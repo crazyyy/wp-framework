@@ -1,0 +1,13 @@
+/* change style default editor */
+
+#editorcontainer textarea#content {
+    font-size: 16px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #333;
+}
+
+/* hide user with id2 from users menu */
+
+#user-2 {
+    display: none;
+}
