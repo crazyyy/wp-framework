@@ -57,19 +57,18 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
     	
     	global $wpdb;
         global $aio_wp_security;
-        /* -- Ordering parameters -- */
-	//Parameters that are going to be used to order the result
-	$orderby = !empty($_GET["orderby"]) ? mysql_real_escape_string($_GET["orderby"]) : 'user_id';
-	$order = !empty($_GET["order"]) ? mysql_real_escape_string($_GET["order"]) : 'DESC';
 
         $logged_in_users = (AIOWPSecurity_Utility::is_multisite_install() ? get_site_transient('users_online') : get_transient('users_online'));
-        
-        foreach ($logged_in_users as $key=>$val)
-        {
-            $userdata = get_userdata($val['user_id']);
-            $username = $userdata->user_login;
-            $val['username'] = $username;
-            $logged_in_users[$key] = $val;
+        if($logged_in_users !== FALSE){
+            foreach ($logged_in_users as $key=>$val)
+            {
+                $userdata = get_userdata($val['user_id']);
+                $username = $userdata->user_login;
+                $val['username'] = $username;
+                $logged_in_users[$key] = $val;
+            }
+        }else{
+            $logged_in_users = array(); //If no transient found set to empty array
         }
         $data = $logged_in_users;
         $current_page = $this->get_pagenum();

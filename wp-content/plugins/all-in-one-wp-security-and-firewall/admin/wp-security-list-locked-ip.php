@@ -177,12 +177,13 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 
 	/* -- Ordering parameters -- */
 	    //Parameters that are going to be used to order the result
-	$orderby = !empty($_GET["orderby"]) ? mysql_real_escape_string($_GET["orderby"]) : 'lockdown_date';
-	$order = !empty($_GET["order"]) ? mysql_real_escape_string($_GET["order"]) : 'DESC';
+        isset($_GET["orderby"]) ? $orderby = strip_tags($_GET["orderby"]): $orderby = '';
+        isset($_GET["order"]) ? $order = strip_tags($_GET["order"]): $order = '';
+
+	$orderby = !empty($orderby) ? esc_sql($orderby) : 'lockdown_date';
+	$order = !empty($order) ? esc_sql($order) : 'DESC';
 
 	$data = $wpdb->get_results("SELECT * FROM $lockdown_table_name WHERE release_date > now() ORDER BY $orderby $order", ARRAY_A);
-        //$data = $wpdb->get_results("SELECT ID, floor((UNIX_TIMESTAMP(release_date)-UNIX_TIMESTAMP(now()))/60) AS minutes_left, ".
-	//				"failed_login_IP FROM $lockdown_table_name WHERE release_date > now()", ARRAY_A);
         $current_page = $this->get_pagenum();
         $total_items = count($data);
         $data = array_slice($data,(($current_page-1)*$per_page),$per_page);

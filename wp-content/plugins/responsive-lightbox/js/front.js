@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
 				deeplinking: (rlArgs.deeplinking === '1' ? true : false),
 				overlay_gallery: (rlArgs.overlayGallery === '1' ? true : false),
 				keyboard_shortcuts: (rlArgs.keyboardShortcuts === '1' ? true : false),
-				social_tools: (rlArgs.social === '1' ? '<div class="pp_social"><div class="twitter"><a href="http://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div><div class="facebook"><iframe src="http://www.facebook.com/plugins/like.php?locale=en_US&href='+location.href+'&amp;layout=button_count&amp;show_faces=true&amp;width=500&amp;action=like&amp;font&amp;colorscheme=light&amp;height=23" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:500px; height:23px;" allowTransparency="true"></iframe></div></div>' : ''),
+				social_tools: (rlArgs.social === '1' ? '<div class="pp_social"><div class="twitter"><a href="//twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script></div><div class="facebook"><iframe src="//www.facebook.com/plugins/like.php?locale=en_US&href='+location.href+'&amp;layout=button_count&amp;show_faces=true&amp;width=500&amp;action=like&amp;font&amp;colorscheme=light&amp;height=23" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:500px; height:23px;" allowTransparency="true"></iframe></div></div>' : ''),
 				changepicturecallback: function(){},
 				callback: function(){},
 				ie6_fallback: true
@@ -75,6 +75,7 @@ jQuery(document).ready(function($) {
 
 			$('a[rel*="'+rlArgs.selector+'"]').nivoLightbox({
 				effect: rlArgs.effect,
+				clickOverlayToClose: (rlArgs.clickOverlayToClose === '1' ? true : false),
 				keyboardNav: (rlArgs.keyboardNav === '1' ? true : false),
 				errorMessage: rlArgs.errorMessage
 			});

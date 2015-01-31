@@ -36,6 +36,7 @@ class AIOWPSecurity_Configure_Settings
 
         //Captcha feature
         $aio_wp_security->configs->set_value('aiowps_enable_login_captcha','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_enable_custom_login_captcha','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_lost_password_captcha','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_captcha_secret_key',AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20));//Hidden secret value which will be used to do some captcha processing. This will be assigned a random string generated when captcha settings saved
 
@@ -75,11 +76,6 @@ class AIOWPSecurity_Configure_Settings
         $aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_5g_firewall','');//Checkbox
-        $aio_wp_security->configs->set_value('aiowps_enable_brute_force_attack_prevention','');//Checkbox
-        $aio_wp_security->configs->set_value('aiowps_brute_force_secret_word','');
-        $aio_wp_security->configs->set_value('aiowps_cookie_based_brute_force_redirect_url','http://127.0.0.1');
-        $aio_wp_security->configs->set_value('aiowps_brute_force_attack_prevention_pw_protected_exception','');//Checkbox
-        $aio_wp_security->configs->set_value('aiowps_brute_force_attack_prevention_ajax_exception','');//Checkbox
         
         //404 detection
         $aio_wp_security->configs->set_value('aiowps_enable_404_logging','');//Checkbox
@@ -89,6 +85,14 @@ class AIOWPSecurity_Configure_Settings
 
         //Brute Force features
         $aio_wp_security->configs->set_value('aiowps_enable_rename_login_page','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_enable_login_honeypot','');//Checkbox
+
+        $aio_wp_security->configs->set_value('aiowps_enable_brute_force_attack_prevention','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_brute_force_secret_word','');
+        $aio_wp_security->configs->set_value('aiowps_cookie_brute_test','');
+        $aio_wp_security->configs->set_value('aiowps_cookie_based_brute_force_redirect_url','http://127.0.0.1');
+        $aio_wp_security->configs->set_value('aiowps_brute_force_attack_prevention_pw_protected_exception','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_brute_force_attack_prevention_ajax_exception','');//Checkbox
 
         //Maintenance menu - Visitor lockout feature
         $aio_wp_security->configs->set_value('aiowps_site_lockout','');//Checkbox
@@ -112,6 +116,9 @@ class AIOWPSecurity_Configure_Settings
         //Misc Options
         //Copy protection feature
         $aio_wp_security->configs->set_value('aiowps_copy_protection','');//Checkbox
+        //Prevent others from dislaying your site in iframe
+        $aio_wp_security->configs->set_value('aiowps_prevent_site_display_inside_frame','');//Checkbox
+        
                 
         //TODO - keep adding default options for any fields that require it
         
@@ -153,6 +160,7 @@ class AIOWPSecurity_Configure_Settings
         $aio_wp_security->configs->add_value('aiowps_allowed_ip_addresses','');
         //Captcha feature
         $aio_wp_security->configs->add_value('aiowps_enable_login_captcha','');//Checkbox
+        $aio_wp_security->configs->add_value('aiowps_enable_custom_login_captcha','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_captcha_secret_key',AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20));//Hidden secret value which will be used to do some captcha processing. This will be assigned a random string generated when captcha settings saved
 
         //User registration
@@ -188,11 +196,6 @@ class AIOWPSecurity_Configure_Settings
         $aio_wp_security->configs->add_value('aiowps_deny_bad_query_strings','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_advanced_char_string_filter','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_enable_5g_firewall','');//Checkbox
-        $aio_wp_security->configs->add_value('aiowps_enable_brute_force_attack_prevention','');//Checkbox
-        $aio_wp_security->configs->add_value('aiowps_brute_force_secret_word','');
-        $aio_wp_security->configs->add_value('aiowps_cookie_based_brute_force_redirect_url','http://127.0.0.1');
-        $aio_wp_security->configs->add_value('aiowps_brute_force_attack_prevention_pw_protected_exception','');//Checkbox
-        $aio_wp_security->configs->add_value('aiowps_brute_force_attack_prevention_ajax_exception','');//Checkbox
 
         //404 detection
         $aio_wp_security->configs->add_value('aiowps_enable_404_logging','');//Checkbox
@@ -202,6 +205,14 @@ class AIOWPSecurity_Configure_Settings
         
         //Brute Force features
         $aio_wp_security->configs->add_value('aiowps_enable_rename_login_page','');//Checkbox
+        $aio_wp_security->configs->add_value('aiowps_enable_login_honeypot','');//Checkbox
+        
+        $aio_wp_security->configs->add_value('aiowps_enable_brute_force_attack_prevention','');//Checkbox
+        $aio_wp_security->configs->add_value('aiowps_brute_force_secret_word','');
+        $aio_wp_security->configs->add_value('aiowps_cookie_brute_test','');
+        $aio_wp_security->configs->add_value('aiowps_cookie_based_brute_force_redirect_url','http://127.0.0.1');
+        $aio_wp_security->configs->add_value('aiowps_brute_force_attack_prevention_pw_protected_exception','');//Checkbox
+        $aio_wp_security->configs->add_value('aiowps_brute_force_attack_prevention_ajax_exception','');//Checkbox
         
         //Maintenance menu - Visitor lockout feature
         $aio_wp_security->configs->add_value('aiowps_site_lockout','');//Checkbox
@@ -225,6 +236,8 @@ class AIOWPSecurity_Configure_Settings
         //Misc Options
         //Copy protection feature
         $aio_wp_security->configs->add_value('aiowps_copy_protection','');//Checkbox
+        //Prevent others from dislaying your site in iframe
+        $aio_wp_security->configs->add_value('aiowps_prevent_site_display_inside_frame','');//Checkbox
 
         
         //TODO - keep adding default options for any fields that require it
@@ -236,6 +249,13 @@ class AIOWPSecurity_Configure_Settings
     static function turn_off_all_security_features()
     {
         AIOWPSecurity_Configure_Settings::set_default_settings();
+        
+        //Refresh the .htaccess file based on the new settings
+        $res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+        if($res == -1)
+        {
+            $aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Configure_Settings::turn_off_all_firewall_rules() - Could not write to the .htaccess file. Please check the file permissions.",4);
+        }
     }
     
     static function turn_off_all_firewall_rules()
@@ -262,16 +282,18 @@ class AIOWPSecurity_Configure_Settings
         $aio_wp_security->configs->set_value('aiowps_enable_404_logging','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_404_IP_lockout','');//Checkbox
         
+        //Prevent Image Hotlinks
+        $aio_wp_security->configs->set_value('aiowps_prevent_hotlinking','');//Checkbox
+        
         $aio_wp_security->configs->save_config();
+        
+        //Refresh the .htaccess file based on the new settings
+        $res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+
+        if($res == -1)
+        {
+            $aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Configure_Settings::turn_off_all_firewall_rules() - Could not write to the .htaccess file. Please check the file permissions.",4);
+        }
     }
 
-    static function restore_to_factory_default()
-    {
-        //TOOD - complete the implementation
-        //restore wp_config_file();//TODO - //TODO - write implementation in the utility class
-        //restore site_htaccess_file();//TODO - write implementation in the utility class
-        //AIOWPSecurity_Configure_Settings::set_default_settings();
-        //Maybe allow them to revert the DB Prefix too?
-        //File permissions
-    }
 }

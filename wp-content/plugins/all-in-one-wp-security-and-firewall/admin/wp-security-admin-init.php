@@ -104,13 +104,42 @@ class AIOWPSecurity_Admin_Init
     
     function do_other_admin_side_init_tasks()
     {
+        global $aio_wp_security;
+        
+        //***New Feature improvement for Cookie Based Brute Force Protection***//
+        //The old "test cookie" used to be too easy to guess because someone could just read the code and get the value. 
+        //So now we will drop a more secure test cookie using a 10 digit random string
+
+        if($aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')=='1'){
+            // This code is for users who had this feature saved using an older release. This will drop the new more secure test cookie to the browser and will write it to the .htaccess file too
+            $test_cookie = $aio_wp_security->configs->get_value('aiowps_cookie_brute_test');
+            if(empty($test_cookie)){
+                $random_suffix = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(10);
+                $test_cookie_name = 'aiowps_cookie_test_'.$random_suffix;
+                $aio_wp_security->configs->set_value('aiowps_cookie_brute_test',$test_cookie_name);
+                $aio_wp_security->configs->save_config();//save the value
+                AIOWPSecurity_Utility::set_cookie_value($test_cookie_name, "1");
+
+                //Write this new cookie to the .htaccess file
+                $res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+                if($res == -1){
+                    $aio_wp_security->debug_logger->log_debug("Error writing new test cookie with random suffix to .htaccess file!",4);
+                }
+
+            }
+        }
+        //For cookie test form submission case
         if (isset($_GET['page']) && $_GET['page'] == AIOWPSEC_BRUTE_FORCE_MENU_SLUG && isset($_GET['tab']) && $_GET['tab'] == 'tab2')
         {
             global $aio_wp_security;
             if(isset($_POST['aiowps_do_cookie_test_for_bfla'])){
-                AIOWPSecurity_Utility::set_cookie_value("aiowps_cookie_test", "1");
+                $random_suffix = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(10);
+                $test_cookie_name = 'aiowps_cookie_test_'.$random_suffix;
+                $aio_wp_security->configs->set_value('aiowps_cookie_brute_test',$test_cookie_name);
+                $aio_wp_security->configs->save_config();//save the value
+                AIOWPSecurity_Utility::set_cookie_value($test_cookie_name, "1");
                 $cur_url = "admin.php?page=".AIOWPSEC_BRUTE_FORCE_MENU_SLUG."&tab=tab2";
-                $redirect_url = AIOWPSecurity_Utility::add_query_data_to_url($cur_url, "aiowps_cookie_test", "1");
+                $redirect_url = AIOWPSecurity_Utility::add_query_data_to_url($cur_url, 'aiowps_cookie_test', "1");
                 AIOWPSecurity_Utility::redirect_to_url($redirect_url);
             }
             
@@ -125,7 +154,8 @@ class AIOWPSecurity_Admin_Init
 
             if(isset($_REQUEST['aiowps_cookie_test']))
             {
-                $cookie_val = AIOWPSecurity_Utility::get_cookie_value("aiowps_cookie_test");
+                $test_cookie = $aio_wp_security->configs->get_value('aiowps_cookie_brute_test');
+                $cookie_val = AIOWPSecurity_Utility::get_cookie_value($test_cookie);
                 if(empty($cookie_val))
                 {
                     $aio_wp_security->configs->set_value('aiowps_cookie_test_success','');
@@ -146,7 +176,7 @@ class AIOWPSecurity_Admin_Init
                 $aio_wp_security->debug_logger->log_debug("Nonce check failed on wp_config file save!",4);
                 die("Nonce check failed on wp_config file save!");
             }
-            $wp_config_path = ABSPATH . 'wp-config.php';
+            $wp_config_path = AIOWPSecurity_Utility_File::get_wp_config_file_path();
             $result = AIOWPSecurity_Utility_File::backup_and_rename_wp_config($wp_config_path); //Backup the wp_config.php file
             AIOWPSecurity_Utility_File::download_a_file_option1($wp_config_path, "wp-config-backup.txt");
         }

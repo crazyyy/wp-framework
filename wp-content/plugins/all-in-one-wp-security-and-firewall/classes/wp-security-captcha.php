@@ -9,6 +9,11 @@ class AIOWPSecurity_Captcha
     
     function display_captcha_form()
     {
+        global $aio_wp_security;
+        if($aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha') == '1' && defined('BP_VERSION')){
+            //if buddy press feature active add action hook so buddy press can display our errors properly on bp registration form
+            do_action( 'bp_aiowps-captcha-answer_errors' );
+        }
         $cap_form = '<p class="aiowps-captcha"><label>'.__('Please enter an answer in digits:','aiowpsecurity').'</label>';
         $cap_form .= '<div class="aiowps-captcha-equation"><strong>';
         $maths_question_output = $this->generate_maths_question();

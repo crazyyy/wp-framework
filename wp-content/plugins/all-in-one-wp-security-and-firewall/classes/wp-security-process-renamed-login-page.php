@@ -9,6 +9,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page
         add_filter('site_url', array(&$this, 'aiowps_site_url'), 10, 2);
         add_filter('network_site_url', array(&$this, 'aiowps_site_url'), 10, 2);
         add_filter('wp_redirect', array(&$this, 'aiowps_wp_redirect'), 10, 2);
+        add_filter('register', array(&$this, 'register_link'));
         remove_action('template_redirect', 'wp_redirect_admin_locations', 1000); //To prevent redirect to login page when people type "login" at end of home URL
         
     }
@@ -46,12 +47,21 @@ class AIOWPSecurity_Process_Renamed_Login_Page
         return $this->aiowps_filter_wp_login_file($location);
     }
 
+    //Filter register link on the login page
+    function register_link($registration_url)
+    {
+        return $this->aiowps_filter_wp_login_file($registration_url);
+    }
+    
     //Filter all login url strings on the login page
     function aiowps_filter_wp_login_file($url)
     {
         if (strpos($url, 'wp-login.php') !== false){
             $args = explode( '?', $url );
             if (isset($args[1])){
+                if (strpos($args[1], 'action=postpass') !== FALSE){
+                    return $url; //Don't reveal the secret URL in the post password action url 
+                }
                 parse_str($args[1], $args);
                 $url = add_query_arg($args, AIOWPSecurity_Process_Renamed_Login_Page::new_login_url());
             }else{
@@ -60,16 +70,70 @@ class AIOWPSecurity_Process_Renamed_Login_Page
         }
         return $url;
     }
-    
+
     static function renamed_login_init_tasks()
     {
         global $aio_wp_security;
-        if (is_admin() && !is_user_logged_in() && !defined('DOING_AJAX')){
-            wp_die( __( 'Please log in to access the WordPress admin area.', 'aiowpsecurity') );
+        
+        //The following will process the native wordpress post password protection form
+        //Normally this is done by wp-login.php file but we cannot use that since the login page has been renamed 
+        $action = isset($_GET['action'])?strip_tags($_GET['action']):'';
+        if(isset($_POST['post_password']) && $action == 'postpass'){
+            require_once ABSPATH . 'wp-includes/class-phpass.php';
+            $hasher = new PasswordHash( 8, true );
+
+            /**
+             * Filter the life span of the post password cookie.
+             *
+             * By default, the cookie expires 10 days from creation. To turn this
+             * into a session cookie, return 0.
+             *
+             * @since 3.7.0
+             *
+             * @param int $expires The expiry time, as passed to setcookie().
+             */
+            $expire = apply_filters( 'post_password_expires', time() + 10 * DAY_IN_SECONDS );
+            setcookie( 'wp-postpass_' . COOKIEHASH, $hasher->HashPassword( wp_unslash( $_POST['post_password'] ) ), $expire, COOKIEPATH );
+
+            wp_safe_redirect( wp_get_referer() );
+            exit();
         }
         
+        //case where someone attempting to reach wp-admin 
+        if (is_admin() && !is_user_logged_in() && !defined('DOING_AJAX')){
+            //Check if the maintenance (lockout) mode is active - if so prevent access to site by not displaying 404 page!
+            if($aio_wp_security->configs->get_value('aiowps_site_lockout') == '1'){
+                AIOWPSecurity_WP_Loaded_Tasks::site_lockout_tasks();
+            }else{
+                AIOWPSecurity_Process_Renamed_Login_Page::aiowps_set_404();
+            }
+        }
+
+        //case where someone attempting to reach wp-login
+        if(isset($_SERVER['REQUEST_URI']) && strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) && !is_user_logged_in()){
+            //Check if the maintenance (lockout) mode is active - if so prevent access to site by not displaying 404 page!
+            if($aio_wp_security->configs->get_value('aiowps_site_lockout') == '1'){
+                AIOWPSecurity_WP_Loaded_Tasks::site_lockout_tasks();
+            }else{
+                AIOWPSecurity_Process_Renamed_Login_Page::aiowps_set_404();
+            }
+        }
+        
+        //case where someone attempting to reach the standard register or signup pages
+        if(isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'wp-register.php' ) ||
+            isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'wp-signup.php' )){
+            //Check if the maintenance (lockout) mode is active - if so prevent access to site by not displaying 404 page!
+            if($aio_wp_security->configs->get_value('aiowps_site_lockout') == '1'){
+                AIOWPSecurity_WP_Loaded_Tasks::site_lockout_tasks();
+            }else{
+                AIOWPSecurity_Process_Renamed_Login_Page::aiowps_set_404();
+            }
+        }
+
         $parsed_url = parse_url($_SERVER['REQUEST_URI']);
+
         $login_slug = $aio_wp_security->configs->get_value('aiowps_login_page_slug');
+        
         if(untrailingslashit($parsed_url['path']) === home_url($login_slug, 'relative')
                 || (!get_option('permalink_structure') && isset($_GET[$login_slug]))){
             status_header( 200 );

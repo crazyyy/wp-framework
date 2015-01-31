@@ -8,7 +8,8 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
     var $menu_tabs;
 
     var $menu_tabs_handler = array(
-        'tab1' => 'render_tab1', 
+        'tab1' => 'render_tab1',
+        'tab2' => 'render_tab2',
         );
 
     function __construct() 
@@ -19,7 +20,8 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
     function set_menu_tabs() 
     {
         $this->menu_tabs = array(
-        'tab1' => __('Copy Protection', 'aiowpsecurity'), 
+        'tab1' => __('Copy Protection', 'aiowpsecurity'),
+        'tab2' => __('Frames', 'aiowpsecurity'),
         );
     }
 
@@ -115,4 +117,56 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
         </div></div>
         <?php
     }
+    
+    function render_tab2()
+    {
+        global $aio_wp_security;
+        $maint_msg = '';
+        if(isset($_POST['aiowpsec_save_frame_display_prevent']))
+        {
+            $nonce=$_REQUEST['_wpnonce'];
+            if (!wp_verify_nonce($nonce, 'aiowpsec-prevent-display-frame'))
+            {
+                $aio_wp_security->debug_logger->log_debug("Nonce check failed on prevent display inside frame feature settings save!",4);
+                die("Nonce check failed on prevent display inside frame feature settings save!");
+            }
+            
+            //Save settings
+            $aio_wp_security->configs->set_value('aiowps_prevent_site_display_inside_frame',isset($_POST["aiowps_prevent_site_display_inside_frame"])?'1':'');
+            $aio_wp_security->configs->save_config();
+
+            $this->show_msg_updated(__('Frame Display Prevention feature settings saved!', 'aiowpsecurity'));
+
+        }
+        ?>
+        <div class="postbox">
+        <h3><label for="title"><?php _e('Prevent Your Site From Being Displayed In a Frame', 'aiowpsecurity'); ?></label></h3>
+        <div class="inside">
+        <form action="" method="POST">
+        <?php wp_nonce_field('aiowpsec-prevent-display-frame'); ?>
+        <div class="aio_blue_box">
+            <?php
+            echo '<p>'.__('This feature allows you to prevent other sites from displaying any of your content via a frame or iframe.', 'aiowpsecurity').'</p>';
+            echo '<p>'.__('When enabled, this feature will set the "X-Frame-Options" paramater to "sameorigin" in the HTTP header.', 'aiowpsecurity').'</p>';
+            ?>
+        </div>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><?php _e('Enable iFrame Protection', 'aiowpsecurity')?>:</th>                
+                <td>
+                <input name="aiowps_prevent_site_display_inside_frame" type="checkbox"<?php if($aio_wp_security->configs->get_value('aiowps_prevent_site_display_inside_frame')=='1') echo ' checked="checked"'; ?> value="1"/>
+                <span class="description"><?php _e('Check this if you want to stop other sites from displaying your content in a frame or iframe.', 'aiowpsecurity'); ?></span>
+                </td>
+            </tr>
+
+        </table>
+    
+        <div class="submit">
+            <input type="submit" class="button-primary" name="aiowpsec_save_frame_display_prevent" value="<?php _e('Save Settings'); ?>" />
+        </div>
+        </form>   
+        </div></div>
+        <?php
+    }
+    
 } //end class

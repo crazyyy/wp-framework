@@ -40,8 +40,7 @@ class AIOWPSecurity_User_Login
                 add_action('login_form', array(&$this, 'insert_unlock_request_form'));
             }
             $aio_wp_security->debug_logger->log_debug("Login attempt from blocked IP range - ".$user_locked['failed_login_ip'],2);
-            return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Login failed because your IP address has been blocked.
-                                Please contact the administrator.', 'aiowpsecurity'));
+            return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Login failed because your IP address has been blocked. Please contact the administrator.', 'aiowpsecurity'));
             //$unlock_msg_form = $this->user_unlock_message();
             //return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Login failed because your IP address has been blocked.
               //                  Please contact the administrator.', 'aiowpsecurity').$unlock_msg_form);
@@ -273,7 +272,9 @@ class AIOWPSecurity_User_Login
             $email_msg .= __('IP Address: '.$ip,'aiowpsecurity')."\n\n";
             $email_msg .= __('IP Range: '.$ip_range.'.*','aiowpsecurity')."\n\n";
             $email_msg .= __('Log into your site\'s WordPress administration panel to see the duration of the lockout or to unlock the user.','aiowpsecurity')."\n";
-            $email_header = 'From: '.get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n\\";
+            $site_title = get_bloginfo( 'name' );
+            $from_name = empty($site_title)?'WordPress':$site_title;
+            $email_header = 'From: '.$from_name.' <'.get_bloginfo('admin_email').'>' . "\r\n\\";
             $sendMail = wp_mail($to_email_address, $subject, $email_msg, $email_header);
         }
     }
@@ -322,7 +323,17 @@ class AIOWPSecurity_User_Login
         }
         else
         {
-            AIOWPSecurity_Utility::redirect_to_url(wp_login_url());
+            if($aio_wp_security->configs->get_value('aiowps_enable_rename_login_page')=='1'){
+                if (get_option('permalink_structure')){
+                    $home_url = trailingslashit(home_url());
+                }else{
+                    $home_url = trailingslashit(home_url()) . '?';
+                }
+                $login_url = $home_url.$aio_wp_security->configs->get_value('aiowps_login_page_slug');
+                AIOWPSecurity_Utility::redirect_to_url($login_url);
+            }else{
+                AIOWPSecurity_Utility::redirect_to_url(wp_login_url());
+            }
         }
     }
     
@@ -338,7 +349,9 @@ class AIOWPSecurity_User_Login
         $email_msg .= __('You have requested for the account with email address '.$email.' to be unlocked. Please click the link below to unlock your account:','aiowpsecurity')."\n";
         $email_msg .= __('Unlock link: '.$unlock_link,'aiowpsecurity')."\n\n";
         $email_msg .= __('After clicking the above link you will be able to login to the WordPress administration panel.','aiowpsecurity')."\n";
-        $email_header = 'From: '.get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n\\";
+        $site_title = get_bloginfo( 'name' );
+        $from_name = empty($site_title)?'WordPress':$site_title;
+        $email_header = 'From: '.$from_name.' <'.get_bloginfo('admin_email').'>' . "\r\n\\";
         $sendMail = wp_mail($to_email_address, $subject, $email_msg, $email_header);
     }
     
@@ -366,10 +379,11 @@ class AIOWPSecurity_User_Login
                     $this->wp_logout_action_handler(); //this will register the logout time/date in the logout_date column
                     
                     $curr_page_url = AIOWPSecurity_Utility::get_current_page_url();
-                    $after_logout_payload = 'redirect_to='.$curr_page_url.'&msg='.$this->key_login_msg.'=session_expired';
-                    $encrypted_payload = base64_encode($after_logout_payload);
+                    $after_logout_payload = array('redirect_to'=>$curr_page_url, 'msg'=>$this->key_login_msg.'=session_expired');
+                    //Save some of the logout redirect data to a transient
+                    AIOWPSecurity_Utility::is_multisite_install() ? set_site_transient('aiowps_logout_payload', $after_logout_payload, 30 * 60) : set_transient('aiowps_logout_payload', $after_logout_payload, 30 * 60);
                     $logout_url = AIOWPSEC_WP_URL.'?aiowpsec_do_log_out=1';
-                    $logout_url = AIOWPSecurity_Utility::add_query_data_to_url($logout_url, 'al_additional_data', $encrypted_payload);
+                    $logout_url = AIOWPSecurity_Utility::add_query_data_to_url($logout_url, 'al_additional_data', '1');
                     AIOWPSecurity_Utility::redirect_to_url($logout_url);
                 }
             }
@@ -382,7 +396,7 @@ class AIOWPSecurity_User_Login
         return $last_login;
     }
 
-    function wp_login_action_handler($user_login, $user='') 
+    static function wp_login_action_handler($user_login, $user='') 
     {
         global $wpdb, $aio_wp_security;
         $login_activity_table = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;

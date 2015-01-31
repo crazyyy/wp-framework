@@ -4,6 +4,7 @@ class AIOWPSecurity_User_Registration
 
     function __construct() 
     {
+        global $aio_wp_security;
         add_action('user_register', array(&$this, 'aiowps_user_registration_action_handler'));
         add_filter('registration_errors', array(&$this, 'aiowps_validate_registration_with_captcha'), 10, 3);
     }
@@ -44,21 +45,26 @@ class AIOWPSecurity_User_Registration
     function aiowps_validate_registration_with_captcha($errors, $sanitized_user_login, $user_email)
     {
         global $aio_wp_security;
-        //Check if captcha enabled
-        if ($aio_wp_security->configs->get_value('aiowps_enable_registration_page_captcha') == '1')
+
+        $locked = $aio_wp_security->user_login_obj->check_locked_user();
+        if($locked == null){
+            //user is not locked continue
+        }else{
+            $errors->add('authentication_failed', __('<strong>ERROR</strong>: You are not allowed to register because your IP address is currently locked!', 'aiowpsecurity'));
+            return $errors;
+        }
+        
+        if (array_key_exists('aiowps-captcha-answer', $_POST)) //If the register form with captcha was submitted then do some processing
         {
-            if (array_key_exists('aiowps-captcha-answer', $_POST)) //If the register form with captcha was submitted then do some processing
+            isset($_POST['aiowps-captcha-answer'])?$captcha_answer = strip_tags(trim($_POST['aiowps-captcha-answer'])): $captcha_answer = '';
+            $captcha_secret_string = $aio_wp_security->configs->get_value('aiowps_captcha_secret_key');
+            $submitted_encoded_string = base64_encode($_POST['aiowps-captcha-temp-string'].$captcha_secret_string.$captcha_answer);
+            if($submitted_encoded_string !== $_POST['aiowps-captcha-string-info'])
             {
-                isset($_POST['aiowps-captcha-answer'])?$captcha_answer = strip_tags(trim($_POST['aiowps-captcha-answer'])): $captcha_answer = '';
-                $captcha_secret_string = $aio_wp_security->configs->get_value('aiowps_captcha_secret_key');
-                $submitted_encoded_string = base64_encode($_POST['aiowps-captcha-temp-string'].$captcha_secret_string.$captcha_answer);
-                if($submitted_encoded_string !== $_POST['aiowps-captcha-string-info'])
-                {
-                    //This means a wrong answer was entered
-                    //return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Your answer was incorrect - please try again.', 'aiowpsecurity'));
-                    $errors->add('authentication_failed', __('<strong>ERROR</strong>: Your answer was incorrect - please try again.', 'aiowpsecurity'));
-                    return $errors;
-                }
+                //This means a wrong answer was entered
+                //return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Your answer was incorrect - please try again.', 'aiowpsecurity'));
+                $errors->add('authentication_failed', __('<strong>ERROR</strong>: Your answer was incorrect - please try again.', 'aiowpsecurity'));
+                return $errors;
             }
         }
         return $errors;

@@ -8,16 +8,17 @@ class AIOWPSecurity_Utility_IP
     
     static function get_user_ip_address()
     {
-        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
+        foreach (array('HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
             if (array_key_exists($key, $_SERVER) === true){
                 foreach (explode(',', $_SERVER[$key]) as $ip){
                     $userIP = trim($ip);
-                    if (filter_var($userIP, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                    if (filter_var($userIP, FILTER_VALIDATE_IP) !== false){
                         return $userIP;
                     }
                 }
             }
         }
+        return ''; //if we get this far we have an invalid address - return empty string
     }
     
      /*
@@ -48,7 +49,7 @@ class AIOWPSecurity_Utility_IP
         return $ip_list_array;
     }
     
-    static function validate_ip_list($ip_list_array, $list='blacklist')
+    static function validate_ip_list($ip_list_array, $list_type='')
     {
         @ini_set('auto_detect_line_endings', true);
         $errors = '';
@@ -123,10 +124,10 @@ class AIOWPSecurity_Utility_IP
                     { //invalid ip 
                         $errors .= '<p>'.$item.__(' is not a valid ip address format.', 'aiowpsecurity').'</p>';
                     } 
-                    elseif (strlen($item > 4 && !in_array($item, $list))) 
+                    elseif (strlen($item) > 4 && !in_array($item, $list)) 
                     {
                         $current_user_ip = AIOWPSecurity_Utility_IP::get_user_ip_address();
-                        if ($current_user_ip == $item && $list == 'blacklist')
+                        if ($current_user_ip == $item && $list_type == 'blacklist')
                         {
                             //You can't ban your own IP
                             $errors .= '<p>'.__('You cannot ban your own IP address: ', 'aiowpsecurity').$item.'</p>';

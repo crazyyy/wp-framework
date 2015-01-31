@@ -86,6 +86,14 @@ jQuery(document).ready(function($) {
 			$('#rl_custom_events').fadeOut(300);
 		}
 	});
+	
+	$(document).on('change', '#rl-enable-gallery-image-size-yes, #rl-enable-gallery-image-size-no', function(event) {
+		if($(this).val() === 'yes') {
+			$('#rl_gallery_image_size').fadeIn(300);
+		} else {
+			$('#rl_gallery_image_size').fadeOut(300);
+		}
+	});
 
 	$(document).on('click', 'input#reset_rl_configuration', function(event) {
 		return confirm(rlArgs.resetScriptToDefaults);

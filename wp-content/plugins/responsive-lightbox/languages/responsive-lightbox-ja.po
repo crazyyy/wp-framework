@@ -1,0 +1,623 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Responsive Lightbox v1.4.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2014-03-19 23:03+0900\n"
+"Last-Translator: stranger-jp <wordpress.stranger.jp@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"Language: ja_JP\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "prettyPhoto"
+msgstr "prettyPhoto"
+
+msgid "slow"
+msgstr "遅い"
+
+msgid "normal"
+msgstr "普通"
+
+msgid "fast"
+msgstr "速い"
+
+msgid "default"
+msgstr "デフォルト"
+
+msgid "light rounded"
+msgstr "明るい 角丸"
+
+msgid "dark rounded"
+msgstr "暗い 角丸"
+
+msgid "light square"
+msgstr "明るい 四角"
+
+msgid "dark square"
+msgstr "暗い 四角"
+
+msgid "facebook"
+msgstr "facebook"
+
+msgid "window"
+msgstr "ウィンドウ"
+
+msgid "transparent"
+msgstr "透明"
+
+msgid "opaque"
+msgstr "不透明"
+
+msgid "direct"
+msgstr "指示"
+
+msgid "gpu"
+msgstr "GPU"
+
+msgid "SwipeBox"
+msgstr "SwipeBox"
+
+msgid "CSS"
+msgstr "CSS"
+
+msgid "jQuery"
+msgstr "jQuery"
+
+msgid "Enable"
+msgstr "有効"
+
+msgid "Disable"
+msgstr "無効"
+
+msgid "General settings"
+msgstr "全般設定"
+
+msgid "Lightbox settings"
+msgstr "Lightbox設定"
+
+msgid "Lightbox script"
+msgstr "Lightboxスクリプト"
+
+msgid "Selector"
+msgstr "セレクタ"
+
+msgid "Galleries"
+msgstr "ギャラリー"
+
+msgid "Video links"
+msgstr "動画リンク"
+
+msgid "Image links"
+msgstr "画像リンク"
+
+msgid "Single images as gallery"
+msgstr "ギャラリーのような表示"
+
+msgid "Deactivation"
+msgstr "プラグインの設定を削除"
+
+msgid "Animation type"
+msgstr "アニメーションタイプ"
+
+msgid "Top and bottom bars"
+msgstr "上部と下部のバー"
+
+msgid "Video max width"
+msgstr "動画最大幅"
+
+msgid "Animation speed"
+msgstr "アニメーションの速度"
+
+msgid "Slideshow"
+msgstr "スライドショー"
+
+msgid "Slideshow autoplay"
+msgstr "スライドショーの自動再生"
+
+msgid "Opacity"
+msgstr "不透明"
+
+msgid "Show title"
+msgstr "タイトルの表示"
+
+msgid "Allow resize big images"
+msgstr "大きな画像サイズを変更可能"
+
+msgid "Video width"
+msgstr "動画の幅"
+
+msgid "Video height"
+msgstr "動画の高さ"
+
+msgid "Theme"
+msgstr "テーマ"
+
+msgid "Horizontal padding"
+msgstr "水平パディング"
+
+msgid "Hide Flash"
+msgstr "フラッシュを隠す"
+
+msgid "Flash Window Mode (wmode)"
+msgstr "フラッシュ・ウィンドウモード(wmode)"
+
+msgid "Video autoplay"
+msgstr "動画自動再生"
+
+msgid "Modal"
+msgstr "モーダル"
+
+msgid "Deeplinking"
+msgstr "ディープリンク"
+
+msgid "Overlay gallery"
+msgstr "オーバーレイギャラリー"
+
+msgid "Keyboard shortcuts"
+msgstr "キーボードショートカット"
+
+msgid "Social (Twitter, Facebook)"
+msgstr "ソーシャル(TwitterやFacebook)"
+
+msgid "Select your preffered ligthbox effect script."
+msgstr "好みのLigthboxのエフェクトを選択します。"
+
+msgid "Select to which rel selector lightbox effect will be applied to."
+msgstr "relセレクタをLightboxのエフェクトに適用させる場合に選択します。"
+
+msgid "Add lightbox to WordPress image galleries by default."
+msgstr "デフォルトはWordPressの画像ギャラリーにLightboxを追加します。"
+
+msgid "Add lightbox to YouTube and Vimeo video links by default."
+msgstr "デフォルトはYouTubeやVimeoの動画リンクにlightboxを追加します。"
+
+msgid "Add lightbox to WordPress image links by default."
+msgstr "デフォルトはWordPressの画像リンクにlightboxを追加します。"
+
+msgid "Display single post images as a gallery."
+msgstr "ギャラリーのように単一の投稿画像を表示します。"
+
+msgid "Delete settings on plugin deactivation."
+msgstr "プラグインの非活性化設定を削除します。"
+
+msgid "Select a method of applying a lightbox effect."
+msgstr "Lightboxの効果の適用方法を選択します。"
+
+msgid "Disable if you don't want to top and bottom bars to be hidden after a period of time."
+msgstr "一定期間後に隠される上部と下部のバーを非表示にする場合は無効にします。"
+
+msgid "Enter the time after which the top and bottom bars will be hidden (when hiding is enabled)."
+msgstr "上部と下部のバーが(隠蔽が有効になっている場合)隠れされるまでの時間を入力してください。"
+
+msgid "Enter the max video width in a lightbox."
+msgstr "Lightboxの動画最大幅を入力してください。"
+
+msgid "Select animation speed for lightbox effect."
+msgstr "Lightboxエフェクトのアニメーション速度を選択してください。"
+
+msgid "Display images as slideshow."
+msgstr "スライドショーで画像を表示します。"
+
+msgid "Enter time (in miliseconds)."
+msgstr "時間(ミリ秒単位)を入力します。"
+
+msgid "Display image tiltle."
+msgstr "有効にすると画像のタイトルを表示します。"
+
+msgid "Resize the photos bigger than viewport."
+msgstr "ビューポートよりも写真が大き場合リサイズします。"
+
+msgid "in pixels"
+msgstr "ピクセル単位"
+
+msgid "Select theme for lightbox effect."
+msgstr "Lightboxのエフェクトのテーマを選択します。"
+
+msgid "Horizontal padding (in pixels)."
+msgstr "水平パディング(ピクセル単位)"
+
+msgid "Select flash window mode."
+msgstr "フラッシュ・ウィンドウモードを選択します。"
+
+msgid "If set to true, only the close button will close the window."
+msgstr "有効にした場合、閉じるボタンでウィンドウを閉じます。"
+
+msgid "Allow prettyPhoto to update the url to enable deeplinking."
+msgstr "prettyPhotoがディープリンクを有効にするURLを更新することを許可します。"
+
+msgid "If enabled, a gallery will overlay the fullscreen image on mouse over."
+msgstr "有効にした場合ギャラリーにマウスオーバーでフルスクリーン画像をオーバーレイします。"
+
+msgid "Display links to Facebook and Twitter."
+msgstr "FacebookやTwitterへのリンクを表示します。"
+
+msgid "Changes were not saved because there was attempt to save settings of inactive script. The site has been reloaded to the proper script settings."
+msgstr "無効なスクリプトの設定を保存しようとする試みがあったので変更は保存されませんでした。サイトは適切なスクリプトの設定でリロードされています。"
+
+msgid "Settings of SwipeBox script were restored to defaults."
+msgstr "SwipeBoxスクリプトの設定がデフォルトに復元されました。"
+
+msgid "Settings of prettyPhoto script were restored to defaults."
+msgstr "prettyPhotoスクリプトの設定がデフォルトに復元されました。"
+
+msgid "Changes were not set to defaults because there was attempt to reset settings of inactive script. The site has been reloaded to the proper script settings."
+msgstr "非アクティブスクリプトの設定をリセットする試みがあったので変更はデフォルトに設定されていません。サイトは適切なスクリプトの設定にリロードされています。"
+
+msgid "Responsive Lightbox"
+msgstr "レスポンシブLightbox"
+
+msgid "Reset to defaults"
+msgstr "デフォルトにリセット"
+
+msgid "Need support?"
+msgstr "Need support?"
+
+msgid "If you are having problems with this plugin, please talk about them in the"
+msgstr "If you are having problems with this plugin, please talk about them in the"
+
+msgid "Support forum"
+msgstr "Support forum"
+
+msgid "Do you like this plugin?"
+msgstr "Do you like this plugin?"
+
+msgid "Rate it 5"
+msgstr "Rate it 5"
+
+msgid "on WordPress.org"
+msgstr "on WordPress.org"
+
+msgid "Blog about it & link to the"
+msgstr "Blog about it & link to the"
+
+msgid "plugin page"
+msgstr "plugin page"
+
+msgid "Check out our other"
+msgstr "Check out our other"
+
+msgid "WordPress plugins"
+msgstr "WordPress plugins"
+
+msgid "Are you sure you want to reset scripts settings to defaults?"
+msgstr "設定をデフォルトにリセットしてもよろしいですか？"
+
+msgid "Support"
+msgstr "サポート"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Value between 0 and 100, 100 for no opacity."
+msgstr "0～100の値で100は透明度なしです。"
+
+msgid "auto"
+msgstr "自動"
+
+msgid "Auto scale"
+msgstr "自動スケール"
+
+msgid "Automatically start slideshow."
+msgstr "自動的にスライドショーを開始します。"
+
+msgid "Automatically start videos."
+msgstr "自動的に動画を開始します。"
+
+msgid "Center on scroll"
+msgstr "スクロールでセンター"
+
+msgid "Change fade"
+msgstr "フェードを変更"
+
+msgid "Change speed"
+msgstr "速度を変更"
+
+msgid "Color of the overlay."
+msgstr "オーバーレイの色。"
+
+msgid "Cyclic"
+msgstr "循環"
+
+msgid "Easing used for elastic animations."
+msgstr "緩和弾性アニメーションに使用されます。"
+
+msgid "Easings (in/out)"
+msgstr "Easings (イン/アウト)"
+
+msgid "elastic"
+msgstr "エラスティック"
+
+msgid "Enable escape button"
+msgstr "Escボタンを有効"
+
+msgid "fade"
+msgstr "フェード"
+
+msgid "FancyBox"
+msgstr "FancyBox"
+
+msgid "Effect"
+msgstr "効果"
+
+msgid "Height of the video."
+msgstr "動画の高さ。"
+
+msgid "The effect to use when showing the lightbox."
+msgstr "lightboxを表示するときに効果を使用します。"
+
+msgid "Hide on content click"
+msgstr "コンテンツをクリックで隠す"
+
+msgid "Hide on overlay click"
+msgstr "オーバーレイをクリックで隠す"
+
+msgid "Hides all the flash object on a page. Enable this if flash appears over prettyPhoto."
+msgstr "ページですべてのフラッシュを非表示にします。フラッシュがprettyPhoto上で表示される場合これを有効にしてください。"
+
+msgid "If true, FancyBox is scaled to fit in viewport."
+msgstr "有効の場合 FancyBoxはビューポートに収まるようにスケーリングします。"
+
+msgid "inside"
+msgstr "内側"
+
+msgid "linear"
+msgstr "リニア"
+
+msgid "Margin"
+msgstr "マージン"
+
+msgid "no"
+msgstr "いいえ"
+
+msgid "none"
+msgstr "なし"
+
+msgid "Opacity of the overlay."
+msgstr "オーバーレイの不透明度。"
+
+msgid "outside"
+msgstr "外"
+
+msgid "over"
+msgstr "以上"
+
+msgid "Overlay color"
+msgstr "オーバーレイの色"
+
+msgid "Overlay opacity"
+msgstr "オーバーレイ不透明"
+
+msgid "Padding"
+msgstr "パディング"
+
+msgid "Scrolling (in/out)"
+msgstr "スクロール(イン/アウト)"
+
+msgid "Set to false if you open forms inside prettyPhoto."
+msgstr "prettyPhoto内部フォームを開く場合は無効にします。"
+
+msgid "Settings of FancyBox script were restored to defaults."
+msgstr "FancyBoxスクリプトの設定をデフォルトに復元しました。"
+
+msgid "Show close button"
+msgstr "閉じるボタンを表示"
+
+msgid "Show nav arrows"
+msgstr "ナビゲーション矢印を表示"
+
+msgid "Show overlay"
+msgstr "オーバーレイを表示"
+
+msgid "Space between FancyBox wrapper and content."
+msgstr "FancyBoxラッパーとコンテンツの間のスペース。"
+
+msgid "Space between viewport and FancyBox wrapper."
+msgstr "ビューポートとFancyBoxラッパーの間のスペース。"
+
+msgid "Speed (in/out)"
+msgstr "速度(イン/アウト)"
+
+msgid "Speed of resizing when changing gallery items, in milliseconds."
+msgstr "ギャラリーの項目を変更するときのサイズ変更速度。(ミリ秒単位)"
+
+msgid "Speed of the content fading while changing gallery items."
+msgstr "ギャラリーのコンテンツ項目を変るフェージングの速度。"
+
+msgid "Speed of the fade and elastic transitions, in milliseconds."
+msgstr "フェードと弾力性の速度。(ミリ秒単位)"
+
+msgid "swing"
+msgstr "スイング"
+
+msgid "The position of title."
+msgstr "タイトルの位置。"
+
+msgid "The transition type."
+msgstr "トランジションタイプ。"
+
+msgid "Title position"
+msgstr "タイトルの位置"
+
+msgid "Title show"
+msgstr "タイトルを表示"
+
+msgid "Toggle close button."
+msgstr "閉じるボタンを切り替えます。"
+
+msgid "Toggle if clicking the content should close FancyBox."
+msgstr "コンテンツをクリックするとFancyBoxを閉じるべきかどうかを切り替えます。"
+
+msgid "Toggle if clicking the overlay should close FancyBox."
+msgstr "オーバーレイをクリックすると、 FancyBoxを閉じるべきかどうかを切り替えます。"
+
+msgid "Toggle if pressing Esc button closes FancyBox."
+msgstr "ESCボタンを押すとFancyBoxを閉じた場合に切り替えます。"
+
+msgid "Toggle navigation arrows."
+msgstr "ナビゲーション用の矢印を切り替えます。"
+
+msgid "Toggle overlay."
+msgstr "オーバーレイを切り替えます。"
+
+msgid "Toggle title."
+msgstr "タイトルを切り替えます。"
+
+msgid "Transition (in/out)"
+msgstr "トランジション(イン/アウト)"
+
+msgid "When true, \"overlayShow\" is set to TRUE and \"hideOnOverlayClick\", \"hideOnContentClick\", \"enableEscapeButton\", \"showCloseButton\" are set to FALSE."
+msgstr "有効にした場合\"オーバーレイを表示\"は有効になり、\"閉じるボタンを表示\"、\"Escボタンを有効\"、\"オーバーレイをクリックで隠す\"、\"コンテンツをクリックで隠す\"は無効になります。"
+
+msgid "When true, FancyBox is centered while scrolling page."
+msgstr "有効の場合スクロールするとFancyBoxを中央に配置します。"
+
+msgid "When true, galleries will be cyclic, allowing you to keep pressing next/back."
+msgstr "有効の場合ギャラリーは繰り返し、次へ/戻るを押すと維持することができます。"
+
+msgid "When true, transparency of content is changed for elastic transitions."
+msgstr "有効の場合コンテンツの透明度は弾性遷移に変更されます。"
+
+msgid "Width of the video."
+msgstr "動画の幅。"
+
+msgid "yes"
+msgstr "はい"
+
+msgid "Set the overflow CSS property to create or hide scrollbars."
+msgstr "スクロールバーを作成したり、非表示にオーバーフローのCSSプロパティを設定します。"
+
+msgid "Nivo Lightbox"
+msgstr "Nivo Lightbox"
+
+msgid "fade scale"
+msgstr "フェードスケール"
+
+msgid "slide left"
+msgstr "左へスライド"
+
+msgid "slide right"
+msgstr "右へスライド"
+
+msgid "slide up"
+msgstr "上へスライド"
+
+msgid "slide down"
+msgstr "下へスライド"
+
+msgid "fall"
+msgstr "フォール"
+
+msgid "Keyboard navigation"
+msgstr "キーボードナビゲーション"
+
+msgid "Enable/Disable keyboard navigation (left/right/escape)."
+msgstr "キーボードナビゲーションを有効/無効にします。(右/左/エスケープ)"
+
+msgid "Error message"
+msgstr "エラーメッセージ"
+
+msgid "Error message if the content cannot be loaded."
+msgstr "コンテンツがロードできない場合のエラーメッセージ。"
+
+msgid "Settings restored to defaults."
+msgstr "設定をデフォルトに復元します。"
+
+msgid "Settings of Nivo script were restored to defaults."
+msgstr "Nivoスクリプトの設定をデフォルトに復元しました。"
+
+msgid "Are you sure you want to reset these settings to defaults?"
+msgstr "これらの設定をデフォルトにリセットしてもよろしいですか？"
+
+msgid "1.4.0.1"
+msgstr "1.4.0.1"
+
+msgid "Allow expand"
+msgstr "拡大を許可"
+
+msgid "Custom events"
+msgstr "カスタムイベント"
+
+msgid "dFactory"
+msgstr "dFactory"
+
+msgid "Enable this if you're having problems with navigation icons not visible on some devices."
+msgstr "いくつかのデバイス上で表示出来ないナビゲーションアイコンの問題を抱えている場合は、これを有効にします。"
+
+msgid "Enable triggering lightbox on custom jquery events."
+msgstr "カスタムjqueryのイベントトリガーのlightboxを有効にします。"
+
+msgid "http://www.dfactory.eu/"
+msgstr "http://www.dfactory.eu/"
+
+msgid "http://www.dfactory.eu/plugins/responsive-lightbox/"
+msgstr "http://www.dfactory.eu/plugins/responsive-lightbox/"
+
+msgid "Responsive Lightbox allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices."
+msgstr "レスポンシブLightboxは、ユーザーがモバイルデバイス用に最適化されたlightbox (オーバーレイ) の効果で画像やギャラリーの大きいバージョンを表示することができます。"
+
+msgid "Enter a space separated list of events."
+msgstr "イベントのスペースで区切って入力します。"
+
+msgid "Expands something."
+msgstr "何かを拡大します。"
+
+msgid "Animation speed."
+msgstr "アニメーション速度。"
+
+msgid "Enable keyboard keys"
+msgstr "キーボードのキーを有効"
+
+msgid "Enable keyboard shortcuts (arrows Left/Right and Esc)."
+msgstr "キーボードショートカット(左右の矢印とEsc) を有効にします。"
+
+msgid "Footer"
+msgstr "フッター"
+
+msgid "Force PNG icons"
+msgstr "PNGアイコンを強制"
+
+msgid "Header"
+msgstr "ヘッダー"
+
+msgid "Image Lightbox"
+msgstr "Image Lightbox"
+
+msgid "Loading place"
+msgstr "場所のロード"
+
+msgid "Preload next image"
+msgstr "次の画像をプリロード"
+
+msgid "Quit after last image"
+msgstr "最後の画像の後に終了する"
+
+msgid "Quit after viewing the last image."
+msgstr "最後の画像を表示した後に終了します。"
+
+msgid "Quit when anything but image is clicked"
+msgstr "画像以外のものをクリックしたときに終了する"
+
+msgid "Quit when anything but the viewed image is clicked."
+msgstr "何かをクリックしたときに表示された画像を終了します。"
+
+msgid "Quit when image is clicked"
+msgstr "画像をクリックしたときに終了する"
+
+msgid "Quit when the viewed image is clicked."
+msgstr "表示された画像をクリックしたときに終了します。"
+
+msgid "Select where all the lightbox scripts should be placed."
+msgstr "すべてのlightboxのスクリプトを置く場所を選択する"
+
+msgid "Silently preload the next image."
+msgstr "サイレントモードで次の画像をプリロードします。"

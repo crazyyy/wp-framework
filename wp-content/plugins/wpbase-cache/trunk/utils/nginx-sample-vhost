@@ -1,0 +1,58 @@
+server {
+	listen   8080;
+	# Redirect www.yoursite.com to yoursite.com
+	server_name			www.{domain_name};
+	port_in_redirect	off;
+	rewrite ^(.*) http://{domain_name}$1 permanent;
+}
+
+server {
+    listen   8080;
+    server_name         {domain_name};
+    
+    index               index.php index.html index.htm;
+    root                /srv/www/{domain_name}/public_html;
+    access_log          /srv/www/{domain_name}/logs/access.log;
+    error_log           /srv/www/{domain_name}/logs/error.log;
+    port_in_redirect 	off;
+    
+    # Use gzip compression
+    # gzip_static       on;  # Uncomment if you compiled Nginx using --with-http_gzip_static_module
+    gzip                on;
+    gzip_disable        "msie6";
+    gzip_vary           on;
+    gzip_proxied        any;
+    gzip_comp_level     5;
+    gzip_buffers        16 8k;
+    gzip_http_version   1.0;
+    gzip_types          text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript image/png image/gif image/jpeg;
+    
+    # Use cached or actual file if they exists, otherwise pass request to WordPress
+    location / {
+        try_files $uri $uri/ /index.php?q=$uri&$args;
+    }
+    
+    # Cache static files for as long as possible - removed xml as an extension to avoid problems with Yoast WordPress SEO plugin which uses WP rewrite API.
+    location ~* \.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|css|rss|atom|js|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
+        try_files       $uri =404;
+        expires         max;
+        access_log      off;
+    }
+    
+    # Deny access to hidden files
+    location ~* /\.ht {
+        deny            all;
+        access_log      off;
+        log_not_found   off;
+    }
+    
+    # Pass PHP scripts on to PHP-FPM
+    location ~* \.php$ {
+        try_files       $uri /index.php;
+        fastcgi_index   index.php;
+        fastcgi_pass    127.0.0.1:9000;
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+    }
+}

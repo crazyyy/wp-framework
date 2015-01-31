@@ -1,0 +1,6 @@
+[01/31/2015 2:12 PM] - FAILURE : Error inserting record into hpx3bi_aiowps_login_activity
+[01/31/2015 2:18 PM] - FAILURE : Delete operation of .htaccess file failed!
+[01/31/2015 2:18 PM] - FAILURE : Import AIOWPS settings from text operation failed!
+[01/31/2015 2:19 PM] - FAILURE : Import AIOWPS settings from text operation failed!
+[01/31/2015 2:19 PM] - FAILURE : Import AIOWPS settings from text operation failed!
+[01/31/2015 2:20 PM] - FAILURE : Import AIOWPS settings from text operation failed!

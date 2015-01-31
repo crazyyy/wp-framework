@@ -42,6 +42,7 @@ class AIOWPSecurity_Feature_Item_Manager
         $this->feature_items[] = new AIOWPSecurity_Feature_Item("user-login-login-lockdown", __("Login Lockdown", "aiowpsecurity"), $this->feature_point_4, $this->sec_level_basic);
         //Login Captcha
         $this->feature_items[] = new AIOWPSecurity_Feature_Item("user-login-captcha", __("Login Captcha", "aiowpsecurity"), $this->feature_point_4, $this->sec_level_basic);
+        $this->feature_items[] = new AIOWPSecurity_Feature_Item("custom-login-captcha", __("Custom Login Captcha", "aiowpsecurity"), $this->feature_point_4, $this->sec_level_basic);
         //Lost Password Captcha
         $this->feature_items[] = new AIOWPSecurity_Feature_Item("lost-password-captcha", __("Lost Password Captcha", "aiowpsecurity"), $this->feature_point_2, $this->sec_level_basic);
         //Login whitelisting
@@ -82,6 +83,8 @@ class AIOWPSecurity_Feature_Item_Manager
         //Brute Force Menu Features
         //Rename Login page
         $this->feature_items[] = new AIOWPSecurity_Feature_Item("bf-rename-login-page", __("Enable Rename Login Page", "aiowpsecurity"), $this->feature_point_2, $this->sec_level_inter);
+        //Login Honeypot
+        $this->feature_items[] = new AIOWPSecurity_Feature_Item("login-honeypot", __("Enable Login Honeypot", "aiowpsecurity"), $this->feature_point_2, $this->sec_level_inter);
         
         //Additional and Advanced firewall
         $this->feature_items[] = new AIOWPSecurity_Feature_Item("firewall-enable-brute-force-attack-prevention", __("Enable Brute Force Attack Prevention", "aiowpsecurity"), $this->feature_point_4, $this->sec_level_advanced);
@@ -96,6 +99,8 @@ class AIOWPSecurity_Feature_Item_Manager
         $this->feature_items[] = new AIOWPSecurity_Feature_Item("block-spambots", __("Block Spambots", "aiowpsecurity"), $this->feature_point_2, $this->sec_level_basic);
         //Comment Captcha
         $this->feature_items[] = new AIOWPSecurity_Feature_Item("comment-form-captcha", __("Comment Captcha", "aiowpsecurity"), $this->feature_point_4, $this->sec_level_basic);
+        //BuddyPress Registration Captcha
+        $this->feature_items[] = new AIOWPSecurity_Feature_Item("bp-register-captcha", __("BuddyPress Registration Captcha", "aiowpsecurity"), $this->feature_point_1, $this->sec_level_basic);
         
         //Filescan
         //File change detection
@@ -183,6 +188,10 @@ class AIOWPSecurity_Feature_Item_Manager
             {
                 $this->check_login_captcha_feature($item);
             }
+            if($item->feature_id == "custom-login-captcha")
+            {
+                $this->check_custom_login_captcha_feature($item);
+            }
             if($item->feature_id == "lost-password-captcha")
             {
                 $this->check_lost_password_captcha_feature($item);
@@ -190,6 +199,10 @@ class AIOWPSecurity_Feature_Item_Manager
             if($item->feature_id == "comment-form-captcha")
             {
                 $this->check_comment_captcha_feature($item);
+            }
+            if($item->feature_id == "bp-register-captcha")
+            {
+                $this->check_bp_register_captcha_feature($item);
             }
             if($item->feature_id == "whitelist-manager-ip-login-whitelisting")
             {
@@ -281,6 +294,11 @@ class AIOWPSecurity_Feature_Item_Manager
                 $this->check_enable_rename_login_page_feature($item);
             }
             
+            if($item->feature_id == "login-honeypot")
+            {
+                $this->check_enable_login_honeypot_feature($item);
+            }
+
             if($item->feature_id == "block-spambots")
             {
                 $this->check_enable_block_spambots_feature($item);
@@ -389,6 +407,18 @@ class AIOWPSecurity_Feature_Item_Manager
         }
     }
 
+    function check_custom_login_captcha_feature($item)
+    {
+        global $aio_wp_security;
+        if ($aio_wp_security->configs->get_value('aiowps_enable_custom_login_captcha') == '1') {
+            $item->set_feature_status($this->feature_active);
+        }
+        else
+        {
+            $item->set_feature_status($this->feature_inactive);
+        }
+    }
+
     function check_lost_password_captcha_feature($item)
     {
         global $aio_wp_security;
@@ -405,6 +435,18 @@ class AIOWPSecurity_Feature_Item_Manager
     {
         global $aio_wp_security;
         if ($aio_wp_security->configs->get_value('aiowps_enable_comment_captcha') == '1') {
+            $item->set_feature_status($this->feature_active);
+        }
+        else
+        {
+            $item->set_feature_status($this->feature_inactive);
+        }
+    }
+
+    function check_bp_register_captcha_feature($item)
+    {
+        global $aio_wp_security;
+        if ($aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha') == '1') {
             $item->set_feature_status($this->feature_active);
         }
         else
@@ -682,6 +724,18 @@ class AIOWPSecurity_Feature_Item_Manager
     {
         global $aio_wp_security;
         if ($aio_wp_security->configs->get_value('aiowps_enable_rename_login_page') == '1') {
+            $item->set_feature_status($this->feature_active);
+        }
+        else
+        {
+            $item->set_feature_status($this->feature_inactive);
+        }
+    }
+
+    function check_enable_login_honeypot_feature($item)
+    {
+        global $aio_wp_security;
+        if ($aio_wp_security->configs->get_value('aiowps_enable_login_honeypot') == '1') {
             $item->set_feature_status($this->feature_active);
         }
         else

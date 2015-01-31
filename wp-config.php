@@ -1,27 +1,21 @@
 <?php
 define('DB_NAME', 'DBNAME');
-
-/** Имя пользователя MySQL */
 define('DB_USER', 'DBUSER');
-
-/** Пароль к базе данных MySQL */
 define('DB_PASSWORD', 'DBPASS');
 
-/** Имя сервера MySQL */
 define('DB_HOST', 'localhost');
 
-/** Кодировка базы данных для создания таблиц. */
-define('DB_CHARSET', 'utf8');
-
-/** Схема сопоставления. Не меняйте, если не уверены. */
-define('DB_COLLATE', '');
-
-// отключаем вп-крон
 define('DISABLE_WP_CRON', true);
-// делаем правки, что бы могло обновлятся без пароля
 define('FS_METHOD', 'direct');
 
-$table_prefix  = 'hpx3bi_';
+define('CACHE_READ_WHITELIST','_transient|posts WHERE ID IN|limit_login_'); // do not read from cache is sql contains these
+define('CACHE_WRITE_WHITELIST','_transient|limit_login_'); // do not reset cache if sql contains these
+
+define('DB_CHARSET', 'utf8');
+define('DB_COLLATE', '');
+
+$table_prefix  = 'jf1uih_';
+
 define('WPLANG', 'ru_RU');
 define('DISALLOW_FILE_EDIT', true);
 define('WP_DEBUG', false);

@@ -67,14 +67,14 @@
 			var matchesYoutube = videoURL.match(/(?:(?:http|https):\/\/)?(?:www\.)?youtube.com\/watch\?v=([a-zA-Z0-9\-_]+)/);
 
 			if(matchesYoutube) {
-				videoToShow = 'http://www.youtube.com/embed/'+matchesYoutube[1];
+				videoToShow = '//www.youtube.com/embed/'+matchesYoutube[1];
 				return true;
 			}
 
 			var matchesVimeo = videoURL.match(/(?:(?:http|https):\/\/)?(?:www\.)?vimeo.com\/([0-9]+)/);
 
 			if (matchesVimeo){
-				videoToShow = 'http://player.vimeo.com/video/'+matchesVimeo[1];
+				videoToShow = '//player.vimeo.com/video/'+matchesVimeo[1];
 				return true;
 			}
 

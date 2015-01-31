@@ -3,7 +3,7 @@
 if (!class_exists('AIO_WP_Security')){
 
 class AIO_WP_Security{
-    var $version = '3.7.5';
+    var $version = '3.8.9';
     var $db_version = '1.6';
     var $plugin_url;
     var $plugin_path;
@@ -57,7 +57,9 @@ class AIO_WP_Security{
         define('AIO_WP_SECURITY_BACKUPS_DIR_NAME', 'aiowps_backups');
         define('AIO_WP_SECURITY_BACKUPS_PATH', AIO_WP_SECURITY_PATH.'/backups');
         define('AIO_WP_SECURITY_LIB_PATH', AIO_WP_SECURITY_PATH.'/lib');
-        define('AIOWPSEC_MANAGEMENT_PERMISSION', 'manage_options');
+        if (!defined('AIOWPSEC_MANAGEMENT_PERMISSION')){//This will allow the user to define custom capability for this constant in wp-config file
+            define('AIOWPSEC_MANAGEMENT_PERMISSION', 'manage_options');
+        }
         define('AIOWPSEC_MENU_SLUG_PREFIX', 'aiowpsec');
         define('AIOWPSEC_MAIN_MENU_SLUG', 'aiowpsec');
         define('AIOWPSEC_SETTINGS_MENU_SLUG', 'aiowpsec_settings');
@@ -125,12 +127,13 @@ class AIO_WP_Security{
     }
     
     static function activate_handler()
-    {   
+    {
         //Only runs when the plugin activates
         include_once ('classes/wp-security-installer.php');
         AIOWPSecurity_Installer::run_installer();
+
         wp_schedule_event(time(), 'hourly', 'aiowps_hourly_cron_event'); //schedule an hourly cron event
-        //wp_schedule_event(time(), 'daily', 'aiowps_daily_cron_event'); //schedule an daily cron event
+        wp_schedule_event(time(), 'daily', 'aiowps_daily_cron_event'); //schedule an daily cron event
         
         do_action('aiowps_activation_complete');
     }
@@ -139,9 +142,9 @@ class AIO_WP_Security{
     {
         //Only runs with the pluign is deactivated
         include_once ('classes/wp-security-deactivation-tasks.php');
-        //AIOWPSecurity_Deactivation::run_deactivation_tasks();
+        AIOWPSecurity_Deactivation::run_deactivation_tasks();
         wp_clear_scheduled_hook('aiowps_hourly_cron_event');
-        //wp_clear_scheduled_hook('aiowps_daily_cron_event');
+        wp_clear_scheduled_hook('aiowps_daily_cron_event');
         if (AIOWPSecurity_Utility::is_multisite_install()){
             delete_site_transient('users_online');
         }
@@ -184,7 +187,7 @@ class AIO_WP_Security{
         $this->user_registration_obj = new AIOWPSecurity_User_Registration();//Do the user login operation tasks
         $this->captcha_obj = new AIOWPSecurity_Captcha();//Do the captcha tasks
         $this->backup_obj = new AIOWPSecurity_Backup();//Object to handle backup tasks
-        $this->scan_obj = new AIOWPSecurity_Scan();//Object to handle backup tasks 
+        $this->scan_obj = new AIOWPSecurity_Scan();//Object to handle scan tasks 
         $this->cron_handler = new AIOWPSecurity_Cronjob_Handler();
         
         add_action('wp_head',array(&$this, 'aiowps_header_content'));
@@ -220,48 +223,24 @@ class AIO_WP_Security{
                 $after_logout_url = esc_url($_GET['after_logout']);
                 AIOWPSecurity_Utility::redirect_to_url($after_logout_url);
             }
-            if(isset($_GET['al_additional_data']))//Inspect the payload and do redirect to login page with a msg and redirect url
+            $additional_data = strip_tags($_GET['al_additional_data']);
+            if(isset($additional_data))
             {
-                $payload = strip_tags($_GET['al_additional_data']);
-                $decoded_payload = base64_decode($payload);
-                parse_str($decoded_payload); 
-                if(!empty($redirect_to)){
-                    $login_url = AIOWPSecurity_Utility::add_query_data_to_url(wp_login_url(),'redirect_to',$redirect_to);
+                $login_url = '';
+                //Inspect the payload and do redirect to login page with a msg and redirect url
+                $logout_payload = (AIOWPSecurity_Utility::is_multisite_install() ? get_site_transient('aiowps_logout_payload') : get_transient('aiowps_logout_payload'));
+                if(!empty($logout_payload['redirect_to'])){
+                    $login_url = AIOWPSecurity_Utility::add_query_data_to_url(wp_login_url(),'redirect_to',$logout_payload['redirect_to']);
                 }
-                if(!empty($msg)){
-                    $login_url .= '&'.$msg;
+                if(!empty($logout_payload['msg'])){
+                    $login_url .= '&'.$logout_payload['msg'];
                 }
                 if(!empty($login_url)){
                     AIOWPSecurity_Utility::redirect_to_url($login_url);
                 }
             }
         }
-    }
-    
-    //This function will dynamically change the upload directory if the user is uploading a file from an aiowps page
-    function aiowps_set_upload_dir($path_data)
-    {
-        $output = array();
-        $originating_url_parsed = parse_url($_SERVER['HTTP_REFERER']);
-        if(isset($originating_url_parsed['query'])){
-            parse_str($originating_url_parsed['query'], $output);
-            
-            if (isset($output['referer'])){
-                if ($output['referer'] == 'aiowpsec') {
-                    $path_data['path'] = WP_CONTENT_DIR . "/" . AIO_WP_SECURITY_BACKUPS_DIR_NAME;
-                    $path_data['url'] = content_url() . "/" . AIO_WP_SECURITY_BACKUPS_DIR_NAME;
-                }
-            }
-        }
-        return $path_data;
-    }
-    
-    function handle_upload( $fileinfo )
-    {
-        remove_filter('upload_dir', array( &$this, 'aiowps_set_upload_dir' ) );
-        return $fileinfo;
-    }
-    
+    }    
     
 }//End of class
 
