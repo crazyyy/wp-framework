@@ -15,3 +15,7 @@ node_modules
 /.hg
 /.hgignore
 sxd
+.sass-cache
+node_modules
+.sublime-gulp.cache
+_gsdata_

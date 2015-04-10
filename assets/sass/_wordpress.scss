@@ -1,0 +1,76 @@
+.wrapper {
+   max-width: 1280px;
+   width: 95%;
+   margin: 0 auto;
+   position: relative;
+}
+::selection,
+::-webkit-selection,
+::-moz-selection {
+   background: #04a4cc;
+   color: #fff;
+   text-shadow: none;
+}
+.alignnone {
+   margin: 5px;
+}
+.aligncenter,
+div.aligncenter {
+   display: block;
+   margin: 5px auto 5px auto;
+}
+.alignright {
+   float: right;
+   margin: 5px 0 20px 20px;
+}
+
+.alignleft {
+   float: left;
+   margin: 5px 20px 20px 0;
+}
+img {
+   &.alignright {
+      float: right;
+      margin: 5px 0 20px 20px;
+   }
+   &.alignnone {
+      margin: 5px 20px 20px 0;
+   }
+   &.alignleft {
+      float: left;
+      margin: 5px 20px 20px 0;
+   }
+   &.aligncenter {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+   }
+}
+
+.wp-caption {
+   background: #fff;
+   border: 1px solid #f0f0f0;
+   max-width: 96%;
+   padding: 5px 3px 10px;
+   text-align: center;
+   img {
+      border: 0 none;
+      height: auto;
+      margin: 0;
+      max-width: 98.5%;
+      padding: 0;
+      width: auto;
+   }
+   .wp-caption-text {
+      font-size: 11px;
+      line-height: 17px;
+      margin: 0;
+      padding: 0 4px 5px;
+   }
+}
+.gallery-caption {
+   font-size: 11px;
+   line-height: 17px;
+   margin: 0;
+   padding: 0 4px 5px;
+}
