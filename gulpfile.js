@@ -1,5 +1,6 @@
-htmlOWp         = true,
-wpThemeName     = 'wp-framework';
+var     htmlOWp         = true,
+        wpThemeName     = 'wp-framework',
+        isProduction    = true;
 
 if (htmlOWp = true) {
     var basePaths = {
@@ -43,22 +44,17 @@ var appFiles = {
 var spriteConfig = {
     imgName: 'sprite.png',
     cssName: '_sprite.scss',
-    imgPath: paths.images.dest + 'sprite.png' // Gets put in the css
+    imgPath: paths.images.dest + 'sprite.png'
 };
-
 var     gulp        =       require('gulp'),
         gutil       =       require('gulp-util'),
-        es          =       require('event-stream'), /* ALARM */
-        
-//         /* ALARM */
-//        wait        =       require('gulp-wait'), /* ALARM */ 
+        es          =       require('event-stream'),
         plugins     =       require("gulp-load-plugins")({
                                 pattern: ['gulp-*', 'gulp.*'],
                                 replaceString: /\bgulp[\-.]/
                             });
 
-var isProduction    = true,
-    sassStyle       = 'compressed';
+var sassStyle       = 'compressed';
 
 if (gutil.env.dev === true) {
     sassStyle       =   'nested',

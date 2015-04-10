@@ -19,3 +19,4 @@ sxd
 node_modules
 .sublime-gulp.cache
 _gsdata_
+npm-debug.log
