@@ -1,6 +1,4 @@
 {
-  "name": "WPFramework",
-  "version": "2014.04.10",
   "devDependencies": {
     "event-stream": "^3.3.0",
     "gulp": "^3.8.11",
@@ -10,6 +8,7 @@
     "gulp-concat": "^2.5.2",
     "gulp-dedupe": "0.0.2",
     "gulp-image-optimization": "^0.1.3",
+    "gulp-livereload": "^3.8.0",
     "gulp-load-plugins": "^0.9.0",
     "gulp-rimraf": "^0.1.1",
     "gulp-sass": "^1.3.3",

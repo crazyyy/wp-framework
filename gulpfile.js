@@ -4,12 +4,12 @@ var     htmlOWp         = true,
 
 if (htmlOWp = true) {
     var basePaths = {
-        dest = './html/'
+        dest: 'html/'
     };
 }
 else {
     var basePaths = {
-        dest = './wordpress/wp-content/themes/'
+        dest: './wordpress/wp-content/themes/'
     };   
 }
 var basePaths = {
@@ -49,6 +49,7 @@ var spriteConfig = {
 var     gulp        =       require('gulp'),
         gutil       =       require('gulp-util'),
         es          =       require('event-stream'),
+        livereload  =       require('gulp-livereload'),
         plugins     =       require("gulp-load-plugins")({
                                 pattern: ['gulp-*', 'gulp.*'],
                                 replaceString: /\bgulp[\-.]/
@@ -78,6 +79,7 @@ gulp.task('css', function () {
         })
         .pipe(plugins.size({showFiles:true}))
         .pipe(plugins.sourcemaps.write('/maps/'))
+        .pipe(livereload())
         .pipe(gulp.dest(paths.styles.dest));
 });
 
@@ -161,17 +163,23 @@ gulp.task('clearcache', function () {
         .pipe(plugins.rimraf());
 });
 
-gulp.task('watch', ['sprite', 'clearcache', 'css', 'style', 'scripts', 'image', 'webp'], function(){
-    gulp.watch(appFiles.styles, ['css', 'style', 'clearcache']).on('change', function(evt) {
-        changeEvent(evt);
-    });
-    gulp.watch(paths.scripts.src + '*.js', ['scripts', 'clearcache']).on('change', function(evt) {
-        changeEvent(evt);
-    });
-    gulp.watch(paths.sprite.src, ['sprite', 'css', 'style', 'clearcache']).on('change', function(evt) {
-        changeEvent(evt);
-    });
-    gulp.watch(paths.images.src, ['image', 'webp', 'clearcache']).on('change', function(evt) {
+// gulp.task('watch', ['sprite', 'clearcache', 'css', 'style', 'scripts', 'image', 'webp'], function(){
+//     gulp.watch(appFiles.styles, ['css', 'style', 'clearcache']).on('change', function(evt) {
+//         changeEvent(evt);
+//     });
+//     gulp.watch(paths.scripts.src + '*.js', ['scripts', 'clearcache']).on('change', function(evt) {
+//         changeEvent(evt);
+//     });
+//     gulp.watch(paths.sprite.src, ['sprite', 'css', 'style', 'clearcache']).on('change', function(evt) {
+//         changeEvent(evt);
+//     });
+//     gulp.watch(paths.images.src, ['image', 'webp', 'clearcache']).on('change', function(evt) {
+//         changeEvent(evt);
+//     });
+// });
+
+gulp.task('watch', ['css'], function(){
+    gulp.watch(appFiles.styles, ['css']).on('change', function(evt) {
         changeEvent(evt);
     });
 });
