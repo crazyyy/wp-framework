@@ -237,6 +237,13 @@ legend {
    white-space: normal;
    *margin-left: -7px;
 }
+::selection,
+::-webkit-selection,
+::-moz-selection {
+  background: #04a4cc;
+  color: #fff;
+  text-shadow: none;
+}
 .clearfix {
    &:before {
       display: table;
