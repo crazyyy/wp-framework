@@ -1,19 +1,19 @@
 var gulp        =		require('gulp'),
-		gutil       =		require('gulp-util'),
-		es          =		require('event-stream'),
-		livereload  =		require('gulp-livereload'),
-		runSequence = 	require('run-sequence'),
-		browserSync = 	require('browser-sync'),
-		reload 			= 	browserSync.reload,
-		plugins     = 	require("gulp-load-plugins")({
-											pattern: ['gulp-*', 'gulp.*'],
-											replaceString: /\bgulp[\-.]/
-										});
+	gutil       =		require('gulp-util'),
+	es          =		require('event-stream'),
+	livereload  =		require('gulp-livereload'),
+	runSequence = 		require('run-sequence'),
+	browserSync = 		require('browser-sync'),
+	reload 		= 		browserSync.reload,
+	plugins     = 		require("gulp-load-plugins")({
+							pattern: ['gulp-*', 'gulp.*'],
+							replaceString: /\bgulp[\-.]/
+						});
 
-var htmlOWp         = false,
-		wpThemeName     = 'wp-framework',
-		isProduction    = true,
-		sassStyle       = 'compressed';
+var htmlOWp         = true,
+	wpThemeName     = 'wp-framework',
+	isProduction    = true,
+	sassStyle       = 'compressed';
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 8', 'ie_mob >= 10', 'ff >= 20', 'chrome >= 24', 'safari >= 5', 'opera >= 12', 'ios >= 7', 'android >= 2.3', '> 1%', 'last 4 versions', 'bb >= 10'
@@ -55,8 +55,8 @@ var paths = {
 		}
 };
 var appFiles = {
-		styles: paths.styles.src + '*.scss',
-		scripts: [paths.scripts.src + '*.js']
+		styles: paths.styles.src + '**/*.scss',
+		scripts: [paths.scripts.src + '**/*.js']
 };
 var spriteConfig = {
 		imgName: 'sprite.png',
@@ -128,6 +128,25 @@ gulp.task('webp', function () {
 		.pipe(plugins.size({showFiles:true}));
 });
 
+// Lint JavaScript
+gulp.task('jshint', function () {
+  return gulp.src(paths.scripts.src)
+    .pipe(reload({stream: true, once: true}))
+    .pipe(plugins.jshint())
+    .pipe(plugins.jshint.reporter('jshint-stylish'));
+});
+
+// Optimize script
+gulp.task('scripts', function(){
+	gulp.src(appFiles.scripts)
+		.pipe(plugins.if('*.js', plugins.uglify()))
+		.pipe(plugins.rename({
+			extname: ".min.js"
+		}))
+		.pipe(plugins.size({showFiles:true}))
+		.pipe(gulp.dest(paths.scripts.dest));
+});
+
 // Compile and automatically prefix stylesheets
 gulp.task('styles', function () {
   // For best performance, don't add Sass partials to `gulp.src`
@@ -143,74 +162,37 @@ gulp.task('styles', function () {
     // Concatenate and minify styles
     .pipe(plugins.if('*.css', plugins.csso()))
     .pipe(gulp.dest(paths.styles.dest))
-    .pipe(livereload())
     .pipe(plugins.size({title: 'styles'}));
 });
 
-// Lint JavaScript
-gulp.task('jshint', function () {
-  return gulp.src(paths.scripts.src)
-    .pipe(reload({stream: true, once: true}))
-    .pipe(plugins.jshint())
-    .pipe(plugins.jshint.reporter('jshint-stylish'))
-
-    // .pipe(plugins.if(!browserSync.active, plugins.jshint.reporter('fail')));
-});
-
-
-
-
-gulp.task('scripts', function(){
-		gulp.src(appFiles.scripts)
-				.pipe(plugins.concat('app.js'))
-				.pipe(gulp.dest(paths.scripts.dest))
-				.pipe(isProduction ? plugins.uglify() : gutil.noop())
-				.pipe(plugins.size({showFiles:true}))
-				.pipe(gulp.dest(paths.scripts.dest));
-});
-
-
-
-
-
-
-
 gulp.task('clearcache', function () {
-		return gulp.src(basePaths.cache, {read: false})
-				.pipe(plugins.wait(500))
-				.pipe(plugins.rimraf());
+	return gulp.src(basePaths.cache, {read: false})
+		.pipe(plugins.wait(500))
+		.pipe(plugins.rimraf());
 });
 
-// gulp.task('watch', ['sprite', 'clearcache', 'css', 'style', 'scripts', 'image', 'webp'], function(){
-//     gulp.watch(appFiles.styles, ['css', 'style', 'clearcache']).on('change', function(evt) {
-//         changeEvent(evt);
-//     });
-//     gulp.watch(paths.scripts.src + '*.js', ['scripts', 'clearcache']).on('change', function(evt) {
-//         changeEvent(evt);
-//     });
-//     gulp.watch(paths.sprite.src, ['sprite', 'css', 'style', 'clearcache']).on('change', function(evt) {
-//         changeEvent(evt);
-//     });
-//     gulp.watch(paths.images.src, ['image', 'webp', 'clearcache']).on('change', function(evt) {
-//         changeEvent(evt);
-//     });
-// });
+gulp.task('default', ['image', 'scripts', 'styles', 'fonts'], function () {
+	browserSync({
+		notify: false,
+		port: 9000,
+		server: {
+			baseDir: basePaths.dest,
+		}
+	});
 
-gulp.task('watch', ['css'], function(){
-		gulp.watch(appFiles.styles, ['css']).on('change', function(evt) {
-				changeEvent(evt);
-		});
+	// watch for changes
+	gulp.watch([
+		basePaths.dest + '*.html',
+		basePaths.dest + '*.php',
+		appFiles.scripts,
+		paths.images.src,
+		paths.fonts.src
+	]).on('change', reload);
+
+	gulp.watch(appFiles.styles, ['styles', reload]);
+	gulp.watch(paths.sprite.src, ['styles', reload]);
+	gulp.watch(paths.fonts.src, ['fonts', reload]);
+	gulp.watch(appFiles.scripts, ['jshint']);
+	gulp.watch(appFiles.scripts, ['scripts', reload]);
+
 });
-
-gulp.task('default', ['css', 'prefixr', 'scripts', 'image', 'clearcache']);
-
-
-
-
-
-
-
-/*
- .pipe(plugins.browsersync.reload({stream:true, once:true}))
-
-*/

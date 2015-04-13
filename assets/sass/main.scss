@@ -6,13 +6,27 @@
 $width: 980px;
 $footer: 100px;
 $footer_margin: $footer - 2 * $footer;
+$color: #444;
+$color_a: #000;
+$trs: all 0.5s;
 
 body {
    font-family: 'Open Sans', sans-serif;
    font-size: 14px;
-   color: #444;
+   color: $color;
    font-weight: normal;
 }
+a {
+	color: $color_a;
+	transition: $trs;
+	&:hover {
+		color: lighten($color_a, 10%);
+	}
+	&:active {
+		color: lighten($color_a, 20%);
+	}
+}
+
 .wrapper {
   width: $width;
   height: auto !important;
@@ -25,6 +39,13 @@ body {
 header {
 
 }
+.logo {
+	display: block;
+	img {
+
+	}
+}
+
 
 .backhead {
    z-index: -50;
@@ -42,8 +63,6 @@ header {
    padding: 0 0 $footer;
 }
 
-
-
 footer {
    position: relative;
    width: 100%;
@@ -57,17 +76,5 @@ footer {
       background-color: #b3d4fc;
    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 @import '_print.scss';

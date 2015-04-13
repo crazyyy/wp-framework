@@ -9,55 +9,34 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, blockquot
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
 }
+html,
+body {
+	height: 100%;
+}
+
 html {
-   font-size: 100%;
-   height: 100%;
-   padding: 0;
-   margin: 0;
-   -webkit-text-size-adjust: 100%;
-       -ms-text-size-adjust: 100%;
-   font-family: sans-serif;
+	-webkit-text-size-adjust: 100%;
+	   -ms-text-size-adjust: 100%;
+	font-family: sans-serif;
 }
 body {
-    line-height: 1;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    position: relative;
+	line-height: 1;
+	width: 100%;
+	position: relative;
 }
 ol, ul {
     list-style: none;
 }
-dl,
-menu,
-ol,
-ul {
-    margin: 1em 0;
-}
-dd {
-    margin: 0 0 0 40px;
-}
-menu,
+dd,
 ol,
 ul {
     padding: 0 0 0 40px;
 }
-blockquote, q {
-    quotes: none;
-}
-
-blockquote {
+blockquote,
+q {
+	quotes: none;
     margin: 1em 40px;
     &:before, &:after {
-        content: '';
-        content: none;
-    }
-}
-q {
-    quotes: none;
-    &:before,
-    &:after {
         content: '';
         content: none;
     }
@@ -72,28 +51,25 @@ a {
         outline: 0;
     }
 }
-h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-    padding: 0;
+b,
+strong {
+	font-weight: bold;
 }
-b, strong {
-    font-weight: bold;
-}
-p, pre {
-    margin: 0 0 18px;
-}
-code, kbd, pre, samp {
-    font-family: monospace, serif;
-    _font-family: 'courier new',monospace;
-    font-size: 1em;
+p,
+pre {
+	margin: 0 0 18px;
 }
 pre {
     white-space: pre;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+code, kbd, pre, samp {
+    font-family: monospace, serif;
+    _font-family: 'courier new',monospace;
+    font-size: 100%;
+}
 button, input, select, textarea {
-    font-family: sans-serif;
     font-size: 100%;
     margin: 0;
     vertical-align: baseline;
@@ -110,7 +86,6 @@ html input[type='button'] {
     cursor: pointer;
     *overflow: visible;
 }
-
 input {
     &[type='reset'],
     &[type='submit'] {
@@ -118,35 +93,33 @@ input {
         cursor: pointer;
         *overflow: visible;
     }
+    &[disabled] {
+    	cursor: default;
+    }
+    &[type='checkbox'],
+    &[type='radio'] {
+    	box-sizing: border-box;
+		padding: 0;
+		*height: 13px;
+		*width: 13px;
+	}
+	&[type='search'] {
+		box-sizing: content-box;
+		&::-webkit-search-cancel-button,
+		&::-webkit-search-decoration {
+			-webkit-appearance: none;
+		}
+	}
 }
 button[disabled] {
    cursor: default;
 }
-input {
-   &[disabled] {
-      cursor: default;
-   }
-   &[type='checkbox'],
-   &[type='radio'] {
-      box-sizing: border-box;
-      padding: 0;
-      *height: 13px;
-      *width: 13px;
-   }
-   &[type='search'] {
-      box-sizing: content-box;
-      &::-webkit-search-cancel-button,
-      &::-webkit-search-decoration {
-         -webkit-appearance: none;
-      }
-   }
-}
+
 button::-moz-focus-inner,
 input::-moz-focus-inner {
    border: 0;
    padding: 0;
 }
-
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -189,7 +162,6 @@ abbr[title] {
 small {
    font-size: 80%;
 }
-
 sub {
    font-size: 75%;
    line-height: 0;
@@ -203,16 +175,12 @@ sup {
    vertical-align: baseline;
    top: -.5em;
 }
-sub {
-   bottom: -.25em;
-}
 nav {
    ul, ol {
       list-style: none;
       list-style-image: none;
    }
 }
-
 img {
    border: 0;
    max-width: 100%;
@@ -245,19 +213,17 @@ legend {
   text-shadow: none;
 }
 .clearfix {
-   &:before {
-      display: table;
-      content: '';
-   }
-   &:after {
-      display: table;
-      content: '';
-      clear: both;
-   }
+	*zoom: 1;
+	&:before {
+		display: table;
+		content: '';
+	}
+	&:after {
+		display: table;
+		content: '';
+		clear: both;
+	}
 }
 .clear {
    clear: both;
-}
-.clearfix {
-   *zoom: 1;
 }
