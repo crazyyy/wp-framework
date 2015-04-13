@@ -10,10 +10,9 @@ var gulp        =		require('gulp'),
 							replaceString: /\bgulp[\-.]/
 						});
 
-var htmlOWp         = true,
+var htmlOWp         = false,
 	wpThemeName     = 'wp-framework',
-	isProduction    = true,
-	sassStyle       = 'compressed';
+	wpDomain		= 'wp-framework.dev';
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 8', 'ie_mob >= 10', 'ff >= 20', 'chrome >= 24', 'safari >= 5', 'opera >= 12', 'ios >= 7', 'android >= 2.3', '> 1%', 'last 4 versions', 'bb >= 10'
@@ -63,12 +62,6 @@ var spriteConfig = {
 		cssName: '_sprite.scss',
 		imgPath: paths.images.dest + 'sprite.png'
 };
-
-// WARN
-if (gutil.env.dev === true) {
-		sassStyle       =   'nested',
-		isProduction    =   false;
-}
 
 var changeEvent = function(evt) {
 	gutil.log('File', gutil.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', gutil.colors.magenta(evt.type));
@@ -172,13 +165,23 @@ gulp.task('clearcache', function () {
 });
 
 gulp.task('default', ['image', 'scripts', 'styles', 'fonts'], function () {
-	browserSync({
-		notify: false,
-		port: 9000,
-		server: {
-			baseDir: basePaths.dest,
-		}
-	});
+	if (htmlOWp == true) {
+		browserSync({
+			notify: false,
+			port: 9000,
+			server: {
+				baseDir: basePaths.dest,
+			}
+		});
+	}
+	else {
+		browserSync({
+			notify: false,
+	        proxy: wpDomain,
+	        host: wpDomain,
+	        port: 8080
+		});
+	}
 
 	// watch for changes
 	gulp.watch([

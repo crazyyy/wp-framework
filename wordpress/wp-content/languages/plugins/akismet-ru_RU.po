@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Akismet 3.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-12-17 22:31+0300\n"
+"PO-Revision-Date: 2015-02-19 06:39+0300\n"
 "Last-Translator: Sergey Biryukov <sergeybiryukov.ru@gmail.com>\n"
 "Language-Team: ru.wordpress.org <sergeybiryukov.ru@gmail.com>\n"
 "Language: ru_RU\n"
@@ -13,21 +13,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 1.7.4\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: S:\\home\\wordpress\\trunk\\wp-content\\plugins\\akismet\n"
 "X-Poedit-SearchPath-0: S:\\home\\wordpress\\trunk\\wp-content\\plugins"
 "\\akismet\n"
 
+#: views/notice.php:96
+msgid ""
+"Your Pro subscription allows the use of Akismet on only one site. Please <a "
+"href=\"http://docs.akismet.com/billing/add-more-sites/\">purchase additional "
+"Pro subscriptions</a> or upgrade to an Enterprise subscription that allows "
+"the use of Akismet on unlimited sites.<br /><br />If you have any questions, "
+"please get in touch with our support team."
+msgstr ""
+"Ваш тарифный план Pro позволяет использовать Akismet только на одном сайте. "
+"Пожалуйста, <a href=\"http://docs.akismet.com/billing/add-more-sites/"
+"\">увеличьте количество сайтов в настройках подписки</a> или перейдите на "
+"план Enterprise, который позволяет использовать Akismet на неограниченном "
+"количестве сайтов.<br /><br />Если у вас есть вопросы &#8212; пожалуйста, "
+"свяжитесь с нашей службой поддержки."
+
 #: views/config.php:97
 msgid ""
-"Spam in the <a href=\"%s\">spam folder</a> older than 1 day is deleted "
+"Spam in the <a href=\"%1$s\">spam folder</a> older than 1 day is deleted "
 "automatically."
 msgid_plural ""
 "Spam in the <a href=\"%1$s\">spam folder</a> older than %2$d days is deleted "
 "automatically."
 msgstr[0] ""
-"Сообщения в <a href=\"%s\">папке спама</a> старше 1 дня автоматически "
+"Сообщения в <a href=\"%1$s\">папке спама</a> старше %2$d дня автоматически "
 "удаляются."
 msgstr[1] ""
 "Сообщения в <a href=\"%1$s\">папке спама</a> старше %2$s дней автоматически "
@@ -35,6 +50,27 @@ msgstr[1] ""
 msgstr[2] ""
 "Сообщения в <a href=\"%1$s\">папке спама</a> старше %2$s дней автоматически "
 "удаляются."
+
+#. Plugin URI of the plugin/theme
+msgid "http://akismet.com/"
+msgstr "http://akismet.com/"
+
+#. Description of the plugin/theme
+msgid ""
+"Used by millions, Akismet is quite possibly the best way in the world to "
+"<strong>protect your blog from comment and trackback spam</strong>. It keeps "
+"your site protected from spam even while you sleep. To get started: 1) Click "
+"the \"Activate\" link to the left of this description, 2) <a href=\"http://"
+"akismet.com/get/\">Sign up for an Akismet API key</a>, and 3) Go to your "
+"Akismet configuration page, and save your API key."
+msgstr ""
+"Вполне возможно, что используемый миллионами людей плагин Akismet &#8212; "
+"лучший в мире способ <strong>защитить ваш блог от спама в комментариях и "
+"обратных ссылках</strong>. Он защищает ваш сайт от спама, даже когда вы "
+"спите. С чего начать: 1) Нажмите ссылку &laquo;Активировать&raquo; слева от "
+"этого описания; 2) <a href=\"http://akismet.com/get/\">Зарегистрируйтесь, "
+"чтобы получить API-ключ Akismet</a>; 3) Перейдите на страницу настройки "
+"Akismet и введите свой API-ключ."
 
 #: class.akismet-admin.php:700
 msgid ""
@@ -165,18 +201,6 @@ msgid ""
 msgstr ""
 "Вы используете ключ Akismet для большего числа сайтов, чем позволяет ваша "
 "подписка Pro."
-
-#: views/notice.php:96
-msgid ""
-"If you would like to use Akismet on more than 10 sites, you will need to <a "
-"href=\"%s\" target=\"_blank\">upgrade to an Enterprise subscription</a>. If "
-"you have any questions, please <a href=\"%s\" target=\"_blank\">get in touch "
-"with our support team</a>"
-msgstr ""
-"Если вы хотите использовать Akismet более чем на 10 сайтах, вам нужно <a "
-"href=\"%s\" target=\"_blank\">перейти на подписку Enterprise</a>. Если у вас "
-"есть вопросы &#8212; пожалуйста, <a href=\"%s\" target=\"_blank\">свяжитесь "
-"с нашей службой поддержки</a>."
 
 #: views/notice.php:98
 msgid "You're using Akismet on far too many sites for your Pro subscription."
@@ -372,10 +396,19 @@ msgid "Safe: always put spam in the Spam folder for review."
 msgstr ""
 "Безопасный: всегда помещать спам в папку &laquo;Спам&raquo; для просмотра."
 
+#. Author of the plugin/theme
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Author URI of the plugin/theme
+msgid "http://automattic.com/wordpress-plugins/"
+msgstr "http://automattic.com/wordpress-plugins/"
+
 #: class.akismet-admin.php:53
 msgid "Comment History"
 msgstr "История комментария"
 
+#. Plugin Name of the plugin/theme
 #: class.akismet-admin.php:76 class.akismet-admin.php:78
 #: class.akismet-admin.php:757 views/config.php:3
 msgid "Akismet"

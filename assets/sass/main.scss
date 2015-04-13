@@ -11,10 +11,10 @@ $color_a: #000;
 $trs: all 0.5s;
 
 body {
-   font-family: 'Open Sans', sans-serif;
-   font-size: 14px;
-   color: $color;
-   font-weight: normal;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	color: $color;
+	font-weight: normal;
 }
 a {
 	color: $color_a;
@@ -28,53 +28,66 @@ a {
 }
 
 .wrapper {
-  width: $width;
-  height: auto !important;
-  height: 100%;
-  min-height: 100%;
-  margin: 0 auto;
-  position: relative;
+	width: 100%;
+	height: auto !important;
+	height: 100%;
+	min-height: 100%;
+	margin: 0 auto;
+	position: relative;
+}
+.inner {
+	width: $width;
+	margin: 0 auto;
+	position: relative;
 }
 
 header {
-
-}
-.logo {
-	display: block;
-	img {
-
+	.logo {
+		display: block;
+		width: 100px;
+		img {
+			max-width: 100%;
+		}
 	}
 }
 
 
 .backhead {
-   z-index: -50;
-   width: 100%;
-   background-repeat: no-repeat;
-   background-position: center;
+	z-index: -50;
+	width: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
 }
 .bkblock0n {
-   position: absolute;
-   top: 0;
-   height: 170px;
+	position: absolute;
+	top: 0;
+	height: 170px;
 }
+
 
 .container {
-   padding: 0 0 $footer;
+	width: $width;
+	padding: 0 0 $footer;
 }
 
+
+
+
+
+
+
 footer {
-   position: relative;
-   width: 100%;
-   height: $footer;
-   margin: $footer_margin auto 0;
-   background-color: #f16529;
-   .mainfooter {
-      width: $width;
-      height: 100%;
-      margin: 0 auto;
-      background-color: #b3d4fc;
-   }
+	position: relative;
+	width: 100%;
+	height: $footer;
+	margin: $footer_margin auto 0;
+	background-color: #f16529;
+	.mainfooter {
+		width: $width;
+		height: 100%;
+		margin: 0 auto;
+		background-color: #b3d4fc;
+	}
 }
 
 @import '_print.scss';
