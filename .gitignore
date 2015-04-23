@@ -7,7 +7,7 @@
 /.hg
 /.hgignore
 _gsdata_
-node_modules
+
 npm-debug.log
 sftp-config.json
 sxd
