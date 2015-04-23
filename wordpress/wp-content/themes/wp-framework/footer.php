@@ -21,7 +21,6 @@
 
 <div class="backhead bkblock0n">
 </div><!-- backhead bkblock0n -->
-
 	<?php wp_footer(); ?>
 </body>
 </html>

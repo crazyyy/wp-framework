@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
   gutil = require('gulp-util'),
   es = require('event-stream'),
-  livereload = require('gulp-livereload'),
   runSequence = require('run-sequence'),
   browserSync = require('browser-sync'),
   reload =  browserSync.reload,
