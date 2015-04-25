@@ -10,7 +10,7 @@ var gulp = require('gulp'),
     replaceString: /\bgulp[\-.]/
   });
 
-var htmlOWp = false,
+var htmlOWp = true,
   wpThemeName = 'wp-framework',
   wpDomain = 'wp-framework.dev';
 
