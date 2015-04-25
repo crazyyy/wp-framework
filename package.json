@@ -11,6 +11,7 @@
     "gulp-dedupe": "0.0.2",
     "gulp-if": "^1.2.5",
     "gulp-image-optimization": "^0.1.3",
+    "gulp-imagemin": "^2.2.1",
     "gulp-jshint": "^1.10.0",
     "gulp-load-plugins": "^0.9.0",
     "gulp-rename": "^1.2.2",
@@ -24,6 +25,7 @@
     "gulp-wait": "0.0.2",
     "gulp-webp": "^2.2.0",
     "gulp.spritesmith": "^3.5.3",
+    "imagemin-pngquant": "^4.1.0",
     "jshint-stylish": "^1.0.1",
     "run-sequence": "^1.0.2"
   },
