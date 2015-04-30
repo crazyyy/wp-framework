@@ -10,6 +10,7 @@ var gulp = require('gulp'),
     replaceString: /\bgulp[\-.]/
   });
 
+/* if work with html == true, else - false */
 var htmlOWp = true,
   wpThemeName = 'wp-framework',
   wpDomain = 'wp-framework.dev';
@@ -81,7 +82,7 @@ gulp.task('imagecp', function () {
 
 // Optimize images
 gulp.task('image', function () {
-  return gulp.src([paths.images.src + '**/*.png', paths.images.src + '**/*.jpg', paths.images.src + '**/*.jpeg', paths.images.src + '**/*.gif'])
+  return gulp.src(paths.images.src + '**/*.{png, jpg, jpeg, .gif}')
     .pipe(plugins.cache(
       plugins.imagemin({
         progressive: true,
