@@ -9,7 +9,7 @@
 //  RU: Подключение собственных шрифтов и скриптов для админки
 function wpeAdminThemeStyle() {
     wp_enqueue_style('wpe-admin-style', get_template_directory_uri() . '/css/admin.css');
-    wp_enqueue_style('wpe-admin-script', get_template_directory_uri() . '/js/admin.min.js');
+    wp_enqueue_style('wpe-admin-script', get_template_directory_uri() . '/js/admin.js');
 }
 add_action('admin_enqueue_scripts', 'wpeAdminThemeStyle');
 
@@ -56,15 +56,13 @@ function wpeHeaderScripts()
 //  Load header scripts (header.php)
 //  RU: Подключение скриптов в шапку (header.php)
         wp_deregister_script('jquery'); // Deregister WordPress jQuery   RU: Отключаю стандартный JQuery WordPress'а
-        wp_register_script('jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js', array(), '1.11.0'); // Google CDN jQuery   RU: Регистрирую JQuery с хостинга Google
+        wp_register_script('jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', array(), '1.11.0'); // Google CDN jQuery   RU: Регистрирую JQuery с хостинга Google
         wp_enqueue_script('jquery'); // Enqueue it!    RU: Подключаю его
-
-//  Load footer scripts (footer.php)
-//  RU: Подключение скриптов в подвал (footer.php)
-        wp_register_script('modernizr', get_template_directory_uri() . '/js/modernizr.min.js', array(), '2.6.2', true); // Modernizr
+        wp_register_script('modernizr', get_template_directory_uri() . '//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js', array(), '2.8.3'); // Modernizr
         wp_enqueue_script('modernizr'); // Enqueue it!
 
-        wp_register_script('wpeScripts', get_template_directory_uri() . '/js/scripts.min.js', array(), '1.0.0', true); // Custom scripts
+//  Load footer scripts (footer.php)
+        wp_register_script('wpeScripts', get_template_directory_uri() . '/js/scripts.js', array(), '1.0.0', true); // Custom scripts
         wp_enqueue_script('wpeScripts'); // Enqueue it!
     }
 }

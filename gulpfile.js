@@ -139,9 +139,6 @@ gulp.task('jshint', function () {
 gulp.task('scripts', function () {
   gulp.src(appFiles.scripts)
     .pipe(plugins.if('*.js', plugins.uglify()))
-    .pipe(plugins.if('*.js', plugins.rename({
-      extname: ".min.js"
-    })))
     .pipe(plugins.size({showFiles: true}))
     .pipe(gulp.dest(paths.scripts.dest));
 });
