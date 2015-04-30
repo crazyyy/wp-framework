@@ -1,3 +1,5 @@
+AddDefaultCharset UTF-8
+php_value memory_limit 512M
 
 # BEGIN All In One WP Security
 #AIOWPS_BLOCK_WP_FILE_ACCESS_START
@@ -151,8 +153,7 @@ RewriteRule .* http://127.0.0.1 [L]
 #AIOWPS_BLOCK_SPAMBOTS_END
 # END All In One WP Security
 
-AddDefaultCharset UTF-8
-php_value memory_limit 265M
+
 
 # BEGIN WordPress
 <IfModule mod_rewrite.c>

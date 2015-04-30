@@ -650,7 +650,7 @@ class P3_Profiler {
 		if ( !empty( $url ) ) {
 			return $url;
 		}
-		$url = remove_query_arg( 'P3_NOCACHE', $_SERVER['REQUEST_URI'] );
+		$url = esc_url( remove_query_arg( 'P3_NOCACHE', $_SERVER['REQUEST_URI'] ) );
 		return $url;
 	}
 

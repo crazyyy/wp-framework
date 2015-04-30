@@ -15,13 +15,13 @@ if ( 'current-scan' == self::$action || !empty( $_REQUEST['current_scan'] ) ) {
 <script type="text/javascript">
 	jQuery( document ).ready( function( $) {
 		$( "#button-current-scan" ).click( function() {
-			location.href = "<?php echo add_query_arg( array( 'p3_action' => 'current-scan', 'name' => null, 'current_scan' => null ) ); ?>";
+			location.href = "<?php echo esc_url_raw( add_query_arg( array( 'p3_action' => 'current-scan', 'name' => null, 'current_scan' => null ) ) ); ?>";
 		});
 		$( "#button-history-scans" ).click( function() {
-			location.href = "<?php echo add_query_arg( array( 'p3_action' => 'list-scans', 'name' => null, 'current_scan' => null ) ); ?>";
+			location.href = "<?php echo esc_url_raw( add_query_arg( array( 'p3_action' => 'list-scans', 'name' => null, 'current_scan' => null ) ) ); ?>";
 		});
 		$( "#button-help" ).click( function() {
-			location.href = "<?php echo add_query_arg( array( 'p3_action' => 'help', 'name' => null, 'current_scan' => null ) ); ?>";
+			location.href = "<?php echo esc_url_raw( add_query_arg( array( 'p3_action' => 'help', 'name' => null, 'current_scan' => null ) ) ); ?>";
 		})
 		$( ".p3-button" ).button();
 		$( "#p3-navbar" ).buttonset();

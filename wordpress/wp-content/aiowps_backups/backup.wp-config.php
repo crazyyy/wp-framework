@@ -14,7 +14,7 @@ define('CACHE_WRITE_WHITELIST','_transient|limit_login_'); // do not reset cache
 define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
 
-$table_prefix  = 'jf1uih_';
+$table_prefix  = '75cotc_';
 
 define('WPLANG', 'ru_RU');
 define('DISALLOW_FILE_EDIT', true);

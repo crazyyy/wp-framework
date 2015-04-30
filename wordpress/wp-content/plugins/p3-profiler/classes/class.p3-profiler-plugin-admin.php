@@ -154,7 +154,7 @@ class P3_Profiler_Plugin_Admin {
 			} catch ( P3_Profiler_No_Data_Exception $e ) {
 				echo '<div class="error"><p>' .
 						sprintf( __( 'No visits recorded during this profiling session.  Check the <a href="%s">help</a> page for more information', 'p3-profiler' ),
-							add_query_arg( array( 'p3_action' => 'help', 'current_scan' => null ) ) . '#q-circumvent-cache"'
+							esc_url( add_query_arg( array( 'p3_action' => 'help', 'current_scan' => null ) ) ) . '#q-circumvent-cache"'
 						) .
 					 '</p></div>';
 				self::$scan = null;
@@ -417,7 +417,7 @@ class P3_Profiler_Plugin_Admin {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 		update_option( 'p3-profiler_debug_log', array() );
-		wp_redirect( add_query_arg( array( 'p3_action' => 'help' ) ) );
+		wp_redirect( esc_url( add_query_arg( array( 'p3_action' => 'help' ) ) ) );
 	}
 
 	/**
