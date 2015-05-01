@@ -1,75 +1,84 @@
 @import '_reset.scss';
+@import '_forms.scss';
 @import '_wordpress.scss';
+@import '_comments.scss';
 @import '_font_fontawesome.scss';
 @import '_font_opensans.scss';
 @import '_sprite.scss';
 @import '_mixin.scss';
-
 $width: 980px;
 $footer: 100px;
 $footer_margin: $footer - 2 * $footer;
 $color: #444;
 $color_a: #000;
-$trs: all 0.5s;
+$trs: all .5s;
 
 body {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    color: $color;
-    font-weight: normal;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+
+  color: $color;
 }
 a {
-    color: $color_a;
-    transition: $trs;
-    &:hover {
-        color: lighten($color_a, 10%);
-    }
-    &:active {
-        color: lighten($color_a, 20%);
-    }
+  transition: $trs;
+
+  color: $color_a;
+  &:hover {
+    color: lighten($color_a, 10%);
+  }
+  &:active {
+    color: lighten($color_a, 20%);
+  }
 }
 
 .wrapper {
-    width: 100%;
-    height: auto !important;
-    height: 100%;
-    min-height: 100%;
-    margin: 0 auto;
-    position: relative;
+  position: relative;
+
+  width: 100%;
+  height: auto !important;
+  height: 100%;
+  min-height: 100%;
+  margin: 0 auto;
 }
 .inner {
-    width: $width;
-    margin: 0 auto;
-    position: relative;
+  position: relative;
+
+  width: $width;
+  margin: 0 auto;
 }
 
 header {
-    .logo {
-        display: block;
-        width: 100px;
-        img {
-            max-width: 100%;
-        }
+  .logo {
+    display: block;
+
+    width: 100px;
+    img {
+      max-width: 100%;
     }
+  }
 }
 
 
 .backhead {
-    z-index: -50;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
+  z-index: -50;
+
+  width: 100%;
+
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .bkblock0n {
-    position: absolute;
-    top: 0;
-    height: 170px;
+  position: absolute;
+  top: 0;
+
+  height: 170px;
 }
 
 
 .container {
-    width: $width;
-    padding: 0 0 $footer;
+  width: $width;
+  padding: 0 0 $footer;
 }
 
 
@@ -79,17 +88,20 @@ header {
 
 
 footer {
-    position: relative;
-    width: 100%;
-    height: $footer;
-    margin: $footer_margin auto 0;
-    background-color: #f16529;
-    .mainfooter {
-        width: $width;
-        height: 100%;
-        margin: 0 auto;
-        background-color: #b3d4fc;
-    }
+  position: relative;
+
+  width: 100%;
+  height: $footer;
+  margin: $footer_margin auto 0;
+
+  background-color: #f16529;
+  .mainfooter {
+    width: $width;
+    height: 100%;
+    margin: 0 auto;
+
+    background-color: #b3d4fc;
+  }
 }
 
 @import '_print.scss';

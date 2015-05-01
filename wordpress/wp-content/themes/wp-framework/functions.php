@@ -10,7 +10,10 @@
 function wpeAdminThemeStyle() {
     wp_enqueue_style('wpe-admin-style', get_template_directory_uri() . '/css/admin.css');
     wp_enqueue_style('wpe-admin-script', get_template_directory_uri() . '/js/admin.js');
+    // Editor Styles
+    add_editor_style( 'editor-style.css' );
 }
+
 add_action('admin_enqueue_scripts', 'wpeAdminThemeStyle');
 
 //  Catch first image from post and display it

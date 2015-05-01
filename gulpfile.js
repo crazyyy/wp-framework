@@ -83,6 +83,7 @@ gulp.task('imagecp', function () {
 // Optimize images
 gulp.task('image', function () {
   return gulp.src(paths.images.src + '**/*.{png, jpg, jpeg, .gif}')
+
     .pipe(plugins.cache(
       plugins.imagemin({
         progressive: true,
@@ -166,8 +167,11 @@ gulp.task('clearcache', function () {
     .pipe(plugins.wait(500))
     .pipe(plugins.rimraf());
 });
+gulp.task('clearPluginCache', function (done) {
+  return plugins.cache.clearAll(done);
+});
 
-gulp.task('default', ['scripts', 'styles', 'fonts'], function () {
+gulp.task('default', ['clearPluginCache', 'scripts', 'styles', 'fonts'], function () {
   if (htmlOWp === true) {
     browserSync({
       notify: false,
@@ -204,7 +208,7 @@ gulp.task('default', ['scripts', 'styles', 'fonts'], function () {
 
 });
 
-gulp.task('serve', ['sprite', 'image', 'webp', 'scripts', 'styles', 'fonts'], function () {
+gulp.task('serve', ['clearPluginCache', 'sprite', 'image', 'webp', 'scripts', 'styles', 'fonts'], function () {
   if (htmlOWp === true) {
     browserSync({
       notify: false,
