@@ -153,10 +153,6 @@ b,
 strong {
   font-weight: bold;
 }
-p,
-pre {
-  margin: 0 0 18px;
-}
 pre {
   white-space: pre;
   white-space: pre-wrap;
@@ -338,13 +334,6 @@ legend {
 
   *margin-left: -7px;
 }
-::selection,
-::-webkit-selection,
-::-moz-selection {
-  color: #fff;
-  background: #04a4cc;
-  text-shadow: none;
-}
 .clearfix {
   *zoom: 1;
   &:before {
@@ -361,16 +350,6 @@ legend {
 }
 .clear {
   clear: both;
-}
-a,
-button,
-input:focus,
-input[type='button'],
-input[type='reset'],
-input[type='submit'],
-textarea:focus,
-.button {
-  transition: all .1s ease-in-out;
 }
 embed,
 iframe,

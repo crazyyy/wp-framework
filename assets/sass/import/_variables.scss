@@ -9,9 +9,8 @@ $heading-line-height: 1.2;
 
 // Other Sizes
 $width: 980px;
-$footer: 100px;
+$footer: 50px;
 $footer_margin: $footer - 2 * $footer;
-
 $base-border-radius: 3px;
 $base-spacing: $base-line-height * 1em;
 $small-spacing: $base-spacing / 2;
@@ -24,8 +23,8 @@ $medium-gray: #999;
 $light-gray: #ddd;
 
 // Font Colors
-$color: $dark-gray;
-$color_a: $blue;
+$base-font-color: $dark-gray;
+$action-color: $blue;
 
 // Border
 $base-border-color: $light-gray;
@@ -36,8 +35,8 @@ $base-background-color: #fff;
 $secondary-background-color: tint($base-border-color, 75%);
 
 // Forms
-$form-box-shadow: inset 0 1px 3px rgba(#000, 0.06);
-$form-box-shadow-focus: $form-box-shadow, 0 0 5px adjust-color($color_a, $lightness: -5%, $alpha: -0.3);
+$form-box-shadow: inset 0 1px 3px rgba(#000, .06);
+$form-box-shadow-focus: $form-box-shadow, 0 0 5px adjust-color($action-color, $lightness: -5%, $alpha: -.3);
 
 // Animations
 $trs: all .15s;
