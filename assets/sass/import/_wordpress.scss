@@ -1,0 +1,52 @@
+.alignnone {
+  margin: $small-spacing;
+}
+.aligncenter,
+div.aligncenter {
+  display: block;
+
+  margin: $small-spacing auto;
+}
+.alignright {
+  float: right;
+
+  margin: $small-spacing 0 $base-spacing $base-spacing;
+}
+.alignleft {
+  float: left;
+
+  margin: $small-spacing $base-spacing $base-spacing 0;
+}
+
+.wp-caption {
+  max-width: 96%;
+  padding: $small-spacing $small-spacing $small-spacing;
+
+  text-align: center;
+
+  border: $base-border;
+  background: #fff;
+  img {
+    width: auto;
+    max-width: 98.5%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+  }
+  .wp-caption-text {
+    font-size: 80%;
+    line-height: $base-line-height;
+
+    margin: 0;
+    padding: 0 $small-spacing $small-spacing;
+  }
+}
+.gallery-caption {
+  font-size: 60%;
+  line-height: $base-line-height;
+
+  margin: 0;
+  padding: 0 $small-spacing $small-spacing;
+}
