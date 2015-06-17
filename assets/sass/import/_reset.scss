@@ -130,7 +130,7 @@ ul {
 }
 blockquote,
 q {
-  margin: 1em 40px;
+  margin: 0;
 
   quotes: none;
   &:before,
@@ -370,11 +370,7 @@ input[type='reset'],
 input[type='submit'],
 textarea:focus,
 .button {
-  -webkit-transition: all .1s ease-in-out;
-     -moz-transition: all .1s ease-in-out;
-      -ms-transition: all .1s ease-in-out;
-       -o-transition: all .1s ease-in-out;
-          transition: all .1s ease-in-out;
+  transition: all .1s ease-in-out;
 }
 embed,
 iframe,

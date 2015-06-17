@@ -21,12 +21,12 @@ $sprite-logo-height: 512px;
 $sprite-logo-total-width: 512px;
 $sprite-logo-total-height: 512px;
 $sprite-logo-image: '../img/sprite.png';
-$sprite-logo: 0px 0px 0px 0px 512px 512px 512px 512px '../img/sprite.png' 'sprite-logo';
+$sprite-logo: (0px, 0px, 0px, 0px, 512px, 512px, 512px, 512px, '../img/sprite.png', 'sprite-logo', );
 $spritesheet-width: 512px;
 $spritesheet-height: 512px;
 $spritesheet-image: '../img/sprite.png';
-$spritesheet-sprites: $sprite-logo;
-$spritesheet: 512px 512px '../img/sprite.png' $spritesheet-sprites;
+$spritesheet-sprites: ($sprite-logo, );
+$spritesheet: (512px, 512px, '../img/sprite.png', $spritesheet-sprites, );
 
 /*
 The provided mixins are intended to be used with the array-like variables

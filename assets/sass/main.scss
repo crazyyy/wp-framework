@@ -1,24 +1,24 @@
-@import '_reset.scss';
-@import '_forms.scss';
-@import '_wordpress.scss';
-@import '_comments.scss';
-@import '_font_fontawesome.scss';
-@import '_font_opensans.scss';
-@import '_sprite.scss';
-@import '_mixin.scss';
-$width: 980px;
-$footer: 100px;
-$footer_margin: $footer - 2 * $footer;
-$color: #444;
-$color_a: #000;
-$trs: all .5s;
+@import 'import/reset';
+@import 'import/variables';
+@import 'import/forms';
+
+
+// @import '_wordpress.scss';
+// @import '_comments.scss';
+// @import '_font_fontawesome.scss';
+// @import '_font_opensans.scss';
+// @import '_sprite.scss';
+// @import '_mixin.scss';
+
 
 body {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
+  font-family: $base-font-family;
+  font-size: $base-font-size;
   font-weight: normal;
+  line-height: $base-line-height;
 
   color: $color;
+  background-color: $base-background-color;
 }
 a {
   transition: $trs;
