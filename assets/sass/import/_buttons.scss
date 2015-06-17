@@ -14,7 +14,7 @@ button {
 
   cursor: pointer;
   user-select: none;
-  transition: all $base-duration $base-timing;
+  transition: $base-transition;
   vertical-align: middle;
   white-space: nowrap;
   text-decoration: none;

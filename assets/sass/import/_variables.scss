@@ -42,3 +42,4 @@ $form-box-shadow-focus: $form-box-shadow, 0 0 5px adjust-color($action-color, $l
 $trs: all .15s;
 $base-duration: 150ms;
 $base-timing: ease;
+$base-transition: background-color $base-duration * 5 $base-timing, color $base-duration * 0.7 $base-timing, opacity $base-duration * 0.3 $base-timing;

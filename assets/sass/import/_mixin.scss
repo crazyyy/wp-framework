@@ -3,6 +3,53 @@
   display: block;
   content: '';
 }
+/*
+  Perfectly Align to Center
+  http://inspirationalpixels.com/articles/10-css-hacks-and-tips
+  By using transform:translate(); and position:absolute;, you can perfectly position something in the center of its parent.
+*/
+.align-center-parent {
+  position:relative;
+}
+
+/* I'm using -webkit- otherwise this won't work on Safari based browsers */
+.align-center {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+}
+
+/*
+  Justify Grid — новое слово в разметке
+  http://habrahabr.ru/post/182146/
+*/
+
+.justify-child {
+  font-size: 0 !important;
+
+  text-align: justify !important;
+  text-justify: distribute-all-lines;
+
+  &:after {
+    display: inline-block;
+
+    width: 100%;
+
+    content: '';
+  }
+  & > * {
+    font-size: medium;
+
+    display: inline-block;
+
+    margin: 0;
+
+    text-align: left;
+    vertical-align: top;
+  }
+}
+
 
 /*
   linear gradient

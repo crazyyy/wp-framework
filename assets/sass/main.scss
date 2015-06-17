@@ -10,8 +10,6 @@
 @import 'font_fontawesome';
 @import 'font_opensans';
 
-
-
 body {
   font-family: $base-font-family;
   font-size: $base-font-size;
@@ -32,39 +30,41 @@ h6 {
   font-family: $heading-font-family;
   font-size: $base-font-size;
   line-height: $heading-line-height;
+
   margin: 0 0 $small-spacing;
 }
-p,pre {
+p,
+pre {
   margin: 0 0 $small-spacing;
 }
 a {
-  color: $action-color;
+  transition: $base-transition;
   text-decoration: none;
-  transition: color 0.1s linear;
 
+  color: $action-color;
   &:active,
   &:focus,
   &:hover {
     color: darken($action-color, 15%);
   }
-
   &:active,
   &:focus {
-    outline: none;
     color: lighten($action-color, 15%);
+    outline: none;
   }
 }
 hr {
+  margin: $base-spacing 0;
+
+  border-top: none;
+  border-right: none;
   border-bottom: $base-border;
   border-left: none;
-  border-right: none;
-  border-top: none;
-  margin: $base-spacing 0;
 }
 img,
 picture {
-  margin: 0;
   max-width: 100%;
+  margin: 0;
 }
 .wrapper {
   position: relative;
@@ -74,70 +74,55 @@ picture {
   height: 100%;
   min-height: 100%;
   margin: 0 auto;
+
+  @extend .clearfix;
 }
 .inner {
   position: relative;
 
   width: $width;
   margin: 0 auto;
+
   @extend .clearfix;
 }
 
 header {
+  background-color: $light-gray;
   .logo {
     display: block;
 
-    width: 100px;
+    width: $width / 10;
     img {
       max-width: 100%;
     }
   }
 }
-
-
-.backhead {
-  z-index: -50;
-
-  width: 100%;
-
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.bkblock0n {
-  position: absolute;
-  top: 0;
-
-  height: 170px;
-}
-
-
-.container {
-  width: $width;
-  padding: 0 0 $footer;
-}
-
-
-
-
-
-footer {
-  position: relative;
-
-  width: 100%;
-  height: $footer;
-  margin: $footer_margin auto 0;
-
-  background-color: #f16529;
-  .mainfooter {
-    width: $width;
-    height: 100%;
-    margin: 0 auto;
-
-    background-color: #b3d4fc;
+nav {
+  ul {
+    @extend .justify-child;
+    @extend .clearfix;
+    li {
+      display: inline-block;
+    }
+  }
+  .headnav {
+    width: $width / 5;
   }
 }
 
+section {
+  padding: 0 0 $footer;
+}
 
+footer {
+  height: $footer;
+  margin: $footer_margin auto 0;
+
+  background-color: $light-gray;
+  .inner {
+    height: $footer;
+  }
+}
 
 
 @import 'import/print';
