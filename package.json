@@ -23,10 +23,8 @@
     "gulp-uncss": "^1.0.1",
     "gulp-util": "^3.0.5",
     "gulp-wait": "0.0.2",
-    "gulp-webp": "^2.3.0",
     "gulp.spritesmith": "^3.8.2",
     "imagemin-pngquant": "^4.1.0",
-    "jshint-stylish": "^1.0.2",
     "run-sequence": "^1.0.2"
   },
   "dependencies": {}
