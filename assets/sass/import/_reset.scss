@@ -96,9 +96,11 @@ figure,
 footer,
 header,
 hgroup,
+main,
 menu,
 nav,
-section {
+section,
+summary {
   display: block;
 }
 html,
@@ -118,6 +120,7 @@ body {
   position: relative;
 
   width: 100%;
+  margin: 0;
 }
 ol,
 ul {
@@ -127,6 +130,9 @@ dd,
 ol,
 ul {
   padding: 0;
+}
+p {
+  hyphens: auto;
 }
 blockquote,
 q {
@@ -140,8 +146,9 @@ q {
   }
 }
 a {
+  background-color: transparent;
   &:focus {
-    outline: thin dotted;
+    outline: 0;
   }
   &:focus,
   &:active,
@@ -183,10 +190,17 @@ textarea {
 textarea {
   overflow: auto;
 
+  resize: vertical;
   vertical-align: top;
 }
+optgroup {
+  font-weight: bold;
+}
 button,
-html input[type='button'] {
+html input[type='button'],
+/* 1 */
+input[type='reset'],
+input[type='submit'] {
   cursor: pointer;
 
   -webkit-appearance: button;
@@ -219,19 +233,36 @@ input {
     }
   }
 }
-button[disabled] {
+button[disabled],
+html input[disabled] {
   cursor: default;
 }
-
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   padding: 0;
 
   border: 0;
 }
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type='search'] {
+  box-sizing: content-box; /* 2 */
+
+  -webkit-appearance: textfield; /* 1 */
+}
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
 table {
   border-spacing: 0;
   border-collapse: collapse;
+  td,
+  th {
+    padding: 0;
+  }
 }
 * {
   box-sizing: border-box;
@@ -263,14 +294,24 @@ video {
   *display: inline;
   *zoom: 1;
 }
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
 audio:not([controls]) {
   display: none;
 
   height: 0;
 }
-[hidden] {
+[hidden],
+template {
   display: none;
 }
+
 abbr[title] {
   border-bottom: 1px dotted;
 }

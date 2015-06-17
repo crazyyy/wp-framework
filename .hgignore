@@ -8,6 +8,7 @@ syntax:glob
 *.sublime-workspace
 .sublime-
 sftp-config.json
+thumbs.db
 
 .git
 \.hg
