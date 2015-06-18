@@ -1,0 +1,68 @@
+$rb-font-path:        "../fonts" !default;
+
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 300;
+  src: url('#{$rb-font-path}/RobotoCondensed-Light.eot');
+  src: local('Roboto Condensed Light'),
+    local('RobotoCondensed-Light'),
+    url('#{$rb-font-path}/RobotoCondensed-Light.eot') format('embedded-opentype'),
+    url('#{$rb-font-path}/RobotoCondensed-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+  src: url('#{$rb-font-path}/RobotoCondensed-Regular.eot');
+  src: local('Roboto Condensed Regular'),
+    local('RobotoCondensed-Regular'),
+    url('#{$rb-font-path}/RobotoCondensed-Regular.eot') format('embedded-opentype'),
+    url('#{$rb-font-path}/RobotoCondensed-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 700;
+  src: url('#{$rb-font-path}/RobotoCondensed-Bold.eot');
+  src: local('Roboto Condensed Regular'),
+    local('RobotoCondensed-Bold'),
+    url('#{$rb-font-path}/RobotoCondensed-Bold.eot') format('embedded-opentype'),
+    url('#{$rb-font-path}/RobotoCondensed-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: italic;
+  font-weight: 300;
+  src: url('#{$rb-font-path}/RobotoCondensed-LightItalic.eot');
+  src: local('Roboto Condensed Light Italic'),
+    local('RobotoCondensed-LightItalic'),
+    url('#{$rb-font-path}/RobotoCondensed-LightItalic.eot') format('embedded-opentype'),
+    url('#{$rb-font-path}/RobotoCondensed-LightItalic.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: italic;
+  font-weight: 400;
+  src: url('#{$rb-font-path}/RobotoCondensed-Italic.eot');
+  src: local('Roboto Condensed Italic'),
+    local('RobotoCondensed-Italic'),
+    url('#{$rb-font-path}/RobotoCondensed-Italic.eot') format('embedded-opentype'),
+    url('#{$rb-font-path}/RobotoCondensed-Italic.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: italic;
+  font-weight: 700;
+  src: url('#{$rb-font-path}/RobotoCondensed-BoldItalic.eot');
+  src: local('Roboto Condensed Bold Italic'),
+    local('RobotoCondensed-BoldItalic'),
+    url('#{$rb-font-path}/RobotoCondensed-BoldItalic.eot') format('embedded-opentype'),
+    url('#{$rb-font-path}/RobotoCondensed-BoldItalic.woff') format('woff');
+}
