@@ -1,42 +1,18 @@
 <?php /* Template Name: Demo Page Template */ get_header(); ?>
-<div class="container inner">
+  <?php if (have_posts()): while (have_posts()) : the_post(); ?>
+    <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-	<!-- section -->
-	<section role="main">
-		<h1 class="title"><?php the_title(); ?></h1>
+      <h1 class="page-title inner-title"><?php the_title(); ?></h1>
+      <?php the_content(); ?>
+      <?php edit_post_link(); ?>
 
-		<?php if (have_posts()): while (have_posts()) : the_post(); ?>
+    </article>
+  <?php endwhile; else: // If 404 page error ?>
+    <article>
 
-			<!-- article -->
-			<article id="post-<?php the_ID(); ?>" <?php post_class('clearfix'); ?>>
+      <h2 class="page-title inner-title"><?php _e( 'Sorry, nothing to display.', 'wpeasy' ); ?></h2>
 
-				<?php the_content(); ?>
-
-				<?php comments_template( '', true ); // Remove if you don't want comments ?>
-
-				<?php edit_post_link(); ?>
-
-			</article>
-			<!-- /article -->
-
-		<?php endwhile; ?>
-
-		<?php else: ?>
-
-			<!-- article -->
-			<article>
-
-				<h2 class="title"><?php _e( 'Sorry, nothing to display.', 'wpeasy' ); ?></h2>
-
-			</article>
-			<!-- /article -->
-
-		<?php endif; ?>
-
-	</section>
-	<!-- /section -->
-
-	<?php get_sidebar(); ?>
-</div>
-<!-- /.container -->
+    </article>
+  <?php endif; ?>
+<?php get_sidebar(); ?>
 <?php get_footer(); ?>

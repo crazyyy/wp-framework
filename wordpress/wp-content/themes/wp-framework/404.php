@@ -1,18 +1,9 @@
 <?php get_header(); ?>
-<div class="container inner">
+  <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-	<!-- section -->
-	<section role="main">
-		<!-- article -->
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<h1 class="title"><?php _e( 'Page not found', 'wpeasy' ); ?></h1>
-			<h2><a href="<?php echo home_url(); ?>"><?php _e( 'Return home?', 'wpeasy' ); ?></a></h2>
-		</article>
-		<!-- /article -->
-	</section>
-	<!-- /section -->
+    <h1 class="ctitle"><?php _e( 'Page not found', 'wpeasy' ); ?></h1>
+    <h2><a href="<?php echo home_url(); ?>"><?php _e( 'Return home?', 'wpeasy' ); ?></a></h2>
 
-	<?php get_sidebar(); ?>
-</div>
-<!-- /.container -->
+  </article>
+<?php get_sidebar(); ?>
 <?php get_footer(); ?>

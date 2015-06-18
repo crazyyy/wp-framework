@@ -114,6 +114,13 @@ nav {
 section {
   padding: 0 0 $footer;
 }
+article {
+  @extend .clearfix;
+}
+.looper {
+  @extend .clearfix;
+}
+
 
 footer {
   height: $footer;
@@ -124,6 +131,5 @@ footer {
     height: $footer;
   }
 }
-
 
 @import 'import/print';
