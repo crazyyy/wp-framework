@@ -1,844 +1,940 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Responsive Lightbox\n"
-"POT-Creation-Date: 2014-09-04 21:25+0100\n"
-"PO-Revision-Date: 2014-09-04 21:25+0100\n"
+"POT-Creation-Date: 2015-06-13 18:20+0100\n"
+"PO-Revision-Date: 2015-05-12 12:06+0100\n"
 "Last-Translator: Bartosz Arendt <info@dfactory.eu>\n"
 "Language-Team: dFactory <info@dfactory.eu>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.7\n"
+"X-Generator: Poedit 1.8.1\n"
 "X-Poedit-KeywordsList: gettext;gettext_noop;__;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../responsive-lightbox.php:294
+#: ../includes/class-settings.php:46
 msgid "prettyPhoto"
 msgstr ""
 
-#: ../responsive-lightbox.php:296
+#: ../includes/class-settings.php:48
 msgid "slow"
 msgstr ""
 
-#: ../responsive-lightbox.php:297
+#: ../includes/class-settings.php:49
 msgid "normal"
 msgstr ""
 
-#: ../responsive-lightbox.php:298
+#: ../includes/class-settings.php:50
 msgid "fast"
 msgstr ""
 
-#: ../responsive-lightbox.php:301
+#: ../includes/class-settings.php:53
 msgid "default"
 msgstr ""
 
-#: ../responsive-lightbox.php:302
+#: ../includes/class-settings.php:54
 msgid "light rounded"
 msgstr ""
 
-#: ../responsive-lightbox.php:303
+#: ../includes/class-settings.php:55
 msgid "dark rounded"
 msgstr ""
 
-#: ../responsive-lightbox.php:304
+#: ../includes/class-settings.php:56
 msgid "light square"
 msgstr ""
 
-#: ../responsive-lightbox.php:305
+#: ../includes/class-settings.php:57
 msgid "dark square"
 msgstr ""
 
-#: ../responsive-lightbox.php:306
+#: ../includes/class-settings.php:58
 msgid "facebook"
 msgstr ""
 
-#: ../responsive-lightbox.php:309
+#: ../includes/class-settings.php:61
 msgid "window"
 msgstr ""
 
-#: ../responsive-lightbox.php:310
+#: ../includes/class-settings.php:62
 msgid "transparent"
 msgstr ""
 
-#: ../responsive-lightbox.php:311
+#: ../includes/class-settings.php:63
 msgid "opaque"
 msgstr ""
 
-#: ../responsive-lightbox.php:312
+#: ../includes/class-settings.php:64
 msgid "direct"
 msgstr ""
 
-#: ../responsive-lightbox.php:313
+#: ../includes/class-settings.php:65
 msgid "gpu"
 msgstr ""
 
-#: ../responsive-lightbox.php:317
+#: ../includes/class-settings.php:69
 msgid "SwipeBox"
 msgstr ""
 
-#: ../responsive-lightbox.php:319
+#: ../includes/class-settings.php:71
 msgid "CSS"
 msgstr ""
 
-#: ../responsive-lightbox.php:320
+#: ../includes/class-settings.php:72
 msgid "jQuery"
 msgstr ""
 
-#: ../responsive-lightbox.php:324
+#: ../includes/class-settings.php:76
 msgid "FancyBox"
 msgstr ""
 
-#: ../responsive-lightbox.php:326
+#: ../includes/class-settings.php:78
 msgid "elastic"
 msgstr ""
 
-#: ../responsive-lightbox.php:327 ../responsive-lightbox.php:348
+#: ../includes/class-settings.php:79 ../includes/class-settings.php:100
+#: ../includes/class-settings.php:801
 msgid "fade"
 msgstr ""
 
-#: ../responsive-lightbox.php:328
+#: ../includes/class-settings.php:80
 msgid "none"
 msgstr ""
 
-#: ../responsive-lightbox.php:331
+#: ../includes/class-settings.php:83
 msgid "auto"
 msgstr ""
 
-#: ../responsive-lightbox.php:332
+#: ../includes/class-settings.php:84
 msgid "yes"
 msgstr ""
 
-#: ../responsive-lightbox.php:333
+#: ../includes/class-settings.php:85
 msgid "no"
 msgstr ""
 
-#: ../responsive-lightbox.php:336
+#: ../includes/class-settings.php:88
 msgid "swing"
 msgstr ""
 
-#: ../responsive-lightbox.php:337
+#: ../includes/class-settings.php:89
 msgid "linear"
 msgstr ""
 
-#: ../responsive-lightbox.php:340
+#: ../includes/class-settings.php:92
 msgid "outside"
 msgstr ""
 
-#: ../responsive-lightbox.php:341
+#: ../includes/class-settings.php:93
 msgid "inside"
 msgstr ""
 
-#: ../responsive-lightbox.php:342
+#: ../includes/class-settings.php:94
 msgid "over"
 msgstr ""
 
-#: ../responsive-lightbox.php:346
+#: ../includes/class-settings.php:98
 msgid "Nivo Lightbox"
 msgstr ""
 
-#: ../responsive-lightbox.php:349
+#: ../includes/class-settings.php:101
 msgid "fade scale"
 msgstr ""
 
-#: ../responsive-lightbox.php:350
+#: ../includes/class-settings.php:102
 msgid "slide left"
 msgstr ""
 
-#: ../responsive-lightbox.php:351
+#: ../includes/class-settings.php:103
 msgid "slide right"
 msgstr ""
 
-#: ../responsive-lightbox.php:352
+#: ../includes/class-settings.php:104
 msgid "slide up"
 msgstr ""
 
-#: ../responsive-lightbox.php:353
+#: ../includes/class-settings.php:105
 msgid "slide down"
 msgstr ""
 
-#: ../responsive-lightbox.php:354
+#: ../includes/class-settings.php:106
 msgid "fall"
 msgstr ""
 
-#: ../responsive-lightbox.php:358
+#: ../includes/class-settings.php:110
 msgid "Image Lightbox"
 msgstr ""
 
-#: ../responsive-lightbox.php:363
-msgid "Enable"
+#: ../includes/class-settings.php:113
+msgid "TosRUs"
 msgstr ""
 
-#: ../responsive-lightbox.php:364
-msgid "Disable"
+#: ../includes/class-settings.php:118
+msgid "None (default)"
 msgstr ""
 
-#: ../responsive-lightbox.php:368
+#: ../includes/class-settings.php:119
+msgid "Image Title"
+msgstr ""
+
+#: ../includes/class-settings.php:120
+msgid "Image Caption"
+msgstr ""
+
+#: ../includes/class-settings.php:121
+msgid "Image Alt Text"
+msgstr ""
+
+#: ../includes/class-settings.php:122
+msgid "Image Description"
+msgstr ""
+
+#: ../includes/class-settings.php:126
 msgid "Header"
 msgstr ""
 
-#: ../responsive-lightbox.php:369
+#: ../includes/class-settings.php:127
 msgid "Footer"
 msgstr ""
 
-#: ../responsive-lightbox.php:374 ../responsive-lightbox.php:475
+#: ../includes/class-settings.php:137
+msgid "Thumbnail"
+msgstr ""
+
+#: ../includes/class-settings.php:138
+msgid "Medium"
+msgstr ""
+
+#: ../includes/class-settings.php:139
+msgid "Large"
+msgstr ""
+
+#: ../includes/class-settings.php:140
+msgid "Full Size (default)"
+msgstr ""
+
+#: ../includes/class-settings.php:150 ../includes/class-settings.php:875
 msgid "General settings"
 msgstr ""
 
-#: ../responsive-lightbox.php:380 ../responsive-lightbox.php:489
-msgid "Lightbox settings"
-msgstr ""
-
-#: ../responsive-lightbox.php:476
+#: ../includes/class-settings.php:159
 msgid "Lightbox script"
 msgstr ""
 
-#: ../responsive-lightbox.php:477
-msgid "Selector"
-msgstr ""
-
-#: ../responsive-lightbox.php:478
-msgid "Galleries"
-msgstr ""
-
-#: ../responsive-lightbox.php:479
-msgid "Gallery image size"
-msgstr ""
-
-#: ../responsive-lightbox.php:480
-msgid "Video links"
-msgstr ""
-
-#: ../responsive-lightbox.php:481
-msgid "Image links"
-msgstr ""
-
-#: ../responsive-lightbox.php:482
-msgid "Single images as gallery"
-msgstr ""
-
-#: ../responsive-lightbox.php:483
-msgid "Custom events"
-msgstr ""
-
-#: ../responsive-lightbox.php:484
-msgid "Loading place"
-msgstr ""
-
-#: ../responsive-lightbox.php:485
-msgid "Deactivation"
-msgstr ""
-
-#: ../responsive-lightbox.php:493
-msgid "Animation type"
-msgstr ""
-
-#: ../responsive-lightbox.php:494
-msgid "Force PNG icons"
-msgstr ""
-
-#: ../responsive-lightbox.php:495
-msgid "Top and bottom bars"
-msgstr ""
-
-#: ../responsive-lightbox.php:496
-msgid "Video max width"
-msgstr ""
-
-#: ../responsive-lightbox.php:500 ../responsive-lightbox.php:557
-msgid "Animation speed"
-msgstr ""
-
-#: ../responsive-lightbox.php:501
-msgid "Slideshow"
-msgstr ""
-
-#: ../responsive-lightbox.php:502
-msgid "Slideshow autoplay"
-msgstr ""
-
-#: ../responsive-lightbox.php:503 ../responsive-lightbox.php:533
-msgid "Opacity"
-msgstr ""
-
-#: ../responsive-lightbox.php:504
-msgid "Show title"
-msgstr ""
-
-#: ../responsive-lightbox.php:505
-msgid "Allow resize big images"
-msgstr ""
-
-#: ../responsive-lightbox.php:506
-msgid "Allow expand"
-msgstr ""
-
-#: ../responsive-lightbox.php:507 ../responsive-lightbox.php:545
-msgid "Video width"
-msgstr ""
-
-#: ../responsive-lightbox.php:508 ../responsive-lightbox.php:546
-msgid "Video height"
-msgstr ""
-
-#: ../responsive-lightbox.php:509
-msgid "Theme"
-msgstr ""
-
-#: ../responsive-lightbox.php:510
-msgid "Horizontal padding"
-msgstr ""
-
-#: ../responsive-lightbox.php:511
-msgid "Hide Flash"
-msgstr ""
-
-#: ../responsive-lightbox.php:512
-msgid "Flash Window Mode (wmode)"
-msgstr ""
-
-#: ../responsive-lightbox.php:513
-msgid "Video autoplay"
-msgstr ""
-
-#: ../responsive-lightbox.php:514 ../responsive-lightbox.php:522
-msgid "Modal"
-msgstr ""
-
-#: ../responsive-lightbox.php:515
-msgid "Deeplinking"
-msgstr ""
-
-#: ../responsive-lightbox.php:516
-msgid "Overlay gallery"
-msgstr ""
-
-#: ../responsive-lightbox.php:517
-msgid "Keyboard shortcuts"
-msgstr ""
-
-#: ../responsive-lightbox.php:518
-msgid "Social (Twitter, Facebook)"
-msgstr ""
-
-#: ../responsive-lightbox.php:523
-msgid "Show overlay"
-msgstr ""
-
-#: ../responsive-lightbox.php:524
-msgid "Show close button"
-msgstr ""
-
-#: ../responsive-lightbox.php:525
-msgid "Enable escape button"
-msgstr ""
-
-#: ../responsive-lightbox.php:526
-msgid "Hide on overlay click"
-msgstr ""
-
-#: ../responsive-lightbox.php:527
-msgid "Hide on content click"
-msgstr ""
-
-#: ../responsive-lightbox.php:528
-msgid "Cyclic"
-msgstr ""
-
-#: ../responsive-lightbox.php:529
-msgid "Show nav arrows"
-msgstr ""
-
-#: ../responsive-lightbox.php:530
-msgid "Auto scale"
-msgstr ""
-
-#: ../responsive-lightbox.php:531
-msgid "Scrolling (in/out)"
-msgstr ""
-
-#: ../responsive-lightbox.php:532
-msgid "Center on scroll"
-msgstr ""
-
-#: ../responsive-lightbox.php:534
-msgid "Overlay opacity"
-msgstr ""
-
-#: ../responsive-lightbox.php:535
-msgid "Overlay color"
-msgstr ""
-
-#: ../responsive-lightbox.php:536
-msgid "Title show"
-msgstr ""
-
-#: ../responsive-lightbox.php:537
-msgid "Title position"
-msgstr ""
-
-#: ../responsive-lightbox.php:538
-msgid "Transition (in/out)"
-msgstr ""
-
-#: ../responsive-lightbox.php:539
-msgid "Easings (in/out)"
-msgstr ""
-
-#: ../responsive-lightbox.php:540
-msgid "Speed (in/out)"
-msgstr ""
-
-#: ../responsive-lightbox.php:541
-msgid "Change speed"
-msgstr ""
-
-#: ../responsive-lightbox.php:542
-msgid "Change fade"
-msgstr ""
-
-#: ../responsive-lightbox.php:543
-msgid "Padding"
-msgstr ""
-
-#: ../responsive-lightbox.php:544
-msgid "Margin"
-msgstr ""
-
-#: ../responsive-lightbox.php:550
-msgid "Effect"
-msgstr ""
-
-#: ../responsive-lightbox.php:551
-msgid "Click overlay to close"
-msgstr ""
-
-#: ../responsive-lightbox.php:552
-msgid "Keyboard navigation"
-msgstr ""
-
-#: ../responsive-lightbox.php:553
-msgid "Error message"
-msgstr ""
-
-#: ../responsive-lightbox.php:558
-msgid "Preload next image"
-msgstr ""
-
-#: ../responsive-lightbox.php:559
-msgid "Enable keyboard keys"
-msgstr ""
-
-#: ../responsive-lightbox.php:560
-msgid "Quit after last image"
-msgstr ""
-
-#: ../responsive-lightbox.php:561
-msgid "Quit when image is clicked"
-msgstr ""
-
-#: ../responsive-lightbox.php:562
-msgid "Quit when anything but image is clicked"
-msgstr ""
-
-#: ../responsive-lightbox.php:582
+#: ../includes/class-settings.php:165
 msgid "Select your preffered ligthbox effect script."
 msgstr ""
 
-#: ../responsive-lightbox.php:592
-msgid "Select to which rel selector lightbox effect will be applied to."
+#: ../includes/class-settings.php:172
+msgid "Selector"
 msgstr ""
 
-#: ../responsive-lightbox.php:612
-msgid "Enable triggering lightbox on custom jquery events."
+#: ../includes/class-settings.php:175
+msgid "Enter the rel selector lightbox effect will be applied to."
 msgstr ""
 
-#: ../responsive-lightbox.php:615
-msgid "Enter a space separated list of events."
+#: ../includes/class-settings.php:178
+msgid "Image links"
 msgstr ""
 
-#: ../responsive-lightbox.php:636
-msgid "Select where all the lightbox scripts should be placed."
-msgstr ""
-
-#: ../responsive-lightbox.php:654
-msgid "Add lightbox to WordPress image galleries by default."
-msgstr ""
-
-#: ../responsive-lightbox.php:674
-msgid ""
-"By default WP gallery links point to full size images only. Enable that to "
-"modify the image size of native WP gallery image links."
-msgstr ""
-
-#: ../responsive-lightbox.php:684
-msgid "full"
-msgstr ""
-
-#: ../responsive-lightbox.php:693
-msgid "Select image size for gallery image links."
-msgstr ""
-
-#: ../responsive-lightbox.php:712
-msgid "Add lightbox to YouTube and Vimeo video links by default."
-msgstr ""
-
-#: ../responsive-lightbox.php:730
+#: ../includes/class-settings.php:181
 msgid "Add lightbox to WordPress image links by default."
 msgstr ""
 
-#: ../responsive-lightbox.php:748
+#: ../includes/class-settings.php:184
+msgid "Single images as gallery"
+msgstr ""
+
+#: ../includes/class-settings.php:187
 msgid "Display single post images as a gallery."
 msgstr ""
 
-#: ../responsive-lightbox.php:766
-msgid "Delete settings on plugin deactivation."
+#: ../includes/class-settings.php:190
+msgid "Galleries"
 msgstr ""
 
-#: ../responsive-lightbox.php:784
+#: ../includes/class-settings.php:193
+msgid "Add lightbox to WordPress image galleries by default."
+msgstr ""
+
+#: ../includes/class-settings.php:196
+msgid "Gallery image size"
+msgstr ""
+
+#: ../includes/class-settings.php:199
+msgid "Select image size for gallery image links."
+msgstr ""
+
+#: ../includes/class-settings.php:203
+msgid "Gallery image title"
+msgstr ""
+
+#: ../includes/class-settings.php:206
+msgid "Select title for images in native WordPress galleries."
+msgstr ""
+
+#: ../includes/class-settings.php:210
+msgid "Force gallery lightbox"
+msgstr ""
+
+#: ../includes/class-settings.php:213
+msgid ""
+"Try to force lightbox for custom WP gallery replacements, like Jetpack tiled "
+"galleries."
+msgstr ""
+
+#: ../includes/class-settings.php:216
+msgid "Video links"
+msgstr ""
+
+#: ../includes/class-settings.php:219
+msgid "Add lightbox to YouTube and Vimeo video links by default."
+msgstr ""
+
+#: ../includes/class-settings.php:222
+msgid "Custom events"
+msgstr ""
+
+#: ../includes/class-settings.php:228
+msgid "Enable triggering lightbox on custom jQuery events."
+msgstr ""
+
+#: ../includes/class-settings.php:232
+msgid "Enter a space separated list of events."
+msgstr ""
+
+#: ../includes/class-settings.php:237
+msgid "Loading place"
+msgstr ""
+
+#: ../includes/class-settings.php:240
+msgid "Select where all the lightbox scripts should be placed."
+msgstr ""
+
+#: ../includes/class-settings.php:244
+msgid "Conditional loading"
+msgstr ""
+
+#: ../includes/class-settings.php:247
+msgid ""
+"Enable to load scripts and styles only on pages that have images or "
+"galleries in post content."
+msgstr ""
+
+#: ../includes/class-settings.php:250
+msgid "Delete data"
+msgstr ""
+
+#: ../includes/class-settings.php:253
+msgid "Delete all plugin settings on deactivation."
+msgstr ""
+
+#: ../includes/class-settings.php:263 ../includes/class-settings.php:881
+msgid "Lightbox settings"
+msgstr ""
+
+#: ../includes/class-settings.php:281
+msgid "Animation type"
+msgstr ""
+
+#: ../includes/class-settings.php:285
 msgid "Select a method of applying a lightbox effect."
 msgstr ""
 
-#: ../responsive-lightbox.php:802
-msgid ""
-"Disable if you don't want to top and bottom bars to be hidden after a period "
-"of time."
+#: ../includes/class-settings.php:290
+msgid "Force PNG icons"
 msgstr ""
 
-#: ../responsive-lightbox.php:805
-msgid ""
-"Enter the time after which the top and bottom bars will be hidden (when "
-"hiding is enabled)."
-msgstr ""
-
-#: ../responsive-lightbox.php:816
-msgid "Enter the max video width in a lightbox."
-msgstr ""
-
-#: ../responsive-lightbox.php:834
+#: ../includes/class-settings.php:293
 msgid ""
 "Enable this if you're having problems with navigation icons not visible on "
 "some devices."
 msgstr ""
 
-#: ../responsive-lightbox.php:852
+#: ../includes/class-settings.php:297
+msgid "Hide close on mobile"
+msgstr ""
+
+#: ../includes/class-settings.php:300
+msgid "Hide the close button on mobile devices."
+msgstr ""
+
+#: ../includes/class-settings.php:304
+msgid "Remove bars on mobile"
+msgstr ""
+
+#: ../includes/class-settings.php:307
+msgid "Hide the top and bottom bars on mobile devices."
+msgstr ""
+
+#: ../includes/class-settings.php:311
+msgid "Top and bottom bars"
+msgstr ""
+
+#: ../includes/class-settings.php:317
+msgid "Hide top and bottom bars after a period of time."
+msgstr ""
+
+#: ../includes/class-settings.php:322
+msgid ""
+"Enter the time after which the top and bottom bars will be hidden (when "
+"hiding is enabled)."
+msgstr ""
+
+#: ../includes/class-settings.php:329
+msgid "Video max width"
+msgstr ""
+
+#: ../includes/class-settings.php:332
+msgid "Enter the max video width in a lightbox."
+msgstr ""
+
+#: ../includes/class-settings.php:337
+msgid "Loop at end"
+msgstr ""
+
+#: ../includes/class-settings.php:340
+msgid "True will return to the first image after the last image is reached."
+msgstr ""
+
+#: ../includes/class-settings.php:352 ../includes/class-settings.php:744
+msgid "Animation speed"
+msgstr ""
+
+#: ../includes/class-settings.php:356
 msgid "Select animation speed for lightbox effect."
 msgstr ""
 
-#: ../responsive-lightbox.php:870
-msgid "Display images as slideshow."
+#: ../includes/class-settings.php:361
+msgid "Slideshow"
 msgstr ""
 
-#: ../responsive-lightbox.php:873
+#: ../includes/class-settings.php:367
+msgid "Display images as slideshow"
+msgstr ""
+
+#: ../includes/class-settings.php:372
 msgid "Enter time (in miliseconds)."
 msgstr ""
 
-#: ../responsive-lightbox.php:892
+#: ../includes/class-settings.php:379
+msgid "Slideshow autoplay"
+msgstr ""
+
+#: ../includes/class-settings.php:382 ../includes/class-settings.php:826
 msgid "Automatically start slideshow."
 msgstr ""
 
-#: ../responsive-lightbox.php:905
+#: ../includes/class-settings.php:386 ../includes/class-settings.php:588
+msgid "Opacity"
+msgstr ""
+
+#: ../includes/class-settings.php:389
 msgid "Value between 0 and 100, 100 for no opacity."
 msgstr ""
 
-#: ../responsive-lightbox.php:923
-msgid "Display image tiltle."
+#: ../includes/class-settings.php:395
+msgid "Show title"
 msgstr ""
 
-#: ../responsive-lightbox.php:941
+#: ../includes/class-settings.php:398
+msgid "Display image title."
+msgstr ""
+
+#: ../includes/class-settings.php:402
+msgid "Allow resize big images"
+msgstr ""
+
+#: ../includes/class-settings.php:405
 msgid "Resize the photos bigger than viewport."
 msgstr ""
 
-#: ../responsive-lightbox.php:959
-msgid "Expands something."
+#: ../includes/class-settings.php:409
+msgid "Allow expand"
 msgstr ""
 
-#: ../responsive-lightbox.php:969 ../responsive-lightbox.php:979
-msgid "in pixels"
+#: ../includes/class-settings.php:412
+msgid "Allow expanding images."
 msgstr ""
 
-#: ../responsive-lightbox.php:997
-msgid "Select theme for lightbox effect."
+#: ../includes/class-settings.php:416 ../includes/class-settings.php:682
+msgid "Video width"
 msgstr ""
 
-#: ../responsive-lightbox.php:1007
-msgid "Horizontal padding (in pixels)."
+#: ../includes/class-settings.php:423 ../includes/class-settings.php:690
+msgid "Video height"
 msgstr ""
 
-#: ../responsive-lightbox.php:1025
+#: ../includes/class-settings.php:430
+msgid "Theme"
+msgstr ""
+
+#: ../includes/class-settings.php:433
+msgid "Select the theme for lightbox effect."
+msgstr ""
+
+#: ../includes/class-settings.php:438
+msgid "Horizontal padding"
+msgstr ""
+
+#: ../includes/class-settings.php:445
+msgid "Hide Flash"
+msgstr ""
+
+#: ../includes/class-settings.php:448
 msgid ""
-"Hides all the flash object on a page. Enable this if flash appears over "
+"Hide all the flash objects on a page. Enable this if flash appears over "
 "prettyPhoto."
 msgstr ""
 
-#: ../responsive-lightbox.php:1043
+#: ../includes/class-settings.php:452
+msgid "Flash Window Mode (wmode)"
+msgstr ""
+
+#: ../includes/class-settings.php:455
 msgid "Select flash window mode."
 msgstr ""
 
-#: ../responsive-lightbox.php:1061
+#: ../includes/class-settings.php:460
+msgid "Video autoplay"
+msgstr ""
+
+#: ../includes/class-settings.php:463
 msgid "Automatically start videos."
 msgstr ""
 
-#: ../responsive-lightbox.php:1079
+#: ../includes/class-settings.php:467 ../includes/class-settings.php:510
+msgid "Modal"
+msgstr ""
+
+#: ../includes/class-settings.php:470
 msgid "If set to true, only the close button will close the window."
 msgstr ""
 
-#: ../responsive-lightbox.php:1097
+#: ../includes/class-settings.php:474
+msgid "Deeplinking"
+msgstr ""
+
+#: ../includes/class-settings.php:477
 msgid "Allow prettyPhoto to update the url to enable deeplinking."
 msgstr ""
 
-#: ../responsive-lightbox.php:1115
+#: ../includes/class-settings.php:481
+msgid "Overlay gallery"
+msgstr ""
+
+#: ../includes/class-settings.php:484
 msgid "If enabled, a gallery will overlay the fullscreen image on mouse over."
 msgstr ""
 
-#: ../responsive-lightbox.php:1133
+#: ../includes/class-settings.php:488
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: ../includes/class-settings.php:491
 msgid "Set to false if you open forms inside prettyPhoto."
 msgstr ""
 
-#: ../responsive-lightbox.php:1151
+#: ../includes/class-settings.php:495
+msgid "Social (Twitter, Facebook)"
+msgstr ""
+
+#: ../includes/class-settings.php:498
 msgid "Display links to Facebook and Twitter."
 msgstr ""
 
-#: ../responsive-lightbox.php:1169
-msgid "The transition type."
-msgstr ""
-
-#: ../responsive-lightbox.php:1179
-msgid "Space between FancyBox wrapper and content."
-msgstr ""
-
-#: ../responsive-lightbox.php:1189
-msgid "Space between viewport and FancyBox wrapper."
-msgstr ""
-
-#: ../responsive-lightbox.php:1207
+#: ../includes/class-settings.php:513
 msgid ""
-"When true, \"overlayShow\" is set to TRUE and \"hideOnOverlayClick\", "
+"When true, \"overlayShow\" is set to true and \"hideOnOverlayClick\", "
 "\"hideOnContentClick\", \"enableEscapeButton\", \"showCloseButton\" are set "
-"to FALSE."
+"to false."
 msgstr ""
 
-#: ../responsive-lightbox.php:1225
+#: ../includes/class-settings.php:517
+msgid "Show overlay"
+msgstr ""
+
+#: ../includes/class-settings.php:520
 msgid "Toggle overlay."
 msgstr ""
 
-#: ../responsive-lightbox.php:1243
+#: ../includes/class-settings.php:524
+msgid "Show close button"
+msgstr ""
+
+#: ../includes/class-settings.php:527
 msgid "Toggle close button."
 msgstr ""
 
-#: ../responsive-lightbox.php:1261
+#: ../includes/class-settings.php:531
+msgid "Enable escape button"
+msgstr ""
+
+#: ../includes/class-settings.php:534
 msgid "Toggle if pressing Esc button closes FancyBox."
 msgstr ""
 
-#: ../responsive-lightbox.php:1279
+#: ../includes/class-settings.php:538
+msgid "Hide on overlay click"
+msgstr ""
+
+#: ../includes/class-settings.php:541
 msgid "Toggle if clicking the overlay should close FancyBox."
 msgstr ""
 
-#: ../responsive-lightbox.php:1297
+#: ../includes/class-settings.php:545
+msgid "Hide on content click"
+msgstr ""
+
+#: ../includes/class-settings.php:548
 msgid "Toggle if clicking the content should close FancyBox."
 msgstr ""
 
-#: ../responsive-lightbox.php:1315
+#: ../includes/class-settings.php:552
+msgid "Cyclic"
+msgstr ""
+
+#: ../includes/class-settings.php:555
 msgid ""
 "When true, galleries will be cyclic, allowing you to keep pressing next/back."
 msgstr ""
 
-#: ../responsive-lightbox.php:1333
+#: ../includes/class-settings.php:559
+msgid "Show nav arrows"
+msgstr ""
+
+#: ../includes/class-settings.php:562
 msgid "Toggle navigation arrows."
 msgstr ""
 
-#: ../responsive-lightbox.php:1351
+#: ../includes/class-settings.php:566
+msgid "Auto scale"
+msgstr ""
+
+#: ../includes/class-settings.php:569
 msgid "If true, FancyBox is scaled to fit in viewport."
 msgstr ""
 
-#: ../responsive-lightbox.php:1369
+#: ../includes/class-settings.php:573
+msgid "Scrolling (in/out)"
+msgstr ""
+
+#: ../includes/class-settings.php:576
 msgid "Set the overflow CSS property to create or hide scrollbars."
 msgstr ""
 
-#: ../responsive-lightbox.php:1387
+#: ../includes/class-settings.php:581
+msgid "Center on scroll"
+msgstr ""
+
+#: ../includes/class-settings.php:584
 msgid "When true, FancyBox is centered while scrolling page."
 msgstr ""
 
-#: ../responsive-lightbox.php:1405
+#: ../includes/class-settings.php:591
 msgid "When true, transparency of content is changed for elastic transitions."
 msgstr ""
 
-#: ../responsive-lightbox.php:1418
+#: ../includes/class-settings.php:595
+msgid "Overlay opacity"
+msgstr ""
+
+#: ../includes/class-settings.php:598
 msgid "Opacity of the overlay."
 msgstr ""
 
-#: ../responsive-lightbox.php:1428
+#: ../includes/class-settings.php:604
+msgid "Overlay color"
+msgstr ""
+
+#: ../includes/class-settings.php:607
 msgid "Color of the overlay."
 msgstr ""
 
-#: ../responsive-lightbox.php:1446
+#: ../includes/class-settings.php:611
+msgid "Title show"
+msgstr ""
+
+#: ../includes/class-settings.php:614
 msgid "Toggle title."
 msgstr ""
 
-#: ../responsive-lightbox.php:1464
+#: ../includes/class-settings.php:618
+msgid "Title position"
+msgstr ""
+
+#: ../includes/class-settings.php:621
 msgid "The position of title."
 msgstr ""
 
-#: ../responsive-lightbox.php:1482
+#: ../includes/class-settings.php:626
+msgid "Transition (in/out)"
+msgstr ""
+
+#: ../includes/class-settings.php:629
+msgid "The transition type."
+msgstr ""
+
+#: ../includes/class-settings.php:634
+msgid "Easings (in/out)"
+msgstr ""
+
+#: ../includes/class-settings.php:637
 msgid "Easing used for elastic animations."
 msgstr ""
 
-#: ../responsive-lightbox.php:1492
+#: ../includes/class-settings.php:642
+msgid "Speed (in/out)"
+msgstr ""
+
+#: ../includes/class-settings.php:645
 msgid "Speed of the fade and elastic transitions, in milliseconds."
 msgstr ""
 
-#: ../responsive-lightbox.php:1502
+#: ../includes/class-settings.php:650
+msgid "Change speed"
+msgstr ""
+
+#: ../includes/class-settings.php:653
 msgid "Speed of resizing when changing gallery items, in milliseconds."
 msgstr ""
 
-#: ../responsive-lightbox.php:1512
+#: ../includes/class-settings.php:658
+msgid "Change fade"
+msgstr ""
+
+#: ../includes/class-settings.php:661
 msgid "Speed of the content fading while changing gallery items."
 msgstr ""
 
-#: ../responsive-lightbox.php:1522
+#: ../includes/class-settings.php:666
+msgid "Padding"
+msgstr ""
+
+#: ../includes/class-settings.php:669
+msgid "Space between FancyBox wrapper and content."
+msgstr ""
+
+#: ../includes/class-settings.php:674
+msgid "Margin"
+msgstr ""
+
+#: ../includes/class-settings.php:677
+msgid "Space between viewport and FancyBox wrapper."
+msgstr ""
+
+#: ../includes/class-settings.php:685
 msgid "Width of the video."
 msgstr ""
 
-#: ../responsive-lightbox.php:1532
+#: ../includes/class-settings.php:693
 msgid "Height of the video."
 msgstr ""
 
-#: ../responsive-lightbox.php:1550
+#: ../includes/class-settings.php:706
+msgid "Effect"
+msgstr ""
+
+#: ../includes/class-settings.php:709
 msgid "The effect to use when showing the lightbox."
 msgstr ""
 
-#: ../responsive-lightbox.php:1568
-msgid "Enable/Disable keyboard navigation (left/right/escape)."
+#: ../includes/class-settings.php:714 ../includes/class-settings.php:813
+msgid "Keyboard navigation"
 msgstr ""
 
-#: ../responsive-lightbox.php:1586
-msgid "Eneble to close lightbox on overlay click."
+#: ../includes/class-settings.php:717 ../includes/class-settings.php:816
+msgid "Enable keyboard navigation (left/right/escape)."
 msgstr ""
 
-#: ../responsive-lightbox.php:1596
+#: ../includes/class-settings.php:721
+msgid "Click overlay to close"
+msgstr ""
+
+#: ../includes/class-settings.php:724
+msgid "Enable to close lightbox on overlay click."
+msgstr ""
+
+#: ../includes/class-settings.php:728
+msgid "Error message"
+msgstr ""
+
+#: ../includes/class-settings.php:732
 msgid "Error message if the content cannot be loaded."
 msgstr ""
 
-#: ../responsive-lightbox.php:1606
+#: ../includes/class-settings.php:747
 msgid "Animation speed."
 msgstr ""
 
-#: ../responsive-lightbox.php:1624
+#: ../includes/class-settings.php:752
+msgid "Preload next image"
+msgstr ""
+
+#: ../includes/class-settings.php:755
 msgid "Silently preload the next image."
 msgstr ""
 
-#: ../responsive-lightbox.php:1642
+#: ../includes/class-settings.php:759
+msgid "Enable keyboard keys"
+msgstr ""
+
+#: ../includes/class-settings.php:762
 msgid "Enable keyboard shortcuts (arrows Left/Right and Esc)."
 msgstr ""
 
-#: ../responsive-lightbox.php:1660
+#: ../includes/class-settings.php:766
+msgid "Quit after last image"
+msgstr ""
+
+#: ../includes/class-settings.php:769
 msgid "Quit after viewing the last image."
 msgstr ""
 
-#: ../responsive-lightbox.php:1678
+#: ../includes/class-settings.php:773
+msgid "Quit on image click"
+msgstr ""
+
+#: ../includes/class-settings.php:776
 msgid "Quit when the viewed image is clicked."
 msgstr ""
 
-#: ../responsive-lightbox.php:1696
+#: ../includes/class-settings.php:780
+msgid "Quit on anything click"
+msgstr ""
+
+#: ../includes/class-settings.php:783
 msgid "Quit when anything but the viewed image is clicked."
 msgstr ""
 
-#: ../responsive-lightbox.php:1938
+#: ../includes/class-settings.php:795
+msgid "Transition effect"
+msgstr ""
+
+#: ../includes/class-settings.php:798
+msgid "What effect to use for the transition."
+msgstr ""
+
+#: ../includes/class-settings.php:800
+msgid "slide"
+msgstr ""
+
+#: ../includes/class-settings.php:806
+msgid "Infinite loop"
+msgstr ""
+
+#: ../includes/class-settings.php:809
 msgid ""
-"Changes were not saved because there was attempt to save settings of "
-"inactive script. The site has been reloaded to the proper script settings."
+"Whether or not to slide back to the first slide when the last has been "
+"reached."
 msgstr ""
 
-#: ../responsive-lightbox.php:1948
-msgid "Settings restored to defaults."
+#: ../includes/class-settings.php:820
+msgid "Autoplay"
 msgstr ""
 
-#: ../responsive-lightbox.php:1956
-msgid "Settings of SwipeBox script were restored to defaults."
+#: ../includes/class-settings.php:831
+msgid "The timeout between sliding to the next slide in milliseconds."
 msgstr ""
 
-#: ../responsive-lightbox.php:1962
-msgid "Settings of prettyPhoto script were restored to defaults."
+#: ../includes/class-settings.php:838
+msgid "Pause on hover"
 msgstr ""
 
-#: ../responsive-lightbox.php:1968
-msgid "Settings of FancyBox script were restored to defaults."
+#: ../includes/class-settings.php:841
+msgid "Whether or not to pause on hover."
 msgstr ""
 
-#: ../responsive-lightbox.php:1974
-msgid "Settings of Nivo script were restored to defaults."
+#: ../includes/class-settings.php:845
+msgid "Pagination"
 msgstr ""
 
-#: ../responsive-lightbox.php:1978
-msgid ""
-"Changes were not set to defaults because there was attempt to reset settings "
-"of inactive script. The site has been reloaded to the proper script settings."
+#: ../includes/class-settings.php:851
+msgid "Whether or not to add a pagination."
 msgstr ""
 
-#: ../responsive-lightbox.php:1992 ../responsive-lightbox.php:1993
-#: ../responsive-lightbox.php:2007 ../responsive-lightbox.php:2021
+#: ../includes/class-settings.php:856
+msgid "What type of pagination to use."
+msgstr ""
+
+#: ../includes/class-settings.php:858
+msgid "Bullets"
+msgstr ""
+
+#: ../includes/class-settings.php:859
+msgid "Thumbnails"
+msgstr ""
+
+#: ../includes/class-settings.php:897 ../includes/class-settings.php:911
+#: ../includes/class-settings.php:924
 msgid "Responsive Lightbox"
 msgstr ""
 
-#: ../responsive-lightbox.php:2023
+#: ../includes/class-settings.php:926
 msgid "Need support?"
 msgstr ""
 
-#: ../responsive-lightbox.php:2024
+#: ../includes/class-settings.php:927
 msgid ""
 "If you are having problems with this plugin, please talk about them in the"
 msgstr ""
 
-#: ../responsive-lightbox.php:2024
+#: ../includes/class-settings.php:927
 msgid "Support forum"
 msgstr ""
 
-#: ../responsive-lightbox.php:2026
+#: ../includes/class-settings.php:929
 msgid "Do you like this plugin?"
 msgstr ""
 
-#: ../responsive-lightbox.php:2027
+#: ../includes/class-settings.php:936
 msgid "Rate it 5"
 msgstr ""
 
-#: ../responsive-lightbox.php:2027
+#: ../includes/class-settings.php:936
 msgid "on WordPress.org"
 msgstr ""
 
-#: ../responsive-lightbox.php:2028
+#: ../includes/class-settings.php:937
 msgid "Blog about it & link to the"
 msgstr ""
 
-#: ../responsive-lightbox.php:2028
+#: ../includes/class-settings.php:937
 msgid "plugin page"
 msgstr ""
 
-#: ../responsive-lightbox.php:2029
+#: ../includes/class-settings.php:938
 msgid "Check out our other"
 msgstr ""
 
-#: ../responsive-lightbox.php:2029
+#: ../includes/class-settings.php:938
 msgid "WordPress plugins"
 msgstr ""
 
-#: ../responsive-lightbox.php:2055
+#: ../includes/class-settings.php:958
 msgid "Reset to defaults"
 msgstr ""
 
-#: ../responsive-lightbox.php:2082
-msgid "Are you sure you want to reset these settings to defaults?"
+#: ../includes/class-settings.php:1325
+msgid "Settings restored to defaults."
 msgstr ""
 
-#: ../responsive-lightbox.php:2083
-msgid "Are you sure you want to reset scripts settings to defaults?"
-msgstr ""
-
-#: ../responsive-lightbox.php:2373
+#: ../responsive-lightbox.php:286
 msgid "Support"
 msgstr ""
 
-#: ../responsive-lightbox.php:2395
+#: ../responsive-lightbox.php:305
 msgid "Settings"
+msgstr ""
+
+#: ../responsive-lightbox.php:325
+msgid "Are you sure you want to reset these settings to defaults?"
+msgstr ""
+
+#: ../responsive-lightbox.php:326
+msgid "Are you sure you want to reset this script settings to defaults?"
 msgstr ""

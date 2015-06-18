@@ -3,6 +3,7 @@ if ( ! class_exists('ewwwngg')) {
 class ewwwngg {
 	/* initializes the nextgen integration functions */
 	function ewwwngg() {
+		global $ewww_debug;
 		add_action('admin_init', array(&$this, 'admin_init'));
 		add_filter('ngg_manage_images_columns', array(&$this, 'ewww_manage_images_columns'));
 		add_filter('ngg_manage_images_number_of_columns', array(&$this, 'ewww_manage_images_number_of_columns'));
@@ -13,8 +14,10 @@ class ewwwngg {
 		}
 		add_action('admin_action_ewww_ngg_manual', array(&$this, 'ewww_ngg_manual'));
 		add_action('admin_menu', array(&$this, 'ewww_ngg_bulk_menu'));
-		$i18ngg = strtolower  ( _n( 'Gallery', 'Galleries', 1, 'nggallery' ) );
-		add_action('admin_head-' . $i18ngg . '_page_nggallery-manage-gallery', array(&$this, 'ewww_ngg_bulk_actions_script'));
+		//$i18ngg = strtolower  ( _n( 'Gallery', 'Galleries', 1, 'nggallery' ) );
+		//$ewww_debug .= "nextgen i18n for Gallery: $i18ngg<br>";
+		//add_action('admin_head-' . $i18ngg . '_page_nggallery-manage-gallery', array(&$this, 'ewww_ngg_bulk_actions_script'));
+		add_action('admin_head', array(&$this, 'ewww_ngg_bulk_actions_script'));
 		add_action('admin_enqueue_scripts', array(&$this, 'ewww_ngg_bulk_script'));
 		add_action('wp_ajax_bulk_ngg_preview', array(&$this, 'ewww_ngg_bulk_preview'));
 		add_action('wp_ajax_bulk_ngg_init', array(&$this, 'ewww_ngg_bulk_init'));
@@ -120,6 +123,9 @@ class ewwwngg {
 
 	/* ngg_manage_images_columns hook */
 	function ewww_manage_images_columns( $columns = null ) {
+		if ( ! defined( 'EWWW_IMAGE_OPTIMIZER_JPEGTRAN' ) ) {
+			ewww_image_optimizer_tool_init();
+		}
 		if ( is_array ( $columns ) ) {
 			$columns['ewww_image_optimizer'] = __( 'Image Optimizer', EWWW_IMAGE_OPTIMIZER_DOMAIN );
 			return $columns;
@@ -316,72 +322,83 @@ class ewwwngg {
 
 	/* prepares the javascript for a bulk operation */
 	function ewww_ngg_bulk_script($hook) {
-		$i18ngg = strtolower  ( _n( 'Gallery', 'Galleries', 1, 'nggallery' ) );
+		//echo "<br>------ $hook ------<br>";
+		//$i18ngg = strtolower  ( _n( 'Gallery', 'Galleries', 1, 'nggallery' ) );
 		// make sure we are on a legitimate page and that we have the proper POST variables if necessary
-		if ($hook != $i18ngg . '_page_ewww-ngg-bulk' && $hook != $i18ngg . '_page_nggallery-manage-gallery')
+		//if ($hook != $i18ngg . '_page_ewww-ngg-bulk' && $hook != $i18ngg . '_page_nggallery-manage-gallery')
+		global $current_screen;
+		if ( strpos( $hook, 'ewww-ngg-bulk' ) === FALSE && strpos( $hook, 'nggallery-manage-gallery' ) === FALSE )
 				return;
-		if ($hook == $i18ngg . '_page_nggallery-manage-gallery' && (empty($_REQUEST['bulkaction']) || $_REQUEST['bulkaction'] != 'bulk_optimize'))
+		if ( strpos( $hook, 'nggallery-manage-gallery' ) && ( empty( $_REQUEST['bulkaction'] ) || $_REQUEST['bulkaction'] != 'bulk_optimize') )
 				return;
-		if ($hook == $i18ngg . '_page_nggallery-manage-gallery' && (empty($_REQUEST['doaction']) || !is_array($_REQUEST['doaction'])))
+		if ( strpos( $hook, 'nggallery-manage-gallery' ) && ( empty( $_REQUEST['doaction'] ) || ! is_array( $_REQUEST['doaction'] ) ) )
 				return;
 		$images = null;
 		// see if the user wants to reset the previous bulk status
-		if (!empty($_REQUEST['ewww_reset']) && wp_verify_nonce($_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk-reset'))
-			update_option('ewww_image_optimizer_bulk_ngg_resume', '');
+		if ( ! empty( $_REQUEST['ewww_reset'] ) && wp_verify_nonce( $_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk-reset' ) )
+			update_option( 'ewww_image_optimizer_bulk_ngg_resume', '' );
 		// see if there is a previous operation to resume
-		$resume = get_option('ewww_image_optimizer_bulk_ngg_resume');
+		$resume = get_option( 'ewww_image_optimizer_bulk_ngg_resume' );
 		// if we've been given a bulk action to perform
-		if (!empty($_REQUEST['doaction'])) {
+		if ( ! empty( $_REQUEST['doaction'] ) ) {
+			
 			// if we are optimizing a specific group of images
-			if ($_REQUEST['page'] == 'manage-images' && $_REQUEST['bulkaction'] == 'bulk_optimize') {
-				check_admin_referer('ngg_updategallery');
+			if ( $_REQUEST['page'] == 'manage-images' && $_REQUEST['bulkaction'] == 'bulk_optimize' ) {
+				check_admin_referer( 'ngg_updategallery' );
 				// reset the resume status, not allowed here
-				update_option('ewww_image_optimizer_bulk_ngg_resume', '');
+				update_option( 'ewww_image_optimizer_bulk_ngg_resume', '' );
 				// retrieve the image IDs from POST
-				$images = array_map( 'intval', $_REQUEST['doaction']);
+				$images = array_map( 'intval', $_REQUEST['doaction'] );
 			}
 			// if we are optimizing a specific group of galleries
+//		if ( ( $current_screen->id != 'nggallery-manage-images' && $current_screen->id != 'nggallery-manage-gallery' ) || ! current_user_can( apply_filters( 'ewww_image_optimizer_bulk_permissions', '' ) ) ) {
 			if ($_REQUEST['page'] == 'manage-galleries' && $_REQUEST['bulkaction'] == 'bulk_optimize') {
-				check_admin_referer('ngg_bulkgallery');
+			//if ( $current_screen->id == 'nggallery-manage-gallery' && $_REQUEST['bulkaction'] == 'bulk_optimize' ) {
+				check_admin_referer( 'ngg_bulkgallery' );
 				global $nggdb;
 				// reset the resume status, not allowed here
-				update_option('ewww_image_optimizer_bulk_ngg_resume', '');
+				update_option( 'ewww_image_optimizer_bulk_ngg_resume', '' );
 				$ids = array();
 				// for each gallery we are given
-				foreach ($_REQUEST['doaction'] as $gid) {
+				foreach ( $_REQUEST['doaction'] as $gid ) {
 					// get a list of IDs
-					$gallery_list = $nggdb->get_gallery($gid);
+					$gallery_list = $nggdb->get_gallery( $gid );
 					// for each ID
-					foreach ($gallery_list as $image) {
+					foreach ( $gallery_list as $image ) {
 						// add it to the array
 						$images[] = $image->pid;
 					}
 				}
 			}
 		// otherwise, if we have an operation to resume
-		} elseif (!empty($resume)) {
+		} elseif ( ! empty( $resume ) ) {
 			// get the list of attachment IDs from the db
-			$images = get_option('ewww_image_optimizer_bulk_ngg_attachments');
+			$images = get_option( 'ewww_image_optimizer_bulk_ngg_attachments' );
 		// otherwise, if we are on the standard bulk page, get all the images in the db
-		} elseif ($hook == $i18ngg . '_page_ewww-ngg-bulk') {
+		} elseif ( strpos( $hook, '_page_ewww-ngg-bulk' ) ) {
 			global $wpdb;
-			$images = $wpdb->get_col("SELECT pid FROM $wpdb->nggpictures ORDER BY sortorder ASC");
+			$images = $wpdb->get_col( "SELECT pid FROM $wpdb->nggpictures ORDER BY sortorder ASC" );
 		}
 		// store the image IDs to process in the db
-		update_option('ewww_image_optimizer_bulk_ngg_attachments', $images);
+		update_option( 'ewww_image_optimizer_bulk_ngg_attachments', $images );
 		// add the EWWW IO script
-		wp_enqueue_script('ewwwbulkscript', plugins_url('/eio.js', __FILE__), array('jquery', 'jquery-ui-progressbar', 'jquery-ui-slider'));
+		wp_enqueue_script( 'ewwwbulkscript', plugins_url( '/eio.js', __FILE__ ), array( 'jquery', 'jquery-ui-progressbar', 'jquery-ui-slider' ) );
 		//replacing the built-in nextgen styling rules for progressbar, partially because the bulk optimize page doesn't work without them 
-		wp_register_style( 'ngg-jqueryui', plugins_url('jquery-ui-1.10.1.custom.css', __FILE__)); 
+		wp_register_style( 'ngg-jqueryui', plugins_url( 'jquery-ui-1.10.1.custom.css', __FILE__ ) ); 
 		// enqueue the progressbar styling 
-		wp_enqueue_style('ngg-jqueryui'); //, plugins_url('jquery-ui-1.10.1.custom.css', __FILE__)); 
+		wp_enqueue_style( 'ngg-jqueryui' ); //, plugins_url('jquery-ui-1.10.1.custom.css', __FILE__)); 
 		// prep the $images for use by javascript
-		$images = json_encode($images);
+		$images = json_encode( $images );
 		// include all the vars we need for javascript
-		wp_localize_script('ewwwbulkscript', 'ewww_vars', array(
-				'_wpnonce' => wp_create_nonce('ewww-image-optimizer-bulk'),
+		wp_localize_script( 'ewwwbulkscript', 'ewww_vars', array(
+				'_wpnonce' => wp_create_nonce( 'ewww-image-optimizer-bulk' ),
 				'gallery' => 'nextgen',
 				'attachments' => $images,
+				'license_exceeded' => __( 'License Exceeded', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'operation_stopped' => __( 'Optimization stopped, reload page to resume.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'operation_interrupted' => __( 'Operation Interrupted', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'temporary_failure' => __( 'Temporary failure, seconds left to retry:', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'remove_failed' => __( 'Could not remove image from table.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 			)
 		);
 	}
@@ -440,6 +457,11 @@ class ewwwngg {
 		// get an image object
 		$image = $storage->object->_image_mapper->find($id);
 		$image = $this->ewww_added_new_image ($image, $storage);
+		global $ewww_exceed;
+		if ( ! empty ( $ewww_exceed ) ) {
+			echo '-9exceeded';
+			die();
+		}
 		// output the results of the optimization
 		printf("<p>" . __('Optimized image:', EWWW_IMAGE_OPTIMIZER_DOMAIN) . " <strong>%s</strong><br>", basename($storage->object->get_image_abspath($image, 'full')));
 		// get an array of sizes available for the $image
@@ -485,12 +507,13 @@ class ewwwngg {
 
 	// insert a bulk optimize option in the actions list for the gallery and image management pages (via javascript, since we have no hooks)
 	function ewww_ngg_bulk_actions_script() {
-		if ( ! current_user_can( apply_filters( 'ewww_image_optimizer_bulk_permissions', '' ) ) ) {
+		global $current_screen;
+		if ( ( strpos( $current_screen->id, 'nggallery-manage-images' ) === FALSE && strpos( $current_screen->id, 'nggallery-manage-gallery' ) === FALSE ) || ! current_user_can( apply_filters( 'ewww_image_optimizer_bulk_permissions', '' ) ) ) {
 			return;
 		}
 ?>		<script type="text/javascript">
 			jQuery(document).ready(function($){
-				$('select[name^="bulkaction"] option:last-child').after('<option value="bulk_optimize">Bulk Optimize</option>');
+				$('select[name^="bulkaction"] option:last-child').after('<option value="bulk_optimize"><?php _e( 'Bulk Optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></option>');
 			});
 		</script>
 <?php	}
@@ -503,11 +526,11 @@ function ewwwngg() {*/
 	global $ewwwngg;
 	$ewwwngg = new ewwwngg();
 //}
-if ( class_exists( 'Mixin' ) && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_noauto' ) ) {
+if ( ! class_exists( 'EWWWIO_Gallery_Storage' ) && class_exists( 'Mixin' ) && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_noauto' ) ) {
 	class EWWWIO_Gallery_Storage extends Mixin {
 		function generate_image_size( $image, $size, $params = null, $skip_defaults = false ) {
 			global $ewww_debug;
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$success = $this->call_parent( 'generate_image_size', $image, $size, $params, $skip_defaults );
 			if ( $success ) {

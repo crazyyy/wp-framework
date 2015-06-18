@@ -81,7 +81,9 @@ class EWWWIO_CLI extends WP_CLI_Command {
 					WP_CLI::line( 'Flagallery: ' . sprintf( __( '%1$d images have been selected (%2$d unoptimized), with %3$d resizes (%4$d unoptimized).', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) );
 				}
 				$other_attachments = ewww_image_optimizer_scan_other();
-				WP_CLI::confirm( sprintf( __( '%1$d images in other folders need optimizing.', EWWW_IMAGE_OPTIMIZER_DOMAIN ), count($other_attachments) ) );
+				if ( empty( $assoc_args['noprompt'] ) ) {
+					WP_CLI::confirm( sprintf( __( '%1$d images in other folders need optimizing.', EWWW_IMAGE_OPTIMIZER_DOMAIN ), count($other_attachments) ) );
+				}
 				ewww_image_optimizer_bulk_media( $delay );
 				if ( class_exists( 'ewwwngg' ) ) {
 					global $ngg;
@@ -103,7 +105,9 @@ class EWWWIO_CLI extends WP_CLI_Command {
 					WP_CLI::line( __('Bulk status has been reset, starting from the beginning.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 				}
 				list( $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) = ewww_image_optimizer_count_optimized ('media');
-				WP_CLI::confirm( sprintf( __( '%1$d images in the Media Library have been selected (%2$d unoptimized), with %3$d resizes (%4$d unoptimized).', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) );
+				if ( empty( $assoc_args['noprompt'] ) ) {
+					WP_CLI::confirm( sprintf( __( '%1$d images in the Media Library have been selected (%2$d unoptimized), with %3$d resizes (%4$d unoptimized).', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) );
+				}
 				ewww_image_optimizer_bulk_media( $delay );
 				break;
 			case 'nextgen':
@@ -115,11 +119,15 @@ class EWWWIO_CLI extends WP_CLI_Command {
 					global $ngg;
 					if ( preg_match( '/^2/', $ngg->version ) ) {
 						list( $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) = ewww_image_optimizer_count_optimized ('ngg');
-						WP_CLI::confirm( sprintf( __( '%1$d images have been selected (%2$d unoptimized), with %3$d resizes (%4$d unoptimized).', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) );
+						if ( empty( $assoc_args['noprompt'] ) ) {
+							WP_CLI::confirm( sprintf( __( '%1$d images have been selected (%2$d unoptimized), with %3$d resizes (%4$d unoptimized).', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) );
+						}
 						ewww_image_optimizer_bulk_ngg( $delay );
 					} else {
 						$attachments = ewww_image_optimizer_scan_next();
-						WP_CLI::confirm( sprintf( __( 'We have %d images to optimize.', EWWW_IMAGE_OPTIMIZER_DOMAIN ), count( $attachments ) ) );
+						if ( empty( $assoc_args['noprompt'] ) ) {
+							WP_CLI::confirm( sprintf( __( 'We have %d images to optimize.', EWWW_IMAGE_OPTIMIZER_DOMAIN ), count( $attachments ) ) );
+						}
 						ewww_image_optimizer_bulk_next( $delay, $attachments );
 					}
 				} else {
@@ -133,7 +141,9 @@ class EWWWIO_CLI extends WP_CLI_Command {
 				}
 				if ( class_exists( 'ewwwflag' ) ) {
 					list( $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) = ewww_image_optimizer_count_optimized ('flag');
-					WP_CLI::confirm( sprintf( __( '%1$d images have been selected (%2$d unoptimized), with %3$d resizes (%4$d unoptimized).', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) );
+					if ( empty( $assoc_args['noprompt'] ) ) {
+						WP_CLI::confirm( sprintf( __( '%1$d images have been selected (%2$d unoptimized), with %3$d resizes (%4$d unoptimized).', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) );
+					}
 					ewww_image_optimizer_bulk_flag( $delay );
 				} else {
 					WP_CLI::error( __( 'Grand Flagallery not installed.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
@@ -146,7 +156,9 @@ class EWWWIO_CLI extends WP_CLI_Command {
 				}
 				WP_CLI::line( __( 'Scanning, this could take a while', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 				$other_attachments = ewww_image_optimizer_scan_other();
-				WP_CLI::confirm( sprintf( __( '%1$d images in other folders need optimizing.', EWWW_IMAGE_OPTIMIZER_DOMAIN ), count($other_attachments) ) );
+				if ( empty( $assoc_args['noprompt'] ) ) {
+					WP_CLI::confirm( sprintf( __( '%1$d images in other folders need optimizing.', EWWW_IMAGE_OPTIMIZER_DOMAIN ), count($other_attachments) ) );
+				}
 				ewww_image_optimizer_bulk_other( $delay, $other_attachments );
 				break;
 			default:
@@ -168,8 +180,6 @@ WP_CLI::add_command( 'ewwwio', 'EWWWIO_CLI' );
 // prepares the bulk operation and includes the javascript functions
 function ewww_image_optimizer_bulk_media( $delay = 0 ) {
         $attachments = null;
-	// check the 'bulk resume' option
-//	$resume = get_option('ewww_image_optimizer_bulk_resume');
         // check if there is a previous bulk operation to resume
         if ( get_option('ewww_image_optimizer_bulk_resume') ) {
 		// retrieve the attachment IDs that have not been finished from the 'bulk attachments' option
@@ -207,7 +217,7 @@ function ewww_image_optimizer_bulk_media( $delay = 0 ) {
 		}
 		if ( ! empty( $meta['ewww_image_optimizer'] ) ) {
 			// tell the user what the results were for the original image
-			WP_CLI::line( sprintf( __( 'Full size – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $meta['ewww_image_optimizer'] ) );
+			WP_CLI::line( sprintf( __( 'Full size – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), html_entity_decode( $meta['ewww_image_optimizer'] ) ) );
 		}
 		// check to see if there are resized version of the image
 		if ( isset($meta['sizes']) && is_array( $meta['sizes'] ) ) {
@@ -215,7 +225,7 @@ function ewww_image_optimizer_bulk_media( $delay = 0 ) {
 			foreach ( $meta['sizes'] as $size ) {
 				if ( ! empty( $size['ewww_image_optimizer'] ) ) {
 					// output the results for the current resized version
-					WP_CLI::line( "{$size['file']} – {$size['ewww_image_optimizer']}" );
+					WP_CLI::line( "{$size['file']} – " . html_entity_decode( $size['ewww_image_optimizer'] ) );
 				}
 			}
 		}
@@ -370,7 +380,7 @@ function ewww_image_optimizer_bulk_other( $delay = 0, $attachments ) {
 		// output the path
 		WP_CLI::line( __('Optimized image:', EWWW_IMAGE_OPTIMIZER_DOMAIN) . ' ' . esc_html($attachment) );
 		// tell the user what the results were for the original image
-		WP_CLI::line( $results[1] );
+		WP_CLI::line( html_entity_decode( $results[1] ) );
 		// calculate how much time has elapsed since we started
 		$elapsed = microtime(true) - $started;
 		// output how much time has elapsed since we started
@@ -413,20 +423,20 @@ function ewww_image_optimizer_bulk_flag( $delay = 0 ) {
 		$meta->image->meta_data['ewww_image_optimizer'] = $fres[1];
 		// let the user know what happened
 		WP_CLI::line( __( 'Optimized image:', EWWW_IMAGE_OPTIMIZER_DOMAIN ) . " " . esc_html($meta->image->filename) );
-		WP_CLI::line( sprintf( __( 'Full size – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fres[1] ) );
+		WP_CLI::line( sprintf( __( 'Full size – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), html_entity_decode( $fres[1] ) ) );
 		if ( ! empty( $meta->image->meta_data['webview'] ) ) {
 			// determine path of the webview
 			$web_path = $meta->image->webimagePath;
 			$wres = ewww_image_optimizer($web_path, 3, false, true);
 			$meta->image->meta_data['webview']['ewww_image_optimizer'] = $wres[1];
-			WP_CLI::line( sprintf( __( 'Optimized size – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $wres[1] ) );
+			WP_CLI::line( sprintf( __( 'Optimized size – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), html_entity_decode( $wres[1] ) ) );
 		}
 		$thumb_path = $meta->image->thumbPath;
 		// optimize the thumbnail
 		$tres = ewww_image_optimizer($thumb_path, 3, false, true);
 		$meta->image->meta_data['thumbnail']['ewww_image_optimizer'] = $tres[1];
 		// and let the user know the results
-		WP_CLI::line( sprintf( __( 'Thumbnail – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN), $tres[1] ) );
+		WP_CLI::line( sprintf( __( 'Thumbnail – %s', EWWW_IMAGE_OPTIMIZER_DOMAIN), html_entity_decode( $tres[1] ) ) );
 		flagdb::update_image_meta($id, $meta->image->meta_data);
 		// determine how much time the image took to process
 		$elapsed = microtime(true) - $started;
@@ -498,13 +508,13 @@ function ewww_image_optimizer_bulk_ngg( $delay = 0 ) {
 		// output the results for each $size
 		foreach ($sizes as $size) {
 			if ($size === 'full') {
-				WP_CLI::line( sprintf( __( 'Full size - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $image->meta_data['ewww_image_optimizer'] ) );
+				WP_CLI::line( sprintf( __( 'Full size - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), html_entity_decode( $image->meta_data['ewww_image_optimizer'] ) ) );
 			} elseif ($size === 'thumbnail') {
 				// output the results of the thumb optimization
-				WP_CLI::line( sprintf( __( 'Thumbnail - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $image->meta_data[$size]['ewww_image_optimizer'] ) );
+				WP_CLI::line( sprintf( __( 'Thumbnail - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), html_entity_decode( $image->meta_data[$size]['ewww_image_optimizer'] ) ) );
 			} else {
 				// output savings for any other sizes, if they ever exist...
-				WP_CLI::line( ucfirst($size) . " - " . $image->meta_data[$size]['ewww_image_optimizer'] );
+				WP_CLI::line( ucfirst($size) . " - " . html_entity_decode( $image->meta_data[$size]['ewww_image_optimizer'] ) );
 			}
 		}
 		// outupt how much time we spent
@@ -555,7 +565,6 @@ function ewww_image_optimizer_bulk_next( $delay, $attachments ) {
 		sleep( $delay );
 		// find out what time we started, in microseconds
 		$started = microtime(true);
-//		$id = $_POST['ewww_attachment'];
 		// get the metadata
 		$meta = new nggMeta($id);
 		// retrieve the filepath
@@ -566,13 +575,13 @@ function ewww_image_optimizer_bulk_next( $delay, $attachments ) {
 		nggdb::update_image_meta($id, array('ewww_image_optimizer' => $fres[1]));
 		// output the results of the optimization
 		WP_CLI::line( __( 'Optimized image:', EWWW_IMAGE_OPTIMIZER_DOMAIN ) . $meta->image->filename );
-		WP_CLI::line( sprintf( __( 'Full size - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $fres[1] ) );
+		WP_CLI::line( sprintf( __( 'Full size - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), html_entity_decode( $fres[1] ) ) );
 		// get the filepath of the thumbnail image
 		$thumb_path = $meta->image->thumbPath;
 		// run the optimization on the thumbnail
 		$tres = ewww_image_optimizer($thumb_path, 2, false, true);
 		// output the results of the thumb optimization
-		WP_CLI::line( sprintf( __( 'Thumbnail - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $tres[1] ) );
+		WP_CLI::line( sprintf( __( 'Thumbnail - %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), html_entity_decode( $tres[1] ) ) );
 		// outupt how much time we spent
 		$elapsed = microtime(true) - $started;
 		WP_CLI::line( sprintf( __( 'Elapsed: %.3f seconds', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $elapsed ) );

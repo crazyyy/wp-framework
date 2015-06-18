@@ -1,105 +1,28 @@
-jQuery(document).ready(function($) {
+( function ( $ ) {
 
-	$('.wplikebtns').buttonset();
-	$('#rl_fb_overlay_color_input').wpColorPicker();
+	$( document ).ready( function () {
 
-	$(document).on('click', '#rl-fb-modal-yes', function(event) {
-		$('#rl-fb-show-overlay-yes').trigger('click');
-		$('#rl-fb-show-overlay-no').button('disable');
-		$('#rl-fb-show-overlay-yes').button('disable');
-		$('#rl-fb-show-close-button-no').trigger('click');
-		$('#rl-fb-show-close-button-no').button('disable');
-		$('#rl-fb-show-close-button-yes').button('disable');
-		$('#rl-fb-enable-escape-button-no').trigger('click');
-		$('#rl-fb-enable-escape-button-no').button('disable');
-		$('#rl-fb-enable-escape-button-yes').button('disable');
-		$('#rl-fb-hide-on-overlay-click-no').trigger('click');
-		$('#rl-fb-hide-on-overlay-click-no').button('disable');
-		$('#rl-fb-hide-on-overlay-click-yes').button('disable');
-		$('#rl-fb-hide-on-content-click-no').trigger('click');
-		$('#rl-fb-hide-on-content-click-no').button('disable');
-		$('#rl-fb-hide-on-content-click-yes').button('disable');
-	});
+		$( '.responsive-lightbox-settings .color-picker' ).wpColorPicker();
+		
+		$( '.responsive-lightbox-settings' ).checkBo();
 
-	$(document).on('click', '#rl-fb-modal-no', function(event) {
-		$('#rl-fb-show-overlay-no').button('enable');
-		$('#rl-fb-show-overlay-yes').button('enable');
-		$('#rl-fb-show-overlay-yes').trigger('click');
-		$('#rl-fb-show-close-button-no').button('enable');
-		$('#rl-fb-show-close-button-yes').button('enable');
-		$('#rl-fb-show-close-button-no').trigger('click');
-		$('#rl-fb-enable-escape-button-no').button('enable');
-		$('#rl-fb-enable-escape-button-yes').button('enable');
-		$('#rl-fb-enable-escape-button-no').trigger('click');
-		$('#rl-fb-hide-on-overlay-click-no').button('enable');
-		$('#rl-fb-hide-on-overlay-click-yes').button('enable');
-		$('#rl-fb-hide-on-overlay-click-no').trigger('click');
-		$('#rl-fb-hide-on-content-click-no').button('enable');
-		$('#rl-fb-hide-on-content-click-yes').button('enable');
-		$('#rl-fb-hide-on-content-click-no').trigger('click');
-	});
+		$( '.responsive-lightbox-settings input.reset-configuration' ).on( 'click', function ( event ) {
+			return confirm( rlArgs.resetScriptToDefaults );
+		} );
 
-	$('#rl_pp_opacity_span').slider({
-		value: rlArgs.opacity_pp,
-		min: 0,
-		max: 100,
-		step: 1,
-		orientation: 'horizontal',
-		slide: function(e, ui) {
-			$('#rl_pp_opacity_input').attr('value', ui.value);
-			$('#rl_pp_opacity_span').attr('title', ui.value);
-		}
-	});
+		$( '.responsive-lightbox-settings input.reset-settings' ).on( 'click', function ( event ) {
+			return confirm( rlArgs.resetSettingsToDefaults );
+		} );
 
-	$('#rl_fb_overlay_opacity_span').slider({
-		value: rlArgs.opacity_fb,
-		min: 0,
-		max: 100,
-		step: 1,
-		orientation: 'horizontal',
-		slide: function(e, ui) {
-			$('#rl_fb_overlay_opacity_input').attr('value', ui.value);
-			$('#rl_fb_overlay_opacity_span').attr('title', ui.value);
-		}
-	});
+	} );
 
-	$(document).on('change', '#rl-pp-slideshow-yes, #rl-pp-slideshow-no', function(event) {
-		if($(this).val() === 'yes') {
-			$('#rl_pp_slideshow_delay').fadeIn(300);
-		} else {
-			$('#rl_pp_slideshow_delay').fadeOut(300);
-		}
-	});
+} )( jQuery );
 
-	$(document).on('change', '#rl-sb-hide-bars-yes, #rl-sb-hide-bars-no', function(event) {
-		if($(this).val() === 'yes') {
-			$('#rl_sb_hide_bars_delay').fadeIn(300);
-		} else {
-			$('#rl_sb_hide_bars_delay').fadeOut(300);
-		}
-	});
-
-	$(document).on('change', '#rl-enable-custom-events-yes, #rl-enable-custom-events-no', function(event) {
-		if($(this).val() === 'yes') {
-			$('#rl_custom_events').fadeIn(300);
-		} else {
-			$('#rl_custom_events').fadeOut(300);
-		}
-	});
-	
-	$(document).on('change', '#rl-enable-gallery-image-size-yes, #rl-enable-gallery-image-size-no', function(event) {
-		if($(this).val() === 'yes') {
-			$('#rl_gallery_image_size').fadeIn(300);
-		} else {
-			$('#rl_gallery_image_size').fadeOut(300);
-		}
-	});
-
-	$(document).on('click', 'input#reset_rl_configuration', function(event) {
-		return confirm(rlArgs.resetScriptToDefaults);
-	});
-
-	$(document).on('click', 'input#reset_rl_settings', function(event) {
-		return confirm(rlArgs.resetSettingsToDefaults);
-	});
-});
+/*
+ * checkBo lightweight jQuery plugin v0.1.4 by  @ElmahdiMahmoud
+ * Licensed under the MIT license - https://github.com/elmahdim/checkbo/blob/master/LICENSE
+ *
+ * Custom checkbox and radio
+ * Author URL: elmahdim.com
+ */
+!function(e){e.fn.checkBo=function(c){return c=e.extend({},{checkAllButton:null,checkAllTarget:null,checkAllTextDefault:null,checkAllTextToggle:null},c),this.each(function(){function t(e){this.input=e}function n(){var c=e(this).is(":checked");e(this).closest("label").toggleClass("checked",c)}function i(e,c,t){e.text(e.parent(a).hasClass("checked")?t:c)}function h(c){var t=c.attr("data-show");c=c.attr("data-hide"),e(t).removeClass("is-hidden"),e(c).addClass("is-hidden")}var l=e(this),a=l.find(".cb-checkbox"),d=l.find(".cb-radio"),o=l.find(".cb-switcher"),s=a.find("input:checkbox"),f=d.find("input:radio");s.wrap('<span class="cb-inner"><i></i></span>'),f.wrap('<span class="cb-inner"><i></i></span>');var k=new t("input:checkbox"),r=new t("input:radio");if(t.prototype.checkbox=function(e){var c=e.find(this.input).is(":checked");e.find(this.input).prop("checked",!c).trigger("change")},t.prototype.radiobtn=function(c,t){var n=e('input:radio[name="'+t+'"]');n.prop("checked",!1),n.closest(n.closest(d)).removeClass("checked"),c.addClass("checked"),c.find(this.input).get(0).checked=c.hasClass("checked"),c.find(this.input).change()},s.on("change",n),f.on("change",n),a.find("a").on("click",function(e){e.stopPropagation()}),a.on("click",function(c){c.preventDefault(),k.checkbox(e(this)),c=e(this).attr("data-toggle"),e(c).toggleClass("is-hidden"),h(e(this))}),d.on("click",function(c){c.preventDefault(),r.radiobtn(e(this),e(this).find("input:radio").attr("name")),h(e(this))}),e.fn.toggleCheckbox=function(){this.prop("checked",!this.is(":checked"))},e.fn.switcherChecker=function(){var c=e(this),t=c.find("input"),n=c.find(".cb-state");t.is(":checked")?(c.addClass("checked"),n.html(t.attr("data-state-on"))):(c.removeClass("checked"),n.html(t.attr("data-state-off")))},o.on("click",function(c){c.preventDefault(),c=e(this),c.find("input").toggleCheckbox(),c.switcherChecker(),e(c.attr("data-toggle")).toggleClass("is-hidden")}),o.each(function(){e(this).switcherChecker()}),c.checkAllButton&&c.checkAllTarget){var u=e(this);u.find(e(c.checkAllButton)).on("click",function(){u.find(c.checkAllTarget).find("input:checkbox").each(function(){u.find(e(c.checkAllButton)).hasClass("checked")?u.find(c.checkAllTarget).find("input:checkbox").prop("checked",!0).change():u.find(c.checkAllTarget).find("input:checkbox").prop("checked",!1).change()}),i(u.find(e(c.checkAllButton)).find(".toggle-text"),c.checkAllTextDefault,c.checkAllTextToggle)}),u.find(c.checkAllTarget).find(a).on("click",function(){u.find(c.checkAllButton).find("input:checkbox").prop("checked",!1).change().removeClass("checked"),i(u.find(e(c.checkAllButton)).find(".toggle-text"),c.checkAllTextDefault,c.checkAllTextToggle)})}l.find('[checked="checked"]').closest("label").addClass("checked"),l.find("input").is("input:disabled")&&l.find("input:disabled").closest("label").off().addClass("disabled")})}}(jQuery,window,document);

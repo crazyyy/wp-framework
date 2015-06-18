@@ -2,9 +2,9 @@
 Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, links, photos, template, theme, photo, image, picture, slideshow, modal, overlay, YouTube, Vimeo, video, videos
-Requires at least: 3.3
-Tested up to: 4.1
-Stable tag: 1.4.10
+Requires at least: 4.0
+Tested up to: 4.2.2
+Stable tag: 1.5.6
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -18,13 +18,16 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 
 = Features include: =
 
-* Select from 5 responsive lightbox scripts (SwipeBox, prettyPhoto, FancyBox, Nivo Lightbox, Image Lightbox)
+* Select from 6 responsive lightbox scripts (SwipeBox, prettyPhoto, FancyBox, Nivo Lightbox, Image Lightbox, Tos "R" Us)
 * Automatically add lightbox to WordPress image galleries
 * Automatically add lightbox to WordPress image links
 * Automatically add lightbox to WordPress video links (YouTube, Vimeo)
 * Option to display single post images as a gallery
 * Option to modify native WP gallery links image size
+* Option to set gallery images title from image title, caption, alt or description
+* Option to force lightbox for custom WP gallery replacements like Jetpack tiled galleries
 * Option to trigger lightbox on custom jquery events
+* Option to conditionally load scripts and styles only on pages that have images or galleries in post content
 * Enter a selector for lightbox
 * Highly customizable settings for each of the lightbox scripts
 * Multisite support
@@ -64,6 +67,53 @@ No questions yet.
 2. screenshot-2.jpg
 
 == Changelog ==
+
+= 1.5.6 =
+* New: Option to conditionally load scripts and styles only on pages that have images or galleries in post content.
+
+= 1.5.5 =
+* Tweak: Multiple backward rel attribute compatibility tweaks
+* Fix: Nivo lightbox and Image lightbox js attr errors when no data-rel given
+* Fix: Swipebox option to remove top and bottom bars
+
+= 1.5.4 =
+* Tweak: Swipebox option to remove top and bottom bars on mobile devices
+* Fix: Swipe support for Tos "R" Us lightbox script
+
+= 1.5.3 =
+* Fix: Nivo lightbox buttons and styles missing
+
+= 1.5.2 =
+* New: Tos "R" Us lightbox script
+* Fix: Final fix for video links regex (hopefully)
+* Tweak: Switched from rel to data-rel attribute to avoid W3C validation errors
+* Tweak: Optimized gallery image size function
+
+= 1.5.1 =
+* Tweak: Support for multiple custom galleries per page (via gallery-n) in rel
+* Fix: Boolean / subfields bug not saving settings properly
+* Fix: Vimeo videos automatic lightbox not working when query parameters were not set
+
+= 1.5.0 =
+* New: Revamped User Interface
+* New: Option to force lightbox for custom WP gallery replacements like Jetpack tiled galleries 
+
+= 1.4.14 =
+* New: Option to set gallery images title from image title, caption, alt or description
+* Tweak: Improved regex for Youtube video links
+
+= 1.4.13 =
+* Fix: Reverted back the regex change in lightbox selector to gallery links
+
+= 1.4.12 =
+* Fix: jQuery prettyPhoto DOM Cross-Site Scripting (XSS) vulnerability
+* Tweak: Added regex filetype check before applying lightbox selector to gallery links.
+* Tweak: Switched from wp_generate_password() to custom function, without needless DB call.
+
+= 1.4.11 =
+* Tweak: Swipebox script updated to 1.3.0.2
+* Tweak: prettyPhoto CSS tweaks
+* Tweak: fancyBox IE patch
 
 = 1.4.10 =
 * Tweak: Image Lightbox updated
@@ -180,5 +230,5 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.4.10 =
-* Tweak: Image Lightbox updated
+= 1.5.6 =
+* New: Option to conditionally load scripts and styles only on pages that have images or galleries in post content.

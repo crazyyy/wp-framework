@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Network Admin package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-04-28 16:44:31+0000\n"
+"PO-Revision-Date: 2015-05-28 13:43:48+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -775,13 +775,13 @@ msgstr "Посилання \"Вимкнути\", \"Архівувати\" та \
 msgid "Operational settings has fields for the network&#8217;s name and admin email."
 msgstr "До оперативних налаштувань відносяться назва мережі і e-mail адміністратора."
 
-#: wp-admin/network/users.php:269
-msgid "The bulk action will permanently delete selected users, or mark/unmark those selected as spam. Spam users will have posts removed and will be unable to sign up again with the same email addresses."
-msgstr "Масові дії дозволяють назавжди видалити виділених користувачів, або позначити їх як спамерів або не спамерів. У спамерів будуть видалені всі записи, а самі вони не зможуть бути авторизовані з тією ж адресою e-mail."
-
 #: wp-admin/network/settings.php:56
 msgid "Upload settings control the size of the uploaded files and the amount of available upload space for each site. You can change the default value for specific sites when you edit a particular site. Allowed file types are also listed (space separated only)."
 msgstr "Налаштування завантаження визначають розмір завантажуваних файлів і кількість доступного місця на диску для кожного сайту. При редагуванні окремих сайтів можна змінити значення за замовчуванням. Також перераховані допустимі типи файлів (розділяються пробілами)."
+
+#: wp-admin/network/users.php:269
+msgid "The bulk action will permanently delete selected users, or mark/unmark those selected as spam. Spam users will have posts removed and will be unable to sign up again with the same email addresses."
+msgstr "Масова дія остаточно видалить виділених користувачів, можна позначити їх як спамерів. Записи спамерів будуть видалені і спамери не зможуть зареєструватися з тією ж e-mail адресою."
 
 #: wp-admin/network/users.php:267
 msgid "You can also go to the user&#8217;s profile page by clicking on the individual username."
@@ -789,7 +789,7 @@ msgstr "Ви також можете перейти на сторінку обл
 
 #: wp-admin/network/sites.php:38
 msgid "Visit to go to the frontend site live."
-msgstr "&laquo;Перейти&raquo; &#8212; відкрити зовнішню частину сайту."
+msgstr "\"Відвідати\" - перейти на зовнішню частину сайту."
 
 #: wp-admin/network/settings.php:55
 msgid "New site settings are defaults applied when a new site is created in the network. These include welcome email for when a new site or user account is registered, and what&#8127;s put in the first post, page, comment, comment author, and comment URL."

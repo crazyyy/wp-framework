@@ -180,9 +180,6 @@ RewriteRule . /index.php [L]
 # END WordPress
 
 # http://habrahabr.ru/company/xakep/blog/259843/
-# Противодействовать скриптам, пытающимся установить глобальные переменные или изменить переменную _REQUEST через URL:
-RewriteCond %{QUERY_STRING} GLOBALS (=|\[|\%[0-9A-Z]{0,2}) [OR]
-RewriteCond %{QUERY_STRING} _REQUEST (=|\[|\%[0-9A-Z]{0,2})
 # Для противодействия SQL-инъекциям блокируем запросы к URL, содержащие определенные ключевые слова:
 RewriteCond %{query_string} concat.*\( [NC,OR]
 RewriteCond %{query_string} union.*select.*\( [NC,OR]

@@ -136,7 +136,7 @@ msgstr "Предлагаемый объект #%d"
 msgid "Updating... please wait."
 msgstr "Обновление... Пожалуйста, подождите."
 
-#: wp-includes/taxonomy.php:4173
+#: wp-includes/taxonomy.php:4169
 msgid "Could not split shared term."
 msgstr "Не удалось разделить связанные элементы."
 
@@ -734,7 +734,7 @@ msgstr "Снять выделение"
 
 #. translators: %s: taxonomy label, %l: list of terms formatted as per
 #. $term_template
-#: wp-includes/taxonomy.php:4483
+#: wp-includes/taxonomy.php:4479
 msgid "%s: %l."
 msgstr "%s: %l."
 
@@ -4702,7 +4702,7 @@ msgstr "Общие"
 msgid "Unapproved"
 msgstr "Не одобрен"
 
-#: wp-includes/comment.php:2368
+#: wp-includes/comment.php:2375
 msgid "Could not update comment status"
 msgstr "Не удалось обновить статус комментария"
 
@@ -5868,7 +5868,7 @@ msgstr "Пожалуйста, войдите заново."
 msgid "Sidebar %d"
 msgstr "Боковая колонка %d"
 
-#: wp-includes/wp-db.php:2949
+#: wp-includes/wp-db.php:2991
 msgid "<strong>ERROR</strong>: WordPress %1$s requires MySQL %2$s or higher"
 msgstr "<strong>ОШИБКА</strong>: WordPress %1$s требует MySQL %2$s или выше"
 
@@ -6057,7 +6057,7 @@ msgid "Invalid Taxonomy"
 msgstr "Неверная таксономия"
 
 #: wp-includes/taxonomy.php:1318 wp-includes/taxonomy.php:3382
-#: wp-includes/taxonomy.php:4351
+#: wp-includes/taxonomy.php:4347
 msgid "Empty Term"
 msgstr "Пустой элемент"
 
@@ -6076,7 +6076,7 @@ msgstr "Требуется название этого элемента"
 msgid "The slug &#8220;%s&#8221; is already in use by another term"
 msgstr "Ярлык &laquo;%s&raquo; уже используется другим элементом"
 
-#: wp-includes/taxonomy.php:4554
+#: wp-includes/taxonomy.php:4550
 msgid "Invalid object ID"
 msgstr "Неверный ID объекта"
 

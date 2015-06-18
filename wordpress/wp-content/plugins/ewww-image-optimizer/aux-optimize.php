@@ -5,21 +5,21 @@ function ewww_image_optimizer_aux_images () {
 	global $wpdb;
 	$ewww_debug .= "<b>ewww_image_optimizer_aux_images()</b><br>";
 	// Retrieve the value of the 'aux resume' option and set the button text for the form to use
-	$aux_resume = get_option('ewww_image_optimizer_aux_resume');
-	if (empty($aux_resume)) {
-		$button_text = __('Scan and optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN);
+	$aux_resume = get_option( 'ewww_image_optimizer_aux_resume' );
+	if ( empty( $aux_resume ) ) {
+		$button_text = __( 'Scan and optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN );
 	} else {
-		$button_text = __('Resume previous optimization', EWWW_IMAGE_OPTIMIZER_DOMAIN);
+		$button_text = __( 'Resume previous optimization', EWWW_IMAGE_OPTIMIZER_DOMAIN );
 	}
 	// find out if the auxiliary image table has anything in it
 	$already_optimized = ewww_image_optimizer_aux_images_table_count();
 	// see if the auxiliary image table needs converting from md5sums to image sizes
 	$convert_query = "SELECT image_md5 FROM $wpdb->ewwwio_images WHERE image_md5 <> ''";
-	$db_convert = $wpdb->get_results($convert_query, ARRAY_N);
+	$db_convert = $wpdb->get_results( $convert_query, ARRAY_N );
 	// generate the WP spinner image for display
-	$loading_image = plugins_url('/wpspin.gif', __FILE__);
+	$loading_image = plugins_url( '/wpspin.gif', __FILE__ );
 	// check the last time the auxiliary optimizer was run
-	$lastaux = get_option('ewww_image_optimizer_aux_last');
+	$lastaux = get_option( 'ewww_image_optimizer_aux_last' );
 	// set the timezone according to the blog settings
 	$site_timezone = get_option( 'timezone_string' );
 	if ( empty( $site_timezone ) ) {
@@ -27,36 +27,36 @@ function ewww_image_optimizer_aux_images () {
 	}
 	date_default_timezone_set( $site_timezone );
 	?>
-	<h3><?php _e('Optimize Everything Else', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></h3>
-		<div id="ewww-aux-forms"><p class="ewww-bulk-info"><?php _e('Use this tool to optimize images outside of the Media Library and galleries where we have full integration. Examples: theme images, BuddyPress, WP Symposium, and any folders that you have specified on the settings page.', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></p>
+	<h3><?php _e( 'Optimize Everything Else', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></h3>
+		<div id="ewww-aux-forms"><p class="ewww-bulk-info"><?php _e( 'Use this tool to optimize images outside of the Media Library and galleries where we have full integration. Examples: theme images, BuddyPress, WP Symposium, and any folders that you have specified on the settings page.', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></p>
 		<?php if (!empty($db_convert)) { ?>
-			<p class="ewww-bulk-info"><?php _e('The database schema has changed, you need to convert to the new format.', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></p>
+			<p class="ewww-bulk-info"><?php _e( 'The database schema has changed, you need to convert to the new format.', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></p>
 			<form method="post" id="ewww-aux-convert" class="ewww-bulk-form" action="">
-				<?php wp_nonce_field( 'ewww-image-optimizer-aux-images', 'ewww_wpnonce'); ?>
+				<?php wp_nonce_field( 'ewww-image-optimizer-aux-images', 'ewww_wpnonce' ); ?>
 				<input type="hidden" name="ewww_convert" value="1">
-				<button id="ewww-table-convert" type="submit" class="button-secondary action"><?php _e('Convert Table', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></button>
+				<button id="ewww-table-convert" type="submit" class="button-secondary action"><?php _e( 'Convert Table', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></button>
 			</form>
 		<?php } ?>	
-			<p id="ewww-nothing" class="ewww-bulk-info" style="display:none"><?php _e('There are no images to optimize.', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></p>
-			<p id="ewww-scanning" class="ewww-bulk-info" style="display:none"><?php _e('Scanning, this could take a while', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>&nbsp;<img src='<?php echo $loading_image; ?>' alt='loading'/></p>
-		<?php if (!empty($lastaux)) { ?>
-			<p id="ewww-lastaux" class="ewww-bulk-info"><?php printf(__('Last optimization was completed on %1$s at %2$s and optimized %3$d images', EWWW_IMAGE_OPTIMIZER_DOMAIN), date(get_option('date_format'), $lastaux[0]), date(get_option('time_format'), $lastaux[0]), $lastaux[1]); ?></p>
+			<p id="ewww-nothing" class="ewww-bulk-info" style="display:none"><?php _e( 'There are no images to optimize.', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></p>
+			<p id="ewww-scanning" class="ewww-bulk-info" style="display:none"><?php _e( 'Scanning, this could take a while', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?>&nbsp;<img src='<?php echo $loading_image; ?>' alt='loading'/></p>
+		<?php if ( ! empty( $lastaux ) ) { ?>
+			<p id="ewww-lastaux" class="ewww-bulk-info"><?php printf( __( 'Last optimization was completed on %1$s at %2$s and optimized %3$d images', EWWW_IMAGE_OPTIMIZER_DOMAIN ), date( get_option( 'date_format' ), $lastaux[0] ), date( get_option( 'time_format' ), $lastaux[0] ), $lastaux[1] ); ?></p>
 		<?php } ?>
 			<form id="ewww-aux-start" class="ewww-bulk-form" method="post" action="">
 				<input id="ewww-aux-first" type="submit" class="button-secondary action" value="<?php echo $button_text; ?>" />
-				<input id="ewww-aux-again" type="submit" class="button-secondary action" style="display:none" value="<?php _e('Optimize Again', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
+				<input id="ewww-aux-again" type="submit" class="button-secondary action" style="display:none" value="<?php _e( 'Optimize Again', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?>" />
 			</form>
 <?php		// if the 'bulk resume' option was not empty, offer to reset it so the user can start back from the beginning
-		if (!empty($aux_resume)) {
+		if ( ! empty( $aux_resume ) ) {
 ?>
-			<p class="ewww-bulk-info"><?php _e('If you would like to start over again, press the Reset Status button to reset the bulk operation status.', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></p>
+			<p class="ewww-bulk-info"><?php _e( 'If you would like to start over again, press the Reset Status button to reset the bulk operation status.', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></p>
 			<form id="ewww-aux-reset" class="ewww-bulk-form" method="post" action="">
-				<?php wp_nonce_field( 'ewww-image-optimizer-aux-images', 'ewww_wpnonce'); ?>
+				<?php wp_nonce_field( 'ewww-image-optimizer-aux-images', 'ewww_wpnonce' ); ?>
 				<input type="hidden" name="ewww_reset_aux" value="1">
-				<button type="submit" class="button-secondary action"><?php _e('Reset Status', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></button>
+				<button type="submit" class="button-secondary action"><?php _e( 'Reset Status', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></button>
 			</form>
 <?php		} 
-		if (empty($already_optimized)) {
+		if ( empty( $already_optimized ) ) {
 			$display = ' style="display:none"';
 		} else {
 			$display = '';
@@ -64,7 +64,7 @@ function ewww_image_optimizer_aux_images () {
 ?>
 			<p id="ewww-table-info" class="ewww-bulk-info"<?php echo "$display>"; printf( __( 'The plugin keeps track of already optimized images to prevent re-optimization. There are %d images that have been optimized so far.', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $already_optimized ); ?></p>
 			<form id="ewww-show-table" class="ewww-bulk-form" method="post" action=""<?php echo $display; ?>>
-				<button type="submit" class="button-secondary action"><?php _e('Show Optimized Images', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></button>
+				<button type="submit" class="button-secondary action"><?php _e( 'Show Optimized Images', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></button>
 			</form>
 			<div class="tablenav ewww-aux-table" style="display:none">
 			<div class="tablenav-pages ewww-aux-table">
@@ -72,7 +72,7 @@ function ewww_image_optimizer_aux_images () {
 			<span id="paginator" class="pagination-links ewww-aux-table">
 				<a id="first-images" class="first-page" style="display:none">&laquo;</a>
 				<a id="prev-images" class="prev-page" style="display:none">&lsaquo;</a>
-				<?php _e('page', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?> <span class="current-page"></span> <?php _e('of', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?> 
+				<?php _e( 'page', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?> <span class="current-page"></span> <?php _e( 'of', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?> 
 				<span class="total-pages"></span>
 				<a id="next-images" class="next-page" style="display:none">&rsaquo;</a>
 				<a id="last-images" class="last-page" style="display:none">&raquo;</a>
@@ -89,20 +89,21 @@ function ewww_image_optimizer_aux_images () {
 
 function ewww_image_optimizer_import_init() {
 	// verify that an authorized user has started the optimizer
-	if (!wp_verify_nonce($_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk')) {
-		wp_die(__('Cheatin&#8217; eh?', EWWW_IMAGE_OPTIMIZER_DOMAIN));
-	} 
+	if ( ! wp_verify_nonce( $_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk' ) ) {
+		wp_die( __( 'Cheatin&#8217; eh?', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
+	}
 	global $ewww_debug;
 	global $wpdb;
 	$import_todo = 0;
 	$import_status['media'] = 0;
-	$import_todo += $wpdb->get_var("SELECT COUNT(posts.ID) FROM $wpdb->postmeta metas INNER JOIN $wpdb->posts posts ON posts.ID = metas.post_id WHERE posts.post_mime_type LIKE '%image%' AND metas.meta_key = '_wp_attachment_metadata' AND metas.meta_value LIKE '%ewww_image_optimizer%'");
+	$import_todo += $wpdb->get_var( "SELECT COUNT(posts.ID) FROM $wpdb->postmeta metas INNER JOIN $wpdb->posts posts ON posts.ID = metas.post_id WHERE posts.post_mime_type LIKE '%image%' AND metas.meta_key = '_wp_attachment_metadata' AND metas.meta_value LIKE '%ewww_image_optimizer%'" );
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		// need to include the plugin library for the is_plugin_active function
-		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 	}
-	if (is_plugin_active('nextgen-gallery/nggallery.php') || (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network('nextgen-gallery/nggallery.php'))) {
-		$nextgen_data = get_plugin_data(trailingslashit(WP_PLUGIN_DIR) . 'nextgen-gallery/nggallery.php', false, false);
+	if ( is_plugin_active( 'nextgen-gallery/nggallery.php' ) || ( function_exists( 'is_plugin_active_for_network' ) && is_plugin_active_for_network( 'nextgen-gallery/nggallery.php' ) ) ) {
+		$nextgen_data = ewww_image_optimizer_get_plugin_version( trailingslashit( WP_PLUGIN_DIR ) . 'nextgen-gallery/nggallery.php' );
+		//$nextgen_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'nextgen-gallery/nggallery.php', false, false );
 		$ewww_debug .= 'Nextgen version: ' . $nextgen_data['Version'] . '<br>';
 		if (preg_match('/^2\./', $nextgen_data['Version'])) { // for Nextgen 2
 			$import_todo += $wpdb->get_var("SELECT COUNT(pid) FROM $wpdb->nggpictures WHERE meta_data LIKE '%ewww_image_optimizer%'");
@@ -436,20 +437,20 @@ function ewww_image_optimizer_image_scan($dir) {
 		return $images;
 	}
 	$ewww_debug .= "scanning folder for images: $dir<br>";
-	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::CHILD_FIRST);
+	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::CHILD_FIRST, RecursiveIteratorIterator::CATCH_GET_CHILD);
 	$start = microtime(true);
 	$query = "SELECT path,image_size FROM $wpdb->ewwwio_images";
 	$already_optimized = $wpdb->get_results($query, ARRAY_A);
 	$file_counter = 0;
+	if ( ewww_image_optimizer_stl_check() ) {
+		set_time_limit (0);
+	}
 	foreach ($iterator as $path) {
-		if ( ini_get( 'max_execution_time' ) < 60 ) {
-			set_time_limit (0);
-		}
 		$file_counter++;
 		$skip_optimized = false;
-		if ($path->isDir()) {
-			continue;
-		} else {
+		if ( $path->isFile() ) {
+		//	continue;
+		//} else {
 			$path = $path->getPathname();
 			if ( preg_match( '/\.(po|mo|pot|php|txt|js|css|html|woff|webp|json|svg|xml|ttf|otf|eot|md)$/', $path ) ) {
 				$ewww_debug .= "not a usable extension: $path<br>";
@@ -662,10 +663,10 @@ function ewww_image_optimizer_aux_images_script($hook) {
 		} else {
 			echo $attachments;
 		}
-	ewwwio_memory( __FUNCTION__ );
+		ewwwio_memory( __FUNCTION__ );
 		die();
 	} else {
-	ewwwio_memory( __FUNCTION__ );
+		ewwwio_memory( __FUNCTION__ );
 		return;
 	}
 }

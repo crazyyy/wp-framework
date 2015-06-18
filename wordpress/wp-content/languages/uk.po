@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Development package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-04-26 20:21:52+0000\n"
+"PO-Revision-Date: 2015-05-28 13:43:05+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -140,7 +140,7 @@ msgstr "Запропонована вставка #%d"
 msgid "Taxonomy names must be between 1 and 32 characters in length."
 msgstr "Довжина імені таксономії повинна становити від 1 до 32 символів."
 
-#: wp-includes/taxonomy.php:4173
+#: wp-includes/taxonomy.php:4169
 msgid "Could not split shared term."
 msgstr "Не вийшло розділити спільну групу."
 
@@ -734,7 +734,7 @@ msgstr "Видалити обрані"
 
 #. translators: %s: taxonomy label, %l: list of terms formatted as per
 #. $term_template
-#: wp-includes/taxonomy.php:4483
+#: wp-includes/taxonomy.php:4479
 msgid "%s: %l."
 msgstr "%s: %l."
 
@@ -3706,13 +3706,13 @@ msgstr "Хтось попрохав змінити пароль для вход�
 msgid "The passwords do not match."
 msgstr "Паролі не співпадають."
 
-#: wp-login.php:367
-msgid "To reset your password, visit the following address:"
-msgstr "Щоб змінити свій пароль, будь ласка перейдіть за цією адресою: "
-
 #: wp-login.php:634
 msgid "Your password has been reset."
 msgstr "Ваш пароль скинуто."
+
+#: wp-login.php:367
+msgid "To reset your password, visit the following address:"
+msgstr "Щоб скинути свій пароль, відвідайте наступну адресу:"
 
 #: wp-includes/admin-bar.php:235
 msgid "Edit My Profile"
@@ -4268,7 +4268,7 @@ msgstr "Ви впевнені, що хочете встановити цей п�
 
 #: wp-includes/script-loader.php:575
 msgid "Use as featured image"
-msgstr "Використати для головного зображення"
+msgstr "Використати як головне зображення"
 
 #: wp-includes/script-loader.php:354
 msgid "Mismatch"
@@ -4749,7 +4749,7 @@ msgstr "Неузгоджено"
 msgid "Duplicate comment detected; it looks as though you&#8217;ve already said that!"
 msgstr "Подвійний коментар — схоже на те, що Ви вже це казали!"
 
-#: wp-includes/comment.php:2368
+#: wp-includes/comment.php:2375
 msgid "Could not update comment status"
 msgstr "Неможливо оновити статус коментаря"
 
@@ -5867,7 +5867,7 @@ msgstr "« Назад"
 msgid "&lt; Prev"
 msgstr "« Назад"
 
-#: wp-includes/wp-db.php:2949
+#: wp-includes/wp-db.php:2991
 msgid "<strong>ERROR</strong>: WordPress %1$s requires MySQL %2$s or higher"
 msgstr "<strong>ПОМИЛКА</strong>: WordPress %1$s потребує MySQL %2$s або вище"
 
@@ -5896,7 +5896,7 @@ msgid "Edit Gallery"
 msgstr "Редагувати галерею"
 
 #: wp-includes/taxonomy.php:1318 wp-includes/taxonomy.php:3382
-#: wp-includes/taxonomy.php:4351
+#: wp-includes/taxonomy.php:4347
 msgid "Empty Term"
 msgstr "Порожній термін"
 
@@ -6064,13 +6064,6 @@ msgstr "[%1$s] Узгодьте, будь ласка: \"%2$s\""
 msgid "UTC"
 msgstr "UTC"
 
-#: wp-includes/pluggable.php:1594
-msgid "Currently %s comment is waiting for approval. Please visit the moderation panel:"
-msgid_plural "Currently %s comments are waiting for approval. Please visit the moderation panel:"
-msgstr[0] "Наразі %s коментар очікує на узгодження. Відвідайте панель модерації:"
-msgstr[1] "Наразі %s коментарі очікують на узгодження. Відвідайте панель модерації:"
-msgstr[2] "Наразі %s коментарів очікує на узгодження. Відвідайте панель модерації:"
-
 #: wp-includes/pluggable.php:1689 wp-includes/pluggable.php:1697
 #: wp-login.php:365
 msgid "Username: %s"
@@ -6181,6 +6174,13 @@ msgstr "[%1$s] Пінг: \"%2$s\""
 #: wp-includes/post-template.php:1779
 msgid "%1$s [Current Revision]"
 msgstr "%1$s [Поточна редакція]"
+
+#: wp-includes/pluggable.php:1594
+msgid "Currently %s comment is waiting for approval. Please visit the moderation panel:"
+msgid_plural "Currently %s comments are waiting for approval. Please visit the moderation panel:"
+msgstr[0] "Наразі %s коментар очікує на одобрення. Будь ласка, відвідайте панель модерації:"
+msgstr[1] "Наразі %s коментарі очікують на одобрення. Будь ласка, відвідайте панель модерації:"
+msgstr[2] "Наразі %s коментарів очікують на одобрення. Будь ласка, відвідайте панель модерації:"
 
 #: wp-includes/ms-functions.php:1003
 msgid "That username is already activated."
@@ -6357,7 +6357,7 @@ msgstr "%s ваш новий логін "
 msgid "Get your own %s account in seconds"
 msgstr "Отримайте ваш %s профіль за мить"
 
-#: wp-includes/taxonomy.php:4554
+#: wp-includes/taxonomy.php:4550
 msgid "Invalid object ID"
 msgstr "Невірний ID"
 

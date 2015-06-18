@@ -4,7 +4,7 @@ function ewww_image_optimizer_bulk_preview() {
 	global $ewww_debug;
 	$ewww_debug .= "<b>ewww_image_optimizer_bulk_preview()</b><br>";
 	// retrieve the attachment IDs that were pre-loaded in the database
-	list($fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count) = ewww_image_optimizer_count_optimized ('media');
+	list( $fullsize_count, $unoptimized_count, $resize_count, $unoptimized_resize_count ) = ewww_image_optimizer_count_optimized( 'media' );
 //	$upload_import = get_option('ewww_image_optimizer_imported');
 	$upload_import = true;
 ?>
@@ -74,7 +74,7 @@ function ewww_image_optimizer_bulk_preview() {
 }
 
 // retrieve image counts for the bulk process
-function ewww_image_optimizer_count_optimized ( $gallery, $return_ids = false ) {
+function ewww_image_optimizer_count_optimized( $gallery, $return_ids = false ) {
 	global $ewww_debug;
 	global $wpdb;
 	$ewww_debug .= "<b>ewww_image_optimizer_count_optmized()</b><br>";
@@ -86,6 +86,9 @@ function ewww_image_optimizer_count_optimized ( $gallery, $return_ids = false ) 
 	$ewww_debug .= "scanning for $gallery<br>";
 	// retrieve the time when the optimizer starts
 	$started = microtime(true);
+	if ( ewww_image_optimizer_stl_check() ) {
+		set_time_limit( 0 );
+	}
 	$max_query = 3000;
 	$attachment_query_count = 0;
 	switch ($gallery) {
@@ -106,6 +109,7 @@ function ewww_image_optimizer_count_optimized ( $gallery, $return_ids = false ) 
 			// retrieve all the image attachment metadata from the database
 			while ( $attachments = $wpdb->get_results( "SELECT metas.meta_value,post_id FROM $wpdb->postmeta metas INNER JOIN $wpdb->posts posts ON posts.ID = metas.post_id WHERE posts.post_mime_type LIKE '%image%' AND metas.meta_key = '_wp_attachment_metadata' $attachment_query LIMIT $offset, $max_query", ARRAY_N ) ) {
 				$ewww_debug .= "fetched " . count( $attachments ) . " attachments starting at $offset<br>";
+				$disabled_sizes = ewww_image_optimizer_get_option( 'ewww_image_optimizer_disable_resizes' );
 				foreach ($attachments as $attachment) {
 					$meta = unserialize($attachment[0]);
 					if (empty($meta)) {
@@ -118,6 +122,9 @@ function ewww_image_optimizer_count_optimized ( $gallery, $return_ids = false ) 
 					// resized versions, so we can continue
 					if (isset($meta['sizes']) ) {
 						foreach($meta['sizes'] as $size => $data) {
+							if ( ! empty( $disabled_sizes[$size] ) ) {
+								continue;
+							}
 							$resize_count++;
 							if (empty($meta['sizes'][$size]['ewww_image_optimizer'])) {
 								$unoptimized_re++;
@@ -259,7 +266,7 @@ function ewww_image_optimizer_count_optimized ( $gallery, $return_ids = false ) 
 }
 
 // prepares the bulk operation and includes the javascript functions
-function ewww_image_optimizer_bulk_script($hook) {
+function ewww_image_optimizer_bulk_script( $hook ) {
 	global $ewww_debug;
 	// make sure we are being called from the bulk optimization page
 	if ('media_page_ewww-image-optimizer-bulk' != $hook) {
@@ -342,6 +349,12 @@ function ewww_image_optimizer_bulk_script($hook) {
 			'attachments' => $attachments,
 			'image_count' => $image_count,
 			'count_string' => sprintf( __( '%d images', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $image_count ),
+			'scan_fail' => __( 'Operation timed out, you may need to increase the max_execution_time for PHP', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+			'license_exceeded' => __( 'License Exceeded', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+			'operation_stopped' => __( 'Optimization stopped, reload page to resume.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+			'operation_interrupted' => __( 'Operation Interrupted', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+			'temporary_failure' => __( 'Temporary failure, seconds left to retry:', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+			'remove_failed' => __( 'Could not remove image from table.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 		)
 	);
 	// load the stylesheet for the jquery progressbar
@@ -402,19 +415,17 @@ function ewww_image_optimizer_bulk_filename() {
 // called by javascript to process each image in the loop
 function ewww_image_optimizer_bulk_loop() {
 	global $ewww_debug;
+	global $ewww_exceed;
 	// verify that an authorized user has started the optimizer
 	$permissions = apply_filters( 'ewww_image_optimizer_bulk_permissions', '' );
 	if ( ! wp_verify_nonce( $_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk' ) || ! current_user_can( $permissions ) ) {
 		wp_die( __( 'Cheatin&#8217; eh?', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 	} 
-	if (!empty($_REQUEST['ewww_sleep'])) {
-		sleep($_REQUEST['ewww_sleep']);
+	if ( ! empty( $_REQUEST['ewww_sleep'] ) ) {
+		sleep( $_REQUEST['ewww_sleep'] );
 	}
 	// retrieve the time when the optimizer starts
-	$started = microtime(true);
-	if ( ini_get( 'max_execution_time' ) < 60 ) {
-		set_time_limit (0);
-	}
+	$started = microtime( true );
 	// get the attachment ID of the current attachment
 	$attachment = $_POST['ewww_attachment'];
 	// get the 'bulk attachments' with a list of IDs remaining
@@ -422,7 +433,11 @@ function ewww_image_optimizer_bulk_loop() {
 	$meta = wp_get_attachment_metadata( $attachment, true );
 	// do the optimization for the current attachment (including resizes)
 	$meta = ewww_image_optimizer_resize_from_meta_data ($meta, $attachment, false);
-	if ( !empty ( $meta['file'] ) ) {
+	if ( ! empty ( $ewww_exceed ) ) {
+		echo '-9exceeded';
+		die();
+	}
+	if ( ! empty ( $meta['file'] ) ) {
 		// output the filename (and path relative to 'uploads' folder)
 		printf( "<p>" . __('Optimized image:', EWWW_IMAGE_OPTIMIZER_DOMAIN) . " <strong>%s</strong><br>", esc_html($meta['file']) );
 	} else {
@@ -446,6 +461,10 @@ function ewww_image_optimizer_bulk_loop() {
 	$elapsed = microtime(true) - $started;
 	// output how much time has elapsed since we started
 	printf(__('Elapsed: %.3f seconds', EWWW_IMAGE_OPTIMIZER_DOMAIN) . "</p>", $elapsed);
+	global $ewww_attachment;
+	$ewww_attachment['id'] = $attachment;
+	$ewww_attachment['meta'] = $meta;
+	add_filter( 'w3tc_cdn_update_attachment_metadata', 'ewww_image_optimizer_w3tc_update_files' );
 	// update the metadata for the current attachment
 	wp_update_attachment_metadata( $attachment, $meta );
 	// remove the first element from the $attachments array

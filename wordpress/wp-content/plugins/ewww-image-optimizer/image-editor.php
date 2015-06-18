@@ -3,8 +3,7 @@ if ( class_exists( 'Bbpp_Animated_Gif' ) ) {
 	class EWWWIO_GD_Editor extends Bbpp_Animated_Gif {
 		public function save( $filename = null, $mime_type = null ) {
 			global $ewww_debug;
-//TODO: rethink these checks. should we be checking for JPEGTRAN still, or perhaps the CLOUD constant?
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$saved = parent::save($filename, $mimetype);
 			if ( ! is_wp_error( $saved ) ) {
@@ -23,7 +22,7 @@ if ( class_exists( 'Bbpp_Animated_Gif' ) ) {
 		}
 		public function multi_resize( $sizes ) {
 			global $ewww_debug;
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$metadata = parent::multi_resize($sizes);
 			$ewww_debug .= "image editor (AGR gd) multi resize<br>";
@@ -48,7 +47,7 @@ if ( class_exists( 'Bbpp_Animated_Gif' ) ) {
 	class EWWWIO_GD_Editor extends WP_Thumb_Image_Editor_GD {
 		protected function _save( $image, $filename = null, $mime_type = null ) {
 			global $ewww_debug;
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$saved = parent::_save($image, $filename, $mime_type);
 			if ( ! is_wp_error( $saved ) ) {
@@ -70,7 +69,7 @@ if ( class_exists( 'Bbpp_Animated_Gif' ) ) {
 	class EWWWIO_GD_Editor extends WP_Image_Editor_GD {
 		protected function _save ($image, $filename = null, $mime_type = null) {
 			global $ewww_debug;
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$saved = parent::_save($image, $filename, $mime_type);
 			if ( ! is_wp_error( $saved ) ) {
@@ -93,7 +92,7 @@ if (class_exists('WP_Thumb_Image_Editor_Imagick')) {
 	class EWWWIO_Imagick_Editor extends WP_Thumb_Image_Editor_Imagick {
 		protected function _save( $image, $filename = null, $mime_type = null ) {
 			global $ewww_debug;
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$saved = parent::_save($image, $filename, $mime_type);
 			if ( ! is_wp_error( $saved ) ) {
@@ -115,7 +114,7 @@ if (class_exists('WP_Thumb_Image_Editor_Imagick')) {
 	class EWWWIO_Imagick_Editor extends WP_Image_Editor_Imagick {
 		protected function _save( $image, $filename = null, $mime_type = null ) {
 			global $ewww_debug;
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$saved = parent::_save($image, $filename, $mime_type);
 			if ( ! is_wp_error( $saved ) ) {
@@ -138,7 +137,7 @@ if (class_exists('WP_Image_Editor_Gmagick')) {
 	class EWWWIO_Gmagick_Editor extends WP_Image_Editor_Gmagick {
 		protected function _save( $image, $filename = null, $mime_type = null ) {
 			global $ewww_debug;
-			if (!defined('EWWW_IMAGE_OPTIMIZER_JPEGTRAN'))
+			if (!defined('EWWW_IMAGE_OPTIMIZER_CLOUD'))
 				ewww_image_optimizer_init();
 			$saved = parent::_save($image, $filename, $mime_type);
 			if ( ! is_wp_error( $saved ) ) {

@@ -83,9 +83,6 @@ class ewwwngg {
 		ob_end_flush();
 		// process each image
 		foreach ($images as $id) {
-			if ( ini_get( 'max_execution_time' ) < 60 ) {
-				set_time_limit (0);
-			}
 			$current++;
 			echo "<p>" . __('Processing', EWWW_IMAGE_OPTIMIZER_DOMAIN) . " $current/$total: ";
 			// get the metadata
@@ -339,7 +336,12 @@ class ewwwngg {
 		wp_localize_script('ewwwbulkscript', 'ewww_vars', array(
 				'_wpnonce' => wp_create_nonce('ewww-image-optimizer-bulk'),
 				'gallery' => 'nextgen',
-				'attachments' => $images
+				'attachments' => $images,
+				'license_exceeded' => __( 'License Exceeded', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'operation_stopped' => __( 'Optimization stopped, reload page to resume.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'operation_interrupted' => __( 'Operation Interrupted', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'temporary_failure' => __( 'Temporary failure, seconds left to retry:', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'remove_failed' => __( 'Could not remove image from table.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 			)
 		);
 	}
@@ -390,6 +392,11 @@ class ewwwngg {
 		$file_path = $meta->image->imagePath;
 		// run the optimizer on the current image
 		$fres = ewww_image_optimizer($file_path, 2, false, false, true);
+		global $ewww_exceed;
+		if ( ! empty ( $ewww_exceed ) ) {
+			echo '-9exceeded';
+			die();
+		}
 		// update the metadata of the optimized image
 		nggdb::update_image_meta($id, array('ewww_image_optimizer' => $fres[1]));
 		// output the results of the optimization

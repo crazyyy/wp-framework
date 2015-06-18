@@ -28,7 +28,7 @@
 
 		titleHeight = 0, titleStr = '', start_pos, final_pos, busy = false, fx = $.extend($('<div/>')[0], { prop: 0 }),
 
-		isIE6 = $.browser.msie && $.browser.version < 7 && !window.XMLHttpRequest,
+		isIE6 = navigator.userAgent.match(/msie [6]/i) && !window.XMLHttpRequest,
 
 		/*
 		 * Private methods 
@@ -828,12 +828,12 @@
 				selectedArray = [];
 				selectedIndex = 0;
 
-				var rel = $(this).attr('rel') || '';
+				var rel = $(this).attr('rel') || $(this).data('rel');
 
 				if (!rel || rel == '' || rel === 'nofollow') {
 					selectedArray.push(this);
 				} else {
-					selectedArray = $('a[rel="'+rel+'"], area[rel="'+rel+'"]');
+					selectedArray = $('a[rel="'+rel+'"], area[rel="'+rel+'"], a[data-rel="'+rel+'"]');
 					selectedIndex = selectedArray.index(this);
 				}
 

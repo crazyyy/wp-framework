@@ -182,7 +182,12 @@ class ewwwflag {
 		wp_localize_script('ewwwbulkscript', 'ewww_vars', array(
 				'_wpnonce' => wp_create_nonce('ewww-image-optimizer-bulk'),
 				'gallery' => 'flag',
-				'attachments' => $ids
+				'attachments' => $ids,
+				'license_exceeded' => __( 'License Exceeded', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'operation_stopped' => __( 'Optimization stopped, reload page to resume.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'operation_interrupted' => __( 'Operation Interrupted', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'temporary_failure' => __( 'Temporary failure, seconds left to retry:', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'remove_failed' => __( 'Could not remove image from table.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 			)
 		);
 	}
@@ -307,6 +312,11 @@ class ewwwflag {
 		$file_path = $meta->image->imagePath;
 		// optimize the full-size version
 		$fres = ewww_image_optimizer($file_path, 3, false, false, true);
+		global $ewww_exceed;
+		if ( ! empty ( $ewww_exceed ) ) {
+			echo '-9exceeded';
+			die();
+		}
 		$meta->image->meta_data['ewww_image_optimizer'] = $fres[1];
 		// let the user know what happened
 		printf( "<p>" . __('Optimized image:', EWWW_IMAGE_OPTIMIZER_DOMAIN) . " <strong>%s</strong><br>", esc_html($meta->image->filename) );

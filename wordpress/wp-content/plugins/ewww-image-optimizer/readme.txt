@@ -3,8 +3,8 @@ Contributors: nosilver4u
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MKMQKCBFFG3WW
 Tags: image, attachment, optimize, optimization, lossless, lossy, photo, picture, seo, compression, gmagick, jpegtran, gifsicle, optipng, pngout, pngquant, jpegmini, tinyjpg, tinypng, webp, wp-cli 
 Requires at least: 3.5
-Tested up to: 4.2-beta4
-Stable tag: 2.3.2
+Tested up to: 4.2.2
+Stable tag: 2.4.4
 License: GPLv3
 
 Reduce file sizes for images in WordPress including NextGEN, GRAND FlAGallery and more using lossless/lossy methods and image format conversion.
@@ -168,7 +168,7 @@ Lossless optimization is done with the command *jpegtran -copy all -optimize -pr
 
 = How are PNGs optimized? =
 
-There are three parts (and all are optional). First, using the command *pngquant original-file*, then using the commands *pngout-static -s2 original-file* and *optipng -o2 original-file*. You can adjust the optimization levels for both tools on the settings page. Optipng is an automated derivative of pngcrush, which is another widely used png optimization utility. EWWW I.O. Cloud uses TinyPNG for even better lossy compression than standalone pngquant.
+There are three parts (and all are optional). First, using the command *pngquant original-file*, then using the commands *pngout-static -s2 original-file* and *optipng -o2 original-file*. You can adjust the optimization levels for both tools on the settings page. Optipng is an automated derivative of pngcrush, which is another widely used png optimization utility. EWWW I.O. Cloud uses TinyPNG for 10% better lossy compression than standalone pngquant.
 
 = How are GIFs optimized? =
 
@@ -192,10 +192,52 @@ Pngout, TinyJPG/TinyPNG, JPEGmini, and Pngquant were recommended by EWWW IO user
 
 = future =
 * these are current feature requests, if you see something you like here, go vote for it in the support forum
-* full GMedia support
 * copy metadata from original images to webp variants
 * EWWW I.O. as a stand-alone tool
 * If you would like to help translate this plugin in your language, get started here: http://translate.ewww.io/projects/ewww-image-optimizer/
+
+= 2.4.4 =
+* fixed: Alt WebP Rewriting unable to find images when WP url and Site url are different (subdirectory install)
+* fixed: Alt WebP Rewriting mangles certain characters due to older versions of libxml
+* fixed: Alt WebP Rewriting parses xml files when it should leave them alone - feeds and sitemaps
+* fixed: issues with API license exceeded during bulk optimization
+* fixed: pngout regression with .tmp and .tmp.png files preventing optimization
+* updated: bundled Gifsicle updated to 1.87
+* updated: bundled cwebp updated to 0.4.3 (0.4.2 for Mac OS 10.8)
+* deprecated: pngout 20151319 does not work on CentOS 5, older versions available at http://static.jonof.id.au/dl/kenutils/
+* deprecated: FreeBSD 8.4 support, moving to 9.3 64-bit only
+
+= 2.4.3 =
+* fixed: Alt WebP Rewriting breaks themes with <header> elements
+
+= 2.4.2 =
+* updated: pngout installer updated to release 20150319
+* updated: set_time_limit() moved to core function for even better timeout avoidance, and threshold increased to 90
+* fixed: Alt WebP Rewriting detects XHTML themes, and attempts to parse them as XML, but will still break if your theme does not pass validation.
+* fixed: cleanup output of html entities when using wp-cli
+* fixed: Scan & Optimize throws warnings when a directory is not detected properly
+* fixed: --noprompt for wp-cli has no effect
+* fixed: notices for exec() and Safe Mode not firing properly
+* fixed: prevent tools from being checked if exec() is disabled or Safe Mode is on during optimization
+* fixed: check to see if set_time_limit() is disabled before running it
+* added: W3TC S3 CDN - update original image on S3 after optimization
+* added: German (de_DE) translation
+* added: French (fr_FR) translation
+* added: call set_time_limit() to avoid timeouts loading the Bulk Optimize page
+
+= 2.4.1 =
+* fixed: Alt WebP Rewriting was slow due to an inefficient regexp
+* fixed: Scan & Optimize fails when it encounters a permissions error
+
+= 2.4.0 =
+* added: advanced option to disable specific resizes or just exclude them from optimization
+* added: Turkish and Swedish translations (with updates of most other translations)
+* added: protection to prevent corruption of images in case of broken mimetype detection
+* fixed: check to prevent issues with reloading nextgen2 support was only half-effective
+* fixed: previous fix for wrong slash on Windows breaks savings settings for Network sites
+* fixed: WP_Image_Editor init() check was not checking the right constant
+* fixed: Alternative WebP Rewriting had a mismatched preg_replace causing broken <html> or <head> tags
+* fixed: some NextGen bulk optimize functions were broken when using various translations
 
 = 2.3.2 =
 * fixed: sql error for duplicate key name during plugin upgrade

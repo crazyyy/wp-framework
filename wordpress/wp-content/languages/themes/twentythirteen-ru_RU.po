@@ -38,6 +38,10 @@ msgstr "Тема 2013 для WordPress заново открывает для н
 msgid "Appears in the footer section of the site."
 msgstr "Отображается в нижней части сайта."
 
+#: image.php:38
+msgid "Link to full-size image"
+msgstr "Ссылка на полноразмерное изображение"
+
 #: functions.php:231
 msgid "Main Widget Area"
 msgstr "Основная область"
@@ -49,10 +53,6 @@ msgstr "Дополнительная область"
 #: functions.php:243
 msgid "Appears on posts and pages in the sidebar."
 msgstr "Отображается в боковой колонке в записях и на страницах."
-
-#: image.php:38
-msgid "Link to full-size image"
-msgstr "Ссылка на полноразмерное изображение"
 
 #: image.php:39
 msgid "Full resolution"
@@ -112,6 +112,14 @@ msgstr "Все записи автора %s"
 msgid "Category Archives: %s"
 msgstr "Архив рубрики: %s"
 
+#: comments.php:25
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "%2$s: %1$s комментарий"
+msgstr[1] "%2$s: %1$s комментария"
+msgstr[2] "%2$s: %1$s комментариев"
+
 #: comments.php:45
 msgid "Comment navigation"
 msgstr "Навигация по комментариям"
@@ -142,6 +150,10 @@ msgstr "Страницы:"
 msgid "Edit"
 msgstr "Изменить"
 
+#: functions.php:369
+msgid "Permalink to %s"
+msgstr "Постоянная ссылка: %s"
+
 #: content-gallery.php:43 content-image.php:39 content-quote.php:29
 #: content-video.php:39 content.php:56
 msgid "Leave a comment"
@@ -156,6 +168,10 @@ msgstr "1 комментарий"
 #: content-video.php:39 content.php:56
 msgid "View all % comments"
 msgstr "Комментарии (%)"
+
+#: content-none.php:12
+msgid "Nothing Found"
+msgstr "Не найдено"
 
 #: content-none.php:18
 msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
@@ -248,10 +264,6 @@ msgctxt "1: post format name. 2: date"
 msgid "%1$s on %2$s"
 msgstr "%1$s от %2$s"
 
-#: functions.php:369
-msgid "Permalink to %s"
-msgstr "Постоянная ссылка: %s"
-
 #: header.php:43
 msgid "Menu"
 msgstr "Меню"
@@ -306,15 +318,3 @@ msgstr "Twenty Thirteen"
 #. Author of the plugin/theme
 msgid "the WordPress team"
 msgstr "Команда WordPress"
-
-#: content-none.php:12
-msgid "Nothing Found"
-msgstr "Не найдено"
-
-#: comments.php:25
-msgctxt "comments title"
-msgid "One thought on &ldquo;%2$s&rdquo;"
-msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
-msgstr[0] "%2$s: %1$s комментарий"
-msgstr[1] "%2$s: %1$s комментария"
-msgstr[2] "%2$s: %1$s комментариев"
