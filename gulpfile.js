@@ -11,7 +11,7 @@ var gulp = require('gulp'),
   });
 
 /* if work with html == true, else - false */
-var htmlOWp = false,
+var htmlOWp = true,
   wpThemeName = 'wp-framework',
   wpDomain = 'wp-framework.dev';
 
