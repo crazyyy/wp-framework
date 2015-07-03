@@ -1,0 +1,193 @@
+
+
+
+/* Start:/bitrix/templates/.default/components/bitrix/menu/horizontal_multilevel/style.css*/
+/* Customize the navbar links to be fill the entire space of the .navbar */
+@media (min-width: 980px) {
+	.navbar .navbar-inner {
+		padding: 0;
+		-webkit-box-shadow:  0px 3px 5px 0px rgba(0, 0, 0, 0.1);
+	    box-shadow:  0px 3px 5px 0px rgba(0, 0, 0, 0.1);
+	}
+	.navbar .nav {
+		margin: 0;
+		display: table;
+		width: 100%;
+	}
+	.navbar .nav li {
+		display: table-cell;
+		width: 1%;
+		float: none;
+	}
+	.navbar .nav li a {
+		font-weight: bold;
+		text-align: center;
+		border-left: 1px solid rgba(255,217,98,.75);
+		border-right: 1px solid rgba(0,0,0,.1);
+	}
+	.navbar .nav li:first-child a {
+		border-left: 0;
+		border-radius: 3px 0 0 3px;
+	}
+	.navbar .nav li:last-child a {
+		border-right: 0;
+		border-radius: 0 3px 3px 0;
+	}
+}
+
+/* End */
+
+
+
+/* Start:/bitrix/templates/.default/components/bitrix/breadcrumb/breadcrumbs/style.css*/
+ul.breadcrumb-navigation
+{
+	padding:0; margin:0;
+	padding-top:4px;
+	list-style:none;
+}
+
+ul.breadcrumb-navigation li
+{
+    display:inline;
+    padding-left: 15px;
+}
+ul.breadcrumb-navigation li:first-child
+{
+    background: none;
+    padding-left: 0px;
+}
+
+ul.breadcrumb-navigation a
+{
+	
+}
+
+ul.breadcrumb-navigation span
+{
+	
+}
+/* End */
+
+
+
+/* Start:/bitrix/templates/inner/components/bitrix/menu/sidebar/style.css*/
+.bs-docs-sidenav > li > a {
+    border: 1px solid #E5E5E5;
+    color: #333333;
+    display: block;
+    margin: 0 0 -1px;
+    padding: 8px 14px;
+}
+.bs-docs-sidenav{padding:0}
+/* End */
+
+
+
+/* Start:/bitrix/templates/.default/components/bizmedia/store.catalog.top/sidebar-specialoffers/style.css*/
+.equipment-list-card{
+	text-align: center;
+	padding: 10px 14px;
+	background: rgba(255,255,255,1);
+	border: 1px solid rgba(235,235,235,1);
+}
+.specoffer-price{
+	color: rgba(153,153,153,1);
+}
+.item-title{
+	font-size: 14px;
+	line-height: 14px;	
+}
+/* End */
+
+
+
+/* Start:/bitrix/templates/.default/components/nsandrey/mailform/write-us/style.css*/
+span.req
+{
+	color: #FF0000;
+}
+p.ok
+{
+	font-size: 12pt;
+	color: green;
+}
+font.errortext
+{
+	font-size: 12pt;
+	color: red;
+}
+input[type=file].error_field
+{
+	color: red;
+}
+input[type=text].error_field, input[type=number].error_field, textarea.error_field
+{
+	border: 1px solid red;
+}
+
+/* End */
+
+
+
+/* Start:/bitrix/templates/inner/styles.css*/
+/**
+* Team-market
+*/
+.tm_logo
+{
+    width: 450px;
+}
+.tm_logo_img
+{
+    width: 120px;
+}
+/* End */
+
+
+
+/* Start:/bitrix/templates/inner/template_styles.css*/
+
+div.catalog-list, div.catalog-detail  { padding: 1em 0 0;}
+
+.bs-docs-sidenav.nav-list > .active > a, .bs-docs-sidenav.nav-list > .active > a:hover, .bs-docs-sidenav.nav-list > .active > a:focus{
+background-color:#FFD758;
+    color: #000;
+   text-shadow: 0 1px 0 #FFD962 !important;
+}
+.nav.nav-list.bs-docs-sidenav {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+    margin: 15px 0 0;
+    padding: 0;
+}
+
+@media (min-width: 1200px) {
+.bs-docs-sidenav h3, .bs-docs-sidenav .h3{
+	font-size: 18px;
+	border-bottom: 1px solid rgba(204,204,204,1);
+}
+  .bs-docs-container {
+    max-width: 970px;
+  }
+  .bs-docs-sidenav > li > a {
+    width: 230px \9; /* Override the previous IE8-9 hack */
+  }
+}
+
+
+
+
+
+  .bs-docs-sidenav {
+  }
+
+/* End */
+/* /bitrix/templates/.default/components/bitrix/menu/horizontal_multilevel/style.css */
+/* /bitrix/templates/.default/components/bitrix/breadcrumb/breadcrumbs/style.css */
+/* /bitrix/templates/inner/components/bitrix/menu/sidebar/style.css */
+/* /bitrix/templates/.default/components/bizmedia/store.catalog.top/sidebar-specialoffers/style.css */
+/* /bitrix/templates/.default/components/nsandrey/mailform/write-us/style.css */
+/* /bitrix/templates/inner/styles.css */
+/* /bitrix/templates/inner/template_styles.css */

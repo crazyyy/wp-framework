@@ -1,0 +1,109 @@
+a.backcall {
+background: #51a351;
+color: #fff;
+padding: 6px;
+border-radius: 6px;
+clear: both;
+position: relative;
+top: 12px;
+font-style: italic;
+left: 17px; }
+a.backcall:hover { text-decoration: underline }
+
+
+a.order_services { margin-top: 10px; background: #FFCC00; padding: 8px 16px; border-radius: 6px; font-size: 20px; color: #000; font-weight: bold; display: block; width: 100px; text-align: center; }
+a.order_services:hover { text-decoration: underline }
+
+
+.backformer input[placeholder]          {text-overflow:ellipsis;}
+.backformer input::-moz-placeholder     {text-overflow:ellipsis;} 
+.backformer input:-moz-placeholder      {text-overflow:ellipsis;} 
+input:-ms-input-placeholder {text-overflow:ellipsis;}
+
+.backformer ::-webkit-input-placeholder {color:#888888;}
+.backformer ::-moz-placeholder          {color:#888888;}/* Firefox 19+ */ 
+.backformer :-ms-input-placeholder      {color:#888888;} 
+
+.backformer { 
+    display: none; 
+    color: #444444;
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 1em;
+    padding: 10px;
+}
+
+.bf-content {
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+.bf-submit,  .bf-row {
+    float: left;
+    width: 396px;
+    margin: 4px;
+    clear: both;
+}
+
+.bf-header {
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.4em;
+}
+ 
+.bf-info-text {
+    display: inline-block;
+    float: left;
+    font-size: 1em;
+    padding: 10px 0;
+    vertical-align: middle;
+    width: 120px;
+}
+
+.bf-info-img {
+    display: inline-block;
+    float: left; 
+    padding:  0;
+    vertical-align: middle;
+    width: 120px;
+}
+
+.bf-submit { 
+    text-align: right;
+}
+
+.bf-submit input {
+    margin: 10px 0 4px 0px; 
+}
+
+.bf-row  input, .bf-row textarea {
+    width: 250px;
+    padding: 10px;
+}
+
+.bf-hidden {
+    display: none;
+}
+ 
+.bf-status {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #fff;
+    display: none;
+    margin: 5px 0;
+    padding: 10px 0;
+    text-align: center;
+    width: 396px;
+}
+
+.img-capcha {
+    cursor: pointer;
+}
+/*
+.btn{text-decoration: none; display:inline-block;*display:inline;*zoom:1;padding:4px 12px;margin-bottom:0;font-size:14px;line-height:20px;text-align:center;vertical-align:middle;cursor:pointer;color:#333333;text-shadow:0 1px 1px rgba(255, 255, 255, 0.75);background-color:#f5f5f5;background-image:-moz-linear-gradient(top, #ffffff, #e6e6e6);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));background-image:-webkit-linear-gradient(top, #ffffff, #e6e6e6);background-image:-o-linear-gradient(top, #ffffff, #e6e6e6);background-image:linear-gradient(to bottom, #ffffff, #e6e6e6);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);border-color:#e6e6e6 #e6e6e6 #bfbfbf;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);*background-color:#e6e6e6;filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);border:1px solid #bbbbbb;*border:0;border-bottom-color:#a2a2a2;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;*margin-left:.3em;-webkit-box-shadow:inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);}.btn:hover,.btn:active,.btn.active,.btn.disabled,.btn[disabled]{color:#333333;background-color:#e6e6e6;*background-color:#d9d9d9;}
+.btn:active,.btn.active{background-color:#cccccc \9;}
+.btn:first-child{*margin-left:0;}
+.btn:hover{color:#333333;text-decoration:none;background-position:0 -15px;-webkit-transition:background-position 0.1s linear;-moz-transition:background-position 0.1s linear;-o-transition:background-position 0.1s linear;transition:background-position 0.1s linear;}
+.btn:focus{outline:thin dotted #333;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px;}
+.btn.active,.btn:active{background-image:none;outline:0;-webkit-box-shadow:inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);box-shadow:inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);}
+.btn.disabled,.btn[disabled]{cursor:default;background-image:none;opacity:0.65;filter:alpha(opacity=65);-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
+*/

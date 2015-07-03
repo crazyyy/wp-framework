@@ -1,0 +1,15 @@
+
+
+
+/* Start:/bitrix/templates/inner-full-width/components/bitrix/furniture.catalog.index/present-sections-list/style.css*/
+/* CSS Document */
+.equipment-mini-card{}
+.equipment-mini-card .h4{
+	font-size: 18px;
+	margin: 12px 0 0 0;
+	text-align: center !important;
+	width:100%;  
+}
+.equipment-mini-card.alert{padding: 20px 14px;}
+/* End */
+/* /bitrix/templates/inner-full-width/components/bitrix/furniture.catalog.index/present-sections-list/style.css */
