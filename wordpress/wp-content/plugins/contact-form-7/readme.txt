@@ -2,9 +2,9 @@
 Contributors: takayukister
 Donate link: http://contactform7.com/donate/
 Tags: contact, form, contact form, feedback, email, ajax, captcha, akismet, multilingual
-Requires at least: 4.1
-Tested up to: 4.2.2
-Stable tag: 4.2
+Requires at least: 4.2
+Tested up to: 4.3.1
+Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,6 @@ It is hard to continue development and support for this free plugin without cont
 The following are other recommended plugins by the author of Contact Form 7.
 
 * [Flamingo](http://wordpress.org/extend/plugins/flamingo/) - With Flamingo, you can save submitted messages via contact forms in the database.
-* [Really Simple CAPTCHA](http://wordpress.org/extend/plugins/really-simple-captcha/) - Really Simple CAPTCHA is a simple CAPTCHA module which works well with Contact Form 7.
 * [Bogo](http://wordpress.org/extend/plugins/bogo/) - Bogo is a straight-forward multilingual plugin that doesn't cause headaches.
 
 = Translators =
@@ -46,12 +45,12 @@ The following are other recommended plugins by the author of Contact Form 7.
 * Central Kurdish (ckb) - Mahr Hassan
 * Chinese (China; zh_CN) - Soz, Keefe Dunn, Stella Hu
 * Chinese (Taiwan; zh_TW) - James Wu
-* Croatian (hr) - tolingo Translation Services, Marko Puskaric
+* Croatian (hr) - tolingo Translation Services, Marko Puskaric, Sanjin Barac
 * Czech (cs_CZ) - Korry, Radovan Fiser, Tomas Vesely, Pavel Bilek, Vladislav Šenk
-* Danish (da_DK) - Jens Griebel, Georg S. Adamsen
-* Dutch (nl_NL) - Chris Devriese, Martin Hein, Rene, TenSheep, Tim de Hoog
+* Danish (da_DK) - Jens Griebel, Georg S. Adamsen, Thomas Blomberg Hansen
+* Dutch (nl_NL) - Chris Devriese, Martin Hein, Rene, TenSheep, Tim de Hoog, Henk Buma
 * Esperanto (eo_EO) - Arkadiusz Zychewicz
-* Estonian (et) - Peeter Rahuvarm, Egon Elbre
+* Estonian (et) - Peeter Rahuvarm, Egon Elbre, Tanel Jüris
 * Finnish (fi) - Miika Turunen, Mediajalostamo, Jani Alha
 * French (fr_FR) - Jillij, Oncle Tom, Maître Mô, Emmanuel Simond, Hédi Sellami
 * Galician (gl_ES) - Arume Desenvolvementos Informáticos
@@ -76,7 +75,7 @@ The following are other recommended plugins by the author of Contact Form 7.
 * Malayalam (ml_IN) - RAHUL.S.A
 * Maltese (mt_MT) - Ajoft Technologies
 * Norwegian (nb_NO) - Kjetil M. Bergem, aanvik.net, Peter Holme
-* Persian (Farsi; fa_IR) - Mohammad Musavi, Mohsen Firoozmandan, Ghaem Omidi
+* Persian (Farsi; fa_IR) - Mohammad Musavi, Mohsen Firoozmandan, Ghaem Omidi, Ehsan Np
 * Polish (pl_PL) - Zbigniew Czernik, Daniel Fruzynski, RafalDesign, Bartosz Arendt
 * Portuguese (Brazil; pt_BR) - Leonardo Pinheiro, Henrique Vianna, Caciano Gabriel Batista, Gervásio Antônio, Gilvanilson Santos
 * Portuguese (Portugal; pt_PT) - Hugo Baeta, Pedro Nave, Pedro Mendonça
@@ -87,7 +86,7 @@ The following are other recommended plugins by the author of Contact Form 7.
 * Sinhala (si_LK) - Nitin Aggarwal
 * Slovak (sk_SK) - Patrik Bóna, WordPress Slovakia
 * Slovene (sl_SI) - Mihael Simonič, Jani Roskar, Marko Ambrožič
-* Spanish (es_ES) - Jordi Sancho, Vladimir Prieto, Federico Mikaelian, Matias Baldanza, Carlos Agnese, Lourdes Cuesta, Carlos Oropesa
+* Spanish (es_ES) - Jordi Sancho, Vladimir Prieto, Federico Mikaelian, Matias Baldanza, Carlos Agnese, Lourdes Cuesta, Carlos Oropesa, Ana Ayelén Martínez
 * Swedish (sv_SE) - Fredrik Jonsson, the Swedish community
 * Tagalog (tl) - Rupert Agnew Lanuza, Hanne, Language Connect
 * Tamil (ta) - Nitin Aggarwal
@@ -125,30 +124,25 @@ Do you have questions or issues with Contact Form 7? Use these support channels 
 
 For more information, see [Releases](http://contactform7.com/category/releases/).
 
+= 4.3 =
+
+* reCAPTCHA module has been introduced.
+* Translations for Croatian, Danish, Persian, and Swedish have been updated.
+* WordPress 4.2 or higher is required.
+
+= 4.2.2 =
+
+* Fixed: Possible empty name attribute of form element (invalid HTML5).
+* Translations for Portuguese, Hungarian, and Spanish have been updated.
+
+= 4.2.1 =
+
+* Corrected admin script dependencies.
+* Shows a hint for keyboard operation in the editor screen.
+* Translations for Estonian, Portuguese, Dutch, and Turkish have been updated.
+
 = 4.2 =
 
 * Renewal of the editor screen.
 * Translation for Slovene has been updated.
 * WordPress 4.1 or higher is required.
-
-= 4.1.2 =
-
-* Added role="form" to wrapper div elements.
-* Added wrapping label elements to quiz question strings.
-* Translation for Portuguese has been updated.
-
-= 4.1.1 =
-
-* Security enhancement: use wp_rand() instead of mt_rand() for CAPTCHA file name generation to make it harder for attackers to predict its next value.
-* Modified wpcf7_plugin_url(): use plugins_url() internally.
-* Translations for Russian, Hungarian, Swedish, German, and Turkish have been updated.
-
-= 4.1 =
-
-* Added maxlength and minlength options to several form-tag types.
-* Added [count] form-tag type that represents character count for form fields.
-* Introduced WPCF7_Validation class to handle the user-input validation process.
-* Added the front-end URL normalization for [url] fields.
-* Added default:get, default:post and default:post_meta options to get default values from the context.
-* Translations for Turkish, German, Portuguese, Dutch, and Hebrew have been updated.
-* WordPress 4.0 or higher is required.

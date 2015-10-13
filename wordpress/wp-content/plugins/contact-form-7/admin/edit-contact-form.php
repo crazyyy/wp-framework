@@ -143,9 +143,11 @@ if ( $post ) :
 </div><!-- #delete-action -->
 <?php endif; ?>
 
-<div class="save-contact-form textright">
+<div id="publishing-action">
+	<span class="spinner"></span>
 	<?php wpcf7_admin_save_button( $post_id ); ?>
 </div>
+<div class="clear"></div>
 </div><!-- #major-publishing-actions -->
 </div><!-- #submitpost -->
 </div>
@@ -167,6 +169,8 @@ if ( $post ) :
 
 <div id="postbox-container-2" class="postbox-container">
 <div id="contact-form-editor">
+<div class="keyboard-interaction"><?php echo sprintf( esc_html( __( '%s keys switch panels', 'contact-form-7' ) ), '<span class="dashicons dashicons-leftright"></span>' ); ?></div>
+
 <?php
 
 	$editor = new WPCF7_Editor( $post );

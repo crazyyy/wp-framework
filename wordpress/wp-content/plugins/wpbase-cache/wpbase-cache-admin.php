@@ -1,5 +1,4 @@
 <?php
-
 class WPBase_Cache_Admin {
 
     public function __construct() {

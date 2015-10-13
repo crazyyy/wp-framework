@@ -3,9 +3,9 @@ Contributors: humanmade, willmot, pauldewouters, joehoyle, mattheu, tcrsavage, c
 Tags: back up, backup, backups, database, zip, db, files, archive, wp-cli, humanmade
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 3.2.6
+Stable tag: 3.3.1
 
-Simple automated backups of your WordPress powered website.
+Simple automated backups of your WordPress-powered website.
 
 == Description ==
 
@@ -31,7 +31,7 @@ The BackUpWordPress plugin is hosted on GitHub, if you want to help out with dev
 
 = Translations =
 
-We'd also love help translating the plugin into more languages, if you can help then please contact support@hmn.md or visit http://translate.hmn.md/.
+We'd also love help translating the plugin into more languages, if you can help then please visit https://translate.wordpress.org/projects/wp-plugins/backupwordpress/dev/ to start translating.
 
 == Installation ==
 
@@ -64,7 +64,7 @@ See this guide for more details - [How to restore from backup](https://bwp.hmn.m
 
 No.
 
-**I'm not receiving my backups by email?**
+**I'm not receiving my backups by email**
 
 Most servers have a filesize limit on email attachments, it's generally about 10mb. If your backup file is over that limit it won't be sent attached to the email, instead you should receive an email with a link to download the backup, if you aren't even receiving that then you likely have a mail issue on your server that you'll need to contact your host about.
 
@@ -82,17 +82,17 @@ The issue is that your `wp-cron.php` is not returning a `200` response when hit 
 
 There are some things you can test to confirm this is the issue.
 
-     * Are scheduled posts working? (They use wp-cron as well ). 
+     * Are scheduled posts working? (They use wp-cron as well.)
 
-     * Are you hosted on Heart Internet? (wp-cron may not be supported by Heart Internet, see below for work-around).
+     * Are you hosted on Heart Internet? (wp-cron may not be supported by Heart Internet, see below for work-around.)
 
      * If you click manual backup does it work?
 
      * Try adding `define( 'ALTERNATE_WP_CRON', true );` to your `wp-config.php`, do automatic backups work?
 
-     * Is your site private (I.E. is it behind some kind of authentication, maintenance plugin, .htaccess) if so wp-cron won't work until you remove it, if you are and you temporarily remove the authentication, do backups start working?
+     * Is your site private (i.e. is it behind some kind of authentication, maintenance plugin, .htaccess)? If so wp-cron won't work until you remove it. If you are and you temporarily remove the authentication, do backups start working?
 
-Report the results to our support team for further help. To do this, either enable suport from your Admin Dashboard (recommended), or email support@hmn.md
+Report the results to our support team for further help. To do this, either enable suport from your Admin Dashboard (recommended), or email backupwordpress@hmn.md
 
 **How to get BackUpWordPress working in Heart Internet**
 
@@ -100,7 +100,7 @@ The script to be entered into the Heart Internet cPanel is: `/usr/bin/php5 /home
 
 **My backups seem to be failing?**
 
-If your backups are failing - it's commonly caused by lack of available resources on your server. The easiest way to establish this to exclude some [of] or your entire uploades folder, running a backup an if that succeeds. If so, we know it's probably a server issue. If not, report the results to our support team for further help. To do this, either enable suport from your Admin Dashboard (recommended), or email support@hmn.md
+If your backups are failing, it's commonly caused by a lack of available resources on your server. The easiest way to establish this is to exclude some of, or the entirety of your uploads folder, running a backup, and if that succeeds, then you'll know it's probably a server issue. If not, report the results to our support team for further help. To do this, either enable support from your Admin Dashboard (recommended), or email backupwordpress@hmn.md
 
 **Further Support & Feedback**
 
@@ -108,7 +108,7 @@ General support questions should be posted in the <a href="http://wordpress.org/
 
 For development issues, feature requests or anybody wishing to help out with development checkout <a href="https://github.com/humanmade/backupwordpress/">BackUpWordPress on GitHub.</a>
 
-You can also tweet <a href="http://twitter.com/humanmadeltd">@humanmadeltd</a> or email support@hmn.md for further help/support.
+You can also tweet <a href="http://twitter.com/humanmadeltd">@humanmadeltd</a> or email backupwordpress@hmn.md for further help/support.
 
 == Screenshots ==
 
@@ -117,6 +117,10 @@ You can also tweet <a href="http://twitter.com/humanmadeltd">@humanmadeltd</a> o
 3. Easily manage exclude rules and see exactly which files are included and excluded from your backup.
 
 == Upgrade Notice ==
+
+= 3.3.1 =
+
+* Fixes a bug that would prevent downloading backups since 3.3.0 - please update.
 
 = 3.2.5 =
 
@@ -143,6 +147,37 @@ You can also tweet <a href="http://twitter.com/humanmadeltd">@humanmadeltd</a> o
   * This is a critical update. Fixes a bug in the core backup library. Please update immediately.
 
 == Changelog ==
+
+### 3.3.1 / 2015-10-12
+
+* Fix false positive error message.
+* Fix broken download links
+
+### 3.3.0 / 2015-10-09
+
+* Dropped support for PclZip
+* Fixed duplicate cron schedule interval names ( props ucavus )
+* Corrected some typos, grammar and punctuation ( props ucavus )
+* Fixed a bug in the WP CLI command ( props duritong )
+* Better message for wp-cron related errors
+* Replace 'bi-weekly' with less confusing wording
+* Fixed a few errors misc reported by code quality tool
+* Total site size display now subtracts excludes
+* Many general improvements and bug fixes
+
+#### 3.2.7 / 2015-07-27
+
+* Pass schedule type instead of schedule id as context for the calculated sizes, it's more useful
+* Simply output arrays rather than trying to be too clever about it
+* Start tracking PDO availability through Intercom
+* Catch database and files shell_exec warnings
+* Test under PHP 5.6 in Travis
+* Use the new backupwordpress@hmn.md email address everywhere
+* Clarify how people request access to Slack and GlotPress
+* Rewrite our contributing guidelines to be more comprehensive
+* Add instructions to contributing.md
+* Revert plugin name as it doesn't make a diff in search results
+* Always return an integer
 
 #### 3.2.6 / 2015-06-09
 

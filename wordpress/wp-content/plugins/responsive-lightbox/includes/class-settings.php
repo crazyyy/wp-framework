@@ -11,13 +11,12 @@ new Responsive_Lightbox_Settings();
  */
 class Responsive_Lightbox_Settings {
 
-	private $settings 		= array();
+	public $settings 		= array();
 	private $scripts 		= array();
-	private $options 		= array();
-	private $defaults 		= array();
 	private $tabs 			= array();
 	private $choices 		= array();
 	private $loading_places	= array();
+	private $api_url		= 'http://dfactory.eu';
 
 	public function __construct() {
 		
@@ -25,9 +24,9 @@ class Responsive_Lightbox_Settings {
 		Responsive_Lightbox()->settings = $this;
 
 		// actions
-		add_action( 'admin_init', array( &$this, 'register_settings' ) );
-		add_action( 'admin_menu', array( &$this, 'admin_menu_options' ) );
-		add_action( 'after_setup_theme', array( &$this, 'load_defaults' ) );
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'admin_menu', array( $this, 'admin_menu_options' ) );
+		add_action( 'after_setup_theme', array( $this, 'load_defaults' ) );
 	}
 
 	/**
@@ -37,7 +36,7 @@ class Responsive_Lightbox_Settings {
 	 */
 	public function load_defaults() {
 
-		$this->scripts = array(
+		$this->scripts = apply_filters( 'rl_settings_scripts', array(
 			'prettyphoto'	 => array(
 				'name'				 => __( 'prettyPhoto', 'responsive-lightbox' ),
 				'animation_speeds'	 => array(
@@ -108,9 +107,9 @@ class Responsive_Lightbox_Settings {
 			'tosrus'		 => array(
 				'name'		 => __( 'TosRUs', 'responsive-lightbox' ),
 			),
-		);
+		) );
 		
-		$this->gallery_image_titles = array(
+		$this->image_titles = array(
 			'default'		=> __( 'None (default)', 'responsive-lightbox' ),
 			'title'	 		=> __( 'Image Title', 'responsive-lightbox' ),
 			'caption'		=> __( 'Image Caption', 'responsive-lightbox' ),
@@ -140,7 +139,7 @@ class Responsive_Lightbox_Settings {
 			'settings' => array(
 				'option_group'	=> 'responsive_lightbox_settings',
 				'option_name'	=> 'responsive_lightbox_settings',
-				// 'callback'		=> array( &$this, 'validate_options' ),
+				// 'callback'		=> array( $this, 'validate_options' ),
 				'sections'		=> array(
 					'responsive_lightbox_settings' => array(
 						'title' 		=> __( 'General settings', 'responsive-lightbox' ),
@@ -158,7 +157,7 @@ class Responsive_Lightbox_Settings {
 						'section' => 'responsive_lightbox_settings',
 						'type' => 'radio',
 						'label' => '',
-						'description' => __( 'Select your preffered ligthbox effect script.', 'responsive-lightbox' ),
+						'description' => sprintf(__( 'Select your preffered ligthbox effect script or get our <a href="%s">premium extensions</a>.', 'responsive-lightbox' ), wp_nonce_url( add_query_arg( array( 'action' => 'rl-hide-notice' ), admin_url( 'options-general.php?page=responsive-lightbox&tab=addons' ) ), 'rl_action', 'rl_nonce' ) ),
 						'options' => $scripts,
 						// 'options_cb' => '',
 						// 'id' => '',
@@ -175,6 +174,13 @@ class Responsive_Lightbox_Settings {
 						'section' => 'responsive_lightbox_settings',
 						'type' => 'boolean',
 						'label' => __( 'Add lightbox to WordPress image links by default.', 'responsive-lightbox' ),
+					),
+					'image_title' => array(
+						'title' => __( 'Single image title', 'responsive-lightbox' ),
+						'section' => 'responsive_lightbox_settings',
+						'type' => 'select',
+						'description' => __( 'Select title for single images.', 'responsive-lightbox' ),
+						'options' => $this->image_titles,
 					),
 					'images_as_gallery' => array(
 						'title' => __( 'Single images as gallery', 'responsive-lightbox' ),
@@ -200,7 +206,7 @@ class Responsive_Lightbox_Settings {
 						'section' => 'responsive_lightbox_settings',
 						'type' => 'select',
 						'description' => __( 'Select title for images in native WordPress galleries.', 'responsive-lightbox' ),
-						'options' => $this->gallery_image_titles,
+						'options' => $this->image_titles,
 					),
 					'force_custom_gallery' => array(
 						'title' => __( 'Force gallery lightbox', 'responsive-lightbox' ),
@@ -253,7 +259,7 @@ class Responsive_Lightbox_Settings {
 			'configuration' => array(
 				'option_group'	=> 'responsive_lightbox_configuration',
 				'option_name'	=> 'responsive_lightbox_configuration',
-				// 'callback'		=> array( &$this, 'validate_options' ),
+				// 'callback'		=> array( $this, 'validate_options' ),
 				'sections'		=> array(
 					'responsive_lightbox_configuration' => array(
 						'title' 		=> __( 'Lightbox settings', 'responsive-lightbox' ) . ': ' . $this->scripts[Responsive_Lightbox()->options['settings']['script']]['name'],
@@ -863,10 +869,13 @@ class Responsive_Lightbox_Settings {
 				break;
 				
 			default :
+				
+				$this->settings['configuration'] = apply_filters( 'rl_settings_' . Responsive_Lightbox()->options['settings']['script'] . '_script_configuration', $this->settings['configuration'] );
+				
 				break;
 		}
 
-		$this->tabs = array(
+		$this->tabs = apply_filters( 'rl_settings_tabs', array(
 			'settings'	 => array(
 				'name'	 => __( 'General settings', 'responsive-lightbox' ),
 				'key'	 => 'responsive_lightbox_settings',
@@ -879,8 +888,14 @@ class Responsive_Lightbox_Settings {
 				'submit' => 'save_' . $this->settings['configuration']['prefix'] . '_configuration',
 				'reset'	 => 'reset_' . $this->settings['configuration']['prefix'] . '_configuration'
 			)
-		);
+		) );
 
+		$this->tabs['addons'] = array(
+			'name'	 	=> __( 'Add-ons', 'responsive-lightbox' ),
+			'key'	 	=> 'responsive_lightbox_configuration',
+			'callback'	=>  array( $this, 'addons_tab_cb' )
+		);
+		
 	}
 	
 	/**
@@ -890,7 +905,7 @@ class Responsive_Lightbox_Settings {
 	 */
 	public function admin_menu_options() {
 		add_options_page(
-			__( 'Responsive Lightbox', 'responsive-lightbox' ), __( 'Responsive Lightbox', 'responsive-lightbox' ), 'manage_options', 'responsive-lightbox', array( &$this, 'options_page' )
+			__( 'Responsive Lightbox', 'responsive-lightbox' ), __( 'Responsive Lightbox', 'responsive-lightbox' ), 'manage_options', 'responsive-lightbox', array( $this, 'options_page' )
 		);
 	}
 
@@ -900,7 +915,7 @@ class Responsive_Lightbox_Settings {
 	 * @return void
 	 */
 	public function options_page() {
-		$tab_key = (isset( $_GET['tab'] ) ? $_GET['tab'] : 'settings');
+		$tab_key = ( isset( $_GET['tab'] ) ? $_GET['tab'] : 'settings' );
 
 		echo '
 		<div class="wrap">' . screen_icon() . '
@@ -938,23 +953,32 @@ class Responsive_Lightbox_Settings {
 					</div>
 				</div>
 			
-				<form action="options.php" method="post">
-					<input type="hidden" name="script_r" value="' . esc_attr( Responsive_Lightbox()->options['settings']['script'] ) . '" />';
+				<form action="options.php" method="post">';
 
-		wp_nonce_field( 'update-options' );
-		settings_fields( $this->tabs[$tab_key]['key'] );
-		do_settings_sections( $this->tabs[$tab_key]['key'] );
+		// tab content callback
+		if ( ! empty( $this->tabs[$tab_key]['callback'] ) ) {
+			call_user_func( $this->tabs[$tab_key]['callback'] );
+		} else {
+			wp_nonce_field( 'update-options' );
+			settings_fields( $this->tabs[$tab_key]['key'] );
+			do_settings_sections( $this->tabs[$tab_key]['key'] );
+		}
 
+		if ( ! empty( $this->tabs[$tab_key]['submit'] ) || ! empty( $this->tabs[$tab_key]['reset'] ) ) {
+
+			echo '		<p class="submit">';	
+			if ( ! empty( $this->tabs[$tab_key]['submit'] ) ) {
+				submit_button( '', array( 'primary', 'save-' . $tab_key ), $this->tabs[$tab_key]['submit'], false );
+				echo ' ';
+			}
+			if ( ! empty( $this->tabs[$tab_key]['reset'] ) ) {
+				submit_button( __( 'Reset to defaults', 'responsive-lightbox' ), array( 'secondary', 'reset-' . $tab_key ), $this->tabs[$tab_key]['reset'], false );
+			}
+			echo '		</p>';
+		
+		}
+		
 		echo '
-					<p class="submit">';
-
-		submit_button( '', array( 'primary', 'save-' . $tab_key ), $this->tabs[$tab_key]['submit'], false );
-
-		echo ' ';
-		echo submit_button( __( 'Reset to defaults', 'responsive-lightbox' ), array( 'secondary', 'reset-' . $tab_key ), $this->tabs[$tab_key]['reset'], false );
-
-		echo '
-					</p>
 				</form>
 			</div>
 			<div class="clear"></div>
@@ -967,7 +991,7 @@ class Responsive_Lightbox_Settings {
 	 * @return void
 	 */
 	public function register_settings() {
-				
+
 		foreach ( $this->settings as $setting_id => $setting ) {
 			
 			// set key
@@ -978,7 +1002,7 @@ class Responsive_Lightbox_Settings {
 			register_setting(
 				esc_attr( $setting_id ),
 				! empty( $setting['option_name'] ) ? esc_attr( $setting['option_name'] ) : $setting_id,
-				! empty( $setting['callback'] ) ? $setting['callback'] : array( &$this, 'validate_settings' )
+				! empty( $setting['callback'] ) ? $setting['callback'] : array( $this, 'validate_settings' )
 			);
 			
 			// register sections
@@ -1020,7 +1044,7 @@ class Responsive_Lightbox_Settings {
 						'options' => ! empty( $field['options'] ) ? $field['options'] : '',
 						'fields' => ! empty( $field['fields'] ) ? $field['fields'] : '',
 						'default' => $field['type'] === 'multiple' ? '' : ( $this->sanitize_field( ! empty( $field['parent'] ) ? Responsive_Lightbox()->defaults[$setting_key][$field['parent']][$field_key] : Responsive_Lightbox()->defaults[$setting_key][$field_key], $field['type'] ) ),
-						'value' => $field['type'] === 'multiple' ? '' : ( $this->sanitize_field( ! empty( $field['parent'] ) ? Responsive_Lightbox()->options[$setting_key][$field['parent']][$field_key] : Responsive_Lightbox()->options[$setting_key][$field_key], $field['type'] ) ),
+						'value' => $field['type'] === 'multiple' ? '' : ( $this->sanitize_field( ! empty( $field['parent'] ) ? Responsive_Lightbox()->options[$setting_key][$field['parent']][$field_key] : ( isset( Responsive_Lightbox()->options[$setting_key][$field_key] ) ? Responsive_Lightbox()->options[$setting_key][$field_key] : Responsive_Lightbox()->defaults[$setting_key][$field_key] ), $field['type'] ) ),
 						'label_for' => $field_id,
 						'return' => false
 					);
@@ -1041,7 +1065,7 @@ class Responsive_Lightbox_Settings {
 					add_settings_field(
 						esc_attr( $field_id ),
 						! empty( $field['title'] ) ? esc_html( $field['title'] ) : '',
-						array( &$this, 'render_field' ),
+						array( $this, 'render_field' ),
 						! empty( $field['page'] ) ? esc_attr( $field['page'] ) : $setting_id,
 						! empty( $field['section'] ) ? esc_attr( $field['section'] ) : '',
 						$args
@@ -1051,6 +1075,36 @@ class Responsive_Lightbox_Settings {
 				
 			}
 			
+		}
+		
+		// licenses
+		$extensions = apply_filters( 'rl_settings_licenses', array() );
+		
+		if ( $extensions ) {
+			// register setting
+			register_setting(
+				'responsive_lightbox_licenses',
+				'responsive_lightbox_licenses',
+				array( $this, 'validate_licenses' )
+			);
+			
+			add_settings_section( 
+				'responsive_lightbox_licenses',
+				__( 'Licenses', 'responsive-lightbox' ),
+				array( $this, 'licenses_section_cb' ),
+				'responsive_lightbox_licenses'
+			);
+			
+			foreach ( $extensions as $id => $extension ) {
+				add_settings_field(
+					esc_attr( $id ),
+					$extension['name'],
+					array( $this, 'license_field_cb' ),
+					'responsive_lightbox_licenses',
+					'responsive_lightbox_licenses',
+					$extension
+				);
+			}
 		}
 
 	}
@@ -1303,6 +1357,11 @@ class Responsive_Lightbox_Settings {
 			
 			}
 			
+			if ( $setting_id === 'settings' ) {
+				// merge scripts settings
+				$input = array_merge( Responsive_Lightbox()->options['settings'], $input );
+			}
+			
 			if ( $setting_id === 'configuration' ) {
 				// merge scripts settings
 				$input = array_merge( Responsive_Lightbox()->options['configuration'], $input );
@@ -1314,6 +1373,10 @@ class Responsive_Lightbox_Settings {
 				// merge scripts settings
 				$input[Responsive_Lightbox()->options['settings']['script']] = Responsive_Lightbox()->defaults['configuration'][Responsive_Lightbox()->options['settings']['script']];
 				$input = array_merge( Responsive_Lightbox()->options['configuration'], $input );
+			} elseif ( $setting_id === 'settings' ) {
+				$input = Responsive_Lightbox()->defaults[$setting_id];
+				$input['update_version'] = Responsive_Lightbox()->options['settings']['update_version'];
+				$input['update_notice'] = Responsive_Lightbox()->options['settings']['update_notice'];
 			} else {
 				$input = Responsive_Lightbox()->defaults[$setting_id];
 			}
@@ -1325,4 +1388,192 @@ class Responsive_Lightbox_Settings {
 		return $input;
 	}
 
+	/**
+	 * Add-ons tab callback
+	 * 
+	 * @return mixed
+	 */
+	private function addons_tab_cb() {
+		?>
+		<h3><?php _e( 'Add-ons / Extensions', 'responsive-lightbox' ); ?></h3>
+		<p class="description"><?php _e( 'Enhance your website with these beautiful, easy to use extensions, designed with Responsive Lightbox integration in mind.', 'responsive-lightbox' ); ?></p>
+		<br />
+		<?php
+		if ( ( $cache = get_transient( 'responsive_lightbox_addons_feed' ) ) === false ) {
+			$url = 'https://dfactory.eu/?feed=addons&product=responsive-lightbox';
+
+			$feed = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
+	
+			if ( ! is_wp_error( $feed ) ) {
+				if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
+					$cache = wp_remote_retrieve_body( $feed );
+					// set_transient( 'responsive_lightbox_addons_feed', $cache, 3600 );
+				}
+			} else {
+				$cache = '<div class="error"><p>' . __( 'There was an error retrieving the extensions list from the server. Please try again later.', 'responsive-lightbox' ) . '</div>';
+			}
+		}
+	
+		echo $cache;
+	}
+	
+	/**
+	 * Licenses section callback.
+	 * 
+	 * @return mixed
+	 */
+	public function licenses_section_cb() {
+		?><p class="description"><?php _e( 'A list of licenses for your Responsive Lightbox extensions.', 'responsive-lightbox' ); ?></p><?php
+	}
+	
+	/**
+	 * License field callback.
+	 * 
+	 * @return mixed
+	 */
+	public function license_field_cb( $args ) {
+		$licenses = get_option( 'responsive_lightbox_licenses' );
+		
+		$license = ! empty( $licenses ) && isset( $licenses[$args['id']]['license'] ) ? esc_attr( $licenses[$args['id']]['license'] ) : '';
+		$status = ! empty( $licenses ) && ! empty( $licenses[$args['id']]['status'] ) ? true : false;
+		?>
+		<fieldset class="rl_license rl_license-<?php echo esc_attr( $args['id'] ); ?>">
+			<input type="text" class="regular-text" name="responsive_lightbox_licenses[<?php echo esc_attr( $args['id'] ); ?>][license]" value="<?php echo $license; ?>"><span class="dashicons <?php echo ! empty( $status ) ? 'dashicons-yes' : 'dashicons-no'; ?>"></span>
+			<p class="description"><?php printf( __( 'Enter your license key to activate %s extension and enable automatic upgrade notices.', 'responsive-lightbox' ), $args['name'] ); ?></p>
+		</fieldset>
+		<?php
+	}
+	
+	/**
+	 * Validate licenses function.
+	 * 
+	 * @param array $input
+	 * @return array
+	 */
+	public function validate_licenses( $input ) {
+		
+		// check cap
+		if ( ! current_user_can( 'manage_options') ) {
+			return $input;
+		}
+
+		// check page
+		if ( ! ( $option_page = esc_attr( $_POST['option_page'] ) ) )
+			return $input;
+		
+		// check data
+		if ( ! isset( $_POST['responsive_lightbox_licenses'] ) || ! is_array( $_POST['responsive_lightbox_licenses']  ))
+			return $input;
+		
+		$extensions = apply_filters( 'rl_settings_licenses', array() );
+		
+		if ( empty( $extensions ) )
+			return $input;
+		
+		// save settings
+		if ( isset( $_POST['save_rl_licenses'] ) ) {
+			$licenses = get_option( 'responsive_lightbox_licenses' );
+			
+			foreach ( $extensions as $extension ) {
+				if ( ! isset( $_POST['responsive_lightbox_licenses'][$extension['id']] ) )
+					continue;
+				
+				$license = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['responsive_lightbox_licenses'][$extension['id']]['license'] );
+				$status = ! empty( $licenses ) && ! empty( $licenses[$extension['id']]['status'] ) ? true : false;
+
+				// request data
+				$request_args = array(
+					'action'		=> 'activate_license',
+					'license'		=> trim( $license ),
+					'item_name'		=> $extension['item_name']
+				);
+				// request
+				$response = $this->license_request( $request_args );
+				
+				// echo '<pre>'; print_r( $response ); echo '</pre>';
+
+				// validate request
+				if ( is_wp_error( $response ) ) {
+					$input[$extension['id']['status']] = false;
+					add_settings_error( 'rl_licenses_settings', 'license_activation_failed', __( 'License activation failed.', 'responsive-lightbox' ), 'error' );
+				} else {
+					// decode the license data
+					$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+					// assign the data
+					if ( $license_data->license == 'valid' ) {
+						$input[$extension['id']]['status'] = true;
+						
+						if ( $status === false )
+							add_settings_error( 'rl_licenses_settings', 'license_activated', __( 'License successfully activated.', 'responsive-lightbox' ), 'updated' );
+					} else {
+						$input[$extension['id']]['status'] = false;
+						add_settings_error( 'rl_licenses_settings', 'license_activation_failed', __( 'License activation failed.', 'responsive-lightbox' ), 'error' );
+					}
+				}
+			}
+		} elseif ( isset( $_POST['reset_rl_licenses'] ) ) {
+			$licenses = get_option( 'responsive_lightbox_licenses' );
+			
+			foreach ( $extensions as $extension ) {
+				$license = ! empty( $licenses ) && isset( $licenses[$extension['id']]['license'] ) ? $licenses[$extension['id']]['license'] : '';
+				$status = ! empty( $licenses ) && ! empty( $licenses[$extension['id']]['status'] ) ? true : false;
+				
+				if ( $status === true ) {	
+					// request data
+					$request_args = array(
+						'action'		=> 'deactivate_license',
+						'license'		=> trim( $license ),
+						'item_name'		=> $extension['item_name']
+					);
+					// request
+					$response = $this->license_request( $request_args );
+					
+					// echo '<pre>'; print_r( $response ); echo '</pre>';
+
+					// validate request
+					if ( is_wp_error( $response ) ) {
+						add_settings_error( 'rl_licenses_settings', 'license_activation_failed', __( 'License activation failed.', 'responsive-lightbox' ), 'error' );
+					} else {
+						// decode the license data
+						$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+						// assign the data
+						if ( $license_data->license == 'deactivated' ) {
+							$input[$extension['id']]['license'] = '';
+							$input[$extension['id']]['status'] = false;
+							add_settings_error( 'rl_licenses_settings', 'license_deactivated', __( 'License successfully deactivated.', 'responsive-lightbox' ), 'updated' );
+						} else {
+							add_settings_error( 'rl_licenses_settings', 'license_deactivation_failed', __( 'License activation failed.', 'responsive-lightbox' ), 'error' );
+						}
+					}
+				}
+			}
+		}
+		
+		return $input;
+	}
+	
+	/**
+	 * License request function.
+	 * 
+	 * @param array $args
+	 * @return mixed
+	 */
+	private function license_request( $args ) {
+		// data to send in our API request
+		$api_params = array(
+			'edd_action'	=> $args['action'],
+			'license'		=> $args['license'],
+			'item_name'		=> urlencode( $args['item_name'] ),
+			// 'item_id'		=> $args['item_id'],
+			'url'			=> home_url(),
+			'timeout'		=> 15,
+			'sslverify'		=> false
+		);
+		// call the custom API.
+		$response = wp_remote_get( add_query_arg( $api_params, $this->api_url ) );
+		
+		return $response;
+	}
 }

@@ -7,14 +7,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: GlotPress/1.0-alpha-1000\n"
+"X-Generator: GlotPress/1.0-alpha-1100\n"
 "Project-Id-Version: Twenty Thirteen\n"
 
 #. Theme URI of the plugin/theme
 msgid "https://wordpress.org/themes/twentythirteen/"
 msgstr "https://wordpress.org/themes/twentythirteen/"
 
+#. #-#-#-#-#  twentythirteen.pot (Twenty Thirteen 1.6)  #-#-#-#-#
 #. Author URI of the plugin/theme
+#: footer.php:19
 msgid "https://wordpress.org/"
 msgstr "https://wordpress.org/"
 
@@ -184,10 +186,6 @@ msgstr "Извините, по вашему запросу ничего не н�
 #: content-none.php:27
 msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
 msgstr "Запрошенную информацию найти не удалось. Возможно, будет полезен поиск по сайту."
-
-#: footer.php:19
-msgid "http://wordpress.org/"
-msgstr "http://wordpress.org/"
 
 #: footer.php:19
 msgid "Semantic Personal Publishing Platform"

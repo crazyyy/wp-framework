@@ -193,21 +193,25 @@ class ewwwflag {
 	}
 	/* flag_added_new_image hook - optimize newly uploaded images */
 	function ewww_added_new_image ($image) {
-		global $ewww_debug;
-		$ewww_debug .= "<b>ewww_flag::ewww_added_new_image()</b><br>";
+		ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
+		global $ewww_defer;
 		// make sure the image path is set
 		if (isset($image->imagePath)) {
+			// get the image ID
+			$pid = $image->pid;
+			if ( $ewww_defer && ewww_image_optimizer_get_option( 'ewww_image_optimizer_defer' ) ) {
+				ewww_image_optimizer_add_deferred_attachment( "flag,$pid" );
+				return;
+			}
 			// optimize the full size
 			$res = ewww_image_optimizer($image->imagePath, 3, false, false, true);
 			// optimize the web optimized version
 			$wres = ewww_image_optimizer($image->webimagePath, 3, false, true);
 			// optimize the thumbnail
 			$tres = ewww_image_optimizer($image->thumbPath, 3, false, true);
-			// get the image ID
-			$pid = $image->pid;
 			// retrieve the metadata for the image ID
 			$meta = new flagMeta( $pid );
-			$ewww_debug .= print_r($meta->image->meta_data, TRUE) . "<br>";
+			ewwwio_debug_message( print_r($meta->image->meta_data, TRUE) );
 			$meta->image->meta_data['ewww_image_optimizer'] = $res[1];
 			if ( ! empty( $meta->image->meta_data['webview'] ) ) {
 				$meta->image->meta_data['webview']['ewww_image_optimizer'] = $wres[1];
@@ -264,7 +268,7 @@ class ewwwflag {
 	function ewww_flag_bulk_init() {
 		$permissions = apply_filters( 'ewww_image_optimizer_bulk_permissions', '' );
 		if ( ! wp_verify_nonce( $_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk' ) || ! current_user_can( $permissions ) ) {
-			wp_die(__('Cheatin&#8217; eh?', EWWW_IMAGE_OPTIMIZER_DOMAIN));
+			wp_die( __( 'Access denied.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 		}
 		// set the resume flag to indicate the bulk operation is in progress
 		update_option('ewww_image_optimizer_bulk_flag_resume', 'true');
@@ -278,7 +282,7 @@ class ewwwflag {
 	function ewww_flag_bulk_filename() {
 		$permissions = apply_filters( 'ewww_image_optimizer_bulk_permissions', '' );
 		if ( ! wp_verify_nonce( $_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk' ) || ! current_user_can( $permissions ) ) {
-			wp_die(__('Cheatin&#8217; eh?', EWWW_IMAGE_OPTIMIZER_DOMAIN));
+			wp_die( __( 'Access token has expired, please reload the page.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 		}
 		// need this file to work with flag meta
 		require_once(WP_CONTENT_DIR . '/plugins/flash-album-gallery/lib/meta.php');
@@ -295,9 +299,11 @@ class ewwwflag {
 		
 	/* process each image and it's thumbnail during the bulk operation */
 	function ewww_flag_bulk_loop() {
+		global $ewww_defer;
+		$ewww_defer = false;
 		$permissions = apply_filters( 'ewww_image_optimizer_bulk_permissions', '' );
 		if ( ! wp_verify_nonce( $_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk' ) || ! current_user_can( $permissions ) ) {
-			wp_die(__('Cheatin&#8217; eh?', EWWW_IMAGE_OPTIMIZER_DOMAIN));
+			wp_die( __( 'Access token has expired, please reload the page.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 		}
 		if (!empty($_REQUEST['ewww_sleep'])) {
 			sleep($_REQUEST['ewww_sleep']);
@@ -353,7 +359,7 @@ class ewwwflag {
 	function ewww_flag_bulk_cleanup() {
 		$permissions = apply_filters( 'ewww_image_optimizer_bulk_permissions', '' );
 		if ( ! wp_verify_nonce( $_REQUEST['ewww_wpnonce'], 'ewww-image-optimizer-bulk' ) || ! current_user_can( $permissions ) ) {
-			wp_die(__('Cheatin&#8217; eh?', EWWW_IMAGE_OPTIMIZER_DOMAIN));
+			wp_die( __( 'Access token has expired, please reload the page.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 		}
 		// reset the bulk flags in the db
 		update_option('ewww_image_optimizer_bulk_flag_resume', '');
@@ -389,40 +395,40 @@ class ewwwflag {
 			$type = ewww_image_optimizer_mimetype($file_path, 'i');
 			// get the file size
 			$file_size = size_format(filesize($file_path), 2);
-			$file_size = str_replace('B ', 'B', $file_size);
+			$file_size = str_replace( 'B ', 'B', $file_size );
 			$valid = true;
 			// if we don't have a valid tool for the image type, output the appropriate message
-	                switch($type) {
+	                switch( $type ) {
         	                case 'image/jpeg':
-                	                if(!EWWW_IMAGE_OPTIMIZER_JPEGTRAN && !EWWW_IMAGE_OPTIMIZER_CLOUD) {
+					if( ! EWWW_IMAGE_OPTIMIZER_JPEGTRAN && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_jpg' ) ) {
                         	                $valid = false;
-	     	                                $msg = '<br>' . sprintf(__('%s is missing', EWWW_IMAGE_OPTIMIZER_DOMAIN), '<em>jpegtran</em>');
+	     	                                $msg = '<br>' . sprintf( __( '%s is missing', EWWW_IMAGE_OPTIMIZER_DOMAIN ), '<em>jpegtran</em>' );
 	                                }
 					break;
 				case 'image/png':
-					if(!EWWW_IMAGE_OPTIMIZER_PNGOUT && !EWWW_IMAGE_OPTIMIZER_OPTIPNG && !EWWW_IMAGE_OPTIMIZER_CLOUD) {
+					if( ! EWWW_IMAGE_OPTIMIZER_PNGOUT && ! EWWW_IMAGE_OPTIMIZER_OPTIPNG && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_png' ) ) {
 						$valid = false;
-						$msg = '<br>' . sprintf(__('%s is missing', EWWW_IMAGE_OPTIMIZER_DOMAIN), '<em>optipng/pngout</em>');
+						$msg = '<br>' . sprintf( __( '%s is missing', EWWW_IMAGE_OPTIMIZER_DOMAIN ), '<em>optipng/pngout</em>' );
 					}
 					break;
 				case 'image/gif':
-					if(!EWWW_IMAGE_OPTIMIZER_GIFSICLE && !EWWW_IMAGE_OPTIMIZER_CLOUD) {
+					if( ! EWWW_IMAGE_OPTIMIZER_GIFSICLE && ! ewww_image_optimizer_get_option('ewww_image_optimizer_cloud_gif' ) ) {
 						$valid = false;
-						$msg = '<br>' . sprintf(__('%s is missing', EWWW_IMAGE_OPTIMIZER_DOMAIN), '<em>gifsicle</em>');
+						$msg = '<br>' . sprintf( __( '%s is missing', EWWW_IMAGE_OPTIMIZER_DOMAIN ), '<em>gifsicle</em>' );
 					}
 					break;
 				default:
 					$valid = false;
 			}
 			// let user know if the file type is unsupported
-			if($valid == false) {
-				_e('Unsupported file type', EWWW_IMAGE_OPTIMIZER_DOMAIN);
+			if( $valid == false ) {
+				_e( 'Unsupported file type', EWWW_IMAGE_OPTIMIZER_DOMAIN );
 				return;
 			}
 			// output the image status if we know it
 			if ( ! empty( $status ) ) {
 				echo $status;
-				echo "<br>" . sprintf(__('Image Size: %s', EWWW_IMAGE_OPTIMIZER_DOMAIN), $file_size);
+				echo "<br>" . sprintf( __( 'Image Size: %s', EWWW_IMAGE_OPTIMIZER_DOMAIN ), $file_size );
 				if ( current_user_can( apply_filters( 'ewww_image_optimizer_manual_permissions', '' ) ) )  {
 					printf("<br><a href=\"admin.php?action=ewww_flag_manual&amp;ewww_force=1&amp;ewww_attachment_ID=%d\">%s</a>",
 						$id,

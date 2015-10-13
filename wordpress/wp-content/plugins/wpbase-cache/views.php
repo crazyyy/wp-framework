@@ -1,5 +1,4 @@
 <?php
-
 $post_id = $_POST['post_id'];
 $view_meta = $_POST['view_meta'];
 

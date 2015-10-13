@@ -2,7 +2,7 @@
 /*
 Plugin Name: Responsive Lightbox
 Description: Responsive Lightbox allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices.
-Version: 1.5.6
+Version: 1.6.3
 Author: dFactory
 Author URI: http://www.dfactory.eu/
 Plugin URI: http://www.dfactory.eu/plugins/responsive-lightbox/
@@ -36,7 +36,7 @@ include_once( RESPONSIVE_LIGHTBOX_PATH . 'includes/class-settings.php' );
  * Responsive Lightbox class.
  *
  * @class Responsive_Lightbox
- * @version	1.5.6
+ * @version	1.6.3
  */
 class Responsive_Lightbox {
 
@@ -50,12 +50,15 @@ class Responsive_Lightbox {
 			'force_custom_gallery'			=> false,
 			'videos'						=> true,
 			'image_links'					=> true,
+			'image_title'					=> 'default',
 			'images_as_gallery'				=> false,
 			'deactivation_delete'			=> false,
 			'loading_place'					=> 'header',
 			'conditional_loading'			=> false,
 			'enable_custom_events'			=> false,
-			'custom_events'					=> 'ajaxComplete'
+			'custom_events'					=> 'ajaxComplete',
+			'update_version'				=> 0,
+			'update_notice'					=> true
 		),
 		'configuration'	 => array(
 			'prettyphoto'	 => array(
@@ -143,9 +146,10 @@ class Responsive_Lightbox {
 				'pagination_type'			=> 'thumbnails'
 			)
 		),
-		'version'		 => '1.5.6'
+		'version'		 => '1.6.3'
 	);
 	public $options = array();
+	private $notices = array();
 	private static $_instance;
 	
 	private function __clone() {}
@@ -162,13 +166,13 @@ class Responsive_Lightbox {
 	}
 
 	public function __construct() {
-		register_activation_hook( __FILE__, array( &$this, 'activate_multisite' ) );
-		register_deactivation_hook( __FILE__, array( &$this, 'deactivate_multisite' ) );
+		register_activation_hook( __FILE__, array( $this, 'activate_multisite' ) );
+		register_deactivation_hook( __FILE__, array( $this, 'deactivate_multisite' ) );
 
 		// change from older versions
 		$db_version = get_option( 'responsive_lightbox_version' );
 
-		if ( version_compare( ($db_version === false ? '1.0.0' : $db_version ), '1.0.5', '<' ) ) {
+		if ( version_compare( ( $db_version === false ? '1.0.0' : $db_version ), '1.0.5', '<' ) ) {
 			if ( ($array = get_option( 'rl_settings' )) !== false ) {
 				update_option( 'responsive_lightbox_settings', $array );
 				delete_option( 'rl_settings' );
@@ -183,7 +187,7 @@ class Responsive_Lightbox {
 		// update plugin version
 		update_option( 'responsive_lightbox_version', $this->defaults['version'], '', 'no' );
 
-		$this->options['settings'] = array_merge( $this->defaults['settings'], (($array = get_option( 'responsive_lightbox_settings' )) === false ? array() : $array ) );
+		$this->options['settings'] = array_merge( $this->defaults['settings'], ( ($array = get_option( 'responsive_lightbox_settings' ) ) === false ? array() : $array ) );
 
 		// for multi arrays we have to merge them separately
 		$db_conf_opts = ( ( $base = get_option( 'responsive_lightbox_configuration' ) ) === false ? array() : $base );
@@ -193,20 +197,28 @@ class Responsive_Lightbox {
 		}
 
 		// actions
-		add_action( 'plugins_loaded', array( &$this, 'load_textdomain' ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'front_scripts_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
+		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'front_scripts_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts_styles' ) );
+		add_action( 'admin_init', array( $this, 'update_notices' ) );
+		add_action( 'admin_print_scripts', array( $this, 'admin_inline_js' ), 999 );
 
 		// filters
-		add_filter( 'plugin_action_links', array( &$this, 'plugin_settings_link' ), 10, 2 );
+		add_filter( 'plugin_action_links', array( $this, 'plugin_settings_link' ), 10, 2 );
 	}
 
+	/**
+	 * Single site activation function
+	 */
 	public function activate_single() {
 		add_option( 'responsive_lightbox_settings', $this->defaults['settings'], '', 'no' );
 		add_option( 'responsive_lightbox_configuration', $this->defaults['configuration'], '', 'no' );
 		add_option( 'responsive_lightbox_version', $this->defaults['version'], '', 'no' );
 	}
 	
+	/**
+	 * Single site deactivation function
+	 */
 	public function deactivate_single( $multi = false ) {
 		if ( $multi === true ) {
 			$options = get_option( 'responsive_lightbox_settings' );
@@ -221,6 +233,9 @@ class Responsive_Lightbox {
 		}
 	}
 
+	/**
+	 * Activation function
+	 */
 	public function activate_multisite( $networkwide ) {
 		if ( is_multisite() && $networkwide ) {
 			global $wpdb;
@@ -241,6 +256,9 @@ class Responsive_Lightbox {
 			$this->activate_single();
 	}
 
+	/**
+	 * Dectivation function
+	 */
 	public function deactivate_multisite( $networkwide ) {
 		if ( is_multisite() && $networkwide ) {
 			global $wpdb;
@@ -271,7 +289,94 @@ class Responsive_Lightbox {
 	public function load_textdomain() {
 		load_plugin_textdomain( 'responsive-lightbox', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
+	
+	/**
+	 * Update notices.
+	 */
+	public function update_notices() {
+		if ( ! current_user_can( 'install_plugins' ) )
+			return;
+		
+		$current_update = 1;
+		
+		if ( $this->options['settings']['update_version'] < $current_update ) {
+			// check version, if update ver is lower than plugin ver, set update notice to true
+			$this->options['settings'] = array_merge( $this->options['settings'], array( 'update_version' => $current_update, 'update_notice' => true ) );
+			update_option( 'responsive_lightbox_settings', $this->options['settings'] );
+		} elseif ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'rl-hide-notice' ) {
+			if ( wp_verify_nonce( $_REQUEST['rl_nonce'], 'rl_action' ) ) {
+				// hide notice, if query arg is set, before it gets displayed
+				$this->options['settings'] = array_merge( $this->options['settings'], array( 'update_notice' => false ) );
+				update_option( 'responsive_lightbox_settings', $this->options['settings'] );
+			} else {
+				print_r( $_REQUEST );
+			}
+		}
 
+		// display current version notice
+		if ( $this->options['settings']['update_notice'] === true ) {
+			
+			$this->add_notice( sprintf(__( 'Thank you for installing Responsive Lightbox version %s. <a href="%s">Click here</a> to check out our latest extensions!', 'responsive-lightbox'),  $this->defaults['version'], wp_nonce_url( add_query_arg( array( 'action' => 'rl-hide-notice' ), admin_url( 'options-general.php' ) . '?page=responsive-lightbox&tab=addons' ), 'rl_action', 'rl_nonce' ) ), 'updated notice is-dismissible rl-notice' );
+		}
+	}
+	
+	/**
+	 * Add admin notices.
+	 */
+	public function add_notice( $html = '', $status = 'error', $paragraph = true, $network = false ) {
+		$this->notices[] = array(
+			'html' 		=> $html,
+			'status' 	=> $status,
+			'paragraph' => $paragraph
+		);
+
+		add_action( 'admin_notices', array( $this, 'display_notice') );
+
+		if( $network )
+			add_action( 'network_admin_notices', array( $this, 'display_notice') );
+	}
+	
+	/**
+	 * Print admin notices.
+	 */
+	public function display_notice() {
+		foreach( $this->notices as $notice ) {
+			echo '
+			<div class="' . $notice['status'] . '">
+				' . ( $notice['paragraph'] ? '<p>' : '' ) . '
+				' . $notice['html'] . '
+				' . ( $notice['paragraph'] ? '</p>' : '' ) . '
+			</div>';
+		}
+	}
+	
+	/**
+	 * Print admin scripts.
+	 */
+	public function admin_inline_js() {
+		if ( ! current_user_can( 'install_plugins' ) )
+			return;
+		?>
+		<script type="text/javascript">
+			( function ( $ ) {
+				$( document ).ready( function () {
+					// save dismiss state
+					$( '.rl-notice.is-dismissible' ).on( 'click', '.notice-dismiss', function ( e ) {
+						e.preventDefault();
+
+						$.post( ajaxurl, {
+							action: 'rl-hide-notice',
+							url: '<?php echo admin_url( 'admin-ajax.php' ); ?>',
+							rl_nonce: '<?php echo wp_create_nonce( 'rl_action' ); ?>'
+						} );
+
+					} );
+				} );
+			} )( jQuery );
+		</script>
+		<?php
+	}
+	
 	/**
 	 * Add links to Support Forum
 	 */
@@ -316,7 +421,7 @@ class Responsive_Lightbox {
 		if ( $page === 'settings_page_responsive-lightbox' ) {
 			
 			wp_register_script(
-				'responsive-lightbox-admin', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery', 'wp-color-picker' )
+				'responsive-lightbox-admin', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery', 'wp-color-picker' ), $this->defaults['version']
 			);
 			wp_enqueue_script( 'responsive-lightbox-admin' );
 
@@ -330,7 +435,7 @@ class Responsive_Lightbox {
 			wp_enqueue_style( 'wp-color-picker' );
 
 			wp_register_style(
-				'responsive-lightbox-admin', plugins_url( 'css/admin.css', __FILE__ )
+				'responsive-lightbox-admin', plugins_url( 'css/admin.css', __FILE__ ), array(), $this->defaults['version']
 			);
 			wp_enqueue_style( 'responsive-lightbox-admin' );
 		}
@@ -356,10 +461,10 @@ class Responsive_Lightbox {
 			case 'prettyphoto' :
 			
 				wp_register_script(
-					'responsive-lightbox-prettyphoto', plugins_url( 'assets/prettyphoto/js/jquery.prettyPhoto.js', __FILE__ ), array( 'jquery' ), '', ($this->options['settings']['loading_place'] === 'header' ? false : true )
+					'responsive-lightbox-prettyphoto', plugins_url( 'assets/prettyphoto/js/jquery.prettyPhoto.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
 				);
 				wp_register_style(
-					'responsive-lightbox-prettyphoto', plugins_url( 'assets/prettyphoto/css/prettyPhoto.css', __FILE__ )
+					'responsive-lightbox-prettyphoto', plugins_url( 'assets/prettyphoto/css/prettyPhoto.css', __FILE__ ), array(), $this->defaults['version']
 				);
 	
 				$scripts[] = 'responsive-lightbox-prettyphoto';
@@ -396,10 +501,10 @@ class Responsive_Lightbox {
 			case 'swipebox' :
 			
 				wp_register_script(
-					'responsive-lightbox-swipebox', plugins_url( 'assets/swipebox/js/jquery.swipebox.min.js', __FILE__ ), array( 'jquery' ), '', ($this->options['settings']['loading_place'] === 'header' ? false : true )
+					'responsive-lightbox-swipebox', plugins_url( 'assets/swipebox/js/jquery.swipebox.min.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
 				);
 				wp_register_style(
-					'responsive-lightbox-swipebox', plugins_url( 'assets/swipebox/css/swipebox.min.css', __FILE__ )
+					'responsive-lightbox-swipebox', plugins_url( 'assets/swipebox/css/swipebox.min.css', __FILE__ ), array(), $this->defaults['version']
 				);
 
 				$scripts[] = 'responsive-lightbox-swipebox';
@@ -423,10 +528,10 @@ class Responsive_Lightbox {
 			case 'fancybox' :
 			
 				wp_register_script(
-					'responsive-lightbox-fancybox', plugins_url( 'assets/fancybox/jquery.fancybox-1.3.4.js', __FILE__ ), array( 'jquery' ), '', ($this->options['settings']['loading_place'] === 'header' ? false : true )
+					'responsive-lightbox-fancybox', plugins_url( 'assets/fancybox/jquery.fancybox-1.3.4.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
 				);
 				wp_register_style(
-					'responsive-lightbox-fancybox', plugins_url( 'assets/fancybox/jquery.fancybox-1.3.4.css', __FILE__ )
+					'responsive-lightbox-fancybox', plugins_url( 'assets/fancybox/jquery.fancybox-1.3.4.css', __FILE__ ), array(), $this->defaults['version']
 				);
 
 				$scripts[] = 'responsive-lightbox-fancybox';
@@ -467,13 +572,13 @@ class Responsive_Lightbox {
 			case 'nivo' :
 
 				wp_register_script(
-					'responsive-lightbox-nivo', plugins_url( 'assets/nivo/nivo-lightbox.min.js', __FILE__ ), array( 'jquery' ), '', ($this->options['settings']['loading_place'] === 'header' ? false : true )
+					'responsive-lightbox-nivo', plugins_url( 'assets/nivo/nivo-lightbox.min.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true ), $this->defaults['version']
 				);
 				wp_register_style(
-					'responsive-lightbox-nivo', plugins_url( 'assets/nivo/nivo-lightbox.css', __FILE__ )
+					'responsive-lightbox-nivo', plugins_url( 'assets/nivo/nivo-lightbox.css', __FILE__ ), array(), $this->defaults['version']
 				);
 				wp_register_style(
-					'responsive-lightbox-nivo-default', plugins_url( 'assets/nivo/themes/default/default.css', __FILE__ )
+					'responsive-lightbox-nivo-default', plugins_url( 'assets/nivo/themes/default/default.css', __FILE__ ), array(), $this->defaults['version']
 				);
 				
 				$scripts[] = 'responsive-lightbox-nivo';
@@ -494,10 +599,10 @@ class Responsive_Lightbox {
 			case 'imagelightbox' :
 
 				wp_register_script(
-					'responsive-lightbox-imagelightbox', plugins_url( 'assets/imagelightbox/js/imagelightbox.min.js', __FILE__ ), array( 'jquery' ), '', ($this->options['settings']['loading_place'] === 'header' ? false : true )
+					'responsive-lightbox-imagelightbox', plugins_url( 'assets/imagelightbox/js/imagelightbox.min.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
 				);
 				wp_register_style(
-					'responsive-lightbox-imagelightbox', plugins_url( 'assets/imagelightbox/css/imagelightbox.css', __FILE__ )
+					'responsive-lightbox-imagelightbox', plugins_url( 'assets/imagelightbox/css/imagelightbox.css', __FILE__ ), array(), $this->defaults['version']
 				);
 				
 				$scripts[] = 'responsive-lightbox-imagelightbox';
@@ -521,16 +626,16 @@ class Responsive_Lightbox {
 				// swipe support, enqueue Hammer.js on mobile devices only
 				if ( wp_is_mobile() ) {
 					wp_register_script(
-						'responsive-lightbox-hammer-js', plugins_url( 'assets/tosrus/js/hammer.min.js', __FILE__ ), array(), '', ($this->options['settings']['loading_place'] === 'header' ? false : true )
+						'responsive-lightbox-hammer-js', plugins_url( 'assets/tosrus/js/hammer.min.js', __FILE__ ), array(), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
 					);
 					$scripts[] = 'responsive-lightbox-hammer-js';
 				}
 			
 				wp_register_script(
-					'responsive-lightbox-tosrus', plugins_url( 'assets/tosrus/js/jquery.tosrus.min.all.js', __FILE__ ), array( 'jquery' ), '', ($this->options['settings']['loading_place'] === 'header' ? false : true )
+					'responsive-lightbox-tosrus', plugins_url( 'assets/tosrus/js/jquery.tosrus.min.all.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
 				);
 				wp_register_style(
-					'responsive-lightbox-tosrus', plugins_url( 'assets/tosrus/css/jquery.tosrus.all.min.css', __FILE__ )
+					'responsive-lightbox-tosrus', plugins_url( 'assets/tosrus/css/jquery.tosrus.all.min.css', __FILE__ ), array(), $this->defaults['version']
 				);
 				
 				$scripts[] = 'responsive-lightbox-tosrus';
@@ -551,6 +656,11 @@ class Responsive_Lightbox {
 				break;
 				
 			default :
+				
+				do_action( 'rl_lightbox_enqueue_scripts' );
+				
+				$scripts = apply_filters( 'rl_lightbox_scripts', $scripts );
+				$styles = apply_filters( 'rl_lightbox_styles', $styles );
 				
 				break;
 		}
@@ -582,7 +692,7 @@ class Responsive_Lightbox {
 
 		if ( ! empty( $args['script'] ) && ! empty( $args['selector'] ) && apply_filters( 'rl_lightbox_conditional_loading', $contitional_scripts ) != false ) {
 
-			wp_register_script( 'responsive-lightbox', plugins_url( 'js/front.js', __FILE__ ), array( 'jquery' ), '', ( $this->options['settings']['loading_place'] === 'header' ? false : true ) );
+			wp_register_script( 'responsive-lightbox', plugins_url( 'js/front.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ( $this->options['settings']['loading_place'] === 'header' ? false : true ) );
 			
 			$scripts[] = 'responsive-lightbox';
 			

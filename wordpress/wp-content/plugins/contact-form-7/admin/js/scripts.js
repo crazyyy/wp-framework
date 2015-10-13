@@ -29,6 +29,14 @@
 			}
 		});
 
+		$('#contact-form-editor-tabs').focusin(function(event) {
+			$('#contact-form-editor .keyboard-interaction').css(
+				'visibility', 'visible');
+		}).focusout(function(event) {
+			$('#contact-form-editor .keyboard-interaction').css(
+				'visibility', 'hidden');
+		});
+
 		$('input:checkbox.toggle-form-table').click(function(event) {
 			$(this).wpcf7ToggleFormTable();
 		}).wpcf7ToggleFormTable();
@@ -69,6 +77,10 @@
 		$('#wpcf7-admin-form-element').submit(function() {
 			if ('copy' != this.action.value) {
 				$(window).off('beforeunload');
+			}
+
+			if ('save' == this.action.value) {
+				$('#publishing-action .spinner').addClass('is-active');
 			}
 		});
 	});

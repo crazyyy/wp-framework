@@ -7,14 +7,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: GlotPress/1.0-alpha-1000\n"
+"X-Generator: GlotPress/1.0-alpha-1100\n"
 "Project-Id-Version: Twenty Fourteen\n"
 
 #. Theme URI of the plugin/theme
 msgid "https://wordpress.org/themes/twentyfourteen/"
 msgstr "https://wordpress.org/themes/twentyfourteen/"
 
+#. #-#-#-#-#  twentyfourteen.pot (Twenty Fourteen 1.5)  #-#-#-#-#
 #. Author URI of the plugin/theme
+#: footer.php:21
 msgid "https://wordpress.org/"
 msgstr "https://wordpress.org/"
 
@@ -322,10 +324,6 @@ msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
 msgstr "Читать далее <span class=\"meta-nav\">&rarr;</span>"
 
 #: footer.php:21
-msgid "http://wordpress.org/"
-msgstr "http://wordpress.org/"
-
-#: footer.php:21
 msgid "Proudly powered by %s"
 msgstr "Сайт работает на %s"
 
@@ -436,7 +434,7 @@ msgstr "Цитаты"
 msgid "Search Results for: %s"
 msgstr "Результаты поиска: %s"
 
-#. #-#-#-#-#  twentyfourteen.pot (Twenty Fourteen 1.4)  #-#-#-#-#
+#. #-#-#-#-#  twentyfourteen.pot (Twenty Fourteen 1.5)  #-#-#-#-#
 #. Theme Name of the plugin/theme
 #: inc/customizer.php:105
 msgid "Twenty Fourteen"

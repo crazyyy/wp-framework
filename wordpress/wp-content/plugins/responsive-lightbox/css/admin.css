@@ -1,32 +1,4 @@
 /* Responsive Lightbox settings */
-.df-credits {
-	float: right;
-	width: 280px;
-	background: #fff;
-	margin: 20px -300px 20px 20px;
-	position: relative;
-}
-.df-credits .inner {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-.df-credits h3 {
-	font-size: 14px;
-	line-height: 1.4;
-	margin: 0;
-	padding: 8px 12px;
-	border-bottom: 1px solid #eee;
-}
-.df-credits .df-link {
-	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
-	font-style: italic;
-	padding-bottom: 10px;
-	margin: 0;
-}
-.df-credits .df-link a {
-	vertical-align: middle;
-	padding: 5px 0 0 4px;
-}
 .responsive-lightbox-settings .df-credits form {
 	min-width: 260px;
 	margin-bottom: 1em;
@@ -63,18 +35,83 @@
 	margin: 0;
 	text-align: left;
 }
+.responsive-lightbox-settings .rl_license .dashicons {
+	vertical-align: middle;
+}
+.responsive-lightbox-settings .rl_license .dashicons-yes {
+	color: #0073aa;
+}
+.responsive-lightbox-settings .rl_license .dashicons-no {
+	color: #a00;
+}
 .rtl .responsive-lightbox-settings output {
 	text-align: right;
 }
 
-.wplike-slider span.middle {
-	width: 150px;
+.df-credits {
+	float: right;
+	width: 280px;
+	background: #fff;
+	margin: 20px -300px 20px 20px;
+	position: relative;
 }
-.wplike-slider span.left {
-	margin-right: 10px;
+.df-credits .inner {
+	padding-left: 10px;
+	padding-right: 10px;
 }
-.wplike-slider span.right {
-	margin-left: 10px;
+.df-credits h3 {
+	font-size: 14px;
+	line-height: 1.4;
+	margin: 0;
+	padding: 8px 12px;
+	border-bottom: 1px solid #eee;
+}
+.df-credits .df-link {
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	font-style: italic;
+	padding-bottom: 10px;
+	margin: 0;
+}
+.df-credits .df-link a {
+	vertical-align: middle;
+	padding: 5px 0 0 4px;
+}
+.df-credits .df-link a {
+	vertical-align: middle;
+	padding: 5px 0 0 4px;
+}
+
+.df-addons li {
+	float: left;
+    margin: 0 1em 1em 0 !important;
+    padding: 0;
+    vertical-align: top;
+    width: 320px;
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+    color: inherit;
+    display: block;
+    min-height: 260px;
+    overflow: hidden;
+}
+.df-addons li h3.addon-title {
+    background: #fff;
+    margin: 0 !important;
+    padding: 20px !important;
+}
+.df-addons li p.addon-description {
+	padding: 20px !important;
+	margin: 0 !important;
+}
+.df-addons li a.addon-image {
+	margin: 0;
+	padding: 0;
+}
+.df-addons li a.addon-image img {
+	display: block;
+}
+.df-addons li a.addon-link {
+	margin: 0 20px 20px !important;
 }
 
 /* All Mobile Sizes (devices and browser) */
@@ -462,10 +499,10 @@
     visibility:hidden !important
 }
 output {
-            display: block;
-            font-size: 30px;
-            font-weight: bold;
-            text-align: center;
-            margin: 30px 0;
-            width: 100%;
-        }
+	display: block;
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+	margin: 30px 0;
+	width: 100%;
+}

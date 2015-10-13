@@ -3,8 +3,8 @@ Contributors: nosilver4u
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MKMQKCBFFG3WW
 Tags: image, attachment, optimize, optimization, lossless, lossy, photo, picture, seo, compression, gmagick, jpegtran, gifsicle, optipng, pngout, pngquant, jpegmini, tinyjpg, tinypng, webp, wp-cli 
 Requires at least: 3.5
-Tested up to: 4.2.2
-Stable tag: 2.4.4
+Tested up to: 4.3
+Stable tag: 2.5.1
 License: GPLv3
 
 Reduce file sizes for images in WordPress including NextGEN, GRAND FlAGallery and more using lossless/lossy methods and image format conversion.
@@ -15,18 +15,18 @@ The EWWW Image Optimizer is a WordPress plugin that will automatically optimize 
 
 **Why use EWWW Image Optimizer?**
 
-1. **Your pages will load faster.** Smaller image sizes means faster page loads. This will make your visitors happy, and can increase ad revenue.
+1. **Your pages will load faster.** Smaller image sizes means faster page loads. This will make your visitors happy, and can increase revenue.
 1. **Faster backups.** Smaller image sizes also means faster backups.
 1. **Less bandwidth usage.** Optimizing your images can save you hundreds of KB per image, which means significantly less bandwidth usage.
 1. **Super fast.** The plugin can run on your own server, so you don’t have to wait for a third party service to receive, process, and return your images. You can optimize hundreds of images in just a few minutes. PNG files take the longest, but you can adjust the settings for your situation.
 1. **Best JPG optimization.** With TinyJPG integration, nothing else comes close (requires an API subscription).
-1. **Better PNG optimization.** You can use pngout, optipng, and pngquant in conjunction.
+1. **Best PNG optimization.** You can use pngout, optipng, and pngquant in conjunction. And if that isn't enough, try the lossy PNG option powered by TinyPNG.
 1. **Root access not needed** Pre-compiled binaries are made available to install directly within the Wordpress folder, and cloud optimization is provided for those who cannot run the binaries locally.
 1. **Optimize everything** With the wp_image_editor class extension, and the ability to specify your own folders for scanning, any image in Wordpress can be optimized.
 
 By default, EWWW Image Optimizer uses lossless optimization techniques, so your image quality will be exactly the same before and after the optimization. The only thing that will change is your file size. The one small exception to this is GIF animations. While the optimization is technically lossless, you will not be able to properly edit the animation again without performing an --unoptimize operation with gifsicle. The gif2png and jpg2png conversions are also lossless but the png2jpg process is not lossless. The lossy optimization for JPG and PNG files uses sophisticated algorithms to minimize perceptual quality loss, which is vastly different than setting a static quality/compression level.
 
-The tools used for optimization are [jpegtran](http://jpegclub.org/jpegtran/), [TinyJPG](http://www.tinyjpg.com), [JPEGmini](http://www.jpegmini.com), [optipng](http://optipng.sourceforge.net/), [pngout](http://advsys.net/ken/utils.htm), [pngquant](http://pngquant.org/), [TinyPNG](http://www.tinypng.com), and [gifsicle](http://www.lcdf.org/gifsicle/). Most of these are freely available except TinyJPG/TinyPNG and JPEGmini. Images are converted using the above tools and GD or 'convert' (ImageMagick).
+The tools used for optimization are [jpegtran](http://jpegclub.org/jpegtran/), [TinyJPG](http://www.tinyjpg.com), [JPEGmini](http://www.jpegmini.com), [optipng](http://optipng.sourceforge.net/), [pngout](http://advsys.net/ken/utils.htm), [pngquant](http://pngquant.org/), [TinyPNG](http://www.tinypng.com), and [gifsicle](http://www.lcdf.org/gifsicle/). Most of these are freely available except TinyJPG/TinyPNG and JPEGmini. Images are converted using the above tools and one of the following: GMagick, IMagick, GD or 'convert' (ImageMagick).
 
 EWWW Image Optimizer calls optimization utilities directly which is well suited to shared hosting situations where these utilities may already be installed. Pre-compiled binaries/executables are provided for optipng, gifsicle, pngquant, cwebp, and jpegtran. Pngout can be installed with one-click from the settings page. If none of that works, there is a cloud option that will work for any site.
 
@@ -46,7 +46,7 @@ All images created by the built-in WP_Image_Editor class will be automatically o
 
 = Optimize Everything Else =
 
-Site admins can specify any folder within their wordpress folder to be optimized. The 'Scan and Optimize' option under Media->Bulk Optimize will optimize theme images, BuddyPress avatars, BuddyPress Activity Plus images, Meta Slider slides, WP Symposium images, GD bbPress attachments, Grand Media Galleries, and any user-specified folders. Additionally, this tool can run on an hourly basis via wp_cron to keep newly uploaded images optimized. Scheduled optimization should not be used for any plugin that uses the built-in Wordpress image functions unless you have disabled automatica optimization.
+Site admins can specify any folder within their wordpress folder to be optimized. The 'Scan and Optimize' option under Media->Bulk Optimize will optimize theme images, BuddyPress avatars, BuddyPress Activity Plus images, Meta Slider slides, WP Symposium images, GD bbPress attachments, Grand Media Galleries, and any user-specified folders. Additionally, this tool can run on an hourly basis via wp_cron to keep newly uploaded images optimized. Scheduled optimization should not be used for any plugin that uses the built-in Wordpress image functions.
 
 = WP-CLI =
 
@@ -55,7 +55,6 @@ Allows you to run all Bulk Optimization processes from your command line, instea
 = NextGEN Gallery =
 
 Features optimization on upload capability, re-optimization, and bulk optimizing. The NextGEN Bulk Optimize function is located near the bottom of the NextGEN menu, and will optimize all images in all galleries. It is also possible to optimize groups of images in a gallery, or multiple galleries at once.
-NOTE: Does not optimize thumbnails on initial upload for legacy (1.9.x) versions of NextGEN, but instead provides a button to optimize thumbnails after uploading images. No further updates will be provided for NextGEN legacy support, use NextCellent instead.
 
 = NextCellent Gallery =
 
@@ -71,15 +70,30 @@ Uploads are automatically optimized. Look for Optimize under the Image Store (Ga
 
 = Translations =
 
-Huge thanks to all our translators: 
-Romanian translation by MediasInfo.ro
-Spanish translation by Manuel Ballesta Ruiz and Adrián López Galera
-Dutch translation by Ludo Rubben
-Polish translation by Grzegorz Janoszka
-Russian translation by Elvis of turkenichev.ru
-Portuguese translation by Pedro Marcelo de Sá Alves
+Huge thanks to all our translators:  
+Bulgarian translation by Ivan Arnaudov  
+Dutch translation by Ludo Rubben  
+French translation by Bruno Tritsch, Nicolas Juen, Philippe Dupuit, Jean-Baptiste Gourdin, Dominique Goethals, Mickaël Chapusot, and Guillaume Thibord  
+German translation by Christian Herrmann and Ralf Platschi  
+Italian translation by  Umberto Moroni, Alexander Gevak and Fabrizio Balestrieri  
+Polish translation by Grzegorz Janoszka  
+Portuguese (Brazil) translation by Pedro Marcelo de Sá Alves and Celso Azevedo  
+Portuguese (Portugal) translation by Celso Azevedo
+Romanian translation by Iosif Kadar of MediasInfo.ro  
+Russian translation by Elvis of turkenichev.ru, Roman Sobol, and Vitaliy Ralle
+Spanish translation by Manuel Ballesta Ruiz and Adrián López Galera  
+Swedish translation by Alexander Widén  
+Turkish translation by sfatih  
+Ukrainian translation by Roman Sobol
 
-If you would like to help translate this plugin (new or existing translations), register for an account at our online translation hub: http://translate.ewww.io/
+In progress translations:  
+Vietnamese  
+Indonesian  
+Hebrew  
+Lithuanian
+
+If you would like to help translate this plugin (new or existing translations), you can do so here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer
+To receive updates when new strings are available for translation, you can signup here: https://ewww.io/register/
 
 == Installation ==
 
@@ -176,10 +190,11 @@ Using the command *gifsicle -b -O3 --careful original file*. This is particularl
 
 = I want to know more about image optimization, and why you chose these options/tools. =
 
-That's not a question, but since I made it up, I'll answer it. See these resources:
-http://developer.yahoo.com/performance/rules.html#opt_images
-https://developers.google.com/speed/docs/best-practices/payload#CompressImages
+That's not a question, but since I made it up, I'll answer it. See these resources:  
+http://developer.yahoo.com/performance/rules.html#opt_images  
+https://developers.google.com/speed/docs/best-practices/payload#CompressImages  
 https://developers.google.com/speed/docs/insights/OptimizeImages
+
 Pngout, TinyJPG/TinyPNG, JPEGmini, and Pngquant were recommended by EWWW IO users. Pngout (usually) optimizes better than Optipng, and best when they are used together. TinyJPG is the best lossy compression tool that I have found for JPG images. Pngquant is an excellent lossy optimizer for PNGs, and is one of the tools used by TinyPNG.
 
 == Screenshots ==
@@ -190,11 +205,61 @@ Pngout, TinyJPG/TinyPNG, JPEGmini, and Pngquant were recommended by EWWW IO user
 
 == Changelog ==
 
-= future =
-* these are current feature requests, if you see something you like here, go vote for it in the support forum
-* copy metadata from original images to webp variants
-* EWWW I.O. as a stand-alone tool
+* feature requests are sticky at the top of the support forums, vote for the ones you like: https://wordpress.org/support/plugin/ewww-image-optimizer
 * If you would like to help translate this plugin in your language, get started here: http://translate.ewww.io/projects/ewww-image-optimizer/
+
+= 2.5.1 =
+* added: Portuguese (Portugal) translation for pt_PT thanks to Celso Azevedo
+* added: optimization for custom sizes for "Fraction" theme
+* added: filter to override restrictions for Folders to Optimize
+* added: automatic fallback for conversion options if a toolkit does not produce any output
+* added: notice for WP Engine users to use Cloud version of EWWW Image Optimizer
+* fixed: bulk delay was ignored when processing deferred images
+* fixed: notices when scanning media library to load Bulk Optimize page
+* fixed: tooltip text was not escaped properly for one-click conversion links
+* fixed: warning when deferred optimization runs and there is nothing available to optimize
+* fixed: error when bulk optimizing and w3_upload_info() function is missing
+* fixed: error when passing empty value to json_encode()
+* fixed: error on Unoptimized Images when bulk optimization resume flag is set, but no attachments are left
+* fixed: Unoptimized Images will scan entire library when bulk optimization resume flag is set, instead of just remaining attachments
+
+= 2.5.0 =
+* deprecated: Disable Automatic Optimization and Include Media Folders options: will be removed from the UI in 2.6 but remain functional if enabled
+* added: deferred optimization lets you upload images with no delays, and optimize later automatically
+* added: wp_cron filter has additional parameter to allow setting scheduled & deferred optimization on different freqencies
+* added: remote images on S3 can be fetched when using WP Offload S3 (Amazon S3 and Cloudfront)
+* added: remote images on Azure Storage can be fetched when using Windows Azure Storage for WordPress
+* added: (re)upload to Dreamspeed after optimization
+* added: action hooks before and after optimization
+* added: filter to modify the number of records queried when counting unoptimized images (default 3000)
+* added: check for retina images generated without WP Retina 2x, with filter to modify @2x extension
+* added: support for Imagick and Gmagick extensons when converting images (JPG2PNG and PNG2JPG)
+* changed: nextcellent thumbs are optimized on creation, no need to manually optimize after upload
+* changed: API keys are masked as password fields
+* changed: debugging functions streamlined to reduce memory usage
+* updated: translator credits - huge THANK YOU to all of them!
+* fixed: errant tool warnings for cloud users in nextgen and flagallery
+* fixed: catch extraction error for pngout during automatic install
+* fixed: settings link in error notices for network-activated installs
+* fixed: regression with alt webp rewriting introduced in 2.4.4 that caused duplicate <html> and <head> tags in some cases
+* fixed: url replacement when restoring original for a converted image
+
+= 2.4.7 =
+* fixed: defer nextgen loading until 'init' to prevent activation/upgrade problems
+* fixed: nextgen dynamic image generation fails if API subscription is out of image credits
+
+= 2.4.6 =
+* fixed: some admin pages were testing all tools regardless of the active settings (also improves admin load times)
+* fixed: check that image exists in WP_Image_Editor extension
+* fixed: load 'tool_init' earlier on Media Library to prevent errors with Enhanced Media Library plugin
+* added: filter to modify/suppress output of thumbnail optimization message after image upload for Nextcellent (useful for things like Lightroom integration)
+* updated: Italian (it_IT) translation
+
+= 2.4.5 =
+* fixed: warning on settings page for implode() function
+* fixed: notice on admin pages with get_home_url() function
+* updated: gifsicle works again on Windows XP and Server 2003
+* added: filter to allow changing time period for scheduled optimization
 
 = 2.4.4 =
 * fixed: Alt WebP Rewriting unable to find images when WP url and Site url are different (subdirectory install)
@@ -832,11 +897,12 @@ Improved performance for PNGs by specifying proper optimization level
 
 == Contact and Credits ==
 
-Written by [Shane Bishop](https://ewww.io). Based upon CW Image Optimizer, which was written by [Jacob Allred](http://www.jacoballred.com/) at [Corban Works, LLC](http://www.corbanworks.com/). CW Image Optimizer was based on WP Smush.it. Jpegtran is the work of the Independent JPEG Group.
-[Hammer](http://thenounproject.com/noun/hammer/#icon-No1306) designed by [John Caserta](http://thenounproject.com/johncaserta) from The Noun Project.
+Written by [Shane Bishop](https://ewww.io). Based upon CW Image Optimizer, which was written by [Jacob Allred](http://www.jacoballred.com/) at [Corban Works, LLC](http://www.corbanworks.com/). CW Image Optimizer was based on WP Smush.it. Jpegtran is the work of the Independent JPEG Group.  
+[Hammer](http://thenounproject.com/noun/hammer/#icon-No1306) designed by [John Caserta](http://thenounproject.com/johncaserta) from The Noun Project.  
 [Images](http://thenounproject.com/noun/images/#icon-No22772) designed by [Simon Henrotte](http://thenounproject.com/Gizmodesbois) from The Noun Project.
 
 = optipng =
+
 Copyright (C) 2001-2014 Cosmin Truta and the Contributing Authors.
 For the purpose of copyright and licensing, the list of Contributing
 Authors is available in the accompanying AUTHORS file.
@@ -885,6 +951,7 @@ arising from the use of this software.
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 = WebP =
+
 Copyright (c) 2010, Google Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

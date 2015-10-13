@@ -3,8 +3,8 @@ Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, links, photos, template, theme, photo, image, picture, slideshow, modal, overlay, YouTube, Vimeo, video, videos
 Requires at least: 4.0
-Tested up to: 4.2.2
-Stable tag: 1.5.6
+Tested up to: 4.3.1
+Stable tag: 1.6.3
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -34,6 +34,11 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 * Filter hook for embeddding different scripts based on any custom conditions (page, post, category, user id, etc.)
 * .pot file for translations included
 
+= Available Extensions: =
+
+* [Justified Gallery](https://www.dfactory.eu/products/justified-gallery/)
+* [Lightcase Lightbox](https://www.dfactory.eu/products/lightcase-lightbox/)
+
 = Translations: =
 
 * Czech - by Vaclav Hnilicka
@@ -45,6 +50,7 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 * Japanese - by stranger-jp
 * Persian - by [Ali Mirzaei](http://alimir.ir/)
 * Polish - by Bartosz Arendt
+* Romanian - by [Victor Chiritoiu](http://contacter.ro)
 * Russian - by [Konstantin](http://l-konstantin.ru)
 * Serbo-Croatian - by [Borisa Djuraskovic](http://www.webhostinghub.com/)
 * Slovak - by [Patrik Zec](http://patwist.com)
@@ -67,6 +73,34 @@ No questions yet.
 2. screenshot-2.jpg
 
 == Changelog ==
+
+= 1.6.3 =
+* Fix: Tos"R"Us script initialized multiple times in Ajax
+* Fix: Regex issue with replacing rel attribute
+* Tweak: Swipebox updated to 1.4.1
+
+= 1.6.2 =
+* New: Disable lightbox for single images with data-rel="norl" attribute
+* Tweak: Keep rel attribute intact if used in post content links
+* Tweak: Vimeo regex improvements
+
+= 1.6.1 =
+* Fix: prettyPhoto and Nivo gallery navigation broken
+* Tweak: Added another way to close the extensions notification
+
+= 1.6.0 =
+* New: Introducing [Justified Gallery](https://www.dfactory.eu/products/justified-gallery/) and [Lightcase Lightbox](https://www.dfactory.eu/products/lightcase-lightbox/) premium extensions.
+* New: Option to set single images title from image title, caption, alt or description
+* Tweak: Confirmed WP 4.3 compatibility
+
+= 1.5.8 =
+* Tweak: Switched to protocol independent URLs in Nivo and Tosrus
+
+= 1.5.7 =
+* New: Romanian translation, thanks to [Victor Chiritoiu](http://contacter.ro)
+* Fix: Tos "R" Us pagination thumbnails and pause on hover settings not working
+* Tweak: Scripts and styles versioning, for better cache handling
+* Tweak: French translation updated
 
 = 1.5.6 =
 * New: Option to conditionally load scripts and styles only on pages that have images or galleries in post content.
@@ -230,5 +264,7 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.5.6 =
-* New: Option to conditionally load scripts and styles only on pages that have images or galleries in post content.
+= 1.6.3 =
+* Fix: Tos"R"Us script initialized multiple times in Ajax
+* Fix: Regex issue with replacing rel attribute
+* Tweak: Swipebox updated to 1.4.1

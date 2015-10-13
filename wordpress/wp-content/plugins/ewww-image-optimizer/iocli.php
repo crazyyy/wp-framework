@@ -34,6 +34,8 @@ class EWWWIO_CLI extends WP_CLI_Command {
 	 * @synopsis <library> [<delay>] [--force] [--reset] [--noprompt]
 	 */
 	function optimize( $args, $assoc_args ) {
+		global $ewww_defer;
+		$ewww_defer = false;
 		// because NextGEN hasn't flushed it's buffers...
 		while( @ob_end_flush() );
 		$library = $args[0];
@@ -270,26 +272,30 @@ function ewww_image_optimizer_scan_other () {
 			$attachments = array_merge($attachments, ewww_image_optimizer_image_scan($parent_path));
 		}
 		// collect a list of images for buddypress
-		if (is_plugin_active('buddypress/bp-loader.php') || (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network('buddypress/bp-loader.php'))) {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			// need to include the plugin library for the is_plugin_active function
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+		if (is_plugin_active('buddypress/bp-loader.php') || is_plugin_active_for_network('buddypress/bp-loader.php')) {
 			// get the value of the wordpress upload directory
 		        $upload_dir = wp_upload_dir();
 			// scan the 'avatars' and 'group-avatars' folders for images
 			$attachments = array_merge($attachments, ewww_image_optimizer_image_scan($upload_dir['basedir'] . '/avatars'), ewww_image_optimizer_image_scan($upload_dir['basedir'] . '/group-avatars'));
 		}
-		if (is_plugin_active('buddypress-activity-plus/bpfb.php') || (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network('buddypress-activity-plus/bpfb.php'))) {
+		if (is_plugin_active('buddypress-activity-plus/bpfb.php') || is_plugin_active_for_network('buddypress-activity-plus/bpfb.php')) {
 			// get the value of the wordpress upload directory
 		        $upload_dir = wp_upload_dir();
 			// scan the 'avatars' and 'group-avatars' folders for images
 			$attachments = array_merge($attachments, ewww_image_optimizer_image_scan($upload_dir['basedir'] . '/bpfb'));
 		}
-		if (is_plugin_active('grand-media/grand-media.php') || (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network('grand-media/grand-media.php'))) {
+		if (is_plugin_active('grand-media/grand-media.php') || is_plugin_active_for_network('grand-media/grand-media.php')) {
 			// scan the grand media folder for images
 			$attachments = array_merge($attachments, ewww_image_optimizer_image_scan(WP_CONTENT_DIR . '/grand-media'));
 		}
-		if (is_plugin_active('wp-symposium/wp-symposium.php') || (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network('wp-symposium/wp-symposium.php'))) {
+		if (is_plugin_active('wp-symposium/wp-symposium.php') || is_plugin_active_for_network('wp-symposium/wp-symposium.php')) {
 			$attachments = array_merge($attachments, ewww_image_optimizer_image_scan(get_option('symposium_img_path')));
 		}
-		if (is_plugin_active('ml-slider/ml-slider.php') || (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network('ml-slider/ml-slider.php'))) {
+		if (is_plugin_active('ml-slider/ml-slider.php') || is_plugin_active_for_network('ml-slider/ml-slider.php')) {
 			$slide_paths = array();
 	                $sliders = get_posts(array(
 	                        'numberposts' => -1,
@@ -327,9 +333,8 @@ function ewww_image_optimizer_scan_other () {
 								$optimized_query = $wpdb->get_results( $query, ARRAY_A );
 								if (!empty($optimized_query)) {
 									foreach ( $optimized_query as $image ) {
-										if ( $image['path'] != $path ) {
-											$ewww_debug .= "{$image['path']} does not match $path, continuing our search<br>";
-										} else {
+										if ( $image['path'] == $path ) {
+										//	$ewww_debug .= "{$image['path']} does not match $path, continuing our search<br>";
 											$already_optimized = $image;
 										}
 									}
@@ -546,7 +551,7 @@ function ewww_image_optimizer_scan_next() {
 			$images = get_option('ewww_image_optimizer_bulk_ngg_attachments');
 		// otherwise, if we are on the standard bulk page, get all the images in the db
 		} else {
-			$ewww_debug .= "starting from scratch, grabbing all the images<br />";
+			//$ewww_debug .= "starting from scratch, grabbing all the images<br />";
 			global $wpdb;
 			$images = $wpdb->get_col("SELECT pid FROM $wpdb->nggpictures ORDER BY sortorder ASC");
 		}
