@@ -145,7 +145,7 @@ gulp.task('serve', ['sprite', 'images', 'scripts', 'styles', 'fonts'], function 
   if (htmlOWp === true) {
     browserSync({
       notify: false,
-      port: 9000,
+      port: 9080,
       server: {
         baseDir: basePaths.dest,
       }
@@ -155,7 +155,7 @@ gulp.task('serve', ['sprite', 'images', 'scripts', 'styles', 'fonts'], function 
       notify: false,
       proxy: wpDomain,
       host: wpDomain,
-      port: 8080
+      port: 9090
     });
   }
 
