@@ -162,9 +162,7 @@ gulp.task('serve', ['sprite', 'images', 'scripts', 'styles', 'fonts'], function 
   // watch for changes
   gulp.watch([
     basePaths.dest + '*.html',
-    basePaths.dest + '*.php',
-    appFiles.scripts,
-    paths.fonts.src
+    basePaths.dest + '*.php'
   ]).on('change', reload);
 
   gulp.watch(paths.sprite.src, ['sprite', 'images', 'styles', reload]);
