@@ -1,15 +1,27 @@
 User-Agent: *
+Sitemap: http://crazyyy.net.ua/sitemap.xml
+
+User-Agent: *
 Crawl-Delay: 10
+User-agent: Yandex
+Crawl-delay: 10
+User-agent: Googlebot
+Crawl-delay: 10
+Disallow:
+User-agent: StackRambler
+Crawl-delay: 10
+Disallow: 
 
 User-agent: *
 Disallow: /cgi-bin
-# запрещаем индексацию системных папок
+Disallow: /sxd
 Disallow: /wp-admin
+Disallow: /wp-includes
+Disallow: /wp-content/plugins
 Disallow: /wp-content/cache
-# запрещаем индексацию страницы входа и регистрации
+Disallow: /wp-content/themes
 Disallow: /wp-login.php
 Disallow: /wp-register.php
-# запрещаем индексацию трекбеков, rss-ленты
 Disallow: /trackback
 Disallow: /feed
 Disallow: /rss
@@ -17,23 +29,23 @@ Disallow: */trackback
 Disallow: */feed
 Disallow: */rss
 Disallow: /xmlrpc.php
-# запрещаем индексацию архива автора
 Disallow: /author*
-# запрещаем индексацию постраничных комментариев
 Disallow: */comments
 Disallow: */comment-page*
-# разрешаем индексацию вложений, особо мнительным можно запретить папку wp-content целиком
-# Allow: /wp-content/uploads
+Disallow: /*?*
+Disallow: /*?
+
+Allow: /wp-content/uploads
 
 User-agent: Yandex
 Disallow: /cgi-bin
-# запрещаем индексацию системных папок
 Disallow: /wp-admin
+Disallow: /wp-includes
+Disallow: /wp-content/plugins
 Disallow: /wp-content/cache
-# запрещаем индексацию страницы входа и регистрации
+Disallow: /wp-content/themes
 Disallow: /wp-login.php
 Disallow: /wp-register.php
-# запрещаем индексацию трекбеков, rss-ленты
 Disallow: /trackback
 Disallow: /feed
 Disallow: /rss
@@ -41,22 +53,17 @@ Disallow: */trackback
 Disallow: */feed
 Disallow: */rss
 Disallow: /xmlrpc.php
-# запрещаем индексацию постраничных комментариев
 Disallow: */comments
 Disallow: */comment-page*
-# разрешаем индексацию вложений, особо мнительным можно запретить папку wp-content целиком
+Disallow: /*?*
+Disallow: /*?
+
 Allow: /wp-content/uploads
+
 User-agent: Googlebot-Image
 Disallow:
 Allow: /*
-# разрешаем индексировать изображения
+
 User-agent: YandexBlog
 Disallow:
 Allow: /*
-
-# start (J)ExR
-
-User-Agent: *
-Disallow: /jexr/
-
-# end (J)ExR
