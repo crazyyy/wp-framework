@@ -1,0 +1,288 @@
+# Copyright (C) 2013 Advanced Automatic Updates
+# This file is distributed under the same license as the Advanced Automatic Updates package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Advanced Automatic Updates 1.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/automatic-updater\n"
+"POT-Creation-Date: 2013-10-29 23:01:27+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#. #-#-#-#-#  plugin.pot (Advanced Automatic Updates 1.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: admin.php:37 admin.php:84
+msgid "Advanced Automatic Updates"
+msgstr ""
+
+#: admin.php:47
+msgid "Overview"
+msgstr ""
+
+#: admin.php:49
+msgid ""
+"This settings page allows you to select whether you would like WordPress "
+"Core, your plugins, and your themes to be automatically updated."
+msgstr ""
+
+#: admin.php:50
+msgid ""
+"It is very important to keep your WordPress installation up to date for "
+"security reasons, so unless you have a specific reason not to, we recommend "
+"allowing everything to automatically update."
+msgstr ""
+
+#: admin.php:54
+msgid "A Plugin By <a href=\"%s\" target=\"_blank\">Gary</a>"
+msgstr ""
+
+#: admin.php:55
+msgid "Donations"
+msgstr ""
+
+#: admin.php:56
+msgid "Support Forums"
+msgstr ""
+
+#: admin.php:65
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: admin.php:72
+msgid "Settings updated"
+msgstr ""
+
+#: admin.php:94
+msgid ""
+"You have the <code>AUTOMATIC_UPDATER_DISABLED</code> constant set.  "
+"Automatic updates are disabled."
+msgstr ""
+
+#: admin.php:104
+msgid ""
+"The Better WP Security plugin is hiding updates, which will prevent "
+"Automatic Updates from operating correctly. Please <a href=\"%s\">disable "
+"these options</a>."
+msgstr ""
+
+#: admin.php:116
+msgid "Update WordPress Core automatically?"
+msgstr ""
+
+#: admin.php:118
+msgid "Major versions"
+msgstr ""
+
+#: admin.php:119
+msgid "Minor and security versions <strong>(Strongly Recommended)</strong>"
+msgstr ""
+
+#: admin.php:123
+msgid "Update your plugins automatically?"
+msgstr ""
+
+#: admin.php:125
+msgid "Update your themes automatically?"
+msgstr ""
+
+#: admin.php:128
+msgid "Notification Email"
+msgstr ""
+
+#: admin.php:129
+msgid ""
+"By default, Automatic Updates will send an email to the Site Admin when an "
+"update is performed. If you would like to send that email to a different "
+"address, you can set it here."
+msgstr ""
+
+#: admin.php:130
+msgid "Override Email Address"
+msgstr ""
+
+#: admin.php:138
+msgid ""
+"If you don't want to receive an email when updates are installed, you can "
+"disable them completely."
+msgstr ""
+
+#: admin.php:139
+msgid "Disable email notifications."
+msgstr ""
+
+#: admin.php:149
+msgid "SVN Support"
+msgstr ""
+
+#: admin.php:159
+msgid "WordPress Core"
+msgstr ""
+
+#: admin.php:160
+msgid ""
+"It looks like you're running an SVN version of WordPress, that's cool! "
+"Advanced Automatic Updates can run <tt>svn up</tt> once an hour, to keep you "
+"up-to-date. For safety, enabling this option will disable the normal "
+"WordPress core updates."
+msgstr ""
+
+#: admin.php:161
+msgid "Update WordPress Core hourly?"
+msgstr ""
+
+#: admin.php:168
+msgid "Plugins"
+msgstr ""
+
+#: admin.php:169
+msgid ""
+"Running plugins from SVN is great for helping plugin devs fine tune them "
+"before release, so on behalf of all of us, thanks! If you see Akismet here "
+"and don't have it coming from a custom repository, it will probably "
+"automatically update when the WordPress Core SVN update occurs."
+msgstr ""
+
+#: admin.php:187
+msgid "Themes"
+msgstr ""
+
+#: admin.php:188
+msgid ""
+"Running themes from SVN makes you an excellent person who makes the "
+"WordPress community better - thank you! If you see any of the default Twenty "
+"Ten, Eleven or Twelve themes, these will probably automatically update when "
+"the WordPress Core SVN update occurs."
+msgstr ""
+
+#: admin.php:207
+msgid ""
+"The items marked in red don't have their .svn directory writable, so <tt>svn "
+"up</tt> will probably fail when the web server runs it. You need to give the "
+"user <tt>%s</tt> write permissions to your entire WordPress install, "
+"including .svn directories."
+msgstr ""
+
+#: admin.php:214
+msgid "SVN Options"
+msgstr ""
+
+#: admin.php:215
+msgid ""
+"Send email on <tt>svn up</tt> success? Disabling this will cause "
+"notification emails to only be sent if the <tt>svn up</tt> fails."
+msgstr ""
+
+#: admin.php:229
+msgid "Debug Information"
+msgstr ""
+
+#: admin.php:231
+msgid ""
+"When would you like to receive debug information with your notification "
+"email?"
+msgstr ""
+
+#: admin.php:235
+msgid "Always"
+msgstr ""
+
+#: admin.php:236
+msgid ""
+"Only when upgrading development versions <strong>(Recommended Minimum)</"
+"strong>"
+msgstr ""
+
+#: admin.php:237
+msgid "Never"
+msgstr ""
+
+#: admin.php:249
+msgid "Save Changes"
+msgstr ""
+
+#: admin.php:318
+msgid "Settings"
+msgstr ""
+
+#: automatic-updater.php:153
+msgid ""
+"Automatic Updater requires WordPress 3.7 or higher! Please upgrade WordPress "
+"manually, then reactivate Automatic Updater."
+msgstr ""
+
+#: automatic-updater.php:268
+msgid "WordPress Core:"
+msgstr ""
+
+#: automatic-updater.php:278
+msgid "We successfully upgraded WordPress Core from SVN!"
+msgstr ""
+
+#: automatic-updater.php:284
+msgid ""
+"While upgrading WordPress Core from SVN, we ran into the following error:"
+msgstr ""
+
+#: automatic-updater.php:286
+msgid "We're sorry it didn't work out. Please try upgrading manually, instead."
+msgstr ""
+
+#: automatic-updater.php:330
+msgid "We upgraded the following plugin:"
+msgid_plural "We upgraded the following plugins:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: automatic-updater.php:371
+msgid "We upgraded the following theme:"
+msgid_plural "We upgraded the following themes:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: automatic-updater.php:396
+msgid "WordPress Update: %s"
+msgstr ""
+
+#: automatic-updater.php:402
+msgid "Howdy!"
+msgstr ""
+
+#: automatic-updater.php:404
+msgid ""
+"Automatic Updater just ran on your site, <a href=\"%1$s\">%1$s</a>, with the "
+"following result:"
+msgstr ""
+
+#: automatic-updater.php:412
+msgid ""
+"It looks like something went wrong during the update. Note that, if "
+"Automatic Updater continues to encounter problems, it will stop trying to do "
+"this update, and will not try again until after you manually update."
+msgstr ""
+
+#: automatic-updater.php:416
+msgid "Thanks for using the Automatic Updater plugin!"
+msgstr ""
+
+#: automatic-updater.php:420
+msgid "Debug Information:"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://pento.net/projects/automatic-updater-for-wordpress/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Adds extra options to WordPress' built-in Automatic Updates feature."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "pento"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://pento.net/"
+msgstr ""
