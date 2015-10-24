@@ -3,7 +3,6 @@
     <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
       <h1 class="single-title inner-title"><?php the_title(); ?></h1>
-
       <?php if ( has_post_thumbnail()) :?>
         <a class="single-thumb" href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
           <?php the_post_thumbnail(); // Fullsize image for the single post ?>
