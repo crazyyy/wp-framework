@@ -37,8 +37,10 @@ function wpeHeaderScripts() {
     wp_deregister_script('jquery'); // Deregister WordPress jQuery   RU: Отключаю стандартный JQuery WordPress'а
     wp_register_script('jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', array(), '1.11.0'); // Google CDN jQuery   RU: Регистрирую JQuery с хостинга Google
     wp_enqueue_script('jquery'); // Enqueue it!    RU: Подключаю его
+
     wp_register_script('modernizr', '//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js', array(), '2.8.3'); // Modernizr
     wp_enqueue_script('modernizr'); // Enqueue it!
+
     //  Load footer scripts (footer.php)
     wp_register_script('wpeScripts', get_template_directory_uri() . '/js/scripts.js', array(), '1.0.0', true); // Custom scripts
     wp_enqueue_script('wpeScripts'); // Enqueue it!

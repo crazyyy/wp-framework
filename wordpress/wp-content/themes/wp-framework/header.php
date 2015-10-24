@@ -13,6 +13,11 @@
     <!-- icons -->
     <link href="<?php echo get_template_directory_uri(); ?>/favicon.ico" rel="shortcut icon">
 
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/html5shiv.js"></script>
+      <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/selectivizr.js"></script>
+      <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/respond.js"></script>
+    <![endif]-->
     <!-- css + javascript -->
     <?php wp_head(); ?>
 </head>
