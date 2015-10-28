@@ -1,26 +1,36 @@
 table {
   width: 100%;
-  margin: $small-spacing 0;
+  margin: $small-spacing 0 0;
 
   table-layout: fixed;
   border-collapse: collapse;
+  thead {
+    color: #fff;
+    background: $blue;
+  }
+  th,td{
+        position: relative;
+  }
+  th {
+    font-weight: 600;
+    font-weight: bold;
+
+    padding: $small-spacing 0;
+
+    text-align: center;
+
+    border-bottom: 1px solid darken($base-border-color, 15%);
+  }
+  td {
+    padding: $small-spacing 0;
+
+    border-bottom: $base-border;
+  }
 }
 
-th {
-  font-weight: 600;
 
-  padding: $small-spacing 0;
 
-  text-align: left;
 
-  border-bottom: 1px solid darken($base-border-color, 15%);
-}
-
-td {
-  padding: $small-spacing 0;
-
-  border-bottom: $base-border;
-}
 
 tr,
 td,
