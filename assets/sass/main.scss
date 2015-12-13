@@ -7,9 +7,9 @@
 @import 'import/mixin';
 @import 'import/wordpress';
 @import 'sprite';
-@import 'font_fontawesome';
-@import 'font_opensans';
-@import 'font_roboto';
+@import 'fonts/font_fontawesome';
+@import 'fonts/font_opensans';
+@import 'fonts/font_roboto';
 
 body {
   font-family: $base-font-family;
