@@ -395,15 +395,15 @@ remove_filter('the_excerpt', 'wpautop'); // Remove <p> tags from Excerpt altoget
 
  // Как отключить комментарии для Медиафайлов WordPress
  // http://wordpresso.org/hacks/kak-otklyuchit-kommentarii-dlya-mediafaylov-wordpress/
-
- function filter_media_comment_status( $open, $post_id ) {
+add_filter( 'comments_open', 'filter_media_comment_status', 10 , 2 );
+function filter_media_comment_status( $open, $post_id ) {
   $post = get_post( $post_id );
   if( $post->post_type == 'attachment' ) {
     return false;
   }
   return $open;
 }
-add_filter( 'comments_open', 'filter_media_comment_status', 10 , 2 );
+
 
  // Редирект записи, когда поисковый запрос выдает один результат
  // http://wordpresso.org/hacks/29-wordpress-tryukov-dlya-rabotyi-s-zapisyami-i-stranitsami/
