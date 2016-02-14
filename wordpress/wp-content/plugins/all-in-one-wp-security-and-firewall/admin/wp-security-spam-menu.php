@@ -55,13 +55,14 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
      */
     function render_menu_page() 
     {
+        echo '<div class="wrap">';
+        echo '<h2>'.__('SPAM Prevention','all-in-one-wp-security-and-firewall').'</h2>';//Interface title
         $this->set_menu_tabs();
         $tab = $this->get_current_tab();
-        ?>
-        <div class="wrap">
+        $this->render_menu_tabs();
+        ?>        
         <div id="poststuff"><div id="post-body">
         <?php 
-        $this->render_menu_tabs();
         //$tab_keys = array_keys($this->menu_tabs);
         call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
         ?>
@@ -115,7 +116,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
         <?php wp_nonce_field('aiowpsec-comment-spam-settings-nonce'); ?>            
 
         <div class="postbox">
-        <h3><label for="title"><?php _e('Add Captcha To Comments Form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Add Captcha To Comments Form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
         <div class="aio_blue_box">
             <?php
@@ -139,7 +140,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
         </div></div>
             
         <div class="postbox">
-        <h3><label for="title"><?php _e('Block Spambot Comments', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Block Spambot Comments', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
         <div class="aio_blue_box">
             <?php
@@ -241,7 +242,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
             ?>
         </div>
         <div class="postbox">
-        <h3><label for="title"><?php _e('List SPAMMER IP Addresses', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('List SPAMMER IP Addresses', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
         <form action="" method="POST">
         <?php wp_nonce_field('aiowpsec-spammer-ip-list-nonce'); ?>
@@ -265,7 +266,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
         </form>
         </div></div>
         <div class="postbox">
-        <h3><label for="title"><?php _e('SPAMMER IP Address Results', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('SPAMMER IP Address Results', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
             <?php
             if (AIOWPSecurity_Utility::is_multisite_install() && get_current_blog_id() != 1)
@@ -323,7 +324,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
         <?php wp_nonce_field('aiowpsec-bp-spam-settings-nonce'); ?>            
 
         <div class="postbox">
-        <h3><label for="title"><?php _e('Add Captcha To BuddyPress Registration Form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Add Captcha To BuddyPress Registration Form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
         <div class="aio_blue_box">
             <?php

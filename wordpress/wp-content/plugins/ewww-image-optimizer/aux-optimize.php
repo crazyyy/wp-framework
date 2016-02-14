@@ -6,9 +6,9 @@ function ewww_image_optimizer_aux_images () {
 	// Retrieve the value of the 'aux resume' option and set the button text for the form to use
 	$aux_resume = get_option( 'ewww_image_optimizer_aux_resume' );
 	if ( empty( $aux_resume ) ) {
-		$button_text = __( 'Scan and optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN );
+		$button_text = esc_attr__( 'Scan and optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN );
 	} else {
-		$button_text = __( 'Resume previous optimization', EWWW_IMAGE_OPTIMIZER_DOMAIN );
+		$button_text = esc_attr__( 'Resume previous optimization', EWWW_IMAGE_OPTIMIZER_DOMAIN );
 	}
 	// find out if the auxiliary image table has anything in it
 	$already_optimized = ewww_image_optimizer_aux_images_table_count();
@@ -16,7 +16,7 @@ function ewww_image_optimizer_aux_images () {
 	$convert_query = "SELECT image_md5 FROM $wpdb->ewwwio_images WHERE image_md5 <> ''";
 	$db_convert = $wpdb->get_results( $convert_query, ARRAY_N );
 	// generate the WP spinner image for display
-	$loading_image = plugins_url( '/wpspin.gif', __FILE__ );
+	$loading_image = plugins_url( '/images/wpspin.gif', __FILE__ );
 	// check the last time the auxiliary optimizer was run
 	$lastaux = get_option( 'ewww_image_optimizer_aux_last' );
 	// set the timezone according to the blog settings
@@ -26,7 +26,7 @@ function ewww_image_optimizer_aux_images () {
 	}
 	date_default_timezone_set( $site_timezone );
 	?>
-	<h3><?php _e( 'Optimize Everything Else', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></h3>
+	<h2><?php _e( 'Optimize Everything Else', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></h2>
 		<div id="ewww-aux-forms"><p class="ewww-bulk-info"><?php _e( 'Use this tool to optimize images outside of the Media Library and galleries where we have full integration. Examples: theme images, BuddyPress, WP Symposium, and any folders that you have specified on the settings page.', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></p>
 		<?php if ( ! empty( $db_convert ) ) { ?>
 			<p class="ewww-bulk-info"><?php _e( 'The database schema has changed, you need to convert to the new format.', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?></p>
@@ -43,7 +43,7 @@ function ewww_image_optimizer_aux_images () {
 		<?php } ?>
 			<form id="ewww-aux-start" class="ewww-bulk-form" method="post" action="">
 				<input id="ewww-aux-first" type="submit" class="button-secondary action" value="<?php echo $button_text; ?>" />
-				<input id="ewww-aux-again" type="submit" class="button-secondary action" style="display:none" value="<?php _e( 'Optimize Again', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?>" />
+				<input id="ewww-aux-again" type="submit" class="button-secondary action" style="display:none" value="<?php esc_attr_e( 'Optimize Again', EWWW_IMAGE_OPTIMIZER_DOMAIN ); ?>" />
 			</form>
 <?php		// if the 'bulk resume' option was not empty, offer to reset it so the user can start back from the beginning
 		if ( ! empty( $aux_resume ) ) {
@@ -146,7 +146,7 @@ function ewww_image_optimizer_import_loop() {
 	}
 	$already_optimized = array();
 	ewwwio_debug_message( "importing " . count( $attachments ) . " attachments" );
-	$insert_query = "INSERT INTO $wpdb->ewwwio_images (path, image_size, orig_size, results, temp) VALUES ";
+	$insert_query = "INSERT INTO $wpdb->ewwwio_images (path, image_size, orig_size, results, temp) VALUES";
 	$rows = array();
 	foreach ( $attachments as $attachment ) {
 		$record = array();
@@ -392,7 +392,7 @@ function ewww_image_optimizer_aux_images_table() {
 	$alternate = true;
 	foreach ( $already_optimized as $optimized_image ) {
 		$image_name = str_replace( ABSPATH, '', $optimized_image[0] );
-		$image_url = trailingslashit( get_site_url() ) . $image_name;
+		$image_url = esc_url( trailingslashit( get_site_url() ) . $image_name );
 		$savings = $optimized_image[1];
 		// if the path given is not the absolute path
 		if ( file_exists( $optimized_image[0] ) ) {
@@ -429,8 +429,7 @@ function ewww_image_optimizer_aux_images_remove() {
 	die();
 }
 
-// scan a folder for images and return them as an array, second parameter (optional) 
-// indicates if we should check the database for already optimized images
+// scan a folder for images and return them as an array
 function ewww_image_optimizer_image_scan( $dir ) {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	global $wpdb;
@@ -443,34 +442,39 @@ function ewww_image_optimizer_image_scan( $dir ) {
 	$start = microtime( true );
 	$query = "SELECT path,image_size FROM $wpdb->ewwwio_images";
 	$already_optimized = $wpdb->get_results( $query, ARRAY_A );
+	$optimized_list = array();
+	foreach( $already_optimized as $optimized ) {
+		$optimized_path = $optimized['path'];
+		$optimized_list[ $optimized_path ] = $optimized['image_size'];
+	}
 	$file_counter = 0;
 	if ( ewww_image_optimizer_stl_check() ) {
 		set_time_limit( 0 );
 	}
-	foreach ( $iterator as $path ) {
+	foreach ( $iterator as $file ) {
 		$file_counter++;
 		$skip_optimized = false;
-		if ( $path->isFile() ) {
-			$path = $path->getPathname();
-			if ( preg_match( '/\.(po|mo|pot|php|txt|js|css|html|woff|webp|json|svg|xml|ttf|otf|eot|md|zip|gz)$/', $path ) ) {
-				ewwwio_debug_message( "not a usable extension: $path" );
+		if ( $file->isFile() ) {
+			$path = $file->getPathname();
+			if ( preg_match( '/(\/|\\\\)\./', $path ) && apply_filters( 'ewww_image_optimizer_ignore_hidden_files', true ) ) {
+	//			ewwwio_debug_message( "skipping hidden file: $path" );
 				continue;
 			}
-			$mimetype = ewww_image_optimizer_mimetype( $path, 'i' );
-			if ( empty( $mimetype ) || ! preg_match( '/^image\/(jpeg|png|gif)/', $mimetype ) ) {
-				ewwwio_debug_message( "not a usable mimetype: $path" );
+			if ( preg_match( '/\.(conf|crt|css|docx|eot|exe|git|gitignore|gitmodules|gz|hgignore|hgsub|hgsubstate|hgtags|htaccess|htm|html|ico|ini|js|json|key|less|lock|log|map|md|mo|mp3|mp4|otf|pdf|pem|php|po|pot|sample|scss|sh|svg|svnignore|swf|template|tiff|tmp|tpl|ttf|txt|url|vcl|woff|woff2|webp|xap|xml|yml|zip)$/', $path ) ) {
+	//			ewwwio_debug_message( "not a usable extension: $path" );
 				continue;
 			}
-			foreach( $already_optimized as $optimized ) {
-				if ( $optimized['path'] === $path ) {
-					$image_size = filesize( $path );
-					if ( $optimized['image_size'] == $image_size ) {
-						ewwwio_debug_message( "match found for $path" );
-						$skip_optimized = true;
-						break;
-					} else {
-						ewwwio_debug_message( "mismatch found for $path, db says " . $optimized['image_size'] . " vs. current $image_size" );
-					}
+			if ( ! preg_match( '/\./', $path ) ) {
+	//			ewwwio_debug_message( "no extension: $path" );
+				continue;
+			}
+			if ( isset( $optimized_list[$path] ) ) {
+				$image_size = $file->getSize();
+				if ( $optimized_list[ $path ] == $image_size ) {
+					ewwwio_debug_message( "match found for $path" );
+					$skip_optimized = true;
+				} else {
+					ewwwio_debug_message( "mismatch found for $path, db says " . $optimized_list[ $path ] . " vs. current $image_size" );
 				}
 			}
 			if ( empty( $skip_optimized ) || ! empty( $_REQUEST['ewww_force'] ) ) {
@@ -604,7 +608,10 @@ function ewww_image_optimizer_aux_images_script( $hook ) {
 						foreach ( $backup_sizes as $backup_size => $meta ) {
 							if ( preg_match( '/resized-/', $backup_size ) ) {
 								$path = $meta['path'];
-								$image_size = filesize( $path );
+								$image_size = ewww_image_optimizer_filesize( $path );
+								if ( ! $image_size ) {
+									continue;
+								}
 								$query = $wpdb->prepare( "SELECT id FROM $wpdb->ewwwio_images WHERE path LIKE %s AND image_size LIKE '$image_size'", $path );
 								$optimized_query = $wpdb->get_results( $query, ARRAY_A );
 								if ( ! empty( $optimized_query ) ) {
@@ -655,18 +662,18 @@ function ewww_image_optimizer_aux_images_script( $hook ) {
 		update_option( 'ewww_image_optimizer_aux_attachments', $attachments );
 	}
 	ewww_image_optimizer_debug_log();
-	if ( empty( $attachments ) ) {
-		$attachments = '';
-	} else {
+//	if ( empty( $attachments ) ) {
+//		$attachments = '';
+//	} else {
 		// submit a couple variables to the javascript to work with
 		$attachments = json_encode( $attachments );
-	}
+//	}
 	if ( ! empty( $_REQUEST['ewww_scan'] ) ) {
-		if ( empty( $attachments ) ) {
-			_e( 'Nothing to optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN );
-		} else {
+//		if ( empty( $attachments ) ) {
+//			_e( 'Nothing to optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN );
+//		} else {
 			echo $attachments;
-		}
+//		}
 		ewwwio_memory( __FUNCTION__ );
 		die();
 	} else {
@@ -691,7 +698,7 @@ function ewww_image_optimizer_aux_images_initialize( $auto = false ) {
 	// let the user know that we are beginning
 	if ( ! $auto ) {
 		// generate the WP spinner image for display
-		$loading_image = plugins_url( '/wpspin.gif', __FILE__ );
+		$loading_image = plugins_url( '/images/wpspin.gif', __FILE__ );
 		echo "<p>" . __( 'Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN ) . "&nbsp;<img src='$loading_image' alt='loading'/></p>";
 		ewwwio_memory( __FUNCTION__ );
 		die();
@@ -707,7 +714,7 @@ function ewww_image_optimizer_aux_images_filename() {
 		wp_die( __( 'Access denied.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 	}
 	// generate the WP spinner image for display
-	$loading_image = plugins_url( '/wpspin.gif', __FILE__ );
+	$loading_image = plugins_url( '/images/wpspin.gif', __FILE__ );
 	// let the user know that we are beginning
 	echo "<p>" . __( 'Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN ) . " <b>" . preg_replace( ":\\\':", "'", $_POST['ewww_attachment'] ) . "</b>&nbsp;<img src='$loading_image' alt='loading'/></p>";
 	ewwwio_memory( __FUNCTION__ );
@@ -740,7 +747,6 @@ add_action( 'wp_ajax_bulk_aux_images_scan', 'ewww_image_optimizer_aux_images_scr
 add_action( 'wp_ajax_bulk_aux_images_table', 'ewww_image_optimizer_aux_images_table' );
 add_action( 'wp_ajax_bulk_aux_images_table_count', 'ewww_image_optimizer_aux_images_table_count' );
 add_action( 'wp_ajax_bulk_aux_images_remove', 'ewww_image_optimizer_aux_images_remove' );
-add_action( 'wp_ajax_bulk_aux_images_loading', 'ewww_image_optimizer_aux_images_loading' );
 add_action( 'wp_ajax_bulk_aux_images_init', 'ewww_image_optimizer_aux_images_initialize' );
 add_action( 'wp_ajax_bulk_aux_images_filename', 'ewww_image_optimizer_aux_images_filename' );
 add_action( 'wp_ajax_bulk_aux_images_loop', 'ewww_image_optimizer_aux_images_loop' );

@@ -1,18 +1,8 @@
-var gulp = require('gulp'),
-  gutil = require('gulp-util'),
-  es = require('event-stream'),
-  runSequence = require('run-sequence'),
-  browserSync = require('browser-sync'),
-  reload =  browserSync.reload,
-  pngquant = require('imagemin-pngquant'),
-  plugins = require("gulp-load-plugins")({
-    pattern: ['gulp-*', 'gulp.*'],
-    replaceString: /\bgulp[\-.]/
-  });
-
-/* if work with html == true, else - false */
+/* if work with html set TRUE, else - FALSE */
 var htmlOWp = true,
+  // set wordpress template folder
   wpThemeName = 'wp-framework',
+  // and set wordpress domain
   wpDomain = 'wp-framework.dev';
 
 var AUTOPREFIXER_BROWSERS = [
@@ -64,6 +54,18 @@ var spriteConfig = {
 var changeEvent = function (evt) {
   gutil.log('File', gutil.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', gutil.colors.magenta(evt.type));
 };
+
+var gulp = require('gulp'),
+  gutil = require('gulp-util'),
+  es = require('event-stream'),
+  runSequence = require('run-sequence'),
+  browserSync = require('browser-sync'),
+  reload =  browserSync.reload,
+  pngquant = require('imagemin-pngquant'),
+  plugins = require("gulp-load-plugins")({
+    pattern: ['gulp-*', 'gulp.*'],
+    replaceString: /\bgulp[\-.]/
+  });
 
 // Copy web fonts to dist
 gulp.task('fonts', function () {

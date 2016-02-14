@@ -92,7 +92,43 @@
 			custom_markup: '',
 			social_tools: '<div class="twitter"><a href="//twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div><div class="facebook"><iframe src="//www.facebook.com/plugins/like.php?locale=en_US&href={location_href}&amp;layout=button_count&amp;show_faces=true&amp;width=500&amp;action=like&amp;font&amp;colorscheme=light&amp;height=23" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:500px; height:23px;" allowTransparency="true"></iframe></div>' /* html or false to disable */
 		}, pp_settings);
-		
+
+		var isMobile = {
+			Android: function() {
+				return navigator.userAgent.match( /Android/i );
+			},
+			BlackBerry: function() {
+				return navigator.userAgent.match( /BlackBerry/i );
+			},
+			iOS: function() {
+				return navigator.userAgent.match( /iPhone|iPad|iPod/i );
+			},
+			Opera: function() {
+				return navigator.userAgent.match( /Opera Mini/i );
+			},
+			Windows: function() {
+				return navigator.userAgent.match( /IEMobile/i );
+			},
+			any: function() {
+				return ( isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows() );
+			}
+		};
+
+		function fitToMobileViewport( newWindowWidth, newWindowHeight, imgWidth, imgHeight ) {
+			var newHeight = 0,
+				newWidth = 0;
+
+			if ( imgWidth > imgHeight ) {
+				newWidth = newWindowWidth;
+				newHeight = Math.round( imgHeight * newWindowWidth / imgWidth );
+			} else {
+				newWidth = Math.round( imgWidth * newWindowHeight / imgHeight );
+				newHeight = newWindowHeight;
+			}
+
+			return _fitToViewport( newWidth, newHeight );
+		}
+
 		// Global variables accessible only by prettyPhoto
 		var matchedObjects = this, percentBased = false, pp_dimensions, pp_open,
 		
@@ -247,9 +283,12 @@
 
 						$pp_pic_holder.find('#pp_full_res')[0].innerHTML = settings.image_markup.replace(/{path}/g,pp_images[set_position]);
 
-						imgPreloader.onload = function(){
+						imgPreloader.onload = function() {
 							// Fit item to viewport
-							pp_dimensions = _fitToViewport(imgPreloader.width,imgPreloader.height);
+							if ( isMobile.any() )
+								pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), imgPreloader.width, imgPreloader.height );
+							else
+								pp_dimensions = _fitToViewport(imgPreloader.width,imgPreloader.height);
 
 							_showContent();
 						};
@@ -263,8 +302,12 @@
 					break;
 				
 					case 'youtube':
-						pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
-						
+						// Fit item to viewport
+						if ( isMobile.any() )
+							pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), movie_width, movie_height );
+						else
+							pp_dimensions = _fitToViewport( movie_width, movie_height );
+
 						// Regular youtube link
 						movie_id = getParam('v',pp_images[set_position]);
 						
@@ -288,8 +331,12 @@
 					break;
 				
 					case 'vimeo':
-						pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
-					
+						// Fit item to viewport
+						if ( isMobile.any() )
+							pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), movie_width, movie_height );
+						else
+							pp_dimensions = _fitToViewport( movie_width, movie_height );
+
 						movie_id = pp_images[set_position];
 						var regExp = /http(s?):\/\/(www\.)?vimeo.com\/(\d+)/;
 						var match = movie_id.match(regExp);
@@ -310,20 +357,28 @@
 					break;
 				
 					case 'flash':
-						pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
-					
+						// Fit item to viewport
+						if ( isMobile.any() )
+							pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), movie_width, movie_height );
+						else
+							pp_dimensions = _fitToViewport( movie_width, movie_height );
+
 						flash_vars = pp_images[set_position];
 						flash_vars = flash_vars.substring(pp_images[set_position].indexOf('flashvars') + 10,pp_images[set_position].length);
 
 						filename = pp_images[set_position];
 						filename = filename.substring(0,filename.indexOf('?'));
-					
+
 						toInject =  settings.flash_markup.replace(/{width}/g,pp_dimensions['width']).replace(/{height}/g,pp_dimensions['height']).replace(/{wmode}/g,settings.wmode).replace(/{path}/g,filename+'?'+flash_vars);
 					break;
 				
 					case 'iframe':
-						pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
-				
+						// Fit item to viewport
+						if ( isMobile.any() )
+							pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), movie_width, movie_height );
+						else
+							pp_dimensions = _fitToViewport( movie_width, movie_height );
+
 						frame_url = pp_images[set_position];
 						frame_url = frame_url.substr(0,frame_url.indexOf('iframe')-1);
 
@@ -332,7 +387,13 @@
 					
 					case 'ajax':
 						doresize = false; // Make sure the dimensions are not resized.
-						pp_dimensions = _fitToViewport(movie_width,movie_height);
+
+						// Fit item to viewport
+						if ( isMobile.any() )
+							pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), movie_width, movie_height );
+						else
+							pp_dimensions = _fitToViewport( movie_width, movie_height );
+
 						doresize = true; // Reset the dimensions
 					
 						skipInjection = true;
@@ -345,8 +406,12 @@
 					break;
 					
 					case 'custom':
-						pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
-					
+						// Fit item to viewport
+						if ( isMobile.any() )
+							pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), movie_width, movie_height );
+						else
+							pp_dimensions = _fitToViewport( movie_width, movie_height );
+
 						toInject = settings.custom_markup;
 					break;
 				
@@ -354,7 +419,13 @@
 						// to get the item height clone it, apply default width, wrap it in the prettyPhoto containers , then delete
 						myClone = $(pp_images[set_position]).clone().append('<br clear="all" />').css({'width':settings.default_width}).wrapInner('<div id="pp_full_res"><div class="pp_inline"></div></div>').appendTo($('body')).show();
 						doresize = false; // Make sure the dimensions are not resized.
-						pp_dimensions = _fitToViewport($(myClone).width(),$(myClone).height());
+
+						// Fit item to viewport
+						if ( isMobile.any() )
+							pp_dimensions = fitToMobileViewport( Math.round( windowWidth * 0.9 ), Math.round( windowHeight * 0.9 ), $(myClone).width(), $(myClone).height() );
+						else
+							pp_dimensions = _fitToViewport( $(myClone).width(), $(myClone).height() );
+
 						doresize = true; // Reset the dimensions
 						$(myClone).remove();
 						toInject = settings.inline_markup.replace(/{content}/g,$(pp_images[set_position]).html());
@@ -881,7 +952,7 @@
 		
 		return this.unbind('click.prettyphoto').bind('click.prettyphoto',$.prettyPhoto.initialize); // Return the jQuery object for chaining. The unbind method is used to avoid click conflict when the plugin is called more than once
 	};
-	
+
 	function getHashtag(){
 		var url = location.href;
 		hashtag = (url.indexOf('#prettyPhoto') !== -1) ? decodeURI(url.substring(url.indexOf('#prettyPhoto')+1,url.length)) : false;

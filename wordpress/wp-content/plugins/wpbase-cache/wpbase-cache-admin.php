@@ -41,8 +41,11 @@ class WPBase_Cache_Admin {
                 'wpbase_cache_section', 'WPBase Cache Settings', array($this, 'wpbase_cache_section_desc'), 'wpbasecache'
         );
 
+    add_settings_field(
+                'wpbase_cache_options_admin_bar_button', 'Show dashboard button in admin bar', array($this, 'admin_bar_button_input'), 'wpbasecache', 'wpbase_cache_section'
+        );
 
-
+        
         add_settings_field(
                 'wpbase_cache_options_varnish_cache', 'Enable Varnish Cache', array($this, 'varnish_cache_input'), 'wpbasecache', 'wpbase_cache_section'
         );
@@ -56,6 +59,17 @@ class WPBase_Cache_Admin {
         //echo 'These settings are part of wpoven manager plugin.';
     }
 
+    public function admin_bar_button_input(){
+        $options = get_option('wpbase_cache_options');
+        $checked = checked(1, $options['admin_bar_button'], FALSE);
+        if (!(defined('WPBASE_CACHE_SANDBOX') && WPBASE_CACHE_SANDBOX)) {
+            echo "<input id='wpbase_cache_admin_bar_button' name='wpbase_cache_options[admin_bar_button]' type='checkbox' value='1' $checked />";
+        } else {
+            echo "<input id='wpbase_cache_admin_bar_button' disabled='disabled' name='wpbase_cache_options[admin_bar_button]' type='checkbox' value='1' $checked />";
+        }
+    }
+    
+    
     public function varnish_cache_input() {
         $options = get_option('wpbase_cache_options');
 
@@ -119,6 +133,8 @@ class WPBase_Cache_Admin {
         // flush db cache
         global $wpbase_cache;
         $wpbase_cache->flush_all_cache();
+
+        delete_option('wpbase_req_cache');
 
         echo 1;
         die;

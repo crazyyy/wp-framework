@@ -5,12 +5,15 @@ $base-font-family: 'Open Sans', sans-serif;
 $heading-font-family: $base-font-family;
 
 // font weight
-$f-xbold: 900;
-$f-bold: 800;
-$f-sbold: 600;
-$f-norm: 400;
-$f-light: 300;
-$f-thin: 200;
+$f-ubold: 900; // Extra Black, Fat, Poster or Ultra Black
+$f-black: 800; // Black, Extra Bold or Heavy
+$f-bold: 700; // Bold
+$f-sbold: 600; // Semibold, Demibold
+$f-med: 500; //  Medium
+$f-norm: 400; //  Normal or Regular
+$f-light: 300; // Book or Demi
+$f-thin: 200; // 200 Light or Thin
+$f-ulight: 100; // 100 Extra Light or Ultra Light
 
 // Line height
 $base-line-height: 1.5;

@@ -57,6 +57,7 @@ if ($nginx_compat->haveNginx() && !function_exists('wp_redirect')) {
 
                 $location = wp_sanitize_redirect($location);
                 header('Location: ' . $location, true, $status);
+                return true;
         }
 
 }

@@ -161,7 +161,7 @@ class ewwwngg {
 			// get the mimetype of the image
 			$type = ewww_image_optimizer_mimetype($file_path, 'i');
 			// retrieve the human-readable filesize of the image
-	                $file_size = size_format(filesize($file_path), 2);
+	                $file_size = size_format( ewww_image_optimizer_filesize( $file_path ), 2 );
        		        $file_size = str_replace('B ', 'B', $file_size);
 			//$file_size = ewww_image_optimizer_format_bytes(filesize($file_path));
 			$valid = true;
@@ -269,21 +269,21 @@ class ewwwngg {
 //		ewww_image_optimizer_cloud_verify(false); 
                 ?>
 		<div class="wrap">
-                <div id="icon-upload" class="icon32"></div><h2><?php _e('Bulk Optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></h2>
+                <div id="icon-upload" class="icon32"></div><h1><?php _e('Bulk Optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></h1>
                 <?php
                 // Retrieve the value of the 'bulk resume' option and set the button text for the form to use
                 $resume = get_option('ewww_image_optimizer_bulk_ngg_resume');
                 if (empty($resume)) {
-                        $button_text = __('Start optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN);
+                        $button_text = esc_attr__('Start optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN);
                 } else {
-                        $button_text = __('Resume previous bulk operation', EWWW_IMAGE_OPTIMIZER_DOMAIN);
+                        $button_text = esc_attr__('Resume previous bulk operation', EWWW_IMAGE_OPTIMIZER_DOMAIN);
                 }
                 ?>
                 <div id="ewww-bulk-loading"></div>
                 <div id="ewww-bulk-progressbar"></div>
                 <div id="ewww-bulk-counter"></div>
 		<form id="ewww-bulk-stop" style="display:none;" method="post" action="">
-			<br /><input type="submit" class="button-secondary action" value="<?php _e('Stop Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
+			<br /><input type="submit" class="button-secondary action" value="<?php esc_attr_e('Stop Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
 		</form>
                 <div id="ewww-bulk-status"></div>
 		<form class="ewww-bulk-form">
@@ -304,7 +304,7 @@ class ewwwngg {
                         <form id="ewww-bulk-reset" class="ewww-bulk-form" method="post" action="">
                                 <?php wp_nonce_field( 'ewww-image-optimizer-bulk-reset', 'ewww_wpnonce'); ?>
                                 <input type="hidden" name="ewww_reset" value="1">
-                                <input type="submit" class="button-secondary action" value="<?php _e('Reset Status', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
+                                <input type="submit" class="button-secondary action" value="<?php esc_attr_e('Reset Status', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
                         </form>
 <?php           }
 	        echo '</div></div>';
@@ -380,9 +380,9 @@ class ewwwngg {
 		// store the image IDs to process in the db
 		update_option( 'ewww_image_optimizer_bulk_ngg_attachments', $images );
 		// add the EWWW IO script
-		wp_enqueue_script( 'ewwwbulkscript', plugins_url( '/eio.js', __FILE__ ), array( 'jquery', 'jquery-ui-progressbar', 'jquery-ui-slider' ) );
+		wp_enqueue_script( 'ewwwbulkscript', plugins_url( '/includes/eio.js', __FILE__ ), array( 'jquery', 'jquery-ui-progressbar', 'jquery-ui-slider' ) );
 		//replacing the built-in nextgen styling rules for progressbar, partially because the bulk optimize page doesn't work without them 
-		wp_register_style( 'ngg-jqueryui', plugins_url( 'jquery-ui-1.10.1.custom.css', __FILE__ ) ); 
+		wp_register_style( 'ngg-jqueryui', plugins_url( '/includes/jquery-ui-1.10.1.custom.css', __FILE__ ) ); 
 		// enqueue the progressbar styling 
 		wp_enqueue_style( 'ngg-jqueryui' ); //, plugins_url('jquery-ui-1.10.1.custom.css', __FILE__)); 
 		// prep the $images for use by javascript
@@ -397,6 +397,7 @@ class ewwwngg {
 				'operation_interrupted' => __( 'Operation Interrupted', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 				'temporary_failure' => __( 'Temporary failure, seconds left to retry:', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 				'remove_failed' => __( 'Could not remove image from table.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'optimized' => __( 'Optimized', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 			)
 		);
 	}
@@ -410,7 +411,7 @@ class ewwwngg {
 		// toggle the resume flag to indicate an operation is in progress
                 update_option('ewww_image_optimizer_bulk_ngg_resume', 'true');
 		// let the user know we are starting
-                $loading_image = plugins_url('/wpspin.gif', __FILE__);
+                $loading_image = plugins_url('/images/wpspin.gif', __FILE__);
                 echo "<p>Optimizing&nbsp;<img src='$loading_image' alt='loading'/></p>";
                 die();
         }
@@ -429,7 +430,7 @@ class ewwwngg {
 		$storage  = $registry->get_utility('I_Gallery_Storage');
 		// get an image object
 		$image = $storage->object->_image_mapper->find($id);
-		$loading_image = plugins_url('/wpspin.gif', __FILE__);
+		$loading_image = plugins_url('/images/wpspin.gif', __FILE__);
 		// get the filename for the image, and output our current status
 		$file_path = esc_html($storage->get_image_abspath($image, 'full'));
 		echo "<p>" . __('Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN) . " <b>" . $file_path . "</b>&nbsp;<img src='$loading_image' alt='loading'/></p>";
@@ -518,14 +519,11 @@ class ewwwngg {
 		</script>
 <?php	}
 }
-}
 // initialize the plugin and the class
-/*add_action('init', 'ewwwngg');
+global $ewwwngg;
+$ewwwngg = new ewwwngg();
+}
 
-function ewwwngg() {*/
-	global $ewwwngg;
-	$ewwwngg = new ewwwngg();
-//}
 if ( ! class_exists( 'EWWWIO_Gallery_Storage' ) && class_exists( 'Mixin' ) && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_noauto' ) ) {
 	class EWWWIO_Gallery_Storage extends Mixin {
 		function generate_image_size( $image, $size, $params = null, $skip_defaults = false ) {
@@ -544,7 +542,7 @@ if ( ! class_exists( 'EWWWIO_Gallery_Storage' ) && class_exists( 'Mixin' ) && ! 
 				ewww_image_optimizer( $filename );
 //				ewww_image_optimizer_aux_images_loop( $filename, true );
 				ewwwio_debug_message( "nextgen dynamic thumb saved: $filename" );
-				$image_size = filesize($filename);
+				$image_size = ewww_image_optimizer_filesize($filename);
 				ewwwio_debug_message( "optimized size: $image_size" );
 			}
 			ewww_image_optimizer_debug_log();

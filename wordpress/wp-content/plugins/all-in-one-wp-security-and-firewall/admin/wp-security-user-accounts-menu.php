@@ -13,7 +13,7 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu
         );
     function __construct() 
     {
-        $this->render_user_account_menu_page();
+        $this->render_menu_page();
         
         //Add the JS library for password tool - make sure we are on our password tab
         if (isset($_GET['page']) && strpos($_GET['page'], AIOWPSEC_USER_ACCOUNTS_MENU_SLUG ) !== false) {
@@ -58,15 +58,16 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu
     /*
      * The menu rendering goes here
      */
-    function render_user_account_menu_page() 
+    function render_menu_page() 
     {
+        echo '<div class="wrap">';
+        echo '<h2>'.__('User Accounts','all-in-one-wp-security-and-firewall').'</h2>';//Interface title
         $this->set_menu_tabs();
         $tab = $this->get_current_tab();
-        ?>
-        <div class="wrap">
-        <div id="poststuff"><div id="post-body">
-        <?php 
         $this->render_menu_tabs();
+        ?>        
+        <div id="poststuff"><div id="post-body">
+        <?php  
         //$tab_keys = array_keys($this->menu_tabs);
         call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
         ?>
@@ -104,7 +105,7 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu
         }
         ?>
         <div class="postbox">
-        <h3><label for="title"><?php _e('Change Admin Username', 'all-in-one-wp-security-and-firewall')?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Change Admin Username', 'all-in-one-wp-security-and-firewall')?></label></h3>
         <div class="inside">
         <?php
         global $aiowps_feature_mgr;
@@ -162,7 +163,7 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu
             </div>
 
             <div class="postbox">
-            <h3><label for="title"><?php _e('Modify Accounts With Identical Login Name & Display Name', 'all-in-one-wp-security-and-firewall')?></label></h3>
+            <h3 class="hndle"><label for="title"><?php _e('Modify Accounts With Identical Login Name & Display Name', 'all-in-one-wp-security-and-firewall')?></label></h3>
             <div class="inside">
             <?php
             global $aiowps_feature_mgr;
@@ -210,7 +211,7 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu
             </div>
 
             <div class="postbox">
-            <h3><label for="title"><?php _e('Password Strength Tool', 'all-in-one-wp-security-and-firewall')?></label></h3>
+            <h3 class="hndle"><label for="title"><?php _e('Password Strength Tool', 'all-in-one-wp-security-and-firewall')?></label></h3>
             <div class="inside">
                 <div class="aio_grey_box aio_half_width"><p>This password tool uses an algorithm which calculates how long it would take for your password to be cracked using the computing power of an off-the-shelf current model desktop PC with high end processor, graphics card and appropriate password cracking software.</p></div>
                 <div class="aiowps_password_tool_field">

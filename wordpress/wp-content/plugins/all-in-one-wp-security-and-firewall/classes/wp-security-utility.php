@@ -70,17 +70,26 @@ class AIOWPSecurity_Utility
         }
         
         //check users table
-        //$user = $wpdb->get_var( "SELECT user_login FROM `" . $wpdb->users . "` WHERE user_login='" . sanitize_text_field( $username ) . "';" );
-        $sql_1 = $wpdb->prepare("SELECT user_login FROM $wpdb->users WHERE user_login=%s", sanitize_text_field( $username ));
-        $user = $wpdb->get_var( $sql_1 );
-        $sql_2 = $wpdb->prepare("SELECT ID FROM $wpdb->users WHERE ID=%s", sanitize_text_field( $username ));
-        $userid = $wpdb->get_var( $sql_2 );
-
-        if ( $user == $username || $userid == $username ) {
-            return true;
-        } else {
-            return false;
+        $sanitized_username = sanitize_text_field( $username );
+        $sql_1 = $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_login=%s", $sanitized_username );
+        $user_login = $wpdb->get_var( $sql_1 );
+        if ( $user_login == $sanitized_username ) {
+            $users_table_value_exists = true;
         }
+        else {
+            //make sure that the sanitized username is an integer before comparing it to the users table's ID column
+            $sanitized_username_is_an_integer = ( 1 === preg_match( '/^\d+$/', $sanitized_username ) ) ? true : false;
+            if ( $sanitized_username_is_an_integer ) {
+                $sql_2 = $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE ID=%d", intval($sanitized_username) );
+                $userid = $wpdb->get_var( $sql_2 );
+                $users_table_value_exists = ( $userid == $sanitized_username ) ? true : false;
+            }
+            else {
+                $users_table_value_exists = false;
+            }
+        }
+        return $users_table_value_exists;
+
     }
     
     /*
@@ -100,7 +109,7 @@ class AIOWPSecurity_Utility
         } else {
             $url .= '&';
         }
-        $url .= $name . '='. $value;
+        $url .= $name . '='. urlencode($value);
         return $url;
     }
 
@@ -222,7 +231,7 @@ class AIOWPSecurity_Utility
         //Make a backup of the config file
         if(!AIOWPSecurity_Utility_File::backup_and_rename_wp_config($config_file))
         {
-            $this->show_msg_error(__('Failed to make a backup of the wp-config.php file. This operation will not go ahead.', 'all-in-one-wp-security-and-firewall'));
+            AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to make a backup of the wp-config.php file. This operation will not go ahead.', 'all-in-one-wp-security-and-firewall'));
             //$aio_wp_security->debug_logger->log_debug("Disable PHP File Edit - Failed to make a backup of the wp-config.php file.",4);
             return false;
         }
@@ -348,7 +357,7 @@ class AIOWPSecurity_Utility
 
         //log to database
         $result = $wpdb->insert($events_table_name, $data);
-        if ($result == FALSE)
+        if ($result === FALSE)
         {
             $aio_wp_security->debug_logger->log_debug("event_logger: Error inserting record into ".$events_table_name,4);//Log the highly unlikely event of DB error
         }

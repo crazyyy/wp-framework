@@ -3,8 +3,8 @@ Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, links, photos, template, theme, photo, image, picture, slideshow, modal, overlay, YouTube, Vimeo, video, videos
 Requires at least: 4.0
-Tested up to: 4.3.1
-Stable tag: 1.6.3
+Tested up to: 4.4.2
+Stable tag: 1.6.7
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -22,6 +22,7 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 * Automatically add lightbox to WordPress image galleries
 * Automatically add lightbox to WordPress image links
 * Automatically add lightbox to WordPress video links (YouTube, Vimeo)
+* WooCommerce product gallery support
 * Option to display single post images as a gallery
 * Option to modify native WP gallery links image size
 * Option to set gallery images title from image title, caption, alt or description
@@ -37,7 +38,9 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 = Available Extensions: =
 
 * [Justified Gallery](https://www.dfactory.eu/products/justified-gallery/)
+* [Masonry Image Gallery](https://www.dfactory.eu/products/masonry-image-gallery/)
 * [Lightcase Lightbox](https://www.dfactory.eu/products/lightcase-lightbox/)
+* [Strip Lightbox](https://www.dfactory.eu/products/strip-lightbox/)
 
 = Translations: =
 
@@ -73,6 +76,22 @@ No questions yet.
 2. screenshot-2.jpg
 
 == Changelog ==
+
+= 1.6.7 =
+* New: WooCommerce product gallery support
+* New: [Masonry Image Gallery](https://www.dfactory.eu/products/masonry-image-gallery/) and [Strip Lightbox](https://www.dfactory.eu/products/strip-lightbox/) extensions
+* Tweak: Tos"R"Us script updated to 2.4.2
+* Tweak: Settings handler improvements.
+
+= 1.6.6 =
+* Tweak: Confirmed WordPress 4.4 compatibility
+
+= 1.6.5 =
+* Fix: Lightbox activated on non-video youtube links
+* Tweak: Added a way to change settings required capability 
+
+= 1.6.4 =
+* Tweak: prettyPhoto improvements for mobile devices
 
 = 1.6.3 =
 * Fix: Tos"R"Us script initialized multiple times in Ajax
@@ -264,7 +283,6 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.6.3 =
-* Fix: Tos"R"Us script initialized multiple times in Ajax
-* Fix: Regex issue with replacing rel attribute
-* Tweak: Swipebox updated to 1.4.1
+= 1.6.7 =
+* New: WooCommerce product gallery support
+* New: [Masonry Image Gallery](https://www.dfactory.eu/products/masonry-image-gallery/) and [Strip Lightbox](https://www.dfactory.eu/products/strip-lightbox/) extensions

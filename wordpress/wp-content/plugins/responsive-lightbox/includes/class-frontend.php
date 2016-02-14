@@ -23,6 +23,11 @@ class Responsive_Lightbox_Frontend {
 		add_filter( 'wp_get_attachment_link', array( $this, 'add_gallery_lightbox_selector' ), 1000, 6 );
 		add_filter( 'the_content', array( $this, 'add_videos_lightbox_selector' ) );
 		add_filter( 'the_content', array( $this, 'add_links_lightbox_selector' ) );
+		add_filter( 'woocommerce_single_product_image_html', array( $this, 'woocommerce_single_product_image_html' ), 100 );
+		add_filter( 'woocommerce_single_product_image_thumbnail_html', array( $this, 'woocommerce_single_product_image_html' ), 100 );
+		
+		// actions
+		add_action( 'wp_enqueue_scripts', array( $this, 'woocommerce_remove_lightbox' ), 100 );
 	}
 
 	/**
@@ -32,11 +37,9 @@ class Responsive_Lightbox_Frontend {
 	 * @return mixed
 	 */
 	public function add_videos_lightbox_selector( $content ) {
-		
-		if ( Responsive_Lightbox()->options['settings']['videos'] === true ) {
-
-			// search for image-links
-			preg_match_all( '/<a(.*?)href=(?:\'|")((?:http|https|)(?::\/\/|)(?:www.|)(?:(?:(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/ytscreeningroom\?v=|\/feeds\/api\/videos\/|\/user\S*[^\w\-\s]|\S*[^\w\-\s]))(?:[\w\-]{11})[a-z0-9;:@#?&%=+\/\$_.-]*)|(?:vimeo\.com\/[0-9]+)))(?:\'|")(.*?)>/i', $content, $links );
+		if ( Responsive_Lightbox()->options['settings']['videos'] ) {
+			// search for video-links
+			preg_match_all('/<a(.*?)href=(?:\'|")((?:http|https)(?::\/\/|)(?:www.)?(?:(?:(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))(?:[\w\-]{11})[a-z0-9;:@#?&%=+\/\$_.-]*)|(?:vimeo\.com\/[0-9]+[a-z0-9;:@#?&%=+\/\$_.-]*)))(?:\'|")(.*?)>/i', $content, $links );
 
 			// found?
 			if ( ! empty ( $links[0] ) ) {
@@ -63,7 +66,6 @@ class Responsive_Lightbox_Frontend {
 					}
 				}
 			}
-
 		}
 
 		return $content;
@@ -76,7 +78,7 @@ class Responsive_Lightbox_Frontend {
 	 * @return mixed
 	 */
 	public function add_links_lightbox_selector( $content ) {
-		if ( Responsive_Lightbox()->options['settings']['image_links'] === true || Responsive_Lightbox()->options['settings']['images_as_gallery'] === true ) {
+		if ( Responsive_Lightbox()->options['settings']['image_links'] || Responsive_Lightbox()->options['settings']['images_as_gallery'] ) {
 
 			// search for image-links
 			preg_match_all( '/<a(.*?)href=(?:\'|")([^<]*?).(bmp|gif|jpeg|jpg|png)(?:\'|")(.*?)>/i', $content, $links );
@@ -84,7 +86,7 @@ class Responsive_Lightbox_Frontend {
 			// found?
 			if ( ! empty ( $links[0] ) ) {
 				// generate hash for single images gallery
-				if ( Responsive_Lightbox()->options['settings']['images_as_gallery'] === true )
+				if ( Responsive_Lightbox()->options['settings']['images_as_gallery'] )
 					$rel_hash = '-gallery-' . $this->generate_password( 4 );
 
 				foreach ( $links[0] as $id => $link ) {
@@ -107,15 +109,15 @@ class Responsive_Lightbox_Frontend {
 							continue;
 
 						// single images gallery
-						if ( Responsive_Lightbox()->options['settings']['images_as_gallery'] === true )
-							$content = str_replace( $link, preg_replace( '/(?:data-rel)=(?:\'|")(?:.*?)(?:\'|")/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . $rel_hash . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ' title="' . $title . '"', $link ), $content );
+						if ( Responsive_Lightbox()->options['settings']['images_as_gallery'] )
+							$content = str_replace( $link, preg_replace( '/(?:data-rel)=(?:\'|")(?:.*?)(?:\'|")/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . $rel_hash . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ' title="' . esc_attr( $title ) . '"', $link ), $content );
 						// single image
 						else {
-							$content = str_replace( $link, preg_replace( '/(?:data-rel)=(?:\'|")(?:.*?)(?:\'|")/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-' . $id . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ' title="' . $title . '"', $link ), $content );
+							$content = str_replace( $link, preg_replace( '/(?:data-rel)=(?:\'|")(?:.*?)(?:\'|")/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-' . $id . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ' title="' . esc_attr( $title ) . '"', $link ), $content );
 						}
 					// link without data-rel
 					} else {
-						$content = str_replace( $link, '<a' . $links[1][$id] . 'href="' . $links[2][$id] . '.' . $links[3][$id] . '"' . $links[4][$id] . ' data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . ( Responsive_Lightbox()->options['settings']['images_as_gallery'] === true ? $rel_hash : '-' . $id ) . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ' title="' . $title . '">', $content );
+						$content = str_replace( $link, '<a' . $links[1][$id] . 'href="' . $links[2][$id] . '.' . $links[3][$id] . '"' . $links[4][$id] . ' data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . ( Responsive_Lightbox()->options['settings']['images_as_gallery'] ? $rel_hash : '-' . $id ) . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ' title="' . esc_attr( $title ) . '">', $content );
 					}
 				}
 			}
@@ -129,7 +131,7 @@ class Responsive_Lightbox_Frontend {
 	 */
 	public function add_gallery_lightbox_selector( $link, $id, $size, $permalink, $icon, $text ) {
 
-		if ( Responsive_Lightbox()->options['settings']['galleries'] === true && wp_attachment_is_image( $id ) ) {
+		if ( Responsive_Lightbox()->options['settings']['galleries'] && wp_attachment_is_image( $id ) ) {
 			
 			// gallery link target image
 			$src = array();
@@ -143,7 +145,7 @@ class Responsive_Lightbox_Frontend {
 			}
 
 			if ( $title )
-				$link = str_replace( '<a href', '<a title="'. $title .'" href', $link );
+				$link = str_replace( '<a href', '<a title="'. esc_attr( $title ) .'" href', $link );
 
 			$link = ( preg_match( '/<a.*? (?:data-rel)=("|\').*?("|\')>/', $link ) === 1 ? preg_replace( '/(<a.*? data-rel=(?:"|\').*?)((?:"|\').*?>)/', '$1 ' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '$2', $link ) : preg_replace( '/(<a.*?)>/', '$1 data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '">', $link ) );
 			
@@ -174,7 +176,7 @@ class Responsive_Lightbox_Frontend {
 	 */
 	public function add_custom_gallery_lightbox_selector( $content, $attr ) {
 
-		if ( Responsive_Lightbox()->options['settings']['force_custom_gallery'] === true ) {
+		if ( Responsive_Lightbox()->options['settings']['force_custom_gallery'] ) {
 
 			preg_match_all( '/<a(.*?)href=(?:\'|")([^<]*?).(bmp|gif|jpeg|jpg|png)(?:\'|")(.*?)>/i', $content, $links );
 
@@ -196,9 +198,9 @@ class Responsive_Lightbox_Frontend {
 					}
 
 					if ( preg_match( '/<a.*?(?:data-rel)=(?:\'|")(.*?)(?:\'|").*?>/', $link, $result ) === 1 ) {
-						$content = str_replace( $link, preg_replace( '/(?:data-rel)=(?:\'|")(.*?)(?:\'|")/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"' . ( ! empty ( $title ) ? ' title="' . $title . '"' : '' ) . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ), $link ), $content );
+						$content = str_replace( $link, preg_replace( '/(?:data-rel)=(?:\'|")(.*?)(?:\'|")/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"' . ( ! empty ( $title ) ? ' title="' . esc_attr( $title ) . '"' : '' ) . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ), $link ), $content );
 					} else {
-						$content = str_replace( $link, '<a' . $links[1][$id] . 'href="' . $links[2][$id] . '.' . $links[3][$id] . '"' . $links[4][$id] . ' data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ( ! empty ( $title ) ? ' title="' . $title . '"' : '' ) . '>', $content );
+						$content = str_replace( $link, '<a' . $links[1][$id] . 'href="' . $links[2][$id] . '.' . $links[3][$id] . '"' . $links[4][$id] . ' data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"' . ( Responsive_Lightbox()->options['settings']['script'] === 'imagelightbox' ? ' data-imagelightbox="' . $id . '"' : '' ) . ( ! empty ( $title ) ? ' title="' . esc_attr( $title ) . '"' : '' ) . '>', $content );
 					}
 				}
 			}
@@ -206,6 +208,35 @@ class Responsive_Lightbox_Frontend {
 		}
 
 		return $content;
+	}
+	
+	/**
+	 * Remove WooCommerce prettyPhoto lightbox stylrs and scripts.
+	 */
+	public function woocommerce_remove_lightbox() {
+		if ( Responsive_Lightbox()->options['settings']['woocommerce_gallery_lightbox'] === true ) {
+			// remove styles
+			wp_dequeue_style( 'woocommerce_prettyPhoto_css' );
+
+			// remove scripts
+			wp_dequeue_script( 'prettyPhoto' );
+			wp_dequeue_script( 'prettyPhoto-init' );
+			wp_dequeue_script( 'fancybox' );
+			wp_dequeue_script( 'enable-lightbox' );
+		}
+	}
+	
+	/**
+	 * Apply lightbox to WooCommerce procust gallery.
+	 * 
+	 * @param mixed $html
+	 * @return mixed
+	 */
+	public function woocommerce_single_product_image_html( $html ) {
+		if ( Responsive_Lightbox()->options['settings']['woocommerce_gallery_lightbox'] === true ) {
+			$html = str_replace( 'data-rel="prettyPhoto[product-gallery]"', 'data-rel="lightbox-gallery-' . $this->gallery_no . '"', $html );
+		}
+		return $html;
 	}
 
 	/**

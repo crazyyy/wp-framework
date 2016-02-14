@@ -1,31 +1,35 @@
 <?php
 /*
-Plugin Name: WPBase-Cache
-Plugin URI: https://github.com/baseapp/wpbase-cache
-Description: A wordpress plugin for using all caches on varnish, nginx, php-fpm stack with php-apc. This plugin includes db-cache-reloaded-fix for dbcache.
-Version: 2.1.4
-Author: Vikrant Datta
-Author URI: http://blog.wpoven.com
-License: GPL2
+  Plugin Name: WPBase-Cache
+  Plugin URI: https://github.com/baseapp/wpbase-cache
+  Description: A wordpress plugin for using all caches on varnish, nginx, php-fpm stack with php-apc. This plugin includes db-cache-reloaded-fix for dbcache.
+  Version: 4.0
+  Author: Vikrant Datta
+  Author URI: http://blog.wpoven.com
+  License: GPL2
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 defined('ABSPATH') or die();
 define('WPBASE_CACHE_DIR', WP_PLUGIN_DIR . '/wpbase-cache');
 define('WPBASE_CACHE_INC_DIR', WP_PLUGIN_DIR . '/wpbase-cache/inc');
+add_action('admin_enqueue_scripts', function() {
+    wp_register_style('style', plugin_dir_url(__FILE__) . '/style.css', false);
+    wp_enqueue_style('style');
+});
 
 //$path = dirname(dirname(dirname(__FILE__)));
 //if(is_file($path.'/db.php')){
@@ -37,6 +41,85 @@ function upon_activation() {
         rename($path . '/db.php', $path . '/db_old.php');
     }
 }
+
+function is_wpoven_site() {
+    $file = ABSPATH . 'wp-config.php';
+    $content = file_get_contents($file);
+    $match = '';
+    preg_match('/define.*DB_NAME.*\'(.*)\'/', $content, $match);
+    $dbname = $match[1];
+    $sitename = substr($dbname, 2);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_URL, "https://wpoven.com/sites/check/wpbasecachecheck/" . $sitename);
+    $content = curl_exec($ch);
+    curl_close($ch);
+    return $content;
+}
+
+function check_wpoven_site() {
+
+    $check_site = is_wpoven_site();
+    if ($check_site == "1") {
+
+        function custom_button_example($wp_admin_bar) {
+            $file = ABSPATH . 'wp-config.php';
+            $content = file_get_contents($file);
+            $match = '';
+            preg_match('/define.*DB_NAME.*\'(.*)\'/', $content, $match);
+            $dbname = $match[1];
+            $sitename = substr($dbname, 2);
+            $req_cache = get_option('wpbase_req_cache');
+            $req_cache = json_decode($req_cache, true);
+            if (!get_option('wpbase_req_cache')) {
+                //echo "here";
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_URL, "https://wpoven.com/sites/checksiteinfo/" . $sitename);
+                $content = curl_exec($ch);
+                curl_close($ch);
+                //var_dump($content);
+                //$return_array = explode(",", $content);
+                $return_array = json_decode($content, true);
+                update_option('wpbase_req_cache', $content);
+            } else {
+                $return_array = $req_cache;
+            }
+            //var_dump($return_array);
+            if ($return_array['status'] == "true") {
+                $args = array(
+                    'id' => 'Dashboard-button',
+                    'title' => $return_array['panel_title'] . ' Dashboard',
+                    'href' => $return_array['hostname'] . '/sites/view/' . $return_array['siteuid'],
+                    'meta' => array(
+                        'class' => 'dashboard-button-class'
+                    )
+                );
+                $wp_admin_bar->add_node($args);
+            } else if ($return_array['status'] == "false") {
+                $args = array(
+                    'id' => 'WPOven-button',
+                    'title' => 'WPOven Site Dashboard',
+                    'href' => 'https://wpoven.com/sites/edit/' . $sitename,
+                    'meta' => array(
+                        'class' => 'dashboard-button-class'
+                    )
+                );
+                $wp_admin_bar->add_node($args);
+            }
+        }
+
+        add_action('admin_bar_menu', 'custom_button_example', 100);
+    }
+}
+
+$options = get_option('wpbase_cache_options');
+if ($options['admin_bar_button'] == '1')
+    add_action('init', 'check_wpoven_site');
 
 register_activation_hook(__FILE__, 'upon_activation');
 
@@ -63,7 +146,8 @@ class WPBase_Cache {
         $options = array(
             'db_cache' => '0',
             'varnish_cache' => '1',
-            'send_as' => 'noreply'
+            'send_as' => 'noreply',
+            'admin_bar_button' => '1'
                 //'reject_url' => '',
                 //'reject_cookie' => '',
         );
@@ -79,7 +163,8 @@ class WPBase_Cache {
         $options = array(
             'db_cache' => '0',
             'varnish_cache' => '0',
-            'send_as' => '0'
+            'send_as' => '0',
+            'admin_bar_button' => ''
                 //'reject_url' => '',
                 //'reject_cookie' => '',
         );
@@ -188,41 +273,42 @@ function warn_admin_notice() {
         </div><?php
     }
 }
+
 $options = get_option('wpbase_cache_options');
 $send_as = $options['send_as'];
-    if($send_as != NULL){
-add_filter('wp_mail_from', 'mail_from');
-add_filter('wp_mail_from_name', 'mail_from_name');
+if ($send_as != NULL) {
+    add_filter('wp_mail_from', 'mail_from_wpoven');
+    add_filter('wp_mail_from_name', 'mail_from_name_wpoven');
 }
-function mail_from($email){
+
+function mail_from_wpoven($email) {
 
     $options = get_option('wpbase_cache_options');
     $send_as = $options['send_as'];
-    if($send_as != NULL){
-       // $sitename = strtolower($_SERVER['SERVER_NAME']);
-       // $sitename = str_replace('www.','',$sitename);
- global $wpdb;
+    if ($send_as != NULL) {
+        // $sitename = strtolower($_SERVER['SERVER_NAME']);
+        // $sitename = str_replace('www.','',$sitename);
+        global $wpdb;
         $table_name = $wpdb->prefix . "options";
-        $result = $wpdb->get_results('SELECT option_value FROM '.$table_name.' WHERE option_name = "siteurl";',ARRAY_N);
+        $result = $wpdb->get_results('SELECT option_value FROM ' . $table_name . ' WHERE option_name = "siteurl";', ARRAY_N);
         $sitename = parse_url($result[0][0]);
         $host = $sitename['host'];
         $domain = str_replace('www.', '', $host);
-if(strpos($domain,'8080')!==false){
-            $dom = explode('/',$_SERVER['REQUEST_URI']);
-            return $send_as.'@'.$dom[1];
-        }
-        else{
-            return $send_as.'@'.$domain;
+        if (strpos($domain, '8080') !== false) {
+            $dom = explode('/', $_SERVER['REQUEST_URI']);
+            return $send_as . '@' . $dom[1];
+        } else {
+            return $send_as . '@' . $domain;
         }
 
         //$sitename = substr($sitename,0,4)=='www.' ? substr($sitename, 4) : $sitename;
     }
-
 }
-function mail_from_name($name){
+
+function mail_from_name_wpoven($name) {
     $options = get_option('wpbase_cache_options');
     $send_as = $options['send_as'];
-    if($send_as != NULL){
+    if ($send_as != NULL) {
         return $send_as;
     }
-    }
+}

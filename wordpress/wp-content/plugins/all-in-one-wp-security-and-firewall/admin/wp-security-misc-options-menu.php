@@ -10,6 +10,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
     var $menu_tabs_handler = array(
         'tab1' => 'render_tab1',
         'tab2' => 'render_tab2',
+        'tab3' => 'render_tab3',
         );
 
     function __construct() 
@@ -22,6 +23,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
         $this->menu_tabs = array(
         'tab1' => __('Copy Protection', 'all-in-one-wp-security-and-firewall'),
         'tab2' => __('Frames', 'all-in-one-wp-security-and-firewall'),
+        'tab3' => __('Users Enumeration', 'all-in-one-wp-security-and-firewall'),
         );
     }
 
@@ -53,13 +55,14 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
      */
     function render_menu_page() 
     {
+        echo '<div class="wrap">';
+        echo '<h2>'.__('Miscellaneous','all-in-one-wp-security-and-firewall').'</h2>';//Interface title
         $this->set_menu_tabs();
         $tab = $this->get_current_tab();
-        ?>
-        <div class="wrap">
+        $this->render_menu_tabs();
+        ?>        
         <div id="poststuff"><div id="post-body">
         <?php 
-        $this->render_menu_tabs();
         //$tab_keys = array_keys($this->menu_tabs);
         call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
         ?>
@@ -90,7 +93,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
         }
         ?>
         <div class="postbox">
-        <h3><label for="title"><?php _e('Disable The Ability To Copy Text', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Disable The Ability To Copy Text', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
         <form action="" method="POST">
         <?php wp_nonce_field('aiowpsec-copy-protection'); ?>
@@ -140,7 +143,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
         }
         ?>
         <div class="postbox">
-        <h3><label for="title"><?php _e('Prevent Your Site From Being Displayed In a Frame', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Prevent Your Site From Being Displayed In a Frame', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
         <form action="" method="POST">
         <?php wp_nonce_field('aiowpsec-prevent-display-frame'); ?>
@@ -168,5 +171,57 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu
         </div></div>
         <?php
     }
+    
+    function render_tab3()
+    {
+        global $aio_wp_security;
+        $maint_msg = '';
+        if(isset($_POST['aiowpsec_save_users_enumeration']))
+        {
+            $nonce=$_REQUEST['_wpnonce'];
+            if (!wp_verify_nonce($nonce, 'aiowpsec-users-enumeration'))
+            {
+                $aio_wp_security->debug_logger->log_debug("Nonce check failed on prevent users enumeration feature settings save!",4);
+                die("Nonce check failed on prevent users enumeration frame feature settings save!");
+            }
+
+            //Save settings
+            $aio_wp_security->configs->set_value('aiowps_prevent_users_enumeration',isset($_POST["aiowps_prevent_users_enumeration"])?'1':'');
+            $aio_wp_security->configs->save_config();
+
+            $this->show_msg_updated(__('Users Enumeration Prevention feature settings saved!', 'all-in-one-wp-security-and-firewall'));
+
+        }
+        ?>
+        <div class="postbox">
+        <h3 class="hndle"><label for="title"><?php _e('Prevent Users Enumeration', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <div class="inside">
+        <form action="" method="POST">
+        <?php wp_nonce_field('aiowpsec-users-enumeration'); ?>
+        <div class="aio_blue_box">
+            <?php
+            echo '<p>'.__('This feature allows you to prevent external users/bots from fetching the user info with urls like "/?author=1".', 'all-in-one-wp-security-and-firewall').'</p>';
+            echo '<p>'.__('When enabled, this feature will print a "forbidden" error rather than the user information.', 'all-in-one-wp-security-and-firewall').'</p>';
+            ?>
+        </div>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><?php _e('Disable Users Enumeration', 'all-in-one-wp-security-and-firewall')?>:</th>
+                <td>
+                <input name="aiowps_prevent_users_enumeration" type="checkbox"<?php if($aio_wp_security->configs->get_value('aiowps_prevent_users_enumeration')=='1') echo ' checked="checked"'; ?> value="1"/>
+                <span class="description"><?php _e('Check this if you want to stop users enumeration.', 'all-in-one-wp-security-and-firewall'); ?></span>
+                </td>
+            </tr>
+
+        </table>
+
+        <div class="submit">
+            <input type="submit" class="button-primary" name="aiowpsec_save_users_enumeration" value="<?php _e('Save Settings'); ?>" />
+        </div>
+        </form>
+        </div></div>
+        <?php
+    }
+
     
 } //end class

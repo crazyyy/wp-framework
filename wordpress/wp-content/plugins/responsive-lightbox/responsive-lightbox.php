@@ -2,7 +2,7 @@
 /*
 Plugin Name: Responsive Lightbox
 Description: Responsive Lightbox allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices.
-Version: 1.6.3
+Version: 1.6.7
 Author: dFactory
 Author URI: http://www.dfactory.eu/
 Plugin URI: http://www.dfactory.eu/plugins/responsive-lightbox/
@@ -12,7 +12,7 @@ Text Domain: responsive-lightbox
 Domain Path: /languages
 
 Responsive Lightbox
-Copyright (C) 2013-2015, Digital Factory - info@digitalfactory.pl
+Copyright (C) 2013-2016, Digital Factory - info@digitalfactory.pl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -36,7 +36,7 @@ include_once( RESPONSIVE_LIGHTBOX_PATH . 'includes/class-settings.php' );
  * Responsive Lightbox class.
  *
  * @class Responsive_Lightbox
- * @version	1.6.3
+ * @version	1.6.7
  */
 class Responsive_Lightbox {
 
@@ -48,6 +48,7 @@ class Responsive_Lightbox {
 			'gallery_image_size'			=> 'full',
 			'gallery_image_title'			=> 'default',
 			'force_custom_gallery'			=> false,
+			'woocommerce_gallery_lightbox'	=> false,
 			'videos'						=> true,
 			'image_links'					=> true,
 			'image_title'					=> 'default',
@@ -146,7 +147,7 @@ class Responsive_Lightbox {
 				'pagination_type'			=> 'thumbnails'
 			)
 		),
-		'version'		 => '1.6.3'
+		'version'		 => '1.6.7'
 	);
 	public $options = array();
 	private $notices = array();
@@ -399,7 +400,7 @@ class Responsive_Lightbox {
 	 * Add links to Settings page
 	 */
 	public function plugin_settings_link( $links, $file ) {
-		if ( ! is_admin() || ! current_user_can( 'manage_options' ) )
+		if ( ! is_admin() || ! current_user_can( apply_filters( 'rl_lightbox_settings_capability', 'manage_options' ) ) )
 			return $links;
 
 		static $plugin;
@@ -635,7 +636,7 @@ class Responsive_Lightbox {
 					'responsive-lightbox-tosrus', plugins_url( 'assets/tosrus/js/jquery.tosrus.min.all.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
 				);
 				wp_register_style(
-					'responsive-lightbox-tosrus', plugins_url( 'assets/tosrus/css/jquery.tosrus.all.min.css', __FILE__ ), array(), $this->defaults['version']
+					'responsive-lightbox-tosrus', plugins_url( 'assets/tosrus/css/jquery.tosrus.all.css', __FILE__ ), array(), $this->defaults['version']
 				);
 				
 				$scripts[] = 'responsive-lightbox-tosrus';

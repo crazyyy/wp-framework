@@ -56,13 +56,14 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
      */
     function render_menu_page() 
     {
+        echo '<div class="wrap">';
+        echo '<h2>'.__('Dashboard','all-in-one-wp-security-and-firewall').'</h2>';//Interface title
         $this->set_menu_tabs();
         $tab = $this->get_current_tab();
-        ?>
-        <div class="wrap">
-        <div id="poststuff"><div id="post-body">
-        <?php 
         $this->render_menu_tabs();
+        ?>        
+        <div id="poststuff"><div id="post-body">
+        <?php         
         //$tab_keys = array_keys($this->menu_tabs);
         call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
         ?>
@@ -91,7 +92,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
             
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Security Strength Meter', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Security Strength Meter', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
 
         <script type='text/javascript'>
@@ -132,7 +133,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Security Points Breakdown', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Security Points Breakdown', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
         
         <?php
@@ -173,7 +174,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         
         <div class="aiowps_dashboard_box_small aiowps_spread_the_word_widget">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Spread the Word', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Spread the Word', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
         
         <p><?php _e('We are working hard to make your WordPress site more secure. Please support us, here is how:', 'all-in-one-wp-security-and-firewall');?></p>
@@ -192,7 +193,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Critical Feature Status', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Critical Feature Status', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
 
         <?php 
@@ -263,7 +264,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
 
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Last 5 Logins', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Last 5 Logins', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">        
         <?php 
     	global $wpdb;
@@ -311,7 +312,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Maintenance Mode Status', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Maintenance Mode Status', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">        
         <?php 
         if($aio_wp_security->configs->get_value('aiowps_site_lockout') == '1'){
@@ -344,7 +345,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         ?>
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Cookie Based Brute Prevention', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Cookie Based Brute Prevention', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">        
         <?php 
         $brute_force_login_feature_link = '<a href="admin.php?page='.AIOWPSEC_BRUTE_FORCE_MENU_SLUG.'&tab=tab2" target="_blank">'.__('Cookie-Based Brute Force','all-in-one-wp-security-and-firewall').'</a>';
@@ -367,7 +368,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         ?>
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Rename Login Page', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Rename Login Page', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">        
         <?php 
         if (get_option('permalink_structure')){
@@ -394,7 +395,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
       
         echo '<div class="aiowps_dashboard_box_small">';
         echo '<div class="postbox">';
-        echo '<h3><label for="title">File Change Detection</label></h3>';
+        echo '<h3 class="hndle"><label for="title">File Change Detection</label></h3>';
         echo '<div class="inside">';
         
         if($aio_wp_security->configs->get_value('aiowps_fcds_change_detected')){
@@ -412,7 +413,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Logged In Users', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Logged In Users', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">        
         <?php
         $users_online_link = '<a href="admin.php?page='.AIOWPSEC_USER_LOGIN_MENU_SLUG.'&tab=tab5">Logged In Users</a>';
@@ -459,7 +460,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
 
         <div class="aiowps_dashboard_box_small">
         <div class="postbox">
-        <h3><label for="title"><?php _e('Locked IP Addresses', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Locked IP Addresses', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">        
         <?php
         $locked_ips_link = '<a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=tab3">Locked IP Addresses</a>';
@@ -515,7 +516,7 @@ var msnry = new Masonry( container, {
         global $wpdb;
         ?>
         <div class="postbox">
-        <h3><label for="title"><?php _e('Site Info', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Site Info', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
 	<strong><?php _e('Plugin Version', 'all-in-one-wp-security-and-firewall');?>: </strong><code><?php echo AIO_WP_SECURITY_VERSION;?></code><br />
 	<strong><?php _e('WP Version', 'all-in-one-wp-security-and-firewall');?>: </strong><code><?php echo get_bloginfo("version"); ?></code><br />
@@ -532,7 +533,7 @@ var msnry = new Masonry( container, {
         </div></div><!-- End of Site Info -->
         
         <div class="postbox">
-        <h3><label for="title"><?php _e('PHP Info', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('PHP Info', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
         <strong><?php _e('PHP Version', 'all-in-one-wp-security-and-firewall'); ?>: </strong><code><?php echo PHP_VERSION; ?></code><br />
         <strong><?php _e('PHP Memory Usage', 'all-in-one-wp-security-and-firewall'); ?>:
@@ -607,7 +608,7 @@ var msnry = new Masonry( container, {
         </div></div><!-- End of PHP Info -->
         
         <div class="postbox">
-        <h3><label for="title"><?php _e('Active Plugins', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Active Plugins', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
         <?php
         $all_plugins = get_plugins();
@@ -655,7 +656,7 @@ var msnry = new Masonry( container, {
         
         ?>
         <div class="postbox">
-        <h3><label for="title"><?php _e('Currently Locked Out IP Addresses and Ranges', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Currently Locked Out IP Addresses and Ranges', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
             <?php 
             //Fetch, prepare, sort, and filter our data...
@@ -685,7 +686,7 @@ var msnry = new Masonry( container, {
         $file_selected = isset($_POST["aiowps_log_file"])?$_POST["aiowps_log_file"]:'';
         ?>
         <div class="postbox">
-        <h3><label for="title"><?php _e('View Logs for All In WP Security & Firewall Plugin', 'all-in-one-wp-security-and-firewall');?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('View Logs for All In WP Security & Firewall Plugin', 'all-in-one-wp-security-and-firewall');?></label></h3>
         <div class="inside">
         <form action="" method="POST">
         <?php wp_nonce_field('aiowpsec-dashboard-logs-nonce'); ?>
@@ -720,7 +721,7 @@ var msnry = new Masonry( container, {
             if(!empty($file_selected)){
         ?>
         <div class="postbox">
-        <h3><label for="title"><?php echo __('Log File Contents For', 'all-in-one-wp-security-and-firewall').': '.$file_selected;?></label></h3>
+        <h3 class="hndle"><label for="title"><?php echo __('Log File Contents For', 'all-in-one-wp-security-and-firewall').': '.$file_selected;?></label></h3>
         <div class="inside">
             <?php
             $aiowps_log_dir = AIO_WP_SECURITY_PATH.'/logs';

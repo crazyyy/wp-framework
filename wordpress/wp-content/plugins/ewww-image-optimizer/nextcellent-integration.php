@@ -70,7 +70,7 @@ class ewwwngg {
 			}
 			ewww_image_optimizer($filename);
 			ewwwio_debug_message( "ngg_Thumbnail saved: $filename" );
-			$image_size = filesize($filename);
+			$image_size = ewww_image_optimizer_filesize( $filename );
 			ewwwio_debug_message( "image editor size: $image_size" );
 		}
 		ewww_image_optimizer_debug_log();
@@ -94,7 +94,7 @@ class ewwwngg {
 			wp_die( __( 'Access denied.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
 		}?> 
 		<div class="wrap">
-                <div id="icon-upload" class="icon32"></div><h2><?php _e('Bulk Thumbnail Optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></h2>
+                <div id="icon-upload" class="icon32"></div><h1><?php _e('Bulk Thumbnail Optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></h1>
 <?php		$images = unserialize ($_POST['ewww_attachments']);
 		// initialize $current, and $started time
 		$started = time();
@@ -188,8 +188,8 @@ class ewwwngg {
 			// get the mimetype of the image
 			$type = ewww_image_optimizer_mimetype($file_path, 'i');
 			// retrieve the human-readable filesize of the image
-			$file_size = size_format(filesize($file_path), 2);
-			$file_size = str_replace('B ', 'B', $file_size);
+			$file_size = size_format( ewww_image_optimizer_filesize( $file_path ), 2 );
+			$file_size = str_replace( 'B ', 'B', $file_size );
 			//$file_size = ewww_image_optimizer_format_bytes(filesize($file_path));
 			$valid = true;
 			// check to see if we have a tool to handle the mimetype detected
@@ -266,21 +266,21 @@ class ewwwngg {
                 }
                 ?>
 		<div class="wrap">
-                <div id="icon-upload" class="icon32"></div><h2><?php _e('Bulk Optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></h2>
+                <div id="icon-upload" class="icon32"></div><h1><?php _e('Bulk Optimize', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></h1>
                 <?php
                 // Retrieve the value of the 'bulk resume' option and set the button text for the form to use
                 $resume = get_option('ewww_image_optimizer_bulk_ngg_resume');
                 if (empty($resume)) {
-                        $button_text = __('Start optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN);
+                        $button_text = esc_attr__('Start optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN);
                 } else {
-                        $button_text = __('Resume previous bulk operation', EWWW_IMAGE_OPTIMIZER_DOMAIN);
+                        $button_text = esc_attr__('Resume previous bulk operation', EWWW_IMAGE_OPTIMIZER_DOMAIN);
                 }
                 ?>
                 <div id="ewww-bulk-loading"></div>
                 <div id="ewww-bulk-progressbar"></div>
                 <div id="ewww-bulk-counter"></div>
 		<form id="ewww-bulk-stop" style="display:none;" method="post" action="">
-			<br /><input type="submit" class="button-secondary action" value="<?php _e('Stop Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
+			<br /><input type="submit" class="button-secondary action" value="<?php esc_attr_e('Stop Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
 		</form>
                 <div id="ewww-bulk-status"></div>
                 <div id="ewww-bulk-forms">
@@ -292,12 +292,12 @@ class ewwwngg {
                 </form>
                 <?php
 		// if there is a previous bulk operation to resume, give the user the option to reset the resume flag
-                if (!empty($resume)) { ?>
+                if ( ! empty( $resume ) ) { ?>
                         <p class="ewww-bulk-info"><?php _e('If you would like to start over again, press the Reset Status button to reset the bulk operation status.', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?></p>
                         <form id="ewww-bulk-reset" class="ewww-bulk-form" method="post" action="">
                                 <?php wp_nonce_field( 'ewww-image-optimizer-bulk-reset', 'ewww_wpnonce'); ?>
                                 <input type="hidden" name="ewww_reset" value="1">
-                                <input type="submit" class="button-secondary action" value="<?php _e('Reset Status', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
+                                <input type="submit" class="button-secondary action" value="<?php esc_attr_e('Reset Status', EWWW_IMAGE_OPTIMIZER_DOMAIN); ?>" />
                         </form>
 <?php           }
 	        echo '</div></div>';
@@ -377,9 +377,9 @@ class ewwwngg {
 		// store the image IDs to process in the db
 		update_option('ewww_image_optimizer_bulk_ngg_attachments', $images);
 		// add the EWWW IO script
-		wp_enqueue_script('ewwwbulkscript', plugins_url('/eio.js', __FILE__), array('jquery', 'jquery-ui-progressbar', 'jquery-ui-slider'));
+		wp_enqueue_script('ewwwbulkscript', plugins_url('/includes/eio.js', __FILE__), array('jquery', 'jquery-ui-progressbar', 'jquery-ui-slider'));
 		// replacing the built-in nextgen styling rules for progressbar
-		wp_register_style( 'ngg-jqueryui', plugins_url('jquery-ui-1.10.1.custom.css', __FILE__));
+		wp_register_style( 'ngg-jqueryui', plugins_url('/includes/jquery-ui-1.10.1.custom.css', __FILE__));
 		// enqueue the progressbar styling
 		wp_enqueue_style('ngg-jqueryui'); //, plugins_url('jquery-ui-1.10.1.custom.css', __FILE__));
 		// prep the $images for use by javascript
@@ -394,6 +394,7 @@ class ewwwngg {
 				'operation_interrupted' => __( 'Operation Interrupted', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 				'temporary_failure' => __( 'Temporary failure, seconds left to retry:', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 				'remove_failed' => __( 'Could not remove image from table.', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
+				'optimized' => __( 'Optimized', EWWW_IMAGE_OPTIMIZER_DOMAIN ),
 			)
 		);
 	}
@@ -407,7 +408,7 @@ class ewwwngg {
 		// toggle the resume flag to indicate an operation is in progress
                 update_option('ewww_image_optimizer_bulk_ngg_resume', 'true');
 		// let the user know we are starting
-                $loading_image = plugins_url('/wpspin.gif', __FILE__);
+                $loading_image = plugins_url('/images/wpspin.gif', __FILE__);
                 echo "<p>" . __('Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN) . "&nbsp;<img src='$loading_image' alt='loading'/></p>";
                 die();
         }
@@ -419,11 +420,11 @@ class ewwwngg {
 			wp_die( __( 'Access token has expired, please reload the page.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
                 }
 		// need this file to work with metadata
-		require_once(WP_CONTENT_DIR . '/plugins/nextcellent-gallery-nextgen-legacy/lib/meta.php');
+		require_once( WP_CONTENT_DIR . '/plugins/nextcellent-gallery-nextgen-legacy/lib/meta.php' );
 		$id = $_POST['attachment'];
 		// get the meta for the image
 		$meta = new nggMeta($id);
-		$loading_image = plugins_url('/wpspin.gif', __FILE__);
+		$loading_image = plugins_url('/images/wpspin.gif', __FILE__);
 		// get the filename for the image, and output our current status
 		$file_name = esc_html($meta->image->filename);
 		echo "<p>" . __('Optimizing', EWWW_IMAGE_OPTIMIZER_DOMAIN) . " <b>" . $file_name . "</b>&nbsp;<img src='$loading_image' alt='loading'/></p>";
@@ -439,9 +440,9 @@ class ewwwngg {
 			wp_die( __( 'Access token has expired, please reload the page.', EWWW_IMAGE_OPTIMIZER_DOMAIN ) );
                 }
 		// need this file to work with metadata
-		require_once(WP_CONTENT_DIR . '/plugins/nextcellent-gallery-nextgen-legacy/lib/meta.php');
+		require_once( WP_CONTENT_DIR . '/plugins/nextcellent-gallery-nextgen-legacy/lib/meta.php' );
 		// find out what time we started, in microseconds
-		$started = microtime(true);
+		$started = microtime( true );
 		$id = $_POST['ewww_attachment'];
 		list( $fres, $tres ) = $this->ewww_ngg_optimize( $id );
 /*		// get the metadata
@@ -473,10 +474,10 @@ class ewwwngg {
 		// get the list of attachments remaining from the db
 		$attachments = get_option('ewww_image_optimizer_bulk_ngg_attachments');
 		// remove the first item
-		if (!empty($attachments))
-			array_shift($attachments);
+		if ( ! empty( $attachments ) )
+			array_shift( $attachments );
 		// and store the list back in the db
-		update_option('ewww_image_optimizer_bulk_ngg_attachments', $attachments);
+		update_option( 'ewww_image_optimizer_bulk_ngg_attachments', $attachments );
 		die();
 	}
 
@@ -506,12 +507,7 @@ class ewwwngg {
 		</script>
 <?php	}
 }
-// initialize the plugin and the class
-//add_action('init', 'ewwwngg');
-//add_action('admin_print_scripts-tools_page_ewww-ngg-bulk', 'ewww_image_optimizer_scripts');
 
-//function ewwwngg() {
-	global $ewwwngg;
-	$ewwwngg = new ewwwngg();
-//}
+global $ewwwngg;
+$ewwwngg = new ewwwngg();
 }
