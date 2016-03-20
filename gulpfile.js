@@ -28,7 +28,7 @@ var paths = {
   },
   scripts: {
     src: basePaths.src + 'js/**',
-    vendor_src: basePaths.src + 'js_vendor/',
+    vendor_src: basePaths.src + 'jsapp/',
     dest: basePaths.dest + 'js/'
   },
   styles: {
@@ -79,7 +79,7 @@ var autoprefixer = require('autoprefixer'),
 gulp.task('fonts', function () {
   return gulp.src(paths.fonts.src)
     .pipe(gulp.dest(paths.fonts.dest))
-    .pipe(plugins.size({title: 'fonts'}));
+    .pipe(plugins.size({showFiles: true, title: 'task:fonts'}));
 });
 
 // Optimize images
@@ -91,8 +91,8 @@ gulp.task('images', function () {
         svgoPlugins: [{removeViewBox: false}],
         use: [pngquant()]
     })))
-    .pipe(gulp.dest(paths.images.dest))
-    .pipe(plugins.size({title: 'images'}));
+    .pipe(plugins.size({showFiles: true, title: 'task:images'}))
+    .pipe(gulp.dest(paths.images.dest));
 });
 
 // Generate sprites
@@ -106,15 +106,15 @@ gulp.task('sprite', function () {
         sprite.name = 'sprite-' + sprite.name;
       }
     }))
+    .pipe(plugins.size({showFiles: true, title: ' task:sprite'}))
     .pipe(plugins.if('*.png', gulp.dest(paths.images.src)))
-    .pipe(plugins.size({showFiles: true, title: 'sprite image:'}))
     .pipe(plugins.if('*.scss', gulp.dest(paths.styles.src)));
 });
 
+// find images in css end encode it to base64
 gulp.task('base64', function(){
   return gulp.src(paths.styles.src + '_base64.scss')
   .pipe(plugins.base64({
-    baseDir: 'html',
     extensions: ['svg', 'png', 'gif',  'jpg', /\.jpg#datauri$/i],
     maxImageSize: 20*1024, // bytes
     debug: false
@@ -166,6 +166,7 @@ gulp.task('sass', function () {
     .pipe(plugins.size({showFiles: true, title: 'task:styles'}));
 });
 
+// postcss autoprefix
 gulp.task('postcss', function () {
   var processors = [
     autoprefixer({browsers: ['ie >= 8', 'ie_mob >= 10', 'ff >= 20', 'chrome >= 24', 'safari >= 5', 'opera >= 12', 'ios >= 7', 'android >= 2.3', '> 1%', 'last 4 versions', 'bb >= 10']}),
@@ -208,10 +209,10 @@ gulp.task('browserSync', function() {
 });
 
 // Consolidated dev phase task
-gulp.task('default', function(callback) {
+gulp.task('serve', function(callback) {
   runSequence(
     'cache:clear',
-    ['sprite', 'images'],
+    ['sprite', 'base64', 'images'],
     ['scripts:vendor', 'scripts:development'],
     ['sass', 'fonts'],
     ['postcss'],
@@ -223,16 +224,17 @@ gulp.task('default', function(callback) {
 gulp.task('watch', function() {
   // watch for changes
   gulp.watch([
-    basePaths.dest + '**/*.html',
-    basePaths.dest + '**/*.php'
+    basePaths.dest + '**/*.{html,htm,php}'
   ]).on('change', reload);
 
-  gulp.watch(paths.sprite.src, ['sprite', 'images', 'sass', 'postcss', reload]);
+  gulp.watch(paths.sprite.src, ['cache:clear','sprite','images','sass','postcss',reload]);
   gulp.watch(paths.images.srcimg, ['images', reload]);
-  gulp.watch(appFiles.styles, ['sass', reload]);
-  gulp.watch(paths.sprite.src, ['sass', reload]);
-  gulp.watch(paths.fonts.src, ['fonts', reload]);
+  gulp.watch(paths.styles.src + '/_base64.scss', ['base64',reload]);
+  gulp.watch(appFiles.styles, ['sass','postcss',reload]);
+  gulp.watch(paths.sprite.src, ['sass','postcss',reload]);
+  gulp.watch(paths.fonts.src, ['fonts',reload]);
   gulp.watch(appFiles.scripts, ['scripts:development', reload]);
+  gulp.watch(appFiles.vendor_scripts + '**/*', ['scripts:vendor', reload]);
 });
 
 // Custom Plumber function for catching errors
