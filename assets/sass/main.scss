@@ -9,9 +9,6 @@
 @import 'grid/bootstrap';
 @import 'grid/bootstrap-theme';
 @import 'sprite';
-@import 'fonts/font_fontawesome';
-@import 'fonts/font_opensans';
-@import 'fonts/font_roboto';
 
 body {
   font-family: $base-font-family;
@@ -134,4 +131,8 @@ footer {
   }
 }
 
+
+@import 'fonts/font_fontawesome';
+@import 'fonts/font_roboto';
+@import 'base64';
 @import 'import/print';

@@ -23,11 +23,12 @@ if (htmlOWp === true) {
 var paths = {
   images: {
     src: basePaths.src + 'img/',
-    srcimg: basePaths.src + 'img/**/*.{png,jpg,jpeg,gif}',
+    srcimg: basePaths.src + 'img/**/*.{png,jpg,jpeg,gif,svg}',
     dest: basePaths.dest + 'img/'
   },
   scripts: {
     src: basePaths.src + 'js/**',
+    vendor_src: basePaths.src + 'js_vendor/',
     dest: basePaths.dest + 'js/'
   },
   styles: {
@@ -44,7 +45,8 @@ var paths = {
 };
 var appFiles = {
   styles: paths.styles.src + '**/*.scss',
-  scripts: [paths.scripts.src]
+  scripts: [paths.scripts.src],
+  vendor_scripts: [paths.scripts.vendor_src]
 };
 var spriteConfig = {
   imgName: 'sprite.png',
@@ -67,18 +69,17 @@ var gulp = require('gulp'),
     replaceString: /\bgulp[\-.]/
   });
 
+// postcss
+var autoprefixer = require('autoprefixer'),
+  mqpacker = require('css-mqpacker'),
+  csswring = require('csswring'),
+  cssnext = require('cssnext');
+
 // Copy web fonts to dist
 gulp.task('fonts', function () {
   return gulp.src(paths.fonts.src)
     .pipe(gulp.dest(paths.fonts.dest))
     .pipe(plugins.size({title: 'fonts'}));
-});
-
-// Temp image cp
-gulp.task('imagecp', function () {
-  return gulp.src(paths.images.src)
-    .pipe(gulp.dest(paths.images.dest))
-    .pipe(plugins.size({title: 'img copy'}));
 });
 
 // Optimize images
@@ -94,56 +95,100 @@ gulp.task('images', function () {
     .pipe(plugins.size({title: 'images'}));
 });
 
+// Generate sprites
 gulp.task('sprite', function () {
-  var spriteData = gulp.src(paths.sprite.src + '*.png').pipe(plugins.spritesmith({
-    imgName: spriteConfig.imgName,
-    cssName: spriteConfig.cssName,
-    imgPath: spriteConfig.imgPath,
-    cssVarMap: function (sprite) {
-      sprite.name = 'sprite-' + sprite.name;
-    }
-  }));
-  spriteData.img
-    .pipe(plugins.size({showFiles: true}))
-    .pipe(plugins.cache(
-      plugins.imageOptimization({
-        optimizationLevel: 3,
-        progressive: true,
-        interlaced: true
-      })
-    ))
-    .pipe(gulp.dest(paths.images.dest))
-    .pipe(plugins.size({showFiles: true}))
-  spriteData.css.pipe(gulp.dest(paths.styles.src));
+  var spriteData = gulp.src(paths.sprite.src + '*.png')
+    .pipe(plugins.spritesmith({
+      imgName: spriteConfig.imgName,
+      cssName: spriteConfig.cssName,
+      imgPath: spriteConfig.imgPath,
+      cssVarMap: function (sprite) {
+        sprite.name = 'sprite-' + sprite.name;
+      }
+    }))
+    .pipe(plugins.if('*.png', gulp.dest(paths.images.src)))
+    .pipe(plugins.size({showFiles: true, title: 'sprite image:'}))
+    .pipe(plugins.if('*.scss', gulp.dest(paths.styles.src)));
+});
+
+gulp.task('base64', function(){
+  return gulp.src(paths.styles.src + '_base64.scss')
+  .pipe(plugins.base64({
+    baseDir: 'html',
+    extensions: ['svg', 'png', 'gif',  'jpg', /\.jpg#datauri$/i],
+    maxImageSize: 20*1024, // bytes
+    debug: false
+  }))
+  .pipe(gulp.dest(paths.styles.src));
+});
+
+// Concat vendor script to one file
+gulp.task('scripts:vendor', function() {
+  return gulp.src([
+    appFiles.vendor_scripts + 'modernizr.js',
+    appFiles.vendor_scripts + 'jquery-1.12.2.js',
+    // appFiles.vendor_scripts + 'jquery-1.12.2.js',
+  ])
+  .pipe(customPlumber('Error Compiling Vendor Scripts'))
+  .pipe(plugins.sourcemaps.init())
+  .pipe(plugins.size({showFiles: true, title: 'vendor scripts to concat:'}))
+  .pipe(plugins.concat('vendor.js'))
+  .pipe(plugins.if('*.js', plugins.uglify()))
+  .pipe(plugins.sourcemaps.write('maps', {includeContent: true}))
+  .pipe(gulp.dest(paths.scripts.dest))
+  .pipe(plugins.size({showFiles: true, title: 'vendor script concated:'}));
 });
 
 // Optimize script
-gulp.task('scripts', function () {
+gulp.task('scripts:development', function () {
   gulp.src(appFiles.scripts)
+    .pipe(customPlumber('Error Compiling Scripts'))
+    .pipe(plugins.sourcemaps.init())
     .pipe(plugins.if('*.js', plugins.uglify()))
-    .pipe(plugins.size({showFiles: true}))
-    .pipe(gulp.dest(paths.scripts.dest));
+    .pipe(plugins.sourcemaps.write('maps', {includeContent: true}))
+    .pipe(gulp.dest(paths.scripts.dest))
+    .pipe(plugins.size({showFiles: true, title: 'task:scripts:'}));
 });
 
 // Compile and automatically prefix stylesheets
-gulp.task('styles', function () {
+gulp.task('sass', function () {
   // For best performance, don't add Sass partials to `gulp.src`
   return gulp.src(appFiles.styles)
+    .pipe(customPlumber('Error Running Sass'))
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.sass({
+      outputStyle: 'compressed',
       precision: 10,
       onError: console.error.bind(console, 'Sass error:')
     }))
-    .pipe(plugins.autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
-    .pipe(plugins.sourcemaps.write())
+    .pipe(plugins.sourcemaps.write('maps', {includeContent: true}))
     .pipe(gulp.dest(paths.styles.dest))
-    // Concatenate and minify styles
-    .pipe(plugins.if('*.css', plugins.csso()))
-    .pipe(gulp.dest(paths.styles.dest))
-    .pipe(plugins.size({title: 'styles'}));
+    .pipe(plugins.size({showFiles: true, title: 'task:styles'}));
 });
 
-gulp.task('serve', ['sprite', 'images', 'scripts', 'styles', 'fonts'], function () {
+gulp.task('postcss', function () {
+  var processors = [
+    autoprefixer({browsers: ['ie >= 8', 'ie_mob >= 10', 'ff >= 20', 'chrome >= 24', 'safari >= 5', 'opera >= 12', 'ios >= 7', 'android >= 2.3', '> 1%', 'last 4 versions', 'bb >= 10']}),
+    mqpacker,
+    csswring,
+    cssnext()
+  ];
+  return gulp.src('./html/css/*.css')
+  .pipe(customPlumber('Error Compiling PostCSS'))
+  .pipe(plugins.sourcemaps.init())
+  .pipe(plugins.postcss(processors))
+  .pipe(plugins.sourcemaps.write('maps', {includeContent: true}))
+  .pipe(plugins.size({showFiles: true, title: 'task:postcss'}))
+  .pipe(gulp.dest('./html/css'));
+});
+
+// clear gulp cache
+gulp.task('cache:clear', function (done) {
+  return plugins.cache.clearAll(done);
+});
+
+// Browser Sync
+gulp.task('browserSync', function() {
   if (htmlOWp === true) {
     browserSync({
       notify: false,
@@ -160,18 +205,45 @@ gulp.task('serve', ['sprite', 'images', 'scripts', 'styles', 'fonts'], function 
       port: 9090
     });
   }
+});
 
+// Consolidated dev phase task
+gulp.task('default', function(callback) {
+  runSequence(
+    'cache:clear',
+    ['sprite', 'images'],
+    ['scripts:vendor', 'scripts:development'],
+    ['sass', 'fonts'],
+    ['postcss'],
+    ['browserSync', 'watch'],
+    callback
+  );
+});
+
+gulp.task('watch', function() {
   // watch for changes
   gulp.watch([
-    basePaths.dest + '*.html',
-    basePaths.dest + '*.php'
+    basePaths.dest + '**/*.html',
+    basePaths.dest + '**/*.php'
   ]).on('change', reload);
 
-  gulp.watch(paths.sprite.src, ['sprite', 'images', 'styles', reload]);
+  gulp.watch(paths.sprite.src, ['sprite', 'images', 'sass', 'postcss', reload]);
   gulp.watch(paths.images.srcimg, ['images', reload]);
-  gulp.watch(appFiles.styles, ['styles', reload]);
-  gulp.watch(paths.sprite.src, ['styles', reload]);
+  gulp.watch(appFiles.styles, ['sass', reload]);
+  gulp.watch(paths.sprite.src, ['sass', reload]);
   gulp.watch(paths.fonts.src, ['fonts', reload]);
-  gulp.watch(appFiles.scripts, ['scripts', reload]);
-
+  gulp.watch(appFiles.scripts, ['scripts:development', reload]);
 });
+
+// Custom Plumber function for catching errors
+function customPlumber(errTitle) {
+  return plugins.plumber({
+    errorHandler: plugins.notify.onError({
+      // Customizing error title
+      title: errTitle || 'Error running Gulp',
+      message: 'Error: <%= error.message %>',
+      sound:    "Bottle"
+    })
+  });
+};
+module.exports = customPlumber;
