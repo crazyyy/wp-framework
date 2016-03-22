@@ -78,6 +78,7 @@ var autoprefixer = require('autoprefixer'),
 // Copy web fonts to dist
 gulp.task('fonts', function () {
   return gulp.src(paths.fonts.src)
+    .pipe(plugins.newer(paths.fonts.dest))
     .pipe(gulp.dest(paths.fonts.dest))
     .pipe(plugins.size({showFiles: true, title: 'task:fonts'}));
 });
@@ -85,12 +86,13 @@ gulp.task('fonts', function () {
 // Optimize images
 gulp.task('images', function () {
   return gulp.src(paths.images.srcimg)
-    .pipe(plugins.cache(plugins.imagemin({
+    .pipe(plugins.newer(paths.images.dest))
+    .pipe(plugins.imagemin({
       progressive: true,
       interlaced: true,
         svgoPlugins: [{removeViewBox: false}],
         use: [pngquant()]
-    })))
+    }))
     .pipe(plugins.size({showFiles: true, title: 'task:images'}))
     .pipe(gulp.dest(paths.images.dest));
 });
@@ -98,15 +100,14 @@ gulp.task('images', function () {
 // Generate sprites
 gulp.task('sprite', function () {
   var spriteData = gulp.src(paths.sprite.src + '*.png')
-    .pipe(plugins.spritesmith({
+   .pipe(plugins.spritesmith({
       imgName: spriteConfig.imgName,
       cssName: spriteConfig.cssName,
       imgPath: spriteConfig.imgPath,
       cssVarMap: function (sprite) {
         sprite.name = 'sprite-' + sprite.name;
       }
-    }))
-
+   }))
   .pipe(plugins.if('*.png', gulp.dest(paths.images.src)))
   .pipe(plugins.if('*.scss', gulp.dest(paths.styles.src)))
   .pipe(plugins.size({showFiles: true, title: ' task:sprite'}));
@@ -131,6 +132,7 @@ gulp.task('scripts:vendor', function() {
     // appFiles.vendor_scripts + 'jquery-1.12.2.js',
   ])
   .pipe(customPlumber('Error Compiling Vendor Scripts'))
+  .pipe(plugins.newer(paths.scripts.dest))
   .pipe(plugins.sourcemaps.init())
   .pipe(plugins.size({showFiles: true, title: 'vendor scripts to concat:'}))
   .pipe(plugins.concat('vendor.js'))
@@ -143,6 +145,7 @@ gulp.task('scripts:vendor', function() {
 // Optimize script
 gulp.task('scripts:development', function () {
   gulp.src(appFiles.scripts)
+    .pipe(plugins.newer(paths.scripts.dest))
     .pipe(customPlumber('Error Compiling Scripts'))
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.if('*.js', plugins.uglify()))
@@ -156,6 +159,7 @@ gulp.task('sass', function () {
   // For best performance, don't add Sass partials to `gulp.src`
   return gulp.src(appFiles.styles)
     .pipe(customPlumber('Error Running Sass'))
+    .pipe(plugins.newer(paths.styles.dest))
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.sass({
       outputStyle: 'compressed',
@@ -177,6 +181,7 @@ gulp.task('postcss', function () {
   ];
   return gulp.src(paths.styles.dest + '**/*.css')
   .pipe(customPlumber('Error Compiling PostCSS'))
+  .pipe(plugins.newer(paths.styles.dest))
   .pipe(plugins.sourcemaps.init())
   .pipe(plugins.postcss(processors))
   .pipe(plugins.sourcemaps.write('maps', {includeContent: true}))
