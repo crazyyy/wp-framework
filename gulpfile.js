@@ -106,9 +106,10 @@ gulp.task('sprite', function () {
         sprite.name = 'sprite-' + sprite.name;
       }
     }))
-    .pipe(plugins.size({showFiles: true, title: ' task:sprite'}))
-    .pipe(plugins.if('*.png', gulp.dest(paths.images.src)))
-    .pipe(plugins.if('*.scss', gulp.dest(paths.styles.src)));
+
+  .pipe(plugins.if('*.png', gulp.dest(paths.images.src)))
+  .pipe(plugins.if('*.scss', gulp.dest(paths.styles.src)))
+  .pipe(plugins.size({showFiles: true, title: ' task:sprite'}));
 });
 
 // find images in css end encode it to base64
@@ -174,13 +175,13 @@ gulp.task('postcss', function () {
     csswring,
     cssnext()
   ];
-  return gulp.src('./html/css/*.css')
+  return gulp.src(paths.styles.dest + '**/*.css')
   .pipe(customPlumber('Error Compiling PostCSS'))
   .pipe(plugins.sourcemaps.init())
   .pipe(plugins.postcss(processors))
   .pipe(plugins.sourcemaps.write('maps', {includeContent: true}))
-  .pipe(plugins.size({showFiles: true, title: 'task:postcss'}))
-  .pipe(gulp.dest('./html/css'));
+  .pipe(gulp.dest(paths.styles.dest))
+  .pipe(plugins.size({showFiles: true, title: 'task:postcss'}));
 });
 
 // clear gulp cache
@@ -208,6 +209,14 @@ gulp.task('browserSync', function() {
   }
 });
 
+gulp.task('styles', function(callback) {
+  runSequence(
+    ['sass'],
+    ['postcss'],
+    callback
+  )
+})
+
 // Consolidated dev phase task
 gulp.task('serve', function(callback) {
   runSequence(
@@ -227,11 +236,11 @@ gulp.task('watch', function() {
     basePaths.dest + '**/*.{html,htm,php}'
   ]).on('change', reload);
 
-  gulp.watch(paths.sprite.src, ['cache:clear','sprite','images','sass','postcss',reload]);
+  gulp.watch(paths.sprite.src, ['cache:clear','sprite','images','styles',reload]);
   gulp.watch(paths.images.srcimg, ['images', reload]);
   gulp.watch(paths.styles.src + '/_base64.scss', ['base64',reload]);
-  gulp.watch(appFiles.styles, ['sass','postcss',reload]);
-  gulp.watch(paths.sprite.src, ['sass','postcss',reload]);
+  gulp.watch(appFiles.styles, ['styles', reload]);
+  gulp.watch(paths.sprite.src, ['styles', reload]);
   gulp.watch(paths.fonts.src, ['fonts',reload]);
   gulp.watch(appFiles.scripts, ['scripts:development', reload]);
   gulp.watch(appFiles.vendor_scripts + '**/*', ['scripts:vendor', reload]);
