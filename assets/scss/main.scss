@@ -15,8 +15,10 @@
 body {
   font-family: $base-font-family;
   font-size: $base-font-size;
-  font-weight: $f-norm;
+  font-weight: $fnorm;
   line-height: $base-line-height;
+
+  transition: $base-transition;
 
   color: $base-font-color;
   background-color: $base-background-color;
@@ -86,7 +88,7 @@ picture {
 }
 
 header {
-  background-color: $light-gray;
+  background-color: $gray-light;
   .logo {
     display: block;
     img {
@@ -122,7 +124,7 @@ footer {
   height: $footer;
   margin: $footer_margin auto 0;
 
-  background-color: $light-gray;
+  background-color: $gray-light;
   .inner {
     height: $footer;
   }
