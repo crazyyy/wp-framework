@@ -1,5 +1,12 @@
 *.log
+*.map
 thumbs.db
+*.swp
+*~
+*.iws
+.project
+.DS_Store
+.idea
 
 .sass-cache
 .sublime-gulp.cache
@@ -8,7 +15,9 @@ thumbs.db
 
 /.hg
 _gsdata_
-node_modules
+node_modules/
+bower_components/
+
 npm-debug.log
 sftp-config.json
 sxd
