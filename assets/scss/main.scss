@@ -18,6 +18,8 @@ body {
   font-weight: $fnorm;
   line-height: $base-line-height;
 
+  min-width: 320px;
+
   transition: $base-transition;
 
   color: $base-font-color;
