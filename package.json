@@ -1,4 +1,6 @@
 {
+  "wp_theme_name": "wp-framework",
+  "wp_site_name": "wp-framework.dev",
   "name": "wp-framework",
   "version": "2016.07.24",
   "description": "simple html and css framework. before run you need to install 'npm install -g gulp browserify babel jade stylus http-server'",
@@ -35,7 +37,9 @@
   "browserify-shim": {},
   "scripts": {
     "start": "NODE_ENV=development gulp serve",
-    "build": "NODE_ENV=production gulp build"
+    "build": "NODE_ENV=production gulp build",
+    "start-wp": "NODE_ENV=development_wp gulp serve",
+    "build-wp": "NODE_ENV=production_wp gulp build"
   },
   "lintOptions": {
     "globals": {
