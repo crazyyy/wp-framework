@@ -50,7 +50,6 @@
   }
 }
 
-
 /*
   linear gradient
   http://sassmeister.com/gist/b58f6e2cc3160007c880
@@ -249,9 +248,9 @@
 
 @mixin text3d($color) {
   color: $color;
-  text-shadow: 1px 1px 0px darken($color, 5%),
-               2px 2px 0px darken($color, 10%),
-               3px 3px 0px darken($color, 15%),
-               4px 4px 0px darken($color, 20%),
-               4px 4px 2px #000;
+  text-shadow: 1px 1px 0 darken($color, 5%),
+  2px 2px 0 darken($color, 10%),
+  3px 3px 0 darken($color, 15%),
+  4px 4px 0 darken($color, 20%),
+  4px 4px 2px #000;
 }

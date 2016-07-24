@@ -1,0 +1,103 @@
+fieldset {
+  margin: 0 0 $small-spacing;
+  padding: $base-spacing;
+
+  border: $base-border;
+  background-color: $secondary-background-color;
+}
+
+input,
+label,
+select {
+  font-family: $base-font-family;
+  font-size: $base-font-size;
+
+  display: block;
+}
+
+label {
+  font-weight: 600;
+
+  margin-bottom: $small-spacing / 2;
+  &.required::after {
+    content: '*';
+  }
+  abbr {
+    display: none;
+  }
+}
+
+input[type='color'],
+input[type='date'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='email'],
+input[type='month'],
+input[type='number'],
+input[type='password'],
+input[type='search'],
+input[type='tel'],
+input[type='text'],
+input[type='time'],
+input[type='url'],
+input[type='week'],
+textarea,
+select[multiple=multiple] {
+  font-family: $base-font-family;
+  font-size: $base-font-size;
+
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: $small-spacing;
+  padding: $base-spacing / 3;
+
+  transition: $base-transition;
+
+  border: $base-border;
+  border-radius: $base-border-radius;
+  outline: none;
+  background-color: $base-background-color;
+  box-shadow: $form-box-shadow;
+  &:hover {
+    border-color: shade($base-border-color, 20%);
+  }
+  &:focus {
+    border-color: $action-color;
+    outline: none;
+    box-shadow: $form-box-shadow-focus;
+  }
+  &:disabled {
+    cursor: not-allowed;
+
+    background-color: shade($base-background-color, 5%);
+    &:hover {
+      border: $base-border;
+    }
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[type='search'] {
+  appearance: none;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  display: inline;
+
+  margin-right: $small-spacing / 2;
+}
+
+input[type='file'] {
+  width: 100%;
+  margin-bottom: $small-spacing;
+}
+
+select {
+  width: auto;
+  max-width: 100%;
+  margin-bottom: $base-spacing;
+}

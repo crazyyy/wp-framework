@@ -8,8 +8,9 @@ table {
     color: #fff;
     background: $blue;
   }
-  th,td{
-        position: relative;
+  th,
+  td {
+    position: relative;
   }
   th {
     font-weight: 600;
@@ -27,11 +28,6 @@ table {
     border-bottom: $base-border;
   }
 }
-
-
-
-
-
 tr,
 td,
 th {

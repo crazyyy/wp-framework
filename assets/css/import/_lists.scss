@@ -11,6 +11,7 @@ ol {
     padding: 0;
     &:before {
       @extend .dblock;
+      display: none;
     }
   }
 }
