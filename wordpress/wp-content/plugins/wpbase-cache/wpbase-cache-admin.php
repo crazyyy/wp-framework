@@ -135,7 +135,7 @@ class WPBase_Cache_Admin {
         $wpbase_cache->flush_all_cache();
 
         delete_option('wpbase_req_cache');
-
+        
         echo 1;
         die;
     }
@@ -145,5 +145,15 @@ class WPBase_Cache_Admin {
     }
 
 }
+$options = get_option('wpbase_cache_options');
+
+if ($options['admin_bar_button'] == '1'){
+   add_action('init', 'check_wpoven_site');    
+}
+else{
+    delete_option('wpbase_req_cache');
+    delete_option('wpbase_check_site');
+}
 
 $wpbase_cache_admin = new WPBase_Cache_Admin();
+

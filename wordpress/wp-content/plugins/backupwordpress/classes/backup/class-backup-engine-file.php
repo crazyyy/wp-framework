@@ -28,7 +28,7 @@ abstract class File_Backup_Engine extends Backup_Engine {
 		$this->set_backup_filename( implode( '-', array(
 			str_ireplace( array( 'http://', 'https://', 'www' ), '', home_url() ),
 			'backup',
-			current_time( 'Y-m-d-H-i-s' )
+			current_time( 'Y-m-d-H-i-s' ),
 		) ) . '.zip' );
 
 		$this->excludes = new Excludes;
@@ -96,7 +96,7 @@ abstract class File_Backup_Engine extends Backup_Engine {
 	public function verify_backup() {
 
 		// If there are errors delete the backup file.
-		if ( $this->get_errors( __CLASS__ ) && file_exists( $this->get_backup_filepath() ) ) {
+		if ( $this->get_errors( get_called_class() ) && file_exists( $this->get_backup_filepath() ) ) {
 			unlink( $this->get_backup_filepath() );
 		}
 
@@ -108,5 +108,4 @@ abstract class File_Backup_Engine extends Backup_Engine {
 		return true;
 
 	}
-
 }

@@ -91,7 +91,7 @@ class AIOWPSecurity_Backup
         }
 
         //Generate a random prefix for more secure filenames
-        $random_prefix = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(10);
+        $random_suffix = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(10);
 
         if ($is_multi_site)
         {
@@ -110,28 +110,27 @@ class AIOWPSecurity_Backup
             
             //Convert whitespaces and underscore to dash
             $site_name = preg_replace("/[\s_]/", "-", $site_name);
-            
-            $file = $random_prefix.'-database-backup-site-name-' . $site_name . '-' . current_time( 'timestamp' );
-            
+
+            $file = 'database-backup-site-name-' . $site_name . '-' . current_time( 'Ymd-His' ) . '-' . $random_suffix;
+
             //We will create a sub dir for the blog using its blog id
-            $dirpath = $aiowps_backup_dir . '/blogid_' . $blog_id . '/';
-            
+            $dirpath = $aiowps_backup_dir . '/blogid_' . $blog_id;
+
             //Create a subdirectory for this blog_id
             if (!AIOWPSecurity_Utility_File::create_dir($dirpath))
             {
-                $aio_wp_security->debug_logger->log_debug("Creation failed of DB backup directory for the following multisite blog ID: ".$blog_details->blog_id,4);
+                $aio_wp_security->debug_logger->log_debug("Creation failed of DB backup directory for the following multisite blog ID: ".$blog_id,4);
                 return false;
             }
-            
-            $handle = @fopen( $dirpath . $file . '.sql', 'w+' );
         }
         else
         {
             $dirpath = $aiowps_backup_dir;
-            $file = $random_prefix.'-database-backup-' . current_time( 'timestamp' );
-            $handle = @fopen( $dirpath . '/' . $file . '.sql', 'w+' );
+            $file = 'database-backup-' . current_time( 'Ymd-His' ) . '-' . $random_suffix;
         }
-        
+
+        $handle = @fopen( $dirpath . '/' . $file . '.sql', 'w+' );
+
         $fw_res = @fwrite( $handle, $return );
         if (!$fw_res)
         {
@@ -155,7 +154,7 @@ class AIOWPSecurity_Backup
         {
             $fileext = '.sql';
         }
-        $this->last_backup_file_name = $file . $fileext;//database-backup-1367644822.zip or database-backup-1367644822.sql
+        $this->last_backup_file_name = $file . $fileext;//database-backup-YYYYMMDD-HHIISS-<random-string>.zip or database-backup-YYYYMMDD-HHIISS-<random-string>.sql
         $this->last_backup_file_path = $dirpath . '/' . $file . $fileext;
         if ($is_multi_site)
         {
@@ -209,7 +208,7 @@ class AIOWPSecurity_Backup
 
             foreach ( $files as $file ) 
             {
-                if ( strstr( $file, 'database-backup' ) ) 
+                if ( strpos( $file, 'database-backup' ) !== false )
                 {
                     if ( $count >= $aio_wp_security->configs->get_value('aiowps_backup_files_stored') ) 
                     {
@@ -300,7 +299,7 @@ class AIOWPSecurity_Backup
         //Check the global meta table
         $global_meta_table_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
         $max_rows_global_meta_table = '5000'; //Keep a max of 5000 rows in this table
-        $max_rows_global_meta_table = apply_filters( 'aiowps_max_rows_global_meta_table', $global_meta_table_name );
+        $max_rows_global_meta_table = apply_filters( 'aiowps_max_rows_global_meta_table', $max_rows_global_meta_table );
         AIOWPSecurity_Utility::cleanup_table($global_meta_table_name, $max_rows_global_meta_table);
 
 

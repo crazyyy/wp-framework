@@ -43,9 +43,9 @@ class WPSEO_GSC_Table extends WP_List_Table {
 	 * @var array
 	 */
 	private $modal_heights = array(
-		'create'         => 350,
-		'no_premium'     => 125,
-		'already_exists' => 150,
+		'create'         => 300,
+		'no_premium'     => 140,
+		'already_exists' => 160,
 	);
 
 	/**
@@ -203,7 +203,7 @@ class WPSEO_GSC_Table extends WP_List_Table {
 			 */
 			$modal_height = $this->modal_box( $item['url'] );
 
-			$actions['create_redirect'] = '<a title="' . __( 'Create a redirect', 'wordpress-seo' ) . '" href="#TB_inline?width=600&height=' . $this->modal_heights[ $modal_height ] . '&inlineId=redirect-' . md5( $item['url'] ) . '" class="thickbox">' . __( 'Create redirect', 'wordpress-seo' ) . '</a>';
+			$actions['create_redirect'] = '<a href="#TB_inline?width=600&height=' . $this->modal_heights[ $modal_height ] . '&inlineId=redirect-' . md5( $item['url'] ) . '" class="thickbox wpseo-open-gsc-redirect-modal aria-button-if-js">' . __( 'Create redirect', 'wordpress-seo' ) . '</a>';
 		}
 
 		$actions['view']        = '<a href="' . $item['url'] . '" target="_blank">' . __( 'View', 'wordpress-seo' ) . '</a>';
@@ -225,6 +225,7 @@ class WPSEO_GSC_Table extends WP_List_Table {
 
 	/**
 	 * Check if the current category allow creating redirects
+	 *
 	 * @return bool
 	 */
 	private function can_create_redirect() {
@@ -353,14 +354,14 @@ class WPSEO_GSC_Table extends WP_List_Table {
 	 * @return string
 	 */
 	private function modal_box_type( $url, &$current_redirect ) {
-		if ( defined( 'WPSEO_PREMIUM_FILE' ) && class_exists( 'WPSEO_URL_Redirect_Manager' ) ) {
+		if ( defined( 'WPSEO_PREMIUM_FILE' ) && class_exists( 'WPSEO_Redirect_Manager' ) ) {
 			static $redirect_manager;
 
 			if ( ! $redirect_manager ) {
-				$redirect_manager = new WPSEO_URL_Redirect_Manager();
+				$redirect_manager = new WPSEO_Redirect_Manager();
 			}
 
-			if ( $current_redirect = $redirect_manager->search_url( $url ) ) {
+			if ( $current_redirect = $redirect_manager->get_redirect( $url ) ) {
 				return 'already_exists';
 			}
 

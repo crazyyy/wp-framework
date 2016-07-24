@@ -3,8 +3,8 @@
 if (!class_exists('AIO_WP_Security')){
 
 class AIO_WP_Security{
-    var $version = '4.0.3';
-    var $db_version = '1.6';
+    var $version = '4.1.2';
+    var $db_version = '1.8';
     var $plugin_url;
     var $plugin_path;
     var $configs;
@@ -51,7 +51,9 @@ class AIO_WP_Security{
     {
         define('AIO_WP_SECURITY_VERSION', $this->version);
         define('AIO_WP_SECURITY_DB_VERSION', $this->db_version);
-        define('AIOWPSEC_WP_URL', site_url());
+        define('AIOWPSEC_WP_HOME_URL', home_url());
+        define('AIOWPSEC_WP_SITE_URL', site_url());
+        define('AIOWPSEC_WP_URL', AIOWPSEC_WP_SITE_URL); // for backwards compatibility
         define('AIO_WP_SECURITY_URL', $this->plugin_url());
         define('AIO_WP_SECURITY_PATH', $this->plugin_path());
         define('AIO_WP_SECURITY_BACKUPS_DIR_NAME', 'aiowps_backups');
@@ -83,6 +85,7 @@ class AIO_WP_Security{
         define('AIOWPSEC_TBL_USER_LOGIN_ACTIVITY', $wpdb->prefix . 'aiowps_login_activity');
         define('AIOWPSEC_TBL_GLOBAL_META_DATA', $wpdb->prefix . 'aiowps_global_meta');
         define('AIOWPSEC_TBL_EVENTS', $wpdb->prefix . 'aiowps_events');
+        define('AIOWPSEC_TBL_PERM_BLOCK', $wpdb->prefix . 'aiowps_permanent_block');
 
     }
 
@@ -106,6 +109,7 @@ class AIO_WP_Security{
         include_once('classes/grade-system/wp-security-feature-item.php');
         include_once('classes/grade-system/wp-security-feature-item-manager.php');
         include_once('classes/wp-security-wp-footer-content.php');
+        include_once('classes/wp-security-blocking.php');
         
         if (is_admin()){ //Load admin side only files
             include_once('classes/wp-security-configure-settings.php');

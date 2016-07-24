@@ -93,25 +93,39 @@ class WPSEO_OnPage {
 	 * Show a notice when the website is not indexable
 	 */
 	public function show_notice() {
-		if ( $this->should_show_notice() ) {
-			$notice = sprintf(
-				/* translators: 1: opens a link to a related knowledge base article. 2: closes the link */
-				__( '%1$sYour homepage cannot be indexed by search engines%2$s. This is very bad for SEO and should be fixed.', 'wordpress-seo' ),
-				'<a href="http://yoa.st/onpageindexerror" target="_blank">',
-				'</a>'
-			);
 
-			Yoast_Notification_Center::get()->add_notification(
-				new Yoast_Notification(
-					$notice,
-					array(
-						'type'  => 'error yoast-dismissible',
-						'id'    => 'wpseo-dismiss-onpageorg',
-						'nonce' => wp_create_nonce( 'wpseo-dismiss-onpageorg' ),
-					)
-				)
-			);
+		$notification        = $this->get_indexability_notification();
+		$notification_center = Yoast_Notification_Center::get();
+
+		if ( $this->should_show_notice() ) {
+			$notification_center->add_notification( $notification );
 		}
+		else {
+			$notification_center->remove_notification( $notification );
+		}
+	}
+
+	/**
+	 * Builds the indexability notification
+	 *
+	 * @return Yoast_Notification
+	 */
+	private function get_indexability_notification() {
+		$notice = sprintf(
+			/* translators: 1: opens a link to a related knowledge base article. 2: closes the link */
+			__( '%1$sYour homepage cannot be indexed by search engines%2$s. This is very bad for SEO and should be fixed.', 'wordpress-seo' ),
+			'<a href="https://yoa.st/onpageindexerror" target="_blank">',
+			'</a>'
+		);
+
+		return new Yoast_Notification(
+			$notice,
+			array(
+				'type'  => Yoast_Notification::ERROR,
+				'id'    => 'wpseo-dismiss-onpageorg',
+				'capabilities' => 'manage_options',
+			)
+		);
 	}
 
 	/**
@@ -120,8 +134,13 @@ class WPSEO_OnPage {
 	 * @return int(0)|int(1)|false
 	 */
 	protected function request_indexability() {
-		$request  = new WPSEO_OnPage_Request( get_option( 'home' ) );
-		$response = $request->get_response();
+		$parameters = array();
+		if ( $this->wordfence_protection_enabled() ) {
+			$parameters['wf_strict'] = 1;
+		}
+
+		$request  = new WPSEO_OnPage_Request();
+		$response = $request->do_request( get_option( 'home' ), $parameters );
 
 		if ( isset( $response['is_indexable'] ) ) {
 			return (int) $response['is_indexable'];
@@ -136,12 +155,12 @@ class WPSEO_OnPage {
 	 * @return bool
 	 */
 	protected function should_show_notice() {
-		// If development note is on or the tagline notice is shown, just don't show this notice.
+		// If development mode is on or the blog is not public, just don't show this notice.
 		if ( WPSEO_Utils::is_development_mode() || ( '0' === get_option( 'blog_public' ) ) ) {
 			return false;
 		}
 
-		return WPSEO_Utils::grant_access() && ! $this->user_has_dismissed() && $this->onpage_option->get_status() === WPSEO_OnPage_Option::IS_NOT_INDEXABLE;
+		return $this->onpage_option->get_status() === WPSEO_OnPage_Option::IS_NOT_INDEXABLE;
 	}
 
 	/**
@@ -182,15 +201,6 @@ class WPSEO_OnPage {
 	}
 
 	/**
-	 * Get the state from the user to check if the current user has dismissed
-	 *
-	 * @return mixed
-	 */
-	private function user_has_dismissed() {
-		return '1' === get_user_meta( get_current_user_id(), WPSEO_OnPage::USER_META_KEY, true );
-	}
-
-	/**
 	 * Redo the fetch request for onpage
 	 */
 	private function catch_redo_listener() {
@@ -201,4 +211,20 @@ class WPSEO_OnPage {
 		}
 	}
 
+	/**
+	 * Checks if WordFence protects the site against 'fake' Google crawlers.
+	 *
+	 * @return boolean
+	 */
+	private function wordfence_protection_enabled() {
+		if ( ! class_exists( 'wfConfig' ) ) {
+			return false;
+		}
+
+		if ( ! method_exists( 'wfConfig', 'get' ) ) {
+			return false;
+		}
+
+		return (bool) wfConfig::get( 'blockFakeBots' );
+	}
 }

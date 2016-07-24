@@ -104,11 +104,11 @@ class WPSEO_Pointers {
 					return;
 				}
 
-				var wpseo_pointer_options = <?php echo WPSEO_Utils::json_encode( $options ); ?>, setup;
+				var wpseo_pointer_options = <?php echo wp_json_encode( $options ); ?>, setup;
 
 				wpseo_pointer_options = $.extend(wpseo_pointer_options, {
 					buttons: function (event, t) {
-						var button = jQuery('<a href="<?php echo $this->get_ignore_url(); ?>" id="pointer-close" style="margin:0 5px;" class="button-secondary">' + '<?php _e( 'Close', 'wordpress-seo' ) ?>' + '</a>');
+						var button = jQuery('<a href="<?php echo $this->get_ignore_url(); ?>" id="pointer-close" style="margin:0 5px;" class="button button-secondary">' + '<?php _e( 'Close', 'wordpress-seo' ) ?>' + '</a>');
 						button.bind('click.pointer', function () {
 							t.element.pointer('close');
 						});
@@ -143,7 +143,7 @@ class WPSEO_Pointers {
 	private function button2() {
 		if ( $this->button_array['button2']['text'] ) {
 			?>
-			lastOpenedPointer.find( '#pointer-close' ).after('<a id="pointer-primary" class="button-primary">' +
+			lastOpenedPointer.find( '#pointer-close' ).after('<a id="pointer-primary" class="button button-primary">' +
 				'<?php echo $this->button_array['button2']['text']; ?>' + '</a>');
 			lastOpenedPointer.find('#pointer-primary').click(function () {
 			<?php echo $this->button_array['button2']['function']; ?>
@@ -158,7 +158,7 @@ class WPSEO_Pointers {
 	private function button3() {
 		if ( $this->button_array['button3']['text'] ) {
 			?>
-			lastOpenedPointer.find('#pointer-primary').after('<a id="pointer-ternary" style="float: left;" class="button-secondary">' +
+			lastOpenedPointer.find('#pointer-primary').after('<a id="pointer-ternary" style="float: left;" class="button button-secondary">' +
 				'<?php echo $this->button_array['button3']['text']; ?>' + '</a>');
 			lastOpenedPointer.find('#pointer-ternary').click(function () {
 			<?php echo $this->button_array['button3']['function']; ?>
@@ -170,17 +170,17 @@ class WPSEO_Pointers {
 	 * Show a pointer that starts the tour for Yoast SEO
 	 */
 	private function start_tour_pointer() {
-		$selector = 'li.toplevel_page_wpseo_dashboard';
+		$selector = 'li.toplevel_page_wpseo_alerts a[href="admin.php?page=' . WPSEO_Admin::PAGE_IDENTIFIER . '"]';
 		$content  = '<h3>' . __( 'Congratulations!', 'wordpress-seo' ) . '</h3>'
 					/* translators: %1$s expands to Yoast SEO */
-		            .'<p>' . sprintf( __( 'You&#8217;ve just installed %1$s! Click &#8220;Start Tour&#8221; to view a quick introduction of this plugin&#8217;s core functionality.', 'wordpress-seo' ), 'Yoast SEO' ) . '</p>';
+		            . '<p>' . sprintf( __( 'You&#8217;ve just installed %1$s! Click &#8220;Start Tour&#8221; to view a quick introduction of this plugin&#8217;s core functionality.', 'wordpress-seo' ), 'Yoast SEO' ) . '</p>';
 		$opt_arr  = array(
 			'content'  => $content,
 			'position' => array( 'edge' => 'bottom', 'align' => 'center' ),
 		);
 
 		$this->button_array['button2']['text']     = __( 'Start Tour', 'wordpress-seo' );
-		$this->button_array['button2']['function'] = sprintf( 'document.location="%s";', admin_url( 'admin.php?page=wpseo_dashboard' ) );
+		$this->button_array['button2']['function'] = sprintf( 'document.location="%s";', admin_url( 'admin.php?page=' . WPSEO_Admin::PAGE_IDENTIFIER ) );
 
 		$this->print_scripts( $selector, $opt_arr );
 	}
@@ -238,7 +238,7 @@ class WPSEO_Pointers {
 			               . '<p><strong>' . sprintf( __( 'More %1$s', 'wordpress-seo' ), 'Yoast SEO' ) . '</strong><br/>'
 
 				/* @todo What about this translation */
-	   					   . sprintf( __( 'There&#8217;s more to learn about WordPress &amp; SEO than just using this plugin. A great start is our article %1$sthe definitive guide to WordPress SEO%2$s.', 'wordpress-seo' ), '<a target="_blank" href="' . esc_url( 'https://yoast.com/articles/wordpress-seo/#utm_source=wpseo_dashboard&utm_medium=wpseo_tour&utm_campaign=tour' ) . '">', '</a>' )
+	   					   . sprintf( __( 'There&#8217;s more to learn about WordPress &amp; SEO than just using this plugin. A great start is our article %1$sthe definitive guide to WordPress SEO%2$s.', 'wordpress-seo' ), '<a target="_blank" href="' . esc_url( 'https://yoast.com/wordpress-seo/#utm_source=wpseo_dashboard&utm_medium=wpseo_tour&utm_campaign=tour' ) . '">', '</a>' )
 						   . '</p>'
 			               . '<p><strong style="font-size:150%;">' . __( 'Subscribe to our Newsletter', 'wordpress-seo' ) . '</strong><br/>'
 				/* translators: %1$s expands to Yoast SEO */
@@ -247,7 +247,7 @@ class WPSEO_Pointers {
 			               . '<p>'
 			               . '<input style="margin: 5px; color:#666" name="EMAIL" value="' . esc_attr( $current_user->user_email ) . '" selector="newsletter-email" placeholder="' . __( 'Email', 'wordpress-seo' ) . '"/>'
 			               . '<input type="hidden" name="group" value="2"/>'
-			               . '<button type="submit" class="button-primary">' . __( 'Subscribe', 'wordpress-seo' ) . '</button>'
+			               . '<button type="submit" class="button button-primary">' . __( 'Subscribe', 'wordpress-seo' ) . '</button>'
 			               . '</p>'
 			               . '</form>',
 			'next_page' => 'titles',
@@ -284,7 +284,7 @@ class WPSEO_Pointers {
 			               . '<p>' . __( 'The frontpage settings allow you to set meta-data for your homepage, whereas the default settings allow you to set a fallback for all posts/pages without images. ', 'wordpress-seo' ) . '</p>'
 			               . '<p><strong>' . __( 'Twitter', 'wordpress-seo' ) . '</strong><br/>' . sprintf( __( 'With %1$sTwitter Cards%2$s, you can attach rich photos, videos and media experience to tweets that drive traffic to your website. Simply check the box, sign up for the service, and users who Tweet links to your content will have a &#8220;Card&#8221; added to the tweet that&#8217;s visible to all of their followers.', 'wordpress-seo' ), '<a target="_blank" href="' . esc_url( 'https://yoast.com/twitter-cards/#utm_source=wpseo_social&utm_medium=wpseo_tour&utm_campaign=tour' ) . '">', '</a>' ) . '</p>'
 			               . '<p><strong>' . __( 'Pinterest', 'wordpress-seo' ) . '</strong><br/>' . __( 'On this tab you can verify your site with Pinterest and enter your Pinterest account.', 'wordpress-seo' ) . '</p>'
-			               . '<p><strong>' . __( 'Google+', 'wordpress-seo' ) . '</strong><br/>' . sprintf( __( 'This tab allows you to add specific post meta data for Google+. And if you have a Google+ page for your business, add that URL here and link it on your %1$sGoogle+%2$s page&#8217;s about page.', 'wordpress-seo' ), '<a target="_blank" href="' . esc_url( 'https://plus.google.com/' ) . '">', '</a>' ) . '</p>',
+			               . '<p><strong>' . __( 'Google+', 'wordpress-seo' ) . '</strong><br/>' . sprintf( __( 'If you have a Google+ page for your business, add that URL here and link it on your %1$sGoogle+%2$s page&#8217;s about page.', 'wordpress-seo' ), '<a target="_blank" href="' . esc_url( 'https://plus.google.com/' ) . '">', '</a>' ) . '</p>',
 			'next_page' => 'xml',
 			'prev_page' => 'titles',
 		);

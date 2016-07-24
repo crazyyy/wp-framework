@@ -2,8 +2,8 @@
 Contributors: humanmade, willmot, pauldewouters, joehoyle, mattheu, tcrsavage, cuvelier
 Tags: back up, backup, backups, database, zip, db, files, archive, wp-cli, humanmade
 Requires at least: 3.9
-Tested up to: 4.4.1
-Stable tag: 3.4.3
+Tested up to: 4.4.2
+Stable tag: 3.6.1
 
 Simple automated backups of your WordPress-powered website.
 
@@ -82,15 +82,15 @@ The issue is that your `wp-cron.php` is not returning a `200` response when hit 
 
 There are some things you can test to confirm this is the issue.
 
-     * Are scheduled posts working? (They use wp-cron as well.)
+	 * Are scheduled posts working? (They use wp-cron as well.)
 
-     * Are you hosted on Heart Internet? (wp-cron may not be supported by Heart Internet, see below for work-around.)
+	 * Are you hosted on Heart Internet? (wp-cron may not be supported by Heart Internet, see below for work-around.)
 
-     * If you click manual backup, does it work?
+	 * If you click manual backup, does it work?
 
-     * Try adding `define( 'ALTERNATE_WP_CRON', true );` to your `wp-config.php`. Do automatic backups work?
+	 * Try adding `define( 'ALTERNATE_WP_CRON', true );` to your `wp-config.php`. Do automatic backups work?
 
-     * Is your site private (i.e. is it behind some kind of authentication, maintenance plugin, .htaccess)? If so, wp-cron won't work until you remove it. If you are and you temporarily remove the authentication, do backups start working?
+	 * Is your site private (i.e. is it behind some kind of authentication, maintenance plugin, .htaccess)? If so, wp-cron won't work until you remove it. If you are and you temporarily remove the authentication, do backups start working?
 
 Report the results to our support team for further help. To do this, either enable support from your Admin Dashboard (recommended), or email backupwordpress@hmn.md
 
@@ -157,6 +157,44 @@ users should see major improvements to reliability.
 * This is a critical update. Fixes a bug in the core backup library. Please update immediately.
 
 == Changelog ==
+
+### 3.6.0 / 2016-03-31
+
+* Fix a bug caused by using a function incompatible with min PHP version requirements
+* Misc code quality improvements and bug fixes
+* Fix bugs in the code responsible for admin notices
+* Display disk space info
+* Uninstall cleanup
+* Introduce a dedicated extensions page
+
+### 3.5 / 2016-03-10
+
+* Reduce duplication and improve code readability when echoing filesizes
+* Improve how filesizes are handled in the Your Site list
+* Switch to storing site size data in a file, large sites could cause database errors when saving the option
+* Re-remove the PHP User and Group Requirements
+* Check that the backup file exists before attempting to check it's contents
+* Only call getPerms on readable files to ensure we avoid a fatal error
+* Ensure error are correctly check in verify_backup
+* Use Symfony Process instead of shell_exec for all our system calls
+* More unit tests
+* Update dependencies
+* Detect disabled functions defined in php.ini, now accounts for different separators.
+
+### 3.4.5 / 2016-02-23
+
+* Fix fatal error on upgrade
+
+### 3.4.4 / 2016-02-23
+
+* Ensure temporary files are correctly cleaned up before and after running a backup.
+* Avoid killing site if plugin is active on PHP 52
+* Allow custom secure key using filter
+* Fixes a bug which caused the root path to the WordPress install to be miscalulated in certain setups.
+
+### 3.4.4-beta
+
+* Fixes a bug which caused the root path to the WordPress install to be miscalulated in certain setups.
 
 ### 3.4.3
 

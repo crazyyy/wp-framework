@@ -18,13 +18,13 @@ class Responsive_Lightbox_Frontend {
 		Responsive_Lightbox()->frontend = $this;
 
 		// filters
-		add_filter( 'post_gallery', array( $this, 'gallery_attributes' ), 1000, 10, 2 );
-		add_filter( 'post_gallery', array( $this, 'add_custom_gallery_lightbox_selector' ), 2000, 10, 2 );
+		add_filter( 'post_gallery', array( $this, 'gallery_attributes' ), 1000 );
+		add_filter( 'post_gallery', array( $this, 'add_custom_gallery_lightbox_selector' ), 2000, 2 );
 		add_filter( 'wp_get_attachment_link', array( $this, 'add_gallery_lightbox_selector' ), 1000, 6 );
 		add_filter( 'the_content', array( $this, 'add_videos_lightbox_selector' ) );
 		add_filter( 'the_content', array( $this, 'add_links_lightbox_selector' ) );
 		add_filter( 'woocommerce_single_product_image_html', array( $this, 'woocommerce_single_product_image_html' ), 100 );
-		add_filter( 'woocommerce_single_product_image_thumbnail_html', array( $this, 'woocommerce_single_product_image_html' ), 100 );
+		add_filter( 'woocommerce_single_product_image_thumbnail_html', array( $this, 'woocommerce_single_product_image_thumbnail_html' ), 100 );
 		
 		// actions
 		add_action( 'wp_enqueue_scripts', array( $this, 'woocommerce_remove_lightbox' ), 100 );
@@ -227,14 +227,27 @@ class Responsive_Lightbox_Frontend {
 	}
 	
 	/**
-	 * Apply lightbox to WooCommerce procust gallery.
+	 * Apply lightbox to WooCommerce procust image.
 	 * 
 	 * @param mixed $html
 	 * @return mixed
 	 */
 	public function woocommerce_single_product_image_html( $html ) {
 		if ( Responsive_Lightbox()->options['settings']['woocommerce_gallery_lightbox'] === true ) {
-			$html = str_replace( 'data-rel="prettyPhoto[product-gallery]"', 'data-rel="lightbox-gallery-' . $this->gallery_no . '"', $html );
+			$html = str_replace( 'data-rel="prettyPhoto"', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '"', $html );
+		}
+		return $html;
+	}
+	
+	/**
+	 * Apply lightbox to WooCommerce procust gallery.
+	 * 
+	 * @param mixed $html
+	 * @return mixed
+	 */
+	public function woocommerce_single_product_image_thumbnail_html( $html ) {
+		if ( Responsive_Lightbox()->options['settings']['woocommerce_gallery_lightbox'] === true ) {
+			$html = str_replace( 'data-rel="prettyPhoto[product-gallery]"', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"', $html );
 		}
 		return $html;
 	}
@@ -321,12 +334,10 @@ class Responsive_Lightbox_Frontend {
 	 * Helper: gallery number function
 	 * 
 	 * @param mixed $content
-	 * @param array $attr
 	 * @return mixed
 	 */
-	public function gallery_attributes( $content, $attr ) {
-
-		++ $this->gallery_no;
+	public function gallery_attributes( $content ) {
+		++$this->gallery_no;
 
 		return $content;
 	}

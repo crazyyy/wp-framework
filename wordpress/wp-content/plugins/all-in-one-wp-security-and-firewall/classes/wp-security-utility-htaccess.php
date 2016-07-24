@@ -43,6 +43,9 @@ class AIOWPSecurity_Utility_Htaccess
     public static $five_g_blacklist_marker_start = '#AIOWPS_FIVE_G_BLACKLIST_START';
     public static $five_g_blacklist_marker_end = '#AIOWPS_FIVE_G_BLACKLIST_END';
 
+    public static $six_g_blacklist_marker_start = '#AIOWPS_SIX_G_BLACKLIST_START';
+    public static $six_g_blacklist_marker_end = '#AIOWPS_SIX_G_BLACKLIST_END';
+
     public static $block_spambots_marker_start = '#AIOWPS_BLOCK_SPAMBOTS_START';
     public static $block_spambots_marker_end = '#AIOWPS_BLOCK_SPAMBOTS_END';
 
@@ -63,35 +66,33 @@ class AIOWPSecurity_Utility_Htaccess
     }
 
 
+    /**
+     * Write all active rules to .htaccess file.
+     *
+     * @return boolean True on success, false on failure.
+     */
     static function write_to_htaccess()
     {
         global $aio_wp_security;
         //figure out what server is being used
         if (AIOWPSecurity_Utility::get_server_type() == -1) {
             $aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported!", 4);
-            return -1; //unable to write to the file
+            return false; //unable to write to the file
         }
 
         //clean up old rules first
         if (AIOWPSecurity_Utility_Htaccess::delete_from_htaccess() == -1) {
             $aio_wp_security->debug_logger->log_debug("Delete operation of .htaccess file failed!", 4);
-            return -1; //unable to write to the file
+            return false; //unable to write to the file
         }
 
         $htaccess = ABSPATH . '.htaccess';
-        //get the subdirectory if it is installed in one
-        $siteurl = explode('/', get_option('siteurl'));
-        if (isset($siteurl[3])) {
-            $dir = '/' . $siteurl[3] . '/';
-        } else {
-            $dir = '/';
-        }
 
         if (!$f = @fopen($htaccess, 'a+')) {
             @chmod($htaccess, 0644);
             if (!$f = @fopen($htaccess, 'a+')) {
                 $aio_wp_security->debug_logger->log_debug("chmod operation on .htaccess failed!", 4);
-                return -1;
+                return false;
             }
         }
         AIOWPSecurity_Utility_File::backup_and_rename_htaccess($htaccess); //TODO - we dont want to continually be backing up the htaccess file
@@ -99,10 +100,6 @@ class AIOWPSecurity_Utility_Htaccess
         $ht = explode(PHP_EOL, implode('', file($htaccess))); //parse each line of file into array
 
         $rules = AIOWPSecurity_Utility_Htaccess::getrules();
-        if ($rules == -1) {
-            $aio_wp_security->debug_logger->log_debug("Unable to retrieve rules in .htaccess file!", 4);
-            return -1;
-        }
 
         $rulesarray = explode(PHP_EOL, $rules);
         $rulesarray = apply_filters('aiowps_htaccess_rules_before_writing', $rulesarray);
@@ -110,7 +107,7 @@ class AIOWPSecurity_Utility_Htaccess
 
         if (!$f = @fopen($htaccess, 'w+')) {
             $aio_wp_security->debug_logger->log_debug("Write operation on .htaccess failed!", 4);
-            return -1; //we can't write to the file
+            return false; //we can't write to the file
         }
 
         $blank = false;
@@ -128,7 +125,7 @@ class AIOWPSecurity_Utility_Htaccess
             }
         }
         @fclose($f);
-        return 1; //success
+        return true; //success
     }
 
     /*
@@ -185,6 +182,7 @@ class AIOWPSecurity_Utility_Htaccess
         $rules .= AIOWPSecurity_Utility_Htaccess::getrules_forbid_proxy_comment_posting();
         $rules .= AIOWPSecurity_Utility_Htaccess::getrules_deny_bad_query_strings();
         $rules .= AIOWPSecurity_Utility_Htaccess::getrules_advanced_character_string_filter();
+        $rules .= AIOWPSecurity_Utility_Htaccess::getrules_6g_blacklist();
         $rules .= AIOWPSecurity_Utility_Htaccess::getrules_5g_blacklist();
         $rules .= AIOWPSecurity_Utility_Htaccess::getrules_enable_brute_force_prevention();
         $rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_spambots();
@@ -644,7 +642,7 @@ class AIOWPSecurity_Utility_Htaccess
             $rules .= AIOWPSecurity_Utility_Htaccess::$deny_bad_query_strings_marker_start . PHP_EOL; //Add feature marker start
             //$rules .= 'RewriteCond %{QUERY_STRING} ../    [NC,OR]' . PHP_EOL;
             //$rules .= 'RewriteCond %{QUERY_STRING} boot.ini [NC,OR]' . PHP_EOL;
-            $rules .= 'RewriteCond %{QUERY_STRING} tag=     [NC,OR]' . PHP_EOL;
+            //$rules .= 'RewriteCond %{QUERY_STRING} tag=     [NC,OR]' . PHP_EOL;
             $rules .= 'RewriteCond %{QUERY_STRING} ftp:     [NC,OR]' . PHP_EOL;
             $rules .= 'RewriteCond %{QUERY_STRING} http:    [NC,OR]' . PHP_EOL;
             $rules .= 'RewriteCond %{QUERY_STRING} https:   [NC,OR]' . PHP_EOL;
@@ -675,7 +673,10 @@ class AIOWPSecurity_Utility_Htaccess
     //Redirectmatch 403 convert(
     //RedirectMatch 403 .inc
     //RedirectMatch 403 include.
-
+    //
+    // The "@" sign is often used in filenames of retina-ready images like
+    // "logo@2x.jpg", therefore it has been removed from the list.
+    //RedirectMatch 403 \@
 
     static function getrules_advanced_character_string_filter()
     {
@@ -689,7 +690,6 @@ class AIOWPSecurity_Utility_Htaccess
                         RedirectMatch 403 \:
                         RedirectMatch 403 \;
                         RedirectMatch 403 \=
-                        RedirectMatch 403 \@
                         RedirectMatch 403 \[
                         RedirectMatch 403 \]
                         RedirectMatch 403 \^
@@ -851,6 +851,81 @@ class AIOWPSecurity_Utility_Htaccess
     }
 
     /*
+     * This function contains the rules for the 6G blacklist produced by Jeff Starr:
+	 * https://perishablepress.com/6g/
+     */
+    static function getrules_6g_blacklist()
+    {
+        global $aio_wp_security;
+        $rules = '';
+        if ($aio_wp_security->configs->get_value('aiowps_enable_6g_firewall') == '1') {
+            $rules .= AIOWPSecurity_Utility_Htaccess::$six_g_blacklist_marker_start . PHP_EOL; //Add feature marker start
+
+            $rules .= '# 6G BLACKLIST/FIREWALL (2016)
+                        # @ https://perishablepress.com/6g/
+
+                        # 6G:[QUERY STRINGS]
+                        <IfModule mod_rewrite.c>
+                                RewriteEngine On
+                                RewriteCond %{QUERY_STRING} (eval\() [NC,OR]
+                                RewriteCond %{QUERY_STRING} (127\.0\.0\.1) [NC,OR]
+                                RewriteCond %{QUERY_STRING} ([a-z0-9]{2000}) [NC,OR]
+                                RewriteCond %{QUERY_STRING} (javascript:)(.*)(;) [NC,OR]
+                                RewriteCond %{QUERY_STRING} (base64_encode)(.*)(\() [NC,OR]
+                                RewriteCond %{QUERY_STRING} (GLOBALS|REQUEST)(=|\[|%) [NC,OR]
+                                RewriteCond %{QUERY_STRING} (<|%3C)(.*)script(.*)(>|%3) [NC,OR]
+                                RewriteCond %{QUERY_STRING} (\\|\.\.\.|\.\./|~|`|<|>|\|) [NC,OR]
+                                RewriteCond %{QUERY_STRING} (boot\.ini|etc/passwd|self/environ) [NC,OR]
+                                RewriteCond %{QUERY_STRING} (thumbs?(_editor|open)?|tim(thumb)?)\.php [NC,OR]
+                                RewriteCond %{QUERY_STRING} (\'|\")(.*)(drop|insert|md5|select|union) [NC]
+                                RewriteRule .* - [F]
+                        </IfModule>
+
+                        # 6G:[REQUEST METHOD]
+                        <ifModule mod_rewrite.c>
+                                RewriteCond %{REQUEST_METHOD} ^(connect|debug|delete|move|put|trace|track) [NC]
+                                RewriteRule .* - [F]
+                        </IfModule>
+
+                        # 6G:[REFERRERS]
+                        <IfModule mod_rewrite.c>
+                                RewriteCond %{HTTP_REFERER} ([a-z0-9]{2000}) [NC,OR]
+                                RewriteCond %{HTTP_REFERER} (semalt.com|todaperfeita) [NC]
+                                RewriteRule .* - [F]
+                        </IfModule>
+
+                        # 6G:[REQUEST STRINGS]
+                        <IfModule mod_alias.c>
+                                RedirectMatch 403 (?i)([a-z0-9]{2000})
+                                RedirectMatch 403 (?i)(https?|ftp|php):/
+                                RedirectMatch 403 (?i)(base64_encode)(.*)(\()
+                                RedirectMatch 403 (?i)(=\\\'|=\\%27|/\\\'/?)\.
+                                RedirectMatch 403 (?i)/(\$(\&)?|\*|\"|\.|,|&|&amp;?)/?$
+                                RedirectMatch 403 (?i)(\{0\}|\(/\(|\.\.\.|\+\+\+|\\\"\\\")
+                                RedirectMatch 403 (?i)(~|`|<|>|:|;|,|%|\\|\s|\{|\}|\[|\]|\|)
+                                RedirectMatch 403 (?i)/(=|\$&|_mm|cgi-|etc/passwd|muieblack)
+                                RedirectMatch 403 (?i)(&pws=0|_vti_|\(null\)|\{\$itemURL\}|echo(.*)kae|etc/passwd|eval\(|self/environ)
+                                RedirectMatch 403 (?i)\.(aspx?|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rar|rdf)$
+                                RedirectMatch 403 (?i)/(^$|(wp-)?config|mobiquo|phpinfo|shell|sqlpatch|thumb|thumb_editor|thumbopen|timthumb|webshell)\.php
+                        </IfModule>
+
+                        # 6G:[USER AGENTS]
+                        <IfModule mod_setenvif.c>
+                                SetEnvIfNoCase User-Agent ([a-z0-9]{2000}) bad_bot
+                                SetEnvIfNoCase User-Agent (archive.org|binlar|casper|checkpriv|choppy|clshttp|cmsworld|diavol|dotbot|extract|feedfinder|flicky|g00g1e|harvest|heritrix|httrack|kmccrew|loader|miner|nikto|nutch|planetwork|postrank|purebot|pycurl|python|seekerspider|siclab|skygrid|sqlmap|sucker|turnit|vikspider|winhttp|xxxyy|youda|zmeu|zune) bad_bot
+                                <limit GET POST PUT>
+                                        Order Allow,Deny
+                                        Allow from all
+                                        Deny from env=bad_bot
+                                </limit>
+                        </IfModule>' . PHP_EOL;
+            $rules .= AIOWPSecurity_Utility_Htaccess::$six_g_blacklist_marker_end . PHP_EOL; //Add feature marker end
+        }
+
+        return $rules;
+    }
+
+    /*
      * This function will write some directives to block all comments which do not originate from the blog's domain
      * OR if the user agent is empty. All blocked requests will be redirected to 127.0.0.1
      */
@@ -859,9 +934,9 @@ class AIOWPSecurity_Utility_Htaccess
         global $aio_wp_security;
         $rules = '';
         if ($aio_wp_security->configs->get_value('aiowps_enable_spambot_blocking') == '1') {
-            $url_string = AIOWPSecurity_Utility_Htaccess::return_regularized_url(AIOWPSEC_WP_URL);
+            $url_string = AIOWPSecurity_Utility_Htaccess::return_regularized_url(AIOWPSEC_WP_HOME_URL);
             if ($url_string == FALSE) {
-                $url_string = AIOWPSEC_WP_URL;
+                $url_string = AIOWPSEC_WP_HOME_URL;
             }
             $rules .= AIOWPSecurity_Utility_Htaccess::$block_spambots_marker_start . PHP_EOL; //Add feature marker start
             $rules .= '<IfModule mod_rewrite.c>
@@ -885,9 +960,9 @@ class AIOWPSecurity_Utility_Htaccess
         global $aio_wp_security;
         $rules = '';
         if ($aio_wp_security->configs->get_value('aiowps_prevent_hotlinking') == '1') {
-            $url_string = AIOWPSecurity_Utility_Htaccess::return_regularized_url(AIOWPSEC_WP_URL);
+            $url_string = AIOWPSecurity_Utility_Htaccess::return_regularized_url(AIOWPSEC_WP_HOME_URL);
             if ($url_string == FALSE) {
-                $url_string = AIOWPSEC_WP_URL;
+                $url_string = AIOWPSEC_WP_HOME_URL;
             }
             $rules .= AIOWPSecurity_Utility_Htaccess::$prevent_image_hotlinks_marker_start . PHP_EOL; //Add feature marker start
             $rules .= '<IfModule mod_rewrite.c>

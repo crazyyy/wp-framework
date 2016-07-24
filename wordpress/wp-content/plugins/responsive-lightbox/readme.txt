@@ -3,8 +3,8 @@ Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, links, photos, template, theme, photo, image, picture, slideshow, modal, overlay, YouTube, Vimeo, video, videos
 Requires at least: 4.0
-Tested up to: 4.4.2
-Stable tag: 1.6.7
+Tested up to: 4.5
+Stable tag: 1.6.8
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -76,6 +76,10 @@ No questions yet.
 2. screenshot-2.jpg
 
 == Changelog ==
+
+= 1.6.8 =
+* Tweak: Tos "R" Us script caption issue when empty link title
+* Tweak: Undefined notice on extentions activation.
 
 = 1.6.7 =
 * New: WooCommerce product gallery support
@@ -283,6 +287,6 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.6.7 =
-* New: WooCommerce product gallery support
-* New: [Masonry Image Gallery](https://www.dfactory.eu/products/masonry-image-gallery/) and [Strip Lightbox](https://www.dfactory.eu/products/strip-lightbox/) extensions
+= 1.6.8 =
+* Tweak: Tos "R" Us script caption issue when empty link title
+* Tweak: Undefined notice on extentions activation.

@@ -3,7 +3,7 @@
   Plugin Name: WPBase-Cache
   Plugin URI: https://github.com/baseapp/wpbase-cache
   Description: A wordpress plugin for using all caches on varnish, nginx, php-fpm stack with php-apc. This plugin includes db-cache-reloaded-fix for dbcache.
-  Version: 4.0
+  Version: 5.0
   Author: Vikrant Datta
   Author URI: http://blog.wpoven.com
   License: GPL2
@@ -43,19 +43,31 @@ function upon_activation() {
 }
 
 function is_wpoven_site() {
+    
     $file = ABSPATH . 'wp-config.php';
     $content = file_get_contents($file);
     $match = '';
     preg_match('/define.*DB_NAME.*\'(.*)\'/', $content, $match);
     $dbname = $match[1];
     $sitename = substr($dbname, 2);
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_URL, "https://wpoven.com/sites/check/wpbasecachecheck/" . $sitename);
-    $content = curl_exec($ch);
-    curl_close($ch);
+    $check_cache = get_option('wpbase_check_site',NULL);
+    
+    if (!isset($check_cache)) {
+        //echo "in";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_URL, "https://wpoven.com/sites/check/wpbasecachecheck/" . $sitename);
+        $content = curl_exec($ch);
+        curl_close($ch);
+        
+        $content = (int)$content;
+        
+        update_option('wpbase_check_site', $content);
+    } else {
+        $content = $check_cache;
+    }
     return $content;
 }
 
@@ -63,7 +75,6 @@ function check_wpoven_site() {
 
     $check_site = is_wpoven_site();
     if ($check_site == "1") {
-
         function custom_button_example($wp_admin_bar) {
             $file = ABSPATH . 'wp-config.php';
             $content = file_get_contents($file);
@@ -112,14 +123,13 @@ function check_wpoven_site() {
                 $wp_admin_bar->add_node($args);
             }
         }
-
         add_action('admin_bar_menu', 'custom_button_example', 100);
     }
 }
 
 $options = get_option('wpbase_cache_options');
-if ($options['admin_bar_button'] == '1')
-    add_action('init', 'check_wpoven_site');
+
+
 
 register_activation_hook(__FILE__, 'upon_activation');
 

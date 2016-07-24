@@ -30,7 +30,7 @@ class WPSEO_Options {
 	/**
 	 * @var  array   Array of instantiated option objects
 	 */
-	protected static $option_instances;
+	protected static $option_instances = array();
 
 	/**
 	 * @var  object  Instance of this class
@@ -84,7 +84,6 @@ class WPSEO_Options {
 		return false;
 	}
 
-
 	/**
 	 * Get a specific default value for an option
 	 *
@@ -104,7 +103,6 @@ class WPSEO_Options {
 		return null;
 	}
 
-
 	/**
 	 * Update a site_option
 	 *
@@ -122,7 +120,6 @@ class WPSEO_Options {
 		}
 	}
 
-
 	/**
 	 * Get the instantiated option instance
 	 *
@@ -137,7 +134,6 @@ class WPSEO_Options {
 
 		return false;
 	}
-
 
 	/**
 	 * Retrieve an array of the options which should be included in get_all() and reset().
@@ -160,7 +156,6 @@ class WPSEO_Options {
 		return $option_names;
 	}
 
-
 	/**
 	 * Retrieve all the options for the SEO plugin in one go.
 	 *
@@ -168,30 +163,58 @@ class WPSEO_Options {
 	 * well change between calls (enriched defaults and such)
 	 *
 	 * @static
-	 * @return  array  Array combining the values of (nearly) all the options
+	 * @return  array  Array combining the values of all the options
 	 */
 	public static function get_all() {
-		$all_options  = array();
-		$option_names = self::get_option_names();
+		return self::get_options( self::get_option_names() );
+	}
 
-		if ( is_array( $option_names ) && $option_names !== array() ) {
-			foreach ( $option_names as $option_name ) {
+	/**
+	 * Retrieve one or more options for the SEO plugin.
+	 *
+	 * @static
+	 *
+	 * @param array $option_names An array of option names of the options you want to get.
+	 *
+	 * @return  array  Array combining the values of the requested options
+	 */
+	public static function get_options( array $option_names ) {
+		$options      = array();
+		$option_names = array_filter( $option_names, 'is_string' );
+		foreach ( $option_names as $option_name ) {
+			if ( isset( self::$option_instances[ $option_name ] ) ) {
+				$option  = self::get_option( $option_name );
+				$options = array_merge( $options, $option );
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Retrieve a single option for the SEO plugin.
+	 *
+	 * @static
+	 *
+	 * @param string $option_name the name of the option you want to get.
+	 *
+	 * @return array Array containing the requested option
+	 */
+	public static function get_option( $option_name ) {
+		$option = null;
+		if ( is_string( $option_name ) && ! empty( $option_name ) ) {
+			if ( isset( self::$option_instances[ $option_name ] ) ) {
 				if ( self::$option_instances[ $option_name ]->multisite_only !== true ) {
 					$option = get_option( $option_name );
 				}
 				else {
 					$option = get_site_option( $option_name );
 				}
-
-				if ( is_array( $option ) && $option !== array() ) {
-					$all_options = array_merge( $all_options, $option );
-				}
 			}
 		}
 
-		return $all_options;
+		return $option;
 	}
-
 
 	/**
 	 * Run the clean up routine for one or all options
@@ -241,7 +264,6 @@ class WPSEO_Options {
 		}
 	}
 
-
 	/**
 	 * Correct the inadvertent removal of the fallback to default values from the breadcrumbs
 	 *
@@ -253,7 +275,6 @@ class WPSEO_Options {
 		}
 	}
 
-
 	/**
 	 * Initialize some options on first install/activate/reset
 	 *
@@ -261,21 +282,11 @@ class WPSEO_Options {
 	 * @return void
 	 */
 	public static function initialize() {
-		/*
-		Make sure title_test and description_test function are available even when called
-			   from the isolated activation
-		*/
-		require_once( WPSEO_PATH . 'inc/wpseo-non-ajax-functions.php' );
-
-		// Commented out? wpseo_title_test(); R.
-		wpseo_description_test();
-
 		/* Force WooThemes to use Yoast SEO data. */
 		if ( function_exists( 'woo_version_init' ) ) {
 			update_option( 'seo_woo_use_third_party_data', 'true' );
 		}
 	}
-
 
 	/**
 	 * Reset all options to their default values and rerun some tests
@@ -302,7 +313,6 @@ class WPSEO_Options {
 		self::initialize();
 	}
 
-
 	/**
 	 * Initialize default values for a new multisite blog
 	 *
@@ -325,7 +335,6 @@ class WPSEO_Options {
 			}
 		}
 	}
-
 
 	/**
 	 * Reset all options for a specific multisite blog to their default values based upon a

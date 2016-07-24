@@ -20,11 +20,9 @@ class WPSEO_Upgrade {
 	 * Class constructor
 	 */
 	public function __construct() {
-		$this->options = WPSEO_Options::get_all();
+		$this->options = WPSEO_Options::get_option( 'wpseo' );
 
 		WPSEO_Options::maybe_set_multisite_defaults( false );
-
-		$this->init();
 
 		if ( version_compare( $this->options['version'], '1.5.0', '<' ) ) {
 			$this->upgrade_15( $this->options['version'] );
@@ -50,27 +48,20 @@ class WPSEO_Upgrade {
 			$this->upgrade_30();
 		}
 
+		if ( version_compare( $this->options['version'], '3.3', '<' ) ) {
+			$this->upgrade_33();
+		}
+
 		/**
 		 * Filter: 'wpseo_run_upgrade' - Runs the upgrade hook which are dependent on Yoast SEO
 		 *
-		 * @api string - The current version of Yoast SEO
+		 * @deprecated Since 3.1
+		 *
+		 * @api        string - The current version of Yoast SEO
 		 */
 		do_action( 'wpseo_run_upgrade', $this->options['version'] );
 
 		$this->finish_up();
-	}
-
-	/**
-	 * Run some functions that run when we first run or when we upgrade Yoast SEO from < 1.4.13
-	 */
-	private function init() {
-		if ( $this->options['version'] === '' || version_compare( $this->options['version'], '1.4.13', '<' ) ) {
-			/* Make sure title_test and description_test functions are available */
-			require_once( WPSEO_PATH . 'inc/wpseo-non-ajax-functions.php' );
-
-			// Run description test once theme has loaded.
-			add_action( 'init', 'wpseo_description_test' );
-		}
 	}
 
 	/**
@@ -97,7 +88,6 @@ class WPSEO_Upgrade {
 		 */
 		delete_option( 'wpseo_ms' );
 
-		$this->move_hide_links_options();
 		$this->move_pinterest_option();
 	}
 
@@ -182,20 +172,11 @@ class WPSEO_Upgrade {
 	}
 
 	/**
-	 * Moves the hide- links options from the permalinks option to the titles option
+	 * Performs upgrade functions to Yoast SEO 3.3
 	 */
-	private function move_hide_links_options() {
-		$options_titles = get_option( 'wpseo_titles' );
-		$options_permalinks = get_option( 'wpseo_permalinks' );
-
-		foreach ( array( 'hide-feedlinks', 'hide-rsdlink', 'hide-shortlink', 'hide-wlwmanifest' ) as $hide ) {
-			if ( isset( $options_titles[ $hide ] ) ) {
-				$options_permalinks[ $hide ] = $options_titles[ $hide ];
-				unset( $options_titles[ $hide ] );
-				update_option( 'wpseo_permalinks', $options_permalinks );
-				update_option( 'wpseo_titles', $options_titles );
-			}
-		}
+	private function upgrade_33() {
+		// Notification dismissals have been moved to User Meta instead of global option.
+		delete_option( Yoast_Notification_Center::STORAGE_KEY );
 	}
 
 	/**
@@ -216,11 +197,11 @@ class WPSEO_Upgrade {
 	 * Runs the needed cleanup after an update, setting the DB version to latest version, flushing caches etc.
 	 */
 	private function finish_up() {
-		$this->options = get_option( 'wpseo' );                             // Re-get to make sure we have the latest version.
+		$this->options = WPSEO_Options::get_option( 'wpseo' );              // Re-get to make sure we have the latest version.
 		update_option( 'wpseo', $this->options );                           // This also ensures the DB version is equal to WPSEO_VERSION.
 
 		add_action( 'shutdown', 'flush_rewrite_rules' );                    // Just flush rewrites, always, to at least make them work after an upgrade.
-		WPSEO_Utils::clear_sitemap_cache();                                 // Flush the sitemap cache.
+		WPSEO_Sitemaps_Cache::clear();                                 // Flush the sitemap cache.
 
 		WPSEO_Options::ensure_options_exist();                              // Make sure all our options always exist - issue #1245.
 	}

@@ -268,7 +268,7 @@ class Responsive_Lightbox_Settings {
 				// 'callback'		=> array( $this, 'validate_options' ),
 				'sections'		=> array(
 					'responsive_lightbox_configuration' => array(
-						'title' 		=> __( 'Lightbox settings', 'responsive-lightbox' ) . ': ' . $this->scripts[Responsive_Lightbox()->options['settings']['script']]['name'],
+						'title' 		=> __( 'Lightbox settings', 'responsive-lightbox' ) . ': ' . ( isset( $this->scripts[Responsive_Lightbox()->options['settings']['script']]['name'] ) ? $this->scripts[Responsive_Lightbox()->options['settings']['script']]['name'] : $this->scripts[Responsive_Lightbox()->defaults['settings']['script']]['name'] ),
 						// 'callback' 	=> '',
 						// 'page' 		=> '',
 					),
@@ -1464,7 +1464,7 @@ class Responsive_Lightbox_Settings {
 		}
 
 		// check page
-		if ( ! ( $option_page = esc_attr( $_POST['option_page'] ) ) )
+		if ( ! isset( $_POST['option_page'] ) || ! ( $option_page = esc_attr( $_POST['option_page'] ) ) )
 			return $input;
 		
 		// check data

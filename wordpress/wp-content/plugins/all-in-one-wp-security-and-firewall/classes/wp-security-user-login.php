@@ -38,9 +38,12 @@ class AIOWPSecurity_User_Login
             if($aio_wp_security->configs->get_value('aiowps_allow_unlock_requests')=='1')
             {
                 add_action('login_form', array(&$this, 'insert_unlock_request_form'));
+                add_action('woocommerce_login_form', array(&$this, 'insert_unlock_request_form'));
             }
             $aio_wp_security->debug_logger->log_debug("Login attempt from blocked IP range - ".$user_locked['failed_login_ip'],2);
-            return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Login failed because your IP address has been blocked. Please contact the administrator.', 'all-in-one-wp-security-and-firewall'));
+            $error_msg = __('<strong>ERROR</strong>: Login failed because your IP address has been blocked. Please contact the administrator.', 'all-in-one-wp-security-and-firewall');
+            $error_msg = apply_filters( 'aiowps_ip_blocked_error_msg', $error_msg );
+            return new WP_Error('authentication_failed', $error_msg);
             //$unlock_msg_form = $this->user_unlock_message();
             //return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Login failed because your IP address has been blocked.
               //                  Please contact the administrator.', 'all-in-one-wp-security-and-firewall').$unlock_msg_form);
@@ -161,6 +164,7 @@ class AIOWPSecurity_User_Login
         $login_lockdown_table = AIOWPSEC_TBL_LOGIN_LOCKDOWN;
         $ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
         $ip_range = AIOWPSecurity_Utility_IP::get_sanitized_ip_range($ip); //Get the IP range of the current user
+        if(empty($ip_range)) return false;
         $locked_user = $wpdb->get_row("SELECT * FROM $login_lockdown_table " .
                                         "WHERE release_date > now() AND " .
                                         "failed_login_ip LIKE '" . esc_sql($ip_range) . "%'", ARRAY_A);
@@ -177,6 +181,8 @@ class AIOWPSecurity_User_Login
         $login_retry_interval = $aio_wp_security->configs->get_value('aiowps_retry_time_period');
         $ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
         $ip_range = AIOWPSecurity_Utility_IP::get_sanitized_ip_range($ip); //Get the IP range of the current user
+        if(empty($ip_range)) return false;
+
         $login_failures = $wpdb->get_var("SELECT COUNT(ID) FROM $failed_logins_table " . 
                                 "WHERE failed_login_date + INTERVAL " .
                                 $login_retry_interval . " MINUTE > now() AND " . 
@@ -194,8 +200,10 @@ class AIOWPSecurity_User_Login
         $lockout_time_length = $aio_wp_security->configs->get_value('aiowps_lockout_time_length');
         $ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
         $ip_range = AIOWPSecurity_Utility_IP::get_sanitized_ip_range($ip); //Get the IP range of the current user
+        if(empty($ip_range)) return false;
+
         $username = sanitize_user($username);
-	$user = get_user_by('login',$username); //Returns WP_User object if exists
+	    $user = get_user_by('login',$username); //Returns WP_User object if exists
         $ip_range = apply_filters('aiowps_before_lockdown', $ip_range);
         if ($user)
         {
@@ -233,9 +241,10 @@ class AIOWPSecurity_User_Login
         $login_fails_table = AIOWPSEC_TBL_FAILED_LOGINS;
         $ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
         $ip_range = AIOWPSecurity_Utility_IP::get_sanitized_ip_range($ip); //Get the IP range of the current user
-        
+        if(empty($ip_range)) return false;
+
         $username = sanitize_user($username);
-	$user = get_user_by('login',$username); //Returns WP_User object if it exists
+	    $user = get_user_by('login',$username); //Returns WP_User object if it exists
         if ($user)
         {
             //If the login attempt was made using a valid user set variables for DB storage later on
@@ -266,7 +275,7 @@ class AIOWPSecurity_User_Login
         $email_msg = '';
         if ($email_notification_enabled == 1)
         {
-            $subject = '['.get_option('siteurl').'] '. __('Site Lockout Notification','all-in-one-wp-security-and-firewall');
+            $subject = '['.get_option('home').'] '. __('Site Lockout Notification','all-in-one-wp-security-and-firewall');
             $email_msg .= __('A lockdown event has occurred due to too many failed login attempts or invalid username:','all-in-one-wp-security-and-firewall')."\n";
             $email_msg .= __('Username: '.($username?$username:"Unknown"),'all-in-one-wp-security-and-firewall')."\n";
             $email_msg .= __('IP Address: '.$ip,'all-in-one-wp-security-and-firewall')."\n\n";
@@ -294,8 +303,7 @@ class AIOWPSecurity_User_Login
         $unlock_link = '';
         $lockdown_table_name = AIOWPSEC_TBL_LOGIN_LOCKDOWN;
         $secret_rand_key = (md5(uniqid(rand(), true)));
-        $sql = "UPDATE $lockdown_table_name SET unlock_key = '$secret_rand_key' WHERE release_date > now() AND failed_login_ip LIKE '%".esc_sql($ip_range)."%'";
-        //$res = $wpdb->get_results("SELECT * FROM $lockdown_table_name WHERE release_date > now() AND user_login = '$username'", ARRAY_A);
+        $sql = $wpdb->prepare("UPDATE $lockdown_table_name SET unlock_key = '$secret_rand_key' WHERE release_date > now() AND failed_login_ip LIKE %s","%".esc_sql($ip_range)."%");
         $res = $wpdb->query($sql);
         if($res == NULL){
             $aio_wp_security->debug_logger->log_debug("No locked user found with IP range ".$ip_range,4);
@@ -303,7 +311,7 @@ class AIOWPSecurity_User_Login
         }else{
             $query_param = array('aiowps_auth_key'=>$secret_rand_key);
             $wp_site_url = AIOWPSEC_WP_URL;
-            $unlock_link = esc_url(add_query_arg($query_param, $wp_site_url)); 
+            $unlock_link = esc_url(add_query_arg($query_param, $wp_site_url));
         }
         return $unlock_link;
     }
@@ -318,7 +326,7 @@ class AIOWPSecurity_User_Login
         global $wpdb, $aio_wp_security;
         $lockdown_table_name = AIOWPSEC_TBL_LOGIN_LOCKDOWN;
         
-        $unlock_command = "UPDATE ".$lockdown_table_name." SET release_date = now() WHERE unlock_key = '".$unlock_key."'";
+        $unlock_command = $wpdb->prepare( "UPDATE ".$lockdown_table_name." SET release_date = now() WHERE unlock_key = %s", $unlock_key );
         $result = $wpdb->query($unlock_command);
         if($result === false)
         {
@@ -426,16 +434,6 @@ class AIOWPSecurity_User_Login
             $aio_wp_security->debug_logger->log_debug("Error inserting record into ".$login_activity_table,4);//Log the highly unlikely event of DB error
         }
         
-    }
-
-    function check_user_logged_in($user_login) 
-    {
-          // get the online users list
-        $logged_in_users = get_transient('users_online');
-
-        //If user is in the transient list and last activity was less than 15 minutes ago they are classed as being online
-        return isset($logged_in_users[$user_id]) && ($logged_in_users[$user_id]['last_activity'] > (current_time('timestamp') - (15 * 60)));
-
     }
 
     /**
@@ -551,7 +549,7 @@ class AIOWPSecurity_User_Login
         
         $unlock_request_form .= '<div style="padding-bottom:10px;"><input type="hidden" name="aiowps-unlock-string-info" id="aiowps-unlock-string-info" value="'.$enc_result.'" />';
         $unlock_request_form .= '<input type="hidden" name="aiowps-unlock-temp-string" id="aiowps-unlock-temp-string" value="'.$current_time.'" />';
-        $unlock_request_form .= '<button type="submit" name="aiowps_unlock_request" class="button">'.__('Request Unlock', 'all-in-one-wp-security-and-firewall').'</button></div>';
+        $unlock_request_form .= '<button type="submit" name="aiowps_unlock_request" id="aiowps_unlock_request" class="button">'.__('Request Unlock', 'all-in-one-wp-security-and-firewall').'</button></div>';
         echo $unlock_request_form;
     }
     

@@ -80,6 +80,7 @@ class AIOWPSecurity_Configure_Settings
         $aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_5g_firewall','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_enable_6g_firewall','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_custom_rules','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_custom_rules','');
         
@@ -107,6 +108,8 @@ class AIOWPSecurity_Configure_Settings
         //SPAM Prevention menu
         $aio_wp_security->configs->set_value('aiowps_enable_spambot_blocking','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_comment_captcha','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_enable_autoblock_spam_ip','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_spam_ip_min_comments_block','');
         
         //Filescan features
         //File change detection feature
@@ -208,6 +211,7 @@ class AIOWPSecurity_Configure_Settings
         $aio_wp_security->configs->add_value('aiowps_deny_bad_query_strings','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_advanced_char_string_filter','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_enable_5g_firewall','');//Checkbox
+        $aio_wp_security->configs->add_value('aiowps_enable_6g_firewall','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_enable_custom_rules','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_custom_rules','');
 
@@ -235,6 +239,9 @@ class AIOWPSecurity_Configure_Settings
         //SPAM Prevention menu
         $aio_wp_security->configs->add_value('aiowps_enable_spambot_blocking','');//Checkbox
         $aio_wp_security->configs->add_value('aiowps_enable_comment_captcha','');//Checkbox
+        $aio_wp_security->configs->add_value('aiowps_enable_autoblock_spam_ip','');//Checkbox
+        $aio_wp_security->configs->add_value('aiowps_spam_ip_min_comments_block','');
+
 
         //Filescan features
         //File change detection feature
@@ -264,13 +271,14 @@ class AIOWPSecurity_Configure_Settings
 
     static function turn_off_all_security_features()
     {
+        global $aio_wp_security;
         AIOWPSecurity_Configure_Settings::set_default_settings();
         
         //Refresh the .htaccess file based on the new settings
         $res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
-        if($res == -1)
+        if( !$res )
         {
-            $aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Configure_Settings::turn_off_all_firewall_rules() - Could not write to the .htaccess file. Please check the file permissions.",4);
+            $aio_wp_security->debug_logger->log_debug(__METHOD__ . " - Could not write to the .htaccess file. Please check the file permissions.",4);
         }
     }
     
@@ -289,6 +297,7 @@ class AIOWPSecurity_Configure_Settings
         $aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_5g_firewall','');//Checkbox
+        $aio_wp_security->configs->set_value('aiowps_enable_6g_firewall','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_brute_force_attack_prevention','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_enable_custom_rules','');//Checkbox
         $aio_wp_security->configs->set_value('aiowps_custom_rules','');
@@ -309,9 +318,9 @@ class AIOWPSecurity_Configure_Settings
         //Refresh the .htaccess file based on the new settings
         $res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
 
-        if($res == -1)
+        if( !$res )
         {
-            $aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Configure_Settings::turn_off_all_firewall_rules() - Could not write to the .htaccess file. Please check the file permissions.",4);
+            $aio_wp_security->debug_logger->log_debug(__METHOD__ . " - Could not write to the .htaccess file. Please check the file permissions.",4);
         }
     }
 

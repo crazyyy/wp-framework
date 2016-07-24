@@ -101,22 +101,26 @@ class Path {
 			return wp_normalize_path( HMBKP_ROOT );
 		}
 
-		$home_path = $site_path;
+		$home_path = wp_normalize_path( $site_path );
 
 		if ( path_in_php_open_basedir( dirname( $site_path ) ) ) {
 
-			// Handle wordpress installed in a subdirectory
-			// 1. index.php and wp-config.php found in parent dir
-			// 2. index.php in parent dir, wp-config.php in $site_path ( wp-config.php can be in both locations )
-			if ( ( file_exists( dirname( $site_path ) . '/wp-config.php' ) || file_exists( $site_path . '/wp-config.php' ) )  && file_exists( dirname( $site_path ) . '/index.php' ) ) {
-				$home_path = dirname( $site_path );
+			$home    = set_url_scheme( get_option( 'home' ), 'http' );
+			$siteurl = set_url_scheme( get_option( 'siteurl' ), 'http' );
+			if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
+				$wp_path_rel_to_home = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
+				$pos = strripos( wp_normalize_path( $_SERVER['SCRIPT_FILENAME'] ), trailingslashit( $wp_path_rel_to_home ) );
+				$home_path = substr( wp_normalize_path( $_SERVER['SCRIPT_FILENAME'] ), 0, $pos );
+				$home_path = trailingslashit( $home_path );
 			}
 
-			// Handle wp-config.php being above site_path
-			if ( file_exists( dirname( $site_path ) . '/wp-config.php' ) && ! file_exists( $site_path . '/wp-config.php' ) && ! file_exists( dirname( $site_path ) . '/index.php' ) ) {
-				$home_path = $site_path;
+			if ( is_multisite() ) {
+				$slashed_home      = trailingslashit( get_option( 'home' ) );
+				$base              = parse_url( $slashed_home, PHP_URL_PATH );
+				$document_root_fix = wp_normalize_path( realpath( $_SERVER['DOCUMENT_ROOT'] ) );
+				$abspath_fix       = wp_normalize_path( ABSPATH );
+				$home_path         = strpos( $abspath_fix, $document_root_fix ) === 0 ? $document_root_fix . $base : $home_path;
 			}
-
 		}
 
 		return wp_normalize_path( untrailingslashit( $home_path ) );
@@ -183,7 +187,7 @@ class Path {
 	}
 
 	public function reset_path() {
-		$this->set_path( false );
+		$this->path = $this->custom_path = '';
 	}
 
 	/**
@@ -239,8 +243,7 @@ class Path {
 		}
 
 		$paths = array_merge( $default, $fallback );
-
-        $paths = array_map( 'wp_normalize_path', $paths );
+		$paths = array_map( 'wp_normalize_path', $paths );
 
 		return $paths;
 
@@ -395,12 +398,10 @@ class Path {
 					// Try to move them
 					if ( ! @rename( trailingslashit( $from ) . $file, trailingslashit( Path::get_path() ) . $file ) ) {
 
-
 						// If we can't move them then try to copy them
 						copy( trailingslashit( $from ) . $file, trailingslashit( Path::get_path() ) . $file );
 
 					}
-
 				}
 			}
 
@@ -409,7 +410,7 @@ class Path {
 		}
 
 		// Delete the old directory if it's inside WP_CONTENT_DIR
-		if ( false !== strpos( $from, WP_CONTENT_DIR ) && $from !== Path::get_path() ) {
+		if ( false !== strpos( $from, WP_CONTENT_DIR ) &&  Path::get_path() !== $from ) {
 			rmdirtree( $from );
 		}
 
@@ -425,7 +426,7 @@ class Path {
 			return;
 		}
 
-		foreach ( new CleanUpIterator( new \DirectoryIterator( $this->path ) ) as $file ) {
+		foreach ( new CleanUpIterator( new \DirectoryIterator( Path::get_path() ) ) as $file ) {
 
 			if ( $file->isDot() || ! $file->isReadable() || ! $file->isFile() ) {
 				continue;
@@ -434,15 +435,31 @@ class Path {
 			@unlink( $file->getPathname() );
 
 		}
-
 	}
-
 }
 
 class CleanUpIterator extends \FilterIterator {
 
-	// Don't match index.html,files with zip extension or status logfiles.
+	// Don't match index.html, files with zip extension or status logfiles.
 	public function accept() {
-		return ! preg_match( '/(index\.html|.*\.zip|.*-running)/', $this->current() );
+
+		// Don't remove existing backups
+		if ( 'zip' === pathinfo( $this->current()->getFilename(), PATHINFO_EXTENSION ) ) {
+			return false;
+		}
+
+		// Don't remove the index.html file
+		if ( 'index.html' === $this->current()->getBasename() ) {
+			return false;
+		}
+
+		// Don't remove the file manifest
+		if ( '.files' === $this->current()->getBasename() ) {
+			return false;
+		}
+
+		// Don't cleanup the backup running file
+		return ! preg_match( '/(.*-running)/', $this->current() );
+
 	}
 }
