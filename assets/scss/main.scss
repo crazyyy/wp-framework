@@ -6,9 +6,11 @@
 @import 'import/tables';
 @import 'import/mixin';
 @import 'import/wordpress';
+
 @import 'grid/bootstrap';
 @import 'grid/bootstrap-theme';
-@import 'sprite/super_sprite';
+
+@import 'super_sprite';
 
 body {
   font-family: $base-font-family;
@@ -77,21 +79,16 @@ picture {
 
   @extend .clearfix;
 }
-.inner {
+.container {
   position: relative;
 
-  width: $width;
-  margin: 0 auto;
-
-  @extend .clearfix;
+  max-width: $width;
 }
 
 header {
   background-color: $light-gray;
   .logo {
     display: block;
-
-    width: $width / 10;
     img {
       max-width: 100%;
     }
@@ -106,7 +103,7 @@ nav {
     }
   }
   .headnav {
-    width: $width / 5;
+    font-size: 100%;
   }
 }
 
