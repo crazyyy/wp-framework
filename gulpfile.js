@@ -251,7 +251,7 @@ gulp.task('watch', function() {
   gulp.watch(appFiles.styles, ['styles', reload]);
   gulp.watch(paths.sprite.src, ['styles', reload]);
   gulp.watch(paths.fonts.src, ['fonts', reload]);
-  gulp.watch(appFiles.scripts, ['scripts:development', reload]);
+  gulp.watch(appFiles.scripts, ['scripts', reload]);
 });
 
 // Custom Plumber function for catching errors
