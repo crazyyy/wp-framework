@@ -9,8 +9,9 @@
 add_action('admin_enqueue_scripts', 'wpeAdminThemeStyle');
 function wpeAdminThemeStyle() {
   wp_enqueue_style('wpe-admin-style', get_template_directory_uri() . '/css/admin.css');
-  wp_enqueue_style('wpe-admin-script', get_template_directory_uri() . '/js/admin.js');
   wp_enqueue_style('wpe-admin-style', get_template_directory_uri() . '/css/editor-style.css');
+  wp_register_script('wpe-admin-script', get_template_directory_uri() . '/js/admin.js');
+  wp_enqueue_script( 'wpe-admin-script' );
 }
 
 //  Catch first image from post and display it

@@ -16,12 +16,12 @@ $readonly = $active ? 1 : 0;
 	
 	<h1><?php _e('Updates', 'acf'); ?></h1>
 	
-	<div class="acf-box">
+	<div class="acf-box" id="acf-license-information">
 		<div class="title">
 			<h3><?php _e('License Information', 'acf'); ?></h3>
 		</div>
 		<div class="inner">
-			<p><?php _e("To unlock updates, please enter your license key below. If you don't have a licence key, please see",'acf'); ?> <a href="https://www.advancedcustomfields.com/pro" target="_blank"><?php _e('details & pricing', 'acf'); ?></a></p>
+			<p><?php printf(__('To unlock updates, please enter your license key below. If you don\'t have a licence key, please see <a href="%s" target="_blank">details & pricing</a>.','acf'), esc_url('https://www.advancedcustomfields.com/pro')); ?></p>
 			<form action="" method="post">
 			<div class="acf-hidden">
 				<input type="hidden" name="_acfnonce" value="<?php echo wp_create_nonce( $nonce ); ?>" />
@@ -60,7 +60,7 @@ $readonly = $active ? 1 : 0;
 		
 	</div>
 	
-	<div class="acf-box">
+	<div class="acf-box" id="acf-update-information">
 		<div class="title">
 			<h3><?php _e('Update Information', 'acf'); ?></h3>
 		</div>
@@ -138,5 +138,9 @@ $readonly = $active ? 1 : 0;
 <style type="text/css">
 	#acf_pro_licence {
 		width: 75%;
+	}
+	
+	#acf-update-information td h4 {
+		display: none;
 	}
 </style>

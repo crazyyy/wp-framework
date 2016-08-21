@@ -241,7 +241,7 @@ class acf_field_repeater extends acf_field {
 		<thead>
 			<tr>
 				<?php if( $show_order ): ?>
-					<th class="acf-row-handle"><span></span></th>
+					<th class="acf-row-handle"></th>
 				<?php endif; ?>
 				
 				<?php foreach( $field['sub_fields'] as $sub_field ): 
@@ -274,7 +274,7 @@ class acf_field_repeater extends acf_field {
 				<?php endforeach; ?>
 
 				<?php if( $show_remove ): ?>
-					<th class="acf-row-handle"><span></span></th>
+					<th class="acf-row-handle"></th>
 				<?php endif; ?>
 			</tr>
 		</thead>
@@ -594,6 +594,10 @@ class acf_field_repeater extends acf_field {
 				$sub_field = $field['sub_fields'][ $j ];
 				
 				
+				// update $sub_field name
+				$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
+				
+				
 				// extract value
 				$sub_value = acf_extract_var( $value[ $i ], $sub_field['key'] );
 				
@@ -603,7 +607,7 @@ class acf_field_repeater extends acf_field {
 				
 				
 				// append to $row
-				$value[ $i ][ $sub_field['name'] ] = $sub_value;
+				$value[ $i ][ $sub_field['_name'] ] = $sub_value;
 				
 			}
 			

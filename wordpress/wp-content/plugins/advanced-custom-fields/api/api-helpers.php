@@ -928,10 +928,6 @@ function acf_get_admin_notices()
 
 function acf_get_image_sizes() {
 	
-	// global
-	global $_wp_additional_image_sizes;
-	
-	
 	// vars
 	$sizes = array(
 		'thumbnail'	=>	__("Thumbnail",'acf'),
@@ -971,12 +967,13 @@ function acf_get_image_sizes() {
 	foreach( array_keys($sizes) as $s ) {
 		
 		// vars
-		$w = isset($_wp_additional_image_sizes[$s]['width']) ? $_wp_additional_image_sizes[$s]['width'] : get_option( "{$s}_size_w" );
-		$h = isset($_wp_additional_image_sizes[$s]['height']) ? $_wp_additional_image_sizes[$s]['height'] : get_option( "{$s}_size_h" );
+		$data = acf_get_image_size($s);
 		
-		if( $w && $h ) {
+		
+		// append
+		if( $data['width'] && $data['height'] ) {
 			
-			$sizes[ $s ] .= " ({$w} x {$h})";
+			$sizes[ $s ] .= ' (' . $data['width'] . ' x ' . $data['height'] . ')';
 			
 		}
 		
@@ -994,6 +991,28 @@ function acf_get_image_sizes() {
 	// return
 	return $sizes;
 	
+}
+
+function acf_get_image_size( $s = '' ) {
+	
+	// global
+	global $_wp_additional_image_sizes;
+	
+	
+	// rename for nicer code
+	$_sizes = $_wp_additional_image_sizes;
+	
+	
+	// vars
+	$data = array(
+		'width' 	=> isset($_sizes[$s]['width']) ? $_sizes[$s]['width'] : get_option("{$s}_size_w"),
+		'height'	=> isset($_sizes[$s]['height']) ? $_sizes[$s]['height'] : get_option("{$s}_size_h")
+	);
+	
+	
+	// return
+	return $data;
+		
 }
 
 
@@ -1720,14 +1739,17 @@ function _acf_orderby_post_type( $ordeby, $wp_query ) {
 }
 
 
-function acf_get_post_title( $post = 0 ) {
+function acf_get_post_title( $post = 0, $is_search = false ) {
 	
-	// load post if given an ID
-	if( is_numeric($post) ) {
-		
-		$post = get_post($post);
-		
-	}
+	// vars
+	$post = get_post($post);
+	$title = '';
+	$prepend = '';
+	$append = '';
+	
+    
+	// bail early if no post
+	if( !$post ) return '';
 	
 	
 	// title
@@ -1743,11 +1765,20 @@ function acf_get_post_title( $post = 0 ) {
 	
 	
 	// ancestors
-	if( $post->post_type != 'attachment' ) {
+	if( $post->post_type !== 'attachment' ) {
 		
+		// get ancestors
 		$ancestors = get_ancestors( $post->ID, $post->post_type );
+		$parent_id = acf_maybe_get( $ancestors, 0 );
+		$prepend = str_repeat('- ', count($ancestors));
 		
-		$title = str_repeat('- ', count($ancestors)) . $title;
+		
+		// add parent
+		if( $is_search && $parent_id ) {
+			
+			$append .= ' (Parent page: ' . get_the_title( $parent_id ) . ')';
+			
+		}
 		
 	}
 	
@@ -1755,15 +1786,90 @@ function acf_get_post_title( $post = 0 ) {
 	// status
 	if( get_post_status( $post->ID ) != "publish" ) {
 		
-		$title .= ' (' . get_post_status( $post->ID ) . ')';
+		$append .= ' (' . get_post_status( $post->ID ) . ')';
 		
 	}
+	
+	
+	// merge
+	$title = $prepend . $title . $append;
 	
 	
 	// return
 	return $title;
 	
 }
+
+
+/*
+function acf_get_post_title( $post = 0, $is_search = false ) {
+	
+	// vars
+	$post = get_post($post);
+	$title = '';
+	$prepend = '';
+	$append = '';
+	
+    
+	// bail early if no post
+	if( !$post ) return '';
+	
+	
+	// title
+	$title = get_the_title( $post->ID );
+	
+	
+	// empty
+	if( $title === '' ) {
+		
+		$title = __('(no title)', 'acf');
+		
+	}
+	
+	
+	// ancestors
+	if( $post->post_type !== 'attachment' ) {
+		
+		// get ancestors
+		$ancestors = get_ancestors( $post->ID, $post->post_type );
+		$parent_id = acf_maybe_get( $ancestors, 0 );
+		
+		
+		// add parent
+		if( $is_search && !empty($ancestors) ) {
+			
+			foreach( $ancestors as $post_id ) {
+				
+				$prepend = get_the_title( $post_id ) . ' / ' . $prepend;
+				
+			}
+			
+		} else {
+			
+			$prepend = str_repeat('- ', count($ancestors));
+			
+		}	
+				
+	}
+	
+	
+	// status
+	if( get_post_status( $post->ID ) != "publish" ) {
+		
+		$append .= ' (' . get_post_status( $post->ID ) . ')';
+		
+	}
+	
+	
+	// merge
+	$title = $prepend . $title . $append;
+	
+	
+	// return
+	return $title;
+	
+}
+*/
 
 
 function acf_order_by_search( $array, $search ) {
@@ -2426,18 +2532,69 @@ function acf_decode_choices( $string = '', $array_keys = false ) {
 }
 
 
-
 /*
-*  acf_convert_date_to_php
+*  acf_str_replace
 *
-*  This fucntion converts a date format string from JS to PHP
+*  This function will replace an array of strings much like str_replace
+*  The difference is the extra logic to avoid replacing a string that has alread been replaced
+*  This is very useful for replacing date characters as they overlap with eachother
 *
 *  @type	function
-*  @date	20/06/2014
-*  @since	5.0.0
+*  @date	21/06/2016
+*  @since	5.3.8
 *
-*  @param	$date (string)
-*  @return	$date (string)
+*  @param	$post_id (int)
+*  @return	$post_id (int)
+*/
+
+function acf_str_replace( $string, $search_replace ) {
+	
+	// vars
+	$ignore = array();
+	
+	
+	// remove potential empty search to avoid PHP error
+	unset($search_replace['']);
+	
+		
+	// loop over conversions
+	foreach( $search_replace as $search => $replace ) {
+		
+		// ignore this search, it was a previous replace
+		if( in_array($search, $ignore) ) continue;
+		
+		
+		// bail early if subsctring not found
+		if( strpos($string, $search) === false ) continue;
+		
+		
+		// replace
+		$string = str_replace($search, $replace, $string);
+		
+		
+		// append to ignore
+		$ignore[] = $replace;
+		
+	}
+	
+	
+	// return
+	return $string;
+	
+}
+
+
+/*
+*  date & time formats
+*
+*  These settings contain an association of format strings from PHP => JS
+*
+*  @type	function
+*  @date	21/06/2016
+*  @since	5.3.8
+*
+*  @param	n/a
+*  @return	n/a
 */
 
 acf_update_setting('php_to_js_date_formats', array(
@@ -2463,41 +2620,45 @@ acf_update_setting('php_to_js_date_formats', array(
 	'd'	=> 'dd',	// Numeric, with leading zeros						01–31
 	'j'	=> 'd',		// Numeric, without leading zeros 					1–31
 	'S'	=> '',		// The English suffix for the day of the month  	st, nd or th in the 1st, 2nd or 15th. 
-
+	
 ));
 
-function acf_convert_date_to_php( $date ) {
+acf_update_setting('php_to_js_time_formats', array(
+	
+	'a' => 'tt',	// Lowercase Ante meridiem and Post meridiem 		am or pm
+	'A' => 'TT',	// Uppercase Ante meridiem and Post meridiem 		AM or PM
+	'h' => 'hh',	// 12-hour format of an hour with leading zeros 	01 through 12
+	'g' => 'h',		// 12-hour format of an hour without leading zeros 	1 through 12
+	'H' => 'HH',	// 24-hour format of an hour with leading zeros 	00 through 23
+	'G' => 'H',		// 24-hour format of an hour without leading zeros 	0 through 23
+	'i' => 'mm',	// Minutes with leading zeros 						00 to 59
+	's' => 'ss',	// Seconds, with leading zeros 						00 through 59
+	
+));
+
+
+/*
+*  acf_convert_date_to_php
+*
+*  This fucntion converts a date format string from JS to PHP
+*
+*  @type	function
+*  @date	20/06/2014
+*  @since	5.0.0
+*
+*  @param	$date (string)
+*  @return	(string)
+*/
+
+function acf_convert_date_to_php( $date = '' ) {
 	
 	// vars
-	$ignore = array();
-	
-	
-	// conversion
 	$php_to_js = acf_get_setting('php_to_js_date_formats');
-	
-	
-	// loop over conversions
-	foreach( $php_to_js as $replace => $search ) {
+	$js_to_php = array_flip($php_to_js);
 		
-		// ignore this replace?
-		if( in_array($search, $ignore) ) {
-			
-			continue;
-			
-		}
-		
-		
-		// replace
-		$date = str_replace($search, $replace, $date);
-		
-		
-		// append to ignore
-		$ignore[] = $replace;
-	}
-	
 	
 	// return
-	return $date;
+	return acf_str_replace( $date, $js_to_php );
 	
 }
 
@@ -2510,42 +2671,69 @@ function acf_convert_date_to_php( $date ) {
 *  @date	20/06/2014
 *  @since	5.0.0
 *
-*  @param	$post_id (int)
-*  @return	$post_id (int)
+*  @param	$date (string)
+*  @return	(string)
 */
 
-function acf_convert_date_to_js( $date ) {
+function acf_convert_date_to_js( $date = '' ) {
 	
 	// vars
-	$ignore = array();
-	
-	
-	// conversion
 	$php_to_js = acf_get_setting('php_to_js_date_formats');
-	
-	
-	// loop over conversions
-	foreach( $php_to_js as $search => $replace ) {
 		
-		// ignore this replace?
-		if( in_array($search, $ignore) ) {
-			
-			continue;
-			
-		}
-		
-		
-		// replace
-		$date = str_replace($search, $replace, $date);
-		
-		
-		// append to ignore
-		$ignore[] = $replace;
-	}
-	
 	
 	// return
-	return $date;
+	return acf_str_replace( $date, $php_to_js );
+	
+}
+
+
+/*
+*  acf_convert_time_to_php
+*
+*  This fucntion converts a time format string from JS to PHP
+*
+*  @type	function
+*  @date	20/06/2014
+*  @since	5.0.0
+*
+*  @param	$time (string)
+*  @return	(string)
+*/
+
+function acf_convert_time_to_php( $time = '' ) {
+	
+	// vars
+	$php_to_js = acf_get_setting('php_to_js_time_formats');
+	$js_to_php = array_flip($php_to_js);
+		
+	
+	// return
+	return acf_str_replace( $time, $js_to_php );
+	
+}
+
+
+/*
+*  acf_convert_time_to_js
+*
+*  This fucntion converts a date format string from PHP to JS
+*
+*  @type	function
+*  @date	20/06/2014
+*  @since	5.0.0
+*
+*  @param	$time (string)
+*  @return	(string)
+*/
+
+function acf_convert_time_to_js( $time = '' ) {
+	
+	// vars
+	$php_to_js = acf_get_setting('php_to_js_time_formats');
+		
+	
+	// return
+	return acf_str_replace( $time, $php_to_js );
 	
 }
 
@@ -2655,14 +2843,10 @@ function acf_get_user_setting( $name = '', $default = false ) {
 *  @return	$post_id (int)
 */
 
-function acf_in_array( $value, $array ) {
+function acf_in_array( $value = '', $array = false ) {
 	
 	// bail early if not array
-	if( !is_array($array) ) {
-		
-		return false;
-		
-	}
+	if( !is_array($array) ) return false;
 	
 	
 	// find value in array
@@ -2894,6 +3078,7 @@ function acf_upload_file( $uploaded_file ) {
 	
 	// required
 	require_once( ABSPATH . "/wp-load.php" );
+	require_once( ABSPATH . "/wp-admin/includes/media.php" ); // video functions
 	require_once( ABSPATH . "/wp-admin/includes/file.php" );
 	require_once( ABSPATH . "/wp-admin/includes/image.php" );
 	 
@@ -3008,6 +3193,10 @@ function acf_is_screen( $id = '' ) {
 	$current_screen = get_current_screen();
 	
 	
+	// bail early if no screen
+	if( !$current_screen ) return false;
+	
+	
 	// return
 	return ($id === $current_screen->id);
 	
@@ -3073,12 +3262,12 @@ function acf_maybe_get( $array, $key, $default = null ) {
 
 function acf_get_attachment( $post ) {
 	
-	// get post
-	if ( !$post = get_post( $post ) ) {
-		
-		return false;
-		
-	}
+	// post
+	$post = get_post($post);
+	
+    
+	// bail early if no post
+	if( !$post ) return false;
 	
 	
 	// vars
@@ -3868,17 +4057,194 @@ function acf_is_row_collapsed( $field_key = '', $row_index = 0 ) {
 
 
 /*
-*  Hacks
+*  acf_get_post_thumbnail
 *
-*  description
+*  This function will return a thumbail image url for a given post
+*
+*  @type	function
+*  @date	3/05/2016
+*  @since	5.3.8
+*
+*  @param	$post (obj)
+*  @param	$size (mixed)
+*  @return	(string)
+*/
+
+function acf_get_post_thumbnail( $post = null, $size = 'thumbnail' ) {
+	
+	// vars
+	$data = array(
+		'url'	=> '',
+		'type'	=> '',
+		'html'	=> ''
+	);
+	
+	
+	// post
+	$post = get_post($post);
+	
+    
+	// bail early if no post
+	if( !$post ) return $data;
+	
+	
+	// vars
+	$thumb_id = $post->ID;
+	$mime_type = acf_maybe_get(explode('/', $post->post_mime_type), 0);
+	
+	
+	// attachment
+	if( $post->post_type === 'attachment' ) {
+		
+		// change $thumb_id
+		if( $mime_type === 'audio' || $mime_type === 'video' ) {
+			
+			$thumb_id = get_post_thumbnail_id($post->ID);
+			
+		}
+	
+	// post
+	} else {
+		
+		$thumb_id = get_post_thumbnail_id($post->ID);
+			
+	}
+	
+	
+	// try url
+	$data['url'] = wp_get_attachment_image_src($thumb_id, $size);
+	$data['url'] = acf_maybe_get($data['url'], 0);
+	
+	
+	// default icon
+	if( !$data['url'] && $post->post_type === 'attachment' ) {
+		
+		$data['url'] = wp_mime_type_icon($post->ID);
+		$data['type'] = 'icon';
+		
+	}
+	
+	
+	// html
+	$data['html'] = '<img src="' . $data['url'] . '" alt="" />';
+	
+	
+	// return
+	return $data;
+	
+}
+
+
+/*
+*  acf_get_browser
+*
+*  This functino will return the browser string for major browsers
 *
 *  @type	function
 *  @date	17/01/2014
 *  @since	5.0.0
 *
-*  @param	$post_id (int)
-*  @return	$post_id (int)
+*  @param	n/a
+*  @return	(string)
 */
+
+function acf_get_browser() {
+	
+	// vars
+	$agent = $_SERVER['HTTP_USER_AGENT'];
+	
+	
+	// browsers
+	$browsers = array(
+		'Firefox'	=> 'firefox',
+		'Trident'	=> 'msie',
+		'MSIE'		=> 'msie',
+		'Edge'		=> 'edge',
+		'Chrome'	=> 'chrome',
+		'Safari'	=> 'safari',
+	);
+	
+	
+	// loop
+	foreach( $browsers as $k => $v ) {
+		
+		if( strpos($agent, $k) !== false ) return $v;
+		
+	}
+	
+	
+	// return
+	return '';
+	
+}
+
+
+/*
+*  acf_is_ajax
+*
+*  This function will reutrn true if performing a wp ajax call
+*
+*  @type	function
+*  @date	7/06/2016
+*  @since	5.3.8
+*
+*  @param	n/a
+*  @return	(boolean)
+*/
+
+function acf_is_ajax() {
+	
+	return ( defined('DOING_AJAX') && DOING_AJAX );
+		
+}
+
+
+
+
+/*
+*  acf_format_date
+*
+*  This function will accept a date value and return it in a formatted string
+*
+*  @type	function
+*  @date	16/06/2016
+*  @since	5.3.8
+*
+*  @param	$value (string)
+*  @return	$format (string)
+*/
+
+function acf_format_date( $value, $format ) {
+
+	// bail early if no value
+	if( empty($value) ) return $value;
+	
+	
+	// attempt strtotime for standard date value
+	$unixtimestamp = strtotime($value);
+	
+	
+	// allow for timestamp value
+	if( !$unixtimestamp && is_numeric($value) ) {
+		
+		$unixtimestamp = $value;
+			
+	}
+	
+	
+	// bail early if timestamp error
+	if( !$unixtimestamp ) return $value;
+	
+	
+	// translate
+	$value = date_i18n($format, $unixtimestamp);
+	
+	
+	// return
+	return $value;
+	
+}
+
 
 add_filter("acf/settings/slug", '_acf_settings_slug');
 

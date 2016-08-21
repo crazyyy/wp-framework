@@ -164,7 +164,7 @@ img.acf-fw {
   color: #fff;
   padding: 5px 15px;
   position: absolute;
-  z-index: 9999;
+  z-index: 999999;
   font-size: 12px;
 }
 .acf-tooltip.top {
@@ -704,7 +704,6 @@ a.acf-icon.-cancel.grey:hover {
 *
 *---------------------------------------------------------------------------------------------*/
 /* Menu */
-#adminmenu a[href="edit.php?post_type=acf-field-group&page=acf-upgrade"],
 #adminmenu a[href="edit.php?post_type=acf-field-group&page=acf-settings-info"] {
   display: none;
 }
@@ -734,9 +733,6 @@ a.acf-icon.-cancel.grey:hover {
 #acf-field-group-wrap .tablenav.bottom {
   display: block;
 }
-#acf-field-group-wrap .wp-list-table {
-  border-radius: 0;
-}
 #acf-field-group-wrap .acf-description {
   font-weight: normal;
   font-size: 13px;
@@ -757,15 +753,31 @@ a.acf-icon.-cancel.grey:hover {
 /* columns (replicate post edit layout) */
 .acf-columns-2 {
   margin-right: 300px;
+  clear: both;
+  /* rtl */
+}
+html[dir="rtl"] .acf-columns-2 {
+  margin-right: 0;
+  margin-left: 300px;
 }
 .acf-columns-2 .acf-column-1 {
   float: left;
   width: 100%;
+  /* rtl */
+}
+html[dir="rtl"] .acf-columns-2 .acf-column-1 {
+  float: right;
 }
 .acf-columns-2 .acf-column-2 {
   float: right;
   margin-right: -300px;
   width: 280px;
+  /* rtl */
+}
+html[dir="rtl"] .acf-columns-2 .acf-column-2 {
+  float: left;
+  margin-right: 0;
+  margin-left: -300px;
 }
 .acf-clear {
   clear: both;
@@ -1066,6 +1078,41 @@ html[dir="rtl"] #acf-popup .title .acf-icon {
 }
 /*--------------------------------------------------------------------------------------------
 *
+*	Plugins
+*
+*--------------------------------------------------------------------------------------------*/
+.acf-plugin-upgrade-notice {
+  font-weight: normal;
+  color: #fff;
+  background: #d54d21;
+  padding: 1em;
+  margin: 9px 0;
+}
+.acf-plugin-upgrade-notice:before {
+  content: "\f348";
+  display: inline-block;
+  font: 400 18px/1 dashicons;
+  speak: none;
+  margin: 0 8px 0 -2px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: top;
+}
+.acf-plugin-upgrade-notice h4 {
+  display: none;
+}
+.acf-plugin-upgrade-notice ul,
+.acf-plugin-upgrade-notice li {
+  display: inline;
+  color: inherit;
+  list-style: none;
+}
+.acf-plugin-upgrade-notice li:after {
+  content: '. ';
+  display: inline;
+}
+/*--------------------------------------------------------------------------------------------
+*
 *	RTL
 *
 *--------------------------------------------------------------------------------------------*/
@@ -1111,7 +1158,7 @@ html[dir="rtl"] .acf-table > tbody > tr > td.order + td {
   [class^="acf-sprite-"],
   [class*=" acf-sprite-"] {
     background-image: url(../images/sprite@2x.png);
-    background-size: 500px 500px;
+    background-size: 250px 250px;
   }
   .acf-loading,
   .acf-spinner {
