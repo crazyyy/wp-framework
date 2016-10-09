@@ -3,8 +3,8 @@ Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, links, photos, template, theme, photo, image, picture, slideshow, modal, overlay, YouTube, Vimeo, video, videos
 Requires at least: 4.0
-Tested up to: 4.5
-Stable tag: 1.6.8
+Tested up to: 4.6
+Stable tag: 1.6.9
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -40,24 +40,8 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 * [Justified Gallery](https://www.dfactory.eu/products/justified-gallery/)
 * [Masonry Image Gallery](https://www.dfactory.eu/products/masonry-image-gallery/)
 * [Lightcase Lightbox](https://www.dfactory.eu/products/lightcase-lightbox/)
+* [PhotoSwipe Lightbox](https://www.dfactory.eu/products/photoswipe-lightbox/)
 * [Strip Lightbox](https://www.dfactory.eu/products/strip-lightbox/)
-
-= Translations: =
-
-* Czech - by Vaclav Hnilicka
-* Dutch - by [Sebas Blom](http://www.basbva.nl/)
-* Estonian - by Hugo Amtmann
-* French - by [Li-An](http://www.echodesplugins.li-an.fr/)
-* German - by [Andreas Reitberger](http://wdbase.de)
-* Hungarian - by [Zsolt Boda](http://cmfrt.net/)
-* Japanese - by stranger-jp
-* Persian - by [Ali Mirzaei](http://alimir.ir/)
-* Polish - by Bartosz Arendt
-* Romanian - by [Victor Chiritoiu](http://contacter.ro)
-* Russian - by [Konstantin](http://l-konstantin.ru)
-* Serbo-Croatian - by [Borisa Djuraskovic](http://www.webhostinghub.com/)
-* Slovak - by [Patrik Zec](http://patwist.com)
-* Spanish - by [Gaston](http://www.detodoynada.com.ar)
 
 
 == Installation ==
@@ -76,6 +60,12 @@ No questions yet.
 2. screenshot-2.jpg
 
 == Changelog ==
+
+= 1.6.9 =
+* New: [PhotoSwipe Lightbox](https://www.dfactory.eu/products/photoswipe-lightbox/) premium extension
+* Fix: data-rel attribute missing in multiline links
+* Tweak: Removed local translation files in favor of WP repository translations
+* Tweak: SwipeBox script updated to 1.4.4
 
 = 1.6.8 =
 * Tweak: Tos "R" Us script caption issue when empty link title
@@ -287,6 +277,6 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.6.8 =
-* Tweak: Tos "R" Us script caption issue when empty link title
-* Tweak: Undefined notice on extentions activation.
+= 1.6.9 =
+* New: [PhotoSwipe Lightbox](https://www.dfactory.eu/products/photoswipe-lightbox/) premium extension
+* Fix: data-rel attribute missing in multiline links

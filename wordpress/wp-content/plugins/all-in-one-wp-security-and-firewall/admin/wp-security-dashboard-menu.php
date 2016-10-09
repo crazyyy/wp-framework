@@ -641,15 +641,6 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
                 <strong><?php _e('PHP Max Post Size', 'all-in-one-wp-security-and-firewall'); ?>
                     : </strong><code><?php echo $post_max; ?></code><br/>
                 <?php
-                if (ini_get('safe_mode')) {
-                    $safe_mode = __('On', 'all-in-one-wp-security-and-firewall');
-                } else {
-                    $safe_mode = __('Off', 'all-in-one-wp-security-and-firewall');
-                }
-                ?>
-                <strong><?php _e('PHP Safe Mode', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo $safe_mode; ?></code><br/>
-                <?php
                 if (ini_get('allow_url_fopen')) {
                     $allow_url_fopen = __('On', 'all-in-one-wp-security-and-firewall');
                 } else {
@@ -828,8 +819,8 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
 
     function render_tab5()
     {
-        global $wpdb;
-        $file_selected = isset($_POST["aiowps_log_file"]) ? $_POST["aiowps_log_file"] : '';
+        $file_selected = '';
+
         ?>
         <div class="postbox">
             <h3 class="hndle"><label
@@ -871,12 +862,25 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         if (isset($_POST['aiowps_view_logs']))//Do form submission tasks
         {
             $error = '';
+
+            //Check nonce before doing anything 
             $nonce = $_REQUEST['_wpnonce'];
             if (!wp_verify_nonce($nonce, 'aiowpsec-dashboard-logs-nonce')) {
                 $aio_wp_security->debug_logger->log_debug("Nonce check failed on dashboard view logs!", 4);
-                die("Nonce check failed on dashboard view logs!");
+                wp_die("Error! Nonce check failed on dashboard view logs!");
             }
 
+            //Get the selected file
+            $file_selected = isset($_POST["aiowps_log_file"]) ? sanitize_text_field($_POST["aiowps_log_file"]) : '';
+            
+            //Let's make sure that the file selected can only ever be the correct log file of this plugin.
+            $valid_aiowps_log_files = array('wp-security-log.txt', 'wp-security-log-cron-job.txt');
+            if(!in_array($file_selected, $valid_aiowps_log_files)){
+                $file_selected = '';
+                unset($_POST['aiowps_view_logs']);
+                wp_die(__('Error! The file you selected is not a permitted file. You can only view log files created by this plugin.','all-in-one-wp-security-and-firewall'));
+            }
+            
             if (!empty($file_selected)) {
                 ?>
                 <div class="postbox">
@@ -898,8 +902,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
                             $log_contents = $file_selected . ': ' . __('Log file is empty!', 'all-in-one-wp-security-and-firewall');
                         }
                         ?>
-                        <textarea class="aio_text_area_file_output aio_half_width aio_spacer_10_tb" rows="15"
-                                  readonly><?php echo $log_contents; ?></textarea>
+                        <textarea class="aio_text_area_file_output aio_half_width aio_spacer_10_tb" rows="15" readonly><?php echo esc_textarea($log_contents); ?></textarea>
 
                     </div>
                 </div>

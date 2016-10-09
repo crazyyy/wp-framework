@@ -78,13 +78,13 @@ msgstr "Галереи"
 msgid "More links"
 msgstr "Другие ссылки"
 
-#: inc/widgets.php:88
-msgid "More quotes"
-msgstr "Другие цитаты"
-
 #: inc/widgets.php:91 taxonomy-post_format.php:45
 msgid "Links"
 msgstr "Ссылки"
+
+#: inc/widgets.php:88
+msgid "More quotes"
+msgstr "Другие цитаты"
 
 #: inc/widgets.php:87 taxonomy-post_format.php:42
 msgid "Quotes"
@@ -174,7 +174,7 @@ msgstr "Улучшите дизайн вашего сайта с помощью 
 msgid "The home page features your choice of up to 6 posts prominently displayed in a grid or slider, controlled by a <a href=\"%1$s\">tag</a>; you can change the tag and layout in <a href=\"%2$s\">Appearance &rarr; Customize</a>. If no posts match the tag, <a href=\"%3$s\">sticky posts</a> will be displayed instead."
 msgstr "На главной странице можно отобразить до 6 записей в виде сетки или слайдера, отмеченных <a href=\"%1$s\">меткой</a>. Переименовать метку и выбрать вариант отображения можно на экране <a href=\"%2$s\">«Внешний вид» &rarr; «Настроить»</a>. Если записей с меткой не найдено, будут отображаться <a href=\"%3$s\">прилепленные записи</a>."
 
-#. #-#-#-#-#  twentyfourteen.pot (Twenty Fourteen 1.7)  #-#-#-#-#
+#. #-#-#-#-#  twentyfourteen.pot (Twenty Fourteen 1.8)  #-#-#-#-#
 #. Theme Name of the plugin/theme
 #: inc/customizer.php:142
 msgid "Twenty Fourteen"
@@ -206,13 +206,13 @@ msgstr "Используйте <a href=\"%1$s\">метку</a>, чтобы по�
 msgid "Featured Content"
 msgstr "Избранное содержимое"
 
-#: inc/customizer.php:44 inc/customizer.php:45
-msgid "May only be visible on wide screens."
-msgstr "Может отображаться только на широком экране."
-
 #: inc/customizer.php:47 inc/customizer.php:48
 msgid "Background may only be visible on wide screens."
 msgstr "Фон может отображаться только на широком экране."
+
+#: inc/customizer.php:44 inc/customizer.php:45
+msgid "May only be visible on wide screens."
+msgstr "Может отображаться только на широком экране."
 
 #: inc/customizer.php:40
 msgid "Display Site Title &amp; Tagline"
@@ -434,7 +434,7 @@ msgstr "По данному адресу ничего не найдено. По�
 msgid "Not Found"
 msgstr "Не найдено"
 
-#. #-#-#-#-#  twentyfourteen.pot (Twenty Fourteen 1.7)  #-#-#-#-#
+#. #-#-#-#-#  twentyfourteen.pot (Twenty Fourteen 1.8)  #-#-#-#-#
 #. Author URI of the plugin/theme
 #: footer.php:21
 msgid "https://wordpress.org/"
