@@ -3,7 +3,7 @@
 $LNG = array(
 
 // Information about the language file
-'ver'				=> 20007, // Dumper version
+'ver'				=> 20005, // Dumper version
 'translated'		=> 'zapimir (http://sypex.net/)', // Contacts
 'name'				=> 'English', // Lang name
 
@@ -41,7 +41,6 @@ $LNG = array(
 'no_saved'			=> 'No saved jobs',
 'btn_save'			=> 'Save',
 'btn_exec'			=> 'Execute',
-'outfile'			=> 'OUTFILE mode',// 2.0.7 pro
 
 // Import	
 'combo_file'		=> 'File:',
@@ -49,9 +48,6 @@ $LNG = array(
 'ext_legend'		=> 'Extended options:',
 'correct'			=> 'Charset correction',
 'autoinc'			=> 'Reset AUTO_INCREMENT',
-'prefix'			=> 'Replace prefix from %s to %s',// 2.0.7 pro
-'savesql'			=> 'Save to SQL-file',// 2.0.7 pro
-'infile'			=> ' to file',// 2.0.7 pro
 
 // Log
 'status_current'	=> 'Current status:',
@@ -77,7 +73,6 @@ $LNG = array(
 'btn_repair'		=> 'Repair',
 'btn_analyze'		=> 'Analyze',
 'btn_optimize'		=> 'Optimize',
-'btn_extra'			=> 'Extra...',// 2.0.7 pro
 
 // Options
 'cfg_legend'		=> 'Basic settings:',
@@ -94,10 +89,6 @@ $LNG = array(
 'cfg_conf_import'	=> 'import',
 'cfg_conf_file'		=> 'file delete',
 'cfg_conf_db'		=> 'database delete',
-'cfg_conf_truncate'	=> 'table empty',// 2.0.7 pro
-'cfg_conf_drop'		=> 'table delete',// 2.0.7 pro
-'cfg_outfile_path'	=> 'Path for OUTFILE:',// 2.0.7 pro
-'cfg_outfile_size'	=> 'OUTFILE buffer size (МБ):',// 2.0.7 pro
 
 // Connection
 'con_header'		=> 'Connection Settings',
@@ -123,7 +114,6 @@ $LNG = array(
 'cdb_name'			=> 'Name:',
 'combo_collate'		=> 'Collation:',
 'btn_create'		=> 'Create',
-'hint'				=> 'Hint',// 2.0.7 pro
 
 // Authorization
 'js_required'		=> 'JavaScript must be enabled',
@@ -209,28 +199,9 @@ $LNG = array(
 	'fdc'			=> 'Do you really want to delete file?',
 	'ddc'			=> 'Do you really want to delete database?',
 	'fic'			=> 'Do you really want to import file?',
-	'ttc'			=> 'Do you really want to empty table?',// 2.0.7 pro
-	'tdc'			=> 'Do you really want to delete table?',// 2.0.7 pro
 
 	// Sizes
 	'sizes'			=> array('B', 'KB', 'MB', 'GB'),
-
-	// Изменение/исправление кодировки
-	'chc_header'	=> 'Change charset',// 2.0.7 pro
-	'coc_header'	=> 'Correct charset',// 2.0.7 pro
-
-	'hint_chc'		=> 'Change charset needed in cases where you need to change the encoding tables and data, for example, from cp1251 to utf8.',// 2.0.7 pro
-	'hint_coc'		=> 'Correct charset needed in cases where a table is specified one encoding, and data to another. For example, a table in latin1, and the data in cp1251.',// 2.0.7 pro
-	'need_backup'	=> 'It is recommended to make a backup of the database.',// 2.0.7 pro
-	
-	// Долнительные сервисы
-	'btn_chc'		=> 'Change charset',// 2.0.7 pro
-	'btn_coc'		=> 'Correct charset',// 2.0.7 pro
-	'btn_enable'	=> 'Enable keys',// 2.0.7 pro
-	'btn_disable'	=> 'Disable keys',// 2.0.7 pro
-	'btn_truncate'	=> 'Empty table',// 2.0.7 pro
-	'btn_drop'		=> 'Delete table',// 2.0.7 pro
-	'btn_drop_db'	=> 'Delete DB',// 2.0.7 pro
 )
 );
 ?>

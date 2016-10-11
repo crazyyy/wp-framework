@@ -1,0 +1,1124 @@
+# Copyright (C) 2015 WP Rocket
+# This file is distributed under the same license as the WP Rocket package.
+# Translators:
+# Abdullah Pazarbasi <mail@abdullahpazarbasi.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Rocket\n"
+"Report-Msgid-Bugs-To: http://wp-rocket.me/\n"
+"POT-Creation-Date: 2015-05-28 16:16:27+00:00\n"
+"PO-Revision-Date: 2015-05-28 16:16+0000\n"
+"Last-Translator: FxB <fxb@wp-translations.org>\n"
+"Language-Team: Turkish (Turkey) (http://www.transifex.com/projects/p/wp-rocket/language/tr_TR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr_TR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: grunt-wp-i18n 0.5.2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Textdomain-Support: yes\n"
+
+#: inc/admin/admin.php:13 inc/admin/options.php:496 inc/admin/options.php:501
+#: inc/admin/ui/modules/support.php:4 inc/common/admin-bar.php:212
+msgid "Support"
+msgstr "Destek"
+
+#: inc/admin/admin.php:15
+msgid "Docs"
+msgstr ""
+
+#: inc/admin/admin.php:18 inc/common/admin-bar.php:31
+msgid "Settings"
+msgstr "Ayarlar"
+
+#: inc/admin/admin.php:60
+msgid "Clear this cache"
+msgstr "Bu önbelleği temizle"
+
+#: inc/admin/admin.php:259 inc/admin/admin.php:267
+msgid "%s Update Rollback"
+msgstr ""
+
+#: inc/admin/faq.inc.php:2
+msgid "FAQ's Table of Content"
+msgstr "SSS'ın İçerik Listesi"
+
+#: inc/admin/options.php:156 inc/admin/options.php:384
+msgid "Warning: "
+msgstr "Uyarı:"
+
+#: inc/admin/options.php:163
+msgid "Download options"
+msgstr "Seçenekleri indir"
+
+#: inc/admin/options.php:192
+msgid "<b>JS</b> files with Deferred Loading JavaScript"
+msgstr ""
+
+#: inc/admin/options.php:212 inc/admin/options.php:232
+#: inc/admin/options.php:252
+msgid "Wait until this file is loaded?"
+msgstr ""
+
+#: inc/admin/options.php:260 inc/admin/ui/modules/advanced.php:223
+msgid "Add URL"
+msgstr "URL Ekle"
+
+#: inc/admin/options.php:272 inc/admin/ui/modules/cdn.php:67
+msgid "Replace site's hostname with:"
+msgstr ""
+
+#: inc/admin/options.php:290 inc/admin/options.php:316
+#: inc/admin/options.php:340
+msgid "reserved for"
+msgstr ""
+
+#: inc/admin/options.php:292 inc/admin/options.php:318
+#: inc/admin/options.php:342
+msgid "All files"
+msgstr "Tüm dosyalar"
+
+#: inc/admin/options.php:293 inc/admin/options.php:319
+#: inc/admin/options.php:343 inc/admin/ui/modules/basic.php:14
+msgid "Images"
+msgstr "Resimler"
+
+#: inc/admin/options.php:355
+msgid "Add CNAME"
+msgstr "CNAME ekle"
+
+#: inc/admin/options.php:415
+msgid "Watch the video"
+msgstr "Videoyu izle"
+
+#: inc/admin/options.php:481 inc/admin/ui/modules/basic.php:4
+msgid "Basic options"
+msgstr "Temel seçenekler"
+
+#: inc/admin/options.php:482 inc/admin/ui/modules/advanced.php:4
+msgid "Advanced options"
+msgstr "İleri seçenekler"
+
+#: inc/admin/options.php:486 inc/admin/ui/meta-boxes.php:62
+msgid "CDN"
+msgstr "CDN"
+
+#: inc/admin/options.php:488 inc/admin/ui/modules/white-label.php:4
+msgid "White Label"
+msgstr "Beyaz Etiket"
+
+#: inc/admin/options.php:490 inc/admin/ui/modules/tools.php:4
+msgid "Tools"
+msgstr "Araçlar"
+
+#: inc/admin/options.php:493 inc/admin/ui/modules/tutorials.php:4
+msgid "Tutorials"
+msgstr "Öğretici Kaynaklar"
+
+#: inc/admin/options.php:495 inc/admin/options.php:500
+#: inc/admin/ui/modules/faq.php:4 inc/admin/ui/modules/faq.php:7
+msgid "FAQ"
+msgstr "S.S.S."
+
+#: inc/admin/options.php:499
+msgid "License"
+msgstr "Lisans"
+
+#: inc/admin/options.php:822
+msgid "Settings imported and saved."
+msgstr "Ayarlar ithal edildi ve saklandı."
+
+#: inc/admin/options.php:840 inc/admin/options.php:924
+msgid "Settings saved."
+msgstr "Ayarlar saklandı."
+
+#: inc/admin/options.php:1001
+msgid ""
+"Before you can upload your import file, you will need to fix the following "
+"error:"
+msgstr "İthal dosyanızı yükleyebilmeden önce şu hataları gidermeniz gerekiyor:"
+
+#: inc/admin/options.php:1008
+msgid "Choose a file from your computer:"
+msgstr "Bilgisayarınızdan bir dosya seç:"
+
+#: inc/admin/options.php:1008
+msgid "Maximum size: %s"
+msgstr "Azami boyut: %s"
+
+#: inc/admin/options.php:1011
+msgid "Upload file and import settings"
+msgstr "Dosya yükle ve ayarları ithal et"
+
+#: inc/admin/ui/enqueue.php:24
+msgid "Are you sure?"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:26
+msgid "CloudFlare Settings"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:27
+msgid "Click \"Save Changes\" to activate the Cloudflare tab."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:29
+msgid "Transmitting across the galaxy..."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:32
+msgid "Unable to transmit"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:33
+msgid ""
+"It seems that communications with Mission Control are temporarily "
+"down....please submit a support ticket while our Rocket Scientists fix the "
+"issue."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:34
+msgid "Get help from a rocket scientist"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:36
+msgid "Last steps before contacting us"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:37
+msgid ""
+"You have to read the <a href=\"%s\" target=\"_blank\">documentation</a> and "
+"to agree to send informations relative to your website to submit a support "
+"ticket."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:39
+msgid "Transmission Received!"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:40
+msgid "We've received your ticket and will reply back within a few hours!"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:40
+msgid "We answer every ticket so check your spam if you don't hear from us."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:42
+msgid "Oh dear, someone's been naughty..."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:43
+msgid ""
+"Well, well, looks like you've got yourself a \"nulled\" version! We don't "
+"provide support to hackers or pirates, so you will need a valid license to "
+"proceed."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:43
+msgid ""
+"Click below to buy a license with a 20% discount automatically applied."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:44
+msgid "Buy It Now!"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:46
+msgid "Uh-oh, you're out of fuel!"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:47
+msgid ""
+"To keep your Rocket running with access to support, <strong>you'll need to "
+"renew your license</strong>."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:47
+msgid ""
+"Click below to renew with a <strong>discount of 50%</strong> automatically "
+"applied!"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:48
+msgid "I re-synchronize now!"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:50
+msgid ""
+"In case of any display errors we recommend following our documentation: "
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:50
+msgid ""
+"You can also <a href=\"%s\">contact our support</a> if you need help "
+"implementing that."
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:52
+msgid "Yes, I'm sure!"
+msgstr ""
+
+#: inc/admin/ui/enqueue.php:53
+msgid "Cancel"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:18 inc/admin/ui/modules/cloudflare.php:100
+#: inc/admin/ui/modules/cloudflare.php:106 inc/admin/ui/modules/tools.php:31
+#: inc/admin/ui/modules/tools.php:37 inc/admin/ui/notices.php:92
+#: inc/common/admin-bar.php:43 inc/common/admin-bar.php:66
+#: inc/common/admin-bar.php:100
+msgid "Clear cache"
+msgstr "Önbelleği temizle"
+
+#: inc/admin/ui/meta-boxes.php:36
+msgid "Cache Options"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:54
+msgid "Activate these options on this post:"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:57
+msgid "Images LazyLoad"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:58
+msgid "Iframes & Videos LazyLoad"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:59
+msgid "HTML Minification"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:60
+msgid "CSS Minification"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:61
+msgid "JS Minification"
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:67
+msgid "Activate first the %s option."
+msgstr ""
+
+#: inc/admin/ui/meta-boxes.php:80
+msgid ""
+"<strong>Note:</strong> These options aren't applied if you added this post "
+"in the \"Never cache the following pages\" option."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:7 inc/admin/ui/modules/advanced.php:15
+msgid "Prefetch DNS requests:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:20
+msgid ""
+"DNS prefetching is a way for browsers to anticipate the DNS resolution of "
+"external domains from your site."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:20
+msgid "This mechanism reduces the latency of some external files."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:26
+msgid ""
+"To learn more about this option and how to use it correctly, we advise you "
+"to watch the following video: <a href=\"%1$s\" class=\"fancybox\">%1$s</a>."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:31
+msgid ""
+"<strong>Note:</strong> Enter the domain names without their protocol, for "
+"example: <code>//ajax.googleapis.com</code> without <code>http:</code> (one "
+"per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:37 inc/admin/ui/modules/advanced.php:45
+msgid "Empty the cache of the following pages when updating a post:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:50
+msgid ""
+"Enter the URL of additionnal pages to purge when updating a post (one per "
+"line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:51 inc/admin/ui/modules/advanced.php:75
+#: inc/admin/ui/modules/advanced.php:137 inc/admin/ui/modules/advanced.php:187
+#: inc/admin/ui/modules/advanced.php:206 inc/admin/ui/modules/cdn.php:87
+msgid "You can use regular expressions (regex)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:56
+msgid ""
+"<strong>Note:</strong> When you update a post or when a comment is posted, "
+"the homepage, categories and tags associated with this post are "
+"automatically removed from the cache and then recreated by our bot."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:62 inc/admin/ui/modules/advanced.php:70
+msgid "Never cache the following pages:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:75
+msgid "Enter the URL of pages to reject (one per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:80
+msgid ""
+"<strong>Note:</strong> The cart and checkout pages are auto-excluded from "
+"the cache for WooCommerce, Easy Digital Download, iThemes Exchange, Jigoshop"
+" & WP-Shop."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:86 inc/admin/ui/modules/advanced.php:94
+msgid "Don't cache pages that use the following cookies:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:99
+msgid "List the names of the cookies (one per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:105 inc/admin/ui/modules/advanced.php:113
+msgid "Cache pages that use the following query strings (GET parameters):"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:118
+msgid "List of query strings which can be cached (one per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:124 inc/admin/ui/modules/advanced.php:132
+msgid "Never send cache pages for these user agents:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:137
+msgid "Enter the user agents name to reject (one per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:143
+msgid "Reducing the number of minified files in one file on:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:152 inc/admin/ui/modules/basic.php:69
+msgid "CSS Files minification"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:158 inc/admin/ui/modules/basic.php:75
+msgid "JS Files minification"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:163
+msgid ""
+"<strong>Note:</strong> We combine the minified files in little groups "
+"<strong>to ensure the best compatibility and better performance</strong>."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:163
+msgid ""
+"However <strong>you can force the minification to create only 1 "
+"file</strong> by activating this option."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:163
+msgid ""
+"But it's not recommended to do that because <strong>you won't take advantage"
+" of the parallelization of the download</strong>: it's faster to download 4 "
+"files in parallel rather than one big file."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:168
+msgid ""
+"Depending to your server configuration, these options can break your "
+"website. If you have any issues, you must deactivate it!"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:174 inc/admin/ui/modules/advanced.php:182
+msgid "<b>CSS</b> files to exclude from minification:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:187
+msgid "Enter the URL of <b>CSS</b> files to reject (one per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:193 inc/admin/ui/modules/advanced.php:201
+msgid "<b>JS</b> files to exclude from minification:"
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:206
+msgid "Enter the URL of <b>JS</b> files to reject (one per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/advanced.php:212 inc/admin/ui/modules/advanced.php:219
+msgid ""
+"<b>JS</b> files to be included in the footer during the minification "
+"process:"
+msgstr "Küçültme işlemi esnasında dipnotta kapsanan <b>JS</b> dosyaları:"
+
+#: inc/admin/ui/modules/advanced.php:228 inc/admin/ui/modules/advanced.php:256
+msgid "Empty the field to remove it."
+msgstr "Kaldırmak için alanı boş bırak."
+
+#: inc/admin/ui/modules/advanced.php:234 inc/admin/ui/modules/advanced.php:262
+msgid "You must specify the complete URL of the files."
+msgstr "Dosyaların tam URL'lerini belirtmeniz gerekiyor."
+
+#: inc/admin/ui/modules/advanced.php:240
+msgid "<b>JS</b> files with deferred loading:"
+msgstr "Gecikmeli yüklemeli <b>JS</b> dosyaları:"
+
+#: inc/admin/ui/modules/advanced.php:251
+msgid ""
+"You can add JavaScript files that will be loaded asynchronously at the same "
+"time as the page loads."
+msgstr ""
+
+#: inc/admin/ui/modules/api-key.php:4
+msgid "License validation"
+msgstr "Lisans doğrulaması"
+
+#: inc/admin/ui/modules/api-key.php:7 inc/admin/ui/modules/api-key.php:15
+#: inc/admin/ui/modules/cloudflare.php:21
+#: inc/admin/ui/modules/cloudflare.php:29
+msgid "API Key"
+msgstr "API Anahtarı"
+
+#: inc/admin/ui/modules/api-key.php:20
+msgid "Please enter the API key obtained after your purchase."
+msgstr ""
+
+#: inc/admin/ui/modules/api-key.php:26 inc/admin/ui/modules/api-key.php:34
+msgid "E-mail Address"
+msgstr "E-posta Adresi"
+
+#: inc/admin/ui/modules/api-key.php:39
+msgid "The one used for the purchase, in your support account."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:7
+msgid "Lazyload:"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:16
+msgid "Lazyload on images"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:20
+msgid "Iframes & Videos"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:22
+msgid "Lazyload on iframes and videos"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:27
+msgid ""
+"LazyLoad displays images, iframes and videos on a page only when they are "
+"visible to the user."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:28 inc/admin/ui/modules/basic.php:80
+msgid ""
+"This mechanism reduces the number of HTTP requests and improves the loading "
+"time."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:34
+msgid ""
+"Files optimisation:<br/><span class=\"description\">(Minification & "
+"Concatenation)</span>"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:43
+msgid "HTML Files minification"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:63
+msgid "Google Fonts minification"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:80
+msgid ""
+"Minification removes any spaces and comments present in the CSS and "
+"JavaScript files."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:80
+msgid ""
+"This mechanism reduces the weight of each file and allows a faster reading "
+"of browsers and search engines."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:80
+msgid "Concatenation combines all CSS and JavaScript files."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:85
+msgid "Concatenating files can cause display errors."
+msgstr "Dosyaları birleştirme görüntüleme hatalarına sebep olabilir."
+
+#: inc/admin/ui/modules/basic.php:91
+msgid ""
+"In case of any errors we recommend you to turn off this option or watch the "
+"following video: <a href=\"%1$s\" class=\"fancybox\">%1$s</a>."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:107 inc/admin/ui/modules/basic.php:116
+msgid "Mobile cache:"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:114
+msgid "Enable caching for mobile devices."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:121
+msgid "Don't turn on this option if you use one of these plugins: %l."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:127 inc/admin/ui/modules/basic.php:134
+msgid "Logged in user cache:"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:132
+msgid "Enable caching for logged in users."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:139 inc/admin/ui/modules/basic.php:147
+msgid "SSL cache:"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:145
+msgid "Enable caching for pages with SSL protocol (<code>https://</code>)."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:152 inc/admin/ui/modules/basic.php:160
+msgid "Clear Cache Lifespan"
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:166
+msgid "Unit of time"
+msgstr "Zaman birimi"
+
+#: inc/admin/ui/modules/basic.php:169
+msgid "second(s)"
+msgstr "saniye"
+
+#: inc/admin/ui/modules/basic.php:170
+msgid "minute(s)"
+msgstr "dakika"
+
+#: inc/admin/ui/modules/basic.php:171
+msgid "hour(s)"
+msgstr "saat"
+
+#: inc/admin/ui/modules/basic.php:172
+msgid "day(s)"
+msgstr "gün"
+
+#: inc/admin/ui/modules/basic.php:178
+msgid ""
+"By default, cache lifespan is 24 hours. This means that once created, the "
+"cache files are automatically removed after 24 hours before being recreated."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:178
+msgid ""
+"This can be useful if you display your latest tweets or rss feeds in your "
+"sidebar, for example."
+msgstr ""
+
+#: inc/admin/ui/modules/basic.php:183
+msgid "Specify 0 for unlimited lifetime."
+msgstr "Sınırsız ömür için 0 girin."
+
+#: inc/admin/ui/modules/cdn.php:4
+msgid "Content Delivery Network options"
+msgstr "İçerik Dağıtım Ağı seçenekleri"
+
+#: inc/admin/ui/modules/cdn.php:14
+msgid "Enable CloudFlare settings tab."
+msgstr ""
+
+#: inc/admin/ui/modules/cdn.php:21
+msgid ""
+"This option allows you to configure some CloudFlare settings like "
+"development mode, purge cache and a recommended configuration."
+msgstr ""
+
+#: inc/admin/ui/modules/cdn.php:26
+msgid ""
+"<strong>Note:</strong> If you are using CloudFlare, configure the options in"
+" the CloudFlare tab. The CDN settings below <strong>do not apply</strong> to"
+" CloudFlare."
+msgstr ""
+
+#: inc/admin/ui/modules/cdn.php:32 inc/admin/ui/modules/cdn.php:41
+msgid "CDN:"
+msgstr "CDN:"
+
+#: inc/admin/ui/modules/cdn.php:39
+msgid "Enable Content Delivery Network."
+msgstr "İçerik Dağıtım Ağını devreye al."
+
+#: inc/admin/ui/modules/cdn.php:46
+msgid ""
+"CDN function replaces all URLs of your static files and media (CSS, JS, "
+"Images) with the url entered below. This way all your content will be copied"
+" to a dedicated hosting or a CDN system <a href=\"http://www.maxcdn.com/\" "
+"target=\"_blank\">maxCDN</a>."
+msgstr ""
+
+#: inc/admin/ui/modules/cdn.php:59
+msgid "Disable CDN on HTTPS pages."
+msgstr ""
+
+#: inc/admin/ui/modules/cdn.php:74 inc/admin/ui/modules/cdn.php:82
+msgid "Rejected files:"
+msgstr ""
+
+#: inc/admin/ui/modules/cdn.php:87
+msgid "Specify the URL files that should not use the CDN. (one per line)."
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:7
+#: inc/admin/ui/modules/cloudflare.php:15
+msgid "CloudFlare Account Email"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:34
+msgid ""
+"<strong>Note:</strong> Where do I find my CloudFlare API key? <a "
+"href=%s\"\">Learn more</a>"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:40
+#: inc/admin/ui/modules/cloudflare.php:48
+msgid "Domain"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:54
+#: inc/admin/ui/modules/cloudflare.php:62
+msgid "Development Mode"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:64
+msgid "Off"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:65
+msgid "On"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:71
+msgid ""
+"Temporarily enter development mode on your website. <a href=%s\"\">Learn "
+"more</a>"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:77
+#: inc/admin/ui/modules/cloudflare.php:85
+msgid "Auto enable the optimal CloudFlare settings (props WP Rocket)"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:87
+msgid "No"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:88
+msgid "Yes"
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:94
+msgid ""
+"We select the best CloudFlare configuration for speed, performance grade and"
+" compatibility."
+msgstr ""
+
+#: inc/admin/ui/modules/cloudflare.php:111
+msgid ""
+"Immediately purge cached resources for your website. <a href=\"%s\" "
+"target=\"_blank\">Learn more</a>"
+msgstr ""
+
+#: inc/admin/ui/modules/support.php:7 inc/admin/ui/modules/support.php:15
+msgid "Summary"
+msgstr ""
+
+#: inc/admin/ui/modules/support.php:21 inc/admin/ui/modules/support.php:29
+msgid "Description"
+msgstr ""
+
+#: inc/admin/ui/modules/support.php:31
+msgid ""
+"Please provide the specific url(s) where we can see each issue. e.g. the "
+"gallery doesn't work on this page: domain.com/gallery-page"
+msgstr ""
+
+#: inc/admin/ui/modules/support.php:32
+msgid ""
+"Please let us know how we will recognize the issue or can reproduce the "
+"issue. What is supposed to happen, and what is actually happening instead?"
+msgstr ""
+
+#: inc/admin/ui/modules/support.php:33
+msgid ""
+"e.g. At the bottom of the post there are related posts which are supposed to"
+" have thumbnails, but no thumbnails are displaying."
+msgstr ""
+
+#: inc/admin/ui/modules/support.php:45
+msgid ""
+"I've read the <a href=\"%s\" target=\"_blank\">documentation</a>, and I "
+"agree to allow WP Rocket to automatically detect my WordPress version and "
+"list of enabled plugins when I submit this form."
+msgstr ""
+
+#: inc/admin/ui/modules/support.php:57
+msgid "Submit the ticket"
+msgstr ""
+
+#: inc/admin/ui/modules/tools.php:9 inc/admin/ui/modules/tools.php:18
+msgid "Beta Tester"
+msgstr ""
+
+#: inc/admin/ui/modules/tools.php:16
+msgid "Yes I do!"
+msgstr ""
+
+#: inc/admin/ui/modules/tools.php:23
+msgid ""
+"Check it to participate in the WP Rocket Beta Program and get earlier access"
+" to new versions, thanks in advance."
+msgstr ""
+
+#: inc/admin/ui/modules/tools.php:42
+msgid "Clear the cache for the whole site."
+msgstr "Tüm sitenin önbelleğini temizle."
+
+#: inc/admin/ui/modules/tools.php:48 inc/admin/ui/modules/tools.php:54
+#: inc/admin/ui/modules/tutorials.php:7 inc/common/admin-bar.php:141
+#: inc/common/admin-bar.php:162 inc/common/admin-bar.php:193
+msgid "Preload cache"
+msgstr "Önbelleği önyükle"
+
+#: inc/admin/ui/modules/tools.php:59
+msgid ""
+"Allows you to request a bot crawl to preload the cache (homepage and its "
+"internal links)."
+msgstr "Önbelleği (anasayfa ve dahili bağlantıları) önyükleme için bir bot emeklemesi talep etmenize izin verir."
+
+#: inc/admin/ui/modules/tools.php:66
+msgid "Settings Exporter"
+msgstr "Ayar İhraç Edicisi"
+
+#: inc/admin/ui/modules/tools.php:76
+msgid "Settings Importer"
+msgstr "Ayar İthal Edicisi"
+
+#: inc/admin/ui/modules/tools.php:85
+msgid ""
+"Please backup your settings before, use the \"Download options\" button "
+"above."
+msgstr ""
+
+#: inc/admin/ui/modules/tools.php:88
+msgid "Update Rollback"
+msgstr ""
+
+#: inc/admin/ui/modules/tools.php:94
+msgid "Reinstall v%s"
+msgstr ""
+
+#: inc/admin/ui/modules/tools.php:99
+msgid ""
+"Is the version %s causing you some issues? You can ask for a rollback and "
+"reinstall the last version you used before."
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:12
+msgid ""
+"This video gives some explanations about our two crawler robots. They "
+"generate several cache files in a few seconds."
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:19
+msgid "CSS and JavaScript minification"
+msgstr "CSS ve JavaScript küçültme"
+
+#: inc/admin/ui/modules/tutorials.php:24
+msgid ""
+"This video gives some explanations about how to use the advanced processes "
+"of minification and concatenation of CSS and JavaScript files."
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:31
+msgid "Preloading DNS queries"
+msgstr "DNS sorguları önbellekleme"
+
+#: inc/admin/ui/modules/tutorials.php:36
+msgid ""
+"This video helps to easily understand the advanced option of \"Preloading "
+"DNS queries\" and the use of the filter <code>rocket_dns_prefetch</code>."
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:43
+msgid "How to use the White Label functionality?"
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:48
+msgid "This video helps to set up a White Label version of WP Rocket."
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:55
+msgid "How to use the CDN functionality?"
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:60
+msgid ""
+"This video helps to understand what is the CDN functionality included since "
+"WP Rocket 2.1."
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:67
+msgid "How to use the CDN API?"
+msgstr ""
+
+#: inc/admin/ui/modules/tutorials.php:72
+msgid ""
+"This video helps to set up the two functions "
+"<code>get_rocket_cdn_url()</code> and <code>rocket_cdn_url()</code>."
+msgstr ""
+
+#: inc/admin/ui/modules/white-label.php:7
+#: inc/admin/ui/modules/white-label.php:16
+msgid "Plugin Name:"
+msgstr "Eklenti Adı:"
+
+#: inc/admin/ui/modules/white-label.php:22
+#: inc/admin/ui/modules/white-label.php:31
+msgid "Plugin URI:"
+msgstr "Eklenti URI'si:"
+
+#: inc/admin/ui/modules/white-label.php:37
+#: inc/admin/ui/modules/white-label.php:46
+msgid "Description:"
+msgstr "Açıklama:"
+
+#: inc/admin/ui/modules/white-label.php:52
+#: inc/admin/ui/modules/white-label.php:61
+msgid "Author:"
+msgstr "Yazar:"
+
+#: inc/admin/ui/modules/white-label.php:67
+#: inc/admin/ui/modules/white-label.php:76
+msgid "Author URI:"
+msgstr "Yazar URI'si:"
+
+#: inc/admin/ui/modules/white-label.php:88
+msgid "Reset White Label values to default"
+msgstr "Beyaz Etiketli değerleri varsayılanlarına döndür"
+
+#: inc/admin/ui/modules/white-label.php:93
+msgid ""
+"If you change anything, the tutorial + FAQ + Support tabs will be hidden."
+msgstr ""
+
+#: inc/admin/ui/notices.php:26 inc/admin/ui/notices.php:30
+msgid "<b>%s</b> can not be deactivated because of <code>%s</code>."
+msgstr ""
+
+#: inc/admin/ui/notices.php:26
+msgid ""
+"This constant is still defined in <code>wp-config.php</code> file and its "
+"value must be set to <code>false</code>."
+msgstr ""
+
+#: inc/admin/ui/notices.php:26
+msgid "Maybe we do not have the writing permissions for <code>%s</code>."
+msgstr ""
+
+#: inc/admin/ui/notices.php:26 inc/admin/ui/notices.php:30
+msgid ""
+"Please give us permissions or resolve the problem yourself. Then retry "
+"deactivation."
+msgstr ""
+
+#: inc/admin/ui/notices.php:30
+msgid "This file is not writable and we can not remove these directives."
+msgstr ""
+
+#: inc/admin/ui/notices.php:30
+msgid "Maybe we do not have writing permissions for <code>%s</code>."
+msgstr ""
+
+#: inc/admin/ui/notices.php:66
+msgid "You can still force the deactivation by clicking here."
+msgstr ""
+
+#: inc/admin/ui/notices.php:92
+msgid ""
+"<b>%s</b>: One or more extensions have been enabled or disabled, do not "
+"forget to clear the cache if necessary."
+msgstr ""
+
+#: inc/admin/ui/notices.php:191
+msgid ""
+"<b>%s</b>: The following plugins are not compatible with this plugin and may"
+" cause unexpected results:"
+msgstr ""
+
+#: inc/admin/ui/notices.php:197
+msgid "Deactivate"
+msgstr ""
+
+#: inc/admin/ui/notices.php:223
+msgid ""
+"<b>%s</b>: A custom permalink structure is required for the plugin to work "
+"properly. Please go to <a href=\"%s\">Permalink</a> to configure it."
+msgstr ""
+
+#: inc/admin/ui/notices.php:254
+msgid ""
+"<b>%s</b>: It seems we don't have <a href=\"%s\" target=\"_blank\">writing "
+"permissions</a> on <code>wp-config.php</code> file or the value of the "
+"constant <code>WP_CACHE</code> is set to <code>false</code>"
+msgstr ""
+
+#: inc/admin/ui/notices.php:256
+msgid ""
+"To fix this you have to set writing permissions for <code>wp-"
+"config.php</code> and then save the settings again."
+msgstr ""
+
+#: inc/admin/ui/notices.php:258
+msgid ""
+"If the message persists, you have to put the following code in your <code"
+">wp-config.php</code> file so that it works correctly. Click on the field "
+"and press Ctrl-A to select all."
+msgstr ""
+
+#: inc/admin/ui/notices.php:299
+msgid ""
+"If you had <a href=\"%1$s\" target=\"_blank\">writing permissions</a> on "
+"<code>%2$s</code> file, <b>%3$s</b> could do this automatically. This is not"
+" the case, here is the code you should add in your <code>%2$s</code> file "
+"for <b>%3$s</b> to work properly."
+msgstr ""
+
+#: inc/admin/ui/notices.php:332
+msgid ""
+"It seems that the <code>%s</code> file is not ours. Save the settings, we "
+"will automatically recreate the correct one. If it's still not working, "
+"please delete it and save again."
+msgstr ""
+
+#: inc/admin/ui/notices.php:361
+msgid ""
+"If you had <a href=\"%1$s\" target=\"_blank\">writing permissions</a> on "
+"<code>.htaccess</code> file, <b>%2$s</b> could do this automatically. This "
+"is not the case, so here are the rewrite rules you have to put in your "
+"<code>.htaccess</code> file for <b>%2$s</b> to work correctly. Click on the "
+"field and press Ctrl-A to select all."
+msgstr ""
+
+#: inc/admin/ui/notices.php:361
+msgid ""
+"<strong>Warning:</strong> This message will popup again and its content may "
+"be updated when saving the options"
+msgstr "<strong>Uyarı:</strong> Bu mesaj yeniden çıkar ve seçenekleri saklayınca içeriği değişebilir"
+
+#: inc/admin/ui/notices.php:390
+msgid ""
+"Be careful, you don't have <a href=\"%1$s\" target=\"_blank\">writing "
+"permissions</a> on <b>%3$s</b> domain configuration folder "
+"(<code>%2$s</code>). To make <b>%3$s</b> work properly, please CHMOD "
+"<code>755</code> or <code>775</code> or <code>777</code> this "
+"folder.<br/>When the problem is solved, thank you to save the %3$s options "
+"to generate the configuration file."
+msgstr ""
+
+#: inc/admin/ui/notices.php:418
+msgid ""
+"Be careful, you don't have <a href=\"%1$s\" target=\"_blank\">writing "
+"permissions</a> on <b>%3$s</b> cache folder (<code>%2$s</code>). For "
+"<b>%3$s</b> works properly, please CHMOD <code>755</code> or "
+"<code>775</code> or <code>777</code> this folder."
+msgstr ""
+
+#: inc/admin/ui/notices.php:447
+msgid ""
+"Be careful, you don't have <a href=\"%1$s\" target=\"_blank\">writing "
+"permissions</a> on <b>%3$s</b> minified cache folder (<code>%2$s</code>). To"
+" make <b>%3$s</b> work properly, please CHMOD <code>755</code> or "
+"<code>775</code> or <code>777</code> this folder."
+msgstr ""
+
+#: inc/admin/ui/notices.php:472
+msgid "Thank you. Your license has been successfully validated!"
+msgstr ""
+
+#: inc/admin/ui/notices.php:473
+msgid "Key: <code>%s</code><br>Email: <i>%s</i>"
+msgstr "Anahtar: <code>%s</code><br />Eposta: <i>%s</i>"
+
+#: inc/admin/updater.php:119 inc/admin/updater.php:126
+msgid ""
+"An unexpected error occurred. Something may be wrong with WP-Rocket.me or "
+"this server&#8217;s configuration. If you continue to have problems, please "
+"try the <a href=\"%s\">support forums</a>."
+msgstr ""
+
+#: inc/common/admin-bar.php:90 inc/common/admin-bar.php:184
+#: inc/common/admin-bar.php:252 inc/common/admin-bar.php:259
+msgid "All languages"
+msgstr "Tüm diller"
+
+#: inc/common/admin-bar.php:115
+msgid "Clear this post"
+msgstr "Bu gönderiyi temizle"
+
+#: inc/common/admin-bar.php:127
+msgid "Purge this URL"
+msgstr "Bu URL'yi yoket"
+
+#: inc/common/admin-bar.php:204
+msgid "Documentation"
+msgstr ""
+
+#: inc/common/cron.php:17
+msgid "%s clear"
+msgstr "%s temiz"
+
+#: inc/functions/admin.php:13
+msgid ""
+"Last step before enjoying the high performances of our plugin, please <a "
+"href=\"%s\">Enter you API key</a> here."
+msgstr ""
+
+#: inc/functions/options.php:439
+msgid "Your license is not valid."
+msgstr "Lisansınız geçerli değil."
+
+#: inc/functions/options.php:440
+msgid "You cannot add more websites. Upgrade your account."
+msgstr "Daha fazla websitesi ekleyemezsiniz. Hesabınızı yükseltin."
+
+#: inc/functions/options.php:441
+msgid "This website is not allowed."
+msgstr "Bu websitesi izinli değil."
+
+#: inc/functions/options.php:442
+msgid "This license key is not accepted."
+msgstr "Bu lisans anahtarı kabul edilmedi."
+
+#. Description of the plugin/theme
+msgid "The best WordPress performance plugin."
+msgstr "En iyi WordPress performans eklentisi."

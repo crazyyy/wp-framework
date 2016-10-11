@@ -1,17 +1,17 @@
 <?php
 // Templates
 function sxd_tpl_page(){
-	global $SXD;
-	return <<<HTML
+global $SXD;
+return <<<HTML
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>{$SXD->name}</title>
-<link rel="stylesheet" type="text/css" href="{$SXD->url}load.php?sxd.v209pro.css">
-<script type="text/javascript" src="{$SXD->url}load.php?sxd.v209pro.js"></script>
-<script type="text/javascript" src="{$SXD->url}load.php?{$SXD->LNG['name']}.v209pro.lng.js"></script>
-<link rel="shortcut icon" href="{$SXD->url}load.php?favicon.v209pro.ico">
+<link rel="stylesheet" type="text/css" href="load.php?sxd.v208.css">
+<script type="text/javascript" src="load.php?sxd.v208.js"></script>
+<script type="text/javascript" src="load.php?{$SXD->LNG['name']}.lng.js"></script>
+<link rel="shortcut icon" href="load.php?favicon.v208.ico">
 </head>
 
 <body>
@@ -34,11 +34,6 @@ function sxd_tpl_page(){
 						<div class="caption">&nbsp;– {$SXD->LNG['del_count']}</div>
 						</fieldset>
 					</div>
-					<div class="caption" style="margin-top:8px;">
-						<fieldset><legend>{$SXD->LNG['ext_legend']}</legend>
-						<div class="caption"><label><input type="checkbox" id="outfile"> {$SXD->LNG['outfile']}</label></div>
-						</fieldset>
-					</div>
 				</td>
 				<td width="308" valign="top">
 					<div class="caption">{$SXD->LNG['tree']}</div><div id=backup_tree class="zTree"></div>
@@ -46,7 +41,7 @@ function sxd_tpl_page(){
 			</tr>
 			<tr><td></td><td align="right"><input type="button" value="{$SXD->LNG['btn_save']}" onclick="sxd.showDialog('savejob');z('sj_name').value = sxd.combos.backup_db.value;"> <input type="button" value="{$SXD->LNG['btn_exec']}" onclick="sxd.runBackup();"></td></tr>
 		</table>
-
+		
 		<table cellspacing="0" id="tab_restore" style="display:none;">
 			<tr>
 				<td width="242" valign="top">
@@ -56,11 +51,10 @@ function sxd_tpl_page(){
 					<div class="caption">{$SXD->LNG['combo_comments']}</div>
 					<div class="border"><textarea cols="10" rows="3" id="restore_comment" readonly></textarea></div>
 					<div class="caption">{$SXD->LNG['combo_strategy']}</div><div id="restore_type"></div>
-					<div class="caption" style="margin-top:1px;">
+					<div class="caption" style="margin-top:17px;">
 						<fieldset><legend>{$SXD->LNG['ext_legend']}</legend>
 						<div class="caption"><label><input type="checkbox" id="correct"> {$SXD->LNG['correct']}</label></div>
 						<div class="caption"><label><input type="checkbox" id="autoinc"> {$SXD->LNG['autoinc']}</label></div>
-						<div class="caption"><input type="checkbox" id="prefix" onclick="sxd.getPrefix();"> {$SXD->LNG['prefix']}</div>
 						</fieldset>
 					</div>
 				</td>
@@ -68,13 +62,13 @@ function sxd_tpl_page(){
 					<div class="caption">{$SXD->LNG['tree']}</div><div id=restore_tree class="zTree"></div>
 				</td>
 			</tr>
-			<tr><td><input type="button" value="{$SXD->LNG['savesql']}"  onclick="sxd.runRestore(1);" style="float:left;" id="savesql"></td><td align="right"><input type="button" value="{$SXD->LNG['btn_save']}" onclick="sxd.showDialog('savejob');z('sj_name').value = sxd.combos.restore_db.value;" id=restore_savejob> <input type="button" value="{$SXD->LNG['btn_exec']}" onclick="sxd.runRestore();" id=restore_runjob></td></tr>
+			<tr><td></td><td align="right"><input type="button" value="{$SXD->LNG['btn_save']}" onclick="sxd.showDialog('savejob');z('sj_name').value = sxd.combos.restore_db.value;" id=restore_savejob> <input type="button" value="{$SXD->LNG['btn_exec']}" onclick="sxd.runRestore();" id=restore_runjob></td></tr>
 		</table>
-
+		
 		<table cellspacing="0" id="tab_log" style="display:none;">
 			<tr>
 				<td valign="top" colspan=2>
-					<div id=sxdGrid1></div>
+					<div id=sxdGrid1></div> 
 				</td>
 			</tr>
 			<tr><td colspan=2>
@@ -94,18 +88,18 @@ function sxd_tpl_page(){
 		<table cellspacing="0" id="tab_result" style="display:none;">
 			<tr>
 				<td valign="top">
-					<div id=sxdGrid3></div>
+					<div id=sxdGrid3></div> 
 				</td>
 			</tr>
 			<tr><td>
 			<input type="button" value="{$SXD->LNG['btn_clear']}" onclick="sxd.result.clear();">
 			</td></tr>
 		</table>
-
+		
 		<table cellspacing="0" id="tab_files" style="display:none;">
 			<tr>
 				<td valign="top" colspan=2>
-					<div id=sxdGrid2></div>
+					<div id=sxdGrid2></div> 
 				</td>
 			</tr>
 			<tr><td width="242"><form id="save_file" method="GET" style="visibility:hidden;display:inline;" target=save></form><input type="button" value="{$SXD->LNG['btn_delete']}" onclick="sxd.runFiles('delete')"></td><td width="290" align="right">
@@ -113,8 +107,8 @@ function sxd_tpl_page(){
 			<input type="button" value="{$SXD->LNG['btn_open']}" onclick="sxd.runFiles('open')">
 			</td></tr>
 		</table>
-
-
+		
+		
 		<table cellspacing="0" id="tab_services" style="display:none;">
 			<tr>
 				<td width="242" valign="top">
@@ -127,7 +121,7 @@ function sxd_tpl_page(){
 					<div class="caption">{$SXD->LNG['tree']}</div><div id=services_tree class="zTree"></div>
 				</td>
 			</tr>
-			<tr><td align="right" colspan=2><input type="button" value="{$SXD->LNG['btn_extra']}"  onclick="sxd.showMenu({el:this}, sxd.options.services,{btn:2,width:160});" style="float:left;"> <input type="button" value="{$SXD->LNG['btn_check']}" onclick="sxd.runServices('check')"> <input type="button" value="{$SXD->LNG['btn_repair']}" onclick="sxd.runServices('repair')"> <input type="button" value="{$SXD->LNG['btn_analyze']}" onclick="sxd.runServices('analyze')">  <input type="button" value="{$SXD->LNG['btn_optimize']}" onclick="sxd.runServices('optimize')"></td></tr>
+			<tr><td align="right" colspan=2><input type="button" value="{$SXD->LNG['btn_delete_db']}" onclick="sxd.runServices('delete')" style="float:left;"> <input type="button" value="{$SXD->LNG['btn_check']}" onclick="sxd.runServices('check')"> <input type="button" value="{$SXD->LNG['btn_repair']}" onclick="sxd.runServices('repair')"> <input type="button" value="{$SXD->LNG['btn_analyze']}" onclick="sxd.runServices('analyze')">  <input type="button" value="{$SXD->LNG['btn_optimize']}" onclick="sxd.runServices('optimize')"></td></tr>
 		</table>
 		<table cellspacing="0" id="tab_options" style="display:none;">
 			<tr>
@@ -152,13 +146,7 @@ function sxd_tpl_page(){
 							</tr>
 							<tr>
 								<td>{$SXD->LNG['cfg_globstat']}</td>
-								<td><input type="checkbox" id="globstat" value="1"></td>
-								<td align="right">Размер буффера OUTFILE (МБ)</td>
-								<td width=40 align="right"><input type="text" id="outfile_size" style="width:40px;"></td>
-							</tr>
-							<tr>
-								<td>Путь для OUTFILE</td>
-								<td colspan=3><input type="text" id="outfile_path" value="" style="width:351px;"></td>
+								<td colspan=3><input type="checkbox" id="globstat" value="1"></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -169,9 +157,6 @@ function sxd_tpl_page(){
 								<td width="33%"><label><input type="checkbox" id="conf_import" value="1"> {$SXD->LNG['cfg_conf_import']}</label></td>
 								<td width="34%"><label><input type="checkbox" id="conf_file" value="1"> {$SXD->LNG['cfg_conf_file']}</label></td>
 								<td width="33%"><label><input type="checkbox" id="conf_db" value="1"> {$SXD->LNG['cfg_conf_db']}</label></td>
-							</tr><tr>
-								<td><label><input type="checkbox" id="conf_truncate" value="1"> {$SXD->LNG['cfg_conf_truncate']}</label></td>
-								<td><label><input type="checkbox" id="conf_drop" value="1"> {$SXD->LNG['cfg_conf_drop']}</label></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -292,44 +277,12 @@ function sxd_tpl_page(){
 		</table>
 	</div>
 </div>
-<div class=dialog id="dia_charsets">
-	<div class="header" id="cc_header"></div>
-	<div class="content">
-		<table cellspacing="5">
-			<tr>
-				<td valign="top">
-				<fieldset>
-				<legend>{$SXD->LNG['cdb_detail']}</legend>
-					<table cellspacing="3">
-						<tr>
-							<td width="80">{$SXD->LNG['combo_charset']}</td>
-							<td width="202"><div id="services_charset"></div></td>
-						</tr>
-						<tr>
-							<td>{$SXD->LNG['combo_collate']}</td>
-							<td><div id="services_charset_col"></div></td>
-						</tr>
-					</table>
-				</fieldset>
-				<fieldset>
-				<legend>{$SXD->LNG['hint']}</legend>
-					<table cellspacing="3">
-						<tr>
-							<td colspan=2 id=charset_hint></td>
-						</tr>
-					</table>
-				</fieldset>
-				</td>
-			</tr>
-			<tr class="buttons"><td align="right"><input type="button" value="{$SXD->LNG['btn_exec']}" onclick="sxd.changeCS();"><input type="button" value="{$SXD->LNG['btn_cancel']}" onclick="sxd.hideDialog('charsets');"></td></tr>
-		</table>
-	</div>
-</div>
+
 <div id=sxdMenu style="display:none;z-index:9999;"></div>
 <script type="text/javascript">
 sxd.init();
 sxd.backupUrl = '{$SXD->CFG['backup_url']}';
-sxd.tbar.init('sxdToolbar', {$SXD->VAR['toolbar']});
+sxd.tbar.init('sxdToolbar', {$SXD->VAR['toolbar']}); 
 {$SXD->VAR['combos']}
 sxd.actions.tab_backup();
 </script>
@@ -339,15 +292,15 @@ HTML;
 }
 
 function sxd_tpl_auth($error = ''){
-	global $SXD;
-	return <<<HTML
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+global $SXD;
+return <<<HTML
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">  
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>{$SXD->name}</title>
-<link rel="shortcut icon" href="{$SXD->url}load.php?favicon.v209pro.ico">
-<link rel="stylesheet" type="text/css" href="{$SXD->url}load.php?sxd.v209pro.css">
+<link rel="shortcut icon" href="load.php?favicon.v208.ico">
+<link rel="stylesheet" type="text/css" href="load.php?sxd.v208.css">
 </head>
 <body>
 <div class="dialog" id="dia_auth">
