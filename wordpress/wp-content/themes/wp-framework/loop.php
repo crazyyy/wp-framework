@@ -2,11 +2,11 @@
   <div id="post-<?php the_ID(); ?>" <?php post_class('looper'); ?>>
 
     <a rel="nofollow" class="feature-img" href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
-      <?php if ( has_post_thumbnail()) :
-        the_post_thumbnail('medium');
-      else: ?>
+      <?php if ( has_post_thumbnail()) { ?>
+        <img src="<?php echo the_post_thumbnail_url('medium'); ?>" title="<?php the_title(); ?>" alt="<?php the_title(); ?>" />
+      <?php } else { ?>
         <img src="<?php echo catchFirstImage(); ?>" title="<?php the_title(); ?>" alt="<?php the_title(); ?>" />
-      <?php endif; ?>
+      <?php } ?>
     </a><!-- /post thumbnail -->
 
     <h2 class="inner-title">
@@ -20,10 +20,4 @@
     <?php wpeExcerpt('wpeExcerpt40'); ?>
 
   </div><!-- /looper -->
-  <?php endwhile; else: ?>
-  <div>
-
-    <h2 class="title"><?php _e( 'Sorry, nothing to display.', 'wpeasy' ); ?></h2>
-
-  </div><!-- /article -->
-<?php endif; ?>
+<?php endwhile; endif; ?>

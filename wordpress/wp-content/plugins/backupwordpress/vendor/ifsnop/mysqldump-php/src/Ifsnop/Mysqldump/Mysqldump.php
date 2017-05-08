@@ -122,6 +122,7 @@ class Mysqldump
             'lock-tables' => true,
             'add-locks' => true,
             'extended-insert' => true,
+            'complete-insert' => false,
             'disable-keys' => true,
             'where' => '',
             'no-create-info' => false,
@@ -164,8 +165,25 @@ class Mysqldump
             throw new Exception("Unexpected value in dumpSettings: (" . implode(",", $diff) . ")");
         }
 
+        if ( !is_array($this->dumpSettings['include-tables']) ||
+            !is_array($this->dumpSettings['exclude-tables']) ) {
+            throw new Exception("Include-tables and exclude-tables should be arrays");
+        }
+
+        // Dump the same views as tables, mimic mysqldump behaviour
+        $this->dumpSettings['include-views'] = $this->dumpSettings['include-tables'];
+
         // Create a new compressManager to manage compressed output
         $this->compressManager = CompressManagerFactory::create($this->dumpSettings['compress']);
+    }
+
+    /**
+     * Destructor of Mysqldump. Unsets dbHandlers and database objects.
+     *
+     */
+    public function __destruct()
+    {
+        $this->dbHandler = null;
     }
 
     /**
@@ -332,9 +350,10 @@ class Mysqldump
         // If there still are some tables/views in include-tables array,
         // that means that some tables or views weren't found.
         // Give proper error and exit.
+        // This check will be removed once include-tables supports regexps
         if (0 < count($this->dumpSettings['include-tables'])) {
             $name = implode(",", $this->dumpSettings['include-tables']);
-            throw new Exception("Table or View (" . $name . ") not found in database");
+            throw new Exception("Table (" . $name . ") not found in database");
         }
 
         $this->exportTables();
@@ -360,18 +379,20 @@ class Mysqldump
     private function getDumpFileHeader()
     {
         $header = '';
-        if (!$this->dumpSettings['skip-comments']) {
+        if ( !$this->dumpSettings['skip-comments'] ) {
             // Some info about software, source and time
             $header = "-- mysqldump-php https://github.com/ifsnop/mysqldump-php" . PHP_EOL .
                     "--" . PHP_EOL .
                     "-- Host: {$this->host}\tDatabase: {$this->dbName}" . PHP_EOL .
                     "-- ------------------------------------------------------" . PHP_EOL;
 
-            if (!empty($this->version)) {
+            if ( !empty($this->version) ) {
                 $header .= "-- Server version \t" . $this->version . PHP_EOL;
             }
 
-            $header .= "-- Date: " . date('r') . PHP_EOL . PHP_EOL;
+            if ( !$this->dumpSettings['skip-dump-date'] ) {
+                $header .= "-- Date: " . date('r') . PHP_EOL . PHP_EOL;
+            }
         }
         return $header;
     }
@@ -424,7 +445,7 @@ class Mysqldump
         }
 
         // Listing all views from database
-        if (empty($this->dumpSettings['include-tables'])) {
+        if (empty($this->dumpSettings['include-views'])) {
             // include all views for now, blacklisting happens later
             foreach ($this->dbHandler->query($this->typeAdapter->show_views($this->dbName)) as $row) {
                 array_push($this->views, current($row));
@@ -432,13 +453,13 @@ class Mysqldump
         } else {
             // include only the tables mentioned in include-tables
             foreach ($this->dbHandler->query($this->typeAdapter->show_views($this->dbName)) as $row) {
-                if (in_array(current($row), $this->dumpSettings['include-tables'], true)) {
+                if (in_array(current($row), $this->dumpSettings['include-views'], true)) {
                     array_push($this->views, current($row));
                     $elem = array_search(
                         current($row),
-                        $this->dumpSettings['include-tables']
+                        $this->dumpSettings['include-views']
                     );
-                    unset($this->dumpSettings['include-tables'][$elem]);
+                    unset($this->dumpSettings['include-views'][$elem]);
                 }
             }
         }
@@ -459,6 +480,27 @@ class Mysqldump
     }
 
     /**
+     * Compare if $table name matches with a definition inside $arr
+     * @param $table string
+     * @param $arr array with strings or patterns
+     * @return bool
+     */
+    private function matches($table, $arr) {
+        $match = false;
+
+        foreach ($arr as $pattern) {
+            if ( '/' != $pattern[0] ) {
+                continue;
+            }
+            if ( 1 == preg_match($pattern, $table) ) {
+                $match = true;
+            }
+        }
+
+        return in_array($table, $arr) || $match;
+    }
+
+    /**
      * Exports all the tables selected from database
      *
      * @return null
@@ -467,11 +509,11 @@ class Mysqldump
     {
         // Exporting tables one by one
         foreach ($this->tables as $table) {
-            if (in_array($table, $this->dumpSettings['exclude-tables'], true)) {
+            if ( $this->matches($table, $this->dumpSettings['exclude-tables']) ) {
                 continue;
             }
             $this->getTableStructure($table);
-            if (false === $this->dumpSettings['no-data']) {
+            if ( false === $this->dumpSettings['no-data'] ) {
                 $this->listValues($table);
             }
         }
@@ -487,14 +529,14 @@ class Mysqldump
         if (false === $this->dumpSettings['no-create-info']) {
             // Exporting views one by one
             foreach ($this->views as $view) {
-                if (in_array($view, $this->dumpSettings['exclude-tables'], true)) {
+                if ( $this->matches($view, $this->dumpSettings['exclude-tables']) ) {
                     continue;
                 }
                 $this->tableColumnTypes[$view] = $this->getTableColumnTypes($view);
                 $this->getViewStructureTable($view);
             }
             foreach ($this->views as $view) {
-                if (in_array($view, $this->dumpSettings['exclude-tables'], true)) {
+                if ( $this->matches($view, $this->dumpSettings['exclude-tables']) ) {
                     continue;
                 }
                 $this->getViewStructureView($view);
@@ -773,9 +815,18 @@ class Mysqldump
         foreach ($resultSet as $row) {
             $vals = $this->escape($tableName, $row);
             if ($onlyOnce || !$this->dumpSettings['extended-insert']) {
-                $lineSize += $this->compressManager->write(
-                    "INSERT INTO `$tableName` VALUES (" . implode(",", $vals) . ")"
-                );
+
+                if ($this->dumpSettings['complete-insert']) {
+                    $lineSize += $this->compressManager->write(
+                        "INSERT INTO `$tableName` (`" .
+                        implode("`, `", array_keys($this->tableColumnTypes[$tableName])) .
+                        "`) VALUES (" . implode(",", $vals) . ")"
+                    );
+                } else {
+                    $lineSize += $this->compressManager->write(
+                        "INSERT INTO `$tableName` VALUES (" . implode(",", $vals) . ")"
+                    );
+                }
                 $onlyOnce = false;
             } else {
                 $lineSize += $this->compressManager->write(",(" . implode(",", $vals) . ")");
@@ -1335,7 +1386,15 @@ class TypeAdapterMysql extends TypeAdapterFactory
             'longblob',
             'binary',
             'varbinary',
-            'bit'
+            'bit',
+            'geometry', /* http://bugs.mysql.com/bug.php?id=43544 */
+            'point',
+            'linestring',
+            'polygon',
+            'multipoint',
+            'multilinestring',
+            'multipolygon',
+            'geometrycollection',
         )
     );
 

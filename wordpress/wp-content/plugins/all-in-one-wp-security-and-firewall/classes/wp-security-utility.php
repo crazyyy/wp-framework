@@ -380,7 +380,7 @@ class AIOWPSecurity_Utility
             $referer_info = isset($_SERVER['HTTP_REFERER']) ? esc_attr($_SERVER['HTTP_REFERER']) : '';
         }
 
-        $current_time = date_i18n( 'Y-m-d H:i:s' );
+        $current_time = current_time( 'mysql' );
         $data = array(
             'event_type' => $event_type,
             'username' => $username,
@@ -572,6 +572,8 @@ class AIOWPSecurity_Utility
             return 'nginx';
         } else if (strstr(strtolower(filter_var($_SERVER['SERVER_SOFTWARE'], FILTER_SANITIZE_STRING)), 'litespeed')) {
             return 'litespeed';
+        } else if (strstr(strtolower(filter_var($_SERVER['SERVER_SOFTWARE'], FILTER_SANITIZE_STRING)), 'iis')) {
+            return 'iis';
         } else { //unsupported server
             return -1;
         }

@@ -234,7 +234,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu
         </div></div>
             
         <div class="postbox">
-        <h3 class="hndle"><label for="title"><?php _e('Block Accesss to Debug Log File', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Block Access to Debug Log File', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">
         <?php
         //Display security info badge
@@ -880,7 +880,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu
                 <br />'.__('However, in some cases you may find many repeated 404 errors which occur in a relatively short space of time and from the same IP address which are all attempting to access a variety of non-existent page URLs.', 'all-in-one-wp-security-and-firewall').'
                 <br />'.__('Such behaviour can mean that a hacker might be trying to find a particular page or URL for sinister reasons.', 'all-in-one-wp-security-and-firewall').'
                 <br /><br />'.__('This feature allows you to monitor all 404 events which occur on your site, and it also gives you the option of blocking IP addresses for a configured length of time.', 'all-in-one-wp-security-and-firewall').'
-                <br />'.__('If you want to temporarily block an IP address, simply click the "Temp Block" link for the applicable IP entry in the "404 Event Logs" table below.', 'all-in-one-wp-security-and-firewall').'</p>';
+                <br />'.__('If you want to temporarily block or blacklist an IP address, simply click the "Temp Block" or "Blacklist IP" link for the applicable IP entry in the "404 Event Logs" table below.', 'all-in-one-wp-security-and-firewall').'</p>';
             ?>
         </div>
         <div class="aio_grey_box">
@@ -972,13 +972,26 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu
             <?php
             if(isset($_REQUEST["tab"]))
             {
-                echo '<input type="hidden" name="tab" value="'.$_REQUEST["tab"].'" />';
+                echo '<input type="hidden" name="tab" value="'.esc_attr($_REQUEST["tab"]).'" />';
             }
             ?>
             <!-- Now we can render the completed list table -->
             <?php $event_list_404->display(); ?>
             </form>
         </div></div>
+        <div class="postbox">
+        <h3 class="hndle"><label for="title"><?php _e('Export to CSV', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+        <div class="inside">
+        <form action="" method="POST">
+        <?php wp_nonce_field('aiowpsec-export-404-event-logs-to-csv-nonce'); ?>
+        <table class="form-table">
+            <tr valign="top">
+            <span class="description"><?php _e('Click this button if you wish to download this log in CSV format.', 'all-in-one-wp-security-and-firewall'); ?></span>
+            </tr>            
+        </table>
+        <input type="submit" name="aiowps_export_404_event_logs_to_csv" value="<?php _e('Export to CSV', 'all-in-one-wp-security-and-firewall')?>" class="button-primary"/>
+        </form>
+        </div></div>  
         <div class="postbox">
         <h3 class="hndle"><label for="title"><?php _e('Delete All 404 Event Logs', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
         <div class="inside">

@@ -1,7 +1,4 @@
 User-Agent: *
-Sitemap: http://crazyyy.net.ua/sitemap.xml
-
-User-Agent: *
 Crawl-Delay: 10
 User-agent: Yandex
 Crawl-delay: 10

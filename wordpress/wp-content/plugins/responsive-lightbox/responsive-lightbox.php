@@ -2,7 +2,7 @@
 /*
 Plugin Name: Responsive Lightbox
 Description: Responsive Lightbox allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices.
-Version: 1.6.9
+Version: 1.6.12
 Author: dFactory
 Author URI: http://www.dfactory.eu/
 Plugin URI: http://www.dfactory.eu/plugins/responsive-lightbox/
@@ -12,7 +12,7 @@ Text Domain: responsive-lightbox
 Domain Path: /languages
 
 Responsive Lightbox
-Copyright (C) 2013-2016, Digital Factory - info@digitalfactory.pl
+Copyright (C) 2013-2017, Digital Factory - info@digitalfactory.pl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -36,7 +36,7 @@ include_once( RESPONSIVE_LIGHTBOX_PATH . 'includes/class-settings.php' );
  * Responsive Lightbox class.
  *
  * @class Responsive_Lightbox
- * @version	1.6.9
+ * @version	1.6.12
  */
 class Responsive_Lightbox {
 
@@ -145,9 +145,17 @@ class Responsive_Lightbox {
 				'timeout'					=> 4000,
 				'pagination'				=> true,
 				'pagination_type'			=> 'thumbnails'
+			),
+			'featherlight'	 	=> array(
+				'open_speed'				=> 250,
+				'close_speed'				=> 250,
+				'close_on_click'			=> 'background',
+				'close_on_esc'				=> true,
+				'gallery_fade_in'			=> 100,
+				'gallery_fade_out'			=> 300
 			)
 		),
-		'version'		 => '1.6.9'
+		'version'		 => '1.6.12'
 	);
 	public $options = array();
 	private $notices = array();
@@ -186,7 +194,7 @@ class Responsive_Lightbox {
 		}
 
 		// update plugin version
-		update_option( 'responsive_lightbox_version', $this->defaults['version'], '', 'no' );
+		update_option( 'responsive_lightbox_version', $this->defaults['version'], false );
 
 		$this->options['settings'] = array_merge( $this->defaults['settings'], ( ($array = get_option( 'responsive_lightbox_settings' ) ) === false ? array() : $array ) );
 
@@ -576,7 +584,7 @@ class Responsive_Lightbox {
 					'responsive-lightbox-nivo', plugins_url( 'assets/nivo/nivo-lightbox.min.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true ), $this->defaults['version']
 				);
 				wp_register_style(
-					'responsive-lightbox-nivo', plugins_url( 'assets/nivo/nivo-lightbox.css', __FILE__ ), array(), $this->defaults['version']
+					'responsive-lightbox-nivo', plugins_url( 'assets/nivo/nivo-lightbox.min.css', __FILE__ ), array(), $this->defaults['version']
 				);
 				wp_register_style(
 					'responsive-lightbox-nivo-default', plugins_url( 'assets/nivo/themes/default/default.css', __FILE__ ), array(), $this->defaults['version']
@@ -656,6 +664,39 @@ class Responsive_Lightbox {
 				
 				break;
 				
+			case 'featherlight' :
+
+				wp_register_script(
+					'responsive-lightbox-featherlight', plugins_url( 'assets/featherlight/featherlight.min.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
+				);
+				wp_register_style(
+					'responsive-lightbox-featherlight', plugins_url( 'assets/featherlight/featherlight.min.css', __FILE__ ), array(), $this->defaults['version']
+				);
+				wp_register_script(
+					'responsive-lightbox-featherlight-gallery', plugins_url( 'assets/featherlight/featherlight.gallery.min.js', __FILE__ ), array( 'jquery' ), $this->defaults['version'], ($this->options['settings']['loading_place'] === 'header' ? false : true )
+				);
+				wp_register_style(
+					'responsive-lightbox-featherlight-gallery', plugins_url( 'assets/featherlight/featherlight.gallery.min.css', __FILE__ ), array(), $this->defaults['version']
+				);
+				
+				$scripts[] = 'responsive-lightbox-featherlight';
+				$styles[] = 'responsive-lightbox-featherlight';
+				$scripts[] = 'responsive-lightbox-featherlight-gallery';
+				$styles[] = 'responsive-lightbox-featherlight-gallery';
+	
+				$args = array_merge(
+					$args, array(
+					'openSpeed'				=> $this->options['configuration']['featherlight']['open_speed'],
+					'closeSpeed'			=> $this->options['configuration']['featherlight']['close_speed'],
+					'closeOnClick'			=> $this->options['configuration']['featherlight']['close_on_click'],
+					'closeOnEsc'			=> $this->get_boolean_value( $this->options['configuration']['featherlight']['close_on_esc'] ),
+					'galleryFadeIn'			=> $this->options['configuration']['featherlight']['gallery_fade_in'],
+					'galleryFadeOut'		=> $this->options['configuration']['featherlight']['gallery_fade_out']
+					)
+				);
+				
+				break;
+				
 			default :
 				
 				do_action( 'rl_lightbox_enqueue_scripts' );
@@ -720,6 +761,30 @@ class Responsive_Lightbox {
 	 */
 	private function get_boolean_value( $option ) {
 		return ( $option == true ? 1 : 0 );
+	}
+	
+	/**
+	 * Helper: convert hex color to rgb color.
+	 * 
+	 * @param type $color
+	 * @return array
+	 */
+	public function hex2rgb( $color ) {
+		if ( $color[0] == '#' ) {
+			$color = substr( $color, 1 );
+		}
+		if ( strlen( $color ) == 6 ) {
+			list( $r, $g, $b ) = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
+		} elseif ( strlen( $color ) == 3 ) {
+			list( $r, $g, $b ) = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
+		} else {
+			return false;
+		}
+		$r = hexdec( $r );
+		$g = hexdec( $g );
+		$b = hexdec( $b );
+
+		return array( $r, $g, $b );
 	}
 
 }

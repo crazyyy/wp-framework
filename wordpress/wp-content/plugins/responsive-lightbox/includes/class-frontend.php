@@ -242,7 +242,7 @@ class Responsive_Lightbox_Frontend {
 	 */
 	public function woocommerce_single_product_image_html( $html ) {
 		if ( Responsive_Lightbox()->options['settings']['woocommerce_gallery_lightbox'] === true ) {
-			$html = str_replace( 'data-rel="prettyPhoto"', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '"', $html );
+			$html = preg_replace( '/data-rel=\"(.*?)\"/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"', $html );
 		}
 		return $html;
 	}
@@ -255,7 +255,7 @@ class Responsive_Lightbox_Frontend {
 	 */
 	public function woocommerce_single_product_image_thumbnail_html( $html ) {
 		if ( Responsive_Lightbox()->options['settings']['woocommerce_gallery_lightbox'] === true ) {
-			$html = str_replace( 'data-rel="prettyPhoto[product-gallery]"', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"', $html );
+			$html = preg_replace( '/data-rel=\"(.*?)\"/', 'data-rel="' . Responsive_Lightbox()->options['settings']['selector'] . '-gallery-' . $this->gallery_no . '"', $html );
 		}
 		return $html;
 	}

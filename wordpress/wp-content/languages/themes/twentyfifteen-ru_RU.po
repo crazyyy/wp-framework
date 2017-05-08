@@ -1,5 +1,5 @@
-# Translation of Twenty Fifteen in Russian
-# This file is distributed under the same license as the Twenty Fifteen package.
+# Translation of Themes - Twenty Fifteen in Russian
+# This file is distributed under the same license as the Themes - Twenty Fifteen package.
 msgid ""
 msgstr ""
 "PO-Revision-Date: 2015-08-18 16:52:11+0000\n"
@@ -7,8 +7,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: GlotPress/2.1.0-alpha\n"
-"Project-Id-Version: Twenty Fifteen\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: ru\n"
+"Project-Id-Version: Themes - Twenty Fifteen\n"
 
 #. Description of the plugin/theme
 msgid "Our 2015 default theme is clean, blog-focused, and designed for clarity. Twenty Fifteen's simple, straightforward typography is readable on a wide variety of screen sizes, and suitable for multiple languages. We designed it using a mobile-first approach, meaning your content takes center-stage, regardless of whether your visitors arrive by smartphone, tablet, laptop, or desktop computer."
@@ -68,15 +69,15 @@ msgctxt "Used before post author name."
 msgid "Author"
 msgstr "Автор"
 
-#: inc/template-tags.php:55
-msgctxt "Used before post format."
-msgid "Format"
-msgstr "Формат"
-
 #: inc/template-tags.php:76
 msgctxt "Used before publish date."
 msgid "Posted on"
 msgstr "Опубликовано"
+
+#: inc/template-tags.php:55
+msgctxt "Used before post format."
+msgid "Format"
+msgstr "Формат"
 
 #: inc/template-tags.php:49
 msgid "Featured"
@@ -122,26 +123,26 @@ msgstr "По умолчанию"
 msgid "Header and Sidebar Background Color"
 msgstr "Цвет фона заголовка и боковой колонки"
 
-#: inc/customizer.php:59
-msgid "Header and Sidebar Text Color"
-msgstr "Цвет текста заголовка и боковой колонки"
-
 #: inc/customizer.php:60 inc/customizer.php:76 inc/customizer.php:81
 msgid "Applied to the header on small screens and the sidebar on wide screens."
 msgstr "Применяется к заголовку на маленьких экранах и к боковой колонке на широких."
+
+#: inc/customizer.php:59
+msgid "Header and Sidebar Text Color"
+msgstr "Цвет текста заголовка и боковой колонки"
 
 #: inc/customizer.php:44
 msgid "Base Color Scheme"
 msgstr "Основная цветовая схема"
 
+#: inc/back-compat.php:37 inc/back-compat.php:47 inc/back-compat.php:60
+msgid "Twenty Fifteen requires at least WordPress version 4.1. You are running version %s. Please upgrade and try again."
+msgstr "Тема Twenty Fifteen требует WordPress 4.1 или выше. У вас версия %s. Пожалуйста, обновите WordPress и попробуйте ещё раз."
+
 #: image.php:84
 msgctxt "Parent post link"
 msgid "<span class=\"meta-nav\">Published in</span><span class=\"post-title\">%title</span>"
 msgstr "<span class=\"meta-nav\">Опубликовано в</span><span class=\"post-title\">%title</span>"
-
-#: inc/back-compat.php:37 inc/back-compat.php:47 inc/back-compat.php:60
-msgid "Twenty Fifteen requires at least WordPress version 4.1. You are running version %s. Please upgrade and try again."
-msgstr "Тема Twenty Fifteen требует WordPress 4.1 или выше. У вас версия %s. Пожалуйста, обновите WordPress и попробуйте ещё раз."
 
 #: image.php:24
 msgid "Next Image"
@@ -159,34 +160,34 @@ msgstr "Меню и виджеты"
 msgid "Skip to content"
 msgstr "Перейти к содержимому"
 
-#: functions.php:269
-msgid "expand child menu"
-msgstr "раскрыть дочернее меню"
-
-#: functions.php:270
+#: functions.php:283
 msgid "collapse child menu"
 msgstr "свернуть дочернее меню"
 
-#. Translators: If there are characters in your language that are not supported
-#. by Inconsolata, translate this to 'off'. Do not translate into your own
-#. language.
-#: functions.php:191
-msgctxt "Inconsolata font: on or off"
-msgid "on"
-msgstr "on"
+#: functions.php:282
+msgid "expand child menu"
+msgstr "раскрыть дочернее меню"
 
 #. Translators: To add an additional character subset specific to your
 #. language, translate this to 'greek', 'cyrillic', 'devanagari' or
 #. 'vietnamese'. Do not translate into your own language.
-#: functions.php:199
+#: functions.php:212
 msgctxt "Add new subset (greek, cyrillic, devanagari, vietnamese)"
 msgid "no-subset"
 msgstr "cyrillic"
 
 #. Translators: If there are characters in your language that are not supported
+#. by Inconsolata, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:204
+msgctxt "Inconsolata font: on or off"
+msgid "on"
+msgstr "on"
+
+#. Translators: If there are characters in your language that are not supported
 #. by Noto Serif, translate this to 'off'. Do not translate into your own
 #. language.
-#: functions.php:183
+#: functions.php:196
 msgctxt "Noto Serif font: on or off"
 msgid "on"
 msgstr "on"
@@ -194,16 +195,16 @@ msgstr "on"
 #. Translators: If there are characters in your language that are not supported
 #. by Noto Sans, translate this to 'off'. Do not translate into your own
 #. language.
-#: functions.php:175
+#: functions.php:188
 msgctxt "Noto Sans font: on or off"
 msgid "on"
 msgstr "on"
 
-#: functions.php:149
+#: functions.php:162
 msgid "Add widgets here to appear in your sidebar."
 msgstr "Добавьте сюда виджеты, которые вы хотите разместить в боковой колонке."
 
-#: functions.php:147
+#: functions.php:160
 msgid "Widget Area"
 msgstr "Область для виджетов"
 
@@ -219,7 +220,7 @@ msgstr "Основное меню"
 msgid "Proudly powered by %s"
 msgstr "Сайт работает на %s"
 
-#. #-#-#-#-#  twentyfifteen.pot (Twenty Fifteen 1.6)  #-#-#-#-#
+#. #-#-#-#-#  twentyfifteen.pot (Twenty Fifteen 1.7)  #-#-#-#-#
 #. Author URI of the plugin/theme
 #: footer.php:25
 msgid "https://wordpress.org/"

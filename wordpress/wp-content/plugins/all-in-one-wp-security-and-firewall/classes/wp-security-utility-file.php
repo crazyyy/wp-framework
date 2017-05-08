@@ -122,7 +122,7 @@ class AIOWPSecurity_Utility_File
         $file_contents = AIOWPSecurity_Utility_File::get_file_contents($src_file_path);
         
         $payload = serialize($file_contents);
-        $date_time = date_i18n( 'Y-m-d H:i:s' );
+        $date_time = current_time( 'mysql' );
         $data = array('date_time' => $date_time, 'meta_key1' => $key_description, 'meta_value2' => $payload);
 
         //First check if a backup entry already exists in the global_meta table
@@ -417,9 +417,9 @@ class AIOWPSecurity_Utility_File
 
     /**
      * Will return an indexed array of files sorted by last modified timestamp
-     * @param $dir
+     * @param string $dir
      * @param string $sort (ASC, DESC)
-     * @return array|bool
+     * @return array
      */
     static function scan_dir_sort_date($dir, $sort='DESC') {
         $files = array();
@@ -427,14 +427,14 @@ class AIOWPSecurity_Utility_File
             $files[$file] = filemtime($dir . '/' . $file);
         }
 
-        arsort($files);
-        $files = array_keys($files);
-        if($sort == 'ASC'){
-            $files = array_reverse($files);
+        if ($sort === 'ASC') {
+            asort($files);
         }
-        return ($files) ? $files : false;
+        else {
+            arsort($files);
+        }
+
+        return array_keys($files);
     }
-
-
 
 }

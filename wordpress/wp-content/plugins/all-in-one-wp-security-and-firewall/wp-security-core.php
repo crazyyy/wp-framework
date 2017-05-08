@@ -1,10 +1,14 @@
-<?php 
+<?php
+
+if ( !defined('ABSPATH') ) {
+    exit; // Exit if accessed directly
+}
 
 if (!class_exists('AIO_WP_Security')){
 
 class AIO_WP_Security{
-    var $version = '4.1.7';
-    var $db_version = '1.8';
+    var $version = '4.2.7';
+    var $db_version = '1.9';
     var $plugin_url;
     var $plugin_path;
     var $configs;
@@ -124,21 +128,29 @@ class AIO_WP_Security{
     function loader_operations()
     {
         add_action('plugins_loaded',array(&$this, 'plugins_loaded_handler'));//plugins loaded hook
-        $this->debug_logger = new AIOWPSecurity_Logger();
+        
+        $debug_config = $this->configs->get_value('aiowps_enable_debug');
+        $debug_enabled = empty($debug_config) ? false : true;
+        $this->debug_logger = new AIOWPSecurity_Logger($debug_enabled);
+        
         if(is_admin()){
             $this->admin_init = new AIOWPSecurity_Admin_Init();
         }
     }
-    
+
     static function activate_handler()
     {
         //Only runs when the plugin activates
         include_once ('classes/wp-security-installer.php');
         AIOWPSecurity_Installer::run_installer();
 
-        wp_schedule_event(time(), 'hourly', 'aiowps_hourly_cron_event'); //schedule an hourly cron event
-        wp_schedule_event(time(), 'daily', 'aiowps_daily_cron_event'); //schedule an daily cron event
-        
+        if ( !wp_next_scheduled('aiowps_hourly_cron_event') ) {
+            wp_schedule_event(time(), 'hourly', 'aiowps_hourly_cron_event'); //schedule an hourly cron event
+        }
+        if ( !wp_next_scheduled('aiowps_daily_cron_event') ) {
+            wp_schedule_event(time(), 'daily', 'aiowps_daily_cron_event'); //schedule an daily cron event
+        }
+
         do_action('aiowps_activation_complete');
     }
     

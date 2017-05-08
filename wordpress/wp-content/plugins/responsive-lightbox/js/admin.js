@@ -1,20 +1,20 @@
 ( function ( $ ) {
 
-	$( document ).ready( function () {
+    $( document ).ready( function () {
 
-		$( '.responsive-lightbox-settings .color-picker' ).wpColorPicker();
-		
-		$( '.responsive-lightbox-settings' ).checkBo();
+	$( '.responsive-lightbox-settings .color-picker' ).wpColorPicker();
 
-		$( '.responsive-lightbox-settings input.reset-configuration' ).on( 'click', function ( event ) {
-			return confirm( rlArgs.resetScriptToDefaults );
-		} );
+	$( '.responsive-lightbox-settings' ).checkBo();
 
-		$( '.responsive-lightbox-settings input.reset-settings' ).on( 'click', function ( event ) {
-			return confirm( rlArgs.resetSettingsToDefaults );
-		} );
-
+	$( '.responsive-lightbox-settings input.reset-configuration' ).on( 'click', function ( event ) {
+	    return confirm( rlArgs.resetScriptToDefaults );
 	} );
+
+	$( '.responsive-lightbox-settings input.reset-settings' ).on( 'click', function ( event ) {
+	    return confirm( rlArgs.resetSettingsToDefaults );
+	} );
+
+    } );
 
 } )( jQuery );
 

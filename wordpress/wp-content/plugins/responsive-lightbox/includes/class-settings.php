@@ -107,6 +107,9 @@ class Responsive_Lightbox_Settings {
 			'tosrus'		 => array(
 				'name'		 => __( 'TosRUs', 'responsive-lightbox' ),
 			),
+			'featherlight'	 => array(
+				'name'		 => __( 'Featherlight', 'responsive-lightbox' ),
+			),
 		) );
 		
 		$this->image_titles = array(
@@ -539,7 +542,7 @@ class Responsive_Lightbox_Settings {
 						'title' => __( 'Enable escape button', 'responsive-lightbox' ),
 						'section' => 'responsive_lightbox_configuration',
 						'type' => 'boolean',
-						'label' => __( 'Toggle if pressing Esc button closes FancyBox.', 'responsive-lightbox' ),
+						'label' => __( 'Toggle if pressing Esc button closes lightbox.', 'responsive-lightbox' ),
 						'parent' => 'fancybox'
 					),
 					'hide_on_overlay_click' => array(
@@ -873,6 +876,65 @@ class Responsive_Lightbox_Settings {
 				);
 				
 				break;
+			
+			case ( 'featherlight' ) :
+
+				$this->settings['configuration']['prefix'] = 'rl_fl';
+				$this->settings['configuration']['fields'] = array(
+					'open_speed' => array(
+						'title' => __( 'Opening speed', 'responsive-lightbox' ),
+						'section' => 'responsive_lightbox_configuration',
+						'type' => 'number',
+						'description' => __( 'Duration of opening animation.', 'responsive-lightbox' ),
+						'append' => 'ms',
+						'parent' => 'featherlight'
+					),
+					'close_speed' => array(
+						'title' => __( 'Closing speed', 'responsive-lightbox' ),
+						'section' => 'responsive_lightbox_configuration',
+						'type' => 'number',
+						'description' => __( 'Duration of closing animation.', 'responsive-lightbox' ),
+						'append' => 'ms',
+						'parent' => 'featherlight'
+					),
+					'close_on_click' => array(
+						'title' => __( 'Close on click', 'responsive-lightbox' ),
+						'section' => 'responsive_lightbox_configuration',
+						'type' => 'radio',
+						'label' => __( 'Select how to close lightbox.', 'responsive-lightbox' ),
+						'options' => array(
+							'background' => __( 'background', 'responsive-lightbox' ),
+							'anywhere' => __( 'anywhere', 'responsive-lightbox' ),
+							'false' => __( 'false', 'responsive-lightbox' )
+						),
+						'parent' => 'featherlight'
+					),
+					'close_on_esc' => array(
+						'title' => __( 'Close on Esc', 'responsive-lightbox' ),
+						'section' => 'responsive_lightbox_configuration',
+						'type' => 'boolean',
+						'label' => __( 'Toggle if pressing Esc button closes lightbox.', 'responsive-lightbox' ),
+						'parent' => 'featherlight'
+					),
+					'gallery_fade_in' => array(
+						'title' => __( 'Gallery fade in', 'responsive-lightbox' ),
+						'section' => 'responsive_lightbox_configuration',
+						'type' => 'number',
+						'description' => __( 'Animation speed when image is loaded.', 'responsive-lightbox' ),
+						'append' => 'ms',
+						'parent' => 'featherlight'
+					),
+					'gallery_fade_out' => array(
+						'title' => __( 'Gallery fade out', 'responsive-lightbox' ),
+						'section' => 'responsive_lightbox_configuration',
+						'type' => 'number',
+						'description' => __( 'Animation speed before image is loaded.', 'responsive-lightbox' ),
+						'append' => 'ms',
+						'parent' => 'featherlight'
+					)
+				);
+				
+				break;
 				
 			default :
 				
@@ -941,18 +1003,12 @@ class Responsive_Lightbox_Settings {
 					<h3 class="hndle">' . __( 'Responsive Lightbox', 'responsive-lightbox' ) . ' ' . Responsive_Lightbox()->defaults['version'] . '</h3>
 					<div class="inside">
 						<h4 class="inner">' . __( 'Need support?', 'responsive-lightbox' ) . '</h4>
-						<p class="inner">' . __( 'If you are having problems with this plugin, please talk about them in the', 'responsive-lightbox' ) . ' <a href="http://www.dfactory.eu/support/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=support" target="_blank" title="' . __( 'Support forum', 'responsive-lightbox' ) . '">' . __( 'Support forum', 'responsive-lightbox' ) . '</a></p>
+						<p class="inner">' . sprintf( __( 'If you are having problems with this plugin, please browse it\'s <a href="%s" target="_blank">Documentation</a> or talk about them in the <a href="%s" target="_blank">Support forum</a>', 'responsive-lightbox' ), 'https://www.dfactory.eu/docs/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=docs', 'https://www.dfactory.eu/support/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=support' ) . '</p>
 						<hr />
 						<h4 class="inner">' . __( 'Do you like this plugin?', 'responsive-lightbox' ) . '</h4>
-						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="inner">
-							<input type="hidden" name="cmd" value="_s-xclick">
-							<input type="hidden" name="hosted_button_id" value="8AL8ULUN9R76U">
-							<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-							<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-						</form>
-						<p class="inner"><a href="http://wordpress.org/support/view/plugin-reviews/responsive-lightbox" target="_blank" title="' . __( 'Rate it 5', 'responsive-lightbox' ) . '">' . __( 'Rate it 5', 'responsive-lightbox' ) . '</a> ' . __( 'on WordPress.org', 'responsive-lightbox' ) . '<br />' .
-		__( 'Blog about it & link to the', 'responsive-lightbox' ) . ' <a href="http://www.dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=blog-about" target="_blank" title="' . __( 'plugin page', 'responsive-lightbox' ) . '">' . __( 'plugin page', 'responsive-lightbox' ) . '</a><br />' .
-		__( 'Check out our other', 'responsive-lightbox' ) . ' <a href="http://www.dfactory.eu/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=other-plugins" target="_blank" title="' . __( 'WordPress plugins', 'responsive-lightbox' ) . '">' . __( 'WordPress plugins', 'responsive-lightbox' ) . '</a>
+						<p class="inner">' . sprintf( __( '<a href="%s" target="_blank">Rate it 5</a> on WordPress.org', 'responsive-lightbox' ), 'https://wordpress.org/support/plugin/responsive-lightbox/reviews/?filter=5' ) . '<br />' .
+						sprintf( __( 'Blog about it & link to the <a href="%s" target="_blank">plugin page</a>.', 'responsive-lightbox' ), 'https://dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=blog-about' ) . '<br />' .
+						sprintf( __( 'Check out our other <a href="%s" target="_blank">WordPress plugins</a>.', 'responsive-lightbox' ), 'https://dfactory.eu/plugins/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=other-plugins' ) . '
 						</p>
 						<hr />
 						<p class="df-link inner">Created by <a href="http://www.dfactory.eu/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=created-by" target="_blank" title="dFactory - Quality plugins for WordPress"><img src="' . RESPONSIVE_LIGHTBOX_URL . '/images/logo-dfactory.png' . '" title="dFactory - Quality plugins for WordPress" alt="dFactory - Quality plugins for WordPress" /></a></p>
