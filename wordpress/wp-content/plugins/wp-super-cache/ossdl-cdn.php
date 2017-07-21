@@ -4,8 +4,8 @@
 
 /* Set up some defaults */
 if ( get_option( 'ossdl_off_cdn_url' ) == false )
-	add_option('ossdl_off_cdn_url', get_option('siteurl'));
-$ossdl_off_blog_url = get_option('siteurl');
+	add_option('ossdl_off_cdn_url', get_home_url() );
+$ossdl_off_blog_url = apply_filters( 'ossdl_off_blog_url', get_home_url() );
 $ossdl_off_cdn_url = trim( get_option('ossdl_off_cdn_url') );
 if ( get_option( 'ossdl_off_include_dirs' ) == false )
 	add_option('ossdl_off_include_dirs', 'wp-content,wp-includes');
@@ -20,7 +20,7 @@ if ( !is_array( $arr_of_excludes ) )
 if ( get_option( 'ossdl_cname' ) == false )
 	add_option('ossdl_cname', '');
 $ossdl_cname = trim(get_option('ossdl_cname'));
-$ossdl_https = trim(get_option('ossdl_https'));
+$ossdl_https = intval(get_option('ossdl_https'));
 $arr_of_cnames = array_map('trim', explode(',', $ossdl_cname));
 if ($arr_of_cnames[0] == '') $arr_of_cnames = array();
 
@@ -123,10 +123,14 @@ if ( false == isset( $ossdlcdn ) )
 if ( $ossdlcdn == 1 )
 	add_action('init', 'do_scossdl_off_ob_start');
 
-function scossdl_off_options() {
-	global $ossdlcdn, $wp_cache_config_file;
-
+if ( function_exists( 'wp_verify_nonce' ) )
 	$valid_nonce = isset($_REQUEST['_wpnonce']) ? wp_verify_nonce($_REQUEST['_wpnonce'], 'wp-cache') : false;
+else
+	$valid_nonce = false;
+
+function scossdl_off_update() {
+	global $ossdlcdn, $wp_cache_config_file, $valid_nonce;
+
 	if ( $valid_nonce && isset($_POST['action']) && ( $_POST['action'] == 'update_ossdl_off' )){
 		update_option('ossdl_off_cdn_url', $_POST['ossdl_off_cdn_url']);
 		update_option('ossdl_off_include_dirs', $_POST['ossdl_off_include_dirs'] == '' ? 'wp-content,wp-includes' : $_POST['ossdl_off_include_dirs']);
@@ -142,20 +146,27 @@ function scossdl_off_options() {
 		}
 		wp_cache_replace_line('^ *\$ossdlcdn', "\$ossdlcdn = $ossdlcdn;", $wp_cache_config_file);
 	}
+}
+
+function scossdl_off_options() {
+	global $ossdlcdn, $wp_cache_config_file, $valid_nonce;
+
+	scossdl_off_update();
+
 	$example_cdn_uri = str_replace( 'http://', 'http://cdn.', str_replace( 'www.', '', get_option( 'siteurl' ) ) );
 	$example_cnames  = str_replace( 'http://cdn.', 'http://cdn1.', $example_cdn_uri );
 	$example_cnames .= ',' . str_replace( 'http://cdn.', 'http://cdn2.', $example_cdn_uri );
 	$example_cnames .= ',' . str_replace( 'http://cdn.', 'http://cdn3.', $example_cdn_uri );
 
-	$example_cdn_uri = get_option('ossdl_off_cdn_url') == get_option('siteurl') ? $example_cdn_uri : get_option('ossdl_off_cdn_url');
-	$example_cdn_uri .= '/wp-includes/js/prototype.js';
+	$example_cdn_uri = get_option('ossdl_off_cdn_url') == get_home_url() ? $example_cdn_uri : get_option('ossdl_off_cdn_url');
+	$example_cdn_uri .= '/wp-includes/js/jquery/jquery-migrate.js';
 	?>
-		<p><?php _e( 'Your website probably uses lots of static files. Image, Javascript and CSS files are usually static files that could just as easily be served from another site or CDN. Therefore, this plugin replaces any links in the <code>wp-content</code> and <code>wp-includes</code> directories (except for PHP files) on your site with the URL you provide below. That way you can either copy all the static content to a dedicated host or mirror the files to a CDN by <a href="http://knowledgelayer.softlayer.com/questions/365/How+does+Origin+Pull+work%3F" target="_blank">origin pull</a>.', 'wp-super-cache' ); ?></p>
+		<p><?php _e( 'Your website probably uses lots of static files. Image, Javascript and CSS files are usually static files that could just as easily be served from another site or CDN. Therefore, this plugin replaces any links in the <code>wp-content</code> and <code>wp-includes</code> directories (except for PHP files) on your site with the URL you provide below. That way you can either copy all the static content to a dedicated host or mirror the files to a CDN by <a href="https://knowledgelayer.softlayer.com/faq/how-does-origin-pull-work" target="_blank">origin pull</a>.', 'wp-super-cache' ); ?></p>
 		<p><?php printf( __( '<strong style="color: red">WARNING:</strong> Test some static urls e.g., %s  to ensure your CDN service is fully working before saving changes.', 'wp-super-cache' ), '<code>' . $example_cdn_uri . '</code>' ); ?></p>
 		<p><?php _e( 'You can define different CDN URLs for each site on a multsite network.', 'wp-super-cache' ); ?></p>
 		<p><form method="post" action="">
 		<?php wp_nonce_field('wp-cache'); ?>
-		<table class="form-table"><tbod>
+		<table class="form-table"><tbody>
 			<tr valign="top">
 				<td style='text-align: right'>
 					<input id='ossdlcdn' type="checkbox" name="ossdlcdn" value="1" <?php if ( $ossdlcdn ) echo "checked=1"; ?> />
@@ -195,7 +206,7 @@ function scossdl_off_options() {
 			</tr>
 		</tbody></table>
 		<input type="hidden" name="action" value="update_ossdl_off" />
-		<p class="submit"><input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" /></p>
+		<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wp-super-cache' ) ?>" /></p>
 		</form></p>
 		<p><?php _e( 'CDN functionality provided by <a href="http://wordpress.org/plugins/ossdl-cdn-off-linker/">OSSDL CDN Off Linker</a> by <a href="http://mark.ossdl.de/">Mark Kubacki</a>', 'wp-super-cache' ); ?></p>
 	<?php

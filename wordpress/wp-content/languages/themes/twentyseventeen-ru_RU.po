@@ -19,8 +19,8 @@ msgstr "Тема Twenty Seventeen оживит ваш сайт благодар�
 msgid "Twenty Seventeen"
 msgstr "Twenty Seventeen"
 
-#: template-parts/header/site-branding.php:31
-#: template-parts/navigation/navigation-top.php:20
+#: template-parts/header/site-branding.php:34
+#: template-parts/navigation/navigation-top.php:27
 msgid "Scroll down to content"
 msgstr "Перейти к содержимому"
 
@@ -39,21 +39,17 @@ msgctxt "Theme starter content"
 msgid "Espresso"
 msgstr "Эспрессо"
 
-#: inc/custom-header.php:117
+#: inc/custom-header.php:119
 msgid "Pause background video"
 msgstr "Приостановить фоновое видео"
 
-#: inc/custom-header.php:116
+#: inc/custom-header.php:118
 msgid "Play background video"
 msgstr "Проиграть фоновое видео"
 
-#: inc/template-tags.php:154
+#: inc/template-tags.php:150
 msgid "Front Page Section %1$s Placeholder"
 msgstr "Заполнитель %1$s раздела главной страницы"
-
-#: inc/customizer.php:80
-msgid "When the two column layout is assigned, the page title is in one column and content is in the other."
-msgstr "При назначении разметки в два столбца, название страницы размещается в первом столбце, а содержимое в другом."
 
 #: single.php:32
 msgid "Next Post"
@@ -103,11 +99,11 @@ msgstr "Выберите избранные страницы для каждой
 msgid "Front Page Section %d Content"
 msgstr "Содержимое %d раздела главной страницы"
 
-#: inc/customizer.php:83 inc/customizer.php:130
+#: inc/customizer.php:83 inc/customizer.php:132
 msgid "Two Column"
 msgstr "Два столбца"
 
-#: inc/customizer.php:82 inc/customizer.php:129
+#: inc/customizer.php:82 inc/customizer.php:131
 msgid "One Column"
 msgstr "Один столбец"
 
@@ -147,6 +143,9 @@ msgstr "Добавьте сюда виджеты для отображения �
 msgid "Footer 1"
 msgstr "Подвал 1"
 
+#. Translators: If there are characters in your language that are not supported
+#. by Libre Franklin, translate this to 'off'. Do not translate into your own
+#. language.
 #: functions.php:269
 msgctxt "Libre Franklin font: on or off"
 msgid "on"
@@ -189,17 +188,17 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Далее"
 
-#: searchform.php:19
+#: searchform.php:20
 msgctxt "submit button"
 msgid "Search"
 msgstr "Поиск"
 
-#: searchform.php:18
+#: searchform.php:19
 msgctxt "placeholder"
 msgid "Search &hellip;"
 msgstr "Поиск&hellip;"
 
-#: searchform.php:16
+#: searchform.php:17
 msgctxt "label"
 msgid "Search for:"
 msgstr "Искать:"
@@ -209,12 +208,12 @@ msgid "Search Results for: %s"
 msgstr "Результаты поиска: %s"
 
 #. translators: %s: Name of current post
-#: functions.php:362 template-parts/page/content-front-page-panels.php:43
+#: functions.php:363 template-parts/page/content-front-page-panels.php:43
 #: template-parts/page/content-front-page.php:44
-#: template-parts/post/content-audio.php:82
-#: template-parts/post/content-gallery.php:68
-#: template-parts/post/content-image.php:58
-#: template-parts/post/content-video.php:80 template-parts/post/content.php:56
+#: template-parts/post/content-audio.php:83
+#: template-parts/post/content-gallery.php:70
+#: template-parts/post/content-image.php:59
+#: template-parts/post/content-video.php:82 template-parts/post/content.php:56
 msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
 msgstr "Читать далее<span class=\"screen-reader-text\"> «%s»</span>"
 
@@ -227,19 +226,19 @@ msgid "Twenty Seventeen requires at least WordPress version 4.7. You are running
 msgstr "Тема Twenty Seventeen требует WordPress версии 4.7 или выше. У вас версия %s. Пожалуйста, обновите WordPress и попробуйте ещё раз."
 
 #. translators: %s: Name of current post
-#: inc/template-tags.php:117
+#: inc/template-tags.php:116
 msgid "Edit<span class=\"screen-reader-text\"> \"%s\"</span>"
 msgstr "Изменить<span class=\"screen-reader-text\"> «%s»</span>"
 
 #: template-parts/page/content-page.php:25
-#: template-parts/post/content-audio.php:87
-#: template-parts/post/content-gallery.php:73
-#: template-parts/post/content-image.php:63
-#: template-parts/post/content-video.php:85 template-parts/post/content.php:61
+#: template-parts/post/content-audio.php:88
+#: template-parts/post/content-gallery.php:75
+#: template-parts/post/content-image.php:64
+#: template-parts/post/content-video.php:87 template-parts/post/content.php:61
 msgid "Pages:"
 msgstr "Страницы:"
 
-#: template-parts/navigation/navigation-top.php:13
+#: template-parts/navigation/navigation-top.php:17
 msgid "Menu"
 msgstr "Меню"
 
@@ -247,21 +246,13 @@ msgstr "Меню"
 msgid "Skip to content"
 msgstr "Перейти к содержимому"
 
-#: functions.php:445
+#: functions.php:446
 msgid "Collapse child menu"
 msgstr "Свернуть дочернее меню"
 
-#: functions.php:444
+#: functions.php:445
 msgid "Expand child menu"
 msgstr "Раскрыть дочернее меню"
-
-#: functions.php:317
-msgid "Add widgets here to appear in your sidebar."
-msgstr "Добавьте сюда виджеты, которые вы хотите разместить в боковой колонке."
-
-#: functions.php:315
-msgid "Sidebar"
-msgstr "Боковая колонка"
 
 #: functions.php:64 functions.php:194
 msgid "Social Links Menu"
@@ -271,7 +262,7 @@ msgstr "Меню социальных ссылок"
 msgid "Proudly powered by %s"
 msgstr "Сайт работает на %s"
 
-#. #-#-#-#-#  twentyseventeen.pot (Twenty Seventeen 1.2)  #-#-#-#-#
+#. #-#-#-#-#  twentyseventeen.pot (Twenty Seventeen 1.3)  #-#-#-#-#
 #. Author URI of the plugin/theme
 #: template-parts/footer/site-info.php:13
 msgid "https://wordpress.org/"

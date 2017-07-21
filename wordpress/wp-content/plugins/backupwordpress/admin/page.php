@@ -10,7 +10,7 @@ namespace HM\BackUpWordPress;
 
 		BackUpWordPress
 
-		<a class="page-title-action" href="<?php echo esc_url( get_settings_url( HMBKP_PLUGIN_SLUG . '_extensions' ) ); ?>">Extensions</a>
+        <a class="page-title-action" href="https://bwp.hmn.md/" target="_blank">Extensions</a>
 
 		<?php if ( get_option( 'hmbkp_enable_support' ) ) : ?>
 
@@ -25,10 +25,16 @@ namespace HM\BackUpWordPress;
 
 	</h1>
 
-	<?php include_once( HMBKP_PLUGIN_PATH . 'admin/backups.php' ); ?>
+	<?php if ( has_server_permissions() ) : ?>
 
-	<p class="howto"><?php printf( __( 'If you\'re finding BackUpWordPress useful, please %1$s rate it on the plugin directory%2$s.', 'backupwordpress' ), '<a target="_blank" href="http://wordpress.org/support/view/plugin-reviews/backupwordpress">', '</a>' ); ?></p>
+		<?php include_once( HMBKP_PLUGIN_PATH . 'admin/backups.php' ); ?>
+  
+		<?php include_once( HMBKP_PLUGIN_PATH . 'admin/upsell.php' ); ?>
 
-	<?php include_once( HMBKP_PLUGIN_PATH . 'admin/upsell.php' ); ?>
+	<?php else : ?>
+
+		<?php include_once( HMBKP_PLUGIN_PATH . 'admin/filesystem-credentials.php' ); ?>
+
+	<?php endif; ?>
 
 </div>

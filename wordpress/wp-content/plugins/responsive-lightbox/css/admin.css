@@ -194,35 +194,35 @@
     cursor:default
 }
 .cb-checkbox.disabled {
-    color:#ddd
+    color:#aaa
 }
 .cb-checkbox.disabled .cb-inner {
-    color:#ddd
+    color:#aaa
 }
 .cb-checkbox.disabled:hover .cb-inner {
-    border-color:#ddd
+    border-color: inherit;
 }
 .cb-checkbox.disabled.checked .cb-inner {
-    background-color:#ddd;
-    border-color:#ddd
+    background-color: inherit;
+    border-color: inherit;
 }
 .cb-radio.disabled {
-    color:#ddd
+    color:#aaa
 }
 .cb-radio.disabled .cb-inner {
-    border-color:#ddd
+    border-color:#aaa
 }
 .cb-radio.disabled i {
     background-color:transparent
 }
 .cb-radio.disabled.checked .cb-inner {
-    border-color:#ddd
+    border-color:#aaa
 }
 .cb-radio.disabled.checked .cb-inner i {
-    background-color:#ddd
+    background-color:#aaa
 }
 .cb-radio.disabled:hover .cb-inner {
-    border-color:#ddd
+    border-color:#aaa
 }
 .cb-checkbox .cb-inner {
     float:left;
@@ -336,12 +336,12 @@
     bottom:6px;
     left:11px
 }
-.cb-checkbox.checked .cb-inner {
+.cb-checkbox.checked:not(.disabled) .cb-inner {
     border-color:#0073aa;
     background-color:#00a0d2;
     box-shadow: 0 1px 0 rgba(120, 200, 230, 0.5) inset, 0 1px 0 rgba(0, 0, 0, 0.15);
 }
-.cb-checkbox.checked:hover .cb-inner {
+.cb-checkbox.checked:hover:not(.disabled) .cb-inner {
     background-color:#0091cd
 }
 .cb-checkbox.checked.cb-sm i:before {
@@ -390,7 +390,7 @@
     transform:scale(1.1, 1.1);
     background-color:#00a0d2
 }
-.cb-checkbox:hover .cb-inner, .cb-radio:hover .cb-inner {
+.cb-checkbox:hover:not(.disabled) .cb-inner, .cb-radio:hover:not(.disabled) .cb-inner {
     border-color:#0073aa
 }
 .cb-switcher {
@@ -505,4 +505,102 @@ output {
 	text-align: center;
 	margin: 30px 0;
 	width: 100%;
+}
+
+/* Gallery widget */
+.rl-gallery-widget .rl-gallery-widget-content {
+	text-align: left;
+	border: 1px dashed #aaa;
+	padding: 0 0 9px 9px;
+	min-height: 180px;
+}
+.rl-gallery-widget .button {
+	margin-bottom: 10px;
+}
+.rl-gallery-images {
+	margin: 0;
+	text-align: left;
+}
+.rl-gallery-images .rl-gallery-image {
+	display: inline-block;
+	width: 85px;
+	cursor: move;
+	margin: 9px 9px 0 0;
+	background: #f7f7f7;
+	border-radius: 2px;
+	position: relative;
+	box-sizing: border-box;
+    border: 1px dashed transparent;
+}
+.rl-gallery-sortable-placeholder {
+	width: 85px;
+	border: 1px dashed #ddd;
+	margin: 9px 9px 0 0;
+	display: inline-block;
+}
+.rl-gallery-images .rl-gallery-image img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    width: auto;
+}
+.rl-gallery-images .rl-gallery-image .inner {
+    padding: 2px;
+}
+.rl-gallery-images .rl-gallery-image .rl-gallery-actions {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+.rl-gallery-images .rl-gallery-image .rl-gallery-actions a {
+    color: #777;
+    cursor: pointer;
+    overflow: visible;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 16px;
+    width: 14px;
+    height: 14px;
+    padding: 3px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    opacity: 0;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    -ms-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+}
+.rl-gallery-images .rl-gallery-image:hover .rl-gallery-actions a {
+    opacity: 1;
+}
+.rl-gallery-images .rl-gallery-image .rl-gallery-actions a:hover {
+    color: #333;
+}
+#widgets-right .rl-gallery-widget-container .description {
+	padding-left: 0;
+	padding-right: 0;
+	font-style: italic;
+}
+
+/* Image widget */
+.rl-image-widget .rl-image-widget-content {
+	border: 1px dashed #aaa;
+	padding: 9px;
+	text-align: left;
+	min-height: 100px;
+}
+.rl-image-widget .rl-image-widget-content img {
+	max-width: 100%;
+	height: auto;
+}
+.rl-image-widget .button {
+	margin-bottom: 10px;
+}
+#widgets-right .rl-image-widget-container .description {
+	padding-left: 0;
+	padding-right: 0;
+	font-style: italic;
 }

@@ -17,11 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function ewww_image_optimizer_bulk_preview() {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	// Retrieve the attachment IDs that were pre-loaded in the database.
-	echo '<div class="wrap"><h1>' . esc_html__( 'Bulk Optimize', 'ewww-image-optimizer' );
+	echo '<div class="wrap"><h1>' . esc_html__( 'Bulk Optimize', 'ewww-image-optimizer' ) . '</h1>';
+	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_auto' ) ) {
+		echo '<div class="error"><p>';
+		esc_html_e( 'Please disable Scheduled optimization before continuing.', 'ewww-image-optimizer' );
+		echo '</p></div></div>';
+		return;
+	}
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) ) {
 		echo '<span><a id="ewww-bulk-credits-available" target="_blank" class="page-title-action" style="float:right;" href="https://ewww.io/my-account/">' . esc_html__( 'Image credits available:', 'ewww-image-optimizer' ) . ' ' . ewww_image_optimizer_cloud_quota() . '</a></span>';
 	}
-	echo '</h1>';
 	// Retrieve the value of the 'bulk resume' option and set the button text for the form to use.
 	$resume = get_option( 'ewww_image_optimizer_bulk_resume' );
 	if ( empty( $resume ) ) {
@@ -64,7 +69,7 @@ function ewww_image_optimizer_bulk_preview() {
  */
 function ewww_image_optimizer_bulk_head_output() {
 	$loading_image = plugins_url( '/images/wpspin.gif', __FILE__ );
-	$delay = ewww_image_optimizer_get_option( 'ewww_image_optimizer_delay' ) ? (int) $delay : 0;
+	$delay = ewww_image_optimizer_get_option( 'ewww_image_optimizer_delay' ) ? (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_delay' ) : 0;
 ?>
 		<div id="ewww-bulk-loading">
 			<p id="ewww-loading" class="ewww-bulk-info" style="display:none"><?php esc_html_e( 'Importing', 'ewww-image-optimizer' ); ?>&nbsp;<img src='<?php echo $loading_image; ?>' /></p>
@@ -658,7 +663,7 @@ function ewww_image_optimizer_media_scan( $hook = '' ) {
 		ewww_image_optimizer_aux_images_script();
 	}
 
-	$disabled_sizes = ewww_image_optimizer_get_option( 'ewww_image_optimizer_disable_resizes_opt' );
+	$disabled_sizes = get_option( 'ewww_image_optimizer_disable_resizes_opt' );
 
 	$enabled_types = array();
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' ) ) {

@@ -447,7 +447,7 @@ function easy_breadcrumbs() {
 
         if ( is_archive() && !is_tax() && !is_category() && !is_tag() ) {
 
-            echo '<li class="item-current item-archive"><strong class="bread-current bread-archive">' . post_type_archive_title($prefix, false) . '</strong></li>';
+            echo '<li class="item-current item-archive"><span class="bread-current bread-archive">' . post_type_archive_title($prefix, false) . '</span></li>';
 
         } else if ( is_archive() && is_tax() && !is_category() && !is_tag() ) {
 
@@ -466,7 +466,7 @@ function easy_breadcrumbs() {
             }
 
             $custom_tax_name = get_queried_object()->name;
-            echo '<li class="item-current item-archive"><strong class="bread-current bread-archive">' . $custom_tax_name . '</strong></li>';
+            echo '<li class="item-current item-archive"><span class="bread-current bread-archive">' . $custom_tax_name . '</span></li>';
 
         } else if ( is_single() ) {
 
@@ -520,25 +520,25 @@ function easy_breadcrumbs() {
             // Check if the post is in a category
             if(!empty($last_category)) {
                 echo $cat_display;
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
+                echo '<li class="item-current item-' . $post->ID . '"><span class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</span></li>';
 
             // Else if post is in a custom taxonomy
             } else if(!empty($cat_id)) {
 
                 echo '<li class="item-cat item-cat-' . $cat_id . ' item-cat-' . $cat_nicename . '"><a class="bread-cat bread-cat-' . $cat_id . ' bread-cat-' . $cat_nicename . '" href="' . $cat_link . '" title="' . $cat_name . '">' . $cat_name . '</a></li>';
                 echo '<li class="separator"> ' . $separator . ' </li>';
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
+                echo '<li class="item-current item-' . $post->ID . '"><span class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</span></li>';
 
             } else {
 
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
+                echo '<li class="item-current item-' . $post->ID . '"><span class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</span></li>';
 
             }
 
         } else if ( is_category() ) {
 
             // Category page
-            echo '<li class="item-current item-cat"><strong class="bread-current bread-cat">' . single_cat_title('', false) . '</strong></li>';
+            echo '<li class="item-current item-cat"><span class="bread-current bread-cat">' . single_cat_title('', false) . '</span></li>';
 
         } else if ( is_page() ) {
 
@@ -562,12 +562,12 @@ function easy_breadcrumbs() {
                 echo $parents;
 
                 // Current page
-                echo '<li class="item-current item-' . $post->ID . '"><strong title="' . get_the_title() . '"> ' . get_the_title() . '</strong></li>';
+                echo '<li class="item-current item-' . $post->ID . '"><span title="' . get_the_title() . '"> ' . get_the_title() . '</span></li>';
 
             } else {
 
                 // Just display current page if not parents
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '"> ' . get_the_title() . '</strong></li>';
+                echo '<li class="item-current item-' . $post->ID . '"><span class="bread-current bread-' . $post->ID . '"> ' . get_the_title() . '</span></li>';
 
             }
 
@@ -585,7 +585,7 @@ function easy_breadcrumbs() {
             $get_term_name  = $terms[0]->name;
 
             // Display the tag name
-            echo '<li class="item-current item-tag-' . $get_term_id . ' item-tag-' . $get_term_slug . '"><strong class="bread-current bread-tag-' . $get_term_id . ' bread-tag-' . $get_term_slug . '">' . $get_term_name . '</strong></li>';
+            echo '<li class="item-current item-tag-' . $get_term_id . ' item-tag-' . $get_term_slug . '"><span class="bread-current bread-tag-' . $get_term_id . ' bread-tag-' . $get_term_slug . '">' . $get_term_name . '</span></li>';
 
         } elseif ( is_day() ) {
 
@@ -600,7 +600,7 @@ function easy_breadcrumbs() {
             echo '<li class="separator separator-' . get_the_time('m') . '"> ' . $separator . ' </li>';
 
             // Day display
-            echo '<li class="item-current item-' . get_the_time('j') . '"><strong class="bread-current bread-' . get_the_time('j') . '"> ' . get_the_time('jS') . ' ' . get_the_time('M') . ' Archives</strong></li>';
+            echo '<li class="item-current item-' . get_the_time('j') . '"><span class="bread-current bread-' . get_the_time('j') . '"> ' . get_the_time('jS') . ' ' . get_the_time('M') . ' Archives</span></li>';
 
         } else if ( is_month() ) {
 
@@ -611,12 +611,12 @@ function easy_breadcrumbs() {
             echo '<li class="separator separator-' . get_the_time('Y') . '"> ' . $separator . ' </li>';
 
             // Month display
-            echo '<li class="item-month item-month-' . get_the_time('m') . '"><strong class="bread-month bread-month-' . get_the_time('m') . '" title="' . get_the_time('M') . '">' . get_the_time('M') . ' Archives</strong></li>';
+            echo '<li class="item-month item-month-' . get_the_time('m') . '"><span class="bread-month bread-month-' . get_the_time('m') . '" title="' . get_the_time('M') . '">' . get_the_time('M') . ' Archives</span></li>';
 
         } else if ( is_year() ) {
 
             // Display year archive
-            echo '<li class="item-current item-current-' . get_the_time('Y') . '"><strong class="bread-current bread-current-' . get_the_time('Y') . '" title="' . get_the_time('Y') . '">' . get_the_time('Y') . ' Archives</strong></li>';
+            echo '<li class="item-current item-current-' . get_the_time('Y') . '"><span class="bread-current bread-current-' . get_the_time('Y') . '" title="' . get_the_time('Y') . '">' . get_the_time('Y') . ' Archives</span></li>';
 
         } else if ( is_author() ) {
 
@@ -627,17 +627,17 @@ function easy_breadcrumbs() {
             $userdata = get_userdata( $author );
 
             // Display author name
-            echo '<li class="item-current item-current-' . $userdata->user_nicename . '"><strong class="bread-current bread-current-' . $userdata->user_nicename . '" title="' . $userdata->display_name . '">' . 'Author: ' . $userdata->display_name . '</strong></li>';
+            echo '<li class="item-current item-current-' . $userdata->user_nicename . '"><span class="bread-current bread-current-' . $userdata->user_nicename . '" title="' . $userdata->display_name . '">' . 'Author: ' . $userdata->display_name . '</span></li>';
 
         } else if ( get_query_var('paged') ) {
 
             // Paginated archives
-            echo '<li class="item-current item-current-' . get_query_var('paged') . '"><strong class="bread-current bread-current-' . get_query_var('paged') . '" title="Page ' . get_query_var('paged') . '">'.__('Page') . ' ' . get_query_var('paged') . '</strong></li>';
+            echo '<li class="item-current item-current-' . get_query_var('paged') . '"><span class="bread-current bread-current-' . get_query_var('paged') . '" title="Page ' . get_query_var('paged') . '">'.__('Page') . ' ' . get_query_var('paged') . '</span></li>';
 
         } else if ( is_search() ) {
 
             // Search results page
-            echo '<li class="item-current item-current-' . get_search_query() . '"><strong class="bread-current bread-current-' . get_search_query() . '" title="Search results for: ' . get_search_query() . '">Search results for: ' . get_search_query() . '</strong></li>';
+            echo '<li class="item-current item-current-' . get_search_query() . '"><span class="bread-current bread-current-' . get_search_query() . '" title="Search results for: ' . get_search_query() . '">Search results for: ' . get_search_query() . '</span></li>';
 
         } elseif ( is_404() ) {
 
@@ -652,81 +652,12 @@ function easy_breadcrumbs() {
 }
 // end easy_breadcrumbs()
 
+// to remove the /./ from links, use this filter
+// https://stackoverflow.com/questions/17798815/remove-category-tag-base-from-wordpress-url-without-a-plugin
+add_filter( 'term_link', function($termlink){
+  return str_replace('/./', '/', $termlink);
+}, 10, 1 );
 
-/*
-  Plugin Name: Top Level Categories
-  Plugin URI: http://fortes.com/projects/wordpress/top-level-cats/
-  Description: Removes the prefix from the URL for a category. For instance, if your old category link was <code>/category/catname</code> it will now be <code>/catname</code>
-*/
-
-// In case we're running standalone, for some odd reason
-if (function_exists('add_action')) {
-  register_activation_hook(__FILE__, 'top_level_cats_activate');
-  register_deactivation_hook(__FILE__, 'top_level_cats_deactivate');
-
-  // Setup filters
-  add_filter('category_rewrite_rules', 'top_level_cats_category_rewrite_rules');
-  add_filter('generate_rewrite_rules', 'top_level_cats_generate_rewrite_rules');
-  add_filter('category_link', 'top_level_cats_category_link', 10, 2);
-
-  global $clean_category_rewrites, $clean_rewrites;
-  $clean_category_rewrites = array();
-}
-function top_level_cats_activate() {
-  global $wp_rewrite;
-  $wp_rewrite->flush_rules();
-}
-function top_level_cats_deactivate() {
-  // Remove the filters so we don't regenerate the wrong rules when we flush
-  remove_filter('category_rewrite_rules', 'top_level_cats_category_rewrite_rules');
-  remove_filter('generate_rewrite_rules', 'top_level_cats_generate_rewrite_rules');
-  remove_filter('category_link', 'top_level_cats_category_link');
-
-  global $wp_rewrite;
-  $wp_rewrite->flush_rules();
-}
-function top_level_cats_generate_rewrite_rules($wp_rewrite) {
-  global $clean_category_rewrites;
-  $wp_rewrite->rules = $wp_rewrite->rules + $clean_category_rewrites;
-}
-
-function top_level_cats_category_rewrite_rules($category_rewrite)
-{
-  global $clean_category_rewrites;
-
-  global $wp_rewrite;
-  // Make sure to use verbose rules, otherwise we'll clobber our
-  // category permalinks with page permalinks
-  $wp_rewrite->use_verbose_page_rules = true;
-
-  while (list($k, $v) = each($category_rewrite)) {
-    // Strip off the category prefix
-    $new_k = top_level_cats_remove_cat_base($k);
-    $clean_category_rewrites[$new_k] = $v;
-  }
-
-    return $category_rewrite;
-}
-
-function top_level_cats_category_link($cat_link, $cat_id) {
-  return top_level_cats_remove_cat_base($cat_link);
-}
-
-function top_level_cats_remove_cat_base($link) {
-  $category_base = get_option('category_base');
-
-  // WP uses "category/" as the default
-  if ($category_base == '')
-      $category_base = 'category';
-
-  // Remove initial slash, if there is one (we remove the trailing slash in the regex replacement and don't want to end up short a slash)
-  if (substr($category_base, 0, 1) == '/')
-      $category_base = substr($category_base, 1);
-
-  $category_base .= '/';
-
-  return preg_replace('|' . $category_base . '|', '', $link, 1);
-}
 
 add_action( 'init', 'disable_wp_emojicons' );
 function disable_wp_emojicons() {
@@ -748,12 +679,5 @@ function disable_emojicons_tinymce( $plugins ) {
     return array();
   }
 }
-
-
-
-
-
-
-
 
 ?>

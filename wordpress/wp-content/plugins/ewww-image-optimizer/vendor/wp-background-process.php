@@ -176,6 +176,8 @@ ewwwio_debug_message( "queue $key will be saved to" );
 		 * the process is not already running.
 		 */
 		public function maybe_handle() {
+			session_write_close();
+
 			if ( $this->is_process_running() ) {
 				// Background process already running.
 				wp_die();
@@ -404,7 +406,7 @@ ewwwio_debug_message( "queue $queue_id is not running, checked with: ". $this->i
 				$memory_limit = '128M';
 			}
 
-			if ( ! $memory_limit || -1 === $memory_limit ) {
+			if ( ! $memory_limit || -1 === intval( $memory_limit ) ) {
 				// Unlimited, set to 32GB.
 				$memory_limit = '32000M';
 			}

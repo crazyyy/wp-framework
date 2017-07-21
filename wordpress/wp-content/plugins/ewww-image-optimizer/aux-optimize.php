@@ -70,10 +70,41 @@ function ewww_image_optimizer_aux_images() {
 		'</div>' .
 		'</div>';
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_debug' ) ) {
+		ewww_image_optimizer_options( 'debug-silent' );
 		global $ewww_debug;
 		$output .= '<div id="ewww-debug-info" style="clear:both;background:#ffff99;margin-left:-20px;padding:10px">' . $ewww_debug . '</div>';
 	}
 	echo $output;
+	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_enable_help' ) ) {
+		$help_instructions = esc_html__( 'Please turn on the Debugging option. Then copy and paste the Debug Information from the bottom of the settings page. This will allow us to assist you more quickly.', 'ewww-image-optimizer' );
+		$current_user = wp_get_current_user();
+		$help_email = $current_user->user_email;
+		$hs_config = array(
+			'color' => '#3eadc9',
+			'icon' => 'buoy',
+			'instructions' => $help_instructions,
+			'poweredBy' => false,
+			'showContactFields' => true,
+			'showSubject' => true,
+			'topArticles' => true,
+			'zIndex' => 100000,
+		);
+		$hs_identify = array(
+			'email' => $help_email,
+			'debug_info' => $ewww_debug,
+		);
+		?>
+<script type='text/javascript'>
+	!function(e,o,n){window.HSCW=o,window.HS=n,n.beacon=n.beacon||{};var t=n.beacon;t.userConfig={},t.readyQueue=[],t.config=function(e){this.userConfig=e},t.ready=function(e){this.readyQueue.push(e)},o.config={docs:{enabled:!0,baseUrl:"//ewwwio.helpscoutdocs.com/"},contact:{enabled:!0,formId:"af75cf17-310a-11e7-9841-0ab63ef01522"}};var r=e.getElementsByTagName("script")[0],c=e.createElement("script");c.type="text/javascript",c.async=!0,c.src="https://djtflbt20bdde.cloudfront.net/",r.parentNode.insertBefore(c,r)}(document,window.HSCW||{},window.HS||{});
+	HS.beacon.config(<?php echo json_encode( $hs_config ); ?>);
+	HS.beacon.ready(function() {
+		HS.beacon.identify(
+			<?php echo json_encode( $hs_identify ); ?>
+		);
+	});
+</script>
+		<?php
+	}
 	ewwwio_memory( __FUNCTION__ );
 }
 
@@ -112,17 +143,15 @@ function ewww_image_optimizer_aux_images_table() {
 		if ( DAY_IN_SECONDS * 30 + $updated_time < time() ) {
 			$optimized_image['backup'] = '';
 		}
-		// If the path given is not the absolute path.
-		if ( file_exists( $optimized_image['path'] ) ) {
+		if ( strpos( $optimized_image['path'], 's3' ) === 0 ) {
 			// Retrieve the mimetype of the attachment.
-			$type = ewww_image_optimizer_mimetype( $optimized_image['path'], 'i' );
-			// Get a human readable filesize.
+			$type = esc_html__( 'Amazon S3 image', 'ewww-image-optimizer' );
 			$file_size = ewww_image_optimizer_size_format( $optimized_image['image_size'] );
 			/* translators: %s: human-readable filesize */
 			$size_string = sprintf( esc_html__( 'Image Size: %s', 'ewww-image-optimizer' ), $file_size );
 ?>			<tr<?php if ( $alternate ) { echo " class='alternate'"; } ?> id="ewww-image-<?php echo $optimized_image['id']; ?>">
-				<td style='width:80px' class='column-icon'><img width='50' height='50' src="<?php echo $image_url; ?>" /></td>
-				<td class='title'>...<?php echo $image_name; ?></td>
+				<td style='width:80px' class='column-icon'>&nbsp;</td>
+				<td class='title'><?php echo $image_name; ?></td>
 				<td><?php echo $type; ?></td>
 				<td>
 					<?php echo "$savings <br>$size_string"; ?><br>
@@ -133,15 +162,16 @@ function ewww_image_optimizer_aux_images_table() {
 				</td>
 			</tr>
 <?php			$alternate = ! $alternate;
-		} elseif ( strpos( $optimized_image['path'], 's3' ) === 0 ) {
+		} elseif ( file_exists( $optimized_image['path'] ) ) {
 			// Retrieve the mimetype of the attachment.
-			$type = esc_html__( 'Amazon S3 image', 'ewww-image-optimizer' );
+			$type = ewww_image_optimizer_mimetype( $optimized_image['path'], 'i' );
+			// Get a human readable filesize.
 			$file_size = ewww_image_optimizer_size_format( $optimized_image['image_size'] );
 			/* translators: %s: human-readable filesize */
 			$size_string = sprintf( esc_html__( 'Image Size: %s', 'ewww-image-optimizer' ), $file_size );
 ?>			<tr<?php if ( $alternate ) { echo " class='alternate'"; } ?> id="ewww-image-<?php echo $optimized_image['id']; ?>">
-				<td style='width:80px' class='column-icon'>&nbsp;</td>
-				<td class='title'><?php echo $image_name; ?></td>
+				<td style='width:80px' class='column-icon'><img width='50' height='50' src="<?php echo $image_url; ?>" /></td>
+				<td class='title'>...<?php echo $image_name; ?></td>
 				<td><?php echo $type; ?></td>
 				<td>
 					<?php echo "$savings <br>$size_string"; ?><br>
@@ -505,7 +535,10 @@ function ewww_image_optimizer_aux_images_script( $hook = '' ) {
 			ewww_image_optimizer_image_scan( WP_CONTENT_DIR . '/grand-media', $started );
 		}
 		if ( is_plugin_active( 'wp-symposium/wp-symposium.php' ) || is_plugin_active_for_network( 'wp-symposium/wp-symposium.php' ) ) {
-			ewww_image_optimizer_image_scan( get_option( 'symposium_img_path', $started ) );
+			ewww_image_optimizer_image_scan( get_option( 'symposium_img_path' ), $started );
+		}
+		if ( defined( 'WPS_CORE_PLUGINS' ) ) {
+			ewww_image_optimizer_image_scan( WP_CONTENT_DIR . '/wps-pro-content', $started );
 		}
 		if ( is_plugin_active( 'ml-slider/ml-slider.php' ) || is_plugin_active_for_network( 'ml-slider/ml-slider.php' ) ) {
 			global $wpdb;
@@ -601,7 +634,8 @@ function ewww_image_optimizer_aux_images_script( $hook = '' ) {
 	if ( wp_doing_ajax() ) {
 		ewwwio_memory( __FUNCTION__ );
 		/* translators: %d: number of images */
-		$ready_msg = sprintf( esc_html( _n( 'There is %d image ready to optimize.', 'There are %d images ready to optimize.', $image_count, 'ewww-image-optimizer' ) ), $image_count );
+		$ready_msg = sprintf( esc_html( _n( 'There is %d image ready to optimize.', 'There are %d images ready to optimize.', $image_count, 'ewww-image-optimizer' ) ), $image_count )
+			. ' <a href="http://docs.ewww.io/article/20-why-do-i-have-so-many-images-on-my-site" target="_blank" data-beacon-article="58598744c697912ffd6c3eb4">' . esc_html__( 'Why are there so many images?', 'ewww-image-optimizer' ) . '</a>';
 		die( json_encode( array(
 			'ready' => $image_count,
 			'message' => $ready_msg,

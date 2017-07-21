@@ -7,6 +7,10 @@ window.fakerpress.plugin = 'fakerpress';
 window.fakerpress.abbr = 'fp';
 
 window.fakerpress.fieldName = function( pieces ){
+	pieces = pieces.map( function( piece ) {
+		return new String( piece );
+	} );
+
 	return this.plugin + '[' + pieces.join( '][' ) + ']';
 };
 
@@ -404,7 +408,7 @@ window.fakerpress.fields.range = function( $, _ ){
 						$fields = $conf.find( window.fakerpress.fieldset.selector.field );
 
 					// Reset the Configuration, only happens once!
-					$conf.removeAttr( 'data-config', false ).data( 'config', {} );
+					// $conf.removeAttr( 'data-config', false ).data( 'config', {} );
 
 					// Loop fields
 					$fields.each( function() {
@@ -413,7 +417,46 @@ window.fakerpress.fields.range = function( $, _ ){
 							index = name.length - 1,
 							key = name[ index ];
 
-						if ( 'undefined' === typeof config[ key ] ) {
+						var $field = $( this ),
+							$label = $field.next( window.fakerpress.fieldset.selector.label ),
+							$internal_label = $field.next( window.fakerpress.fieldset.selector.internal_label ),
+
+							__name = $field.data( 'name' ),
+							__id = $field.data( 'id' ),
+							id = [],
+							name = [];
+
+						// If didn't find a label inside of the parent element
+						if ( 0 === $label.length ){
+							$label = $field.parents( window.fakerpress.fieldset.selector.field_container ).eq(0).find( window.fakerpress.fieldset.selector.label );
+						}
+
+						_.each( __id, function( value, key, list ) {
+							id.push( value );
+							if ( 'meta' === value || 'taxonomy' === value ){
+								id.push( index );
+							}
+						} );
+
+						_.each( __name, function( value, key, list ) {
+							name.push( value );
+							if ( 'meta' === value || 'taxonomy' === value ){
+								name.push( index );
+							}
+						} );
+
+						if ( 0 !== id.length ){
+							$field.attr( 'id', window.fakerpress.fieldId( id ) );
+							$label.attr( 'for', window.fakerpress.fieldId( id ) );
+							$internal_label.attr( 'for', window.fakerpress.fieldId( id ) );
+						}
+
+						if ( 0 !== name.length ){
+							$field.attr( 'name', window.fakerpress.fieldName( name ) );
+						}
+
+
+						if ( 'undefined' === typeof config || 'undefined' === typeof config[ key ] ) {
 							return;
 						}
 

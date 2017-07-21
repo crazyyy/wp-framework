@@ -220,7 +220,7 @@ msgstr "Основное меню"
 msgid "Proudly powered by %s"
 msgstr "Сайт работает на %s"
 
-#. #-#-#-#-#  twentyfifteen.pot (Twenty Fifteen 1.7)  #-#-#-#-#
+#. #-#-#-#-#  twentyfifteen.pot (Twenty Fifteen 1.8)  #-#-#-#-#
 #. Author URI of the plugin/theme
 #: footer.php:25
 msgid "https://wordpress.org/"

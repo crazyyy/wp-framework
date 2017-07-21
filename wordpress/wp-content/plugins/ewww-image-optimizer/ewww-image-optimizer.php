@@ -14,7 +14,7 @@ Plugin URI: https://wordpress.org/plugins/ewww-image-optimizer/
 Description: Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery. Uses jpegtran, optipng/pngout, and gifsicle.
 Author: Shane Bishop
 Text Domain: ewww-image-optimizer
-Version: 3.3.1
+Version: 3.5.1
 Author URI: https://ewww.io/
 License: GPLv3
 */
@@ -97,6 +97,14 @@ if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50300 ) {
 	 * EWWW_Image class for working with queued images and image records from the database.
 	 */
 	require_once( EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'classes/class-ewww-image.php' );
+	/**
+	 * EWWWIO_Tracking class for reporting anonymous site data.
+	 */
+	require_once( EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'classes/class-ewwwio-tracking.php' );
+	/**
+	 * EWWWIO_HS_Beacon class for embedding the HelpScout Beacon.
+	 */
+	require_once( EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'classes/class-ewwwio-hs-beacon.php' );
 } // End if().
 
 if ( ! function_exists( 'ewww_image_optimizer_unsupported_php' ) ) {
