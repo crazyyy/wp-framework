@@ -9,6 +9,7 @@ syntax:glob
 *.swp
 *~
 *.iws
+._*
 *.sublime-project
 *.sublime-workspace
 .sublime-
@@ -22,6 +23,9 @@ license.txt
 readme.html
 sitemap*.xml
 sitemap*.xml.gz
+Desktop.ini
+.Spotlight-V100
+.Trashes
 
 node_modules
 node_modules/**
