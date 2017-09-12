@@ -254,3 +254,29 @@
   4px 4px 0 darken($color, 20%),
   4px 4px 2px #000;
 }
+/*
+* placeholder mixin
+* https: //stackoverflow.com/questions/17181849/placeholder-mixin-scss-css
+
+  input {
+    @include placeholder {
+      font-family: $base-font-family;
+      color: red;
+    }
+  }
+
+*/
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content
+  }
+  &:-moz-placeholder {
+    @content
+  }
+  &::-moz-placeholder {
+    @content
+  }
+  &:-ms-input-placeholder {
+    @content
+  }
+}

@@ -2,15 +2,14 @@ ul,
 ol {
   margin: 0;
   padding: 0;
-
   list-style: none;
   li {
     position: relative;
-
     margin: 0;
     padding: 0;
     &:before {
-      @extend .dblock;
+      content: "";
+      display: inline-block;
       display: none;
     }
   }
@@ -20,7 +19,6 @@ dl {
   margin-bottom: $small-spacing;
   dt {
     font-weight: bold;
-
     margin-top: $small-spacing;
   }
   dd {

@@ -84,7 +84,7 @@ picture {
 
 header {
   background-color: $gray-light;
-  .logo {
+  .header--logo {
     display: block;
     img {
       max-width: 100%;
@@ -93,14 +93,10 @@ header {
 }
 nav {
   ul {
-    @extend .justify-child;
     @extend .clearfix;
     li {
       display: inline-block;
     }
-  }
-  .headnav {
-    font-size: 100%;
   }
 }
 

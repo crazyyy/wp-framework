@@ -1,6 +1,6 @@
 'use strict';
 /* if work with html set TRUE, else - FALSE */
-const htmlOWp = true;
+const htmlOWp = false;
 
 /* import dependencies */
 import config from 'config';
@@ -202,5 +202,5 @@ function ChangeBasePath(config) {
   config.path.fonts.dest = config.path.fonts.dest.replace(config.path.base.dest, config.path.base.wp);
   config.path.styles.dest = config.path.styles.dest.replace(config.path.base.dest, config.path.base.wp);
   config.path.scripts.dest = config.path.scripts.dest.replace(config.path.base.dest, config.path.base.wp);
-  config.path.dest.desthtml = config.path.dest.desthtml.replace(config.path.base.dest, config.path.base.wp);
+  config.path.base.desthtml = config.path.base.desthtml.replace(config.path.base.dest, config.path.base.wp);
 }
