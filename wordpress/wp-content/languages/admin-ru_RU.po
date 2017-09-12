@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WordPress - 4.8.x - Administration package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2017-06-15 13:54:09+0000\n"
+"PO-Revision-Date: 2017-08-29 20:32:20+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,39 +26,39 @@ msgctxt "start of week"
 msgid "1"
 msgstr "1"
 
-#: wp-admin/about.php:196
+#: wp-admin/about.php:218
 msgid "New capabilities have been introduced to 4.8 with an eye towards removing calls to <code>is_super_admin()</code>. Additionally, new hooks and tweaks to more granularly control site and user counts per network have been added."
 msgstr "Новые возможности были введены в 4.8 с намерением уменьшить вызовы функции <code>is_super_admin()</code>.  Дополнительно были добавлены новы хуки и тонкие настройки для контроля сайтов и числа пользователей в режиме сети."
 
-#: wp-admin/about.php:151
+#: wp-admin/about.php:173
 msgid "Being part of the community can help you improve your WordPress skills and network with people you wouldn&#8217;t otherwise meet. Now you can easily find your local events just by logging in to your dashboard and looking at the new Events and News dashboard widget."
 msgstr "Участвуя в сообществе, вы можете улучшить свои навыки работы с WordPress и познакомиться с людьми, которых бы иначе не встретили. Теперь вы можете легко найти проводимые поблизости мероприятия просто зайдя в консоль и взглянув на новые виджеты Мероприятия и Новости."
 
-#: wp-admin/about.php:149
+#: wp-admin/about.php:171
 msgid "This is quickly becoming one of our favorite features. While you are in the dashboard (because you&#8217;re running updates and writing posts, right?) all upcoming WordCamps and WordPress Meetups &mdash; local to you &mdash; will be displayed."
 msgstr "Эта возможность быстро становится одной из наших любимых. В то время как вы находитесь в консоли (потому что обновляете что-то и пишете записи, да?), вы увидите все предстоящие встречи WordPress и WordCamp рядом с вами."
 
-#: wp-admin/about.php:147
+#: wp-admin/about.php:169
 msgid "Did you know that WordPress has a thriving offline community with groups meeting regularly in more than 400 cities around the world? WordPress now draws your attention to the events that help you continue improving your WordPress skills, meet friends, and, of course, publish!"
 msgstr "Знаете ли вы, что WordPress имеет процветающее оффлайн сообщество с группами регулярно встречающимися в более чем 400 городах по всему миру? WordPress теперь обратит ваше внимание на мероприятия способные улучшить ваши навыки WordPress, встретить друзей и, конечно же, публиковаться!"
 
-#: wp-admin/about.php:126
+#: wp-admin/about.php:148
 msgid "Have you ever tried updating a link, or the text around a link, and found you can&#8217;t seem to edit it correctly? When you edit the text after the link, your new text also ends up linked. Or you edit the text in the link, but your text ends up outside of it. This can be frustrating! With link boundaries, a great new feature, the process is streamlined and your links will work well. You’ll be happier. We promise."
 msgstr "Когда-нибудь пробовали обновить ссылку или текст рядом со ссылкой, но не получалось сделать это корректно? Редактируете текст после ссылки, а он также становится ссылкой. Или редактируете текст внутри ссылки, но он получаются вне её. Какое разочарование! С границами ссылок, новой отличной возможностью, процесс упрощается и ваши ссылки будут работать правильно. Вы будете счастливы. Мы обещаем."
 
-#: wp-admin/about.php:117
+#: wp-admin/about.php:139
 msgid "This feature deserves a parade down the center of town! Rich-text editing capabilities are now native for Text widgets. Add a widget anywhere and format away. Create lists, add emphasis, and quickly and easily insert links. Have fun with your newfound formatting powers, and watch what you can accomplish in a short amount of time."
 msgstr "Эта возможность заслуживает парада по центру города! Возможности редактирования обогащенного текста (RTF) теперь доступны для текстовых виджетов. Добавьте виджет в любое место и отформатируйте. Создавайте списки, выделяйте жирным и курсивом, с легкостью вставляйте ссылки. Получайте удовольствие с новой силой форматирования и смотрите чего можно достичь за короткое время."
 
-#: wp-admin/about.php:109
+#: wp-admin/about.php:131
 msgid "A welcome video is a great way to humanize the branding of your website. You can now add any video from the Media Library to a sidebar on your site with the new Video widget. Use this to showcase a welcome video to introduce visitors to your site or promote your latest and greatest content."
 msgstr "Приветственное видео - отличный способ очеловечить стиль вашего сайта. Вы можете добавить любую видеозапись из медиа библиотеки на боковую панель вашего сайта используя новый виджет Видео. Используйте его для приветствия посетителям сайта или продвигайте ваш последний и замечательный материал."
 
-#: wp-admin/about.php:105
+#: wp-admin/about.php:127
 msgid "Adding an image to a widget is now a simple task that is achievable for any WordPress user without needing to know code. Simply insert your image right within the widget settings. Try adding something like a headshot or a photo of your latest weekend adventure &mdash; and see it appear automatically."
 msgstr "Добавить изображение к виджету сейчас так просто, что доступно любому пользователю WordPress, без необходимости знания кода. Просто вставьте ваше изображение из настроек виджета. Попробуйте добавить портрет или фотографию с ваших последних выходных, они появятся автоматически."
 
-#: wp-admin/about.php:50
+#: wp-admin/about.php:72
 msgid "Though some updates seem minor, they&#8217;ve been built by hundreds of contributors with <em>you</em> in mind. Get ready for new features you&#8217;ll welcome like an old friend: link improvements, <em>three</em> new media widgets covering images, audio, and video, an updated text widget that supports visual editing, and an upgraded news section in your dashboard which brings in nearby and upcoming WordPress events."
 msgstr "Хотя некоторые обновления и кажутся небольшими, они были сделаны сотнями участников с мыслью <em>о вас</em>. Готовьтесь к новым возможностям, которые вы встретите как старого друга: улучшения ссылок, <em>три</em> новых медиавиджета, включающие изображения, аудио- и видеозаписи, обновленный текстовый виджет с поддержкой визуального редактирования и улучшенный раздел новостей в консоли сообщающий о ближайших предстоящих мероприятиях WordPress."
 
@@ -66,59 +66,59 @@ msgstr "Хотя некоторые обновления и кажутся не�
 msgid "Thank you for updating to the latest version! WordPress %s adds more ways for you to express yourself and represent your brand."
 msgstr "Спасибо за обновление до последней версии! WordPress %s дает вам больше способов для самовыражения и представления вашей марки."
 
-#: wp-admin/about.php:204
+#: wp-admin/about.php:226
 msgid "The introduction of a new base media widget REST API schema to 4.8 opens up possibilities for even more media widgets (like galleries or playlists) in the future. The three new media widgets are powered by a shared base class that covers most of the interactions with the media modal. That class also makes it easier to create new media widgets and paves the way for more to come."
 msgstr "Введение новой базовой схемы REST API для медиа-виджетов в 4.8 открывает возможности и для других медиа виджетов (например галерей или плейлистов) в будущем. Три новых медиа виджета основаны на общем базовом классе, который покрывает большинство взаимодействий с формой медиафайлов. Этот класс также упрощает создание новых медиавиджетов и открывает путь к увеличению их числа."
 
-#: wp-admin/about.php:203
+#: wp-admin/about.php:225
 msgid "Media Widgets API"
 msgstr "API Медиа-виджетов"
 
-#: wp-admin/about.php:208
+#: wp-admin/about.php:230
 msgid "Rejoice! New responsive breakpoints have been added to the customizer sidebar to make it wider on high-resolution screens. Customizer controls should use percentage-based widths instead of pixels."
 msgstr "Радуйтесь! Новые адаптивные точки прерывания были добавлены к боковой панели интерфейса настройки, что позволяет сделать ее шире на дисплеях высокого разрешения. Элементы управления интерфейсом настройки должны использовать ширину в процентах, вместо пикселей."
 
-#: wp-admin/about.php:207
+#: wp-admin/about.php:229
 msgid "Customizer Width Variable"
 msgstr "Переменная ширина интерфейса настройки"
 
-#: wp-admin/about.php:200
+#: wp-admin/about.php:222
 msgid "With the addition of TinyMCE to the text widget in 4.8 comes a new JavaScript API for instantiating the editor after page load. This can be used to add an editor instance to any text area, and customize it with buttons and functions. Great for plugin authors!"
-msgstr "С дополнением TinyMCE в текстовых виджетах, в 4.8 также был добавлен новый JavaScript API для инстанциации редактора после загрузки страницы. Он может использоваться для добавления редактора в любую текстовую область и настройки её кнопками и функциями. Для авторов плагинов это просто замечательно!"
+msgstr "С добавлением TinyMCE в текстовых виджетах, в 4.8 также был добавлен новый JavaScript API для создания экземпляра редактора после загрузки страницы. Он может использоваться для добавления редактора в любую текстовую область и настройки её кнопками и функциями. Для авторов плагинов это просто замечательно!"
 
-#: wp-admin/about.php:199
+#: wp-admin/about.php:221
 msgid "Text-Editor JavaScript API"
 msgstr "JavaScript API текстового редактора"
 
-#: wp-admin/about.php:195
+#: wp-admin/about.php:217
 msgid "Multisite Updates"
 msgstr "Обновления для режима сети"
 
-#: wp-admin/about.php:192
+#: wp-admin/about.php:214
 msgid "As fewer and fewer browsers support Silverlight, file formats which require the presence of the Silverlight plugin are being removed from core support. Files will still display as a download link, but will no longer be embedded automatically."
-msgstr "Так как все меньше браузеров поддерживают Silverlight, файловые форматы требующие наличия Silverlight плагина более не поддерживаются ядром. Файлы будут отображаться как ссылка на загрузку, но не будут автоматически встраиваться."
+msgstr "Так как все меньше браузеров поддерживают Silverlight, файловые форматы, требующие наличия Silverlight плагина, больше не поддерживаются ядром. Файлы будут отображаться как ссылка на загрузку, но не будут автоматически встраиваться."
 
-#: wp-admin/about.php:191
+#: wp-admin/about.php:213
 msgid "Removal of Core Support for WMV and WMA Files"
 msgstr "WMV и WMA файлы более не поддерживаются ядром"
 
-#: wp-admin/about.php:188
+#: wp-admin/about.php:210
 msgid "New CSS rules mean extraneous content (like &ldquo;Add New&rdquo; links) no longer need to be included in admin-area headings. These panel headings improve the experience for people using assistive technologies."
 msgstr "Новые CSS правила означают, что дополнительный контент (например ссылки &ldquo;Добавить новый&rdquo;) более не требуется включать в панель администратора. Это улучшает доступность для тех, кто использует вспомогательные возможности."
 
-#: wp-admin/about.php:187
+#: wp-admin/about.php:209
 msgid "More Accessible Admin Panel Headings"
 msgstr "Более доступные заголовки верхней панели администратора"
 
-#: wp-admin/about.php:56
+#: wp-admin/about.php:78
 msgid "Exciting Widget Updates"
 msgstr "Захватывающие обновления виджетов"
 
-#: wp-admin/about.php:49
+#: wp-admin/about.php:71
 msgid "WordPress 4.8 adds some great new features. Gear up for a more intuitive WordPress!"
 msgstr "WordPress 4.8 добавляет несколько великолепных новых возможностей. Подготовьтесь к более интуитивному WordPress!"
 
-#: wp-admin/about.php:48
+#: wp-admin/about.php:70
 msgid "An Update with You in Mind"
 msgstr "Обновление с мыслью о вас"
 
@@ -127,19 +127,19 @@ msgstr "Обновление с мыслью о вас"
 msgid "There aren&#8217;t any events scheduled near you at the moment. Would you like to <a href=\"%s\">organize one</a>?"
 msgstr "Никаких мероприятий в настоящее время рядом с вами не запланировано. Хотите <a href=\"%s\">организовать</a>?"
 
-#: wp-admin/about.php:145
+#: wp-admin/about.php:167
 msgid "Nearby WordPress Events"
 msgstr "Ближайшие мероприятия WordPress"
 
-#: wp-admin/about.php:116
+#: wp-admin/about.php:138
 msgid "Rich Text Widget"
 msgstr "Обогащенный текст (RTF)"
 
-#: wp-admin/about.php:113
+#: wp-admin/about.php:135
 msgid "Are you a podcaster, musician, or avid blogger? Adding a widget with your audio file has never been easier. Upload your audio file to the Media Library, go to the widget settings, select your file, and you&#8217;re ready for listeners. This would be a easy way to add a more personal welcome message, too!"
 msgstr "Вы музыкант, ведете подкасты или блогер-энтузиаст? Добавить виджет с вашими аудиозаписями никогда не было так просто. Загрузите аудиофайл в медиа библиотеку, перейдите в настройки виджетов, выберите ваш файл и ... всё! Это также отличный способ добавить более личное приветственное сообщение!"
 
-#: wp-admin/about.php:125
+#: wp-admin/about.php:147
 msgid "Link Boundaries"
 msgstr "Границы ссылок"
 
@@ -218,7 +218,7 @@ msgid "Assign a parent term to create a hierarchy. The term Jazz, for example, w
 msgstr "Назначьте родительский элемент для создания иерархии. \"Джаз\" например может быть родителем для \"бибоп\" и \"биг-бэнд\"."
 
 #. translators: %s: smiling face with smiling eyes emoji
-#: wp-admin/about.php:180
+#: wp-admin/about.php:202
 msgid "Even More Developer Happiness %s"
 msgstr "Еще больше счастья разработчикам %s"
 
@@ -1204,16 +1204,16 @@ msgstr "Корзина"
 msgid "The ssh2 PHP extension is available, however, we require the PHP5 function %s"
 msgstr "Расширение ssh2 для PHP доступно, однако требуется функция PHP5 %s"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:588
+#: wp-admin/includes/class-wp-comments-list-table.php:593
 msgid "Quick edit this comment inline"
 msgstr "Изменить свойства этого комментария"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:584
+#: wp-admin/includes/class-wp-comments-list-table.php:589
 #: wp-admin/includes/dashboard.php:634
 msgid "Edit this comment"
 msgstr "Изменить этот комментарий"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:570
+#: wp-admin/includes/class-wp-comments-list-table.php:575
 msgid "Restore this comment from the spam"
 msgstr "Восстановить этот комментарий из спама"
 
@@ -1282,7 +1282,7 @@ msgid "Welcome to %s. This is your first post. Edit or delete it, then start blo
 msgstr "Добро пожаловать на сайт %s. Это ваша первая запись. Отредактируйте или удалите её, затем пишите!"
 
 #. translators: %s: WordPress version number
-#: wp-admin/about.php:242
+#: wp-admin/about.php:264
 msgid "<strong>Version %s</strong> addressed one security issue."
 msgstr "В <strong>версии %s</strong> решена проблема с безопасностью."
 
@@ -1299,15 +1299,15 @@ msgstr "Аватар можно изменить на сайте <a href=\"%s\">
 msgid "Profile Picture"
 msgstr "Аватар"
 
-#: wp-admin/about.php:239
+#: wp-admin/about.php:261
 msgid "Maintenance and Security Releases"
 msgstr "Технические обновления безопасности"
 
-#: wp-admin/about.php:236
+#: wp-admin/about.php:258
 msgid "Security Releases"
 msgstr "Обновления безопасности"
 
-#: wp-admin/about.php:233
+#: wp-admin/about.php:255
 msgid "Maintenance Releases"
 msgstr "Технические обновления"
 
@@ -1724,7 +1724,7 @@ msgstr "Ожидающих комментариев нет"
 msgid "Failed to initialize a SFTP subsystem session with the SSH2 Server %s"
 msgstr "Не удалось установить сеанс связи подсистемы SFTP с сервером SSH2 %s"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:405
+#: wp-admin/includes/class-wp-comments-list-table.php:410
 msgctxt "column name"
 msgid "Submitted On"
 msgstr "Отправлено"
@@ -1885,7 +1885,7 @@ msgstr "Текущая тема не поддерживает произволь
 
 #. translators: %s: comment link
 #: wp-admin/comment.php:187
-#: wp-admin/includes/class-wp-comments-list-table.php:648
+#: wp-admin/includes/class-wp-comments-list-table.php:653
 msgid "In reply to %s."
 msgstr "В ответ автору %s."
 
@@ -1983,7 +1983,7 @@ msgstr "Подтвердите пароль"
 msgid "While you are editing your %1$s file, take a moment to make sure you have all 8 keys and that they are unique. You can generate these using the <a href=\"%2$s\">WordPress.org secret key service</a>."
 msgstr "Когда вы будете править файл %1$s, заодно убедитесь, что в нём заданы все 8 уникальных ключей. Их можно сгенерировать с помощью <a href=\"%2$s\">сервиса секретных ключей WordPress.org</a>."
 
-#: wp-admin/includes/class-wp-comments-list-table.php:616
+#: wp-admin/includes/class-wp-comments-list-table.php:621
 #: wp-admin/includes/class-wp-list-table.php:523
 #: wp-admin/includes/class-wp-list-table.php:1324
 #: wp-admin/includes/update.php:687
@@ -2776,7 +2776,7 @@ msgstr "d.m.Y H:i:s"
 
 #. translators: column name or table row header
 #: wp-admin/comment.php:169
-#: wp-admin/includes/class-wp-comments-list-table.php:402
+#: wp-admin/includes/class-wp-comments-list-table.php:407
 msgid "In Response To"
 msgstr "В ответ на"
 
@@ -2897,7 +2897,7 @@ msgstr "Сессии пользователя %s завершены."
 msgid "You are now logged out everywhere else."
 msgstr "Вы вышли из других сессий."
 
-#: wp-admin/includes/class-wp-comments-list-table.php:327
+#: wp-admin/includes/class-wp-comments-list-table.php:332
 msgid "Filter by comment type"
 msgstr "Фильтр по типу комментариев"
 
@@ -3181,7 +3181,7 @@ msgstr "Можно изменить размер исходного изобра
 msgid "To crop the image, click on it and drag to make your selection."
 msgstr "Чтобы обрезать изображение, нажмите на него и выделите нужную часть, удерживая кнопку мыши."
 
-#: wp-admin/includes/class-wp-comments-list-table.php:329
+#: wp-admin/includes/class-wp-comments-list-table.php:334
 msgid "All comment types"
 msgstr "Все типы комментариев"
 
@@ -4733,7 +4733,7 @@ msgstr "Рубрики можно выборочно преобразовать 
 msgid "Select %s"
 msgstr "Выбрать %s"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:627
+#: wp-admin/includes/class-wp-comments-list-table.php:632
 msgid "Select comment"
 msgstr "Выбрать комментарий"
 
@@ -4955,7 +4955,7 @@ msgid "%s ago"
 msgstr "%s назад"
 
 #: wp-admin/includes/class-wp-comments-list-table.php:300
-#: wp-admin/includes/class-wp-comments-list-table.php:574
+#: wp-admin/includes/class-wp-comments-list-table.php:579
 #: wp-admin/includes/class-wp-media-list-table.php:144
 #: wp-admin/includes/class-wp-media-list-table.php:715
 #: wp-admin/includes/class-wp-posts-list-table.php:397
@@ -5424,7 +5424,7 @@ msgid "Contributing Developers"
 msgstr "Помощники по разработке"
 
 #. translators: 1: WordPress version number, 2: plural number of bugs.
-#: wp-admin/about.php:247
+#: wp-admin/about.php:52 wp-admin/about.php:269
 msgid "<strong>Version %1$s</strong> addressed %2$s bug."
 msgid_plural "<strong>Version %1$s</strong> addressed %2$s bugs."
 msgstr[0] "В <strong>версии %1$s</strong> исправлена %2$s ошибка."
@@ -5433,7 +5433,7 @@ msgstr[2] "В <strong>версии %1$s</strong> исправлены %2$s ош�
 
 #. translators: 1: WordPress version number, 2: plural number of bugs. More
 #. than one security issue.
-#: wp-admin/about.php:255
+#: wp-admin/about.php:277
 msgid "<strong>Version %1$s</strong> addressed some security issues and fixed %2$s bug."
 msgid_plural "<strong>Version %1$s</strong> addressed some security issues and fixed %2$s bugs."
 msgstr[0] "В <strong>версии %1$s</strong> решены несколько проблем с безопасностью и исправлена %2$s ошибка."
@@ -5441,13 +5441,13 @@ msgstr[1] "В <strong>версии %1$s</strong> решены несколько
 msgstr[2] "В <strong>версии %1$s</strong> решены несколько проблем с безопасностью и исправлены %2$s ошибок."
 
 #. translators: %s: Codex URL
-#: wp-admin/about.php:259
+#: wp-admin/about.php:63 wp-admin/about.php:281
 msgid "For more information, see <a href=\"%s\">the release notes</a>."
 msgstr "Дополнительную информацию можно найти в <a href=\"%s\">заметке о релизе</a>."
 
 #. translators: 1: WordPress version number, 2: plural number of bugs. Singular
 #. security issue.
-#: wp-admin/about.php:251
+#: wp-admin/about.php:273
 msgid "<strong>Version %1$s</strong> addressed a security issue and fixed %2$s bug."
 msgid_plural "<strong>Version %1$s</strong> addressed a security issue and fixed %2$s bugs."
 msgstr[0] "В <strong>версии %1$s</strong> решена проблема с безопасностью и исправлена %2$s ошибка."
@@ -5459,15 +5459,15 @@ msgid "Welcome to your WordPress Dashboard! This is the screen you will see when
 msgstr "Добро пожаловать в консоль WordPress! Этот экран вы будете видеть после авторизации. Он даёт доступ ко всем функциям управления сайтом. Можно получить помощь по каждому экрану, нажав на вкладку &laquo;Помощь&raquo; над заголовком экрана."
 
 #. translators: %s: WordPress version number
-#: wp-admin/about.php:244
+#: wp-admin/about.php:266
 msgid "<strong>Version %s</strong> addressed some security issues."
 msgstr "В <strong>версии %s</strong> решены несколько проблем с безопасностью."
 
-#: wp-admin/about.php:232
+#: wp-admin/about.php:47 wp-admin/about.php:254
 msgid "Maintenance Release"
 msgstr "Техническое обновление"
 
-#: wp-admin/about.php:235
+#: wp-admin/about.php:257
 msgid "Security Release"
 msgstr "Обновление безопасности"
 
@@ -5475,7 +5475,7 @@ msgstr "Обновление безопасности"
 msgid "What&#8217;s New"
 msgstr "Что нового"
 
-#: wp-admin/about.php:238
+#: wp-admin/about.php:260
 msgid "Maintenance and Security Release"
 msgstr "Техническое обновление безопасности"
 
@@ -5487,7 +5487,7 @@ msgstr "На этом экране можно выбрать структуру 
 msgid "Welcome to WordPress %1$s. <a href=\"%2$s\">Learn more</a>."
 msgstr "Добро пожаловать в WordPress %1$s. <a href=\"%2$s\">Узнать больше</a>."
 
-#: wp-admin/about.php:218
+#: wp-admin/about.php:240
 msgid "Return to Updates"
 msgstr "Вернуться на страницу &laquo;Обновления&raquo;"
 
@@ -5767,11 +5767,11 @@ msgstr "Похоже, для вызова функции add_meta_box() был �
 msgid "Welcome to WordPress %s"
 msgstr "Добро пожаловать в WordPress %s"
 
-#: wp-admin/about.php:218
+#: wp-admin/about.php:240
 msgid "Return to Dashboard &rarr; Updates"
 msgstr "Вернуться на страницу &laquo;Консоль&raquo; &rarr; &laquo;Обновления&raquo;"
 
-#: wp-admin/about.php:221
+#: wp-admin/about.php:243
 msgid "Go to Dashboard &rarr; Home"
 msgstr "Перейти на страницу &laquo;Консоль&raquo; &rarr; &laquo;Главная&raquo;"
 
@@ -7152,12 +7152,12 @@ msgstr "Обрезать изображение заголовка"
 msgid "Default Images"
 msgstr "Изображения по умолчанию"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:578
+#: wp-admin/includes/class-wp-comments-list-table.php:583
 #: wp-admin/includes/dashboard.php:639
 msgid "Delete this comment permanently"
 msgstr "Удалить этот комментарий навсегда"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:574
+#: wp-admin/includes/class-wp-comments-list-table.php:579
 msgid "Restore this comment from the Trash"
 msgstr "Восстановить этот комментарий из корзины"
 
@@ -7268,7 +7268,7 @@ msgid "You have version %1$s installed. Update to %2$s."
 msgstr "Вы используете версию %1$s. Обновить до %2$s."
 
 #: wp-admin/includes/class-wp-comments-list-table.php:302
-#: wp-admin/includes/class-wp-comments-list-table.php:570
+#: wp-admin/includes/class-wp-comments-list-table.php:575
 msgctxt "comment"
 msgid "Not Spam"
 msgstr "Не спам"
@@ -7646,7 +7646,7 @@ msgstr "Все"
 msgid "Please enter a valid menu name."
 msgstr "Пожалуйста, введите корректное название меню."
 
-#: wp-admin/about.php:221
+#: wp-admin/about.php:243
 msgid "Go to Dashboard"
 msgstr "Перейти на страницу &laquo;Консоль&raquo;"
 
@@ -9165,7 +9165,7 @@ msgstr "Видна"
 msgid "Relationship"
 msgstr "Отношение"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:398
+#: wp-admin/includes/class-wp-comments-list-table.php:403
 #: wp-admin/includes/class-wp-post-comments-list-table.php:28
 msgctxt "column name"
 msgid "Comment"
@@ -9189,7 +9189,7 @@ msgctxt "column name"
 msgid "Title"
 msgstr "Заголовок"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:588
+#: wp-admin/includes/class-wp-comments-list-table.php:593
 #: wp-admin/includes/class-wp-posts-list-table.php:1253
 #: wp-admin/includes/class-wp-terms-list-table.php:449
 msgid "Quick&nbsp;Edit"
@@ -10118,36 +10118,36 @@ msgstr "[Ожидает проверки]"
 msgid "From %1$s on %2$s %3$s"
 msgstr "%1$s к записи %2$s %3$s"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:580
+#: wp-admin/includes/class-wp-comments-list-table.php:585
 #: wp-admin/includes/dashboard.php:641
 msgid "Move this comment to the Trash"
 msgstr "Переместить этот комментарий в корзину"
 
 #. translators: mark as spam link
-#: wp-admin/includes/class-wp-comments-list-table.php:568
+#: wp-admin/includes/class-wp-comments-list-table.php:573
 #: wp-admin/includes/dashboard.php:636
 msgctxt "verb"
 msgid "Spam"
 msgstr "Спам"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:568
+#: wp-admin/includes/class-wp-comments-list-table.php:573
 #: wp-admin/includes/dashboard.php:636
 msgid "Mark this comment as spam"
 msgstr "Пометить этот комментарий как спам"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:590
+#: wp-admin/includes/class-wp-comments-list-table.php:595
 #: wp-admin/includes/dashboard.php:635
 msgid "Reply to this comment"
 msgstr "Ответить на комментарий"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:558
-#: wp-admin/includes/class-wp-comments-list-table.php:564
+#: wp-admin/includes/class-wp-comments-list-table.php:563
+#: wp-admin/includes/class-wp-comments-list-table.php:569
 #: wp-admin/includes/dashboard.php:633
 msgid "Unapprove this comment"
 msgstr "Отклонить этот комментарий"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:560
-#: wp-admin/includes/class-wp-comments-list-table.php:563
+#: wp-admin/includes/class-wp-comments-list-table.php:565
+#: wp-admin/includes/class-wp-comments-list-table.php:568
 #: wp-admin/includes/dashboard.php:632
 msgid "Approve this comment"
 msgstr "Одобрить этот комментарий"
@@ -10704,24 +10704,24 @@ msgstr "Поле изменено."
 msgid "No comments found."
 msgstr "Комментариев не найдено."
 
-#: wp-admin/includes/class-wp-comments-list-table.php:359
+#: wp-admin/includes/class-wp-comments-list-table.php:364
 #: wp-admin/includes/class-wp-media-list-table.php:181
 #: wp-admin/includes/class-wp-posts-list-table.php:493
 msgid "Empty Trash"
 msgstr "Очистить корзину"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:359
+#: wp-admin/includes/class-wp-comments-list-table.php:364
 msgid "Empty Spam"
 msgstr "Очистить спам"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:354
+#: wp-admin/includes/class-wp-comments-list-table.php:359
 #: wp-admin/includes/class-wp-links-list-table.php:115
 #: wp-admin/includes/class-wp-media-list-table.php:177
 #: wp-admin/includes/class-wp-posts-list-table.php:488
 msgid "Filter"
 msgstr "Фильтр"
 
-#: wp-admin/includes/class-wp-comments-list-table.php:340
+#: wp-admin/includes/class-wp-comments-list-table.php:345
 #: wp-admin/includes/class-wp-posts-list-table.php:1612
 msgid "Pings"
 msgstr "Уведомления"
@@ -10734,15 +10734,15 @@ msgid "Move to Trash"
 msgstr "Удалить"
 
 #: wp-admin/includes/class-wp-comments-list-table.php:295
-#: wp-admin/includes/class-wp-comments-list-table.php:560
-#: wp-admin/includes/class-wp-comments-list-table.php:563
+#: wp-admin/includes/class-wp-comments-list-table.php:565
+#: wp-admin/includes/class-wp-comments-list-table.php:568
 #: wp-admin/includes/dashboard.php:632
 msgid "Approve"
 msgstr "Одобрить"
 
 #: wp-admin/includes/class-wp-comments-list-table.php:293
-#: wp-admin/includes/class-wp-comments-list-table.php:558
-#: wp-admin/includes/class-wp-comments-list-table.php:564
+#: wp-admin/includes/class-wp-comments-list-table.php:563
+#: wp-admin/includes/class-wp-comments-list-table.php:569
 #: wp-admin/includes/dashboard.php:633
 msgid "Unapprove"
 msgstr "Отклонить"

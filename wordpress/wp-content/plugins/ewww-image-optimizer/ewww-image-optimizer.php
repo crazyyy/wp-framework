@@ -14,7 +14,7 @@ Plugin URI: https://wordpress.org/plugins/ewww-image-optimizer/
 Description: Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery. Uses jpegtran, optipng/pngout, and gifsicle.
 Author: Shane Bishop
 Text Domain: ewww-image-optimizer
-Version: 3.5.1
+Version: 3.6.1
 Author URI: https://ewww.io/
 License: GPLv3
 */
@@ -49,6 +49,16 @@ if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50300 ) {
 	add_action( 'admin_notices', 'ewww_image_optimizer_dual_plugin' );
 	// Loads the plugin translations.
 	add_action( 'plugins_loaded', 'ewww_image_optimizer_false_init' );
+} elseif ( defined( 'KINSTAMU_VERSION' ) ) {
+	add_action( 'network_admin_notices', 'ewww_image_optimizer_notice_kinsta' );
+	add_action( 'admin_notices', 'ewww_image_optimizer_notice_kinsta' );
+	// Loads the plugin translations.
+	add_action( 'plugins_loaded', 'ewww_image_optimizer_false_init' );
+} elseif ( defined( 'WPE_PLUGIN_VERSION' ) ) {
+	add_action( 'network_admin_notices', 'ewww_image_optimizer_notice_wpengine' );
+	add_action( 'admin_notices', 'ewww_image_optimizer_notice_wpengine' );
+	// Loads the plugin translations.
+	add_action( 'plugins_loaded', 'ewww_image_optimizer_false_init' );
 } else {
 	/**
 	 * The full path of the plugin file (this file).
@@ -61,7 +71,7 @@ if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50300 ) {
 	 *
 	 * @var string EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE_REL
 	 */
-	define( 'EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE_REL', 'ewww-image-optimizer/ewww-image-optimizer.php' );
+	define( 'EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE_REL', basename( plugin_dir_path( __FILE__ ) ) . '/' . basename( __FILE__ ) );
 	/**
 	 * This is the full system path to the plugin folder.
 	 *
@@ -128,4 +138,18 @@ if ( ! function_exists( 'ewww_image_optimizer_unsupported_php' ) ) {
 	function ewww_image_optimizer_false_init() {
 		load_plugin_textdomain( 'ewww-image-optimizer', false, EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'languages/' );
 	}
+}
+
+/**
+ * Inform the user that only ewww-image-optimizer-cloud is permitted on WP Engine.
+ */
+function ewww_image_optimizer_notice_wpengine() {
+	echo "<div id='ewww-image-optimizer-warning-wpengine' class='error'><p>" . esc_html__( 'The regular version of the EWWW Image Optimizer plugin is not permitted on WP Engine sites. However, the cloud version has been approved by WP Engine. Please deactivate EWWW Image Optimizer and install EWWW Image Optimizer Cloud to optimize your images.', 'ewww-image-optimizer' ) . '</p></div>';
+}
+
+/**
+ * Inform the user that only ewww-image-optimizer-cloud is permitted on Kinsta.
+ */
+function ewww_image_optimizer_notice_kinsta() {
+	echo "<div id='ewww-image-optimizer-warning-kinsta' class='error'><p>" . esc_html__( 'The regular version of the EWWW Image Optimizer plugin is not permitted on Kinsta sites. Please deactivate EWWW Image Optimizer and install EWWW Image Optimizer Cloud to optimize your images.', 'ewww-image-optimizer' ) . '</p></div>';
 }

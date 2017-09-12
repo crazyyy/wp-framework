@@ -69,14 +69,38 @@ function ewww_image_optimizer_aux_images() {
 		'<span id="ewww-pointer" style="display:none">0</span>' .
 		'</div>' .
 		'</div>';
+	$help_instructions = esc_html__( 'Enable the Debugging option and refresh this page to include debugging information with your question.', 'ewww-image-optimizer' ) . ' ' .
+		esc_html__( 'This will allow us to assist you more quickly.', 'ewww-image-optimizer' );
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_debug' ) ) {
 		ewww_image_optimizer_options( 'debug-silent' );
+		?>
+<script type="text/javascript">
+	function selectText(containerid) {
+		var debug_node = document.getElementById(containerid);
+		if (document.selection) {
+			var range = document.body.createTextRange();
+			range.moveToElementText(debug_node);
+			range.select();
+		} else if (window.getSelection) {
+			window.getSelection().selectAllChildren(debug_node);
+		}
+	}
+</script>
+		<?php
 		global $ewww_debug;
-		$output .= '<div id="ewww-debug-info" style="clear:both;background:#ffff99;margin-left:-20px;padding:10px">' . $ewww_debug . '</div>';
+		$output .= '<p style="clear:both"><b>' . esc_html__( 'Debugging Information', 'ewww-image-optimizer' ) . ':</b> <button onclick="selectText(' . "'ewww-debug-info'" . ')">' . esc_html__( 'Select All', 'ewww-image-optimizer' ) . '</button>';
+		if ( is_file( EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'debug.log' ) ) {
+			$debug_log_url = plugins_url( '/debug.log', __FILE__ );
+			$output .= "&emsp;<a href='$debug_log_url'>" . esc_html( 'View Debug Log', 'ewww-image-optimizer' ) . "</a> - <a href='admin.php?action=ewww_image_optimizer_delete_debug_log'>" . esc_html( 'Remove Debug Log', 'ewww-image-optimizer' ) . '</a>';
+		}
+		$output .= '</p>';
+		$output .= '<div id="ewww-debug-info" style="background:#ffff99;margin-left:-20px;padding:10px" contenteditable="true">' . $ewww_debug . '</div>';
+		$help_instructions = esc_html__( 'Debugging information will be included with your message automatically.', 'ewww-image-optimizer' ) . ' ' .
+			esc_html__( 'This will allow us to assist you more quickly.', 'ewww-image-optimizer' );
 	}
 	echo $output;
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_enable_help' ) ) {
-		$help_instructions = esc_html__( 'Please turn on the Debugging option. Then copy and paste the Debug Information from the bottom of the settings page. This will allow us to assist you more quickly.', 'ewww-image-optimizer' );
+		/* $help_instructions = esc_html__( 'Please turn on the Debugging option. Then copy and paste the Debug Information from the bottom of the settings page. This will allow us to assist you more quickly.', 'ewww-image-optimizer' ); */
 		$current_user = wp_get_current_user();
 		$help_email = $current_user->user_email;
 		$hs_config = array(
@@ -91,8 +115,15 @@ function ewww_image_optimizer_aux_images() {
 		);
 		$hs_identify = array(
 			'email' => $help_email,
-			'debug_info' => $ewww_debug,
 		);
+		if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_debug' ) ) {
+			$ewww_debug_array = explode( '<br>', $ewww_debug );
+			$ewww_debug_i = 0;
+			foreach ( $ewww_debug_array as $ewww_debug_line ) {
+				$hs_identify[ 'debug_info_' . $ewww_debug_i ] = $ewww_debug_line;
+				$ewww_debug_i++;
+			}
+		}
 		?>
 <script type='text/javascript'>
 	!function(e,o,n){window.HSCW=o,window.HS=n,n.beacon=n.beacon||{};var t=n.beacon;t.userConfig={},t.readyQueue=[],t.config=function(e){this.userConfig=e},t.ready=function(e){this.readyQueue.push(e)},o.config={docs:{enabled:!0,baseUrl:"//ewwwio.helpscoutdocs.com/"},contact:{enabled:!0,formId:"af75cf17-310a-11e7-9841-0ab63ef01522"}};var r=e.getElementsByTagName("script")[0],c=e.createElement("script");c.type="text/javascript",c.async=!0,c.src="https://djtflbt20bdde.cloudfront.net/",r.parentNode.insertBefore(c,r)}(document,window.HSCW||{},window.HS||{});
@@ -149,7 +180,14 @@ function ewww_image_optimizer_aux_images_table() {
 			$file_size = ewww_image_optimizer_size_format( $optimized_image['image_size'] );
 			/* translators: %s: human-readable filesize */
 			$size_string = sprintf( esc_html__( 'Image Size: %s', 'ewww-image-optimizer' ), $file_size );
-?>			<tr<?php if ( $alternate ) { echo " class='alternate'"; } ?> id="ewww-image-<?php echo $optimized_image['id']; ?>">
+			?>
+			<tr
+			<?php
+			if ( $alternate ) {
+				echo " class='alternate' ";
+			}
+			?>
+			id="ewww-image-<?php echo $optimized_image['id']; ?>">
 				<td style='width:80px' class='column-icon'>&nbsp;</td>
 				<td class='title'><?php echo $image_name; ?></td>
 				<td><?php echo $type; ?></td>
@@ -161,7 +199,8 @@ function ewww_image_optimizer_aux_images_table() {
 				<?php	} ?>
 				</td>
 			</tr>
-<?php			$alternate = ! $alternate;
+			<?php
+			$alternate = ! $alternate;
 		} elseif ( file_exists( $optimized_image['path'] ) ) {
 			// Retrieve the mimetype of the attachment.
 			$type = ewww_image_optimizer_mimetype( $optimized_image['path'], 'i' );
@@ -169,7 +208,14 @@ function ewww_image_optimizer_aux_images_table() {
 			$file_size = ewww_image_optimizer_size_format( $optimized_image['image_size'] );
 			/* translators: %s: human-readable filesize */
 			$size_string = sprintf( esc_html__( 'Image Size: %s', 'ewww-image-optimizer' ), $file_size );
-?>			<tr<?php if ( $alternate ) { echo " class='alternate'"; } ?> id="ewww-image-<?php echo $optimized_image['id']; ?>">
+			?>
+			<tr
+			<?php
+			if ( $alternate ) {
+				echo " class='alternate' ";
+			}
+			?>
+			id="ewww-image-<?php echo $optimized_image['id']; ?>">
 				<td style='width:80px' class='column-icon'><img width='50' height='50' src="<?php echo $image_url; ?>" /></td>
 				<td class='title'>...<?php echo $image_name; ?></td>
 				<td><?php echo $type; ?></td>
@@ -181,7 +227,8 @@ function ewww_image_optimizer_aux_images_table() {
 				<?php	} ?>
 				</td>
 			</tr>
-<?php			$alternate = ! $alternate;
+			<?php
+			$alternate = ! $alternate;
 		} // End if().
 	} // End foreach().
 	echo '</table>';
@@ -221,7 +268,7 @@ function ewww_image_optimizer_aux_images_remove() {
  *
  * @global object $wpdb
  * @return int The total number of records in the images table that are not pending and have a
- * 	valid file-size.
+ *             valid file-size.
  */
 function ewww_image_optimizer_aux_images_table_count() {
 	global $wpdb;
@@ -244,6 +291,20 @@ function ewww_image_optimizer_aux_images_table_count() {
 function ewww_image_optimizer_aux_images_table_count_pending() {
 	global $wpdb;
 	$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->ewwwio_images WHERE pending=1" );
+	return $count;
+}
+
+/**
+ * Find the number of un-optimized (media) images in the ewwwio_images table.
+ *
+ * This is useful to know if we need to alert the user when the bulk attachments array is empty.
+ *
+ * @global object $wpdb
+ * @return int Number of pending media images in queue.
+ */
+function ewww_image_optimizer_aux_images_table_count_pending_media() {
+	global $wpdb;
+	$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->ewwwio_images WHERE pending=1 AND gallery='media'" );
 	return $count;
 }
 
@@ -273,7 +334,7 @@ function ewww_image_optimizer_delete_pending() {
  *
  * @global object $wpdb
  * @global array|string $optimized_list An associative array containing information from the images
- * 					table, or 'low_memory', 'large_list', 'small_scan'.
+ *                                      table, or 'low_memory', 'large_list', 'small_scan'.
  *
  * @param string $dir The absolute path of the folder to be scanned for unoptimized images.
  * @param int    $started Optional. The number of seconds since the overall scanning process started. Default 0.
@@ -609,7 +670,7 @@ function ewww_image_optimizer_aux_images_script( $hook = '' ) {
 		}
 		// Scan images in two most recent media library folders if the option is enabled, and this is a scheduled optimization.
 		if ( 'ewww-image-optimizer-auto' == $hook && ewww_image_optimizer_get_option( 'ewww_image_optimizer_include_media_paths' ) ) {
-			// Retrieve the location of the wordpress upload folder.
+			// Retrieve the location of the WordPress upload folder.
 			$upload_dir = wp_upload_dir();
 			// Retrieve the path of the upload folder.
 			$upload_path = $upload_dir['basedir'];

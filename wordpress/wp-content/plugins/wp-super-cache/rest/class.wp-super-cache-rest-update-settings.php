@@ -1,6 +1,6 @@
 <?php
 
-require_once WPCACHEHOME . 'rest/class.wp-super-cache-settings-map.php';
+require_once( dirname( __FILE__ ) . '/class.wp-super-cache-settings-map.php' );
 
 class WP_Super_Cache_Rest_Update_Settings extends WP_REST_Controller {
 
@@ -379,6 +379,13 @@ class WP_Super_Cache_Rest_Update_Settings extends WP_REST_Controller {
 	 */
 	protected function set_ossdl_cname( $value ) {
 		update_option( 'ossdl_cname', $value );
+	}
+
+	/**
+	 * @param mixed $value
+	 */
+	protected function set_ossdl_off_blog_url( $value ) {
+		update_option( 'ossdl_off_blog_url', untrailingslashit( $value ) );
 	}
 
 	/**

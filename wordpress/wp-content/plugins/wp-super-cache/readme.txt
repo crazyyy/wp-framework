@@ -1,8 +1,8 @@
 === WP Super Cache ===
 Contributors: donncha, automattic, kraftbj
 Tags: performance,caching,wp-cache,wp-super-cache,cache
-Tested up to: 4.8
-Stable tag: 1.5.1
+Tested up to: 4.8.1
+Stable tag: 1.5.5
 Requires at least: 3.0
 
 A very fast caching engine for WordPress that produces static html files.
@@ -46,18 +46,58 @@ See the [WP Super Cache homepage](https://wordpress.org/plugins/wp-super-cache/)
 
 There's a [GIT repository](https://github.com/Automattic/wp-super-cache) too if you want to contribute a patch.
 
-The [changelog](http://svn.wp-plugins.org/wp-super-cache/trunk/Changelog.txt) is a good place to start if you want to know what has changed since you last downloaded the plugin.
+The [commit list](https://github.com/Automattic/wp-super-cache/commits/master) is a good place to start if you want to know what has changed since you last downloaded the plugin.
 
 Interested in translating WP Super Cache to your language? See the [translation page](https://translate.wordpress.org/projects/wp-plugins/wp-super-cache) for the plugin.
 
 The cache directory, usually wp-content/cache/ is only for temporary files. Do not ever put important files or symlinks to important files or directories in that directory. They will be deleted if the plugin has write access to them.
 
 == Upgrade Notice ==
-
-= 1.5.1 =
-Emergency fix for sites running outdated WordPress and PHP.
+Fix for older versions of WordPress, catch fatal errors before they're cached, preload fixes.
 
 == Changelog ==
+= 1.5.5 =
+* Catch fatal errors so they're not cached, improve code that catches unknown page types. (#367)
+* Fix caching on older WP installs, and if the plugin is inactive on a blog, but still caching, give feeds a short TTL to ensure they're fresh. (#366)
+* When preloading don't delete sub-directories, or child pages, when caching pages. (#363)
+* Avoid PHP warnings from the REST API for settings that are not yet defined. (#361)
+* Added missing settings to the config file. (#360)
+
+= 1.5.4 =
+* Fix messages related to creating advanced-cache.php (#355, #354)
+* Deleting the plugin doesn't need to delete the cache directory as it's already done on deactivation. (#323)
+* Disable Jetpack mobile detection if Jetpack Beta is detected. (#298)
+* Add more checks on directories to make sure they exist before deleting them. (#324)
+* Add siteurl setting to CDN page for users who have WordPress in it's own directory. (#332)
+* Don't enable and then not save debug comments when toggling logging. (#334)
+* Show plugin activity html comments to users who disable caching for logged in users. (#335)
+* Better notifications on Preload page, and redo sql to fetch posts. Added "wpsc_preload_post_types_args" filter on post visibility, and wpsc_preload_post_types filter on post types used. (#336)
+* Use a cached feed if it is newer than the last time a post was updated. (#337)
+* Better define a sitemap (#340) but when the content type is unknown add more checks to find out what it is. (#346)
+* Save cache location correctly on the advanced settings page. (#345)
+* Make sure the debug log exists before toggling it on/off to ensure the http auth code is added to it.
+* Return the correct cache type to the REST API. Ignore supercache enabled status. (#352)
+* Fix cache contents in REST API showing double count of supercache files. (#353)
+* Move the nonce in the CDN page back into a function. (#346)
+* Use realpath to compare directories when loading the sample config file to account for symlinked directories. (#342)
+* Other minor changes to html or typos
+(Numbers are [pull requests](https://github.com/Automattic/wp-super-cache/pulls) on Github.)
+
+= 1.5.3 =
+* Fix a critical bug that caused unlink to be run on null while deleting the plugin.
+
+= 1.5.2 =
+* Add a trailing slash to home path. Fixes problems with finding the .htaccess file.
+* Delete WPCACHEHOME and WP_CACHE from wp-config.php when plugin deactivated.
+* Check that WPCACHEHOME is the right path on each load of the settings page.
+* Load the REST API code without using WPCACHEHOME.
+* Fixed mobile browser caching when using WP-Cache caching.
+* Fixed directory checks on Windows machines.
+* Reverted CDN changes in 1.5.0 as they caused problems in older "WordPress in a separate directory" installs.
+* Added note to CDN page when site url != home url. Site owners can use a filter to adjust the URL used.
+* Stop preload quicker when requested while preloading taxonomies.
+* Added more information for when updating the .htaccess file fails.
+* "Served by" header is now optional. Enable it by setting $wpsc_served_header to true in the config file.
 
 = 1.5.1 =
 * Don't use anonymous functions in REST API

@@ -1,6 +1,6 @@
 <?php
 
-require_once WPCACHEHOME . 'rest/class.wp-super-cache-settings-map.php';
+require_once( dirname( __FILE__ ) . '/class.wp-super-cache-settings-map.php' );
 
 class WP_Super_Cache_Rest_Get_Settings extends WP_REST_Controller {
 
@@ -43,11 +43,25 @@ class WP_Super_Cache_Rest_Get_Settings extends WP_REST_Controller {
 
 			} elseif ( isset( $map['global'] ) ) {
 				$global_var = $map['global'];
-				$settings[ $name ] = $$global_var;
+				if ( false == isset( $$global_var ) ) {
+					$settings[ $name ] = false;
+				} else {
+					$settings[ $name ] = $$global_var;
+				}
 			}
 		}
 
 		return $this->prepare_item_for_response( $settings, $request );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_ossdl_off_blog_url() {
+		$url = get_option( 'ossdl_off_blog_url' );
+		if ( ! $url )
+			$url = apply_filters( 'ossdl_off_blog_url', untrailingslashit( get_option( 'siteurl' ) ) );
+		return $url;
 	}
 
 	/**
@@ -69,14 +83,10 @@ class WP_Super_Cache_Rest_Get_Settings extends WP_REST_Controller {
 		}
 		include( $wp_cache_config_file );
 
-		if ( $super_cache_enabled ) {
-			if ( $wp_cache_mod_rewrite == 1 ) {
-				return 'mod_rewrite';
-			} else {
-				return 'PHP';
-			}
+		if ( $wp_cache_mod_rewrite == 1 ) {
+			return 'mod_rewrite';
 		} else {
-			return 'wpcache';
+			return 'PHP';
 		}
 	}
 
@@ -162,8 +172,7 @@ class WP_Super_Cache_Rest_Get_Settings extends WP_REST_Controller {
 	 */
 	protected function get_minimum_preload_interval() {
 		global $wpdb;
-		$posts_count = wp_count_posts();
-		$count = $posts_count->publish;
+		$count = $this->get_post_count();
 		if ( $count > 1000 ) {
 			$min_refresh_interval = 720;
 		} else {
@@ -188,8 +197,7 @@ class WP_Super_Cache_Rest_Get_Settings extends WP_REST_Controller {
 	 * @return int
 	 */
 	protected function get_post_count() {
-		$posts_count = wp_count_posts();
-		return $posts_count->publish;
+		return wpsc_post_count();
 	}
 
 	/**
