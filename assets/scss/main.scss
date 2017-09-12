@@ -10,7 +10,8 @@
 @import "grid/bootstrap";
 @import "grid/bootstrap-theme";
 
-@import "super_sprite";
+@import "gulp_png_sprite";
+
 
 body {
   font-family: $base-font-family;

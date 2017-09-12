@@ -1,6 +1,5 @@
 'use strict';
 /* if work with html set TRUE, else - FALSE */
-// const htmlOWp = false;
 const htmlOWp = true;
 
 /* import dependencies */
@@ -24,25 +23,6 @@ if (htmlOWp === false) {
   ChangeBasePath(config);
   config.path.base.dest = config.path.base.wp;
 }
-
-let basePaths = '';
-
-var paths = {
-  scripts: {
-    src: basePaths.src + 'js/**',
-    dest: basePaths.dest + 'js/'
-  },
-
-  sprite: {
-    src: basePaths.src + 'sprite/*'
-  }
-};
-
-var appFiles = {
-	scripts: [paths.scripts.src]
-};
-// postcss
-
 
 // Compile and automatically prefix stylesheets
 gulp.task('scss', function() {
@@ -118,6 +98,23 @@ gulp.task('images', function() {
 		.pipe(gulp.dest(config.path.images.dest));
 });
 
+// Generate sprites
+gulp.task('sprite', function() {
+	var spriteData = gulp
+		.src(config.path.images.sprite + '*.png')
+		.pipe(plugins.spritesmith({
+				imgName: config.sprite.imgName,
+				cssName: config.sprite.cssName,
+				imgPath: config.sprite.imgPath,
+				cssVarMap: function(sprite) {
+					sprite.name = 'sprite-' + sprite.name;
+				}
+			}))
+		.pipe(plugins.if('*.png', gulp.dest(config.path.images.src)))
+		.pipe(plugins.if('*.scss', gulp.dest(config.path.styles.src)))
+		.pipe(plugins.size({ showFiles: true, title: ' task:sprite' }));
+});
+
 // Copy web fonts to dist
 gulp.task('fonts', function() {
   return gulp
@@ -127,6 +124,56 @@ gulp.task('fonts', function() {
 		.pipe(plugins.size({ showFiles: true, title: 'task:fonts' }));
 });
 
+// Optimize script
+gulp.task('scripts', function() {
+  return gulp
+		.src(config.path.scripts.src)
+		.pipe(plugins.newer(config.path.scripts.dest))
+		.pipe(customPlumber('Error Compiling Scripts'))
+		.pipe(plugins.sourcemaps.init())
+		.pipe(plugins.if('*.js', plugins.uglify()))
+		.pipe(plugins.sourcemaps.write('maps', { includeContent: true }))
+		.pipe(gulp.dest(config.path.scripts.dest))
+		.pipe(plugins.size({ showFiles: true, title: 'task:scripts:' }));
+});
+
+// Browser Sync
+gulp.task('browserSync', function() {
+  let args;
+  if (htmlOWp === true) {
+    args = {
+      notify: false,
+      port: 9080,
+      server: {
+        baseDir: config.path.base.dest,
+      }
+    }
+  } else {
+    args = {
+      notify: false,
+      port: 9090,
+      proxy: config.domain,
+      host: config.domain,
+    }
+  }
+  browserSync(args)
+});
+
+// watch for changes
+gulp.task('watch', function() {
+
+  gulp.watch([
+    basePaths.dest + '**/*.{html,htm,php}'
+  ]).on('change', reload);
+
+  gulp.watch(paths.sprite.src, ['cache:clear', 'sprite', 'images', 'styles', reload]);
+  gulp.watch(paths.images.srcimg, ['images', reload]);
+
+  gulp.watch(appFiles.styles, ['styles', reload]);
+  gulp.watch(paths.sprite.src, ['styles', reload]);
+  gulp.watch(paths.fonts.src, ['fonts', reload]);
+  gulp.watch(appFiles.scripts, ['scripts', reload]);
+});
 
 // Custom Plumber function for catching errors
 function customPlumber(errTitle) {
@@ -145,4 +192,5 @@ function ChangeBasePath(config) {
   config.path.images.dest = config.path.images.dest.replace(config.path.base.dest, config.path.base.wp);
   config.path.fonts.dest = config.path.fonts.dest.replace(config.path.base.dest, config.path.base.wp);
   config.path.styles.dest = config.path.styles.dest.replace(config.path.base.dest, config.path.base.wp);
+  config.path.scripts.dest = config.path.scripts.dest.replace(config.path.base.dest, config.path.base.wp);
 }
