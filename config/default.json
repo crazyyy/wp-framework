@@ -1,4 +1,15 @@
 {
   "domain": "wp-framework.dev",
-  "theme": "wp-framework"
+  "theme": "wp-framework",
+  "path": {
+    "base": {
+      "src":"assets/",
+      "dest": "./html/"
+    },
+    "images": {
+      "src": "assets/img/",
+      "srcimg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
+      "dest": "./html/img/"
+    }
+  }
 }

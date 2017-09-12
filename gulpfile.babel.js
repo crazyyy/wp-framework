@@ -4,11 +4,10 @@ const htmlOWp = true;
 
 /* import dependencies */
 import config from 'config';
+
 import gulp from 'gulp';
 import runSequence from 'run-sequence';
 import browserSync from 'browser-sync';
-import imagemin from 'imagemin';
-import imageminPngquant from 'imagemin-pngquant';
 
 const reload = browserSync.reload;
 const plugins = require("gulp-load-plugins")({
@@ -16,25 +15,13 @@ const plugins = require("gulp-load-plugins")({
   replaceString: /\bgulp[\-.]/
 });
 
-
-
-if (htmlOWp === true) {
-  var basePaths = {
-    src: 'assets/',
-    dest: './html/'
-  };
-} else {
-  var basePaths = {
-    src: 'assets/',
-    dest: './wordpress/wp-content/themes/' + config.theme + '/'
-  };
+if (htmlOWp === false) {
+  config.path.base.dest = './wordpress/wp-content/themes/' + config.theme + '/';
 }
+
+let basePaths = '';
+
 var paths = {
-  images: {
-    src: basePaths.src + 'img/',
-    srcimg: basePaths.src + 'img/**/*.{png,jpg,jpeg,gif,svg}',
-    dest: basePaths.dest + 'img/'
-  },
   scripts: {
     src: basePaths.src + 'js/**',
     dest: basePaths.dest + 'js/'
@@ -53,25 +40,19 @@ var paths = {
   }
 };
 
-
-
 // Optimize images
 gulp.task('images', function() {
-  return gulp.src(paths.images.srcimg)
-    .pipe(plugins.newer(paths.images.dest))
-    .pipe(plugins.imagemin({
-      progressive: true,
-      interlaced: true,
-      svgoPlugins: [{
-        removeViewBox: false
-      }],
-      use: [imageminPngquant()]
-    }))
-    .pipe(plugins.size({
-      showFiles: true,
-      title: 'task:images'
-    }))
-    .pipe(gulp.dest(paths.images.dest));
+  return gulp
+		.src(config.path.images.srcimg)
+		.pipe(plugins.newer(config.path.images.dest))
+    .pipe(plugins.imagemin([
+      plugins.imagemin.gifsicle({ interlaced: true }),
+      plugins.imagemin.jpegtran({ progressive: true }),
+      plugins.imagemin.optipng({ optimizationLevel: 5 }),
+      plugins.imagemin.svgo({ plugins: [{ removeViewBox: true }] })
+    ]))
+		.pipe(plugins.size({ showFiles: true, title: 'task:images' }))
+		.pipe(gulp.dest(config.path.images.dest));
 });
 
 
