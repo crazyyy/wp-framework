@@ -10,6 +10,10 @@
       "src": "assets/img/",
       "srcimg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
       "dest": "./html/img/"
+    },
+    "fonts": {
+      "src": "assets/fonts/**",
+      "dest": "./html/fonts/"
     }
   }
 }

@@ -1,5 +1,6 @@
 'use strict';
 /* if work with html set TRUE, else - FALSE */
+// const htmlOWp = false;
 const htmlOWp = true;
 
 /* import dependencies */
@@ -16,7 +17,9 @@ const plugins = require("gulp-load-plugins")({
 });
 
 if (htmlOWp === false) {
-  config.path.base.dest = './wordpress/wp-content/themes/' + config.theme + '/';
+  config.path.base.wp = './wordpress/wp-content/themes/' + config.theme + '/';
+  ChangeBasePath(config);
+  config.path.base.dest = config.path.base.wp;
 }
 
 let basePaths = '';
@@ -31,14 +34,11 @@ var paths = {
     css: basePaths.src + 'css/',
     dest: basePaths.dest + 'css/'
   },
-  fonts: {
-    src: basePaths.src + 'fonts/**',
-    dest: basePaths.dest + 'fonts/'
-  },
   sprite: {
     src: basePaths.src + 'sprite/*'
   }
 };
+
 
 // Optimize images
 gulp.task('images', function() {
@@ -55,6 +55,15 @@ gulp.task('images', function() {
 		.pipe(gulp.dest(config.path.images.dest));
 });
 
+// Copy web fonts to dist
+gulp.task('fonts', function() {
+  return gulp
+		.src(config.path.fonts.src)
+		.pipe(plugins.newer(config.path.fonts.dest))
+		.pipe(gulp.dest(config.path.fonts.dest))
+		.pipe(plugins.size({ showFiles: true, title: 'task:fonts' }));
+});
+
 
 // Custom Plumber function for catching errors
 function customPlumber(errTitle) {
@@ -68,3 +77,8 @@ function customPlumber(errTitle) {
   });
 };
 module.exports = customPlumber;
+
+function ChangeBasePath(config) {
+  config.path.images.dest = config.path.images.dest.replace(config.path.base.dest, config.path.base.wp);
+  config.path.fonts.dest = config.path.fonts.dest.replace(config.path.base.dest, config.path.base.wp);
+}
