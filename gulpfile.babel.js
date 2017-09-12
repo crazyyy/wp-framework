@@ -162,17 +162,26 @@ gulp.task('browserSync', function() {
 // watch for changes
 gulp.task('watch', function() {
 
-  gulp.watch([
-    basePaths.dest + '**/*.{html,htm,php}'
-  ]).on('change', reload);
+  gulp.watch([config.path.base.desthtml]).on('change', reload);
 
-  gulp.watch(paths.sprite.src, ['cache:clear', 'sprite', 'images', 'styles', reload]);
-  gulp.watch(paths.images.srcimg, ['images', reload]);
+  gulp.watch(config.path.images.sprite, ['sprite', 'images', 'styles', reload]);
+  gulp.watch(config.path.images.sprite, ['styles', reload]);
 
-  gulp.watch(appFiles.styles, ['styles', reload]);
-  gulp.watch(paths.sprite.src, ['styles', reload]);
-  gulp.watch(paths.fonts.src, ['fonts', reload]);
-  gulp.watch(appFiles.scripts, ['scripts', reload]);
+  gulp.watch(config.path.images.srcimg, ['images', reload]);
+
+  gulp.watch(config.path.styles.srcfiles, ['styles', reload]);
+
+  gulp.watch(config.path.fonts.src, ['fonts', reload]);
+  gulp.watch(config.path.scripts.src, ['scripts', reload]);
+
+});
+
+// Consolidated dev phase task
+gulp.task('serve', function(callback) {
+  runSequence(
+    ['sprite',  'images'], ['scripts'], ['scss', 'fonts'], ['postcss'], ['browserSync', 'watch'],
+    callback
+  );
 });
 
 // Custom Plumber function for catching errors
@@ -193,4 +202,5 @@ function ChangeBasePath(config) {
   config.path.fonts.dest = config.path.fonts.dest.replace(config.path.base.dest, config.path.base.wp);
   config.path.styles.dest = config.path.styles.dest.replace(config.path.base.dest, config.path.base.wp);
   config.path.scripts.dest = config.path.scripts.dest.replace(config.path.base.dest, config.path.base.wp);
+  config.path.dest.desthtml = config.path.dest.desthtml.replace(config.path.base.dest, config.path.base.wp);
 }

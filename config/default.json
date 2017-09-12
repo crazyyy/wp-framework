@@ -4,7 +4,8 @@
   "path": {
     "base": {
       "src":"assets/",
-      "dest": "./html/"
+      "dest": "./html/",
+      "desthtml": "./html/**/*.{html,htm,php}"
     },
     "images": {
       "src": "assets/img/",

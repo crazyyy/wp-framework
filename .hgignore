@@ -1,23 +1,32 @@
 syntax:glob
 
-*.DS_Store
+.git
+
+*.log
+*.map
 *.orig
 .sass*
-*.log
+*.swp
+*~
+*.iws
 *.sublime-project
 *.sublime-workspace
 .sublime-
 sftp-config.json
 thumbs.db
-
+.project
+.DS_Store
+.idea
 .phpintel
-.git
-\.hg
-\.DS_Store
-\.project
-node_modules
-npm-debug\.log
+license.txt
+readme.html
+sitemap*.xml
+sitemap*.xml.gz
 
+node_modules
+node_modules/**
+_gsdata_
+wordpress/_gsdata_/
 wp-content/advanced-cache.php
 wp-content/backup-db/
 wp-content/backups/
@@ -25,9 +34,7 @@ wp-content/blogs.dir/
 wp-content/cache/
 wp-content/upgrade/
 wp-content/wp-cache-config.php
-wordpress/_gsdata_/
-_gsdata_
-
+wp-content/db.php
 
 local
 docs_html
