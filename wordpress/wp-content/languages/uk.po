@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WordPress - 4.8.x package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2017-08-10 15:50:30+0000\n"
+"PO-Revision-Date: 2017-09-19 19:56:39+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2025,7 +2025,7 @@ msgstr "Не можна створити вже наявний коментар.
 #: wp-includes/rest-api/endpoints/class-wp-rest-comments-controller.php:403
 #: wp-includes/rest-api/endpoints/class-wp-rest-comments-controller.php:420
 msgid "Sorry, you must be logged in to comment."
-msgstr "Вибачте, ви повинні увійти для коментування."
+msgstr "Вибачте, для відправки коментаря необхідно авторизуватись."
 
 #: wp-includes/rest-api/endpoints/class-wp-rest-comments-controller.php:156
 msgid "Query parameter not permitted: %s"
@@ -5132,11 +5132,6 @@ msgctxt "add new from admin bar"
 msgid "Link"
 msgstr "Посилання"
 
-#: wp-includes/post.php:66
-msgctxt "add new media"
-msgid "Add New"
-msgstr "Додати"
-
 #: wp-includes/post.php:64
 msgctxt "post type general name"
 msgid "Media"
@@ -5161,6 +5156,11 @@ msgstr "Запис"
 msgctxt "TinyMCE menu"
 msgid "Format"
 msgstr "Формат"
+
+#: wp-includes/post.php:66
+msgctxt "add new media"
+msgid "Add New"
+msgstr "Додати новий"
 
 #: wp-login.php:870
 msgid "<strong>You have successfully updated WordPress!</strong> Please log back in to see what&#8217;s new."
@@ -6299,13 +6299,13 @@ msgstr "Записи з будь-якого каналу RSS або Atom."
 msgid "Login, RSS, &amp; WordPress.org links."
 msgstr "Вхід, RSS, і посилання WordPress.org."
 
-#: wp-includes/widgets/class-wp-widget-tag-cloud.php:27
-msgid "A cloud of your most used tags."
-msgstr "Хмаринка ваших найуживаніших позначок."
-
 #: wp-includes/widgets/class-wp-nav-menu-widget.php:27
 msgid "Add a custom menu to your sidebar."
 msgstr "Додати користувацьке меню до своєї бічної колонки."
+
+#: wp-includes/widgets/class-wp-widget-tag-cloud.php:27
+msgid "A cloud of your most used tags."
+msgstr "Хмара часто використовуваних позначок."
 
 #. translators: If there are characters in your language that are not supported
 #. by Open Sans, translate this to 'off'. Do not translate into your own
@@ -7044,11 +7044,11 @@ msgstr "Збережено"
 
 #: wp-includes/script-loader.php:461
 msgid "Save &amp; Activate"
-msgstr "Зберегти та увімкнути"
+msgstr "Зберегти та активувати"
 
 #: wp-includes/script-loader.php:462
 msgid "Save &amp; Publish"
-msgstr "Зберегти та оприлюднити"
+msgstr "Зберегти та опублікувати"
 
 #: wp-includes/customize/class-wp-customize-media-control.php:60
 #: wp-includes/customize/class-wp-customize-media-control.php:65
@@ -10016,10 +10016,6 @@ msgstr "Коментарі до: %s"
 msgid "Protected Comments: Please enter your password to view comments."
 msgstr "Захищені коментарі: Будь ласка, введіть свій пароль, щоби переглянути коментарі."
 
-#: wp-includes/widgets/class-wp-widget-meta.php:58
-msgid "Entries <abbr title=\"Really Simple Syndication\">RSS</abbr>"
-msgstr "Записи <abbr title=\"Really Simple Syndication\">RSS</abbr>"
-
 #: wp-includes/widgets.php:1351
 msgid "Enter the RSS feed URL here:"
 msgstr "Введіть посилання RSS каналу:"
@@ -10293,6 +10289,10 @@ msgstr "Введена вами адреса схожа на зовнішнє п
 msgid "The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?"
 msgstr "Введена вами адреса схожа на e-mail, додати префікс mailto: на початок?"
 
+#: wp-includes/widgets/class-wp-widget-meta.php:58
+msgid "Entries <abbr title=\"Really Simple Syndication\">RSS</abbr>"
+msgstr "<abbr title=\"Really Simple Syndication\">RSS</abbr> записів"
+
 #: wp-includes/class-wp-theme.php:800
 msgid "Blue"
 msgstr "Блакитний"
@@ -10383,23 +10383,6 @@ msgstr "Висота"
 #: wp-includes/class-wp-editor.php:182 wp-includes/class-wp-editor.php:1258
 msgid "Visual"
 msgstr "Візуально"
-
-#: wp-includes/default-widgets.php:190
-#: wp-includes/widgets/class-wp-nav-menu-widget.php:137
-#: wp-includes/widgets/class-wp-widget-archives.php:157
-#: wp-includes/widgets/class-wp-widget-calendar.php:104
-#: wp-includes/widgets/class-wp-widget-categories.php:160
-#: wp-includes/widgets/class-wp-widget-media.php:401
-#: wp-includes/widgets/class-wp-widget-meta.php:111
-#: wp-includes/widgets/class-wp-widget-pages.php:131
-#: wp-includes/widgets/class-wp-widget-recent-comments.php:159
-#: wp-includes/widgets/class-wp-widget-recent-posts.php:132
-#: wp-includes/widgets/class-wp-widget-search.php:71
-#: wp-includes/widgets/class-wp-widget-tag-cloud.php:127
-#: wp-includes/widgets/class-wp-widget-text.php:359
-#: wp-includes/widgets/class-wp-widget-text.php:392
-msgid "Title:"
-msgstr "Назва:"
 
 #: wp-includes/comment-template.php:2202
 msgid "Website"
@@ -10505,11 +10488,6 @@ msgstr "Помаранчевий"
 msgid "Click here to cancel reply."
 msgstr "Натисніть сюди, щоби скасувати відповідь."
 
-#: wp-includes/post.php:1372
-msgctxt "page"
-msgid "Add New"
-msgstr "Додати"
-
 #: wp-includes/class-wp-customize-panel.php:385
 #: wp-includes/class-wp-customize-section.php:377
 #: wp-includes/customize/class-wp-customize-nav-menus-panel.php:85
@@ -10561,10 +10539,6 @@ msgstr "Записи автора %s"
 #: wp-includes/class-walker-category.php:137
 msgid "Feed for all posts filed under %s"
 msgstr "Канал для всіх записів %s"
-
-#: wp-includes/widgets/class-wp-widget-meta.php:59
-msgid "Comments <abbr title=\"Really Simple Syndication\">RSS</abbr>"
-msgstr "Коментарі <abbr title=\"Really Simple Syndication\">RSS</abbr>"
 
 #: wp-includes/category-template.php:1144
 msgid "Tags: "
@@ -10633,6 +10607,32 @@ msgstr "Щоб відправити коментар вам необхідно <
 #: wp-includes/class-walker-comment.php:354
 msgid "Your comment is awaiting moderation."
 msgstr "Ваш коментар очікує на схвалення."
+
+#: wp-includes/default-widgets.php:190
+#: wp-includes/widgets/class-wp-nav-menu-widget.php:137
+#: wp-includes/widgets/class-wp-widget-archives.php:157
+#: wp-includes/widgets/class-wp-widget-calendar.php:104
+#: wp-includes/widgets/class-wp-widget-categories.php:160
+#: wp-includes/widgets/class-wp-widget-media.php:401
+#: wp-includes/widgets/class-wp-widget-meta.php:111
+#: wp-includes/widgets/class-wp-widget-pages.php:131
+#: wp-includes/widgets/class-wp-widget-recent-comments.php:159
+#: wp-includes/widgets/class-wp-widget-recent-posts.php:132
+#: wp-includes/widgets/class-wp-widget-search.php:71
+#: wp-includes/widgets/class-wp-widget-tag-cloud.php:127
+#: wp-includes/widgets/class-wp-widget-text.php:359
+#: wp-includes/widgets/class-wp-widget-text.php:392
+msgid "Title:"
+msgstr "Заголовок:"
+
+#: wp-includes/widgets/class-wp-widget-meta.php:59
+msgid "Comments <abbr title=\"Really Simple Syndication\">RSS</abbr>"
+msgstr "<abbr title=\"Really Simple Syndication\">RSS</abbr> коментарів"
+
+#: wp-includes/post.php:1372
+msgctxt "page"
+msgid "Add New"
+msgstr "Додати нову"
 
 #: wp-includes/category-template.php:524
 #: wp-includes/theme-compat/sidebar.php:97
@@ -10737,10 +10737,6 @@ msgstr "Сторінки"
 #: wp-includes/admin-bar.php:468
 msgid "Users"
 msgstr "Користувачі"
-
-#: wp-includes/class-wp-theme.php:751 wp-includes/comment-template.php:31
-msgid "Anonymous"
-msgstr "Анонімний"
 
 #: wp-includes/widgets/class-wp-widget-rss.php:31
 msgid "RSS"
@@ -10864,11 +10860,6 @@ msgstr "Редагувати медіа"
 #: wp-includes/script-loader.php:620
 msgid "(no title)"
 msgstr "(без назви)"
-
-#: wp-includes/post.php:1372
-msgctxt "post"
-msgid "Add New"
-msgstr "Додати"
 
 #: wp-includes/widgets/class-wp-widget-recent-comments.php:162
 msgid "Number of comments to show:"
@@ -11067,11 +11058,14 @@ msgstr "OK"
 msgid "Privately Published"
 msgstr "Опубліковано як особисте"
 
-#: wp-includes/class-wp-editor.php:1074 wp-includes/media-template.php:382
-#: wp-includes/media-template.php:563 wp-includes/revision.php:34
-#: wp-includes/script-loader.php:581
-msgid "Title"
-msgstr "Назва"
+#: wp-includes/class-wp-theme.php:751 wp-includes/comment-template.php:31
+msgid "Anonymous"
+msgstr "Анонім"
+
+#: wp-includes/post.php:1372
+msgctxt "post"
+msgid "Add New"
+msgstr "Додати новий"
 
 #: wp-includes/admin-bar.php:337 wp-includes/admin-bar.php:558
 #: wp-includes/deprecated.php:2790
@@ -11137,3 +11131,9 @@ msgstr "d.m.Y"
 #: wp-includes/script-loader.php:467
 msgid "Cheatin&#8217; uh?"
 msgstr "Хакер, чи що?"
+
+#: wp-includes/class-wp-editor.php:1074 wp-includes/media-template.php:382
+#: wp-includes/media-template.php:563 wp-includes/revision.php:34
+#: wp-includes/script-loader.php:581
+msgid "Title"
+msgstr "Заголовок"

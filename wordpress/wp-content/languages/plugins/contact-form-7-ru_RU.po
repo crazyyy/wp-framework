@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - Contact Form 7 - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2017-06-01 03:00:20+0000\n"
+"PO-Revision-Date: 2017-10-04 10:43:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,35 +42,35 @@ msgstr "Невозможно создать существующую конта�
 msgid "You are not allowed to access contact forms."
 msgstr "У вас нет доступа к контактной форме."
 
-#: includes/config-validator.php:537
+#: includes/config-validator.php:541
 msgid "Attachment file does not exist at %path%."
 msgstr "По указанному пути %path% файл вложения не существует. "
 
-#: includes/config-validator.php:468
+#: includes/config-validator.php:472
 msgid "Invalid mailbox syntax is used in the %name% field."
 msgstr "Был использован некорректный синтаксис почтового адреса в поле %name%."
 
-#: includes/config-validator.php:379
+#: includes/config-validator.php:383
 msgid "Unavailable names (%names%) are used for form controls."
 msgstr "Использованы недопустимые названия (%names%) элементов управления формы."
 
-#: includes/config-validator.php:141
+#: includes/config-validator.php:142
 msgid "There are invalid mail header fields."
 msgstr "Присутствуют недопустимые поля заголовка почты."
 
-#: includes/config-validator.php:137
+#: includes/config-validator.php:138
 msgid "HTML tags are used in a message."
 msgstr "В сообщении используются HTML теги."
 
-#: includes/config-validator.php:135
+#: includes/config-validator.php:136
 msgid "Sender email address does not belong to the site domain."
 msgstr "Электронный адрес отправителя не принадлежит домену сайта."
 
-#: includes/config-validator.php:133
+#: includes/config-validator.php:134
 msgid "Invalid mailbox syntax is used."
 msgstr "Использован некорректный синтаксис почтового адреса."
 
-#: includes/config-validator.php:131
+#: includes/config-validator.php:132
 msgid "There is a possible empty field."
 msgstr "Вероятно есть пустое поле."
 
@@ -81,27 +81,27 @@ msgstr[0] "Обнаружена %s ошибка конфигурации"
 msgstr[1] "Обнаружены %s ошибки конфигурации"
 msgstr[2] "Обнаружено %s ошибок конфигурации"
 
-#: admin/admin.php:319
+#: admin/admin.php:321
 msgid "%d configuration errors detected in this tab panel"
 msgstr "Обнаружено %d ошибки на данной панели вкладок"
 
-#: admin/admin.php:318
+#: admin/admin.php:320
 msgid "1 configuration error detected in this tab panel"
 msgstr "Обнаружена 1 ошибка на данной панели вкладок"
 
-#: admin/admin.php:317
+#: admin/admin.php:319
 msgid "%d configuration errors detected"
 msgstr "Обнаружены %d ошибки конфигурации"
 
-#: admin/admin.php:316
+#: admin/admin.php:318
 msgid "1 configuration error detected"
 msgstr "Обнаружена 1 ошибка в конфигурации"
 
-#: admin/admin.php:501 includes/rest-api.php:138 includes/rest-api.php:214
+#: admin/admin.php:503 includes/rest-api.php:138 includes/rest-api.php:214
 msgid "There was an error saving the contact form."
 msgstr "Ошибка при сохранении контактной формы."
 
-#: includes/functions.php:357
+#: includes/functions.php:355
 msgid "%1$s is <strong>deprecated</strong> since Contact Form 7 version %2$s! Use %3$s instead."
 msgstr "%1$s считается <strong>устаревшим</strong> начиная с Contact Form 7 версии %2$s! Вместо этого используйте %3$s ."
 
@@ -123,7 +123,7 @@ msgstr "Перед тем как оплакивать потерянную по�
 
 #: admin/includes/welcome-panel.php:26
 msgid "comment blacklist"
-msgstr "Comment Blacklist"
+msgstr "черный список комментариев"
 
 #: admin/includes/welcome-panel.php:26
 msgid "https://contactform7.com/comment-blacklist/"
@@ -141,19 +141,19 @@ msgstr "Спамеры затрагивают всё, ваши контактн�
 msgid "Getting spammed? You have protection."
 msgstr "Получаете спам? У нас есть защита."
 
-#: includes/config-validator.php:139
+#: includes/config-validator.php:140
 msgid "Multiple form controls are in a single label element."
 msgstr "Несколько элементов управления формы находятся внутри одного элемента маркировки."
 
-#: admin/admin.php:315
+#: admin/admin.php:317
 msgid "How to correct this?"
 msgstr "Как это исправить?"
 
-#: admin/admin.php:420
+#: admin/admin.php:422
 msgid "FAQ about Configuration Validator"
 msgstr "Часто задаваемые вопросы о конфигурации валидатора"
 
-#: admin/admin.php:420
+#: admin/admin.php:422
 msgid "https://contactform7.com/configuration-validator-faq/"
 msgstr "https://contactform7.com/configuration-validator-faq/"
 
@@ -247,34 +247,34 @@ msgctxt "mail subject"
 msgid "%1$s \"%2$s\""
 msgstr "%1$s \"%2$s\""
 
-#: admin/admin.php:607
+#: admin/admin.php:609
 msgid "Misconfiguration leads to mail delivery failure or other troubles. Validate your contact forms now."
 msgstr "Ошибки в конфигурации ведут к сбоям в отправке писем или иным неполадкам. Проверьте сейчас свои контактные формы."
 
-#: admin/admin.php:605
+#: admin/admin.php:607
 msgid "Validate Contact Form 7 Configuration"
 msgstr "Проверить конфигурацию Contact Form 7"
 
-#: includes/config-validator.php:16
+#: includes/config-validator.php:17
 msgid "https://contactform7.com/configuration-errors/"
 msgstr "https://contactform7.com/configuration-errors/"
 
-#: admin/admin.php:523
+#: admin/admin.php:525
 msgid "Configuration validation completed. No invalid contact form was found."
 msgstr "Проверка конфигурации завершена. Проблемы в контактных формах не найдены."
 
-#: admin/admin.php:515
+#: admin/admin.php:517
 msgid "Configuration validation completed. An invalid contact form was found."
 msgid_plural "Configuration validation completed. %s invalid contact forms were found."
 msgstr[0] "Проверка конфигурации завершена. Одна неверная форма контактов была обнаружена."
 msgstr[1] "Проверка конфигурации завершена. %s неверные формы контактов были обнаружены."
 msgstr[2] "Проверка конфигурации завершена. %s неверных форм контактов было обнаружено."
 
-#: admin/admin.php:412
+#: admin/admin.php:414
 msgid "Validate Configuration"
 msgstr "Проверить конфигурацию"
 
-#: admin/admin.php:403
+#: admin/admin.php:405
 msgid "Validate %s Contact Form Now"
 msgid_plural "Validate %s Contact Forms Now"
 msgstr[0] "Проверить сейчас %s Форму Контактов"
@@ -285,7 +285,7 @@ msgstr[2] "Проверить сейчас %s Форм Контактов"
 msgid "You are not allowed to validate configuration."
 msgstr "Вам не доступна валидация конфигурации."
 
-#: includes/controller.php:65
+#: includes/controller.php:64
 msgid "Please verify that you are not a robot."
 msgstr "Пожалуйста, подтвердите, что вы не робот."
 
@@ -375,6 +375,10 @@ msgstr "reCAPTCHA"
 #: modules/really-simple-captcha.php:236
 msgid "CAPTCHA (Really Simple CAPTCHA)"
 msgstr "КАПТЧА (Действительно простая КАПТЧА)"
+
+#. Author URI of the plugin/theme
+msgid "https://ideasilo.wordpress.com/"
+msgstr "https://ideasilo.wordpress.com/"
 
 #. Author of the plugin/theme
 msgid "Takayuki Miyoshi"
@@ -668,34 +672,34 @@ msgstr "Более ранняя дата установленного огран
 msgid "Date format that the sender entered is invalid"
 msgstr "Отправителем введён некорректный формат даты"
 
-#: modules/checkbox.php:363 modules/date.php:221 modules/number.php:229
+#: modules/checkbox.php:362 modules/date.php:221 modules/number.php:229
 #: modules/select.php:248 modules/text.php:316 modules/textarea.php:190
 msgid "To use the value input through this field in a mail field, you need to insert the corresponding mail-tag (%s) into the field on the Mail tab."
 msgstr "Чтобы использовать значение, введенное через это поле в поле почты, вам нужно вставить соответствующий почтовый-тег (%s) в поле на вкладке Почта."
 
-#: modules/checkbox.php:333
+#: modules/checkbox.php:332
 msgid "Make checkboxes exclusive"
 msgstr "Сделать чекбоксы исключительными"
 
-#: modules/checkbox.php:331
+#: modules/checkbox.php:330
 msgid "Wrap each item with label element"
 msgstr "Оберните каждый элемент с элементом метки"
 
-#: modules/checkbox.php:330
+#: modules/checkbox.php:329
 msgid "Put a label first, a checkbox last"
 msgstr "Поставьте метку сначала, после - чекбокс."
 
-#: modules/checkbox.php:329 modules/select.php:217
+#: modules/checkbox.php:328 modules/select.php:217
 msgid "One option per line."
 msgstr "Один вариант в каждой строке."
 
-#: modules/checkbox.php:312 modules/date.php:164 modules/file.php:246
+#: modules/checkbox.php:311 modules/date.php:164 modules/file.php:246
 #: modules/number.php:172 modules/select.php:201 modules/text.php:247
 #: modules/textarea.php:150
 msgid "Required field"
 msgstr "Обязательное поле"
 
-#: modules/checkbox.php:308 modules/checkbox.php:311 modules/date.php:160
+#: modules/checkbox.php:307 modules/checkbox.php:310 modules/date.php:160
 #: modules/date.php:163 modules/file.php:242 modules/file.php:245
 #: modules/number.php:163 modules/number.php:166 modules/select.php:197
 #: modules/select.php:200 modules/text.php:243 modules/text.php:246
@@ -703,27 +707,27 @@ msgstr "Обязательное поле"
 msgid "Field type"
 msgstr "Тип поля"
 
-#: modules/checkbox.php:297 modules/select.php:187
+#: modules/checkbox.php:296 modules/select.php:187
 msgid "Checkboxes, Radio Buttons and Menus"
 msgstr "Чекбоксы, Радиокнопки и Меню"
 
-#: modules/checkbox.php:297 modules/select.php:187
+#: modules/checkbox.php:296 modules/select.php:187
 msgid "https://contactform7.com/checkboxes-radio-buttons-and-menus/"
 msgstr "https://contactform7.com/checkboxes-radio-buttons-and-menus/"
 
-#: modules/checkbox.php:294
+#: modules/checkbox.php:293
 msgid "Generate a form-tag for a group of radio buttons. For more details, see %s."
 msgstr "Генерируйте тег формы для группы радио кнопок. Для более подробной информации см. %s."
 
-#: modules/checkbox.php:292
+#: modules/checkbox.php:291
 msgid "Generate a form-tag for a group of checkboxes. For more details, see %s."
 msgstr "Генерируйте тег формы для группы чекбоксов. Для более подробной информации см. %s."
 
-#: modules/checkbox.php:279
+#: modules/checkbox.php:278
 msgid "radio buttons"
 msgstr "радио кнопка"
 
-#: modules/checkbox.php:277
+#: modules/checkbox.php:276
 msgid "checkboxes"
 msgstr "чекбоксы"
 
@@ -767,7 +771,7 @@ msgstr "Код введен неверно."
 msgid "The code that sender entered does not match the CAPTCHA"
 msgstr "Код, который ввел отправитель не совпадает с CAPTCHA"
 
-#: modules/acceptance.php:195 modules/checkbox.php:358 modules/date.php:216
+#: modules/acceptance.php:195 modules/checkbox.php:357 modules/date.php:216
 #: modules/file.php:285 modules/number.php:224 modules/quiz.php:230
 #: modules/really-simple-captcha.php:309 modules/recaptcha.php:503
 #: modules/select.php:243 modules/submit.php:88 modules/text.php:311
@@ -775,7 +779,7 @@ msgstr "Код, который ввел отправитель не совпад
 msgid "Insert Tag"
 msgstr "Вставить тег"
 
-#: modules/acceptance.php:182 modules/checkbox.php:345 modules/date.php:204
+#: modules/acceptance.php:182 modules/checkbox.php:344 modules/date.php:204
 #: modules/file.php:272 modules/number.php:212 modules/quiz.php:217
 #: modules/really-simple-captcha.php:282 modules/really-simple-captcha.php:297
 #: modules/recaptcha.php:490 modules/select.php:230 modules/submit.php:75
@@ -783,7 +787,7 @@ msgstr "Вставить тег"
 msgid "Class attribute"
 msgstr "атрибут класса"
 
-#: modules/acceptance.php:177 modules/checkbox.php:340 modules/date.php:199
+#: modules/acceptance.php:177 modules/checkbox.php:339 modules/date.php:199
 #: modules/file.php:267 modules/number.php:207 modules/quiz.php:212
 #: modules/really-simple-captcha.php:277 modules/really-simple-captcha.php:292
 #: modules/recaptcha.php:485 modules/select.php:225 modules/submit.php:70
@@ -800,12 +804,12 @@ msgid "Make this checkbox checked by default"
 msgstr "Сделайте этот флажок отмеченным по умолчанию"
 
 #: modules/acceptance.php:166 modules/acceptance.php:169
-#: modules/checkbox.php:324 modules/checkbox.php:327 modules/select.php:212
+#: modules/checkbox.php:323 modules/checkbox.php:326 modules/select.php:212
 #: modules/select.php:215
 msgid "Options"
 msgstr "Параметры"
 
-#: modules/acceptance.php:161 modules/checkbox.php:319 modules/date.php:170
+#: modules/acceptance.php:161 modules/checkbox.php:318 modules/date.php:170
 #: modules/file.php:252 modules/number.php:178 modules/quiz.php:196
 #: modules/really-simple-captcha.php:267 modules/select.php:207
 #: modules/text.php:253 modules/textarea.php:156
@@ -1193,7 +1197,7 @@ msgstr "Введите заголовок"
 msgid "Save"
 msgstr "Сохранить"
 
-#: admin/admin.php:576
+#: admin/admin.php:578
 msgid "You are not allowed to edit this contact form."
 msgstr "Вы не можете редактировать эту контактную форму."
 
@@ -1209,35 +1213,35 @@ msgstr "https://contactform7.com/spam-filtering-with-akismet/"
 msgid "Dismiss"
 msgstr "Закрыть"
 
-#: admin/admin.php:558
+#: admin/admin.php:560
 msgid "<strong>Contact Form 7 %1$s requires WordPress %2$s or higher.</strong> Please <a href=\"%3$s\">update WordPress</a> first."
 msgstr "<strong>Contact Form 7 %1$s требует WordPress %2$s или новее.</strong> Пожалуйста, сначала <a href=\"%3$s\">обновите WordPress</a>."
 
-#: admin/admin.php:540
+#: admin/admin.php:542
 msgid "Settings"
 msgstr "Настройки"
 
-#: admin/admin.php:492
+#: admin/admin.php:494
 msgid "Contact form deleted."
 msgstr "Контактная форма удалена."
 
-#: admin/admin.php:490
+#: admin/admin.php:492
 msgid "Contact form saved."
 msgstr "Контактная форма сохранена."
 
-#: admin/admin.php:488
+#: admin/admin.php:490
 msgid "Contact form created."
 msgstr "Контактная форма создана."
 
-#: admin/admin.php:390
+#: admin/admin.php:392
 msgid "Search Contact Forms"
 msgstr "Поиск формы"
 
-#: admin/admin.php:377
+#: admin/admin.php:379
 msgid "Search results for &#8220;%s&#8221;"
 msgstr "Результаты поиска &#8220;%s&#8221;"
 
-#: admin/admin.php:308
+#: admin/admin.php:310
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr "Внесенные изменения будут потеряны, если вы уйдете с этой страницы."
 
@@ -1257,11 +1261,11 @@ msgstr "Недостаточно прав для редактирования."
 msgid "Integration"
 msgstr "Интеграция"
 
-#: admin/admin.php:47 admin/admin.php:458
+#: admin/admin.php:47 admin/admin.php:460
 msgid "Integration with Other Services"
 msgstr "Интеграция с другими сервисами"
 
-#: admin/admin.php:37 admin/admin.php:372 admin/edit-contact-form.php:46
+#: admin/admin.php:37 admin/admin.php:374 admin/edit-contact-form.php:46
 msgid "Add New"
 msgstr "Добавить новую"
 
@@ -1269,7 +1273,7 @@ msgstr "Добавить новую"
 msgid "Add New Contact Form"
 msgstr "Добавить контактную форму"
 
-#: admin/admin.php:29 admin/admin.php:365 includes/contact-form.php:31
+#: admin/admin.php:29 admin/admin.php:367 includes/contact-form.php:31
 msgid "Contact Forms"
 msgstr "Контактные формы"
 
@@ -1281,7 +1285,7 @@ msgstr "Редактировать контактную форму"
 msgid "Contact"
 msgstr "Contact Form 7"
 
-#. #-#-#-#-#  contact-form-7-code.pot (Contact Form 7 4.8)  #-#-#-#-#
+#. #-#-#-#-#  contact-form-7-code.pot (Contact Form 7 4.9)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/admin.php:21 modules/flamingo.php:150
 msgid "Contact Form 7"

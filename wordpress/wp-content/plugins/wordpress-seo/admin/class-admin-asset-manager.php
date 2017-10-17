@@ -149,6 +149,13 @@ class WPSEO_Admin_Asset_Manager {
 
 		return array(
 			array(
+				'name' => 'help-center',
+				'src'  => 'wp-seo-help-center-' . $flat_version,
+				'deps' => array(
+					'jquery'
+				),
+			),
+			array(
 				'name' => 'admin-script',
 				'src'  => 'wp-seo-admin-' . $flat_version,
 				'deps' => array(
@@ -303,6 +310,34 @@ class WPSEO_Admin_Asset_Manager {
 				'src'  => 'wp-seo-edit-page-' . $flat_version,
 				'deps' => array( 'jquery' ),
 			),
+			array(
+				'name' => 'quick-edit-handler',
+				'src'  => 'wp-seo-quick-edit-handler-' . $flat_version,
+				'deps' => array( 'jquery' ),
+				'in_footer' => true,
+			),
+			array(
+				'name' => 'api',
+				'src'  => 'wp-seo-api-' . $flat_version,
+				'deps' => array(
+					'wp-api',
+					'jquery',
+				),
+			),
+			array(
+				'name' => 'dashboard-widget',
+				'src'  => 'wp-seo-dashboard-widget-' . $flat_version,
+				'deps' => array(
+					self::PREFIX . 'api',
+					self::PREFIX . 'polyfill',
+					'jquery',
+				),
+			),
+			array(
+				'name' => 'filter-explanation',
+				'src'  => 'wp-seo-filter-explanation-' . $flat_version,
+				'deps' => array( 'jquery' ),
+			),
 		);
 	}
 
@@ -395,6 +430,10 @@ class WPSEO_Admin_Asset_Manager {
 			array(
 				'name' => 'extensions',
 				'src'  => 'yoast-extensions-' . $flat_version,
+			),
+			array(
+				'name' => 'filter-explanation',
+				'src'  => 'filter-explanation-' . $flat_version,
 			),
 		);
 	}
