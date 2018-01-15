@@ -28,113 +28,147 @@ if (htmlOWp === false) {
 gulp.task('scss', function() {
   // For best performance, don't add Sass partials to `gulp.src`
   return gulp
-		.src(config.path.styles.srcfiles)
-		.pipe(customPlumber('Error Running Sass'))
-		.pipe(plugins.newer(config.path.styles.css))
-		.pipe(plugins.sourcemaps.init())
-		.pipe(plugins.sass({
-				outputStyle: 'expanded',
-				precision: 5,
-				onError: console.error.bind(console, 'Sass error:')
-			}))
-		.pipe(plugins.sourcemaps.write('maps', { includeContent: true }))
-		.pipe(gulp.dest(config.path.styles.css))
-		.pipe(plugins.size({ showFiles: true, title: 'task:styles' }));
+    .src(config.path.styles.srcfiles)
+    .pipe(customPlumber('Error Running Sass'))
+    .pipe(plugins.newer(config.path.styles.css))
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.sass({
+      outputStyle: 'expanded',
+      precision: 5,
+      onError: console.error.bind(console, 'Sass error:')
+    }))
+    .pipe(plugins.sourcemaps.write('maps', {
+      includeContent: true
+    }))
+    .pipe(gulp.dest(config.path.styles.css))
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:styles'
+    }));
 });
 
 // postcss autoprefix
 gulp.task('postcss', function() {
-  var processors =
-    [cssnext({
+  var processors = [cssnext({
       browsers: [
-              'ie >= 8',
-              'ie_mob >= 10',
-              'ff >= 20',
-              'chrome >= 24',
-              'safari >= 5',
-              'opera >= 12',
-              'ios >= 7',
-              'android >= 2.3',
-              '> 1%',
-              'last 5 versions',
-              'bb >= 10'
-            ]
+        'ie >= 8',
+        'ie_mob >= 10',
+        'ff >= 20',
+        'chrome >= 24',
+        'safari >= 5',
+        'opera >= 12',
+        'ios >= 7',
+        'android >= 2.3',
+        '> 1%',
+        'last 5 versions',
+        'bb >= 10'
+      ]
     }),
     cssnano({
-				discardComments: {
-					removeAll: true
-				}
-			}
+        discardComments: {
+          removeAll: true
+        }
+      }
 
 
-    )];;
+    )
+  ];;
   return gulp
-		.src(config.path.styles.cssfiles)
-		.pipe(customPlumber('Error Compiling PostCSS'))
-		.pipe(plugins.newer(config.path.styles.dest))
-		.pipe(plugins.sourcemaps.init())
-		.pipe(plugins.postcss(processors))
-		.pipe(plugins.sourcemaps.write('maps', { includeContent: true }))
-		.pipe(gulp.dest(config.path.styles.dest))
-		.pipe(plugins.size({ showFiles: true, title: 'task:postcss' }));
+    .src(config.path.styles.cssfiles)
+    .pipe(customPlumber('Error Compiling PostCSS'))
+    .pipe(plugins.newer(config.path.styles.dest))
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.postcss(processors))
+    .pipe(plugins.sourcemaps.write('maps', {
+      includeContent: true
+    }))
+    .pipe(gulp.dest(config.path.styles.dest))
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:postcss'
+    }));
 });
 
 gulp.task('styles', function(callback) {
-	runSequence(['scss'], ['postcss'], callback);
+  runSequence(['scss'], ['postcss'], callback);
 });
 
 // Optimize images
 gulp.task('images', function() {
   return gulp
-		.src(config.path.images.srcimg)
-		.pipe(plugins.newer(config.path.images.dest))
+    .src(config.path.images.srcimg)
+    .pipe(plugins.newer(config.path.images.dest))
     .pipe(plugins.imagemin([
-      plugins.imagemin.gifsicle({ interlaced: true }),
-      plugins.imagemin.jpegtran({ progressive: true }),
-      plugins.imagemin.optipng({ optimizationLevel: 5 }),
-      plugins.imagemin.svgo({ plugins: [{ removeViewBox: true }] })
+      plugins.imagemin.gifsicle({
+        interlaced: true
+      }),
+      plugins.imagemin.jpegtran({
+        progressive: true
+      }),
+      plugins.imagemin.optipng({
+        optimizationLevel: 5
+      }),
+      plugins.imagemin.svgo({
+        plugins: [{
+          removeViewBox: true
+        }]
+      })
     ]))
-		.pipe(plugins.size({ showFiles: true, title: 'task:images' }))
-		.pipe(gulp.dest(config.path.images.dest));
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:images'
+    }))
+    .pipe(gulp.dest(config.path.images.dest));
 });
 
 // Generate sprites
 gulp.task('sprite', function() {
-	var spriteData = gulp
-		.src(config.path.images.sprite + '*.png')
-		.pipe(plugins.spritesmith({
-				imgName: config.sprite.imgName,
-				cssName: config.sprite.cssName,
-				imgPath: config.sprite.imgPath,
-				cssVarMap: function(sprite) {
-					sprite.name = 'sprite-' + sprite.name;
-				}
-			}))
-		.pipe(plugins.if('*.png', gulp.dest(config.path.images.src)))
-		.pipe(plugins.if('*.scss', gulp.dest(config.path.styles.src)))
-		.pipe(plugins.size({ showFiles: true, title: ' task:sprite' }));
+  var spriteData = gulp
+    .src(config.path.images.sprite + '*.png')
+    .pipe(plugins.spritesmith({
+      imgName: config.sprite.imgName,
+      cssName: config.sprite.cssName,
+      imgPath: config.sprite.imgPath,
+      cssVarMap: function(sprite) {
+        sprite.name = 'sprite-' + sprite.name;
+      }
+    }))
+    .pipe(plugins.if('*.png', gulp.dest(config.path.images.src)))
+    .pipe(plugins.if('*.scss', gulp.dest(config.path.styles.src)))
+    .pipe(plugins.size({
+      showFiles: true,
+      title: ' task:sprite'
+    }));
 });
 
 // Copy web fonts to dist
 gulp.task('fonts', function() {
   return gulp
-		.src(config.path.fonts.src)
-		.pipe(plugins.newer(config.path.fonts.dest))
-		.pipe(gulp.dest(config.path.fonts.dest))
-		.pipe(plugins.size({ showFiles: true, title: 'task:fonts' }));
+    .src(config.path.fonts.src)
+    .pipe(plugins.newer(config.path.fonts.dest))
+    .pipe(gulp.dest(config.path.fonts.dest))
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:fonts'
+    }));
 });
 
 // Optimize script
 gulp.task('scripts', function() {
   return gulp
-		.src(config.path.scripts.src)
-		.pipe(plugins.newer(config.path.scripts.dest))
-		.pipe(customPlumber('Error Compiling Scripts'))
-		.pipe(plugins.sourcemaps.init())
-		.pipe(plugins.if('*.js', plugins.uglify()))
-		.pipe(plugins.sourcemaps.write('maps', { includeContent: true }))
-		.pipe(gulp.dest(config.path.scripts.dest))
-		.pipe(plugins.size({ showFiles: true, title: 'task:scripts:' }));
+    .src(config.path.scripts.src)
+    .pipe(plugins.newer(config.path.scripts.dest))
+    .pipe(customPlumber('Error Compiling Scripts'))
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.if('*.js', plugins.uglify()))
+    .pipe(plugins.sourcemaps.write('maps', {
+      includeContent: true
+    }))
+    .pipe(gulp.dest(config.path.scripts.dest))
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:scripts:'
+    }));
 });
 
 // Browser Sync
@@ -153,7 +187,7 @@ gulp.task('browserSync', function() {
       notify: false,
       port: 9090,
       proxy: config.domain,
-      host: config.domain,
+      host: config.domain
     }
   }
   browserSync(args)
@@ -179,7 +213,7 @@ gulp.task('watch', function() {
 // Consolidated dev phase task
 gulp.task('serve', function(callback) {
   runSequence(
-    ['sprite',  'images'], ['scripts'], ['scss', 'fonts'], ['postcss'], ['browserSync', 'watch'],
+    ['sprite', 'images'], ['scripts'], ['scss', 'fonts'], ['postcss'], ['browserSync', 'watch'],
     callback
   );
 });

@@ -110,9 +110,9 @@ body {
 html,
 body,
 button {
-  -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
           font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 html {
   font-family: sans-serif;
@@ -208,16 +208,16 @@ input[type='reset'],
 input[type='submit'] {
   cursor: pointer;
 
-  -webkit-appearance: button;
   *overflow: visible;
+  -webkit-appearance: button;
 }
 input {
   &[type='reset'],
   &[type='submit'] {
     cursor: pointer;
 
-    -webkit-appearance: button;
     *overflow: visible;
+    -webkit-appearance: button;
   }
   &[disabled] {
     cursor: default;
@@ -270,7 +270,6 @@ table {
   }
 }
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
 
@@ -284,17 +283,24 @@ table {
     text-rendering: optimizeLegibility;
   }
 }
+html {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
 hr {
-  -moz-box-sizing: content-box;
-       box-sizing: content-box;
+  box-sizing: content-box;
   height: 0;
 }
 dfn {
   font-style: italic;
 }
 mark {
-  color: #000;
-  background-color: #ff0;
+  color: #000000;
+  background-color: #ffff00;
 }
 audio,
 canvas,
