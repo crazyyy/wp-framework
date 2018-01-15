@@ -2,8 +2,8 @@
 Contributors: johnbillion
 Tags: ajax, debug, debug-bar, debugging, development, developer, performance, profiler, profiling, queries, query monitor, rest-api
 Requires at least: 3.7
-Tested up to: 4.8
-Stable tag: 2.15.0
+Tested up to: 4.9
+Stable tag: 2.17.0
 License: GPLv2 or later
 
 View debugging and performance information on database queries, hooks, conditionals, HTTP requests, redirects and more.
@@ -75,6 +75,10 @@ Filtering queries by component or calling function makes it easy to see which pl
  * Shows the response code, call stack, component, timeout, and time taken
  * Highlights erroneous responses, such as failed requests and anything without a `200` response code
 
+= User Capability Checks =
+
+ * Shows every user capability check that is performed on the page, along with the result and any parameters passed along with the capability check.
+
 = Redirects =
 
  * Whenever a redirect occurs, Query Monitor adds an `X-QM-Redirect` HTTP header containing the call stack, so you can use your favourite HTTP inspector or browser developer tools to easily trace where a redirect has come from
@@ -121,7 +125,7 @@ In addition to this, you can set an authentication cookie which allows you to vi
 
 1. The admin toolbar menu showing an overview
 2. Aggregate database queries by component
-3. Slow database queries highlighted in a separate panel
+3. User capability checks with an active filter
 4. Database queries complete with filter controls
 5. Hooks and actions
 6. HTTP requests (showing an HTTP error)

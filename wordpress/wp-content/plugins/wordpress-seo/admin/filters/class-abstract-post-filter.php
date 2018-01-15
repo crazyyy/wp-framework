@@ -17,36 +17,34 @@ abstract class WPSEO_Abstract_Post_Filter implements WPSEO_WordPress_Integration
 	 *
 	 * @return string The modified query.
 	 */
-	public abstract function filter_posts( $where );
+	abstract public function filter_posts( $where );
 
 	/**
 	 * Returns the query value this filter uses.
 	 *
 	 * @return string The query value this filter uses.
 	 */
-	public abstract function get_query_val();
+	abstract public function get_query_val();
 
 	/**
 	 * Returns the total number of posts that match this filter.
 	 *
 	 * @return int The total number of posts that match this filter.
 	 */
-	protected abstract function get_post_total();
+	abstract protected function get_post_total();
 
 	/**
 	 * Returns the label for this filter.
 	 *
 	 * @return string The label for this filter.
 	 */
-	protected abstract function get_label();
+	abstract protected function get_label();
 
 	/**
 	 * Registers the hooks.
 	 */
 	public function register_hooks() {
-		foreach ( $this->get_post_types() as $post_type ) {
-			add_filter( 'views_edit-' . $post_type, array( $this, 'add_filter_link' ) );
-		}
+		add_action( 'admin_init', array( $this, 'add_filter_links' ), 11 );
 
 		add_filter( 'posts_where', array( $this, 'filter_posts' ) );
 
@@ -56,6 +54,17 @@ abstract class WPSEO_Abstract_Post_Filter implements WPSEO_WordPress_Integration
 
 		if ( $this->is_filter_active() && $this->get_explanation() !== null ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_explanation_assets' ) );
+		}
+	}
+
+	/**
+	 * Adds the filter links to the view_edit screens to give the user a filter link.
+	 *
+	 * @return void
+	 */
+	public function add_filter_links() {
+		foreach ( $this->get_post_types() as $post_type ) {
+			add_filter( 'views_edit-' . $post_type, array( $this, 'add_filter_link' ) );
 		}
 	}
 
@@ -84,9 +93,9 @@ abstract class WPSEO_Abstract_Post_Filter implements WPSEO_WordPress_Integration
 	 */
 	public function add_filter_link( array $views ) {
 		$views[ 'yoast_' . $this->get_query_val() ] = sprintf(
-			'<a href="%1$s" class="%2$s">%3$s</a> (%4$s)',
+			'<a href="%1$s"%2$s>%3$s</a> (%4$s)',
 			esc_url( $this->get_filter_url() ),
-			( $this->is_filter_active() ) ? 'current' : '',
+			( $this->is_filter_active() ) ? ' class="current" aria-current="page"' : '',
 			$this->get_label(),
 			$this->get_post_total()
 		);
@@ -109,7 +118,7 @@ abstract class WPSEO_Abstract_Post_Filter implements WPSEO_WordPress_Integration
 	 * @return void
 	 */
 	public function render_hidden_input() {
-		echo '<input type="hidden" name="' . self::FILTER_QUERY_ARG . '" value="' . $this->get_query_val() . '">';
+		echo '<input type="hidden" name="' . esc_attr( self::FILTER_QUERY_ARG ) . '" value="' . esc_attr( $this->get_query_val() ) . '">';
 	}
 
 	/**
@@ -120,7 +129,7 @@ abstract class WPSEO_Abstract_Post_Filter implements WPSEO_WordPress_Integration
 	protected function get_filter_url() {
 		return add_query_arg( array(
 			self::FILTER_QUERY_ARG => $this->get_query_val(),
-			'post_type' => $this->get_current_post_type(),
+			'post_type'            => $this->get_current_post_type(),
 		), 'edit.php' );
 	}
 
@@ -153,7 +162,7 @@ abstract class WPSEO_Abstract_Post_Filter implements WPSEO_WordPress_Integration
 	 * @return array The post types to which this filter should be added.
 	 */
 	protected function get_post_types() {
-		return array( 'post', 'page' );
+		return WPSEO_Post_Type::get_accessible_post_types();
 	}
 
 	/**

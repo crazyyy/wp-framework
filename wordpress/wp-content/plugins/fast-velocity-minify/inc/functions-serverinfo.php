@@ -306,6 +306,7 @@ if(!function_exists('fvm_get_serverload')) {
         $server_load = '';
 		$numCpus = 'N/A';
         if(PHP_OS != 'WINNT' && PHP_OS != 'WIN32') {
+			clearstatcache();
             if(@file_exists('/proc/loadavg') ) {
                 if ($fh = @fopen( '/proc/loadavg', 'r' )) {
                     $data = @fread( $fh, 6 );
@@ -340,6 +341,7 @@ if(!function_exists('fvm_get_servercpu')) {
     function fvm_get_servercpu() {
 		$numCpus = '';
         if(PHP_OS != 'WINNT' && PHP_OS != 'WIN32') {
+			clearstatcache();
 			if (is_file('/proc/cpuinfo')) {
 				$cpuinfo = file_get_contents('/proc/cpuinfo');
 				preg_match_all('/^processor/m', $cpuinfo, $matches);

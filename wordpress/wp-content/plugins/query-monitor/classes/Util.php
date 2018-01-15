@@ -98,8 +98,8 @@ class QM_Util {
 
 		$file = self::standard_dir( $file );
 
-		if ( isset( self::$file_components[$file] ) ) {
-			return self::$file_components[$file];
+		if ( isset( self::$file_components[ $file ] ) ) {
+			return self::$file_components[ $file ];
 		}
 
 		foreach ( self::get_file_dirs() as $type => $dir ) {
@@ -157,7 +157,12 @@ class QM_Util {
 				$name = __( 'Parent Theme', 'query-monitor' );
 				break;
 			case 'other':
-				$name    = self::standard_dir( $file, '' );
+				// Anything else that's within the content directory should appear as
+				// `wp-content/{dir}` or `wp-content/{file}`
+				$name    = self::standard_dir( $file );
+				$name    = str_replace( dirname( self::$file_dirs['other'] ), '', $name );
+				$parts   = explode( '/', trim( $name, '/' ) );
+				$name    = $parts[0] . '/' . $parts[1];
 				$context = $file;
 				break;
 			case 'core':
@@ -169,7 +174,7 @@ class QM_Util {
 				break;
 		}
 
-		return self::$file_components[$file] = (object) compact( 'type', 'name', 'context' );
+		return self::$file_components[ $file ] = (object) compact( 'type', 'name', 'context' );
 
 	}
 
@@ -182,7 +187,6 @@ class QM_Util {
 		try {
 
 			if ( is_array( $callback['function'] ) ) {
-
 				if ( is_object( $callback['function'][0] ) ) {
 					$class  = get_class( $callback['function'][0] );
 					$access = '->';
@@ -193,9 +197,7 @@ class QM_Util {
 
 				$callback['name'] = $class . $access . $callback['function'][1] . '()';
 				$ref = new ReflectionMethod( $class, $callback['function'][1] );
-
-			} else if ( is_object( $callback['function'] ) ) {
-
+			} elseif ( is_object( $callback['function'] ) ) {
 				if ( is_a( $callback['function'], 'Closure' ) ) {
 					$ref  = new ReflectionFunction( $callback['function'] );
 					$file = QM_Util::standard_dir( $ref->getFileName(), '' );
@@ -207,12 +209,9 @@ class QM_Util {
 					$callback['name'] = $class . '->__invoke()';
 					$ref = new ReflectionMethod( $class, '__invoke' );
 				}
-
 			} else {
-
 				$callback['name'] = $callback['function'] . '()';
 				$ref = new ReflectionFunction( $callback['function'] );
-
 			}
 
 			$callback['file'] = $ref->getFileName();
@@ -245,7 +244,6 @@ class QM_Util {
 					'context' => '',
 				);
 			}
-
 		} catch ( ReflectionException $e ) {
 
 			$callback['error'] = new WP_Error( 'reflection_exception', $e->getMessage() );
@@ -267,7 +265,7 @@ class QM_Util {
 		if ( self::is_ajax() ) {
 			return true;
 		}
-		if ( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && 'xmlhttprequest' === strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) ) {
+		if ( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && 'xmlhttprequest' === strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) ) { // @codingStandardsIgnoreLine
 			return true;
 		}
 		return false;
@@ -330,6 +328,40 @@ class QM_Util {
 		return $type;
 	}
 
+	public static function display_variable( $value ) {
+		if ( is_string( $value ) ) {
+			return $value;
+		} elseif ( is_bool( $value ) ) {
+			return ( $value ) ? 'true' : 'false';
+		} elseif ( is_scalar( $value ) ) {
+			return $value;
+		} elseif ( is_object( $value ) ) {
+			$class = get_class( $value );
+			$id = false;
+
+			switch ( $class ) {
+
+				case 'WP_Post':
+				case 'WP_User':
+					$id = $value->ID;
+					break;
+
+				case 'WP_Term':
+					$id = $value->term_id;
+					break;
+
+			}
+
+			if ( $id ) {
+				return sprintf( '%s (ID:%d)', $class, $id );
+			}
+
+			return $class;
+		} else {
+			return gettype( $value );
+		}
+	}
+
 	public static function sort( array &$array, $field ) {
 		self::$sort_field = $field;
 		usort( $array, array( __CLASS__, '_sort' ) );
@@ -343,7 +375,7 @@ class QM_Util {
 	private static function _rsort( $a, $b ) {
 		$field = self::$sort_field;
 
-		if ( $a[ $field ] == $b[ $field ] ) {
+		if ( $a[ $field ] === $b[ $field ] ) {
 			return 0;
 		} else {
 			return ( $a[ $field ] > $b[ $field ] ) ? -1 : 1;
@@ -353,7 +385,7 @@ class QM_Util {
 	private static function _sort( $a, $b ) {
 		$field = self::$sort_field;
 
-		if ( $a[ $field ] == $b[ $field ] ) {
+		if ( $a[ $field ] === $b[ $field ] ) {
 			return 0;
 		} else {
 			return ( $a[ $field ] > $b[ $field ] ) ? 1 : -1;

@@ -5,12 +5,12 @@ in development...
 */
 
 # add admin toolbar
-function fastvelocity_load_toolbar() { 
-	if(current_user_can('manage_options')) { add_action( 'admin_bar_menu', 'fastvelocity_add_toolbar', 100 ); } 
-}
+add_action( 'admin_bar_menu', 'fastvelocity_add_toolbar', 100 );
+
 
 # admin toolbar processing
 function fastvelocity_add_toolbar() {
+if(current_user_can('manage_options')) {
 global $wp_admin_bar;
 
 # get cache size
@@ -45,9 +45,10 @@ $wp_admin_bar->add_node( array(
 ));
 
 }
+}
 
 
-
+/*
 # get cache size and count
 function fastvelocity_get_cachestats() {
 	
@@ -70,5 +71,5 @@ if(is_dir(rtrim($dir, '/'))) {
 
 return array('size'=>fastvelocity_format_filesize($size), 'count'=>$count);
 }
-
+*(
 

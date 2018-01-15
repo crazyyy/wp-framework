@@ -78,6 +78,9 @@
 			e.$el.sortable({
 				handle: '.acf-sortable-handle',
 				connectWith: '.acf-field-list',
+				start: function(e, ui){
+			        ui.placeholder.height( ui.item.height() );
+			    },
 				update: function(event, ui){
 					
 					// vars
@@ -551,7 +554,7 @@
 			
 			
 			// update label
-			$handle.find('.li-field-label strong a').text( label );
+			$handle.find('.li-field-label strong a').html( label );
 			
 			
 			// update required
@@ -2028,6 +2031,10 @@
 			// duplicate
 			$tr2 = acf.duplicate( $tr );
 			
+			
+			// action
+			//acf.do_action('add_location_rule', $tr2);
+			
 		},
 		
 		
@@ -2048,23 +2055,24 @@
 			
 			// vars
 			var $tr = e.$el.closest('tr');
-
-			
-			// save field
-			$tr.find('select:first').trigger('change');
 			
 			
+			// action
+			//acf.do_action('remove_location_rule', $tr);
+			
+			
+			// remove
 			if( $tr.siblings('tr').length == 0 ) {
 				
 				// remove group
 				$tr.closest('.rule-group').remove();
 				
-			}
-			
-			
-			// remove tr
-			$tr.remove();
+			} else {
 				
+				// remove tr
+				$tr.remove();
+			
+			}
 			
 		},
 		
@@ -2099,6 +2107,14 @@
 			
 			// remove all tr's except the first one
 			$group2.find('tr:not(:first)').remove();
+			
+			
+			// vars
+			//var $tr = $group2.find('tr');
+			
+			
+			// action
+			//acf.do_action('add_location_rule', $tr);
 			
 		},
 		
@@ -2150,6 +2166,10 @@
 					
 					// update
 					$rule.replaceWith( html );
+					
+					
+					// action
+					//acf.do_action('change_location_rule', $rule);
 	
 				}
 			});

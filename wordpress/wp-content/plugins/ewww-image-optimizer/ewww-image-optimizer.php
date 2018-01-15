@@ -14,7 +14,7 @@ Plugin URI: https://wordpress.org/plugins/ewww-image-optimizer/
 Description: Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery. Uses jpegtran, optipng/pngout, and gifsicle.
 Author: Shane Bishop
 Text Domain: ewww-image-optimizer
-Version: 3.6.1
+Version: 4.0.6
 Author URI: https://ewww.io/
 License: GPLv3
 */
@@ -57,6 +57,11 @@ if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50300 ) {
 } elseif ( defined( 'WPE_PLUGIN_VERSION' ) ) {
 	add_action( 'network_admin_notices', 'ewww_image_optimizer_notice_wpengine' );
 	add_action( 'admin_notices', 'ewww_image_optimizer_notice_wpengine' );
+	// Loads the plugin translations.
+	add_action( 'plugins_loaded', 'ewww_image_optimizer_false_init' );
+} elseif ( defined( 'FLYWHEEL_CONFIG_DIR' ) ) {
+	add_action( 'network_admin_notices', 'ewww_image_optimizer_notice_flywheel' );
+	add_action( 'admin_notices', 'ewww_image_optimizer_notice_flywheel' );
 	// Loads the plugin translations.
 	add_action( 'plugins_loaded', 'ewww_image_optimizer_false_init' );
 } else {
@@ -122,7 +127,7 @@ if ( ! function_exists( 'ewww_image_optimizer_unsupported_php' ) ) {
 	 * Display a notice that the PHP version is too old.
 	 */
 	function ewww_image_optimizer_unsupported_php() {
-		echo "<div id='ewww-image-optimizer-warning-php' class='error'><p><strong>" . esc_html__( 'EWWW Image Optimizer requires PHP 5.3 or greater. Newer versions of PHP, like 5.6, 7.0 and 7.1, are significantly faster and much more secure, as PHP 5.2 has been unsupported for several years. If you are unsure how to upgrade to a supported version, ask your webhost for instructions.', 'ewww-image-optimizer' ) . '</strong></p></div>';
+		echo "<div id='ewww-image-optimizer-warning-php' class='error'><p><strong>" . esc_html__( 'EWWW Image Optimizer requires PHP 5.3 or greater. Newer versions of PHP, like 5.6, 7.0 and 7.1, are significantly faster and much more secure. If you are unsure how to upgrade to a supported version, ask your webhost for instructions.', 'ewww-image-optimizer' ) . '</strong></p></div>';
 	}
 
 	/**
@@ -152,4 +157,11 @@ function ewww_image_optimizer_notice_wpengine() {
  */
 function ewww_image_optimizer_notice_kinsta() {
 	echo "<div id='ewww-image-optimizer-warning-kinsta' class='error'><p>" . esc_html__( 'The regular version of the EWWW Image Optimizer plugin is not permitted on Kinsta sites. Please deactivate EWWW Image Optimizer and install EWWW Image Optimizer Cloud to optimize your images.', 'ewww-image-optimizer' ) . '</p></div>';
+}
+
+/**
+ * Inform the user that only ewww-image-optimizer-cloud is permitted on Flywheel.
+ */
+function ewww_image_optimizer_notice_flywheel() {
+	echo "<div id='ewww-image-optimizer-warning-flywheel' class='error'><p>" . esc_html__( 'The regular version of the EWWW Image Optimizer plugin is not permitted on Flywheel sites. Please deactivate EWWW Image Optimizer and install EWWW Image Optimizer Cloud to optimize your images.', 'ewww-image-optimizer' ) . '</p></div>';
 }

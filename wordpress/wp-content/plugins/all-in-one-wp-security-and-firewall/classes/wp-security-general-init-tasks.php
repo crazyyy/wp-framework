@@ -31,9 +31,13 @@ class AIOWPSecurity_General_Init_Tasks
             if(strip_tags($_REQUEST['aiowps_reapply_htaccess']) == 1){
                 include_once ('wp-security-installer.php');
                 if(AIOWPSecurity_Installer::reactivation_tasks()){
-                    echo '<div class="updated"><p>The AIOWPS .htaccess rules were successfully re-inserted.</p></div>';
+		    $aio_wp_security->debug_logger->log_debug("The AIOWPS .htaccess rules were successfully re-inserted!");
+		    $_SESSION['reapply_htaccess_rules_action_result'] = '1';//Success indicator. 
+		    //Can't echo to the screen here. It will create an header already sent error.
                 }else{
-                    echo '<div class="error"><p>AIOWPS encountered an error when trying to write to your .htaccess file. Please check the logs.</p></div>';
+		    $aio_wp_security->debug_logger->log_debug("AIOWPS encountered an error when trying to write to your .htaccess file. Please check the logs.", 5);
+		    $_SESSION['reapply_htaccess_rules_action_result'] = '2';//fail indicator.
+		    //Can't echo to the screen here. It will create an header already sent error.
                 }
                 
             }elseif(strip_tags($_REQUEST['aiowps_reapply_htaccess']) == 2){
@@ -106,6 +110,19 @@ class AIOWPSecurity_General_Init_Tasks
             }
         }
 
+        //For woo form captcha features
+        if($aio_wp_security->configs->get_value('aiowps_enable_woo_login_captcha') == '1'){
+            if (!is_user_logged_in()) {
+                add_action('woocommerce_login_form', array(&$this, 'insert_captcha_question_form'));
+            }
+        }
+
+        if($aio_wp_security->configs->get_value('aiowps_enable_woo_register_captcha') == '1'){
+            if (!is_user_logged_in()) {
+                add_action('woocommerce_register_form', array(&$this, 'insert_captcha_question_form'));
+            }
+        }
+        
         //For custom login form captcha feature, ie, when wp_login_form() function is used to generate login form
         if($aio_wp_security->configs->get_value('aiowps_enable_custom_login_captcha') == '1'){
             if (!is_user_logged_in()) {

@@ -33,13 +33,13 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 
 		$vars = array();
 
-		if ( !empty( $data['vars'] ) ) {
+		if ( ! empty( $data['vars'] ) ) {
 			foreach ( $data['vars'] as $key => $value ) {
 				$vars[] = $key . ': ' . $value;
 			}
 		}
 
-		if ( !empty( $data['http'] ) ) {
+		if ( ! empty( $data['http'] ) ) {
 
 			echo '<caption class="screen-reader-text">' . esc_html__( 'HTTP API Calls', 'query-monitor' ) . '</caption>';
 
@@ -52,7 +52,7 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 			echo '<th scope="col">';
 			echo $this->build_filter( 'type', array_keys( $data['types'] ), __( 'Status', 'query-monitor' ) ); // WPCS: XSS ok.
 			echo '</th>';
-			echo '<th scope="col">' . esc_html__( 'Call Stack', 'query-monitor' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Caller', 'query-monitor' ) . '</th>';
 			echo '<th scope="col">';
 			echo $this->build_filter( 'component', wp_list_pluck( $data['component_times'], 'component' ), __( 'Component', 'query-monitor' ) ); // WPCS: XSS ok.
 			echo '</th>';
@@ -84,7 +84,7 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 					$css      = '';
 
 					if ( intval( $code ) >= 400 ) {
-						$is_error = true;;
+						$is_error = true;
 					}
 
 					$response = $code . ' ' . $msg;
@@ -123,7 +123,9 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 
 				$stack          = array();
 				$filtered_trace = $row['trace']->get_display_trace();
-				array_pop( $filtered_trace );
+				array_pop( $filtered_trace ); // remove WP_Http->request()
+				array_pop( $filtered_trace ); // remove WP_Http->{$method}()
+				array_pop( $filtered_trace ); // remove wp_remote_{$method}()
 
 				foreach ( $filtered_trace as $item ) {
 					$stack[] = self::output_filename( $item['display'], $item['calling_file'], $item['calling_line'] );
@@ -131,6 +133,10 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 
 				$row_attr['data-qm-component'] = $component->name;
 				$row_attr['data-qm-type']      = $row['type'];
+
+				if ( 'core' !== $component->context ) {
+					$row_attr['data-qm-component'] .= ' non-core';
+				}
 
 				$attr = '';
 				foreach ( $row_attr as $a => $v ) {
@@ -155,10 +161,19 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 					'<td>%s</td>',
 					esc_html( $response )
 				);
-				printf( // WPCS: XSS ok.
-					'<td class="qm-nowrap qm-ltr"><ol class="qm-numbered"><li>%s</li></ol></td>',
-					implode( '</li><li>', $stack )
-				);
+
+				echo '<td class="qm-has-toggle qm-nowrap qm-ltr"><ol class="qm-toggler qm-numbered">';
+
+				$caller = array_pop( $stack );
+
+				if ( ! empty( $stack ) ) {
+					echo $this->build_toggler(); // WPCS: XSS ok;
+					echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>'; // WPCS: XSS ok.
+				}
+
+				echo "<li>{$caller}</li>"; // WPCS: XSS ok.
+				echo '</ol></td>';
+
 				printf(
 					'<td class="qm-nowrap">%s</td>',
 					esc_html( $component->name )
@@ -208,7 +223,7 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 			echo '<tr>';
 			echo '<td style="text-align:center !important"><em>' . esc_html__( 'none', 'query-monitor' ) . '</em></td>';
 			echo '</tr>';
-			if ( !empty( $vars ) ) {
+			if ( ! empty( $vars ) ) {
 				echo '<tr>';
 				printf(
 					'<td>%s</td>',
@@ -260,7 +275,7 @@ class QM_Output_Html_HTTP extends QM_Output_Html {
 
 		if ( isset( $data['errors']['alert'] ) ) {
 			$args['meta']['classname'] = 'qm-alert';
-		} else if ( isset( $data['errors']['warning'] ) ) {
+		} elseif ( isset( $data['errors']['warning'] ) ) {
 			$args['meta']['classname'] = 'qm-warning';
 		}
 

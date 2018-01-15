@@ -36,10 +36,10 @@ if ( class_exists( 'WP_Thumb_Image_Editor_Imagick' ) ) {
 				if ( $current_size && $this->size['width'] == $current_size[0] && $this->size['height'] == $current_size[1] ) {
 					ewwwio_debug_message( "existing file has same dimensions, not saving $filename" );
 					return array(
-						'path' => $filename,
-						'file' => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
-						'width' => $this->size['width'],
-						'height' => $this->size['height'],
+						'path'      => $filename,
+						'file'      => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
+						'width'     => $this->size['width'],
+						'height'    => $this->size['height'],
 						'mime-type' => $mime_type,
 					);
 				}
@@ -70,8 +70,8 @@ if ( class_exists( 'WP_Thumb_Image_Editor_Imagick' ) ) {
 							$ewwwio_image_background = new EWWWIO_Image_Background_Process();
 						}
 						$ewwwio_image_background->push_to_queue( $filename );
-		 				$ewwwio_image_background->save()->dispatch();
-			 			ewwwio_debug_message( "image editor (wpthumb imagick) queued: $filename" );
+						$ewwwio_image_background->save()->dispatch();
+						ewwwio_debug_message( "image editor (wpthumb imagick) queued: $filename" );
 					}
 					*/
 				}
@@ -108,10 +108,10 @@ if ( class_exists( 'WP_Thumb_Image_Editor_Imagick' ) ) {
 				if ( $current_size && $this->size['width'] == $current_size[0] && $this->size['height'] == $current_size[1] ) {
 					ewwwio_debug_message( "existing file has same dimensions, not saving $filename" );
 					return array(
-						'path' => $filename,
-						'file' => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
-						'width' => $this->size['width'],
-						'height' => $this->size['height'],
+						'path'      => $filename,
+						'file'      => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
+						'width'     => $this->size['width'],
+						'height'    => $this->size['height'],
 						'mime-type' => $mime_type,
 					);
 				}
@@ -180,10 +180,10 @@ if ( class_exists( 'WP_Thumb_Image_Editor_Imagick' ) ) {
 				if ( $current_size && $this->size['width'] == $current_size[0] && $this->size['height'] == $current_size[1] ) {
 					ewwwio_debug_message( "existing file has same dimensions, not saving $filename" );
 					return array(
-						'path' => $filename,
-						'file' => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
-						'width' => $this->size['width'],
-						'height' => $this->size['height'],
+						'path'      => $filename,
+						'file'      => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
+						'width'     => $this->size['width'],
+						'height'    => $this->size['height'],
 						'mime-type' => $mime_type,
 					);
 				}
@@ -298,10 +298,10 @@ if ( class_exists( 'WP_Thumb_Image_Editor_Imagick' ) ) {
 				if ( $current_size && $this->size['width'] == $current_size[0] && $this->size['height'] == $current_size[1] ) {
 					ewwwio_debug_message( "existing file has same dimensions, not saving $filename" );
 					return array(
-						'path' => $filename,
-						'file' => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
-						'width' => $this->size['width'],
-						'height' => $this->size['height'],
+						'path'      => $filename,
+						'file'      => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
+						'width'     => $this->size['width'],
+						'height'    => $this->size['height'],
 						'mime-type' => $mime_type,
 					);
 				}

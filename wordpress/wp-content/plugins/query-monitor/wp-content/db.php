@@ -48,7 +48,7 @@ if ( ! is_readable( $backtrace ) ) {
 }
 require_once $backtrace;
 
-if ( !defined( 'SAVEQUERIES' ) ) {
+if ( ! defined( 'SAVEQUERIES' ) ) {
 	define( 'SAVEQUERIES', true );
 }
 
@@ -104,14 +104,24 @@ class QM_DB extends wpdb {
 		}
 
 		$i = $this->num_queries - 1;
-		$this->queries[$i]['trace'] = new QM_Backtrace( array(
+		$this->queries[ $i ]['trace'] = new QM_Backtrace( array(
 			'ignore_items' => 1,
 		) );
 
 		if ( $this->last_error ) {
-			$this->queries[$i]['result'] = new WP_Error( 'qmdb', $this->last_error );
+			$code = 'qmdb';
+			if ( $this->use_mysqli ) {
+				if ( $this->dbh instanceof mysqli ) {
+					$code = mysqli_errno( $this->dbh );
+				}
+			} else {
+				if ( is_resource( $this->dbh ) ) {
+					$code = mysql_errno( $this->dbh );
+				}
+			}
+			$this->queries[ $i ]['result'] = new WP_Error( $code, $this->last_error );
 		} else {
-			$this->queries[$i]['result'] = $result;
+			$this->queries[ $i ]['result'] = $result;
 		}
 
 		return $result;

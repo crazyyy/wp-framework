@@ -48,12 +48,17 @@ Yoast_Form::get_instance()->admin_header( true, $active_tab->get_opt_group() );
 
 echo '<h2 class="nav-tab-wrapper">';
 foreach ( $tabs->get_tabs() as $tab ) {
-	$active = ( $tabs->is_active_tab( $tab ) ) ? ' nav-tab-active' : '';
-	echo '<a class="nav-tab' . $active . '" id="' . $tab->get_name() . '-tab" href="' . admin_url( 'admin.php?page=wpseo_advanced&tab=' . $tab->get_name() ) . '">' . $tab->get_label() . '</a>';
+	printf(
+		'<a class="nav-tab %1$s" id="%2$s" href="%3$s">%4$s</a>',
+		( $tabs->is_active_tab( $tab ) ? 'nav-tab-active' : '' ),
+		esc_attr( $tab->get_name() . '-tab' ),
+		esc_url( admin_url( 'admin.php?page=wpseo_advanced&tab=' . $tab->get_name() ) ),
+		$tab->get_label()
+	);
 }
 echo '</h2>';
 
-$help_center = new WPSEO_Help_Center( '', $tabs );
+$help_center = new WPSEO_Help_Center( '', $tabs, WPSEO_Utils::is_yoast_seo_premium() );
 $help_center->localize_data();
 $help_center->mount();
 
