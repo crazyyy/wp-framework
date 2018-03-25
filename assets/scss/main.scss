@@ -7,9 +7,7 @@
 @import "import/mixin";
 @import "import/wordpress";
 
-
-@import "grid/bootstrap";
-@import "grid/bootstrap-theme";
+@import 'grid/bootstrap-grid';
 
 @import "gulp_png_sprite";
 
