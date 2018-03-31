@@ -20,7 +20,7 @@ button {
   white-space: nowrap;
   text-decoration: none;
 
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: $base-border-radius;
   background-color: $action-color;
@@ -28,7 +28,7 @@ button {
   -webkit-font-smoothing: antialiased;
   &:hover,
   &:focus {
-    color: #fff;
+    color: #ffffff;
     background-color: darken($action-color, 15%);
   }
   &:active {

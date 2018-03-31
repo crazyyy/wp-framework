@@ -2,7 +2,7 @@
   *,
   *:before,
   *:after {
-    color: #000 !important;
+    color: #000000 !important;
     background: transparent !important;
     box-shadow: none !important;
     text-shadow: none !important;
@@ -16,6 +16,13 @@
     &[href]:after {
       content: ' (' attr(href) ')';
     }
+    &[href^='javascript:']:after,
+    &[href^='#']:after {
+      content: '';
+    }
+    [href]:not([href^='#']):after {
+      content: ' ('attr(href)') ';
+    }
   }
   abbr[title]:after {
     content: ' (' attr(title) ')';
@@ -23,15 +30,9 @@
   .ir a:after {
     content: '';
   }
-  a {
-    &[href^='javascript:']:after,
-    &[href^='#']:after {
-      content: '';
-    }
-  }
   pre,
   blockquote {
-    border: 1px solid #999;
+    border: 1px solid #999999;
 
     page-break-inside: avoid;
   }

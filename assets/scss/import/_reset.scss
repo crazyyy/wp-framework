@@ -127,6 +127,8 @@ body {
 
   width: 100%;
   margin: 0;
+
+  overscroll-behavior: none;
 }
 ol,
 ul {
@@ -189,6 +191,7 @@ textarea {
 
   margin: 0;
 
+  cursor: pointer;
   vertical-align: baseline;
 
   *vertical-align: middle;
@@ -331,25 +334,26 @@ template {
 abbr[title] {
   border-bottom: 1px dotted;
 }
+abbr[title],
+acronym[title],
+dfn {
+  cursor: help;
+}
 small {
   font-size: 80%;
 }
-sub {
-  font-size: 75%;
-  line-height: 0;
-
-  position: relative;
-
-  vertical-align: baseline;
-}
+sub,
 sup {
   font-size: 75%;
   line-height: 0;
 
   position: relative;
-  top: -.5em;
 
   vertical-align: baseline;
+}
+
+sup {
+  top: -.5em;
 }
 nav {
   ul,
@@ -359,16 +363,20 @@ nav {
   }
 }
 img {
+  font-style: italic;
+
   width: auto; /* IE8 */
   max-width: 100%;
   height: auto;
 
-  vertical-align: top;
+  vertical-align: middle;
 
   -ms-interpolation-mode: bicubic;
   border: 0;
 }
-
+svg {
+  fill: currentColor;
+}
 svg:not(:root) {
   overflow: hidden;
 }
@@ -415,4 +423,26 @@ object,
 video,
 .wp-caption {
   max-width: 100%;
+}
+::selection {
+  color: #000000;
+  background: #fbd404;
+}
+video,
+audio {
+  max-width: 100%;
+  height: auto;
+}
+a[href^='tel'] {
+  white-space: nowrap;
+  text-decoration: none;
+  pointer-events: none;
+
+  color: inherit;
+}
+@media (max-width: 30em) {
+  a[href^='tel'] {
+    text-decoration: underline;
+    pointer-events: auto;
+  }
 }
