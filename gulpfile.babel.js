@@ -160,6 +160,9 @@ gulp.task('scripts', function() {
     .pipe(plugins.newer(config.path.scripts.dest))
     .pipe(customPlumber('Error Compiling Scripts'))
     .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.babel({
+			presets: ['env']
+		}))
     .pipe(plugins.if('*.js', plugins.uglify()))
     .pipe(plugins.sourcemaps.write('maps', {
       includeContent: true

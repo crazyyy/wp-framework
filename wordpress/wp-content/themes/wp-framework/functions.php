@@ -8,10 +8,10 @@
 //  Enable styles for WP admin panel
 add_action('admin_enqueue_scripts', 'wpeAdminThemeStyle');
 function wpeAdminThemeStyle() {
-  wp_enqueue_style('wpe-admin-style', get_template_directory_uri() . '/css/admin.css');
-  wp_enqueue_style('wpe-admin-style', get_template_directory_uri() . '/css/editor-style.css');
-  wp_register_script('wpe-admin-script', get_template_directory_uri() . '/js/admin.js');
-  wp_enqueue_script( 'wpe-admin-script' );
+  wp_register_style('wpe-editor-style', get_template_directory_uri() . '/css/editor-style.css');
+  wp_enqueue_style('wpe-editor-style');
+  wp_register_script('wpe-editor-script', get_template_directory_uri() . '/js/admin.js');
+  wp_enqueue_script( 'wpe-editor-script' );
 }
 
 //  Catch first image from post and display it
@@ -60,10 +60,10 @@ function wpeHeaderScripts() {
     //  Load footer scripts (footer.php)
     wp_register_script('wpeScripts', get_template_directory_uri() . '/js/scripts.js', array(), '1.0.0', true);
     wp_enqueue_script('wpeScripts');
-    wp_localize_script( 'wpeScripts', 'adminAjax', array( 
-      'ajaxurl' => admin_url( 'admin-ajax.php' ), 
-      'templatePath' => get_template_directory_uri(), 
-      'posts_per_page' => get_option('posts_per_page') 
+    wp_localize_script( 'wpeScripts', 'adminAjax', array(
+      'ajaxurl' => admin_url( 'admin-ajax.php' ),
+      'templatePath' => get_template_directory_uri(),
+      'posts_per_page' => get_option('posts_per_page')
     ));
 
   }
@@ -391,7 +391,6 @@ remove_action('wp_head', 'start_post_rel_link', 10, 0); // Start link
 remove_action('wp_head', 'adjacent_posts_rel_link', 10, 0); // Display relational links for the posts adjacent to the current post.
 remove_action('wp_head', 'wp_generator'); // Display the XHTML generator that is generated on the wp_head hook, WP version
 remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
-remove_action('wp_head', 'rel_canonical');
 remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
 
 // Add Filters
