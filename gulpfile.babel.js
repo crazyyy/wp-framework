@@ -65,10 +65,11 @@ gulp.task('postcss', function() {
       ]
     }),
     cssnano({
-        discardComments: {
-          removeAll: true
-        }
+      zindex: false,
+      discardComments: {
+        removeAll: true
       }
+    }
 
 
     )
