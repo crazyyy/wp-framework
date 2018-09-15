@@ -8,9 +8,15 @@ import config from 'config';
 import gulp from 'gulp';
 import runSequence from 'run-sequence';
 import browserSync from 'browser-sync';
+
 /* PostCSS plugins */
 import cssnext from 'postcss-cssnext';
 import cssnano from 'cssnano';
+
+/* sprites */
+import svgSprite from 'gulp-svg-sprites';
+import svg2png from 'gulp-svg2png';
+import filter from 'gulp-filter';
 
 const reload = browserSync.reload;
 const plugins = require("gulp-load-plugins")({
@@ -49,7 +55,7 @@ gulp.task('scss', function() {
 
 // postcss autoprefix
 gulp.task('postcss', function() {
-  var processors = [cssnext({
+  const processors = [cssnext({
       browsers: [
         'ie >= 8',
         'ie_mob >= 10',
@@ -69,11 +75,8 @@ gulp.task('postcss', function() {
       discardComments: {
         removeAll: true
       }
-    }
-
-
-    )
-  ];;
+    })
+  ];
   return gulp
     .src(config.path.styles.cssfiles)
     .pipe(customPlumber('Error Compiling PostCSS'))
@@ -123,9 +126,9 @@ gulp.task('images', function() {
 });
 
 // Generate sprites
-gulp.task('sprite', function() {
-  var spriteData = gulp
-    .src(config.path.images.sprite + '*.png')
+gulp.task('sprite_png', function() {
+  return gulp
+    .src(config.path.images.spritePng)
     .pipe(plugins.spritesmith({
       imgName: config.sprite.imgName,
       cssName: config.sprite.cssName,
@@ -138,7 +141,46 @@ gulp.task('sprite', function() {
     .pipe(plugins.if('*.scss', gulp.dest(config.path.styles.src)))
     .pipe(plugins.size({
       showFiles: true,
-      title: ' task:sprite'
+      title: 'task:png sprite'
+    }));
+});
+
+gulp.task('sprite_svg', function () {
+  return gulp
+    .src(config.path.images.spriteSvg)
+    .pipe(plugins.size({
+        showFiles: true,
+        title: 'task:svg sprite >>'
+    }))
+    .pipe(svgSprite({
+      baseSize: 16,
+      common: 'svgico',
+      selector: 'svgico-%f',
+      cssFile: 'scss/_sprite_svg.scss',
+      svg: {
+        sprite: 'img/_sprite_svg.svg'
+      },
+      pngPath: '../img/_sprite_svg.png',
+      preview: {
+        sprite: 'svg-sprite-preview.html'
+      },
+      padding: 5
+    }))
+    .pipe(gulp.dest('assets')) // Write the sprite-sheet + CSS + Preview
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:svg sprite >>'
+    }))
+    .pipe(filter('**/*.svg')) // Filter out everything except the SVG file
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:svg sprite >> svg'
+    }))
+    .pipe(svg2png()) // Create a PNG
+    .pipe(gulp.dest('assets'))
+    .pipe(plugins.size({
+      showFiles: true,
+      title: 'task:svg sprite >> png'
     }));
 });
 
@@ -202,8 +244,8 @@ gulp.task('watch', function() {
 
   gulp.watch([config.path.base.desthtml]).on('change', reload);
 
-  gulp.watch(config.path.images.sprite, ['sprite', 'images', 'styles', reload]);
-  gulp.watch(config.path.images.sprite, ['styles', reload]);
+  gulp.watch(config.path.images.spritePng, ['sprite_png', 'images', 'styles', reload]);
+  gulp.watch(config.path.images.spriteSvg, ['sprite_svg', 'images', 'styles', reload]);
 
   gulp.watch(config.path.images.srcimg, ['images', reload]);
 
@@ -217,7 +259,7 @@ gulp.task('watch', function() {
 // Consolidated dev phase task
 gulp.task('serve', function(callback) {
   runSequence(
-    ['sprite', 'images'], ['scripts'], ['scss', 'fonts'], ['postcss'], ['browserSync', 'watch'],
+    ['sprite_png', 'sprite_svg', 'images'], ['scripts'], ['scss', 'fonts'], ['postcss'], ['browserSync', 'watch'],
     callback
   );
 });

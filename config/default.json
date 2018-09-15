@@ -11,7 +11,8 @@
       "src": "assets/img/",
       "srcimg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
       "dest": "./html/img/",
-      "sprite": "assets/sprite/*"
+      "spritePng": "assets/sprite-png/**/*.png",
+      "spriteSvg": "assets/sprite-svg/**/*.svg"
     },
     "fonts": {
       "src": "assets/fonts/**",
@@ -30,8 +31,8 @@
     }
   },
   "sprite": {
-    "imgName": "gulp_png_sprite.png",
-    "cssName": "_gulp_png_sprite.scss",
-    "imgPath": "../img/gulp_png_sprite.png"
+    "imgName": "_sprite_png.png",
+    "cssName": "_sprite_png.scss",
+    "imgPath": "../img/_sprite_png.png"
   }
 }

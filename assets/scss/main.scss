@@ -9,8 +9,8 @@
 
 @import 'grid/bootstrap-grid';
 
-@import "gulp_png_sprite";
-
+@import "sprite_svg";
+@import "sprite_png";
 
 body {
   font-family: $base-font-family;
