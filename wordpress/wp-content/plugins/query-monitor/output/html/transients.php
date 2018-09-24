@@ -1,18 +1,9 @@
 <?php
-/*
-Copyright 2009-2017 John Blackbourn
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-*/
+/**
+ * Transient storage output for HTML pages.
+ *
+ * @package query-monitor
+ */
 
 class QM_Output_Html_Transients extends QM_Output_Html {
 
@@ -25,18 +16,15 @@ class QM_Output_Html_Transients extends QM_Output_Html {
 
 		$data = $this->collector->get_data();
 
-		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
-		echo '<table cellspacing="0">';
-
 		if ( ! empty( $data['trans'] ) ) {
 
-			echo '<caption class="screen-reader-text">' . esc_html__( 'Transient Updates', 'query-monitor' ) . '</caption>';
+			$this->before_tabular_output();
 
 			echo '<thead>';
 			echo '<tr>';
 			echo '<th scope="col">' . esc_html__( 'Updated Transient', 'query-monitor' ) . '</th>';
 			if ( is_multisite() ) {
-				echo '<th>' . esc_html_x( 'Type', 'transient type', 'query-monitor' ) . '</th>';
+				echo '<th scope="col">' . esc_html_x( 'Type', 'transient type', 'query-monitor' ) . '</th>';
 			}
 			echo '<th scope="col">' . esc_html__( 'Expiration', 'query-monitor' ) . '</th>';
 			echo '<th scope="col">' . esc_html_x( 'Size', 'size of transient value', 'query-monitor' ) . '</th>';
@@ -57,30 +45,31 @@ class QM_Output_Html_Transients extends QM_Output_Html {
 
 				echo '<tr>';
 				printf(
-					'<td class="qm-ltr">%s</td>',
+					'<td class="qm-ltr"><code>%s</code></td>',
 					esc_html( $transient )
 				);
 				if ( is_multisite() ) {
 					printf(
-						'<td class="qm-ltr">%s</td>',
+						'<td class="qm-ltr qm-nowrap">%s</td>',
 						esc_html( $row['type'] )
 					);
 				}
 
 				if ( 0 === $row['expiration'] ) {
 					printf(
-						'<td><em>%s</em></td>',
+						'<td class="qm-nowrap"><em>%s</em></td>',
 						esc_html__( 'none', 'query-monitor' )
 					);
 				} else {
 					printf(
-						'<td>%s</td>',
-						esc_html( $row['expiration'] )
+						'<td class="qm-nowrap">%s <span class="qm-info">(~%s)</span></td>',
+						esc_html( $row['expiration'] ),
+						esc_html( human_time_diff( 0, $row['expiration'] ) )
 					);
 				}
 
 				printf(
-					'<td>~%s</td>',
+					'<td class="qm-nowrap">~%s</td>',
 					esc_html( size_format( $row['size'] ) )
 				);
 
@@ -98,7 +87,7 @@ class QM_Output_Html_Transients extends QM_Output_Html {
 				$caller = array_pop( $stack );
 
 				if ( ! empty( $stack ) ) {
-					echo $this->build_toggler(); // WPCS: XSS ok;
+					echo self::build_toggler(); // WPCS: XSS ok;
 					echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>'; // WPCS: XSS ok.
 				}
 
@@ -114,27 +103,15 @@ class QM_Output_Html_Transients extends QM_Output_Html {
 
 			}
 
-			echo '</tbody>';
-
+			$this->after_tabular_output();
 		} else {
+			$this->before_non_tabular_output();
 
-			echo '<thead>';
-			echo '<tr>';
-			echo '<th>' . esc_html__( 'Transient Updates', 'query-monitor' ) . '</th>';
-			echo '</tr>';
-			echo '</thead>';
+			$notice = __( 'No transients set.', 'query-monitor' );
+			echo $this->build_notice( $notice ); // WPCS: XSS ok.
 
-			echo '<tbody>';
-			echo '<tr>';
-			echo '<td style="text-align:center !important"><em>' . esc_html__( 'none', 'query-monitor' ) . '</em></td>';
-			echo '</tr>';
-			echo '</tbody>';
-
+			$this->after_non_tabular_output();
 		}
-
-		echo '</table>';
-		echo '</div>';
-
 	}
 
 	public function admin_menu( array $menu ) {

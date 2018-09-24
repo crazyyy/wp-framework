@@ -1,5 +1,7 @@
 <?php
 /**
+ * WPSEO plugin file.
+ *
  * @package WPSEO\Admin\Customizer
  */
 
@@ -54,7 +56,6 @@ class WPSEO_Customizer {
 				'active_callback' => array( $this, 'breadcrumbs_active_callback' ),
 			)
 		);
-
 	}
 
 	/**
@@ -63,9 +64,7 @@ class WPSEO_Customizer {
 	 * @return bool
 	 */
 	public function breadcrumbs_active_callback() {
-		$options = WPSEO_Options::get_option( 'wpseo_internallinks' );
-
-		return true === ( current_theme_supports( 'yoast-seo-breadcrumbs' ) || $options['breadcrumbs-enable'] );
+		return true === ( current_theme_supports( 'yoast-seo-breadcrumbs' ) || WPSEO_Options::get( 'breadcrumbs-enable' ) );
 	}
 
 	/**
@@ -73,7 +72,7 @@ class WPSEO_Customizer {
 	 */
 	private function breadcrumbs_blog_remove_setting() {
 		$this->wp_customize->add_setting(
-			'wpseo_internallinks[breadcrumbs-blog-remove]', array(
+			'wpseo_titles[breadcrumbs-display-blog-page]', array(
 				'default'   => '',
 				'type'      => 'option',
 				'transport' => 'refresh',
@@ -82,11 +81,11 @@ class WPSEO_Customizer {
 
 		$this->wp_customize->add_control(
 			new WP_Customize_Control(
-				$this->wp_customize, 'wpseo-breadcrumbs-blog-remove', array(
+				$this->wp_customize, 'wpseo-breadcrumbs-display-blog-page', array(
 					'label'           => __( 'Remove blog page from breadcrumbs', 'wordpress-seo' ),
 					'type'            => 'checkbox',
 					'section'         => 'wpseo_breadcrumbs_customizer_section',
-					'settings'        => 'wpseo_internallinks[breadcrumbs-blog-remove]',
+					'settings'        => 'wpseo_titles[breadcrumbs-display-blog-page]',
 					'context'         => '',
 					'active_callback' => array( $this, 'breadcrumbs_blog_remove_active_cb' ),
 				)
@@ -108,7 +107,7 @@ class WPSEO_Customizer {
 	 */
 	private function breadcrumbs_separator_setting() {
 		$this->wp_customize->add_setting(
-			'wpseo_internallinks[breadcrumbs-sep]', array(
+			'wpseo_titles[breadcrumbs-sep]', array(
 				'default'   => '',
 				'type'      => 'option',
 				'transport' => 'refresh',
@@ -121,7 +120,7 @@ class WPSEO_Customizer {
 					'label'    => __( 'Breadcrumbs separator:', 'wordpress-seo' ),
 					'type'     => 'text',
 					'section'  => 'wpseo_breadcrumbs_customizer_section',
-					'settings' => 'wpseo_internallinks[breadcrumbs-sep]',
+					'settings' => 'wpseo_titles[breadcrumbs-sep]',
 					'context'  => '',
 				)
 			)
@@ -133,7 +132,7 @@ class WPSEO_Customizer {
 	 */
 	private function breadcrumbs_home_setting() {
 		$this->wp_customize->add_setting(
-			'wpseo_internallinks[breadcrumbs-home]', array(
+			'wpseo_titles[breadcrumbs-home]', array(
 				'default'   => '',
 				'type'      => 'option',
 				'transport' => 'refresh',
@@ -146,7 +145,7 @@ class WPSEO_Customizer {
 					'label'    => __( 'Anchor text for the homepage:', 'wordpress-seo' ),
 					'type'     => 'text',
 					'section'  => 'wpseo_breadcrumbs_customizer_section',
-					'settings' => 'wpseo_internallinks[breadcrumbs-home]',
+					'settings' => 'wpseo_titles[breadcrumbs-home]',
 					'context'  => '',
 				)
 			)
@@ -158,7 +157,7 @@ class WPSEO_Customizer {
 	 */
 	private function breadcrumbs_prefix_setting() {
 		$this->wp_customize->add_setting(
-			'wpseo_internallinks[breadcrumbs-prefix]', array(
+			'wpseo_titles[breadcrumbs-prefix]', array(
 				'default'   => '',
 				'type'      => 'option',
 				'transport' => 'refresh',
@@ -171,7 +170,7 @@ class WPSEO_Customizer {
 					'label'    => __( 'Prefix for breadcrumbs:', 'wordpress-seo' ),
 					'type'     => 'text',
 					'section'  => 'wpseo_breadcrumbs_customizer_section',
-					'settings' => 'wpseo_internallinks[breadcrumbs-prefix]',
+					'settings' => 'wpseo_titles[breadcrumbs-prefix]',
 					'context'  => '',
 				)
 			)
@@ -183,7 +182,7 @@ class WPSEO_Customizer {
 	 */
 	private function breadcrumbs_archiveprefix_setting() {
 		$this->wp_customize->add_setting(
-			'wpseo_internallinks[breadcrumbs-archiveprefix]', array(
+			'wpseo_titles[breadcrumbs-archiveprefix]', array(
 				'default'   => '',
 				'type'      => 'option',
 				'transport' => 'refresh',
@@ -196,7 +195,7 @@ class WPSEO_Customizer {
 					'label'    => __( 'Prefix for archive pages:', 'wordpress-seo' ),
 					'type'     => 'text',
 					'section'  => 'wpseo_breadcrumbs_customizer_section',
-					'settings' => 'wpseo_internallinks[breadcrumbs-archiveprefix]',
+					'settings' => 'wpseo_titles[breadcrumbs-archiveprefix]',
 					'context'  => '',
 				)
 			)
@@ -208,7 +207,7 @@ class WPSEO_Customizer {
 	 */
 	private function breadcrumbs_searchprefix_setting() {
 		$this->wp_customize->add_setting(
-			'wpseo_internallinks[breadcrumbs-searchprefix]', array(
+			'wpseo_titles[breadcrumbs-searchprefix]', array(
 				'default'   => '',
 				'type'      => 'option',
 				'transport' => 'refresh',
@@ -221,7 +220,7 @@ class WPSEO_Customizer {
 					'label'    => __( 'Prefix for search result pages:', 'wordpress-seo' ),
 					'type'     => 'text',
 					'section'  => 'wpseo_breadcrumbs_customizer_section',
-					'settings' => 'wpseo_internallinks[breadcrumbs-searchprefix]',
+					'settings' => 'wpseo_titles[breadcrumbs-searchprefix]',
 					'context'  => '',
 				)
 			)
@@ -233,7 +232,7 @@ class WPSEO_Customizer {
 	 */
 	private function breadcrumbs_404_setting() {
 		$this->wp_customize->add_setting(
-			'wpseo_internallinks[breadcrumbs-404crumb]', array(
+			'wpseo_titles[breadcrumbs-404crumb]', array(
 				'default'   => '',
 				'type'      => 'option',
 				'transport' => 'refresh',
@@ -246,7 +245,7 @@ class WPSEO_Customizer {
 					'label'    => __( 'Breadcrumb for 404 pages:', 'wordpress-seo' ),
 					'type'     => 'text',
 					'section'  => 'wpseo_breadcrumbs_customizer_section',
-					'settings' => 'wpseo_internallinks[breadcrumbs-404crumb]',
+					'settings' => 'wpseo_titles[breadcrumbs-404crumb]',
 					'context'  => '',
 				)
 			)

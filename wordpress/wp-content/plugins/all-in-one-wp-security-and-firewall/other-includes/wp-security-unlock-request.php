@@ -65,11 +65,10 @@ if (isset($_POST['aiowps_wp_submit_unlock_request']))
             //Process unlock request
             //Generate a special code and unlock url
             $ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
-            $ip_range = AIOWPSecurity_Utility_IP::get_sanitized_ip_range($ip); //Get the IP range of the current user
-            if(empty($ip_range)){
+            if(empty($ip)){
                 $unlock_url = false;
             }else{
-                $unlock_url = AIOWPSecurity_User_Login::generate_unlock_request_link($ip_range);
+                $unlock_url = AIOWPSecurity_User_Login::generate_unlock_request_link($ip);
             }
 
             if (!$unlock_url){
@@ -103,6 +102,11 @@ function display_unlock_form($email='')
 ?>
 <div class="message"><?php echo $unlock_form_msg; ?></div>
 <form name="loginform" id="loginform" action="<?php echo wp_login_url(); ?>" method="post">
+    <?php
+    if(isset($_POST['aiowps-woo-login'])){
+        echo '<input type="hidden" name="aiowps-woo-login" id="aiowps-woo-login" value="1" />';
+    }
+    ?>
 	<p>
 		<label for="aiowps_unlock_request_email"><?php _e('Email Address', 'all-in-one-wp-security-and-firewall'); ?><br>
 		<input type="text" name="aiowps_unlock_request_email" id="aiowps_unlock_request_email" class="input" value="<?php echo $email; ?>" size="20"></label>

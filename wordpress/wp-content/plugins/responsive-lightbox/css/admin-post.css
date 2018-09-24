@@ -1,0 +1,49 @@
+#rl-modal-gallery {
+	position: relative;
+}
+
+#rl-insert-modal-gallery-button {
+	padding-left: 5px;
+}
+
+#rl-insert-modal-gallery-button span {
+	font-size: 18px;
+}
+
+#rl-modal-gallery .rl-gallery-images-spinner {
+	margin-top: 20px;
+	float: none;
+}
+
+#rl-modal-gallery .rl-loading-content {
+	pointer-events: none;
+	opacity: 0.4;
+	transition: opacity 0.3s ease-in-out;
+}
+
+#rl-modal-gallery .rl-attachments-list .attachment, #rl-modal-gallery .rl-attachments-list .attachment-preview {
+	cursor: default;
+}
+
+#rl-modal-gallery .rl-status-active {
+	opacity: 1;
+}
+
+#rl-modal-gallery .rl-status-inactive {
+	opacity: 0.4;
+}
+
+.wrap .rl-reload-galleries, .wrap .rl-reload-galleries:active {
+	margin-left: 10px;
+}
+
+.media-frame .rl-gallery-reload-spinner {
+	float: none;
+	visibility: visible;
+	margin-left: 5px;
+	margin-top: -5px;
+}
+
+.attachments-browser .media-toolbar-primary {
+	max-width: 100%;
+}

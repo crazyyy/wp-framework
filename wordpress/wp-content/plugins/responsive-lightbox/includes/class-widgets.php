@@ -73,7 +73,7 @@ class Responsive_Lightbox_Gallery_Widget extends WP_Widget {
 			'desc'	 => __( 'Descending', 'responsive-lightbox' )
 		);
 
-		$gallery_types = apply_filters( 'rl_gallery_types', array() );
+		$gallery_types = apply_filters( 'rl_gallery_types', Responsive_Lightbox()->gallery_types );
 
 		if ( ! empty( $gallery_types ) ) {
 			$this->rlg_gallery_types = array_merge(

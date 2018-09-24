@@ -1,5 +1,7 @@
 <?php
 /**
+ * WPSEO plugin file.
+ *
  * @package WPSEO\Admin\Formatter
  */
 
@@ -51,7 +53,6 @@ class WPSEO_Metabox_Formatter {
 			'base_url'              => '',
 			'contentTab'            => __( 'Readability', 'wordpress-seo' ),
 			'keywordTab'            => __( 'Keyword:', 'wordpress-seo' ),
-			'enterFocusKeyword'     => __( 'Enter your focus keyword', 'wordpress-seo' ),
 			'removeKeyword'         => __( 'Remove keyword', 'wordpress-seo' ),
 			'contentLocale'         => get_locale(),
 			'userLocale'            => WPSEO_Utils::get_user_locale(),
@@ -61,7 +62,11 @@ class WPSEO_Metabox_Formatter {
 			'metadesc_template'     => '',
 			'contentAnalysisActive' => $analysis_readability->is_enabled() ? 1 : 0,
 			'keywordAnalysisActive' => $analysis_seo->is_enabled() ? 1 : 0,
+			'cornerstoneActive' 	=> WPSEO_Options::get( 'enable_cornerstone_content', false ) ? 1 : 0,
 			'intl'                  => $this->get_content_analysis_component_translations(),
+			'isRtl'                 => is_rtl(),
+			'addKeywordUpsell'      => $this->get_add_keyword_upsell_translations(),
+
 			/**
 			 * Filter to determine if the markers should be enabled or not.
 			 *
@@ -69,18 +74,63 @@ class WPSEO_Metabox_Formatter {
 			 */
 			'show_markers'          => apply_filters( 'wpseo_enable_assessment_markers', true ),
 			'publish_box'           => array(
-				'labels'   => array(
-					'content' => __( 'Readability', 'wordpress-seo' ),
-					'keyword' => __( 'SEO', 'wordpress-seo' ),
-				),
-				'statuses' => array(
-					'na'   => __( 'Not available', 'wordpress-seo' ),
-					'bad'  => __( 'Needs improvement', 'wordpress-seo' ),
-					'ok'   => __( 'OK', 'wordpress-seo' ),
-					'good' => __( 'Good', 'wordpress-seo' ),
+				'labels' => array(
+					'content' => array(
+						'na'   => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'Readability: %1$sNot available%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+						'bad'  => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'Readability: %1$sNeeds improvement%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+						'ok'   => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'Readability: %1$sOK%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+						'good' => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'Readability: %1$sGood%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+					),
+					'keyword' => array(
+						'na'   => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'SEO: %1$sNot available%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+						'bad'  => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'SEO: %1$sNeeds improvement%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+						'ok'   => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'SEO: %1$sOK%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+						'good' => sprintf(
+							/* translators: %1$s expands to an opening strong tag, %2$s expands to a closing strong tag. */
+							__( 'SEO: %1$sGood%2$s', 'wordpress-seo' ),
+							'<strong>',
+							'</strong>'
+						),
+					),
 				),
 			),
 			'markdownEnabled'       => $this->is_markdown_enabled(),
+			'analysisHeadingTitle'  => __( 'Analysis', 'wordpress-seo' ),
 		);
 	}
 
@@ -112,12 +162,44 @@ class WPSEO_Metabox_Formatter {
 			'content-analysis.problems'             => __( 'Problems', 'wordpress-seo' ),
 			'content-analysis.improvements'         => __( 'Improvements', 'wordpress-seo' ),
 			'content-analysis.considerations'       => __( 'Considerations', 'wordpress-seo' ),
-			'content-analysis.good'                 => __( 'Good', 'wordpress-seo' ),
+			'content-analysis.good'                 => __( 'Good results', 'wordpress-seo' ),
 			'content-analysis.language-notice'      => __( 'Your site language is set to {language}.', 'wordpress-seo' ),
 			'content-analysis.language-notice-contact-admin' => __( 'Your site language is set to {language}. If this is not correct, contact your site administrator.', 'wordpress-seo' ),
 			'content-analysis.highlight'            => __( 'Highlight this result in the text', 'wordpress-seo' ),
 			'content-analysis.nohighlight'          => __( 'Remove highlight from the text', 'wordpress-seo' ),
 			'content-analysis.disabledButton'       => __( 'Marks are disabled in current view', 'wordpress-seo' ),
+			'a11yNotice.opensInNewTab'              => __( '(Opens in a new browser tab)', 'wordpress-seo' ),
+		);
+	}
+
+	/**
+	 * Returns the translations for the Add Keyword modal.
+	 *
+	 * These strings are not escaped because they're meant to be used with React
+	 * which already takes care of that. If used in PHP, they should be escaped.
+	 *
+	 * @return array Translated text strings for the Add Keyword modal.
+	 */
+	public function get_add_keyword_upsell_translations() {
+		return array(
+			'title'                    => __( 'Would you like to add more than one keyword?', 'wordpress-seo' ),
+			'intro'                    => sprintf(
+			/* translators: %1$s expands to a 'Yoast SEO Premium' text linked to the yoast.com website. */
+				__( 'Great news: you can, with %1$s!', 'wordpress-seo' ),
+				'{{link}}Yoast SEO Premium{{/link}}'
+			),
+			'link'                     => WPSEO_Shortlinker::get( 'https://yoa.st/pe-premium-page' ),
+			'other'                    => sprintf(
+			/* translators: %s expands to 'Yoast SEO Premium'. */
+				__( 'Other benefits of %s for you:', 'wordpress-seo' ), 'Yoast SEO Premium'
+			),
+			'buylink'                  => WPSEO_Shortlinker::get( 'https://yoa.st/add-keywords-popup' ),
+			'buy'                      => sprintf(
+			/* translators: %s expands to 'Yoast SEO Premium'. */
+				__( 'Get %s now!', 'wordpress-seo' ), 'Yoast SEO Premium'
+			),
+			'small'                    => __( '1 year free updates and upgrades included!', 'wordpress-seo' ),
+			'a11yNotice.opensInNewTab' => __( '(Opens in a new browser tab)', 'wordpress-seo' ),
 		);
 	}
 

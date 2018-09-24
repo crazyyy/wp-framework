@@ -334,7 +334,7 @@ class EWWWIO_Optimize_Tests extends WP_UnitTestCase {
 		update_site_option( 'ewww_image_optimizer_optipng_level', 2 );
 		update_site_option( 'ewww_image_optimizer_jpegtran_copy', true );
 		$results = $this->optimize_png();
-		$this->assertEquals( 38082, filesize( $results[0] ) );
+		$this->assertEquals( 37428, filesize( $results[0] ) );
 		unlink( $results[0] );
 	}
 
@@ -368,7 +368,7 @@ class EWWWIO_Optimize_Tests extends WP_UnitTestCase {
 		$results = $this->optimize_png();
 		update_option( 'ewww_image_optimizer_cloud_key', '' );
 		update_site_option( 'ewww_image_optimizer_cloud_key', '' );
-		$this->assertEquals( 37697, filesize( $results[0] ) );
+		$this->assertEquals( 37557, filesize( $results[0] ) );
 		unlink( $results[0] );
 	}
 

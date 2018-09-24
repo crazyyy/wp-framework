@@ -1,18 +1,9 @@
 <?php
-/*
-Copyright 2009-2017 John Blackbourn
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-*/
+/**
+ * User capability check collector.
+ *
+ * @package query-monitor
+ */
 
 class QM_Collector_Caps extends QM_Collector {
 
@@ -24,8 +15,16 @@ class QM_Collector_Caps extends QM_Collector {
 
 	public function __construct() {
 		parent::__construct();
+		if ( ! defined( 'QM_ENABLE_CAPS_PANEL' ) || ! QM_ENABLE_CAPS_PANEL ) {
+			return;
+		}
 		add_filter( 'user_has_cap', array( $this, 'filter_user_has_cap' ), 9999, 3 );
 		add_filter( 'map_meta_cap', array( $this, 'filter_map_meta_cap' ), 9999, 4 );
+	}
+
+	public function tear_down() {
+		remove_filter( 'user_has_cap', array( $this, 'filter_user_has_cap' ), 9999 );
+		remove_filter( 'map_meta_cap', array( $this, 'filter_map_meta_cap' ), 9999 );
 	}
 
 	/**
@@ -120,6 +119,11 @@ class QM_Collector_Caps extends QM_Collector {
 
 		foreach ( $this->data['caps'] as $i => $cap ) {
 			$name = $cap['args'][0];
+
+			if ( ! is_string( $name ) ) {
+				$name = '';
+			}
+
 			$parts = array_filter( preg_split( '#[_/-]#', $name ) );
 			$this->data['caps'][ $i ]['parts'] = $parts;
 			$this->data['caps'][ $i ]['name']  = $name;

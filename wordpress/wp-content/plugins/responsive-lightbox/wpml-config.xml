@@ -1,0 +1,13 @@
+<wpml-config>
+    <custom-fields>
+        <custom-field action="copy-once">_rl_images</custom-field>
+        <custom-field action="copy-once">_rl_config</custom-field>
+        <custom-field action="copy-once">_rl_lightbox</custom-field>
+        <custom-field action="copy-once">_rl_misc</custom-field>
+        <custom-field action="copy-once">_rl_featured_image_type</custom-field>
+        <custom-field action="copy-once">_rl_featured_image</custom-field>
+    </custom-fields>
+    <custom-types>
+        <custom-type translate="1">rl_gallery</custom-type>
+    </custom-types>    
+</wpml-config>

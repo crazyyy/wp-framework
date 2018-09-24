@@ -23,51 +23,51 @@ msgstr "Twenty Seventeen"
 msgid "Footer"
 msgstr "Подвал"
 
-#: functions.php:317
+#: functions.php:326
 msgid "Add widgets here to appear in your sidebar on blog posts and archive pages."
 msgstr "Добавить виджеты, которые появятся на боковой панели в записях блога и страницах архива."
 
-#: functions.php:315 sidebar.php:18
+#: functions.php:324 sidebar.php:18
 msgid "Blog Sidebar"
 msgstr "Боковая панель блога"
 
 #: template-parts/header/site-branding.php:34
-#: template-parts/navigation/navigation-top.php:27
+#: template-parts/navigation/navigation-top.php:31
 msgid "Scroll down to content"
 msgstr "Перейти к содержимому"
 
-#: functions.php:159
+#: functions.php:167
 msgctxt "Theme starter content"
 msgid "Coffee"
 msgstr "Кофе"
 
-#: functions.php:155
+#: functions.php:163
 msgctxt "Theme starter content"
 msgid "Sandwich"
 msgstr "Сэндвич"
 
-#: functions.php:151
+#: functions.php:159
 msgctxt "Theme starter content"
 msgid "Espresso"
 msgstr "Эспрессо"
 
-#: inc/custom-header.php:120
+#: inc/custom-header.php:126
 msgid "Pause background video"
 msgstr "Приостановить фоновое видео"
 
-#: inc/custom-header.php:119
+#: inc/custom-header.php:125
 msgid "Play background video"
 msgstr "Проиграть фоновое видео"
 
-#: inc/template-tags.php:150
+#: inc/template-tags.php:151
 msgid "Front Page Section %1$s Placeholder"
 msgstr "Заполнитель %1$s раздела главной страницы"
 
-#: inc/customizer.php:80
+#: inc/customizer.php:99
 msgid "When the two-column layout is assigned, the page title is in one column and content is in the other."
 msgstr "При назначении разметки в два столбца, название страницы размещается в первом столбце, а содержимое в другом."
 
-#: single.php:32
+#: single.php:34
 msgid "Next Post"
 msgstr "Следующая запись"
 
@@ -75,21 +75,21 @@ msgstr "Следующая запись"
 msgid "Posts"
 msgstr "Записи"
 
-#: inc/template-tags.php:88
+#: inc/template-tags.php:89
 msgid "Tags"
 msgstr "Метки"
 
-#: inc/template-tags.php:84
+#: inc/template-tags.php:85
 msgid "Categories"
 msgstr "Рубрики"
 
 #. translators: used between list items, there is a space after the comma
-#: inc/template-tags.php:65
+#: inc/template-tags.php:66
 msgid ", "
 msgstr ", "
 
 #. translators: %s: post date
-#: inc/template-tags.php:51
+#: inc/template-tags.php:52
 msgid "<span class=\"screen-reader-text\">Posted on</span> %s"
 msgstr "<span class=\"screen-reader-text\">Опубликовано</span> %s"
 
@@ -106,85 +106,85 @@ msgstr "Пожалуйста, определите имя файла для SVG 
 msgid "Please define default parameters in the form of an array."
 msgstr "Пожалуйста, определите параметры по умолчанию в форме массива."
 
-#: inc/customizer.php:108
+#: inc/customizer.php:131
 msgid "Select pages to feature in each area from the dropdowns. Add an image to a section by setting a featured image in the page editor. Empty sections will not be displayed."
 msgstr "Выберите избранные страницы для каждой области из выпадающих списков. Добавьте изображение в раздел установив избранное изображение в редакторе страницы. Пустые разделы не будут показаны."
 
 #. translators: %d is the front page section number
-#: inc/customizer.php:107
+#: inc/customizer.php:130
 msgid "Front Page Section %d Content"
 msgstr "Содержимое %d раздела главной страницы"
 
-#: inc/customizer.php:83 inc/customizer.php:132
+#: inc/customizer.php:102 inc/customizer.php:158
 msgid "Two Column"
 msgstr "Два столбца"
 
-#: inc/customizer.php:82 inc/customizer.php:131
+#: inc/customizer.php:101 inc/customizer.php:157
 msgid "One Column"
 msgstr "Один столбец"
 
-#: inc/customizer.php:77
+#: inc/customizer.php:96
 msgid "Page Layout"
 msgstr "Разметка страницы"
 
-#: inc/customizer.php:66
+#: inc/customizer.php:81
 msgid "Theme Options"
 msgstr "Настройки темы"
 
-#: inc/customizer.php:50
+#: inc/customizer.php:59
 msgid "Custom"
 msgstr "Пользовательская"
 
-#: inc/customizer.php:48
+#: inc/customizer.php:57
 msgid "Light"
 msgstr "Светлая"
 
-#: inc/customizer.php:46
+#: inc/customizer.php:55
 msgid "Color Scheme"
 msgstr "Цветовая схема"
 
-#: inc/custom-header.php:49
+#: inc/custom-header.php:54
 msgid "Default Header Image"
 msgstr "Изображение заголовка по умолчанию"
 
-#: functions.php:335
+#: functions.php:348
 msgid "Footer 2"
 msgstr "Подвал 2"
 
-#: functions.php:327 functions.php:337
+#: functions.php:338 functions.php:350
 msgid "Add widgets here to appear in your footer."
 msgstr "Добавьте сюда виджеты для отображения в подвале сайта."
 
-#: functions.php:325
+#: functions.php:336
 msgid "Footer 1"
 msgstr "Подвал 1"
 
 #. Translators: If there are characters in your language that are not supported
 #. by Libre Franklin, translate this to 'off'. Do not translate into your own
 #. language.
-#: functions.php:269
+#: functions.php:277
 msgctxt "Libre Franklin font: on or off"
 msgid "on"
 msgstr "on"
 
-#: functions.php:63 functions.php:183
+#: functions.php:64 functions.php:191
 #: template-parts/navigation/navigation-top.php:12
 msgid "Top Menu"
 msgstr "Верхнее меню"
 
-#: comments.php:60
+#: comments.php:62
 msgid "Reply"
 msgstr "Ответить"
 
-#: template-parts/post/content-none.php:27
+#: template-parts/post/content-none.php:28
 msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
 msgstr "Запрошенную информацию найти не удалось. Возможно, будет полезен поиск по сайту."
 
-#: search.php:50
+#: search.php:54
 msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
 msgstr "Извините, по вашему запросу ничего не найдено. Попробуйте другие ключевые слова."
 
-#: template-parts/post/content-none.php:23
+#: template-parts/post/content-none.php:24
 msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
 msgstr "Готовы опубликовать свою первую запись? <a href=\"%1$s\">Начните отсюда</a>."
 
@@ -192,15 +192,15 @@ msgstr "Готовы опубликовать свою первую запись
 msgid "Nothing Found"
 msgstr "Не найдено"
 
-#: single.php:31
+#: single.php:33
 msgid "Previous Post"
 msgstr "Предыдущая запись:"
 
-#: comments.php:66 single.php:31
+#: comments.php:71 single.php:33
 msgid "Previous"
 msgstr "Назад"
 
-#: comments.php:67 single.php:32
+#: comments.php:72 single.php:34
 msgid "Next"
 msgstr "Далее"
 
@@ -224,33 +224,33 @@ msgid "Search Results for: %s"
 msgstr "Результаты поиска: %s"
 
 #. translators: %s: Name of current post
-#: functions.php:363 template-parts/page/content-front-page-panels.php:43
-#: template-parts/page/content-front-page.php:40
-#: template-parts/post/content-audio.php:83
-#: template-parts/post/content-gallery.php:70
-#: template-parts/post/content-image.php:59
-#: template-parts/post/content-video.php:82 template-parts/post/content.php:56
+#: functions.php:378 template-parts/page/content-front-page-panels.php:45
+#: template-parts/page/content-front-page.php:42
+#: template-parts/post/content-audio.php:84
+#: template-parts/post/content-gallery.php:71
+#: template-parts/post/content-image.php:61
+#: template-parts/post/content-video.php:83 template-parts/post/content.php:57
 msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
 msgstr "Читать далее<span class=\"screen-reader-text\"> «%s»</span>"
 
-#: inc/customizer.php:49
+#: inc/customizer.php:58
 msgid "Dark"
 msgstr "Тёмная"
 
-#: inc/back-compat.php:39 inc/back-compat.php:51 inc/back-compat.php:66
+#: inc/back-compat.php:39 inc/back-compat.php:52 inc/back-compat.php:68
 msgid "Twenty Seventeen requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again."
 msgstr "Тема Twenty Seventeen требует WordPress версии 4.7 или выше. У вас версия %s. Пожалуйста, обновите WordPress и попробуйте ещё раз."
 
 #. translators: %s: Name of current post
-#: inc/template-tags.php:116
+#: inc/template-tags.php:117
 msgid "Edit<span class=\"screen-reader-text\"> \"%s\"</span>"
 msgstr "Изменить<span class=\"screen-reader-text\"> «%s»</span>"
 
-#: template-parts/page/content-page.php:25
-#: template-parts/post/content-audio.php:88
-#: template-parts/post/content-gallery.php:75
-#: template-parts/post/content-image.php:64
-#: template-parts/post/content-video.php:87 template-parts/post/content.php:61
+#: template-parts/page/content-page.php:26
+#: template-parts/post/content-audio.php:91
+#: template-parts/post/content-gallery.php:78
+#: template-parts/post/content-image.php:68
+#: template-parts/post/content-video.php:90 template-parts/post/content.php:64
 msgid "Pages:"
 msgstr "Страницы:"
 
@@ -262,38 +262,38 @@ msgstr "Меню"
 msgid "Skip to content"
 msgstr "Перейти к содержимому"
 
-#: functions.php:446
+#: functions.php:467
 msgid "Collapse child menu"
 msgstr "Свернуть дочернее меню"
 
-#: functions.php:445
+#: functions.php:466
 msgid "Expand child menu"
 msgstr "Раскрыть дочернее меню"
 
-#: functions.php:64 functions.php:194
+#: functions.php:65 functions.php:202
 msgid "Social Links Menu"
 msgstr "Меню социальных ссылок"
 
-#: template-parts/footer/site-info.php:13
+#: template-parts/footer/site-info.php:19
 msgid "Proudly powered by %s"
 msgstr "Сайт работает на %s"
 
-#. #-#-#-#-#  twentyseventeen.pot (Twenty Seventeen 1.4)  #-#-#-#-#
+#. #-#-#-#-#  twentyseventeen.pot (Twenty Seventeen 1.7)  #-#-#-#-#
 #. Author URI of the plugin/theme
-#: template-parts/footer/site-info.php:13
+#: template-parts/footer/site-info.php:18
 msgid "https://wordpress.org/"
 msgstr "https://ru.wordpress.org/"
 
-#: footer.php:25
+#: footer.php:26
 msgid "Footer Social Links Menu"
 msgstr "Меню социальных ссылок в подвале"
 
-#: comments.php:75
+#: comments.php:82
 msgid "Comments are closed."
 msgstr "Обсуждение закрыто."
 
 #. translators: 1: number of comments, 2: post title
-#: comments.php:40
+#: comments.php:41
 msgctxt "comments title"
 msgid "%1$s Reply to &ldquo;%2$s&rdquo;"
 msgid_plural "%1$s Replies to &ldquo;%2$s&rdquo;"
@@ -302,12 +302,12 @@ msgstr[1] "%2$s: %1$s комментария"
 msgstr[2] "%2$s: %1$s комментариев"
 
 #. translators: %s: post title
-#: comments.php:36
+#: comments.php:37
 msgctxt "comments title"
 msgid "One Reply to &ldquo;%s&rdquo;"
 msgstr "%s: 1 комментарий"
 
-#: archive.php:47 index.php:52 search.php:45
+#: archive.php:50 index.php:54 search.php:47
 msgid "Page"
 msgstr "Страница"
 
@@ -319,11 +319,11 @@ msgstr "Ой! Страница не найдена."
 msgid "It looks like nothing was found at this location. Maybe try a search?"
 msgstr "По данному адресу ничего не найдено. Попробуйте воспользоваться поиском."
 
-#: archive.php:45 index.php:50 search.php:43
+#: archive.php:48 index.php:52 search.php:45
 msgid "Previous page"
 msgstr "Предыдущая страница"
 
-#: archive.php:46 index.php:51 search.php:44
+#: archive.php:49 index.php:53 search.php:46
 msgid "Next page"
 msgstr "Следующая страница"
 

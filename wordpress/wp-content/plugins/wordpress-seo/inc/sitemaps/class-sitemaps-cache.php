@@ -1,5 +1,7 @@
 <?php
 /**
+ * WPSEO plugin file.
+ *
  * @package WPSEO\XML_Sitemaps
  */
 
@@ -67,7 +69,6 @@ class WPSEO_Sitemaps_Cache {
 		 */
 		return apply_filters( 'wpseo_enable_xml_sitemap_transient_caching', true );
 	}
-
 
 	/**
 	 * Retrieve the sitemap page from cache.
@@ -177,10 +178,10 @@ class WPSEO_Sitemaps_Cache {
 	 */
 	public static function invalidate_helper( $unused, $type ) {
 
-		$sitemap_options = WPSEO_Options::get_option( 'wpseo_xml' );
-
-		$taxonomy_not_in_sitemap = 'taxonomies-' . $type . '-not_in_sitemap';
-		if ( isset( $sitemap_options[ $taxonomy_not_in_sitemap ] ) && $sitemap_options[ $taxonomy_not_in_sitemap ] === false ) {
+		if (
+			WPSEO_Options::get( 'noindex-' . $type ) === false ||
+			WPSEO_Options::get( 'noindex-tax-' . $type ) === false
+		) {
 			self::invalidate( $type );
 		}
 	}

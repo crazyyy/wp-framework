@@ -1,18 +1,9 @@
 <?php
-/*
-Copyright 2009-2017 John Blackbourn
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-*/
+/**
+ * Language and locale collector.
+ *
+ * @package query-monitor
+ */
 
 class QM_Collector_Languages extends QM_Collector {
 
@@ -44,6 +35,10 @@ class QM_Collector_Languages extends QM_Collector {
 	 * @return bool
 	 */
 	public function log_file_load( $override, $domain, $mofile ) {
+
+		if ( 'query-monitor' === $domain && self::hide_qm() ) {
+			return $override;
+		}
 
 		$trace    = new QM_Backtrace;
 		$filtered = $trace->get_filtered_trace();

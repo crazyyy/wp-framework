@@ -1,24 +1,32 @@
-=== Responsive Lightbox by dFactory ===
+=== Responsive Lightbox & Gallery ===
 Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, photos, theme, photo, image, picture, slideshow, modal, overlay, video
 Requires at least: 4.0
-Tested up to: 4.7.5
-Stable tag: 1.7.2
+Tested up to: 4.9.6
+Stable tag: 2.0.5
+Requires PHP: 5.2.4
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
-Responsive Lightbox allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices.
+Responsive Lightbox & Gallery allows users to create galleries and view larger versions of images, galleries and videos in a lightbox (overlay) effect optimized for mobile devices.
 
 == Description ==
 
-[Responsive Lightbox](http://www.dfactory.eu/plugins/responsive-lightbox/) allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices.
+[Responsive Lightbox & Gallery](http://www.dfactory.eu/plugins/responsive-lightbox/) allows users to create galleries and view larger versions of images, galleries and videos in a lightbox (overlay) effect optimized for mobile devices.
 
 For more information, check out plugin page at [dFactory](http://www.dfactory.eu/) or see the [Live demo](http://www.dfactory.eu/plugins/responsive-lightbox/) on our site.
 
 = Features include: =
 
-* Select from 7 responsive lightbox scripts (SwipeBox, prettyPhoto, FancyBox, Nivo Lightbox, Image Lightbox, Tos "R" Us, Featherlight)
+* Powerful, but easy to use gallery builder
+* 3 beautiful basic gallery templates - Grid, Slider and Masonry
+* 8 responsive lightbox scripts (SwipeBox, prettyPhoto, FancyBox, Nivo Lightbox, Image Lightbox, Tos "R" Us, Featherlight, Magnific Popup)
+* Create galleries from Media Library or Post attached images
+* Drag n drop reordering of images
+* Gallery picker to insert shortcodes
+* Iframe, Ajax, HTML5 and Inline lightbox content support
+* Advanced pagination, incl. AJAX and infinite scroll
 * Automatically add lightbox to WordPress image galleries
 * Automatically add lightbox to WordPress image links
 * Automatically add lightbox to WordPress video links (YouTube, Vimeo)
@@ -70,9 +78,36 @@ No questions yet.
 
 == Changelog ==
 
-= 1.7.2 =
-* Fix: Cross-site scripting (XSS) vulnerability
-* Tweak: Improved Jetpack gallery compatibility
+= 2.0.5 =
+* Fix: Escaped characters on titles and descriptions
+* Fix: Gallery shortcode not accepting image order
+* Fix: Gallery using default parameters instead of the settings
+* Fix: PHP fatal error if gallery builder is disabled
+
+= 2.0.4 =
+* Fix: Gallery sorting and orderby not working
+* Fix: Slow db query on post edit screen
+* Fix: WooCommerce gallery undefined method for get_gallery_image_ids
+* Fix: Uncaught Argument in preview_post_link function
+* Fix: Removed a callback to sanitize_textarea_field
+
+= 2.0.3 =
+* Fix: Gallery shortcode thumbnails not accepting size parameter
+* Fix: Basic templates for WooCommerce gallery 
+
+= 2.0.2 =
+* Fix: Default WordPress gallery issue
+
+= 2.0.1 =
+* Fix: Syntax error in frontend.php on line 522
+
+= 2.0 =
+* New: Powerful gallery builder
+* New: 3 gallery templates - Basic Grid, Slider and Masonry
+* New: Magnific Popup lightbox
+* New: Iframe, Ajax, HTML5 and Inline lightbox content support
+* Tweak: Improved Visual Composer compatibility
+* Tweak: Revamped admin interface
 
 = 1.7.1 =
 * New: Tos "R" Us overlay close option
@@ -322,5 +357,8 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.7.2 =
-* Fix: Cross-site scripting (XSS) vulnerability
+= 2.0.5 =
+* Fix: Escaped characters on titles and descriptions
+* Fix: Gallery shortcode not accepting image order
+* Fix: Gallery using default parameters instead of the settings
+* Fix: PHP fatal error if gallery builder is disabled

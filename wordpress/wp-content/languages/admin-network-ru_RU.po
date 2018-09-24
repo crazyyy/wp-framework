@@ -24,7 +24,7 @@ msgstr "Вы собираетесь удалить следующие сайты
 msgid "User could not be added to this site."
 msgstr "Пользователь не может быть добавлен на этот сайт."
 
-#: wp-admin/network/site-new.php:250
+#: wp-admin/network/site-new.php:252
 msgid "The username and a link to set the password will be mailed to this email address."
 msgstr "Имя пользователя и ссылка для установки пароля будут отправлены на этот адрес электронной почты."
 
@@ -567,7 +567,7 @@ msgstr "Разрешённые типы файлов. Разделяются п�
 msgid "Set site attributes"
 msgstr "Задать атрибуты сайта"
 
-#: wp-admin/network/settings.php:418
+#: wp-admin/network/settings.php:420
 msgid "Enable menus"
 msgstr "Разрешить меню"
 
@@ -1243,7 +1243,7 @@ msgstr "Настройки загрузки"
 msgid "Operational Settings"
 msgstr "Оперативные настройки"
 
-#: wp-admin/network/settings.php:396
+#: wp-admin/network/settings.php:398
 msgid "Enable administration menus"
 msgstr "Разрешить служебные меню"
 
@@ -1284,15 +1284,15 @@ msgstr "[%s] Создан новый сайт"
 msgid "Network Admin Email"
 msgstr "E-mail администратора сети"
 
-#: wp-admin/network/site-new.php:250
+#: wp-admin/network/site-new.php:252
 msgid "A new user will be created if the above email address is not in the database."
 msgstr "Если указанный адрес e-mail отсутствует в базе, будет создан новый пользователь."
 
-#: wp-admin/network/site-new.php:246
+#: wp-admin/network/site-new.php:248
 msgid "Admin Email"
 msgstr "E-mail администратора"
 
-#: wp-admin/network/site-new.php:262
+#: wp-admin/network/site-new.php:264
 msgid "Add Site"
 msgstr "Добавить сайт"
 

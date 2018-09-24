@@ -1,5 +1,7 @@
 <?php
 /**
+ * WPSEO plugin file.
+ *
  * @package WPSEO\Internals\Options
  */
 
@@ -25,7 +27,6 @@
  * - On (succesfull) update of a couple of options, certain related actions will be run automatically.
  *    Some examples:
  *      - on change of wpseo[yoast_tracking], the cron schedule will be adjusted accordingly
- *      - on change of wpseo_permalinks and wpseo_xml, the rewrite rules will be flushed
  *      - on change of wpseo and wpseo_title, some caches will be cleared
  *
  *
@@ -148,6 +149,9 @@ abstract class WPSEO_Option {
 		*/
 		add_filter( 'sanitize_option_' . $this->option_name, array( $this, 'validate' ) );
 
+		// Flushes the rewrite rules when option is updated.
+		add_action( 'update_option_' . $this->option_name, array( 'WPSEO_Utils', 'clear_rewrites' ) );
+
 		/* Register our option for the admin pages */
 		add_action( 'admin_init', array( $this, 'register_setting' ) );
 
@@ -175,7 +179,6 @@ abstract class WPSEO_Option {
 	}
 
 // @codingStandardsIgnoreStart
-
 	/**
 	 * All concrete classes *must* contain the get_instance method.
 	 *
@@ -212,28 +215,6 @@ abstract class WPSEO_Option {
 
 	// @codingStandardsIgnoreStart
 	/**
-	 * Abusing a filter to re-add our default filters.
-	 * WP 3.7 specific as update_option action hook was in the wrong place temporarily.
-	 *
-	 * @see http://core.trac.wordpress.org/ticket/25705
-	 *
-	 * @param   mixed $new_value Pass through value in filter.
-	 *
-	 * @deprecated 3.0 WP 3.7 is no longer supported.
-	 *
-	 * @todo Drop this and logic adding it. R.
-	 *
-	 * @return  mixed   unchanged value
-	 */
-	public function wp37_add_default_filters( $new_value ) {
-		_deprecated_function( __METHOD__, 'WPSEO 3.0' );
-
-		$this->add_default_filters();
-
-		return $new_value;
-	}
-
-	/**
 	 * Validate webmaster tools & Pinterest verification strings.
 	 *
 	 * @param string $key   Key to check, by type of service.
@@ -259,6 +240,11 @@ abstract class WPSEO_Option {
 				$service = '';
 
 				switch ( $key ) {
+					case 'baiduverify':
+						$regex   = '`^[A-Za-z0-9_-]+$`';
+						$service = 'Baidu Webmaster tools';
+						break;
+
 					case 'googleverify':
 						$regex   = '`^[A-Za-z0-9_-]+$`';
 						$service = 'Google Webmaster tools';
@@ -344,7 +330,6 @@ abstract class WPSEO_Option {
 		remove_filter( 'default_option_' . $this->option_name, array( $this, 'get_defaults' ) );
 	}
 
-
 	/**
 	 * Get the enriched default value for an option.
 	 *
@@ -367,7 +352,6 @@ abstract class WPSEO_Option {
 		return apply_filters( 'wpseo_defaults', $this->defaults, $this->option_name );
 	}
 
-
 	/**
 	 * Add filters to make sure that the option is merged with its defaults before being returned.
 	 *
@@ -380,7 +364,6 @@ abstract class WPSEO_Option {
 		}
 	}
 
-
 	/**
 	 * Remove the option filters.
 	 * Called from the clean_up methods to make sure we retrieve the original old option.
@@ -390,7 +373,6 @@ abstract class WPSEO_Option {
 	public function remove_option_filters() {
 		remove_filter( 'option_' . $this->option_name, array( $this, 'get_option' ) );
 	}
-
 
 	/**
 	 * Merge an option with its default values.
@@ -417,7 +399,6 @@ abstract class WPSEO_Option {
 		return $filtered;
 	}
 
-
 	/* *********** METHODS influencing add_uption(), update_option() and saving from admin pages. *********** */
 
 	/**
@@ -428,11 +409,20 @@ abstract class WPSEO_Option {
 	 * @return void
 	 */
 	public function register_setting() {
-		if ( WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ) ) {
-			register_setting( $this->group_name, $this->option_name );
+		if ( ! WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ) ) {
+			return;
 		}
-	}
 
+		if ( $this->multisite_only === true ) {
+			$network_settings_api = Yoast_Network_Settings_API::get();
+			if ( $network_settings_api->meets_requirements() ) {
+				$network_settings_api->register_setting( $this->group_name, $this->option_name );
+			}
+			return;
+		}
+
+		register_setting( $this->group_name, $this->option_name );
+	}
 
 	/**
 	 * Validate the option
@@ -469,7 +459,6 @@ abstract class WPSEO_Option {
 		return $clean;
 	}
 
-
 	/**
 	 * All concrete classes must contain a validate_option() method which validates all
 	 * values within the option.
@@ -479,7 +468,6 @@ abstract class WPSEO_Option {
 	 * @param  array $old   Old value of the option.
 	 */
 	abstract protected function validate_option( $dirty, $clean, $old );
-
 
 	/* *********** METHODS for ADDING/UPDATING/UPGRADING the option. *********** */
 
@@ -524,7 +512,6 @@ abstract class WPSEO_Option {
 		}
 	}
 
-
 	/**
 	 * Update a site_option.
 	 *
@@ -553,7 +540,6 @@ abstract class WPSEO_Option {
 		}
 	}
 
-
 	/**
 	 * Retrieve the real old value (unmerged with defaults), clean and re-save the option.
 	 *
@@ -568,7 +554,6 @@ abstract class WPSEO_Option {
 		$option_value = $this->get_original_option();
 		$this->import( $option_value, $current_version );
 	}
-
 
 	/**
 	 * Clean and re-save the option.
@@ -610,6 +595,14 @@ abstract class WPSEO_Option {
 		}
 	}
 
+	/**
+	 * Returns the variable array key patterns for an options class.
+	 *
+	 * @return array
+	 */
+	public function get_patterns() {
+		return (array) $this->variable_array_key_patterns;
+	}
 
 	/**
 	 * Concrete classes *may* contain a clean_option method which will clean out old/renamed
@@ -654,7 +647,6 @@ abstract class WPSEO_Option {
 		return $filtered;
 	}
 
-
 	/**
 	 * Make sure that any set option values relating to post_types and/or taxonomies are retained,
 	 * even when that post_type or taxonomy may not yet have been registered.
@@ -691,7 +683,6 @@ abstract class WPSEO_Option {
 		return $clean;
 	}
 
-
 	/**
 	 * Check whether a given array key conforms to one of the variable array key patterns for this option.
 	 *
@@ -715,145 +706,4 @@ abstract class WPSEO_Option {
 
 		return $key;
 	}
-
-
-	/* *********** DEPRECATED METHODS *********** */
-
-	// @codeCoverageIgnoreStart
-
-	/**
-	 * Emulate the WP native sanitize_text_field function in a %%variable%% safe way.
-	 *
-	 * @see        https://core.trac.wordpress.org/browser/trunk/src/wp-includes/formatting.php for the original
-	 *
-	 * @deprecated 1.5.6.1
-	 * @deprecated use WPSEO_Utils::sanitize_text_field()
-	 * @see        WPSEO_Utils::sanitize_text_field()
-	 *
-	 * @param string $value String value to sanitize.
-	 *
-	 * @return string
-	 */
-	public static function sanitize_text_field( $value ) {
-		_deprecated_function( __METHOD__, 'WPSEO 1.5.6.1', 'WPSEO_Utils::sanitize_text_field()' );
-
-		return WPSEO_Utils::sanitize_text_field( $value );
-	}
-
-
-	/**
-	 * Sanitize a url for saving to the database.
-	 * Not to be confused with the old native WP function.
-	 *
-	 * @deprecated 1.5.6.1
-	 * @deprecated use WPSEO_Utils::sanitize_url()
-	 * @see        WPSEO_Utils::sanitize_url()
-	 *
-	 * @param  string $value             URL string to sanitize.
-	 * @param  array  $allowed_protocols Set of allowed protocols.
-	 *
-	 * @return  string
-	 */
-	public static function sanitize_url( $value, $allowed_protocols = array( 'http', 'https' ) ) {
-		_deprecated_function( __METHOD__, 'WPSEO 1.5.6.1', 'WPSEO_Utils::sanitize_url()' );
-
-		return WPSEO_Utils::sanitize_url( $value, $allowed_protocols );
-	}
-
-	/**
-	 * Validate a value as boolean.
-	 *
-	 * @deprecated 1.5.6.1
-	 * @deprecated use WPSEO_Utils::validate_bool()
-	 * @see        WPSEO_Utils::validate_bool()
-	 *
-	 * @static
-	 *
-	 * @param mixed $value Value to validate.
-	 *
-	 * @return  bool
-	 */
-	public static function validate_bool( $value ) {
-		_deprecated_function( __METHOD__, 'WPSEO 1.5.6.1', 'WPSEO_Utils::validate_bool()' );
-
-		return WPSEO_Utils::validate_bool( $value );
-	}
-
-	/**
-	 * Cast a value to bool.
-	 *
-	 * @deprecated 1.5.6.1
-	 * @deprecated use WPSEO_Utils::emulate_filter_bool()
-	 * @see        WPSEO_Utils::emulate_filter_bool()
-	 *
-	 * @static
-	 *
-	 * @param    mixed $value Value to cast.
-	 *
-	 * @return    bool
-	 */
-	public static function emulate_filter_bool( $value ) {
-		_deprecated_function( __METHOD__, 'WPSEO 1.5.6.1', 'WPSEO_Utils::emulate_filter_bool()' );
-
-		return WPSEO_Utils::emulate_filter_bool( $value );
-	}
-
-
-	/**
-	 * Validate a value as integer.
-	 *
-	 * @deprecated 1.5.6.1
-	 * @deprecated use WPSEO_Utils::validate_int()
-	 * @see        WPSEO_Utils::validate_int()
-	 *
-	 * @param mixed $value Value to validate.
-	 *
-	 * @return  mixed  int or false in case of failure to convert to int
-	 */
-	public static function validate_int( $value ) {
-		_deprecated_function( __METHOD__, 'WPSEO 1.5.6.1', 'WPSEO_Utils::validate_int()' );
-
-		return WPSEO_Utils::validate_int( $value );
-	}
-
-	/**
-	 * Cast a value to integer.
-	 *
-	 * @deprecated 1.5.6.1
-	 * @deprecated use WPSEO_Utils::emulate_filter_int()
-	 * @see        WPSEO_Utils::emulate_filter_int()
-	 *
-	 * @static
-	 *
-	 * @param    mixed $value Value to cast.
-	 *
-	 * @return    int|bool
-	 */
-	public static function emulate_filter_int( $value ) {
-		_deprecated_function( __METHOD__, 'WPSEO 1.5.6.1', 'WPSEO_Utils::emulate_filter_int()' );
-
-		return WPSEO_Utils::emulate_filter_int( $value );
-	}
-
-
-	/**
-	 * Recursively trim whitespace round a string value or of string values within an array.
-	 * Only trims strings to avoid typecasting a variable (to string).
-	 *
-	 * @deprecated 1.5.6.1
-	 * @deprecated use WPSEO_Utils::trim_recursive()
-	 * @see        WPSEO_Utils::trim_recursive()
-	 *
-	 * @static
-	 *
-	 * @param   mixed $value Value to trim or array of values to trim.
-	 *
-	 * @return  mixed      Trimmed value or array of trimmed values.
-	 */
-	public static function trim_recursive( $value ) {
-		_deprecated_function( __METHOD__, 'WPSEO 1.5.6.1', 'WPSEO_Utils::trim_recursive()' );
-
-		return WPSEO_Utils::trim_recursive( $value );
-	}
-	// @codeCoverageIgnoreEnd
 }

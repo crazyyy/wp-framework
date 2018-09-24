@@ -81,41 +81,88 @@
 	padding: 5px 0 0 4px;
 }
 
+.df-addons:after {
+	visibility: hidden;
+	display: block;
+	content: "";
+	clear: both;
+	height: 0;
+}
+
 .df-addons li {
 	float: left;
-    margin: 0 1em 1em 0 !important;
     padding: 0;
     vertical-align: top;
-    width: 320px;
-    border: 1px solid #ddd;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+    width: 23%;
+	margin: 0 2% 2% 0;
+	border: 1px solid #ddd;
+	box-shadow: 0 1px 1px -1px rgba(0,0,0,.1);
+	background: rgba(255,255,255,.65);
     color: inherit;
     display: block;
-    min-height: 260px;
     overflow: hidden;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
+
+@media (min-width: 1200px) {
+	.df-addons li {
+		width: 23%;
+	}
+	
+	.df-addons li:nth-child(4) {
+		margin-right: 0;
+	}
+
+	.df-addons li:nth-child(4n+1) {
+		clear: left;
+	}
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (max-width: 1200px) {
+	.df-addons li {
+		width: 31.3%;
+	}
+	
+	.df-addons li:nth-child(3) {
+		margin-right: 0;
+	}
+
+	.df-addons li:nth-child(3n+1) {
+		clear: left;
+	}
+}
+
 .df-addons li h3.addon-title {
     background: #fff;
     margin: 0 !important;
     padding: 20px !important;
 }
+
 .df-addons li p.addon-description {
 	padding: 20px !important;
 	margin: 0 !important;
 }
+
 .df-addons li a.addon-image {
 	margin: 0;
 	padding: 0;
 }
+
 .df-addons li a.addon-image img {
 	display: block;
+	max-width: 100%;
+	height: auto;
 }
+
 .df-addons li a.addon-link {
 	margin: 0 20px 20px !important;
 }
 
 /* All Mobile Sizes (devices and browser) */
-@media only screen and (max-width: 959px) {
+@media only screen and (max-width: 960px) {
 	.df-credits {
 		width: 100%;
 		float: none;

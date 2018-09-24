@@ -87,6 +87,12 @@ class EWWW_Image {
 	 * @var int $level
 	 */
 	public $level = 0;
+	/**
+	 * Raw db record.
+	 *
+	 * @var array $record
+	 */
+	public $record = array();
 
 	/**
 	 * Creates an image record, either from a pending record in the database, or from a file path.
@@ -175,6 +181,7 @@ class EWWW_Image {
 		$this->converted     = ewww_image_optimizer_relative_path_replace( $new_image['converted'] );
 		$this->gallery       = ( empty( $gallery ) ? $new_image['gallery'] : $gallery );
 		$this->backup        = $new_image['backup'];
+		$this->record        = $new_image;
 	}
 
 	/**
@@ -465,12 +472,13 @@ class EWWW_Image {
 	/**
 	 * Converts a file using built-in PHP functions.
 	 *
-	 * @access private
+	 * @access public
 	 *
 	 * @param string $file The name of the file to convert.
+	 * @param bool   $replace_url Default true. Run function to update database with new url.
 	 * @return string The name of the new file.
 	 */
-	private function convert( $file ) {
+	public function convert( $file, $replace_url = true ) {
 		ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 		if ( empty( $file ) ) {
 			ewwwio_debug_message( 'no file provided to convert' );
@@ -492,27 +500,6 @@ class EWWW_Image {
 		if ( strpos( $type, 'image' ) === false ) {
 			ewwwio_debug_message( "cannot convert mimetype: $type" );
 			return false;
-		}
-
-		// Just in case, run through the constants and utility checks, someday to be replaced with a proper object (or transient) that we can reference.
-		if ( ! defined( 'EWWW_IMAGE_OPTIMIZER_CLOUD' ) || ! EWWW_IMAGE_OPTIMIZER_CLOUD ) {
-			ewww_image_optimizer_define_noexec();
-			if ( EWWW_IMAGE_OPTIMIZER_NOEXEC ) {
-				$nice = '';
-			} else {
-				// Check to see if 'nice' exists.
-				$nice = ewww_image_optimizer_find_nix_binary( 'nice', 'n' );
-			}
-		}
-		$skip = ewww_image_optimizer_skip_tools();
-		// If the user has disabled the utility checks.
-		if ( EWWW_IMAGE_OPTIMIZER_CLOUD ) {
-			$skip['jpegtran'] = true;
-			$skip['optipng']  = true;
-			$skip['gifsicle'] = true;
-			$skip['pngout']   = true;
-			$skip['pngquant'] = true;
-			$skip['webp']     = true;
 		}
 		switch ( $type ) {
 			case 'image/jpeg':
@@ -715,7 +702,9 @@ class EWWW_Image {
 			default:
 				return false;
 		} // End switch().
-		$this->replace_url( $newfile, $file );
+		if ( $replace_url ) {
+			$this->replace_url( $newfile, $file );
+		}
 		return $newfile;
 	}
 
@@ -735,7 +724,7 @@ class EWWW_Image {
 		// Set the increment to 1 ( but allow the user to override it ).
 		$filenum = apply_filters( 'ewww_image_optimizer_converted_filename_suffix', $this->increment );
 		// But it must be only letters, numbers, or underscores.
-		$filenum              = ( preg_match( '/^[\w\d]*$/', $filenum ) ? $filenum : 1 );
+		$filenum              = ( preg_match( '/^[\w\d]+$/', $filenum ) ? $filenum : 1 );
 		$suffix               = ( ! empty( $filenum ) ? '-' . $filenum : '' );
 		$dimensions           = '';
 		$default_hidpi_suffix = apply_filters( 'ewww_image_optimizer_hidpi_suffix', '@2x' );
@@ -929,8 +918,11 @@ class EWWW_Image {
 		$type       = ewww_image_optimizer_quick_mimetype( $this->file );
 		$image_size = ( empty( $this->opt_size ) ? $this->orig_size : $this->opt_size );
 		if ( empty( $image_size ) ) {
-			$this->orig_size = filesize( $this->file );
+			$this->orig_size = ewww_image_optimizer_filesize( $this->file );
 			$image_size      = $this->orig_size;
+			if ( ! $image_size ) {
+				return 5;
+			}
 		}
 		switch ( $type ) {
 			case 'image/jpeg':

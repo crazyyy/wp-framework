@@ -1,4 +1,7 @@
 <?php
+if(!defined('ABSPATH')){
+    exit;//Exit if accessed directly
+}
 
 class AIOWPSecurity_General_Init_Tasks
 {
@@ -71,6 +74,11 @@ class AIOWPSecurity_General_Init_Tasks
             include_once(AIO_WP_SECURITY_PATH.'/other-includes/wp-security-stop-users-enumeration.php');
         }
         
+        //REST API security
+        if( $aio_wp_security->configs->get_value('aiowps_disallow_unauthorized_rest_requests') == 1) {
+            add_action('rest_api_init', array(&$this, 'check_rest_api_requests'), 10 ,1);
+        }
+        
         //For user unlock request feature
         if(isset($_POST['aiowps_unlock_request']) || isset($_POST['aiowps_wp_submit_unlock_request'])){
             nocache_headers();            
@@ -81,13 +89,13 @@ class AIOWPSecurity_General_Init_Tasks
         
         if(isset($_GET['aiowps_auth_key'])){
             //If URL contains unlock key in query param then process the request
-            $unlock_key = strip_tags($_GET['aiowps_auth_key']);
+            $unlock_key = sanitize_text_field($_GET['aiowps_auth_key']);
             AIOWPSecurity_User_Login::process_unlock_request($unlock_key);
         }
 
         //For honeypot feature
         if(isset($_POST['aio_special_field'])){
-            $special_field_value = strip_tags($_POST['aio_special_field']);
+            $special_field_value = sanitize_text_field($_POST['aio_special_field']);
             if(!empty($special_field_value)){
                 //This means a robot has submitted the login form!
                 //Redirect back to its localhost
@@ -111,9 +119,36 @@ class AIOWPSecurity_General_Init_Tasks
         }
 
         //For woo form captcha features
-        if($aio_wp_security->configs->get_value('aiowps_enable_woo_login_captcha') == '1'){
+        if($aio_wp_security->configs->get_value('aiowps_enable_woo_login_captcha') == '1' 
+                || $aio_wp_security->configs->get_value('aiowps_enable_woo_register_captcha') == '1'){
             if (!is_user_logged_in()) {
                 add_action('woocommerce_login_form', array(&$this, 'insert_captcha_question_form'));
+            }
+            
+            if(isset($_POST['woocommerce-login-nonce']) || isset($_POST['woocommerce-register-nonce'])){
+                // If answer is empty
+                if (empty($_POST['aiowps-captcha-answer'])){
+                    wp_die( __('Please enter an answer in the CAPTCHA field.', 'all-in-one-wp-security-and-firewall' ) );
+                }
+                $captcha_answer = sanitize_text_field($_POST['aiowps-captcha-answer']);
+                $captcha_secret_string = $aio_wp_security->configs->get_value('aiowps_captcha_secret_key');
+                $submitted_encoded_string = base64_encode($_POST['aiowps-captcha-temp-string'].$captcha_secret_string.$captcha_answer);
+                $trans_handle = sanitize_text_field($_POST['aiowps-captcha-string-info']);
+                $captcha_string_info_trans = (AIOWPSecurity_Utility::is_multisite_install() ? get_site_transient('aiowps_captcha_string_info_'.$trans_handle) : get_transient('aiowps_captcha_string_info_'.$trans_handle));
+
+                if ($captcha_string_info_trans === $submitted_encoded_string){
+                    //Correct answer given
+                }else{
+                    //Wrong answer
+                    wp_die( __('Error: You entered an incorrect CAPTCHA answer. Please go back and try again.', 'all-in-one-wp-security-and-firewall'));
+                }
+            }
+        }
+
+        //For bbpress new topic form captcha
+        if($aio_wp_security->configs->get_value('aiowps_enable_bbp_new_topic_captcha') == '1'){
+            if (!is_user_logged_in()) {
+                add_action('bbp_theme_before_topic_form_submit_wrapper', array(&$this, 'insert_captcha_question_form'));
             }
         }
 
@@ -183,16 +218,20 @@ class AIOWPSecurity_General_Init_Tasks
             $blog_id = get_current_blog_id();
             switch_to_blog($blog_id);
             if($aio_wp_security->configs->get_value('aiowps_enable_comment_captcha') == '1'){
-                add_action( 'comment_form_after_fields', array(&$this, 'insert_captcha_question_form'), 1 );
-                add_action( 'comment_form_logged_in_after', array(&$this, 'insert_captcha_question_form'), 1 );
-                add_filter( 'preprocess_comment', array(&$this, 'process_comment_post') );
+                if (!is_user_logged_in()) {
+                    add_action( 'comment_form_after_fields', array(&$this, 'insert_captcha_question_form'), 1 );
+                    add_action( 'comment_form_logged_in_after', array(&$this, 'insert_captcha_question_form'), 1 );
+                    add_filter( 'preprocess_comment', array(&$this, 'process_comment_post') );
+                }
             }
             restore_current_blog();
         }else{
             if($aio_wp_security->configs->get_value('aiowps_enable_comment_captcha') == '1'){
-                add_action( 'comment_form_after_fields', array(&$this, 'insert_captcha_question_form'), 1 );
-                add_action( 'comment_form_logged_in_after', array(&$this, 'insert_captcha_question_form'), 1 );
-                add_filter( 'preprocess_comment', array(&$this, 'process_comment_post') );
+                if (!is_user_logged_in()) {
+                    add_action( 'comment_form_after_fields', array(&$this, 'insert_captcha_question_form'), 1 );
+                    add_action( 'comment_form_logged_in_after', array(&$this, 'insert_captcha_question_form'), 1 );
+                    add_filter( 'preprocess_comment', array(&$this, 'process_comment_post') );
+                }
             }
         }
         
@@ -408,7 +447,7 @@ class AIOWPSecurity_General_Init_Tasks
         //Check if captcha enabled
         if (array_key_exists('aiowps-captcha-answer', $_POST)) //If the register form with captcha was submitted then do some processing
         {
-            isset($_POST['aiowps-captcha-answer'])?$captcha_answer = strip_tags(trim($_POST['aiowps-captcha-answer'])): $captcha_answer = '';
+            $captcha_answer = isset($_POST['aiowps-captcha-answer'])?sanitize_text_field($_POST['aiowps-captcha-answer']):'';
             $captcha_secret_string = $aio_wp_security->configs->get_value('aiowps_captcha_secret_key');
             $submitted_encoded_string = base64_encode($_POST['aiowps-captcha-temp-string'].$captcha_secret_string.$captcha_answer);
             $trans_handle = sanitize_text_field($_POST['aiowps-captcha-string-info']);
@@ -481,7 +520,7 @@ class AIOWPSecurity_General_Init_Tasks
         {
             if (array_key_exists('aiowps-captcha-answer', $_POST)) //If the lost pass form with captcha was submitted then do some processing
             {
-                isset($_POST['aiowps-captcha-answer'])?($captcha_answer = strip_tags(trim($_POST['aiowps-captcha-answer']))):($captcha_answer = '');
+                $captcha_answer = isset($_POST['aiowps-captcha-answer'])?sanitize_text_field($_POST['aiowps-captcha-answer']):'';
                 $captcha_secret_string = $aio_wp_security->configs->get_value('aiowps_captcha_secret_key');
                 $submitted_encoded_string = base64_encode($_POST['aiowps-captcha-temp-string'].$captcha_secret_string.$captcha_answer);
                 $trans_handle = sanitize_text_field($_POST['aiowps-captcha-string-info']);
@@ -517,7 +556,7 @@ class AIOWPSecurity_General_Init_Tasks
         //Check if captcha enabled
         if (array_key_exists('aiowps-captcha-answer', $_POST)) //If the register form with captcha was submitted then do some processing
         {
-            isset($_POST['aiowps-captcha-answer'])?$captcha_answer = strip_tags(trim($_POST['aiowps-captcha-answer'])): $captcha_answer = '';
+            $captcha_answer = isset($_POST['aiowps-captcha-answer'])?sanitize_text_field($_POST['aiowps-captcha-answer']):'';
             $captcha_secret_string = $aio_wp_security->configs->get_value('aiowps_captcha_secret_key');
             $submitted_encoded_string = base64_encode($_POST['aiowps-captcha-temp-string'].$captcha_secret_string.$captcha_answer);
             $trans_handle = sanitize_text_field($_POST['aiowps-captcha-string-info']);
@@ -562,4 +601,18 @@ class AIOWPSecurity_General_Init_Tasks
         }
         return $errors;
     }
+    
+    /*
+     * Re-wrote code which checks for REST API requests
+     * Below uses the "rest_api_init" action hook to check for REST requests.
+     * The code will block unauthorized requests whilst allowing genuine requests. 
+     * (P. Petreski June 2018)
+     */
+    function check_rest_api_requests($rest_server_object){
+        $rest_user = wp_get_current_user();
+        if(empty($rest_user->ID)){
+            $error_message = apply_filters('aiowps_rest_api_error_message', __('You are not authorized to perform this action.', 'disable-wp-rest-api'));
+            wp_die($error_message); 
+        }
+    }    
 }

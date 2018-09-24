@@ -1,6 +1,8 @@
 <?php
 namespace Faker\Provider;
 
+use Fakerpress;
+
 class HTML extends Base {
 	/**
 	 * @param \Faker\Generator $generator
@@ -55,7 +57,7 @@ class HTML extends Base {
 		$html = array();
 
 		$defaults = array(
-			'qty' => Base::numberBetween( 5, 25 ),
+			'qty' => array( 5, 25 ),
 			'elements' => array_merge( self::$sets['header'], self::$sets['list'], self::$sets['block'] ),
 			'attr' => array(),
 			'exclude' => array( 'div' ),
@@ -65,15 +67,18 @@ class HTML extends Base {
 		$args = (object) wp_parse_args( $args, $defaults );
 		$args->did_more_element = false;
 
+		// Randomize the quantity based on range
+		$args->qty = FakerPress\Utils::instance()->get_qty_from_range( $args->qty );
+
 		$max_to_more = ( $args->qty / 2 ) + $this->generator->numberBetween( 0, max( floor( $args->qty / 2 ), 1 ) );
 		$min_to_more = ( $args->qty / 2 ) - $this->generator->numberBetween( 0, max( floor( $args->qty / 2 ), 1 ) );
 
 		for ( $i = 0; $i < $args->qty; $i++ ) {
 			$exclude = $args->exclude;
-			if ( isset( $element ) ){
+			if ( isset( $element ) ) {
 				// Here we check if we need to exclude some elements from the next
 				// This one is to exclude header elements from apearing one after the other, or in the end of the string
-				if ( in_array( $element, self::$sets['header'] ) || $args->qty - 1 === $i ){
+				if ( in_array( $element, self::$sets['header'] ) || $args->qty - 1 === $i ) {
 					$exclude = array_merge( (array) $exclude, self::$sets['header'] );
 				} elseif ( $i > 1 && ( in_array( $els[ $i - 1 ], self::$sets['list'] ) || in_array( $els[ $i - 2 ], self::$sets['list'] ) ) ) {
 					$exclude = array_merge( (array) $exclude, self::$sets['list'] );
@@ -82,7 +87,7 @@ class HTML extends Base {
 
 			$elements = array_diff( $args->elements, $exclude );
 
-			if ( ! $args->allow_html_comments ){
+			if ( ! $args->allow_html_comments ) {
 				$elements = array_filter( $elements, array( $this, 'filter_html_comments' ) );
 			}
 
@@ -90,7 +95,14 @@ class HTML extends Base {
 
 			$html[] = $this->element( $element, $args->attr, null, $args );
 
-			if ( $this->generator->numberBetween( 0, 100 ) <= 80 && ! $args->did_more_element && $args->qty > 2 && $this->has_element( '!--more--', $args->elements ) && $i < $max_to_more &&	$i > $min_to_more ){
+			if (
+				$this->generator->numberBetween( 0, 100 ) <= 80
+				&& ! $args->did_more_element
+				&& $args->qty > 2
+				&& $this->has_element( '!--more--', $args->elements )
+				&& $i < $max_to_more
+				&&	$i > $min_to_more
+			) {
 				$html[] = $this->element( '!--more--' );
 				$args->did_more_element = true;
 			}
@@ -99,7 +111,7 @@ class HTML extends Base {
 		return (array) $html;
 	}
 
-	private function html_element_img( $element, $sources = array( 'lorempixel', 'placeholdit', 'unsplashit' ) ) {
+	private function html_element_img( $element, $sources = array( 'placeholdit', 'unsplashit' ) ) {
 		if ( ! isset( $element->attr['class'] ) ) {
 			$element->attr['class'][] = $this->generator->optional( 40, null )->randomElement( array( 'aligncenter', 'alignleft', 'alignright' ) );
 			$element->attr['class'] = array_filter( $element->attr['class'] );
@@ -119,7 +131,7 @@ class HTML extends Base {
 		return $element;
 	}
 
-	public function get_img_src( $sources = array( 'lorempixel', 'placeholdit', 'unsplashit' ) ) {
+	public function get_img_src( $sources = array( 'placeholdit', 'unsplashit' ) ) {
 		$images = \FakerPress\Module\Post::fetch( array( 'post_type' => 'attachment' ) );
 		$image = false;
 		$count_images = count( $images );
@@ -188,7 +200,7 @@ class HTML extends Base {
 			'attr' => $attr,
 		);
 
-		if ( empty( $element->name ) ){
+		if ( empty( $element->name ) ) {
 			return false;
 		}
 
@@ -196,7 +208,7 @@ class HTML extends Base {
 
 		$html = array();
 
-		if ( 'a' === $element->name ){
+		if ( 'a' === $element->name ) {
 			if ( ! isset( $element->attr['title'] ) ) {
 				$element->attr['title'] = Lorem::sentence( Base::numberBetween( 1, Base::numberBetween( 3, 9 ) ) );
 			}
@@ -205,8 +217,8 @@ class HTML extends Base {
 			}
 		}
 
-		if ( 'img' === $element->name ){
-			$sources = array( 'placeholdit', 'lorempixel', 'unsplashit' );
+		if ( 'img' === $element->name ) {
+			$sources = array( 'placeholdit', 'unsplashit' );
 			if ( is_object( $args ) && $args->sources ) {
 				$sources = $args->sources;
 			}
@@ -221,19 +233,19 @@ class HTML extends Base {
 		$html[] = sprintf( '<%s%s>', $element->name, ( ! empty( $attributes ) ? ' ' : '' ) . implode( ' ', $attributes ) );
 
 		if ( ! $element->one_liner ) {
-			if ( ! is_null( $text ) ){
+			if ( ! is_null( $text ) ) {
 				$html[] = $text;
-			} elseif ( in_array( $element->name, self::$sets['inline'] ) ){
+			} elseif ( in_array( $element->name, self::$sets['inline'] ) ) {
 				$text   = Lorem::text( Base::numberBetween( 5, 25 ) );
 				$html[] = substr( $text, 0, strlen( $text ) - 1 );
-			} elseif ( in_array( $element->name, self::$sets['item'] ) ){
+			} elseif ( in_array( $element->name, self::$sets['item'] ) ) {
 				$text   = Lorem::text( Base::numberBetween( 10, 60 ) );
 				$html[] = substr( $text, 0, strlen( $text ) - 1 );
-			} elseif ( in_array( $element->name, self::$sets['list'] ) ){
+			} elseif ( in_array( $element->name, self::$sets['list'] ) ) {
 				for ( $i = 0; $i < Base::numberBetween( 1, 15 ); $i++ ) {
 					$html[] = $this->element( 'li' );
 				}
-			} elseif ( in_array( $element->name, self::$sets['header'] ) ){
+			} elseif ( in_array( $element->name, self::$sets['header'] ) ) {
 				$text   = Lorem::text( Base::numberBetween( 60, 200 ) );
 				$html[] = substr( $text, 0, strlen( $text ) - 1 );
 			} else {

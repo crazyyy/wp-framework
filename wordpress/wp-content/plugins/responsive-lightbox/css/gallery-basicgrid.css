@@ -1,0 +1,20 @@
+.rl-basicgrid-gallery {
+	display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.rl-basicgrid-gallery:after {
+    content: '';
+    flex-grow: 999999999;
+    min-width: 300px;
+    height: 0; 
+}
+.rl-basicgrid-gallery .rl-gallery-item {
+	text-decoration: none !important;
+	box-shadow: none !important;
+	text-align: center;
+}
+.rl-basicgrid-gallery .rl-gallery-item img {
+	max-width: 100%;
+	display: inline-block;
+}

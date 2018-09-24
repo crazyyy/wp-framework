@@ -1,5 +1,7 @@
 <?php
 /**
+ * WPSEO plugin file.
+ *
  * @package WPSEO\Internals\Options
  */
 
@@ -43,11 +45,9 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 	public static $defaults_per_term = array(
 		'wpseo_title'                 => '',
 		'wpseo_desc'                  => '',
-		'wpseo_metakey'               => '',
 		'wpseo_canonical'             => '',
 		'wpseo_bctitle'               => '',
 		'wpseo_noindex'               => 'default',
-		'wpseo_sitemap_include'       => '-',
 		'wpseo_focuskw'               => '',
 		'wpseo_linkdex'               => '',
 		'wpseo_content_score'         => '',
@@ -76,21 +76,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 	);
 
 	/**
-	 * @var  array  Available sitemap include options.
-	 *        Used for form generation and input validation.
-	 *
-	 * @static
-	 *
-	 * {@internal Labels (translation) added on admin_init via WPSEO_Taxonomy::translate_meta_options().}}
-	 */
-	public static $sitemap_include_options = array(
-		'-'      => '',
-		'always' => '',
-		'never'  => '',
-	);
-
-
-	/**
 	 * Add the actions and filters for the option.
 	 *
 	 * @todo [JRF => testers] Check if the extra actions below would run into problems if an option
@@ -109,7 +94,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		add_action( 'update_option_' . $this->option_name, array( 'WPSEO_Utils', 'flush_w3tc_cache' ) );
 	}
 
-
 	/**
 	 * Get the singleton instance of this class.
 	 *
@@ -124,7 +108,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		return self::$instance;
 	}
 
-
 	/**
 	 * Add extra default options received from a filter.
 	 */
@@ -134,7 +117,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 			self::$defaults_per_term = array_merge( $extra_defaults_per_term, self::$defaults_per_term );
 		}
 	}
-
 
 	/**
 	 * Helper method - Combines a fixed array of default values with an options array
@@ -191,7 +173,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		}
 	*/
 
-
 	/**
 	 * Validate the option.
 	 *
@@ -246,7 +227,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		return $clean;
 	}
 
-
 	/**
 	 * Validate the meta data for one individual term and removes default values (no need to save those).
 	 *
@@ -281,12 +261,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 					}
 					break;
 
-				case 'wpseo_sitemap_include':
-					if ( isset( $meta_data[ $key ], self::$sitemap_include_options[ $meta_data[ $key ] ] ) ) {
-						$clean[ $key ] = $meta_data[ $key ];
-					}
-					break;
-
 				case 'wpseo_canonical':
 					if ( isset( $meta_data[ $key ] ) && $meta_data[ $key ] !== '' ) {
 						$url = WPSEO_Utils::sanitize_url( $meta_data[ $key ] );
@@ -297,7 +271,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 					}
 					break;
 
-				case 'wpseo_metakey':
 				case 'wpseo_bctitle':
 					if ( isset( $meta_data[ $key ] ) ) {
 						$clean[ $key ] = WPSEO_Utils::sanitize_text_field( stripslashes( $meta_data[ $key ] ) );
@@ -337,7 +310,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		// Only save the non-default values.
 		return array_diff_assoc( $clean, self::$defaults_per_term );
 	}
-
 
 	/**
 	 * Clean a given option value.
@@ -379,7 +351,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 										break;
 
 									case 'canonical':
-									case 'wpseo_metakey':
 									case 'wpseo_bctitle':
 									case 'wpseo_title':
 									case 'wpseo_desc':
@@ -412,7 +383,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 
 		return $option_value;
 	}
-
 
 	/**
 	 * Retrieve a taxonomy term's meta value(s).
@@ -471,9 +441,11 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 	 */
 	public static function get_meta_without_term( $meta ) {
 		$term = $GLOBALS['wp_query']->get_queried_object();
+		if ( ! $term || empty( $term->taxonomy ) ) {
+			return false;
+		}
 
 		return self::get_term_meta( $term, $term->taxonomy, $meta );
-
 	}
 
 	/**
