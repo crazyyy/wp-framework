@@ -1,0 +1,16 @@
+body {
+	padding:1em;
+	font-family: verdana,arial,sans-serif;
+	font-size:14px;
+	line-height:16px;
+}
+textarea {
+	font-size:11px;
+}
+
+a {
+	color:blue;
+}
+a.cssdownload {
+	font-weight:bold;
+}

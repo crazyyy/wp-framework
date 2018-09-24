@@ -1,0 +1,1 @@
+bwp-minify/bwp-minify.php

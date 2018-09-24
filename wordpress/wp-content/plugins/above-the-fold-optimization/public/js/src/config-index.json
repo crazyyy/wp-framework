@@ -1,0 +1,40 @@
+["load_module", "js", "css", "base", "css_footer",
+    "css_delay", {
+        "proxy": [
+            "url",
+            "js",
+            "css",
+            "preload",
+            "base",
+            "js_include",
+            "js_exclude",
+            "css_include",
+            "css_exclude",
+            "cdn"
+        ]
+    }, {
+        "gwf": [
+            "google_fonts",
+            "footer",
+            "async",
+            "async_url"
+        ]
+    }, {
+        "pwa": [
+            "path",
+            "scope",
+            "policy",
+            "offline_class",
+            "version",
+            "max_size",
+            "register",
+            "preload_mousedown"
+        ]
+    }, "header_load", "header", "footer", "load_css", "pwa_unregister", "domready",
+
+    "raf", "idle", "async",
+    "load_js", "loadCSS", "on_script_load",
+    "load_script", "load_script_mark", "load_cached_script", "load_cached_script_url",
+    "preload_cached_script", "proxy_setup", "proxy_setup", "proxify",
+    "localUrl"
+]

@@ -46,7 +46,7 @@ add_action('init', 'wpeHeaderScripts'); // Add Scripts to wp_head
 function wpeHeaderScripts() {
   if (!is_admin()) {
     wp_deregister_script('jquery');
-    wp_register_script('jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js', array(), '1.12.4');
+    wp_register_script('jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), '3.3.1');
     wp_enqueue_script('jquery');
 
     wp_register_script('jquery-migrate', '//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.0/jquery-migrate.min.js', array(), '3.0.0');

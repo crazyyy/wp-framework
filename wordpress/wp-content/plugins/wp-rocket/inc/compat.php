@@ -1,63 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
-
-// WP <3.5 defines.
-if ( ! defined( 'SECOND_IN_SECONDS' ) ) {
-	define( 'SECOND_IN_SECONDS', 1 );
-}
-if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
-	define( 'MINUTE_IN_SECONDS', SECOND_IN_SECONDS * 60 );
-}
-if ( ! defined( 'HOUR_IN_SECONDS' ) ) {
-	define( 'HOUR_IN_SECONDS', 60 * MINUTE_IN_SECONDS );
-}
-if ( ! defined( 'DAY_IN_SECONDS' ) ) {
-	define( 'DAY_IN_SECONDS', 24 * HOUR_IN_SECONDS );
-}
-if ( ! defined( 'WEEK_IN_SECONDS' ) ) {
-	define( 'WEEK_IN_SECONDS', 7 * DAY_IN_SECONDS );
-}
-if ( ! defined( 'YEAR_IN_SECONDS' ) ) {
-	define( 'YEAR_IN_SECONDS', 365 * DAY_IN_SECONDS );
-}
-
-// copied from core to reduct backcompat to 3.1 and not 3.5.
-if ( ! function_exists( 'wp_send_json' ) ) {
-	/**
-	 * Send a JSON response back to an Ajax request.
-	 *
-	 * @since WordPress 3.5.0
-	 *
-	 * @param mixed $response Variable (usually an array or object) to encode as JSON, then print and die.
-	 */
-	function wp_send_json( $response ) {
-		@header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
-		echo json_encode( $response );
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_die();
-		} else {
-			die();
-		}
-	}
-}
-
-// copied from core to reduct backcompat to 3.1 and not 3.6.
-if ( ! function_exists( 'wp_unslash' ) ) {
-	/**
-	 * Remove slashes from a string or array of strings.
-	 *
-	 * This should be used to remove slashes from data passed to core API that
-	 * expects data to be unslashed.
-	 *
-	 * @since 3.6.0
-	 *
-	 * @param string|array $value String or array of strings to unslash.
-	 * @return string|array Unslashed $value
-	 */
-	function wp_unslash( $value ) {
-		return stripslashes_deep( $value );
-	}
-}
+defined( 'ABSPATH' ) || die( 'Cheatin&#8217; uh?' );
 
 // Copied from core for compatibility with WP < 4.6.
 // Removed the error triggering because it relies on another WP 4.6 function.
@@ -80,11 +22,11 @@ if ( ! function_exists( 'apply_filters_deprecated' ) ) {
 	 * @param string $message     Optional. A message regarding the change.
 	 */
 	function apply_filters_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
-	    if ( ! has_filter( $tag ) ) {
-	    	return $args[0];
-	    }
+		if ( ! has_filter( $tag ) ) {
+			return $args[0];
+		}
 
-	    return apply_filters_ref_array( $tag, $args );
+		return apply_filters_ref_array( $tag, $args );
 	}
 }
 
@@ -119,31 +61,31 @@ if ( ! function_exists( 'wp_parse_url' ) ) {
 	 *               PHP_URL_PORT - integer when it does. See parse_url()'s return values.
 	 */
 	function wp_parse_url( $url, $component = -1 ) {
-	    $to_unset = array();
-	    $url = strval( $url );
+		$to_unset = array();
+		$url      = strval( $url );
 
-	    if ( '//' === substr( $url, 0, 2 ) ) {
-	        $to_unset[] = 'scheme';
-	        $url = 'placeholder:' . $url;
-	    } elseif ( '/' === substr( $url, 0, 1 ) ) {
-	        $to_unset[] = 'scheme';
-	        $to_unset[] = 'host';
-	        $url = 'placeholder://placeholder' . $url;
-	    }
+		if ( '//' === substr( $url, 0, 2 ) ) {
+			$to_unset[] = 'scheme';
+			$url        = 'placeholder:' . $url;
+		} elseif ( '/' === substr( $url, 0, 1 ) ) {
+			$to_unset[] = 'scheme';
+			$to_unset[] = 'host';
+			$url        = 'placeholder://placeholder' . $url;
+		}
 
-	    $parts = @parse_url( $url );
+		$parts = @parse_url( $url );
 
-	    if ( false === $parts ) {
-	        // Parsing failure.
-	        return $parts;
-	    }
+		if ( false === $parts ) {
+			// Parsing failure.
+			return $parts;
+		}
 
-	    // Remove the placeholder values.
-	    foreach ( $to_unset as $key ) {
-	        unset( $parts[ $key ] );
-	    }
+		// Remove the placeholder values.
+		foreach ( $to_unset as $key ) {
+			unset( $parts[ $key ] );
+		}
 
-	    return _get_component_from_parsed_url_array( $parts, $component );
+		return _get_component_from_parsed_url_array( $parts, $component );
 	}
 }
 
@@ -157,9 +99,9 @@ if ( ! function_exists( '_get_component_from_parsed_url_array' ) ) {
 	 * @since 4.7.0
 	 *
 	 * @param array|false $url_parts The parsed URL. Can be false if the URL failed to parse.
-	 * @param int    $component The specific component to retrieve. Use one of the PHP
-	 *                          predefined constants to specify which one.
-	 *                          Defaults to -1 (= return all parts as an array).
+	 * @param int         $component The specific component to retrieve. Use one of the PHP
+	 *                               predefined constants to specify which one.
+	 *                               Defaults to -1 (= return all parts as an array).
 	 *                          @see http://php.net/manual/en/function.parse-url.php
 	 * @return mixed False on parse failure; Array of URL components on success;
 	 *               When a specific component has been requested: null if the component
@@ -168,14 +110,14 @@ if ( ! function_exists( '_get_component_from_parsed_url_array' ) ) {
 	 */
 	function _get_component_from_parsed_url_array( $url_parts, $component = -1 ) {
 		if ( -1 === $component ) {
-		        return $url_parts;
+				return $url_parts;
 		}
 
 		$key = _wp_translate_php_url_constant_to_key( $component );
 		if ( false !== $key && is_array( $url_parts ) && isset( $url_parts[ $key ] ) ) {
-		        return $url_parts[ $key ];
+				return $url_parts[ $key ];
 		} else {
-		        return null;
+				return null;
 		}
 	}
 }
@@ -196,14 +138,14 @@ if ( ! function_exists( '_wp_translate_php_url_constant_to_key' ) ) {
 	 */
 	function _wp_translate_php_url_constant_to_key( $constant ) {
 		$translation = array(
-				PHP_URL_SCHEME   => 'scheme',
-				PHP_URL_HOST     => 'host',
-				PHP_URL_PORT     => 'port',
-				PHP_URL_USER     => 'user',
-				PHP_URL_PASS     => 'pass',
-				PHP_URL_PATH     => 'path',
-				PHP_URL_QUERY    => 'query',
-				PHP_URL_FRAGMENT => 'fragment',
+			PHP_URL_SCHEME   => 'scheme',
+			PHP_URL_HOST     => 'host',
+			PHP_URL_PORT     => 'port',
+			PHP_URL_USER     => 'user',
+			PHP_URL_PASS     => 'pass',
+			PHP_URL_PATH     => 'path',
+			PHP_URL_QUERY    => 'query',
+			PHP_URL_FRAGMENT => 'fragment',
 		);
 
 		if ( isset( $translation[ $constant ] ) ) {
@@ -214,33 +156,4 @@ if ( ! function_exists( '_wp_translate_php_url_constant_to_key' ) ) {
 	}
 }
 
-if ( ! function_exists( 'hash_equals' ) ) {
-	/**
-	 * Polyfill for hash_equals function not available before 5.6
-	 *
-	 * @since 2.10.6
-	 * @author Remy Perona
-	 *
-	 * @see   http://php.net/manual/fr/function.hash-equals.php
-	 *
-	 * @param string $known_string The string of known length to compare against.
-	 * @param string $user_string The user-supplied string.
-	 * @return bool Returns TRUE when the two strings are equal, FALSE otherwise.
-	 */
-    function hash_equals( $known_string, $user_string ) {
-        $ret = 0;
-        
-        if ( strlen( $known_string ) !== strlen( $user_string ) ) {
-            $user_string = $known_string;
-            $ret = 1;
-        }
-        
-        $res = $known_string ^ $user_string;
-        
-        for ( $i = strlen( $res ) - 1; $i >= 0; --$i ) {
-            $ret |= ord( $res[ $i ] );
-        }
-        
-        return ! $ret;
-    }
-}
+
