@@ -12,6 +12,8 @@ import browserSync from 'browser-sync';
 /* PostCSS plugins */
 import cssnext from 'postcss-cssnext';
 import cssnano from 'cssnano';
+import easysprite from 'postcss-easysprites';
+// https://github.com/glebmachine/postcss-easysprites
 
 /* sprites */
 import svgSprite from 'gulp-svg-sprites';
@@ -75,6 +77,10 @@ gulp.task('postcss', function() {
       discardComments: {
         removeAll: true
       }
+    }),
+    easysprite({
+      imagePath:'./assets/images',
+      spritePath: './assets/images'
     })
   ];
   return gulp

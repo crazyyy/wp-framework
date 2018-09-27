@@ -89,6 +89,7 @@
     "@babel/core": "^7.0.1",
     "@babel/preset-env": "^7.0.0",
     "gulp-babel": "^8.0.0",
+    "postcss-easysprites": "^0.1.9",
     "run-sequence": "^2.2.1"
   }
 }

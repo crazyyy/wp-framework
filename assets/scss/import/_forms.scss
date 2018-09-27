@@ -9,7 +9,7 @@ fieldset {
 input,
 label,
 select {
-  font-family: $base-font-family;
+  font-family: $font-family-base;
   font-size: $base-font-size;
 
   display: block;
@@ -43,7 +43,7 @@ input[type='url'],
 input[type='week'],
 textarea,
 select[multiple=multiple] {
-  font-family: $base-font-family;
+  font-family: $font-family-base;
   font-size: $base-font-size;
 
   box-sizing: border-box;

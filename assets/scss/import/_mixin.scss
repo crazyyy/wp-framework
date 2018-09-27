@@ -279,7 +279,7 @@
 
   input {
     @include placeholder {
-      font-family: $base-font-family;
+      font-family: $font-family-base;
       color: red;
     }
   }
