@@ -59,14 +59,18 @@
     "undef": true,
     "unused": true
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.2.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
     "browser-sync": "^2.26.3",
     "config": "^3.0.0",
     "css-mqpacker": "^7.0.0",
     "cssnano": "^4.1.7",
     "gulp": "^4.0.0",
-    "gulp-babel": "^8.0.0",
+    "gulp-babel": "^8.0.0-beta.2",
     "gulp-filter": "^5.1.0",
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^5.0.3",
@@ -80,6 +84,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-svg-sprites": "^4.1.2",
     "gulp-svg2png": "^2.0.2",
+    "gulp-svg2png-update": "^2.2.0",
     "gulp-uglify": "^3.0.1",
     "gulp.spritesmith": "^6.9.0",
     "postcss-combine-duplicated-selectors": "^6.1.0",
@@ -89,7 +94,9 @@
     "postcss-preset-env": "^6.4.0",
     "postcss-single-charset": "^2.0.0",
     "postcss-unprefix": "^2.1.3",
-    "postcss-urlrev": "^2.0.0",
-    "run-sequence": "^2.2.1"
+    "postcss-urlrev": "^2.0.0"
+  },
+  "devDependencies": {
+    "gulp-bytediff": "^1.0.0"
   }
 }
