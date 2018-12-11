@@ -29,6 +29,7 @@ Desktop.ini
 
 node_modules
 node_modules/**
+node_modules_bck
 _gsdata_
 wordpress/_gsdata_/
 wp-content/advanced-cache.php
