@@ -1,4 +1,6 @@
 <?php
+use WP_Rocket\Logger\Logger;
+
 defined( 'ABSPATH' ) || die( 'Cheatin&#8217; uh?' );
 
 /**
@@ -20,10 +22,37 @@ function rocket_after_save_options( $oldvalue, $value ) {
 	}
 
 	// These values do not need to clean the cache domain.
-	$removed = array(
-		'purge_cron_interval' => true,
-		'purge_cron_unit'     => true,
-	);
+	$removed = [
+		'cache_mobile'                => true,
+		'purge_cron_interval'         => true,
+		'purge_cron_unit'             => true,
+		'sitemap_preload'             => true,
+		'sitemaps'                    => true,
+		'database_revisions'          => true,
+		'database_auto_drafts'        => true,
+		'database_trashed_posts'      => true,
+		'database_spam_comments'      => true,
+		'database_trashed_comments'   => true,
+		'database_expired_transients' => true,
+		'database_all_transients'     => true,
+		'database_optimize_tables'    => true,
+		'schedule_automatic_cleanup'  => true,
+		'automatic_cleanup_frequency' => true,
+		'do_cloudflare'               => true,
+		'cloudflare_email'            => true,
+		'cloudflare_api_key'          => true,
+		'cloudflare_zone_id'          => true,
+		'cloudflare_devmode'          => true,
+		'cloudflare_auto_settings'    => true,
+		'cloudflare_old_settings'     => true,
+		'heartbeat_admin_behavior'    => true,
+		'heartbeat_editor_behavior'   => true,
+		'varnish_auto_purge'          => true,
+		'do_beta'                     => true,
+		'analytics_enabled'           => true,
+		'sucury_waf_cache_sync'       => true,
+		'sucury_waf_api_key'          => true,
+	];
 
 	// Create 2 arrays to compare.
 	$oldvalue_diff = array_diff_key( $oldvalue, $removed );
@@ -33,6 +62,16 @@ function rocket_after_save_options( $oldvalue, $value ) {
 	if ( md5( wp_json_encode( $oldvalue_diff ) ) !== md5( wp_json_encode( $value_diff ) ) ) {
 		// Purge all cache files.
 		rocket_clean_domain();
+
+		wp_remote_get(
+			home_url(),
+			[
+				'timeout'    => 0.01,
+				'blocking'   => false,
+				'user-agent' => 'WP Rocket/Homepage Preload',
+				'sslverify'  => apply_filters( 'https_local_ssl_verify', true ),
+			]
+		);
 	}
 
 	// Purge all minify cache files.
@@ -47,15 +86,6 @@ function rocket_after_save_options( $oldvalue, $value ) {
 	// Purge all cache busting files.
 	if ( ! empty( $_POST ) && ( $oldvalue['remove_query_strings'] !== $value['remove_query_strings'] ) ) {
 		rocket_clean_cache_busting();
-		wp_remote_get(
-			home_url(),
-			array(
-				'timeout'    => 0.01,
-				'blocking'   => false,
-				'user-agent' => 'wprocketbot',
-				'sslverify'  => apply_filters( 'https_local_ssl_verify', true ),
-			)
-		);
 	}
 
 	// Update CloudFlare Development Mode.
@@ -80,7 +110,7 @@ function rocket_after_save_options( $oldvalue, $value ) {
 	}
 
 	// Update CloudFlare settings.
-	if ( ! empty( $_POST ) && isset( $oldvalue['cloudflare_auto_settings'], $value['cloudflare_auto_settings'] ) && (int) $oldvalue['cloudflare_auto_settings'] !== (int) $value['cloudflare_auto_settings'] ) {
+	if ( ! empty( $_POST ) && ! empty( $value['do_cloudflare'] ) && isset( $oldvalue['cloudflare_auto_settings'], $value['cloudflare_auto_settings'] ) && (int) $oldvalue['cloudflare_auto_settings'] !== (int) $value['cloudflare_auto_settings'] ) {
 		$cf_old_settings = explode( ',', $value['cloudflare_old_settings'] );
 
 		// Set Cache Level to Aggressive.
@@ -226,27 +256,15 @@ function rocket_pre_main_option( $newvalue, $oldvalue ) {
 		$newvalue['minify_js_key'] = create_rocket_uniqid();
 	}
 
-	// Update CloudFlare zone ID if CloudFlare domain was changed.
-	if ( isset( $newvalue['cloudflare_domain'], $oldvalue['cloudflare_domain'] ) && $newvalue['cloudflare_domain'] !== $oldvalue['cloudflare_domain'] && 0 < (int) get_rocket_option( 'do_cloudflare' ) ) {
-		$cf_instance = get_rocket_cloudflare_api_instance();
-		if ( ! is_wp_error( $cf_instance ) ) {
-			try {
-				$zone_instance = new Cloudflare\Zone( $cf_instance );
-				$zone          = $zone_instance->zones( $newvalue['cloudflare_domain'] );
-
-				if ( isset( $zone->result[0]->id ) ) {
-					$newvalue['cloudflare_zone_id'] = $zone->result[0]->id;
-				}
-			} catch ( Exception $e ) {
-				// do nothing.
-			}
-		}
-	}
-
 	// Save old CloudFlare settings.
 	if ( ( isset( $newvalue['cloudflare_auto_settings'], $oldvalue['cloudflare_auto_settings'] ) && $newvalue['cloudflare_auto_settings'] !== $oldvalue['cloudflare_auto_settings'] && 1 === $newvalue['cloudflare_auto_settings'] ) && 0 < (int) get_rocket_option( 'do_cloudflare' ) ) {
 		$cf_settings                         = get_rocket_cloudflare_settings();
 		$newvalue['cloudflare_old_settings'] = ( ! is_wp_error( $cf_settings ) ) ? implode( ',', array_filter( $cf_settings ) ) : '';
+	}
+
+	// Checked the SSL option if the whole website is on SSL.
+	if ( rocket_is_ssl_website() ) {
+		$newvalue['cache_ssl'] = 1;
 	}
 
 	if ( ! defined( 'WP_ROCKET_ADVANCED_CACHE' ) ) {
@@ -272,8 +290,12 @@ add_filter( 'pre_update_option_' . WP_ROCKET_SLUG, 'rocket_pre_main_option', 10,
  * @param array $value     An array of submitted options values.
  */
 function rocket_update_ssl_option_after_save_home_url( $old_value, $value ) {
-	if ( $old_value !== $value ) {
-		rocket_generate_config_file();
+	if ( $old_value === $value ) {
+		return;
 	}
+
+	$scheme = rocket_extract_url_component( $value, PHP_URL_SCHEME );
+
+	update_rocket_option( 'cache_ssl', 'https' === $scheme ? 1 : 0 );
 }
 add_action( 'update_option_home', 'rocket_update_ssl_option_after_save_home_url', 10, 2 );

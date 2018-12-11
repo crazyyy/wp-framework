@@ -134,6 +134,16 @@ class Render extends Abstract_render {
 	}
 
 	/**
+	 * Render the Imagify page section.
+	 *
+	 * @since 3.2
+	 * @author Remy Perona
+	 */
+	public function render_imagify_section() {
+		echo $this->generate( 'page-sections/imagify' );
+	}
+
+	/**
 	 * Render the tools page section.
 	 *
 	 * @since 3.0
@@ -162,12 +172,17 @@ class Render extends Abstract_render {
 				'type'        => 'fields_container',
 				'title'       => '',
 				'description' => '',
+				'class'       => '',
 				'help'        => '',
 				'helper'      => '',
 				'page'        => '',
 			];
 
 			$args = wp_parse_args( $args, $default );
+
+			if ( ! empty( $args['class'] ) ) {
+				$args['class'] = implode( ' ', array_map( 'sanitize_html_class', $args['class'] ) );
+			}
 
 			call_user_func_array( array( $this, $args['type'] ), array( $args ) );
 		}
@@ -197,6 +212,7 @@ class Render extends Abstract_render {
 				'container_class'   => '',
 				'default'           => '',
 				'helper'            => '',
+				'placeholder'       => '',
 				'parent'            => '',
 				'section'           => '',
 				'page'              => '',
@@ -530,6 +546,7 @@ class Render extends Abstract_render {
 					case 'preload':
 					case 'rocket_purge_opcache':
 					case 'rocket_purge_cloudflare':
+					case 'rocket_purge_sucuri':
 					case 'rocket_rollback':
 					case 'rocket_export':
 					case 'rocket_generate_critical_css':

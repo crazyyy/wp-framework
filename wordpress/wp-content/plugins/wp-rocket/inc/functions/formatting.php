@@ -17,8 +17,7 @@ function rocket_clean_exclude_file( $file ) {
 		return false;
 	}
 
-	$path = rocket_extract_url_component( $file, PHP_URL_PATH );
-	return $path;
+	return wp_parse_url( $file, PHP_URL_PATH );
 }
 
 /**
@@ -118,6 +117,7 @@ function rocket_remove_url_protocol( $url, $no_dots = false ) {
  * @return string $url The URL with protocol
  */
 function rocket_add_url_protocol( $url ) {
+  
 	if ( strpos( $url, 'http://' ) === false && strpos( $url, 'https://' ) === false ) {
 		if ( substr( $url, 0, 2 ) !== '//' ) {
 			$url = '//' . $url;
@@ -310,49 +310,34 @@ function rocket_realpath( $file ) {
  *
  * @param string $url   URL to convert.
  * @param array  $hosts An array of possible hosts for the URL.
- * @return string
+ * @return string|bool
  */
 function rocket_url_to_path( $url, $hosts = '' ) {
-	$url_components  = get_rocket_parse_url( $url );
-	$site_components = get_rocket_parse_url( site_url() );
-	$site_url        = trailingslashit( set_url_scheme( site_url() ) );
+	$root_dir = trailingslashit( dirname( WP_CONTENT_DIR ) );
+	$root_url = str_replace( wp_basename( WP_CONTENT_DIR ), '', WP_CONTENT_URL );
+	$url_host = wp_parse_url( $url, PHP_URL_HOST );
 
-	if ( isset( $hosts[ $url_components['host'] ] ) && 'home' !== $hosts[ $url_components['host'] ] ) {
-		$site_url = trailingslashit( rocket_add_url_protocol( $url_components['host'] ) );
-
-		if ( $url_components['path'] !== $site_components['path'] ) {
-			$site_url .= ltrim( $site_components['path'], '/' );
-		}
+	// relative path.
+	if ( null === $url_host ) {
+		$subdir_levels = substr_count( preg_replace( '/https?:\/\//','', site_url() ), '/' );
+		$url           = site_url() . str_repeat( '/..', $subdir_levels ) . $url;
 	}
 
-	$home_path = rocket_get_home_path();
-	$file      = str_replace( $site_url, $home_path, rocket_set_internal_url_scheme( $url ) );
-
-	return rocket_realpath( $file );
-}
-
-/**
- * Get the absolute filesystem path to the root of the WordPress installation.
- *
- * @since 2.11.7 copy function get_home_path() from WP core.
- * @since 2.11.5
- * @author Chris Williams
- *
- * @return string Full filesystem path to the root of the WordPress installation.
- */
-function rocket_get_home_path() {
-	$home      = set_url_scheme( get_option( 'home' ), 'http' );
-	$siteurl   = set_url_scheme( get_option( 'siteurl' ), 'http' );
-	$home_path = ABSPATH;
-
-	if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
-		$wp_path_rel_to_home = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
-		$pos                 = strripos( str_replace( '\\', '/', $_SERVER['SCRIPT_FILENAME'] ), trailingslashit( $wp_path_rel_to_home ) );
-		$home_path           = substr( $_SERVER['SCRIPT_FILENAME'], 0, $pos );
-		$home_path           = trailingslashit( $home_path );
+	// CDN.
+	if ( isset( $hosts[ $url_host ] ) && 'home' !== $hosts[ $url_host ] ) {
+		$url = str_replace( $url_host, wp_parse_url( site_url(), PHP_URL_HOST ), $url );
 	}
 
-	return str_replace( '\\', '/', $home_path );
+	$root_url = preg_replace( '/^https?:/', '', $root_url );
+	$url      = preg_replace( '/^https?:/', '', $url );
+	$file     = str_replace( $root_url, $root_dir, $url );
+	$file     = rocket_realpath( $file );
+
+	if ( ! rocket_direct_filesystem()->is_readable( $file ) ) {
+		return false;
+	}
+
+	return $file;
 }
 
 /**

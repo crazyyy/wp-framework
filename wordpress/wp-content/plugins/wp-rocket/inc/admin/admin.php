@@ -10,11 +10,13 @@ defined( 'ABSPATH' ) || die( 'Cheatin&#8217; uh?' );
  * @return array Updated array of links
  */
 function rocket_settings_action_links( $actions ) {
+	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://wp-rocket.me/support/?utm_source=wp_plugin&utm_medium=wp_rocket', __( 'Support', 'rocket' ) ) );
+
 	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', get_rocket_documentation_url(), __( 'Docs', 'rocket' ) ) );
 
 	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', get_rocket_faq_url(), __( 'FAQ', 'rocket' ) ) );
 
-	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . WP_ROCKET_PLUGIN_SLUG ), __( 'Settings' ) ) );
+	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . WP_ROCKET_PLUGIN_SLUG ), __( 'Settings', 'rocket' ) ) );
 
 	return $actions;
 }
@@ -399,7 +401,6 @@ function rocket_analytics_data() {
 		'minify_js_key'           => 1,
 		'cloudflare_email'        => 1,
 		'cloudflare_api_key'      => 1,
-		'cloudflare_domain'       => 1,
 		'cloudflare_zone_id'      => 1,
 		'cloudflare_old_settings' => 1,
 		'submit_optimize'         => 1,

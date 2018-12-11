@@ -68,8 +68,6 @@ picture {
 .wrapper {
   position: relative;
   width: 100%;
-  height: auto !important;
-  height: 100%;
   min-height: 100%;
   margin: 0 auto;
 
@@ -99,7 +97,7 @@ nav {
 }
 
 section {
-  padding: 0 0 $footer;
+  padding: 0;
 }
 article {
   @extend .clearfix;
@@ -108,10 +106,9 @@ article {
   @extend .clearfix;
 }
 
-
 footer {
   height: $footer;
-  margin: $footer_margin auto 0;
+  margin: auto 0;
   background-color: $gray-light;
 }
 

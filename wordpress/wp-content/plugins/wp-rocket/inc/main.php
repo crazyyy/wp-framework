@@ -17,15 +17,6 @@ function rocket_init() {
 		return;
 	}
 
-	// Nothing to do if XMLRPC request.
-	if ( defined( 'XMLRPC_REQUEST' ) ) {
-		return;
-	}
-
-	// Necessary to call correctly WP Rocket Bot for cache json.
-	global $do_rocket_bot_cache_json;
-	$do_rocket_bot_cache_json = false;
-
 	// Call defines and functions.
 	require WP_ROCKET_FUNCTIONS_PATH . 'options.php';
 
@@ -40,14 +31,14 @@ function rocket_init() {
 	require WP_ROCKET_FUNCTIONS_PATH . 'files.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'posts.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'admin.php';
+	require WP_ROCKET_FUNCTIONS_PATH . 'preload.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'formatting.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'cdn.php';
-	require WP_ROCKET_FUNCTIONS_PATH . 'minify.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'i18n.php';
-	require WP_ROCKET_FUNCTIONS_PATH . 'bots.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'htaccess.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'varnish.php';
-	require WP_ROCKET_INC_PATH . 'deprecated.php';
+	require WP_ROCKET_DEPRECATED_PATH . 'deprecated.php';
+	require WP_ROCKET_DEPRECATED_PATH . '3.2.php';
 	require WP_ROCKET_3RD_PARTY_PATH . '3rd-party.php';
 	require WP_ROCKET_COMMON_PATH . 'admin-bar.php';
 	require WP_ROCKET_COMMON_PATH . 'updater.php';
@@ -82,10 +73,8 @@ function rocket_init() {
 		require WP_ROCKET_ADMIN_UI_PATH . 'notices.php';
 		require WP_ROCKET_ADMIN_UI_PATH . 'meta-boxes.php';
 	} elseif ( rocket_valid_key() ) {
-		require WP_ROCKET_FRONT_PATH . 'minify.php';
 		require WP_ROCKET_FRONT_PATH . 'cookie.php';
 		require WP_ROCKET_FRONT_PATH . 'images.php';
-		require WP_ROCKET_FRONT_PATH . 'enqueue.php';
 		require WP_ROCKET_FRONT_PATH . 'dns-prefetch.php';
 
 		if ( get_rocket_option( 'defer_all_js' ) ) {
@@ -99,9 +88,6 @@ function rocket_init() {
 
 		require WP_ROCKET_FRONT_PATH . 'protocol.php';
 	}
-
-	global $rocket_sitemap_background_process;
-	$rocket_sitemap_background_process = new Rocket_Sitemap_Preload_Process();
 
 	Rocket_Database_Optimization::init();
 	Rocket_Critical_CSS::get_instance()->init();
@@ -166,9 +152,14 @@ function rocket_deactivation() {
 		)
 	);
 
+	// Delete transients.
 	delete_transient( 'rocket_check_licence_30' );
 	delete_transient( 'rocket_check_licence_1' );
 	delete_site_transient( 'update_wprocket_response' );
+
+	// Unschedule WP Cron events.
+	wp_clear_scheduled_hook( 'rocket_facebook_tracking_cache_update' );
+	wp_clear_scheduled_hook( 'rocket_google_tracking_cache_update' );
 }
 register_deactivation_hook( WP_ROCKET_FILE, 'rocket_deactivation' );
 
@@ -192,6 +183,7 @@ function rocket_activation() {
 	require WP_ROCKET_FUNCTIONS_PATH . 'i18n.php';
 	require WP_ROCKET_FUNCTIONS_PATH . 'htaccess.php';
 	require WP_ROCKET_3RD_PARTY_PATH . 'hosting/godaddy.php';
+	require WP_ROCKET_3RD_PARTY_PATH . 'hosting/o2switch.php';
 
 	if ( rocket_valid_key() ) {
 		// Add All WP Rocket rules of the .htaccess file.
@@ -215,6 +207,16 @@ function rocket_activation() {
 		WP_ROCKET_WEB_API . 'activate-licence.php', array(
 			'blocking' => false,
 		)
+	);
+
+	wp_remote_get(
+		home_url(),
+		[
+			'timeout'    => 0.01,
+			'blocking'   => false,
+			'user-agent' => 'WP Rocket/Homepage Preload',
+			'sslverify'  => apply_filters( 'https_local_ssl_verify', true ),
+		]
 	);
 }
 register_activation_hook( WP_ROCKET_FILE, 'rocket_activation' );

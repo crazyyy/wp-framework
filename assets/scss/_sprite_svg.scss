@@ -1,0 +1,29 @@
+.svgico {
+    font-size: 16px;
+}
+
+.svgico:before {
+    content:' ';
+    vertical-align:middle;
+    display: inline-block;
+    background-image: url("../img/_sprite_svg.svg");
+    background-repeat: no-repeat;
+    background-size: 7.5em 7.5em;
+}
+
+.no-svg .svgico:before {
+    background-image: url("../img/_sprite_svg.png");
+}
+
+
+
+  .svgico.svgico-close:before {
+      background-position: -0.3125em -0.3125em;
+      width: 6.875em;
+      height: 6.875em;
+  }
+
+
+
+
+

@@ -7,6 +7,7 @@ import config from 'config';
 
 import gulp from 'gulp';
 import browserSync from 'browser-sync';
+import lazypipe from 'lazypipe';
 
 const plugins = require("gulp-load-plugins")({
   pattern: ['gulp-*', 'gulp.*'],
@@ -25,6 +26,7 @@ import discardEmpty from 'postcss-discard-empty';
 import combineDuplicatedSelectors from 'postcss-combine-duplicated-selectors';
 import unprefix from 'postcss-unprefix';
 import charset from 'postcss-single-charset';
+import focus from 'postcss-focus';
 
 const postCSSprocessors = [
   charset(),
@@ -42,6 +44,7 @@ const postCSSprocessors = [
       spritePath: './assets/img'
   }),
   urlrev(),
+  focus(),
   cssnext({
     browsers: [
       'ie >= 8',
@@ -146,7 +149,8 @@ gulp.task('images', function() {
       }),
       plugins.imagemin.svgo({
         plugins: [{
-          removeViewBox: true
+          removeViewBox: false,
+          collapseGroups: true
         }]
       })
     ]))
@@ -234,6 +238,10 @@ gulp.task('fonts', function() {
     .pipe(browserSync.reload({stream: true}));
 });
 
+
+var jsConcat = lazypipe()
+  .pipe(plugins.concat, 'scripts.js', {newLine: '\n;'})
+
 // Optimize script
 gulp.task('scripts', function() {
   return gulp
@@ -244,6 +252,7 @@ gulp.task('scripts', function() {
     .pipe(plugins.babel({
 			presets: ['env']
 		}))
+    .pipe(plugins.if(['scripts.js' /*,'scripts2.js'*/], jsConcat()))
     .pipe(plugins.if('*.js', plugins.uglify()))
     .pipe(plugins.sourcemaps.write('maps', {
       includeContent: true
@@ -281,9 +290,10 @@ gulp.task('watch', function() {
 
 });
 
-
 // Consolidated dev phase task
 gulp.task('serve', gulp.series('parallel-scripts-images-styles', 'watch'));
+
+gulp.task('default', gulp.series('parallel-scripts-images-styles'));
 
 // Custom Plumber function for catching errors
 function customPlumber(errTitle) {
