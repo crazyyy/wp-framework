@@ -133,8 +133,8 @@ gulp.task('styles', function() {
 
 // Optimize images
 gulp.task('images', function() {
-  return gulp
-    .src(config.path.images.srcimg)
+  return gulp.src(config.path.images.srcimg)
+    .pipe(customPlumber('Error Running Images'))
     .pipe(plugins.newer(config.path.images.dest))
     .pipe(plugins.bytediff.start())
     .pipe(plugins.imagemin([
@@ -168,8 +168,8 @@ gulp.task('images', function() {
 
 // Generate sprites
 gulp.task('sprites:png', function() {
-  return gulp
-    .src(config.path.images.spritePng)
+  return gulp.src(config.path.images.spritePng)
+    .pipe(customPlumber('Error Running Sprite PNG'))
     .pipe(plugins.spritesmith({
       imgName: config.sprite.imgName,
       cssName: config.sprite.cssName,
@@ -187,8 +187,8 @@ gulp.task('sprites:png', function() {
 });
 
 gulp.task('sprites:svg', function () {
-  return gulp
-    .src(config.path.images.spriteSvg)
+  return gulp.src(config.path.images.spriteSvg)
+    .pipe(customPlumber('Error Running Sprite SVG'))
     .pipe(plugins.size({
         showFiles: true,
         title: 'task:svg sprite >>'
@@ -227,8 +227,8 @@ gulp.task('sprites:svg', function () {
 
 // Copy web fonts to dist
 gulp.task('fonts', function() {
-  return gulp
-    .src(config.path.fonts.src)
+  return gulp.src(config.path.fonts.src)
+    .pipe(customPlumber('Error Running Fonts'))
     .pipe(plugins.newer(config.path.fonts.dest))
     .pipe(gulp.dest(config.path.fonts.dest))
     .pipe(plugins.size({
@@ -244,8 +244,8 @@ var jsConcat = lazypipe()
 
 // Optimize script
 gulp.task('scripts', function() {
-  return gulp
-    .src(config.path.scripts.src)
+  return gulp.src(config.path.scripts.src)
+    .pipe(customPlumber('Error Running Scripts'))
     .pipe(plugins.newer(config.path.scripts.dest))
     .pipe(customPlumber('Error Compiling Scripts'))
     .pipe(plugins.sourcemaps.init())
