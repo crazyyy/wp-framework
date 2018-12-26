@@ -238,6 +238,7 @@ class WPSEO_Meta {
 		'title'       => 'text',
 		'description' => 'textarea',
 		'image'       => 'upload',
+		'image-id'    => 'hidden',
 	);
 
 	/**
@@ -272,18 +273,12 @@ class WPSEO_Meta {
 		}
 		unset( $extra_fields );
 
-		$register = function_exists( 'register_meta' );
-
 		foreach ( self::$meta_fields as $subset => $field_group ) {
 			foreach ( $field_group as $key => $field_def ) {
-				if ( $register === true ) {
-					register_meta( 'post', self::$meta_prefix . $key, array(
-						'sanitize_callback' => array( __CLASS__, 'sanitize_post_meta' ),
-					) );
-				}
-				else {
-					add_filter( 'sanitize_post_meta_' . self::$meta_prefix . $key, array( __CLASS__, 'sanitize_post_meta' ), 10, 2 );
-				}
+
+				register_meta( 'post', self::$meta_prefix . $key, array(
+					'sanitize_callback' => array( __CLASS__, 'sanitize_post_meta' ),
+				) );
 
 				// Set the $fields_index property for efficiency.
 				self::$fields_index[ self::$meta_prefix . $key ] = array(
@@ -301,7 +296,7 @@ class WPSEO_Meta {
 				}
 			}
 		}
-		unset( $subset, $field_group, $key, $field_def, $register );
+		unset( $subset, $field_group, $key, $field_def );
 
 		add_filter( 'update_post_metadata', array( __CLASS__, 'remove_meta_if_default' ), 10, 5 );
 		add_filter( 'add_post_metadata', array( __CLASS__, 'dont_save_meta_if_default' ), 10, 4 );
@@ -360,6 +355,10 @@ class WPSEO_Meta {
 				}
 				elseif ( ! isset( $post->post_type ) && isset( $_GET['post_type'] ) ) {
 					$post_type = sanitize_text_field( $_GET['post_type'] );
+				}
+
+				if ( $post_type === '' ) {
+					return array();
 				}
 
 				/* Adjust the no-index text strings based on the post type. */
@@ -490,19 +489,6 @@ class WPSEO_Meta {
 			default:
 				if ( is_string( $meta_value ) ) {
 					$clean = WPSEO_Utils::sanitize_text_field( trim( $meta_value ) );
-				}
-
-				if ( $meta_key === self::$meta_prefix . 'focuskw' ) {
-					$clean = str_replace( array(
-						'&lt;',
-						'&gt;',
-						'&quot',
-						'&#96',
-						'<',
-						'>',
-						'"',
-						'`',
-					), '', $clean );
 				}
 
 				break;

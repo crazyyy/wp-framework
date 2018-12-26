@@ -4,9 +4,9 @@ Donate link: https://yoa.st/1up
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Google Search Console, Content analysis, Readability
-Requires at least: 4.8
-Tested up to: 4.9.8
-Stable tag: 8.2.1
+Requires at least: 4.9
+Tested up to: 5.0.1
+Stable tag: 9.3
 Requires PHP: 5.2.4
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -34,8 +34,8 @@ Yoast SEO does everything in its power to please both visitors and search engine
 
 * Content & SEO analysis: Invaluable tools to write SEO-friendly texts.
 * The snippet preview shows you how your post or page will look in the search results - even on mobile. Yoast SEO Premium even has social media previews!
-* **[Premium]** The Insights tool shows you what your text focuses on so you can keep your article in line with your keywords.
-* **[Premium]** Multiple focus keywords: Optimize your article for synonyms and related keywords.
+* **[Premium]** The Insights tool shows you what your text focuses on so you can keep your article in line with your keyphrases.
+* **[Premium]** Synonyms & related keyphrases: Optimize your article for synonyms and related keyphrases.
 * **[Premium]** Automatic internal linking suggestions: write your article and get automatic suggested posts to link to.
 
 #### Keep your site in perfect shape
@@ -52,7 +52,7 @@ Yoast SEO does everything in its power to please both visitors and search engine
 
 The Yoast team does not always provide active support for the Yoast SEO plugin on the WordPress.org forums, as we prioritize our email support. One-on-one email support is available to people who [bought Yoast SEO Premium](https://yoa.st/1v8) only.
 
-Note that the [Yoast SEO Premium](https://yoa.st/1v8) also has several extra features too, including the option to have multiple focus keywords, internal linking suggestions, cornerstone content checks and a redirect manager, so it is well worth your investment!
+Note that the [Yoast SEO Premium](https://yoa.st/1v8) also has several extra features too, including the option to have synonyms and related keyphrases, internal linking suggestions, cornerstone content checks and a redirect manager, so it is well worth your investment!
 
 You should also check out the [Yoast Local SEO](https://yoa.st/1uu), [Yoast News SEO](https://yoa.st/1uv) and [Yoast Video SEO](https://yoa.st/1uw) extensions to Yoast SEO. They work with the free version of Yoast SEO already, and these premium extensions of course come with support too.
 
@@ -106,73 +106,77 @@ You'll find answers to many of your questions on [kb.yoast.com](https://yoa.st/1
 
 == Changelog ==
 
-= 8.2.1 =
-Release Date: September 20th, 2018
-
-Bugfixes:
-
-* Fixes a bug where the Chrome or Opera browser tab would crash on Windows when a Polish text contains sentences in passive voice.
-
-= 8.2.0 =
-Release Date: September 11th, 2018
+= 9.3.0 =
+Release Date: December 18th, 2018
 
 Enhancements:
 
-* Introduces a How-To block in Gutenberg to create a How-to guide in an SEO-friendly way. Read more about the Gutenblocks in [https://yoa.st/gutenblocks](our release post).
-* Introduces a FAQ block in Gutenberg to list your Frequently Asked Questions in an SEO-friendly way. Read more about the Gutenblocks in [https://yoa.st/gutenblocks](our release post).
-* Adds readability analysis for Polish.
-* On Multisite environments, in addition to the site domain, path and ID, also site titles are now present in the site selection dropdowns.
+* Reapplies the markers in Gutenberg when the content changes to make sure they stay up-to-date.
+* Changes the output of schema preventing unnecessary escaping of forward slashes, only available on sites running PHP 5.4 or higher.
+* Changes the website schema `@id` attribute to include the home URL to be a unique identifier.
+* Adds the page number to the breadcrumbs when an archived page is entered.
+* Removes a redundant Edge-specific CSS fix for the tooltips in the post overview. Props [mkronenfeld](https://github.com/mkronenfeld).
 
 Bugfixes:
 
-* Fixes a bug where changing the WordPress slug would not correctly update the snippet editor.
-* Fixes a bug where the user input would trigger an analysis every time.
-* Fixes a bug with incorrect zooming on older iPhones within the installation wizard.
-* Fixes a bug where the OpenGraph image wouldn't show correctly for the frontpage in a few situations. Props to [@mt8](https://github.com/mt8) for the solution direction.
-* Fixes a bug where the Yoast SEO network admin menu and admin bar menu would appear when the plugin was only active for the main site, and not for the entire network.
-* Fixes a bug where snippet variables in the Twitter card title and description wouldn't be properly replaced.
-* Fixes a bug where a non-existing dependency was requested on the Search Appearance settings page.
-* Fixes a bug where the value of the primary category snippet variable in the classic editor wouldn't change when the primary category was changed.
-* Fixes a bug where the Gutenberg editor in the Classic Editor plugin would crash when the primary category picker was loaded. If something goes wrong in the primary category picker, it now shows a notification, instead of making the entire editor crash.
-* Fixes a bug where the readability analysis would not show the correct scores for cornerstone content.
-* Fixes a bug where switching off the SEO analysis would stop the readability analysis from loading.
-* Fixes a fatal error on the Term and Post edit pages when the server is running on PHP 5.2.
+* Fixes a bug where the 'Select primary category' label in the primary taxonomy picker would overlap the 'Add new category' button.
+* Fixes a bug where the cornerstone filter was still visible with the metabox disabled.
+* Fixes a bug where non-functional markers are shown for taxonomy pages.
+* Fixes a bug where the `og:description` tag would remain empty after setting the author description.
+* Fixes a bug where texts in the configuration wizard would overlap each other and break out of the columns in Internet Explorer 11. Props [DrGrimshaw](https://github.com/DrGrimshaw).
+* Fixes a bug where keyphrases weren't recognized in the URL when the words in the URL were separated by underscore characters instead of hyphens.
+* Fixes a bug that caused numbers to be stripped when marking a keyphrase containing a number, e.g. 'Yoast SEO 9.3'.
+* Fixes a bug where the first tab of the metabox would be empty when using WordPress 4.8.x.
+* Fixes a bug where private post types would have a sitemap with their 'private' entries.
 
-= 8.1.2 =
-Release Date: September 5th, 2018
+Other:
+* Implemented performance optimizations in FAQ and How To blocks.
 
-Bugfixes:
-
-* Fixes a bug where our JavaScript memory usage would increase indefinitely. This could result in a browser crash after a long enough period.
-
-= 8.1.1 =
-Release Date: September 3rd, 2018
+= 9.2.1 =
+Release Date: November 21th, 2018
 
 Bugfixes:
 
-* Fixes compatibility with Gutenberg 3.7, which removed a feature we were relying on.
-* Fixes a bug where the Twitter meta-tags would not have the snippet variables replaced with their dynamic values.
-* Fixes a bug where the `og:url` would not be set to the canonical URL if the canonical URL is explicitly set on Post types, Terms or Tags.
-* Fixes a bug on the Term page when editting the `slug`, it would not be updated in the Snippet Preview directly.
+* Fixes a bug where the title and meta description field's cursor would jump to the start when typing.
 
-= 8.1.0 =
-Release Date: August 28th, 2018
+= 9.2.0 =
+Release Date: November 20th, 2018
 
 Enhancements:
 
-* Adds the Snippet Preview Editor to the sidebar.
-* Introduces the Primary Category picker to Gutenberg.
-* Introduces a loading indicator in the analysis that is shown until we're ready to analyze the content.
-* Optimizes the content analysis calculations. This fixes the issue where the UI could freeze when you have a long post.
-* Changes the "Check Inlinks (OSE)" menu item in the Yoast Admin bar "Analyze this page" dropdown from the Moz OpenSite Explorer (OSE) to Google Search Console, as the former service is being disabled on August 30th 2018.
+* Adds support for the 'eye' markers in Gutenberg using the experimental annotations API in Gutenberg. They will work for the paragraph, quote, heading and list blocks.
+* Adds the latest og:locale options provided by Facebook. Props to [valtlfelipe](https://github.com/valtlfelipe)
+* Adds support for oEmbed utilization of Yoast custom fields (post meta) values. Specifically the image and the title. Props to [ben-caplan](https://github.com/ben-caplan)
+* Defines attachment as non-accessible when attachment urls are redirected to the attachment file itself. Props to [stodorovic](https://github.com/stodorovic)
+* Improves the accessibility of the "Bulk editor" and "Search console" tables.
+* Hides SEO title and meta description fields on the author edit page when the author archives are disabled.
+* Replaces Settings ZIP download (export) and upload (import) functionality with Settings fields.
 
 Bugfixes:
 
-* Fixes a bug where the analysis scores would change multiple times due to a delay in the loading of the actual scores. We now show loading indicators until the actual scores have been calculated.
-* Fixes a bug where the parent title snippet variable wasn't properly being replaced with the actual parent title in Gutenberg.
-* Fixes a plugin compatibility bug where the SEO score in the admin bar could not be retrieved.
-* Fixes a bug where the editor would not be usable when deferred or async loading of JavaScript is being forced.
-* Fixes a bug where the analysis for previously used keywords would only be triggered if the keyword was changed, resulting in an incorrect SEO score.
+* Fixes a bug where assessments would fail if a "<" character is present in the content.
+* Fixes a bug where the excerpt replacement variable will output a piece of the post content when no excerpt is given.
+* Fixes a bug where the wrong title is rendered for the WooCommerce product archive.
+* Fixes a bug where the Yoast metabox is visible even when the attachment urls are redirected to the attachment file itself.
+* Fixes a bug where the Dashboard Widget was not displayed in the correct language.
+* Fixes a bug in combination with Gutenberg where paragraphs were sometimes not correctly detected because paragraph tags were not automatically added in WordPress-like fashion.
+* Fixes a bug in combination with Gutenberg where multiple marker buttons could be active at the same time.
+* Fixes a bug in combination with Gutenberg where escaped HTML is shown in the OpenGraph description.
+
+Compatibility:
+
+* Adds the `__block_editor_compatible_meta_box` flag to our metabox registrations to indicate they are compatible with WordPress 5.0.
+* Revise the enqueue order of the JavaScript assets to ensure compatibility with the classic editor plugin and WordPress 5.0.
+
+Security:
+
+* Fixes a possible command execution by users with SEO Manager roles. Props to [Dimopoulos Elias](https://twitter.com/gweeperx)
+
+Other:
+
+* Disables the non-functioning markers for the subheading distribution assessment.
+* Refactor SEO assessment filenames and exports. Props to [Kingdutch](https://github.com/Kingdutch)
+* Deprecates the `Yoast_Modal` class.
 
 = Earlier versions =
 

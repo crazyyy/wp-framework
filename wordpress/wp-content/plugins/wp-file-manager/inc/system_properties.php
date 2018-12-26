@@ -2,7 +2,7 @@
 $this->custom_css();
 ?>
 <div class="wrap fm_systemPropertyWrap">
-<h3 class="fm_headingTitle"><?php _e('File Manager - System Properties','wp-file-manager'); ?>  <a href="https://filemanager.webdesi9.com/product/file-manager" class="button button-primary fm_BuyProBtn" target="_blank" title="Click to Buy PRO"><?php  _e('Buy PRO', 'wp-file-manager'); ?></a></h3>
+<h3 class="fm_headingTitle"><?php _e('File Manager - System Properties','wp-file-manager'); ?>  <a href="https://filemanagerpro.io/product/file-manager" class="button button-primary fm_BuyProBtn" target="_blank" title="Click to Buy PRO"><?php  _e('Buy PRO', 'wp-file-manager'); ?></a></h3>
 
 <table cellpadding="0" cellspacing="0" class="fm_systemPropertyTbl" style="background:#fff; padding:10px; border-left: 5px solid #09F;">
 	

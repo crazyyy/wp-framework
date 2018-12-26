@@ -7,7 +7,7 @@ if ( !defined('ABSPATH') ) {
 if (!class_exists('AIO_WP_Security')){
 
 class AIO_WP_Security{
-    var $version = '4.3.6';
+    var $version = '4.3.8.3';
     var $db_version = '1.9';
     var $plugin_url;
     var $plugin_path;
@@ -138,11 +138,11 @@ class AIO_WP_Security{
         }
     }
 
-    static function activate_handler()
+    static function activate_handler($networkwide)
     {
         //Only runs when the plugin activates
         include_once ('classes/wp-security-installer.php');
-        AIOWPSecurity_Installer::run_installer();
+        AIOWPSecurity_Installer::run_installer($networkwide);
 
         if ( !wp_next_scheduled('aiowps_hourly_cron_event') ) {
             wp_schedule_event(time(), 'hourly', 'aiowps_hourly_cron_event'); //schedule an hourly cron event
@@ -206,7 +206,7 @@ class AIO_WP_Security{
         $this->scan_obj = new AIOWPSecurity_Scan();//Object to handle scan tasks 
         $this->cron_handler = new AIOWPSecurity_Cronjob_Handler();
         
-        add_action('wp_head',array(&$this, 'aiowps_header_content'));
+        add_action('login_enqueue_scripts',array(&$this, 'aiowps_login_enqueue'));
         add_action('wp_footer',array(&$this, 'aiowps_footer_content'));
         
         add_action('wp_login', array('AIOWPSecurity_User_Login', 'wp_login_action_handler'), 10, 2);
@@ -218,12 +218,17 @@ class AIO_WP_Security{
     {
         new AIOWPSecurity_WP_Loaded_Tasks();
     }
-
-    function aiowps_header_content()
-    {
-        //NOP
-    }
     
+    function aiowps_login_enqueue()
+    {
+        global $aio_wp_security;
+        if($aio_wp_security->configs->get_value('aiowps_default_recaptcha')) {
+            wp_enqueue_script( 'google-recaptcha', 'https://www.google.com/recaptcha/api.js', false );
+            // below is needed to provide some space for the google reCaptcha form (otherwise it appears partially hidden on RHS)
+            wp_add_inline_script( 'google-recaptcha', 'document.addEventListener("DOMContentLoaded", ()=>{document.getElementById("login").style.width = "340px";});' );
+        }
+    }
+
     function aiowps_footer_content()
     {
         new AIOWPSecurity_WP_Footer_Content();

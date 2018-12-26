@@ -89,7 +89,9 @@ class AIOWPSecurity_Utility_Htaccess
             return false; //unable to write to the file
         }
 
-        $htaccess = ABSPATH . '.htaccess';
+        if ( !function_exists( 'get_home_path' ) ) require_once( ABSPATH. '/wp-admin/includes/file.php' );
+        $home_path = get_home_path();
+        $htaccess = $home_path . '.htaccess';
 
         if (!$f = @fopen($htaccess, 'a+')) {
             @chmod($htaccess, 0644);
@@ -137,8 +139,9 @@ class AIOWPSecurity_Utility_Htaccess
      */
     static function delete_from_htaccess($section = 'All In One WP Security')
     {
-        //TODO
-        $htaccess = ABSPATH . '.htaccess';
+        if ( !function_exists( 'get_home_path' ) ) require_once( ABSPATH. '/wp-admin/includes/file.php' );
+        $home_path = get_home_path();
+        $htaccess = $home_path . '.htaccess';
 
         @ini_set('auto_detect_line_endings', true);
         if (!file_exists($htaccess)) {

@@ -34,7 +34,7 @@ class elFinderEditorZohoOffice extends elFinderEditor
 
     public function enabled()
     {
-        return defined('ELFINDER_ZOHO_OFFICE_APIKEY') && function_exists('curl_init');
+        return defined('ELFINDER_ZOHO_OFFICE_APIKEY') && ELFINDER_ZOHO_OFFICE_APIKEY && function_exists('curl_init');
     }
 
     public function init()
@@ -78,7 +78,7 @@ class elFinderEditorZohoOffice extends elFinderEditor
                     'apikey' => ELFINDER_ZOHO_OFFICE_APIKEY,
                     'output' => 'url',
                     'mode' => 'normaledit',
-                    'filename' => rawurlencode($file['name']),
+                    'filename' => $file['name'],
                     'id' => $hash,
                     'format' => $format,
                     'lang' => $lang,

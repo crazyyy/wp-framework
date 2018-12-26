@@ -305,9 +305,12 @@ margin-right: 25px;
 .elfinder-quicklook-titlebar-icon .ui-front.ui-icon.ui-icon-plusthick.elfinder-icon-full {
 	margin: -18px 26px 0 1px;
 }
+.elfinder-quicklook-titlebar-icon .ui-icon.ui-icon-minusthick {
+	margin: -18px 24px 0px 3px !important;
+}
 .mac .elfinder-quicklook-titlebar-icon .ui-front.ui-icon.ui-icon-plusthick.elfinder-icon-full{
-margin: -18px 26px 0 23px;
+     margin: -18px 26px 0 23px;
 }
 .mac .elfinder-quicklook-titlebar-icon span.ui-front.ui-icon.ui-icon-minusthick.elfinder-icon-minimize{
-margin: -18px 0px 0 23px;
+     margin: -18px 0px 0 23px !important;
 }

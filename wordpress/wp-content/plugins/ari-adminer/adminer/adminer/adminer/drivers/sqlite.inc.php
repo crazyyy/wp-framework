@@ -152,7 +152,7 @@ if (isset($_GET["sqlite"]) || isset($_GET["sqlite2"])) {
 
 				function fetch_field() {
 					$name = $this->_result->fieldName($this->_offset++);
-					$pattern = '(\\[.*]|"(?:[^"]|"")*"|(.+))';
+					$pattern = '(\[.*]|"(?:[^"]|"")*"|(.+))';
 					if (preg_match("~^($pattern\\.)?$pattern\$~", $name, $match)) {
 						$table = ($match[3] != "" ? $match[3] : idf_unescape($match[2]));
 						$name = ($match[5] != "" ? $match[5] : idf_unescape($match[4]));
@@ -240,6 +240,11 @@ if (isset($_GET["sqlite"]) || isset($_GET["sqlite2"])) {
 	}
 
 	function connect() {
+		global $adminer;
+		list(, , $password) = $adminer->credentials();
+		if ($password != "") {
+			return lang('Database does not support password.');
+		}
 		return new Min_DB;
 	}
 
@@ -273,7 +278,7 @@ if (isset($_GET["sqlite"]) || isset($_GET["sqlite2"])) {
 	}
 
 	function tables_list() {
-		return get_key_vals("SELECT name, type FROM sqlite_master WHERE type IN ('table', 'view') ORDER BY (name = 'sqlite_sequence'), name", 1);
+		return get_key_vals("SELECT name, type FROM sqlite_master WHERE type IN ('table', 'view') ORDER BY (name = 'sqlite_sequence'), name");
 	}
 
 	function count_tables($databases) {
@@ -402,7 +407,7 @@ if (isset($_GET["sqlite"]) || isset($_GET["sqlite2"])) {
 
 	function view($name) {
 		global $connection;
-		return array("select" => preg_replace('~^(?:[^`"[]+|`[^`]*`|"[^"]*")* AS\\s+~iU', '', $connection->result("SELECT sql FROM sqlite_master WHERE name = " . q($name)))); //! identifiers may be inside []
+		return array("select" => preg_replace('~^(?:[^`"[]+|`[^`]*`|"[^"]*")* AS\s+~iU', '', $connection->result("SELECT sql FROM sqlite_master WHERE name = " . q($name)))); //! identifiers may be inside []
 	}
 
 	function collations() {
@@ -649,7 +654,7 @@ if (isset($_GET["sqlite"]) || isset($_GET["sqlite2"])) {
 		if ($name == "") {
 			return array("Statement" => "BEGIN\n\t;\nEND");
 		}
-		$idf = '(?:[^`"\\s]+|`[^`]*`|"[^"]*")+';
+		$idf = '(?:[^`"\s]+|`[^`]*`|"[^"]*")+';
 		$trigger_options = trigger_options();
 		preg_match(
 			"~^CREATE\\s+TRIGGER\\s*$idf\\s*(" . implode("|", $trigger_options["Timing"]) . ")\\s+([a-z]+)(?:\\s+OF\\s+($idf))?\\s+ON\\s*$idf\\s*(?:FOR\\s+EACH\\s+ROW\\s)?(.*)~is",
@@ -670,7 +675,7 @@ if (isset($_GET["sqlite"]) || isset($_GET["sqlite2"])) {
 		$return = array();
 		$trigger_options = trigger_options();
 		foreach (get_rows("SELECT * FROM sqlite_master WHERE type = 'trigger' AND tbl_name = " . q($table)) as $row) {
-			preg_match('~^CREATE\\s+TRIGGER\\s*(?:[^`"\\s]+|`[^`]*`|"[^"]*")+\\s*(' . implode("|", $trigger_options["Timing"]) . ')\\s*(.*)\\s+ON\\b~iU', $row["sql"], $match);
+			preg_match('~^CREATE\s+TRIGGER\s*(?:[^`"\s]+|`[^`]*`|"[^"]*")+\s*(' . implode("|", $trigger_options["Timing"]) . ')\s*(.*)\s+ON\b~iU', $row["sql"], $match);
 			$return[$row["name"]] = array($match[1], $match[2]);
 		}
 		return $return;

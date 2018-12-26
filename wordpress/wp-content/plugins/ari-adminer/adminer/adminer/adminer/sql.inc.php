@@ -56,7 +56,7 @@ if (!$error && $_POST) {
 		}
 		$commands = 0;
 		$errors = array();
-		$parse = '[\'"' . ($jush == "sql" ? '`#' : ($jush == "sqlite" ? '`[' : ($jush == "mssql" ? '[' : ''))) . ']|/\\*|-- |$' . ($jush == "pgsql" ? '|\\$[^$]*\\$' : '');
+		$parse = '[\'"' . ($jush == "sql" ? '`#' : ($jush == "sqlite" ? '`[' : ($jush == "mssql" ? '[' : ''))) . ']|/\*|-- |$' . ($jush == "pgsql" ? '|\$[^$]*\$' : '');
 		$total_start = microtime(true);
 		parse_str($_COOKIE["adminer_export"], $adminer_export);
 		$dump_format = $adminer->dumpFormat();
@@ -78,7 +78,7 @@ if (!$error && $_POST) {
 					$offset = $pos + strlen($found);
 
 					if ($found && rtrim($found) != $delimiter) { // find matching quote or comment end
-						while (preg_match('(' . ($found == '/*' ? '\\*/' : ($found == '[' ? ']' : (preg_match('~^-- |^#~', $found) ? "\n" : preg_quote($found) . "|\\\\."))) . '|$)s', $query, $match, PREG_OFFSET_CAPTURE, $offset)) { //! respect sql_mode NO_BACKSLASH_ESCAPES
+						while (preg_match('(' . ($found == '/*' ? '\*/' : ($found == '[' ? ']' : (preg_match('~^-- |^#~', $found) ? "\n" : preg_quote($found) . "|\\\\."))) . '|$)s', $query, $match, PREG_OFFSET_CAPTURE, $offset)) { //! respect sql_mode NO_BACKSLASH_ESCAPES
 							$s = $match[0][0];
 							if (!$s && $fp && !feof($fp)) {
 								$query .= fread($fp, 1e5);
@@ -225,13 +225,14 @@ if (!isset($_GET["import"])) {
 	
 } else {
 	echo "<fieldset><legend>" . lang('File upload') . "</legend><div>";
+	$gz = (extension_loaded("zlib") ? "[.gz]" : "");
 	echo (ini_bool("file_uploads")
-		? "SQL (&lt; " . ini_get("upload_max_filesize") . "B): <input type='file' name='sql_file[]' multiple>\n$execute" // ignore post_max_size because it is for all form fields together and bytes computing would be necessary
+		? "SQL$gz (&lt; " . ini_get("upload_max_filesize") . "B): <input type='file' name='sql_file[]' multiple>\n$execute" // ignore post_max_size because it is for all form fields together and bytes computing would be necessary
 		: lang('File uploads are disabled.')
 	);
 	echo "</div></fieldset>\n";
 	echo "<fieldset><legend>" . lang('From server') . "</legend><div>";
-	echo lang('Webserver file %s', "<code>" . h($adminer->importServerPath()) . (extension_loaded("zlib") ? "[.gz]" : "") . "</code>");
+	echo lang('Webserver file %s', "<code>" . h($adminer->importServerPath()) . "$gz</code>");
 	echo ' <input type="submit" name="webfile" value="' . lang('Run file') . '">';
 	echo "</div></fieldset>\n";
 	echo "<p>";

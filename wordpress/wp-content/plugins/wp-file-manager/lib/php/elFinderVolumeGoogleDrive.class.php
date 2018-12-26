@@ -1,7 +1,5 @@
 <?php
 
-elFinder::$netDrivers['googledrive'] = 'GoogleDrive';
-
 /**
  * Simple elFinder driver for GoogleDrive
  * google-api-php-client-2.x or above.
@@ -90,6 +88,13 @@ class elFinderVolumeGoogleDrive extends elFinderVolumeDriver
      * @var string
      **/
     public $netMountKey = '';
+
+    /**
+     * Current token expires
+     * 
+     * @var integer
+     **/
+    private $expires;
 
     /**
      * Constructor
@@ -918,6 +923,7 @@ class elFinderVolumeGoogleDrive extends elFinderVolumeDriver
                 if (!$serviceAccountConfig) {
                     if ($this->options['access_token']) {
                         $client->setAccessToken($this->options['access_token']);
+                        $access_token = $this->options['access_token'];
                     }
                     if ($client->isAccessTokenExpired()) {
                         $client->setClientId($this->options['client_id']);
@@ -934,6 +940,7 @@ class elFinderVolumeGoogleDrive extends elFinderVolumeDriver
                         }
                         $this->options['access_token'] = $access_token;
                     }
+                    $this->expires = empty($access_token['refresh_token']) ? $access_token['created'] + $access_token['expires_in'] - 30 : 0;
                 } else {
                     $client->setAuthConfigFile($serviceAccountConfig);
                     $client->setScopes([Google_Service_Drive::DRIVE]);
@@ -1089,6 +1096,11 @@ class elFinderVolumeGoogleDrive extends elFinderVolumeDriver
      **/
     protected function doSearch($path, $q, $mimes)
     {
+        if (!empty($this->doSearchCurrentQuery['matchMethod'])) {
+            // has custom match method use elFinderVolumeDriver::doSearch()
+            return parent::doSearch($path, $q, $mimes);
+        }
+
         list(, $itemId) = $this->_gd_splitPath($path);
 
         $path = $this->_normpath($path.'/');
@@ -1181,17 +1193,20 @@ class elFinderVolumeGoogleDrive extends elFinderVolumeDriver
                     $raw['mimeType'] == self::DIRMIME ? $this->copy($src.'/'.$raw['id'], $path, $raw['name']) : $this->_copy($src.'/'.$raw['id'], $path, $raw['name']);
                 }
 
-                return $this->_joinPath($dst, $itemId);
+                $ret = $this->_joinPath($dst, $itemId);
+                $this->added[] = $this->stat($ret);
             } else {
-                $this->setError(elFinder::ERROR_COPY, $this->_path($src));
+                $ret = $this->setError(elFinder::ERROR_COPY, $this->_path($src));
             }
         } else {
-            $itemId = $this->_copy($src, $dst, $name);
-
-            return $itemId
-            ? $this->_joinPath($dst, $itemId)
-            : $this->setError(elFinder::ERROR_COPY, $this->_path($src));
+            if ($itemId = $this->_copy($src, $dst, $name)) {
+                $ret = $this->_joinPath($dst, $itemId);
+                $this->added[] = $this->stat($ret);
+            } else {
+                $ret = $this->setError(elFinder::ERROR_COPY, $this->_path($src));
+            }
         }
+        return $ret;
     }
 
     /**
@@ -1525,7 +1540,11 @@ class elFinderVolumeGoogleDrive extends elFinderVolumeDriver
     protected function _stat($path)
     {
         if ($raw = $this->_gd_getFile($path)) {
-            return $this->_gd_parseRaw($raw);
+            $stat = $this->_gd_parseRaw($raw);
+            if ($path === $this->root) {
+                $stat['expires'] = $this->expires;
+            }
+            return $stat;
         }
 
         return false;

@@ -6,7 +6,7 @@ if (isset($_GET["pgsql"])) {
 	define("DRIVER", "pgsql");
 	if (extension_loaded("pgsql")) {
 		class Min_DB {
-			var $extension = "PgSQL", $_link, $_result, $_string, $_database = true, $server_info, $affected_rows, $error;
+			var $extension = "PgSQL", $_link, $_result, $_string, $_database = true, $server_info, $affected_rows, $error, $timeout;
 
 			function _error($errno, $error) {
 				if (ini_bool("html_errors")) {
@@ -69,12 +69,18 @@ if (isset($_GET["pgsql"])) {
 				$this->error = "";
 				if (!$result) {
 					$this->error = pg_last_error($this->_link);
-					return false;
+					$return = false;
 				} elseif (!pg_num_fields($result)) {
 					$this->affected_rows = pg_affected_rows($result);
-					return true;
+					$return = true;
+				} else {
+					$return = new Min_Result($result);
 				}
-				return new Min_Result($result);
+				if ($this->timeout) {
+					$this->timeout = 0;
+					$this->query("RESET statement_timeout");
+				}
+				return $return;
 			}
 
 			function multi_query($query) {
@@ -139,7 +145,7 @@ if (isset($_GET["pgsql"])) {
 
 	} elseif (extension_loaded("pdo_pgsql")) {
 		class Min_DB extends Min_PDO {
-			var $extension = "PDO_PgSQL";
+			var $extension = "PDO_PgSQL", $timeout;
 
 			function connect($server, $username, $password) {
 				global $adminer;
@@ -155,12 +161,17 @@ if (isset($_GET["pgsql"])) {
 				return ($adminer->database() == $database);
 			}
 
-			function value($val, $field) {
-				return $val;
-			}
-
 			function quoteBinary($s) {
 				return q($s);
+			}
+
+			function query($query, $unbuffered = false) {
+				$return = parent::query($query, $unbuffered);
+				if ($this->timeout) {
+					$this->timeout = 0;
+					parent::query("RESET statement_timeout");
+				}
+				return $return;
 			}
 
 			function warnings() {
@@ -197,15 +208,19 @@ if (isset($_GET["pgsql"])) {
 			return true;
 		}
 
+		function slowQuery($query, $timeout) {
+			$this->_conn->query("SET statement_timeout = " . (1000 * $timeout));
+			$this->_conn->timeout = 1000 * $timeout;
+			return $query;
+		}
+
 		function convertSearch($idf, $val, $field) {
-			return (preg_match('~char|text' . (is_numeric($val["val"]) && !preg_match('~LIKE~', $val["op"]) ? '|' . number_type() : '') . '~', $field["type"])
+			return (preg_match('~char|text'
+					. (!preg_match('~LIKE~', $val["op"]) ? '|date|time(stamp)?|boolean|uuid|' . number_type() : '')
+					. '~', $field["type"])
 				? $idf
 				: "CAST($idf AS text)"
 			);
-		}
-
-		function value($val, $field) {
-			return $this->_conn->value($val, $field);
 		}
 
 		function quoteBinary($s) {
@@ -271,7 +286,7 @@ if (isset($_GET["pgsql"])) {
 	function limit1($table, $query, $where, $separator = "\n") {
 		return (preg_match('~^INTO~', $query)
 			? limit($query, $where, 1, 0, $separator)
-			: " $query WHERE ctid = (SELECT ctid FROM " . table($table) . $where . $separator . "LIMIT 1)"
+			: " $query" . (is_view(table_status1($table)) ? $where : " WHERE ctid = (SELECT ctid FROM " . table($table) . $where . $separator . "LIMIT 1)")
 		);
 	}
 
@@ -358,7 +373,7 @@ ORDER BY a.attnum"
 				$row["full_type"] = $row["type"] . $length . $addon . $array;
 			}
 			$row["null"] = !$row["attnotnull"];
-			$row["auto_increment"] = preg_match('~^nextval\\(~i', $row["default"]);
+			$row["auto_increment"] = preg_match('~^nextval\(~i', $row["default"]);
 			$row["privileges"] = array("insert" => 1, "select" => 1, "update" => 1);
 			if (preg_match('~(.+)::[^)]+(.*)~', $row["default"], $match)) {
 				$row["default"] = ($match[1] == "NULL" ? null : (($match[1][0] == "'" ? idf_unescape($match[1]) : $match[1]) . $match[2]));
@@ -434,8 +449,8 @@ WHERE table_schema = current_schema() AND table_name = " . q($name))));
 	function error() {
 		global $connection;
 		$return = h($connection->error);
-		if (preg_match('~^(.*\\n)?([^\\n]*)\\n( *)\\^(\\n.*)?$~s', $return, $match)) {
-			$return = $match[1] . preg_replace('~((?:[^&]|&[^;]*;){' . strlen($match[3]) . '})(.*)~', '\\1<b>\\2</b>', $match[2]) . $match[4];
+		if (preg_match('~^(.*\n)?([^\n]*)\n( *)\^(\n.*)?$~s', $return, $match)) {
+			$return = $match[1] . preg_replace('~((?:[^&]|&[^;]*;){' . strlen($match[3]) . '})(.*)~', '\1<b>\2</b>', $match[2]) . $match[4];
 		}
 		return nl_br($return);
 	}
@@ -830,7 +845,7 @@ AND typelem = 0"
 		$structured_types[$key] = array_keys($val);
 	}
 	$unsigned = array();
-	$operators = array("=", "<", ">", "<=", ">=", "!=", "~", "!~", "LIKE", "LIKE %%", "ILIKE", "ILIKE %%", "IN", "IS NULL", "NOT LIKE", "NOT IN", "IS NOT NULL"); // no "SQL" to avoid SQL injection
+	$operators = array("=", "<", ">", "<=", ">=", "!=", "~", "!~", "LIKE", "LIKE %%", "ILIKE", "ILIKE %%", "IN", "IS NULL", "NOT LIKE", "NOT IN", "IS NOT NULL"); // no "SQL" to avoid CSRF
 	$functions = array("char_length", "lower", "round", "to_hex", "to_timestamp", "upper");
 	$grouping = array("avg", "count", "count distinct", "max", "min", "sum");
 	$edit_functions = array(
