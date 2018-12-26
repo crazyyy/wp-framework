@@ -32,6 +32,7 @@ node_modules/**
 node_modules_bck
 _gsdata_
 wordpress/_gsdata_/
+wordpress/wordpress.zip
 wp-content/advanced-cache.php
 wp-content/backup-db/
 wp-content/backups/
