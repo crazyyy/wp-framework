@@ -178,16 +178,16 @@ function wpeSideNav() {
 add_action('init', 'register_html5_menu'); // Add HTML5 Blank Menu
 function register_html5_menu() {
   register_nav_menus(array(
-    'header-menu' => __('Меню в шапке', 'wpeasy'),
-    'sidebar-menu' => __('Меню в сайдбар', 'wpeasy'),
-    'footer-menu' => __('Меню в подвал', 'wpeasy')
+    'header-menu' => __('Header Nav', 'wpeasy'),
+    'sidebar-menu' => __('Sidebar Nav', 'wpeasy'),
+    'footer-menu' => __('Footer Nav', 'wpeasy')
   ));
 }
 //  If Dynamic Sidebar Existsов
 if (function_exists('register_sidebar')) {
   //  Define Sidebar Widget Area 1
   register_sidebar(array(
-    'name' => __('Блок виджетов #1', 'wpeasy'),
+    'name' => __('Widgets area #1', 'wpeasy'),
     'description' => __('Description for this widget-area...', 'wpeasy'),
     'id' => 'widgetarea1',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
@@ -198,7 +198,7 @@ if (function_exists('register_sidebar')) {
   //  Define Sidebar Widget Area 2. If your want to display more widget - uncoment this
   /*
   register_sidebar(array(
-    'name' => __('Блок виджетов #2', 'wpeasy'),
+    'name' => __('Widgets area #2', 'wpeasy'),
     'description' => __('Description for this widget-area...', 'wpeasy'),
     'id' => 'widgetarea2',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
