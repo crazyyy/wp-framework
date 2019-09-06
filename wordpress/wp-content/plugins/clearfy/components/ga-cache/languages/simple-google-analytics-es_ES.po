@@ -1,0 +1,234 @@
+# Translation of Plugins - Clearfy in Spanish (Spain)
+# This file is distributed under the same license as the Plugins - Clearfy – WordPress optimization plugin and disable ultimate tweaker - Development (trunk) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-04-28 06:27+0300\n"
+"PO-Revision-Date: 2019-04-28 06:27+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:34
+msgid "The <b>Simple Google Analytics</b> plugin has some major changes!"
+msgstr "El plugin <b>Simple Google Analytics</b> tiene cambios importantes."
+
+#: admin/boot.php:35
+msgid ""
+"Unfortunately, the old version of the plugin (2.2.2) is no longer supported, "
+"but you still can download it from the WordPress repository in case if the "
+"new release doesn’t work for you."
+msgstr ""
+"Desafortunadamente, la versión anterior del complemento (2.2.2) ya no aplica "
+"soporte, pero aún puede descargarlo del repositorio de WordPress en caso de "
+"que la nueva versión no funcione para usted."
+
+#: admin/boot.php:36
+msgid ""
+"We’ve updated the code and fixed the compatibility issue for the latest "
+"WordPress and PHP versions. We’ve also added additional feature of the Local "
+"Google Analytics – this way your website will load faster. The plugin’s name "
+"has been changed to Local Google Analytics, but all features remained the "
+"same."
+msgstr ""
+"Hemos actualizado el código y hemos solucionado el problema de "
+"compatibilidad para las últimas versiones de WordPress y PHP. También hemos "
+"agregado una función adicional de Local Google Analytics, de esta manera su "
+"sitio web cargará más rápido. El nombre del plugin se ha cambiado a Local "
+"Google Analytics, pero todas las características siguen siendo las mismas."
+
+#: admin/boot.php:37
+#, php-format
+msgid ""
+"Please, check <a href=\"%s\">plugin settings</a> and its performance on your "
+"website. We do care about you and want to avoid any problems with the new "
+"version."
+msgstr ""
+"Verifique <a href=\"%s\">configuraciónes de plugins</a> y el rendimiento de "
+"su Website. Nos preocupamos por usted, queremos evitar problemas con la "
+"nueva versión."
+
+#: admin/boot.php:38
+#, php-format
+msgid ""
+"We are aimed to pay more attention to the speed and security aspects of your "
+"website. That’s why you should definitely try our basic WordPress "
+"optimization plugin as well. Clearfy includes functionality of this plugin "
+"and has many additional features for the website optimization:\n"
+"<a href=\"%s\">Donwload Clearfy for free</a>"
+msgstr ""
+"Nuestro meta es prestar más atención a los aspectos de velocidad y seguridad "
+"de su sitio web. Por eso prueba nuestro plugin básico de optimización "
+"WordPress. Clearfy incluye funcionalidades de este plugin y posee "
+"características adicionales para optimización de sitios web:\n"
+"<a href=\"%s\">Descargue Clearfy de forma gratuita</a>"
+
+#: admin/boot.php:170 admin/options.php:29 admin/pages/ga_cache.php:54
+msgid "Google Analytics Cache"
+msgstr "Cache de Google Analytics"
+
+#: admin/boot.php:176 admin/options.php:49
+msgid "Google analytic Code"
+msgstr "Código de Google Analytics"
+
+#: admin/boot.php:181 admin/options.php:70
+msgid "Use adjusted bounce rate?"
+msgstr "¿Usar tasa de rebote ajustada?"
+
+#: admin/boot.php:186 admin/options.php:79
+msgid "Change enqueue order?"
+msgstr "¿Cambiar orden del turno?"
+
+#: admin/boot.php:191 admin/options.php:88
+msgid "Disable all display features functionality?"
+msgstr "¿Desactivar todas las funciones de la pantalla?"
+
+#: admin/boot.php:196 admin/options.php:97
+msgid "Use Anonymize IP? (Required by law for some countries)"
+msgstr "¿Usar IP Anónima? (Requerimiento legal en algunos países)"
+
+#: admin/boot.php:201 admin/options.php:106 admin/options.php:108
+msgid "Track logged in Administrators?"
+msgstr "¿Registrados en Administradores?"
+
+#: admin/boot.php:232
+msgid "Get ultimate plugin free"
+msgstr "Obtener el ultimate plugin gratis"
+
+#: admin/options.php:22
+msgid "<strong>Google Analytics cache</strong>."
+msgstr "<strong>Google Analytics cache</strong>."
+
+#: admin/options.php:22
+msgid ""
+"To improve Google Page Speed indicators Analytics caching is needed. "
+"However, it can also slightly increase your website loading speed, because "
+"Analytics js files will load locally. The second case that you might need "
+"these settings is the usual Google Analytics connection to your website. You "
+"do not need to do this with other plugins or insert the tracking code into "
+"your theme."
+msgstr ""
+"Para mejorar el ranking en Google Page Speed, es necesario el almacenamiento "
+"en caché de Analytics. con esto, aumentará ligeramente la velocidad de carga "
+"de su sitio web, ya que los archivos de Analytics js se cargarán localmente. "
+"El segundo caso en el que puede necesitar estos ajustes, es con la conexión "
+"habitual de Google Analytics a su sitio web. No necesita hacer esto con "
+"otros plugins ni insertar el código de seguimiento en su tema."
+
+#: admin/options.php:31
+msgid ""
+"If you enable this option, the plugin will begin to save a local copy of "
+"Google Analytics to speed up the loading of your website and improve Google "
+"Page Speed."
+msgstr ""
+"Si habilita esta opción, el complemento comenzará a guardar una copia local "
+"de Google Analytics acelerando la carga de su sitio web y mejorando el "
+"ranking en Google Page Speed ."
+
+#: admin/options.php:31
+msgid ""
+"ATTENTION! Before using this option, remove the previously installed Google "
+"Analytics code inside your theme or plugins associated with this feature!"
+msgstr ""
+"¡ATENCIÓN! ¡Antes de usar esta opción, elimine el código de Google Analytics "
+"instalado previamente dentro de su tema o los complementos asociados con "
+"esta función!"
+
+#: admin/options.php:51
+msgid "Set the Google Analytics tracking code."
+msgstr "Configure el código de seguimiento de Google Analytics."
+
+#: admin/options.php:62
+msgid "Save GA in"
+msgstr "Guardar GA en"
+
+#: admin/options.php:63
+msgid "Select location for the Google Analytics code."
+msgstr "Seleccione la ubicación para el código de Google Analytics."
+
+#: admin/options.php:73
+msgid ""
+"Essentially, you set up an event which is triggered after a user spends a "
+"certain amount of time on the landing page, telling Google Analytics not to "
+"count these users as bounces. A user may come to your website, find all of "
+"the information they need (a phone number, for example) and then leave the "
+"site without visiting another page. Without adjusted bounce rate, such a "
+"user would be considered a bounce, even though they had a successful "
+"experience. By defining a time limit after which you can consider a user to "
+"be \"engaged,\" that user would no longer count as a bounce, and you'd get a "
+"more accurate idea of whether they found what they were looking for."
+msgstr ""
+"Básicamente, configura un evento que se activa después de que un usuario "
+"pasa una cierta cantidad de tiempo en la página de destino, diciéndole a "
+"Google Analytics que no cuente a estos usuarios como rebotes. Un usuario "
+"puede ir a su sitio web, buscar toda la información que necesita (un número "
+"de teléfono, por ejemplo) y luego abandonar el sitio sin visitar otra "
+"página. Sin una tasa de rebote ajustada, dicho usuario se consideraría un "
+"rebote aunque tuviera una experiencia exitosa. Al definir un límite de "
+"tiempo, un usuario se consideraría \"comprometido\", ese usuario ya no se "
+"contaría como un rebote ya que sería obvio que encontró lo que buscó."
+
+#: admin/options.php:82
+msgid ""
+"By default, Google Analytics code is loaded before other scripts and "
+"javasscript code, but if you set the value to 100, the GA code will be "
+"loaded after all other scripts. By changing the priority, you can set code "
+"position on the page."
+msgstr ""
+"Por defecto, el código de Google Analytics se carga antes que otros scripts "
+"y el código javasscript, pero si establece el valor a 100, el código GA se "
+"cargará después de todos los demás scripts. Al cambiar la prioridad, puede "
+"establecer la posición del código en la página."
+
+#: admin/options.php:90
+#, php-format
+msgid "Disable all <a href=\"%s\">display features functionality?</a>"
+msgstr ""
+"Deshabilitar todas las <a href=\"%s\">¿Características de funciones?</a>"
+
+#: admin/options.php:99
+#, php-format
+msgid ""
+"Use <a href=\"%s\">Anonymize IP?</a> (Required by law for some countries)"
+msgstr ""
+"Use <a href=\"%s\">¿Anonimizar IP?</a> (Requisito legal para algunos países)"
+
+#: admin/pages/ga_cache.php:38
+msgid "Local Google Analytics"
+msgstr "Google Analytics local"
+
+#: admin/pages/ga_cache.php:55
+msgid "General"
+msgstr "General"
+
+#: includes/classes/class.configurate-ga.php:44
+msgid "Once Weekly"
+msgstr "Una vez a la semana"
+
+#: includes/classes/class.configurate-ga.php:49
+msgid "Twice Monthly"
+msgstr "Dos veces al mes"
+
+#: includes/classes/class.configurate-ga.php:54
+msgid "Once Monthly"
+msgstr "Una vez al mes"
+
+#: simple_google_analytics.php:83
+msgid "Webcraftic Local Google Analytics"
+msgstr "Webcraftic Local Google Analytics"

@@ -4,8 +4,8 @@ if (isset($_POST['submit']) && wp_verify_nonce($_POST['wp_filemanager_root_nonce
     $save = update_option('wp_file_manager_settings', 
 		array(
 			'public_path' => isset($_POST['public_path']) ? htmlentities($_POST['public_path']) : '',
-			'fm_syntax_checker' => isset($_POST['fm_syntax_checker']) ? htmlentities($_POST['fm_syntax_checker']) : '',
-			'fm_enable_trash' => isset($_POST['fm_enable_trash']) ? htmlentities($_POST['fm_enable_trash']) : ''
+            'fm_enable_trash' => isset($_POST['fm_enable_trash']) ? htmlentities($_POST['fm_enable_trash']) : '',
+            'fm_enable_media_upload' => isset($_POST['fm_enable_media_upload']) ? htmlentities($_POST['fm_enable_media_upload']) : '',
 			)
 		);
     if ($save) {
@@ -20,7 +20,7 @@ if (isset($_POST['submit']) && wp_verify_nonce($_POST['wp_filemanager_root_nonce
 }
 $settings = get_option('wp_file_manager_settings'); ?>
 <div class="wrap fm_rootWrap">
-<h3 class="fm_headingTitle"><?php _e('Settings - Root Directory', 'wp-file-manager'); ?></h3>
+<h3 class="fm_headingTitle"><?php _e('Preferences', 'wp-file-manager'); ?></h3>
 <?php $path = str_replace('\\', '/', ABSPATH); ?>
 <div class="fm_whiteBg">
 <form action="" method="post">
@@ -36,18 +36,18 @@ $settings = get_option('wp_file_manager_settings'); ?>
 </td>
 </tr>
 <tr>
-<th><?php _e('Enable Syntax Checker?', 'wp-file-manager'); ?></th>
-<td>
-<input name="fm_syntax_checker" type="checkbox" id="fm_syntax_checker" value="1" class="regular-text" <?php echo (isset($settings['fm_syntax_checker']) && !empty($settings['fm_syntax_checker']) && $settings['fm_syntax_checker'] == 1) ? 'checked="checked"' : ''; ?>>
-<p class="description mb15" style="color:#F00"><?php _e('When the Syntax Checker is enabled, the code updates being made to PHP files will be checked for syntax errors. If a syntax error is found, the updates will not be saved and a message box will appear which will define the error found. This checker will help prevent website downtime issues due to syntax errors.', 'wp-file-manager'); ?>
-</p>
-</td>
-</tr>
-<tr>
 <th><?php _e('Enable Trash?', 'wp-file-manager'); ?></th>
 <td>
 <input name="fm_enable_trash" type="checkbox" id="fm_enable_trash" value="1" class="regular-text" <?php echo (isset($settings['fm_enable_trash']) && !empty($settings['fm_enable_trash']) && $settings['fm_enable_trash'] == 1) ? 'checked="checked"' : ''; ?>>
 <p class="description mb15"><?php _e('After enable trash, your files will go to trash folder.', 'wp-file-manager'); ?>
+</p>
+</td>
+</tr>
+<tr>
+<th><?php _e('Enable Files Upload to Media Library?', 'wp-file-manager'); ?></th>
+<td>
+<input name="fm_enable_media_upload" type="checkbox" id="fm_enable_media_upload" value="1" class="regular-text" <?php echo (isset($settings['fm_enable_media_upload']) && !empty($settings['fm_enable_media_upload']) && $settings['fm_enable_media_upload'] == 1) ? 'checked="checked"' : ''; ?>>
+<p style="color:#F00" class="description mb15"><?php _e('After enabling this all files will go to media library.', 'wp-file-manager'); ?>
 </p>
 </td>
 </tr>

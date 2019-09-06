@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Select foreign key in edit form
 * @link https://www.adminer.org/plugins/#use

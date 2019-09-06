@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\App\Plugin as Ari_Plugin;
 use Ari\Utils\Request as Request;
 use Ari_Adminer\Helpers\Settings as Settings;
@@ -121,7 +123,7 @@ class Plugin extends Ari_Plugin {
                 array(
                     'id' => 'adminer-link',
                     'title' => __( 'Adminer', 'ari-adminer' ),
-                    'href'  => get_admin_url( null, '/admin.php?page=ari-adminer-run-adminer&action=run&noheader=1' ),
+                    'href'  => get_admin_url( null, '/admin.php?page=ari-adminer-run-adminer&action=run&noheader=1&_wpnonce=' . wp_create_nonce( ARIADMINER_NONCE ) ),
                     'meta' => array(
                         'target' => '_blank',
                     )

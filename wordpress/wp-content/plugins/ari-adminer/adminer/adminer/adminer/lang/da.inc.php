@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $translations = array(
 	'System' => 'System',
 	'Server' => 'Server',

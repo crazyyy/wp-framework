@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 define( 'ARI_UTILS_OPENSSL_RPB_SUPPORTED', function_exists( 'openssl_random_pseudo_bytes' ) );
 
 class Utils {

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 page_header(lang('Database schema'), "", array(), h(DB . ($_GET["ns"] ? ".$_GET[ns]" : "")));
 
 $table_pos = array();

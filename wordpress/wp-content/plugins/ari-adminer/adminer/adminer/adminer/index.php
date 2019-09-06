@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 /** Adminer - Compact database management
 * @link https://www.adminer.org/
 * @author Jakub Vrana, https://www.vrana.cz/

@@ -1,0 +1,478 @@
+# Translation of Plugins - Clearfy in Spanish (Spain)
+# This file is distributed under the same license as the Plugins - Clearfy – WordPress optimization plugin and disable ultimate tweaker - Development (trunk) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-04-28 06:31+0300\n"
+"PO-Revision-Date: 2019-04-28 06:31+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/ajax/change-flag.php:26
+msgid "Required arguments of slug, flag is empty!"
+msgstr "Argumentos requeridos de slug, bandera está vacía!"
+
+#: admin/ajax/change-flag.php:38
+#, php-format
+msgid "Method %s is not found!"
+msgstr "¡El método %s no se encuentra!"
+
+#: admin/boot.php:55
+#, php-format
+msgid ""
+"We found that you have the plugin %s installed. The functions of this plugin "
+"already exist in %s. Please deactivate plugin %s to avoid conflicts between "
+"plugins' functions."
+msgstr ""
+"Usted tiene el plugin %s instalado. Las funciones de este complemento ya "
+"existen en %s. Desactive el complemento %s para evitar conflictos entre las "
+"funciones ambos plugin."
+
+#: admin/boot.php:56
+#, php-format
+msgid ""
+"If you do not want to deactivate the plugin %s for some reason, we strongly "
+"recommend do not use the same plugins' functions at the same time!"
+msgstr ""
+"Si no desea desactivar el plugin %s por algún motivo, le recomendamos que no "
+"utilice las mismas funciones de ambos plugin al mismo tiempo."
+
+#: admin/boot.php:100
+msgid "Disable plugin updates"
+msgstr "Deshabilitar actualizaciones de plugin"
+
+#: admin/boot.php:106
+msgid "Disable theme updates"
+msgstr "Deshabilitar actualizaciones de temas"
+
+#: admin/boot.php:112 admin/pages/updates.php:128
+msgid "Disable Automatic Translation Updates"
+msgstr "Deshabilitar actualizaciones de traducción automática"
+
+#: admin/boot.php:117
+msgid "Disable wordPress core updates"
+msgstr "Deshabilitar las actualizaciones del Core WordPress."
+
+#: admin/boot.php:123 admin/pages/updates.php:180
+msgid "Enable updates for VCS Installations"
+msgstr "Habilitar actualizaciones para instalaciones VCS"
+
+#: admin/boot.php:128
+msgid "Plugin filters"
+msgstr "Filtros de plugin"
+
+#: admin/boot.php:133 admin/pages/updates.php:190
+msgid "Updates nags only for Admin"
+msgstr "Actualizaciones de nags solo para admin"
+
+#: admin/boot.php:138 admin/pages/updates.php:238 admin/pages/updates.php:245
+msgid "Core notifications"
+msgstr "Notificaciones genéricas"
+
+#: admin/boot.php:143
+msgid "Notify me when update successful installed"
+msgstr "Notificarme cuando la actualización sea exitosa"
+
+#: admin/boot.php:148 admin/pages/updates.php:229
+msgid "Email address"
+msgstr "Dirección de correo electrónico"
+
+#: admin/boot.php:160
+msgid "One click disable all updates"
+msgstr "Deshabilitar todas las actualizaciones con un click"
+
+#: admin/boot.php:181
+msgid "Get ultimate plugin free"
+msgstr "Obtener el ultimate plugin gratis"
+
+#: admin/boot.php:230 admin/boot.php:275
+msgid "Update manager"
+msgstr "Gestor de actualizaciones"
+
+#: admin/boot.php:238
+msgid "Auto-update disabled"
+msgstr "Actualización automática deshabilitada"
+
+#: admin/boot.php:239
+msgid "Auto-update enabled"
+msgstr "Actualización automática habilitada"
+
+#: admin/boot.php:240
+msgid "Update disabled"
+msgstr "Actualización deshabilitada"
+
+#: admin/boot.php:241
+msgid "Translation update disabled"
+msgstr "Actualización de traducción desactivada"
+
+#: admin/pages/advanced.php:43
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: admin/pages/advanced.php:71
+msgid "Please, wait 90 sec. to see the forced automatic update result."
+msgstr ""
+"Por favor, espera 90 Seg. para ver resultados de la actualizacion automática "
+"forzada."
+
+#: admin/pages/advanced.php:81
+msgid "Force Automatic Updates"
+msgstr "Forzar actualizaciones automáticas"
+
+#: admin/pages/advanced.php:83
+msgid ""
+"This will attempt to force automatic updates. This is useful for debugging."
+msgstr ""
+"Esto intentará forzar actualizaciones automáticas. Esto es útil para la "
+"depuración."
+
+#: admin/pages/advanced.php:84
+msgid "Force update"
+msgstr "Forzar actualización"
+
+#: admin/pages/plugins.php:72
+msgid "Plugins"
+msgstr "Plugins"
+
+#: admin/pages/plugins.php:91
+msgid ""
+"- To disable updates individually choose the “Manual or automatic plugin "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"- Para deshabilitar las actualizaciones individualmente, elija la opción "
+"\"Actualizaciones de plugins manuales o automáticas\", luego guarde las "
+"configuraciones y vuelva a esta página."
+
+#: admin/pages/plugins.php:95
+msgid ""
+"- To configure plugin auto updates individually, choose the “Enable auto "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"- Para configurar las actualizaciones automáticas de plugin de forma "
+"individual, elija la opción \"Habilitar actualizaciones automáticas\" y "
+"luego guarde la configuración y vuelva a esta página."
+
+#: admin/pages/plugins.php:326
+msgid "Plugins list"
+msgstr "Lista de plugins"
+
+#: admin/pages/plugins.php:329
+msgid "This page you can individually disable plugin updates and auto updates."
+msgstr ""
+"Esta página puede deshabilitar individualmente las actualizaciones de "
+"complementos y actualizaciones automáticas."
+
+#: admin/pages/plugins.php:345 admin/pages/themes.php:321
+msgid "Bulk actions"
+msgstr "Acciones a granel"
+
+#: admin/pages/plugins.php:346 admin/pages/plugins.php:366
+#: admin/pages/themes.php:322 admin/pages/themes.php:340
+#: admin/pages/updates.php:102 admin/pages/updates.php:117
+#: admin/pages/updates.php:139
+msgid "Disable updates"
+msgstr "Deshabilitar actualizaciones"
+
+#: admin/pages/plugins.php:347 admin/pages/themes.php:323
+msgid "Enable updates"
+msgstr "Activar actualizaciones"
+
+#: admin/pages/plugins.php:348 admin/pages/themes.php:324
+msgid "Enable auto-updates"
+msgstr "Activar auto actualizaciones"
+
+#: admin/pages/plugins.php:349 admin/pages/themes.php:325
+msgid "Disable auto-updates"
+msgstr "Deshabilitar las actualizaciones automáticas"
+
+#: admin/pages/plugins.php:350 admin/pages/themes.php:326
+msgid "Disable translation updates"
+msgstr "Deshabilitar actualizaciones de traducción"
+
+#: admin/pages/plugins.php:351 admin/pages/themes.php:327
+msgid "Enable translation updates"
+msgstr "Habilitar actualizaciones de traducción"
+
+#: admin/pages/plugins.php:352 admin/pages/plugins.php:375
+msgid "Hide plugin"
+msgstr "Ocultar plugin"
+
+#: admin/pages/plugins.php:353
+msgid "Show plugin"
+msgstr "Mostrar plugin"
+
+#: admin/pages/plugins.php:355 admin/pages/themes.php:329
+msgid "Apply"
+msgstr "Aplicar"
+
+#: admin/pages/plugins.php:364
+msgid "Plugin"
+msgstr "Plugin"
+
+#: admin/pages/plugins.php:369 admin/pages/themes.php:343
+msgid "Auto-updates"
+msgstr "Actualizaciones automáticas"
+
+#: admin/pages/plugins.php:372 admin/pages/themes.php:346
+msgid "Translation updates"
+msgstr "Actualizaciones de traducción"
+
+#: admin/pages/plugins.php:441 admin/pages/themes.php:396
+msgid "Select"
+msgstr "Seleccionar"
+
+#: admin/pages/plugins.php:469 admin/pages/plugins.php:486
+#: admin/pages/plugins.php:502 admin/pages/plugins.php:518
+#: admin/pages/themes.php:420 admin/pages/themes.php:439
+#: admin/pages/themes.php:458
+msgid "On"
+msgstr "On"
+
+#: admin/pages/plugins.php:470 admin/pages/plugins.php:487
+#: admin/pages/plugins.php:503 admin/pages/plugins.php:519
+#: admin/pages/themes.php:421 admin/pages/themes.php:440
+#: admin/pages/themes.php:459
+msgid "Off"
+msgstr "Off"
+
+#: admin/pages/themes.php:69
+msgid "Themes"
+msgstr "Plantillas"
+
+#: admin/pages/themes.php:88
+msgid ""
+"- To disable updates individually choose the “Manual or automatic theme "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"- Para deshabilitar las actualizaciones por separado, elija la opción "
+"“Actualizaciones de temas manuales o automáticas”, luego guarde las "
+"configuraciones y vuelva a esta página."
+
+#: admin/pages/themes.php:92
+msgid ""
+"- To configure theme auto updates individually, choose the “Enable auto "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"- Para configurar las actualizaciones automáticas del tema individualmente, "
+"elija la opción \"Habilitar actualizaciones automáticas\" y luego guarde la "
+"configuración y vuelva a esta página."
+
+#: admin/pages/themes.php:302
+msgid "Themes list"
+msgstr "Listado de Plantillas"
+
+#: admin/pages/themes.php:305
+msgid "This page you can individually disable theme updates and auto updates."
+msgstr ""
+"En esta página puedes deshabilitar individualmente las actualizaciones de "
+"temas y actualizaciones automáticas."
+
+#: admin/pages/themes.php:338
+msgid "Theme"
+msgstr "Plantilla"
+
+#: admin/pages/updates.php:43
+msgid "Updates manager"
+msgstr "Gestor de actualizaciones"
+
+#: admin/pages/updates.php:44
+msgid "Manage all site updates"
+msgstr "Administrar todas las actualizaciones del sitio"
+
+#: admin/pages/updates.php:57
+msgid "Updates"
+msgstr "Actualizaciones"
+
+#: admin/pages/updates.php:57
+msgid "General"
+msgstr "General"
+
+#: admin/pages/updates.php:91
+msgid "General settings for WordPress, plugins and themes updates"
+msgstr ""
+"Configuraciones generales para WordPress, complementos y actualizaciones de "
+"temas."
+
+#: admin/pages/updates.php:91
+msgid ""
+"This page, you can enable or disable automatic updates. To test the "
+"automatic updates, click the \"Advanced\" tab."
+msgstr ""
+"En esta página, puede habilitar o deshabilitar actualizaciones automáticas. "
+"Para probar las actualizaciones automáticas, haga clic en la pestaña  "
+"\"Avanzado \"."
+
+#: admin/pages/updates.php:98
+msgid "Plugin Updates"
+msgstr "Actualizaciones de plugins"
+
+#: admin/pages/updates.php:100 admin/pages/updates.php:115
+msgid "Manual updates"
+msgstr "Actualizaciones manuales"
+
+#: admin/pages/updates.php:101 admin/pages/updates.php:116
+msgid "Enable auto updates"
+msgstr "Habilitar actualizaciones automáticas"
+
+#: admin/pages/updates.php:105
+msgid ""
+"You can disable all plugin updates or choose manual or automatic update mode."
+msgstr ""
+"Puede deshabilitar todas las actualizaciones de plugins o elegir el modo de "
+"actualización manual o automática."
+
+#: admin/pages/updates.php:113
+msgid "Theme Updates"
+msgstr "Actualizaciones del tema"
+
+#: admin/pages/updates.php:120
+msgid ""
+"You can disable all themes updates or choose manual or automatic update mode."
+msgstr ""
+"Puede desactivar todas las actualizaciones de temas o elegir el modo de "
+"actualización manual o automática."
+
+#: admin/pages/updates.php:137
+msgid "WordPress Core Updates"
+msgstr "Actualizaciones del Core WordPress"
+
+#: admin/pages/updates.php:140
+msgid "Disable auto updates"
+msgstr "Deshabilitar actualizaciones automáticas"
+
+#: admin/pages/updates.php:143
+msgid "Allow minor auto updates"
+msgstr "Permitir actualizaciones automáticas menores"
+
+#: admin/pages/updates.php:147
+msgid "Allow major auto updates"
+msgstr "Permitir actualizaciones automáticas importantes"
+
+#: admin/pages/updates.php:151
+msgid "Allow development auto updates"
+msgstr "Permitir actualizaciones automáticas de desarrollo"
+
+#: admin/pages/updates.php:155
+msgid ""
+"You can disable all core WordPress updates, or disable only automatic "
+"updates. Also you can select the update mode. By default (minor)"
+msgstr ""
+"deshabilitar actualizaciones básicas de WordPress o deshabilitar solo las "
+"actualizaciones automáticas. También puede seleccionar el modo de "
+"actualización. Por defecto (menor)"
+
+#: admin/pages/updates.php:155
+msgid "Major - automatically update to major releases (e.g., 4.1, 4.2, 4.3)."
+msgstr ""
+"Mayor - se actualiza automáticamente a las versiones principales (por "
+"ejemplo, 4.1, 4.2, 4.3)."
+
+#: admin/pages/updates.php:155
+msgid ""
+"Minor - automatically update to minor releases (e.g., 4.1.1, 4.1.2, 4.1.3).."
+msgstr ""
+"Menor - se actualiza automáticamente a versiones menores (por ejemplo, "
+"4.1.1, 4.1.2, 4.1.3).."
+
+#: admin/pages/updates.php:155
+msgid "Development - update automatically to Bleeding Edge releases."
+msgstr ""
+"Desarrollo - actualizar automáticamente a las versiones de Bleeding Edge."
+
+#: admin/pages/updates.php:182
+msgid ""
+"Enable Automatic Updates even if a VCS folder (.git, .hg, .svn) was found in "
+"the WordPress directory"
+msgstr ""
+"Habilite las actualizaciones automáticas incluso si se encuentra una carpeta "
+"VCS (.git, .hg, .svn) en el directorio de WordPress"
+
+#: admin/pages/updates.php:192
+msgid ""
+"This plugin allows you to hide the update WordPress reminder from all users "
+"that are not assumed Administrators (cannot upgrade plugins).\n"
+"\n"
+"If you have multiple users then this means those who are not admins don’t "
+"need to see the message. Useful for CMS based sites, so the client doesn’t "
+"see the notice."
+msgstr ""
+"Este plugin te permite ocultar el recordatorio de actualización de WordPress "
+"a todos los usuarios que no se consideren administradores (no se pueden "
+"actualizar los complementos).\n"
+"\n"
+"Si tiene varios usuarios, esto significa que aquellos que no son "
+"administradores no necesitan ver el mensaje. Útil para sitios basados en CMS "
+"donde usuarios no admin no veran el aviso."
+
+#: admin/pages/updates.php:200
+msgid "Email Notifications"
+msgstr "Notificaciones Email"
+
+#: admin/pages/updates.php:200
+msgid ""
+"Email notifications are send once a day, you can choose what notifications "
+"to send below."
+msgstr ""
+"Las notificaciones vía Email se envían una vez al día, puede elegir qué "
+"notificaciones enviar a continuación."
+
+#: admin/pages/updates.php:207
+msgid "Update available"
+msgstr "Actualización disponible"
+
+#: admin/pages/updates.php:208
+msgid "Send me emails when an update is available."
+msgstr ""
+"Enviarme correos electrónicos cuando haya una actualización disponible."
+
+#: admin/pages/updates.php:218
+msgid "Successful update"
+msgstr "Actualización exitosa"
+
+#: admin/pages/updates.php:219
+msgid "Send me emails when something has been updated."
+msgstr "Enviarme correos electrónicos cuando algo se haya actualizado."
+
+#: admin/pages/updates.php:230
+msgid "Seperate email addresses using commas."
+msgstr "Separe las direcciones de correo con comas."
+
+#: admin/pages/updates.php:238
+msgid ""
+"Core notifications are handled by WordPress and not by this plugin. You can "
+"only disable them, changing your email address in the settings above will "
+"not affect these notifications."
+msgstr ""
+"Las notificaciones genéricas son manejadas por WordPress y no por este "
+"complemento. Solo puede deshabilitarlas, cambiar su dirección de correo "
+"electrónico en la configuración anterior no afectará estas notificaciones."
+
+#: admin/pages/updates.php:246
+msgid ""
+"By default wordpress sends an email when a core update happend. Uncheck this "
+"box to disable these emails."
+msgstr ""
+"Por defecto, wordpress envía un correo electrónico cuando se produce una "
+"actualización del núcleo. Desmarque esta casilla para deshabilitar estos "
+"correos electrónicos."
+
+#: webcraftic-updates-manager.php:78
+msgid "Webcraftic Updates Manager"
+msgstr "Gestor de Actualizaciones Webcraftic"

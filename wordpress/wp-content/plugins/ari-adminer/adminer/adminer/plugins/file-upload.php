@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 //! delete
 
 /** Edit fields ending with "_path" by <input type="file"> and link to the uploaded files from select

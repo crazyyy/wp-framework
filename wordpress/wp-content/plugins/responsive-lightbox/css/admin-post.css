@@ -25,6 +25,16 @@
 	cursor: default;
 }
 
+#rl-modal-gallery .rl-galleries-list .attachment .format-landscape {
+	width: auto;
+	height: 100%;
+}
+
+#rl-modal-gallery .rl-galleries-list .attachment .format-portrait {
+	width: 100%;
+	height: auto;
+}
+
 #rl-modal-gallery .rl-status-active {
 	opacity: 1;
 }

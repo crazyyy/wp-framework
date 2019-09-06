@@ -12,15 +12,14 @@
 class WPSEO_Bulk_Title_Editor_List_Table extends WPSEO_Bulk_List_Table {
 
 	/**
-	 * Current type for this class will be title
+	 * Current type for this class will be title.
 	 *
 	 * @var string
 	 */
 	protected $page_type = 'title';
 
-
 	/**
-	 * Settings with are used in __construct
+	 * Settings with are used in __construct.
 	 *
 	 * @var array
 	 */
@@ -38,7 +37,7 @@ class WPSEO_Bulk_Title_Editor_List_Table extends WPSEO_Bulk_List_Table {
 	protected $target_db_field = 'title';
 
 	/**
-	 * The columns shown on the table
+	 * The columns shown on the table.
 	 *
 	 * @return array
 	 */
@@ -55,7 +54,7 @@ class WPSEO_Bulk_Title_Editor_List_Table extends WPSEO_Bulk_List_Table {
 	}
 
 	/**
-	 * Parse the title columns
+	 * Parse the title columns.
 	 *
 	 * @param string $column_name Column name.
 	 * @param object $record      Data object.
@@ -70,7 +69,10 @@ class WPSEO_Bulk_Title_Editor_List_Table extends WPSEO_Bulk_List_Table {
 
 		switch ( $column_name ) {
 			case 'col_existing_yoast_seo_title':
-				// @todo Inconsistent echo/return behavior R.
+				// @todo Inconsistent return/echo behavior R.
+				// I traced the escaping of the attributes to WPSEO_Bulk_List_Table::column_attributes.
+				// The output of WPSEO_Bulk_List_Table::parse_meta_data_field is properly escaped.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				echo $this->parse_meta_data_field( $record->ID, $attributes );
 				break;
 

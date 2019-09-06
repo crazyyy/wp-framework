@@ -1,0 +1,618 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: clearfy\n"
+"POT-Creation-Date: 2018-10-16 22:49+0300\n"
+"PO-Revision-Date: 2018-12-22 16:06+0300\n"
+"Last-Translator: alex.kovalevv@gmail.com <alex.kovalevv@gmail.com>\n"
+"Language-Team: Alex Kovalev <alex.kovalevv@gmail.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+
+#: admin/boot.php:56
+#, php-format
+msgid ""
+"We found that you have the plugin %s installed. The functions of this plugin "
+"already exist in %s. Please deactivate plugin %s to avoid conflicts between "
+"plugins functions."
+msgstr ""
+"Мы обнаружили, что у вас установлен плагин %s, функции этого плагина уже "
+"есть в %s. Пожалуйста, деактивируйте плагин %s во избежание конфликтов между "
+"функциями плагинов."
+
+#: admin/boot.php:57
+#, php-format
+msgid ""
+"If you do not want to deactivate the plugin %s for some reason, we strongly "
+"recommend do not use the same plugins functions at the same time!"
+msgstr ""
+"Если по какой-то причине вы не хотите деактивировать плагин %s, то мы "
+"настоятельно рекомендуем не использовать похожие функции плагинов "
+"одновременно!"
+
+#: admin/boot.php:117 admin/pages/cyrlitera.php:118
+msgid "Use transliteration"
+msgstr "Использовать транслитерацию"
+
+#: admin/boot.php:123 admin/pages/cyrlitera.php:136
+msgid "Force transliteration"
+msgstr "Принудильная траслитерация"
+
+#: admin/boot.php:129 admin/pages/cyrlitera.php:165
+msgid "Don't use transliteration in frontend"
+msgstr "Не использовать транслитерацию на фронтенде"
+
+#: admin/boot.php:135 admin/pages/cyrlitera.php:127
+msgid "Convert file names"
+msgstr "Конвертировать имена файлов"
+
+#: admin/boot.php:141 admin/pages/cyrlitera.php:145
+msgid "Convert file names into lowercase"
+msgstr "Преобразовывать имена файлов в нижний регистр"
+
+#: admin/boot.php:147 admin/pages/cyrlitera.php:155
+msgid "Redirection old URLs to new ones"
+msgstr "Перенаправление со старых URL на новые"
+
+#: admin/boot.php:153 admin/pages/cyrlitera.php:175
+msgid "Character Sets"
+msgstr "Наборы символов"
+
+#: admin/boot.php:174
+msgid "Get ultimate plugin free"
+msgstr "Получите полную версию плагина бесплатно"
+
+#: admin/pages/cyrlitera.php:39 admin/pages/cyrlitera.php:57
+msgid "Transliteration"
+msgstr "Транслитерация"
+
+#: admin/pages/cyrlitera.php:57
+msgid "General"
+msgstr "Основные"
+
+#: admin/pages/cyrlitera.php:111
+msgid "Transliteration of Cyrillic alphabet."
+msgstr "Транслитерация кириллицы."
+
+#: admin/pages/cyrlitera.php:111
+msgid ""
+"Converts Cyrillic permalinks of post, pages, taxonomies and media files to "
+"the Latin alphabet. Supports Russian, Ukrainian, Georgian, Bulgarian "
+"languages. Example: http://site.dev/последние-новости -> http://site.dev/"
+"poslednie-novosti"
+msgstr ""
+"Конвертирует кириллические постоянные ссылки записей, страниц, таксономий и "
+"медиафайлов в латиницу. Поддерживает Русский, Украинский, Грузинский, "
+"Болгарский языки. Пример: http://site.dev/последние-новости -> http://site."
+"dev/poslednie-novosti"
+
+#: admin/pages/cyrlitera.php:120
+msgid ""
+"If you enable this option, all URLs of new pages, posts, tags, and "
+"categories will automatically be converted to Latin."
+msgstr ""
+"Если включить эту опцию, все URL новых страниц, записей, меток, рубрик будут "
+"автоматически конвертироваться в латиницу."
+
+#: admin/pages/cyrlitera.php:129
+msgid ""
+"This option works only for new media library files. All Cyrillic names of "
+"the downloaded files will be converted to names with Latin characters."
+msgstr ""
+"Эта опция работает только для новых файлов медиа библиотеки. Все "
+"кириллические имена загружаемых файлов, будут преобразованы в имена с "
+"латинскими символами."
+
+#: admin/pages/cyrlitera.php:138
+#, php-format
+msgid ""
+"If any of your plugins affects transliteration of links and file names, you "
+"can use this option to change the plugin of %s to overwrite the changes of "
+"the other plugins."
+msgstr ""
+"Если какой-то из установленных у вас плагинов влияет на траслитерацию "
+"постоянных ссылок и файловых имен, включите эту опцию, чтобы %s "
+"перезаписывал изменения других плагинов."
+
+#: admin/pages/cyrlitera.php:147
+msgid ""
+"This function works only for new upload files. Example: File_Name.jpg -> "
+"file_name.jpg"
+msgstr ""
+"Эта функция работает только для новых загружаемых файлов. Пример: File_Name."
+"jpg -> file_name.jpg"
+
+#: admin/pages/cyrlitera.php:157
+msgid ""
+"If at the time of the plugin installation you had pages with unconverted "
+"links, use this option to redirect users from old to new URLs with the Latin "
+"alphabet."
+msgstr ""
+"Если на момент установки плагина у вас были страницы с не преобразованными "
+"ссылками, используйте эту опцию, чтобы пользователи, перешедшие по старым "
+"ссылкам, были перенаправлены на новые URL на латинице."
+
+#: admin/pages/cyrlitera.php:167
+msgid "Enable when have a problem in frontend."
+msgstr "Включите эту опцию, если у вас есть проблемы с внешней стороны сайта."
+
+#: admin/pages/cyrlitera.php:176
+msgid ""
+"You can supplement current base of transliteration characters. Write pairs "
+"of values separated by commas. Example:"
+msgstr ""
+"Вы можете дополнить текущую базу символов транслитерации, пишите пары "
+"значений через запятую. Пример: "
+
+#: admin/pages/cyrlitera.php:242
+msgid ""
+"If at the time of the plugin installation you already had posts, pages, tags "
+"and categories, click on this button and the plugin will automatically "
+"convert URLs into Latin. Attention! Previously uploaded files will not be "
+"converted."
+msgstr ""
+"Если на момент установки плагина у вас уже были созданы записи, страницы, "
+"метки и рубрики, то нажмите на эту кнопку и плагин автоматически преобразует "
+"URLы в латинские. Внимание! Ранее загруженные файлы преобразованы не будут."
+
+#: admin/pages/cyrlitera.php:251
+msgid "Convert already created posts and categories"
+msgstr "Преобразовать уже созданные записи и рубрики"
+
+#: admin/pages/cyrlitera.php:253
+msgid "Url of old posts, pages,terms,tags successfully converted into Latin!"
+msgstr ""
+"Url старых записей, страниц, тегов и рубрик были успешно конвертированы в "
+"литинские!"
+
+#: admin/pages/cyrlitera.php:263
+msgid ""
+"Allows you to restore converted URLs by using the \"Convert already created "
+"posts and categories\" button. This can be useful in case of incorrect URLs "
+"or incorrect transliteration of some characters. You can roll back changes "
+"and advance the character sets above to correct the plugin's work. "
+msgstr ""
+"Позволяет восстановить преобразованные с помощью кнопки “Преобразовать уже "
+"созданные записи и рубрики” URLы. Это может быть полезно в случае появления "
+"некорректных URL адресов или неправильной транслитерации определенных "
+"символов. У вас есть возможность откатить изменения и изменить наборы "
+"символов выше, чтобы скорректировать работу плагина."
+
+#: admin/pages/cyrlitera.php:272
+msgid "Rollback changes"
+msgstr "Откатить изменения"
+
+#: admin/pages/cyrlitera.php:274
+msgid "The rollback of new changes was successful!"
+msgstr "Откат новых изменений прошел успешно!"
+
+#: cyrlitera.php:63
+msgid "Webcraftic Cyrlitera"
+msgstr "Webcraftic Cyrlitera"
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has disable comments functions, so you can "
+#~ "deactivate plugin \"Webcraftic Cyrlitera\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить  "
+#~ "неиспользуемые функции», этот плагин уже имеет функции отключения "
+#~ "комментариев, поэтому вы можете отключить плагин «Webcraftic Cyrlitera»!"
+
+#~ msgid ""
+#~ "You can supplement current base of transliteration characters. Write "
+#~ "pairs of values in lower case separated by commas. Example:"
+#~ msgstr ""
+#~ "Вы можете дополнить текущую базу символов транслитерации, пишите пары "
+#~ "значений в нижнем регистре через запятую. Пример: ა=a,ბ=b"
+
+#~ msgid ""
+#~ "If any of your plugins affects transliteration of links, you can use this "
+#~ "option to change the plugin of %s to overwrite the changes of the other "
+#~ "plugins."
+#~ msgstr ""
+#~ "Если какой-то из установленных у вас плагинов влияет на траслитерацию "
+#~ "постоянный ссылок, включите эту опцию, чтобы %s перезаписывал изменения "
+#~ "других плагинов."
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has disable comments functions, so you can "
+#~ "deactivate plugin \"Cyrilic transliteration\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить  "
+#~ "неиспользуемые функции», этот плагин уже имеет функции отключения "
+#~ "комментариев, поэтому вы можете отключить плагин «Транслитерация "
+#~ "кириллицы»!"
+
+#~ msgid "Webcraftic cyrilic transliteration"
+#~ msgstr "Webcraftic транслитерация кириллицы"
+
+#~ msgid ""
+#~ "If you enable this option, the permanent URLs of all previously published "
+#~ "posts and pages will be converted into URLs with Latin characters. All "
+#~ "new pages and posts will also have a URL in the Latin alphabet."
+#~ msgstr ""
+#~ "Если включить эту опцию, постоянные URL всех ранее опубликованных записей "
+#~ "и страниц будут преобразованы в URL с латинскими символами. Все новые "
+#~ "страницы и записи, также будут иметь URL на латинице."
+
+#~ msgid "You don't have enough capability to edit this information."
+#~ msgstr "Вы не имеете разрешения на редактирование этого!"
+
+#~ msgid "Undefinded notice id."
+#~ msgstr "Не передан notice id."
+
+#~ msgid "Success"
+#~ msgstr "Успешно"
+
+#~ msgid "Hide admin notices"
+#~ msgstr "Скрыть уведомления"
+
+#~ msgid "Enable hidden notices in adminbar"
+#~ msgstr "Включить уведомления в админбаре"
+
+#~ msgid "Admin notifications, Update nags"
+#~ msgstr "Уведомления администратора, уведомления об обновлении Wordpress"
+
+#~ msgid ""
+#~ "Do you know the situation, when some plugin offers you to update to "
+#~ "premium, to collect technical data and shows many annoying notices? You "
+#~ "are close these notices every now and again but they newly appears and "
+#~ "interfere your work with WordPress. Even worse, some plugin’s authors "
+#~ "delete “close” button from notices and they shows in your admin panel "
+#~ "forever."
+#~ msgstr ""
+#~ "Вам знакома ситуация, когда какой-то плагин просит вас обновиться до "
+#~ "премиум-версии, получить права на сбор данных о вашем сайте и создает "
+#~ "много раздражающих уведомлений? Вы закрываете эти уведомления раз за "
+#~ "разом, но они вновь появляются и мешают вашей работе с WordPress. Хуже "
+#~ "того, некоторые авторы и вовсе удаляют кнопку “закрыть” из уведомлений, и "
+#~ "они висят в шапке вашей панели администратора целую вечность."
+
+#~ msgid "All notices"
+#~ msgstr "Все уведомления"
+
+#~ msgid "Hide all notices globally."
+#~ msgstr "Скрыть все уведомления глобально."
+
+#~ msgid "Only selected"
+#~ msgstr "Только выбранные"
+
+#~ msgid ""
+#~ "Hide selected notices only. You will see the link \"Hide notification "
+#~ "forever\" in each notice. Push it and they will not bother you anymore."
+#~ msgstr ""
+#~ "Скрывать только выбранные уведомления. В каждом уведомлении вы увидите "
+#~ "ссылку \"Скрыть уведомление навсегда\". Нажмите на неё и уведомление "
+#~ "будет скрыто навсегда и перестанет вас беспокоить."
+
+#~ msgid "Don't nide"
+#~ msgstr "Не скрывать"
+
+#~ msgid ""
+#~ "Do not hide notices and do not show “Hide notification forever” link for "
+#~ "admin."
+#~ msgstr ""
+#~ "Не скрывать уведомления и не показывать ссылку \"Скрыть уведомление "
+#~ "навсегда\" в уведомлениях администратора."
+
+#~ msgid ""
+#~ "Some plugins shows notifications about premium version, data collecting "
+#~ "or promote their services. Even if you push close button (that sometimes "
+#~ "are impossible), notices are shows again in some time. This option allows "
+#~ "you to control notices. Hide them all or each individually. Some plugins "
+#~ "shows notifications about premium version, data collecting or promote "
+#~ "their services. Even if you push close button (that sometimes are "
+#~ "impossible), notices are shows again in some time. This option allows you "
+#~ "to control notices. Hide them all or each individually."
+#~ msgstr ""
+#~ "Зачастую, плагины отображают уведомления о возможности перехода на "
+#~ "премиум версию, просят разрешение на сбор данных, рекламируют свои "
+#~ "услуги. Даже если вы нажмете кнопку закрыть (что не всегда возможно), "
+#~ "уведомления всё равно отобразятся через какое-то время. С помощью этой "
+#~ "настройки, вы можете контролировать эти уведомления. Скройте их все сразу "
+#~ "или каждое по отдельности."
+
+#~ msgid ""
+#~ "By default, the plugin hides all notices, which you specified. If you "
+#~ "enable this option, the plugin will collect all hidden notices and show "
+#~ "them into the top admin toolbar. It will not disturb you but will allow "
+#~ "to look notices at your convenience."
+#~ msgstr ""
+#~ "По умолчанию, плагин полностью скрывает отключенные вами уведомления. "
+#~ "Если включить эту опцию, то плагин будет собирать все скрытые вами "
+#~ "уведомления и выводить в верхней панели администратора. Это не будет вас "
+#~ "раздражать, но и позволит просматривать уведомления, когда вам это удобно."
+
+#~ msgid "Push reset hidden notices if you need to show hidden notices again."
+#~ msgstr "Нажмите кнопку \\\"Сбросить скрытые уведомления\\\""
+
+#~ msgid "Reset hidden notices (%s)"
+#~ msgstr "Сбросить скрытые уведомления (%s)"
+
+#~ msgid "Hidden notices are successfully reset, now you can see them again!"
+#~ msgstr ""
+#~ "Скрытые уведомления успешно восстановлены, теперь вы можете снова видеть "
+#~ "их!"
+
+#~ msgid "Notices"
+#~ msgstr "Уведомления"
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has disable comments functions, so you can "
+#~ "deactivate plugin \"Disable admin notices\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить  "
+#~ "неиспользуемые функции», этот плагин уже имеет функции отключения "
+#~ "комментариев, поэтому вы можете отключить плагин «Скрыть уведомления "
+#~ "администратора»!"
+
+#~ msgid "Webcraftic disable admin notices"
+#~ msgstr "Webcraftic отключить уведомления администратора"
+
+#~ msgid "Notifications %s"
+#~ msgstr "Уведомления %s"
+
+#~ msgid "Restore notice"
+#~ msgstr "Восстановить уведомление"
+
+#~ msgid "Hide notification forever"
+#~ msgstr "Скрыть уведомление навсегда"
+
+#~ msgid "Hidden notices"
+#~ msgstr "Скрытые уведомления"
+
+#~ msgid "Disable comments on the entire site"
+#~ msgstr "Отключить комментарии на всем сайте"
+
+#~ msgid "Select post types"
+#~ msgstr "Выбрать тип записи"
+
+#~ msgid "Replace external links in comments on the JavaScript code"
+#~ msgstr "Заменить внешние ссылки в комментариях на JavaScript код"
+
+#~ msgid "Replace external links from comment authors on the JavaScript code"
+#~ msgstr "Заменить внешние ссылки от авторов комментариев на код JavaScript"
+
+#~ msgid "Disable X-Pingback"
+#~ msgstr "Убрать ссылку на X-Pingback и возможность спамить pingback-ами"
+
+#~ msgid "Remove field \"site\" in comment form"
+#~ msgstr "Удаляет поле \"Сайт\" в форме комментариев"
+
+#~ msgid "Disable all comments"
+#~ msgstr "Отключить все комментарии"
+
+#~ msgid "Comments"
+#~ msgstr "Комментарии"
+
+#~ msgid ""
+#~ "Hide selected notices only. You will see the link \"Hide notification "
+#~ "forever\" in each notice. Push it and they will not bother you anymore. "
+#~ "Push <a href=\"%s\">reset hidden notices (%d)</a> if you need to show "
+#~ "hidden notices again."
+#~ msgstr ""
+#~ "Скрывать только выбранные уведомления. В каждом уведомлении вы увидите "
+#~ "ссылку \"Скрыть уведомление навсегда\". Нажмите на неё и уведомление "
+#~ "будет скрыто навсегда и перестанет вас беспокоить. Нажмите <a href=\"%s"
+#~ "\">сбросить скрытые уведомления (%d)</a>, если вам нужно восстановить "
+#~ "показ скрытых ранее уведомлений."
+
+#~ msgid "Webcraftic hide admin notices"
+#~ msgstr "Webcraftic скрыть уведомления администратора"
+
+#~ msgid "Comments tweaks"
+#~ msgstr "Инструменты комментариев"
+
+#~ msgid "All comments have been deleted."
+#~ msgstr "Все комментарии были удалены."
+
+#~ msgid ""
+#~ "An error occurred while trying to delete comments. Internal error "
+#~ "occured. Please try again later."
+#~ msgstr ""
+#~ "При попытке удалить комментарии произошла ошибка. Пожалуйста, повторите "
+#~ "попытку позже."
+
+#~ msgid "You are not allowed to view this page."
+#~ msgstr "Вам не разрешено просматривать эту страницу."
+
+#~ msgid "You do not have the selected post types!"
+#~ msgstr "Вы не выбрали еще ни одного типа записей!"
+
+#~ msgid "No comments available for deletion."
+#~ msgstr "Нет комментариев для удаления."
+
+#~ msgid ""
+#~ "Are you sure that you desire to delete all comments from the database?"
+#~ msgstr "Вы уверены, что хотите удалить все комментарии из базы данных?"
+
+#~ msgid ""
+#~ "Deleting comments will remove existing comment entries in the database "
+#~ "and cannot be reverted without a database backup."
+#~ msgstr ""
+#~ "При удалении комментариев удаляются существующие записи комментариев в "
+#~ "базе данных, они не могут быть восстановлены без резервного копирования "
+#~ "базы данных."
+
+#~ msgid "You have %s comments"
+#~ msgstr "У вас есть %s комментариев"
+
+#~ msgid "Yes, I'm sure"
+#~ msgstr "Да, я уверен"
+
+#~ msgid "No, return back"
+#~ msgstr "Нет, вернуться"
+
+#~ msgid ""
+#~ "Are you sure that you desire to delete all comments from the database for "
+#~ "the selected post types (%s)?"
+#~ msgstr ""
+#~ "Вы уверены, что хотите удалить все комментарии из базы данных для "
+#~ "выбранных типов записей (%s)?"
+
+#~ msgid "Disable comments"
+#~ msgstr "Отключить комментарии"
+
+#~ msgid "Not disable"
+#~ msgstr "Не отключать"
+
+#~ msgid "Everywhere"
+#~ msgstr "Повсюду"
+
+#~ msgid ""
+#~ "You can delete all comments in the database by clicking on this link (<a "
+#~ "href=\"%s\">cleaning comments in database</a>)."
+#~ msgstr ""
+#~ "Вы можете удалить все комментарии в базе данных, нажав на эту ссылку ( <a "
+#~ "href=\"%s\">очистка комментариев в базе данных</a> )."
+
+#~ msgid "On certain post types"
+#~ msgstr "Только выбранные типы записей"
+
+#~ msgid ""
+#~ "You can delete all comments for the selected post types. Select the post "
+#~ "types below and save the settings. After that, click the link (<a href="
+#~ "\"%s\">delete all comments for the selected post types in database</a>)."
+#~ msgstr ""
+#~ "Вы можете удалить все комментарии для выбранных типов записей. Выберите "
+#~ "типы записей ниже и сохраните настройки. После этого нажмите ссылку ( <a "
+#~ "href=\"%s\">удалите все комментарии для выбранных типов записей в базе "
+#~ "данных</a> )."
+
+#~ msgid ""
+#~ "Everywhere - Warning: This option is global and will affect your entire "
+#~ "site. Use it only if you want to disable comments everywhere. A complete "
+#~ "description of what this option does is available here"
+#~ msgstr ""
+#~ "Повсюду - предупреждение: этот параметр является глобальным и повлияет на "
+#~ "весь ваш сайт. Используйте его только в том случае, если вы хотите "
+#~ "отключить комментарии повсюду. "
+
+#~ msgid ""
+#~ "On certain post types - Disabling comments will also disable trackbacks "
+#~ "and pingbacks. All comment-related fields will also be hidden from the "
+#~ "edit/quick-edit screens of the affected posts. These settings cannot be "
+#~ "overridden for individual posts."
+#~ msgstr ""
+#~ "В некоторых типах сообщений - отключение комментариев также отключает "
+#~ "трекбэки и pingback. Все поля, связанные с комментариями, также будут "
+#~ "скрыты от экранов редактирования / быстрого редактирования затронутых "
+#~ "сообщений. Эти настройки нельзя переопределять для отдельных сообщений."
+
+#~ msgid "Select the post types for which comments will be disabled"
+#~ msgstr "Выберите типы записей, для которых комментарии будут отключены."
+
+#~ msgid ""
+#~ "Tired of spam in the comments? Do visitors leave \"blank\" comments for "
+#~ "the sake of a link to their site?"
+#~ msgstr ""
+#~ "Надоел спам в комментариях? Посетители оставляют «пустые» комментарии "
+#~ "ради ссылки на свой сайт?"
+
+#~ msgid "Removes the \"Site\" field from the comment form."
+#~ msgstr "Убирает поле «Сайт» из формы комментирования."
+
+#~ msgid ""
+#~ "Works with the standard comment form, if the form is manually written in "
+#~ "your theme-it probably will not work!"
+#~ msgstr ""
+#~ "Работает со стандартной формой комментирования, если в Вашей теме форма "
+#~ "прописана вручную - скорей всего не сработает!"
+
+#~ msgid "Recommended"
+#~ msgstr "Рекомендовано"
+
+#~ msgid ""
+#~ "Superfluous external links from comments, which can be typed from a dozen "
+#~ "and more for one article, do not bring anything good for promotion."
+#~ msgstr ""
+#~ "Внешние ссылки в комментариях, которых может быть десятки или больше на "
+#~ "одной странице, могут ухудшить продвижение вашего сайта."
+
+#~ msgid "Replaces the links of this kind of %s, on links of this kind %s"
+#~ msgstr ""
+#~ "Заменяет ссылки %s, на span тег и устанавливает переход с помощью "
+#~ "JavaScript %s"
+
+#~ msgid ""
+#~ "Up to 90 percent of comments in the blog can be left for the sake of an "
+#~ "external link. Even nofollow from page weight loss here does not help."
+#~ msgstr ""
+#~ "До 90 процентов комментариев в блоге оставляют ради внешней ссылки. Не "
+#~ "поможет даже nofollow от потери веса страницы."
+
+#~ msgid ""
+#~ "Replaces the links of the authors of comments on the JavaScript code, it "
+#~ "is impossible to distinguish it from usual links."
+#~ msgstr ""
+#~ "Заменяет ссылки авторов комментариев на JavaScript код, его невозможно "
+#~ "отличить от обычной ссылки."
+
+#~ msgid "In some Wordpress topics this may not work."
+#~ msgstr "В некоторых темах Wordpress это может не сработать."
+
+#~ msgid "Disable XML-RPC"
+#~ msgstr "Отключить XML-RPC"
+
+#~ msgid ""
+#~ "A pingback is basically an automated comment that gets created when "
+#~ "another blog links to you. A self-pingback is created when you link to an "
+#~ "article within your own blog. Pingbacks are essentially nothing more than "
+#~ "spam and simply waste resources."
+#~ msgstr ""
+#~ "Pingback по-существу автоматизированных комментарий, который создается, "
+#~ "когда другой блог ссылается на вас. Self-pingback создается, когда вы "
+#~ "оставили ссылку на статью в своем блоге. Pingbacks по существу являются "
+#~ "не более чем спам и пустая трата ресурсов вашего сайта."
+
+#~ msgid "Removes the server responses a reference to the xmlrpc file."
+#~ msgstr "Удаляет ссылку на xmlrpc-файл и ответ сервера."
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has disable comments functions, so you can "
+#~ "deactivate plugin \"Comments tweaks\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить  "
+#~ "неиспользуемые функции», этот плагин уже имеет функции отключения "
+#~ "комментариев, поэтому вы можете отключить плагин «Инструменты "
+#~ "комментариев»!"
+
+#~ msgid "Webcraftic comments tweaks"
+#~ msgstr "Webcraftic инструменты комментариев"
+
+#~ msgid "Comments are closed."
+#~ msgstr "Комментарии Закрыты."
+
+#~ msgid ""
+#~ "Note: The <em>%s</em> plugin is currently active, and comments are "
+#~ "completely disabled on: %s. Many of the settings below will not be "
+#~ "applicable for those post types."
+#~ msgstr ""
+#~ "Примечание. Плагин <em>%s</em> в настоящий момент активен, и комментарии "
+#~ "полностью отключены: %s. Многие из приведенных ниже настроек не будут "
+#~ "применяться для этих типов сообщений."
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has disable comments functions, so you can "
+#~ "deactivate plugin \"Disable comments\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить  "
+#~ "неиспользуемые функции», этот плагин уже имеет функции отключения "
+#~ "комментариев, поэтому вы можете отключить плагин «Отключить комментарии»!"
+
+#~ msgid "Webcraftic Disable comments"
+#~ msgstr "Webcraftic отключить комментарии"

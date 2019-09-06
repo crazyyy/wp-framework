@@ -10,7 +10,11 @@
  */
 class WPSEO_Link_Extractor {
 
-	/** @var string */
+	/**
+	 * The content to extract the links from.
+	 *
+	 * @var string
+	 */
 	protected $content;
 
 	/**

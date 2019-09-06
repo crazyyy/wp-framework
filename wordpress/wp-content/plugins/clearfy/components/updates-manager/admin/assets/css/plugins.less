@@ -1,0 +1,35 @@
+/**
+ * Plugins page interface
+ * @author Webcraftic <wordpress.webraftic@gmail.com> 
+ * @copyright Webcraftic 03.09.2018 
+ */
+
+/* wordpress default plugins page */
+.wbcr-upm-plugin-status, tbody .check-column:not(.hide-placeholder):after {
+  display: block;
+  content: "\f463";
+  line-height: 1;
+  font-family: dashicons;
+  text-decoration: inherit;
+  font-weight: 400;
+  font-style: normal;
+  vertical-align: top;
+  text-align: center;
+  margin: 4px 0 0 8px;
+  color: #b4b9be;
+  border: 1px solid #b4b9be;
+  font-size: 14px;
+  height: 14px;
+  width: 14px;
+}
+
+.wbcr-upm-plugin-status {
+  &.wbcr-upm-red {
+    color: rgba(170, 0, 0, 0.58);
+    border-color: rgba(170, 0, 0, 0.45);
+  }
+  &.wbcr-upm-purple {
+    color: #ac62b9;
+    border-color: #a767b3;
+  }
+}

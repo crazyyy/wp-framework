@@ -6,18 +6,20 @@
  */
 
 /**
- * Class WPSEO_Taxonomy_Presenter
+ * Class WPSEO_Taxonomy_Presenter.
  */
 class WPSEO_Taxonomy_Fields_Presenter {
 
 	/**
-	 * The taxonomy meta data for the current term
+	 * The taxonomy meta data for the current term.
 	 *
 	 * @var array
 	 */
 	private $tax_meta;
 
 	/**
+	 * Constructs the WPSEO_Taxonomy_Fields_Presenter class.
+	 *
 	 * @param stdClass $term The current term.
 	 */
 	public function __construct( $term ) {
@@ -25,7 +27,7 @@ class WPSEO_Taxonomy_Fields_Presenter {
 	}
 
 	/**
-	 * Displaying the form fields
+	 * Displaying the form fields.
 	 *
 	 * @param array $fields Array with the fields that will be displayed.
 	 */
@@ -149,7 +151,7 @@ class WPSEO_Taxonomy_Fields_Presenter {
 	}
 
 	/**
-	 * Getting the value for given field_name
+	 * Getting the value for given field_name.
 	 *
 	 * @param string $field_name The fieldname to get the value for.
 	 *
@@ -164,7 +166,7 @@ class WPSEO_Taxonomy_Fields_Presenter {
 	}
 
 	/**
-	 * Getting the class attributes if $options contains a class key
+	 * Getting the class attributes if $options contains a class key.
 	 *
 	 * @param array $options The array with field options.
 	 *
@@ -179,7 +181,7 @@ class WPSEO_Taxonomy_Fields_Presenter {
 	}
 
 	/**
-	 * Getting the label HTML
+	 * Getting the label HTML.
 	 *
 	 * @param string $label      The label value.
 	 * @param string $field_name The target field.
@@ -197,9 +199,9 @@ class WPSEO_Taxonomy_Fields_Presenter {
 	/**
 	 * Returns the HTML for the row which contains label, help and the field.
 	 *
-	 * @param string                 $label       The html for the label if there was a label set.
-	 * @param WPSEO_Admin_Help_Panel $help        The help panel to render in this row.
-	 * @param string                 $field       The html for the field.
+	 * @param string                 $label The html for the label if there was a label set.
+	 * @param WPSEO_Admin_Help_Panel $help  The help panel to render in this row.
+	 * @param string                 $field The html for the field.
 	 *
 	 * @return string
 	 */

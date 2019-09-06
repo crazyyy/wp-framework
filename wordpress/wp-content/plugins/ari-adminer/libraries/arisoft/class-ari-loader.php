@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 final class Ari_Loader {
 	private static $prefix_list = array();
 	

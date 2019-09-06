@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 function adminer_object() {
 	include_once "../plugins/plugin.php";
 	include_once "../plugins/designs.php";

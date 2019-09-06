@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Helpers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 define( 'ARIADMINER_SETTINGS_GROUP', 'ari_adminer' );
 define( 'ARIADMINER_SETTINGS_NAME', 'ari_adminer_settings' );
 

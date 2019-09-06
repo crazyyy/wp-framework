@@ -1,0 +1,359 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:27+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:18
+msgid "Disable comments on the entire site"
+msgstr "Reacties uitschakelen op de volledige site"
+
+#: admin/boot.php:24 admin/pages/comments.php:129
+msgid "Select post types"
+msgstr "Selecteer bericht types"
+
+#: admin/boot.php:29 admin/pages/comments.php:157
+msgid "Replace external links in comments on the JavaScript code"
+msgstr "Vervang externe links in opmerkingen over de JavaScript code"
+
+#: admin/boot.php:34 admin/pages/comments.php:166
+msgid "Replace external links from comment authors on the JavaScript code"
+msgstr "Vervang externe links van commentaar auteurs op de JavaScript code"
+
+#: admin/boot.php:39
+msgid "Disable X-Pingback"
+msgstr "Uitschakelen X-Pingback"
+
+#: admin/boot.php:44 admin/pages/comments.php:148
+msgid "Remove field \"site\" in comment form"
+msgstr "Verwijder het veld \"site\" in reactie formulier"
+
+#: admin/boot.php:56
+msgid "One click disable all comments"
+msgstr "Alle reacties uitschakelen in één klik"
+
+#: admin/boot.php:77
+msgid "Get ultimate plugin free"
+msgstr "Krijg ultieme plugin gratis"
+
+#: admin/pages/comments.php:33 admin/pages/comments.php:94
+msgid "Disable comments"
+msgstr "Reacties uitschakelen"
+
+#: admin/pages/comments.php:47
+msgid "Comments"
+msgstr "Opmerkingen"
+
+#: admin/pages/comments.php:48
+msgid "General"
+msgstr "Algemeen"
+
+#: admin/pages/comments.php:81
+msgid "Global disabling of comments"
+msgstr "Algemene uitschakeling van reacties"
+
+#: admin/pages/comments.php:81
+msgid ""
+"What is the difference between these and native WordPress functions? WordPress "
+"disables comments only for new posts! Using the functions below, you can "
+"disable comments globally, even for old posts, and you can choose which post "
+"types comments to disable. The plugin also disables the comment functionality "
+"itself, which creates a certain load on the site."
+msgstr ""
+"Wat is het verschil tussen deze en native WordPress-functies? WordPress "
+"schakelt alleen reacties uit voor nieuwe berichten! Met behulp van de "
+"onderstaande functies kunt u opmerkingen globaal uitschakelen, zelfs voor oude "
+"berichten, en kunt u kiezen welk bericht een opmerking is om uit te schakelen. "
+"De plugin schakelt ook de commentaar functionaliteit zelf uit, die de site op "
+"één of andere manier belast."
+
+#: admin/pages/comments.php:96
+msgid "Not disable"
+msgstr "Niet uitschakelen"
+
+#: admin/pages/comments.php:99
+msgid "Everywhere"
+msgstr "Overal"
+
+#: admin/pages/comments.php:100
+#, php-format
+msgid ""
+"You can delete all comments in the database by clicking on this link (<a href="
+"\"%s\">cleaning comments in database</a>)."
+msgstr ""
+"U kunt alle reacties in de database verwijderen door op deze link te klikken "
+"(<a href=\"%s\">reacties opschonen in database</a>)."
+
+#: admin/pages/comments.php:104
+msgid "On certain post types"
+msgstr "Op bepaalde bericht types"
+
+#: admin/pages/comments.php:105
+#, php-format
+msgid ""
+"You can delete all comments for the selected post types. Select the post types "
+"below and save the settings. After that, click the link (<a href=\"%s\">delete "
+"all comments for the selected post types in database</a>)."
+msgstr ""
+"U kunt alle reacties voor de geselecteerde bericht types verwijderen. "
+"Selecteer de bericht types hieronder en sla de instellingen op. Klik daarna op "
+"de link (<a href=\"%s\">verwijder alle reacties voor de geselecteerde bericht "
+"types in de database</a>)."
+
+#: admin/pages/comments.php:109
+msgid ""
+"Everywhere - Warning: This option is global and will affect your entire site. "
+"Use it only if you want to disable comments everywhere. A complete description "
+"of what this option does is available here"
+msgstr ""
+"Overal - Waarschuwing: deze optie is globaal en heeft invloed op uw hele site. "
+"Gebruik het alleen als u reacties overal wilt uitschakelen. Een volledige "
+"beschrijving van wat deze optie doet, is hier beschikbaar"
+
+#: admin/pages/comments.php:109
+msgid ""
+"On certain post types - Disabling comments will also disable trackbacks and "
+"pingbacks. All comment-related fields will also be hidden from the edit/quick-"
+"edit screens of the affected posts. These settings cannot be overridden for "
+"individual posts."
+msgstr ""
+"Op bepaalde bericht types: Door het uitschakelen van reacties, worden ook "
+"trackbacks en pingbacks uitgeschakeld. Alle aan reactie gerelateerde velden "
+"worden ook verborgen in de editeer/quick-edit schermen van de betreffende "
+"berichten. Deze instellingen kunnen niet worden overschreven voor individuele "
+"berichten."
+
+#: admin/pages/comments.php:132
+msgid "Select the post types for which comments will be disabled"
+msgstr "Selecteer de bericht types waarvoor reacties zullen worden uitgeschakeld"
+
+#: admin/pages/comments.php:142
+msgid "General settings for comments"
+msgstr "Algemene instellingen voor reacties"
+
+#: admin/pages/comments.php:142
+msgid "These settings will help you improve SEO and reduce the amount of spam."
+msgstr ""
+"Met deze instellingen kunt u de SEO verbeteren en de hoeveelheid spam "
+"verminderen."
+
+#: admin/pages/comments.php:150
+msgid ""
+"Tired of spam in the comments? Do visitors leave \"blank\" comments for the "
+"sake of a link to their site?"
+msgstr ""
+"Ben je spam in de reacties beu? Laten bezoekers \"lege\" reacties achter om "
+"enkel te linken naar hun site?"
+
+#: admin/pages/comments.php:150
+msgid "Removes the \"Site\" field from the comment form."
+msgstr "Verwijdert het veld \"Site\" uit het reactie formulier."
+
+#: admin/pages/comments.php:150
+msgid ""
+"Works with the standard comment form, if the form is manually written in your "
+"theme-it probably will not work!"
+msgstr ""
+"Werkt met het standaard reactie formulier, als het formulier handmatig aan uw "
+"thema werd toegevoegd, zal het waarschijnlijk niet werken!"
+
+#: admin/pages/comments.php:159
+msgid ""
+"Superfluous external links from comments, which can be typed from a dozen and "
+"more for one article, do not bring anything good for promotion."
+msgstr ""
+"Overbodige externe linken van reacties, die uit een tiental of meer voor één "
+"artikel getypt kunnen zijn, brengen promotioneel niets bij."
+
+#: admin/pages/comments.php:159
+#, php-format
+msgid "Replaces the links of this kind of %s, on links of this kind %s"
+msgstr "Vervangt de linken van dit soort %s, naar linken van dit type %s"
+
+#: admin/pages/comments.php:168
+msgid ""
+"Up to 90 percent of comments in the blog can be left for the sake of an "
+"external link. Even nofollow from page weight loss here does not help."
+msgstr ""
+"Tot 90 procent van de reacties in de blog wordt achtergelaten omwille van een "
+"externe link. Zelfs nofollow voor pagina gewichtsverlies helpt hier niet."
+
+#: admin/pages/comments.php:168
+msgid ""
+"Replaces the links of the authors of comments on the JavaScript code, it is "
+"impossible to distinguish it from usual links."
+msgstr ""
+"Vervangt de linken van de auteurs van reacties op de JavaScript code, het is "
+"onmogelijk om het te onderscheiden van de gebruikelijke linken."
+
+#: admin/pages/comments.php:168
+msgid "In some Wordpress topics this may not work."
+msgstr "In sommige onderdelen van WordPress werkt dit misschien niet."
+
+#: admin/pages/comments.php:175
+msgid "Disable XML-RPC"
+msgstr "Schakel XML-RPC uit"
+
+#: admin/pages/comments.php:177
+msgid ""
+"A pingback is basically an automated comment that gets created when another "
+"blog links to you. A self-pingback is created when you link to an article "
+"within your own blog. Pingbacks are essentially nothing more than spam and "
+"simply waste resources."
+msgstr ""
+"Een pingback is in feite een geautomatiseerde commentaar die wordt gemaakt "
+"wanneer een andere blog linkt naar u. Een zelf-pingback wordt gemaakt wanneer "
+"u een linkt naar een artikel binnen uw eigen blog. Pingbacks zijn in wezen "
+"niets meer dan spam en simpelweg een verspilling van resources."
+
+#: admin/pages/comments.php:177
+msgid "Removes the server responses a reference to the xmlrpc file."
+msgstr "Verwijdert de server reacties bij verwijzing naar het xmlrpc bestand."
+
+#: admin/pages/delete-comments.php:36
+msgid "Comments cleaner"
+msgstr "Reacties opkuisen"
+
+#: admin/pages/delete-comments.php:75
+msgid "All comments have been deleted."
+msgstr "Alle opmerkingen zijn verwijderd."
+
+#: admin/pages/delete-comments.php:84
+msgid ""
+"An error occurred while trying to delete comments. Internal error occured. "
+"Please try again later."
+msgstr ""
+"Er is een fout opgetreden bij het verwijderen van opmerkingen. Interne fout "
+"opgetreden. Probeer het later opnieuw."
+
+#: admin/pages/delete-comments.php:154
+msgid ""
+"Are you sure you want to delete comments from the database without restoring?"
+msgstr ""
+"Weet je zeker dat je reacties uit de database wilt verwijderen zonder te "
+"herstellen?"
+
+#: admin/pages/delete-comments.php:169
+msgid "Delete "
+msgstr ""
+
+#: admin/pages/delete-comments.php:175
+msgid "Comments clearing tools"
+msgstr "Opmerkingen wissen tools"
+
+#: admin/pages/delete-comments.php:178
+msgid ""
+"These functions can be useful for global disabling comments or bulk cleaning "
+"spam comments."
+msgstr ""
+"Deze functies kunnen handig zijn voor algemene uitschakeling van opmerkingen "
+"of voor het opschonen van spam-reacties."
+
+#: admin/pages/delete-comments.php:183
+msgid "Remove all comments"
+msgstr "Verwijder alle reacties"
+
+#: admin/pages/delete-comments.php:185
+msgid "You can delete all comments in your database with one click."
+msgstr "U kunt alle reacties in uw database met één klik verwijderen."
+
+#: admin/pages/delete-comments.php:187
+msgid "Choose post types"
+msgstr "Kies bericht types"
+
+#: admin/pages/delete-comments.php:192
+msgid "Select all"
+msgstr "Selecteer alles"
+
+#: admin/pages/delete-comments.php:209
+#, php-format
+msgid "Delete Woocommerce order notices? (%d)"
+msgstr "Woocommerce ordermeldingen verwijderen? (%d)"
+
+#: admin/pages/delete-comments.php:215
+#, php-format
+msgid "Delete (%s)"
+msgstr ""
+
+#: admin/pages/delete-comments.php:222
+msgid "Remove spam comments"
+msgstr "Verwijder spam reacties"
+
+#: admin/pages/delete-comments.php:224
+msgid "You can remove only spam comments from the database with one click."
+msgstr "U kunt met één muisklik enkel spam reacties uit de database verwijderen."
+
+#: admin/pages/delete-comments.php:226 admin/pages/delete-comments.php:233
+#: admin/pages/delete-comments.php:240
+#, php-format
+msgid "Delete (%d)"
+msgstr "Verwijderen (%d)"
+
+#: admin/pages/delete-comments.php:229
+msgid "Remove unapproved comments"
+msgstr "Verwijder niet-goedgekeurde reacties"
+
+#: admin/pages/delete-comments.php:231
+msgid "You can remove only unapproved comments from the database with one click."
+msgstr ""
+"U kunt met één klik enkel niet-goedgekeurde reacties uit de database "
+"verwijderen."
+
+#: admin/pages/delete-comments.php:236
+msgid "Remove trashed comments"
+msgstr "Verwijder reacties uit vuilbak"
+
+#: admin/pages/delete-comments.php:238
+msgid "You can remove only trashed comments from the database with one click."
+msgstr ""
+"U kunt met één klik enkel de reacties in de vuilbak uit de database "
+"verwijderen."
+
+#: comments-plus.php:23
+msgid ""
+"We found that you have the \"Clearfy - disable unused features\" plugin "
+"installed, this plugin already has disable comments functions, so you can "
+"deactivate plugin \"Disable comments\"!"
+msgstr ""
+"We hebben geconstateerd dat de plugin \"Clearfy - uitschakelen ongebruikte "
+"functies\" is geïnstalleerd, deze plugin heeft al de functie voor het "
+"uitschakelen van reacties, dus u kunt de plugin \"Uitschakelen Reacties\" "
+"deactiveren!"
+
+#: comments-plus.php:81
+msgid "Webcraftic Disable comments"
+msgstr "Webcraftic uitschakelen reacties"
+
+#: includes/classes/class.configurate-comments.php:188
+#: includes/classes/class.configurate-comments.php:240
+msgid "Comments are closed."
+msgstr "Reacties zijn gesloten."
+
+#: includes/classes/class.configurate-comments.php:228
+#, php-format
+msgid ""
+"Note: The <em>%s</em> plugin is currently active, and comments are completely "
+"disabled on: %s. Many of the settings below will not be applicable for those "
+"post types."
+msgstr ""
+"Opmerking: de plugin <em>%s</em> is momenteel actief en reacties zijn volledig "
+"uitgeschakeld op: %s. Veel van onderstaande instellingen zijn niet van "
+"toepassing op die bericht types."

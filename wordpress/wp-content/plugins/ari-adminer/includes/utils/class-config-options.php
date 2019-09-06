@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Options as Options;
 
 class Config_Options extends Options {
@@ -17,4 +19,6 @@ class Config_Options extends Options {
     public $db_user;
 
     public $db_pass;
+
+    public $nonce;
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Controllers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Request as Request;
 use Ari\Utils\Object_Helper as Object_Helper;
 

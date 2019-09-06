@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 page_header(lang('Privileges'));
 
 echo '<p class="links"><a href="' . h(ME) . 'user=">' . lang('Create user') . "</a>";

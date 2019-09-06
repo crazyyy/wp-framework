@@ -301,7 +301,8 @@
 		$( document ).on( 'click', '.rl-gallery-update-preview', function ( e ) {
 			e.preventDefault();
 
-			var container = $( '.rl-gallery-tab-inside-images-featured' ),
+			var menu_item = $( '.rl-gallery-tab-menu-images input:checked' ).val(),
+				container = $( '.rl-gallery-tab-inside-images-' + menu_item ),
 				parent = $( this ).parent(),
 				spinner = parent.find( '.spinner' ),
 				rules = $( '.rl-rules-groups > .rl-rules-group' ),
@@ -316,34 +317,42 @@
 					case 'number':
 						value = parseInt( el.find( 'input' ).val() );
 
-						if ( ! value ) {
+						if ( ! value )
 							value = 0;
-						}
-						console.log
+						break;
+
+					case 'taxonomy':
+						value = {
+							'id': parseInt( el.find( 'select option:selected' ).val() ),
+							'children': el.find( 'input[type="checkbox"]' ).prop( 'checked' )
+						};
+
+						if ( ! value )
+							value = {
+								'id': 0,
+								'children': false
+							};
 						break;
 
 					case 'select':
 						value = el.find( 'select option:selected' ).val();
 
-						if ( ! value ) {
+						if ( ! value )
 							value = '';
-						}
 						break;
 
 					case 'radio':
 						value = el.find( 'input:checked' ).val();
 
-						if ( ! value ) {
+						if ( ! value )
 							value = '';
-						}
 						break;
 
 					case 'multiselect':
 						value = el.find( 'select' ).val();
 
-						if ( ! value ) {
+						if ( ! value )
 							value = [];
-						}
 						break;
 				}
 
@@ -360,9 +369,9 @@
 			$.post( ajaxurl, {
 				action: 'rl-get-preview-content',
 				post_id: rlArgs.post_id,
-				menu_item: $( '.rl-gallery-tab-menu-images input:checked' ).val(),
+				menu_item: menu_item,
 				query: query_args,
-				excluded: container.find( '.rl-gallery-exclude-ids' ).val(),
+				excluded: $( '.rl-gallery-exclude' ).map( function( i, elem ) { return $( elem ).val(); } ).get(),
 				nonce: rlArgs.nonce
 			} ).done( function ( response ) {
 				try {
@@ -374,10 +383,7 @@
 				} catch ( e ) {
 					// @todo
 				}
-
-				// hide spinner
-				spinner.fadeOut( 'fast' );
-			} ).fail( function () {
+			} ).always( function () {
 				// hide spinner
 				spinner.fadeOut( 'fast' );
 			} );

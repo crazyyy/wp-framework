@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Dump to XML format in structure <database name=""><table name=""><column name="">value
 * @link https://www.adminer.org/plugins/#use

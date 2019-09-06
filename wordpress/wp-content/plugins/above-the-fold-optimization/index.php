@@ -1,1 +1,0 @@
-<?php // Above the fold optimization

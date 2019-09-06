@@ -1,0 +1,501 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: clearfy\n"
+"POT-Creation-Date: 2018-10-16 23:25+0300\n"
+"PO-Revision-Date: 2018-10-16 23:26+0300\n"
+"Last-Translator: alex.kovalevv@gmail.com <alex.kovalevv@gmail.com>\n"
+"Language-Team: Alex Kovalev <alex.kovalevv@gmail.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+
+#: admin/ajax/change-flag.php:26
+msgid "Required arguments of slug, flag is empty!"
+msgstr "Не переданы обязательные аругменты slug, flag"
+
+#: admin/ajax/change-flag.php:38
+#, php-format
+msgid "Method %s is not found!"
+msgstr "Метод %s не найден!"
+
+#: admin/boot.php:23
+#, php-format
+msgid ""
+"We found that you have the plugin %s installed. The functions of this plugin "
+"already exist in %s. Please deactivate plugin %s to avoid conflicts between "
+"plugins' functions."
+msgstr ""
+"Мы обнаружили, что у вас установлен плагин %s, функции этого плагина уже "
+"есть в %s. Пожалуйста, деактивируйте плагин %s во избежание конфликтов между "
+"функциями плагинов."
+
+#: admin/boot.php:24
+#, php-format
+msgid ""
+"If you do not want to deactivate the plugin %s for some reason, we strongly "
+"recommend do not use the same plugins' functions at the same time!"
+msgstr ""
+"Если по какой-то причине вы не хотите деактивировать плагин %s, то мы "
+"настоятельно рекомендуем не использовать похожие функции плагинов "
+"одновременно!"
+
+#: admin/boot.php:68
+msgid "Disable plugin updates"
+msgstr "Отключить обновления плагинов"
+
+#: admin/boot.php:74
+msgid "Disable theme updates"
+msgstr "Отключить обновления тем"
+
+#: admin/boot.php:80 admin/pages/updates.php:128
+msgid "Disable Automatic Translation Updates"
+msgstr "Отключить автоматические обновления переводов"
+
+#: admin/boot.php:85
+msgid "Disable wordPress core updates"
+msgstr "Отключить обновления ядра Wordpress"
+
+#: admin/boot.php:91 admin/pages/updates.php:180
+msgid "Enable updates for VCS Installations"
+msgstr "Включить обновления для установок VCS"
+
+#: admin/boot.php:96
+msgid "Plugin filters"
+msgstr "Фильтры плагинов"
+
+#: admin/boot.php:101 admin/pages/updates.php:190
+msgid "Updates nags only for Admin"
+msgstr "Показывать уведомления об обновлении Wordpress только для админа"
+
+#: admin/boot.php:106 admin/pages/updates.php:238 admin/pages/updates.php:245
+msgid "Core notifications"
+msgstr "Оповещения ядра WP"
+
+#: admin/boot.php:111
+msgid "Notify me when update successful installed"
+msgstr "Уведомлять когда обновления установлены"
+
+#: admin/boot.php:116 admin/pages/updates.php:229
+msgid "Email address"
+msgstr "Е-мейл"
+
+#: admin/boot.php:128
+msgid "One click disable all updates"
+msgstr "Отключить все обновления в один клик"
+
+#: admin/boot.php:149
+msgid "Get ultimate plugin free"
+msgstr "Получите полную версию плагина бесплатно"
+
+#: admin/boot.php:200 admin/boot.php:247
+msgid "Update manager"
+msgstr "Менеджер обновлений"
+
+#: admin/boot.php:208
+msgid "Auto-update disabled"
+msgstr "Автообновление выключено"
+
+#: admin/boot.php:209
+msgid "Auto-update enabled"
+msgstr "Автообновление включено"
+
+#: admin/boot.php:210
+msgid "Update disabled"
+msgstr "Обновление отключено"
+
+#: admin/boot.php:211
+msgid "Translation update disabled"
+msgstr "Обновление переводов отключено"
+
+#: admin/pages/advanced.php:43
+msgid "Advanced"
+msgstr "Дополнительно"
+
+#: admin/pages/advanced.php:71
+msgid "Please, wait 90 sec. to see the forced automatic update result."
+msgstr ""
+"Пожалуйста, подождите 90 сек., чтобы увидеть результат принудительного "
+"автоматического обновления."
+
+#: admin/pages/advanced.php:81
+msgid "Force Automatic Updates"
+msgstr "Принудительное автоматическое обновление"
+
+#: admin/pages/advanced.php:83
+msgid ""
+"This will attempt to force automatic updates. This is useful for debugging."
+msgstr ""
+"Эта возможность вам понадобится для проверки автоматических обновлений. "
+"Настройте автоматические обновления и нажмите на эту кнопку, чтобы проверить "
+"работают они или нет."
+
+#: admin/pages/advanced.php:84
+msgid "Force update"
+msgstr "Запустить обновление"
+
+#: admin/pages/plugins.php:72
+msgid "Plugins"
+msgstr "Плагины"
+
+#: admin/pages/plugins.php:91
+msgid ""
+"- To disable updates individually choose the “Manual or automatic plugin "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"Чтобы индивидуально отключить обновления, выберите опцию “Ручные или "
+"автоматические обновления плагинов”, сохраните настройки и вернитесь на эту "
+"страницу."
+
+#: admin/pages/plugins.php:95
+msgid ""
+"- To configure plugin auto updates individually, choose the “Enable auto "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"Чтобы индивидуально настроить автоматические обновления плагинов, выберите "
+"опцию “Автоматические обновления”, сохраните настройки и вернитесь на эту "
+"страницу."
+
+#: admin/pages/plugins.php:326
+msgid "Plugins list"
+msgstr "Ваш список плагинов"
+
+#: admin/pages/plugins.php:329
+msgid "This page you can individually disable plugin updates and auto updates."
+msgstr ""
+"На этой странице вы можете индивидуально отключить обновления и "
+"автообновления плагинов."
+
+#: admin/pages/plugins.php:345 admin/pages/themes.php:321
+msgid "Bulk actions"
+msgstr "Массовые действия"
+
+#: admin/pages/plugins.php:346 admin/pages/themes.php:322
+#: admin/pages/updates.php:102 admin/pages/updates.php:117
+#: admin/pages/updates.php:139
+msgid "Disable updates"
+msgstr "Отключить все обновления"
+
+#: admin/pages/plugins.php:347 admin/pages/themes.php:323
+msgid "Enable updates"
+msgstr "Включить обновления"
+
+#: admin/pages/plugins.php:348 admin/pages/themes.php:324
+msgid "Enable auto-updates"
+msgstr "Включить авто-обновления"
+
+#: admin/pages/plugins.php:349 admin/pages/themes.php:325
+msgid "Disable auto-updates"
+msgstr "Отключить авто-обновления"
+
+#: admin/pages/plugins.php:350 admin/pages/themes.php:326
+msgid "Disable translation updates"
+msgstr "Отключить обновление переводов"
+
+#: admin/pages/plugins.php:351 admin/pages/themes.php:327
+msgid "Enable translation updates"
+msgstr "Включить обновление переводов"
+
+#: admin/pages/plugins.php:352 admin/pages/plugins.php:373
+msgid "Hide plugin"
+msgstr "Скрыть плагин"
+
+#: admin/pages/plugins.php:353
+msgid "Show plugin"
+msgstr "Показывать плагин"
+
+#: admin/pages/plugins.php:355 admin/pages/themes.php:329
+msgid "Apply"
+msgstr "Применить"
+
+#: admin/pages/plugins.php:362
+msgid "Plugin"
+msgstr "Плагин"
+
+#: admin/pages/plugins.php:364 admin/pages/themes.php:338
+#: admin/pages/updates.php:57
+msgid "Updates"
+msgstr "Обновления"
+
+#: admin/pages/plugins.php:367 admin/pages/themes.php:341
+msgid "Auto-updates"
+msgstr "Авто-обновление"
+
+#: admin/pages/plugins.php:370 admin/pages/themes.php:344
+msgid "Translation updates"
+msgstr "Обновление переводов"
+
+#: admin/pages/plugins.php:432 admin/pages/themes.php:394
+msgid "Select"
+msgstr "Выбор"
+
+#: admin/pages/plugins.php:453 admin/pages/plugins.php:472
+#: admin/pages/plugins.php:491 admin/pages/plugins.php:507
+#: admin/pages/themes.php:418 admin/pages/themes.php:437
+#: admin/pages/themes.php:456
+msgid "On"
+msgstr "Вкл"
+
+#: admin/pages/plugins.php:454 admin/pages/plugins.php:473
+#: admin/pages/plugins.php:492 admin/pages/plugins.php:508
+#: admin/pages/themes.php:419 admin/pages/themes.php:438
+#: admin/pages/themes.php:457
+msgid "Off"
+msgstr "Выкл"
+
+#: admin/pages/themes.php:69
+msgid "Themes"
+msgstr "Темы"
+
+#: admin/pages/themes.php:88
+msgid ""
+"- To disable updates individually choose the “Manual or automatic theme "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"Чтобы индивидуально отключить обновления, выберите опцию “Ручные или "
+"автоматические обновления плагинов”, сохраните настройки и вернитесь на эту "
+"страницу."
+
+#: admin/pages/themes.php:92
+msgid ""
+"- To configure theme auto updates individually, choose the “Enable auto "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"Чтобы индивидуально настроить автоматические обновления тем, выберите опцию "
+"“Автоматические обновления”, сохраните настройки и вернитесь на эту страницу."
+
+#: admin/pages/themes.php:302
+msgid "Themes list"
+msgstr "Ваш список тем"
+
+#: admin/pages/themes.php:305
+msgid "This page you can individually disable theme updates and auto updates."
+msgstr ""
+"На этой странице вы можете индивидуально отключить обновления и "
+"автообновления тем."
+
+#: admin/pages/themes.php:336
+msgid "Theme"
+msgstr "Тема"
+
+#: admin/pages/updates.php:43
+msgid "Updates manager"
+msgstr "Менеджер обновлений"
+
+#: admin/pages/updates.php:44
+msgid "Manage all site updates"
+msgstr "Упр. обновлениями сайта"
+
+#: admin/pages/updates.php:57
+msgid "General"
+msgstr "Основные"
+
+#: admin/pages/updates.php:91
+msgid "General settings for WordPress, plugins and themes updates"
+msgstr "Общие настройки для обновлений WordPress, плагинов и тем"
+
+#: admin/pages/updates.php:91
+msgid ""
+"This page, you can enable or disable automatic updates. To test the "
+"automatic updates, click the \"Advanced\" tab."
+msgstr ""
+"На этой странице можете включить или отключить автоматические обновления. "
+"Чтобы протестировать работу автоматических обновлений, перейдите на вкладку "
+"\"Дополнительно\"."
+
+#: admin/pages/updates.php:98
+msgid "Plugin Updates"
+msgstr "Обновления плагина"
+
+#: admin/pages/updates.php:100 admin/pages/updates.php:115
+msgid "Manual updates"
+msgstr "Ручные"
+
+#: admin/pages/updates.php:101 admin/pages/updates.php:116
+msgid "Enable auto updates"
+msgstr "Автоматические"
+
+#: admin/pages/updates.php:105
+msgid ""
+"You can disable all plugin updates or choose manual or automatic update mode."
+msgstr ""
+"Вы можете отключить все обновления плагинов или выбрать режим ручного или "
+"автоматического обновления."
+
+#: admin/pages/updates.php:113
+msgid "Theme Updates"
+msgstr "Обновления тем"
+
+#: admin/pages/updates.php:120
+msgid ""
+"You can disable all themes updates or choose manual or automatic update mode."
+msgstr ""
+"Вы можете отключить все обновления тем или выбрать режим ручного или "
+"автоматического обновления."
+
+#: admin/pages/updates.php:137
+msgid "WordPress Core Updates"
+msgstr "Базовые обновления Wordpress"
+
+#: admin/pages/updates.php:140
+msgid "Disable auto updates"
+msgstr "Отключить автоматические обновления"
+
+#: admin/pages/updates.php:143
+msgid "Allow minor auto updates"
+msgstr "Разрешить незначительные автоматические обновления"
+
+#: admin/pages/updates.php:147
+msgid "Allow major auto updates"
+msgstr "Разрешить основные автоматические обновления"
+
+#: admin/pages/updates.php:151
+msgid "Allow development auto updates"
+msgstr "Разрешить разрабатываемые автоматические обновления"
+
+#: admin/pages/updates.php:155
+msgid ""
+"You can disable all core WordPress updates, or disable only automatic "
+"updates. Also you can select the update mode. By default (minor)"
+msgstr ""
+"Вы можете отключить все основные обновления WordPress или отключить только "
+"автоматические обновления. Также вы можете выбрать режим обновления. По "
+"умолчанию (младший)"
+
+#: admin/pages/updates.php:155
+msgid "Major - automatically update to major releases (e.g., 4.1, 4.2, 4.3)."
+msgstr ""
+"Основные - автоматически обновления основных версий (4.1, 4.2, 4.3 и т.д)."
+
+#: admin/pages/updates.php:155
+msgid ""
+"Minor - automatically update to minor releases (e.g., 4.1.1, 4.1.2, 4.1.3).."
+msgstr ""
+"Незначительные - автоматически обновления промежуточных версий (4.1.1, "
+"4.1.2, 4.1.3 и т.д)."
+
+#: admin/pages/updates.php:155
+msgid "Development - update automatically to Bleeding Edge releases."
+msgstr "Разрабатываемые - автоматические обновления до финальных выпусков."
+
+#: admin/pages/updates.php:182
+msgid ""
+"Enable Automatic Updates even if a VCS folder (.git, .hg, .svn) was found in "
+"the WordPress directory"
+msgstr ""
+"Включить автоматическое обновление, даже если папка VCS (.git, .hg, .svn) "
+"была найдена в каталоге WordPress"
+
+#: admin/pages/updates.php:192
+msgid ""
+"This plugin allows you to hide the update WordPress reminder from all users "
+"that are not assumed Administrators (cannot upgrade plugins).\n"
+"\n"
+"If you have multiple users then this means those who are not admins don’t "
+"need to see the message. Useful for CMS based sites, so the client doesn’t "
+"see the notice."
+msgstr ""
+"Этот опция позволяет вам скрыть напоминание о обновлении WordPress для  всех "
+"пользователей, которые не являются администраторами (не могут обновлять "
+"плагины).\n"
+"\n"
+"Если у вас несколько пользователей, это означает, что те, кто не являются "
+"админами, не должны видеть уведомления об обновлениях."
+
+#: admin/pages/updates.php:200
+msgid "Email Notifications"
+msgstr "Оповещения ядра WP"
+
+#: admin/pages/updates.php:200
+msgid ""
+"Email notifications are send once a day, you can choose what notifications "
+"to send below."
+msgstr ""
+"Оповещения отправляются раз в день, ниже Вы можете выбрать какие сообщения "
+"получать."
+
+#: admin/pages/updates.php:207
+msgid "Update available"
+msgstr "Доступно обновления"
+
+#: admin/pages/updates.php:208
+msgid "Send me emails when an update is available."
+msgstr "Уведомлять когда обновления доступны."
+
+#: admin/pages/updates.php:218
+msgid "Successful update"
+msgstr "При успешном обновлении"
+
+#: admin/pages/updates.php:219
+msgid "Send me emails when something has been updated."
+msgstr "Присылать оповещение когда обновления установлены."
+
+#: admin/pages/updates.php:230
+msgid "Seperate email addresses using commas."
+msgstr "Адреса электронной почты через запятую."
+
+#: admin/pages/updates.php:238
+msgid ""
+"Core notifications are handled by WordPress and not by this plugin. You can "
+"only disable them, changing your email address in the settings above will "
+"not affect these notifications."
+msgstr ""
+"Почтовые сообщения отправляются ядром Вордпресс, а не этим плагином. Вы "
+"можете только отключить их, изменение вашего почтового адреса в настройках "
+"выше не влияет на эти оповещения."
+
+#: admin/pages/updates.php:246
+msgid ""
+"By default wordpress sends an email when a core update happend. Uncheck this "
+"box to disable these emails."
+msgstr ""
+"По умолчанию сайт присылает сообщение когда ядро Вордпресс обновилось. "
+"Снимите галочку если не хотите получать его."
+
+#: webcraftic-updates-manager.php:58
+msgid "Webcraftic Updates Manager"
+msgstr "Webcraftic менеджер обновлений"
+
+#~ msgid "If off email notifications disabled for wp core updates"
+#~ msgstr "Если Выкл оповещения на почту об обновлении ядра не будут приходить"
+
+#~ msgid "theme"
+#~ msgstr "тема"
+
+#~ msgid "themes"
+#~ msgstr "темы"
+
+#~ msgid "Plugin update available."
+#~ msgstr "Доступны обновления плагина."
+
+#~ msgid "plugin"
+#~ msgstr "плагин"
+
+#~ msgid "plugins"
+#~ msgstr "плагины"
+
+#~ msgid "Plugins have been updated."
+#~ msgstr "Плагины были обновлены."
+
+#~ msgid "Themes have been updated."
+#~ msgstr "Темы были обновлены."
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has update manager functions, so you can "
+#~ "deactivate plugin \"Update manager\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить "
+#~ "неиспользуемые функции», этот плагин уже имеет функции менеджера "
+#~ "обновлений, поэтому вы можете отключить плагин «Менеджер обновлений»!"
+
+#~ msgid "Description"
+#~ msgstr "Описание"

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Date {
     static public function db_gmt_to_local( $db_date, $format = null ) {
         if ( empty( $format ) )

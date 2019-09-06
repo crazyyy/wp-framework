@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /*abstract*/ class Min_SQL {
 	var $_conn;

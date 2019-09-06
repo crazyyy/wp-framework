@@ -1,0 +1,155 @@
+/**
+ * General styles
+ * @author Alex Kovalev <alex.kovalevv@gmail.com> 
+ * @copyright Alex Kovalev 23.08.2017 
+ */
+#WBCR {
+  /* upm */
+}
+#WBCR .wp-list-table th,
+#WBCR .wp-list-table .plugin-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+#WBCR .wp-list-table.wbcr-upm-list-table-pro.wbcr-upm-column-premium td {
+  background: #f9f2f0 !important;
+}
+#WBCR .wp-list-table.wbcr-upm-list-table-pro.wbcr-upm-column-premium td .factory-buttons-way,
+#WBCR .wp-list-table.wbcr-upm-list-table-pro.wbcr-upm-column-premium td input[type="checkbox"] {
+  border-color: #fff;
+  background: #fff;
+}
+#WBCR .wp-list-table th.wbcr-upm-column-premium,
+#WBCR .wp-list-table td.wbcr-upm-column-premium {
+  background: #f9f2f0 !important;
+}
+#WBCR .wp-list-table th.wbcr-upm-column-premium .factory-buttons-way,
+#WBCR .wp-list-table td.wbcr-upm-column-premium .factory-buttons-way,
+#WBCR .wp-list-table th.wbcr-upm-column-premium input[type="checkbox"],
+#WBCR .wp-list-table td.wbcr-upm-column-premium input[type="checkbox"] {
+  border-color: #fff;
+  background: #fff;
+}
+#WBCR .wp-list-table .plugin-update-tr.active td,
+#WBCR .wp-list-table.plugins .active th.check-column {
+  border-left: 4px solid #e6e6e6 !important;
+  padding-left: 8px !important;
+}
+#WBCR .wp-list-table.plugins .row-actions,
+#WBCR .wp-list-table.plugins .second {
+  padding: 0 0 5px;
+  color: #949292;
+}
+#WBCR .wp-list-table.plugins .active td,
+#WBCR .wp-list-table.plugins .active th {
+  background-color: #ffffff;
+}
+#WBCR .wp-list-table.plugins,
+#WBCR .wp-list-table.plugins td,
+#WBCR .wp-list-table.plugins th,
+#WBCR .wp-list-table .row-actions .network_active,
+#WBCR .wp-list-table .row-actions .network_only {
+  color: #777;
+}
+#WBCR .wp-list-table .widefat ol,
+#WBCR .wp-list-table .widefat p,
+#WBCR .wp-list-table .widefat tfoot tr td,
+#WBCR .wp-list-table .widefat tfoot tr th,
+#WBCR .wp-list-table .widefat thead tr td,
+#WBCR .wp-list-table .widefat thead tr th,
+#WBCR .wp-list-table .widefat ul {
+  color: #7d7d7d;
+}
+#WBCR .wp-list-table #disable_updates,
+#WBCR .wp-list-table #disable_auto_updates,
+#WBCR .wp-list-table #disable_translation_updates,
+#WBCR .wp-list-table #hide_item {
+  width: 100px;
+}
+#WBCR .column-flags .factory-checkbox {
+  display: inline-flex;
+}
+#WBCR .wp-list-table.autoupdate th {
+  white-space: normal !important;
+}
+#WBCR .wp-list-table.autoupdate .plugin-title {
+  white-space: normal !important;
+}
+#WBCR .wp-list-table__plugins .plugin-title {
+  max-width: 12rem;
+}
+#WBCR .wbcr-upm-group-header-pro {
+  position: relative;
+  display: inline-block;
+}
+#WBCR .wbcr-upm-group-header-pro:after {
+  display: inline-block;
+  position: relative;
+  content: 'PRO';
+  background: #ff5722;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+  font-style: normal;
+  padding: 4px 6px;
+  margin-left: 4px;
+  vertical-align: top;
+  top: 0;
+  left: auto;
+  right: 0;
+  z-index: 11;
+}
+#WBCR #disable_translation_updates,
+#WBCR #hide_item {
+  position: relative;
+}
+#WBCR #disable_translation_updates.wbcr-upm-column-pro:after,
+#WBCR #hide_item.wbcr-upm-column-pro:after {
+  display: inline-block;
+  position: absolute;
+  content: 'PRO';
+  background: #ff5722;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+  font-style: normal;
+  padding: 4px 6px;
+  margin-left: 4px;
+  vertical-align: top;
+  top: -10px;
+  left: auto;
+  right: 0;
+  z-index: 11;
+}
+#WBCR .factory-checkbox.wbcr-upm-icon-pro:after {
+  display: inline-block;
+  position: relative;
+  content: 'PRO';
+  background: #ff5722;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+  font-style: normal;
+  padding: 4px 6px;
+  margin-left: 4px;
+  vertical-align: top;
+  top: -8px;
+  left: -10px;
+  right: auto;
+  z-index: 11;
+}
+#WBCR .wp-list-table.autoupdate .check-column {
+  padding: 10px 9px;
+}
+.factory-checkbox-disabled input,
+.factory-checkbox-disabled button {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: .65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

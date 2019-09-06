@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Wordpress;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Cache\Lite as Cache;
 
 class Security {

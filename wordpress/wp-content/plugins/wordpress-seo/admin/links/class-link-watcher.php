@@ -10,7 +10,11 @@
  */
 class WPSEO_Link_Watcher {
 
-	/** @var WPSEO_Link_Content_Processor */
+	/**
+	 * Represents the content processor. It will extract links from the content and saves them for the given post id.
+	 *
+	 * @var WPSEO_Link_Content_Processor
+	 */
 	protected $content_processor;
 
 	/**
@@ -41,6 +45,15 @@ class WPSEO_Link_Watcher {
 	 * @return void
 	 */
 	public function save_post( $post_id, WP_Post $post ) {
+		/**
+		 * Filter: 'wpseo_should_index_links' - Allows disabling of Yoast's links indexation.
+		 *
+		 * @api bool To disable the indexation, return false.
+		 */
+		if ( ! apply_filters( 'wpseo_should_index_links', true ) ) {
+			return;
+		}
+
 		if ( ! WPSEO_Link_Table_Accessible::is_accessible() || ! WPSEO_Meta_Table_Accessible::is_accessible() ) {
 			return;
 		}
@@ -72,6 +85,11 @@ class WPSEO_Link_Watcher {
 	 * @return void
 	 */
 	public function delete_post( $post_id ) {
+		/** This filter is documented in admin/links/class-link-watcher.php */
+		if ( ! apply_filters( 'wpseo_should_index_links', true ) ) {
+			return;
+		}
+
 		if ( ! WPSEO_Link_Table_Accessible::is_accessible() || ! WPSEO_Meta_Table_Accessible::is_accessible() ) {
 			return;
 		}

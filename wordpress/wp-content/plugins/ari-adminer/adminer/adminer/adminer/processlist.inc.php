@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 if (support("kill") && $_POST && !$error) {
 	$killed = 0;
 	foreach ((array) $_POST["kill"] as $val) {
@@ -13,6 +15,7 @@ page_header(lang('Process list'), $error);
 ?>
 
 <form action="" method="post">
+<div class="scrollable">
 <table cellspacing="0" class="nowrap checkable">
 <?php
 echo script("mixin(qsl('table'), {onclick: tableClick, ondblclick: partialArg(tableClick, true)});");
@@ -45,6 +48,7 @@ foreach (process_list() as $i => $row) {
 }
 ?>
 </table>
+</div>
 <p>
 <?php
 if (support("kill")) {

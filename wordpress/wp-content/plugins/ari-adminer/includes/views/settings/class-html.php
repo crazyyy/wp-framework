@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Views\Settings;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari_Adminer\Views\Base as Base;
 
 class Html extends Base {

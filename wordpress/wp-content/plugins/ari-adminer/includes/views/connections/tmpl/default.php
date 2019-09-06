@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari_Adminer\Helpers\Helper as Helper;
 use Ari_Adminer\Utils\Db_Driver as DB_Driver;
 
@@ -36,6 +38,7 @@ $tmpl_path = dirname( __FILE__ ) . '/';
     <input type="hidden" id="ctrl_sub_action" name="sub_action" value="" />
     <input type="hidden" id="hidConnectionId" name="action_connection_id" value="" />
     <input type="hidden" name="filter" value="<?php echo esc_attr( $data['filter_encoded'] ); ?>" />
+    <?php wp_nonce_field( ARIADMINER_NONCE ); ?>
 </div>
 </form>
 <div id="newConnectionForm" class="connection-form-container mfp-hide">

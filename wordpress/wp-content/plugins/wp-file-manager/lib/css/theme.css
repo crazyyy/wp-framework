@@ -347,3 +347,7 @@
 .elfinder .elfinder-ui-tooltip.ui-widget-shadow {
     box-shadow: 2px 6px 4px -4px #cecdcd;
 }
+
+button.ui-button-text.check-syntax-cta{
+	border:0px!important;
+}

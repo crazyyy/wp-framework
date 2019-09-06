@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Allow using Adminer inside a frame (disables ClickJacking protection)
 * @link https://www.adminer.org/plugins/#use

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Filter {
     public static function filter( $val, $filter = null ) {
         if ( empty( $filter ) || empty( $val ) )

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 function adminer_object() {
 	// required to run any plugin
 	include_once "../plugins/plugin.php";

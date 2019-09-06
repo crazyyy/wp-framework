@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $PROCEDURE = ($_GET["name"] ? $_GET["name"] : $_GET["procedure"]);
 $routine = (isset($_GET["function"]) ? "FUNCTION" : "PROCEDURE");
 $row = $_POST;
@@ -35,9 +37,10 @@ $routine_languages = routine_languages();
 ?>
 
 <form action="" method="post" id="form">
-<p><?php echo lang('Name'); ?>: <input name="name" value="<?php echo h($row["name"]); ?>" maxlength="64" autocapitalize="off">
+<p><?php echo lang('Name'); ?>: <input name="name" value="<?php echo h($row["name"]); ?>" data-maxlength="64" autocapitalize="off">
 <?php echo ($routine_languages ? lang('Language') . ": " . html_select("language", $routine_languages, $row["language"]) . "\n" : ""); ?>
 <input type="submit" value="<?php echo lang('Save'); ?>">
+<div class="scrollable">
 <table cellspacing="0" class="nowrap">
 <?php
 edit_fields($row["fields"], $collations, $routine);
@@ -47,6 +50,7 @@ if (isset($_GET["function"])) {
 }
 ?>
 </table>
+</div>
 <p><?php textarea("definition", $row["definition"]); ?>
 <p>
 <input type="submit" value="<?php echo lang('Save'); ?>">

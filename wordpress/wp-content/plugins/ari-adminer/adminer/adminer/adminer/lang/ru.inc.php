@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $translations = array(
 	'Login' => 'Войти',
 	'Logout successful.' => 'Вы успешно покинули систему.',

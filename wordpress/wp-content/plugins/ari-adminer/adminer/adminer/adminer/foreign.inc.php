@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $TABLE = $_GET["foreign"];
 $name = $_GET["name"];
 $row = $_POST;

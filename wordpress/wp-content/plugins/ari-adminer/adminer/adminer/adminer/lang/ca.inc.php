@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $translations = array(
 	'Login' => 'Inicia la sessió',
 	'Logout successful.' => 'Desconnexió correcta.',

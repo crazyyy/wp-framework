@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Controls\Paging;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Options as Options;
 
 class Paging_Options extends Options {

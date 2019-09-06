@@ -1,0 +1,173 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:31+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/ajax/hide-notice.php:19 admin/ajax/restore-notice.php:19
+msgid "You don't have enough capability to edit this information."
+msgstr "Je hebt niet voldoende mogelijkheden om deze informatie te bewerken."
+
+#: admin/ajax/hide-notice.php:32 admin/ajax/restore-notice.php:28
+msgid "Undefinded notice id."
+msgstr "Ongedefinieerde mededeling id."
+
+#: admin/ajax/hide-notice.php:46 admin/ajax/restore-notice.php:40
+msgid "Success"
+msgstr "Succes"
+
+#: admin/boot.php:18 admin/options.php:30 admin/pages/notices.php:33
+msgid "Hide admin notices"
+msgstr "Verberg admin meldingen"
+
+#: admin/boot.php:24 admin/options.php:70
+msgid "Enable hidden notices in adminbar"
+msgstr "Schakel verborgen meldingen in de beheer balk in"
+
+#: admin/boot.php:46
+msgid "Get ultimate plugin free"
+msgstr "Krijg ultieme plugin gratis"
+
+#: admin/options.php:23
+msgid "Admin notifications, Update nags"
+msgstr "Admin mededelingen, Update meldingen"
+
+#: admin/options.php:23
+msgid ""
+"Do you know the situation, when some plugin offers you to update to premium, "
+"to collect technical data and shows many annoying notices? You are close these "
+"notices every now and again but they newly appears and interfere your work "
+"with WordPress. Even worse, some plugin’s authors delete “close” button from "
+"notices and they shows in your admin panel forever."
+msgstr ""
+"Herkent u de situatie, waarin sommige plugins u aanbieden om te updaten naar "
+"premium, om technische gegevens te verzamelen en veel vervelende meldingen "
+"weergeven? Zo nu en dan sluit u deze meldingen, maar ze verschijnen keer op "
+"keer opnieuw en belemmeren uw werk met WordPress. Erger nog, de auteurs van "
+"sommige plugins verwijderen de knop \"Sluiten\" uit meldingen en blijven "
+"continu zichtbaar in uw beheer venster."
+
+#: admin/options.php:34
+msgid "All notices"
+msgstr "Alle mededelingen"
+
+#: admin/options.php:35
+msgid "Hide all notices globally."
+msgstr "Alle meldingen globaal verbergen."
+
+#: admin/options.php:39
+msgid "Only selected"
+msgstr "Enkel geselecteerd"
+
+#: admin/options.php:40
+msgid ""
+"Hide selected notices only. You will see the link \"Hide notification forever"
+"\" in each notice. Push it and they will not bother you anymore."
+msgstr ""
+"Slechts bepaalde meldingen verbergen. U ziet in elke melding de link \"Verberg "
+"melding voor altijd\". Klik erop en ze zullen je niet meer lastig vallen."
+
+#: admin/options.php:44
+msgid "Don't nide"
+msgstr "Niet verbergen"
+
+#: admin/options.php:45
+msgid ""
+"Do not hide notices and do not show “Hide notification forever” link for admin."
+msgstr ""
+"Meldingen niet verbergen en laat de link 'Verberg melding voor altijd' niet "
+"zien voor beheerder."
+
+#: admin/options.php:49
+msgid ""
+"Some plugins shows notifications about premium version, data collecting or "
+"promote their services. Even if you push close button (that sometimes are "
+"impossible), notices are shows again in some time. This option allows you to "
+"control notices. Hide them all or each individually. Some plugins shows "
+"notifications about premium version, data collecting or promote their "
+"services. Even if you push close button (that sometimes are impossible), "
+"notices are shows again in some time. This option allows you to control "
+"notices. Hide them all or each individually."
+msgstr ""
+"Sommige plugins tonen meldingen over de premium versie, het verzamelen van "
+"gegevens of het promoten van hun diensten. Zelfs als je op afsluiten klikt "
+"(wat soms niet eens mogelijk is), worden mededelingen binnen afzienbare tijd "
+"opnieuw getoond. Met deze optie kunt u mededelingen beheren. Verberg ze "
+"allemaal of elk afzonderlijk."
+
+#: admin/options.php:72
+msgid ""
+"By default, the plugin hides all notices, which you specified. If you enable "
+"this option, the plugin will collect all hidden notices and show them into the "
+"top admin toolbar. It will not disturb you but will allow to look notices at "
+"your convenience."
+msgstr ""
+"Standaard verbergt de plugin alle kennisgevingen die u hebt opgegeven. Als u "
+"deze optie inschakelt, verzamelt de plugin alle verborgen mededelingen en "
+"toont deze in de bovenste beheer werkbalk. Het zal niet storend zijn, maar zal "
+"je toelaten om aankondigingen op je gemak te bekijken."
+
+#: admin/options.php:136
+msgid "Push reset hidden notices if you need to show hidden notices again."
+msgstr ""
+"Druk op reset verborgen mededelingen als u verborgen mededelingen opnieuw wilt "
+"weergeven."
+
+#: admin/options.php:145
+#, php-format
+msgid "Reset hidden notices (%s)"
+msgstr "Reset verborgen mededelingen (%s)"
+
+#: admin/options.php:147 admin/pages/notices.php:85
+msgid "Hidden notices are successfully reset, now you can see them again!"
+msgstr "Verborgen meldingen zijn succesvol gereset, nu kun je ze opnieuw zien!"
+
+#: admin/pages/notices.php:49
+msgid "Notices"
+msgstr "Mededelingen"
+
+#: admin/pages/notices.php:50
+msgid "General"
+msgstr "Algemeen"
+
+#: disable-admin-notices.php:23
+msgid ""
+"We found that you have the \"Clearfy - disable unused features\" plugin "
+"installed, this plugin already has disable comments functions, so you can "
+"deactivate plugin \"Disable admin notices\"!"
+msgstr ""
+
+#: disable-admin-notices.php:80
+msgid "Webcraftic disable admin notices"
+msgstr "Webcraftic uitschakelen admin mededelingen"
+
+#: includes/classes/class.configurate-notices.php:79
+#, php-format
+msgid "Notifications %s"
+msgstr "Meldingen %s"
+
+#: includes/classes/class.configurate-notices.php:88
+msgid "Restore notice"
+msgstr "Herstel mededelingen"
+
+#: includes/classes/class.configurate-notices.php:267
+msgid "Hide notification forever"
+msgstr "Verberg melding voor altijd"

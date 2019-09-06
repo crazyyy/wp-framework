@@ -1,12 +1,12 @@
 <?php
 /**
- * Primary Term table migration.
+ * Yoast SEO Plugin File.
  *
  * @package WPSEO\Migrations
  */
 
+use Yoast\WP\Free\ORM\Yoast_Model;
 use YoastSEO_Vendor\Ruckusing_Migration_Base;
-use Yoast\YoastSEO\Yoast_Model;
 
 /**
  * Migration for the Primary Term.
@@ -23,9 +23,32 @@ class WpYoastPrimaryTerm extends Ruckusing_Migration_Base {
 
 		$indexable_table = $this->create_table( $table_name );
 
-		$indexable_table->column( 'post_id', 'integer', array( 'unsigned' => true, 'null' => false, 'limit' => 11 ) );
-		$indexable_table->column( 'term_id', 'integer', array( 'unsigned' => true, 'null' => false, 'limit' => 11 ) );
-		$indexable_table->column( 'taxonomy', 'string', array( 'null' => false, 'limit' => 191 ) );
+		$indexable_table->column(
+			'post_id',
+			'integer',
+			array(
+				'unsigned' => true,
+				'null'     => false,
+				'limit'    => 11,
+			)
+		);
+		$indexable_table->column(
+			'term_id',
+			'integer',
+			array(
+				'unsigned' => true,
+				'null'     => false,
+				'limit'    => 11,
+			)
+		);
+		$indexable_table->column(
+			'taxonomy',
+			'string',
+			array(
+				'null'  => false,
+				'limit' => 191,
+			)
+		);
 
 		// Executes the SQL to create the table.
 		$indexable_table->finish();

@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\App\Installer as Ari_Installer;
 use Ari\Database\Helper as DB;
 use Ari\Wordpress\Security as Security;

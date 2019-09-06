@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 // caching headers added in compile.php
 
 if ($_GET["file"] == "favicon.ico") {

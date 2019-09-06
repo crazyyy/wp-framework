@@ -1,0 +1,208 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:29+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:56
+#, php-format
+msgid ""
+"We found that you have the plugin %s installed. The functions of this plugin "
+"already exist in %s. Please deactivate plugin %s to avoid conflicts between "
+"plugins functions."
+msgstr ""
+
+#: admin/boot.php:57
+#, php-format
+msgid ""
+"If you do not want to deactivate the plugin %s for some reason, we strongly "
+"recommend do not use the same plugins functions at the same time!"
+msgstr ""
+"Als u de plugin %s om eender welke reden niet wilt deactiveren, raden wij u "
+"ten zeerste aan om niet dezelfde plugin functies tegelijkertijd te gebruiken!"
+
+#: admin/boot.php:117 admin/options.php:30
+msgid "Use transliteration"
+msgstr "Gebruik transliteratie"
+
+#: admin/boot.php:123 admin/options.php:48
+msgid "Force transliteration"
+msgstr "Forceer transliteratie"
+
+#: admin/boot.php:129 admin/options.php:78
+msgid "Don't use transliteration in frontend"
+msgstr ""
+
+#: admin/boot.php:135 admin/options.php:39
+msgid "Convert file names"
+msgstr "Bestandsnamen converteren"
+
+#: admin/boot.php:141 admin/options.php:58
+msgid "Convert file names into lowercase"
+msgstr "Bestandsnamen converteren naar kleine letters"
+
+#: admin/boot.php:147 admin/options.php:68
+msgid "Redirection old URLs to new ones"
+msgstr "Redirect oude URL's naar nieuwe"
+
+#: admin/boot.php:153 admin/options.php:88
+msgid "Character Sets"
+msgstr "Tekensets"
+
+#: admin/boot.php:174
+msgid "Get ultimate plugin free"
+msgstr "Krijg ultieme plugin gratis"
+
+#: admin/options.php:23
+msgid "Transliteration of Cyrillic alphabet."
+msgstr "Transliteratie van Cyrillische alfabet."
+
+#: admin/options.php:23
+msgid ""
+"Converts Cyrillic permalinks of post, pages, taxonomies and media files to the "
+"Latin alphabet. Supports Russian, Ukrainian, Georgian, Bulgarian languages. "
+"Example: http://site.dev/последние-новости -> http://site.dev/poslednie-novosti"
+msgstr ""
+"Converteert Cyrillische permalinks van post, pagina's, taxonomieën en "
+"mediabestanden naar het Latijnse alfabet. Ondersteunt Russische, Oekraïense, "
+"Georgische, Bulgaarse talen. Voorbeeld: http://site.dev/последнивости -> "
+"http://site.dev/poslednie-novosti"
+
+#: admin/options.php:32
+msgid ""
+"If you enable this option, all URLs of new pages, posts, tags, and categories "
+"will automatically be converted to Latin."
+msgstr ""
+"Als u deze optie inschakelt, worden alle URL's van nieuwe pagina's, berichten, "
+"tags en categorieën automatisch geconverteerd naar het Latijn."
+
+#: admin/options.php:41
+msgid ""
+"This option works only for new media library files. All Cyrillic names of the "
+"downloaded files will be converted to names with Latin characters."
+msgstr ""
+"Deze optie werkt alleen voor nieuwe mediabibliotheek bestanden. Alle "
+"Cyrillische namen van de gedownloade bestanden worden geconverteerd naar namen "
+"met Latijnse tekens."
+
+#: admin/options.php:50
+#, php-format
+msgid ""
+"If any of your plugins affects transliteration of links and file names, you "
+"can use this option to change the plugin of %s to overwrite the changes of the "
+"other plugins."
+msgstr ""
+"Als één van uw plugins de transliteratie van koppelingen en bestandsnamen "
+"beïnvloedt, kunt u deze optie gebruiken om de plugin van %s te wijzigen om de "
+"wijzigingen van de andere plugins te overschrijven."
+
+#: admin/options.php:60
+msgid ""
+"This function works only for new upload files. Example: File_Name.jpg -> "
+"file_name.jpg"
+msgstr ""
+"Deze functie werkt alleen voor nieuwe uploadbestanden. Voorbeeld: File_Name."
+"jpg -> file_name.jpg"
+
+#: admin/options.php:70
+msgid ""
+"If at the time of the plugin installation you had pages with unconverted "
+"links, use this option to redirect users from old to new URLs with the Latin "
+"alphabet."
+msgstr ""
+"Als u op het moment van de installatie van de plugin pagina's had met niet-"
+"geconverteerde links, gebruikt u deze optie om gebruikers om te leiden van "
+"oude naar nieuwe URL's met het Latijnse alfabet."
+
+#: admin/options.php:80
+msgid "Enable when have a problem in frontend."
+msgstr ""
+
+#: admin/options.php:89
+msgid ""
+"You can supplement current base of transliteration characters. Write pairs of "
+"values separated by commas. Example:"
+msgstr ""
+"U kunt de huidige basis van transliteratie tekens aanvullen. Schrijf paren van "
+"waardes gescheiden door komma's. Voorbeeld:"
+
+#: admin/options.php:178
+msgid ""
+"If at the time of the plugin installation you already had posts, pages, tags "
+"and categories, click on this button and the plugin will automatically convert "
+"URLs into Latin. Attention! Previously uploaded files will not be converted."
+msgstr ""
+"Als u tijdens de installatie van de plugin al berichten, pagina's, tags en "
+"categorieën had, klik dan op deze knop en de plugin converteert URL's "
+"automatisch naar Latijn. Aandacht! Eerder geüploade bestanden worden niet "
+"geconverteerd."
+
+#: admin/options.php:187
+msgid "Convert already created posts and categories"
+msgstr "Converteer eerder gemaakte berichten en categorieën"
+
+#: admin/options.php:189
+msgid "Url of old posts, pages,terms,tags successfully converted into Latin!"
+msgstr "Url van oude berichten, pagina's, voorwaarden, tags omgezet in Latijn!"
+
+#: admin/options.php:199
+msgid ""
+"Allows you to restore converted URLs by using the \"Convert already created "
+"posts and categories\" button. This can be useful in case of incorrect URLs or "
+"incorrect transliteration of some characters. You can roll back changes and "
+"advance the character sets above to correct the plugin's work. "
+msgstr ""
+"Hiermee kunt u geconverteerde URL's herstellen met behulp van de knop "
+"\"Bestaande berichten en categorieën converteren\". Dit kan handig zijn in het "
+"geval van onjuiste URL's of onjuiste transliteratie van sommige tekens. U kunt "
+"wijzigingen terugdraaien en de tekensets hierboven verbeteren om het werk van "
+"de plugin te corrigeren."
+
+#: admin/options.php:208
+msgid "Rollback changes"
+msgstr "Wijzigingen terugdraaien"
+
+#: admin/options.php:210
+msgid "The rollback of new changes was successful!"
+msgstr "Het terugdraaien van nieuwe wijzigingen was succesvol!"
+
+#: admin/pages/cyrlitera.php:33 admin/pages/cyrlitera.php:49
+msgid "Transliteration"
+msgstr "Transliteratie"
+
+#: admin/pages/cyrlitera.php:50
+msgid "General"
+msgstr "Algemeen"
+
+#: cyrlitera.php:23
+msgid ""
+"We found that you have the \"Clearfy - disable unused features\" plugin "
+"installed, this plugin already has disable comments functions, so you can "
+"deactivate plugin \"Webcraftic Cyrlitera\"!"
+msgstr ""
+"We hebben vastgesteld dat de plugin \"Clearfy - niet-gebruikte functies "
+"uitschakelen\" is geïnstalleerd.  Deze plugin heeft reeds de functie "
+"opmerkingen uitschakelen, zodat u de plugin \"Webcraftic Cyrlitera\" kunt "
+"deactiveren!"
+
+#: cyrlitera.php:81
+msgid "Webcraftic Cyrlitera"
+msgstr "Webcraftic Cyrlitera"

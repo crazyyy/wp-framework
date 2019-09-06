@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Adminer_Runner;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Display as Display_Controller;
 use Ari\Utils\Response as Response;
 

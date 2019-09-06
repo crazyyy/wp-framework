@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $TABLE = $_GET["table"];
 $fields = fields($TABLE);
 if (!$fields) {

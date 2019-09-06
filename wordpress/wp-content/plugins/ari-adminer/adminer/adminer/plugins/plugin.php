@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Adminer customization allowing usage of plugins
 * @link https://www.adminer.org/plugins/#use

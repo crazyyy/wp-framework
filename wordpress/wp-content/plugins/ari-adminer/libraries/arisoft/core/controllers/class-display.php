@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Controllers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Display extends Controller {
     function __construct( $options = array() ) {
         $this->options = new Display_Options( $options );

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $SEQUENCE = $_GET["sequence"];
 $row = $_POST;
 

@@ -1,0 +1,306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:34+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:21
+#, php-format
+msgid ""
+"We found that you have the plugin %s installed. The functions of this plugin "
+"already exist in %s. Please deactivate plugin %s to avoid conflicts between "
+"plugins' functions."
+msgstr ""
+"We hebben geconstateerd dat de plugin %s is geïnstalleerd. De functies van "
+"deze plugin bestaan ​​al in %s. Deactiveer plugin %s om conflicten tussen de "
+"functies van de plugins te voorkomen."
+
+#: admin/boot.php:22
+#, php-format
+msgid ""
+"If you do not want to deactivate the plugin %s for some reason, we strongly "
+"recommend do not use the same plugins' functions at the same time!"
+msgstr ""
+"Als u de plugin %s, om eender welke reden niet wilt deactiveren, raden wij u "
+"ten zeerste aan om niet dezelfde plugin functies tegelijkertijd te gebruiken!"
+
+#: admin/boot.php:70
+msgid "Disable plugin updates"
+msgstr "Schakel plugin updates uit"
+
+#: admin/boot.php:76
+msgid "Disable theme updates"
+msgstr "Schakel thema updates uit"
+
+#: admin/boot.php:82 admin/pages/updates.php:122
+msgid "Disable Automatic Translation Updates"
+msgstr "Schakel Automatische vertaal-updates uit"
+
+#: admin/boot.php:87
+msgid "Disable wordPress core updates"
+msgstr "Schakel WordPress core-updates uit"
+
+#: admin/boot.php:93 admin/pages/updates.php:156
+msgid "Enable updates for VCS Installations"
+msgstr "Schakel updates voor VCS-installaties in"
+
+#: admin/boot.php:98
+msgid "Plugin filters"
+msgstr "Plugin filters"
+
+#: admin/boot.php:103 admin/pages/updates.php:166
+msgid "Updates nags only for Admin"
+msgstr "Update meldingen enkel voor Admin"
+
+#: admin/boot.php:115
+msgid "One click disable all updates"
+msgstr "Alle updates uitschakelen in één klik"
+
+#: admin/boot.php:136
+msgid "Get ultimate plugin free"
+msgstr "Krijg ultieme plugin gratis"
+
+#: admin/pages/advanced.php:37
+msgid "Advanced"
+msgstr "Gevorderd"
+
+#: admin/pages/advanced.php:65
+msgid "Please, wait 90 sec. to see the forced automatic update result."
+msgstr ""
+"Wacht alstublieft 90 sec. om het geforceerde automatische update resultaat te "
+"zien."
+
+#: admin/pages/advanced.php:75
+msgid "Force Automatic Updates"
+msgstr "Forceer Automatische Updates"
+
+#: admin/pages/advanced.php:77
+msgid ""
+"This will attempt to force automatic updates. This is useful for debugging."
+msgstr ""
+"Hiermee wordt geprobeerd automatische updates te forceren. Dit is handig om "
+"fouten op te sporen."
+
+#: admin/pages/advanced.php:78
+msgid "Force update"
+msgstr "Forceer update"
+
+#: admin/pages/plugins.php:63
+msgid "Plugins"
+msgstr "Plugins"
+
+#: admin/pages/plugins.php:81
+msgid ""
+"- To disable updates individually choose the “Manual or automatic plugin "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+"- Om updates afzonderlijk uit te schakelen, kiest u de optie \"Handmatige of "
+"automatische plugin updates\", slaat u vervolgens de instellingen op en keert "
+"u terug naar deze pagina."
+
+#: admin/pages/plugins.php:85
+msgid ""
+"- To configure plugin auto updates individually, choose the “Enable auto "
+"updates” option then save settings and comeback to this page."
+msgstr ""
+
+#: admin/pages/plugins.php:238
+msgid "Plugins list"
+msgstr "Lijst met plugins"
+
+#: admin/pages/plugins.php:241
+msgid "This page you can individually disable plugin updates and auto updates."
+msgstr ""
+"Op deze pagina kunt u plugin updates en automatische updates individueel "
+"uitschakelen."
+
+#: admin/pages/plugins.php:257
+msgid "Bulk actions"
+msgstr "Bulk acties"
+
+#: admin/pages/plugins.php:258 admin/pages/plugins.php:333
+#: admin/pages/plugins.php:338 admin/pages/updates.php:96
+#: admin/pages/updates.php:111 admin/pages/updates.php:132
+msgid "Disable updates"
+msgstr "Schakel updates uit"
+
+#: admin/pages/plugins.php:259 admin/pages/plugins.php:335
+msgid "Enable updates"
+msgstr "Schakel updates in"
+
+#: admin/pages/plugins.php:260 admin/pages/plugins.php:345
+#: admin/pages/plugins.php:351
+msgid "Enable auto-updates"
+msgstr "Schakel auto-updates in"
+
+#: admin/pages/plugins.php:261 admin/pages/plugins.php:343
+#: admin/pages/plugins.php:349
+msgid "Disable auto-updates"
+msgstr "Automatische updates uitschakelen"
+
+#: admin/pages/plugins.php:263
+msgid "Apply"
+msgstr "Toepassen"
+
+#: admin/pages/plugins.php:270
+msgid "Plugin"
+msgstr "Plugin"
+
+#: admin/pages/plugins.php:272
+msgid "Description"
+msgstr "Beschrijving"
+
+#: admin/pages/plugins.php:319
+msgid "Select"
+msgstr "Selecteer"
+
+#: admin/pages/updates.php:37
+msgid "Updates manager"
+msgstr "Updates manager"
+
+#: admin/pages/updates.php:51
+msgid "Updates"
+msgstr "Updates"
+
+#: admin/pages/updates.php:52
+msgid "General"
+msgstr "Algemeen"
+
+#: admin/pages/updates.php:85
+msgid "General settings for WordPress, plugins and themes updates"
+msgstr "Algemene instellingen voor WordPress, plugins en thema updates"
+
+#: admin/pages/updates.php:85
+msgid ""
+"This page, you can enable or disable automatic updates. To test the automatic "
+"updates, click the \"Advanced\" tab."
+msgstr ""
+"Op deze pagina kunt u automatische updates in- of uitschakelen. Klik op het "
+"tabblad 'Geavanceerd' om de automatische updates te testen."
+
+#: admin/pages/updates.php:92
+msgid "Plugin Updates"
+msgstr "Plugin Updates"
+
+#: admin/pages/updates.php:94 admin/pages/updates.php:109
+msgid "Manual updates"
+msgstr "Manuele updates"
+
+#: admin/pages/updates.php:95 admin/pages/updates.php:110
+msgid "Enable auto updates"
+msgstr "Schakel automatische updates in"
+
+#: admin/pages/updates.php:99
+msgid ""
+"You can disable all plugin updates or choose manual or automatic update mode."
+msgstr ""
+"U kunt alle plugin updates uitschakelen of de handmatige of automatische "
+"update modus kiezen."
+
+#: admin/pages/updates.php:107
+msgid "Theme Updates"
+msgstr "Thema Updates"
+
+#: admin/pages/updates.php:114
+msgid ""
+"You can disable all themes updates or choose manual or automatic update mode."
+msgstr ""
+"U kunt alle thema updates uitschakelen of de handmatige of automatische update "
+"modus kiezen."
+
+#: admin/pages/updates.php:130
+msgid "WordPress Core Updates"
+msgstr "WordPress Core Updates"
+
+#: admin/pages/updates.php:133
+msgid "Disable auto updates"
+msgstr "Schakel automatische updates uit"
+
+#: admin/pages/updates.php:136
+msgid "Allow minor auto updates"
+msgstr "Sta kleine automatische updates toe"
+
+#: admin/pages/updates.php:140
+msgid "Allow major auto updates"
+msgstr "Sta grote automatische updates toe"
+
+#: admin/pages/updates.php:144
+msgid "Allow development auto updates"
+msgstr "Automatische updates van de toepassing toestaan"
+
+#: admin/pages/updates.php:148
+msgid ""
+"You can disable all core WordPress updates, or disable only automatic updates. "
+"Also you can select the update mode. By default (minor)"
+msgstr ""
+"U kunt alle essentiële WordPress updates uitschakelen of alleen automatische "
+"updates uitschakelen. U kunt ook de update modus selecteren. Standaard (gering)"
+
+#: admin/pages/updates.php:148
+msgid "Major - automatically update to major releases (e.g., 4.1, 4.2, 4.3)."
+msgstr ""
+"Belangrijk -  update automatisch naar belangrijke releases (bijv. 4.1, 4.2, "
+"4.3)."
+
+#: admin/pages/updates.php:148
+msgid ""
+"Minor - automatically update to minor releases (e.g., 4.1.1, 4.1.2, 4.1.3).."
+msgstr ""
+"Gering - update automatisch naar kleine releases (bijv. 4.1.1, 4.1.2, 4.1.3)..."
+
+#: admin/pages/updates.php:148
+msgid "Development - update automatically to Bleeding Edge releases."
+msgstr "Ontwikkeling - update automatisch naar Bleeding Edge-releases."
+
+#: admin/pages/updates.php:158
+msgid ""
+"Enable Automatic Updates even if a VCS folder (.git, .hg, .svn) was found in "
+"the WordPress directory"
+msgstr ""
+"Inschakel Automatische updates, zelfs als een VCS-map (.git, .hg, .svn) werd "
+"gevonden in de WordPress directory"
+
+#: admin/pages/updates.php:168
+msgid ""
+"This plugin allows you to hide the update WordPress reminder from all users "
+"that are not assumed Administrators (cannot upgrade plugins).\n"
+"\n"
+"If you have multiple users then this means those who are not admins don’t need "
+"to see the message. Useful for CMS based sites, so the client doesn’t see the "
+"notice."
+msgstr ""
+"Met deze plugin kunt u de herinnering update WordPress verbergen voor alle "
+"gebruikers die niet worden verondersteld beheerders te zijn (kan geen plugins "
+"upgraden)."
+
+#: webcraftic-updates-manager.php:18
+msgid ""
+"We found that you have the \"Clearfy - disable unused features\" plugin "
+"installed, this plugin already has update manager functions, so you can "
+"deactivate plugin \"Update manager\"!"
+msgstr ""
+"We hebben geconstateerd dat de plugin \"Clearfy - uitschakelen ongebruikte "
+"functies\" is geïnstalleerd, deze plugin heeft al functies voor updaten "
+"manager, dus u kunt de plugin \"Update manager\" deactiveren!"
+
+#: webcraftic-updates-manager.php:75
+msgid "Webcraftic Updates Manager"
+msgstr "Webcraftic Updates Manager"

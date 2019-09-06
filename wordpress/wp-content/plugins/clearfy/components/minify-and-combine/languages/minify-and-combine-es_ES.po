@@ -1,0 +1,273 @@
+# Translation of Plugins - Clearfy in Spanish (Spain)
+# This file is distributed under the same license as the Plugins - Clearfy – WordPress optimization plugin and disable ultimate tweaker - Development (trunk) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-04-28 06:29+0300\n"
+"PO-Revision-Date: 2019-04-28 06:29+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:23
+msgid ""
+"Clearfy: Minify and Combine component is not compatible with the Autoptimize "
+"plugin, please do not use them together to avoid conflicts. Please disable "
+"the Minify and Combine component"
+msgstr ""
+"Clearfy: Nuestro componente Minify and Combine no es compatible con el "
+"plugin ( Autoptimize ), no los use juntos para evitar conflictos. Por favor "
+"deshabilite el componente Minify y Combine"
+
+#: admin/boot.php:50 admin/pages/settings.php:103
+msgid "Optimize JavaScript Code?"
+msgstr "¿Optimizar código JavaScript?"
+
+#: admin/boot.php:55 admin/pages/settings.php:124
+msgid "Aggregate JS-files?"
+msgstr "¿Agregar archivos JS?"
+
+#: admin/boot.php:60 admin/pages/settings.php:145
+msgid "Also aggregate inline JS?"
+msgstr "¿También agregar inline JS?"
+
+#: admin/boot.php:65 admin/pages/settings.php:166
+msgid "Force JavaScript in &lt;head&gt;?"
+msgstr "Forzar JavaScript en &lt;head&gt;?"
+
+#: admin/boot.php:70 admin/pages/settings.php:175
+msgid "Exclude scripts from Мinify And Combine:"
+msgstr "Excluir scripts de Мinify And Combine:"
+
+#: admin/boot.php:75 admin/pages/settings.php:185
+msgid "Add try-catch wrapping?"
+msgstr "¿Añadir envoltura try-catch?"
+
+#: admin/boot.php:83 admin/pages/settings.php:206
+msgid "Optimize CSS Code?"
+msgstr "¿Optimizar código CSS?"
+
+#: admin/boot.php:89 admin/pages/settings.php:222
+msgid "Aggregate CSS-files?"
+msgstr "¿Agregar archivos CSS?"
+
+#: admin/boot.php:95 admin/pages/settings.php:243
+msgid "Also aggregate inline CSS?"
+msgstr "¿También agregar inline CSS?"
+
+#: admin/boot.php:101 admin/pages/settings.php:264
+msgid "Generate data: URIs for images?"
+msgstr "Generar datos: ¿URIs para imágenes?"
+
+#: admin/boot.php:107 admin/pages/settings.php:274
+msgid "Inline and Defer CSS?"
+msgstr "¿Inline y aplazar CSS?"
+
+#: admin/boot.php:113 admin/pages/settings.php:285
+msgid "Inline all CSS?"
+msgstr "¿Inline todo el CSS?"
+
+#: admin/boot.php:119
+msgid "Exclude CSS from Мinify And Combine"
+msgstr "Excluir CSS de Мinify And Combine"
+
+#: admin/boot.php:135
+msgid "One click optimize scripts (js, css)"
+msgstr "Optimizar scripts con un clik (js, css)"
+
+#: admin/boot.php:137
+msgid "One click optimize html code and scripts"
+msgstr "Optimizar html y scripts con un Click"
+
+#: admin/pages/settings.php:39
+msgid "Minify (JS/CSS)"
+msgstr "Minificar (JS/CSS)"
+
+#: admin/pages/settings.php:60
+msgid "Minify (Html/JS/CSS)"
+msgstr "Minificar (Html/JS/CSS)"
+
+#: admin/pages/settings.php:60
+msgid "General"
+msgstr "General"
+
+#: admin/pages/settings.php:78
+msgid "The cache has been successfully cleaned."
+msgstr "El caché se ha limpiado con éxito."
+
+#: admin/pages/settings.php:96
+msgid "JavaScript Options"
+msgstr "Opciones de JavaScript"
+
+#: admin/pages/settings.php:126
+msgid ""
+"Aggregate all linked JS-files to have them loaded non-render blocking? If "
+"this option is off, the individual JS-files will remain in place but will be "
+"minified."
+msgstr ""
+"¿Agregar todos los archivos JS vinculados para que sean cargados sin "
+"procesamiento? Si esta opción está desactivada, los archivos JS individuales "
+"permanecerán en su lugar pero se minimizarán."
+
+#: admin/pages/settings.php:147
+msgid ""
+"Let Мinify And Combine also extract JS from the HTML. Warning: this can make "
+"Мinify And Combine's cache size grow quickly, so only enable this if you "
+"know what you're doing."
+msgstr ""
+"Deje que Мinify And Combine también extraiga JS del HTML. Advertencia: esto "
+"puede hacer que el tamaño del caché de Мinify And Combine crezca "
+"rápidamente, así que habilítelo solo si sabe lo que está haciendo."
+
+#: admin/pages/settings.php:168
+msgid ""
+"Load JavaScript early, this can potentially fix some JS-errors, but makes "
+"the JS render blocking."
+msgstr ""
+"Cargar primero JavaScript puede corregir algunos errores potenciales de JS, "
+"pero hace que JS renderice el bloqueo."
+
+#: admin/pages/settings.php:177
+msgid ""
+"A comma-separated list of scripts you want to exclude from being optimized, "
+"for example 'whatever.js, another.js' (without the quotes) to exclude those "
+"scripts from being aggregated and minimized by Мinify And Combine."
+msgstr ""
+"Lista de scripts separados por comas para ser excluídos de la optimización, "
+"ejemplo, 'whatever.js, another.js' (sin las comillas) excluir estos scripts "
+"de ser agregados para minimizarlos por Мinify And Combine."
+
+#: admin/pages/settings.php:187 admin/pages/settings.php:208
+msgid ""
+"If your scripts break because of a JS-error, you might want to try this."
+msgstr "Si sus scripts se rompen debido a un error de JS, intente esto."
+
+#: admin/pages/settings.php:199
+msgid "CSS Options"
+msgstr "Opciones de CSS"
+
+#: admin/pages/settings.php:224
+msgid ""
+"Aggregate all linked CSS-files? If this option is off, the individual CSS-"
+"files will remain in place but will be minified."
+msgstr ""
+"¿Agregar todos los archivos CSS vinculados? Si esta opción es desactivada, "
+"los archivos CSS individuales permanecerán en su lugar pero se minimizarán."
+
+#: admin/pages/settings.php:245
+msgid ""
+"Check this option for Мinify And Combine to also aggregate CSS in the HTML."
+msgstr ""
+"Marque esta opción para Мinificar y combinar asi como agregar también CSS en "
+"el HTML."
+
+#: admin/pages/settings.php:266
+msgid ""
+"Enable this to include small background-images in the CSS itself instead of "
+"as separate downloads."
+msgstr ""
+"Habilite esto para incluir pequeñas imágenes de fondo en el CSS, "
+"descarguelas de forma separada."
+
+#: admin/pages/settings.php:276
+msgid ""
+"Inline \"above the fold CSS\" while loading the main auto optimized CSS only "
+"after page load. Check the FAQ for more info.\n"
+"This can be fully automated for different types of pages with the Мinify And "
+"Combine CriticalCSS Power-Up."
+msgstr ""
+"En línea \"above the fold CSS\" mientras se carga el auto optimizado de CSS "
+"principal. Consulte FAQ para obtener más información.\n"
+"Esto puede automatizarse completamente para diferentes tipos de páginas con "
+"la función de \"Мinify And Combine CriticalCSS\"."
+
+#: admin/pages/settings.php:287
+msgid ""
+"Inlining all CSS can improve performance for sites with a low pageviews/ "
+"visitor-rate, but may slow down performance otherwise."
+msgstr ""
+"La incorporación de todo el CSS puede mejorar el rendimiento de los sitios "
+"con un bajo pageviews/ visitor-rate, pero también podría relentizar el "
+"rendimiento."
+
+#: admin/pages/settings.php:294
+msgid "Exclude CSS from Мinify And Combine:"
+msgstr "Excluir CSS de Мinify And Combine:"
+
+#: admin/pages/settings.php:296
+msgid "A comma-separated list of CSS you want to exclude from being optimized."
+msgstr "Lista de CSS separada por comas para ser excluídas de la optimización."
+
+#: admin/pages/settings.php:308
+msgid "Cache Info"
+msgstr "Información de caché"
+
+#: admin/pages/settings.php:368 includes/boot.php:52 includes/boot.php:71
+msgid "Clear cache"
+msgstr "Limpiar cache"
+
+#: admin/pages/settings.php:386
+msgid ""
+"<b>This could break things!</b><br>If you notice any errors on your website "
+"after having activated this setting, just deactivate it again, and your site "
+"will be back to normal."
+msgstr ""
+"<b>¡Esto podría dañar algo!</b> <br> Si observa algún error en su sitio web "
+"después de haber activado esta configuración, simplemente desactívela "
+"nuevamente y su sitio volverá a la normalidad."
+
+#: includes/classes/class.mac-cache-checker.php:84
+msgid "Мinify And Combine cache size warning"
+msgstr "Advertencia de tamaño Мinify And Combine en Cache"
+
+#: includes/classes/class.mac-cache-checker.php:85
+msgid ""
+"Мinify And Combine's cache size is getting big, consider purging the cache. "
+"Have a look at https://wordpress.org/plugins/ to see how you can keep the "
+"cache size under control."
+msgstr ""
+"El tamaño del caché de Мinify And Combine está incrementándose, considere "
+"purgar el caché. Busque en https://wordpress.org/plugins/ para ver cómo "
+"puedes mantener el tamaño del caché bajo control."
+
+#: includes/classes/class.mac-cache-checker.php:107
+msgid ""
+"<strong>Мinify And Combine's cache size is getting big</strong>, consider "
+"purging the cache. Have a look at <a href=\"https://wordpress.org/plugins/\" "
+"target=\"_blank\" rel=\"noopener noreferrer\">the Мinify And Combine FAQ</a> "
+"to see how you can keep the cache size under control."
+msgstr ""
+"<strong>El tamaño del caché de Мinify And Combine está incrementándose</"
+"strong>, considere purgar el caché. Vea cómo hacerlo: <a href=\"https://"
+"wordpress.org/plugins/\" target=\"_blank\" rel=\"noopener noreferrer\">the "
+"Мinify And Combine FAQ</a> para saber cómo mantener el tamaño de caché bajo "
+"control."
+
+#: includes/classes/class.mac-main.php:426
+#, php-format
+msgid ""
+"Мinify And Combine cannot write to the cache directory (%s), please fix to "
+"enable CSS/ JS optimization!"
+msgstr ""
+"Мinify And Combine no puede escribir en el directorio de caché (% s), "
+"corríjalo para habilitar la optimización CSS / JS."
+
+#: minify-and-combine.php:101
+msgid "Webcraftic minify and combine"
+msgstr "Webcraftic minify and combine"

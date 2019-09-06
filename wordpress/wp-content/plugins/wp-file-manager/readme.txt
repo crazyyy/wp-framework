@@ -1,10 +1,10 @@
-﻿=== File Manager ===
+=== File Manager ===
 Contributors: mndpsingh287
-Tags: wp-file-manager, elfinder,file manager, ftp, wordpress file manager,file manager, wp-filemanager, Upload Files, WP File Manager, File Manage, Edit Files, Delete Files, FTP, filemanager, wpfilemanager, ftp, file transfer, update, create, delete, view, rename, editor, Cpanel, Control Panel, Admin, Shortcode, explorer, file explorer, filemanager
+Tags: wp-file-manager, elfinder,file manager, ftp, wp-filemanager,file manager, wp-filemanager, Upload Files, WP File Manager, File Manage, Edit Files, Delete Files, FTP, filemanager, wpfilemanager, ftp, file transfer, update, create, delete, view, rename, editor, Cpanel, Control Panel, Admin, Shortcode, explorer, file explorer, filemanager
 Requires at least: 4.0
-Tested up to: 5.0.2
+Tested up to: 5.2.2
 Requires PHP: 5.2.4
-Stable tag: 3.8
+Stable tag: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,23 +14,23 @@ file manager provides you ability to edit, delete, upload, download, copy and pa
 
 #### File Manager allows you to edit, delete, upload, download, zip, copy and paste files and folders directly from the Wordpress backend. Don’t bother with FTP to manage and move your files from location to location. The most powerful, flexible, and easiest Wordpress file management solution ever built!
 
-Multi Langauges Added 
+Multi Languages Added 
        
 = Key Features in File Manager free Version Plugin =
 
 Key Features in the Free File Manager plugin include:
-* **Operations**: Various operations with files and folders on a remote server (copy, move, upload, create folder/file, rename, edit, delete, etc.)
-* **Move/Copy**: Admin can Move/Copy files with Drag & Drop. Also includes multi file selection. 
-* **Archives**: Admin can create, archive and extract files(zip, rar, tar, gzip).
-* **File Size**: Admin/User can upload any size files.
-* **File Type**: Control what files can be uploaded and what file can be downloaded.
+* **Operations**: Various operations with files and folders on a remote server (copy, move, upload, create folder/file, rename, edit, delete, etc.)
+* **Move/Copy**: Admin can Move/Copy files with Drag & Drop. Also includes multi file selection. 
+* **Archives**: Admin can create, archive and extract files(zip, rar, tar, gzip).
+* **File Size**: Admin/User can upload any size files.
+* **File Type**: Control what files can be uploaded and what file can be downloaded.
 * **Code Editor**: File Manager comes with a built in integrated development environment (IDE) - New Feature
 * **Syntax Checker**: File Manager now can complete code reviews before saving files to ensure your site will not go down when updating code. Reviewing code for errors has never been so easy! - New Feature
-* **Multiple Themes**: Multiple File Manager Themes Available – New Feature
+* **Multiple Themes**: Multiple File Manager Themes Available – New Feature
 * **Get Info**: All file details, properties, information is now available by simply right clicking a file and selecting Get Info - New Feature 
 * **Share Files by Email**: With File Manager you can easily and quickly share files by Email. Simply right click a file and press share, that’s it! - New Feature 
-* **Private Folder**: Available only for File Manager Pro Edition
-* **Shortcode**: Available only for File Manager Pro Edition
+* **Private Folder**: Available only for File Manager Pro Edition
+* **Shortcode**: Available only for File Manager Pro Edition
 * **Root Directory**: Quickly and easily edit your root path directory. With this feature you can access files inside and outside of Wordpress
 * **PDF Support**: Preview PDF files easily 
 * **Built-in Trash**: Delete files by moving them to trash
@@ -41,16 +41,18 @@ Key Features in the Free File Manager plugin include:
 * **Automatic File Resize**: automatically resize files once uploaded.
 * **Responsive UI**: File Manager works on tablet and mobile devices
 * **Browsing History**: File and folders browsing history
-* **Trash funtion**: Move to Trash Folder Feature
+* **Trash function**: Move to Trash Folder Feature
 * **PDF Preview**: PDF Preview feature available
 * **FTP/SFTP Support**: Alternative to FTP or Cpanel
 * **File Preview**: preview for common MIMEs and file types
 * **Directory Size**: Calculate directory size
 * **Icon View***: List and Icons view available for files and files
 * **Keyboard shortcuts***: Keyboard shortcuts available e.g. copy,paste,drag & drop
-* **Drag and drop**: File Drag & Drop file upload funtion avialable
-* **Funtions Toolbar**: Rich context menu and file manager functions toolbar
+* **Drag and drop**: File Drag & Drop file upload function available
+* **Functions Toolbar**: Rich context menu and file manager functions toolbar
 * **Thumbnails**: Thumbnails for all types of image files
+* **Upload to Media Library**: We have now included the ability to enable images, pdf's, and zip files to be uploaded to you folders and as well be available via the native Wordpress Media Library
+* **Backup/Restore**: Backup and restore themes files, plugins files,uploads folder and db data on server.
 
 = Key Features in File Manager Pro Editions =
 
@@ -66,7 +68,7 @@ Key Features in the Free File Manager plugin include:
 * **Hide Files/Folder:** Here admin is able to hide files and folders for user roles and for users.
 * **File Type:** Control what files can be uploaded and what file can be downloaded.
 * **User Role:** admin is able to control file operations and hide and lock Files and Folders for user roles .
-* **Users:** admin is able to control file operations and hide and lock Files and Folders for paticular user .
+* **Users:** admin is able to control file operations and hide and lock Files and Folders for particular user .
 * **High performance:** High performance server backend and light client UI.
 * **File system:** Local file system storage drivers.
 * **Edit file:** User can edit text files and images.
@@ -102,7 +104,7 @@ Key Features in the Free File Manager plugin include:
 == Frequently asked questions ==
 
 = Can we make zip of any folder or file and download it ? =
-Yes, You can archieve any files and folders as zip then simple download it. Please view screenshots.
+Yes, You can achieve any files and folders as zip then simple download it. Please view screenshots.
 
 == Support == 
 * If any problem occurs, please contact us at https://webdesi9.zendesk.com/hc/en-us
@@ -132,6 +134,66 @@ Yes, You can archieve any files and folders as zip then simple download it. Plea
 
 
 == Changelog ==
+
+= 5.3 (20th AUGUST, 2019) =
+
+* Rate us bar repetition removed.
+
+= 5.2 (12th JULY, 2019) =
+
+* Security fixes addressed by wordpress.
+
+= 5.1 (11th JULY, 2019) =
+
+* Security fixes.
+
+= 5.0 (10th JULY, 2019) =
+
+* Search outline issue fixed, Restore feature bugs fixes
+
+= 4.9 (8th JULY, 2019) =
+
+* Media library multiple file extensions allowed, backup feature admin authorized issue fixes
+
+= 4.8 (13th MAY, 2019) =
+
+* Minor fixes
+
+= 4.7 (13th MAY, 2019) =
+
+* Files and Database backup - restore feature added
+
+= 4.6 (18th APR, 2019) =
+
+* Elfinder Library Updated, Security Fixes
+
+= 4.5 (17th APR, 2019) =
+
+* PHP 7 issues fixes
+
+= 4.4 (22nd FEB, 2019) =
+
+* Extract issue fixed
+
+= 4.3 (21st FEB, 2019) =
+
+* Syntax checker feature removed for now
+
+= 4.2 (21st FEB, 2019) =
+
+* elFinder Library Updated
+
+= 4.1 (21st JAN, 2019) =
+
+* Syntax Error Feature Added
+
+= 4.0 (10th JAN, 2019) =
+
+* Http API fixes
+
+= 3.9 (10th JAN, 2019) =
+
+* CURL issue fixes
 
 = 3.8 (20th DEC, 2018) =
 

@@ -1,12 +1,12 @@
 <?php
 /**
- * Class WpYoastIndexable
+ * Yoast SEO Plugin File.
  *
  * @package WPSEO\Migrations
  */
 
+use Yoast\WP\Free\ORM\Yoast_Model;
 use YoastSEO_Vendor\Ruckusing_Migration_Base;
-use Yoast\YoastSEO\Yoast_Model;
 
 /**
  * Indexable migration.
@@ -63,7 +63,8 @@ class WpYoastIndexable extends Ruckusing_Migration_Base {
 		// Exexcute the SQL to create the table.
 		$indexable_table->finish();
 
-		$this->add_index( $table_name,
+		$this->add_index(
+			$table_name,
 			array(
 				'permalink',
 			),

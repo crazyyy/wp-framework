@@ -194,6 +194,9 @@ select.elfinder-tabstop.ui-state-hover {
     src: url("../icons/material.svg?98361579#material") format("svg");
   }
 }
+.elfinder-button-menu {
+	margin-top: 24px !important;
+}
 .ui-icon,
 .elfinder-button-icon,
 .ui-widget-header .ui-icon,

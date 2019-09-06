@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Utils\Dbcheck;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Object_Factory as Object_Factory;
 
 class Db_Check {

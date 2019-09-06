@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Database;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Helper {
     public static function split_sql( $sql, $prepare_query = true ) {
         $start = 0;

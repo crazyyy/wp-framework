@@ -10,16 +10,39 @@
  */
 class WPSEO_Link {
 
+	/**
+	 * Indicates that the link is external.
+	 *
+	 * @var string
+	 */
 	const TYPE_EXTERNAL = 'external';
+
+	/**
+	 * Indicates that the link is internal.
+	 *
+	 * @var string
+	 */
 	const TYPE_INTERNAL = 'internal';
 
-	/** @var string */
+	/**
+	 * Holds the url.
+	 *
+	 * @var string
+	 */
 	protected $url;
 
-	/** @var int */
+	/**
+	 * Holds the post ID of the target.
+	 *
+	 * @var int
+	 */
 	protected $target_post_id;
 
-	/** @var string */
+	/**
+	 * Holds the link type.
+	 *
+	 * @var string
+	 */
 	protected $type;
 
 	/**

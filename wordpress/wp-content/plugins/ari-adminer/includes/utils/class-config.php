@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 define( 'ARIADMINER_CONFIG_SESSION_KEY', 'adminer_config' );
 
 class Config {

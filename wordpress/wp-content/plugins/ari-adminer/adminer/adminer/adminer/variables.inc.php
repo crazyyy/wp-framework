@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $status = isset($_GET["status"]);
 page_header($status ? lang('Status') : lang('Variables'));
 

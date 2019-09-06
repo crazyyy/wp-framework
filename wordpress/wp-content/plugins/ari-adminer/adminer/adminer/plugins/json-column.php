@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Display JSON values as table in edit
 * @link https://www.adminer.org/plugins/#use

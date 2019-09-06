@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Controls\Grid;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Grid {
     protected $id = null;
 

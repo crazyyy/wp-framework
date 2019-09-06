@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $page_count = $this->get_page_count();
 $page_num = $this->options->page_num;
 

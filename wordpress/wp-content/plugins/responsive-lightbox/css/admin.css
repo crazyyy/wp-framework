@@ -22,7 +22,7 @@
 .responsive-lightbox-settings form {
 	float: left;
 	min-width: 463px;
-	width: auto;
+	width: 100%;
 }
 .responsive-lightbox-settings fieldset span.description {
 	margin-bottom: 8px;

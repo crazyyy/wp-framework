@@ -1,0 +1,83 @@
+# Translation of Plugins - Clearfy in Spanish (Spain)
+# This file is distributed under the same license as the Plugins - Clearfy – WordPress optimization plugin and disable ultimate tweaker - Development (trunk) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-04-28 06:28+0300\n"
+"PO-Revision-Date: 2019-04-28 06:28+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:23
+msgid ""
+"Clearfy: Html minify component is not compatible with the Autoptimize "
+"plugin, please do not use them together to avoid conflicts. Please disable "
+"the Html minify component"
+msgstr ""
+"Clearfy: el componente html minify no es compatible con el plugin "
+"( Autoptimize ), no los use juntos para evitar conflictos. Por favor "
+"deshabilite el componente html minify"
+
+#: admin/boot.php:46 admin/boot.php:96
+msgid "Optimize HTML Code?"
+msgstr "¿Optimizar código HTML?"
+
+#: admin/boot.php:52 admin/boot.php:106
+msgid "Keep HTML comments?"
+msgstr "¿Mantener los comentarios HTML?"
+
+#: admin/boot.php:69
+msgid "One click optimize html code"
+msgstr "Optimizar html con un Click"
+
+#: admin/boot.php:71
+msgid "One click optimize html code and scripts"
+msgstr "Optimizar html y scripts con un Click"
+
+#: admin/boot.php:88
+msgid "HTML Options"
+msgstr "Opciones HTML"
+
+#: admin/boot.php:88
+msgid ""
+"Ever look at the HTML markup of your website and notice how sloppy and "
+"amateurish it looks? The Minify HTML options cleans up sloppy looking markup "
+"and minifies, which also speeds up download."
+msgstr ""
+"¿Alguna vez has mirado el código HTML de tu sitio web y has notado lo "
+"descuidado y extraño que se ve? Las opciones Minify HTML solventan ese "
+"inconveniente y minimizan, acelerando la carga de su Web."
+
+#: admin/boot.php:108
+msgid "Enable this if you want HTML comments to remain in the page."
+msgstr ""
+"Habilita esto si quieres que los comentarios HTML permanezcan en la página."
+
+#: admin/pages/settings.php:40 admin/pages/settings.php:63
+msgid "HTML Minify"
+msgstr "Minificar HTML"
+
+#: admin/pages/settings.php:64
+msgid "General"
+msgstr "General"
+
+#: html-minify.php:102
+msgid "Webcraftic HTML Minify"
+msgstr "Webcraftic HTML Minify"

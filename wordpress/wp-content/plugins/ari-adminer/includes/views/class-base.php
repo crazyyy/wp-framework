@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Views;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Views\View as View;
 use Ari\Utils\Request as Request;
 

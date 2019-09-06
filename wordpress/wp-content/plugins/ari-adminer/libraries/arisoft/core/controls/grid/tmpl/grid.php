@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $current_path = dirname( __FILE__ );
 ?>
 <table id="<?php echo $this->id; ?>" class="ari-grid<?php if ( $this->options->options->class ) echo ' ' . $this->options->options->class; ?>">

@@ -1,0 +1,427 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: clearfy\n"
+"POT-Creation-Date: 2018-10-16 22:46+0300\n"
+"PO-Revision-Date: 2018-10-16 23:23+0300\n"
+"Last-Translator: alex.kovalevv@gmail.com <alex.kovalevv@gmail.com>\n"
+"Language-Team: Alex Kovalev <alex.kovalevv@gmail.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+
+#: admin/boot.php:18
+msgid "Disable comments on the entire site"
+msgstr "Отключить комментарии на всем сайте"
+
+#: admin/boot.php:24 admin/pages/comments.php:127
+msgid "Select post types"
+msgstr "Выбрать тип записи"
+
+#: admin/boot.php:29 admin/pages/comments.php:167
+msgid "Replace external links in comments on the JavaScript code"
+msgstr "Заменить внешние ссылки в комментариях на JavaScript код"
+
+#: admin/boot.php:34 admin/pages/comments.php:176
+msgid "Replace external links from comment authors on the JavaScript code"
+msgstr "Заменить внешние ссылки от авторов комментариев на код JavaScript"
+
+#: admin/boot.php:39
+msgid "Disable X-Pingback"
+msgstr "Убрать ссылку на X-Pingback и возможность спамить pingback-ами"
+
+#: admin/boot.php:44 admin/pages/comments.php:158
+msgid "Remove field \"site\" in comment form"
+msgstr "Удаляет поле \"Сайт\" в форме комментариев"
+
+#: admin/boot.php:56
+msgid "One click disable all comments"
+msgstr "Отключить все комментарии в один клик"
+
+#: admin/boot.php:77
+msgid "Get ultimate plugin free"
+msgstr "Получите полную версию плагина бесплатно"
+
+#: admin/pages/comments.php:38 admin/pages/comments.php:92
+msgid "Disable comments"
+msgstr "Отключить комментарии"
+
+#: admin/pages/comments.php:39
+msgid "Manage site comments"
+msgstr "Упр. комментариями"
+
+#: admin/pages/comments.php:52
+msgid "Comments"
+msgstr "Комментарии"
+
+#: admin/pages/comments.php:52
+msgid "General"
+msgstr "Основные"
+
+#: admin/pages/comments.php:67
+msgid "Global disabling of comments"
+msgstr "Глобальное отключение комментариев"
+
+#: admin/pages/comments.php:67
+msgid ""
+"What is the difference between these and native WordPress functions? "
+"WordPress disables comments only for new posts! Using the functions below, "
+"you can disable comments globally, even for old posts, and you can choose "
+"which post types comments to disable. The plugin also disables the comment "
+"functionality itself, which creates a certain load on the site."
+msgstr ""
+"Чем отличается эти функции от нативных функций Wordpress? Wordpress "
+"отключает комментарии только для новых записей! С помощью функций ниже, вы "
+"можете отключить комментарии глобально, даже для старых записей, причем вы "
+"можете выбрать для каких типов записей нужно отключить комментарии. Плагин "
+"также отключает сам функционал комментариев, который создает определенную "
+"нагрузку на сайт."
+
+#: admin/pages/comments.php:94
+msgid "Not disable"
+msgstr "Не отключать"
+
+#: admin/pages/comments.php:97
+msgid "Everywhere"
+msgstr "Повсюду"
+
+#: admin/pages/comments.php:98
+#, php-format
+msgid ""
+"You can delete all comments in the database by clicking on this link (<a "
+"href=\"%s\">cleaning comments in database</a>)."
+msgstr ""
+"Вы можете удалить все комментарии в базе данных, нажав на эту ссылку ( <a "
+"href=\"%s\">очистка комментариев в базе данных</a> )."
+
+#: admin/pages/comments.php:102
+msgid "On certain post types"
+msgstr "Только выбранные типы записей"
+
+#: admin/pages/comments.php:103
+#, php-format
+msgid ""
+"You can delete all comments for the selected post types. Select the post "
+"types below and save the settings. After that, click the link (<a href=\"%s"
+"\">delete all comments for the selected post types in database</a>)."
+msgstr ""
+"Вы можете удалить все комментарии для выбранных типов записей. Выберите типы "
+"записей ниже и сохраните настройки. После этого нажмите ссылку ( <a href=\"%s"
+"\">удалите все комментарии для выбранных типов записей в базе данных</a> )."
+
+#: admin/pages/comments.php:107
+msgid ""
+"Everywhere - Warning: This option is global and will affect your entire "
+"site. Use it only if you want to disable comments everywhere. A complete "
+"description of what this option does is available here"
+msgstr ""
+"Повсюду - предупреждение: этот параметр является глобальным и повлияет на "
+"весь ваш сайт. Используйте его только в том случае, если вы хотите отключить "
+"комментарии повсюду. "
+
+#: admin/pages/comments.php:107
+msgid ""
+"On certain post types - Disabling comments will also disable trackbacks and "
+"pingbacks. All comment-related fields will also be hidden from the edit/"
+"quick-edit screens of the affected posts. These settings cannot be "
+"overridden for individual posts."
+msgstr ""
+"В некоторых типах сообщений - отключение комментариев также отключает "
+"трекбэки и pingback. Все поля, связанные с комментариями, также будут скрыты "
+"от экранов редактирования / быстрого редактирования затронутых сообщений. "
+"Эти настройки нельзя переопределять для отдельных сообщений."
+
+#: admin/pages/comments.php:130
+msgid "Select the post types for which comments will be disabled"
+msgstr "Выберите типы записей, для которых комментарии будут отключены."
+
+#: admin/pages/comments.php:138
+msgid "Custom post types"
+msgstr "Произвольные типы записей"
+
+#: admin/pages/comments.php:141
+msgid ""
+"Only the built-in post types appear above. If you want to disable comments "
+"on other custom post types on the entire network, you can supply a comma-"
+"separated list of post types below (use the slug that identifies the post "
+"type)."
+msgstr ""
+"Только встроенные типы записей отображаются выше. Если вы хотите отключить "
+"комментарии к другим пользовательским типам записей во всей сети, вы можете "
+"предоставить список типов сообщений, разделенных запятыми (используйте имя, "
+"которое идентифицирует тип записей)."
+
+#: admin/pages/comments.php:152
+msgid "General settings for comments"
+msgstr "Общие настройки комментариев"
+
+#: admin/pages/comments.php:152
+msgid "These settings will help you improve SEO and reduce the amount of spam."
+msgstr "Эти настройки помогут вам улучшить SEO и уменьшить количество спама."
+
+#: admin/pages/comments.php:160
+msgid ""
+"Tired of spam in the comments? Do visitors leave \"blank\" comments for the "
+"sake of a link to their site?"
+msgstr ""
+"Надоел спам в комментариях? Посетители оставляют «пустые» комментарии ради "
+"ссылки на свой сайт?"
+
+#: admin/pages/comments.php:160
+msgid "Removes the \"Site\" field from the comment form."
+msgstr "Убирает поле «Сайт» из формы комментирования."
+
+#: admin/pages/comments.php:160
+msgid ""
+"Works with the standard comment form, if the form is manually written in "
+"your theme-it probably will not work!"
+msgstr ""
+"Работает со стандартной формой комментирования, если в Вашей теме форма "
+"прописана вручную - скорей всего не сработает!"
+
+#: admin/pages/comments.php:169
+msgid ""
+"Superfluous external links from comments, which can be typed from a dozen "
+"and more for one article, do not bring anything good for promotion."
+msgstr ""
+"Внешние ссылки в комментариях, которых может быть десятки или больше на "
+"одной странице, могут ухудшить продвижение вашего сайта."
+
+#: admin/pages/comments.php:169
+#, php-format
+msgid "Replaces the links of this kind of %s, on links of this kind %s"
+msgstr ""
+"Заменяет ссылки %s, на span тег и устанавливает переход с помощью JavaScript "
+"%s"
+
+#: admin/pages/comments.php:178
+msgid ""
+"Up to 90 percent of comments in the blog can be left for the sake of an "
+"external link. Even nofollow from page weight loss here does not help."
+msgstr ""
+"До 90 процентов комментариев в блоге оставляют ради внешней ссылки. Не "
+"поможет даже nofollow от потери веса страницы."
+
+#: admin/pages/comments.php:178
+msgid ""
+"Replaces the links of the authors of comments on the JavaScript code, it is "
+"impossible to distinguish it from usual links."
+msgstr ""
+"Заменяет ссылки авторов комментариев на JavaScript код, его невозможно "
+"отличить от обычной ссылки."
+
+#: admin/pages/comments.php:178
+msgid "In some Wordpress topics this may not work."
+msgstr "В некоторых темах Wordpress это может не сработать."
+
+#: admin/pages/comments.php:185
+msgid "Disable XML-RPC"
+msgstr "Отключить XML-RPC"
+
+#: admin/pages/comments.php:187
+msgid ""
+"A pingback is basically an automated comment that gets created when another "
+"blog links to you. A self-pingback is created when you link to an article "
+"within your own blog. Pingbacks are essentially nothing more than spam and "
+"simply waste resources."
+msgstr ""
+"Pingback по-существу автоматизированных комментарий, который создается, "
+"когда другой блог ссылается на вас. Self-pingback создается, когда вы "
+"оставили ссылку на статью в своем блоге. Pingbacks по существу являются не "
+"более чем спам и пустая трата ресурсов вашего сайта."
+
+#: admin/pages/comments.php:187
+msgid "Removes the server responses a reference to the xmlrpc file."
+msgstr "Удаляет ссылку на xmlrpc-файл и ответ сервера."
+
+#: admin/pages/delete-comments.php:41
+msgid "Comments cleaner"
+msgstr "Очистка комментариев"
+
+#: admin/pages/delete-comments.php:62
+msgid "All comments have been deleted."
+msgstr "Все комментарии были удалены."
+
+#: admin/pages/delete-comments.php:71
+msgid ""
+"An error occurred while trying to delete comments. Internal error occured. "
+"Please try again later."
+msgstr ""
+"При попытке удалить комментарии произошла ошибка. Пожалуйста, повторите "
+"попытку позже."
+
+#: admin/pages/delete-comments.php:211
+msgid ""
+"Are you sure you want to delete comments from the database without restoring?"
+msgstr ""
+"Вы уверены, что вы хотите удалить комментарии из базы данных без "
+"восстановления?"
+
+#: admin/pages/delete-comments.php:226
+msgid "Delete "
+msgstr "Удалить"
+
+#: admin/pages/delete-comments.php:232
+msgid "Comments clearing tools"
+msgstr "Комментарии очищающие инструменты"
+
+#: admin/pages/delete-comments.php:235
+msgid ""
+"These functions can be useful for global disabling comments or bulk cleaning "
+"spam comments."
+msgstr ""
+"Эти функции могут быть полезны для глобальных отключений комментариев или "
+"массовой очистки спама комментариев."
+
+#: admin/pages/delete-comments.php:240
+msgid "Remove all comments"
+msgstr "Удалить все комментарии"
+
+#: admin/pages/delete-comments.php:242
+msgid "You can delete all comments in your database with one click."
+msgstr "Вы можете удалить все комментарии в базе данных с одним щелчком мыши."
+
+#: admin/pages/delete-comments.php:244
+msgid "Choose post types"
+msgstr "Выберите типы записей"
+
+#: admin/pages/delete-comments.php:249
+msgid "Select all"
+msgstr "Выбрать все"
+
+#: admin/pages/delete-comments.php:266
+#, php-format
+msgid "Delete Woocommerce order notices? (%d)"
+msgstr "Удалять заметки от заказов Woocommerce? (%d)"
+
+#: admin/pages/delete-comments.php:272
+#, php-format
+msgid "Delete (%s)"
+msgstr "Удалить (%s)"
+
+#: admin/pages/delete-comments.php:279
+msgid "Remove spam comments"
+msgstr "Удалить спам комментарии"
+
+#: admin/pages/delete-comments.php:281
+msgid "You can remove only spam comments from the database with one click."
+msgstr ""
+"Вы можете одним нажатием удалить только спам комментарии из базы данных."
+
+#: admin/pages/delete-comments.php:283 admin/pages/delete-comments.php:290
+#: admin/pages/delete-comments.php:297
+#, php-format
+msgid "Delete (%d)"
+msgstr "Удалить (%d)"
+
+#: admin/pages/delete-comments.php:286
+msgid "Remove unapproved comments"
+msgstr "Удалить неподтвержденные комментарии"
+
+#: admin/pages/delete-comments.php:288
+msgid ""
+"You can remove only unapproved comments from the database with one click."
+msgstr ""
+"Вы можете одним нажатием удалить только не подтвержденные комментарии из "
+"базы данных."
+
+#: admin/pages/delete-comments.php:293
+msgid "Remove trashed comments"
+msgstr "Удалить комментарии из корзины"
+
+#: admin/pages/delete-comments.php:295
+msgid "You can remove only trashed comments from the database with one click."
+msgstr "Вы можете одним нажатием удалить только комментарии из корзины."
+
+#: comments-plus.php:63
+msgid "Webcraftic Disable comments"
+msgstr "Webcraftic отключить комментарии"
+
+#: includes/classes/class.configurate-comments.php:204
+#: includes/classes/class.configurate-comments.php:256
+msgid "Comments are closed."
+msgstr "Комментарии Закрыты."
+
+#: includes/classes/class.configurate-comments.php:244
+#, php-format
+msgid ""
+"Note: The <em>%s</em> plugin is currently active, and comments are "
+"completely disabled on: %s. Many of the settings below will not be "
+"applicable for those post types."
+msgstr ""
+"Примечание. Плагин <em>%s</em> в настоящий момент активен, и комментарии "
+"полностью отключены: %s. Многие из приведенных ниже настроек не будут "
+"применяться для этих типов сообщений."
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has disable comments functions, so you can "
+#~ "deactivate plugin \"Disable comments\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить  "
+#~ "неиспользуемые функции», этот плагин уже имеет функции отключения "
+#~ "комментариев, поэтому вы можете отключить плагин «Отключить комментарии»!"
+
+#~ msgid "Recommended"
+#~ msgstr "Рекомендовано"
+
+#~ msgid "You are not allowed to view this page."
+#~ msgstr "Вам не разрешено просматривать эту страницу."
+
+#~ msgid "You do not have the selected post types!"
+#~ msgstr "Вы не выбрали еще ни одного типа записей!"
+
+#~ msgid "No comments available for deletion."
+#~ msgstr "Нет комментариев для удаления."
+
+#~ msgid ""
+#~ "Are you sure that you desire to delete all comments from the database?"
+#~ msgstr "Вы уверены, что хотите удалить все комментарии из базы данных?"
+
+#~ msgid ""
+#~ "Deleting comments will remove existing comment entries in the database "
+#~ "and cannot be reverted without a database backup."
+#~ msgstr ""
+#~ "При удалении комментариев удаляются существующие записи комментариев в "
+#~ "базе данных, они не могут быть восстановлены без резервного копирования "
+#~ "базы данных."
+
+#~ msgid "You have %s comments"
+#~ msgstr "У вас есть %s комментариев"
+
+#~ msgid "Yes, I'm sure"
+#~ msgstr "Да, я уверен"
+
+#~ msgid "No, return back"
+#~ msgstr "Нет, вернуться"
+
+#~ msgid ""
+#~ "Are you sure that you desire to delete all comments from the database for "
+#~ "the selected post types (%s)?"
+#~ msgstr ""
+#~ "Вы уверены, что хотите удалить все комментарии из базы данных для "
+#~ "выбранных типов записей (%s)?"
+
+#~ msgid "Webcraftic comments tweaks"
+#~ msgstr "Webcraftic инструменты комментариев"
+
+#~ msgid ""
+#~ "We found that you have the \"Clearfy - disable unused features\" plugin "
+#~ "installed, this plugin already has disable comments functions, so you can "
+#~ "deactivate plugin \"Comments tweaks\"!"
+#~ msgstr ""
+#~ "Мы обнаружили, что у вас установлен плагин «Clearfy - отключить  "
+#~ "неиспользуемые функции», этот плагин уже имеет функции отключения "
+#~ "комментариев, поэтому вы можете отключить плагин «Инструменты "
+#~ "комментариев»!"
+
+#~ msgid "Disable all comments"
+#~ msgstr "Отключить все комментарии"

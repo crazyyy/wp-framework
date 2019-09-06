@@ -6,14 +6,14 @@
  */
 
 /**
- * Class WPSEO_Recalculate_Scores
+ * Class WPSEO_Recalculate_Scores.
  *
- * This class handles the SEO score recalculation for all posts with a filled focus keyword
+ * This class handles the SEO score recalculation for all posts with a filled focus keyword.
  */
 class WPSEO_Recalculate_Scores_Ajax {
 
 	/**
-	 * Initialize the AJAX hooks
+	 * Initialize the AJAX hooks.
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_wpseo_recalculate_scores', array( $this, 'recalculate_scores' ) );
@@ -28,7 +28,8 @@ class WPSEO_Recalculate_Scores_Ajax {
 		check_ajax_referer( 'wpseo_recalculate', 'nonce' );
 
 		wp_die(
-			wp_json_encode(
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: WPSEO_Utils::format_json_encode is considered safe.
+			WPSEO_Utils::format_json_encode(
 				array(
 					'posts' => $this->calculate_posts(),
 					'terms' => $this->calculate_terms(),
@@ -38,7 +39,7 @@ class WPSEO_Recalculate_Scores_Ajax {
 	}
 
 	/**
-	 * Start recalculation
+	 * Start recalculation.
 	 */
 	public function recalculate_scores() {
 		check_ajax_referer( 'wpseo_recalculate', 'nonce' );
@@ -49,7 +50,8 @@ class WPSEO_Recalculate_Scores_Ajax {
 			$response = $fetch_object->get_items_to_recalculate( $paged );
 
 			if ( ! empty( $response ) ) {
-				wp_die( wp_json_encode( $response ) );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: WPSEO_Utils::format_json_encode is considered safe.
+				wp_die( WPSEO_Utils::format_json_encode( $response ) );
 			}
 		}
 
@@ -57,7 +59,7 @@ class WPSEO_Recalculate_Scores_Ajax {
 	}
 
 	/**
-	 * Saves the new linkdex score for given post
+	 * Saves the new linkdex score for given post.
 	 */
 	public function save_score() {
 		check_ajax_referer( 'wpseo_recalculate', 'nonce' );
@@ -88,7 +90,7 @@ class WPSEO_Recalculate_Scores_Ajax {
 	}
 
 	/**
-	 * Gets the total number of posts
+	 * Gets the total number of posts.
 	 *
 	 * @return int
 	 */
@@ -106,7 +108,7 @@ class WPSEO_Recalculate_Scores_Ajax {
 	}
 
 	/**
-	 * Get the total number of terms
+	 * Get the total number of terms.
 	 *
 	 * @return int
 	 */

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\App;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Installer {
     protected $options;
 

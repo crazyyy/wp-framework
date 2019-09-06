@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Views\Connections;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari_Adminer\Views\Base as Base;
 use Ari_Adminer\Controls\Grid\Grid as Grid;
 use Ari_Adminer\Helpers\Helper as Helper;
@@ -25,7 +27,7 @@ class Html extends Base {
         $app_options = array(
             'actionEl' => '#ctrl_action',
 
-            'ajaxUrl' => admin_url( 'admin-ajax.php?action=ari_adminer' ),
+            'ajaxUrl' => admin_url( 'admin-ajax.php?action=ari_adminer&_wpnonce=' . wp_create_nonce( ARIADMINER_NONCE ) ),
 
             'messages' => array(
                 'deleteConfirm' => __( 'Do you want to delete the selected item?', 'ari-adminer' ),
@@ -122,7 +124,7 @@ class Html extends Base {
 
                             $html .= sprintf(
                                 '<a class="row-title connection-edit" href="#" data-id="%2$d">%1$s</a>',
-                                $val,
+                                esc_html( $val ),
                                 $data->connection_id
                             );
 

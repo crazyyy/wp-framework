@@ -10,14 +10,25 @@
  */
 class WPSEO_Link_Factory {
 
-	/** @var WPSEO_Link_Type_Classifier */
+	/**
+	 * Represents the classifier for a link. Determines of a link is an outbound or internal one.
+	 *
+	 * @var WPSEO_Link_Type_Classifier
+	 */
 	protected $classifier;
 
-	/** @var WPSEO_Link_Internal_Lookup */
-
+	/**
+	 * Represents the internal link lookup. This class tries get the postid for a given internal link.
+	 *
+	 * @var WPSEO_Link_Internal_Lookup
+	 */
 	protected $internal_lookup;
 
-	/** @var WPSEO_Link_Filter */
+	/**
+	 * Represents the filter for filtering links.
+	 *
+	 * @var WPSEO_Link_Filter
+	 */
 	protected $filter;
 
 	/**
@@ -42,10 +53,10 @@ class WPSEO_Link_Factory {
 	 */
 	public function build( array $extracted_links ) {
 		$extracted_links = array_map( array( $this, 'build_link' ), $extracted_links );
-		$filtered_links  = array_filter( $extracted_links, array(
-			$this->filter,
-			'internal_link_with_fragment_filter',
-		) );
+		$filtered_links  = array_filter(
+			$extracted_links,
+			array( $this->filter, 'internal_link_with_fragment_filter' )
+		);
 
 		return $filtered_links;
 	}

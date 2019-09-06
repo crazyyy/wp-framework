@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Cache;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Persistence {
     public static function set( $key, $val, $lifetime ) {
         return set_transient( $key, $val, $lifetime );

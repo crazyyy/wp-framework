@@ -12,7 +12,7 @@
 class WPSEO_Bulk_List_Table extends WP_List_Table {
 
 	/**
-	 * The nonce that was passed with the request
+	 * The nonce that was passed with the request.
 	 *
 	 * @var string
 	 */
@@ -40,35 +40,35 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	protected $meta_data = array();
 
 	/**
-	 * The current requested page_url
+	 * The current requested page_url.
 	 *
 	 * @var string
 	 */
-	private $request_url;
+	private $request_url = '';
 
 	/**
-	 * The current page (depending on $_GET['paged']) if current tab is for current page_type, else it will be 1
+	 * The current page (depending on $_GET['paged']) if current tab is for current page_type, else it will be 1.
 	 *
 	 * @var integer
 	 */
 	private $current_page;
 
 	/**
-	 * The current post filter, if is used (depending on $_GET['post_type_filter'])
+	 * The current post filter, if is used (depending on $_GET['post_type_filter']).
 	 *
 	 * @var string
 	 */
 	private $current_filter;
 
 	/**
-	 * The current post status, if is used (depending on $_GET['post_status'])
+	 * The current post status, if is used (depending on $_GET['post_status']).
 	 *
 	 * @var string
 	 */
 	private $current_status;
 
 	/**
-	 * The current sorting, if used (depending on $_GET['order'] and $_GET['orderby'])
+	 * The current sorting, if used (depending on $_GET['order'] and $_GET['orderby']).
 	 *
 	 * @var string
 	 */
@@ -83,7 +83,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 
 	/**
 	 * Based on the page_type ($this->page_type) there will be constructed an url part, for subpages and
-	 * navigation
+	 * navigation.
 	 *
 	 * @var string
 	 */
@@ -97,71 +97,52 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	protected $settings;
 
 	/**
+	 * Holds the pagination config.
+	 *
 	 * @var array
 	 */
 	protected $pagination = array();
 
 	/**
-	 * Class constructor
+	 * Holds the sanitized data from the user input.
+	 *
+	 * @var array
 	 */
-	public function __construct() {
+	protected $input_fields = array();
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args The arguments.
+	 */
+	public function __construct( $args = array() ) {
 		parent::__construct( $this->settings );
 
-		$this->request_url    = $_SERVER['REQUEST_URI'];
-		$this->current_page   = ( ! empty( $_GET['paged'] ) ) ? $_GET['paged'] : 1;
-		$this->current_filter = ( ! empty( $_GET['post_type_filter'] ) ) ? $_GET['post_type_filter'] : 1;
-		$this->current_status = ( ! empty( $_GET['post_status'] ) ) ? $_GET['post_status'] : 1;
-		$this->current_order  = array(
-			'order'   => ( ! empty( $_GET['order'] ) ) ? $_GET['order'] : 'asc',
-			'orderby' => ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'post_title',
+		$args = wp_parse_args(
+			$args,
+			array(
+				'nonce'        => '',
+				'input_fields' => array(),
+			)
 		);
 
-		$this->verify_nonce();
+		$this->input_fields = $args['input_fields'];
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			$this->request_url = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+		}
 
-		$this->nonce    = wp_create_nonce( 'bulk-editor-table' );
+		$this->current_page   = ( ! empty( $this->input_fields['paged'] ) ) ? $this->input_fields['paged'] : 1;
+		$this->current_filter = ( ! empty( $this->input_fields['post_type_filter'] ) ) ? $this->input_fields['post_type_filter'] : 1;
+		$this->current_status = ( ! empty( $this->input_fields['post_status'] ) ) ? $this->input_fields['post_status'] : 1;
+		$this->current_order  = array(
+			'order'   => ( ! empty( $this->input_fields['order'] ) ) ? $this->input_fields['order'] : 'asc',
+			'orderby' => ( ! empty( $this->input_fields['orderby'] ) ) ? $this->input_fields['orderby'] : 'post_title',
+		);
+
+		$this->nonce    = $args['nonce'];
 		$this->page_url = "&nonce={$this->nonce}&type={$this->page_type}#top#{$this->page_type}";
 
 		$this->populate_editable_post_types();
-	}
-
-	/**
-	 * Verifies nonce if additional parameters have been sent.
-	 *
-	 * Shows an error notification if the nonce check fails.
-	 */
-	private function verify_nonce() {
-		if ( $this->should_verify_nonce() && ! wp_verify_nonce( filter_input( INPUT_GET, 'nonce' ), 'bulk-editor-table' ) ) {
-			Yoast_Notification_Center::get()->add_notification(
-				new Yoast_Notification(
-					__( 'You are not allowed to access this page.', 'wordpress-seo' ),
-					array( 'type' => Yoast_Notification::ERROR )
-				)
-			);
-			Yoast_Notification_Center::get()->display_notifications();
-			die;
-		}
-	}
-
-	/**
-	 * Checks if additional parameters have been sent to determine if nonce should be checked or not.
-	 *
-	 * @return bool
-	 */
-	private function should_verify_nonce() {
-		$possible_params = array(
-			'type',
-			'paged',
-			'post_type_filter',
-			'post_status',
-			'order',
-			'orderby',
-		);
-
-		foreach ( $possible_params as $param_name ) {
-			if ( filter_input( INPUT_GET, $param_name ) ) {
-				return true;
-			}
-		}
 	}
 
 	/**
@@ -207,7 +188,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Will shown the navigation for the table like pagenavigation and pagefilter;
+	 * Will show the navigation for the table like pagenavigation and pagefilter.
 	 *
 	 * @param string $which Table nav location (such as top).
 	 */
@@ -253,7 +234,8 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	 * This function takes into account the post types in which the current user can
 	 * edit all posts, and the ones the current user can only edit his/her own.
 	 *
-	 * @return string $subquery The subquery, which should always be used in $wpdb->prepare(), passing the current user_id in as the first parameter.
+	 * @return string The subquery, which should always be used in $wpdb->prepare(),
+	 *                passing the current user_id in as the first parameter.
 	 */
 	public function get_base_subquery() {
 		global $wpdb;
@@ -277,7 +259,9 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * @return array
+	 * Gets the views.
+	 *
+	 * @return array The views.
 	 */
 	public function get_views() {
 		global $wpdb;
@@ -362,6 +346,8 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Outputs extra table navigation.
+	 *
 	 * @param string $which Table nav location (such as top).
 	 */
 	public function extra_tablenav( $which ) {
@@ -423,17 +409,21 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 				);
 				printf(
 					'<select name="post_type_filter" id="%2$s">%1$s</select>',
+					// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: $options is properly escaped above.
 					$options,
 					esc_attr( 'post-type-filter-' . $instance_type )
 				);
 
-				submit_button( __( 'Filter', 'wordpress-seo' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
+				submit_button( esc_html__( 'Filter', 'wordpress-seo' ), 'button', false, false, array( 'id' => 'post-query-submit' ) );
 				echo '</div>';
 			}
 		}
 	}
 
 	/**
+	 * Gets a list of sortable columns.
+	 *
+	 * The format is: 'internal-name' => array( 'orderby', bool ).
 	 *
 	 * @return array
 	 */
@@ -446,7 +436,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Sets the correct pagenumber and pageurl for the navigation
+	 * Sets the correct pagenumber and pageurl for the navigation.
 	 */
 	public function prepare_page_navigation() {
 
@@ -457,8 +447,11 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 		$current_status = $this->current_status;
 		$current_order  = $this->current_order;
 
-		// If current type doesn't compare with objects page_type, than we have to unset some vars in the requested url (which will be use for internal table urls).
-		if ( $_GET['type'] !== $this->page_type ) {
+		/*
+		 * If current type doesn't compare with objects page_type, then we have to unset
+		 * some vars in the requested url (which will be used for internal table urls).
+		 */
+		if ( isset( $this->input_fields['type'] ) && $this->input_fields['type'] !== $this->page_type ) {
 			$request_url = remove_query_arg( 'paged', $request_url ); // Page will be set with value 1 below.
 			$request_url = remove_query_arg( 'post_type_filter', $request_url );
 			$request_url = remove_query_arg( 'post_status', $request_url );
@@ -487,7 +480,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Preparing the requested pagerows and setting the needed variables
+	 * Preparing the requested pagerows and setting the needed variables.
 	 */
 	public function prepare_items() {
 
@@ -511,7 +504,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Getting the columns for first row
+	 * Getting the columns for first row.
 	 *
 	 * @return array
 	 */
@@ -520,7 +513,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Setting the column headers
+	 * Setting the column headers.
 	 */
 	protected function set_column_headers() {
 		$columns               = $this->get_columns();
@@ -530,7 +523,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Counting total items
+	 * Counting total items.
 	 *
 	 * @param string $subquery         SQL FROM part.
 	 * @param string $all_states       SQL IN part.
@@ -552,7 +545,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Getting the post_type_clause filter
+	 * Getting the post_type_clause filter.
 	 *
 	 * @return string
 	 */
@@ -638,7 +631,8 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Heavily restricts the possible columns by which a user can order the table in the bulk editor, thereby preventing a possible CSRF vulnerability.
+	 * Heavily restricts the possible columns by which a user can order the table
+	 * in the bulk editor, thereby preventing a possible CSRF vulnerability.
 	 *
 	 * @param string $orderby The column by which we want to order.
 	 *
@@ -659,7 +653,8 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Makes sure the order clause is always ASC or DESC for the bulk editor table, thereby preventing a possible CSRF vulnerability.
+	 * Makes sure the order clause is always ASC or DESC for the bulk editor table,
+	 * thereby preventing a possible CSRF vulnerability.
 	 *
 	 * @param string $order Whether we want to sort ascending or descending.
 	 *
@@ -699,8 +694,8 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 		$states          = get_post_stati( array( 'show_in_admin_all_list' => true ) );
 		$states['trash'] = 'trash';
 
-		if ( ! empty( $_GET['post_status'] ) ) {
-			$requested_state = sanitize_text_field( $_GET['post_status'] );
+		if ( ! empty( $this->input_fields['post_status'] ) ) {
+			$requested_state = $this->input_fields['post_status'];
 			if ( in_array( $requested_state, $states, true ) ) {
 				$states = array( $requested_state );
 			}
@@ -776,7 +771,7 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 		}
 
 		if ( ! empty( $class ) ) {
-			$attributes = 'class="' . implode( ' ', $class ) . '"';
+			$attributes = 'class="' . esc_attr( implode( ' ', $class ) ) . '"';
 		}
 
 		$attributes .= ' data-colname="' . esc_attr( $column_display_name ) . '"';
@@ -916,7 +911,11 @@ class WPSEO_Bulk_List_Table extends WP_List_Table {
 			$meta_value = $values[ $meta_value ];
 		}
 
-		return sprintf( '<td %2$s id="wpseo-existing-%4$s-%3$s">%1$s</td>', $meta_value, $attributes, $record_id, $this->target_db_field );
+		$id = "wpseo-existing-$record_id-$this->target_db_field";
+
+		// $attributes correctly escaped, verified by Alexander. See WPSEO_Bulk_Description_List_Table::parse_page_specific_column.
+		// phpcs:ignore WordPress.Security.EscapeOutput
+		return sprintf( '<td %2$s id="%3$s">%1$s</td>', esc_html( $meta_value ), $attributes, esc_attr( $id ) );
 	}
 
 	/**

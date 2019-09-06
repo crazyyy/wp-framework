@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $translations = array(
 	// label for database system selection (MySQL, SQLite, ...)
 	'System' => 'Система Бази Даних',

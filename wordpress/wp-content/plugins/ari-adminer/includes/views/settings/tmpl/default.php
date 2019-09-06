@@ -1,4 +1,6 @@
-<?php settings_errors(); ?>
+<?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+ settings_errors(); ?>
 <div>
     <form method="post" action="options.php" class="settings-page">
         <?php do_settings_sections( ARIADMINER_SETTINGS_GENERAL_PAGE ); ?>

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Request {
     static $root_url = null;
 

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $translations = array(
 	'Login' => 'Prihlásiť sa',
 	'Logout successful.' => 'Odhlásenie prebehlo v poriadku.',

@@ -202,9 +202,9 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
                         //success case
                         $result = 1;
                         $list = $payload[1];
-                        $banned_ip_data = implode(PHP_EOL, $list);
-                        $aio_wp_security->configs->set_value('aiowps_lockdown_allowed_ip_addresses',$banned_ip_data);
-                        $_POST['aiowps_lockdown_allowed_ip_addresses'] = ''; //Clear the post variable for the banned address list
+                        $allowed_ip_data = implode(PHP_EOL, $list);
+                        $aio_wp_security->configs->set_value('aiowps_lockdown_allowed_ip_addresses', $allowed_ip_data);
+                        $_POST['aiowps_lockdown_allowed_ip_addresses'] = ''; //Clear the post variable for the allowed address list
                     }
                     else{
                         $result = -1;
@@ -404,6 +404,8 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
                 $failed_login_list->delete_login_failed_records(strip_tags($_REQUEST['failed_login_id']));
             }
         }
+        
+        AIOWPSecurity_Admin_Menu::display_bulk_result_message();
         ?>
         <div class="aio_blue_box">
             <?php
@@ -420,10 +422,15 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
             $failed_login_list->prepare_items();
             //echo "put table of locked entries here"; 
             ?>
-            <form id="tables-filter" method="get" onSubmit="return confirm('Are you sure you want to perform this bulk operation on the selected entries?');">
+            <form id="tables-filter" method="get">
             <!-- For plugins, we also need to ensure that the form posts back to our current page -->
             <input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
-            <input type="hidden" name="tab" value="<?php echo esc_attr($_REQUEST['tab']); ?>" />
+            <?php
+            $failed_login_list->search_box(__('Search', 'all-in-one-wp-security-and-firewall'), 'search_failed_login');
+            if (isset($_REQUEST["tab"])) {
+                echo '<input type="hidden" name="tab" value="' . esc_attr($_REQUEST["tab"]) . '" />';
+            }
+            ?>
             <!-- Now we can render the completed list table -->
             <?php $failed_login_list->display(); ?>
             </form>
@@ -551,10 +558,8 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
                 $acct_activity_list->delete_login_activity_records(strip_tags($_REQUEST['activity_login_rec']));
             }
         }
-        if (isset($_POST['aiowpsec_export_to_csv'])) {
-            echo'yo';
-            die;
-        }
+        
+        AIOWPSecurity_Admin_Menu::display_bulk_result_message();
         ?>
         <div class="aio_blue_box">
             <?php
@@ -571,10 +576,15 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
             $acct_activity_list->prepare_items();
             //echo "put table of locked entries here"; 
             ?>
-            <form id="tables-filter" method="get" onSubmit="return confirm('Are you sure you want to perform this bulk operation on the selected entries?');">
+            <form id="tables-filter" method="get">
             <!-- For plugins, we also need to ensure that the form posts back to our current page -->
             <input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
-            <input type="hidden" name="tab" value="<?php echo esc_attr($_REQUEST['tab']); ?>" />
+            <?php
+            $acct_activity_list->search_box(__('Search', 'all-in-one-wp-security-and-firewall'), 'search_login_activity');
+            if (isset($_REQUEST["tab"])) {
+                echo '<input type="hidden" name="tab" value="' . esc_attr($_REQUEST["tab"]) . '" />';
+            }
+            ?>
             <!-- Now we can render the completed list table -->
             <?php $acct_activity_list->display(); ?>
             </form>
@@ -597,9 +607,9 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
     
     function render_tab5()
     {
+        global $aio_wp_security;
         $logged_in_users = (AIOWPSecurity_Utility::is_multisite_install() ? get_site_transient('users_online') : get_transient('users_online'));
         
-        global $aio_wp_security;
         include_once 'wp-security-list-logged-in-users.php'; //For rendering the AIOWPSecurity_List_Table
         $user_list = new AIOWPSecurity_List_Logged_In_Users();
         if(isset($_REQUEST['action'])) //Do row action tasks for list table form for login activity display

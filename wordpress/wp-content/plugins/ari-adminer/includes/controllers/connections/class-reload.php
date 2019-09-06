@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Connections;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Controller as Controller;
 use Ari\Utils\Response as Response;
 use Ari\Utils\Request as Request;

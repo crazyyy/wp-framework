@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Use filter in tables list
 * @link https://www.adminer.org/plugins/#use
@@ -53,7 +55,7 @@ function tablesFilterInput() {
 	tablesFilterTimeout = window.setTimeout(tablesFilter, 200);
 }
 
-if (sessionStorage){
+sessionStorage && document.addEventListener('DOMContentLoaded', function () {
 	var db = qs('#dbs').querySelector('select');
 	db = db.options[db.selectedIndex].text;
 	if (db == sessionStorage.getItem('adminer_tables_filter_db') && sessionStorage.getItem('adminer_tables_filter')){
@@ -61,7 +63,7 @@ if (sessionStorage){
 		tablesFilter();
 	}
 	sessionStorage.setItem('adminer_tables_filter_db', db);
-}
+});
 </script>
 <p class="jsonly"><input id="filter-field" autocomplete="off"><?php echo script("qs('#filter-field').oninput = tablesFilterInput;"); ?>
 <?php

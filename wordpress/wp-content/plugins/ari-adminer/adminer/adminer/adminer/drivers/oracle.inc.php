@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $drivers["oracle"] = "Oracle (beta)";
 
 if (isset($_GET["oracle"])) {
@@ -398,7 +400,7 @@ ORDER BY PROCESS
 	}
 
 	function support($feature) {
-		return preg_match('~^(columns|database|drop_col|indexes|processlist|scheme|sql|status|table|variables|view|view_trigger)$~', $feature); //!
+		return preg_match('~^(columns|database|drop_col|indexes|descidx|processlist|scheme|sql|status|table|variables|view|view_trigger)$~', $feature); //!
 	}
 
 	$jush = "oracle";

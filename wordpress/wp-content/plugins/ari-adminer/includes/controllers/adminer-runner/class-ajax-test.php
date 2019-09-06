@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Adminer_Runner;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Ajax as Ajax_Controller;
 use Ari_Adminer\Helpers\Helper as Helper;
 use Ari_Adminer\Utils\Dbcheck\Db_Check as DB_Check;
@@ -8,7 +10,12 @@ use Ari\Utils\Request as Request;
 
 class Ajax_Test extends Ajax_Controller {
     protected function process_request() {
-        if ( $this->options->nopriv || ! Helper::has_access_to_adminer() || ! Request::exists( 'connection' ) )
+        if (
+            $this->options->nopriv ||
+            ! Helper::is_valid_nonce() ||
+            ! Helper::has_access_to_adminer() ||
+            ! Request::exists( 'connection' )
+        )
             return false;
 
         $connection_data = stripslashes_deep( Request::get_var( 'connection' ) );

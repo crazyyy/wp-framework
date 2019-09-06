@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Dump to ZIP format
 * @link https://www.adminer.org/plugins/#use

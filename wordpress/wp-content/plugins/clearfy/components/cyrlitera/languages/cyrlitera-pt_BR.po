@@ -1,0 +1,210 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:29+0300\n"
+"PO-Revision-Date: 2018-09-06 18:29+0300\n"
+"Last-Translator: alex.kovalevv@gmail.com <alex.kovalevv@gmail.com>\n"
+"Language-Team: Alex Kovalev <alex.kovalevv@gmail.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:56
+#, php-format
+msgid ""
+"We found that you have the plugin %s installed. The functions of this plugin "
+"already exist in %s. Please deactivate plugin %s to avoid conflicts between "
+"plugins functions."
+msgstr ""
+"Descobrimos que você tem o plugin %s instalado. As funções deste plugin já "
+"existem em %s . Por favor, desative o plugin %s para evitar conflitos entre "
+"as funções dos plugins."
+
+#: admin/boot.php:57
+#, php-format
+msgid ""
+"If you do not want to deactivate the plugin %s for some reason, we strongly "
+"recommend do not use the same plugins functions at the same time!"
+msgstr ""
+"Se você não quiser desativar o plugin %s por algum motivo, recomendamos que "
+"não use as mesmas funções de plugins ao mesmo tempo!"
+
+#: admin/boot.php:117 admin/options.php:30
+msgid "Use transliteration"
+msgstr "Use transliteração"
+
+#: admin/boot.php:123 admin/options.php:48
+msgid "Force transliteration"
+msgstr "Forçar transliteração"
+
+#: admin/boot.php:129 admin/options.php:78
+msgid "Don't use transliteration in frontend"
+msgstr ""
+
+#: admin/boot.php:135 admin/options.php:39
+msgid "Convert file names"
+msgstr "Converter nomes de arquivos"
+
+#: admin/boot.php:141 admin/options.php:58
+msgid "Convert file names into lowercase"
+msgstr "Converter nomes de arquivos em minúsculas"
+
+#: admin/boot.php:147 admin/options.php:68
+msgid "Redirection old URLs to new ones"
+msgstr "Redirecionar URLs antigas para novas"
+
+#: admin/boot.php:153 admin/options.php:88
+msgid "Character Sets"
+msgstr "Conjuntos de caracteres"
+
+#: admin/boot.php:174
+msgid "Get ultimate plugin free"
+msgstr "Obtenha o melhor plugin grátis"
+
+#: admin/options.php:23
+msgid "Transliteration of Cyrillic alphabet."
+msgstr "Transliteração do alfabeto cirílico."
+
+#: admin/options.php:23
+msgid ""
+"Converts Cyrillic permalinks of post, pages, taxonomies and media files to "
+"the Latin alphabet. Supports Russian, Ukrainian, Georgian, Bulgarian "
+"languages. Example: http://site.dev/последние-новости -> http://site.dev/"
+"poslednie-novosti"
+msgstr ""
+"Converte permalinks cirílicos de post, páginas, taxonomias e arquivos de "
+"mídia para o alfabeto latino. Suporta as línguas russa, ucraniana, georgiana "
+"e búlgara. Exemplo: http://site.dev/последние-новости -> http://site.dev/"
+"poslednie-novosti"
+
+#: admin/options.php:32
+msgid ""
+"If you enable this option, all URLs of new pages, posts, tags, and "
+"categories will automatically be converted to Latin."
+msgstr ""
+"Se você ativar essa opção, todos os URLs de novas páginas, postagens, tags e "
+"categorias serão convertidos automaticamente para o idioma latino."
+
+#: admin/options.php:41
+msgid ""
+"This option works only for new media library files. All Cyrillic names of "
+"the downloaded files will be converted to names with Latin characters."
+msgstr ""
+"Esta opção funciona apenas para novos arquivos de biblioteca de mídia. Todos "
+"os nomes cirílicos dos arquivos baixados serão convertidos em nomes com "
+"caracteres latinos."
+
+#: admin/options.php:50
+#, php-format
+msgid ""
+"If any of your plugins affects transliteration of links and file names, you "
+"can use this option to change the plugin of %s to overwrite the changes of "
+"the other plugins."
+msgstr ""
+"Se algum de seus plugins afetar a transliteração de links e nomes de "
+"arquivos, você poderá usar essa opção para alterar o plug-in de %s para "
+"sobrescrever as alterações dos outros plug-ins."
+
+#: admin/options.php:60
+msgid ""
+"This function works only for new upload files. Example: File_Name.jpg -> "
+"file_name.jpg"
+msgstr ""
+"Esta função funciona apenas para novos arquivos de upload. Exemplo: "
+"File_Name.jpg -> file_name.jpg"
+
+#: admin/options.php:70
+msgid ""
+"If at the time of the plugin installation you had pages with unconverted "
+"links, use this option to redirect users from old to new URLs with the Latin "
+"alphabet."
+msgstr ""
+"Se, no momento da instalação do plug-in, você tivesse páginas com links não "
+"convertidos, use essa opção para redirecionar os usuários de URLs antigos "
+"para novos com o alfabeto latino."
+
+#: admin/options.php:80
+msgid "Enable when have a problem in frontend."
+msgstr ""
+
+#: admin/options.php:89
+msgid ""
+"You can supplement current base of transliteration characters. Write pairs "
+"of values separated by commas. Example:"
+msgstr ""
+"Você pode complementar a base atual de caracteres de transliteração. Escreva "
+"pares de valores separados por vírgulas. Exemplo:"
+
+#: admin/options.php:178
+msgid ""
+"If at the time of the plugin installation you already had posts, pages, tags "
+"and categories, click on this button and the plugin will automatically "
+"convert URLs into Latin. Attention! Previously uploaded files will not be "
+"converted."
+msgstr ""
+"Se, no momento da instalação do plugin, você já tiver postagens, páginas, "
+"tags e categorias, clique neste botão e o plug-in converterá os URLs "
+"automaticamente em latim. Atenção! Os arquivos enviados anteriormente não "
+"serão convertidos."
+
+#: admin/options.php:187
+msgid "Convert already created posts and categories"
+msgstr "Converter posts e categorias já criados"
+
+#: admin/options.php:189
+msgid "Url of old posts, pages,terms,tags successfully converted into Latin!"
+msgstr "URL de postagens, páginas, termos e tags antigos convertidos em latim."
+
+#: admin/options.php:199
+msgid ""
+"Allows you to restore converted URLs by using the \"Convert already created "
+"posts and categories\" button. This can be useful in case of incorrect URLs "
+"or incorrect transliteration of some characters. You can roll back changes "
+"and advance the character sets above to correct the plugin's work. "
+msgstr ""
+"Permite restaurar URLs convertidos usando o botão  \"Converter postagens e "
+"categorias já criadas \". Isso pode ser útil em caso de URLs incorretos ou "
+"transliteração incorreta de alguns caracteres. Você pode reverter alterações "
+"e avançar os conjuntos de caracteres acima para corrigir o trabalho do "
+"plugin. "
+
+#: admin/options.php:208
+msgid "Rollback changes"
+msgstr "Alterações de reversão"
+
+#: admin/options.php:210
+msgid "The rollback of new changes was successful!"
+msgstr "A reversão de novas mudanças foi bem sucedida!"
+
+#: admin/pages/cyrlitera.php:33 admin/pages/cyrlitera.php:49
+msgid "Transliteration"
+msgstr "Transliteração"
+
+#: admin/pages/cyrlitera.php:50
+msgid "General"
+msgstr "Geral"
+
+#: cyrlitera.php:23
+msgid ""
+"We found that you have the \"Clearfy - disable unused features\" plugin "
+"installed, this plugin already has disable comments functions, so you can "
+"deactivate plugin \"Webcraftic Cyrlitera\"!"
+msgstr ""
+"Descobrimos que você tem o  \"Clearfy - desativar os recursos não utilizados "
+"\" plugin instalado, este plugin já tem funções de desabilitar comentários, "
+"assim você pode desativar o plugin  \"Webcraftic Cyrlitera \"!"
+
+#: cyrlitera.php:81
+msgid "Webcraftic Cyrlitera"
+msgstr "Webcraftic Cyrlitera"

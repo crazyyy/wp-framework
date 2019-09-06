@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $container_class = $data['class'];
 ?>
 <div class="tablenav <?php echo $container_class; ?>">

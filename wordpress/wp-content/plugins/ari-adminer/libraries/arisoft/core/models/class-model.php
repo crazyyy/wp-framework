@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Models;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Object_Helper as Object_Helper;
 
 class Model {

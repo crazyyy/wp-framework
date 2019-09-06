@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Controllers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Ajax extends Controller {
     function __construct( $options = array() ) {
         $this->options = new Ajax_Options( $options );

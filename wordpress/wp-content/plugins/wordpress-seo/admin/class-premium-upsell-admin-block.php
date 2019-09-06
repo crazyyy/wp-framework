@@ -9,10 +9,19 @@
  * Class WPSEO_Premium_Upsell_Admin_Block
  */
 class WPSEO_Premium_Upsell_Admin_Block {
-	/** @var string Hook to display the block on. */
+
+	/**
+	 * Hook to display the block on.
+	 *
+	 * @var string
+	 */
 	protected $hook;
 
-	/** @var string Identifier to use in the dismissal functionality. */
+	/**
+	 * Identifier to use in the dismissal functionality.
+	 *
+	 * @var string
+	 */
 	protected $identifier = 'premium_upsell_admin_block';
 
 	/**
@@ -48,7 +57,7 @@ class WPSEO_Premium_Upsell_Admin_Block {
 			'<strong>' . esc_html__( 'No more dead links', 'wordpress-seo' ) . '</strong>: ' . esc_html__( 'Easy redirect manager', 'wordpress-seo' ),
 			'<strong>' . esc_html__( 'Superfast internal linking suggestions', 'wordpress-seo' ) . '</strong>',
 			'<strong>' . esc_html__( 'Social media preview', 'wordpress-seo' ) . '</strong>: ' . esc_html__( 'Facebook & Twitter', 'wordpress-seo' ),
-			'<strong>' . esc_html__( '24/7 support', 'wordpress-seo' ) . '</strong>',
+			'<strong>' . esc_html__( '24/7 email support', 'wordpress-seo' ) . '</strong>',
 			'<strong>' . esc_html__( 'No ads!', 'wordpress-seo' ) . '</strong>',
 		);
 
@@ -65,9 +74,9 @@ class WPSEO_Premium_Upsell_Admin_Block {
 			'<span aria-hidden="true" class="yoast-button-upsell__caret"></span>';
 
 		$upgrade_button = sprintf(
-			'<a id="wpseo-%1$s-popup-button" class="yoast-button-upsell" href="%2$s" target="_blank" rel="noreferrer noopener">%3$s</a>',
-			$this->identifier,
-			$url,
+			'<a id="%1$s" class="yoast-button-upsell" href="%2$s" target="_blank">%3$s</a>',
+			esc_attr( 'wpseo-' . $this->identifier . '-popup-button' ),
+			esc_url( $url ),
 			$button_text
 		);
 
@@ -89,7 +98,8 @@ class WPSEO_Premium_Upsell_Admin_Block {
 		'</h2>';
 		echo '<ul class="' . esc_attr( $class . '--motivation' ) . '">' . $arguments_html . '</ul>';
 
-		echo '<p><a href="' . esc_url( $url ) . '" target="_blank">' . $upgrade_button . '</a><br />';
+		// @phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in $upgrade_button and $button_text above.
+		echo '<p>' . $upgrade_button . '</p>';
 		echo '</div>';
 
 		echo '</div>';

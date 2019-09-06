@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $TABLE = $_GET["view"];
 $row = $_POST;
 $orig_type = "VIEW";
@@ -48,7 +50,7 @@ page_header(($TABLE != "" ? lang('Alter view') : lang('Create view')), $error, a
 ?>
 
 <form action="" method="post">
-<p><?php echo lang('Name'); ?>: <input name="name" value="<?php echo h($row["name"]); ?>" maxlength="64" autocapitalize="off">
+<p><?php echo lang('Name'); ?>: <input name="name" value="<?php echo h($row["name"]); ?>" data-maxlength="64" autocapitalize="off">
 <?php echo (support("materializedview") ? " " . checkbox("materialized", 1, $row["materialized"], lang('Materialized view')) : ""); ?>
 <p><?php textarea("select", $row["select"]); ?>
 <p>

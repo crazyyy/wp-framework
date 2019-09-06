@@ -1,8 +1,11 @@
 <?php
 namespace Ari_Adminer\Helpers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari_Adminer\Utils\Db_Driver as DB_Driver;
 use Ari_Adminer\Models\Connections as Connections_Model;
+use Ari\Utils\Request as Request;
 
 class Helper {
     private static $system_args = array(
@@ -186,5 +189,9 @@ class Helper {
             $connection_id = 0;
 
         return $connection_id;
+    }
+
+    public static function is_valid_nonce() {
+        return wp_verify_nonce( Request::get_var( '_wpnonce' ), ARIADMINER_NONCE );
     }
 }

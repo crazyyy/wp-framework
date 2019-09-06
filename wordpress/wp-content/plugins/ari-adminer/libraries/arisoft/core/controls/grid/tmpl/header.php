@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $options = $this->options;
 ?>
 <tr<?php if ( $options->options->header_class ): ?> class="<?php echo $options->options->header_class; ?>"<?php endif; ?>>

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $drivers["simpledb"] = "SimpleDB";
 
 if (isset($_GET["simpledb"])) {

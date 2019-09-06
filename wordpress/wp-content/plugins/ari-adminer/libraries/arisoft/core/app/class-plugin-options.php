@@ -1,6 +1,8 @@
 <?php
 namespace Ari\App;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Options as Options;
 
 class Plugin_Options extends Options {

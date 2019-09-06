@@ -188,6 +188,9 @@ select.elfinder-tabstop.ui-state-hover {
   font-weight: normal;
   font-style: normal;
 }
+.elfinder-button-menu {
+	margin-top: 24px !important;
+}
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
     font-family: material;

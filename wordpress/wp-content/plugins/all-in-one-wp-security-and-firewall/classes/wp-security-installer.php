@@ -69,8 +69,8 @@ class AIOWPSecurity_Installer
         id bigint(20) NOT NULL AUTO_INCREMENT,
         user_id bigint(20) NOT NULL,
         user_login VARCHAR(150) NOT NULL,
-        lockdown_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-        release_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+        lockdown_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
+        release_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
         failed_login_ip varchar(100) NOT NULL DEFAULT '',
         lock_reason varchar(128) NOT NULL DEFAULT '',
         unlock_key varchar(128) NOT NULL DEFAULT '',
@@ -82,7 +82,7 @@ class AIOWPSecurity_Installer
         id bigint(20) NOT NULL AUTO_INCREMENT,
         user_id bigint(20) NOT NULL,
         user_login VARCHAR(150) NOT NULL,
-        failed_login_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+        failed_login_date datetime NOT NULL DEFAULT '1000-10-00 10:00:00',
         login_attempt_ip varchar(100) NOT NULL DEFAULT '',
         PRIMARY KEY  (id)
         )" . $charset_collate . ";";
@@ -92,8 +92,8 @@ class AIOWPSecurity_Installer
         id bigint(20) NOT NULL AUTO_INCREMENT,
         user_id bigint(20) NOT NULL,
         user_login VARCHAR(150) NOT NULL,
-        login_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-        logout_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+        login_date datetime NOT NULL DEFAULT '1000-10-00 10:00:00',
+        logout_date datetime NOT NULL DEFAULT '1000-10-00 10:00:00',
         login_ip varchar(100) NOT NULL DEFAULT '',
         login_country varchar(150) NOT NULL DEFAULT '',
         browser_type varchar(150) NOT NULL DEFAULT '',
@@ -103,7 +103,7 @@ class AIOWPSecurity_Installer
 
         $gm_tbl_sql = "CREATE TABLE " . $aiowps_global_meta_tbl_name . " (
         meta_id bigint(20) NOT NULL auto_increment,
-        date_time datetime NOT NULL default '0000-00-00 00:00:00',
+        date_time datetime NOT NULL default '1000-10-10 10:00:00',
         meta_key1 varchar(255) NOT NULL,
         meta_key2 varchar(255) NOT NULL,
         meta_key3 varchar(255) NOT NULL,
@@ -123,7 +123,7 @@ class AIOWPSecurity_Installer
         event_type VARCHAR(150) NOT NULL DEFAULT '',
         username VARCHAR(150),
         user_id bigint(20),
-        event_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+        event_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
         ip_or_host varchar(100),
         referer_info varchar(255),
         url varchar(255),
@@ -138,7 +138,7 @@ class AIOWPSecurity_Installer
         blocked_ip varchar(100) NOT NULL DEFAULT '',
         block_reason varchar(128) NOT NULL DEFAULT '',
         country_origin varchar(50) NOT NULL DEFAULT '',
-        blocked_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+        blocked_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
         unblock tinyint(1) NOT NULL DEFAULT '0',
         PRIMARY KEY  (id)
         )" . $charset_collate . ";";
@@ -201,6 +201,41 @@ class AIOWPSecurity_Installer
         } else {
             $aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Deactivation::run_deactivation_tasks() - Original config settings not found!", 4);
             return false;
+        }
+    }
+    
+    /**
+     * Setup aiowps cron tasks
+     * Handles both single and multi-site (NW activation) cases
+     * @global type $wpdb
+     * @param type $networkwide
+     */
+    static function set_cron_tasks_upon_activation($networkwide) {
+        global $wpdb;
+        if (AIOWPSecurity_Utility::is_multisite_install() && $networkwide) {
+            // check if it is a network activation
+            $blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+            foreach ($blogids as $blog_id) {
+                switch_to_blog($blog_id);
+                AIOWPSecurity_Installer::schedule_cron_events();
+                do_action('aiowps_activation_complete');
+                restore_current_blog();
+            }
+        } else {
+            AIOWPSecurity_Installer::schedule_cron_events();
+            do_action('aiowps_activation_complete');
+        }
+    }
+    
+    /**
+     * Helper function for scheduling aiowps cron events
+     */
+    static function schedule_cron_events() {
+        if ( !wp_next_scheduled('aiowps_hourly_cron_event') ) {
+            wp_schedule_event(time(), 'hourly', 'aiowps_hourly_cron_event'); //schedule an hourly cron event
+        }
+        if ( !wp_next_scheduled('aiowps_daily_cron_event') ) {
+            wp_schedule_event(time(), 'daily', 'aiowps_daily_cron_event'); //schedule an daily cron event
         }
     }
 }

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Include current date and time in export filename
 * @link https://www.adminer.org/plugins/#use

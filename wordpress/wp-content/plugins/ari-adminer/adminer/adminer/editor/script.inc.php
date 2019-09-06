@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 if ($_GET["script"] == "kill") {
 	$connection->query("KILL " . number($_POST["kill"]));
 

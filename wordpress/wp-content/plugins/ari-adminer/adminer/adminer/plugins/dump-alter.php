@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Exports one database (e.g. development) so that it can be synced with other database (e.g. production)
 * @link https://www.adminer.org/plugins/#use

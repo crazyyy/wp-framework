@@ -1,5 +1,7 @@
 <?php
-define( 'ARIADMINER_VERSION', '1.1.12' );
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
+define( 'ARIADMINER_VERSION', '1.2.3' );
 define( 'ARIADMINER_SLUG', 'ari-adminer' );
 define( 'ARIADMINER_ASSETS_URL', ARIADMINER_URL . 'assets/' );
 define( 'ARIADMINER_VERSION_OPTION', 'ari_adminer' );
@@ -18,3 +20,6 @@ define( 'ARIADMINER_MESSAGETYPE_SUCCESS', 'success' );
 define( 'ARIADMINER_MESSAGETYPE_NOTICE', 'notice' );
 define( 'ARIADMINER_MESSAGETYPE_ERROR', 'error' );
 define( 'ARIADMINER_MESSAGETYPE_WARNING', 'warning' );
+
+define( 'ARIADMINER_NONCE', 'ariadminer' );
+define( 'ARIADMINER_RUN_NONCE', 'ariadminer_run' );

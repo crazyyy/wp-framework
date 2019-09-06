@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 header("Content-Type: text/javascript; charset=utf-8");
 
 if ($_GET["script"] == "db") {

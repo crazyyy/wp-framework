@@ -54,7 +54,7 @@ class Responsive_Lightbox_Welcome_Page {
 			?>
 		</div>
 		
-		<div class="rl-badge" style="position: absolute; top: 0; right: 0; box-shadow: 0 1px 3px rgba(0,0,0,.1);"><img src="<?php echo RESPONSIVE_LIGHTBOX_URL . '/images/logo-rl.png'; ?>" width="180" height="180" /></div>
+		<div class="rl-badge" style="position: absolute; top: 0; right: 0; box-shadow: 0 1px 3px rgba(0,0,0,.1); max-width: 180px;"><img src="<?php echo RESPONSIVE_LIGHTBOX_URL . '/images/logo-rl.png'; ?>" width="180" height="180" /></div>
 
 		<div class="changelog">
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=responsive-lightbox-tour' ) ); ?>" class="button button-primary button-large"><?php _e( 'Start Tour', 'responsive-lightbox' ); ?></a>

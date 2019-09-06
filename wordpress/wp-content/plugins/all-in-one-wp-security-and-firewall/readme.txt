@@ -3,7 +3,7 @@ Contributors: Tips and Tricks HQ, wpsolutions, Peter Petreski, Ruhul Amin, mbrso
 Donate link: https://www.tipsandtricks-hq.com
 Tags: security, secure, Anti Virus, antivirus, ban, ban hacker, virus, firewall, firewall security, login, lockdown, htaccess, hack, malware, vulnerability, protect, protection, phishing, database, backup, plugin, sql injection, ssl, restrict, login captcha, bot, hotlink, 404 detection, admin, rename, all in one, scan, scanner, iframe,
 Requires at least: 4.7
-Tested up to: 5.0
+Tested up to: 5.2
 Stable tag: trunk
 License: GPLv3
 
@@ -107,12 +107,8 @@ or malicious bots who do not have a special cookie in their browser. You (the si
 * Ability to hide admin login page. Rename your WordPress login page URL so that bots and hackers cannot access your real WordPress login URL. This feature allows you to change the default login page (wp-login.php) to something you configure.
 * Ability to use Login Honeypot which will helps reduce brute force login attempts by robots.
 
-= WhoIs Lookup =
-* Perform a WhoIs lookup of a suspicious host or IP address and get full details.
-
 = Security Scanner =
 * The file change detection scanner can alert you if any files have changed in your WordPress system. You can then investigate and see if that was a legitimate change or some bad code was injected.
-* Database scanner feature can be used to scan your database tables. It will look for any common suspicious-looking strings, javascript and html code in some of the WordPress core tables.
 
 = Comment SPAM Security =
 * Monitor the most active IP addresses which persistently produce the most SPAM comments and instantly block them with the click of a button.
@@ -187,6 +183,34 @@ https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin
 None
 
 == Changelog ==
+= 4.4.0 =
+- Added robustness to login lockdown feature by replacing the strtotime function with DateTime/DateInterval. 
+This should prevent 32-bit systems from being constrained to the max date of 19 Jan 2038.
+- Fixed bugs related to captcha features.
+- Fixed and improved "Logged In Users" functionality for multisite.
+- Always set valid dates, to avoid errors when strict mode is enabled on mysql. Thanks to Davide.
+
+= 4.3.9.4 =
+- Removed whois feature because it adds relatively little value and the third-party library used is not being maintained regularly.
+- Fixed "headers already sent" error when bulk action performed using aiowps list table.
+
+= 4.3.9.3 =
+- Fixed another captcha bug related to comment form.
+
+= 4.3.9.2 =
+- Fixed various captcha bugs: woocommerce lost password page, custom login form page, etc
+
+= 4.3.9.1 =
+- Fixed rename login page feature bug introduced after WP core change in version 5.2.
+
+= 4.3.9 =
+- Fixed captcha bug.
+- Fixed PHP_EOL issue where some IPv6 and v4 addresses saved in settings were incorrectly deemed invalid.
+- Tightened file permission for wp-config.php to "640"
+- Fixed DB prefix change bug for cases where DB had tables of type "view".
+- Fixed some translation string issues.
+- Minor style fix for wp list table pagination nav buttons.
+
 = 4.3.8.3 =
 - Trying again - Fixed login captcha authentication bug.
 

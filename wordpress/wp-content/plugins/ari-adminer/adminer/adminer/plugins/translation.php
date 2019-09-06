@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 /* Requires this table:
 CREATE TABLE translation (
 	id int NOT NULL AUTO_INCREMENT, -- optional

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Array_Helper {
     static public function get_value( $arr, $key, $default = null, $filter = null ) {
         $val = $default;

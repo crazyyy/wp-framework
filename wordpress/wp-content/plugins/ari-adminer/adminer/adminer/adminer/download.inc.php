@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $TABLE = $_GET["download"];
 $fields = fields($TABLE);
 header("Content-Type: application/octet-stream");

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Link system tables (in mysql and information_schema databases) by foreign keys
 * @link https://www.adminer.org/plugins/#use

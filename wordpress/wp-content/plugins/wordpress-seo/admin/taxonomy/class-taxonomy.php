@@ -18,11 +18,15 @@ class WPSEO_Taxonomy {
 	private $taxonomy = '';
 
 	/**
+	 * Holds the metabox SEO analysis instance.
+	 *
 	 * @var WPSEO_Metabox_Analysis_SEO
 	 */
 	private $analysis_seo;
 
 	/**
+	 * Holds the metabox readability analysis instance.
+	 *
 	 * @var WPSEO_Metabox_Analysis_Readability
 	 */
 	private $analysis_readability;
@@ -103,6 +107,7 @@ class WPSEO_Taxonomy {
 			$asset_manager->enqueue_style( 'scoring' );
 			$asset_manager->enqueue_script( 'metabox' );
 			$asset_manager->enqueue_script( 'term-scraper' );
+			$asset_manager->enqueue_script( 'admin-script' );
 
 			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'term-scraper', 'wpseoTermScraperL10n', $this->localize_term_scraper_script() );
 			$yoast_components_l10n = new WPSEO_Admin_Asset_Yoast_Components_L10n();
@@ -110,11 +115,23 @@ class WPSEO_Taxonomy {
 
 			$analysis_worker_location          = new WPSEO_Admin_Asset_Analysis_Worker_Location( $asset_manager->flatten_version( WPSEO_VERSION ) );
 			$used_keywords_assessment_location = new WPSEO_Admin_Asset_Analysis_Worker_Location( $asset_manager->flatten_version( WPSEO_VERSION ), 'used-keywords-assessment' );
-			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'term-scraper', 'wpseoAnalysisWorkerL10n', array(
-				'url'                     => $analysis_worker_location->get_url( $analysis_worker_location->get_asset(), WPSEO_Admin_Asset::TYPE_JS ),
-				'keywords_assessment_url' => $used_keywords_assessment_location->get_url( $used_keywords_assessment_location->get_asset(), WPSEO_Admin_Asset::TYPE_JS ),
+
+			$localization_data = array(
+				'url'                     => $analysis_worker_location->get_url(
+					$analysis_worker_location->get_asset(),
+					WPSEO_Admin_Asset::TYPE_JS
+				),
+				'keywords_assessment_url' => $used_keywords_assessment_location->get_url(
+					$used_keywords_assessment_location->get_asset(),
+					WPSEO_Admin_Asset::TYPE_JS
+				),
 				'log_level'               => WPSEO_Utils::get_analysis_worker_log_level(),
-			) );
+			);
+			wp_localize_script(
+				WPSEO_Admin_Asset_Manager::PREFIX . 'term-scraper',
+				'wpseoAnalysisWorkerL10n',
+				$localization_data
+			);
 
 			/**
 			 * Remove the emoji script as it is incompatible with both React and any
@@ -123,14 +140,17 @@ class WPSEO_Taxonomy {
 			remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
 
 			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'replacevar-plugin', 'wpseoReplaceVarsL10n', $this->localize_replace_vars_script() );
-			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'metabox', 'wpseoSelect2Locale', WPSEO_Utils::get_language( WPSEO_Utils::get_user_locale() ) );
+			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'metabox', 'wpseoSelect2Locale', WPSEO_Language_Utils::get_language( WPSEO_Language_Utils::get_user_locale() ) );
 			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'metabox', 'wpseoAdminL10n', WPSEO_Utils::get_admin_l10n() );
+			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'metabox', 'wpseoFeaturesL10n', WPSEO_Utils::retrieve_enabled_features() );
 
 			$asset_manager->enqueue_script( 'admin-media' );
 
-			wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'admin-media', 'wpseoMediaL10n', array(
-				'choose_image' => __( 'Use Image', 'wordpress-seo' ),
-			) );
+			wp_localize_script(
+				WPSEO_Admin_Asset_Manager::PREFIX . 'admin-media',
+				'wpseoMediaL10n',
+				array( 'choose_image' => __( 'Use Image', 'wordpress-seo' ) )
+			);
 		}
 
 		if ( self::is_term_overview( $pagenow ) ) {
@@ -196,6 +216,9 @@ class WPSEO_Taxonomy {
 
 		foreach ( $filters as $filter ) {
 			remove_filter( $filter, 'wp_filter_kses' );
+			if ( ! current_user_can( 'unfiltered_html' ) ) {
+				add_filter( $filter, 'wp_filter_post_kses' );
+			}
 		}
 		remove_filter( 'term_description', 'wp_kses_data' );
 	}
@@ -257,6 +280,8 @@ class WPSEO_Taxonomy {
 	}
 
 	/**
+	 * Determines if a given page is the term overview page.
+	 *
 	 * @param string $page The string to check for the term overview page.
 	 *
 	 * @return bool
@@ -266,6 +291,8 @@ class WPSEO_Taxonomy {
 	}
 
 	/**
+	 * Determines if a given page is the term edit page.
+	 *
 	 * @param string $page The string to check for the term edit page.
 	 *
 	 * @return bool

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 // PDO can be used in several database drivers
 if (extension_loaded('pdo')) {
 	/*abstract*/ class Min_PDO extends PDO {

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 /** Remove spaces and comments from JavaScript code
 * @param string code with commands terminated by semicolon
 * @return string shrinked code

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Object_Helper {
     public static function extract_name( $obj ) {
         $class = get_class( $obj );

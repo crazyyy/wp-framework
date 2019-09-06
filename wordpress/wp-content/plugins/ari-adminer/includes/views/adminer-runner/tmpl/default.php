@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari_Adminer\Helpers\Helper as Helper;
 use Ari_Adminer\Utils\Db_Driver as DB_Driver;
 
@@ -10,6 +12,8 @@ $run_url = Helper::build_url(
         'action' => 'run',
 
         'noheader' => '1',
+
+        '_wpnonce' => wp_create_nonce( ARIADMINER_NONCE ),
     )
 );
 ?>

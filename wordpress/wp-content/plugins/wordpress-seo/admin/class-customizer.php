@@ -11,6 +11,8 @@
 class WPSEO_Customizer {
 
 	/**
+	 * Holds the customize manager.
+	 *
 	 * @var WP_Customize_Manager
 	 */
 	protected $wp_customize;
@@ -54,7 +56,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Function to support WordPress Customizer
+	 * Function to support WordPress Customizer.
 	 *
 	 * @param WP_Customize_Manager $wp_customize Manager class instance.
 	 */
@@ -66,7 +68,7 @@ class WPSEO_Customizer {
 		$this->wp_customize = $wp_customize;
 
 		$this->breadcrumbs_section();
-		$this->breadcrumbs_blog_remove_setting();
+		$this->breadcrumbs_blog_show_setting();
 		$this->breadcrumbs_separator_setting();
 		$this->breadcrumbs_home_setting();
 		$this->breadcrumbs_prefix_setting();
@@ -76,7 +78,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Add the breadcrumbs section to the customizer
+	 * Add the breadcrumbs section to the customizer.
 	 */
 	private function breadcrumbs_section() {
 		$section_args = array(
@@ -90,7 +92,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Returns whether or not the breadcrumbs are active
+	 * Returns whether or not the breadcrumbs are active.
 	 *
 	 * @return bool
 	 */
@@ -99,30 +101,30 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Adds the breadcrumbs remove blog checkbox
+	 * Adds the breadcrumbs show blog checkbox.
 	 */
-	private function breadcrumbs_blog_remove_setting() {
+	private function breadcrumbs_blog_show_setting() {
 		$index        = 'breadcrumbs-display-blog-page';
 		$control_args = array(
-			'label'           => __( 'Remove blog page from breadcrumbs', 'wordpress-seo' ),
+			'label'           => __( 'Show blog page in breadcrumbs', 'wordpress-seo' ),
 			'type'            => 'checkbox',
-			'active_callback' => array( $this, 'breadcrumbs_blog_remove_active_cb' ),
+			'active_callback' => array( $this, 'breadcrumbs_blog_show_active_cb' ),
 		);
 
 		$this->add_setting_and_control( $index, $control_args );
 	}
 
 	/**
-	 * Returns whether or not to show the breadcrumbs blog remove option
+	 * Returns whether or not to show the breadcrumbs blog show option.
 	 *
 	 * @return bool
 	 */
-	public function breadcrumbs_blog_remove_active_cb() {
+	public function breadcrumbs_blog_show_active_cb() {
 		return 'page' === get_option( 'show_on_front' );
 	}
 
 	/**
-	 * Adds the breadcrumbs separator text field
+	 * Adds the breadcrumbs separator text field.
 	 */
 	private function breadcrumbs_separator_setting() {
 		$index        = 'breadcrumbs-sep';
@@ -135,7 +137,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Adds the breadcrumbs home anchor text field
+	 * Adds the breadcrumbs home anchor text field.
 	 */
 	private function breadcrumbs_home_setting() {
 		$index        = 'breadcrumbs-home';
@@ -147,7 +149,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Adds the breadcrumbs prefix text field
+	 * Adds the breadcrumbs prefix text field.
 	 */
 	private function breadcrumbs_prefix_setting() {
 		$index        = 'breadcrumbs-prefix';
@@ -159,7 +161,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Adds the breadcrumbs archive prefix text field
+	 * Adds the breadcrumbs archive prefix text field.
 	 */
 	private function breadcrumbs_archiveprefix_setting() {
 		$index        = 'breadcrumbs-archiveprefix';
@@ -171,7 +173,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Adds the breadcrumbs search prefix text field
+	 * Adds the breadcrumbs search prefix text field.
 	 */
 	private function breadcrumbs_searchprefix_setting() {
 		$index        = 'breadcrumbs-searchprefix';
@@ -183,7 +185,7 @@ class WPSEO_Customizer {
 	}
 
 	/**
-	 * Adds the breadcrumb 404 prefix text field
+	 * Adds the breadcrumb 404 prefix text field.
 	 */
 	private function breadcrumbs_404_setting() {
 		$index        = 'breadcrumbs-404crumb';

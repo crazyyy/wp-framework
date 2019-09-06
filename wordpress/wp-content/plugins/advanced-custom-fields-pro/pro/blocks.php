@@ -415,7 +415,7 @@ function acf_enqueue_block_type_assets( $block_type ) {
 	
 	// Enqueue assets callback.
 	if( $block_type['enqueue_assets'] && is_callable($block_type['enqueue_assets']) ) {
-		call_user_func( $block_type['enqueue_assets'] );
+		call_user_func( $block_type['enqueue_assets'], $block_type );
 	}
 }
 
@@ -534,7 +534,7 @@ function acf_parse_save_blocks( $text = '' ) {
 	// Search text for dynamic blocks and modify attrs.
 	return addslashes(
 		preg_replace_callback(
-			'/<!--\s+wp:(?P<name>[\S]+)\s+(?P<attrs>{[\S\s]+?})\s+\/-->/',
+			'/<!--\s+wp:(?P<name>[\S]+)\s+(?P<attrs>{[\S\s]+?})\s+(?P<void>\/)?-->/',
 			'acf_parse_save_blocks_callback',
 			stripslashes( $text )
 		)
@@ -575,6 +575,7 @@ function acf_parse_save_blocks_callback( $matches ) {
 	// Prevent wp_targeted_link_rel from corrupting JSON.
 	remove_filter( 'content_save_pre', 'wp_filter_post_kses' );
 	remove_filter( 'content_save_pre', 'wp_targeted_link_rel' );
+	remove_filter( 'content_save_pre', 'balanceTags', 50 );
 	
 	/**
 	 * Filteres the block attributes before saving.

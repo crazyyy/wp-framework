@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Controls\Grid;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Array_Helper as Array_Helper;
 
 class Grid_Options {

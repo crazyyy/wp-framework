@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Connections;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Ajax as Ajax_Controller;
 use Ari_Adminer\Helpers\Helper as Helper;
 use Ari\Utils\Request as Request;

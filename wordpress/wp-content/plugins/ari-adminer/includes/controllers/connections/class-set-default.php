@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Connections;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Controller as Controller;
 use Ari\Utils\Response as Response;
 use Ari\Utils\Request as Request;
@@ -11,7 +13,11 @@ class Set_Default extends Controller {
         $result = false;
         $model = $this->model();
 
-        if ( Request::exists( 'action_connection_id' ) && Helper::has_access_to_adminer() ) {
+        if (
+            Request::exists( 'action_connection_id' ) &&
+            Helper::is_valid_nonce() &&
+            Helper::has_access_to_adminer()
+        ) {
             $connection_id = (int) Request::get_var( 'action_connection_id', 0, 'num' );
             if ( $connection_id > 0 ) {
                 $result = Helper::set_default_connection( $connection_id );

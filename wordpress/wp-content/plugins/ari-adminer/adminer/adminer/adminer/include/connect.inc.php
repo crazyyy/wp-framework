@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 function connect_error() {
 	global $adminer, $connection, $token, $error, $drivers;
 	if (DB != "") {

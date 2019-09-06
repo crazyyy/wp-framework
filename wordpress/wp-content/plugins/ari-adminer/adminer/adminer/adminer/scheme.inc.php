@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $row = $_POST;
 
 if ($_POST && !$error) {

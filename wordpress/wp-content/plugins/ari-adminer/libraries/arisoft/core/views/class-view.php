@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Views;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Filter as Filter;
 use Ari\Utils\Object_Helper as Object_Helper;
 

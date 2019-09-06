@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Utils\Dbcheck;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Driver {
     protected $last_error;
 

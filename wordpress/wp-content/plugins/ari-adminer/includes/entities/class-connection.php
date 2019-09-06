@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Entities;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Entities\Entity as Entity;
 use Ari_Adminer\Utils\Db_Driver as DB_Driver;
 use Ari_Adminer\Helpers\Helper as Helper;

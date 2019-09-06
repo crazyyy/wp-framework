@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Adminer_Runner;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Controller as Controller;
 use Ari\Utils\Response as Response;
 use Ari\Utils\Request as Request;
@@ -13,14 +15,20 @@ use Ari_Adminer\Helpers\Bridge as WP_Adminer_Bridge;
 
 class Run extends Controller {
     public function execute() {
-        if ( ! Helper::has_access_to_adminer() ) {
+        if (
+            ! Helper::is_valid_nonce() ||
+            ! Helper::has_access_to_adminer()
+        ) {
             $this->redirect_to_dashboard( __( 'You do not have permissions to run Adminer', 'ari-adminer' ) );
         }
 
+        $nonce = wp_create_nonce( ARIADMINER_RUN_NONCE );
         $connection_id = intval( Request::get_var( 'id', 0 ), 10 );
 
         $adminer_options = array(
             'theme_url' => Helper::get_theme_url(),
+
+            'nonce' => $nonce,
         );
 
         if ( $connection_id > 0 ) {
@@ -75,6 +83,8 @@ class Run extends Controller {
             'username' => $options_key,
 
             'db' => $config->db_name,
+
+            '__wp_nonce' => $nonce,
         );
 
         if ( DB_Driver::MYSQL != $config->db_driver )

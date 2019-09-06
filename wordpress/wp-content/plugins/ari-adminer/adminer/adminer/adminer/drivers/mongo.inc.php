@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $drivers["mongo"] = "MongoDB";
 
 if (isset($_GET["mongo"])) {
@@ -526,7 +528,7 @@ if (isset($_GET["mongo"])) {
 								$op = '$regex';
 								break;
 							default:
-								continue;
+								continue 2;
 						}
 						if ($type == 'and') {
 							$data['$and'][] = array($col => array($op => $val));
@@ -662,7 +664,7 @@ if (isset($_GET["mongo"])) {
 	}
 
 	function support($feature) {
-		return preg_match("~database|indexes~", $feature);
+		return preg_match("~database|indexes|descidx~", $feature);
 	}
 
 	function db_collation($db, $collations) {

@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Utils\Dbcheck\Drivers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari_Adminer\Utils\Dbcheck\Driver as Driver;
 
 define( 'ARI_DBCHECKED_MYSQL_CONNECTION_TIMEOUT', 10 );

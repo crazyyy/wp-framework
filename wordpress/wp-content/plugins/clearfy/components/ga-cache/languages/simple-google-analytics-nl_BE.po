@@ -1,0 +1,243 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:33+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:27
+msgid "The <b>Simple Google Analytics</b> plugin has some major changes!"
+msgstr ""
+
+#: admin/boot.php:28
+msgid ""
+"Unfortunately, the old version of the plugin (2.2.2) is no longer supported, "
+"but you still can download it from the WordPress repository in case if the new "
+"release doesn’t work for you."
+msgstr ""
+
+#: admin/boot.php:29
+msgid ""
+"We’ve updated the code and fixed the compatibility issue for the latest "
+"WordPress and PHP versions. We’ve also added additional feature of the Local "
+"Google Analytics – this way your website will load faster. The plugin’s name "
+"has been changed to Local Google Analytics, but all features remained the same."
+msgstr ""
+
+#: admin/boot.php:30
+#, php-format
+msgid ""
+"Please, check <a href=\"%s\">plugin settings</a> and its performance on your "
+"website. We do care about you and want to avoid any problems with the new "
+"version."
+msgstr ""
+
+#: admin/boot.php:32
+#, php-format
+msgid ""
+"We are aimed to pay more attention to the speed and security aspects of your "
+"website. That’s why you should definitely try our basic WordPress optimization "
+"plugin as well. Clearfy includes functionality of this plugin and has many "
+"additional features for the website optimization:\n"
+"<a href=\"%s\">Donwload Clearfy for free</a>"
+msgstr ""
+
+#: admin/boot.php:121 admin/options.php:30 admin/pages/ga_cache.php:49
+msgid "Google Analytics Cache"
+msgstr ""
+
+#: admin/boot.php:127 admin/options.php:50
+msgid "Google analytic Code"
+msgstr "Google analytics Code"
+
+#: admin/boot.php:132 admin/options.php:71
+msgid "Use adjusted bounce rate?"
+msgstr "Aangepast bounce percentage gebruiken?"
+
+#: admin/boot.php:137 admin/options.php:80
+msgid "Change enqueue order?"
+msgstr "Enqueue volgorde wijzigen?"
+
+#: admin/boot.php:142 admin/options.php:89
+msgid "Disable all display features functionality?"
+msgstr "Alle weergave functionaliteit uitschakelen?"
+
+#: admin/boot.php:147 admin/options.php:98
+msgid "Use Anonymize IP? (Required by law for some countries)"
+msgstr "Gebruik anonimiseren IP? (Voor sommige landen wettelijk verplicht)"
+
+#: admin/boot.php:152 admin/options.php:107 admin/options.php:109
+msgid "Track logged in Administrators?"
+msgstr "Track ingelogde Beheerders?"
+
+#: admin/boot.php:157 admin/options.php:116
+msgid "Remove script from wp-cron?"
+msgstr "Verwijder script van wp-cron?"
+
+#: admin/boot.php:185
+msgid "Get ultimate plugin free"
+msgstr "Krijg ultieme plugin gratis"
+
+#: admin/options.php:23
+msgid "<strong>Google Analytics cache</strong>."
+msgstr "<strong>Google Analytics cache</strong>."
+
+#: admin/options.php:23
+msgid ""
+"To improve Google Page Speed indicators Analytics caching is needed. However, "
+"it can also slightly increase your website loading speed, because Analytics js "
+"files will load locally. The second case that you might need these settings is "
+"the usual Google Analytics connection to your website. You do not need to do "
+"this with other plugins or insert the tracking code into your theme."
+msgstr ""
+"Om de pagina snelheid indicatoren van Google te verbeteren, is caching in "
+"Analytics nodig. Het kan echter ook de laadsnelheid van uw website enigszins "
+"verhogen, omdat de Analytics js bestanden lokaal worden geladen. Het tweede "
+"geval waarvoor u deze instellingen nodig heeft, is de gebruikelijke Google "
+"Analytics verbinding met uw website. U hoeft dit niet met andere plugins te "
+"doen of de tracking code in uw thema in te voegen."
+
+#: admin/options.php:32
+msgid ""
+"If you enable this option, the plugin will begin to save a local copy of "
+"Google Analytics to speed up the loading of your website and improve Google "
+"Page Speed."
+msgstr ""
+"Als u deze optie inschakelt, zal de plugin beginnen met het opslaan van een "
+"lokale kopie van Google Analytics om het laden van uw website te versnellen en "
+"de Google Page Speed ​​te verbeteren."
+
+#: admin/options.php:32
+msgid ""
+"ATTENTION! Before using this option, remove the previously installed Google "
+"Analytics code inside your theme or plugins associated with this feature!"
+msgstr ""
+"AANDACHT! Voordat u deze optie gebruikt, verwijdert u de eerder geïnstalleerde "
+"Google Analytics code in uw thema of plugins die aan deze functie zijn "
+"gekoppeld!"
+
+#: admin/options.php:52
+msgid "Set the Google Analytics tracking code."
+msgstr "Stel de Google Analytics tracking code in."
+
+#: admin/options.php:63
+msgid "Save GA in"
+msgstr "Bewaar GA in"
+
+#: admin/options.php:64
+msgid "Select location for the Google Analytics code."
+msgstr "Selecteer een locatie voor de Google Analytics code."
+
+#: admin/options.php:74
+msgid ""
+"Essentially, you set up an event which is triggered after a user spends a "
+"certain amount of time on the landing page, telling Google Analytics not to "
+"count these users as bounces. A user may come to your website, find all of the "
+"information they need (a phone number, for example) and then leave the site "
+"without visiting another page. Without adjusted bounce rate, such a user would "
+"be considered a bounce, even though they had a successful experience. By "
+"defining a time limit after which you can consider a user to be \"engaged,\" "
+"that user would no longer count as a bounce, and you'd get a more accurate "
+"idea of whether they found what they were looking for."
+msgstr ""
+"In essentie stelt u een gebeurtenis in die wordt geactiveerd nadat een "
+"gebruiker een bepaalde hoeveelheid tijd op de bestemmingspagina heeft "
+"doorgebracht, waarmee u Google Analytics vertelt om deze gebruikers niet als "
+"bounces te tellen. Een gebruiker kan naar uw website komen, alle benodigde "
+"informatie vinden (bijvoorbeeld een telefoonnummer) en vervolgens de website "
+"verlaten zonder een andere pagina te bezoeken. Zonder aangepast bounce "
+"percentage zou een dergelijke gebruiker als een bounce worden beschouwd, ook "
+"al hadden ze een succesvolle ervaring. Door een tijdslimiet te definiëren "
+"waarna u kunt concluderen dat een gebruiker \"geëngageerd\" is, telt die "
+"gebruiker niet mee als een bounce en krijgt u een beter beeld van het feit of "
+"ze hebben gevonden waarnaar ze op zoek waren."
+
+#: admin/options.php:83
+msgid ""
+"By default, Google Analytics code is loaded before other scripts and "
+"javasscript code, but if you set the value to 100, the GA code will be loaded "
+"after all other scripts. By changing the priority, you can set code position "
+"on the page."
+msgstr ""
+"Standaard wordt de Google Analytics code geladen voor andere scripts en "
+"javasscript code, maar als u de waarde instelt op 100, wordt de GA code "
+"geladen na alle andere scripts. Door de prioriteit te wijzigen, kunt u de "
+"codepositie op de pagina instellen."
+
+#: admin/options.php:91
+#, php-format
+msgid "Disable all <a href=\"%s\">display features functionality?</a>"
+msgstr "Alle <a href=\"%s\">van weergave functies uitschakelen?</a>"
+
+#: admin/options.php:100
+#, php-format
+msgid "Use <a href=\"%s\">Anonymize IP?</a> (Required by law for some countries)"
+msgstr ""
+"Gebruik <a href=\"%s\">Anoniem maken van IP?</a> (Wettelijk vereist voor "
+"sommige landen)"
+
+#: admin/options.php:118
+msgid ""
+"Clearfy creates a cron job to daily update Google Analytics cache scripts. "
+"After enabling this option, the plugin will not update Google Analytics cache "
+"file. Do not use this option if you do not understand why you need it!"
+msgstr ""
+"Clearfy maakt een cron-taak om dagelijks de cache scripts van Google Analytics "
+"bij te werken. Nadat u deze optie hebt ingeschakeld, werkt de plugin het cache "
+"bestand van Google Analytics niet bij. Gebruik deze optie niet als u niet "
+"begrijpt waarom u het nodig hebt!"
+
+#: admin/pages/ga_cache.php:33
+msgid "Local Google Analytics"
+msgstr ""
+
+#: admin/pages/ga_cache.php:50
+msgid "General"
+msgstr "Algemeen"
+
+#: includes/classes/class.configurate-ga.php:37
+msgid "Once Weekly"
+msgstr "Eénmaal per week"
+
+#: includes/classes/class.configurate-ga.php:42
+msgid "Twice Monthly"
+msgstr "Tweemaal per maand"
+
+#: includes/classes/class.configurate-ga.php:47
+msgid "Once Monthly"
+msgstr "Eénmaal per maand"
+
+#: simple_google_analytics.php:32
+msgid ""
+"We found that you have the \"Clearfy - disable unused features\" plugin "
+"installed, this plugin already has Google Analytics cache functions, so you "
+"can deactivate plugin \"Google Analytics Cache\"!"
+msgstr ""
+
+#: simple_google_analytics.php:40
+msgid ""
+"You use the old version of Wordpress to use the <b>Webcraftic Local Google "
+"Analytics (Old name: Simple Google Analytics)</b> plugin, you must upgrade "
+"your Wordpress to the minimum version 4.2!"
+msgstr ""
+
+#: simple_google_analytics.php:65
+msgid "Webcraftic Local Google Analytics"
+msgstr ""

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $translations = array(
 	'Login' => 'Entrar',
 	'Logout successful.' => 'Sessão terminada com sucesso.',

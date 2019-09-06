@@ -1,0 +1,181 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:31+0300\n"
+"PO-Revision-Date: 2018-09-06 18:31+0300\n"
+"Last-Translator: alex.kovalevv@gmail.com <alex.kovalevv@gmail.com>\n"
+"Language-Team: Alex Kovalev <alex.kovalevv@gmail.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/ajax/hide-notice.php:19 admin/ajax/restore-notice.php:19
+msgid "You don't have enough capability to edit this information."
+msgstr "Você não tem capacidade suficiente para editar essas informações."
+
+#: admin/ajax/hide-notice.php:32 admin/ajax/restore-notice.php:28
+msgid "Undefinded notice id."
+msgstr "ID de aviso não identificada."
+
+#: admin/ajax/hide-notice.php:46 admin/ajax/restore-notice.php:40
+msgid "Success"
+msgstr "Sucesso"
+
+#: admin/boot.php:18 admin/options.php:30 admin/pages/notices.php:33
+msgid "Hide admin notices"
+msgstr "Ocultar avisos de administrador"
+
+#: admin/boot.php:24 admin/options.php:70
+msgid "Enable hidden notices in adminbar"
+msgstr "Ativar avisos ocultos no adminbar"
+
+#: admin/boot.php:46
+msgid "Get ultimate plugin free"
+msgstr "Obtenha o melhor plugin grátis"
+
+#: admin/options.php:23
+msgid "Admin notifications, Update nags"
+msgstr "Notificações de administrador, Atualizações nags"
+
+#: admin/options.php:23
+msgid ""
+"Do you know the situation, when some plugin offers you to update to premium, "
+"to collect technical data and shows many annoying notices? You are close "
+"these notices every now and again but they newly appears and interfere your "
+"work with WordPress. Even worse, some plugin’s authors delete “close” button "
+"from notices and they shows in your admin panel forever."
+msgstr ""
+"Você conhece a situação, quando algum plugin lhe oferece para atualizar para "
+"premium, para coletar dados técnicos e mostra muitos avisos irritantes? Você "
+"está próximo desses avisos de vez em quando, mas eles aparecem recentemente "
+"e interferem no seu trabalho com o WordPress. Pior ainda, alguns autores de "
+"plug-in excluem o botão “fechar” dos avisos e eles são exibidos no seu "
+"painel de administração para sempre."
+
+#: admin/options.php:34
+msgid "All notices"
+msgstr "Todos os avisos"
+
+#: admin/options.php:35
+msgid "Hide all notices globally."
+msgstr "Esconda todos os avisos globalmente."
+
+#: admin/options.php:39
+msgid "Only selected"
+msgstr "Apenas selecionado"
+
+#: admin/options.php:40
+msgid ""
+"Hide selected notices only. You will see the link \"Hide notification forever"
+"\" in each notice. Push it and they will not bother you anymore."
+msgstr ""
+"Ocultar apenas avisos selecionados. Você verá o link \"Ocultar notificação "
+"para sempre\" em cada aviso. Empurre-o e eles não vão incomodá-lo mais."
+
+#: admin/options.php:44
+msgid "Don't nide"
+msgstr "Não nide"
+
+#: admin/options.php:45
+msgid ""
+"Do not hide notices and do not show “Hide notification forever” link for "
+"admin."
+msgstr ""
+"Não oculte avisos e não mostre o link \"Ocultar notificação para sempre\" "
+"para o administrador."
+
+#: admin/options.php:49
+msgid ""
+"Some plugins shows notifications about premium version, data collecting or "
+"promote their services. Even if you push close button (that sometimes are "
+"impossible), notices are shows again in some time. This option allows you to "
+"control notices. Hide them all or each individually. Some plugins shows "
+"notifications about premium version, data collecting or promote their "
+"services. Even if you push close button (that sometimes are impossible), "
+"notices are shows again in some time. This option allows you to control "
+"notices. Hide them all or each individually."
+msgstr ""
+"Alguns plugins mostram notificações sobre a versão premium, coleta de dados "
+"ou promover seus serviços. Mesmo se você apertar o botão fechar (que às "
+"vezes são impossíveis), os avisos são exibidos novamente em algum momento. "
+"Esta opção permite controlar avisos. Esconda-os todos ou cada um "
+"individualmente. Alguns plugins mostram notificações sobre a versão premium, "
+"coleta de dados ou promover seus serviços. Mesmo se você apertar o botão "
+"fechar (que às vezes são impossíveis), os avisos são exibidos novamente em "
+"algum momento. Esta opção permite controlar avisos. Esconda-os todos ou cada "
+"um individualmente."
+
+#: admin/options.php:72
+msgid ""
+"By default, the plugin hides all notices, which you specified. If you enable "
+"this option, the plugin will collect all hidden notices and show them into "
+"the top admin toolbar. It will not disturb you but will allow to look "
+"notices at your convenience."
+msgstr ""
+"Por padrão, o plug-in oculta todos os avisos especificados. Se você ativar "
+"essa opção, o plug-in coletará todos os avisos ocultos e os mostrará na "
+"barra de ferramentas superior do administrador. Não o incomodará, mas "
+"permitirá que você veja avisos de acordo com sua conveniência."
+
+#: admin/options.php:136
+msgid "Push reset hidden notices if you need to show hidden notices again."
+msgstr ""
+"Envie os avisos ocultos redefinidos se precisar mostrar avisos ocultos "
+"novamente."
+
+#: admin/options.php:145
+#, php-format
+msgid "Reset hidden notices (%s)"
+msgstr "Redefinir avisos ocultos ( %s )"
+
+#: admin/options.php:147 admin/pages/notices.php:85
+msgid "Hidden notices are successfully reset, now you can see them again!"
+msgstr ""
+"Avisos ocultos são redefinidos com sucesso, agora você pode vê-los novamente!"
+
+#: admin/pages/notices.php:49
+msgid "Notices"
+msgstr "Avisos"
+
+#: admin/pages/notices.php:50
+msgid "General"
+msgstr "Geral"
+
+#: disable-admin-notices.php:23
+msgid ""
+"We found that you have the \"Clearfy - disable unused features\" plugin "
+"installed, this plugin already has disable comments functions, so you can "
+"deactivate plugin \"Disable admin notices\"!"
+msgstr ""
+"Descobrimos que você tem o plug-in  \"Clearfy - desativar recursos não "
+"utilizados \" instalado, este plugin já tem funções de desabilitar "
+"comentários, então você pode desativar o plugin  \"Desativar avisos do "
+"administrador \"!"
+
+#: disable-admin-notices.php:80
+msgid "Webcraftic disable admin notices"
+msgstr "Webcraftic desabilitar avisos de administração"
+
+#: includes/classes/class.configurate-notices.php:79
+#, php-format
+msgid "Notifications %s"
+msgstr "Notificações %s"
+
+#: includes/classes/class.configurate-notices.php:88
+msgid "Restore notice"
+msgstr "Aviso de restauração"
+
+#: includes/classes/class.configurate-notices.php:267
+msgid "Hide notification forever"
+msgstr "Ocultar a notificação para sempre"

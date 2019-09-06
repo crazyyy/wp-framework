@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Views\Adminer_Runner;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari_Adminer\Views\Base as Base;
 
 class Html extends Base {
@@ -19,7 +21,7 @@ class Html extends Base {
         $app_options = array(
             'actionEl' => '#ctrl_action',
 
-            'ajaxUrl' => admin_url( 'admin-ajax.php?action=ari_adminer' ),
+            'ajaxUrl' => admin_url( 'admin-ajax.php?action=ari_adminer&_wpnonce=' . wp_create_nonce( ARIADMINER_NONCE ) ),
 
             'messages' => array(
                 'connectionOk' => __( 'Connection parameters are valid.', 'ari-adminer' ),

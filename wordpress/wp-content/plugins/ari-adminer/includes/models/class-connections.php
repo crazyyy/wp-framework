@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Models;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Models\Model as Model;
 use Ari\Utils\Request as Request;
 use Ari\Utils\Array_Helper as Array_Helper;

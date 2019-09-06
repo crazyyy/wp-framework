@@ -79,10 +79,11 @@ class Responsive_Lightbox_Tour {
 		global $pagenow;
 
 		$pointer = array();
+		$rl = Responsive_Lightbox();
 
 		// galleries
 		if ( $pagenow === 'edit.php' ) {
-			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'rl_gallery' && Responsive_Lightbox()->options['builder']['gallery_builder'] ) {
+			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'rl_gallery' && $rl->options['builder']['gallery_builder'] ) {
 				$pointer = array(
 					'content'	 => '<h3>' . __( 'Gallery Builder', 'responsive-lightbox' ) . '</h3>' . 
 					'<p>' . __( 'This is an advanced gallery builder. Here you can see a preview of all created galleries along with their settings, such as the name, type, source of images, author or date of publication. You can also add a new gallery, edit existing ones or quickly copy the code allowing its use on the site.', 'responsive-lightbox' ) . '</p>',
@@ -91,10 +92,10 @@ class Responsive_Lightbox_Tour {
 				);
 
 				// next categories?
-				if ( Responsive_Lightbox()->options['builder']['categories'] )
+				if ( $rl->options['builder']['categories'] )
 					$pointer['function'] = 'window.location="' . admin_url( 'edit-tags.php?taxonomy=rl_category&post_type=rl_gallery' ) . '";';
 				// next tags?
-				elseif ( Responsive_Lightbox()->options['builder']['tags'] )
+				elseif ( $rl->options['builder']['tags'] )
 					$pointer['function'] = 'window.location="' . admin_url( 'edit-tags.php?taxonomy=rl_tag&post_type=rl_gallery' ) . '";';
 				// or settings?
 				else
@@ -112,7 +113,7 @@ class Responsive_Lightbox_Tour {
 					);
 
 					// next tags?
-					if ( Responsive_Lightbox()->options['builder']['tags'] )
+					if ( $rl->options['builder']['tags'] )
 						$pointer['function'] = 'window.location="' . admin_url( 'edit-tags.php?taxonomy=rl_tag&post_type=rl_gallery' ) . '";';
 					// or settings?
 					else
@@ -140,7 +141,7 @@ class Responsive_Lightbox_Tour {
 				);
 			} elseif ( $_GET['page'] === 'responsive-lightbox-configuration' ) {
 				// get additional plugins based on tabs
-				$plugins = array_values( array_diff( array_keys( Responsive_Lightbox()->settings->tabs ), array( 'settings', 'configuration', 'gallery', 'builder', 'licenses', 'addons' ) ) );
+				$plugins = array_values( array_diff( array_keys( $rl->settings->tabs ), array( 'settings', 'configuration', 'gallery', 'builder', 'folders', 'licenses', 'addons' ) ) );
 
 				if ( ! empty( $plugins ) ) {
 					// get first plugin tab key
@@ -169,7 +170,15 @@ class Responsive_Lightbox_Tour {
 					'<p>' . __( 'You can use the galleries in many ways - insert them into posts using the Add Gallery button, insert manually using shortcodes or add to the theme using functions. But you can also display them in archives just like other post types. Use these settings to specify the functionality of the gallery builder like categories, tags, archives and permalinks.', 'responsive-lightbox' ) . '</p>',
 					'button2'	 => __( 'Next', 'responsive-lightbox' ),
 					'id'		 => '#wpbody-content .wrap h2:first',
-					'function'	 => 'window.location="' . admin_url( 'admin.php?page=responsive-lightbox-' . ( ! empty( Responsive_Lightbox()->settings->tabs['licenses'] ) ? 'licenses' : 'addons' ) ) . '";'
+					'function'	 => 'window.location="' . admin_url( 'admin.php?page=responsive-lightbox-' . ( $rl->options['folders']['active'] ? 'folders' : ( ! empty( $rl->settings->tabs['licenses'] ) ? 'licenses' : 'addons' ) ) ) . '";'
+				);
+			} elseif ( $_GET['page'] === 'responsive-lightbox-folders' ) {
+				$pointer = array(
+					'content'	 => '<h3>' . __( 'Folders Settings', 'responsive-lightbox' ) . '</h3>' . 
+					'<p>' . __( 'Responsive Lithbox & Gallery comes with an optional Media Folders feature that extends your WordPress Media Library with visual folders. It allows you to organize your attachments in a folder tree structure. Move, copy, rename and delete files and folders with a nice drag and drop interface.', 'responsive-lightbox' ) . '</p>',
+					'button2'	 => __( 'Next', 'responsive-lightbox' ),
+					'id'		 => '#wpbody-content .wrap h2:first',
+					'function'	 => 'window.location="' . admin_url( 'admin.php?page=responsive-lightbox-' . ( ! empty( $rl->settings->tabs['licenses'] ) ? 'licenses' : 'addons' ) ) . '";'
 				);
 			} elseif ( $_GET['page'] === 'responsive-lightbox-licenses' ) {
 				$pointer = array(
@@ -182,7 +191,7 @@ class Responsive_Lightbox_Tour {
 			} elseif ( $_GET['page'] === 'responsive-lightbox-addons' ) {
 				$pointer = array(
 					'content'	 => '<h3>' . __( 'Add-ons', 'responsive-lightbox' ) . '</h3>' . 
-					'<p>' . __( 'Responsive Lightbox & Gallery is more that that. Do you need a beautiful lightbox effect, integration with social media, an attractive image gallery? Among our products you will surely find something for yourself. Boost your creativity and enhance your website with these beautiful, easy to use extensions, designed with Responsive Lightbox & Gallery integration in mind.', 'responsive-lightbox' ) . '</p>',
+					'<p>' . __( 'Responsive Lightbox & Gallery is more than that. Do you need a beautiful lightbox effect, integration with social media, an attractive image gallery? Among our products you will surely find something for yourself. Boost your creativity and enhance your website with these beautiful, easy to use extensions, designed with Responsive Lightbox & Gallery integration in mind.', 'responsive-lightbox' ) . '</p>',
 					'button2'	 => '',
 					'id'		 => '#wpbody-content .wrap h2:first',
 					'function'	 => ''

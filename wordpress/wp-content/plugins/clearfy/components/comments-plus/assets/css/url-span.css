@@ -1,0 +1,16 @@
+/**
+ * Url span
+ * @author Webcraftic <wordpress.webraftic@gmail.com>
+ * @copyright (c) 17.11.2017, Webcraftic
+ * @version 1.0
+ */
+
+.wbcr-clearfy-pseudo-link {
+    color: #008acf;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.wbcr-clearfy-pseudo-link:hover {
+    text-decoration: none;
+}

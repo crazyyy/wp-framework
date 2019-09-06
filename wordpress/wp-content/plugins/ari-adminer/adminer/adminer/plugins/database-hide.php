@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Hide some databases from the interface - just to improve design, not a security plugin
 * @link https://www.adminer.org/plugins/#use

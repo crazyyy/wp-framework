@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Object_Factory {
 	static public function get_object( $name, $ns, $params = array() ) {
         $obj = null;

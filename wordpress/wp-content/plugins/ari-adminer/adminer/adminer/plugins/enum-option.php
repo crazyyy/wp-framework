@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 
 /** Use <select><option> for enum edit instead of <input type="radio">
 * @link https://www.adminer.org/plugins/#use

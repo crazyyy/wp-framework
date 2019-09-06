@@ -6,24 +6,29 @@
  */
 
 /**
- * Class WPSEO_Export
+ * Class WPSEO_Export.
  *
- * Class with functionality to export the WP SEO settings
+ * Class with functionality to export the WP SEO settings.
  */
 class WPSEO_Export {
+
+	/**
+	 * Holds the nonce action.
+	 *
+	 * @var string
+	 */
 	const NONCE_ACTION = 'wpseo_export';
 
 	/**
+	 * Holds the export data.
+	 *
 	 * @var string
 	 */
 	private $export = '';
 
 	/**
-	 * @var string
-	 */
-	private $error = '';
-
-	/**
+	 * Holds whether the export was a success.
+	 *
 	 * @var boolean
 	 */
 	public $success;
@@ -47,32 +52,19 @@ class WPSEO_Export {
 		}
 
 		echo '<p>';
-		/* translators: %1$s expands to Import settings */
-		printf( esc_html__( 'Copy all these settings to another site\'s %1$s tab and click "%1$s" there.', 'wordpress-seo' ), __( 'Import settings', 'wordpress-seo' ) );
-		echo '</p>';
-		echo '<textarea id="wpseo-export" rows="20" cols="100">' . $this->export . '</textarea>';
-	}
-
-	/**
-	 * Returns true when the property error has a value.
-	 *
-	 * @return bool
-	 */
-	public function has_error() {
-		return ( $this->error !== '' );
-	}
-
-	/**
-	 * Sets the error hook, to display the error to the user.
-	 */
-	public function set_error_hook() {
-		/* translators: %1$s expands to Yoast SEO */
-		$message = sprintf( __( 'Error creating %1$s export: ', 'wordpress-seo' ), 'Yoast SEO' ) . $this->error;
-
 		printf(
-			'<div class="notice notice-error"><p>%1$s</p></div>',
-			$message
+			/* translators: %1$s expands to Import settings */
+			esc_html__(
+				'Copy all these settings to another site\'s %1$s tab and click "%1$s" there.',
+				'wordpress-seo'
+			),
+			esc_html__(
+				'Import settings',
+				'wordpress-seo'
+			)
 		);
+		echo '</p>';
+		echo '<textarea id="wpseo-export" rows="20" cols="100">' . esc_textarea( $this->export ) . '</textarea>';
 	}
 
 	/**
@@ -100,7 +92,7 @@ class WPSEO_Export {
 	}
 
 	/**
-	 * Writes a line to the export
+	 * Writes a line to the export.
 	 *
 	 * @param string  $line          Line string.
 	 * @param boolean $newline_first Boolean flag whether to prepend with new line.
@@ -113,7 +105,7 @@ class WPSEO_Export {
 	}
 
 	/**
-	 * Writes an entire option group to the export
+	 * Writes an entire option group to the export.
 	 *
 	 * @param string $opt_group Option group name.
 	 */
@@ -130,7 +122,7 @@ class WPSEO_Export {
 		foreach ( $options as $key => $elem ) {
 			if ( is_array( $elem ) ) {
 				$count = count( $elem );
-				for ( $i = 0; $i < $count; $i ++ ) {
+				for ( $i = 0; $i < $count; $i++ ) {
 					$this->write_setting( $key . '[]', $elem[ $i ] );
 				}
 			}
@@ -141,7 +133,7 @@ class WPSEO_Export {
 	}
 
 	/**
-	 * Writes a settings line to the export
+	 * Writes a settings line to the export.
 	 *
 	 * @param string $key Key string.
 	 * @param string $val Value string.
@@ -151,5 +143,33 @@ class WPSEO_Export {
 			$val = '"' . $val . '"';
 		}
 		$this->write_line( $key . ' = ' . $val );
+	}
+
+	/* ********************* DEPRECATED METHODS ********************* */
+
+	/**
+	 * Returns true when the property error has a value.
+	 *
+	 * @deprecated 11.9 Obsolete since the export setting refactor in 9.2.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return bool
+	 */
+	public function has_error() {
+		_deprecated_function( __METHOD__, 'WPSEO 11.9' );
+
+		return false;
+	}
+
+	/**
+	 * Sets the error hook, to display the error to the user.
+	 *
+	 * @deprecated 11.9 Obsolete since the export setting refactor in 9.2.
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function set_error_hook() {
+		_deprecated_function( __METHOD__, 'WPSEO 11.9' );
 	}
 }

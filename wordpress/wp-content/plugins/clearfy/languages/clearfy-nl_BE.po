@@ -1,0 +1,2083 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Clearfy\n"
+"POT-Creation-Date: 2018-09-06 18:06+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/ajax/configurate.php:19 admin/ajax/import-settings.php:21
+#: admin/ajax/install-addons.php:26 admin/ajax/install-addons.php:126
+msgid "You don't have enough capability to edit this information."
+msgstr "Je hebt niet voldoende mogelijkheden om deze informatie te bewerken."
+
+#: admin/ajax/configurate.php:26 admin/ajax/configurate.php:36
+msgid "Undefinded mode."
+msgstr "Ongedefinieerde modus."
+
+#: admin/ajax/import-settings.php:28
+msgid "Settings are not defined or do not exist."
+msgstr "Instellingen zijn niet gedefinieerd of bestaan ​​niet."
+
+#: admin/ajax/install-addons.php:26
+msgid "Something went wrong."
+msgstr ""
+
+#: admin/ajax/install-addons.php:30
+msgid "Required attributes are not passed or empty."
+msgstr ""
+
+#: admin/ajax/install-addons.php:53 admin/ajax/install-addons.php:76
+msgid "You are trying to perform an invalid action."
+msgstr ""
+
+#: admin/ajax/install-addons.php:109 admin/ajax/update-package.php:55
+msgid "An unknown error occurred during the activation of the component."
+msgstr ""
+
+#: admin/ajax/install-addons.php:130
+msgid "Required attribute [component_name] is empty."
+msgstr ""
+
+#: admin/ajax/update-package.php:27
+msgid "To use premium components, you need activate a license!"
+msgstr ""
+
+#: admin/ajax/update-package.php:27
+msgid "Activate license"
+msgstr ""
+
+#: admin/ajax/update-package.php:47
+msgid "Configuration updated."
+msgstr ""
+
+#: admin/boot.php:26
+#, php-format
+msgid ""
+"When you deactivate some components, permanent links may work incorrectly. If "
+"this happens, please, <a href=\"%s\">update the permalinks</a>, so you could "
+"complete the deactivation."
+msgstr ""
+
+#: admin/boot.php:99
+#, php-format
+msgid ""
+"We found that you have the plugin %s installed. The functions of this plugin "
+"already exist in %s. Please deactivate plugin %s to avoid conflicts between "
+"plugins functions."
+msgstr ""
+
+#: admin/boot.php:100
+#, php-format
+msgid ""
+"If you do not want to deactivate the plugin %s for some reason, we strongly "
+"recommend do not use the same plugins functions at the same time!"
+msgstr ""
+"Als u de plugin %s om eender welke reden niet wilt deactiveren, raden wij u "
+"ten zeerste aan om niet dezelfde plugin functies tegelijkertijd te gebruiken!"
+
+#: admin/boot.php:117
+msgid "Robin image optimizer – saves your money on image optimization!"
+msgstr ""
+
+#: admin/boot.php:118
+msgid "Our new component!"
+msgstr ""
+
+#: admin/boot.php:118
+msgid ""
+"We’ve created a fully free solution for image optimization, which is as good "
+"as the paid products. The plugin optimizes your images automatically, reducing "
+"their weight with no quality loss."
+msgstr ""
+
+#: admin/boot.php:124
+msgid "Hide login page (Reloaded) – hides your login page!"
+msgstr ""
+
+#: admin/boot.php:125
+msgid ""
+"Attention! If you’ve ever used features associated with hiding login page, "
+"then, please, re-activate this component."
+msgstr ""
+
+#: admin/boot.php:125
+msgid ""
+"This simple module changes the login page URL to a custom link quickly and "
+"safely. The plugin requires installation."
+msgstr ""
+
+#: admin/boot.php:130
+msgid "Hide my wp (Premium) – hides your WordPress from hackers and bots!"
+msgstr ""
+
+#: admin/boot.php:131
+msgid "Our new component! "
+msgstr ""
+
+#: admin/boot.php:131
+msgid ""
+"This premium component helps in hiding your WordPress from hackers and bots. "
+"Basically, it disables identification of your CMS by changing directories and "
+"files names, removing meta data and replacing HTML content which can provide "
+"all information about the platform you use.\n"
+"Most websites can be hacked easily, as hackers and bots know all security "
+"flaws in plugins, themes and the WordPress core. You can secure the website "
+"from the attack by hiding the information the hackers will need.\n"
+msgstr ""
+
+#: admin/boot.php:153
+msgid "Welcome to Clearfy!"
+msgstr ""
+
+#: admin/boot.php:154
+msgid "We apologize for the delay in updates!"
+msgstr ""
+
+#: admin/boot.php:155
+msgid ""
+"Our team has spent a lot of time designing new, useful, and the most important "
+"– free! – features of the Clearfy plugin! "
+msgstr ""
+
+#: admin/boot.php:156
+msgid "Now it is time to try it."
+msgstr ""
+
+#: admin/boot.php:212
+msgid "Images optimization"
+msgstr ""
+
+#: admin/boot.php:253 admin/pages/license.php:258
+msgid "Activation Clearfy Business"
+msgstr ""
+
+#: admin/boot.php:257 admin/pages/license.php:260
+msgid ""
+"<b>Clearfy Business</b> is a paid package of components for the popular free "
+"WordPress plugin named Clearfy. You get access to all paid components at one "
+"price."
+msgstr ""
+
+#: admin/boot.php:259 admin/pages/license.php:262
+msgid ""
+"Paid license guarantees that you can download and update existing and future "
+"paid components of the plugin."
+msgstr ""
+
+#: admin/boot.php:262
+#, php-format
+msgid "Upgrade to Clearfy Business for $%s"
+msgstr ""
+
+#: admin/includes/classes/class.install-plugins-button.php:359
+msgid "Activate"
+msgstr "Activeer"
+
+#: admin/includes/classes/class.install-plugins-button.php:360
+msgid "Install"
+msgstr ""
+
+#: admin/includes/classes/class.install-plugins-button.php:361
+msgid "Deactivate"
+msgstr "Deactiveren"
+
+#: admin/includes/classes/class.install-plugins-button.php:362
+msgid "Delete"
+msgstr ""
+
+#: admin/includes/classes/class.install-plugins-button.php:363
+msgid "Please wait..."
+msgstr ""
+
+#: admin/includes/classes/class.install-plugins-button.php:364
+msgid "Preparation..."
+msgstr ""
+
+#: admin/includes/classes/class.install-plugins-button.php:365
+msgid "Read more"
+msgstr ""
+
+#: admin/includes/classes/class.pages.php:54
+msgid "Business"
+msgstr ""
+
+#: admin/includes/options.php:18 admin/pages/performance-google.php:92
+msgid "Google Fonts asynchronous"
+msgstr "Google Fonts asynchroon"
+
+#: admin/includes/options.php:23 admin/pages/performance-google.php:102
+msgid "Disable Google Fonts"
+msgstr "Schakel Google lettertypes uit"
+
+#: admin/includes/options.php:28 admin/pages/performance-google.php:130
+msgid "Remove iframe Google maps"
+msgstr "Verwijder iframe Google maps"
+
+#: admin/includes/options.php:33 admin/pages/performance-google.php:140
+msgid "Exclude pages from Disable Google Maps filter"
+msgstr "Sluit pagina's uit bij uitschakelen Google Maps filter"
+
+#: admin/includes/options.php:39 admin/pages/performance-google.php:113
+msgid "Disable Google maps"
+msgstr "Schakel Google maps uit"
+
+#: admin/includes/options.php:45 admin/pages/performance.php:164
+msgid "Removing XFN (XHTML Friends Network) Profile Link"
+msgstr "Verwijder XFN (XHTML Friends Network) Profiel Link"
+
+#: admin/includes/options.php:50 admin/pages/performance.php:216
+msgid "Font Awesome asynchronous"
+msgstr "Font Awesome asynchrone"
+
+#: admin/includes/options.php:55 admin/pages/performance.php:226
+msgid "Disable Dashicons"
+msgstr "Dashicons uitschakelen"
+
+#: admin/includes/options.php:60 admin/pages/performance.php:236
+msgid "Disable gravatars"
+msgstr "Schakel gravatars uit"
+
+#: admin/includes/options.php:65 admin/pages/performance.php:106
+msgid "Remove REST API Links"
+msgstr "Verwijder REST API-links"
+
+#: admin/includes/options.php:70 admin/pages/performance.php:116
+msgid "Disable Emojis"
+msgstr "Schakel Emoji's uit"
+
+#: admin/includes/options.php:81 admin/pages/performance.php:155
+msgid "Remove RSD Link"
+msgstr "Remove RSD Link"
+
+#: admin/includes/options.php:86 admin/pages/performance.php:176
+msgid "Remove wlwmanifest Link"
+msgstr "Verwijder wlwmanifest Link"
+
+#: admin/includes/options.php:91 admin/pages/performance.php:186
+msgid "Remove Shortlink"
+msgstr "Verwijder Shortlink"
+
+#: admin/includes/options.php:96 admin/pages/performance.php:196
+msgid "Remove links to previous, next post"
+msgstr "Verwijder links naar vorige, volgende bericht"
+
+#: admin/includes/options.php:101 admin/pages/performance.php:206
+msgid "Remove .recentcomments styles"
+msgstr "Verwijder .recenteopmerkingen stijlen"
+
+#: admin/includes/options.php:107 admin/pages/seo.php:76
+msgid "Automatically set the alt attribute"
+msgstr "Stel het alt-attribuut automatisch in"
+
+#: admin/includes/options.php:112 admin/pages/seo.php:115
+msgid "Automatically insert the Last Modified header"
+msgstr "Voeg automatisch de Laatst Gewijzigde Hoofding toe"
+
+#: admin/includes/options.php:117 admin/pages/seo.php:146
+msgid "Return an If-Modified-Since responce"
+msgstr "Retourneer een Als-Gemodificeerd-Sinds reactie"
+
+#: admin/includes/options.php:122 admin/pages/seo.php:160
+msgid "Remove duplicate names in breadcrumbs WP SEO by Yoast"
+msgstr "Verwijder dubbele namen in het kruimelpad WP SEO door Yoast"
+
+#: admin/includes/options.php:127 admin/pages/seo.php:170
+#, php-format
+msgid "Remove the tag %s from XML site map"
+msgstr "Verwijder de tag %s van de XML sitemap"
+
+#: admin/includes/options.php:134 admin/pages/seo.php:188
+msgid "Disable JSON-LD sitelinks searchbox"
+msgstr "Schakel zoekbox van JSON-LD sitelinks uit"
+
+#: admin/includes/options.php:139 admin/pages/seo.php:198
+msgid "Disable Yoast Structured Data"
+msgstr "Schakel Yoast Structured Data uit"
+
+#: admin/includes/options.php:144 admin/pages/seo.php:223
+#, php-format
+msgid "Remove comment from %s section"
+msgstr "Verwijder reactie uit de sectie %s"
+
+#: admin/includes/options.php:149 admin/pages/seo-double-pages.php:93
+msgid "Remove archives date"
+msgstr "Verwijder datum archieven"
+
+#: admin/includes/options.php:154 admin/pages/seo-double-pages.php:103
+msgid "Remove author archives "
+msgstr "Verwijder archieven auteur"
+
+#: admin/includes/options.php:159 admin/pages/seo-double-pages.php:113
+msgid "Remove archives tag"
+msgstr "Verwijder label archieven"
+
+#: admin/includes/options.php:164 admin/pages/seo-double-pages.php:123
+msgid "Remove attachment pages"
+msgstr "Verwijder bijlage pagina's"
+
+#: admin/includes/options.php:169 admin/pages/seo-double-pages.php:133
+msgid "Remove post pagination"
+msgstr "Verwijder post paginering"
+
+#: admin/includes/options.php:174 admin/pages/seo-double-pages.php:143
+msgid "Remove ?replytocom"
+msgstr "Verwijder ?anwoordaancom"
+
+#: admin/includes/options.php:179 admin/pages/defence.php:105
+msgid "Remove meta generator"
+msgstr "Verwijder meta generator"
+
+#: admin/includes/options.php:184 admin/pages/defence.php:60
+msgid "Hide author login"
+msgstr "Login van de auteur verbergen"
+
+#: admin/includes/options.php:189 admin/pages/defence.php:70
+msgid "Hide errors when logging into the site"
+msgstr "Verberg fouten bij het inloggen op de site"
+
+#: admin/includes/options.php:194 admin/includes/options.php:305
+#: admin/pages/defence.php:131
+msgid "Remove Version from Stylesheet"
+msgstr "Verwijder Versie van Stylesheet"
+
+#: admin/includes/options.php:199 admin/includes/options.php:310
+#: admin/pages/defence.php:120
+msgid "Remove Version from Script"
+msgstr "Verwijder Versie uit Script"
+
+#: admin/includes/options.php:204 admin/pages/widgets.php:59
+msgid "Remove the \"Pages\" widget"
+msgstr "Verwijder de \"Pagina's\" widget"
+
+#: admin/includes/options.php:209 admin/pages/widgets.php:68
+msgid "Remove calendar widget"
+msgstr "Verwijder agenda widget"
+
+#: admin/includes/options.php:214 admin/pages/widgets.php:77
+msgid "Remove the \"Cloud of tags\" widget"
+msgstr "Verwijder de \"Cloud of tags\" widget"
+
+#: admin/includes/options.php:219 admin/pages/widgets.php:86
+msgid "Remove the \"Archives\" widget"
+msgstr "Verwijder de  \"Archieven\" widget"
+
+#: admin/includes/options.php:224 admin/pages/widgets.php:95
+msgid "Remove the \"Links\" widget"
+msgstr "Verwijder de \"Links\" widget"
+
+#: admin/includes/options.php:229 admin/pages/widgets.php:104
+msgid "Remove the \"Meta\" widget"
+msgstr "Verwijder de \"Meta\" widget"
+
+#: admin/includes/options.php:234 admin/pages/widgets.php:113
+msgid "Remove the \"Search\" widget"
+msgstr "Verwijder de \"Zoek\" widget"
+
+#: admin/includes/options.php:239 admin/includes/options.php:259
+#: admin/pages/widgets.php:122
+msgid "Remove the \"Text\" widget"
+msgstr "Verwijder de \"Tekst\" widget"
+
+#: admin/includes/options.php:244 admin/pages/widgets.php:131
+msgid "Remove the \"Categories\" widget"
+msgstr "Verwijder de \"Categorieën\" widget"
+
+#: admin/includes/options.php:249 admin/pages/widgets.php:140
+msgid "Remove the \"Recent Posts\" widget"
+msgstr "Verwijder de \"Recente berichten\" widget"
+
+#: admin/includes/options.php:254 admin/pages/widgets.php:149
+msgid "Remove the \"Recent Comments\" widget"
+msgstr "Verwijder de \"Recente Reacties\" widget"
+
+#: admin/includes/options.php:264 admin/pages/widgets.php:158
+msgid "Remove the \"RSS\" widget"
+msgstr "Verwijder de \"RSS\" widget"
+
+#: admin/includes/options.php:269 admin/pages/widgets.php:167
+msgid "Remove the \"Menu\" widget"
+msgstr "Verwijder de \"Menu\" widget"
+
+#: admin/includes/options.php:274 admin/pages/widgets.php:176
+msgid "Remove the \"Twenty Eleven Ephemera\" widget"
+msgstr "Verwijder de \"Twenty Eleven Ephemera\" widget"
+
+#: admin/includes/options.php:277 admin/includes/options.php:340
+#: admin/pages/advanced.php:223
+msgid "Disable revision"
+msgstr "Schakel revisie uit"
+
+#: admin/includes/options.php:278 admin/includes/options.php:345
+#: admin/pages/advanced.php:236
+msgid "Limit Post Revisions"
+msgstr "Beperk postrevisies"
+
+#: admin/includes/options.php:279 admin/pages/seo.php:137
+msgid "Exclude pages:"
+msgstr "Pagina's uitsluiten:"
+
+#: admin/includes/options.php:282 admin/pages/seo.php:86
+msgid "Create right robots.txt"
+msgstr "Maak het juiste robots.txt"
+
+#: admin/includes/options.php:287 admin/pages/seo.php:101
+msgid "You can edit the robots.txt file in the box below:"
+msgstr "U kunt het robots.txt-bestand in het onderstaande vak bewerken:"
+
+#: admin/includes/options.php:290
+msgid "Quick mode"
+msgstr "Quick mode"
+
+#: admin/includes/options.php:293 admin/pages/performance.php:126
+msgid "Remove jQuery Migrate"
+msgstr "Verwijder jQuery Migratie"
+
+#: admin/includes/options.php:296 admin/pages/performance.php:136
+msgid "Disable Embeds"
+msgstr "Schakel Embeds uit"
+
+#: admin/includes/options.php:297 admin/pages/performance.php:76
+msgid "Disable RSS feeds"
+msgstr ""
+
+#: admin/includes/options.php:300
+msgid "Removes links to wordpress.org site from the admin bar"
+msgstr "Verwijdert links naar wordpress.org site van de beheer balk"
+
+#: admin/includes/options.php:315
+msgid "Eclude stylesheet/script file names"
+msgstr "Sluit stijl-/script bestandsnamen uit"
+
+#: admin/includes/options.php:320
+msgid "Enable Sanitization of WordPress"
+msgstr "Inschakelen sanering van WordPress"
+
+#: admin/includes/options.php:325 admin/pages/advanced.php:174
+msgid "Disable admin top bar"
+msgstr "Uitschakelen bovenste beheer balk"
+
+#: admin/includes/options.php:330 admin/pages/advanced.php:192
+msgid "Remove admin bar WP logo"
+msgstr "Verwijder WP logo van beheer balk"
+
+#: admin/includes/options.php:335 admin/pages/advanced.php:202
+msgid "Replace \"Howdy\" text with \"Welcome\""
+msgstr "Vervang \"Howdy\" tekst door \"Welcome\""
+
+#: admin/includes/options.php:350 admin/pages/advanced.php:260
+msgid "Disable autosave"
+msgstr "Automatisch opslaan uitschakelen"
+
+#: admin/includes/options.php:355 admin/pages/advanced.php:270
+msgid "Disable Texturization - Smart Quotes"
+msgstr "Texturisatie uitschakelen - Slimme aanhalingstekens"
+
+#: admin/includes/options.php:360 admin/pages/advanced.php:280
+msgid "Disable capitalization in Wordpress branding"
+msgstr "Hoofdlettergebruik uitschakelen in Wordpress branding"
+
+#: admin/includes/options.php:365 admin/pages/advanced.php:290
+msgid "Disable auto inserted paragraphs (i.e. p tags)"
+msgstr "Automatisch ingevoegde alinea's uitschakelen (d.w.z. p-tags)"
+
+#: admin/includes/options.php:370 admin/pages/advanced.php:105
+msgid "Disable Heartbeat"
+msgstr "Schakel Heartbeat uit"
+
+#: admin/includes/options.php:375 admin/pages/advanced.php:134
+msgid "Heartbeat frequency"
+msgstr "Heartbeat frequentie"
+
+#: admin/includes/options.php:380 admin/pages/defence.php:95
+msgid "Remove html comments"
+msgstr "Verwijder HTML opmerkingen"
+
+#: admin/includes/options.php:385
+msgid "Deactivate preinstall components"
+msgstr ""
+
+#: admin/pages/advanced.php:36
+msgid "Advanced"
+msgstr "Gevorderd"
+
+#: admin/pages/advanced.php:65
+msgid ""
+"Warning! In the wp-config.php file, a constant WP_POST_REVISIONS is found, it "
+"determines the number of revisions. Delete it so you can change this value "
+"through the admin panel."
+msgstr ""
+"Waarschuwing! In het bestand wp-config.php vindt men constant "
+"WP_BERICHT_REVISIES terug, wat het aantal revisies bepaalt. Verwijder het "
+"zodat u deze waarde kunt wijzigen via het admin paneel."
+
+#: admin/pages/advanced.php:82
+msgid "Clearfy options"
+msgstr ""
+
+#: admin/pages/advanced.php:82
+msgid ""
+"This group of settings allows you to configure the work of the Clearfy plugin."
+msgstr ""
+
+#: admin/pages/advanced.php:89
+msgid "Disable Clearfy extra menu"
+msgstr ""
+
+#: admin/pages/advanced.php:91
+msgid ""
+"This setting allows you to disable the additional menu of the Clearfy plugin, "
+"in the admin bar. This menu is required to work with the Minify and Combine "
+"and Assets Manager components."
+msgstr ""
+
+#: admin/pages/advanced.php:98
+msgid "Heartbeat"
+msgstr "Heartbeat"
+
+#: admin/pages/advanced.php:98
+msgid ""
+"The WordPress Heartbeat API uses /wp-admin/admin-ajax.php to run AJAX calls "
+"from the web-browser. While this is great and all it can also cause high CPU "
+"usage and crazy amounts of PHP calls. For example, if you leave your dashboard "
+"open it will keep sending POST requests to this file on a regular interval, "
+"every 15 seconds. Here is an example below of it happening."
+msgstr ""
+"De WordPress Heartbeat API gebruikt /wp-admin/admin-ajax.php om AJAX oproepen "
+"vanuit de webbrowser uit te voeren. Hoewel dit geweldig is, kan het ook leiden "
+"tot een hoog CPU gebruik en ongeziene hoeveelheden PHP oproepen. Als u "
+"bijvoorbeeld uw dashboard open laat, blijft het BERICHT verzoeken sturen naar "
+"dit bestand met een regelmatig interval, elke 15 seconden. Hieronder ziet u "
+"een voorbeeld als dit gebeurt."
+
+#: admin/pages/advanced.php:107
+msgid "Default"
+msgstr "Standaard"
+
+#: admin/pages/advanced.php:108
+msgid "Everywhere"
+msgstr "Overal"
+
+#: admin/pages/advanced.php:109
+msgid "On dashboard page"
+msgstr "Op dashboard pagina"
+
+#: admin/pages/advanced.php:110
+msgid "Only allow when editing Posts/Pages"
+msgstr "Alleen toestaan ​​bij het bewerken van Berichten/Pagina's"
+
+#: admin/pages/advanced.php:136 admin/pages/advanced.php:238
+msgid "Wordpress default"
+msgstr "Wordpress standaard"
+
+#: admin/pages/advanced.php:137 admin/pages/advanced.php:138
+#: admin/pages/advanced.php:139 admin/pages/advanced.php:140
+#: admin/pages/advanced.php:141 admin/pages/advanced.php:142
+#: admin/pages/advanced.php:143 admin/pages/advanced.php:144
+#: admin/pages/advanced.php:145 admin/pages/advanced.php:146
+#: admin/pages/advanced.php:147 admin/pages/advanced.php:148
+#: admin/pages/advanced.php:149 admin/pages/advanced.php:150
+#: admin/pages/advanced.php:151 admin/pages/advanced.php:152
+#: admin/pages/advanced.php:153
+msgid "seconds"
+msgstr "seconden"
+
+#: admin/pages/advanced.php:156
+msgid ""
+"Select the heartbeat frequency wordpress. We recommend you 60 seconds, default "
+"is 20 seconds."
+msgstr ""
+"Selecteer de heartbeat frequentie wordpress. Wij raden 60 seconden aan, "
+"standaard waarde is 20 seconden."
+
+#: admin/pages/advanced.php:167
+msgid "Admin bar"
+msgstr "Beheer balk"
+
+#: admin/pages/advanced.php:167
+msgid "In this group of settings, you can manage the adminbar."
+msgstr "In deze groep instellingen kunt u de beheer balk beheren."
+
+#: admin/pages/advanced.php:176
+msgid "Default enable"
+msgstr "Standaard inschakelen"
+
+#: admin/pages/advanced.php:177
+msgid "For all users"
+msgstr "Voor alle gebruikers"
+
+#: admin/pages/advanced.php:180
+msgid "For all users except administrator"
+msgstr "Voor alle gebruikers behalve beheerder"
+
+#: admin/pages/advanced.php:184
+msgid ""
+"In some cases, you need to disable the floating top admin panel. You can "
+"disable this panel."
+msgstr ""
+"In sommige gevallen moet u het zwevende bovenste beheer paneel uitschakelen. U "
+"kunt dit paneel uitschakelen."
+
+#: admin/pages/advanced.php:184
+msgid "Disable admin top bar."
+msgstr "Schakel de bovenste beheer balk uit."
+
+#: admin/pages/advanced.php:194
+msgid "Enable this if you want to remove wp logo from admin bar."
+msgstr "Schakel dit in als u het WP logo uit de beheer balk wilt verwijderen."
+
+#: admin/pages/advanced.php:204
+msgid "Replaces the welcome text in admin bar."
+msgstr "Vervangt de welkomst tekst in de beheer balk."
+
+#: admin/pages/advanced.php:216
+msgid "Posts"
+msgstr "Berichten"
+
+#: admin/pages/advanced.php:216
+msgid "In this group of options, you can manage revisions and post autosave."
+msgstr ""
+"In deze groep opties kunt u revisies beheren en berichten automatisch opslaan."
+
+#: admin/pages/advanced.php:239 admin/pages/advanced.php:240
+#: admin/pages/advanced.php:241 admin/pages/advanced.php:242
+#: admin/pages/advanced.php:243 admin/pages/advanced.php:244
+#: admin/pages/advanced.php:245 admin/pages/advanced.php:246
+#: admin/pages/advanced.php:247 admin/pages/advanced.php:248
+msgid "revisions"
+msgstr "revisie"
+
+#: admin/pages/advanced.php:251
+msgid ""
+"WordPress automatically saves revisions when you are working on posts and "
+"pages. These can begin to add up pretty quick. By default, there is no limit "
+"in place. We have seen posts with over 1,000 revisions. Multiply this by 50 "
+"pages and suddenly you have over 50,000 revisions sitting in your database. "
+"The problem with this is that you will most likely never use them and they can "
+"start slowing down your database as well as using disk space.\n"
+"So we recommend either disabling or limiting your revisions. "
+msgstr ""
+"WordPress slaat automatisch revisies op wanneer u aan berichten en pagina's "
+"werkt. Deze kunnen al snel hoog oplopen. Standaard is er geen limiet "
+"ingesteld. We hebben berichten gezien met meer dan 1.000 revisies. "
+"Vermenigvuldig dit met 50 pagina's en plots heb je meer dan 50.000 revisies in "
+"je database. Het probleem hiermee is dat je ze waarschijnlijk nooit zult "
+"gebruiken.  Ze kunnen je database danig beginnen te vertragen en tevens "
+"schijfruimte innemen.\n"
+"Daarom raden we aan uw revisies uit te schakelen of te beperken."
+
+#: admin/pages/advanced.php:262
+msgid ""
+"WordPress by default automatically saves a draft every 60 seconds (1 minute). "
+"There are reasons why you might want to change this."
+msgstr ""
+"WordPress slaat standaard elke 60 seconden automatisch een klad op (1 minuut). "
+"Er kunnen redenen zijn waarom u dit zou willen veranderen."
+
+#: admin/pages/advanced.php:262
+msgid "Disables automatic saving of drafts."
+msgstr "Schakelt automatisch opslaan van concepten uit."
+
+#: admin/pages/advanced.php:272
+msgid ""
+"Function of text formatting. This function makes the text more correct, "
+"readable and visually appealing. But sometimes this function may prevent you "
+"from using certain codes and symbols."
+msgstr ""
+"Functie van tekstopmaak. Deze functie maakt de tekst correcter, leesbaarder en "
+"visueel aantrekkelijker. Maar soms kan deze functie u beletten bepaalde codes "
+"en symbolen te gebruiken."
+
+#: admin/pages/advanced.php:272
+msgid "Disable Texturization - Smart Quotes."
+msgstr "Texturisatie uitschakelen - Slimme aanhalingstekens."
+
+#: admin/pages/advanced.php:282
+msgid ""
+"Replaces the incorrectly written letter \"p\" in the middle of WordPress (you "
+"need to write with the capital P in the middle)."
+msgstr ""
+"Vervangt de onjuist geschreven letter \"p\" in het midden van WordPress "
+"(verplicht met de hoofdletter P in het midden te schrijven)."
+
+#: admin/pages/advanced.php:282
+msgid "Disable capitalization in Wordpress branding."
+msgstr "Hoofdlettergebruik uitschakelen in Wordpress branding"
+
+#: admin/pages/advanced.php:292
+msgid ""
+"Replaces the double shifting of a string to an HTML p ... /p construct, and a "
+"single one on br."
+msgstr ""
+"Vervangt de dubbele verschuiving van een string in een HTML p ... /p "
+"constructie en een enkele verschuiving bij br."
+
+#: admin/pages/advanced.php:292
+msgid "Disable auto inserted paragraphs."
+msgstr "Schakel automatisch ingevoegde alinea's uit."
+
+#: admin/pages/components.php:40
+msgid "Components"
+msgstr "Onderdelen"
+
+#: admin/pages/components.php:129
+msgid "Robin image optimizer"
+msgstr ""
+
+#: admin/pages/components.php:134
+msgid ""
+"Automatic image optimization without any quality loss. No limitations, no paid "
+"plans. The best Wordpress image optimization plugin allows optimizing any "
+"amount of images for free!"
+msgstr ""
+
+#: admin/pages/components.php:138
+msgid "Hide login page"
+msgstr "Inlogpagina verbergen"
+
+#: admin/pages/components.php:143
+msgid ""
+"Hide Login Page is a very light plugin that lets you easily and safely change "
+"the url of the login form page to anything you want."
+msgstr ""
+"Inlogpagina Verbergen is een zeer lichte plugin waarmee u eenvoudig en veilig "
+"de url van de inlogpagina kunt wijzigen in alles wat u maar wilt."
+
+#: admin/pages/components.php:147
+msgid "Html minify"
+msgstr ""
+
+#: admin/pages/components.php:151
+msgid ""
+"Ever look at the HTML markup of your website and notice how sloppy and "
+"amateurish it looks? The Minify HTML options cleans up sloppy looking markup "
+"and minifies, which also speeds up download"
+msgstr ""
+
+#: admin/pages/components.php:155
+msgid "Minify and combine (JS, CSS)"
+msgstr ""
+
+#: admin/pages/components.php:159
+msgid ""
+"Improve your speed score on GTmetrix, Pingdom Tools and Google PageSpeed "
+"Insights by merging and minifying CSS, JavaScript."
+msgstr ""
+
+#: admin/pages/components.php:163
+msgid "Google Analytics Cache"
+msgstr ""
+
+#: admin/pages/components.php:167
+msgid ""
+"To improve Google Page Speed indicators Analytics caching is needed. However, "
+"it can also slightly increase your website loading speed, because Analytics js "
+"files will load locally."
+msgstr ""
+
+#: admin/pages/components.php:171
+msgid "Updates manager"
+msgstr "Updates manager"
+
+#: admin/pages/components.php:175
+msgid "Disable updates enable auto updates for themes, plugins and WordPress."
+msgstr ""
+
+#: admin/pages/components.php:179
+msgid "Comments tools"
+msgstr "Tools voor reacties"
+
+#: admin/pages/components.php:183
+msgid ""
+"Bulk disable and remove comments, disable “Website” field, hides external "
+"links, disable XML-RPC."
+msgstr ""
+"Bulk deactiveer en verwijder opmerkingen, schakel \"Website\" veld uit, "
+"verbergt externe links, schakel XML-RPC uit."
+
+#: admin/pages/components.php:187
+msgid "Widgets tools"
+msgstr "Widgets tools"
+
+#: admin/pages/components.php:191
+msgid "Disable unused widgets such as tag cloud, links, calendar etc."
+msgstr "Schakel ongebruikte widgets uit zoals tag cloud, links, agenda etc."
+
+#: admin/pages/components.php:195
+msgid "Asset manager"
+msgstr "Asset manager"
+
+#: admin/pages/components.php:199
+msgid ""
+"Selectively disable unused scripts and styles on the pages of your website."
+msgstr ""
+"Ongebruikte scripts en stijlen selectief uitschakelen op de pagina's van uw "
+"website."
+
+#: admin/pages/components.php:203
+msgid "Disable admin notices"
+msgstr "Schakel kennisgevingen beheerders uit"
+
+#: admin/pages/components.php:207
+msgid ""
+"Disables admin notices bulk or individually. Collects notices into the admin "
+"bar."
+msgstr ""
+"Schakelt bulk of afzonderlijke meldingen voor beheerder uit. Verzamelt "
+"berichten in de beheer balk."
+
+#: admin/pages/components.php:211
+msgid "Admin bar manager"
+msgstr "Beheer balk manager"
+
+#: admin/pages/components.php:215
+msgid "Disables admin bar. Allows to change and remove admin bar elements."
+msgstr ""
+"Schakelt de beheer balk uit. Staat toe om beheer balk elementen te veranderen "
+"en te verwijderen."
+
+#: admin/pages/components.php:219
+msgid "Posts tools"
+msgstr "Berichten tools"
+
+#: admin/pages/components.php:223
+msgid ""
+"Disable revisions, disable posts autosave, disable smart quotes and disable "
+"auto paragraphs."
+msgstr ""
+"Revisies uitschakelen, berichten automatisch opslaan uitschakelen, slimme "
+"aanhalingstekens uitschakelen en automatische alinea's uitschakelen."
+
+#: admin/pages/components.php:227
+msgid "Yoast SEO optimization"
+msgstr "Yoast SEO optimalisatie"
+
+#: admin/pages/components.php:231
+msgid "Set of optimization functions for the popular Yoast SEO plugin."
+msgstr ""
+"Verzameling van optimalisatie functies voor de populaire Yoast SEO plugin."
+
+#: admin/pages/components.php:237
+msgid "Transliteration of Cyrillic alphabet"
+msgstr "Transcriptie van Cyrillisch alfabet"
+
+#: admin/pages/components.php:241
+msgid ""
+"Converts Cyrillic permalinks of post, pages, taxonomies and media files to the "
+"Latin alphabet. Supports Russian, Ukrainian, Georgian, Bulgarian languages."
+msgstr ""
+"Converteert Cyrillische permalinks van berichten, pagina's, taxonomieën en "
+"mediabestanden naar het Latijnse alfabet. Ondersteunt Russische, Oekraïense, "
+"Georgische, Bulgaarse talen."
+
+#: admin/pages/components.php:281
+msgid "<strong>Plugin Components</strong>."
+msgstr "<strong>Plugin Onderdelen</strong>."
+
+#: admin/pages/components.php:283
+msgid ""
+"These are components of the plugin bundle. When you activate the plugin, all "
+"the components turned on by default. If you don’t need some function, you can "
+"easily turn it off on this page."
+msgstr ""
+"Dit zijn componenten van de plugin bundel. Wanneer u de plugin activeert, zijn "
+"alle componenten standaard ingeschakeld. Als u bepaalde functies niet nodig "
+"heeft, kunt u deze eenvoudig uitschakelen op deze pagina."
+
+#: admin/pages/components.php:329
+msgid "Premium"
+msgstr ""
+
+#: admin/pages/defence.php:34
+msgid "Defence"
+msgstr "Verdediging"
+
+#: admin/pages/defence.php:53
+msgid "<strong>Base settings</strong>."
+msgstr "<strong>Basis instellingen</strong>."
+
+#: admin/pages/defence.php:53
+msgid "Basic recommended security settings."
+msgstr "Aanbevolen basis beveiligingsinstellingen."
+
+#: admin/pages/defence.php:62
+msgid ""
+"An attacker can find out the author's login, using a similar request to get "
+"your site. mysite.com/?author=1"
+msgstr ""
+"Een aanvaller kan de aanmeld gegevens van de auteur achterhalen met een "
+"soortgelijk verzoek om uw site te bemachtigen. mysite.com/?author=1"
+
+#: admin/pages/defence.php:62
+msgid "Sets the redirect to exclude the possibility of obtaining a login."
+msgstr "Stelt de redirect in om het verkrijgen van een login uit te sluiten."
+
+#: admin/pages/defence.php:72
+msgid ""
+"WP by default shows whether you entered a wrong login or incorrect password, "
+"which allows attackers to understand if there is a certain user on the site, "
+"and then start searching through the passwords."
+msgstr ""
+"WP toont standaard of u een verkeerde login of onjuist wachtwoord hebt "
+"ingevoerd, waardoor aanvallers kunnen inzien of er een bepaalde gebruiker op "
+"de site is en vervolgens door de wachtwoorden begint te zoeken."
+
+#: admin/pages/defence.php:72
+msgid ""
+"Changes in the text of the error so that attackers could not find the login."
+msgstr ""
+"Wijzigt in de tekst van de fout zodat aanvallers de login niet konden vinden."
+
+#: admin/pages/defence.php:80
+msgid "Disable XML-RPC"
+msgstr "Schakel XML-RPC uit"
+
+#: admin/pages/defence.php:82
+msgid ""
+"A pingback is basically an automated comment that gets created when another "
+"blog links to you. A self-pingback is created when you link to an article "
+"within your own blog. Pingbacks are essentially nothing more than spam and "
+"simply waste resources."
+msgstr ""
+"Een pingback is in feite een geautomatiseerde commentaar die wordt gemaakt "
+"wanneer een andere blog linkt naar u. Een zelf-pingback wordt gemaakt wanneer "
+"u een linkt naar een artikel binnen uw eigen blog. Pingbacks zijn in wezen "
+"niets meer dan spam en simpelweg een verspilling van resources."
+
+#: admin/pages/defence.php:82
+msgid "Removes the server responses a reference to the xmlrpc file."
+msgstr "Verwijdert de server reacties bij verwijzing naar het xmlrpc bestand."
+
+#: admin/pages/defence.php:88
+msgid "<strong>Hide WordPress versions</strong>"
+msgstr ""
+
+#: admin/pages/defence.php:88
+msgid ""
+"WordPress itself and many plugins shows their version at the public areas of "
+"your site. An attacker received this information may be aware of the "
+"vulnerabilities found in the version of the WordPress core or plugins."
+msgstr ""
+"WordPress zelf en vele plugins tonen hun versie in de openbare delen van uw "
+"site. Een aanvaller die deze informatie weet te bemachtigen, is mogelijk op de "
+"hoogte van de zwakke plekken in de WordPress core versie of de plugins versies."
+
+#: admin/pages/defence.php:97
+msgid ""
+"This function will remove all html comments in the source code, except for "
+"special and hidden comments. This is necessary to hide the version of "
+"installed plugins."
+msgstr ""
+"Deze functie verwijdert alle html reacties in de broncode, behalve speciale en "
+"verborgen reacties. Dit is nodig om de versie van geïnstalleerde plugins te "
+"verbergen."
+
+#: admin/pages/defence.php:97
+msgid "Remove html comments in source code."
+msgstr "Verwijder html reacties in broncode."
+
+#: admin/pages/defence.php:105 admin/pages/defence.php:120
+#: admin/pages/defence.php:131 admin/pages/defence.php:148 admin/pages/seo.php:76
+#: admin/pages/seo.php:115 admin/pages/seo.php:129 admin/pages/seo.php:146
+#: admin/pages/seo.php:160 admin/pages/seo.php:170 admin/pages/seo.php:223
+msgid "Recommended"
+msgstr "Aanbevolen"
+
+#: admin/pages/defence.php:107
+msgid ""
+"Allows attacker to learn the version of WP installed on the site. This meta "
+"tag has no useful function."
+msgstr ""
+"Hiermee kan een aanvaller de versie van WP leren kennen die op de site is "
+"geïnstalleerd. Deze meta tag heeft geen nuttige functie."
+
+#: admin/pages/defence.php:107
+#, php-format
+msgid "Removes the meta tag from the %s section"
+msgstr "Verwijdert de meta tag uit %s segment"
+
+#: admin/pages/defence.php:113
+msgid "Remove query strings from static resources"
+msgstr ""
+
+#: admin/pages/defence.php:113
+msgid ""
+"This funcitons will remove query strings from static resources like CSS & JS "
+"files inside the HTML <head> element to improve your speed scores in services "
+"like Pingdom, GTmetrix, PageSpeed and YSlow."
+msgstr ""
+
+#: admin/pages/defence.php:122 admin/pages/defence.php:133
+msgid ""
+"To make it more difficult for others to hack your website you can remove the "
+"WordPress version number from your site, your css and js. Without that number "
+"it's not possible to see if you run not the current version to exploit bugs "
+"from the older versions. <br><br>\n"
+"\t\t\t\t\tAdditionally it can improve the loading speed of your site, because "
+"without query strings in the URL the css and js files can be cached."
+msgstr ""
+"Om het voor anderen moeilijker te maken om uw website te hacken, kunt u het "
+"versie nummer van WordPress van uw site, uw CSS en js verwijderen. Zonder dat "
+"nummer is het niet mogelijk om te zien of u al dan niet de meest courante "
+"versie gebruikt om bugs van de oudere versies te kunnen misbruiken. <br><br>\n"
+"Bovendien kan het de laadsnelheid van uw site verbeteren, omdat zonder query "
+"strings in de URL de css en js bestanden in de cache kunnen worden opgeslagen."
+
+#: admin/pages/defence.php:123
+msgid "Removes wordpress version number from scripts (not logged in user only)."
+msgstr ""
+"Verwijdert WordPress versie nummer van scripts (niet enkel van de ingelogde "
+"gebruiker)."
+
+#: admin/pages/defence.php:134
+msgid ""
+"Removes the wordpress version number from stylesheets (not logged in user "
+"only)."
+msgstr ""
+"Verwijdert het versie nummer van WordPress uit stylesheets (niet enkel van "
+"ingelogde gebruiker)."
+
+#: admin/pages/defence.php:148
+msgid "Disable remove versions for auth users"
+msgstr ""
+
+#: admin/pages/defence.php:157
+msgid "Exclude stylesheet/script file names"
+msgstr "Sluit de bestandsnamen van stylesheet/scripts uit"
+
+#: admin/pages/defence.php:159
+msgid ""
+"Enter Stylesheet/Script file names to exclude from version removal (each "
+"exclude file starts with a new line)"
+msgstr ""
+"Voer de Stylesheet-/Script bestandsnaam in om het verwijderen van die versie "
+"te vermijden (elk uit te sluiten bestand begint op een nieuwe regel)"
+
+#: admin/pages/defence.php:159
+msgid "Example"
+msgstr "Voorbeeld"
+
+#: admin/pages/license.php:52
+msgid "License"
+msgstr ""
+
+#: admin/pages/license.php:139 includes/classes/class.package.php:258
+msgid "Update in progress..."
+msgstr ""
+
+#: admin/pages/license.php:139
+msgid "Components have been successfully updated!"
+msgstr ""
+
+#: admin/pages/license.php:139
+msgid "update now"
+msgstr ""
+
+#: admin/pages/license.php:151
+msgid "Updates are available for one of the components."
+msgstr ""
+
+#: admin/pages/license.php:278
+#, php-format
+msgid "Upgrade to Premium for $%s"
+msgstr ""
+
+#: admin/pages/license.php:283
+#, php-format
+msgid "Your current license for %1$s:"
+msgstr ""
+
+#: admin/pages/license.php:288
+msgid "Delete Key"
+msgstr ""
+
+#: admin/pages/license.php:290
+msgid "Synchronization"
+msgstr ""
+
+#: admin/pages/license.php:297
+#, php-format
+msgid "(Automatic renewal, every %s"
+msgstr ""
+
+#: admin/pages/license.php:306
+msgid ""
+"Public License is a GPLv2 compatible license allowing you to change and use "
+"this version of the plugin for free. Please keep in mind this license covers "
+"only free edition of the plugin. Premium versions are distributed with other "
+"type of a license."
+msgstr ""
+
+#: admin/pages/license.php:310
+msgid ""
+"You use a paid subscription for the plugin updates. In case you don’t want to "
+"receive paid updates, please, click <a data-action=\"unsubscribe\" class=\"wcl-"
+"control-btn\" href=\"#\">cancel subscription</a>"
+msgstr ""
+
+#: admin/pages/license.php:315
+msgid ""
+"Your license has expired, please extend the license to get updates and support."
+msgstr ""
+
+#: admin/pages/license.php:323
+msgid "domain"
+msgstr ""
+
+#: admin/pages/license.php:327
+msgid "plan"
+msgstr ""
+
+#: admin/pages/license.php:331
+msgid "of"
+msgstr ""
+
+#: admin/pages/license.php:332
+msgid "active sites"
+msgstr ""
+
+#: admin/pages/license.php:337
+msgid "version"
+msgstr ""
+
+#: admin/pages/license.php:338
+msgid "up-to-date"
+msgstr ""
+
+#: admin/pages/license.php:343
+msgid "EXPIRED!"
+msgstr ""
+
+#: admin/pages/license.php:344
+msgid "please update the key"
+msgstr ""
+
+#: admin/pages/license.php:353
+msgid "day(s)"
+msgstr ""
+
+#: admin/pages/license.php:355
+msgid "remained"
+msgstr ""
+
+#: admin/pages/license.php:366
+msgid "Have a key to activate the premium version? Paste it here:"
+msgstr ""
+
+#: admin/pages/license.php:368
+msgid "Have a key to activate the plugin? Paste it here:"
+msgstr ""
+
+#: admin/pages/license.php:374
+msgid "Submit Key"
+msgstr ""
+
+#: admin/pages/license.php:382
+#, php-format
+msgid ""
+"<a href=\"%s\" target=\"_blank\" rel=\"noopener\">Lean more</a> about the "
+"premium version and get the license key to activate it now!"
+msgstr ""
+
+#: admin/pages/license.php:386
+#, php-format
+msgid ""
+"Can’t find your key? Go to <a href=\"%s\" target=\"_blank\" rel=\"noopener"
+"\">this page</a> and login using the e-mail address associated with your "
+"purchase."
+msgstr ""
+
+#: admin/pages/performance-google.php:46
+msgid "Google services"
+msgstr "Google services"
+
+#: admin/pages/performance-google.php:85
+msgid "<strong>Fonts and Maps</strong>."
+msgstr "<strong>Lettertypes en Maps</strong>."
+
+#: admin/pages/performance-google.php:85
+msgid ""
+"Google Fonts and Maps strongly affect your website loading speed. Use settings "
+"below to disable or optimize Google fonts and Maps."
+msgstr ""
+"Google Fonts en Maps hebben grote invloed op de laadsnelheid van uw website. "
+"Gebruik de onderstaande instellingen om Google lettertypes en Maps uit te "
+"schakelen of te optimaliseren."
+
+#: admin/pages/performance-google.php:94
+msgid ""
+"By default, WordPress loads Google fonts synchronously, that is, your page "
+"will not be fully loaded until Google Fonts are loaded. This algorithm slows "
+"down the loading of your page and leads to errors when checking the site in "
+"Google Page Speed. Using this option, your Google Fonts will be loaded after "
+"your page is fully loaded. This method has a negative — you and visitors of "
+"your site will see how the font changes while loading a page, from the system "
+"to the downloadable one."
+msgstr ""
+"WordPress laadt standaard Google lettertypes synchroon, dat wil zeggen dat uw "
+"pagina niet volledig wordt geladen totdat Google Fonts is geladen. Dit "
+"algoritme vertraagt ​​het laden van uw pagina en leidt tot fouten bij het "
+"controleren van de site in Google Page Speed. Met deze optie worden uw Google "
+"lettertypes geladen nadat uw pagina volledig is geladen. Deze methode heeft "
+"een keerzijde - u en bezoekers van uw site zullen zien hoe het lettertype "
+"verandert tijdens het laden van een pagina, van het systeem tot het "
+"downloadbare lettertype."
+
+#: admin/pages/performance-google.php:104
+msgid ""
+"This function stops loading of Open Sans and other fonts used by WordPress and "
+"bundled themes (Twenty Twelve, Twenty Thirteen, Twenty Fourteen, Twenty "
+"Fifteen, Twenty Sixteen, Twenty Seventeen) from Google Fonts.\n"
+"Reasons for not using Google Fonts might be privacy and security, local "
+"development or production, blocking of Google’s servers, characters not "
+"supported by font, performance."
+msgstr ""
+"Deze functie stopt het laden van Open Sans en andere lettertypes  uit Google "
+"Fonts die worden gebruikt door WordPress en gebundelde thema's (Twenty Twelve, "
+"Twenty Thirteen, Twenty Fourteen, Twenty Fifteen, Twenty Sixteen, Twenty "
+"Seventeen). Redenen om Google Fonts niet te gebruiken, zijn onder meer privacy "
+"en beveiliging, lokale ontwikkeling of productie, blokkering van de servers "
+"van Google, tekens die niet worden ondersteund worden, prestaties."
+
+#: admin/pages/performance-google.php:115
+msgid ""
+"This function stops loading of Google Maps used by some themes or plugins.\n"
+"Reasons for not using Google Maps might be privacy and security, local "
+"development or production, blocking of Google’s servers, performance, not "
+"necessary, etc."
+msgstr ""
+"Deze functie stopt het laden van Google Maps, wat gebruikt wordt door sommige "
+"thema's of plugins.\n"
+"Redenen om Google Maps niet te gebruiken zijn privacy en beveiliging, lokale "
+"ontwikkeling of productie, blokkeren van servers van Google, prestaties, niet "
+"nodig, enz."
+
+#: admin/pages/performance-google.php:132
+msgid ""
+"By default, the \"Disable Google Maps\" option removes maps inserted with the "
+"SCRIPT tag from the page source code. However, you can also cut out all maps "
+"inserted via the iframe by enabling this option."
+msgstr ""
+"Standaard verwijdert de optie \"Google Maps uitschakelen\" kaarten die zijn "
+"ingevoegd met de SCRIPT tag uit de pagina broncode. U kunt echter ook alle "
+"kaarten verwijderen die zijn ingevoegd via het iframe door deze optie in te "
+"schakelen."
+
+#: admin/pages/performance-google.php:141
+msgid "Posts or Pages IDs separated by a ,"
+msgstr "Berichten of Pagina's gescheiden met een ,"
+
+#: admin/pages/performance.php:41
+msgid "Performance"
+msgstr "Prestatie"
+
+#: admin/pages/performance.php:69
+msgid "<strong>Clear the unnecessary scripts</strong>"
+msgstr "<strong>Wis de overbodige scripts</strong>"
+
+#: admin/pages/performance.php:69
+msgid ""
+"This set of settings will help you remove unnecessary links and code from the "
+"head section, as well as reduce your website's pages weight."
+msgstr ""
+"Met deze set instellingen kunt u onnodige links en code uit het hoofdgedeelte "
+"verwijderen en het gewicht van uw pagina's verlagen."
+
+#: admin/pages/performance.php:78
+msgid ""
+"By default, WordPress generates all types of different RSS feeds for your "
+"site. While RSS feeds can be useful if you are running a blog, businesses "
+"might not always utilize these. Not every site out there has a blog."
+msgstr ""
+"WordPress genereert standaard alle verschillende soorten RSS-feeds voor uw "
+"site. Hoewel RSS-feeds handig kunnen zijn als u een blog gebruikt, zullen "
+"bedrijven deze misschien niet altijd gebruiken. Niet elke site, heeft een blog."
+
+#: admin/pages/performance.php:78
+#, php-format
+msgid ""
+"Removes a link to the RSS-feed from the %s section, closes and puts the "
+"redirect from all RSS-feeds."
+msgstr ""
+"Verwijdert een link naar de RSS-feed van %s segment, sluit en plaatst de "
+"redirect van alle RSS-feeds."
+
+#: admin/pages/performance.php:93
+msgid "Redirect 301"
+msgstr "Redirect 301"
+
+#: admin/pages/performance.php:94
+msgid "Page 404"
+msgstr "Pagina 404"
+
+#: admin/pages/performance.php:96
+msgid "Redirect feed requests"
+msgstr "Redirect feed verzoeken"
+
+#: admin/pages/performance.php:97
+msgid ""
+"Forward all requests to page 404 or to the main page through 301 redirects."
+msgstr ""
+"Alle aanvragen doorsturen naar pagina 404 of naar de hoofdpagina via 301 "
+"omleidingen."
+
+#: admin/pages/performance.php:108
+msgid ""
+"The WordPress REST API provides API endpoints for WordPress data types that "
+"allow developers to interact with sites remotely by sending and receiving JSON "
+"(JavaScript Object Notation) objects. However, a lot of sites don’t use this, "
+"and therefore in most cases, it is just unnecessary code."
+msgstr ""
+"De WordPress REST API biedt API eindpunten voor WordPress gegevens types "
+"waarmee ontwikkelaars op afstand met sites kunnen communiceren door JSON "
+"objecten (JavaScript Object Notation) te verzenden en te ontvangen. Veel sites "
+"gebruiken dit echter niet en daarom is het in de meeste gevallen gewoon "
+"onnodige code."
+
+#: admin/pages/performance.php:108
+msgid ""
+"Removes REST API link tag from the front end and the REST API header link from "
+"page requests."
+msgstr ""
+"Verwijdert REST API link tag uit front-end en de REST API hoofding link uit "
+"pagina aanvragen."
+
+#: admin/pages/performance.php:118
+msgid ""
+"Emojis are fun and all, but if you are aren’t using them they actually load a "
+"JavaScript file (wp-emoji-release.min.js) on every page of your website. For a "
+"lot of businesses, this is not needed and simply adds load time to your site. "
+"So we recommend disabling this."
+msgstr ""
+"Emoji's zijn leuk en wel, maar als je ze niet gebruikt, laden ze evenzeer een "
+"JavaScript bestand (wp-emoji-release.min.js) op elke pagina van je website. "
+"Voor veel bedrijven is dit niet nodig en verhoogt het alleen maar de laadtijd "
+"van uw site. Daarom raden we aan dit uit te schakelen."
+
+#: admin/pages/performance.php:118
+msgid "Removes WordPress Emojis JavaScript file (wp-emoji-release.min.js)."
+msgstr ""
+"Verwijdert WordPress Emojis JavaScript bestand (wp-emoji-release.min.js)."
+
+#: admin/pages/performance.php:128
+msgid ""
+"They started adding jQuery migrate in WordPress 3.6. Most up-to-date frontend "
+"code and plugins don’t require jquery-migrate.min.js. In most cases, this "
+"simply adds unnecessary load to your site. You can see this running if you "
+"launch Chrome Devtools console."
+msgstr ""
+
+#: admin/pages/performance.php:128
+msgid "Removes jQuery Migrate JavaScript file (jquery-migrate.min.js)."
+msgstr "Verwijdert jQuery Migratie JavaScript bestand (jQuery-migrate.min.js)."
+
+#: admin/pages/performance.php:128
+msgid "Warning! If there is a broke on your site, disable this option!"
+msgstr "Waarschuwing! Als er iets breekt op uw site, schakel deze optie uit!"
+
+#: admin/pages/performance.php:138
+msgid ""
+"Embeds were released with WordPress 4.4. This is basically the magic that auto "
+"converts your YouTube videos, Tweets, and URLs into pretty previews while you "
+"are editing. However, this actually loads a JavaScript file (wp-embed.min.js) "
+"on every page of your website. If you don’t care about the auto converting "
+"preview (which we don’t), you can disable this across your site."
+msgstr ""
+"Embeds werden geïntroduceerd met WordPress 4.4. Dit is eigenlijk de magie die "
+"je YouTube video's, Tweets en URL's automatisch converteert naar mooie "
+"previews terwijl je aan het bewerken bent. Dit laadt echter een JavaScript "
+"bestand (wp-embed.min.js) op elke pagina van uw website. Als u een automatisch "
+"geconverteerde preview niet nodig vindt (wat wij onbelangrijk achten), kunt u "
+"dit op uw site uitschakelen."
+
+#: admin/pages/performance.php:138
+msgid "Removes WordPress Embed JavaScript file (wp-embed.min.js)"
+msgstr "Verwijdert WordPress Embed JavaScript bestand (wp-embed.min.js)"
+
+#: admin/pages/performance.php:157
+msgid ""
+"The above link is used by blog clients. If you edit your site from your "
+"browser then you don’t need this. It is also used by some 3rd party "
+"applications that utilize XML-RPC requests. In most cases, this is just "
+"unnecessary code."
+msgstr ""
+"De bovenstaande link wordt gebruikt door blog clienten. Als u uw site vanuit "
+"uw browser bewerkt, hebt u dit niet nodig. Het wordt ook gebruikt door sommige "
+"toepassingen van derden die gebruik maken van XML-RPC aanvragen. In de meeste "
+"gevallen is dit louter onnodige code."
+
+#: admin/pages/performance.php:157
+msgid "Remove RSD (Real Simple Discovery) link tag."
+msgstr "Verwijder RSD (Real Simple Discovery) link tag."
+
+#: admin/pages/performance.php:166
+msgid ""
+"The profile attribute specifies the metadata profile address. Usually, the "
+"browser recognizes the value of this attribute and executes some conventions "
+"related to the specified profile. Loading the document itself at the specified "
+"address does not really happen, moreover, it may not exist at all.\n"
+"In particular, the profile is used for the XFN microformat (XHTML Friends "
+"Network) - a way of representing relationships between people using links and "
+"rel attributes with different values. WordPress also actively uses profile in "
+"its templates.\n"
+msgstr ""
+"Het profiel kenmerk geeft het adres van het metadata profiel aan. Gewoonlijk "
+"herkent de browser de waarde van dit kenmerk en voert enkele conventies uit "
+"die betrekking hebben op het opgegeven profiel. Het laden van het document "
+"zelf gebeurt niet echt op dat specifieke adres, bovendien bestaat het mogelijk "
+"helemaal niet.\n"
+"Het profiel wordt voornamelijk gebruikt voor het XFN microformat (XHTML "
+"Friends Network) - een manier om relaties tussen mensen voor te stellen met "
+"behulp van links en rel attributen met verschillende waardes. WordPress maakt "
+"ook actief gebruik van het profiel in zijn sjablonen.\n"
+
+#: admin/pages/performance.php:168
+msgid "Remove link tag"
+msgstr "Verwijder link tag"
+
+#: admin/pages/performance.php:178
+msgid ""
+"This link is actually used by Windows Live Writer. If you don’t know use "
+"Windows Live Writer, which we are guessing you don’t, this is just unnecessary "
+"code."
+msgstr ""
+"Deze link wordt in feite gebruikt door Windows Live Writer. Als u niet weet "
+"hoe Windows Live Writer te gebruiken, wat hoogstwaarschijnlijk het geval zal "
+"zijn, is dit gewoonweg onnodige code."
+
+#: admin/pages/performance.php:178
+msgid "Remove wlwmanifest (Windows Live Writer) link tag."
+msgstr "Verwijder WLWMANIFEST (Windows Live Writer) -link tag."
+
+#: admin/pages/performance.php:188
+#, php-format
+msgid ""
+"By default, the following tag shows up in every WordPress install. %s This is "
+"used for a shortlink to your pages and posts. However, if you are already "
+"using pretty permalinks, such as domain.com/post, then there is no reason to "
+"keep this, it is just unnecessary code."
+msgstr ""
+"Standaard wordt de volgende tag weergegeven in elke installatie van WordPress. "
+"%s Dit wordt gebruikt voor een shortlink naar uw pagina's en berichten. Als u "
+"echter al gebruikmaakt van mooie permalinks, zoals domain.com/post, dan is er "
+"geen reden om dit te behouden, het is gewoonweg onnodige code."
+
+#: admin/pages/performance.php:188
+msgid "Remove Shortlink link tag."
+msgstr "Verwijder Shortlink link tag."
+
+#: admin/pages/performance.php:198
+msgid ""
+"If you use Wordpress as a CMS, then you can delete these links, they can only "
+"come in handy for a blog."
+msgstr ""
+"Als u Wordpress als een CMS gebruikt, kunt u deze links verwijderen, ze komen "
+"enkel van pas voor een blog."
+
+#: admin/pages/performance.php:198
+msgid ""
+"Remove the previous and next post links within the wp_head of your wordpress "
+"theme."
+msgstr ""
+"Verwijder de vorige en volgende bericht linken in de wp_hoofding van uw "
+"WordPress thema."
+
+#: admin/pages/performance.php:208
+msgid ""
+"WP by default for the widget \"recent comments\" prescribes in the code styles "
+"that are almost impossible to change, because to them apply! important."
+msgstr ""
+"WP standaard hanteert code stijlen voor de widget \"recente reacties\" die "
+"bijna onmogelijk te veranderen zijn, omdat ze voor hen van toepassing zijn! "
+"belangrijk."
+
+#: admin/pages/performance.php:208
+msgid "Removes .recentcomments styles from head section."
+msgstr "Verwijdert .recentereacties stijlen uit hoofd segment."
+
+#: admin/pages/performance.php:218
+msgid ""
+"By default, WordPress loads Font Awesome icons synchronously, that is, your "
+"page will not be fully loaded until Font Awesome icons are loaded. This "
+"algorithm slows down the loading of your page and leads to errors when "
+"checking the site in Google Page Speed. Using this option, your Font Awesome "
+"icons will be loaded after your page is fully loaded. This method has a "
+"negative — you and visitors of your site will see changes while loading a "
+"page, from the placeholders to icons."
+msgstr ""
+"WordPress laadt standaard de pictogrammen van Font Awesome synchroon op, dat "
+"wil zeggen dat uw pagina niet volledig wordt geladen totdat de pictogrammen "
+"voor Font Awesome zijn geladen. Dit algoritme vertraagt ​​het laden van uw "
+"pagina en leidt tot fouten bij het controleren van de site in Google Page "
+"Speed. Met deze optie worden uw Font Awesome pictogrammen geladen nadat uw "
+"pagina volledig is geladen. Deze methode heeft een keerzijde: u en bezoekers "
+"van uw site zien wijzigingen tijdens het laden van een pagina, van de "
+"placeholders naar pictogrammen."
+
+#: admin/pages/performance.php:228
+msgid ""
+"Dashicons is the official icon font of the WordPress admin as of 3.8. Some of "
+"you have requested that we add a feature to remove Dashicons. Some themes and "
+"developers utilize this (dashicons.min.css) on the front-end of their sites."
+msgstr ""
+"Dashicons is het officiële pictogram van de WordPress beheerder vanaf 3.8. "
+"Sommigen van jullie hebben ons gevraagd om een ​​functie toe te voegen om "
+"Dashicons te verwijderen. Sommige thema's en ontwikkelaars gebruiken dit "
+"(dashicons.min.css) aan de front-end van hun sites."
+
+#: admin/pages/performance.php:238
+msgid ""
+"This function that prevents the user’s gravatar being automatically obtained "
+"from gravatar.com based on their registered email. This would be useful for "
+"sites where users require an extra layer of privacy, or if you just want to "
+"prevent potentially silly or embarrasing avatar accidents.\n"
+"\t\t\tIf you’re using Identicons or any other generated default avatar, the "
+"user should keep a consistent avatar unless they change their registered "
+"email.\n"
+"\t\t\t"
+msgstr ""
+"Deze functie voorkomt dat de gravatar van de gebruiker automatisch wordt "
+"verkregen van gravatar.com op basis van hun geregistreerde e-mailadres. Dit "
+"zou handig zijn voor sites waar gebruikers een extra laag privacy nodig "
+"hebben, of als je gewoonweg voor gekke of gênante avatar incidenten wil "
+"voorkomen.\n"
+"Als u Identicons of een andere gegenereerde standaard avatar gebruikt, moet de "
+"gebruiker een consistente avatar behouden, tenzij deze zijn geregistreerde e-"
+"mailadres wijzigt."
+
+#: admin/pages/quick-start.php:62
+msgid "Clearfy menu"
+msgstr "Clearfy menu"
+
+#: admin/pages/quick-start.php:71
+msgid "Quick start"
+msgstr "Quick start"
+
+#: admin/pages/quick-start.php:109
+msgid ""
+"On this page you can quickly configure the plug-in without going into details."
+msgstr ""
+"Op deze pagina kunt u de plugin snel configureren zonder op details in te gaan."
+
+#: admin/pages/quick-start.php:187
+msgid "One click code clearing"
+msgstr "Code wissen in één klik"
+
+#: admin/pages/quick-start.php:188
+msgid "One click security"
+msgstr "Beveiliging in één klik"
+
+#: admin/pages/quick-start.php:190
+msgid "One click seo optimization"
+msgstr "Seo optimalisatie in één klik"
+
+#: admin/pages/quick-start.php:194
+msgid "One click remove default Widgets"
+msgstr "Alle standaard Widgets verwijderen in één klik"
+
+#: admin/pages/quick-start.php:204
+msgid "Reset all settings"
+msgstr "Reset alle instellingen"
+
+#: admin/pages/quick-start.php:211
+msgid "Are you sure you want to enable the this options?"
+msgstr "Weet je zeker dat je deze optie wilt inschakelen?"
+
+#: admin/pages/quick-start.php:214 admin/pages/quick-start.php:263
+msgid ""
+"After confirmation, all the settings of the plug-in will return to the default "
+"state. Make backup settings by copying data from the export field."
+msgstr ""
+"Na bevestiging keren alle instellingen van de plugin terug naar de standaard "
+"status. Maak backup instellingen door gegevens uit het exportveld te kopiëren."
+
+#: admin/pages/quick-start.php:218
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#: admin/pages/quick-start.php:219
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: admin/pages/quick-start.php:225
+msgid ""
+"These are quick optimization options for your website. You can activate the "
+"groups of necessary settings in one click. With the fast optimization mode, we "
+"are enable the only safe settings that do not break your website. That is why "
+"we recommend you to look at each setting of the plugin individually. The "
+"settings with grey and red question mark will not be active, until you do it "
+"yourself."
+msgstr ""
+"Dit zijn snelle optimalisatie mogelijkheden voor uw website. U kunt de groepen "
+"noodzakelijke instellingen met één klik activeren. Met de snelle optimalisatie "
+"modus schakelen we enkel de veilige instellingen in die uw website niet "
+"breken. Daarom raden we u aan om elke instelling van de plugin afzonderlijk te "
+"bekijken. De instellingen met een grijs en rood vraagteken zullen niet actief "
+"zijn, totdat u deze zelf activeert."
+
+#: admin/pages/quick-start.php:226
+msgid "Select what you need to do"
+msgstr "Selecteer wat u moet doen"
+
+#: admin/pages/quick-start.php:228
+msgid ""
+"After selecting any optimization case, the plugin will automatically enable "
+"the necessary settings in safe mode and one click."
+msgstr ""
+"Na het selecteren van een bepaalde optimalisatie, zal de plugin in één klik "
+"automatisch de noodzakelijke instellingen activeren in de veilige modus."
+
+#: admin/pages/quick-start.php:262
+msgid "Reset settings"
+msgstr "Reset instellingen"
+
+#: admin/pages/quick-start.php:275
+msgid "Reset"
+msgstr "Reset"
+
+#: admin/pages/quick-start.php:277
+msgid "Do It!"
+msgstr "Doe dit!"
+
+#: admin/pages/quick-start.php:291
+msgid "Settings successfully updated!"
+msgstr "Instellingen succesvol bijgewerkt!"
+
+#: admin/pages/quick-start.php:294
+msgid ""
+"During the setup, an unknown error occurred, please try again or contact the "
+"plug-in support."
+msgstr ""
+"Tijdens de installatie is een onbekende fout opgetreden. Probeer het opnieuw "
+"of neem contact op met de ondersteuning van de plugin."
+
+#: admin/pages/quick-start.php:304
+msgid "Import/Export settings"
+msgstr "Importeer/Exporteer instellingen"
+
+#: admin/pages/quick-start.php:307
+msgid "Import options"
+msgstr "Importeer opties"
+
+#: admin/pages/quick-start.php:313
+msgid "Support"
+msgstr "Ondersteuning"
+
+#: admin/pages/quick-start.php:315
+msgid ""
+"If you faced with any issues, please follow the steps below to get quickly "
+"quality support:"
+msgstr ""
+"Als u problemen ondervindt, volgt u de onderstaande stappen om snel "
+"kwaliteitsondersteuning te krijgen:"
+
+#: admin/pages/quick-start.php:318
+msgid ""
+"Generate a debug report which will contains inforamtion about your "
+"configuratin and installed plugins"
+msgstr ""
+"Genereer een foutopsporingsrapport met informatie over uw configuratie en "
+"geïnstalleerde plugins"
+
+#: admin/pages/quick-start.php:321
+msgid "Generate Debug Report"
+msgstr "Genereer foutopsporingsrapport"
+
+#: admin/pages/quick-start.php:325
+msgid ""
+"Send a message to <b>wordpress.webraftic@gmail.com</b> include the debug "
+"report into the message body."
+msgstr ""
+"Stuur een bericht naar <b>wordpress.webraftic@gmail.com</b> neem het "
+"foutenopsporingsrapport op in de body van het bericht."
+
+#: admin/pages/quick-start.php:328
+msgid "We guarantee to respond you within 7 business day."
+msgstr "We garanderen u binnen de 7 werkdagen te reageren."
+
+#: admin/pages/seo-double-pages.php:37
+msgid "Duplicate pages"
+msgstr "Dubbele pagina's"
+
+#: admin/pages/seo-double-pages.php:86
+msgid "<strong>Delete duplicate pages.</strong>."
+msgstr "<strong>Dubbele pagina's verwijderen.</strong>."
+
+#: admin/pages/seo-double-pages.php:86
+msgid ""
+"Search engines perceive these pages as website separate pages, therefore their "
+"content ceases to be unique because of duplication. In addition, page "
+"reference weight is reduced if it has a duplicate. A small number of "
+"duplicated pages will not be a serious problem, but if there are more than 50 "
+"percents of them - you urgently need to correct the situation."
+msgstr ""
+"Zoekmachines beschouwen deze pagina's als aparte pagina's van de website, "
+"daarom is hun inhoud niet langer uniek vanwege duplicatie. Bovendien wordt het "
+"pagina referentie gewicht verminderd als het een duplicaat heeft. Een klein "
+"aantal gedupliceerde pagina's zal geen serieus probleem zijn, maar als het er "
+"meer dan 50 procent zijn, moet u dringend de situatie corrigeren."
+
+#: admin/pages/seo-double-pages.php:95
+#, php-format
+msgid ""
+"Many duplicates in date archives. Imagine, in addition, that your article will "
+"be displayed in the main and in the category, you will still receive at least "
+"3 duplicates: in archives by year, month and date, for example %s."
+msgstr ""
+"Vele duplicaten in datum archieven. Stel u voor dat uw artikel zowel "
+"hoofdelijk getoond wordt als in de categorie, dan nog krijgt u op z'n minst 3 "
+"duplicaten: in archieven per jaar, maand en datum, bijvoorbeeld %s."
+
+#: admin/pages/seo-double-pages.php:95
+msgid "Removes all pages with the date archives and puts a redirect."
+msgstr "Verwijdert alle pagina's met de datum archieven en plaatst een redirect."
+
+#: admin/pages/seo-double-pages.php:105
+#, php-format
+msgid ""
+"If the site is only filled by you - a mandatory item. Allows you to get rid of "
+"duplicates on user archives, for example %s."
+msgstr ""
+"Als de site alleen door u wordt aangevuld - een verplicht item. Hiermee kunt u "
+"zich ontdoen van duplicaten in gebruikersarchieven, bijvoorbeeld %s."
+
+#: admin/pages/seo-double-pages.php:105
+msgid "Removes all pages with the author archives and puts a redirect."
+msgstr ""
+"Verwijdert alle pagina's met de auteur archieven en plaatst een redirect."
+
+#: admin/pages/seo-double-pages.php:115
+msgid ""
+"If you use tags only for the block Similar records, or do not use them at all "
+"- it will be more correct to close them to avoid duplicates."
+msgstr ""
+"Als u tags alleen voor het blok Vergelijkbare records gebruikt, of deze "
+"helemaal niet gebruikt, zou het juister zijn om ze te sluiten om duplicaten te "
+"voorkomen."
+
+#: admin/pages/seo-double-pages.php:115
+msgid "Removes all pages with the tag archives and puts a redirect."
+msgstr "Verwijdert alle pagina's met de tag archieven en plaatst een redirect."
+
+#: admin/pages/seo-double-pages.php:125
+msgid ""
+"Every of the pictures has its own page on the site. Such pages are "
+"successfully indexed and create duplicates. The site can have thousands of "
+"same-type attachment pages."
+msgstr ""
+"Elk van de foto's heeft zijn eigen pagina op de site. Dergelijke pagina's "
+"worden eveneens geïndexeerd, waardoor duplicaten ontstaan. De site kan "
+"duizenden pagina's met hetzelfde type bijlage bevatten."
+
+#: admin/pages/seo-double-pages.php:125
+msgid "Removes attachment pages and puts a redirect."
+msgstr "Verwijdert bijlage pagina's en plaatst een redirect."
+
+#: admin/pages/seo-double-pages.php:135
+#, php-format
+msgid ""
+"In WordPress, any post can be divided into parts (pages), each part will have "
+"its own address. But this functionality is rarely used, but it can create "
+"trouble for you. For example, you can add a number to the address of any entry "
+"of your blog, %s - the post itself will open, which will be a duplicate. You "
+"can substitute any number."
+msgstr ""
+
+#: admin/pages/seo-double-pages.php:135
+#, php-format
+msgid "Removes the pagination from the post and puts a redirect. Example: %s"
+msgstr ""
+"Verwijdert de paginering van het bericht en plaatst een redirect. Voorbeeld: %s"
+
+#: admin/pages/seo-double-pages.php:145
+#, php-format
+msgid ""
+"WordPress adds %s to the link \"Reply\" in the comments, if you use "
+"hierarchical comments."
+msgstr ""
+"WordPress voegt %s toe aan de link \"Beantwoorden\" in de reacties, als u "
+"hiërarchische reacties gebruiken."
+
+#: admin/pages/seo-double-pages.php:145
+msgid "?relpytocom remove and and puts a redirect."
+msgstr ""
+
+#: admin/pages/seo.php:35
+msgid "SEO"
+msgstr "SEO"
+
+#: admin/pages/seo.php:69
+msgid "<strong>Basic SEO optimization settings</strong>."
+msgstr "<strong>Basis SEO optimalisatie instellingen</strong>."
+
+#: admin/pages/seo.php:69
+msgid "Recommended settings that can complement your SEO plugin."
+msgstr "Aanbevolen instellingen die uw SEO plugin kunnen aanvullen."
+
+#: admin/pages/seo.php:78
+msgid ""
+"The alt attribute is mandatory, so most SEO experts say. If you missed or did "
+"not fill it at all, it will be automatically assigned and will be equal to the "
+"title of the article."
+msgstr ""
+"Het alt attribuut is verplicht, zeggen de meeste SEO experten. Als je het over "
+"het hoofd hebt gezien of helemaal niet hebt ingevuld, wordt het automatisch "
+"toegewezen en is het gelijk aan de titel van het artikel."
+
+#: admin/pages/seo.php:78
+#, php-format
+msgid "Replaces the %s, on attribute with an article name %s"
+msgstr "Vervangt %s, op kenmerk door een artikel naam %s"
+
+#: admin/pages/seo.php:88
+msgid ""
+"After installation, WP does not contain a robots.txt file and create it "
+"manually. We re-read about 30 different articles, instructions from Yandex and "
+"Google to create the perfect robots.txt"
+msgstr ""
+"Na de installatie bevat WP geen robots.txt bestand en maakt het handmatig aan. "
+"We hebben ongeveer 30 verschillende artikelen herlezen, instructies van Yandex "
+"en Google om de perfecte robots.txt te maken"
+
+#: admin/pages/seo.php:88
+msgid "Automatically creates the perfect robots.txt file"
+msgstr "Creëert automatisch het perfecte robots.txt-bestand"
+
+#: admin/pages/seo.php:108
+msgid "Server headers and response"
+msgstr "Server headers en reactie"
+
+#: admin/pages/seo.php:108
+msgid ""
+"WordPress does not know how to give the Last Modified header in the server's "
+"responses. You can do this using the settings below."
+msgstr ""
+"WordPress weet geen reactie te geven op de Laatst Aangepaste hoofding in de "
+"server. U kunt dit doen met behulp van de onderstaande instellingen."
+
+#: admin/pages/seo.php:129
+msgid "Disable Last Modified header on front page"
+msgstr ""
+
+#: admin/pages/seo.php:139
+#, php-format
+msgid ""
+"You can specify a page mask, for example: %s or %s. All pages that contain the "
+"string will be excluded. Each exclude must begin with a new line."
+msgstr ""
+"U kunt een pagina masker opgeven, bijvoorbeeld: %s of %s. Alle pagina's die "
+"deze tekenreeks bevatten, worden uitgesloten. Elke uitsluiting moet beginnen "
+"op een nieuwe regel."
+
+#: admin/pages/seo.php:153
+msgid "For the Yoast SEO plugin"
+msgstr "Voor de Yoast SEO plugin"
+
+#: admin/pages/seo.php:153
+msgid ""
+"These settings will help you eliminate some problems associated with the "
+"popular Yoast SEO plugin"
+msgstr ""
+"Met deze instellingen kunt u een aantal problemen vermijden die verband houden "
+"met de populaire Yoast SEO plugin"
+
+#: admin/pages/seo.php:162
+msgid ""
+"The last element in the breadcrumbs in the Yoast SEO plugin duplicates the "
+"title of the article. Some SEO-specialists consider this duplication to be "
+"superfluous."
+msgstr ""
+"Het laatste element in de broodkruimels in de Yoast SEO plugin dupliceert de "
+"titel van het artikel. Sommige SEO specialisten beschouwen deze duplicatie als "
+"overbodig."
+
+#: admin/pages/seo.php:162
+msgid ""
+"Removes duplication of the name in the breadcrumbs of the WP SEO plugin from "
+"Yoast."
+msgstr ""
+"Verwijdert duplicatie van de naam in de broodkruimels van de WP Yoast SEO "
+"plugin."
+
+#: admin/pages/seo.php:172
+msgid ""
+"Yandex.Webmaster swears on a standard XML card from the plugin Yoast, tk. it "
+"has a specific tag"
+msgstr ""
+"Yandex.Webmaster zweert bij een standaard XML kaart van de plugin Yoast, tk. "
+"met een specifieke tag"
+
+#: admin/pages/seo.php:172
+#, php-format
+msgid "Remove the tag %s from XML site map of the plugin Yoast SEO."
+msgstr "Verwijder de tag %s van de XML sitemap van de Yoast SEO plugin."
+
+#: admin/pages/seo.php:172
+msgid ""
+"Attention! After activation, turn off the site map and enable it back to "
+"regenerate it."
+msgstr ""
+"Aandacht! Schakel na activering de sitemap uit en schakel deze weer in om deze "
+"opnieuw te genereren."
+
+#: admin/pages/seo.php:172
+msgid "In older versions of Yoast SEO may not work - update the plugin Yoast"
+msgstr ""
+"In oudere versies van Yoast werkt SEO misschien niet - update de plugin Yoast"
+
+#: admin/pages/seo.php:190
+msgid ""
+"If you’re not familiar with Search Action it’s the mark-up that helps search "
+"engines add a shiny Sitelinks Search Box below your search engine results. For "
+"the majority of webmasters the extra search box is an absolutely fantastic "
+"feature but for many it’s not required or wanted, especially if a site only "
+"has a few pages or if the site uses a customised search platform that only "
+"searches blog posts and not pages."
+msgstr ""
+"Mocht u niet bekend zijn met Zoekactie, dit is de mark-up waarmee zoekmachines "
+"een lumineus zoekvak Sitelinks toevoegen onder de resultaten van uw "
+"zoekmachine. Voor de meerderheid van de webmasters heeft het extra zoekvak een "
+"absoluut fantastische functie, maar voor velen is het niet nodig of gewenst, "
+"vooral als een site maar een paar pagina's omvat of als de site een aangepast "
+"zoekplatform gebruikt dat alleen naar blog berichten en niet naar pagina's "
+"zoekt."
+
+#: admin/pages/seo.php:190
+msgid "Disable JSON-LD sitelinks searchbox using WordPress in plugin Yoast SEO."
+msgstr ""
+"Schakel zoekbox van JSON-LD sitelinks uit met WordPress in plugin Yoast SEO."
+
+#: admin/pages/seo.php:200
+msgid ""
+"Prevents output of the script tag of type application/ld+json containing\n"
+"schema.org data from the popular Yoast SEO and Yoast SEO Premium plugins.\n"
+"There is currently no UI to do so."
+msgstr ""
+"Voorkomt uitvoer van de script tag van het type applicatie/ld+json die\n"
+"schema.org gegevens bevat van de populaire Yoast SEO en Yoast SEO Premium "
+"plugins.\n"
+"Er is momenteel geen gebruikersinterface om dit te doen."
+
+#: admin/pages/seo.php:202
+msgid "Disable Structured Data in plugin Yoast SEO."
+msgstr "Structured Data uitschakelen in plugin Yoast SEO."
+
+#: admin/pages/seo.php:225
+#, php-format
+msgid "The Yoast SEO plugin displays a comment of the form %s in %s section"
+msgstr "De Yoast SEO plugin toont een reactie van het formulier %s in %s segment"
+
+#: admin/pages/seo.php:225
+#, php-format
+msgid "Removes the Yoast SEO plugin comment of their section %s"
+msgstr "Verwijdert de Yoast SEO plugin reactie van hun segment %s"
+
+#: admin/pages/widgets.php:33
+msgid "Widgets"
+msgstr "Widgets"
+
+#: admin/pages/widgets.php:52
+msgid "<strong>Disable unused widgets</strong>."
+msgstr "<strong>Ongebruikte widgets uitschakelen</strong>."
+
+#: admin/pages/widgets.php:52
+msgid ""
+"Some widgets, such as the Calendar or Tag Cloud, create an extra query to the "
+"database, even if they are not displayed on the website. Of course, a couple "
+"of hits to the database will not do much harm to the whole site. However, if "
+"the resource contains a huge amount of content, and the speed of its work "
+"above all else, disabling unused functionality is the first step to optimizing "
+"and accelerating it."
+msgstr ""
+"Sommige widgets, zoals de Agenda of Tag Cloud, maken een extra query naar de "
+"database, ook als deze niet op de website worden weergegeven. Natuurlijk "
+"zullen een paar hits naar de database de hele site niet veel schaden. Als de "
+"bron echter een enorme hoeveelheid inhoud bevat, en de snelheid van zijn werk "
+"boven alles, is het uitschakelen van ongebruikte functionaliteit de eerste "
+"stap om deze te optimaliseren en te versnellen."
+
+#: clearfy.php:68 includes/boot.php:87
+msgid "Clearfy"
+msgstr "Clearfy"
+
+#: includes/boot.php:59
+msgid "Documentation"
+msgstr ""
+
+#: includes/boot.php:65
+msgid "Do you like our plugin?"
+msgstr ""
+
+#: includes/boot.php:75
+msgid "Upgrade to premium"
+msgstr ""
+
+#: includes/classes/class.configurate-advanced.php:219
+msgid "Howdy"
+msgstr "Howdy"
+
+#: includes/classes/class.configurate-advanced.php:219
+msgid "Welcome"
+msgstr "Welkom"
+
+#: includes/classes/class.configurate-performance.php:209
+msgid "REST API restricted to authenticated users."
+msgstr ""
+
+#: includes/classes/class.configurate-security.php:51
+msgid "<strong>ERROR</strong>: Wrong login or password"
+msgstr "<strong>FOUT</strong>: verkeerde gebruikersnaam of wachtwoord"
+
+#: includes/classes/class.licensing.php:207
+msgid "The license is deactivated."
+msgstr ""
+
+#: includes/classes/class.licensing.php:225
+#: includes/classes/class.licensing.php:244
+#: includes/classes/class.licensing.php:281
+msgid "The license has been updated."
+msgstr ""
+
+#: includes/classes/class.licensing.php:349
+msgid "Your license has been successfully activated."
+msgstr ""
+
+#: includes/classes/class.package.php:189
+msgid "Sorry, you are not allowed to install plugins on this site."
+msgstr ""
+
+#: includes/classes/class.package.php:251
+msgid ""
+"Updates are available for one of the components. Please, update your current "
+"package of components to the newest version."
+msgstr ""
+
+#: includes/classes/class.package.php:254
+msgid ""
+"You’ve changed the component configuration. For the further work, please, "
+"update the current package of components!"
+msgstr ""
+
+#: includes/classes/class.package.php:258
+msgid "Update now"
+msgstr ""
+
+#: includes/classes/class.zip-archive.php:15
+msgid "The ZipArchive class does not exist in this version of php."
+msgstr "De ZipArchive klasse bestaat niet in deze versie van php."

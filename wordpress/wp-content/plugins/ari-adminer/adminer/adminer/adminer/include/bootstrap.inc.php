@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 error_reporting(6135); // errors and warnings
 
 include "../adminer/include/coverage.inc.php";
@@ -79,6 +81,7 @@ include "../adminer/drivers/firebird.inc.php";
 include "../adminer/drivers/simpledb.inc.php";
 include "../adminer/drivers/mongo.inc.php";
 include "../adminer/drivers/elastic.inc.php";
+include "../adminer/drivers/clickhouse.inc.php";
 include "../adminer/drivers/mysql.inc.php"; // must be included as last driver
 
 define("SERVER", $_GET[DRIVER]); // read from pgsql=localhost

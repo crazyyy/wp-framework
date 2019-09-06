@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Helpers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 define( 'ARI_CRYPT_OPENSSL_INSTALLED', extension_loaded( 'openssl' ) );
 
 class Crypt {

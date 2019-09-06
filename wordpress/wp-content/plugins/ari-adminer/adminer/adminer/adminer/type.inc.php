@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $TYPE = $_GET["type"];
 $row = $_POST;
 

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Controls\Grid;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Utils\Options as Options;
 
 class Grid_Column_Options extends Options {

@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Cache;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Lite {
     static protected $cache = array();
 

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 /** PHP implementation of XXTEA encryption algorithm
 * @author Ma Bingyao <andot@ujn.edu.cn>
 * @link http://www.coolcode.cn/?action=show&id=128

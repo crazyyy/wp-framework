@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Models;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Models\Model as Model;
 use Ari_Adminer\Models\Connections as Connections_Model;
 use Ari_Adminer\Models\Connection as Connection_Model;

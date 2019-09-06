@@ -1,0 +1,369 @@
+# Translation of Plugins - Clearfy in Spanish (Spain)
+# This file is distributed under the same license as the Plugins - Clearfy – WordPress optimization plugin and disable ultimate tweaker - Development (trunk) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-04-28 06:24+0300\n"
+"PO-Revision-Date: 2019-04-28 06:24+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:72
+msgid "Disable comments on the entire site"
+msgstr "Deshabilitar comentarios en todo el sitio"
+
+#: admin/boot.php:78 admin/pages/comments.php:127
+msgid "Select post types"
+msgstr "Seleccionar tipos publicaciones"
+
+#: admin/boot.php:83 admin/pages/comments.php:138
+msgid "Custom post types"
+msgstr "Custom post types"
+
+#: admin/boot.php:88 admin/pages/comments.php:149
+msgid "Use persistent mode"
+msgstr "Usa el modo persistente"
+
+#: admin/boot.php:93 admin/pages/comments.php:176
+msgid "Replace external links in comments on the JavaScript code"
+msgstr "Reemplazar enlaces externos decomentarios en el código JavaScript"
+
+#: admin/boot.php:98 admin/pages/comments.php:185
+msgid "Replace external links from comment authors on the JavaScript code"
+msgstr ""
+"Reemplace los enlaces externos de los autores en comentarios del código "
+"JavaScript"
+
+#: admin/boot.php:103 admin/pages/comments.php:167
+msgid "Remove field \"site\" in comment form"
+msgstr "Eliminar campo \"sitio \" en formulario de comentario"
+
+#: admin/boot.php:115
+msgid "One click disable all comments"
+msgstr "Un clic deshabilita todos los comentarios"
+
+#: admin/boot.php:136
+msgid "Get ultimate plugin free"
+msgstr "Obtener el ultimate plugin gratis"
+
+#: admin/pages/comments.php:37 admin/pages/comments.php:91
+msgid "Disable comments"
+msgstr "Desactivar Comentarios"
+
+#: admin/pages/comments.php:38
+msgid "Manage site comments"
+msgstr "Administrar los comentarios del sitio"
+
+#: admin/pages/comments.php:51
+msgid "Comments"
+msgstr "Comentarios"
+
+#: admin/pages/comments.php:51
+msgid "General"
+msgstr "General"
+
+#: admin/pages/comments.php:66
+msgid "Global disabling of comments"
+msgstr "Deshabilitación global de comentarios."
+
+#: admin/pages/comments.php:66
+msgid ""
+"What is the difference between these and native WordPress functions? "
+"WordPress disables comments only for new posts! Using the functions below, "
+"you can disable comments globally, even for old posts, and you can choose "
+"which post types comments to disable. The plugin also disables the comment "
+"functionality itself, which creates a certain load on the site."
+msgstr ""
+"¿Cuál es la diferencia entre estas y las funciones nativas de WordPress? "
+"¡WordPress deshabilita comentarios solo para nuevas publicaciones! Al usar "
+"las funciones a continuación, puede deshabilitar los comentarios "
+"globalmente, incluso para las publicaciones anteriores, y puede elegir qué "
+"tipo de comentarios deshabilitar. El plugin también desactiva la "
+"funcionalidad de comentarios, lo que crea una cierta carga en el sitio."
+
+#: admin/pages/comments.php:93
+msgid "Not disable"
+msgstr "No deshabilitar"
+
+#: admin/pages/comments.php:96
+msgid "Everywhere"
+msgstr "Donde sea"
+
+#: admin/pages/comments.php:97
+#, php-format
+msgid ""
+"You can delete all comments in the database by clicking on this link (<a "
+"href=\"%s\">cleaning comments in database</a>)."
+msgstr ""
+"Puede eliminar los comentarios en la base de datos haciendo clic en este "
+"enlace (<a href=\"%s\">limpiando comentarios en la base de datos</a>)."
+
+#: admin/pages/comments.php:101
+msgid "On certain post types"
+msgstr "Para ciertos tipos de correos"
+
+#: admin/pages/comments.php:102
+#, php-format
+msgid ""
+"You can delete all comments for the selected post types. Select the post "
+"types below and save the settings. After that, click the link (<a href=\"%s"
+"\">delete all comments for the selected post types in database</a>)."
+msgstr ""
+"Puede eliminar los comentarios para los tipos de publicación seleccionados. "
+"Seleccione los tipos de publicación y guarde la configuración. Después, haga "
+"clic en el enlace (<a href=\"%s\">eliminar todos los comentarios de los "
+"tipos de publicaciones seleccionados en la base de datos</a>)."
+
+#: admin/pages/comments.php:106
+msgid ""
+"Everywhere - Warning: This option is global and will affect your entire "
+"site. Use it only if you want to disable comments everywhere. A complete "
+"description of what this option does is available here"
+msgstr ""
+"Donde sea -  Advertencia: Esta opción es global y afectará a todo su sitio. "
+"Úselo solo si desea deshabilitar comentarios en todas partes. Una "
+"descripción completa de lo que hace esta opción está disponible aquí."
+
+#: admin/pages/comments.php:106
+msgid ""
+"On certain post types - Disabling comments will also disable trackbacks and "
+"pingbacks. All comment-related fields will also be hidden from the edit/"
+"quick-edit screens of the affected posts. These settings cannot be "
+"overridden for individual posts."
+msgstr ""
+"Para ciertas publicaciones, al deshabilitar los comentarios, se deshabilita "
+"los trackbacks y los pingbacks. Los campos relacionados con comentarios se "
+"ocultarán de las pantallas de edición/edición-rápida de las publicaciones "
+"afectadas. Estas configuraciones no se pueden anular para publicaciones "
+"individuales."
+
+#: admin/pages/comments.php:130
+msgid "Select the post types for which comments will be disabled"
+msgstr ""
+"Seleccione los tipos de publicación para los cuales se deshabilitarán los "
+"comentarios."
+
+#: admin/pages/comments.php:141
+msgid ""
+"Only the built-in post types appear above. If you want to disable comments "
+"on other custom post types on the entire network, you can supply a comma-"
+"separated list of post types below (use the slug that identifies the post "
+"type)."
+msgstr ""
+"Solo los tipos de post types incorporados aparecen arriba. Si desea "
+"deshabilitar los comentarios sobre otros tipos de post types personalizadas "
+"en toda la red, puede proporcionar una lista separada por comas de los tipos "
+"de post types a continuación (use la barra que identifica el tipo de "
+"publicación)."
+
+#: admin/pages/comments.php:151
+msgid ""
+"This will make persistent changes to your database &mdash; comments will "
+"remain closed even if you later disable the plugin! You should not use it if "
+"you only want to disable comments temporarily."
+msgstr ""
+"Esto hará cambios persistentes en su base de datos &mdash; Los comentarios "
+"permanecerán cerrados incluso si luego deshabilitas el plugin. No lo use si "
+"solo desea deshabilitar los comentarios temporalmente."
+
+#: admin/pages/comments.php:161
+msgid "General settings for comments"
+msgstr "Configuraciones generales para comentarios"
+
+#: admin/pages/comments.php:161
+msgid "These settings will help you improve SEO and reduce the amount of spam."
+msgstr ""
+"Estas configuraciones te ayudarán a mejorar el SEO y reducir la cantidad de "
+"spam."
+
+#: admin/pages/comments.php:169
+msgid ""
+"Tired of spam in the comments? Do visitors leave \"blank\" comments for the "
+"sake of a link to their site?"
+msgstr ""
+"¿Cansado de spam en los comentarios? ¿Los visitantes dejan \"en blanco\"  "
+"los comentarios por un enlace a su sitio?"
+
+#: admin/pages/comments.php:169
+msgid "Removes the \"Site\" field from the comment form."
+msgstr "Elimina el campo \"Sitio \" del formulario de comentarios."
+
+#: admin/pages/comments.php:169
+msgid ""
+"Works with the standard comment form, if the form is manually written in "
+"your theme-it probably will not work!"
+msgstr ""
+"Funciona con el formulario de comentarios estándar, si el formulario está "
+"escrito manualmente en su tema, ¡probablemente no funcionará!"
+
+#: admin/pages/comments.php:178
+msgid ""
+"Superfluous external links from comments, which can be typed from a dozen "
+"and more for one article, do not bring anything good for promotion."
+msgstr ""
+"Los enlaces externos superfluos en los comentarios y en cantidades mayores "
+"de 12 no aportan nada bueno para el SEO o algunas promociones."
+
+#: admin/pages/comments.php:178
+#, php-format
+msgid "Replaces the links of this kind of %s, on links of this kind %s"
+msgstr "Reemplaza los enlaces del tipo  %s, en enlaces de este tipo %s"
+
+#: admin/pages/comments.php:187
+msgid ""
+"Up to 90 percent of comments in the blog can be left for the sake of an "
+"external link. Even nofollow from page weight loss here does not help."
+msgstr ""
+"Hasta un 90 por ciento de los comentarios del Blog pueden ser usados para "
+"enlaces externos, incluso, usar la etiqueta \"nofollow\" no ayudará. "
+
+#: admin/pages/comments.php:187
+msgid ""
+"Replaces the links of the authors of comments on the JavaScript code, it is "
+"impossible to distinguish it from usual links."
+msgstr ""
+"Reemplaza los enlaces de los autores de los comentarios sobre el código "
+"JavaScript, es imposible distinguirlo de los enlaces habituales."
+
+#: admin/pages/comments.php:187
+msgid "In some Wordpress topics this may not work."
+msgstr "En algunos tópicos de Wordpress, ésto podría no trabajar"
+
+#: admin/pages/delete-comments.php:41
+msgid "Comments cleaner"
+msgstr "Limpieza de comentarios"
+
+#: admin/pages/delete-comments.php:62
+msgid "All comments have been deleted."
+msgstr "Todos los comentarios han sido eliminados."
+
+#: admin/pages/delete-comments.php:71
+msgid ""
+"An error occurred while trying to delete comments. Internal error occured. "
+"Please try again later."
+msgstr ""
+"Se ha producido un error al intentar eliminar comentarios. Se produjo un "
+"error interno. Por favor, inténtelo de nuevo más tarde."
+
+#: admin/pages/delete-comments.php:211
+msgid ""
+"Are you sure you want to delete comments from the database without restoring?"
+msgstr ""
+"¿Está seguro de que desea eliminar los comentarios de la base de datos sin "
+"restaurar?"
+
+#: admin/pages/delete-comments.php:226
+msgid "Delete "
+msgstr "Borrar"
+
+#: admin/pages/delete-comments.php:232
+msgid "Comments clearing tools"
+msgstr "Herramientas de limpieza de comentarios"
+
+#: admin/pages/delete-comments.php:235
+msgid ""
+"These functions can be useful for global disabling comments or bulk cleaning "
+"spam comments."
+msgstr ""
+"Estas funciones pueden ser útiles para deshabilitar los comentarios globales "
+"o limpiar de forma masiva los comentarios de spam."
+
+#: admin/pages/delete-comments.php:240
+msgid "Remove all comments"
+msgstr "Eliminar todos los comentarios"
+
+#: admin/pages/delete-comments.php:242
+msgid "You can delete all comments in your database with one click."
+msgstr "Borrar todos los comentarios en la basa de datos con un click"
+
+#: admin/pages/delete-comments.php:244
+msgid "Choose post types"
+msgstr "Elegir tipos de publicaciones"
+
+#: admin/pages/delete-comments.php:249
+msgid "Select all"
+msgstr "Seleccionar todo"
+
+#: admin/pages/delete-comments.php:266
+#, php-format
+msgid "Delete Woocommerce order notices? (%d)"
+msgstr "¿Desea eliminar los avisos de pedidos de Woocommerce? (%d)"
+
+#: admin/pages/delete-comments.php:272
+#, php-format
+msgid "Delete (%s)"
+msgstr "Borrar (%s)"
+
+#: admin/pages/delete-comments.php:279
+msgid "Remove spam comments"
+msgstr "Eliminar comentarios spam"
+
+#: admin/pages/delete-comments.php:281
+msgid "You can remove only spam comments from the database with one click."
+msgstr ""
+"Puede eliminar solo los comentarios spam de la base de datos con un solo "
+"clic."
+
+#: admin/pages/delete-comments.php:283 admin/pages/delete-comments.php:290
+#: admin/pages/delete-comments.php:297
+#, php-format
+msgid "Delete (%d)"
+msgstr "Borrar (%d)"
+
+#: admin/pages/delete-comments.php:286
+msgid "Remove unapproved comments"
+msgstr "Eliminar comentarios no aprobados"
+
+#: admin/pages/delete-comments.php:288
+msgid ""
+"You can remove only unapproved comments from the database with one click."
+msgstr ""
+"Puede eliminar solo los comentarios no aprobados de la base de datos con un "
+"solo click."
+
+#: admin/pages/delete-comments.php:293
+msgid "Remove trashed comments"
+msgstr "Eliminar comentarios en la papelera"
+
+#: admin/pages/delete-comments.php:295
+msgid "You can remove only trashed comments from the database with one click."
+msgstr ""
+"Puede borrar solo los comentarios eliminados de la base de datos con un solo "
+"click."
+
+#: comments-plus.php:70
+msgid "Webcraftic Disable comments"
+msgstr "Deshabilitar comentarios Webcraftic "
+
+#: includes/classes/class.configurate-comments.php:180
+#: includes/classes/class.configurate-comments.php:236
+msgid "Comments are closed."
+msgstr "Cerrados los comentarios"
+
+#: includes/classes/class.configurate-comments.php:224
+#, php-format
+msgid ""
+"Note: The <em>%s</em> plugin is currently active, and comments are "
+"completely disabled on: %s. Many of the settings below will not be "
+"applicable for those post types."
+msgstr ""
+"Nota: el plugin <em>%s</em> está activo y los comentarios están "
+"completamente deshabilitados en: %s. Muchas de las configuraciones a "
+"continuación no serán aplicables para esos tipos de publicaciones."

@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Helpers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 define( 'ARIADMINER_BRIDGE_SESSION_KEY', 'adminer_shared' );
 
 use Ari\Utils\Request as Request;
@@ -80,6 +82,70 @@ class Bridge {
                 );
             },
             $content
+        );
+
+        $content = preg_replace_callback(
+            '/<a[\s]+[^>]*?(href[\s]?=[\s\"\']*(.*?)[\"\'])*.*?>([^<]+|.*?)?<\/a>/i',
+            function( $matches ) {
+                $url = $matches[2];
+                if ( false !== strpos( $url, '__wp_nonce' ) ) {
+                    return $matches[0];
+                }
+
+                $insertPos = strpos( $url, '?' );
+                $insertAmp = strpos( $url, '&' ) !== false;
+                if ( false === $insertPos ) {
+                    $insertPos = strpos( $url, '#' );
+
+                    if ( false === $insertPos ) {
+                        $url .= '?';
+                        $insertPos = strlen( $url );
+                    }
+                } else {
+                    $insertAmp = true;
+                    $insertPos += 1;
+                }
+
+                $url = substr( $url, 0, $insertPos)
+                    . '__wp_nonce=' . $this->config->nonce . ( $insertAmp ? '&amp;' : '' )
+                    . substr( $url, $insertPos );
+
+                return str_replace(
+                    $matches[1],
+                    'href="' . $url . '"',
+                    $matches[0]
+                );
+            },
+            $content
+        );
+
+        $content = preg_replace_callback(
+            '/<\/form>/i',
+            function( $matches ) {
+                return sprintf(
+                    '<input type="hidden" name="__wp_nonce" value="%s" />%s',
+                    htmlspecialchars( $this->config->nonce ),
+                    $matches[0]
+                );
+            },
+            $content
+        );
+
+        $content = preg_replace_callback(
+            '/<body[^>]*>/i',
+            function( $matches ) {
+                return script(
+                        'if (typeof(ajax) !== "undefined" && !ajax.__patched) {' .
+                        'const originalAjax = ajax;' .
+                        'ajax = function(url, callback, data, message) {
+                        if (!/__wp_nonce=/.test(url)) url += "&__wp_nonce=" + "' . $this->config->nonce . '";
+                        console.log(url); 
+                        return originalAjax(url, callback, data, message);
+                    };ajax.__patched = true;' .
+                        '}') . $matches[0];
+            },
+            $content,
+            1
         );
 
         return $content;

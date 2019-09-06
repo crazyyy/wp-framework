@@ -1,6 +1,8 @@
 <?php
 namespace Ari\Utils;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Enum {
     static public function exists( $val ) {
         if ( empty( $val ) || ! is_string( $val ) )

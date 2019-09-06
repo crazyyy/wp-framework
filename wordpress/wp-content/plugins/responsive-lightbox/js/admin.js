@@ -15,6 +15,44 @@
 		$( '.responsive-lightbox-settings input.reset-gallery' ).on( 'click', function() {
 			return confirm( rlArgs.resetGalleryToDefaults );
 		} );
+
+		// load all previously used taxonomies
+		$( document ).on( 'click', '#rl_folders_load_old_taxonomies', function () {
+			var select = $( '#rl_media_taxonomy' ),
+				spinner = select.parent().find( '.spinner' ),
+				taxonomies = [];
+
+			select.find( 'option' ).each( function ( i, item ) {
+				console.log( item );
+				taxonomies.push( $( item ).val() );
+			} );
+
+			// show spinner
+			spinner.toggleClass( 'is-active', true );
+
+			$.post( ajaxurl, {
+				action: 'rl-folders-load-old-taxonomies',
+				taxonomies: taxonomies,
+				nonce: rlArgs.tax_nonce
+			} ).done( function ( response ) {
+				try {
+					if ( response.success && response.data.taxonomies.length > 0 ) {
+						$.each( response.data.taxonomies, function ( i, item ) {
+							select.append( $( '<option></option>' ).attr( 'value', item ).text( item ) );
+						} );
+					} else {
+						//@TODO
+					}
+				} catch ( e ) {
+					//@TODO
+				}
+			} ).always( function () {
+				// hide spinner
+				spinner.toggleClass( 'is-active', false );
+			} );
+
+			return false;
+		} );
     } );
 
 } )( jQuery );

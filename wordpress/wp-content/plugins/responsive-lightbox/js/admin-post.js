@@ -19,7 +19,12 @@
 			galleries = {};
 
 			// load galleries
-			get_galleries( modal );
+			get_galleries( modal, $( '#rl-media-search-input' ).val() );
+		} );
+
+		// select category
+		modal.on( 'change', '#rl-media-attachment-categories', function() {
+			$( '.rl-reload-galleries' ).click();
 		} );
 
 		// close gallery modal
@@ -85,7 +90,7 @@
 
 			set_columns( modal );
 
-			get_galleries( modal );
+			get_galleries( modal, $( '#rl-media-search-input' ).val() );
 		} );
 
 		$( window ).on( 'resize', function () {
@@ -168,18 +173,12 @@
 							// update gallery data
 							update_gallery_preview( element, galleries[gallery_id], true );
 						} else {
-//@TODO
+							//@TODO
 						}
 					} catch( e ) {
-//@TODO
+						//@TODO
 					}
-
-					// hide spinner
-					spinner.fadeOut( 'fast' );
-
-					// turn on info
-					info.removeClass( 'rl-loading-content' );
-				} ).fail( function () {
+				} ).always( function () {
 					// hide spinner
 					spinner.fadeOut( 'fast' );
 
@@ -211,21 +210,19 @@
 			action: 'rl-post-get-galleries',
 			post_id: rlArgs.post_id,
 			search: search,
-			nonce: rlArgs.nonce
+			nonce: rlArgs.nonce,
+			category: element.find( '#rl-media-attachment-categories' ).val()
 		} ).done( function ( response ) {
 			try {
 				if ( response.success ) {
 					element.find( '.rl-galleries-list' ).empty().append( response.data );
 				} else {
-					
+					//@TODO
 				}
 			} catch( e ) {
-				
+				//@TODO
 			}
-
-			// hide spinner
-			spinner.fadeOut( 'fast' );
-		} ).fail( function () {
+		} ).always( function () {
 			// hide spinner
 			spinner.fadeOut( 'fast' );
 		} );

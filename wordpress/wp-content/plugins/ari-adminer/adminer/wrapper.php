@@ -1,6 +1,8 @@
 <?php
 defined( 'ADMINER_WRAPPER_TYPE' ) || die( 'Access denied.' );
 
+define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+
 $plugin_root_path = dirname( __FILE__ ) . '/../';
 $adminer_path = dirname( __FILE__ ) . '/adminer/';
 
@@ -23,6 +25,13 @@ if ( ! $adminer_config->load( $session_key ) ) {
         die(
             WP_Adminer_Bridge::get_terminated_message( $wp_login_url )
         );
+    }
+}
+
+$nonce = Request::get_var( '__wp_nonce' );
+if ( 0 === strlen( $nonce ) || 0 === strlen( $adminer_config->nonce ) || $nonce !== $adminer_config->nonce ) {
+    if ( $_SERVER['REQUEST_METHOD'] !== 'GET' && !WP_Adminer_Bridge::is_ajax_request() ) {
+        die( 'Access denied. Invalid token.' );
     }
 }
 

@@ -1,0 +1,466 @@
+# Translation of Plugins - Clearfy in Spanish (Spain)
+# This file is distributed under the same license as the Plugins - Clearfy – WordPress optimization plugin and disable ultimate tweaker - Development (trunk) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-04-28 06:23+0300\n"
+"PO-Revision-Date: 2019-04-28 06:23+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libs\n"
+"X-Poedit-SearchPathExcluded-1: components\n"
+"X-Poedit-SearchPathExcluded-2: cache\n"
+
+#: admin/boot.php:30
+msgid ""
+"We detected that you used the Assets manager plugin. Do you want to import "
+"settings from this plugin to the Clearfy plugin?"
+msgstr ""
+"Configuración de activos detectada. ¿Desea importar esta configuración al "
+"plugin Clearfy?"
+
+#: admin/boot.php:31
+msgid "Import options"
+msgstr "Importar opciones"
+
+#: admin/boot.php:48
+msgid "Settings has been successfully imported!"
+msgstr "¡Configuración importada exitosamente!"
+
+#: admin/boot.php:140 admin/pages/assets-manager.php:96
+msgid "Disable assets manager"
+msgstr "Deshabilitar gestor de activos"
+
+#: admin/boot.php:147 admin/pages/assets-manager.php:120
+msgid "Disable assets manager panel"
+msgstr "Deshabilitar el panel de Gestor de Activos"
+
+#: admin/boot.php:153 admin/pages/assets-manager.php:129
+msgid "Disable assets manager on front"
+msgstr "Deshabilitar el administrador de activos en el frontend"
+
+#: admin/boot.php:159 admin/pages/assets-manager.php:138
+msgid "Disable assets manager on back-end"
+msgstr "Deshabilitar el administrador de activos en el back-end"
+
+#: admin/boot.php:165
+msgid "Assets manager options"
+msgstr "Opciiones del Gestor de Activos"
+
+#: admin/boot.php:205 includes/class.configurate-assets.php:266
+msgid "Disable plugins (groups of scripts)"
+msgstr "Deshabilitar plugins (grupos de scripts)"
+
+#: admin/boot.php:206 includes/class.configurate-assets.php:267
+msgid "Conditions by the link template"
+msgstr "Condiciones para enlace de plantilla."
+
+#: admin/boot.php:207 includes/class.configurate-assets.php:268
+msgid "Conditions by the regular expression"
+msgstr "Condiciones para la expresión regular."
+
+#: admin/boot.php:208 includes/class.configurate-assets.php:269
+msgid "Safe mode"
+msgstr "Modo seguro"
+
+#: admin/boot.php:209 includes/class.configurate-assets.php:270
+msgid "Statistics and optimization results"
+msgstr "Estadísticas y resultados de optimización."
+
+#: admin/boot.php:220
+msgid "Get premium"
+msgstr "Obtener premium"
+
+#: admin/pages/assets-manager.php:48 admin/pages/assets-manager.php:67
+#: admin/pages/assets-manager.php:75
+msgid "Assets manager"
+msgstr "Gestor de Activos"
+
+#: admin/pages/assets-manager.php:67 admin/pages/assets-manager.php:75
+msgid "General"
+msgstr "General"
+
+#: admin/pages/assets-manager.php:89
+msgid "Disable unused scripts, styles, and fonts"
+msgstr "Deshabilitar los scripts, estilos y fuentes no utilizados"
+
+#: admin/pages/assets-manager.php:89
+msgid ""
+"There is a button in the adminbar called \"Script Manager\". If you click on "
+"it you will see a list of loaded scripts, styles and fonts on the current "
+"page of your site. If you think that one of the assets is superfluous on "
+"this page, you can disable it individually, so that it does not create "
+"unnecessary queries when page loading. Use the script manager very carefull "
+"to non-corrupt your website. We recommend to test this function at a local "
+"server."
+msgstr ""
+"Hay un botón en la barra de administración llamado \"Administrador de "
+"secuencias de comandos\". Si hace clic en él, verá una lista de los scripts, "
+"estilos y fuentes cargados en la página actual de su sitio. Si cree que uno "
+"de los recursos es superfluo en esta página, puede deshabilitarlo "
+"individualmente, para que no cree consultas innecesarias cuando se carga la "
+"página. Utilice el administrador de scripts con mucho cuidado para no dañar "
+"su sitio web. Recomendamos probar esta función en un servidor local."
+
+#: admin/pages/assets-manager.php:98
+msgid "Full disable of the module."
+msgstr "Deshabilitación completa del módulo."
+
+#: admin/pages/assets-manager.php:122
+msgid ""
+"By default in your admin bar there is a button for control the assets "
+"scripts and styles. With this option, you can turn off the script manager on "
+"front and back-end."
+msgstr ""
+"De forma predeterminada, en la barra de administración hay un botón para "
+"controlar los scripts y estilos de activos. Con esta opción, puede "
+"desactivar el administrador de secuencias de comandos en la parte frontal y "
+"posterior."
+
+#: admin/pages/assets-manager.php:131
+msgid "Disables assets manager initialization for frontend."
+msgstr "Desactiva el inicio del administrador de activos para el frontend."
+
+#: admin/pages/assets-manager.php:140
+msgid "Disables assets manager initialization for backend."
+msgstr "Desactiva el inicio del administrador de activos para el backend."
+
+#: gonzales.php:84
+msgid "Webcraftic assets manager"
+msgstr "Gestor de activos webcraftic"
+
+#: includes/class.configurate-assets.php:128
+#: includes/class.configurate-assets.php:147
+msgid "Assets Manager"
+msgstr "Gestor de Activos"
+
+#: includes/class.configurate-assets.php:212
+msgid "Total requests"
+msgstr "Total de solicitudes"
+
+#: includes/class.configurate-assets.php:213
+msgid "Total size"
+msgstr "Tamaño total"
+
+#: includes/class.configurate-assets.php:214
+msgid "Optimized size"
+msgstr "Tamaño optimizado"
+
+#: includes/class.configurate-assets.php:215
+msgid "Disabled js"
+msgstr "JS desactivado"
+
+#: includes/class.configurate-assets.php:216
+msgid "Disabled css"
+msgstr "CSS desactivado"
+
+#: includes/class.configurate-assets.php:218
+msgid ""
+"This is the general statistics to see the optimization result. Available in "
+"the paid version only."
+msgstr ""
+"Esta es la estadística general para ver el resultado de la optimización. "
+"Disponible solo en la versión de pago."
+
+#: includes/class.configurate-assets.php:222
+msgid "Reset"
+msgstr "Resetear"
+
+#: includes/class.configurate-assets.php:223
+msgid "Save"
+msgstr "Guardar"
+
+#: includes/class.configurate-assets.php:224
+msgid ""
+"In test mode, you can experiment with disabling unused scripts safely for "
+"your site. The resources that you disabled will be visible only to you (the "
+"administrator), and all other users will receive an unoptimized version of "
+"the site, until you remove this tick"
+msgstr ""
+"En el modo de prueba, puede experimentar con la desactivación segura de "
+"scripts no utilizados para su sitio. Los recursos que desactivó solo serán "
+"visibles para usted (el administrador), y todos los demás usuarios recibirán "
+"una versión no optimizada del sitio, hasta que elimine esta marca"
+
+#: includes/class.configurate-assets.php:225
+msgid "Safe mode <b>PRO</b>"
+msgstr "Modo seguro <b>PRO</b>"
+
+#: includes/class.configurate-assets.php:227
+msgid "Close"
+msgstr "Cerrar"
+
+#: includes/class.configurate-assets.php:257
+msgid ""
+"Important! Each page of your website has different sets of scripts and "
+"styles files."
+msgstr ""
+"¡Importante! Cada página de su sitio web tiene diferentes conjuntos de "
+"scripts y archivos de estilos."
+
+#: includes/class.configurate-assets.php:258
+msgid ""
+"Use this feature to disable unwanted scripts and styles by setting up the "
+"logic for different types of pages. We recommend working in \"Safe mode\" "
+"because disabling any necessary system script file can corrupt the website. "
+"All changes done in Safe mode are available for administrator only. This way "
+"only you, as the administrator, can see the result of optimization. To "
+"enable the changes for other users, uncheck Safe mode."
+msgstr ""
+"Utilice esta función para deshabilitar los scripts y estilos no deseados "
+"configurando la mejor lógica para diferentes tipos de páginas. Recomendamos "
+"trabajar en \"Safe mode\" ya que deshabilitar cualquier archivo importante "
+"del script del sistema podría dañar el sitio web. Todos los cambios "
+"realizados en Modo seguro están disponibles solo para el administrador. De "
+"esta manera solo usted, como administrador, puede ver el resultado de la "
+"optimización. Para habilitar los cambios para otros usuarios, desmarque Modo "
+"seguro."
+
+#: includes/class.configurate-assets.php:259
+#, php-format
+msgid ""
+"For more details and user guides, check the plugin’s <a href=\"%s\" target="
+"\"_blank\" rel=\"noreferrer noopener\">documentation</a>."
+msgstr ""
+"Para más detalles y guías de usuario del plugin, consulte la <a href=\"%s\" "
+"target=\"_blank\" rel=\"noreferrer noopener\">documentación</a>."
+
+#: includes/class.configurate-assets.php:262
+msgid "Upgrade to Premium"
+msgstr "Actualizar a Premium"
+
+#: includes/class.configurate-assets.php:265
+msgid "MORE IN CLEARFY BUSINESS"
+msgstr "MÁS EN CLEARFY BUSINESS"
+
+#: includes/class.configurate-assets.php:308
+#: includes/class.configurate-assets.php:336
+msgid "Loaded"
+msgstr "Cargado"
+
+#: includes/class.configurate-assets.php:309
+msgid "Plugin"
+msgstr "Plugin"
+
+#: includes/class.configurate-assets.php:313
+#: includes/class.configurate-assets.php:342
+msgid "Load resource?"
+msgstr "¿Cargar recurso?"
+
+#: includes/class.configurate-assets.php:314
+#: includes/class.configurate-assets.php:343
+msgid "Conditions"
+msgstr "Condiciones"
+
+#: includes/class.configurate-assets.php:322
+msgid "Author"
+msgstr "Autor"
+
+#: includes/class.configurate-assets.php:323
+#: includes/class.configurate-assets.php:402
+msgid "Version"
+msgstr "Versión"
+
+#: includes/class.configurate-assets.php:337
+msgid "Size"
+msgstr "Tamaño"
+
+#: includes/class.configurate-assets.php:338
+msgid "Resource"
+msgstr "Recurso"
+
+#: includes/class.configurate-assets.php:366
+msgid "In use by"
+msgstr "En uso por"
+
+#: includes/class.configurate-assets.php:373
+msgid "Requires"
+msgstr "Requiere"
+
+#: includes/class.configurate-assets.php:402
+msgid "--"
+msgstr "--"
+
+#: includes/class.configurate-assets.php:559
+#: includes/class.configurate-assets.php:1403
+msgid "No"
+msgstr "No"
+
+#: includes/class.configurate-assets.php:559
+#: includes/class.configurate-assets.php:1403
+msgid "Yes"
+msgstr "Sí"
+
+#: includes/class.configurate-assets.php:575
+msgid ""
+"Click the switch in the <b>Load resource?</b> column to display the "
+"conditions for loading the resource."
+msgstr ""
+"Haga clic en el switch de la columna <b>¿Cargar recurso?</b> para mostrar "
+"las condiciones para cargar el recurso."
+
+#: includes/class.configurate-assets.php:577
+msgid ""
+"Set the plugin logic to apply it to all plugin’s resources. This feature "
+"available at the paid version."
+msgstr ""
+"Configure el \"plugin logic\" para aplicarlo a todos los recursos del "
+"complemento. Esta característica está disponible en la versión de pago."
+
+#: includes/class.configurate-assets.php:586
+#: includes/class.configurate-assets.php:610
+msgid "Current URL"
+msgstr "URL actual"
+
+#: includes/class.configurate-assets.php:587
+msgid "Everywhere"
+msgstr "Donde sea"
+
+#: includes/class.configurate-assets.php:588
+msgid "Custom URL (PRO)"
+msgstr "URL personalizada (PRO)"
+
+#: includes/class.configurate-assets.php:589
+msgid "Regular expression (PRO)"
+msgstr "Expresión regular (PRO)"
+
+#: includes/class.configurate-assets.php:599
+msgid "Exclude"
+msgstr "Excluir"
+
+#: includes/class.configurate-assets.php:599
+msgid ""
+"You can disable this resource for all pages, except sections and page types "
+"listed below. Specify sections and page types with the enabled resource."
+msgstr ""
+"Puede deshabilitar este recurso para todas las páginas, excepto las "
+"secciones y los tipos de página que se enumeran a continuación. Especifique "
+"secciones y tipos de página con el recurso habilitado."
+
+#: includes/class.configurate-assets.php:683
+msgid "Example"
+msgstr "Ejemplo"
+
+#: includes/class.configurate-assets.php:683
+msgid "Enter URL (set * for mask)"
+msgstr "Ingrese URL (set * for mask)"
+
+#: includes/class.configurate-assets.php:683
+msgid ""
+"You can disable the resource only for the pages with the matched to the "
+"template address. For example, if you set the template for the link as "
+"http://yoursite.test/profile/*, then the resource is disabled for the "
+"following pages: http://yoursite.test/profile/12, http://yoursite.test/"
+"profile/43, http://yoursite.test/profile/999. If you don’t use the asterisk "
+"symbol in the template then the plugin will disable the resource only for "
+"the pages with 100% match in the specified link type. This feature is "
+"available at the paid version."
+msgstr ""
+"Puede deshabilitar el recurso solo para las páginas que coincidan con la "
+"dirección de la plantilla. Por ejemplo, si configura la plantilla para el "
+"enlace como http://yoursite.test/profile/*, el recurso se deshabilita para "
+"las siguientes páginas: http://yoursite.test/profile/12, http://yoursite."
+"test/profile/43, http://yoursite.test/profile/999. Si no usa el símbolo de "
+"asterisco en la plantilla, el complemento deshabilitará el recurso solo para "
+"las páginas con una coincidencia del 100% en el tipo de enlace especificado. "
+"Esta característica está disponible en la versión de pago."
+
+#: includes/class.configurate-assets.php:686
+msgid "Add field"
+msgstr "Añadir campo"
+
+#: includes/class.configurate-assets.php:696
+msgid "Enter regular expression"
+msgstr "Ingrese la expresión regular"
+
+#: includes/class.configurate-assets.php:696
+msgid ""
+"Regular expressions can be used by experts. This tool creates flexible "
+"conditions to disable the resource. For example, if you specify this "
+"expression: ^([A-z0-9]+-)?gifts? then the resource will be disabled at the "
+"following pages http://yoursite.test/get-gift/, http://yoursite.test/gift/, "
+"http://yoursite.test/get-gifts/, http://yoursite.test/gifts/. The plugin "
+"ignores the backslash at the beginning of the query string, so you can "
+"dismiss it. Check your regular expressions in here: https://regex101.com, "
+"this will prevent you from the mistakes. This feature is available at the "
+"paid version."
+msgstr ""
+"Las expresiones regulares pueden ser utilizadas por expertos. Esta "
+"herramienta crea condiciones flexibles para deshabilitar el recurso. Por "
+"ejemplo, si especifica esta expresión: ^ ([A-z0-9] + -)?Gifts? significa que "
+"el recurso se deshabilitará en las siguientes páginas http: //yoursite.test/"
+"get-gift/, http: //yoursite.test/gift/, http: //yoursite.test/get-gifts/, "
+"http: / /yoursite.test/gifts/. El plugin ignora la barra diagonal inversa al "
+"principio de la cadena de consulta, por lo que puede descartarla. Verifique "
+"sus expresiones regulares aquí: https://regex101.com, esto evitará que "
+"cometa errores. Esta característica está disponible en la versión de pago."
+
+#: includes/class.configurate-assets.php:715
+msgid "Also disabled for pages"
+msgstr "También deshabilitado para páginas"
+
+#: includes/class.configurate-assets.php:729
+msgid "You don't have enough capability to edit this information."
+msgstr "No tienes suficiente permisos para editar esta información."
+
+#: includes/class.configurate-assets.php:1293
+msgid "Minify and Combine"
+msgstr "Minificar y Combinar"
+
+#: includes/class.configurate-assets.php:1314
+msgid "remove version?"
+msgstr "¿Eliminar versión?"
+
+#: includes/class.configurate-assets.php:1314
+msgid "optimize?"
+msgstr "¿optimizar?"
+
+#: includes/class.configurate-assets.php:1318
+msgid ""
+"You’ve enabled &#34;Remove query strings&#34; from static resources in the "
+"&#34;Clearfy&#34; plugin. This list of settings helps you to exclude the "
+"necessary scripts and styles with remaining query strings. Press No to add a "
+"file to the excluded list."
+msgstr ""
+"Has habilitado &#34;Eliminar cadenas de consulta&#34; de los recursos "
+"estáticos en el &#34;Clearfy&#34; plugin. Esta lista de configuraciones le "
+"ayuda a excluir los scripts y estilos necesarios con las cadenas de consulta "
+"restantes. Presione No para agregar un archivo a la lista excluida."
+
+#: includes/class.configurate-assets.php:1320
+msgid ""
+"You’ve enabled the &#34;Optimize js scripts?&#34; and &#34;Optimize CSS "
+"options&#34; in the &#34;Minify & Combine plugin&#34;. These settings "
+"exclude scripts and styles that you don’t want to optimize. Press No to add "
+"a file to the excluded list."
+msgstr ""
+"Has habilitado &#34;Optimizar js scripts?&#34; y &#34;Optimizar CSS "
+"options&#34; en el &#34;plugin Minify & Combine&#34;. Esta configuración "
+"excluye los scripts y los estilos que no desea optimizar. Presione No para "
+"agregar un archivo a la lista excluida."
+
+#: includes/class.configurate-assets.php:1322
+msgid ""
+"You’ve enabled the &#34;Optimize js scripts?&#34; and &#34;Optimize CSS "
+"options&#34; in the &#34;Autoptimize&#34;. These settings exclude scripts "
+"and styles that you don’t want to optimize. Press No to add a file to the "
+"excluded list."
+msgstr ""
+"Has habilitado &#34;Optimizar js scripts?&#34; y &#34;Optimizar CSS "
+"options&#34; en el &#34;Autoptimize&#34;. Esta configuración excluye los "
+"scripts y los estilos que no desea optimizar. Presione No para agregar un "
+"archivo a la lista excluida."

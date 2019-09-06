@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Helpers;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 class Screen {
     static public function register() {
         $screen = get_current_screen();

@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Connections;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Controller as Controller;
 use Ari\Utils\Response as Response;
 use Ari_Adminer\Helpers\Helper as Helper;
@@ -16,7 +18,10 @@ class Reset_Default extends Controller {
         );
 
         $result = false;
-        if ( Helper::has_access_to_adminer() ) {
+        if (
+            Helper::is_valid_nonce() &&
+            Helper::has_access_to_adminer()
+        ) {
             $result = Helper::set_default_connection( 0 );
         }
 

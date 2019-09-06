@@ -3,8 +3,8 @@ Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, photos, theme, photo, image, picture, slideshow, modal, overlay, video
 Requires at least: 4.0
-Tested up to: 4.9.6
-Stable tag: 2.0.5
+Tested up to: 5.0.3
+Stable tag: 2.1.0
 Requires PHP: 5.2.4
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
@@ -25,6 +25,7 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 * Create galleries from Media Library or Post attached images
 * Drag n drop reordering of images
 * Gallery picker to insert shortcodes
+* Media Folders with a drag & drop interface
 * Iframe, Ajax, HTML5 and Inline lightbox content support
 * Advanced pagination, incl. AJAX and infinite scroll
 * Automatically add lightbox to WordPress image galleries
@@ -77,6 +78,14 @@ No questions yet.
 2. screenshot-2.jpg
 
 == Changelog ==
+
+= 2.1.0 =
+* New: Introducing Media Library Folders
+* New: Media folder gallery type
+* New: Filter gallery by category
+* Fix: Ajax Pagination not working when logged out
+* Fix: CSS issues with multiple Basic grid galleries on one page
+* Fix: Removed call to a sanitize_field function
 
 = 2.0.5 =
 * Fix: Escaped characters on titles and descriptions
@@ -357,8 +366,5 @@ Initial release
 
 == Upgrade Notice ==
 
-= 2.0.5 =
-* Fix: Escaped characters on titles and descriptions
-* Fix: Gallery shortcode not accepting image order
-* Fix: Gallery using default parameters instead of the settings
-* Fix: PHP fatal error if gallery builder is disabled
+= 2.1.0 =
+* New: Introducing Media Library Folders

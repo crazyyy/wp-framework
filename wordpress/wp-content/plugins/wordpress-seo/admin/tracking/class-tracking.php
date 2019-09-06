@@ -10,17 +10,29 @@
  */
 class WPSEO_Tracking {
 
-	/** @var string */
+	/**
+	 * The tracking option name.
+	 *
+	 * @var string
+	 */
 	protected $option_name = 'wpseo_tracking_last_request';
 
-	/** @var int */
+	/**
+	 * The limit or the option.
+	 *
+	 * @var int
+	 */
 	protected $threshold = 0;
 
-	/** @var string */
+	/**
+	 * The endpoint to send the data to.
+	 *
+	 * @var string
+	 */
 	protected $endpoint = '';
 
 	/**
-	 * Constructor setting the treshhold..
+	 * Constructor setting the threshold.
 	 *
 	 * @param string $endpoint  The endpoint to send the data to.
 	 * @param int    $threshold The limit for the option.
@@ -31,7 +43,7 @@ class WPSEO_Tracking {
 	}
 
 	/**
-	 * Registers all hooks to WordPress
+	 * Registers all hooks to WordPress.
 	 */
 	public function send() {
 

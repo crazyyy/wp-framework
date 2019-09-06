@@ -1,6 +1,8 @@
 <?php
 namespace Ari_Adminer\Controllers\Connections;
 
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 use Ari\Controllers\Controller as Controller;
 use Ari\Utils\Response as Response;
 use Ari\Utils\Request as Request;
@@ -11,7 +13,11 @@ class Bulk_Delete extends Controller {
         $result = false;
         $model = $this->model();
 
-        if ( Request::exists( 'connection_id' ) && Helper::has_access_to_adminer() ) {
+        if (
+            Request::exists( 'connection_id' ) &&
+            Helper::is_valid_nonce() &&
+            Helper::has_access_to_adminer()
+        ) {
             $connection_id = Request::get_var( 'connection_id', array() );
             if ( $connection_id > 0 ) {
                 if ( is_array( $connection_id ) && count( $connection_id ) > 0 ) {

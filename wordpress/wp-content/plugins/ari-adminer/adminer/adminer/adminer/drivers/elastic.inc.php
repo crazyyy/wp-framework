@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Access forbidden!' );
+
 $drivers["elastic"] = "Elasticsearch (beta)";
 
 if (isset($_GET["elastic"])) {

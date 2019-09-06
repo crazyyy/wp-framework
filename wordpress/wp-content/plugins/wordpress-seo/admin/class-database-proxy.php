@@ -6,23 +6,43 @@
  */
 
 /**
- * Represents the proxy for communicating with the database
+ * Represents the proxy for communicating with the database.
  */
 class WPSEO_Database_Proxy {
 
-	/** @var string */
+	/**
+	 * Holds the table name.
+	 *
+	 * @var string
+	 */
 	protected $table_name;
 
-	/** @var bool */
+	/**
+	 * Determines whether to suppress errors or not.
+	 *
+	 * @var bool
+	 */
 	protected $suppress_errors = true;
 
-	/** @var bool */
+	/**
+	 * Determines if this table is multisite.
+	 *
+	 * @var bool
+	 */
 	protected $is_multisite_table = false;
 
-	/** @var bool */
+	/**
+	 * Holds the last suppressed state.
+	 *
+	 * @var bool
+	 */
 	protected $last_suppressed_state;
 
-	/** @var wpdb */
+	/**
+	 * Holds the WordPress database object.
+	 *
+	 * @var wpdb
+	 */
 	protected $database;
 
 	/**

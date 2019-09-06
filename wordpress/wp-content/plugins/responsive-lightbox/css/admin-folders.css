@@ -1,0 +1,66 @@
+#rl-folders-tree-container {
+    width: 260px;
+    height: 100%;
+    padding: 0 12px 0 0;
+    float: left;
+    position: relative;
+}
+#rl-folders-tree {
+    white-space: nowrap;
+    width: 260px;
+    position: relative;
+    padding-bottom: 15px;
+}
+#rl-folders-tree-container .page-title-action.dashicons,
+#rl-folders-tree-container .page-title-action.dashicons:before {
+    height: auto;
+    vertical-align: text-bottom;
+    line-height: 18px;
+    height: 18px;
+}
+#rl-folders-tree-container .media-toolbar {
+    height: 100%;
+    position: relative;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    padding: 0 10px;
+}
+#rl-folders-tree-container .media-toolbar a {
+    line-height: 20px;
+}
+a.disabled-link {
+    pointer-events: none;
+    cursor: default;
+}
+.rl-folders-action-links a {
+	line-height: 20px;
+	font-size: 13px;
+}
+.view-switch a.disabled-link:before {
+    color: #e6e6e6;
+}
+.rl-folders-dragged-item {
+    height: 1em;
+    text-align: center;
+}
+#rl-folders-enter-folder, #rl-folders-enter-new-folder {
+    z-index: 1;
+    position: relative;
+    height: 22px;
+    border: 0;
+    margin: 0;
+    box-shadow: none;
+}
+body.upload-php #posts-filter {
+    float: right;
+    width: calc(100% - 272px);
+}
+.media-modal-content .media-frame select.attachment-filters {
+	max-width: 100%;
+	min-width: auto;
+	width: calc(33% - 12px) !important;
+}
+#rl_folders_upload_files {
+    position: relative;
+    z-index: 1;
+}

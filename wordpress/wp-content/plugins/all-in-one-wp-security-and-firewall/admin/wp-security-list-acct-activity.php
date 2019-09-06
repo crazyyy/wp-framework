@@ -51,10 +51,10 @@ class AIOWPSecurity_List_Account_Activity extends AIOWPSecurity_List_Table {
     function get_columns(){
         $columns = array(
             'cb' => '<input type="checkbox" />', //Render a checkbox
-            'user_id' => 'User ID',
-            'user_login' => 'Username',
-            'login_date' => 'Login Date',
-            'logout_date' => 'Logout Date',
+            'user_id' => __('User ID', 'all-in-one-wp-security-and-firewall'),
+            'user_login' => __('Username', 'all-in-one-wp-security-and-firewall'),
+            'login_date' => __('Login Date', 'all-in-one-wp-security-and-firewall'),
+            'logout_date' => __('Logout Date', 'all-in-one-wp-security-and-firewall'),
             'login_ip' => 'IP'
         );
         return $columns;
@@ -108,16 +108,22 @@ class AIOWPSecurity_List_Account_Activity extends AIOWPSecurity_List_Table {
             if (isset($_REQUEST['_wp_http_referer']))
             {
                 //Delete multiple records
+                $tab = strip_tags($_REQUEST['tab']);
+
                 $entries = array_filter($entries, 'is_numeric'); //discard non-numeric ID values
                 $id_list = "(" .implode(",",$entries) .")"; //Create comma separate list for DB operation
                 $delete_command = "DELETE FROM ".$login_activity_table." WHERE id IN ".$id_list;
                 $result = $wpdb->query($delete_command);
-                if($result != NULL)
+                if($result !== false)
                 {
-                    $success_msg = '<div id="message" class="updated fade"><p><strong>';
-                    $success_msg .= __('The selected entries were deleted successfully!','all-in-one-wp-security-and-firewall');
-                    $success_msg .= '</strong></p></div>';
-                    _e($success_msg);
+                    $redir_url = sprintf('admin.php?page=%s&tab=%s&bulk_count=%s', AIOWPSEC_USER_LOGIN_MENU_SLUG, $tab, count($entries));
+                    AIOWPSecurity_Utility::redirect_to_url($redir_url);
+                } else {
+                    // error on bulk delete
+                    $aio_wp_security->debug_logger->log_debug("DB error: ".$wpdb->last_error,4);
+                    $redir_url = sprintf('admin.php?page=%s&tab=%s&bulk_error=%s', AIOWPSEC_USER_LOGIN_MENU_SLUG, $tab, 1);
+                    AIOWPSecurity_Utility::redirect_to_url($redir_url);
+                    
                 }
             }
         } 
@@ -132,12 +138,12 @@ class AIOWPSecurity_List_Account_Activity extends AIOWPSecurity_List_Table {
             //Delete single record
             $delete_command = "DELETE FROM ".$login_activity_table." WHERE id = '".absint($entries)."'";
             $result = $wpdb->query($delete_command);
-            if($result != NULL)
+            if($result !== false)
             {
                 $success_msg = '<div id="message" class="updated fade"><p><strong>';
                 $success_msg .= __('The selected entry was deleted successfully!','all-in-one-wp-security-and-firewall');
                 $success_msg .= '</strong></p></div>';
-                _e($success_msg);
+                echo $success_msg;
             }
         }
     }
@@ -150,6 +156,7 @@ class AIOWPSecurity_List_Account_Activity extends AIOWPSecurity_List_Table {
         $columns = $this->get_columns();
         $hidden = array();
         $sortable = $this->get_sortable_columns();
+        $search = isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : '';
 
         $this->_column_headers = array($columns, $hidden, $sortable);
 
@@ -170,7 +177,12 @@ class AIOWPSecurity_List_Account_Activity extends AIOWPSecurity_List_Table {
         $orderby = AIOWPSecurity_Utility::sanitize_value_by_array($orderby, $sortable);
         $order = AIOWPSecurity_Utility::sanitize_value_by_array($order, array('DESC' => '1', 'ASC' => '1'));
 
-        $data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $login_activity_table ORDER BY $orderby $order LIMIT %d", 50), ARRAY_A); //Get the last 50 records
+        if(empty($search)) {
+            $data = $wpdb->get_results("SELECT * FROM $login_activity_table ORDER BY $orderby $order", ARRAY_A);
+        } else {
+            $data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $login_activity_table WHERE `user_login` LIKE '%%%s%%' OR `login_ip` LIKE '%%%s%%' ORDER BY $orderby $order  LIMIT %d", $search, $search, 50), ARRAY_A);
+        }
+        
         if (!$ignore_pagination) {
             $current_page = $this->get_pagenum();
             $total_items = count($data);

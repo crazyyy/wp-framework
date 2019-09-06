@@ -1,0 +1,1102 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Bicycles by falbar 2\n"
+"POT-Creation-Date: 2018-01-04 20:31+0300\n"
+"PO-Revision-Date: 2018-01-04 20:31+0300\n"
+"Last-Translator: \n"
+"Language-Team: Anton Kuleshov\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.8\n"
+"X-Poedit-Basepath: ../includes\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: class-falbar-bbf.php\n"
+"X-Poedit-SearchPath-1: static/class-falbar-bbf-option-additionally.php\n"
+"X-Poedit-SearchPath-2: static/class-falbar-bbf-option-security.php\n"
+
+#: class-falbar-bbf.php:162 class-falbar-bbf.php:163 class-falbar-bbf.php:182
+msgid "Bicycles"
+msgstr "Велосипеды"
+
+#: class-falbar-bbf.php:185
+msgid ""
+"In most cases, configuration and optimization of the website on the "
+"WordPress consists of a set<br>of well-known \"Bicycle\" and add the code "
+"templates that are repeated from project to project.<br>The purpose of this "
+"plugin is to collect all the solutions in one place to start or operate the "
+"CMS."
+msgstr ""
+"В большинстве случаев настройка и оптимизация сайта на движке WordPress "
+"состоит из набора<br>всем известных \"велосипедов\" и шаблонов добавляемого "
+"кода, которые повторяются из проекта в проект.<br>Цель этого плагина собрать "
+"все решения в одном месте для комфортного старта или работы с CMS."
+
+#: class-falbar-bbf.php:190
+msgid "Note recommended settings"
+msgstr "Отметить рекомендуемые настройки"
+
+#: class-falbar-bbf.php:194
+msgid "Reset all settings"
+msgstr "Сбросить все настройки"
+
+#: class-falbar-bbf.php:199
+msgid "Settings marked do not forget to save!"
+msgstr "Настройки отмечены не забудьте сохранить!"
+
+#: class-falbar-bbf.php:202
+msgid "Settings reset remember to save!"
+msgstr "Настройки сброшены не забудьте сохранить!"
+
+#: class-falbar-bbf.php:210
+msgid "General"
+msgstr "Общая"
+
+#: class-falbar-bbf.php:213 class-falbar-bbf.php:292
+msgid "Code"
+msgstr "Оптимизация кода"
+
+#: class-falbar-bbf.php:216 class-falbar-bbf.php:529
+msgid "Doubles pages"
+msgstr "Дубли страниц"
+
+#: class-falbar-bbf.php:219 class-falbar-bbf.php:645
+msgid "SEO"
+msgstr "SEO"
+
+#: class-falbar-bbf.php:222 class-falbar-bbf.php:717
+msgid "Widgets"
+msgstr "Виджеты"
+
+#: class-falbar-bbf.php:225 class-falbar-bbf.php:842
+msgid "Comments"
+msgstr "Комментарии"
+
+#: class-falbar-bbf.php:228 class-falbar-bbf.php:914
+msgid "Security"
+msgstr "Защита"
+
+#: class-falbar-bbf.php:231 class-falbar-bbf.php:1052
+msgid "Additionally"
+msgstr "Дополнительно"
+
+#: class-falbar-bbf.php:235
+msgid "To support the plugin"
+msgstr "Поддержать плагин"
+
+#: class-falbar-bbf.php:241
+msgid "What can plug-Bicycles by falbar"
+msgstr "Что умеет плагин Bicycles by falbar"
+
+#: class-falbar-bbf.php:245
+msgid "Remove redundant code and optimize it;"
+msgstr "Удаляет лишний код и оптимизирует его;"
+
+#: class-falbar-bbf.php:248
+msgid "Removes duplicate pages and redirects sets;"
+msgstr "Удаляет дубли страниц и устанавливает редиректы;"
+
+#: class-falbar-bbf.php:251
+msgid "Improve SEO on the website;"
+msgstr "Улучшает SEO на сайте;"
+
+#: class-falbar-bbf.php:254
+msgid "Disable unnecessary widgets;"
+msgstr "Отключает ненужные виджеты;"
+
+#: class-falbar-bbf.php:257
+msgid "Enhances security for your website."
+msgstr "Усиливает защиту вашего сайта. "
+
+#: class-falbar-bbf.php:261
+msgid "From the developer"
+msgstr "От разработчика"
+
+#: class-falbar-bbf.php:264
+msgid ""
+"Dear friends, if you have any questions or suggestions and ideas on how to "
+"improve the plugin please contact us by email: <a href=\"mailto:"
+"support@falbar.ru\">support@falbar.ru</a>. I will try to answer the "
+"questions, and practical advice to implement in future updates."
+msgstr ""
+"Дорогие друзья, если у вас возникли вопросы или появились пожелания и идеи, "
+"как улучшить плагин то пишите на почту: <a href=\"mailto:support@falbar.ru"
+"\">support@falbar.ru</a>. Я постараюсь ответить на вопросы, а дельные советы "
+"реализовать в будущих обновлениях."
+
+#: class-falbar-bbf.php:267
+msgid "More plugins"
+msgstr "Ещё плагины"
+
+#: class-falbar-bbf.php:271
+msgid "Simple SEO by falbar"
+msgstr "Simple SEO by falbar"
+
+#: class-falbar-bbf.php:273
+msgid ""
+" - a simple solution without any extra settings to fill in title, "
+"description and keywords for all pages of WordPress."
+msgstr ""
+" - простое решение, позволяющее без лишних настроек заполнять title, "
+"description и keywords для всех страниц WordPress."
+
+#: class-falbar-bbf.php:277
+msgid "Simple SEO Woo by falbar"
+msgstr "Simple SEO Woo by falbar"
+
+#: class-falbar-bbf.php:279
+msgid ""
+" - a simple solution without any extra settings to fill in title, "
+"description and keywords for all pages of WooCommerce."
+msgstr ""
+" - простое решение, позволяющее без лишних настроек заполнять title, "
+"description и keywords для всех страниц WooCommerce."
+
+#: class-falbar-bbf.php:282
+msgid "My site"
+msgstr "Мой сайт"
+
+#: class-falbar-bbf.php:286
+msgid "falbar.ru"
+msgstr "falbar.ru"
+
+#: class-falbar-bbf.php:300
+msgid "Remove styles .recentcomments"
+msgstr "Удалить стили .recentcomments"
+
+#: class-falbar-bbf.php:302 class-falbar-bbf.php:321 class-falbar-bbf.php:356
+#: class-falbar-bbf.php:375 class-falbar-bbf.php:426 class-falbar-bbf.php:445
+#: class-falbar-bbf.php:464 class-falbar-bbf.php:539 class-falbar-bbf.php:558
+#: class-falbar-bbf.php:593 class-falbar-bbf.php:612 class-falbar-bbf.php:631
+#: class-falbar-bbf.php:655 class-falbar-bbf.php:674 class-falbar-bbf.php:924
+#: class-falbar-bbf.php:943 class-falbar-bbf.php:962 class-falbar-bbf.php:981
+#: class-falbar-bbf.php:1000 class-falbar-bbf.php:1019
+#: class-falbar-bbf.php:1038
+msgid "Recommended"
+msgstr "Рекомендовано"
+
+#: class-falbar-bbf.php:306
+msgid ""
+"WordPress default widget \"Recent comments\" registers in the code styles "
+"that it is almost impossible to change because it applies !important."
+msgstr ""
+"WordPress по умолчанию для виджета \"Последние комментарии\" прописывает в "
+"коде стили, которые почти невозможно изменить, потому что к ним применяется !"
+"important."
+
+#: class-falbar-bbf.php:309
+msgid ""
+"<strong>Plugin:</strong> remove styles .recentcomments section <code>&lt;"
+"head&gt;</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет стили .recentcomments из секции <code>&lt;"
+"head&gt;</code>."
+
+#: class-falbar-bbf.php:319
+msgid "Disable Emoji"
+msgstr "Отключить Emoji"
+
+#: class-falbar-bbf.php:325
+msgid ""
+"WordPress version 4.2 added support for Emoji emoticons. For many sites this "
+"is not needed and just increases the page loading time."
+msgstr ""
+"WordPress с версии 4.2 добавил поддержку смайликов Emoji. Для многих сайтов "
+"это не требуется и просто увеличивает время загрузки страницы."
+
+#: class-falbar-bbf.php:328
+msgid ""
+"<strong>Plugin:</strong> code removes Emojis section <code>&lt;head&gt;</"
+"code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет код Emojis из секции <code>&lt;head&gt;</"
+"code>."
+
+#: class-falbar-bbf.php:338
+msgid "Disable Embeds"
+msgstr "Отключить Embeds"
+
+#: class-falbar-bbf.php:341
+msgid ""
+"WordPress version 4.4 added support for embeddable objects. This function "
+"automatically converts YouTube, Tweets, and URLS to objects for easy "
+"viewing. For many sites this is not needed and just increases the page "
+"loading time."
+msgstr ""
+"WordPress с версии 4.4 добавил поддержку встраиваемых объектов. Эта функция "
+"автоматически преобразуют YouTube, Tweets, и URL-адреса в объекты для "
+"удобного просмотра. Для многих сайтов это не требуется и просто увеличивает "
+"время загрузки страницы."
+
+#: class-falbar-bbf.php:344
+msgid "<strong>Plugin:</strong> removes code Embeds on the page."
+msgstr "<strong>Плагин:</strong> удаляет код Embeds на странице."
+
+#: class-falbar-bbf.php:354
+msgid "Remove dns-prefetch"
+msgstr "Удалить dns-prefetch"
+
+#: class-falbar-bbf.php:360
+msgid ""
+"Starting with version 4.6.1 in WordPress appeared new links in the section "
+"<code>&lt;head&gt;</code> dns-prefetch."
+msgstr ""
+"Начиная с версии 4.6.1 в WordPress появились новые ссылки в секции <code>&lt;"
+"head&gt;</code> dns-prefetch."
+
+#: class-falbar-bbf.php:363
+msgid ""
+"<strong>Plugin:</strong> removes links dns-prefetch the partition <code>&lt;"
+"head&gt;</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет ссылки dns-prefetch из секции <code>&lt;"
+"head&gt;</code>."
+
+#: class-falbar-bbf.php:373
+msgid "Remove shortlink link"
+msgstr "Удалить короткую ссылку"
+
+#: class-falbar-bbf.php:379
+msgid ""
+"WordPress by default adds per page short url <code>/?p=</code>. If you are "
+"using permalinks, it does not need a code."
+msgstr ""
+"WordPress по умолчанию добавляет на каждой станице короткую ссылку <code>/?"
+"p=</code>. Если вы используете постоянные ссылки, то это не нужный код."
+
+#: class-falbar-bbf.php:382
+msgid ""
+"<strong>Plugin:</strong> removes a short link section <code>&lt;head&gt;</"
+"code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет короткую ссылку из секции <code>&lt;head&gt;"
+"</code>."
+
+#: class-falbar-bbf.php:392
+msgid "Remove canonical link"
+msgstr "Удалить каноническую ссылку"
+
+#: class-falbar-bbf.php:395
+msgid ""
+"WordPress by default adds per page canonical link. At a certain site "
+"configuration, this functionality is not required."
+msgstr ""
+"WordPress по умолчанию добавляет на каждой станице каноническую ссылку. При "
+"определенной настройке сайта этот функционал не требуется."
+
+#: class-falbar-bbf.php:398
+msgid ""
+"<strong>Plugin:</strong> removes the canonical link section <code>&lt;"
+"head&gt;</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет каноническую ссылку из секции <code>&lt;"
+"head&gt;</code>."
+
+#: class-falbar-bbf.php:408
+msgid "Remove the links to next, previous record"
+msgstr "Удалить ссылки на следующую, предыдущую запись"
+
+#: class-falbar-bbf.php:411
+msgid ""
+"If you are using WordPress as a CMS (not a blog), then you can remove these "
+"references, but for the blog they can be useful."
+msgstr ""
+"Если вы используете WordPress как CMS (а не блог), то вы можете удалить эти "
+"ссылки, но для блога они могут быть полезны."
+
+#: class-falbar-bbf.php:414
+msgid ""
+"<strong>Plugin:</strong> removes references to next, previous record of the "
+"section <code>&lt;head&gt;</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет ссылки на следующую, предыдущую запись из "
+"секции <code>&lt;head&gt;</code>."
+
+#: class-falbar-bbf.php:424
+msgid "Remove WLW manifest link"
+msgstr "Удалить WLW manifest ссылку"
+
+#: class-falbar-bbf.php:430
+msgid ""
+"This reference is used to Windows Live Writer. If you don't know how to use "
+"it and why is it, then it's just unnecessary code."
+msgstr ""
+"Эта ссылка используется для Windows Live Writer. Если вы не знаете, как его "
+"использовать и зачем он, то это только ненужный код."
+
+#: class-falbar-bbf.php:433
+msgid ""
+"<strong>Plugin:</strong> remove WLW manifest link section <code>&lt;head&gt;"
+"</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет WLW manifest ссылку из секции <code>&lt;"
+"head&gt;</code>."
+
+#: class-falbar-bbf.php:443
+msgid "Remove RSD link"
+msgstr "Удалить RSD ссылку"
+
+#: class-falbar-bbf.php:449
+msgid ""
+"This link is used by customers of the blog. If you edit the website from "
+"your browser, then for you, it's just unnecessary code."
+msgstr ""
+"Эта ссылка используется клиентами блога. Если вы редактируете сайт из вашего "
+"браузера, то для вас это только ненужный код."
+
+#: class-falbar-bbf.php:452
+msgid ""
+"<strong>Plugin:</strong> remove RSD link section <code>&lt;head&gt;</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет RSD ссылку из секции <code>&lt;head&gt;</"
+"code>."
+
+#: class-falbar-bbf.php:462
+msgid "Disable JSON REST API"
+msgstr "Отключить JSON REST API"
+
+#: class-falbar-bbf.php:468
+msgid ""
+"WordPress version 4.4 provides an API for working with data, it allows "
+"developers to interact with the sites remotely by sending and receiving data "
+"in JSON format. However, many sites are using it, and therefore, in most "
+"cases it's just unnecessary code. Also WordPress creates technical page "
+"<code>/wp-json/</code>, which successfully indexed by search engines and "
+"index get a garbage page."
+msgstr ""
+"WordPress с версии 4.4 предоставляет API для работы с данными, это позволяет "
+"разработчикам взаимодействовать с сайтами удаленно, посредством отправки и "
+"получения данных в формате JSON. Однако многие сайты не используют это, и "
+"поэтому в большинстве случаев, это только ненужный код. Так же WordPress "
+"создает технические страницы <code>/wp-json/</code>, которые успешно "
+"индексируются поисковиками и в индекс попадают мусорные страницы."
+
+#: class-falbar-bbf.php:471
+msgid ""
+"<strong>Plugin:</strong> disables the REST API and removes all reference "
+"from the section <code>&lt;head&gt;</code> and also puts a redirect on the "
+"main."
+msgstr ""
+"<strong>Плагин:</strong> отключает REST API и удаляет все ссылки из секции "
+"<code>&lt;head&gt;</code>, а также ставит редирект на главную."
+
+#: class-falbar-bbf.php:481
+msgid "Remove jQuery Migrate"
+msgstr "Удалить jQuery Migrate"
+
+#: class-falbar-bbf.php:484
+msgid ""
+"JQuery Migrate was introduced in WordPress 3.6. For most modern web "
+"interfaces and plug-ins it is not required."
+msgstr ""
+"Библиотека jQuery Migrate появилась в WordPress 3.6. Для большинства "
+"современных веб-интерфейсов и плагинов она не требуется."
+
+#: class-falbar-bbf.php:487
+msgid ""
+"<strong>Plugin:</strong> removes the connection jquery-migrate.min.js "
+"section <code>&lt;head&gt;</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет подключение jquery-migrate.min.js из секции "
+"<code>&lt;head&gt;</code>."
+
+#: class-falbar-bbf.php:490
+msgid "* If you have problems in the website or plugin, disable this option!"
+msgstr ""
+"* Если у вас появились проблемы в работе сайта или плагинов, отключите эту "
+"опцию!"
+
+#: class-falbar-bbf.php:500
+msgid "Remove HTML comments"
+msgstr "Удалить HTML комментарии"
+
+#: class-falbar-bbf.php:503
+msgid ""
+"This function will remove all HTML comments in the source code, except "
+"special and hidden comments. This is to hide the version of installed "
+"plugins."
+msgstr ""
+"Эта функция удалит все HTML-комментарии в исходном коде, за исключением "
+"специальных и скрытых комментариев. Это необходимо, чтобы скрыть версии "
+"установленных плагинов."
+
+#: class-falbar-bbf.php:506
+msgid ""
+"<strong>Plugin:</strong> removes HTML comments in the source code of the "
+"page."
+msgstr ""
+"<strong>Плагин:</strong> удаляет HTML комментарии в исходном коде страницы."
+
+#: class-falbar-bbf.php:516
+msgid "Enable HTML minification"
+msgstr "Включить HTML минификацию"
+
+#: class-falbar-bbf.php:519
+msgid "Reduce page weight by removing line breaks, tabs, spaces, etc."
+msgstr ""
+"Уменьшает вес страницы путем удаления разрывов строк, вкладок, пробелов и т."
+"д."
+
+#: class-falbar-bbf.php:522
+msgid "<strong>Plugin:</strong> miniserver page."
+msgstr "<strong>Плагин:</strong> минизирует страницу."
+
+#: class-falbar-bbf.php:537
+msgid "Remove page attachments"
+msgstr "Удалить страницы вложений"
+
+#: class-falbar-bbf.php:543
+msgid ""
+"Each uploaded image has its own page on the site, consisting only of one "
+"symbol. These pages are successfully indexed and create duplicates. On the "
+"site may be thousands of similar pages of attachments."
+msgstr ""
+"Каждая загруженная картинка имеет свою страничку на сайте, состоящую только "
+"из одной картинки. Такие страницы успешно индексируются и создают дубли. На "
+"сайте могут быть тысячи однотипных страниц вложений."
+
+#: class-falbar-bbf.php:546
+msgid ""
+"<strong>Plugin:</strong> remove page attachments and puts a redirect to the "
+"entry."
+msgstr ""
+"<strong>Плагин:</strong> удаляет страницы вложений и ставит редирект на "
+"запись."
+
+#: class-falbar-bbf.php:556
+msgid "Remove archives date"
+msgstr "Удалить архивы дат"
+
+#: class-falbar-bbf.php:562
+msgid ""
+"A huge number of duplicates in the archives dates. Imagine also that your "
+"article will be displayed on the home and category, you still get at least 3 "
+"doubles: archives by year, month and date, for "
+"example /2016/ /2016/02/ /2016/02/15."
+msgstr ""
+"Огромное количество дублей в архивах дат. Представьте, кроме того, что ваша "
+"статья будет выводиться на главной и в категории, вы еще получите как "
+"минимум 3 дубля: в архивах по году, месяцу и дате, "
+"например /2016/ /2016/02/ /2016/02/15."
+
+#: class-falbar-bbf.php:565
+msgid ""
+"<strong>Plugin:</strong> remove the archives, dates, and puts up a redirect "
+"on the main page (deactivate widget)."
+msgstr ""
+"<strong>Плагин:</strong> удаляет полностью архивы дат и ставит редирект на "
+"главную (отключает виджет)."
+
+#: class-falbar-bbf.php:575
+msgid "Remove files tags"
+msgstr "Удалить архивы тегов"
+
+#: class-falbar-bbf.php:578
+msgid ""
+"If you use tags only for similar records, or not ispolzute them all - would "
+"be correct to close them to avoid duplicates."
+msgstr ""
+"Если вы используете теги только для блока похожие записи, либо не использете "
+"их совсем - правильнее будет их закрыть, чтобы избежать дублей."
+
+#: class-falbar-bbf.php:581
+msgid ""
+"<strong>Plugin:</strong> removes page tags it and puts a redirect on the "
+"main page (disables the widget)."
+msgstr ""
+"<strong>Плагин:</strong> удаляет страницы тегов и ставит редирект на главную "
+"(отключает виджет)."
+
+#: class-falbar-bbf.php:591
+msgid "Remove pagination of records"
+msgstr "Удалить пагинацию у записей"
+
+#: class-falbar-bbf.php:597
+msgid ""
+"In WordPress any record can be divided into parts (pages), each part will "
+"have its own address. This functionality is rarely used, but can create "
+"problems for you. For example, to address any entry in your blog you can add "
+"a number, <code>/privet-mir/1/</code> - opens the record itself that will "
+"take. Room you can substitute any."
+msgstr ""
+"В WordPress любую запись можно разделить на части (страницы), каждая часть "
+"будет иметь свой собственный адрес. Этот функционал крайне редко "
+"используется, но может создать для вас проблемы. Например, к адресу любой "
+"записи вашего блога можно добавить номер, <code>/privet-mir/1/</code> - "
+"откроется сама запись, что будет дублем. Номер можно подставить любой."
+
+#: class-falbar-bbf.php:600
+msgid ""
+"<strong>Plugin:</strong> removes the page pagination of the records and puts "
+"a redirect to the entry."
+msgstr ""
+"<strong>Плагин:</strong> удаляет страницы пагинации записей и ставит "
+"редирект на запись."
+
+#: class-falbar-bbf.php:610
+msgid "Remove a users archive"
+msgstr "Удалить архивы пользователей"
+
+#: class-falbar-bbf.php:616
+msgid ""
+"If the site is filled with only you - that function is required. Will get "
+"rid of the duplicates on the users archive, such as <code>/author/admin/</"
+"code>."
+msgstr ""
+"Если сайт наполняете только вы - это функция обязательна. Позволит "
+"избавиться от дублей на архивах пользователей, например <code>/author/admin/"
+"</code>."
+
+#: class-falbar-bbf.php:619
+msgid ""
+"<strong>Plugin:</strong> deletes a users archive and puts a redirect on the "
+"main."
+msgstr ""
+"<strong>Плагин:</strong> удаляет архивы пользователей и ставит редирект на "
+"главную."
+
+#: class-falbar-bbf.php:629
+msgid "Remove ?replytocom"
+msgstr "Удалить ?replytocom"
+
+#: class-falbar-bbf.php:635
+msgid ""
+"WordPress adds a <code>?replytocom=</code> to the reply link in the comments "
+"if you have enabled comment threading work."
+msgstr ""
+"WordPress добавляет <code>?replytocom=</code> к ссылке ответить в "
+"комментариях, если включены древовидные комментарии."
+
+#: class-falbar-bbf.php:638
+msgid ""
+"<strong>Plugin:</strong> removes <code>?replytocom=</code> and puts a "
+"redirect to the entry."
+msgstr ""
+"<strong>Плагин:</strong> удаляет <code>?replytocom=</code> и ставит редирект "
+"на запись."
+
+#: class-falbar-bbf.php:653
+msgid "Automatically put alt"
+msgstr "Автоматически проставить alt"
+
+#: class-falbar-bbf.php:659
+msgid ""
+"Attribute <code>alt</code> is mandatory, so say most SEO professionals. In "
+"case you missed or did not fill it, it will automatically be set to the name "
+"of the article."
+msgstr ""
+"Аттрибут <code>alt</code> обязателен к заполнению, так говорят большинство "
+"SEO-специалистов. Если вдруг вы пропустили или вовсе не заполняли его, он "
+"будет автоматически задан из названия статьи."
+
+#: class-falbar-bbf.php:662
+msgid ""
+"<strong>Plugin:</strong> marks the attribute <code>alt</code> in the images "
+"where it is not specified."
+msgstr ""
+"<strong>Плагин:</strong> проставляет аттрибут <code>alt</code> у "
+"изображений, где он не задан."
+
+#: class-falbar-bbf.php:672
+msgid "Automatically set the Last Modified header"
+msgstr "Автоматически проставить заголовок Last Modified"
+
+#: class-falbar-bbf.php:678
+msgid ""
+"WordPress is not able to give server response header Last-Modified (last "
+"modified date of the document) and to give the correct answer 304 Not "
+"Modified. And this title is very important for search engines. Its presence "
+"speeds up indexing, reduces the load and allows you to download the search "
+"engines at a time, more pages in the index."
+msgstr ""
+"WordPress не умеет отдавать в ответах сервера заголовок Last Modified (дату "
+"последнего изменения документа) и давать правильный ответ 304 Not Modified. "
+"А этот заголовок очень важен для поисковых систем. Его наличие ускоряет "
+"индексацию, снижает нагрузку и позволяет загружать поисковикам за раз больше "
+"страниц в индекс."
+
+#: class-falbar-bbf.php:681
+msgid ""
+"<strong>Plugin:</strong> marks for all posts, pages, archives (categories, "
+"tags, etc.) the title of the Last Modified and returns the correct answer, "
+"if the page has not been modified."
+msgstr ""
+"<strong>Плагин:</strong> проставляет для всех записей, страниц, архивов "
+"(категорий, тегов и пр.) заголовок Last Modified и возвращает правильный "
+"ответ, если страница не была изменена."
+
+#: class-falbar-bbf.php:691
+msgid "Create robots.txt"
+msgstr "Создать robots.txt"
+
+#: class-falbar-bbf.php:694
+msgid ""
+"After installation, WordPress does not contain a file <code>robots.txt</"
+"code> and it has to be created manually. This setting will create the "
+"correct <code>robots.txt</code> and will save you from wasting time."
+msgstr ""
+"После установки, WordPress не содержит файла <code>robots.txt</code> и его "
+"приходится создавать вручную. Эта настройка создаст правильный <code>robots."
+"txt</code> и избавит вас от лишней траты времени."
+
+#: class-falbar-bbf.php:697
+msgid "<strong>Plugin:</strong> creates the ideal <code>robots.txt</code>."
+msgstr "<strong>Плагин:</strong> создает идеальный <code>robots.txt</code>."
+
+#: class-falbar-bbf.php:700
+msgid "* If you have already created the file, save it, as it can be lost!"
+msgstr ""
+"* Если у вас уже создан файл, сохраните его, так как он может быть потерян!"
+
+#: class-falbar-bbf.php:705
+msgid "To edit the file robots.txt"
+msgstr "Отредактировать файл robots.txt"
+
+#: class-falbar-bbf.php:725
+msgid "Disable the page widget"
+msgstr "Отключить виджет cтраницы"
+
+#: class-falbar-bbf.php:735
+msgid "Disable calendar widget"
+msgstr "Отключить виджет календарь"
+
+#: class-falbar-bbf.php:745
+msgid "Disable widget archives tags"
+msgstr "Отключить виджет архивы тегов"
+
+#: class-falbar-bbf.php:755
+msgid "Disable widget archives"
+msgstr "Отключить виджет архивы"
+
+#: class-falbar-bbf.php:765
+msgid "Disable it on the meta"
+msgstr "Отключить виджет мета"
+
+#: class-falbar-bbf.php:775
+msgid "Disable the search widget"
+msgstr "Отключить виджет поиск"
+
+#: class-falbar-bbf.php:785
+msgid "Disable the text widget"
+msgstr "Отключить виджет текст"
+
+#: class-falbar-bbf.php:795
+msgid "Disable widget categories"
+msgstr "Отключить виджет категории"
+
+#: class-falbar-bbf.php:805
+msgid "Disable it on the last record"
+msgstr "Отключить виджет последние записи"
+
+#: class-falbar-bbf.php:815
+msgid "Disable widget recent comments"
+msgstr "Отключить виджет последние комментарии"
+
+#: class-falbar-bbf.php:825
+msgid "Disable RSS widget"
+msgstr "Отключить виджет RSS"
+
+#: class-falbar-bbf.php:835
+msgid "Disable the widget menu"
+msgstr "Отключить виджет меню"
+
+#: class-falbar-bbf.php:850
+msgid "Remove field \"Website\" in comment form"
+msgstr "Убрать поле \"Сайт\" в форме комментирования"
+
+#: class-falbar-bbf.php:853
+msgid ""
+"Tired of comment spam? Visitors leave \"empty\" comments for links back to "
+"your website?"
+msgstr ""
+"Надоел спам в комментариях? Посетители оставляют \"пустые\" комментарии ради "
+"ссылки на свой сайт?"
+
+#: class-falbar-bbf.php:856
+msgid "<strong>Plugin:</strong> removes a field \"Website\" from comment form."
+msgstr ""
+"<strong>Плагин:</strong> убирает поле \"Сайт\" из формы комментирования."
+
+#: class-falbar-bbf.php:859
+msgid ""
+"* Works with standard commenting form if your theme form prescribed manually "
+"- probably not going to work!"
+msgstr ""
+"* Работает со стандартной формой комментирования, если в вашей теме форма "
+"прописана вручную - скорей всего не сработает!"
+
+#: class-falbar-bbf.php:869
+msgid "Replace external links in comments using JavaScript"
+msgstr "Заменить внешние ссылки в комментариях на JavaScript"
+
+#: class-falbar-bbf.php:872
+msgid ""
+"External links in comments, which can be dozens or more on the same page, "
+"can degrade the promotion of your website."
+msgstr ""
+"Внешние ссылки в комментариях, которых может быть десятки или больше на "
+"одной странице, могут ухудшить продвижение вашего сайта."
+
+#: class-falbar-bbf.php:875
+msgid ""
+"<strong>Plugin:</strong> replaces the external links of <code>a href="
+"\"http://mysite.com/\"</code> to <code>span data-link=\"http://mysite.com/\" "
+"class=\"pseudo-link\"</code>."
+msgstr ""
+"<strong>Плагин:</strong> заменяет внешние ссылки <code>a href=\"http://"
+"mysite.com/\"</code> на <code>span data-link=\"http://mysite.com/\" class="
+"\"pseudo-link\"</code>."
+
+#: class-falbar-bbf.php:879 class-falbar-bbf.php:903
+msgid "To specify your own CSS for the pseudo links"
+msgstr "Указать свой CSS для псевдо ссылки"
+
+#: class-falbar-bbf.php:893
+msgid ""
+"To replace the external links from the authors of the comments in the "
+"JavaScript code"
+msgstr "Заменить внешние ссылки от авторов комментариев на код JavaScript"
+
+#: class-falbar-bbf.php:896
+msgid ""
+"Up to 90 percent of the comments on the blog can be left for external links. "
+"Even nofollow from current weight page will not help here."
+msgstr ""
+"До 90 процентов комментариев на блоге может быть оставлено ради внешней "
+"ссылки. Даже nofollow от утекания веса страницы тут не поможет."
+
+#: class-falbar-bbf.php:899
+msgid ""
+"<strong>Plugin:</strong> replaces the external link with <code>a href="
+"\"http://mysite.com/\"</code> to <code>span data-link=\"http://mysite.com/\" "
+"class=\"pseudo-author-link\"</code>."
+msgstr ""
+"<strong>Плагин:</strong> заменяет внешнию ссылку <code>a href=\"http://"
+"mysite.com/\"</code> на <code>span data-link=\"http://mysite.com/\" class="
+"\"pseudo-author-link\"</code>."
+
+#: class-falbar-bbf.php:922
+msgid "Remove meta generator"
+msgstr "Удалить meta generator"
+
+#: class-falbar-bbf.php:928
+msgid ""
+"Allows hackers to know the version of WordPress installed on the website."
+msgstr ""
+"Позволяет злоумышленникам узнать версию WordPress, установленную на сайте."
+
+#: class-falbar-bbf.php:931
+msgid ""
+"<strong>Plugin:</strong> removes the meta generator section <code>&lt;"
+"head&gt;</code>."
+msgstr ""
+"<strong>Плагин:</strong> удаляет meta generator из секции <code>&lt;head&gt;"
+"</code>."
+
+#: class-falbar-bbf.php:941
+msgid "Remove files readme.html and license.txt"
+msgstr "Удалять файлы readme.html и license.txt"
+
+#: class-falbar-bbf.php:947
+msgid ""
+"When you install WordPress or upgrade a machine added files readme.html and "
+"license.txt. Attackers can find out extra information about your CMS."
+msgstr ""
+"При установке WordPress или обновление автоматом добавляются файлы readme."
+"html и license.txt. Злоумышленники могут узнать лишнюю информацию о вашей "
+"CMS."
+
+#: class-falbar-bbf.php:950
+msgid ""
+"<strong>Plugin:</strong> removes files readme.html and license.txt when you "
+"are prompted."
+msgstr ""
+"<strong>Плагин:</strong> удаляет файлы readme.html и license.txt при "
+"появлении."
+
+#: class-falbar-bbf.php:960
+msgid "Hide mistakes when you log on to the website"
+msgstr "Спрятать ошибки при входе на сайт"
+
+#: class-falbar-bbf.php:966
+msgid ""
+"WordPress by default shows whether you've entered the wrong username or the "
+"wrong password, which gives the cyber criminals to understand whether there "
+"is a certain user on the website, and then start brute force."
+msgstr ""
+"WordPress по умолчанию показывает, ввели ли вы неправильный логин или "
+"неправильный пароль, что дает злоумышленникам понять, существует ли "
+"определенный пользователь на сайте, а после начать перебор паролей."
+
+#: class-falbar-bbf.php:969
+msgid ""
+"<strong>Plugin:</strong> change the error text so that attackers are unable "
+"to pick up login."
+msgstr ""
+"<strong>Плагин:</strong> меняет текст ошибки так, чтобы злоумышленники не "
+"смогли подобрать логин."
+
+#: class-falbar-bbf.php:979
+msgid "Disable XML-RPC"
+msgstr "Отключить XML-RPC"
+
+#: class-falbar-bbf.php:985
+msgid ""
+"One of the reasons why your WordPress site began to slow down, is the attack "
+"in which there is a large number of queries to the file xmlrpc.php who is "
+"responsible for pingback'and remote access to WordPress. File xmlrpc.php can "
+"go DDoS or brute force attack."
+msgstr ""
+"Одной из причин, по которым ваш сайт на WordPress стал тормозить, является "
+"атака на сайт, при которой идет большое количество запросов к файлу xmlrpc."
+"php, который отвечает за pingback'и, удаленный доступ к WordPress. Через "
+"файл xmlrpc.php может идти DDoS или Брутфорс-атака."
+
+#: class-falbar-bbf.php:988
+msgid ""
+"<strong>Plugin:</strong> disables XML-RPC mechanism, remove server response "
+"a reference to the xmlrpc file and closes the opportunity to spam the "
+"website pingback'AMI."
+msgstr ""
+"<strong>Плагин:</strong> отключает XML-RPC мехонизм, удаляет в ответах "
+"сервера ссылку на xmlrpc файл и закрывает возможность спамить сайт "
+"pingback'ами."
+
+#: class-falbar-bbf.php:998
+msgid "Remove the opportunity to learn administrator login"
+msgstr "Убрать возможность узнать логин администратора"
+
+#: class-falbar-bbf.php:1004
+msgid ""
+"An attacker can learn the username of the administrator who is using a "
+"similar GET request on a <code>mysite.com/?author=1</code>."
+msgstr ""
+"Злоумышленник может узнать логин администратора, с помощью подобного GET "
+"запроса <code>mysite.com/?author=1</code>."
+
+#: class-falbar-bbf.php:1007
+msgid ""
+"<strong>Plugin:</strong> deletes a user's archive and puts a redirect on the "
+"main."
+msgstr ""
+"<strong>Плагин:</strong> удаляет архивы пользователей и ставит редирект на "
+"главную."
+
+#: class-falbar-bbf.php:1017
+msgid "Delete a version of the styles"
+msgstr "Удалить версию у стилей"
+
+#: class-falbar-bbf.php:1023
+msgid ""
+"WordPress, themes and plugins often includes styles specifying the file "
+"version of the plugin or of the engine, it looks like this: <code>?"
+"ver=4.7.5</code>. First, it allows hackers to know the version of the plugin "
+"engine, and secondly, disables caching for these files, which reduces the "
+"page load time."
+msgstr ""
+"WordPress, темы и плагины часто подключают стили с указанием версии файла, "
+"плагина или движка, выглядит это так: <code>?ver=4.7.5</code>. Во-первых, "
+"это позволяет злоумышленникам узнать версию плагина, движка, во-вторых, "
+"отключает кеширование для этих файлов, что уменьшает время загрузки страницы."
+
+#: class-falbar-bbf.php:1026
+msgid "<strong>Plugin:</strong> removes version styles."
+msgstr "<strong>Плагин:</strong> удаляет версии у стилей."
+
+#: class-falbar-bbf.php:1036
+msgid "Remove version from scripts"
+msgstr "Удалить версию у скриптов"
+
+#: class-falbar-bbf.php:1042
+msgid ""
+"As with styles, scripts connect by specifying the file version of a plugin "
+"or engine, it looks like this: <code>?ver=4.7.5</code>. First, it allows "
+"hackers to know the version of the plugin engine, and secondly, disables "
+"caching for these files, which reduces the page load time."
+msgstr ""
+"Как и со стилями, скрипты подключаются с указанием версии файла, плагина или "
+"движка, выглядит это так: <code>?ver=4.7.5</code>. Во-первых, это позволяет "
+"злоумышленникам узнать версию плагина, движка, во-вторых, отключает "
+"кеширование для этих файлов, что уменьшает время загрузки страницы."
+
+#: class-falbar-bbf.php:1045
+msgid "<strong>Plugin:</strong> remove version from scripts."
+msgstr "<strong>Плагин:</strong> удаляет версии у скриптов."
+
+#: class-falbar-bbf.php:1060
+msgid "Enable the hidden settings page"
+msgstr "Включить спрятанную страницу настроек"
+
+#: class-falbar-bbf.php:1063
+msgid ""
+"In WordPress there is a hidden settings page that you can link to <code>/wp-"
+"admin/options.php</code>."
+msgstr ""
+"В WordPress есть спрятанная страница настроек, на которую можно перейти по "
+"ссылке <code>/wp-admin/options.php</code>."
+
+#: class-falbar-bbf.php:1066
+msgid "<strong>Plugin:</strong> adds a settings page under \"Settings\"."
+msgstr ""
+"<strong>Плагин:</strong> добавляет страницу настроек в разделе \"Настройки\"."
+
+#: class-falbar-bbf.php:1076
+msgid "Disable RSS feeds"
+msgstr "Отключить RSS ленты"
+
+#: class-falbar-bbf.php:1079
+msgid ""
+"By default, WordPress generates different types of RSS feeds for your "
+"website. Sometimes RSS feeds can be useful if you are using a blog for "
+"example, but if you have a normal odnostranichnik RSS for you will be "
+"useless."
+msgstr ""
+"По умолчанию WordPress генерирует различные виды RSS-ленты для вашего сайта. "
+"Иногда RSS-ленты могут быть полезны, если вы используете блог например, но "
+"если у вас обычный одностаничник, то RSS для вас будет бесполезен."
+
+#: class-falbar-bbf.php:1082
+msgid ""
+"<strong>Plugin:</strong> removes references to the RSS feeds section "
+"<code>&lt;head&gt;</code>, closes it and puts a redirect from all RSS feeds "
+"on the main page."
+msgstr ""
+"<strong>Плагин:</strong> удаляет ссылки на RSS-ленты из секции <code>&lt;"
+"head&gt;</code>, закрывает и ставит редирект со всех RSS-лент на главную."
+
+#: class-falbar-bbf.php:1092
+msgid "Remove unnecessary links from the admin bar of WordPress"
+msgstr "Убрать лишние ссылки из админ бара WordPress"
+
+#: class-falbar-bbf.php:1095
+msgid ""
+"The first item in the toolbar is a WordPress logo and external links to "
+"sites wordpress.org, documentation, and WordPress forums."
+msgstr ""
+"Первым пунктом в панели инструментов идет логотип WordPress и внешние ссылки "
+"на сайты wordpress.org, документацию и форумы WordPress."
+
+#: class-falbar-bbf.php:1098
+msgid ""
+"<strong>Plugin:</strong> removes all links wordpress.org from the toolbar."
+msgstr ""
+"<strong>Плагин:</strong> убирает все ссылки на wordpress.org из панели "
+"инструментов."
+
+#: class-falbar-bbf.php:1108
+msgid ""
+"Enable the Ghost to lower case the name of the media file while downloading"
+msgstr "Включить привидение к нижнему регистру имени медиафайлов при загрузке"
+
+#: class-falbar-bbf.php:1111
+msgid ""
+"The names of the downloadable midifiles can be of different register, which "
+"is not always convenient."
+msgstr ""
+"Имена загружаемых медифайлов могут быть разного регистра, что не всегда "
+"удобно."
+
+#: class-falbar-bbf.php:1114
+msgid ""
+"<strong>Plugin:</strong> when uploading images and files names to lower case."
+msgstr ""
+"<strong>Плагин:</strong> при загрузке изображений и фалов приводит имена к "
+"нижнему регистру."
+
+#: class-falbar-bbf.php:1124
+msgid "Redirect from http to https"
+msgstr "Редирект с http на https"
+
+#: class-falbar-bbf.php:1127
+msgid ""
+"If your site uses an SSL certificate, select this check box to enable "
+"redirect from http to https."
+msgstr ""
+"Если ваш сайт использует SSL-сертификат, отметьте данный пункт, чтобы "
+"включить редирект с http на https."
+
+#: class-falbar-bbf.php:1130
+msgid "<strong>Plugin:</strong> puts a redirect from http to https."
+msgstr "<strong>Плагин:</strong> ставит редирект с http на https."
+
+#: class-falbar-bbf.php:1133
+msgid ""
+"* Before activating, please make sure that your site is opened via https!"
+msgstr ""
+"* Перед активацией обязательно убедитесь, что ваш сайт открывается по https!"
+
+#: class-falbar-bbf.php:1143
+msgid "Transliteration of titles and files"
+msgstr "Транслитерация заголовков и файлов"
+
+#: class-falbar-bbf.php:1146
+msgid ""
+"Analogue plugins Cyr to Lat enhanced, Rus To Lat, Cyr2Lat, etc. "
+"Transliteration permalinks and file names."
+msgstr ""
+"Аналог плагинов Cyr to Lat enhanced, Rus To Lat, Cyr2Lat и др. "
+"Транслитерация постоянных ссылок и названий файлов."
+
+#: class-falbar-bbf.php:1149
+msgid ""
+"<strong>Plugin:</strong> performs transliteration permanent links and "
+"downloadable files, remove characters, spaces, Latin and other languages "
+"from the names of uploaded files (pure characters, only lowercase letters "
+"and dashes)."
+msgstr ""
+"<strong>Плагин:</strong> выполняет транслитерацию постоянных ссылок и "
+"загружаемых файлов, удаляет символы, пробелы, латинские и другие языки из "
+"имен загружаемых файлов (чистые символы, только строчные буквы и тире)."
+
+#: class-falbar-bbf.php:1159
+msgid "Disable revisions completely"
+msgstr "Отключить ревизии полностью"
+
+#: class-falbar-bbf.php:1162
+msgid ""
+"When you save and update any posts or pages create a copy of it (the "
+"revision), which in the future can be viewed or restored. But over time, a "
+"large number of such revisions (and there may be dozens for each page) score "
+"database, wasting space and slowing the work."
+msgstr ""
+"При сохранении и обновлении любой записи или страницы создается её копия "
+"(ревизия), которую в будущем можно посмотреть или восстановить. Но со "
+"временем большое количество таких ревизий (а их может быть десятки для "
+"каждой страницы) забивают базу данных, расходуя место и замедляя работу."
+
+#: class-falbar-bbf.php:1165
+msgid "<strong>Plugin:</strong> disables the creation of audits."
+msgstr "<strong>Плагин:</strong> отключает создание ревизий."
+
+#: class-falbar-bbf.php:1175
+msgid "Disable auto-save"
+msgstr "Отключить автосохранение"
+
+#: class-falbar-bbf.php:1178
+msgid "By default, WordPress automatically saves a draft every 60 seconds."
+msgstr ""
+"WordPress по умолчанию автоматически сохраняет черновик каждые 60 секунд."
+
+#: class-falbar-bbf.php:1181
+msgid "<strong>Plugin:</strong> disables auto-save."
+msgstr "<strong>Плагин:</strong> отключает автосохранение."
+
+#: class-falbar-bbf.php:1237
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+#: class-falbar-bbf.php:1242
+msgid "Dismiss this notice."
+msgstr "Скрыть это уведомление."
+
+#: static/class-falbar-bbf-option-additionally.php:154
+#: static/class-falbar-bbf-option-additionally.php:155
+msgid "All Settings"
+msgstr "Все настройки"
+
+#: static/class-falbar-bbf-option-security.php:116
+msgid "<strong>ERROR</strong>: Invalid username or password."
+msgstr "<strong>ОШИБКА</strong>: Неверный логин или пароль."
