@@ -9,9 +9,6 @@
 
 @import 'grid/bootstrap-grid';
 
-@import "sprite_svg";
-@import "sprite_png";
-
 body {
   font-family: $font-family-base;
   font-size: $base-font-size;
@@ -115,6 +112,7 @@ footer {
 
 @import "media";
 
-@import "fonts/font_roboto";
+// @import "fonts/font_roboto";
+
 @import "import/base64";
 @import "import/print";

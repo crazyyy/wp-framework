@@ -24,7 +24,7 @@ function catchFirstImage() {
     $post->post_content, $matches);
   $first_img = $matches [1] [0];
   if(empty($first_img)){
-    $first_img = get_template_directory_uri() . '/img/noimage.jpg'; }
+    $first_img = get_template_directory_uri() . '/img/noimage.png'; }
     return $first_img;
 }
 
@@ -44,29 +44,22 @@ function wpeStyles()  {
 
 add_action('init', 'wpeHeaderScripts'); // Add Scripts to wp_head
 function wpeHeaderScripts() {
-  if (!is_admin()) {
-    wp_deregister_script('jquery');
-    wp_register_script('jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), '3.3.1');
-    wp_enqueue_script('jquery');
+  wp_deregister_script('jquery');
+  wp_deregister_script('jquery-migrate');
+  wp_deregister_script('modernizr');
+  wp_deregister_script( 'jquery-form' );
 
-    wp_register_script('jquery-migrate', '//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.0/jquery-migrate.min.js', array(), '3.0.0');
-    wp_enqueue_script('jquery-migrate');
+  wp_register_script('jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js', array(), '3.4.1');
+  wp_enqueue_script('jquery');
 
-    wp_register_script('modernizr', '//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js', array(), '2.8.3');
-    wp_enqueue_script('modernizr');
-
-    wp_deregister_script( 'jquery-form' );
-
-    //  Load footer scripts (footer.php)
-    wp_register_script('wpeScripts', get_template_directory_uri() . '/js/scripts.js', array(), '1.0.0', true);
-    wp_enqueue_script('wpeScripts');
-    wp_localize_script( 'wpeScripts', 'adminAjax', array(
-      'ajaxurl' => admin_url( 'admin-ajax.php' ),
-      'templatePath' => get_template_directory_uri(),
-      'posts_per_page' => get_option('posts_per_page')
-    ));
-
-  }
+  //  Load footer scripts (footer.php)
+  wp_register_script('wpeScripts', get_template_directory_uri() . '/js/scripts.js', array(), '1.0.0', true);
+  wp_enqueue_script('wpeScripts');
+  wp_localize_script( 'wpeScripts', 'adminAjax', array(
+    'ajaxurl' => admin_url( 'admin-ajax.php' ),
+    'templatePath' => get_template_directory_uri(),
+    'posts_per_page' => get_option('posts_per_page')
+  ));
 }
 
 //  Remove wp_head() injected Recent Comment styles
@@ -324,7 +317,7 @@ function remove_thumbnail_dimensions( $html ) {
 // Custom Gravatar in Settings > Discussion
 add_filter('avatar_defaults', 'html5blankgravatar'); // Custom Gravatar in Settings > Discussion
 function html5blankgravatar ($avatar_defaults) {
-  $myavatar = get_template_directory_uri() . '/img/gravatar.jpg';
+  $myavatar = get_template_directory_uri() . '/img/gravatar.png';
   $avatar_defaults[$myavatar] = "Custom Gravatar";
   return $avatar_defaults;
 }
