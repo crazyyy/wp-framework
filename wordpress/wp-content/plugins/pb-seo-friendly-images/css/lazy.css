@@ -1,0 +1,5 @@
+img.pb-seo-lazy[src*='data:image/gif;base64'] {
+    border: 1px dashed #dbdbdb;
+    background: url(/wp-includes/images/wpspin-2x.gif) no-repeat center center;
+    background-size: 16px 16px;
+}
