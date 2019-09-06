@@ -158,23 +158,38 @@ gulp.task('image:default', function () {
     .src(config.path.images.srcimg)
     .pipe(plugins.newer(config.path.images.dest))
     .pipe(plugins.bytediff.start())
-    .pipe(plugins.imagemin([
-      plugins.imagemin.gifsicle({
-        interlaced: true
-      }),
-      plugins.imagemin.jpegtran({
-        progressive: true
-      }),
-      plugins.imagemin.optipng({
-        optimizationLevel: 5
-      }),
-      plugins.imagemin.svgo({
-        plugins: [{
-          removeViewBox: false,
-          collapseGroups: true
-        }]
-      })
-    ]))
+    .pipe(plugins.if(
+      '*.png',
+      plugins.imagemin([
+        imageminPngquant(),
+        imageminAdvpng(),
+      ])
+    ))
+    .pipe(plugins.if(
+      '*.jp*g',
+      plugins.imagemin([
+        imageminMozjpeg({progressive: true}),
+        imageminGuetzli({quality: 95}),
+      ])
+    ))
+    .pipe(plugins.if(
+      '*.gif',
+      plugins.imagemin([
+        plugins.imagemin.gifsicle({
+          interlaced: true
+        }),
+      ])
+    ))
+    .pipe(plugins.if(
+      '*.svg',
+      plugins.imagemin([
+        plugins.imagemin.svgo({
+          plugins: [{
+            removeViewBox: true
+          }]
+        })
+      ])
+    ))
     .pipe(plugins.bytediff.stop(function(data) {
       var difference = (data.savings > 0) ? ' smaller.' : ' larger.';
       return data.fileName + ' is ' + data.percent + '%' + difference;
