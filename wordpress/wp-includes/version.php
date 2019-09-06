@@ -43,4 +43,4 @@ $required_php_version = '5.6.20';
  */
 $required_mysql_version = '5.0';
 
-$wp_local_package = 'ru_RU';
+$wp_local_package = 'uk';

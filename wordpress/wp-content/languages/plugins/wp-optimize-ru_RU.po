@@ -1,0 +1,773 @@
+# Translation of Plugins - WP-Optimize - Stable (latest release) in Russian
+# This file is distributed under the same license as the Plugins - WP-Optimize - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-04-25 04:06:10+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.3.0-alpha\n"
+"Language: ru\n"
+"Project-Id-Version: Plugins - WP-Optimize - Stable (latest release)\n"
+
+#: wp-optimize-main.php:305
+msgid "WARNING: Do not select RED marked items, they may have unexpected results"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Не выделяйте объекты выделенные КРАСНЫМ, с ними могут быть неожиданные результаты"
+
+#: wp-optimize-main.php:298
+msgid "Clean orphaned relationship data"
+msgstr "Очистить ставшие неактуальными данные о связях"
+
+#: wp-optimize-main.php:289
+msgid "Clean comment meta data"
+msgstr "Очистить метаданные комментариев"
+
+#: wp-optimize-main.php:280
+msgid "Clean post meta data"
+msgstr "Очистить метаданные записей"
+
+#: wp-optimize-main.php:191
+msgid "WARNING: This operation is permanent. Continue?"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Это действие вносит постоянное изменение. Продолжить?"
+
+#: wp-optimize-main.php:182
+msgid "Cleaning up orphaned post relationship data can have unexpected result. Are you sure?"
+msgstr "Очистка неактуальных данных о связях записей может иметь неожиданные последствия. Вы уверены?"
+
+#: wp-optimize-main.php:179
+msgid "Cleaning up comments meta can have unexpected results on some servers. Are you sure?"
+msgstr "Очистка метаданных комментариев может иметь неожиданные последствия. Вы уверены? "
+
+#: wp-optimize-main.php:176
+msgid "Cleaning up post meta can have unexpected results on some servers. Are you sure?"
+msgstr "Очистка метаданных записей может иметь неожиданные последствия на некоторых серверах. Вы уверены? "
+
+#: wp-optimize-main.php:173
+msgid "This will delete all trackbacks in the database. Are you sure?"
+msgstr "Уверены что хотите удалить все обратные ссылки из базы ?"
+
+#: wp-optimize-main.php:170
+msgid "This will delete all pingbacks in the database. Are you sure?"
+msgstr "Уверены что хотите удалить все уведомления из базы ?"
+
+#: wp-optimize-main.php:167
+msgid "Transient options are automatically re-created by WordPress. Select this option, if you have a large number of Transient."
+msgstr "Транзиентные объекты автоматически пересоздаются WordPress. Выберите если у вас накопилось их слишком много."
+
+#: wp-optimize-credits.php:84
+msgid "GitHub - Develop Branch"
+msgstr "GitHub - ветка разработки"
+
+#: wp-optimize-credits.php:73
+msgid "What's New"
+msgstr "Что нового"
+
+#: wp-optimize-common.php:826
+msgid "No orphaned relationship data in your database"
+msgstr "Нет неактуальных данных о связях записей в базе"
+
+#: wp-optimize-tables.php:213
+msgid "Total space that can be saved:"
+msgstr "Всего места может быть освобождено:"
+
+#: wp-optimize-settings.php:266
+msgid "InnoDB tables will not be optimized!"
+msgstr "Таблицы InnoDB не будут оптимизированы!"
+
+#: wp-optimize-settings.php:128
+msgid "Keep last %s weeks data"
+msgstr "Сохранить данные за последние %s недель"
+
+#: wp-optimize-main.php:430
+msgid "Keeping last %s weeks data"
+msgstr "Сохраняем данные за последние %s недель"
+
+#: wp-optimize-main.php:348
+msgid "Please donate! It really helps me improving the plugin."
+msgstr "Пожалуйста сделайте пожертвование! Это реально поможет мне улучшать плагин."
+
+#: wp-optimize-main.php:309 wp-optimize-settings.php:180
+msgid "Optimize YouTube embedding with this free plugin on WordPress.org"
+msgstr "Оптимизировать внедрение с YouTube этим бесплатным плагином на WordPress.org"
+
+#: wp-optimize-main.php:84
+msgctxt "%s is the Database Name"
+msgid "%s Database Optimized!"
+msgstr "%s база данных оптимизирована!"
+
+#: wp-optimize-common.php:914
+msgid "%d Trackback found"
+msgid_plural "%d Trackbacks found"
+msgstr[0] "Найдена %d обратная ссылка"
+msgstr[1] "Найдены %d обратные ссылки"
+msgstr[2] "Найдены %d обратных ссылок"
+
+#: wp-optimize-common.php:904
+msgid "%d Pingback found"
+msgid_plural "%d Pingbacks found"
+msgstr[0] "Найдено %d уведомление"
+msgstr[1] "Найдено %d уведомления"
+msgstr[2] "Найдено %d уведомлений"
+
+#: wp-optimize-common.php:743
+msgid "%d trackback deleted"
+msgid_plural "%d trackbacks deleted"
+msgstr[0] "Удалена %d обратная ссылка"
+msgstr[1] "Удалены %d обратные ссылки"
+msgstr[2] "Удалены %d обратных ссылок"
+
+#: wp-optimize-common.php:737
+msgid "%d pingback deleted"
+msgid_plural "%d pingbacks deleted"
+msgstr[0] "Удалено %d уведомление"
+msgstr[1] "Удалено %d уведомления"
+msgstr[2] "Удалено %d уведомлений"
+
+#. Author URI of the plugin/theme
+msgid "https://github.com/ruhanirabin/WP-Optimize"
+msgstr "https://github.com/ruhanirabin/WP-Optimize"
+
+#. Author of the plugin/theme
+msgid "Ruhani Rabin"
+msgstr "Ruhani Rabin"
+
+#. Description of the plugin/theme
+msgid "This plugin helps you to keep your database clean by removing post revisions and spam in a blaze. Additionally, it allows you to run the optimize command on your WordPress core tables (please use with caution)."
+msgstr "Этот плагин помогает содержать базу данных чистой быстро удаляя ревизии записей и спам. Дополнительно он позволяет оптимизировать основные таблицы WordPress (использовать с осторожностью)."
+
+#. Plugin URI of the plugin/theme
+msgid "http://wp-optimize.ruhanirabin.com/"
+msgstr "http://wp-optimize.ruhanirabin.com/"
+
+#. Plugin Name of the plugin/theme
+msgid "WP-Optimize"
+msgstr "WP-Optimize"
+
+#: wp-optimize-tables.php:207
+msgid "Optimization Possibility:"
+msgstr "Возможность оптимизации:"
+
+#: wp-optimize-tables.php:196
+msgid "Total Space Saved:"
+msgstr "Сохранено места всего:"
+
+#: wp-optimize-tables.php:191
+msgid "Optimization Results:"
+msgstr "Результаты оптимизации:"
+
+#: wp-optimize-tables.php:179
+msgid "Total Size of Database:"
+msgstr "Общий размер базы данных:"
+
+#: wp-optimize-tables.php:139
+msgid "%d Record"
+msgid_plural "%d Records"
+msgstr[0] "%d Запись"
+msgstr[1] "%d Записи"
+msgstr[2] "%d Записей"
+
+#: wp-optimize-tables.php:138
+msgid "%d Table"
+msgid_plural "%d Tables"
+msgstr[0] "%d Таблица"
+msgstr[1] "%d Таблицы"
+msgstr[2] "%d Таблиц"
+
+#: wp-optimize-tables.php:137
+msgid "Total:"
+msgstr "Всего: "
+
+#: wp-optimize-tables.php:42
+msgid "Overhead"
+msgstr "накладные расходы"
+
+#: wp-optimize-tables.php:41
+msgid "Type"
+msgstr "Тип"
+
+#: wp-optimize-tables.php:40
+msgid "Index Size"
+msgstr "Размер Индекса"
+
+#: wp-optimize-tables.php:39
+msgid "Data Size"
+msgstr "Размер Данных"
+
+#: wp-optimize-tables.php:38
+msgid "Records"
+msgstr "Записи"
+
+#: wp-optimize-tables.php:36
+msgid "No."
+msgstr "Нет."
+
+#: wp-optimize-tables.php:28
+msgid "Optimized all the tables found in the database."
+msgstr "Оптимизировать все найденные таблицы в базе данных."
+
+#: wp-optimize-tables.php:20
+msgid "Database Name:"
+msgstr "Имя Базы данных: "
+
+#: wp-optimize-settings.php:284
+msgid "SAVE AUTO CLEAN-UP SETTINGS"
+msgstr "Сохранить настройки авто-очистки"
+
+#: wp-optimize-settings.php:261
+msgid "Optimize database"
+msgstr "Оптимизировать базу данных"
+
+#: wp-optimize-settings.php:258
+msgid "Remove unused tags"
+msgstr "Удалить неиспользуемые метки"
+
+#: wp-optimize-settings.php:255
+msgid "Remove orphaned post meta"
+msgstr "Удалить несвязанные с записями метаданные"
+
+#: wp-optimize-settings.php:245
+msgid "Remove spam comments"
+msgstr "Удалить спам-комментарии"
+
+#: wp-optimize-settings.php:242
+msgid "Remove auto drafts"
+msgstr "Удалить авто черновики"
+
+#: wp-optimize-settings.php:239
+msgid "Remove auto revisions"
+msgstr "Удалить авто ревизии"
+
+#: wp-optimize-settings.php:236
+msgid "These options will only work if the automatic clean-up schedule has been enabled"
+msgstr "Эти настройки работают только если разрешена запланированая автоочистка"
+
+#: wp-optimize-settings.php:233
+msgid "Remove revisions, auto drafts, posts/comments in trash, transient options. After that it will optimize the db."
+msgstr "Удаление ревизий, авто черновиков, записей и комментариев в корзине, транзиентов. Будет произведена оптимизация БД."
+
+#: wp-optimize-settings.php:231
+msgid "Automatic cleanup will perform the following:"
+msgstr "Автоочистка произведет следующее:"
+
+#: wp-optimize-settings.php:217 wp-optimize-settings.php:228
+msgid "Every month (every 31 days)"
+msgstr "Каждый месяц (каждый 31 день)"
+
+#: wp-optimize-settings.php:213 wp-optimize-settings.php:227
+msgid "Every other week (every 14 days)"
+msgstr "Через неделю (каждые 14 дней)"
+
+#: wp-optimize-settings.php:209 wp-optimize-settings.php:221
+#: wp-optimize-settings.php:226
+msgid "Every week"
+msgstr "Каждую неделю"
+
+#: wp-optimize-settings.php:205 wp-optimize-settings.php:225
+msgid "Every day"
+msgstr "Каждый день"
+
+#: wp-optimize-settings.php:198
+msgid "Select schedule type (default is Weekly)"
+msgstr "Выбрать тип плана (по умолчанию - еженедельно)"
+
+#: wp-optimize-settings.php:196
+msgid "Enable scheduled clean-up and optimization (Beta feature!)"
+msgstr "Включить планировщик очистки и оптимизации (БЕТА!)"
+
+#: wp-optimize-settings.php:193
+msgid "Auto Clean-up Settings"
+msgstr "Настройки Авто-очистки"
+
+#: wp-optimize-settings.php:183
+msgid "SAVE SETTINGS"
+msgstr "СОХРАНИТЬ НАСТРОЙКИ"
+
+#: wp-optimize-settings.php:176
+msgid "This will disable/enable Comments on all your current and previously published posts"
+msgstr "Это отключит/включит комментарии во всех текущих и ранее опубликованых записях "
+
+#: wp-optimize-settings.php:168
+msgid "Disable/Enable Comments"
+msgstr "Отключить/Включить Комментарии"
+
+#: wp-optimize-settings.php:165
+msgid "This will disable/enable Trackbacks on all your current and previously published posts"
+msgstr "Это отключит/включит обратные ссылки во всех текущих и ранее опубликованых записях"
+
+#: wp-optimize-settings.php:162 wp-optimize-settings.php:173
+msgid "Enable"
+msgstr "Включено"
+
+#: wp-optimize-settings.php:161 wp-optimize-settings.php:172
+msgid "Disable"
+msgstr "Отключено"
+
+#: wp-optimize-settings.php:160 wp-optimize-settings.php:171
+msgid "SELECT"
+msgstr "ВЫБРАТЬ"
+
+#: wp-optimize-settings.php:157
+msgid "Disable/Enable Trackbacks"
+msgstr "Выкл/Вкл обратные ссылки"
+
+#: wp-optimize-settings.php:155
+msgid "Trackback/Comments Actions"
+msgstr "Действия с Обратными ссылками/Комментариями"
+
+#: wp-optimize-settings.php:153
+msgid "This option will put WP-Optimize link on the top admin bar (default is off). Requires page refresh."
+msgstr "Эта настройка поместит WP-Optimize наверх панели администратора (по умолчанию отвключено). Требует обновления страницы."
+
+#: wp-optimize-settings.php:149
+msgid "(Click here to refresh)"
+msgstr "(Нажмите для обновления)"
+
+#: wp-optimize-settings.php:146
+msgid "Enable admin bar link"
+msgstr "Включить ссылку на панели администратора"
+
+#: wp-optimize-settings.php:141
+msgid "This option will retain the last selected weeks data and remove any garbage data before that period. This will also affect Auto Clean-up process"
+msgstr "Эта настройка будет сохранять последние выбранные недели данных и удалять весь мусор старше этого периода. Это также влияет на процесс автоочистки"
+
+#: wp-optimize-settings.php:123
+msgid "General Settings"
+msgstr "Основные настройки"
+
+#: wp-optimize-settings.php:113
+msgid "Settings updated"
+msgstr "Настройки обновлены"
+
+#: wp-optimize-settings.php:108
+msgid "Comments enabled on all current and previously published posts"
+msgstr "Комментарии включены во всех текущих и ранее опубликованых записях"
+
+#: wp-optimize-settings.php:102
+msgid "Comments disabled on all current and previously published posts"
+msgstr "Комментарии отключены во всех текущих и ранее опубликованых записях"
+
+#: wp-optimize-settings.php:93
+msgid "Trackbacks enabled on all current and previously published posts"
+msgstr "Обратные ссылки включены во всех текущих и ранее опубликованых записях "
+
+#: wp-optimize-settings.php:87
+msgid "Trackbacks disabled on all current and previously published posts"
+msgstr "Обратные ссылки отключены во всех текущих и ранее опубликованых записях"
+
+#: wp-optimize-main.php:502
+msgid "Sponsor"
+msgstr "Спонсор"
+
+#: wp-optimize-main.php:485
+msgid "Total clean up overall:"
+msgstr "Общая очистка в целом:"
+
+#: wp-optimize-main.php:471
+msgid "You can save almost:"
+msgstr "Вы можете сохранить почти:"
+
+#: wp-optimize-main.php:451 wp-optimize-main.php:463
+msgid "Current database size:"
+msgstr "Текущий размер базы данных:"
+
+#: wp-optimize-main.php:456
+msgid "You have saved:"
+msgstr "Вы сохранили:"
+
+#: wp-optimize-main.php:437
+msgid "Not keeping recent data"
+msgstr "Не сохраняем недавние данные"
+
+#: wp-optimize-main.php:419 wp-optimize-main.php:440
+msgid "Check settings"
+msgstr "Проверить настройки"
+
+#: wp-optimize-main.php:416
+msgid "Scheduled cleaning disabled"
+msgstr "Запланированная очистка отключена"
+
+#: wp-optimize-main.php:408
+msgid "Refresh"
+msgstr "Обновить"
+
+#: wp-optimize-main.php:397
+msgid "Next schedule:"
+msgstr "Следующее задание:"
+
+#: wp-optimize-main.php:385
+msgid "Scheduled cleaning enabled"
+msgstr "Запланированная очистка включена"
+
+#: wp-optimize-main.php:370
+msgid "There was no automatic optimization"
+msgstr "Не было автоматической оптимизации"
+
+#: wp-optimize-main.php:359
+msgid "Last automatic optimization was at"
+msgstr "Последняя автоматическая оптимизация была в "
+
+#: wp-optimize-main.php:353
+msgid "Status log"
+msgstr "Журнал статуса"
+
+#: wp-optimize-main.php:350
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: wp-optimize-main.php:349
+msgid "Please give a proper rating :)"
+msgstr "Поставьте правильный рейтинг :)"
+
+#: wp-optimize-main.php:348
+msgid "Donate!"
+msgstr "Сделайте пожертвование"
+
+#: wp-optimize-main.php:345
+msgid "PROCESS"
+msgstr "ОБРАБОТКА"
+
+#: wp-optimize-main.php:341
+msgid "Always make a backup of your DB when you upgrade to major versions"
+msgstr "Всегда делайте резервную копию БД при обновлении до версии следующего поколения"
+
+#: wp-optimize-main.php:339
+msgid "Warning:"
+msgstr "Внимание:"
+
+#: wp-optimize-main.php:338
+msgid "Select safe options"
+msgstr "Выбрать безопасные настройки"
+
+#: wp-optimize-main.php:334
+msgid "InnoDB tables will not be optimized"
+msgstr "Таблицы InnoDB оптимизированы не будут"
+
+#: wp-optimize-main.php:332
+msgid "Note:"
+msgstr "Примечание:"
+
+#: wp-optimize-main.php:326
+msgid "Optimize database tables"
+msgstr "Оптимизировать таблицы базы данных"
+
+#: wp-optimize-main.php:318
+msgid "Actions"
+msgstr "Действия"
+
+#: wp-optimize-main.php:270
+msgid "Remove trackbacks"
+msgstr "Удалить обратные ссылки"
+
+#: wp-optimize-main.php:262
+msgid "Remove pingbacks"
+msgstr "Удалить уведомления"
+
+#: wp-optimize-main.php:254 wp-optimize-settings.php:252
+msgid "Remove transient options"
+msgstr "Удалить транзиенты"
+
+#: wp-optimize-main.php:245 wp-optimize-settings.php:248
+msgid "Remove unapproved comments"
+msgstr "Удалить неодобренные комментарии"
+
+#: wp-optimize-main.php:243
+msgid "Remove unapproved comments which are older than %d weeks"
+msgstr "Удалить неодобренные комментарии старше чем %d недель"
+
+#: wp-optimize-main.php:232
+msgid "Remove spam comments and comments in trash"
+msgstr "Удалить спам-комментарии и комментарии из корзины"
+
+#: wp-optimize-main.php:230
+msgid "Remove spam comments which are older than %d weeks"
+msgstr "Удалить спам-комментарии старше чем %d недель"
+
+#: wp-optimize-main.php:219
+msgid "Clean all auto draft posts and posts in trash"
+msgstr "Очистить все авто черновики и записи в корзине"
+
+#: wp-optimize-main.php:217
+msgid "Clean auto draft posts which are older than %d weeks"
+msgstr "Очистить авто черновики записей старше чем %d недель"
+
+#: wp-optimize-main.php:206
+msgid "Clean all post revisions"
+msgstr "Очистить все ревизии записей"
+
+#: wp-optimize-main.php:204
+msgid "Clean post revisions which are older than %d weeks"
+msgstr "Очистить ревизии записей старше чем %d недель"
+
+#: wp-optimize-main.php:195
+msgid "Clean-up options"
+msgstr "Настройки очистки"
+
+#: wp-optimize-credits.php:104
+msgid "No items"
+msgstr "Нет ничего"
+
+#: wp-optimize-credits.php:63
+msgid "FAQ"
+msgstr "FAQ"
+
+#: wp-optimize-credits.php:60
+msgid "Change Log"
+msgstr "Журнал изменений"
+
+#: wp-optimize-credits.php:57
+msgid "Support E-mail"
+msgstr "Поддержка по E-mail"
+
+#: wp-optimize-credits.php:54
+msgid "Support (GitHub)"
+msgstr "Поддержка (GitHub)"
+
+#: wp-optimize-credits.php:51
+msgid "Plugin Homepage"
+msgstr "Домашняя страница Плагина"
+
+#: wp-optimize-credits.php:48
+msgid "Plugin Translation Portal (needs WordPress account)"
+msgstr "Портал переводов плагина (требуется регистрация)"
+
+#: wp-optimize-credits.php:46
+msgid "Plugin Resources"
+msgstr "Ресурсы плагина"
+
+#: wp-optimize-credits.php:37
+msgid "Your name and website will be credited here in the plugin."
+msgstr "Ваше имя и сайт будут упомянуты здесь в плагине"
+
+#: wp-optimize-credits.php:35
+msgid "I am looking for contributing developers."
+msgstr "Я ищу разработчиков для сотрудничества."
+
+#: wp-optimize-credits.php:35
+msgid "Help me make this plugin better"
+msgstr "Помогите мне сделать этот плагин лучше"
+
+#: wp-optimize-credits.php:33
+msgid "Contributing Developers"
+msgstr "Внесшие вклад разработчики"
+
+#: wp-optimize-credits.php:16
+msgid "WP-Optimize started as a utility for my own projects. I soon realized, that this plugin might help a lot of people. I am personally thanking all of the users who use this plugin on a daily basis. Also, thank you to all of the translators and the generous people who have donated to this project."
+msgstr "WP-Optimize был начат как утилита для моих проектов, но оказалось что этот плагин может помочь многим людям. Я лично благодарю всех пользователей использующих его регулярно. Я также благодарю переводчиков и добрых людей сделавших пожертвования проекту."
+
+#: wp-optimize-credits.php:14
+msgid "Credits"
+msgstr "Благодарности"
+
+#: wp-optimize-common.php:922
+msgid "nothing"
+msgstr "ничего"
+
+#: wp-optimize-common.php:916
+msgid "No trackbacks found"
+msgstr "не найдены обратные ссылки"
+
+#: wp-optimize-common.php:906
+msgid "No pingbacks found"
+msgstr "не найдены уведомления"
+
+#: wp-optimize-common.php:896
+msgid "No unapproved comments found"
+msgstr "неодобренные комментарии не найдены"
+
+#: wp-optimize-common.php:894
+msgid "%d unapproved comment found"
+msgid_plural "%d unapproved comments found"
+msgstr[0] "Найден %d неодобренный комментарий"
+msgstr[1] "Найдено %d неодобренных комментария"
+msgstr[2] "Найдено %d неодобренных комментариев"
+
+#: wp-optimize-common.php:882
+msgid "No spam comments found"
+msgstr "Не найдены спам-комментарии"
+
+#: wp-optimize-common.php:880 wp-optimize-common.php:894
+msgid "Review"
+msgstr "Обзор"
+
+#: wp-optimize-common.php:880
+msgid "%d spam comment found"
+msgid_plural "%d spam comments found"
+msgstr[0] "Найден %d спам комментарий"
+msgstr[1] "Найдено %d спам комментария"
+msgstr[2] "Найдено %d спам комментариев"
+
+#: wp-optimize-common.php:868
+msgid "No auto draft posts found"
+msgstr "Не найдены автоматические черновики в вашей базе"
+
+#: wp-optimize-common.php:866
+msgid "%d auto draft post in your database"
+msgid_plural "%d auto draft posts in your database"
+msgstr[0] "%d авточерновик записей в базе"
+msgstr[1] "%d авточерновика записей в базе"
+msgstr[2] "%d авточерновиков записей в базе"
+
+#: wp-optimize-common.php:853
+msgid "No post revisions found"
+msgstr "Не найдены ревизии запией"
+
+#: wp-optimize-common.php:851
+msgid "%d post revision in your database"
+msgid_plural "%d post revisions in your database"
+msgstr[0] "%d ревизия записей в БД"
+msgstr[1] "%d ревизии записей в БД"
+msgstr[2] "%d ревизий записей в БД"
+
+#: wp-optimize-common.php:804
+msgid "No orphaned post meta data in your database"
+msgstr "Нет несвязанных метаданных записей в БД"
+
+#: wp-optimize-common.php:802
+msgid "%d orphaned post meta data in your database"
+msgid_plural "%d orphaned postmeta in your database"
+msgstr[0] "%d объект несвязанных метаданные записей в БД"
+msgstr[1] "%d объекта несвязанных метаданные записей в БД"
+msgstr[2] "%d объектов несвязанных метаданные записей в БД"
+
+#: wp-optimize-common.php:793
+msgid "No transient options found"
+msgstr "транзиентные настройки не найдены"
+
+#: wp-optimize-common.php:791
+msgid "%d transient option in your database"
+msgid_plural "%d transient options in your database"
+msgstr[0] "%d транзиентная настройка в БД"
+msgstr[1] "%d транзиентных настройки в БД"
+msgstr[2] "%d транзиентных настроек в БД"
+
+#: wp-optimize-common.php:764
+msgid "NO Actions Taken"
+msgstr "Не было никаких действий"
+
+#: wp-optimize-common.php:755
+msgid "Disabled weekly processing"
+msgstr "Отключена недельная обработка"
+
+#: wp-optimize-common.php:749
+msgid "Enabled weekly processing"
+msgstr "Еженедельная обработка включена"
+
+#: wp-optimize-common.php:731
+msgid "%d unapproved comment deleted"
+msgid_plural "%d unapproved comments deleted"
+msgstr[0] "%d неодобреный комментарий удален"
+msgstr[1] "%d неодобреных комментария удалено"
+msgstr[2] "%d неодобренных комментариев удалено"
+
+#: wp-optimize-common.php:650
+msgid "%d unused akismet comment metadata item removed"
+msgid_plural "%d unused akismet comment metadata items removed"
+msgstr[0] "Удален %d объект akismet метаданных комментариев"
+msgstr[1] "Удалены %d объекта akismet метаданных комментариев"
+msgstr[2] "Удален %d объектов akismet метаданных комментариев"
+
+#: wp-optimize-common.php:644
+msgid "%d unused comment metadata item removed"
+msgid_plural "%d unused comment metadata items removed"
+msgstr[0] "%d неиспользованный элемент метаданных комментариев удален"
+msgstr[1] "%d неиспользованных элемента метаданных комментариев удалено"
+msgstr[2] "%d неиспользованных элементов метаданных комментариев удалено"
+
+#: wp-optimize-common.php:720
+msgid "%d comment removed from Trash"
+msgid_plural "%d comments removed from Trash"
+msgstr[0] "%d комментарий удален из корзины"
+msgstr[1] "%d комментария удалено из корзины"
+msgstr[2] "%d комментариев удалено из корзины"
+
+#: wp-optimize-common.php:711
+msgid "%d spam comment deleted"
+msgid_plural "%d spam comments deleted"
+msgstr[0] "%d спам комментарий удален"
+msgstr[1] "%d спам комментария удалены"
+msgstr[2] "%d спам комментариев удалено"
+
+#: wp-optimize-common.php:699
+msgid "%d item removed from Trash"
+msgid_plural "%d items removed from Trash"
+msgstr[0] "%d объект из корзины очищен"
+msgstr[1] "%d объекта из корзины очищены"
+msgstr[2] "%d объектов из корзины очищены"
+
+#: wp-optimize-common.php:689
+msgid "%d auto draft deleted"
+msgid_plural "%d auto drafts deleted"
+msgstr[0] "%d авточерновик удален"
+msgstr[1] "%d авточерновика удалены"
+msgstr[2] "%d авточерновиков удалено"
+
+#: wp-optimize-common.php:678
+msgid "%d post revision deleted"
+msgid_plural "%d post revisions deleted"
+msgstr[0] "%d ревизия записей удалена"
+msgstr[1] "%d ревизии записей удалены"
+msgstr[2] "%d ревизий записей удалены"
+
+#: wp-optimize-common.php:629
+msgid "%d transient option deleted"
+msgid_plural "%d transient options deleted"
+msgstr[0] "%d транзиентная настройка удалена"
+msgstr[1] "%d транзиентных настройки удалены"
+msgstr[2] "%d транзиентных настроек удалено"
+
+#: wp-optimize-common.php:539
+msgid "bytes"
+msgstr "байт"
+
+#: wp-optimize-common.php:537
+msgid "KB"
+msgstr "Кб"
+
+#: wp-optimize-common.php:535
+msgid "MB"
+msgstr "Мб"
+
+#: wp-optimize-common.php:533
+msgid "GB"
+msgstr "Гб"
+
+#: wp-optimize-common.php:79
+msgid "WP-Optimize Plugin"
+msgstr "WP-Optimize Плагин"
+
+#: wp-optimize-common.php:78
+msgid "Regards,"
+msgstr "C наилучшими пожеланиями,"
+
+#: wp-optimize-common.php:76
+msgid "You can safely delete this email."
+msgstr "Можете безопасно удалить это сообщение."
+
+#: wp-optimize-common.php:74
+msgid "Scheduled optimization was executed at"
+msgstr "Запланированая оптимизация выполнена в"
+
+#: wp-optimize-common.php:72
+msgid "Automatic Operation Completed"
+msgstr "Автоматическая операция завершена"
+
+#: wp-optimize-admin.php:53 wp-optimize-tables.php:37
+msgid "Tables"
+msgstr "Таблицы"
+
+#: wp-optimize-admin.php:34 wp-optimize-admin.php:57
+msgid "Info"
+msgstr "Информация"
+
+#: wp-optimize-admin.php:33 wp-optimize-admin.php:55 wp-optimize.php:95
+msgid "Settings"
+msgstr "Настройки"
+
+#: wp-optimize-admin.php:28 wp-optimize-admin.php:47
+msgid "MYSQL"
+msgstr "MySQL"
+
+#: wp-optimize-admin.php:25 wp-optimize-admin.php:44 wp-optimize.php:96
+msgid "Optimizer"
+msgstr "Оптимизатор"

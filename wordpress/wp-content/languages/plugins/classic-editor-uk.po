@@ -1,0 +1,120 @@
+# Translation of Plugins - Classic Editor - Stable (latest release) in Ukrainian
+# This file is distributed under the same license as the Plugins - Classic Editor - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2019-02-26 21:51:32+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: uk_UA\n"
+"Project-Id-Version: Plugins - Classic Editor - Stable (latest release)\n"
+
+#: classic-editor.php:812
+msgctxt "Editor Name"
+msgid "Edit (Classic Editor)"
+msgstr "Редагувати (класичний редактор)"
+
+#: classic-editor.php:805
+msgctxt "Editor Name"
+msgid "Edit (Block Editor)"
+msgstr "Редагувати (блоковий редактор)"
+
+#: classic-editor.php:479
+msgid "Change settings"
+msgstr "Змінити налаштування"
+
+#: classic-editor.php:466
+msgid "Default editor for all sites"
+msgstr "Редактор за замовчуванням для всіх сайтів"
+
+#: classic-editor.php:462
+msgid "Editor Settings"
+msgstr "Налаштування редактора"
+
+#: classic-editor.php:446
+msgid "Default Editor"
+msgstr "Редактор за замовчуванням"
+
+#: classic-editor.php:397 classic-editor.php:474 classic-editor.php:846
+#: classic-editor.php:859
+msgctxt "Editor Name"
+msgid "Block Editor"
+msgstr "Блоковий редактор"
+
+#: classic-editor.php:393 classic-editor.php:470 classic-editor.php:843
+#: classic-editor.php:859
+msgctxt "Editor Name"
+msgid "Classic Editor"
+msgstr "Класичний редактор"
+
+#. translators: %s: post title
+#: classic-editor.php:807
+msgid "Edit &#8220;%s&#8221; in the Block Editor"
+msgstr "Редагувати &#8220;%s&#8221; в блоковому редакторі"
+
+#: classic-editor.php:647
+msgid "Switch to Block Editor"
+msgstr "Перемкнутися на блоковий редактор"
+
+#: classic-editor.php:671
+msgid "Switch to Classic Editor"
+msgstr "Перемкнутися на класичний редактор"
+
+#: classic-editor.php:483
+msgid "By default the Block Editor is replaced with the Classic Editor and users cannot switch editors."
+msgstr "За замовчуванням блоковий редактор буде замінений на класичний редактор і користувачі не зможуть вибирати редактор."
+
+#: classic-editor.php:482
+msgid "Allow site admins to change settings"
+msgstr "Дозволити адміністраторам сайту змінювати налаштування"
+
+#: classic-editor.php:628
+msgid "Editor"
+msgstr "Редактор"
+
+#: classic-editor.php:421
+msgid "No"
+msgstr "Ні"
+
+#: classic-editor.php:417
+msgid "Yes"
+msgstr "Так"
+
+#: classic-editor.php:344
+msgid "Allow users to switch editors"
+msgstr "Дозволити користувачам перемикання редакторів"
+
+#: classic-editor.php:343
+msgid "Default editor for all users"
+msgstr "Редактор за замовчуванням для всіх користувачів"
+
+#. Author URI of the plugin
+msgid "https://github.com/WordPress/classic-editor/"
+msgstr "https://github.com/WordPress/classic-editor/"
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/classic-editor/"
+msgstr "https://uk.wordpress.org/plugins/classic-editor/"
+
+#. Author of the plugin
+msgid "WordPress Contributors"
+msgstr "Учасники розробки WordPress"
+
+#. Description of the plugin
+msgid "Enables the WordPress classic editor and the old-style Edit Post screen with TinyMCE, Meta Boxes, etc. Supports the older plugins that extend this screen."
+msgstr "Вмикає класичний редактор WordPress, старий варіант екрану редагування записів (TinyMCE, мета поля та ін.). Підтримує інші плагіни розширення старого редактора."
+
+#. Plugin Name of the plugin
+msgid "Classic Editor"
+msgstr "Classic Editor"
+
+#. translators: %s: post title
+#: classic-editor.php:814
+msgid "Edit &#8220;%s&#8221; in the Classic Editor"
+msgstr "Редагувати &#8220;%s&#8221; в класичному редакторі"
+
+#: classic-editor.php:690
+msgid "Settings"
+msgstr "Налаштування"

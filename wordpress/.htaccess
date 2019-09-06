@@ -1,68 +1,107 @@
-AddDefaultCharset utf-8
-php_value memory_limit 512M
-
-# supress php errors
-php_flag display_startup_errors off
-php_flag display_errors off
-php_flag html_errors off
-php_value docref_root 0
-php_value docref_ext 0
-
-# enable PHP error logging
-php_flag  log_errors on
-php_value error_log  /PHP_errors.log
-
 
 # BEGIN All In One WP Security
 #AIOWPS_BLOCK_WP_FILE_ACCESS_START
 <Files license.txt>
-order allow,deny
-deny from all
-</files>
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order deny,allow
+Deny from all
+</IfModule>
+</Files>
 <Files wp-config-sample.php>
-order allow,deny
-deny from all
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order deny,allow
+Deny from all
+</IfModule>
 </Files>
 <Files readme.html>
-order allow,deny
-deny from all
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order deny,allow
+Deny from all
+</IfModule>
 </Files>
 #AIOWPS_BLOCK_WP_FILE_ACCESS_END
 #AIOWPS_BASIC_HTACCESS_RULES_START
 <Files .htaccess>
-order allow,deny
-deny from all
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order deny,allow
+Deny from all
+</IfModule>
 </Files>
 ServerSignature Off
 LimitRequestBody 10240000
 <Files wp-config.php>
-order allow,deny
-deny from all
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order deny,allow
+Deny from all
+</IfModule>
 </Files>
 #AIOWPS_BASIC_HTACCESS_RULES_END
 #AIOWPS_PINGBACK_HTACCESS_RULES_START
 <Files xmlrpc.php>
-order deny,allow
-deny from all
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order deny,allow
+Deny from all
+</IfModule>
 </Files>
 #AIOWPS_PINGBACK_HTACCESS_RULES_END
+#AIOWPS_DEBUG_LOG_BLOCK_HTACCESS_RULES_START
+<Files debug.log>
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order deny,allow
+Deny from all
+</IfModule>
+</Files>
+#AIOWPS_DEBUG_LOG_BLOCK_HTACCESS_RULES_END
 #AIOWPS_DISABLE_INDEX_VIEWS_START
 Options -Indexes
 #AIOWPS_DISABLE_INDEX_VIEWS_END
 #AIOWPS_DISABLE_TRACE_TRACK_START
+<IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
 RewriteRule .* - [F]
+</IfModule>
 #AIOWPS_DISABLE_TRACE_TRACK_END
 #AIOWPS_FORBID_PROXY_COMMENTS_START
-RewriteCond %{REQUEST_METHOD} =POST
-RewriteCond %{HTTP:VIA}%{HTTP:FORWARDED}%{HTTP:USERAGENT_VIA}%{HTTP:X_FORWARDED_FOR}%{HTTP:PROXY_CONNECTION} !^$ [OR]
-RewriteCond %{HTTP:XPROXY_CONNECTION}%{HTTP:HTTP_PC_REMOTE_ADDR}%{HTTP:HTTP_CLIENT_IP} !^$
-RewriteCond %{REQUEST_URI} !^/(wp-login.php|wp-admin/|wp-content/plugins/|wp-includes/).* [NC]
-RewriteRule .* - [F,NS,L]
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} ^POST
+RewriteCond %{HTTP:VIA} !^$ [OR]
+RewriteCond %{HTTP:FORWARDED} !^$ [OR]
+RewriteCond %{HTTP:USERAGENT_VIA} !^$ [OR]
+RewriteCond %{HTTP:X_FORWARDED_FOR} !^$ [OR]
+RewriteCond %{HTTP:X_FORWARDED_HOST} !^$ [OR]
+RewriteCond %{HTTP:PROXY_CONNECTION} !^$ [OR]
+RewriteCond %{HTTP:XPROXY_CONNECTION} !^$ [OR]
+RewriteCond %{HTTP:HTTP_PC_REMOTE_ADDR} !^$ [OR]
+RewriteCond %{HTTP:HTTP_CLIENT_IP} !^$
+RewriteRule wp-comments-post\.php - [F]
+</IfModule>
 #AIOWPS_FORBID_PROXY_COMMENTS_END
 #AIOWPS_DENY_BAD_QUERY_STRINGS_START
-RewriteCond %{QUERY_STRING} tag=     [NC,OR]
+<IfModule mod_rewrite.c>
+RewriteEngine On
 RewriteCond %{QUERY_STRING} ftp:     [NC,OR]
 RewriteCond %{QUERY_STRING} http:    [NC,OR]
 RewriteCond %{QUERY_STRING} https:   [NC,OR]
@@ -70,6 +109,7 @@ RewriteCond %{QUERY_STRING} mosConfig [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*(globals|encode|localhost|loopback).* [NC,OR]
 RewriteCond %{QUERY_STRING} (\;|'|\"|%22).*(request|insert|union|declare|drop) [NC]
 RewriteRule ^(.*)$ - [F,L]
+</IfModule>
 #AIOWPS_DENY_BAD_QUERY_STRINGS_END
 #AIOWPS_ADVANCED_CHAR_STRING_FILTER_START
 <IfModule mod_alias.c>
@@ -77,7 +117,6 @@ RedirectMatch 403 \,
 RedirectMatch 403 \:
 RedirectMatch 403 \;
 RedirectMatch 403 \=
-RedirectMatch 403 \@
 RedirectMatch 403 \[
 RedirectMatch 403 \]
 RedirectMatch 403 \^
@@ -154,16 +193,173 @@ RedirectMatch 403 admin\.webring\.docs\.
 Redirectmatch 403 Table\/Latest\/index\.
 </IfModule>
 #AIOWPS_ADVANCED_CHAR_STRING_FILTER_END
+#AIOWPS_SIX_G_BLACKLIST_START
+# 6G FIREWALL/BLACKLIST
+# @ https://perishablepress.com/6g/
+
+# 6G:[QUERY STRINGS]
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{QUERY_STRING} (eval\() [NC,OR]
+RewriteCond %{QUERY_STRING} (127\.0\.0\.1) [NC,OR]
+RewriteCond %{QUERY_STRING} ([a-z0-9]{2000,}) [NC,OR]
+RewriteCond %{QUERY_STRING} (javascript:)(.*)(;) [NC,OR]
+RewriteCond %{QUERY_STRING} (base64_encode)(.*)(\() [NC,OR]
+RewriteCond %{QUERY_STRING} (GLOBALS|REQUEST)(=|\[|%) [NC,OR]
+RewriteCond %{QUERY_STRING} (<|%3C)(.*)script(.*)(>|%3) [NC,OR]
+RewriteCond %{QUERY_STRING} (\|\.\.\.|\.\./|~|`|<|>|\|) [NC,OR]
+RewriteCond %{QUERY_STRING} (boot\.ini|etc/passwd|self/environ) [NC,OR]
+RewriteCond %{QUERY_STRING} (thumbs?(_editor|open)?|tim(thumb)?)\.php [NC,OR]
+RewriteCond %{QUERY_STRING} ('|\")(.*)(drop|insert|md5|select|union) [NC]
+RewriteRule .* - [F]
+</IfModule>
+
+# 6G:[REQUEST METHOD]
+<IfModule mod_rewrite.c>
+RewriteCond %{REQUEST_METHOD} ^(connect|debug|move|put|trace|track) [NC]
+RewriteRule .* - [F]
+</IfModule>
+
+# 6G:[REFERRERS]
+<IfModule mod_rewrite.c>
+RewriteCond %{HTTP_REFERER} ([a-z0-9]{2000,}) [NC,OR]
+RewriteCond %{HTTP_REFERER} (semalt.com|todaperfeita) [NC]
+RewriteRule .* - [F]
+</IfModule>
+
+# 6G:[REQUEST STRINGS]
+<IfModule mod_alias.c>
+RedirectMatch 403 (?i)([a-z0-9]{2000,})
+RedirectMatch 403 (?i)(https?|ftp|php):/
+RedirectMatch 403 (?i)(base64_encode)(.*)(\()
+RedirectMatch 403 (?i)(=\'|=\%27|/\'/?)\.
+RedirectMatch 403 (?i)/(\$(\&)?|\*|\"|\.|,|&|&amp;?)/?$
+RedirectMatch 403 (?i)(\{0\}|\(/\(|\.\.\.|\+\+\+|\\"\\")
+RedirectMatch 403 (?i)(~|`|<|>|:|;|,|%|\|\s|\{|\}|\[|\]|\|)
+RedirectMatch 403 (?i)/(=|\$&|_mm|cgi-|etc/passwd|muieblack)
+RedirectMatch 403 (?i)(&pws=0|_vti_|\(null\)|\{\$itemURL\}|echo(.*)kae|etc/passwd|eval\(|self/environ)
+RedirectMatch 403 (?i)\.(aspx?|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rar|rdf)$
+RedirectMatch 403 (?i)/(^$|(wp-)?config|mobiquo|phpinfo|shell|sqlpatch|thumb|thumb_editor|thumbopen|timthumb|webshell)\.php
+</IfModule>
+
+# 6G:[USER AGENTS]
+<IfModule mod_setenvif.c>
+SetEnvIfNoCase User-Agent ([a-z0-9]{2000,}) bad_bot
+SetEnvIfNoCase User-Agent (archive.org|binlar|casper|checkpriv|choppy|clshttp|cmsworld|diavol|dotbot|extract|feedfinder|flicky|g00g1e|harvest|heritrix|httrack|kmccrew|loader|miner|nikto|nutch|planetwork|postrank|purebot|pycurl|python|seekerspider|siclab|skygrid|sqlmap|sucker|turnit|vikspider|winhttp|xxxyy|youda|zmeu|zune) bad_bot
+
+# Apache < 2.3
+<IfModule !mod_authz_core.c>
+Order Allow,Deny
+Allow from all
+Deny from env=bad_bot
+</IfModule>
+
+# Apache >= 2.3
+<IfModule mod_authz_core.c>
+<RequireAll>
+Require all Granted
+Require not env bad_bot
+</RequireAll>
+</IfModule>
+</IfModule>
+#AIOWPS_SIX_G_BLACKLIST_END
+#AIOWPS_FIVE_G_BLACKLIST_START
+# 5G BLACKLIST/FIREWALL (2013)
+# @ http://perishablepress.com/5g-blacklist-2013/
+
+# 5G:[QUERY STRINGS]
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{QUERY_STRING} (\"|%22).*(<|>|%3) [NC,OR]
+RewriteCond %{QUERY_STRING} (javascript:).*(\;) [NC,OR]
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3) [NC,OR]
+RewriteCond %{QUERY_STRING} (\\|\.\./|`|='$|=%27$) [NC,OR]
+RewriteCond %{QUERY_STRING} (\;|'|\"|%22).*(union|select|insert|drop|update|md5|benchmark|or|and|if) [NC,OR]
+RewriteCond %{QUERY_STRING} (base64_encode|localhost|mosconfig) [NC,OR]
+RewriteCond %{QUERY_STRING} (boot\.ini|echo.*kae|etc/passwd) [NC,OR]
+RewriteCond %{QUERY_STRING} (GLOBALS|REQUEST)(=|\[|%) [NC]
+RewriteRule .* - [F]
+</IfModule>
+
+# 5G:[USER AGENTS]
+<IfModule mod_setenvif.c>
+# SetEnvIfNoCase User-Agent ^$ keep_out
+SetEnvIfNoCase User-Agent (binlar|casper|cmsworldmap|comodo|diavol|dotbot|feedfinder|flicky|ia_archiver|jakarta|kmccrew|nutch|planetwork|purebot|pycurl|skygrid|sucker|turnit|vikspider|zmeu) keep_out
+<limit GET POST PUT>
+Order Allow,Deny
+Allow from all
+Deny from env=keep_out
+</limit>
+</IfModule>
+
+# 5G:[REQUEST STRINGS]
+<IfModule mod_alias.c>
+RedirectMatch 403 (https?|ftp|php)\://
+RedirectMatch 403 /(https?|ima|ucp)/
+RedirectMatch 403 /(Permanent|Better)$
+RedirectMatch 403 (\=\\\'|\=\\%27|/\\\'/?|\)\.css\()$
+RedirectMatch 403 (\,|\)\+|/\,/|\{0\}|\(/\(|\.\.\.|\+\+\+|\||\\\"\\\")
+RedirectMatch 403 \.(cgi|asp|aspx|cfg|dll|exe|jsp|mdb|sql|ini|rar)$
+RedirectMatch 403 /(contac|fpw|install|pingserver|register)\.php$
+RedirectMatch 403 (base64|crossdomain|localhost|wwwroot|e107\_)
+RedirectMatch 403 (eval\(|\_vti\_|\(null\)|echo.*kae|config\.xml)
+RedirectMatch 403 \.well\-known/host\-meta
+RedirectMatch 403 /function\.array\-rand
+RedirectMatch 403 \)\;\$\(this\)\.html\(
+RedirectMatch 403 proc/self/environ
+RedirectMatch 403 msnbot\.htm\)\.\_
+RedirectMatch 403 /ref\.outcontrol
+RedirectMatch 403 com\_cropimage
+RedirectMatch 403 indonesia\.htm
+RedirectMatch 403 \{\$itemURL\}
+RedirectMatch 403 function\(\)
+RedirectMatch 403 labels\.rdf
+RedirectMatch 403 /playing.php
+RedirectMatch 403 muieblackcat
+</IfModule>
+
+# 5G:[REQUEST METHOD]
+<ifModule mod_rewrite.c>
+RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+RewriteRule .* - [F]
+</IfModule>
+#AIOWPS_FIVE_G_BLACKLIST_END
 #AIOWPS_BLOCK_SPAMBOTS_START
 <IfModule mod_rewrite.c>
+RewriteEngine On
 RewriteCond %{REQUEST_METHOD} POST
 RewriteCond %{REQUEST_URI} ^(.*)?wp-comments-post\.php(.*)$
-RewriteCond %{HTTP_REFERER} !^http(s)?://framework\.wp [NC,OR]
+RewriteCond %{HTTP_REFERER} !^http(s)?://wp-framework\.local [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} ^$
 RewriteRule .* http://127.0.0.1 [L]
 </IfModule>
 #AIOWPS_BLOCK_SPAMBOTS_END
+#AIOWPS_PREVENT_IMAGE_HOTLINKS_START
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} \.(gif|jpe?g?|png)$ [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://wp-framework\.local [NC]
+RewriteRule \.(gif|jpe?g?|png)$ - [F,NC,L]
+</IfModule>
+#AIOWPS_PREVENT_IMAGE_HOTLINKS_END
 # END All In One WP Security
+
+AddDefaultCharset utf-8
+php_value memory_limit 512M
+
+# supress php errors
+php_flag display_startup_errors off
+php_flag display_errors off
+php_flag html_errors off
+php_value docref_root 0
+php_value docref_ext 0
+
+# enable PHP error logging
+php_flag  log_errors on
+php_value error_log  /PHP_errors.log
 
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
@@ -246,19 +442,19 @@ AddType text/x-component                            htc
 </IfModule>
 # Block access to directories without a default document.
 <IfModule mod_autoindex.c>
-    Options -Indexes
+Options -Indexes
 </IfModule>
 # Block access to files that can expose sensitive information.
 <FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
 # Apache < 2.3
 <IfModule !mod_authz_core.c>
-	Order allow,deny
-	Deny from all
-	Satisfy All
+Order allow,deny
+Deny from all
+Satisfy All
 </IfModule>
 # Apache ≥ 2.3
 <IfModule mod_authz_core.c>
-	Require all denied
+Require all denied
 </IfModule>
 </FilesMatch>
 # ----------------------------------------------------------------------
@@ -267,81 +463,81 @@ AddType text/x-component                            htc
 
 <IfModule mod_deflate.c>
 
-    # Force compression for mangled `Accept-Encoding` request headers
-    # https://developer.yahoo.com/blogs/ydn/pushing-beyond-gzipping-25601.html
+# Force compression for mangled `Accept-Encoding` request headers
+# https://developer.yahoo.com/blogs/ydn/pushing-beyond-gzipping-25601.html
 
-    <IfModule mod_setenvif.c>
-        <IfModule mod_headers.c>
-            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
-            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
-        </IfModule>
-    </IfModule>
+<IfModule mod_setenvif.c>
+<IfModule mod_headers.c>
+SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+</IfModule>
+</IfModule>
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Compress all output labeled with one of the following media types.
-    #
-    # (!) For Apache versions below version 2.3.7 you don't need to
-    # enable `mod_filter` and can remove the `<IfModule mod_filter.c>`
-    # and `</IfModule>` lines as `AddOutputFilterByType` is still in
-    # the core directives.
-    #
-    # https://httpd.apache.org/docs/current/mod/mod_filter.html#addoutputfilterbytype
+# Compress all output labeled with one of the following media types.
+#
+# (!) For Apache versions below version 2.3.7 you don't need to
+# enable `mod_filter` and can remove the `<IfModule mod_filter.c>`
+# and `</IfModule>` lines as `AddOutputFilterByType` is still in
+# the core directives.
+#
+# https://httpd.apache.org/docs/current/mod/mod_filter.html#addoutputfilterbytype
 
-    <IfModule mod_filter.c>
-        AddOutputFilterByType DEFLATE "application/atom+xml" \
-                                      "application/javascript" \
-                                      "application/json" \
-                                      "application/ld+json" \
-                                      "application/manifest+json" \
-                                      "application/rdf+xml" \
-                                      "application/rss+xml" \
-                                      "application/schema+json" \
-                                      "application/vnd.geo+json" \
-                                      "application/vnd.ms-fontobject" \
-                                      "application/x-font-ttf" \
-                                      "application/x-javascript" \
-                                      "application/x-web-app-manifest+json" \
-                                      "application/xhtml+xml" \
-                                      "application/xml" \
-                                      "font/eot" \
-                                      "font/opentype" \
-                                      "image/bmp" \
-                                      "image/svg+xml" \
-                                      "image/vnd.microsoft.icon" \
-                                      "image/x-icon" \
-                                      "text/cache-manifest" \
-                                      "text/css" \
-                                      "text/html" \
-                                      "text/javascript" \
-                                      "text/plain" \
-                                      "text/vcard" \
-                                      "text/vnd.rim.location.xloc" \
-                                      "text/vtt" \
-                                      "text/x-component" \
-                                      "text/x-cross-domain-policy" \
-                                      "text/xml"
+<IfModule mod_filter.c>
+AddOutputFilterByType DEFLATE "application/atom+xml" \
+"application/javascript" \
+"application/json" \
+"application/ld+json" \
+"application/manifest+json" \
+"application/rdf+xml" \
+"application/rss+xml" \
+"application/schema+json" \
+"application/vnd.geo+json" \
+"application/vnd.ms-fontobject" \
+"application/x-font-ttf" \
+"application/x-javascript" \
+"application/x-web-app-manifest+json" \
+"application/xhtml+xml" \
+"application/xml" \
+"font/eot" \
+"font/opentype" \
+"image/bmp" \
+"image/svg+xml" \
+"image/vnd.microsoft.icon" \
+"image/x-icon" \
+"text/cache-manifest" \
+"text/css" \
+"text/html" \
+"text/javascript" \
+"text/plain" \
+"text/vcard" \
+"text/vnd.rim.location.xloc" \
+"text/vtt" \
+"text/x-component" \
+"text/x-cross-domain-policy" \
+"text/xml"
 
-    </IfModule>
+</IfModule>
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Map the following filename extensions to the specified
-    # encoding type in order to make Apache serve the file types
-    # with the appropriate `Content-Encoding` response header
-    # (do note that this will NOT make Apache compress them!).
-    #
-    # If these files types would be served without an appropriate
-    # `Content-Enable` response header, client applications (e.g.:
-    # browsers) wouldn't know that they first need to uncompress
-    # the response, and thus, wouldn't be able to understand the
-    # content.
-    #
-    # https://httpd.apache.org/docs/current/mod/mod_mime.html#addencoding
+# Map the following filename extensions to the specified
+# encoding type in order to make Apache serve the file types
+# with the appropriate `Content-Encoding` response header
+# (do note that this will NOT make Apache compress them!).
+#
+# If these files types would be served without an appropriate
+# `Content-Enable` response header, client applications (e.g.:
+# browsers) wouldn't know that they first need to uncompress
+# the response, and thus, wouldn't be able to understand the
+# content.
+#
+# https://httpd.apache.org/docs/current/mod/mod_mime.html#addencoding
 
-    <IfModule mod_mime.c>
-        AddEncoding gzip              svgz
-    </IfModule>
+<IfModule mod_mime.c>
+AddEncoding gzip              svgz
+</IfModule>
 
 </IfModule>
 
@@ -356,7 +552,7 @@ AddType text/x-component                            htc
 
 # `FileETag None` doesn't work in all cases.
 <IfModule mod_headers.c>
-    Header unset ETag
+Header unset ETag
 </IfModule>
 
 FileETag None
@@ -375,89 +571,82 @@ FileETag None
 
 <IfModule mod_expires.c>
 
-    ExpiresActive on
-    ExpiresDefault                                      "access plus 1 month"
+ExpiresActive on
+ExpiresDefault                                      "access plus 1 month"
 
-  # CSS
+# CSS
 
-    ExpiresByType text/css                              "access plus 1 year"
+ExpiresByType text/css                              "access plus 1 year"
 
+# Data interchange
 
-  # Data interchange
+ExpiresByType application/atom+xml                  "access plus 1 hour"
+ExpiresByType application/rdf+xml                   "access plus 1 hour"
+ExpiresByType application/rss+xml                   "access plus 1 hour"
 
-    ExpiresByType application/atom+xml                  "access plus 1 hour"
-    ExpiresByType application/rdf+xml                   "access plus 1 hour"
-    ExpiresByType application/rss+xml                   "access plus 1 hour"
+ExpiresByType application/json                      "access plus 0 seconds"
+ExpiresByType application/ld+json                   "access plus 0 seconds"
+ExpiresByType application/schema+json               "access plus 0 seconds"
+ExpiresByType application/vnd.geo+json              "access plus 0 seconds"
+ExpiresByType application/xml                       "access plus 0 seconds"
+ExpiresByType text/xml                              "access plus 0 seconds"
 
-    ExpiresByType application/json                      "access plus 0 seconds"
-    ExpiresByType application/ld+json                   "access plus 0 seconds"
-    ExpiresByType application/schema+json               "access plus 0 seconds"
-    ExpiresByType application/vnd.geo+json              "access plus 0 seconds"
-    ExpiresByType application/xml                       "access plus 0 seconds"
-    ExpiresByType text/xml                              "access plus 0 seconds"
+# Favicon (cannot be renamed!) and cursor images
 
+ExpiresByType image/vnd.microsoft.icon              "access plus 1 week"
+ExpiresByType image/x-icon                          "access plus 1 week"
 
-  # Favicon (cannot be renamed!) and cursor images
+# HTML
 
-    ExpiresByType image/vnd.microsoft.icon              "access plus 1 week"
-    ExpiresByType image/x-icon                          "access plus 1 week"
+ExpiresByType text/html                             "access plus 0 seconds"
 
-  # HTML
+# JavaScript
 
-    ExpiresByType text/html                             "access plus 0 seconds"
+ExpiresByType application/javascript                "access plus 1 year"
+ExpiresByType application/x-javascript              "access plus 1 year"
+ExpiresByType text/javascript                       "access plus 1 year"
 
+# Manifest files
 
-  # JavaScript
+ExpiresByType application/manifest+json             "access plus 1 week"
+ExpiresByType application/x-web-app-manifest+json   "access plus 0 seconds"
+ExpiresByType text/cache-manifest                   "access plus 0 seconds"
 
-    ExpiresByType application/javascript                "access plus 1 year"
-    ExpiresByType application/x-javascript              "access plus 1 year"
-    ExpiresByType text/javascript                       "access plus 1 year"
+# Media files
 
+ExpiresByType audio/ogg                             "access plus 1 month"
+ExpiresByType image/bmp                             "access plus 1 month"
+ExpiresByType image/gif                             "access plus 1 month"
+ExpiresByType image/jpeg                            "access plus 1 month"
+ExpiresByType image/png                             "access plus 1 month"
+ExpiresByType image/svg+xml                         "access plus 1 month"
+ExpiresByType image/webp                            "access plus 1 month"
+ExpiresByType video/mp4                             "access plus 1 month"
+ExpiresByType video/ogg                             "access plus 1 month"
+ExpiresByType video/webm                            "access plus 1 month"
 
-  # Manifest files
+# Web fonts
 
-    ExpiresByType application/manifest+json             "access plus 1 week"
-    ExpiresByType application/x-web-app-manifest+json   "access plus 0 seconds"
-    ExpiresByType text/cache-manifest                   "access plus 0 seconds"
+# Embedded OpenType (EOT)
+ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
+ExpiresByType font/eot                              "access plus 1 month"
 
+# OpenType
+ExpiresByType font/opentype                         "access plus 1 month"
 
-  # Media files
+# TrueType
+ExpiresByType application/x-font-ttf                "access plus 1 month"
 
-    ExpiresByType audio/ogg                             "access plus 1 month"
-    ExpiresByType image/bmp                             "access plus 1 month"
-    ExpiresByType image/gif                             "access plus 1 month"
-    ExpiresByType image/jpeg                            "access plus 1 month"
-    ExpiresByType image/png                             "access plus 1 month"
-    ExpiresByType image/svg+xml                         "access plus 1 month"
-    ExpiresByType image/webp                            "access plus 1 month"
-    ExpiresByType video/mp4                             "access plus 1 month"
-    ExpiresByType video/ogg                             "access plus 1 month"
-    ExpiresByType video/webm                            "access plus 1 month"
+# Web Open Font Format (WOFF) 1.0
+ExpiresByType application/font-woff                 "access plus 1 month"
+ExpiresByType application/x-font-woff               "access plus 1 month"
+ExpiresByType font/woff                             "access plus 1 month"
 
+# Web Open Font Format (WOFF) 2.0
+ExpiresByType application/font-woff2                "access plus 1 month"
 
-  # Web fonts
+# Other
 
-    # Embedded OpenType (EOT)
-    ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
-    ExpiresByType font/eot                              "access plus 1 month"
-
-    # OpenType
-    ExpiresByType font/opentype                         "access plus 1 month"
-
-    # TrueType
-    ExpiresByType application/x-font-ttf                "access plus 1 month"
-
-    # Web Open Font Format (WOFF) 1.0
-    ExpiresByType application/font-woff                 "access plus 1 month"
-    ExpiresByType application/x-font-woff               "access plus 1 month"
-    ExpiresByType font/woff                             "access plus 1 month"
-
-    # Web Open Font Format (WOFF) 2.0
-    ExpiresByType application/font-woff2                "access plus 1 month"
-
-
-  # Other
-
-    ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
+ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
 
 </IfModule>

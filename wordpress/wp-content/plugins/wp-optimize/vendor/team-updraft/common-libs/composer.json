@@ -1,0 +1,6 @@
+{
+    "name": "team-updraft/common-libs",
+    "description": "These are the common libs used across all of our projects",
+    "type": "project",
+    "minimum-stability": "dev"
+}

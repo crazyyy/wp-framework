@@ -1,0 +1,1823 @@
+# Translation of Plugins - Broken Link Checker - Stable (latest release) in Russian
+# This file is distributed under the same license as the Plugins - Broken Link Checker - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2019-05-28 08:57:30+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: ru\n"
+"Project-Id-Version: Plugins - Broken Link Checker - Stable (latest release)\n"
+
+#. Author URI of the plugin
+msgid "https://managewp.com"
+msgstr "https://managewp.com"
+
+#. Author of the plugin
+msgid "ManageWP"
+msgstr "ManageWP"
+
+#: core/core.php:1431
+msgid "Enter the keys of acf fields you want to check (one per line). If a field contains HTML code, prefix its name with <code>html:</code>. For example, <code>html:field_586a3eaa4091b</code>."
+msgstr "Введите ключи полей acf, которые вы хотите проверить (по одному на строку). Если поле содержит HTML-код, прикрепите его имя к <code>html:</code>. Например, <code>html:field_586a3eaa4091b</code>."
+
+#: core/core.php:111
+msgid "Every 10 minutes"
+msgstr "Каждые 10 минут"
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/broken-link-checker/"
+msgstr "https://ru.wordpress.org/plugins/broken-link-checker/"
+
+#. Description of the plugin
+msgid "Checks your blog for broken links and missing images and notifies you on the dashboard if any are found."
+msgstr "Проверяет ваш блог на наличие битых ссылок и отсутствующих изображений и уведомляет вас в Консоли, если такие найдены."
+
+#: modules/parsers/metadata.php:119 modules/parsers/acf_field.php:120
+msgid "Custom field"
+msgstr "Пользовательское поле"
+
+#: modules/parsers/image.php:186
+msgid "Image"
+msgstr "Изображение"
+
+#: modules/extras/youtube.php:263
+msgid "Unknown YouTube API response received."
+msgstr "Неизвестный ответ API YouTube."
+
+#: modules/extras/youtube.php:214
+msgid "Playlist OK"
+msgstr "Плейлист в порядке"
+
+#: modules/extras/youtube.php:205
+msgid "Video Restricted"
+msgstr "Ограниченный доступ к видео"
+
+#: modules/extras/youtube.php:199
+msgid "Video status : %s%s"
+msgstr "Статус видео : %s%s"
+
+#: modules/extras/youtube.php:189
+msgctxt "link status"
+msgid "Empty Playlist"
+msgstr "Пустой плейлист"
+
+#: modules/extras/youtube.php:188
+msgid "This playlist has no entries or all entries have been deleted."
+msgstr "В этом плейлисте нет записей или все записи были удалены."
+
+#: modules/extras/youtube.php:181
+msgid "Playlist Restricted"
+msgstr "Плейлист ограничен"
+
+#: modules/extras/youtube.php:171 modules/extras/youtube.php:174
+msgid "Playlist Not Found"
+msgstr "Плейлист на найден"
+
+#: modules/extras/youtube.php:149 modules/extras/youtube.php:152
+msgid "Video Not Found"
+msgstr "Видео не найдено"
+
+#: modules/extras/youtube.php:137
+msgid "Video OK"
+msgstr "Видео ОК"
+
+#: modules/extras/youtube-playlist-embed.php:25
+msgid "Embedded YouTube playlist"
+msgstr "Встроенный плейлист YouTube"
+
+#: modules/extras/youtube-playlist-embed.php:24
+msgid "YouTube Playlist"
+msgstr "YouTube плейлист"
+
+#: modules/extras/youtube-iframe.php:26 modules/extras/youtube-embed.php:25
+msgid "Embedded YouTube video"
+msgstr "Встроенное видео YouTube"
+
+#: modules/extras/youtube-iframe.php:25 modules/extras/youtube-embed.php:24
+msgid "YouTube Video"
+msgstr "YouTube видео"
+
+#: modules/extras/vimeo-embed.php:25
+msgid "Embedded Vimeo video"
+msgstr "Встроенное видео Vimeo"
+
+#: modules/extras/vimeo-embed.php:24
+msgid "Vimeo Video"
+msgstr "Vimeo видео"
+
+#: modules/extras/rapidshare.php:189
+msgid "RapidShare API error: %s"
+msgstr "Ошибка RapidShare API: %s"
+
+#: modules/extras/rapidshare.php:183
+msgid "RapidShare : %s"
+msgstr "RapidShare : %s"
+
+#: modules/extras/rapidshare.php:172
+msgid "File Locked"
+msgstr "Файл заблокирован"
+
+#: modules/extras/rapidshare.php:165
+msgid "File Blocked"
+msgstr "Файл заблокирован"
+
+#: modules/extras/rapidshare.php:158
+msgid "RS Server Down"
+msgstr "RS сервер не отвечает"
+
+#: modules/extras/rapidshare.php:51
+msgid "Using RapidShare API"
+msgstr "Использовать RapidShare API"
+
+#: modules/extras/mediafire.php:109
+msgid "Permission Denied"
+msgstr "Доступ запрещен"
+
+#: modules/extras/rapidshare.php:139 modules/extras/mediafire.php:97
+#: modules/extras/mediafire.php:103
+msgid "Not Found"
+msgstr "Не найдено"
+
+#: modules/extras/googlevideo-embed.php:25
+msgid "Embedded GoogleVideo video"
+msgstr "Встроенное видео в формате GoogleVideo"
+
+#: modules/extras/googlevideo-embed.php:24
+msgid "GoogleVideo Video"
+msgstr "GoogleVideo видео"
+
+#: modules/extras/embed-parser-base.php:197
+msgid "Embedded videos can't be edited using Broken Link Checker. Please edit or replace the video in question manually."
+msgstr "Встроенные видео нельзя редактировать с помощью программы Broken Link Checker. Пожалуйста, отредактируйте или замените рассматриваемое видео вручную."
+
+#: modules/extras/dailymotion-embed.php:24
+msgid "Embedded DailyMotion video"
+msgstr "Встроенное видео DailyMotion"
+
+#: modules/extras/dailymotion-embed.php:23
+msgid "DailyMotion Video"
+msgstr "DailyMotion видео"
+
+#: modules/containers/dummy.php:34 modules/containers/dummy.php:45
+msgid "I don't know how to edit a '%s' [%d]."
+msgstr "Я не знаю, как редактировать '%s' [%d]."
+
+#: modules/containers/custom_field.php:250 modules/containers/acf_field.php:258
+msgid "View \"%s\""
+msgstr "Посмотреть \"%s\""
+
+#: modules/containers/custom_field.php:216 modules/containers/acf_field.php:234
+msgid "Edit this post"
+msgstr "Редактировать эту запись"
+
+#: modules/containers/custom_field.php:115 modules/containers/acf_field.php:132
+msgid "Failed to delete the meta field '%s' on %s [%d]"
+msgstr "Не удалось удалить мета-поле '%s' в %s [%d]"
+
+#: modules/containers/custom_field.php:85 modules/containers/acf_field.php:102
+msgid "Failed to update the meta field '%s' on %s [%d]"
+msgstr "Не удалось обновить мета-поле '%s' на %s [%d]"
+
+#: modules/containers/comment.php:383
+msgid "%d comment moved to the Trash."
+msgid_plural "%d comments moved to the Trash."
+msgstr[0] "%d комментарий перемещен в корзину."
+msgstr[1] "%d комментария перемещены в корзину."
+msgstr[2] "%d комментариев перемещено в корзину."
+
+#: modules/containers/comment.php:364
+msgid "%d comment has been deleted."
+msgid_plural "%d comments have been deleted."
+msgstr[0] "%d комментарий удален."
+msgstr[1] "%d комментария удалены."
+msgstr[2] "%d комментариев удалено."
+
+#: modules/containers/comment.php:189
+msgid "Comment"
+msgstr "Комментарий"
+
+#: modules/containers/comment.php:172
+msgid "View comment"
+msgstr "Смотреть комментарии"
+
+#: modules/containers/comment.php:168
+msgctxt "verb"
+msgid "Trash"
+msgstr "Корзина"
+
+#: modules/containers/comment.php:168
+msgid "Move this comment to the trash"
+msgstr "Переместить этот комментарий в корзину"
+
+#: modules/containers/comment.php:166
+msgid "Delete Permanently"
+msgstr "Удалить навсегда"
+
+#: modules/containers/comment.php:159 modules/containers/comment.php:201
+msgid "Edit comment"
+msgstr "Редактировать комментарий"
+
+#: modules/containers/comment.php:95
+msgid "Can't move comment %d to the trash"
+msgstr "Невозможно переместить комментарий %d в корзину"
+
+#: modules/containers/comment.php:74
+msgid "Failed to delete comment %d"
+msgstr "Не удалось удалить комментарий %d"
+
+#: modules/containers/comment.php:53
+msgid "Updating comment %d failed"
+msgstr "Обновления комментария %d не выполнено"
+
+#: modules/containers/blogroll.php:298
+msgid "%d blogroll link deleted."
+msgid_plural "%d blogroll links deleted."
+msgstr[0] "%d ссылка на блог удалена."
+msgstr[1] "%d ссылки на блог удалены."
+msgstr[2] "%d ссылок на блог удалено."
+
+#: modules/containers/blogroll.php:128
+msgid "Failed to delete blogroll link \"%s\" (%d)"
+msgstr "Не удалось удалить ссылку на блог \"%s\" (%d)"
+
+#: modules/containers/blogroll.php:97
+msgid "Updating bookmark %d failed"
+msgstr "Обновление закладки %d не выполнено"
+
+#: modules/containers/blogroll.php:47
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы собираетесь удалить эту ссылку: '%s'\n"
+"Нажмите 'Отмена', чтобы прекратить или 'OK' для удаления."
+
+#: modules/containers/blogroll.php:27 modules/containers/blogroll.php:46
+msgid "Edit this bookmark"
+msgstr "Редактировать эту закладку"
+
+#: modules/containers/blogroll.php:21
+msgid "Bookmark"
+msgstr "Закладка"
+
+#: modules/checkers/http.php:465
+msgid "Using Snoopy"
+msgstr "Используем Snoopy"
+
+#: modules/checkers/http.php:447
+msgid "Request timed out."
+msgstr "Время ожидания ответа на запрос истекло."
+
+#: modules/checkers/http.php:376
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "Соединение разорвано или этот домен не существует."
+
+#: modules/checkers/http.php:358 modules/checkers/http.php:440
+msgid "(No response)"
+msgstr "(Нет ответа)"
+
+#: modules/checkers/http.php:356 modules/checkers/http.php:438
+msgid "HTTP code : %d"
+msgstr "HTTP код : %d"
+
+#: modules/checkers/http.php:308
+msgid "Connection Failed"
+msgstr "Не удалось подключиться"
+
+#: modules/checkers/http.php:292
+msgid "Server Not Found"
+msgstr "Сервер не найден"
+
+#: includes/utility-class.php:263
+msgid "%d month ago"
+msgid_plural "%d months ago"
+msgstr[0] "%d месяц назад"
+msgstr[1] "%d месяца назад"
+msgstr[2] "%d месяцев назад"
+
+#: includes/utility-class.php:262
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d месяц"
+msgstr[1] "%d месяца"
+msgstr[2] "%d месяцев"
+
+#: includes/utility-class.php:259
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "%d день назад"
+msgstr[1] "%d дня назад"
+msgstr[2] "%d дней назад"
+
+#: includes/utility-class.php:258
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d день назад"
+msgstr[1] "%d дня назад"
+msgstr[2] "%d дней назад"
+
+#: includes/utility-class.php:255
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d час назад"
+msgstr[1] "%d часа назад"
+msgstr[2] "%d часов назад"
+
+#: includes/utility-class.php:254
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d час"
+msgstr[1] "%d часа"
+msgstr[2] "%d часов"
+
+#: includes/utility-class.php:251
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d минута назад"
+msgstr[1] "%d минуты назад"
+msgstr[2] "%d минут назад"
+
+#: includes/utility-class.php:250
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d минута"
+msgstr[1] "%d минуты"
+msgstr[2] "%d минут"
+
+#: includes/utility-class.php:247
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "%d секунду назад"
+msgstr[1] "%d секунды назад"
+msgstr[2] "%d секунд назад"
+
+#: includes/utility-class.php:246
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d секунда"
+msgstr[1] "%d секунды"
+msgstr[2] "%d секунд"
+
+#: includes/parsers.php:132
+msgid "Unlinking is not implemented in the '%s' parser"
+msgstr "Отвязка не реализована в '%s' парсере"
+
+#: includes/parsers.php:117
+msgid "Editing is not implemented in the '%s' parser"
+msgstr "Редактирование не выполняется в '%s' парсере"
+
+#: modules/extras/rapidshare.php:145 modules/extras/rapidshare.php:151
+#: modules/extras/rapidshare.php:178 modules/extras/youtube.php:138
+#: modules/extras/youtube.php:215 includes/links.php:1052
+msgctxt "link status"
+msgid "OK"
+msgstr "ОК"
+
+#: includes/links.php:1049
+msgid "False positive"
+msgstr "Ложно положительный"
+
+#: includes/links.php:1046
+msgid "Not checked"
+msgstr "Не проверено"
+
+#: modules/checkers/http.php:315 modules/extras/mediafire.php:115
+#: modules/extras/youtube.php:132 modules/extras/youtube.php:229
+#: includes/links.php:1022
+msgid "Unknown Error"
+msgstr "Неизвестная ошибка"
+
+#: includes/links.php:1009
+msgctxt "link status"
+msgid "Unknown"
+msgstr "Неизвестный"
+
+#: includes/links.php:898 includes/links.php:935
+msgid "Couldn't delete the link's database record"
+msgstr "Не удалось удалить ссылки записей базы данных"
+
+#: includes/links.php:844
+msgid "This link is not a redirect"
+msgstr "Эта ссылка не перенаправление"
+
+#: includes/links.php:778
+msgid "Failed to create a DB entry for the new URL."
+msgstr "Не удалось создать запись базы данных для нового URL-адреса."
+
+#: includes/links.php:752
+msgid "This link can not be edited because it is not used anywhere on this site."
+msgstr "Эта ссылка не может быть отредактирована, поскольку она не используется нигде на этом сайте."
+
+#: includes/links.php:735 includes/links.php:837 includes/links.php:871
+msgid "Link is not valid"
+msgstr "Ссылка не действительна"
+
+#: includes/links.php:504
+msgid "Link is valid."
+msgstr "Ссылка работает."
+
+#: includes/links.php:502
+msgid "Link is broken."
+msgstr "Ссылка не работает."
+
+#: includes/links.php:271
+msgid "The plugin doesn't know how to check this type of link."
+msgstr "Плагин не знает, как проверить этот тип ссылки."
+
+#: includes/links.php:224
+msgid "The plugin script was terminated while trying to check the link."
+msgstr "Сценарий плагина был прерван при попытке проверить ссылку."
+
+#: includes/link-query.php:83 includes/link-query.php:130
+msgid "No links found for your query"
+msgstr "По этому запросу ссылок не найдено"
+
+#: includes/link-query.php:82
+msgid "Search Results"
+msgstr "Результаты поиска"
+
+#: includes/link-query.php:68
+msgid "No dismissed links found"
+msgstr "Неправильных ссылок не найдено"
+
+#: includes/link-query.php:67
+msgid "Dismissed Links"
+msgstr "Отклоненные ссылки"
+
+#: includes/link-query.php:66
+msgid "Dismissed"
+msgstr "Отклонённые"
+
+#: includes/link-query.php:58
+msgid "No redirects found"
+msgstr "Перенаправленных ссылок нет"
+
+#: includes/link-query.php:57
+msgid "Redirected Links"
+msgstr "Перенаправленные ссылки"
+
+#: includes/link-query.php:56
+msgid "Redirects"
+msgstr "Перенаправленные"
+
+#: includes/link-query.php:48
+msgid "No warnings found"
+msgstr "Предупреждения не найдены"
+
+#: includes/link-query.php:47
+msgid "Warnings"
+msgstr "Предупреждения"
+
+#: includes/link-query.php:46
+msgctxt "filter name"
+msgid "Warnings"
+msgstr "Предупреждения"
+
+#: includes/link-query.php:38
+msgid "No broken links found"
+msgstr "Неправильных ссылок нет"
+
+#: includes/link-query.php:36
+msgid "Broken"
+msgstr "Повреждённые"
+
+#: includes/link-query.php:27
+msgid "No links found (yet)"
+msgstr "Ссылок нет (пока)"
+
+#: includes/link-query.php:26
+msgid "Detected Links"
+msgstr "Все ссылки"
+
+#: includes/link-query.php:25
+msgid "All"
+msgstr "Все"
+
+#: includes/instances.php:114 includes/instances.php:170
+msgid "Parser '%s' not found."
+msgstr "Парсер '%s' не найден."
+
+#: includes/instances.php:105 includes/instances.php:161
+msgid "Container %s[%d] not found"
+msgstr "Контейнер %s[%d] не найден"
+
+#: includes/extra-strings.php:20
+msgctxt "module name"
+msgid "Pages"
+msgstr "Страницы"
+
+#: includes/extra-strings.php:19
+msgctxt "module name"
+msgid "Posts"
+msgstr "Записи"
+
+#: includes/extra-strings.php:18
+msgctxt "module name"
+msgid "YouTube API"
+msgstr "YouTube API"
+
+#: includes/extra-strings.php:17
+msgctxt "module name"
+msgid "Smart YouTube httpv:// URLs"
+msgstr "Умные YouTube httpv:// URL-адреса"
+
+#: includes/extra-strings.php:16
+msgctxt "module name"
+msgid "RapidShare API"
+msgstr "RapidShare API"
+
+#: includes/extra-strings.php:15
+msgctxt "module name"
+msgid "Plaintext URLs"
+msgstr "Обычные текстовые URL-адреса"
+
+#: includes/extra-strings.php:14
+msgctxt "module name"
+msgid "MediaFire API"
+msgstr "MediaFire API"
+
+#: includes/extra-strings.php:13
+msgctxt "module name"
+msgid "HTML links"
+msgstr "HTML ссылки"
+
+#: includes/extra-strings.php:12
+msgctxt "module name"
+msgid "HTML images"
+msgstr "HTML изображения"
+
+#: includes/extra-strings.php:11
+msgctxt "module name"
+msgid "Embedded YouTube videos (old embed code)"
+msgstr "Встроенные видео YouTube (старый код для встраивания)"
+
+#: includes/extra-strings.php:10
+msgctxt "module name"
+msgid "Embedded YouTube videos"
+msgstr "Встроенное видео YouTube"
+
+#: includes/extra-strings.php:9
+msgctxt "module name"
+msgid "Embedded YouTube playlists (old embed code)"
+msgstr "Встраиваемые плейлисты YouTube (старый код для встраивания)"
+
+#: includes/extra-strings.php:8
+msgctxt "module name"
+msgid "Embedded Vimeo videos"
+msgstr "Встраиваемые видео Vimeo"
+
+#: includes/extra-strings.php:7
+msgctxt "module name"
+msgid "Embedded GoogleVideo videos"
+msgstr "Встраиваемые видеоролики GoogleVideo"
+
+#: includes/extra-strings.php:6
+msgctxt "module name"
+msgid "Embedded DailyMotion videos"
+msgstr "Встраиваемые видео DailyMotion"
+
+#: includes/extra-strings.php:5
+msgctxt "module name"
+msgid "Custom fields"
+msgstr "Пользовательские поля"
+
+#: includes/extra-strings.php:4
+msgctxt "module name"
+msgid "Comments"
+msgstr "Комментарии"
+
+#: includes/extra-strings.php:3
+msgctxt "module name"
+msgid "Blogroll items"
+msgstr "Пункты ссылок на блоги"
+
+#: includes/extra-strings.php:2
+msgctxt "module name"
+msgid "Basic HTTP"
+msgstr "Базовый HTTP"
+
+#: includes/containers.php:888 includes/containers.php:906
+msgid "Container type '%s' not recognized"
+msgstr "Тип контейнера '%s' не распознан"
+
+#: includes/containers.php:122
+msgid "%d '%s' has been deleted"
+msgid_plural "%d '%s' have been deleted"
+msgstr[0] "%d '%s' удалено"
+msgstr[1] "%d '%s' удалено"
+msgstr[2] "%d '%s' удалено"
+
+#: includes/any-post.php:799
+msgid "%d \"%s\" moved to the Trash."
+msgid_plural "%d \"%s\" moved to the Trash."
+msgstr[0] "%d \"%s\" перемещено в корзину."
+msgstr[1] "%d \"%s\" перемещено в корзину."
+msgstr[2] "%d \"%s\" перемещено в корзину."
+
+#: includes/any-post.php:797
+msgid "%d page moved to the Trash."
+msgid_plural "%d pages moved to the Trash."
+msgstr[0] "%d страница перемещено в Корзину."
+msgstr[1] "%d страницы перемещено в Корзину."
+msgstr[2] "%d страниц перемещено в Корзину."
+
+#: includes/any-post.php:795
+msgid "%d post moved to the Trash."
+msgid_plural "%d posts moved to the Trash."
+msgstr[0] "%d записей перемещено в Корзину."
+msgstr[1] "%d записи перемещено в Корзину."
+msgstr[2] "%d записей перемещено в Корзину."
+
+#: includes/any-post.php:776
+msgid "%d \"%s\" deleted."
+msgid_plural "%d \"%s\" deleted."
+msgstr[0] "%d \"%s\" удалено."
+msgstr[1] "%d \"%s\" удалено."
+msgstr[2] "%d \"%s\" удалено."
+
+#: includes/any-post.php:774
+msgid "%d page deleted."
+msgid_plural "%d pages deleted."
+msgstr[0] "%d страница удалена."
+msgstr[1] "%d страницы удалены."
+msgstr[2] "%d страниц удалено."
+
+#: includes/any-post.php:772
+msgid "%d post deleted."
+msgid_plural "%d posts deleted."
+msgstr[0] "%d запись удалена."
+msgstr[1] "%d записи удалено."
+msgstr[2] "%d записей удалено."
+
+#: modules/containers/custom_field.php:355 modules/containers/acf_field.php:353
+#: includes/any-post.php:664
+msgid "Failed to move post \"%s\" (%d) to the trash"
+msgstr "Не удалось переместить сообщение \"%s\" (%d) в корзину"
+
+#: modules/containers/custom_field.php:336 modules/containers/acf_field.php:341
+#: includes/any-post.php:644
+msgid "Can't move post \"%s\" (%d) to the trash because the trash feature is disabled"
+msgstr "Невозможно переместить сообщение \"%s\" (%d) в корзину, потому что функция мусора отключена"
+
+#: modules/containers/custom_field.php:317 modules/containers/acf_field.php:327
+#: includes/any-post.php:625
+msgid "Failed to delete post \"%s\" (%d)"
+msgstr "Не удалось удалить пост \"%s\" (%d)"
+
+#: includes/any-post.php:588
+msgid "Updating post %d failed"
+msgstr "Ошибка обновления сообщения %d"
+
+#: modules/containers/blogroll.php:83 modules/containers/comment.php:43
+#: includes/any-post.php:578
+msgid "Nothing to update"
+msgstr "Ничего не обновлять"
+
+#: modules/containers/custom_field.php:230 modules/containers/acf_field.php:248
+#: includes/any-post.php:514
+msgid "Edit this item"
+msgstr "Изменить этот элемент"
+
+#: modules/containers/custom_field.php:250 modules/containers/comment.php:172
+#: modules/containers/acf_field.php:258 includes/any-post.php:495
+msgid "View"
+msgstr "Посмотреть"
+
+#: includes/any-post.php:494
+msgid "View &#8220;%s&#8221;"
+msgstr "Посмотреть &#8220;%s&#8221;"
+
+#: includes/any-post.php:487
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: includes/any-post.php:486
+msgid "Preview &#8220;%s&#8221;"
+msgstr "Просмотр &#8220;%s&#8221;"
+
+#: modules/containers/blogroll.php:47 modules/containers/custom_field.php:245
+#: modules/containers/acf_field.php:254 includes/any-post.php:473
+msgid "Delete"
+msgstr "Удалить"
+
+#: modules/containers/custom_field.php:243 modules/containers/acf_field.php:254
+#: includes/any-post.php:471
+msgid "Delete this item permanently"
+msgstr "Удалить этот элемент навсегда"
+
+#: modules/containers/custom_field.php:238 modules/containers/acf_field.php:252
+#: includes/any-post.php:466
+msgid "Trash"
+msgstr "Корзина"
+
+#: modules/containers/custom_field.php:236 modules/containers/acf_field.php:252
+#: includes/any-post.php:464
+msgid "Move this item to the Trash"
+msgstr "Переместить элемент в корзину"
+
+#: modules/containers/blogroll.php:46 modules/containers/custom_field.php:230
+#: modules/containers/comment.php:159 modules/containers/acf_field.php:248
+#: includes/any-post.php:456
+msgid "Edit"
+msgstr "Редактировать"
+
+#: includes/admin/table-printer.php:892
+msgid "Use this URL"
+msgstr "Использовать этот URL"
+
+#: includes/admin/table-printer.php:872
+msgctxt "inline link editor"
+msgid "Suggestions"
+msgstr "Предложения"
+
+#: includes/admin/table-printer.php:867
+msgctxt "inline link editor"
+msgid "URL"
+msgstr "URL"
+
+#: includes/admin/table-printer.php:862
+msgctxt "inline link editor"
+msgid "Text"
+msgstr "Текст"
+
+#: includes/admin/table-printer.php:859
+msgctxt "inline editor title"
+msgid "Edit Link"
+msgstr "Редактировать ссылку"
+
+#: includes/admin/table-printer.php:782
+msgid "[An orphaned link! This is a bug.]"
+msgstr "[Ссылка-сирота! Это ошибка.]"
+
+#: includes/admin/table-printer.php:755
+msgid "Update URL"
+msgstr "Обновить URL"
+
+#: includes/admin/table-printer.php:721
+msgid "Replace this redirect with a direct link"
+msgstr "Замените это перенаправление прямой ссылкой"
+
+#: includes/admin/table-printer.php:708
+msgid "Undismiss"
+msgstr "Отменить"
+
+#: includes/admin/table-printer.php:707
+msgid "Undismiss this link"
+msgstr "Отменить эту ссылку"
+
+#: includes/admin/table-printer.php:701
+msgid "Hide this link and do not report it again unless its status changes"
+msgstr "Скрыть эту ссылку и не сообщать об этом заново, если ее статус не изменится"
+
+#: includes/admin/table-printer.php:693
+msgid "Remove this link from the list of broken links and mark it as valid"
+msgstr "Удалить это сообщение и пометить ссылку как правильную"
+
+#: includes/admin/table-printer.php:687
+msgid "Remove this link from all posts"
+msgstr "Удалить эту ссылку во всех записях"
+
+#: includes/admin/table-printer.php:685
+msgid "Edit this link"
+msgstr "Редактировать ссылку"
+
+#: includes/admin/table-printer.php:664
+msgctxt "link in the \"Status\" column"
+msgid "Details"
+msgstr "Подробности"
+
+#: includes/admin/table-printer.php:652
+msgid "Broken for"
+msgstr "Испорчен"
+
+#: includes/admin/table-printer.php:636
+msgctxt "checked how long ago"
+msgid "Checked"
+msgstr "Проверено"
+
+#: includes/admin/table-printer.php:618 includes/admin/table-printer.php:663
+msgid "Show more info about this link"
+msgstr "Показать подробный отчёт об этой ссылке"
+
+#: includes/admin/table-printer.php:593
+msgid "Log"
+msgstr "Отчёт о проверке"
+
+#: includes/admin/table-printer.php:582
+msgid "This link has been broken for %s."
+msgstr "Эта ссылка была повреждена %s."
+
+#: includes/admin/table-printer.php:574
+msgid "This link has failed %d time."
+msgid_plural "This link has failed %d times."
+msgstr[0] "Эта ссылка не прошла проверку %d раз."
+msgstr[1] "Эта ссылка не прошла проверку %d раза."
+msgstr[2] "Эта ссылка не прошла проверку %d раз."
+
+#: includes/admin/table-printer.php:565
+msgid "Instance count"
+msgstr "Кол-во экземпляров"
+
+#: includes/admin/table-printer.php:560
+msgid "Redirect count"
+msgstr "Кол-во перенаправлений"
+
+#: includes/admin/table-printer.php:555
+msgid "Final URL"
+msgstr "Конечный URL"
+
+#: includes/admin/table-printer.php:552
+msgid "%2.3f seconds"
+msgstr "%2.3f секунд"
+
+#: includes/admin/table-printer.php:550
+msgid "Response time"
+msgstr "Время отклика"
+
+#: includes/admin/table-printer.php:535
+msgid "Never"
+msgstr "Никогда"
+
+#: includes/admin/table-printer.php:531
+msgid "Link last checked"
+msgstr "Дата последней проверки"
+
+#: includes/admin/table-printer.php:526
+msgid "Post published on"
+msgstr "Сообщение опубликовано в"
+
+#: includes/admin/table-printer.php:371 includes/admin/table-printer.php:880
+msgid "Update"
+msgstr "Обновить"
+
+#: includes/admin/table-printer.php:363
+msgid "Regular expression"
+msgstr "Регулярное выражение"
+
+#: includes/admin/table-printer.php:359
+msgid "Case sensitive"
+msgstr "Деликатный случай"
+
+#: includes/admin/table-printer.php:351
+msgid "Replace with"
+msgstr "Заменить"
+
+#: includes/admin/table-printer.php:347
+msgid "Find"
+msgstr "Найти"
+
+#: includes/admin/table-printer.php:345
+msgid "Bulk Edit URLs"
+msgstr "Массовое изменение URL-адресов"
+
+#: includes/admin/table-printer.php:322
+msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
+msgstr "Показано %s&#8211;%s из <span class=\"current-link-count\">%s</span>"
+
+#: includes/admin/table-printer.php:314
+msgid "&raquo;"
+msgstr "&raquo;"
+
+#: includes/admin/table-printer.php:313
+msgid "&laquo;"
+msgstr "&laquo;"
+
+#: includes/admin/table-printer.php:298
+msgid "Delete sources"
+msgstr "Удалить источники"
+
+#: includes/admin/table-printer.php:296
+msgid "Move sources to Trash"
+msgstr "Переместить источник в корзину"
+
+#: includes/admin/table-printer.php:291
+msgid "Mark as not broken"
+msgstr "Пометить как рабочая"
+
+#: includes/admin/table-printer.php:290
+msgid "Fix redirects"
+msgstr "Исправить перенаправление"
+
+#: includes/admin/table-printer.php:287
+msgid "Bulk Actions"
+msgstr "Массовые действия"
+
+#: includes/admin/table-printer.php:236
+msgid "Redirect URL"
+msgstr "URL перенаправления"
+
+#: includes/admin/table-printer.php:229
+msgid "Link Text"
+msgstr "Текст ссылки"
+
+#: includes/admin/table-printer.php:223
+msgid "Source"
+msgstr "Источник"
+
+#: includes/admin/table-printer.php:193
+msgid "Detailed View"
+msgstr "Детальный просмотр"
+
+#: includes/admin/table-printer.php:188
+msgid "Compact View"
+msgstr "Компактный вид"
+
+#: includes/admin/search-form.php:113 includes/admin/table-printer.php:369
+#: includes/admin/table-printer.php:754 includes/admin/table-printer.php:879
+msgid "Cancel"
+msgstr "Отмена"
+
+#: includes/admin/search-form.php:112
+msgid "Search Links"
+msgstr "Искать ссылки"
+
+#: includes/admin/search-form.php:74
+msgid "Links used in"
+msgstr "Ссылки в"
+
+#: includes/admin/search-form.php:70
+msgid "Any"
+msgstr "Любые"
+
+#: includes/admin/search-form.php:68 includes/admin/search-form.php:85
+msgid "Link type"
+msgstr "Тип ссылки"
+
+#: includes/admin/search-form.php:51
+msgid "Link status"
+msgstr "Статус ссылки"
+
+#: includes/admin/search-form.php:48 includes/admin/table-printer.php:545
+msgid "HTTP code"
+msgstr "Код HTTP"
+
+#: includes/admin/search-form.php:45 includes/admin/table-printer.php:216
+msgid "URL"
+msgstr "URL"
+
+#: includes/admin/search-form.php:42
+msgid "Link text"
+msgstr "Текст"
+
+#: includes/link-query.php:81 includes/admin/search-form.php:32
+msgid "Search"
+msgstr "Искать"
+
+#: includes/admin/search-form.php:26
+msgid "Delete This Filter"
+msgstr "Удалить этот фильтр"
+
+#: includes/admin/search-form.php:16
+msgid "Save This Search As a Filter"
+msgstr "Сохранить результаты поиска как фильтр"
+
+#: includes/admin/options-page-js.php:54
+msgid "Hide debug info"
+msgstr "Скрыть отладочную информацию"
+
+#: includes/admin/links-page-js.php:938
+msgid "Select one or more links to edit."
+msgstr "Выберите одну или несколько ссылок для редактирования."
+
+#: includes/admin/links-page-js.php:931
+msgid "Enter a search string first."
+msgstr "Сначала введите строку поиска."
+
+#: includes/admin/links-page-js.php:801
+msgid ""
+"Are you sure you want to remove the selected links? This action can't be undone.\n"
+"'Cancel' to stop, 'OK' to remove"
+msgstr ""
+"Вы хотите удалить выбранные ссылки? Это действие не обратимо.\n"
+"«Отмена» для остановки, «ОК», чтобы удалить"
+
+#: includes/admin/links-page-js.php:787
+msgid ""
+"Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n"
+"'Cancel' to stop, 'OK' to delete"
+msgstr ""
+"Вы действительно хотите удалить все сообщения, закладки или другие элементы, содержащие какие-либо из выбранных ссылок? Это действие не может быть отменено.\n"
+"«Отмена» для остановки, «ОК», чтобы удалить"
+
+#: includes/admin/links-page-js.php:763
+msgid ""
+"You are about to delete the current filter.\n"
+"'Cancel' to stop, 'OK' to delete"
+msgstr ""
+"Вы собираетесь удалить текущий фильтр.\n"
+"Нажмите 'Отмена', чтобы прекратить, или 'OK' для удаления"
+
+#: includes/admin/links-page-js.php:751
+msgid "Enter a name for the new custom filter"
+msgstr "Введите название фильтра"
+
+#: includes/admin/links-page-js.php:705
+msgid "The following error(s) occured :"
+msgstr "Произошли следующие ошибки:"
+
+#: includes/admin/links-page-js.php:702
+msgid "The plugin failed to remove the link."
+msgstr "Эту ссылку не получилось удалить."
+
+#: includes/admin/links-page-js.php:697
+msgid "However, %d instances couldn't be removed."
+msgstr "Однако %d экземпляров не могут быть удалены."
+
+#: includes/admin/links-page-js.php:691
+msgid "%d instances of the link were successfully unlinked."
+msgstr "%d экземпляров ссылки были успешно отсоединены."
+
+#: includes/admin/links-page-js.php:615
+msgid "Error: Link URL must not be empty."
+msgstr "Ошибка: URL-адрес ссылки не должен быть пустым."
+
+#: includes/admin/links-page-js.php:543
+msgid "The following error(s) occurred :"
+msgstr "Произошли следующие ошибки :"
+
+#: includes/admin/links-page-js.php:540
+msgid "The link could not be modified."
+msgstr "Ссылка не может быть изменена."
+
+#: includes/admin/links-page-js.php:534
+msgid "However, %d instances couldn't be edited and still point to the old URL."
+msgstr "Тем не менее, %d экземпляров не могут быть отредактированы и по-прежнему указывают на старый URL."
+
+#: includes/admin/links-page-js.php:528
+msgid "%d instances of the link were successfully modified."
+msgstr "%d ссылок были успешно изменены."
+
+#: includes/admin/links-page-js.php:431
+msgctxt "link suggestions"
+msgid "Archived page from %s (via the Wayback Machine)"
+msgstr "Архивированная страница из %s (через Wayback Machine)"
+
+#: includes/admin/links-page-js.php:430
+msgctxt "link suggestions"
+msgid "No suggestions available."
+msgstr "Нет предложений."
+
+#: includes/admin/links-page-js.php:429
+msgctxt "link suggestions"
+msgid "Searching..."
+msgstr "Поиск..."
+
+#: includes/admin/links-page-js.php:371
+msgctxt "link text"
+msgid "(Multiple links)"
+msgstr "(Несколько ссылок)"
+
+#: includes/admin/links-page-js.php:370
+msgctxt "link text"
+msgid "(None)"
+msgstr "(Пусто)"
+
+#: includes/admin/links-page-js.php:64 includes/admin/links-page-js.php:653
+msgid "Wait..."
+msgstr "Подождите..."
+
+#: includes/admin/db-upgrade.php:97
+msgid "Failed to delete old DB tables. Database error : %s"
+msgstr "Не удалось удалить старые таблицы БД. Ошибка базы данных: %s"
+
+#: core/init.php:342
+msgid "Please activate the plugin separately on each site. Network activation is not supported."
+msgstr "Включите плагин отдельно на каждом сайте. Активация сети не поддерживается."
+
+#: core/init.php:338
+msgid "Broken Link Checker installation failed. Try deactivating and then reactivating the plugin."
+msgstr "Не удалось установить исправление неисправной ссылки. Попробуйте отключить и затем активировать плагин."
+
+#: core/init.php:262
+msgid "Twice a Month"
+msgstr "Два раза в месяц"
+
+#: core/init.php:256
+msgid "Once Weekly"
+msgstr "Раз в неделю"
+
+#: core/core.php:3756
+msgid "Broken Link Checker has detected %d new broken link in your posts."
+msgid_plural "Broken Link Checker has detected %d new broken links in your posts."
+msgstr[0] "Broken Link Checker обнаружил %d новую неработающую ссылку в ваших сообщениях."
+msgstr[1] "Broken Link Checker обнаружил %d новые неработающие ссылки в ваших сообщениях."
+msgstr[2] "Broken Link Checker обнаружил %d новых неработающуих ссылкок в ваших сообщениях."
+
+#: core/core.php:3702
+msgid "You can see all broken links here:"
+msgstr "Вы можете увидеть все неработающие ссылки здесь:"
+
+#: core/core.php:3688
+msgid "Source : %s"
+msgstr "Источник : %s"
+
+#: core/core.php:3687
+msgid "Link URL : <a href=\"%s\">%s</a>"
+msgstr "URL ссылки : <a href=\"%s\">%s</a>"
+
+#: core/core.php:3686
+msgid "Link text : %s"
+msgstr "Текст ссылки : %s"
+
+#: core/core.php:3677
+msgid "Here's a list of the new broken links: "
+msgstr "Это список новых сломанных ссылок: "
+
+#: core/core.php:3668
+msgid "Here's a list of the first %d broken links:"
+msgid_plural "Here's a list of the first %d broken links:"
+msgstr[0] "Вот список из первых %d сломанной ссылки:"
+msgstr[1] "Вот список из первых %d сломанных ссылок:"
+msgstr[2] "Вот список из первых %d сломанных ссылок:"
+
+#: core/core.php:3637
+msgid "Broken Link Checker has detected %d new broken link on your site."
+msgid_plural "Broken Link Checker has detected %d new broken links on your site."
+msgstr[0] "Broken Link Checker обнаружил %d новую неработающую ссылку на вашем сайте."
+msgstr[1] "Broken Link Checker обнаружил %d новые неработающие ссылки на вашем сайте."
+msgstr[2] "Broken Link Checker обнаружил %d новых неработающих ссылок на вашем сайте."
+
+#: core/core.php:3632 core/core.php:3751
+msgid "[%s] Broken links detected"
+msgstr "[%s] Обнаружены неисправные ссылки"
+
+#: core/core.php:3509
+msgid "If this value is zero even after several page reloads you have probably encountered a bug."
+msgstr "Если это значение равно нулю даже после нескольких перезагрузок страниц, вы, вероятно, столкнулись с ошибкой."
+
+#: core/core.php:3490
+msgid "Database character set"
+msgstr "Кодировка символов базы данных"
+
+#: core/core.php:3472
+msgid "Redirects may be detected as broken links when open_basedir is on."
+msgstr "Если параметр open_basedir включен, то перенаправления могут быть восприняты как неправильные ссылки."
+
+#: core/core.php:3471
+msgid "On ( %s )"
+msgstr "Вкл ( %s )"
+
+#: core/core.php:3463 core/core.php:3477
+msgid "Off"
+msgstr "Выкл"
+
+#: core/core.php:3458
+msgid "Redirects may be detected as broken links when safe_mode is on."
+msgstr "Если параметр safe mode включен, то перенаправления могут быть восприняты как неправильные ссылки."
+
+#: core/core.php:3457
+msgid "On"
+msgstr "Вкл"
+
+#: core/core.php:3446
+msgid "You must have either CURL or Snoopy installed for the plugin to work!"
+msgstr "Для того, чтобы этот плагин мог работать, у вас должны быть установлены либо CURL, либо Snoopy!"
+
+#: core/core.php:3433
+msgid "Installed"
+msgstr "Установлено"
+
+#: core/core.php:3427
+msgid "CURL version"
+msgstr "Версия CURL"
+
+#: core/core.php:3424 core/core.php:3440 core/core.php:3445
+msgid "Not installed"
+msgstr "Не установлено"
+
+#: core/core.php:3412
+msgid "You have an old version of CURL. Redirect detection may not work properly."
+msgstr "Вы используете старую версию CURL. Обнаружение перенаправлений может работать некорректно."
+
+#: core/core.php:3399
+msgid "MySQL version"
+msgstr "Версия MySQL"
+
+#: core/core.php:3393
+msgid "PHP version"
+msgstr "Версия PHP"
+
+#. Plugin Name of the plugin
+#: core/core.php:3373
+msgid "Broken Link Checker"
+msgstr "Broken Link Checker"
+
+#: core/core.php:3319
+msgid "Failed to load link details (%s)"
+msgstr "Не удалось загрузить подробности о ссылке (%s)"
+
+#: core/core.php:3305
+msgid "Error : link ID not specified"
+msgstr "Ошибка: не указан ID ссылки"
+
+#: core/core.php:3292
+msgid "You don't have sufficient privileges to access this information!"
+msgstr "Вам запрещен доступ к этой информации!"
+
+#: core/core.php:3157
+msgid "An unexpected error occured!"
+msgstr "Произошла неожиданная ошибка!"
+
+#: core/core.php:3087
+msgid "An unexpected error occurred!"
+msgstr "Произошла непредвиденная ошибка!"
+
+#: core/core.php:3061 core/core.php:3071
+msgid "Oops, the new URL is invalid!"
+msgstr "Извините, но этот новый URL тоже неправильный!"
+
+#: core/core.php:3043
+msgid "Error : link_id or new_url not specified"
+msgstr "Ошибка: не указан ID ссылки или её новый URL"
+
+#: core/core.php:2984 core/core.php:3025 core/core.php:3174 core/core.php:3188
+#: core/core.php:3250
+msgid "Error : link_id not specified"
+msgstr "Ошибка: не указан ID ссылки"
+
+#: core/core.php:2981 core/core.php:3022
+msgid "Oops, couldn't modify the link!"
+msgstr "Извините, но ссылку невозможно отредактировать!"
+
+#: core/core.php:2961 core/core.php:3008 core/core.php:3052 core/core.php:3148
+#: core/core.php:3197 core/core.php:3259
+msgid "Oops, I can't find the link %d"
+msgstr "Извините, но ссылку %d невозможно найти"
+
+#: core/core.php:2896
+msgctxt "current load"
+msgid "Unknown"
+msgstr "Неизвестный"
+
+#: core/core.php:2870
+msgid "No links detected."
+msgstr "Не обнаружено ни одной ссылки."
+
+#: core/core.php:2868
+msgid "Searching your blog for links..."
+msgstr "Поиск ссылок в вашем журнале..."
+
+#: core/core.php:2861
+msgid "Detected %1$s in %2$s."
+msgstr "Обнаружено %1$s в %2$s."
+
+#: core/core.php:2855
+msgid "Detected %1$s in %2$s and still searching..."
+msgstr "Обнаружено %1$s в %2$s и продолжается поиск ..."
+
+#: core/core.php:2849
+msgctxt "for the \"Detected X unique URLs in Y links\" message"
+msgid "%d link"
+msgid_plural "%d links"
+msgstr[0] "в %d ссылке"
+msgstr[1] "в %d ссылках"
+msgstr[2] "в %d ссылках"
+
+#: core/core.php:2845
+msgctxt "for the \"Detected X unique URLs in Y links\" message"
+msgid "%d unique URL"
+msgid_plural "%d unique URLs"
+msgstr[0] "Обнаружен %d уникальный URL"
+msgstr[1] "Обнаружено %d уникальных URL"
+msgstr[2] "Обнаружено %d уникальных URL"
+
+#: core/core.php:2839
+msgid "No URLs in the work queue."
+msgstr "Сейчас в очереди на проверку нет ни одного URL."
+
+#: core/core.php:2836
+msgid "%d URL in the work queue"
+msgid_plural "%d URLs in the work queue"
+msgstr[0] "%d URL в очереди на проверку"
+msgstr[1] "%d URL в очереди на проверку"
+msgstr[2] "%d URL в очереди на проверку"
+
+#: core/core.php:2829
+msgid "No broken links found."
+msgstr "Сейчас не найдено ни одной неправильной ссылки."
+
+#: core/core.php:2823
+msgid "Found %d broken link"
+msgid_plural "Found %d broken links"
+msgstr[0] "Найдена %d неправильная ссылка"
+msgstr[1] "Найдены %d неправильные ссылки"
+msgstr[2] "Найдено %d неправильных ссылок"
+
+#: core/core.php:2822
+msgid "View broken links"
+msgstr "Показать неправильные ссылки"
+
+#: core/core.php:2389 core/core.php:2953 core/core.php:3000 core/core.php:3037
+#: core/core.php:3138 core/core.php:3182 core/core.php:3244
+msgid "You're not allowed to do that!"
+msgstr "Вам запрещено делать это!"
+
+#: core/core.php:2372
+msgid "Color-code status codes"
+msgstr "Коды статуса цветового кода"
+
+#: core/core.php:2363
+msgid "Highlight links broken for at least %s days"
+msgstr "Выделите ссылки неработающие, по крайней мере %s дней"
+
+#: core/core.php:2348
+msgid "Misc"
+msgstr "Разное"
+
+#: core/core.php:2344 includes/admin/table-printer.php:171
+msgid "Apply"
+msgstr "Применить"
+
+#: core/core.php:2343
+msgid "links"
+msgstr "ссылки"
+
+#: core/core.php:2336
+msgid "Show on screen"
+msgstr "Показать на экране"
+
+#: core/core.php:2317
+msgid "Table columns"
+msgstr "Столбцы таблицы"
+
+#: core/core.php:2292
+msgctxt "a link from the admin notice under Tools - Broken links - Warnings"
+msgid "Change warning settings"
+msgstr "Изменение настроек предупреждения"
+
+#: core/core.php:2286
+msgctxt "admin notice under Tools - Broken links - Warnings"
+msgid "Hide notice"
+msgstr "Скрыть уведомление"
+
+#: core/core.php:2281
+msgid "The \"Warnings\" page lists problems that are probably temporary or suspected to be false positives.<br> Warnings that persist for a long time will usually be reclassified as broken links."
+msgstr "На странице «Предупреждения» перечислены проблемы, которые, вероятно, являются временными или предполагаются ложными срабатываниями.<br> Предупреждения, которые сохраняются в течение длительного времени, обычно реклассифицируются как неработающие ссылки."
+
+#: core/core.php:2224
+msgid "%d link dismissed"
+msgid_plural "%d links dismissed"
+msgstr[0] "%d ссылка отклонена"
+msgstr[1] "%d ссылки отклонены"
+msgstr[2] "%d ссылок отклонено"
+
+#: core/core.php:2162
+msgid "%d link marked as not broken"
+msgid_plural "%d links marked as not broken"
+msgstr[0] "%d ссылка обозначена как не сломанная"
+msgstr[1] "%d ссылки обозначены как не сломанные"
+msgstr[2] "%d ссылок обозначены как не сломанные"
+
+#: core/core.php:2151 core/core.php:2213
+msgid "Couldn't modify link %d"
+msgstr "Не удалось изменить ссылку %d"
+
+#: core/core.php:2143 core/core.php:2969
+msgid "This link was manually marked as working by the user."
+msgstr "Эта ссылка была вручную помечена пользователем как рабочая."
+
+#: core/core.php:2094
+msgid "%d link scheduled for rechecking"
+msgid_plural "%d links scheduled for rechecking"
+msgstr[0] "%d ссылка нуждается в перепроверкe"
+msgstr[1] "%d ссылки нуждаются в перепроверкe"
+msgstr[2] "%d ссылок нуждаются в перепроверкe"
+
+#: core/core.php:2064
+msgid "Didn't find anything to delete!"
+msgstr "Не нашел ничего, чтобы удалить!"
+
+#: core/core.php:2042
+msgid "%d item was skipped because it can't be moved to the Trash. You need to delete it manually."
+msgid_plural "%d items were skipped because they can't be moved to the Trash. You need to delete them manually."
+msgstr[0] "%d элемент был пропущен, потому что его нельзя перенести в корзину. Вам нужно удалить его вручную."
+msgstr[1] "%d элемента были пропущены, потому что их нельзя перенести в корзину. Вам нужно удалить их вручную."
+msgstr[2] "%d элементов были пропущены, потому что их нельзя перенести в корзину. Вам нужно удалить их вручную."
+
+#: core/core.php:1933
+msgid "Failed to remove %d link"
+msgid_plural "Failed to remove %d links"
+msgstr[0] "Не удалось убрать %d ссылку"
+msgstr[1] "Не удалось убрать %d ссылки"
+msgstr[2] "Не удалось убрать %d ссылок"
+
+#: core/core.php:1922
+msgid "%d link removed"
+msgid_plural "%d links removed"
+msgstr[0] "%d ссылка убрана"
+msgstr[1] "%d ссылки убрано"
+msgstr[2] "%d ссылок убрано"
+
+#: core/core.php:1833
+msgid "Failed to update %d link."
+msgid_plural "Failed to update %d links."
+msgstr[0] "Не удалось обновить %d ссылку."
+msgstr[1] "Не удалось обновить %d ссылки."
+msgstr[2] "Не удалось обновить %d ссылок."
+
+#: core/core.php:1822
+msgid "%d link updated."
+msgid_plural "%d links updated."
+msgstr[0] "%d Ссылка обновлена."
+msgstr[1] "%d Ссылки обновлены."
+msgstr[2] "%d Ссылок обновлены."
+
+#: core/core.php:1744
+msgid "None of the selected links are redirects!"
+msgstr "Ни одна из выбранных ссылок не перенаправляется!"
+
+#: core/core.php:1733
+msgid "Failed to fix %d redirect"
+msgid_plural "Failed to fix %d redirects"
+msgstr[0] "Не удалось установить %d перенаправление"
+msgstr[1] "Не удалось установить %d перенаправления"
+msgstr[2] "Не удалось установить %d перенаправлений"
+
+#: core/core.php:1722
+msgid "Replaced %d redirect with a direct link"
+msgid_plural "Replaced %d redirects with direct links"
+msgstr[0] "Заменено %d перенаправление прямой ссылкой"
+msgstr[1] "Заменено %d перенаправления прямыми ссылками"
+msgstr[2] "Заменено %d перенаправлений прямыми ссылками"
+
+#: core/core.php:1675
+msgid "Filter deleted"
+msgstr "Фильтр удалён"
+
+#: core/core.php:1668
+msgid "Filter ID not specified."
+msgstr "ID фильтра не указан."
+
+#: core/core.php:1641
+msgid "Filter \"%s\" created"
+msgstr "Фильтр \"%s\" создан"
+
+#: core/core.php:1631
+msgid "Invalid search query."
+msgstr "Некорректный поисковый запрос."
+
+#: core/core.php:1627
+msgid "You must enter a filter name!"
+msgstr "Вы должны указать название фильтра!"
+
+#: core/core.php:1562 core/core.php:1646 core/core.php:1678
+msgid "Database error : %s"
+msgstr "Ошибка базы данных: %s"
+
+#: core/core.php:1417
+msgid "Enter the names of custom fields you want to check (one per line). If a field contains HTML code, prefix its name with <code>html:</code>. For example, <code>html:field_name</code>."
+msgstr "Введите имена настраиваемых полей, которые вы хотите проверить (по одному на строку). Если поле содержит HTML-код, префикс его имени <code>html:</code>. Например, <code>html:field_name</code>."
+
+#: core/core.php:1335
+msgid "Configure"
+msgstr "Настроить"
+
+#: core/core.php:1284
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#: core/core.php:1273
+msgid "The \"Nuclear Option\". Click this button to make the plugin empty its link database and recheck the entire site from scratch."
+msgstr "«Ядерный вариант». Нажмите эту кнопку, чтобы плагин очистил свою базу данных ссылок и проверил весь сайт с нуля."
+
+#: core/core.php:1269
+msgid "Re-check all pages"
+msgstr "Перепроверить все страницы"
+
+#: core/core.php:1266
+msgid "Forced recheck"
+msgstr "Принудительная перепроверка"
+
+#: core/core.php:1254
+msgctxt "log file location"
+msgid "Custom"
+msgstr "Выборочно"
+
+#: core/core.php:1240
+msgctxt "log file location"
+msgid "Default"
+msgstr "По умолчанию"
+
+#: core/core.php:1231
+msgid "Log file location"
+msgstr "Расположение файла журнала"
+
+#: core/core.php:1224
+msgid "Enable logging"
+msgstr "Включить журналирование"
+
+#: core/core.php:1218
+msgid "Logging"
+msgstr "Журналирование"
+
+#: core/core.php:1200
+msgid "Target resource usage"
+msgstr "Использовать ресурс"
+
+#: core/core.php:1192
+msgid "Load limiting only works on Linux-like systems where <code>/proc/loadavg</code> is present and accessible."
+msgstr "Ограничение нагрузки работает только на Linux-подобных системах, где <code>/proc/loadavg</code> присутствует и доступно."
+
+#: core/core.php:1190
+msgid "Not available"
+msgstr "Не доступно"
+
+#: core/core.php:1181
+msgid "Link checking will be suspended if the average <a href=\"%s\">server load</a> rises above this number. Leave this field blank to disable load limiting."
+msgstr "Проверка ссылок будет приостановлена, если средняя <a href=\"%s\">загрузка сервера</a> выше этого числа. Оставьте это поле пустым, чтобы отключить ограничение нагрузки."
+
+#: core/core.php:1176
+msgid "Current load : %s"
+msgstr "Текущая загрузка : %s"
+
+#: core/core.php:1161
+msgid "Server load limit"
+msgstr "Предельная нагрузка сервера"
+
+#: core/core.php:1152
+msgid "The plugin works by periodically launching a background job that parses your posts for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the link monitor may run each time before stopping."
+msgstr "Плагин работает периодически запускает фоновое задание, которое анализирует свои сообщения для ссылки, проверяет обнаружили URL-адресов, а также выполняет другие трудоемкие задачи. Здесь вы можете установить, как долго, в крайнем случае, связь монитор может запускаться каждый раз перед остановкой."
+
+#: core/core.php:1135
+msgid "Max. execution time"
+msgstr "Максимальное время поиска"
+
+#: core/core.php:1117
+msgctxt "settings page"
+msgid "Show link actions"
+msgstr "Показать действие ссылки"
+
+#: core/core.php:1101
+msgctxt "dashboard widget visibility"
+msgid "Nobody (disables the widget)"
+msgstr "Никому (отключает виджет)"
+
+#: core/core.php:1100
+msgctxt "dashboard widget visibility"
+msgid "Editor and above"
+msgstr "Редактор и выше"
+
+#: core/core.php:1099
+msgctxt "dashboard widget visibility"
+msgid "Administrator"
+msgstr "Администратор"
+
+#: core/core.php:1094
+msgid "Show the dashboard widget for"
+msgstr "Показать виджет панели инструментов для"
+
+#: core/core.php:1086
+msgid "Run hourly in the background"
+msgstr "Ежечасно в фоновом режиме"
+
+#: core/core.php:1078
+msgid "Run continuously while the Dashboard is open"
+msgstr "Непрерывно работать при открытой панели управления"
+
+#: core/core.php:1070
+msgid "Link monitor"
+msgstr "Мониторить ссвылки"
+
+#: core/core.php:1063
+msgid "Links that take longer than this to load will be marked as broken."
+msgstr "Ссылки, время загрузки которых больше, чем указанное, будут помечены как неправильные."
+
+#: core/core.php:1054 core/core.php:1141 core/core.php:3484
+msgid "%s seconds"
+msgstr "%s сек"
+
+#: core/core.php:1048 includes/links.php:1026
+msgid "Timeout"
+msgstr "Время ожидания загрузки"
+
+#: core/core.php:1029
+msgid "Check links using"
+msgstr "Проверьте ссылки, используя"
+
+#: core/core.php:1011
+msgid "Don't check links where the URL contains any of these words (one per line) :"
+msgstr "Не проверять ссылки, которые содержат любое из этих слов (по одному на строку):"
+
+#: core/core.php:1010
+msgid "Exclusion list"
+msgstr "Список исключений"
+
+#: core/core.php:1003
+msgid "Error : All link parsers missing!"
+msgstr "Ошибка: Отсутствуют все анализаторы ссылок!"
+
+#: core/core.php:997
+msgid "Link types"
+msgstr "Типы ссылок"
+
+#: core/core.php:964
+msgid "Post statuses"
+msgstr "Статусы сообщений"
+
+#: core/core.php:953
+msgid "Look for links in"
+msgstr "Где искать"
+
+#: core/core.php:938
+msgid "Turning off this option will make the plugin report all problems as broken links."
+msgstr "Отключение этой опции заставит плагин сообщать обо всех проблемах как неработающие ссылки."
+
+#: core/core.php:935
+msgid "Show uncertain or minor problems as \"warnings\" instead of \"broken\""
+msgstr "Показать неопределенные или незначительные проблемы, как \"предупреждения\" вместо \"сломанны\""
+
+#: core/core.php:930
+msgctxt "settings page"
+msgid "Warnings"
+msgstr "Предупреждения"
+
+#: core/core.php:924
+msgid "Suggest alternatives to broken links"
+msgstr "Предложить альтернативы неработающих ссылок"
+
+#: core/core.php:919
+msgctxt "settings page"
+msgid "Suggestions"
+msgstr "Предложения"
+
+#: core/core.php:908
+msgctxt "\"Link tweaks\" settings"
+msgid "These settings only apply to the content of posts, not comments or custom fields."
+msgstr "Эти настройки применяются только к контенту сообщений, а не к комментариям или настраиваемым полям."
+
+#: core/core.php:902
+msgid "Stop search engines from following broken links"
+msgstr "Остановить дальнейший поиск по следующим неработающим ссылкам"
+
+#: core/core.php:889
+msgid "Example : Lorem ipsum <span %s>removed link</span>, dolor sit amet."
+msgstr "Пример: Lorem ipsum <span %s> ссылка удалена </span>, dolor sit amet."
+
+#: core/core.php:869
+msgid "Apply custom formatting to removed links"
+msgstr "Применить пользовательское форматирование к удаленным ссылкам"
+
+#: core/core.php:861 core/core.php:892
+msgid "Click \"Save Changes\" to update example output."
+msgstr "Нажмите «Сохранить изменения», чтобы обновить пример вывода."
+
+#: core/core.php:858
+msgid "Example : Lorem ipsum <a %s>broken link</a>, dolor sit amet."
+msgstr "Пример: Lorem ipsum <a %s> битая ссылка </a>, dolor sit amet."
+
+#: core/core.php:842 core/core.php:873
+msgid "Edit CSS"
+msgstr "Редактировать CSS"
+
+#: core/core.php:838
+msgid "Apply custom formatting to broken links"
+msgstr "Применить пользовательское форматирование к неработающим ссылкам"
+
+#: core/core.php:832
+msgid "Link tweaks"
+msgstr "Настройки ссылки"
+
+#: core/core.php:825
+msgid "Leave empty to use the e-mail address specified in Settings &rarr; General."
+msgstr "Оставьте пустым, чтобы использовать адрес электронной почты, указанный в настройках & rarr; Общие."
+
+#: core/core.php:813
+msgid "Notification e-mail address"
+msgstr "Адрес электронной почты для уведомлений"
+
+#: core/core.php:806
+msgid "Send authors e-mail notifications about broken links in their posts"
+msgstr "Отправить авторам сообщения электронной почты о битых ссылках в их записях"
+
+#: core/core.php:798
+msgid "Send me e-mail notifications about newly detected broken links"
+msgstr "Отправьте мне уведомления по электронной почте о новых обнаруженных битых ссылках"
+
+#: core/core.php:792
+msgid "E-mail notifications"
+msgstr "Уведомления по электронной почте"
+
+#: core/core.php:785
+msgid "Existing links will be checked this often. New links will usually be checked ASAP."
+msgstr "Ссылки в старых записях будут перепроверяться с указанным интервалом. Новые записи обычно проверяются по мере их появления."
+
+#: core/core.php:776
+msgid "Every %s hours"
+msgstr "Каждые %s ч"
+
+#: core/core.php:771
+msgid "Check each link"
+msgstr "Периодичность проверок"
+
+#: core/core.php:743 includes/admin/options-page-js.php:56
+msgid "Show debug info"
+msgstr "Показать отладочную информацию"
+
+#: core/core.php:741 includes/admin/table-printer.php:211
+msgid "Status"
+msgstr "Состояние"
+
+#: core/core.php:699
+msgid "Broken Link Checker Options"
+msgstr "Настройка проверки ссылок"
+
+#: core/core.php:684
+msgid "Advanced"
+msgstr "Дополнительно"
+
+#: core/core.php:683
+msgid "Protocols & APIs"
+msgstr "Протоколы и API"
+
+#: core/core.php:682
+msgid "Which Links To Check"
+msgstr "Что проверять"
+
+#: core/core.php:681
+msgid "Look For Links In"
+msgstr "Искать Ссылки в"
+
+#: core/core.php:680
+msgid "General"
+msgstr "Общие"
+
+#: core/core.php:658
+msgid "Complete site recheck started."
+msgstr "Спасибо вам за ваше пожертвование!"
+
+#: core/core.php:650
+msgid "Thank you for your donation!"
+msgstr "Благодарим за пожертвование!"
+
+#: core/core.php:644
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+#: core/core.php:403 includes/admin/table-printer.php:722
+msgctxt "link action; replace one redirect with a direct link"
+msgid "Fix redirect"
+msgstr "Исправить перенаправление"
+
+#: core/core.php:402 includes/admin/table-printer.php:289
+#: includes/admin/table-printer.php:714
+msgid "Recheck"
+msgstr "Перепроверить"
+
+#: core/core.php:401 includes/admin/table-printer.php:292
+#: includes/admin/table-printer.php:702
+msgid "Dismiss"
+msgstr "Отклонить"
+
+#: core/core.php:400 includes/admin/links-page-js.php:111
+#: includes/admin/table-printer.php:694
+msgid "Not broken"
+msgstr "Не нарушена"
+
+#: core/core.php:399 includes/admin/links-page-js.php:713
+#: includes/admin/table-printer.php:293 includes/admin/table-printer.php:688
+msgid "Unlink"
+msgstr "Удалить ссылку"
+
+#: core/core.php:398 includes/admin/table-printer.php:288
+#: includes/admin/table-printer.php:685
+msgid "Edit URL"
+msgstr "Редактировать URL"
+
+#: core/core.php:369
+msgid "Settings"
+msgstr "Настройки"
+
+#: core/core.php:351
+msgid "Go to Broken Links"
+msgstr "Перейти к битым ссылкам"
+
+#: core/core.php:336
+msgid "View Broken Links"
+msgstr "Просмотреть неправильные ссылки"
+
+#: core/core.php:320 includes/link-query.php:37
+msgid "Broken Links"
+msgstr "Неправильные ссылки"
+
+#: core/core.php:315
+msgid "Link Checker"
+msgstr "Проверка ссылок"
+
+#: core/core.php:314
+msgid "Link Checker Settings"
+msgstr "Настройки проверки ссылок"
+
+#: core/core.php:223
+msgid "Automatically expand the widget if broken links have been detected"
+msgstr "Автоматически раскрыть виджет, если обнаружены неправильные ссылки"
+
+#: core/core.php:196 includes/admin/options-page-js.php:18
+msgid "[ Network error ]"
+msgstr "[ Ошибка сети ]"
+
+#: core/core.php:172 includes/admin/links-page-js.php:45
+msgid "Loading..."
+msgstr "Загрузка..."
