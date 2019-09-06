@@ -53,6 +53,7 @@ if (htmlOWp === true) {
 import config from 'config';
 import gulp from 'gulp';
 import browserSync from 'browser-sync';
+import lazypipe from 'lazypipe';
 
 /* PostCSS plugins */
 import postcssPresetEnv from 'postcss-preset-env';
@@ -83,10 +84,6 @@ const plugins = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'gulp.*'],
   replaceString: /\bgulp[\-.]/
 });
-
-config.path.base.wp = './wp-content/themes/' + config.theme + '/';
-ChangeBasePath(config);
-config.path.base.dest = config.path.base.wp;
 
 let processors = [
   charset(),
@@ -303,14 +300,14 @@ gulp.task('parallel-scripts-images-styles', gulp.parallel('task:images-styles', 
 
 gulp.task('default', gulp.parallel(
   'task:images-styles',
-  // 'image2webpContent', // tempolary disable it
+  // 'image:image2webpContent', // tempolary disable it
   'scripts',
   'fonts',
 ));
 
 gulp.task('build', gulp.parallel(
   'task:images-styles',
-  'image2webpContent', // tempolary disable it
+  'image:image2webpContent', // tempolary disable it
   'scripts',
   'fonts',
 ));

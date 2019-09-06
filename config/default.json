@@ -10,9 +10,8 @@
     "images": {
       "src": "assets/img/",
       "srcimg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
-      "dest": "./html/img/",
-      "spritePng": "assets/sprite-png/**/*.png",
-      "spriteSvg": "assets/sprite-svg/**/*.svg"
+      "srcImgContent": "wordpress/wp-content/uploads/",
+      "dest": "./html/img/"
     },
     "fonts": {
       "src": "assets/fonts/**",
@@ -29,10 +28,5 @@
       "src": "assets/js/**",
       "dest": "./html/js/"
     }
-  },
-  "sprite": {
-    "imgName": "_sprite_png.png",
-    "cssName": "_sprite_png.scss",
-    "imgPath": "../img/_sprite_png.png"
   }
 }
