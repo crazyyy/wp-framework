@@ -436,7 +436,7 @@ audio {
 a[href^='tel'] {
   white-space: nowrap;
   text-decoration: none;
-  pointer-events: none;
+  // pointer-events: none;
 
   color: inherit;
 }
