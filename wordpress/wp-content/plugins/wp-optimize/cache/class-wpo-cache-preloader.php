@@ -186,6 +186,7 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 	public function run($type = 'scheduled', $response = null) {
 		if (!$this->is_cache_active()) {
 			return array(
+				'success' => false,
 				'error' => __('Page cache is disabled.', 'wp-optimize')
 			);
 		}
@@ -194,8 +195,13 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 			$response = array('success' => true);
 		}
 
+		$is_wp_cli = defined('WP_CLI') && WP_CLI;
+
 		// close browser connection and continue work.
-		WP_Optimize()->close_browser_connection(json_encode($response));
+		// don't close connection for WP-CLI
+		if (false == $is_wp_cli) {
+			WP_Optimize()->close_browser_connection(json_encode($response));
+		}
 
 		// trying to change time limit.
 		WP_Optimize()->change_time_limit();
@@ -217,6 +223,11 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 		}
 
 		$this->process_tasks_queue();
+
+		// return $response in WP-CLI mode
+		if ($is_wp_cli) {
+			return $response;
+		}
 	}
 
 	/**
@@ -297,6 +308,28 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 	public function cancel_preload() {
 		$this->delete_tasks($this->task_type);
 		$this->delete_preload_continue_action();
+	}
+
+	/**
+	 * Check if preloading queue is processing.
+	 *
+	 * @return bool
+	 */
+	public function is_busy() {
+		$is_busy = false;
+
+		// Trying to lock queue semaphore and if we can't lock then assume the queue is processing.
+
+		$queue_semaphore = new Updraft_Semaphore_2_1($this->task_type);
+		$lock = $queue_semaphore->lock();
+
+		if (!$lock) {
+			$is_busy = true;
+		} else {
+			$queue_semaphore->unlock();
+		}
+
+		return $is_busy;
 	}
 
 	/**
@@ -401,7 +434,7 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 
 				// this description is being used for internal purposes.
 				$description = 'Preload - '.$url;
-				$options = array('url' => $url, 'preload_type' => $type);
+				$options = array('url' => $url, 'preload_type' => $type, 'anonymous_user_allowed' => (defined('DOING_CRON') && DOING_CRON) || (defined('WP_CLI') && WP_CLI));
 
 				WP_Optimize_Load_Url_Task::create_task($this->task_type, $description, $options, 'WP_Optimize_Load_Url_Task');
 			}
@@ -514,7 +547,7 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 		$response = wp_remote_get(site_url('/sitemap.xml'), array('timeout' => 10));
 
 		if (is_wp_error($response) || '200' != wp_remote_retrieve_response_code($response)) {
-			$sitemap_file = trailingslashit(get_home_path()) . 'sitemap.xml';
+			$sitemap_file = $this->get_local_sitemap_file();
 
 			if (is_file($sitemap_file)) {
 				return true;
@@ -555,7 +588,7 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 
 			// if response is empty then try load from file.
 			if (empty($response) && '' == $sitemap_url) {
-				$sitemap_file = trailingslashit(get_home_path()) . 'sitemap.xml';
+				$sitemap_file = $this->get_local_sitemap_file();
 
 				$response = file_get_contents($sitemap_file);
 			}
@@ -584,6 +617,18 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 		}
 
 		return $urls;
+	}
+
+	/**
+	 * Get the path to a local sitemap.xml file
+	 *
+	 * @return string
+	 */
+	private function get_local_sitemap_file() {
+		if (!function_exists('get_home_path')) {
+			include_once ABSPATH . '/wp-admin/includes/file.php';
+		}
+		return trailingslashit(get_home_path()) . 'sitemap.xml';
 	}
 
 	/**

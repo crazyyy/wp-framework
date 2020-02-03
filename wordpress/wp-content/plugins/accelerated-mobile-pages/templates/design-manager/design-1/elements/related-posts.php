@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 global $post, $redux_builder_amp;
 do_action('ampforwp_above_related_post',$this); //Above Related Posts
 $string_number_of_related_posts = $redux_builder_amp['ampforwp-number-of-related-posts'];
@@ -22,7 +25,12 @@ if( $current_post_type = get_post_type( $post )) {
         'order' => 'DESC',
         'orderby' => $orderby,
         'post_type' => $current_post_type,
-        'post__not_in' => array( $post->ID )
+        'post__not_in' => array( $post->ID ),
+        'meta_query' => array(
+	        array(
+		        'key'        => 'ampforwp-amp-on-off',
+		        'value'      => 'default',
+	        ))
     );  
   } 			
 }//end of block for custom Post types
@@ -39,7 +47,12 @@ if($redux_builder_amp['ampforwp-single-select-type-of-related']==2) {
 					'ignore_sticky_posts'=> 1,
 					'has_password'		 => false ,
 					'post_status'  		 => 'publish',
-					'orderby'      		 => $orderby
+					'orderby'      		 => $orderby,
+					'meta_query' => array(
+						array(
+							'key'        => 'ampforwp-amp-on-off',
+							'value'      => 'default',
+						))
 			);
 	}
 } //end of block for categories
@@ -58,7 +71,12 @@ if($redux_builder_amp['ampforwp-single-select-type-of-related']==1) {
 				'has_password' 		 => false ,
 				'post_status'		 => 'publish',
 				'orderby'    		 => $orderby,
-				'no_found_rows'		 => true
+				'no_found_rows'		 => true,
+			    'meta_query' => array(
+				    array(
+					    'key'        => 'ampforwp-amp-on-off',
+					    'value'      => 'default',
+				    ))
 			);
 	}
 }//end of block for tags
@@ -104,13 +122,24 @@ if( isset($redux_builder_amp['ampforwp-single-related-posts-switch']) && $redux_
 			                    <a href="<?php echo esc_url( $related_post_permalink ); ?>" title="<?php echo esc_html( $title ); ?>" ><?php the_title(); ?></a>
 			                    <?php
 				                    if ( isset($redux_builder_amp['ampforwp-single-related-posts-excerpt']) && true == $redux_builder_amp['ampforwp-single-related-posts-excerpt'] ) {
+				                    	$class = 'large-screen-excerpt';
+		                    			if ( true == ampforwp_get_setting('excerpt-option-small-rp') ) {
+											$class = 'small-screen-excerpt';
+										}
 										if(has_excerpt()){
 											$content = get_the_excerpt();
 										}else{
 											$content = get_the_content();
 										} ?> 
-			                    		<p><?php echo wp_trim_words( strip_shortcodes( $content ) , 15 ); ?></p>
-			                    	<?php } ?>
+			                    		<p><?php $excerpt_length = ampforwp_get_setting('enable-excerpt-single-related-posts');
+			                    		if(empty($excerpt_length)){
+											$excerpt_length = 15;
+										}
+			                    		if (true == ampforwp_get_setting('excerpt-option-rp-read-more')){
+											$content .= '...&nbsp;';
+										}
+			                    		 echo wp_trim_words( strip_shortcodes( $content ) , $excerpt_length ); ?><?php if (true == ampforwp_get_setting('excerpt-option-rp-read-more')){ ?><a class="readmore-rp" href="<?php echo esc_url( $related_post_permalink ); ?>"><?php echo ampforwp_translation(ampforwp_get_setting('amp-translator-read-more'),'Read More') ?></a></p>
+			                    	<?php } } ?>
 			                </div>
 			            </li>
 							<?php

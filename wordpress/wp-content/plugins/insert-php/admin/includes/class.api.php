@@ -92,7 +92,9 @@ class WINP_Api extends WINP_Request {
 		$url  = $common ? 'common' : self::WINP_API_SNIPPET;
 		$json = $this->get( $url . '/view?id=' . $id . '&expand=type' );
 
-		return $this->map_object( $json, 'WINP\JsonMapper\Snippet' );
+		$snippet = $this->map_object( $json, 'WINP\JsonMapper\Snippet' );
+		$snippet->execute_everywhere = $snippet->execute_everywhere ? 'evrywhere' : 'shortcode';
+		return $snippet;
 	}
 
 	/**
@@ -308,6 +310,7 @@ class WINP_Api extends WINP_Request {
 				WINP_Helper::updateMetaOption( $post_id, 'snippet_type', $snippet->type->slug );
 				WINP_Helper::updateMetaOption( $post_id, 'snippet_api_type', $snippet->type_id );
 				WINP_Helper::updateMetaOption( $post_id, 'snippet_description', $snippet->description );
+				WINP_Helper::updateMetaOption( $post_id, 'snippet_scope', $snippet->execute_everywhere );
 
 				return $post_id;
 			}

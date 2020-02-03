@@ -1,5 +1,8 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-base-sanitizer.php' );
 
 /**
@@ -7,7 +10,7 @@ require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-base-sanitize
  */
 class AMP_Iframe_Sanitizer extends AMP_Base_Sanitizer {
 	const FALLBACK_HEIGHT = 400;
-	const SANDBOX_DEFAULTS = 'allow-scripts allow-same-origin allow-popups';
+	const SANDBOX_DEFAULTS = 'allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation';
 
 	public static $tag = 'iframe';
 

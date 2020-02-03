@@ -1,5 +1,8 @@
 <?php
 use ReduxCore\ReduxFramework\Redux;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 //Admin Panel Options        
 if ( ! class_exists( 'ReduxCore\ReduxFramework\Redux' ) ) {
     return;
@@ -253,12 +256,11 @@ $extension_listing_array = array(
                             'name'=>'PWA For WordPress',
                             'desc'=>'Add Progressive Web App support for WordPress website',
                             'img_src'=>AMPFORWP_IMAGE_DIR . '/pwa-icon.png',
-                            'price'=>'$89',
-                            'url_link'=>'http://ampforwp.com/pwa/#utm_source=options-panel&utm_medium=extension-tab_pwa-for-wordpress&utm_campaign=AMP%20Plugin',
+                            'price'=>'FREE',
+                            'url_link'=>'https://pwa-for-wp.com//#utm_source=options-panel&utm_medium=extension-tab_pwa-for-wordpress&utm_campaign=AMP%20Plugin',
                             'plugin_active_path'=> 'pwa-for-wordpress/amp-pwa.php',
                             'item_name'=>'PWA For WordPress',
-                            'store_url'=>'https://accounts.ampforwp.com',
-                            'is_activated'=>(is_plugin_active('pwa-for-wordpress/amp-pwa.php')? 1 : 2),
+                            'is_activated'=>(is_plugin_active('pwa-for-wp/pwa-for-wp.php')? 1 : 2),
                             'settingUrl'=>admin_url( 'admin.php?page=ampforwp-pwa' ),
                         ), 
                         array(
@@ -458,12 +460,12 @@ $extension_listing_array = array(
                             'name'=>'Structured Data for WP',
                             'desc'=>'Structured Data for your site and for AMP',
                             'img_src'=>AMPFORWP_IMAGE_DIR . '/sd-icon.png',
-                            'price'=>'$29',
+                            'price'=>'FREE',
                             'url_link'=>'https://ampforwp.com/structuredata-for-wp/#utm_source=options-panel&utm_medium=extension-tab_structuredata-for-wp&utm_campaign=AMP%20Plugin',
                             'plugin_active_path'=> 'structured-data-for-wp/structured-data-for-wp.php',
                             'item_name'=>'Structured Data for WP',
                             'store_url'=>'https://accounts.ampforwp.com',
-                            'is_activated'=>(is_plugin_active('structured-data-for-wp/structured-data-for-wp.php')? 1: 2),
+                            'is_activated'=>2,
                           //'settingUrl'=>'',
                         ),
                         array(
@@ -478,7 +480,6 @@ $extension_listing_array = array(
                             'item_name'=>'Purge AMP CDN Cache',
                             'store_url'=>'https://accounts.ampforwp.com',
                             'is_activated'=>(is_plugin_active('purge-amp-cdn-cache/purge-amp-cdn-cache.php')? 1 : 2),
-                            'settingUrl'=>admin_url( 'admin.php?page=update-amp-cache' ),
                         ),
                         array(
                             'name'=>'Polylang For AMP',
@@ -536,6 +537,30 @@ $extension_listing_array = array(
                             'store_url'=>'https://accounts.ampforwp.com',
                             'is_activated'=>(is_plugin_active('table-of-content-plus-for-amp/table-of-content-plus-for-amp.php')? 1 : 2),
                         ),
+                        array(
+                            'name'=>'Easy Table of Contents for AMP',
+                            'class'=>'new-ext',
+                            'desc'=>'Easy Table of Contents Plugin Compatibility in AMP',
+                            'img_src'=>AMPFORWP_IMAGE_DIR . '/easytoc-icon.png',
+                            'price'=>'$39',
+                            'url_link'=>'https://ampforwp.com/addons/easy-table-of-contents-for-amp/',
+                            'plugin_active_path'=> 'easy-table-of-contents-for-amp/easy-table-of-contents-for-amp.php',
+                            'item_name'=>'Easy Table of Contents for AMP',
+                            'store_url'=>'https://accounts.ampforwp.com',
+                            'is_activated'=>(is_plugin_active('easy-table-of-contents-for-amp/easy-table-of-contents-for-amp.php')? 1 : 2),
+                        ), 
+                        array(
+                            'name'=>'Floating Button for AMP',
+                            'class'=>'new-ext',
+                            'desc'=>'You can add floating button in AMP with the help of this extension',
+                            'img_src'=>AMPFORWP_IMAGE_DIR . '/floating-icon.png',
+                            'price'=>'$39',
+                            'url_link'=>'https://ampforwp.com/addons/floating-button-for-amp/',
+                            'plugin_active_path'=> 'floating-button-for-amp/floating-button-for-amp.php',
+                            'item_name'=>'Floating Button for AMP',
+                            'store_url'=>'https://accounts.ampforwp.com',
+                            'is_activated'=>(is_plugin_active('floating-button-for-amp/floating-button-for-amp.php')? 1 : 2),
+                        ),
                     );
         $viewAllExtensions = array(
                     'name'=>'View All Extensions',
@@ -556,7 +581,7 @@ $ampforwp_extension_list_html = '';
 $ampforwp_nameOfUser = "";
 $ampforwp_is_productActivated = false;
 function ampforwp_sort_extension_array($a, $b){
-    if ($a['is_activated'] == $b['is_activated']) {
+    if ($a['is_activated'] == $b['is_activated'] && isset($a['label']) && isset($b['label'])) {
         return strcmp(strtolower($a['name']), strtolower($b['name']));
     }
     return ($a['is_activated'] < $b['is_activated']) ? -1 : 1;
@@ -570,8 +595,10 @@ foreach ($extension_listing_array as $key => $extension) {
 
     $onclickUrl = '<a href="'.$extension['url_link'].'" target="_blank">';
     $onclickUrlclose = '</a>';
-    $settingPageUrl = '';
-    $pluginReview = '<div class="extension_btn">From: '.$extension['price'].'</div>';
+    $settingPageUrl = $pluginReview = '';
+    if(isset($extension['is_activated']) && $extension['is_activated']!=1){
+        $pluginReview = '<div class="extension_btn">From: '.esc_html($extension['price']).'</div>';
+    }
     if($extension['plugin_active_path'] != "" && is_plugin_active($extension['plugin_active_path']) ){
         $ampforwp_is_productActivated = true;
         $currentStatus = "not-active invalid";
@@ -855,9 +882,11 @@ $freepro_listing = '
             </div>
             <div class="pri-lst">
                 <div class="pri-tb">
-                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=1&utm_medium=freevspro&utm_campaign=AMP%20Plugin">
+                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=1">
                         <h5>PERSONAL</h5>
+                        <span class="d-amt"><sup>$</sup>149</span>
                         <span class="amt"><sup>$</sup>149</span>
+                        <span class="s-amt">(Save $59)</span>
                         <span class="bil">Billed Annually</span>
                         <span class="s">1 Site License</span>
                         <span class="e">E-mail support</span>
@@ -867,9 +896,11 @@ $freepro_listing = '
                     </a>
                 </div>
                 <div class="pri-tb rec">
-                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=2&utm_medium=freevspro&utm_campaign=AMP%20Plugin">
+                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=2">
                         <h5>MULTIPLE</h5>
+                        <span class="d-amt"><sup>$</sup>199</span>
                         <span class="amt"><sup>$</sup>199</span>
+                        <span class="s-amt">(Save $79)</span>
                         <span class="bil">Billed Annually</span>
                         <span class="s">3 Site License</span>
                         <span class="e">E-mail support</span>
@@ -880,9 +911,11 @@ $freepro_listing = '
                     </a>
                 </div>
                 <div class="pri-tb">
-                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=3&utm_medium=freevspro&utm_campaign=AMP%20Plugin">
+                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=3">
                         <h5>WEBMASTER</h5>
+                        <span class="d-amt"><sup>$</sup>249</span>
                         <span class="amt"><sup>$</sup>249</span>
+                        <span class="s-amt">(Save $99)</span>
                         <span class="bil">Billed Annually</span>
                         <span class="s">10 Site License</span>
                         <span class="e">E-mail support</span>
@@ -892,9 +925,11 @@ $freepro_listing = '
                     </a>
                 </div>
                 <div class="pri-tb">
-                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=4&utm_medium=freevspro&utm_campaign=AMP%20Plugin">
+                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=4">
                         <h5>FREELANCER</h5>
+                        <span class="d-amt"><sup>$</sup>299</span>
                         <span class="amt"><sup>$</sup>299</span>
+                        <span class="s-amt">(Save $119)</span>
                         <span class="bil">Billed Annually</span>
                         <span class="s">25 Site License</span>
                         <span class="e">E-mail support</span>
@@ -904,9 +939,11 @@ $freepro_listing = '
                     </a>
                 </div>
                 <div class="pri-tb">
-                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=5&utm_medium=freevspro&utm_campaign=AMP%20Plugin">
+                    <a href="https://accounts.ampforwp.com/order?edd_action=add_to_cart&download_id=24570&edd_options[price_id]=5">
                         <h5>AGENCY</h5>
+                        <span class="d-amt"><sup>$</sup>499</span>
                         <span class="amt"><sup>$</sup>499</span>
+                        <span class="s-amt">(Save $199)</span>
                         <span class="bil">Billed Annually</span>
                         <span class="s">Unlimited</span>
                         <span class="e">E-mail support</span>
@@ -918,8 +955,8 @@ $freepro_listing = '
             </div><!-- /.pri-lst -->
             <div class="tru-us">
                 <img src="'.AMPFORWP_IMAGE_DIR . '/rating.png" />
-                <h2>Trusted by more that 130000+ Users!</h2>
-                <p>More than 130k Websites, Blogs & E-Commerce website are powered by our AMP making it the #1 Rated AMP plugin in WordPress Community.</p>
+                <h2>Trusted by more that 180000+ Users!</h2>
+                <p>More than 180k Websites, Blogs & E-Commerce website are powered by our AMP making it the #1 Rated AMP plugin in WordPress Community.</p>
                 <a href="https://wordpress.org/support/plugin/accelerated-mobile-pages/reviews/?filter=5" target="_blank">Read The Reviews</a>
             </div>
         </div><!--/ .amp-upg -->
@@ -1172,7 +1209,13 @@ $eu_iso_codes = array(
 
 // All the possible arguments for Redux.
 //$amp_redux_header = '<span id="name"><span style="color: #4dbefa;">U</span>ltimate <span style="color: #4dbefa;">W</span>idgets</span>';
-$proDetailsProvide = '<a class="technical_support_btn_txt" href="https://ampforwp.com/support/" target="_blank">'.esc_html__('Technical Support','accelerated-mobile-pages').'</a> <a class="premium_features_btn" href="https://ampforwp.com/membership/#utm_source=options-panel&utm_medium=view_pro_features_btn&utm_campaign=AMP%20Plugin" target="_blank">Upgrade to PRO</a> ';
+$upg_to_pro_url = '#';
+$upg_to_pro_target = '';
+if(get_theme_support('amp-template-mode')){
+    $upg_to_pro_url = 'https://ampforwp.com/membership/#utm_source=options-panel&utm_medium=view_pro_features_btn&utm_campaign=AMP%20Plugin';
+    $upg_to_pro_target = 'target="_blank"';
+}
+$proDetailsProvide = '<a class="technical_support_btn_txt" href="https://ampforwp.com/support/" target="_blank">'.esc_html__('Technical Support','accelerated-mobile-pages').'</a>';
 if($ampforwp_nameOfUser!=""){
     $proDetailsProvide = "<span class='extension-menu-call'><span class='activated-plugins'>Hello, ".esc_html($ampforwp_nameOfUser)."</span> <a class='' href='".esc_url(admin_url('admin.php?page=amp_options&tabid=opt-go-premium'))."'><i class='dashicons-before dashicons-admin-generic'></i></a></span>";
 }elseif($ampforwp_is_productActivated){
@@ -1181,6 +1224,19 @@ if($ampforwp_nameOfUser!=""){
 if(function_exists('amp_activate') ){
     $proDetailsProvide = "<a class='premium_features_btn_txt' href=\"#\"> AMP by Automattic compatibility has been activated</a>";
 }
+
+$user = wp_get_current_user();
+$permissions = "manage_options";
+$amp_access = ampforwp_get_setting('ampforwp-role-based-access');
+
+if( in_array( 'administrator', $user->roles ) ) {
+    $permissions = "manage_options";
+}elseif( in_array( 'editor', $user->roles ) && in_array('editor', $amp_access) ){
+    $permissions = 'edit_pages';
+}elseif( in_array( 'author', $user->roles ) && in_array('author', $amp_access)){
+    $permissions = 'edit_posts';
+}
+
 $args = array(
     // TYPICAL -> Change these values as you need/desire
     'opt_name'              => 'redux_builder_amp', // This is where your data is stored in the database and also becomes your global variable name.
@@ -1201,7 +1257,7 @@ $args = array(
     // OPTIONAL -> Give you extra features
     'page_priority'         => null, // Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
     'page_parent'           => 'themes.php', // For a full list of options, visit: http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters
-    'page_permissions'      => 'manage_options', // Permissions needed to access the options panel.
+    'page_permissions'      => $permissions, // Permissions needed to access the options panel.
     'last_tab'              => '', // Force your panel to always open to a specific tab (by id)
     'page_icon'             => 'icon-themes', // Icon displayed in the admin panel next to your menu_title
     'page_slug'             => 'amp_options', // Page slug used to denote the panel
@@ -1268,62 +1324,182 @@ Redux::setArgs( "redux_builder_amp", $args );
         ampforwp_admin_contact_form_options($opt_name);
     }
 
+
+    // New AMP UX
+     if(!function_exists('ampforwp_generate_ux_admin_button')){
+        function ampforwp_generate_ux_admin_button($id='',$type='',$label=''){
+            $option = "";
+            if($type=="button"){
+                if($id=="ampforwp-ux-website-type-section"){
+                    $amp_website_type = ampforwp_get_setup_info('ampforwp-ux-website-type-section');
+                    if($amp_website_type){
+                    $option = '<div class="filled-lbl-blk">
+                                    <p class="msg">'.esc_attr($amp_website_type).'</p>
+                                    <span class="lbl">Change</span>
+                                </div>';
+                    }else{
+                        $option = '<div class="button btn-red">'.esc_attr($label).'</div>';
+                    }
+                }else if($id=="ampforwp-ux-privacy-section"){
+                    $setup_txt = ampforwp_get_setup_info('ampforwp-ux-privacy-section');
+                    if($setup_txt!=""){
+                    $option = '<div class="filled-lbl-blk">
+                                    <p class="msg">'.esc_attr($setup_txt).'</p>
+                                    <span class="lbl">Change</span>
+                                </div>';
+                    }else{
+                        $option = '<div class="button btn-red">'.esc_attr($label).'</div>';
+                    }    
+                }else if($id=="ampforwp-ux-need-type-section"){
+                    $need_type=ampforwp_get_setup_info('ampforwp-ux-need-type-section');
+                    if($need_type!=""){
+                    $option = '<div class="filled-lbl-blk">
+                                    <p class="msg">'.esc_attr($need_type).'</p>
+                                    <span class="lbl">Change</span>
+                                </div>';
+                    }else{
+                        $option = '<div class="button btn-red">'.esc_attr($label).'</div>';
+                    }
+                }else if($id=="ampforwp-ux-design-section"){
+                    $opt_med_url = ampforwp_get_setup_info('ampforwp-ux-design-section');
+                    if($opt_med_url!=""){
+                    $option = '<div class="filled-lbl-blk">
+                                    <p class="msg">Configured</p>
+                                    <span class="lbl">Change</span>
+                                </div>';
+                    }else{
+                        $option = '<div class="button btn-red">'.esc_attr($label).'</div>';
+                    }
+                }else if($id=="ampforwp-ux-analytics-section"){
+                    $analytics_txt = ampforwp_get_setup_info('ampforwp-ux-analytics-section');
+                    if($analytics_txt!=""){
+                    $option = '<div class="filled-lbl-blk">
+                                    <p class="msg">'.esc_attr($analytics_txt).'</p>
+                                    <span class="lbl">Change</span>
+                                </div>';
+                    }else{
+                        $option = '<div class="button btn-red">'.esc_attr($label).'</div>';
+                    }
+                }else{
+                    $option = '<div class="button btn-red">'.esc_attr($label).'</div>';
+                }
+            }else{
+                $option = '<div class="button btn-list">'.esc_attr($label).'</div>';
+            }
+            return $option;
+        }
+    }
+  $setup_ids = array(
+                        'ampforwp-ux-website-type-section',
+                        'ampforwp-ux-need-type-section',
+                        'ampforwp-ux-analytics-section'
+                    );
+    $amp_ux_icon = "amp-ux-warning-okay";
+    for($sid = 0; $sid < count($setup_ids); $sid++ ){
+        $check = ampforwp_get_setup_info($setup_ids[$sid]);
+        if($check==""){
+            $amp_ux_icon = "amp-ux-warning";
+        }
+    }
+    $is_aafwp = "not-exist";
+    $aafwp_active_url = '';
+    $aafwp_default = 0;
+    $ampforwp_admin_url = admin_url();
+    $adfwp_a_open = "";
+    $adfwp_a_close = "";
+ 
+    $adv_data_href = 'data-href=ampforwp-ux-advertisement-section';
+    if(function_exists('adsforwp_check_plugin')){
+        $plugin_file = "ads-for-wp/ads-for-wp.php";
+        $is_sdfwp = "active";
+        $aafwp_active_url = $ampforwp_admin_url.'admin.php?page=adsforwp&amp;tab=general&amp;reference=ampforwp';
+        $adfwp_a_open = '<a href="'.esc_url($aafwp_active_url).'" target="_blank">';
+        $adfwp_a_close = '</a>';
+        $adv_data_href = 'data-href=';
+    }
+        Redux::setSection( $opt_name, array(
+            'title'      => esc_html__( 'Setup', 'accelerated-mobile-pages' ),
+            'id'         => 'ampforwp-new-ux',
+            'icon'         => "el el-warning ux-setup-icon $amp_ux_icon",
+            'fields'     => array(      
+                                   array(       
+                                               'id' => 'ampforwp-setup-ux-website-type',        
+                                               'type' => 'text',        
+                                               'title' => '',       
+                                               'default'=>''        
+                                    )       
+                               ),
+            'desc'   => '<div class="amp-ux-section">
+                            <h2 class="amp-section-desc">Quick &amp; Easy Setup</h2>
+                        <div class="amp-ux-section-fields">
+                                <div class="amp-ux-section-field" data-id="website-type" data-href="ampforwp-ux-website-type-section">
+                                   <div class="amp-ux-elem-field">
+                                        <h4 class="amp-ux-elem-title">Website Type</h4>
+                                        <div class="amp-ux-elem-but-block amp-ux-valid-require">'.ampforwp_generate_ux_admin_button("ampforwp-ux-website-type-section","button","SELECT").'</div>
+                                    </div>
+                                </div>
+                                <div class="amp-ux-section-field" data-href="ampforwp-ux-need-type-section">
+                                    <div class="amp-ux-elem-field">
+                                        <h4 class="amp-ux-elem-title">
+                                            Where do you need AMP?
+                                        </h4>
+                                        <div class="amp-ux-elem-but-block amp-ux-valid-require">'.ampforwp_generate_ux_admin_button("ampforwp-ux-need-type-section","button","CHOOSE").'</div>
+                                    </div>
+                                </div>
+                                <div class="amp-ux-section-field" data-href="ampforwp-ux-design-section">
+                                   <div class="amp-ux-elem-field">
+                                        <h4 class="amp-ux-elem-title">Design and Presentation</h4>
+                                     <div class="amp-ux-elem-but-block">'.ampforwp_generate_ux_admin_button("ampforwp-ux-design-section","button","SET UP").'</div>
+                                    </div>
+                                </div>
+                                <div class="amp-ux-section-field" data-href="ampforwp-ux-analytics-section">
+                                     <div class="amp-ux-elem-field">
+                                        <h4 class="amp-ux-elem-title">Analytics Tracking</h4>
+                                        <div class="amp-ux-elem-but-block amp-ux-valid-require">'.ampforwp_generate_ux_admin_button("ampforwp-ux-analytics-section","button","CONFIG").'</div>
+                                    </div>
+                                </div>
+                                <div class="amp-ux-section-field" data-href="ampforwp-ux-privacy-section">
+                                     <div class="amp-ux-elem-field">
+                                        <h4 class="amp-ux-elem-title">Privacy Settings</h4>
+                                        <div class="amp-ux-elem-but-block">'.ampforwp_generate_ux_admin_button("ampforwp-ux-privacy-section","button","CHOOSE").'</div>
+                                    </div>
+                                </div>'.
+                                $adfwp_a_open.
+                                '<div class="amp-ux-section-field" '.esc_attr($adv_data_href).'>
+                                    <div class="amp-ux-elem-field">
+                                        <h4 class="amp-ux-elem-title">Advertisement</h4>
+                                        <div class="amp-ux-elem-but-block stup">View Setup</div>
+                                    </div>
+                                </div>'.
+                                 $adfwp_a_close.
+                                '<div class="amp-ux-section-field" data-href="ampforwp-ux-thirdparty-section">
+                                    <div class="amp-ux-elem-field">
+                                        <h4 class="amp-ux-elem-title">3rd Party Compatibility</h4>
+                                        <div class="amp-ux-elem-but-block">'.ampforwp_generate_ux_admin_button("ampforwp-ux-thirdparty-section","label","View List").'</div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>',
+        ));
+
     Redux::setSection( $opt_name, array(
-        'title' => esc_html__( 'Settings', 'accelerated-mobile-pages' ),
-        'id'    => 'basic',
-        'fields' => array(
-            array(
-                'id'       => 'opt-blank',
-                'type'     => 'raw',
-                'title'    => '',
-                'desc'     => '',
-            )
-        ),
-        'desc'  =>  '<div class="amp-faq">'.esc_html__('Thank you for using Accelerated Mobile Pages plugin.', 'accelerated-mobile-pages'). ' ' .
-          ''.esc_html__('We are actively working on updating the plugin. We have built user friendly options which allows you to make changes on your AMP version.', 'accelerated-mobile-pages' )                      
-			               . '<div style="width:100%;margin:20px 0px 10px 0px" class="getstarted_wrapper">
-            <div class="getstarted_options">
-            <p><b>'.esc_html__('Getting Started', 'accelerated-mobile-pages').'</b></p>
-				<ul class="getstarted_ul">
-					<li><a href="https://ampforwp.com/tutorials/article-categories/installation-updating/" target="_blank">'.esc_html__('Installation & Setup', 'accelerated-mobile-pages').'</a></li>
-					<li><a href="https://ampforwp.com/tutorials/article-categories/settings-options/" target="_blank">'.esc_html__('Settings & Options', 'accelerated-mobile-pages').'</a></li>
-					<li><a href="https://ampforwp.com/tutorials/article-categories/setup-amp/" target="_blank">'.esc_html__('Setup AMP', 'accelerated-mobile-pages').'</a></li>
-					<li><a href="https://ampforwp.com/tutorials/article-categories/page-builder/" target="_blank">'.esc_html__('Page Builder', 'accelerated-mobile-pages').'</a></li>
-				</ul>  
-            </div>
-            <div class="getstarted_options">
-            <p><b>'.esc_html__('Useful Links', 'accelerated-mobile-pages').'</b></p>
-				<ul class="getstarted_ul">
-					<li><a href="https://ampforwp.com/tutorials/article-categories/extension/" target="_blank">'.esc_html__('Extensions & Themes Docs', 'accelerated-mobile-pages').'</a></li>
-					<li><a href="https://ampforwp.com/tutorials/article-categories/developer-documentation/" target="_blank">'.esc_html__('Developers Docs', 'accelerated-mobile-pages').'</a></li>
-					<li><a href="https://ampforwp.com/amp-theme-framework/" target="_blank">'.esc_html__('Create a Custom Theme for AMP', 'accelerated-mobile-pages').'</a></li>
-					<li><a href="https://ampforwp.com/tutorials/article-categories/how-to/" target="_blank">'.esc_html__('General How To\'s', 'accelerated-mobile-pages').'</a></li>
-				</ul>  
-            </div>
-            <div class="clear"></div>
-            </div>'
-           . '<p><strong>' . sprintf( '1. <a href="https://ampforwp.com/support/" target="_blank">%s</a>: ',esc_html__('Technical Customer Support','accelerated-mobile-pages')) . '</strong>' . esc_html__('We have a special community support forum where you can ask us questions and get help about your AMP related questions. Delivering a good user experience means a lot to us and so we try our best to reply each and every question that gets asked.', 'accelerated-mobile-pages' ) . '</p>'
-                           . '<p><strong>' . sprintf( '2. <a href="https://github.com/ahmedkaludi/accelerated-mobile-pages/issues" target="_blank">%s</a>: ',esc_html__('Found a bug? Use GitHub','accelerated-mobile-pages' )) . '</strong>' . esc_html__( 'If you’ve discovered a bug in our software, the best place to report it is on GitHub. This is where the AMP developers are active. They’ll review your bug report and triage the bug. The more relevant details you add to your report, the faster bugs are usually solved. And please remember to search first, We think that most general tickets have been created already.', 'accelerated-mobile-pages' ) . '</p>'
-                           . '<p><strong>' . sprintf( '3. <a href="https://ampforwp.com/priority-support/" target="_blank">%s</a>: ',esc_html__('Priority Support','accelerated-mobile-pages' )) . '</strong>' . esc_html__( 'We will personally take care that your website’s AMP version is perfectly validated. We will make sure that your AMP version gets approved and indexed by Google Webmaster Tools properly and we will even keep an eye on AMP updates from Google and implement them into your website.', 'accelerated-mobile-pages' ) . '</p>'
-                           . '<p><strong>' . sprintf( '4. <a href="https://ampforwp.com/hire/" target="_blank">%s</a>: ',esc_html__('Hire Us / Customization', 'accelerated-mobile-pages' )) . '</strong>' . esc_html__( 'We are your development backbone who specialises Backend and Frontend technologies. We have the capability to handle & solve the complex issues. If you have any customization, feel free to ask.', 'accelerated-mobile-pages' ) . '</p>'
-                           . '<p><strong>' . sprintf( '5. <a href="http://ampforwp.com/new/" target="_blank"> %s</a>: ',esc_html__('What\'s New in this Version?','accelerated-mobile-pages' )) . '</strong>' . esc_html__( 'If you want to know whats new in the latest version of the plugin, then please use this link.', 'accelerated-mobile-pages' ) . '</p>'
-
-						         . '</p></div>
-                                 <br /><p><h3>'.esc_html__('Take AMP to the Next Level with Premium Extensions').'</h3></p>
-                                 ' .$gettingstarted_extension_listing
-
-				 , 
-        'icon'  => 'el el-cogs'
-    ) );
+        'title'      => esc_html__( 'Settings', 'accelerated-mobile-pages' ),
+          'id'    => 'basic',
+          'icon' => 'el el-cogs',
+          'desc'  => ''
+    ));
     
     function ampforwp_default_logo_settings($param=""){
         $custom_logo_id = '';
         $image          = '';
         $value          = '';
-        $custom_logo_id = get_theme_mod( 'custom_logo' );
-        $image = wp_get_attachment_image_src( $custom_logo_id , 'full');
-        if( $image ){
-            return $image[0];
+        $current_page = ampforwp_get_admin_current_page();
+        if($current_page=="amp_options"){
+            $custom_logo_id = get_theme_mod( 'custom_logo' );
+            $image = wp_get_attachment_image_src( $custom_logo_id , 'full');
+            if( $image ){
+                return $image[0];
+            }
         }
         return $value;
     }
@@ -1354,6 +1530,89 @@ Redux::setArgs( "redux_builder_amp", $args );
                     'options' => ampforwp_get_cpt_generated_post_types(),
                 );
     }
+function ampforwp_get_categories($id){
+	$data =	get_transient($id);
+
+	if($data){
+		return $data;
+	}
+	
+    $result = array();
+    $selected_categories = ampforwp_get_setting($id);
+    
+	if(is_numeric($selected_categories)){
+		$temp_array = array();
+		$temp_array[0] = $selected_categories;
+		$selected_categories = $temp_array;
+	}
+	if(isset($selected_categories) && $selected_categories) {
+		$get_required_data = array_filter( $selected_categories );
+		if ( count( $get_required_data ) != 0 ) {
+			$categories = get_terms( 'category', array( 'include' => $get_required_data ) );
+			foreach ( $categories as $category ) {
+				$result[ esc_attr( $category->term_id ) ] = esc_html( $category->name );
+			}
+			set_transient( $id, $result);
+		}
+	}
+	return $result;
+}
+function ampforwp_get_all_tags($id){
+
+	$data =  get_transient($id);
+	if ( $data) {
+		return $data;
+	}
+
+    $result = array();
+    $selected_tags = ampforwp_get_setting($id);
+
+	if ( $selected_tags ){
+		if(is_numeric($selected_tags)){
+			$temp_array = array();
+			$temp_array[0] = $selected_tags;
+			$selected_tags = $temp_array;
+		}
+		$get_required_data = array_filter( $selected_tags );
+
+		if ( count( $get_required_data ) != 0 ) {
+			$tags = get_terms( 'post_tag', array( 'include' => $get_required_data ) );
+			foreach($tags as  $tag ) {
+				$result[esc_attr($tag->term_id)] = esc_html($tag->name);
+			}
+			set_transient( $id, $result);
+		}
+	}
+	return $result;
+}
+    function ampforwp_get_user_roles(){
+        global $wp_roles;
+        $allroles = array();
+        foreach ( $wp_roles->roles as $key=>$value ){
+            $allroles[esc_attr($key)] = esc_html($value['name']);
+        }
+        return $allroles;
+    }
+    function ampforwp_default_user_roles(){
+        $roles = '';
+        $metabox_access = ampforwp_get_setting('amp-meta-permissions');
+        if($metabox_access == 'admin'){
+            $rba = ampforwp_get_setting('ampforwp-role-based-access');
+            if(empty($rba)){
+                $roles = array('administrator');
+            }else{
+                $roles = ampforwp_get_setting('ampforwp-role-based-access');
+            }
+        }else{
+            $rba = ampforwp_get_setting('ampforwp-role-based-access');
+            if(empty($rba)){
+                $roles = array('administrator','editor');
+            }else{
+                $roles = ampforwp_get_setting('ampforwp-role-based-access');
+            } 
+        }
+        return $roles;
+    }
     function ampforwp_get_generated_custom_taxonomies(){
         $taxonomies = '';
         $taxonomies = get_transient('ampforwp_get_taxonomies');
@@ -1369,7 +1628,17 @@ Redux::setArgs( "redux_builder_amp", $args );
                     'tooltip-subtitle'   => esc_html__('Enable AMP Support on Archives for Custom Taxonomies.', 'accelerated-mobile-pages'),
                     'multi'   => true,
                     'options' => ampforwp_get_generated_custom_taxonomies(),
+                    'required' => array('ampforwp-archive-support', '=' , '1')
                 );
+    }
+    $design_types = ampforwp_get_setting('amp-design-selector');
+    $secondary_text = 'Content';
+    if($design_types == 1 || $design_types == 2 || $design_types == 3){
+        $secondary_text = 'Secondary';
+    }
+    $show_for_admin = '';
+    if(!current_user_can('administrator') ){
+        $show_for_admin = 'hide';
     }
     // AMP to WP Default value
     function ampforwp_amp2wp_default(){
@@ -1382,7 +1651,6 @@ Redux::setArgs( "redux_builder_amp", $args );
         }
         return $default;
     }
-
         Redux::setSection( $opt_name, array(
         'title'      => esc_html__( 'General', 'accelerated-mobile-pages' ),
         'id'         => 'opt-text-subsection',
@@ -1610,6 +1878,17 @@ Redux::setArgs( "redux_builder_amp", $args );
             return $default;
         }
     }
+    $seo_options = array(
+                    'yoast'       => 'Yoast',
+                    'aioseo'     => 'All in One SEO',
+                    'rank_math' => 'Rank Math SEO',
+                    'genesis'    => 'Genesis',
+                    'seopress'    => 'SEOPress',
+                    'bridge'    => 'Bridge Qode SEO',
+                    'seo_framework'    => 'The SEO Framework',
+                    'squirrly'    => 'Squirrly SEO',
+                    'smartcrawl'    => 'SmartCrawl'
+                );
  // SEO SECTION
   Redux::setSection( $opt_name, array(
       'title'      => esc_html__( 'SEO', 'accelerated-mobile-pages' ),
@@ -1657,16 +1936,7 @@ Redux::setArgs( "redux_builder_amp", $args );
                 'id'       => 'ampforwp-seo-selection',
                 'type'     => 'select',
                 'title'    => esc_html__('Select SEO Plugin', 'accelerated-mobile-pages'),
-                'options'  => array(
-                    'yoast'       => 'Yoast',
-                    'aioseo'     => 'All in One SEO',
-                    'rank_math' => 'Rank Math SEO',
-                    'genesis'    => 'Genesis',
-                    'seopress'    => 'SEOPress',
-                    'bridge'    => 'Bridge Qode SEO',
-                    'seo_framework'    => 'The SEO Framework',
-                    'squirrly'    => 'Squirrly SEO'
-                ),
+               'options'  => $seo_options,
                 'default'  => ampforwp_seo_default(),
             ),
            array( 
@@ -2172,8 +2442,8 @@ Redux::setSection( $opt_name, array(
                         'id'       => 'fb-instant-article-ad-id',
                         'type'     => 'text',
                         'title'    => esc_html__('Enter your Audience Network Placement ID', 'accelerated-mobile-pages'),
-                        'tooltip-subtitle' => esc_html__('You can find out more about this <a href="https://developers.facebook.com/docs/instant-articles/monetization/audience-network">here</a>. ', 'accelerated-mobile-pages'),
-                        'desc' => esc_html__('<a href="https://ampforwp.com/tutorials/article/how-to-enter-audience-network-placement-id-of-advertisement-in-the-instant-article/" target="_blank">Click here</a> on how to get Audience Network Placement Id.', 'accelerated-mobile-pages'),
+                        'tooltip-subtitle' => sprintf('%s <a href="%s">%s</a>.', esc_html__('You can find out more about this','accelerated-mobile-pages'), esc_url('https://developers.facebook.com/docs/instant-articles/monetization/audience-network'),esc_html__('here','accelerated-mobile-pages') ),
+                        'desc' => sprintf('<a href="%s" target="_blank">%s</a> %s', esc_url('https://ampforwp.com/tutorials/article/how-to-enter-audience-network-placement-id-of-advertisement-in-the-instant-article/'), esc_html__('Click here','accelerated-mobile-pages'), esc_html__('on how to get Audience Network Placement Id.','accelerated-mobile-pages')),
                         'required'  => array('fb-instant-article-ad-type', '=', '1')
                     ),
                     array(
@@ -2234,6 +2504,18 @@ Redux::setSection( $opt_name, array(
                         'tooltip-subtitle' => esc_html__('Allow like and comment for media', 'accelerated-mobile-pages'),
                         'required'  => array('fb-instant-article-switch', '=', 1)
                     ),
+                 array(
+                        'id'        =>'hide-amp-ia-categories',
+                        'type'      => 'select',
+                        'title'     => esc_html__('Select Categories to Hide in IA'),
+                        'tooltip-subtitle' => esc_html__( 'Hide IA from all the posts of a selected category.', 'accelerated-mobile-pages' ),
+                        'multi'     => true, 
+                        'ajax'      => true, 
+                        'data-action'     => 'ampforwp_categories',
+                        'options' => ampforwp_get_categories('hide-amp-ia-categories'),
+                        'data'      => 'categories',
+                        'required'  => array('fb-instant-article-switch', '=', 1)
+                    ),  
                     array(
                         'id'       => 'fbia-header-text-area',
                         'type'     => 'textarea',
@@ -2264,12 +2546,18 @@ Redux::setSection( $opt_name, array(
 
  // Hide AMP Bulk Tools
 Redux::setSection( $opt_name, array(
-   'title'      => esc_html__( 'Hide AMP Bulk Tools', 'accelerated-mobile-pages' ),
+   'title'      => esc_html__( 'Tools', 'accelerated-mobile-pages' ),
    'id'         => 'hide-amp-section',
    'subsection' => true,
-   'desc'       => 'Here are some Advanced options to help you exclude AMP from your prefered pages',
    'fields'     => array(
-
+                        array(
+                                   'id' => 'hide-amp-bulk-tools',
+                                   'type' => 'section',
+                                   'title' => esc_html__('Hide AMP Bulk Tools', 'accelerated-mobile-pages'),
+                                   'indent' => true,
+                                   'layout_type' => 'accordion',
+                                   'accordion-open'=> 1,
+                        ),
                         array(
                            'id'       => 'amp-pages-meta-default',
                            'type'     => 'select',
@@ -2289,7 +2577,8 @@ Redux::setSection( $opt_name, array(
                         'title'     => __('Select Categories to Hide AMP'),
                         'tooltip-subtitle' => __( 'Hide AMP from all the posts of a selected category.', 'accelerated-mobile-pages' ),
                         'multi'     => true, 
-                        'ajax'      => true, 
+                        'ajax'      => true,
+                        'options' => ampforwp_get_categories('hide-amp-categories2'),
                         'data-action'     => 'ampforwp_categories', 
                         'data'      => 'categories',
                         ),  
@@ -2300,6 +2589,7 @@ Redux::setSection( $opt_name, array(
                         'tooltip-subtitle' => __( 'Hide AMP from all the posts of a selected tags.', 'accelerated-mobile-pages' ),
                         'multi'     => true,
                         'ajax'      => true,
+                        'options' => ampforwp_get_all_tags('hide-amp-tags-bulk-option2'),
                         'data-action' => 'ampforwp_tags', 
                         'data'      => 'tags',
 
@@ -2342,10 +2632,24 @@ Redux::setSection( $opt_name, array(
                         'required' => array( 'amp-mobile-redirection', '=' , 1 )
                     ),
                     array(
+                        'id'       => 'amp-redirection-search',
+                        'type'     => 'switch',
+                        'title'    => esc_html__('Search Result Page in AMP', 'accelerated-mobile-pages'),
+                        'tooltip-subtitle' => esc_html__('Disable this option if you want your search pages in Non-AMP.','accelerated-mobile-pages'),
+                        'default' => 1,
+                    ),
+                    array(
                         'id'       => 'convert-internal-nonamplinks-to-amp',
                         'type'     => 'switch',
                         'title'    => esc_html__('Change Internal Links to AMP', 'accelerated-mobile-pages'),
                         'tooltip-subtitle' => esc_html__('Enable if you want all your links inside the article to go to /amp/. All the outbound links will remain untouched.','accelerated-mobile-pages'),
+                        'default' => 0,
+                    ),
+                    array(
+                        'id'       => 'hide-amp-version-from-source',
+                        'type'     => 'switch',
+                        'title'    => esc_html__('Hide AMP Version', 'accelerated-mobile-pages'),
+                        'tooltip-subtitle' => esc_html__('Enable if you want hide AMP version in view source page(generator).','accelerated-mobile-pages'),
                         'default' => 0,
                     ),
                     array(
@@ -2368,7 +2672,7 @@ Redux::setSection( $opt_name, array(
                    'id'       => 'ampforwp-amp-convert-to-wp',
                    'type'     => 'switch',
                    'title'    => esc_html__('Convert AMP to WP theme (Beta)', 'accelerated-mobile-pages'),
-                   'tooltip-subtitle' => esc_html__('It makes your AMP & Non-AMP Same! (AMP will output AMP Compatible code, while WordPress will have the WP code but with the same design)', 'accelerated-mobile-pages'),
+                   'tooltip-subtitle'  => sprintf( '%s<a href="%s" target="_blank">%s</a>%s', esc_html__("It makes your AMP & Non-AMP Same! (AMP will output AMP Compatible code, while WordPress will have the WP code but with the same design and ",'accelerated-mobile-pages'),esc_url('https://ampforwp.com/tutorials/article/how-to-convert-your-non-amp-website-to-amp/'),esc_html__('Click Here','accelerated-mobile-pages'),esc_html__(' for more info','accelerated-mobile-pages')),
                    'default'  => ampforwp_amp2wp_default(),
                    'required' => array('amp-design-selector', '=' , '4'),
              ), 
@@ -2516,15 +2820,7 @@ Redux::setSection( $opt_name, array(
                         'title'    => esc_html__('Dev Mode', 'accelerated-mobile-pages'),
                         'required' => array('ampforwp-development-mode', '=', 1)
                     ),
-                      array(
-                        'id'       => 'ampforwp-update-notification-bar',
-                        'type'     => 'switch',
-                        'title'    => esc_html__('Plugin Update Notification Bar'),
-                        'tooltip-subtitle' => esc_html__('Enable/Disable the Plugin Update Notification Bar', 'accelerated-mobile-pages'),
-                        'true'      => 'true',
-                        'false'     => 'false',
-                        'default'   => 1,                        
-                    ),
+                      
                     array(
                         'id'       => 'ampforwp-wptexturize',
                         'type'     => 'switch',
@@ -2535,13 +2831,14 @@ Redux::setSection( $opt_name, array(
                         'default'   => 0,                        
                     ), 
                     array(
-                        'id'       => 'ampforwp-content-builder',
-                        'type'     => 'switch',
-                        'title'    => esc_html__('Legacy Page Builder (widgets)', 'accelerated-mobile-pages'),
-                        'tooltip-subtitle' => esc_html__('Build AMP Landing pages in minutes.', 'accelerated-mobile-pages'),
-                        'true'      => 'true',                
-                        'false'     => 'false',
-                        'default'   => 0
+                        'id'      => 'ampforwp-role-based-access',
+                        'type'    => 'select',
+                        'class'   => $show_for_admin,
+                        'title'   => esc_html__('Role Based Access', 'accelerated-mobile-pages'),
+                        'tooltip-subtitle'   => esc_html__('Allows Administrator to show AMP Options based on User Role.', 'accelerated-mobile-pages'),
+                        'multi'   => true,
+                        'options' => ampforwp_get_user_roles(),
+                        'default'  => ampforwp_default_user_roles()
                     ),
                     // Delete Data on Deletion
                     array(
@@ -2876,6 +3173,14 @@ $e_commerce_support[] = array(
                        'required' => array( 'amp-use-pot', '=' , 0 )
                    ),
                    array(
+                       'id'       => 'amp-translator-published-date-text',
+                       'type'     => 'text',
+                       'title'    => esc_html__('This post was published on ', 'accelerated-mobile-pages'),
+                       'default'  => esc_html__('This post was published on ','accelerated-mobile-pages'),
+                       'placeholder'=> esc_html__('write here','accelerated-mobile-pages'),
+                       'required' => array( 'amp-use-pot', '=' , 0 )
+                   ),
+                   array(
                        'id'       => 'amp-translator-modified-date-text',
                        'type'     => 'text',
                        'title'    => esc_html__('This post was last modified on ', 'accelerated-mobile-pages'),
@@ -2987,7 +3292,10 @@ $e_commerce_support[] = array(
                       'title'    => esc_html__('Search Widget Label', 'accelerated-mobile-pages'),
                       'default'  => esc_html__('Search for:','accelerated-mobile-pages'),
                       'desc' => esc_html__('This is the text that gets shown as Search Box Label','accelerated-mobile-pages'),
-                      'required' => array( 'amp-use-pot', '=' , 0 )
+                      'required' => array(
+                                        array( 'amp-use-pot', '=' , 0 ),
+                                        array('amp-design-selector', '!=' , '4')
+                                    )
                   ),
                   array(
                      'id'       => 'ampforwp-search-label',
@@ -2996,7 +3304,10 @@ $e_commerce_support[] = array(
                      'desc' => esc_html__('This is the text that gets shown above Search Box','accelerated-mobile-pages'),
                      'default'  => esc_html__('Type your search query and hit enter: ','accelerated-mobile-pages'),
                      'placeholder'=>esc_html__('write here','accelerated-mobile-pages'),
-                     'required' => array( 'amp-use-pot', '=' , 0 )
+                     'required' => array(
+                                        array( 'amp-use-pot', '=' , 0 ),
+                                        array('amp-design-selector', '!=' , '4')
+                                    )
 
                  )
     ) ));
@@ -3182,7 +3493,7 @@ Redux::setSection( $opt_name, array(
                     'type'      => 'color_rgba',
                     'title'     => esc_html__('Color Scheme','accelerated-mobile-pages'),
                     'default'   => array(
-                    'color'     => '#F42F42',
+                    'color'     => '#AD0B15',
                     ),
                     'required' => array(
                         array('amp-design-selector', '=' , '3')
@@ -3205,7 +3516,7 @@ Redux::setSection( $opt_name, array(
                     'type'      => 'color_rgba',
                     'title'     => esc_html__('Anchor Link Color','accelerated-mobile-pages'),
                     'default'   => array(
-                    'color'     => '#f42f42',
+                    'color'     => '#AD0B15',
                     ),
                     'required' => array(
                         array('amp-design-selector', '=' , '3')
@@ -3252,9 +3563,7 @@ Redux::setSection( $opt_name, array(
                            'type' => 'section',
                            'title' => esc_html__('Typography', 'accelerated-mobile-pages'),
                            'indent' => true,
-                            'required' => array(
-                                array('amp-design-selector', '=' , '4')
-                            ),
+                            
                             'layout_type' => 'accordion',
                             'accordion-open'=> 1,
                 ));
@@ -3295,7 +3604,6 @@ Redux::setSection( $opt_name, array(
                'title' => esc_html__('Google Fonts', 'accelerated-mobile-pages'),
                'tooltip-subtitle'  => esc_html__('Enable/Disable Google Font','accelerated-mobile-pages'),
                 'default'   => $enabledGoogleFonts,
-                'required' => array(array('amp-design-selector', '=' , '4'))
             ),
             array(
                 'id'        =>'google_font_api_key',
@@ -3304,8 +3612,7 @@ Redux::setSection( $opt_name, array(
                 'tooltip-subtitle'  => esc_html__('You can get the Link ','accelerated-mobile-pages').'<a target="_blank" href="https://developers.google.com/fonts/docs/developer_api?refresh=1&pli=1#APIKey">'.esc_html__('form here','accelerated-mobile-pages').'</a>',
                 'default'   =>'',
                 'required' => array(
-                    array('ampforwp-google-font-switch', '=', '1'),
-                    array('amp-design-selector', '=' , '4')
+                    array('ampforwp-google-font-switch', '=', '1')
                  )
             ),
             array(
@@ -3319,8 +3626,7 @@ Redux::setSection( $opt_name, array(
                 ),
                 'default'  => '',
                 'required' => array(
-                    array('ampforwp-google-font-switch', '=', '1'),
-                    array('amp-design-selector', '=' , '4')
+                    array('ampforwp-google-font-switch', '=', '1')
                 )
 
             ),
@@ -3336,8 +3642,7 @@ Redux::setSection( $opt_name, array(
                 ),
                 'default'  => '',
                 'required' => array(
-                    array('ampforwp-google-font-switch', '=', '1'),
-                    array('amp-design-selector', '=' , '4')
+                    array('ampforwp-google-font-switch', '=', '1')
                 )
 
             ),
@@ -3348,29 +3653,24 @@ Redux::setSection( $opt_name, array(
                 'title'     =>esc_html__('Google Font Current Font','accelerated-mobile-pages'),
                 'default'   =>'',
                 'required' => array(
-                    array('amp-design-selector', '=' , '4'),
-                    array('ampforwp-google-font-switch', '=', '1'),
+                    array('ampforwp-google-font-switch', '=', '1')
                 )
             ),
             array(
                     'id'       => 'content-font-family-enable',
                     'type'     => 'switch',
-                    'class'    => 'ampforwp-google-font-class',
-                    'title'    => esc_html__('Content Font Selector', 'accelerated-mobile-pages'),
-                    'required' => array(
-                                   // array('amp-design-selector', '=' , '4')
-                                    ),
+                    'class'    => 'ampforwp-google-font-class secondary-font-selector',
+                    'title'    => sprintf('%s', esc_html__( $secondary_text . 'Font Selector', 'accelerated-mobile-pages' ) ),
                     'default'  => '0' ,
                     'required' => array(
-                        array('ampforwp-google-font-switch', '=', '1'),
-                        array('amp-design-selector', '=' , '4')
+                        array('ampforwp-google-font-switch', '=', '1')
                     )   
             ),
             array(
                 'id'       => 'amp_font_selector_content_single',
                 'type'     => 'select',
-                'class'    => 'ampforwp-google-font-class ampwp-font-families',
-                'title'    => esc_html__( 'Content Font Family Selector', 'accelerated-mobile-pages' ),
+                'class'    => 'ampforwp-google-font-class ampwp-font-families secondary-font-family-selector',
+                'title'    => sprintf('%s', esc_html__( $secondary_text.' Font Family Selector', 'accelerated-mobile-pages') ),
                 'tooltip-subtitle' => esc_html__( 'Select your design from dropdown or ', 'accelerated-mobile-pages' ),
                 'options'  => array(
                     '1' => 'None',
@@ -3378,17 +3678,16 @@ Redux::setSection( $opt_name, array(
                 'default'  => '',
                 'required' => array(
                     array('ampforwp-google-font-switch', '=', '1'),
-                    array('amp-design-selector', '=' , '4'),
-                    array('content-font-family-enable', '=' , '1'),
+                    array('content-font-family-enable', '=' , '1')
                 )
 
             ),
             array(
                 'id'       => 'amp_font_type_content_single',
                 'type'     => 'select',
-                'class'    => 'ampforwp-google-font-class ampwp-font-family-weights',
+                'class'    => 'ampforwp-google-font-class ampwp-font-family-weights secondary-font-family-weights',
                 'multi'    => true,
-                'title'    => esc_html__( 'Content Font Family Weight Selector', 'accelerated-mobile-pages' ),
+                'title'    => sprintf('%s',  esc_html__( $secondary_text. ' Font Family Weight Selector', 'accelerated-mobile-pages' ) ),
                 'tooltip-subtitle' => esc_html__( 'Select your design from dropdown', 'accelerated-mobile-pages' ),
                 'options'  => array(
                     '1' => 'none',
@@ -3396,7 +3695,6 @@ Redux::setSection( $opt_name, array(
                 'default'  => '',
                 'required' => array(
                     array('ampforwp-google-font-switch', '=', '1'),
-                    array('amp-design-selector', '=' , '4'),
                     array('content-font-family-enable', '=' , '1')
                 )
 
@@ -3408,7 +3706,6 @@ Redux::setSection( $opt_name, array(
                 'title'     =>esc_html__('Google Font Current Font','accelerated-mobile-pages'),
                 'default'   =>'',
                 'required' => array(
-                    array('amp-design-selector', '=' , '4'),
                     array('ampforwp-google-font-switch', '=', '1'),
                 )
             )
@@ -3459,40 +3756,6 @@ Redux::setSection( $opt_name, array(
                         'required' => array( array('gnrl-sidebar', '=' , '1') ),
                 ),
                 array(
-                        'id'        => 'sidebar-bgcolor',
-                        'class' => 'child_opt child_opt_arrow',
-                        'type'      => 'color_rgba',
-                        'title'     => esc_html__('Sidebar Background','accelerated-mobile-pages'),
-                        'default'   => array(
-                            'color'     => '#f7f7f7',
-                        ),
-                        'required' => array( array('gbl-sidebar', '=',1) )
-                ),
-                array(
-                        'id'       => 'sbr-heading-color',
-                        'type'     => 'color_rgba',
-                        'class' => 'child_opt',
-                        'title'    => esc_html__('Heading', 'accelerated-mobile-pages'),
-                        'default'  => array(
-                            'color'     => '#333',
-                        ),
-                        'required' => array(
-                          array('gbl-sidebar','=',1)
-                        )           
-                ),
-                array(
-                        'id'       => 'sbr-text-color',
-                        'type'     => 'color_rgba',
-                        'class' => 'child_opt',
-                        'title'    => esc_html__('Text', 'accelerated-mobile-pages'),
-                        'default'  => array(
-                            'color'     => '#333',
-                        ),
-                        'required' => array(
-                          array('gbl-sidebar','=',1)
-                        )           
-                ),
-                array(
                         'id'    => 'swift-sidebar',
                         'class' => 'child_opt child_opt_arrow',
                         'type'  => 'switch',
@@ -3509,6 +3772,40 @@ Redux::setSection( $opt_name, array(
                       'default'  =>  '0',
                       'required' => array('gnrl-sidebar', '=' , '1'), 
                   ),
+                array(
+                        'id'        => 'sidebar-bgcolor',
+                        'class' => 'child_opt child_opt_arrow',
+                        'type'      => 'color_rgba',
+                        'title'     => esc_html__('Sidebar Background','accelerated-mobile-pages'),
+                        'default'   => array(
+                            'color'     => '#f7f7f7',
+                        ),
+                        'required' => array( array('gnrl-sidebar', '=',1) )
+                ),
+                array(
+                        'id'       => 'sbr-heading-color',
+                        'type'     => 'color_rgba',
+                        'class' => 'child_opt',
+                        'title'    => esc_html__('Heading', 'accelerated-mobile-pages'),
+                        'default'  => array(
+                            'color'     => '#333',
+                        ),
+                        'required' => array(
+                          array('gnrl-sidebar','=',1)
+                        )           
+                ),
+                array(
+                        'id'       => 'sbr-text-color',
+                        'type'     => 'color_rgba',
+                        'class' => 'child_opt',
+                        'title'    => esc_html__('Text', 'accelerated-mobile-pages'),
+                        'default'  => array(
+                            'color'     => '#333',
+                        ),
+                        'required' => array(
+                          array('gnrl-sidebar','=',1)
+                        )           
+                ),
                 array(
                         'id'       => 'ampforwp-infinite-scroll',
                         'type'     => 'switch',
@@ -3528,7 +3825,7 @@ Redux::setSection( $opt_name, array(
                 array(
                        'id' => 'google-icons',
                        'type' => 'section',
-                       'title' => esc_html__('Google Icon Library', 'accelerated-mobile-pages'),
+                       'title' => esc_html__('Font Icon Library', 'accelerated-mobile-pages'),
                        'indent' => true,
                        'layout_type' => 'accordion',
                         'accordion-open'=> 1,
@@ -3537,7 +3834,7 @@ Redux::setSection( $opt_name, array(
                 array(
                     'id'       => 'ampforwp_font_icon',
                     'type'     => 'select',
-                    'title'    => esc_html__('Icon Font Library', 'accelerated-mobile-pages'),
+                    'title'    => esc_html__('Font Icon Library', 'accelerated-mobile-pages'),
                     'options'  => array(
                         'swift-icons'       => 'Swift Icons',
                         'fontawesome-icons'     => 'Font Awesome Icons'
@@ -3725,7 +4022,7 @@ Redux::setSection( $opt_name, array(
                 'title'     => esc_html__('Alt Menu Background', 'accelerated-mobile-pages'),
                 'type'      => 'color_rgba',
                 'default'   => array(
-                    'rgba'  => 'rgb(239, 239, 239)',
+                    'rgba'  => 'rgba(239, 239, 239,1)',
                     ),
                     'required' => array(
                       array('primary-menu','=',1)
@@ -3773,6 +4070,15 @@ Redux::setSection( $opt_name, array(
                       array('signin-button','=',1)
                     )  
               ),
+            // CTA No Follow links
+            array(
+                'id'        =>  'ampforwp-header-cta-link-nofollow',
+                'type'      =>  'switch',
+                'class' => 'child_opt child_opt_arrow',
+                'title'     =>  esc_html__('No Follow Link', 'accelerated-mobile-pages'),
+                'default'   =>  0,
+                'required' => array('signin-button', '=', '1')
+            ),
             array(
                 'id'        => 'signin-button-style',
                 'class' => 'child_opt child_opt_arrow',
@@ -3845,6 +4151,18 @@ Redux::setSection( $opt_name, array(
                       array('border-type','=',3)
                     )  
               ),
+            array(
+                    'id'    => 'cta-responsive-view',
+                    'class' => 'child_opt child_opt_arrow',
+                   'title'  => esc_html__('CTA Position on Mobile', 'accelerated-mobile-pages'),
+                   'type'   => 'select',
+                   'options'=> array(
+                        '1' =>  'Header',
+                        '2' =>  'Menu',
+                    ),
+                   'default'=> '1',
+                   'required' => array( array('signin-button', '=' ,1) ),
+            ),
              array(
                     'id'       => 'ampforwp-amp-menu',
                     'type'     => 'switch',
@@ -3857,7 +4175,259 @@ Redux::setSection( $opt_name, array(
                     'required' => array(array('amp-design-selector', '!=' , '4')),
 
             ),
-            // Design1 Menu Options
+            // Design 1 Menu slider position option
+            array(
+                  'id'    => 'header-overlay-position-d1',
+                  'title'  => esc_html__('Menu Overlay Position', 'accelerated-mobile-pages'),
+                  'type'   => 'select',
+                  'options'=> array(
+                      '1' =>  'Right',
+                      '2' =>  'Left'
+                    ),
+                    'default'=> '1',
+                    'required' => array(
+                        array('amp-design-selector', '=' , '1'),
+                        array('ampforwp-amp-menu', '=' , '1')
+                  )    
+            ),
+            // Design 2 Menu slide poistion option
+            array(
+                  'id'    => 'header-overlay-position-d2',
+                  'title'  => esc_html__('Menu Overlay Position', 'accelerated-mobile-pages'),
+                  'type'   => 'select',
+                  'options'=> array(
+                      '1' =>  'Right',
+                      '2' =>  'Left'
+                    ),
+                    'default'=> '1',
+                    'required' => array(
+                        array('amp-design-selector', '=' , '2'),
+                        array('ampforwp-amp-menu', '=' , '1')
+                  )    
+            ),
+            // Design 3 Menu slider position option
+            array(
+                  'id'    => 'header-overlay-position-d3',
+                  'title'  => esc_html__('Menu Overlay Position', 'accelerated-mobile-pages'),
+                  'type'   => 'select',
+                  'options'=> array(
+                      '1' =>  'Left',
+                      '2' =>  'Right'
+                    ),
+                    'default'=> '1',
+                    'required' => array(
+                        array('amp-design-selector', '=' , '3'),
+                        array('ampforwp-amp-menu', '=' , '1')
+                  )    
+            ),
+            
+           array(
+                       'id' => 'header_section_3',
+                       'type' => 'section',
+                       'title' => esc_html__('Header Settings', 'accelerated-mobile-pages'),
+                       'indent' => true,
+                       'layout_type' => 'accordion',
+                        'accordion-open'=> 1,
+            ),
+            // Call Now button
+             array(
+                    'id'       => 'ampforwp-callnow-button',
+                    'type'     => 'switch',
+                    'title'    => esc_html__('Call Now Button', 'accelerated-mobile-pages'),
+                    'true'      => 'true',
+                    'false'     => 'false',
+                    'required' => array(
+                        array('amp-design-selector', '!=' , '1')
+                    ),
+                    'default'   => 0
+             ),
+             array(
+                    'id'        =>'enable-amp-call-numberfield',
+                 'class' => 'child_opt child_opt_arrow',
+                    'type'      => 'text',
+                    'required'  => array(
+                        array('ampforwp-callnow-button', '=' , '1'),
+                        array('amp-design-selector', '!=' , '1')
+                    ),
+                    'title'     => esc_html__('Enter Phone Number', 'accelerated-mobile-pages'),
+                    'default'   => '',
+             ),
+             array(
+                    'id'        =>'amp-on-off-support-for-non-amp-home-page',
+                    'type'      => 'switch',
+                    'title'     => esc_html__('Non-AMP link in Header', 'accelerated-mobile-pages'),
+                    'tooltip-subtitle'  => esc_html__('If you want users in header to go to non-AMP website from the Header', 'accelerated-mobile-pages'),
+                    'default'   => 0,
+            ),
+             array(
+                    'id'        => 'amp-opt-sticky-head',
+                    'type'      => 'switch',
+                    'title'     => esc_html__('Make Header UnSticky','accelerated-mobile-pages'), 
+                    'required' => array(
+                      array('amp-design-selector', '=' , '3')
+                    ),
+                    'tooltip-subtitle'     => esc_html__('Turning it ON will remove the sticky head from the design.', 'accelerated-mobile-pages' ),
+                    'default'  => '0'
+            ),
+             array(
+                    'id'       => 'amp-design-3-search-feature',
+                    'type'     => 'switch',
+                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
+                    'required' => array(
+                        array('amp-design-selector', '=' , '3')
+                    ),
+                    'default'  => '1'
+            ),
+             
+             array(
+                    'id'       => 'amp-design-2-search-feature',
+                    'type'     => 'switch',
+                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
+                    'required' => array(
+                        array('amp-design-selector', '=' , '2')
+                    ),
+                    'default'  => '0'
+            ),
+
+             array(
+                    'id'       => 'amp-design-1-search-feature',
+                    'type'     => 'switch',
+                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
+                    'required' => array(
+                        array('amp-design-selector', '=' , '1')
+                    ),
+                    'default'  => '0'
+            ),
+            array(
+                    'id'       => 'amp-swift-search-feature',
+                    'type'     => 'switch',
+                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
+                    'required' => array(
+                        array('amp-design-selector', '=' , '4')
+                    ),
+                    'default'  => '1'
+            ),
+            array(
+                'id'        => 'amp-sticky-header', 
+                "type"      =>"switch",
+                'title'     => esc_html__( 'Sticky Header', 'accelerated-mobile-pages' ),
+                'default'   => 0,
+                'required'  => array(
+                    array('amp-design-selector', '=' , '4')
+                )
+            ),
+            array(
+                       'id' => 'header_design_section',
+                       'type' => 'section',
+                       'title' => esc_html__('Header Design Options', 'accelerated-mobile-pages'),
+                       'indent' => true,
+                       'layout_type' => 'accordion',
+                        'accordion-open'=> 1,
+            ),
+            // Design 1 Fields
+            array(
+                    'id'        => 'amp-d1-background-color',
+                    'type'      => 'color_rgba',
+                    'title'     => esc_html__('Header Background','accelerated-mobile-pages'),
+                    'default'   => array(
+                        'color'     => '#0a89c0',
+                    ),
+                    'required' => array(
+                      array('amp-design-selector', '=' , '1')
+                    )
+            ),
+              array(
+                    'id'        => 'amp-d1-elements-color',
+                    'type'      => 'color_rgba',
+                    'title'     => esc_html__('Header Elements Color','accelerated-mobile-pages'),
+                    'default'   => array(
+                        'color' => '#ffffff',
+                    ),
+                    'required' => array(
+                      array('amp-design-selector', '=' , '1')
+                    )
+            ),
+            // Design 2 Fields
+            array(
+                    'id'        => 'amp-d2-background-color',
+                    'type'      => 'color_rgba',
+                    'title'     => esc_html__('Header Background','accelerated-mobile-pages'),
+                    'default'   => array(
+                        'color'     => '#0a89c0',
+                    ),
+                    'required' => array(
+                      array('amp-design-selector', '=' , '2')
+                    )
+            ),
+              array(
+                    'id'        => 'amp-d2-elements-color',
+                    'type'      => 'color_rgba',
+                    'title'     => esc_html__('Header Elements Color','accelerated-mobile-pages'),
+                    'default'   => array(
+                        'color' => '#ffffff',
+                    ),
+                    'required' => array(
+                      array('amp-design-selector', '=' , '2')
+                    )
+            ), 
+            // Design 3 Fields
+             array(
+                    'id'        => 'amp-opt-color-rgba-headercolor',
+                    'type'      => 'color_rgba',
+                    'title'     => esc_html__('Header Background','accelerated-mobile-pages'),
+                    'default'   => array(
+                        'color'     => '#FFFFFF',
+                    ),
+                    'required' => array(
+                      array('amp-design-selector', '=' , '3')
+                    )
+            ),
+              array(
+                    'id'        => 'amp-opt-color-rgba-headerelements',
+                    'type'      => 'color_rgba',
+                    'title'     => esc_html__('Header Elements','accelerated-mobile-pages'),
+                    'default'   => array(
+                        'color'     => ampforwp_get_element_default_color(),
+                    ),
+                    'required' => array(
+                      array('amp-design-selector', '=' , '3')
+                    )
+            ),
+            // Design 4 Fields
+              array(
+                'id'        => 'swift-background-scheme',
+                'title'     => esc_html__('Header Background', 'accelerated-mobile-pages'),
+                'type'      => 'color_rgba',
+                'default'   => array(
+                    'color'  => '#fff',
+                ),
+                'required' => array('header-type', '<' , '8')     
+              ),
+              array(  
+                'id'        => 'swift-element-color-control',
+                'title'     => esc_html__('Header Elements', 'accelerated-mobile-pages'),
+                'tooltip-subtitle'  => esc_html__('Color of the Text and Icons on top of Header','accelerated-mobile-pages'),
+                'type'      => 'color_rgba',
+                'default'   => array(
+                    'color'  => '#333',
+                ),
+                'required' => array('header-type', '<' , '8')
+              ), 
+
+            // Navigation Menu Designs Options for Design 1, 2 and 3
+            array(
+                   'id' => 'navigation_design_section',
+                   'type' => 'section',
+                   'title' => esc_html__('Navigation Menu Design Options', 'accelerated-mobile-pages'),
+                   'indent' => true,
+                   'layout_type' => 'accordion',
+                    'accordion-open'=> 1,
+                    'required'  => array(
+                        array('amp-design-selector', '!=' , '4'),
+                        array('ampforwp-amp-menu', '=' , '1'),
+                    )
+            ),
+            // Design1 Menu Color Options
              array(
                     'id'        => 'amp-d1-sidebar-color',
                     'type'      => 'color_rgba',
@@ -3975,7 +4545,7 @@ Redux::setSection( $opt_name, array(
                       array('ampforwp-amp-menu', '=' , '1')
                     )
             ),
-            // Design 2 Menu Options
+            // Design 2 Menu Color Options
             array(
                     'id'        => 'amp-d2-sidebar-color',
                     'type'      => 'color_rgba',
@@ -4093,7 +4663,7 @@ Redux::setSection( $opt_name, array(
                       array('ampforwp-amp-menu', '=' , '1')
                     )
             ),
-            // Design 3 Menu Options
+            // Design 3 Menu color options
             array(
                     'id'        => 'amp-opt-color-rgba-menu-bg-color',
                     'type'      => 'color_rgba',
@@ -4173,182 +4743,6 @@ Redux::setSection( $opt_name, array(
                     )
             ),
 
-
-           array(
-                       'id' => 'header_section_3',
-                       'type' => 'section',
-                       'title' => esc_html__('Header Settings', 'accelerated-mobile-pages'),
-                       'indent' => true,
-                       'layout_type' => 'accordion',
-                        'accordion-open'=> 1,
-            ),
-            // Call Now button
-             array(
-                    'id'       => 'ampforwp-callnow-button',
-                    'type'     => 'switch',
-                    'title'    => esc_html__('Call Now Button', 'accelerated-mobile-pages'),
-                    'true'      => 'true',
-                    'false'     => 'false',
-                    'required' => array(
-                        array('amp-design-selector', '!=' , '1')
-                    ),
-                    'default'   => 0
-             ),
-             array(
-                    'id'        =>'enable-amp-call-numberfield',
-                 'class' => 'child_opt child_opt_arrow',
-                    'type'      => 'text',
-                    'required'  => array(
-                        array('ampforwp-callnow-button', '=' , '1'),
-                        array('amp-design-selector', '!=' , '1')
-                    ),
-                    'title'     => esc_html__('Enter Phone Number', 'accelerated-mobile-pages'),
-                    'default'   => '',
-             ),
-             array(
-                    'id'        =>'amp-on-off-support-for-non-amp-home-page',
-                    'type'      => 'switch',
-                    'title'     => esc_html__('Non-AMP link in Header', 'accelerated-mobile-pages'),
-                    'tooltip-subtitle'  => esc_html__('If you want users in header to go to non-AMP website from the Header', 'accelerated-mobile-pages'),
-                    'default'   => 0,
-            ),
-             array(
-                    'id'        => 'amp-opt-sticky-head',
-                    'type'      => 'switch',
-                    'title'     => esc_html__('Make Header UnSticky','accelerated-mobile-pages'), 
-                    'required' => array(
-                      array('amp-design-selector', '=' , '3')
-                    ),
-                    'tooltip-subtitle'     => esc_html__('Turning it ON will remove the sticky head from the design.', 'accelerated-mobile-pages' ),
-                    'default'  => '0'
-            ),
-             array(
-                    'id'       => 'amp-design-3-search-feature',
-                    'type'     => 'switch',
-                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
-                    'required' => array(
-                        array('amp-design-selector', '=' , '3')
-                    ),
-                    'default'  => '1'
-            ),
-             
-             array(
-                    'id'       => 'amp-design-2-search-feature',
-                    'type'     => 'switch',
-                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
-                    'required' => array(
-                        array('amp-design-selector', '=' , '2')
-                    ),
-                    'default'  => '0'
-            ),
-
-             array(
-                    'id'       => 'amp-design-1-search-feature',
-                    'type'     => 'switch',
-                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
-                    'required' => array(
-                        array('amp-design-selector', '=' , '1')
-                    ),
-                    'default'  => '0'
-            ),
-            array(
-                    'id'       => 'amp-swift-search-feature',
-                    'type'     => 'switch',
-                    'title'    => esc_html__( 'Search', 'accelerated-mobile-pages' ),
-                    'required' => array(
-                        array('amp-design-selector', '=' , '4')
-                    ),
-                    'default'  => '1'
-            ),
-            array(
-                'id'        => 'amp-sticky-header', 
-                "type"      =>"switch",
-                'title'     =>"Sticky Header ",
-                'default'   => 0,
-                'required'  => array(
-                    array('amp-design-selector', '=' , '4')
-                )
-            ),
-            array(
-                       'id' => 'header_design_section',
-                       'type' => 'section',
-                       'title' => __('Header Designs Options', 'accelerated-mobile-pages'),
-                       'indent' => true,
-                       'layout_type' => 'accordion',
-                        'accordion-open'=> 1,
-                        'required'  => array(
-                            array('amp-design-selector', '!=' , '4')
-                        )
-            ),
-            // Design 1 Fields
-            array(
-                    'id'        => 'amp-d1-background-color',
-                    'type'      => 'color_rgba',
-                    'title'     => esc_html__('Header Background','accelerated-mobile-pages'),
-                    'default'   => array(
-                        'color'     => '#0a89c0',
-                    ),
-                    'required' => array(
-                      array('amp-design-selector', '=' , '1')
-                    )
-            ),
-              array(
-                    'id'        => 'amp-d1-elements-color',
-                    'type'      => 'color_rgba',
-                    'title'     => esc_html__('Header Elements Color','accelerated-mobile-pages'),
-                    'default'   => array(
-                        'color' => '#ffffff',
-                    ),
-                    'required' => array(
-                      array('amp-design-selector', '=' , '1')
-                    )
-            ),
-            // Design 2 Fields
-            array(
-                    'id'        => 'amp-d2-background-color',
-                    'type'      => 'color_rgba',
-                    'title'     => esc_html__('Header Background','accelerated-mobile-pages'),
-                    'default'   => array(
-                        'color'     => '#0a89c0',
-                    ),
-                    'required' => array(
-                      array('amp-design-selector', '=' , '2')
-                    )
-            ),
-              array(
-                    'id'        => 'amp-d2-elements-color',
-                    'type'      => 'color_rgba',
-                    'title'     => esc_html__('Header Elements Color','accelerated-mobile-pages'),
-                    'default'   => array(
-                        'color' => '#ffffff',
-                    ),
-                    'required' => array(
-                      array('amp-design-selector', '=' , '2')
-                    )
-            ), 
-            // Design 3 Fields
-             array(
-                    'id'        => 'amp-opt-color-rgba-headercolor',
-                    'type'      => 'color_rgba',
-                    'title'     => esc_html__('Header Background','accelerated-mobile-pages'),
-                    'default'   => array(
-                        'color'     => '#FFFFFF',
-                    ),
-                    'required' => array(
-                      array('amp-design-selector', '=' , '3')
-                    )
-            ),
-              array(
-                    'id'        => 'amp-opt-color-rgba-headerelements',
-                    'type'      => 'color_rgba',
-                    'title'     => esc_html__('Header Elements','accelerated-mobile-pages'),
-                    'default'   => array(
-                        'color'     => ampforwp_get_element_default_color(),
-                    ),
-                    'required' => array(
-                      array('amp-design-selector', '=' , '3')
-                    )
-            ),
              // Tab 1 end    
             // Tab 2
             array(
@@ -4485,20 +4879,6 @@ Redux::setSection( $opt_name, array(
                         array('border-line','=',1)
                       )  
               ),
-
-
-            array(
-                    'class' => 'child_opt',
-                'id'        => 'swift-background-scheme',
-                'title'     => esc_html__('Header Background', 'accelerated-mobile-pages'),
-                'type'      => 'color_rgba',
-                'default'   => array(
-                    'rgba'  => 'rgba(255, 255, 255, 255)',
-                    ),
-                    'required' => array(
-                      array('customize-options','=',1)
-                    )  
-              ),
               array(
                     'class' => 'child_opt',
                     'id'        => 'swift-header-overlay',
@@ -4507,19 +4887,6 @@ Redux::setSection( $opt_name, array(
                     'default'   => array(
                         'rgba'  => 'rgba(20, 20, 22, 0.9)',
                          ),
-                    'required' => array(
-                        array('customize-options','=',1)
-                      )
-              ),
-              array(
-                    'class' => 'child_opt',
-                    'id'        => 'swift-element-color-control',
-                    'title'     => esc_html__('Header Elements', 'accelerated-mobile-pages'),
-                    'tooltip-subtitle'  => esc_html__('Color of the Text and Icons on top of Header','accelerated-mobile-pages'),
-                    'type'      => 'color_rgba',
-                    'default'   => array(
-                        'color'  => '#333',
-                     ),
                     'required' => array(
                         array('customize-options','=',1)
                       )
@@ -4634,6 +5001,7 @@ Redux::setSection( $opt_name, array(
                           array('amp-design-3-featured-content', '=', '1'),
                         ),
                         'ajax'      => true,
+                        'options' => ampforwp_get_categories('amp-design-3-category-selector'),
                         'data-action' => 'ampforwp_categories', 
                         'data'      => 'categories',
                   ),
@@ -4648,6 +5016,7 @@ Redux::setSection( $opt_name, array(
                     array('amp-design-3-featured-content', '=' , '2'),
                         ),  
                         'ajax'      => true,
+                        'options'   => ampforwp_get_all_tags('amp-design-3-tag-selector'),
                         'data-action' => 'ampforwp_tags', 
                         'data'      => 'tags',         
                 ),
@@ -4836,11 +5205,14 @@ Redux::setSection( $opt_name, array(
                         'default'   => 'post',
                 ),
                 array(
-                        'id'       => 'ampforwp-homepage-loop-cats',
-                        'type'     => 'select',
-                        'title'    => esc_html__( 'Exclude Categories', 'accelerated-mobile-pages' ),
-                        'data'  => 'categories',
-                        'multi'    => true
+                    'id'           => 'ampforwp-homepage-loop-cats',
+                    'type'         => 'select',
+                    'title'        => esc_html__( 'Exclude Categories', 'accelerated-mobile-pages' ),
+                    'multi'        => true, 
+                    'ajax'         => true,
+                    'options'      => ampforwp_get_categories('ampforwp-homepage-loop-cats'),
+                    'data-action'  => 'ampforwp_categories', 
+                    'data'         => 'categories',
                 ),
                 array(
                     'id'    => 'ampforwp-homepage-loop-readmore-link',
@@ -4993,13 +5365,15 @@ $single_page_options = array(
                     'type'  => 'switch',
                     'title' => esc_html__('Featured Image', 'accelerated-mobile-pages'),
                     'default'   => 1,
+                    'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                    esc_html__('Enable this option to show featured image in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-use-featured-images-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
                     'required' => array( array('amp-design-selector', '=' , '4') ),
             ),
             array(
                     'id'    => 'swift-featued-image-type',
                     'class' => 'child_opt child_opt_arrow',
                     'type'  => 'select',
-                    'title'    => esc_html__('Featured Image Type', 'accelerated-mobile-pages'),
+                    'title'    => esc_html__('Featured Image Size', 'accelerated-mobile-pages'),
                     'tooltip-subtitle'     => esc_html__('Select Featured Image Size','accelerated-mobile-pages'),
                     'options'  => array(
                         '1' => 'Full Screen Image',
@@ -5046,6 +5420,9 @@ $single_page_options = array(
                     'type'  => 'switch',
                     'title' => esc_html__('Published Date', 'accelerated-mobile-pages'),
                     'default'   => 1,
+                    'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                     esc_html__('Enable this option to show published date in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-published-date-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
+
                     'required' => array( array('amp-design-selector', '=' , '4') ),
             ),
          //Breadcrumb ON/OFF
@@ -5054,6 +5431,9 @@ $single_page_options = array(
               'type'     => 'switch',
               'default'  =>  '1',
               'title'    => esc_html__('Breadcrumbs', 'accelerated-mobile-pages'),
+              'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+               esc_html__('Enable this option to show breadcrumbs in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-breadcrumbs-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
+
            ),
           //Breadcrumb for Tags
           array(
@@ -5085,7 +5465,9 @@ $single_page_options = array(
               'type'     => 'switch',
               'default'  =>  '1',
               'title'    => esc_html__('Categories', 'accelerated-mobile-pages'),
-              'tooltip-subtitle' => esc_html__('Enable or Disable Categories in Single', 'accelerated-mobile-pages'),              
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                esc_html__('Enable this option to show categories in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-show-categories-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),           
+              
            ),
          //Tags  ON/OFF
          array(
@@ -5093,6 +5475,9 @@ $single_page_options = array(
               'type'     => 'switch',
               'default'  =>  '1',
               'title'    => esc_html__('Tags', 'accelerated-mobile-pages'),
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                esc_html__('Enable this option to show tags in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-show-tags-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
            ),
           //Categories and Tags Links
           array(
@@ -5100,6 +5485,9 @@ $single_page_options = array(
               'type'     => 'switch',
               'default'  =>  '1',
               'title'    => esc_html__('Categories & Tags Links', 'accelerated-mobile-pages'),
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                esc_html__('Enable this option to make categories and tags links in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-categories-tags-links-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
            ),
           
           // Excerpt ON/OFF
@@ -5108,7 +5496,9 @@ $single_page_options = array(
               'type'      => 'switch',
               'title'     => esc_html__('Excerpt', 'accelerated-mobile-pages'),
               'default'   => 0,
-              'tooltip-subtitle'  => esc_html__('Excerpt will be displayed above content', 'accelerated-mobile-pages'),
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                esc_html__('Enable this option to show excerpt in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-excerpt-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
           ),
           //deselectable next previous links
           array(
@@ -5116,13 +5506,26 @@ $single_page_options = array(
               'type'      => 'switch',
               'title'     => esc_html__('Next-Previous Links', 'accelerated-mobile-pages'),
               'default'   => 1,
-         ),    
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                esc_html__('Enable this option to show next and previous links in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-next-previous-links-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
+         ),   
+         array(
+              'id'        => 'single-next-prev-to-nonamp',
+              'type'      => 'switch',
+              'class' => 'child_opt child_opt_arrow',
+              'title'     => esc_html__('Link to Non-AMP page', 'accelerated-mobile-pages'),
+              'default'   => 0,
+              'required' => array('enable-single-next-prev' , '=' , '1')       
+          ), 
         // Author Bio
          array(
              'id'       => 'amp-author-description',
              'type'     => 'switch',
              'title'    => esc_html__( 'Author Bio', 'accelerated-mobile-pages' ),
              'default'  => '1',
+             'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+             esc_html__('Enable this option to show author bio in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-author-bio-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
          ),
          // Author name 
          array(
@@ -5131,6 +5534,8 @@ $single_page_options = array(
              'type'     => 'switch',
              'title'    => esc_html__( 'Author Name', 'accelerated-mobile-pages' ),
              'default'  => '1',
+             'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+              esc_html__('Enable this option to show author name in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-show-author-name-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
              'required' => array(
                 array('amp-design-selector' , '=' , '4'),
                 array('amp-author-description' , '=' , '1'),
@@ -5163,7 +5568,9 @@ $single_page_options = array(
             'type'     => 'switch',
             'title'    => esc_html__( 'Post Pagination', 'accelerated-mobile-pages' ),
            'default'   => 1,
-           'tooltip-subtitle'  => esc_html__('Enable the feature to add Pagination in single', 'accelerated-mobile-pages'),
+            'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+            esc_html__('Enable this option to show pagination in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-post-pagination-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
         ),
         array(
             'id'       => 'ampforwp-pagination-select',
@@ -5181,7 +5588,8 @@ $single_page_options = array(
             'id'       => 'ampforwp-swift-recent-posts',
             'type'     => 'switch',
             'title'    => esc_html__('Recent Posts below Related', 'accelerated-mobile-pages'),
-            'tooltip-subtitle' => esc_html__('To enable & disable recent posts', 'accelerated-mobile-pages'),
+            'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+             esc_html__('Enable this option to show recent posts in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-recent-posts-below-related-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
             'default'  => 1,
             'required' => array('amp-design-selector' , '=' , '4'),
         ),
@@ -5192,6 +5600,41 @@ $single_page_options = array(
                     'title'     => esc_html__('Recent Posts Date', 'accelerated-mobile-pages'),
                     'default'   => 1,
                     'tooltip-subtitle'  => esc_html__('Enable this option to show data below each post of Recent post loop'),
+                    'required' => array('ampforwp-swift-recent-posts' , '=' , '1'),
+            ),
+        array(
+                    'id'        => 'amforwp-recentpost-image-switch',
+                    'type'      => 'switch',
+                    'class' => 'child_opt child_opt_arrow',
+                    'title'     => esc_html__('Image', 'accelerated-mobile-pages'),
+                    'default'   => 1,
+                    'tooltip-subtitle'  => esc_html__('Enable this option to show image for each post of Recent post loop'),
+                    'required' => array('ampforwp-swift-recent-posts' , '=' , '1'),
+            ),
+        array(
+                    'id'        => 'amforwp-recentpost-excerpt-switch',
+                    'type'      => 'switch',
+                    'class' => 'child_opt child_opt_arrow',
+                    'title'     => esc_html__('Excerpt', 'accelerated-mobile-pages'),
+                    'default'   => 1,
+                    'tooltip-subtitle'  => esc_html__('Enable this option to show excerpt for each post of Recent post loop'),
+                    'required' => array('ampforwp-swift-recent-posts' , '=' , '1'),
+            ),
+        array(
+                    'id'       => 'ampforwp-recentpost-posts-link',
+                    'type'     => 'switch',
+                    'class' => 'child_opt',
+                    'title'    => esc_html__('Link to Non-AMP', 'accelerated-mobile-pages'),
+                    'default'  => 0,
+                    'required' => array('ampforwp-swift-recent-posts' , '=' , '1'),
+            ),
+        array(
+                    'id'       => 'ampforwp-number-of-recent-posts',
+                    'type'     => 'text',
+                'class' => 'child_opt',
+                    'title'    => esc_html__('Number of Recent Post', 'accelerated-mobile-pages'),
+                    'validate' => 'numeric',
+                    'default'  => '6',
                     'required' => array('ampforwp-swift-recent-posts' , '=' , '1'),
             ),
             array(
@@ -5208,6 +5651,9 @@ $single_page_options = array(
                     'type'     => 'switch',
                     'title'    => esc_html__( 'Related Posts', 'accelerated-mobile-pages' ),
                    'default'   => 1,
+                    'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                     esc_html__('Enable this option to show related posts in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-related-posts-on-single-pages/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
             ),
             array(
                    'id'    => 'rp_design_type',
@@ -5270,6 +5716,38 @@ $single_page_options = array(
                                     array('ampforwp-single-related-posts-switch', '=' , '1') 
                                 ),
             ),
+            // Excerpt ON/OFF of Related Posts
+          array(
+              'id'        => 'enable-excerpt-single-related-posts',
+              'type'      => 'text',
+              'class'     => 'child_opt',
+              'title'     => esc_html__('Excerpt Length', 'accelerated-mobile-pages'),
+              'default'   => 15,
+              'tooltip-subtitle'  => esc_html__('Excerpt will be displayed on related posts', 'accelerated-mobile-pages'),
+              'required'  => array( 
+                array('ampforwp-single-related-posts-excerpt', '=' , '1') ),
+          ),
+          array(
+                 'id'        => 'excerpt-option-small-rp',
+                 'class' => 'child_opt',
+                 'type'      => 'switch',
+                 'title'     =>  esc_html__('Excerpt on Small Screens', 'accelerated-mobile-pages'),
+                 'default'   => '0',
+                 'required' => array(
+                     array('amp-design-selector', '!=' , '4'),
+                     array('ampforwp-single-related-posts-excerpt', '=' , '1'),
+                    )                         
+                ),
+          array(
+                 'id'        => 'excerpt-option-rp-read-more',
+                 'class' => 'child_opt',
+                 'type'      => 'switch',
+                 'title'     =>  esc_html__('Read More Link', 'accelerated-mobile-pages'),
+                 'default'   => '0',
+                 'required' => array(
+                     array('ampforwp-single-related-posts-excerpt', '=' , '1'),
+                    )                         
+                ),
             array(
                     'id'       => 'ampforwp-single-related-posts-link',
                     'type'     => 'switch',
@@ -5323,11 +5801,49 @@ $single_page_options = array(
                                     array('ampforwp-related-posts-days-switch', '=' , '1'),
                                 ),
             ),
+             // DESIGN 3 RECENT POST BELOW RELATED
+            array(
+                'id'       => 'ampforwp-design3-recent-posts',
+                'type'     => 'switch',
+                'title'    => esc_html__('Recent Posts below Related', 'accelerated-mobile-pages'),
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                            esc_html__('Enable this option to show recent posts in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-recent-posts-below-related-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+                'default'  => 0,
+                'required' => array('amp-design-selector' , '=' , '3'),
+            ),
+            array(
+                        'id'        => 'amforwp-design3-recentpost-date-switch',
+                        'type'      => 'switch',
+                        'class' => 'child_opt child_opt_arrow',
+                        'title'     => esc_html__('Recent Posts Date', 'accelerated-mobile-pages'),
+                        'default'   => 1,
+                        'tooltip-subtitle'  => esc_html__('Enable this option to show data below each post of Recent post loop'),
+                        'required' => array('ampforwp-design3-recent-posts' , '=' , '1'),
+                ),
+            array(
+                        'id'        => 'amforwp-design3-recentpost-image-switch',
+                        'type'      => 'switch',
+                        'class' => 'child_opt child_opt_arrow',
+                        'title'     => esc_html__('Image', 'accelerated-mobile-pages'),
+                        'default'   => 1,
+                        'tooltip-subtitle'  => esc_html__('Enable this option to show image for each post of Recent post loop'),
+                        'required' => array('ampforwp-design3-recent-posts' , '=' , '1'),
+                ),
+            array(
+                        'id'       => 'ampforwp-design3-number-of-recent-posts',
+                        'type'     => 'text',
+                    'class' => 'child_opt',
+                        'title'    => esc_html__('Number of Recent Post', 'accelerated-mobile-pages'),
+                        'default'  => '6',
+                        'required' => array('ampforwp-design3-recent-posts' , '=' , '1'),
+                ),
             array(
                     'id'       => 'ampforwp-inline-related-posts',
                     'type'     => 'switch',
                     'title'    => esc_html__('In-Content Related Post', 'accelerated-mobile-pages'),
-                'tooltip-subtitle' => esc_html__('Insert Related Posts between the content', 'accelerated-mobile-pages'),
+                    'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                    esc_html__('Enable this option to show inline related posts in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-in-content-related-posts-on-single-pages/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
                 'default'  => 0,
             ),
             array(
@@ -5381,12 +5897,30 @@ $single_page_options = array(
                     'required' => array( array('ampforwp-inline-related-posts', '=' , '1'),array('ampforwp-inline-related-posts-display-type', '=' , 'paragraphs') ),
             ),
             array(
+                    'id'       => 'ampforwp-in-content-related-posts-days-switch',
+                    'type'     => 'switch',
+                    'class' => 'child_opt',
+                    'title'    => esc_html__('By Last X Days', 'accelerated-mobile-pages'),
+                    'tooltip-subtitle' => esc_html__('Show In Content Related Posts From Past Few Days', 'accelerated-mobile-pages'),
+                    'default'  => 0,
+                    'required' => array('ampforwp-inline-related-posts', '=' , '1'),                     
+            ),
+            array(
+                    'id'       => 'ampforwp-in-content-related-posts-days-text',
+                    'type'     => 'text',
+                    'class' => 'child_opt',
+                    'title'    => esc_html__('Number of Days', 'accelerated-mobile-pages'),
+                    'validate' => 'numeric',
+                    'default'  => '7',
+                    'required' => array('ampforwp-in-content-related-posts-days-switch', '=' , '1'),  
+                ),
+            array(
                    'id' => 'single-tab-2',
                    'type' => 'section',
                    'title' => esc_html__('General', 'accelerated-mobile-pages'),
                    'indent' => true,
                    'layout_type' => 'accordion',
-                    'accordion-open'=> 0,
+                    'accordion-open'=> 1,
              ),
             // Lightbox 
            array(
@@ -5394,6 +5928,9 @@ $single_page_options = array(
               'type'     => 'switch',
               'default'  =>  '0',
               'title'    => esc_html__('Lightbox for Images', 'accelerated-mobile-pages'),
+              'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+               esc_html__('Enable this option to show lightbox for images in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-lightbox-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
            ),
            // Dropcap 
            array(
@@ -5401,6 +5938,9 @@ $single_page_options = array(
               'type'     => 'switch',
               'default'  =>  '0',
               'title'    => esc_html__('Dropcap', 'accelerated-mobile-pages'),
+              'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+               esc_html__('Enable this option to show dropcap in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-use-dropcap-feature-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
               'required'  => array(
                     array('amp-design-selector', '=' , '4')
                 )
@@ -5430,8 +5970,10 @@ $single_page_options = array(
                 'id'       => 'swift_cnt',
                 'type'     => 'switch',
                 'title'    =>  esc_html__( 'H1 - H6 Font Sizes', 'accelerated-mobile-pages' ),
-               'default'   => 0,
-               'tooltip-subtitle'  => esc_html__('Enable the Heading to add Font Sizes in single', 'accelerated-mobile-pages'),
+                'default'   => 0,
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                 esc_html__('Enable this option to change default heading size in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-change-font-size-of-h1-h6/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
             ),
             array(
                 'id'       => 'swift_cnt_h1',
@@ -5539,6 +6081,9 @@ $single_page_options = array(
                     'id'    => 'single-new-features',
                     'type'  => 'switch',
                     'title' => esc_html__('Advanced Single Options', 'accelerated-mobile-pages'),
+                    'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                    esc_html__('Enable this option to use advanced options for single posts in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-enable-advanced-single-options-in-single-page/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
                     'default'   => 0,
             ),
             array(
@@ -5568,6 +6113,9 @@ $single_page_options = array(
                    'id'    => 'ampforwp-gallery-design-type',
                    'title'  => esc_html__('Select Gallery Designs', 'accelerated-mobile-pages'),
                    'class' => 'child_opt child_opt_arrow',
+                   'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                    esc_html__('Select the design which you want for displaying the gallery in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/add-image-gallery-carousel-in-amp-version/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')), 
+
                    'type'   => 'image_select',
                    'options'=> array(
                         '1' => array(
@@ -5595,6 +6143,7 @@ $single_page_options = array(
                'title' => esc_html__('Lightbox for Gallery', 'accelerated-mobile-pages'),
                'class' => 'child_opt child_opt_arrow',
                'default'    =>  1,
+               'tooltip-subtitle'  => esc_html__('Enable this option to show lightbox for gallery in AMP','accelerated-mobile-pages'), 
                'required'   =>  array('ampforwp-gallery-design-type' , '!=' , '3'),
              ),
             array(
@@ -5610,6 +6159,8 @@ $single_page_options = array(
                 'type'     => 'switch',
                 'title'    => esc_html__('Content Sneak Peek', 'accelerated-mobile-pages'),
                 'default'  => 0,
+                'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                esc_html__('Enable this option to hide all your content and show just a preview of your content in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-content-sneak-peek-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
             ),
             array(
                 'id'       => 'content-sneak-peek-height',
@@ -5992,7 +6543,7 @@ else{
                             array('amp-design-selector', '=' , '4')
                     ),
                    'layout_type' => 'accordion',
-                    'accordion-open'=> 0,
+                    'accordion-open'=> 1,
              ),
             array(
                     'id'    => 'footer-customize-options',
@@ -6239,9 +6790,17 @@ else{
            'layout_type' => 'accordion',
             'accordion-open'=> 1,
          ),
+        // Social Icons Option #3613
+        array(
+              'id'        =>  'ampforwp-social-share',
+              'type'      =>  'switch',
+              'title'     =>  esc_html__('Social Share', 'accelerated-mobile-pages'),
+              'default'   =>  1,
+        ),    
         // Social Icons Position [Swift] #1722
             array(
                 'id'       => 'swift-social-position',
+                'class' => 'child_opt child_opt_arrow',
                 'type'     => 'select',
                 'title'    => esc_html__( 'Position', 'accelerated-mobile-pages' ),
                 'options'  => array(
@@ -6250,25 +6809,29 @@ else{
                                 'below-content' => 'Below Content'
                                 ),
                 'default'  => 'default',
-                'required' => array(array('amp-design-selector', '=', '4') )
+                'required' => array(array('amp-design-selector', '=', '4'),array('ampforwp-social-share', '=', '1') )
             ), 
         // Social Share links to AMP
           array(
               'id'        =>  'ampforwp-social-share-amp',
               'type'      =>  'switch',
+              'class' => 'child_opt child_opt_arrow',
               'title'     =>  esc_html__('Social Share links to AMP', 'accelerated-mobile-pages'),
               'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
                         esc_html__('Enable this option to share all your social links to AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-share-social-links-to-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
               'default'   =>  0,
+              'required' => array(array('ampforwp-social-share', '=', '1'))
           ), 
           // Social No Follow links 
           array(
               'id'        =>  'ampforwp-social-no-follow',
               'type'      =>  'switch',
+              'class' => 'child_opt child_opt_arrow',
               'title'     =>  esc_html__('No Follow All Your Social Links', 'accelerated-mobile-pages'),
               'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
                         esc_html__('Enable this option to add no-follow to all your social links and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-no-follow-to-all-your-social-share-links/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
               'default'   =>  0,
+              'required' => array(array('ampforwp-social-share', '=', '1'))
           ),
             // AddThis Support  
         array(
@@ -6413,6 +6976,7 @@ else{
            'indent' => true,
            'layout_type' => 'accordion',
             'accordion-open'=> 1,
+            'required' => array(array('ampforwp-social-share', '=', '1'))
          ),
           // Facebook Like 
           array(
@@ -6420,6 +6984,24 @@ else{
               'type'      =>  'switch',
               'title'     =>  esc_html__('Facebook Like Button', 'accelerated-mobile-pages'),
               'default'   =>  0,
+          ),
+          array(
+              'id'        =>  'ampforwp-facebook-like-data-action',
+              'type'      =>  'switch',
+              'class' => 'child_opt child_opt_arrow',
+              'title'     =>  esc_html__('Add Recommend Label', 'accelerated-mobile-pages'),
+              'tooltip-subtitle'  => esc_html__('Button text will be replaced from \'Like\' to \'Recommend\'', 'accelerated-mobile-pages'),
+              'default'   =>  0,
+              'required'  => array('ampforwp-facebook-like-button', '=' , '1'),
+          ),
+          array(
+              'id'        =>  'ampforwp-facebook-like-width',
+              'type'      =>  'text',
+              'class' => 'child_opt child_opt_arrow',
+              'title'     =>  esc_html__('Width for Facebook like button', 'accelerated-mobile-pages'),
+              'required'  => array('ampforwp-facebook-like-data-action', '=' , '1'),
+              'tooltip-subtitle'  => esc_html__('Enter the width of Facebook like button in px, default value is 140.', 'accelerated-mobile-pages'),
+              'default'   =>  '140',
           ),
           // Facebook ON/OFF
           array(
@@ -6468,6 +7050,7 @@ else{
           array(
               'id'        =>  'enable-single-twitter-share-handle',
               'type'      =>  'text',
+              'class' => 'child_opt',
               'title'     =>  esc_html__('Twitter Handle', 'accelerated-mobile-pages'),
               'required'  => array('enable-single-twitter-share', '=' , '1'),
               'placeholder'  => esc_html__('Eg: @xyx','accelerated-mobile-pages'),
@@ -6476,17 +7059,11 @@ else{
            array(
               'id'        =>  'enable-single-twitter-share-link',
               'type'      =>  'switch',
+              'class' => 'child_opt',
               'title'     =>  esc_html__('Pretty Permalinks for Twitter Share?', 'accelerated-mobile-pages'),
               'tooltip-subtitle'  => esc_html__('Enable this to have pretty links for twitter sharing'),
               'default'   =>  0,
               'required'  => array('enable-single-twitter-share', '=' , '1'),
-          ),
-          // GooglePlus ON/OFF
-          array(
-              'id'        =>  'enable-single-gplus-share',
-              'type'      =>  'switch',
-              'title'     =>  esc_html__('GooglePlus', 'accelerated-mobile-pages'),
-              'default'   =>  1,
           ),
           // Email ON/OFF
           array(
@@ -6556,13 +7133,6 @@ else{
               'id'        =>  'enable-single-telegram-share',
               'type'      =>  'switch',
               'title'     =>  esc_html__('Telegram', 'accelerated-mobile-pages'),
-              'default'   =>  0,
-          ),
-          // Digg
-          array(
-              'id'        =>  'enable-single-digg-share',
-              'type'      =>  'switch',
-              'title'     =>  esc_html__('Digg', 'accelerated-mobile-pages'),
               'default'   =>  0,
           ),
           // StumbleUpon
@@ -6824,6 +7394,24 @@ else{
                       array('enbl-tbl','=',1)
                     )           
             ),
+            array(
+                    'id'       => 'enbl-telegram',
+                    'type'     => 'switch',
+                    'title'    => esc_html__('Telegram', 'accelerated-mobile-pages'),
+                    'default'  => 0,
+                    'required' => array(
+                      array('menu-social','=',1)
+                    )          
+            ),
+            array(
+                    'id'       => 'enbl-telegram-prfl-url',
+                    'type'     => 'text',
+                    'title'    => esc_html__('Telegram URL', 'accelerated-mobile-pages'),
+                    'default'  => '#',
+                    'required' => array(
+                      array('enbl-telegram','=',1)
+                    )           
+            ),
           array(
        'id' => 'social-media-profiles-subsection',
        'type' => 'section',
@@ -7058,6 +7646,26 @@ else{
                 array('enable-single-Tumblr-profile', '=' , '1')
               ),
           ),
+          //#13
+          array(
+              'id'        =>  'enable-single-telegram-profile',
+              'type'      =>  'switch',
+              'title'     =>  esc_html__('Telegram', 'accelerated-mobile-pages'),
+              'default'   =>  0,
+              'required' => array(
+                array('amp-design-selector', '=' , '3')
+              ),
+          ),
+          array(
+              'id'        =>  'enable-single-telegram-profile-url',
+              'type'      =>  'text',
+              'title'     =>  esc_html__('Telegram URL', 'accelerated-mobile-pages'),
+              'default'   =>  '#',
+              'required' => array(
+                array('amp-design-selector', '=' , '3'),
+                array('enable-single-telegram-profile', '=' , '1')
+              ),
+          ),
         )
     ) );
 
@@ -7067,7 +7675,16 @@ else{
        'id'         => 'ampforwp-date-section',
        'subsection' => true,
         'fields'     => array(
-            // Date on Single Design 3
+            
+                array(
+                   'id' => 'date-tab-1', 
+                   'type' => 'section',
+                   'title' => esc_html__('General', 'accelerated-mobile-pages'),
+                   'indent' => true,
+                   'layout_type' => 'accordion',
+                    'accordion-open'=> 1,
+             ),
+                // Date on Single Design 3
              array(
                 'id'       => 'amp-design-3-date-feature',
                 'type'     => 'switch',
@@ -7078,14 +7695,6 @@ else{
                 'tooltip-subtitle'     => esc_html__('Display date along with author and category in posts', 'accelerated-mobile-pages' ),
                 'default'  => '0'
             ),
-                array(
-                   'id' => 'date-tab-1', 
-                   'type' => 'section',
-                   'title' => esc_html__('General', 'accelerated-mobile-pages'),
-                   'indent' => true,
-                   'layout_type' => 'accordion',
-                    'accordion-open'=> 1,
-             ),
             // Show Date As
              array(
                     'id'       => 'ampforwp-post-date-global',
@@ -7117,14 +7726,44 @@ else{
                     'required' => array( array('ampforwp-post-date-format', '=', '1') ),
                     'default'   =>'% days ago',
             ),
+            array(
+                    'id'        =>'ampforwp-post-time',
+                    'type'      =>'switch',
+                    'title'     => esc_html__('Time','accelerated-mobile-pages'),
+                    'tooltip-subtitle' => esc_html__('Enable or Disable Time In Posts', 'accelerated-mobile-pages'),
+                    'default'   =>'1',
+                    'required' => array( array('ampforwp-post-date-format', '=', '2') ),
+            ),
         // Post Modified Date
-          array(
+            array(
               'id'        => 'post-modified-date',
               'type'      => 'switch',
-              'title'     => esc_html__('Modified Date Notice', 'accelerated-mobile-pages'),
+              'title'     => esc_html__('Date Notice', 'accelerated-mobile-pages'),
               'default'   => 0,
               'tooltip-subtitle'  => esc_html__('Show Modified date of an article at the end of the post.', 'accelerated-mobile-pages'),
-          ),        
+            ),
+            array(
+                    'id'        =>'ampforwp-post-date-notice-type',
+                    'type'      =>'select',
+                    'class' => 'child_opt child_opt_arrow',
+                    'title'     =>esc_html__('Notice Type','accelerated-mobile-pages'),
+                    'tooltip-subtitle' => esc_html__('Select Date Format of Posts', 'accelerated-mobile-pages'),
+                    'options'   => array(
+                                    'modified' => 'Modified Date Notice',
+                                    'published' => 'Published Date Notice'
+                                    ), 
+                    'default'   =>'modified',
+                    'required' => array( array('post-modified-date', '=', '1') ),
+            ),
+            array(
+              'id'        => 'ampforwp-post-date-notice-time',
+              'class' => 'child_opt child_opt_arrow',
+              'type'      => 'switch',
+              'title'     => esc_html__('Time', 'accelerated-mobile-pages'),
+              'default'   => 1,
+              'tooltip-subtitle'  => esc_html__('Show Modified date of an article at the end of the post.', 'accelerated-mobile-pages'),
+              'required' => array( array('ampforwp-post-date-notice-type', '!=', ''),array('post-modified-date', '=', '1') ),
+            ),        
         )
 
     ) );
@@ -7182,7 +7821,7 @@ else{
 
 if(!ampforwp_check_extensions()){
     Redux::setSection( $opt_name, array(
-        'title'      => esc_html__( 'Free vs Pro', 'accelerated-mobile-pages' ),
+        'title'      => esc_html__( 'Upgrade to Pro', 'accelerated-mobile-pages' ),
         'id'         => 'opt-choose',
         'subsection' => false,
        'desc' => $freepro_listing,
@@ -7190,16 +7829,7 @@ if(!ampforwp_check_extensions()){
     ) );
 }
 
-if(!ampforwp_check_extensions()){
-// Priority Support
-    Redux::setSection( $opt_name, array(
-        'title'      => esc_html__( 'Fix AMP Errors', 'accelerated-mobile-pages' ),
-        'id'         => 'opt-go-premium-support',
-        'subsection' => false,
-        'desc' => '        <a href="http://ampforwp.com/priority-support/#utm_source=options-panel&utm_medium=extension-tab_priority_support&utm_campaign=AMP%20Plugin"  target="_blank"><img class="ampforwp-support-banner" src="'.AMPFORWP_IMAGE_DIR . '/priority-support-banner.png" width="345" height="500" /></a>',
-        'icon' => 'el el-hand-right',
-    ) );
-}
+if(function_exists('ampforwp_plugin_supporter_activator')){
 if(!function_exists('ampforwp_create_controls_for_plugin_manager')){
 // Plugin Manager
     Redux::setSection( $opt_name, array(
@@ -7232,6 +7862,7 @@ if(!function_exists('ampforwp_create_controls_for_plugin_manager')){
            ),
         )        
 ) );
+}
 }
 Redux::setExtensions( $opt_name, AMPFORWP_PLUGIN_DIR.'includes/options/extensions/demolink_image_select' );
 /*

@@ -1,11 +1,11 @@
 <?php
 
-namespace WBCR\Factory_Freemius_108\Updates;
+namespace WBCR\Factory_Freemius_110\Updates;
 
 // Exit if accessed directly
 use Exception;
-use Wbcr_Factory419_Plugin;
-use WBCR\Factory_419\Updates\Repository;
+use Wbcr_Factory422_Plugin;
+use WBCR\Factory_422\Updates\Repository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Freemius_Repository extends Repository {
 	
 	/**
-	 * @var \WBCR\Factory_Freemius_108\Premium\Provider
+	 * @var \WBCR\Factory_Freemius_110\Premium\Provider
 	 */
 	private $premium;
 	
@@ -28,11 +28,11 @@ class Freemius_Repository extends Repository {
 	 * Freemius constructor.
 	 * @since 4.0.0
 	 *
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( Wbcr_Factory419_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
 		$this->plugin  = $plugin;
 		$this->premium = $this->plugin->premium;
 	}
@@ -41,7 +41,7 @@ class Freemius_Repository extends Repository {
 	 * @throws Exception
 	 */
 	public function init() {
-		if ( ! $this->premium instanceof \WBCR\Factory_Freemius_108\Premium\Provider ) {
+		if ( ! $this->premium instanceof \WBCR\Factory_Freemius_110\Premium\Provider ) {
 			throw new Exception( "This repository type requires Freemius premium provider." );
 		}
 		

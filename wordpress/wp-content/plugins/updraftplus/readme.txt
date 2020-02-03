@@ -2,8 +2,8 @@
 Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snightingale, bcrodua
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
-Tested up to: 5.2
-Stable tag: 1.16.16
+Tested up to: 5.3
+Stable tag: 1.16.21
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -166,10 +166,96 @@ Unfortunately not; since this is free software, there’s no warranty and no gua
 
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.16.x of the free version correspond to changes made in 2.16.16.x of the paid version.
+N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.17.x of the free version correspond to changes made in 2.16.17.x of the paid version.
+
+= 1.16.21 - 10/Dec/2019 =
+
+* FIX: Correctly search and replace database views when importing on a site with a different table prefix
+* FIX: A bug that prevented the restore modal opening on the migrate/clone tab
+* FIX: Dropbox cURL issues on connection are resolved for PHP 7.4
+* TWEAK: Change the way the "Disabled Cron" warning appears on the administrative settings page
+* TWEAK: Improvements to error messages return for UpdraftCentral's plugin and theme installation process
+* TWEAK: Updates to credentials validation for UpdraftCentral's plugin and theme modules
+* TWEAK: Add media request handler for UpdraftCentral media module
+* TWEAK: On paid versions, again possibly adjust the daily update check time to further favour overnight hours
+* TWEAK: Mask classified information in WebDav URL settings
+* TWEAK: Add multiple range selection on certain backup using ctrl and shift buttons
+* TWEAK: Hide incremental backup link if the backup directory is not writable
+* TWEAK: Make Updraft_Restorer_Skin compatible with WP 5.3
+* TWEAK: Added Linode object storage link to list of supported S3 providers and updated existing links
+* TWEAK: Ensure some variables are defined to prevent unwanted warnings
+
+= 1.16.20 - 04/Nov/2019 =
+
+* FEATURE: Add support for PHP 7.4 in UpdraftClone
+* FEATURE: Added the ability to restore "more files" backups
+* FEATURE: Add OneDrive Germany compatibility
+* FIX: Failure to send existing translation version with update checks (on paid versions) resulted in redundant translation updates
+* FIX: Deal with a BackBlaze "first chunk too small" error correctly when doing chunked uploading
+* TWEAK: Block any updates from occuring during a restore
+* TWEAK: Force the predecessor Amazon S3 SDK to use virtual-hosted style bucket identification instead of path style
+* TWEAK: Refactor the remote storage logging code in Addon base v2
+* TWEAK: Removed the Keyy notice (Keyy now has a new owner)
+* TWEAK: Add WP 5.3 support in UpdraftClone
+* TWEAK: On paid versions, possibly adjust the daily update check time to favour overnight hours
+* TWEAK: Get UpdraftClone supported WordPress versions during authentication
+* TWEAK: Added the ability to use backups stored in remote storage for UpdraftClone
+* TWEAK: Small PHP 7.4 deprecation tweaks in the Google and legacy AWS SDKs
+* FIX: Prevent trying to download files that have no remote storage and don't exist locally
+
+= 1.16.19 - 04/Oct/2019 =
+
+* FIX: GoogleDrive and WebDAV remote storage methods now correctly report if remote files failed to be deleted
+* FIX: Issue in cloudfiles-enhanced addon that breaks translations when the user language is different from the site language
+* FIX: Regression: add missing restore options
+* TWEAK: Improve restoration modal on mobile devices
+* TWEAK: Support the new Amazon S3 Middle East (Bahrain) region when removing a backup set
+* TWEAK: Improvements to the dashboard to allow for better screen-reader access
+* TWEAK: Ensure phpseclib Crypt_Blowfish is loaded over PEAR's version
+* TWEAK: Add time zone and expiries in to the UpdraftClone scheduled removal time
+* TWEAK: Add a multi-delete capability for OneDrive to prevent PHP timeouts during deletes
+
+= 1.16.18 - 20/Sep/2019 =
+
+* FIX: Select2 instance visiblility in restoration modal when selecting blog on multisite
+* FIX: Remove unsupported WordPress versions (3.6 and older) from the UpdraftClone selection list
+* FEATURE: Ability to resume interrupted database restores
+* TWEAK: Add filesystem error data when FTP input validation fails in UpdraftCentral
+* TWEAK: Enable appropriate SQL mode to ensure the database restoration compatibility
+* TWEAK: Add a link to the Backblaze configuration guide
+
+= 1.16.17 - 12/Sep/2019 =
+
+* FEATURE: Added the ability to use UpdraftClone with sub-folder based multisites
+* FEATURE: Catch duplicate entries in a corrupt DB upon restoration and handle/fix them automatically
+* FIX: Some more complicated triggers (see in CiviCRM) that were not previously handled correctly are; and SQL backup format for triggers is now mutually compatible with mysqldump/mysql binaries
+* FIX: Reset internal state upon beginning backup_resume(), in case WP cron called us multiple times in the same process
+* FIX: Provide compatibility functions on WP < 3.7 for mbstring_binary_safe_encoding() and reset_mbstring_encoding()
+* FIX: Correct the Azure China storage endpoint in options
+* TWEAK: Re-designed restore process
+* TWEAK: Prevent cosmetic error if WP_Filesystem call fails when deleting old folders
+* TWEAK: Fix escaping that caused a problem in some translations with a dismissal notice
+* TWEAK: Update bundled cacert.pem file
+* TWEAK: Include a DROP command for any triggers about to be created in the backup
+* TWEAK: The BackBlaze module (Premium feature) can now cope with BackBlaze losing uploaded chunks
+* TWEAK: Cast file IDs in Backblaze to strings to prevent possible API error
+* TWEAK: Do not attempt to perform search/replaces in tables of ARCHIVE type
+* TWEAK: Introduce the constant UPDRAFTPLUS_SQLEXEC_MAXIMUM_ERRORS to aid debugging
+* TWEAK: log message when checking which files need uploading on a incremental backup job
+* TWEAK: Don't send external DB backups to UpdraftClone
+* TWEAK: Reset the UpdraftClone UI if the clone is not created before it expires
+* TWEAK: Automatically detect a stalled restore and offer a resumption on the restore page
+* TWEAK: Remove some unused restore code
+* TWEAK: Prevent a PHP deprecation log notice with WebDAV on PHP 7.3
+* TWEAK: Catch exceptions and errors during recursive search/replace and recover from them
+* TWEAK: CSS tweak to prevent other plugins from breaking the style of pop-up close buttons
+* TWEAK: Ensure the error is logged on the final remote send complete call if it fails
+* TWEAK: BackBlaze terminology updated to match their changes
+* TWEAK: Update seasonal notices for next year
 
 = 1.16.16 - 23/Jul/2019 =
 
+* TWEAK: Adding support for installing plugin and theme through zip files in UpdraftCentral
 * FEATURE: Added the ability to launch a blank WordPress clone
 * FEATURE: Add --collate= parameter to WP-CLI (Premium) to allow substitution of locally unknown collations when restoring
 * FIX: Switched to wp_insert_site() from insert_blog() and install_blog() method when importing single-site into a multisite network on WP 5.1+. Fixes 'Already Installed' error when importing on newer WP versions
@@ -891,4 +977,4 @@ Furthermore, reliance upon any non-English translation is at your own risk. Updr
 We recognise and thank the following for code and/or libraries used and/or modified under the terms of their open source licences; see: https://updraftplus.com/acknowledgements/
 
 == Upgrade Notice ==
-* 1.16.16: Added the ability to launch a blank WordPress clone. Add --collate= parameter to WP-CLI (Premium) to allow substitution of locally unknown collations when restoring. A recommended update for all.
+* 1.16.21: Correctly search and replace database views when importing on a site with a different table prefix. Fix a bug that prevented the restore modal opening on the migrate/clone tab. Various other small tweaks and improvements. A recommended update for all.

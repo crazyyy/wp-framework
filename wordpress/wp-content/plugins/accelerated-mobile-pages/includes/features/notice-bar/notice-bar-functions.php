@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 if(is_plugin_active('amp/amp.php')){
 	add_action('amp_post_template_css' , 'ampforwp_notification_bar_css');
 	function ampforwp_notification_bar_css(){?>
@@ -25,9 +28,9 @@ function ampforwp_footer() {
 <?php if($redux_builder_amp['amp-enable-notifications'] == true && (isset($redux_builder_amp['amp-gdpr-compliance-switch']) && $redux_builder_amp['amp-gdpr-compliance-switch'] == 0) ) { ?>
 	<!-- Thanks to @nicholasgriffintn for Cookie Notification Code-->
   <amp-user-notification layout=nodisplay id="amp-user-notification1">
-       <p><?php echo esc_html__(ampforwp_get_setting('amp-notification-text'),'accelerated-mobile-pages'); ?> </p>
+       <p><?php $cookie_message = ampforwp_get_setting('amp-notification-text'); echo strip_tags($cookie_message, '<span><a><b><i><br>');?></p>
        <?php if ( ampforwp_get_setting('amp-enable-links') ){ ?>
-	       <a class="amp-not-privacy amp-not-page-link" href="<?php echo esc_url( ampforwp_get_setting('amp-notice-bar-select-privacy-page')); ?>" target="_blank"><?php echo esc_attr(ampforwp_get_setting('amp-notice-bar-privacy-page-button-text')); ?>
+	       <a class="amp-not-privacy amp-not-page-link" href="<?php echo esc_url( ampforwp_get_setting('amp-notice-bar-select-privacy-page')); ?>" <?php ampforwp_nofollow_notification(); ?> target="_blank"><?php echo esc_attr(ampforwp_get_setting('amp-notice-bar-privacy-page-button-text')); ?>
 	       </a> 
         <?php } ?>
        <button on="tap:amp-user-notification1.dismiss"><?php echo esc_html__(ampforwp_get_setting('amp-accept-button-text'),'accelerated-mobile-pages'); ?></button>
@@ -54,10 +57,12 @@ add_action('amp_init', 'ampforwp_gdpr_init');
 if ( ! function_exists('ampforwp_gdpr_init') ) {
 	function ampforwp_gdpr_init() {
 		if ( ampforwp_get_setting('amp-gdpr-compliance-switch')  ) {
-			// gdpr component 
-			add_action('amp_footer_link' , 'amp_gdpr' );
-			if ( is_plugin_active('amp/amp.php') ) {
-				add_action('amp_post_template_footer' , 'amp_gdpr' );
+			if(!isset($_COOKIE['ampforwp_gdpr_action'])){
+				// gdpr component 
+				add_action('amp_footer_link' , 'amp_gdpr' );
+				if ( is_plugin_active('amp/amp.php') ) {
+					add_action('amp_post_template_footer' , 'amp_gdpr' );
+				}
 			}
 		}
 	}

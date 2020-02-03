@@ -60,7 +60,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 				</td>
 				<?php endif; ?>
 				<td class="updraft_existingbackup_date " data-rawbackup="<?php echo $rawbackup;?>" data-label="<?php _e('Backup date', 'updraftplus');?>">
-					<div class="backup_date_label">
+					<div tabindex="0" class="backup_date_label">
 						<?php
 							echo $date_label;
 							if (!empty($backup['always_keep'])) {
@@ -150,10 +150,10 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 <?php if (!defined('UPDRAFTCENTRAL_COMMAND')) : ?>
 <div id="ud_massactions">
 	<strong><?php _e('Actions upon selected backups', 'updraftplus');?></strong>
-	<div class="updraftplus-remove"><button type="button" class="button button-remove js--delete-selected-backups"><?php _e('Delete', 'updraftplus');?></button></div>
-	<div class="updraft-viewlogdiv"><button type="button" class="button js--select-all-backups" href="#"><?php _e('Select all', 'updraftplus');?></button></div>
-	<div class="updraft-viewlogdiv"><button type="button" class="button js--deselect-all-backups" href="#"><?php _e('Deselect', 'updraftplus');?></button></div>
-	<small class="ud_massactions-tip"><?php _e('Use ctrl / cmd + press to select several items', 'updraftplus'); ?></small>
+	<div class="updraftplus-remove"><button title="<?php _e('Delete selected backups', 'updraftplus');?>" type="button" class="button button-remove js--delete-selected-backups"><?php _e('Delete', 'updraftplus');?></button></div>
+	<div class="updraft-viewlogdiv"><button title="<?php _e('Select all backups', 'updraftplus');?>" type="button" class="button js--select-all-backups" href="#"><?php _e('Select all', 'updraftplus');?></button></div>
+	<div class="updraft-viewlogdiv"><button title="<?php _e('Deselect all backups', 'updraftplus');?>" type="button" class="button js--deselect-all-backups" href="#"><?php _e('Deselect', 'updraftplus');?></button></div>
+	<small class="ud_massactions-tip"><?php _e('Use ctrl / cmd + press to select several items, or ctrl / cmd + shift + press to select all in between', 'updraftplus'); ?></small>
 </div>
 <div id="updraft-delete-waitwarning" class="updraft-hidden" style="display:none;">
 	<span class="spinner"></span> <em><?php _e('Deleting...', 'updraftplus');?> <span class="updraft-deleting-remote"><?php _e('Please allow time for the communications with the remote storage to complete.', 'updraftplus');?><span></em>

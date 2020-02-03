@@ -44,8 +44,7 @@ add_action( 'admin_init', function () {
 	require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/base-options.php' );
 	WINP_Helper::register_factory_metaboxes( new WINP_BaseOptionsMetaBox( $plugin ), WINP_SNIPPETS_POST_TYPE, $plugin );
 
-	//if ( current_user_can( 'install_plugins' ) && ! is_plugin_active( 'robin-image-optimizer/robin-image-optimizer.php' ) ) {
-	if ( ! WINP_Plugin::app()->premium->is_activate() ) {
+	if ( ( defined( 'FACTORY_ADVERTS_DEBUG' ) && FACTORY_ADVERTS_DEBUG ) || ! WINP_Plugin::app()->premium->is_activate() ) {
 		require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/info.php' );
 		WINP_Helper::register_factory_metaboxes( new WINP_InfoMetaBox( $plugin ), WINP_SNIPPETS_POST_TYPE, $plugin );
 	}
@@ -67,7 +66,7 @@ add_action( 'admin_init', function () {
 			if ( WINP_Helper::is_need_show_about_page() ) {
 				try {
 					$redirect_url = '';
-					if ( class_exists( 'Wbcr_FactoryPages419' ) ) {
+					if ( class_exists( 'Wbcr_FactoryPages422' ) ) {
 						$redirect_url = WINP_Plugin::app()->getPluginPageUrl( 'about', [ 'wbcr_inp_about_page_viewed' => 1 ] );
 					}
 					if ( $redirect_url ) {

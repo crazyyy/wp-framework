@@ -184,7 +184,7 @@ abstract class UpdraftPlus_RemoteSend {
 		
 		if (false === $write_status || (false == $write_status && !empty($data))) return $this->return_rpc_message(array('response' => 'error', 'data' => 'fwrite_failure'));
 
-		@fclose($fhandle);
+		@fclose($fhandle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 		$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_migrator_localkeys');
 		if (is_array($our_keys) && isset($our_keys[$name_hash]) && !empty($our_keys[$name_hash]['name'])) $updraftplus->log("Received data chunk on key ".$our_keys[$name_hash]['name']. " ($file, ".$start.", is_last=$is_last_chunk)");

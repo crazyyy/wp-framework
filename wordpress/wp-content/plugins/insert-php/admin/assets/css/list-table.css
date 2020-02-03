@@ -6,16 +6,16 @@
 .wp-list-table th#title {
   width: 20% !important;
 }
-.wp-list-table th#snippet_type {
+.wp-list-table th#winp_snippet_type {
   width: 70px !important;
 }
-.wp-list-table th#actions {
+.wp-list-table th#winp_actions {
   width: 50px !important;
 }
-.wp-list-table th#where_use {
+.wp-list-table th#winp_where_use {
   width: 200px !important;
 }
-.wp-list-table th#taxonomy-wbcr-snippet-tags {
+.wp-list-table th#winp_taxonomy-wbcr-snippet-tags {
   width: 100px;
 }
 .wp-list-table td {
@@ -98,3 +98,4 @@
     font-size: 0;
   }
 }
+/*# sourceMappingURL=list-table.css.map */

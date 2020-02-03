@@ -38,7 +38,7 @@ class WINP_RevisionsMetaBox extends WINP_MetaBox {
 	 */
 	public $priority = 'core';
 
-	public $css_class = 'factory-bootstrap-420 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-423 factory-fontawesome-000';
 
 	public function __construct( $plugin ) {
 		parent::__construct( $plugin );
@@ -51,8 +51,8 @@ class WINP_RevisionsMetaBox extends WINP_MetaBox {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory419_ScriptList $scripts A set of scripts to include.
-	 * @param Wbcr_Factory419_StyleList $styles A set of style to include.
+	 * @param Wbcr_Factory422_ScriptList $scripts A set of scripts to include.
+	 * @param Wbcr_Factory422_StyleList $styles A set of style to include.
 	 *
 	 * @return void
 	 */

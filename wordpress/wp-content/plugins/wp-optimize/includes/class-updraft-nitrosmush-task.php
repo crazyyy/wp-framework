@@ -71,9 +71,10 @@ class Nitro_Smush_Task extends Updraft_Smush_Task {
 	/**
 	 * Prepares the image as part of the post data for the specific implementation
 	 *
-	 * @param String $local_file - The image to e optimised
+	 * @param string $local_file - The image to e optimised
+	 * @param array  $options    - Eventual options
 	 */
-	public function prepare_post_request($local_file) {
+	public function prepare_post_request($local_file, $options) {
 
 		$boundary = wp_generate_password(12);
 		$lossy = $this->get_option('lossy_compression');
@@ -88,6 +89,8 @@ class Nitro_Smush_Task extends Updraft_Smush_Task {
 		} else {
 			$quality = 100;
 		}
+
+		if (isset($options['quality']) && is_int($options['quality']) && 0 < $options['quality']) $quality = $options['quality'];
 
 		$this->log($quality);
 
@@ -117,6 +120,7 @@ class Nitro_Smush_Task extends Updraft_Smush_Task {
 	 * @param String $response - The response object
 	 */
 	public function process_server_response($response) {
+		global $http_response_header;
 
 		$response = parent::process_server_response($response);
 		$data = json_decode(wp_remote_retrieve_body($response));
@@ -131,12 +135,26 @@ class Nitro_Smush_Task extends Updraft_Smush_Task {
 			return false;
 		}
 
-		$compressed_image = file_get_contents($data->result_file);
-		
-		if ($compressed_image) {
-			return $compressed_image;
+		if (!property_exists($data, 'result_file')) {
+			$this->fail("invalid_response", "The response does not contain the compressed file URL");
+			$this->log("data: ".json_encode($data));
+			return false;
+		}
+
+		$compressed_image_response = wp_remote_get($data->result_file);
+
+		if (!is_wp_error($compressed_image_response)) {
+			$image_contents = wp_remote_retrieve_body($compressed_image_response);
+			if ($this->is_downloaded_image_buffer_mime_type_valid($image_contents)) {
+				return $image_contents;
+			} else {
+				$this->log("The downloaded resource does not have a matching mime type.");
+				return false;
+			}
 		} else {
-			$this->fail("invalid_response", "The Smush process failed with an invalid response from the server");
+			$this->fail("invalid_response", "The compression apparently succeeded, but WP-Optimize could not retrieve the compressed image from the remote server.");
+			$this->log("data: ".json_encode($data));
+			$this->log("response: ".json_encode($compressed_image_response));
 			return false;
 		}
 	}

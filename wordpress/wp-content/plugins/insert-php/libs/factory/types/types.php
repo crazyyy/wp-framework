@@ -39,9 +39,9 @@ class Wbcr_FactoryTypes410 {
 	 * will be setup on the plugin configuration.
 	 *
 	 * @param string                 $class_name
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 */
-	public static function register( $class_name, Wbcr_Factory419_Plugin $plugin = null ) {
+	public static function register( $class_name, Wbcr_Factory422_Plugin $plugin = null ) {
 		$type = new $class_name( $plugin );
 
 		$plugin_name = ! empty( $plugin ) ? $plugin->getPluginName() : '-';
@@ -57,7 +57,7 @@ class Wbcr_FactoryTypes410 {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 *
 	 * @return void
 	 */
@@ -93,11 +93,11 @@ class Wbcr_FactoryTypes410 {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 *
 	 * @return void
 	 */
-	public static function deactivationHook( Wbcr_Factory419_Plugin $plugin ) {
+	public static function deactivationHook( Wbcr_Factory422_Plugin $plugin ) {
 
 		$plugin_name = $plugin->getPluginName();
 		global $wp_roles;

@@ -35,8 +35,10 @@
 	?>
 </header>
 <?php
-	// This is to display the notices.
-	$wp_optimize_notices->do_notice();
+	if ($show_notices) {
+		// This is to display the notices.
+		$wp_optimize_notices->do_notice();
+	}
 ?>
 
 <script type="text/javascript">

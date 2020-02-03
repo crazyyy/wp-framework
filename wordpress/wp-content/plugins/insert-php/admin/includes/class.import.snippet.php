@@ -37,7 +37,7 @@ class WINP_Import_Snippet {
 	 * @uses add_query_arg() to append the results to the current URI
 	 */
 	public function import_snippets_proccess() {
-		if ( isset( $_POST['wbcr_inp_import_form_saved'] ) ) {
+		if ( isset( $_POST['wbcr_inp_import_form_action'] ) ) {
 
 			if ( ! WINP_Plugin::app()->currentUserCan() ) {
 				wp_die( __( 'Sorry, you are not allowed to import snippets as this user.' ), __( 'You need a higher level of permission.' ), 403 );
@@ -95,7 +95,7 @@ class WINP_Import_Snippet {
 	 *
 	 * @return int|bool|array
 	 */
-	private function importSnippet( $file, $dup_action ) {
+	public function importSnippet( $file, $dup_action ) {
 		if ( ! file_exists( $file ) || ! is_file( $file ) ) {
 			return false;
 		}

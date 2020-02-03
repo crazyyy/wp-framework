@@ -41,6 +41,10 @@ if (!class_exists('Updraft_PHP_Logger')) require_once(WPO_PLUGIN_MAIN_PATH.'/inc
 
 require_once dirname(__FILE__) . '/file-based-page-cache-functions.php';
 
+if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+	require_once dirname(__FILE__) . '/php-5.3-functions.php';
+}
+
 wpo_cache_load_extensions();
 
 if (!class_exists('WPO_Page_Cache')) :
@@ -68,6 +72,20 @@ class WPO_Page_Cache {
 	 */
 	public static $instance;
 
+	/**
+	 * Store last advanced cache file writing status
+	 * If true then last writing finished with error
+	 *
+	 * @var bool
+	 */
+	public $advanced_cache_file_writing_error;
+
+	/**
+	 * Last advanced cache file content
+	 *
+	 * @var string
+	 */
+	public $advanced_cache_file_content;
 
 	/**
 	 * Set everything up here
@@ -85,6 +103,12 @@ class WPO_Page_Cache {
 		 */
 		add_action('wpo_cache_flush', array($this, 'update_cache_config'));
 		add_action('wpo_cache_flush', array($this, 'delete_cache_size_information'));
+
+		// Add purge cache link to admin bar.
+		add_action('admin_bar_menu', array($this, 'wpo_admin_bar_purge_cache'), 100);
+
+		// Handle single page purge.
+		add_action('wp_loaded', array($this, 'handle_purge_single_page_cache'));
 	}
 
 	/**
@@ -99,6 +123,172 @@ class WPO_Page_Cache {
 		if (apply_filters('wpo_purge_page_cache_on_activate_deactivate_plugin', true)) {
 			$this->purge();
 		}
+	}
+
+	/**
+	 * Check if current user can purge cache.
+	 *
+	 * @return bool
+	 */
+	public function can_purge_cache() {
+		if (is_multisite()) return $this->is_enabled() && current_user_can('manage_network_options');
+		return $this->is_enabled() && current_user_can('manage_options');
+	}
+
+	/**
+	 * Add Purge from cache in admin bar.
+	 *
+	 * @param WP_Admin_Bar $wp_admin_bar
+	 */
+	public function wpo_admin_bar_purge_cache($wp_admin_bar) {
+		global $pagenow;
+
+		if (!$this->can_purge_cache()) return;
+
+		$act_url = remove_query_arg(array('wpo_single_page_cache_purged', 'wpo_all_pages_cache_purged'));
+
+		if (!is_admin() || 'post.php' == $pagenow) {
+			$wp_admin_bar->add_menu(array(
+				'id'    => 'wpo_purge_cache',
+				'title' => __('Purge cache', 'wp-optimize'),
+				'href'  => '#',
+				'meta'  => array(
+					'title' => __('Purge cache', 'wp-optimize'),
+				),
+				'parent' => false,
+			));
+
+			$wp_admin_bar->add_node(array(
+				'id'    => 'wpo_purge_this_page_cache',
+				'title' => __('Purge this page', 'wp-optimize'),
+				'href'  => add_query_arg('_wpo_purge', wp_create_nonce('wpo_purge_single_page_cache'), $act_url),
+				'meta'  => array(
+					'title' => __('Purge this page', 'wp-optimize'),
+				),
+				'parent' => 'wpo_purge_cache',
+			));
+
+			$wp_admin_bar->add_node(array(
+				'id'    => 'wpo_purge_all_pages_cache',
+				'title' => __('Purge all pages', 'wp-optimize'),
+				'href'  => add_query_arg('_wpo_purge', wp_create_nonce('wpo_purge_all_pages_cache'), $act_url),
+				'meta'  => array(
+					'title' => __('Purge all pages', 'wp-optimize'),
+				),
+				'parent' => 'wpo_purge_cache',
+			));
+		} else {
+			$wp_admin_bar->add_menu(array(
+				'id'    => 'wpo_purge_cache',
+				'title' => __('Purge all pages', 'wp-optimize'),
+				'href'  => add_query_arg('_wpo_purge', wp_create_nonce('wpo_purge_all_pages_cache'), $act_url),
+				'meta'  => array(
+					'title' => __('Purge all pages', 'wp-optimize'),
+				),
+				'parent' => false,
+			));
+		}
+	}
+
+	/**
+	 * Check if purge single page action sent and purge cache.
+	 */
+	public function handle_purge_single_page_cache() {
+
+		if (!$this->can_purge_cache()) return;
+
+		if (isset($_GET['wpo_single_page_cache_purged']) || isset($_GET['wpo_all_pages_cache_purged'])) {
+			if (isset($_GET['wpo_single_page_cache_purged'])) {
+				$notice_function = $_GET['wpo_single_page_cache_purged'] ? 'notice_purge_single_page_cache_success' : 'notice_purge_single_page_cache_error';
+			} else {
+				$notice_function = $_GET['wpo_all_pages_cache_purged'] ? 'notice_purge_all_pages_cache_success' : 'notice_purge_all_pages_cache_error';
+			}
+
+			add_action('admin_notices', array($this, $notice_function));
+
+			return;
+		}
+
+		if (!isset($_GET['_wpo_purge'])) return;
+
+		if (wp_verify_nonce($_GET['_wpo_purge'], 'wpo_purge_single_page_cache')) {
+			$success = false;
+
+			if (is_admin()) {
+				$post = isset($_GET['post']) ? (int) $_GET['post'] : 0;
+				if ($post > 0) {
+					$success = self::delete_single_post_cache($post);
+				}
+			} else {
+				$success = self::delete_cache_by_url(wpo_current_url());
+			}
+
+			// remove nonce from url and reload page.
+			wp_redirect(add_query_arg('wpo_single_page_cache_purged', $success, remove_query_arg('_wpo_purge')));
+			exit;
+
+		} elseif (wp_verify_nonce($_GET['_wpo_purge'], 'wpo_purge_all_pages_cache')) {
+			$success = self::purge();
+
+			// remove nonce from url and reload page.
+			wp_redirect(add_query_arg('wpo_all_pages_cache_purged', $success, remove_query_arg('_wpo_purge')));
+			exit;
+		}
+	}
+
+	/**
+	 * Show notification when page cache purged successfully.
+	 */
+	public function notice_purge_single_page_cache_success() {
+		$this->show_notice(__('The page cache was successfully purged.', 'wp-optimize'), 'success');
+	}
+
+	/**
+	 * Show notification when page cache wasn't purged.
+	 */
+	public function notice_purge_single_page_cache_error() {
+		$this->show_notice(__('The page cache was not purged.', 'wp-optimize'), 'error');
+	}
+
+	/**
+	 * Show notification when all pages cache purged successfully.
+	 */
+	public function notice_purge_all_pages_cache_success() {
+		$this->show_notice(__('The page cache was successfully purged.', 'wp-optimize'), 'success');
+	}
+
+	/**
+	 * Show notification when all pages cache wasn't purged.
+	 */
+	public function notice_purge_all_pages_cache_error() {
+		$this->show_notice(__('The page cache was not purged.', 'wp-optimize'), 'error');
+	}
+
+	/**
+	 * Show notification in WordPress admin.
+	 *
+	 * @param string $message HTML (no further escaping is performed)
+	 * @param string $type    error, warning, success, or info
+	 */
+	public function show_notice($message, $type) {
+		?>
+		<div class="notice notice-<?php echo $type; ?> is-dismissible">
+			<p><?php echo $message; ?></p>
+		</div>
+		<script>
+			window.addEventListener('load', function() {
+				(function(wp) {
+					wp.data.dispatch('core/notices').createNotice(
+						'<?php echo $type; ?>',
+						'<?php echo $message; ?>',
+						{
+							isDismissible: true,
+						}
+					);
+				})(window.wp);
+			});
+		</script>
+		<?php
 	}
 
 	/**
@@ -129,8 +319,17 @@ class WPO_Page_Cache {
 			return true;
 		}
 
-		if (!$this->write_advanced_cache()) {
-			$already_ran_enable = new WP_Error("write_advanced_cache", "The request to write the advanced-cache.php file failed. You might not have the permission to write inside wp-content.");
+		if (!$this->write_advanced_cache() && $this->get_advanced_cache_version() != WPO_VERSION) {
+			$message = sprintf("The request to write the file %s failed. ", htmlspecialchars($this->get_advanced_cache_filename()));
+			$message .= ' '.__('Your WP install might not have permission to write inside the wp-content folder.', 'wp-optimize');
+
+			if (!defined('WP_CLI') || !WP_CLI) {
+				$message .= "\n\n".sprintf(__('1. Please navigate, via FTP, to the folder - %s', 'wp-optimize'), htmlspecialchars(dirname($this->get_advanced_cache_filename())));
+				$message .= "\n".__('2. Edit or create a file with the name advanced-cache.php', 'wp-optimize');
+				$message .= "\n".__('3. Copy and paste the following lines into the file:', 'wp-optimize');
+			}
+
+			$already_ran_enable = new WP_Error("write_advanced_cache", $message);
 			return $already_ran_enable;
 		}
 
@@ -140,7 +339,7 @@ class WPO_Page_Cache {
 		}
 
 		if (!$this->verify_cache()) {
-			$already_ran_enable = new WP_Error("verify_cache", "Could not verify if cache was enabled. Turn on logging to find the reason.");
+			$already_ran_enable = new WP_Error("verify_cache", "Could not verify if the cache was enabled. Turn on logging to find the reason.");
 			return $already_ran_enable;
 		}
 
@@ -148,7 +347,6 @@ class WPO_Page_Cache {
 
 		return true;
 	}
-
 
 	/**
 	 * Disables page cache
@@ -158,7 +356,7 @@ class WPO_Page_Cache {
 	public function disable() {
 		$ret = true;
 
-		$advanced_cache_file = untrailingslashit(WP_CONTENT_DIR) . '/advanced-cache.php';
+		$advanced_cache_file = $this->get_advanced_cache_filename();
 		
 		// We only touch advanched-cache.php and wp-config.php if it appears that we were in control of advanced-cache.php
 		if (!file_exists($advanced_cache_file) || false !== strpos(file_get_contents($advanced_cache_file), 'WP-Optimize advanced-cache.php')) {
@@ -265,6 +463,15 @@ class WPO_Page_Cache {
 	}
 
 	/**
+	 * Get advanced-cache.php file name with full path.
+	 *
+	 * @return string
+	 */
+	public function get_advanced_cache_filename() {
+		return untrailingslashit(WP_CONTENT_DIR) . '/advanced-cache.php';
+	}
+
+	/**
 	 * Writes advanced-cache.php
 	 *
 	 * @return bool
@@ -279,8 +486,6 @@ class WPO_Page_Cache {
 			$config_file_basename = 'config-'.$url['host'].'.php';
 		}
 
-		$file = untrailingslashit(WP_CONTENT_DIR) . '/advanced-cache.php';
-		$contents = '';
 		$cache_file_basename = untrailingslashit(plugin_dir_path(__FILE__));
 		$plugin_basename = basename(WPO_PLUGIN_MAIN_PATH);
 		$cache_path = '/wpo-cache';
@@ -289,8 +494,8 @@ class WPO_Page_Cache {
 		$wpo_version = WPO_VERSION;
 
 		// CS does not like heredoc
-		// @codingStandardsIgnoreStart
-		$contents = <<<EOF
+		// phpcs:disable
+		$this->advanced_cache_file_content = <<<EOF
 <?php
 
 if (!defined('ABSPATH')) die('No direct access allowed');
@@ -335,12 +540,42 @@ if (empty(\$GLOBALS['wpo_cache_config']) || empty(\$GLOBALS['wpo_cache_config'][
 if (false !== \$plugin_location) { include_once(\$plugin_location.'/file-based-page-cache.php'); }
 
 EOF;
-		// @codingStandardsIgnoreEnd
-		if (!file_put_contents($file, $contents)) {
+		// phpcs:enable
+		$advanced_cache_filename = $this->get_advanced_cache_filename();
+
+		// check if we can't write the advanced cache file
+		// case 1: the directory is read-only and the file doesn't exist
+		// case 2: the file is already exists but it's read-only
+		if (!is_file($advanced_cache_filename) && !is_writable(dirname($advanced_cache_filename)) || (is_file($advanced_cache_filename) && !is_writable($advanced_cache_filename))) {
+			$this->advanced_cache_file_writing_error = true;
 			return false;
 		}
 
+		if (file_put_contents($this->get_advanced_cache_filename(), $this->advanced_cache_file_content)) {
+			$this->advanced_cache_file_writing_error = true;
+			return false;
+		}
+
+		$this->advanced_cache_file_writing_error = false;
 		return true;
+	}
+
+	/**
+	 * Get WPO version number from advanced-cache.php file.
+	 *
+	 * @return bool|mixed
+	 */
+	public function get_advanced_cache_version() {
+		if (!is_file($this->get_advanced_cache_filename())) return false;
+
+		$version = false;
+		$content = file_get_contents($this->get_advanced_cache_filename());
+
+		if (preg_match('/WP\-Optimize advanced\-cache\.php \(written by version\: (.+)\)/Ui', $content, $match)) {
+			$version = $match[1];
+		}
+
+		return $version;
 	}
 
 	/**
@@ -518,7 +753,7 @@ EOF;
 				$file_count += $sub_dir_infos['file_count'];
 			} elseif (is_file($current_file)) {
 				$dir_size += filesize($current_file);
-				$file_count ++;
+				$file_count++;
 			}
 		}
 
@@ -541,6 +776,11 @@ EOF;
 			}
 		}
 
+		// WP-CLI doesn't include wp-config.php that's why we use function from WP-CLI to locate config file.
+		if (!$config_path && is_callable('wpo_wp_cli_locate_wp_config')) {
+			$config_path = wpo_wp_cli_locate_wp_config();
+		}
+
 		return $config_path;
 	}
 
@@ -557,9 +797,27 @@ EOF;
 	}
 
 	/**
+	 * Delete cached files for specific url.
+	 *
+	 * @param string $url
+	 * @param bool   $recursive If true child elements will deleted too
+	 *
+	 * @return bool
+	 */
+	public static function delete_cache_by_url($url, $recursive = false) {
+		if (!defined('WPO_CACHE_FILES_DIR') || '' == $url) return;
+
+		$path = trailingslashit(WPO_CACHE_FILES_DIR) . trailingslashit(wpo_get_url_path($url));
+
+		return wpo_delete_files($path, $recursive);
+	}
+
+	/**
 	 * Delete cached files for single post.
 	 *
 	 * @param integer $post_id The post ID
+	 *
+	 * @return bool
 	 */
 	public static function delete_single_post_cache($post_id) {
 	
@@ -567,7 +825,7 @@ EOF;
 	
 		$path = trailingslashit(WPO_CACHE_FILES_DIR) . trailingslashit(wpo_get_url_path(get_permalink($post_id)));
 
-		wpo_delete_files($path, false);
+		return wpo_delete_files($path, false);
 	}
 
 	/**

@@ -74,6 +74,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 
 		add_action('wp_ajax_updraft_smush_ajax', array($this, 'updraft_smush_ajax'));
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'), 9);
+		add_action('elementor/editor/before_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 		add_action('add_attachment', array($this, 'autosmush_create_task'));
 		add_action('ud_task_initialised', array($this, 'set_task_logger'));
 		add_action('ud_task_started', array($this, 'set_task_logger'));
@@ -86,8 +87,14 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			add_filter('attachment_fields_to_edit', array($this, 'add_compress_button_to_media_modal' ), 10, 2);
 		}
 		add_action('delete_attachment', array($this, 'unscheduled_original_file_deletion'));
-	}
 
+		// clean backup images cron action.
+		add_action('wpo_smush_clear_backup_images', array($this, 'clear_backup_images'));
+
+		if (!wp_next_scheduled('wpo_smush_clear_backup_images')) {
+			wp_schedule_event(time(), 'daily', 'wpo_smush_clear_backup_images');
+		}
+	}
 
 	/**
 	 * The Task Manager AJAX handler
@@ -154,6 +161,10 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			'lossy_compression' => $this->options->get_option('lossy_compression', false)
 		);
 
+		if (filesize(get_attached_file($post_id)) > 5242880) {
+			$options['request_timeout'] = 180;
+		}
+
 		$server = $this->options->get_option('compression_server', $this->webservice);
 		$task_name = $this->get_associated_task($server);
 
@@ -217,41 +228,179 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 	 * Restores a single image if a backup is available
 	 *
 	 * @param int $image_id - The id of the image
-	 * @return bool - success or failure
+	 * @param int $blog_id  - The id of the blog
+	 *
+	 * @return bool|WP_Error - success or failure
 	 */
-	public function restore_single_image($image_id) {
+	public function restore_single_image($image_id, $blog_id) {
+
+		$switched_blog = false;
+		if (is_multisite() && current_user_can('manage_network_options')) {
+			switch_to_blog($blog_id);
+			$switched_blog = true;
+		} elseif (is_multisite() && get_current_blog_id() != $blog_id) {
+			return new WP_Error('restore_backup_wrong_blog_id', __('The blog ID provided does not match the current blog.', 'wp-optimize'));
+		}
+
+		$error = false;
 
 		$image_path = get_attached_file($image_id);
 		$backup_path = get_post_meta($image_id, 'original-file', true);
 		
+		// If the file doesn't exist, check if it's relative
 		if (!file_exists($backup_path)) {
-			return new WP_Error('restore_failed', __('Backup not found, it may have been deleted or already restored', 'wp-optimize'));
+			$uploads_dir = wp_upload_dir();
+			$uploads_basedir = trailingslashit($uploads_dir['basedir']);
+
+			if (file_exists($uploads_basedir . $backup_path)) {
+				$backup_path = $uploads_basedir . $backup_path;
+			}
 		}
 
-		if (!is_writable($image_path)) {
-			return new WP_Error('restore_failed', __('The destination could not be written to, please check your folder permissions', 'wp-optimize'));
+		// If the file still doesn't exist, the record could be an absolute path from a migrated site
+		// Use the current Uploads path
+		if (!file_exists($backup_path)) {
+			$current_uploads_dir_folder = trailingslashit(substr($uploads_basedir, strlen(ABSPATH)));
+			// A strict operator (!==) needs to be used, as 0 is a positive result.
+			if (false !== strpos($backup_path, $current_uploads_dir_folder)) {
+				$temp_relative_backup_path = substr($backup_path, strpos($backup_path, $current_uploads_dir_folder) + strlen($current_uploads_dir_folder));
+			}
+
+			if (file_exists($uploads_basedir . $temp_relative_backup_path)) {
+				$backup_path = $uploads_basedir . $temp_relative_backup_path;
+			}
+
 		}
 
-		$this->log("Restoring the original image - {$image_path} from backup {$backup_path}");
-		
-		if (!copy($backup_path, $image_path)) {
-			return new WP_Error('restore_failed', __('Could not copy file, check your PHP error logs for details', 'wp-optimize'));
+		// If the file still doesn't exist, the record could be an absolute path from a migrated site
+		// The current Uploads path failed, so try with the default uploads directory value
+		if (!file_exists($backup_path)) {
+			// A strict operator (!==) needs to be used, as 0 is a positive result.
+			if (false !== strpos($backup_path, 'wp-content/uploads/')) {
+				$backup_path = substr($backup_path, strpos($backup_path, 'wp-content/uploads/') + strlen('wp-content/uploads/'));
+				$backup_path = $uploads_basedir . $backup_path;
+			}
 		}
 
-		unlink($backup_path);
+		if (!file_exists($backup_path)) {
+			// Delete information about backup.
+			delete_post_meta($image_id, 'original-file');
+			$error = new WP_Error('restore_backup_not_found', __('The backup was not found; it may have been deleted or was already restored', 'wp-optimize'));
+		} elseif (!is_writable($image_path)) {
+			$error =  new WP_Error('restore_failed', __('The destination could not be written to.', 'wp-optimize').' '.__("Please check your folder's permissions", 'wp-optimize'));
+		} elseif (!copy($backup_path, $image_path)) {
+			$error =  new WP_Error('restore_failed', __('The file could not be copied; check your PHP error logs for details', 'wp-optimize'));
+		} elseif (!unlink($backup_path)) {
+			$error =  new WP_Error('restore_failed', sprintf(__('The backup file %s could not be deleted.', 'wp-optimize'), $backup_path));
+		}
+
+		if (!$error) {
+			// if backup image deleted successfully
+			// then delete from attachment meta associated smush data
+			delete_post_meta($image_id, 'smush-complete');
+			delete_post_meta($image_id, 'smush-stats');
+			delete_post_meta($image_id, 'original-file');
+			delete_post_meta($image_id, 'smush-info');
+		}
+
+		if ($switched_blog) {
+			restore_current_blog();
+		}
+
+		if (is_wp_error($error)) return $error;
+
 		$this->delete_from_cache('uncompressed_images');
-
-		// Clear associated smush data
-		delete_post_meta($image_id, 'smush-complete');
-		delete_post_meta($image_id, 'smush-stats');
-		delete_post_meta($image_id, 'original-file');
-		delete_post_meta($image_id, 'smush-info');
 
 		if (!wp_next_scheduled('prune_smush_logs')) {
 			wp_schedule_single_event(time() + 7200, 'prune_smush_logs');
 		}
 
 		return true;
+	}
+
+	/**
+	 * Restore compressed images for selected blog.
+	 *
+	 * @param bool $restore_backup if true then restore images from backup otherwise just delete meta.
+	 * @param int  $blog_id        blog id.
+	 * @param int  $images_limit   how many images process per time.
+	 *
+	 * @return array ['completed' => (bool), 'message' => (string), 'error' => (string)]
+	 */
+	public function bulk_restore_compressed_images($restore_backup, $blog_id = 1, $images_limit = 100) {
+		global $wpdb;
+
+		if (is_multisite()) {
+			switch_to_blog($blog_id);
+		}
+
+		$result = array(
+			'completed' => false,
+			'message' => '',
+		);
+
+		$processed = 0;
+
+		if ($restore_backup) {
+			// get post ids those have backup meta field.
+			$image_ids = $wpdb->get_results($wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'original-file' LIMIT %d;", $images_limit), ARRAY_A);
+
+			if (!empty($image_ids)) {
+				// run restore function for each fond image.
+				foreach ($image_ids as $image) {
+					$restore_result = $this->restore_single_image($image['post_id'], $blog_id);
+
+					// if we get an error then we stop the work, except situation when "backup already restored'.
+					if (is_wp_error($restore_result) && 'restore_backup_not_found' != $restore_result->get_error_code()) {
+						// we need to stop the work as we haven't restored the backup.
+						$result['error'] = $restore_result->get_error_message();
+						$this->options->delete_option('smush_images_restored');
+						break;
+					}
+
+					$processed++;
+				}
+			}
+
+			$images_count = count($image_ids);
+
+			// if all images processed then set flag completed to true.
+			if ($processed == $images_count && $images_count < $images_limit) {
+				$this->options->delete_option('smush_images_restored');
+				$result['completed'] = true;
+			} else {
+				// save into options total processed count.
+				$processed += $this->options->get_option('smush_images_restored', 0);
+				$this->options->update_option('smush_images_restored', $processed);
+
+				if (is_multisite()) {
+					$result['message'] = sprintf(__('%s compressed images were restored from their backup for the site %s', 'wp-optimize'), $processed, get_site_url($blog_id));
+				} else {
+					$result['message'] = sprintf(__('%s compressed images were restored from their backup', 'wp-optimize'), $processed);
+				}
+			}
+
+		} else {
+			// if we just delete compressed images meta then set complete flag to true.
+			$result['completed'] = true;
+		}
+
+		if ($result['completed']) {
+			if (is_multisite()) {
+				$result['message'] = sprintf(__('All the compressed images for the site %s were successfully marked as uncompressed.', 'wp-optimize'), get_site_url($blog_id));
+			} else {
+				$result['message'] = __('All the compressed images were successfully marked as uncompressed.', 'wp-optimize');
+			}
+
+			// clear all metas for smushed images after work completed.
+			$wpdb->query("DELETE FROM {$wpdb->postmeta} WHERE meta_key IN ('smush-complete', 'smush-stats', 'original-file', 'smush-info');");
+		}
+
+		if (is_multisite()) {
+			restore_current_blog();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -368,8 +517,12 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			return;
 		}
 
-		if (false === $completed_task_count || false === $total_bytes_saved) {
+		if (false === $completed_task_count) {
 			$completed_task_count = $total_bytes_saved = 0;
+		}
+
+		if (!$total_bytes_saved) {
+			$total_bytes_saved = 0;
 		}
 
 		if (is_multisite()) {
@@ -421,14 +574,21 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 	 * @return array
 	 */
 	public function get_smush_options() {
-		return array(
-			'compression_server' => $this->options->get_option('compression_server', $this->get_default_webservice()),
-			'image_quality' => $this->options->get_option('image_quality', 'very_good'),
-			'lossy_compression' => $this->options->get_option('lossy_compression', false),
-			'back_up_original' => $this->options->get_option('back_up_original', true),
-			'preserve_exif' => $this->options->get_option('preserve_exif', false),
-			'autosmush' => $this->options->get_option('autosmush', false)
-		);
+		static $smush_options = array();
+		if (empty($smush_options)) {
+			$smush_options = array(
+				'compression_server' => $this->options->get_option('compression_server', $this->get_default_webservice()),
+				'image_quality' => $this->options->get_option('image_quality', 'very_good'),
+				'lossy_compression' => $this->options->get_option('lossy_compression', false),
+				'back_up_original' => $this->options->get_option('back_up_original', true),
+				'back_up_delete_after' => $this->options->get_option('back_up_delete_after', true),
+				'back_up_delete_after_days' => $this->options->get_option('back_up_delete_after_days', 50),
+				'preserve_exif' => $this->options->get_option('preserve_exif', false),
+				'autosmush' => $this->options->get_option('autosmush', false),
+				'show_smush_metabox' => $this->options->get_option('show_smush_metabox', 'show') == 'show' ? true : false
+			);
+		}
+		return $smush_options;
 	}
 
 	/**
@@ -467,15 +627,20 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 	 */
 	public function smush_js_translations() {
 		return apply_filters('updraft_smush_js_translations', array(
-			'all_images_compressed' 		=> __('No uncompressed images were found.', 'wp-optimize'),
-			'error_unexpected_response' 	=> __('An unexpected response was received from the server. More information has been logged in the browser console.', 'wp-optimize'),
-			'compress_single_image_dialog'	=> __('Please wait: compressing the selected image.', 'wp-optimize'),
-			'error_try_again_later'			=> __('Please try again later.', 'wp-optimize'),
-			'server_check'					=> __('Connecting to the Smush API server, please wait', 'wp-optimize'),
-			'please_wait'					=> __('Please wait while the request is being processed', 'wp-optimize'),
-			'server_error'					=> __('There was an error connecting to the image compression server. This could mean either the server is temporarily unavailable or there are connectivity issues with your internet connection. Please try later.', 'wp-optimize'),
-			'please_select_images'			=> __('Please select the images you want compressed from the "Uncompressed images" panel first', 'wp-optimize'),
-			'view_image'					=> __('View Image', 'wp-optimize'),
+			'all_images_compressed' 		  => __('No uncompressed images were found.', 'wp-optimize'),
+			'error_unexpected_response' 	  => __('An unexpected response was received from the server. More information has been logged in the browser console.', 'wp-optimize'),
+			'compress_single_image_dialog'	  => __('Please wait: compressing the selected image.', 'wp-optimize'),
+			'error_try_again_later'			  => __('Please try again later.', 'wp-optimize'),
+			'server_check'					  => __('Connecting to the Smush API server, please wait', 'wp-optimize'),
+			'please_wait'					  => __('Please wait while the request is being processed', 'wp-optimize'),
+			'server_error'					  => __('There was an error connecting to the image compression server. This could mean either the server is temporarily unavailable or there are connectivity issues with your internet connection. Please try later.', 'wp-optimize'),
+			'please_select_images'		  	  => __('Please select the images you want compressed from the "Uncompressed images" panel first', 'wp-optimize'),
+			'please_updating_images_info'	  => __('Please wait: updating information about the selected image.', 'wp-optimize'),
+			'please_select_compressed_images' => __('Please select the images you want to mark as already compressed from the "Uncompressed images" panel first', 'wp-optimize'),
+			'view_image'					  => __('View Image', 'wp-optimize'),
+			'delete_image_backup_confirm'	=> __('Do you really want to delete all backup images now? This action is irreversible.', 'wp-optimize'),
+			'mark_all_images_uncompressed'	=> __('Do you really want to mark all the images as uncompressed? This action is irreversible.', 'wp-optimize'),
+			'restore_images_from_backup'	=> __('Do you want to restore the original images from the backup (where they exist?)', 'wp-optimize'),
 		));
 	}
 
@@ -506,14 +671,24 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 		$has_backup = get_post_meta($post->ID, 'original-file', true) ? true : false;
 
 		$smush_info = get_post_meta($post->ID, 'smush-info', true);
+		$marked = get_post_meta($post->ID, 'smush-marked', false);
 		
+		$options = Updraft_Smush_Manager()->get_smush_options();
+
+		$file = get_attached_file($post->ID);
+		$file_size = ($file && is_file($file)) ? filesize($file) : 0;
+
 		$extract = array(
 			'post_id' 			=> $post->ID,
 			'smush_display'		=> $compressed ? "style='display:none;'" : "style='display:block;'",
 			'restore_display' 	=> $compressed ? "style='display:block;'" : "style='display:none;'",
 			'restore_action'	=> $has_backup ? "style='display:block;'" : "style='display:none;'",
+			'smush_mark'		=> !$compressed && !$marked ? "style='display:block;'" : "style='display:none;'",
+			'smush_unmark'      => $marked ? "style='display:block;'" : "style='display:none;'",
 			'smush_info'		=> $smush_info ? $smush_info : ' ',
-			'file_size'			=> filesize(get_attached_file($post->ID))
+			'file_size'			=> $file_size,
+			'smush_options'     => $options,
+			'custom'            => 100 == $options['image_quality'] || 90 == $options['image_quality'] ? false : true
 		);
 
 		WP_Optimize()->include_template('admin-metabox-smush.php', false, $extract);
@@ -541,9 +716,14 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 				'relation' => 'OR',
 				array(
 					'key'	 => 'smush-complete',
+					'compare' => '!=',
+					'value'   => '1',
+				),
+				array(
+					'key'	 => 'smush-complete',
 					'compare' => 'NOT EXISTS',
 					'value'   => '',
-				)
+				),
 			)
 		);
 
@@ -744,6 +924,8 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			'back_up_original'	 => true,
 			'preserve_exif'		 => false,
 			'autosmush'			 => false,
+			'back_up_delete_after' => $this->options->get_option('back_up_delete_after', true),
+			'back_up_delete_after_days' => $this->options->get_option('back_up_delete_after_days', 50),
 		);
 		
 		$this->update_smush_options($options);
@@ -823,7 +1005,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 		
 		global $wpdb;
 		
-		// @codingStandardsIgnoreStart
+		// phpcs:disable
 		$wp_version = $this->get_wordpress_version();
 		$mysql_version = $wpdb->db_version();
 		$safe_mode = $this->detect_safe_mode();
@@ -836,7 +1018,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 		// Attempt to raise limit
 		@set_time_limit(90);
 
-		// @codingStandardsIgnoreStart
+		// phpcs:enable
 		$log_header[] = "\n";
 		$log_header[] = "Header for logs at time:  ".date('r')." on ".network_site_url();
 		$log_header[] = "WP: ".$wp_version;
@@ -911,7 +1093,6 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			case '':
 			$memory_limit = floor($memory_limit/1048576);
 				break;
-			// @codingStandardsIgnoreLine
 			case 'K':
 			case 'k':
 			$memory_limit = floor($memory_limit/1024);
@@ -919,7 +1100,6 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			case 'G':
 			$memory_limit = $memory_limit*1024;
 				break;
-			// @codingStandardsIgnoreLine
 			case 'M':
 			// assumed size, no change needed
 				break;
@@ -933,7 +1113,6 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 	 * @return Integer - 1 or 0
 	 */
 	public function detect_safe_mode() {
-		// @codingStandardsIgnoreLine
 		return (@ini_get('safe_mode') && strtolower(@ini_get('safe_mode')) != "off") ? 1 : 0;
 	}
 
@@ -1025,6 +1204,91 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 	}
 
 	/**
+	 * Delete recursively all smush backup files created more that $days_ago days.
+	 *
+	 * @param string $directory upload directory
+	 * @param int    $days_ago
+	 */
+	public function clear_backup_images_directory($directory, $days_ago = 30) {
+
+		$directory = trailingslashit($directory);
+
+		if (preg_match('/(\d{4})\/(\d{2})\/$/', $directory, $match)) {
+
+			$check_date = false;
+
+			if ($days_ago > 0) {
+				// check if it is end directory then scan for backup images.
+				$year = (int) $match[1];
+				$month = (int) $match[2];
+
+				$limit = strtotime('-'.$days_ago.' '.(($days_ago > 1) ? 'days' : 'day'));
+				$year_limit = (int) date('Y', $limit);
+				$month_limit = (int) date('m', $limit);
+				$day_limit = (int) date('j', $limit);
+
+				// if current directory is newer than needed then we skip it.
+				if ($year_limit < $year || ($year_limit == $year && $month_limit < $month)) {
+					return;
+				}
+
+				// we will check dates only in directory that contain limit date.
+				$check_date = ($year_limit == $year && $month_limit == $month);
+			}
+
+			$files = glob($directory . '*-updraft-pre-smush-original.*', GLOB_BRACE);
+
+			foreach ($files as $file) {
+				if ($check_date) {
+					$filedate_day = (int) date('j', filectime($file));
+					if ($filedate_day >= $day_limit) continue;
+				}
+
+				unlink($file);
+			}
+
+		} else {
+			// scan directories recursively.
+			$handle = opendir($directory);
+
+			if (false === $handle) return;
+
+			$file = readdir($handle);
+
+			while (false !== $file) {
+
+				if ('.' == $file || '..' == $file) {
+					$file = readdir($handle);
+					continue;
+				}
+
+				if (is_dir($directory . $file)) {
+					$this->clear_backup_images_directory($directory . $file, $days_ago);
+				}
+
+				$file = readdir($handle);
+			}
+		}
+
+	}
+
+	/**
+	 * Clean backup smush images according to saved options.
+	 */
+	public function clear_backup_images() {
+		$back_up_delete_after = $this->options->get_option('back_up_delete_after', false);
+
+		if (!$back_up_delete_after) return;
+
+		$back_up_delete_after_days = $this->options->get_option('back_up_delete_after_days', 50);
+
+		$upload_dir = wp_get_upload_dir();
+		$base_dir = $upload_dir['basedir'];
+
+		$this->clear_backup_images_directory($base_dir, $back_up_delete_after_days);
+	}
+
+	/**
 	 * Check if attachment already compressed.
 	 *
 	 * @param int $attachment_id
@@ -1036,7 +1300,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 	}
 
 	/**
-	 * @param array   $actions
+	 * @param array   $form_fields
 	 * @param WP_Post $post
 	 *
 	 * @return array
@@ -1082,7 +1346,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 
 	/**
 	 * This callback function is triggered due to delete_attachment action (wp-includes/post.php) and is executed prior to deletion of post-type attachment
-	 * 
+	 *
 	 * @param int $post_id - WordPress Post ID
 	 */
 	public function unscheduled_original_file_deletion($post_id) {

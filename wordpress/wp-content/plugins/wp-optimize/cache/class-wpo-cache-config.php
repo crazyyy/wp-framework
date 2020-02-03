@@ -74,16 +74,28 @@ class WPO_Cache_Config {
 		$config['page_cache_length_value'] = intval($config['page_cache_length_value']);
 		$config['page_cache_length'] = $this->calculate_page_cache_length($config['page_cache_length_value'], $config['page_cache_length_unit']);
 
-		$cookies = array();
-		$wpo_cache_cookies = apply_filters('wpo_cache_cookies', $cookies);
+		/**
+		 * Filters the cookies used to set cache file names
+		 *
+		 * @param array $cookies - The cookies
+		 * @param array $config  - The new config
+		 */
+		$wpo_cache_cookies = apply_filters('wpo_cache_cookies', array(), $config);
 		sort($wpo_cache_cookies);
 
-		$wpo_query_variables = array();
-		$wpo_query_variables = apply_filters('wpo_cache_query_variables', $wpo_query_variables);
+		/**
+		 * Filters the query variables used to set cache file names
+		 *
+		 * @param array $wpo_query_variables - The variables
+		 * @param array $config              - The new config
+		 */
+		$wpo_query_variables = apply_filters('wpo_cache_query_variables', array(), $config);
 		sort($wpo_query_variables);
 
 		$config['wpo_cache_cookies'] = $wpo_cache_cookies;
 		$config['wpo_cache_query_variables'] = $wpo_query_variables;
+		
+		$config = apply_filters('wpo_cache_update_config', $config);
 
 		if (is_multisite()) {
 			update_site_option('wpo_cache_config', $config);

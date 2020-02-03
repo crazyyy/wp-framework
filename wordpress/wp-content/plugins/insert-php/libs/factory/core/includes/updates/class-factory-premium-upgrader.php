@@ -1,12 +1,12 @@
 <?php
 
-namespace WBCR\Factory_419\Updates;
+namespace WBCR\Factory_422\Updates;
 
 use Exception;
 use Plugin_Installer_Skin;
 use Plugin_Upgrader;
-use Wbcr_Factory419_Plugin;
-use Wbcr_FactoryPages419_ImpressiveThemplate;
+use Wbcr_Factory422_Plugin;
+use Wbcr_FactoryPages422_ImpressiveThemplate;
 use WP_Filesystem_Base;
 use WP_Upgrader;
 use WP_Upgrader_Skin;
@@ -39,11 +39,11 @@ class Premium_Upgrader extends Upgrader {
 	 * @param                        $args
 	 * @param bool                   $is_premium
 	 *
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( Wbcr_Factory419_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
 		parent::__construct( $plugin );
 
 		$this->plugin_basename      = null;
@@ -102,7 +102,7 @@ class Premium_Upgrader extends Upgrader {
 			}
 
 			add_action( "admin_print_styles-plugins.php", [ $this, "print_styles_for_plugin_row" ] );
-			add_action( "wbcr_factory_notices_000_list", [ $this, "admin_notices_hook" ], 10, 2 );
+			add_action( "wbcr/factory/admin_notices", [ $this, "admin_notices_hook" ], 10, 2 );
 			add_action( 'wbcr/factory/pages/impressive/print_all_notices', [
 				$this,
 				'install_notice_in_plugin_interface'
@@ -116,11 +116,14 @@ class Premium_Upgrader extends Upgrader {
 	}
 
 	/**
+	 * @since 4.2.2 Fixed bug with plugins namespace (ISW-4)
 	 * @since 4.1.1
 	 */
 	public function init_admin_actions() {
-		if ( isset( $_GET['wbcr_factory_premium_updates_action'] ) ) {
-			$action = $this->plugin->request->get( 'wbcr_factory_premium_updates_action' );
+		$plugin_slug = $this->plugin->request->get( 'wfactory_premium_updates_plugin', null );
+
+		if ( isset( $_GET['wfactory_premium_updates_action'] ) && $this->plugin_slug === $plugin_slug ) {
+			$action = $this->plugin->request->get( 'wfactory_premium_updates_action' );
 
 			check_admin_referer( "factory_premium_{$action}" );
 			try {
@@ -225,9 +228,9 @@ class Premium_Upgrader extends Upgrader {
 	 *
 	 * @since 4.1.1
 	 *
-	 * @param Wbcr_FactoryPages419_ImpressiveThemplate $obj
+	 * @param Wbcr_FactoryPages422_ImpressiveThemplate $obj
 	 *
-	 * @param Wbcr_Factory419_Plugin                   $plugin
+	 * @param Wbcr_Factory422_Plugin                   $plugin
 	 *
 	 * @return void
 	 */
@@ -342,20 +345,28 @@ class Premium_Upgrader extends Upgrader {
 		<?php
 	}
 
+
 	/**
 	 * Обновляет данные о премиум пакете в базе данных, после обновления плагина.
 	 *
-	 * @since 4.1.1
+	 * @param WP_Upgrader $wp_upgrader   WP_Upgrader instance.
+	 * @param array       $hook_extra    Array of bulk item update data.
 	 *
-	 * @param array       $options
-	 *
-	 * @param WP_Upgrader $upgrader_object
-	 *
+	 * @return void
 	 * @throws Exception
 	 */
-	public function upgrader_process_complete_hook( $upgrader_object, $options ) {
-		if ( ! empty( $options ) && $options['action'] == 'update' && $options['type'] == 'plugin' ) {
-			if ( is_array( $options['plugins'] ) && in_array( $this->plugin_basename, $options['plugins'] ) ) {
+	public function upgrader_process_complete_hook( $upgrader_object, $hook_extra ) {
+		if ( ! empty( $hook_extra ) && $hook_extra['action'] == 'update' && $hook_extra['type'] == 'plugin' ) {
+
+			# if it isn't bulk upgrade
+			if ( isset( $hook_extra['plugin'] ) && $this->plugin_basename === $hook_extra['plugin'] ) {
+				$this->update_package_data();
+
+				return;
+			}
+
+			# if it is bulk upgrade
+			if ( is_array( $hook_extra['plugins'] ) && in_array( $this->plugin_basename, $hook_extra['plugins'] ) ) {
 				$this->update_package_data();
 			}
 		}
@@ -424,7 +435,10 @@ class Premium_Upgrader extends Upgrader {
 	 * @return string
 	 */
 	protected function get_action_url( $action ) {
-		$args = [ 'wbcr_factory_premium_updates_action' => $action ];
+		$args = [
+			'wfactory_premium_updates_action' => $action,
+			'wfactory_premium_updates_plugin' => $this->plugin_slug
+		];
 
 		return wp_nonce_url( $this->get_admin_url( $args ), "factory_premium_{$action}" );
 	}
@@ -752,12 +766,12 @@ class Premium_Upgrader extends Upgrader {
 		$cancel_license_url  = $this->get_action_url( 'cancel_license' );
 
 		$texts = [
-			'need_activate_license'   => __( 'License activation required. A license is required to get premium plugin updates, as well as to get additional services.', 'wbcr_factory_419' ),
-			'need_renew_license'      => __( 'Your license has expired. You can no longer get premium plugin updates, premium support and your access to Webcraftic services has been suspended.', 'wbcr_factory_419' ),
+			'need_activate_license'   => __( 'License activation required. A license is required to get premium plugin updates, as well as to get additional services.', 'wbcr_factory_422' ),
+			'need_renew_license'      => __( 'Your license has expired. You can no longer get premium plugin updates, premium support and your access to Webcraftic services has been suspended.', 'wbcr_factory_422' ),
 			'please_install_premium'  => sprintf( __( 'Congratulations, you have activated a premium license! Please install premium add-on to use pro features now.
-        <a href="%s">Install</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_419' ), $upgrade_url, $cancel_license_url ),
+        <a href="%s">Install</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_422' ), $upgrade_url, $cancel_license_url ),
 			'please_activate_premium' => sprintf( __( 'Congratulations, you have activated a premium license! Please activate premium add-on to use pro features now.
-        <a href="%s">Activate</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_419' ), $activate_plugin_url, $cancel_license_url )
+        <a href="%s">Activate</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_422' ), $activate_plugin_url, $cancel_license_url )
 		];
 
 		if ( isset( $texts[ $type ] ) ) {

@@ -56,9 +56,6 @@ function amppbbase_admin_scripts( $hook_suffix ){
 			$previousData = get_post_meta($postId,'amp-page-builder');
 			$ampforwp_pagebuilder_enable = get_post_meta($postId,'ampforwp_page_builder_enable', true);
 			$previousData = isset($previousData[0])? $previousData[0]: null;
-			
-			$previousData = (str_replace("'", "", $previousData));
-			
 			$totalRows = 1;
 			$totalmodules = 1;
 			if(!empty($previousData)){
@@ -95,7 +92,7 @@ function amppbbase_admin_scripts( $hook_suffix ){
 				foreach ($posts_array as $key => $layoutData) {
 				$allPostLayout[] = array('post_title'=>$layoutData->post_title,
 										'post_id'=>$layoutData->ID,
-										'post_content'=>$layoutData->post_content,
+										'post_content'=>wp_unslash($layoutData->post_content),
 											);
 				}
 			}
@@ -108,11 +105,11 @@ function amppbbase_admin_scripts( $hook_suffix ){
 									);
 			wp_localize_script( 'amppb-admin', 'amppb_panel_options',$components_options);
 			wp_enqueue_script('amppb-admin');
-			add_action( 'admin_footer', 'js_templates',9999);	    
+			add_action( 'admin_footer', 'amppb_js_templates',9999);	    
     }
 }
 
-function js_templates() {
+function amppb_js_templates() {
 	global $containerCommonSettings;
 	global $moduleTemplate;
     global $layoutTemplate;

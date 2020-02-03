@@ -516,10 +516,12 @@ div#wpoptimize_table_list_tables_not_found + h3 {
 }
 
 #wpo_browser_cache_output,
-#wpo_gzip_compression_output {
+#wpo_gzip_compression_output,
+#wpo_advanced_cache_output {
 	background: #F0F0F0;
 	padding: 10px;
 	border: 1px solid #CCC;
+	white-space: pre-wrap;
 }
 
 #wpo_gzip_compression_error_message,
@@ -528,6 +530,7 @@ div#wpoptimize_table_list_tables_not_found + h3 {
 }
 
 .notice.wpo-error__enabling-cache {
+	white-space: pre;
 	margin-bottom: 15px;
 }
 

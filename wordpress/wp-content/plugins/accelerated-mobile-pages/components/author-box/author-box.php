@@ -1,4 +1,7 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 function ampforwp_framework_get_author_box( $args=array() ) { 
 // Simple Author Box compatibility #2268
 if( class_exists('Simple_Author_Box') && !isset($args['author_info']) ){
@@ -84,8 +87,8 @@ if ( isset($args['show_time']) ) {
         if ( true == ampforwp_get_setting('ampforwp-author-page-url') ){
             if ( function_exists('coauthors_posts_links') ) {
                 if( $author_pub_name  ){
-                    $allowed_tags = '<a>';
-                    echo '<span class="author-name">' .esc_html($author_prefix) . strip_tags($author_link, $allowed_tags) . ' </span>';
+	                $author_link = (true == ampforwp_get_setting('ampforwp-archive-support'))? esc_url(ampforwp_url_controller($author_link)) :  esc_url($author_link);
+	                echo '<span class="author-name">' .esc_html($author_prefix) . ' <a href="'. esc_url($author_link).'" title="'. esc_html($author_name).'"> ' .esc_html( $author_name ).'</a></span>';
                     echo ampforwp_yoast_twitter_handle();
                 }
             }

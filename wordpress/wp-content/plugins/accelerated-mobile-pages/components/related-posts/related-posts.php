@@ -1,4 +1,7 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /*
 	@data parameter have options for
 	show_excerpt
@@ -60,7 +63,12 @@ function ampforwp_related_post_loop_query(){
     'ignore_sticky_posts'=>1,
 	'has_password' => false ,
 	'post_status'=> 'publish',
-	'no_found_rows'	=> true
+	'no_found_rows'	=> true,
+	'meta_query' => array(
+		array(
+			'key'        => 'ampforwp-amp-on-off',
+			'value'      => 'default',
+		))
 	);
 	if($redux_builder_amp['ampforwp-single-select-type-of-related']==2 && 'post' == $post->post_type ){
 	    $categories = get_the_category($post->ID);
@@ -96,6 +104,7 @@ function ampforwp_related_post_loop_query(){
 					            	)
 					       		); 
 	}
+	$args = apply_filters('ampforwp_component_related_post_args' , $args );
 	$my_query = new wp_query( $args );
 
 	return $my_query;
@@ -139,15 +148,25 @@ function ampforwp_get_relatedpost_image( $imagetype ='thumbnail', $data=array() 
 					$width 	= $width * $resolution;
 					$height = $height * $resolution;
 				}
+				$image_dimensions = array();
+				$image_dimensions['width'] = $width;
+				$image_dimensions['height'] = $height;
+				$image_dimensions = apply_filters('ampforwp_related_post_image_size', $image_dimensions);
+				$width = $image_dimensions['width'];
+				$height = $image_dimensions['height'];
 				$thumb_url_array = ampforwp_aq_resize( $thumb_url, $width, $height, true, false, true ); //resize & crop the image
 				$thumb_url = $thumb_url_array[0];
 				$thumb_width = $thumb_url_array[1];
 				$thumb_height = $thumb_url_array[2];
 			}
 	    
-	     if ( $thumb_url && $show_image ) { ?>
-	    	<amp-img src="<?php echo esc_url( $thumb_url ); ?>" width="<?php echo esc_attr($thumb_width); ?>" height="<?php echo esc_attr($thumb_height); ?>" layout="responsive"></amp-img>
-		<?php }
+	     if ( $thumb_url && $show_image ) { 
+	    	$img_content = '<amp-img src="'.esc_url( $thumb_url ).'" width="'.esc_attr($thumb_width).'" height="'.esc_attr($thumb_height).'" layout="responsive"></amp-img>';
+	    	if(function_exists('ampforwp_add_fallback_element')){
+                $img_content = ampforwp_add_fallback_element($img_content,'amp-img');
+            }
+	    	echo $img_content;
+		 }
 		} ?>
     </a>
 <?php
@@ -174,10 +193,19 @@ function ampforwp_get_relatedpost_content($argsdata=array()){
 				}else{
 					$content = get_the_content();
 				}
-		?><p><?php 
-		echo (wp_trim_words( strip_shortcodes( $content ) , 15 )); 
-		?></p><?php 
-		} 
+		?><p><?php $excerpt_length = ampforwp_get_setting('enable-excerpt-single-related-posts');
+		if(empty($excerpt_length)){
+			$excerpt_length = 15;
+		}
+		if (true == ampforwp_get_setting('excerpt-option-rp-read-more')){
+				$content .= '...';
+		}
+		echo wp_trim_words( strip_shortcodes( $content ) , $excerpt_length ); 
+		?>
+		<?php if (true == ampforwp_get_setting('excerpt-option-rp-read-more')){?>
+		<a class="readmore-rp" href="<?php echo esc_url( $related_post_permalink ); ?>"><?php echo ampforwp_translation(ampforwp_get_setting('amp-translator-read-more'),'Read More') ?></a></p>
+		<?php
+		} }
 		$show_author = (isset($argsdata['show_author'])? $argsdata['show_author'] : true);
 		if($show_author){
 			$author_args = isset($argsdata['author_args'])? $argsdata['author_args'] : array();

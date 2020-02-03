@@ -44,13 +44,6 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 		global $updraftplus;
 		$opts = $this->options;
 		
-		static $registered_completion_event = false;
-		if (!$registered_completion_event) {
-			// This is here, instead of the constructor, to make sure that, if multiple objects are insantiated, then only the one actually used for uploading gets involved in the upload_complete event
-			$registered_completion_event = true;
-			add_action('updraftplus_remotesend_upload_complete', array($this, 'upload_complete'));
-		}
-		
 		try {
 			$storage = $this->bootstrap();
 			if (is_wp_error($storage)) throw new Exception($storage->get_error_message());
@@ -281,16 +274,21 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 	}
 
 	/**
-	 * This function is called via an action and will send a message to the remote site to inform it that the backup has finished sending
+	 * This function will send a message to the remote site to inform it that the backup has finished sending, on success will update the jobdata key upload_completed and return true else false
+	 *
+	 * @return boolean - returns true on success or false on error, all errors are logged to the backup log
 	 */
-	public function upload_complete() {
+	public function upload_completed() {
 		global $updraftplus;
 
 		$service = $updraftplus->jobdata_get('service');
 		$remote_sent = (!empty($service) && ((is_array($service) && in_array('remotesend', $service)) || 'remotesend' === $service));
 
 		if (!$remote_sent) return;
-		
+
+		// ensure options have been loaded
+		$this->options = $this->get_options();
+
 		try {
 			$storage = $this->bootstrap();
 			if (is_wp_error($storage)) throw new Exception($storage->get_error_message());
@@ -304,19 +302,32 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 		
 		if (is_wp_error($storage)) return $updraftplus->log_wp_error($storage, false, true);
 
-		$response = $this->send_message('upload_complete', array('job_id' => $updraftplus->nonce), 30);
+		for ($i = 0; $i < 3; $i++) {
 
-		if (is_wp_error($response)) {
-			throw new Exception($response->get_error_message().' ('.$response->get_error_code().')');
+			$success = false;
+
+			$response = $this->send_message('upload_complete', array('job_id' => $updraftplus->nonce), 30);
+
+			if (is_wp_error($response)) {
+				$message = $response->get_error_message().' ('.$response->get_error_code().')';
+				$this->log("RPC service error: ".$message);
+				$this->log($message, 'error');
+			} elseif (!is_array($response) || empty($response['response'])) {
+				$this->log("RPC service error: ".serialize($response));
+				$this->log(serialize($response), 'error');
+			} elseif ('error' == $response['response']) {
+				// Could interpret the codes to get more interesting messages directly to the user
+				$msg = $response['data'];
+				$this->log("RPC service error: ".$msg);
+				$this->log($msg, 'error');
+			} elseif ('file_status' == $response['response']) {
+				$success = true;
+			}
+
+			sleep(5);
 		}
 
-		if (!is_array($response) || empty($response['response'])) throw new Exception(__('Unexpected response:', 'updraftplus').' '.serialize($response));
-
-		if ('error' == $response['response']) {
-			$msg = $response['data'];
-			// Could interpret the codes to get more interesting messages directly to the user
-			throw new Exception(__('Error', 'updraftplus').': '.$msg);
-		}
+		return $success;
 	}
 
 	/**

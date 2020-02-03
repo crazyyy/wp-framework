@@ -1,12 +1,254 @@
-@brand-primary: #2DAAE1;
+// out: wizard.css, sourcemap: false, compress: false
+@brand-primary: #29b6f6;
+@brand-secondary: #61ce70;
 @border-radius: 25px;
 @gray: #c6c6c6;
+
+.cmplz-hidden{
+  display:none;
+}
 /*
    statistics
 */
 .cmplz-bestperformericon {
   width:12px;
 }
+.cmplz-scriptcenter {
+  textarea {
+    width: 100%;
+    height: 100px;
+  }
+
+  #plugins label.cmplz-disabled{
+    color: #cecece;
+    font-weight: normal;
+    font-style: italic;
+  }
+
+  input:checked:disabled + .cmplz-slider {
+    background-color: lighten(@brand-primary, 25%);
+    &:before{
+      //background-color:#c6c6c6;
+    }
+  }
+}
+
+.cmplz-selectable{
+  background-color:#f2f2f2;
+  -webkit-touch-callout: all; /* iOS Safari */
+  -webkit-user-select: all; /* Safari */
+  -khtml-user-select: all; /* Konqueror HTML */
+  -moz-user-select: all; /* Firefox */
+  -ms-user-select: all; /* Internet Explorer/Edge */
+  user-select: all; /* Chrome and Opera */
+
+}
+
+.fa.cmplz-tooltip-icon{
+  &.cmplz-success{
+    color:#666;
+    &.fa-check{
+      color:#61ce70;
+    }
+  }
+  &.cmplz-error{
+    color:#d81414;
+  }
+
+  &.cmplz-disabled{
+    color:#ababab;
+  }
+}
+
+/* START TOOLTIP STYLES */
+[cmplz-tooltip] {
+  position: relative; /* opinion 1 */
+}
+
+/* Applies to all tooltips */
+[cmplz-tooltip]::before,
+[cmplz-tooltip]::after {
+  text-transform: none; /* opinion 2 */
+  font-size: 1em; /* opinion 3 */
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  display: none;
+  opacity: 0;
+}
+[cmplz-tooltip]::before {
+  content: '';
+  border: 5px solid transparent; /* opinion 4 */
+  z-index: 1001; /* absurdity 1 */
+}
+[cmplz-tooltip]::after {
+  content: attr(cmplz-tooltip); /* magic! */
+
+  /* most of the rest of this is opinion */
+  font-family: Helvetica, sans-serif;
+  text-align: center;
+
+  /*
+    Let the content set the size of the tooltips
+    but this will also keep them from being obnoxious
+    */
+  min-width: 3em;
+  //max-wid th: 21em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 1ch 1.5ch;
+  border-radius: .3ch;
+  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
+  background: #333;
+  color: #fff;
+  z-index: 1000; /* absurdity 2 */
+}
+
+/* Make the tooltips respond to hover */
+[cmplz-tooltip]:hover::before,
+[cmplz-tooltip]:hover::after {
+  display: block;
+}
+
+/* don't show empty tooltips */
+[cmplz-tooltip='']::before,
+[cmplz-tooltip='']::after {
+  display: none !important;
+}
+
+/* FLOW: UP */
+[cmplz-tooltip]:not([flow])::before,
+[cmplz-tooltip][flow^="up"]::before {
+  bottom: 100%;
+  border-bottom-width: 0;
+  border-top-color: #333;
+}
+[cmplz-tooltip]:not([flow])::after,
+[cmplz-tooltip][flow^="up"]::after {
+  bottom: calc(100% + 5px);
+}
+[cmplz-tooltip]:not([flow])::before,
+[cmplz-tooltip]:not([flow])::after,
+[cmplz-tooltip][flow^="up"]::before,
+[cmplz-tooltip][flow^="up"]::after {
+  left: 50%;
+  transform: translate(-50%, -.5em);
+}
+
+/* FLOW: DOWN */
+[cmplz-tooltip][flow^="down"]::before {
+  top: 100%;
+  border-top-width: 0;
+  border-bottom-color: #333;
+}
+[cmplz-tooltip][flow^="down"]::after {
+  top: calc(100% + 5px);
+}
+[cmplz-tooltip][flow^="down"]::before,
+[cmplz-tooltip][flow^="down"]::after {
+  left: 50%;
+  transform: translate(-50%, .5em);
+}
+
+/* FLOW: LEFT */
+[cmplz-tooltip][flow^="left"]::before {
+  top: 50%;
+  border-right-width: 0;
+  border-left-color: #333;
+  left: calc(0em - 5px);
+  transform: translate(-.5em, -50%);
+}
+[cmplz-tooltip][flow^="left"]::after {
+  top: 50%;
+  right: calc(100% + 5px);
+  transform: translate(-.5em, -50%);
+}
+
+/* FLOW: RIGHT */
+[cmplz-tooltip][flow^="right"]::before {
+  top: 50%;
+  border-left-width: 0;
+  border-right-color: #333;
+  right: calc(0em - 5px);
+  transform: translate(.5em, -50%);
+}
+[cmplz-tooltip][flow^="right"]::after {
+  top: 50%;
+  left: calc(100% + 5px);
+  transform: translate(.5em, -50%);
+}
+
+/* KEYFRAMES */
+@keyframes tooltips-vert {
+  to {
+    opacity: .9;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes tooltips-horz {
+  to {
+    opacity: .9;
+    transform: translate(0, -50%);
+  }
+}
+
+/* FX All The Things */
+[cmplz-tooltip]:not([flow]):hover::before,
+[cmplz-tooltip]:not([flow]):hover::after,
+[cmplz-tooltip][flow^="up"]:hover::before,
+[cmplz-tooltip][flow^="up"]:hover::after,
+[cmplz-tooltip][flow^="down"]:hover::before,
+[cmplz-tooltip][flow^="down"]:hover::after {
+  animation: tooltips-vert 300ms ease-out forwards;
+}
+
+[cmplz-tooltip][flow^="left"]:hover::before,
+[cmplz-tooltip][flow^="left"]:hover::after,
+[cmplz-tooltip][flow^="right"]:hover::before,
+[cmplz-tooltip][flow^="right"]:hover::after {
+  animation: tooltips-horz 300ms ease-out forwards;
+}
+
+
+
+
+
+.cmplz-shortcode {
+  display:none;
+  bottom:0;
+  position:absolute;
+}
+.cmplz-second-column-docs{
+  width:100%;
+  position:relative;
+}
+.cmplz-last-column-docs{
+  position:relative;
+  white-space: nowrap;
+  img {
+    float:right;
+  }
+  .cmplz-document-sync{
+    position:absolute;
+    right:35px;
+  }
+  .cmplz-open-shortcode{
+    svg:hover{
+      background-color:#f2f2f2;
+    }
+    cursor:pointer;
+    position:absolute;
+    right:50px;
+
+  }
+}
+
+
+
+
 /*
     Complianz submenu in wp admin
 */
@@ -37,21 +279,30 @@ tr.field-group .cmplz-help-modal{
   }
   display:none;
   padding:15px 30px;
-  border-radius: .25rem;
-  color: #856404;
-  background-color: #fff3cd;
-  border-color: #ffeeba;
+  border-radius: 0px;
+  color: #fff;
+  background-color: @brand-primary;
+  border-color: @brand-primary;
   text-align: left;
-  -webkit-box-shadow:2px 2px 3px #b4b9be;
-  -moz-box-shadow:2px 2px 3px #b4b9be;
-  box-shadow:2px 2px 3px #b4b9be;
+}
+.cmplz-help-modal a {
+  color: #333;
+}
+a:active,a:hover
+{
+  color: #333;
 }
 a.button.cmplz-open-modal{
   font-size: 9px;
   line-height: 13px;
   height: 15px;
+  min-height: 15px;
   padding: 1px 3px;
   margin-left: 10px;
+}
+
+.cookie-scan a.button.cmplz-open-modal{
+  margin-top:15px;
 }
 
 .cmplz_delete_banner{
@@ -63,8 +314,42 @@ a.button.cmplz-open-modal{
   display: inline-block;
   width: 80%;
 }
-.cmplz-panel {
 
+#cmplz_language{
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+.cmplz-list-container {
+  .cmplz-cookie-field>div{
+    margin-top:8px;
+  }
+  .cmplz-disabled label, .cmplz-disabled span{
+    color:#ababab !important;
+  }
+  input[type="checkbox"]:disabled{
+    border: 1px solid blue;
+  }
+  .cmplz-service-divider {
+    font-size: 19px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+
+}
+.cmplz-panel {
+  &.cmplz-toggle-disabled{
+    color:#aca5a5;
+  }
+
+  .cmplz-panel-title{
+    cursor: pointer;
+  }
+
+  .cmplz-field>div{
+    margin:10px 0;
+  }
   .cmplz-multiple-field-validation {
     float:right;
   }
@@ -75,7 +360,6 @@ a.button.cmplz-open-modal{
       padding-left:10px;
     }
     .cmplz-panel-title{
-      cursor: pointer;
       i {
         margin-right:5px;
       }
@@ -100,7 +384,7 @@ a.button.cmplz-open-modal{
     padding: 10px 15px;
   }
   h1 {
-    font-size:16px;
+    font-size:22px;
   }
   font-size: 13px!important;
   p {
@@ -108,26 +392,31 @@ a.button.cmplz-open-modal{
   }
 
   color: #383d41;
-  background-color: #e2e3e5;
+  background-color: #F2F2F2;
   border: 1px solid #d6d8db;
   padding: 10px 15px;
-  border-radius: .25rem;
-  margin:10px 0;
+  border-radius: 0px;
+  margin: 0px 0;
 
   &.cmplz-notice {
-    background-color: #d9edf7;
-    border-color: #bcdff1;
-    color: #31708f;
+    background-color: #fff;
+    border-color: #fff;
+    border: 0;
+    border-left: 4px solid #29b6f6;
+    color: black;
+    margin: 10px 0px 10px 0px;
+    padding-left: 15px;
   }
   &.cmplz-success {
-    background-color: #dff0d8;
-    border-color: #d0e9c6;
-    color: #3c763d;
+    background-color: #61ce70;
+    border-color: #61ce70;
+    color: #fff;
   }
   &.cmplz-warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
+    color: #333333;
+    background-color: #fbc43d;
+    border-color: #fbc43d;
+    margin: 10px 0px 10px 0px;
   }
 
   ul {
@@ -136,8 +425,15 @@ a.button.cmplz-open-modal{
   }
 
 }
-
-
+//color picker fix
+div.field-group .wp-picker-container .wp-picker-input-wrap {
+.button.button-small.wp-picker-clear {
+  margin-top: 13px;
+}
+.cmplz-color-picker.wp-color-picker{
+  margin-top:5px;
+}
+}
 #cmplz-region-slider {
   text-align:center;
   .switch {
@@ -194,7 +490,7 @@ a.button.cmplz-open-modal{
     display: none;
   }
 
-  .eu, .us {
+  .eu, .us, .uk {
     color: white;
     position: absolute;
     transform: translate(-50%, -50%);
@@ -212,7 +508,13 @@ a.button.cmplz-open-modal{
     display: none;
   }
 
+  input:checked + .slider .uk {
+    display: none;
+  }
+
   /*--------- END --------*/
+
+
 
   /* Rounded sliders */
   .slider.round {
@@ -224,6 +526,9 @@ a.button.cmplz-open-modal{
   }
 }
 
+input[type="text"]{
+  width:80%;
+}
 /*
     cool checkbox sliders
 */
@@ -276,13 +581,20 @@ input:checked + .cmplz-slider {
     transform: translateX(17px);
   }
 }
+//input:disabled + .cmplz-slider {
+//  background-color: lighten(#ccc, 40%);
+//  &:before{
+//    //background-color:#c6c6c6;
+//  }
+//}
 
-input:disabled + .cmplz-slider {
-  background-color: lighten(@brand-primary, 30%);
+input:checked:disabled + .cmplz-slider {
+  background-color: lighten(@brand-primary, 40%);
   &:before{
     //background-color:#c6c6c6;
   }
 }
+
 
 input:focus + .cmplz-slider {
   box-shadow: 0 0 1px @brand-primary;
@@ -300,10 +612,10 @@ input:focus + .cmplz-slider {
   background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
   z-index: 99;
   p {
-    border-radius:10px;
+    border-radius:0px;
     font-size: 16px;
-    background-color: white;
-    color: black;
+    background-color: @brand-primary;
+    color: white;
     position: relative;
     /* height: 100px; */
     top: 150px;
@@ -316,11 +628,11 @@ input:focus + .cmplz-slider {
 }
 
 @font-face {
-  font-family: Sofia Pro Light;
-  src: url("../fonts/sofiapro-light.otf") format("opentype");
+  font-family: Roboto, sans-serif;
+  src: url("../fonts/Roboto-Regular.ttf") format("truetype");
 }
 
-//prevent a too small editor widht
+//prevent a too small editor width
 html .mceContentBody {
   max-width: 100% !important;
 }
@@ -355,37 +667,37 @@ html .mceContentBody {
   margin-top: 15px;
 }
 
-#cmplz-support-form.hide {
-  display: none !important; //override flex
-}
-
-
 
 /*progress bar */
-#cmplz-scan-progress {
-  width: 100%;
-  .cmplz-progress-bar {
-    height: 15px;
+#cmplz-scan-progress, #cmplz-sync-progress {
+    width: 100%;
+    background-color:#f2f2f2;
+
+  .cmplz-progress-bar, .cmplz-sync-progress-bar {
+    height: 25px;
     background-color: @brand-primary;
     transition: width 0.5s;
     -webkit-transition: width 0.5s;
+    font-weight:bold;
+    padding:2px;
   }
 }
 
-#cmplz-wizard {
+#cmplz-wizard, #cookie-policy-snapshots {
 
-  font-family: Sofia Pro Light;
+  font-family: Roboto, sans-serif;
 
   h1, h2, h3, h4, .cmplz-menu-item, .cmplz-step-title, .cmplz-button {
-    font-variant: small-caps;
+    font-variant: normal;
   }
+
 
   label {
     font-size: 14px;
   }
 
   table tr.group-header {
-    background-color: #c6c6c6;
+    background-color: #f2f2f2;
     td {
       padding: 3px;
     }
@@ -399,14 +711,20 @@ html .mceContentBody {
     &.first {
       border-top:0;
     }
-
+    .cmplz-field{
+      margin-top:5px;
+    }
+    .cmplz-label label{
+      font-size:14px;
+      font-weight: bold;
+    }
   }
 
   .cmplz-header {
     background-color: #F1F1F1;
     .cmplz-wizard-title {
       font-size: 26px;
-      padding-bottom: 15px;
+      padding-bottom: 20px;
     }
 
     .cmplz-wizard-steps {
@@ -424,7 +742,7 @@ html .mceContentBody {
 
       .cmplz-step-count {
         span {
-          top: 10px;
+          top: 9px;
           position: relative;
         }
         color: #fff;
@@ -438,8 +756,11 @@ html .mceContentBody {
       }
 
       .cmplz-step-title {
-        color: @brand-primary;
+        color: #333333;
+        top: 2px;
+        position: relative;
       }
+
 
       .cmplz-step {
 
@@ -453,9 +774,12 @@ html .mceContentBody {
           font-size: 18px;
         }
         &.active {
+          .cmplz-step-title {
+            color: white;
+          }
           .cmplz-step-count {
-            color: @brand-primary;
-            background-color: #fff;
+            color: #fff;
+            background-color: @brand-primary;
             border-radius: 50%;
           }
 
@@ -469,14 +793,15 @@ html .mceContentBody {
             width: 260px;
           }
           .cmplz-step-wrap {
-            background-color: #fff;
-            border: 1px solid @brand-primary;
+            background-color: @brand-primary;
+            border: 0;
             border-radius: @border-radius;
+            height:36px;
           }
         }
         &.not-active {
           .cmplz-step-wrap a:hover .cmplz-step-count {
-            background-color: lighten(@brand-primary, 10%)
+            background-color: lighten(@brand-primary, 5%)
           }
         }
         .cmplz-step-wrap {
@@ -488,7 +813,7 @@ html .mceContentBody {
         }
         &.incomplete {
           .cmplz-step-count {
-            background-color: lighten(@brand-primary, 30%);
+            background-color: @brand-primary;
             color: #fff;
           }
         }
@@ -499,10 +824,14 @@ html .mceContentBody {
   /*body */
   .cmplz-body {
 
-
-
     button.button {
       margin-bottom: 15px;
+      margin-top: 15px;
+      color: #333333;
+    }
+    input[type=submit]{
+      margin-bottom: 15px;
+      margin-top: 15px;
     }
 
 
@@ -515,13 +844,13 @@ html .mceContentBody {
     }
 
     .cmplz-section-menu {
-      margin-top: 30px;
-      margin-bottom: 30px;
+      margin-top: 0px;
+      margin-bottom: 0px;
       background-color: @brand-primary;
       color: #fff;
-      border-radius: 10px;
+      border-radius: 0px;
       padding: 30px;
-      margin-left: 30px;
+      margin-left: 0px;
       flex: 0 0 190px;
       &.active a {
         font-size: 1.3em;
@@ -534,9 +863,7 @@ html .mceContentBody {
       margin-left: 30px;
     }
     .cmplz-region-indicator {
-      margin-bottom:30px;
       height:0;
-      width:100%;
       span{
         padding-top:7px;
         padding-right:10px;
@@ -546,22 +873,24 @@ html .mceContentBody {
         float:right;
       }
       img {
-        width: 50px;
-        height: 30px;
+        width: 40px;
+        height: 25px;
+        margin-left:5px;
       }
       //float:right;
     }
 
     /* Define the styling of the text input fields */
     label {
-      //font-variant: small-caps;
-      font-weight: bold;
+      //font-variant: normal;
+      font-weight: normal;
       margin: 10px 0;
     }
+
     input[type="text"], input[type="email"] {
       width: 80%;
       //height: 30px;
-      margin-bottom: 12px;
+      //margin-bottom: 12px;
       background-color: #F1F1F1;
     }
     .validation {
@@ -642,6 +971,8 @@ html .mceContentBody {
 
     .cmplz-button {
       //span {
+
+
       &.cmplz-save {
 
         margin-right: 10px;
@@ -649,6 +980,9 @@ html .mceContentBody {
         input[type=submit] {
           background-color: @gray;
           border-color:@gray;
+          border-radius: 50px;
+          font-size:14px;
+
           //padding-right: 35px;
         }
         //span:after {
@@ -661,8 +995,15 @@ html .mceContentBody {
         float: left;
         text-indent: 0.5em;
         input[type=submit] {
+          &:focus {
+            outline:none;
+          }
+          cursor:pointer;
+
           background-color: @gray;
           border-color:@gray;
+          border-radius: 50px;
+          font-size:14px;
           //padding-left: 30px;
         }
         //span:before {
@@ -675,7 +1016,7 @@ html .mceContentBody {
           font-family: 'Font Awesome 5 Free';
           color: white;
           font-weight: bold;
-          font-size: 18px !important;
+          font-size: 14px !important;
           position: absolute;
           top: 0;
           padding-top: 2px;
@@ -684,10 +1025,16 @@ html .mceContentBody {
 
         position: relative;
         input[type="submit"] {
-          font-family: "Sofia Pro Light", Arial;
-          font-size: 16px;
+          &:focus {
+            outline:none;
+          }
+          cursor:pointer;
+
+          font-family: "Roboto, sans-serif", Arial;
+          font-size: 14px;
           text-transform: lowercase;
           background-color: @brand-primary;
+          border-radius: 50px;
           color: white;
           //border: none;
           box-shadow: none;
@@ -702,6 +1049,7 @@ html .mceContentBody {
 
       &.cmplz-next {
         float: right;
+        border-radius: 50px;
         input {
           //padding-right: 30px;
         }
@@ -801,7 +1149,6 @@ html .mceContentBody {
     float: left;
     display: inline-block;
     vertical-align: middle;
-    width: 16px;
     font: 400 21px/1 dashicons;
     speak: none;
     -webkit-font-smoothing: antialiased;
@@ -819,6 +1166,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
   color: #fff;
   padding-right: 20px;
   border: 0;
+  border-radius:50px;
   padding-top: 2px;
   &:hover {
     background-color: lighten(@brand-primary, 10%);
@@ -848,8 +1196,8 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
 .cmplz-dashboard-container {
   .cmplz-dashboard-title {
     padding-top:22px;
-    font-weight: 900;
-    font-size: 30px;
+    font-weight: 600;
+    font-size: 24px;
     line-height: 30px;
     margin-bottom: 20px;
     @media screen and (max-width: 720px) {
@@ -878,7 +1226,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
 }
 
 .cmplz-dashboard-container {
-  font-family: "Sofia Pro Light", Arial;
+  font-family: "Roboto, sans-serif", Arial;
   background-color: white;
   display: flex;
   flex-wrap: wrap;
@@ -907,11 +1255,12 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
     flex-shrink: 1;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 0px;
+    border-color: #f2f2f2;
     overflow: hidden;
   }
   .cmplz-dashboard-item .cmplz-top h1 {
-    font-weight: 900;
+    font-weight: 600;
     font-size: 2.5em;
     padding: 25px;
   }
@@ -926,8 +1275,8 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
     .cmplz-logo {
       display: flex;
       align-items: center;
-      font-size: 2em;
-      font-weight: 900;
+      font-size: 1.5em;
+      font-weight: 600;
     }
     .cmplz-header-text {
       display: flex;
@@ -957,7 +1306,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
     }
     .cmplz-dashboard-text {
       color: black;
-      font-weight: 900;
+      font-weight: 400;
       padding: 15px;
       li {
         border-bottom: 1px solid;
@@ -983,7 +1332,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
         min-height: 170px;
         .cmplz-dashboard-top-text {
           display: inline-grid;
-          font-size: 20px;
+          font-size: 18px;
           line-height: 22px;
           max-width: 60%;
           float: left;
@@ -996,6 +1345,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
         padding-top: 125px;
         button {
           text-align: -webkit-left;
+          border-radius: 50px;
         }
       }
       .cmplz-percentage-complete {
@@ -1015,9 +1365,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
     }
 
     .cmplz-dashboard-support {
-      #cmplz-support-form {
-        margin-bottom: 15px;
-      }
+
       width: 450px;
       @media screen and (max-width: 1210px) {
         margin: 0 auto;
@@ -1089,7 +1437,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
         position: relative;
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
-        border-radius: 10px;
+        border-radius: 0px;
         background-color: #F2F2F2;
         width: 205px;
         min-height: 70px;
@@ -1104,7 +1452,7 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
           margin-top: 9px;
           margin-left: 9px;
           font-weight: 900;
-          font-size: 1.3em;
+          font-size: 1.2em;
           margin-right: 35px;
         }
         .cmplz-footer-description {
@@ -1116,11 +1464,10 @@ a.cmplz.button, button.cmplz.button, input.cmplz.button {
         .cmplz-external-btn {
           text-align: center;
           border-radius: 7px;
-          color: white;
+          color: @brand-primary;
           width: 25px;
           height: 20px;
           float: right;
-          background-color: @brand-primary;
           .fa-angle-right {
             font-size: 1.5em;
             vertical-align: middle;

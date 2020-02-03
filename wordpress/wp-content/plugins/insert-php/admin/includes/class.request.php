@@ -16,7 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class WINP_Request {
-	const WINP_REQUEST_URL = 'http://142.93.91.206/v1/woody/';
+	//В новых версиях Вуди начиная с 2.2.10 будет обращаться к новой версии API библиотеки сниппетов
+	// это делается для обратной совместимости, чтобы старые версии продолжили работать со старым API
+	const WINP_REQUEST_URL = 'http://api.woodysnippet.com/v2/woody/';
+	// Старое API http://142.93.91.206/v1/woody/
 
 	/**
 	 * WINP_REQUEST constructor.
@@ -232,6 +235,7 @@ class WINP_Request {
 			return $mapper->map( $body, new $object_name() );
 		} catch ( WINP\JsonMapper\Exception $exception ) {
 			error_log( 'Snippet api [map_object]: ' . $exception->getMessage() );
+
 			return false;
 		}
 	}
@@ -274,6 +278,7 @@ class WINP_Request {
 			);
 		} catch ( WINP\JsonMapper\Exception $exception ) {
 			error_log( 'Snippet api [map_objects]: ' . $exception->getMessage() );
+
 			return false;
 		}
 	}

@@ -1019,7 +1019,12 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		if (is_string($files)) $files = array($files);
 
 		$storage = $this->bootstrap();
-		if (is_wp_error($storage) || false == $storage) return $storage;
+		if (is_wp_error($storage)) {
+			$this->log("delete: failed due to storage error: ".$storage->get_error_code()." (".$storage->get_error_message().")");
+			return false;
+		}
+			
+		if (false == $storage) return $storage;
 
 		$opts = $this->get_options();
 

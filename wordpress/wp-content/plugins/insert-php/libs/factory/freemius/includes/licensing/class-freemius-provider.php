@@ -1,17 +1,16 @@
 <?php
 
-namespace WBCR\Factory_Freemius_108\Premium;
+namespace WBCR\Factory_Freemius_110\Premium;
 
-use WBCR\Factory_Freemius_108\Entities\License;
-use WBCR\Factory_Freemius_108\Entities\Plugin;
-use WBCR\Factory_Freemius_108\Entities\Site;
-use WBCR\Factory_Freemius_108\Entities\User;
-use WBCR\Factory_419\Premium\Provider as License_Provider;
-use Wbcr_Factory419_Plugin;
-use WBCR\Factory_Freemius_108\Api;
+use WBCR\Factory_Freemius_110\Entities\License;
+use WBCR\Factory_Freemius_110\Entities\Plugin;
+use WBCR\Factory_Freemius_110\Entities\Site;
+use WBCR\Factory_Freemius_110\Entities\User;
+use WBCR\Factory_422\Premium\Provider as License_Provider;
+use Wbcr_Factory422_Plugin;
+use WBCR\Factory_Freemius_110\Api;
 use WP_Error;
 use Exception;
-use stdClass;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,8 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @author        Webcraftic <wordpress.webraftic@gmail.com>, Alex Kovalev <alex.kovalevv@gmail.com>
- * @link          https://webcraftic.com
+ * @author        Alex Kovalev <alex.kovalevv@gmail.com>, Github: https://github.com/alexkovalevv
  * @copyright (c) 2018 Webraftic Ltd, Freemius, Inc.
  * @version       1.0
  */
@@ -42,17 +40,17 @@ final class Provider extends License_Provider {
 	private $slug;
 
 	/**
-	 * @var \WBCR\Factory_Freemius_108\Api
+	 * @var \WBCR\Factory_Freemius_110\Api
 	 */
 	private $site_api;
 
 	/**
-	 * @var \WBCR\Factory_Freemius_108\Api
+	 * @var \WBCR\Factory_Freemius_110\Api
 	 */
 	private $plugin_api;
 
 	/**
-	 * @var \WBCR\Factory_Freemius_108\Api
+	 * @var \WBCR\Factory_Freemius_110\Api
 	 */
 	private $user_api;
 
@@ -84,11 +82,11 @@ final class Provider extends License_Provider {
 	/**
 	 * Manager constructor.
 	 *
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( Wbcr_Factory419_Plugin $plugin, array $settings ) {
+	public function __construct( Wbcr_Factory422_Plugin $plugin, array $settings ) {
 		parent::__construct( $plugin, $settings );
 
 		$this->plugin_id  = $this->get_setting( 'plugin_id', null );
@@ -147,7 +145,7 @@ final class Provider extends License_Provider {
 	}
 
 	/**
-	 * @return \WBCR\Factory_Freemius_108\Entities\License|null
+	 * @return \WBCR\Factory_Freemius_110\Entities\License|null
 	 * @throws Exception
 	 */
 	public function get_license() {
@@ -234,6 +232,8 @@ final class Provider extends License_Provider {
 	}
 
 	/**
+	 * Активирует лицензицию
+	 *
 	 * @param string $key
 	 *
 	 * @return bool|mixed
@@ -335,18 +335,22 @@ final class Provider extends License_Provider {
 		];
 
 		/**
-		 * @since 1.0.0
+		 * Дейтсвие сработает после того, как лицензия будет успешно активирована
 		 *
-		 * @param string $plugin_name    Имя плагина
+		 * @since 1.0.9 Изменил имя хука на {$plugin_name}/factory/premium/license_activate
+		 * @since 1.0.0 Добавлен
 		 *
+		 * @param string $provider       Провайдер лицензии
 		 * @param string $license_info   Дополнительная информация о лицензии
 		 */
-		do_action( 'wbcr/factory/license_activate', $license_info, $plugin_name );
+		do_action( "{$plugin_name}/factory/premium/license_activate", 'freemius', $license_info );
 
 		return true;
 	}
 
 	/**
+	 * Деактивирует лицензию
+	 *
 	 * @return bool
 	 * @throws \Freemius_Exception
 	 * @throws Exception
@@ -375,13 +379,15 @@ final class Provider extends License_Provider {
 		$this->delete_license_data();
 
 		/**
-		 * @since 1.0.0
+		 * Дейтсвие сработает после того, как лицензия будет успешно деактивирована
 		 *
-		 * @param string $plugin_name    Имя плагина
+		 * @since 1.0.9 Изменил имя хука на {$plugin_name}/factory/premium/license_deactivate
+		 * @since 1.0.0 Добавлен
 		 *
+		 * @param string $provider       Провайдер лицензии
 		 * @param string $license_info   Дополнительная информация о лицензии
 		 */
-		do_action( 'wbcr/factory/license_deactivate', $license_info, $plugin_name );
+		do_action( "{$plugin_name}/factory/premium/license_deactivate", 'freemius', $license_info );
 
 		return true;
 	}
@@ -400,14 +406,22 @@ final class Provider extends License_Provider {
 		$site_api = $this->get_api_site_scope( $this->license_site );
 		$user_api = $this->get_api_user_scope( $this->license_user );
 
+		$request_install = $site_api->call( '/', 'GET' );
+
+		// Если установка не найдена или неактивна, деактивируем лицензию
+		if ( isset( $request_install->error ) || ! ( isset( $request_install->is_active ) && $request_install->is_active ) ) {
+			$this->deactivate();
+
+			return true;
+		}
+
 		$use_license_key      = urlencode( $this->license->secret_key );
 		$request_license_path = $this->get_license_endpoint( $this->license ) . '.json?license_key=' . $use_license_key;
 		$request_license      = $site_api->call( $request_license_path, 'GET' );
 
-		$request_install_path = $this->get_plugin_endpoint() . '/installs.json?ids=' . $this->license_site->id;
-		$request_installs     = $user_api->call( $request_install_path, 'GET' );
-
-		if ( $request_installs->installs[0]->license_id !== $this->license->id ) {
+		// Если лицензия не найдена или неактивна или тарифный план не совпадает с текущей установкой,
+		// деактивируем лицензию.
+		if ( isset( $request_license->error ) || ! ( isset( $request_license->plan_id ) && $request_license->plan_id == $request_install->plan_id ) ) {
 			$this->deactivate();
 
 			return true;
@@ -430,6 +444,18 @@ final class Provider extends License_Provider {
 		$this->license->populate( $request_license );
 		$this->save_license_data();
 
+		// Обновляем информацию о сайте и сервере пользователя
+		$site_api->call( '/', 'put', [
+			'id'                           => $this->license_site->id,
+			'uid'                          => $this->get_unique_site_id(),
+			'plugin_version'               => $this->plugin->getPluginVersion(),
+			'language'                     => get_bloginfo( 'language' ),
+			'charset'                      => get_bloginfo( 'charset' ),
+			'platform_version'             => get_bloginfo( 'version' ),
+			'sdk_version'                  => '2.2.3',
+			'programming_language_version' => phpversion()
+		] );
+
 		$plugin_name  = $this->plugin->getPluginName();
 		$license_info = [
 			'provider'        => 'freemius',
@@ -439,13 +465,14 @@ final class Provider extends License_Provider {
 		];
 
 		/**
-		 * @since 1.0.0
+		 * Выполняется, когда синхронизация завершена успешно, без деактивации
 		 *
-		 * @param string $plugin_name    Имя плагина
+		 * @since 1.0.9 Изменил имя хука на {$plugin_name}/factory/premium/license_sync
+		 * @since 1.0.0 Добавлен
 		 *
 		 * @param string $license_info   Дополнительная информация о лицензии
 		 */
-		do_action( 'wbcr/factory/license_sync', $license_info, $plugin_name );
+		do_action( "{$plugin_name}/factory/premium/license_sync", $license_info );
 
 		return true;
 	}
@@ -562,7 +589,7 @@ final class Provider extends License_Provider {
 	/**
 	 * @param bool $flush
 	 *
-	 * @return \WBCR\Factory_Freemius_108\Api
+	 * @return \WBCR\Factory_Freemius_110\Api
 	 * @throws Exception
 	 */
 	private function get_api_user_scope( User $user, $flush = false ) {
@@ -576,7 +603,7 @@ final class Provider extends License_Provider {
 	/**
 	 * @param bool $flush
 	 *
-	 * @return \WBCR\Factory_Freemius_108\Api
+	 * @return \WBCR\Factory_Freemius_110\Api
 	 * @throws Exception
 	 */
 	private function get_api_site_scope( Site $site, $flush = false ) {
@@ -590,7 +617,7 @@ final class Provider extends License_Provider {
 	/**
 	 * Get plugin public API scope.
 	 *
-	 * @return \WBCR\Factory_Freemius_108\Api
+	 * @return \WBCR\Factory_Freemius_110\Api
 	 * @throws Exception
 	 */
 	private function get_api_plugin_scope() {

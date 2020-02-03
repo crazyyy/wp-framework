@@ -1,5 +1,8 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 // Callbacks for adding content to an AMP template
 
 add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_title' );
@@ -15,11 +18,27 @@ function amp_post_template_add_canonical( $amp_template ) {
 	<link rel="canonical" href="<?php echo esc_url( apply_filters('ampforwp_modify_rel_url',$amp_template->get( 'canonical_url' ) ) ); ?>" />
    <?php
 }
-add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_meta_generator' );
-function amp_post_template_add_meta_generator() {
+if(false==ampforwp_get_setting('hide-amp-version-from-source')){
+	add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_meta_generator' );
+	function amp_post_template_add_meta_generator() {
+		?>
+		<meta name="generator" content="AMP for WP <?php echo esc_attr(AMPFORWP_VERSION) ?>" />
+	<?php
+	}
+}
+
+add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_cached_link' );
+function amp_post_template_add_cached_link($amp_template) {
+	$design = "swift";
+	if(ampforwp_get_setting("ampforwp_font_icon")=="swift-icons" && (ampforwp_get_setting('amp-design-selector')==3 || ampforwp_get_setting('amp-design-selector')==4)){
+		if(ampforwp_get_setting('amp-design-selector')!=4){
+			$design = "design-".ampforwp_get_setting('amp-design-selector');
+		}
+		$font_url = AMPFORWP_PLUGIN_DIR_URI."templates/design-manager/$design/fonts/icomoon.ttf";
 	?>
-	<meta name="generator" content="AMP for WP <?php echo esc_attr(AMPFORWP_VERSION) ?>" />
-<?php
+		<link rel="preload" as="font" href="<?php echo esc_url($font_url); ?>" type="font/ttf" crossorigin>
+	<?php
+	}
 }
 
 add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_scripts' );
@@ -54,7 +73,16 @@ function amp_post_template_add_schemaorg_metadata( $amp_template ) {
 	if ( empty( $metadata ) ) {
 		return;
 	}
-	if( (ampforwp_get_setting('ampforwp-seo-yoast-schema') == false && ampforwp_get_setting('ampforwp-seo-selection') == 'yoast') || empty(ampforwp_get_setting('ampforwp-seo-selection')) ){
+	if ( isset($metadata['description']) ) {
+		$metadata['description'] = str_replace("&nbsp;", "", $metadata['description']);
+	}
+	if ( isset($metadata['articleBody']) ) {
+		$metadata['articleBody'] = str_replace("&nbsp;", "", $metadata['articleBody']);
+		$metadata['articleBody'] = trim(preg_replace('/\s+/', ' ', $metadata['articleBody']));
+		$metadata['articleBody'] = preg_replace('/(&lt;.+?&gt;)/', '', $metadata['articleBody']);
+	}
+	$seo_sel = ampforwp_get_setting('ampforwp-seo-selection');
+	if( (ampforwp_get_setting('ampforwp-seo-yoast-schema') == false && ampforwp_get_setting('ampforwp-seo-selection') == 'yoast') || empty($seo_sel) ){
 	?>
 	<script type="application/ld+json"><?php echo wp_json_encode( $metadata ); ?></script>
 	<?php
@@ -90,8 +118,8 @@ function amp_post_template_add_analytics_data( $amp_template ) {
 	}
 
 	foreach ( $analytics_entries as $id => $analytics_entry ) {
-		if ( ! isset( $analytics_entry['type'], $analytics_entry['attributes'], $analytics_entry['config_data'] ) ) {
-			_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'Analytics entry for %s is missing one of the following keys: `type`, `attributes`, or `config_data` (array keys: %s)', 'accelerated-mobile-pages' ), esc_html( $id ), esc_html( implode( ', ', array_keys( $analytics_entry ) ) ) ), '0.3.2' );
+		if ( ! isset(  $analytics_entry['attributes'], $analytics_entry['config_data'] ) ) {
+			_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'Analytics entry for %s is missing one of the following keys:  `attributes`, or `config_data` (array keys: %s)', 'accelerated-mobile-pages' ), esc_html( $id ), esc_html( implode( ', ', array_keys( $analytics_entry ) ) ) ), '0.3.2' );
 			continue;
 		}
 
@@ -99,10 +127,7 @@ function amp_post_template_add_analytics_data( $amp_template ) {
 			'type' => 'application/json',
 		), wp_json_encode( $analytics_entry['config_data'] ) );
 
-		$amp_analytics_attr = array_merge( array(
-			'id' => $id,
-			'type' => $analytics_entry['type'],
-		), $analytics_entry['attributes'] );
+		$amp_analytics_attr = $analytics_entry['attributes'];
 
 		echo AMP_HTML_Utils::build_tag( 'amp-analytics', $amp_analytics_attr, $script_element );
 	}

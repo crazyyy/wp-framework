@@ -30,7 +30,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	 */
 	public $priority = 'core';
 
-	public $css_class = 'factory-bootstrap-420 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-423 factory-fontawesome-000';
 
 	protected $errors = [];
 	protected $source_channel;
@@ -68,9 +68,9 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory419_StyleList  $styles    A set of style to include.
+	 * @param Wbcr_Factory422_StyleList  $styles    A set of style to include.
 	 *
-	 * @param Wbcr_Factory419_ScriptList $scripts   A set of scripts to include.
+	 * @param Wbcr_Factory422_ScriptList $scripts   A set of scripts to include.
 	 *
 	 * @return void
 	 */
@@ -231,7 +231,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 			$button_nonce = ' data-nonce="' . wp_create_nonce( "wbcr_inp_save_snippet_{$snippet_id}_as_template" ) . '"';
 
 			?>
-            <div class="factory-bootstrap-420 factory-fontawesome-000">
+            <div class="factory-bootstrap-423 factory-fontawesome-000">
                 <div class="modal fade" id="winp-sync-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                      aria-hidden="true" style="display: none">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -412,7 +412,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 		if ( ! empty( $post ) && $post->post_type == WINP_SNIPPETS_POST_TYPE ) {
 			$snippet_type = WINP_Helper::get_snippet_type();
 
-			$new_classes = "wbcr-inp-snippet-type-" . $snippet_type;
+			$new_classes = "wbcr-inp-snippet-type-" . esc_attr( $snippet_type );
 
 			if ( $snippet_type !== WINP_SNIPPET_TYPE_TEXT ) {
 				$new_classes .= " winp-snippet-enabled";
@@ -435,9 +435,10 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 			return;
 		}
 
-		$snippet_type = WINP_Plugin::app()->request->get( 'winp_item', WINP_SNIPPET_TYPE_PHP, true );
+		$snippet_type = WINP_Plugin::app()->request->get( 'winp_item', WINP_SNIPPET_TYPE_PHP, 'sanitize_key' );
 		$snippet_type = WINP_Helper::getMetaOption( $current_post->ID, 'snippet_type', $snippet_type );
-		echo '<input type="hidden" id="wbcr_inp_snippet_type" name="wbcr_inp_snippet_type" value="' . $snippet_type . '">';
+
+		echo '<input type="hidden" id="wbcr_inp_snippet_type" name="wbcr_inp_snippet_type" value="' . esc_attr( $snippet_type ) . '">';
 
 		if ( 'auto-draft' == $current_post->post_status && WINP_SNIPPETS_POST_TYPE == $current_post->post_type && WINP_Helper::getMetaOption( $current_post->ID, 'snippet_draft', false ) ) {
 			global $post;
@@ -463,7 +464,8 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 		$disabled = '';
 		if ( $post->ID && WINP_Plugin::app()->get_api_object()->is_key() ) {
 			$disabled = WINP_Plugin::app()->get_api_object()->is_changed( $post->ID ) == true ? '' : ' disabled';
-		} ?>
+		}
+		?>
         <div class="winp-sync-buttons">
             <a class="wbcr-inp-import-snippet-button button<?php echo $disabled; ?>" id="winp-snippet-sync"
                href="javascript:void(0)">
@@ -486,7 +488,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_FactoryForms417_Form $form   A form object to configure.
+	 * @param Wbcr_FactoryForms420_Form $form   A form object to configure.
 	 *
 	 * @return void
 	 * @see   Wbcr_FactoryMetaboxes409_FormMetabox

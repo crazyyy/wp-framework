@@ -290,14 +290,13 @@ amppb-row-fields .amppb-column-2:not(:last-child){
 }
 .amppb-setting-right span{
     display: inline-block;
-    right: 0px;
-    /*position: absolute;*/
-    top: 0px;
-    padding: 12px 7px 9px 5px;
     cursor: pointer;
     font-size: 15px;
     color: #72777c;
     line-height: 1;
+    width:35px;
+    height: 35px;
+    line-height: 35px;
 } 
 
 #amp-page-builder .ui-state-highlight {
@@ -1237,7 +1236,7 @@ Layout css
   -moz-osx-font-smoothing: grayscale;
 }
 /* icons not loading in AMP page builder when WooCommerce Product Slider plugin is Installed */
-[class*=" icon-"]:before {
+#amp-page-builder [class*=" icon-"]:before {
 font-family: 'icomoon'!important; 
 }
 .amppb_accordion__panel {
@@ -1295,8 +1294,16 @@ a.amppb_accordion__panel:hover {
 }
 
 /*** RTL CSS ***/
+.rtl #pagebilder_content h2 span{
+    padding-right: 29px
+}
+.rtl #pagebilder_content h2 span:before{
+    left: auto;
+    right: 10px;
+}
+
 .rtl .amppb-module .module_label {
-    left: -35px;
+    left: -15px;
 }
 .rtl #amp-page-builder .form-label{
  margin-right:10px;
@@ -1310,7 +1317,15 @@ a.amppb_accordion__panel:hover {
     float: left;
     margin-left: 20px;
 }
-
+.rtl .modal-footer .del-btn-modal {
+    float: left;
+}
+.rtl .amppb-setting-right{
+    float: left;
+}
+.rtl .amppb-setting-right span {
+    float: left;
+}
 
 .layout-image-picker img{
     width:100%;
@@ -1396,4 +1411,10 @@ body .modal-footer .del-btn-modal{
     top: 100px;
     left: 170px;
     right: 300px;
+}
+.spinner.spinner-cat-mod{
+    visibility: hidden;
+    position: relative;
+    top: -27px;
+    right: -18px;
 }

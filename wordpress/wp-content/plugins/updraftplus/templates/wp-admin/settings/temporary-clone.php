@@ -31,8 +31,8 @@ if (defined('UPDRAFTPLUS_TEMPORARY_CLONE') && !UPDRAFTPLUS_TEMPORARY_CLONE) retu
 						<li><strong><?php _e('Fast', 'updraftplus'); ?>:</strong> <?php _e('Takes just the time needed to create a backup and send it.', 'updraftplus'); ?></li>
 						<li><strong><?php _e('Flexible', 'updraftplus'); ?>:</strong> <?php _e('If you want, test upgrading to a different PHP or WP version.', 'updraftplus'); ?></li>
 					</ul>
-					<?php if (is_multisite()) { ?>
-						<p><?php echo '<a target="_blank" href="https://updraftplus.com/faqs/how-do-i-migrate-to-a-new-site-location/">' . __('Temporary clones of WordPress multisite installations are not yet supported. See our documentation on how to carry out a normal migration here', 'updraftplus') . '.</a>'; ?></p>
+					<?php if (is_multisite() && is_subdomain_install()) { ?>
+						<p><?php echo '<a target="_blank" href="https://updraftplus.com/faqs/how-do-i-migrate-to-a-new-site-location/">' . __('Temporary clones of WordPress subdomain multisite installations are not yet supported. See our documentation on how to carry out a normal migration here', 'updraftplus') . '.</a>'; ?></p>
 					<?php
 					} else {
 					?>

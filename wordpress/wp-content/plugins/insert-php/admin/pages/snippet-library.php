@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_SnippetLibraryPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory419_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = 'snippet-library';

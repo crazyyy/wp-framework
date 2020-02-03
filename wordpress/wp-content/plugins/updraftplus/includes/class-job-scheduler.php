@@ -94,7 +94,7 @@ class UpdraftPlus_Job_Scheduler {
 		$updraft_dir = $updraftplus->backups_dir_location();
 		if (file_exists($updraft_dir.'/deleteflag-'.$updraftplus->nonce.'.txt')) {
 			$updraftplus->log("User request for abort: backup job will be immediately halted");
-			@unlink($updraft_dir.'/deleteflag-'.$updraftplus->nonce.'.txt');
+			@unlink($updraft_dir.'/deleteflag-'.$updraftplus->nonce.'.txt');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			$updraftplus->backup_finish(true, true, true);
 			die;
 		}

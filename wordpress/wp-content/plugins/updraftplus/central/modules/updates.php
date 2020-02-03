@@ -255,7 +255,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 		
 		$get_core_updates = get_core_updates();
 		
-		@include(ABSPATH.WPINC.'/version.php');
+		@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		
 		foreach ($get_core_updates as $k => $core_update) {
 			if (isset($core_update->version) && version_compare($core_update->version, $wp_version, '>') && version_compare($core_update->version, $core_update_latest_version, '>')) {
@@ -767,7 +767,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 				$core_update_key = false;
 				$core_update_latest_version = false;
 				
-				@include(ABSPATH.WPINC.'/version.php');
+				@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				
 				foreach ($get_core_updates as $k => $core_update) {
 					if (isset($core_update->version) && version_compare($core_update->version, $wp_version, '>') && version_compare($core_update->version, $core_update_latest_version, '>')) {

@@ -898,11 +898,13 @@ class UpdraftPlus_Commands {
 			
 			if (0 != $response['tokens']) {
 				$is_admin_user = isset($response['is_admin_user']) ? $response['is_admin_user'] : false;
+				$supported_wp_versions = isset($response['supported_wp_versions']) ? $response['supported_wp_versions'] : array();
 				$content .= '<div class="updraftclone_action_box">';
-				$content .= $updraftplus_admin->updraftplus_clone_ui_widget($is_admin_user);
+				$content .= $updraftplus_admin->updraftplus_clone_ui_widget($is_admin_user, $supported_wp_versions);
 				$content .= '<p class="updraftplus_clone_status"></p>';
 				$content .= '<button id="updraft_migrate_createclone" class="button button-primary button-hero" data-clone_id="'.$response['clone_info']['id'].'" data-secret_token="'.$response['clone_info']['secret_token'].'">'. __('Create clone', 'updraftplus') . '</button>';
-				$content .= '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span>';
+				$content .= '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span><br>';
+				$content .= '<div id="ud_downloadstatus3"></div>';
 				$content .= '</div>';
 			}
 			$content .= '</div>'; // end .updraftclone-main-row
@@ -995,6 +997,34 @@ class UpdraftPlus_Commands {
 		$response = array();
 
 		$response['html'] = $updraftplus_admin->updraftplus_clone_info($url);
+
+		return $response;
+	}
+
+	/**
+	 * This function will get the restore resume notice
+	 *
+	 * @param array $params - the parameters for the call
+	 *
+	 * @return array|WP_Error - the response array that includes the restore resume notice
+	 */
+	public function get_restore_resume_notice($params) {
+		if (false === ($updraftplus_admin = $this->_load_ud_admin()) || false === ($updraftplus = $this->_load_ud())) return new WP_Error('no_updraftplus');
+		if (!UpdraftPlus_Options::user_can_manage()) return new WP_Error('updraftplus_permission_denied');
+
+		$job_id = empty($params['job_id']) ? '' : $params['job_id'];
+
+		$response = array(
+			'status' => 'success',
+		);
+
+		if (empty($job_id)) return new WP_Error('missing_parameter', 'Missing parameters.');
+
+		$html = $updraftplus_admin->get_restore_resume_notice($job_id);
+
+		if (is_wp_error($html)) return $html;
+
+		$response['html'] = $html;
 
 		return $response;
 	}

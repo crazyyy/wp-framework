@@ -23,9 +23,9 @@
 		class Wbcr_FactoryMetaboxes409_PublishMetabox extends Wbcr_FactoryMetaboxes409_Metabox {
 
 			/**
-			 * @param Wbcr_Factory419_Plugin $plugin
+			 * @param Wbcr_Factory422_Plugin $plugin
 			 */
-			public function __construct(Wbcr_Factory419_Plugin $plugin = null)
+			public function __construct(Wbcr_Factory422_Plugin $plugin = null)
 			{
 				$this->title = __('Control');
 				$this->context = 'side';

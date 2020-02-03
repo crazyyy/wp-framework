@@ -1,5 +1,8 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-base-sanitizer.php' );
 
 /**
@@ -40,6 +43,15 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 
 		if($node->nodeName=='a' && $node->hasAttribute('href')){
 			$href = $node->getAttribute('href');
+			if( strpos($href,'tel:') ){
+				$disallowed = array('http://', 'https://');
+				foreach($disallowed as $d){
+			      if(strpos($href, $d) === 0) {
+			         $href = str_replace($d, '', $href);
+			      }
+			   }
+			   $node->setAttribute('href',$href);
+			}
 			$node->setAttribute('href', \ampforwp_findInternalUrl($href));
 
 		}
@@ -103,11 +115,42 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 					}
 				}
 				$parent_node = $element->parentNode;
-				$allowed_tags = AMP_Allowed_Tags_Generated::get_allowed_tags();
+				$spec_name = 'amp-script extension local script';
+				$checkAllowedFlag = 0 ;
+				foreach ( AMP_Allowed_Tags_Generated::get_allowed_tag( 'script' ) as $spec_rule ) {
+					if ( isset( $spec_rule[ AMP_Rule_Spec::TAG_SPEC ]['spec_name'] ) && $spec_name === $spec_rule[ AMP_Rule_Spec::TAG_SPEC ]['spec_name'] ) {
+						if($element->getAttribute( 'id' ) && $element->getAttribute( 'target' ) == 'amp-script')
+							$checkAllowedFlag = 1 ;
+					}
+				}
 
-				if( $parent_node->tagName != 'amp-state'){
+				//white listing form element #4010
+				$form_classes = '';
+				$form_method = '';
+				if($element->tagName=='form'){
+					$form_classes 	= $element->getAttribute('class');
+					$form_method 	= $element->getAttribute('method');
+				}else if($parent_node->tagName=='form'){
+					$form_classes	= $parent_node->getAttribute('class');
+					$form_method 	= $parent_node->getAttribute('method');
+				}
+				$allow_form = 0;
+				$allow_form = apply_filters('ampforwp_whitelist_form_element',$allow_form,$element);
+				if((strpos($form_classes, 'ampforwp-form-allow') !== false || $allow_form==1) && strtolower($form_method)=='post'){
+					$checkAllowedFlag = 1;
+				}
+				
+				if($form_method!=''){
+					if(strtolower($form_method)=='get'){
+						$checkAllowedFlag = 1;
+					}
+				}
+				//white listing form element close #4010
+
+
+				if( $parent_node->tagName != 'amp-state' && $checkAllowedFlag == 0){
  					$parent_node->removeChild( $element );
-				 }
+				}
  				if ( 'body' !== $parent_node->nodeName && AMP_DOM_Utils::is_node_empty( $parent_node ) ) {
 					$parent_node->parentNode->removeChild( $parent_node );
 				}
@@ -248,8 +291,6 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 			'param',
 			'applet',
 			'form',
-			'label',
-			'input',
 			'textarea',
 			'select',
 			'option',

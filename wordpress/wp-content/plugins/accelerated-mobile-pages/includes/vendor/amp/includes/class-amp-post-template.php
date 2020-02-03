@@ -1,5 +1,8 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 require_once( AMP__VENDOR__DIR__ . '/includes/utils/class-amp-dom-utils.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/utils/class-amp-html-utils.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/utils/class-amp-string-utils.php' );
@@ -18,7 +21,12 @@ require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-playbuzz-sani
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-rule-spec.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-allowed-tags-generated.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-tag-and-attribute-sanitizer.php' );
-require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-gallery-block-sanitizer.php' );
+global $wp_version;
+if ( version_compare( $wp_version, '5.3', '>=' ) ) {
+	require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-gallery-block-sanitizer-5-3.php' );
+}else{
+	require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-gallery-block-sanitizer.php' );
+}
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-block-sanitizer.php' );
 
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-twitter-embed.php' );
@@ -34,6 +42,14 @@ require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-pinterest-embed.p
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-wistia-embed.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-core-block-handler.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-playlist-embed-handler.php' );
+
+if ( file_exists( AMPFORWP_PLUGIN_DIR .'includes/vendor/css-parser/autoload.php' ) ) {
+	require_once AMPFORWP_PLUGIN_DIR .'includes/vendor/css-parser/autoload.php';
+}
+
+require_once( AMP__VENDOR__DIR__ . 'includes/sanitizers/class-amp-tree-style-sanitizer.php' );
+
+require_once( AMPFORWP_PLUGIN_DIR . 'includes/vendor/css-parser/parser-helper-function.php' );
 
 class AMP_Post_Template {
 	const SITE_ICON_SIZE = 32;
@@ -113,10 +129,11 @@ class AMP_Post_Template {
 		if ( isset( $this->data[ $property ] ) ) {
 			return $this->data[ $property ];
 		} else {
-			_doing_it_wrong( __METHOD__, sprintf( esc_html__( 'Called for non-existant key ("%s").', 'accelerated-mobile-pages' ), esc_html( $property ) ), '0.1' );
+			//_doing_it_wrong( __METHOD__, sprintf( esc_html__( 'Called for non-existant key ("%s").', 'accelerated-mobile-pages' ), esc_html( $property ) ), '0.1' );
+			
+			// We commented the below line because php notice as per #3967
+			return $default;
 		}
-
-		return $default;
 	}
 	public function set( $property, $value = '' ) {
 		if ( isset( $this->data[ $property ]  ) ) {
@@ -262,8 +279,11 @@ class AMP_Post_Template {
 	}
 
 	private function build_post_content() {
-		if( !empty($this->post->post_content) && false === ampforwp_is_home() && false === is_archive() ){
-			$new_post_content = $this->post->post_content;
+		if(false === ampforwp_is_home() && false === is_archive() ){
+			if(!empty($this->post->post_content))
+				$new_post_content = $this->post->post_content;
+			else
+				$new_post_content = '';
 			// #2001 Filter to remove the unused JS from the paginated post
 			$new_post_content = apply_filters( 'ampforwp_post_content_filter', $new_post_content );
 
@@ -301,7 +321,14 @@ class AMP_Post_Template {
 				)
 			);
 
-			$this->add_data_by_key( 'post_amp_content', $amp_content->get_amp_content() );
+			$amp_con = $amp_content->get_amp_content();
+			if(function_exists('ampforwp_mistape_plugin_compatibility')){
+				$amp_con = ampforwp_mistape_plugin_compatibility($amp_con);
+			}
+			if(function_exists('ampforwp_add_fallback_element')){
+				$amp_con = ampforwp_add_fallback_element($amp_con,'amp-img');
+			}
+			$this->add_data_by_key( 'post_amp_content', $amp_con);
 			$this->merge_data_for_key( 'amp_component_scripts', $amp_content->get_amp_scripts() );
 			$this->merge_data_for_key( 'post_amp_styles', $amp_content->get_amp_styles() );
 		}else{
@@ -311,6 +338,7 @@ class AMP_Post_Template {
 		}
 	}
 
+	
 	private function build_post_featured_image() {
 		$post_id = $this->ID;
 		$image_size = apply_filters( 'ampforwp_featured_image_size', 'large' );
@@ -441,7 +469,7 @@ class AMP_Post_Template {
 		if ( $lang ) {
 			$attributes['lang'] = $lang;
 		}
-
+		$attributes = apply_filters('ampforwp_modify_html_attributes', $attributes);
 		$this->add_data_by_key( 'html_tag_attributes', $attributes );
 	}
 

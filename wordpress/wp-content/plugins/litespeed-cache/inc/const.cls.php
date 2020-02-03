@@ -70,6 +70,7 @@ class LiteSpeed_Cache_Const
 	const OPID_ENABLED_RADIO = 'radio_select' ;
 
 	const OPT_AUTO_UPGRADE = 'auto_upgrade' ;
+	const OPT_NEWS = 'news' ;
 	const OPID_CACHE_PRIV = 'cache_priv' ;
 	const OPID_CACHE_COMMENTER = 'cache_commenter' ;
 	const OPID_CACHE_REST = 'cache_rest' ;
@@ -432,6 +433,7 @@ class LiteSpeed_Cache_Const
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::OPID_ENABLED_RADIO => $default_radio,
 			self::OPT_AUTO_UPGRADE => false,
+			self::OPT_NEWS => false,
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_PRIV => true,
 			self::OPID_CACHE_COMMENTER => true,
@@ -562,11 +564,11 @@ class LiteSpeed_Cache_Const
 			self::CRWL_CRON_ACTIVE => false,
 		) ;
 
-		if ( LSWCP_ESI_SUPPORT ) {
+		// if ( LSWCP_ESI_SUPPORT ) {
 			$default_options[self::OPID_ESI_ENABLE] = false ;
 			$default_options[self::OPID_ESI_CACHE_ADMBAR] = true ;
 			$default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
-		}
+		// }
 
 		// Load default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {

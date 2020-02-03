@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the UpdraftPlus package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2017-01-31 22:41:56+0000\n"
+"PO-Revision-Date: 2019-11-15 06:22:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,37 +13,37 @@ msgstr ""
 
 #: src/admin.php:5374
 msgid "Clone region:"
-msgstr ""
+msgstr "Wilayah klon:"
 
 #: src/udaddons/updraftplus-addons.php:268,
 #: src/udaddons/updraftplus-addons.php:280
 msgid "go here"
-msgstr ""
+msgstr "kesini"
 
 #: src/udaddons/updraftplus-addons.php:268,
 #: src/udaddons/updraftplus-addons.php:280
 msgid "If you have already renewed, then you need to allocate a licence to this site - %s"
-msgstr ""
+msgstr "Jika Anda telah memperbarui, maka Anda perlu mengalokasikan lisensi ke situs ini - %s"
 
 #: src/addons/onedrive.php:864
 msgid "Authentication"
-msgstr ""
+msgstr "Otentikasi"
 
 #: src/admin.php:926
 msgid "You must select at least one remote storage destination to upload this backup set to."
-msgstr ""
+msgstr "Anda harus memilih setidaknya satu tujuan penyimpanan jarak jauh untuk mengunggah set cadangan ini."
 
 #: src/templates/wp-admin/settings/form-contents.php:350
 msgid "Read more about Easy Updates Manager"
-msgstr ""
+msgstr "Baca lebih lanjut tentang Easy Updates Manager"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:68
 msgid "You can find out more about clone keys here."
-msgstr ""
+msgstr "Anda dapat mengetahui lebih lanjut tentang kunci klon di sini."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:57
 msgid "Or, use an UpdraftClone key"
-msgstr ""
+msgstr "Atau, gunakan kunci UpdraftClone"
 
 #: src/restorer.php:2493
 msgid "Found SET NAMES %s, but changing to %s as suggested by WPDB::determine_charset()."
@@ -51,11 +51,11 @@ msgstr ""
 
 #: src/admin.php:953
 msgid "UpdraftClone key is required."
-msgstr ""
+msgstr "Diperlukan kunci UpdraftClone."
 
 #: src/admin.php:944
 msgid "The preparation of the clone data has been aborted."
-msgstr ""
+msgstr "Persiapan data klon telah dibatalkan."
 
 #: src/addons/azure.php:646
 msgid "Azure Government"
@@ -63,11 +63,11 @@ msgstr ""
 
 #: src/templates/wp-admin/settings/form-contents.php:350
 msgid "Ask WordPress to automatically update UpdraftPlus when it finds an available update."
-msgstr ""
+msgstr "Mintalah WordPress untuk memperbarui UpdraftPlus secara otomatis ketika menemukan pembaruan yang tersedia."
 
 #: src/templates/wp-admin/settings/form-contents.php:349
 msgid "Automatic updates"
-msgstr ""
+msgstr "Pembaruan otomatis"
 
 #: src/restorer.php:2092, src/restorer.php:2134
 msgid "Your database user does not have permission to drop tables"
@@ -75,11 +75,11 @@ msgstr ""
 
 #: src/admin.php:2962
 msgid "Ask WordPress to update UpdraftPlus automatically when an update is available"
-msgstr ""
+msgstr "Mintalah WordPress untuk memperbarui UpdraftPlus secara otomatis ketika pembaruan tersedia"
 
 #: src/addons/googlecloud.php:997
 msgid "You must add the following as the authorized redirect URI (under \"More Options\") when asked"
-msgstr ""
+msgstr "Anda harus menambahkan yang berikut ini sebagai URI pengalihan resmi (di bawah \"Opsi Lainnya\") ketika ditanya"
 
 #: src/addons/googlecloud.php:991
 msgid "%s does not allow authorization of sites hosted on direct IP addresses. You will need to change your site's address (%s) before you can use %s for storage."
@@ -87,47 +87,47 @@ msgstr ""
 
 #: src/addons/googlecloud.php:57
 msgid "Frankfurt"
-msgstr ""
+msgstr "Frankfurt"
 
 #: src/addons/googlecloud.php:56
 msgid "London"
-msgstr ""
+msgstr "London"
 
 #: src/addons/googlecloud.php:55
 msgid "Belgium"
-msgstr ""
+msgstr "Belgium"
 
 #: src/addons/googlecloud.php:54
 msgid "Sydney"
-msgstr ""
+msgstr "Sydney"
 
 #: src/addons/googlecloud.php:53
 msgid "Singapore"
-msgstr ""
+msgstr "Singapura"
 
 #: src/addons/googlecloud.php:52
 msgid "Tokyo"
-msgstr ""
+msgstr "Tokyo"
 
 #: src/addons/googlecloud.php:51
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 #: src/addons/googlecloud.php:50
 msgid "Oregon"
-msgstr ""
+msgstr "Oregon"
 
 #: src/addons/googlecloud.php:49
 msgid "North Virginia"
-msgstr ""
+msgstr "Virginia Utara"
 
 #: src/addons/googlecloud.php:48
 msgid "South Carolina"
-msgstr ""
+msgstr "Karolina Selatan"
 
 #: src/addons/googlecloud.php:47
 msgid "Iowa"
-msgstr ""
+msgstr "Iowa"
 
 #: src/includes/class-commands.php:949
 msgid "The creation of your data for creating the clone should now begin. N.B. You will be charged one token once the clone is ready. If the clone fails to boot, then no token will be taken."
@@ -135,429 +135,429 @@ msgstr ""
 
 #: src/templates/wp-admin/settings/file-backup-exclude.php:11
 msgid "Confirm change"
-msgstr ""
+msgstr "Memastikan perubahan"
 
 #: src/templates/wp-admin/settings/exclude-settings-modal/exclude-panel-submit.php:3,
 #: src/templates/wp-admin/settings/file-backup-exclude.php:18
 msgid "Add an exclusion rule"
-msgstr ""
+msgstr "Tambahkan aturan pengecualian"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:59
 msgid "Type a file prefix"
-msgstr ""
+msgstr "Ketikkan awalan berkas"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:56,
 #: src/templates/wp-admin/settings/exclude-modal.php:58
 msgid "All files beginning with these characters"
-msgstr ""
+msgstr "Semua berkas dimulai dengan karakter ini"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:47
 msgid "Type an extension like zip"
-msgstr ""
+msgstr "Ketikkan ekstensi seperti zip"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:28
 msgid "Select a file/folder which you would like to exclude"
-msgstr ""
+msgstr "Pilih berkas/direktori yang ingin Anda kecualikan"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:15
 msgid "All files beginning with given characters"
-msgstr ""
+msgstr "Semua berkas dimulai dengan karakter yang diberikan"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:12,
 #: src/templates/wp-admin/settings/exclude-modal.php:44,
 #: src/templates/wp-admin/settings/exclude-modal.php:46
 msgid "All files with this extension"
-msgstr ""
+msgstr "Semua berkas dengan ekstensi ini"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:9,
 #: src/templates/wp-admin/settings/exclude-modal.php:22
 msgid "File/directory"
-msgstr ""
+msgstr "Berkas/direktori"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:6
 msgid "Select a way to exclude files or directories from the backup"
-msgstr ""
+msgstr "Pilih cara untuk mengecualikan file atau direktori dari cadangan"
 
 #: src/templates/wp-admin/settings/exclude-modal.php:2
 msgid "Exclude files/directories"
-msgstr ""
+msgstr "Kecualikan berkas/direktori"
 
 #: src/includes/updraftclone/temporary-clone-status.php:422
 msgid "To read FAQs/documentation about UpdraftClone, go here."
-msgstr ""
+msgstr "Untuk membaca Pertanyaan Umum/dokumentasi tentang UpdraftClone, buka di sini."
 
 #: src/includes/updraftclone/temporary-clone-status.php:421
 msgid "your UpdraftPlus.com account"
-msgstr ""
+msgstr "akun UpdraftPlus.com Anda"
 
 #: src/includes/updraftclone/temporary-clone-status.php:421
 msgid "You can check the progress here or in %s"
-msgstr ""
+msgstr "Anda dapat memeriksa progresnya di sini atau dalam %s"
 
 #: src/includes/updraftclone/temporary-clone-status.php:421
 msgid "Your UpdraftClone is still setting up."
-msgstr ""
+msgstr "UpdraftClone Anda masih disiapkan."
 
 #: src/includes/updraftclone/temporary-clone-status.php:378
 msgid "%s archives remain"
-msgstr ""
+msgstr "Arsip %s tetap ada"
 
 #: src/includes/updraftclone/temporary-clone-status.php:378
 msgid "The site data has all been received, and its import has begun."
-msgstr ""
+msgstr "Semua data situs telah diterima, dan impornya telah dimulai."
 
 #: src/includes/updraftclone/temporary-clone-status.php:373
 msgid "The sending of the site data has begun. So far %s data archives totalling %s have been received"
-msgstr ""
+msgstr "Pengiriman data situs telah dimulai. Sejauh ini %s arsip data dengan jumlah %s telah diterima"
 
 #: src/includes/updraftclone/temporary-clone-status.php:369
 msgid "WordPress installed; now awaiting the site data to be sent."
-msgstr ""
+msgstr "WordPress diinstal; sekarang menunggu data situs untuk dikirim."
 
 #: src/includes/updraftclone/temporary-clone-status.php:94
 msgid "Clone ready"
-msgstr ""
+msgstr "Klon siap"
 
 #: src/includes/updraftclone/temporary-clone-status.php:86
 msgid "Site data has been deployed"
-msgstr ""
+msgstr "Data situs telah digunakan"
 
 #: src/includes/updraftclone/temporary-clone-status.php:84,
 #: src/includes/updraftclone/temporary-clone-status.php:347
 msgid "Deploying site data"
-msgstr ""
+msgstr "Menyebarkan data situs"
 
 #: src/includes/updraftclone/temporary-clone-status.php:75
 msgid "Site data received"
-msgstr ""
+msgstr "Data situs diterima"
 
 #: src/includes/updraftclone/temporary-clone-status.php:73,
 #: src/includes/updraftclone/temporary-clone-status.php:344
 msgid "Receiving site data"
-msgstr ""
+msgstr "Menerima data situs"
 
 #: src/includes/updraftclone/temporary-clone-status.php:66,
 #: src/includes/updraftclone/temporary-clone-status.php:341
 msgid "WordPress installed"
-msgstr ""
+msgstr "WordPress terpasang"
 
 #: src/admin.php:5428
 msgid "Your clone has started, network information is not yet available but will be displayed here and at your updraftplus.com account once it is ready."
-msgstr ""
+msgstr "Klon Anda sudah mulai, informasi jaringan belum tersedia tetapi akan ditampilkan di sini dan di akun updraftplus.com Anda setelah siap."
 
 #: src/admin.php:3828
 msgid "Exclude these from"
-msgstr ""
+msgstr "Kecualikan ini dari"
 
 #: src/admin.php:952
 msgid "The exclusion rule which you are trying to add already exists"
-msgstr ""
+msgstr "Aturan pengecualian yang Anda coba tambahkan sudah ada"
 
 #: src/admin.php:951
 msgid "Please enter a valid file name prefix"
-msgstr ""
+msgstr "Silakan masukkan awalan nama berkas yang valid"
 
 #: src/admin.php:950
 msgid "Please enter characters that begin the filename which you would like to exclude"
-msgstr ""
+msgstr "Silakan masukkan karakter yang memulai nama file yang ingin Anda kecualikan"
 
 #: src/admin.php:949
 msgid "Please enter a valid file extension"
-msgstr ""
+msgstr "Silakan masukkan ekstensi berkas yang valid"
 
 #: src/admin.php:948
 msgid "Please enter a file extension, like zip"
-msgstr ""
+msgstr "Silakan masukkan ekstensi berkas, seperti zip"
 
 #: src/admin.php:947
 msgid "Please select a file/folder which you would like to exclude"
-msgstr ""
+msgstr "Silakan pilih berkas/direktori yang ingin Anda kecualikan"
 
 #: src/admin.php:946
 msgid "Are you sure you want to remove this exclusion rule?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin menghapus aturan pengecualian ini?"
 
 #: src/templates/wp-admin/advanced/site-info.php:104
 msgid "log results to console"
-msgstr ""
+msgstr "mencatat hasil ke konsol"
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:42
 msgid "Each time your clone renews it costs 1 token, which lasts for 1 week. You can shut this clone down at the following link:"
-msgstr ""
+msgstr "Setiap kali klon Anda memperbarui biayanya 1 token, yang berlangsung selama 1 minggu. Anda dapat mematikan klon ini di tautan berikut:"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:41
 msgid "To create a temporary clone you need credit in your account."
-msgstr ""
+msgstr "Untuk membuat klon sementara Anda membutuhkan kredit di akun Anda."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:22
 msgid "Read FAQs here."
-msgstr ""
+msgstr "Baca Pertanyaan Umum di sini."
 
 #: src/methods/dropbox.php:305, src/methods/dropbox.php:321
 msgid "failed to upload file to %s (see log file for more)"
-msgstr ""
+msgstr "gagal mengunggah berkas ke %s (lihat berkas log untuk lebih lanjut)"
 
 #: src/admin.php:5424
 msgid "Dashboard:"
-msgstr ""
+msgstr "Dasbor:"
 
 #: src/admin.php:5423
 msgid "Front page:"
-msgstr ""
+msgstr "Halaman Depan:"
 
 #: src/admin.php:5422
 msgid "Your clone has started and will be available at the following URLs once it is ready."
-msgstr ""
+msgstr "Klon Anda sudah mulai dan akan tersedia di URL berikut setelah siap."
 
 #: src/includes/class-commands.php:906
 msgid "manage"
-msgstr ""
+msgstr "mengelola"
 
 #: src/includes/class-commands.php:906
 msgid "Current clones"
-msgstr ""
+msgstr "Klon saat ini"
 
 #: src/class-updraftplus.php:2992
 msgid "Your clone will now deploy this data to re-create your site."
-msgstr ""
+msgstr "Klon Anda sekarang akan menggunakan data ini untuk membuat kembali situs Anda."
 
 #: src/admin.php:943
 msgid "The clone has been provisioned, and its data has been sent to it. Once the clone has finished deploying it, you will receive an email."
-msgstr ""
+msgstr "Klon telah disediakan, dan datanya telah dikirim ke sana. Setelah klon selesai menyebarkannya, Anda akan menerima email."
 
 #: src/addons/migrator.php:1745
 msgid "Site key"
-msgstr ""
+msgstr "Kunci situs"
 
 #: src/addons/migrator.php:1736
 msgid "Add a site"
-msgstr ""
+msgstr "Tambahkan situs"
 
 #: src/addons/migrator.php:229, src/addons/migrator.php:1731,
 #: src/addons/migrator.php:1752
 msgid "back"
-msgstr ""
+msgstr "kembali"
 
 #: src/addons/migrator.php:195
 msgid "Read this article to see step-by-step how it's done."
-msgstr ""
+msgstr "Baca artikel ini untuk melihat langkah demi langkah cara melakukannya."
 
 #: src/addons/migrator.php:189,
 #: src/templates/wp-admin/settings/migrator-no-migrator.php:6
 msgid "Migrate (create a copy of a site on hosting you control)"
-msgstr ""
+msgstr "Migrasikan (buat salinan situs di hosting yang Anda kontrol)"
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:42
 msgid "Manage your clones"
-msgstr ""
+msgstr "Kelola klon Anda"
 
 #: src/templates/wp-admin/settings/existing-backups-table.php:158
 msgid "Use ctrl / cmd + press to select several items"
-msgstr ""
+msgstr "Gunakan ctrl / cmd + tekan untuk memilih beberapa item"
 
 #: src/methods/dreamobjects.php:20
 msgid "Closing 1st October 2018"
-msgstr ""
+msgstr "Penutupan 1 Oktober 2018"
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:41
 msgid "Your clone will renew on:"
-msgstr ""
+msgstr "Klon Anda akan diperbarui pada:"
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:32
 msgid "Unable to get renew date"
-msgstr ""
+msgstr "Tidak dapat memperoleh tanggal pembaruan"
 
 #: src/admin.php:906
 msgid "The backup was aborted"
-msgstr ""
+msgstr "Cadangan dibatalkan"
 
 #: src/addons/onedrive.php:1197
 msgid "OneDrive Germany"
-msgstr ""
+msgstr "OneDrive Jerman"
 
 #: src/addons/onedrive.php:1196
 msgid "OneDrive International"
-msgstr ""
+msgstr "OneDrive International"
 
 #: src/addons/onedrive.php:1193
 msgid "Account type"
-msgstr ""
+msgstr "Jenis akun"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:56,
 #: src/templates/wp-admin/settings/temporary-clone.php:76
 msgid "I accept the UpdraftClone terms and conditions"
-msgstr ""
+msgstr "Saya menerima syarat dan ketentuan UpdraftClone"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:56
 msgid "Not got an account? Get one by buying some tokens here."
-msgstr ""
+msgstr "Belum punya akun? Dapatkan satu dengan membeli beberapa token di sini."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:22,
 #: src/templates/wp-admin/settings/temporary-clone.php:41,
 #: src/templates/wp-admin/settings/temporary-clone.php:54
 msgid "You can buy UpdraftClone tokens from our shop, here."
-msgstr ""
+msgstr "Anda dapat membeli token UpdraftClone dari toko kami, di sini."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:54
 msgid "To create a temporary clone you need: 1) credit in your account and 2) to connect to your account, below."
-msgstr ""
+msgstr "Untuk membuat klon sementara Anda perlu: 1) kredit di akun Anda dan 2) untuk terhubung ke akun Anda, di bawah ini."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:32
 msgid "If you want, test upgrading to a different PHP or WP version."
-msgstr ""
+msgstr "Jika Anda mau, uji peningkatan ke versi PHP atau WP yang berbeda."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:32
 msgid "Flexible"
-msgstr ""
+msgstr "Fleksibel"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:31
 msgid "Takes just the time needed to create a backup and send it."
-msgstr ""
+msgstr "Hanya membutuhkan waktu untuk membuat cadangan dan mengirimkannya."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:31
 msgid "Fast"
-msgstr ""
+msgstr "Cepat"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:30
 msgid "One VPS (Virtual Private Server) per clone, shared with nobody."
-msgstr ""
+msgstr "Satu VPS (Virtual Private Server) per klon, dibagikan kepada siapa pun."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:30
 msgid "Secure"
-msgstr ""
+msgstr "Aman"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:29
 msgid "Runs on capacity from a leading cloud computing provider."
-msgstr ""
+msgstr "Berjalan pada kapasitas dari penyedia cloud computing terkemuka."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:29
 msgid "Reliable"
-msgstr ""
+msgstr "Andal"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:28
 msgid "Press the buttons... UpdraftClone does the work."
-msgstr ""
+msgstr "Tekan tombol... UpdraftClone yang berfungsi."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:28
 msgid "Easy"
-msgstr ""
+msgstr "Mudah"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:22
 msgid "A temporary clone is an instant copy of this website, running on our servers. Rather than test things on your live site, you can UpdraftClone it, and then throw away your clone when done."
-msgstr ""
+msgstr "Klon sementara adalah salinan instan situs web ini, yang berjalan di server kami. Daripada menguji hal-hal di situs langsung Anda, Anda dapat UpdraftClone itu, dan kemudian membuang klon Anda setelah selesai."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:10,
 #: src/templates/wp-admin/settings/temporary-clone.php:39
 msgid "Create a temporary clone on our servers (UpdraftClone)"
-msgstr ""
+msgstr "Buat klon sementara di server kami (UpdraftClone)"
 
 #: src/templates/wp-admin/settings/tab-addons.php:23
 msgid "WooCommerce plugins"
-msgstr ""
+msgstr "Plugin WooCommerce"
 
 #: src/templates/wp-admin/advanced/wipe-settings.php:13
 msgid "Reset tour"
-msgstr ""
+msgstr "Setel ulang tur"
 
 #: src/templates/wp-admin/advanced/wipe-settings.php:12
 msgid "Press this button to take a tour of the plugin."
-msgstr ""
+msgstr "Tekan tombol ini untuk melakukan tur plugin."
 
 #: src/includes/updraftplus-tour.php:232
 msgid "Take Tour"
-msgstr ""
+msgstr "Ambil tur"
 
 #: src/includes/updraftplus-tour.php:182
 msgid "Log in here to enable all the features you have access to."
-msgstr ""
+msgstr "Masuk di sini untuk mengaktifkan semua fitur yang Anda miliki aksesnya."
 
 #: src/includes/updraftplus-tour.php:181
 msgid "Connect to updraftplus.com"
-msgstr ""
+msgstr "Sambungkan ke updraftplus.com"
 
 #: src/includes/updraftplus-tour.php:172
 msgid "Thank you for taking the tour. You are now all set to use UpdraftPlus!"
-msgstr ""
+msgstr "Terima kasih telah mengikuti tur. Anda sekarang siap menggunakan UpdraftPlus!"
 
 #: src/includes/updraftplus-tour.php:160
 msgctxt "Translators: UpdraftVault is a product name and should not be translated."
 msgid "To get started with UpdraftVault, select one of the options below:"
-msgstr ""
+msgstr "Untuk memulai dengan UpdraftVault, pilih salah satu opsi di bawah ini:"
 
 #: src/includes/updraftplus-tour.php:156,
 #: src/includes/updraftplus-tour.php:174, src/includes/updraftplus-tour.php:185
 msgid "Finish"
-msgstr ""
+msgstr "Selesai"
 
 #: src/includes/updraftplus-tour.php:153
 msgid "UpdraftPlus Premium has many more exciting features!"
-msgstr ""
+msgstr "UpdraftPlus Premium memiliki banyak fitur menarik lainnya!"
 
 #: src/includes/updraftplus-tour.php:152
 msgid "UpdraftPlus Premium and addons"
-msgstr ""
+msgstr "Premium dan addon UpdraftPlus"
 
 #: src/includes/updraftplus-tour.php:150, src/includes/updraftplus-tour.php:179
 msgid "Thank you for taking the tour."
-msgstr ""
+msgstr "Terima kasih telah mengikuti tur."
 
 #: src/includes/updraftplus-tour.php:145
 msgid "Do you have a few more WordPress sites you want to backup? If yes you can save hours by controlling all your backups in one place from UpdraftCentral."
-msgstr ""
+msgstr "Apakah Anda memiliki beberapa situs WordPress yang ingin Anda backup? Jika ya, Anda dapat menghemat waktu dengan mengendalikan semua cadangan Anda di satu tempat dari UpdraftCentral."
 
 #: src/includes/updraftplus-tour.php:144
 msgid "Control all your backups in one place"
-msgstr ""
+msgstr "Kontrol semua cadangan Anda di satu tempat"
 
 #: src/includes/updraftplus-tour.php:139
 msgid "Congratulations, your settings have successfully been saved."
-msgstr ""
+msgstr "Selamat, pengaturan Anda telah berhasil disimpan."
 
 #: src/includes/updraftplus-tour.php:135
 msgid "Press here to save your settings."
-msgstr ""
+msgstr "Tekan di sini untuk menyimpan pengaturan Anda."
 
 #: src/includes/updraftplus-tour.php:134, src/includes/updraftplus-tour.php:138
 msgid "Save"
-msgstr ""
+msgstr "Menyimpan"
 
 #: src/includes/updraftplus-tour.php:131
 msgid "Look through the other settings here, making any changes you’d like."
-msgstr ""
+msgstr "Lihat melalui pengaturan lain di sini, buat perubahan apa pun yang Anda suka."
 
 #: src/includes/updraftplus-tour.php:130
 msgid "More settings"
-msgstr ""
+msgstr "Lebih banyak pengaturan"
 
 #: src/includes/updraftplus-tour.php:126,
 #: src/includes/updraftplus-tour.php:153,
 #: src/templates/wp-admin/settings/temporary-clone.php:22
 msgid "Find out more here."
-msgstr ""
+msgstr "Cari tahu lebih lanjut di sini."
 
 #: src/includes/updraftplus-tour.php:125
 msgid "UpdraftVault is our remote storage which works seamlessly with UpdraftPlus."
-msgstr ""
+msgstr "UpdraftVault adalah penyimpanan jarak jauh kami yang berfungsi mulus dengan UpdraftPlus."
 
 #: src/includes/updraftplus-tour.php:122
 msgid "Now select a remote storage destination to protect against server-wide threats. If not, your backups remain on the same server as your site."
-msgstr ""
+msgstr "Sekarang pilih tujuan penyimpanan jarak jauh untuk melindungi dari ancaman di seluruh server. Jika tidak, cadangan Anda tetap di server yang sama dengan situs Anda."
 
 #: src/includes/updraftplus-tour.php:118
 msgid "Choose the schedule that you want your backups to run on."
-msgstr ""
+msgstr "Pilih jadwal yang Anda inginkan untuk menjalankan pencadangan Anda."
 
 #: src/includes/updraftplus-tour.php:117
 msgid "Choose your backup schedule"
-msgstr ""
+msgstr "Pilih jadwal cadangan Anda"
 
 #: src/includes/updraftplus-tour.php:113
 msgid "Congratulations! Your first backup is running."
-msgstr ""
+msgstr "Selamat! Cadangan pertama Anda sedang berjalan."
 
 #: src/includes/updraftplus-tour.php:109, src/includes/updraftplus-tour.php:114
 msgid "Go to settings"
-msgstr ""
+msgstr "Pergi ke pengaturan"
 
 #: src/includes/updraftplus-tour.php:108, src/includes/updraftplus-tour.php:113
 msgctxt "Translators: %s is a bold tag."
@@ -566,19 +566,19 @@ msgstr ""
 
 #: src/includes/updraftplus-tour.php:108
 msgid "Press here to run a manual backup."
-msgstr ""
+msgstr "Tekan di sini untuk menjalankan pencadangan manual."
 
 #: src/includes/updraftplus-tour.php:107, src/includes/updraftplus-tour.php:112
 msgid "Creating your first backup"
-msgstr ""
+msgstr "Membuat cadangan pertama Anda"
 
 #: src/includes/updraftplus-tour.php:104
 msgid "Select what you want to backup"
-msgstr ""
+msgstr "Pilih apa yang ingin Anda cadangkan"
 
 #: src/includes/updraftplus-tour.php:103
 msgid "Manual backup options"
-msgstr ""
+msgstr "Opsi pencadangan manual"
 
 #: src/includes/updraftplus-tour.php:100
 msgctxt "updraftplus"
@@ -587,15 +587,15 @@ msgstr ""
 
 #: src/includes/updraftplus-tour.php:99
 msgid "Your first backup"
-msgstr ""
+msgstr "Cadangan pertama Anda"
 
 #: src/includes/updraftplus-tour.php:95
 msgid "Press here to start!"
-msgstr ""
+msgstr "Tekan di sini untuk memulai!"
 
 #: src/includes/updraftplus-tour.php:92
 msgid "the world’s most trusted backup plugin!"
-msgstr ""
+msgstr "plugin cadangan paling tepercaya di dunia!"
 
 #: src/includes/updraftplus-tour.php:92
 msgid "Welcome to UpdraftPlus"
@@ -607,63 +607,63 @@ msgstr ""
 
 #: src/includes/updraftplus-tour.php:88
 msgid "End tour"
-msgstr ""
+msgstr "Akhiri tur"
 
 #: src/includes/updraftplus-tour.php:87
 msgid "Skip this step"
-msgstr ""
+msgstr "Lewati langkah ini"
 
 #: src/includes/updraftplus-tour.php:86
 msgid "Back"
-msgstr ""
+msgstr "Kembali"
 
 #: src/includes/class-commands.php:893
 msgid "You can buy more temporary clone tokens here."
-msgstr ""
+msgstr "Anda dapat membeli lebih banyak token klon sementara di sini."
 
 #: src/admin.php:5379
 msgid "Forbid non-administrators to login to WordPress on your clone"
-msgstr ""
+msgstr "Melarang non-administrator untuk masuk ke WordPress di klon Anda"
 
 #: src/templates/wp-admin/settings/temporary-clone.php:35
 msgid "Temporary clones of WordPress multisite installations are not yet supported. See our documentation on how to carry out a normal migration here"
-msgstr ""
+msgstr "Klon sementara instalasi multisite WordPress belum didukung. Lihat dokumentasi kami tentang cara melakukan migrasi normal di sini"
 
 #: src/templates/wp-admin/settings/tab-addons.php:247
 msgid "Premium / Find out more"
-msgstr ""
+msgstr "Premium / Cari tahu lebih lanjut"
 
 #: src/templates/wp-admin/settings/tab-addons.php:22
 msgid "Other great plugins"
-msgstr ""
+msgstr "Plugin hebat lainnya"
 
 #: src/admin.php:5426, src/admin.php:5429
 msgid "You can find your temporary clone information in your updraftplus.com account here."
-msgstr ""
+msgstr "Anda dapat menemukan informasi klon sementara di akun updraftplus.com Anda di sini."
 
 #: src/class-updraftplus.php:4177
 msgid "Choose a default for each table"
-msgstr ""
+msgstr "Pilih default untuk setiap tabel"
 
 #: src/admin.php:3276
 msgid "Sending files to remote site"
-msgstr ""
+msgstr "Mengirim berkas ke situs jarak jauh"
 
 #: src/admin.php:3271
 msgid "Clone server being provisioned and booted (can take several minutes)"
-msgstr ""
+msgstr "Server klon disediakan dan di-boot (bisa memakan waktu beberapa menit)"
 
 #: src/admin.php:942
 msgid "Warning: you have selected a lower version than your currently installed version. This may fail if you have components that are incompatible with earlier versions."
-msgstr ""
+msgstr "Peringatan: Anda telah memilih versi yang lebih rendah dari versi yang diinstal saat ini. Ini mungkin gagal jika Anda memiliki komponen yang tidak kompatibel dengan versi sebelumnya."
 
 #: src/addons/migrator.php:233
 msgid "To import a backup set, go to the \"Existing Backups\" section in the \"Backup/Restore\" tab"
-msgstr ""
+msgstr "Untuk mengimpor kumpulan cadangan, buka bagian \"Cadangan yang Ada\" di tab \"Cadangan/Pemulihan\""
 
 #: src/admin.php:2798
 msgid "Backup / Restore"
-msgstr ""
+msgstr "Cadangkan / Kembalikan"
 
 #: src/admin.php:663
 msgid "Backup"
@@ -691,55 +691,55 @@ msgstr ""
 
 #: src/includes/updraftclone/temporary-clone-user-notice.php:32
 msgid "Allow only administrators to log in"
-msgstr ""
+msgstr "Izinkan hanya administrator untuk masuk"
 
 #: src/includes/updraftclone/temporary-clone-user-notice.php:31
 msgid "You can forbid non-admins logins to this cloned site by checking the checkbox below"
-msgstr ""
+msgstr "Anda dapat melarang login non-admin ke situs yang dikloning ini dengan mencentang kotak di bawah in"
 
 #: src/includes/updraftclone/temporary-clone-user-notice.php:30
 msgid "UpdraftPlus temporary clone user login settings:"
-msgstr ""
+msgstr "Pengaturan login sementara pengguna UpdraftPlus sementara:"
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:39
 msgid "Welcome to your UpdraftClone (temporary clone)"
-msgstr ""
+msgstr "Selamat datang di UpdraftClone Anda (klon sementara)"
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:38
 msgid "Refresh connection"
-msgstr ""
+msgstr "Segarkan koneksi"
 
 #: src/addons/reporting.php:495
 msgid "Log all messages to syslog"
-msgstr ""
+msgstr "Log semua pesan ke syslog"
 
 #: src/addons/sftp.php:601, src/addons/sftp.php:603
 msgid "The server's RSA key %s fingerprint: %s."
-msgstr ""
+msgstr "Kunci RSA kunci server %s sidik jari: %s."
 
 #: src/addons/sftp.php:597
 msgid "Failed: We are unable to match the fingerprint. However, we were able to log in and move to the indicated directory and successfully create a file in that location."
-msgstr ""
+msgstr "Gagal: Kami tidak dapat mencocokkan sidik jari. Namun, kami dapat masuk dan pindah ke direktori yang ditunjukkan dan berhasil membuat file di lokasi itu."
 
 #: src/addons/sftp.php:478
 msgid "MD5 (128-bit) fingerprint, in hex format - should have the same length and general appearance as this (colons optional): 73:51:43:b1:b5:fc:8b:b7:0a:3a:a9:b1:0f:69:73:a8. Using a fingerprint is not essential, but you are not secure against %s if you do not use one"
-msgstr ""
+msgstr "Sidik jari MD5 (128-bit), dalam format hex - harus memiliki panjang dan penampilan umum yang sama dengan ini (opsional titik dua): 73:51:43:b1:b5:fc:8b:b7:0a:3a:a9:b1:0f:69:73:a8. Menggunakan sidik jari tidak penting, tetapi Anda tidak aman terhadap %s jika tidak menggunakannya"
 
 #: src/addons/sftp.php:475
 msgid "RSA fingerprint"
-msgstr ""
+msgstr "Sidik jari RSA"
 
 #: src/addons/sftp.php:82
 msgid "Fingerprints don't match."
-msgstr ""
+msgstr "Sidik jari tidak cocok."
 
 #: src/templates/wp-admin/settings/migrator-no-migrator.php:17
 msgid "More information here."
-msgstr ""
+msgstr "Informasi lebih lanjut di sini."
 
 #: src/admin.php:671, src/admin.php:2799
 msgid "Migrate / Clone"
-msgstr ""
+msgstr "Migrasi / Klon"
 
 #: src/admin.php:3036, src/admin.php:3961,
 #: src/templates/wp-admin/settings/existing-backups-table.php:73,
@@ -749,97 +749,97 @@ msgstr ""
 
 #: src/addons/wp-cli.php:834
 msgid "You have given the %1$s option. The %1$s is working with \"%2$s\" addon. Get the \"%2$s\" addon: %3$s"
-msgstr ""
+msgstr "Anda telah memberikan opsi %1$s. %1$s bekerja dengan addon \"%2$s\". Dapatkan addon  \"%2$s\": %3$s"
 
 #: src/addons/wp-cli.php:793
 msgid "Your WordPress install has old directories from its state before you restored/migrated (technical information: these are suffixed with -old)."
-msgstr ""
+msgstr "Instalasi WordPress Anda memiliki direktori lama dari statusnya sebelum Anda dipulihkan / dimigrasikan (informasi teknis: ini berakhir dengan yang lama)."
 
 #: src/addons/wp-cli.php:739, src/addons/wp-cli.php:743
 msgid "This is not an incremental backup"
-msgstr ""
+msgstr "Ini bukan cadangan tambahan"
 
 #: src/addons/wp-cli.php:665
 msgid "Run this command to see the log file for this restoration (needed for any support requests)."
-msgstr ""
+msgstr "Jalankan perintah ini untuk melihat berkas log untuk pemulihan ini (diperlukan untuk setiap permintaan dukungan)."
 
 #: src/class-updraftplus.php:188
 msgid "A version of UpdraftPlus is already installed. WordPress will only allow you to install your new version after first de-installing the existing one. That is safe - all your settings and backups will be retained. So, go to the \"Plugins\" page, de-activate and de-install UpdraftPlus, and then try again."
-msgstr ""
+msgstr "Versi UpdraftPlus sudah diinstal. WordPress hanya akan memungkinkan Anda untuk menginstal versi baru Anda setelah terlebih dahulu menghapus versi yang sudah ada. Itu aman - semua pengaturan dan cadangan Anda akan dipertahankan. Jadi, buka halaman \"Plugins\", nonaktifkan dan hapus instal UpdraftPlus, lalu coba lagi."
 
 #: src/admin.php:5402
 msgid "(current version)"
-msgstr ""
+msgstr "(versi sekarang)"
 
 #: src/admin.php:3738
 msgid "press here"
-msgstr ""
+msgstr "tekan di sini"
 
 #: src/addons/onedrive.php:1157, src/methods/dropbox.php:586,
 #: src/methods/googledrive.php:1214
 msgid "this privacy policy"
-msgstr ""
+msgstr "kebijakan privasi ini"
 
 #: src/addons/onedrive.php:1157, src/methods/dropbox.php:586,
 #: src/methods/googledrive.php:1214
 msgid "Please read %s for use of our %s authorization app (none of your backup data is sent to us)."
-msgstr ""
+msgstr "Harap baca %s untuk penggunaan aplikasi otorisasi %s kami (tidak ada data cadangan Anda yang dikirimkan kepada kami)."
 
 #: src/addons/incremental.php:270
 msgid "Tell me more"
-msgstr ""
+msgstr "Ceritakan lebih banyak"
 
 #: src/addons/incremental.php:258
 msgid "And then add an incremental backup"
-msgstr ""
+msgstr "Dan kemudian tambahkan cadangan tambahan"
 
 #: src/addons/incremental.php:236, src/updraftplus.php:99
 msgid "Every hour"
-msgstr ""
+msgstr "Setiap jam"
 
 #: src/includes/class-commands.php:900
 msgid "Create clone"
-msgstr ""
+msgstr "Buat klon"
 
 #: src/includes/class-commands.php:892, src/includes/class-commands.php:937
 msgid "Available temporary clone tokens:"
-msgstr ""
+msgstr "Token klon sementara yang tersedia:"
 
 #: src/admin.php:2886, src/includes/class-commands.php:901,
 #: src/includes/class-commands.php:949,
 #: src/templates/wp-admin/settings/temporary-clone.php:83,
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:71
 msgid "Processing"
-msgstr ""
+msgstr "Pengolahan"
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:70
 msgid "Connect to UpdraftCentral Cloud"
-msgstr ""
+msgstr "Terhubung ke UpdraftCentral Cloud"
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:68
 msgid "UpdraftPlus.Com account terms and policies"
-msgstr ""
+msgstr "Persyaratan dan kebijakan akun UpdraftPlus.Com"
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:68
 msgid "I consent to %s"
-msgstr ""
+msgstr "Saya menyetujui %s"
 
 #: src/admin.php:2984,
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:56
 msgid "One Time Password (check your OTP app to get this password)"
-msgstr ""
+msgstr "Kata Sandi Satu Kali (periksa aplikasi OTP Anda untuk mendapatkan kata sandi ini)"
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:46
 msgid "Login or register with this email address"
-msgstr ""
+msgstr "Masuk atau daftar dengan alamat email ini"
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:34
 msgid "If not, then choose your details and a new account will be registered."
-msgstr ""
+msgstr "Jika tidak, maka pilih detail Anda dan akun baru akan didaftarkan."
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:33
 msgid "If you already have an updraftplus.com account, then enter the details below."
-msgstr ""
+msgstr "Jika Anda sudah memiliki akun updraftplus.com, maka masukkan detail di bawah ini."
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:31
 msgid "Add this website to your UpdraftCentral Cloud dashboard at updraftplus.com."
@@ -901,64 +901,64 @@ msgstr ""
 
 #: src/admin.php:935
 msgid "Perhaps you would want to login instead."
-msgstr ""
+msgstr "Mungkin Anda ingin masuk saja."
 
 #: src/admin.php:934
 msgid "Trouble connecting? Try using an alternative method in the advanced security options."
-msgstr ""
+msgstr "Kesulitan menghubungkan? Coba gunakan metode alternatif dalam opsi keamanan tingkat lanjut."
 
 #: src/admin.php:933
 msgid "An email is required and needs to be in a valid format."
-msgstr ""
+msgstr "Diperlukan email dan harus dalam format yang valid."
 
 #: src/admin.php:932
 msgid "Both email and password fields are required."
-msgstr ""
+msgstr "Kolom email dan kata sandi diperlukan."
 
 #: src/admin.php:931
 msgid "Registration successful."
-msgstr ""
+msgstr "Registrasi berhasil."
 
 #: src/admin.php:930, src/admin.php:931
 msgid "Please follow this link to open %s in a new window."
-msgstr ""
+msgstr "Ikuti tautan ini untuk membuka %s di jendela baru."
 
 #: src/admin.php:930
 msgid "Login successful."
-msgstr ""
+msgstr "Login berhasil."
 
 #: src/admin.php:929,
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:9
 msgid "UpdraftCentral Cloud"
-msgstr ""
+msgstr "UpdraftCentral Cloud"
 
 #: src/admin.php:489
 msgid "Are you sure you want to dismiss all UpdraftPlus news forever?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin mengabaikan semua berita UpdraftPlus selamanya?"
 
 #: src/admin.php:488
 msgid "Dismiss all UpdraftPlus news"
-msgstr ""
+msgstr "Singkirkan semua berita UpdraftPlus"
 
 #: src/admin.php:487
 msgid "UpdraftPlus News"
-msgstr ""
+msgstr "Berita UpdraftPlus"
 
 #: src/addons/wp-cli.php:553
 msgid "Migration key created:"
-msgstr ""
+msgstr "Kunci migrasi dibuat:"
 
 #: src/addons/wp-cli.php:543
 msgid "Missing parameters"
-msgstr ""
+msgstr "Parameter tidak ada"
 
 #: src/addons/azure.php:645
 msgid "Azure Germany"
-msgstr ""
+msgstr "Azure Jerman"
 
 #: src/addons/azure.php:644
 msgid "Azure Global"
-msgstr ""
+msgstr "Azure Global"
 
 #: src/addons/azure.php:641
 msgid "Azure Account"
@@ -1022,19 +1022,19 @@ msgstr ""
 
 #: src/templates/wp-admin/settings/tab-addons.php:154
 msgid "WP-CLI commands to take, list and delete backups."
-msgstr ""
+msgstr "Perintah WP-CLI untuk mengambil, mendaftar dan menghapus cadangan."
 
 #: src/templates/wp-admin/settings/tab-addons.php:153
 msgid "WP-CLI support"
-msgstr ""
+msgstr "Dukungan WP-CLI"
 
 #: src/templates/wp-admin/settings/tab-addons.php:152
 msgid "WP CLI"
-msgstr ""
+msgstr "WP CLI"
 
 #: src/addons/wp-cli.php:265
 msgid "Invalid Job Id"
-msgstr ""
+msgstr "Id Pekerjaan Tidak Valid"
 
 #: src/addons/wp-cli.php:205
 msgid "Backup has been started successfully. You can see the last log message by running the following command: \"%s\""
@@ -1493,11 +1493,11 @@ msgstr ""
 
 #: src/admin.php:4934
 msgid "Your settings failed to save. Please refresh the settings page and try again"
-msgstr ""
+msgstr "Pengaturan anda gagal disimpan. Silahkan muat ulang kembali halaman pengaturan ini dan coba kembali"
 
 #: src/admin.php:4893
 msgid "UpdraftPlus seems to have been updated to version (%s), which is different to the version running when this settings page was loaded. Please reload the settings page before trying to save settings."
-msgstr ""
+msgstr "UpdraftPlus tampaknya telah diperbarui ke versi (%s) yang berbeda dengan versi yang berjalan saat halaman pengaturan ini dimuat. Mohon muat ulang halaman pengaturan ini sebelum mencoba menyimpan pengaturan anda."
 
 #: src/methods/updraftvault.php:71,
 #: src/templates/wp-admin/settings/tab-addons.php:243
@@ -1506,19 +1506,19 @@ msgstr ""
 
 #: src/includes/class-wpadmin-commands.php:529
 msgid "archive"
-msgstr ""
+msgstr "arsip"
 
 #: src/includes/class-wpadmin-commands.php:520
 msgid "Extra database"
-msgstr ""
+msgstr "Ekstra database"
 
 #: src/admin.php:4104
 msgid "Press here to download or browse"
-msgstr ""
+msgstr "Tekan disini untuk mengunduh ataupun menjelajahi"
 
 #: src/admin.php:1334, src/admin.php:1344
 msgid "Error: invalid path"
-msgstr ""
+msgstr "Kesalahan: jalur tidak valid"
 
 #: src/admin.php:1133
 msgid "An error occurred when fetching storage module options: "
@@ -1526,7 +1526,7 @@ msgstr ""
 
 #: src/admin.php:915
 msgid "Loading log file"
-msgstr ""
+msgstr "Memproses file log"
 
 #: src/admin.php:914
 msgid "Unable to download file. This could be caused by a timeout. It would be best to download the zip to your computer."
@@ -1542,23 +1542,23 @@ msgstr ""
 
 #: src/admin.php:911
 msgid "Browsing zip file"
-msgstr ""
+msgstr "Telusuri file zip"
 
 #: src/admin.php:878
 msgid "With UpdraftPlus Premium, you can directly download individual files from here."
-msgstr ""
+msgstr "Dengan UpdraftPlus Premium, anda bisa langsung mengunduh file secara individual dari sini."
 
 #: src/admin.php:824
 msgid "Browse contents"
-msgstr ""
+msgstr "Telusuri konten"
 
 #: src/restorer.php:2219
 msgid "Skipped tables:"
-msgstr ""
+msgstr "Tabel yang terlewati:"
 
 #: src/class-updraftplus.php:4232
 msgid "This database backup has the following WordPress tables excluded: %s"
-msgstr ""
+msgstr "Backup database ini memiliki tabel WordPress berikut yang dikecualikan:%s"
 
 #: src/admin.php:3022
 msgid "With UpdraftPlus Premium, you can choose to backup non-WordPress tables, backup only specified tables, and backup other databases too."
@@ -1566,7 +1566,7 @@ msgstr ""
 
 #: src/admin.php:3022
 msgid "All WordPress tables will be backed up."
-msgstr ""
+msgstr "Semua tabel WordPress akan dicadangkan."
 
 #: src/admin.php:910
 msgid "Further information may be found in the browser JavaScript console, and the server PHP error logs."
@@ -1590,7 +1590,7 @@ msgstr ""
 
 #: src/admin.php:909
 msgid "HTTP code:"
-msgstr ""
+msgstr "Kode HTTP:"
 
 #: src/addons/wp-cli.php:109, src/admin.php:801
 msgid "You have chosen to backup a database, but no tables have been selected"
@@ -2224,7 +2224,7 @@ msgstr ""
 
 #: src/addons/migrator.php:1764, src/central/bootstrap.php:546
 msgid "recommended"
-msgstr ""
+msgstr "direkomendasikan"
 
 #: src/addons/migrator.php:1764, src/central/bootstrap.php:546
 msgid "%s bytes"
@@ -2325,7 +2325,7 @@ msgstr "Masukkan deskripsi"
 
 #: src/central/bootstrap.php:535
 msgid "Description"
-msgstr "Deskripsi"
+msgstr "Keterangan"
 
 #: src/central/bootstrap.php:463
 msgid "Delete..."
@@ -2341,7 +2341,7 @@ msgstr "Akses situs ini sebagai user:"
 
 #: src/central/bootstrap.php:477
 msgid "Details"
-msgstr "Detail"
+msgstr "Rincian"
 
 #: src/central/bootstrap.php:476
 msgid "Key description"
@@ -2397,7 +2397,7 @@ msgstr "Pencadangan dibatalkan oleh user"
 
 #: src/admin.php:4929
 msgid "Your settings have been saved."
-msgstr ""
+msgstr "Pengaturan Anda telah disimpan."
 
 #: src/admin.php:4009
 msgid "Total backup size:"
@@ -2405,7 +2405,7 @@ msgstr ""
 
 #: src/admin.php:3416
 msgid "stop"
-msgstr ""
+msgstr "Berhenti"
 
 #: src/admin.php:905, src/admin.php:3209
 msgid "The backup has finished running"
@@ -2484,7 +2484,7 @@ msgstr ""
 #: src/admin.php:2842, src/templates/wp-admin/notices/horizontal-notice.php:16,
 #: src/templates/wp-admin/notices/horizontal-notice.php:18
 msgid "Dismiss"
-msgstr ""
+msgstr "Abaikan"
 
 #: src/admin.php:891
 msgid "Please fill in the required information."
@@ -2593,7 +2593,7 @@ msgstr ""
 
 #: src/admin.php:4801
 msgid "settings"
-msgstr ""
+msgstr "pengaturan"
 
 #: src/admin.php:4801
 msgid "Backup won't be sent to any remote storage - none has been saved in the %s"
@@ -2646,7 +2646,7 @@ msgstr ""
 
 #: src/admin.php:695
 msgid "Extensions"
-msgstr ""
+msgstr "Ekstensi"
 
 #: src/admin.php:687, src/admin.php:2801
 msgid "Advanced Tools"
@@ -2793,7 +2793,7 @@ msgstr ""
 
 #: src/templates/wp-admin/advanced/site-info.php:56
 msgid "Not installed"
-msgstr ""
+msgstr "Tidak diinstal"
 
 #: src/addons/googlecloud.php:1042, src/addons/s3-enhanced.php:63
 msgid "Storage class"
@@ -2841,7 +2841,7 @@ msgstr "Anda harus menyimpan dan mengautentikasi sebelum dapat mencoba pengatura
 
 #: src/addons/googlecloud.php:541
 msgid "Have not yet obtained an access token from Google - you need to authorize or re-authorize your connection to Google Cloud."
-msgstr ""
+msgstr "Belum memperoleh token akses dari Google - Anda perlu mengesahkan atau mengesahkan kembali koneksi Anda ke Google Cloud."
 
 #: src/addons/googlecloud.php:257, src/addons/googlecloud.php:332,
 #: src/addons/googlecloud.php:897, src/addons/googlecloud.php:947
@@ -6109,7 +6109,7 @@ msgstr ""
 
 #: src/admin.php:2591, src/class-updraftplus.php:4009, src/restorer.php:2647
 msgid "Warning:"
-msgstr ""
+msgstr "Peringatan:"
 
 #: src/class-updraftplus.php:3998, src/class-updraftplus.php:4001,
 #: src/restorer.php:530
@@ -6127,7 +6127,7 @@ msgstr ""
 
 #: src/admin.php:849, src/includes/updraftplus-tour.php:89
 msgid "Close"
-msgstr ""
+msgstr "Tutup"
 
 #: src/addons/autobackup.php:349, src/addons/autobackup.php:441,
 #: src/admin.php:803, src/methods/remotesend.php:69,
@@ -6366,7 +6366,7 @@ msgstr ""
 #: src/methods/openstack2.php:164, src/methods/updraftvault.php:361,
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:50
 msgid "Password"
-msgstr ""
+msgstr "Kata kunci"
 
 #: src/addons/sftp.php:445, src/addons/webdav.php:207
 msgid "Port"
@@ -6423,7 +6423,7 @@ msgstr ""
 
 #: src/addons/morefiles.php:137, src/includes/class-wpadmin-commands.php:523
 msgid "WordPress Core"
-msgstr ""
+msgstr "Inti WordPress"
 
 #: src/methods/addon-base-v2.php:330, src/methods/stream-base.php:375
 msgid "Failed: We were not able to place a file in that directory - please check your credentials."
@@ -6469,15 +6469,15 @@ msgstr ""
 
 #: src/methods/ftp.php:435
 msgid "Success: we successfully logged in, and confirmed our ability to create a file in the given directory (login type:"
-msgstr ""
+msgstr "Berhasil: kami berhasil masuk, dan mengonfirmasi kemampuan kami untuk membuat file di direktori yang diberikan (jenis login:"
 
 #: src/methods/ftp.php:426
 msgid "Failure: we did not successfully log in with those credentials."
-msgstr ""
+msgstr "Kegagalan: kami tidak berhasil masuk dengan kredensial itu."
 
 #: src/methods/ftp.php:408
 msgid "Failure: No server details were given."
-msgstr ""
+msgstr "Kegagalan: Tidak ada detail server yang diberikan."
 
 #: src/methods/ftp.php:373
 msgid "Needs to already exist"
@@ -6485,7 +6485,7 @@ msgstr ""
 
 #: src/methods/ftp.php:336
 msgid "If you want encryption (e.g. you are storing sensitive business data), then an add-on is available."
-msgstr ""
+msgstr "Jika Anda ingin enkripsi (mis. Anda menyimpan data bisnis yang sensitif), maka add-on tersedia."
 
 #: src/addons/onedrive.php:901, src/methods/dropbox.php:821
 msgid "Your %s account name: %s"
@@ -6501,39 +6501,39 @@ msgstr "anda telah mengautentikasikan akun %s Anda"
 
 #: src/methods/dropbox.php:603, src/methods/dropbox.php:605
 msgid "there's an add-on for that."
-msgstr ""
+msgstr "ada add-on untuk itu."
 
 #: src/methods/dropbox.php:603, src/methods/dropbox.php:605
 msgid "If you backup several sites into the same Dropbox and want to organize with sub-folders, then "
-msgstr ""
+msgstr "Jika Anda mencadangkan beberapa situs ke Dropbox yang sama dan ingin mengatur dengan sub-folder, maka"
 
 #: src/methods/dropbox.php:603, src/methods/dropbox.php:605
 msgid "Backups are saved in"
-msgstr ""
+msgstr "Cadangan disimpan dalam"
 
 #: src/methods/dropbox.php:603, src/methods/dropbox.php:605
 msgid "Need to use sub-folders?"
-msgstr ""
+msgstr "Perlu menggunakan sub-folder?"
 
 #: src/methods/dropbox.php:284
 msgid "error: failed to upload file to %s (see log file for more)"
-msgstr ""
+msgstr "kesalahan: gagal mengunggah file ke %s (lihat berkas log untuk lebih lanjut)"
 
 #: src/methods/dropbox.php:195
 msgid "error: %s (see log file for more)"
-msgstr ""
+msgstr "kesalahan: %s (lihat berkas log untuk lebih lanjut)"
 
 #: src/methods/dropbox.php:173, src/methods/dropbox.php:190
 msgid "You do not appear to be authenticated with Dropbox"
-msgstr ""
+msgstr "Anda tampaknya tidak diautentikasi dengan Dropbox"
 
 #: src/methods/s3.php:1160
 msgid "The communication with %s was not encrypted."
-msgstr ""
+msgstr "Komunikasi dengan %s tidak dienkripsi."
 
 #: src/methods/s3.php:1158
 msgid "The communication with %s was encrypted."
-msgstr ""
+msgstr "Komunikasi dengan %s dienkripsi."
 
 #: src/addons/googlecloud.php:839, src/methods/s3.php:1155
 msgid "We accessed the bucket, and were able to create files within it."
@@ -6621,34 +6621,34 @@ msgstr ""
 
 #: src/methods/email.php:92
 msgid "Note:"
-msgstr ""
+msgstr "Catatan:"
 
 #: src/methods/email.php:45
 msgid "WordPress Backup"
-msgstr ""
+msgstr "Backup WordPress"
 
 #: src/methods/cloudfiles.php:575, src/methods/openstack-base.php:530
 msgid "We accessed the container, and were able to create files within it."
-msgstr ""
+msgstr "Kami mengakses wadah, dan dapat membuat file di dalamnya."
 
 #: src/methods/cloudfiles.php:571
 msgid "Cloud Files error - we accessed the container, but failed to create a file within it"
-msgstr ""
+msgstr "Kesalahan File Cloud - kami mengakses wadah, tetapi gagal membuat file di dalamnya"
 
 #: src/methods/cloudfiles.php:544, src/methods/openstack-base.php:472
 msgid "Failure: No container details were given."
-msgstr ""
+msgstr "Kesalahan: Tidak ada detail kontainer yang diberikan."
 
 #: src/addons/moredatabase.php:240, src/addons/sftp.php:452,
 #: src/addons/webdav.php:187, src/methods/cloudfiles-new.php:189,
 #: src/methods/cloudfiles.php:524, src/methods/openstack2.php:158
 msgid "Username"
-msgstr ""
+msgstr "Nama Pengguna"
 
 #: src/methods/cloudfiles-new.php:184, src/methods/cloudfiles.php:519,
 #: src/methods/s3.php:1089
 msgid "API key"
-msgstr ""
+msgstr "Kunci API"
 
 #: src/addons/migrator.php:337, src/addons/moredatabase.php:89,
 #: src/addons/moredatabase.php:91, src/addons/moredatabase.php:93,
@@ -6662,7 +6662,7 @@ msgstr ""
 #: src/methods/openstack2.php:190, src/methods/openstack2.php:195,
 #: src/methods/s3.php:1089, src/methods/s3.php:1093
 msgid "Failure: No %s was given."
-msgstr ""
+msgstr "Kegagalan: Tidak ada %s yang diberikan."
 
 #: src/methods/cloudfiles-new.php:100, src/methods/cloudfiles.php:440,
 #: src/methods/openstack-base.php:571, src/methods/s3.php:863
@@ -6671,7 +6671,7 @@ msgstr ""
 
 #: src/methods/cloudfiles.php:483
 msgid "Cloud Files username"
-msgstr ""
+msgstr "Nama pengguna Cloud Files"
 
 #: src/addons/cloudfiles-enhanced.php:38, src/methods/cloudfiles-new.php:119,
 #: src/methods/cloudfiles.php:467
@@ -6685,12 +6685,12 @@ msgstr "AS (default)"
 
 #: src/methods/cloudfiles.php:463
 msgid "US or UK Cloud"
-msgstr ""
+msgstr "Cloud AS atau Inggris"
 
 #: src/methods/cloudfiles-new.php:102, src/methods/cloudfiles.php:446,
 #: src/methods/openstack2.php:120
 msgid "Also, you should read this important FAQ."
-msgstr ""
+msgstr "Anda juga harus membaca Pertanyaan Umum penting ini."
 
 #: src/methods/cloudfiles-new.php:102, src/methods/cloudfiles.php:446
 msgid "Get your API key <a href=\"https://mycloud.rackspace.com/\">from your Rackspace Cloud console</a> (read instructions <a href=\"http://www.rackspace.com/knowledge_center/article/rackspace-cloud-essentials-1-generating-your-api-key\">here</a>), then pick a container name to use for storage. This container will be created for you if it does not already exist."
@@ -6698,23 +6698,23 @@ msgstr ""
 
 #: src/admin.php:892, src/methods/backup-module.php:315
 msgid "Test %s Settings"
-msgstr ""
+msgstr "Tes Pengaturan %s"
 
 #: src/class-updraftplus.php:1298, src/class-updraftplus.php:1342,
 #: src/methods/cloudfiles.php:383, src/methods/stream-base.php:297
 msgid "Error opening local file: Failed to download"
-msgstr ""
+msgstr "Kesalahan membuka berkas lokal: Gagal mengunduh"
 
 #: src/methods/cloudfiles.php:218
 msgid "Cloud Files error - failed to upload file"
-msgstr ""
+msgstr "Kesalahan File Cloud - gagal mengunggah berkas"
 
 #: src/addons/sftp.php:141, src/addons/sftp.php:153,
 #: src/methods/cloudfiles.php:147, src/methods/cloudfiles.php:189,
 #: src/methods/openstack-base.php:81, src/methods/openstack-base.php:315,
 #: src/methods/s3.php:376, src/methods/s3.php:388, src/methods/s3.php:389
 msgid "%s Error: Failed to upload"
-msgstr ""
+msgstr "Kesalahan %s: Gagal mengunggah"
 
 #: src/addons/googlecloud.php:201, src/addons/googlecloud.php:206,
 #: src/class-updraftplus.php:1140, src/methods/cloudfiles.php:130,
@@ -6725,7 +6725,7 @@ msgstr "Galat %s: Gagal membuka berkas lokal"
 #: src/methods/cloudfiles.php:103, src/methods/cloudfiles.php:343,
 #: src/methods/cloudfiles.php:355
 msgid "Cloud Files error - failed to create and access the container"
-msgstr ""
+msgstr "Kesalahan File Cloud - gagal membuat dan mengakses wadah"
 
 #: src/addons/cloudfiles-enhanced.php:114,
 #: src/addons/cloudfiles-enhanced.php:127,
@@ -6736,21 +6736,21 @@ msgstr "Autentikasi Cloud Files gagal"
 
 #: src/methods/googledrive.php:1273
 msgid "Authenticate with Google"
-msgstr ""
+msgstr "Otentikasi dengan Google"
 
 #: src/addons/googlecloud.php:1027, src/addons/onedrive.php:1181,
 #: src/methods/googledrive.php:1237
 msgid "Client Secret"
-msgstr ""
+msgstr "Rahasia Klien"
 
 #: src/addons/googlecloud.php:1022, src/methods/googledrive.php:1234
 msgid "If Google later shows you the message \"invalid_client\", then you did not enter a valid client ID here."
-msgstr ""
+msgstr "Jika Google nanti menampilkan pesan \"invalid_client\" kepada Anda, maka Anda tidak memasukkan ID klien yang valid di sini."
 
 #: src/addons/googlecloud.php:1019, src/addons/onedrive.php:1177,
 #: src/methods/googledrive.php:1233
 msgid "Client ID"
-msgstr ""
+msgstr "ID klien"
 
 #: src/methods/googledrive.php:1207
 msgid "You must add the following as the authorised redirect URI (under \"More Options\") when asked"
@@ -6758,7 +6758,7 @@ msgstr ""
 
 #: src/addons/googlecloud.php:997, src/methods/googledrive.php:1207
 msgid "Select 'Web Application' as the application type."
-msgstr ""
+msgstr "Pilih 'Aplikasi Web' sebagai jenis aplikasi."
 
 #: src/addons/googlecloud.php:995, src/methods/googledrive.php:1205
 msgid "For longer help, including screenshots, follow this link. The description below is sufficient for more expert users."
@@ -6775,15 +6775,15 @@ msgstr "Akun tidak terautorisasi."
 #: src/methods/googledrive.php:554, src/methods/googledrive.php:556,
 #: src/methods/stream-base.php:219
 msgid "Failed to upload to %s"
-msgstr ""
+msgstr "Gagal mengunggah ke %s"
 
 #: src/methods/googledrive.php:531
 msgid "Account full: your %s account has only %d bytes left, but the file to be uploaded is %d bytes"
-msgstr ""
+msgstr "Akun penuh: akun %s Anda hanya memiliki %d byte, tetapi file yang akan diunggah adalah %d byte"
 
 #: src/methods/googledrive.php:624, src/methods/googledrive.php:660
 msgid "Have not yet obtained an access token from Google - you need to authorise or re-authorise your connection to Google Drive."
-msgstr ""
+msgstr "Belum memperoleh token akses dari Google - Anda perlu mengesahkan atau mengesahkan kembali koneksi Anda ke Google Drive."
 
 #: src/addons/googlecloud.php:718, src/addons/onedrive.php:939,
 #: src/methods/googledrive.php:475
@@ -6814,22 +6814,24 @@ msgstr "Tidak ada refresh token yang diterima dari Google. Ini biasanya berarti 
 
 #: src/methods/addon-not-yet-present.php:84
 msgid "follow this link to get it"
-msgstr ""
+msgstr "ikuti tautan ini untuk mendapatkannya"
 
 #: src/methods/addon-not-yet-present.php:84
 msgid "%s support is available as an add-on"
-msgstr ""
+msgstr "Dukungan %s tersedia sebagai add-on"
 
 #: src/methods/addon-not-yet-present.php:28,
 #: src/methods/addon-not-yet-present.php:68,
 #: src/methods/addon-not-yet-present.php:75
 msgid "You do not have the UpdraftPlus %s add-on installed - get it from %s"
 msgstr ""
+"70/5000\n"
+"Anda tidak menginstal add-on %s UpdraftPlus - dapatkan dari %s"
 
 #: src/includes/Dropbox2/OAuth/Consumer/ConsumerAbstract.php:126,
 #: src/includes/Dropbox2/OAuth/Consumer/ConsumerAbstract.php:127
 msgid "You need to re-authenticate with %s, as your existing credentials are not working."
-msgstr ""
+msgstr "Anda perlu mengautentikasi ulang dengan %s, karena kredensial Anda yang saat ini ada tidak berfungsi."
 
 #: src/admin.php:3468, src/admin.php:3503, src/admin.php:3507,
 #: src/includes/class-remote-send.php:327,
@@ -6978,7 +6980,7 @@ msgstr "Instalasi PHP/Curl pada server web Anda tidak mendukung akses https. Kam
 
 #: src/admin.php:3916
 msgid "Your web server's PHP/Curl installation does not support https access. Communications with %s will be unencrypted. Ask your web host to install Curl/SSL in order to gain the ability for encryption (via an add-on)."
-msgstr ""
+msgstr "Instalasi PHP PHP/Curl server web Anda tidak mendukung akses https. Komunikasi dengan %s  tidak akan dienkripsi. Minta host web Anda untuk menginstal Curl/SSL untuk mendapatkan kemampuan enkripsi (melalui add-on)."
 
 #: src/methods/cloudfiles-new.php:100, src/methods/cloudfiles.php:440,
 #: src/methods/openstack-base.php:571, src/methods/s3.php:863
@@ -7027,7 +7029,7 @@ msgstr "atak, untuk mengatur ulang opsi ini"
 
 #: src/admin.php:3738
 msgid "Follow this link to attempt to create the directory and set the permissions"
-msgstr ""
+msgstr "Ikuti tautan ini untuk mencoba membuat direktori dan mengatur izin"
 
 #: src/admin.php:3730
 msgid "Backup directory specified is writable, which is good."
@@ -7117,7 +7119,7 @@ msgstr "Untuk menentukan waktu pencadangan dilakukan,"
 
 #: src/addons/incremental.php:244, src/admin.php:3724
 msgid "Monthly"
-msgstr "Setiap bulan"
+msgstr "Bulanan"
 
 #: src/addons/incremental.php:243, src/admin.php:3723
 msgid "Fortnightly"
@@ -7125,11 +7127,11 @@ msgstr "Setiap 2 minggu"
 
 #: src/addons/incremental.php:242, src/admin.php:3722
 msgid "Weekly"
-msgstr "Setiap minggu"
+msgstr "Mingguan"
 
 #: src/addons/incremental.php:241, src/admin.php:3721
 msgid "Daily"
-msgstr "Setiap hari"
+msgstr "Harian"
 
 #: src/admin.php:851, src/admin.php:3699
 msgid "Download log file"
@@ -7341,7 +7343,7 @@ msgstr "Ruang disk web-server yang digunakan oleh UpdraftPlus"
 
 #: src/includes/class-filesystem-functions.php:86
 msgid "This is a count of the contents of your Updraft directory"
-msgstr ""
+msgstr "Ini adalah hitungan dari isi direktori Updraft Anda"
 
 #: src/addons/google-enhanced.php:74, src/methods/googledrive.php:202,
 #: src/methods/googledrive.php:204, src/methods/googledrive.php:475,
@@ -7456,7 +7458,7 @@ msgstr "Homepage pemimpin pengembangan"
 
 #: src/central/bootstrap.php:511
 msgid "UpdraftPlus.Com"
-msgstr ""
+msgstr "UpdraftPlus.Com"
 
 #: src/admin.php:5053
 msgid "Your settings have been wiped."
@@ -7594,7 +7596,7 @@ msgstr "Pengulangan tanpa henti: lihat log Anda untuk informasi lebih lanjut"
 
 #: src/includes/updraftplus-notices.php:102
 msgid "Please help UpdraftPlus by giving a positive review at wordpress.org."
-msgstr ""
+msgstr "Tolong bantu UpdraftPlus dengan memberikan ulasan positif di wordpress.org."
 
 #: src/includes/updraftplus-notices.php:101
 msgid "Like UpdraftPlus and can spare one minute?"

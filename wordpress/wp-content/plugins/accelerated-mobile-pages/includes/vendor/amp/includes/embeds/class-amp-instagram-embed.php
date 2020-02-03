@@ -1,11 +1,14 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-base-embed-handler.php' );
 
 // Much of this class is borrowed from Jetpack embeds
 class AMP_Instagram_Embed_Handler extends AMP_Base_Embed_Handler {
 	const SHORT_URL_HOST = 'instagr.am';
-	const URL_PATTERN = '#http(s?)://(www\.)?instagr(\.am|am\.com)/p/([^/?]+)#i';
+	const URL_PATTERN = '#http(s?)://(www\.)?instagr(\.am|am\.com)/(p|tv)/([^/?]+)#i';
 
 	protected $DEFAULT_WIDTH = 600;
 	protected $DEFAULT_HEIGHT = 600;

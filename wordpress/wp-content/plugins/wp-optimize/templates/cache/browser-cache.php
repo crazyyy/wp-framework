@@ -9,7 +9,7 @@
 
 	<div class="wpo-fieldgroup">
 		<div id="wpo_browser_cache_status" class="<?php echo $class_name; ?>">
-			<span class="wpo-enabled"><?php printf(__('Browser static file caching headers are currently %s.', 'wp-optimize'), '<strong>'.__('enabled', 'wp-optimize').'</strong>'); ?></span>
+			<span class="wpo-enabled"><span class="dashicons dashicons-yes"></span> <?php printf(__('Browser static file caching headers are currently %s.', 'wp-optimize'), '<strong>'.__('enabled', 'wp-optimize').'</strong>'); ?></span>
 			<span class="wpo-disabled"><?php printf(__('Browser static file caching headers are currently %s.', 'wp-optimize'), '<strong>'.__('disabled', 'wp-optimize').'</strong>'); ?></span>
 		</div>
 

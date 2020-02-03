@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_ImportPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory419_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = "import";
@@ -78,7 +78,7 @@ class WINP_ImportPage extends WINP_Page {
                 </p>
             </div>
 			<?php
-		} else if ( isset( $_POST['wbcr_inp_import_form_saved'] ) ) { ?>
+		} else if ( isset( $_POST['wbcr_inp_import_form_action'] ) ) { ?>
             <div id="message" class="alert alert-warning">
                 <p><?php _e( 'No files selected!', 'insert-php' ) ?></p>
             </div>
@@ -163,7 +163,7 @@ class WINP_ImportPage extends WINP_Page {
                                     <div class="form-group form-horizontal">
                                         <div class="control-group controls col-sm-12">
 											<?php wp_nonce_field( 'wbcr_inp_import_form', 'wbcr_inp_import_form_nonce_field' ); ?>
-                                            <input name="<?php echo 'wbcr_inp_import_form_saved' ?>" class="btn btn-primary" type="submit" value="<?php _e( 'Upload files and import', 'insert-php' ) ?>"/>
+                                            <input name="<?php echo 'wbcr_inp_import_form_action' ?>" class="btn btn-primary" type="submit" value="<?php _e( 'Upload files and import', 'insert-php' ) ?>"/>
                                         </div>
                                     </div>
                                 </div>

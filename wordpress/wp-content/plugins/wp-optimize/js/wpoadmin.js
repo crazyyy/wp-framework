@@ -13,6 +13,12 @@ wp_optimize_send_command_admin_ajax = function (action, data, callback, json_par
 
 	json_parse = ('undefined' === typeof json_parse) ? true : json_parse;
 
+	if (!data) data = {};
+	// If the command doesn't have the property, default to true
+	if (!data.hasOwnProperty('include_ui_elements')) {
+		data.include_ui_elements = true;
+	}
+
 	var ajax_data = {
 		action: 'wp_optimize_ajax',
 		subaction: action,
@@ -141,7 +147,7 @@ var WP_Optimize = function (send_command) {
 				// external filter (column specific or any match)
 				filter_external: table_list_filter,
 				// add a default type search to the second table column
-				filter_defaultFilter: { 2 : '~{query}' },
+				filter_defaultFilter: { 2 : '~{query}' }
 			}
 		});
 
@@ -510,7 +516,7 @@ var WP_Optimize = function (send_command) {
 		} else if (additional_data_length > 0) {
 			// check if additional data passed for optimization.
 			data = {
-				optimization_id: id,
+				optimization_id: id
 			};
 
 			for (var i in additional_data) {
@@ -629,11 +635,15 @@ var WP_Optimize = function (send_command) {
 	 * Take a backup with UpdraftPlus if possible.
 	 *
 	 * @param {Function} callback
+	 * @param {String}   file_entities
 	 *
 	 * @return void
 	 */
-	function take_a_backup_with_updraftplus(callback) {
-		// Only run the backup if tick box is checked.
+	function take_a_backup_with_updraftplus(callback, file_entities) {
+		// Set default for file_entities to empty string
+		if ('undefined' == typeof file_entities) file_entities = '';
+		var exclude_files = file_entities ? 0 : 1;
+
 		if (typeof updraft_backupnow_inpage_go === 'function') {
 			updraft_backupnow_inpage_go(function () {
 				// Close the backup dialogue.
@@ -641,7 +651,7 @@ var WP_Optimize = function (send_command) {
 
 				if (callback) callback();
 
-			}, '', 'autobackup', 0, 1, 0, wpoptimize.automatic_backup_before_optimizations);
+			}, file_entities, 'autobackup', 0, exclude_files, 0, wpoptimize.automatic_backup_before_optimizations);
 		} else {
 			if (callback) callback();
 		}

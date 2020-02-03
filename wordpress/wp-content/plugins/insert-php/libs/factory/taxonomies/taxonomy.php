@@ -9,8 +9,8 @@
 	 * @since 1.0.0
 	 */
 
-	//add_action('factory_419_plugin_activation', 'FactoryTaxonomy000::activationHook');
-	//add_action('factory_419_plugin_deactivation', 'FactoryTaxonomy000::deactivationHook');
+	//add_action('factory_422_plugin_activation', 'FactoryTaxonomy000::activationHook');
+	//add_action('factory_422_plugin_deactivation', 'FactoryTaxonomy000::deactivationHook');
 
 	// Exit if accessed directly
 	if( !defined('ABSPATH') ) {
@@ -41,7 +41,7 @@
 			 * will be setup on the plugin configuration.
 			 *
 			 * @param string $class_name
-			 * @param Wbcr_Factory419_Plugin $plugin
+			 * @param Wbcr_Factory422_Plugin $plugin
 			 */
 			public static function register($className, $plugin = null)
 			{
@@ -61,7 +61,7 @@
 			 * A plugin activation hook.
 			 *
 			 * @since 1.0.0
-			 * @param Factory419_Plugin
+			 * @param Factory422_Plugin
 			 * @return void
 			 */
 			/*public static function activationHook($plugin)
@@ -94,7 +94,7 @@
 			 * A plugin deactivation hook.
 			 *
 			 * @since 1.0.0
-			 * @param Factory419_Plugin
+			 * @param Factory422_Plugin
 			 * @return void
 			 */
 			/*public static function deactivationHook($plugin)

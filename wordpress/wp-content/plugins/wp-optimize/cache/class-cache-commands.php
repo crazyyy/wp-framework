@@ -66,8 +66,53 @@ class WP_Optimize_Cache_Commands {
 		$return['result'] = $save_settings_result;
 		$return['enabled'] = !empty($data['cache-settings']['enable_page_caching']);
 
+		if (is_wp_error($enabled) && WPO_Page_Cache::instance()->advanced_cache_file_writing_error) {
+			$return['advanced_cache_file_writing_error'] = true;
+			$return['advanced_cache_file_content'] = WPO_Page_Cache::instance()->advanced_cache_file_content;
+		}
+
 		return $return;
 
+	}
+
+	/**
+	 * Get information about current cache status. Used in cli commands.
+	 *
+	 * @return array
+	 */
+	public function get_status_info() {
+		$status = array();
+
+		$settings = WPO_Cache_Config::instance()->get();
+		$status[] = $settings['enable_page_caching'] ? __('Caching is enabled', 'wp-optimize') : __('Caching is disabled', 'wp-optimize');
+
+		$preloader_status = WP_Optimize_Page_Cache_Preloader::instance()->get_status_info();
+		$status[] = sprintf(__('Current cache size: %s', 'wp-optimize'), $preloader_status['size']);
+		$status[] = sprintf(__('Number of files: %s', 'wp-optimize'), $preloader_status['file_count']);
+
+		if (array_key_exists('message', $preloader_status)) $status[] = $preloader_status['message'];
+
+		$status['message'] = join(PHP_EOL, $status);
+
+		return $status;
+	}
+
+	/**
+	 * Enable cache.
+	 */
+	public function enable() {
+		$settings = WPO_Cache_Config::instance()->get();
+		$settings['enable_page_caching'] = true;
+		return $this->format_save_cache_settings_response($this->save_cache_settings(array('cache-settings' => $settings)));
+	}
+
+	/**
+	 * Disable cache.
+	 */
+	public function disable() {
+		$settings = WPO_Cache_Config::instance()->get();
+		$settings['enable_page_caching'] = false;
+		return $this->format_save_cache_settings_response($this->save_cache_settings(array('cache-settings' => $settings)));
 	}
 
 	/**
@@ -96,7 +141,46 @@ class WP_Optimize_Cache_Commands {
 			$wpo_page_cache_preloader->run('scheduled', $response);
 		}
 
+		if ($response['success']) {
+			$response['message'] = __('Page cache purged successfully', 'wp-optimize');
+		}
+
 		return $response;
+	}
+
+	/**
+	 * Run cache preload (for wp-cli).
+	 *
+	 * @return array|bool
+	 */
+	public function run_cache_preload_cli() {
+		global $wpdb;
+
+		if (!(defined('WP_CLI') && WP_CLI)) return false;
+
+		// define WPO_ADVANCED_CACHE constant as WP-CLI doesn't load advanced-cache.php file
+		// but we check this constant value wen detecting status of cache
+		if (!defined('WPO_ADVANCED_CACHE')) define('WPO_ADVANCED_CACHE', true);
+		// don't interrupt queue processing
+		add_filter('updraft_interrupt_tasks_queue_load-url-task', '__return_false', 99);
+
+		// if preloading is running then exit.
+		if (WP_Optimize_Page_Cache_Preloader::instance()->is_busy()) {
+			return array(
+				'success' => false,
+				'error' => __('Preloading is currently running in another process.', 'wp-optimize'),
+			);
+		}
+
+		// set default response.
+		$response = array(
+			'success' => true,
+			'message' => __('All URLs were preloaded into cache successfully', 'wp-optimize'),
+		);
+
+		WP_CLI::log(__('Preloading URLs into cache...', 'wp-optimize'));
+
+		return WP_Optimize_Page_Cache_Preloader::instance()->run('manual', $response);
 	}
 
 	/**
@@ -135,5 +219,28 @@ class WP_Optimize_Cache_Commands {
 	 */
 	public function enable_browser_cache($params) {
 		return WP_Optimize()->get_browser_cache()->enable_browser_cache_command_handler($params);
+	}
+
+	/**
+	 * Format save_cache_settings() result for displaying in WP-CLI console
+	 *
+	 * @param array $response
+	 * @return array
+	 */
+	private function format_save_cache_settings_response($response) {
+		$result = array(
+			'success' => $response['result'],
+		);
+
+		if (isset($response['error'])) {
+			$result['success'] = false;
+			$result['error'] = $response['error']['message'];
+		}
+
+		if ($result['success']) {
+			$result['message'] = __('Page cache settings updated successfully.', 'wp-optimize');
+		}
+
+		return $result;
 	}
 }

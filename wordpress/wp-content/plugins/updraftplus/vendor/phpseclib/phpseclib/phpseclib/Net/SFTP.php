@@ -465,6 +465,7 @@ class Net_SFTP extends Net_SSH2
     function login($username)
     {
         $args = func_get_args();
+        $this->auth[] = $args;
         if (!call_user_func_array(array(&$this, '_login'), $args)) {
             return false;
         }
@@ -897,6 +898,7 @@ class Net_SFTP extends Net_SSH2
             }
             if (is_array($this->_query_stat_cache($this->_realpath($dir . '/' . $value)))) {
                 $temp = $this->_nlist_helper($dir . '/' . $value, true, $relativeDir . $value . '/');
+                $temp = is_array($temp) ? $temp : array();
                 $result = array_merge($result, $temp);
             } else {
                 $result[] = $relativeDir . $value;
@@ -2204,10 +2206,11 @@ class Net_SFTP extends Net_SSH2
      * @param string $local_file
      * @param int $offset
      * @param int $length
+     * @param callable|null $progressCallback
      * @return mixed
      * @access public
      */
-    function get($remote_file, $local_file = false, $offset = 0, $length = -1)
+    function get($remote_file, $local_file = false, $offset = 0, $length = -1, $progressCallback = null)
     {
         if (!($this->bitmap & NET_SSH2_MASK_LOGIN)) {
             return false;
@@ -2273,6 +2276,9 @@ class Net_SFTP extends Net_SSH2
                 }
                 $packet = null;
                 $read+= $packet_size;
+                if (is_callable($progressCallback)) {
+                    call_user_func($progressCallback, $read);
+                }
                 $i++;
             }
 
@@ -3025,6 +3031,20 @@ class Net_SFTP extends Net_SSH2
         }
 
         return $result;
+    }
+
+    /**
+     * Resets a connection for re-use
+     *
+     * @param int $reason
+     * @access private
+     */
+    function _reset_connection($reason)
+    {
+        parent::_reset_connection($reason);
+        $this->use_request_id = false;
+        $this->pwd = false;
+        $this->requestBuffer = array();
     }
 
     /**

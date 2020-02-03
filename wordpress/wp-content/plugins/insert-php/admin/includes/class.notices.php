@@ -25,7 +25,10 @@ class WINP_WarningNotices {
 	private $notices = [];
 
 	public function __construct() {
-		add_filter( 'wbcr_factory_notices_000_list', [ $this, 'register_notices' ], 10, 2 );
+		/**
+		 * @since 2.2.8 Filter Name Changed
+		 */
+		add_filter( 'wbcr/factory/admin_notices', [ $this, 'register_notices' ], 10, 2 );
 	}
 
 	/**
@@ -56,11 +59,11 @@ class WINP_WarningNotices {
 			'post-new',
 			'edit'
 		] );
-		$this->add_notice( 'leave_feedback', $this->get_leave_feedback_notice(), 'success', true, time() + 3600 * 60, [
+		/*$this->add_notice( 'leave_feedback', $this->get_leave_feedback_notice(), 'success', true, time() + 3600 * 60, [
 			'post',
 			'post-new',
 			'edit'
-		] );
+		] );*/
 
 		return array_merge( $notices, $this->notices );
 	}

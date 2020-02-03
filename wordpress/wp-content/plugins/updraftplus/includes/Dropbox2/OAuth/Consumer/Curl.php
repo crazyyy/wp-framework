@@ -111,10 +111,6 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
          */
         if (isset($additional['api_v2']) && !empty($request['postfields'])) {
             $request['postfields'] = json_encode($request['postfields']);
-        } elseif (empty($request['postfields'])) {
-            // if the postfields are empty then we don't want to send the application/json header if it's set as Dropbox will return an error
-            $key = array_search('Content-Type: application/json', $request['headers']);
-            if (false !== $key) unset($request['headers'][$key]);
         }
 
         if (isset($request['headers']) && !empty($request['headers'])) $options[CURLOPT_HTTPHEADER] = $request['headers'];
@@ -139,7 +135,7 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
             $options[CURLOPT_POSTFIELDS] = $this->inFile;
         } elseif ($method == 'POST') { // POST
             $options[CURLOPT_POST] = true;
-            $options[CURLOPT_POSTFIELDS] = $request['postfields'];
+            $options[CURLOPT_POSTFIELDS] = empty($request['postfields']) ? 'null' : $request['postfields'];
         } elseif ($method == 'PUT' && $this->inFile) { // PUT
             $options[CURLOPT_PUT] = true;
             $options[CURLOPT_INFILE] = $this->inFile;
@@ -152,7 +148,7 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
         if (isset($additional['timeout'])) {
             $options[CURLOPT_TIMEOUT] = $additional['timeout'];
         }
-        
+
         // Set the cURL options at once
         curl_setopt_array($handle, $options);
         // Execute, get any error and close

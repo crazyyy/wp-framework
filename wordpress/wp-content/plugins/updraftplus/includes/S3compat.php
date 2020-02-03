@@ -710,13 +710,13 @@ class UpdraftPlus_S3_Compat {
 				$fp = $save_to;
 				if (!is_bool($resume)) $range_header = $resume;
 			} elseif (file_exists($save_to)) {
-				if ($resume && ($fp = @fopen($save_to, 'ab')) !== false) {
+				if ($resume && ($fp = @fopen($save_to, 'ab')) !== false) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 					$range_header = "bytes=".filesize($save_to).'-';
 				} else {
 					throw new Exception('Unable to open save file for writing: '.$save_to);
 				}
 			} else {
-				if (($fp = @fopen($save_to, 'wb')) !== false) {
+				if (($fp = @fopen($save_to, 'wb')) !== false) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 					$range_header = false;
 				} else {
 					throw new Exception('Unable to open save file for writing: '.$save_to);

@@ -431,6 +431,7 @@ class WINP_Common_Snippet {
 						'type'    => $_snippet->type->slug,
 						'content' => $_snippet->content,
 						'type_id' => $_snippet->type_id,
+						'scope'   => $_snippet->execute_everywhere,
 					];
 				}
 			}
@@ -448,6 +449,7 @@ class WINP_Common_Snippet {
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_api_type', $snippet['type_id'] );
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_description', $snippet['desc'] );
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_draft', true );
+				WINP_Helper::updateMetaOption( $post_ID, 'snippet_scope', $snippet['scope'] );
 
 				wp_redirect( admin_url( 'post.php?post=' . $post_ID . '&action=edit' ) );
 			}

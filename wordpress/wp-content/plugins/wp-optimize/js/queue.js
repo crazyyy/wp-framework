@@ -88,7 +88,7 @@ function Updraft_Queue() {
 		var item = queue[offset];
 
 		// Increment the offset and remove the free space if necessary.
-		if ((++ offset * 2) >= queue.length) {
+		if ((++offset * 2) >= queue.length) {
 			queue  = queue.slice(offset);
 			offset = 0;
 		}

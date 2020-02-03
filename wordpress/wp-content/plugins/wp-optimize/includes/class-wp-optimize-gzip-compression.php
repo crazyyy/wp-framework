@@ -35,26 +35,34 @@ class WP_Optimize_Gzip_Compression {
 	}
 
 	/**
-	 * Make http request to theme style.css and check returned headers for gzip encoding option.
+	 * Make http request to theme style.css, get 'server' line and check headers for gzip/brotli encoding option.
 	 *
-	 * @return bool|WP_Error
+	 * @return array|WP_Error
 	 */
-	public function check_headers_for_gzip() {
-
-		static $found_gzip;
-		if (isset($found_gzip)) return $found_gzip;
+	public function get_headers_information() {
+		static $headers_information;
+		if (isset($headers_information)) return $headers_information;
 
 		$headers = WP_Optimize()->get_stylesheet_headers();
 
 		if (is_wp_error($headers)) return $headers;
 
-		// check if there exists Content-encoding header with gzip value.
-		if (array_key_exists('content-encoding', $headers) && preg_match('/gzip/i', $headers['content-encoding'])) {
-			$found_gzip = true;
+		$headers_information = array(
+			'server' => array_key_exists('server', $headers) ? $headers['server'] : '',
+		);
+
+		if (array_key_exists('content-encoding', $headers) && preg_match('/\Wbr\W/i', $headers['content-encoding'])) {
+			// check if there exists Content-encoding header with br(Brotli) value.
+			$headers_information['compression'] = 'brotli';
+		} elseif (array_key_exists('content-encoding', $headers) && preg_match('/gzip/i', $headers['content-encoding'])) {
+			// check if there exists Content-encoding header with gzip value.
+			$headers_information['compression'] = 'gzip';
+			
 		} else {
-			$found_gzip = false;
+			$headers_information['compression'] = false;
 		}
-		return $found_gzip;
+
+		return $headers_information;
 	}
 
 	/**
@@ -95,13 +103,15 @@ class WP_Optimize_Gzip_Compression {
 		if (!$force_check) return WP_Optimize()->get_options()->get_option('is_gzip_compression_enabled');
 
 		// trying to get info about gzip in headers.
-		$is_gzip_compression_enabled = $this->check_headers_for_gzip();
+		$headers_info = $this->get_headers_information();
+
+		// we can't determine then return WP_Error.
+		if (is_wp_error($headers_info)) return $headers_info;
+
+		$is_gzip_compression_enabled = $headers_info['compression'];
 
 		// if we got error then trying to get info from api otherwise get result from check_headers_for_gzip().
 		// $is_gzip_compression_enabled = is_wp_error($is_gzip_compression_enabled) ? $this->check_api_for_gzip() : $is_gzip_compression_enabled;
-
-		// we can't determine then return WP_Error.
-		if (is_wp_error($is_gzip_compression_enabled)) return $is_gzip_compression_enabled;
 
 		// if Gzip is not enabled but we have added settings and Apache modules nt loaded then return error.
 		if (false == $is_gzip_compression_enabled && $this->is_gzip_compression_section_exists()) {

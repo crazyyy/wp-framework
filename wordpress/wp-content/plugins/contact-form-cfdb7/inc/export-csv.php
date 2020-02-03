@@ -80,9 +80,11 @@ class Expoert_CSV{
             $heading_row = $cfdb->get_results("SELECT form_id, form_value, form_date FROM $table_name
                 WHERE form_post_id = '$fid' ORDER BY form_id DESC LIMIT 1",OBJECT);
 
-            $heading_row = reset( $heading_row );
-            $heading_row = unserialize( $heading_row->form_value );
-            $heading_key = array_keys( $heading_row );
+            $heading_row    = reset( $heading_row );
+            $heading_row    = unserialize( $heading_row->form_value );
+            $heading_key    = array_keys( $heading_row );
+            $rm_underscore  = apply_filters('cfdb7_remove_underscore_data', true); 
+
 
             $total_rows  = $cfdb->get_var("SELECT COUNT(*) FROM $table_name WHERE form_post_id = '$fid' "); 
             $per_query    = 1000;
@@ -110,7 +112,12 @@ class Expoert_CSV{
                     $cfdb7_dir_url          = $upload_dir['baseurl'].'/cfdb7_uploads';
 
                     foreach ($resultTmp as $key => $value):
+                        $matches = array();
+
                         if ( ! in_array( $key, $heading_key ) ) continue;
+                        if( $rm_underscore ) preg_match('/^_.*$/m', $key, $matches);
+                        if( ! empty($matches[0]) ) continue;
+
                         if (strpos($key, 'cfdb7_file') !== false ){
                             $data[$key][$i] = $cfdb7_dir_url.'/'.$value;
                             continue;

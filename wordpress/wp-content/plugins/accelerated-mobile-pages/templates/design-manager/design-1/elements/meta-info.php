@@ -1,4 +1,8 @@
-<?php do_action('ampforwp_before_meta_info_hook',$this); ?>
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+do_action('ampforwp_before_meta_info_hook',$this); ?>
 <?php global $redux_builder_amp;
 if ( is_single() || (is_page() && $redux_builder_amp['meta_page']) ) : ?>
 <div class="amp-wp-article-header ampforwp-meta-info <?php if( is_page() && ! $redux_builder_amp['meta_page'] ) {?> hide-meta-info <?php  }?>">
@@ -29,8 +33,14 @@ if ( is_single() || (is_page() && $redux_builder_amp['meta_page']) ) : ?>
 		<?php if( is_single() || ( is_page() && $redux_builder_amp['meta_page'] ) ) {
 			global $redux_builder_amp;
 			$date = get_the_date( get_option( 'date_format' ));
-			if( 2 == $redux_builder_amp['ampforwp-post-date-global'] ){
-				$date = get_the_modified_date( get_option( 'date_format' )) . ', ' . get_the_modified_time() ;
+			if(1 == ampforwp_get_setting('ampforwp-post-date-global') && true == ampforwp_get_setting('ampforwp-post-time')){
+		    $date = $date . ', ' . get_the_time();
+			}
+			if( 2 == ampforwp_get_setting('ampforwp-post-date-global')) {
+			    $date = get_the_modified_date( get_option( 'date_format' ) );
+			}
+			if( 2 == ampforwp_get_setting('ampforwp-post-date-global') && true == ampforwp_get_setting('ampforwp-post-time')){
+			    $date = get_the_modified_date( get_option( 'date_format' ) ) . ', ' . get_the_modified_time();
 			}
 			echo esc_attr(apply_filters('ampforwp_modify_post_date', ampforwp_translation($redux_builder_amp['amp-translator-on-text'], 'On') . ' ' . $date ));
 			}?>

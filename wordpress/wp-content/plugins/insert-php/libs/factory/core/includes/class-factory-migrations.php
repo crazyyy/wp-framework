@@ -1,9 +1,9 @@
 <?php
 
-namespace WBCR\Factory_419;
+namespace WBCR\Factory_422;
 
 use Exception;
-use Wbcr_Factory419_Plugin;
+use Wbcr_Factory422_Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,11 +35,11 @@ class Migrations {
 	/**
 	 * Migrations constructor.
 	 *
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( Wbcr_Factory419_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
 
 		$this->plugin = $plugin;
 		$plugin_name  = $plugin->getPluginName();
@@ -52,8 +52,8 @@ class Migrations {
 			add_action( "admin_init", [ $this, "check_migrations" ] );
 
 			add_action( "wbcr/factory/plugin_{$plugin_name}_activated", [ $this, 'activation_hook' ] );
-			add_action( "wbcr_factory_notices_000_list", [ $this, "debug_bar_notice" ], 10, 2 );
-			add_action( "wbcr_factory_notices_000_list", [ $this, "migration_error_notice" ], 10, 2 );
+			add_action( "wbcr/factory/admin_notices", [ $this, "debug_bar_notice" ], 10, 2 );
+			add_action( "wbcr/factory/admin_notices", [ $this, "migration_error_notice" ], 10, 2 );
 		}
 	}
 
@@ -129,14 +129,14 @@ class Migrations {
 		$fix_migration_error_url = add_query_arg( 'wbcr_factory_fix_migration_error', 1 );
 
 		$notice_text = $migration_error_text;
-		$notice_text .= "<br><br><a href='{$fix_migration_error_url}' class='button button-default'>" . __( 'I fixed, confirm migration', 'wbcr_factory_419' ) . "</a>";
+		$notice_text .= "<br><br><a href='{$fix_migration_error_url}' class='button button-default'>" . __( 'I fixed, confirm migration', 'wbcr_factory_422' ) . "</a>";
 
 		$notices[] = [
 			'id'              => 'migration_debug_bar',
 			'type'            => 'error',
 			'dismissible'     => false,
 			'dismiss_expires' => 0,
-			'text'            => '<p><b>' . $this->plugin->getPluginTitle() . ' ' . __( 'migration error', 'wbcr_factory_419' ) . '</b><br>' . $notice_text . '</p>'
+			'text'            => '<p><b>' . $this->plugin->getPluginTitle() . ' ' . __( 'migration error', 'wbcr_factory_422' ) . '</b><br>' . $notice_text . '</p>'
 		];
 
 		return $notices;
@@ -162,19 +162,19 @@ class Migrations {
 
 		$migrate_url = add_query_arg( 'wbcr_factory_test_migration', 1 );
 
-		$notice_text = __( "Plugin activated:", "wbcr_factory_419" ) . ' ' . date( "Y-m-d H:i:s", $this->get_plugin_activated_time() ) . "<br>";
+		$notice_text = __( "Plugin activated:", "wbcr_factory_422" ) . ' ' . date( "Y-m-d H:i:s", $this->get_plugin_activated_time() ) . "<br>";
 
-		$notice_text .= __( "Old plugin version (debug):", "wbcr_factory_419" ) . ' ' . $this->get_old_plugin_version() . "<br>";
-		$notice_text .= __( "Current plugin version:", "wbcr_factory_419" ) . ' ' . $this->get_current_plugin_version() . "<br>";
-		$notice_text .= __( "Need migration:", "wbcr_factory_419" ) . ' ' . ( $this->need_migration() ? "true" : "false" ) . "<br><br>";
-		$notice_text .= "<a href='{$migrate_url}' class='button button-default'>" . __( "Migrate now", "wbcr_factory_419" ) . "</a><br>";
+		$notice_text .= __( "Old plugin version (debug):", "wbcr_factory_422" ) . ' ' . $this->get_old_plugin_version() . "<br>";
+		$notice_text .= __( "Current plugin version:", "wbcr_factory_422" ) . ' ' . $this->get_current_plugin_version() . "<br>";
+		$notice_text .= __( "Need migration:", "wbcr_factory_422" ) . ' ' . ( $this->need_migration() ? "true" : "false" ) . "<br><br>";
+		$notice_text .= "<a href='{$migrate_url}' class='button button-default'>" . __( "Migrate now", "wbcr_factory_422" ) . "</a><br>";
 
 		$notices[] = [
 			'id'              => 'migration_debug_bar',
 			'type'            => 'warning',
 			'dismissible'     => false,
 			'dismiss_expires' => 0,
-			'text'            => '<p><b style="color:red;">' . $this->plugin->getPluginTitle() . ' ' . __( 'migrations DEBUG bar', 'wbcr_factory_419' ) . '</b><br>' . $notice_text . '</p>'
+			'text'            => '<p><b style="color:red;">' . $this->plugin->getPluginTitle() . ' ' . __( 'migrations DEBUG bar', 'wbcr_factory_422' ) . '</b><br>' . $notice_text . '</p>'
 		];
 
 		return $notices;
@@ -505,7 +505,7 @@ class Migrations {
 		$classes = [];
 
 		if ( ! function_exists( 'token_get_all' ) ) {
-			throw new Exception( __( 'There is no PHP Tokenizer extension installed on your server, you cannot use the token_get_all function.', 'wbcr_factory_419' ) );
+			throw new Exception( __( 'There is no PHP Tokenizer extension installed on your server, you cannot use the token_get_all function.', 'wbcr_factory_422' ) );
 		}
 
 		$tokens = token_get_all( $phpCode );

@@ -329,7 +329,7 @@ abstract class Updraft_Task_1_1 {
 		$affected = $wpdb->query($wpdb->prepare("
 			UPDATE {$wpdb->base_prefix}tm_tasks
 			   SET last_locked_at = %d
-			 WHERE id = %d'
+			 WHERE id = %d
 			   AND last_locked_at <= %s
 		", time(), $task_id, $expires_at));
 		
@@ -655,9 +655,10 @@ abstract class Updraft_Task_1_1 {
 		global $wpdb;
 
 		$user_id = get_current_user_id();
-		$class_identifier = function_exists('get_called_class') ? get_called_class() : $task_class;
+		$class_identifier = function_exists('get_called_class') ? get_called_class() : $task_class;// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctions.get_called_classFound
 
-		if (!$user_id) return false;
+		$is_anonymous_user_allowed = isset($options['anonymous_user_allowed']) && $options['anonymous_user_allowed'];
+		if (!$user_id && !$is_anonymous_user_allowed) return false;
 
 		$sql = $wpdb->prepare("INSERT INTO {$wpdb->base_prefix}tm_tasks (type, user_id, description, class_identifier, status) VALUES (%s, %d, %s, %s, %s)", $type, $user_id, $description, $class_identifier, 'active');
 

@@ -32,7 +32,7 @@
 			public $css_class;
 
 			/**
-			 * @var Wbcr_FactoryForms417_MetaValueProvider
+			 * @var Wbcr_FactoryForms420_MetaValueProvider
 			 */
 			protected $provider;
 
@@ -42,9 +42,9 @@
 			private $scope;
 
 			/**
-			 * @param Wbcr_Factory419_Plugin $plugin
+			 * @param Wbcr_Factory422_Plugin $plugin
 			 */
-			public function __construct(Wbcr_Factory419_Plugin $plugin)
+			public function __construct(Wbcr_Factory422_Plugin $plugin)
 			{
 				parent::__construct($plugin);
 
@@ -53,19 +53,19 @@
 
 			/**
 			 * @param null $post_id
-			 * @return Wbcr_FactoryForms417_Form
+			 * @return Wbcr_FactoryForms420_Form
 			 */
 			private function getForm($post_id = null)
 			{
 				// creating a value provider
-				$this->provider = new Wbcr_FactoryForms417_MetaValueProvider(array(
+				$this->provider = new Wbcr_FactoryForms420_MetaValueProvider(array(
 					'scope' => $this->scope
 				));
 
 				$this->provider->init($post_id);
 
 				// creating a form
-				$form = new Wbcr_FactoryForms417_Form(array(
+				$form = new Wbcr_FactoryForms420_Form(array(
 					'scope' => $this->scope,
 					'name' => $this->id
 				), $this->plugin);
@@ -85,7 +85,7 @@
 
 				$form = $this->getForm();
 
-				echo '<div class="factory-form-metabox factory-bootstrap-420">';
+				echo '<div class="factory-form-metabox factory-bootstrap-423">';
 				$this->beforeForm($form);
 				$form->html(array(
 					'css_class' => $this->css_class
@@ -129,7 +129,7 @@
 			/**
 			 * Method executed before rendering the form.
 			 */
-			public function beforeForm(Wbcr_FactoryForms417_Form $form)
+			public function beforeForm(Wbcr_FactoryForms420_Form $form)
 			{
 				return;
 			}
@@ -137,7 +137,7 @@
 			/**
 			 * Method executed after rendering the form.
 			 */
-			public function afterForm(Wbcr_FactoryForms417_Form $form)
+			public function afterForm(Wbcr_FactoryForms420_Form $form)
 			{
 				return;
 			}

@@ -244,6 +244,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			$endpoint = 's3-'.$region.'.amazonaws.com';
 				break;
 			case 'ap-south-1':
+			case 'me-south-1':
 			case 'cn-north-1':
 			$endpoint = 's3.'.$region.'.amazonaws.com.cn';
 				break;
@@ -516,7 +517,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			while ($attempt_flag < 5) {
 
 				$attempt_flag++;
-				if (@$storage->getBucketLocation($bucket_name)) {
+				if (@$storage->getBucketLocation($bucket_name)) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 					$attempt_flag = 100;
 				} else {
 					if (empty($config['sessiontoken'])) $config['sessiontoken'] = null;
@@ -847,10 +848,11 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 					echo '<p>';
 					_e('Examples of S3-compatible storage providers:');
 					echo ' <a href="https://updraftplus.com/use-updraftplus-digital-ocean-spaces/" target="_blank">DigitalOcean Spaces</a>, ';
+					echo '<a href="https://www.linode.com/products/object-storage/" target="_blank">Linode Object Storage</a>, ';
 					echo '<a href="https://www.cloudian.com" target="_blank">Cloudian</a>, ';
 					echo '<a href="https://www.mh.connectria.com/rp/order/cloud_storage_index" target="_blank">Connectria</a>, ';
 					echo '<a href="https://www.constant.com/cloud/storage/" target="_blank">Constant</a>, ';
-					echo '<a href="http://www.eucalyptus.com/eucalyptus-cloud/iaas" target="_blank">Eucalyptus</a>, ';
+					echo '<a href="https://www.eucalyptus.cloud/" target="_blank">Eucalyptus</a>, ';
 					echo '<a href="http://cloud.nifty.com/storage/" target="_blank">Nifty</a>, ';
 					echo '<a href="http://www.ntt.com/business/services/cloud/iaas/cloudn.html" target="_blank">Cloudn</a>';
 					echo ''.__('... and many more!', 'updraftplus').'<br>';
@@ -872,7 +874,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 				?>
 				<br>
 				<p>
-					<?php if ($console_url) echo sprintf(__('Get your access key and secret key <a href="%s">from your %s console</a>, then pick a (globally unique - all %s users) bucket name (letters and numbers) (and optionally a path) to use for storage. This bucket will be created for you if it does not already exist.', 'updraftplus'), $console_url, $console_descrip, $whoweare_long);?>
+					<?php if ($console_url) echo sprintf(__('Get your access key and secret key from your <a href="%s">%s console</a>, then pick a (globally unique - all %s users) bucket name (letters and numbers) (and optionally a path) to use for storage. This bucket will be created for you if it does not already exist.', 'updraftplus'), $console_url, $console_descrip, $whoweare_long);?>
 
 					<a href="<?php echo apply_filters("updraftplus_com_link", "https://updraftplus.com/faqs/i-get-ssl-certificate-errors-when-backing-up-andor-restoring/");?>" target="_blank"><?php _e('If you see errors about SSL certificates, then please go here for help.', 'updraftplus');?></a>
 
@@ -1018,7 +1020,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			if ('dreamobjects' == $config['key']) $this->set_region($storage, $endpoint);
 			
 			try {
-				$region = @$storage->getBucketLocation($bucket);
+				$region = @$storage->getBucketLocation($bucket);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				// We want to distinguish between an empty region (null), and an exception or missing bucket (false)
 				if (empty($region) && false !== $region) $region = null;
 			} catch (Exception $e) {
@@ -1052,7 +1054,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 						if (!is_wp_error($new_storage)) {
 							// Try again
 							try {
-								$region = @$new_storage->getBucketLocation($bucket);
+								$region = @$new_storage->getBucketLocation($bucket);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 								// We want to distinguish between an empty region (null), and an exception or missing bucket (false)
 								if (empty($region) && false !== $region) $region = null;
 								// Worked this time; update the passed-in information
@@ -1078,14 +1080,14 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		if (false === $region || 'n/a' === $region) {
 			$storage->setExceptions(true);
 			try {
-				if (@$storage->putBucket($bucket, 'private')) {
+				if (@$storage->putBucket($bucket, 'private')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 					$bucket_exists = true;
 				}
 				
 			} catch (Exception $e) {
 				$this->s3_exception = $e;
 				try {
-					if ('s3' == $config['key'] && $this->use_dns_bucket_name($storage, $bucket) && false !== @$storage->getBucket($bucket, $path, null, 1)) {
+					if ('s3' == $config['key'] && $this->use_dns_bucket_name($storage, $bucket) && false !== @$storage->getBucket($bucket, $path, null, 1)) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 						$bucket_exists = true;
 					}
 				} catch (Exception $e) {
@@ -1099,7 +1101,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 							$this->set_region($storage, $xml->Region);
 							$storage->setExceptions(false);
 							
-							if (false !== @$storage->getBucket($bucket, $path, null, 1)) {
+							if (false !== @$storage->getBucket($bucket, $path, null, 1)) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 								$bucket_exists = true;
 							}
 							
@@ -1217,7 +1219,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 
 			if (!empty($create_success)) {
 				try {
-					@$storage->deleteObject($bucket, $path.$try_file);
+					@$storage->deleteObject($bucket, $path.$try_file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				} catch (Exception $e) {
 					echo ' '.__('Delete failed:', 'updraftplus').' '.$e->getMessage();
 				}

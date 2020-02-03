@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WINP_Plugin' ) ) {
 
-	class WINP_Plugin extends Wbcr_Factory419_Plugin {
+	class WINP_Plugin extends Wbcr_Factory422_Plugin {
 
 		/**
-		 * @var Wbcr_Factory419_Plugin
+		 * @var Wbcr_Factory422_Plugin
 		 */
 		private static $app;
 
@@ -226,7 +226,6 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.import.snippet.php' );
 			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.notices.php' );
 			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.request.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.dashboard.widget.php' );
 			require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/metabox.php' );
 			require_once( WINP_PLUGIN_DIR . '/admin/boot.php' );
 
@@ -238,7 +237,6 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 			new WINP_Export_Snippet();
 			new WINP_Import_Snippet();
 			new WINP_WarningNotices();
-			new WINP_Dashboard_Widget();
 
 			# Required for i18n to be loaded properly
 			add_action( 'plugins_loaded', [ $this, 'register_pages' ] );

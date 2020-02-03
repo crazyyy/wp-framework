@@ -86,7 +86,7 @@ class WINP_Snippet_Library_Table extends WP_List_Table {
 	 */
 	function __construct( $modal = false ) {
 		global $status, $page;
-
+		add_thickbox();
 		$this->modal  = $modal;
 		$this->common = true;
 
@@ -131,6 +131,7 @@ class WINP_Snippet_Library_Table extends WP_List_Table {
 				$desc = strlen( $item[ $column_name ] ) > 500 ? substr( $item[ $column_name ], 0, 500 ) : $item[ $column_name ];
 
 				return '<div class="wbcr-inp-snippet-description" title="' . esc_attr( $desc ) . '">' . esc_html( $desc ) . '</div>';
+			case 'preview':
 			case 'datetime':
 			case 'insert':
 			case 'delete':
@@ -199,14 +200,18 @@ class WINP_Snippet_Library_Table extends WP_List_Table {
 	 **************************************************************************@see WP_List_Table::::single_row_columns()
 	 */
 	public function get_columns() {
-		$columns = [
-			// 'cb'     => '<input type="checkbox" />', //Render a checkbox instead of text
-			'type'     => __( 'Type', 'insert-php' ),
-			'title'    => __( 'Title', 'insert-php' ),
-			'desc'     => __( 'Description', 'insert-php' ),
-			'datetime' => __( 'Date', 'insert-php' ),
-			'insert'   => __( 'Insert', 'insert-php' ),
+		$columns          = [// 'cb'     => '<input type="checkbox" />', //Render a checkbox instead of text
 		];
+		$columns['type']  = __( 'Type', 'insert-php' );
+		$columns['title'] = __( 'Title', 'insert-php' );
+
+		if ( ! $this->modal && $this->common ) {
+			$columns['preview'] = __( 'Preview', 'insert-php' );
+		}
+
+		$columns['desc']     = __( 'Description', 'insert-php' );
+		$columns['datetime'] = __( 'Date', 'insert-php' );
+		$columns['insert']   = __( 'Insert', 'insert-php' );
 
 		if ( ! $this->modal && ! $this->common ) {
 			$columns['delete'] = __( 'Delete', 'insert-php' );
@@ -276,6 +281,20 @@ class WINP_Snippet_Library_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Возвращает id youtube видео
+	 *
+	 * @param $video_link   - ссылка на видео
+	 *
+	 * @return bool|string - если id сниппета не найден, то вернёт false
+	 */
+	private function get_video_id( $video_link ) {
+		// youtube regex
+		preg_match( "#([\/|\?|&]vi?[\/|=]|youtu\.be\/|embed\/)([a-zA-Z0-9_-]+)#", $video_link, $matches );
+
+		return ! empty( $matches ) ? end( $matches ) : false;
+	}
+
+	/**
 	 * Get snippets data
 	 *
 	 * @return array
@@ -286,7 +305,7 @@ class WINP_Snippet_Library_Table extends WP_List_Table {
 
 		$orderby = WINP_Plugin::app()->request->request( 'orderby', 'datetime', true );
 		$order   = WINP_Plugin::app()->request->request( 'order', 'desc', true );
-		$paged   = WINP_Plugin::app()->request->request( 'paged', 1 );
+		$paged   = WINP_Plugin::app()->request->request( 'paged', 1, 'intval' );
 
 		$order_tags = [
 			'title'    => 'title',
@@ -304,22 +323,35 @@ class WINP_Snippet_Library_Table extends WP_List_Table {
 
 		if ( ! empty( $snippets ) ) {
 			foreach ( (array) $snippets as $snippet ) {
-				$data[] = [
-					'ID'       => $snippet->id,
+				$_data = [
+					'ID'       => (int) $snippet->id,
 					'title'    => esc_html( $snippet->title ),
 					'desc'     => esc_html( $snippet->description ),
 					'type'     => $snippet->type->title,
 					'datetime' => date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $snippet->updated_at ),
-					'insert'   => '<a class="wbcr-inp-enable-snippet-button button" data-snippet="' . $snippet->id . '" data-common="' . ( $this->common ? 1 : 0 ) . '" href="javascript: void(0)"><span class="dashicons dashicons-plus"></span></a>',
-					'delete'   => '<a class="wbcr-inp-delete-snippet-button button" data-snippet="' . $snippet->id . '" href="javascript: void(0)"><span class="dashicons dashicons-no"></span></a>',
+					'insert'   => '<a class="wbcr-inp-enable-snippet-button button" data-snippet="' . esc_attr( $snippet->id ) . '" data-common="' . ( $this->common ? 1 : 0 ) . '" href="javascript: void(0)"><span class="dashicons dashicons-plus"></span></a>',
+					'delete'   => '<a class="wbcr-inp-delete-snippet-button button" data-snippet="' . esc_attr( $snippet->id ) . '" href="javascript: void(0)"><span class="dashicons dashicons-no"></span></a>',
 				];
+
+				if ( $this->common ) {
+					$_data['preview'] = '';
+				}
+
+				$video_id = $this->get_video_id( $snippet->video_link );
+
+				if ( $video_id ) {
+					$_data['preview'] = '<a class="thickbox" href="https://www.youtube.com/embed/' . esc_attr( $video_id ) . '?autoplay=1&rel=0&TB_iframe=true">' . '<img src="' . WINP_PLUGIN_URL . '/admin/assets/img/video.png" class="winp-library-image-preview" data-videoid="' . esc_attr( $video_id ) . '" alt="' . __( 'View the video', 'insert-php' ) . '">' . '</a>';
+				}
+
+				$data[] = $_data;
 
 				$saved_data[ $snippet->id ] = [
 					'title'   => esc_html( $snippet->title ),
 					'desc'    => esc_html( $snippet->description ),
 					'type'    => $snippet->type->slug,
 					'content' => $snippet->content,
-					'type_id' => $snippet->type_id,
+					'type_id' => (int) $snippet->type_id,
+					'scope'   => $snippet->execute_everywhere ? 'evrywhere' : 'shortcode',
 				];
 			}
 

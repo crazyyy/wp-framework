@@ -1,5 +1,8 @@
 <?php
 use ReduxCore\ReduxFramework\Redux;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 function ampforwp_get_default_analytics($param=""){
     $default = ''; 
     $default = ampforwp_get_setting('amp-analytics-select-option');
@@ -37,6 +40,8 @@ function ampforwp_analytics_options($opt_name){
                             '11' => esc_html__('Alexa Metrics', 'accelerated-mobile-pages'),
                             '12' => esc_html__('AFS Analytics', 'accelerated-mobile-pages'),
                             '13' => esc_html__('Adobe Analytics', 'accelerated-mobile-pages'),
+                            '14' => esc_html__('Facebook Pixel', 'accelerated-mobile-pages'),
+                            '15' => esc_html__('Clicky Analytics', 'accelerated-mobile-pages'),
                         ),
                         'default'  => '1',
                     ),  
@@ -154,18 +159,6 @@ function ampforwp_analytics_options($opt_name){
                                 array('amp-use-gtm-option', '=' , '1')
                               ),
                         ),
-                       array(
-                           'class' => 'child_opt',
-                           'id'            =>'amp-gtm-analytics-type',
-                           'type'          => 'text',
-                           'title'         => esc_html__('Analytics Type','accelerated-mobile-pages'),
-                           'default'       => '',
-                           'desc'  => esc_html__('Eg: googleanalytics','accelerated-mobile-pages'),
-                            // 'validate' => 'not_empty',
-                             'required' => array(
-                               array('amp-use-gtm-option', '=' , '1')
-                             ),
-                       ),
                         array(
                             'class'=>'child_opt',
                             'id'            =>'amp-gtm-analytics-code',
@@ -193,7 +186,7 @@ function ampforwp_analytics_options($opt_name){
                         'id'       => 'ampforwp-gtm-field-advance',
                         'type'     => 'ace_editor',
                         'title'    => esc_html__('Analytics Code in JSON Format', 'accelerated-mobile-pages'),
-                        'tooltip-subtitle'    => sprintf( '%s<a href="%s" target="_blank">%s</a>', esc_html__( 'Tutorial: ','accelerated-mobile-pages' ), esc_url('https://ampforwp.com/tutorials/article/add-advanced-google-analytics-amp/'),  esc_html__( 'How To Add Advanced Google Analytics in AMP?','accelerated-mobile-pages' ) ),
+                        'tooltip-subtitle'    => sprintf( '%s<a href="%s" target="_blank">%s</a>', esc_html__( 'Tutorial: ','accelerated-mobile-pages' ), esc_url('https://ampforwp.com/tutorials/article/how-to-track-a-click-event-in-gtm-amp/'),  esc_html__( 'How To Add Advanced Google Tag Manager in AMP?','accelerated-mobile-pages' ) ),
                         'required' => array(
                             array('amp-use-gtm-option', '=' , '1'),
                             array('ampforwp-gtm-field-advance-switch', '=' , '1')
@@ -202,16 +195,8 @@ function ampforwp_analytics_options($opt_name){
                         'theme'    => 'monokai',
                         'desc'     => '',
                         'default'  => ('{
-                          "vars": {
-                              "account": "UA-xxxxxxx-x"
-                          },
-                          "triggers": {
-                              "trackPageview": {
-                                  "on": "visible",
-                                  "request": "pageview"
-                              }
-                          }
-                      }')
+                      "vars": { "account": "UA-XXXXXX-Y"}
+}')
                     ),
                         array(
                           'class' => 'child_opt',
@@ -463,11 +448,10 @@ function ampforwp_analytics_options($opt_name){
                           'tooltip-subtitle' => esc_html__( 'Enter the Website ID', 'accelerated-mobile-pages' ),
                           'default'  => '',
                           'desc' => 'example: 00000003',
-                      ),   
+                      ), 
+                    //Clicky Analytics    
                     array(
-                        'required' => array(
-                          array('amp-use-gtm-option', '=' , '0'),
-                        ),
+                        
                         'id'            =>'amp-clicky-switch',
                         'type'          => 'switch',
                         'title'         => esc_html__('Clicky Analytics','accelerated-mobile-pages'),
@@ -484,7 +468,6 @@ function ampforwp_analytics_options($opt_name){
                             esc_html__( 'to create an account.','accelerated-mobile-pages' )
                         ),
                         'required' => array(
-                          array('amp-use-gtm-option', '=' , '0'),
                           array('amp-clicky-switch', '=' , '1')
                         ),
                         'placeholder'  => esc_html__('YOUR_SITE_ID_HERE','accelerated-mobile-pages'),

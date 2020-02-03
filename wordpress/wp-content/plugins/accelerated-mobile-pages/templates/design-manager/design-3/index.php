@@ -1,11 +1,15 @@
-<?php use AMPforWP\AMPVendor\AMP_HTML_Utils;?>
+<?php use AMPforWP\AMPVendor\AMP_HTML_Utils;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+?>
 <?php global $redux_builder_amp;  ?>
 <!doctype html>
 <html amp <?php echo AMP_HTML_Utils::build_attributes_string( $this->get( 'html_tag_attributes' ) ); ?>>
 <head>
 	<meta charset="utf-8">
 	<?php do_action('amp_experiment_meta', $this); ?>
-  	<link rel="dns-prefetch" href="https://cdn.ampproject.org">
+  	<link rel="dns-prefetch" href="//cdn.ampproject.org">
 	<?php do_action( 'amp_post_template_head', $this ); ?>
 
 	<style amp-custom>
@@ -150,7 +154,14 @@ if ( get_query_var( 'paged' ) ) {
 					$thumb_width  	= ampforwp_get_setting('ampforwp-design-3-homepage-posts-width');
 					$thumb_height 	= ampforwp_get_setting('ampforwp-design-3-homepage-posts-height');
 					$thumb_url_modify 	= wp_get_attachment_image_src($thumb_id, 'full' , true);
- 					$thumb_crop_url = ampforwp_aq_resize( $thumb_url_modify[0], $thumb_width , $thumb_height , true, false );
+					$thumb_mod_url = $thumb_url_modify[0];
+					if($thumb_id==0 || $thumb_id==""){
+						if( true ==ampforwp_get_setting('ampforwp-featured-image-from-content') && ampforwp_get_featured_image_from_content('url') ){
+							$thumb_url 	  = ampforwp_get_post_thumbnail('url');
+							$thumb_mod_url = $thumb_url;
+						}
+					}
+ 					$thumb_crop_url = ampforwp_aq_resize( $thumb_mod_url, $thumb_width , $thumb_height , true, false );
 					$thumb_url = $thumb_crop_url[0];
 				}
 				if($thumb_url){

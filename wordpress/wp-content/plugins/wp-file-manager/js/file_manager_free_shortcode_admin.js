@@ -16,7 +16,7 @@ jQuery(document).ready(function () {
         handlers: {
             /* Upload */
             upload: function (event, instance) {
-                if (fmfparams.fm_enable_media_upload) {
+                if (fmfparams.fm_enable_media_upload == '1') {
                     var filepaths = [];
                     var uploadedFiles = event.data.added;
                     for (i in uploadedFiles) {
@@ -26,7 +26,8 @@ jQuery(document).ready(function () {
                     if (filepaths != '') {
                         var data = {
                             'action': 'mk_file_folder_manager_media_upload',
-                            'uploadefiles': filepaths
+                            'uploadefiles': filepaths,
+							'_wpnonce': security_key
                         };
                         jQuery.post(ajaxurl, data, function (response) {
 

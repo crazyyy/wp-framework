@@ -34,9 +34,9 @@ function wpo_cache($buffer, $flags) {
 		$no_cache_because[] = __('User is logged in', 'wp-optimize');
 	}
 
-	// Don't cache search, 404, or password protected.
-	if (is_404() || is_search() || !empty($post->post_password)) {
-		$no_cache_because[] = __('Page type is not cacheable (404, search or password-protected)', 'wp-optimize');
+	$restricted_page_type_cache = apply_filters('wpo_restricted_cache_page_type', false);
+	if ($restricted_page_type_cache) {
+		$no_cache_because[] = $restricted_page_type_cache;
 	}
 
 	// No root cache folder, so short-circuit here
@@ -46,6 +46,15 @@ function wpo_cache($buffer, $flags) {
 		// Try creating a folder for cached files, if it was flushed recently
 		if (!mkdir(WPO_CACHE_FILES_DIR)) {
 			$no_cache_because[] = __('WP-O cache directory was not found', 'wp-optimize').' ('.WPO_CACHE_FILES_DIR.')';
+		}
+	}
+
+	// If comments are opened and the user has saved his information
+	if (function_exists('comments_open') && comments_open()) {
+		$commenter = wp_get_current_commenter();
+		// if any of the fields contain something, do not save to cache
+		if ('' != $commenter['comment_author'] || '' != $commenter['comment_author_email'] || '' != $commenter['comment_author_url']) {
+			$no_cache_because[] = __('Comments are opened and the visitor saved his information.', 'wp-optimize');
 		}
 	}
 
@@ -61,7 +70,11 @@ function wpo_cache($buffer, $flags) {
 	if (!$can_cache_page) {
 		$no_cache_because[] = __('DONOTCACHEPAGE constant or wpo_can_cache_page filter forbade it', 'wp-optimize');
 	}
-	
+
+	if (defined('REST_REQUEST') && REST_REQUEST) {
+		$no_cache_because[] = __('This is a REST API request (identified by REST_REQUEST constant)', 'wp-optimize');
+	}
+
 	if (empty($no_cache_because)) {
 
 		$buffer = apply_filters('wpo_pre_cache_buffer', $buffer, $flags);
@@ -89,8 +102,8 @@ function wpo_cache($buffer, $flags) {
 	if (!empty($no_cache_because)) {
 	
 		// Only output if the user has turned on debugging output
-		if (defined('WP_DEBUG') && WP_DEBUG) {
-			$buffer .= "\n<!-- WP Optimize page cache - https://getwpo.com - page not served from cache because: ".implode(', ', array_filter($no_cache_because, 'htmlspecialchars'))." -->\n";
+		if (((defined('WP_DEBUG') && WP_DEBUG) || isset($_GET['wpo_cache_debug'])) && (!defined('DOING_CRON') || !DOING_CRON) && (!defined('REST_REQUEST') || !REST_REQUEST)) {
+			$buffer .= "\n<!-- WP Optimize page cache - https://getwpo.com - page NOT cached because: ".implode(', ', array_filter($no_cache_because, 'htmlspecialchars'))." -->\n";
 		}
 		
 		return $buffer;
@@ -112,9 +125,9 @@ function wpo_cache($buffer, $flags) {
 		
 		if (preg_match('#</html>#i', $buffer)) {
 			if (!empty($GLOBALS['wpo_cache_config']['enable_mobile_caching']) && wpo_is_mobile()) {
-				$add_to_footer .= "\n<!-- Cached by WP Optimize - for mobile devices - https://getwpo.com - Last modified: " . gmdate('D, d M Y H:i:s', $modified_time) . " GMT -->\n";
+				$add_to_footer .= "\n<!-- Cached by WP-Optimize - for mobile devices - https://getwpo.com - Last modified: " . gmdate('D, d M Y H:i:s', $modified_time) . " GMT -->\n";
 			} else {
-				$add_to_footer .= "\n<!-- Cached by WP Optimize - https://getwpo.com - Last modified: " . gmdate('D, d M Y H:i:s', $modified_time) . " GMT -->\n";
+				$add_to_footer .= "\n<!-- Cached by WP-Optimize - https://getwpo.com - Last modified: " . gmdate('D, d M Y H:i:s', $modified_time) . " GMT -->\n";
 			}
 		}
 
@@ -127,7 +140,7 @@ function wpo_cache($buffer, $flags) {
 		// if we can then cache gzipped content in .gz file.
 		if (function_exists('gzencode')) {
 			// Only replace inside the addition, not inside the main buffer (e.g. post content)
-			file_put_contents($cache_file . '.gz', gzencode($buffer.str_replace('by WP Optimize', 'by WP Optimize (gzip)', $add_to_footer), apply_filters('wpo_cache_gzip_level', 6)));
+			file_put_contents($cache_file . '.gz', gzencode($buffer.str_replace('by WP-Optimize', 'by WP-Optimize (gzip)', $add_to_footer), apply_filters('wpo_cache_gzip_level', 6)));
 		}
 
 		file_put_contents($cache_file, $buffer.$add_to_footer);
@@ -162,6 +175,11 @@ if (!function_exists('wpo_cache_load_extensions')) :
 function wpo_cache_load_extensions() {
 	$extensions = glob(WPO_CACHE_EXT_DIR . '/*.php');
 
+	// Add external extensions
+	if (defined('WPO_CACHE_CUSTOM_EXT_DIR') && is_dir(WPO_CACHE_CUSTOM_EXT_DIR)) {
+		$extensions = array_merge($extensions, glob(WPO_CACHE_CUSTOM_EXT_DIR . '/*.php'));
+	}
+
 	if (empty($extensions)) return;
 
 	foreach ($extensions as $extension) {
@@ -169,6 +187,24 @@ function wpo_cache_load_extensions() {
 	}
 }
 endif;
+
+if (!function_exists('wpo_restricted_cache_page_type')) {
+function wpo_restricted_cache_page_type($restricted) {
+	global $post;
+
+	// Don't cache search or password protected.
+	if ((function_exists('is_search') && is_search()) || (function_exists('is_404') && is_404()) || !empty($post->post_password)) {
+		$restricted = __('Page type is not cacheable (search, 404 or password-protected)', 'wp-optimize');
+	}
+
+	// Don't cache htacesss. Remember to properly escape any output to prevent injection.
+	if (strpos($_SERVER['REQUEST_URI'], '.htaccess') !== false) {
+		$restricted = 'The file path is unsuitable for caching ('.$_SERVER['REQUEST_URI'].')';
+	}
+
+	return $restricted;
+}
+}
 
 /**
  * Get filename for store cache, depending on gzip, mobile and cookie settings.
@@ -442,6 +478,17 @@ function wpo_serve_cache() {
 			header('Content-Encoding: gzip');
 		}
 
+		// send correct headers for xml and txt files
+		$filename = basename(dirname($path));
+
+		if (preg_match('/\.xml$/i', $filename)) {
+			header('Content-type: text/xml');
+		}
+
+		if (preg_match('/\.txt$/i', $filename)) {
+			header('Content-type: text/plain');
+		}
+
 		readfile($path);
 
 		exit;
@@ -475,6 +522,8 @@ if (!function_exists('wpo_get_url_path')) :
 function wpo_get_url_path($url = '') {
 	$url = '' == $url ? wpo_current_url() : $url;
 	$url_parts = parse_url($url);
+
+	if (!isset($url_parts['host'])) $url_parts['host'] = '';
 	if (!isset($url_parts['path'])) $url_parts['path'] = '';
 
 	return $url_parts['host'].$url_parts['path'];
@@ -488,9 +537,15 @@ endif;
  */
 if (!function_exists('wpo_current_url')) :
 function wpo_current_url() {
-	return rtrim('http' . ((isset($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'] || 1 == $_SERVER['HTTPS']) ||
+	// Note: We use `static $url` to save the first value we retrieve, as some plugins change $_SERVER later on in the process (e.g. Weglot).
+	// Otherwise this function would return a different URL at the begining and end of the cache process.
+	static $url = '';
+	if ('' != $url) return $url;
+	$http_host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+	$url = rtrim('http' . ((isset($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'] || 1 == $_SERVER['HTTPS']) ||
 			isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && 'https' == $_SERVER['HTTP_X_FORWARDED_PROTO']) ? 's' : '' )
-		. '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}", '/');
+		. '://' . $http_host.$_SERVER['REQUEST_URI'], '/');
+	return $url;
 }
 endif;
 
@@ -680,6 +735,7 @@ function wpo_delete_files($src, $recursive = true) {
 	}
 
 	$success = true;
+	$has_dir = false;
 
 	if ($recursive) {
 		// N.B. If opendir() fails, then a false positive (i.e. true) will be returned
@@ -704,18 +760,26 @@ function wpo_delete_files($src, $recursive = true) {
 			}
 			closedir($dir);
 		}
-
-		// Success of this operation is not recorded; we only ultimately care about emptying, not removing entirely (empty folders in our context are harmless)
-		rmdir($src);
 	} else {
 		// Not recursive, so we only delete the files
 		$files = scandir($src);
 		foreach ($files as $file) {
-			if (is_dir($src . '/' . $file) || '.' == $file || '..' == $file) continue;
+			if ('.' == $file || '..' == $file) continue;
+
+			if (is_dir($src . '/' . $file)) {
+				$has_dir = true;
+				continue;
+			}
+
 			if (!unlink($src . '/' . $file)) {
 				$success = false;
 			}
 		}
+	}
+
+	if ($success && !$has_dir) {
+		// Success of this operation is not recorded; we only ultimately care about emptying, not removing entirely (empty folders in our context are harmless)
+		rmdir($src);
 	}
 
 	// delete cached information about cache size.
@@ -738,9 +802,9 @@ function wpo_cache_add_footer_output($output = null) {
 	if (function_exists('current_filter') && 'shutdown' == current_filter()) {
 		// Only add the line if it was a page, not something else (e.g. REST response)
 		if (function_exists('did_action') && did_action('wp_footer')) {
-			echo $buffered;
-		} else {
-			error_log($buffered);
+			echo "\n<!-- WP Optimize page cache - https://getwpo.com - ".$buffered." -->\n";
+		} elseif (defined('WPO_CACHE_DEBUG') && WPO_CACHE_DEBUG) {
+			error_log('[CACHE DEBUG] '.wpo_current_url() . ' - ' . $buffered);
 		}
 	} else {
 		if (null == $buffered && function_exists('add_action')) add_action('shutdown', 'wpo_cache_add_footer_output', 11);
@@ -762,8 +826,27 @@ function wpo_cache_maybe_ignore_query_variables($variables) {
 
 	/**
 	 * Filters the current $_GET variables that will be used when caching or excluding from cache.
+	 * Currently:
+	 * - 'wpo_cache_debug' (Shows the reason for not being cached even when WP_DEBUG isn't set)
+	 * - 'doing_wp_cron' (alternative cron)
+	 * - 'aiosp_sitemap_path', 'aiosp_sitemap_page' (All in one SEO sitemap)
+	 * - 'xml_sitemap', 'seopress_sitemap', 'seopress_news', 'seopress_video', 'seopress_cpt', 'seopress_paged' (SEOPress sitemap)
+	 * - 'sitemap', 'sitemap_n' (YOAST SEO sitemap)
 	 */
-	$exclude_variables = array('doing_wp_cron');
+	$exclude_variables = array(
+		'wpo_cache_debug',    // Shows the reason for not being cached even when WP_DEBUG isn't set
+		'doing_wp_cron',      // alternative cron
+		'aiosp_sitemap_path', // All in one SEO sitemap
+		'aiosp_sitemap_page',
+		'xml_sitemap',        // SEOPress sitemap
+		'seopress_sitemap',
+		'seopress_news',
+		'seopress_video',
+		'seopress_cpt',
+		'seopress_paged',
+		'sitemap',            // YOAST SEO sitemap
+		'sitemap_n',
+	);
 	$exclude_variables = function_exists('apply_filters') ? apply_filters('wpo_cache_ignore_query_variables', $exclude_variables) : $exclude_variables;
 
 	if (empty($exclude_variables)) return $variables;
@@ -771,10 +854,32 @@ function wpo_cache_maybe_ignore_query_variables($variables) {
 	foreach ($exclude_variables as $variable) {
 		$exclude = array_search($variable, $variables);
 		if (false !== $exclude) {
-			array_splice($variables, $exclude);
+			array_splice($variables, $exclude, 1);
 		}
 	}
 
 	return $variables;
+}
+endif;
+
+/**
+ * Get cache config
+ *
+ * @param string $key     - The config item
+ * @param mixed  $default - The default value
+ *
+ * @return mixed
+ */
+if (!function_exists('wpo_cache_config_get')) :
+function wpo_cache_config_get($key, $default = false) {
+	$config = $GLOBALS['wpo_cache_config'];
+
+	if (!$config) return false;
+
+	if (isset($config[$key])) {
+		return $config[$key];
+	} else {
+		return $default;
+	}
 }
 endif;

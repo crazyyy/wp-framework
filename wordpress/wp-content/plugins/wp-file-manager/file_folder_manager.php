@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/wp-file-manager
   Description: Manage your WP files.
   Author: mndpsingh287
-  Version: 5.3
+  Version: 5.7
   Author URI: https://profiles.wordpress.org/mndpsingh287
   License: GPLv2
  **/
@@ -23,7 +23,6 @@ if (!class_exists('mk_file_folder_manager')):
             add_action('admin_menu', array(&$this, 'ffm_menu_page'));
             add_action('admin_enqueue_scripts', array(&$this, 'ffm_admin_things'));
             add_action('wp_ajax_mk_file_folder_manager', array(&$this, 'mk_file_folder_manager_action_callback'));
-            add_action('wp_ajax_nopriv_mk_file_folder_manager', array(&$this, 'mk_file_folder_manager_action_callback'));
             add_action('wp_ajax_mk_fm_close_fm_help', array($this, 'mk_fm_close_fm_help'));
             add_filter('plugin_action_links', array(&$this, 'mk_file_folder_manager_action_links'), 10, 2);
             do_action('load_filemanager_extensions');
@@ -587,7 +586,8 @@ if (!class_exists('mk_file_folder_manager')):
             add_submenu_page('wp_file_manager', __('System Properties', 'wp-file-manager'), __('System Properties', 'wp-file-manager'), 'manage_options', 'wp_file_manager_properties', array(&$this, 'wp_file_manager_properties'));
             /* Only for admin */
             add_submenu_page('wp_file_manager', __('Shortcode - PRO', 'wp-file-manager'), __('Shortcode - PRO', 'wp-file-manager'), 'manage_options', 'wp_file_manager_shortcode_doc', array(&$this, 'wp_file_manager_shortcode_doc'));
-            add_submenu_page('wp_file_manager', __('Backup / Restore', 'wp-file-manager'), __('Backup / Restore', 'wp-file-manager'), 'manage_options', 'wpfm-backup', array(&$this, 'wp_file_manager_backup'));
+            add_submenu_page('wp_file_manager', __('Logs', 'wp-file-manager'), __('Logs', 'wp-file-manager'), 'manage_options', 'wpfm-logs', array(&$this, 'wp_file_manager_logs'));
+            add_submenu_page('wp_file_manager', __('Backup / Restore', 'wp-file-manager'), __('Backup / Restore', 'wp-file-manager'), 'manage_options', 'wpfm-backup', array(&$this, 'wp_file_manager_backup'));             
         }       
         /* Main Role */
         public function ffm_settings_callback()
@@ -625,8 +625,7 @@ if (!class_exists('mk_file_folder_manager')):
             if (is_admin()):
              include 'inc/system_properties.php';
             endif;
-        }
-
+        }	
         /*
          Root
         */
@@ -634,6 +633,13 @@ if (!class_exists('mk_file_folder_manager')):
         {
             if (is_admin()):
              include 'inc/root.php';
+            endif;
+        }		
+		/* System Properties */
+        public function wp_file_manager_logs()
+        {
+            if (is_admin()):
+             include 'inc/logs.php';
             endif;
         }
 
@@ -659,11 +665,11 @@ if (!class_exists('mk_file_folder_manager')):
                 $wp_fm_lang = get_transient('wp_fm_lang');
                 $wp_fm_theme = get_transient('wp_fm_theme');
                 $opt = get_option('wp_file_manager_settings');
-               wp_register_script( "file_manager_free_shortcode_admin", plugins_url('js/file_manager_free_shortcode_admin.js',  __FILE__ ), array() );
+               wp_register_script( "file_manager_free_shortcode_admin", plugins_url('js/file_manager_free_shortcode_admin.js',  __FILE__ ), array(), rand(0,9999) );
                 wp_localize_script( 'file_manager_free_shortcode_admin', 'fmfparams', array(
                     'ajaxurl' => admin_url('admin-ajax.php'),
                     'nonce' => $fm_nonce,
-                    'lang' => isset($_GET['lang']) ? sanitize_text_field($_GET['lang']) : ($wp_fm_lang !== false) ? $wp_fm_lang : 'en',
+                    'lang' => isset($_GET['lang']) ? sanitize_text_field($_GET['lang']) : (($wp_fm_lang !== false) ? $wp_fm_lang : 'en'),
                     'fm_enable_media_upload' => (isset($opt['fm_enable_media_upload']) && $opt['fm_enable_media_upload'] == '1') ? '1' : '0',
                     )
                 );        
@@ -703,7 +709,7 @@ if (!class_exists('mk_file_folder_manager')):
         public function mk_file_folder_manager_action_links($links, $file)
         {
             if ($file == plugin_basename(__FILE__)) {
-                $mk_file_folder_manager_links = '<a href="http://filemanager.webdesi9.com/product/file-manager/" title="Buy Pro Now" target="_blank" style="font-weight:bold">'.__('Buy Pro', 'wp-file-manager').'</a>';
+                $mk_file_folder_manager_links = '<a href="https://filemanagerpro.io/product/file-manager/" title="Buy Pro Now" target="_blank" style="font-weight:bold">'.__('Buy Pro', 'wp-file-manager').'</a>';
                 $mk_file_folder_manager_donate = '<a href="http://www.webdesi9.com/donate/?plugin=wp-file-manager" title="Donate Now" target="_blank" style="font-weight:bold">'.__('Donate', 'wp-file-manager').'</a>';
                 array_unshift($links, $mk_file_folder_manager_donate);
                 array_unshift($links, $mk_file_folder_manager_links);
@@ -942,16 +948,19 @@ if (!class_exists('mk_file_folder_manager')):
         * Media Upload
         */
         public function mk_file_folder_manager_media_upload() {	
-			$uploadedfiles = isset($_POST['uploadefiles']) ? $_POST['uploadefiles'] : '';
-			  if(!empty($uploadedfiles)) {
-				 $files = '';
-				 $fileCount = 1;
-				 foreach($uploadedfiles as $uploadedfile) {					 
-				 /* Start - Uploading Image to Media Lib */
-				   $this->upload_to_media_library($uploadedfile);
-				 /* End - Uploading Image to Media Lib */
-				 }
-			  }
+            $nonce = $_REQUEST['_wpnonce'];
+            if (current_user_can('manage_options') && wp_verify_nonce($nonce, 'wp-file-manager')) {
+                $uploadedfiles = isset($_POST['uploadefiles']) ? $_POST['uploadefiles'] : '';
+                if(!empty($uploadedfiles)) {
+                    $files = '';
+                    $fileCount = 1;
+                    foreach($uploadedfiles as $uploadedfile) {					 
+                    /* Start - Uploading Image to Media Lib */
+                    $this->upload_to_media_library($uploadedfile);
+                    /* End - Uploading Image to Media Lib */
+                    }
+                }
+            }
 			  die;
         }
        /* Upload Images to Media Library */

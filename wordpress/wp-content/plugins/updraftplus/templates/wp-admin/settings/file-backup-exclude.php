@@ -15,4 +15,4 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 	}
 	?>
 </div>
-<a href="#" class="updraft_add_exclude_item updraft_icon_link" data-include-backup-file="<?php echo esc_attr($key);?>" data-path="<?php echo esc_attr($path);?>"><span class="dashicons dashicons-plus"></span><?php echo __('Add an exclusion rule', 'updraftplus');?></a>
+<a href="#" class="updraft_add_exclude_item updraft_icon_link" data-include-backup-file="<?php echo esc_attr($key);?>" data-path="<?php echo esc_attr($path);?>" aria-label="<?php echo sprintf(__('Add an exclusion rule for %s', 'updraftplus'), esc_attr($key)); ?>"><span class="dashicons dashicons-plus"></span><?php echo __('Add an exclusion rule', 'updraftplus');?></a>

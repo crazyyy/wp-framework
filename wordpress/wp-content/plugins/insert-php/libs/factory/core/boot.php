@@ -14,49 +14,49 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( defined( 'FACTORY_419_LOADED' ) ) {
+if ( defined( 'FACTORY_422_LOADED' ) ) {
 	return;
 }
 
-define( 'FACTORY_419_LOADED', true );
+define( 'FACTORY_422_LOADED', true );
 
-define( 'FACTORY_419_VERSION', '4.1.9' );
+define( 'FACTORY_422_VERSION', '4.2.2' );
 
-define( 'FACTORY_419_DIR', dirname( __FILE__ ) );
-define( 'FACTORY_419_URL', plugins_url( null, __FILE__ ) );
+define( 'FACTORY_422_DIR', dirname( __FILE__ ) );
+define( 'FACTORY_422_URL', plugins_url( null, __FILE__ ) );
 
-load_plugin_textdomain( 'wbcr_factory_419', false, dirname( plugin_basename( __FILE__ ) ) . '/langs' );
+load_plugin_textdomain( 'wbcr_factory_422', false, dirname( plugin_basename( __FILE__ ) ) . '/langs' );
 
 #comp merge
-require_once( FACTORY_419_DIR . '/includes/functions.php' );
+require_once( FACTORY_422_DIR . '/includes/functions.php' );
 
-require_once( FACTORY_419_DIR . '/includes/entities/class-factory-paths.php' );
-require_once( FACTORY_419_DIR . '/includes/entities/class-factory-support.php' );
+require_once( FACTORY_422_DIR . '/includes/entities/class-factory-paths.php' );
+require_once( FACTORY_422_DIR . '/includes/entities/class-factory-support.php' );
 
-require_once( FACTORY_419_DIR . '/includes/class-factory-requests.php' );
-require_once( FACTORY_419_DIR . '/includes/class-factory-options.php' );
-require_once( FACTORY_419_DIR . '/includes/class-factory-plugin-base.php' );
-require_once( FACTORY_419_DIR . '/includes/class-factory-migrations.php' );
-require_once( FACTORY_419_DIR . '/includes/class-factory-notices.php' );
+require_once( FACTORY_422_DIR . '/includes/class-factory-requests.php' );
+require_once( FACTORY_422_DIR . '/includes/class-factory-options.php' );
+require_once( FACTORY_422_DIR . '/includes/class-factory-plugin-base.php' );
+require_once( FACTORY_422_DIR . '/includes/class-factory-migrations.php' );
+require_once( FACTORY_422_DIR . '/includes/class-factory-notices.php' );
 
 // ASSETS
-require_once( FACTORY_419_DIR . '/includes/assets-managment/class-factory-assets-list.php' );
-require_once( FACTORY_419_DIR . '/includes/assets-managment/class-factory-script-list.php' );
-require_once( FACTORY_419_DIR . '/includes/assets-managment/class-factory-style-list.php' );
+require_once( FACTORY_422_DIR . '/includes/assets-managment/class-factory-assets-list.php' );
+require_once( FACTORY_422_DIR . '/includes/assets-managment/class-factory-script-list.php' );
+require_once( FACTORY_422_DIR . '/includes/assets-managment/class-factory-style-list.php' );
 
 // PREMIUM
-require_once( FACTORY_419_DIR . '/includes/premium/class-factory-license-interface.php' );
-require_once( FACTORY_419_DIR . '/includes/premium/class-factory-provider-abstract.php' );
-require_once( FACTORY_419_DIR . '/includes/premium/class-factory-manager.php' );
+require_once( FACTORY_422_DIR . '/includes/premium/class-factory-license-interface.php' );
+require_once( FACTORY_422_DIR . '/includes/premium/class-factory-provider-abstract.php' );
+require_once( FACTORY_422_DIR . '/includes/premium/class-factory-manager.php' );
 
 // UPDATES
-require_once( FACTORY_419_DIR . '/includes/updates/repositories/class-factory-repository-abstract.php' );
-require_once( FACTORY_419_DIR . '/includes/updates/repositories/class-factory-wordpress.php' );
-require_once( FACTORY_419_DIR . '/includes/updates/class-factory-upgrader.php' );
-require_once( FACTORY_419_DIR . '/includes/updates/class-factory-premium-upgrader.php' );
+require_once( FACTORY_422_DIR . '/includes/updates/repositories/class-factory-repository-abstract.php' );
+require_once( FACTORY_422_DIR . '/includes/updates/repositories/class-factory-wordpress.php' );
+require_once( FACTORY_422_DIR . '/includes/updates/class-factory-upgrader.php' );
+require_once( FACTORY_422_DIR . '/includes/updates/class-factory-premium-upgrader.php' );
 
-require_once( FACTORY_419_DIR . '/includes/class-factory-plugin-abstract.php' );
+require_once( FACTORY_422_DIR . '/includes/class-factory-plugin-abstract.php' );
 
-require_once( FACTORY_419_DIR . '/includes/activation/class-factory-activator.php' );
-require_once( FACTORY_419_DIR . '/includes/activation/class-factory-update.php' );
+require_once( FACTORY_422_DIR . '/includes/activation/class-factory-activator.php' );
+require_once( FACTORY_422_DIR . '/includes/activation/class-factory-update.php' );
 #endcomp

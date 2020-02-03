@@ -2,19 +2,19 @@
 Contributors: DavidAnderson, ruhanirabin, DNutbourne, aporter, snightingale, lumberhack
 Donate link: https://david.dw-perspective.org.uk/donate
 Tags: cache, optimizing, database, image optimize, performance, clean, spam, speed, caching, smush, smushing
-Requires at least: 3.8
-Tested up to: 5.2
-Stable tag: 3.0.11
+Requires at least: 3.9
+Tested up to: 5.3
+Stable tag: 3.0.16
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
+Makes your site fast and efficient. It cleans the database, compresses images and caches pages. Cached sites attract more traffic and users.
 
 == Description ==
 
 WP-Optimize is a revolutionary, all-in-one plugin that cleans your database, compresses your images and caches your site. 
 
-Built around the world’s fastest caching engine, this simple, popular and highly effective tool has everything you need to keep your website fast and thoroughly optimized!
+Our cache feature is built around the world’s fastest caching engine. This simple, popular and highly effective tool has everything you need to keep your website fast and thoroughly optimized!
 
 [vimeo https://vimeo.com/333705073]
 
@@ -22,9 +22,9 @@ It does it in three clever ways:
 
 * It allows you to clean and optimise your database.
 * It gives you the option to compress your images.
-* It allows you cache your pages, for super fast load times (read more below).
+* It allows you cache your pages, for super fast load times (read more caching information below).
 
-Extensive tests show the cache feature alone can make WordPress sites faster than any other caching plugin available.  But when combined with the database and image optimize features, the difference with alternative solutions is significant.
+Extensive tests show the cache feature alone can make WordPress sites faster than any other caching plugin available.  But when you combine the cache with the database and image optimize features, the difference with alternative solutions is significant.
 
 = 1. Cleans the database  =
 
@@ -79,19 +79,19 @@ Smaller yet high quality images means significantly faster page loading times an
 
 <strong>Page caching is probably what will make the biggest difference to your website's performance. </strong>
 
-Caching involves keeping dynamic data in a temporary storage area so that it can be retrieved in an instant. It’s a sure-fire way to ensure that web pages load at lightning-fast speed.
+Caching involves keeping dynamic data in a temporary storage area so that it can be retrieved in an instant. Caching is a sure-fire way to ensure that web pages load at lightning-fast speed.
 
-Practically, our powerful yet simple WP-Optimize cache feature generates the cache when a visitor visits any page or post on your site. WordPress processes the dynamic php files to generate that page, and we save it into a static html file, so that when the next user visits, the page doesn't need processing. This results in a much faster loading time, and  gives a slight break to your server. So caching increases speed and performance while reducing the server's use of resources.
+Practically, our powerful yet simple cache feature generates the cache when a visitor visits any page or post on your site. WordPress processes the dynamic php files to generate that page, and we save it into a static html file in the cache folder, so that when the next user visits, the page is cached and doesn't need processing. This caching results in a much faster loading time, and  gives a slight break to your server. So caching increases speed and performance while reducing the server's use of resources.
 
-With minimal configuration, the plugin is easy to use and has a load of useful features, including:
+With minimal configuration, caching your site with WP-Optimize is easy to do thanks to a load of useful features, including:
 
-* <strong>Cache preloading</strong> to ensure the cache is always ready and loaded:
+* <strong>Cache preloading</strong> to ensure the cache is always ready and loaded.
 * <strong>Gzip compression</strong> of HTML, JavaScript, and CSS to reduce site load time.
 * <strong>Device-Specific cache</strong> to ensure the optimized page version is always served.
-* <strong>Advanced exclusion rules</strong>, so that you can cache almost anything by excluding logged in users, specific URLs or cookies.
-* <strong>Browser Cache</strong> to instruct client browsers to reuse resources (HTML, CSS, JS) if no changes were made since the last request. 
+* <strong>Advanced cache exclusion rules</strong>, so that you can cache almost anything by excluding logged in users, specific URLs or cookies.
+* <strong>Browser Cache</strong> to instruct client browsers to reuse cached resources (HTML, CSS, JS) if no changes were made since the last request. 
 
-Overall WP-Optimize brings the best optimization technology together in a single seamless plugin to make your WordPress site fast, lean and efficient.
+Overall WP-Optimize brings the best cache and optimization technology together in a single seamless plugin to make your WordPress site fast, lean and efficient.
 
 = WP-Optimize Premium =
 
@@ -105,7 +105,7 @@ Our free version of WP-Optimize is great, but we also have an even more powerful
 * <strong>WP-CLI support:</strong> provides a way to manage optimizations from command-line interface if you have lots of sites
 * <strong>Lazy Loading:</strong> load only the images and part of a web-page when it is visible to the user so they can see something very quickly.
 * <strong>Optimization Preview:</strong> gives users the ability to preview, select and remove data and records available for optimization from the database.
-* <strong>Premium support</strong> - caching is one of the most complex things you can do for a website, so premium support offers you peace of mind there’s someone to talk quickly to if you need any technical answers.
+* <strong>Premium support</strong> - caching is one of the most complex things you can do for a website, so premium support offers you peace of mind there’s someone to talk quickly to if you need any technical answers or help configuring the optimizations or cache settings for your website.
 
 = Translations =
 
@@ -142,10 +142,10 @@ There are 3 different ways to install WP-Optimize, as with any other wordpress.o
 
 = Isn't it better to use a dedicated caching plugin to cache my site? =
 
-We've built WP-Optimize around the most advanced and powerful caching technology. Our tests and feedback from real-world users show that the caching feature alone can make your site faster than any other cache plugin. <a href="https://ps.w.org/wp-optimize/assets/screenshot-1.png?rev=2125386">See these speed test results.</a>
+We've built WP-Optimize around the most advanced and powerful caching technology. Our caching tests and feedback from real-world users show that the caching feature alone can make your site faster than any other cache plugin or optimization. <a href="https://ps.w.org/wp-optimize/assets/screenshot-1.png?rev=2125386">See these speed test results.</a>
 
 = Is optimizing my database safe? =
-Yes; optimizing does not involve any "tricks" or poking around in dangerous ways. It involves running routine clean-up operations using well-defined, common MySQL commands. Nevertheless, we always recommend backups, which cover every possibility; not just database malfunctions, but hackers, human errors, etc. We recommend <a href="https://wordpress.org/plugins/updraftplus/">UpdraftPlus</a>.
+Yes; optimizing does not involve any "tricks" or poking around in dangerous ways. It involves running routine clean-up operations using well-defined, common MySQL commands. <strong>Nevertheless, we always recommend backups</strong>, which cover every possibility; not just database malfunctions, but hackers, human errors, etc. We recommend <a href="https://wordpress.org/plugins/updraftplus/">UpdraftPlus</a>.
 
 = What savings can I expect to make? =
 This is a "how long is string?" sort of question. It depends completely on your site - how big it is, how many users interact on it, how long it has been running, and when you last optimised it. However, the savings and speed-ups can be substantial; it is always worth making sure that your database is optimised.
@@ -169,7 +169,7 @@ Not unless you have an existing backup. Please ensure that you make a backup of 
 The plugin is an ongoing work; that means that it is impossible to rule out unforeseen situations and bugs. So I would recommend you to test it out on your local system or make a backup of your database (just to be extra careful).
 
 = How do I stop transient options from coming back automatically each time I clear them? =
-When WordPress uses a particular transient, that specific transient is re-created automatically. So, it's normaly for ones which are in active use to gradually re-appear. The best way to keep things optimal is to clear the transient options on a scheduled basis. For example, WordPress may create 50 transient option in a week. If you schedule WP-Optimize to clear these options on a weekly basis, you’ll have far fewer building up.
+When WordPress uses a particular transient, that specific transient is re-created automatically. So, it's normally for ones which are in active use to gradually re-appear. The best way to keep things optimal is to clear the transient options on a scheduled basis. For example, WordPress may create 50 transient option in a week. If you schedule WP-Optimize to clear these options on a weekly basis, you’ll have far fewer building up.
 
 = The table size shows wrong / Not optimizing  =
 Please check your database for corrupted tables. That can happen, usually your web hosting company can run the repair command on the db.
@@ -178,44 +178,119 @@ Please check your database for corrupted tables. That can happen, usually your w
 To use all features in the plugin, a minimum of version WordPress 4 with PHP 5.3 are required. But we do recommend to use the latest version of WordPress. Using PHP 7+ is also highly recommended, as our caching feature will work even faster.
 
 = Which optimisation will make the biggest difference? =
-This depends on your setup (theme, number and quality of plugins used, etc...), but generally, caching will make the biggest visible difference to your website's performance. Indeed, the cache functionality bypasses most of WordPress code to serve your pre-optimised pages directly to your visitor, significantly increasing the speed.
+This depends on your setup (theme, number and quality of plugins used, etc...), but generally, caching will make the biggest visible difference to your website's performance. Indeed, the cache functionality bypasses most of WordPress code to serve your pre-optimised cached pages directly to your visitor, significantly increasing the speed.
 
 = What is caching, or page caching? =
-<em>From Wikipedia:</em> "In computing, a cache is a hardware or software component that stores data so that future requests for that data can be served faster; the data stored in a cache might be the result of an earlier computation or a copy of data stored elsewhere. A cache hit occurs when the requested data can be found in a cache, while a cache miss occurs when it cannot." — WP-Optimize does this by saving the page computed by WordPress on the disk. When a user visits a page, WP-Optimize will serve the cached page before WordPress is loaded. If the page wasn't cached before, it will be computed by WordPress, and WP-Optimize will then save the result to the cache.
+<em>"Caching", from Wikipedia:</em> "In computing, a cache is a hardware or software component that stores data so that future requests for that data can be served faster; the data stored in a cache might be the result of an earlier computation or a copy of data stored elsewhere. A cache hit occurs when the requested data can be found in a cache, while a cache miss occurs when it cannot." — WP-Optimize cache does this by saving the page computed by WordPress on the disk. When a user visits a page, WP-Optimize will serve the cached page before WordPress is loaded. If the page wasn't cached before, it will be computed by WordPress, and WP-Optimize will then save the result to the cache.
 
 = Why should I use a caching plugin on my website? =
-You think your site is fast? A caching plugin will make your website even faster. A faster website will increase SEO, it will improve your visitors experience, and save your server's resources.
+You think your site is fast without caching? A caching plugin will make your website even faster. A faster cached website will increase SEO, it will improve your visitors experience. Caching will also save your server's resources.
 
 = Is the WP-Optimize page cache compatible with Gutenberg and WordPress 5.0+? =
 Yes, your Gutenberg pages will be cached, as well as those created with page builder plugins such as Elementor.
 
 = How do I know my webpage is being cached (or why it isn’t)? =
-In order to see if your page is cached, use the “View Source” function in your web browser to view the page source. Scroll down to the bottom, and you should see a line added by the cache: `<!-- Cached by WP Optimize - https://getwpo.com - Last modified: Sat, 20 Jul 2019 21:17:19 GMT ->`
+If cache is enabled, and in order to see if your page is cached, use the “View Source” function in your web browser to view the page source. To find caching information, scroll down to the bottom, and you should see a line added by the cache: `<!-- Cached by WP Optimize - https://getwpo.com - Last modified: Sat, 20 Jul 2019 21:17:19 GMT ->`
 However, note that if you are using a further service that minifies HTML (e.g. Cloudflare), then this line may have been removed. Another method is to inspect the contents of the directory wpo-cache inside your wp-content directory. <a href="https://getwpo.com/faqs/how-do-i-know-my-webpage-is-being-cached/>Further information can be read here</a>
+Also note that if you do not preload the cache, a page or post will have to be visited once for the cache file to be generated.
 
 = How do I configure the page cache? =
-Go to WP-Optimize -> Cache and enable caching. For most people, that will be enough. If you run an e-commerce, have a custom login page or any page that has dynamic content, you might want to exclude certain urls from the cache. See <a href="https://getwpo.com/documentation/">Advanced caching options</a> in our documentation to know more on excluding an url from the cache.
+Go to WP-Optimize -> Cache and enable caching. For most people, that will be enough. If you run an e-commerce, have a custom login page or any page that has dynamic content, you might want to exclude certain urls from the cache. See <a href="https://getwpo.com/documentation/">Advanced caching options</a> in our cache documentation to know more on excluding an URL from the cache.
 
 = Is the caching feature compatible with e-commerce plugins? =
-Yes, WP-Optimize allows you to safely cache your products, with plugins like WooCommerce or Easy Digital Downloads, or any e-commerce that uses `DONOTCACHEPAGE` to exclude sensitive pages from caching (e.g. my account, cart or checkout pages).
+Yes, caching with WP-Optimize allows you to safely cache your products, with plugins like WooCommerce or Easy Digital Downloads, or any e-commerce that uses `DONOTCACHEPAGE` to exclude sensitive pages from caching (e.g. my account, cart or checkout pages).
 
 = Do I need a special setup to use the caching feature? =
 No, if WordPress works properly, WP-Optimize will be able to cache your pages and posts.
 
-= Can I use the page caching feature together with an other cache plugin? =
-No, because both plugins would need to use the drop-in plugin `advanced-cache.php`. If you turn off caching on WP-Optimize, you can use any other caching plugin and still use the other features of WP-Optimize. But we do recommend using our caching solution.
+= Can I use the page caching feature together with another cache plugin? =
+No, because both cache plugins would need to use the drop-in plugin `advanced-cache.php`. If you turn off caching on WP-Optimize, you can use any other caching plugin and still use the other features of WP-Optimize. But we do recommend using our caching solution.
 
 = Is WP-Optimize caching compatible with Cloudflare? =
-Yes! No special configuration is needed. Page cacheing on the WP site (that done by WP-Optimize) is independent of proxy cacheing (e.g. Cloudflare) – you can use both, or neither, and they will complement each other and not interfere. <br>Just one thing to note – Cloudflare will strip out the special HTML comment at the bottom of the source of a page that is helpful to confirm that page cacheing is working, so, don’t be confused by that – it’s absence doesn’t indicate it’s not working.
+Yes! No special cache configuration is needed. Page caching on the WP site (that done by WP-Optimize) is independent of proxy cacheing (e.g. Cloudflare) – you can use both, or neither, and they will complement each other and not interfere. <br>Just one thing to note – Cloudflare will strip out the special HTML comment at the bottom of the source of a page that is helpful to confirm that page caching is working, so, don’t be confused by that – it’s absence doesn’t indicate the cache is not working.
 
 = Can I empty the cache automatically when performing a custom action? =
-Yes, you can trigger a cache purge action using WP-Optimize public functions. If you want to clear the whole cache, use the function `wpo_cache_flush()`. If you want to clear the cache files for a specific page or post, use `WPO_Page_Cache::delete_single_post_cache($post_id);`. Those are available after WP action `plugins_loaded`.
+Yes, you can trigger a cache purge action using WP-Optimize public functions. If you want to clear the whole cache, use the function `wpo_cache_flush()`. If you want to clear the cache files for a specific page or post, use `WPO_Page_Cache::delete_single_post_cache($post_id);`. Those cache options are available after WP action `plugins_loaded`.
 
 = Will the comments work even when page caching is enabled? =
 Yes, when using WordPress' commenting system, your users will still be able to post comments. Every time a comment is approved, the cache for that page or post will be cleared, allowing the next visitor to see an up to date list of comments.
 
 = What is "cache preloading"? =
 Usually, a page is cached when a user visits it. So the first user visiting won't be served a cached version of the page, and will wait longer than the next users. The cache preloading functionality will go through all your pages and posts, and simulate a visit by a user, allowing WP-Optimize to cache the pages before anyone visits them. Your first visitor will thus be served a cached version of the page, increasing its performance.
+
+= What frequency should I choose for the cache preloading schedule? =
+Choosing a frequency for the cache preloading schedule will depend on factors such as the frequency at which the website content is updated, the number of pages in the cache, the resources of the server and more. 
+For example a site with hundreds of pages will require more resources to preload its cache. So choosing a high frequency will mean that the cache will be recreated often, and the resource usage will be higher.
+On a website where updates aren't as frequent, you can even disable the cache preloading schedule, or set a high cache lifespan and set the cache preloading schedule to follow it.
+
+= How do I cache only the home page? =
+Add /.+ to the cache option “URLs to exclude from cache” on the advanced settings tab.
+
+= How do I prevent WP-Optimize from caching a certain page =
+To prevent a page from being cached, you can add the URL to the field “URLs to exclude from cache” in the cache “Advanced settings” tab. If you are developing a plugin and want to prevent a page from being cached, you can define the “DONOTCACHEPAGE” constant on the pages you need. Any request where “DONOTCACHEPAGE” is defined will not be cached.
+
+= Is the caching feature of WP-Optimize free? =
+Yes the caching feature is free. You will always be able to cache your website for free using WP-Optimize and we are constantly working on improving the existing cache feature. We will add more caching options to the free version and develop more specific caching options in the premium version to enable you to taylor the caching functionality to your needs.
+
+= Where does WP-Optimize store the cached files? =
+The cached files are stored in the common “wp-content/cache” folder, inside a “wpo-cache” folder. Removing the “cache” folder will delete all of WP-Optimize's cache, as well as those from other plugins.
+Deleting the "cache" folder is generally safe, as those cached files will be regenerated.
+
+= How do I disable caching? =
+Go to WP-Optimize settings > Cache and toggle the “Enable page caching” option to on/off.
+
+= Will caching slow down my server? =
+No, caching will actually reduce the load on your server, by reducing the amount of PHP and mysql used. You might see a peak in resource usage when using the cache preloader, as this functionality will create the cache files for all your pages in a short amount of time. But once this is done, performance should increase and the load on your server will decrease. Every single major site uses caching to serve cached pages faster by using fewer resources. 
+
+= Can I make certain parts of the page stay dynamic when cache is enabled? =
+The cached page is sent to the user before most of WordPress was loaded. The plugins aren't loaded yet, making it impossible for them to change the cached content at every request.
+So at the moment if you want to keep parts of your page dynamic (e.g. adverts, widgets, shopping cart...) AND keep it cached, you will have to use custom solutions using javascript and AJAX to fetch those dynamic parts from the server.
+
+= How do I delete the WP_CACHE define from wp-config.php? =
+WP-Optimize will remove the “WP_CACHE” constant from wp-config.php when you disable page caching, or when you deactivate the cache plugin. If you need to remove it manually, you can use FTP to edit wp-config.php and delete the line define ('WP_CACHE', true );
+If page caching is still enabled in the settings, WP-Optimize will attempt to add the line again, as it is required for the caching functionality to work. 
+
+= My filesystem is not writable to increase security. What do I need to do to make it compatible with the caching functionality? =
+WP-Optimize caching feature needs write access to the ‘wp-content/cache’ folder, as this is where the cache files will be stored. It also needs to define the constant ‘WP_CACHE’ in ‘wp-config.php’, it will need access once to ‘wp-content/advanced-cache.php’, as well as to the folder ‘wp-content/wpo-cache’ to write the cache settings. 
+
+= How do I change file permissions? =
+If you need to change file permissions to enable caching, you can follow the instructions on this page https://wordpress.org/support/article/changing-file-permissions/
+
+= What is the maximum number of pages I can cache? =
+There is no limit to the number of pages you can cache. The only limit is the space on your server and the maximum number of subdirectories allowed by your server, as caching will write files in subdirectories following the permalink structure.
+If you were to reach a caching limit, it probably means that your server is not fit for the size of your website and caching needs.
+
+= How do I serve cached pages to people using a phone or tablet? =
+You can generate a separate cache by selecting ”Generate separate files for mobile devices” in the page cache settings. This cache setting is only necessary if you use a specific theme for mobile devices, or for certain AMP plugins.
+
+= Does WP-Optimize cache work with Nginx? =
+Yes, the cache feature works with Nginx. Should you want to enable browser caching or GZIP compression, you will have to do this yourself directly on the server settings.
+
+= Does caching work with Windows Server (IIS) ? =
+Yes, the cache feature works with IIS. As with Nginx, if you need to enable browser caching or GZIP compression, you will have to do this yourself on the server.
+
+= Does the WP-Optimize page cache work with non-pretty (query parameter-based) permalinks? =
+No. It’s necessary to have pretty permalinks of the type http://xxxxx.com/my-post/ rather than http://xxxxx.com/?p=1234 for cache to work. Pretty permalinks are the WordPress default setting, and there is no good reason to turn them off, so you should not have a problem with this.
+Note that cache will work with permalinks including /index.php/. It is only those based upon query parameters (?…) where cache won't work.
+
+= When does WP-Optimize clear the page cache? =
+* When you publish new content or update/edit existing content, the cache for that post/page will be cleared.
+* Changing/updating current themes and parent themes (of child themes) will purge the cache.
+* When turning off the cache feature in WP-Optimize
+
+= Will pages in the WP admin dashboard be cached? =
+No, WP dashboard pages are not cached. The cache functionality is only meant to cache frontend pages.
+
+= What is cache lifespan? =
+The cache lifespan is the time a cached file will be kept before being regenerated.
+One of the main reason for setting a lifespan to your cache is that some plugins and themes use nonces, which are printed in the source code of the page (<a href="https://developer.wordpress.org/plugins/security/nonces/">Read more about nonces here</a>). These nonces cannot be reused and are valid for 12 hours by default (developers can change that value). The cache plugin will store the nonce in the page, and this one will become invalid after that perdiod of time, which can affect certain functionalities of your plugins and themes. Setting a cache lifespan to under 10 hours ensures the cache is flushed automatically before the nonce expires. This way you can use WP-Optimize's cache feature on sites which use nonces.
+An other reason is that you may want your pages to reflect some changes without having to clear the whole cache. Indeed if you have many pages and posts, you might not want to clear every cache file with every change, but rather set an interval at which they will expire and be regenerated.
+
+= What value should the cache lifespan be? =
+A lower cache lifespan value will result in more frequent cache update activity on your server, and thus more preload processes, if activated. 
+If your site does not use nonces, and your site's cache doesn't need to be updated often, you can set the cache lifespan to a high value or to 0 to give it an infinite lifespan.
+The cache lifespan option is set to 10 hours by default, but you may go down to 8 or even less. 
+If you notice any issues due to high server load, set a higher interval for the preloader.
 
 == Screenshots ==
 
@@ -231,7 +306,86 @@ Usually, a page is cached when a user visits it. So the first user visiting won'
 
 == Changelog ==
 
-* TWEAK: Added WooCommerce support for lazy load
+= 3.0.16 - 27/Jan/2020 =
+
+* FIX: Premium - Unused images - Fixed detection of -rotated and -scaled images
+* TWEAK: Cache feature - Cache sitemap.xml and robots.txt
+* TWEAK: Cache feature: fix scheduled preload
+* TWEAK: Cache feature: save the value of wpo_current_url() to enhance compatibility with Weglot
+* TWEAK: Fix permissions for restoring or compressing images on multisite
+* TWEAK: Premium - Tweak UI when fetching unused image infos
+* TWEAK: Premium - Added compatibility for Oxygen builder
+* TWEAK: Premium - Added WP-CLI commands for managing cache
+
+= 3.0.15 - 16/Dec/2019 =
+
+* FIX: Image compression - Fix restoration on multisite
+* FIX: Cache feature - Scheduled preload when a sitemap does not exists
+* TWEAK: Check for headers_sent() before closing the browser connection
+* TWEAK: Cache feature - Do not show clear cache buttons in the admin bar if the user doesn't have the right capability
+* TWEAK: Cache feature - Don't cache REST API requests
+* TWEAK: Tabs to point to the correct URL for direct access
+* TWEAK: Only log the reason why an URL isn't cached if the constant WPO_CACHE_DEBUG is true
+* TWEAK: Image compression - Added a new filter 'wpo_image_compression_single_image_options' to allow changing the image quality for each image.
+* TWEAK: Cache feature - Added instructions how to edit advanced-cache.php file
+* TWEAK: Detecting Cloudflare and Brotli compression before enabling GZIP
+
+= 3.0.14 - 25/Nov/2019 =
+
+* FIX: Fixed default option values for smush backup automatic deletion
+* FIX: Prevent potential Fatal error when including notices class
+* FIX: Image compression - Fixed division by zero notification
+* FIX: Fix list of backup entities before removing unused images
+* TWEAK: PHP 7.4 compatibility tweak in the fatal error handler
+* TWEAK: Image compression feature - Backup of original image paths are now relative
+* TWEAK: Page cache - Fix condition when displaying the message indicating the reason for not caching or serving cache
+* TWEAK: Page cache - Do not save post to cache if comments are opened and the user has saved their information
+* TWEAK: Page cache - intelligently handle Google Analytics tracking parameters in URL (Premium)
+* TWEAK: Page cache - add a query parameter to force display of the reason for not caching a page or serving a cached page
+* TWEAK: Cache feature - Added is_writable() checking before trying to write advanced-cache.php
+* TWEAK: Premium - Optimize database optimisations for WP-CLI commands
+* TWEAK: Premium - Don't run UI requests for WP-CLI actions
+* TWEAK: Premium - Page cache - Add default WooCommerce currency to the cache config
+* TWEAK: Page cache - Add the possibility to save default values to the cache config
+* TWEAK: Page cache - Add a possible secondary cache extensions location using the constant 'WPO_CACHE_CUSTOM_EXT_DIR', to allow keeping the bundled extensions in their original location
+* TWEAK: UI tweaks
+* TWEAK: Add missing filename reference in error message
+* TWEAK: Page cache - Purge cache when Autoptimize's cache is cleared
+* TWEAK: Image compression - Compatibility with Elementor plugin
+* TWEAK: Image compression - Added feature to mark all images as uncompressed
+* TWEAK: Bump supported minimum WP version up to 3.9
+
+= 3.0.13 - 21/Oct/2019 =
+
+* FIX: Don't show VIEWs as corrupted database tables
+* TWEAK: Image compression - Cancel button now stops the compression process
+* TWEAK: Only show general notice when update notice isn't shown
+* TWEAK: Improve message when Gzip compression is already enabled
+* TWEAK: Premium - Use path to include lazy load script
+* FIX: Image compression - Fixed detecting of uncompressed images
+* TWEAK: Image compression - Use wp_remote_get() instead file_get_contents() for retrieving compressed images
+* TWEAK: Use wp_remote_get() instead file_get_contents() for retrieving compressed images
+* TWEAK: Cache feature - add a 'Purge all' cache button to the admin bar
+* TWEAK: Premium - Prevent php warning in scheduled optimisations list
+* TWEAK: Premium - Unused images feature - Add compatibility with Advanced Custom Fields (ACF) image and gallery fields
+
+= 3.0.12 - 24/Sep/2019 =
+
+* TWEAK: Cache - Purge cache files when updating menu, saving the customizer and editing widgets
+* TWEAK: Cache - Do not show the reason for not caching when the request is DOING_CRON
+* TWEAK: Premium - Unused images feature - Improved detection on sites with many posts/images
+* TWEAK: Automatically delete smush image backups option
+* TWEAK: Premium - Unused images feature - Better detection of featured images
+* TWEAK: Cache - Ability to purge single page or post from cache
+* TWEAK: Cache - Display the content of advanced-cache.php to the user if it was not writable when enabling cache
+* TWEAK: Image compression - Automatically delete image backups option
+* TWEAK: Image compression - metabox now inherits the settings from the main screen
+* TWEAK: Image compression - Added feature to mark images as already compressed by another tool
+* TWEAK: Image compression - Added detailed log information when image compression fails.
+* TWEAK: Premium - Unused images feature - Improved detection on sites with many posts/images
+* TWEAK: Premium - Unused images feature - Better detection of featured images
+* TWEAK: Premium - Lazy load - Added WooCommerce support
+* TWEAK: Premium - Increased warning level and visibility when deleting unused database tables and unused images
 * TWEAK: Prevent a couple of unwanted PHP notices being logged when running cron via the command-line
 * TWEAK: Tweaked update notice wording
 
@@ -697,4 +851,4 @@ Usually, a page is cached when a user visits it. So the first user visiting won'
 * Fix Interface
 
 == Upgrade Notice ==
-* 3.0.11: 3.0 introduces a new major feature: Page caching, as well as various small improvements, tweaks and fixes. A recommended update for all. 3.0.1-11 releases add small tweaks/fixes.
+* 3.0.16: Premium - Unused images - Fixed detection of -rotated and -scaled images

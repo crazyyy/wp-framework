@@ -23,6 +23,12 @@ class UpdraftPlus_UpdraftCentral_Listener {
 
 	private $command_classes;
 
+	/**
+	 * Class constructor
+	 *
+	 * @param Array $keys			 - keys to set up listeners for
+	 * @param Array $command_classes - commands
+	 */
 	public function __construct($keys = array(), $command_classes = array()) {
 		global $updraftplus;
 		$this->ud = $updraftplus;
@@ -219,7 +225,7 @@ class UpdraftPlus_UpdraftCentral_Listener {
 		$this->ud->error_reporting_stop_when_logged = true;
 		set_error_handler(array($this->ud, 'php_error'), E_ALL & ~E_STRICT);
 		$this->php_events = array();
-		@ob_start();
+		@ob_start();// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Might be a bigger picture that I am missing but do we need to silence errors here?
 		add_filter('updraftplus_logline', array($this, 'updraftplus_logline'), 10, 4);
 		if (!UpdraftPlus_Options::get_updraft_option('updraft_debug_mode')) return;
 	}
@@ -236,8 +242,8 @@ class UpdraftPlus_UpdraftCentral_Listener {
 			$this->ud->log('Unexpected response code in remote communications: '.serialize($msg));
 		}
 		
-		$caught_output = @ob_get_contents();
-		@ob_end_clean();
+		$caught_output = @ob_get_contents();// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Might be a bigger picture that I am missing but do we need to silence errors here?
+		@ob_end_clean();// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Might be a bigger picture that I am missing but do we need to silence errors here?
 		// If turning output-catching off, turn this on instead:
 		// $caught_output = ''; @ob_end_flush();
 		

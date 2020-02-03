@@ -39,7 +39,7 @@ class WINP_InfoMetaBox extends WINP_MetaBox {
 	 */
 	public $priority = 'core';
 
-	public $css_class = 'factory-bootstrap-420 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-423 factory-fontawesome-000';
 
 	protected $errors = [];
 	protected $source_channel;
@@ -58,8 +58,8 @@ class WINP_InfoMetaBox extends WINP_MetaBox {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory419_ScriptList $scripts   A set of scripts to include.
-	 * @param Wbcr_Factory419_StyleList  $styles    A set of style to include.
+	 * @param Wbcr_Factory422_ScriptList $scripts   A set of scripts to include.
+	 * @param Wbcr_Factory422_StyleList  $styles    A set of style to include.
 	 *
 	 * @return void
 	 */
@@ -67,18 +67,11 @@ class WINP_InfoMetaBox extends WINP_MetaBox {
 	}
 
 	public function html() {
-		//$install_plugin_url = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=robin-image-optimizer' ), 'install-plugin_robin-image-optimizer' );
-		$get_premium_url = WINP_Plugin::app()->get_support()->get_pricing_url( true, 'right-metabox' );
 		?>
         <div class="wbcr-inp-metabox-banner">
-            <!--<h3 class="wbcr-inp-title">YOU HAVE 83% UNOPTIMIZED<br><span>&lt;IMAGES&gt;</span></h3>-->
             <div class="wbcr-inp-image">
-                <a href="<?php echo $get_premium_url ?>" target="_blank"><img src="<?php echo WINP_PLUGIN_URL ?>/admin/assets/img/get-premium-banner.jpg" alt=""></a>
+				<?php WINP_Plugin::app()->get_adverts_manager()->render_placement( 'right_sidebar' ) ?>
             </div>
-            <!--<strong class="wbcr-inp-big-text"><?php _e( 'Install plugin Robin Image Optimizer to speed up your site!', 'insert-php' ); ?></strong>
-            <a href="<?php //echo $install_plugin_url ?>" class="wbcr-inp-button" target="_blank">
-                <span class="dashicons dashicons-dashboard"></span> <?php _e( 'Optimize now for free', 'insert-php' ); ?>
-            </a>-->
         </div>
 		<?php
 	}

@@ -14,11 +14,11 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 		$this->columns->clear();
 		//$this->columns->add('status', __('Status', 'insert-php'));
 		$this->columns->add( 'title', __( 'Snippet title', 'insert-php' ) );
-		$this->columns->add( 'description', __( 'Description', 'insert-php' ) );
-		$this->columns->add( 'actions', __( 'Status', 'insert-php' ) );
-		$this->columns->add( 'where_use', __( 'Where use?', 'insert-php' ) );
-		$this->columns->add( 'taxonomy-' . WINP_SNIPPETS_TAXONOMY, __( 'Tags', 'insert-php' ) );
-		$this->columns->add( 'snippet_type', '' );
+		$this->columns->add( 'winp_description', __( 'Description', 'insert-php' ) );
+		$this->columns->add( 'winp_actions', __( 'Status', 'insert-php' ) );
+		$this->columns->add( 'winp_where_use', __( 'Where use?', 'insert-php' ) );
+		$this->columns->add( 'winp_taxonomy-' . WINP_SNIPPETS_TAXONOMY, __( 'Tags', 'insert-php' ) );
+		$this->columns->add( 'winp_snippet_type', '' );
 
 		/**
 		 * Scripts & styles
@@ -27,29 +27,21 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 		$this->runActions();
 	}
 
-	/**
-	 * Column 'Title'
-	 *
-	 * @param $post
-	 */
-	public function columnTitle( $post ) {
-		echo $post->post_title;
-	}
 
 	/**
 	 * Column 'Type'
 	 *
 	 * @param $post
 	 */
-	public function columnSnippet_type( $post ) {
+	public function columnWinp_snippet_type( $post ) {
 		$type  = WINP_Helper::getMetaOption( $post->ID, 'snippet_type', WINP_SNIPPET_TYPE_PHP );
 		$class = 'wbcr-inp-type-' . esc_attr( $type );
 		$type  = $type == 'universal' ? 'uni' : $type;
 
-		echo '<div class="wbcr-inp-snippet-type-label ' . $class . '">' . esc_html( $type ) . '</div>';
+		echo '<div class="wbcr-inp-snippet-type-label ' . esc_attr( $class ) . '">' . esc_html( $type ) . '</div>';
 	}
 
-	public function columnDescription( $post ) {
+	public function columnWinp_description( $post ) {
 		echo esc_html( WINP_Helper::getMetaOption( $post->ID, 'snippet_description' ) );
 	}
 
@@ -58,7 +50,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 	 *
 	 * @param $post
 	 */
-	public function columnWhere_use( $post ) {
+	public function columnWinp_where_use( $post ) {
 		$snippet_scope = WINP_Helper::getMetaOption( $post->ID, 'snippet_scope' );
 
 		if ( $snippet_scope == 'evrywhere' ) {
@@ -109,7 +101,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 					$text = __( 'Everywhere', 'insert-php' );
 			}
 
-			echo __( 'Automatic insertion', 'insert-php' ) . ': ' . $text;
+			echo __( 'Automatic insertion', 'insert-php' ) . ': ' . esc_html( $text );
 		} else {
 			$snippet_type = WINP_Helper::get_snippet_type( $post->ID );
 			$snippet_type = ( $snippet_type == WINP_SNIPPET_TYPE_UNIVERSAL ? '' : $snippet_type . '_' );
@@ -123,15 +115,16 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 	 *
 	 * @param $post
 	 */
-	public function columnActions( $post ) {
-		$is_activate = (int) WINP_Helper::getMetaOption( $post->ID, 'snippet_activate', 0 );
+	public function columnWinp_actions( $post ) {
+		$post_id     = (int) $post->ID;
+		$is_activate = (int) WINP_Helper::getMetaOption( $post_id, 'snippet_activate', 0 );
 		$icon        = 'dashicons-controls-play';
 
 		if ( $is_activate ) {
 			$icon = 'dashicons-controls-pause';
 		}
 
-		echo '<a class="wbcr-inp-enable-snippet-button button" href="' . wp_nonce_url( admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&amp;post=' . $post->ID . '&amp;action=wbcr_inp_activate_snippet' ), 'wbcr_inp_snippert_' . $post->ID . '_action_nonce' ) . '"><span class="dashicons ' . esc_attr( $icon ) . '"></span></a>';
+		echo '<a class="wbcr-inp-enable-snippet-button button" href="' . wp_nonce_url( admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&amp;post=' . $post_id . '&amp;action=wbcr_inp_activate_snippet' ), 'wbcr_inp_snippert_' . $post_id . '_action_nonce' ) . '"><span class="dashicons ' . esc_attr( $icon ) . '"></span></a>';
 	}
 
 	/*

@@ -66,20 +66,20 @@
     },
     {
         "name": "components/jquery",
-        "version": "3.3.1",
-        "version_normalized": "3.3.1.0",
+        "version": "3.4.1",
+        "version_normalized": "3.4.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/components/jquery.git",
-            "reference": "459648cda77875519c5da3ae1dd0ed5d170aa649"
+            "reference": "901828b7968b18319e377dc23d466f28426ee083"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/components/jquery/zipball/459648cda77875519c5da3ae1dd0ed5d170aa649",
-            "reference": "459648cda77875519c5da3ae1dd0ed5d170aa649",
+            "url": "https://api.github.com/repos/components/jquery/zipball/901828b7968b18319e377dc23d466f28426ee083",
+            "reference": "901828b7968b18319e377dc23d466f28426ee083",
             "shasum": ""
         },
-        "time": "2018-03-04T13:23:48+00:00",
+        "time": "2019-10-23T05:15:13+00:00",
         "type": "component",
         "extra": {
             "component": {
@@ -379,17 +379,17 @@
     },
     {
         "name": "phpseclib/phpseclib",
-        "version": "1.0.16",
-        "version_normalized": "1.0.16.0",
+        "version": "1.0.18",
+        "version_normalized": "1.0.18.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpseclib/phpseclib.git",
-            "reference": "d77bb6e42b9ea9cd883ea0297c1ffec8f96a5dd1"
+            "reference": "ec1fcfe648e5696efa2dd26ffa54436e3478ae5c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d77bb6e42b9ea9cd883ea0297c1ffec8f96a5dd1",
-            "reference": "d77bb6e42b9ea9cd883ea0297c1ffec8f96a5dd1",
+            "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ec1fcfe648e5696efa2dd26ffa54436e3478ae5c",
+            "reference": "ec1fcfe648e5696efa2dd26ffa54436e3478ae5c",
             "shasum": ""
         },
         "require": {
@@ -406,7 +406,7 @@
             "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",
             "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 5.0.0."
         },
-        "time": "2019-06-13T06:15:36+00:00",
+        "time": "2019-09-17T04:11:10+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -480,27 +480,27 @@
     },
     {
         "name": "psr/log",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
+        "version": "1.1.2",
+        "version_normalized": "1.1.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/php-fig/log.git",
-            "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
+            "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
-            "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
+            "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2018-11-20T15:27:04+00:00",
+        "time": "2019-11-01T11:05:21+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.0.x-dev"
+                "dev-master": "1.1.x-dev"
             }
         },
         "installation-source": "dist",
@@ -708,23 +708,23 @@
     },
     {
         "name": "symfony/process",
-        "version": "v3.4.29",
-        "version_normalized": "3.4.29.0",
+        "version": "v3.4.33",
+        "version_normalized": "3.4.33.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/process.git",
-            "reference": "d129c017e8602507688ef2c3007951a16c1a8407"
+            "reference": "c19da50bc3e8fa7d60628fdb4ab5d67de534cf3e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/d129c017e8602507688ef2c3007951a16c1a8407",
-            "reference": "d129c017e8602507688ef2c3007951a16c1a8407",
+            "url": "https://api.github.com/repos/symfony/process/zipball/c19da50bc3e8fa7d60628fdb4ab5d67de534cf3e",
+            "reference": "c19da50bc3e8fa7d60628fdb4ab5d67de534cf3e",
             "shasum": ""
         },
         "require": {
             "php": "^5.5.9|>=7.0.8"
         },
-        "time": "2019-05-30T15:47:52+00:00",
+        "time": "2019-10-24T15:33:53+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

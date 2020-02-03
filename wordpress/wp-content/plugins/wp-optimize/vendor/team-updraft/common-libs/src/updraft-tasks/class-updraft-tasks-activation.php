@@ -44,7 +44,48 @@ class Updraft_Tasks_Activation {
 	public static function install() {
 		self::init_db();
 		self::create_tables();
-		update_option('updraft_task_manager_dbversion', self::get_version());
+		// we need walk through all updates when install at first.
+		self::check_updates();
+	}
+
+	/**
+	 * Check needed tables in data base and if one of them doesn't exist force reinstall.
+	 */
+	public static function reinstall_if_needed() {
+		static $done = false;
+
+		if ($done) return;
+
+		if (!self::check_if_tables_exist()) self::reinstall();
+
+		$done = true;
+	}
+
+	/**
+	 * Drop database version variable from option from database and run install again.
+	 */
+	public static function reinstall() {
+		delete_option('updraft_task_manager_dbversion');
+		self::install();
+	}
+
+	/**
+	 * Check if needed task manager tables exist.
+	 *
+	 * @return bool
+	 */
+	public static function check_if_tables_exist() {
+		global $wpdb;
+		$our_prefix = $wpdb->base_prefix.self::$table_prefix;
+		$tables = array($our_prefix.'tasks', $our_prefix.'taskmeta');
+
+		foreach ($tables as $table) {
+			$query = "SHOW TABLES LIKE '{$table}'";
+			$tables = $wpdb->get_results($query, ARRAY_A);
+			if (!is_array($tables) || 0 == count($tables)) return false;
+		}
+
+		return true;
 	}
 
 	/**

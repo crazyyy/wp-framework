@@ -87,7 +87,7 @@
 			 * Scripts that must be included on edit page.
 			 *
 			 * @since 1.0.0
-			 * @var Wbcr_Factory419_ScriptList
+			 * @var Wbcr_Factory422_ScriptList
 			 */
 			public $scripts;
 
@@ -95,7 +95,7 @@
 			 * Styles that must be included on edit page.
 			 *
 			 * @since 1.0.0
-			 * @var Wbcr_Factory419_StyleList
+			 * @var Wbcr_Factory422_StyleList
 			 */
 			public $styles;
 
@@ -151,9 +151,9 @@
 			/**
 			 * Creates a new instance of a type.
 			 *
-			 * @param Wbcr_Factory419_Plugin $plugin
+			 * @param Wbcr_Factory422_Plugin $plugin
 			 */
-			public function __construct(Wbcr_Factory419_Plugin $plugin)
+			public function __construct(Wbcr_Factory422_Plugin $plugin)
 			{
 				$this->plugin = $plugin;
 
@@ -228,7 +228,7 @@
 				}
 
 				if( !$this->scripts->isEmpty('bootstrap') || !$this->styles->isEmpty('bootstrap') ) {
-					add_action('wbcr_factory_419_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), array(
+					add_action('wbcr_factory_422_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), array(
 						$this,
 						'actionAdminBootstrapScripts'
 					));

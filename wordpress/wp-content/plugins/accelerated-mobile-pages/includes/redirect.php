@@ -13,6 +13,9 @@ function ampforwp_redirection() {
   if ( ( is_singular() || ampforwp_is_front_page() || ampforwp_is_blog() ) && 'hide-amp' == get_post_meta( ampforwp_get_the_ID(),'ampforwp-amp-on-off',true) ) {
     return;
   }
+  if ( ampforwp_posts_to_remove() && is_object($post) && $post->post_type == 'post' ) {
+      return;
+  }
   // Redirection for Homepage and Archive Pages when Turned Off from options panel
   if ( ampforwp_is_amp_endpoint() ) {
      if(is_tax()){
@@ -48,22 +51,23 @@ function ampforwp_redirection() {
       exit;
     }
   }
+$current_url = home_url(add_query_arg(array($_GET), $wp->request));
+  //AMP on Search Pages #3977
+if(is_search() && 0 == ampforwp_get_setting('amp-redirection-search')){
+      if(strpos( $current_url, "amp=1&")!==false){
+        $redirect_search = str_replace("amp=1&", '', $current_url);
+        wp_safe_redirect( $redirect_search, 301 );
+        exit;
+      }else{
+        return;
+      }
+}          
   // Redirect ?nonamp=1 to normal url #3269
-  $current_url = $check = '';
-  $current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 
-                "https" : "http") . "://" . AMPFROWP_HOST_NAME .  
-                $_SERVER['REQUEST_URI'];              
-  $current_url = explode('/', $current_url);
-  $check    =  '?nonamp=1';
   if (( isset($_GET['nonamp']) && 1 == $_GET['nonamp'] ) ){
-        session_start();
-        $_SESSION['ampforwp_mobile'] = 'exit';     
-  }
-  if (in_array( $check  , $current_url ) ) {
-      $current_url = array_flip($current_url);
-      unset($current_url['?nonamp=1']);
-      $current_url = array_flip($current_url);
-      $current_url = implode('/', $current_url);
+      session_start();
+      $_SESSION['ampforwp_mobile'] = 'exit'; 
+      $current_url = str_replace("?nonamp=1", '',$current_url);
+      $current_url = user_trailingslashit($current_url);
       wp_safe_redirect( $current_url );
       exit;
   }
@@ -256,11 +260,11 @@ function ampforwp_redirection() {
         return;
     }
 
-    if ( ! session_id() ) {
+    if ( function_exists('session_id') && ! session_id() ) {
         session_start();
     }
 
-    if ( isset( $_SESSION['ampforwp_mobile'] ) && 'mobile-on' == $_SESSION['ampforwp_amp_mode'] && 'exit' == $_SESSION['ampforwp_mobile'] ) {
+    if ( isset( $_SESSION['ampforwp_mobile'] ) && (isset($_SESSION['ampforwp_amp_mode']) && 'mobile-on' == $_SESSION['ampforwp_amp_mode']) && 'exit' == $_SESSION['ampforwp_mobile'] ) {
         return;
     }
 

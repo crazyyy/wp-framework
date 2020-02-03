@@ -28,10 +28,10 @@ $this->document_elements['cookie-statement-us'] = array(
     ),
     array(
         'title' => 'What are scripts?',
-        'content' => 'A script is a piece of programme code that is used to make our website function properly and interactively. This code is executed on our server or on your device.',
+        'content' => 'A script is a piece of program code that is used to make our website function properly and interactively. This code is executed on our server or on your device.',
     ),
     array(
-        'title' => 'What is a webbeacon?',
+        'title' => 'What is a web beacon?',
         'content' => 'A web beacon (or a pixel tag) is a small, invisible piece of text or image on a website that is used to monitor traffic on a website. In order to do this, various data about you is stored using web beacons.',
         'callback_condition' => 'NOT cmplz_uses_only_functional_cookies',
     ),
@@ -46,11 +46,7 @@ $this->document_elements['cookie-statement-us'] = array(
     array(
         'content' =>'You can also disable the use of cookies via your browser, but please note that our website may no longer work properly.',
     ),
-    array(
-        'title' => 'Third parties',
-        'content' => 'We have made agreements about the use of cookies with other companies that place cookies. However, we cannot guarantee that these third parties handle your personal data in a reliable or secure manner. Parties such as Google are to be considered as independent data controllers. We recommend that you read the privacy statements of these companies.',
-        'callback_condition' => 'cmplz_third_party_cookies_active',
-    ),
+
     array(
         'title' => 'Cookies',
     ),
@@ -123,33 +119,14 @@ $this->document_elements['cookie-statement-us'] = array(
         'condition' => array('uses_social_media' => 'yes'),
     ),
 
-    'cookie_names' => array(
-        'title' => 'Placed cookies',
-        'p' => false,
-        'content' => '<table><tr><td colspan="2"><b>[label]</b></td></tr>
-                                 <tr><td colspan="2">
-                                    Purpose: [purpose]<br>
-                                    Retention period: [storage_duration]<br>
-                                    Description: [description]
-                                 </td></tr>
-                                 <tr>
-                                    <td>Used names</td>
-                                    <td>Sharing</td>
-                                  </tr><tr>
-                                     <td>[used_names]</td>
-                                     <td><a href="[privacy_policy_url]">'.__('Privacy statement','complianz-gdpr').'</a></td>
-                                 </tr>
-                     </table>',
-        'condition' => array(
-            'used_cookies' => 'loop',
-        ),
-    ),
-
-//    array(
-//        'title' => __('List of data for sale',
-//        'content' => __("Internet activity information, including, but not limited to, browsing history, search history, and information regarding a consumer's interaction with an Internet Web site, application, or advertisement.",
-//        'condition' => array('purpose_personaldata' => 'selling-data-thirdparty'),
-//    ),
+	'cookie_names' => array(
+		'title' => 'Placed cookies',
+		'callback' => 'cmplz_used_cookies',
+		'condition' => array(
+			'uses_cookies' => 'yes',
+		),
+	),
+    
 
     array(
         'title' => 'Your rights with respect to personal data',
@@ -168,10 +145,16 @@ $this->document_elements['cookie-statement-us'] = array(
     array(
         'title' => 'Enabling/disabling and deleting cookies',
         'content' => 'You can use your internet browser to automatically or manually delete cookies. You can also specify that certain cookies may not be placed. Another option is to change the settings of your internet browser so that you receive a message each time a cookie is placed. For more information about these options, please refer to the instructions in the Help section of your browser.',
-    ),  
-
+    ),
     array(
         'title' => 'Selling data to third parties',
+        'callback_condition' => 'cmplz_sells_personal_data',
+        'condition' => array(
+            'california' => 'yes',
+        ),
+    ),
+    array(
+        'subtitle' => 'Categories of data',
         'content' => 'The following categories of data are sold to third parties',
         'callback_condition' => 'cmplz_sells_personal_data',
         'condition' => array(
@@ -225,6 +208,13 @@ $this->document_elements['cookie-statement-us'] = array(
                     Website: [domain] <br>
                     Email: [email_company] <br>
                     [telephone_company]',
+    ),
+
+    array(
+        'content' => sprintf(_x('This cookie policy was synchronized with %scookiedatabase.org%s on %s', 'Legal document cookie policy', 'complianz-gdpr'),'<a href="https://cookiedatabase.org" target="_blank">', '</a>', '[sync_date]'),
+        'callback_condition' => array(
+	        'cmplz_cdb_reference_in_policy',
+        )
     ),
 
 );

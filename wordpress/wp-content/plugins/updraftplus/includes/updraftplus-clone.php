@@ -116,7 +116,7 @@ class UpdraftPlus_Clone extends UpdraftPlus_Login {
 		}
 		if (is_multisite()) {
 			$data['install_info']['multisite'] = true;
-			$data['install_info']['multisite_subdomain_install'] = is_subdomain_install();
+			$data['install_info']['multisite_type'] = is_subdomain_install() ? 'subdomain' : 'subfolder';
 		}
 
 		$response = $this->send_remote_request($data, $action);

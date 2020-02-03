@@ -1,4 +1,21 @@
 <?php
+/**
+ * On change of settings for california, we need to update the cookie policy settings for each variation as well.
+ * @hooked cmplz_update_us_cookie_policy_title
+ *
+ */
+add_action('cmplz_update_us_cookie_policy_title',  'cmplz_update_us_cookie_policy_title_in_banners');
+ function cmplz_update_us_cookie_policy_title_in_banners()
+{
+	$banners = cmplz_get_cookiebanners();
+	$title = cmplz_us_cookie_statement_title();
+
+	foreach ($banners as $banner) {
+		$banner = new CMPLZ_COOKIEBANNER($banner->ID);
+		$banner->readmore_optout = $title;
+		$banner->save();
+	}
+}
 
 /**
  * When A/B testing is enabled, we should increase all banner versions to flush the users cache
@@ -44,15 +61,15 @@ function cmplz_redirect_to_cookiebanner(){
     }
 }
 
-add_action('cmplz_admin_menu', 'cmplz_cookiebanner_admin_menu');
+add_action('cmplz_cookiebanner_menu', 'cmplz_cookiebanner_admin_menu');
 function cmplz_cookiebanner_admin_menu()
 {
     if (!cmplz_user_can_manage()) return;
 
     add_submenu_page(
         'complianz',
-        __('Cookie Banner', 'complianz-gdpr'),
-        __('Cookie Banner', 'complianz-gdpr'),
+        __('Cookie banner', 'complianz-gdpr'),
+        __('Cookie banner', 'complianz-gdpr'),
         'manage_options',
         'cmplz-cookiebanner',
         'cmplz_cookiebanner_overview'
@@ -79,7 +96,7 @@ function cmplz_delete_cookiebanner(){
  * This function is hooked to the plugins_loaded, prio 10 hook, as otherwise there is some escaping we don't want.
  * @todo fix the escaping
  */
-add_action('plugins_loaded', 'cmplz_cookiebanner_form_submit', 10);
+add_action('plugins_loaded', 'cmplz_cookiebanner_form_submit', 20);
 function cmplz_cookiebanner_form_submit()
 {
     if (!cmplz_user_can_manage()) return;
@@ -94,7 +111,6 @@ function cmplz_cookiebanner_form_submit()
         $id = intval($_GET['id']);
         $banner = new CMPLZ_COOKIEBANNER($id);
     }
-
     $banner->process_form($_POST);
 
     if (isset($_POST['cmplz_add_new'])) {
@@ -165,7 +181,7 @@ function cmplz_cookiebanner_overview(){
             if (!COMPLIANZ()->wizard->wizard_completed_once()) {
                 cmplz_notice(__('Please complete the wizard to check if you need a cookie warning.', 'complianz-gdpr'), 'warning');
             } else {
-                if (!COMPLIANZ()->cookie->site_needs_cookie_warning()) {
+                if (!COMPLIANZ()->cookie_admin->site_needs_cookie_warning()) {
                     cmplz_notice(__('Your website does not require a cookie warning, so these settings do not apply.', 'complianz-gdpr'));
                 } else {
                     cmplz_notice(__('Your website requires a cookie warning, these settings will determine how the popup will look.', 'complianz-gdpr'));
@@ -220,7 +236,8 @@ function cmplz_enqueue_cookiebanner_wysiwyg_assets($hook){
         }
     }
 
-    $cookiesettings = COMPLIANZ()->cookie->get_cookiebanner_settings($cookiebanner_id);
+
+    $cookiesettings = COMPLIANZ()->cookie_admin->get_cookiebanner_settings($cookiebanner_id);
 
     wp_enqueue_script('cmplz-cookie', cmplz_url . "core/assets/js/cookieconsent.js", array('jquery', 'cmplz-admin'), cmplz_version, true);
     wp_localize_script(

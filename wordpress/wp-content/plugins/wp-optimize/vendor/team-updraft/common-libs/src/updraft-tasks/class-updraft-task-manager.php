@@ -28,6 +28,7 @@ abstract class Updraft_Task_Manager_1_2 {
 		if (!class_exists('Updraft_Task_1_1')) require_once('class-updraft-task.php');
 		if (!class_exists('Updraft_Task_Manager_Commands_1_0')) require_once('class-updraft-task-manager-commands.php');
 		if (!class_exists('Updraft_Semaphore_2_1')) require_once(dirname(__FILE__).'/../updraft-semaphore/class-updraft-semaphore.php');
+		if (!class_exists('Updraft_Tasks_Activation')) require_once(dirname(__FILE__).'/class-updraft-tasks-activation.php');
 
 		$this->commands = new Updraft_Task_Manager_Commands_1_0($this);
 
@@ -285,7 +286,15 @@ abstract class Updraft_Task_Manager_1_2 {
 		}
 
 		$_tasks = $wpdb->get_results($sql);
-		if (!$_tasks) return;
+
+		if (!$_tasks) {
+			// if we got an error then check if task manager tables are in the database
+			// and recreate them if needed.
+			if ($wpdb->last_error) {
+				Updraft_Tasks_Activation::reinstall_if_needed();
+			}
+			return;
+		}
 
 
 		foreach ($_tasks as $_task) {

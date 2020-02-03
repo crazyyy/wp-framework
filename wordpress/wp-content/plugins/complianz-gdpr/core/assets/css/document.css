@@ -10,10 +10,6 @@
   /* Buttons styles */
   /*honeypot */
 }
-#cmplz-document .cmplz-status-accepted,
-#cmplz-document .cmplz-status-denied {
-  display: none;
-}
 #cmplz-document input::-moz-focus-inner,
 #cmplz-document button::-moz-focus-inner {
   border: 0;
@@ -93,6 +89,13 @@
   margin-bottom: 5px;
   text-transform: initial;
 }
+#cmplz-document h5 {
+  font-size: 14px;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  text-transform: initial;
+}
 #cmplz-document h3.annex,
 #cmplz-document h4.annex {
   font-weight: bold;
@@ -102,7 +105,8 @@
   border-bottom: 0;
 }
 #cmplz-document p,
-#cmplz-document li {
+#cmplz-document li,
+#cmplz-document td {
   font-size: 14px;
   margin-top: 0;
 }
@@ -118,6 +122,7 @@
 #cmplz-document ul {
   list-style: disc;
   margin-left: 15px;
+  margin-bottom: 0;
 }
 #cmplz-document ol.alphabetic ol {
   counter-reset: list;
@@ -141,3 +146,7 @@
   font-weight: bold;
   margin-top: 25px;
 }
+#cmplz-document .cmplz-indent {
+  margin-left: 36px;
+}
+/*# sourceMappingURL=document.css.map */

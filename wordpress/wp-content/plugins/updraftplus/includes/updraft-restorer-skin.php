@@ -4,7 +4,7 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 
 if (!class_exists('WP_Upgrader_Skin')) require_once(ABSPATH.'wp-admin/includes/class-wp-upgrader.php');
 
-class Updraft_Restorer_Skin extends WP_Upgrader_Skin {
+abstract class Updraft_Restorer_Skin_Main extends WP_Upgrader_Skin {
 
 	// @codingStandardsIgnoreStart
 	public function header() {}
@@ -30,7 +30,7 @@ class Updraft_Restorer_Skin extends WP_Upgrader_Skin {
 		}
 	}
 
-	public function feedback($string) {
+	protected function updraft_feedback($string) {
 
 		if (isset($this->upgrader->strings[$string])) {
 			$string = $this->upgrader->strings[$string];
@@ -49,5 +49,19 @@ class Updraft_Restorer_Skin extends WP_Upgrader_Skin {
 
 		global $updraftplus;
 		$updraftplus->log_e($string);
+	}
+}
+
+global $updraftplus;
+$wp_version = $updraftplus->get_wordpress_version();
+
+if (version_compare($wp_version, '5.3', '>=')) {
+	if (!class_exists('Updraft_Restorer_Skin')) require_once(UPDRAFTPLUS_DIR.'/includes/updraft-restorer-skin-compatibility.php');
+} else {
+	class Updraft_Restorer_Skin extends Updraft_Restorer_Skin_Main {
+
+		public function feedback($string) {
+			parent::updraft_feedback($string);
+		}
 	}
 }

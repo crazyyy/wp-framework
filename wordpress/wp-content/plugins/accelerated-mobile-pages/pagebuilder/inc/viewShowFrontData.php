@@ -22,14 +22,7 @@ function amp_pagebuilder_content(){
 			$postId = pll_get_post($front_page_id);
 		}
 	}
-  	if( empty( $postId ) ) return;
-	$ampforwp_pagebuilder_enable = get_post_meta($postId,'ampforwp_page_builder_enable', true);
-	
-	if (ampforwp_empty_content(get_post($postId)->post_content) && $ampforwp_pagebuilder_enable=='yes') { 
-		$arr['ID'] = get_post($postId)->ID;
-		$arr['post_content'] = '&nbsp;';
-		wp_update_post($arr);
-	}
+
 	add_filter( 'amp_pagebuilder_content', 'ampforwp_insert_pb_content' );
 }
 
@@ -58,7 +51,6 @@ function ampforwp_pagebuilder_header_html_output(){
 	$previousData = isset($previousData[0])? $previousData[0]: null;
 	$ampforwp_pagebuilder_enable = get_post_meta($postId,'ampforwp_page_builder_enable', true);
 	if($previousData!="" && $ampforwp_pagebuilder_enable=='yes'){
-		$previousData = (str_replace("'", "", $previousData));
 		$previousData = json_decode($previousData,true);
 		if(isset($previousData['settingdata']['scripts_data']) && $previousData['settingdata']['scripts_data']!=""){
 			echo $previousData['settingdata']['scripts_data']; // nothing to escaped
@@ -78,7 +70,6 @@ function amp_pagebuilder_script_loader($scriptData){
 	$previousData = isset($previousData[0])? $previousData[0]: null;
 	$ampforwp_pagebuilder_enable = get_post_meta($postId,'ampforwp_page_builder_enable', true);
 	if($previousData!="" && $ampforwp_pagebuilder_enable=='yes'){
-		$previousData = (str_replace("'", "", $previousData));
 		$previousData = json_decode($previousData,true);
 		if(count($previousData['rows'])>0){
 			foreach ($previousData['rows'] as $key => $rowsData) {
@@ -149,6 +140,12 @@ function amp_pagebuilder_content_styles(){
 	$completeCssOfPB .= '.amp_pb{display: inline-block;width: 100%;}
 .row{display: inline-flex;width: 100%;}
 .col-2{width:50%;float:left;}
+.col-2-wrap .col-2:nth-child(1){
+	padding-right:5px;
+}
+.col-2-wrap .col-2:nth-child(2){
+	padding-left:5px;
+}
 .cb{clear:both;}
 .amp_blurb{text-align:center}
 .amp_blurb amp-img{margin: 0 auto;}
@@ -161,11 +158,12 @@ function amp_pagebuilder_content_styles(){
 }
 @media(max-width:425px){
 .col-2{width:100%;float:none;margin-bottom:10%;}
+.col-2-wrap .col-2:nth-child(1){padding-right:0px;}
+.col-2-wrap .col-2:nth-child(2){padding-left:0px;}
 }
 ';
 
 		add_filter('ampforwp_body_class', 'bodyClassForAMPPagebuilder',10,2);
-		$previousData = (str_replace("'", "", $previousData));
 		$previousData = json_decode($previousData,true);
 		if(count($previousData['rows'])>0){
 
@@ -518,9 +516,17 @@ function ampforwp_pb_autoCompileLess($css)
 
     // add groups of media query at the end of CSS
     $css = $css." \n";
-    foreach ($completeCssMinifies as $id => $val)
-    {
-        $css .= "\n" . '@media' . $id . '{' . $val . '}' . "\n";
+    $medias = array();
+    foreach ($completeCssMinifies as $key => $value) {
+    	preg_match_all('!\d+!', $key, $matches);
+    	if($matches){
+			$medias[$matches[0][0]] = $value;
+		}
+    }   
+    krsort($medias);
+    foreach ($medias as $id => $val)
+    {	
+        $css .= "\n" . '@media(max-width:' . $id . 'px){' . $val . '}' . "\n";
     }
     //Remove multiple Spaces
     //padding:\s*?(\d*px)\s*(\d*px)\s*(\d*px)\s*(\d*px)\s*?;
@@ -577,7 +583,6 @@ function amppb_post_content($content){
 
 
 		$html ="";
-		$previousData = (str_replace("'", "", $previousData));
 		$previousData = json_decode($previousData,true);
 		//Call Sorting for rows 
 		if(count($previousData['rows'])>0){
@@ -860,12 +865,19 @@ function ampforwp_rowData($container,$col,$moduleTemplate){
 								'post_status'=> 'publish',
 								'post_type' => $fieldValues['post_type_selection']
 								);
-						if ( isset($fieldValues['category_selection']) && 'recent_option' !== $fieldValues['category_selection'] ) {
+						if ( (isset($fieldValues['taxonomy_selection']) && 'recent_option' !== $fieldValues['taxonomy_selection']) &&  (isset($fieldValues['category_selection']) && 'recent_option' !== $fieldValues['category_selection'])) {
 							$args['tax_query'] = array(
 									array(
-										'taxonomy'=>(isset($fieldValues['category_selection']))?get_term($fieldValues['category_selection'])->taxonomy: '',
+										'taxonomy'=>$fieldValues['taxonomy_selection'],
 										'field'=>'id',
-										'terms'=>$fieldValues['category_selection']));
+										'terms'=>$fieldValues['category_selection']
+									)
+								);
+							if ( isset($args['tax_query'][0]['taxonomy']  ) ){
+								if ( empty($args['tax_query'][0]['taxonomy'])) {
+									unset($args['tax_query']);
+								}
+							}
 						}
 						$args = apply_filters('ampforwp_content_module_args', $args, $fieldValues);
 						//The Query
@@ -1073,9 +1085,6 @@ function sortByIndex($contentArray){
 	}else{
 		return $contentArray;
 	}
-}
-function ampforwp_empty_content($str) {
-    return trim(str_replace('&nbsp;','',$str)) == '';
 }
 
 function ampforwp_get_attachment_id( $url , $imagetype='full') {

@@ -38,6 +38,9 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			'clear_smush_stats',
 			'check_server_status',
 			'get_smush_logs',
+			'mark_as_compressed',
+			'mark_all_as_uncompressed',
+			'clean_all_backup_images',
 		);
 
 		return array_merge($commands, $smush_commands);
@@ -54,6 +57,11 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$options = !empty($data['smush_options']) ? $data['smush_options'] : $this->task_manager->get_smush_options();
 		$image = isset($data['selected_image']) ? filter_var($data['selected_image']['attachment_id'], FILTER_SANITIZE_NUMBER_INT) : false;
 		$blog = isset($data['selected_image']) ? filter_var($data['selected_image']['blog_id'], FILTER_SANITIZE_NUMBER_INT) : false;
+
+		// A subsite administrator can only compress their own image. If the blog ID isn't theirs, return an error.
+		if ($blog && is_multisite() && get_current_blog_id() != $blog && !current_user_can('manage_network_options')) {
+			return new WP_Error('compression_not_permitted', __('The blog ID provided does not match the current blog.', 'wp-optimize'));
+		}
 
 		$server = filter_var($options['compression_server'], FILTER_SANITIZE_STRING);
 
@@ -100,9 +108,10 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 */
 	public function restore_single_image($data) {
 
-		$image = isset($data['selected_image']) ? $data['selected_image'] : false;
+		$blog_id = isset($data['blog_id']) ? $data['blog_id'] : false;
+		$image_id   = isset($data['selected_image']) ? $data['selected_image'] : false;
 
-		$success = $this->task_manager->restore_single_image($image);
+		$success = $this->task_manager->restore_single_image($image_id, $blog_id);
 
 		if (is_wp_error($success)) {
 			return $success;
@@ -110,9 +119,9 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 
 		$response['status'] = true;
 		$response['operation'] = 'restore';
-		$response['image']	 = $image;
+		$response['image']	 = $image_id;
 		$response['success'] = $success;
-		$response['summary'] = __('Image restored successfully', 'wp-optimize');
+		$response['summary'] = __('The image was restored successfully', 'wp-optimize');
 		
 		return $response;
 	}
@@ -187,6 +196,8 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$options['compression_server'] = filter_var($data['compression_server'], FILTER_SANITIZE_STRING);
 		$options['lossy_compression'] = filter_var($data['lossy_compression'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 		$options['back_up_original'] = filter_var($data['back_up_original'], FILTER_VALIDATE_BOOLEAN) ? true : false;
+		$options['back_up_delete_after'] = filter_var($data['back_up_delete_after'], FILTER_VALIDATE_BOOLEAN) ? true : false;
+		$options['back_up_delete_after_days'] = filter_var($data['back_up_delete_after_days'], FILTER_SANITIZE_NUMBER_INT);
 		$options['preserve_exif'] = filter_var($data['preserve_exif'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 		$options['autosmush'] = filter_var($data['autosmush'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 		$options['image_quality'] = filter_var($data['image_quality'], FILTER_SANITIZE_NUMBER_INT);
@@ -268,6 +279,115 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	}
 
 	/**
+	 * Mark selected images as already compressed.
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function mark_as_compressed($data) {
+		$response = array();
+		$selected_images = array();
+
+		$unmark = isset($data['unmark']) && $data['unmark'];
+
+		foreach ($data['selected_images'] as $image) {
+			if (!array_key_exists($image['blog_id'], $selected_images)) $selected_images[$image['blog_id']] = array();
+
+			$selected_images[$image['blog_id']][] = $image['attachment_id'];
+		}
+
+		$info = __('This image is marked as already compressed by another tool.', 'wp-optimize');
+
+		foreach (array_keys($selected_images) as $blog_id) {
+			if (is_multisite()) switch_to_blog($blog_id);
+
+			foreach ($selected_images[$blog_id] as $attachment_id) {
+				if ($unmark) {
+					delete_post_meta($attachment_id, 'smush-complete');
+					delete_post_meta($attachment_id, 'smush-marked');
+					delete_post_meta($attachment_id, 'smush-info');
+				} else {
+					update_post_meta($attachment_id, 'smush-complete', true);
+					update_post_meta($attachment_id, 'smush-marked', true);
+					update_post_meta($attachment_id, 'smush-info', $info);
+				}
+			}
+
+			if (is_multisite()) restore_current_blog();
+		}
+
+		$response['status'] = true;
+
+		if ($unmark) {
+			$response['summary'] = _n('The selected image was successfully marked as uncompressed', 'The selected images were successfully marked as uncompressed', count($data['selected_images']), 'wp-optimize');
+		} else {
+			$response['summary'] = _n('The selected image was successfully marked as compressed', 'The selected images were successfully marked as compressed', count($data['selected_images']), 'wp-optimize');
+		}
+
+		$response['info'] = $info;
+
+		return $response;
+	}
+
+	/**
+	 * Mark all images as uncompressed and if posted restore_backup argument
+	 * then try to restore images form backup.
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function mark_all_as_uncompressed($data) {
+
+		$restore_backup = isset($data['restore_backup']) && $data['restore_backup'];
+		$images_per_request = apply_filters('mark_all_as_uncompressed_images_per_request', 100);
+
+		if (is_multisite()) {
+			// option where we store last completed blog id
+			$option_name = 'mark_as_uncompressed_last_blog_id';
+			// set default value for response
+			$response = array(
+				'completed' => true,
+				'message' => __('All the compressed images were successfully restored.', 'wp-optimize'),
+			);
+
+			// get all blogs ids
+			$blogs = WP_Optimize()->get_sites();
+			$blogs_ids = wp_list_pluck($blogs, 'blog_id');
+			sort($blogs_ids);
+
+			// select the blog for processing
+			$last_completed_blog_id = $this->task_manager->options->get_option($option_name, false);
+			$index = $last_completed_blog_id ? array_search($last_completed_blog_id, $blogs_ids) + 1 : 0;
+
+			if ($index < count($blogs_ids)) {
+				$blog_id = $blogs_ids[$index];
+				$response = $this->task_manager->bulk_restore_compressed_images($restore_backup, $blog_id, $images_per_request);
+
+				// if we get completed the current blog then update last completed blog option value
+				// and if we have other blogs for processing then set complete to false as we have not
+				// processed all blogs
+				if ($response['completed']) {
+					if ($index + 1 < count($blogs_ids)) {
+						$response['completed'] = false;
+					} else {
+						$response['message'] = __('All the compressed images were successfully marked as uncompressed.', 'wp-optimize');
+					}
+					$this->task_manager->options->update_option($option_name, $blog_id);
+				}
+			}
+
+			// if we get an error or completed the work then delete option with last completed blog id.
+			if ($response['completed'] || isset($response['error'])) {
+				$this->task_manager->options->delete_option($option_name);
+			}
+		} else {
+			$response = $this->task_manager->bulk_restore_compressed_images($restore_backup, 0, $images_per_request);
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Returns the log file
 	 *
 	 * @return WP_Error|file - logfile or WP_Error object on failure
@@ -288,7 +408,6 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			header('Cache-Control: must-revalidate');
 			header('Pragma: public');
 			header('Content-Length: ' . filesize($logfile));
-			//@codingStandardsIgnoreLine
 			readfile($logfile);
 			exit;
 		} else {
@@ -296,6 +415,22 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		}
 		
 		return $response;
+	}
+
+	/**
+	 * Clean all backup images command.
+	 *
+	 * @return array
+	 */
+	public function clean_all_backup_images() {
+		$upload_dir = wp_get_upload_dir();
+		$base_dir = $upload_dir['basedir'];
+
+		$this->task_manager->clear_backup_images_directory($base_dir, 0);
+
+		return array(
+			'status' => true,
+		);
 	}
 
 	/**

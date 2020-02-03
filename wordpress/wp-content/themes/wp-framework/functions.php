@@ -33,6 +33,7 @@ function my_acf_init() {
   acf_update_setting('google_api_key', 'AIzaSyCZF31krTQH_5QnEpdIsEgmsBV-Iy884rE');
 }
 
+
 add_action('wp_enqueue_scripts', 'wpeStyles'); // Add Theme Stylesheet
 function wpeStyles()  {
   wp_dequeue_style('fancybox');
@@ -44,8 +45,8 @@ function wpeStyles()  {
 
 add_action('init', 'wpeHeaderScripts'); // Add Scripts to wp_head
 function wpeHeaderScripts() {
-  wp_deregister_script('jquery');
-  wp_deregister_script('jquery-migrate');
+  // wp_deregister_script('jquery');
+  // wp_deregister_script('jquery-migrate');
   wp_deregister_script('modernizr');
   wp_deregister_script( 'jquery-form' );
 

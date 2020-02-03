@@ -38,10 +38,12 @@
         }
     );
 
-    $.redux.ajax_save = function( button ) {
+    $.redux.ajax_save = function( button, $no_fade = '' ) {
 
         var overlay = $( document.getElementById( 'redux_ajax_overlay' ) );
-        overlay.fadeIn();
+        if ( true != $no_fade ){
+            overlay.fadeIn();
+        }
 
         // Add the loading mechanism
         jQuery( '.redux-action_bar .spinner' ).addClass( 'is-active' );
@@ -87,6 +89,104 @@
         if ( button.attr( 'name' ) != "redux_save" ) {
             $data += "&" + button.attr( 'name' ) + "=" + button.val();
         }
+         var data_to_send = $data;
+        try{
+            var json_arr = [];
+            var arr = redux_data; 
+            $.each(arr,function(key,value){
+                if(typeof value =='object'){
+                  json_arr[key] = [];
+                  $.each(value,function(k,v){
+                        json_arr[key][k] = v;
+                  });
+                }else{
+                    json_arr[key] = value;
+                }
+            });
+            var urldata = $data.split('&');
+            var ja = [];
+            var send_data = '';
+            var temp_arr = [];
+            var ss_data = '';
+            for(var i=0 ; i<urldata.length;i++){
+                var kv   = urldata[i];
+                var tarr = kv.split('=');
+                var key  = decodeURIComponent(tarr[0]);
+                var val  = decodeURIComponent(tarr[1]).replace(/\+/g, " ");
+                var keysend = encodeURIComponent(key);
+                var valsend = encodeURIComponent(val);
+                var jsval = '';
+                ss_data = '';
+                if(key.match(/redux_builder_amp\[(.*?)]/)) {
+                    var t  = key.match(/redux_builder_amp\[(.*?)]/);
+                    var tk = t[1];
+                    jsval = arr[tk];
+                    var s_data = '';
+                    if(!key.match(/redux_builder_amp\[(.*?)]\[(.*?)]\[(.*?)]/)){
+                        if(key.match(/redux_builder_amp\[(.*?)]\[(.*?)]/)){
+                            var t2 = key.match(/redux_builder_amp\[(.*?)]\[(.*?)]/);
+                            var tk2 = t2[2];
+                            if(tk2!=''){
+                                if(jQuery.inArray( tk, temp_arr )<0){
+                                    temp_arr.push(tk);
+                                    s_data = '';
+                                    $.each(jsval,function(jk,jva){
+
+                                        var tval =jQuery('[name="redux_builder_amp['+tk+']['+jk+']"]').val();
+                                        if(tk2==''){
+                                             tval =jQuery('[name="redux_builder_amp['+tk+'][]"]').val();
+                                        }
+                                        if(typeof jsval =='undefined'){
+                                            var dd = 'redux_builder_amp['+tk+']['+jk+']';
+                                            if(tk2==''){
+                                                 dd = 'redux_builder_amp['+tk+'][]';
+                                            }
+                                            s_data += encodeURIComponent(dd)+"="+encodeURIComponent(tval)+"&";
+                                        }else if(tval!=jva){
+                                            s_data = '';
+                                            $.each(jsval,function(njk,njva){
+                                                var ddd = 'redux_builder_amp['+tk+']['+njk+']';
+                                                if(tk2==''){
+                                                     ddd = 'redux_builder_amp['+tk+'][]';
+                                                }
+                                                s_data += encodeURIComponent(ddd)+"="+encodeURIComponent(tval)+"&";
+                                            });
+                                        }
+                                    });
+                                }
+                                ss_data += s_data;
+                            }else{
+                                send_data += keysend+"="+valsend+"&";
+                            }
+                        }else{
+                            jsval = json_arr[tk];
+                        }
+                        if(typeof jsval =='undefined'){
+                            send_data += keysend+"="+valsend+"&";
+                        }else if(typeof jsval =='object'){
+                            send_data += ss_data;
+                        }else if(jsval!=val){
+                            send_data += keysend+"="+valsend+"&";
+                        }
+                    }else{
+                       send_data += keysend+"="+valsend+"&"; 
+                    }
+                }else{
+                    jsval = json_arr[key];
+                    if(typeof jsval =='undefined'){
+                        send_data += keysend+"="+valsend+"&";
+                    }else if(jsval!=val){
+                        send_data += keysend+"="+valsend+"&";
+                    }
+                } 
+            }
+            var check_error = localStorage.getItem("ampforwp_check_opt_error");
+            if(check_error=='error'){
+                send_data = send_data.replace(/&\s*$/, "");
+                data_to_send = send_data;
+            }
+            temp_arr = [];
+        }catch(err){}
 
         var $nonce = $parent.attr( "data-nonce" );
 
@@ -99,7 +199,7 @@
                     action: redux.args.opt_name + "_ajax_save",
                     nonce: $nonce,
                     'opt_name': redux.args.opt_name,
-                    data: $data
+                    data: data_to_send
                 },
                 error: function( response ) {
                     if ( !window.console ) console = {};
@@ -110,7 +210,13 @@
                     jQuery( '.redux-action_bar input' ).removeAttr( 'disabled' );
                     overlay.fadeOut( 'fast' );
                     jQuery( '.redux-action_bar .spinner' ).removeClass( 'is-active' );
-                    alert( redux.ajax.alert );
+                    var resp_error = response.responseText;
+                    if(resp_error.match(/Mod_Security/i) && check_error!='error'){
+                        localStorage.setItem("ampforwp_check_opt_error","error");
+                        $( "#redux_save" ).trigger( "click" );
+                    }else{
+                        alert(redux.ajax.alert);
+                    }
                 },
                 success: function( response ) {
                     if ( response.action && response.action == "reload" ) {
@@ -123,7 +229,14 @@
                         //redux.defaults = response.defaults;
                         redux.errors = response.errors;
                         redux.warnings = response.warnings;
-
+                        if(redux.options.ampforwp_css_tree_shaking == '1')  {
+                            jQuery('#ampforwp-clear-clearcss-data').removeClass('hide');
+                            jQuery('#ampforwp-clear-clcss-msg').addClass('hide');
+                        } else{
+                            jQuery('#ampforwp-clear-clearcss-data').addClass('hide');
+                            jQuery('#ampforwp-clear-clcss-msg').removeClass('hide');
+                            jQuery("#ampforwp-clear-clcss-msg").html("Please Save Before Clearing Cache");
+                        }
                         $notification_bar.html( response.notification_bar ).slideDown( 'fast' );
                         if ( response.errors !== null || response.warnings !== null ) {
                             $.redux.notices();
@@ -138,6 +251,11 @@
                         jQuery( '.wrap h2:first' ).parent().append( '<div class="error redux_ajax_save_error" style="display:none;"><p>' + response.status + '</p></div>' );
                         jQuery( '.redux_ajax_save_error' ).slideDown();
                         jQuery( "html, body" ).animate( {scrollTop: 0}, "slow" );
+                    }
+                    if( true == $no_fade ) {
+                        $('div.amp-ux-section-container').find('.amp-ux-loading').addClass('hide');
+                        $('div.amp-ux-section-container').find('.amp-ux-check').removeClass('hide');
+                        $('div.amp-ux-section-container').find('.amp-ux-check').html('&#10004;');
                     }
                 }
             }
@@ -174,11 +292,19 @@
                     // Defaults button clicked
                     if ( !confirm( redux.args.reset_confirm ) ) {
                         return false;
+                    }else{
+                        try{
+                            jQuery("#ampforwp-clear-clearcss-data").click();
+                        }catch(err){}
                     }
                 } else if ( $( this ).attr( 'name' ) == redux.args.opt_name + '[defaults-section]' ) {
                     // Default section clicked
                     if ( !confirm( redux.args.reset_section_confirm ) ) {
                         return false;
+                    }else{
+                        try{
+                            jQuery("#ampforwp-clear-clearcss-data").click();
+                        }catch(err){}
                     }
                 }
 
@@ -647,7 +773,15 @@
         } else {
             sTab.click();
         }
-
+        if(amp_option_panel_view==""){
+            $.cookie(
+                'redux_current_tab', 1, {
+                    expires: 7,
+                    path: '/'
+                }
+            );
+            $( '.redux-container' ).find( '.redux-group-tab-link-a:first' ).click();
+        }
     };
 
     $.redux.initFields = function() {

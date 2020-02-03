@@ -23,9 +23,6 @@
 		<?php echo '<strong><a href="https://getwpo.com" target="_blank">WP-Optimize</a>: </strong>'.__('Auto-clean your WordPress database so that it runs at maximum efficiency. 800,000 users!', 'updraftplus'); ?>
 	</p>
 	<p>
-		<?php echo '<strong><a href="https://getkeyy.com/" target="_blank">Keyy: </a></strong>'.__('Simple and secure login with a wave of your phone.', 'updraftplus'); ?>
-	</p>
-	<p>
 		<?php echo '<strong><a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/newsletter-signup").'" target="_blank">'.__('Free Newsletter', 'updraftplus').'</a>: </strong>'.__('UpdraftPlus news, high-quality training materials for WordPress developers and site-owners, and general WordPress news. You can de-subscribe at any time.', 'updraftplus'); ?>
 	</p>
 	<p>

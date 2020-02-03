@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 if ( ! function_exists( 'ampforwp_reporting_bugs' ) ) {
 	function ampforwp_reporting_bugs($sections){
 
@@ -31,5 +34,4 @@ $sections[] = array(
 	    return $sections;
 	}
 }
-  add_filter("redux/options/redux_builder_amp/sections", 'ampforwp_reporting_bugs', PHP_INT_MAX);
 ?>

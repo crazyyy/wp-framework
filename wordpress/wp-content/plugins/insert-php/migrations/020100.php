@@ -4,7 +4,7 @@
  * Updates for altering the table used to store statistics data.
  * Adds new columns and renames existing ones in order to add support for the new social buttons.
  */
-class WINPUpdate020100 extends Wbcr_Factory419_Update {
+class WINPUpdate020100 extends Wbcr_Factory422_Update {
 
 	public function install() {
 		if ( is_multisite() && $this->plugin->isNetworkActive() ) {

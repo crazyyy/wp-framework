@@ -10,7 +10,7 @@ if (!class_exists("cmplz_document_core")) {
         function __construct()
         {
             if (isset(self::$_this))
-                wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'complianz-gdpr'), get_class($this)));
+	            wp_die(sprintf('%s is a singleton class and you cannot create a second instance.', get_class($this)));
 
             self::$_this = $this;
 
@@ -75,23 +75,32 @@ if (!class_exists("cmplz_document_core")) {
                 $conditions = $page['condition'];
                 $condition_met = true;
                 foreach ($conditions as $condition_question => $condition_answer){
-                    $value = cmplz_get_value($condition_question);
+
+                    $value = cmplz_get_value($condition_question, false, false, $use_default=false);
                     $invert = false;
-                    if (strpos($condition_answer, 'NOT ')!==FALSE) {
+                    if (!is_array($condition_answer) && strpos($condition_answer, 'NOT ')!==FALSE) {
                         $condition_answer = str_replace('NOT ', '', $condition_answer);
                         $invert = true;
                     }
 
-                    if (is_array($value)) {
+                    $condition_answer = is_array($condition_answer) ? $condition_answer : array($condition_answer);
+                    foreach($condition_answer as $answer_item){
+	                    if (is_array($value)) {
+		                    if (!isset($value[$answer_item]) || !$value[$answer_item]) {
+			                    $condition_met = false;
+		                    } else {
+			                    $condition_met =true;
+		                    }
 
-                        if (!isset($value[$condition_answer]) || !$value[$condition_answer]) {
-                            $condition_met = false;
-                        } else {
-                            $condition_met =true;
-                        }
+	                    } else {
+		                    $condition_met = ($value == $answer_item);
+	                    }
 
-                    } else {
-                        $condition_met = ($value == $condition_answer);
+	                    //if one condition is met, we break with this condition, so it will return true.
+	                    if ($condition_met) {
+		                    break;
+	                    }
+
                     }
 
                     //if one condition is not met, we break with this condition, so it will return false.
@@ -219,7 +228,6 @@ if (!class_exists("cmplz_document_core")) {
             if (!isset(COMPLIANZ()->config->document_elements[$type])) return sprintf(__('No %s document was found','complianz-gdpr'),$type);
 
             $elements = COMPLIANZ()->config->document_elements[$type];
-
             $html = "";
             $paragraph = 0;
             $sub_paragraph = 0;
@@ -249,7 +257,6 @@ if (!class_exists("cmplz_document_core")) {
                         $annex_arr[$id] = $annex;
                     }
                 }
-
                 if ($this->is_loop_element($element) && $this->insert_element($element, $post_id)) {
                     $fieldname = key($element['condition']);
                     $values = cmplz_get_value($fieldname, $post_id);
@@ -257,21 +264,13 @@ if (!class_exists("cmplz_document_core")) {
                     if (!empty($values)) {
                         foreach ($values as $value) {
 
-                            //line specific for cookies, to hide or show conditionally
-                            if ($fieldname==='used_cookies' && isset($value['show']) && $value['show'] !== 'on') continue;
-
-                            //prevent showing empty cookie entries
-                            if ($fieldname==='used_cookies' && (!isset($value['label']) || $value['label'] == '')) continue;
-
                             if (!is_array($value)) $value = array($value);
                             $fieldnames = array_keys($value);
                             if (count($fieldnames) == 1 && $fieldnames[0] == 'key') continue;
 
                             $loop_section = $element['content'];
                             foreach ($fieldnames as $c_fieldname) {
-
                                 $field_value = (isset($value[$c_fieldname])) ? $value[$c_fieldname] : '';
-
                                 if (!empty($field_value) && is_array($field_value)) $field_value = implode(', ', $field_value);
 
                                 $loop_section = str_replace('[' . $c_fieldname . ']', $field_value, $loop_section);
@@ -289,11 +288,16 @@ if (!class_exists("cmplz_document_core")) {
                         $html .= $this->wrap_content($element['content'], $element);
                     }
                 }
+
+                if (isset($element['callback']) && function_exists($element['callback'])){
+                    $func = $element['callback'];
+                    $html .= $func();
+                }
             }
 
             $html = $this->replace_fields($html, $paragraph_id_arr, $annex_arr, $post_id, $type);
 
-            $comment = apply_filters("cmplz_document_comment", "\n"."<!-- This legal document was generated by Complianz | GDPR Cookie Consent https://wordpress.org/plugins/complianz-gdpr -->"."\n");
+            $comment = apply_filters("cmplz_document_comment", "\n"."<!-- This legal document was generated by Complianz | GDPR/CCPA Cookie Consent https://wordpress.org/plugins/complianz-gdpr -->"."\n");
 
             $html =  $comment . '<div id="cmplz-document">'. $html. '</div>';
             $allowed_html = cmplz_allowed_html();
@@ -322,7 +326,8 @@ if (!class_exists("cmplz_document_core")) {
             if (isset($element['title'])) {
                 if (empty($element['title'])) return "";
                 if ($paragraph > 0 && $this->is_numbered_element($element)) $nr = $paragraph;
-                return '<h3>' . cmplz_esc_html($nr) . ' ' . cmplz_esc_html($element['title']) . '</h3>';
+                $index_char = apply_filters('cmplz_index_char', '.');
+                return '<h3>' . cmplz_esc_html($nr) . $index_char.' ' . cmplz_esc_html($element['title']) . '</h3>';
             }
 
             if (isset($element['subtitle'])) {
@@ -368,14 +373,16 @@ if (!class_exists("cmplz_document_core")) {
         {
             if (empty($content)) return "";
 
+            $class = isset($element['class']) ? 'class="'.esc_attr($element['class']).'"' : '';
+
             $list = (isset($element['list']) && $element['list']) ? true : false;
             //loop content
             if (!$element || $list) {
-                return '<div>' . $content . '</div>';
+                return '<div $class>' . $content . '</div>';
             }
             $p = (!isset($element['p']) || $element['p']) ? true : $element['p'];
             $el = $p ? 'p' : 'div';
-            return "<$el>" . $content . "</$el>";
+            return "<$el $class>" . $content . "</$el>";
         }
 
         /**
@@ -422,12 +429,26 @@ if (!class_exists("cmplz_document_core")) {
             $html = str_replace('[cookie-statement-us-title]', $cookie_policy_title, $html);
 
             $date = $post_id ? get_the_date('', $post_id) : get_option('cmplz_publish_date');
-            $date = cmplz_localize_date($date);
+
+	        $date = cmplz_localize_date($date);
             $html = str_replace("[publish_date]", cmplz_esc_html($date), $html);
+
+            $html = str_replace("[sync_date]", cmplz_esc_html(COMPLIANZ()->cookie_admin->get_last_cookie_sync_date()), $html);
 
             $checked_date = date(get_option('date_format'), get_option('cmplz_documents_update_date'));
             $checked_date = cmplz_localize_date($checked_date);
             $html = str_replace("[checked_date]", cmplz_esc_html($checked_date), $html);
+
+            //because the phonenumber is not required, we need to allow for an empty phonenr, making a dynamic string necessary.
+            $contact_dpo = cmplz_get_value('email_dpo');
+            $phone_dpo = cmplz_get_value('phone_dpo');
+            if (strlen($phone_dpo)!==0) $contact_dpo .= " ".sprintf(_x("or by telephone on %s",'if phonenumber is entered, this string is part of the sentence "you may contact %s, via %s or by telephone via %s"',"complianz-gdpr"), $phone_dpo);
+            $html = str_replace("[email_dpo]", $contact_dpo, $html);
+
+            $contact_dpo_uk = cmplz_get_value('email_dpo_uk');
+            $phone_dpo_uk = cmplz_get_value('phone_dpo_uk');
+            if (strlen($phone_dpo)!==0) $contact_dpo_uk .= " ".sprintf(_x("or by telephone on %s",'if phonenumber is entered, this string is part of the sentence "you may contact %s, via %s or by telephone via %s"',"complianz-gdpr"), $phone_dpo_uk);
+            $html = str_replace("[email_dpo_uk]", $contact_dpo_uk, $html);
 
             //replace all fields.
             foreach (COMPLIANZ()->config->fields() as $fieldname => $field) {
@@ -513,6 +534,9 @@ if (!class_exists("cmplz_document_core")) {
             if ($front_end_label && !empty($value)) $value = $front_end_label . $value."<br>";
             return $value;
         }
+
+
+
 
     }
 } //class closure

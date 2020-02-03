@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - Health Check &amp; Troubleshooting - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-08-16 11:34:08+0000\n"
+"PO-Revision-Date: 2019-10-03 18:17:34+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,6 +10,31 @@ msgstr ""
 "X-Generator: GlotPress/2.4.0-alpha\n"
 "Language: ru\n"
 "Project-Id-Version: Plugins - Health Check &amp; Troubleshooting - Stable (latest release)\n"
+
+#: includes/tools/class-health-check-plugin-compatibility.php:26
+msgid "Highest supported PHP"
+msgstr "Максимально поддерживаемая версия PHP"
+
+#: includes/tools/class-health-check-plugin-compatibility.php:25
+msgid "Minimum PHP"
+msgstr "Минимальная версия PHP"
+
+#: includes/tools/class-health-check-plugin-compatibility.php:23
+msgid "Plugin"
+msgstr "Плагин"
+
+#. translators: %s: URL for the Site Health page.
+#: includes/class-health-check-dashboard-widget.php:62
+msgid "<a href=\"%s\">Visit the Site Health page</a> to gather information on about your site.."
+msgstr "Перейдите на страницу <a href=\"%s\">Здоровье сайта</a> для сбора информации о вашем сайте."
+
+#: includes/class-health-check-dashboard-widget.php:55
+msgid "No Site Health information has been gathered yet, you can do so by visiting the Site Health page, alternatively the checks will run automatically once every week."
+msgstr "Информация о здоровье сайта пока не была собрана, вы можете сделать это посетив страницу Здоровье сайта, либо проверки будут запускаться автоматически еженедельно."
+
+#: includes/class-health-check-dashboard-widget.php:46
+msgid "No information yet&hellip;"
+msgstr "Пока нет информации..."
 
 #: includes/tools/class-health-check-plugin-compatibility.php:77
 msgid "Could not be determined"
@@ -31,12 +56,12 @@ msgstr "Проверка совместимости плагинов вашег�
 msgid "Plugin compatibility"
 msgstr "Совместимость плагинов"
 
-#: includes/class-health-check-debug-data.php:709
+#: includes/class-health-check-debug-data.php:719
 msgid "Could not retrieve server headers"
 msgstr "Невозможно получить заголовки сервера"
 
-#: includes/class-health-check-debug-data.php:708
-#: includes/class-health-check-debug-data.php:716
+#: includes/class-health-check-debug-data.php:718
+#: includes/class-health-check-debug-data.php:726
 msgid "Server headers"
 msgstr "Заголовки сервера"
 
@@ -87,26 +112,26 @@ msgstr "Ваш сайт не использует локальные часов�
 
 #: includes/class-health-check-site-status.php:1229
 msgid "Daylight Savings Time (DST) may affect the times used and shown by your site, and using an UTC offset, instead of a localized timezone, means that the site does not get automatic DST updates."
-msgstr "Возможное использование летнегов ремени может влиять на используемое время, использование сдвига относительно UTC означает то, что сайт не будет автоматически использовать переход на летнее время."
+msgstr "Переход на летнее время (DST) может влиять на используемое и отображаемое время, использование сдвига к UTС означает, что сайт не будет автоматически использовать переход на летнее время."
 
 #: includes/class-health-check-site-status.php:1221
 msgid "Your site uses localized timezones"
 msgstr "Ваш сайт использует локальные часовые пояса"
 
 #. translators: 1: Count of issues. 2: URL for the Site Health page.
-#: includes/class-health-check-dashboard-widget.php:64
+#: includes/class-health-check-dashboard-widget.php:85
 msgid "Take a look at the <strong>%1$d items</strong> on the <a href=\"%2$s\">Site Health Check status page</a>."
 msgstr "Обратите внимание на <strong>элементы (%1$d)</strong> на <a href=\"%2$s\">странице статуса здоровья сайта</a>."
 
-#: includes/class-health-check-dashboard-widget.php:55
+#: includes/class-health-check-dashboard-widget.php:75
 msgid "Your site scores pretty well on the Health Check, but there are still some things you can do to improve the performance and security of your website."
 msgstr "На вашем сайте почти всё замечательно, но есть пара вещей, которые можно сделать для улучшения безопасности и производительности вашего сайта."
 
-#: includes/class-health-check-dashboard-widget.php:53
+#: includes/class-health-check-dashboard-widget.php:73
 msgid "Great job! Your site currently passes all site health checks."
 msgstr "Замечательно! Ваш сайт успешно прошел все тесты проверки состояния здоровья."
 
-#: includes/class-health-check-dashboard-widget.php:51
+#: includes/class-health-check-dashboard-widget.php:71
 msgid "Your site has critical issues that should be addressed as soon as possible to improve the performance or security of your website."
 msgstr "На вашем сайте есть критические проблемы, которые стоит решить как можно быстрее, для улучшения безопасности и производительности вашего сайта."
 
@@ -119,10 +144,10 @@ msgstr "Все тесты проверки здоровья сайта заве�
 msgid "This page can show you every detail about the configuration of your WordPress website. For any improvements that could be made, see the <a href=\"%s\">Site Health Status</a> page."
 msgstr "Эта страница показывает подробности о конфигурации вашего сайта WordPress. Если что-либо может быть улучшено, вы увидите это на <a href=\"%s\">странице состояния сайта</a>."
 
+#: includes/class-health-check-dashboard-widget.php:48
 #: pages/site-health-header.php:29
-#: includes/class-health-check-dashboard-widget.php:45
 msgid "Results are still loading&hellip;"
-msgstr "Результаты всё ёще загружаются..."
+msgstr "Результаты всё ещё загружаются..."
 
 #. translators: %d: Amount of hidden themes.
 #: assets/mu-plugin/health-check-troubleshooting-mode.php:1160
@@ -203,7 +228,7 @@ msgstr "Режим решения проблем"
 msgid "Passed tests"
 msgstr "Пройденные тесты"
 
-#: pages/site-status.php:32 includes/class-health-check-dashboard-widget.php:17
+#: includes/class-health-check-dashboard-widget.php:17 pages/site-status.php:32
 msgid "Site Health Status"
 msgstr "Состояние здоровья сайта"
 
@@ -215,28 +240,28 @@ msgstr "Всё работает отлично."
 msgid "Great job!"
 msgstr "Замечательно!"
 
-#: includes/class-health-check-debug-data.php:1389
+#: includes/class-health-check-debug-data.php:1399
 msgid "Total size is not available. Some errors were encountered when determining the size of your installation."
 msgstr "Общий размер недоступен. Возникли некоторые ошибки при определении размера вашей установки."
 
-#: includes/class-health-check-debug-data.php:1345
+#: includes/class-health-check-debug-data.php:1355
 msgid "The directory size calculation has timed out. Usually caused by a very large number of sub-directories and files."
 msgstr "Время на подсчёт размера папок истекло, возможно это произошло из-за слишком большого количества подпапок и файлов."
 
-#: includes/class-health-check-debug-data.php:1338
+#: includes/class-health-check-debug-data.php:1348
 msgid "The size cannot be calculated. The directory is not accessible. Usually caused by invalid permissions."
 msgstr "Размер не может быть подсчитан, папка недоступна. Возможно это вызвано неправильными правами на неё."
 
-#: includes/class-health-check-debug-data.php:944
-#: includes/class-health-check-debug-data.php:993
+#: includes/class-health-check-debug-data.php:954
+#: includes/class-health-check-debug-data.php:1003
 msgid "Theme directory location"
 msgstr "Папка темы"
 
-#: includes/class-health-check-debug-data.php:940
+#: includes/class-health-check-debug-data.php:950
 msgid "Theme features"
 msgstr "Возможности темы"
 
-#: includes/class-health-check-debug-data.php:936
+#: includes/class-health-check-debug-data.php:946
 msgid "None"
 msgstr "Нет"
 
@@ -880,11 +905,11 @@ msgstr "Производительность"
 msgid "Could not confirm that the %s filter is available."
 msgstr "Невозможно подтвердить доступность фильтра %s."
 
+#: includes/tools/class-health-check-files-integrity.php:152
 #: includes/class-health-check-site-status.php:886
 #: includes/class-health-check-site-status.php:1182
 #: includes/class-health-check-site-status.php:1549
 #: includes/class-health-check-site-status.php:1613
-#: includes/tools/class-health-check-files-integrity.php:152
 msgid "Error"
 msgstr "Ошибка"
 
@@ -917,9 +942,9 @@ msgstr "Критические проблемы"
 msgid "%s Items with no issues detected"
 msgstr "%s элементов без проблем"
 
-#. translators: %s: number of items with no issues
 #. translators: %s: Amount of passed tests.
-#: pages/site-status.php:71 includes/class-health-check.php:244
+#. translators: %s: number of items with no issues
+#: includes/class-health-check.php:244 pages/site-status.php:71
 msgid "%s Item with no issues detected"
 msgid_plural "%s Items with no issues detected"
 msgstr[0] "%s элемент без обнаруженных проблем"
@@ -931,9 +956,9 @@ msgstr[2] "%s элементов без обнаруженных проблем"
 msgid "%s Recommended improvements"
 msgstr "%s рекомендуемых улучшений"
 
-#. translators: %s: number of recommended improvements
 #. translators: %s: Amount of recommended issues.
-#: pages/site-status.php:52 includes/class-health-check.php:240
+#. translators: %s: number of recommended improvements
+#: includes/class-health-check.php:240 pages/site-status.php:52
 msgid "%s Recommended improvement"
 msgid_plural "%s Recommended improvements"
 msgstr[0] "%s рекомендуемое улучшение"
@@ -945,9 +970,9 @@ msgstr[2] "%s рекомендуемых улучшений"
 msgid "%s Critical issues"
 msgstr "%s критических проблем"
 
-#. translators: %s: number of critical issues found
 #. translators: %s: Amount of critical issues.
-#: pages/site-status.php:41 includes/class-health-check.php:236
+#. translators: %s: number of critical issues found
+#: includes/class-health-check.php:236 pages/site-status.php:41
 msgid "%s Critical issue"
 msgid_plural "%s Critical issues"
 msgstr[0] "%s критическая проблема"
@@ -1287,21 +1312,21 @@ msgstr "Полный размер установки"
 msgid "Database size"
 msgstr "Размер базы данных"
 
-#: includes/class-health-check-debug-data.php:733
+#: includes/class-health-check-debug-data.php:743
 msgid "Your .htaccess file contains only core WordPress features."
 msgstr "В файле .htaccess содержатся только базовые правила WordPress"
 
-#: includes/class-health-check-debug-data.php:733
+#: includes/class-health-check-debug-data.php:743
 msgid "Custom rules have been added to your .htaccess file."
 msgstr "В файл .htaccess были добавлены пользовательские правила"
 
-#: includes/class-health-check-debug-data.php:732
+#: includes/class-health-check-debug-data.php:742
 msgid ".htaccess rules"
 msgstr "Правила .htaccess"
 
 #: includes/class-health-check-debug-data.php:473
 #: includes/class-health-check-debug-data.php:495
-#: includes/class-health-check-debug-data.php:1373
+#: includes/class-health-check-debug-data.php:1383
 msgid "Not available"
 msgstr "Не доступно"
 
@@ -1309,10 +1334,10 @@ msgstr "Не доступно"
 #. translators: %s: Latest plugin version number.
 #. translators: %s: Latest theme version number.
 #: includes/class-health-check-debug-data.php:62
-#: includes/class-health-check-debug-data.php:870
-#: includes/class-health-check-debug-data.php:902
-#: includes/class-health-check-debug-data.php:960
-#: includes/class-health-check-debug-data.php:1044
+#: includes/class-health-check-debug-data.php:880
+#: includes/class-health-check-debug-data.php:912
+#: includes/class-health-check-debug-data.php:970
+#: includes/class-health-check-debug-data.php:1054
 msgid "(Latest version: %s)"
 msgstr "( последняя версия: %s )"
 
@@ -1410,7 +1435,7 @@ msgstr "(Посмотреть разницу)"
 msgid "Content changed"
 msgstr "Содержимое изменено"
 
-#: pages/tools.php:16 includes/class-health-check.php:499
+#: includes/class-health-check.php:499 pages/tools.php:16
 msgid "Tools"
 msgstr "Инструменты"
 
@@ -1474,7 +1499,7 @@ msgstr "При решении проблем на сайте, скорее вс�
 msgid "Error encountered: (%1$d) %2$s"
 msgstr "Возникла ошибка: (%1$d) %2$s"
 
-#: includes/class-health-check-debug-data.php:791
+#: includes/class-health-check-debug-data.php:801
 msgid "Database name"
 msgstr "Имя БД"
 
@@ -1590,23 +1615,23 @@ msgstr "Запланированых событий на этом сайте н�
 
 #. translators: %s: Plugin version number.
 #. translators: %s: Theme version number.
-#: includes/class-health-check-debug-data.php:825
-#: includes/class-health-check-debug-data.php:863
-#: includes/class-health-check-debug-data.php:1037
+#: includes/class-health-check-debug-data.php:835
+#: includes/class-health-check-debug-data.php:873
+#: includes/class-health-check-debug-data.php:1047
 msgid "Version %s"
 msgstr "Версия %s"
 
 #. translators: %s: Plugin author name.
 #. translators: %s: Theme author name.
-#: includes/class-health-check-debug-data.php:819
-#: includes/class-health-check-debug-data.php:857
-#: includes/class-health-check-debug-data.php:1031
+#: includes/class-health-check-debug-data.php:829
+#: includes/class-health-check-debug-data.php:867
+#: includes/class-health-check-debug-data.php:1041
 msgid "By %s"
 msgstr "от %s"
 
-#: includes/class-health-check-debug-data.php:809
-#: includes/class-health-check-debug-data.php:847
-#: includes/class-health-check-debug-data.php:1021
+#: includes/class-health-check-debug-data.php:819
+#: includes/class-health-check-debug-data.php:857
+#: includes/class-health-check-debug-data.php:1031
 msgid "No version or author information is available."
 msgstr "Информация об автора и версии недоступна"
 
@@ -1762,60 +1787,60 @@ msgstr "Состояние здоровья сайта показывает кр
 
 #. translators: 1: Parent theme name. 2: Parent theme slug.
 #. translators: 1: Theme name. 2: Theme slug.
-#: includes/class-health-check-debug-data.php:913
-#: includes/class-health-check-debug-data.php:971
-#: includes/class-health-check-debug-data.php:1052
+#: includes/class-health-check-debug-data.php:923
+#: includes/class-health-check-debug-data.php:981
+#: includes/class-health-check-debug-data.php:1062
 msgid "%1$s (%2$s)"
 msgstr "%1$s (%2$s)"
 
-#: includes/class-health-check-debug-data.php:935
+#: includes/class-health-check-debug-data.php:945
 msgid "Parent theme"
 msgstr "Родительская тема"
 
-#: includes/class-health-check-debug-data.php:930
-#: includes/class-health-check-debug-data.php:988
+#: includes/class-health-check-debug-data.php:940
+#: includes/class-health-check-debug-data.php:998
 msgid "Author website"
 msgstr "Сайт автора"
 
-#: includes/class-health-check-debug-data.php:925
-#: includes/class-health-check-debug-data.php:983
+#: includes/class-health-check-debug-data.php:935
+#: includes/class-health-check-debug-data.php:993
 msgid "Author"
 msgstr "Автор"
 
-#: includes/class-health-check-debug-data.php:910
-#: includes/class-health-check-debug-data.php:968
+#: includes/class-health-check-debug-data.php:920
+#: includes/class-health-check-debug-data.php:978
 msgid "Name"
 msgstr "Имя"
 
 #. translators: 1: Plugin version number. 2: Plugin author name.
 #. translators: 1: Theme version number. 2: Theme author name.
-#: includes/class-health-check-debug-data.php:814
-#: includes/class-health-check-debug-data.php:852
-#: includes/class-health-check-debug-data.php:1026
+#: includes/class-health-check-debug-data.php:824
+#: includes/class-health-check-debug-data.php:862
+#: includes/class-health-check-debug-data.php:1036
 msgid "Version %1$s by %2$s"
 msgstr "Версия %1$s автора %2$s"
 
-#: includes/class-health-check-debug-data.php:797
+#: includes/class-health-check-debug-data.php:807
 msgid "Database prefix"
 msgstr "Префикс таблиц БД"
 
-#: includes/class-health-check-debug-data.php:785
+#: includes/class-health-check-debug-data.php:795
 msgid "Database host"
 msgstr "Хост БД"
 
-#: includes/class-health-check-debug-data.php:779
+#: includes/class-health-check-debug-data.php:789
 msgid "Database user"
 msgstr "Пользователь БД"
 
-#: includes/class-health-check-debug-data.php:774
+#: includes/class-health-check-debug-data.php:784
 msgid "Client version"
 msgstr "Версия клиента БД"
 
-#: includes/class-health-check-debug-data.php:769
+#: includes/class-health-check-debug-data.php:779
 msgid "Server version"
 msgstr "Версия СУБД"
 
-#: includes/class-health-check-debug-data.php:764
+#: includes/class-health-check-debug-data.php:774
 msgid "Extension"
 msgstr "Расширение"
 
@@ -1904,7 +1929,7 @@ msgstr "Число сайтов"
 msgid "User count"
 msgstr "Число пользователей"
 
-#: includes/class-health-check-debug-data.php:1067
+#: includes/class-health-check-debug-data.php:1077
 msgid "The must use plugins directory"
 msgstr "Папка обязательных (MU) плагинов"
 
@@ -1929,7 +1954,7 @@ msgstr "Папка wp-content"
 #: includes/class-health-check-debug-data.php:335
 #: includes/class-health-check-debug-data.php:340
 #: includes/class-health-check-debug-data.php:345
-#: includes/class-health-check-debug-data.php:1068
+#: includes/class-health-check-debug-data.php:1078
 msgid "Not writable"
 msgstr "Недоступна для записи"
 
@@ -1938,7 +1963,7 @@ msgstr "Недоступна для записи"
 #: includes/class-health-check-debug-data.php:335
 #: includes/class-health-check-debug-data.php:340
 #: includes/class-health-check-debug-data.php:345
-#: includes/class-health-check-debug-data.php:1068
+#: includes/class-health-check-debug-data.php:1078
 msgid "Writable"
 msgstr "Доступна для записи"
 
@@ -1980,8 +2005,8 @@ msgstr "Включено"
 #: includes/class-health-check-debug-data.php:230
 #: includes/class-health-check-debug-data.php:245
 #: includes/class-health-check-debug-data.php:250
-#: includes/class-health-check-debug-data.php:931
-#: includes/class-health-check-debug-data.php:989
+#: includes/class-health-check-debug-data.php:941
+#: includes/class-health-check-debug-data.php:999
 msgid "Undefined"
 msgstr "Не определено"
 
@@ -2069,9 +2094,10 @@ msgstr "Адрес сайта"
 msgid "Home URL"
 msgstr "Адрес WordPress"
 
+#: includes/tools/class-health-check-plugin-compatibility.php:24
 #: includes/class-health-check-debug-data.php:75
-#: includes/class-health-check-debug-data.php:920
-#: includes/class-health-check-debug-data.php:978
+#: includes/class-health-check-debug-data.php:930
+#: includes/class-health-check-debug-data.php:988
 msgid "Version"
 msgstr "Версия"
 

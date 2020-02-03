@@ -35,7 +35,7 @@ class UpdraftPlus_Filesystem_Functions {
 
 			foreach ($directories as $dir) {
 				if (is_file($dir)) {
-					$size += @filesize($dir);
+					$size += @filesize($dir);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				} else {
 					$suffix = ('' != $basedir) ? ((0 === strpos($dir, $basedir.'/')) ? substr($dir, 1+strlen($basedir)) : '') : '';
 					$size += self::recursive_directory_size_raw($basedir, $exclude, $suffix);
@@ -79,8 +79,12 @@ class UpdraftPlus_Filesystem_Functions {
 			request_filesystem_credentials($build_url, '', true, false);
 			
 			if ($wp_filesystem->errors->get_error_code()) {
-				echo '<p><em><a href="' . apply_filters('updraftplus_com_link', "https://updraftplus.com/faqs/asked-ftp-details-upon-restorationmigration-updates/") . '" target="_blank">' . __('Why am I seeing this?', 'updraftplus') . '</a></em></p>';
+				echo '<div class="restore-credential-errors">';
+				echo '<p class="restore-credential-errors--link"><em><a href="' . apply_filters('updraftplus_com_link', "https://updraftplus.com/faqs/asked-ftp-details-upon-restorationmigration-updates/") . '" target="_blank">' . __('Why am I seeing this?', 'updraftplus') . '</a></em></p>';
+				echo '<div class="restore-credential-errors--list">';
 				foreach ($wp_filesystem->errors->get_error_messages() as $message) show_message($message);
+				echo '</div>';
+				echo '</div>';
 				exit;
 			}
 		}
@@ -184,17 +188,17 @@ class UpdraftPlus_Filesystem_Functions {
 					if (($match && ($ziparchive_match || $binzip_match || $cachelist_match || $manifest_match || 0 == $older_than) && $now_time-filemtime($updraft_dir.'/'.$entry) >= $older_than) || $now_time-filemtime($updraft_dir.'/'.$entry)>43200) {
 						$skip_dblog = (0 == $files_deleted % 25) ? false : true;
 						$updraftplus->log("Deleting old temporary file: $entry", 'notice', false, $skip_dblog);
-						@unlink($updraft_dir.'/'.$entry);
+						@unlink($updraft_dir.'/'.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 						$files_deleted++;
 					}
 				} elseif (preg_match('/^log\.[0-9a-f]+\.txt$/', $entry) && $now_time-filemtime($updraft_dir.'/'.$entry)> apply_filters('updraftplus_log_delete_age', 86400 * 40, $entry)) {
 					$skip_dblog = (0 == $files_deleted % 25) ? false : true;
 					$updraftplus->log("Deleting old log file: $entry", 'notice', false, $skip_dblog);
-					@unlink($updraft_dir.'/'.$entry);
+					@unlink($updraft_dir.'/'.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 					$files_deleted++;
 				}
 			}
-			@closedir($handle);
+			@closedir($handle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		}
 
 		// Depending on the PHP setup, the current working directory could be ABSPATH or wp-admin - scan both
@@ -205,10 +209,10 @@ class UpdraftPlus_Filesystem_Functions {
 					// With the old pclzip temporary files, there is no need to keep them around after they're not in use - so we don't use $older_than here - just go for 15 minutes
 					if (preg_match("/^pclzip-[a-z0-9]+.tmp$/", $entry) && $now_time-filemtime($path.$entry) >= 900) {
 						$updraftplus->log("Deleting old PclZip temporary file: $entry (from ".basename($path).")");
-						@unlink($path.$entry);
+						@unlink($path.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 					}
 				}
-				@closedir($handle);
+				@closedir($handle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			}
 		}
 	}
@@ -222,14 +226,14 @@ class UpdraftPlus_Filesystem_Functions {
 	 */
 	public static function really_is_writable($dir) {
 		// Suppress warnings, since if the user is dumping warnings to screen, then invalid JavaScript results and the screen breaks.
-		if (!@is_writable($dir)) return false;
+		if (!@is_writable($dir)) return false;// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		// Found a case - GoDaddy server, Windows, PHP 5.2.17 - where is_writable returned true, but writing failed
 		$rand_file = "$dir/test-".md5(rand().time()).".txt";
 		while (file_exists($rand_file)) {
 			$rand_file = "$dir/test-".md5(rand().time()).".txt";
 		}
-		$ret = @file_put_contents($rand_file, 'testing...');
-		@unlink($rand_file);
+		$ret = @file_put_contents($rand_file, 'testing...');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		@unlink($rand_file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		return ($ret > 0);
 	}
 	
@@ -248,17 +252,17 @@ class UpdraftPlus_Filesystem_Functions {
 		// }
 		// return rmdir($dir);
 
-		if ($handle = @opendir($dir)) {
+		if ($handle = @opendir($dir)) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			while (false !== ($entry = readdir($handle))) {
 				if ('.' !== $entry && '..' !== $entry) {
 					if (is_dir($dir.'/'.$entry)) {
 						self::remove_local_directory($dir.'/'.$entry, false);
 					} else {
-						@unlink($dir.'/'.$entry);
+						@unlink($dir.'/'.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 					}
 				}
 			}
-			@closedir($handle);
+			@closedir($handle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		}
 
 		return $contents_only ? true : rmdir($dir);
@@ -291,7 +295,7 @@ class UpdraftPlus_Filesystem_Functions {
 			if (0 === gzseek($dbhandle, 0)) {
 				return $dbhandle;
 			} else {
-				@gzclose($dbhandle);
+				@gzclose($dbhandle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				return gzopen($file, 'r');
 			}
 		}
@@ -304,22 +308,22 @@ class UpdraftPlus_Filesystem_Functions {
 
 		if (false === ($fnew = fopen($file.".tmp", 'w')) || !is_resource($fnew)) {
 
-			@gzclose($dbhandle);
+			@gzclose($dbhandle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			$err_msg = __('The attempt to undo the double-compression failed.', 'updraftplus');
 
 		} else {
 
-			@fwrite($fnew, $bytes);
+			@fwrite($fnew, $bytes);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			$emptimes = 0;
 			while (!gzeof($dbhandle)) {
-				$bytes = @gzread($dbhandle, 262144);
+				$bytes = @gzread($dbhandle, 262144);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				if (empty($bytes)) {
 					$emptimes++;
 					global $updraftplus;
 					$updraftplus->log("Got empty gzread ($emptimes times)");
 					if ($emptimes>2) break;
 				} else {
-					@fwrite($fnew, $bytes);
+					@fwrite($fnew, $bytes);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				}
 			}
 
@@ -636,7 +640,7 @@ class UpdraftPlus_Filesystem_Functions {
 		* Require we have enough space to unzip the file and copy its contents, with a 10% buffer.
 		*/
 		if (self::wp_doing_cron()) {
-			$available_space = @disk_free_space(WP_CONTENT_DIR);
+			$available_space = @disk_free_space(WP_CONTENT_DIR);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			if ($available_space && ($uncompressed_size * 2.1) > $available_space) {
 				return new WP_Error('disk_full_unzip_file', __('Could not copy files. You may have run out of disk space.'), compact('uncompressed_size', 'available_space'));
 			}

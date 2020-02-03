@@ -33,6 +33,10 @@ class WP_Optimize_Load_Url_Task extends Updraft_Task_1_1 {
 		$cache_preloader->preload_mobile($url);
 		$cache_preloader->preload_amp($url);
 
+		if (defined('WP_CLI') && WP_CLI) {
+			WP_CLI::log($url);
+		}
+
 		/**
 		 * Action triggered after preloading a single url
 		 *

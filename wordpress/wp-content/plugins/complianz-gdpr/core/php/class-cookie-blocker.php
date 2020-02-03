@@ -12,7 +12,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
         {
 
             if (isset(self::$_this))
-                wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'complianz-gdpr'), get_class($this)));
+	            wp_die(sprintf('%s is a singleton class and you cannot create a second instance.', get_class($this)));
 
             self::$_this = $this;
 
@@ -36,8 +36,24 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
         public function filter_buffer($buffer)
         {
-            $buffer = $this->replace_tags($buffer);
+            if (cmplz_is_amp()){
+                $buffer = $this->replace_for_amp($buffer);
+
+            } else {
+                $buffer = $this->replace_tags($buffer);
+
+            }
             return $buffer;
+        }
+
+        public function replace_for_amp($output){
+            $amp_tags = COMPLIANZ()->config->amp_tags;
+
+            $amp_tags = apply_filters('cmplz_amp_tags', $amp_tags);
+            foreach($amp_tags as $amp_tag){
+                $output = str_replace('<'.$amp_tag, '<'.$amp_tag.' data-block-on-consent ', $output);
+            }
+            return $output;
         }
 
         /**
@@ -108,6 +124,13 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
             $known_script_tags = apply_filters('cmplz_known_script_tags', $known_script_tags);
 
             /*
+             * Get dependencies between scripts
+             * */
+            $dependencies = COMPLIANZ()->config->dependencies;
+            $dependencies = apply_filters('cmplz_dependencies', $dependencies);
+
+
+            /*
              * Get async list tags
              *
              * */
@@ -129,7 +152,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
             //not meant as a "real" URL pattern, just a loose match for URL type strings.
             //edit: instagram uses ;width, so we need to allow ; as well.
-            $url_pattern = '([\w.,;@?^=%&:\/~+#!\-*]*?)';
+            $url_pattern = '([\w.,;@?^=%&:()\/~+#!\-*]*?)';
 
             /*
              * Handle scripts loaded with dns prefetch
@@ -137,7 +160,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
              *
              * */
 
-/*            $prefetch_pattern = '/<link rel=[\'|"]dns-prefetch[\'|"] href=[\'|"](\X*?)[\'|"].*?>/i';*/
+/*            $prefetch_pattern = '/<link rel=[\'|"]dns-prefetch[\'|"] href=[\'|"](\X*?)[\'|"][^>]*?>/i';*/
 //            if (preg_match_all($prefetch_pattern, $output, $matches, PREG_PATTERN_ORDER)) {
 //                foreach($matches[1] as $key => $prefetch_url){
 //                    $total_match = $matches[0][$key];
@@ -157,7 +180,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
             $image_tags = COMPLIANZ()->config->image_tags;
             $image_tags = apply_filters('cmplz_image_tags', $image_tags);
-            $image_pattern = '/<img.*?src=[\'|"](\X*?)[\'|"].*?>/i';
+	        $image_pattern = '/<img.*?src=[\'|"](\X*?)[\'|"].*?>/s'; //matches multiline with s operater, for FB pixel
             if (preg_match_all($image_pattern, $output, $matches, PREG_PATTERN_ORDER)) {
                 foreach($matches[1] as $key => $image_url){
                     $total_match = $matches[0][$key];
@@ -165,12 +188,14 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
                         $placeholder = cmplz_placeholder(false, $image_url);
 
                         $new = $total_match;
-                        $new = str_replace('<iframe ', '<iframe data-src-cmplz="'.$image_url.'" ', $new);
+                        //$new = str_replace('<img ', '<img data-src-cmplz="'.$image_url.'" ', $new);
                         $new = $this->add_class($new, 'img', 'cmplz-iframe cmplz-iframe-styles '.apply_filters('cmplz_video_class', 'cmplz-no-video'));
 
                         $new = $this->replace_src($new, apply_filters('cmplz_source_placeholder',$placeholder));
 
                         if (!cmplz_get_value('dont_use_placeholders')) {
+                            $new = $this->add_class($new, 'img', " cmplz-placeholder-element ");
+
                             $new = $this->add_data($new, 'img', 'placeholder-text', apply_filters('cmplz_accept_cookies_blocked_content', cmplz_get_value('blocked_content_text')));
                         }
                         $output = str_replace($total_match, $new, $output);
@@ -184,7 +209,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
              * fonts.google.com has currently been removed in favor of plugin recommendation
              *
              * */
-            $style_pattern = '/<link rel=[\'|"]stylesheet[\'|"].*?href=[\'|"](\X*?)[\'|"].*?>/i';
+            $style_pattern = '/<link rel=[\'|"]stylesheet[\'|"].*?href=[\'|"](\X*?)[\'|"][^>]*?>/i';
             if (preg_match_all($style_pattern, $output, $matches, PREG_PATTERN_ORDER)) {
                 foreach($matches[1] as $key => $style_url){
                     $total_match = $matches[0][$key];
@@ -205,8 +230,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
             $iframe_pattern = '/<(iframe)[^>].*?src=[\'"](http:\/\/|https:\/\/|\/\/)'.$url_pattern.'[\'"].*?>.*?<\/iframe>/i';
             if (preg_match_all($iframe_pattern, $output, $matches, PREG_PATTERN_ORDER)) {
-                foreach($matches[2] as $key => $match){
-                    $total_match = $matches[0][$key];
+                foreach ($matches[0] as $key => $total_match) {
                     $iframe_src = $matches[2][$key].$matches[3][$key];
                     if ($this->strpos_arr($iframe_src, $known_iframe_tags) !== false) {
                         $placeholder = cmplz_placeholder(false, $iframe_src);
@@ -214,55 +238,64 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
                         $new = str_replace('<iframe ', '<iframe data-src-cmplz="'.$iframe_src.'" ', $new);
                         //an iframes-styles class is added so we can reset styles from the theme, and release them after consent
 
-                        //we insert no-video class so the script can activate on div not being video, preventing issues with additional divs.
+                        //we insert video/no-video class for specific video styling
                         if ($this->is_video($iframe_src)){
                             $video_class = apply_filters('cmplz_video_class','cmplz-video cmplz-hidden');
                             //we add a variable behind the placeholder, so other scripts which randomly add a variable with & won't cause a 404.
                             $source_placeholder =  cmplz_url . 'core/assets/video/youtube-placeholder.mp4?cmplz=1';
                         } else {
                             $video_class = apply_filters('cmplz_video_class', 'cmplz-no-video');
-                            $source_placeholder =  cmplz_get_value('dont_use_placeholders') ? cmplz_url . 'core/assets/images/placeholder.html' : cmplz_url . 'core/assets/images/s.png';
+                            $source_placeholder =  'about:blank';
                         }
-                        $new = $this->add_class($new, 'iframe', 'cmplz-iframe cmplz-iframe-styles '.$video_class);
 
                         $source_placeholder = apply_filters('cmplz_source_placeholder',$source_placeholder);
                         $new = $this->replace_src($new, $source_placeholder);
+                        $new = $this->add_class($new, 'iframe', "cmplz-iframe cmplz-iframe-styles $video_class ");
 
-                        if (!cmplz_get_value('dont_use_placeholders')) {
+                        if (!cmplz_get_value('dont_use_placeholders') && strpos($iframe_src,'like.php')===false) {
+                            $new = $this->add_class($new, 'iframe', " cmplz-placeholder-element ");
                             $new = $this->add_data($new, 'iframe','placeholder-image', $placeholder);
-                            $new = $this->add_data($new, 'iframe','placeholder-text', apply_filters('cmplz_accept_cookies_blocked_content',cmplz_get_value('blocked_content_text')));
+
+                            //allow for integrations to override html
+                            $new = apply_filters('cmplz_iframe_html', $new);
+
+                            //make sure there is a parent element which contains this iframe only, to attach the placeholder to
+                            if (!$this->is_video($iframe_src) && !$this->no_div($iframe_src)) $new = '<div>'.$new.'</div>';
                         }
 
                         $output = str_replace($total_match, $new, $output);
 
                     }
                 }
+
             }
 
-            /*
+            /**
              * set non iframe placeholders
              *
              *
              * */
+            if (!cmplz_get_value('dont_use_placeholders')) {
+                $placeholder_markers = apply_filters('cmplz_placeholder_markers', COMPLIANZ()->config->placeholder_markers);
+                foreach ($placeholder_markers as $type => $markers) {
+                    if (!is_array($markers)) $markers = array($markers);
+                    foreach ($markers as $marker) {
+                    	$placeholder_pattern = '/<(section|div|blockquote|twitter-widget)*[^>]*class=[\'" ]*[^>]*('.$marker.')[\'" ].*?>/i';
+	                    if (preg_match_all($placeholder_pattern, $output, $matches, PREG_PATTERN_ORDER)) {
+                            foreach ($matches[0] as $key => $html_match) {
+                                $el = $matches[1][$key];
+                                $placeholder = cmplz_placeholder($type, $marker);
+                                $new_html = $this->add_data($html_match, $el, 'placeholder-image', $placeholder);
+	                            $new_html = $this->add_class($new_html, $el, 'cmplz-placeholder-element');
+                                $output = str_replace($html_match, $new_html, $output);
+                            }
+                        }
+                    }
+                }
+            }
 
-//            $placeholder_markers = COMPLIANZ()->config->placeholder_markers;
-//            foreach($placeholder_markers as $type => $marker){
-/*                $placeholder_pattern = '/<(div).*?class=[\'"](.*?'.$marker.'.*?)[\'"].*?>/i';*/
-//                if (preg_match_all($placeholder_pattern, $output, $matches, PREG_PATTERN_ORDER)) {
-//                    $html_match = $matches[0][0];
-//                    foreach($matches[2] as $key => $match) {
-//
-//                        $placeholder = cmplz_placeholder($type, $marker);
-//                        $new_html = $this->add_data($html_match, 'div', 'placeholder-image', $placeholder);
-//                        $output = str_replace($html_match, $new_html, $output);
-//                        $output = str_replace($marker, $marker." cmplz-div-placeholder", $output);
-//                    }
-//
-//                }
-//            }
 
-
-            /*
+            /**
              * Handle scripts from third parties
              *
              *
@@ -274,6 +307,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
                 foreach($matches[1] as $key => $script_open){
                     //we don't block scripts with the cmplz-native class
                     if (strpos($script_open,'cmplz-native')!==FALSE) continue;
+
                     //exclude ld+json
                     if (strpos($script_open,'application/ld+json')!==FALSE) continue;
                     $total_match = $matches[0][$key];
@@ -283,11 +317,21 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
                     if (!empty($content)) {
                         if (strpos($content, 'avia_preview')!==false) continue;
                         $found = $this->strpos_arr($content, $known_script_tags);
+
                         if ($found !== false) {
                             $new = $total_match;
-                            $new = $this->add_class($new, 'script', 'cmplz-script');
 
-                            $new = $this->set_javascript_to_plain($new);
+                            $new = $this->add_class($new, 'script', apply_filters('cmplz_script_class','cmplz-script', $total_match, $found));
+
+	                        //native scripts don't have to be blocked
+	                        if (strpos($new,'cmplz-native')===FALSE) {
+		                        $new = $this->set_javascript_to_plain( $new );
+
+		                        $waitfor = $this->strpos_arr( $content, $dependencies );
+		                        if ( $waitfor !== false ) {
+			                        $new = $this->add_data( $new, 'script', 'waitfor', $waitfor );
+		                        }
+	                        }
                             $output = str_replace($total_match, $new, $output);
                         }
                     }
@@ -299,22 +343,35 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
                         foreach ($src_matches[2] as $src_key => $script_src) {
 
                             $script_src = $src_matches[1][$src_key].$src_matches[2][$src_key];
+
                             $found = $this->strpos_arr($script_src, $known_script_tags);
                             if ($found !== false){
                                 $new = $total_match;
-                                $new = $this->add_class($new, 'script', 'cmplz-script');
-                                $new = $this->set_javascript_to_plain($new);
+                                $new = $this->add_class($new, 'script', apply_filters('cmplz_script_class','cmplz-script', $total_match, $found));
 
-                                if ($this->strpos_arr($found, $async_list)){
-                                    $index ++;
-                                    $new = $this->add_data($new, 'script', 'post_scribe_id', 'cmplz-ps-'.$index);
-                                    if (cmplz_has_async_documentwrite_scripts()) {
-                                        $new .= '<div class="cmplz-blocked-content-container"><div class="cmplz-blocked-content-notice cmplz-accept-cookies">'.apply_filters('cmplz_accept_cookies_blocked_content',cmplz_get_value('blocked_content_text')).'</div><div id="cmplz-ps-' . $index . '"><img src="'.cmplz_placeholder('div').'"></div></div>';
-                                    }
-                                }
+                                //native scripts don't have to be blocked
+	                            if (strpos($new,'cmplz-native')===FALSE) {
+		                            $new = $this->set_javascript_to_plain( $new );
+
+		                            if ( $this->strpos_arr( $found, $async_list ) ) {
+			                            $index ++;
+			                            $new = $this->add_data( $new, 'script', 'post_scribe_id', 'cmplz-ps-' . $index );
+			                            if ( cmplz_has_async_documentwrite_scripts() ) {
+				                            $new .= '<div class="cmplz-blocked-content-container"><div class="cmplz-blocked-content-notice cmplz-accept-cookies">' . apply_filters( 'cmplz_accept_cookies_blocked_content', cmplz_get_value( 'blocked_content_text' ) ) . '</div><div id="cmplz-ps-' . $index . '"><img src="' . cmplz_placeholder( 'div' ) . '"></div></div>';
+			                            }
+		                            }
+
+		                            //maybe add dependency
+		                            $waitfor = $this->strpos_arr( $script_src, $dependencies );
+		                            if ( $waitfor !== false ) {
+			                            $new = $this->add_data( $new, 'script', 'waitfor', $waitfor );
+		                            }
+	                            }
 
                                 $output = str_replace($total_match, $new, $output);
                             }
+
+
                         }
                     }
                 }
@@ -328,7 +385,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
 
         /**
-         * check if there is a partial match between a keys of the array and the haystack
+         * check if there is a partial match between a key of the array and the haystack
          * We cannot use array_search, as this would not allow partial matches.
          *
          * @param string $haystack
@@ -342,9 +399,10 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
             if (!is_array($needle)) $needle = array($needle);
 
-            foreach ($needle as $key => $what) {
-                $search = (is_numeric($key)) ? $what : $key;
-                if (($pos = strpos($haystack, $search)) !== false) return $search;
+            foreach ($needle as $key => $value) {
+                if (($pos = strpos($haystack, $value)) !== false) {
+                    return (is_numeric($key)) ? $value : $key;
+                }
             }
             return false;
         }
@@ -360,7 +418,6 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
                     $script = substr_replace($script, '<script type="text/plain"', $pos, strlen("<script"));
                 }
             }
-
             return $script;
         }
 
@@ -408,10 +465,9 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
         private function add_class($html, $el, $class){
             $class = esc_attr($class);
-            preg_match('/<'.$el.'[^>].*?\K(class=")(?=.*">)/i', $html, $matches);
-
+            preg_match('/<'.$el.'[^\>]*[^\>\S]+\K(class=")/i', $html, $matches);
             if ($matches) {
-                $html = preg_replace('/<'.$el.'[^>].*?\K(class=")(?=.*">)/i', 'class="'.$class.' ', $html, 1);
+                $html = preg_replace('/<'.$el.'[^\>]*[^\>\S]+\K(class=")/i', 'class="'.$class.' ', $html, 1);
             } else {
                 $pos = strpos($html, "<$el");
                 if ($pos !== false) {
@@ -431,7 +487,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
          * @return string $html
          */
 
-        private function add_data($html, $el, $id, $content){
+        public function add_data($html, $el, $id, $content){
             $content = esc_attr($content);
             $id = esc_attr($id);
 
@@ -455,6 +511,20 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
            }
 
            return false;
+        }
+
+        /**
+         * Check if this iframe source is soundcloud
+         * @param $iframe_src
+         * @return bool
+         */
+
+        private function no_div($iframe_src){
+            if (strpos($iframe_src, 'soundcloud')!==false ){
+                return true;
+            }
+
+            return false;
         }
 
     }

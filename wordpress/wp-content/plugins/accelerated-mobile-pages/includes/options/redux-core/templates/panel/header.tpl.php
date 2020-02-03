@@ -1,5 +1,8 @@
 <?php
 namespace ReduxCore\ReduxFramework;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
     /**
      * The template for the panel header area.
      * Override this template by specifying the path where it is stored (templates_path) in your Redux config.
@@ -61,13 +64,11 @@ namespace ReduxCore\ReduxFramework;
                 </div>
             
             <?php } ?>
-
-            <h2><?php echo wp_kses_post( $this->parent->args['display_name'] ); ?></h2>
-
-            <?php if ( ! empty( $this->parent->args['display_version'] ) ) { ?>
-                <span><?php echo wp_kses_post( $this->parent->args['display_version'] ); ?></span>
-            <?php } ?>
-
+            <h2 class="ampforwp-tooltip">
+                <span class="tooltiptext">
+                    <?php echo "AMPforWP - " .esc_attr($this->parent->args['display_version']);?>
+                </span>
+            </h2>
         </div>
     <?php } ?>
 

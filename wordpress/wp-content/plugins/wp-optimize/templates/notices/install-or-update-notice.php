@@ -29,12 +29,13 @@
 		<h3><?php _e('Thank you for updating WP-Optimize!', 'wp-optimize'); ?></h3>
 		<p><?php _e('The team at WP-Optimize is working hard to make your site fast & efficient.', 'wp-optimize'); ?></p>
 		<p>
-			<?php printf(_x('This new version includes the ability to %s compress unlimited images %s and %s cache your site.%s', '%s will be replaced by a "strong" tag', 'wp-optimize'), '<strong>', '</strong>', '<strong>', '</strong>'); ?>
-			<?php _e("If you already have plugins for images and caching, don't worry - WP-Optimize won't interfere unless you turn these options on.", 'wp-optimize'); ?>
+			<?php printf(_x('This new version includes the ability to %s cache your site.%s', '%s will be replaced by a "strong" tag', 'wp-optimize'), '<strong>', '</strong>'); ?>
+			<?php _e("We've built this around the most powerful caching technology we know and subjected it to many months of highly intensive testing.", 'wp-optimize'); ?>
 		</p>
-		<p><?php _e("In this first version with these new free features we're aiming to offer more as standard than many other dedicated alternatives in these areas.", 'wp-optimize'); ?></p>
+		<p><?php _e("If you already have plugins for images and caching, don't worry - WP-Optimize won't interfere unless you turn these options on.", 'wp-optimize'); ?></p>
+		<p><?php printf(_x("However, %s tests by us%s and early adopters show WP-Optimize's cache feature alone can make your site faster than every other caching plugin we've tested, and it's simpler too. So we encourage you to give it a go!", '%s will be replaced by a link', 'wp-optimize'), '<a target="_blank" href="'.WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/benchmark/').'">', '</a>'); ?></p>
 		<?php if (!$is_premium) : ?>
-			<p class="wpo-introduction-notice__footer-links--premium"><?php printf(_x('PS - check out our new improved Premium version %shere%s.', '%s is replaced by a link tag', 'wp-optimize'), '<a href="'.WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/buy/').'" target="_blank">', '</a>'); ?></p>
+			<p class="wpo-introduction-notice__footer-links--premium"><?php printf(_x('PS - check out our new improved Premium version %shere%s.', '%s is replaced by a link tag', 'wp-optimize'), '<a href="'.'https://getwpo.com/buy/'.'" target="_blank">', '</a>'); ?></p>
 		<?php endif; ?>
 		<div class="wpo-introduction-notice__footer">
 			<p class="wpo-introduction-notice__footer-links font-size__normal">

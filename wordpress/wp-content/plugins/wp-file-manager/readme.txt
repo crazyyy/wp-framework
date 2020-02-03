@@ -2,9 +2,9 @@
 Contributors: mndpsingh287
 Tags: wp-file-manager, elfinder,file manager, ftp, wp-filemanager,file manager, wp-filemanager, Upload Files, WP File Manager, File Manage, Edit Files, Delete Files, FTP, filemanager, wpfilemanager, ftp, file transfer, update, create, delete, view, rename, editor, Cpanel, Control Panel, Admin, Shortcode, explorer, file explorer, filemanager
 Requires at least: 4.0
-Tested up to: 5.2.2
+Tested up to: 5.3.2
 Requires PHP: 5.2.4
-Stable tag: 5.3
+Stable tag: 5.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,20 +80,20 @@ Key Features in the Free File Manager plugin include:
 * **Dropbox Integration**        drag drop, copy paste all other operations between file manager and dropbox.   
 
 
-> <strong>[Buy Pro Version](https://filemanagerpro.io/product/file-manager/)</strong> with various features & support.
-> <strong>[Contact us](https://webdesi9.zendesk.com/hc/en-us)</strong> for Support Only Pro Version Users.
-> <strong>[Documentation](https://filemanagerpro.io/documentation/)</strong> Click Here.
-> <strong>[Addons](https://filemanagerpro.io/addons)</strong> with various features & support.
-**[Upgrade to Pro Version](https://filemanagerpro.io/product/file-manager/)**
+> <strong>[Buy Pro Version](https://filemanagerpro.io/product/file-manager/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> with various features & support.
+> <strong>[Contact us](https://filemanagerpro.io/contact/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> for Support Only Pro Version Users.
+> <strong>[Documentation](https://filemanagerpro.io/documentation/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> Click Here.
+> <strong>[Addons](https://filemanagerpro.io/addons/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> with various features & support.
+**[Upgrade to Pro Version](https://filemanagerpro.io/product/file-manager/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)**
 
 = Premium Addons =
 
-<strong>[File Manager Google Drive](https://filemanagerpro.io/product/file-manager-google-drive)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Google Drive.
-<strong>[File Manager OneDrive](https://filemanagerpro.io/product/file-manager-one-drive)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in OneDrive from File Manager.
-<strong>[File Manager Dropbox](https://filemanagerpro.io/product/file-manager-dropbox)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in dropbox.
-<strong>[File Manager Box](https://filemanagerpro.io/product/file-manager-box)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Box.
-<strong>[File Manager Git](https://filemanagerpro.io/product/file-manager-git)</strong> Github integration for file manager.
-<strong>[File Manager Slack](https://filemanagerpro.io/product/file-manager-slack)</strong> Slack incoming webhook integration to file manager.
+<strong>[File Manager Google Drive](https://filemanagerpro.io/product/file-manager-google-drive/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Google Drive.
+<strong>[File Manager OneDrive](https://filemanagerpro.io/product/file-manager-one-drive/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in OneDrive from File Manager.
+<strong>[File Manager Dropbox](https://filemanagerpro.io/product/file-manager-dropbox/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in dropbox.
+<strong>[File Manager Box](https://filemanagerpro.io/product/file-manager-box/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Box.
+<strong>[File Manager Git](https://filemanagerpro.io/product/file-manager-git/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> Github integration for file manager.
+<strong>[File Manager Slack](https://filemanagerpro.io/product/file-manager-slack/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> Slack incoming webhook integration to file manager.
 
 
 == Installation ==
@@ -107,7 +107,7 @@ Key Features in the Free File Manager plugin include:
 Yes, You can achieve any files and folders as zip then simple download it. Please view screenshots.
 
 == Support == 
-* If any problem occurs, please contact us at https://webdesi9.zendesk.com/hc/en-us
+* If any problem occurs, please contact us at https://filemanagerpro.io/contact/
 
 ## How to use
 
@@ -134,6 +134,22 @@ Yes, You can achieve any files and folders as zip then simple download it. Pleas
 
 
 == Changelog ==
+
+= 5.7 (23rd JAN, 2020) =
+
+* Media library js fixes
+
+= 5.6 (14th JAN, 2020) =
+
+* Media library option fixes
+
+= 5.5 (2nd DEC, 2019) =
+
+* Unparenthesized issue fixes.
+
+= 5.4 (16th AUGUST, 2019) =
+
+* Minor fixes and added logs demo screenshots.
 
 = 5.3 (20th AUGUST, 2019) =
 
@@ -285,7 +301,7 @@ major Performence fix
 
 * fix some Bug in 1.7 - Minor Update
 * Now WP File Manager is in various languages. - Major Update
-* WP File Manager Translations Available. Compatiable with any wordpress language. - Major Update
+* WP File Manager Translations Available. Compatible with any wordpress language. - Major Update
 
 = 1.7 (18th Aug ,2017) =
 
@@ -332,4 +348,4 @@ major Performence fix
 *   PHP 5.x
 *   MySQL 5.x
 
-If any problem occurs, please contact us at https://webdesi9.zendesk.com/hc/en-us.
+If any problem occurs, please contact us at https://filemanagerpro.io/contact/

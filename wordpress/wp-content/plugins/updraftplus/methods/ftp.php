@@ -243,7 +243,7 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 
 		$ret = true;
 		foreach ($files as $file) {
-			if (@$ftp->delete($ftp_remote_path.$file)) {
+			if (@$ftp->delete($ftp_remote_path.$file)) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				$this->log("delete: succeeded (${ftp_remote_path}${file})");
 			} else {
 				$this->log("delete: failed (${ftp_remote_path}${file})");
@@ -375,13 +375,13 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		
 		<tr class="<?php echo $classes;?>">
 			<th><?php _e('Remote path', 'updraftplus');?>:</th>
-			<td><input class="updraft_input--wide" type="text" size="64" data-updraft_settings_test="path" <?php $this->output_settings_field_name_and_id('path');?> value="{{path}}" /> <em><?php _e('Needs to already exist', 'updraftplus');?></em></td>
+			<td><input title="<?php _e('Needs to already exist', 'updraftplus'); ?>" class="updraft_input--wide" type="text" size="64" data-updraft_settings_test="path" <?php $this->output_settings_field_name_and_id('path');?> value="{{path}}" /> <em><?php _e('Needs to already exist', 'updraftplus');?></em></td>
 		</tr>
 		
 		<tr class="<?php echo $classes;?>">
 			<th><?php _e('Passive mode', 'updraftplus');?>:</th>
 			<td>
-			<input type="checkbox" data-updraft_settings_test="passive" <?php $this->output_settings_field_name_and_id('passive');?> value="1" {{#ifeq '1' passive}}checked="checked"{{/ifeq}}> <br><em><?php echo __('Almost all FTP servers will want passive mode; but if you need active mode, then uncheck this.', 'updraftplus');?></em></td>
+			<input title="<?php echo __('Almost all FTP servers will want passive mode; but if you need active mode, then uncheck this.', 'updraftplus');?>" type="checkbox" data-updraft_settings_test="passive" <?php $this->output_settings_field_name_and_id('passive');?> value="1" {{#ifeq '1' passive}}checked="checked"{{/ifeq}}> <br><em><?php echo __('Almost all FTP servers will want passive mode; but if you need active mode, then uncheck this.', 'updraftplus');?></em></td>
 		</tr>
 		
 		<?php
@@ -438,7 +438,7 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		
 		if ($ftp->put(ABSPATH.WPINC.'/version.php', $fullpath, FTP_BINARY, false, true)) {
 			echo __("Success: we successfully logged in, and confirmed our ability to create a file in the given directory (login type:", 'updraftplus')." ".$ftp->login_type.')';
-			@$ftp->delete($fullpath);
+			@$ftp->delete($fullpath);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		} else {
 			_e('Failure: we successfully logged in, but were not able to create a file in the given directory.', 'updraftplus');
 			if (!empty($ftp->ssl)) {

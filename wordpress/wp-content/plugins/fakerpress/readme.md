@@ -6,10 +6,11 @@ FakerPress is a clean way to generate fake and dummy content to your WordPress, 
 
 **Contributors:** [bordoni](http://profiles.wordpress.org/bordoni)  
 **Tags:** [generator](http://wordpress.org/plugins/tags/generator), [dummy content](http://wordpress.org/plugins/tags/dummy content), [dummy data](http://wordpress.org/plugins/tags/dummy data), [lorem ipsun](http://wordpress.org/plugins/tags/lorem ipsun), [admin](http://wordpress.org/plugins/tags/admin), [exemples](http://wordpress.org/plugins/tags/exemples), [testing](http://wordpress.org/plugins/tags/testing), [images](http://wordpress.org/plugins/tags/images), [attachments](http://wordpress.org/plugins/tags/attachments), [featured image](http://wordpress.org/plugins/tags/featured image), [taxonomies](http://wordpress.org/plugins/tags/taxonomies), [users](http://wordpress.org/plugins/tags/users), [post type](http://wordpress.org/plugins/tags/post type), [faker](http://wordpress.org/plugins/tags/faker), [fake data](http://wordpress.org/plugins/tags/fake data), [random](http://wordpress.org/plugins/tags/random), [developer](http://wordpress.org/plugins/tags/developer), [dev](http://wordpress.org/plugins/tags/dev), [development](http://wordpress.org/plugins/tags/development), [test](http://wordpress.org/plugins/tags/test), [tests](http://wordpress.org/plugins/tags/tests)  
-**Requires at least:** 3.7  
-**Tested up to:** 4.9.4  
+**Requires at least:** 4.7  
+**Tested up to:** 5.3  
 **Stable tag:** trunk (master)  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
+**Requires PHP:** 5.6  
 
 ## Description ##
 
@@ -98,6 +99,19 @@ Thank you for wanting to make FakerPress better for everyone! [We salute you](ht
 
 
 ## Changelog ##
+
+### 0.5.0 &mdash; 09 of November, 2019 ###
+* Feature: Removed 500px as a image provider as that source was deprecated a while ago.
+* Fix: Properly handle downloading of images into WordPress, which makes this a lot safer and faster.
+* Fix: Resolved the problem where images from the Meta Attachment were been generated with 0x0 size and breaking the attachment.
+* Fix: Removed 500px as a image provider as that source was deprecated a while ago.
+* Fix: Moved from Unplash.it to their new name as Lorem Picsum.
+* Tweak: Started adding proper docblocks to the new methods. Note it will take a couple versions to have all methods with proper docblocks.
+* Tweak: Control timeout of image download with filter `fakerpress.module.attachment.download_url_timeout` defaulting to 10 seconds per attachment.
+* Tweak: Update required version of PHP to 5.6 to be more along the requirements of WordPress.
+* Tweak: Test and update the version of WordPress FakerPress was tested up to, now on 5.3.
+* Tweak: Updated the version of fzaninotto/faker (v1.6.0 => v1.8.0)
+* Tweak: Updated the version of nesbot/carbon (1.21.0 => 1.39.1)
 
 ### 0.4.11 &mdash; 25 of February, 2018 ###
 * Fix: Prevent fatals from oversight with Namespace and Classnames for User and Post generation &mdash; Thanks [@radgh](https://wordpress.org/support/topic/fakerpress-generate-users-fails/) & [@johny-dotpad](https://wordpress.org/support/topic/post-generation-fails/)

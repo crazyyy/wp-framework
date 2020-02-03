@@ -59,36 +59,47 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_1 {
 
 		if (!$this->validate_file($file_path)) return false;
 
+		$api_endpoint = $this->get_option('api_endpoint');
+
+		if (false === filter_var($api_endpoint, FILTER_VALIDATE_URL)) {
+			$this->fail('invalid_api_url', "The API endpoint supplied {$api_endpoint} is invalid");
+			return false;
+		}
+
 		$original_image = $file_path;
 		$backup_original_image = $this->get_option('keep_original', true);
 
 		// add possibility to exclude certain image sizes from smush.
 		$dont_smush_sizes = apply_filters('wpo_dont_smush_sizes', array());
 
-		// build list of files for smush.
-		$files = array($file_path);
-
 		$this->update_option('original_filesize', filesize($file_path));
 
-		foreach ($this->get_attachment_files($attachment_id) as $size => $file) {
-			if (in_array($size, $dont_smush_sizes)) continue;
-			$files[] = $file;
-		}
-		
-		$api_endpoint = $this->get_option('api_endpoint');
+		// build list of files for smush.
+		$files = array_merge(array('full' => $file_path), $this->get_attachment_files($attachment_id));
 
-		foreach ($files as $file_path) {
+		foreach ($files as $size => $file_path) {
+
+			if (in_array($size, $dont_smush_sizes)) continue;
+
 			if (filesize($file_path) > 5242880) {
 				$this->update_option('request_timeout', 180);
 			}
 
 			$this->log($this->get_description());
 
-			$post_data = $this->prepare_post_request($file_path);
+			/**
+			 * Filters the options for a single image to compress.
+			 * Currently supports:
+			 * - 'quality': Will use the image quality set in this filter, instead of the one defined in the settings.
+			 *
+			 * @param array   $options       - The options (default: empty array)
+			 * @param integer $attachment_id - The attachment post ID
+			 * @param string  $file_path     - The path to the file being compressed
+			 * @param string  $size          - The size name (e.g. 'thumbnail')
+			 */
+			$options = apply_filters('wpo_image_compression_single_image_options', array(), $attachment_id, $file_path, $size);
 
-			if (false === filter_var($api_endpoint, FILTER_VALIDATE_URL)) {
-				$this->fail('invalid_api_url', "The API endpoint supplied {$api_endpoint} is invalid");
-			}
+			$post_data = $this->prepare_post_request($file_path, $options);
 
 			$response = $this->post_to_remote_server($api_endpoint, $post_data);
 			$optimised_image = $this->process_server_response($response);
@@ -172,18 +183,24 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_1 {
 				
 		$this->set_current_stage('backup_original');
 
-		$file = pathinfo($file_path);
-		$back_up = wp_normalize_path($file['dirname'].'/'.basename($file['filename'].$this->get_option('backup_prefix').$file['extension']));
-
 		if (is_multisite()) {
 			switch_to_blog($this->get_option('blog_id', 1));
-			update_post_meta($this->get_option('attachment_id'), 'original-file', $back_up);
-			restore_current_blog();
-		} else {
-			update_post_meta($this->get_option('attachment_id'), 'original-file', $back_up);
 		}
 
-		$this->log("Backing up the original image - {$back_up}");
+		$file = pathinfo($file_path);
+		$back_up = wp_normalize_path($file['dirname'].'/'.basename($file['filename'].$this->get_option('backup_prefix').$file['extension']));
+		$uploads_dir = wp_upload_dir();
+
+		// Make path relative and safe for migrations
+		$back_up_relative_path = preg_replace('#^'.wp_normalize_path($uploads_dir['basedir'].'/').'#', '', $back_up);
+
+		update_post_meta($this->get_option('attachment_id'), 'original-file', $back_up_relative_path);
+
+		if (is_multisite()) {
+			restore_current_blog();
+		}
+
+		$this->log("Backing up the original image - {$back_up_relative_path}");
 
 		return copy($file_path, $back_up);
 	}
@@ -232,8 +249,12 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_1 {
 		$this->set_current_stage('completed');
 
 		clearstatcache(true, $file_path); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.clearstatcache_clear_realpath_cacheFound,PHPCompatibility.FunctionUse.NewFunctionParameters.clearstatcache_filenameFound
-		$saved = round((($original_size - filesize($file_path)) / $original_size * 100), 2);
-		$info = sprintf(__("The file was compressed from %s to %s saving %s percent using WP-Optimize", 'wp-optimize'), $this->format_filesize($original_size), $this->format_filesize(filesize($file_path)), $saved);
+		if (0 == $original_size) {
+			$info = sprintf(__("The file was compressed to %s using WP-Optimize", 'wp-optimize'), $this->format_filesize(filesize($file_path)));
+		} else {
+			$saved = round((($original_size - filesize($file_path)) / $original_size * 100), 2);
+			$info = sprintf(__("The file was compressed from %s to %s saving %s percent using WP-Optimize", 'wp-optimize'), $this->format_filesize($original_size), $this->format_filesize(filesize($file_path)), $saved);
+		}
 
 		$stats = array(
 			'smushed-with'  	=> $this->label,
@@ -417,6 +438,22 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_1 {
 		}
 
 		return $attachment_images;
+	}
+
+	/**
+	 * Check the mime type of a downloaded file, returns true if it is a valid image mime type.
+	 *
+	 * @param string $file_buffer The buffer string downloaded from the compression service
+	 * @return boolean
+	 */
+	protected function is_downloaded_image_buffer_mime_type_valid($file_buffer) {
+		// If the required class does not exist, return true to avoid breaking the functionality
+		if (!class_exists('finfo')) return true;
+		$accepted_types = apply_filters('wpo_image_compression_accepted_mime_types', array('image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'));
+		// The ignore rule below is added because "finfo" doesn't exist in PHP5.2.
+		$finfo = new finfo(FILEINFO_MIME_TYPE); // phpcs:ignore PHPCompatibility.Classes.NewClasses.finfoFound, PHPCompatibility.Constants.NewConstants.fileinfo_mime_typeFound
+		$mime_type = $finfo->buffer($file_buffer);
+		return in_array($mime_type, $accepted_types);
 	}
 }
 endif;

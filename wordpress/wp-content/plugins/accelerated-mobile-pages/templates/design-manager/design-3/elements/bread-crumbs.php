@@ -1,4 +1,8 @@
-<?php  global $redux_builder_amp; 
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+global $redux_builder_amp; 
 if ( ( (is_single() && 1 == ampforwp_get_setting('ampforwp-bread-crumb')) || (is_page() && ampforwp_get_setting('ampforwp_pages_breadcrumbs')) ) && !checkAMPforPageBuilderStatus(get_the_ID()) ) {   
     $home_non_amp = $archive_non_amp = '';
     if ( false == $redux_builder_amp['ampforwp-homepage-on-off-support'] ) {
@@ -109,9 +113,17 @@ if ( ( (is_single() && 1 == ampforwp_get_setting('ampforwp-bread-crumb')) || (is
                     $last_category = end($last_category);
                       $category_name = get_category($last_category);
                     // Get parent any categories and create array
-                    $get_cat_parents = rtrim(get_category_parents($last_category->term_id, false, ','),',');
-                    $cat_parents = explode(',',$get_cat_parents);
-                      
+                    $get_cat_parents = rtrim(get_category_parents($last_category->term_id, false, '>'),'>');
+                    if(class_exists( 'WPSEO_Options' )){
+                        $primary_cateogory = get_post_meta(ampforwp_get_the_ID(), '_yoast_wpseo_primary_category', true);
+                    if(isset($primary_cateogory) && $primary_cateogory!=""){
+                        $pcname = get_the_category_by_ID($primary_cateogory);
+                        $category_name = $pcname;
+                        $get_cat_parents = rtrim(get_category_parents($primary_cateogory, false, '>'),'>');
+                       }
+                   }
+                        // Get parent any categories and create array 
+                        $cat_parents = explode('>',$get_cat_parents);
                     // Loop through parent categories and store in variable $cat_display
                     $cat_display = '';
                     foreach($cat_parents as $parents) {
@@ -121,10 +133,10 @@ if ( ( (is_single() && 1 == ampforwp_get_setting('ampforwp-bread-crumb')) || (is
                             $cat_link = ampforwp_url_controller( $cat_link );
                         }
                         $cat_display .= '<li class="item-cat item-cat-' . $cat_id . '"><a class="bread-cat bread-cat-' . $cat_id . ' bread-cat-' . $parents. '" href="'. esc_url($cat_link).'" title="'.esc_attr($parents).'">'.esc_html($parents).'</a></li>';
+                    }
                         if(ampforwp_get_setting('ampforwp-bread-crumb-post')){
                              $cat_display .='<li class="item-post item-post-' . esc_attr(ampforwp_get_the_ID()) . '"><span class="bread-post">'.wp_kses_data( get_the_title(ampforwp_get_the_ID()) ). '</span></li>';
                         } 
-                    }
                 }
             }
             /*Breadcrumb with tags End*/

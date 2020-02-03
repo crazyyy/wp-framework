@@ -301,8 +301,12 @@ class WINP_Execute_Snippet {
 
 		$snippets = $wpdb->get_results( "SELECT {$wpdb->posts}.ID, {$wpdb->posts}.post_content
  					FROM {$wpdb->posts}
- 					INNER JOIN {$wpdb->postmeta} ON ( {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id )
- 					WHERE ( ( {$wpdb->postmeta}.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_scope' AND {$wpdb->postmeta}.meta_value = '{$scope}' )	) AND {$wpdb->posts}.post_type = '" . WINP_SNIPPETS_POST_TYPE . "' AND ( ({$wpdb->posts}.post_status = 'publish') )" );
+ 					INNER JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)
+ 					WHERE (( {$wpdb->postmeta}.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_scope' 
+ 					AND {$wpdb->postmeta}.meta_value = '{$scope}')) 
+ 					AND {$wpdb->posts}.post_type = '" . WINP_SNIPPETS_POST_TYPE . "' 
+ 					AND (({$wpdb->posts}.post_status = 'publish'))" );
+
 
 		if ( empty( $snippets ) ) {
 			return $content;
@@ -932,17 +936,23 @@ class WINP_Execute_Snippet {
 	/**
 	 * A taxonomy of the current page
 	 *
+	 * @since 2.2.8 The bug is fixed, the condition was not checked
+	 *              for tachonomies, only posts.
+	 *
 	 * @param $operator
 	 * @param $value
 	 *
 	 * @return boolean
 	 */
 	private function location_taxonomy( $operator, $value ) {
-		global $post;
+		$term_id = null;
 
-		$post_cat = get_the_category( $post->ID );
-		if ( isset( $post_cat[0] ) ) {
-			return $this->checkByOperator( $operator, intval( $value ), $post_cat[0]->term_id );
+		if ( is_tax() || is_tag() || is_category() ) {
+			$term_id = get_queried_object()->term_id;
+
+			if ( $term_id ) {
+				return $this->checkByOperator( $operator, intval( $value ), $term_id );
+			}
 		}
 
 		return false;

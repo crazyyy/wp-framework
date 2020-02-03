@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Wbcr_FactoryPages419_AdminPage' ) ) {
+if ( ! class_exists( 'Wbcr_FactoryPages422_AdminPage' ) ) {
 
-	class Wbcr_FactoryPages419_AdminPage extends Wbcr_FactoryPages419_Page {
+	class Wbcr_FactoryPages422_AdminPage extends Wbcr_FactoryPages422_Page {
 
 		/**
 		 * Visible page title.
@@ -209,7 +209,7 @@ if ( ! class_exists( 'Wbcr_FactoryPages419_AdminPage' ) ) {
 		 */
 		public $add_link_to_plugin_actions = false;
 
-		public function __construct( Wbcr_Factory419_Plugin $plugin ) {
+		public function __construct( Wbcr_Factory422_Plugin $plugin ) {
 			parent::__construct( $plugin );
 			$this->configure();
 
@@ -316,13 +316,13 @@ if ( ! class_exists( 'Wbcr_FactoryPages419_AdminPage' ) ) {
 		public function connect() {
 			$result_id = $this->getResultId();
 
-			$this->hidden = apply_filters( 'wbcr_factory_419_page_is_hidden_' . $result_id, $this->hidden );
+			$this->hidden = apply_filters( 'wbcr_factory_422_page_is_hidden_' . $result_id, $this->hidden );
 
 			if ( $this->hidden ) {
 				return;
 			}
 
-			$this->internal = apply_filters( 'wbcr_factory_419_page_is_internal_' . $result_id, $this->internal );
+			$this->internal = apply_filters( 'wbcr_factory_422_page_is_internal_' . $result_id, $this->internal );
 
 			if ( $this->internal ) {
 				$this->menu_target    = null;
@@ -361,7 +361,7 @@ if ( ! class_exists( 'Wbcr_FactoryPages419_AdminPage' ) ) {
 				$this->assets( $this->scripts, $this->styles );
 
 				if ( ! $this->scripts->isEmpty( 'bootstrap' ) || ! $this->styles->isEmpty( 'bootstrap' ) ) {
-					add_action( 'wbcr_factory_419_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), [
+					add_action( 'wbcr_factory_422_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), [
 						$this,
 						'actionAdminBootstrapScripts'
 					] );
@@ -490,8 +490,7 @@ if ( ! class_exists( 'Wbcr_FactoryPages419_AdminPage' ) ) {
 				if ( preg_match( '/\\\f\d{3}/', $this->menu_icon ) ) {
 					$icon_code = $this->menu_icon;
 				} else {
-					$plugin_path_info = $this->plugin->getPluginPathInfo();
-					$icon_url         = str_replace( '~/', $plugin_path_info->plugin_url . '/', $this->menu_icon );
+					$icon_url         = str_replace( '~/', $this->plugin->get_paths()->url . '/', $this->menu_icon );
 				}
 			}
 

@@ -31,6 +31,13 @@ var WP_Optimize_Cache = function (send_command) {
 	});
 
 	/**
+	 * Trigger purge cache button click if wpo_purge_cache event fired.
+	 */
+	$('body').on('wpo_purge_cache', function() {
+		purge_cache_btn.trigger('click');
+	});
+
+	/**
 	 * Trigger click Browser cache button if user push Enter and form start submitting.
 	 */
 	browser_cache_enable_btn.closest('form').submit(
@@ -235,6 +242,15 @@ var WP_Optimize_Cache = function (send_command) {
 			} else {
 				$('.wpo-error__enabling-cache').addClass('wpo_hidden').find('p').text('');
 			}
+
+			if (response.hasOwnProperty('advanced_cache_file_writing_error')) {
+				$('#wpo_advanced_cache_output')
+					.text(response.advanced_cache_file_content)
+					.show();
+			} else {
+				$('#wpo_advanced_cache_output').hide();
+			}
+
 			$.unblockUI();
 			spinner.hide();
 			// update the toggle state depending on response.enabled

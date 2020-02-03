@@ -1,5 +1,8 @@
 <?php
 use ReduxCore\ReduxFramework\Redux;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 function ampforwp_notice_bar_options($opt_name){
   // If CTA is not Activated
   $cta_desc = "";
@@ -13,7 +16,7 @@ function ampforwp_notice_bar_options($opt_name){
        'title'      => esc_html__( 'Notice Bar & GDPR', 'accelerated-mobile-pages' ),
           'desc'       => $cta_desc ,
        'id'         => 'amp-notifications',
-       'class'      => 'ampforwp_new_features ',
+       'class'      => '',
        'subsection' => true,
        'fields'     => array(
            array(
@@ -44,6 +47,7 @@ function ampforwp_notice_bar_options($opt_name){
            'required' => array('amp-enable-notifications', '=' , '1'),
            'default'  => esc_html__('This website uses cookies.','accelerated-mobile-pages'),
            'placeholder' => esc_html__('Enter Text here','accelerated-mobile-pages'),
+           'tooltip-subtitle' => esc_html__('Enter the message you want to show in the notice bar. You can also paste HTML in it but only <span><a><b><i><br> tags are allowed.', 'accelerated-mobile-pages'),
            ),
            array(
            'class' => 'child_opt',
@@ -81,7 +85,15 @@ function ampforwp_notice_bar_options($opt_name){
                'default'   => 'Read More',
                'required' => array('amp-enable-links', '=' , '1'),
            ),
-
+           array(
+               'class'  => 'child_opt',
+               'id'        =>'ampforwp-notifications-nofollow',
+               'type'      => 'switch',
+               'title'     => esc_html__('No Follow link', 'accelerated-mobile-pages'),
+               'default'   => 0,
+               'tooltip-subtitle'  => esc_html__('Add nofollow to the notification link.', 'accelerated-mobile-pages'),
+               'required' => array('amp-enable-links', '=' , '1'),
+           ),
            array(
             'id' => 'ampforwp-notice_1',
             'type' => 'section',

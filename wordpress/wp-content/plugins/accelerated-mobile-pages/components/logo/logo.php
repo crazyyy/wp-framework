@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 function ampforwp_framework_get_logo(){
   global $redux_builder_amp;
   $title = get_bloginfo();
@@ -26,10 +29,9 @@ function ampforwp_framework_get_logo(){
                        <?php  bloginfo('name'); ?> 
                     </h1>
              <?php } ?>
-          <?php } else { if(is_single()){ ?>
-          <h2> <?php } else{?><h1><?php }?>
-          <a href="<?php echo esc_url( $ampforwp_home_url ); ?>"  <?php if($set_rel_to_noamp){ echo ' rel="nofollow"'; } ?>  ><?php bloginfo('name'); ?></a><?php if(is_single()){?></h2><?php } else{?></h1><?php }
-         } ?>
+              <?php } else { ?><h1>
+              <a href="<?php echo esc_url( $ampforwp_home_url ); ?>"  <?php if($set_rel_to_noamp){ echo ' rel="nofollow"'; } ?>  ><?php bloginfo('name'); ?></a></h1><?php
+            } ?>
     </div>
  <?php }
 
@@ -39,10 +41,14 @@ if( !function_exists( 'amp_framework_logo_styles' ) ){
   global $redux_builder_amp;
   $max_width = '190px';
    $width =  (integer) ampforwp_default_logo('width');
-  if ( true == ampforwp_get_setting('ampforwp-custom-logo-dimensions') && true == ampforwp_get_setting('ampforwp-custom-logo-dimensions-options') && 'flexible' == ampforwp_get_setting('ampforwp-custom-logo-dimensions-options') ) {
-       $max_width =  (integer) $redux_builder_amp['ampforwp-custom-logo-dimensions-slider'];
+  if ( true == ampforwp_get_setting('ampforwp-custom-logo-dimensions') && 'flexible' == ampforwp_get_setting('ampforwp-custom-logo-dimensions-options') ) {
+       $max_width =  (integer) ampforwp_get_setting('ampforwp-custom-logo-dimensions-slider');
        $width =  (integer) ampforwp_default_logo('width');
        $max_width = ceil(($width*$max_width)/100)."px";
+  }elseif( true == ampforwp_get_setting('ampforwp-custom-logo-dimensions') && 'prescribed' == ampforwp_get_setting('ampforwp-custom-logo-dimensions-options') ) {
+       $max_width =  (integer) ampforwp_get_setting('opt-media-width');
+       $width =  (integer) ampforwp_default_logo('width');
+       $max_width .="px";     
   }
    $width .= 'px';
    ?>

@@ -1,11 +1,14 @@
 <?php
+
 define('DB_NAME', 'DBNAME');
 define('DB_USER', 'DBUSER');
 define('DB_PASSWORD', 'DBPASS');
 
-define('DB_HOST', 'localhost');
+// define('DB_HOST', 'localhost');
+define( 'DB_HOST', '127.0.0.1' );
 
-define('WP_DEBUG', false);
+
+define('WP_DEBUG', true);
 define('WPCF7_AUTOP', false);
 
 define('CACHE_READ_WHITELIST','_transient|posts WHERE ID IN|limit_login_'); // do not read from cache is sql contains these

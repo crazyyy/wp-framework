@@ -218,6 +218,23 @@ span.close {
 	margin: 10px;
 }
 
+#smush-backup-delete-days {
+	width: 50px;
+	margin: 0 8px;
+}
+
+img#wpo_smush_delete_backup_spinner {
+	max-width: 20px;
+	max-height: 20px;
+	position: relative;
+	top: 4px;
+}
+
+span#wpo_smush_delete_backup_done {
+	font-size: inherit;
+	color: green;
+}
+
 .wpo-fieldgroup .smush-options.custom_compression {
 	display: -ms-flexbox;
 	display: flex;
@@ -366,7 +383,7 @@ span.close {
 }
 
 .wpo-fieldgroup .toggle-smush-advanced span.text {
-	background: #EDEFF0;
+	background: #F2F4F4;
 	z-index: 1;
 	position: relative;
 	padding-right: 5px;
@@ -478,7 +495,7 @@ span.close {
 	background: gainsboro;
 }
 
-#smush-information {
+.smush-information {
 	margin-bottom: 10px;
 }
 
@@ -724,6 +741,11 @@ img#wpo_smush_images_clear_stats_spinner {
 .compat-field-wpo_compress_image th.label label span {
 	font-weight: 500;
 	text-align: left;
+}
+
+/* fix for elementor restore button position */
+.wpo_restore_single_image .alignright {
+	float: right;
 }
 
 /**

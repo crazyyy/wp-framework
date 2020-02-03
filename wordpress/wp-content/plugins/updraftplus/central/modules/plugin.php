@@ -51,6 +51,16 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 	}
 
 	/**
+	 * Installs and activates a plugin through upload
+	 *
+	 * @param array $params Parameter array containing information pertaining the currently uploaded plugin
+	 * @return array Contains the result of the current process
+	 */
+	public function upload_plugin($params) {
+		return $this->process_chunk_upload($params, 'plugin');
+	}
+
+	/**
 	 * Checks whether the plugin is currently installed and activated.
 	 *
 	 * @param array $query Parameter array containing the name of the plugin to check
@@ -62,7 +72,7 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 			return $this->_generic_error_response('plugin_name_required');
 
 
-		$result = $this->_get_plugin_info($query['plugin']);
+		$result = $this->_get_plugin_info($query);
 		return $this->_response($result);
 	}
 
@@ -80,7 +90,7 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 		switch ($action) {
 			case 'activate':
 			case 'network_activate':
-				$info = $this->_get_plugin_info($query['plugin']);
+				$info = $this->_get_plugin_info($query);
 				if ($info['installed']) {
 					if (is_multisite() && 'network_activate' === $action) {
 						$activate = activate_plugin($info['plugin_path'], '', true);
@@ -99,7 +109,7 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 				break;
 			case 'deactivate':
 			case 'network_deactivate':
-				$info = $this->_get_plugin_info($query['plugin']);
+				$info = $this->_get_plugin_info($query);
 				if ($info['active']) {
 					if (is_multisite() && 'network_deactivate' === $action) {
 						deactivate_plugins($info['plugin_path'], false, true);
@@ -138,9 +148,10 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 				if (is_wp_error($api)) {
 					$result = $this->_generic_error_response('generic_response_error', array($api->get_error_message()));
 				} else {
-					$info = $this->_get_plugin_info($query['plugin']);
+					$info = $this->_get_plugin_info($query);
 					$installed = $info['installed'];
 
+					$error_code = $error_message = '';
 					if (!$installed) {
 						// WP < 3.7
 						if (!class_exists('Automatic_Upgrader_Skin')) include_once(UPDRAFTPLUS_DIR.'/central/classes/class-automatic-upgrader-skin.php');
@@ -150,10 +161,48 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 
 						$download_link = $api->download_link;
 						$installed = $upgrader->install($download_link);
+
+						if (is_wp_error($installed)) {
+							$error_code = $installed->get_error_code();
+							$error_message = $installed->get_error_message();
+						} elseif (is_wp_error($skin->result)) {
+							$error_code = $skin->result->get_error_code();
+							$error_message = $skin->result->get_error_message();
+
+							$error_data = $skin->result->get_error_data($error_code);
+							if (!empty($error_data)) {
+								if (is_array($error_data)) $error_data = json_encode($error_data);
+								$error_message .= ' '.$error_data;
+							}
+						} elseif (is_null($installed) || !$installed) {
+							global $wp_filesystem;
+							$upgrade_messages = $skin->get_upgrade_messages();
+
+							if (!class_exists('WP_Filesystem_Base')) include_once(ABSPATH.'/wp-admin/includes/class-wp-filesystem-base.php');
+
+							// Pass through the error from WP_Filesystem if one was raised.
+							if ($wp_filesystem instanceof WP_Filesystem_Base && is_wp_error($wp_filesystem->errors) && $wp_filesystem->errors->get_error_code()) {
+								$error_code = $wp_filesystem->errors->get_error_code();
+								$error_message = $wp_filesystem->errors->get_error_message();
+							} elseif (!empty($upgrade_messages)) {
+								// We're only after for the last feedback that we received from the install process. Mostly,
+								// that is where the last error has been inserted.
+								$messages = $skin->get_upgrade_messages();
+								$error_code = 'install_failed';
+								$error_message = end($messages);
+							} else {
+								$error_code = 'unable_to_connect_to_filesystem';
+								$error_message = __('Unable to connect to the filesystem. Please confirm your credentials.');
+							}
+						}
 					}
 
-					if (!$installed) {
-						$result = $this->_generic_error_response('plugin_install_failed', array($query['plugin']));
+					if (!$installed || is_wp_error($installed)) {
+						$result = $this->_generic_error_response('plugin_install_failed', array(
+							'plugin' => $query['plugin'],
+							'error_code' => $error_code,
+							'error_message' => $error_message
+						));
 					} else {
 						$result = array('installed' => true);
 					}
@@ -337,7 +386,7 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 		}
 
 		$this->_preload_credentials($query);
-		$info = $this->_get_plugin_info($query['plugin']);
+		$info = $this->_get_plugin_info($query);
 
 		if ($info['installed']) {
 			$deleted = delete_plugins(array($info['plugin_path']));
@@ -368,7 +417,7 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 		}
 
 		$this->_preload_credentials($query);
-		$info = $this->_get_plugin_info($query['plugin']);
+		$info = $this->_get_plugin_info($query);
 
 		// Make sure that we still have the plugin installed before running
 		// the update process
@@ -392,10 +441,10 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 	 * Gets the plugin information along with its active and install status
 	 *
 	 * @internal
-	 * @param array $plugin The name of the plugin to pull the information from
-	 * @return array Contains the plugin information
+	 * @param array $query Contains either the plugin name or slug or both to be used when retrieving information
+	 * @return array
 	 */
-	private function _get_plugin_info($plugin) {
+	private function _get_plugin_info($query) {
 
 		$info = array(
 			'active' => false,
@@ -404,15 +453,24 @@ class UpdraftCentral_Plugin_Commands extends UpdraftCentral_Commands {
 		
 		// Clear plugin cache so that newly installed/downloaded plugins
 		// gets reflected when calling "get_plugins"
-		wp_clean_plugins_cache();
+		if (function_exists('wp_clean_plugins_cache')) {
+			wp_clean_plugins_cache();
+		}
 		
 		// Gets all plugins available.
 		$get_plugins = get_plugins();
 
 		// Loops around each plugin available.
 		foreach ($get_plugins as $key => $value) {
+			$slug = basename($key, '.php');
+
 			// If the plugin name matches that of the specified name, it will gather details.
-			if ($value['Name'] === $plugin) {
+			// In case name check isn't enough, we'll use slug to verify if the plugin being queried is actually installed.
+			//
+			// Reason for name check failure:
+			// Due to plugin name inconsistencies - where wordpress.org registered plugin name is different
+			// from the actual plugin files's metadata (found inside the plugin's PHP file itself).
+			if ((!empty($query['plugin']) && $value['Name'] === $query['plugin']) || (!empty($query['slug']) && $slug === $query['slug'])) {
 				$info['installed'] = true;
 				$info['active'] = is_plugin_active($key);
 				$info['plugin_path'] = $key;

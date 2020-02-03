@@ -37,6 +37,16 @@ class Snippet {
 	public $content;
 
 	/**
+	 * @var string|null Snippets Library: video link
+	 */
+	public $video_link;
+
+	/**
+	 * @var string|null Snippet scope
+	 */
+	public $execute_everywhere;
+
+	/**
 	 * @var boolean Snippet status
 	 */
 	public $status;
@@ -65,5 +75,4 @@ class Snippet {
 	 * @var Type
 	 */
 	public $type;
-
 }

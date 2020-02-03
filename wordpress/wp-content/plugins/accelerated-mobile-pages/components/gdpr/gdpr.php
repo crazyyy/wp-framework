@@ -1,4 +1,8 @@
-<?php function amp_gdpr_output(){
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+function amp_gdpr_output(){
 	global $redux_builder_amp;
     $headline   = $accept = $reject = $settings = $user_data = $form_url = '';
     $headline   = $redux_builder_amp['amp-gdpr-compliance-headline-text'];
@@ -69,11 +73,14 @@
       </amp-consent>
 <?php 
 }
-if (ampforwp_get_setting('amp-gdpr-compliance-switch') ) {
-	// Scripts
-	add_filter('amp_post_template_data' , 'ampforwp_gdpr_data', 15);
-	// CSS
-	add_action('amp_post_template_css' , 'ampforwp_gdpr_css');
+global $loadComponent;
+if (ampforwp_get_setting('amp-gdpr-compliance-switch') || (isset($loadComponent['AMP-gdpr']) && true == $loadComponent['AMP-gdpr'] )) {
+	if(!isset($_COOKIE['ampforwp_gdpr_action'])){
+		// Scripts
+		add_filter('amp_post_template_data' , 'ampforwp_gdpr_data', 15);
+		// CSS
+		add_action('amp_post_template_css' , 'ampforwp_gdpr_css');
+	}
 	// Consent Submission
 	add_action('wp_ajax_amp_consent_submission','amp_consent_submission');
 	add_action('wp_ajax_nopriv_amp_consent_submission','amp_consent_submission');
@@ -175,7 +182,7 @@ function ampforwp_gdpr_css(){
 		.gdpr_yn form{display: inline;}
 		.gdpr_yn button{background: #FFFC26;border: none;color: #333;padding: 8px 40px;font-size: 15px;margin: 0 3px;font-weight: 600;cursor: pointer;}
 		.gdpr_yn .gdpr_n{background: transparent;}
-		amp-consent{margin-left: 10px;top: 2px;width: auto;background: transparent;margin:0;width:100%;}
+		amp-consent{position: relative;margin-left: 10px;top: 2px;width: auto;background: transparent;margin:0;width:100%;}
 		.gdpr_fmi span, .gdpr_fmi a:before{
 		  display:none;
 		}
@@ -249,15 +256,18 @@ function ampforwp_gdpr_css(){
 <?php }
 
 function amp_consent_submission(){
-	if(!wp_verify_nonce( $_REQUEST['verify_nonce'], 'amp_consent' ) ) {
-        echo json_encode(array("status"=>300,"message"=>'Request not valid'));
+	if(wp_verify_nonce( $_REQUEST['verify_nonce'], 'amp_consent' ) ) {
+		setcookie('ampforwp_gdpr_action','true', time() + (86400 * 30), "/");
+       	$current_url = $site_url = $site_host = $amp_site = '';
+		$current_url 	= wp_get_referer();
+		$site_url 		= parse_url( get_site_url() );
+		$site_host 		= $site_url['host'];
+		$amp_site 		= $site_url['scheme'] . '://' . $site_url['host'];
+		header("AMP-Access-Control-Allow-Source-Origin: ".esc_url($amp_site));
+		header("AMP-Redirect-To: ".esc_url($current_url));
+    }else{
+    	echo json_encode(array("status"=>300,"message"=>'Request not valid'));
         die;
     }
-	$current_url = $site_url = $site_host = $amp_site = '';
-	$current_url 	= wp_get_referer();
-	$site_url 		= parse_url( get_site_url() );
-	$site_host 		= $site_url['host'];
-	$amp_site 		= $site_url['scheme'] . '://' . $site_url['host'];
-	header("AMP-Access-Control-Allow-Source-Origin: esc_url($amp_site) ");
-	header("AMP-Redirect-To: esc_url($current_url) ");
+	
 }

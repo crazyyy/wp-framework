@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 // 12. Add Logo URL in the structured metadata
 	    add_filter( 'amp_post_template_metadata', 'ampforwp_update_metadata', 10, 2 );
 	    function ampforwp_update_metadata( $metadata, $post ) {
@@ -31,7 +33,7 @@
 
 	        //code for adding 'description' meta from Yoast SEO
 
-	        if($redux_builder_amp['ampforwp-seo-yoast-description']){
+	       	if('yoast' == ampforwp_get_setting('ampforwp-seo-selection') && ampforwp_get_setting('ampforwp-seo-yoast-description')){
 	         if ( class_exists('WPSEO_Frontend') ) {
 	           $front = WPSEO_Frontend::get_instance();
 	           $desc = $front->metadesc( false );
@@ -280,9 +282,9 @@ function ampforwp_structured_data_type( $metadata ) {
         }
     }
 
-    if( $post->post_type == "post" && empty( $set_sd_post )){
+    if( isset( $post->post_type ) && $post->post_type == "post" && empty( $set_sd_post )){
     	return;
-    }elseif($post->post_type == "page" && empty( $set_sd_page )) {
+    }elseif(isset( $post->post_type ) && $post->post_type == "page" && empty( $set_sd_page )) {
     	return;
     }
 

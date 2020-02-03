@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 //main output function
 function ampforwp_framework_get_search_form() {
 		global $redux_builder_amp;
@@ -13,19 +16,20 @@ function ampforwp_framework_get_search_form() {
 			$amp_query_variable = 'amp';
 			$amp_query_variable_val = '1';
 		}
-	  $form = '<form role="search" method="get" id="amp-search" class="amp-search" target="_top" action="' . esc_url($action_url)  .'">
+	  $form = '<form role="search" method="get" class="amp-search" target="_top" action="' . esc_url($action_url)  .'">
 				<div class="amp-search-wrapper">
 					<label aria-label="Type your query" class="screen-reader-text" for="s">' . esc_html__($label,'accelerated-mobile-pages') . '</label>
 					<input type="text" placeholder="AMP" value="'.esc_attr($amp_query_variable_val).'" name="'.esc_attr($amp_query_variable).'" class="hidden"/>
-					<input type="text" placeholder="'.esc_attr($placeholder).'" value="' . esc_attr(get_search_query()) . '" name="s" id="s" />
+					<input type="text" placeholder="'.esc_attr($placeholder).'" value="' . esc_attr(get_search_query()) . '" name="s" class="s" />
 					<label aria-label="Submit amp search" for="amp-search-submit" >
-						<input type="submit" class="icon-search" id="amp-search-submit" value="'. esc_attr_x( 'Search', 'submit button' ) .'" />
+						<input type="submit" class="icon-search" value="'. esc_attr_x( 'Search', 'submit button' ) .'" />
 					</label>
 					<div class="overlay-search">
 					</div>
 				</div>
 				</form>';
-	    echo $form;	// escaped above 
+		$form = apply_filters( 'ampforwp_search_form_data', $form );		
+	    echo $form;	// XSS OK
 }
 ampforwp_add_scripts();
 function ampforwp_add_scripts(){

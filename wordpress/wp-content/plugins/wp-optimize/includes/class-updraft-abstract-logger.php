@@ -155,8 +155,7 @@ abstract class Updraft_Abstract_Logger implements Updraft_Logger_Interface {
 	 *
 	 * @return mixed
 	 */
-	// @codingStandardsIgnoreLine
-	abstract function get_description();
+	public abstract function get_description();
 
 	/**
 	 * For the Logger: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md

@@ -187,6 +187,7 @@ class WP_Optimize_Commands {
 		} else {
 			$optimization_id = $params['optimization_id'];
 			$data = isset($params['data']) ? $params['data'] : array();
+			$include_ui_elements = isset($data['include_ui_elements']) ? $data['include_ui_elements'] : false;
 			
 			$optimization = $this->optimizer->get_optimization($optimization_id, $data);
 	
@@ -196,14 +197,17 @@ class WP_Optimize_Commands {
 				'result' => $result,
 				'messages' => array(),
 				'errors' => array(),
-				'status_box_contents' => $this->get_status_box_contents()
 			);
+
+			if ($include_ui_elements) {
+				$results['status_box_contents'] = $this->get_status_box_contents();
+			}
 			
 			if (is_wp_error($optimization)) {
 				$results['errors'][] = $optimization->get_error_message().' ('.$optimization->get_error_code().')';
 			}
 			
-			if ($optimization->get_changes_table_data()) {
+			if ($include_ui_elements && $optimization->get_changes_table_data()) {
 				$table_list = $this->get_table_list();
 				$results['table_list'] = $table_list['table_list'];
 				$results['total_size'] = $table_list['total_size'];
@@ -273,6 +277,7 @@ class WP_Optimize_Commands {
 		} else {
 			$optimization_id = $params['optimization_id'];
 			$data = isset($params['data']) ? $params['data'] : array();
+			$include_ui_elements = isset($data['include_ui_elements']) ? $data['include_ui_elements'] : false;
 
 			$optimization = $this->optimizer->get_optimization($optimization_id, $data);
 			$result = is_a($optimization, 'WP_Optimization') ? $optimization->get_optimization_info() : null;
@@ -281,8 +286,11 @@ class WP_Optimize_Commands {
 				'result' => $result,
 				'messages' => array(),
 				'errors' => array(),
-				'status_box_contents' => $this->get_status_box_contents()
 			);
+
+			if ($include_ui_elements) {
+				$results['status_box_contents'] = $this->get_status_box_contents();
+			}
 		}
 
 		return $results;
@@ -405,7 +413,6 @@ class WP_Optimize_Commands {
 		$settings = json_decode($params['settings'], true);
 
 		// check if valid json file posted (requires PHP 5.3+)
-		// @codingStandardsIgnoreLine
 		if ((function_exists('json_last_error') && 0 != json_last_error()) || empty($settings)) {
 			return array('errors' => array(__('Please upload a valid settings file.', 'wp-optimize')));
 		}
@@ -428,5 +435,37 @@ class WP_Optimize_Commands {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Run images trash command.
+	 */
+	public function images_trash_command($params) {
+		if (!class_exists('WP_Optimize_Images_Trash_Manager_Commands')) {
+			return array(
+				'errors' => array('WP_Optimize_Images_Trash_Manager_Commands class not found'),
+			);
+		}
+
+		// get posted command.
+		$trash_command = isset($params['images_trash_command']) ? $params['images_trash_command'] : '';
+		// check if command is allowed.
+		$allowed_commands = WP_Optimize_Images_Trash_Manager_Commands::get_allowed_ajax_commands();
+
+		if (!in_array($trash_command, $allowed_commands)) {
+			return array(
+				'errors' => array('No such command found'),
+			);
+		}
+
+		$results = call_user_func(array(WP_Optimize_Images_Trash_Manager()->commands, $trash_command), $params);
+
+		if (is_wp_error($results)) {
+			$results = array(
+				'errors' => array($results->get_error_message()),
+			);
+		}
+
+		return $results;
 	}
 }

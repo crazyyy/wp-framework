@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_AboutPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory419_Plugin $plugin
+	 * @param Wbcr_Factory422_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory419_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = "about";
@@ -54,7 +54,7 @@ class WINP_AboutPage extends WINP_Page {
             <div class="headline">
                 <h3 class="headline-title">PHP snippets (Insert php) Evolution to Woody ad snippets</h3>
                 <div class="featured-image">
-                    <img src="https://cm-wp-storage.s3.eu-west-2.amazonaws.com/images/woody/about-page/change-plugin-name.jpg" alt="">
+                    <img src="https://woodysnippet.com/images/about/change-plugin-name.jpg" alt="">
                 </div>
                 <p class="introduction">If you are a long-term user of the <code>Insert php 1.3.0</code> plugin, you may
                     be confused
@@ -95,7 +95,7 @@ class WINP_AboutPage extends WINP_Page {
             </div>
             <div style="text-align:center;">
                 <picture>
-                    <img src="https://cm-wp-storage.s3.eu-west-2.amazonaws.com/images/woody/about-page/gutenberg.gif" alt="" style="max-width:800px;box-shadow: 0 0 15px rgba(0,0,0,0.3);">
+                    <img src="https://woodysnippet.com/images/about/gutenberg.gif" alt="" style="max-width:800px;box-shadow: 0 0 15px rgba(0,0,0,0.3);">
                 </picture>
             </div>
             <div class="feature-section one-col">
@@ -115,7 +115,7 @@ class WINP_AboutPage extends WINP_Page {
             <div class="<?php echo( version_compare( $wp_version, '5.2', '<' ) ? 'under-the-hood feature-section three-col' : 'is-fullwidth has-3-columns' ) ?>">
                 <div class="col" style="text-align: center">
                     <picture>
-                        <img src="https://cm-wp-storage.s3.eu-west-2.amazonaws.com/images/woody/about-page/php-snippet.jpg" alt="" style="width:80%;box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                        <img src="https://woodysnippet.com/images/about/php-snippet.jpg" alt="" style="width:80%;box-shadow: 0 0 10px rgba(0,0,0,0.3);">
                     </picture>
                     <h3>PHP Snippets</h3>
                     <p>This is a simple snippet type. It executes PHP code. Use this type to register functions,
@@ -124,7 +124,7 @@ class WINP_AboutPage extends WINP_Page {
                 </div>
                 <div class="col" style="text-align: center">
                     <picture>
-                        <img src="https://cm-wp-storage.s3.eu-west-2.amazonaws.com/images/woody/about-page/text-snippet.jpg" alt="" style="width:80%;box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                        <img src="https://woodysnippet.com/images/about/text-snippet.jpg" alt="" style="width:80%;box-shadow: 0 0 10px rgba(0,0,0,0.3);">
                     </picture>
                     <h3>Text Snippets</h3>
                     <p>This is the easiest snippet type. Here you can use text and HTML code only. It works as a classic
@@ -133,7 +133,7 @@ class WINP_AboutPage extends WINP_Page {
                 </div>
                 <div class="col" style="text-align: center">
                     <picture>
-                        <img src="https://cm-wp-storage.s3.eu-west-2.amazonaws.com/images/woody/about-page/universal-snippet.jpg" alt="" style="width:80%;box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                        <img src="https://woodysnippet.com/images/about/universal-snippet.jpg" alt="" style="width:80%;box-shadow: 0 0 10px rgba(0,0,0,0.3);">
                     </picture>
                     <h3>Universal Snippets</h3>
                     <p>This is a complex snippet type where you can combine PHP, HTML, JavaScript, and CSS. We’ve
@@ -165,7 +165,7 @@ class WINP_AboutPage extends WINP_Page {
             </div>
             <div style="text-align:center;">
                 <picture>
-                    <img src="https://cm-wp-storage.s3.eu-west-2.amazonaws.com/images/woody/about-page/conditions.gif" alt="" style="max-width:800px;box-shadow: 0 0 15px rgba(0,0,0,0.3);">
+                    <img src="https://woodysnippet.com/images/about/conditions.gif" alt="" style="max-width:800px;box-shadow: 0 0 15px rgba(0,0,0,0.3);">
                 </picture>
             </div>
             <div class="feature-section one-col">
@@ -184,7 +184,7 @@ class WINP_AboutPage extends WINP_Page {
             </div>
             <div class="full-width">
                 <picture>
-                    <img src="https://cm-wp-storage.s3.eu-west-2.amazonaws.com/images/woody/about-page/import-export2.png" alt="" style="box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+                    <img src="https://woodysnippet.com/images/about/import-export2.png" alt="" style="box-shadow: 0 0 10px rgba(0,0,0,0.3);">
                 </picture>
             </div>
             <div class="feature-section one-col">

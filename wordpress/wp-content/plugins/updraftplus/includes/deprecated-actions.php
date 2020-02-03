@@ -34,7 +34,7 @@ if (isset($_POST['subaction']) && 'credentials_test' === $_POST['subaction']) {
 	$rescan = ($remotescan || !empty($_GET['rescan']));
 	
 	$history_status = $updraftplus_admin->get_history_status($rescan, $remotescan);
-	echo @json_encode($history_status);
+	echo @json_encode($history_status);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 } elseif ('diskspaceused' == $subaction && isset($_GET['entity'])) {
 	$entity = $_GET['entity'];

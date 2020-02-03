@@ -106,9 +106,9 @@ if(!class_exists('Aq_Resize')) {
                 elseif(!strncmp($url,$relative_prefix,strlen($relative_prefix))){ //if url begins with // make $upload_url begin with // as well
                     $upload_url = str_replace(array( 0 => "$http_prefix", 1 => "$https_prefix"),$relative_prefix,$upload_url);
                 }
-                $is_cdn  = '';
+                $is_cdn  = false;
                 $cdn_url = '';
-
+                $cdn_url_main = '';
 
                 // Check if $img_url is not local.
                 if ( false === strpos( $url, $upload_url ) ) {
@@ -319,7 +319,14 @@ if(!function_exists('ampforwp_aq_resize')) {
         }
         elseif( function_exists('fifu_activate') || is_plugin_active('fifu-premium/fifu-premium.php') ){
             return fifu_amp_url($url, $width, $height); 
-        } 
+        } else if (function_exists('wpp_get_option')){
+	        $image = array(
+		        0 => $url,
+		        1 => $width,
+		        2 => $height,
+	        );
+	        return $image;
+        }
         else {
             $aq_resize = Aq_Resize::getInstance();
             return $aq_resize->process( $url, $width, $height, $crop, $single, $upscale );

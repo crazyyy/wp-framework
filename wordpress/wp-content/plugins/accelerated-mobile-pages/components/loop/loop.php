@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 function amp_archive_title(){
 	global $redux_builder_amp;
 	if( is_author() ){
@@ -45,7 +48,7 @@ function amp_archive_title(){
 		    }
 				if($paged <= '1') {?>
 					<div class="amp-archive-desc">
-						<?php echo $arch_desc;// amphtml content, no kses ?>
+						<?php echo do_shortcode($arch_desc);// amphtml content, no kses ?>
 				    </div> <?php
 				}
 			}
@@ -61,7 +64,11 @@ function amp_archive_title(){
 		if( !empty( $cat_childs ) ){
 			echo "<div class='amp-sub-archives'><ul>";
 			foreach ($cat_childs as $cat_child ) {
-				 echo '<li><a href="' . esc_url(get_term_link( $cat_child )) . '">' . esc_attr($cat_child->name) . '</a></li>'; 
+				$cat_child_url = get_term_link( $cat_child );
+				 if(true == ampforwp_get_setting('convert-internal-nonamplinks-to-amp')){
+				 	$cat_child_url = ampforwp_url_controller($cat_child_url);
+				 }
+				 echo '<li><a href="' . esc_url($cat_child_url) . '">' . esc_attr($cat_child->name) . '</a></li>'; 
 			}
 			echo "</ul></div>";
 		}
@@ -124,18 +131,26 @@ function call_loops_standard($data=array()){
 			$monthnum 	= get_query_var('monthnum');
 			$week 		= get_query_var('week');
 			$day 		= get_query_var('day');
-			$args 		= array( 'date_query' => array(
-						    array( 	'year' 	=> esc_attr($year),
-						    		'month' => esc_attr($monthnum),
-					    		 	'week' 	=> esc_attr($week),
-					    		 	'day' 	=> esc_attr($day) )
-						  	),
-							'paged'               => esc_attr($paged),
-						'post__not_in' 		  => $exclude_ids,
-						'has_password' => false ,
-						'post_status'=> 'publish',
+
+			$args 		= array( 
+							'date_query' => array(
+								array('year' => esc_attr($year))
+						),
+						'paged'         => esc_attr($paged),
+						'post__not_in' 	=> $exclude_ids,
+						'has_password' 	=> false ,
+						'post_status'	=> 'publish',
 						'no_found_rows'	=> true
 						);
+			if ( $monthnum ) {
+				$args['date_query'][0]['month'] = esc_attr($monthnum);
+			}
+			if ( $week ) {
+				$args['date_query'][0]['week'] = esc_attr($week);
+			}
+			if ( $day ) {
+				$args['date_query'][0]['day'] = esc_attr($day);
+			}
 		}
 	}
 	if ( is_home() ) {
@@ -362,7 +377,7 @@ function amp_loop_date($args=array()){
     	$args['format'] = 'traditional';
     }
 	if(isset($args['format']) && $args['format']=='traditional'){
-		$post_date = get_the_date() . ' '. get_the_time();
+		$post_date = get_the_date();
     }else{
     	$post_date =  human_time_diff(
     						get_the_time('U', get_the_ID() ), 
@@ -405,9 +420,12 @@ function amp_loop_all_content($tag = 'p'){
 
 function amp_loop_permalink($return = ''){
 	if (is_single() && ampforwp_get_setting('ampforwp-single-related-posts-link')) {
-		return get_permalink();
+		$url =  get_permalink();
+	}else{
+		$url = ampforwp_url_controller( get_permalink() ) ;
 	}
-	return ampforwp_url_controller( get_permalink() ) ;
+	$url = apply_filters('ampforwp_loop_permalink_update',$url);
+	return $url;
 }
 	
 if (! function_exists('amp_loop_get_permalink')){
@@ -497,7 +515,11 @@ function amp_loop_image( $data=array() ) {
 			}
 			echo '<'.esc_attr($tag).' class="loop-img '.esc_attr($tag_class).'">';
 			echo '<a href="'.esc_url($imageLink).'" title="'.esc_html(get_the_title()).'">';
-			echo '<amp-img src="'. esc_url($thumb_url) .'" width="'.esc_attr($thumb_width).'" height="'.esc_attr($thumb_height).'" '. esc_attr($layout_responsive) .' class="'.esc_attr($imageClass).'" alt="'. esc_html(get_the_title()) .'"></amp-img>';
+			$img_content =  '<amp-img src="'. esc_url($thumb_url) .'" width="'.esc_attr($thumb_width).'" height="'.esc_attr($thumb_height).'" '. esc_attr($layout_responsive) .' class="'.esc_attr($imageClass).'" alt="'. esc_html(get_the_title()) .'"></amp-img>';
+				if(function_exists('ampforwp_add_fallback_element')){
+					$img_content = ampforwp_add_fallback_element($img_content,'amp-img');
+				}
+		    	echo $img_content;
 			echo '</a>';
 			echo '</'.esc_attr($tag).'>';
 		}

@@ -186,7 +186,7 @@ class WINP_Helper {
 
 		$_post = $post;
 
-		$snippet_type = WINP_Plugin::app()->request->get( 'winp_item', WINP_SNIPPET_TYPE_PHP, true );
+		$snippet_type = WINP_Plugin::app()->request->get( 'winp_item', WINP_SNIPPET_TYPE_PHP, 'sanitize_key' );
 		$get_post     = WINP_Plugin::app()->request->get( 'post', '' );
 
 		if ( empty( $post_id ) && ! empty( $get_post ) && ! is_array( $get_post ) ) {
@@ -552,18 +552,18 @@ class WINP_Helper {
 	 * @return string
 	 */
 	public static function get_factory_class() {
-		return "factory-bootstrap-420 factory-fontawesome-000";
+		return "factory-bootstrap-423 factory-fontawesome-000";
 	}
 
 	/**
-	 * Wrapper for Wbcr_FactoryForms417_OptionsValueProvider object
+	 * Wrapper for Wbcr_FactoryForms420_OptionsValueProvider object
 	 *
 	 * @param $plugin
 	 *
-	 * @return Wbcr_FactoryForms417_OptionsValueProvider
+	 * @return Wbcr_FactoryForms420_OptionsValueProvider
 	 */
 	public static function get_options_value_provider( $plugin ) {
-		return new Wbcr_FactoryForms417_OptionsValueProvider( $plugin );
+		return new Wbcr_FactoryForms420_OptionsValueProvider( $plugin );
 	}
 
 	/**
@@ -572,10 +572,10 @@ class WINP_Helper {
 	 * @param $options
 	 * @param $plugin
 	 *
-	 * @return Wbcr_FactoryForms417_Form
+	 * @return Wbcr_FactoryForms420_Form
 	 */
 	public static function get_factory_form( $options, $plugin ) {
-		return new Wbcr_FactoryForms417_Form( $options, $plugin );
+		return new Wbcr_FactoryForms420_Form( $options, $plugin );
 	}
 
 	/**

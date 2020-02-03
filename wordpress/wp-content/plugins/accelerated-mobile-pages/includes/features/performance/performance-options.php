@@ -1,5 +1,8 @@
 <?php
 use ReduxCore\ReduxFramework\Redux;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
  function ampforwp_admin_performance_options($opt_name){
   // Display only If AMP Cache is Not Installed
   $cache_desc ="";
@@ -70,7 +73,32 @@ use ReduxCore\ReduxFramework\Redux;
                'title'     => esc_html__('Leverage Browser Caching', 'accelerated-mobile-pages'),
                'tooltip-subtitle'     => esc_html__('Improve the Page Speed and Loading time with Leverage Browser Caching option', 'accelerated-mobile-pages'),
                'default'  => 0
+           ),
+           array(
+               'id'       => 'ampforwp_css_tree_shaking',
+               'type'     => 'switch',
+               'title'     => esc_html__('Optimize CSS (beta)', 'accelerated-mobile-pages'),
+              'tooltip-subtitle'     => esc_html__('Improve size of the CSS and Page Speed with Tree Shaking Feature.', 'accelerated-mobile-pages'),
+               'default'  => 0
+           ),
+           array(
+
+               'id'       => 'ampforwp_css_tree_shaking_clear_cache',
+               'type'     => 'raw',
+               'class' => 'child_opt child_opt_arrow',
+               'title'     => esc_html__('Want to clear the Cache?', 'accelerated-mobile-pages'),
+               'content'   => "<span class='button button-primary button-small' id='ampforwp-clear-clearcss-data' target='_blank'  data-nonce='".wp_create_nonce( 'ampforwp_clear_tree_shaking')."'><i class='el el-trash'></i> Clear Cache</span><span id='ampforwp-clear-clcss-msg' ></span>",
+               'tooltip-subtitle' => esc_html__('This will remove all the generated cache.', 'amp-pagebuilder-compatibility'),
+               'full_width' => false,
+               'section_id'=>'amp-content-builder',
+               'required'=>array('ampforwp_css_tree_shaking','=','1')
            )
+
+
+
+
+
+
        )
 
   )

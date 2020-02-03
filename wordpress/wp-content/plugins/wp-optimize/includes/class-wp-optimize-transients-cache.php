@@ -94,11 +94,7 @@ class WP_Optimize_Transients_Cache {
 			unset($this->_cache[$key], $this->_expiration[$key]);
 		}
 
-		if (WP_Optimize()->is_multisite_mode()) {
-			delete_site_transient($key);
-		} else {
-			delete_transient($key);
-		}
+		$this->delete_transient($key);
 	}
 
 	/**
@@ -130,6 +126,19 @@ class WP_Optimize_Transients_Cache {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Delete transient.
+	 *
+	 * @param string $key
+	 */
+	public function delete_transient($key) {
+		if (WP_Optimize()->is_multisite_mode()) {
+			delete_site_transient($key);
+		} else {
+			delete_transient($key);
+		}
 	}
 
 	/**

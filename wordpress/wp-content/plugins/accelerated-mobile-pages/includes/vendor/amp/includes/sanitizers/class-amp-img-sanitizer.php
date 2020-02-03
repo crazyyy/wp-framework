@@ -1,5 +1,8 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-base-sanitizer.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/utils/class-amp-image-dimension-extractor.php' );
 
@@ -50,6 +53,24 @@ class AMP_Img_Sanitizer extends AMP_Base_Sanitizer {
 				$node->parentNode->removeChild( $node );
 				continue;
 			}
+			if ( ! is_numeric( $node->getAttribute( 'srcset' ) ) && true == ampforwp_get_setting('ampforwp-amp-img-lightbox')) {
+				if(!$node->getAttribute( 'srcset' )){
+					$image_src = $node->getAttribute( 'src' );
+					preg_match('/(.*-(\d{3}x\d{3}.))/', $image_src , $image_src_matches);
+					if($image_src_matches){
+					 	$img_name = explode('/',$image_src);
+					    $img_name = end($img_name);
+					    $img_croped = explode('-',$img_name);
+					    $img_croped = end($img_croped);
+					    $img_ext = wp_check_filetype($image_src);
+					    $img_ext = $img_ext['ext'];
+					    $new_img_url = str_replace("-$img_croped",".$img_ext",$image_src);
+					    if ( $new_img_url ) {
+					    	$node->setAttribute( 'srcset', esc_url($new_img_url) );
+					    }
+					}
+				}
+			}
 
 			if( $node->getAttribute( 'src' )){
 				if (strpos($node->getAttribute( 'src' ), '../wp-content') !== false) {
@@ -98,9 +119,11 @@ class AMP_Img_Sanitizer extends AMP_Base_Sanitizer {
 				$width  = isset( $this->args['content_max_width'] ) ? $this->args['content_max_width'] : self::FALLBACK_WIDTH;
 				$height = self::FALLBACK_HEIGHT;
 				if ( isset( $dimensions['width'] ) ) {
+					$dimensions['width']  = (int)$dimensions['width'];
 					$width = $dimensions['width'];
 				}
 				if ( isset( $dimensions['height'] ) ) {
+					$dimensions['height']  = (int)$dimensions['height'];
 					$height = $dimensions['height'];
 				}
 
@@ -147,6 +170,14 @@ class AMP_Img_Sanitizer extends AMP_Base_Sanitizer {
 		$old_attributes = apply_filters('amp_img_attributes', $old_attributes);
 		$new_attributes = $this->filter_attributes( $old_attributes );
 		$new_attributes = $this->enforce_sizes_attribute( $new_attributes );
+		// Use responsive images when a theme supports wide and full-bleed images.
+		if ( ! empty( $this->args['align_wide_support'] ) && $node->parentNode && 'figure' === $node->parentNode->nodeName && preg_match( '/(^|\s)(alignwide|alignfull)(\s|$)/', $node->parentNode->getAttribute( 'class' ) ) ) {
+			$new_attributes['layout'] = 'responsive';
+		} else {
+			$new_attributes['layout'] = 'intrinsic';
+		}
+		// Remove sizes attribute since it causes headaches in AMP and because AMP will generate it for us. See <https://github.com/ampproject/amphtml/issues/21371>.
+		unset( $new_attributes['sizes'] );
 		if ( $this->is_gif_url( $new_attributes['src'] ) ) {
 			$this->did_convert_elements = true;
 			$new_tag = 'amp-anim';
@@ -178,7 +209,7 @@ class AMP_Img_Sanitizer extends AMP_Base_Sanitizer {
 	}
 
 	public function get_scripts() {
-		if ( $this->is_lightbox ) {
+		if ( $this->is_lightbox && (is_singular() || ampforwp_is_front_page())) {
 			$this->scripts[self::$script_slug_lightbox] = self::$script_src_lightbox;
 		}
 

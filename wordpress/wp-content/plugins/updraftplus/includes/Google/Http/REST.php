@@ -171,7 +171,7 @@ class Google_Http_REST
     }
 
     if (count($queryVars)) {
-      $requestUrl .= '?' . implode($queryVars, '&');
+      $requestUrl .= '?' . implode('&', $queryVars);
     }
 
     return $requestUrl;

@@ -1,22 +1,4 @@
-<?php if (!defined('WPO_VERSION')) die('No direct access allowed');
-
-$options = WP_Optimize()->get_options();
-
-if (!isset($options) || !$options->get_option('compression_server')) {
-	Updraft_Smush_Manager()->set_default_options();
-}
-
-$smush_options['compression_server'] = $options->get_option('compression_server');
-$smush_options['lossy_compression'] = $options->get_option('lossy_compression');
-$smush_options['back_up_original'] = $options->get_option('back_up_original');
-$smush_options['preserve_exif'] = $options->get_option('preserve_exif');
-$smush_options['autosmush'] = $options->get_option('autosmush');
-$smush_options['image_quality'] = $options->get_option('image_quality');
-$smush_options['show_smush_metabox'] = $options->get_option('show_smush_metabox', 'show') == 'show' ? true : false;
-
-$custom = 100 == $smush_options['image_quality'] || 90 == $smush_options['image_quality'] ? false : true;
-?>
-
+<?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
 <div id="wpo_smush_settings">
 	<div class="wpo-info">
 		<a class="wpo-info__trigger" href="#"><span class="dashicons dashicons-sos"></span> <?php _e('How to use the image compression feature', 'wp-optimize'); ?> <span class="wpo-info__close"><?php _e('Close', 'wp-optimize'); ?></span></a>
@@ -100,13 +82,21 @@ $custom = 100 == $smush_options['image_quality'] || 90 == $smush_options['image_
 				</div>
 			</div>
 			<br>
+			<h3><?php _e('More options', 'wp-optimize');?></h3>
 			<div class="image_options">
+				<input type="checkbox" id="smush-preserve-exif" class="smush-options preserve_exif" <?php checked($smush_options['preserve_exif']); ?> >
+				<label for="smush-preserve-exif" class="smush-options preserve_exif"><?php _e('Preserve EXIF data', 'wp-optimize');?></label>
+				<br>
 				<input type="checkbox" id="smush-backup-original" class="smush-options back_up_original" <?php checked($smush_options['back_up_original']); ?> > 
 				<label for="smush-backup-original"><?php _e('Backup original images', 'wp-optimize');?></label>
-				<b data-tooltip="<?php _e('The original images are stored alongside the compressed images, you can visit the edit screen of the individual images in the Media Library to restore them.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </b>						
+				<b data-tooltip="<?php _e('The original images are stored alongside the compressed images, you can visit the edit screen of the individual images in the Media Library to restore them.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </b>
 				<br>
-				<input type="checkbox" id="smush-preserve-exif" class="smush-options preserve_exif" <?php checked($smush_options['preserve_exif']); ?> > 
-				<label for="smush-preserve-exif" class="smush-options preserve_exif"><?php _e('Preserve EXIF data', 'wp-optimize');?></label><br>
+				<input type="checkbox" id="smush-backup-delete" class="smush-options back_up_original" <?php checked($smush_options['back_up_delete_after']); ?> >
+				<label for="smush-backup-delete"><?php _e('Automatically delete image backups after', 'wp-optimize');?><input id="smush-backup-delete-days" type="number" min="1" value="<?php esc_attr_e($smush_options['back_up_delete_after_days']); ?>"><?php _e('days', 'wp-optimize');?></label><label> — <?php _e('or', 'wp-optimize'); ?></label> <button type="button" id="wpo_smush_delete_backup_btn" class="wpo_primary_small button"><?php _e('Delete all backup images now', 'wp-optimize'); ?></button>
+				<img id="wpo_smush_delete_backup_spinner" class="display-none" src="<?php esc_attr_e(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+				<span id="wpo_smush_delete_backup_done" class="dashicons dashicons-yes display-none save-done"></span>
+				<br>
+				<button type="button" id="wpo_smush_mark_all_as_uncompressed_btn" class="wpo_primary_small button"><?php _e('Mark all images as uncompressed', 'wp-optimize'); ?></button>
 			</div>
 		</div>
 		<div class="save-options">
@@ -134,6 +124,7 @@ $custom = 100 == $smush_options['image_quality'] || 90 == $smush_options['image_
 		<div id="wpo_smush_images_grid"></div>
 		<div class="smush-actions">
 			<input type="button" id="wpo_smush_images_btn" class="wpo_primary_small button-primary align-left" value="<?php _e('Compress the selected images', 'wp-optimize'); ?>" />
+			<input type="button" id="wpo_smush_mark_as_compressed" class="wpo_primary_small button align-left" value="<?php _e('Mark as already compressed', 'wp-optimize'); ?>" />
 			<input type="button" id="wpo_smush_get_logs" class="wpo_smush_get_logs wpo_primary_small button-primary align-right" value="<?php _e('View logs', 'wp-optimize'); ?>" />
 		</div>
 	</div>
@@ -172,7 +163,7 @@ $custom = 100 == $smush_options['image_quality'] || 90 == $smush_options['image_
 		</tbody>
 	</table>
 	</div>
-	<input type="button" class="wpo_primary_small button-primary wpo_smush_stats_cta_btn" value="<?php _e('Cancel', 'wp-optimize'); ?>" />
+	<input type="button" id="wpo_smush_images_pending_tasks_cancel_button" class="wpo_primary_small button-primary" value="<?php _e('Cancel', 'wp-optimize'); ?>" />
 </div>
 
 <div id="smush-complete-summary" class="complete-animation" style="display:none;">
@@ -199,6 +190,11 @@ $custom = 100 == $smush_options['image_quality'] || 90 == $smush_options['image_
 </div>
 
 <div id="smush-information-modal" style="display:none;">
-	<div id="smush-information"></div>
+	<div class="smush-information"></div>
 	<input type="button" class="wpo_primary_small button-primary information-modal-close" value="<?php _e('Close', 'wp-optimize'); ?>" />
+</div>
+
+<div id="smush-information-modal-cancel-btn" style="display:none;">
+	<div class="smush-information"></div>
+	<input type="button" class="wpo_primary_small button-primary" value="<?php _e('Cancel', 'wp-optimize'); ?>" />
 </div>

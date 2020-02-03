@@ -1,5 +1,8 @@
 <?php
 namespace ReduxCore\ReduxFramework;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
     class Redux_P {
 
         public function __construct() {
@@ -10,7 +13,7 @@ namespace ReduxCore\ReduxFramework;
 
         public function proxy() {
 
-            if ( ! isset( $_GET['nonce'] ) || ( isset( $_GET['nonce'] ) && ! wp_verify_nonce( $_GET['nonce'], "redux-ads-nonce" ) ) ) {
+            if ( ! isset( $_GET['nonce'] ) || ( isset( $_GET['nonce'] ) && ! wp_verify_nonce( $_GET['nonce'], "redux-ads-nonce" ) ) && ! current_user_can( 'manage_options' )) {
                 die();
             }
 

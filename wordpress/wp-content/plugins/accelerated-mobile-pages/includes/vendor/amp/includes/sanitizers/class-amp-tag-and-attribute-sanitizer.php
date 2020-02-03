@@ -1,5 +1,8 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /**
  * Class AMP_Tag_And_Attribute_Sanitizer
  *
@@ -205,7 +208,7 @@ class AMP_Tag_And_Attribute_Sanitizer extends AMP_Base_Sanitizer {
 		$scriptArray = array_fill_keys( $this->script_components, true );
 		foreach ( $scriptArray as $ext_key=>$ext_value ) {
 			$version = 'latest';
-			if ( 'amp-carousel' == $ext_key ) {
+			if ( 'amp-carousel' == $ext_key || 'amp-auto-ads' == $ext_key  || 'amp-ad' == $ext_key  ) {
 				$version = '0.1';
 			}
 			$scriptArray[$ext_key] = sprintf(
@@ -1203,7 +1206,7 @@ class AMP_Tag_And_Attribute_Sanitizer extends AMP_Base_Sanitizer {
 					}
 
 					// Check if the host contains invalid chars (hostCharIsValid: https://github.com/ampproject/amphtml/blob/af1e3a550feeafd732226202b8d1f26dcefefa18/validator/engine/parse-url.js#L62-L103).
-					$host = wp_parse_url( $url, PHP_URL_HOST );
+					$host = AMP_WP_Utils::parse_url( $url, PHP_URL_HOST );
 					if ( $host && preg_match( '/[!"#$%&\'()*+,\/:;<=>?@[\]^`{|}~\s]/i', $host ) ) {
 						return AMP_Rule_Spec::FAIL;
 					}

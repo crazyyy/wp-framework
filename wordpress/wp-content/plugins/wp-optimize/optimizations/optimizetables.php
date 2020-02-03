@@ -39,6 +39,9 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 
 			if (false !== $table) {
 				$this->optimize_table($table, $force);
+				
+				// Exit if the UI elements aren't required
+				if (isset($this->data['include_ui_elements']) && !$this->data['include_ui_elements']) return;
 
 				$wp_optimize = WP_Optimize();
 				$tablestatus = $wp_optimize->get_db_info()->get_table_status($table->Name, true);

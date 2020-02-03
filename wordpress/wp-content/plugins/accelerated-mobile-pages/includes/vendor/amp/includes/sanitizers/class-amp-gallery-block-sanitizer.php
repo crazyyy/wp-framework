@@ -1,5 +1,8 @@
 <?php
 namespace AMPforWP\AMPVendor;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-base-sanitizer.php' );
 /**
  * Class AMP_Gallery_Block_Sanitizer.
@@ -128,12 +131,26 @@ class AMP_Gallery_Block_Sanitizer extends AMP_Base_Sanitizer {
 				}
 			}
 
+			$fig_item = $node->getElementsByTagName( 'figure');
+			$ni =0;
 			// If not linking to anything then look for <amp-img>.
 			foreach ( $node->getElementsByTagName( 'amp-img' ) as $element ) {
+				$caption = $fig_item->item($ni)->nodeValue;
+				$ni++;
 				$url = $element->getAttribute('src');
 				$width = $element->getAttribute('width');
 				$height = $element->getAttribute('height');
 				$attachment_id = attachment_url_to_postid($url);
+				if($attachment_id==0){
+					$img_name = explode('/',$url);
+    				$img_name = end($img_name);
+    				$img_croped = explode('-',$img_name);
+    				$img_croped = end($img_croped);
+    				$filetype = wp_check_filetype($img_croped);
+					$img_ext = $filetype['ext'];
+    				$new_img_url = str_replace("-$img_croped",".$img_ext",$url);
+    				$attachment_id = attachment_url_to_postid($new_img_url);
+				}
 				if ( empty( $images ) ) {
 					$images[] = $element;
 				}
@@ -141,6 +158,7 @@ class AMP_Gallery_Block_Sanitizer extends AMP_Base_Sanitizer {
 								'url' => $url,
 								'width' => $width,
 								'height' => $height,
+								'caption' => $caption
 							),$attachment_id);
 			}
 
@@ -247,6 +265,7 @@ class AMP_Gallery_Block_Sanitizer extends AMP_Base_Sanitizer {
 					'src' => $image['url'],
 					'width' => $image['width'],
 					'height' => $image['height'],
+					'caption' => $image['caption'],
 					'layout' => 'fill',
 					'class'  => 'amp-carousel-img',
 				);
@@ -351,8 +370,15 @@ class AMP_Gallery_Block_Sanitizer extends AMP_Base_Sanitizer {
 
 		elseif ( 3 == ampforwp_get_setting('ampforwp-gallery-design-type') ) {
 			$gal_div = AMP_DOM_Utils::create_node($this->dom, 'div', array('class'=>'gal_w') );
-			foreach ($amp_images as $amp_image) {				
-				$gal_div->appendChild( $amp_image );
+			$i = 0;
+			foreach ($amp_images as $amp_image) {
+				$figure_node = AMP_DOM_Utils::create_node($this->dom, 'figure', array('class'=>'ampforwp-gallery-item amp-carousel-containerd3'));
+				$figure_node->appendChild($amp_image);
+				$fig_caption = AMP_DOM_Utils::create_node($this->dom, 'figcaption', array());
+				$fig_caption->nodeValue = $args['images'][$i]['caption'];
+				$figure_node->appendChild($fig_caption);
+				$gal_div->appendChild( $figure_node );
+				$i++;	
 			}
 			$amp_carousel = $gal_div;
 			add_action('amp_post_template_css', 'AMPforWP\\AMPVendor\\ampforwp_gal_des_3');

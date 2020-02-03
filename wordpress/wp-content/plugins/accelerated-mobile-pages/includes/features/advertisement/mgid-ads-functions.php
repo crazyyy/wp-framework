@@ -1,4 +1,7 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 // MGID
 if( !class_exists('adsforwp_output_functions') ){
 	add_filter('ampforwp_modify_ad_1','ampforwp_mgid_markup_ad_1',10,1);
@@ -19,9 +22,17 @@ function ampforwp_mgid_markup_ad_1($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con');
+		$flexible = '';
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_1">
 						<amp-ad class="amp-ad-1"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"
@@ -40,9 +51,17 @@ function ampforwp_mgid_markup_ad_2($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub-2');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget-2');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con-2');
+		$flexible = '';
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible-2')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_2">
 						<amp-ad class="amp-ad-2"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible-2')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"
@@ -61,9 +80,17 @@ function ampforwp_mgid_markup_ad_3($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub-3');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget-3');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con-3');
+		$flexible = '';
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible-3')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_3">
 						<amp-ad class="amp-ad-3"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible-3')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"
@@ -82,9 +109,17 @@ function ampforwp_mgid_markup_ad_4($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub-4');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget-4');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con-4');
+		$flexible = '';
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible-4')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_4">
 						<amp-ad class="amp-ad-4"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible-4')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"
@@ -103,9 +138,17 @@ function ampforwp_mgid_markup_ad_5($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub-5');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget-5');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con-5');
+		$flexible = '';
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible-5')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_5">
 						<amp-ad class="amp-ad-5"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible-5')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"
@@ -124,9 +167,17 @@ function ampforwp_mgid_markup_ad_6($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub-6');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget-6');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con-6');
+		$flexible = '';
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible-6')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_6">
 						<amp-ad class="amp-ad-6"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible-6')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"
@@ -145,9 +196,16 @@ function ampforwp_mgid_markup_ad_7($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub-7');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget-7');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con-7');
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible-7')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_7">
 						<amp-ad class="amp-ad-7"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible-7')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"
@@ -166,9 +224,16 @@ function ampforwp_mgid_markup_ad_8($output){
 		$data_pub 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-pub-8');
 		$data_wid 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-widget-8');
 		$data_cont 	= ampforwp_get_setting('enable-amp-ads-mgid-field-data-con-8');
+		if(true == ampforwp_get_setting('enable-amp-ads-mgid-flexible-8')){
+			$width = '600';
+			$height = '600';
+			$flexible = 'layout=responsive';
+		}
 		$output = 	'<div class="amp-ad-wrapper amp_ad_8">
 						<amp-ad class="amp-ad-8"
-							'.(!ampforwp_get_setting('enable-amp-ads-mgid-flexible-8')? 'width="'.esc_attr( $width ).'" height="'.esc_attr( $height ).'"' : '' ).'
+							width="'.esc_attr( $width ).'" 
+							height="'.esc_attr( $height ).'"
+							'.esc_html($flexible).'
 							type="mgid"
 							data-publisher="'.esc_attr( $data_pub ).'"
 							data-widget="'.esc_attr( $data_wid ).'"

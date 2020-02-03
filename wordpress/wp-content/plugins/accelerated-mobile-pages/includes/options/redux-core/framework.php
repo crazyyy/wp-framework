@@ -333,11 +333,6 @@
                     // Grab database values
                     $this->get_options();
 
-                    // Tracking
-                    if ( isset( $this->args['allow_tracking'] ) && $this->args['allow_tracking'] && Redux_Helpers::isTheme( __FILE__ ) ) {
-                        $this->_tracking();
-                    }
-
                     // Options page
                     add_action( 'admin_menu', array( $this, '_options_page' ) );
 
@@ -652,15 +647,6 @@
 
             // get_instance()
 
-            private function _tracking() {
-                if ( file_exists( dirname( __FILE__ ) . '/inc/tracking.php' ) ) {
-                    require_once dirname( __FILE__ ) . '/inc/tracking.php';
-                    $tracking = Redux_Tracking::get_instance();
-                    $tracking->load( $this );
-                }
-            }
-            // _tracking()
-
             /**
              * ->_get_default(); This is used to return the default value if default_show is set
              *
@@ -910,16 +896,7 @@
                         $data = array();
                         $args = wp_parse_args( $args, array() );
 
-                        if ( $type == "categories" || $type == "category" ) {
-                            $args['number'] = apply_filters('ampforwp_number_of_categories', 500);
-                            $cats = get_categories( $args );
-                            if ( ! empty ( $cats ) ) {
-                                foreach ( $cats as $cat ) {
-                                    $data[ $cat->term_id ] = $cat->name;
-                                }
-                                //foreach
-                            } // If
-                        } else if ( $type == "menus" || $type == "menu" ) {
+                        if ( $type == "menus" || $type == "menu" ) {
                             $menus = wp_get_nav_menus( $args );
                             if ( ! empty ( $menus ) ) {
                                 foreach ( $menus as $item ) {
@@ -988,16 +965,7 @@
                                     $data[ $name ] = ucfirst( $name );
                                 }
                             }
-                        } else if ( $type == "tags" || $type == "tag" ) { 
-                            $args['number'] = apply_filters('ampforwp_number_of_tags', 500);
-                            $tags = get_tags( $args );
-                            if ( ! empty ( $tags ) ) {
-                                foreach ( $tags as $tag ) {
-                                    $data[ $tag->term_id ] = $tag->name;
-                                }
-                                //foreach
-                            }
-                            //if
+                        
                         } else if ( $type == "menu_location" || $type == "menu_locations" ) {
                             global $_wp_registered_nav_menus;
 
@@ -1778,15 +1746,18 @@
                     }
 
                     // Make URL
-                    $url = '<a class="redux_hint_status" href="?dismiss=' . $dismiss . '&amp;id=hints&amp;page=' . $curPage . '&amp;tab=' . $curTab . '">' . $s . ' hints</a>';
-
+                    $hrefUrl = add_query_arg( 'dismiss', esc_attr($dismiss), '' );
+                    $hrefUrl = add_query_arg( 'id', 'hints', $hrefUrl );
+                    $hrefUrl = add_query_arg( 'page', esc_attr($curPage), $hrefUrl );
+                    $hrefUrl = add_query_arg( 'tab', esc_attr($curTab), $hrefUrl );
+                    $url = '<a class="redux_hint_status" href="'.esc_url_raw($hrefUrl).'">' . esc_html($s) . ' hints</a>';
                     $event = __( 'moving the mouse over', 'accelerated-mobile-pages' );
                     if ( 'click' == $this->args['hints']['tip_effect']['show']['event'] ) {
                         $event = __( 'clicking', 'accelerated-mobile-pages' );
                     }
 
                     // Construct message
-                    $msg = sprintf( __( 'Hints are tooltips that popup when %d the hint icon, offering addition information about the field in which they appear.  They can be %d d by using the link below.', 'accelerated-mobile-pages' ), $event, strtolower( $s ) ) . '<br/><br/>' . $url;
+                    $msg = sprintf( __( 'Hints are tooltips that popup when %d the hint icon, offering addition information about the field in which they appear.  They can be %d d by using the link below.', 'accelerated-mobile-pages' ), $event, strtolower( $s ) ) . '<br/><br/>' . $url;// url escaped above
 
                     // Construct hint tab
                     $tab = array(
@@ -3211,7 +3182,13 @@
                 if ( strpos( $icon, 'el-icon-' ) !== false ) {
                     $icon = str_replace( 'el-icon-', 'el el-', $icon );
                 }
-
+                if (!preg_match("/\bux-setup-icon\b/i", $icon, $match))  {
+                    $icon = "";
+                }else{
+                    $string ='<span class="ampforwp-setup-not-tt"><span class="setup-tt">
+                           Your setup is not completed. Please setup for better AMP Experience.
+                        </span></span>';
+                }
                 $hide_section = '';
                 if ( isset ( $section['hidden'] ) ) {
                     $hide_section = ( $section['hidden'] == true ) ? ' hidden ' : '';
@@ -3239,6 +3216,7 @@
                     if(is_object($current_screen) && $current_screen->parent_base=='amp_options'){
                         $enabledOptions = array(
                             esc_html__('automatic-amp-features','accelerated-mobile-pages'),
+                            esc_html__('ampforwp-new-ux','accelerated-mobile-pages'),
                             esc_html__('basic','accelerated-mobile-pages'),
                             esc_html__('Design','accelerated-mobile-pages'),
                             esc_html__('opt-go-premium','accelerated-mobile-pages'),
@@ -3279,7 +3257,7 @@
                                 if ( ! $display ) {
                                     continue;
                                 }
-
+                                $sections[ $nextK ] = apply_filters('ampforwp_remove_unused_options',$sections[ $nextK ]);
                                 $hide_sub = '';
                                 if ( isset ( $sections[ $nextK ]['hidden'] ) ) {
                                     $hide_sub = ( $sections[ $nextK ]['hidden'] == true ) ? ' hidden ' : '';
@@ -3330,12 +3308,13 @@
             public function generate_panel() {
                 require_once 'core/panel.php';
                 if(is_admin()){
-                    echo '<div class="a-f-wp-help"><div class="a-f-wp-help-message">
+                     echo '<div class="a-f-wp-help"><div class="a-f-wp-help-message">
                         <a target="_blank" href="http://ampforwp.com/support/?utm_source=options-panel&utm_medium=contact_link_btn&utm_campaign=AMP%20Plugin"> <img src="'.AMPFORWP_IMAGE_DIR . '/amp-img-conv.png'.'" /></a>
 
                         </div>
                         <div class="a-f-wp-help-container">
-                          <div class="a-f-wp-help-tear "><span> <i class="dashicons-admin-comments"></i></span></div>
+                          <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">window.Beacon("init", "15cc2e40-aa70-4571-8e62-09906c77d535")</script>
                         </div></div>';
                 }
                 $panel = new reduxCorePanel ( $this );

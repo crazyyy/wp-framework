@@ -4,16 +4,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 $output = '
 	<div {{if_id}}id="{{id}}"{{ifend_id}} class="ln-fx {{user_class}}">{{repeater}}</div>';
 $css = '
-.feature-mod{margin:{{margin_css}};padding:{{padding_css}};}
+{{module-class}}.feature-mod{margin:{{margin_css}};padding:{{padding_css}};}
 {{if_condition_feature_layout_type==1}}
 {{module-class}} .ln-fx{width:100%;display:flex; flex-wrap:wrap;}
-.feat-blk{ margin: 0 3% 3% 0; background: {{background_color_picker}}; width: 47%; text-align: {{align_type}};padding: 40px; position: relative;color: #26292c;}
-.feat-blk p{color: #333;font-size: 18px;padding-top:15px;}
-.feat-blk h3{font-size:28px;color:{{font_color_picker}};font-weight:400;padding-bottom:15px;}
-.feat-blk amp-img{margin:0 auto;width:100%}
-.feat-blk amp-img{width:{{img_width}};}
+{{module-class}} .feat-blk{ margin: 0 3% 3% 0; background: {{background_color_picker}}; width: 47%; text-align: {{align_type}};padding: 40px; position: relative;color: #26292c;}
+{{module-class}} .feat-blk p{color: #333;font-size: 18px;padding-top:15px;}
+{{module-class}} .feat-blk h1{font-size:28px;}
+{{module-class}} .feat-blk h2{font-size:25px;}
+{{module-class}} .feat-blk h3{font-size:22px;}
+{{module-class}} .feat-blk h4{font-size:19px;}
+{{module-class}} .feat-blk h5{font-size:17px;}
+{{module-class}} .feat-blk h6{font-size:15px;}
+{{module-class}} .feat-blk h1, {{module-class}} .feat-blk h2, {{module-class}} .feat-blk h3, {{module-class}} .feat-blk h4, {{module-class}} .feat-blk h5, {{module-class}} .feat-blk h6{
+	color:{{font_color_picker}};font-weight:400;padding-bottom:15px;
+}
+{{module-class}} .feat-blk amp-img{margin:0 auto;width:{{img_width}};max-width:100%;}
 {{if_condition_check_for_btn==1}}
-.feat-blk .fe_btn{
+{{module-class}} .feat-blk .fe_btn{
 	font-size:{{btn_size}};
 	font-weight:{{btn_weight}};
 	color:{{btn_color}};
@@ -25,10 +32,10 @@ $css = '
 }
 {{ifend_condition_check_for_btn_1}}
 @media(max-width:768px){
-    .feat-blk{width: 100%;margin-right: 0;}
+    {{module-class}} .feat-blk{width: 100%;margin-right: 0;}
 }
 @media(max-width:425px){
-	.feat-blk amp-img{width:100%;}
+	{{module-class}} .feat-blk amp-img{width:100%;}
 }
 {{ifend_condition_feature_layout_type_1}}
 ';
@@ -58,6 +65,23 @@ return array(
 				                          ),
 				            'content_type'=>'html',
 				            ),
+						array(		
+	 							'type'	=>'select',		
+	 							'name'  =>'heading_tags',		
+	 							'label' => esc_html__('Heading Tags','accelerated-mobile-pages'),
+								'tab'     =>'customizer',
+	 							'default' =>'h3',
+	 							'options_details'=>array(
+	 												'h1'  	=>'H1',
+	 												'h2'    =>'H2',
+	 												'h3'    =>'H3',
+	 												'h4'    =>'H4',
+	 												'h5'    =>'H5',
+	 												'h6'    =>'H6'
+	 											),
+	 							'content_type'=>'html',
+	 							'required'  =>  array('feature_layout_type'=> 1),
+	 					),
 						 array(
 								'type'		=>'checkbox',
 								'name'		=>"image_layout",
@@ -299,7 +323,7 @@ return array(
               ),
           'front_template'=>
         '{{if_condition_feature_layout_type==1}}<div class="feat-blk">
-      		<h3 class="t-txt">{{content_title}}</h3>
+      		{{if_heading_tags}}<{{heading_tags}} class="t-txt">{{content_title}}</{{heading_tags}}>{{ifend_heading_tags}}
 			{{if_img_upload}}<amp-img src="{{img_upload}}" width="{{image_width}}" height="{{image_height}}" {{image_layout}} alt="{{image_alt}}"></amp-img>{{ifend_img_upload}}
 			<p>{{content}}</p>
 			{{if_condition_check_for_btn==1}}

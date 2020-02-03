@@ -82,10 +82,14 @@ function cmplz_editor_assets() { // phpcs:ignore
  */
 function cmplz_render_document_block($attributes, $content)
 {
-
     $html = '';
+
     if (isset($attributes['selectedDocument'])) {
-        $html = COMPLIANZ()->document->get_document_html($attributes['selectedDocument']);
+        if (isset($attributes['documentSyncStatus']) && $attributes['documentSyncStatus']==='unlink' && isset($attributes['customDocument'])){
+            $html = $attributes['customDocument'];
+        } else {
+            $html = COMPLIANZ()->document->get_document_html($attributes['selectedDocument']);
+        }
     }
 
     return $html;

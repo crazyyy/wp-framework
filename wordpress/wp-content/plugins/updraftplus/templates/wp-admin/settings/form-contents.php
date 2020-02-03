@@ -22,7 +22,7 @@ foreach ($default_options as $k => $v) {
 		<th><?php _e('Files backup schedule', 'updraftplus'); ?>:</th>
 		<td class="js-file-backup-schedule">
 			<div>
-				<select class="updraft_interval" name="updraft_interval">
+				<select title="<?php echo __('Files backup interval', 'updraftplus'); ?>" class="updraft_interval" name="updraft_interval">
 				<?php
 				$intervals = $updraftplus_admin->get_intervals('files');
 				$selected_interval = UpdraftPlus_Options::get_updraft_option('updraft_interval', 'manual');
@@ -39,7 +39,7 @@ foreach ($default_options as $k => $v) {
 
 					$updraft_retain = max((int) UpdraftPlus_Options::get_updraft_option('updraft_retain', 2), 1);
 
-					$retain_files_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" name="updraft_retain" value="'.$updraft_retain.'" class="retain-files" />';
+					$retain_files_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" title="'.__('Retain this many scheduled file backups', 'updraftplus').'" name="updraft_retain" value="'.$updraft_retain.'" class="retain-files" />';
 
 					echo $retain_files_config;
 
@@ -59,7 +59,7 @@ foreach ($default_options as $k => $v) {
 		</th>
 		<td class="js-database-backup-schedule">
 		<div>
-			<select class="updraft_interval_database" name="updraft_interval_database">
+			<select class="updraft_interval_database" title="<?php echo __('Database backup interval', 'updraftplus'); ?>" name="updraft_interval_database">
 			<?php
 			$intervals = $updraftplus_admin->get_intervals('db');
 			$selected_interval_db = UpdraftPlus_Options::get_updraft_option('updraft_interval_database', UpdraftPlus_Options::get_updraft_option('updraft_interval'));
@@ -73,7 +73,7 @@ foreach ($default_options as $k => $v) {
 
 			<?php
 				$updraft_retain_db = max((int) UpdraftPlus_Options::get_updraft_option('updraft_retain_db', $updraft_retain), 1);
-				$retain_dbs_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" name="updraft_retain_db" value="'.$updraft_retain_db.'" class="retain-files" />';
+				$retain_dbs_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" title="'.__('Retain this many scheduled database backups', 'updraftplus').'" name="updraft_retain_db" value="'.$updraft_retain_db.'" class="retain-files" />';
 
 				echo $retain_dbs_config;
 			?>

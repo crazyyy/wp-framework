@@ -81,20 +81,15 @@ function ampforwp_custom_post_content_sanitizer( $data, $post ) {
 
 function ampforwp_custom_content_meta_register() {
     global $redux_builder_amp;
+    global $post_id;
 
-    $user_level = '';
-    $user_level = current_user_can( 'manage_options' );
-
-    if ( isset( $redux_builder_amp['amp-meta-permissions'] ) && 'all' === $redux_builder_amp['amp-meta-permissions'] ) {
-      $user_level = true;
-    }
-
-    if ( $user_level ) {
+    if( ampforwp_role_based_access_options() == true && ( current_user_can('edit_posts') || current_user_can('edit_pages') ) ){
         if ( $redux_builder_amp['amp-on-off-for-all-posts'] ) {
           add_meta_box( 'custom_content_editor', esc_html__( 'Custom AMP Editor', 'accelerated-mobile-pages' ), 'amp_content_editor_title_callback', 'post','normal', 'default' );
         }
 
-        if ( $redux_builder_amp['amp-on-off-for-all-pages'] ) {
+        $frontpage_id = ampforwp_get_the_ID();
+        if ( true == ampforwp_get_setting('amp-on-off-for-all-pages') || ( true == ampforwp_get_setting('amp-frontpage-select-option') && $post_id == $frontpage_id )) {
           add_meta_box( 'custom_content_editor', esc_html__( 'Custom AMP Editor','accelerated-mobile-pages' ), 'amp_content_editor_title_callback', 'page','normal', 'default' );
         }
         // Custom AMP Editor for Custom Post Types
@@ -108,7 +103,7 @@ function ampforwp_custom_content_meta_register() {
         }
 
         // Assign Pagebuilder Meta Box // Legecy pagebuilder
-        if ( $redux_builder_amp['ampforwp-content-builder'] ) {
+        if ( function_exists('ampforwp_custom_theme_files_register') ) {
           add_meta_box( 'custom_content_sidebar', esc_html__( 'AMP Page Builder', 'accelerated-mobile-pages' ), 'amp_content_sidebar_callback', 'page','side', 'default' );
         }  
     }
@@ -153,7 +148,7 @@ function amp_content_editor_title_callback( $post ) {
     		<?php esc_attr_e( 'Use This Content as AMP Content','accelerated-mobile-pages' )?>   </p>
         <p><?php esc_attr_e('If you want to add some special tags, then please use normal HTML into this area, it will automatically convert them into AMP compatible tags.','accelerated-mobile-pages') ?></p>
     </label>
-
+  <div class="amp-editor-content" id="amp-editor-checker" style="background: #FFF59D;padding: 8px 14px;width:96%;margin-bottom:12px;"><b>Note: </b> <span id="ampforwp-amp-content-error-msg">AMP contents is blank, Please enter content</span></div>
   <!--HTML content Ends here-->
   <?php
   $content = get_post_meta ( $amp_current_post_id, 'ampforwp_custom_content_editor', true );
@@ -181,12 +176,7 @@ function amp_content_editor_meta_save( $post_id ) {
     // Save data of Custom AMP Editor
     if ( isset( $_POST['ampforwp_custom_content_editor'] ) ) {
       $unsan_ampforwp_custom_content_editor = htmlentities($_POST[ 'ampforwp_custom_content_editor' ]);
-      if ( function_exists('sanitize_textarea_field') ) {
-        $ampforwp_custom_content_editor = sanitize_textarea_field( $unsan_ampforwp_custom_content_editor );
-      }
-      else{
-        $ampforwp_custom_content_editor = implode( "\n", array_map( 'sanitize_text_field', explode( "\n", $unsan_ampforwp_custom_content_editor ) ));
-      }
+      $ampforwp_custom_content_editor = sanitize_post( $unsan_ampforwp_custom_content_editor );
       update_post_meta($post_id, 'ampforwp_custom_content_editor',  $ampforwp_custom_content_editor );
     }
     // Save data of Custom AMP Editor CheckBox
