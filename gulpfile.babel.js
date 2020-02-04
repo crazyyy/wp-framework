@@ -67,13 +67,13 @@ import charset from 'postcss-single-charset';
 import willChangeTransition from 'postcss-will-change-transition';
 import willChange from 'postcss-will-change';
 import momentumScrolling from 'postcss-momentum-scrolling';
-import webpcss from 'webpcss';
+// import webpcss from 'webpcss';
 
 
 import replace from 'gulp-replace';
 
 const extReplace = require("gulp-ext-replace");
-const imageminWebp = require("imagemin-webp");
+// const imageminWebp = require("imagemin-webp");
 const imageminPngquant = require('imagemin-pngquant');
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const imageminAdvpng = require('imagemin-advpng');
@@ -153,47 +153,47 @@ gulp.task('image:default', function () {
   return gulp
     .src(config.path.images.srcimg)
     .pipe(plugins.newer(config.path.images.dest))
-    .pipe(plugins.bytediff.start())
-    .pipe(plugins.if(
-      '*.png',
-      plugins.imagemin([
-        imageminPngquant(),
-        imageminAdvpng(),
-      ])
-    ))
-    .pipe(plugins.if(
-      '*.jp*g',
-      plugins.imagemin([
-        imageminMozjpeg({progressive: true}),
-        imageminGuetzli({quality: 95}),
-      ])
-    ))
-    .pipe(plugins.if(
-      '*.gif',
-      plugins.imagemin([
-        plugins.imagemin.gifsicle({
-          interlaced: true
-        }),
-      ])
-    ))
-    .pipe(plugins.if(
-      '*.svg',
-      plugins.imagemin([
-        plugins.imagemin.svgo({
-          plugins: [{
-            removeViewBox: true
-          }]
-        })
-      ])
-    ))
-    .pipe(plugins.bytediff.stop(function(data) {
-      var difference = (data.savings > 0) ? ' smaller.' : ' larger.';
-      return data.fileName + ' is ' + data.percent + '%' + difference;
-    }))
-    .pipe(plugins.size({
-      showFiles: true,
-      title: 'task:image: '
-    }))
+    // .pipe(plugins.bytediff.start())
+    // .pipe(plugins.if(
+    //   '*.png',
+    //   plugins.imagemin([
+    //     // imageminPngquant(),
+    //     // imageminAdvpng(),
+    //   ])
+    // ))
+    // .pipe(plugins.if(
+    //   '*.jp*g',
+    //   plugins.imagemin([
+    //     imageminMozjpeg({progressive: true}),
+    //     imageminGuetzli({quality: 95}),
+    //   ])
+    // ))
+    // .pipe(plugins.if(
+    //   '*.gif',
+    //   plugins.imagemin([
+    //     plugins.imagemin.gifsicle({
+    //       interlaced: true
+    //     }),
+    //   ])
+    // ))
+    // .pipe(plugins.if(
+    //   '*.svg',
+    //   plugins.imagemin([
+    //     plugins.imagemin.svgo({
+    //       plugins: [{
+    //         removeViewBox: true
+    //       }]
+    //     })
+    //   ])
+    // ))
+    // .pipe(plugins.bytediff.stop(function(data) {
+    //   var difference = (data.savings > 0) ? ' smaller.' : ' larger.';
+    //   return data.fileName + ' is ' + data.percent + '%' + difference;
+    // }))
+    // .pipe(plugins.size({
+    //   showFiles: true,
+    //   title: 'task:image: '
+    // }))
     .pipe(gulp.dest(config.path.images.dest))
     .pipe(browserSync.reload({stream: true}));
 });
@@ -203,54 +203,54 @@ gulp.task('image:sprite', function () {
   return gulp
     .src(config.path.images.src + 'sprites/**/*.{png,svg}')
     // .pipe(plugins.newer(config.path.images.dest))
-    .pipe(plugins.if(
-      '*.png',
-      plugins.imagemin([
-        imageminPngquant(),
-        imageminAdvpng(),
-      ])
-    ))
-    .pipe(plugins.if(
-      '*.svg',
-      plugins.imagemin([
-        plugins.imagemin.svgo({
-          plugins: [{
-            removeViewBox: true
-          }]
-        })
-      ])
-    ))
-    .pipe(plugins.size({
-      showFiles: true,
-      title: 'task: image_sprite: '
-    }))
+    // .pipe(plugins.if(
+    //   '*.png',
+    //   plugins.imagemin([
+    //     // imageminPngquant(),
+    //     // imageminAdvpng(),
+    //   ])
+    // ))
+    // .pipe(plugins.if(
+    //   '*.svg',
+    //   plugins.imagemin([
+    //     plugins.imagemin.svgo({
+    //       plugins: [{
+    //         removeViewBox: true
+    //       }]
+    //     })
+    //   ])
+    // ))
+    // .pipe(plugins.size({
+    //   showFiles: true,
+    //   title: 'task: image_sprite: '
+    // }))
     .pipe(gulp.dest(config.path.images.dest + 'sprites/'))
     .pipe(browserSync.reload({stream: true}));
 });
 
 
 gulp.task("image:image2webp", function() {
-  return gulp.src([config.path.images.dest + '**/*.{png,jpg,jpeg}'])
-    // .pipe(plugins.newer(config.path.images.dest))
-    .pipe(plugins.imagemin([
-      imageminWebp({
-        quality: 95
-      })
-    ]))
-    .pipe(extReplace(".webp"))
-    .pipe(gulp.dest(config.path.images.dest));
+  // return gulp.src([config.path.images.dest + '**/*.{png,jpg,jpeg}'])
+  //   // .pipe(plugins.newer(config.path.images.dest))
+  //   .pipe(plugins.imagemin([
+  //     imageminWebp({
+  //       quality: 95
+  //     })
+  //   ]))
+  //   .pipe(extReplace(".webp"))
+  //   .pipe(gulp.dest(config.path.images.dest));
 });
 
 gulp.task("image:image2webpContent", function() {
-  return gulp.src(config.path.images.srcImgContent + '**/*.{png,jpg,jpeg}')
-    // .pipe(plugins.newer(config.path.images.dest))
-    .pipe(plugins.imagemin([
-      imageminWebp({
-        quality: 95
-      })
-    ]))
-    .pipe(extReplace(".webp"))
-    .pipe(gulp.dest(config.path.images.srcImgContent));
+  // return gulp.src(config.path.images.srcImgContent + '**/*.{png,jpg,jpeg}')
+  //   // .pipe(plugins.newer(config.path.images.dest))
+  //   .pipe(plugins.imagemin([
+  //     imageminWebp({
+  //       quality: 95
+  //     })
+  //   ]))
+  //   .pipe(extReplace(".webp"))
+  //   .pipe(gulp.dest(config.path.images.srcImgContent));
 });
 
 
@@ -293,7 +293,8 @@ gulp.task('scripts', function() {
     .pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('task:images', gulp.series('image:default', 'image:sprite', 'image:image2webp'));
+gulp.task('task:images', gulp.series('image:default', 'image:sprite'));
+// gulp.task('task:images', gulp.series('image:default', 'image:sprite', 'image:image2webp'));
 gulp.task('task:images-styles', gulp.series('task:images', 'styles'));
 gulp.task('parallel-scripts-images-styles', gulp.parallel('task:images-styles', 'scripts', 'fonts'));
 
@@ -306,7 +307,7 @@ gulp.task('default', gulp.parallel(
 
 gulp.task('build', gulp.parallel(
   'task:images-styles',
-  'image:image2webpContent', // tempolary disable it
+  // 'image:image2webpContent', // tempolary disable it
   'scripts',
   'fonts',
 ));
