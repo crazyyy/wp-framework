@@ -75,14 +75,12 @@
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "browser-sync": "^2.26.7",
-    "css-mqpacker": "^7.0.0",
     "gulp": "^4.0.2",
     "gulp-typescript": "^5.0.1",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
     "config": "^3.2.5",
-    "css-mqpacker": "^7.0.0",
     "cssnano": "^4.1.10",
     "cssnano-preset-advanced": "^4.0.7",
     "cssnano-preset-default": "^4.0.7",
@@ -116,7 +114,7 @@
     "postcss-discard-duplicates": "^4.0.2",
     "postcss-discard-empty": "^4.0.1",
     "postcss-easysprites": "^1.0.0",
-    "postcss-momentum-scrolling": "^2.3.10",
+    "postcss-momentum-scrolling": "^2.3.12",
     "postcss-preset-env": "^6.7.0",
     "postcss-single-charset": "^2.0.0",
     "postcss-unprefix": "^2.1.4",
