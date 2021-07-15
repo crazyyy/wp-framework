@@ -55,22 +55,26 @@ import gulp from 'gulp';
 import browserSync from 'browser-sync';
 import lazypipe from 'lazypipe';
 
-/* PostCSS plugins */
-import postcssPresetEnv from 'postcss-preset-env';
-import cssnano from 'cssnano';
-import easysprite from 'postcss-easysprites';
-import urlrev from 'postcss-urlrev';
-import discardDuplicates from 'postcss-discard-duplicates';
-import discardEmpty from 'postcss-discard-empty';
-import combineDuplicatedSelectors from 'postcss-combine-duplicated-selectors';
-import charset from 'postcss-single-charset';
-import willChangeTransition from 'postcss-will-change-transition';
-import willChange from 'postcss-will-change';
-import momentumScrolling from 'postcss-momentum-scrolling';
-// import webpcss from 'webpcss';
+// /* PostCSS plugins */
+// import postcssPresetEnv from 'postcss-preset-env';
+// import cssnano from 'cssnano';
+// import easysprite from 'postcss-easysprites';
+// import urlrev from 'postcss-urlrev';
+// import discardDuplicates from 'postcss-discard-duplicates';
+// import discardEmpty from 'postcss-discard-empty';
+// import combineDuplicatedSelectors from 'postcss-combine-duplicated-selectors';
+// import charset from 'postcss-single-charset';
+// import willChangeTransition from 'postcss-will-change-transition';
+// import willChange from 'postcss-will-change';
+// import momentumScrolling from 'postcss-momentum-scrolling';
+// // import webpcss from 'webpcss';
 
 
 import replace from 'gulp-replace';
+
+import dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+const sass = gulpSass( dartSass );
 
 const extReplace = require("gulp-ext-replace");
 // const imageminWebp = require("imagemin-webp");
@@ -84,42 +88,42 @@ const plugins = require('gulp-load-plugins')({
   replaceString: /\bgulp[\-.]/
 });
 
-let processors = [
-  charset(),
-  willChangeTransition(),
-  willChange(),
-  momentumScrolling([
-    'scroll'
-  ]),
-  discardDuplicates(),
-  discardEmpty(),
-  combineDuplicatedSelectors({
-    removeDuplicatedProperties: true
-  }),
-  easysprite({
-    imagePath:'./assets/img/sprites',
-    spritePath: './assets/img/sprites'
-  }),
-  // webpcss({
-  //   copyBackgroundSize: true
-  // }),
-  // https://github.com/hail2u/node-css-mqpacker#options
-  // mqpacker({
-  //   sort: function (a, b) {
-  //     return a.localeCompare(b);
-  //   }
-  // }),
-  urlrev(),
-  postcssPresetEnv({
-    stage: 4,
-    warnForDuplicates: false
-  }),
-  cssnano({
-    preset: 'advanced',
-    reduceIdents: true,
-    zindex: false
-  })
-];
+// let processors = [
+//   charset(),
+//   willChangeTransition(),
+//   willChange(),
+//   momentumScrolling([
+//     'scroll'
+//   ]),
+//   discardDuplicates(),
+//   discardEmpty(),
+//   combineDuplicatedSelectors({
+//     removeDuplicatedProperties: true
+//   }),
+//   easysprite({
+//     imagePath:'./assets/img/sprites',
+//     spritePath: './assets/img/sprites'
+//   }),
+//   // webpcss({
+//   //   copyBackgroundSize: true
+//   // }),
+//   // https://github.com/hail2u/node-css-mqpacker#options
+//   // mqpacker({
+//   //   sort: function (a, b) {
+//   //     return a.localeCompare(b);
+//   //   }
+//   // }),
+//   urlrev(),
+//   postcssPresetEnv({
+//     stage: 4,
+//     warnForDuplicates: false
+//   }),
+//   cssnano({
+//     preset: 'advanced',
+//     reduceIdents: true,
+//     zindex: false
+//   })
+// ];
 
 
 // Compile and automatically prefix stylesheets
@@ -131,12 +135,12 @@ gulp.task('styles', function() {
     .pipe(customPlumber('Error Running Sass'))
     .pipe(plugins.newer(destination))
     .pipe(plugins.if(!env_prod, plugins.sourcemaps.init()))
-    .pipe(plugins.sass({
-      outputStyle: 'compact',
+    .pipe(sass({
+      // outputStyle: 'compact',
       precision: 5,
       onError: console.error.bind(console, 'Sass error:')
     }))
-    .pipe(plugins.postcss(processors))
+    // .pipe(plugins.postcss(processors))
     .pipe(plugins.if(!env_prod, plugins.sourcemaps.write('maps', {includeContent: true})))
     .pipe(gulp.dest(destination))
     .pipe(plugins.filter('**/*.css'))
