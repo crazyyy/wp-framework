@@ -14,16 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WINP_Plugin' ) ) {
 
-	class WINP_Plugin extends Wbcr_Factory422_Plugin {
+	class WINP_Plugin extends Wbcr_Factory443_Plugin {
 
 		/**
-		 * @var Wbcr_Factory422_Plugin
+		 * @var Wbcr_Factory443_Plugin
 		 */
 		private static $app;
 
 		/**
 		 * @param string $plugin_path
-		 * @param array  $data
+		 * @param array $data
 		 *
 		 * @throws Exception
 		 */
@@ -95,9 +95,9 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		}
 
 		/**
-		 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
-		 * @since  2.2.0
 		 * @throws \Exception
+		 * @since  2.2.0
+		 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		/*public function plugins_loaded() {
 			$this->register_pages();
@@ -109,9 +109,9 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		}
 
 		/**
-		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
-		 * @since   2.2.0
 		 * @throws \Exception
+		 * @since   2.2.0
+		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		public function register_pages() {
 			require_once( WINP_PLUGIN_DIR . '/admin/pages/page.php' );
@@ -124,9 +124,9 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		}
 
 		/**
-		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
-		 * @since   2.2.0
 		 * @throws \Exception
+		 * @since   2.2.0
+		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		public function register_depence_pages() {
 			require_once( WINP_PLUGIN_DIR . '/admin/pages/page.php' );
@@ -137,9 +137,9 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		}
 
 		/**
-		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
-		 * @since   2.2.0
 		 * @throws \Exception
+		 * @since   2.2.0
+		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		private function register_types() {
 			require_once( WINP_PLUGIN_DIR . '/admin/types/snippets-post-types.php' );
@@ -154,11 +154,8 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @since  2.2.0
 		 */
 		private function register_shortcodes() {
-			$is_cron = WINP_Helper::doing_cron();
-			$is_rest = WINP_Helper::doing_rest_api();
-
 			$action = WINP_Plugin::app()->request->get( 'action', '' );
-			if ( ! ( 'edit' == $action && is_admin() ) && ! $is_cron && ! $is_rest ) {
+			if ( ! ( 'edit' == $action && is_admin() ) ) {
 				if ( WINP_Plugin::app()->getOption( 'support_old_shortcodes' ) ) {
 					// todo: Deprecated
 					require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-insert-php.php' );
@@ -171,6 +168,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-css.php' );
 				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-js.php' );
 				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-html.php' );
+				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-ad.php' );
 
 				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodePhp', $this );
 				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodeText', $this );
@@ -178,6 +176,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodeCss', $this );
 				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodeJs', $this );
 				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodeHtml', $this );
+				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodeAdvert', $this );
 			}
 		}
 
@@ -215,9 +214,9 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		/**
 		 * Initialization and require files for backend.
 		 *
-		 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
-		 * @since  2.2.0
 		 * @throws \Exception
+		 * @since  2.2.0
+		 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		private function load_backend() {
 			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.snippets.viewtable.php' );
@@ -244,6 +243,32 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 			# Required for compatibility with the premium plugin.
 			# We set the priority to 30 to wait for the premium plugin to load.
 			add_action( 'plugins_loaded', [ $this, 'register_depence_pages' ], 30 );
+
+			add_action( 'wbcr_factory_forms_440_register_controls', function () {
+				$colorControls = array(
+					[
+						'type'    => 'winp-dropdown',
+						'class'   => 'WINP_FactoryForms_Dropdown',
+						'include' => WINP_PLUGIN_DIR . '/includes/controls/class.dropdown.php'
+					],
+				);
+				$this->forms->registerControls( $colorControls );
+			} );
 		}
+
+		/**
+		 * Метод проверяет активацию премиум плагина и наличие действующего лицензионного ключа
+		 *
+		 * @return bool
+		 */
+		public function is_premium() {
+			if ( $this->premium->is_active() && $this->premium->is_activate() //&& $this->premium->is_install_package()
+			) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 	}
 }

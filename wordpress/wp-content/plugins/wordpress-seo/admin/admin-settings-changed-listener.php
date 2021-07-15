@@ -32,7 +32,7 @@ class WPSEO_Admin_Settings_Changed_Listener implements WPSEO_WordPress_Integrati
 	public function intercept_save_update_notification() {
 		global $pagenow;
 
-		if ( $pagenow !== 'admin.php' || ! WPSEO_Utils::is_yoast_seo_page() ) {
+		if ( $pagenow !== 'admin.php' || ! YoastSEO()->helpers->current_page->is_yoast_seo_page() ) {
 			return;
 		}
 
@@ -46,7 +46,7 @@ class WPSEO_Admin_Settings_Changed_Listener implements WPSEO_WordPress_Integrati
 
 			self::$settings_saved = true;
 			unset( $wp_settings_errors[ $key ] );
-			// Overwrite the global with the list excluding the Changed saved message.
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride -- Overwrite the global with the list excluding the Changed saved message.
 			$GLOBALS['wp_settings_errors'] = $wp_settings_errors;
 			break;
 		}

@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_NewItemPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory422_Plugin $plugin
+	 * @param Wbcr_Factory443_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory443_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->menu_position = 1;
@@ -79,6 +79,11 @@ class WINP_NewItemPage extends WINP_Page {
 				'title'       => __( 'HTML snippet', 'insert-php' ),
 				'help'        => '#',
 				'description' => '<p>' . __( 'Used for inserting html code. Can be used for inserting html code.', 'insert-php' ) . '</p>'
+			],
+			WINP_SNIPPET_TYPE_AD      => [
+				'title'       => __( 'Advertisement snippet', 'insert-php' ),
+				'help'        => WINP_Plugin::app()->get_support()->get_tracking_page_url( 'getting-started-with-woody-ad-snippets/#Creating_a_Ad_Snippet', 'create-snippet' ),
+				'description' => '<p>' . __( 'Used for inserting Advertisement. Can be used for inserting quotes, paragraphs, shortcodes from other plugins, tables, media files.', 'insert-php' ) . '</p>'
 			],
 		]; ?>
         <div class="wrap <?php echo WINP_Helper::get_factory_class(); ?>">

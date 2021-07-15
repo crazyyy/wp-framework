@@ -127,6 +127,20 @@ function ampforwp_notice_bar_options($opt_name){
                    'required' => array( array('amp-gdpr-compliance-switch', '=' , '1') ),
             ),
            array(
+                    'class'  => 'child_opt child_opt_arrow',
+                    'id'    => 'amp-gdpr-type2-position',
+                   'title'  => esc_html__('GDPR Popup Position', 'accelerated-mobile-pages'),
+                   'type'   => 'select',
+                   'options'=> array(
+                        '1' =>  'Top',
+                        '2' =>  'Bottom'
+                    ),
+                   'default'=> '1',
+                  'required' => array(
+                      array('gdpr-type','=',2)
+                    )    
+            ),
+           array(
                'class'  => 'child_opt child_opt_arrow',
                'id'        =>'amp-gdpr-compliance-headline-text',
                'type'      => 'text',
@@ -196,6 +210,54 @@ function ampforwp_notice_bar_options($opt_name){
                'title'     => esc_html__('Privacy Page Button Text', 'accelerated-mobile-pages'),
                'default'   => 'Click Here',
                'required' => array('amp-gdpr-compliance-switch', '=' , '1'),
+           ),
+            array(
+            'id' => 'ampforwp-notice-quantcast',
+            'type' => 'section',
+            'title' => esc_html__('Quantcast Notice Bar in AMP', 'accelerated-mobile-pages'),
+            'indent' => true,
+            'layout_type' => 'accordion',
+            'accordion-open'=> 1, 
+                  ),
+           array(
+               'id'        =>'amp-quantcast-notice-switch',
+               'type'      => 'switch',
+               'title'     => esc_html__('Quantcast Notice Bar', 'accelerated-mobile-pages'),
+               'default'   => 0,
+               'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                         esc_html__('Enable this option to add quantcast notice bar in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-quantcast-notice-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
+           ),
+           array(
+               'class'  => 'child_opt',
+               'id'        =>'amp-quantcast-id',
+               'type'      => 'text',
+               'title'     => esc_html__('Account Id', 'accelerated-mobile-pages'),
+               'placeholder'=> 'Quantcast Account Id',
+               'required' => array('amp-quantcast-notice-switch', '=' , '1'),
+           ),
+           array(
+               'class'  => 'child_opt',
+               'id'        =>'amp-quantcast-hashcode',
+               'type'      => 'text',
+               'title'     => esc_html__('Hash Code', 'accelerated-mobile-pages'),
+               'placeholder'=> '3BDXDqoakCk4Q4LzQqBGVQ',
+               'required' => array('amp-quantcast-notice-switch', '=' , '1'),
+           ),
+           array(
+               'class'  => 'child_opt',
+               'id'        =>'amp-quantcast-publishercountrycode',
+               'type'      => 'text',
+               'title'     => esc_html__('Publisher Country Code', 'accelerated-mobile-pages'),
+               'placeholder'=> 'US',
+               'required' => array('amp-quantcast-notice-switch', '=' , '1'),
+           ),
+           array(
+               'class'  => 'child_opt',
+               'id'        =>'amp-quantcast-publishername',
+               'type'      => 'text',
+               'title'     => esc_html__('Publisher Name', 'accelerated-mobile-pages'),
+               'placeholder'=> 'TestMeOut',
+               'required' => array('amp-quantcast-notice-switch', '=' , '1'),
            ),
            array(
            'class' => 'amp-popup-fld',

@@ -1,10 +1,15 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; 
 $images_url = 'https://www.webdesi9.com/plugins/wp_file_manager/images';
 ?>
+<style>
+.buy-now:hover,
+.buy-now:focus{ box-shadow:none !important; }
+img{ max-width:100% !important; }
+</style>
 <div class="wrap">
 <h3><?php _e('Settings - General', 'wp-file-manager');?></h3>
 <p class="danger" style="color:#F00"><strong><?php  _e('Note: This is just a demo screenshot. To get settings please buy our pro version.', 'wp-file-manager'); ?></strong>
-<a href="https://filemanagerpro.io/product/file-manager" class="button button-primary" target="_blank" title="Click to Buy PRO"><?php  _e('Buy PRO', 'wp-file-manager'); ?></a></p>
+<a href="https://filemanagerpro.io/product/file-manager" class="button button-primary buy-now" target="_blank" title="Click to Buy PRO"><?php  _e('Buy PRO', 'wp-file-manager'); ?></a></p>
 <p><?php _e('Here admin can give access to user roles to use filemanager. Admin can set Default Access Folder and also control upload size of filemanager.', 'wp-file-manager');?></p>
 <img src="<?php echo $images_url.'/screenshot-general.png';?>" />
 <h3><?php _e('Settings - Code-editor', 'wp-file-manager');?></h3>
@@ -19,5 +24,5 @@ $images_url = 'https://www.webdesi9.com/plugins/wp_file_manager/images';
 <p><?php _e('Admin can restrict actions of any userrole. Also hide files and folders and can set different - different folders paths for different users roles.', 'wp-file-manager');?></p>
 <img src="<?php echo $images_url.'/screenshot-user-role-restriction.jpg';?>" />
 <p class="danger" style="color:#F00"><strong><?php  _e('Note: This is just a demo screenshot. To get settings please buy our pro version.', 'wp-file-manager'); ?></strong>
-<a href="https://filemanagerpro.io/product/file-manager" class="button button-primary" target="_blank" title="Click to Buy PRO"><?php  _e('Buy PRO', 'wp-file-manager'); ?></a></p>
+<a href="https://filemanagerpro.io/product/file-manager" class="button button-primary buy-now" target="_blank" title="Click to Buy PRO"><?php  _e('Buy PRO', 'wp-file-manager'); ?></a></p>
 </div>

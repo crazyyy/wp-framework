@@ -8,16 +8,17 @@ if (!defined('WPO_PLUGIN_MAIN_PATH')) die('No direct access allowed');
 class WP_Optimize_UpdraftCentral {
 
 	public function __construct() {
-		add_action('updraftplus_remotecontrol_command_classes', array($this, 'updraftplus_remotecontrol_command_classes'));
+		add_filter('updraftplus_remotecontrol_command_classes', array($this, 'updraftcentral_remotecontrol_command_classes'));
+		add_filter('updraftcentral_remotecontrol_command_classes', array($this, 'updraftcentral_remotecontrol_command_classes'));
 		add_action('updraftcentral_command_class_wanted', array($this, 'updraftcentral_command_class_wanted'));
 	}
 	
 	/**
 	 * Register our class
 	 *
-	 * @param string $command_classes Passing over an arrya of command classes.
+	 * @param string $command_classes Passing over an array of command classes.
 	 */
-	public function updraftplus_remotecontrol_command_classes($command_classes) {
+	public function updraftcentral_remotecontrol_command_classes($command_classes) {
 		if (is_array($command_classes)) $command_classes['wpoptimize'] = 'UpdraftCentral_WP_Optimize_Commands';
 		return $command_classes;
 	}

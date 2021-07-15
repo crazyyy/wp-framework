@@ -133,9 +133,12 @@ function wbcr_inp_ajax_get_page_list() {
 
 	check_admin_referer( 'wbcr_inp_snippet_' . $snippet_id . '_conditions_metabox' );
 
+	$is_woo   = WINP_Helper::is_woo_active();
+	$woo_desc = $is_woo ? '' : __( '(not active)', 'insert-php' );
+
 	$result = [
 		'values' => [
-			'Basic'         => [
+			__( 'Basic', 'insert-php' )                   => [
 				[
 					'value' => 'base_web',
 					'title' => __( 'Entire Website', 'insert-php' ),
@@ -149,7 +152,7 @@ function wbcr_inp_ajax_get_page_list() {
 					'title' => __( 'All Archives', 'insert-php' ),
 				],
 			],
-			'Special Pages' => [
+			__( 'Special Pages', 'insert-php' )           => [
 				[
 					'value' => 'spec_404',
 					'title' => __( '404 Page', 'insert-php' ),
@@ -175,7 +178,7 @@ function wbcr_inp_ajax_get_page_list() {
 					'title' => __( 'Author Archive', 'insert-php' ),
 				],
 			],
-			'Posts'         => [
+			__( 'Posts', 'insert-php' )                   => [
 				[
 					'value' => 'post_all',
 					'title' => __( 'All Posts', 'insert-php' ),
@@ -193,7 +196,7 @@ function wbcr_inp_ajax_get_page_list() {
 					'title' => __( 'All Tags Archive', 'insert-php' ),
 				],
 			],
-			'Pages'         => [
+			__( 'Pages', 'insert-php' )                   => [
 				[
 					'value' => 'page_all',
 					'title' => __( 'All Pages', 'insert-php' ),
@@ -201,6 +204,43 @@ function wbcr_inp_ajax_get_page_list() {
 				[
 					'value' => 'page_arch',
 					'title' => __( 'All Pages Archive', 'insert-php' ),
+				],
+			],
+			__( 'Woocommerce', 'insert-php' ) . $woo_desc => [
+				[
+					'value'    => 'woo_product',
+					'title'    => __( 'Product', 'insert-php' ),
+					'disabled' => ! $is_woo,
+				],
+				[
+					'value'    => 'woo_cart',
+					'title'    => __( 'Cart page', 'insert-php' ),
+					'disabled' => ! $is_woo,
+				],
+				[
+					'value'    => 'woo_checkout',
+					'title'    => __( 'Checkout page', 'insert-php' ),
+					'disabled' => ! $is_woo,
+				],
+				[
+					'value'    => 'woo_checkout_pay',
+					'title'    => __( 'Checkout pay page', 'insert-php' ),
+					'disabled' => ! $is_woo,
+				],
+				[
+					'value'    => 'woo_arch',
+					'title'    => __( 'All Products page', 'insert-php' ),
+					'disabled' => ! $is_woo,
+				],
+				[
+					'value'    => 'woo_cat',
+					'title'    => __( 'Products Category page', 'insert-php' ),
+					'disabled' => ! $is_woo,
+				],
+				[
+					'value'    => 'woo_tag',
+					'title'    => __( 'Products Tag page', 'insert-php' ),
+					'disabled' => ! $is_woo,
 				],
 			],
 		],

@@ -123,7 +123,7 @@ class Yoast_Notification {
 	 *
 	 * Returns the id of the current user if not user has been sent.
 	 *
-	 * @return integer The user id
+	 * @return int The user id
 	 */
 	public function get_user_id() {
 		if ( $this->get_user() !== null ) {
@@ -135,7 +135,7 @@ class Yoast_Notification {
 	/**
 	 * Retrieve nonce identifier.
 	 *
-	 * @return null|string Nonce for this Notification.
+	 * @return string|null Nonce for this Notification.
 	 */
 	public function get_nonce() {
 		if ( $this->options['id'] && empty( $this->options['nonce'] ) ) {
@@ -281,12 +281,7 @@ class Yoast_Notification {
 	 */
 	private function has_capability( $capability ) {
 		$user = $this->options['user'];
-
-		$role_caps = $user->get_role_caps();
-		if ( array_key_exists( $capability, $role_caps ) ) {
-			return $role_caps[ $capability ];
-		}
-		return false;
+		return $user->has_cap( $capability );
 	}
 
 	/**
@@ -320,10 +315,10 @@ class Yoast_Notification {
 
 		// Default notification classes.
 		$classes = [
-			'yoast-alert',
+			'yoast-notification',
 		];
 
-		// Maintain WordPress visualisation of alerts when they are not persistent.
+		// Maintain WordPress visualisation of notifications when they are not persistent.
 		if ( ! $this->is_persistent() ) {
 			$classes[] = 'notice';
 			$classes[] = $this->get_type();
@@ -359,7 +354,7 @@ class Yoast_Notification {
 	private function wrap_yoast_seo_icon( $message ) {
 		$out  = sprintf(
 			'<img src="%1$s" height="%2$d" width="%3$d" class="yoast-seo-icon" />',
-			esc_url( plugin_dir_url( WPSEO_FILE ) . 'images/Yoast_SEO_Icon.svg' ),
+			esc_url( plugin_dir_url( WPSEO_FILE ) . 'packages/js/images/Yoast_SEO_Icon.svg' ),
 			60,
 			60
 		);
@@ -397,7 +392,7 @@ class Yoast_Notification {
 		$options['priority'] = min( 1, max( 0, $options['priority'] ) );
 
 		// Set default capabilities when not supplied.
-		if ( empty( $options['capabilities'] ) || [] === $options['capabilities'] ) {
+		if ( empty( $options['capabilities'] ) || $options['capabilities'] === [] ) {
 			$options['capabilities'] = [ 'wpseo_manage_options' ];
 		}
 

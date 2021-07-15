@@ -47,12 +47,37 @@ class WINP_Filter_List {
             </select>
 			<?php
 		}
+
+		$types = [
+			'PHP',
+			'HTML',
+			'CSS',
+			'JS',
+			'Universal',
+			'Text',
+			'Advertisement',
+		];
+
+		if ( WINP_SNIPPETS_POST_TYPE == $type && ! empty( $types ) ) { ?>
+            <select name="winp_filter_type">
+                <option value=""><?php _e( 'Filter by type:', 'insert-php' ); ?></option>
+				<?php
+				$current_type = WINP_Plugin::app()->request->get( 'winp_filter_type', '' );
+				foreach ( $types as $t ) {
+					if ( is_string( $t ) ) {
+						printf( '<option value="%s"%s>%s</option>', strtolower( $t ), strtolower( $t ) == $current_type ? ' selected="selected"' : '', $t );
+					}
+				}
+				?>
+            </select>
+			<?php
+		}
 	}
 
 	/**
 	 * If submitted filter by tag
 	 *
-	 * @param $query
+	 * @param $query WP_Query
 	 */
 	function parseQuery( $query ) {
 		global $pagenow;
@@ -69,6 +94,17 @@ class WINP_Filter_List {
 				],
 			];
 			$query->set( 'tax_query', $taxquery );
+		}
+
+		if ( WINP_SNIPPETS_POST_TYPE == $type && is_admin() && 'edit.php' == $pagenow && WINP_Plugin::app()->request->get( 'winp_filter_type', '' ) ) {
+			$meta_query = [
+				[
+					'key'     => 'wbcr_inp_snippet_type',
+					'value'   => WINP_Plugin::app()->request->get( 'winp_filter_type', '' ),
+					'compare' => '=',
+				]
+			];
+			$query->set( 'meta_query', $meta_query );
 		}
 	}
 

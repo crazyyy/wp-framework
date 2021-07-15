@@ -24,6 +24,9 @@ function amp_archive_title(){
 		}else{
 			the_archive_title( '<h2 class="amp-archive-title">', '</h2>' );
 		}
+		if(function_exists('ampforwp_category_image_compatibility')){
+			ampforwp_category_image_compatibility('echo','amp-archive-image');
+		}
 	    $description 	= get_the_archive_description();
 		$sanitizer = new AMPFORWP_Content( $description, array(), 
 			apply_filters( 'ampforwp_content_sanitizers',
@@ -46,12 +49,12 @@ function amp_archive_title(){
 		    } else {
 		        $paged = 1;
 		    }
-				if($paged <= '1') {?>
+				if($paged <= '1' && ampforwp_get_setting('ampforwp-cat-description')) {?>
 					<div class="amp-archive-desc">
 						<?php echo do_shortcode($arch_desc);// amphtml content, no kses ?>
-				    </div> <?php
-				}
+					</div> <?php	
 			}
+		}	
 	}
 	if( is_category() && 1 == $redux_builder_amp['ampforwp-sub-categories-support'] ){
 		$parent_cat_id 	= '';
@@ -297,6 +300,9 @@ function amp_pagination($args =array()) {
 	}?>
 
     <div class="loop-pagination"><?php
+	    if (function_exists('wp_pagenavi')) {
+	      wp_pagenavi();
+	    }else{
 	    if ( get_next_posts_link( $args['next_text'], $amp_q->max_num_pages ) ) { 
     	 	$next_link = '<div class="right">'. apply_filters('ampforwp_next_posts_link',get_next_posts_link( ampforwp_translation($redux_builder_amp['amp-translator-show-more-posts-text'] , $args['next_text']), $amp_q->max_num_pages ), $paged) .'</div>';
     	 	echo $next_link; // escaped above
@@ -306,7 +312,7 @@ function amp_pagination($args =array()) {
 	    	echo $pre_link; // escaped above 
     	} ?>
 	    <div class="clearfix"></div>
-	</div><?php
+	</div><?php }
 	
 }
 
@@ -392,6 +398,11 @@ function amp_loop_excerpt($excerpt_length = 15,$tag = 'p', $class = ''){
 	//excerpt
 	global $post,$redux_builder_amp;
 	$excerpt_length = (int) $excerpt_length;
+	
+	if ( empty( $class )) {
+		$class = 'loop-excerpt';
+	}
+
 	if( has_excerpt() ) {
 		$content = get_the_excerpt();
 	} else {
@@ -406,7 +417,7 @@ function amp_loop_excerpt($excerpt_length = 15,$tag = 'p', $class = ''){
 	}
 
 	if( ampforwp_get_setting('ampforwp-homepage-loop-readmore-link') == 1 ) {
-		echo ('<'.esc_attr($tag).' class="'.$class.'">'. wp_trim_words(  $content, $excerpt_length ) .' '.'<a href="'. ampforwp_url_controller(get_permalink($post->ID)) . '">'. ampforwp_translation($redux_builder_amp['amp-translator-read-more'],'Read More') . '</a></'.esc_attr($tag).'>');
+		echo ('<'.esc_attr($tag).' class="'.esc_attr($class).'">'. wp_trim_words(  $content, $excerpt_length ) .' '.'<a href="'. ampforwp_url_controller(get_permalink($post->ID)) . '">'. ampforwp_translation($redux_builder_amp['amp-translator-read-more'],'Read More') . '</a></'.esc_attr($tag).'>');
 	} else {
 		echo ('<'.esc_attr($tag).' class="'.esc_attr($class).'">'. wp_trim_words(  $content, $excerpt_length ) .'</'.esc_attr($tag).'>');
 	}
@@ -513,6 +524,16 @@ function amp_loop_image( $data=array() ) {
 				$imageClass			= $changesInImageData["image_class"];
 				$imageLink			= $changesInImageData["image_link"];
 			}
+			if(function_exists('ampforwp_check_image_existance')){
+				$thumb_url = ampforwp_check_image_existance($thumb_url);
+			}
+			if(ampforwp_get_setting('ampforwp-retina-images') && (ampforwp_get_setting('amp-design-selector') ==1 || ampforwp_get_setting('amp-design-selector') ==2 ) && (is_home() || is_archive() || is_search()) ){
+				$thumb_width = $width / $resolution;
+				$thumb_height = $height / $resolution;
+			}
+			if(isset($data['referer']) && $data['referer']=='related_post'){
+				$imageLink = ampforwp_modify_url_utm_params($imageLink);
+			}
 			echo '<'.esc_attr($tag).' class="loop-img '.esc_attr($tag_class).'">';
 			echo '<a href="'.esc_url($imageLink).'" title="'.esc_html(get_the_title()).'">';
 			$img_content =  '<amp-img src="'. esc_url($thumb_url) .'" width="'.esc_attr($thumb_width).'" height="'.esc_attr($thumb_height).'" '. esc_attr($layout_responsive) .' class="'.esc_attr($imageClass).'" alt="'. esc_html(get_the_title()) .'"></amp-img>';
@@ -528,20 +549,53 @@ function amp_loop_image( $data=array() ) {
 
 // Category
 function amp_loop_category(){
-	global $redux_builder_amp;
-	if(count(get_the_category()) > 0){
+	$categories = get_the_category();
+	$cat_id = '';
+	if (function_exists('seopress_activation')){
+		$cat_id = get_post_meta(ampforwp_get_the_ID(),'_seopress_robots_primary_cat',true);
+	}
+	if(class_exists( 'WPSEO_Options' )){
+        $cat_id = get_post_meta(ampforwp_get_the_ID(), '_yoast_wpseo_primary_category', true);
+	}
+	if(class_exists('RankMath')){
+        $cat_id = get_post_meta(ampforwp_get_the_ID(), 'rank_math_primary_category', true);
+	}
+	if (function_exists( 'the_seo_framework' )) {
+		$cat_id = the_seo_framework()->get_primary_term_id( ampforwp_get_the_ID(),'category' );
+	}
+	if(class_exists( 'SQ_Classes_ObjController' )){
+		$get_cat_id = SQ_Classes_ObjController::getClass('SQ_Models_Domain_Categories')->getAllCategories(ampforwp_get_the_ID());
+		$cat_id = key($get_cat_id);
+	}
+	$cat_id = apply_filters('ampforwp_custom_primary_cat',$cat_id);
+	if (isset($cat_id)) {
+		$cat_name = get_cat_name($cat_id);
+	}
+	if( count($categories) > 0 && empty($cat_id)){
 		echo ' <ul class="loop-category">';
-			foreach((get_the_category()) as $category) {
+			foreach($categories as $category) {
 				if(ampforwp_get_setting('ampforwp-cats-tags-links-single') == true){
 					$cat_link = get_category_link( $category->term_id );
 					if(ampforwp_get_setting('ampforwp-archive-support-cat') == true && ampforwp_get_setting('ampforwp-archive-support') == true){
 	                    $cat_link = ampforwp_url_controller( $cat_link );
 	                }
-	                echo '<li class="amp-cat-'. $category->term_id.'"><a href="'.esc_url($cat_link).'">'. esc_html($category->cat_name).'</a></li>';
+	                echo '<li class="amp-cat-'. esc_attr($category->term_id) .'"><a href="'.esc_url($cat_link).'">'. esc_html($category->cat_name).'</a></li>';
 				}else{
-				echo '<li class="amp-cat-'. $category->term_id.'">'. esc_html($category->cat_name).'</li>';
+				echo '<li class="amp-cat-'. esc_attr($category->term_id) .'">'. esc_html($category->cat_name).'</li>';
 				}
 			}
+		echo '</ul>';
+		}else{
+		echo '<ul class="loop-category">';
+		if(ampforwp_get_setting('ampforwp-cats-tags-links-single') == true){
+			$cat_link = get_category_link( $cat_id );
+			if(ampforwp_get_setting('ampforwp-archive-support-cat') == true && ampforwp_get_setting('ampforwp-archive-support') == true){
+	            $cat_link = ampforwp_url_controller( $cat_link );
+	        }
+	            echo '<li class="amp-cat-'. esc_attr($cat_id) .'"><a href="'.esc_url($cat_link).'">'. esc_html($cat_name).'</a></li>';
+		}else{
+			echo '<li class="amp-cat-'. esc_attr($cat_id) .'">'. esc_html($cat_name).'</li>';
+		}
 		echo '</ul>';
 	}
 }

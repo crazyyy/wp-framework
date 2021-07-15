@@ -2,7 +2,7 @@
  * Japanese translation
  * @author Tomoaki Yoshida <info@yoshida-studio.jp>
  * @author Naoki Sawada <hypweb+elfinder@gmail.com>
- * @version 2018-12-09
+ * @version 2020-09-01
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -17,9 +17,9 @@
 		translator : 'Tomoaki Yoshida &lt;info@yoshida-studio.jp&gt;, Naoki Sawada &lt;hypweb+elfinder@gmail.com&gt;',
 		language   : 'Japanese',
 		direction  : 'ltr',
-		dateFormat : 'Y/m/d h:i A', // will show like: 2018/08/24 04:37 PM
-		fancyDateFormat : '$1 h:i A', // will show like: 今日 04:37 PM
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 180824-163717
+		dateFormat : 'Y/m/d h:i A', // will show like: 2020/09/01 05:56 PM
+		fancyDateFormat : '$1 h:i A', // will show like: 今日 05:56 PM
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200901-175621
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -291,7 +291,7 @@
 			'untitled folder'   : '新規フォルダ',   // added 10.11.2015
 			'Archive'           : '新規アーカイブ',  // from v2.1 added 10.11.2015
 			'untitled file'     : '新規ファイル.$1',  // from v2.1.41 added 6.8.2018
-			'extentionfile'     : '$1: ファイル',     // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: ファイル',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
@@ -303,6 +303,7 @@
 			'confirmNonUTF8'  : 'このファイルの文字エンコーディングを判別できませんでした。編集するには一時的に UTF-8 に変換する必要があります。<br/>文字エンコーディングを指定してください。', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : '変更されています。<br/>保存せずに閉じると編集内容が失われます。', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'アイテムをごみ箱に移動してもよろしいですか？', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'アイテムを"$1"に移動してもよろしいですか？', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : '全てに適用します',
 			'name'            : '名前',
 			'size'            : 'サイズ',
@@ -401,6 +402,7 @@
 			'autoSync'        : '自動更新',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : '上へ移動',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'リンクURLを取得', // from v2.1.7 added 9.2.2016
+			'share'           : '共有する',
 			'selectedItems'   : '選択アイテム ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'フォルダID', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'オフライン アクセスを可能にする', // from v2.1.10 added 3.25.2016
@@ -442,6 +444,7 @@
 			'clearBrowserData': 'ブラウザに保存された設定を初期化する', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'ツールバー設定', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... 残り $1 文字',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... 残り $1 行',  // from v2.1.52 added 16.1.2020
 			'sum'             : '合計', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : '大まかなファイルサイズ', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'マウスオーバーでダイアログの要素にフォーカスする',  // from v2.1.30 added 2.11.2017
@@ -475,6 +478,7 @@
 			'integrations'    : '統合', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'この elFinder は次の外部サービスが統合されています。それらの利用規約、プライバシーポリシーなどをご確認の上、ご利用ください。', // from v2.1.40 added 11.7.2018
 			'showHidden'      : '非表示アイテムを表示', // from v2.1.41 added 24.7.2018
+			'Code Editor'     : 'コードエディタ',
 			'hideHidden'      : '非表示アイテムを隠す', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : '非表示アイテムの表示/非表示', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : '「新しいファイル」で有効にするファイルタイプ', // from v2.1.41 added 7.8.2018
@@ -485,9 +489,11 @@
 			'description'     : '説明', // from v2.1.43 added 19.10.2018
 			'website'         : 'ウェブサイト', // from v2.1.43 added 19.10.2018
 			'author'          : '作者', // from v2.1.43 added 19.10.2018
-			'email'           : 'Email', // from v2.1.43 added 19.10.2018
+			'email'           : 'Eメール', // from v2.1.43 added 19.10.2018
 			'license'         : 'ライセンス', // from v2.1.43 added 19.10.2018
 			'exportToSave'    : 'このアイテムは保存できません。 編集内容を失わないようにするには、PCにエクスポートする必要があります。', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'ファイルをダブルクリックして選択します。', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'フルスクリーンモードの利用', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : '不明',
@@ -573,4 +579,3 @@
 		}
 	};
 }));
-

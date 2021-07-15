@@ -29,19 +29,11 @@ $max-tablet: "screen and (max-width: 768px)";
 	}
 }
 .cptui-table {
-	#excerpt {
-		display: inline-block;
-		height: 16px;
-		margin: 12px 4px 12px 0;
-		width: auto;
-	}
 	td.outer {
 		vertical-align: top;
 		width: 50%;
 	}
-	input[type="text"],
-	.cptui-new & textarea,
-	.cptui-edit & textarea {
+	input[type="text"] {
 		width: 75%;
 	}
 	.question:hover {
@@ -60,15 +52,6 @@ $max-tablet: "screen and (max-width: 768px)";
 		font-weight: bold;
 		&.hidemessage {
 			display: none;
-		}
-	}
-}
-.cpt-ui_page_cptui_tools {
-	.cptui-table {
-		.outer {
-			p {
-				padding: 0 4px;
-			}
 		}
 	}
 }
@@ -173,20 +156,6 @@ $max-tablet: "screen and (max-width: 768px)";
 		}
 	}
 }
-.rtl {
-	.about-wrap {
-		.feature-rest div {
-			padding-left: 100px;
-		}
-		.feature-rest div.last-feature {
-			padding-right: 100px;
-			padding-left: 0;
-		}
-		.feature-rest div.icon:before {
-			margin: 0 -100px 0 0;
-		}
-	}
-}
 .about-wrap {
 	.about-integrations {
 		background: #fff;
@@ -200,19 +169,23 @@ $max-tablet: "screen and (max-width: 768px)";
   	}
 	.cptui-about-text {
 		margin-bottom: 1em !important;
-	}
-	.cptui-badge {
-		position: absolute;
-	    top: 0;
-	    right: 0;
+		margin-right: 0;
+		max-width: calc(100% - 173px);
 	}
 }
-#togglelabels {
-	display: none;
-	.js & {
-		display: inline-block;
+.email-octopus-form-row {
+	input::placeholder {
+		color: #cccccc;
 	}
 }
+.email-octopus-form-row-hp {
+	visibility: hidden;
+}
+.cptui-intro-devblock{
+    display: flex;
+    flex-direction: row;
+}
+
 .cptui-help {
 	color: #424242;
 	margin-left: 4px;
@@ -231,13 +204,17 @@ $max-tablet: "screen and (max-width: 768px)";
 		box-shadow: none;
 	}
 }
-#toplevel_page_cptui_main_menu {
+#menu_icon_preview {
+	float: right;
+	padding-left: 8px;
+
 	img {
+		display: block;
 		height: 20px;
-		margin-top: -2px;
 		width: 20px;
 	}
 }
+
 .visuallyhidden {
 	position: absolute;
 	left: -10000px;
@@ -246,41 +223,31 @@ $max-tablet: "screen and (max-width: 768px)";
 	height: 1px;
 	overflow: hidden;
 }
-.cptui-section {
-	fieldset {
-		border: solid rgb(204, 204, 204) 1px;
-		display: block;
-		margin-bottom: 30px;
-		padding: 10px;
-		overflow: hidden;
-		.js &.toggledclosed {
-			height: 1px;
-		}
-	}
-	legend {
-		border: solid rgb(204, 204, 204) 1px;
-		border-bottom: 0;
-		font-size: 14px;
-		font-weight: bold;
-		padding: 5px;
-	}
-}
 .cptui-spacer {
 	display: block;
 	margin-top: 25px;
 }
+
+.email-octopus-form-wrapper {
+	background: #fff;
+	margin-bottom: 10px;
+	padding: 20px;
+	label {
+		margin-bottom: 10px;
+	}
+}
+
+.wdsoctosignup {
+	h2 {
+		text-align:left;
+	}
+}
+
 .wdspromos {
 	float: right;
 	margin-left: 20px;
 	margin-top: 10px;
 	width: 275px;
-
-	#mc_embed_signup {
-		background: #fff;
-		border: solid rgb(204, 204, 204) 1px;
-		clear: left;
-		margin-bottom: 10px;
-	}
 }
 .wdspromos-about {
 	display: -ms-flexbox;
@@ -367,14 +334,14 @@ $max-tablet: "screen and (max-width: 768px)";
 
 @media #{$min-tablet} {
 	.cptui-badge {
-	    padding-top: 142px;
-	    height: 50px;
+		margin-top: -42px;
+	    height: 173px;
 	    width: 173px;
 	    color: #fafafa;
 	    font-weight: bold;
 	    font-size: 14px;
 	    text-align: center;
-	    margin: 0 -5px;
+	    margin-bottom: 10px;
 	    background: url(../images/cptui-icon-173x173.png) no-repeat;
 	}
 }

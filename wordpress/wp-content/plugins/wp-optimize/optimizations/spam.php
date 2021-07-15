@@ -59,14 +59,17 @@ class WP_Optimization_spam extends WP_Optimization {
 			)
 		);
 
-		$posts = $this->wpdb->get_results($sql, ARRAY_A);
+		$comments = $this->wpdb->get_results($sql, ARRAY_A);
 
 		// fix empty revision titles.
-		if (!empty($posts)) {
-			foreach ($posts as $key => $post) {
-				$posts[$key]['post_title'] = array(
-					'text' => '' == $post['post_title'] ? '('.__('no title', 'wp-optimize').')' : $post['post_title'],
-					'url' => get_edit_post_link($post['ID']),
+		if (!empty($comments)) {
+			foreach ($comments as $key => $comment) {
+				$args = array(
+					'comment_status' => $type,
+				);
+				$comments[$key]['comment_content'] = array(
+					'text' => $comment['comment_content'],
+					'url' => add_query_arg($args, 'edit-comments.php'),
 				);
 			}
 		}
@@ -86,7 +89,7 @@ class WP_Optimization_spam extends WP_Optimization {
 			'offset' => $params['offset'],
 			'limit' => $params['limit'],
 			'total' => $total,
-			'data' => $this->htmlentities_array($posts, array('comment_ID')),
+			'data' => $this->htmlentities_array($comments, array('comment_ID')),
 			'message' => $total > 0 ? '' : __('No spam or trashed comments found', 'wp-optimize'),
 		);
 	}

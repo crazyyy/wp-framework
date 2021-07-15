@@ -8,9 +8,9 @@ if (!defined('ABSPATH')) die('No direct access.');
  * Thanks to Alex King (https://github.com/crowdfavorite/wp-social)
  */
 
-if (!class_exists('Updraft_Semaphore_2_1')) :
+if (!class_exists('Updraft_Semaphore_2_2')) :
 
-class Updraft_Semaphore_2_1 {
+class Updraft_Semaphore_2_2 {
 
 	/**
 	 * Lock Broke
@@ -259,6 +259,22 @@ class Updraft_Semaphore_2_1 {
 
 		$this->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') still locked ('.$result.')');
 		return false;
+	}
+
+	/**
+	 * Check if semaphore is currently locked.
+	 *
+	 * @return bool
+	 */
+	public function is_locked() {
+		global $wpdb;
+
+		$result = $wpdb->get_results("
+			SELECT option_name FROM $wpdb->options
+			 WHERE option_name = 'updraft_locked_".$this->lock_name."'
+		");
+
+		return is_array($result) && count($result);
 	}
 
 	/**

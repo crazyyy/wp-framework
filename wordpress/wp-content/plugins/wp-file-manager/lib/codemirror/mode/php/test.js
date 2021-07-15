@@ -12,7 +12,7 @@
 
   MT('variable_interpolation_non_alphanumeric',
      '[meta <?php]',
-     '[keyword echo] [string "aaa$~$!$@$#$$$%$^$&$*$($)$.$<$>$/$\\$}$\\\"$:$;$?$|$[[$]]$+$=aaa"]',
+     '[keyword echo] [string "aaa$~$!$@$#$$$%$^$&$*jQuery($)jQuery.$<$>$/$\\$}$\\\"$:$;$?$|$[[$]]$+$=aaa"]',
      '[meta ?>]');
 
   MT('variable_interpolation_digits',

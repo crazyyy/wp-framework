@@ -16,7 +16,7 @@ class UpdraftPlus_Temporary_Clone_Dash_Notice {
 			wp_schedule_event(time(), 'twicedaily', 'updraftplus_temporary_clone_refresh_connection');
 		}
 
-		if ('' == get_site_option('updraftplus_clone_scheduled_removal', '')) {
+		if ('' == get_site_option('updraftplus_clone_scheduled_removal', '') || 0 == get_site_option('updraftplus_clone_package_cost', 0)) {
 			$this->refresh_connection();
 		}
 	}
@@ -35,13 +35,22 @@ class UpdraftPlus_Temporary_Clone_Dash_Notice {
 			$pretty_date = get_date_from_gmt(gmdate('Y-m-d H:i:s', (int) $date), 'M d, Y G:i');
 			$date_diff = sprintf(__('%s from now', 'updraftplus'), human_time_diff($date));
 		}
+
+		$package_cost = get_site_option('updraftplus_clone_package_cost', 0);
+		$package_cost = empty($package_cost) ? 1 : $package_cost;
 		?>
 		<div id="updraftplus_temporary_clone-dashnotice" class="updated">
 			<div style="float:right;"><a href="#" onclick="jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {action: 'updraftplus_dash_notice_ajax', subaction: 'refresh_connection', nonce: '<?php echo wp_create_nonce('updraftplus_refresh_connection');?>' }, function() { location.reload(); });"><?php _e('Refresh connection', 'updraftplus'); ?></a></div>
 			<h1><?php _e('Welcome to your UpdraftClone (temporary clone)', 'updraftplus'); ?></h1>
 			<p>
 				<?php echo __('Your clone will renew on:', 'updraftplus') . ' ' . $pretty_date . ' ' . get_option('timezone_string') . ' (' . $date_diff . ')'; ?>.
-				<?php _e('Each time your clone renews it costs 1 token, which lasts for 1 week. You can shut this clone down at the following link:', 'updraftplus'); ?> <a target="_blank" href="https://updraftplus.com/my-account/clones/"><?php _e('Manage your clones', 'updraftplus'); ?></p></a>
+				<?php echo sprintf(__('Each time your clone renews (weekly) it costs %s. You can shut this clone down at the following link:', 'updraftplus'), sprintf(_n('%d token', '%d tokens', $package_cost, 'updraftplus'), $package_cost)); ?> <a target="_blank" href="https://updraftplus.com/my-account/clones/"><?php _e('Manage your clones', 'updraftplus'); ?></a>
+			</p>
+			<?php
+			$show_removal_warning = get_site_option('updraftplus_clone_removal_warning', false);
+
+			if ($show_removal_warning) echo '<p>'.__('Warning: You have no clone tokens remaining and either no subscriptions or no subscription that will renew before the clone expiry date.', 'updraftplus').'</p>'
+			?>
 		</div>
 		<?php
 	}
@@ -120,13 +129,39 @@ class UpdraftPlus_Temporary_Clone_Dash_Notice {
 		$data = array('user_id' => $user_id, 'vps_id' => $vps_id, 'token' => $token);
 		$result = $updraftplus->get_updraftplus_clone()->clone_status($data);
 
+		if (!isset($result['data'])) return array('code' => 'error', 'data' => 'No data returned from clone status call');
+
 		$vps_info = $result['data'];
 
 		if (empty($vps_info['scheduled_removal'])) return array('code' => 'error', 'data' => 'No scheduled removal date found');
+		if (empty($vps_info['package_cost'])) return array('code' => 'error', 'data' => 'Missing the expected clone package cost information');
 		
 		update_site_option('updraftplus_clone_scheduled_removal', $vps_info['scheduled_removal']);
+		update_site_option('updraftplus_clone_package_cost', $vps_info['package_cost']);
 
-		return array('code' => 'success', 'data' => $vps_info['scheduled_removal']);
+		$clone_removal_warning = false;
+
+		if (isset($vps_info['tokens']) && 0 == $vps_info['tokens']) {
+			if (empty($vps_info['subscription_renewals'])) {
+				$clone_removal_warning = true;
+			} else {
+				$subscription_before_expire = false;
+				foreach ($vps_info['subscription_renewals'] as $renewal) {
+					if ($renewal < $vps_info['scheduled_removal']) $subscription_before_expire = true;
+				}
+
+				if (!$subscription_before_expire) $clone_removal_warning = true;
+			}
+		}
+
+		update_site_option('updraftplus_clone_removal_warning', $clone_removal_warning);
+
+		$vps_data = array(
+			'scheduled_removal' => $vps_info['scheduled_removal'],
+			'package_cost' => $vps_info['package_cost']
+		);
+
+		return array('code' => 'success', 'data' => $vps_data);
 	}
 }
 

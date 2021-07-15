@@ -279,7 +279,7 @@ class Mapper {
 	 * @return string Fully-qualified type name with namespace
 	 */
 	protected function getFullNamespace( $type, $strNs ) {
-		if ( $type !== '' && $type{0} != '\\' ) {
+		if ( $type !== '' && $type[0] != '\\' ) {
 			//create a full qualified namespace
 			if ( $strNs != '' ) {
 				$type = '\\' . $strNs . '\\' . $type;

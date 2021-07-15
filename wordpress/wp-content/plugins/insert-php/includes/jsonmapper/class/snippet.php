@@ -75,4 +75,9 @@ class Snippet {
 	 * @var Type
 	 */
 	public $type;
+
+	/**
+	 * @var integer
+	 */
+	public $priority;
 }

@@ -28,7 +28,7 @@
  *
  * @author Google, Inc.
  */
-class Google_Service_Datastore extends Google_Service
+class Google_Service_Datastore extends UDP_Google_Service
 {
   /** View and manage your data across Google Cloud Platform services. */
   const CLOUD_PLATFORM =
@@ -48,7 +48,7 @@ class Google_Service_Datastore extends Google_Service
    *
    * @param Google_Client $client
    */
-  public function __construct(Google_Client $client)
+  public function __construct(UDP_Google_Client $client)
   {
     parent::__construct($client);
     $this->servicePath = 'datastore/v1beta2/datasets/';
@@ -137,7 +137,7 @@ class Google_Service_Datastore extends Google_Service
  *   $datasets = $datastoreService->datasets;
  *  </code>
  */
-class Google_Service_Datastore_Datasets_Resource extends Google_Service_Resource
+class Google_Service_Datastore_Datasets_Resource extends UDP_Google_Service_Resource
 {
 
   /**

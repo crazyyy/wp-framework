@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71
+class ComposerStaticInit181177ab4a90f38ae0968c193a5c589e
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -19,6 +19,7 @@ class ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71
         'F' => 
         array (
             'Faker\\' => 6,
+            'FakerPress\\' => 11,
         ),
     );
 
@@ -34,6 +35,10 @@ class ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71
         'Faker\\' => 
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
+        ),
+        'FakerPress\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/FakerPress',
         ),
     );
 
@@ -54,10 +59,10 @@ class ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf9aed2ad0a3b9b6027bdd80cf9711c71::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit181177ab4a90f38ae0968c193a5c589e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit181177ab4a90f38ae0968c193a5c589e::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit181177ab4a90f38ae0968c193a5c589e::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit181177ab4a90f38ae0968c193a5c589e::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

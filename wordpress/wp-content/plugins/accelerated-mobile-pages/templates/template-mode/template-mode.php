@@ -74,6 +74,7 @@ Class AMPforWP_theme_mode{
 		remove_filter( 'query_vars', 'ampforwp_custom_query_var' );
 		remove_action( 'template_redirect', 'ampforwp_redirect_to_orginal_url' );
 		remove_action('template_redirect', 'ampforwp_redirect_proper_qendpoint' );
+		remove_action('get_search_form', 'ampforwp_search_form' );
 		//Main files
 		remove_action( 'init', 'ampforwp_add_custom_post_support',11);
 		remove_action( 'init', 'ampforwp_add_custom_rewrite_rules', 25 );
@@ -171,7 +172,12 @@ Class AMPforWP_theme_mode{
 					  	{{response}}
 						</template>
 					</div>';
-		$content = preg_replace("/<form(.*?)action=[\"|'](.*?)[\"|'](.*?)id=[\"|']commentform[\"|'](.*?)>/s", '<form$1action-xhr="'.esc_url_raw($submit_url).'"$3id="commentform" $4 on="submit-success:commentform.reset()">'.$mustache, $content);
+				if(preg_match('/method\s*=\s*"\s*get\s*"/', $content)){
+						$content = preg_replace("/<form(.*?)action=[\"|'](.*?)[\"|'](.*?)id=[\"|']commentform[\"|'](.*?)>/s", '<form$1action="'.esc_url_raw($submit_url).'"$3id="commentform" $4 on="submit-success:commentform.reset()">'.$mustache, $content);
+				}
+				if(preg_match('/method\s*=\s*"\s*post\s*"/', $content)){
+					$content = preg_replace("/<form action=[\"|'](.*?)[\"|'](.*?)id=[\"|']commentform[\"|'](.*?)>/s", '<form action-xhr="$1"$2id="commentform" $3 on="submit-success:commentform.reset()">'.$mustache, $content);
+				}
 		}
 		return $content;
 	}
@@ -608,6 +614,7 @@ Class AMPforWP_theme_mode{
 		$sanitizer_obj = new AMPFORWP_Content( $content,
 				 apply_filters( 'amp_content_embed_handlers_template_mode', array(
 					'AMP_Core_Block_Handler' => array(),
+					'AMP_Reddit_Embed_Handler' => array(),
 					'AMP_Twitter_Embed_Handler' => array(),
 					'AMP_YouTube_Embed_Handler' => array(),
 					'AMP_DailyMotion_Embed_Handler' => array(),
@@ -671,6 +678,10 @@ Class AMPforWP_theme_mode{
 }//Class Closed
 add_action('after_setup_theme', 'ampforwp_template_mode_is_activate', 999);
 function ampforwp_template_mode_is_activate(){
+	$url_path = trim(parse_url(add_query_arg(array()), PHP_URL_PATH),'/' );
+	if((function_exists('td_wp_title') || class_exists('Bunyad_Theme_SmartMag') ) && function_exists('ampforwp_is_amp_inURL') && ampforwp_is_amp_inURL($url_path)){
+		add_theme_support( 'title-tag' );
+	}
 	if(get_theme_support('amp-template-mode') && !is_customize_preview()){
 		$ampforwp_theme_mode = new AMPforWP_theme_mode();
 		$ampforwp_theme_mode->init();

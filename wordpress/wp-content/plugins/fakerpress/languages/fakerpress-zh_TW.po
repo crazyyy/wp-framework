@@ -1,0 +1,1833 @@
+# Translation of Plugins - FakerPress - Development (trunk) in Chinese (Taiwan)
+# This file is distributed under the same license as the Plugins - FakerPress - Development (trunk) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2020-02-02 09:03:26+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: zh_TW\n"
+"Project-Id-Version: Plugins - FakerPress - Development (trunk)\n"
+
+#: modules/attachment.php:69 modules/attachment.php:80
+msgid "Invalid image MimeType"
+msgstr "無效的圖片 MIME 類型"
+
+#: modules/attachment.php:143
+msgid "Lorem Picsum"
+msgstr "Lorem Picsum"
+
+#: view/comments.php:96
+msgid "Comment Content"
+msgstr "留言內容"
+
+#: view/comments.php:109 view/posts.php:160
+msgid "Content Size"
+msgstr "內容長度"
+
+#: view/comments.php:110 view/posts.php:161
+msgid "How many paragraphs we are going to generate of content."
+msgstr "請設定要為虛設內容產生的段落數量。"
+
+#: view/posts.php:130
+msgid "Post Content"
+msgstr "文章內容"
+
+#: view/users.php:39
+msgid "User Description"
+msgstr "使用者個人資料"
+
+#: view/users.php:52
+msgid "Description Size"
+msgstr "個人資料長度"
+
+#: view/users.php:53
+msgid "How many paragraphs we are going to generate of description."
+msgstr "請設定要為虛設內容摘要產生的段落數量。"
+
+#: inc/class-fp-field.php:1302
+msgid "Range of possible width sizes for the image"
+msgstr "請設定圖片寬度尺寸範圍。"
+
+#: inc/class-fp-field.php:1304
+msgid "e.g.: 350"
+msgstr "範例: 350"
+
+#: inc/class-fp-field.php:1305
+msgid "e.g.: 900"
+msgstr "範例: 900"
+
+#: inc/class-fp-field.php:1313
+msgid "Range of possible height sizes for the image"
+msgstr "請設定圖片高度尺寸範圍。"
+
+#: inc/class-fp-field.php:1315
+msgid "e.g.: 125"
+msgstr "範例: 125"
+
+#: inc/class-fp-field.php:1316
+msgid "e.g.: 650"
+msgstr "範例: 650"
+
+#: inc/class-fp-field.php:1292
+msgid "Select at least one Provider"
+msgstr "請選取至少一個服務提供商。"
+
+#: view/comments.php:13
+msgid "default"
+msgstr "預設"
+
+#: view/comments.php:40
+msgid "Which type of comment are you going to generate?"
+msgstr "請選取要產生哪些留言類型。"
+
+#: view/comments.php:71
+msgid "Group of Post Types that the comment can be generate for"
+msgstr "請選取哪些內容類型的內容需要產生虛設留言。"
+
+#: inc/class-fp-field.php:1265
+msgid "Attachment"
+msgstr "附件"
+
+#: inc/class-fp-field.php:1275
+msgid "Attachment ID"
+msgstr "附件 ID"
+
+#: inc/class-fp-field.php:1279
+msgid "Attachment URL"
+msgstr "附件網址"
+
+#: inc/class-fp-field.php:1283
+msgid "Which value should be saved on the Meta"
+msgstr "請設定要儲存於中繼資料欄位的資料。"
+
+#: inc/class-fp-field.php:1284
+msgid "Stored Data"
+msgstr "已儲存的資料"
+
+#: modules/attachment.php:138
+msgid "Placehold.it"
+msgstr "Placehold.it"
+
+#: inc/class-fp-field.php:852
+msgid "To"
+msgstr "至"
+
+#: inc/class-fp-field.php:971
+msgid "If you do not select any, the plugin will choose from all the existing terms."
+msgstr "如果沒有選取任何分類法詞彙，這個外掛會自行從現有分類法詞彙中進行選取。"
+
+#: inc/class-fp-field.php:1000
+msgid "How many terms will be selected. <br> E.g.: From 1 to 4 or just fill the first field for an exact number"
+msgstr "請設定可選取的分類法詞彙數量。<br>範例: 在兩個欄位分別輸入 1 及 4，或兩個欄位輸入相同的正整數。"
+
+#: inc/class-fp-utils.php:1391
+msgid "Zimbabwe"
+msgstr "辛巴威"
+
+#: inc/class-fp-utils.php:1381
+msgid "Yemen"
+msgstr "葉門"
+
+#: inc/class-fp-utils.php:1386
+msgid "Zambia"
+msgstr "尚比亞"
+
+#: inc/class-fp-utils.php:1366
+msgid "Vietnam"
+msgstr "越南"
+
+#: inc/class-fp-utils.php:1371
+msgid "Wallis and Futuna"
+msgstr "瓦利斯及福杜納"
+
+#: inc/class-fp-utils.php:1376
+msgid "Western Sahara"
+msgstr "西撒哈拉"
+
+#: inc/class-fp-utils.php:1351
+msgid "Uzbekistan"
+msgstr "烏茲別克斯坦"
+
+#: inc/class-fp-utils.php:1356
+msgid "Vanuatu"
+msgstr "萬那杜"
+
+#: inc/class-fp-utils.php:1361
+msgid "Venezuela"
+msgstr "委內瑞拉"
+
+#: inc/class-fp-utils.php:1341
+msgid "United States"
+msgstr "美國"
+
+#: inc/class-fp-utils.php:1346
+msgid "Uruguay"
+msgstr "烏拉圭"
+
+#: inc/class-fp-utils.php:1326
+msgid "Ukraine"
+msgstr "烏克蘭"
+
+#: inc/class-fp-utils.php:1331
+msgid "United Arab Emirates"
+msgstr "阿拉伯聯合大公國"
+
+#: inc/class-fp-utils.php:1336
+msgid "United Kingdom"
+msgstr "英國"
+
+#: inc/class-fp-utils.php:1311
+msgid "Turks and Caicos Islands"
+msgstr "土克斯及開科斯群島"
+
+#: inc/class-fp-utils.php:1316
+msgid "Tuvalu"
+msgstr "吐瓦魯"
+
+#: inc/class-fp-utils.php:1321
+msgid "Uganda"
+msgstr "烏干達"
+
+#: inc/class-fp-utils.php:1296
+msgid "Tunisia"
+msgstr "突尼西亞"
+
+#: inc/class-fp-utils.php:1301
+msgid "Turkey"
+msgstr "土耳其"
+
+#: inc/class-fp-utils.php:1306
+msgid "Turkmenistan"
+msgstr "土庫曼"
+
+#: inc/class-fp-utils.php:1281
+msgid "Tokelau"
+msgstr "托克勞群島"
+
+#: inc/class-fp-utils.php:1286
+msgid "Tonga"
+msgstr "東加"
+
+#: inc/class-fp-utils.php:1291
+msgid "Trinidad and Tobago"
+msgstr "千里達及托巴哥"
+
+#: inc/class-fp-utils.php:1271
+msgid "East Timor"
+msgstr "東帝汶"
+
+#: inc/class-fp-utils.php:1276
+msgid "Togo"
+msgstr "多哥"
+
+#: inc/class-fp-utils.php:1256
+msgid "Tajikistan"
+msgstr "塔吉克"
+
+#: inc/class-fp-utils.php:1261
+msgid "Tanzania"
+msgstr "坦尚尼亞"
+
+#: inc/class-fp-utils.php:1266
+msgid "Thailand"
+msgstr "泰國"
+
+#: inc/class-fp-utils.php:1246
+msgid "Syria"
+msgstr "敘利亞"
+
+#: inc/class-fp-utils.php:1251
+msgid "Taiwan"
+msgstr "台灣"
+
+#: inc/class-fp-utils.php:1231
+msgid "Swaziland"
+msgstr "史瓦濟蘭"
+
+#: inc/class-fp-utils.php:1236
+msgid "Sweden"
+msgstr "瑞典"
+
+#: inc/class-fp-utils.php:1241
+msgid "Switzerland"
+msgstr "瑞士"
+
+#: inc/class-fp-utils.php:1216
+msgid "Sudan"
+msgstr "蘇丹"
+
+#: inc/class-fp-utils.php:1221
+msgid "Suriname"
+msgstr "蘇利南"
+
+#: inc/class-fp-utils.php:1226
+msgid "Svalbard and Jan Mayen"
+msgstr "冷岸及央棉"
+
+#: inc/class-fp-utils.php:1201
+msgid "South Sudan"
+msgstr "南蘇丹"
+
+#: inc/class-fp-utils.php:1206
+msgid "Spain"
+msgstr "西班牙"
+
+#: inc/class-fp-utils.php:1211
+msgid "Sri Lanka"
+msgstr "斯里蘭卡"
+
+#: inc/class-fp-utils.php:1191
+msgid "South Georgia"
+msgstr "南喬治亞"
+
+#: inc/class-fp-utils.php:1196
+msgid "South Korea"
+msgstr "南韓"
+
+#: inc/class-fp-utils.php:1176
+msgid "Solomon Islands"
+msgstr "索羅門群島"
+
+#: inc/class-fp-utils.php:1181
+msgid "Somalia"
+msgstr "索馬利亞"
+
+#: inc/class-fp-utils.php:1186
+msgid "South Africa"
+msgstr "南非"
+
+#: inc/class-fp-utils.php:1161
+msgid "Sint Maarten"
+msgstr "聖馬丁"
+
+#: inc/class-fp-utils.php:1166
+msgid "Slovakia"
+msgstr "斯洛伐克"
+
+#: inc/class-fp-utils.php:1171
+msgid "Slovenia"
+msgstr "斯洛維尼亞"
+
+#: inc/class-fp-utils.php:1156
+msgid "Singapore"
+msgstr "新加坡"
+
+#: inc/class-fp-utils.php:1151
+msgid "Sierra Leone"
+msgstr "獅子山"
+
+#: inc/class-fp-utils.php:1136
+msgid "Senegal"
+msgstr "塞內加爾"
+
+#: inc/class-fp-utils.php:1141
+msgid "Serbia"
+msgstr "塞爾維亞"
+
+#: inc/class-fp-utils.php:1146
+msgid "Seychelles"
+msgstr "塞席爾"
+
+#: inc/class-fp-utils.php:1126
+msgid "São Tomé and Príncipe"
+msgstr "聖多美及普林西比"
+
+#: inc/class-fp-utils.php:1131
+msgid "Saudi Arabia"
+msgstr "沙烏地阿拉伯"
+
+#: inc/class-fp-utils.php:1116
+msgid "Samoa"
+msgstr "薩摩亞"
+
+#: inc/class-fp-utils.php:1121
+msgid "San Marino"
+msgstr "聖馬利諾"
+
+#: inc/class-fp-utils.php:1096
+msgid "Saint Lucia"
+msgstr "聖露西亞"
+
+#: inc/class-fp-utils.php:1101
+msgid "Saint Martin"
+msgstr "聖馬丁"
+
+#: inc/class-fp-utils.php:1106
+msgid "Saint Pierre and Miquelon"
+msgstr "聖匹島"
+
+#: inc/class-fp-utils.php:1111
+msgid "Saint Vincent and the Grenadines"
+msgstr "聖文森及格瑞那丁"
+
+#: inc/class-fp-utils.php:1076
+msgid "Rwanda"
+msgstr "盧安達"
+
+#: inc/class-fp-utils.php:1081
+msgid "Saint Barthélemy"
+msgstr "聖巴瑟米"
+
+#: inc/class-fp-utils.php:1086
+msgid "Saint Helena"
+msgstr "聖赫勒拿島"
+
+#: inc/class-fp-utils.php:1091
+msgid "Saint Kitts and Nevis"
+msgstr "聖克里斯多福及尼維斯"
+
+#: inc/class-fp-utils.php:1056
+msgid "Republic of Kosovo"
+msgstr "科索沃共和國"
+
+#: inc/class-fp-utils.php:1061
+msgid "Réunion"
+msgstr "留尼旺"
+
+#: inc/class-fp-utils.php:1066
+msgid "Romania"
+msgstr "羅馬尼亞"
+
+#: inc/class-fp-utils.php:1071
+msgid "Russia"
+msgstr "俄羅斯"
+
+#: inc/class-fp-utils.php:1051
+msgid "Qatar"
+msgstr "卡達"
+
+#: inc/class-fp-utils.php:1046
+msgid "Puerto Rico"
+msgstr "波多黎各"
+
+#: inc/class-fp-utils.php:1041
+msgid "Portugal"
+msgstr "葡萄牙"
+
+#: inc/class-fp-utils.php:1021
+msgid "Peru"
+msgstr "祕魯"
+
+#: inc/class-fp-utils.php:1026
+msgid "Philippines"
+msgstr "菲律賓"
+
+#: inc/class-fp-utils.php:1031
+msgid "Pitcairn Islands"
+msgstr "皮特康群島"
+
+#: inc/class-fp-utils.php:1036
+msgid "Poland"
+msgstr "波蘭"
+
+#: inc/class-fp-utils.php:1011
+msgid "Papua New Guinea"
+msgstr "巴布亞紐幾內亞"
+
+#: inc/class-fp-utils.php:1016
+msgid "Paraguay"
+msgstr "巴拉圭"
+
+#: inc/class-fp-utils.php:1006
+msgid "Panama"
+msgstr "巴拿馬"
+
+#: inc/class-fp-utils.php:1001
+msgid "Palestine"
+msgstr "巴勒斯坦"
+
+#: inc/class-fp-utils.php:996
+msgid "Palau"
+msgstr "帛琉"
+
+#: inc/class-fp-utils.php:986
+msgid "Oman"
+msgstr "阿曼"
+
+#: inc/class-fp-utils.php:991
+msgid "Pakistan"
+msgstr "巴基斯坦"
+
+#: inc/class-fp-utils.php:976
+msgid "Northern Mariana Islands"
+msgstr "北馬里安納群島"
+
+#: inc/class-fp-utils.php:981
+msgid "Norway"
+msgstr "挪威"
+
+#: inc/class-fp-utils.php:961
+msgid "Niue"
+msgstr "紐威島"
+
+#: inc/class-fp-utils.php:966
+msgid "Norfolk Island"
+msgstr "諾福克島"
+
+#: inc/class-fp-utils.php:971
+msgid "North Korea"
+msgstr "北韓"
+
+#: inc/class-fp-utils.php:951
+msgid "Niger"
+msgstr "尼日"
+
+#: inc/class-fp-utils.php:956
+msgid "Nigeria"
+msgstr "奈及利亞"
+
+#: inc/class-fp-utils.php:936
+msgid "New Caledonia"
+msgstr "新喀里多尼亞群島"
+
+#: inc/class-fp-utils.php:941
+msgid "New Zealand"
+msgstr "紐西蘭"
+
+#: inc/class-fp-utils.php:946
+msgid "Nicaragua"
+msgstr "尼加拉瓜"
+
+#: inc/class-fp-utils.php:926
+msgid "Nepal"
+msgstr "尼泊爾"
+
+#: inc/class-fp-utils.php:931
+msgid "Netherlands"
+msgstr "荷蘭"
+
+#: inc/class-fp-utils.php:921
+msgid "Nauru"
+msgstr "諾魯"
+
+#: inc/class-fp-utils.php:911
+msgid "Myanmar"
+msgstr "緬甸"
+
+#: inc/class-fp-utils.php:916
+msgid "Namibia"
+msgstr "納米比亞"
+
+#: inc/class-fp-utils.php:901
+msgid "Morocco"
+msgstr "摩洛哥"
+
+#: inc/class-fp-utils.php:906
+msgid "Mozambique"
+msgstr "莫三比克"
+
+#: inc/class-fp-utils.php:896
+msgid "Montserrat"
+msgstr "蒙特色拉特島"
+
+#: inc/class-fp-utils.php:886
+msgid "Mongolia"
+msgstr "蒙古"
+
+#: inc/class-fp-utils.php:891
+msgid "Montenegro"
+msgstr "蒙特內哥羅"
+
+#: inc/class-fp-utils.php:881
+msgid "Monaco"
+msgstr "摩納哥"
+
+#: inc/class-fp-utils.php:871
+msgid "Federated States of Micronesia"
+msgstr "密克羅尼西亞聯邦"
+
+#: inc/class-fp-utils.php:876
+msgid "Moldova"
+msgstr "摩爾多瓦"
+
+#: inc/class-fp-utils.php:861
+msgid "Mayotte"
+msgstr "馬約特島"
+
+#: inc/class-fp-utils.php:866
+msgid "Mexico"
+msgstr "墨西哥"
+
+#: inc/class-fp-utils.php:856
+msgid "Mauritius"
+msgstr "模里西斯"
+
+#: inc/class-fp-utils.php:851
+msgid "Mauritania"
+msgstr "茅利塔尼亞"
+
+#: inc/class-fp-utils.php:846
+msgid "Martinique"
+msgstr "馬丁尼克"
+
+#: inc/class-fp-utils.php:836
+msgid "Malta"
+msgstr "馬爾他"
+
+#: inc/class-fp-utils.php:841
+msgid "Marshall Islands"
+msgstr "馬紹爾群島"
+
+#: inc/class-fp-utils.php:826
+msgid "Maldives"
+msgstr "馬爾地夫"
+
+#: inc/class-fp-utils.php:831
+msgid "Mali"
+msgstr "馬利"
+
+#: inc/class-fp-utils.php:806
+msgid "Republic of Macedonia"
+msgstr "馬其頓共和國"
+
+#: inc/class-fp-utils.php:811
+msgid "Madagascar"
+msgstr "馬達加斯加"
+
+#: inc/class-fp-utils.php:816
+msgid "Malawi"
+msgstr "馬拉威"
+
+#: inc/class-fp-utils.php:821
+msgid "Malaysia"
+msgstr "馬來西亞"
+
+#: inc/class-fp-utils.php:801
+msgid "Macau"
+msgstr "澳門"
+
+#: inc/class-fp-utils.php:796
+msgid "Luxembourg"
+msgstr "盧森堡"
+
+#: inc/class-fp-utils.php:786
+msgid "Liechtenstein"
+msgstr "列支敦斯登"
+
+#: inc/class-fp-utils.php:791
+msgid "Lithuania"
+msgstr "立陶宛"
+
+#: inc/class-fp-utils.php:776
+msgid "Liberia"
+msgstr "賴比瑞亞"
+
+#: inc/class-fp-utils.php:781
+msgid "Libya"
+msgstr "利比亞"
+
+#: inc/class-fp-utils.php:761
+msgid "Latvia"
+msgstr "拉脫維亞"
+
+#: inc/class-fp-utils.php:766
+msgid "Lebanon"
+msgstr "黎巴嫩"
+
+#: inc/class-fp-utils.php:771
+msgid "Lesotho"
+msgstr "賴索托"
+
+#: inc/class-fp-utils.php:751
+msgid "Kyrgyzstan"
+msgstr "吉爾吉斯"
+
+#: inc/class-fp-utils.php:756
+msgid "Laos"
+msgstr "寮國"
+
+#: inc/class-fp-utils.php:746
+msgid "Kuwait"
+msgstr "科威特"
+
+#: inc/class-fp-utils.php:741
+msgid "Kiribati"
+msgstr "吉里巴斯"
+
+#: inc/class-fp-utils.php:726
+msgid "Jordan"
+msgstr "約旦"
+
+#: inc/class-fp-utils.php:731
+msgid "Kazakhstan"
+msgstr "哈薩克"
+
+#: inc/class-fp-utils.php:736
+msgid "Kenya"
+msgstr "肯亞"
+
+#: inc/class-fp-utils.php:721
+msgid "Jersey"
+msgstr "澤西島"
+
+#: inc/class-fp-utils.php:716
+msgid "Japan"
+msgstr "日本"
+
+#: inc/class-fp-utils.php:711
+msgid "Jamaica"
+msgstr "牙買加"
+
+#: inc/class-fp-utils.php:701
+msgid "Israel"
+msgstr "以色列"
+
+#: inc/class-fp-utils.php:706
+msgid "Italy"
+msgstr "義大利"
+
+#: inc/class-fp-utils.php:696
+msgid "Isle of Man"
+msgstr "曼島"
+
+#: inc/class-fp-utils.php:686
+msgid "Iraq"
+msgstr "伊拉克"
+
+#: inc/class-fp-utils.php:691
+msgid "Republic of Ireland"
+msgstr "愛爾蘭共和國"
+
+#: inc/class-fp-utils.php:671
+msgid "Indonesia"
+msgstr "印尼"
+
+#: inc/class-fp-utils.php:676
+msgid "Ivory Coast"
+msgstr "象牙海岸"
+
+#: inc/class-fp-utils.php:681
+msgid "Iran"
+msgstr "伊朗"
+
+#: inc/class-fp-utils.php:656
+msgid "Hungary"
+msgstr "匈牙利"
+
+#: inc/class-fp-utils.php:661
+msgid "Iceland"
+msgstr "冰島"
+
+#: inc/class-fp-utils.php:666
+msgid "India"
+msgstr "印度"
+
+#: inc/class-fp-utils.php:651
+msgid "Hong Kong"
+msgstr "香港"
+
+#: inc/class-fp-utils.php:646
+msgid "Honduras"
+msgstr "宏都拉斯"
+
+#: inc/class-fp-utils.php:636
+msgid "Haiti"
+msgstr "海地"
+
+#: inc/class-fp-utils.php:641
+msgid "Heard Island and McDonald Islands"
+msgstr "赫德島及麥當勞群島"
+
+#: inc/class-fp-utils.php:631
+msgid "Guyana"
+msgstr "蓋亞那"
+
+#: inc/class-fp-utils.php:621
+msgid "Guinea"
+msgstr "幾內亞"
+
+#: inc/class-fp-utils.php:626
+msgid "Guinea-Bissau"
+msgstr "幾內亞比索"
+
+#: inc/class-fp-utils.php:616
+msgid "Guernsey"
+msgstr "根西島"
+
+#: inc/class-fp-utils.php:611
+msgid "Guatemala"
+msgstr "瓜地馬拉"
+
+#: inc/class-fp-utils.php:606
+msgid "Guam"
+msgstr "關島"
+
+#: inc/class-fp-utils.php:601
+msgid "Guadeloupe"
+msgstr "瓜地洛普"
+
+#: inc/class-fp-utils.php:596
+msgid "Grenada"
+msgstr "格瑞那達"
+
+#: inc/class-fp-utils.php:586
+msgid "Greece"
+msgstr "希臘"
+
+#: inc/class-fp-utils.php:591
+msgid "Greenland"
+msgstr "格陵蘭"
+
+#: inc/class-fp-utils.php:581
+msgid "Gibraltar"
+msgstr "直布羅陀"
+
+#: inc/class-fp-utils.php:571
+msgid "Germany"
+msgstr "德國"
+
+#: inc/class-fp-utils.php:576
+msgid "Ghana"
+msgstr "迦納"
+
+#: inc/class-fp-utils.php:551
+msgid "French Southern and Antarctic Lands"
+msgstr "法屬南半球和南極領地"
+
+#: inc/class-fp-utils.php:556
+msgid "Gabon"
+msgstr "加彭"
+
+#: inc/class-fp-utils.php:561
+msgid "The Gambia"
+msgstr "甘比亞"
+
+#: inc/class-fp-utils.php:566
+msgid "Georgia"
+msgstr "喬治亞"
+
+#: inc/class-fp-utils.php:536
+msgid "France"
+msgstr "法國"
+
+#: inc/class-fp-utils.php:541
+msgid "French Guiana"
+msgstr "法屬圭亞那"
+
+#: inc/class-fp-utils.php:546
+msgid "French Polynesia"
+msgstr "法屬玻里尼西亞"
+
+#: inc/class-fp-utils.php:526
+msgid "Fiji"
+msgstr "斐濟"
+
+#: inc/class-fp-utils.php:531
+msgid "Finland"
+msgstr "芬蘭"
+
+#: inc/class-fp-utils.php:516
+msgid "Falkland Islands"
+msgstr "福克蘭群島"
+
+#: inc/class-fp-utils.php:521
+msgid "Faroe Islands"
+msgstr "法羅群島"
+
+#: inc/class-fp-utils.php:501
+msgid "Eritrea"
+msgstr "厄利垂亞"
+
+#: inc/class-fp-utils.php:506
+msgid "Estonia"
+msgstr "愛沙尼亞"
+
+#: inc/class-fp-utils.php:511
+msgid "Ethiopia"
+msgstr "衣索比亞"
+
+#: inc/class-fp-utils.php:491
+msgid "El Salvador"
+msgstr "薩爾瓦多"
+
+#: inc/class-fp-utils.php:496
+msgid "Equatorial Guinea"
+msgstr "赤道幾內亞"
+
+#: inc/class-fp-utils.php:476
+msgid "Dominican Republic"
+msgstr "多明尼加共和國"
+
+#: inc/class-fp-utils.php:481
+msgid "Ecuador"
+msgstr "厄瓜多爾"
+
+#: inc/class-fp-utils.php:486
+msgid "Egypt"
+msgstr "埃及"
+
+#: inc/class-fp-utils.php:471
+msgid "Dominica"
+msgstr "多明尼加"
+
+#: inc/class-fp-utils.php:466
+msgid "Djibouti"
+msgstr "吉布地"
+
+#: inc/class-fp-utils.php:456
+msgid "Czech Republic"
+msgstr "捷克共和國"
+
+#: inc/class-fp-utils.php:461
+msgid "Denmark"
+msgstr "丹麥"
+
+#: inc/class-fp-utils.php:436
+msgid "Croatia"
+msgstr "克羅埃西亞"
+
+#: inc/class-fp-utils.php:441
+msgid "Cuba"
+msgstr "古巴"
+
+#: inc/class-fp-utils.php:446
+msgid "Curaçao"
+msgstr "庫拉索"
+
+#: inc/class-fp-utils.php:451
+msgid "Cyprus"
+msgstr "賽普勒斯"
+
+#: inc/class-fp-utils.php:431
+msgid "Costa Rica"
+msgstr "哥斯大黎加"
+
+#: inc/class-fp-utils.php:416
+msgid "Republic of the Congo"
+msgstr "剛果共和國"
+
+#: inc/class-fp-utils.php:421
+msgid "Democratic Republic of the Congo"
+msgstr "剛果民主共和國"
+
+#: inc/class-fp-utils.php:426
+msgid "Cook Islands"
+msgstr "柯克群島"
+
+#: inc/class-fp-utils.php:401
+msgid "Cocos (Keeling) Islands"
+msgstr "可可斯 (基林) 群島"
+
+#: inc/class-fp-utils.php:406
+msgid "Colombia"
+msgstr "哥倫比亞"
+
+#: inc/class-fp-utils.php:411
+msgid "Comoros"
+msgstr "葛摩"
+
+#: inc/class-fp-utils.php:386
+msgid "Chile"
+msgstr "智利"
+
+#: inc/class-fp-utils.php:391
+msgid "China"
+msgstr "中國"
+
+#: inc/class-fp-utils.php:396
+msgid "Christmas Island"
+msgstr "聖誕島"
+
+#: inc/class-fp-utils.php:371
+msgid "Cayman Islands"
+msgstr "開曼群島"
+
+#: inc/class-fp-utils.php:376
+msgid "Central African Republic"
+msgstr "中非共和國"
+
+#: inc/class-fp-utils.php:381
+msgid "Chad"
+msgstr "查德"
+
+#: inc/class-fp-utils.php:366
+msgid "Cape Verde"
+msgstr "維德角"
+
+#: inc/class-fp-utils.php:351
+msgid "Cambodia"
+msgstr "柬埔寨"
+
+#: inc/class-fp-utils.php:356
+msgid "Cameroon"
+msgstr "喀麥隆"
+
+#: inc/class-fp-utils.php:361
+msgid "Canada"
+msgstr "加拿大"
+
+#: inc/class-fp-utils.php:336
+msgid "Bulgaria"
+msgstr "保加利亞"
+
+#: inc/class-fp-utils.php:341
+msgid "Burkina Faso"
+msgstr "布吉納法索"
+
+#: inc/class-fp-utils.php:346
+msgid "Burundi"
+msgstr "蒲隆地"
+
+#: inc/class-fp-utils.php:331
+msgid "Brunei"
+msgstr "汶萊"
+
+#: inc/class-fp-utils.php:326
+msgid "British Virgin Islands"
+msgstr "英屬維爾京群島"
+
+#: inc/class-fp-utils.php:316
+msgid "British Indian Ocean Territory"
+msgstr "英屬印度洋領土"
+
+#: inc/class-fp-utils.php:321
+msgid "United States Minor Outlying Islands"
+msgstr "美國外島"
+
+#: inc/class-fp-utils.php:301
+msgid "Botswana"
+msgstr "波札那"
+
+#: inc/class-fp-utils.php:306
+msgid "Bouvet Island"
+msgstr "布威島"
+
+#: inc/class-fp-utils.php:311
+msgid "Brazil"
+msgstr "巴西"
+
+#: inc/class-fp-utils.php:281
+msgid "Bhutan"
+msgstr "不丹"
+
+#: inc/class-fp-utils.php:286
+msgid "Bolivia"
+msgstr "玻利維亞"
+
+#: inc/class-fp-utils.php:291
+msgid "Bonaire"
+msgstr "波奈"
+
+#: inc/class-fp-utils.php:296
+msgid "Bosnia and Herzegovina"
+msgstr "波士尼亞與赫塞哥維納"
+
+#: inc/class-fp-utils.php:276
+msgid "Bermuda"
+msgstr "百慕達"
+
+#: inc/class-fp-utils.php:271
+msgid "Benin"
+msgstr "貝南"
+
+#: inc/class-fp-utils.php:266
+msgid "Belize"
+msgstr "貝里斯"
+
+#: inc/class-fp-utils.php:261
+msgid "Belgium"
+msgstr "比利時"
+
+#: inc/class-fp-utils.php:251
+msgid "Barbados"
+msgstr "巴貝多"
+
+#: inc/class-fp-utils.php:256
+msgid "Belarus"
+msgstr "白羅斯"
+
+#: inc/class-fp-utils.php:246
+msgid "Bangladesh"
+msgstr "孟加拉"
+
+#: inc/class-fp-utils.php:241
+msgid "Bahrain"
+msgstr "巴林"
+
+#: inc/class-fp-utils.php:231
+msgid "Azerbaijan"
+msgstr "亞塞拜然"
+
+#: inc/class-fp-utils.php:236
+msgid "The Bahamas"
+msgstr "巴哈馬"
+
+#: inc/class-fp-utils.php:226
+msgid "Austria"
+msgstr "奧地利"
+
+#: inc/class-fp-utils.php:221
+msgid "Australia"
+msgstr "澳洲"
+
+#: inc/class-fp-utils.php:216
+msgid "Aruba"
+msgstr "阿路巴"
+
+#: inc/class-fp-utils.php:206
+msgid "Argentina"
+msgstr "阿根廷"
+
+#: inc/class-fp-utils.php:211
+msgid "Armenia"
+msgstr "亞美尼亞"
+
+#: inc/class-fp-utils.php:196
+msgid "Anguilla"
+msgstr "安圭拉"
+
+#: inc/class-fp-utils.php:201
+msgid "Antigua and Barbuda"
+msgstr "安地卡及巴布達"
+
+#: inc/class-fp-utils.php:191
+msgid "Angola"
+msgstr "安哥拉"
+
+#: inc/class-fp-utils.php:186
+msgid "Andorra"
+msgstr "安道爾"
+
+#: inc/class-fp-utils.php:181
+msgid "American Samoa"
+msgstr "美屬薩摩亞"
+
+#: inc/class-fp-utils.php:166
+msgid "Åland Islands"
+msgstr "奧蘭群島"
+
+#: inc/class-fp-utils.php:171
+msgid "Albania"
+msgstr "阿爾巴尼亞"
+
+#: inc/class-fp-utils.php:176
+msgid "Algeria"
+msgstr "阿爾及利亞"
+
+#: inc/class-fp-utils.php:161
+msgid "Afghanistan"
+msgstr "阿富汗"
+
+#: inc/class-fp-field.php:1566
+msgid "Country Code (e.g.: US)"
+msgstr "國碼/地區碼 (範例: US)"
+
+#: inc/class-fp-field.php:1570
+msgid "Country ABBR (e.g.: USA"
+msgstr "國名縮寫 (範例: USA)"
+
+#: view/terms.php:9
+msgid "How many terms should be generated, use both fields to get a randomized number of terms within the given range."
+msgstr "請設定要為這個網站產生的虛設分類法詞彙數量。如果同時在兩個欄位輸入正整數，則會產生設定數值範圍內的隨機數量分類法詞彙。"
+
+#: view/terms.php:17
+msgid "Name Size"
+msgstr "名稱長度"
+
+#: view/terms.php:18
+msgid "What is the size of the Term name"
+msgstr "請設定分類法詞彙名稱長度範圍。"
+
+#: view/terms.php:41
+msgid "Group of taxonomies that the terms will be created within"
+msgstr "請選取可用於虛設內容的分類法詞彙群組。"
+
+#: view/terms.php:53
+msgid "Use the fields below to configure a set of rules for your generated Terms"
+msgstr "請使用以下欄位為已產生的虛設分類法詞彙的規則集進行設定。"
+
+#: view/users.php:9
+msgid "How many users should be generated, use both fields to get a randomized number of users within the given range."
+msgstr "請設定要為這個網站產生的虛設使用者數量。如果同時在兩個欄位輸入正整數，則會產生設定數值範圍內的隨機數量使用者。"
+
+#: view/users.php:31
+msgid "Roles"
+msgstr "使用者角色"
+
+#: view/users.php:32
+msgid "Sampling roles to be used"
+msgstr "請選取虛設使用者可指派的使用者角色。"
+
+#: view/users.php:63
+msgid "Use HTML on your randomized user description?"
+msgstr "在隨機使用者個人資料中使用 HTML"
+
+#: view/users.php:86
+msgid "Select the group of tags that can be selected to print on the User Description."
+msgstr "請選取可用於虛設使用者個人資料的標籤群組。"
+
+#: view/users.php:97
+msgid "Use the fields below to configure a set of rules for your generated users"
+msgstr "請使用以下欄位為已產生的虛設使用者的規則集進行設定。"
+
+#. Plugin URI of the plugin
+msgid "https://fakerpress.com"
+msgstr "https://tw.wordpress.org/plugins/fakerpress/"
+
+#. Description of the plugin
+msgid "FakerPress is a clean way to generate fake data to your WordPress instalation, great for developers who need testing"
+msgstr "FakerPress 是一款能以單純方式產生 WordPress 網站虛設內容的外掛，非常適合需要進行測試的開發者使用。"
+
+#. Author of the plugin
+msgid "Gustavo Bordoni"
+msgstr "Gustavo Bordoni"
+
+#. Author URI of the plugin
+msgid "http://bordoni.me"
+msgstr "https://bordoni.me/"
+
+#: fakerpress.php:52
+msgid "<b>FakerPress</b> requires PHP 5.6 or higher, and the plugin has now disabled itself."
+msgstr "<b>FakerPress</b> 需要 PHP 5.6 或更新版本，外掛目前已自行停用。"
+
+#: fakerpress.php:54
+msgid "To allow better control over dates, advanced security improvements and performance gain."
+msgstr "只要網站主機符合條件，便能對控制日期、進階安全性改進及效能改善進行更好的控制。"
+
+#: fakerpress.php:56
+msgid "Contact your Hosting or your system administrator and ask for this Upgrade to version 5.6 of PHP."
+msgstr "請聯絡這個網站的主機服務提供商或系統管理員，並要求將這台主機升級至 PHP 5.6。"
+
+#: inc/class-fp-admin.php:87 inc/class-fp-admin.php:276
+msgid "Settings"
+msgstr "設定"
+
+#. Plugin Name of the plugin
+#: inc/class-fp-admin.php:88
+msgid "FakerPress"
+msgstr "FakerPress"
+
+#: inc/class-fp-admin.php:426
+msgid "Changelog"
+msgstr "變更記錄"
+
+#: inc/class-fp-admin.php:430
+msgid "Not Found (404)"
+msgstr "404 錯誤"
+
+#: inc/class-fp-admin.php:445
+msgid "%s on FakerPress"
+msgstr "%s | FakerPress"
+
+#: inc/class-fp-admin.php:506
+msgid "Contact Support"
+msgstr "聯絡技術支援"
+
+#: inc/class-fp-admin.php:510
+msgid "Add your [stars] on [wp.org] to spread the love."
+msgstr "在 [wp.org] 上發佈 [stars] 評價，便能協助我們宣傳這個外掛。"
+
+#: inc/class-fp-admin.php:531
+msgid "Help us with Translations for the FakerPress project"
+msgstr "協助我們本地化 FakerPress 外掛"
+
+#: inc/class-fp-admin.php:532
+msgid "Version"
+msgstr "版本"
+
+#: inc/class-fp-admin.php:532
+msgid "View what changed in this version"
+msgstr "檢視這個版本的變更記錄"
+
+#: inc/class-fp-admin.php:579
+msgid "The verification to erase the data has failed, you have to let it go..."
+msgstr "清除資料的驗證程序失敗，請輸入 <strong>Let it Go!</strong> 才能完成驗證。"
+
+#: inc/class-fp-admin.php:595
+msgid "All data is gone for good."
+msgstr "全部資料已清除。"
+
+#: inc/class-fp-ajax.php:35 inc/class-fp-ajax.php:98 inc/class-fp-ajax.php:168
+#: inc/class-fp-ajax.php:208
+msgid "Your request has failed"
+msgstr "這項要求發生錯誤。"
+
+#: inc/class-fp-ajax.php:46
+msgid "Security fail, refresh the page and try again!"
+msgstr "發生安全性錯誤，請重新整理頁面後再試一次。"
+
+#: inc/class-fp-ajax.php:124 inc/class-fp-ajax.php:190
+#: inc/class-fp-ajax.php:227
+msgid "Request successful"
+msgstr "要求成功"
+
+#: inc/class-fp-dates.php:19
+msgid "Today"
+msgstr "今天"
+
+#: inc/class-fp-dates.php:25
+msgid "Yesterday"
+msgstr "昨天"
+
+#: inc/class-fp-dates.php:31
+msgid "Tomorrow"
+msgstr "明天"
+
+#: inc/class-fp-dates.php:37
+msgid "This week"
+msgstr "本週"
+
+#: inc/class-fp-dates.php:43
+msgid "This month"
+msgstr "本月"
+
+#: inc/class-fp-dates.php:49
+msgid "This year"
+msgstr "今年"
+
+#: inc/class-fp-dates.php:55
+msgid "Last 15 days"
+msgstr "最近 15 天"
+
+#: inc/class-fp-dates.php:61
+msgid "Next 15 Days"
+msgstr "未來 15 天"
+
+#: inc/class-fp-field.php:818
+msgid "e.g.: 3"
+msgstr "範例: 3"
+
+#: inc/class-fp-field.php:846
+msgid "e.g.: 12"
+msgstr "範例: 12"
+
+#: view/terms.php:40 inc/class-fp-field.php:934
+msgid "Taxonomies"
+msgstr "分類法"
+
+#: inc/class-fp-field.php:955
+msgid "Select Which taxonomies"
+msgstr "設定要使用的分類法"
+
+#: modules/term.php:20 inc/class-fp-field.php:962
+msgid "Terms"
+msgstr "分類法詞彙"
+
+#: inc/class-fp-field.php:974
+msgid "Which terms can be used"
+msgstr "設定要使用的分類法詞彙"
+
+#: inc/class-fp-field.php:981 inc/class-fp-field.php:989
+msgid "Rate"
+msgstr "百分比"
+
+#: inc/class-fp-field.php:982
+msgid "Percentage rate of posts that will have terms generated for the amount below"
+msgstr "請設定要有多少百分比的虛設內容納入虛設分類法詞彙。"
+
+#: view/terms.php:8 view/users.php:8 view/attachments.php:11
+#: view/comments.php:79 view/posts.php:12 inc/class-fp-field.php:999
+#: inc/class-fp-field.php:1217
+msgid "Quantity"
+msgstr "數量"
+
+#: inc/class-fp-field.php:1110
+msgid "Select a Field type"
+msgstr "選取欄位類型"
+
+#: inc/class-fp-field.php:1120
+msgid "Newborn Meta needs a Name, E.g.: _new_image"
+msgstr "新增的中繼資料需要名稱。範例: _new_image"
+
+#: view/comments.php:39 inc/class-fp-field.php:1130
+msgid "Type"
+msgstr "類型"
+
+#: inc/class-fp-field.php:1131
+msgid "Select a type of the Meta Field"
+msgstr "請選取欄位類型。"
+
+#: inc/class-fp-field.php:1138
+msgid "Name"
+msgstr "名稱"
+
+#: inc/class-fp-field.php:1139
+msgid "Select the name for Meta Field"
+msgstr "請選取欄位名稱。"
+
+#: inc/class-fp-field.php:1146
+msgid "Configuration"
+msgstr "組態"
+
+#: inc/class-fp-field.php:1198
+msgid "E.g.: , "
+msgstr "範例: , "
+
+#: inc/class-fp-field.php:1199
+msgid "Separator"
+msgstr "分隔符號"
+
+#: inc/class-fp-field.php:1209
+msgid "E.g.: 55"
+msgstr "範例: 55"
+
+#: inc/class-fp-field.php:1210
+msgid "Weight"
+msgstr "權重"
+
+#: inc/class-fp-field.php:1226
+msgid "Number"
+msgstr "數值"
+
+#: inc/class-fp-field.php:1233
+msgid "Range of possible numbers"
+msgstr "數值的產生範圍。"
+
+#: inc/class-fp-field.php:1245
+msgid "WP_Query"
+msgstr "WP_Query"
+
+#: inc/class-fp-field.php:1253
+msgid "category=2&posts_per_page=10"
+msgstr "category=2&posts_per_page=10"
+
+#: inc/class-fp-field.php:1254
+msgid "Uses <a href=\"http://codex.wordpress.org/Class_Reference/WP_Query\" target=\"_blank\">WP_Query</a>"
+msgstr "請使用 <a href=\"http://codex.wordpress.org/Class_Reference/WP_Query\" target=\"_blank\">WP_Query</a>。"
+
+#: view/posts.php:191 inc/class-fp-field.php:1293
+msgid "Which image services will the generator use?"
+msgstr "請選取要用來產生虛設圖片的服務。"
+
+#: inc/class-fp-field.php:1333
+msgid "Elements"
+msgstr "元素"
+
+#: inc/class-fp-field.php:1343
+msgid "Type all possible elements (Tab or Return)"
+msgstr "輸入全部可能的元素 (按 Tab 或 Return 鍵)"
+
+#: inc/class-fp-field.php:1357
+msgid "Letter"
+msgstr "字母"
+
+#: inc/class-fp-field.php:1367
+msgid "Words"
+msgstr "單字"
+
+#: inc/class-fp-field.php:1379
+msgid "Text"
+msgstr "文字內容"
+
+#: inc/class-fp-field.php:1387
+msgid "Sentences"
+msgstr "句子"
+
+#: inc/class-fp-field.php:1391
+msgid "Paragraphs"
+msgstr "段落"
+
+#: inc/class-fp-field.php:1400
+msgid "Separator <b space>&mdash;</b> New Line: \"\\n\""
+msgstr "請設定分隔符號 <b space>&mdash;</b> 預設使用換行符號 <code>\\n</code>。"
+
+#: inc/class-fp-field.php:1413
+msgid "HTML"
+msgstr "HTML"
+
+#: inc/class-fp-field.php:1424
+msgid "HTML Tags, without &lt; or &gt;"
+msgstr "不包含 &lt; 或 &gt; 的 HTML 標籤"
+
+#: inc/class-fp-field.php:1436
+msgid "Lexify"
+msgstr "Lexify 方法"
+
+#: inc/class-fp-field.php:1443
+msgid "E.g.: John ##??"
+msgstr "範例: John ##??"
+
+#: inc/class-fp-field.php:1444
+msgid "John ##?? <b spacer>&raquo;</b> John 29ze"
+msgstr "使用 John ##?? 產生的其中一個結果 <b spacer>&raquo;</b> John 29ze。"
+
+#: inc/class-fp-field.php:1455
+msgid "Asciify"
+msgstr "Asciify 方法"
+
+#: inc/class-fp-field.php:1462
+msgid "E.g.: John ****"
+msgstr "範例: John ****"
+
+#: inc/class-fp-field.php:1463
+msgid "John **** <b spacer>&raquo;</b> John r9\"+"
+msgstr "使用 John **** 產生的其中一個結果 <b spacer>&raquo;</b> John r9\"+。"
+
+#: inc/class-fp-field.php:1474
+msgid "Regexify"
+msgstr "Regexify 方法"
+
+#: inc/class-fp-field.php:1481
+msgid "E.g.: [A-Z0-9._%+-]+@[A-Z0-9.-]"
+msgstr "範例: [A-Z0-9._%+-]+@[A-Z0-9.-]"
+
+#: inc/class-fp-field.php:1482
+msgid "[A-Z0-9._%+-]+@[A-Z0-9.-] <b spacer>&raquo;</b> sm0@y8k96a"
+msgstr "使用 [A-Z0-9._%+-]+@[A-Z0-9.-] 產生的其中一個結果 <b spacer>&raquo;</b> sm0@y8k96a。"
+
+#: inc/class-fp-field.php:1493
+msgid "Person"
+msgstr "人物"
+
+#: inc/class-fp-field.php:1503
+msgid "Title"
+msgstr "稱謂"
+
+#: inc/class-fp-field.php:1507
+msgid "First Name"
+msgstr "名字"
+
+#: inc/class-fp-field.php:1511
+msgid "Last Name"
+msgstr "姓氏"
+
+#: inc/class-fp-field.php:1515 inc/class-fp-field.php:1662
+msgid "Suffix"
+msgstr "後置稱謂"
+
+#: inc/class-fp-field.php:1523
+msgid "Name Template"
+msgstr "為範本命名"
+
+#: inc/class-fp-field.php:1531
+msgid "Male"
+msgstr "男性"
+
+#: inc/class-fp-field.php:1535
+msgid "Female"
+msgstr "女性"
+
+#: inc/class-fp-field.php:1552
+msgid "Geo Information"
+msgstr "地理位置"
+
+#: inc/class-fp-field.php:1562
+msgid "Country"
+msgstr "國家/地區"
+
+#: inc/class-fp-field.php:1574
+msgid "City Prefix"
+msgstr "鄉/鎮/市/區前置詞"
+
+#: inc/class-fp-field.php:1578
+msgid "City Suffix"
+msgstr "鄉/鎮/市/區後置詞"
+
+#: inc/class-fp-field.php:1582
+msgid "City"
+msgstr "鄉/鎮/市/區"
+
+#: inc/class-fp-field.php:1586
+msgid "State"
+msgstr "縣/市"
+
+#: inc/class-fp-field.php:1590
+msgid "State Abbr"
+msgstr "縣/市縮寫"
+
+#: inc/class-fp-field.php:1594
+msgid "Address"
+msgstr "地址"
+
+#: inc/class-fp-field.php:1598
+msgid "Secondary Address"
+msgstr "次要地址"
+
+#: inc/class-fp-field.php:1602
+msgid "Building Number"
+msgstr "建築物號碼"
+
+#: inc/class-fp-field.php:1606
+msgid "Street Name"
+msgstr "街道名稱"
+
+#: inc/class-fp-field.php:1610
+msgid "Street Address"
+msgstr "街道地址"
+
+#: inc/class-fp-field.php:1614
+msgid "Postal Code"
+msgstr "郵遞區號"
+
+#: inc/class-fp-field.php:1618
+msgid "Latitude"
+msgstr "緯度"
+
+#: inc/class-fp-field.php:1622
+msgid "Longitude"
+msgstr "經度"
+
+#: inc/class-fp-field.php:1629
+msgid "Address Format"
+msgstr "地址格式"
+
+#: inc/class-fp-field.php:1640 inc/class-fp-field.php:1658
+msgid "Company"
+msgstr "公司"
+
+#: inc/class-fp-field.php:1650
+msgid "Catch Phrase"
+msgstr "口號"
+
+#: inc/class-fp-field.php:1654
+msgid "BS"
+msgstr "公司標語"
+
+#: inc/class-fp-field.php:1669
+msgid "Company Format"
+msgstr "公司標語"
+
+#: view/attachments.php:23 view/comments.php:88 view/posts.php:24
+#: inc/class-fp-field.php:1680
+msgid "Date"
+msgstr "發佈日期"
+
+#: inc/class-fp-field.php:1694
+msgid "Date Format <b space>&mdash;</b> See <a href=\"http://php.net/manual/function.date.php\" target=\"_blank\">PHP Date</a>"
+msgstr "日期格式可重新設定 <b space>&mdash;</b> 請參閱〈<a href=\"https://php.net/manual/function.date.php\" target=\"_blank\">PHP Date</a>〉。"
+
+#: inc/class-fp-field.php:1706
+msgid "TimeZone"
+msgstr "時區"
+
+#: inc/class-fp-field.php:1716
+msgid "Email"
+msgstr "電子郵件地址"
+
+#: inc/class-fp-field.php:1726
+msgid "Domain"
+msgstr "網域名稱"
+
+#: inc/class-fp-field.php:1736
+msgid "IP"
+msgstr "IP 位址"
+
+#: inc/class-fp-field.php:1746
+msgid "Browser User Agent"
+msgstr "瀏覽器使用者代理程式"
+
+#: inc/class-fp-field.php:1774 inc/class-fp-field.php:1783
+msgid "yyyy-mm-dd"
+msgstr "yyyy-mm-dd"
+
+#: inc/class-fp-field.php:1790
+msgid "Select an Interval"
+msgstr "選取發佈日期範圍"
+
+#: inc/class-fp-variable.php:90
+msgid "Invalid use, type must be one of INPUT_* family."
+msgstr "無效的使用方式，類型必須是 INPUT_* 系列的其中之一。"
+
+#: modules/comment.php:20
+msgid "Comments"
+msgstr "留言"
+
+#: modules/comment.php:21
+msgid "Generate Comments"
+msgstr "產生留言"
+
+#: modules/comment.php:118
+msgid "Zero is not a good number of comments to fake..."
+msgstr "設定值為 0 便無法產生虛設留言。"
+
+#: modules/comment.php:185 modules/user.php:192 modules/post.php:218
+#: modules/term.php:158
+msgid "Faked %d new %s: [ %s ]"
+msgstr "新增的虛設項目數量為 %d，類型為 [%s]，產生項目的連結為 %s"
+
+#: modules/comment.php:187
+msgid "comment"
+msgid_plural "comments"
+msgstr[0] "留言"
+
+#: modules/post.php:19
+msgid "Posts"
+msgstr "內容"
+
+#: modules/post.php:20
+msgid "Generate Posts"
+msgstr "產生內容"
+
+#: modules/post.php:119
+msgid "Zero is not a good number of posts to fake..."
+msgstr "設定值為 0 便無法產生虛設內容。"
+
+#: modules/post.php:220
+msgid "post"
+msgid_plural "posts"
+msgstr[0] "文章"
+
+#: modules/term.php:21
+msgid "Generate Terms"
+msgstr "產生分類法詞彙"
+
+#: modules/term.php:100
+msgid "Zero is not a good number of terms to fake..."
+msgstr "設定值為 0 便無法產生虛設分類法詞彙。"
+
+#: modules/term.php:160
+msgid "term"
+msgid_plural "terms"
+msgstr[0] "分類法詞彙"
+
+#: modules/user.php:20
+msgid "Users"
+msgstr "使用者"
+
+#: modules/user.php:21
+msgid "Generate Users"
+msgstr "產生使用者"
+
+#: modules/user.php:124
+msgid "Zero is not a good number of users to fake..."
+msgstr "設定值為 0 便無法產生虛設使用者。"
+
+#: modules/user.php:194
+msgid "user"
+msgid_plural "users"
+msgstr[0] "使用者"
+
+#: view/attachments.php:12 view/posts.php:13
+msgid "How many posts should be generated, use both fields to get a randomized number of posts within the given range."
+msgstr "請設定要為這個網站產生的虛設內容數量。如果同時在兩個欄位輸入正整數，則會產生設定數值範圍內的隨機數量內容。"
+
+#: view/attachments.php:24 view/comments.php:89 view/posts.php:25
+msgid "Choose the range for the posts dates."
+msgstr "請設定產生內容的發佈日期範圍。"
+
+#: view/attachments.php:36 view/posts.php:68
+msgid "Parents"
+msgstr "上層項目"
+
+#: view/attachments.php:37 view/posts.php:69
+msgid "What posts can be choosen as Parent to the ones created"
+msgstr "請選取要成為外掛產生內容的上層項目的內容。"
+
+#: view/attachments.php:50 view/posts.php:82
+msgid "Allow Comments"
+msgstr "開放留言"
+
+#: view/attachments.php:54 view/posts.php:86
+msgid "Comments closed"
+msgstr "留言功能已關閉"
+
+#: view/attachments.php:59 view/posts.php:91
+msgid "Comments Status"
+msgstr "留言狀態"
+
+#: view/attachments.php:60 view/posts.php:92
+msgid "Sampling group of options for the comment status of the posts"
+msgstr "請選取可套用於虛設內容中的留言功能狀態。"
+
+#: view/attachments.php:70 view/posts.php:141
+msgid "Use HTML on your randomized post content?"
+msgstr "在隨機內容中使用 HTML"
+
+#: view/users.php:70 view/attachments.php:77 view/comments.php:127
+#: view/posts.php:148
+msgid "Use HTML"
+msgstr "使用 HTML"
+
+#: view/users.php:85 view/attachments.php:92 view/comments.php:142
+#: view/posts.php:176
+msgid "HTML tags"
+msgstr "HTML 標籤"
+
+#: view/attachments.php:93 view/posts.php:177
+msgid "Select the group of tags that can be selected to print on the Post Content"
+msgstr "請選取可用於虛設內容的標籤群組。"
+
+#: view/attachments.php:163 view/posts.php:122
+msgid "Author"
+msgstr "作者"
+
+#: view/attachments.php:164 view/posts.php:123
+msgid "Choose some users to be authors of posts generated."
+msgstr "請選取要成為虛設內容作者的使用者。"
+
+#: view/terms.php:52 view/users.php:96 view/attachments.php:175
+#: view/comments.php:153 view/posts.php:221
+msgid "Meta Field Rules"
+msgstr "中繼資料欄位規則"
+
+#: view/attachments.php:176 view/posts.php:222
+msgid "Use the fields below to configure a set of rules for your generated Posts"
+msgstr "請使用以下欄位為已產生的虛設內容的規則集進行設定。"
+
+#: view/terms.php:71 view/users.php:114 view/attachments.php:192
+#: view/comments.php:175 view/posts.php:241
+msgid "Generate"
+msgstr "產生"
+
+#: view/changelog.php:2
+msgid "What has Changed in FakerPress"
+msgstr "FakerPress 的變更記錄"
+
+#: view/changelog.php:4
+msgid "Sorry but this page still doesn't have the information available."
+msgstr "很抱歉，這個頁面仍未提供資訊。"
+
+#: view/comments.php:70 view/posts.php:55
+msgid "Post Type"
+msgstr "內容類型"
+
+#: view/comments.php:80
+msgid "How many comments should be generated, use both fields to get a randomized number of comments within the given range."
+msgstr "請設定要為這個網站產生的虛設留言數量。如果同時在兩個欄位輸入正整數，則會產生設定數值範圍內的隨機數量留言。"
+
+#: view/comments.php:121
+msgid "Use HTML on your randomized comment content?"
+msgstr "在隨機留言內容中使用 HTML"
+
+#: view/comments.php:143
+msgid "Select the group of tags that can be selected to print on the Comment Content."
+msgstr "請選取可用於虛設留言的標籤群組。"
+
+#: view/comments.php:154
+msgid "Use the fields below to configure a set of rules for your generated Comments"
+msgstr "請使用以下欄位為已產生的虛設留言的規則集進行設定。"
+
+#: view/error.php:14
+msgid "Oops, 404 Error!"
+msgstr "很抱歉，發生 404 錯誤。"
+
+#: view/error.php:16
+msgid ""
+"Yeah... Something went very wrong somewhere along your last actions.\n"
+"\n"
+"Right now we feel ashamed about this problem, <a href='%s' target='_blank'>poke us on twitter!</a>"
+msgstr ""
+"很抱歉，最後的操作導致發生嚴重錯誤。\n"
+"\n"
+"我們對發生這個問題深表遺憾，<a href='%s' target='_blank'>請在 Twitter 上通知我們</a>！"
+
+#: view/posts.php:56
+msgid "Sampling group of Post Types"
+msgstr "請選取要產生哪些內容類型的內容。"
+
+#: view/posts.php:190
+msgid "Image Providers"
+msgstr "圖片服務提供商"
+
+#: view/posts.php:202
+msgid "Taxonomy Field Rules"
+msgstr "分類法欄位規則"
+
+#: view/posts.php:203
+msgid "Use the fields below to configure the rules for the Taxonomy and Terms selected"
+msgstr "請使用以下欄位為已選取的分類法及分類法詞彙的規則進行設定。"
+
+#: view/settings.php:10
+msgid "Erase faked data"
+msgstr "清除虛設資料"
+
+#: view/settings.php:11
+msgid "To erase all data generated type \"<b>Let it Go!</b>\"."
+msgstr "如需清除這個外掛所產生的全部虛設資料，請輸入 <code>Let it Go!</code>。"
+
+#: view/settings.php:13
+msgid "Delete!"
+msgstr "刪除"

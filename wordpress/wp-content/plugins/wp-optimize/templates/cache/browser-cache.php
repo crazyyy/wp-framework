@@ -8,6 +8,13 @@
 	</p>
 
 	<div class="wpo-fieldgroup">
+		<?php if ($is_cloudflare_site) : ?>
+		<p class="wpo-enabled"><span class="dashicons dashicons-yes"></span>
+			<em><?php _e('Your website seems to use Cloudflare, which handles the browser caching rules.', 'wp-optimize'); ?></em>
+		</p>
+
+		<?php else : ?>
+
 		<div id="wpo_browser_cache_status" class="<?php echo $class_name; ?>">
 			<span class="wpo-enabled"><span class="dashicons dashicons-yes"></span> <?php printf(__('Browser static file caching headers are currently %s.', 'wp-optimize'), '<strong>'.__('enabled', 'wp-optimize').'</strong>'); ?></span>
 			<span class="wpo-disabled"><?php printf(__('Browser static file caching headers are currently %s.', 'wp-optimize'), '<strong>'.__('disabled', 'wp-optimize').'</strong>'); ?></span>
@@ -44,7 +51,7 @@
 				</form>
 			<?php
 			} else {
-				echo sprintf('<a href="%s" target="_blank">%s</a>', $faq_link, __('Follow this link to read the article about how to enable browser cache with your server software.', 'wp_optimize'));
+				printf('<a href="%s" target="_blank">%s</a>', $faq_link, __('Follow this link to read the article about how to enable browser cache with your server software.', 'wp_optimize'));
 			}
 			?>
 
@@ -52,6 +59,8 @@
 			<pre id="wpo_browser_cache_output" style="display: none;"></pre>
 			<?php
 		}
+
+		endif;
 		?>
 	</div><!-- END .wpo-fieldgroup -->
 </div><!-- END .wpo_section -->

@@ -9,7 +9,7 @@ class WP_Optimize_Detect_Cache_Plugins {
 	/**
 	 * WP_Optimize_Detect_Cache_Plugins constructor.
 	 */
-	private function __construct() {
+	protected function __construct() {
 	}
 
 	/**
@@ -19,21 +19,10 @@ class WP_Optimize_Detect_Cache_Plugins {
 	 */
 	public function get_active_cache_plugins() {
 		// The index is the plugin's slug
-		$plugins = array(
-			'w3-total-cache' => 'W3 Total Cache',
-			'wp-super-cache' => 'WP Super Cache',
-			'wp-rocket' => 'WP Rocket',
-			'wp-fastest-cache' => 'WP Fastest Cache',
-			'litespeed-cache' => 'LiteSpeed Cache',
-			'cache-enabler' => 'Cache Enabler',
-			'comet-cache' => 'Comet Cache',
-			'hummingbird-performance' => 'Hummingbird',
-			'hyper-cache' => 'Hyper Cache',
-		);
 
 		$active_cache_plugins = array();
 
-		foreach ($plugins as $plugin_slug => $plugin_title) {
+		foreach ($this->get_plugins() as $plugin_slug => $plugin_title) {
 
 			$function_name = 'is_'.str_replace('-', '_', $plugin_slug).'_plugin_active';
 
@@ -49,6 +38,25 @@ class WP_Optimize_Detect_Cache_Plugins {
 		}
 
 		return $active_cache_plugins;
+	}
+
+	/**
+	 * Get the plugins list
+	 *
+	 * @return array
+	 */
+	protected function get_plugins() {
+		return array(
+			'w3-total-cache' => 'W3 Total Cache',
+			'wp-super-cache' => 'WP Super Cache',
+			'wp-rocket' => 'WP Rocket',
+			'wp-fastest-cache' => 'WP Fastest Cache',
+			'litespeed-cache' => 'LiteSpeed Cache',
+			'cache-enabler' => 'Cache Enabler',
+			'comet-cache' => 'Comet Cache',
+			'hummingbird-performance' => 'Hummingbird',
+			'hyper-cache' => 'Hyper Cache',
+		);
 	}
 
 	/**
@@ -88,10 +96,11 @@ class WP_Optimize_Detect_Cache_Plugins {
 	 * @return WP_Optimize_Detect_Cache_Plugins
 	 */
 	static public function instance() {
-		if (empty(self::$instance)) {
-			self::$instance = new WP_Optimize_Detect_Cache_Plugins();
+		static $instance;
+		if (empty($instance)) {
+			$instance = new self();
 		}
 
-		return self::$instance;
+		return $instance;
 	}
 }

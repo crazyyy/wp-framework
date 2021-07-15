@@ -48,6 +48,14 @@ abstract class UpdraftCentral_Commands {
 		}
 	}
 	
+	/**
+	 * Return a response in the expected format
+	 *
+	 * @param Mixed  $data
+	 * @param String $code
+	 *
+	 * @return Array
+	 */
 	final protected function _response($data = null, $code = 'rpcok') {
 		return array(
 			'response' => $code,
@@ -55,6 +63,14 @@ abstract class UpdraftCentral_Commands {
 		);
 	}
 	
+	/**
+	 * Return an error in the expected format
+	 *
+	 * @param String $code
+	 * @param Mixed  $data
+	 *
+	 * @return Array
+	 */
 	final protected function _generic_error_response($code = 'central_unspecified', $data = null) {
 		return $this->_response(
 			array(
@@ -140,6 +156,7 @@ abstract class UpdraftCentral_Commands {
 	 * @return array
 	 */
 	final protected function process_chunk_upload($params, $type) {
+		global $updraftcentral_host_plugin;
 
 		if (!in_array($type, array('plugin', 'theme'))) {
 			return $this->_generic_error_response('upload_type_not_supported');
@@ -174,158 +191,170 @@ abstract class UpdraftCentral_Commands {
 			return $this->_generic_error_response('upload_dir_not_available');
 		}
 
+		// Preloads the submitted credentials to the global $_POST variable
+		if (!empty($params) && isset($params['filesystem_credentials'])) {
+			parse_str($params['filesystem_credentials'], $filesystem_credentials);
+			if (is_array($filesystem_credentials)) {
+				foreach ($filesystem_credentials as $key => $value) {
+					// Put them into $_POST, which is where request_filesystem_credentials() checks for them.
+					$_POST[$key] = $value;
+				}
+			}
+		}
+
 		// Save uploaded file
-		$filename = $params['filename'];
+		$filename = basename($params['filename']);
 		$is_chunked = false;
 
 		if (isset($params['chunks']) && 1 < (int) $params['chunks']) {
-			$filename = $params['filename'].'.part';
+			$filename = basename($params['filename']).'.part';
 			$is_chunked = true;
 		}
 
-		if (!empty($params['data'])) {
-			$result = file_put_contents($upload_dir.'/'.$filename, base64_decode($params['data']), FILE_APPEND | LOCK_EX);
-			if (false === $result) {
-				return $this->_generic_error_response('unable_to_write_content');
+		if (empty($params['data'])) {
+			return $this->_generic_error_response('data_empty_or_invalid');
+		}
+		
+		$result = file_put_contents($upload_dir.'/'.$filename, base64_decode($params['data']), FILE_APPEND | LOCK_EX);
+		
+		if (false === $result) {
+			return $this->_generic_error_response('unable_to_write_content');
+		}
+		
+		// Set $install_now to true for single upload and for the last chunk of a multi-chunks upload process
+		$install_now = true;
+
+		if ($is_chunked) {
+			if ($params['chunk'] == (int) $params['chunks'] - 1) {
+				// If this is the last chunk of the request, then we're going to restore the
+				// original filename of the file (without the '.part') since our upload is now complete.
+				$orig_filename = basename($filename, '.part');
+				$success = rename($upload_dir.'/'.$filename, $upload_dir.'/'.$orig_filename);
+
+				// If renaming the file was successful then restore the original name and override the $filename variable.
+				// Overriding the $filename variable makes it easy for us to use the same variable for both
+				// non-chunked and chunked zip file for the installation process.
+				if ($success) {
+					$filename = $orig_filename;
+				} else {
+					return $this->_generic_error_response('unable_to_rename_file');
+				}
 			} else {
-				// Set $install_now to true for single upload and for the last chunk of a multi-chunks upload process
-				$install_now = true;
+				// Bypass installation for now since we're waiting for the last chunk to arrive
+				// to complete the uploading of the zip file.
+				$install_now = false;
+			}
+		}
 
-				if ($is_chunked) {
-					if ($params['chunk'] == (int) $params['chunks'] - 1) {
-						// If this is the last chunk of the request, then we're going to restore the
-						// original filename of the file (without the '.part') since our upload is now complete.
-						$orig_filename = basename($filename, '.part');
-						$success = rename($upload_dir.'/'.$filename, $upload_dir.'/'.$orig_filename);
+		// Everything is already good (upload completed), thus, we proceed with the installation
+		if ($install_now) {
 
-						// If renaming the file was successful then restore the original name and override the $filename variable.
-						// Overriding the $filename variable makes it easy for us to use the same variable for both
-						// non-chunked and chunked zip file for the installation process.
-						if ($success) {
-							$filename = $orig_filename;
-						} else {
-							return $this->_generic_error_response('unable_to_rename_file');
-						}
-					} else {
-						// Bypass installation for now since we're waiting for the last chunk to arrive
-						// to complete the uploading of the zip file.
-						$install_now = false;
-					}
+			// We have successfully uploaded the zip file in this location with its original filename intact.
+			$zip_filepath = $upload_dir.'/'.$filename;
+
+			// Making sure that the file does actually exists, since we've just run through
+			// a renaming process above.
+			if (file_exists($zip_filepath)) {
+				add_filter('upgrader_post_install', array($this, 'get_install_data'), 10, 3);
+
+				// WP < 3.7
+				if (!class_exists('Automatic_Upgrader_Skin')) include_once(UPDRAFTPLUS_DIR.'/central/classes/class-automatic-upgrader-skin.php');
+
+				$skin = new Automatic_Upgrader_Skin();
+				$upgrader = ('plugin' === $type) ? new Plugin_Upgrader($skin) : new Theme_Upgrader($skin);
+
+				$install_result = $upgrader->install($zip_filepath);
+				remove_filter('upgrader_post_install', array($this, 'get_install_data'), 10, 3);
+
+				// Remove zip file on success and on error (cleanup)
+				if ($install_result || is_null($install_result) || is_wp_error($install_result)) {
+					@unlink($zip_filepath);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				}
 
-				// Everything is already good (upload completed), thus, we proceed with the installation
-				if ($install_now) {
+				if (false === $install_result || is_wp_error($install_result)) {
+					$message = $updraftcentral_host_plugin->retrieve_show_message('unable_to_connect');
+					if (is_wp_error($install_result)) $message = $install_result->get_error_message();
 
-					// We have successfully uploaded the zip file in this location with its original filename intact.
-					$zip_filepath = $upload_dir.'/'.$filename;
+					return $this->_generic_error_response($type.'_install_failed', array('message' => $message));
+				} else {
+					// Pull installed data
+					$data = $this->installed_data;
 
-					// Making sure that the file does actually exists, since we've just run through
-					// a renaming process above.
-					if (file_exists($zip_filepath)) {
-						add_filter('upgrader_post_install', array($this, 'get_install_data'), 10, 3);
-
-						// WP < 3.7
-						if (!class_exists('Automatic_Upgrader_Skin')) include_once(UPDRAFTPLUS_DIR.'/central/classes/class-automatic-upgrader-skin.php');
-
-						$skin = new Automatic_Upgrader_Skin();
-						$upgrader = ('plugin' === $type) ? new Plugin_Upgrader($skin) : new Theme_Upgrader($skin);
-
-						$install_result = $upgrader->install($zip_filepath);
-						remove_filter('upgrader_post_install', array($this, 'get_install_data'), 10, 3);
-
-						// Remove zip file on success and on error (cleanup)
-						if ($install_result || is_null($install_result) || is_wp_error($install_result)) {
-							@unlink($zip_filepath);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-						}
-
-						if (false === $install_result || is_wp_error($install_result)) {
-							$message = __('Unable to connect to the filesystem', 'updraftplus');
-							if (is_wp_error($install_result)) $message = $install_result->get_error_message();
-
-							return $this->_generic_error_response($type.'_install_failed', array('message' => $message));
-						} else {
-							// Pull installed data
+					// For WP 3.4 the intended filter hook isn't working or not available
+					// so we're going to pull the data manually.
+					if ($install_result && empty($data)) {
+						$result = $this->get_install_data($install_result, array('type' => $type), $skin->result);
+						if ($result) {
+							// Getting the installed data one more time after manually calling
+							// the "get_install_data" function.
 							$data = $this->installed_data;
-
-							// For WP 3.4 the intended filter hook isn't working or not available
-							// so we're going to pull the data manually.
-							if ($install_result && empty($data)) {
-								$result = $this->get_install_data($install_result, array('type' => $type), $skin->result);
-								if ($result) {
-									// Getting the installed data one more time after manually calling
-									// the "get_install_data" function.
-									$data = $this->installed_data;
-								}
-							}
-
-							if (!empty($data)) {
-								// Activate item if set
-								$is_active = ('plugin' === $type) ? is_plugin_active($data['slug']) : ((wp_get_theme()->get('Name') === $data['Name']) ? true : false);
-
-								if ((bool) $params['activate'] && !$is_active) {
-									if ('plugin' === $type) {
-										if (is_multisite()) {
-											$activate = activate_plugin($data['slug'], '', true);
-										} else {
-											$activate = activate_plugin($data['slug']);
-										}
-									} else {
-										// In order to make it compatible with older versions of switch_theme which takes two
-										// arguments we're going to pass two arguments instead of one. Latest versions have backward
-										// compatibility so it's safe to do it this way.
-										switch_theme($data['template'], $data['slug']);
-										$activate = (wp_get_theme()->get_stylesheet() === $data['slug']) ? true : false;
-									}
-
-									if (false === $activate || is_wp_error($activate)) {
-										global $updraftplus;
-										$wp_version = $updraftplus->get_wordpress_version();
-
-										$message = is_wp_error($activate) ? array('message' => $activate->get_error_message()) : array('message' => sprintf(__('Unable to activate %s successfully. Make sure that this %s is compatible with your remote WordPress version. WordPress version currently installed in your remote website is %s.', 'updraftplus'), $type, $type, $wp_version));
-										return $this->_generic_error_response('unable_to_activate_'.$type, $message);
-									}
-								}
-
-								return $this->_response(
-									array(
-										'installed' => true,
-										'installed_data' => $data,
-									)
-								);
-							}
-
-							if (is_wp_error($skin->result)) {
-								$code = $skin->result->get_error_code();
-								$message = $skin->result->get_error_message();
-
-								$error_data = $skin->result->get_error_data($code);
-								if (!empty($error_data)) {
-									if (is_array($error_data)) $error_data = json_encode($error_data);
-
-									$message .= ' '.$error_data;
-								}
-
-								return $this->_generic_error_response($code, $message);
-							} else {
-								return $this->_response(
-									array(
-										'installed' => false,
-										'message' => sprintf(__('Unable to install %s. Make sure that the zip file is a valid %s file and a previous version of this %s does not exist. If you wish to overwrite an existing %s then you will have to manually delete it from the %s folder on the remote website and try uploading the file again.', 'updraftplus'), $type, $type, $type, $type, 'wp-content/'.$type.'s'),
-									)
-								);
-							}
 						}
 					}
-				} else {
-					// Returning response to a chunk requests while still processing and
-					// completing the file upload process. If we don't return a positive response
-					// for every chunk requests then the caller will assumed an error has occurred
-					// and will eventually stop the upload process.
-					return $this->_response(array('in_progress' => true));
+
+					if (!empty($data)) {
+						// Activate item if set
+						$is_active = ('plugin' === $type) ? is_plugin_active($data['slug']) : ((wp_get_theme()->get('Name') === $data['Name']) ? true : false);
+
+						if ((bool) $params['activate'] && !$is_active) {
+							if ('plugin' === $type) {
+								if (is_multisite()) {
+									$activate = activate_plugin($data['slug'], '', true);
+								} else {
+									$activate = activate_plugin($data['slug']);
+								}
+							} else {
+								// In order to make it compatible with older versions of switch_theme which takes two
+								// arguments we're going to pass two arguments instead of one. Latest versions have backward
+								// compatibility so it's safe to do it this way.
+								switch_theme($data['template'], $data['slug']);
+								$activate = (wp_get_theme()->get_stylesheet() === $data['slug']) ? true : false;
+							}
+
+							if (false === $activate || is_wp_error($activate)) {
+								global $updraftplus;
+								$wp_version = $updraftplus->get_wordpress_version();
+
+								$message = is_wp_error($activate) ? array('message' => $activate->get_error_message()) : array('message' => sprintf($updraftcentral_host_plugin->retrieve_show_message('unable_to_activate'), $type, $type, $wp_version));
+								return $this->_generic_error_response('unable_to_activate_'.$type, $message);
+							}
+						}
+
+						return $this->_response(
+							array(
+								'installed' => true,
+								'installed_data' => $data,
+							)
+						);
+					}
+
+					if (is_wp_error($skin->result)) {
+						$code = $skin->result->get_error_code();
+						$message = $skin->result->get_error_message();
+
+						$error_data = $skin->result->get_error_data($code);
+						if (!empty($error_data)) {
+							if (is_array($error_data)) $error_data = json_encode($error_data);
+
+							$message .= ' '.$error_data;
+						}
+
+						return $this->_generic_error_response($code, $message);
+					} else {
+						return $this->_response(
+							array(
+								'installed' => false,
+								'message' => sprintf($updraftcentral_host_plugin->retrieve_show_message('unable_to_install'), $type, $type, $type, $type, 'wp-content/'.$type.'s'),
+							)
+						);
+					}
 				}
 			}
 		} else {
-			return $this->_generic_error_response('data_empty_or_invalid');
+			// Returning response to a chunk requests while still processing and
+			// completing the file upload process. If we don't return a positive response
+			// for every chunk requests then the caller will assumed an error has occurred
+			// and will eventually stop the upload process.
+			return $this->_response(array('in_progress' => true));
 		}
 	}
 }

@@ -2,9 +2,8 @@
 /* Main toolbar wrapper */
 .elfinder .elfinder-toolbar {
 	background: #f4f5f7;
-	padding: 15px 0px;
 	border-bottom: 1px solid #ddd;
-padding-left: 10px;
+	padding-left: 10px;
 }
 /* Buttonset wrapper */
 .elfinder .elfinder-toolbar .elfinder-buttonset {
@@ -28,8 +27,7 @@ padding-left: 10px;
 }
 /* Hovered buttons in search field */
 .elfinder .elfinder-button-search .elfinder-button-menu .ui-button:hover {
-  /* background: #cce8ff;
- border: 0px solid #99d1ff;*/
+ 
 }
 /* Disabled buttons */
 .elfinder .elfinder-toolbar .elfinder-buttonset .elfinder-button.ui-state-disabled {
@@ -46,7 +44,6 @@ padding-left: 10px;
 /* Searchbar */
 .elfinder-toolbar .elfinder-button-search {
   /* */
-  /*border: 1px solid #ccc;*/
   margin-right: 5px;
   border-radius: 0;
 }
@@ -235,10 +232,7 @@ background-size:12px;
 	  background-size:13px;
 	  background-position: center center;
   }
-  /*.elfinder .elfinder-toolbar .elfinder-buttonset .elfinder-button-icon-empty {
-    background-image: url('../images/16px/rm.svg');
-	background-size:16px;
-  }*/
+  
   /* Menus (e.g. for sorting) */
   .elfinder .elfinder-toolbar .elfinder-buttonset .elfinder-button-menu {
     /* */
@@ -263,3 +257,9 @@ background-size:12px;
   .elfinder .elfinder-toolbar .elfinder-buttonset .elfinder-button-menu-item-selected.elfinder-menu-item-sort-desc .elfinder-menu-item-sort-dir {
     /* */
   }
+  .elfinder-toolbar .elfinder-button-search .ui-icon-close {
+    background-image: url(../images/close.png);
+    background-position: center;
+    background-size: 57px;
+    background-repeat: no-repeat;
+}

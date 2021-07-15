@@ -1,42 +1,35 @@
 <?php
-/**
- * Yoast extension of the Model class.
- *
- * @package Yoast\YoastSEO\ORM\Repositories
- */
 
-namespace Yoast\WP\Free\Repositories;
+namespace Yoast\WP\SEO\Repositories;
 
-use Yoast\WP\Free\ORM\ORMWrapper;
-use Yoast\WP\Free\ORM\Yoast_Model;
+use Yoast\WP\Lib\Model;
+use Yoast\WP\Lib\ORM;
 
 /**
- * Class SEO_Meta_Repository
- *
- * @package Yoast\WP\Free\ORM\Repositories
+ * Class SEO_Meta_Repository.
  */
-class SEO_Meta_Repository extends ORMWrapper {
+class SEO_Meta_Repository {
 
 	/**
-	 * Returns the instance of this class constructed through the ORM Wrapper.
+	 * SEO_Meta_Repository constructor.
 	 *
-	 * @return \Yoast\WP\Free\Repositories\SEO_Meta_Repository
+	 * @deprecated 14.8
+	 * @codeCoverageIgnore
 	 */
-	public static function get_instance() {
-		ORMWrapper::$repositories[ Yoast_Model::get_table_name( 'SEO_Meta' ) ] = self::class;
-
-		return Yoast_Model::of_type( 'SEO_Meta' );
+	public function __construct() {
+		\_deprecated_function( __METHOD__, '14.8' );
 	}
 
 	/**
-	 * Finds the SEO meta for given post.
+	 * Starts a query for this repository.
 	 *
-	 * @param int $post_id The post ID.
+	 * @deprecated 14.8
+	 * @codeCoverageIgnore
 	 *
-	 * @return \Yoast\WP\Free\Models\SEO_Meta The SEO meta.
+	 * @return ORM
 	 */
-	public function find_by_post_id( $post_id ) {
-		return $this->where( 'object_id', $post_id )
-					->find_one();
+	public function query() {
+		\_deprecated_function( __METHOD__, '14.8' );
+		return Model::of_type( 'SEO_Meta' );
 	}
 }

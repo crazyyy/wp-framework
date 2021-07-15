@@ -27,7 +27,7 @@ class WPSEO_Configuration_Translations {
 	/**
 	 * Sets the translations based on the file.
 	 *
-	 * @param string $locale The locale to retreive the translations for.
+	 * @param string $locale The locale to retrieve the translations for.
 	 */
 	public function __construct( $locale ) {
 		$this->locale       = $locale;
@@ -50,8 +50,9 @@ class WPSEO_Configuration_Translations {
 	 */
 	protected function get_translations_from_file() {
 
-		$file = plugin_dir_path( WPSEO_FILE ) . 'languages/yoast-components-' . $this->locale . '.json';
+		$file = WPSEO_PATH . 'languages/yoast-components-' . $this->locale . '.json';
 		if ( file_exists( $file ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Retrieving a local file.
 			$file = file_get_contents( $file );
 			if ( is_string( $file ) && $file !== '' ) {
 				return json_decode( $file, true );

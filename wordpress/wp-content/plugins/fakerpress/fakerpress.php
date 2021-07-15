@@ -3,13 +3,13 @@
  * Plugin Name:       FakerPress
  * Plugin URI:        https://fakerpress.com
  * Description:       FakerPress is a clean way to generate fake data to your WordPress instalation, great for developers who need testing
- * Version:           0.5.0
+ * Version:           0.5.1
  * Author:            Gustavo Bordoni
  * Author URI:        http://bordoni.me
  * Text Domain:       fakerpress
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Domain Path:       /l10n
+ * Domain Path:       /languages
  * GitHub Plugin URI: https://github.com/bordoni/fakerpress
  */
 
@@ -30,7 +30,7 @@ define( '__FP_FILE__', __FILE__ );
 function _fp_l10n() {
 	// Doing that to use the real folder that the plugin is living, not a static string
 	$plugin_folder = str_replace( DIRECTORY_SEPARATOR . basename( __FILE__ ), '', plugin_basename( __FP_FILE__ ) );
-	load_plugin_textdomain( 'fakerpress', false, $plugin_folder . DIRECTORY_SEPARATOR . 'l10n' . DIRECTORY_SEPARATOR );
+	load_plugin_textdomain( 'fakerpress', false, $plugin_folder . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR );
 }
 add_action( 'plugins_loaded', '_fp_l10n' );
 
@@ -60,5 +60,5 @@ if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 		deactivate_plugins( __FP_FILE__ );
 	}
 } else {
-	require_once plugin_dir_path( __FP_FILE__ ) . 'inc' . DIRECTORY_SEPARATOR . 'load.php';
+	require_once plugin_dir_path( __FP_FILE__ ) . 'load.php';
 }

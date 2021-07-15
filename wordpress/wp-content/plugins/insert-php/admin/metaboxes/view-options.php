@@ -25,14 +25,14 @@ class WINP_ViewOptionsMetaBox extends WINP_MetaBox {
 	 *
 	 * @var string
 	 */
-	public $css_class = 'factory-bootstrap-423 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-443 factory-fontawesome-000';
 
 	/**
 	 * WINP_ViewOptionsMetaBox constructor.
 	 *
-	 * @param Wbcr_Factory422_Plugin $plugin
+	 * @param Wbcr_Factory443_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory443_Plugin $plugin ) {
 		parent::__construct( $plugin );
 
 		$this->title = __( 'Conditional execution logic for the snippet', 'insert-php' );
@@ -41,8 +41,8 @@ class WINP_ViewOptionsMetaBox extends WINP_MetaBox {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param Wbcr_Factory422_ScriptList $scripts   A set of scripts to include.
-	 * @param Wbcr_Factory422_StyleList  $styles    A set of style to include.
+	 * @param Wbcr_Factory443_ScriptList $scripts   A set of scripts to include.
+	 * @param Wbcr_Factory443_StyleList  $styles    A set of style to include.
 	 *
 	 * @return void
 	 */
@@ -144,7 +144,17 @@ class WINP_ViewOptionsMetaBox extends WINP_MetaBox {
 					],
 					[
 						'id'          => 'location-taxonomy',
-						'title'       => __( 'Taxonomy', 'insert-php' ),
+						'title'       => __( 'Taxonomy page', 'insert-php' ),
+						'type'        => 'select',
+						'values'      => [
+							'type'   => 'ajax',
+							'action' => 'wbcr_inp_ajax_get_taxonomies'
+						],
+						'description' => __( 'A taxonomy page.', 'insert-php' )
+					],
+					[
+						'id'          => 'page-taxonomy',
+						'title'       => __( 'Taxonomy of the page', 'insert-php' ),
 						'type'        => 'select',
 						'values'      => [
 							'type'   => 'ajax',

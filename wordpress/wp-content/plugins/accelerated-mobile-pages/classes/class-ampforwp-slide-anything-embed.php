@@ -6,7 +6,7 @@ require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-base-embed-handle
 
 class AMPFORWP_Slide_Anything_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Handler {
 	private static $script_slug = 'amp-carousel';
-	private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.1.js';
+	private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.2.js';
 
 	public function register_embed() {
 		add_shortcode( 'slide-anything', array( $this, 'shortcode' ) );
@@ -48,6 +48,7 @@ class AMPFORWP_Slide_Anything_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_
 		$id = intval( $atts['id'] );
 		$post_status = get_post_status($id);
 		if ($post_status == 'publish') {
+			global $metadata;
 			$metadata = get_metadata('post', $id);
 		}
 
@@ -199,10 +200,23 @@ class AMPFORWP_Slide_Anything_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_
 					      </div>
 					    </amp-image-lightbox>';
 			}
-			$amp_images[$key] = AMP_HTML_Utils::build_tag(
-				'amp-img',
-				$amp_img_arr
-			);
+			if(!preg_match('/default.png/', $amp_img_arr['src'])){
+				$amp_images[$key] = AMP_HTML_Utils::build_tag(
+					'amp-img',
+					$amp_img_arr
+				);
+			}else{
+				global $metadata;
+				$slide_data = array();
+				$slide_data['num_slides'] = $metadata['sa_num_slides'][0];
+				for ($i = 1; $i <= $slide_data['num_slides']; $i++) {
+					if (isset($metadata["sa_slide".$i."_content"][0])) {
+						$amp_images[$i-1] = AMP_HTML_Utils::build_tag(
+						'div',  array( 'slideampcontent' => esc_attr($metadata["sa_slide".$i."_content"][0]))
+						); 
+					}	
+				} 
+			}
 
 			//Small Thumbnail Images
 			$thumb_url = ampforwp_aq_resize( $image['url'], 120, 60, true, false ); //resize & crop the image
@@ -252,16 +266,21 @@ class AMPFORWP_Slide_Anything_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_
 
 		//replacements
 			$r = rand(1,100);
-			$amp_carousel = AMP_HTML_Utils::build_tag( 
-							'amp-carousel',
-							array(
+			$carousel_args = array(
 								'width' => $this->args['width'],
 								'height' => $this->args['height'],
 								'type' => 'slides',
 								'layout' => 'responsive',
 								'class'  => 'collapsible-captions',
 								'id' => 'carousel-with-carousel-preview-'.$r
-							),
+							);
+			$c_args = array('loop'=>'', 'autoplay'=>'');
+			$carousel_filter = apply_filters('ampforwp_carousel_args',$c_args);
+			$carousel_args = array_merge($carousel_args,$carousel_filter);
+
+			$amp_carousel = AMP_HTML_Utils::build_tag( 
+							'amp-carousel',
+							$carousel_args,
 							implode( PHP_EOL, $images ));
 
 			$amp_carousel_with_thumbnail_nav = apply_filters('amp_thumbnail_images', $amp_images_small, $r, $markup);
@@ -286,6 +305,9 @@ class AMPFORWP_Slide_Anything_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_
 		$returnCompleteHtml = str_replace('{{with_carousel_thumbnail}}', $amp_carousel_thumbnail, $returnCompleteHtml);
 		$returnCompleteHtml = str_replace('{{amp_image_lightbox}}', $amp_image_lightbox, $returnCompleteHtml);
 		$returnCompleteHtml = str_replace('{{with_images}}', implode( PHP_EOL, $images ), $returnCompleteHtml);
+		$returnCompleteHtml = preg_replace('/<div slideampcontent="(.*?)"><\/div>/s', '<div>$1</div>', $returnCompleteHtml);
+        $returnCompleteHtml = str_replace('&lt;', '<', $returnCompleteHtml);
+        $returnCompleteHtml = str_replace('&gt;', '>', $returnCompleteHtml);
 		return $returnCompleteHtml;
 	}
 }// Class closed

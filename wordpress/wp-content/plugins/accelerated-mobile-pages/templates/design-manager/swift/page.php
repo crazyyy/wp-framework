@@ -11,14 +11,26 @@ amp_header(); ?>
 			<?php if ( is_page() && true == ampforwp_get_setting('ampforwp_pages_breadcrumbs') ) {
 				amp_breadcrumb();
 			}?>
-		 	<?php amp_title(); ?>
+		 	<?php if ( (is_page() && true == ampforwp_get_setting('ampforwp_pages_title')) ||  (ampforwp_is_front_page() && ampforwp_get_setting('ampforwp-title-on-front-page'))) {
+				amp_title();
+			}?>
 		<?php } ?>
 		<?php } // Level up Condition ends here?>
-		<?php if ( true == ampforwp_get_setting('featured_image_swift_page') && ampforwp_has_post_thumbnail() ) { ?>
+		</div>
+		<?php 
+		$paged = get_query_var( 'paged' );
+	 	$page = get_query_var( 'page' );
+	    if($paged==0 && $page==0){
+	   		if ( true == ampforwp_get_setting('featured_image_swift_page') && ampforwp_has_post_thumbnail() && !checkAMPforPageBuilderStatus(ampforwp_get_the_ID()) ) { ?> 
 				<div class="sf-img">
 					<?php amp_featured_image();?>
 				</div>
-				<?php } ?>
+				<?php }elseif (true == ampforwp_get_setting('featured_image_swift_page') && true == ampforwp_get_setting('featured_image_swift_page_builder')) {?>
+				<div class="sf-img">
+					<?php amp_featured_image();?>
+				</div>
+			<?php } } ?>
+		<div <?php if(!checkAMPforPageBuilderStatus(ampforwp_get_the_ID())){ ?>class="cntr"<?php } ?>>	
        <div class="pg">
        		<?php if (  is_page() && true == ampforwp_get_setting('ampforwp-page-social') && 'above-content' ==  ampforwp_get_setting('swift-social-position') ){
 							ampforwp_swift_social_icons(); 
@@ -31,6 +43,11 @@ amp_header(); ?>
 				}
 				if(ampforwp_is_front_page() && false == ampforwp_get_setting('gbl-sidebar') ){
 					amp_content();
+					if(ampforwp_get_comments_status()){ ?>
+						<div class="cmts">
+							<?php amp_comments();?>
+						</div>
+					<?php }
 				}
 				if(!ampforwp_is_front_page()){
 					amp_content();
@@ -38,7 +55,7 @@ amp_header(); ?>
 				if( !checkAMPforPageBuilderStatus(ampforwp_get_the_ID()) && is_page() && true == ampforwp_get_setting('ampforwp-page-social') && 'above-content' !=  ampforwp_get_setting('swift-social-position') ) { 
 						echo ampforwp_swift_social_icons();
 		        	} ?>
-		    	<?php if( !ampforwp_levelup_compatibility('levelup_elementor') && !ampforwp_is_front_page() && !checkAMPforPageBuilderStatus(ampforwp_get_the_ID())){ // Level up Condition starts ?>
+		    	<?php if( !ampforwp_levelup_compatibility('levelup_elementor') && !checkAMPforPageBuilderStatus(ampforwp_get_the_ID()) && !ampforwp_is_front_page()){ // Level up Condition starts ?>
 					<div class="cmts">
 						<?php amp_comments();?>
 					</div>
@@ -51,10 +68,16 @@ amp_header(); ?>
 					<div class="<?php if(!checkAMPforPageBuilderStatus(ampforwp_get_the_ID())){ ?>cntr <?php } ?>pgb">
 						<div class="cntn-wrp pg-lft">
 							<?php amp_content(); ?>
+							<?php if(ampforwp_get_comments_status()){ ?>
+								<div class="cmts">
+									<?php amp_comments();?>
+								</div>
+							<?php } ?>
 						</div>
 						<?php if(isset($redux_builder_amp['gbl-sidebar']) && $redux_builder_amp['gbl-sidebar'] == '1'){ ?>
 							<div class="sdbr-right"> <?php 
 								$sanitized_sidebar = ampforwp_sidebar_content_sanitizer('swift-sidebar');
+								$sidebar_output = '';
 								if ( $sanitized_sidebar) {
 									$sidebar_output = $sanitized_sidebar->get_amp_content();
 									$sidebar_output = apply_filters('ampforwp_modify_sidebars_content',$sidebar_output);
@@ -69,6 +92,7 @@ amp_header(); ?>
 				<div class="sdbr-right" style="float: right;" >
 					<?php 
 					$sanitized_sidebar = ampforwp_sidebar_content_sanitizer('swift-sidebar');
+					$sidebar_output = '';
 					if ( $sanitized_sidebar) {
 						$sidebar_output = $sanitized_sidebar->get_amp_content();
 						$sidebar_output = apply_filters('ampforwp_modify_sidebars_content',$sidebar_output);

@@ -76,6 +76,7 @@
 .elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file.ui-selected td {
   border-top: 1px solid #99d1ff;
   border-bottom: 1px solid #99d1ff;
+  color : #fff;
 }
 
 .elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file.ui-selected td:first-child {

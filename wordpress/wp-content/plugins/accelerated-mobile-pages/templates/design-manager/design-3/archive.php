@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <head>
 	<meta charset="utf-8">
 	<?php do_action('amp_experiment_meta', $this); ?>
-  	<link rel="dns-prefetch" href="//cdn.ampproject.org">
+  	<link rel="preconnect" href="//cdn.ampproject.org">
 	<?php
 	if ( is_archive() ) {
 		$description 	= get_the_archive_description();
@@ -96,9 +96,12 @@ if ( get_query_var( 'paged' ) ) {
 			}else{
  				the_archive_title( '<h2 class="amp-wp-content page-title archive-heading">', '</h2>' );
  			}
+ 			if(function_exists('ampforwp_category_image_compatibility')){
+ 				ampforwp_category_image_compatibility('echo','taxonomy-image');	
+ 			}
 			$arch_desc 		= $sanitizer->get_amp_content();
 			if( $arch_desc ) {  
-				if($paged <= '1') {?>
+				if($paged <= '1' && ampforwp_get_setting('ampforwp-cat-description')) {?>
 					<div class="taxonomy-description">
 						<?php echo do_shortcode($arch_desc);// amphtml content, no kses ?>
 				  </div>

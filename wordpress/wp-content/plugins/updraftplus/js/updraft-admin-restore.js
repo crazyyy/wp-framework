@@ -1,5 +1,5 @@
 var updraft_restore_screen = true;
-jQuery(document).ready(function($) {
+jQuery(function($) {
 
 	var job_id = $('#updraftplus_ajax_restore_job_id').val();
 	var action = $('#updraftplus_ajax_restore_action').val();
@@ -10,6 +10,10 @@ jQuery(document).ready(function($) {
 	var previous_stage;
 	var current_stage;
 	var logged_out = false;
+	var auto_resume_count = 0;
+	var server_500_count = 0;
+
+	$('#updraft-restore-hidethis').remove();
 
 	updraft_restore_command(job_id, action);
 
@@ -159,6 +163,8 @@ jQuery(document).ready(function($) {
 					if (restore_data.data.hasOwnProperty('stage')) {
 						if ('table' == restore_data.data.stage) {
 							$current.find('.updraft_component--progress').html(' — '+updraftlion.restore_db_table_progress.replace('%s', '<strong>'+(restore_data.data.table)+'</strong>'));
+						} else if ('stored_routine' == restore_data.data.stage) {
+							$current.find('.updraft_component--progress').html(' — '+updraftlion.restore_db_stored_routine_progress.replace('%s', '<strong>'+(restore_data.data.routine_name)+'</strong>'));
 						} else if ('finished' == restore_data.data.stage) {
 							$current.find('.updraft_component--progress').html(' — '+updraftlion.finished);
 						} else if ('begun' == restore_data.data.stage) {
@@ -183,6 +189,15 @@ jQuery(document).ready(function($) {
 							}
 						});
 						if (restore_data.data.hasOwnProperty('actions') && 'object' == typeof restore_data.data.actions) {
+							
+							var pages_found = updraft_restore_get_pages(restore_data.data.urls);
+							if (!$.isEmptyObject(pages_found)) {
+								$('.updraft_restore_result').before(updraftlion.ajax_restore_404_detected);
+								$.each(pages_found, function(index, url) {
+									$('.updraft_missing_pages').append('<li>'+url+'</li>');
+								});
+							}
+
 							$.each(restore_data.data.actions, function(index, item) {
 								$steps_list.after('<a href="'+item+'" class="button button-primary">'+index+'</a>');
 							});
@@ -236,7 +251,12 @@ jQuery(document).ready(function($) {
 		updraft_send_command('get_restore_resume_notice', { job_id: job_id }, function(response) {
 			if (response.hasOwnProperty('status') && 'success' == response.status && response.hasOwnProperty('html')) {
 				if (updraft_restore_update_timer) clearInterval(updraft_restore_update_timer);
-				$('.updraft_restore_main--components').prepend(response.html);
+				if ('plugins' != current_stage && 'db' != current_stage && 5 > auto_resume_count) {
+					auto_resume_count++;
+					updraft_restore_command(job_id, 'updraft_ajaxrestore_continue');
+				} else {
+					$('.updraft_restore_main--components').prepend(response.html);
+				}
 			} else if (response.hasOwnProperty('error_code') && response.hasOwnProperty('error_message')) {
 				if (updraft_restore_update_timer) clearInterval(updraft_restore_update_timer);
 				alert(response.error_code + ': ' + response.error_message);
@@ -244,11 +264,39 @@ jQuery(document).ready(function($) {
 			}
 		}, {
 			error_callback: function (response, status, error_code, resp) {
-				var error_message = "updraft_send_command: error: " + status + " (" + error_code + ")";
-				console.log(error_message);
-				console.log(response);
+				if (500 == response.status && 3 > server_500_count) {
+					server_500_count++;
+					updraft_restore_command(job_id, 'updraft_ajaxrestore_continue');
+				} else {
+					updraft_restore_process_data({stage: 'finished', type: 'state_change'})
+					var error_message = "updraft_send_command: error: " + status + " (" + error_code + ")";
+					alert(error_message);
+					console.log(error_message);
+					console.log(response);
+				}
 			}
 		});
+	}
+
+	/**
+	 * This function will make a call to the passed in urls and check if the response code is a 404 if it is then add it to the array of urls that are not found and return it
+	 *
+	 * @param {array} urls - the urls we want to test
+	 *
+	 * @return {array} an array of urls not found
+	 */
+	function updraft_restore_get_pages(urls) {
+
+		var urls_not_found = [];
+
+		$.each(urls, function(index, url) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.open('GET', url, false);
+			xhttp.send(null);
+			if (xhttp.status == 404) urls_not_found.push(url);
+		});
+
+		return urls_not_found;
 	}
 
 	$('#updraftplus_ajax_restore_progress').on('click', '#updraft_restore_resume', function(e) {

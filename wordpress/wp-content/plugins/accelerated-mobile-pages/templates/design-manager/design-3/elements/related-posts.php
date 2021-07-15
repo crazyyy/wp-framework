@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 global $post,  $redux_builder_amp;
 do_action('ampforwp_above_related_post',$this); //Above Related Posts
-$string_number_of_related_posts = $redux_builder_amp['ampforwp-number-of-related-posts'];		
+$string_number_of_related_posts = ampforwp_get_setting('ampforwp-number-of-related-posts');		
 $int_number_of_related_posts = (int)$string_number_of_related_posts;
 
 // declaring this variable here to prevent debug errors
@@ -21,62 +21,70 @@ if( $current_post_type = get_post_type( $post )) {
 // The query arguments
 	if($current_post_type != 'page'){
     $args = array(
+    	'fields'=>'ids',
         'posts_per_page'=> $int_number_of_related_posts,
+        'post__not_in' => array($post->ID),
         'order' => 'DESC',
         'orderby' => $orderby,
         'post_type' => $current_post_type,
-        'post__not_in' => array( $post->ID ),
+        'no_found_rows' 	  => true,
         'meta_query' => array(
-	        array(
-		        'key'        => 'ampforwp-amp-on-off',
-		        'value'      => 'default',
-	        ))
+					array(
+						'key'        => 'ampforwp-amp-on-off',
+						'value'      => 'default',
+					)
+				)
 
     );  
 } 			
 }//end of block for custom Post types
 
-if($redux_builder_amp['ampforwp-single-select-type-of-related']==2){
+if(ampforwp_get_setting('ampforwp-single-select-type-of-related')==2){
 	$categories = get_the_category($post->ID);
 	if ($categories) {
 		$category_ids = array();
 		foreach($categories as $individual_category) $category_ids[] = $individual_category->term_id;
 		$args=array(
+			'fields'=>'ids',
 		    'category__in'		 => $category_ids,
-		    'post__not_in'		 => array($post->ID),
-		    'posts_per_page'	 => $int_number_of_related_posts,
+		    'posts_per_page'	 => $int_number_of_related_posts, 
 		    'ignore_sticky_posts'=> 1,
 			'has_password' 		 => false ,
 			'post_status'		 => 'publish',
+			'no_found_rows' 	  => true,
 			'orderby' 			 => $orderby,
-		    'meta_query'         => array(
-			    array(
-				    'key'        => 'ampforwp-amp-on-off',
-				    'value'      => 'default',
-			    ))
+		    'meta_query' => array(
+		    	array(
+		    		'key' => 'ampforwp-amp-on-off',
+		    		'value' => 'default',
+		    	)
+		    )
 		);
 	}
 } //end of block for categories
 //code block for tags
-if($redux_builder_amp['ampforwp-single-select-type-of-related']==1) {
+if(ampforwp_get_setting('ampforwp-single-select-type-of-related')==1) {
 	$ampforwp_tags = get_the_tags($post->ID);
 	if ($ampforwp_tags) {
 			$tag_ids = array();
 			foreach($ampforwp_tags as $individual_tag) $tag_ids[] = $individual_tag->term_id;
 				$args=array(
+					'fields'=>'ids',
 				   'tag__in' 			 => $tag_ids,
-				    'post__not_in' 		 => array($post->ID),
+				   
 				    'posts_per_page'	 => $int_number_of_related_posts,
+				    'post__not_in' => array($post->ID),
 				    'ignore_sticky_posts'=> 1,
 						'has_password' 	 => false ,
 						'post_status'	 => 'publish',
 						'no_found_rows' 	  => true,
 						'orderby' 		 => $orderby,
-                       'meta_query'         => array(
-                           array(
-                               'key'        => 'ampforwp-amp-on-off',
-                               'value'      => 'default',
-                           ))
+                       'meta_query' => array(
+							array(
+								'key'        => 'ampforwp-amp-on-off',
+								'value'      => 'default',
+							)
+						)
 				);
 	}
 }//end of block for tags
@@ -95,20 +103,32 @@ if ( isset($redux_builder_amp['ampforwp-related-posts-days-switch']) && true == 
 				       		); 
 }
 if( isset($redux_builder_amp['ampforwp-single-related-posts-switch']) && $redux_builder_amp['ampforwp-single-related-posts-switch'] && $redux_builder_amp['ampforwp-single-select-type-of-related'] ){
+	$args = apply_filters('ampforwp_related_posts_query_args', $args);
 	$my_query = new wp_query( $args );
 		if( $my_query->have_posts() ) { ?>
 			<div class="amp-wp-content relatedpost">
-			    <div class="related_posts">
-			    	<span class="related-title"><?php echo esc_attr(ampforwp_translation( $redux_builder_amp['amp-translator-related-text'], 'Related Post' )); ?></span>
+			    <div class="rp">
+			    	<span class="related-title">
+				    <?php if (function_exists('pll__')) {
+			    		echo pll__(esc_html__( ampforwp_get_setting('amp-translator-related-text'), 'accelerated-mobile-pages'));
+			    	}else{
+			    		echo esc_attr(ampforwp_translation( ampforwp_get_setting('amp-translator-related-text'), 'Related Post' ));
+			    	} ?></span>
 					<ol class="clearfix">
 						<?php
+						$current_id = ampforwp_get_the_ID();
 				    	while( $my_query->have_posts() ) {
 						    $my_query->the_post();
+						    if(ampforwp_get_the_ID()==$current_id){
+				            	continue;
+				            }
 							$related_post_permalink = "";
 							$related_post_permalink = ampforwp_url_controller( get_permalink() );
 							if (  ampforwp_get_setting('ampforwp-single-related-posts-link') ) {
 								$related_post_permalink = get_permalink();
-							} ?>
+							} 
+							$related_post_permalink = ampforwp_modify_url_utm_params($related_post_permalink);
+							?>
 							<li class="<?php if ( ampforwp_has_post_thumbnail() ) { echo'has_related_thumbnail'; } else { echo 'no_related_thumbnail'; } ?>">
 								<div class="related-post_image">
 	                            <a href="<?php echo esc_url( $related_post_permalink ); ?>" rel="bookmark" title="<?php the_title_attribute(); ?>">
@@ -116,8 +136,10 @@ if( isset($redux_builder_amp['ampforwp-single-related-posts-switch']) && $redux_
 							$thumb_url = ampforwp_get_post_thumbnail();
 							$thumb_width  	= ampforwp_get_post_thumbnail('width');
 							$thumb_height 	= ampforwp_get_post_thumbnail('height');
+							$thumb_alt = '';
+							$thumb_alt = get_post_meta ( get_post_thumbnail_id(), '_wp_attachment_image_alt', true );
 							if( $thumb_url && true == $redux_builder_amp['ampforwp-single-related-posts-image'] ) { 
-				            	$img_content = '<amp-img src="'.esc_url( $thumb_url ).'" width="'.esc_attr($thumb_width).'" height="'.esc_attr($thumb_height).'" layout="responsive"></amp-img>';
+				            	$img_content = '<amp-img src="'.esc_url( $thumb_url ).'" alt="'.esc_attr($thumb_alt).'" width="'.esc_attr($thumb_width).'" height="'.esc_attr($thumb_height).'" layout="responsive"></amp-img>';
 				            	if(function_exists('ampforwp_add_fallback_element')){
 									$img_content = ampforwp_add_fallback_element($img_content,'amp-img');
 				            	}

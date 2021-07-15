@@ -9,7 +9,7 @@ require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-base-embed-handle
 
 class AMPforWP_Photo_Gallery_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Handler {
   private static $script_slug = 'amp-carousel';
-  private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.1.js';
+  private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.2.js';
 
   public function register_embed() {
     add_shortcode( 'Best_Wordpress_Gallery', array( $this, 'shortcode' ) );
@@ -30,7 +30,11 @@ class AMPforWP_Photo_Gallery_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_E
   public function shortcode( $args ) {
 
     $params = array();
-    $params['id'] = WDWLibrary::get('shortcode_id', 0);
+     $param_id = 0;
+    if(isset($args['id'])){
+      $param_id = $args['id'];
+    }
+    $params['id'] = WDWLibrary::get('shortcode_id', $param_id);
     // Get values for elementor widget.
     $params['gallery_type'] = WDWLibrary::get('gallery_type', 'thumbnails');
     $params['gallery_id'] = WDWLibrary::get('gallery_id', 0);

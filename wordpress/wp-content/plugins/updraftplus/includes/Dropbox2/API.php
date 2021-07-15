@@ -69,6 +69,15 @@ class UpdraftPlus_Dropbox_API {
             $this->root = $root;
         }
     }
+
+    /**
+     * This function will make a request to refresh the access token
+     *
+     * @return void
+     */
+    public function refreshAccessToken() {
+        $this->OAuth->refreshAccessToken();
+    }
     
     /**
      * Retrieves information about the user's account
@@ -124,8 +133,8 @@ class UpdraftPlus_Dropbox_API {
                 
                 // Read from the file handle until EOF, uploading each chunk
                 while ($data = fread($handle, $this->chunkSize)) {
-                    
-                    // Set the file, request parameters and send the request
+
+					// Set the file, request parameters and send the request
                     $this->OAuth->setInFile($data);
 
                     if ($firstCommit) {
@@ -206,6 +215,8 @@ class UpdraftPlus_Dropbox_API {
 				
 //                 $params['cursor']['offset'] = $responseCheck[1];
 //                 $response = $this->append_upload($params, $last_call);
+            } elseif (isset($responseCheck) && strpos($responseCheck[0], 'closed') !== false) {
+                throw new Exception("Upload with upload_id {$params['cursor']['session_id']} already completed");
             } else {
                 throw $e;
             }
@@ -253,23 +264,58 @@ class UpdraftPlus_Dropbox_API {
     }
     
     /**
-     * Returns metadata for all files and folders that match the search query
+     * Calls the relevant method to return metadata for all files and folders that match the search query
      * @param mixed $query The search string. Must be at least 3 characters long
      * @param string [$path=''] The path to the folder you want to search in
      * @param integer [$limit=1000] Maximum number of results to return (1-1000)
-     * @param integer [$start=0] Result number to start from
+     * @param integer [$cursor=''] A Dropbox ID to start the search from
      * @return array
      */
-    public function search($query, $path = '', $limit = 1000, $start = 0) {
-        $call = '2/files/search';
+    public function search($query, $path = '', $limit = 1000, $cursor = '') {
+        if (empty($cursor)) {
+            return $this->start_search($query, $path, $limit);
+        } else {
+            return $this->continue_search($cursor);
+        }
+    }
+
+    /**
+     * This method will start a search for all files and folders that match the search query
+     *
+     * @param mixed   $query - the search string, must be at least 3 characters long
+     * @param string  $path  - the path to the folder you want to search in
+     * @param integer $limit - maximum number of results to return (1-1000)
+     *
+     * @return array - an array of search results
+     */
+    private function start_search($query, $path, $limit) {
+        $call = '2/files/search_v2';
         $path = $this->encodePath($path);
         // APIv2 requires that the path match this regex: String(pattern="(/(.|[\r\n])*)?|(ns:[0-9]+(/.*)?)")
         if ($path && '/' != substr($path, 0, 1)) $path = "/$path";
         $params = array(
-            'path' => $path,
             'query' => $query,
-            'start' => $start,
-            'max_results' => ($limit < 1) ? 1 : (($limit > 1000) ? 1000 : (int) $limit),
+            'options' => array(
+                'path' => $path,
+                'max_results' => ($limit < 1) ? 1 : (($limit > 1000) ? 1000 : (int) $limit),
+            ),
+            'api_v2' => true,
+        );
+        $response = $this->fetch('POST', self::API_URL_V2, $call, $params);
+        return $response;
+    }
+
+    /**
+     * This method will continue a previous search for all files and folders that match the previous search query
+     *
+     * @param string $cursor - a Dropbox ID to continue the search
+     *
+     * @return array - an array of search results
+     */
+    private function continue_search($cursor) {
+        $call = '2/files/search/continue_v2';
+        $params = array(
+            'cursor' => $cursor,
             'api_v2' => true,
         );
         $response = $this->fetch('POST', self::API_URL_V2, $call, $params);
@@ -282,7 +328,7 @@ class UpdraftPlus_Dropbox_API {
      * @return object stdClass
      */
     public function delete($path) {
-        $call = '2/files/delete';
+        $call = '2/files/delete_v2';
         $params = array('path' => '/' . $this->normalisePath($path), 'api_v2' => true);
         $response = $this->fetch('POST', self::API_URL_V2, $call, $params);
         return $response;

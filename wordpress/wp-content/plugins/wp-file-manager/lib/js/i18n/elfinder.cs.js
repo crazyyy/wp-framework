@@ -2,7 +2,7 @@
  * Czech translation
  * @author RobiNN <kelcakrobo@gmail.com>
  * @author Jay Gridley <gridley.jay@hotmail.com>
- * @version 2019-01-12
+ * @version 2020-03-15
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -17,9 +17,9 @@
 		translator : 'RobiNN &lt;kelcakrobo@gmail.com&gt;, Jay Gridley &lt;gridley.jay@hotmail.com&gt;',
 		language   : 'Čeština',
 		direction  : 'ltr',
-		dateFormat : 'd. m. Y H:i', // will show like: 12. 01. 2019 18:21
-		fancyDateFormat : '$1 H:i', // will show like: Dnes 18:21
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 190112-182129
+		dateFormat : 'd. m. Y H:i', // will show like: 15. 03. 2020 16:45
+		fancyDateFormat : '$1 H:i', // will show like: Dnes 16:45
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200315-164551
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -303,6 +303,7 @@
 			'confirmNonUTF8'  : 'Kódování tohoto souboru nemoholo rozpoznán. Pro úpravy je třeba dočasně převést do kódování UTF-8.<br/>Prosím, vyberte kódování znaků souboru.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Byl změněn.<br/>Pokud obsahuje neuložené změny, dojde ke ztrátě práce.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Opravdu chcete položky přesunout do koše?', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'Opravdu chcete položky přesunout do "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Pro všechny',
 			'name'            : 'Název',
 			'size'            : 'Velikost',
@@ -401,6 +402,7 @@
 			'autoSync'        : 'Automatická synchronizace',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Přesunout nahoru',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Získat URL odkaz', // from v2.1.7 added 9.2.2016
+			'share'           : 'Podíl',
 			'selectedItems'   : 'Vybrané položky ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID složky', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Povolit přístup offline', // from v2.1.10 added 3.25.2016
@@ -442,6 +444,7 @@
 			'clearBrowserData': 'Inicializujte nastavení uložená v tomto prohlížeči', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Nastavení panelu nástrojů', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '...$1 znaků zbývá.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '...$1 řádků zůstává.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Součet', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Hrubá velikost souboru', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Zaměření na prvek dialogu s mouseover',  // from v2.1.30 added 2.11.2017
@@ -475,6 +478,7 @@
 			'integrations'    : 'Integrace', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Tento elFinder má integrované následující externí služby. Před použitím zkontrolujte podmínky používání, zásady ochrany osobních údajů atd.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : 'Zobrazit skryté položky', // from v2.1.41 added 24.7.2018
+			'Code Editor'     : 'Editor kódu',
 			'hideHidden'      : 'Skrýt skryté položky', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Zobrazit/skrýt skryté položky', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : 'Typy souborů, jež mají být povoleny pomocí "Nový soubor"', // from v2.1.41 added 7.8.2018
@@ -488,6 +492,9 @@
 			'email'           : 'E-mail', // from v2.1.43 added 19.10.2018
 			'license'         : 'Licence', // from v2.1.43 added 19.10.2018
 			'exportToSave'    : 'Tuto položku nelze uložit. Abyste se vyhnuli ztrátě úprav, musíte je exportovat do počítače.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Poklepáním na soubor jej vyberte.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Použít režim celé obrazovky', // from v2.1.47 added 19.2.2019
+			'Code Editor':'Editor kódu',
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Neznámý',
@@ -573,4 +580,3 @@
 		}
 	};
 }));
-

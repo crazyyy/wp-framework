@@ -105,7 +105,8 @@ class WPCF7_Mail {
 		);
 
 		$components = apply_filters( 'wpcf7_mail_components',
-			$components, wpcf7_get_current_contact_form(), $this );
+			$components, wpcf7_get_current_contact_form(), $this
+		);
 
 		if ( ! $send ) {
 			return $components;
@@ -116,7 +117,6 @@ class WPCF7_Mail {
 		$recipient = wpcf7_strip_newline( $components['recipient'] );
 		$body = $components['body'];
 		$additional_headers = trim( $components['additional_headers'] );
-		$attachments = $components['attachments'];
 
 		$headers = "From: $sender\n";
 
@@ -130,6 +130,66 @@ class WPCF7_Mail {
 		if ( $additional_headers ) {
 			$headers .= $additional_headers . "\n";
 		}
+
+		$attachments = array_filter(
+			(array) $components['attachments'],
+			function ( $attachment ) {
+				$path = path_join( WP_CONTENT_DIR, $attachment );
+
+				if ( ! wpcf7_is_file_path_in_content_dir( $path ) ) {
+					if ( WP_DEBUG ) {
+						trigger_error(
+							sprintf(
+								/* translators: %s: Attachment file path. */
+								__( 'Failed to attach a file. %s is not in the allowed directory.', 'contact-form-7' ),
+								$path
+							),
+							E_USER_NOTICE
+						);
+					}
+
+					return false;
+				}
+
+				if ( ! is_readable( $path ) or ! is_file( $path ) ) {
+					if ( WP_DEBUG ) {
+						trigger_error(
+							sprintf(
+								/* translators: %s: Attachment file path. */
+								__( 'Failed to attach a file. %s is not a readable file.', 'contact-form-7' ),
+								$path
+							),
+							E_USER_NOTICE
+						);
+					}
+
+					return false;
+				}
+
+				static $total_size = array();
+
+				if ( ! isset( $total_size[$this->name] ) ) {
+					$total_size[$this->name] = 0;
+				}
+
+				$file_size = (int) @filesize( $path );
+
+				if ( 25 * MB_IN_BYTES < $total_size[$this->name] + $file_size ) {
+					if ( WP_DEBUG ) {
+						trigger_error(
+							__( 'Failed to attach a file. The total file size exceeds the limit of 25 megabytes.', 'contact-form-7' ),
+							E_USER_NOTICE
+						);
+					}
+
+					return false;
+				}
+
+				$total_size[$this->name] += $file_size;
+
+				return true;
+			}
+		);
 
 		return wp_mail( $recipient, $subject, $body, $headers, $attachments );
 	}
@@ -157,10 +217,9 @@ class WPCF7_Mail {
 		if ( $submission = WPCF7_Submission::get_instance() ) {
 			$uploaded_files = $submission->uploaded_files();
 
-			foreach ( (array) $uploaded_files as $name => $path ) {
-				if ( false !== strpos( $template, "[${name}]" )
-				and ! empty( $path ) ) {
-					$attachments[] = $path;
+			foreach ( (array) $uploaded_files as $name => $paths ) {
+				if ( false !== strpos( $template, "[${name}]" ) ) {
+					$attachments = array_merge( $attachments, (array) $paths );
 				}
 			}
 		}
@@ -168,21 +227,18 @@ class WPCF7_Mail {
 		foreach ( explode( "\n", $template ) as $line ) {
 			$line = trim( $line );
 
-			if ( '[' == substr( $line, 0, 1 ) ) {
+			if ( '' === $line or '[' == substr( $line, 0, 1 ) ) {
 				continue;
 			}
 
-			$path = path_join( WP_CONTENT_DIR, $line );
+			$attachments[] = path_join( WP_CONTENT_DIR, $line );
+		}
 
-			if ( ! wpcf7_is_file_path_in_content_dir( $path ) ) {
-				// $path is out of WP_CONTENT_DIR
-				continue;
-			}
-
-			if ( is_readable( $path )
-			and is_file( $path ) ) {
-				$attachments[] = $path;
-			}
+		if ( $submission = WPCF7_Submission::get_instance() ) {
+			$attachments = array_merge(
+				$attachments,
+				(array) $submission->extra_attachments( $this->name )
+			);
 		}
 
 		return $attachments;
@@ -316,14 +372,13 @@ class WPCF7_MailTaggedText {
 			? $submission->get_posted_data( $field_name )
 			: null;
 
-		if ( null !== $submitted ) {
+		if ( $mail_tag->get_option( 'do_not_heat' ) ) {
+			$submitted = isset( $_POST[$field_name] ) ? $_POST[$field_name] : '';
+		}
 
-			if ( $mail_tag->get_option( 'do_not_heat' ) ) {
-				$submitted = isset( $_POST[$field_name] ) ? $_POST[$field_name] : '';
-			}
+		$replaced = $submitted;
 
-			$replaced = $submitted;
-
+		if ( null !== $replaced ) {
 			if ( $format = $mail_tag->get_option( 'format' ) ) {
 				$replaced = $this->format( $replaced, $format );
 			}
@@ -334,18 +389,23 @@ class WPCF7_MailTaggedText {
 				$replaced = esc_html( $replaced );
 				$replaced = wptexturize( $replaced );
 			}
+		}
 
-			if ( $form_tag = $mail_tag->corresponding_form_tag() ) {
-				$type = $form_tag->type;
+		if ( $form_tag = $mail_tag->corresponding_form_tag() ) {
+			$type = $form_tag->type;
 
-				$replaced = apply_filters(
-					"wpcf7_mail_tag_replaced_{$type}", $replaced,
-					$submitted, $html, $mail_tag );
-			}
+			$replaced = apply_filters(
+				"wpcf7_mail_tag_replaced_{$type}", $replaced,
+				$submitted, $html, $mail_tag
+			);
+		}
 
-			$replaced = apply_filters( 'wpcf7_mail_tag_replaced', $replaced,
-				$submitted, $html, $mail_tag );
+		$replaced = apply_filters(
+			'wpcf7_mail_tag_replaced', $replaced,
+			$submitted, $html, $mail_tag
+		);
 
+		if ( null !== $replaced ) {
 			$replaced = wp_unslash( trim( $replaced ) );
 
 			$this->replaced_tags[$tag] = $replaced;
@@ -353,7 +413,8 @@ class WPCF7_MailTaggedText {
 		}
 
 		$special = apply_filters( 'wpcf7_special_mail_tags', null,
-			$mail_tag->tag_name(), $html, $mail_tag );
+			$mail_tag->tag_name(), $html, $mail_tag
+		);
 
 		if ( null !== $special ) {
 			$this->replaced_tags[$tag] = $special;
@@ -368,7 +429,11 @@ class WPCF7_MailTaggedText {
 
 		foreach ( $original as $key => $value ) {
 			if ( preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $value ) ) {
-				$original[$key] = mysql2date( $format, $value );
+				$datetime = date_create( $value, wp_timezone() );
+
+				if ( false !== $datetime ) {
+					$original[$key] = wp_date( $format, $datetime->getTimestamp() );
+				}
 			}
 		}
 

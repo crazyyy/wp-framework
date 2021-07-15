@@ -83,7 +83,8 @@ function wpcf7_captchac_form_tag_handler( $tag ) {
 
 	$html = sprintf(
 		'<input type="hidden" name="_wpcf7_captcha_challenge_%1$s" value="%2$s" /><img %3$s />',
-		$tag->name, esc_attr( $prefix ), $atts );
+		$tag->name, esc_attr( $prefix ), $atts
+	);
 
 	return $html;
 }
@@ -116,7 +117,15 @@ function wpcf7_captchar_form_tag_handler( $tag ) {
 	$atts['id'] = $tag->get_id_option();
 	$atts['tabindex'] = $tag->get_option( 'tabindex', 'signed_int', true );
 	$atts['autocomplete'] = 'off';
-	$atts['aria-invalid'] = $validation_error ? 'true' : 'false';
+
+	if ( $validation_error ) {
+		$atts['aria-invalid'] = 'true';
+		$atts['aria-describedby'] = wpcf7_get_validation_error_reference(
+			$tag->name
+		);
+	} else {
+		$atts['aria-invalid'] = 'false';
+	}
 
 	$value = (string) reset( $tag->values );
 
@@ -138,7 +147,8 @@ function wpcf7_captchar_form_tag_handler( $tag ) {
 
 	$html = sprintf(
 		'<span class="wpcf7-form-control-wrap %1$s"><input %2$s />%3$s</span>',
-		sanitize_html_class( $tag->name ), $atts, $validation_error );
+		sanitize_html_class( $tag->name ), $atts, $validation_error
+	);
 
 	return $html;
 }
@@ -159,12 +169,12 @@ function wpcf7_captcha_validation_filter( $result, $tag ) {
 	$response = isset( $_POST[$name] ) ? (string) $_POST[$name] : '';
 	$response = wpcf7_canonicalize( $response );
 
-	if ( 0 == strlen( $prefix )
+	if ( 0 === strlen( $prefix )
 	or ! wpcf7_check_captcha( $prefix, $response ) ) {
 		$result->invalidate( $tag, wpcf7_get_message( 'captcha_not_match' ) );
 	}
 
-	if ( 0 != strlen( $prefix ) ) {
+	if ( 0 !== strlen( $prefix ) ) {
 		wpcf7_remove_captcha( $prefix );
 	}
 
@@ -174,8 +184,8 @@ function wpcf7_captcha_validation_filter( $result, $tag ) {
 
 /* Ajax echo filter */
 
-add_filter( 'wpcf7_ajax_onload', 'wpcf7_captcha_ajax_refill', 10, 1 );
-add_filter( 'wpcf7_ajax_json_echo', 'wpcf7_captcha_ajax_refill', 10, 1 );
+add_filter( 'wpcf7_refill_response', 'wpcf7_captcha_ajax_refill', 10, 1 );
+add_filter( 'wpcf7_feedback_response', 'wpcf7_captcha_ajax_refill', 10, 1 );
 
 function wpcf7_captcha_ajax_refill( $items ) {
 	if ( ! is_array( $items ) ) {
@@ -550,7 +560,7 @@ function wpcf7_cleanup_captcha_files() {
 
 			$stat = stat( path_join( $dir, $file ) );
 
-			if ( $stat['mtime'] + 3600 < time() ) { // 3600 secs == 1 hour
+			if ( $stat['mtime'] + HOUR_IN_SECONDS < time() ) {
 				@unlink( path_join( $dir, $file ) );
 			}
 		}

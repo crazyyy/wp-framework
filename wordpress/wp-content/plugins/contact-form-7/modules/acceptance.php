@@ -47,7 +47,15 @@ function wpcf7_acceptance_form_tag_handler( $tag ) {
 	$item_atts['name'] = $tag->name;
 	$item_atts['value'] = '1';
 	$item_atts['tabindex'] = $tag->get_option( 'tabindex', 'signed_int', true );
-	$item_atts['aria-invalid'] = $validation_error ? 'true' : 'false';
+
+	if ( $validation_error ) {
+		$item_atts['aria-invalid'] = 'true';
+		$item_atts['aria-describedby'] = wpcf7_get_validation_error_reference(
+			$tag->name
+		);
+	} else {
+		$item_atts['aria-invalid'] = 'false';
+	}
 
 	if ( $tag->has_option( 'default:on' ) ) {
 		$item_atts['checked'] = 'checked';
@@ -240,7 +248,7 @@ function wpcf7_tag_generator_acceptance( $contact_form, $args = '' ) {
 
 	$description = __( "Generate a form-tag for an acceptance checkbox. For more details, see %s.", 'contact-form-7' );
 
-	$desc_link = wpcf7_link( __( 'https://contactform7.com/acceptance-checkbox/', 'contact-form-7' ), __( 'Acceptance Checkbox', 'contact-form-7' ) );
+	$desc_link = wpcf7_link( __( 'https://contactform7.com/acceptance-checkbox/', 'contact-form-7' ), __( 'Acceptance checkbox', 'contact-form-7' ) );
 
 ?>
 <div class="control-box">

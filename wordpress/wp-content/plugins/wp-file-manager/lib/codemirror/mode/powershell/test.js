@@ -27,8 +27,8 @@
   MT('string_variable_escaping', '[string "a `$x"]');
   MT('string_variable', '[string "a ][variable-2 $x][string  b"]');
   MT('string_variable_spaces', '[string "a ][variable-2 ${x y}][string  b"]');
-  MT('string_expression', '[string "a ][punctuation $(][variable-2 $x][operator +][number 3][punctuation )][string  b"]');
-  MT('string_expression_nested', '[string "A][punctuation $(][string "a][punctuation $(][string "w"][punctuation )][string b"][punctuation )][string B"]');
+  MT('string_expression', '[string "a ][punctuation jQuery(][variable-2 $x][operator +][number 3][punctuation )][string  b"]');
+  MT('string_expression_nested', '[string "A][punctuation jQuery(][string "a][punctuation jQuery(][string "w"][punctuation )][string b"][punctuation )][string B"]');
 
   MT('string_heredoc', '[string @"]',
     '[string abc]',
@@ -40,7 +40,7 @@
     '[string a ][variable-2 $x][string  b]',
   '[string "@]');
   MT('string_heredoc_nested_string', '[string @"]',
-    '[string a][punctuation $(][string "w"][punctuation )][string b]',
+    '[string a][punctuation jQuery(][string "w"][punctuation )][string b]',
   '[string "@]');
   MT('string_heredoc_literal_quotes', "[string @']",
     '[string abc "\']',

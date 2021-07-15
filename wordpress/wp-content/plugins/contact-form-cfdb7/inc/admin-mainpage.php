@@ -8,7 +8,7 @@ if (!defined( 'ABSPATH')) exit;
 /**
  * Cfdb7_Wp_List_Table class will create the page to load the table
  */
-class Cfdb7_Wp_Main_Page
+class CFDB7_Wp_Main_Page
 {
     /**
      * Constructor will create the menu item
@@ -31,7 +31,7 @@ class Cfdb7_Wp_Main_Page
 
         add_menu_page( __( 'Contact Forms', 'contact-form-cfdb7' ), __( 'Contact Forms', 'contact-form-cfdb7' ), $cfdb7_cap, 'cfdb7-list.php', array($this, 'list_table_page'), 'dashicons-list-view' );
 
-         require_once 'add-ons.php';
+        require_once 'add-ons.php';
 
     }
     /**
@@ -51,13 +51,13 @@ class Cfdb7_Wp_Main_Page
 
         if ( !empty($fid) && empty($_GET['ufid']) ) {
 
-            new Cfdb7_Wp_Sub_Page();
+            new CFDB7_Wp_Sub_Page();
             return;
         }
 
         if( !empty($ufid) && !empty($fid) ){
 
-            new CFdb7_Form_Details();
+            new CFDB7_Form_Details();
             return;
         }
 

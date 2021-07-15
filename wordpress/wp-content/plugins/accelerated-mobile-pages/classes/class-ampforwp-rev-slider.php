@@ -9,7 +9,7 @@ require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-base-embed-handle
 
 class AMP_Rev_Slider_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Handler {
 	private static $script_slug = 'amp-carousel';
-	private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.1.js';
+	private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.2.js';
 
 	public function register_embed() {
 		add_shortcode( 'rev_slider', array( $this, 'shortcode' ) );
@@ -70,10 +70,18 @@ class AMP_Rev_Slider_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Han
 					$img_data = wp_get_attachment_metadata( $slide->getImageID() );
 					$url = $slide->getImageUrl();
 					$attachment_id = $slide->getImageID();
+					$width = 480;
+					$height = 270;
+					if(isset($img_data['width'])){
+						$width = $img_data['width'];
+					}
+					if(isset($img_data['height'])){
+						$height = $img_data['height'];
+					}	
 					$urls[] = apply_filters('amp_gallery_image_params', array(
 						'url' => $url,
-						'width' => intval($img_data['width']),
-						'height' => intval($img_data['height']),
+						'width' => intval($width),
+						'height' => intval($height),
 						'bgtype' => esc_attr($bgtype)
 					),$attachment_id);
 				}elseif( $bgtype == 'youtube' ){
@@ -114,10 +122,9 @@ class AMP_Rev_Slider_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Han
 				$bgtype = $slide->get_param(array('bg', 'type'),'');
 				$image_id = $slide->image_id;
 				$url = $slide->image_url;
-				if ( '' == $image_id ) {
-					$image_id = attachment_url_to_postid($url);
+				if ( $image_id ) {
+				 	$img_data = wp_get_attachment_metadata( $image_id );
 				}
-				$img_data = wp_get_attachment_metadata( $image_id );
 				if($bgtype == 'external'){
 					$url = esc_url($slide->get_param(array('bg','externalSrc'), ''));
 					$imgalt = esc_attr($slide->get_param('alt_attr', ''));
@@ -131,21 +138,50 @@ class AMP_Rev_Slider_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Han
 						'bgtype' => esc_attr($bgtype)
 					),$image_id);
 				}elseif( $bgtype == 'image'){
+					$width = 480;
+					$height = 270;
+					if(isset($img_data['width'])){
+						$width = $img_data['width'];
+					}
+					if(isset($img_data['height'])){
+						$height = $img_data['height'];
+					}
 					$urls[] = apply_filters('amp_gallery_image_params', array(
 						'url' => $url,
-						'width' => intval($img_data['width']),
-						'height' => intval($img_data['height']),
+						'width' => intval($width),
+						'height' => intval($height),
 						'bgtype' => esc_attr($bgtype)
 					),$image_id);
 				}elseif( $bgtype == 'youtube' ){
 					$youtube_id = $slide->get_param(array('bg','youtube'), '');
 					$cover_img = $slide->get_param(array('bg','image'), '');
 					$urls[] = apply_filters('amp_gallery_image_params', array(
-						'url' => esc_url($youtube_id),
+						'url' => esc_attr($youtube_id),
 						'width' => '480',
 						'height' => '270',
 						'bgtype' => esc_attr($bgtype),
 						'cover_img' => esc_attr($cover_img)
+					),$image_id);
+				}elseif($bgtype == 'vimeo'){
+					$vimeo_id = $slide->get_param(array('bg','vimeo'), '');
+					$cover_img = $slide->get_param(array('bg','image'), '');
+					$urls[] = apply_filters('amp_gallery_image_params', array(
+						'url' => esc_attr($vimeo_id),
+						'width' => '480',
+						'height' => '270',
+						'bgtype' => esc_attr($bgtype),
+						'cover_img' => esc_attr($cover_img)
+					),$image_id);
+				}elseif($bgtype == 'html5'){
+					$html5_url = $slide->get_param(array('bg','mpeg'), '');
+					$html5_url = str_replace('http:','https:',$html5_url);
+					$cover_img = $slide->get_param(array('bg','image'), '');
+					$urls[] = apply_filters('amp_gallery_image_params', array(
+						'url' => esc_url($html5_url),
+						'width' => '480',
+						'height' => '270',
+						'bgtype' => esc_attr($bgtype),
+						'cover_img' => esc_url($cover_img)
 					),$image_id);
 				}
 			}
@@ -241,9 +277,32 @@ class AMP_Rev_Slider_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Han
 					'layout'=>'responsive',
 					'class'  => 'amp-carousel-img',
 					'data-param-playlist'=> $image['url'],
-					'data-param-modestbranding'=> '1'
+					'data-param-modestbranding'=> '1',
+					'autoplay' => '',
 				);
 				$tag_type = 'amp-youtube';
+			}elseif( $image['bgtype'] =="vimeo"){
+				$amp_img_arr = array(
+					'data-videoid'=> $image['url'],
+					'width' => $image['width'],
+					'height' => $image['height'],
+					'layout'=>'responsive',
+					'class'  => 'amp-carousel-img',
+					'autoplay' => '',
+				);
+				$tag_type = 'amp-vimeo';
+			}elseif( $image['bgtype'] =="html5"){
+				$amp_img_arr = array(
+					'src'=> $image['url'],
+					'width' => $image['width'],
+					'height' => $image['height'],
+					'layout'=>'responsive',
+					'class'  => 'amp-carousel-img',
+					'poster' => $image['cover_img'],
+					'controls' => '',
+					'autoplay' => '',
+				);
+				$tag_type = 'amp-video';
 			}
 			if(  3 == ampforwp_get_setting('ampforwp-gallery-design-type') || true == ampforwp_get_setting('ampforwp-gallery-lightbox') ){
 				$design3_additional_attr = array('on'=> 'tap:gallery-lightbox', 'role'=>'button', 
@@ -324,16 +383,22 @@ class AMP_Rev_Slider_Embed_Handler extends AMPforWP\AMPVendor\AMP_Base_Embed_Han
 
 		//replacements
 			$r = rand(1,100);
-			$amp_carousel = AMP_HTML_Utils::build_tag(
-							'amp-carousel',
-							array(
+
+			$carousel_args = array(
 								'width' => $this->args['width'],
 								'height' => $this->args['height'],
 								'type' => 'slides',
 								'layout' => 'responsive',
 								'class'  => 'collapsible-captions',
 								'id' => 'carousel-with-carousel-preview-'.$r
-							),
+							);
+			$c_args = array('loop'=>'', 'autoplay'=>'');
+			$carousel_filter = apply_filters('ampforwp_carousel_args',$c_args);
+			$carousel_args = array_merge($carousel_args,$carousel_filter);
+
+			$amp_carousel = AMP_HTML_Utils::build_tag(
+							'amp-carousel',
+							$carousel_args,
 							implode( PHP_EOL, $images ));
 
 			$amp_carousel_with_thumbnail_nav = apply_filters('amp_thumbnail_images', $amp_images_small, $r, $markup);

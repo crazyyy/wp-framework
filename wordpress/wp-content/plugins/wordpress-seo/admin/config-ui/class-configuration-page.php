@@ -49,12 +49,12 @@ class WPSEO_Configuration_Page {
 		$this->remove_notification();
 		$this->remove_notification_option();
 
-		wp_redirect( admin_url( 'admin.php?page=' . WPSEO_Admin::PAGE_IDENTIFIER ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=' . WPSEO_Admin::PAGE_IDENTIFIER ) );
 		exit;
 	}
 
 	/**
-	 *  Registers the page for the wizard.
+	 * Registers the page for the wizard.
 	 */
 	public function add_wizard_page() {
 		add_dashboard_page( '', '', 'wpseo_manage_options', self::PAGE_IDENTIFIER, '' );
@@ -90,10 +90,10 @@ class WPSEO_Configuration_Page {
 
 		$config = $this->get_config();
 
-		wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'configuration-wizard', 'yoastWizardConfig', $config );
+		$asset_manager->localize_script( 'configuration-wizard', 'yoastWizardConfig', $config );
 
 		$yoast_components_l10n = new WPSEO_Admin_Asset_Yoast_Components_L10n();
-		$yoast_components_l10n->localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'configuration-wizard' );
+		$yoast_components_l10n->localize_script( 'configuration-wizard' );
 	}
 
 	/**

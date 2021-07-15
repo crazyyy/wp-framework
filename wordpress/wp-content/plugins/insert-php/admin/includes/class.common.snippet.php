@@ -96,6 +96,7 @@ class WINP_Common_Snippet {
 			'js'        => __( 'Js snippet', 'insert-php' ),
 			'html'      => __( 'Html snippet', 'insert-php' ),
 			'universal' => __( 'Universal snippet', 'insert-php' ),
+			'advert'    => __( 'Advertisement snippet', 'insert-php' ),
 		];
 		$url     = 'post-new.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&winp_item=';
 		?>
@@ -118,24 +119,25 @@ class WINP_Common_Snippet {
             }
         </style>
         <script type="text/javascript">
-			/* <![CDATA[ */
-			jQuery(window).ready(function($) {
-				$('#wpbody-content a.page-title-action').hide();
-				var h1 = '<?php _e( 'Woody snippets', 'insert-php' ); ?> ';
-				h1 += ' <select class="winp-page-title-action">';
-				h1 += '<option value="<?php echo $url; ?>php"><?php echo $strings['php']; ?></option>';
-				h1 += '<option value="<?php echo $url; ?>text"><?php echo $strings['text']; ?></option>';
-				h1 += '<option value="<?php echo $url; ?>css"><?php echo $strings['css']; ?></option>';
-				h1 += '<option value="<?php echo $url; ?>js"><?php echo $strings['js']; ?></option>';
-				h1 += '<option value="<?php echo $url; ?>html"><?php echo $strings['html']; ?></option>';
-				h1 += '<option value="<?php echo $url; ?>universal"><?php echo $strings['universal']; ?></option>';
-				h1 += '</select>';
-				h1 += '<a href="#" id="winp-add-snippet-action" class="page-title-action"><?php _e( 'Add', 'insert-php' ); ?></a>';
-				$('#wpbody-content h1').html(h1);
-				$('#winp-add-snippet-action').click(function() {
-					window.location.href = $('select.winp-page-title-action').val();
-				});
-			});
+            /* <![CDATA[ */
+            jQuery(window).ready(function ($) {
+                $('#wpbody-content a.page-title-action').hide();
+                var h1 = '<?php _e( 'Woody snippets', 'insert-php' ); ?> ';
+                h1 += ' <select class="winp-page-title-action">';
+                h1 += '<option value="<?php echo $url; ?>php"><?php echo $strings['php']; ?></option>';
+                h1 += '<option value="<?php echo $url; ?>text"><?php echo $strings['text']; ?></option>';
+                h1 += '<option value="<?php echo $url; ?>css"><?php echo $strings['css']; ?></option>';
+                h1 += '<option value="<?php echo $url; ?>js"><?php echo $strings['js']; ?></option>';
+                h1 += '<option value="<?php echo $url; ?>html"><?php echo $strings['html']; ?></option>';
+                h1 += '<option value="<?php echo $url; ?>universal"><?php echo $strings['universal']; ?></option>';
+                h1 += '<option value="<?php echo $url; ?>advert"><?php echo $strings['advert']; ?></option>';
+                h1 += '</select>';
+                h1 += '<a href="#" id="winp-add-snippet-action" class="page-title-action"><?php _e( 'Add', 'insert-php' ); ?></a>';
+                $('#wpbody-content h1').html(h1);
+                $('#winp-add-snippet-action').click(function () {
+                    window.location.href = $('select.winp-page-title-action').val();
+                });
+            });
         </script>
 		<?php
 	}
@@ -152,6 +154,7 @@ class WINP_Common_Snippet {
 				'js'        => __( 'Js snippet', 'insert-php' ),
 				'html'      => __( 'Html snippet', 'insert-php' ),
 				'universal' => __( 'Universal snippet', 'insert-php' ),
+				'advert'    => __( 'Advertisement snippet', 'insert-php' ),
 			],
 			'edit' => [
 				'php'       => __( 'Edit php snippet', 'insert-php' ),
@@ -160,6 +163,7 @@ class WINP_Common_Snippet {
 				'js'        => __( 'Edit js snippet', 'insert-php' ),
 				'html'      => __( 'Edit html snippet', 'insert-php' ),
 				'universal' => __( 'Edit universal snippet', 'insert-php' ),
+				'advert'    => __( 'Edit advertisement snippet', 'insert-php' ),
 			]
 		];
 
@@ -181,19 +185,20 @@ class WINP_Common_Snippet {
 			$html .= '<option value="' . $url . 'js">' . $strings['add']['js'] . '</option>';
 			$html .= '<option value="' . $url . 'html">' . $strings['add']['html'] . '</option>';
 			$html .= '<option value="' . $url . 'universal">' . $strings['add']['universal'] . '</option>';
+			$html .= '<option value="' . $url . 'advert">' . $strings['add']['advert'] . '</option>';
 			$html .= '</select>';
 			$html .= '<a href="#" id="winp-add-snippet-action" class="page-title-action">' . __( 'Add', 'insert-php' ) . '</a>';
 		} ?>
         <script type="text/javascript">
-			/* <![CDATA[ */
-			jQuery(window).ready(function($) {
-				$('#wpbody-content a.page-title-action').hide();
-				$('#wpbody-content h1').html('<?php echo $html; ?>');
-				$('#winp-add-snippet-action').click(function() {
-					window.location.href = $('select.winp-page-title-action').val();
-				});
-			});
-			/* ]]> */
+            /* <![CDATA[ */
+            jQuery(window).ready(function ($) {
+                $('#wpbody-content a.page-title-action').hide();
+                $('#wpbody-content h1').html('<?php echo $html; ?>');
+                $('#winp-add-snippet-action').click(function () {
+                    window.location.href = $('select.winp-page-title-action').val();
+                });
+            });
+            /* ]]> */
         </script>
 		<?php
 	}
@@ -270,8 +275,12 @@ class WINP_Common_Snippet {
         <div class="inside">
             <div id="edit-slug-box" class="hide-if-no-js">
                 <strong><?php _e( 'Permalink', 'insert-php' ) ?>:</strong>
-                <span id="sample-permalink"><a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( WINP_UPLOAD_URL ) . '/'; ?><span id="editable-post-name"><?php echo esc_html( $filename ); ?></span>.<?php echo esc_html( $filetype ); ?></a></span>
-                <span id="winp-edit-slug-buttons"><button type="button" class="winp-edit-slug button button-small hide-if-no-js" aria-label="<?php _e( 'Edit permalink', 'insert-php' ) ?>"><?php _e( 'Edit', 'insert-php' ) ?></button></span>
+                <span id="sample-permalink"><a
+                            href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( WINP_UPLOAD_URL ) . '/'; ?><span
+                                id="editable-post-name"><?php echo esc_html( $filename ); ?></span>.<?php echo esc_html( $filetype ); ?></a></span>
+                <span id="winp-edit-slug-buttons"><button type="button"
+                                                          class="winp-edit-slug button button-small hide-if-no-js"
+                                                          aria-label="<?php _e( 'Edit permalink', 'insert-php' ) ?>"><?php _e( 'Edit', 'insert-php' ) ?></button></span>
                 <span id="editable-post-name-full"><?php echo esc_html( $filename ); ?></span>
             </div>
 			<?php wp_nonce_field( 'winp-permalink', 'winp-permalink-nonce' ); ?>
@@ -426,12 +435,13 @@ class WINP_Common_Snippet {
 				$_snippet = WINP_Plugin::app()->get_api_object()->get_snippet( $snippet_id, $common );
 				if ( ! empty( $_snippet ) ) {
 					$snippet = [
-						'title'   => $_snippet->title,
-						'desc'    => $_snippet->description,
-						'type'    => $_snippet->type->slug,
-						'content' => $_snippet->content,
-						'type_id' => $_snippet->type_id,
-						'scope'   => $_snippet->execute_everywhere,
+						'title'    => $_snippet->title,
+						'desc'     => $_snippet->description,
+						'type'     => $_snippet->type->slug,
+						'content'  => $_snippet->content,
+						'type_id'  => $_snippet->type_id,
+						'scope'    => $_snippet->execute_everywhere,
+						'priority' => $_snippet->priority,
 					];
 				}
 			}
@@ -450,6 +460,7 @@ class WINP_Common_Snippet {
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_description', $snippet['desc'] );
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_draft', true );
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_scope', $snippet['scope'] );
+				WINP_Helper::updateMetaOption( $post_ID, 'snippet_priority', $snippet['priority'] );
 
 				wp_redirect( admin_url( 'post.php?post=' . $post_ID . '&action=edit' ) );
 			}
@@ -472,24 +483,24 @@ class WINP_Common_Snippet {
 	 */
 	public function admin_footer() {
 		?>
-        <script type="text/javascript">!function(e, t, n) {
-				function a() {
-					var e = t.getElementsByTagName("script")[0], n = t.createElement("script");
-					n.type = "text/javascript", n.async = !0, n.src = "https://beacon-v2.helpscout.net", e.parentNode.insertBefore(n, e)
-				}
+        <script type="text/javascript">!function (e, t, n) {
+                function a() {
+                    var e = t.getElementsByTagName("script")[0], n = t.createElement("script");
+                    n.type = "text/javascript", n.async = !0, n.src = "https://beacon-v2.helpscout.net", e.parentNode.insertBefore(n, e)
+                }
 
-				if( e.Beacon = n = function(t, n, a) {
-					e.Beacon.readyQueue.push({
-						method: t,
-						options: n,
-						data: a
-					})
-				}, n.readyQueue = [], "complete" === t.readyState ) {
-					return a();
-				}
-				e.attachEvent ? e.attachEvent("onload", a) : e.addEventListener("load", a, !1)
-			}(window, document, window.Beacon || function() {
-			});</script>
+                if (e.Beacon = n = function (t, n, a) {
+                    e.Beacon.readyQueue.push({
+                        method: t,
+                        options: n,
+                        data: a
+                    })
+                }, n.readyQueue = [], "complete" === t.readyState) {
+                    return a();
+                }
+                e.attachEvent ? e.attachEvent("onload", a) : e.addEventListener("load", a, !1)
+            }(window, document, window.Beacon || function () {
+            });</script>
         <script type="text/javascript">window.Beacon('init', '1a4078fd-3e77-4692-bcfa-47bb4da0cee5')</script>
 		<?php
 	}

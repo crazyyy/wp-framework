@@ -4,7 +4,7 @@
  * @author Luis Faura <luis@luisfaura.es>
  * @author Adrià Vilanova <me@avm99963.tk>
  * @author Wilman Marín Duran <fuclo05@hotmail.com>
- * @version 2018-04-10
+ * @version 2020-09-01
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -19,9 +19,9 @@
 		translator : 'Julián Torres &lt;julian.torres@pabernosmatao.com&gt;, Luis Faura &lt;luis@luisfaura.es&gt;, Adrià Vilanova &lt;me@avm99963.tk&gt;, Wilman Marín Duran &lt;fuclo05@hotmail.com&gt;',
 		language   : 'Español internacional',
 		direction  : 'ltr',
-		dateFormat : 'M d, Y h:i A', // Mar 13, 2012 05:27 PM
-		fancyDateFormat : '$1 h:i A', // will produce smth like: Today 12:25 PM
-		nonameDateFormat : 'ymd-His', // to apply if upload file is noname: 120513172700
+		dateFormat : 'M d, Y h:i A', // will show like: Sep 01, 2020 10:11 AM
+		fancyDateFormat : '$1 h:i A', // will show like: Hoy 10:11 AM
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200901-101112
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -117,6 +117,7 @@
 			'errEditorNotFound'    : 'Editor no encontrado para este tipo de archivo.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Error ocurrido en el lado del servidor.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'No es posible vaciar la carpeta "$1".', // from v2.1.25 added 22.6.2017
+			'moreErrors'           : 'Hay $1 más errores.', // from v2.1.44 added 9.12.2018
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Crear archivo',
@@ -165,6 +166,7 @@
 			'cmdselectnone': 'Seleccionar ninguno', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Invertir selección', // from v2.1.28 added 15.08.2017
 			'cmdopennew'   : 'Abrir en nueva ventana', // from v2.1.38 added 3.4.2018
+			'cmdhide'      : 'Ocultar (preferencia)', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Cerrar',
@@ -226,6 +228,7 @@
 			'ntfchkdir'   : 'Comprobando carpeta de destino', // from v2.1.24 added 3.5.2017
 			'ntfundo'     : 'Deshaciendo operación previa', // from v2.1.27 added 31.07.2017
 			'ntfredo'     : 'Rehaciendo previo deshacer', // from v2.1.27 added 31.07.2017
+			'ntfchkcontent' : 'Comprobación de los contenidos', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
 			'volume_Trash' : 'Papelera', //from v2.1.24 added 29.4.2017
@@ -289,6 +292,9 @@
 			'untitled file.txt' : 'NuevoArchivo.txt', // added 10.11.2015
 			'untitled folder'   : 'NuevaCarpeta',   // added 10.11.2015
 			'Archive'           : 'NuevoArchivo',  // from v2.1 added 10.11.2015
+			'untitled file'     : 'NewFile.$1',  // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: Archivar',    // from v2.1.41 added 6.8.2018
+			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Se necesita confirmación',
@@ -299,6 +305,7 @@
 			'confirmNonUTF8'  : 'Codificación de caracteres de este archivo no pudo ser detectada. Es necesario convertir temporalmente a UTF-8 para editarlo. <br/> Por favor, seleccione la codificación de caracteres de este archivo.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Ha sido modificado.<br/>Perderás los cambios si no los guardas.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : '¿Estás seguro que quieres mover los elementos a la papelera?', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : '¿Estás segura de que quieres mover elementos a "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Aplicar a todo',
 			'name'            : 'Nombre',
 			'size'            : 'Tamaño',
@@ -316,6 +323,10 @@
 			'selectlfile'     : 'Seleccionar último archivo',
 			'viewlist'        : 'ver como lista',
 			'viewicons'       : 'Ver como iconos',
+			'viewSmall'       : 'Iconos pequeños', // from v2.1.39 added 22.5.2018
+			'viewMedium'      : 'Iconos medianos', // from v2.1.39 added 22.5.2018
+			'viewLarge'       : 'Iconos grandes', // from v2.1.39 added 22.5.2018
+			'viewExtraLarge'  : 'Iconos extra grandes', // from v2.1.39 added 22.5.2018
 			'places'          : 'Lugares',
 			'calc'            : 'Calcular',
 			'path'            : 'Ruta',
@@ -393,6 +404,7 @@
 			'autoSync'        : 'Sincronización automática',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Mover arriba',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Obtener enlace', // from v2.1.7 added 9.2.2016
+			'share'           : 'Compartir',
 			'selectedItems'   : 'Elementos seleccionados ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID carpeta', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Permitir acceso sin conexión', // from v2.1.10 added 3.25.2016
@@ -434,6 +446,7 @@
 			'clearBrowserData': 'Inicializa la configuración guardada en este navegador', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Configuración de la barra de herramientas', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '...falta $1 caracteres.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $1 líneas dejaron.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Suma', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Tamaño de archivo aproximado', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Centrado en el elemento de diálogo con \'mouseover\'',  // from v2.1.30 added 2.11.2017
@@ -459,6 +472,30 @@
 			'workspace'       : 'Espacio de trabajo', // from v2.1.38 added 4.4.2018
 			'dialog'          : 'Diálogo', // from v2.1.38 added 4.4.2018
 			'all'             : 'Todo', // from v2.1.38 added 4.4.2018
+			'iconSize'        : 'Tamaño del icono (vista de iconos)', // from v2.1.39 added 7.5.2018
+			'editorMaximized' : 'Abra la ventana del editor maximizada', // from v2.1.40 added 30.6.2018
+			'editorConvNoApi' : 'Debido a que la conversión por API no está disponible actualmente, convierta en el sitio web.', //from v2.1.40 added 8.7.2018
+			'editorConvNeedUpload' : 'Después de la conversión, debe cargar con la URL del artículo o un archivo descargado para guardar el archivo convertido.', //from v2.1.40 added 8.7.2018
+			'convertOn'       : 'Convertir en el sitio de $1', // from v2.1.40 added 10.7.2018
+			'integrations'    : 'Integraciones', // from v2.1.40 added 11.7.2018
+			'integrationWith' : 'Este elFinder tiene integrados los siguientes servicios externos. Consulte los términos de uso, la política de privacidad, etc. antes de usarlo.', // from v2.1.40 added 11.7.2018
+			'showHidden'      : 'Mostrar elementos ocultos', // from v2.1.41 added 24.7.2018
+			'Code Editor'     : 'Editora de código',
+			'hideHidden'      : 'Ocultar elementos ocultos', // from v2.1.41 added 24.7.2018
+			'toggleHidden'    : 'Mostrar/Ocultar elementos ocultos', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'Tipos de archivos para habilitar con "Archivo nuevo"', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Tipo de archivo de texto', // from v2.1.41 added 7.8.2018
+			'add'             : 'Añadir', // from v2.1.41 added 7.8.2018
+			'theme'           : 'Tema', // from v2.1.43 added 19.10.2018
+			'default'         : 'Defecto', // from v2.1.43 added 19.10.2018
+			'description'     : 'Descripción', // from v2.1.43 added 19.10.2018
+			'website'         : 'Sitio web', // from v2.1.43 added 19.10.2018
+			'author'          : 'Autora', // from v2.1.43 added 19.10.2018
+			'email'           : 'Correo electrónico', // from v2.1.43 added 19.10.2018
+			'license'         : 'Licencia', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'Este elemento no se puede guardar. Para evitar perder las ediciones, debe exportar a su PC.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Haga doble clic en el archivo para seleccionarlo.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Utilice el modo de pantalla completa', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Desconocido',

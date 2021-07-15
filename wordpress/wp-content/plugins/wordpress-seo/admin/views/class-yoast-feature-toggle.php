@@ -25,6 +25,13 @@ class Yoast_Feature_Toggle {
 	protected $setting = '';
 
 	/**
+	 * Whether the feature is premium or not.
+	 *
+	 * @var boolean
+	 */
+	protected $premium = false;
+
+	/**
 	 * Feature toggle label.
 	 *
 	 * @var string
@@ -39,6 +46,13 @@ class Yoast_Feature_Toggle {
 	protected $read_more_url = '';
 
 	/**
+	 * URL to learn more about the premium feature.
+	 *
+	 * @var string
+	 */
+	protected $premium_url = '';
+
+	/**
 	 * Label for the learn more link.
 	 *
 	 * @var string
@@ -51,6 +65,13 @@ class Yoast_Feature_Toggle {
 	 * @var string
 	 */
 	protected $extra = '';
+
+	/**
+	 * Additional content to be rendered after the toggle.
+	 *
+	 * @var string
+	 */
+	protected $after = '';
 
 	/**
 	 * Value to specify the feature toggle order.
@@ -69,7 +90,7 @@ class Yoast_Feature_Toggle {
 	 *
 	 *     @type string $name            Required. Feature toggle identifier.
 	 *     @type string $setting         Required. Name of the setting the feature toggle is associated with.
-	 *     @type string $label           Required. Feature toggle label.
+	 *     @type string $label           Feature toggle label.
 	 *     @type string $read_more_url   URL to learn more about the feature. Default empty string.
 	 *     @type string $read_more_label Label for the learn more link. Default empty string.
 	 *     @type string $extra           Additional help content for the feature. Default empty string.
@@ -80,7 +101,7 @@ class Yoast_Feature_Toggle {
 	 * @throws InvalidArgumentException Thrown when a required argument is missing.
 	 */
 	public function __construct( array $args ) {
-		$required_keys = [ 'name', 'setting', 'label' ];
+		$required_keys = [ 'name', 'setting' ];
 
 		foreach ( $required_keys as $key ) {
 			if ( empty( $args[ $key ] ) ) {

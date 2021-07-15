@@ -29,7 +29,7 @@
  *
  * @author Google, Inc.
  */
-class Google_Service_Dns extends Google_Service
+class Google_Service_Dns extends UDP_Google_Service
 {
   /** View and manage your data across Google Cloud Platform services. */
   const CLOUD_PLATFORM =
@@ -52,7 +52,7 @@ class Google_Service_Dns extends Google_Service
    *
    * @param Google_Client $client
    */
-  public function __construct(Google_Client $client)
+  public function __construct(UDP_Google_Client $client)
   {
     parent::__construct($client);
     $this->servicePath = 'dns/v1/projects/';
@@ -276,7 +276,7 @@ class Google_Service_Dns extends Google_Service
  *   $changes = $dnsService->changes;
  *  </code>
  */
-class Google_Service_Dns_Changes_Resource extends Google_Service_Resource
+class Google_Service_Dns_Changes_Resource extends UDP_Google_Service_Resource
 {
 
   /**
@@ -349,7 +349,7 @@ class Google_Service_Dns_Changes_Resource extends Google_Service_Resource
  *   $managedZones = $dnsService->managedZones;
  *  </code>
  */
-class Google_Service_Dns_ManagedZones_Resource extends Google_Service_Resource
+class Google_Service_Dns_ManagedZones_Resource extends UDP_Google_Service_Resource
 {
 
   /**
@@ -428,7 +428,7 @@ class Google_Service_Dns_ManagedZones_Resource extends Google_Service_Resource
  *   $projects = $dnsService->projects;
  *  </code>
  */
-class Google_Service_Dns_Projects_Resource extends Google_Service_Resource
+class Google_Service_Dns_Projects_Resource extends UDP_Google_Service_Resource
 {
 
   /**
@@ -454,7 +454,7 @@ class Google_Service_Dns_Projects_Resource extends Google_Service_Resource
  *   $resourceRecordSets = $dnsService->resourceRecordSets;
  *  </code>
  */
-class Google_Service_Dns_ResourceRecordSets_Resource extends Google_Service_Resource
+class Google_Service_Dns_ResourceRecordSets_Resource extends UDP_Google_Service_Resource
 {
 
   /**

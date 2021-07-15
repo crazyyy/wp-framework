@@ -17,9 +17,9 @@ class UpdraftCentral_Theme_Commands extends UpdraftCentral_Commands {
 	 * @param array  $data       an array of data post or get fields
 	 * @param array  $extra_info extrainfo use in the udrpc_action, e.g. user_id
 	 *
-	 * link to udrpc_action main function in class UpdraftPlus_UpdraftCentral_Listener
+	 * link to udrpc_action main function in class UpdraftCentral_Listener
 	 */
-	public function _pre_action($command, $data, $extra_info) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function _pre_action($command, $data, $extra_info) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This function is called from listner.php and $extra_info is being sent.
 		// Here we assign the current blog_id to a variable $blog_id
 		$blog_id = get_current_blog_id();
 		if (!empty($data['site_id'])) $blog_id = $data['site_id'];
@@ -36,9 +36,9 @@ class UpdraftCentral_Theme_Commands extends UpdraftCentral_Commands {
 	 * @param array  $data       an array of data post or get fields
 	 * @param array  $extra_info extrainfo use in the udrpc_action, e.g. user_id
 	 *
-	 * link to udrpc_action main function in class UpdraftPlus_UpdraftCentral_Listener
+	 * link to udrpc_action main function in class UpdraftCentral_Listener
 	 */
-	public function _post_action($command, $data, $extra_info) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function _post_action($command, $data, $extra_info) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		// Here, we're restoring to the current (default) blog before we switched
 		if ($this->switched) restore_current_blog();
 	}
@@ -556,6 +556,7 @@ class UpdraftCentral_Theme_Commands extends UpdraftCentral_Commands {
 			$theme->child_theme = !empty($template) ? true : false;
 			$theme->website = $website;
 			$theme->multisite = is_multisite();
+			$theme->site_url = trailingslashit(get_bloginfo('url'));
 
 			if ($theme->child_theme) {
 				$parent_theme = wp_get_theme($template);

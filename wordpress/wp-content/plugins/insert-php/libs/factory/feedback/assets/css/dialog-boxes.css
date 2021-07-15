@@ -1,0 +1,674 @@
+.wbcr-factory-feedback-109-modal {
+    position: fixed;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    z-index: 100000;
+    display: none;
+    background: rgba(0, 0, 0, 0.6)
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-dialog {
+    background: transparent;
+    position: absolute;
+    left: 50%;
+    margin-left: -298px;
+    padding-bottom: 30px;
+    top: -100%;
+    z-index: 100001;
+    width: 596px
+}
+
+@media (max-width: 650px) {
+    .wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-dialog {
+        margin-left: -50%;
+        box-sizing: border-box;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 100%
+    }
+
+    .wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-dialog .wbcr-factory-feedback-109-modal-panel > h3 > strong {
+        font-size: 1.3em
+    }
+}
+
+.wbcr-factory-feedback-109-modal.active {
+    display: block
+}
+
+.wbcr-factory-feedback-109-modal.active:before {
+    display: block
+}
+
+.wbcr-factory-feedback-109-modal.active .wbcr-factory-feedback-109-modal-dialog {
+    top: 10%
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-success .wbcr-factory-feedback-109-modal-header {
+    border-bottom-color: #46b450
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-success .wbcr-factory-feedback-109-modal-body {
+    background-color: #f7fff7
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-warn .wbcr-factory-feedback-109-modal-header {
+    border-bottom-color: #ffb900
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-warn .wbcr-factory-feedback-109-modal-body {
+    background-color: #fff8e5
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-error .wbcr-factory-feedback-109-modal-header {
+    border-bottom-color: #dc3232
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-error .wbcr-factory-feedback-109-modal-body {
+    background-color: #ffeaea
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-body, .wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-footer {
+    border: 0;
+    background: #fefefe;
+    padding: 20px
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header {
+    border-bottom: #eeeeee solid 1px;
+    background: #fbfbfb;
+    padding: 15px 20px;
+    position: relative;
+    margin-bottom: -10px
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header h4 {
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #cacaca;
+    text-shadow: 1px 1px 1px #fff;
+    letter-spacing: 0.6px;
+    -webkit-font-smoothing: antialiased
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header .wbcr-factory-feedback-109-close {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    cursor: pointer;
+    color: #bbb;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    padding: 3px;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header .wbcr-factory-feedback-109-close:hover {
+    color: #fff;
+    background: #aaa
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header .wbcr-factory-feedback-109-close .dashicons, .wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header .wbcr-factory-feedback-109-close:hover .dashicons {
+    text-decoration: none
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-body {
+    border-bottom: 0
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-body p {
+    font-size: 14px
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-body h2 {
+    font-size: 20px;
+    line-height: 1.5em
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-body > div {
+    margin-top: 10px
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-body > div h2 {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 0
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-footer {
+    border-top: #eeeeee solid 1px;
+    text-align: right
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-footer > .button {
+    margin: 0 7px
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-footer > .button:first-child {
+    margin: 0
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-panel > .notice.inline {
+    margin: 0;
+    display: none
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-panel:not(.active) {
+    display: none
+}
+
+.rtl .wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header .wbcr-factory-feedback-109-close {
+    right: auto;
+    left: 20px
+}
+
+body.has-wbcr-factory-feedback-109-modal {
+    overflow: hidden
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .reason-input, .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .internal-message {
+    margin: 3px 0 3px 22px
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .reason-input input, .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .reason-input textarea, .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .internal-message input, .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .internal-message textarea {
+    width: 100%
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback li.reason.has-internal-message .internal-message {
+    border: 1px solid #ccc;
+    padding: 7px;
+    display: none
+}
+
+@media (max-width: 650px) {
+    .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback li.reason li.reason {
+        margin-bottom: 10px
+    }
+
+    .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback li.reason li.reason .reason-input, .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback li.reason li.reason .internal-message {
+        margin-left: 29px
+    }
+
+    .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback li.reason li.reason label {
+        display: table
+    }
+
+    .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback li.reason li.reason label > span {
+        display: table-cell;
+        font-size: 1.3em
+    }
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .wbcr-factory-feedback-109-anonymous-feedback-label {
+    float: left
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .wbcr-factory-feedback-109-modal-panel {
+    margin-top: 0 !important
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-deactivation-feedback .wbcr-factory-feedback-109-modal-panel h3 {
+    margin-top: 0;
+    line-height: 1.5em
+}
+
+#the-list .deactivate > .wbcr-factory-feedback-109-slug {
+    display: none
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-subscription-cancellation .wbcr-factory-feedback-109-price-increase-warning {
+    color: red;
+    font-weight: bold;
+    padding: 0 25px;
+    margin-bottom: 0
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-subscription-cancellation ul.subscription-actions label input {
+    float: left;
+    top: 5px;
+    position: relative
+}
+
+.rtl .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-subscription-cancellation ul.subscription-actions label input {
+    float: right
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-subscription-cancellation ul.subscription-actions label span {
+    display: block;
+    margin-left: 24px
+}
+
+.rtl .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-subscription-cancellation ul.subscription-actions label span {
+    margin-left: 0;
+    margin-right: 24px
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-activation .wbcr-factory-feedback-109-modal-body input.wbcr-factory-feedback-109-license-key {
+    width: 100%
+}
+
+.wbcr-factory-feedback-109-license-options-container table, .wbcr-factory-feedback-109-license-options-container table select, .wbcr-factory-feedback-109-license-options-container table .wbcr-factory-feedback-109-available-license-key {
+    width: 100%
+}
+
+.wbcr-factory-feedback-109-license-options-container table td:first-child {
+    width: 1%
+}
+
+.wbcr-factory-feedback-109-license-options-container table .wbcr-factory-feedback-109-other-license-key-container label {
+    position: relative;
+    top: 6px;
+    float: left;
+    margin-right: 5px
+}
+
+.wbcr-factory-feedback-109-license-options-container table .wbcr-factory-feedback-109-other-license-key-container div {
+    overflow: hidden;
+    width: auto;
+    height: 30px;
+    display: block;
+    top: 2px;
+    position: relative
+}
+
+.wbcr-factory-feedback-109-license-options-container table .wbcr-factory-feedback-109-other-license-key-container div input {
+    margin: 0
+}
+
+.wbcr-factory-feedback-109-sites-list-container td {
+    cursor: pointer
+}
+
+.wbcr-factory-feedback-109-multisite-options-container {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 5px
+}
+
+.wbcr-factory-feedback-109-multisite-options-container a {
+    text-decoration: none
+}
+
+.wbcr-factory-feedback-109-multisite-options-container a:focus {
+    box-shadow: none
+}
+
+.wbcr-factory-feedback-109-multisite-options-container a.selected {
+    font-weight: bold
+}
+
+.wbcr-factory-feedback-109-multisite-options-container.wbcr-factory-feedback-109-apply-on-all-sites {
+    border: 0 none;
+    padding: 0
+}
+
+.wbcr-factory-feedback-109-multisite-options-container.wbcr-factory-feedback-109-apply-on-all-sites .wbcr-factory-feedback-109-all-sites-options {
+    border-spacing: 0
+}
+
+.wbcr-factory-feedback-109-multisite-options-container.wbcr-factory-feedback-109-apply-on-all-sites .wbcr-factory-feedback-109-all-sites-options td:not(:first-child) {
+    display: none
+}
+
+.wbcr-factory-feedback-109-multisite-options-container .wbcr-factory-feedback-109-sites-list-container {
+    display: none;
+    overflow: auto
+}
+
+.wbcr-factory-feedback-109-multisite-options-container .wbcr-factory-feedback-109-sites-list-container table td {
+    border-top: 1px solid #ccc;
+    padding: 4px 2px
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend .email-address-container {
+    overflow: hidden;
+    padding-right: 2px
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend.wbcr-factory-feedback-109-freemium input.email-address {
+    width: 300px
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend.wbcr-factory-feedback-109-freemium label {
+    display: block;
+    margin-bottom: 10px
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend.wbcr-factory-feedback-109-premium input.email-address {
+    width: 100%
+}
+
+.wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend.wbcr-factory-feedback-109-premium .button-container {
+    float: right;
+    margin-left: 7px
+}
+
+@media (max-width: 650px) {
+    .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend.wbcr-factory-feedback-109-premium .button-container {
+        margin-top: 2px
+    }
+}
+
+.rtl .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend .wbcr-factory-feedback-109-modal-body .input-container > .email-address-container {
+    padding-left: 2px;
+    padding-right: 0
+}
+
+.rtl .wbcr-factory-feedback-109-modal.wbcr-factory-feedback-109-modal-license-key-resend .wbcr-factory-feedback-109-modal-body .button-container {
+    float: left;
+    margin-right: 7px;
+    margin-left: 0
+}
+
+a.show-license-resend-modal {
+    margin-top: 4px;
+    display: inline-block
+}
+
+.wbcr-factory-feedback-109-ajax-loader {
+    position: relative;
+    width: 170px;
+    height: 20px;
+    margin: auto
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar {
+    position: absolute;
+    top: 0;
+    background-color: #0074a3;
+    width: 20px;
+    height: 20px;
+    -webkit-animation-name: bounce_ajaxLoader;
+    -moz-animation-name: bounce_ajaxLoader;
+    -ms-animation-name: bounce_ajaxLoader;
+    -o-animation-name: bounce_ajaxLoader;
+    animation-name: bounce_ajaxLoader;
+    -webkit-animation-duration: 1.5s;
+    -moz-animation-duration: 1.5s;
+    -ms-animation-duration: 1.5s;
+    -o-animation-duration: 1.5s;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    -o-animation-iteration-count: infinite;
+    -ms-animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    -webkit-animation-direction: normal;
+    -moz-animation-direction: normal;
+    -ms-animation-direction: normal;
+    -o-animation-direction: normal;
+    animation-direction: normal;
+    -moz-transform: 0.3;
+    -o-transform: 0.3;
+    -ms-transform: 0.3;
+    -webkit-transform: 0.3;
+    transform: 0.3
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-1 {
+    left: 0px;
+    animation-delay: 0.6s;
+    -o-animation-delay: 0.6s;
+    -ms-animation-delay: 0.6s;
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-2 {
+    left: 19px;
+    animation-delay: 0.75s;
+    -o-animation-delay: 0.75s;
+    -ms-animation-delay: 0.75s;
+    -webkit-animation-delay: 0.75s;
+    -moz-animation-delay: 0.75s
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-3 {
+    left: 38px;
+    animation-delay: 0.9s;
+    -o-animation-delay: 0.9s;
+    -ms-animation-delay: 0.9s;
+    -webkit-animation-delay: 0.9s;
+    -moz-animation-delay: 0.9s
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-4 {
+    left: 57px;
+    animation-delay: 1.05s;
+    -o-animation-delay: 1.05s;
+    -ms-animation-delay: 1.05s;
+    -webkit-animation-delay: 1.05s;
+    -moz-animation-delay: 1.05s
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-5 {
+    left: 76px;
+    animation-delay: 1.2s;
+    -o-animation-delay: 1.2s;
+    -ms-animation-delay: 1.2s;
+    -webkit-animation-delay: 1.2s;
+    -moz-animation-delay: 1.2s
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-6 {
+    left: 95px;
+    animation-delay: 1.35s;
+    -o-animation-delay: 1.35s;
+    -ms-animation-delay: 1.35s;
+    -webkit-animation-delay: 1.35s;
+    -moz-animation-delay: 1.35s
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-7 {
+    left: 114px;
+    animation-delay: 1.5s;
+    -o-animation-delay: 1.5s;
+    -ms-animation-delay: 1.5s;
+    -webkit-animation-delay: 1.5s;
+    -moz-animation-delay: 1.5s
+}
+
+.wbcr-factory-feedback-109-ajax-loader .wbcr-factory-feedback-109-ajax-loader-bar-8 {
+    left: 133px;
+    animation-delay: 1.65s;
+    -o-animation-delay: 1.65s;
+    -ms-animation-delay: 1.65s;
+    -webkit-animation-delay: 1.65s;
+    -moz-animation-delay: 1.65s
+}
+
+@-moz-keyframes bounce_ajaxLoader {
+    0% {
+        -moz-transform: scale(1);
+        -o-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        background-color: #0074a3
+    }
+    100% {
+        -moz-transform: scale(0.3);
+        -o-transform: scale(0.3);
+        -ms-transform: scale(0.3);
+        -webkit-transform: scale(0.3);
+        transform: scale(0.3);
+        background-color: #fff
+    }
+}
+
+@-ms-keyframes bounce_ajaxLoader {
+    0% {
+        -moz-transform: scale(1);
+        -o-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        background-color: #0074a3
+    }
+    100% {
+        -moz-transform: scale(0.3);
+        -o-transform: scale(0.3);
+        -ms-transform: scale(0.3);
+        -webkit-transform: scale(0.3);
+        transform: scale(0.3);
+        background-color: #fff
+    }
+}
+
+@-o-keyframes bounce_ajaxLoader {
+    0% {
+        -moz-transform: scale(1);
+        -o-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        background-color: #0074a3
+    }
+    100% {
+        -moz-transform: scale(0.3);
+        -o-transform: scale(0.3);
+        -ms-transform: scale(0.3);
+        -webkit-transform: scale(0.3);
+        transform: scale(0.3);
+        background-color: #fff
+    }
+}
+
+@-webkit-keyframes bounce_ajaxLoader {
+    0% {
+        -moz-transform: scale(1);
+        -o-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        background-color: #0074a3
+    }
+    100% {
+        -moz-transform: scale(0.3);
+        -o-transform: scale(0.3);
+        -ms-transform: scale(0.3);
+        -webkit-transform: scale(0.3);
+        transform: scale(0.3);
+        background-color: #fff
+    }
+}
+
+@keyframes bounce_ajaxLoader {
+    0% {
+        -moz-transform: scale(1);
+        -o-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        background-color: #0074a3
+    }
+    100% {
+        -moz-transform: scale(0.3);
+        -o-transform: scale(0.3);
+        -ms-transform: scale(0.3);
+        -webkit-transform: scale(0.3);
+        transform: scale(0.3);
+        background-color: #fff
+    }
+}
+
+.wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form h2, .wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form .request-filesystem-credentials-action-buttons {
+    display: none
+}
+
+.wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form input[type=password], .wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form input[type=email], .wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form input[type=text] {
+    -webkit-appearance: none;
+    padding: 10px 10px 5px 10px;
+    width: 300px;
+    max-width: 100%
+}
+
+.wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form > div, .wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form label, .wbcr-factory-feedback-109-modal-auto-install #request-filesystem-credentials-form fieldset {
+    width: 300px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: block
+}
+
+.button-primary.warn {
+    box-shadow: 0 1px 0 #d2593c;
+    text-shadow: 0 -1px 1px #d2593c, 1px 0 1px #d2593c, 0 1px 1px #d2593c, -1px 0 1px #d2593c;
+    background: #f56a48;
+    border-color: #ec6544 #d2593c #d2593c
+}
+
+.button-primary.warn:hover {
+    background: #fd6d4a;
+    border-color: #d2593c
+}
+
+.button-primary.warn:focus {
+    box-shadow: 0 1px 0 #dd6041, 0 0 2px 1px #e4a796
+}
+
+.button-primary.warn:active {
+    background: #dd6041;
+    border-color: #d2593c;
+    box-shadow: inset 0 2px 0 #d2593c
+}
+
+.button-primary.warn.disabled {
+    color: #f5b3a1 !important;
+    background: #e76444 !important;
+    border-color: #d85e40 !important;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1) !important
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header {
+    background: black;
+    color: #fff;
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-header h4 {
+    text-shadow: none;
+    color: #fff;
+}
+
+.wbcr-factory-feedback-109-modal .wbcr-factory-feedback-109-modal-body {
+    padding-top: 35px;
+}
+
+.wbcr-factory-feedback-109-modal a.button-primary {
+    background-color: #9fbb1a !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    height: 35px !important;
+    padding: 0 24px !important;
+    line-height: 35px;
+    width: auto !important;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-family: Lato, sans-serif;
+}
+
+.wbcr-factory-feedback-109-modal a.button-secondary {
+    border: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    height: 35px !important;
+    padding: 0 24px !important;
+    line-height: 35px;
+    width: auto !important;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-family: Lato, sans-serif;
+}

@@ -116,18 +116,23 @@ class UpdraftPlus_Backup_History {
 	 * Get the HTML for the table of existing backups
 	 *
 	 * @param Array|Boolean $backup_history - a list of backups to use, or false to get the current list from the database
+	 * @param Boolean       $backup_count   - the amount of backups currently displayed in the existing backups table
 	 *
 	 * @uses UpdraftPlus_Admin::include_template()
 	 *
 	 * @return String - HTML for the table
 	 */
-	public static function existing_backup_table($backup_history = false) {
+	public static function existing_backup_table($backup_history = false, $backup_count = 0) {
 
 		global $updraftplus, $updraftplus_admin;
 
 		if (false === $backup_history) $backup_history = self::get_history();
 		
-		if (!is_array($backup_history) || empty($backup_history)) return '<div class="postbox"><p class="updraft-no-backups-msg"><em>'.__('You have not yet made any backups.', 'updraftplus').'</em></p></div>';
+		if (!is_array($backup_history) || empty($backup_history)) return '<div class="postbox"><p class="updraft-no-backups-msg">'.__('You have not yet made any backups.', 'updraftplus').'</p> <p class="updraft-no-backups-msg">'.__('If you have an existing backup that you wish to upload and restore from, then please use the "Upload backup files" link above.', 'updraftplus').' '.__('Or, if they are in remote storage, you can connect that remote storage (in the "Settings" tab), save your settings, and use the "Rescan remote storage" link.', 'updraftplus').'</p></div>';
+
+		if (empty($backup_count)) {
+			$backup_count = defined('UPDRAFTPLUS_EXISTING_BACKUPS_LIMIT') ? UPDRAFTPLUS_EXISTING_BACKUPS_LIMIT : 100;
+		}
 
 		// Reverse date sort - i.e. most recent first
 		krsort($backup_history);
@@ -135,7 +140,9 @@ class UpdraftPlus_Backup_History {
 		$pass_values = array(
 			'backup_history' => self::add_jobdata($backup_history),
 			'updraft_dir' => $updraftplus->backups_dir_location(),
-			'backupable_entities' => $updraftplus->get_backupable_file_entities(true, true)
+			'backupable_entities' => $updraftplus->get_backupable_file_entities(true, true),
+			'backup_count' => $backup_count,
+			'show_paging_actions' => false,
 		);
 		
 		return $updraftplus_admin->include_template('wp-admin/settings/existing-backups-table.php', true, $pass_values);
@@ -247,10 +254,9 @@ class UpdraftPlus_Backup_History {
 	/**
 	 * Used by self::always_get_from_db()
 	 *
-	 * @param  String $v - ignored
 	 * @return Mixed - the database option
 	 */
-	public static function filter_updraft_backup_history($v) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Filter use
+	public static function filter_updraft_backup_history() {
 		global $wpdb;
 		$row = $wpdb->get_row($wpdb->prepare("SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", 'updraft_backup_history'));
 		if (is_object($row)) return maybe_unserialize($row->option_value);
@@ -556,7 +562,7 @@ class UpdraftPlus_Backup_History {
 					if (isset($only_add_this_file['label'])) $backup_history[$btime]['label'] = $only_add_this_file['label'];
 					$backup_history[$btime]['native'] = false;
 				} elseif ('db' == $type && !$accepted_foreign) {
-					list ($mess, $warn, $err, $info) = $updraftplus->analyse_db_file(false, array(), $updraft_dir.'/'.$entry, true);
+					list ($mess, $warn, $err, $info) = $updraftplus->analyse_db_file(false, array(), $updraft_dir.'/'.$entry, true);// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 					if (!empty($info['label'])) {
 						$backup_history[$btime]['label'] = $info['label'];
 					}
@@ -587,11 +593,9 @@ class UpdraftPlus_Backup_History {
 					$backup_history[$btime]['service'] = array_unique(array_merge($current_services, $remote_files[$entry]));
 				}
 				// Get the right size (our local copy may be too small)
-				foreach ($remote_files[$entry] as $remote_file) {
-					if (!empty($remote_file['size']) && $remote_file['size'] > $file_size) {
-						$file_size = $remote_file['size'];
-						$changes = true;
-					}
+				if (!empty($remote_sizes[$entry]) && $remote_sizes[$entry] > $file_size) {
+					$file_size = $remote_sizes[$entry];
+					$changes = true;
 				}
 				// Remove from $remote_files, so that we can later see what was left over (i.e. $remote_files will exclude files which are present locally).
 				unset($remote_files[$entry]);
@@ -611,7 +615,15 @@ class UpdraftPlus_Backup_History {
 			}
 
 			$backup_history[$btime][$type][$index] = $entry;
-			if ($file_size > 0) $backup_history[$btime][$type.$itext.'-size'] = $file_size;
+			
+			if (!empty($backup_history[$btime][$type.$itext.'-size']) && $backup_history[$btime][$type.$itext.'-size'] < $file_size) {
+				$backup_history[$btime][$type.$itext.'-size'] = $file_size;
+				$changes = true;
+			} elseif (empty($backup_history[$btime][$type.$itext.'-size']) && $file_size > 0) {
+				$backup_history[$btime][$type.$itext.'-size'] = $file_size;
+				$changes = true;
+			}
+			
 			$backup_history[$btime]['nonce'] = $nonce;
 			if (!empty($accepted_foreign)) $backup_history[$btime]['meta_foreign'] = $accepted_foreign;
 		}
@@ -647,7 +659,7 @@ class UpdraftPlus_Backup_History {
 				if (!isset($backup_history[$btime]['service']) || (is_array($backup_history[$btime]['service']) && $backup_history[$btime]['service'] !== $services) || (is_string($backup_history[$btime]['service']) && (1 != count($services) || $services[0] !== $backup_history[$btime]['service']))) {
 					$changes = true;
 					if (isset($backup_history[$btime]['service'])) {
-						$existing_services = is_array($backup_history[$btime]['service']) ? $backup_history[$btime]['service'] : array($existing_services);
+						$existing_services = is_array($backup_history[$btime]['service']) ? $backup_history[$btime]['service'] : array($backup_history[$btime]['service']);
 						$backup_history[$btime]['service'] = array_unique(array_merge($services, $existing_services));
 						foreach ($backup_history[$btime]['service'] as $k => $v) {
 							if ('none' === $v || '' == $v) unset($backup_history[$btime]['service'][$k]);
@@ -754,7 +766,7 @@ class UpdraftPlus_Backup_History {
 
 		$backup_history = self::get_history();
 
-		foreach ($backup_history as $key => $backup) {
+		foreach ($backup_history as $backup) {
 
 			$remote_sent = !empty($backup['service']) && ((is_array($backup['service']) && in_array('remotesend', $backup['service'])) || 'remotesend' === $backup['service']);
 			if ($remote_sent) continue;
@@ -805,7 +817,6 @@ class UpdraftPlus_Backup_History {
 	 * @param Array	  $backup_array - the backup
 	 */
 	public static function save_backup($backup_time, $backup_array) {
-		global $updraftplus;
 		$backup_history = self::get_history();
 
 		$backup_history[$backup_time] = isset($backup_history[$backup_time]) ? apply_filters('updraftplus_merge_backup_history', $backup_array, $backup_history[$backup_time]) : $backup_array;

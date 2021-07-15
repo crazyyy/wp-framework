@@ -38,9 +38,9 @@ class WINP_SnippetsType extends Wbcr_FactoryTypes410_Type {
 	public $capabilities = [ 'administrator' ];
 
 	/**
-	 * @param Wbcr_Factory422_Plugin $plugin
+	 * @param Wbcr_Factory443_Plugin $plugin
 	 */
-	function __construct( Wbcr_Factory422_Plugin $plugin ) {
+	function __construct( Wbcr_Factory443_Plugin $plugin ) {
 		$this->name           = WINP_SNIPPETS_POST_TYPE;
 		$this->plural_title   = __( 'Woody snippets', 'insert-php' );
 		$this->singular_title = __( 'Woody snippets', 'insert-php' );
@@ -94,7 +94,7 @@ class WINP_SnippetsType extends Wbcr_FactoryTypes410_Type {
 
 		$parameters   = [ 'title', 'revisions' ];
 		$snippet_type = WINP_Helper::get_snippet_type();
-		if ( $snippet_type === WINP_SNIPPET_TYPE_TEXT ) {
+		if ( $snippet_type === WINP_SNIPPET_TYPE_TEXT || $snippet_type === WINP_SNIPPET_TYPE_AD ) {
 			$parameters[] = 'editor';
 		}
 		$this->options['supports'] = apply_filters( 'wbcr_inp_items_supports', $parameters );

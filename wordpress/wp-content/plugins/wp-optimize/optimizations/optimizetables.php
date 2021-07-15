@@ -22,14 +22,23 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 
 	public $run_sort_order = 100000;
 
-	public $run_multisite = false;
+	public $run_multisite = true;
 
 	public $support_preview = false;
+
+	private $table_information = array();
+
+	/**
+	 * Optimize method.
+	 */
+	public function optimize() {
+		// We don't need run anything in this method to avoid issues on multisite installations.
+	}
 
 	/**
 	 * Run optimization.
 	 */
-	public function optimize() {
+	public function after_optimize() {
 		// check if force optimize sent.
 		$force = (isset($this->data['optimization_force']) && $this->data['optimization_force']) ? true : false;
 
@@ -101,16 +110,42 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 				$this->optimizer->update_total_cleaned(strval($table_obj->Data_free));
 			}
 
-			$this->register_output(__('Optimizing Table:', 'wp-optimize') . ' ' . $table_obj->Name);
+			$this->register_output(__('Optimized table:', 'wp-optimize') . ' ' . $table_obj->Name);
+		}
+	}
+
+	/**
+	 * Before get_info() actions.
+	 */
+	public function before_get_info() {
+		$this->table_information['total_gain'] = 0;
+		$this->table_information['inno_db_tables'] = 0;
+		$this->table_information['non_inno_db_tables'] = 0;
+		$this->table_information['table_list'] = '';
+		$this->table_information['is_optimizable'] = true;
+	}
+
+	/**
+	 * Get information to be disbalyed onscreen before optimization.
+	 */
+	public function get_info() {
+		$table_information = $this->optimizer->get_table_information(get_current_blog_id());
+
+		$this->table_information['total_gain'] += $table_information['total_gain'];
+		$this->table_information['inno_db_tables'] += $table_information['inno_db_tables'];
+		$this->table_information['non_inno_db_tables'] += $table_information['non_inno_db_tables'];
+		$this->table_information['table_list'] .= $table_information['table_list'];
+		if (!$table_information['is_optimizable']) {
+			$this->table_information['is_optimizable'] = false;
 		}
 	}
 
 	/**
 	 * Return info about optimization.
 	 */
-	public function get_info() {
+	public function after_get_info() {
 		// This gathers information to be displayed onscreen before optimization.
-		$tablesstatus = $this->optimizer->get_table_information();
+		$tablesstatus = $this->table_information;
 
 		// Check if database is not optimizable.
 		if (false === $tablesstatus['is_optimizable']) {

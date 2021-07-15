@@ -9,23 +9,39 @@
   padding: 3px 0 3px 6px;
   height: 30px;
   box-sizing: border-box;
+  background: #dee1e6;
 }
 
 /* Close button */
-.elfinder .elfinder-dialog .ui-dialog-titlebar-close {
-  background: url('../images/close.png');
+.elfinder .elfinder-dialog .ui-dialog-titlebar-close,
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize,
+.elfinder .elfinder-dialog .elfinder-titlebar-full{
+  background: url('../images/win_10_sprite_icon.png');
   right: 0;
   border-radius: 0;
-  margin-top: -15px;
-  webkit-transition: background 0.3s; /* Safari */
+  margin-top: -13px; 
+  left: -7px;
+  -webkit-transition: background 0.3s; /* Safari */
   transition: background-image 0.3s;
   height: 29px;
-  width: 45px;
+  width: 44px;
+}
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize{
+  background-position: -89px 0px;
+}
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize:hover{
+ background-position: -89px -31px;
+}
+.elfinder .elfinder-dialog .elfinder-titlebar-full{
+ background-position: -45px 0px;
+}
+.elfinder .elfinder-dialog .elfinder-titlebar-full:hover{
+ background-position: -45px -31px;
+}
+.elfinder .elfinder-dialog .ui-dialog-titlebar-close:hover {
+ background-position: 0px -31px;
 }
 
-.elfinder .elfinder-dialog .ui-dialog-titlebar-close:hover {
-  background: url('../images/close-hover.png');
-}
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-button.elfinder-titlebar-button-right {
   left: 1px;
   top: 12px;
@@ -33,6 +49,12 @@
 /* Dialog content */
 .elfinder .elfinder-dialog .ui-dialog-content {
   /* */
+}
+
+/* Dialog content */
+.elfinder .elfinder-dialog.elfinder-dialog-edit .ui-dialog-content {
+  /* */
+  padding: 0;
 }
 
 /* Tabs */
@@ -78,6 +100,7 @@
 /* Footer */
 .elfinder .elfinder-dialog .ui-dialog-buttonpane {
   /* */
+  background: #ededed;
 }
 
 /* Buttonset (wrapper) */
@@ -122,3 +145,9 @@
 .elfinder .elfinder-dialog .elfinder-upload-dialog-or {
   /* */
 }
+.elfinder .elfinder-button-search.ui-state-active{background: transparent;}
+
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize .ui-icon.ui-icon-minusthick,
+.elfinder .elfinder-dialog .elfinder-titlebar-full .ui-icon.ui-icon-plusthick,
+.elfinder .elfinder-dialog .ui-dialog-titlebar-close .ui-icon.ui-icon-closethick,
+.elfinder .elfinder-dialog .elfinder-titlebar-full .ui-icon.ui-icon-arrowreturnthick-1-s{ background: inherit; } 

@@ -193,9 +193,61 @@
 		</tr>
 		<tr>
 			<td>
+				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/geolocation.png';?>" alt="<?php esc_attr_e('Geolocation for WooCommerce', 'wp-optimize');?>" class="wpo-premium-image">
+				<h4><?php _e('Geolocation and tax country for WooCommerce', 'wp-optimize');?></h4>
+				<p><?php _e('Anyone running an international WooCommerce store needs this: serve country specific content to your customers, appropriate VAT, pricing, all cached for great performance', 'wp-optimize');?></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-no-alt" aria-label="<?php esc_attr_e('No', 'wp-optimize');?>"></span></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'wp-optimize');?>"></span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/more-settings.png';?>" alt="<?php esc_attr_e('Multilingual and multi-currency compatible', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php _e('Multilingual and multi-currency compatible', 'wp-optimize');?></h4>
 				<p><?php _e('Cache supports WPML multilingual plugin and multiple currencies for WooCommerce', 'wp-optimize');?></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-no-alt" aria-label="<?php esc_attr_e('No', 'wp-optimize');?>"></span></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'wp-optimize');?>"></span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/choice-n-flexibility.png';?>" alt="<?php esc_attr_e('More caching options', 'wp-optimize');?>" class="wpo-premium-image">
+				<h4><?php _e('More caching options', 'wp-optimize');?></h4>
+				<p><?php _e('Exclude posts and pages from the cache, straight from the post edit screen.', 'wp-optimize');?></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-no-alt" aria-label="<?php esc_attr_e('No', 'wp-optimize');?>"></span></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'wp-optimize');?>"></span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/lazy-load.png';?>" alt="<?php esc_attr_e('Preload key requests', 'wp-optimize');?>" class="wpo-premium-image">
+				<h4><?php _e('Preload key requests', 'wp-optimize');?></h4>
+				<p><?php _e('Preload assets such as web fonts and icon fonts, as recommended by Google PageSpeed Insights', 'wp-optimize');?></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-no-alt" aria-label="<?php esc_attr_e('No', 'wp-optimize');?>"></span></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'wp-optimize');?>"></span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/advanced.png';?>" alt="<?php esc_attr_e('Power tweaks', 'wp-optimize');?>" class="wpo-premium-image">
+				<h4><?php _e('Power tweaks', 'wp-optimize');?></h4>
+				<p><?php _e('Catered towards more advanced users, the power tweaks will enable you to improve performance by targeting specific weak points, either in WordPress Core, or in popular plugins', 'wp-optimize');?></p>
 			</td>
 			<td>
 				<p><span class="dashicons dashicons-no-alt" aria-label="<?php esc_attr_e('No', 'wp-optimize');?>"></span></p>
@@ -233,12 +285,9 @@
 	<header>
 		<h2><?php _e("Our other plugins", 'wp-optimize');?></h2>
 		<p>
-		
 			<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/', 'UpdraftPlus'); ?> |
 			
 			<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/updraftcentral/', 'UpdraftCentral'); ?> |
-
-			<?php $wp_optimize->wp_optimize_url('https://metaslider.com/', 'MetaSlider'); ?>		
 		</p>
 	</header>
 	<div class="wpo-plugin-family__plugins">
@@ -280,25 +329,6 @@
 				<?php _e("With a wide range of useful features, including automated backup schedules and sophisticated one click updates, UpdraftCentral is sure to boost to your productivity and save you time.", 'wp-optimize');?>
 			</p>
 			<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/updraftcentral/', null, __('Try for free', 'wp-optimize')); ?>
-		</div>
-		<div class="wpo-plugin-family__plugin">
-			<?php
-			$wp_optimize->wp_optimize_url('https://www.metaslider.com/', null, '<img class="addons" alt="'.__("Meta Slider", 'wp-optimize').'" src="'. WPO_PLUGIN_URL.'images/features/metaslider_logo.png' .'">');
-			$wp_optimize->wp_optimize_url('https://www.metaslider.com/', null, '<h3>'.__('MetaSlider - hold visitors’ attention to increase conversion and profits.', 'wp-optimize').'</h3>', 'class="other-plugin-title"');
-			?>
-			<p>
-				<?php _e("With Metaslider, WordPress’ most popular slider plugin, you can add unique, SEO-optimizing slideshow to your blog or website in a matter of seconds!", 'wp-optimize');?>
-			</p>
-			<p>
-				<?php _e("Sliders instantly make a web-page more eye-catching and engaging.", 'wp-optimize');?>
-			</p>
-			<p>
-				<?php _e("With Metaslider, creating them couldn’t be easier: simply select images from your WordPress Media Library, drag and drop them into place. You can then set the slide captions, links and SEO fields all from one page.", 'wp-optimize');?>
-			</p>
-			<p>
-				<?php _e("Easily improve the look of your site, your conversion rate and bottom line.", 'wp-optimize');?>
-			</p>
-			<?php $wp_optimize->wp_optimize_url('https://www.metaslider.com/', null, __('Try for free', 'wp-optimize')); ?>
 		</div>
 	</div><!-- END wpo-plugin-family__plugins -->
 </div>

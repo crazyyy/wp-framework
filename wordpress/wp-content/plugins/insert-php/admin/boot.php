@@ -63,17 +63,17 @@ add_action( 'admin_init', function () {
 	if ( ! WINP_Plugin::app()->isNetworkAdmin() ) {
 		$about_page_viewed = WINP_Plugin::app()->request->get( 'wbcr_inp_about_page_viewed', null );
 		if ( is_null( $about_page_viewed ) ) {
-			if ( WINP_Helper::is_need_show_about_page() ) {
+			if ( WINP_Helper::is_need_show_about_page() && current_user_can( 'manage_options' ) ) {
 				try {
 					$redirect_url = '';
-					if ( class_exists( 'Wbcr_FactoryPages422' ) ) {
+					if ( class_exists( 'Wbcr_FactoryPages442' ) ) {
 						$redirect_url = WINP_Plugin::app()->getPluginPageUrl( 'about', [ 'wbcr_inp_about_page_viewed' => 1 ] );
 					}
 					if ( $redirect_url ) {
 						wp_safe_redirect( $redirect_url );
 						die();
 					}
-				} catch( Exception $e ) {
+				} catch ( Exception $e ) {
 				}
 			}
 		} else {
@@ -160,9 +160,9 @@ function wbcr_inp_tinymce_data( $hook ) {
         }
     </style>
     <script>
-		var wbcr_inp_tinymce_snippets_button_title = '<?php echo $shortcode_title ?>';
-		var wbcr_inp_post_tinymce_nonce = '<?php echo wp_create_nonce( 'wbcr_inp_tinymce_post_nonce' ) ?>';
-		var wbcr_inp_shortcode_snippets = <?php echo $shortcode_snippets_json ?>;
+        var wbcr_inp_tinymce_snippets_button_title = '<?php echo $shortcode_title ?>';
+        var wbcr_inp_post_tinymce_nonce = '<?php echo wp_create_nonce( 'wbcr_inp_tinymce_post_nonce' ) ?>';
+        var wbcr_inp_shortcode_snippets = <?php echo $shortcode_snippets_json ?>;
     </script>
     <!-- /end <?php echo WINP_Plugin::app()->getPluginTitle() ?> for tinymce -->
 	<?php
@@ -175,9 +175,9 @@ add_action( 'admin_print_scripts-widgets.php', 'wbcr_inp_tinymce_data' );
 /**
  * Deactivate snippet on trashed
  *
- * @since 2.0.6
- *
  * @param $post_id
+ *
+ * @since 2.0.6
  *
  */
 function wbcr_inp_trash_post( $post_id ) {

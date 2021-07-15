@@ -63,7 +63,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 		$get_remote_size = $this->send_message('get_file_status', $file, 30);
 		
 		if (is_wp_error($get_remote_size)) {
-			throw new Exception($get_remote_size->get_error_message().' ('.$get_remote_size->get_error_code().')');
+			throw new Exception($get_remote_size->get_error_message().' (get_file_status: '.$get_remote_size->get_error_code().')');
 		}
 
 		if (!is_array($get_remote_size) || empty($get_remote_size['response'])) throw new Exception(__('Unexpected response:', 'updraftplus').' '.serialize($get_remote_size));
@@ -97,8 +97,6 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 		$this->remote_sent_defchunk_transient = 'ud_rsenddck_'.md5($opts['name_indicator']);
 
 		if (empty($this->default_chunk_size)) {
-		
-			$clone_would_like = $updraftplus->verify_free_memory(4194304*2) ? 4194304 : 2097152;
 		
 			// Default is 2MB. After being b64-encoded twice, this is ~ 3.7MB = 113 seconds on 32KB/s uplink
 			$default_chunk_size = $updraftplus->jobdata_get('clone_job') ? 4194304 : 2097152;
@@ -167,8 +165,6 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 
 		global $updraftplus;
 
-		$storage = $this->get_storage();
-		
 		$chunk = fread($fp, $upload_size);
 
 		if (false === $chunk) {
@@ -247,7 +243,6 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 			// Could interpret the codes to get more interesting messages directly to the user
 			// The textual prefixes here were added after 1.12.5 - hence optional when parsing
 			if (preg_match('/^invalid_start_too_big:(start=)?(\d+),(existing_size=)?(\d+)/', $msg, $matches)) {
-				$attempted_start = $matches[1];
 				$existing_size = $matches[2];
 				if ($existing_size < $this->remotesend_uploaded_size) {
 					// The file on the remote system seems to have shrunk. Could be some load-balancing system with a distributed filesystem that is only eventually consistent.
@@ -265,7 +260,6 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 			return false;
 		} else {
 			$remote_size = (int) $put_chunk['data']['size'];
-			$remote_status = $put_chunk['data']['status'];
 			$this->remotesend_uploaded_size = $remote_size;
 		}
 
@@ -276,7 +270,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 	/**
 	 * This function will send a message to the remote site to inform it that the backup has finished sending, on success will update the jobdata key upload_completed and return true else false
 	 *
-	 * @return boolean - returns true on success or false on error, all errors are logged to the backup log
+	 * @return Boolean - returns true on success or false on error, all errors are logged to the backup log
 	 */
 	public function upload_completed() {
 		global $updraftplus;
@@ -309,7 +303,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 			$response = $this->send_message('upload_complete', array('job_id' => $updraftplus->nonce), 30);
 
 			if (is_wp_error($response)) {
-				$message = $response->get_error_message().' ('.$response->get_error_code().')';
+				$message = $response->get_error_message().' (upload_complete: '.$response->get_error_code().')';
 				$this->log("RPC service error: ".$message);
 				$this->log($message, 'error');
 			} elseif (!is_array($response) || empty($response['response'])) {
@@ -322,6 +316,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 				$this->log($msg, 'error');
 			} elseif ('file_status' == $response['response']) {
 				$success = true;
+				break;
 			}
 
 			sleep(5);
@@ -393,7 +388,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 		return $response;
 	}
 
-	public function do_bootstrap($opts, $connect = true) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function do_bootstrap($opts, $connect = true) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $connect unused
 	
 		global $updraftplus;
 	
@@ -452,7 +447,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 	
 		// Don't call self::log() - this then requests options (to get the label), causing an infinite loop.
 	
-		global $updraftplus;
+		global $updraftplus, $updraftplus_admin;
 		if (empty($updraftplus_admin)) include_once(UPDRAFTPLUS_DIR.'/admin.php');
 		
 		$clone_job = $updraftplus->jobdata_get('clone_job');

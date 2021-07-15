@@ -83,16 +83,23 @@ class WPSEO_Option_MS extends WPSEO_Option {
 	public function __construct() {
 		$allow_prefix   = self::ALLOW_KEY_PREFIX;
 		$this->defaults = [
-			'access'                                    => 'admin',
-			'defaultblog'                               => '', // Numeric blog ID or empty.
-			"{$allow_prefix}disableadvanced_meta"       => true,
-			"{$allow_prefix}onpage_indexability"        => true,
-			"{$allow_prefix}content_analysis_active"    => true,
-			"{$allow_prefix}keyword_analysis_active"    => true,
-			"{$allow_prefix}enable_admin_bar_menu"      => true,
-			"{$allow_prefix}enable_cornerstone_content" => true,
-			"{$allow_prefix}enable_xml_sitemap"         => true,
-			"{$allow_prefix}enable_text_link_counter"   => true,
+			'access'                                        => 'admin',
+			'defaultblog'                                   => '', // Numeric blog ID or empty.
+			"{$allow_prefix}disableadvanced_meta"           => true,
+			"{$allow_prefix}ryte_indexability"              => true,
+			"{$allow_prefix}content_analysis_active"        => true,
+			"{$allow_prefix}keyword_analysis_active"        => true,
+			"{$allow_prefix}enable_admin_bar_menu"          => true,
+			"{$allow_prefix}enable_cornerstone_content"     => true,
+			"{$allow_prefix}enable_xml_sitemap"             => true,
+			"{$allow_prefix}enable_text_link_counter"       => true,
+			"{$allow_prefix}enable_headless_rest_endpoints" => true,
+			"{$allow_prefix}enable_metabox_insights"        => true,
+			"{$allow_prefix}enable_link_suggestions"        => true,
+			"{$allow_prefix}tracking"                       => true,
+			"{$allow_prefix}enable_enhanced_slack_sharing"  => true,
+			"{$allow_prefix}semrush_integration_active"     => true,
+			"{$allow_prefix}zapier_integration_active"      => true,
 		];
 
 		if ( is_multisite() ) {
@@ -222,24 +229,4 @@ class WPSEO_Option_MS extends WPSEO_Option {
 
 		return $clean;
 	}
-
-	/**
-	 * Clean a given option value.
-	 *
-	 * @param array  $option_value          Old (not merged with defaults or filtered) option value to
-	 *                                      clean according to the rules for this option.
-	 * @param string $current_version       (optional) Version from which to upgrade, if not set,
-	 *                                      version specific upgrades will be disregarded.
-	 * @param array  $all_old_option_values (optional) Only used when importing old options to have
-	 *                                      access to the real old values, in contrast to the saved ones.
-	 *
-	 * @return array Cleaned option.
-	 */
-
-	/*
-	Protected function clean_option( $option_value, $current_version = null, $all_old_option_values = null ) {
-
-		return $option_value;
-	}
-	*/
 }

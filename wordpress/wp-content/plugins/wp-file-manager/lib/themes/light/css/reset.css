@@ -61,14 +61,11 @@
 .elfinder .ui-widget-header,
 .elfinder-dialog-confirm .ui-icon,
 .elfinder-dialog-confirm .ui-widget-content,
-.std42-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover .ui-icon,
-.std42-dialog .ui-icon{
+.std42-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover .ui-icon {
  background: none;
   border: none;
 }
-.ui-dialog-titlebar-close{
-	background: url('../images/close.png') !important;
-}
+
 .elfinder-button-search input {
 	border-radius: 0 !important;
 	height: 24px !important;
@@ -95,8 +92,7 @@
 .elfinder-toolbar .elfinder-button-search .ui-icon-search {
 	background-image: url('../images/search-default.svg') !important;
 	background-position: inherit;
-	/*left: 138px;*/
-background-size: 14px;
+background-size: 15px;
 }
 .elfinder-cwd table tr:nth-child(2n+1) {
 	background-color: #f9f9f9;
@@ -114,7 +110,7 @@ background-size: 14px;
 }
 .elfinder .elfinder-cwd table thead td {
 	padding: 10px 14px;
-	padding-right: 20px;
+	padding-right: 25px;
 	font-weight: 700;
 }
 .elfinder .elfinder-cwd table td {
@@ -144,8 +140,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	padding: 0px;
 }
 .ui-state-default, thead .ui-widget-content .ui-state-default{
-	/*background:#fff;
-	border-bottom: 1px solid #000 !important;*/
+	
 }
 .ui-widget-header.ui-corner-top thead .ui-corner-all.ui-widget-content .ui-state-default td{
 	background:#fff !important;
@@ -156,8 +151,7 @@ border: 1px solid #ddd !important;
 }
 
 #elfinder-wp_file_manager-cwd-thead .ui-state-default.touch-punch.touch-punch-keep-default.ui-sortable .elfinder-cwd-view-th-name span.ui-icon{
-	right: inherit;
-left: 54px;
+
 }
 .elfinder .elfinder-cwd-wrapper-list table thead tr td {
 	color: #404040;

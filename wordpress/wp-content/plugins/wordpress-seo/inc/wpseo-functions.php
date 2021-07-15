@@ -11,15 +11,6 @@ if ( ! defined( 'WPSEO_VERSION' ) ) {
 	exit();
 }
 
-if ( ! function_exists( 'initialize_wpseo_front' ) ) {
-	/**
-	 * Wraps frontend class.
-	 */
-	function initialize_wpseo_front() {
-		WPSEO_Frontend::get_instance();
-	}
-}
-
 if ( ! function_exists( 'yoast_breadcrumb' ) ) {
 	/**
 	 * Template tag for breadcrumbs.
@@ -47,7 +38,7 @@ if ( ! function_exists( 'yoast_get_primary_term_id' ) ) {
 	 * Get the primary term ID.
 	 *
 	 * @param string           $taxonomy Optional. The taxonomy to get the primary term ID for. Defaults to category.
-	 * @param null|int|WP_Post $post     Optional. Post to get the primary term ID for.
+	 * @param int|WP_Post|null $post     Optional. Post to get the primary term ID for.
 	 *
 	 * @return bool|int
 	 */
@@ -64,7 +55,7 @@ if ( ! function_exists( 'yoast_get_primary_term' ) ) {
 	 * Get the primary term name.
 	 *
 	 * @param string           $taxonomy Optional. The taxonomy to get the primary term for. Defaults to category.
-	 * @param null|int|WP_Post $post     Optional. Post to get the primary term for.
+	 * @param int|WP_Post|null $post     Optional. Post to get the primary term for.
 	 *
 	 * @return string Name of the primary term.
 	 */
@@ -195,15 +186,18 @@ add_filter( 'icl_wpml_config_array', 'wpseo_wpml_config' );
  * Yoast SEO breadcrumb shortcode.
  * [wpseo_breadcrumb]
  *
+ * @deprecated 14.0
+ * @codeCoverageIgnore
+ *
  * @return string
  */
 function wpseo_shortcode_yoast_breadcrumb() {
-	return yoast_breadcrumb( '', '', false );
+	_deprecated_function( __FUNCTION__, 'WPSEO 14.0' );
+
+	return '';
 }
 
-add_shortcode( 'wpseo_breadcrumb', 'wpseo_shortcode_yoast_breadcrumb' );
-
-if ( ! extension_loaded( 'ctype' ) || ! function_exists( 'ctype_digit' ) ) {
+if ( ! function_exists( 'ctype_digit' ) ) {
 	/**
 	 * Emulate PHP native ctype_digit() function for when the ctype extension would be disabled *sigh*.
 	 * Only emulates the behaviour for when the input is a string, does not handle integer input as ascii value.
@@ -255,4 +249,68 @@ function wpseo_get_capabilities() {
 		do_action( 'wpseo_register_capabilities' );
 	}
 	return WPSEO_Capability_Manager_Factory::get()->get_capabilities();
+}
+
+if ( ! function_exists( 'wp_get_environment_type' ) ) {
+	/**
+	 * Retrieves the current environment type.
+	 *
+	 * The type can be set via the `WP_ENVIRONMENT_TYPE` global system variable,
+	 * or a constant of the same name.
+	 *
+	 * Possible values include 'local', 'development', 'staging', 'production'.
+	 * If not set, the type defaults to 'production'.
+	 *
+	 * Backfill for `wp_get_environment_type()` introduced in WordPress 5.5. Code
+	 * is adapted to the Yoast PHP coding standards.
+	 *
+	 * @return string The current environment type.
+	 */
+	function wp_get_environment_type() {
+		static $current_env = '';
+
+		if ( $current_env ) {
+			return $current_env;
+		}
+
+		$wp_environments = [
+			'local',
+			'development',
+			'staging',
+			'production',
+		];
+
+		// Check if the environment variable has been set, if `getenv` is available on the system.
+		if ( function_exists( 'getenv' ) ) {
+			$has_env = getenv( 'WP_ENVIRONMENT_TYPES' );
+			if ( $has_env !== false ) {
+				$wp_environments = explode( ',', $has_env );
+			}
+		}
+
+		// Fetch the environment types from a constant, this overrides the global system variable.
+		if ( defined( 'WP_ENVIRONMENT_TYPES' ) ) {
+			$wp_environments = WP_ENVIRONMENT_TYPES;
+		}
+
+		// Check if the environment variable has been set, if `getenv` is available on the system.
+		if ( function_exists( 'getenv' ) ) {
+			$has_env = getenv( 'WP_ENVIRONMENT_TYPE' );
+			if ( $has_env !== false ) {
+				$current_env = $has_env;
+			}
+		}
+
+		// Fetch the environment from a constant, this overrides the global system variable.
+		if ( defined( 'WP_ENVIRONMENT_TYPE' ) ) {
+			$current_env = WP_ENVIRONMENT_TYPE;
+		}
+
+		// Make sure the environment is an allowed one, and not accidentally set to an invalid value.
+		if ( ! in_array( $current_env, $wp_environments, true ) ) {
+			$current_env = 'production';
+		}
+
+		return $current_env;
+	}
 }

@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+jQuery(function($) {
 	WP_Optimize_Smush = WP_Optimize_Smush();
 });
 
@@ -24,6 +24,7 @@ var WP_Optimize_Smush = function() {
 		smush_single_image_btn = $('.wpo_smush_single_image .button'),
 		smush_single_restore_btn = $('.wpo_restore_single_image .button'),
 		smush_mark_all_as_uncompressed_btn = $('#wpo_smush_mark_all_as_uncompressed_btn'),
+		restore_all_compressed_images_btn = $('#wpo_smush_restore_all_compressed_images_btn'),
 		smush_view_logs_btn = $('.wpo_smush_get_logs'),
 		smush_delete_backup_images_btn = $('#wpo_smush_delete_backup_btn'),
 		compression_server_select = $('.compression_server'),
@@ -34,8 +35,33 @@ var WP_Optimize_Smush = function() {
 		smush_timer_handle = 0,
 		smush_image_list = [],
 		smush_completed = false,
-		smush_mark_all_as_uncompressed = false;
+		smush_mark_all_as_uncompressed = false,
+		smush_affected_images = {},
+		pending_tasks_cancel_btn = $('#wpo_smush_images_pending_tasks_cancel_button');
 
+	/**
+	 * Handle Image Selection
+	 */
+	var last_clicked_image_id = null;
+
+	smush_images_grid.on('click', '.thumbnail', function (e) {
+		$(this).closest('input[type="checkbox"]').prop('checked', true);
+	});
+
+
+	/**
+	 * Handle Shift Ctrl keys state.
+	 */
+	var ctrl_shift_on_image_held = false;
+	
+
+	smush_images_grid.on('mousedown', '.thumbnail', function (e) {
+		ctrl_shift_on_image_held = e.shiftKey || e.ctrlKey;
+	});
+
+	smush_images_grid.on('mouseup', '.thumbnail', function (e) {
+		ctrl_shift_on_image_held = e.shiftKey || e.ctrlKey;
+	});
 
 	/**
 	 *  Checks if smush is active and loads images if yes - image tabs change.
@@ -62,6 +88,26 @@ var WP_Optimize_Smush = function() {
 	}
 
 	smush_images_grid.on('change', 'input[type="checkbox"]', function() {
+		var clicked_image_id = parseInt($(this).val());
+
+		if (null === last_clicked_image_id) {
+			last_clicked_image_id = $(this).val();
+		}
+
+		if (true === ctrl_shift_on_image_held) {
+			if (clicked_image_id > last_clicked_image_id) {
+				for (var i = last_clicked_image_id; i <= clicked_image_id; i++) {
+					$('#wpo_smush_images_grid input[type="checkbox"][value="' + i + '"]').prop('checked', true);
+				}
+			} else {
+				for (var i = last_clicked_image_id; i >= clicked_image_id; i--) {
+					$('#wpo_smush_images_grid input[type="checkbox"][value="' + i + '"]').prop('checked', true);
+				}
+			}
+		} else {
+			last_clicked_image_id = clicked_image_id;
+		}
+
 		update_smush_action_buttons_state();
 	});
 
@@ -162,6 +208,19 @@ var WP_Optimize_Smush = function() {
 	});
 
 	/**
+	 * Handle "Restore all compressed images" click.
+	 */
+	restore_all_compressed_images_btn.on('click', function() {
+		if (!confirm(wposmush.restore_all_compressed_images)) return;
+
+		update_view_modal_message($('#smush-information-modal-cancel-btn'));
+		$('#smush-information-modal-cancel-btn .smush-information').text(wposmush.please_wait);
+
+		smush_mark_all_as_uncompressed = true;
+		run_mark_all_as_uncompressed(true, true);
+	});
+
+	/**
 	 * Handle "Cancel" button click for mark all images as uncompressed process
 	 */
 	$('#smush-information-modal-cancel-btn input[type="button"]').on('click', function() {
@@ -175,32 +234,38 @@ var WP_Optimize_Smush = function() {
 	 *
 	 * @param {bool} restore_backup if set to true then images will restored from backup if possible.
 	 */
-	function run_mark_all_as_uncompressed(restore_backup) {
+	function run_mark_all_as_uncompressed(restore_backup, delete_only_backups_meta) {
 		if (!smush_mark_all_as_uncompressed) return;
 
 		var info = $('#smush-information-modal-cancel-btn .smush-information');
-		smush_manager_send_command('mark_all_as_uncompressed', {restore_backup: restore_backup ? 1 : 0}, function(resp) {
-			// if cancel button pressed then exit
-			if (!smush_mark_all_as_uncompressed) return;
+		smush_manager_send_command('mark_all_as_uncompressed',
+			{
+				restore_backup: restore_backup ? 1 : 0,
+				delete_only_backups_meta: delete_only_backups_meta ? 1 : 0
+			},
+			function(resp) {
+				// if cancel button pressed then exit
+				if (!smush_mark_all_as_uncompressed) return;
 
-			// if we get an error then show it
-			if (resp.hasOwnProperty('error')) {
-				update_view_modal_message($('#smush-information-modal'), $.unblockUI);
-				$('#smush-information-modal .smush-information').text(resp.error);
-				get_info_from_smush_manager();
-				return;
-			}
+				// if we get an error then show it
+				if (resp.hasOwnProperty('error')) {
+					update_view_modal_message($('#smush-information-modal'), $.unblockUI);
+					$('#smush-information-modal .smush-information').text(resp.error);
+					get_info_from_smush_manager();
+					return;
+				}
 
-			// if completed then refresh uncompressed images list and show final message.
-			if (resp.completed) {
-				update_view_modal_message($('#smush-information-modal'), $.unblockUI);
-				$('#smush-information-modal .smush-information').text(resp.message);
-				get_info_from_smush_manager();
-			} else {
-				info.text(resp.message);
-				run_mark_all_as_uncompressed(restore_backup);
+				// if completed then refresh uncompressed images list and show final message.
+				if (resp.completed) {
+					update_view_modal_message($('#smush-information-modal'), $.unblockUI);
+					$('#smush-information-modal .smush-information').text(resp.message);
+					get_info_from_smush_manager();
+				} else {
+					info.text(resp.message);
+					run_mark_all_as_uncompressed(restore_backup);
+				}
 			}
-		});
+		);
 	}
 
 	/**
@@ -224,6 +289,7 @@ var WP_Optimize_Smush = function() {
 	 */
 	smush_images_select_none_btn.off().on('click', function() {
 		$('#wpo_smush_images_grid input[type="checkbox"]').prop("checked", false);
+		last_clicked_image_id = null;
 		update_smush_action_buttons_state();
 	});
 
@@ -320,6 +386,10 @@ var WP_Optimize_Smush = function() {
 	 */
 	$('body').on('click', '#wpo_smush_images_pending_tasks_cancel_button', function(e) {
 
+		if (wpoptimize.cancel === pending_tasks_cancel_btn.val()) {
+			pending_tasks_cancel_btn.val(wpoptimize.cancelling);
+			pending_tasks_cancel_btn.prop('disabled', true);
+		}
 		smush_manager_send_command('clear_pending_images', {}, function(resp) {
 			$.unblockUI();
 			if (resp.status) {
@@ -328,6 +398,8 @@ var WP_Optimize_Smush = function() {
 			} else {
 				console.log('Cancelling pending images apparently failed.', resp);
 			}
+			pending_tasks_cancel_btn.val(wpoptimize.cancel);
+			pending_tasks_cancel_btn.prop('disabled', false);
 		});
 	});
 
@@ -407,7 +479,7 @@ var WP_Optimize_Smush = function() {
 
 			if (response.status) {
 				$('.wpo_smush_single_image', wrapper).hide();
-				$('.toggle-smush-advanced', wrapper).removeClass('opened');
+				$('.wpo-toggle-advanced-options', wrapper).removeClass('opened');
 				$('.wpo_smush_mark_single_image', wrapper).hide();
 				$('.wpo_smush_unmark_single_image', wrapper).show();
 				$('.wpo_restore_single_image', wrapper).show();
@@ -452,7 +524,7 @@ var WP_Optimize_Smush = function() {
 		setTimeout(reset_view_bulk_smush, 500);
 	});
 
-	$('body').on('click', '.toggle-smush-advanced', function(e) {
+	$('body').on('click', '.wpo-toggle-advanced-options', function(e) {
 		e.preventDefault();
 		$(this).toggleClass('opened');
 	});
@@ -660,6 +732,9 @@ var WP_Optimize_Smush = function() {
 		var admin_url_post_id = '&action=edit';
 		
 		for (blog_id in data.unsmushed_images) {
+			data.unsmushed_images[blog_id].sort(function(a, b) {
+				return a.id - b.id;
+			});
 			for (i in data.unsmushed_images[blog_id]) {
 				if (!data.unsmushed_images[blog_id].hasOwnProperty(i)) continue;
 				image = data.unsmushed_images[blog_id][i];
@@ -903,35 +978,87 @@ var WP_Optimize_Smush = function() {
 		if (resp.hasOwnProperty('success') && resp.success) {
 			$(".smush-information").text(resp.summary);
 			update_view_modal_message($("#smush-information-modal"), $.unblockUI);
-			$('.toggle-smush-advanced.wpo_smush_single_image').removeClass('opened');
 
-			var wrapper = $("#smush_info").closest('#smush-metabox-inside-wrapper');
+			$('.wpo-toggle-advanced-options.wpo_smush_single_image').removeClass('opened');
+
+			update_view_singe_image_compress(resp.operation, resp.summary, resp.restore_possible);
+
+			// here we store data from the the response
+			// this information will be used to show correct UI elements
+			// when smush metabox will shown again without reloading main page
+			var blog_id = resp.blog_id || resp.options.blog_id,
+				image_id = resp.image || resp.options.attachment_id;
+
+			if (!smush_affected_images.hasOwnProperty(blog_id)) smush_affected_images[blog_id] = {};
+			if (!smush_affected_images[blog_id].hasOwnProperty(image_id)) smush_affected_images[blog_id][image_id] = {};
 
 			if ('compress' == resp.operation) {
-				$(".wpo_smush_single_image").hide();
-				$(".wpo_restore_single_image").show();
-
-				$("#smush_info").text(resp.summary);
-
-				$('.wpo_smush_mark_single_image').hide();
-
-				if (resp.restore_possible) {
-					$(".restore_possible").show();
-				} else {
-					$(".restore_possible").hide();
+				smush_affected_images[blog_id][image_id] = {
+					operation: resp.operation,
+					summary: resp.summary,
+					restore_possible: resp.restore_possible
 				}
 			} else {
-				$(".wpo_smush_single_image").show();
-				$(".wpo_restore_single_image").hide();
-
-				$('.wpo_smush_mark_single_image').show();
-				$('.wpo_smush_unmark_single_image', wrapper).hide();
+				smush_affected_images[blog_id][image_id] = {
+					operation: resp.operation
+				}
 			}
 		} else {
 			$(".smush-information").text(resp.error_message);
 			update_view_modal_message($("#smush-information-modal"), $.unblockUI);
 		}
 	}
+
+	/**
+	 * Update metabox view depending on a command response.
+	 *
+	 * @param {string}  operation
+	 * @param {string}  summary
+	 * @param {boolean} restore_possible
+	 */
+	function update_view_singe_image_compress(operation, summary, restore_possible) {
+		var wrapper = $("#smush_info").closest('#smush-metabox-inside-wrapper');
+
+		if ('compress' == operation) {
+			$(".wpo_smush_single_image").hide();
+			$(".wpo_restore_single_image").show();
+
+			$("#smush_info").text(summary);
+
+			$('.wpo_smush_mark_single_image').hide();
+
+			if (restore_possible) {
+				$(".restore_possible").show();
+			} else {
+				$(".restore_possible").hide();
+			}
+		} else {
+			$(".wpo_smush_single_image").show();
+			$(".wpo_restore_single_image").hide();
+
+			$('.wpo_smush_mark_single_image').show();
+			$('.wpo_smush_unmark_single_image', wrapper).hide();
+		}
+	}
+
+	/**
+	 * Handle smush metabox load event. This handler is used to restore correct smush metabox view.
+	 */
+	$(document).on('admin-metabox-smush-loaded', function() {
+		var image_data = $('.wpo_restore_single_image input[type="button"]').first().data();
+
+		if (!image_data) return;
+
+		if (smush_affected_images.hasOwnProperty(image_data.blog) && smush_affected_images[image_data.blog].hasOwnProperty(image_data.id)) {
+			var smush_image_data = smush_affected_images[image_data.blog][image_data.id];
+
+			if ('compress' == smush_image_data.operation) {
+				update_view_singe_image_compress(smush_image_data.operation, smush_image_data.summary, smush_image_data.restore_possible);
+			} else {
+				update_view_singe_image_compress(smush_image_data.operation);
+			}
+		}
+	});
 
 	/**
 	 * Display a modal message
@@ -1036,13 +1163,16 @@ var WP_Optimize_Smush = function() {
 /**
  * Parse JSON string, including automatically detecting unwanted extra input and skipping it
  *
- * @param {string} json_mix_str - JSON string which need to parse and convert to object
+ * @param {string|object} json_mix_str - JSON string which need to parse and convert to object
  *
  * @throws SyntaxError|String (including passing on what JSON.parse may throw) if a parsing error occurs.
  *
  * @return mixed parsed JSON object. Will only return if parsing is successful (otherwise, will throw)
  */
 function wpo_parse_json(json_mix_str) {
+	// When using wp_send_json to return the value, the format is already parsed.
+	if ('object' === typeof json_mix_str) return json_mix_str;
+
 	// Just try it - i.e. the 'default' case where things work (which can include extra whitespace/line-feeds, and simple strings, etc.).
 	try {
 		var result = JSON.parse(json_mix_str);

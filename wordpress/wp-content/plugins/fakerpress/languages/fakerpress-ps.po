@@ -1,0 +1,200 @@
+# Translation of Plugins - FakerPress - Development (trunk) in Pashto
+# This file is distributed under the same license as the Plugins - FakerPress - Development (trunk) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-04-01 05:19:52+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: ps_AF\n"
+"Project-Id-Version: Plugins - FakerPress - Development (trunk)\n"
+
+#: inc/class-fp-utils.php:1191
+msgid "South Georgia"
+msgstr "سهيلي گرجستان"
+
+#: inc/class-fp-utils.php:1156
+msgid "Singapore"
+msgstr "سنگاپور"
+
+#: inc/class-fp-utils.php:1116
+msgid "Samoa"
+msgstr "سامووا"
+
+#: inc/class-fp-utils.php:1121
+msgid "San Marino"
+msgstr "سن مرينو"
+
+#: inc/class-fp-utils.php:1051
+msgid "Qatar"
+msgstr "قطر"
+
+#: inc/class-fp-utils.php:1046
+msgid "Puerto Rico"
+msgstr "پورتوریکو "
+
+#: inc/class-fp-utils.php:1006
+msgid "Panama"
+msgstr "پاناما "
+
+#: inc/class-fp-utils.php:996
+msgid "Palau"
+msgstr "پالاو"
+
+#: inc/class-fp-utils.php:961
+msgid "Niue"
+msgstr "نیوئې"
+
+#: inc/class-fp-utils.php:921
+msgid "Nauru"
+msgstr "نائورو"
+
+#: inc/class-fp-utils.php:896
+msgid "Montserrat"
+msgstr "مونتسرات "
+
+#: inc/class-fp-utils.php:881
+msgid "Monaco"
+msgstr "موناکو"
+
+#: inc/class-fp-utils.php:861
+msgid "Mayotte"
+msgstr "مایوټ"
+
+#: inc/class-fp-utils.php:856
+msgid "Mauritius"
+msgstr "مورېشوز"
+
+#: inc/class-fp-utils.php:846
+msgid "Martinique"
+msgstr "مارتینیک "
+
+#: inc/class-fp-utils.php:836
+msgid "Malta"
+msgstr "مالټا"
+
+#: inc/class-fp-utils.php:826
+msgid "Maldives"
+msgstr "مالديو"
+
+#: inc/class-fp-utils.php:801
+msgid "Macau"
+msgstr "ماکاوو"
+
+#: inc/class-fp-utils.php:796
+msgid "Luxembourg"
+msgstr "لوکسامبورگ"
+
+#: inc/class-fp-utils.php:746
+msgid "Kuwait"
+msgstr "کويټ"
+
+#: inc/class-fp-utils.php:721
+msgid "Jersey"
+msgstr "جېرسي"
+
+#: inc/class-fp-utils.php:711
+msgid "Jamaica"
+msgstr "جميکا"
+
+#: inc/class-fp-utils.php:696
+msgid "Isle of Man"
+msgstr "د سړيانو ټاپو"
+
+#: inc/class-fp-utils.php:651
+msgid "Hong Kong"
+msgstr "هانگ کانگ"
+
+#: inc/class-fp-utils.php:631
+msgid "Guyana"
+msgstr "گایانه"
+
+#: inc/class-fp-utils.php:611
+msgid "Guatemala"
+msgstr "گواتيمالا"
+
+#: inc/class-fp-utils.php:616
+msgid "Guernsey"
+msgstr "گوېنزي"
+
+#: inc/class-fp-utils.php:606
+msgid "Guam"
+msgstr "گوام"
+
+#: inc/class-fp-utils.php:596
+msgid "Grenada"
+msgstr "گرېنېډا"
+
+#: inc/class-fp-utils.php:601
+msgid "Guadeloupe"
+msgstr "گوادلوپ"
+
+#: inc/class-fp-utils.php:581
+msgid "Gibraltar"
+msgstr "جبل الطارق"
+
+#: inc/class-fp-utils.php:526
+msgid "Fiji"
+msgstr "فيجي"
+
+#: inc/class-fp-utils.php:491
+msgid "El Salvador"
+msgstr "ايلسلوادور"
+
+#: inc/class-fp-utils.php:471
+msgid "Dominica"
+msgstr "ډومېنيکا"
+
+#: inc/class-fp-utils.php:466
+msgid "Djibouti"
+msgstr "جیبوټي"
+
+#: inc/class-fp-utils.php:431
+msgid "Costa Rica"
+msgstr "کوستاریکا"
+
+#: inc/class-fp-utils.php:366
+msgid "Cape Verde"
+msgstr "کیپ ورډ"
+
+#: inc/class-fp-utils.php:331
+msgid "Brunei"
+msgstr "برونای"
+
+#: inc/class-fp-utils.php:276
+msgid "Bermuda"
+msgstr "برمودا"
+
+#: inc/class-fp-utils.php:266
+msgid "Belize"
+msgstr "بلیز"
+
+#: inc/class-fp-utils.php:251
+msgid "Barbados"
+msgstr "باربادوس"
+
+#: inc/class-fp-utils.php:241
+msgid "Bahrain"
+msgstr "بحرين"
+
+#: inc/class-fp-utils.php:216
+msgid "Aruba"
+msgstr "اروبا"
+
+#: inc/class-fp-utils.php:221
+msgid "Australia"
+msgstr "استرالیا"
+
+#: inc/class-fp-utils.php:206
+msgid "Argentina"
+msgstr "ارجنټاین"
+
+#: inc/class-fp-utils.php:196
+msgid "Anguilla"
+msgstr "انگویلا"
+
+#: inc/class-fp-utils.php:186
+msgid "Andorra"
+msgstr "اندورا"

@@ -39,7 +39,7 @@ class Re_Smush_It_Task extends Updraft_Smush_Task {
 
 		$request = array(
 			'headers' => array( "content-type" => "multipart/form-data; boundary=$boundary" ),
-			'user-agent' => "WordPress $wp_version/Resmush.it",
+			'user-agent' => "WordPress $wp_version/WP-Optimize ".WPO_VERSION.' - anonymous', // Anonymous until Resmushit has a clear privacy statement that we can link to
 			'timeout' => 10,
 			'body' => $body,
 		);
@@ -120,7 +120,7 @@ class Re_Smush_It_Task extends Updraft_Smush_Task {
 		return array(
 			'headers' => $headers,
 			'timeout' => $this->get_option('request_timeout'),
-			'user-agent' => "Wordpress $wp_version/Resmush.it ".$this->get_option('version'),
+			'user-agent' => "WordPress $wp_version/WP-Optimize ".WPO_VERSION.' - anonymous', // Anonymous until Resmushit has a clear privacy statement that we can link to
 			'body' => $payload,
 		);
 	}

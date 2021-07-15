@@ -12,336 +12,251 @@ msgstr ""
 "Language: \n"
 "Project-Id-Version: Plugins - Woody ad snippets &#8211; insert any code, "
 "text, or ads via using conditions - Development (trunk)\n"
-"POT-Creation-Date: 2019-04-29 19:38+0000\n"
+"POT-Creation-Date: 2021-02-11 13:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: "
 
-#: insert_php.php:61 admin/boot.php:180
-msgid "Woody ad snippets"
+#. %s: size in bytes
+#: admin/pages/import.php:157
+#, php-format
+msgid "(Maximum size: %s)"
 msgstr ""
 
-#: includes/class.helpers.php:326
-msgid "Simple php snippet: Disable emojis"
+#: admin/ajax/ajax.php:137
+msgid "(not active)"
 msgstr ""
 
-#: includes/class.helpers.php:331
+#: admin/pages/new-item.php:30 admin/types/snippets-post-types.php:79
+msgid "+ Add snippet"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:433
+msgid ", younger than"
+msgstr ""
+
+#: admin/ajax/ajax.php:158
+msgid "404 Page"
+msgstr ""
+
+#: admin/pages/license.php:338
+#, php-format
 msgid ""
-"Emojis are little icons used to express ideas or emotions. While these icons "
-"are fun and all, are they really necessary for your WordPress site? This "
-"snippet to disable emojis on your site to make it faster."
+"<a href=\"%s\" target=\"_blank\" rel=\"noopener\">Lean more</a> about the "
+"premium version and get the license key to activate it now!"
 msgstr ""
 
-#: includes/class.helpers.php:336
-msgid "Simple text snippet: What is Lorem Ipsum?"
+#: admin/metaboxes/view-options.php:292
+msgid "[Delayed Lock]: Show the locker only in posts older than 5 days"
 msgstr ""
 
-#: includes/class.helpers.php:341
+#: admin/metaboxes/view-options.php:262
+msgid "[Hide For Members]: Show the locker only for guests"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:277
+msgid "[Hide On Mobile]: Hide the locker on mobile devices"
+msgstr ""
+
+#: includes/shortcodes/shortcode-ad.php:26
+msgid "]: Advertisement snippets error (not passed the snippet ID)"
+msgstr ""
+
+#: includes/shortcodes/shortcode-css.php:26
+#: includes/shortcodes/shortcode-html.php:26
+#: includes/shortcodes/shortcode-js.php:26
+#: includes/shortcodes/shortcode-php.php:26
+#: includes/shortcodes/shortcode-universal.php:26
+msgid "]: PHP snippets error (not passed the snippet ID)"
+msgstr ""
+
+#: includes/shortcodes/shortcode-text.php:26
+msgid "]: Text snippets error (not passed the snippet ID)"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:273
 msgid ""
-"This ordinary maintenance text. With this snippet, you can fill your pages "
-"with meaningless English text."
+"A copy of your snippet and its settings are stored on our remote server. You "
+"can access it from any website where you’ve activated the plugin’s premium "
+"version. If you have our plugin on multiple websites or work in a team, it’s "
+"quite handy to use templates. The feature is available in the premium "
+"version only."
 msgstr ""
 
-#: includes/class.helpers.php:347
-msgid "Simple universal snippet: Google analytics tracking"
+#: admin/metaboxes/view-options.php:143
+msgid "A post type of the current page."
 msgstr ""
 
-#: includes/class.helpers.php:534
-msgid "Purchase premium for"
+#: admin/metaboxes/view-options.php:133
+msgid "A referrer URL which has brought a user to the current page."
 msgstr ""
 
-#: admin/includes/class.snippets.table.php:215
-msgid "Type"
+#: admin/metaboxes/view-options.php:92
+msgid ""
+"A role of the user who views your website. The role \"guest\" is applied to "
+"unregistered users."
 msgstr ""
 
-#: admin/includes/class.snippets.table.php:216
-msgid "Title"
+#: admin/metaboxes/view-options.php:163
+msgid "A taxonomy of the current page."
 msgstr ""
 
-#: admin/includes/class.snippets.table.php:217
-#: admin/includes/class.snippets.viewtable.php:17
-#: admin/metaboxes/base-options.php:632
-msgid "Description"
+#: admin/metaboxes/view-options.php:153
+msgid "A taxonomy page."
 msgstr ""
 
-#: admin/includes/class.snippets.table.php:218
-msgid "Date"
+#: admin/pages/about.php:29
+msgid "About"
 msgstr ""
 
-#: admin/includes/class.snippets.table.php:219
-msgid "Insert"
+#: admin/metaboxes/view-options.php:471
+msgid "absolute"
 msgstr ""
 
-#: admin/includes/class.snippets.table.php:223
-#: admin/includes/class.actions.snippet.php:110
-#: admin/metaboxes/revisions.php:101 admin/metaboxes/revisions.php:138
-msgid "Delete"
+#: admin/metaboxes/revisions.php:68
+msgid "Access denied"
 msgstr ""
 
-#: admin/includes/class.filter.snippet.php:41
-msgid "Filter by tag:"
-msgstr ""
-
-#: admin/includes/class.actions.snippet.php:89
-#: admin/includes/class.actions.snippet.php:178 admin/pages/import.php:121
-msgid "Export"
-msgstr ""
-
-#: admin/includes/class.actions.snippet.php:111
-msgid "Deactivate"
-msgstr ""
-
-#: admin/includes/class.actions.snippet.php:112
+#: admin/includes/class.actions.snippet.php:113
 msgid "Activate"
 msgstr ""
 
-#: admin/includes/class.actions.snippet.php:175
-msgid "Close"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:16
-msgid "Snippet title"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:18
-msgid "Status"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:19
-msgid "Where use?"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:20
-#: admin/types/snippets-taxonomy.php:34
-msgid "Tags"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:65
-msgid "Run everywhere"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:68
-msgid "Header"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:69
-#: admin/metaboxes/base-options.php:476
-msgid "Footer"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:70
-#: admin/metaboxes/base-options.php:487
-msgid "Insert Before Post"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:71
-#: admin/metaboxes/base-options.php:492
-msgid "Insert Before Content"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:72
-#: admin/metaboxes/base-options.php:497
-msgid "Insert Before Paragraph"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:73
-#: admin/metaboxes/base-options.php:502
-msgid "Insert After Paragraph"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:74
-#: admin/metaboxes/base-options.php:507
-msgid "Insert After Content"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:75
-#: admin/metaboxes/base-options.php:512
-msgid "Insert After Post"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:76
-#: admin/metaboxes/base-options.php:523
-msgid "Insert Before Excerpt"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:77
-#: admin/metaboxes/base-options.php:528
-msgid "Insert After Excerpt"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:78
-#: admin/metaboxes/base-options.php:533
-msgid "Between Posts"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:79
-#: admin/metaboxes/base-options.php:538
-msgid "Before post"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:80
-#: admin/metaboxes/base-options.php:543
-msgid "After post"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:86
-#: admin/includes/class.snippets.viewtable.php:104
-#: admin/metaboxes/base-options.php:466
-msgid "Everywhere"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:94
-#: admin/metaboxes/base-options.php:482
-msgid "Posts, Pages, Custom post types"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:101
-#: admin/metaboxes/base-options.php:518
-msgid "Categories, Archives, Tags, Taxonomies"
-msgstr ""
-
-#: admin/includes/class.snippets.viewtable.php:106
-msgid "Automatic insertion"
-msgstr ""
-
-#: admin/includes/class.api.php:266
-msgid "Synchronization snippet error"
-msgstr ""
-
-#: admin/includes/class.api.php:269
-msgid "Unknown sippet type"
-msgstr ""
-
-#: admin/includes/class.dashboard.widget.php:57
-msgid "Woody News"
-msgstr ""
-
-#: admin/includes/class.dashboard.widget.php:147
-msgid "Woody Banner"
-msgstr ""
-
-#: admin/includes/class.dashboard.widget.php:170
-#: admin/includes/class.dashboard.widget.php:181
-msgid "No news"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:62
+#: admin/pages/license.php:215
 #, php-format
-msgid "The %s directory could not be created"
+msgid "Activate %s"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:63
-msgid "Please run the following commands in order to make the directory"
+#: admin/pages/settings.php:72
+msgid "Activate by Default"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:72
-#, php-format
-msgid ""
-"The %s directory is not writable, therefore the CSS and JS files cannot be "
-"saved."
+#: admin/pages/license.php:288
+msgid "active sites"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:73
-msgid "Please run the following command to make the directory writable"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:91
-#: admin/includes/class.common.snippet.php:148
-msgid "Php snippet"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:92
-#: admin/includes/class.common.snippet.php:149 admin/pages/new-item.php:59
-msgid "Text snippet"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:93
-#: admin/includes/class.common.snippet.php:150 admin/pages/new-item.php:69
-msgid "Css snippet"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:94
-#: admin/includes/class.common.snippet.php:151
-msgid "Js snippet"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:95
-#: admin/includes/class.common.snippet.php:152
-msgid "Html snippet"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:96
-#: admin/includes/class.common.snippet.php:153 admin/pages/new-item.php:64
-msgid "Universal snippet"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:122
-#: admin/types/snippets-post-types.php:41
-#: admin/types/snippets-post-types.php:42
-msgid "Woody snippets"
-msgstr ""
-
-#: admin/includes/class.common.snippet.php:131
-#: admin/includes/class.common.snippet.php:184
+#: admin/includes/class.common.snippet.php:135
+#: admin/includes/class.common.snippet.php:190
 msgid "Add"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:156
-msgid "Edit php snippet"
+#: includes/class.helpers.php:429
+msgid "Add Facebook Pixel to the Order success page"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:157
-msgid "Edit text snippet"
+#: includes/class.helpers.php:434
+msgid "Add Facebook Pixel to the Order success page."
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:158
-msgid "Edit css snippet"
+#: admin/types/snippets-post-types.php:80
+msgid "Add new"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:159
-msgid "Edit js snippet"
+#: admin/metaboxes/view-options.php:183
+msgid "Addblocker"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:160
-msgid "Edit html snippet"
+#: admin/includes/class.common.snippet.php:99
+#: admin/includes/class.common.snippet.php:157 admin/pages/new-item.php:84
+msgid "Advertisement snippet"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:161
-msgid "Edit universal snippet"
+#: includes/class.insertion.locations.php:201
+msgid "After a product excerpt"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:273
-msgid "Permalink"
+#: includes/class.insertion.locations.php:193
+msgid "After a product price"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:275
-msgid "Edit permalink"
+#: includes/class.insertion.locations.php:185
+msgid "After a product title"
 msgstr ""
 
-#: admin/includes/class.common.snippet.php:275
-#: admin/types/snippets-post-types.php:77
-msgid "Edit"
+#: includes/class.insertion.locations.php:161
+msgid "After a single product"
 msgstr ""
 
-#: admin/includes/class.notices.php:57
-msgid "Have feedback on Woody ad Snippets?"
+#: includes/class.insertion.locations.php:177
+msgid "After a single product summary"
 msgstr ""
 
-#: admin/includes/class.notices.php:57
+#: includes/class.insertion.locations.php:127
+msgid "After post"
+msgstr ""
+
+#: includes/class.insertion.locations.php:145
+msgid "After the list of products"
+msgstr ""
+
+#: admin/ajax/ajax.php:152
+msgid "All Archives"
+msgstr ""
+
+#: admin/ajax/ajax.php:192
+msgid "All Categories Archive"
+msgstr ""
+
+#: admin/ajax/ajax.php:202
+msgid "All Pages"
+msgstr ""
+
+#: admin/ajax/ajax.php:206
+msgid "All Pages Archive"
+msgstr ""
+
+#: admin/ajax/ajax.php:184
+msgid "All Posts"
+msgstr ""
+
+#: admin/ajax/ajax.php:188
+msgid "All Posts Archive"
+msgstr ""
+
+#: admin/ajax/ajax.php:232
+msgid "All Products page"
+msgstr ""
+
+#: admin/ajax/ajax.php:148
+msgid "All Singulars"
+msgstr ""
+
+#: admin/ajax/ajax.php:196
+msgid "All Tags Archive"
+msgstr ""
+
+#: admin/pages/snippet-library.php:64
+msgid "An error occurred during delete"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:111
+msgid "An error occurred during export"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:110 admin/pages/snippet-library.php:63
+msgid "An error occurred during import"
+msgstr ""
+
+#: admin/pages/import.php:61
+msgid "An error occurred when processing the import files."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:127
 msgid ""
-"Please take the time to answer a short survey on how you use this plugin and "
-"what you'd like to see changed or added in the future."
+"An URL of the current page where a user who views your website is located."
 msgstr ""
 
-#: admin/includes/class.notices.php:58
-msgid "Take the survey now"
+#: admin/metaboxes/view-options.php:402
+msgid "AND"
 msgstr ""
 
-#: admin/includes/class.notices.php:79
-#, php-format
-msgid "The snippet has been deactivated due to an error on line %d:"
+#: admin/metaboxes/view-options.php:361
+msgid "and"
 msgstr ""
 
-#: admin/includes/class.notices.php:96
+#: admin/metaboxes/view-options.php:237
+msgid "Attendance by time of day"
+msgstr ""
+
+#: admin/includes/class.notices.php:118
 #, php-format
 msgid ""
 "Attention! If you have previously used version 1.3.0 of plugin Insert php. "
@@ -352,260 +267,101 @@ msgid ""
 "will stop supporting shortcodes [insert_php]."
 msgstr ""
 
-#: admin/includes/class.notices.php:98
-msgid ""
-"We strongly recommend you to porting your php code to snippets and call them "
-"in your posts/pages and widgets using [wbcr_php_snippet id = \"000\"] "
-"shortcodes."
+#: admin/metaboxes/view-options.php:221
+msgid "Auditory"
 msgstr ""
 
-#: admin/includes/class.notices.php:99
+#: admin/metaboxes/revisions.php:100
+msgid "Author"
+msgstr ""
+
+#: admin/ajax/ajax.php:178
+msgid "Author Archive"
+msgstr ""
+
+#: admin/pages/settings.php:180
+msgid "Auto Close Brackets"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:575
+msgid "Automatic insertion"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:713
+msgid "Available attributes"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:714
 #, php-format
 msgid ""
-"For more information on porting code and using snippets, see our plugin <a "
-"href=\"%s\" target=\"_blank\">documentation</a>"
+"Available attributes for shortcode via comma. Only numbers, letters and "
+"underscore characters are allowed. Attribute id is always available. With "
+"this option you can set additional attributes for the shortcode. Example: "
+"start_date attribute to [%s id='xxx' start_date='2018/01/15'] shortcode. Now "
+"we can get attribute value in the snippet with the $start_date variable. "
+"It's convenient if you want to print out different results depending on this "
+"attributes."
 msgstr ""
 
-#: admin/includes/class.notices.php:101
-msgid "Create new php snippet"
+#: admin/metaboxes/base-options.php:43
+msgid "Base options"
 msgstr ""
 
-#: admin/includes/class.notices.php:103
-msgid "Download old version"
+#: admin/ajax/ajax.php:141
+msgid "Basic"
 msgstr ""
 
-#: admin/includes/class.notices.php:104
-#, php-format
+#: includes/class.insertion.locations.php:153
+msgid "Before a single product"
+msgstr ""
+
+#: includes/class.insertion.locations.php:169
+msgid "Before a single product summary"
+msgstr ""
+
+#: includes/class.insertion.locations.php:119
+msgid "Before post"
+msgstr ""
+
+#: includes/class.insertion.locations.php:137
+msgid "Before the list of products"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:394
+msgid "Between"
+msgstr ""
+
+#: includes/class.insertion.locations.php:111
+msgid "Between Posts"
+msgstr ""
+
+#: admin/ajax/ajax.php:166
+msgid "Blog / Posts Page"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:189
+msgid "Browser"
+msgstr ""
+
+#: admin/pages/import.php:177
+msgid "Bulk export [Premium]"
+msgstr ""
+
+#: admin/pages/import.php:178
 msgid ""
-"If you have issues with the plugin new version or any suggestions, please "
-"contact us on <a href=\"%s\" target=\"_blank\">our forum</a>."
+"Bulk export allows exporting all snippets in one click. Bulk export has "
+"advanced settings of snippet segmentation by types, tags, or activity. If "
+"you value your time use our premium plugin and export all of your snippets "
+"in one click."
 msgstr ""
 
-#: admin/includes/class.notices.php:122
-msgid "Running in safe mode. This mode your snippets will not be started."
-msgstr ""
-
-#: admin/includes/class.notices.php:123
-msgid "Disable Safe Mode"
-msgstr ""
-
-#: admin/types/snippets-taxonomy.php:35
-msgid "Tag"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:74
-msgid "Snippets"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:75 admin/pages/new-item.php:30
-msgid "+ Add snippet"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:76
-msgid "Add new"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:78
-msgid "Edit snippet"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:79
-msgid "New snippet"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:81
-msgid "View snippet"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:82
-msgid "Search snippets"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:83
-msgid "Snippet is not found"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:84
-msgid "Snippt is not found in trash"
-msgstr ""
-
-#: admin/types/snippets-post-types.php:85
-msgid "Parent snippet"
-msgstr ""
-
-#: admin/pages/new-item.php:54
-msgid "PHP snippet"
-msgstr ""
-
-#: admin/pages/new-item.php:56
+#: admin/metaboxes/base-options.php:609
 msgid ""
-"Used for inserting php code. Can be used for registering functions, hooks, "
-"global variables, printing text. Virtual functions.php"
-msgstr ""
-
-#: admin/pages/new-item.php:61
-msgid ""
-"Used for inserting formatted text. Can be used for inserting quotes, "
-"paragraphs, shortcodes from other plugins, tables, media files."
-msgstr ""
-
-#: admin/pages/new-item.php:66
-msgid ""
-"Used for inserting php, html, js & css code. Can be used for inserting ads, "
-"analytics, embeds & other complex scenarios."
-msgstr ""
-
-#: admin/pages/new-item.php:71
-msgid "Used for inserting css code. Can be used for inserting css styles."
-msgstr ""
-
-#: admin/pages/new-item.php:74
-msgid "JavaScript snippet"
-msgstr ""
-
-#: admin/pages/new-item.php:76
-msgid ""
-"Used for inserting js code. Can be used for inserting ads, analytics, embeds "
-"& other complex scenarios."
-msgstr ""
-
-#: admin/pages/new-item.php:79
-msgid "HTML snippet"
-msgstr ""
-
-#: admin/pages/new-item.php:81
-msgid "Used for inserting html code. Can be used for inserting html code."
-msgstr ""
-
-#: admin/pages/new-item.php:86
-msgid "Creating New Snippet"
-msgstr ""
-
-#: admin/pages/new-item.php:87
-msgid "Choose which snippet you would like to create."
-msgstr ""
-
-#: admin/pages/new-item.php:99
-msgid "Create Item"
-msgstr ""
-
-#: admin/pages/new-item.php:102
-msgid "Click here to learn more"
-msgstr ""
-
-#: admin/pages/about.php:29
-msgid "About"
-msgstr ""
-
-#: admin/pages/about.php:47
-msgid "What&#8217;s New"
-msgstr ""
-
-#: admin/pages/about.php:48
-msgid "Documentation"
-msgstr ""
-
-#: admin/pages/license.php:91
-msgid "License"
-msgstr ""
-
-#: admin/pages/license.php:215
-#, php-format
-msgid "Activate %s"
-msgstr ""
-
-#: admin/pages/license.php:226
-#, php-format
-msgid "Upgrade to Premium for $%s"
-msgstr ""
-
-#: admin/pages/license.php:229
-#, php-format
-msgid "Your current license for %1$s:"
-msgstr ""
-
-#: admin/pages/license.php:235
-msgid "Delete Key"
-msgstr ""
-
-#: admin/pages/license.php:239
-msgid "Synchronization"
-msgstr ""
-
-#: admin/pages/license.php:258
-msgid ""
-"Public License is a GPLv2 compatible license allowing you to change and use "
-"this version of the plugin for free. Please keep in mind this license covers "
-"only free edition of the plugin. Premium versions are distributed with other "
-"type of a license."
-msgstr ""
-
-#: admin/pages/license.php:262
-msgid ""
-"You use a paid subscription for the plugin updates. In case you don’t want "
-"to receive paid updates, please, click <a data-action=\"unsubscribe\" "
-"class=\"winp-control-btn\" href=\"#\">cancel subscription</a>"
-msgstr ""
-
-#: admin/pages/license.php:268
-msgid ""
-"Your license has expired, please extend the license to get updates and "
-"support."
-msgstr ""
-
-#: admin/pages/license.php:276
-msgid "domain"
-msgstr ""
-
-#: admin/pages/license.php:280
-msgid "plan"
-msgstr ""
-
-#: admin/pages/license.php:286
-msgid "of"
-msgstr ""
-
-#: admin/pages/license.php:288
-msgid "active sites"
-msgstr ""
-
-#: admin/pages/license.php:293
-msgid "version"
-msgstr ""
-
-#: admin/pages/license.php:298
-msgid "EXPIRED!"
-msgstr ""
-
-#: admin/pages/license.php:299
-msgid "please update the key"
-msgstr ""
-
-#: admin/pages/license.php:309
-msgid "day(s)"
-msgstr ""
-
-#: admin/pages/license.php:311
-msgid "remained"
-msgstr ""
-
-#: admin/pages/license.php:322
-msgid "Have a key to activate the premium version? Paste it here:"
-msgstr ""
-
-#: admin/pages/license.php:324
-msgid "Have a key to activate the plugin? Paste it here:"
-msgstr ""
-
-#: admin/pages/license.php:330
-msgid "Submit Key"
-msgstr ""
-
-#: admin/pages/license.php:338
-#, php-format
-msgid ""
-"<a href=\"%s\" target=\"_blank\" rel=\"noopener\">Lean more</a> about the "
-"premium version and get the license key to activate it now!"
+"By default, all snippet shortcodes look like this: [wbcr_snippet id=”121”]. "
+"Such shortcodes are hard to remember. In addition, when you move a snippet "
+"to another website its ID can be changed. So the best solution for the "
+"snippets use regularly is to define a custom shortcode name. The custom "
+"shortcode may look like this: [soccer_match_date]"
 msgstr ""
 
 #: admin/pages/license.php:342
@@ -616,903 +372,289 @@ msgid ""
 "purchase."
 msgstr ""
 
-#: admin/pages/snippet-library.php:29 admin/pages/snippet-library.php:122
-#: admin/pages/snippet-library.php:129
-msgid "Snippet library"
+#: admin/ajax/ajax.php:217
+msgid "Cart page"
 msgstr ""
 
-#: admin/pages/snippet-library.php:61
-msgid "Import snippet?"
+#: admin/metaboxes/base-options.php:630
+msgid "Categories, Archives, Tags, Taxonomies"
 msgstr ""
 
-#: admin/pages/snippet-library.php:62
-msgid "Delete snippet?"
+#: admin/ajax/ajax.php:222
+msgid "Checkout page"
 msgstr ""
 
-#: admin/pages/snippet-library.php:63 admin/metaboxes/base-options.php:91
-msgid "An error occurred during import"
-msgstr ""
-
-#: admin/pages/snippet-library.php:64
-msgid "An error occurred during delete"
-msgstr ""
-
-#: admin/pages/snippet-library.php:98
-msgid "Library is only available in premium version"
-msgstr ""
-
-#: admin/pages/snippet-library.php:99
-msgid ""
-"Library allows to save snippets in our remote repository. Using this library "
-"you can easily synchronise snippets between your websites."
-msgstr ""
-
-#: admin/pages/snippet-library.php:126
-msgid "My snippets"
-msgstr ""
-
-#: admin/pages/settings.php:33 admin/pages/settings.php:207
-msgid "Settings"
-msgstr ""
-
-#: admin/pages/settings.php:77
-msgid "Activate by Default"
-msgstr ""
-
-#: admin/pages/settings.php:79
-msgid ""
-"When creating a new snippet or updating an old one, make the code snippets "
-"active by default."
-msgstr ""
-
-#: admin/pages/settings.php:86
-msgid "Complete Uninstall"
-msgstr ""
-
-#: admin/pages/settings.php:88
-msgid ""
-"When the plugin is deleted from the Plugins menu, also delete all snippets "
-"and plugin settings."
-msgstr ""
-
-#: admin/pages/settings.php:103
-msgid "Code style"
-msgstr ""
-
-#: admin/pages/settings.php:106
-msgid ""
-"The optional feature. You can customize the code style in the snippet editor."
-" The \"Default\" style is applied by default."
-msgstr ""
-
-#: admin/pages/settings.php:113
-msgid "Indent With Tabs"
-msgstr ""
-
-#: admin/pages/settings.php:115
-msgid ""
-"The optional feature. Whether, when indenting, the first N*tabSize spaces "
-"should be replaced by N tabs. The default is false."
-msgstr ""
-
-#: admin/pages/settings.php:122
-msgid "Tab Size"
-msgstr ""
-
-#: admin/pages/settings.php:124
-msgid ""
-"The optional feature. Pressing Tab in the code editor increases left indent "
-"to N spaces. N is a number pre-defined by you."
-msgstr ""
-
-#: admin/pages/settings.php:131
-msgid "Indent Unit"
-msgstr ""
-
-#: admin/pages/settings.php:133
-msgid ""
-"The optional feature. The indent for code lines (units). Example: select a "
-"snippet, press Tab. The left indent in the selected code increases to N "
-"spaces. N is a number pre-defined by you."
-msgstr ""
-
-#: admin/pages/settings.php:140
-msgid "Wrap Lines"
-msgstr ""
-
-#: admin/pages/settings.php:142
-msgid ""
-"The optional feature. If ON, the editor will wrap long lines. Otherwise, it "
-"will create a horizontal scroll."
-msgstr ""
-
-#: admin/pages/settings.php:149
-msgid "Line Numbers"
-msgstr ""
-
-#: admin/pages/settings.php:151
-msgid "The optional feature. If ON, all lines in the editor will be numbered."
-msgstr ""
-
-#: admin/pages/settings.php:158
-msgid "Auto Close Brackets"
-msgstr ""
-
-#: admin/pages/settings.php:160
-msgid ""
-"The optional feature. If ON, the editor will automatically close opened "
-"quotes or brackets. Sometimes, it speeds up coding."
-msgstr ""
-
-#: admin/pages/settings.php:167
-msgid "Highlight Selection Matches"
-msgstr ""
-
-#: admin/pages/settings.php:169
-msgid ""
-"The optional feature. If ON, it searches for matches for the selected "
-"variable/function name. Highlight matches with green. Improves readability."
-msgstr ""
-
-#: admin/pages/settings.php:213
-msgid "The settings have been updated successfully!"
-msgstr ""
-
-#: admin/pages/settings.php:223
-msgid "Save settings"
-msgstr ""
-
-#: admin/pages/import.php:29
-msgid "Import/Export"
-msgstr ""
-
-#: admin/pages/import.php:62
-msgid "An error occurred when processing the import files."
-msgstr ""
-
-#: admin/pages/import.php:67
-msgid "No snippets were imported."
-msgstr ""
-
-#: admin/pages/import.php:69
-#, php-format
-msgid "Successfully imported <strong>%1$d</strong> snippet."
-msgid_plural "Successfully imported <strong>%1$d</strong> snippets."
-msgstr[0] ""
-msgstr[1] ""
-
-#: admin/pages/import.php:78
-#, php-format
-msgid ""
-"To import more then one snippet at a time, you need to purchase <a "
-"href=\"%s\">Woody snippets PRO</a>"
-msgstr ""
-
-#: admin/pages/import.php:84
-msgid "No files selected!"
-msgstr ""
-
-#: admin/pages/import.php:113
-msgid "Woody ad snippets Import"
-msgstr ""
-
-#: admin/pages/import.php:118
-msgid "Import"
-msgstr ""
-
-#: admin/pages/import.php:126
-msgid ""
-"Upload one or more Php Snippets export files and the snippets will be "
-"imported."
-msgstr ""
-
-#: admin/pages/import.php:127
-msgid "Duplicate Snippets"
-msgstr ""
-
-#: admin/pages/import.php:129
-msgid ""
-"What should happen if an existing snippet is found with an identical name to "
-"an imported snippet?"
-msgstr ""
-
-#: admin/pages/import.php:136
-msgid ""
-"Ignore any duplicate snippets: import all snippets from the file regardless "
-"and leave all existing snippets unchanged."
-msgstr ""
-
-#: admin/pages/import.php:142
-msgid ""
-"Replace any existing snippets with a newly imported snippet of the same name."
-msgstr ""
-
-#: admin/pages/import.php:148
-msgid ""
-"Do not import any duplicate snippets; leave all existing snippets unchanged."
-msgstr ""
-
-#: admin/pages/import.php:153
-msgid "Upload Files"
+#: admin/ajax/ajax.php:227
+msgid "Checkout pay page"
 msgstr ""
 
 #: admin/pages/import.php:155
+msgid "Choose files from your computer:"
+msgstr ""
+
+#: admin/pages/import.php:150
 msgid ""
 "Choose one or more Php Snippets (.json) files to upload, then click \"Upload "
 "files and import\"."
 msgstr ""
 
-#: admin/pages/import.php:160
-msgid "Choose files from your computer:"
+#: admin/pages/new-item.php:92
+msgid "Choose which snippet you would like to create."
 msgstr ""
 
-#. translators: %s: size in bytes
-#: admin/pages/import.php:163
-#, php-format
-msgid "(Maximum size: %s)"
+#: admin/pages/new-item.php:107
+msgid "Click here to learn more"
 msgstr ""
 
-#: admin/pages/import.php:172
-msgid "Upload files and import"
-msgstr ""
-
-#: admin/pages/import.php:183
-msgid "Mass export is only available in premium version"
-msgstr ""
-
-#: admin/pages/import.php:184
-msgid ""
-"Mass export gives you an ability to export all snippet in one click. Mass "
-"export has advanced segmentation settings by type, tags and snippet activity."
-" If you value your time, use your premium plugin to export your snippets in "
-"one click."
-msgstr ""
-
-#: admin/ajax/check-license.php:27
-msgid "Licensing action not passed or this action is prohibited!"
-msgstr ""
-
-#: admin/ajax/check-license.php:39
-msgid ""
-"License key is empty or license key too long (license key is 32 characters "
-"long)"
-msgstr ""
-
-#: admin/ajax/check-license.php:42
-msgid "Your license has been successfully activated"
-msgstr ""
-
-#: admin/ajax/check-license.php:47
-msgid "The license is deactivated"
-msgstr ""
-
-#: admin/ajax/check-license.php:51
-msgid "The license has been updated"
-msgstr ""
-
-#: admin/ajax/check-license.php:55
-msgid "Subscription success cancelled"
-msgstr ""
-
-#: admin/ajax/snippet-library.php:27
-msgid "Loading..."
-msgstr ""
-
-#: admin/ajax/ajax.php:31
-msgid "Guest"
-msgstr ""
-
-#: admin/ajax/ajax.php:101
-msgid "Entire Website"
-msgstr ""
-
-#: admin/ajax/ajax.php:105
-msgid "All Singulars"
-msgstr ""
-
-#: admin/ajax/ajax.php:109
-msgid "All Archives"
-msgstr ""
-
-#: admin/ajax/ajax.php:115
-msgid "404 Page"
-msgstr ""
-
-#: admin/ajax/ajax.php:119
-msgid "Search Page"
-msgstr ""
-
-#: admin/ajax/ajax.php:123
-msgid "Blog / Posts Page"
-msgstr ""
-
-#: admin/ajax/ajax.php:127
-msgid "Front Page"
-msgstr ""
-
-#: admin/ajax/ajax.php:131
-msgid "Date Archive"
-msgstr ""
-
-#: admin/ajax/ajax.php:135
-msgid "Author Archive"
-msgstr ""
-
-#: admin/ajax/ajax.php:141
-msgid "All Posts"
-msgstr ""
-
-#: admin/ajax/ajax.php:145
-msgid "All Posts Archive"
-msgstr ""
-
-#: admin/ajax/ajax.php:149
-msgid "All Categories Archive"
-msgstr ""
-
-#: admin/ajax/ajax.php:153
-msgid "All Tags Archive"
-msgstr ""
-
-#: admin/ajax/ajax.php:159
-msgid "All Pages"
-msgstr ""
-
-#: admin/ajax/ajax.php:163
-msgid "All Pages Archive"
+#: admin/includes/class.actions.snippet.php:176
+msgid "Close"
 msgstr ""
 
 #: admin/metaboxes/revisions.php:46
 msgid "Code Revisions"
 msgstr ""
 
-#: admin/metaboxes/revisions.php:68
-msgid "Access denied"
+#: admin/pages/settings.php:125
+msgid "Code style"
 msgstr ""
 
 #: admin/metaboxes/revisions.php:98 admin/metaboxes/revisions.php:136
 msgid "Compare"
 msgstr ""
 
-#: admin/metaboxes/revisions.php:99
-msgid "Revision"
+#: admin/pages/settings.php:99
+msgid "Complete Uninstall"
 msgstr ""
 
-#: admin/metaboxes/revisions.php:100
-msgid "Author"
-msgstr ""
-
-#: admin/metaboxes/revisions.php:102 admin/metaboxes/revisions.php:124
-msgid "Restore"
-msgstr ""
-
-#: admin/metaboxes/info.php:51
-msgid "Robin image optimizer: notice"
-msgstr ""
-
-#: admin/metaboxes/info.php:76
-msgid "Install plugin Robin Image Optimizer to speed up your site!"
-msgstr ""
-
-#: admin/metaboxes/info.php:78
-msgid "Optimize now for free"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:43
+#: admin/metaboxes/view-options.php:38
 msgid "Conditional execution logic for the snippet"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:70
-msgid "User"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:74
-msgid "Role"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:80
-msgid ""
-"A role of the user who views your website. The role \"guest\" is applied to "
-"unregistered users."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:84
-msgid "Registration Date"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:86
-msgid ""
-"The date when the user who views your website was registered. For "
-"unregistered users this date always equals to 1 Jan 1970."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:100
-msgid "Cookie Name"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:103
-msgid "Determines whether the user's browser has a cookie with a given name."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:109
-msgid "Location"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:113
-msgid "Current Page"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:115
-msgid ""
-"An URL of the current page where a user who views your website is located."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:119
-msgid "Current Referrer"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:121
-msgid "A referrer URL which has brought a user to the current page."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:125
-msgid "Post type"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:131
-msgid "A post type of the current page."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:135
-msgid "Taxonomy"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:141
-msgid "A taxonomy of the current page."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:145
-msgid "Page"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:151
-msgid "List of specific pages."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:157
-msgid "Technology"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:161
-msgid "Addblocker"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:163
-msgid "Determines whether the user use Addblocker on website."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:167
-msgid "Browser"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:169
-msgid "Determines whether the user use selected browser."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:173
-msgid "Use cookie"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:175
-msgid "Determines whether the user use cookie on website."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:179
-msgid "Use javascript"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:181
-msgid "Determines whether the user use javascript on website."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:185
-msgid "Operating system"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:187
-msgid "Determines whether the user use selected OS."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:191
-msgid "Device type"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:193
-msgid "Determines whether the user use selected device type."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:199
-msgid "Auditory"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:203
-msgid "User country"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:205
-msgid "Geolocation"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:209
-msgid "Viewing depth"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:211
-msgid "The number of pages viewed by the user per session"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:215
-msgid "Attendance by time of day"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:217
-msgid "The time interval during which the user entered"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:221
-msgid "Total number of visits"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:223
-msgid "The total number of sessions opened by the user"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:240
-msgid "[Hide For Members]: Show the locker only for guests"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:255
-msgid "[Hide On Mobile]: Hide the locker on mobile devices"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:270
-msgid "[Delayed Lock]: Show the locker only in posts older than 5 days"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:300
-msgid ""
-"No filters specified. <a href=\"#\" class=\"winp-add-filter\">Click here</a> "
-"to add one."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:309
-msgid "Show IF"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:312
-msgid "Display On IF"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:313
-msgid "Do Not Display IF"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:315 admin/metaboxes/view-options.php:342
-msgid "or"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:333
-msgid ""
-"No conditions specified. <a href=\"#\" class=\"winp-link-add\">Click here</a>"
-" to add one."
-msgstr ""
-
-#: admin/metaboxes/view-options.php:339
-msgid "and"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:363
-msgid "Equals"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:364
-msgid "Doesn't Equal"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:365
-msgid "Greater Than"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:366
-msgid "Less Than"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:367
-msgid "Older Than"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:368
-msgid "Younger Than"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:369
+#: admin/metaboxes/view-options.php:392
 msgid "Contains"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:370
-msgid "Doesn't Сontain"
+#: admin/metaboxes/view-options.php:112
+msgid "Cookie Name"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:371
-msgid "Between"
+#: admin/pages/new-item.php:104
+msgid "Create Item"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:379
-msgid "OR"
+#: admin/includes/class.notices.php:122
+msgid "Create new php snippet"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:380
-msgid "AND"
+#: admin/pages/new-item.php:91
+msgid "Creating New Snippet"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:388
-msgid "from"
+#: admin/includes/class.common.snippet.php:95
+#: admin/includes/class.common.snippet.php:153 admin/pages/new-item.php:69
+msgid "Css snippet"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:394
-msgid "to"
+#: admin/metaboxes/view-options.php:125
+msgid "Current Page"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:402
-msgid "older than"
+#: admin/metaboxes/view-options.php:131
+msgid "Current Referrer"
 msgstr ""
 
-#: admin/metaboxes/view-options.php:405 admin/metaboxes/view-options.php:416
-#: admin/metaboxes/view-options.php:436
-msgid "Second(s)"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:406 admin/metaboxes/view-options.php:417
-#: admin/metaboxes/view-options.php:437
-msgid "Minutes(s)"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:407 admin/metaboxes/view-options.php:418
-#: admin/metaboxes/view-options.php:438
-msgid "Hours(s)"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:408 admin/metaboxes/view-options.php:419
-#: admin/metaboxes/view-options.php:439
-msgid "Day(s)"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:409 admin/metaboxes/view-options.php:420
-#: admin/metaboxes/view-options.php:440
-msgid "Week(s)"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:410 admin/metaboxes/view-options.php:421
-#: admin/metaboxes/view-options.php:441
-msgid "Month(s)"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:411 admin/metaboxes/view-options.php:422
-#: admin/metaboxes/view-options.php:442
-msgid "Year(s)"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:413
-msgid ", younger than"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:449
-msgid "relative"
-msgstr ""
-
-#: admin/metaboxes/view-options.php:451
-msgid "absolute"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:42
-msgid "Base options"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:89
-msgid "Import snippet"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:90 admin/metaboxes/base-options.php:372
-msgid "Export snippet"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:92
-msgid "An error occurred during export"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:93 admin/metaboxes/base-options.php:141
-msgid "Save"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:94
-msgid "Snippet template succefully saved!"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:135
-msgid "Save your page to library"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:136
-msgid ""
-"Your snippets will be available for export and reuse on any page or website"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:139
-msgid "Enter template name"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:372
-msgid "Save as template"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:402 admin/metaboxes/base-options.php:424
-msgid "Where there is a shortcode"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:415
-msgid ""
-"If you want to place some content into your snippet from the shortcode just "
-"wrap it inside [wbcr_text_snippet id=\"xxx\"]content[/wbcr_text_snippet]. To "
-"use this content inside the snippet use {{SNIPPET_CONTENT}} variable."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:418
-#, php-format
-msgid ""
-"If you want to place some content into your snippet from the shortcode just "
-"wrap it inside [wbcr%s_snippet id=\"xxx\"]content[/wbcr%s_snippet]. To use "
-"this content inside the snippet use $content variable."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:444
-msgid "Where to execute the code?"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:445
-msgid ""
-"\" option, after activating the widget, the php code will be launched on all "
-"pages of your site. Another option works only where you have set a shortcode "
-"snippet (widgets, post)."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:454
-msgid "Custom name"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:455
-msgid "Arbitrary unique shortcode name"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:471
-msgid "Head"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:472
-msgid "Snippet will be placed in the source code before </head>."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:477
-msgid "Snippet will be placed in the source code before </body>."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:488
-msgid "Snippet will be placed before the title of the post/page."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:493
-msgid "Snippet will be placed before the content of the post/page."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:498
-msgid ""
-"Snippet will be placed before the paragraph, which number you can specify in "
-"the Location number field."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:503
-msgid ""
-"Snippet will be placed after the paragraph, which number you can specify in "
-"the Location number field."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:508
-msgid "Snippet will be placed after the content of the post/page."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:513
-msgid "Snippet will be placed in the very end of the post/page."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:524
-msgid "Snippet will be placed before the excerpt of the post/page."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:529
-msgid "Snippet will be placed after the excerpt of the post/page."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:534
-msgid "Snippet will be placed between each post."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:539
-msgid ""
-"Snippet will be placed before the post, which number you can specify in the "
-"Location number field."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:544
-msgid ""
-"Snippet will be placed after the post, which number you can specify in the "
-"Location number field."
-msgstr ""
-
-#: admin/metaboxes/base-options.php:559
-msgid "Insertion location"
-msgstr ""
-
-#: admin/metaboxes/base-options.php:560
-msgid "Select the location for you snippet."
+#: admin/metaboxes/base-options.php:651
+msgid "Custom"
 msgstr ""
 
 #: admin/metaboxes/base-options.php:608
-msgid "Location number"
+msgid "Custom shortcode name"
 msgstr ""
 
-#: admin/metaboxes/base-options.php:609
-msgid "Paragraph / Post number"
+#: admin/includes/class.snippets.table.php:213
+msgid "Date"
 msgstr ""
 
-#: admin/metaboxes/base-options.php:620
-msgid "External File"
+#: admin/ajax/ajax.php:174
+msgid "Date Archive"
 msgstr ""
 
-#: admin/metaboxes/base-options.php:621
-msgid "Inline Code"
+#: admin/metaboxes/view-options.php:428 admin/metaboxes/view-options.php:439
+#: admin/metaboxes/view-options.php:459
+msgid "Day(s)"
 msgstr ""
 
-#: admin/metaboxes/base-options.php:623
-msgid "Linking type"
+#: admin/pages/license.php:309
+msgid "day(s)"
 msgstr ""
 
-#: admin/metaboxes/base-options.php:624
-msgid "Select how the snippet will be linked to the page."
+#: admin/includes/class.actions.snippet.php:112
+msgid "Deactivate"
 msgstr ""
 
-#: admin/metaboxes/base-options.php:633
+#: admin/includes/class.actions.snippet.php:111
+#: admin/includes/class.snippets.table.php:217
+#: admin/metaboxes/revisions.php:101 admin/metaboxes/revisions.php:138
+msgid "Delete"
+msgstr ""
+
+#: admin/pages/license.php:235
+msgid "Delete Key"
+msgstr ""
+
+#: admin/pages/snippet-library.php:62
+msgid "Delete snippet?"
+msgstr ""
+
+#: admin/includes/class.snippets.table.php:212
+#: admin/includes/class.snippets.viewtable.php:18
+#: admin/metaboxes/base-options.php:699
+msgid "Description"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:185
+msgid "Determines whether the user use Addblocker on website."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:197
+msgid "Determines whether the user use cookie on website."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:203
+msgid "Determines whether the user use javascript on website."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:191
+msgid "Determines whether the user use selected browser."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:215
+msgid "Determines whether the user use selected device type."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:209
+msgid "Determines whether the user use selected OS."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:115
+msgid "Determines whether the user's browser has a cookie with a given name."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:213
+msgid "Device type"
+msgstr ""
+
+#: admin/includes/class.notices.php:144
+msgid "Disable Safe Mode"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:334
+msgid "Display On IF"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:335
+msgid "Do Not Display IF"
+msgstr ""
+
+#: admin/pages/import.php:143
 msgid ""
-"You can write a short note so that you can always remember why this code or "
-"your colleague was able to apply this code in his works."
+"Do not import any duplicate snippets; leave all existing snippets unchanged."
 msgstr ""
 
-#: admin/metaboxes/base-options.php:646
-msgid "Available attributes"
+#: admin/pages/about.php:50
+msgid "Documentation"
 msgstr ""
 
-#: includes/shortcodes/shortcode-text.php:26
-msgid "]: Text snippets error (not passed the snippet ID)"
+#: admin/metaboxes/view-options.php:387
+msgid "Doesn't Equal"
 msgstr ""
 
-#: includes/shortcodes/shortcode-js.php:26
-#: includes/shortcodes/shortcode-php.php:26
-#: includes/shortcodes/shortcode-html.php:26
-#: includes/shortcodes/shortcode-css.php:26
-#: includes/shortcodes/shortcode-universal.php:26
-msgid "]: PHP snippets error (not passed the snippet ID)"
+#: admin/metaboxes/view-options.php:393
+msgid "Doesn't Сontain"
 msgstr ""
 
-#. Plugin Name of the plugin
-msgid "Woody ad snippets (PHP snippets | Insert PHP)"
+#: admin/pages/license.php:276
+msgid "domain"
+msgstr ""
+
+#: admin/includes/class.notices.php:123
+msgid "Download old version"
+msgstr ""
+
+#: admin/pages/import.php:122
+msgid "Duplicate Snippets"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:283
+#: admin/types/snippets-post-types.php:81
+msgid "Edit"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:166
+msgid "Edit advertisement snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:162
+msgid "Edit css snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:164
+msgid "Edit html snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:163
+msgid "Edit js snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:283
+msgid "Edit permalink"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:160
+msgid "Edit php snippet"
+msgstr ""
+
+#: admin/types/snippets-post-types.php:82
+msgid "Edit snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:161
+msgid "Edit text snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:165
+msgid "Edit universal snippet"
+msgstr ""
+
+#: includes/class.helpers.php:423
+msgid ""
+"Emojis are little icons used to express ideas or emotions. While these icons "
+"are fun and all, are they really necessary for your WordPress site? This "
+"snippet to disable emojis on your site to make it faster."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:278
+msgid "Enter template name"
+msgstr ""
+
+#: admin/ajax/ajax.php:144
+msgid "Entire Website"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:386
+msgid "Equals"
+msgstr ""
+
+#: includes/class.helpers.php:748 admin/metaboxes/base-options.php:620
+msgid "Everywhere"
+msgstr ""
+
+#: admin/pages/settings.php:90
+msgid "Execute shortcodes in snippets"
+msgstr ""
+
+#: admin/pages/settings.php:92
+msgid "Execute shortcodes in the snippet code before executing the snippet."
 msgstr ""
 
 #. Description of the plugin
@@ -1521,13 +663,1142 @@ msgid ""
 "and external service’s code. Ensures no content duplication."
 msgstr ""
 
-#. Plugin URI of the plugin
+#: admin/pages/license.php:298
+msgid "EXPIRED!"
+msgstr ""
+
+#: admin/includes/class.actions.snippet.php:90
+#: admin/includes/class.actions.snippet.php:179 admin/pages/import.php:116
+msgid "Export"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:109 admin/metaboxes/base-options.php:489
+msgid "Export snippet"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:687
+msgid "External File"
+msgstr ""
+
+#: admin/includes/class.filter.snippet.php:38
+msgid "Filter by tag:"
+msgstr ""
+
+#: admin/includes/class.filter.snippet.php:63
+msgid "Filter by type:"
+msgstr ""
+
+#: includes/class.insertion.locations.php:35
+msgid "Footer"
+msgstr ""
+
+#: admin/includes/class.notices.php:121
+#, php-format
+msgid ""
+"For more information on porting code and using snippets, see our plugin <a "
+"href=\"%s\" target=\"_blank\">documentation</a>"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:410
+msgid "from"
+msgstr ""
+
+#: admin/ajax/ajax.php:170
+msgid "Front Page"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:227
+msgid "Geolocation"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:388
+msgid "Greater Than"
+msgstr ""
+
+#: admin/ajax/ajax.php:41
+msgid "Guest"
+msgstr ""
+
+#: admin/pages/license.php:324
+msgid "Have a key to activate the plugin? Paste it here:"
+msgstr ""
+
+#: admin/pages/license.php:322
+msgid "Have a key to activate the premium version? Paste it here:"
+msgstr ""
+
+#: admin/includes/class.notices.php:79
+msgid "Have feedback on Woody ad Snippets?"
+msgstr ""
+
+#: includes/class.insertion.locations.php:27
+msgid "Header"
+msgstr ""
+
+#: admin/pages/snippet-library.php:100
+msgid ""
+"Here you see all of your snippet templates. We’ve gathered the frequently "
+"used snippets so you can use them in your projects. Snippet templates help "
+"to implement your ideas faster without wasting time on searching and "
+"studying PHP code. The feature is available in the premium version only."
+msgstr ""
+
+#: admin/pages/settings.php:189
+msgid "Highlight Selection Matches"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:427 admin/metaboxes/view-options.php:438
+#: admin/metaboxes/view-options.php:458
+msgid "Hours(s)"
+msgstr ""
+
+#: admin/pages/new-item.php:79
+msgid "HTML snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:97
+#: admin/includes/class.common.snippet.php:155
+msgid "Html snippet"
+msgstr ""
+
 #. Author URI of the plugin
-msgid "http://woody-ad-snippets.webcraftic.com/"
+msgid "http://cm-wp.com"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://woodysnippet.com/"
+msgstr ""
+
+#: admin/includes/class.notices.php:125
+#, php-format
+msgid ""
+"If you have issues with the plugin new version or any suggestions, please "
+"contact us on <a href=\"%s\" target=\"_blank\">our forum</a>."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:599
+#, php-format
+msgid ""
+"If you select the \"%s\" option, after activating the widget, the php code "
+"will be launched on all pages of your site. Another option works only where "
+"you have set a shortcode snippet (widgets, post)."
+msgstr ""
+
+#: admin/includes/class.notices.php:124
+#, php-format
+msgid ""
+"If you still want to use the old shortcodes [insert_php] and you don’t have "
+"time to upgrade to the new version, you can enable support for old "
+"shortcodes in the plugin <a href=\"%s\">settings</a>."
+msgstr ""
+
+#: admin/pages/settings.php:110
+msgid ""
+"If you used our plugin from version 1.3.0, then you could use the old "
+"shortcodes [insert_php][/insert_php]; from version 2.2.0 we disabled this "
+"type of shortcodes by default, as their use is not safe. If you still want "
+"to execute your php code via [insert_php][/insert_php] shortcodes, you can "
+"enable this option."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:572
+#, php-format
+msgid ""
+"If you want to place some content into your snippet from the shortcode just "
+"wrap it inside [wbcr%s_snippet id=\"xxx\"]content[/wbcr%s_snippet]. To use "
+"this content inside the snippet use $content variable."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:569
+msgid ""
+"If you want to place some content into your snippet from the shortcode just "
+"wrap it inside [wbcr_text_snippet id=\"xxx\"]content[/wbcr_text_snippet]. To "
+"use this content inside the snippet use {{SNIPPET_CONTENT}} variable."
+msgstr ""
+
+#: admin/pages/settings.php:83
+msgid ""
+"If you want to use an HTML entity in your code (for example &gt; or &quot;), "
+"but the editor keeps on changing them to its equivalent character (> and \" "
+"for the previous example), then you might want to enable this option."
+msgstr ""
+
+#: admin/pages/import.php:131
+msgid ""
+"Ignore any duplicate snippets: import all snippets from the file regardless "
+"and leave all existing snippets unchanged."
+msgstr ""
+
+#: admin/pages/import.php:113
+msgid "Import"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:108
+msgid "Import snippet"
+msgstr ""
+
+#: admin/pages/snippet-library.php:61
+msgid "Import snippet?"
+msgstr ""
+
+#: admin/pages/import.php:28
+msgid "Import/Export"
+msgstr ""
+
+#: admin/pages/settings.php:153
+msgid "Indent Unit"
+msgstr ""
+
+#: admin/pages/settings.php:135
+msgid "Indent With Tabs"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:688
+msgid "Inline Code"
+msgstr ""
+
+#: admin/includes/class.snippets.table.php:214
+msgid "Insert"
+msgstr ""
+
+#: includes/class.insertion.locations.php:77
+msgid "Insert After Content"
+msgstr ""
+
+#: includes/class.insertion.locations.php:103
+msgid "Insert After Excerpt"
+msgstr ""
+
+#: includes/class.insertion.locations.php:69
+msgid "Insert After Paragraph"
+msgstr ""
+
+#: includes/class.insertion.locations.php:85
+msgid "Insert After Post"
+msgstr ""
+
+#: includes/class.insertion.locations.php:53
+msgid "Insert Before Content"
+msgstr ""
+
+#: includes/class.insertion.locations.php:95
+msgid "Insert Before Excerpt"
+msgstr ""
+
+#: includes/class.insertion.locations.php:61
+msgid "Insert Before Paragraph"
+msgstr ""
+
+#: includes/class.insertion.locations.php:45
+msgid "Insert Before Post"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:666
+msgid "Insertion location"
+msgstr ""
+
+#: admin/pages/new-item.php:74
+msgid "JavaScript snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:96
+#: admin/includes/class.common.snippet.php:154
+msgid "Js snippet"
+msgstr ""
+
+#: admin/pages/settings.php:81
+msgid "Keep the HTML entities, don't convert to its character"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:389
+msgid "Less Than"
+msgstr ""
+
+#: admin/pages/license.php:91
+msgid "License"
+msgstr ""
+
+#: admin/ajax/check-license.php:39
+msgid ""
+"License key is empty or license key too long (license key is 32 characters "
+"long)"
+msgstr ""
+
+#: admin/ajax/check-license.php:27
+msgid "Licensing action not passed or this action is prohibited!"
+msgstr ""
+
+#: admin/pages/settings.php:171
+msgid "Line Numbers"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:690
+msgid "Linking type"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:173
+msgid "List of specific pages."
+msgstr ""
+
+#: admin/ajax/snippet-library.php:31
+msgid "Loading..."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:121
+msgid "Location"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:675
+msgid "Location number"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:426 admin/metaboxes/view-options.php:437
+#: admin/metaboxes/view-options.php:457
+msgid "Minutes(s)"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:430 admin/metaboxes/view-options.php:441
+#: admin/metaboxes/view-options.php:461
+msgid "Month(s)"
+msgstr ""
+
+#: admin/pages/snippet-library.php:131
+msgid "My snippets"
+msgstr ""
+
+#: admin/pages/snippet-library.php:102
+msgid "My Templates [Premium]"
+msgstr ""
+
+#: admin/types/snippets-post-types.php:83
+msgid "New snippet"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:355
+msgid ""
+"No conditions specified. <a href=\"#\" class=\"winp-link-add\">Click here</a>"
+" to add one."
+msgstr ""
+
+#: admin/pages/import.php:83
+msgid "No files selected!"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:322
+msgid ""
+"No filters specified. <a href=\"#\" class=\"winp-add-filter\">Click here</a> "
+"to add one."
+msgstr ""
+
+#: admin/pages/import.php:66
+msgid "No snippets were imported."
+msgstr ""
+
+#: admin/pages/license.php:286
+msgid "of"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:390
+msgid "Older Than"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:422
+msgid "older than"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:207
+msgid "Operating system"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:401
+msgid "OR"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:337 admin/metaboxes/view-options.php:364
+msgid "or"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:167
+msgid "Page"
+msgstr ""
+
+#: admin/ajax/ajax.php:199
+msgid "Pages"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:676
+msgid "Paragraph / Post number"
+msgstr ""
+
+#: admin/types/snippets-post-types.php:89
+msgid "Parent snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:277
+msgid "Permalink"
+msgstr ""
+
+#: admin/pages/new-item.php:54
+msgid "PHP snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:93
+#: admin/includes/class.common.snippet.php:151
+msgid "Php snippet"
+msgstr ""
+
+#: admin/pages/license.php:280
+msgid "plan"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:75
+msgid "Please run the following command to make the directory writable"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:64
+msgid "Please run the following commands in order to make the directory"
+msgstr ""
+
+#: admin/includes/class.notices.php:79
+msgid ""
+"Please take the time to answer a short survey on how you use this plugin and "
+"what you'd like to see changed or added in the future."
+msgstr ""
+
+#: admin/pages/license.php:299
+msgid "please update the key"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:137
+msgid "Post type"
+msgstr ""
+
+#: admin/ajax/ajax.php:181
+msgid "Posts"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:625
+msgid "Posts, Pages, Custom post types"
+msgstr ""
+
+#: admin/includes/class.snippets.table.php:209
+msgid "Preview"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:21
+msgid "Priority"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:213
+msgid "Priority is not changed!"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:206
+msgid "Priority is not changed! It's must be a number"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:202
+msgid "Priority successfully changed"
+msgstr ""
+
+#: admin/ajax/ajax.php:212
+msgid "Product"
+msgstr ""
+
+#: admin/ajax/ajax.php:237
+msgid "Products Category page"
+msgstr ""
+
+#: admin/ajax/ajax.php:242
+msgid "Products Tag page"
+msgstr ""
+
+#: admin/pages/license.php:258
+msgid ""
+"Public License is a GPLv2 compatible license allowing you to change and use "
+"this version of the plugin for free. Please keep in mind this license covers "
+"only free edition of the plugin. Premium versions are distributed with other "
+"type of a license."
+msgstr ""
+
+#: includes/class.helpers.php:647
+msgid "Purchase premium for"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:96
+msgid "Registration Date"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:469
+msgid "relative"
+msgstr ""
+
+#: admin/pages/license.php:311
+msgid "remained"
+msgstr ""
+
+#: admin/pages/import.php:137
+msgid ""
+"Replace any existing snippets with a newly imported snippet of the same name."
+msgstr ""
+
+#: admin/metaboxes/revisions.php:102 admin/metaboxes/revisions.php:124
+msgid "Restore"
+msgstr ""
+
+#: admin/metaboxes/revisions.php:99
+msgid "Revision"
+msgstr ""
+
+#: admin/metaboxes/info.php:52
+msgid "Robin image optimizer: notice"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:86
+msgid "Role"
+msgstr ""
+
+#: includes/class.helpers.php:739
+msgid "Run everywhere"
+msgstr ""
+
+#: admin/includes/class.notices.php:143
+msgid "Running in safe mode. This mode your snippets will not be started."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:112 admin/metaboxes/base-options.php:281
+msgid "Save"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:265
+msgid "Save a Snippet as a Template"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:490
+msgid "Save as template"
+msgstr ""
+
+#: admin/pages/settings.php:246
+msgid "Save settings"
+msgstr ""
+
+#: admin/ajax/ajax.php:162
+msgid "Search Page"
+msgstr ""
+
+#: admin/types/snippets-post-types.php:86
+msgid "Search snippets"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:425 admin/metaboxes/view-options.php:436
+#: admin/metaboxes/view-options.php:456
+msgid "Second(s)"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:691
+msgid "Select how the snippet will be linked to the page."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:667
+msgid "Select the location for you snippet."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:736
+msgid "Select the WPML language/languages that this snippet will work for."
+msgstr ""
+
+#: admin/pages/settings.php:28 admin/pages/settings.php:230
+msgid "Settings"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:520
+msgid "Shortcode:"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:331
+msgid "Show IF"
+msgstr ""
+
+#: includes/class.helpers.php:418
+msgid "Simple php snippet: Disable emojis"
+msgstr ""
+
+#: includes/class.helpers.php:406
+msgid "Simple text snippet: What is Lorem Ipsum?"
+msgstr ""
+
+#: includes/class.helpers.php:394
+msgid "Simple universal snippet: Google analytics tracking"
+msgstr ""
+
+#: admin/types/snippets-post-types.php:87
+msgid "Snippet is not found"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:256
+msgid "Snippet status changed"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:260
+msgid "Snippet status not changed."
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:268
+msgid "Snippet status not changed. No snippet ID"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:113
+msgid "Snippet template succefully saved!"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:17
+msgid "Snippet title"
+msgstr ""
+
+#: includes/class.insertion.locations.php:202
+msgid "Snippet will be placed after a product excerpt"
+msgstr ""
+
+#: includes/class.insertion.locations.php:194
+msgid "Snippet will be placed after a product price"
+msgstr ""
+
+#: includes/class.insertion.locations.php:186
+msgid "Snippet will be placed after a product title"
+msgstr ""
+
+#: includes/class.insertion.locations.php:162
+msgid "Snippet will be placed after a single product"
+msgstr ""
+
+#: includes/class.insertion.locations.php:178
+msgid "Snippet will be placed after a single product summary"
+msgstr ""
+
+#: includes/class.insertion.locations.php:78
+msgid "Snippet will be placed after the content of the post/page."
+msgstr ""
+
+#: includes/class.insertion.locations.php:104
+msgid "Snippet will be placed after the excerpt of the post/page."
+msgstr ""
+
+#: includes/class.insertion.locations.php:146
+msgid "Snippet will be placed after the list of products."
+msgstr ""
+
+#: includes/class.insertion.locations.php:70
+msgid ""
+"Snippet will be placed after the paragraph, which number you can specify in "
+"the Location number field."
+msgstr ""
+
+#: includes/class.insertion.locations.php:128
+msgid ""
+"Snippet will be placed after the post, which number you can specify in the "
+"Location number field."
+msgstr ""
+
+#: includes/class.insertion.locations.php:154
+msgid "Snippet will be placed before a single product"
+msgstr ""
+
+#: includes/class.insertion.locations.php:170
+msgid "Snippet will be placed before a single product summary"
+msgstr ""
+
+#: includes/class.insertion.locations.php:54
+msgid "Snippet will be placed before the content of the post/page."
+msgstr ""
+
+#: includes/class.insertion.locations.php:96
+msgid "Snippet will be placed before the excerpt of the post/page."
+msgstr ""
+
+#: includes/class.insertion.locations.php:138
+msgid "Snippet will be placed before the list of products."
+msgstr ""
+
+#: includes/class.insertion.locations.php:62
+msgid ""
+"Snippet will be placed before the paragraph, which number you can specify in "
+"the Location number field."
+msgstr ""
+
+#: includes/class.insertion.locations.php:120
+msgid ""
+"Snippet will be placed before the post, which number you can specify in the "
+"Location number field."
+msgstr ""
+
+#: includes/class.insertion.locations.php:46
+msgid "Snippet will be placed before the title of the post/page."
+msgstr ""
+
+#: includes/class.insertion.locations.php:112
+msgid "Snippet will be placed between each post."
+msgstr ""
+
+#: includes/class.insertion.locations.php:36
+msgid "Snippet will be placed in the source code before </body>."
+msgstr ""
+
+#: includes/class.insertion.locations.php:28
+msgid "Snippet will be placed in the source code before </head>."
+msgstr ""
+
+#: includes/class.insertion.locations.php:86
+msgid "Snippet will be placed in the very end of the post/page."
+msgstr ""
+
+#: admin/types/snippets-post-types.php:78
+msgid "Snippets"
+msgstr ""
+
+#: admin/pages/snippet-library.php:29 admin/pages/snippet-library.php:127
+#: admin/pages/snippet-library.php:134
+msgid "Snippets library"
+msgstr ""
+
+#: admin/pages/snippet-library.php:99
+msgid "Snippets Library [Premium]"
+msgstr ""
+
+#: admin/types/snippets-post-types.php:88
+msgid "Snippt is not found in trash"
+msgstr ""
+
+#: admin/ajax/ajax.php:155
+msgid "Special Pages"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:16
+msgid "Status"
+msgstr ""
+
+#: admin/pages/license.php:330
+msgid "Submit Key"
+msgstr ""
+
+#: admin/ajax/check-license.php:55
+msgid "Subscription success cancelled"
+msgstr ""
+
+#: admin/pages/import.php:68
+#, php-format
+msgid "Successfully imported <strong>%1$d</strong> snippet."
+msgid_plural "Successfully imported <strong>%1$d</strong> snippets."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/pages/settings.php:108
+msgid "Support old shortcodes [insert_php]"
+msgstr ""
+
+#: admin/pages/license.php:239
+msgid "Synchronization"
+msgstr ""
+
+#: admin/includes/class.api.php:269
+msgid "Synchronization snippet error"
+msgstr ""
+
+#: admin/pages/settings.php:144
+msgid "Tab Size"
+msgstr ""
+
+#: admin/types/snippets-taxonomy.php:35
+msgid "Tag"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:20
+#: admin/types/snippets-taxonomy.php:34
+msgid "Tags"
+msgstr ""
+
+#: admin/includes/class.notices.php:80
+msgid "Take the survey now"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:157
+msgid "Taxonomy of the page"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:147
+msgid "Taxonomy page"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:179
+msgid "Technology"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:94
+#: admin/includes/class.common.snippet.php:152 admin/pages/new-item.php:59
+msgid "Text snippet"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:63
+#, php-format
+msgid "The %s directory could not be created"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:74
+#, php-format
+msgid ""
+"The %s directory is not writable, therefore the CSS and JS files cannot be "
+"saved."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:98
+msgid ""
+"The date when the user who views your website was registered. For "
+"unregistered users this date always equals to 1 Jan 1970."
+msgstr ""
+
+#: admin/ajax/check-license.php:51
+msgid "The license has been updated"
+msgstr ""
+
+#: admin/ajax/check-license.php:47
+msgid "The license is deactivated"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:233
+msgid "The number of pages viewed by the user per session"
+msgstr ""
+
+#: admin/pages/settings.php:173
+msgid "The optional feature. If ON, all lines in the editor will be numbered."
+msgstr ""
+
+#: admin/pages/settings.php:191
+msgid ""
+"The optional feature. If ON, it searches for matches for the selected "
+"variable/function name. Highlight matches with green. Improves readability."
+msgstr ""
+
+#: admin/pages/settings.php:182
+msgid ""
+"The optional feature. If ON, the editor will automatically close opened "
+"quotes or brackets. Sometimes, it speeds up coding."
+msgstr ""
+
+#: admin/pages/settings.php:164
+msgid ""
+"The optional feature. If ON, the editor will wrap long lines. Otherwise, it "
+"will create a horizontal scroll."
+msgstr ""
+
+#: admin/pages/settings.php:146
+msgid ""
+"The optional feature. Pressing Tab in the code editor increases left indent "
+"to N spaces. N is a number pre-defined by you."
+msgstr ""
+
+#: admin/pages/settings.php:155
+msgid ""
+"The optional feature. The indent for code lines (units). Example: select a "
+"snippet, press Tab. The left indent in the selected code increases to N "
+"spaces. N is a number pre-defined by you."
+msgstr ""
+
+#: admin/pages/settings.php:137
+msgid ""
+"The optional feature. Whether, when indenting, the first N*tabSize spaces "
+"should be replaced by N tabs. The default is false."
+msgstr ""
+
+#: admin/pages/settings.php:128
+msgid ""
+"The optional feature. You can customize the code style in the snippet editor."
+" The \"Default\" style is applied by default."
+msgstr ""
+
+#: admin/pages/settings.php:236
+msgid "The settings have been updated successfully!"
+msgstr ""
+
+#: admin/includes/class.notices.php:101
+#, php-format
+msgid "The snippet has been deactivated due to an error on line %d:"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:244
+msgid ""
+"The snippet is not activated because errors were detected in the snippet "
+"code!"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:239
+msgid "The time interval during which the user entered"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:245
+msgid "The total number of sessions opened by the user"
+msgstr ""
+
+#: includes/class.helpers.php:411
+msgid ""
+"This ordinary maintenance text. With this snippet, you can fill your pages "
+"with meaningless English text."
+msgstr ""
+
+#: admin/includes/class.snippets.table.php:206
+msgid "Title"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:415
+msgid "to"
+msgstr ""
+
+#: admin/pages/import.php:77
+#, php-format
+msgid ""
+"To import more then one snippet at a time, you need to purchase <a "
+"href=\"%s\">Woody snippets PRO</a>"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:243
+msgid "Total number of visits"
+msgstr ""
+
+#: admin/includes/class.snippets.table.php:205
+msgid "Type"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:98
+#: admin/includes/class.common.snippet.php:156 admin/pages/new-item.php:64
+msgid "Universal snippet"
+msgstr ""
+
+#: admin/includes/class.api.php:272
+msgid "Unknown sippet type"
+msgstr ""
+
+#: admin/pages/license.php:226
+#, php-format
+msgid "Upgrade to Premium for $%s"
+msgstr ""
+
+#: admin/pages/import.php:148
+msgid "Upload Files"
+msgstr ""
+
+#: admin/pages/import.php:166
+msgid "Upload files and import"
+msgstr ""
+
+#: admin/pages/import.php:121
+msgid ""
+"Upload one or more Php Snippets export files and the snippets will be "
+"imported."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:195
+msgid "Use cookie"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:201
+msgid "Use javascript"
+msgstr ""
+
+#: admin/pages/new-item.php:86
+msgid ""
+"Used for inserting Advertisement. Can be used for inserting quotes, "
+"paragraphs, shortcodes from other plugins, tables, media files."
+msgstr ""
+
+#: admin/pages/new-item.php:71
+msgid "Used for inserting css code. Can be used for inserting css styles."
+msgstr ""
+
+#: admin/pages/new-item.php:61
+msgid ""
+"Used for inserting formatted text. Can be used for inserting quotes, "
+"paragraphs, shortcodes from other plugins, tables, media files."
+msgstr ""
+
+#: admin/pages/new-item.php:81
+msgid "Used for inserting html code. Can be used for inserting html code."
+msgstr ""
+
+#: admin/pages/new-item.php:76
+msgid ""
+"Used for inserting js code. Can be used for inserting ads, analytics, embeds "
+"& other complex scenarios."
+msgstr ""
+
+#: admin/pages/new-item.php:56
+msgid ""
+"Used for inserting php code. Can be used for registering functions, hooks, "
+"global variables, printing text. Virtual functions.php"
+msgstr ""
+
+#: admin/pages/new-item.php:66
+msgid ""
+"Used for inserting php, html, js & css code. Can be used for inserting ads, "
+"analytics, embeds & other complex scenarios."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:82
+msgid "User"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:225
+msgid "User country"
+msgstr ""
+
+#: admin/pages/license.php:293
+msgid "version"
+msgstr ""
+
+#: admin/types/snippets-post-types.php:85
+msgid "View snippet"
+msgstr ""
+
+#: admin/includes/class.snippets.table.php:343
+msgid "View the video"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:231
+msgid "Viewing depth"
+msgstr ""
+
+#: admin/includes/class.notices.php:120
+msgid ""
+"We strongly recommend you to porting your php code to snippets and call them "
+"in your posts/pages and widgets using [wbcr_php_snippet id = \"000\"] "
+"shortcodes."
+msgstr ""
+
+#: admin/metaboxes/view-options.php:429 admin/metaboxes/view-options.php:440
+#: admin/metaboxes/view-options.php:460
+msgid "Week(s)"
+msgstr ""
+
+#: admin/pages/import.php:124
+msgid ""
+"What should happen if an existing snippet is found with an identical name to "
+"an imported snippet?"
+msgstr ""
+
+#: admin/pages/about.php:49
+msgid "What&#8217;s New"
+msgstr ""
+
+#: admin/pages/settings.php:74
+msgid ""
+"When creating a new snippet or updating an old one, make the code snippets "
+"active by default."
+msgstr ""
+
+#: admin/pages/settings.php:101
+msgid ""
+"When the plugin is deleted from the Plugins menu, also delete all snippets "
+"and plugin settings."
+msgstr ""
+
+#: admin/pages/snippet-library.php:103
+msgid ""
+"Whenever you or someone from your team save snippets as templates on any "
+"website, they go to this section. Our remote server provides snippet "
+"synchronization. Thus, snippet templates are always available without extra "
+"import/export. The feature is available in the premium version only."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:554 admin/metaboxes/base-options.php:578
+msgid "Where there is a shortcode"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:598
+msgid "Where to execute the code?"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:524
+msgid "Where use:"
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:19
+msgid "Where use?"
 msgstr ""
 
 #. Author of the plugin
+msgid "Will Bontrager Software, LLC <will@willmaster.com>, Webcraftic"
+msgstr ""
+
+#: admin/ajax/ajax.php:209 admin/metaboxes/base-options.php:642
+msgid "Woocommerce"
+msgstr ""
+
+#: insert_php.php:178 admin/boot.php:151
+msgid "Woody ad snippets"
+msgstr ""
+
+#: admin/pages/import.php:108
+msgid "Woody ad snippets Import"
+msgstr ""
+
+#. Name of the plugin
+msgid "Woody code snippets (PHP snippets | Insert PHP)"
+msgstr ""
+
+#: admin/includes/class.common.snippet.php:125
+#: admin/types/snippets-post-types.php:45
+#: admin/types/snippets-post-types.php:46
+msgid "Woody snippets"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:734
+msgid "WPML Language"
+msgstr ""
+
+#: admin/pages/settings.php:162
+msgid "Wrap Lines"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:431 admin/metaboxes/view-options.php:442
+#: admin/metaboxes/view-options.php:462
+msgid "Year(s)"
+msgstr ""
+
+#: admin/metaboxes/base-options.php:700
 msgid ""
-"Will Bontrager Software, LLC <will@willmaster.com>, Webcraftic <wordpress."
-"webraftic@gmail.com>"
+"You can write a short note so that you can always remember why this code or "
+"your colleague was able to apply this code in his works."
+msgstr ""
+
+#: admin/includes/class.snippets.viewtable.php:194
+#: admin/includes/class.snippets.viewtable.php:226
+msgid "You don't have enough capability to edit this information."
+msgstr ""
+
+#: admin/pages/license.php:262
+msgid ""
+"You use a paid subscription for the plugin updates. In case you don’t want "
+"to receive paid updates, please, click <a data-action=\"unsubscribe\" "
+"class=\"winp-control-btn\" href=\"#\">cancel subscription</a>"
+msgstr ""
+
+#: admin/metaboxes/view-options.php:391
+msgid "Younger Than"
+msgstr ""
+
+#: admin/pages/license.php:229
+#, php-format
+msgid "Your current license for %1$s:"
+msgstr ""
+
+#: admin/ajax/check-license.php:42
+msgid "Your license has been successfully activated"
+msgstr ""
+
+#: admin/pages/license.php:268
+msgid ""
+"Your license has expired, please extend the license to get updates and "
+"support."
+msgstr ""
+
+#: admin/metaboxes/base-options.php:270
+msgid ""
+"Your snippets will be available for export and reuse on any page or website"
 msgstr ""

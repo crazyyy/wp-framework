@@ -2,12 +2,34 @@
 $backupDirs = array('uploads.zip','plugins.zip','themes.zip','others.zip','db.sql.gz');
 $upload_dir = wp_upload_dir();
 $backup_dirname = $upload_dir['basedir'].'/wp-file-manager-pro/fm_backup/';
-$backup_baseurl = $upload_dir['baseurl'].'/wp-file-manager-pro/fm_backup/';
+$backup_baseurl = site_url().'/wp-json/v1/fm/backup/';
 global $wpdb;
 $fmdb = $wpdb->prefix.'wpfm_backup';
 $backups = $wpdb->get_results("select * from ".$fmdb." order by id desc");
 ?>
 <style>
+button{
+    outline: none !important;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+}
+.restore_btn, .del_btn, .log_btn{
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+}
+
+.del_btn:hover, .log_btn:hover {
+    background: #696868;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+}
 .wrap.restore-sec {
     background: #fff;
     padding: 25px;
@@ -67,7 +89,6 @@ $backups = $wpdb->get_results("select * from ".$fmdb." order by id desc");
 }
 
 .schedule-back .well {
-    width: 50%;
     background: #f1f1f1;
     clear: both;
     padding: 15px;
@@ -86,6 +107,7 @@ $backups = $wpdb->get_results("select * from ".$fmdb." order by id desc");
     border-radius: 3px;
     margin-top: 25px;
     margin-bottom: 0px;
+    border: 1px #ddd solid;
 }
 .existing-back{
 	padding-top:40px;
@@ -109,6 +131,7 @@ $backups = $wpdb->get_results("select * from ".$fmdb." order by id desc");
     margin-left: 10px;
     padding: 2px;
     border-radius: 10px;
+    vertical-align: top;
 }
 strong {
     font-weight: 700;
@@ -248,7 +271,7 @@ p{
     background: #0e6bb7;
     color: #fff;
     border: none;
-    padding: 10px 12px;
+    padding: 7px 12px 8px;
     border-radius: 3px;
     cursor: pointer;
 }
@@ -269,6 +292,7 @@ p{
     border-bottom: 1px solid #ddd;
     background: #fff;
 }
+
 /* All pop-ups css*/
 .fmbkp_console_popup, .restore_backup_popup, .dlt_backup_popup, .dlt_success_popup{
     position: fixed;
@@ -368,6 +392,9 @@ p{
 #fmbkp_console .fm_console_success{
     color: green;
 }
+.fm_console_success.log_msg_align_center {
+    color: #ffffff !important;
+}
 #fmbkp_console .fm_console_log_pop{
     margin: 0px;
     margin-bottom: 15px;
@@ -436,7 +463,7 @@ p{
 }
 .exitBackBtn{
 	border: none;
-	padding: 7px 15px;
+	padding: 6px 15px 7px;
 	cursor: pointer;
     border-radius:5px;
     color: #fff;
@@ -457,12 +484,98 @@ p{
 }
 .log_msg_align_center {
     text-align: center;
+    text-transform: uppercase !important;
 }
 .disabled_btn {
 	cursor: default;
 	pointer-events: none;
 	background: #ddd;
 	color: #fff;
+}
+.mrt10 {
+    margin-right: 10px;
+}
+.styledCheckbox {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 16px;
+    height: 16px;
+}
+.styledCheckbox input {
+    position: absolute;
+    opacity: 0 !important;
+    cursor: pointer;
+    z-index: 1;
+    margin: 0;
+}
+.fm_checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.fm_checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.styledCheckbox .fm_checkmark:after {
+    left: 6px;
+    top: 3px;
+    width: 3px;
+    height: 7px;
+    border: solid #0073aa;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.styledCheckbox input:checked ~ .fm_checkmark:after {
+    display: block;
+}
+span.chk-label {
+    vertical-align: middle;
+}
+.backup-date span.chk-label,
+.styledCheckbox {
+    vertical-align: middle;
+}
+
+.bck_action a:hover,
+.restore_cancel:hover, .dlt_cancel:hover {
+    background: #696868;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+}
+.double-col .inner-col-half .backup_btn:hover,
+.restore_btn:hover, .restore_confirmed:hover,.dlt_confirmed:hover{
+    background: #00669b !important;
+    border-color: #00669b !important;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+}
+a:focus{
+    box-shadow: none;
+}
+a.close_restore_backup:active, a.close_restore_backup:hover,
+a.close_dlt_backup:active, a.close_dlt_backup:hover,
+a.close_dlt_success:active,a.close_dlt_success:hover  {
+    color: #ffffff;
 }
 </style>
 <div class="wrap restore-sec">
@@ -471,22 +584,35 @@ p{
 	</div>
 	
 	<div class="schedule-back">
-		<!-- <h3><?php //_e('Backup Options:', 'wp-file-manager'); ?></h3> -->
-		
+
         <div class="double-col">
             <h4><?php _e('Backup Options:', 'wp-file-manager'); ?></h4>
             <div class="inner-col-wrap">
                 <div class="inner-col-half">
                     <div class="colmn-div3">
-                        <input type="checkbox" name="fm_bkp_database" id="fm_bkp_database" value="5" checked="checked"> <?php _e('Database Backup', 'wp-file-manager'); ?> 
+                        <span class="styledCheckbox mrt10">
+                            <input type="checkbox" name="fm_bkp_database" id="fm_bkp_database" value="5" checked="checked"> <span class="fm_checkmark"></span>
+                        </span>
+                        <span class="chk-label"><?php _e('Database Backup', 'wp-file-manager'); ?></span>
                     </div>
                     <div class="colmn-div3">
-                        <input type="checkbox" name="fm_bkp_files" id="fm_bkp_files" value="files" checked="checked"> <a href="javascript:void(0)" id="fm_open_files_option"><?php _e('Files Backup', 'wp-file-manager'); ?></a>
+                        <span class="styledCheckbox mrt10">
+                            <input type="checkbox" class="chk-all-files" name="fm_bkp_files" id="fm_bkp_files" value="files" checked="checked"> <span class="fm_checkmark"></span>
+                        </span>
+                        <span class="chk-label"><a href="javascript:void(0)" id="fm_open_files_option"><?php _e('Files Backup', 'wp-file-manager'); ?></a></span>
                         <div id="fm_open_files_options" class="fm_open_files_options">
-                            <li><input type="checkbox" id="fm_bkp_plugins" name="fm_bkp_plugins" value="1" checked="checked"><?php _e('Plugins', 'wp-file-manager'); ?></li>
-                            <li><input type="checkbox" id="fm_bkp_themes" name="fm_bkp_themes" value="2" checked="checked"><?php _e('Themes', 'wp-file-manager'); ?></li>
-                            <li><input type="checkbox" id="fm_bkp_uploads" name="fm_bkp_uploads" value="3" checked="checked"><?php _e('Uploads', 'wp-file-manager'); ?></li>
-                            <li><input type="checkbox" id="fm_bkp_other" name="fm_bkp_other" value="4" checked="checked"><?php _e('Any other directories found inside wp-content', 'wp-file-manager'); ?></li>
+                            <li><span class="styledCheckbox mrt10">
+                                <input type="checkbox" class="chk-files" id="fm_bkp_plugins" name="fm_bkp_plugins" value="1" checked="checked"> <span class="fm_checkmark"></span>
+                            </span> <span class="chk-label"><?php _e('Plugins', 'wp-file-manager'); ?></span></li>
+                                <li><span class="styledCheckbox mrt10">
+                                <input type="checkbox" class="chk-files" id="fm_bkp_themes" name="fm_bkp_themes" value="2" checked="checked"> <span class="fm_checkmark"></span>
+                            </span> <span class="chk-label"><?php _e('Themes', 'wp-file-manager'); ?></span></li>
+                                <li><span class="styledCheckbox mrt10">
+                                <input type="checkbox" class="chk-files" id="fm_bkp_uploads" name="fm_bkp_uploads" value="3" checked="checked"> <span class="fm_checkmark"></span>
+                            </span> <span class="chk-label"><?php _e('Uploads', 'wp-file-manager'); ?></span></li>
+                                <li><span class="styledCheckbox mrt10">
+                                <input type="checkbox" class="chk-files" id="fm_bkp_other" name="fm_bkp_other" value="4" checked="checked"> <span class="fm_checkmark"></span>
+                            </span> <span class="chk-label"><?php _e('Others (Any other directories found inside wp-content)', 'wp-file-manager'); ?></span></li>
                         </div>
                     </div>
                     <div class="colmn-div3 inner-col-half">
@@ -508,9 +634,9 @@ p{
                     <div class="dlt_success_popup_inner">
                         <a href="javascript:void(0)" class="close_dlt_success">&times;</a>
 		                <div id="dlt_success_success"> 
-                            <h3><?php _e('Success', 'wp-file-manager'); ?></h3>
+                            <h3><?php _e('SUCCESS', 'wp-file-manager'); ?></h3>
                             <div class="dlt_success_wrap">
-                                <p><?php _e('Backup successfully deleted', 'wp-file-manager'); ?></p>
+                                <p><?php _e('Backup successfully deleted.', 'wp-file-manager'); ?></p>
                                 <button class="dlt_confirmed_success backup_btn_common"><?php _e('Ok', 'wp-file-manager'); ?></button>
                             </div>
                         </div>
@@ -578,7 +704,7 @@ p{
 		<h3><?php _e('Last Log Message', 'wp-file-manager'); ?></h3>
         <p>
         <?php if(isset($backups) && !empty($backups)) { ?>
-            <?php _e('The backup apparently succeeded and is now complete', 'wp-file-manager'); ?> (<?php echo $backups[0]->backup_date;?>)
+            <?php _e('The backup apparently succeeded and is now complete.', 'wp-file-manager'); ?> (<?php echo date('j M, Y H:i A', strtotime($backups[0]->backup_date));?>)
              <?php } else { ?>
                 <?php _e('No log message', 'wp-file-manager'); ?> 
              <?php } ?>
@@ -586,14 +712,16 @@ p{
 	</div>
 	
 	<div class="existing-back">
-		<h3><?php _e('Existing Backups', 'wp-file-manager'); ?> <span><?php echo count($backups);?></span> </h3>
+		<h3><?php _e('Existing Backup(s)', 'wp-file-manager'); ?> <span><?php echo count($backups);?></span> </h3>
 		<!--p><strong> More tasks: </strong> <a href="#">upload backup files</a> | <a href="#">Rescan local folder for new backup sets </a> | <a href="#">Rescan remote storage</a></p-->
 		
 	</div>
 	
 	<div class="backup-main">
 		<div class="backup-date">
-			<input type="checkbox" class="bkpchkCheckAll"> <span> <?php _e('Backup Date', 'wp-file-manager'); ?> </span>
+            <span class="styledCheckbox mrt10">
+                <input type="checkbox" class="bkpchkCheckAll" <?php echo count($backups) == 0 ? 'disabled="disabled"' : "";?>> <span class="fm_checkmark"></span>
+            </span> <span class="chk-label"> <?php _e('Backup Date', 'wp-file-manager'); ?> </span>
 		</div>
 		<div class="download bck_action">
 			 <span> <?php _e('Backup data (click to download)', 'wp-file-manager'); ?></span>
@@ -616,8 +744,10 @@ p{
 		?>
 	<div class="database-sec <?php echo($count++%2 == 0) ? 'even' : 'odd'?>">
 		<div class="backup-date">
-			<input type="checkbox" value="<?php echo $backup->id;?>" name="backupids[]" class="backupids"> 
-            <span><?php echo $backupName; ?> <?php echo ($todayDate == $compareDate) ? '(Today)' : '';?> </span>
+            <span class="styledCheckbox mrt10">
+                <input type="checkbox" value="<?php echo $backup->id;?>" name="backupids[]" class="backupids"> <span class="fm_checkmark"></span>
+            </span>
+            <span class="chk-label"><?php echo date('j M, Y H:i A', strtotime($backupName)); ?> <?php echo ($todayDate == $compareDate) ? '(Today)' : '';?> </span>
 		</div>
 		<div class="download bck_action">
 		<?php foreach($backupDirs as $backupDir) {
@@ -630,8 +760,10 @@ p{
                     $dirName = str_replace('.zip','',$backupDir);
                 }
                 $size = filesize($dir);
+                $backup_type = explode('.',$backupDir);
+                $id = (int) $backup->id;
                ?>
-                  <a href="<?php echo $backup_baseurl.$bkpName;?>"><?php echo ucfirst($dirName); ?> (<?php echo $this->formatSizeUnits($size); ?>)</a>
+                <a href="javascript:void(0)" class="bck-icon" data-token="<?php echo base64_encode($backup->id).'/'.base64_encode($backup_type[0]).'/'.base64_encode(site_url().self::fm_get_key());?>"><?php echo ucfirst($dirName); ?> (<?php echo $this->formatSizeUnits($size); ?>)</a>
               <?php } 
             } ?>
 		</div>
@@ -643,21 +775,22 @@ p{
 	</div>
 	<?php } ?>
 	<?php } else { ?>
-           <p class="no_backup"><?php _e('Currently no backups found.', 'wp-file-manager'); ?></p>
+           <p class="no_backup"><?php _e('Currently no backup(s) found.', 'wp-file-manager'); ?></p>
           <?php } ?>
 	<div class="action-sec">
-		<strong> <?php _e('Actions upon selected backups', 'wp-file-manager'); ?></strong>
+		<strong> <?php _e('Actions upon selected backup(s)', 'wp-file-manager'); ?></strong>
         <button class="exitBackBtn bkpDelete del_btn disabled_btn"><?php _e('Delete', 'wp-file-manager'); ?></button>
-		<button class="exitBackBtn bkpCheckAll restore_btn"><?php _e('Select All', 'wp-file-manager'); ?></button>
+		<button class="exitBackBtn bkpCheckAll restore_btn <?php echo count($backups) == 0 ? 'disabled_btn' : '';?>"><?php _e('Select All', 'wp-file-manager'); ?></button>
         <button class="exitBackBtn bkpUnCheckAll log_btn disabled_btn"><?php _e('Deselect', 'wp-file-manager'); ?></button>	
 	</div>
-<p><i><?php _e('Note: Backup files will be under <code>'.$backup_dirname.'</code>', 'wp-file-manager'); ?></i></p>	
+    <p><i><?php _e('<strong>Note:</strong> Backup files will be under <code>'.$backup_dirname.'</code>', 'wp-file-manager'); ?></i></p>	
 </div>
 <?php $wpfmbackup = wp_create_nonce( 'wpfmbackup' ); ?>
 <script>
 jQuery(document).ready(function(){
     var ajax_url = "<?php echo admin_url('admin-ajax.php')?>";
     jQuery("#wpfm-backupnow-button").click(function(){
+        jQuery(".fmbkp_console h3").removeAttr('style');
         var fm_bkp_database = jQuery('#fm_bkp_database').prop('checked');
         var fm_bkp_files = jQuery('#fm_bkp_files').prop('checked');
         var fm_bkp_plugins = jQuery('#fm_bkp_plugins').prop('checked');
@@ -665,8 +798,9 @@ jQuery(document).ready(function(){
         var fm_bkp_uploads = jQuery('#fm_bkp_uploads').prop('checked');
         var fm_bkp_other = jQuery('#fm_bkp_other').prop('checked');
         var fm_bkp_id = ''; // empty
+        jQuery(".fmbkp_console_popup .close_fm_console").hide();
         jQuery('.fmbkp_console_popup').show();
-        jQuery('#fmbkp_console').show().html('<p class="backup_wait">Backuping please wait...</p>');
+        jQuery('#fmbkp_console').show().html('<p class="backup_wait">Backup is running, please wait...</p>');
         wp_fm_backup(ajax_url, fm_bkp_database,fm_bkp_files,fm_bkp_plugins,fm_bkp_themes,fm_bkp_uploads,fm_bkp_other,fm_bkp_id);
   });
  function wp_fm_backup(ajax_url, fm_bkp_database,fm_bkp_files,fm_bkp_plugins,fm_bkp_themes,fm_bkp_uploads,fm_bkp_other,fm_bkp_id){
@@ -700,7 +834,26 @@ jQuery(document).ready(function(){
 		}
     });
  } 
-
+ jQuery(".backupids").click(function(){
+    if(jQuery(".backupids:checked").length == jQuery(".backupids").length){
+        jQuery(".bkpchkCheckAll").prop("checked",true);
+        jQuery('.bkpCheckAll').addClass('disabled_btn');
+        jQuery('.bkpUnCheckAll').removeClass('disabled_btn');
+        jQuery('.bkpDelete').removeClass('disabled_btn');
+    }
+    else{
+        jQuery(".bkpchkCheckAll").prop("checked",false);
+        jQuery('.bkpUnCheckAll').addClass('disabled_btn');
+        jQuery('.bkpCheckAll').removeClass('disabled_btn');
+        jQuery('.bkpDelete').removeClass('disabled_btn');
+        if(jQuery(".backupids:checked").length == 0){
+            jQuery('.bkpDelete').addClass('disabled_btn');
+        }
+        if(jQuery(".backupids:checked").length > 0){
+            jQuery('.bkpUnCheckAll').removeClass('disabled_btn');
+        }
+    }
+});
 // select all -> backups
 jQuery(".bkpchkCheckAll").click(function () {
     jQuery(".backupids").prop('checked', jQuery(this).prop('checked'));
@@ -743,9 +896,9 @@ jQuery(".bkpDelete").click(function () {
     }); //each
 
     if(delarr == '') {
-    alert('Select backups to delete!');
+    alert('Select backup(s) to delete!');
     } else {
-        var r = confirm("Are you sure want to remove selected backups?")
+        var r = confirm("Are you sure want to remove selected backup(s)?")
         if (r == true) {
             jQuery.ajax({
                 type: "POST",
@@ -794,6 +947,7 @@ jQuery(".dlt_confirmed").click(function () {
 
         success: function(response) {
             if(response == "Backup removed successfully!"){
+                jQuery(".fmbkp_console h3").css('text-transform','uppercase !important');
                 jQuery(".dlt_backup_popup").hide();
                 jQuery(".dlt_success_popup").show();
             }
@@ -861,5 +1015,17 @@ jQuery(".restore_confirmed").click(function () {
 
 }); //click
 
+});
+
+jQuery(document).on('click','#fm_bkp_files', function(){
+    var status = this.checked;
+    jQuery(".chk-files").each( function() {
+        jQuery(this).prop("checked",status);
+    });
+});
+
+jQuery(document).on("click",".bck-icon", function(){
+    var key = jQuery(this).attr('data-token');
+    window.open('<?php echo $backup_baseurl;?>'+key);
 });
 </script>

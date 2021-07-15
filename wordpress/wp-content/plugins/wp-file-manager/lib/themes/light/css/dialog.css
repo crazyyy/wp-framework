@@ -9,23 +9,39 @@
   padding: 3px 0 3px 6px;
   height: 30px;
   box-sizing: border-box;
+  background: #dee1e6;
 }
 
 /* Close button */
-.elfinder .elfinder-dialog .ui-dialog-titlebar-close {
-  background: url('../images/close.png');
+.elfinder .elfinder-dialog .ui-dialog-titlebar-close,
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize,
+.elfinder .elfinder-dialog .elfinder-titlebar-full{
+  background: url('../images/win_10_sprite_icon.png');
   right: 0;
   border-radius: 0;
-  margin-top: -15px;
-  webkit-transition: background 0.3s; /* Safari */
+  margin-top: -13px;
+  -webkit-transition: background 0.3s; /* Safari */
   transition: background-image 0.3s;
   height: 29px;
-  width: 45px;
+  width: 44px;
 }
 
-.elfinder .elfinder-dialog .ui-dialog-titlebar-close:hover {
-  background: url('../images/close-hover.png');
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize{
+  background-position: -89px 0px;
 }
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize:hover{
+ background-position: -89px -31px;
+}
+.elfinder .elfinder-dialog .elfinder-titlebar-full{
+ background-position: -45px 0px;
+}
+.elfinder .elfinder-dialog .elfinder-titlebar-full:hover{
+ background-position: -45px -31px;
+}
+.elfinder .elfinder-dialog .ui-dialog-titlebar-close:hover {
+ background-position: 0px -31px !important;
+}
+
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-button.elfinder-titlebar-button-right {
   left: 1px;
   top: 12px;
@@ -57,7 +73,6 @@
  }
 .elfinder .ui-state-active {
 	background: #1979CA none repeat scroll 0 0;	
-	/*background: #009688 none repeat scroll 0 0;	*/
 }
 /* Icons */
 /* Dialog icon (e.g. for error messages) */
@@ -122,3 +137,10 @@
 .elfinder .elfinder-dialog .elfinder-upload-dialog-or {
   /* */
 }
+
+.elfinder .elfinder-dialog .elfinder-titlebar-minimize .ui-icon.ui-icon-minusthick,
+.elfinder .elfinder-dialog .elfinder-titlebar-full .ui-icon.ui-icon-plusthick,
+.elfinder .elfinder-dialog .ui-dialog-titlebar-close .ui-icon.ui-icon-closethick,
+.elfinder .elfinder-dialog .elfinder-titlebar-full .ui-icon.ui-icon-arrowreturnthick-1-s{ background: inherit; } 
+
+.std42-dialog .ui-dialog-titlebar .elfinder-titlebar-button{ left: -7px; }

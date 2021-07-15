@@ -2,9 +2,9 @@
 /**
  * Execute snippet
  *
- * @author        Webcraftic <wordpress.webraftic@gmail.com>
- * @copyright (c) 16.11.2018, Webcraftic
- * @version       1.0
+ * @author        Artem Prihodko <webtemyk@yandex.ru>
+ * @copyright (c) 2020, CreativeMotion
+ * @version       2.4
  */
 
 // Exit if accessed directly
@@ -15,9 +15,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_Execute_Snippet {
 
 	/**
+	 * @var self
+	 */
+	private static $instance;
+
+	/**
+	 * @var array
+	 */
+	public $snippets;
+
+	/**
+	 * @var WINP_Insertion_Locations
+	 */
+	public $snippets_locations;
+
+	public static function app() {
+		if ( self::$instance === null ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
 	 * WINP_Execute_Snippet constructor.
 	 */
 	public function __construct() {
+		self::$instance = $this;
+
 		if ( ! defined( 'WINP_UPLOAD_DIR' ) ) {
 			$dir = wp_upload_dir();
 			define( 'WINP_UPLOAD_DIR', $dir['basedir'] . '/winp-css-js' );
@@ -27,6 +52,26 @@ class WINP_Execute_Snippet {
 			$dir = wp_upload_dir();
 			define( 'WINP_UPLOAD_URL', $dir['baseurl'] . '/winp-css-js' );
 		}
+		global $wpdb;
+
+		$sql = "SELECT {$wpdb->posts}.ID, {$wpdb->posts}.post_content, p2.meta_value as priority
+ 					FROM {$wpdb->posts}
+ 					INNER JOIN {$wpdb->postmeta} p1 ON ({$wpdb->posts}.ID = p1.post_id)
+ 					INNER JOIN {$wpdb->postmeta} p2 ON ({$wpdb->posts}.ID = p2.post_id)
+ 					INNER JOIN {$wpdb->postmeta} p3 ON ({$wpdb->posts}.ID = p3.post_id)
+					WHERE (( p1.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_scope' AND p1.meta_value = '%s')
+					     AND
+					      ( p3.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_activate' AND p3.meta_value = '1')
+						 AND p2.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_priority' ) 
+ 					AND {$wpdb->posts}.post_type = '" . WINP_SNIPPETS_POST_TYPE . "' 
+ 					AND ({$wpdb->posts}.post_status = 'publish')
+ 					ORDER BY CAST(priority AS UNSIGNED) %s";
+
+		$this->snippets['evrywhere'] = $wpdb->get_results( sprintf( $sql, 'evrywhere', 'DESC' ) );
+		$this->snippets['auto']      = $wpdb->get_results( sprintf( $sql, 'auto', 'ASC' ) );
+
+		global $winp_snippets_locations;
+		$this->snippets_locations = new WINP_Insertion_Locations();
 	}
 
 	/**
@@ -41,12 +86,20 @@ class WINP_Execute_Snippet {
 			add_filter( 'the_post', [ $this, 'executePostSnippets' ], 10, 2 );
 			add_filter( 'the_content', [ $this, 'executeContentSnippets' ] );
 			add_filter( 'the_excerpt', [ $this, 'executeExcerptSnippets' ] );
-			add_filter( 'wp_list_comments_args', [ $this, 'executeListCommentsSnippets' ] );
+			// Бесполезный хук, который вызывается на каждый комментарий. Если их много, увеличивается нагрузка
+			//add_filter( 'wp_list_comments_args', [ $this, 'executeListCommentsSnippets' ] );
+
+			//add_action( 'wp_head', [ $this, 'executeWoocommerceSnippets' ] );
+
+			if ( ! empty( $this->snippets_locations->getInsertion( 'custom' ) ) ) {
+				add_action( 'wp_head', [ $this, 'executeCustomSnippets' ] );
+			}
+
 		}
 	}
 
 	/**
-	 * Execute the evrywhere snippets once the plugins are loaded
+	 * Execute the everywhere snippets once the plugins are loaded
 	 */
 	public function executeEverywhereSnippets() {
 		echo $this->executeActiveSnippets( 'evrywhere' );
@@ -56,14 +109,14 @@ class WINP_Execute_Snippet {
 	 * Execute the snippets in header of page once the plugins are loaded
 	 */
 	public function executeHeaderSnippets() {
-		echo $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_HEADER );
+		echo $this->executeActiveSnippets( 'auto', 'header' );
 	}
 
 	/**
 	 * Execute the snippets in footer of page once the plugins are loaded
 	 */
 	public function executeFooterSnippets() {
-		echo $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_FOOTER );
+		echo $this->executeActiveSnippets( 'auto', 'footer' );
 	}
 
 	/**
@@ -81,19 +134,19 @@ class WINP_Execute_Snippet {
 		if ( is_singular( [ $post_type ] ) && $post->ID == $data->ID ) {
 			if ( did_action( 'get_header' ) ) {
 				// Перед заголовком
-				$content = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_BEFORE_POST );
+				$content = $this->executeActiveSnippets( 'auto', 'before_post' );
 			}
 		} else {
 			if ( $query->post_count > 0 ) {
 				if ( $query->post_count > 1 && $query->current_post > 0 && $query->post_count > $query->current_post ) {
 					// Между записями
-					$content = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_BETWEEN_POSTS );
+					$content = $this->executeActiveSnippets( 'auto', 'between_posts' );
 				}
 				// Перед записью
-				$content .= $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_BEFORE_POSTS, '', $query );
+				$content .= $this->executeActiveSnippets( 'auto', 'before_posts', '', $query );
 
 				// После записи
-				$content .= $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_AFTER_POSTS, '', $query );
+				$content .= $this->executeActiveSnippets( 'auto', 'after_posts', '', $query );
 			}
 		}
 
@@ -146,11 +199,11 @@ class WINP_Execute_Snippet {
 	/**
 	 * Handle posts content
 	 *
-	 * @param string  $content
-	 * @param string  $snippet_content
+	 * @param string $content
+	 * @param string $snippet_content
 	 * @param integer $post_number
-	 * @param string  $type
-	 * @param object  $query
+	 * @param string $type
+	 * @param object $query
 	 *
 	 * @return mixed
 	 */
@@ -192,27 +245,27 @@ class WINP_Execute_Snippet {
 
 		if ( is_category() || is_archive() || is_tag() || is_tax() || is_search() ) {
 			// Перед коротким описанием
-			$content = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_BEFORE_EXCERPT ) . $content;
+			$content = $this->executeActiveSnippets( 'auto', 'before_excerpt' ) . $content;
 
 			// После короткого описания
-			$content .= $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_AFTER_EXCERPT );
+			$content .= $this->executeActiveSnippets( 'auto', 'after_excerpt' );
 		}
 
 		if ( is_singular( [ $post_type ] ) ) {
 			// Перед параграфом
-			$content = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_BEFORE_PARAGRAPH, $content );
+			$content = $this->executeActiveSnippets( 'auto', 'before_paragraph', $content );
 
 			// После параграфа
-			$content = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_AFTER_PARAGRAPH, $content );
+			$content = $this->executeActiveSnippets( 'auto', 'after_paragraph', $content );
 
 			// После заголовка
-			$content = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_BEFORE_CONTENT ) . $content;
+			$content = $this->executeActiveSnippets( 'auto', 'before_content' ) . $content;
 
 			// После текста
-			$content .= $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_AFTER_CONTENT );
+			$content .= $this->executeActiveSnippets( 'auto', 'after_content' );
 
 			// После поста
-			$content .= $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_AFTER_POST );
+			$content .= $this->executeActiveSnippets( 'auto', 'after_post' );
 
 			if ( ! comments_open( $post->ID ) && ! get_comments_number( $post->ID ) ) {
 				remove_filter( 'wp_list_comments_args', [ $this, 'executeListCommentsSnippets' ] );
@@ -236,10 +289,10 @@ class WINP_Execute_Snippet {
 	public function executeExcerptSnippets( $excerpt ) {
 		if ( is_category() || is_archive() || is_tag() || is_tax() || is_search() ) {
 			// Перед коротким описанием
-			$excerpt = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_BEFORE_EXCERPT ) . $excerpt;
+			$excerpt = $this->executeActiveSnippets( 'auto', 'before_excerpt' ) . $excerpt;
 
 			// После короткого описания
-			$excerpt .= $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_AFTER_EXCERPT );
+			$excerpt .= $this->executeActiveSnippets( 'auto', 'after_excerpt' );
 		}
 
 		return $excerpt;
@@ -280,33 +333,129 @@ class WINP_Execute_Snippet {
 		$post_type = ! empty( $post ) ? $post->post_type : false;
 		if ( is_singular( [ $post_type ] ) ) {
 			// После комментариев
-			$content = $this->executeActiveSnippets( 'auto', WINP_SNIPPET_AUTO_AFTER_POST );
+			$content = $this->executeActiveSnippets( 'auto', 'after_post' );
 		}
 
 		echo $content;
 	}
 
 	/**
+	 * Execute the custom snippets
+	 *
+	 * @since 2.4
+	 */
+	public function executeCustomSnippets() {
+		$locations = $this->snippets_locations->getInsertion( 'custom' );
+		foreach ( $locations as $location => $data ) {
+			$this->executeActiveSnippets( 'auto', $location );
+		}
+	}
+
+	/**
+	 * Execute Woocommerce actions/hooks
+	 *
+	 * @param $location
+	 * @param $snippet_content
+	 *
+	 * @since 2.4
+	 */
+	public function woocommerce_actions( $location, $snippet_content = '' ) {
+		$action = function () use ( $location, $snippet_content ) {
+			echo $snippet_content;
+		};
+
+		switch ( $location ) {
+			case 'woo_before_shop_loop':
+				add_filter( 'woocommerce_product_loop_start', function ( $content ) use ( $snippet_content ) {
+					return $snippet_content . $content;
+				} );
+				break;
+			case 'woo_after_shop_loop':
+				add_filter( 'woocommerce_product_loop_end', function ( $content ) use ( $snippet_content ) {
+					return $content . $snippet_content;
+				} );
+				break;
+			case 'woo_before_single_product':
+				add_action( 'woocommerce_before_single_product', $action, 10, 2 );
+				break;
+			case 'woo_after_single_product':
+				add_action( 'woocommerce_after_single_product', $action, 10, 2 );
+				break;
+			case 'woo_before_single_product_summary':
+				add_action( 'woocommerce_before_single_product_summary', $action, 10, 2 );
+				break;
+			case 'woo_after_single_product_summary':
+				add_action( 'woocommerce_after_single_product_summary', $action, 10, 2 );
+				break;
+			case 'woo_single_product_summary_title':
+				add_action( 'woocommerce_single_product_summary', $action, 6, 2 );
+				break;
+			case 'woo_single_product_summary_price':
+				add_action( 'woocommerce_single_product_summary', $action, 15, 2 );
+				break;
+			case 'woo_single_product_summary_excerpt':
+				add_action( 'woocommerce_single_product_summary', $action, 25, 2 );
+				break;
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Execute Woocommerce actions/hooks
+	 *
+	 * @param $location
+	 * @param $snippet_content
+	 *
+	 * @since 2.4
+	 */
+	public function custom_actions( $location, $snippet_content = '' ) {
+		if ( ! empty( $this->snippets_locations->getLocation( $location ) ) ) {
+			/**
+			 * Action for a custom location applied in 'wbcr/woody/add_custom_location' filter
+			 *
+			 * @param array $location Slug of the location.
+			 * @param string $snippet_content Rendered snippet content
+			 *
+			 * @since 2.4
+			 */
+			do_action( "wbcr/woody/do_custom_location/{$location}", $snippet_content );
+		}
+	}
+
+	/**
 	 * Execute the snippets once the plugins are loaded
 	 *
 	 * @param string $scope
-	 * @param string $auto
+	 * @param string $location
 	 * @param string $content
-	 * @param array  $custom_params
+	 * @param array $custom_params
 	 *
 	 * @return string
 	 */
-	public function executeActiveSnippets( $scope = 'evrywhere', $auto = '', $content = '', $custom_params = [] ) {
+	public function executeActiveSnippets( $scope = 'evrywhere', $location = '', $content = '', $custom_params = [] ) {
+		/*
 		global $wpdb;
 
-		$snippets = $wpdb->get_results( "SELECT {$wpdb->posts}.ID, {$wpdb->posts}.post_content
+		if ( $scope == 'evrywhere' ) {
+			$sort = 'DESC';
+		} else {
+			$sort = 'ASC';
+		}
+		$snippets = $wpdb->get_results( "SELECT {$wpdb->posts}.ID, {$wpdb->posts}.post_content, p2.meta_value as priority
  					FROM {$wpdb->posts}
- 					INNER JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)
- 					WHERE (( {$wpdb->postmeta}.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_scope' 
- 					AND {$wpdb->postmeta}.meta_value = '{$scope}')) 
+ 					INNER JOIN {$wpdb->postmeta} p1 ON ({$wpdb->posts}.ID = p1.post_id)
+ 					INNER JOIN {$wpdb->postmeta} p2 ON ({$wpdb->posts}.ID = p2.post_id)
+ 					INNER JOIN {$wpdb->postmeta} p3 ON ({$wpdb->posts}.ID = p3.post_id)
+					WHERE (( p1.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_scope' AND p1.meta_value = '{$scope}')
+					     AND
+					      ( p3.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_activate' AND p3.meta_value = '1')
+						 AND p2.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_priority' ) 
  					AND {$wpdb->posts}.post_type = '" . WINP_SNIPPETS_POST_TYPE . "' 
- 					AND (({$wpdb->posts}.post_status = 'publish'))" );
-
+ 					AND ({$wpdb->posts}.post_status = 'publish')
+ 					ORDER BY CAST(priority AS UNSIGNED) {$sort}" );
+		*/
+		$snippets = $this->snippets[ $scope ] ?? [];
 
 		if ( empty( $snippets ) ) {
 			return $content;
@@ -314,15 +463,14 @@ class WINP_Execute_Snippet {
 
 		foreach ( (array) $snippets as $snippet ) {
 			$id = (int) $snippet->ID;
-
-			$is_active = (int) WINP_Helper::getMetaOption( $id, 'snippet_activate', 0 );
+			//$is_active = (int) WINP_Helper::getMetaOption( $id, 'snippet_activate', 0 );
 			// Если это сниппет с автовставкой и выбранное место подходит под активный action
-			$avail_place = ( 'auto' == $scope ? $auto == WINP_Helper::getMetaOption( $id, 'snippet_location', '' ) : true );
-			// Если условие отображения сниппена выполняется
+			$avail_place = ( 'auto' == $scope ? $location == WINP_Helper::getMetaOption( $id, 'snippet_location', '' ) : true );
+			// Если условие отображения сниппета выполняется
 			$snippet_type = WINP_Helper::getMetaOption( $id, 'snippet_type', WINP_SNIPPET_TYPE_PHP );
 			$is_condition = $snippet_type != WINP_SNIPPET_TYPE_PHP ? $this->checkCondition( $id ) : true;
 
-			if ( $is_active && $avail_place && $is_condition ) {
+			if ( $avail_place && $is_condition ) {
 				$post_id = (int) WINP_Plugin::app()->request->post( 'post_ID', 0 );
 
 				if ( isset( $_POST['wbcr_inp_snippet_scope'] ) && $post_id === $id && WINP_Plugin::app()->currentUserCan() ) {
@@ -333,10 +481,24 @@ class WINP_Execute_Snippet {
 					return $content;
 				}
 
+				// WPML Compatibility
+				if ( defined( 'WPML_PLUGIN_FILE' ) ) {
+					$wpml_langs = WINP_Helper::getMetaOption( $id, 'snippet_wpml_lang', '' );
+					if ( $wpml_langs !== '' && defined( 'ICL_LANGUAGE_CODE' ) ) {
+						if ( ! in_array( ICL_LANGUAGE_CODE, explode( ',', $wpml_langs ) ) ) {
+							continue;
+						}
+					}
+				}
+
 				$snippet_code = WINP_Helper::get_snippet_code( $snippet );
 
-				if ( $snippet_type === WINP_SNIPPET_TYPE_TEXT ) {
-					$snippet_content = '<div class="winp-text-snippet-contanier">' . $snippet_code . '</div>';
+				if ( WINP_Plugin::app()->getOption( 'execute_shortcode' ) ) {
+					$snippet_code = do_shortcode( $snippet_code );
+				}
+
+				if ( $snippet_type === WINP_SNIPPET_TYPE_TEXT || $snippet_type === WINP_SNIPPET_TYPE_AD ) {
+					$snippet_content = '<div class="winp-text-snippet-container">' . $snippet_code . '</div>';
 				} else if ( $snippet_type === WINP_SNIPPET_TYPE_CSS || $snippet_type === WINP_SNIPPET_TYPE_JS ) {
 					$snippet_content = self::getJsCssSnippetData( $id );
 				} else if ( $snippet_type === WINP_SNIPPET_TYPE_HTML ) {
@@ -350,26 +512,40 @@ class WINP_Execute_Snippet {
 				}
 
 				if ( 'auto' == $scope ) {
-					switch ( $auto ) {
-						case WINP_SNIPPET_AUTO_BEFORE_PARAGRAPH:   // Перед параграфом
+					switch ( $location ) {
+						case 'before_paragraph':   // Перед параграфом
 							$location_number = WINP_Helper::getMetaOption( $id, 'snippet_p_number', 0 );
 							$content         = $this->handleParagraphContent( $content, $snippet_content, $location_number );
 							break;
-						case WINP_SNIPPET_AUTO_AFTER_PARAGRAPH:   // После параграфа
+						case 'after_paragraph':   // После параграфа
 							$location_number = WINP_Helper::getMetaOption( $id, 'snippet_p_number', 0 );
 							$content         = $this->handleParagraphContent( $content, $snippet_content, $location_number, 'after' );
 							break;
-						case WINP_SNIPPET_AUTO_BEFORE_POSTS:   // Перед записью
+						case 'before_posts':   // Перед записью
 							$location_number = WINP_Helper::getMetaOption( $id, 'snippet_p_number', 0 );
 							$content         = $this->handlePostsContent( $content, $snippet_content, $location_number, 'before', $custom_params );
 							break;
-						case WINP_SNIPPET_AUTO_AFTER_POSTS:   // После записи
+						case 'after_posts':   // После записи
 							$location_number = WINP_Helper::getMetaOption( $id, 'snippet_p_number', 0 );
 							$content         = $this->handlePostsContent( $content, $snippet_content, $location_number, 'after', $custom_params );
 							break;
 						default:
 							$content = $snippet_content . $content;
 					}
+
+					/**
+					 * Action for woo actions
+					 *
+					 * @param array $location Slug of the location.
+					 * @param string $snippet_content Rendered snippet content
+					 *
+					 * @since 2.4
+					 */
+					do_action( "wbcr/woody/do_woocommerce_actions", $location, $snippet_content );
+
+					//$this->woocommerce_actions( $location, $snippet_content );
+					$this->custom_actions( $location, $snippet_content );
+
 				} else {
 					$content = $snippet_content . $content;
 				}
@@ -427,9 +603,9 @@ class WINP_Execute_Snippet {
 	 * Code must NOT be escaped, as
 	 * it will be executed directly
 	 *
-	 * @param string $code           The snippet code to execute
-	 * @param int    $id             The snippet ID
-	 * @param bool   $catch_output   Whether to attempt to suppress the output of execution using buffers
+	 * @param string $code The snippet code to execute
+	 * @param int $id The snippet ID
+	 * @param bool $catch_output Whether to attempt to suppress the output of execution using buffers
 	 *
 	 * @return mixed        The result of the code execution
 	 */
@@ -591,7 +767,7 @@ class WINP_Execute_Snippet {
 	/**
 	 * Prepare the code by removing php tags from beginning and end
 	 *
-	 * @param string  $code
+	 * @param string $code
 	 * @param integer $snippet_id
 	 *
 	 * @return string
@@ -652,9 +828,17 @@ class WINP_Execute_Snippet {
 	public function checkByOperator( $operation, $first, $second, $third = false ) {
 		switch ( $operation ) {
 			case 'equals':
-				return $first === $second;
+				if ( is_array( $second ) ) {
+					return in_array( $first, $second );
+				} else {
+					return $first === $second;
+				}
 			case 'notequal':
-				return $first !== $second;
+				if ( is_array( $second ) ) {
+					return ! in_array( $first, $second );
+				} else {
+					return $first !== $second;
+				}
 			case 'less':
 			case 'older':
 				return $first > $second;
@@ -880,10 +1064,36 @@ class WINP_Execute_Snippet {
 						$result = true;
 					}
 				}
-				break;
+			break;
 
 			default:
-				$result = true;
+				$result = false;
+		}
+
+		if ( WINP_Helper::is_woo_active() ) {
+			switch ( $value ) {
+				case 'woo_product':
+					$result = is_product();
+					break;
+				case 'woo_arch':
+					$result = is_shop();
+					break;
+				case 'woo_cart':
+					$result = is_cart();
+					break;
+				case 'woo_checkout':
+					$result = is_checkout();
+					break;
+				case 'woo_checkout_pay':
+					$result = is_checkout_pay_page();
+					break;
+				case 'woo_cat':
+					$result = is_product_category();
+					break;
+				case 'woo_tag':
+					$result = is_product_tag();
+					break;
+			}
 		}
 
 		return $this->checkByOperator( $operator, $result, true );
@@ -934,15 +1144,15 @@ class WINP_Execute_Snippet {
 	}
 
 	/**
-	 * A taxonomy of the current page
-	 *
-	 * @since 2.2.8 The bug is fixed, the condition was not checked
-	 *              for tachonomies, only posts.
+	 * A taxonomy page
 	 *
 	 * @param $operator
 	 * @param $value
 	 *
 	 * @return boolean
+	 * @since 2.2.8 The bug is fixed, the condition was not checked
+	 *              for tachonomies, only posts.
+	 *
 	 */
 	private function location_taxonomy( $operator, $value ) {
 		$term_id = null;
@@ -958,4 +1168,31 @@ class WINP_Execute_Snippet {
 		return false;
 	}
 
+	/**
+	 * A taxonomy of the current page
+	 *
+	 * @param $operator
+	 * @param $value
+	 *
+	 * @return boolean
+	 * @since 2.4.0
+	 */
+	private function page_taxonomy( $operator, $value ) {
+		$term_id = null;
+
+		if ( is_singular() ) {
+			$post_cat = get_the_category( get_the_ID() );
+			if ( is_array( $post_cat ) ) {
+				foreach ( $post_cat as $item ) {
+					$term_id[] = $item->term_id;
+				}
+			}
+		}
+
+		if ( $term_id ) {
+			return $this->checkByOperator( $operator, intval( $value ), $term_id );
+		}
+
+		return false;
+	}
 }

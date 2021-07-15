@@ -3,9 +3,9 @@
 if (!defined('UPDRAFTCENTRAL_CLIENT_DIR')) die('No access.');
 
 /**
- * This class is the basic glue between the lower-level UpdraftPlus_Remote_Communications (UDRPC) class, and UpdraftPlus. It does not contain actual commands themselves; the class names to use for actual commands are passed in as a parameter to the constructor.
+ * This class is the basic glue between the lower-level Remote Communications (RPC) class in UpdraftCentral, and the host plugin. It does not contain actual commands themselves; the class names to use for actual commands are passed in as a parameter to the constructor.
  */
-class UpdraftPlus_UpdraftCentral_Listener {
+class UpdraftCentral_Listener {
 
 	public $udrpc_version;
 
@@ -54,7 +54,7 @@ class UpdraftPlus_UpdraftCentral_Listener {
 			$ud_rpc->activate_replay_protection();
 			if (!empty($key['extra_info']) && isset($key['extra_info']['mothership'])) {
 				$mothership = $key['extra_info']['mothership'];
-				unset($url);
+				$url = '';
 				if ('__updraftpluscom' == $mothership) {
 					$url = 'https://updraftplus.com';
 				} elseif (false != ($parsed = parse_url($key['extra_info']['mothership'])) && is_array($parsed)) {
@@ -73,8 +73,10 @@ class UpdraftPlus_UpdraftCentral_Listener {
 			if (!empty($_GET['login_id']) && is_numeric($_GET['login_id']) && !empty($_GET['login_key'])) {
 				$login_user = get_user_by('id', $_GET['login_id']);
 				
+				// THis is included so we can get $wp_version
 				include_once(ABSPATH.WPINC.'/version.php');
-				if (is_a($login_user, 'WP_User') || (version_compare($wp_version, '3.5', '<') && !empty($login_user->ID))) {
+
+				if (is_a($login_user, 'WP_User') || (version_compare($wp_version, '3.5', '<') && !empty($login_user->ID))) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
 					// Allow site implementers to disable this functionality
 					$allow_autologin = apply_filters('updraftcentral_allow_autologin', true, $login_user);
 					if ($allow_autologin) {
@@ -168,53 +170,67 @@ class UpdraftPlus_UpdraftCentral_Listener {
 	 */
 	public function udrpc_action($response, $command, $data, $key_name_indicator, $ud_rpc) {
 
-		if (empty($this->receivers[$key_name_indicator])) return $response;
-		
-		// This can be used to detect an UpdraftCentral context
-		if (!defined('UPDRAFTCENTRAL_COMMAND')) define('UPDRAFTCENTRAL_COMMAND', $command);
-		
-		$this->initialise_listener_error_handling();
+		try {
 
-		$command_info = apply_filters('updraftcentral_get_command_info', false, $command);
-		if (!$command_info) return $response;
-
-		$class_prefix = $command_info['class_prefix'];
-		$command = $command_info['command'];
-		$command_php_class = $command_info['command_php_class'];
-		
-		if (empty($this->commands[$class_prefix])) {
-			if (class_exists($command_php_class)) {
-				$this->commands[$class_prefix] = new $command_php_class($this);
+			if (empty($this->receivers[$key_name_indicator])) return $response;
+			
+			// This can be used to detect an UpdraftCentral context
+			if (!defined('UPDRAFTCENTRAL_COMMAND')) define('UPDRAFTCENTRAL_COMMAND', $command);
+			
+			$this->initialise_listener_error_handling();
+	
+			$command_info = apply_filters('updraftcentral_get_command_info', false, $command);
+			if (!$command_info) return $response;
+	
+			$class_prefix = $command_info['class_prefix'];
+			$command = $command_info['command'];
+			$command_php_class = $command_info['command_php_class'];
+			
+			if (empty($this->commands[$class_prefix])) {
+				if (class_exists($command_php_class)) {
+					$this->commands[$class_prefix] = new $command_php_class($this);
+				}
 			}
+			
+			$command_class = isset($this->commands[$class_prefix]) ? $this->commands[$class_prefix] : new stdClass;
+	
+			if ('_' == substr($command, 0, 1) || !is_a($command_class, $command_php_class) || (!method_exists($command_class, $command) && !method_exists($command_class, '__call'))) {
+				if (defined('UPDRAFTPLUS_UDRPC_FORCE_DEBUG') && UPDRAFTPLUS_UDRPC_FORCE_DEBUG) error_log("Unknown RPC command received: ".$command);
+				return $this->return_rpc_message(array('response' => 'rpcerror', 'data' => array('code' => 'unknown_rpc_command', 'data' => array('prefix' => $class_prefix, 'command' => $command, 'class' => $command_php_class))));
+			}
+	
+			$extra_info = isset($this->extra_info[$key_name_indicator]) ? $this->extra_info[$key_name_indicator] : null;
+			
+			// Make it so that current_user_can() checks can apply + work
+			if (!empty($extra_info['user_id'])) wp_set_current_user($extra_info['user_id']);
+			
+			$this->current_udrpc = $ud_rpc;
+			
+			do_action('updraftcentral_listener_pre_udrpc_action', $command, $command_class, $data, $extra_info);
+			
+			// Allow the command class to perform any boiler-plate actions.
+			if (is_callable(array($command_class, '_pre_action'))) call_user_func(array($command_class, '_pre_action'), $command, $data, $extra_info);
+			
+			// Despatch
+			$msg = apply_filters('updraftcentral_listener_udrpc_action', call_user_func(array($command_class, $command), $data, $extra_info), $command_class, $class_prefix, $command, $data, $extra_info);
+	
+			if (is_callable(array($command_class, '_post_action'))) call_user_func(array($command_class, '_post_action'), $command, $data, $extra_info);
+	
+			do_action('updraftcentral_listener_post_udrpc_action', $command, $command_class, $data, $extra_info);
+					
+			return $this->return_rpc_message($msg);
+		} catch (Exception $e) {
+			$log_message = 'PHP Fatal Exception error ('.get_class($e).') has occurred during UpdraftCentral command execution. Error Message: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
+			error_log($log_message);
+
+			return $this->return_rpc_message(array('response' => 'rpcerror', 'data' => array('code' => 'rpc_fatal_error', 'data' => array('command' => $command, 'message' => $log_message))));
+		// @codingStandardsIgnoreLine
+		} catch (Error $e) {
+			$log_message = 'PHP Fatal error ('.get_class($e).') has occurred during UpdraftCentral command execution. Error Message: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
+			error_log($log_message);
+
+			return $this->return_rpc_message(array('response' => 'rpcerror', 'data' => array('code' => 'rpc_fatal_error', 'data' => array('command' => $command, 'message' => $log_message))));
 		}
-		
-		$command_class = isset($this->commands[$class_prefix]) ? $this->commands[$class_prefix] : new stdClass;
-
-		if ('_' == substr($command, 0, 1) || !is_a($command_class, $command_php_class) || (!method_exists($command_class, $command) && !method_exists($command_class, '__call'))) {
-			if (defined('UPDRAFTPLUS_UDRPC_FORCE_DEBUG') && UPDRAFTPLUS_UDRPC_FORCE_DEBUG) error_log("Unknown RPC command received: ".$command);
-			return $this->return_rpc_message(array('response' => 'rpcerror', 'data' => array('code' => 'unknown_rpc_command', 'data' => array('prefix' => $class_prefix, 'command' => $command, 'class' => $command_php_class))));
-		}
-
-		$extra_info = isset($this->extra_info[$key_name_indicator]) ? $this->extra_info[$key_name_indicator] : null;
-		
-		// Make it so that current_user_can() checks can apply + work
-		if (!empty($extra_info['user_id'])) wp_set_current_user($extra_info['user_id']);
-		
-		$this->current_udrpc = $ud_rpc;
-		
-		do_action('updraftcentral_listener_pre_udrpc_action', $command, $command_class, $data, $extra_info);
-		
-		// Allow the command class to perform any boiler-plate actions.
-		if (is_callable(array($command_class, '_pre_action'))) call_user_func(array($command_class, '_pre_action'), $command, $data, $extra_info);
-		
-		// Despatch
-		$msg = apply_filters('updraftcentral_listener_udrpc_action', call_user_func(array($command_class, $command), $data, $extra_info), $command_class, $class_prefix, $command, $data, $extra_info);
-
-		if (is_callable(array($command_class, '_post_action'))) call_user_func(array($command_class, '_post_action'), $command, $data, $extra_info);
-
-		do_action('updraftcentral_listener_post_udrpc_action', $command, $command_class, $data, $extra_info);
-				
-		return $this->return_rpc_message($msg);
 	}
 	
 	public function get_current_udrpc() {

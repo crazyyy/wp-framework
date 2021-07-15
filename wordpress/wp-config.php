@@ -1,12 +1,13 @@
 <?php
 
-define('DB_NAME', 'DBNAME');
-define('DB_USER', 'DBUSER');
-define('DB_PASSWORD', 'DBPASS');
+define('DB_NAME', 'wings_wings');
+define('DB_USER', 'wings_wings');
+define('DB_PASSWORD', 'L+Bn#+dGvO!@BE7J');
+// define('DB_NAME', 'DBNAME');
+// define('DB_USER', 'DBUSER');
+// define('DB_PASSWORD', 'DBPASS');
 
-// define('DB_HOST', 'localhost');
-define( 'DB_HOST', '127.0.0.1' );
-
+define('DB_HOST', 'localhost');
 
 define('WP_DEBUG', true);
 define('WPCF7_AUTOP', false);

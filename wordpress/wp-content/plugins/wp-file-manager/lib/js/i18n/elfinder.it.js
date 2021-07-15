@@ -4,7 +4,7 @@
  * @author Claudio Nicora (coolsoft.ita@gmail.com)
  * @author Stefano Galeazzi <stefano.galeazzi@probanet.it>
  * @author Thomas Camaran <camaran@gmail.com>
- * @version 2018-06-08
+ * @version 2020-09-01
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -19,9 +19,9 @@
 		translator : 'Alberto Tocci (alberto.tocci@gmail.com), Claudio Nicora (coolsoft.ita@gmail.com), Stefano Galeazzi &lt;stefano.galeazzi@probanet.it&gt;, Thomas Camaran &lt;camaran@gmail.com&gt;',
 		language   : 'Italiano',
 		direction  : 'ltr',
-		dateFormat : 'd/m/Y H:i', // Mar 13, 2012 05:27 PM
-		fancyDateFormat : '$1 H:i', // will produce smth like: Today 12:25 PM
-		nonameDateFormat : 'ymd-His', // to apply if upload file is noname: 120513172700
+		dateFormat : 'd/m/Y H:i', // will show like: 01/09/2020 18:05
+		fancyDateFormat : '$1 H:i', // will show like: Oggi 18:05
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200901-180537
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -117,6 +117,7 @@
 			'errEditorNotFound'    : 'Impossibile trovare un editor per questo tipo di file.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Si è verificato un errore lato server.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Impossibile svuotare la cartella "$1".', // from v2.1.25 added 22.6.2017
+			'moreErrors'           : 'Ci sono altri $ 1 errori.', // from v2.1.44 added 9.12.2018
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Crea archivio',
@@ -151,7 +152,7 @@
 			'cmdsort'      : 'Ordina',
 			'cmdnetmount'  : 'Monta disco di rete', // added 18.04.2012
 			'cmdnetunmount': 'Smonta', // from v2.1 added 30.04.2012
-			'cmdplaces'    : 'Alle cartelle', // added 28.12.2014
+			'cmdplaces'    : 'Aggiungi ad Accesso rapido', // added 28.12.2014
 			'cmdchmod'     : 'Cambia modalità', // from v2.1 added 20.6.2015
 			'cmdopendir'   : 'Apri una cartella', // from v2.1 added 13.1.2016
 			'cmdcolwidth'  : 'Reimposta dimensione colonne', // from v2.1.13 added 12.06.2016
@@ -165,6 +166,7 @@
 			'cmdselectnone': 'Annulla selezione', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Inverti selezione', // from v2.1.28 added 15.08.2017
 			'cmdopennew'   : 'Apri in una nuova finestra', // from v2.1.38 added 3.4.2018
+			'cmdhide'      : 'Nascondi (preferenza)', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Chiudi',
@@ -226,6 +228,7 @@
 			'ntfchkdir'   : 'Controllo cartella destinazione', // from v2.1.24 added 3.5.2017
 			'ntfundo'     : 'Annullamento operazione precedente', // from v2.1.27 added 31.07.2017
 			'ntfredo'     : 'Rifacimento precedente annullamento', // from v2.1.27 added 31.07.2017
+			'ntfchkcontent' : 'Controllo dei contenuti', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
 			'volume_Trash' : 'Cestino', //from v2.1.24 added 29.4.2017
@@ -289,6 +292,9 @@
 			'untitled file.txt' : 'NuovoFile.txt', // added 10.11.2015
 			'untitled folder'   : 'NuovaCartella',   // added 10.11.2015
 			'Archive'           : 'NuovoArchivio',  // from v2.1 added 10.11.2015
+			'untitled file'     : 'NuovoFile. $ 1',  // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$ 1: file',    // from v2.1.41 added 6.8.2018
+			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Conferma richiesta',
@@ -299,6 +305,7 @@
 			'confirmNonUTF8'  : 'La codifica caratteri di questo file non può essere determinata. Sarà temporaneamente convertito in UTF-8 per l\'editting.<br/>Per cortesia, selezionare la codifica caratteri per il file.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Il contenuto è stato modificato.<br/>Le modifiche andranno perse se non si salveranno.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Sei sicuro di voler cestinare gli oggetti?', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'Sei sicuro di voler spostare gli elementi in "$ 1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Applica a tutti',
 			'name'            : 'Nome',
 			'size'            : 'Dimensione',
@@ -320,7 +327,7 @@
 			'viewMedium'      : 'Icone medie', // from v2.1.39 added 22.5.2018
 			'viewLarge'       : 'Icone grandi', // from v2.1.39 added 22.5.2018
 			'viewExtraLarge'  : 'Icone molto grandi', // from v2.1.39 added 22.5.2018
-			'places'          : 'Cartelle',
+			'places'          : 'Accesso rapido',
 			'calc'            : 'Calcola',
 			'path'            : 'Percorso',
 			'aliasfor'        : 'Alias per',
@@ -360,7 +367,7 @@
 			'moveFiles'       : 'Sposta file',
 			'copyFiles'       : 'Copia file',
 			'restoreFiles'    : 'Ripristina oggetti', // from v2.1.24 added 5.5.2017
-			'rmFromPlaces'    : 'Rimuovi da places',
+			'rmFromPlaces'    : 'Rimuovi da Accesso rapido',
 			'aspectRatio'     : 'Proporzioni',
 			'scale'           : 'Scala',
 			'width'           : 'Larghezza',
@@ -373,10 +380,10 @@
 			'degree'          : 'Gradi',
 			'netMountDialogTitle' : 'Monta disco di rete', // added 18.04.2012
 			'protocol'            : 'Protocollo', // added 18.04.2012
-			'host'                : 'Host', // added 18.04.2012
+			'host'                : 'Ospite', // added 18.04.2012
 			'port'                : 'Porta', // added 18.04.2012
 			'user'                : 'Utente', // added 18.04.2012
-			'pass'                : 'Password', // added 18.04.2012
+			'pass'                : 'Parola d\'ordine', // added 18.04.2012
 			'confirmUnmount'      : 'Vuoi smontare $1?',  // from v2.1 added 30.04.2012
 			'dropFilesBrowser': 'Rilascia o incolla dal browser', // from v2.1 added 30.05.2012
 			'dropPasteFiles'  : 'Rilascia o incolla files e indirizzi URL qui', // from v2.1 added 07.04.2014
@@ -397,6 +404,7 @@
 			'autoSync'        : 'Sincr. automatica',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Sposta in alto',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Mostra URL link', // from v2.1.7 added 9.2.2016
+			'share'           : 'Condividi',
 			'selectedItems'   : 'Elementi selezionati ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID cartella', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Permetti accesso non in linea', // from v2.1.10 added 3.25.2016
@@ -438,6 +446,7 @@
 			'clearBrowserData': 'Inizializza le impostazioni salvate nel browser', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Impostazioni ToolBar', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... $1 caratteri rimanenti.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $ 1 righe rimanenti.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Somma', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Dimensione file approssimativa', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Fuoco sull\'elemento sotto al mouse',  // from v2.1.30 added 2.11.2017
@@ -446,7 +455,7 @@
 			'useStoredEditor' : 'Apri con l\'editor usato l\'ultima volta', // from v2.1.30 added 23.11.2017
 			'selectinvert'    : 'Inverti selezione', // from v2.1.30 added 25.11.2017
 			'renameMultiple'  : 'Sei sicuro di voler rinominare $1 selezionati come $2?<br/>Questo non può essere annullato!', // from v2.1.31 added 4.12.2017
-			'batchRename'     : 'Batch rename', // from v2.1.31 added 8.12.2017
+			'batchRename'     : 'Rinomina in batch', // from v2.1.31 added 8.12.2017
 			'plusNumber'      : '+ Numero', // from v2.1.31 added 8.12.2017
 			'asPrefix'        : 'Aggiungi prefisso', // from v2.1.31 added 8.12.2017
 			'asSuffix'        : 'Aggiungi sufisso', // from v2.1.31 added 8.12.2017
@@ -454,16 +463,39 @@
 			'columnPref'      : 'Impostazioni delle colonne (visualizzazione elenco)', // from v2.1.32 added 6.2.2018
 			'reflectOnImmediate' : 'Tutti i cambiamenti saranno immeditamente applicati.', // from v2.1.33 added 2.3.2018
 			'reflectOnUnmount'   : 'Qualsiasi modifica non sarà visibile fino a quando non si monta questo volume.', // from v2.1.33 added 2.3.2018
-			'unmountChildren' : 'The following volume(s) mounted on this volume also unmounted. Are you sure to unmount it?', // from v2.1.33 added 5.3.2018
+			'unmountChildren' : 'Anche i seguenti volumi montati su questo volume sono stati smontati. Sei sicuro di smontarlo?', // from v2.1.33 added 5.3.2018
 			'selectionInfo'   : 'Seleziona Info', // from v2.1.33 added 7.3.2018
 			'hashChecker'     : 'Algoritmi per visualizzare l\'hash del file', // from v2.1.33 added 10.3.2018
 			'infoItems'       : 'Informazioni (pannello di informazioni sulla selezione)', // from v2.1.38 added 28.3.2018
 			'pressAgainToExit': 'Premi di nuovo per uscire.', // from v2.1.38 added 1.4.2018
-			'toolbar'         : 'Toolbar', // from v2.1.38 added 4.4.2018
+			'toolbar'         : 'Barra degli strumenti', // from v2.1.38 added 4.4.2018
 			'workspace'       : 'Spazio di lavoro', // from v2.1.38 added 4.4.2018
-			'dialog'          : 'Dialog', // from v2.1.38 added 4.4.2018
+			'dialog'          : 'Dialogo', // from v2.1.38 added 4.4.2018
 			'all'             : 'Tutti', // from v2.1.38 added 4.4.2018
-			'iconSize'        : 'Dimensione icona (Visualizzazione icone)', // form v2.1.39 added 7.5.2018
+			'iconSize'        : 'Dimensione icona (Visualizzazione icone)', // from v2.1.39 added 7.5.2018
+			'editorMaximized' : 'Apri la finestra dell\'editor ingrandita', // from v2.1.40 added 30.6.2018
+			'editorConvNoApi' : 'Poiché la conversione tramite API non è attualmente disponibile, effettua la conversione sul sito web.', //from v2.1.40 added 8.7.2018
+			'editorConvNeedUpload' : 'Dopo la conversione, è necessario caricare con l\'URL dell\'elemento o un file scaricato per salvare il file convertito.', //from v2.1.40 added 8.7.2018
+			'convertOn'       : 'Converti sul sito di $ 1', // from v2.1.40 added 10.7.2018
+			'integrations'    : 'Integrazioni', // from v2.1.40 added 11.7.2018
+			'integrationWith' : 'Questo elFinder ha i seguenti servizi esterni integrati. Si prega di controllare i termini di utilizzo, l\'informativa sulla privacy, ecc. Prima di utilizzarlo.', // from v2.1.40 added 11.7.2018
+			'showHidden'      : 'Mostra gli elementi nascosti', // from v2.1.41 added 24.7.
+			'Code Editor'     : 'Editor di codice',
+			'hideHidden'      : 'Nascondi gli elementi nascosti', // from v2.1.41 added 24.7.2018
+			'toggleHidden'    : 'Mostra / Nascondi elementi nascosti', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'Tipi di file da abilitare con "Nuovo file"', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Tipo di file di testo', // from v2.1.41 added 7.8.2018
+			'add'             : 'Inserisci', // from v2.1.41 added 7.8.2018
+			'theme'           : 'Tema', // from v2.1.43 added 19.10.2018
+			'default'         : 'Predefinito', // from v2.1.43 added 19.10.2018
+			'description'     : 'Descrizione', // from v2.1.43 added 19.10.2018
+			'website'         : 'Sito web', // from v2.1.43 added 19.10.2018
+			'author'          : 'Autore', // from v2.1.43 added 19.10.2018
+			'email'           : 'E-mail', // from v2.1.43 added 19.10.2018
+			'license'         : 'Licenza', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'Questo articolo non può essere salvato. Per evitare di perdere le modifiche è necessario esportare sul PC.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Fare doppio clic sul file per selezionarlo.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Usa la modalità a schermo intero', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Sconosciuto',
@@ -549,4 +581,3 @@
 		}
 	};
 }));
-

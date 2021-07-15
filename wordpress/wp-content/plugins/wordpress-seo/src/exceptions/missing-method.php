@@ -1,21 +1,18 @@
 <?php
+
+namespace Yoast\WP\SEO\Exceptions;
+
+use Exception;
+
 /**
  * Exception to use when a method does not exist.
- *
- * @package Yoast\YoastSEO\Exceptions
  */
-
-namespace Yoast\WP\Free\Exceptions;
-
-/**
- * The exception when a method does not exists.
- */
-class Missing_Method extends \Exception {
+class Missing_Method extends Exception {
 
 	/**
-	 * Creates exception for a method that does not exists in a class.
+	 * Creates exception for a method that does not exist in a class.
 	 *
-	 * @param string $method     The method that does not exists.
+	 * @param string $method     The method that does not exist.
 	 * @param string $class_name The class name.
 	 *
 	 * @return static Instance of the exception.

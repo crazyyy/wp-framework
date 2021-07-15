@@ -55,7 +55,7 @@ function ampforwp_url_base_rewrite_rules(){
 		remove_action( 'created_post_tag', 'amp_flush_rewrite_rules' , 999 );
 		remove_action( 'edited_post_tag', 'amp_flush_rewrite_rules', 999 );
 		remove_action( 'delete_post_tag', 'amp_flush_rewrite_rules', 999 );
-		remove_filter( 'tag_rewrite_rules', 'ampforwp_tag_url_rewrite_rules' ); 
+		remove_filter( 'post_tag_rewrite_rules', 'ampforwp_tag_url_rewrite_rules' ); 
 	} 
 }
 
@@ -98,13 +98,13 @@ function ampforwp_category_url_rewrite_rules( $rewrite ) {
 
  
 function ampforwp_tag_url_rewrite_rules( $rewrite ) {
-	$terms = get_terms( 'post_tag', array( 'hide_empty' => false ) );
-	foreach ( $terms as $term ) {
-		$term_nicename = trim($term->slug);
-		
-		$rewrite[ '('.$term_nicename.')'.'/amp/?$' ] = 'index.php?amp&tag=$matches[1]';
-		$rewrite[ '('.$term_nicename.')'.'/amp/page/?([0-9]{1,})/?$' ] = 
-		  'index.php?amp&tag=$matches[1]&paged=$matches[2]'; 
+	$tags = get_terms('post_tag', array('hide_empty' => false));
+	if(is_array( $tags ) && ! empty( $tags ) ) {
+	 	foreach ( $tags as $tag ) {
+	 		$tag_nicename = trim($tag->slug);
+	 		$rewrite[ '('.$tag_nicename.')'.'/amp/?$' ] = 'index.php?amp&tag=$matches[1]';
+	 		$rewrite[ '('.$tag_nicename.')'.'/amp/page/?([0-9]{1,})/?$' ] = 'index.php?amp&tag=$matches[1]&paged=$matches[2]'; 
+		}
 	}
 	
 	return $rewrite;

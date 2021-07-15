@@ -27,10 +27,6 @@
 		</p>
 
 		<p>
-			<strong><?php $wp_optimize->wp_optimize_url('https://metaslider.com', 'MetaSlider');?>: </strong> <?php echo __('Add style and flare easily with beautifully-designed sliders with the #1 WP slider plugin', 'wp-optimize'); ?>
-		</p>
-		
-		<p>
 			<strong><?php $wp_optimize->wp_optimize_url('https://www.simbahosting.co.uk/s3/shop/', __('Premium WooCommerce extensions', 'wp-optimize')); ?></strong>
 		</p>
 

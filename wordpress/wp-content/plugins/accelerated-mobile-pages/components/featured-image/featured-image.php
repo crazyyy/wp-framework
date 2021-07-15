@@ -49,6 +49,18 @@ function ampforwp_framework_get_featured_image(){
 				$alt = get_the_title( $post_id );
 			}
 			$alt = convert_chars( stripslashes( $alt ) );
+			if(function_exists('fifu_show_elements')){
+				$fifu_image_url = get_post_meta($post_id, 'fifu_image_url', true);
+				if($fifu_image_url){
+					$size = getimagesize(get_the_post_thumbnail_url());
+					if(isset($size[0])){
+						$image[1] = $size[0];
+					}
+					if(isset($size[1])){
+						$image[2] = $size[1];
+					}
+				}
+			}
 			if( $image ){
 				if(empty($image[1])){
 					$image[1] = 1000;
@@ -59,7 +71,7 @@ function ampforwp_framework_get_featured_image(){
 				if ( empty($srcet) ) {
 					$srcet = $image[0];
 				}
-				$amp_html = '<amp-img src="'.esc_url($image[0]).'" srcset="'.esc_html($srcet).'" width="'.esc_attr($image[1]).'" height="'.esc_attr($image[2]).'" layout=responsive alt="'.esc_attr($alt).'"></amp-img>';
+				$amp_html = '<amp-img data-hero src="'.esc_url($image[0]).'" srcset="'.esc_html($srcet).'" width="'.esc_attr($image[1]).'" height="'.esc_attr($image[2]).'" layout=responsive alt="'.esc_attr($alt).'"></amp-img>';
 			}
 		}
 		elseif ( ampforwp_is_custom_field_featured_image() ) {
@@ -74,6 +86,7 @@ function ampforwp_framework_get_featured_image(){
 			$amp_html = ampforwp_get_featured_image_from_content();
 			$amp_html = preg_replace('#sizes="(.*)"#', "layout='responsive'", $amp_html);
 		}
+		$amp_html = apply_filters('ampforwp_modify_featured_image',$amp_html);
 		if( $amp_html ){ ?>
 			<figure class="amp-featured-image <?php echo esc_html($f_vid); ?>"> <?php  
 				if(function_exists('ampforwp_add_fallback_element')){

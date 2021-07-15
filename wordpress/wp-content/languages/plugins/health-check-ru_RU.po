@@ -2,12 +2,12 @@
 # This file is distributed under the same license as the Plugins - Health Check &amp; Troubleshooting - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-10-03 18:17:34+0000\n"
+"PO-Revision-Date: 2020-11-07 17:37:22+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Generator: GlotPress/3.0.0-alpha.2\n"
 "Language: ru\n"
 "Project-Id-Version: Plugins - Health Check &amp; Troubleshooting - Stable (latest release)\n"
 
@@ -24,15 +24,15 @@ msgid "Plugin"
 msgstr "Плагин"
 
 #. translators: %s: URL for the Site Health page.
-#: includes/class-health-check-dashboard-widget.php:62
+#: includes/class-health-check-dashboard-widget.php:68
 msgid "<a href=\"%s\">Visit the Site Health page</a> to gather information on about your site.."
 msgstr "Перейдите на страницу <a href=\"%s\">Здоровье сайта</a> для сбора информации о вашем сайте."
 
-#: includes/class-health-check-dashboard-widget.php:55
+#: includes/class-health-check-dashboard-widget.php:61
 msgid "No Site Health information has been gathered yet, you can do so by visiting the Site Health page, alternatively the checks will run automatically once every week."
 msgstr "Информация о здоровье сайта пока не была собрана, вы можете сделать это посетив страницу Здоровье сайта, либо проверки будут запускаться автоматически еженедельно."
 
-#: includes/class-health-check-dashboard-widget.php:46
+#: includes/class-health-check-dashboard-widget.php:52
 msgid "No information yet&hellip;"
 msgstr "Пока нет информации..."
 
@@ -89,6 +89,10 @@ msgstr "Требует улучшения"
 msgid "Good"
 msgstr "Хорошо"
 
+#: includes/class-health-check.php:231
+msgid "All site health tests have finished running. There are items that should be addressed, and the results are now available on the page."
+msgstr "Все тесты проверки здоровья сайта завершены. Есть элементы с замечаниями, результаты доступны на странице."
+
 #: includes/class-health-check-site-status.php:1932
 msgid "Timezone"
 msgstr "Часовой пояс"
@@ -96,7 +100,7 @@ msgstr "Часовой пояс"
 #. translators: %s: The name of the late cron event.
 #: includes/class-health-check-site-status.php:1499
 msgid "The scheduled event, %s, is late to run. Your site still works, but this may indicate that scheduling posts or automated updates may not work as intended."
-msgstr "Запланированное задание %s было пропущено. Ваш сайт все ещё работает,  но возможно есть проблемы с автоматическим обновлением или отложенной публикацией записей."
+msgstr "Запланированное задание %s было пропущено. Ваш сайт все ещё работает, но возможно есть проблемы с автоматическим обновлением или отложенной публикацией записей."
 
 #: includes/class-health-check-site-status.php:1493
 msgid "A scheduled event is late"
@@ -119,55 +123,51 @@ msgid "Your site uses localized timezones"
 msgstr "Ваш сайт использует локальные часовые пояса"
 
 #. translators: 1: Count of issues. 2: URL for the Site Health page.
-#: includes/class-health-check-dashboard-widget.php:85
+#: includes/class-health-check-dashboard-widget.php:91
 msgid "Take a look at the <strong>%1$d items</strong> on the <a href=\"%2$s\">Site Health Check status page</a>."
 msgstr "Обратите внимание на <strong>элементы (%1$d)</strong> на <a href=\"%2$s\">странице статуса здоровья сайта</a>."
 
-#: includes/class-health-check-dashboard-widget.php:75
+#: includes/class-health-check-dashboard-widget.php:81
 msgid "Your site scores pretty well on the Health Check, but there are still some things you can do to improve the performance and security of your website."
 msgstr "На вашем сайте почти всё замечательно, но есть пара вещей, которые можно сделать для улучшения безопасности и производительности вашего сайта."
 
-#: includes/class-health-check-dashboard-widget.php:73
+#: includes/class-health-check-dashboard-widget.php:79
 msgid "Great job! Your site currently passes all site health checks."
 msgstr "Замечательно! Ваш сайт успешно прошел все тесты проверки состояния здоровья."
 
-#: includes/class-health-check-dashboard-widget.php:71
+#: includes/class-health-check-dashboard-widget.php:77
 msgid "Your site has critical issues that should be addressed as soon as possible to improve the performance or security of your website."
 msgstr "На вашем сайте есть критические проблемы, которые стоит решить как можно быстрее, для улучшения безопасности и производительности вашего сайта."
-
-#: includes/class-health-check.php:231
-msgid "All site health tests have finished running. There are items that should be addressed, and the results are now available on the page."
-msgstr "Все тесты проверки здоровья сайта завершены. Есть элементы с замечаниями, результаты доступны на странице."
 
 #. translators: %s: URL to Site Health Status page
 #: pages/debug-data.php:26
 msgid "This page can show you every detail about the configuration of your WordPress website. For any improvements that could be made, see the <a href=\"%s\">Site Health Status</a> page."
 msgstr "Эта страница показывает подробности о конфигурации вашего сайта WordPress. Если что-либо может быть улучшено, вы увидите это на <a href=\"%s\">странице состояния сайта</a>."
 
-#: includes/class-health-check-dashboard-widget.php:48
+#: includes/class-health-check-dashboard-widget.php:54
 #: pages/site-health-header.php:29
 msgid "Results are still loading&hellip;"
 msgstr "Результаты всё ещё загружаются..."
 
 #. translators: %d: Amount of hidden themes.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1160
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1171
 msgid "Show %d remaining themes"
 msgstr "Показать оставшиеся темы (%d)"
 
 #. translators: %d: Amount of hidden plugins.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1081
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1092
 msgid "Show %d remaining plugins"
 msgstr "Показать оставшиеся плагины (%d)"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:293
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:299
 msgid "When bulk-disabling plugins, a site failure occurred. Because of this the change was automatically reverted."
 msgstr "При массовом отключении плагинов возникла ошибка на сайте. Произведен автоматический откат сделанных изменений."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:268
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:274
 msgid "When bulk-enabling plugins, a site failure occurred. Because of this the change was automatically reverted."
 msgstr "При массовом включении плагинов возникла ошибка на сайте. Произведен автоматический откат сделанных изменений."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:243
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:249
 msgid "When enabling troubleshooting on the selected plugins, a site failure occurred. Because of this the selected plugins were kept disabled while troubleshooting mode started."
 msgstr "Возникла ошибка на сайте при включении режима решения проблем для выбранных плагинов. Выбранные плагины останутся деактивированными при запуске режима решения проблем."
 
@@ -228,7 +228,7 @@ msgstr "Режим решения проблем"
 msgid "Passed tests"
 msgstr "Пройденные тесты"
 
-#: includes/class-health-check-dashboard-widget.php:17 pages/site-status.php:32
+#: includes/class-health-check-dashboard-widget.php:20 pages/site-status.php:32
 msgid "Site Health Status"
 msgstr "Состояние здоровья сайта"
 
@@ -666,6 +666,12 @@ msgstr "Одно или несколько требуемых расширени
 msgid "One or more recommended modules are missing"
 msgstr "Одно или несколько рекомендуемых расширений отсутствуют "
 
+#: includes/class-health-check-site-status.php:894
+#: includes/class-health-check-site-status.php:1557
+#: includes/class-health-check-site-status.php:1621
+msgid "Warning"
+msgstr "Предупреждение"
+
 #: includes/class-health-check-site-status.php:753
 msgid "the team handbook"
 msgstr "этом руководстве"
@@ -1001,41 +1007,35 @@ msgid "The loopback request to your site failed, this means features relying on 
 msgstr "Петлевой запрос к вашему сайту не удался, возможности, зависящие от его работоспособности сейчас не работают как нужно."
 
 #. translators: %d: The amount of notices that are visible.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1182
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1193
 msgid "Notices (%d)"
 msgstr "Уведомлений  (%d)"
 
 #. translators: %d: The amount of available themes.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1104
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1115
 msgid "Available themes (%d)"
 msgstr "Установленных тем (%d) "
 
 #. translators: %d: The amount of available plugins.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1008
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1019
 msgid "Available plugins (%d)"
 msgstr "Установленных плагинов (%d)"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:969
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:980
 msgid "enabled"
 msgstr "включен"
 
-#: includes/class-health-check-site-status.php:894
-#: includes/class-health-check-site-status.php:1557
-#: includes/class-health-check-site-status.php:1621
-msgid "Warning"
-msgstr "Внимание!"
-
 #. translators: %s: The running status of Troubleshooting Mode.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:966
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:977
 msgid "Troubleshooting Mode - %s"
 msgstr "Режим решения проблем - %s"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:872
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:883
 msgctxt "Prefix for inactive themes in troubleshooting mode"
 msgid "Switch to"
 msgstr "Переключиться на"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:872
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:883
 msgctxt "Prefix for the active theme in troubleshooting mode"
 msgid "Active:"
 msgstr "Активна:"
@@ -1221,65 +1221,65 @@ msgstr "Активная тема: %s"
 msgid "Waiting..."
 msgstr "Ждите..."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1139
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1150
 msgid "Switch to this theme"
 msgstr "Переключиться на эту тему"
 
 #. translators: %s: Theme name.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1135
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1146
 msgid "Switch the active theme to %s"
 msgstr "Сменить активную тему на %s"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1070
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1081
 msgid "Enable"
 msgstr "Включить"
 
 #. translators: %s: Plugin name.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1066
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1077
 msgid "Enable the plugin, %s, while troubleshooting."
 msgstr "Включите плагин %s в режиме решения проблем."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1051
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1062
 msgid "Disable"
 msgstr "Выключить"
 
 #. translators: %s: Plugin name.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1047
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1058
 msgid "Disable the plugin, %s, while troubleshooting."
 msgstr "Отключите плагин %s в режиме решения проблем."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1228
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1239
 msgid "Dismiss notices"
 msgstr "Скрыть заметки"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1202
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1213
 msgid "Plugin actions, such as activating and deactivating, are not available while in Troubleshooting Mode."
 msgstr "Действия с плагинами, например их активация и деактивация, недоступны в режиме решения проблем."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1194
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1205
 msgid "There are no notices to show."
 msgstr "Нет заметок."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:995
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1006
 msgid "Here you can enable individual plugins or themes, helping you to find out what might be causing strange behaviors on your site. Do note that <strong>any changes you make to settings will be kept</strong> when you disable Troubleshooting Mode."
 msgstr "Здесь можно включать отдельные плагины или темы, что поможет вам найти то, что создает странные вещи на вашем сайте. Обратите внимание, <strong>все измененные настройки сохранятся</strong> при выходе из режима решения проблем."
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:991
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1002
 msgid "Your site is currently in Troubleshooting Mode. This has <strong>no effect on your site visitors</strong>, they will continue to view your site as usual, but for you it will look as if you had just installed WordPress for the first time."
-msgstr "Ваш сайт сейчас в режиме решения проблем. <strong>Это не влияет на посетителей сайта!</strong> Посетители видят ваш сайт как обычно, но для вас он такой, как если бы вы только что установили WordPress."
+msgstr "Ваш сайт сейчас использует режим решения проблем. Это <strong>не влияет на посетителей сайта.</strong> Они видят ваш сайт как обычно, но для вас он такой, как если бы вы только что установили WordPress."
 
 #. translators: %s: The theme slug that was switched to.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:710
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:716
 msgid "When switching the active theme to %s, a site failure occurred. Because of this we reverted the theme to the one you used previously."
 msgstr "При смене активной темы на %s возникла ошибка сайта. Это изменение было автоматически отменено."
 
 #. translators: %s: The plugin slug that was disabled.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:687
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:693
 msgid "When disabling the plugin, %s, a site failure occurred. Because of this the change was automatically reverted."
 msgstr "При отключении плагина %s возникла ошибка сайта. Это изменение было автоматически отменено."
 
 #. translators: %s: The plugin slug that was enabled.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:661
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:667
 msgid "When enabling the plugin, %s, a site failure occurred. Because of this the change was automatically reverted."
 msgstr "При включении плагина %s возникла ошибка сайта. Это изменение было автоматически отменено."
 
@@ -1342,11 +1342,11 @@ msgid "(Latest version: %s)"
 msgstr "( последняя версия: %s )"
 
 #. translators: Prefix for the active theme in a listing.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:1145
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:1156
 msgid "Active:"
 msgstr "Активна:"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:856
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:867
 msgid "Themes"
 msgstr "Темы"
 
@@ -1439,17 +1439,17 @@ msgstr "Содержимое изменено"
 msgid "Tools"
 msgstr "Инструменты"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:893
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:985
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:904
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:996
 #: includes/class-health-check-troubleshoot.php:244
 msgid "Disable Troubleshooting Mode"
 msgstr "Отключить режим решения проблем"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:166
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:172
 msgid "Install a default theme"
 msgstr "Установить тему по умолчанию"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:157
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:163
 msgid "You don't have any of the default themes installed. A default theme helps you determine if your current theme is causing conflicts."
 msgstr "У вас нет установленных тем по умолчанию. Тема по умолчанию помогает определить является ли ваша текущая тема источником проблемы."
 
@@ -1459,26 +1459,26 @@ msgid "Health Check"
 msgstr "Health Check"
 
 #. Translators: %s: Plugin slug.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:826
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:837
 msgid "Enable %s"
 msgstr "Включить %s"
 
 #. Translators: %s: Plugin slug.
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:811
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:822
 msgid "Disable %s"
 msgstr "Выключить %s"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:772
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:783
 msgid "Manage active plugins"
 msgstr "Управление активными плагинами"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:310
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:386
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:316
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:392
 msgid "Enable while troubleshooting"
 msgstr "Включить в режиме решения проблем"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:311
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:373
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:317
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:379
 msgid "Disable while troubleshooting"
 msgstr "Выключить в режиме решения проблем"
 
@@ -1531,7 +1531,7 @@ msgstr "Активный редактор"
 msgid "Media Handling"
 msgstr "Обработка мультимедиа"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:304
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:310
 #: includes/class-health-check.php:433
 msgid "Troubleshoot"
 msgstr "Решить проблему"
@@ -1552,11 +1552,11 @@ msgstr "Мы не смогли заменить файл плагина треб
 msgid "Enable Troubleshooting Mode"
 msgstr "Включить режим решения проблем"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:781
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:792
 msgid "Plugins"
 msgstr "Плагины"
 
-#: assets/mu-plugin/health-check-troubleshooting-mode.php:762
+#: assets/mu-plugin/health-check-troubleshooting-mode.php:773
 msgid "Troubleshooting Mode"
 msgstr "Режим решения проблем"
 

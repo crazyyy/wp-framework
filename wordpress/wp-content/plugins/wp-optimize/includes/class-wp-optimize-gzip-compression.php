@@ -51,7 +51,7 @@ class WP_Optimize_Gzip_Compression {
 			'server' => array_key_exists('server', $headers) ? $headers['server'] : '',
 		);
 
-		if (array_key_exists('content-encoding', $headers) && preg_match('/\Wbr\W/i', $headers['content-encoding'])) {
+		if (array_key_exists('content-encoding', $headers) && preg_match('/^(.*\W|)br(\W.*|)$/i', $headers['content-encoding'])) {
 			// check if there exists Content-encoding header with br(Brotli) value.
 			$headers_information['compression'] = 'brotli';
 		} elseif (array_key_exists('content-encoding', $headers) && preg_match('/gzip/i', $headers['content-encoding'])) {
@@ -152,6 +152,15 @@ class WP_Optimize_Gzip_Compression {
 	public function disable() {
 		$this->_htaccess->remove_commented_section($this->_htaccess_section_comment);
 		$this->_htaccess->write_file();
+	}
+
+	/**
+	 * Check if gzip compression option is set to true then add section with gzip settings into .htaccess (used when plugin being activated).
+	 */
+	public function restore() {
+		$enabled = WP_Optimize()->get_options()->get_option('is_gzip_compression_enabled');
+
+		if ($enabled && $this->_htaccess->is_writable()) $this->enable();
 	}
 
 	/**
@@ -258,7 +267,11 @@ class WP_Optimize_Gzip_Compression {
 					'BrowserMatch ^Mozilla/4 gzip-only-text/html',
 					'BrowserMatch ^Mozilla/4\.0[678] no-gzip',
 					'BrowserMatch \bMSIE !no-gzip !gzip-only-text/html',
-					'Header append Vary User-Agent',
+					array(
+						'<IfModule mod_headers.c>',
+						'Header append Vary User-Agent',
+						'</IfModule>',
+					),
 					'</IfModule>',
 				),
 				'</IfModule>',

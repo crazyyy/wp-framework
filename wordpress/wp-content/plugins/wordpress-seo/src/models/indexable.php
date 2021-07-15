@@ -1,59 +1,89 @@
 <?php
-/**
- * Model for the Indexable table.
- *
- * @package Yoast\YoastSEO\Models
- */
 
-namespace Yoast\WP\Free\Models;
+namespace Yoast\WP\SEO\Models;
 
-use Yoast\WP\Free\ORM\Yoast_Model;
+use Yoast\WP\Lib\Model;
 
 /**
  * Indexable table definition.
  *
- * @property int     $id
- * @property int     $object_id
- * @property string  $object_type
- * @property string  $object_sub_type
+ * @property int    $id
+ * @property int    $object_id
+ * @property string $object_type
+ * @property string $object_sub_type
  *
- * @property string  $created_at
- * @property string  $updated_at
+ * @property int    $author_id
+ * @property int    $post_parent
  *
- * @property string  $permalink
- * @property string  $permalink_hash
- * @property string  $canonical
- * @property int     $content_score
+ * @property string $created_at
+ * @property string $updated_at
  *
- * @property boolean $is_robots_noindex
- * @property boolean $is_robots_nofollow
- * @property boolean $is_robots_noarchive
- * @property boolean $is_robots_noimageindex
- * @property boolean $is_robots_nosnippet
+ * @property string $permalink
+ * @property string $permalink_hash
+ * @property string $canonical
  *
- * @property string  $title
- * @property string  $description
- * @property string  $breadcrumb_title
+ * @property bool   $is_robots_noindex
+ * @property bool   $is_robots_nofollow
+ * @property bool   $is_robots_noarchive
+ * @property bool   $is_robots_noimageindex
+ * @property bool   $is_robots_nosnippet
  *
- * @property boolean $is_cornerstone
+ * @property string $title
+ * @property string $description
+ * @property string $breadcrumb_title
  *
- * @property string  $primary_focus_keyword
- * @property int     $primary_focus_keyword_score
+ * @property bool   $is_cornerstone
  *
- * @property int     $readability_score
+ * @property string $primary_focus_keyword
+ * @property int    $primary_focus_keyword_score
  *
- * @property int     $link_count
- * @property int     $incoming_link_count
+ * @property int    $readability_score
  *
- * @property string  $og_title
- * @property string  $og_description
- * @property string  $og_image
+ * @property int    $link_count
+ * @property int    $incoming_link_count
+ * @property int    $number_of_pages
  *
- * @property string  $twitter_title
- * @property string  $twitter_description
- * @property string  $twitter_image
+ * @property string $open_graph_title
+ * @property string $open_graph_description
+ * @property string $open_graph_image
+ * @property string $open_graph_image_id
+ * @property string $open_graph_image_source
+ * @property string $open_graph_image_meta
+ *
+ * @property string $twitter_title
+ * @property string $twitter_description
+ * @property string $twitter_image
+ * @property string $twitter_image_id
+ * @property string $twitter_image_source
+ * @property string $twitter_card
+ *
+ * @property int    $prominent_words_version
+ *
+ * @property bool   $is_public
+ * @property bool   $is_protected
+ * @property string $post_status
+ * @property bool   $has_public_posts
+ *
+ * @property int    $blog_id
+ *
+ * @property string $language
+ * @property string $region
+ *
+ * @property string $schema_page_type
+ * @property string $schema_article_type
+ *
+ * @property bool   $has_ancestors
+ *
+ * @property int    $estimated_reading_time_minutes
  */
-class Indexable extends Yoast_Model {
+class Indexable extends Model {
+
+	/**
+	 * Holds the ancestors.
+	 *
+	 * @var Indexable[]
+	 */
+	public $ancestors = [];
 
 	/**
 	 * Whether nor this model uses timestamps.
@@ -63,18 +93,55 @@ class Indexable extends Yoast_Model {
 	protected $uses_timestamps = true;
 
 	/**
+	 * Which columns contain boolean values.
+	 *
+	 * @var array
+	 */
+	protected $boolean_columns = [
+		'is_robots_noindex',
+		'is_robots_nofollow',
+		'is_robots_noarchive',
+		'is_robots_noimageindex',
+		'is_robots_nosnippet',
+		'is_cornerstone',
+		'is_public',
+		'is_protected',
+		'has_public_posts',
+	];
+
+	/**
+	 * Which columns contain int values.
+	 *
+	 * @var array
+	 */
+	protected $int_columns = [
+		'id',
+		'object_id',
+		'author_id',
+		'post_parent',
+		'primary_focus_keyword_score',
+		'readability_score',
+		'link_count',
+		'incoming_link_count',
+		'number_of_pages',
+		'prominent_words_version',
+		'blog_id',
+		'estimated_reading_time_minutes',
+	];
+
+	/**
 	 * The loaded indexable extensions.
 	 *
-	 * @var \Yoast\WP\Free\Models\Indexable_Extension[]
+	 * @var Indexable_Extension[]
 	 */
 	protected $loaded_extensions = [];
 
 	/**
-	 * Returns an Indexable_Extension by it's name.
+	 * Returns an Indexable_Extension by its name.
 	 *
 	 * @param string $class_name The class name of the extension to load.
 	 *
-	 * @return \Yoast\WP\Free\Models\Indexable_Extension|bool The extension.
+	 * @return Indexable_Extension|bool The extension.
 	 */
 	public function get_extension( $class_name ) {
 		if ( ! $this->loaded_extensions[ $class_name ] ) {
@@ -87,14 +154,57 @@ class Indexable extends Yoast_Model {
 	/**
 	 * Enhances the save method.
 	 *
-	 * @return boolean True on succes.
+	 * @return bool True on success.
 	 */
 	public function save() {
 		if ( $this->permalink ) {
-			$this->permalink      = \trailingslashit( $this->permalink );
+			$this->sanitize_permalink();
 			$this->permalink_hash = \strlen( $this->permalink ) . ':' . \md5( $this->permalink );
+		}
+		if ( \strlen( $this->primary_focus_keyword ) > 191 ) {
+			$this->primary_focus_keyword = \mb_substr( $this->primary_focus_keyword, 0, 191, 'UTF-8' );
 		}
 
 		return parent::save();
+	}
+
+	/**
+	 * Sanitizes the permalink.
+	 *
+	 * @return void
+	 */
+	protected function sanitize_permalink() {
+		if ( $this->permalink === 'unindexed' ) {
+			return;
+		}
+
+		$permalink_structure = \get_option( 'permalink_structure' );
+		$permalink_parts     = \wp_parse_url( $this->permalink );
+
+		if ( ! isset( $permalink_parts['path'] ) ) {
+			$permalink_parts['path'] = '/';
+		}
+		if ( \substr( $permalink_structure, -1, 1 ) === '/' && \strpos( \substr( $permalink_parts['path'], -5 ), '.' ) === false ) {
+			$permalink_parts['path'] = \trailingslashit( $permalink_parts['path'] );
+		}
+
+		$permalink = '';
+		if ( isset( $permalink_parts['scheme'] ) ) {
+			$permalink .= $permalink_parts['scheme'] . '://';
+		}
+		if ( isset( $permalink_parts['host'] ) ) {
+			$permalink .= $permalink_parts['host'];
+		}
+		if ( isset( $permalink_parts['port'] ) ) {
+			$permalink .= ':' . $permalink_parts['port'];
+		}
+		if ( isset( $permalink_parts['path'] ) ) {
+			$permalink .= $permalink_parts['path'];
+		}
+		if ( isset( $permalink_parts['query'] ) ) {
+			$permalink .= '?' . $permalink_parts['query'];
+		}
+		// We never set the fragment as the fragment is intended to be client-only.
+		$this->permalink = $permalink;
 	}
 }

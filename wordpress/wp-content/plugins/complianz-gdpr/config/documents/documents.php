@@ -1,33 +1,72 @@
 <?php
 defined('ABSPATH') or die("you do not have access to this page!");
 
-$this->pages = array(
+$this->pages['eu'] = array(
     'cookie-statement' => array(
-        'title' => __("Cookie policy (EU)", 'complianz-gdpr'),
+        'title' => __("Cookie Policy (EU)", 'complianz-gdpr'),
         'public' => true,
+        'document_elements' => '',
         'condition' => array(
             'regions' => 'eu',
-            'cookie-policy-type' => 'default',
-        ),
-    ),
-
-    'cookie-statement-us' => array(
-        'title' => cmplz_us_cookie_statement_title(),
-        'public' => true,
-        'condition' => array(
-            'regions' => 'us',
-            'cookie-policy-type' => 'default',
-        ),
-    ),
-
-    'cookie-statement-uk' => array(
-        'title' => __("Cookie policy (UK)", 'complianz-gdpr'),
-        'public' => true,
-        'condition' => array(
-            'regions' => 'uk',
-            'cookie-policy-type' => 'default',
+            'cookie-statement' => 'generated',
         ),
     ),
 );
 
+$this->pages['us'] = array(
+	'cookie-statement' => array(
+        'title' => cmplz_us_cookie_statement_title(),
+        'public' => true,
+        'document_elements' => '',
+        'condition' => array(
+            'regions' => 'us',
+            'cookie-statement' => 'generated',
+        ),
+    ),
+);
 
+$this->pages['uk'] = array(
+	'cookie-statement' => array(
+        'title' => __("Cookie Policy (UK)", 'complianz-gdpr'),
+        'public' => true,
+        'document_elements' => '',
+        'condition' => array(
+            'regions' => 'uk',
+            'cookie-statement' => 'generated',
+        ),
+    ),
+);
+
+$this->pages['ca'] = array(
+	'cookie-statement' => array(
+	    'title' => __("Cookie Policy (CA)", 'complianz-gdpr'),
+	    'public' => true,
+	    'document_elements' => '',
+	    'condition' => array(
+		    'regions' => 'ca',
+		    'cookie-statement' => 'generated',
+	    ),
+    ),
+);
+$this->pages['au'] = array(
+    'cookie-statement' => array(
+        'title' => 'Cookie Policy (AU)',
+        'public' => true,
+        'document_elements' => '',
+        'condition' => array(
+            'regions' => 'au',
+            'cookie-statement' => 'generated',
+        ),
+    ),
+);
+$this->pages['za'] = array(
+	'cookie-statement' => array(
+		'title' => __("Cookie Policy (ZA)", 'complianz-gdpr'),
+		'public' => true,
+		'document_elements' => '',
+		'condition' => array(
+			'regions' => 'za',
+			'cookie-statement' => 'generated',
+		),
+	),
+);

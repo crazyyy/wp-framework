@@ -20,6 +20,13 @@ abstract class Dropbox_ConsumerAbstract
     const ACCESS_TOKEN_METHOD = 'oauth2/token';
     // The next endpoint only exists with APIv1
     const OAUTH_UPGRADE = 'oauth2/token_from_oauth1';
+
+    private $scopes = array(
+        'account_info.read',
+        'files.content.write',
+        'files.content.read',
+        'files.metadata.read',
+    );
     
     /**
      * Signature method, either PLAINTEXT or HMAC-SHA1
@@ -54,6 +61,10 @@ abstract class Dropbox_ConsumerAbstract
             $updraftplus->log('OAuth v1 token found: upgrading to v2');
             $this->upgradeOAuth();
             $updraftplus->log('OAuth token upgrade successful');
+        }
+
+        if (!empty($access_token) && isset($access_token->refresh_token) && isset($access_token->expires_in)) {
+            if ($access_token->expires_in < time()) $this->refreshAccessToken();
         }
         
         if (empty($access_token) || !isset($access_token->oauth_token)) {
@@ -171,6 +182,8 @@ abstract class Dropbox_ConsumerAbstract
             'response_type' => 'code',
             'redirect_uri' => empty($key) ? $this->callback : $this->callbackhome,
             'state' => empty($key) ? "POST:".$CSRF.$this->instance_id.$this->callbackhome : $CSRF.$this->instance_id,
+            'scope' => implode(' ', $this->scopes),
+            'token_access_type' => 'offline'
         );
     
         // Build the URL and redirect the user
@@ -219,7 +232,7 @@ abstract class Dropbox_ConsumerAbstract
             
             } else {
                 $code = base64_decode($code);
-                $code = json_decode($code, true);    
+                $code = json_decode($code, true);
             }
             
 	        /*
@@ -229,13 +242,14 @@ abstract class Dropbox_ConsumerAbstract
 		        as far as I can tell only the oauth token is used
 		        after more testing token secret can be removed.
 			*/
-            
             $token = new stdClass();
             $token->oauth_token_secret = $code['access_token'];
             $token->oauth_token = $code['access_token'];
             $token->account_id = $code['account_id'];
             $token->token_type = $code['token_type'];
             $token->uid = $code['uid'];
+            $token->refresh_token = $code['refresh_token'];
+            $token->expires_in = time() + $code['expires_in'] - 30;
             $this->storage->set($token, 'access_token');
             $this->storage->do_unset('upgraded');
             
@@ -244,6 +258,48 @@ abstract class Dropbox_ConsumerAbstract
 	    } else {
 		    throw new Dropbox_BadRequestException("No Dropbox Code found, will try to get one now", 400);
 	    }
+    }
+
+    /**
+     * This function will make a request to the auth server sending the users refresh token to get a new access token
+     *
+     * @return void
+     */
+    public function refreshAccessToken() {
+        global $updraftplus;
+
+        $access_token = $this->storage->get('access_token');
+        
+        $params = array(
+            'code' => 'ud_dropbox_code',
+            'refresh_token' => $access_token->refresh_token,
+            'headers' => apply_filters('updraftplus_auth_headers', ''),
+        );
+
+        $response = $this->fetch('POST', $this->callback, '' , $params);
+        
+        if ("200" != $response['code']) {
+            $updraftplus->log('Failed to refresh access token error code: '.$response['code']);
+            return;
+        }
+
+        if (empty($response['body'])) {
+            $updraftplus->log('Failed to refresh access token empty response body');
+            return;
+        }
+
+        $body = json_decode(base64_decode($response['body']));
+
+        if (isset($body->access_token) && isset($body->expires_in)) {
+            $access_token->oauth_token_secret = $body->access_token;
+            $access_token->oauth_token = $body->access_token;
+            $access_token->expires_in = time() + $body->expires_in - 30;
+            $this->storage->set($access_token, 'access_token');
+            $updraftplus->log('Successfully updated and refreshed the access token');
+        } else {
+            $updraftplus->log('Failed to refresh access token missing token and expiry: '.json_encode($body));
+            return;
+        }
     }
     
     /**
@@ -324,6 +380,22 @@ abstract class Dropbox_ConsumerAbstract
                         'Content-Type: application/json',
                     );
                 }
+                return array(
+                    'url' => $url . $call,
+                    'postfields' => $additional,
+                    'headers' => $headers,
+                );
+            } elseif (isset($additional['code']) && isset($additional['refresh_token'])) {
+                $extra_headers = array();
+                if (isset($additional['headers']) && !empty($additional['headers'])) {
+                    foreach ($additional['headers'] as $key => $header) {
+                        $extra_headers[] = $key.': '.$header;
+                    }
+                    unset($additional['headers']);
+                }
+                $headers = array();
+                $headers = array_merge($headers, $extra_headers);
+
                 return array(
                     'url' => $url . $call,
                     'postfields' => $additional,

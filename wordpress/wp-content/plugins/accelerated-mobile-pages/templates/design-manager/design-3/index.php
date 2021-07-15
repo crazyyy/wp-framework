@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <head>
 	<meta charset="utf-8">
 	<?php do_action('amp_experiment_meta', $this); ?>
-  	<link rel="dns-prefetch" href="//cdn.ampproject.org">
+  	<link rel="preconnect" href="//cdn.ampproject.org">
 	<?php do_action( 'amp_post_template_head', $this ); ?>
 
 	<style amp-custom>
@@ -218,12 +218,16 @@ if ( get_query_var( 'paged' ) ) {
 	endwhile;  ?>
 	<?php do_action('ampforwp_loop_before_pagination') ?>
 	<div class="amp-wp-content pagination-holder">
-
+		<?php	
+		if (function_exists('wp_pagenavi')) {
+	      wp_pagenavi();
+	    }else{?>
 		<div id="pagination">
         	<?php if ( get_next_posts_link('next', $q->max_num_pages) ){ ?><div class="next"><?php echo apply_filters('ampforwp_next_posts_link',get_next_posts_link( ampforwp_translation($redux_builder_amp['amp-translator-next-text'], 'Show more Posts' ).'&raquo;', 0), $paged);?></div><?php }?>
         	<?php if ( get_previous_posts_link() ){ ?><div class="prev"><?php echo apply_filters( 'ampforwp_previous_posts_link', get_previous_posts_link( '&laquo; '. ampforwp_translation($redux_builder_amp['amp-translator-previous-text'], 'Show Previous Posts' )), $paged ); ?></div><?php }?>
 			<div class="clearfix"></div>
 		</div>
+		<?php } ?>	
 	</div>
 
 	<?php endif; ?>

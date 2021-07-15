@@ -1,0 +1,200 @@
+# Translation of Plugins - FakerPress - Development (trunk) in Dhivehi
+# This file is distributed under the same license as the Plugins - FakerPress - Development (trunk) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-04-01 05:19:52+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: dv_MV\n"
+"Project-Id-Version: Plugins - FakerPress - Development (trunk)\n"
+
+#: inc/class-fp-utils.php:1191
+msgid "South Georgia"
+msgstr "ސައުތު ޖޯޖިޔާ"
+
+#: inc/class-fp-utils.php:1156
+msgid "Singapore"
+msgstr "ސިންގަޕޫރު"
+
+#: inc/class-fp-utils.php:1116
+msgid "Samoa"
+msgstr "ސަމާއޯ"
+
+#: inc/class-fp-utils.php:1121
+msgid "San Marino"
+msgstr "ސަން މާރިއޯ"
+
+#: inc/class-fp-utils.php:1051
+msgid "Qatar"
+msgstr "ޤަތަރު"
+
+#: inc/class-fp-utils.php:1046
+msgid "Puerto Rico"
+msgstr "ޕިއުޓޯ ރިކޯ"
+
+#: inc/class-fp-utils.php:1006
+msgid "Panama"
+msgstr "ޕެނަމާ"
+
+#: inc/class-fp-utils.php:996
+msgid "Palau"
+msgstr "ޕަލައު"
+
+#: inc/class-fp-utils.php:961
+msgid "Niue"
+msgstr "ނިއުއޭ"
+
+#: inc/class-fp-utils.php:921
+msgid "Nauru"
+msgstr "ނައުރޫ"
+
+#: inc/class-fp-utils.php:896
+msgid "Montserrat"
+msgstr "މޮންޓްސެރަޓް"
+
+#: inc/class-fp-utils.php:881
+msgid "Monaco"
+msgstr "މޮނާކޯ"
+
+#: inc/class-fp-utils.php:861
+msgid "Mayotte"
+msgstr "މަޔޮއްޓޭ"
+
+#: inc/class-fp-utils.php:856
+msgid "Mauritius"
+msgstr "މޮރިޝަސް"
+
+#: inc/class-fp-utils.php:846
+msgid "Martinique"
+msgstr "މާޓިނިކިއު"
+
+#: inc/class-fp-utils.php:836
+msgid "Malta"
+msgstr "މަލްޓާ"
+
+#: inc/class-fp-utils.php:826
+msgid "Maldives"
+msgstr "ދިވެހިރާއްޖެ"
+
+#: inc/class-fp-utils.php:801
+msgid "Macau"
+msgstr "މަކާއޫ"
+
+#: inc/class-fp-utils.php:796
+msgid "Luxembourg"
+msgstr "ލަކްޒަމްބާގް"
+
+#: inc/class-fp-utils.php:746
+msgid "Kuwait"
+msgstr "ކުވޭތު"
+
+#: inc/class-fp-utils.php:721
+msgid "Jersey"
+msgstr "ޖާރޒީ"
+
+#: inc/class-fp-utils.php:711
+msgid "Jamaica"
+msgstr "ޖަމައިކާ"
+
+#: inc/class-fp-utils.php:696
+msgid "Isle of Man"
+msgstr "އިސުލް އޮފް މޭން"
+
+#: inc/class-fp-utils.php:651
+msgid "Hong Kong"
+msgstr "ހޮންކޮން"
+
+#: inc/class-fp-utils.php:631
+msgid "Guyana"
+msgstr "ގުޔާނާ"
+
+#: inc/class-fp-utils.php:611
+msgid "Guatemala"
+msgstr "ގުއެޓަމާލާ"
+
+#: inc/class-fp-utils.php:616
+msgid "Guernsey"
+msgstr "ގުއެންސޭ"
+
+#: inc/class-fp-utils.php:606
+msgid "Guam"
+msgstr "ގުއަމް"
+
+#: inc/class-fp-utils.php:596
+msgid "Grenada"
+msgstr "ގްރެނަޑާ"
+
+#: inc/class-fp-utils.php:601
+msgid "Guadeloupe"
+msgstr "ގުއެޑެލޯޕް"
+
+#: inc/class-fp-utils.php:581
+msgid "Gibraltar"
+msgstr "ގިބްރަލްޓާ"
+
+#: inc/class-fp-utils.php:526
+msgid "Fiji"
+msgstr "ފިޖީ"
+
+#: inc/class-fp-utils.php:491
+msgid "El Salvador"
+msgstr "އެލް ސަލްވަޑޯ"
+
+#: inc/class-fp-utils.php:471
+msgid "Dominica"
+msgstr "ޑޮމިނިކާ"
+
+#: inc/class-fp-utils.php:466
+msgid "Djibouti"
+msgstr "ޖިބޯޓީ"
+
+#: inc/class-fp-utils.php:431
+msgid "Costa Rica"
+msgstr "ކޮސްޓަރިކާ"
+
+#: inc/class-fp-utils.php:366
+msgid "Cape Verde"
+msgstr "ކޭޕް ވާޑެ"
+
+#: inc/class-fp-utils.php:331
+msgid "Brunei"
+msgstr "ބުރުނާއީ"
+
+#: inc/class-fp-utils.php:276
+msgid "Bermuda"
+msgstr "ބާމިއުޑާ"
+
+#: inc/class-fp-utils.php:266
+msgid "Belize"
+msgstr "ބެލިޒް"
+
+#: inc/class-fp-utils.php:251
+msgid "Barbados"
+msgstr "ބާބަޑޮސް"
+
+#: inc/class-fp-utils.php:241
+msgid "Bahrain"
+msgstr "ބަހްރެއިން"
+
+#: inc/class-fp-utils.php:216
+msgid "Aruba"
+msgstr "އަރޫބާ"
+
+#: inc/class-fp-utils.php:221
+msgid "Australia"
+msgstr "އޮސްޓްރޭލިޔާ"
+
+#: inc/class-fp-utils.php:206
+msgid "Argentina"
+msgstr "އާޖެންޓީނާ"
+
+#: inc/class-fp-utils.php:196
+msgid "Anguilla"
+msgstr "އެންގުއިލާ"
+
+#: inc/class-fp-utils.php:186
+msgid "Andorra"
+msgstr "އެންޑޯރާ"

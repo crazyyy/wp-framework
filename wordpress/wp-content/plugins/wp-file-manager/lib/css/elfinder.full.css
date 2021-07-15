@@ -733,10 +733,6 @@ ul.elfinder-help-integrations a:hover {
     margin-left: 1em;
 }
 
-.elfinder-help-debug dd span {
-    /*font-size: 1.2em;*/
-}
-
 /********************** COMMAND "PREFERENCE" ****************************/
 .elfinder-dialog .elfinder-preference .ui-tabs-nav {
     margin-bottom: 1px;
@@ -991,7 +987,6 @@ ul.elfinder-help-integrations a:hover {
 .elfinder *:not(input):not(textarea):not(select):not([contenteditable=true]),
 .elfinder-contextmenu *:not(input):not(textarea):not(select):not([contenteditable=true]) {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    /*-webkit-touch-callout:none;*/
     -webkit-user-select: none;
     -moz-user-select: none;
     -khtml-user-select: none;
@@ -1025,9 +1020,6 @@ ul.elfinder-help-integrations a:hover {
     background-image: url(../img/toolbar.png);
     background-repeat: no-repeat;
     background-position: 0 -528px;
-}
-
-.elfinder-symlink {
 }
 
 /* noaccess */
@@ -2345,8 +2337,6 @@ ul.elfinder-help-integrations a:hover {
 
 /************************************  LIST VIEW ************************************/
 
-/*.elfinder-cwd-view-list { padding:0 0 4px 0; }*/
-
 .elfinder-cwd-wrapper.elfinder-cwd-fixheader .elfinder-cwd::after {
     display: none;
 }
@@ -3307,7 +3297,6 @@ button.elfinder-info-button {
 
 .elfinder-rm-title strong {
     display: block;
-    /*word-wrap: break-word;*/
     white-space: pre-wrap;
     word-break: normal;
     overflow: hidden;
@@ -3499,7 +3488,6 @@ button.elfinder-info-button {
     margin-top: -8px;
     background-image: url("../img/arrows-normal.png");
     background-repeat: no-repeat;
-    /*	border:1px solid #111;*/
 }
 
 .elfinder-ltr .elfinder-navbar-arrow {
@@ -3772,10 +3760,6 @@ button.elfinder-info-button {
     padding: 0;
 }
 
-.elfinder-places.elfinder-droppable-active {
-    /*border:1px solid #8cafed;*/
-}
-
 /* navbar swipe handle */
 .elfinder-navbar-swipe-handle {
     position: absolute;
@@ -3903,10 +3887,6 @@ button.elfinder-info-button {
 .elfinder-quicklook-fullscreen .elfinder-quicklook-preview {
     border: 0 solid;
 }
-
-/*.elfinder-quicklook-fullscreen iframe {
-	height: 100%;
-}*/
 
 .elfinder-quicklook-cover {
     width: 100%;
@@ -4679,7 +4659,6 @@ embed.elfinder-quicklook-preview-audio {
 .elfinder-button-icon {
     width: 16px;
     height: 16px;
-    /*display:block;*/
     display: inline-block;
     background: url('../img/toolbar.png') no-repeat;
 }

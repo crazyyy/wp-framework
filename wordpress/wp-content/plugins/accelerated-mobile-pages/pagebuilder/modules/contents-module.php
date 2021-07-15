@@ -21,8 +21,9 @@ function ampforwp_content_module_pagination($args, $fieldValues){
   }
 }
  $output = '{{if_condition_content_layout_type==1}}
-            <div {{if_id}}id="{{id}}"{{ifend_id}} class="pb_mod cm {{user_class}}"><h4>{{content_title}}</h4>   
-                <div class="wrap"><ul>{{category_selection}}</ul></div>
+            <div {{if_id}}id="{{id}}"{{ifend_id}} class="pb_mod cm {{user_class}}">
+            {{if_content_title}}<h4>{{content_title}}</h4> {{ifend_content_title}}
+                <div id="cat-jump{{id}}" class="wrap"><ul>{{category_selection}}</ul></div>
                 {{pagination_links}}    
             </div>
           {{ifend_condition_content_layout_type_1}}
@@ -113,6 +114,13 @@ function ampforwp_content_module_pagination($args, $fieldValues){
 }
 {{ifend_condition_content_layout_type_1}}
 ';
+if(ampforwp_get_setting('amp-design-selector') == 3 || ampforwp_get_setting('amp-design-selector') == 2){
+  $frontCss .= '@media (max-width: 480px){
+  {{module-class}} .cm ul{
+  width:80%;
+  }
+  }';
+}
 $options = '<option value="recent_option">Recent Posts</option>';
 $post_types = '';
 $categoriesArray = array();
@@ -127,9 +135,9 @@ if ( is_admin() ) {
                ) );   
  $categoriesArray = array('recent_option'=>'Recent Posts');   
  foreach($categories as $category){   
-  $categoryName = htmlspecialchars($category->name, ENT_QUOTES);
-  $categoriesArray[$category->term_id] = $categoryName;   
-  $options.= '<option value="'.$category->term_id.'">'.$categoryName.'</option>';   
+  $categoryName = htmlspecialchars(esc_html($category->name), ENT_QUOTES);
+  $categoriesArray[$category->term_id] = $categoryName;
+  $options.= '<option value="'.esc_attr($category->term_id).'">'.esc_html($categoryName).'</option>';   
  }    
 }
  return array(    
@@ -359,7 +367,7 @@ if ( is_admin() ) {
 
                               <div class="cml"> 
                                <a href="{{ampforwp_post_url}}">
-                               {{if_image}}<amp-img  class="ampforwp_wc_shortcode_img"  src="{{image}}" width="{{width}}" height="{{height}}" layout="responsive" alt="{{image_alt}}"> </amp-img>{{ifend_image}}</a>
+                               {{if_image}}<amp-img  class="ampforwp_wc_shortcode_img"  src="{{image}}" width="{{width}}" height="{{height}}" srcset="{{image_srcset}}" layout="responsive" alt="{{image_alt}}"> </amp-img>{{ifend_image}}</a>
                               </div>
                               <div class="cmr">
                                 <a href="{{ampforwp_post_url}}">{{title}}</a>
@@ -378,21 +386,29 @@ if ( is_admin() ) {
   $ampforwp_show_excerpt = (isset($fieldValues['ampforwp_show_excerpt'])? $fieldValues['ampforwp_show_excerpt']: 'yes');
   $ampforwp_excerpt_length = (isset($fieldValues['ampforwp_excerpt_length'])? $fieldValues['ampforwp_excerpt_length']: 15);
   $ampforwp_excerpt_length = (int) $ampforwp_excerpt_length;
-  
+  $mob_pres_link = false;
+  if(function_exists('ampforwp_mobile_redirect_preseve_link')){
+    $mob_pres_link = ampforwp_mobile_redirect_preseve_link();
+  }
   if ( $the_query->have_posts() ) { 
          while ( $the_query->have_posts() ) {   
              $the_query->the_post();    
              $ampforwp_post_url = get_permalink();
-             if(ampforwp_get_setting('ampforwp-amp-takeover') == true){ 
-             $ampforwp_post_url = trailingslashit($ampforwp_post_url);
-             }else{
-              $ampforwp_post_url = trailingslashit($ampforwp_post_url) . AMPFORWP_AMP_QUERY_VAR;
+             if(ampforwp_get_setting('ampforwp-amp-takeover') == true || $mob_pres_link == true){
+                $ampforwp_post_url = user_trailingslashit($ampforwp_post_url);
+             }else if(true == ampforwp_get_setting('amp-core-end-point')){
+                $ampforwp_post_url = user_trailingslashit($ampforwp_post_url);
+                $ampforwp_post_url = add_query_arg( 'amp', '', $ampforwp_post_url);
+              }else{
+                $ampforwp_post_url = user_trailingslashit($ampforwp_post_url) . AMPFORWP_AMP_QUERY_VAR;
+                $ampforwp_post_url = user_trailingslashit($ampforwp_post_url);
              }
-             $image = $height = $width = $image_alt = ""; 
+             $image = $height = $width = $image_alt = $image_srcset = ""; 
              if ( has_post_thumbnail() ) {  
                    $thumb_id = get_post_thumbnail_id();   
                    $image_alt = get_post_meta( $thumb_id, '_wp_attachment_image_alt', true);
-                   $thumb_url_array = wp_get_attachment_image_src($thumb_id, 'full', true);  
+                   $thumb_url_array = wp_get_attachment_image_src($thumb_id, 'full', true); 
+                   $image_srcset  = wp_get_attachment_image_srcset( $thumb_id, 'full'); 
                    $image = $thumb_url_array[0];
                    $width = $thumb_url_array[1];
                    $height = $thumb_url_array[2];
@@ -485,6 +501,7 @@ if ( is_admin() ) {
               $rawhtml = str_replace(array(
                                 "{{ampforwp_post_url}}",
                                 "{{image}}",
+                                "{{image_srcset}}",
                                 "{{width}}",
                                 "{{height}}",
                                 "{{title}}",
@@ -499,6 +516,7 @@ if ( is_admin() ) {
                               array(
                                 $ampforwp_post_url,
                                 $image,
+                                $image_srcset,
                                 $width,
                                 $height,
                                 $title,
@@ -513,6 +531,7 @@ if ( is_admin() ) {
                               $loopHtml);
             $rawhtml = ampforwp_replaceIfContentConditional("ampforwp_post_url", $ampforwp_post_url, $rawhtml);
             $rawhtml = ampforwp_replaceIfContentConditional("image", $image, $rawhtml);
+            $rawhtml = ampforwp_replaceIfContentConditional("image_srcset", $image_srcset, $rawhtml);
             $rawhtml = ampforwp_replaceIfContentConditional("width", $width, $rawhtml);
             $rawhtml = ampforwp_replaceIfContentConditional("height", $height, $rawhtml);
             $rawhtml = ampforwp_replaceIfContentConditional("title", $title, $rawhtml);
@@ -568,6 +587,7 @@ if ( is_admin() ) {
         if( $paged > 1){
           
           $first_page = add_query_arg( array( $pagination_text => 1 ), $queryUrl );
+          $first_page .= '#cat-jump'. esc_html($fieldValues['id']);
           $prev_page = add_query_arg( array( $pagination_text => $paged - 1 ), $queryUrl );
           $nextLabel = (isset($fieldValues['ampforwp_pb_cat_pagination_next']) && !empty($fieldValues['ampforwp_pb_cat_pagination_next'])) ? $fieldValues['ampforwp_pb_cat_pagination_next'] : "Next";
 
@@ -585,7 +605,7 @@ if ( is_admin() ) {
           if( $paged == $i && $startPage!=$endPage){
               $pagination_links .= "<a class='active' href='#/' >".esc_html__($i, 'accelerated-mobile-pages')."</a>";
           }else{
-            $allPages = add_query_arg( array( $pagination_text => $i ), $queryUrl );
+            $allPages = add_query_arg( array( $pagination_text => $i ), $queryUrl ) . '#cat-jump'.esc_html($fieldValues['id']);
             if($startPage!=$endPage){
               $pagination_links .= "<a href =".esc_url($allPages)." >".esc_html__($i, 'accelerated-mobile-pages')."</a>";
             }
@@ -600,6 +620,7 @@ if ( is_admin() ) {
         if( $total_num_pages != $paged ){
 	        $lastLabel = (isset($fieldValues['ampforwp_pb_cat_pagination_last']) && !empty($fieldValues['ampforwp_pb_cat_pagination_last'])) ? $fieldValues['ampforwp_pb_cat_pagination_last'] : "Last";
           $next_page = add_query_arg( array( $pagination_text => $total_num_pages ), $queryUrl );
+          $next_page .= '#cat-jump'. esc_html($fieldValues['id']);
           $pagination_links .= "<a class='pagi-last' href =".esc_url($next_page)." >".esc_html__($lastLabel, 'accelerated-mobile-pages')."</a>";
         }
         $pagination_links .= '</div>';

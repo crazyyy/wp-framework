@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/wp-file-manager
   Description: Manage your WP files.
   Author: mndpsingh287
-  Version: 5.7
+  Version: 7.1.1
   Author URI: https://profiles.wordpress.org/mndpsingh287
   License: GPLv2
  **/
@@ -16,12 +16,13 @@ if (!class_exists('mk_file_folder_manager')):
     class mk_file_folder_manager
     {
         protected $SERVER = 'http://ikon.digital/plugindata/api.php';
-
+        var $ver = '7.1.1';
         /* Auto Load Hooks */
         public function __construct()
         {
             add_action('admin_menu', array(&$this, 'ffm_menu_page'));
             add_action('admin_enqueue_scripts', array(&$this, 'ffm_admin_things'));
+            add_action('admin_enqueue_scripts', array(&$this, 'ffm_admin_script'));
             add_action('wp_ajax_mk_file_folder_manager', array(&$this, 'mk_file_folder_manager_action_callback'));
             add_action('wp_ajax_mk_fm_close_fm_help', array($this, 'mk_fm_close_fm_help'));
             add_filter('plugin_action_links', array(&$this, 'mk_file_folder_manager_action_links'), 10, 2);
@@ -46,6 +47,13 @@ if (!class_exists('mk_file_folder_manager')):
              add_action('wp_ajax_mk_file_manager_single_backup_restore', array(&$this, 'mk_file_manager_single_backup_restore_callback'));
              $this->mk_file_manager_create_tables();
              register_activation_hook( __FILE__, array(&$this, 'mk_file_manager_create_tables'));
+             add_action( 'rest_api_init', function () {
+				register_rest_route( 'v1', '/fm/backup/(?P<backup_id>[a-zA-Z0-9-=]+)/(?P<type>[a-zA-Z0-9-=]+)/(?P<key>[a-zA-Z0-9-=]+)', array(
+				    'methods' => 'GET',
+                    'callback' => array( $this, 'fm_download_backup' ),
+                    'permission_callback' => '__return_true',
+                ));
+            });
         }
         /* Auto Directory */
         public function create_auto_directory() {
@@ -54,11 +62,19 @@ if (!class_exists('mk_file_folder_manager')):
             if (!file_exists($backup_dirname)) {
                 wp_mkdir_p($backup_dirname);
             }
-            // creating bank index.php inside fm_backup
-            $ourFileName = $backup_dirname."/index.php";
-            $ourFileHandle = fopen($ourFileName, 'w');
-            fclose($ourFileHandle);
 
+            // security fix
+            $myfile = $backup_dirname."/.htaccess";
+            $myfileHandle = @fopen($myfile, 'wr');
+            $txt = "deny from all";
+            @fwrite($myfileHandle, $txt);
+            @fclose($myfileHandle);
+
+            // creating bank index.php inside fm_backup
+            $ourFileName = $backup_dirname."/index.html";
+            $ourFileHandle = @fopen($ourFileName, 'w');
+            @fclose($ourFileHandle);
+            @chmod($ourFileName, 0755);
         }
          /* 
          create Backup table
@@ -321,14 +337,14 @@ if (!class_exists('mk_file_folder_manager')):
             $date = date('Y-m-d H:i:s');
             $file_number = 'backup_'.date('Y_m_d_H_i_s-').rand(0,9999);
             $nonce = $_POST['nonce'];
-            $type = $_POST['type'];
-            $database = $_POST['database'];
-            $files = $_POST['files'];
-            $plugins = $_POST['plugins'];
-            $themes = $_POST['themes'];
-            $uploads = $_POST['uploads'];
-            $others = $_POST['others'];
-            $bkpid = isset($_POST['bkpid']) ? $_POST['bkpid'] : '';
+            $type = sanitize_text_field($_POST['type']);
+            $database = sanitize_text_field($_POST['database']);
+            $files = sanitize_text_field($_POST['files']);
+            $plugins = sanitize_text_field($_POST['plugins']);
+            $themes = sanitize_text_field($_POST['themes']);
+            $uploads = sanitize_text_field($_POST['uploads']);
+            $others = sanitize_text_field($_POST['others']);
+            $bkpid = isset($_POST['bkpid']) ? sanitize_text_field($_POST['bkpid']) : '';
             if($database == 'false' && $files == 'false' && $bkpid == '') {
                 echo json_encode(array('step' => '0', 'database' => 'false','files' => 'false','plugins' => 'false','themes' => 'false', 'uploads'=> 'false', 'others' => 'false', 'bkpid' => '0', 'msg' => '<span class="fm_console_error">Nothing selected for backup</span>'));
                 die; 
@@ -558,6 +574,22 @@ if (!class_exists('mk_file_folder_manager')):
             return $response;
         }
 
+        /**
+		* Generate plugin key
+		**/
+		
+		private static function fm_generate_key(){
+			return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(25/strlen($x)) )),1,25);
+        }
+        
+        /**
+		* Generate plugin key
+		**/
+		
+		private static function fm_get_key(){
+			return get_option('fm_key');
+		}
+
         /* File Manager text Domain */
         public function filemanager_load_text_domain()
         {
@@ -565,6 +597,12 @@ if (!class_exists('mk_file_folder_manager')):
             $locale = apply_filters('plugin_locale', get_locale(), $domain);
             load_textdomain($domain, trailingslashit(WP_LANG_DIR).'plugins'.'/'.$domain.'-'.$locale.'.mo');
             load_plugin_textdomain($domain, false, basename(dirname(__FILE__)).'/languages/');
+
+            ////// Creating key
+            $fmkey = self::fm_generate_key();
+            if(self::fm_get_key() == ""){
+                update_option('fm_key',$fmkey);
+            }
         }
 
         /* Menu Page */
@@ -576,7 +614,7 @@ if (!class_exists('mk_file_folder_manager')):
             'manage_options',
             'wp_file_manager',
             array(&$this, 'ffm_settings_callback'),
-            plugins_url('images/wp_file_manager.png', __FILE__)
+            plugins_url('images/wp_file_manager.svg', __FILE__)
             );
             /* Only for admin */
             add_submenu_page('wp_file_manager', __('Settings', 'wp-file-manager'), __('Settings', 'wp-file-manager'), 'manage_options', 'wp_file_manager_settings', array(&$this, 'wp_file_manager_settings'));
@@ -643,65 +681,196 @@ if (!class_exists('mk_file_folder_manager')):
             endif;
         }
 
-        /* Admin  Things */
-        public function ffm_admin_things()
-        {
-            $getPage = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
-            $allowedPages = array(
-                                      'wp_file_manager',
-                                      );
-            if (!empty($getPage) && in_array($getPage, $allowedPages)):
-                wp_enqueue_style('jquery-ui', plugins_url('css/jquery-ui.css', __FILE__));
-                wp_enqueue_style('elfinder.min', plugins_url('lib/css/elfinder.min.css', __FILE__));
-                wp_enqueue_script('jquery_min', plugins_url('js/jquery-ui.min.js', __FILE__));
-                wp_enqueue_script('elfinder_min', plugins_url('lib/js/elfinder.full.js', __FILE__));
-                wp_enqueue_style('theme', plugins_url('lib/css/theme.css', __FILE__));
-                // code mirror
-               wp_enqueue_script('fm-codemirror-js', plugins_url('lib/codemirror/lib/codemirror.js', __FILE__));
-               wp_enqueue_style('fm-codemirror', plugins_url('lib/codemirror/lib/codemirror.css', __FILE__));
-               wp_enqueue_style('fm-3024-day', plugins_url('lib/codemirror/theme/3024-day.css', __FILE__));
-               // File - Manager UI
+        public function ffm_admin_script(){
+            wp_enqueue_style( 'fm_menu_common', plugins_url('/css/fm_common.css', __FILE__) );
+        }
+
+         /* Admin  Things */
+         public function ffm_admin_things()
+         {
+             $getPage = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
+             $allowedPages = array(
+                                       'wp_file_manager',
+                                       );
+             // Languages
+            $lang = isset($_GET['lang']) && !empty($_GET['lang']) ? sanitize_text_field($_GET['lang']) : '';
+             if (!empty($getPage) && in_array($getPage, $allowedPages)):
+                global $wp_version;
                 $fm_nonce = wp_create_nonce('wp-file-manager');
                 $wp_fm_lang = get_transient('wp_fm_lang');
                 $wp_fm_theme = get_transient('wp_fm_theme');
                 $opt = get_option('wp_file_manager_settings');
-               wp_register_script( "file_manager_free_shortcode_admin", plugins_url('js/file_manager_free_shortcode_admin.js',  __FILE__ ), array(), rand(0,9999) );
-                wp_localize_script( 'file_manager_free_shortcode_admin', 'fmfparams', array(
-                    'ajaxurl' => admin_url('admin-ajax.php'),
-                    'nonce' => $fm_nonce,
-                    'lang' => isset($_GET['lang']) ? sanitize_text_field($_GET['lang']) : (($wp_fm_lang !== false) ? $wp_fm_lang : 'en'),
-                    'fm_enable_media_upload' => (isset($opt['fm_enable_media_upload']) && $opt['fm_enable_media_upload'] == '1') ? '1' : '0',
-                    )
-                );        
-                wp_enqueue_script( 'file_manager_free_shortcode_admin' );               
-               // Languages
-                $lang = isset($_GET['lang']) && !empty($_GET['lang']) ? sanitize_text_field($_GET['lang']) : '';
-            if (!empty($lang)) {
-                set_transient('wp_fm_lang', $lang, 60 * 60 * 720);
-                if ($lang != 'en') {
-                    wp_enqueue_script('fm_lang', plugins_url('lib/js/i18n/elfinder.'.$lang.'.js', __FILE__));
+                 wp_enqueue_style('jquery-ui', plugins_url('css/jquery-ui.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_commands', plugins_url('lib/css/commands.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_common', plugins_url('lib/css/common.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_contextmenu', plugins_url('lib/css/contextmenu.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_cwd', plugins_url('lib/css/cwd.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_dialog', plugins_url('lib/css/dialog.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_fonts', plugins_url('lib/css/fonts.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_navbar', plugins_url('lib/css/navbar.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_places', plugins_url('lib/css/places.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_quicklook', plugins_url('lib/css/quicklook.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_statusbar', plugins_url('lib/css/statusbar.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('theme', plugins_url('lib/css/theme.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_toast', plugins_url('lib/css/toast.css', __FILE__), '', $this->ver);
+                 wp_enqueue_style('fm_toolbar', plugins_url('lib/css/toolbar.css', __FILE__), '', $this->ver);
+				 
+                 wp_enqueue_script('jquery');          
+                 
+                 wp_enqueue_script('fm_jquery_js', plugins_url('js/top.js', __FILE__), '', $this->ver);
+                
+                $jquery_ui_js = 'jquery-ui-1.11.4.js';
+                // 5.6 jquery ui issue fix
+                if ( version_compare( $wp_version, '5.6', '>=' ) ) {
+                    $jquery_ui_js = 'jquery-ui-1.12.1.js';
                 }
-            } elseif (false !== ($wp_fm_lang = get_transient('wp_fm_lang'))) {
-                if ($wp_fm_lang != 'en') {
-                    wp_enqueue_script('fm_lang', plugins_url('lib/js/i18n/elfinder.'.$wp_fm_lang.'.js', __FILE__));
-                }
-            }
-            $theme = isset($_GET['theme']) && !empty($_GET['theme']) ? sanitize_text_field($_GET['theme']) : '';
-            // New Theme
-            if (!empty($theme)) {
-                delete_transient('wp_fm_theme');
-                set_transient('wp_fm_theme', $theme, 60 * 60 * 720);
-                if ($theme != 'default') {
-                    wp_enqueue_style('theme-latest', plugins_url('lib/themes/'.$theme.'/css/theme.css', __FILE__));
-                }
-            } elseif (false !== ($wp_fm_theme = get_transient('wp_fm_theme'))) {
-                if ($wp_fm_theme != 'default') {
-                    wp_enqueue_style('theme-latest', plugins_url('lib/themes/'.$wp_fm_theme.'/css/theme.css', __FILE__));
-                }
-            } else {
-            }
-            endif;
-        }
+
+                wp_enqueue_script('fm_jquery_ui', plugins_url('lib/jquery/'.$jquery_ui_js, __FILE__), $this->ver);
+
+                 wp_enqueue_script('fm_elFinder', plugins_url('lib/js/elFinder.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_elFinder_version', plugins_url('lib/js/elFinder.version.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_jquery_elfinder', plugins_url('lib/js/jquery.elfinder.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_elFinder_mimetypes', plugins_url('lib/js/elFinder.mimetypes.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_elFinder_options', plugins_url('lib/js/elFinder.options.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_elFinder_options_netmount', plugins_url('lib/js/elFinder.options.netmount.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_elFinder_history', plugins_url('lib/js/elFinder.history.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_elFinder_command', plugins_url('lib/js/elFinder.command.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_elFinder_resources', plugins_url('lib/js/elFinder.resources.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_dialogelfinder', plugins_url('lib/js/jquery.dialogelfinder.js', __FILE__), '', $this->ver);
+                 
+           
+                    if (!empty($lang)) {
+                    set_transient('wp_fm_lang', $lang, 60 * 60 * 720);
+                    wp_enqueue_script('fm_lang', plugins_url('lib/js/i18n/elfinder.'.$lang.'.js', __FILE__), '', $this->ver);
+                    
+                    } elseif (false !== ($wp_fm_lang = get_transient('wp_fm_lang'))) {
+                            wp_enqueue_script('fm_lang', plugins_url('lib/js/i18n/elfinder.'.$wp_fm_lang.'.js', __FILE__), '', $this->ver);
+                    } else {
+                        wp_enqueue_script('fm_lang', plugins_url('lib/js/i18n/elfinder.en.js', __FILE__), '', $this->ver);  
+                    }
+                 wp_enqueue_script('fm_ui_button', plugins_url('lib/js/ui/button.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_contextmenu', plugins_url('lib/js/ui/contextmenu.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_cwd', plugins_url('lib/js/ui/cwd.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_dialog', plugins_url('lib/js/ui/dialog.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_fullscreenbutton', plugins_url('lib/js/ui/fullscreenbutton.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_navbar', plugins_url('lib/js/ui/navbar.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_navdock', plugins_url('lib/js/ui/navdock.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_overlay', plugins_url('lib/js/ui/overlay.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_panel', plugins_url('lib/js/ui/panel.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_ui_path', plugins_url('lib/js/ui/path.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_ui_searchbutton', plugins_url('lib/js/ui/searchbutton.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_sortbutton', plugins_url('lib/js/ui/sortbutton.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_stat', plugins_url('lib/js/ui/stat.js', __FILE__), '', $this->ver);
+
+
+                 wp_enqueue_script('fm_ui_toast', plugins_url('lib/js/ui/toast.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_toolbar', plugins_url('lib/js/ui/toolbar.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_tree', plugins_url('lib/js/ui/tree.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_uploadButton', plugins_url('lib/js/ui/uploadButton.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_ui_viewbutton', plugins_url('lib/js/ui/viewbutton.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_ui_workzone', plugins_url('lib/js/ui/workzone.js', __FILE__), '', $this->ver);
+            
+             
+
+                 wp_enqueue_script('fm_command_archive', plugins_url('lib/js/commands/archive.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_back', plugins_url('lib/js/commands/back.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_chmod', plugins_url('lib/js/commands/chmod.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_colwidth', plugins_url('lib/js/commands/colwidth.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_copy', plugins_url('lib/js/commands/copy.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_cut', plugins_url('lib/js/commands/cut.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_download', plugins_url('lib/js/commands/download.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_duplicate', plugins_url('lib/js/commands/duplicate.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_edit', plugins_url('lib/js/commands/edit.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_empty', plugins_url('lib/js/commands/empty.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_extract', plugins_url('lib/js/commands/extract.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_forward', plugins_url('lib/js/commands/forward.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_fullscreen', plugins_url('lib/js/commands/fullscreen.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_getfile', plugins_url('lib/js/commands/getfile.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_help', plugins_url('lib/js/commands/help.js', __FILE__), '', $this->ver); 
+                 
+                 wp_enqueue_script('fm_command_hidden', plugins_url('lib/js/commands/hidden.js', __FILE__), '', $this->ver);  
+                 wp_enqueue_script('fm_command_hide', plugins_url('lib/js/commands/hide.js', __FILE__), '', $this->ver);  
+                 wp_enqueue_script('fm_command_home', plugins_url('lib/js/commands/home.js', __FILE__), '', $this->ver);  
+                 wp_enqueue_script('fm_command_info', plugins_url('lib/js/commands/info.js', __FILE__), '', $this->ver);  
+                 wp_enqueue_script('fm_command_mkdir', plugins_url('lib/js/commands/mkdir.js', __FILE__), '', $this->ver);  
+                 wp_enqueue_script('fm_command_mkfile', plugins_url('lib/js/commands/mkfile.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_netmount', plugins_url('lib/js/commands/netmount.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_open', plugins_url('lib/js/commands/open.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_opendir', plugins_url('lib/js/commands/opendir.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_opennew', plugins_url('lib/js/commands/opennew.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_paste', plugins_url('lib/js/commands/paste.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_places', plugins_url('lib/js/commands/places.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_quicklook', plugins_url('lib/js/commands/quicklook.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_quicklook_plugins', plugins_url('lib/js/commands/quicklook.plugins.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_reload', plugins_url('lib/js/commands/reload.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_rename', plugins_url('lib/js/commands/rename.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_resize', plugins_url('lib/js/commands/resize.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_restore', plugins_url('lib/js/commands/restore.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_rm', plugins_url('lib/js/commands/rm.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_search', plugins_url('lib/js/commands/search.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_selectall', plugins_url('lib/js/commands/selectall.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_selectinvert', plugins_url('lib/js/commands/selectinvert.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_selectnone', plugins_url('lib/js/commands/selectnone.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_sort', plugins_url('lib/js/commands/sort.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_command_undo', plugins_url('lib/js/commands/undo.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_up', plugins_url('lib/js/commands/up.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_upload', plugins_url('lib/js/commands/upload.js', __FILE__), '', $this->ver);
+                 wp_enqueue_script('fm_command_view', plugins_url('lib/js/commands/view.js', __FILE__), '', $this->ver);
+
+                 wp_enqueue_script('fm_quicklook_googledocs', plugins_url('lib/js/extras/quicklook.googledocs.js', __FILE__), '', $this->ver);         
+                     
+                 // code mirror
+                wp_enqueue_script('fm-codemirror-js', plugins_url('lib/codemirror/lib/codemirror.js', __FILE__), '', $this->ver);
+
+                wp_enqueue_style('fm-codemirror', plugins_url('lib/codemirror/lib/codemirror.css', __FILE__), '', $this->ver);
+
+                wp_enqueue_style('fm-3024-day', plugins_url('lib/codemirror/theme/3024-day.css', __FILE__), '', $this->ver);
+                // File - Manager UI               
+                wp_register_script( "file_manager_free_shortcode_admin", plugins_url('js/file_manager_free_shortcode_admin.js',  __FILE__ ), array(), rand(0,9999) );
+                 wp_localize_script( 'file_manager_free_shortcode_admin', 'fmfparams', array(
+                     'ajaxurl' => admin_url('admin-ajax.php'),
+                     'nonce' => $fm_nonce,
+                     'lang' => isset($_GET['lang']) ? sanitize_text_field($_GET['lang']) : (($wp_fm_lang !== false) ? $wp_fm_lang : 'en'),
+                     'fm_enable_media_upload' => (isset($opt['fm_enable_media_upload']) && $opt['fm_enable_media_upload'] == '1') ? '1' : '0',
+                     )
+                 );        
+                 wp_enqueue_script( 'file_manager_free_shortcode_admin' );               
+                
+             $theme = isset($_GET['theme']) && !empty($_GET['theme']) ? sanitize_text_field($_GET['theme']) : '';
+             // New Theme
+             if (!empty($theme)) {
+                 delete_transient('wp_fm_theme');
+                 set_transient('wp_fm_theme', $theme, 60 * 60 * 720);
+                 if ($theme != 'default') {
+                     wp_enqueue_style('theme-latest', plugins_url('lib/themes/'.$theme.'/css/theme.css', __FILE__), '', $this->ver);
+                 }
+             } elseif (false !== ($wp_fm_theme = get_transient('wp_fm_theme'))) {
+                 if ($wp_fm_theme != 'default') {
+                     wp_enqueue_style('theme-latest', plugins_url('lib/themes/'.$wp_fm_theme.'/css/theme.css', __FILE__), '', $this->ver);
+                 }
+             } else {
+             }
+             endif;
+             
+         }
 
         /*
         * Admin Links
@@ -779,7 +948,7 @@ if (!class_exists('mk_file_folder_manager')):
                             'uploadOrder' => array('deny', 'allow'),
                             'accessControl' => 'access',
                             'acceptedName' => 'validName',
-                            //'disabled' => array('help', 'preference'),
+                            'disabled' => array('help', 'preference','hide','netmount'),
                             'attributes' => $mk_restrictions,
                         ),
                         $mkTrash,
@@ -997,7 +1166,9 @@ if (!class_exists('mk_file_folder_manager')):
 					$post_id = 0;
 					$desc = "";
 					$file_array = array();     
-					$file_array['name'] = basename($matches[0]);					
+                    $file_array['name'] = basename($matches[0]);
+                    $file_info = pathinfo($file_array['name']);
+					$desc = $file_info['filename'];				
 					// If error storing temporarily, unlink
 					if ( is_wp_error( $tmp ) ) {
 						@unlink($file_array['tmp_name']);
@@ -1011,7 +1182,72 @@ if (!class_exists('mk_file_folder_manager')):
 						return $id;
                     }
             }
-		 }
+         }
+         
+         public function fm_download_backup($request){
+            $params = $request->get_params();
+            if(isset($params["backup_id"]) && !empty(trim($params["backup_id"])) && isset($params["type"]) && !empty(trim($params["type"]))){
+                $id = (int) base64_decode(trim($params["backup_id"]));
+                $type = base64_decode(trim($params["type"]));
+                $fmkey = self::fm_get_key();
+                if(base64_encode(site_url().$fmkey) === $params['key']){
+                    global $wpdb;
+                    $upload_dir = wp_upload_dir();
+                    $backup = $wpdb->get_var("select backup_name from ".$wpdb->prefix."wpfm_backup where id=".$id);
+                    $backup_dirname = $upload_dir['basedir'].'/wp-file-manager-pro/fm_backup/';
+                    $backup_baseurl = $upload_dir['baseurl'].'/wp-file-manager-pro/fm_backup/';
+                    if($type == "db"){
+                        $bkpName = $backup.'-db.sql.gz';
+                    }else{
+                        $bkpName = $backup.'-'.$type.'.zip';
+                    }
+                    $file = $backup_dirname.$bkpName;
+                    if(file_exists($file)){
+                        //Set Headers:
+                        $memory_limit = intval( ini_get( 'memory_limit' ) );
+                        if ( ! extension_loaded( 'suhosin' ) && $memory_limit < 512 ) {
+                            @ini_set( 'memory_limit', '1024M' );
+                        }
+                        @ini_set( 'max_execution_time', 6000 );
+                        @ini_set( 'max_input_vars', 10000 );
+                        $etag = md5_file($file);
+                        header('Pragma: public');
+                        header('Expires: 0');
+                        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT');
+                        header("Etag: ".$etag);
+                        header('Content-Type: application/force-download');
+                        header('Content-Disposition: inline; filename="'.$bkpName.'"');
+                        header('Content-Transfer-Encoding: binary');
+                        header('Content-Length: ' . filesize($file));
+                        header('Connection: close');
+                        if(ob_get_level()){
+                            ob_end_clean();
+                        }
+                        readfile($file);
+                        exit();
+                    }
+                    else{
+                        $messg = __( 'File doesn\'t exist to download.', 'wp-file-manager-pro');
+                        return new WP_Error( 'fm_file_exist', $messg, array( 'status' => 404 ) );
+                    }
+                }
+                else {
+                    $messg = __( 'Invalid Security Code.', 'wp-file-manager-pro');
+                    return new WP_Error( 'fm_security_issue', $messg, array( 'status' => 404 ) );
+                }
+            }
+            if(!isset($params["backup_id"])){
+                $messg1 = __( 'Missing backup id.', 'wp-file-manager-pro');
+                return new WP_Error( 'fm_missing_params', $messg1, array( 'status' => 401 ) );
+            } elseif(!isset($params["type"])){
+                $messg2 = __( 'Missing parameter type.', 'wp-file-manager-pro');
+                return new WP_Error( 'fm_missing_params', $messg2, array( 'status' => 401 ) );
+            } else {
+                $messg4 = __( 'Missing required parameters.', 'wp-file-manager-pro');
+                return new WP_Error( 'fm_missing_params', $messg4, array( 'status' => 401 ) );
+            }
+        }
 
     }
     $filemanager = new mk_file_folder_manager();

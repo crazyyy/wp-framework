@@ -1,4 +1,4 @@
-jQuery(window).load(function (e) {
+jQuery(window).on('load',function (e) {
 	jQuery('.wfmrs').delay(10000).slideDown('slow');
 	jQuery('.lokhal_verify_email_popup').slideDown();
 	jQuery('.lokhal_verify_email_popup_overlay').show();

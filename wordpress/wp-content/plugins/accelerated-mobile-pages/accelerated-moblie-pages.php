@@ -3,7 +3,7 @@
 Plugin Name: Accelerated Mobile Pages
 Plugin URI: https://wordpress.org/plugins/accelerated-mobile-pages/
 Description: AMP for WP - Accelerated Mobile Pages for WordPress
-Version: 1.0.20
+Version: 1.0.77.12
 Author: Ahmed Kaludi, Mohammed Kaludi
 Author URI: https://ampforwp.com/
 Donate link: https://www.paypal.me/Kaludi/25
@@ -20,7 +20,7 @@ define('AMPFORWP_PLUGIN_DIR_URI', plugin_dir_url(__FILE__));
 define('AMPFORWP_DISQUS_URL',plugin_dir_url(__FILE__).'includes/disqus.html');
 define('AMPFORWP_IMAGE_DIR',plugin_dir_url(__FILE__).'images');
 define('AMPFORWP_MAIN_PLUGIN_DIR', plugin_dir_path( __DIR__ ) );
-define('AMPFORWP_VERSION','1.0.20');
+define('AMPFORWP_VERSION','1.0.77.12');
 define('AMPFORWP_EXTENSION_DIR',plugin_dir_path(__FILE__).'includes/options/extensions');
 if(!defined('AMPFROWP_HOST_NAME')){
 	$urlinfo = get_bloginfo('url');
@@ -246,6 +246,17 @@ function ampforwp_add_custom_rewrite_rules() {
 			      'index.php?amp&post_type='.$post_type,
 			      'top'
 			    );
+			    if ( class_exists( 'Lsvr_Permalink_Settings_Knowledge_Base' ) ) {
+				    $lsvr_value = get_post_type_archive_link( 'lsvr_kba' );
+				    $lsvr_value = explode("/",$lsvr_value);
+				    $lsvr_value = array_filter($lsvr_value);
+				    $lsvr_value = end($lsvr_value);
+				    add_rewrite_rule(
+				      $lsvr_value.'\/amp/?$',
+				      'index.php?amp&post_type='.$post_type,
+				      'top'
+				    );
+				}
 			    add_rewrite_rule(
 			      $post_type.'\/(.+?)\/amp\/?$',
 			      'index.php?amp&'.$post_type.'=$matches[1]',
@@ -290,6 +301,18 @@ function ampforwp_add_custom_rewrite_rules() {
 			}
 		}
 	}
+	if (ampforwp_get_setting('ampforwp-pagination-link-type')) {
+		add_rewrite_rule(
+	      '(.+?)-[0-9]+\/([0-9]{1,})\/amp$',
+	      'index.php?amp=1&name=$matches[1]&paged=$matches[2]',
+	      'top'
+	    );
+		add_rewrite_rule(
+	      '(.+?)\/([0-9]{1,})\/amp$',
+	      'index.php?amp=1&name=$matches[1]&paged=$matches[2]',
+	      'top'
+	    ); 
+    }
 }
 add_action( 'init', 'ampforwp_add_custom_rewrite_rules', 25 );
 // Delete category_base transient when it is updated #2924
@@ -635,9 +658,8 @@ add_action('init','ampforwp_plugin_init', 9);
 * customized output widget
 * to be used be used in before or after Loop
 */
-ampforwp_require_file( AMPFORWP_PLUGIN_DIR.'/templates/category-widget.php' );
 ampforwp_require_file( AMPFORWP_PLUGIN_DIR.'/templates/woo-widget.php' );
-
+ampforwp_require_file( AMPFORWP_PLUGIN_DIR.'/templates/amp-code-widget.php' );
 
 /*
 * 	Including core AMP plugin files and removing any other things if necessary
@@ -671,6 +693,12 @@ function ampforwp_bundle_core_amp_files(){
 		remove_action( 'plugins_loaded', 'jnews_amp' );
 		remove_filter( 'amp_content_sanitizers', 'jnews_amp_content_sanitize');
 	}
+	if (function_exists('wpda_hb_pro__plugins_loaded')) {
+		$url_path = trim(parse_url(add_query_arg(array()), PHP_URL_PATH),'/' );
+    	if( function_exists('ampforwp_is_amp_inURL') && ampforwp_is_amp_inURL($url_path)) {
+			remove_action('plugins_loaded', 'wpda_hb_pro__plugins_loaded');
+		}
+	}
 } 
 add_action('plugins_loaded','ampforwp_bundle_core_amp_files', 8);
 
@@ -690,7 +718,7 @@ if ( ! function_exists('ampforwp_init') ) {
 
 		do_action( 'amp_init' );
 
-		load_plugin_textdomain( 'accelerated-mobile-pages', false, trailingslashit(AMPFORWP_PLUGIN_DIR) . 'languages' );
+		load_plugin_textdomain( 'accelerated-mobile-pages', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 		add_rewrite_endpoint( AMP_QUERY_VAR, EP_PERMALINK );
 		add_post_type_support( 'post', AMP_QUERY_VAR );
@@ -732,7 +760,6 @@ function amp_update_db_check() {
 
 
 // Admin notice for AMP WordPress Theme
-add_action('admin_notices', 'ampforwp_ampwptheme_notice');
 function ampforwp_ampwptheme_notice() {
  	$theme = '';
 	$theme = wp_get_theme(); // gets the current theme
@@ -811,6 +838,7 @@ if(is_admin()){
 	add_action( "redux/options/redux_builder_amp/saved", 'ampforwp_update_data_when_saved', 10, 2 );
 	add_action( "redux/options/redux_builder_amp/reset", 'ampforwp_update_data_when_reset' );
 	add_action( "redux/options/redux_builder_amp/section/reset", 'ampforwp_update_data_when_reset' );
+	add_action( "redux/options/redux_builder_amp/saved", 'ampforwp_save_local_font', 10, 2 );
 }
 
 /**
@@ -847,6 +875,9 @@ if ( ! function_exists('ampforwp_customizer_is_enabled') ) {
 // Get Settings from Redux #2177 & #2911
 function ampforwp_get_setting( $opt_name='', $child_option='', $sanitize_method='' ){
 	global $redux_builder_amp;
+	if (is_plugin_active('amp/amp.php')) {
+		unset($redux_builder_amp['ampforwp-seo-selection']);
+	}
 	if(empty($redux_builder_amp)){
 		$redux_builder_amp =  (array) get_option('redux_builder_amp');
 	}
@@ -905,6 +936,7 @@ if(!function_exists('ampforwp_get_setup_info')){
             $ux_content = ampforwp_get_setting('opt-media','url');
 		}else if($ux_option=="ampforwp-ux-analytics-section"){
             $ga_field       = ampforwp_get_setting('ga-feild');
+            $ga_field_gtm     = ampforwp_get_setting('amp-gtm-id');
             $amp_fb_pixel_id = ampforwp_get_setting('amp-fb-pixel-id');
             $sa_feild = ampforwp_get_setting('sa-feild');
             $pa_feild = ampforwp_get_setting('pa-feild');
@@ -920,10 +952,13 @@ if(!function_exists('ampforwp_get_setup_info')){
             $alexa_d = ampforwp_get_setting('ampforwp-alexa-domain');
             $afs_c = ampforwp_get_setting('ampforwp-afs-siteid');
             $clicky_side_id = ampforwp_get_setting('clicky-site-id');
-           	
+           	$cr_config_url = ampforwp_get_setting('ampforwp-callrail-config-url');
+           	$cr_number = ampforwp_get_setting('ampforwp-callrail-number');
+           	$cr_analytics_url = ampforwp_get_setting('ampforwp-callrail-analytics-url');
             $analytics_txt = "";
             $analytic_arr = array();
             if(ampforwp_get_setting('ampforwp-ga-switch') && $ga_field!="UA-XXXXX-Y" && $ga_field!=""){$analytic_arr[]="Google Analytics";}
+            if(ampforwp_get_setting('amp-use-gtm-option') && $ga_field_gtm!="" && $ga_field_gtm!=""){$analytic_arr[]="Google Tag Manager";}
             if(ampforwp_get_setting('amp-fb-pixel') && $amp_fb_pixel_id!=""){$analytic_arr[]="Facebook Pixel";}
            if(ampforwp_get_setting('ampforwp-Segment-switch') && $sa_feild!="SEGMENT-WRITE-KEY" && $sa_feild!=""){$analytic_arr[]="Segment Analytics";}
             if(ampforwp_get_setting('ampforwp-Piwik-switch') && $pa_feild!="#" && $pa_feild!=""){ $analytic_arr[]="Matomo Analytics";}
@@ -937,6 +972,7 @@ if(!function_exists('ampforwp_get_setup_info')){
             if(ampforwp_get_setting('ampforwp-Alexa-switch') && $alexa_c!="" && $alexa_d!=""){$analytic_arr[]="Alexa Metrics";}
             if(ampforwp_get_setting('ampforwp-afs-analytics-switch') && $afs_c!=""){$analytic_arr[]="AFS Analytics";}
             if(ampforwp_get_setting('amp-clicky-switch') && $clicky_side_id!=""){$analytic_arr[]="Clicky Analytics";}
+            if(ampforwp_get_setting('ampforwp-callrail-switch') && $cr_config_url!="" && $cr_number!="" && $cr_analytics_url!=""){$analytic_arr[]="Call Rail Analytics";}
             $ux_content = implode(", ", $analytic_arr);
         }else if($ux_option=="ampforwp-ux-privacy-section"){
 			$ux_cookie_enable = ampforwp_get_setting('amp-enable-notifications');
@@ -1047,7 +1083,9 @@ function ampforwp_get_all_post_types(){
     if( ampforwp_get_setting('ampforwp-archive-support') && ampforwp_get_setting('ampforwp-archive-support-cat') ){
     	$post_types['category'] = 'category';
     }
-
+    if( ampforwp_get_setting('ampforwp-archive-support') && ampforwp_get_setting('ampforwp-archive-support-tag')){
+    	$post_types['tag'] = 'post_tag';
+    }
     $custom_taxonomies = ampforwp_get_setting('ampforwp-custom-taxonomies');
 	if(ampforwp_get_setting('ampforwp-archive-support') && !empty($custom_taxonomies) ){
 		foreach($custom_taxonomies as $taxonomy){
@@ -1065,7 +1103,9 @@ function ampforwp_get_all_post_types(){
         }
         $post_types = array_merge($post_types, $selected_post_types);
     }
-
+    if(class_exists('WPUltimateRecipe') && function_exists('ampforwp_is_home') && ampforwp_is_home()){
+	    	$post_types['recipe'] = 'recipe';
+	}
     return $post_types;
 }
 
@@ -1083,7 +1123,7 @@ if( !function_exists( 'is_search_enabled_in_ampforwp' ) ) {
 // Fallback for Redux class #2377
 add_action('after_setup_theme', 'ampforwp_redux_class' );
 function ampforwp_redux_class(){	
-	if ( !class_exists('Redux') && class_exists('ReduxCore\\ReduxFramework\\Redux') && !class_exists('QuadMenu') ) {
+	if ( !class_exists('Redux') && class_exists('ReduxCore\\ReduxFramework\\Redux') && !class_exists('QuadMenu') && !function_exists('volcanno_plugins_loaded')) {
 		class Redux extends ReduxCore\ReduxFramework\Redux
 		{
 			# Do nothing, it will inherit all the methods
@@ -1112,6 +1152,18 @@ function ampforwp_add_plugin_meta_links($meta_fields, $file) {
 // AMPforWP Global Data variable
 $ampforwp_data = array();
 
+if(!function_exists('sanitize_hex_color')){
+	function sanitize_hex_color( $color ) {
+	    if ( '' === $color ) {
+	        return '';
+	    }
+
+	    // 3 or 6 hex digits, or the empty string.
+	    if ( preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
+	        return $color;
+	    }
+	}
+}
 // color sanitizer
 function ampforwp_sanitize_color( $color ) {
     if ( empty( $color ) || is_array( $color ) )
@@ -1152,7 +1204,6 @@ if ( false == get_transient('ampforwp-pm-disabler') ) {
 	}
 
 }
-add_action('admin_notices', 'ampforwp_plugins_manager_notice');
 function ampforwp_plugins_manager_notice(){
 	if ( true == get_transient('ampforwp-pm-disabler') ) { ?>
 		<div id="ampforwp_pluginmanager" class="notice-warning settings-error notice is-dismissible"><p><b><?php echo esc_html__('Attention: ','accelerated-mobile-pages');?></b><?php echo esc_html__('AMPforWP Plugin Manager has been deactivated and requires an upgrade. Please','accelerated-mobile-pages');?> <b><a target="_blank" href=<?php echo esc_url('https://ampforwp.com/plugins-manager/?update=plugins-manager#utm_source=plugin-page&utm_medium=plugin-manager-update&utm_campaign=update-notice');?>><?php echo esc_html__('Download &amp; install the latest version','accelerated-mobile-pages');?></a></b><?php echo esc_html__(' for free.','accelerated-mobile-pages');?>
@@ -1171,7 +1222,7 @@ function ampforwp_delete_plugins_manager_transient($plugin){
 add_action('pre_amp_render_post', 'ampforwp_initialise_classes');
 if ( ! function_exists('ampforwp_initialise_classes') ) {
 	function ampforwp_initialise_classes(){
-		if ( true == ampforwp_get_setting('ampforwp-infinite-scroll') ) {
+		if ( true == ampforwp_get_setting('ampforwp-infinite-scroll') || true == ampforwp_get_setting('ampforwp-wcp-infinite-scroll') ) {
 			require AMPFORWP_PLUGIN_DIR .'/classes/class-ampforwp-infinite-scroll.php';
 		}
 	}
@@ -1256,6 +1307,9 @@ function ampforwp_vendor_is_amp_endpoint(){
 	global $pagenow;
 	if ( ! function_exists('amp_activate') && ! function_exists('is_amp_endpoint' ) && 'plugins.php' !== $pagenow ) {
 		function is_amp_endpoint(){
+			if(true == ampforwp_get_setting('ampforwp-amp-takeover')){
+				return true;
+			}
 			return false !== get_query_var( AMP_QUERY_VAR, false );
 		}
 	}
@@ -1321,7 +1375,6 @@ function ampforwp_redux_options_remover($sections){
 }
 
 // AMP with AMPforWP notice #2287
-add_action( 'admin_notices', 'ampforwp_automattic_activation' );
 function ampforwp_automattic_activation(){
 
 	if ( function_exists('amp_activate') && get_transient( 'ampforwp_automattic_activation_notice' ) == false) { 
@@ -1341,67 +1394,52 @@ function ampforwp_automattic_notice_delete(){
 	exit();
 }
 
-add_action('admin_init','ampforwp_replace_redux_comments');
-function ampforwp_replace_redux_comments(){
-
+add_action('current_screen','ampforwp_replace_redux_comments');
+function ampforwp_replace_redux_comments($screen){
 	if(current_user_can( 'manage_options' )){
-	$replaced_redux_comments = get_transient('replaced_redux_comments_updated');
-
-		if(!$replaced_redux_comments){
-		    $redux_val   = get_option('redux_builder_amp',array());  
-
-		    if ( empty($redux_val) || ! is_array($redux_val)) {
-				return;
-		    }
-
-		    $search = '/******* Paste your Custom CSS in this Editor *******/';
-		    $rep = str_replace("$search", "", $redux_val);
-
-			//FOR GA
-			$pattern 	= '/\s*/m';
-			$replace 	= '';
-
-			$ga_val   	= $redux_val['ampforwp-ga-field-advance'];
-			$rep 		= preg_replace( $pattern, $replace,$ga_val);
-			$search 	= '/***EnteryourAdvancedAnalyticscodehere*/';
-			$rep 		= str_replace("$search", "", $rep);
-			$search 	= '//ReplacethiswithyourTrackingID';
-			$rep 		= str_replace("$search", "", $rep);
-			$jsonstr 	= "";
-
-			for($i=0;$i<strlen($rep);$i++){
-				$resp = $rep[$i];
-				$jsonstr.=$resp;
-				if($resp=='{' || $resp=='}'){
-					$jsonstr.=PHP_EOL;
-				}
-			}
-		    $redux_val['ampforwp-ga-field-advance'] = $jsonstr;
-		    // GA CLOSE
-		      
-			//FOR GTM
-			$gml_val   	= $redux_val['ampforwp-gtm-field-advance'];
-			$rep 		= preg_replace( $pattern, $replace,$gml_val);
-			$search 	= '/***EnteryourAdvancedAnalyticscodehere*/';
-			$rep 		= str_replace("$search", "", $rep);
-	      	$search 	= '/*ReplacethiswithyourTrackingID*/';
-	      	$rep 		= str_replace("$search", "", $rep);
-
-			$jsonstr 	= "";
-			for($i=0;$i<strlen($rep);$i++){
-				$resp = $rep[$i];
-				$jsonstr.=$resp;
-				if($resp=='{' || $resp=='}'){
-					$jsonstr.=PHP_EOL;
-				}
-			}
-			//GTM CLOSE
-
-			$redux_val['ampforwp-gtm-field-advance'] = $jsonstr;
-			update_option('redux_builder_amp',$redux_val);
-			set_transient('replaced_redux_comments_updated',1);
-	    }
- 	}
+		if ( 'toplevel_page_amp_options' == $screen->base ) {
+			$replaced_redux_comments = get_transient('replaced_redux_comments_updated');
+			if(!$replaced_redux_comments){
+			    $redux_val   = get_option('redux_builder_amp',array());  
+			    if ( empty($redux_val) || ! is_array($redux_val)) {
+					return;
+			    }
+			    $ga_val   	= $redux_val['ampforwp-ga-field-advance'];
+			    if(preg_match('/\/\*(.*?)\*\//s', $ga_val)){
+			    	$ga_val = preg_replace('/\/\*(.*?)\*\//s', '', $ga_val);
+			    	$redux_val['ampforwp-ga-field-advance'] = $ga_val;
+			    	update_option('redux_builder_amp',$redux_val);
+			    }
+			    if(preg_match('/\/\/Replace this with your Tracking ID/', $ga_val)){
+			    	$ga_val = preg_replace('/\/\/Replace this with your Tracking ID/', '', $ga_val);
+			    	$redux_val['ampforwp-ga-field-advance'] = $ga_val;
+			    	update_option('redux_builder_amp',$redux_val);
+			    }
+			    // GA CLOSE
+			      
+				//FOR GTM
+			    $gml_val   	= $redux_val['ampforwp-gtm-field-advance'];
+			    if(preg_match('/\/\*(.*?)\*\//s', $gml_val)){
+			    	$gml_val = preg_replace('/\/\*(.*?)\*\//s', '', $gml_val);
+			    	$redux_val['ampforwp-gtm-field-advance'] = $gml_val;
+			    	update_option('redux_builder_amp',$redux_val);
+			    }
+			    if(preg_match('/\/\/Replace this with your Tracking ID/', $gml_val)){
+			    	$gml_val = preg_replace('/\/\/Replace this with your Tracking ID/', '', $gml_val);
+			    	$redux_val['ampforwp-gtm-field-advance'] = $gml_val;
+			    	update_option('redux_builder_amp',$redux_val);
+			    }
+			    // GLOBAL CSS EDITOR
+			    $css_editor   	= $redux_val['css_editor'];
+			    if(preg_match('/\/\*(.*?)\*\//s', $css_editor)){
+			    	$css_editor = preg_replace('/\/\*(.*?)\*\//s', '', $css_editor);
+			    	$redux_val['css_editor'] = $css_editor;
+			    	update_option('redux_builder_amp',$redux_val);
+			    }
+			    set_transient('replaced_redux_comments_updated',1);
+		 	}
+		}
+	}
 }
 if(!function_exists('ampforwp_wp_plugin_action_link')){
 	function ampforwp_wp_plugin_action_link( $plugin, $action = 'activate' ) {
@@ -1479,4 +1517,55 @@ if(!function_exists('ampforwp_delete_transient_on_update')){
 			}
 		}
 	}
+}
+if(!function_exists('ampforwp_save_local_font')){
+	function ampforwp_save_local_font(){
+		if(ampforwp_get_setting('ampforwp-local-font-switch') && ampforwp_get_setting('ampforwp-local-font-upload','url')!=""){
+			$upload_dir = wp_upload_dir(); 
+			$user_dirname = $upload_dir['basedir'] . '/' . 'ampforwp-local-fonts';
+			if(!file_exists($user_dirname)) wp_mkdir_p($user_dirname);
+			$font_url 	= ampforwp_get_setting('ampforwp-local-font-upload','url');
+			$abs_path 	= explode("wp-content", $font_url);
+			if(isset($abs_path[1])){
+		        $permfile   = ABSPATH.'wp-content'.$abs_path[1];
+		        $files = explode('/', $abs_path[1]);
+		        $file_name = end($files);
+		        $copy_to   = esc_attr($user_dirname).'/'.esc_attr($file_name);
+		        if(!file_exists($copy_to)){
+		        	$files = glob( $user_dirname . '/*' );
+		            foreach ( $files as $file ) {
+		                unlink( $file );
+		            }
+	            	copy($permfile, $copy_to);
+		        	unzip_file($permfile, $user_dirname );
+		        	$files = glob( $user_dirname . '/*' );
+		            foreach ( $files as $file ) {
+		            	if(is_dir($file)){
+		            		rmdir($file);
+		            	}
+			            $fonts = explode("/", $file);
+		               	$font_names = end($fonts);
+						$ext = end(explode(".", $font_names));
+						if($ext!='ttf' && $ext!='eot' && $ext!='svg'){
+							unlink( $file );
+						}
+		            }
+		        }
+		    }
+		}else if(ampforwp_get_setting('ampforwp-local-font-switch') && ampforwp_get_setting('ampforwp-local-font-upload','url')==""){
+			$upload_dir   = wp_upload_dir();
+	        $user_dirname = esc_attr($upload_dir['basedir']) . '/' . 'ampforwp-local-fonts';
+	        if ( file_exists( $user_dirname ) ) {
+	            $files = glob( $user_dirname . '/*' );
+	            foreach ( $files as $file ) {
+	                 unlink( $file );
+	            }
+	        }
+		}
+	}
+}
+
+add_action("amp_init", "ampforwp_amp_optimizer");
+function ampforwp_amp_optimizer(){
+	require_once AMPFORWP_PLUGIN_DIR."/includes/amp-optimizer-addon.php";
 }

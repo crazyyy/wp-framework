@@ -320,11 +320,6 @@ if ($updraftplus_checkout_embed) {
 				<p><?php _e('Keep your database fast and efficient', 'updraftplus'); ?></p>
 				<a aria-label="WP Optimize. <?php echo __('Keep your database fast and efficient', 'updraftplus').'. '.__('Find out more', 'updraftplus'); ?>" target="_blank" href="https://getwpo.com/?utm_source=updraftplus&utm_medium=cross-sell&utm_campaign=addons-tab"><?php _e('Find out more', 'updraftplus'); ?></a>
 			</div>
-			<div class="udp-box">
-				<h3><img src="<?php echo UPDRAFTPLUS_URL; ?>/images/other-plugins/meta-slider.png" alt="MetaSlider"></h3>
-				<p><?php _e('Create powerful, seo-optimized slideshows in minutes', 'updraftplus'); ?></p>
-				<a aria-label="MetaSlider <?php echo __('Create powerful, seo-optimized slideshows in minutes', 'updraftplus').'. '.__('Find out more', 'updraftplus'); ?>" target="_blank" href="https://www.metaslider.com/?utm_source=updraftplus&utm_medium=cross-sell&utm_campaign=addons-tab"><?php _e('Find out more', 'updraftplus'); ?></a>
-			</div>
 		</div>
 	</section>	
 </div>

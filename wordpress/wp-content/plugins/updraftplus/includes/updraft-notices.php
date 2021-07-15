@@ -40,7 +40,7 @@ abstract class Updraft_Notices {
 		return true;
 	}
 	
-	protected function url_start($html_allowed = false, $url, $https = false, $website_home = null) {
+	protected function url_start($html_allowed, $url, $https = false, $website_home = null) {
 		$proto = ($https) ? 'https' : 'http';
 		if (strpos($url, $website_home) !== false) {
 			return $html_allowed ? "<a href=".apply_filters(str_replace('.', '_', $website_home).'_link', $proto.'://'.$url).">" : "";
@@ -137,7 +137,7 @@ abstract class Updraft_Notices {
 		return $available_notices[0];
 	}
 
-	protected function skip_seasonal_notices($notice_data) {
+	protected function skip_seasonal_notices($notice_data) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		return false;
 	}
 

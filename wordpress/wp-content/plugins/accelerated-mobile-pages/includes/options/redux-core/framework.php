@@ -1994,7 +1994,8 @@
                     'repeater',
                     'color_scheme',
                     'social_profiles',
-                    'css_layout'
+                    'css_layout',
+                    'multitext_repeater'
                 );
 
                 if ( $this->args['default_show'] == true && isset ( $field['default'] ) && isset ( $this->options[ $field['id'] ] ) && $this->options[ $field['id'] ] != $field['default'] && ! in_array( $field['type'], $filter_arr ) ) {
@@ -2249,7 +2250,7 @@
                                             150,
                                             150
                                         ) );
-                                        $this->options[ $field['id'] ]['thumbnail'] = $data[0];
+                                        $this->options[ $field['id'] ]['thumbnail'] = isset($data[0]) ? $data[0] : '' ;
                                         $doUpdate                                   = true;
                                     }
                                 }
@@ -2845,7 +2846,7 @@
 
                     $values = $values[ $redux->args['opt_name'] ];
 
-                    if ( function_exists( 'get_magic_quotes_gpc' ) && get_magic_quotes_gpc() ) {
+                    if ( version_compare( PHP_VERSION, '7.4', '<' ) && function_exists( 'get_magic_quotes_gpc' ) && get_magic_quotes_gpc() ) {
                         $values = array_map( 'stripslashes_deep', $values );
                     }
 
@@ -3227,11 +3228,21 @@
                         $enabledOptions = array_map('strtolower', $enabledOptions);
                         if(!in_array($section['id'], $enabledOptions)){
                             $addClass = 'otherSectionFields';
-                            $style="style='display:none;'";
+                            $style="style=display:none;";
                         }
                     }
 
-                    $string .= '<li id="' . esc_attr( $k . $suffix ) . '_section_group_li" class="redux-group-tab-link-li '.$addClass.'' . esc_attr( $hide_section ) . esc_attr( $section['class'] ) . esc_attr( $subsectionsClass ) . ' ' . strtolower( wp_kses_post( $section['id'] )) . '" '.$style.'>';
+                    $amp_opt = get_option("ampforwp_option_panel_view_type");
+                    $opt_visible = "";
+                    $opt_visible_class = "amp-full-view-options";
+                    if(($amp_opt==1 || $amp_opt=="") && !get_theme_support('amp-template-mode')){
+                        $opt_visible = 'style=display:none';
+                    }
+                    if($section['title']=="Extensions" || $section['title']=="Setup"){
+                         $opt_visible = '';
+                         $opt_visible_class = "";
+                    }
+                    $string .= '<li '.esc_html($opt_visible).' id="' . esc_attr( $k . $suffix ) . '_section_group_li" class="'.esc_attr($opt_visible_class).' redux-group-tab-link-li '.esc_attr($addClass).'' . esc_attr( $hide_section ) . esc_attr( $section['class'] ) . esc_attr( $subsectionsClass ) . ' ' . strtolower( wp_kses_post( $section['id'] )) . '" '.esc_html($style).'>';
                     $string .= '<a href="javascript:void(0);" id="' . esc_attr( $k . $suffix ) . '_section_group_li_a" class="redux-group-tab-link-a" data-key="' . esc_attr( $k ) . '" data-rel="' . esc_attr( $k . $suffix ) . '">' . $extra_icon . $icon . '<span class="group_title">' . wp_kses_post( $section['title'] ) . '</span></a>';
 
                     $nextK = $k;
@@ -3307,16 +3318,6 @@
              */
             public function generate_panel() {
                 require_once 'core/panel.php';
-                if(is_admin()){
-                     echo '<div class="a-f-wp-help"><div class="a-f-wp-help-message">
-                        <a target="_blank" href="http://ampforwp.com/support/?utm_source=options-panel&utm_medium=contact_link_btn&utm_campaign=AMP%20Plugin"> <img src="'.AMPFORWP_IMAGE_DIR . '/amp-img-conv.png'.'" /></a>
-
-                        </div>
-                        <div class="a-f-wp-help-container">
-                          <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
-<script type="text/javascript">window.Beacon("init", "15cc2e40-aa70-4571-8e62-09906c77d535")</script>
-                        </div></div>';
-                }
                 $panel = new reduxCorePanel ( $this );
                 $panel->init();
                 $this->set_transients();

@@ -16,7 +16,7 @@ class WP_Optimize_Install_Or_Update_Notice {
 	 *
 	 * @var string
 	 */
-	private $version = '1.0';
+	private $version = '1.1';
 
 	public function __construct() {
 		$this->options = WP_Optimize()->get_options();
@@ -62,7 +62,7 @@ class WP_Optimize_Install_Or_Update_Notice {
 	public function output_notice() {
 		WP_Optimize()->include_template('notices/install-or-update-notice.php', false, array(
 			'is_new_install' => $this->is_new_install(),
-			'is_premium' => WP_Optimize()->is_premium(),
+			'is_premium' => WP_Optimize::is_premium(),
 			'is_updraftplus_installed' => $this->is_updraftplus_installed()
 		));
 	}

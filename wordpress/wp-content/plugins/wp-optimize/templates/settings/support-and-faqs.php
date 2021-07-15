@@ -2,6 +2,7 @@
 
 <h3><?php _e('Support and feedback', 'wp-optimize'); ?></h3>
 <div class="wpo-fieldgroup">
+	<?php WP_Optimize()->include_template('settings/system-status.php'); ?>
 	<ul>
 		<li><?php WP_Optimize()->wp_optimize_url('https://getwpo.com/faqs/', __("Read our FAQ here", 'wp-optimize')); ?></li>
 		<li><a href="https://wordpress.org/support/plugin/wp-optimize/"><?php _e('Support is available here.', 'wp-optimize'); ?></a></li>

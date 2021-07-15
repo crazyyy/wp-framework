@@ -48,7 +48,8 @@ class WPSEO_Premium_Upsell_Admin_Block {
 	 * @return void
 	 */
 	public function render() {
-		$url = WPSEO_Shortlinker::get( 'https://yoa.st/17h' );
+		$page = filter_input( INPUT_GET, 'page' );
+		$url  = add_query_arg( [ 'screen' => $page ], WPSEO_Shortlinker::get( 'https://yoa.st/17h' ) );
 
 		$arguments = [
 			'<strong>' . esc_html__( 'Multiple keyphrases', 'wordpress-seo' ) . '</strong>: ' . esc_html__( 'Increase your SEO reach', 'wordpress-seo' ),
@@ -64,7 +65,7 @@ class WPSEO_Premium_Upsell_Admin_Block {
 		$class = $this->get_html_class();
 
 		/* translators: %s expands to Yoast SEO Premium */
-		$button_text  = esc_html( sprintf( __( 'Get %s', 'wordpress-seo' ), 'Yoast SEO Premium' ) );
+		$button_text  = sprintf( esc_html__( 'Get %s', 'wordpress-seo' ), 'Yoast SEO Premium' );
 		$button_text .= '<span class="screen-reader-text">' . esc_html__( '(Opens in a new browser tab)', 'wordpress-seo' ) . '</span>' .
 			'<span aria-hidden="true" class="yoast-button-upsell__caret"></span>';
 
@@ -85,9 +86,11 @@ class WPSEO_Premium_Upsell_Admin_Block {
 				'Yoast SEO Premium'
 			) .
 		'</h2>';
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in $this->get_argument_html() method.
 		echo '<ul class="' . esc_attr( $class . '--motivation' ) . '">' . $arguments_html . '</ul>';
 
-		// @phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in $upgrade_button and $button_text above.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in $upgrade_button and $button_text above.
 		echo '<p>' . $upgrade_button . '</p>';
 		echo '</div>';
 

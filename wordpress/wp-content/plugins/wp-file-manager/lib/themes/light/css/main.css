@@ -12,7 +12,6 @@
 /* Override styles in child elements of elFinder div */
 /* Use for consistently setting text sizes and overriding general jQuery UI styles */
 .elfinder * {
-  /*color: #000;*/
   font-family: 'Open Sans', sans-serif;
 }
 

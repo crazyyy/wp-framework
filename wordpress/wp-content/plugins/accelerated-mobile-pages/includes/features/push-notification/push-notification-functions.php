@@ -11,7 +11,10 @@ if( ! function_exists( ' ampforwp_onesignal_notifications ' ) ){
 	if ( (!checkAMPforPageBuilderStatus(get_the_ID()) &&  is_single() ) || true == ampforwp_get_setting('ampforwp-web-push-onesignal-header') || true == ampforwp_get_setting('ampforwp-web-push-onesignal-sticky') ){
 		$checker = true;
 	}
-	if(isset($redux_builder_amp['ampforwp-web-push-onesignal']) && $redux_builder_amp['ampforwp-web-push-onesignal'] && $checker ){
+	elseif ( !checkAMPforPageBuilderStatus(ampforwp_get_the_ID()) &&  (is_page() || ampforwp_is_front_page()) && true == ampforwp_get_setting('ampforwp-one-signal-page')){
+		$checker = true;
+	}
+	if('1' == ampforwp_get_setting('ampforwp-web-push') && $checker ){
 		$onesignal_domain 		= '';
 		$onesignal_domain_sw 	= '';
 		$onesignal_subdomain 	= '';
@@ -99,8 +102,11 @@ if(function_exists('amp_activate')){
 
 if( ! function_exists('ampforwp_onesignal_notifications_widget') ){
 	function ampforwp_onesignal_notifications_widget(){
-	global $redux_builder_amp;
-	if(is_single() && ampforwp_get_setting('ampforwp-web-push-onesignal') && !checkAMPforPageBuilderStatus(get_the_ID()) ){ ?>
+	 $checker = false;
+	 if ( is_single() || ( (is_page() || ampforwp_is_front_page()) && true == ampforwp_get_setting('ampforwp-one-signal-page'))){
+	 	$checker = true;
+	}
+	if('1' == ampforwp_get_setting('ampforwp-web-push') && !checkAMPforPageBuilderStatus(ampforwp_get_the_ID()) && $checker ){?>
 		<!-- A subscription widget -->
 	<div class="amp-web-push-container">
 		<amp-web-push-widget visibility="unsubscribed" layout="fixed" width="245" height="45">
@@ -112,13 +118,13 @@ if( ! function_exists('ampforwp_onesignal_notifications_widget') ){
 		             layout="fixed"
 		             src="data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic3Vic2NyaWJlLWljb24iIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMS44NCAxOS44ODdIMS4yMnMtLjk0Ny0uMDk0LS45NDctLjk5NWMwLS45LjgwNi0uOTQ4LjgwNi0uOTQ4czMuMTctMS41MTcgMy4xNy0yLjYwOGMwLTEuMDktLjUyLTEuODUtLjUyLTYuMzA1czIuODUtNy44NyA2LjI2LTcuODdjMCAwIC40NzMtMS4xMzQgMS44NS0xLjEzNCAxLjMyNSAwIDEuOCAxLjEzNyAxLjggMS4xMzcgMy40MTMgMCA2LjI2IDMuNDE4IDYuMjYgNy44NyAwIDQuNDYtLjQ3NyA1LjIyLS40NzcgNi4zMSAwIDEuMDkgMy4xNzYgMi42MDcgMy4xNzYgMi42MDdzLjgxLjA0Ni44MS45NDdjMCAuODUzLS45OTYuOTk1LS45OTYuOTk1SDExLjg0ek04IDIwLjk3N2g3LjExcy0uNDkgMi45ODctMy41MyAyLjk4N1M4IDIwLjk3OCA4IDIwLjk3OHoiIGZpbGw9IiNGRkYiLz48L3N2Zz4=">
 		    </amp-img>
-		    <?php echo ampforwp_translation( $redux_builder_amp['ampforwp-onesignal-translator-subscribe'], 'Subscribe to updates' ); ?>
+		    <?php echo ampforwp_translation( ampforwp_get_setting('ampforwp-onesignal-translator-subscribe'), 'Subscribe to updates' ); ?>
 		  </button>
 		</amp-web-push-widget>
 		<!-- An unsubscription widget -->
 		<amp-web-push-widget visibility="subscribed" layout="fixed" width="230" height="45">
 		   <button class="unsubscribe" on="tap:amp-web-push.unsubscribe">
-		   	<?php echo ampforwp_translation( $redux_builder_amp['ampforwp-onesignal-translator-unsubscribe'], 'Unsubscribe from updates' ); ?>
+		   	<?php echo ampforwp_translation( ampforwp_get_setting('ampforwp-onesignal-translator-unsubscribe'), 'Unsubscribe from updates' ); ?>
 		   </button>
 		</amp-web-push-widget>
 	</div>
@@ -134,7 +140,7 @@ if(!function_exists('ampforwp_onesignal_notifications_script')){
 	if ( (!checkAMPforPageBuilderStatus(get_the_ID()) && is_single() ) || true == ampforwp_get_setting('ampforwp-web-push-onesignal-header') || true == ampforwp_get_setting('ampforwp-web-push-onesignal-sticky') ){
 		$checker = true;
 	}
-	if(ampforwp_get_setting('ampforwp-web-push-onesignal') && $checker ){
+	if('1' == ampforwp_get_setting('ampforwp-web-push') && $checker ){
 		if ( empty( $data['amp_component_scripts']['amp-web-push'] ) ) {
 				$data['amp_component_scripts']['amp-web-push'] = 'https://cdn.ampproject.org/v0/amp-web-push-0.1.js';
 			}
@@ -146,8 +152,11 @@ if(!function_exists('ampforwp_onesignal_notifications_script')){
 add_action('amp_post_template_css' , 'ampforwp_onesignal_notifications_styling' , 99);
 if(!function_exists('ampforwp_onesignal_notifications_styling')){
 	function ampforwp_onesignal_notifications_styling(){
-	global $redux_builder_amp;
-	if(ampforwp_get_setting('ampforwp-web-push-onesignal') && !checkAMPforPageBuilderStatus(get_the_ID()) && is_single() ){ ?>
+	$checker = false;
+	if ( is_single() || ( (is_page() || ampforwp_is_front_page()) && true == ampforwp_get_setting('ampforwp-one-signal-page'))){
+		$checker = true;
+	}
+	if('1' == ampforwp_get_setting('ampforwp-web-push') && !checkAMPforPageBuilderStatus(ampforwp_get_the_ID()) && $checker ){?>
     amp-web-push-widget button.subscribe { display: inline-flex; align-items: center; border-radius: 2px; border: 0; box-sizing: border-box; margin: 0; padding: 10px 15px; cursor: pointer; outline: none; font-size: 15px; font-weight: 400; background: #4A90E2; color: white; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5); -webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
     amp-web-push-widget button.subscribe .subscribe-icon {margin-right: 10px;}
     amp-web-push-widget button.subscribe:active {transform: scale(0.99);}
@@ -208,3 +217,60 @@ function ampforwp_onesignal_sticky(){ ?>
 		</amp-web-push-widget>
 	</div>
 <?php }
+add_action( 'ampforwp_body_beginning' , 'ampforwp_truepush_notifications');
+function ampforwp_truepush_notifications(){
+	$checker = false;
+	if (!checkAMPforPageBuilderStatus(get_the_ID()) && is_single() ){
+			$checker = true;
+	}
+	if('4' == ampforwp_get_setting('ampforwp-web-push') && $checker ){
+		$app_id	= ampforwp_get_setting('ampforwp-truepush-app-id');
+		$public_key = ampforwp_get_setting('ampforwp-truepush-public-key');
+		$domain_path = AMPFORWP_PLUGIN_DIR_URI.'includes/truepush-integration/';
+		$helper_iframe_url = $domain_path .'amp-web-push-helper-frame.html?appId=' . $app_id;
+		$permission_dialog_url = $domain_path .'amp-web-push-permission-dialog.html?publicKey=' . $public_key;
+		$service_worker_url = $domain_path .'sw.js';?>
+	 <amp-web-push
+	    id="amp-web-push"
+	    layout="nodisplay"
+	    helper-iframe-url="<?php echo esc_url_raw($helper_iframe_url); ?>"
+	    permission-dialog-url="<?php echo esc_url_raw($permission_dialog_url); ?>"
+	    service-worker-url="<?php echo esc_url($service_worker_url); ?>">
+	 </amp-web-push>
+	<?php }
+}
+add_action('amp_post_template_css' , 'ampforwp_truepush_styling');
+function ampforwp_truepush_styling(){?>
+	amp-web-push-widget button.amp-subscribe {
+	  display: inline-flex;
+	  align-items: center;
+	  border-radius: 5px;
+	  border: 0;
+	  box-sizing: border-box;
+	  margin: 0;
+	  padding: 10px 15px;
+	  cursor: pointer;
+	  outline: none;
+	  font-size: 15px;
+	  font-weight: 500;
+	  background: #4A90E2;
+	  margin-top: 7px;
+	  color: white;
+	  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5);
+	  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	  }
+<?php }
+function ampforwp_truepush_markup(){
+	if (!checkAMPforPageBuilderStatus(get_the_ID()) && is_single() && '4' == ampforwp_get_setting('ampforwp-web-push')) {?>
+		<amp-web-push-widget visibility="unsubscribed" layout="fixed" width="250" height="45">
+		<button on="tap:amp-web-push.subscribe" class="amp-subscribe"><?php echo ampforwp_translation( ampforwp_get_setting('ampforwp-truepush-translator-subscribe'), 'Subscribe to updates' ); ?></button>
+		</amp-web-push-widget>
+	<?php }
+}
+if(ampforwp_get_setting('ampforwp-web-push-truepush-below-content')){
+	add_action('ampforwp_after_post_content', 'ampforwp_truepush_markup');
+}
+
+if(ampforwp_get_setting('ampforwp-web-push-truepush-above-content')){
+	add_action('ampforwp_before_post_content', 'ampforwp_truepush_markup');
+}

@@ -1,18 +1,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PB SEO Friendly Images\n"
-"POT-Creation-Date: 2018-01-21 12:54+0100\n"
-"PO-Revision-Date: 2018-01-21 12:55+0100\n"
-"Last-Translator: Pascal Bajorat <pascal@pascal-bajorat.com>\n"
-"Language-Team: Pascal Bajorat <pascal@pascal-bajorat.com>\n"
-"Language: de\n"
+"POT-Creation-Date: 2019-02-24 17:02+0100\n"
+"PO-Revision-Date: 2019-02-24 17:02+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.12\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-WPHeader: pb-seo-friendly-images.php\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: pb-seo-friendly-images-pro.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
@@ -20,53 +21,35 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: inc/settings.php:35
-#, php-format
-msgid ""
-"<strong>Hey %s</strong>, we have updated <a href=\"%s\">PB SEO Friendly "
-"Images</a>. Visit the <a href=\"%s\">plugin settings page</a> to get deeper "
-"insights about the new features. This message will disappear automatically "
-"after you've visited the plugin settings."
-msgstr ""
-"<strong>Hey %s</strong>, wir haben <a href=\"%s\">PB SEO Friendly Images</a> "
-"aktualisiert. Besuche die <a href=\"%s\">Plugin-Einstellungen</a> und schau "
-"dir die neuen Funktionen an. Diese Nachricht verschwindet automatisch, "
-"nachdem du die Plugin-Einstellung geöffnet hast."
-
-#: inc/settings.php:40
-msgid "Close"
-msgstr "schließen"
-
-#: inc/settings.php:58
+#: inc/pbsfi_admin_interface.php:68
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: inc/settings.php:70
+#: inc/pbsfi_admin_interface.php:80
 msgid "Get Pro Version"
 msgstr "Pro-Version kaufen"
 
-#: inc/settings.php:93
+#: inc/pbsfi_admin_interface.php:106
 msgid "Image \"alt\" and \"title\" Settings"
-msgstr "Bilder \"alt\" und \"title\" Einstellungen"
+msgstr "Bild „alt“ und „Titel“ Einstellungen"
 
-#: inc/settings.php:97
+#: inc/pbsfi_admin_interface.php:110
 msgid ""
 "PB SEO Friendly Images automatically adds \"alt\" and \"title\" attributes "
 "to all images and post thumbnails in your posts. The default options are a "
 "good starting point for the optimization and basically fine for most "
 "websites."
 msgstr ""
-"PB SEO Friendly Images verwaltet automatisch die \"alt\" und \"title\" "
-"Attribute deiner Post-Thumbnails sowie aller Bilder innerhalb deiner Seiten "
-"und Artikel. Die Standard-Einstellungen sind eine gute erste Grundlage und "
-"werden für die meisten Webseiten gut funktionieren, ohne das Änderungen "
-"notwendig sind."
+"PB SEO Friendly Images verwaltet automatisch die „alt“ und „title“ Attribute "
+"Ihrer Post-Thumbnails sowie aller Bilder innerhalb Ihrer Seiten und Artikel. "
+"Die Standard-Einstellungen sind eine gute erste Grundlage und werden für die "
+"meisten Webseiten gut funktionieren, ohne das Änderungen notwendig sind."
 
-#: inc/settings.php:98
+#: inc/pbsfi_admin_interface.php:111
 msgid "Override feature"
 msgstr "Override-Funktion"
 
-#: inc/settings.php:98
+#: inc/pbsfi_admin_interface.php:111
 msgid ""
 "Enable the override means that a possible sync and also hand picked \"alt"
 "\" / \"title\" attributes will be overwritten with the selected scheme. If "
@@ -75,12 +58,12 @@ msgid ""
 "\"title\" will do it's best for you."
 msgstr ""
 "Wenn du die Override (überschreiben) Funktion verwendest, werden alle "
-"manuellen \"alt\" und/oder \"title\" Attribute durch das gewählte Schema "
-"überschrieben. Wenn du bereits manuelle Attribute für deine Bilder gesetzt "
-"hast, solltest du einfach die Sync Funktion ihren Job machen lassen und "
-"keine Überschreibung erzwingen."
+"manuellen „alt“ und/oder „title“ Attribute durch das gewählte Schema "
+"überschrieben. Wenn du bereits manuelle Attribute für Bilder gesetzt hast, "
+"solltest du einfach die Sync Funktion ihren Job machen lassen und keine "
+"Überschreibung erzwingen."
 
-#: inc/settings.php:101
+#: inc/pbsfi_admin_interface.php:114
 #, php-format
 msgid ""
 "PB SEO Friendly Images Pro is a WordPress Plugin by <a href=\"%s\" target="
@@ -90,11 +73,11 @@ msgstr ""
 "target=\"_blank\">Pascal Bajorat</a>, entwickelt und gepflegt mit %s in "
 "Berlin."
 
-#: inc/settings.php:107
+#: inc/pbsfi_admin_interface.php:120
 msgid "How it works"
-msgstr "Wie funktioniert das Plugin"
+msgstr "Anleitung"
 
-#: inc/settings.php:107
+#: inc/pbsfi_admin_interface.php:120
 msgid ""
 "You only need to configure the plugin with the following settings. The "
 "plugin will optimize your HTML code on-the-fly. This means, that you see the "
@@ -111,67 +94,68 @@ msgstr ""
 "kannst also risikolos die Einstellungen anpassen, Änderungen werden immer "
 "direkt in der HTML Ausgabe berücksichtigt."
 
-#: inc/settings.php:114
+#: inc/pbsfi_admin_interface.php:127
 #, php-format
 msgid ""
 "Please consider upgrading to <a href=\"%s\" target=\"_blank\">PB SEO "
 "Friendly Images Pro</a> if you want to use more features and support the "
 "development of this plugin."
 msgstr ""
-"Bitte ziehe doch ein Upgrade auf <a href=\"%s\" target=\"_blank\">PB SEO "
-"Friendly Images Pro</a> in Erwägung, wenn du weitere Funktionen verwenden "
-"möchtest und die Entwicklung des Plugins unterstützen willst."
+"Bitte ziehe ein Upgrade auf <a href=\"%s\" target=\"_blank\">PB SEO Friendly "
+"Images Pro</a> in Erwägung, wenn du weitere Funktionen verwenden möchten und "
+"die Entwicklung des Plugins unterstützen möchtest."
 
-#: inc/settings.php:117 inc/settings.php:236 inc/settings.php:337
+#: inc/pbsfi_admin_interface.php:131 inc/pbsfi_admin_interface.php:249
+#: inc/pbsfi_admin_interface.php:304 inc/pbsfi_admin_interface.php:405
 msgid "Upgrade now"
 msgstr "Jetzt upgraden"
 
-#: inc/settings.php:124
+#: inc/pbsfi_admin_interface.php:138
 msgid "optimize images"
 msgstr "Bilder optimieren"
 
-#: inc/settings.php:129
+#: inc/pbsfi_admin_interface.php:143
 msgid "post thumbnails and images in post content"
 msgstr "Thumbnails und Bilder innerhalb der Posts"
 
-#: inc/settings.php:129 inc/settings.php:144 inc/settings.php:360
+#: inc/pbsfi_admin_interface.php:143 inc/pbsfi_admin_interface.php:158
+#: inc/pbsfi_admin_interface.php:428
 msgid "recommended"
 msgstr "empfohlen"
 
-#: inc/settings.php:130
+#: inc/pbsfi_admin_interface.php:144
 msgid "only post thumbnails"
 msgstr "Nur Postthumbnails"
 
-#: inc/settings.php:131
+#: inc/pbsfi_admin_interface.php:145
 msgid "only images in post content"
 msgstr "Nur Bilder im Post-Inhalt"
 
-#: inc/settings.php:133
+#: inc/pbsfi_admin_interface.php:147
 msgid "which images should be optimized"
-msgstr "Welche Bilder sollen optimiert werden."
+msgstr "Welche Bilder sollen optimiert werden"
 
-#: inc/settings.php:139 inc/settings.php:355
+#: inc/pbsfi_admin_interface.php:153 inc/pbsfi_admin_interface.php:423
 msgid "sync method"
-msgstr "Synchronisierungsmethode"
+msgstr "Synchronisationsmethode"
 
-#: inc/settings.php:144 inc/settings.php:360
+#: inc/pbsfi_admin_interface.php:158 inc/pbsfi_admin_interface.php:428
 msgid "alt <=> title"
 msgstr "alt <=> title"
 
-#: inc/settings.php:145 inc/settings.php:361
+#: inc/pbsfi_admin_interface.php:159 inc/pbsfi_admin_interface.php:429
 msgid "alt => title"
 msgstr "alt => title"
 
-#: inc/settings.php:146 inc/settings.php:362
+#: inc/pbsfi_admin_interface.php:160 inc/pbsfi_admin_interface.php:430
 msgid "alt <= title"
 msgstr "alt <= title"
 
-#: inc/settings.php:148 inc/settings.php:364
+#: inc/pbsfi_admin_interface.php:162 inc/pbsfi_admin_interface.php:432
 msgid "select sync method for \"alt\" and \"title\" attribute."
-msgstr ""
-"Wähle die Synchronisierungsmethode für \"alt\" und \"title\" Attribute."
+msgstr "Wähle die Synchronisierungsmethode für „alt“ und „title“ Attribute."
 
-#: inc/settings.php:149 inc/settings.php:365
+#: inc/pbsfi_admin_interface.php:163 inc/pbsfi_admin_interface.php:433
 msgid ""
 "<code>alt <=> title</code> - if one attribute is set use it also for the "
 "other one"
@@ -179,105 +163,169 @@ msgstr ""
 "<code>alt <=> title</code> - Wenn ein Attribut gesetzt ist, wird dieses auch "
 "auf das andere übertragen"
 
-#: inc/settings.php:150 inc/settings.php:366
+#: inc/pbsfi_admin_interface.php:164 inc/pbsfi_admin_interface.php:434
 msgid ""
 "<code>alt => title</code> - if \"alt\" is set use it for the title attribute"
 msgstr ""
-"<code>alt => title</code> - Wenn \"alt\" gesetzt ist, wird der Wert "
-"ebenfalls für \"title\" gesetzt"
+"<code>alt => title</code> - wenn „alt“ gesetzt ist, verwende diesen für das "
+"Title-Attribut"
 
-#: inc/settings.php:151 inc/settings.php:367
+#: inc/pbsfi_admin_interface.php:165 inc/pbsfi_admin_interface.php:435
 msgid ""
 "<code>alt <= title</code> - if \"title\" is set use it for the alt attribute"
 msgstr ""
-"<code>alt <= title</code> - Wenn \"title\" gesetzt ist, wird der Wert "
-"ebenfalls für \"alt\" gesetzt"
+"<code>alt <= title</code> - wenn „title“ gesetzt ist, verwende diesen für "
+"das Alt-Attribut"
 
-#: inc/settings.php:157 inc/settings.php:374
+#: inc/pbsfi_admin_interface.php:171 inc/pbsfi_admin_interface.php:442
 msgid "override \"alt\""
-msgstr "\"alt\" überschreiben"
+msgstr "Alt-Override"
 
-#: inc/settings.php:161 inc/settings.php:378
+#: inc/pbsfi_admin_interface.php:175 inc/pbsfi_admin_interface.php:446
 msgid "override existing image alt attributes"
-msgstr "Überschreibt bestehende \"alt\" Attribute"
+msgstr "Überschreibt bestehende „alt“ Attribute"
 
-#: inc/settings.php:167 inc/settings.php:385
+#: inc/pbsfi_admin_interface.php:181 inc/pbsfi_admin_interface.php:453
 msgid "override \"title\""
-msgstr "\"title\" überschreiben"
+msgstr "Titel-Override"
 
-#: inc/settings.php:171 inc/settings.php:389
+#: inc/pbsfi_admin_interface.php:185 inc/pbsfi_admin_interface.php:457
 msgid "override existing image title attributes"
-msgstr "Überschreibt bestehende \"title\" Attribute"
+msgstr "Überschreibt bestehende „title“ Attribute"
 
-#: inc/settings.php:175
+#: inc/pbsfi_admin_interface.php:189
 msgid "possible variables:"
 msgstr "Mögliche Variablen:"
 
-#: inc/settings.php:176
+#: inc/pbsfi_admin_interface.php:190
 msgid "replaces post title"
-msgstr "Wird ersetzt durch Artikeltitel"
+msgstr "wird ersetzt durch Artikeltitel"
 
-#: inc/settings.php:177
+#: inc/pbsfi_admin_interface.php:191
 msgid "replaces post excerpt"
-msgstr "Wird ersetzt durch den Artikelauszug"
+msgstr "wird ersetzt durch den Artikelauszug"
 
-#: inc/settings.php:178
+#: inc/pbsfi_admin_interface.php:192
 msgid "replaces image filename (without extension)"
 msgstr "Wird ersetzt mit dem Dateinamen (ohne Dateiendung)"
 
-#: inc/settings.php:179
+#: inc/pbsfi_admin_interface.php:193
 msgid "replaces post category"
-msgstr "Wird ersetzt durch die Artikelkategorien"
+msgstr "wird ersetzt durch die Artikelkategorien"
 
-#: inc/settings.php:180
+#: inc/pbsfi_admin_interface.php:194
 msgid "replaces post tags"
-msgstr "Wird ersetzt durch die Artikel-Tags"
+msgstr "wird ersetzt durch die Artikel-Tags"
 
-#: inc/settings.php:181
+#: inc/pbsfi_admin_interface.php:195
 msgid "replaces attachment title (could be empty if not set)"
 msgstr ""
 "Wird ersetzt durch den Medien-Titel (könnte leer sein, falls nicht gesetzt)"
 
-#: inc/settings.php:182
+#: inc/pbsfi_admin_interface.php:196
 msgid "replaces attachment alt-text (could be empty if not set)"
 msgstr ""
 "Wird ersetzt durch den Medien-Alternativtext (könnte leer sein, falls nicht "
 "gesetzt)"
 
-#: inc/settings.php:183
+#: inc/pbsfi_admin_interface.php:197
 msgid "replaces attachment caption (could be empty if not set)"
 msgstr ""
 "Wird ersetzt durch die Medien-Beschriftung (könnte leer sein, falls nicht "
 "gesetzt)"
 
-#: inc/settings.php:184
+#: inc/pbsfi_admin_interface.php:198
 msgid "replaces attachment description (could be empty if not set)"
 msgstr ""
 "Wird ersetzt durch die Medien-Beschreibung (könnte leer sein, falls nicht "
 "gesetzt)"
 
-#: inc/settings.php:188 inc/settings.php:396
+#: inc/pbsfi_admin_interface.php:202 inc/pbsfi_admin_interface.php:464
 msgid "alt scheme"
 msgstr "Schema alt-Attribut"
 
-#: inc/settings.php:192 inc/settings.php:202 inc/settings.php:400
-#: inc/settings.php:411 inc/settings.php:496
+#: inc/pbsfi_admin_interface.php:206 inc/pbsfi_admin_interface.php:216
+#: inc/pbsfi_admin_interface.php:468 inc/pbsfi_admin_interface.php:479
+#: inc/pbsfi_admin_interface.php:564
 msgid "default"
 msgstr "Standard"
 
-#: inc/settings.php:198 inc/settings.php:407
+#: inc/pbsfi_admin_interface.php:212 inc/pbsfi_admin_interface.php:475
 msgid "title scheme"
 msgstr "Schema title-Attribut"
 
-#: inc/settings.php:221
+#: inc/pbsfi_admin_interface.php:235
 msgid "Pro Features"
-msgstr "Pro Features"
+msgstr "Pro-Funktionen"
 
-#: inc/settings.php:223
+#: inc/pbsfi_admin_interface.php:237
+msgid "Caching"
+msgstr "Zwischenspeicher"
+
+#: inc/pbsfi_admin_interface.php:239
+msgid ""
+"Caching can highly increase the performance of your website with PB SEO "
+"Friendly Images. If you already use a caching plugin you do not need to "
+"enable this function."
+msgstr ""
+"Das Caching kann die Leistung deiner Website mit PB SEO Friendly Images "
+"stark steigern. Wenn du bereits ein Caching-Plugin verwendest, musst du "
+"diese Funktion nicht aktivieren."
+
+#: inc/pbsfi_admin_interface.php:240
+#, php-format
+msgid ""
+"We recommend to use <a href=\"%1$s\" target=\"_blank\">WP Rocket</a> as one "
+"of the best Performance and Caching Solutions for WordPress. If you are "
+"interested in a professional and individual Performance-Optimization <a href="
+"\"%2$s\" target=\"_blank\">get a free quote here</a>."
+msgstr ""
+"Wir empfehlen, <a href=\"%1$s\" target=\"_ blank\">WP Rocket</a> als eine "
+"der besten Performance- und Caching-Lösungen für WordPress zu verwenden. "
+"Wenn du an einer professionellen und individuellen Performance-Optimierung "
+"interessiert bist, <a href=\"%2$s\" target=\"_blank\">erhältst du hier ein "
+"kostenloses Angebot</a>."
+
+#: inc/pbsfi_admin_interface.php:240 templates/options_page.php:58
+msgid ""
+"https://www.pascal-bajorat.com/en/lp/wordpress-performance-optimization/"
+msgstr "https://www.pascal-bajorat.com/lp/wordpress-performance-optimierung/"
+
+#: inc/pbsfi_admin_interface.php:246 inc/pbsfi_admin_interface.php:301
+#: inc/pbsfi_admin_interface.php:402
+#, php-format
+msgid ""
+"Please consider upgrading to <a href=\"%s\" target=\"_blank\">PB SEO "
+"Friendly Images Pro</a> if you want to use this feature."
+msgstr ""
+"Bitte führe ein Upgrade auf <a href=\"%s\" target=\"_blank\">PB SEO Friendly "
+"Images Pro</a> durch, um diese Funktion verwenden zu können."
+
+#: inc/pbsfi_admin_interface.php:256
+msgid "enable content caching"
+msgstr "Content-Caching aktivieren"
+
+#: inc/pbsfi_admin_interface.php:260
+msgid ""
+"enable content caching and boost up your site speed with PB SEO Friendly "
+"Images"
+msgstr ""
+"Mit PB SEO Friendly Images Content Caching kannst du die Geschwindigkeit "
+"deiner Website erhöhen"
+
+#: inc/pbsfi_admin_interface.php:267
+msgid "TTL"
+msgstr "TTL"
+
+#: inc/pbsfi_admin_interface.php:271
+msgid "TTL in seconds: 86400 = 24h; 3600 = 1h; 0 = never expire;"
+msgstr "TTL in Sekunden: 86400 = 24h; 3600 = 1h; 0 = läuft nie ab;"
+
+#: inc/pbsfi_admin_interface.php:291
 msgid "Lazy Load settings"
 msgstr "Lazy Load Einstellungen"
 
-#: inc/settings.php:225
+#: inc/pbsfi_admin_interface.php:293
 msgid ""
 "This function is very useful and it boosts performance by delaying loading "
 "of images in long web pages, because images outside of viewport (visible "
@@ -288,7 +336,7 @@ msgstr ""
 "wenn diese in den Viewport scrollen, nicht vorher. Damit wird die initiale "
 "Datenlast beim Laden stark reduziert."
 
-#: inc/settings.php:226
+#: inc/pbsfi_admin_interface.php:294
 msgid ""
 "The lazy load is powered by unveil.js, one of the fastest and thinnest lazy "
 "loader in the web. The implementation is highly seo compatible with a no js "
@@ -298,52 +346,43 @@ msgstr ""
 "Lazy Loader im Web. Die Umsetzung ist SEO kompatibel aufgebaut und verfügt "
 "über einen JS Fallback."
 
-#: inc/settings.php:227
+#: inc/pbsfi_admin_interface.php:295
 msgid ""
 "If enabled the lazy load will be added automatically to images in your post "
 "or page content and also to post thumbnails."
 msgstr ""
-"Wenn der Lazy Load aktiviert ist, wird die Funktion automatisch in deinen "
+"Wenn der Lazy Load aktiviert ist, wird die Funktion automatisch in Ihren "
 "Beiträgen, Seite und Artikelbildern aktiviert."
 
-#: inc/settings.php:233 inc/settings.php:334
-#, php-format
-msgid ""
-"Please consider upgrading to <a href=\"%s\" target=\"_blank\">PB SEO "
-"Friendly Images Pro</a> if you want to use this feature."
-msgstr ""
-"Bitte führe ein Upgrade auf <a href=\"%s\" target=\"_blank\">PB SEO Friendly "
-"Images Pro</a> durch, um diese Funktion verwenden zu können."
-
-#: inc/settings.php:243
+#: inc/pbsfi_admin_interface.php:311
 msgid "enable lazy load"
 msgstr "Lazy Load aktivieren"
 
-#: inc/settings.php:247
+#: inc/pbsfi_admin_interface.php:315
 msgid "enable lazy load and boost up your site speed"
-msgstr "Aktiviere Lazy Load und steigere die Performance deiner Webseite"
+msgstr "Aktiviere den Lazy Load und steiger die Performance deiner Webseite"
 
-#: inc/settings.php:254
+#: inc/pbsfi_admin_interface.php:322
 msgid "enable lazy load for acf"
 msgstr "Lazy Load für ACF"
 
-#: inc/settings.php:258
+#: inc/pbsfi_admin_interface.php:326
 msgid "enable lazy load for AdvancedCustomFields"
 msgstr "Lazy Load für AdvancedCustomFields aktivieren"
 
-#: inc/settings.php:265
+#: inc/pbsfi_admin_interface.php:333
 msgid "lazy load default styles"
 msgstr "Lazy Load Standard-Styles laden"
 
-#: inc/settings.php:269
+#: inc/pbsfi_admin_interface.php:337
 msgid "enable lazy load default styles"
-msgstr "Lazy Load Standard-Styles laden"
+msgstr "Aktiviere Lazy Load Standard-Styles"
 
-#: inc/settings.php:276
+#: inc/pbsfi_admin_interface.php:344
 msgid "threshold"
 msgstr "Grenzwert für Lazy Load"
 
-#: inc/settings.php:280
+#: inc/pbsfi_admin_interface.php:348
 msgid ""
 "By default, images are only loaded when the user scrolls to them and they "
 "became visible on the screen (default value for this field <code>0</code>). "
@@ -352,32 +391,32 @@ msgid ""
 msgstr ""
 "Standardmäßig werden die Bilder nur dann geladen, wenn der Besucher zu den "
 "Bildern scrollt und diese in den sichtbaren Bereich rutschen (Standardwert "
-"für dieses Feld <code>0</code>). Wenn du die Bilder früher  laden möchtest, "
-"sagen wir 200px vor dem Viewport, dann müssen <code>200</code> als Feldwert "
-"gesetzt werden."
+"für dieses Feld <code>0</code>). Wenn du die Bilder früher laden möchtest, "
+"sagen wir z.B. 200px vor dem Viewport, dann müssen <code>200</code> als "
+"Feldwert gesetzt werden."
 
-#: inc/settings.php:300
+#: inc/pbsfi_admin_interface.php:368
 msgid "Theme-Integration (only for developers relevant)"
 msgstr "Theme-Integration (nur für Entwickler relevant)"
 
-#: inc/settings.php:302
+#: inc/pbsfi_admin_interface.php:370
 msgid ""
 "Want to add lazy load to images in your theme? You only need to do some "
 "small modifications. Add class \"lazy\" and modify the \"src\" like this:"
 msgstr ""
 "Möchtest du den Lazy Load auch für Bilder in deinem Theme verwenden? Du "
 "musst lediglich ein paar kleinere Modifikationen durchführen. Füge die "
-"Klasse \"pb-seo-lazy\" hinzu und erweitere das \"src\" Attribut wie folgt:"
+"Klasse „pb-seo-lazy“ hinzu und erweitere das „src“ Attribut wie folgt:"
 
-#: inc/settings.php:306
+#: inc/pbsfi_admin_interface.php:374
 msgid "REAL SRC HERE"
-msgstr "Echter SRC Pfad"
+msgstr "ECHTER SRC HIER"
 
-#: inc/settings.php:326
+#: inc/pbsfi_admin_interface.php:394
 msgid "WooCommerce settings"
 msgstr "WooCommerce Einstellungen"
 
-#: inc/settings.php:328
+#: inc/pbsfi_admin_interface.php:396
 msgid ""
 "This settings are specially for images inside your WooCommerce Shop. In most "
 "cases you need to activate the override to use your custom settings."
@@ -386,24 +425,24 @@ msgstr ""
 "Shops. In dein meisten Fällen muss der Override aktiviert werden, damit "
 "diese korrekt funktionieren."
 
-#: inc/settings.php:344
+#: inc/pbsfi_admin_interface.php:412
 msgid "WooCommerce"
 msgstr "WooCommerce"
 
-#: inc/settings.php:348
+#: inc/pbsfi_admin_interface.php:416
 msgid "Use the product name as alt and title for WooCommerce product images"
 msgstr ""
-"Verwende den Produktnamen als alt und title für WooCommerce Produktbilder."
+"Verwende den Produktnamen als alt und title für WooCommerce Produktbilder"
 
-#: inc/settings.php:431
+#: inc/pbsfi_admin_interface.php:499
 msgid "Additional features"
-msgstr "Zusatzfunktionen"
+msgstr "Weitere Funktionen"
 
-#: inc/settings.php:437
+#: inc/pbsfi_admin_interface.php:505
 msgid "set title for links"
 msgstr "Title für Links setzen"
 
-#: inc/settings.php:441
+#: inc/pbsfi_admin_interface.php:509
 msgid ""
 "Use the power of PB SEO Friendly Images also for seo friendly links. This "
 "will set the title depending on the link text and only if there is no "
@@ -413,11 +452,11 @@ msgstr ""
 "Links. Das Tool wird nicht vergebene Linktitel automatisch auf Basis der "
 "Linktexte oder enthaltener Bilder setzen"
 
-#: inc/settings.php:448
+#: inc/pbsfi_admin_interface.php:516
 msgid "disable srcset"
 msgstr "srcset ausschalten"
 
-#: inc/settings.php:452
+#: inc/pbsfi_admin_interface.php:520
 msgid ""
 "disable srcset attribute and responsive images in WordPress if you don't "
 "need them"
@@ -425,11 +464,11 @@ msgstr ""
 "deaktiviere das srcset Attribut und Responsive Bilder in Wordpress, wenn du "
 "diese nicht benötigst"
 
-#: inc/settings.php:472
+#: inc/pbsfi_admin_interface.php:540
 msgid "Encoding and Parser"
 msgstr "Encoding und Parser"
 
-#: inc/settings.php:474
+#: inc/pbsfi_admin_interface.php:542
 msgid ""
 "Here you can configure the HTML-Parser of the plugin. You <u>only</u> need "
 "to change this settings if you have <u>problems with your encoding</u> after "
@@ -439,11 +478,11 @@ msgstr ""
 "Einstellungen <u>nur dann ändern</u>, falls du <u>Probleme mit dem "
 "Encoding / Umlauten</u> nach Aktivierung des Plugins hast."
 
-#: inc/settings.php:481
+#: inc/pbsfi_admin_interface.php:549
 msgid "encoding"
 msgstr "Encoding"
 
-#: inc/settings.php:485
+#: inc/pbsfi_admin_interface.php:553
 msgid ""
 "leave blank to use WordPress default encoding or type in something like "
 "\"utf-8\""
@@ -451,70 +490,132 @@ msgstr ""
 "Lass dieses Feld leer um das WordPress Standard-Encoding zu verwenden oder "
 "gib etwas ein wie z.B. „utf-8“"
 
-#: inc/settings.php:491
+#: inc/pbsfi_admin_interface.php:559
 msgid "encoding mode"
 msgstr "Encoding-Modus"
 
-#: inc/settings.php:496
+#: inc/pbsfi_admin_interface.php:564
 msgid "HTML-ENTITIES"
 msgstr "HTML-ENTITIES"
 
-#: inc/settings.php:497
+#: inc/pbsfi_admin_interface.php:565
 msgid "disable convert encoding"
 msgstr "Konvertierung abschalten"
 
 #. Plugin Name of the plugin/theme
-#: inc/settings.php:507
+#: inc/pbsfi_admin_interface.php:578 pbseofriendlyimages.php:71
 msgid "PB SEO Friendly Images"
 msgstr "PB SEO Friendly Images"
 
-#: inc/settings.php:508
+#: inc/pbsfi_admin_interface.php:579
 msgid "SEO Friendly Images"
-msgstr "SEO Friendly Images"
+msgstr "PB SEO Friendly Images"
 
-#: inc/settings.php:537
+#: pbseofriendlyimages.php:197
+msgid "Clear Cache"
+msgstr "Cache leeren"
+
+#: pbseofriendlyimages.php:305
+#, php-format
+msgid "Can not find: %s"
+msgstr "Nicht gefunden: %s"
+
+#: plugin-update-checker/Puc/v4p5/Plugin/Ui.php:54
+msgid "View details"
+msgstr "Details anzeigen"
+
+#: plugin-update-checker/Puc/v4p5/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr "Mehr Informationen über %s"
+
+#: plugin-update-checker/Puc/v4p5/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr "Auf Aktualisierungen prüfen"
+
+#: plugin-update-checker/Puc/v4p5/Plugin/Ui.php:213
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr "Das %s Plugin ist aktuell."
+
+#: plugin-update-checker/Puc/v4p5/Plugin/Ui.php:215
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr "Eine neue Version des Plugins %s ist verfügbar."
+
+#: plugin-update-checker/Puc/v4p5/Plugin/Ui.php:217
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr "Konnte nicht prüfen, ob Updates für das Plugin %s verfügbar sind."
+
+#: plugin-update-checker/Puc/v4p5/Plugin/Ui.php:223
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr "Unbekannter Status für Aktualisierungscheck „%s“"
+
+#: plugin-update-checker/Puc/v4p5/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr "Es steht kein Änderungsprotokoll zur Verfügung."
+
+#: templates/options_page.php:11
+#, php-format
+msgid ""
+"<strong>Cache cleared!</strong> %d elements are removed from transient cache."
+msgstr ""
+"<strong>Cache geleert!</strong> %d Elemente wurden aus dem Transient-Cache "
+"entfernt."
+
+#: templates/options_page.php:28
 msgid "Plugins & Support"
 msgstr "Plugins & Support"
 
-#: inc/settings.php:541
+#: templates/options_page.php:35 templates/options_page.php:37
+#: templates/options_page.php:52
 msgid "WordPress Kurs"
-msgstr ""
+msgstr "WordPress Kurs"
 
-#: inc/settings.php:542
+#: templates/options_page.php:37 templates/options_page.php:54
+msgid "Recommendation"
+msgstr "Empfehlung"
+
+#: templates/options_page.php:39
 msgid ""
 "Möchtest du mit WordPress richtig durchstarten? In meinem WordPress Kurs "
 "erfährst du spannende Tipps und Tricks zu WordPress und SEO!"
 msgstr ""
+"Möchtest du mit WordPress richtig durchstarten? In meinem WordPress Kurs "
+"erfährst du spannende Tipps und Tricks zu WordPress und SEO!"
 
-#: inc/settings.php:545
+#: templates/options_page.php:43
 msgid "Jetzt Kurs ansehen"
-msgstr ""
+msgstr "Jetzt Kurs ansehen"
 
-#: inc/settings.php:553 inc/settings.php:555
-msgid "PrimusNote"
-msgstr "PrimusNote"
+#: templates/options_page.php:54
+msgid "WordPress Performance"
+msgstr "WordPress Performance"
 
-#: inc/settings.php:555
-msgid "Project Management"
-msgstr "Projekt-Management"
-
-#: inc/settings.php:558
+#: templates/options_page.php:55
 msgid ""
-"PrimusNote is a Project Management and Team Collaboration software based on "
-"WordPress."
+"Do you want a professional and individual performance optimization for your "
+"website? Increase your Google Pagespeed and SEO traffic with our high "
+"performance optimization."
 msgstr ""
-"PrimusNote ist eine Projekt-Management und Team-Kollaborations-Software auf "
-"WordPress Basis."
+"Möchtest du eine professionelle und individuelle Performance-Optimierung für "
+"deine Website? Erhöhe deinen Google Pagespeed und SEO-Traffic mit unserer "
+"Hochleistungsoptimierung."
 
-#: inc/settings.php:559 inc/settings.php:572
-msgid "Install Plugin"
-msgstr "Plugin installieren"
+#: templates/options_page.php:59
+msgid "Get a free quote"
+msgstr "Erhalte ein kostenloses Angebot"
 
-#: inc/settings.php:566 inc/settings.php:568
+#: templates/options_page.php:67 templates/options_page.php:69
 msgid "MailCrypt - AntiSpam Email Encryption"
 msgstr "MailCrypt - E-Mail Verschlüsselung"
 
-#: inc/settings.php:571
+#: templates/options_page.php:72
 msgid ""
 "This Plugin provides a Shortcode to encrypt email addresses / links and "
 "protect them against spam."
@@ -522,49 +623,32 @@ msgstr ""
 "Dieses Plugin stellt einen Shortcode und Funktionen für die E-Mail "
 "Verschlüsselung zur Verfügung und schützt gegen Spam."
 
-#: inc/settings.php:577
+#: templates/options_page.php:75
+msgid "Install Plugin"
+msgstr "Plugin installieren"
+
+#: templates/options_page.php:80
 msgid "Support"
 msgstr "Support"
 
-#: inc/settings.php:578
+#: templates/options_page.php:81
 msgid ""
 "Do you need some help with this plugin? I am here to help you. Get in touch:"
 msgstr ""
 "Benötigst du Unterstützung mit diesem Plugin? Ich bin gerne bereit zu "
 "helfen, schreib mir einfach:"
 
-#: inc/settings.php:582
+#: templates/options_page.php:86
 msgid "Support Forum"
 msgstr "Support Forum"
 
-#: inc/settings.php:584
+#: templates/options_page.php:89
 msgid "Contact Support"
 msgstr "Support kontaktieren"
 
-#: inc/settings.php:586
+#: templates/options_page.php:92
 msgid "Changelog"
-msgstr "Changelog"
-
-#: plugin-update-checker/github-checker.php:119
-msgid "There is no changelog available."
-msgstr "Es steht kein Änderungsprotokoll zur Verfügung."
-
-#: plugin-update-checker/plugin-update-checker.php:776
-msgid "Check for updates"
-msgstr "Auf Aktualisierung prüfen"
-
-#: plugin-update-checker/plugin-update-checker.php:820
-msgid "This plugin is up to date."
-msgstr "Dieses Plugin ist auf dem neuesten Stand."
-
-#: plugin-update-checker/plugin-update-checker.php:822
-msgid "A new version of this plugin is available."
-msgstr "Eine neue Version dieses Plugins ist verfügbar."
-
-#: plugin-update-checker/plugin-update-checker.php:824
-#, php-format
-msgid "Unknown update checker status \"%s\""
-msgstr "Unbekannter Aktualisierungs-Status \"%s\""
+msgstr "Änderungsprotokoll"
 
 #. Plugin URI of the plugin/theme
 msgid "https://wordpress.org/extend/plugins/pb-seo-friendly-images/"
@@ -576,9 +660,10 @@ msgid ""
 "\"alt\" and \"title\" attributes for all images and post thumbnails. This "
 "plugin helps you to improve your traffic from search engines."
 msgstr ""
-"PB SEO Friendly Images: Einfach, schnell und automatisch "
-"suchmaschinenfreundliche Bilder für WordPress. Simple Optimierung von Alt- "
-"und Title Attributen."
+"Dieses Plugin ist eine vollwertige Lösung für SEO-freundliche Bilder. "
+"Optimiere die Attribute „alt“ und „title“ für alle Bilder und Post-"
+"Thumbnails. Dieses Plugin hilft dir deinen organischen Traffic aus "
+"Suchmaschinen zu verbessern."
 
 #. Author of the plugin/theme
 msgid "Pascal Bajorat"
@@ -588,27 +673,15 @@ msgstr "Pascal Bajorat"
 msgid "https://www.pascal-bajorat.com"
 msgstr "https://www.pascal-bajorat.com"
 
-#~ msgid ""
-#~ "Do you need some help with this plugin? We are here to help you. Get in "
-#~ "touch:"
-#~ msgstr ""
-#~ "Benötigst du Unterstützung? Wir sind da um zu helfen, nimm Kontakt mit "
-#~ "uns auf"
+#~ msgid "PrimusNote"
+#~ msgstr "PrimusNote"
+
+#~ msgid "Project Management"
+#~ msgstr "Projektmanagement"
 
 #~ msgid ""
-#~ "PB SEO Friendly Images is a free WordPress Plugin by <a href=\"%s\" "
-#~ "target=\"_blank\">Pascal Bajorat</a> and made with %s in Berlin, Germany."
-#~ "<br />If you like it and maybe want to <a href=\"%s\" target=\"_blank"
-#~ "\">buy me a cup of coffee or a beer</a> I would appreciate that very much."
+#~ "PrimusNote is a Project Management and Team Collaboration software based "
+#~ "on WordPress."
 #~ msgstr ""
-#~ "PB SEO Friendly Images ist ein kostenloses WordPress Plugin von <a href="
-#~ "\"%s\" target=\"_blank\">Pascal Bajorat</a> und wurde mit viel %s in "
-#~ "Berlin entwickelt.<br />Wenn du das Plugin magst würde ich mich freuen, "
-#~ "<a href=\"%s\" target=\"_blank\">wenn du mich mit einer kleinen Spende "
-#~ "virtuell auf einen Kaffee oder Bier einlädst</a>."
-
-#~ msgid "http://wordpress.org/extend/plugins/pb-seo-friendly-images/"
-#~ msgstr "http://wordpress.org/extend/plugins/pb-seo-friendly-images/"
-
-#~ msgid "PB SEO Friendly Images Pro"
-#~ msgstr "PB SEO Friendly Images Pro"
+#~ "PrimusNote ist eine Projekt-Management und Team-Kollaborations-Software "
+#~ "auf WordPress Basis."

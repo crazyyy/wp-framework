@@ -28,7 +28,6 @@
 
 /* Item icon */
 .elfinder-contextmenu .elfinder-contextmenu-item .elfinder-contextmenu-icon {
-  /* */
 }
 
 /* Separator */
@@ -40,4 +39,13 @@
 
 .elfinder-contextmenu .elfinder-button-icon-open + span {
   font-weight: bold;
+}
+
+.elfinder .elfinder-contextmenu-item .ui-icon.ui-icon-check {
+    margin-top: -9px;
+    left: 1px;
+}
+.elfinder .elfinder-contextmenu-rtl .elfinder-contextmenu-item .ui-icon.ui-icon-check {
+    right: -1px;
+    left: auto;
 }

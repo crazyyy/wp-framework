@@ -1,6 +1,6 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
 
-<h3 class="wpo-first-child"><?php _e('URLs to exclude from cache', 'wp-optimize'); ?></h3>
+<h3 class="wpo-first-child"><?php _e('URLs to exclude from caching', 'wp-optimize'); ?></h3>
 
 <div class="wpo-fieldgroup">
 
@@ -12,9 +12,12 @@
 	<span>
 		<?php _e('Use the wildcard * to exclude child URLs.', 'wp-optimize'); ?> <?php printf(_x('e.g. %s or %s', '%s are examples of path using the wildcard *', 'wp-optimize'), '<code>'._x('/shop/*', 'an example path with the wildcard (*)', 'wp-optimize').'</code>', '<code>'._x('*sample-path*', 'a second example path using the wildcard (*) twice', 'wp-optimize').'</code>'); ?>
 	</span>
+
+	<?php do_action('wpo_after_cache_exception_urls'); ?>
+
 </div>
 
-<h3 class="wpo-first-child"><?php _e('Cookies to exclude from cache (one per line)', 'wp-optimize'); ?></h3>
+<h3 class="wpo-first-child"><?php _e('Cookies which, if present, will prevent caching (one per line)', 'wp-optimize'); ?></h3>
 
 <div class="wpo-fieldgroup">
 
@@ -24,7 +27,7 @@
 	</p>
 </div>
 
-<h3 class="wpo-first-child"><?php _e('List of browser agent strings to exclude from cache', 'wp-optimize'); ?></h3>
+<h3 class="wpo-first-child"><?php _e('List of browser agent strings which, if detected, will prevent caching', 'wp-optimize'); ?></h3>
 
 <div class="wpo-fieldgroup">
 
@@ -35,6 +38,8 @@
 
 	<span><?php _e('If any of the above strings is found in the User-Agent HTTP header, then the requested page will not be cached.', 'wp-optimize'); ?> </span>
 </div>
+
+<?php do_action('wpo_page_cache_advanced_settings', $wpo_cache_options); ?>
 
 <input id="wp-optimize-save-cache-advanced-rules" class="button button-primary" type="submit" name="wp-optimize-save-cache-advanced-rules" value="Save changes">
 

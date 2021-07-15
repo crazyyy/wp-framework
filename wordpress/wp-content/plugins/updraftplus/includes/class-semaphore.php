@@ -118,7 +118,7 @@ class UpdraftPlus_Semaphore {
 	 * @return Updraft_Semaphore
 	 */
 	public function increment(array $filters = array()) {
-		global $wpdb;
+		global $wpdb, $updraftplus;
 
 		if (count($filters)) {
 			// Loop through all of the filters and increment the semaphore

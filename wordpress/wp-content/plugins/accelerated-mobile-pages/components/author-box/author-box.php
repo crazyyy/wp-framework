@@ -9,6 +9,9 @@ if( class_exists('Simple_Author_Box') && !isset($args['author_info']) ){
 }
 global $post, $redux_builder_amp;
 $post_author = get_userdata($post->post_author);
+if(empty($post_author)){
+    return;
+}
 if ( ! is_array($args) ) {
     $args = array();
 }
@@ -21,7 +24,9 @@ $class = $author_prefix = $author_wrapper_class = '';
 $show_date = false;
 $show_time = false;
 $author_name = $post_author->display_name;
+$author_name = apply_filters('ampforwp_modify_author_name',$author_name);
 $and_text = '';
+$avatar_size_weight = $avatar_size_height = '';
 $and_text = ampforwp_translation($redux_builder_amp['amp-translator-and-text'], 'and' );
 if ( function_exists('coauthors') ) { 
     $author_name = coauthors($and_text,$and_text,null,null,false);
@@ -30,7 +35,7 @@ $author_link = get_author_posts_url($post_author->ID);
 if ( function_exists('coauthors_posts_links') ) {
     $author_link = coauthors_posts_links($and_text,$and_text,null,null,false);
 }
-$author_image_wrapper = '';
+$author_image_wrapper = $alt = '';
 
 if ( isset($args['author_pub_name']) ) {
     $author_pub_name = $args['author_pub_name'];
@@ -40,7 +45,18 @@ if ( isset($args['avatar']) ) {
     $avatar = $args['avatar'];
 }
 if ( isset($args['avatar_size']) ) {
-    $avatar_size = $args['avatar_size'];
+    $avatar_size = ampforwp_get_setting('amp-author-bio-image-width');
+    $avatar_size_width = ampforwp_get_setting('amp-author-bio-image-width');
+    $avatar_size_height = ampforwp_get_setting('amp-author-bio-image-height');
+    if (empty($avatar_size_width)) {
+       $avatar_size_width = 60;
+    }
+    if (empty($avatar_size_height)) {
+       $avatar_size_height = 60;
+    }
+    if (empty($avatar_size)) {
+       $avatar_size_width = 60;
+    }
 }
 if ( isset($args['class']) ) {
 	$class = $args['class'];
@@ -58,6 +74,10 @@ if ( isset( $args['author_prefix']) ) {
 if ( isset( $args['author_link']) ) {
 	  $author_link = $args['author_link'];
 }
+$is_author_link_amp = true;
+if ( isset( $args['is_author_link_amp']) ) {
+      $is_author_link_amp = $args['is_author_link_amp'];
+}
 if ( isset( $args['author_wrapper_class']) ) {
 	  $author_wrapper_class = $args['author_wrapper_class'];
 }
@@ -74,27 +94,50 @@ if ( isset($args['show_time']) ) {
 
  ?>
     <div class="amp-author <?php echo esc_attr($class); ?>">
-        <?php if ( $avatar ) {
+        <?php if ( $avatar && true == ampforwp_get_setting('amp-author-bio-image')) {
     $author_avatar_url = ampforwp_get_wp_user_avatar();
     if( null == $author_avatar_url ){
        $author_avatar_url = get_avatar_url( $post_author->ID, array( 'size' => $avatar_size ) );
-    } ?>
+    } 
+    if(class_exists('WP_User_Avatar_Functions') && defined('PPRESS_VERSION_NUMBER') && version_compare(PPRESS_VERSION_NUMBER,'3.0', '<')){
+        $image = get_wp_user_avatar();
+        if (!empty($image)) {
+            preg_match_all( '@alt="([^"]+)"@' , $image, $match );
+            $alt = array_pop($match);
+            $alt = implode(" ", $alt);
+            $alt = explode(" ", $alt);
+            if(class_exists('transposh_plugin') && isset($_GET['lang']) && isset($alt[1]) ){
+                $alt = 'alt=' . $alt[1];
+            }
+            elseif (isset($alt[0])) {
+                $alt = 'alt=' . $alt[0];
+            }
+        }
+    }
+    ?>
         <div class="amp-author-image <?php echo esc_attr($author_image_wrapper); ?>">
-            <amp-img <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?>src="<?php echo esc_url($author_avatar_url); ?>" width="<?php echo esc_attr($avatar_size); ?>" height="<?php echo esc_attr($avatar_size); ?>" layout="fixed"></amp-img> 
+            <amp-img <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?>src="<?php echo esc_url($author_avatar_url); ?>" <?php echo esc_attr($alt); ?> width="<?php echo esc_attr($avatar_size_width); ?>" height="<?php echo esc_attr($avatar_size_height); ?>" layout="fixed"></amp-img> 
         </div>
         <?php } ?>
         <?php echo '<div class="author-details '. esc_attr($author_wrapper_class) .'">';
         if ( true == ampforwp_get_setting('ampforwp-author-page-url') ){
             if ( function_exists('coauthors_posts_links') ) {
                 if( $author_pub_name  ){
-	                $author_link = (true == ampforwp_get_setting('ampforwp-archive-support'))? esc_url(ampforwp_url_controller($author_link)) :  esc_url($author_link);
+                    $auth_link = $author_link;
+                    if($is_author_link_amp==true){
+                        $auth_link = ampforwp_url_controller($author_link);
+                    }
+                    $author_link = (true == ampforwp_get_setting('ampforwp-archive-support'))? esc_url($auth_link) :  esc_url($author_link);
 	                echo '<span class="author-name">' .esc_html($author_prefix) . ' <a href="'. esc_url($author_link).'" title="'. esc_html($author_name).'"> ' .esc_html( $author_name ).'</a></span>';
                     echo ampforwp_yoast_twitter_handle();
                 }
             }
             else {
                 if( $author_pub_name  ){
-                    echo '<span class="author-name">' .esc_html($author_prefix) . ' <a href="'. esc_url(ampforwp_url_controller($author_link)).'" title="'. esc_html($author_name).'"> ' .esc_html( $author_name ).'</a></span>';
+                    if($is_author_link_amp==true && ampforwp_get_setting('ampforwp-archive-support')){
+                        $author_link = ampforwp_url_controller($author_link);
+                    }
+                    echo '<span class="author-name">' .esc_html($author_prefix) . ' <a href="'. esc_url($author_link).'" title="'. esc_html($author_name).'"> ' .esc_html( $author_name ).'</a></span>';
                     echo ampforwp_yoast_twitter_handle();
                 }
             }
@@ -120,7 +163,9 @@ if ( isset($args['show_time']) ) {
         if ( $author_description ) {
             if( true == ampforwp_get_setting('amp-author-box-description') ){
                 $allowed_tags = '<p><a><b><strong><i><u><ul><ol><li><h1><h2><h3><h4><h5><h6><table><tr><th><td><em><span>';
-                echo "<p>".strip_tags($post_author->description,$allowed_tags)."</p>";
+                $author_description = "<p>".strip_tags($post_author->description,$allowed_tags)."</p>";
+                $author_description = apply_filters( 'ampforwp_author_description', $author_description);
+                echo $author_description;
             }
         } ?>
         </div>

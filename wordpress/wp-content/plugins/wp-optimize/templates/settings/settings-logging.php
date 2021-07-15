@@ -63,9 +63,9 @@
 
 								?>
 								<input class="wpo_logger_addition_option" type="text"
-										name="wpo-logger-options[<?php echo $option_name; ?>][]"
-										value="<?php echo $options_values[$option_name]; ?>"
-										placeholder="<?php echo $placeholder; ?>"
+										name="wpo-logger-options[<?php echo esc_attr($option_name); ?>][]"
+										value="<?php echo esc_attr($options_values[$option_name]); ?>"
+										placeholder="<?php echo esc_attr($placeholder); ?>"
 									<?php echo $data_validate_attr; ?> "/>
 								<?php
 							}

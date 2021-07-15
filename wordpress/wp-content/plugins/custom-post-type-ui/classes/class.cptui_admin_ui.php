@@ -133,7 +133,7 @@ class cptui_admin_ui {
 	 * @return string
 	 */
 	public function get_legend_start() {
-		return '<legend>';
+		return '<legend class="screen-reader-text">';
 	}
 
 	/**
@@ -233,7 +233,7 @@ class cptui_admin_ui {
 	 * @return string
 	 */
 	public function get_description( $help_text = '' ) {
-		return '<span class="cptui-field-description">' . $help_text . '</span>';
+		return '<p class="cptui-field-description description">' . $help_text . '</p>';
 	}
 
 	/**
@@ -538,6 +538,26 @@ class cptui_admin_ui {
 		$value .= '<input id="' . $args['id'] . '" class="button" type="button" value="' . $args['textvalue'] . '" />';
 
 		return $value;
+	}
+
+	/**
+	 * Returns an HTML block for previewing the menu icon.
+	 *
+	 * @param string $menu_icon URL or a name of the dashicons class.
+	 *
+	 * @return string $value HTML block with a layout of the menu icon preview.
+	 * @since 1.8.1
+	 */
+	public function get_menu_icon_preview( $menu_icon = '' ) {
+		$content = '';
+		if ( ! empty( $menu_icon ) ) {
+			$content = '<img src="' . $menu_icon . '">';
+			if ( 0 === strpos( $menu_icon, 'dashicons-' ) ) {
+				$content = '<div class="dashicons-before ' . $menu_icon . '"></div>';
+			}
+		}
+
+		return '<div id="menu_icon_preview">' . $content . '</div>';
 	}
 
 	/**

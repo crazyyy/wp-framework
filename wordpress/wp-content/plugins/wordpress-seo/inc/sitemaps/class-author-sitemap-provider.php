@@ -5,7 +5,7 @@
  * @package WPSEO\XML_Sitemaps
  */
 
-use Yoast\WP\Free\Helpers\Author_Archive_Helper;
+use Yoast\WP\SEO\Helpers\Author_Archive_Helper;
 
 /**
  * Sitemap provider for author archives.
@@ -13,25 +13,11 @@ use Yoast\WP\Free\Helpers\Author_Archive_Helper;
 class WPSEO_Author_Sitemap_Provider implements WPSEO_Sitemap_Provider {
 
 	/**
-	 * The date helper.
-	 *
-	 * @var WPSEO_Date_Helper
-	 */
-	protected $date;
-
-	/**
-	 * WPSEO_Author_Sitemap_Provider constructor.
-	 */
-	public function __construct() {
-		$this->date = new WPSEO_Date_Helper();
-	}
-
-	/**
 	 * Check if provider supports given item type.
 	 *
 	 * @param string $type Type string to check for.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function handles_type( $type ) {
 		// If the author archives have been disabled, we don't do anything.
@@ -91,10 +77,10 @@ class WPSEO_Author_Sitemap_Provider implements WPSEO_Sitemap_Provider {
 			$user    = get_user_by( 'id', $user_id );
 			$index[] = [
 				'loc'     => WPSEO_Sitemaps_Router::get_base_url( 'author-sitemap' . $page . '.xml' ),
-				'lastmod' => ( $user->_yoast_wpseo_profile_updated ) ? $this->date->format_timestamp( $user->_yoast_wpseo_profile_updated ) : null,
+				'lastmod' => ( $user->_yoast_wpseo_profile_updated ) ? YoastSEO()->helpers->date->format_timestamp( $user->_yoast_wpseo_profile_updated ) : null,
 			];
 
-			$page++;
+			++$page;
 		}
 
 		return $index;
@@ -154,9 +140,9 @@ class WPSEO_Author_Sitemap_Provider implements WPSEO_Sitemap_Provider {
 	 * @param int    $max_entries  Entries per sitemap.
 	 * @param int    $current_page Current page of the sitemap.
 	 *
-	 * @throws OutOfBoundsException When an invalid page is requested.
-	 *
 	 * @return array
+	 *
+	 * @throws OutOfBoundsException When an invalid page is requested.
 	 */
 	public function get_sitemap_links( $type, $max_entries, $current_page ) {
 

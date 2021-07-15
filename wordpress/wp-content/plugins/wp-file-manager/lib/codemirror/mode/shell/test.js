@@ -36,9 +36,9 @@
      "outside\\'\\\"\\`\\\\[string \"inside\\`\\'\\\"\\\\`\\$notAVar\"]outside\\$\\(notASubShell\\)");
 
   MT("subshell",
-     "[builtin echo] [quote $(whoami)] s log, stardate [quote `date`].");
+     "[builtin echo] [quote jQuery(whoami)] s log, stardate [quote `date`].");
   MT("doubleQuotedSubshell",
-     "[builtin echo] [string \"][quote $(whoami)][string 's log, stardate `date`.\"]");
+     "[builtin echo] [string \"][quote jQuery(whoami)][string 's log, stardate `date`.\"]");
 
   MT("hashbang",
      "[meta #!/bin/bash]");

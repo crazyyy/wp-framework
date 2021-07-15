@@ -11,15 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
-	
+
 	public $shortcode_name = 'wbcr_php_snippet';
-	
+
 	/**
 	 * Includes assets
 	 * @var bool
 	 */
 	public $assets_in_header = true;
-	
+
 	/**
 	 * Filter attributes
 	 *
@@ -31,44 +31,49 @@ class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
 	public function filterAttributes( $attr, $post_id ) {
 		if ( ! empty( $attr ) ) {
 			$available_tags = WINP_Helper::getMetaOption( $post_id, 'snippet_tags', null );
-			
+
 			if ( ! empty( $available_tags ) ) {
 				$available_tags = explode( ',', $available_tags );
 				$available_tags = array_map( 'trim', $available_tags );
 			}
-			
+
 			foreach ( $attr as $name => $value ) {
 				$is_allow_attr = in_array( $name, array( 'id', 'title' ) );
 				$validate_name = preg_match( '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $name );
-				
+
 				if ( ! $is_allow_attr && ( ( ! empty( $available_tags ) && ! in_array( $name, $available_tags ) ) || ! $validate_name ) ) {
 					unset( $attr[ $name ] );
 				} else {
 					// issue PCS-1
 					// before sending the value to the shortcode, using encodeURIComponent(val).replace(/\./g, ‘%2E’); fixes the issue. Will the next update stop this from working?
 					$value = urldecode( $value );
-					
+
 					// Remove script tag
 					$value = preg_replace( '#<script(.*?)>(.*?)</script>#is', '', $value );
-					
+
 					// Remove any attribute starting with "on" or xmlns
 					$value = preg_replace( '#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu', '$1>', $value );
-					
+
 					// Remove javascript: and vbscript: protocols
 					$value = preg_replace( '#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2nojavascript...', $value );
 					$value = preg_replace( '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2novbscript...', $value );
 					$value = preg_replace( '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u', '$1=$2nomozbinding...', $value );
-					
+
 					// Filter value
+					if ( version_compare( phpversion(), '7.3.0', '>=' ) ) {
+						$filter = FILTER_SANITIZE_ADD_SLASHES;
+					} else {
+						$filter = FILTER_SANITIZE_MAGIC_QUOTES;
+					}
 					$value         = filter_var( $value, FILTER_SANITIZE_SPECIAL_CHARS );
-					$attr[ $name ] = filter_var( $value, FILTER_SANITIZE_MAGIC_QUOTES );
+					$attr[ $name ] = filter_var( $value, $filter );
 				}
 			}
 		}
-		
+
 		return $attr;
 	}
-	
+
 	/**
 	 * Get snippet id
 	 *
@@ -82,10 +87,10 @@ class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
 		if ( $id && $type != WINP_Helper::get_snippet_type( $id ) ) {
 			$id = 0;
 		}
-		
+
 		return $id;
 	}
-	
+
 	/**
 	 * Get snippet activate
 	 *
@@ -94,9 +99,19 @@ class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
 	 * @return bool
 	 */
 	public function getSnippetActivate( $snippet_meta ) {
+		// WPML Compatibility
+		if ( defined( 'WPML_PLUGIN_FILE' ) ) {
+			$wpml_langs = isset( $snippet_meta[ $this->plugin->getPrefix() . 'snippet_wpml_lang' ][0] ) ? $snippet_meta[ $this->plugin->getPrefix() . 'snippet_wpml_lang' ][0] : '';
+			if ( $wpml_langs !== '' && defined( 'ICL_LANGUAGE_CODE' ) ) {
+				if ( ! in_array( ICL_LANGUAGE_CODE, explode( ',', $wpml_langs ) ) ) {
+					return false;
+				}
+			}
+		}
+
 		return isset( $snippet_meta[ $this->plugin->getPrefix() . 'snippet_activate' ] ) && $snippet_meta[ $this->plugin->getPrefix() . 'snippet_activate' ][0];
 	}
-	
+
 	/**
 	 * Get snippet scope
 	 *
@@ -107,7 +122,7 @@ class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
 	public function getSnippetScope( $snippet_meta ) {
 		return isset( $snippet_meta[ $this->plugin->getPrefix() . 'snippet_scope' ] ) ? $snippet_meta[ $this->plugin->getPrefix() . 'snippet_scope' ][0] : null;
 	}
-	
+
 	/**
 	 * Get snippet content
 	 *
@@ -118,10 +133,15 @@ class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
 	 * @return null|string
 	 */
 	public function getSnippetContent( $snippet, $snippet_meta, $id ) {
-		$snippet_code = WINP_Helper::get_snippet_code($snippet);
+		$snippet_code = WINP_Helper::get_snippet_code( $snippet );
+
+		if ( WINP_Plugin::app()->getOption( 'execute_shortcode' ) ) {
+			$snippet_code = do_shortcode( $snippet_code );
+		}
+
 		return WINP_Plugin::app()->getExecuteObject()->prepareCode( $snippet_code, $id );
 	}
-	
+
 	/**
 	 * Content render
 	 *
@@ -130,7 +150,7 @@ class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
 	 * @param string $tag
 	 */
 	public function html( $attr, $content, $tag ) {
-	
+
 	}
-	
+
 }

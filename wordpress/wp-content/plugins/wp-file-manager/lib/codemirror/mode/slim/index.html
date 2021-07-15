@@ -78,9 +78,9 @@ a.slim href="work" disabled=false running==:atom Text <b>bold</b>
       theme: "ambiance",
       mode: "application/x-slim"
     });
-    $('.CodeMirror').resizable({
+    jQuery('.CodeMirror').resizable({
       resize: function() {
-        editor.setSize($(this).width(), $(this).height());
+        editor.setSize(jQuery(this).width(), jQuery(this).height());
         //editor.refresh();
       }
     });

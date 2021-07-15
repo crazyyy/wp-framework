@@ -10,43 +10,43 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if( !defined('ABSPATH') ) {
 	exit;
 }
 
-if ( defined( 'FACTORY_FREEMIUS_110_LOADED' ) ) {
+if( defined('FACTORY_FREEMIUS_131_LOADED') ) {
 	return;
 }
 
-define( 'FACTORY_FREEMIUS_110_VERSION', '1.1.0' );
+define('FACTORY_FREEMIUS_131_VERSION', '1.3.1');
 
-define( 'FACTORY_FREEMIUS_110_LOADED', true );
-define( 'FACTORY_FREEMIUS_110_DIR', dirname( __FILE__ ) );
-define( 'FACTORY_FREEMIUS_110_URL', plugins_url( null, __FILE__ ) );
+define('FACTORY_FREEMIUS_131_LOADED', true);
+define('FACTORY_FREEMIUS_131_DIR', dirname(__FILE__));
+define('FACTORY_FREEMIUS_131_URL', plugins_url(null, __FILE__));
 
 #comp merge
 // Freemius
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/entities/class-freemius-entity.php' );
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/entities/class-freemius-scope.php' );
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/entities/class-freemius-user.php' );
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/entities/class-freemius-site.php' );
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/entities/class-freemius-license.php' );
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/licensing/class-freemius-provider.php' );
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/updates/class-freemius-repository.php' );
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/entities/class-freemius-entity.php');
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/entities/class-freemius-scope.php');
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/entities/class-freemius-user.php');
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/entities/class-freemius-site.php');
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/entities/class-freemius-license.php');
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/licensing/class-freemius-provider.php');
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/updates/class-freemius-repository.php');
 
-if ( ! class_exists( 'Freemius_Api_WordPress' ) ) {
-	require_once FACTORY_FREEMIUS_110_DIR . '/includes/sdk/FreemiusWordPress.php';
+if( !class_exists('Freemius_Api_WordPress') ) {
+	require_once FACTORY_FREEMIUS_131_DIR . '/includes/sdk/FreemiusWordPress.php';
 }
 
-require_once( FACTORY_FREEMIUS_110_DIR . '/includes/class-freemius-api.php' );
+require_once(FACTORY_FREEMIUS_131_DIR . '/includes/class-freemius-api.php');
 
 /**
- * @param Wbcr_Factory422_Plugin $plugin
+ * @param Wbcr_Factory443_Plugin $plugin
  */
-add_action( 'wbcr_factory_freemius_110_plugin_created', function ( $plugin ) {
+add_action('wbcr_factory_freemius_131_plugin_created', function ($plugin) {
 	# Устанавливаем класс провайдера лицензий для премиум менеджера
-	$plugin->set_license_provider( 'freemius', 'WBCR\Factory_Freemius_110\Premium\Provider' );
+	$plugin->set_license_provider('freemius', 'WBCR\Factory_Freemius_131\Premium\Provider');
 	# Устанавливаем класс репозитория обновлений для менеджера обновлений
-	$plugin->set_update_repository( 'freemius', 'WBCR\Factory_Freemius_110\Updates\Freemius_Repository' );
-} );
+	$plugin->set_update_repository('freemius', 'WBCR\Factory_Freemius_131\Updates\Freemius_Repository');
+});
 #endcomp

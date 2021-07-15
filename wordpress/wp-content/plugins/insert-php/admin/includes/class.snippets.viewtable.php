@@ -13,18 +13,28 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 		 */
 		$this->columns->clear();
 		//$this->columns->add('status', __('Status', 'insert-php'));
+		$this->columns->add( 'winp_actions', __( 'Status', 'insert-php' ) );
 		$this->columns->add( 'title', __( 'Snippet title', 'insert-php' ) );
 		$this->columns->add( 'winp_description', __( 'Description', 'insert-php' ) );
-		$this->columns->add( 'winp_actions', __( 'Status', 'insert-php' ) );
 		$this->columns->add( 'winp_where_use', __( 'Where use?', 'insert-php' ) );
-		$this->columns->add( 'winp_taxonomy-' . WINP_SNIPPETS_TAXONOMY, __( 'Tags', 'insert-php' ) );
+		$this->columns->add( 'winp_taxonomy', __( 'Tags', 'insert-php' ) );
+		$this->columns->add( 'winp_priority', __( 'Priority', 'insert-php' ) );
 		$this->columns->add( 'winp_snippet_type', '' );
 
 		/**
 		 * Scripts & styles
 		 */
 		$this->styles->add( WINP_PLUGIN_URL . '/admin/assets/css/list-table.css' );
+		$this->scripts->add( WINP_PLUGIN_URL . '/admin/assets/js/snippet-list.js' );
+		$this->scripts->localize( 'winp_ajax_nonce', wp_create_nonce( 'winp_ajax' ) );
 		$this->runActions();
+
+		add_filter( 'manage_edit-' . WINP_SNIPPETS_POST_TYPE . '_sortable_columns', array(
+			$this,
+			'sortable_columns'
+		) );
+		add_action( 'wp_ajax_change_priority', [ $this, 'change_priority' ] );
+		add_action( 'wp_ajax_change_snippet_status', [ $this, 'change_snippet_status' ] );
 	}
 
 
@@ -37,6 +47,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 		$type  = WINP_Helper::getMetaOption( $post->ID, 'snippet_type', WINP_SNIPPET_TYPE_PHP );
 		$class = 'wbcr-inp-type-' . esc_attr( $type );
 		$type  = $type == 'universal' ? 'uni' : $type;
+		$type  = $type == 'advert' ? 'ad' : $type;
 
 		echo '<div class="wbcr-inp-snippet-type-label ' . esc_attr( $class ) . '">' . esc_html( $type ) . '</div>';
 	}
@@ -51,63 +62,48 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 	 * @param $post
 	 */
 	public function columnWinp_where_use( $post ) {
+		$click         = "";
 		$snippet_scope = WINP_Helper::getMetaOption( $post->ID, 'snippet_scope' );
-
-		if ( $snippet_scope == 'evrywhere' ) {
-			echo __( 'Run everywhere', 'insert-php' );
-		} else if ( $snippet_scope == 'auto' ) {
-			$items = [
-				WINP_SNIPPET_AUTO_HEADER           => __( 'Header', 'insert-php' ),
-				WINP_SNIPPET_AUTO_FOOTER           => __( 'Footer', 'insert-php' ),
-				WINP_SNIPPET_AUTO_BEFORE_POST      => __( 'Insert Before Post', 'insert-php' ),
-				WINP_SNIPPET_AUTO_BEFORE_CONTENT   => __( 'Insert Before Content', 'insert-php' ),
-				WINP_SNIPPET_AUTO_BEFORE_PARAGRAPH => __( 'Insert Before Paragraph', 'insert-php' ),
-				WINP_SNIPPET_AUTO_AFTER_PARAGRAPH  => __( 'Insert After Paragraph', 'insert-php' ),
-				WINP_SNIPPET_AUTO_AFTER_CONTENT    => __( 'Insert After Content', 'insert-php' ),
-				WINP_SNIPPET_AUTO_AFTER_POST       => __( 'Insert After Post', 'insert-php' ),
-				WINP_SNIPPET_AUTO_BEFORE_EXCERPT   => __( 'Insert Before Excerpt', 'insert-php' ),
-				WINP_SNIPPET_AUTO_AFTER_EXCERPT    => __( 'Insert After Excerpt', 'insert-php' ),
-				WINP_SNIPPET_AUTO_BETWEEN_POSTS    => __( 'Between Posts', 'insert-php' ),
-				WINP_SNIPPET_AUTO_BEFORE_POSTS     => __( 'Before post', 'insert-php' ),
-				WINP_SNIPPET_AUTO_AFTER_POSTS      => __( 'After post', 'insert-php' ),
-			];
-
-			$snippet_location = WINP_Helper::getMetaOption( $post->ID, 'snippet_location', '' );
-
-			switch ( $snippet_location ) {
-				case WINP_SNIPPET_AUTO_HEADER:
-				case WINP_SNIPPET_AUTO_FOOTER:
-					$text = __( 'Everywhere', 'insert-php' ) . '[' . $items[ $snippet_location ] . ']';
-					break;
-
-				case WINP_SNIPPET_AUTO_BEFORE_POST:
-				case WINP_SNIPPET_AUTO_BEFORE_CONTENT:
-				case WINP_SNIPPET_AUTO_BEFORE_PARAGRAPH:
-				case WINP_SNIPPET_AUTO_AFTER_PARAGRAPH:
-				case WINP_SNIPPET_AUTO_AFTER_CONTENT:
-				case WINP_SNIPPET_AUTO_AFTER_POST:
-					$text = __( 'Posts, Pages, Custom post types', 'insert-php' ) . '[' . $items[ $snippet_location ] . ']';
-					break;
-
-				case WINP_SNIPPET_AUTO_BEFORE_EXCERPT:
-				case WINP_SNIPPET_AUTO_AFTER_EXCERPT:
-				case WINP_SNIPPET_AUTO_BETWEEN_POSTS:
-				case WINP_SNIPPET_AUTO_BEFORE_POSTS:
-				case WINP_SNIPPET_AUTO_AFTER_POSTS:
-					$text = __( 'Categories, Archives, Tags, Taxonomies', 'insert-php' ) . '[' . $items[ $snippet_location ] . ']';
-					break;
-
-				default:
-					$text = __( 'Everywhere', 'insert-php' );
-			}
-
-			echo __( 'Automatic insertion', 'insert-php' ) . ': ' . esc_html( $text );
-		} else {
-			$snippet_type = WINP_Helper::get_snippet_type( $post->ID );
-			$snippet_type = ( $snippet_type == WINP_SNIPPET_TYPE_UNIVERSAL ? '' : $snippet_type . '_' );
-
-			echo esc_html( apply_filters( 'wbcr/inp/viewtable/where_use', '[wbcr_' . $snippet_type . 'snippet id="' . $post->ID . '"]', $post->ID ) );
+		if ( $snippet_scope == 'shortcode' ) {
+			$click = "onclick='this.setSelectionRange(0, this.value.length)'";
 		}
+
+		$value = WINP_Helper::get_where_use_text( $post );
+		echo "<input type='text' name='wbcr_inp_shortcode_input' class='wbcr_inp_shortcode_input' value='{$value}' readonly='readonly' {$click}>";
+	}
+
+	/**
+	 * Column 'Priority'
+	 *
+	 * @param $post
+	 *
+	 * @since 2.4.0
+	 *
+	 */
+	public function columnWinp_taxonomy( $post ) {
+		$post_cat = get_the_terms( $post->ID, WINP_SNIPPETS_TAXONOMY );
+		$result   = [];
+		if ( is_array( $post_cat ) ) {
+			foreach ( $post_cat as $item ) {
+				$href     = admin_url( "edit.php?post_type=" . WINP_SNIPPETS_POST_TYPE . "&winp_filter_tag={$item->slug}" );
+				$result[] = "<a href='{$href}' class='winp-taxonomy-href'>{$item->name}</a>";
+			}
+		}
+		echo implode( ', ', $result );
+	}
+
+	/**
+	 * Column 'Priority'
+	 *
+	 * @param $post
+	 *
+	 * @since 2.4.0
+	 *
+	 */
+	public function columnWinp_priority( $post ) {
+		$snippet_priority = WINP_Helper::getMetaOption( $post->ID, 'snippet_priority' );
+		echo "<input type='number' name='wbcr_inp_input_priority' class='wbcr_inp_input_priority'
+ 			  data-snippet-id='{$post->ID}' value='{$snippet_priority}'>";
 	}
 
 	/**
@@ -118,13 +114,14 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 	public function columnWinp_actions( $post ) {
 		$post_id     = (int) $post->ID;
 		$is_activate = (int) WINP_Helper::getMetaOption( $post_id, 'snippet_activate', 0 );
-		$icon        = 'dashicons-controls-play';
+		$css_class   = 'winp-inactive';
 
 		if ( $is_activate ) {
-			$icon = 'dashicons-controls-pause';
+			$css_class = '';
 		}
 
-		echo '<a class="wbcr-inp-enable-snippet-button button" href="' . wp_nonce_url( admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&amp;post=' . $post_id . '&amp;action=wbcr_inp_activate_snippet' ), 'wbcr_inp_snippert_' . $post_id . '_action_nonce' ) . '"><span class="dashicons ' . esc_attr( $icon ) . '"></span></a>';
+		echo "<a class='winp-snippet-active-switch {$css_class}' id='winp-snippet-status-switch' data-snippet-id='{$post_id}' href='" . wp_nonce_url( admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&amp;post=' . $post_id . '&amp;action=wbcr_inp_activate_snippet' ), 'wbcr_inp_snippert_' . $post_id . '_action_nonce' ) . "'>&nbsp;</a>";
+		//echo '<a class="wbcr-inp-enable-snippet-button button" href="' . wp_nonce_url( admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&amp;post=' . $post_id . '&amp;action=wbcr_inp_activate_snippet' ), 'wbcr_inp_snippert_' . $post_id . '_action_nonce' ) . '"><span class="dashicons ' . esc_attr( $icon ) . '"></span></a>';
 	}
 
 	/*
@@ -139,7 +136,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 				$post_id = (int) $post;
 				$wpnonce = WINP_Plugin::app()->request->get( '_wpnonce', '' );
 
-				if ( ( ! empty( $wpnonce ) && ! wp_verify_nonce( $wpnonce, 'wbcr_inp_snippert_' . $post_id . '_action_nonce' ) ) || ! WINP_Plugin::app()->currentUserCan() ) {
+				if ( ! wp_verify_nonce( $wpnonce, 'wbcr_inp_snippert_' . $post_id . '_action_nonce' ) || ! WINP_Plugin::app()->currentUserCan() ) {
 					wp_die( 'Permission error. You can not edit this page.' );
 				}
 
@@ -152,7 +149,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 				 *
 				 * @since 2.0.5
 				 */
-				if ( ( 'evrywhere' == $snippet_scope || 'auto' == $snippet_scope ) && $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_CSS && $snippet_type != WINP_SNIPPET_TYPE_JS && ! $is_activate ) {
+				if ( ( 'evrywhere' == $snippet_scope || 'auto' == $snippet_scope ) && $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_AD && $snippet_type != WINP_SNIPPET_TYPE_CSS && $snippet_type != WINP_SNIPPET_TYPE_JS && ! $is_activate ) {
 					if ( WINP_Plugin::app()->getExecuteObject()->getSnippetError( $post_id ) ) {
 						wp_safe_redirect( add_query_arg( [
 							'action'                       => 'edit',
@@ -175,6 +172,102 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 				wp_safe_redirect( $redirect_url );
 				exit;
 			}
+		}
+	}
+
+	/**
+	 * @param $sortable_columns
+	 */
+	public function sortable_columns( $sortable_columns ) {
+		$sortable_columns['winp_priority'] = 'winp_priority';
+
+		return $sortable_columns;
+	}
+
+	/**
+	 * AJAX action for change priority
+	 */
+	public function change_priority() {
+		check_ajax_referer( 'winp_ajax' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json( array( 'error_message' => __( "You don't have enough capability to edit this information.", 'insert-php' ) ) );
+		}
+
+		if ( isset( $_POST['snippet_id'] ) && isset( $_POST['priority'] ) ) {
+			if ( is_numeric( $_POST['priority'] ) ) {
+				WINP_Helper::updateMetaOption( $_POST['snippet_id'], 'snippet_priority', $_POST['priority'] );
+
+				wp_send_json( [
+					'message' => __( "Priority successfully changed", "insert-php" ),
+				] );
+			} else {
+				wp_send_json( [
+						'error_message' => __( "Priority is not changed! It's must be a number", 'insert-php' ),
+					]
+				);
+			}
+
+		} else {
+			wp_send_json( [
+					'error_message' => __( 'Priority is not changed!', 'insert-php' ),
+				]
+			);
+		}
+	}
+
+	/**
+	 * AJAX action for change priority
+	 */
+	public function change_snippet_status() {
+		check_ajax_referer( 'winp_ajax' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json( array( 'error_message' => __( "You don't have enough capability to edit this information.", 'insert-php' ) ) );
+		}
+
+		if ( isset( $_POST['snippet_id'] ) ) {
+			$snippet_id    = $_POST['snippet_id'];
+			$is_activate   = (int) WINP_Helper::getMetaOption( $snippet_id, 'snippet_activate', 0 );
+			$snippet_scope = WINP_Helper::getMetaOption( $snippet_id, 'snippet_scope' );
+			$snippet_type  = WINP_Helper::get_snippet_type( $snippet_id );
+
+			/**
+			 * Prevent activation of the snippet if it contains an error. This will not allow the user to break his site.
+			 *
+			 * @since 2.0.5
+			 */
+			if ( ( 'evrywhere' == $snippet_scope || 'auto' == $snippet_scope ) && $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_AD && $snippet_type != WINP_SNIPPET_TYPE_CSS && $snippet_type != WINP_SNIPPET_TYPE_JS && ! $is_activate ) {
+				if ( WINP_Plugin::app()->getExecuteObject()->getSnippetError( $snippet_id ) ) {
+					wp_send_json( [
+							'alert'         => true,
+							'error_message' => __( "The snippet is not activated because errors were detected in the snippet code!", 'insert-php' ),
+						]
+					);
+				}
+			}
+
+			$status = ! $is_activate;
+
+			$ok = update_post_meta( $snippet_id, $this->plugin->getPrefix() . 'snippet_activate', $status );
+
+			if ( $ok ) {
+				wp_send_json( [
+					'message' => __( "Snippet status changed", "insert-php" ),
+				] );
+			} else {
+				wp_send_json( [
+						'error_message' => __( 'Snippet status not changed.', 'insert-php' ),
+					]
+				);
+
+			}
+
+		} else {
+			wp_send_json( [
+					'error_message' => __( 'Snippet status not changed. No snippet ID', 'insert-php' ),
+				]
+			);
 		}
 	}
 }

@@ -8,7 +8,7 @@ global $redux_builder_amp, $wp; ?>
 <head>
 	<meta charset="utf-8">
 	<?php do_action('amp_experiment_meta', $this); ?>
-    <link rel="dns-prefetch" href="//cdn.ampproject.org">
+    <link rel="preconnect" href="//cdn.ampproject.org">
 	<?php
 	if ( is_archive() ) {
 		$description 	= get_the_archive_description();
@@ -68,7 +68,9 @@ global $redux_builder_amp, $wp; ?>
 		}else{
 			the_archive_title( '<h2 class="page-title">', '</h2>' );
 		}
-	    
+	    	if(function_exists('ampforwp_category_image_compatibility')){
+	    		ampforwp_category_image_compatibility('echo','amp-wp-content taxonomy-image');
+	    	}
 			$arch_desc 		= $sanitizer->get_amp_content();
 			if( $arch_desc ) {  
 				if ( get_query_var( 'paged' ) ) {
@@ -78,7 +80,7 @@ global $redux_builder_amp, $wp; ?>
 		    } else {
 		        $paged = 1;
 		    }
-				if($paged <= '1') {?>
+				if($paged <= '1' && ampforwp_get_setting('ampforwp-cat-description')) {?>
 					<div class="amp-wp-content taxonomy-description">
 						<?php echo do_shortcode($arch_desc);// amphtml content, no kses ?>
 				    </div> <?php

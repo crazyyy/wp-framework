@@ -7,7 +7,7 @@ require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-base-embed-handle
 
 class AMP_Gallery_Embed_Handler extends AMP_Base_Embed_Handler {
 	private static $script_slug = 'amp-carousel';
-	private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.1.js';
+	private static $script_src = 'https://cdn.ampproject.org/v0/amp-carousel-0.2.js';
 
 	public function register_embed() {
 		add_shortcode( 'gallery', array( $this, 'shortcode' ) );
@@ -142,6 +142,7 @@ class AMP_Gallery_Embed_Handler extends AMP_Base_Embed_Handler {
 							.carousel-preview button{padding:0;}
 							.carousel-preview amp-img{height:40px;width:60px;position:relative;}
 							.carousel-preview {width: 100%;display: inline-block;text-align: center;margin: 20px 0px;}
+							.carousel-preview .amp-carousel-img img {object-fit: fill;}
 							.cls-btn { background: #0d0d0d; border: none;position: absolute;right: 10px;}
 							.cls-btn:after{content:"X";display:inline-block;color:#fff;font-size:20px;padding:20px;}
 							',
@@ -247,9 +248,7 @@ class AMP_Gallery_Embed_Handler extends AMP_Base_Embed_Handler {
 
 		//replacements
 			$r = rand(1,100);
-			$amp_carousel = AMP_HTML_Utils::build_tag( 
-							'amp-carousel',
-							array(
+			$carousel_args = array(
 								'width' => $this->args['width'],
 								'height' => $this->args['height'],
 								'type' => 'slides',
@@ -257,7 +256,14 @@ class AMP_Gallery_Embed_Handler extends AMP_Base_Embed_Handler {
 								'layout' => 'responsive',
 								'class'  => 'collapsible-captions',
 								'id' => 'carousel-with-carousel-preview-'.$r
-							),
+							);
+			$c_args = array('loop'=>'', 'autoplay'=>'');
+			$carousel_filter = apply_filters('ampforwp_carousel_args',$c_args);
+			$carousel_args = array_merge($carousel_args,$carousel_filter);
+
+			$amp_carousel = AMP_HTML_Utils::build_tag( 
+							'amp-carousel',
+							$carousel_args,
 							implode( PHP_EOL, $images ));
 
 			$amp_carousel_with_thumbnail_nav = apply_filters('amp_thumbnail_images', $amp_images_small, $r, $markup);

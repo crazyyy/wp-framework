@@ -1,0 +1,928 @@
+# Translation of Plugins - FakerPress - Development (trunk) in Ukrainian
+# This file is distributed under the same license as the Plugins - FakerPress - Development (trunk) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-04-01 05:20:07+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: uk_UA\n"
+"Project-Id-Version: Plugins - FakerPress - Development (trunk)\n"
+
+#: inc/class-fp-utils.php:1391
+msgid "Zimbabwe"
+msgstr "Зімбабве"
+
+#: inc/class-fp-utils.php:1381
+msgid "Yemen"
+msgstr "Ємен"
+
+#: inc/class-fp-utils.php:1386
+msgid "Zambia"
+msgstr "Замбія"
+
+#: inc/class-fp-utils.php:1366
+msgid "Vietnam"
+msgstr "Вʼєтнам"
+
+#: inc/class-fp-utils.php:1371
+msgid "Wallis and Futuna"
+msgstr "Уолліс та Футуна"
+
+#: inc/class-fp-utils.php:1376
+msgid "Western Sahara"
+msgstr "Західна Сахара"
+
+#: inc/class-fp-utils.php:1351
+msgid "Uzbekistan"
+msgstr "Узбекистан"
+
+#: inc/class-fp-utils.php:1356
+msgid "Vanuatu"
+msgstr "Вануату"
+
+#: inc/class-fp-utils.php:1361
+msgid "Venezuela"
+msgstr "Венесуела"
+
+#: inc/class-fp-utils.php:1341
+msgid "United States"
+msgstr "США"
+
+#: inc/class-fp-utils.php:1346
+msgid "Uruguay"
+msgstr "Уругвай"
+
+#: inc/class-fp-utils.php:1326
+msgid "Ukraine"
+msgstr "Україна"
+
+#: inc/class-fp-utils.php:1331
+msgid "United Arab Emirates"
+msgstr "Обʼєднані Арабські Емірати"
+
+#: inc/class-fp-utils.php:1336
+msgid "United Kingdom"
+msgstr "Великобританія"
+
+#: inc/class-fp-utils.php:1311
+msgid "Turks and Caicos Islands"
+msgstr "Теркс і Кайкос острова"
+
+#: inc/class-fp-utils.php:1316
+msgid "Tuvalu"
+msgstr "Тувалу"
+
+#: inc/class-fp-utils.php:1321
+msgid "Uganda"
+msgstr "Уганда"
+
+#: inc/class-fp-utils.php:1296
+msgid "Tunisia"
+msgstr "Туніс"
+
+#: inc/class-fp-utils.php:1301
+msgid "Turkey"
+msgstr "Туреччина"
+
+#: inc/class-fp-utils.php:1306
+msgid "Turkmenistan"
+msgstr "Туркменистан"
+
+#: inc/class-fp-utils.php:1281
+msgid "Tokelau"
+msgstr "Токелау"
+
+#: inc/class-fp-utils.php:1286
+msgid "Tonga"
+msgstr "Тонга"
+
+#: inc/class-fp-utils.php:1291
+msgid "Trinidad and Tobago"
+msgstr "Тринідад і Тобаго"
+
+#: inc/class-fp-utils.php:1271
+msgid "East Timor"
+msgstr "Східний Тимор"
+
+#: inc/class-fp-utils.php:1276
+msgid "Togo"
+msgstr "Того"
+
+#: inc/class-fp-utils.php:1256
+msgid "Tajikistan"
+msgstr "Таджикистан"
+
+#: inc/class-fp-utils.php:1261
+msgid "Tanzania"
+msgstr "Танзанія"
+
+#: inc/class-fp-utils.php:1266
+msgid "Thailand"
+msgstr "Таїланд"
+
+#: inc/class-fp-utils.php:1246
+msgid "Syria"
+msgstr "Сирія"
+
+#: inc/class-fp-utils.php:1251
+msgid "Taiwan"
+msgstr "Тайвань"
+
+#: inc/class-fp-utils.php:1231
+msgid "Swaziland"
+msgstr "Свазіленд"
+
+#: inc/class-fp-utils.php:1236
+msgid "Sweden"
+msgstr "Швеція"
+
+#: inc/class-fp-utils.php:1241
+msgid "Switzerland"
+msgstr "Швейцарія"
+
+#: inc/class-fp-utils.php:1216
+msgid "Sudan"
+msgstr "Судан"
+
+#: inc/class-fp-utils.php:1221
+msgid "Suriname"
+msgstr "Суринам"
+
+#: inc/class-fp-utils.php:1226
+msgid "Svalbard and Jan Mayen"
+msgstr "Шпіцберген і Ян-Маєн"
+
+#: inc/class-fp-utils.php:1201
+msgid "South Sudan"
+msgstr "південний Судан"
+
+#: inc/class-fp-utils.php:1206
+msgid "Spain"
+msgstr "Іспанія"
+
+#: inc/class-fp-utils.php:1211
+msgid "Sri Lanka"
+msgstr "Шрі-Ланка"
+
+#: inc/class-fp-utils.php:1191
+msgid "South Georgia"
+msgstr "Південна Джорджія"
+
+#: inc/class-fp-utils.php:1196
+msgid "South Korea"
+msgstr "Південна Корея"
+
+#: inc/class-fp-utils.php:1176
+msgid "Solomon Islands"
+msgstr "Соломонові Острови"
+
+#: inc/class-fp-utils.php:1181
+msgid "Somalia"
+msgstr "Сомалі"
+
+#: inc/class-fp-utils.php:1186
+msgid "South Africa"
+msgstr "ПАР"
+
+#: inc/class-fp-utils.php:1166
+msgid "Slovakia"
+msgstr "Словакія"
+
+#: inc/class-fp-utils.php:1171
+msgid "Slovenia"
+msgstr "Словенія"
+
+#: inc/class-fp-utils.php:1151
+msgid "Sierra Leone"
+msgstr "Сьєрра-Леоне"
+
+#: inc/class-fp-utils.php:1156
+msgid "Singapore"
+msgstr "Сінгапур"
+
+#: inc/class-fp-utils.php:1136
+msgid "Senegal"
+msgstr "Сенегал"
+
+#: inc/class-fp-utils.php:1141
+msgid "Serbia"
+msgstr "Сербія"
+
+#: inc/class-fp-utils.php:1146
+msgid "Seychelles"
+msgstr "Сейшели"
+
+#: inc/class-fp-utils.php:1126
+msgid "São Tomé and Príncipe"
+msgstr "Сан-Томе і Прінсіпі"
+
+#: inc/class-fp-utils.php:1131
+msgid "Saudi Arabia"
+msgstr "Саудівська Аравія"
+
+#: inc/class-fp-utils.php:1116
+msgid "Samoa"
+msgstr "Самоа"
+
+#: inc/class-fp-utils.php:1121
+msgid "San Marino"
+msgstr "Сан-Марино"
+
+#: inc/class-fp-utils.php:1096
+msgid "Saint Lucia"
+msgstr "Сент-Люсія"
+
+#: inc/class-fp-utils.php:1106
+msgid "Saint Pierre and Miquelon"
+msgstr "Сен-П'єр і Мікелон"
+
+#: inc/class-fp-utils.php:1111
+msgid "Saint Vincent and the Grenadines"
+msgstr "Сент-Вінсент і Гренадини"
+
+#: inc/class-fp-utils.php:1076
+msgid "Rwanda"
+msgstr "Руанда"
+
+#: inc/class-fp-utils.php:1086
+msgid "Saint Helena"
+msgstr "острів Святої Єлени"
+
+#: inc/class-fp-utils.php:1091
+msgid "Saint Kitts and Nevis"
+msgstr "Сент-Кітс і Невіс"
+
+#: inc/class-fp-utils.php:1066
+msgid "Romania"
+msgstr "Румунія"
+
+#: inc/class-fp-utils.php:1071
+msgid "Russia"
+msgstr "Росія"
+
+#: inc/class-fp-utils.php:1051
+msgid "Qatar"
+msgstr "Катар"
+
+#: inc/class-fp-utils.php:1041
+msgid "Portugal"
+msgstr "Португалія"
+
+#: inc/class-fp-utils.php:1046
+msgid "Puerto Rico"
+msgstr "Пуерто-Ріко"
+
+#: inc/class-fp-utils.php:1021
+msgid "Peru"
+msgstr "Перу"
+
+#: inc/class-fp-utils.php:1026
+msgid "Philippines"
+msgstr "Філіппіни"
+
+#: inc/class-fp-utils.php:1036
+msgid "Poland"
+msgstr "Польща"
+
+#: inc/class-fp-utils.php:1011
+msgid "Papua New Guinea"
+msgstr "Папуа Нова Гвінея"
+
+#: inc/class-fp-utils.php:1016
+msgid "Paraguay"
+msgstr "Парагвай"
+
+#: inc/class-fp-utils.php:1006
+msgid "Panama"
+msgstr "Панама"
+
+#: inc/class-fp-utils.php:986
+msgid "Oman"
+msgstr "Оман"
+
+#: inc/class-fp-utils.php:991
+msgid "Pakistan"
+msgstr "Пакистан"
+
+#: inc/class-fp-utils.php:996
+msgid "Palau"
+msgstr "Палау"
+
+#: inc/class-fp-utils.php:981
+msgid "Norway"
+msgstr "Норвегія"
+
+#: inc/class-fp-utils.php:961
+msgid "Niue"
+msgstr "Ніуе"
+
+#: inc/class-fp-utils.php:966
+msgid "Norfolk Island"
+msgstr "острів Норфолк"
+
+#: inc/class-fp-utils.php:971
+msgid "North Korea"
+msgstr "Північна Корея"
+
+#: inc/class-fp-utils.php:951
+msgid "Niger"
+msgstr "Нігер"
+
+#: inc/class-fp-utils.php:956
+msgid "Nigeria"
+msgstr "Нігерія"
+
+#: inc/class-fp-utils.php:936
+msgid "New Caledonia"
+msgstr "Нова Каледонія"
+
+#: inc/class-fp-utils.php:941
+msgid "New Zealand"
+msgstr "Нова Зеландія"
+
+#: inc/class-fp-utils.php:946
+msgid "Nicaragua"
+msgstr "Нікарагуа"
+
+#: inc/class-fp-utils.php:926
+msgid "Nepal"
+msgstr "Непал"
+
+#: inc/class-fp-utils.php:931
+msgid "Netherlands"
+msgstr "Нідерланди"
+
+#: inc/class-fp-utils.php:911
+msgid "Myanmar"
+msgstr "М'янма"
+
+#: inc/class-fp-utils.php:916
+msgid "Namibia"
+msgstr "Намібія"
+
+#: inc/class-fp-utils.php:921
+msgid "Nauru"
+msgstr "Науру"
+
+#: inc/class-fp-utils.php:901
+msgid "Morocco"
+msgstr "Марокко"
+
+#: inc/class-fp-utils.php:906
+msgid "Mozambique"
+msgstr "Мозамбік"
+
+#: inc/class-fp-utils.php:886
+msgid "Mongolia"
+msgstr "Монголія"
+
+#: inc/class-fp-utils.php:891
+msgid "Montenegro"
+msgstr "Чорногорія"
+
+#: inc/class-fp-utils.php:896
+msgid "Montserrat"
+msgstr "Монтсеррат"
+
+#: inc/class-fp-utils.php:876
+msgid "Moldova"
+msgstr "Молдова"
+
+#: inc/class-fp-utils.php:881
+msgid "Monaco"
+msgstr "Монако"
+
+#: inc/class-fp-utils.php:861
+msgid "Mayotte"
+msgstr "Майотта"
+
+#: inc/class-fp-utils.php:866
+msgid "Mexico"
+msgstr "Мексика"
+
+#: inc/class-fp-utils.php:851
+msgid "Mauritania"
+msgstr "Мавританія"
+
+#: inc/class-fp-utils.php:856
+msgid "Mauritius"
+msgstr "Маврикій"
+
+#: inc/class-fp-utils.php:846
+msgid "Martinique"
+msgstr "Мартинюк"
+
+#: inc/class-fp-utils.php:836
+msgid "Malta"
+msgstr "Мальта"
+
+#: inc/class-fp-utils.php:841
+msgid "Marshall Islands"
+msgstr "Маршаллові Острови"
+
+#: inc/class-fp-utils.php:826
+msgid "Maldives"
+msgstr "Мальдіви"
+
+#: inc/class-fp-utils.php:831
+msgid "Mali"
+msgstr "Малі"
+
+#: inc/class-fp-utils.php:811
+msgid "Madagascar"
+msgstr "Мадагаскар"
+
+#: inc/class-fp-utils.php:816
+msgid "Malawi"
+msgstr "Малаві"
+
+#: inc/class-fp-utils.php:821
+msgid "Malaysia"
+msgstr "Малайзія"
+
+#: inc/class-fp-utils.php:801
+msgid "Macau"
+msgstr "Макао О.А.Р. Китаю"
+
+#: inc/class-fp-utils.php:786
+msgid "Liechtenstein"
+msgstr "Ліхтенштейн"
+
+#: inc/class-fp-utils.php:791
+msgid "Lithuania"
+msgstr "Литва"
+
+#: inc/class-fp-utils.php:796
+msgid "Luxembourg"
+msgstr "Люксембург"
+
+#: inc/class-fp-utils.php:776
+msgid "Liberia"
+msgstr "Ліберія"
+
+#: inc/class-fp-utils.php:781
+msgid "Libya"
+msgstr "Лівія"
+
+#: inc/class-fp-utils.php:761
+msgid "Latvia"
+msgstr "Латвія"
+
+#: inc/class-fp-utils.php:766
+msgid "Lebanon"
+msgstr "Ліван"
+
+#: inc/class-fp-utils.php:771
+msgid "Lesotho"
+msgstr "Лесото"
+
+#: inc/class-fp-utils.php:751
+msgid "Kyrgyzstan"
+msgstr "Киргизстан"
+
+#: inc/class-fp-utils.php:756
+msgid "Laos"
+msgstr "Лаос"
+
+#: inc/class-fp-utils.php:741
+msgid "Kiribati"
+msgstr "Кірибаті"
+
+#: inc/class-fp-utils.php:746
+msgid "Kuwait"
+msgstr "Кувейт"
+
+#: inc/class-fp-utils.php:726
+msgid "Jordan"
+msgstr "Йорданія"
+
+#: inc/class-fp-utils.php:731
+msgid "Kazakhstan"
+msgstr "Казахстан"
+
+#: inc/class-fp-utils.php:736
+msgid "Kenya"
+msgstr "Кенія"
+
+#: inc/class-fp-utils.php:716
+msgid "Japan"
+msgstr "Японія"
+
+#: inc/class-fp-utils.php:721
+msgid "Jersey"
+msgstr "Джерсі"
+
+#: inc/class-fp-utils.php:711
+msgid "Jamaica"
+msgstr "Ямайка"
+
+#: inc/class-fp-utils.php:701
+msgid "Israel"
+msgstr "Ізраїль"
+
+#: inc/class-fp-utils.php:706
+msgid "Italy"
+msgstr "Італія"
+
+#: inc/class-fp-utils.php:686
+msgid "Iraq"
+msgstr "Ірак"
+
+#: inc/class-fp-utils.php:691
+msgid "Republic of Ireland"
+msgstr "Ірландія"
+
+#: inc/class-fp-utils.php:696
+msgid "Isle of Man"
+msgstr "Острів Мен"
+
+#: inc/class-fp-utils.php:671
+msgid "Indonesia"
+msgstr "Індонезія"
+
+#: inc/class-fp-utils.php:676
+msgid "Ivory Coast"
+msgstr "Кот д’Івуар"
+
+#: inc/class-fp-utils.php:681
+msgid "Iran"
+msgstr "Іран"
+
+#: inc/class-fp-utils.php:656
+msgid "Hungary"
+msgstr "Угорщина"
+
+#: inc/class-fp-utils.php:661
+msgid "Iceland"
+msgstr "Ісландія"
+
+#: inc/class-fp-utils.php:666
+msgid "India"
+msgstr "Індія"
+
+#: inc/class-fp-utils.php:646
+msgid "Honduras"
+msgstr "Гондурас"
+
+#: inc/class-fp-utils.php:651
+msgid "Hong Kong"
+msgstr "Гонконґ О.А.Р. Китаю"
+
+#: inc/class-fp-utils.php:636
+msgid "Haiti"
+msgstr "Гаїті"
+
+#: inc/class-fp-utils.php:641
+msgid "Heard Island and McDonald Islands"
+msgstr "Острів Херд і острови Макдональд"
+
+#: inc/class-fp-utils.php:621
+msgid "Guinea"
+msgstr "Гвінея"
+
+#: inc/class-fp-utils.php:626
+msgid "Guinea-Bissau"
+msgstr "Гвінея-Біссау"
+
+#: inc/class-fp-utils.php:631
+msgid "Guyana"
+msgstr "Guyana"
+
+#: inc/class-fp-utils.php:611
+msgid "Guatemala"
+msgstr "Гватемала"
+
+#: inc/class-fp-utils.php:616
+msgid "Guernsey"
+msgstr "Гернсі"
+
+#: inc/class-fp-utils.php:606
+msgid "Guam"
+msgstr "Гуам"
+
+#: inc/class-fp-utils.php:596
+msgid "Grenada"
+msgstr "Гренада"
+
+#: inc/class-fp-utils.php:601
+msgid "Guadeloupe"
+msgstr "Гваделупа"
+
+#: inc/class-fp-utils.php:586
+msgid "Greece"
+msgstr "Греція"
+
+#: inc/class-fp-utils.php:591
+msgid "Greenland"
+msgstr "Гренландія"
+
+#: inc/class-fp-utils.php:571
+msgid "Germany"
+msgstr "Німеччина"
+
+#: inc/class-fp-utils.php:576
+msgid "Ghana"
+msgstr "Гана"
+
+#: inc/class-fp-utils.php:581
+msgid "Gibraltar"
+msgstr "Гібралтар"
+
+#: inc/class-fp-utils.php:556
+msgid "Gabon"
+msgstr "Габон"
+
+#: inc/class-fp-utils.php:566
+msgid "Georgia"
+msgstr "Грузія"
+
+#: inc/class-fp-utils.php:536
+msgid "France"
+msgstr "Франція"
+
+#: inc/class-fp-utils.php:541
+msgid "French Guiana"
+msgstr "Французька Гвіана"
+
+#: inc/class-fp-utils.php:546
+msgid "French Polynesia"
+msgstr "Французька Полінезія"
+
+#: inc/class-fp-utils.php:526
+msgid "Fiji"
+msgstr "Фіджі"
+
+#: inc/class-fp-utils.php:531
+msgid "Finland"
+msgstr "Фінляндія"
+
+#: inc/class-fp-utils.php:516
+msgid "Falkland Islands"
+msgstr "Фолклендські острови"
+
+#: inc/class-fp-utils.php:521
+msgid "Faroe Islands"
+msgstr "Фарерські острови"
+
+#: inc/class-fp-utils.php:501
+msgid "Eritrea"
+msgstr "Еритрея"
+
+#: inc/class-fp-utils.php:506
+msgid "Estonia"
+msgstr "Естонія"
+
+#: inc/class-fp-utils.php:511
+msgid "Ethiopia"
+msgstr "Ефіопія"
+
+#: inc/class-fp-utils.php:491
+msgid "El Salvador"
+msgstr "Сальвадор"
+
+#: inc/class-fp-utils.php:496
+msgid "Equatorial Guinea"
+msgstr "Екваторіальна Гвінея"
+
+#: inc/class-fp-utils.php:476
+msgid "Dominican Republic"
+msgstr "Домініканська Республіка"
+
+#: inc/class-fp-utils.php:481
+msgid "Ecuador"
+msgstr "Еквадор"
+
+#: inc/class-fp-utils.php:486
+msgid "Egypt"
+msgstr "Єгипет"
+
+#: inc/class-fp-utils.php:471
+msgid "Dominica"
+msgstr "Домінік"
+
+#: inc/class-fp-utils.php:456
+msgid "Czech Republic"
+msgstr "Чеська республіка"
+
+#: inc/class-fp-utils.php:461
+msgid "Denmark"
+msgstr "Данія"
+
+#: inc/class-fp-utils.php:466
+msgid "Djibouti"
+msgstr "Джібуті"
+
+#: inc/class-fp-utils.php:436
+msgid "Croatia"
+msgstr "Хорватія"
+
+#: inc/class-fp-utils.php:441
+msgid "Cuba"
+msgstr "Куба"
+
+#: inc/class-fp-utils.php:451
+msgid "Cyprus"
+msgstr "Кіпр"
+
+#: inc/class-fp-utils.php:431
+msgid "Costa Rica"
+msgstr "Коста-Рика"
+
+#: inc/class-fp-utils.php:416
+msgid "Republic of the Congo"
+msgstr "Республіка Конго"
+
+#: inc/class-fp-utils.php:421
+msgid "Democratic Republic of the Congo"
+msgstr "Демократична Республіка Конго"
+
+#: inc/class-fp-utils.php:426
+msgid "Cook Islands"
+msgstr "Острови Кука"
+
+#: inc/class-fp-utils.php:401
+msgid "Cocos (Keeling) Islands"
+msgstr "Кокосові (Кілінг) острови"
+
+#: inc/class-fp-utils.php:406
+msgid "Colombia"
+msgstr "Колумбія"
+
+#: inc/class-fp-utils.php:411
+msgid "Comoros"
+msgstr "Коморські Острови"
+
+#: inc/class-fp-utils.php:386
+msgid "Chile"
+msgstr "Чилі"
+
+#: inc/class-fp-utils.php:391
+msgid "China"
+msgstr "Китай"
+
+#: inc/class-fp-utils.php:396
+msgid "Christmas Island"
+msgstr "острів Різдва"
+
+#: inc/class-fp-utils.php:371
+msgid "Cayman Islands"
+msgstr "Кайманові острови"
+
+#: inc/class-fp-utils.php:376
+msgid "Central African Republic"
+msgstr "Центрально-Африканська Республіка"
+
+#: inc/class-fp-utils.php:381
+msgid "Chad"
+msgstr "Чад"
+
+#: inc/class-fp-utils.php:366
+msgid "Cape Verde"
+msgstr "Кабо-Верде"
+
+#: inc/class-fp-utils.php:351
+msgid "Cambodia"
+msgstr "Камбоджа"
+
+#: inc/class-fp-utils.php:356
+msgid "Cameroon"
+msgstr "Камерун"
+
+#: inc/class-fp-utils.php:361
+msgid "Canada"
+msgstr "Канада"
+
+#: inc/class-fp-utils.php:336
+msgid "Bulgaria"
+msgstr "Болгарія"
+
+#: inc/class-fp-utils.php:341
+msgid "Burkina Faso"
+msgstr "Буркіна-Фасо"
+
+#: inc/class-fp-utils.php:346
+msgid "Burundi"
+msgstr "Бурунді"
+
+#: inc/class-fp-utils.php:326
+msgid "British Virgin Islands"
+msgstr "Британські Віргінські острови"
+
+#: inc/class-fp-utils.php:331
+msgid "Brunei"
+msgstr "Бруней"
+
+#: inc/class-fp-utils.php:316
+msgid "British Indian Ocean Territory"
+msgstr "Британська територія Індійського океану"
+
+#: inc/class-fp-utils.php:301
+msgid "Botswana"
+msgstr "Ботсвана"
+
+#: inc/class-fp-utils.php:306
+msgid "Bouvet Island"
+msgstr "острів Буве"
+
+#: inc/class-fp-utils.php:311
+msgid "Brazil"
+msgstr "Бразилія"
+
+#: inc/class-fp-utils.php:281
+msgid "Bhutan"
+msgstr "Бутан"
+
+#: inc/class-fp-utils.php:286
+msgid "Bolivia"
+msgstr "Болівія"
+
+#: inc/class-fp-utils.php:296
+msgid "Bosnia and Herzegovina"
+msgstr "Боснія і Герцоговина"
+
+#: inc/class-fp-utils.php:276
+msgid "Bermuda"
+msgstr "Бермудські Острови"
+
+#: inc/class-fp-utils.php:271
+msgid "Benin"
+msgstr "Бенін"
+
+#: inc/class-fp-utils.php:261
+msgid "Belgium"
+msgstr "Бельгія"
+
+#: inc/class-fp-utils.php:266
+msgid "Belize"
+msgstr "Белиз"
+
+#: inc/class-fp-utils.php:251
+msgid "Barbados"
+msgstr "Барбадос"
+
+#: inc/class-fp-utils.php:256
+msgid "Belarus"
+msgstr "Білорусь"
+
+#: inc/class-fp-utils.php:246
+msgid "Bangladesh"
+msgstr "Бангладеш"
+
+#: inc/class-fp-utils.php:231
+msgid "Azerbaijan"
+msgstr "Азербайджан"
+
+#: inc/class-fp-utils.php:241
+msgid "Bahrain"
+msgstr "Бахрейн"
+
+#: inc/class-fp-utils.php:226
+msgid "Austria"
+msgstr "Австрія"
+
+#: inc/class-fp-utils.php:216
+msgid "Aruba"
+msgstr "Аруба"
+
+#: inc/class-fp-utils.php:221
+msgid "Australia"
+msgstr "Австралія"
+
+#: inc/class-fp-utils.php:206
+msgid "Argentina"
+msgstr "Аргентина"
+
+#: inc/class-fp-utils.php:211
+msgid "Armenia"
+msgstr "Вірменія"
+
+#: inc/class-fp-utils.php:196
+msgid "Anguilla"
+msgstr "Ангілья"
+
+#: inc/class-fp-utils.php:201
+msgid "Antigua and Barbuda"
+msgstr "Антигуа і Барбуда"
+
+#: inc/class-fp-utils.php:191
+msgid "Angola"
+msgstr "Ангола"
+
+#: inc/class-fp-utils.php:186
+msgid "Andorra"
+msgstr "Андорра"
+
+#: inc/class-fp-utils.php:171
+msgid "Albania"
+msgstr "Албанія"
+
+#: inc/class-fp-utils.php:176
+msgid "Algeria"
+msgstr "Алжир"
+
+#: inc/class-fp-utils.php:161
+msgid "Afghanistan"
+msgstr "Афганістан"

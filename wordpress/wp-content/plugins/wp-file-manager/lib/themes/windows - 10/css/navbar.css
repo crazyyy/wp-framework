@@ -1,7 +1,10 @@
 /* navbar.css */
 /* Main wrapper for navbar */
-.elfinder .elfinder-navbar {
-  border-right: 1px solid #e5e5e5;
+.elfinder.elfinder-rtl .elfinder-navbar {
+    border-left: 1px solid #e5e5e5;
+}
+.elfinder.elfinder-ltr .elfinder-navbar {
+    border-right: 1px solid #e5e5e5;
 }
 
 /* Directories */

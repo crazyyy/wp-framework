@@ -88,16 +88,6 @@ class WPSEO_MyYoast_Proxy implements WPSEO_WordPress_Integration {
 		$this->set_header( 'Content-Type: ' . $proxy_options['content_type'] );
 		$this->set_header( 'Cache-Control: max-age=' . self::CACHE_CONTROL_MAX_AGE );
 
-		if ( $this->should_load_url_directly() ) {
-			/*
-			 * If an error occurred, fallback to the next proxy method (`wp_remote_get`).
-			 * Otherwise, we are done here.
-			 */
-			if ( $this->load_url( $proxy_options['url'] ) ) {
-				return;
-			}
-		}
-
 		try {
 			echo $this->get_remote_url_body( $proxy_options['url'] );
 		}
@@ -122,10 +112,10 @@ class WPSEO_MyYoast_Proxy implements WPSEO_WordPress_Integration {
 	 *
 	 * @param string $url The url to load.
 	 *
+	 * @return string The body of the response.
+	 *
 	 * @throws Exception When `wp_remote_get` returned an error.
 	 * @throws Exception When the response code is not 200.
-	 *
-	 * @return string The body of the response.
 	 */
 	protected function get_remote_url_body( $url ) {
 		$response = wp_remote_get( $url );
@@ -139,21 +129,6 @@ class WPSEO_MyYoast_Proxy implements WPSEO_WordPress_Integration {
 		}
 
 		return wp_remote_retrieve_body( $response );
-	}
-
-	/**
-	 * Tries to load the given url.
-	 *
-	 * @link https://php.net/manual/en/function.readfile.php
-	 *
-	 * @codeCoverageIgnore
-	 *
-	 * @param string $url The url to load.
-	 *
-	 * @return bool False if an error occurred.
-	 */
-	protected function load_url( $url ) {
-		return readfile( $url ) !== false;
 	}
 
 	/**
@@ -178,19 +153,6 @@ class WPSEO_MyYoast_Proxy implements WPSEO_WordPress_Integration {
 		}
 
 		return [];
-	}
-
-	/**
-	 * Checks the PHP configuration of allow_url_fopen.
-	 *
-	 * @codeCoverageIgnore
-	 *
-	 * @link https://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen
-	 *
-	 * @return bool True when the PHP configuration allows for url loading via readfile.
-	 */
-	protected function should_load_url_directly() {
-		return ! ! ini_get( 'allow_url_fopen' );
 	}
 
 	/**

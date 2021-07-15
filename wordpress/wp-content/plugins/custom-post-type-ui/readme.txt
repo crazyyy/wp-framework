@@ -2,9 +2,9 @@
 Contributors: webdevstudios, pluginize, tw2113, vegasgeek, modemlooper, williamsba1
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3084056
 Tags: custom post types, CPT, CMS, post, types, post type, taxonomy, tax, custom, content types, post types
-Requires at least: 5.2
-Tested up to: 5.3
-Stable tag: 1.7.2
+Requires at least: 5.5
+Tested up to: 5.7.2
+Stable tag: 1.9.2
 License: GPL-2.0+
 Requires PHP: 5.6
 
@@ -31,128 +31,69 @@ Official development of Custom Post Type UI is on GitHub, with official stable r
 
 == Changelog ==
 
-= 1.7.2 - 2020-01-08 =
-* Fixed: Duplicate entries for "delete_with_user" in get code.
-* Fixed: Delete button for post types and taxonomies at bottom of page did not trigger dialog prompt.
+= 1.9.2 - 2021-06-16 =
+* Added: "date" as a reserved taxonomy slug.
+* Fixed: duplicate "show_in_graphql" attribute output in "Get Code" output.
+* Updated: image optimization for smaller file sizes.
+* Updated: removed duplicate taxonomy labels.
 
-= 1.7.1 - 2019-11-06 =
-* Fixed: Random-ish redirects to the "Add new" tab for post types or taxonomies
-* Fixed: JavaScript error when trying to delete a taxonomy.
+= 1.9.1 - 2021-04-19 =
+* Fixed: missed WPGraphQL settings in our Get Tools/Export functionality.
+* Updated: note about needing a published item to set parent/child relationships in post types.
 
-= 1.7.0 - 2019-11-06 =
-* Actually added this time: Delete with user support for post types. Managed to miss the code with 1.6.0 which was a long time ago.
-* Added: Ability to disable registration of post types or taxonomies, via code filter, without deleting them completely from settings.
-* Added: New post type labels introduced in WordPress 5.0.0.
-* Added: Link to Dashicon documentation for when editing menu icon. Props @juliekuehl
-* Added: Ability to automatically fill in additional labels based on chosen plural and singular label text.
-* Updated: Added post type templates documentation to help section.
-* Updated: Redirect user to the "add" tab if deleting the last post type or taxonomy created.
-* Updated: Touched up tab markup to match semantic improvements provided by WordPress 5.2.0.
-* Fixed: potential duplicate output of "parent_item_colon" with "Get Code" output.
-* Misc: Added code of conduct file to github repo. Props GaryJones.
+= 1.9.0 - 2021-03-30 =
+* Added: WPGraphQL Support when WPGraphQL is installed and active.
+* Fixed: Better handling of code in post_format based helper functions.
+* Updated: Cleaned up unused CSS.
+* Updated: Added `types` to disallowed taxonomy slugs.
+* Updated: Amended some helper text on the listings page regarding templates. Props @tarecord
 
-= 1.6.2 - 2019-05-20 =
-* Added: "themes" is now a reserved post type slug due to conflicts with WordPress internally.
-* Fixed: Updated wording around "Supports" section of post type settings screen.
+= 1.8.2 - 2020-12-29 =
+* Fixed: Addressed some missing available labels for taxonomies.
+* Updated: Provide page slug and link to page if a post type slug is matching an existing page.
+* Updated: Support link was pointed to legacy WordPress Codex but had been moved to Developer Portal. Props @robwent
 
-= 1.6.1 - 2018-12-03 =
-* Fixed: Missed quote for "publicly_queryable" in taxonomy "get code" output.
-* Fixed: Adjusted handling of capitalization on the word "false" when being used to disable a taxonomy metabox via the "metabox callback" setting. The word "false" needs to be all lowercase to disable.
-* Updated: Added note about ability to pass "false" for the "metabox callback" setting to disable the metabox.
-* Updated: Fall back to "custom-post-type-ui" textdomain in "get code" output if theme does not have their own.
-* Updated: Make "Show In Rest" setting default to true taxonomies for sake of easier Gutenberg integration in the future. 1.6.0 had just post types doing this.
+= 1.8.1 - 2020-09-21 =
+* Fixed: Issues with WP-CLI importing.
+* Added: Menu icon preview that should have been in 1.8.0, but was missed. Props @glebkema
 
-= 1.6.0 - 2018-10-22 =
-* Added: Support for `meta_box_cb` parameter for `register_taxonomy` and taxonomies.
-* Added: Dynamically warn about existing slugs.
-* Added: "delete_with_user" support for post types.
-* Added: Filters for post type and taxonomy data right before saving of final data.
-* Added: `cptui_get_taxonomy_exists` function to check if a provided taxonomy is registered.
-* Added: Required PHP version to readme.txt
-* Added: Filter on taxonomies to be listed as available for association with a post type.
-* Added: Warning indicators to our "Slug changed" and "Slug exists" warnings for post types and taxonomies.
-* Added: Support for "publicly_queryable" parameter for taxonomies.
-* Added: Support for "rest_controller_class" parameters for both post types and taxonomies.
-* Added: Some initial WP-CLI support for importing and exporting CPTUI settings.
-* Added: `name_admin_bar` support in post type labels.
-* Added: Handling of array versions for "capability_type" field.
-* Updated: Bump minimum WordPress version to 4.7.
-* Updated: Pass the object_type array to `cptui_pre_register_taxonomy` filter as extra parameter.
-* Updated: Adjusted preserved label handling to aid with plugin performance. Props alex-solovyev
-* Updated: Utilize `wp_doing_ajax()` function for our AJAX checks.
-* Updated: Clarify what is exported with the Post Types and Taxonomies spots for the Tools section.
-* Updated: Clarify that the listed post types to associate to a CPTUI taxonomy are public post types by default.
-* Updated: Make "Show In Rest" setting default to true for sake of easier Gutenberg integration in the future.
-* Fixed: Only register archive slug if has_archive is set to true.
-* Fixed: Error occurred when attempting to unset post types while editing a taxonomy.
-* Fixed: Prevent errors from non-existant callback functions during post type or taxonomy processing.
-* Fixed: Incorrect use of reserved taxonomy slugs function in a check for reserved post types.
-* Fixed: Make sure "No post type selected" alert trigger from both buttons on the taxonomy settings edit screen.
-* Fixed: Add our stylesheet only on our CPTUI pages. Fixes responsive bug on post editor screen.
-* Fixed: Removed duplicate "label" in taxonomy "get code" section.
-
+= 1.8.0 - 2020-08-14 =
+* Added: support for default terms with a custom taxonomy.
+* Updated: Removed the forcing of underscores for post type slugs. Taxonomies are still forced.
+* Fixed: jQuery compatibility issue with WordPress 5.5.0
 
 == Upgrade Notice ==
 
-= 1.7.2 - 2020-01-08 =
-* Fixed: Duplicate entries for "delete_with_user" in get code.
-* Fixed: Delete button for post types and taxonomies at bottom of page did not trigger dialog prompt.
+= 1.9.2 - 2021-06-16 =
+* Added: "date" as a reserved taxonomy slug.
+* Fixed: duplicate "show_in_graphql" attribute output in "Get Code" output.
+* Updated: image optimization for smaller file sizes.
+* Updated: removed duplicate taxonomy labels.
 
-= 1.7.1 - 2019-11-06 =
-* Fixed: Random-ish redirects to the "Add new" tab for post types or taxonomies
-* Fixed: JavaScript error when trying to delete a taxonomy.
+= 1.9.1 - 2021-04-19 =
+* Fixed: missed WPGraphQL settings in our Get Tools/Export functionality.
+* Updated: note about needing a published item to set parent/child relationships in post types.
 
-= 1.7.0 - 2019-11-06 =
-* Actually added this time: Delete with user support for post types. Managed to miss the code with 1.6.0 which was a long time ago.
-* Added: Ability to disable registration of post types or taxonomies, via code filter, without deleting them completely from settings.
-* Added: New post type labels introduced in WordPress 5.0.0.
-* Added: Link to Dashicon documentation for when editing menu icon. Props @juliekuehl
-* Added: Ability to automatically fill in additional labels based on chosen plural and singular label text.
-* Updated: Added post type templates documentation to help section.
-* Updated: Redirect user to the "add" tab if deleting the last post type or taxonomy created.
-* Updated: Touched up tab markup to match semantic improvements provided by WordPress 5.2.0.
-* Fixed: potential duplicate output of "parent_item_colon" with "Get Code" output.
-* Misc: Added code of conduct file to github repo. Props GaryJones.
+= 1.9.0 - 2021-03-30 =
+* Added: WPGraphQL Support when WPGraphQL is installed and active.
+* Fixed: Better handling of code in post_format based helper functions.
+* Updated: Cleaned up unused CSS.
+* Updated: Added `types` to disallowed taxonomy slugs.
+* Updated: Amended some helper text on the listings page regarding templates. Props @tarecord
 
-= 1.6.2 - 2019-05-20 =
-* Added: "themes" is now a reserved post type slug due to conflicts with WordPress internally.
-* Fixed: Updated wording around "Supports" section of post type settings screen.
+= 1.8.2 - 2020-12-29 =
+* Fixed: Addressed some missing available labels for taxonomies.
+* Updated: Provide page slug and link to page if a post type slug is matching an existing page.
+* Updated: Support link was pointed to legacy WordPress Codex but had been moved to Developer Portal. Props @robwent
 
-= 1.6.1 - 2018-12-03 =
-* Fixed: Missed quote for "publicly_queryable" in taxonomy "get code" output.
-* Fixed: Adjusted handling of capitalization on the word "false" when being used to disable a taxonomy metabox via the "metabox callback" setting. The word "false" needs to be all lowercase to disable.
-* Updated: Added note about ability to pass "false" for the "metabox callback" setting to disable the metabox.
-* Updated: Fall back to "custom-post-type-ui" textdomain in "get code" output if theme does not have their own.
-* Updated: Make "Show In Rest" setting default to true taxonomies for sake of easier Gutenberg integration in the future. 1.6.0 had just post types doing this.
+= 1.8.1 - 2020-09-21 =
+* Fixed: Issues with WP-CLI importing.
+* Added: Menu icon preview that should have been in 1.8.0, but was missed. Props @glebkema
 
-= 1.6.0 - 2018-10-22 =
-* Added: Support for `meta_box_cb` parameter for `register_taxonomy` and taxonomies.
-* Added: Dynamically warn about existing slugs.
-* Added: "delete_with_user" support for post types.
-* Added: Filters for post type and taxonomy data right before saving of final data.
-* Added: `cptui_get_taxonomy_exists` function to check if a provided taxonomy is registered.
-* Added: Required PHP version to readme.txt
-* Added: Filter on taxonomies to be listed as available for association with a post type.
-* Added: Warning indicators to our "Slug changed" and "Slug exists" warnings for post types and taxonomies.
-* Added: Support for "publicly_queryable" parameter for taxonomies.
-* Added: Support for "rest_controller_class" parameters for both post types and taxonomies.
-* Added: Some initial WP-CLI support for importing and exporting CPTUI settings.
-* Added: `name_admin_bar` support in post type labels.
-* Added: Handling of array versions for "capability_type" field.
-* Updated: Bump minimum WordPress version to 4.7.
-* Updated: Pass the object_type array to `cptui_pre_register_taxonomy` filter as extra parameter.
-* Updated: Adjusted preserved label handling to aid with plugin performance. Props alex-solovyev
-* Updated: Utilize `wp_doing_ajax()` function for our AJAX checks.
-* Updated: Clarify what is exported with the Post Types and Taxonomies spots for the Tools section.
-* Updated: Clarify that the listed post types to associate to a CPTUI taxonomy are public post types by default.
-* Updated: Make "Show In Rest" setting default to true for sake of easier Gutenberg integration in the future.
-* Fixed: Only register archive slug if has_archive is set to true.
-* Fixed: Error occurred when attempting to unset post types while editing a taxonomy.
-* Fixed: Prevent errors from non-existant callback functions during post type or taxonomy processing.
-* Fixed: Incorrect use of reserved taxonomy slugs function in a check for reserved post types.
-* Fixed: Make sure "No post type selected" alert trigger from both buttons on the taxonomy settings edit screen.
-* Fixed: Add our stylesheet only on our CPTUI pages. Fixes responsive bug on post editor screen.
-* Fixed: Removed duplicate "label" in taxonomy "get code" section.
+= 1.8.0 - 2020-08-14 =
+* Added: support for default terms with a custom taxonomy.
+* Updated: Removed the forcing of underscores for post type slugs. Taxonomies are still forced.
+* Fixed: jQuery compatibility issue with WordPress 5.5.0
 
 == Installation ==
 

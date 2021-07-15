@@ -33,7 +33,7 @@
 			// load jQueryUI CSS
 			elFinder.prototype.loadCss('//cdnjs.cloudflare.com/ajax/libs/jqueryui/'+uiver+'/themes/smoothness/jquery-ui.css');
 			
-			$(function() {
+			jQuery(function() {
 				var optEditors = {
 						commandsOptions: {
 							edit: {
@@ -45,7 +45,7 @@
 				
 				// Interpretation of "elFinderConfig"
 				if (config && config.managers) {
-					$.each(config.managers, function(id, mOpts) {
+					jQuery.each(config.managers, function(id, mOpts) {
 						opts = Object.assign(opts, config.defaultOpts || {});
 						// editors marges to opts.commandOptions.edit
 						try {
@@ -54,9 +54,9 @@
 							Object.assign(mOpts, optEditors);
 						}
 						// Make elFinder
-						$('#' + id).elfinder(
+						jQuery('#' + id).elfinder(
 							// 1st Arg - options
-							$.extend(true, { lang: lang }, opts, mOpts || {}),
+							jQuery.extend(true, { lang: lang }, opts, mOpts || {}),
 							// 2nd Arg - before boot up function
 							function(fm, extraObj) {
 								// `init` event callback function

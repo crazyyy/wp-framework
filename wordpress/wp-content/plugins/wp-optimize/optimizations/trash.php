@@ -54,9 +54,13 @@ class WP_Optimization_trash extends WP_Optimization {
 		// fix empty revision titles.
 		if (!empty($posts)) {
 			foreach ($posts as $key => $post) {
+				$args = array(
+					'post_status' => 'trash',
+					'post_type' => 'post',
+				);
 				$posts[$key]['post_title'] = array(
 					'text' => '' == $post['post_title'] ? '('.__('no title', 'wp-optimize').')' : $post['post_title'],
-					'url' => get_edit_post_link($post['ID']),
+					'url' => add_query_arg($args, 'edit.php'),
 				);
 			}
 		}

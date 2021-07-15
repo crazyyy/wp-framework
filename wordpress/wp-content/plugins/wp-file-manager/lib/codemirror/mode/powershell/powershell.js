@@ -284,7 +284,7 @@ CodeMirror.defineMode('powershell', function() {
   }
 
   function tokenInterpolation(stream, state, parentTokenize) {
-    if (stream.match('$(')) {
+    if (stream.match('jQuery(')) {
       var savedBracketNesting = state.bracketNesting;
       state.returnStack.push({
         /*jshint loopfunc:true */

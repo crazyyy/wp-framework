@@ -6,9 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_filter('ampforwp_the_content_last_filter','ampforwp_minify_html_output');
 function ampforwp_minify_html_output($content_buffer){
     $content_buffer = str_replace('srcset=""', '', $content_buffer);
+    $content_buffer = preg_replace('/<style amp-runtime(=""|)><\/style>/', '', $content_buffer);
     //Removed trbidi attribute #3687
     $content_buffer = str_replace('trbidi="on"', '', $content_buffer);
     $content_buffer = str_replace("trbidi='on'", '', $content_buffer);
+    //Picture-tag is not working in AMP #4051
+    if(preg_match('/<picture(.*?)<amp-img(.*?)><\/amp-img>(.*?)<\/picture>/s', $content_buffer)){
+        $content_buffer = preg_replace('/<picture(.*?)<amp-img(.*?)><\/amp-img>(.*?)<\/picture>/s', '<noscript><picture$1</picture></noscript><amp-img$2></amp-img>$3', $content_buffer);
+    }
     if(class_exists('SiteOrigin_Widgets_Bundle')){
         $content_buffer = preg_replace('/<amp-video id="sow-player(.*?)" class="(.*?)"(.*?)<\/amp-video>/', '<amp-video id="sow-player$1" class="$2" autoplay $3</amp-video>', $content_buffer);
     }
@@ -19,6 +24,61 @@ function ampforwp_minify_html_output($content_buffer){
 	if (defined('W3TC') && strpos($content_buffer, 'frameborder') !== false) {
 		add_filter("w3tc_minify_html_enable",'__return_false');
 	}
+    if(class_exists('Cli_Optimizer') && preg_match('/<style type="text\/css">@font-face(.*?)<\/style>/s', $content_buffer)!=0){
+        $content_buffer = preg_replace('/<style type="text\/css">@font-face(.*?)<\/style>/s', '', $content_buffer);
+    }
+    if(preg_match('/<script(.*?)type="text\/javascript"(.*?)>[\s\S]*?<\/script>/', $content_buffer) && !ampforwp_get_setting('ampforwp-query-monitor') ){
+        $content_buffer = preg_replace('/<script(.*?)type="text\/javascript"(.*?)>[\s\S]*?<\/script>/', '', $content_buffer);
+    }
+    if(preg_match('/<amp-story-player(.*?)<\/amp-story-player>/s', $content_buffer)){
+        $content_buffer = preg_replace('/<amp-story-player(.*?)<\/amp-story-player>/s', '<amp-story-player width="360" height="600" $1</amp-story-player>', $content_buffer);
+    }
+    if(preg_match('/<input(.*?)type="image"(.*?)>/', $content_buffer)){
+        $content_buffer = preg_replace('/<input(.*?)type="image"(.*?)src="(.*?)"(.*?)>/', '<amp-img src="$3" layout="responsive" width="150" height="50" style="width:150px;height:50px;"></amp-img>', $content_buffer);
+    }
+    if(preg_match('/<figcaption class="ampforwp-blocks-gallery-caption">(.*?)<\/figcaption>/', $content_buffer)){
+        $content_buffer = preg_replace('/&lt;/', '<', $content_buffer);
+        $content_buffer = preg_replace('/&gt;/', '>', $content_buffer);
+    }
+    if(function_exists('googlesitekit_activate_plugin') && preg_match('/<script custom-element="amp-auto-ads"(.*?)src="(.*?)" async><\/script>(.*?)<amp-auto-ads/', $content_buffer)==0){
+        $content_buffer = preg_replace('/<script custom-element="amp-auto-ads"(.*?)src="(.*?)" async><\/script>/', '', $content_buffer);
+    }
+    if(preg_match('/<form(.*?)for="categories-dropdown-(.*?)"(.*?)class="postform(.*?)>/', $content_buffer)){
+        $content_buffer = preg_replace('/<form(.*?)for="categories-dropdown-(.*?)"(.*?)class="postform(.*?)>/', '<form id="amp-wp-widget-categories-1" on="change:amp-wp-widget-categories-1.submit" $1for="categories-dropdown-$2"$3class="postform$4>', $content_buffer);
+    }
+    if (function_exists('aioseo_pro_just_activated') && preg_match('/<link rel="canonical" href="([^>]*)\/amp\/" \/>/', $content_buffer)) {
+        $content_buffer = preg_replace('/<link rel="canonical" href="([^>]*)\/amp\/" \/>/','<link rel="canonical" href="$1/" />', $content_buffer);
+    }
+    if(preg_match('/<script(.*?)src="https:\/\/www.google-analytics.com\/analytics.js"><\/script>/', $content_buffer)){
+        $content_buffer = preg_replace('/<script(.*?)src="https:\/\/www.google-analytics.com\/analytics.js"><\/script>/', '', $content_buffer);
+    }
+    if(preg_match('/<blockquote class="imgur-embed(.*?)"(.*?)data-id="(.*?)"(.*?)<\/blockquote>/', $content_buffer)){
+        $content_buffer = preg_replace('/<blockquote class="imgur-embed(.*?)"(.*?)data-id="(.*?)"(.*?)<\/blockquote>/', '<amp-imgur data-imgur-id="$3" layout="responsive" width="500" height="600"></amp-imgur>', $content_buffer);
+    }
+    if ( class_exists( 'Jetpack' ) && preg_match('/<div(.*?)id="v-(.*?)-(.*?)"(.*?)class="video-player">(.*?)<\/div>/', $content_buffer)) {
+        $content_buffer = preg_replace('/<div(.*?)id="v-(.*?)-(.*?)"(.*?)class="video-player">(.*?)<\/div>/', '<div$1id="v-$2-$3"$4class="video-player"><amp-iframe width="300" height="150" sandbox="allow-scripts allow-same-origin" layout="responsive" src="https://videopress.com/embed/$2"></amp-iframe></div>', $content_buffer);
+    }
+    if (class_exists('AddWidgetAfterContent') && preg_match('/<form(.*?)><label(.*?)for="cat"(.*?)name="cat"(.*?)<\/form>/s', $content_buffer)) {
+        $content_buffer = preg_replace('/<form(.*?)><label(.*?)for="cat"(.*?)name="cat"(.*?)<\/form>/s', '<form$1 id="amp-wp-widget-categories-1" on="change:amp-wp-widget-categories-1.submit" target="_top"><label$2for="cat"$3name="cat"$4</form>', $content_buffer);
+    }
+    if(function_exists('vp_pfui_admin_init') && function_exists('penci_setup') && preg_match('/<amp-iframe src="(.*?)anchor.fm(.*?)"(.*?)<\/amp-iframe>/', $content_buffer)){
+        $content_buffer = preg_replace('/<amp-iframe src="(.*?)anchor.fm(.*?)"(.*?)<\/amp-iframe>/', '<amp-iframe src="$1anchor.fm$2" scrolling="no" $3</amp-iframe>', $content_buffer);
+    }
+    if(class_exists('Mfn_Builder_Front') && preg_match_all('/<div\sclass="section mcb-section(.*?)<div class="amp-wp-content">/s', $content_buffer, $matches)){
+        $match = $matches[0][0];
+        $mfn_content = str_replace("img", 'amp-img', $match);
+        $content_buffer = preg_replace('/<div\sclass="section mcb-section(.*?)<div class="amp-wp-content">/s', $mfn_content , $content_buffer);
+    }
+    if(preg_match('/<animatetransform(.*?)<\/animatetransform>/', $content_buffer)){
+        $content_buffer = preg_replace('/<animatetransform(.*?)<\/animatetransform>/', '', $content_buffer);
+    }
+    if( function_exists('aioseo') && preg_match('/<script type="text\/javascript"(.*?)>/', $content_buffer)){
+        $content_buffer = preg_replace('/<script type="text\/javascript"(.*?)>/', '', $content_buffer); 
+        $content_buffer = preg_replace('/window.ga=window.ga||function()(.*?)/', '', $content_buffer); 
+        $content_buffer = preg_replace('/\|\|\(\)\{\(ga\.q=ga\.q\|\|\[\]\).push\(arguments\)};ga\.l(.*?);/', '', $content_buffer);
+        $content_buffer = preg_replace('/ga\(\'create\',(.*?),\s{\s\'cookieDomain\':\s\'(.*?)\'\s}\s\);/', '', $content_buffer);
+        $content_buffer = preg_replace('/ga\(\'(.*?)\',(.*?)\'(.*?)\'\);/', '', $content_buffer);
+   }
     global $redux_builder_amp;
     if(!$redux_builder_amp['ampforwp_cache_minimize_mode']){
            return $content_buffer;       
@@ -34,7 +94,7 @@ function ampforwp_minify_html_output($content_buffer){
     else
         $mod = '/s';
     $buffer = str_replace(array (chr(13) . chr(10), chr(9)), array (chr(10), ' '), $buffer);
-    $buffer = str_ireplace(array ('<script', '/script>', '<pre', '/pre>', '<textarea', '/textarea>', '<style', '/style>'), array ('M1N1FY-ST4RT<script', '/script>M1N1FY-3ND', 'M1N1FY-ST4RT<pre', '/pre>M1N1FY-3ND', 'M1N1FY-ST4RT<textarea', '/textarea>M1N1FY-3ND', 'M1N1FY-ST4RT<style', '/style>M1N1FY-3ND'), $buffer);
+    $buffer = str_ireplace(array ('<script', '/script>', '<pre', '/pre>', '<textarea', '/textarea>', '<style', '/style>','<p', '/p>'), array ('M1N1FY-ST4RT<script', '/script>M1N1FY-3ND', 'M1N1FY-ST4RT<pre', '/pre>M1N1FY-3ND', 'M1N1FY-ST4RT<textarea', '/textarea>M1N1FY-3ND', 'M1N1FY-ST4RT<style', '/style>M1N1FY-3ND','M1N1FY-ST4RT<p', '/p>M1N1FY-3ND'), $buffer);
     $split = explode('M1N1FY-3ND', $buffer);
     $buffer = ''; 
     for ($i=0; $i<count($split); $i++) {
@@ -69,7 +129,24 @@ function ampforwp_minify_html_output($content_buffer){
             $asis = '';
         } 
 
-        $process = preg_replace(array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/\s+/' ), array('> ', ' <', ' '), $process);
+        if(function_exists('tec_amp_compatibility_orgs_venues_support')){
+            global $wp;
+            $current_url = home_url(add_query_arg(array($_GET), $wp->request));
+            if(preg_match('/months/', $current_url)){
+                $process = preg_replace(array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/\s+/' ), array('> ', ' <', '  '), $process);
+            }else{
+                $process = preg_replace(array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/\s+/' ), array('> ', ' <', ' '), $process);
+            }
+        }else{
+            if( is_user_logged_in() && class_exists('QM_Plugin') && ampforwp_get_setting('ampforwp-query-monitor')){
+                $pref = get_user_option( "show_admin_bar_front", get_current_user_id() );
+                if($pref==="true"){
+                    $process = preg_replace('/\>[^\S ]+' . $mod, '> ', $process);
+                }
+            }else{
+                $process = preg_replace(array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/\s+/' ), array('> ', ' <', ' '), $process);
+            }
+        }
 
         if ( $minify_html_comments != 'no' )
             $process = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->' . $mod, '', $process);
@@ -153,7 +230,7 @@ function ampforwp_leverage_browser_caching(){
 
 function ampforwp_no_htaccess_access_notice(){
     $message = '<div class="error"><p>';
-    $message .= esc_html__( 'Accelerated Mobile Pages: htaccess file is not readable or writable for Leverage Browser Caching. Please change permission of htaccess file.', 'accelerated-mobile-pages' );
+    $message .= sprintf( 'Accelerated Mobile Pages: htaccess file is not readable or writable for Leverage Browser Caching. Please change permission of htaccess file and for more info <a href="https://ampforwp.com/tutorials/article/how-to-fix-leverage-browser-caching-error/" target="_blank">%s</a>',esc_html__('Click Here','accelerated-mobile-pages' ));
     $message .= '</p></div>';
     echo wp_kses_post( $message );
 }
@@ -164,6 +241,18 @@ function ampforwp_no_htaccess_notice(){
     echo wp_kses_post( $message );
 }
 function ampforwp_code_to_add_in_htaccess(){
+    $expires = ampforwp_get_setting('ampforwp_leverage_browser_caching_expires');
+    if (empty($expires)) {
+        $expires = '3 month';
+    }
+    if ($expires == 90) {
+        $expires = '3 month';
+    }
+    else if ($expires == 1) {
+        $expires = '1 day';
+    }else{
+        $expires = $expires . ' days';
+    }    
     $htaccess_cntn  = "\n";
     $htaccess_cntn .= '# AMPFORWPLBROWSERCSTART Browser Caching' . "\n";
     $htaccess_cntn .= '<IfModule mod_expires.c>' . "\n";
@@ -184,15 +273,13 @@ function ampforwp_code_to_add_in_htaccess(){
     $htaccess_cntn .= 'ExpiresByType image/jpeg "access 1 year"' . "\n";
     $htaccess_cntn .= 'ExpiresByType image/png "access 1 year"' . "\n";
     $htaccess_cntn .= 'ExpiresByType image/x-icon "access 1 year"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType text/css "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType text/javascript "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType text/html "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType application/javascript "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType application/x-javascript "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType application/xhtml-xml "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType application/pdf "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresByType application/x-shockwave-flash "access 3 month"' . "\n";
-    $htaccess_cntn .= 'ExpiresDefault "access 3 month"' . "\n";
+    $htaccess_cntn .= 'ExpiresByType text/css "access '.esc_html($expires).'"' . "\n";
+    $htaccess_cntn .= 'ExpiresByType text/javascript "access '.esc_html($expires).'"' . "\n";
+    $htaccess_cntn .= 'ExpiresByType application/javascript "access '.esc_html($expires).'"' . "\n";
+    $htaccess_cntn .= 'ExpiresByType application/x-javascript "access '.esc_html($expires).'"' . "\n";
+    $htaccess_cntn .= 'ExpiresByType application/xhtml-xml "access '.esc_html($expires).'"' . "\n";
+    $htaccess_cntn .= 'ExpiresByType application/pdf "access '.esc_html($expires).'"' . "\n";
+    $htaccess_cntn .= 'ExpiresByType application/x-shockwave-flash "access '.esc_html($expires).'"' . "\n";
     $htaccess_cntn .= '</IfModule>' . "\n";
     $htaccess_cntn .= '# END Caching AMPFORWPLBROWSERCEND' . "\n";
     return $htaccess_cntn;
@@ -202,6 +289,9 @@ function ampforwp_white_list_selectors($completeContent){
     $white_list = array();
     if(ampforwp_get_setting('ampforwp_css_tree_shaking')==1 && ampforwp_get_setting('content-sneak-peek')==1 ){
         $white_list[] = '.hide';
+    }
+    if(ampforwp_get_setting('ampforwp_css_tree_shaking')==1){
+       $white_list[] = '.amp-carousel-img img';
     }
     $white_list = (array)apply_filters('ampforwp_tree_shaking_white_list_selector',$white_list);
     $w_l_str = '';
@@ -218,7 +308,7 @@ function ampforwp_white_list_selectors($completeContent){
 if( !function_exists("ampforwp_tree_shaking_purify_amphtml") ){
     function ampforwp_tree_shaking_purify_amphtml($completeContent){
         $white_lists = ampforwp_white_list_selectors($completeContent);
-        if( function_exists('ampforwp_purify_amphtmls') ){
+        if( function_exists('ampforwp_purify_amphtmls') || ampforwp_get_setting('ampforwp-amp-convert-to-wp') ){
             // compatibility with AMP Pagebuilder Compatibility
             return $completeContent;
         }
@@ -226,7 +316,7 @@ if( !function_exists("ampforwp_tree_shaking_purify_amphtml") ){
         $completeContent = str_replace(array('"\\', "'\\"), array('":backSlash:',"':backSlash:"), $completeContent);   
         /***Replacements***/
         if(!empty($completeContent)){
-            $tmpDoc = new DOMDocument();
+            $tmpDoc = AMPforWP\AMPVendor\AMP_DOM_Utils::get_dom_from_content($completeContent); 
             libxml_use_internal_errors(true);
             $tmpDoc->loadHTML($completeContent);
             $font_css = '';
@@ -248,14 +338,10 @@ if( !function_exists("ampforwp_tree_shaking_purify_amphtml") ){
                 $arg['allow_dirty_styles'] = false;
                 $obj = new AMPforWP\AMPVendor\AMP_treeshaking_Style_Sanitizer($tmpDoc, $arg);
                 $datatrack = $obj->sanitize();
-                // return json_encode($datatrack);
-
+                
                 $data = $obj->get_stylesheets();
-                //return json_encode($data);
-
                 $comment = $obj->get_comments();
-                //return json_encode($comment);
-
+                
                 foreach($data as $styles){
                     $sheet .= $styles;
                 }
@@ -265,6 +351,7 @@ if( !function_exists("ampforwp_tree_shaking_purify_amphtml") ){
                 if(strpos($sheet, '-keyframes')!==false){
                     $sheet = preg_replace("/@(-o-|-moz-|-webkit-|-ms-)*keyframes\s(.*?){([0-9%a-zA-Z,\s.]*{(.*?)})*[\s\n]*}/s", "", $sheet);
                 }
+                
                 //TRANSPOSH PLUGIN RTL ISSUE FIXED #3895
                 if(class_exists('transposh_plugin')){
                      ampforwp_clear_css_on_transposh_rtl($sheet);
@@ -343,6 +430,8 @@ function ampforwp_clear_tree_shaking_on_activity($plugin='', $network=''){
 add_action( 'save_post', 'ampforwp_clear_tree_shaking_post');
 if( !function_exists("ampforwp_clear_tree_shaking_post") ) {
 	function ampforwp_clear_tree_shaking_post() {
+        global $post;
+        $transient_filename = '';
 		if ( current_user_can( 'edit_posts' ) && is_user_logged_in() ){
 			if(ampforwp_get_setting('ampforwp_css_tree_shaking')){
 				if(ampforwp_is_home()){
@@ -351,21 +440,27 @@ if( !function_exists("ampforwp_clear_tree_shaking_post") ) {
 					$transient_filename = "blog";
 				}elseif(ampforwp_is_front_page()){
 					$transient_filename = "post-".ampforwp_get_frontpage_id();
-				}else{
-					$transient_filename = "post-".ampforwp_get_the_ID();
-				}
+				}elseif(is_singular()){
+                    $transient_filename = "post-".ampforwp_get_the_ID();
+                }elseif(is_archive()){
+                    $page_id = get_queried_object_id();
+                    $transient_filename = "archive-".intval($page_id);
+                }elseif(is_object($post)){
+                    $transient_filename = "post-".$post->ID;
+                }               
                 if( is_user_logged_in() ){
                     $transient_filename = $transient_filename.'-admin';
                 }
-				$upload_dir = wp_upload_dir();
-				$ts_file = $upload_dir['basedir'] . '/' . 'ampforwp-tree-shaking/_transient_'.esc_attr($transient_filename).".css";
-				if(file_exists($ts_file) && is_file($ts_file)){
-					unlink($ts_file);
-				}
+                if($transient_filename != ''){
+    				$upload_dir = wp_upload_dir();
+    				$ts_file = $upload_dir['basedir'] . '/' . 'ampforwp-tree-shaking/_transient_'.esc_attr($transient_filename).".css";
+    				if(file_exists($ts_file) && is_file($ts_file)){
+    					unlink($ts_file);
+    				}
+                }
 			}
 		}
 	}
-
 }
 
 if(!function_exists('ampforwp_clear_css_on_transposh_rtl')){

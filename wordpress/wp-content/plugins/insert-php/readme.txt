@@ -1,10 +1,10 @@
-=== Woody ad snippets - Insert Header Footer Code, AdSense Ads ===
+=== Woody code snippets - Insert Header Footer Code, AdSense Ads ===
 Contributors: WillBontrager, webcraftic, creativemotion, alexkovalevv
-Donate link: http://www.willmaster.com/plugindonate.php
-Tags: adsense, ads, Header, Footer, code snippets, run PHP, insert PHP, use PHP, PHP plugin, ads, ad rotation, shortcoder, ad inserter, Header, Footer, ad manager, amp ads, amazon, ad blocking detection, header code, banner, banners, advert, adverts, sticky fixed widgets
-Requires at least: 4.7
-Tested up to: 5.3
-Requires PHP: 5.4
+Donate link: https://woodysnippet.com
+Tags: code snippets, woocommerce, shortcode, adsense, header
+Requires at least: 4.8
+Tested up to: 5.6
+Requires PHP: 7.0
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -28,12 +28,20 @@ Woody ad snippets will make your life so much easier. The plugin helps to create
 
 - Insert Headers and Footers
 - Insert Google AdSense Ads, Amazon Native Shopping Contextual Ads, Yandex Direct Ads, Media.net on your website.
-- Insert Google Analytic Tracking code, Yandex Metrica Tracking Code, Yandex Counter to Header, Footer.
+- Insert Google Analytic Tracking code, Yandex Metrika Tracking Code, Yandex Counter to Header, Footer.
 - Insert PHP Code Snippets and execute on your website. Register PHP functions, classes, global variables everywhere.
 - Insert Social media widgets, add any external resources widgets.
 - Insert Facebook Pixels, Facebook Scripts, Facebook og:image Tag, Google Conversion Pixels, Vk Pixels.
 - Show or hide code snippets based on conditional logic.
 - You can save templates of posts or page builders, quotes, and galleries to re-use them on your website.
+- Roll back changes with Code Revisions **[(Premium)](https://woodysnippet.com/pricing/ "Get PRO")**
+- Cloud storage for snippets **[(Premium)](https://woodysnippet.com/pricing/ "Get PRO")**
+- Synchronize snippets between your sites using the cloud (**Coming soon**)
+- Ready-made snippets in our cloud that will help you solve some of your cases (**[Premium](https://woodysnippet.com/pricing/ "Get PRO")**)
+
+### Need premium features? ###
+
+**[Get Premium version](https://woodysnippet.com/pricing/)**
 
 ### How It Works? ###
 
@@ -87,28 +95,75 @@ https://youtu.be/FNoNsl_jy2k
 * Insert AdSense Before post — snippet is added before a certain post. A post number is listed in the Location number field.
 * Insert AdSense After post — snippet is added after a certain post. A post number is listed in the Location number field.
 
+**Insert to Woocommerce pages: [(Premium)](https://woodysnippet.com/pricing/ "Get PRO")**
+
+* Before the list of products — Snippet will be placed before the list of products.
+* After the list of products — Snippet will be placed after the list of products.
+* Before a single product — Snippet will be placed before a single product
+* After a single product — Snippet will be placed after a single product
+* Before a single product summary — Snippet will be placed before a single product summary
+* After a single product summary — Snippet will be placed after a single product summary
+* After a product title — Snippet will be placed after a product title
+* After a product price — Snippet will be placed after a product price
+* After a product excerpt — Snippet will be placed after a product excerpt
+
+* Insert AdSense After post — snippet is added after a certain post. A post number is listed in the Location number field.
+
 ### What Are Conditional Logic Options to Show a Snippet? ###
 
-* Page types;
-* Device types;
-* Post types;
-* Taxonomy;
-* User role;
-* Contains cookies;
-* Where a user came from;
-* User’s registration date.
+**User:**
+- Role
+- Registration Date
+- Cookie Name
+- Current Page
+- Current Referrer
+**Location:**
+- Post Type
+- Taxonomy page
+- Taxonomy of the page
+- Page
+**Technology [(Premium)](https://woodysnippet.com/pricing/ "Get PRO")**:
+- AddBlocker
+- Browser
+- Use cookie
+- Use JavaScript
+- Operation system
+- Device type
+**Auditory [(Premium)](https://woodysnippet.com/pricing/ "Get PRO")**:
+- User country (Use Webnet77 or MaxMind geo ip base)
+- Viewing depth
+- Attendance by time of day
+- Total number of visits
 
 #### Recommended our plugins ####
 * [Clearfy - all in one optimization tools](https://wordpress.org/plugins/clearfy/ "Download Clearfy")
 * [Robin Image Optimizer - save money on image compression](https://wordpress.org/plugins/robin-image-optimizer/ "Download Robin Image Optimizer")
+* [Titan Anti-spam & Security - save money on image compression](https://wordpress.org/plugins/anti-spam/ "Download Titan")
 
 #### NEED SUPPORT, WE GOT YOU COVERED ####
 We provide free support for this plugin. If you are pushed with a problem, just create a new ticket. We will definitely help you!
 
 1. **[Get starting free support](http://forum.webcraftic.com)**
-2. **[Documentation](http://woody-ad-snippets.webcraftic.com/getting-started-with-woody-ad-snippets/)**
+2. **[Documentation](https://woodysnippet.com/getting-started-with-woody-ad-snippets/)**
 
 We are very need for your help with [translating Woody ad snippets plugin](https://translate.wordpress.org/projects/wp-plugins/insert-php) into your native language. We want to make it international and understandable for everyone. Please contact us via email inside the plugin, or create a topic on our [support forum](http://forum.webcraftic.com) if you can help with the translations. In exchange for your help, we will give you better support and our premium plugins absolutely free!
+
+### Setting options ###
+* Keep the HTML entities, don't convert to its character - If you want to use an HTML entity in your code (for example > or "), but the editor keeps on changing them to its equivalent character (> and " for the previous example), then you might want to enable this option.
+* Execute shortcodes in snippets - Execute shortcodes in the snippet code before executing the snippet.
+* Complete Uninstall - When the plugin is deleted from the Plugins menu, also delete all snippets and plugin settings.
+* Support old shortcodes [insert_php] - If you used our plugin from version 1.3.0, then you could use the old shortcodes [insert_php][/insert_php]; from version 2.2.0 we disabled this type of shortcodes by default, as their use is not safe. If you still want to execute your php code via [insert_php][/insert_php] shortcodes, you can enable this option.
+#### Code Editor ####
+* Code style - The optional feature. You can customize the code style in the snippet editor. The "Default" style is applied by default.
+* Indent With Tabs - The optional feature. Whether, when indenting, the first N*tabSize spaces should be replaced by N tabs. The default is false.
+* Tab Size - The optional feature. Pressing Tab in the code editor increases left indent to N spaces. N is a number pre-defined by you.
+* Indent Unit - The optional feature. The indent for code lines (units). Example: select a snippet, press Tab. The left indent in the selected code increases to N spaces. N is a number pre-defined by you.
+* Wrap Lines - The optional feature. If ON, the editor will wrap long lines. Otherwise, it will create a horizontal scroll.
+* Line Numbers - The optional feature. If ON, all lines in the editor will be numbered.
+* Auto Close Brackets - The optional feature. If ON, the editor will automatically close opened quotes or brackets. Sometimes, it speeds up coding.
+* Highlight Selection Matches - The optional feature. If ON, it searches for matches for the selected variable/function name. Highlight matches with green. Improves readability.
+#### Geolocation ####
+IP geolocation database (Webnet77 or MaxMind) - Select IP geolocation database
 
 ### History, Developers, Credits ###
 
@@ -120,9 +175,7 @@ http://www.willmaster.com/software/WPplugins/go/iphphome_iphplugin
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
-
 2. Activate the plugin through the 'Plugins' screen in WordPress
-
 3. Use the PHP Snippets -> Add snippet, to create a new snippet
 
 == Frequently Asked Questions ==
@@ -130,7 +183,6 @@ http://www.willmaster.com/software/WPplugins/go/iphphome_iphplugin
 = How to pass attributes to a snippet using a shortcode? =
 
 Add a new attribute “simple” to the shortcode [wbcr_php_snippet id=”xx” simple=”example”].
-
 The attribute “simple” is available in the snippet as the $simple variable. The attribute name can contain Latin letters and lowercase digits. You can also use underscore.
 
 = The snippet code executed with an error and I cannot change it, what should I do? =
@@ -154,28 +206,23 @@ Yes, it does. You can add there special blocks from our plugin.
 = I used the old plugin Insert php 1.3.0. What should I expect in 2.x.x version? =
 
 The old version of Insert php 1.3.0 worked this way: you wrapped PHP code with shortcodes [insert_php]php code[/insert_php]. Starting from version 2.x.x and higher, you need to create special snippets to place PHP code. Use a snippet shortcode [wbcr_php_snippetid=”xx”] instead of shortcodes  [insert_php][/insert_php] to execute PHP code on pages.
-
 We recommend you to move all your code from the post editor to snippets.
-
 Important! TinyMCE converts double quotes to special characters. So if you place this code on the snippet editor, it may not work. To avoid this problem, replace all special symbols of double quotes in your PHP code with classic double quotes.
 
 = How long are you planning to support the old version 1.3.0? =
 
 60% users have already downloaded 2.x.x version. We are trying to reach the number of 80%. The deadline for support is scheduled for March 1, 2019.
-
 You can download the old plugin version from [here](https://downloads.wordpress.org/plugin/insert-php.1.3.zip).
 
 = I don’t like the new plugin version. How can I roll back to 1.3.0 and don’t get updates? =
 
 First of all, please, take some time to actually go through the new version. Usually, it takes a week to see how useful this version may be for you. If you’ve faced any problems or found some bugs, feel free to contact us at our [support forum](http://forum.webcraftic.com).
-
 You can always download the old version (1.3.0) from [here](https://downloads.wordpress.org/plugin/insert-php.1.3.zip).
-
 To avoid getting updates, open the PHP file wp-content/plugins/insert-php/insert_php.php and change the plugin version to 9.9.9.
 
 = Is there any plugin documentation? =
 
-You can find the detailed documentation in [here](http://woody-ad-snippets.webcraftic.com/getting-started-with-woody-ad-snippets/).
+You can find the detailed documentation in [here](https://woodysnippet.com/getting-started-with-woody-ad-snippets/).
 
 = Is plugin compatible with GDPR? =
 
@@ -188,7 +235,6 @@ Go to the settings page and enable the "Complete uninstall" option. Than, when y
 = How to remove plugin via ftp client? =
 
 You have to delete the folder with the plugin, which is located here: wp-content/plugins/insert-php
-
 This will not clear the plugin data from the database. You have to remove the plugin through the admin panel with the "Full Uninstall" option enabled in order to completely clear the plugin data.
 
 = Will I lose my snippets if I change the theme or upgrade WordPress? =
@@ -198,20 +244,58 @@ No, the snippets are stored in the WordPress database and are independent of the
 = Does plugin work with multisite? =
 
 The plugin doesn’t support multi-sites.
-
 We will definitely add multisite support in the future. You can speed up this process by leaving a request on our [support forum](http://forum.webcraftic.com).
 
 == Screenshots ==
 
 1. Snippets list
 2. Edit php snippet
-3. Edit text snippet
-3. Setting up automatic placement of snippets
-4. Setting conditional logic to display a snippet
-5. Creating a Snippet for Gutenberg Editor
-6. Adding a snippet shortcode to a text widget
+3. Code revisions
+4. Setting up automatic placement of snippets
+5. Setting conditional logic to display a snippet
+6. Creating a Snippet for Gutenberg Editor
+7. Adding a snippet shortcode to a text widget
+7. Custom shortcode name
 
 == Changelog ==
+= 2.4.1 =
+* Fix: Snippets not working after updating to version 2.4.0, if Woocommerce is activated
+
+= 2.4.0 =
+* Add: Insertion locations for Woocommerce (PRO)
+* Add: Snippet conditional execution logic for Woocommerce
+* Tweak: Improved performance
+* Up the minimum version of PHP -> 7.0
+
+= 2.3.10 =
+* Fixed: Hot fix
+
+= 2.3.9 =
+* Fixed: jQuery.fn.load() and other bugs after update to Wordpress 5.5
+
+= 2.3.8 =
+* Added: "Execute shortcodes in snippets" option in plugin settings. OFF by default!
+
+= 2.3.7 =
+* FIX: WPML compatibility
+
+= 2.3.6 =
+* Add WPML compatibility
+* Fix snippet switch
+
+= 2.3.5 =
+* Fixed "Warning: filter_var()". The attributes of the snippets work
+
+= 2.3.2 =
+* Fixed: compatibility with PHP 7.4.
+* Added: JS snippets support attributes
+* Added: Filter by type of the snippet.
+* Added: Priority of snippets execution.
+* Added: Sorting by priority.
+* Added: Sorting by name.
+* Added: New Advertisement snippet type.
+* Added: Conditional logic for current page taxonomies
+
 = 2.3.1 (26.11.2019) =
 * Fixed: Bug with images on the about page.
 

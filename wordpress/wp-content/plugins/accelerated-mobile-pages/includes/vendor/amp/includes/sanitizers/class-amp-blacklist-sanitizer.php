@@ -52,7 +52,13 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 			   }
 			   $node->setAttribute('href',$href);
 			}
-			$node->setAttribute('href', \ampforwp_findInternalUrl($href));
+			if( function_exists('googlesitekit_activate_plugin') ){	
+                if(strpos($href,'#') !== 0){
+			    $node->setAttribute('href', \ampforwp_findInternalUrl($href));
+			    }
+		    }else{
+			  $node->setAttribute('href', \ampforwp_findInternalUrl($href));
+		    }   
 
 		}
 		
@@ -70,7 +76,10 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 			$length = $node->attributes->length;
 			for ( $i = $length - 1; $i >= 0; $i-- ) {
 				$attribute = $node->attributes->item( $i );
-				$attribute_name = strtolower( $attribute->name );
+				$attribute_name = '';
+				if (isset($attribute->name)) {
+					$attribute_name = strtolower( $attribute->name );
+				}
 				if ( in_array( $attribute_name, $bad_attributes, true ) ) {
 					$node->removeAttribute( $attribute_name );
 					continue;
@@ -159,8 +168,10 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 	}
 
 	private function sanitize_a_attribute( $node, $attribute ) {
-		$attribute_name = strtolower( $attribute->name );
-
+		$attribute_name = '';
+		if (isset($attribute->name)) {
+			$attribute_name = strtolower( $attribute->name );
+		}
 		if ( 'rel' === $attribute_name ) {
 			$old_value = $attribute->value;
 			$new_value = trim( preg_replace( self::PATTERN_REL_WP_ATTACHMENT, '', $old_value ) );
@@ -227,7 +238,7 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 		 *  For more info check: https://github.com/ahmedkaludi/accelerated-mobile-pages/issues/2556 and https://github.com/ahmedkaludi/accelerated-mobile-pages/issues/2967
 		*/
 		if( false === $this->contains_any_multibyte($href) ){
-			if ( false === filter_var( $href, FILTER_VALIDATE_URL )
+			if ( false === parse_url( $href,PHP_URL_HOST )
 				&& ! in_array( $protocol, $special_protocols, true ) ) {
 				return false;
 			}
@@ -295,7 +306,6 @@ class AMP_Blacklist_Sanitizer extends AMP_Base_Sanitizer {
 			'select',
 			'option',
 			'link',
-			'picture',
 			'canvas',
 
 			// Sanitizers run after embed handlers, so if anything wasn't matched, it needs to be removed.

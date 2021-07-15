@@ -982,6 +982,7 @@ if( !window.winp ) {
 					for( var subindex in item ) {
 						var subvalue = item[subindex];
 						$option = $("<option></option>").attr('value', subvalue['value']).text(subvalue['title']);
+						if (subvalue['disabled'] !== null && subvalue['disabled']) $option.attr('disabled', 'disabled');
 						$optgroup.append($option);
 					}
 					$select.append($optgroup);

@@ -208,13 +208,17 @@ function cptui_manage_post_types() {
 		<div class="postbox-container">
 		<div id="poststuff">
 			<div class="cptui-section postbox">
-				<button type="button" class="handlediv button-link" aria-expanded="true">
-					<span class="screen-reader-text"><?php esc_html_e( 'Toggle panel: Basic settings', 'custom-post-type-ui' ); ?></span>
-					<span class="toggle-indicator" aria-hidden="true"></span>
-				</button>
-				<h2 class="hndle">
-					<span><?php esc_html_e( 'Basic settings', 'custom-post-type-ui' ); ?></span>
-				</h2>
+				<div class="postbox-header">
+					<h2 class="hndle ui-sortable-handle">
+						<span><?php esc_html_e( 'Basic settings', 'custom-post-type-ui' ); ?></span>
+					</h2>
+					<div class="handle-actions hide-if-no-js">
+						<button type="button" class="handlediv" aria-expanded="true">
+							<span class="screen-reader-text"><?php esc_html_e( 'Toggle panel: Basic settings', 'custom-post-type-ui' ); ?></span>
+							<span class="toggle-indicator" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
 				<div class="inside">
 					<div class="main">
 						<table class="form-table cptui-table">
@@ -348,13 +352,17 @@ function cptui_manage_post_types() {
 				</div>
 			</div>
 			<div class="cptui-section cptui-labels postbox">
-				<button type="button" class="handlediv button-link" aria-expanded="true">
-					<span class="screen-reader-text"><?php esc_html_e( 'Toggle panel: Additional labels', 'custom-post-type-ui' ); ?></span>
-					<span class="toggle-indicator" aria-hidden="true"></span>
-				</button>
-				<h2 class="hndle">
-					<span><?php esc_html_e( 'Additional labels', 'custom-post-type-ui' ); ?></span>
-				</h2>
+				<div class="postbox-header">
+					<h2 class="hndle ui-sortable-handle">
+						<span><?php esc_html_e( 'Additional labels', 'custom-post-type-ui' ); ?></span>
+					</h2>
+					<div class="handle-actions hide-if-no-js">
+						<button type="button" class="handlediv" aria-expanded="true">
+							<span class="screen-reader-text"><?php esc_html_e( 'Toggle panel: Basic settings', 'custom-post-type-ui' ); ?></span>
+							<span class="toggle-indicator" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
 				<div class="inside">
 					<div class="main">
 						<table class="form-table cptui-table">
@@ -786,13 +794,17 @@ function cptui_manage_post_types() {
 				</div>
 			</div>
 			<div class="cptui-section cptui-settings postbox">
-				<button type="button" class="handlediv button-link" aria-expanded="true">
-					<span class="screen-reader-text"><?php esc_html_e( 'Toggle panel: Settings', 'custom-post-type-ui' ); ?></span>
-					<span class="toggle-indicator" aria-hidden="true"></span>
-				</button>
-				<h2 class="hndle">
-					<span><?php esc_html_e( 'Settings', 'custom-post-type-ui' ); ?></span>
-				</h2>
+				<div class="postbox-header">
+					<h2 class="hndle ui-sortable-handle">
+						<span><?php esc_html_e( 'Settings', 'custom-post-type-ui' ); ?></span>
+					</h2>
+					<div class="handle-actions hide-if-no-js">
+						<button type="button" class="handlediv" aria-expanded="true">
+							<span class="screen-reader-text"><?php esc_html_e( 'Toggle panel: Basic settings', 'custom-post-type-ui' ); ?></span>
+							<span class="toggle-indicator" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
 				<div class="inside">
 					<div class="main">
 						<table class="form-table cptui-table">
@@ -978,7 +990,7 @@ function cptui_manage_post_types() {
 								'namearray'  => 'cpt_custom_post_type',
 								'name'       => 'hierarchical',
 								'labeltext'  => esc_html__( 'Hierarchical', 'custom-post-type-ui' ),
-								'aftertext'  => esc_html__( '(default: false) Whether or not the post type can have parent-child relationships.', 'custom-post-type-ui' ),
+								'aftertext'  => esc_html__( '(default: false) Whether or not the post type can have parent-child relationships. At least one published content item is needed in order to select a parent.', 'custom-post-type-ui' ),
 								'selections' => $select,
 							] );
 
@@ -1057,7 +1069,7 @@ function cptui_manage_post_types() {
 										'custom-post-type-ui'
 									),
 									sprintf(
-										'<a href="http://codex.wordpress.org/Function_Reference/register_post_type#Parameters" target="_blank">%s</a>',
+										'<a href="https://developer.wordpress.org/reference/functions/register_post_type/#menu_position" target="_blank">%s</a>',
 										esc_html__( 'Available options', 'custom-post-type-ui' )
 									)
 								)
@@ -1106,12 +1118,16 @@ function cptui_manage_post_types() {
 							] );
 							echo $ui->get_td_end() . $ui->get_tr_end();
 
-							echo $ui->get_tr_start() . $ui->get_th_start() . '<label for="menu_icon">' . __( 'Menu Icon', 'custom-post-type-ui' ) . '</label>' . $ui->get_th_end() . $ui->get_td_start();
+							echo $ui->get_tr_start() . $ui->get_th_start();
 
+							$current_menu_icon = isset( $current['menu_icon'] ) ? esc_attr( $current['menu_icon'] ) : '';
+							echo $ui->get_menu_icon_preview( $current_menu_icon );
+							echo $ui->get_label( 'menu_icon', esc_html__( 'Menu Icon', 'custom-post-type-ui' ) );
+							echo $ui->get_th_end() . $ui->get_td_start();
 							echo $ui->get_text_input( [
 								'namearray' => 'cpt_custom_post_type',
 								'name'      => 'menu_icon',
-								'textvalue' => isset( $current['menu_icon'] ) ? esc_attr( $current['menu_icon'] ) : '',
+								'textvalue' => $current_menu_icon,
 								'aftertext' => esc_attr__( '(Full URL for icon or Dashicon class)', 'custom-post-type-ui' ),
 								'helptext'  => sprintf(
 									esc_html__( 'Image URL or %sDashicon class name%s to use for icon. Custom image should be 20px by 20px.', 'custom-post-type-ui' ),
@@ -1421,8 +1437,8 @@ function cptui_post_types_dropdown( $post_types = [] ) {
 		$select['options'] = [];
 
 		foreach ( $post_types as $type ) {
-			$text = ! empty( $type['label'] ) ? $type['label'] : $type['name'];
-			$select['options'][] = [ 'attr' => $type['name'], 'text' => $text ];
+			$text                = ! empty( $type['label'] ) ? esc_html( $type['label'] ) : esc_html( $type['name'] );
+			$select['options'][] = [ 'attr' => esc_html( $type['name'] ), 'text' => $text ];
 		}
 
 		$current = cptui_get_current_post_type();
@@ -1939,7 +1955,6 @@ function cptui_process_post_type() {
 			add_filter( 'cptui_post_type_deleted', '__return_true' );
 		}
 
-		// @TODO Utilize anonymous function to admin_notice `$result` if it happens to error.
 		if ( $result ) {
 			if ( is_callable( "cptui_{$result}_admin_notice" ) ) {
 				add_action( 'admin_notices', "cptui_{$result}_admin_notice" );

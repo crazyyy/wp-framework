@@ -5,10 +5,21 @@
  * @package WPSEO\Admin
  */
 
+use Yoast\WP\SEO\Context\Meta_Tags_Context;
+use Yoast\WP\SEO\Integrations\Admin\Admin_Columns_Cache_Integration;
+use Yoast\WP\SEO\Surfaces\Values\Meta;
+
 /**
  * Class WPSEO_Meta_Columns.
  */
 class WPSEO_Meta_Columns {
+
+	/**
+	 * Holds the context objects for each indexable.
+	 *
+	 * @var Meta_Tags_Context[]
+	 */
+	protected $context = [];
 
 	/**
 	 * Holds the SEO analysis.
@@ -25,6 +36,13 @@ class WPSEO_Meta_Columns {
 	private $analysis_readability;
 
 	/**
+	 * Admin columns cache.
+	 *
+	 * @var Admin_Columns_Cache_Integration
+	 */
+	private $admin_columns_cache;
+
+	/**
 	 * When page analysis is enabled, just initialize the hooks.
 	 */
 	public function __construct() {
@@ -34,6 +52,7 @@ class WPSEO_Meta_Columns {
 
 		$this->analysis_seo         = new WPSEO_Metabox_Analysis_SEO();
 		$this->analysis_readability = new WPSEO_Metabox_Analysis_Readability();
+		$this->admin_columns_cache  = YoastSEO()->classes->get( Admin_Columns_Cache_Integration::class );
 	}
 
 	/**
@@ -51,6 +70,7 @@ class WPSEO_Meta_Columns {
 		}
 
 		add_filter( 'request', [ $this, 'column_sort_orderby' ] );
+		add_filter( 'default_hidden_columns', [ $this, 'column_hidden' ], 10, 1 );
 	}
 
 	/**
@@ -98,29 +118,23 @@ class WPSEO_Meta_Columns {
 
 		switch ( $column_name ) {
 			case 'wpseo-score':
-				// @phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in render_score_indicator() method.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in render_score_indicator() method.
 				echo $this->parse_column_score( $post_id );
 				return;
 
 			case 'wpseo-score-readability':
-				// @phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in render_score_indicator() method.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Correctly escaped in render_score_indicator() method.
 				echo $this->parse_column_score_readability( $post_id );
 				return;
 
 			case 'wpseo-title':
-				$post  = get_post( $post_id, ARRAY_A );
-				$title = wpseo_replace_vars( $this->page_title( $post_id ), $post );
-				$title = apply_filters( 'wpseo_title', $title );
-
-				echo esc_html( $title );
+				echo esc_html( $this->get_meta( $post_id )->title );
 				return;
 
 			case 'wpseo-metadesc':
-				$post         = get_post( $post_id, ARRAY_A );
-				$metadesc_val = wpseo_replace_vars( WPSEO_Meta::get_value( 'metadesc', $post_id ), $post );
-				$metadesc_val = apply_filters( 'wpseo_metadesc', $metadesc_val );
+				$metadesc_val = $this->get_meta( $post_id )->meta_description;
 
-				if ( '' === $metadesc_val ) {
+				if ( $metadesc_val === '' ) {
 					echo '<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">',
 						esc_html__( 'Meta description not set.', 'wordpress-seo' ),
 						'</span>';
@@ -133,7 +147,7 @@ class WPSEO_Meta_Columns {
 			case 'wpseo-focuskw':
 				$focuskw_val = WPSEO_Meta::get_value( 'focuskw', $post_id );
 
-				if ( '' === $focuskw_val ) {
+				if ( $focuskw_val === '' ) {
 					echo '<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">',
 						esc_html__( 'Focus keyphrase not set.', 'wordpress-seo' ),
 						'</span>';
@@ -169,30 +183,22 @@ class WPSEO_Meta_Columns {
 	/**
 	 * Hides the SEO title, meta description and focus keyword columns if the user hasn't chosen which columns to hide.
 	 *
-	 * @param array|false $result The hidden columns.
-	 * @param string      $option The option name used to set which columns should be hidden.
-	 * @param WP_User     $user   The User.
+	 * @param array $hidden The hidden columns.
 	 *
-	 * @return array      $result Array containing the columns to hide.
+	 * @return array Array containing the columns to hide.
 	 */
-	public function column_hidden( $result, $option, $user ) {
-		global $wpdb;
-
-		if ( $user->has_prop( $wpdb->get_blog_prefix() . $option ) || $user->has_prop( $option ) ) {
-			return $result;
+	public function column_hidden( $hidden ) {
+		if ( ! is_array( $hidden ) ) {
+			$hidden = [];
 		}
 
-		if ( ! is_array( $result ) ) {
-			$result = [];
-		}
-
-		array_push( $result, 'wpseo-title', 'wpseo-metadesc' );
+		array_push( $hidden, 'wpseo-title', 'wpseo-metadesc' );
 
 		if ( $this->analysis_seo->is_enabled() ) {
-			array_push( $result, 'wpseo-focuskw' );
+			$hidden[] = 'wpseo-focuskw';
 		}
 
-		return $result;
+		return $hidden;
 	}
 
 	/**
@@ -208,11 +214,13 @@ class WPSEO_Meta_Columns {
 		echo '<label class="screen-reader-text" for="wpseo-filter">' . esc_html__( 'Filter by SEO Score', 'wordpress-seo' ) . '</label>';
 		echo '<select name="seo_filter" id="wpseo-filter">';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput -- Output is correctly escaped in the generate_option() method.
 		echo $this->generate_option( '', __( 'All SEO Scores', 'wordpress-seo' ) );
 
 		foreach ( $ranks as $rank ) {
 			$selected = selected( $this->get_current_seo_filter(), $rank->get_rank(), false );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Output is correctly escaped in the generate_option() method.
 			echo $this->generate_option( $rank->get_rank(), $rank->get_drop_down_label(), $selected );
 		}
 
@@ -234,11 +242,13 @@ class WPSEO_Meta_Columns {
 		echo '<label class="screen-reader-text" for="wpseo-readability-filter">' . esc_html__( 'Filter by Readability Score', 'wordpress-seo' ) . '</label>';
 		echo '<select name="readability_filter" id="wpseo-readability-filter">';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput -- Output is correctly escaped in the generate_option() method.
 		echo $this->generate_option( '', __( 'All Readability Scores', 'wordpress-seo' ) );
 
 		foreach ( $ranks as $rank ) {
 			$selected = selected( $this->get_current_readability_filter(), $rank->get_rank(), false );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Output is correctly escaped in the generate_option() method.
 			echo $this->generate_option( $rank->get_rank(), $rank->get_drop_down_readability_labels(), $selected );
 		}
 
@@ -256,6 +266,19 @@ class WPSEO_Meta_Columns {
 	 */
 	protected function generate_option( $value, $label, $selected = '' ) {
 		return '<option ' . $selected . ' value="' . esc_attr( $value ) . '">' . esc_html( $label ) . '</option>';
+	}
+
+	/**
+	 * Returns the meta object for a given post ID.
+	 *
+	 * @param int $post_id The post ID.
+	 *
+	 * @return Meta The meta object.
+	 */
+	protected function get_meta( $post_id ) {
+		$indexable = $this->admin_columns_cache->get_indexable( $post_id );
+
+		return YoastSEO()->meta->for_indexable( $indexable, 'Post_Type' );
 	}
 
 	/**
@@ -567,7 +590,7 @@ class WPSEO_Meta_Columns {
 	/**
 	 * Determines whether the given post ID uses the default indexing settings.
 	 *
-	 * @param integer $post_id The post ID to check.
+	 * @param int $post_id The post ID to check.
 	 *
 	 * @return bool Whether or not the default indexing is being used for the post.
 	 */
@@ -603,7 +626,7 @@ class WPSEO_Meta_Columns {
 	/**
 	 * Parses the score column.
 	 *
-	 * @param integer $post_id The ID of the post for which to show the score.
+	 * @param int $post_id The ID of the post for which to show the score.
 	 *
 	 * @return string The HTML for the SEO score indicator.
 	 */
@@ -663,15 +686,6 @@ class WPSEO_Meta_Columns {
 			add_filter( 'manage_' . $post_type . '_posts_columns', [ $this, 'column_heading' ], 10, 1 );
 			add_action( 'manage_' . $post_type . '_posts_custom_column', [ $this, 'column_content' ], 10, 2 );
 			add_action( 'manage_edit-' . $post_type . '_sortable_columns', [ $this, 'column_sort' ], 10, 2 );
-
-			/*
-			 * Use the `get_user_option_{$option}` filter to change the output of the get_user_option
-			 * function for the `manage{$screen}columnshidden` option, which is based on the current
-			 * admin screen. The admin screen we want to target is the `edit-{$post_type}` screen.
-			 */
-			$filter = sprintf( 'get_user_option_%s', sprintf( 'manage%scolumnshidden', 'edit-' . $post_type ) );
-
-			add_filter( $filter, [ $this, 'column_hidden' ], 10, 3 );
 		}
 
 		unset( $post_type );
@@ -683,7 +697,7 @@ class WPSEO_Meta_Columns {
 	 *
 	 * @since 7.0
 	 *
-	 * @param string $post_type Optional. The post type to test, defaults to the current post post_type.
+	 * @param string|null $post_type Optional. The post type to test, defaults to the current post post_type.
 	 *
 	 * @return bool Whether or not the meta box (and associated columns etc) should be hidden.
 	 */
@@ -695,31 +709,6 @@ class WPSEO_Meta_Columns {
 		}
 
 		return WPSEO_Utils::is_metabox_active( $post_type, 'post_type' );
-	}
-
-	/**
-	 * Retrieve the page title.
-	 *
-	 * @param int $post_id Post to retrieve the title for.
-	 *
-	 * @return string
-	 */
-	private function page_title( $post_id ) {
-		$fixed_title = WPSEO_Meta::get_value( 'title', $post_id );
-		if ( $fixed_title !== '' ) {
-			return $fixed_title;
-		}
-
-		$post = get_post( $post_id );
-
-		if ( is_object( $post ) && WPSEO_Options::get( 'title-' . $post->post_type, '' ) !== '' ) {
-			$title_template = WPSEO_Options::get( 'title-' . $post->post_type );
-			$title_template = str_replace( ' %%page%% ', ' ', $title_template );
-
-			return wpseo_replace_vars( $title_template, $post );
-		}
-
-		return wpseo_replace_vars( '%%title%%', $post );
 	}
 
 	/**
@@ -753,7 +742,7 @@ class WPSEO_Meta_Columns {
 		}
 
 		$screen = get_current_screen();
-		if ( null === $screen ) {
+		if ( $screen === null ) {
 			return false;
 		}
 

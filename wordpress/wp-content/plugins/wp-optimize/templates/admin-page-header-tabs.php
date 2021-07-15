@@ -18,7 +18,7 @@
 			$tab_title = $tab;
 		}
 	?>
-	<a id="wp-optimize-nav-tab-<?php echo esc_attr($page).'-'.$tab_id; ?>" href="<?php esc_attr_e($options->admin_page_url($page)); ?>&amp;tab=wp_optimize_<?php echo $tab_id; ?>" class="nav-tab <?php if ($active_tab == $tab_id) echo 'nav-tab-active'; ?>">
+	<a id="wp-optimize-nav-tab-<?php echo esc_attr($page.'-'.$tab_id); ?>" data-tab="<?php echo esc_attr($tab_id); ?>" data-page="<?php echo esc_attr($page); ?>" href="<?php esc_attr_e($options->admin_page_url($page)); ?>&amp;tab=wp_optimize_<?php echo $tab_id; ?>" class="nav-tab <?php if ($active_tab == $tab_id) echo 'nav-tab-active'; ?>">
 		<?php if ($tab_icon) : ?>
 			<span class="dashicons dashicons-<?php echo $tab_icon; ?>"></span>
 		<?php endif; ?>

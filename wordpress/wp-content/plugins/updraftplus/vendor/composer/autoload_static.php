@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2
+class ComposerStaticInit8d2562284e59aad5854a8f93782f415e
 {
     public static $files = array (
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
@@ -13,6 +13,10 @@ class ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2
     );
 
     public static $prefixLengthsPsr4 = array (
+        'm' => 
+        array (
+            'mikemccabe\\JsonPatch\\' => 21,
+        ),
         'S' => 
         array (
             'Symfony\\Component\\Process\\' => 26,
@@ -25,6 +29,10 @@ class ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2
     );
 
     public static $prefixDirsPsr4 = array (
+        'mikemccabe\\JsonPatch\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikemccabe/json-patch-php/src',
+        ),
         'Symfony\\Component\\Process\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
@@ -52,7 +60,6 @@ class ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2
             'OpenCloud' => 
             array (
                 0 => __DIR__ . '/..' . '/rackspace/php-opencloud/lib',
-                1 => __DIR__ . '/..' . '/rackspace/php-opencloud/tests',
             ),
         ),
         'N' => 
@@ -119,6 +126,7 @@ class ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/AbstractLogger.php',
         'Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/log/Psr/Log/InvalidArgumentException.php',
         'Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/psr/log/Psr/Log/LogLevel.php',
@@ -127,7 +135,7 @@ class ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2
         'Psr\\Log\\LoggerInterface' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerInterface.php',
         'Psr\\Log\\LoggerTrait' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerTrait.php',
         'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
-        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/DummyTest.php',
         'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
         'Symfony\\Component\\EventDispatcher\\ContainerAwareEventDispatcher' => __DIR__ . '/..' . '/symfony/event-dispatcher/ContainerAwareEventDispatcher.php',
@@ -146,10 +154,10 @@ class ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit910a6a6207c3117d5fbb76f01dd074c2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8d2562284e59aad5854a8f93782f415e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8d2562284e59aad5854a8f93782f415e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8d2562284e59aad5854a8f93782f415e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit8d2562284e59aad5854a8f93782f415e::$classMap;
 
         }, null, ClassLoader::class);
     }

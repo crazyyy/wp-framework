@@ -3,8 +3,8 @@ Contributors: mohammed_kaludi, ahmedkaludi, ampforwp
 Tags: AMP, accelerated mobile pages, mobile, amp project, google amp, amp wp, google, plugin, SEO
 Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 3.0
-Tested up to: 5.3.2
-Stable tag: 1.0.20
+Tested up to: 5.8
+Stable tag: 1.0.77.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,20 +29,16 @@ Bug reports for AMP for WP are [welcomed on GitHub](https://github.com/ahmedkalu
 
 * NEW - Gutenberg Support
 * NEW - Divi and Elementor Support [More Info](https://ampforwp.com/amp-pagebuilder-compatibility/)
-* NEW - Improved CSS Optimization (Tree Shaking)
-* NEW - Google Fonts Support For All Designs
-* NEW - Addthis Sharing Support
-* NEW - AMP Infinite Scroll Support
-* NEW - Photo Gallery by 10Web Support 
-* NEW - MEWE social network Support 
 * NEW - GDPR Compliance
-* Out of the box compatiblity for Yoast SEO, All in One Seo, Rank Math, Genesis, SEOPress, Bridge Qode SEO, The SEO Framework and Squrilly SEO Plugin.
+* NEW - Google PageSpeed Optimization with SSR (Server Side Rendering)
+* NEW - CSS Optimization (Tree Shaking) - This will automatically remove all the unused CSS from your AMP pages
+* NEW - Google Font API and Local Fonts Support For All Designs
+* Out of the box compatiblity for Yoast SEO, All in One Seo, Rank Math, Genesis, SEOPress, Bridge Qode SEO, The SEO Framework, SmartCrawl and Squrilly SEO Plugin.
 * Introducing Page Builder 3.0 for AMP! [Learn More & Video](https://ampforwp.com/tutorials/article/amp-page-builder-installation/)
 * New Default Theme for AMP called Swift
 * 3 Pre-built AMP Layouts for Business websites and landing pages 
-* OneSignal Push Notifications integration 
+* OneSignal and TruePush Push Notifications integration 
 * Advanced WooCommerce Support [More Info](https://ampforwp.com/woocommerce/)
-* Gravity Forms Support [More Info](https://ampforwp.com/gravity-forms/)
 * AMP Plugins Manager - Which allows you to disable a specific plugin functionality only in the AMP version
 * Structured Data Options
 * Page Break / NextPage (Pagination) Support
@@ -59,10 +55,13 @@ Bug reports for AMP for WP are [welcomed on GitHub](https://github.com/ahmedkalu
 * Native AMP Search functionality.
 * Design 3 [Watch the Video Overview](https://www.youtube.com/watch?v=ub1pwskt3Rc)
 * Disqus Comments Support
+* Vuukle Comments Support
+* Spot.IM Comments Support
 * Google Tag Manager Support
 * Page, Category & Tags Support Added
 * Custom AMP Editor - Which allows you to override your Content that you had written in Post or page, so you can add the different content just for AMP.
 * Mobile Redirection -  More than 50% of your traffic is from mobile and you aren’t doing anything to improve their user experience, which means you are falling behind on SEO and it can result in lower SERPS. Lightning fast mobile version means faster User experience means more engagement which directly results in the lower bounce rate.
+* Custom Post Type Support 
 * Custom Post Type Support 
 * Star Ratings
 * Drag & Drop Page builder Added 
@@ -74,7 +73,7 @@ Bug reports for AMP for WP are [welcomed on GitHub](https://github.com/ahmedkalu
 * Related posts below the post
 * Recent Comments list
 * Automatically integrate AMP to your website.
-* Google Adsense (AMP-AD) Support with 4 different Ad slots across the layout! The First Plugin to have this capability.
+* Google Adsense (AMP-AD) Support with 6 different Ad slots across the layout! The First Plugin to have this capability.
 * Built in MGID Ads Support with 6 different ad slots.
 * Google Analytics Support.
 * User Friendly Theme Options Panel.
@@ -106,7 +105,10 @@ Bug reports for AMP for WP are [welcomed on GitHub](https://github.com/ahmedkalu
 * AMP Installation Wizard that makes it easy to setup for new users.
 * Category base remover support
 * Tag base remover support
-* 7 New Social Media Integrations added (Reddit, Tumblr, Telegram, Digg, StumbleUpon, Wechat, Viber) 
+* Addthis Sharing Support
+* Infinite Scroll Support
+* Photo Gallery by 10Web Support  
+* 12 New Social Media Integrations added (Reddit, Tumblr, Telegram, Digg, StumbleUpon, Wechat, Viber, Hatena Bookmarks, Pocket, Yummly, MeWe, Flipboard) 
 * AMP Theme Framework Core Support Added. You can now create AMP templates of your own in just minutes. **[More](https://ampforwp.com/amp-theme-framework/)**
 * NEW - Make AMP & Non-AMP Same with just one click! 
 * NEW - Allows you to use AMP as primary website!
@@ -127,6 +129,7 @@ Bug reports for AMP for WP are [welcomed on GitHub](https://github.com/ahmedkalu
 Some code used in this plugin was forked from 'AMP for WordPress' plugin https://wordpress.org/plugins/amp/ - License URI: http://www.gnu.org/licenses/gpl-2.0.html.
 Mobile & Tablet detection library used https://github.com/serbanghita/Mobile-Detect - License URI: https://github.com/serbanghita/Mobile-Detect/blob/master/LICENSE.txt
 PHP CSS Parser library used https://github.com/sabberworm/PHP-CSS-Parser - License URI: https://github.com/sabberworm/PHP-CSS-Parser#license (PHP-CSS-Parser is freely distributable under the terms of an MIT-style license.)
+AMP Optimizer library used https://github.com/ampproject/amp-toolbox/tree/main/packages/optimizer - License URI: https://github.com/ampproject/amp-toolbox#license (AMP Toolbox is made by the AMP Project, and is licensed under the Apache License, Version 2.0.)
 
 == Installation ==
 **[Visit Help area for the Documentation:](https://ampforwp.com/help/)**
@@ -194,27 +197,19 @@ Device testing done through [BrowserStack](https://www.browserstack.com)
 
 == Changelog ==
 
-= 1.0.20 (31th January 2020) =
-* Fixed: Need to add nofollow feature in notification option #3612
-* Fixed: Cache Should auto clear when any plugin is activated/deactivated #4046
-* Fixed: Pages won't save apostophies in AMP page builder text module. #4074
-* Fixed: Modifying the location of the theme files. #4091
-* Fixed: Warring in console : [DOM] Found 2 elements with non-unique id #amp-search #3946
+= 1.0.77.12 (12th July 2021) =
+* Fixed: Exclude categories loop not working #5088
+* Fixed: Endpoint '?amp' not working with plain permalink #5087
 
-= 1.0.19 (29th January 2020) =
-* Improvement: EWWW Image Optimizer plugin Compatibility #3984
-* Fixed: WP Admin toolbar CSS is not loading when user is logged in #4076
-* Fixed: AMP Options panel UI improvements done. #4088
-* Fixed: video is not displaying in AMP when a video is inserted from gutenberg video module #4086
-* Fixed: Performance section all features not working when Ezoic integration plugin is active. #4092
-* Fixed: Playbuzz is not working #4085
-* Fixed: RECENT POSTS label visible if no posts are available #4011
-* Fixed: data-block-on-consent is missing for Vuukle comments when gdpr is enabled #4095
-* Fixed: Remove Purge AMP CDN cache Settings buuton: #4099
-* Fixed: When categories that we exclude from AMP through the plugin configuration present redirection problem along with mobile redirection option #4075
-* Fixed: Alignment issue in GDPR Privacy link. #4101
+= 1.0.77.11 (6th July 2021) =
+* Improvements: Improved readme.txt for newer features #5080
+* Fixed: SVG images are loading with a bigger size in the AMP version #5084
+* Fixed: Removed the percentage symbol beside AMP icon in dashboard #5082
+* Fixed: Gallery thumbnail image improved #5003
 
-= 1.0.18 (27th January 2020) =
-* Fixed: Debug warnings with Imagify plugin #3908
+= 1.0.77.10 (5th July 2021) =
+* Improvements: Unused CSS and Scripts are removed in AMP Optimizer (SSR) #5070 
+* Improvements: Added data-hero attribute in AMP logo #5083
+* Fixed: Webp images not appearing with Litespeed cache #5081
 
 Full changelog available [ at changelog.txt](https://plugins.svn.wordpress.org/accelerated-mobile-pages/trunk/changelog.txt)

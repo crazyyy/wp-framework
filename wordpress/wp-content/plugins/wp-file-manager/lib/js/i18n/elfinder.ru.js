@@ -3,7 +3,7 @@
  * @author Dmitry "dio" Levashov <dio@std42.ru>
  * @author Andrew Berezovsky <andrew.berezovsky@gmail.com>
  * @author Alex Yashkin <alex@yashkin.by>
- * @version 2018-12-07
+ * @version 2020-08-31
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -18,9 +18,9 @@
 		translator : 'Dmitry "dio" Levashov &lt;dio@std42.ru&gt;, Andrew Berezovsky &lt;andrew.berezovsky@gmail.com&gt;, Alex Yashkin &lt;alex@yashkin.by&gt;',
 		language   : 'Русский язык',
 		direction  : 'ltr',
-		dateFormat : 'd M Y H:i', // will show like: 07 Дек 2018 16:41
-		fancyDateFormat : '$1 H:i', // will show like: Сегодня 16:41
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 181207-164137
+		dateFormat : 'd M Y H:i', // will show like: 31 Авг 2020 17:07
+		fancyDateFormat : '$1 H:i', // will show like: Сегодня 17:07
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200831-170750
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -116,6 +116,7 @@
 			'errEditorNotFound'    : 'Не найден редактор для этого типа файлов.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Возникла ошибка на стороне сервера.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Невозможно очистить папку "$1".', // from v2.1.25 added 22.6.2017
+			'moreErrors'           : 'Еще ошибок: $1', // from v2.1.44 added 9.12.2018
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Создать архив',
@@ -303,6 +304,7 @@
 			'confirmNonUTF8'  : 'Невозможно определить кодировку файла. Необходима предварительная конвертация файла в UTF-8 для дальнейшего редактирования.<br/>Выберите кодировку файла.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Произошли изменения.<br/>Если не сохраните изменения, то потеряете их.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Вы уверены, что хотите переместить файлы в корзину?', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'Вы уверены, что хотите переместить файлы в "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Применить для всех',
 			'name'            : 'Имя',
 			'size'            : 'Размер',
@@ -401,6 +403,7 @@
 			'autoSync'        : 'Авто синхронизация',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Передвинуть вверх',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Получить URL ссылку', // from v2.1.7 added 9.2.2016
+			'share'           : 'доля',
 			'selectedItems'   : 'Выбранные объекты ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID папки', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Позволить автономный доступ', // from v2.1.10 added 3.25.2016
@@ -442,6 +445,7 @@
 			'clearBrowserData': 'Сбросить настройки для этого браузера', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Настройки панели', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... еще символов: $1.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... еще строк: $1.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Общий размер', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Приблизительный размер файла', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Фокус на элементе диалога при наведении мыши',  // from v2.1.30 added 2.11.2017
@@ -475,6 +479,7 @@
 			'integrations'    : 'Интеграции', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Менеджер elFinder интегрирован со следующими внешними сервисами. Ознакомьтесь с правилами пользования, политиками безопасности и др. перед их использованием.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : 'Показать скрытые элементы', // from v2.1.41 added 24.7.2018
+			'Code Editor'     : 'Редактор кода',
 			'hideHidden'      : 'Скрыть скрытые элементы', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Показать/скрыть скрытые элементы', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : 'Типы файлов в меню "Новый файл"', // from v2.1.41 added 7.8.2018
@@ -488,6 +493,8 @@
 			'email'           : 'Email', // from v2.1.43 added 19.10.2018
 			'license'         : 'Лицензия', // from v2.1.43 added 19.10.2018
 			'exportToSave'    : 'Невозможно сохранить файл. Чтобы не потерять изменения, экспортируйте их на свой ПК.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Двойной клик по файлу для его выбора.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Использовать полноэкранный режим', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Неизвестный',
@@ -525,7 +532,7 @@
 			'kindCSS'         : 'Таблицы стилей CSS',
 			'kindHTML'        : 'Документ HTML',
 			'kindJS'          : 'Исходник Javascript',
-			'kindRTF'         : 'Rich Text Format',
+			'kindRTF'         : 'Расширенный текстовый формат',
 			'kindC'           : 'Исходник C',
 			'kindCHeader'     : 'Заголовочный файл C',
 			'kindCPP'         : 'Исходник C++',
@@ -573,4 +580,3 @@
 		}
 	};
 }));
-

@@ -40,7 +40,7 @@ class UpdraftPlus_Tour {
 		add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 
 		// only init and load assets if the tour hasn't been canceled
-		if (isset($_REQUEST['updraftplus_tour']) && 0 === intval($_REQUEST['updraftplus_tour'])) {
+		if (isset($_REQUEST['updraftplus_tour']) && 0 === (int) $_REQUEST['updraftplus_tour']) {
 			$this->set_tour_status(array('current_step' => 'start'));
 			return;
 		}
@@ -51,7 +51,7 @@ class UpdraftPlus_Tour {
 		}
 
 		// if 'Take tour' link was used, reset tour
-		if (isset($_REQUEST['updraftplus_tour']) && 1 === intval($_REQUEST['updraftplus_tour'])) {
+		if (isset($_REQUEST['updraftplus_tour']) && 1 === (int) $_REQUEST['updraftplus_tour']) {
 			$this->reset_tour_status();
 		}
 
@@ -80,10 +80,11 @@ class UpdraftPlus_Tour {
 		}
 
 		$script_suffix = $updraftplus->use_unminified_scripts() ? '' : '.min';
+		$updraft_min_or_not = $updraftplus->get_updraftplus_file_version();
 		wp_enqueue_script('updraftplus-tether-js', trailingslashit(UPDRAFTPLUS_URL).'includes/tether/tether'.$script_suffix.'.js', $updraftplus->version, true);
 		wp_enqueue_script('updraftplus-shepherd-js', trailingslashit(UPDRAFTPLUS_URL).'includes/tether-shepherd/shepherd'.$script_suffix.'.js', array('updraftplus-tether-js'), $updraftplus->version, true);
 		wp_enqueue_style('updraftplus-shepherd-css', trailingslashit(UPDRAFTPLUS_URL).'css/tether-shepherd/shepherd-theme-arrows-plain-buttons'.$script_suffix.'.css', false, $updraftplus->version);
-		wp_enqueue_style('updraftplus-tour-css', trailingslashit(UPDRAFTPLUS_URL).'css/updraftplus-tour'.$script_suffix.'.css', false, $updraftplus->version);
+		wp_enqueue_style('updraftplus-tour-css', trailingslashit(UPDRAFTPLUS_URL).'css/updraftplus-tour'.$updraft_min_or_not.'.css', false, $updraftplus->version);
 		wp_register_script('updraftplus-tour-js', trailingslashit(UPDRAFTPLUS_URL).'js/tour.js', array('updraftplus-tether-js'), $updraftplus->version, true);
 		
 		$tour_data = array(

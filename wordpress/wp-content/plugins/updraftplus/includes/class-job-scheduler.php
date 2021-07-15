@@ -63,8 +63,15 @@ class UpdraftPlus_Job_Scheduler {
 		self::record_still_alive();
 
 		if (!$updraftplus->something_useful_happened) {
-			$useful_checkin = $updraftplus->jobdata_get('useful_checkin');
-			if (empty($useful_checkin) || $updraftplus->current_resumption > $useful_checkin) $updraftplus->jobdata_set('useful_checkin', $updraftplus->current_resumption);
+		
+			// Update the record of when something useful happened
+			$useful_checkins = $updraftplus->jobdata_get('useful_checkins');
+			if (!is_array($useful_checkins)) $useful_checkins = array();
+			if (!in_array($updraftplus->current_resumption, $useful_checkins)) {
+				$useful_checkins[] = $updraftplus->current_resumption;
+				$updraftplus->jobdata_set('useful_checkins', $useful_checkins);
+			}
+			
 		}
 
 		$updraftplus->something_useful_happened = true;
@@ -82,7 +89,7 @@ class UpdraftPlus_Job_Scheduler {
 				$log_data = $updraftplus->get_last_log_chunk($updraftplus->file_nonce);
 				$log_contents = isset($log_data['log_contents']) ? $log_data['log_contents'] : '';
 				$first_byte = isset($log_data['first_byte']) ? $log_data['first_byte'] : 0;
-				$response = $updraftplus->get_updraftplus_clone()->clone_checkin(array('clone_id' => $clone_id, 'secret_token' => $secret_token, 'first_byte' => $first_byte, 'log_contents' => $log_contents));
+				$response = $updraftplus->get_updraftplus_clone()->backup_checkin(array('clone_id' => $clone_id, 'secret_token' => $secret_token, 'first_byte' => $first_byte, 'log_contents' => $log_contents));
 				if (!isset($response['status']) || 'success' != $response['status']) {
 					$updraftplus->log("UpdraftClone backup check-in failed.");
 				} else {
@@ -131,7 +138,8 @@ class UpdraftPlus_Job_Scheduler {
 		// This next line may be too cautious; but until 14-Aug-2014, it was 300.
 		// Update 20-Mar-2015 - lowered from 180 to 120
 		// Update 03-Aug-2018 - lowered from 120 to 100
-		if ($how_far_ahead < 100) $how_far_ahead = 100;
+		// Update 09-Oct-2020 - lowered from 100 to 60
+		if ($how_far_ahead < 60) $how_far_ahead = 60;
 		$schedule_for = time() + $how_far_ahead;
 		$updraftplus->log("Rescheduling resumption $next_resumption: moving to $how_far_ahead seconds from now ($schedule_for)");
 		wp_schedule_single_event($schedule_for, 'updraft_backup_resume', array($next_resumption, $updraftplus->nonce));
@@ -178,7 +186,7 @@ class UpdraftPlus_Job_Scheduler {
 
 		global $updraftplus;
 	
-		$resume_interval = max(intval($updraftplus->jobdata_get('resume_interval')), (0 === $howmuch) ? 120 : 300);
+		$resume_interval = max((int) $updraftplus->jobdata_get('resume_interval'), (0 === $howmuch) ? 120 : 300);
 
 		if (empty($updraftplus->newresumption_scheduled) && $due_to_overlap) {
 			$updraftplus->log('A new resumption will be scheduled to prevent the job ending');

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) die('Access denied.');
 
 if (!class_exists('Updraft_Task_1_1')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task.php');
 
-if (!class_exists('Smush_Task')) :
+if (!class_exists('Updraft_Smush_Task')) :
 
 abstract class Updraft_Smush_Task extends Updraft_Task_1_1 {
 
@@ -250,10 +250,10 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_1 {
 
 		clearstatcache(true, $file_path); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.clearstatcache_clear_realpath_cacheFound,PHPCompatibility.FunctionUse.NewFunctionParameters.clearstatcache_filenameFound
 		if (0 == $original_size) {
-			$info = sprintf(__("The file was compressed to %s using WP-Optimize", 'wp-optimize'), $this->format_filesize(filesize($file_path)));
+			$info = sprintf(__("The file was compressed to %s using WP-Optimize", 'wp-optimize'), WP_Optimize()->format_size(filesize($file_path)));
 		} else {
 			$saved = round((($original_size - filesize($file_path)) / $original_size * 100), 2);
-			$info = sprintf(__("The file was compressed from %s to %s saving %s percent using WP-Optimize", 'wp-optimize'), $this->format_filesize($original_size), $this->format_filesize(filesize($file_path)), $saved);
+			$info = sprintf(__("The file was compressed from %s to %s saving %s percent using WP-Optimize", 'wp-optimize'), WP_Optimize()->format_size($original_size), WP_Optimize()->format_size(filesize($file_path)), $saved);
 		}
 
 		$stats = array(
@@ -382,31 +382,6 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_1 {
 		if (isset($this->stage))
 			return $this->stage;
 		else return $this->get_option('current_stage');
-	}
-
-
-	/**
-	 * Helper function to format bytes to a human readable value
-	 *
-	 * @param int $bytes - the filesize in bytes
-	 */
-	public function format_filesize($bytes) {
-		
-		if (1073741824 <= $bytes) {
-			$bytes = number_format($bytes / 1073741824, 2) . ' GB';
-		} elseif (1048576 <= $bytes) {
-			$bytes = number_format($bytes / 1048576, 2) . ' MB';
-		} elseif (1024 <= $bytes) {
-			$bytes = number_format($bytes / 1024, 2) . ' KB';
-		} elseif (1 < $bytes) {
-			$bytes = $bytes . ' bytes';
-		} elseif (1 == $bytes) {
-			$bytes = $bytes . ' byte';
-		} else {
-			$bytes = '0 bytes';
-		}
-
-		return $bytes;
 	}
 
 	/**

@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_SettingsPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory422_Plugin $plugin
+	 * @param Wbcr_Factory443_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory422_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory443_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = "settings";
@@ -81,6 +81,15 @@ class WINP_SettingsPage extends WINP_Page {
 			'title'   => __( 'Keep the HTML entities, don\'t convert to its character', 'insert-php' ),
 			'default' => false,
 			'hint'    => __( 'If you want to use an HTML entity in your code (for example &gt; or &quot;), but the editor keeps on changing them to its equivalent character (> and " for the previous example), then you might want to enable this option.', 'insert-php' )
+		];
+
+		$options[] = [
+			'type'    => 'checkbox',
+			'way'     => 'buttons',
+			'name'    => 'execute_shortcode',
+			'title'   => __( 'Execute shortcodes in snippets', 'insert-php' ),
+			'default' => false,
+			'hint'    => __( 'Execute shortcodes in the snippet code before executing the snippet.', 'insert-php' )
 		];
 
 		$options[] = [

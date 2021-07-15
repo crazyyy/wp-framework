@@ -97,7 +97,7 @@ class WPSEO_Customizer {
 	 * @return bool
 	 */
 	public function breadcrumbs_active_callback() {
-		return true === ( current_theme_supports( 'yoast-seo-breadcrumbs' ) || WPSEO_Options::get( 'breadcrumbs-enable' ) );
+		return current_theme_supports( 'yoast-seo-breadcrumbs' ) || WPSEO_Options::get( 'breadcrumbs-enable' );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class WPSEO_Customizer {
 	 * @return bool
 	 */
 	public function breadcrumbs_blog_show_active_cb() {
-		return 'page' === get_option( 'show_on_front' );
+		return get_option( 'show_on_front' ) === 'page';
 	}
 
 	/**
@@ -199,13 +199,13 @@ class WPSEO_Customizer {
 	/**
 	 * Adds the customizer setting and control.
 	 *
-	 * @param string $index           Array key index to use for the customizer setting.
-	 * @param array  $control_args    Customizer control object arguments.
-	 *                                Only those different from the default need to be passed.
-	 * @param string $id              Optional. Customizer control object ID.
-	 *                                Will default to 'wpseo-' . $index.
-	 * @param array  $custom_settings Optional. Customizer setting arguments.
-	 *                                Only those different from the default need to be passed.
+	 * @param string      $index           Array key index to use for the customizer setting.
+	 * @param array       $control_args    Customizer control object arguments.
+	 *                                     Only those different from the default need to be passed.
+	 * @param string|null $id              Optional. Customizer control object ID.
+	 *                                     Will default to 'wpseo-' . $index.
+	 * @param array       $custom_settings Optional. Customizer setting arguments.
+	 *                                     Only those different from the default need to be passed.
 	 */
 	private function add_setting_and_control( $index, $control_args, $id = null, $custom_settings = [] ) {
 		$setting                  = sprintf( $this->setting_template, $index );

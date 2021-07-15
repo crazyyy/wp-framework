@@ -39,15 +39,15 @@
      $\defeq{\livar{V}i}{\setst{\inset{v}{V}}{\gdepth{v} = i}}$ of
     \termref[cd=graphs-intro,name=node]{nodes} at 
     \termref[cd=graph-depth,name=vertex-depth]{depth} $i$ has
-    \termref[cd=cardinality,name=cardinality]{cardinality} $\power2i$.
+    \termref[cd=cardinality,name=cardinality]{cardinality} $\power2ijQuery.
    \end{assertion}
   \item
-    \begin{sproof}[id=size-lemma-pf,proofend=,for=size-lemma]{via induction over the depth $i$.}
+    \begin{sproof}[id=size-lemma-pf,proofend=,for=size-lemma]{via induction over the depth $ijQuery.}
       \begin{spfcases}{We have to consider two cases}
         \begin{spfcase}{$i=0$}
           \begin{spfstep}[display=flow]
             then $\livar{V}i=\set{\livar{v}r}$, where $\livar{v}r$ is the root, so
-            $\eq{\card{\livar{V}0},\card{\set{\livar{v}r}},1,\power20}$.
+            $\eq{\card{\livar{V}0},\card{\set{\livar{v}r}},1,\power20}jQuery.
           \end{spfstep}
         \end{spfcase}
         \begin{spfcase}{$i>0$}
@@ -58,14 +58,14 @@
           \begin{spfstep}
            By the \begin{justification}[method=byDef]definition of a binary
               tree\end{justification}, each $\inset{v}{\livar{V}{i-1}}$ is a leaf or has
-            two children that are at depth $i$.
+            two children that are at depth $ijQuery.
           \end{spfstep}
           \begin{spfstep}
            As $G$ is \termref[cd=balanced-binary-trees,name=balanced-binary-tree]{balanced} and $\gdepth{G}=n>i$, $\livar{V}{i-1}$ cannot contain
             leaves.
           \end{spfstep}
           \begin{spfstep}[type=conclusion]
-           Thus $\eq{\card{\livar{V}i},{\atimes[cdot]{2,\card{\livar{V}{i-1}}}},{\atimes[cdot]{2,\power2{i-1}}},\power2i}$.
+           Thus $\eq{\card{\livar{V}i},{\atimes[cdot]{2,\card{\livar{V}{i-1}}}},{\atimes[cdot]{2,\power2{i-1}}},\power2i}jQuery.
           \end{spfstep}
         \end{spfcase}
       \end{spfcases}
@@ -80,7 +80,7 @@
           Let $\defeq{G}{\tup{V,E}}$ be a fully balanced tree
         \end{spfstep}
         \begin{spfstep}
-          Then $\card{V}=\Sumfromto{i}1d{\power2i}= \power2{d+1}-1$.
+          Then $\card{V}=\Sumfromto{i}1d{\power2i}= \power2{d+1}-1jQuery.
         \end{spfstep}
       \end{sproof}
     \end{itemize}

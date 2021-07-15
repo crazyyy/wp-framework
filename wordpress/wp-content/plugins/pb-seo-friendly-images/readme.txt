@@ -2,9 +2,9 @@
 Contributors: pascalbajorat
 Donate link: https://www.pascal-bajorat.com/spenden/
 Tags: seo, images, Post, admin, google, attachment, optimize, photo, picture, image, media, photos, pictures, alt, title, lazy, load
-Requires at least: 3.0
-Tested up to: 5.2.9
-Stable tag: 3.1.0
+Requires at least: 5.0
+Tested up to: 5.5
+Stable tag: 4.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -46,6 +46,23 @@ Want to add lazy load to images in your theme? You only need to do some small mo
 1.	Plugin Settings
 
 == Changelog ==
+
+= 4.0.4 =
+* DISABLED: Banner in WP Dashboard
+* Bugfix & Optimization
+
+= 4.0.3 =
+* Bugfix & Optimization
+
+= 4.0.2 =
+* Bugfix & Optimization
+
+= 4.0.1 =
+* Bugfix
+
+= 4.0.0 =
+* Complete Rewrite of the plugin
+* Please make sure to backup your files before you run this update. If you have any problems you can switch to an older version, have a look at the download archive.
 
 = 3.1.0 =
 * serveral bugs are fixed and code was optimized

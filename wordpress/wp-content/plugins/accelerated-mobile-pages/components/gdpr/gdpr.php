@@ -21,8 +21,18 @@ function amp_gdpr_output(){
     if(isset($redux_builder_amp['amp-gdpr-compliance-privacy-page-button-text']) && $redux_builder_amp['amp-gdpr-compliance-privacy-page-button-text']){
     $privacy_button_text = $redux_builder_amp['amp-gdpr-compliance-privacy-page-button-text'];
     }
-    $gdpr_countries = array("AT","BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS", "IE", "IT", "LV", "LI", "LT", "LU", "MT", "NL", "NO", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB", "AX", "IC", "EA", "GF", "PF", "TF", "GI", "GP", "GG", "JE", "MQ", "YT", "NC", "RE", "BL", "MF", "PM", "SJ", "VA", "WF", "EZ", "CH");
-    $gdpr_countries = apply_filters( 'ampforwp_gdpr_country_list' , $gdpr_countries ); ?>
+    $gdpr_countries = array("AT","BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS", "IE", "IT", "LV", "LI", "LT", "LU", "MT", "NL", "NO", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB", "AX", "IC", "EA", "GF", "PF", "TF", "GI", "GP", "GG", "JE", "MQ", "YT", "NC", "RE", "BL", "MF", "PM", "SJ", "VA", "WF", "EZ", "CH","BR");
+    $gdpr_countries = apply_filters( 'ampforwp_gdpr_country_list' , $gdpr_countries ); 
+    $gdpr_text = array("headline"=>$headline,"user_data"=>$user_data,"accept"=>$accept,"reject"=>$reject,"settings"=>$settings,"more_info "=>$more_info,"privacy_button_text"=>$privacy_button_text );
+	$gdpr_text = apply_filters('ampforwp_modify_gdpr_output',$gdpr_text);
+	$headline = $gdpr_text['headline'];
+	$user_data = $gdpr_text['user_data'];
+	$accept = $gdpr_text['accept'];
+	$reject = $gdpr_text['reject'];
+	$settings = $gdpr_text['settings'];
+	$more_info = isset($gdpr_text['more_info']) ? $gdpr_text['more_info'] : "";
+	$privacy_button_text = $gdpr_text['privacy_button_text'];
+    ?>
     <amp-geo layout="nodisplay">
         <script type="application/json">
             {
@@ -47,28 +57,28 @@ function amp_gdpr_output(){
               <div class="gdpr_x" role="button" tabindex="0" on="tap:ampforwpConsent.dismiss">X</div>
               <div class="gdpr-l">
 	              	<div class="gdpr_t">
-		                <h3><?php echo esc_attr($headline); ?></h3>
-		                <p><?php echo esc_attr($user_data); ?></p>
+		                <h3><?php echo esc_html__($headline,'accelerated-mobile-pages'); ?></h3>
+		                <p><?php echo esc_html__($user_data,'accelerated-mobile-pages'); ?></p>
 	                </div><?php if(isset($redux_builder_amp['amp-gdpr-compliance-select-privacy-page']) && $redux_builder_amp['amp-gdpr-compliance-select-privacy-page']){?>
 	                <div class="gdpr_fmi">
-	                  <span><?php echo esc_attr($more_info); ?></span>
-	                  <a class="gdpr_fmi pri_page_link" href=<?php echo esc_attr($privacy_page); ?> target="_blank"><?php echo esc_attr($privacy_button_text); ?></a> 
+	                   <span><?php echo esc_html__($more_info,'accelerated-mobile-pages'); ?></span>
+	                  <a class="gdpr_fmi pri_page_link" href="<?php echo esc_attr($privacy_page); ?>" target="_blank"><?php echo esc_html__($privacy_button_text,'accelerated-mobile-pages'); ?></a> 
 	                </div><?php } ?>
 	            </div>
               <div id="gdpr_yn" class="gdpr_yn">
               	<div class="gdpr-btns">
 	                <form class="acp" action-xhr="<?php echo esc_url($form_url); ?>" method="post" target="_top">
-	                  <button type="submit" on="tap:ampforwpConsent.accept" class="btn gdpr_y btn"><?php echo esc_attr($accept); ?></button>
+	                  <button type="submit" on="tap:ampforwpConsent.accept" class="btn gdpr_y btn"><?php echo esc_html__($accept,'accelerated-mobile-pages'); ?></button>
 	                </form>
 	                <form class="rej" action-xhr="<?php echo esc_url($form_url); ?>" method="post" target="_top">
-	                  <button type="submit" on="tap:ampforwpConsent.reject" class="btn gdpr_n"><?php echo esc_attr($reject); ?></button>
+	                  <button type="submit" on="tap:ampforwpConsent.reject" class="btn gdpr_n"><?php echo esc_html__($reject,'accelerated-mobile-pages'); ?></button>
 	                 </form>
 	             </div>
               </div>
             </div>
           </div>
           <div id="post-consent-ui">
-            <a href="#" on="tap:ampforwpConsent.prompt()" class="btn"><?php echo esc_attr($settings); ?></a> 
+            <a href="#" on="tap:ampforwpConsent.prompt()" class="btn"><?php echo esc_html__($settings,'accelerated-mobile-pages'); ?></a> 
           </div>
       </amp-consent>
 <?php 
@@ -128,24 +138,20 @@ function ampforwp_gdpr_css(){
 		#footer .gdpr_fmi a{
 			color: <?php echo ampforwp_sanitize_color( ampforwp_get_setting('swift-color-scheme','color') ); ?>;
 		}
-		amp-consent.amp-active {
-		  top: 0;
-		  bottom: 0;
-		  left: 0;
-		  right: 0;
-		  position: fixed;
-		} 
+	
 		@media(max-width:768px){
 			.gdpr_w{width: 85%;margin:0 auto;padding:1.5rem;}
 		}
 		@media(max-width:700px){
-		    .gdpr_w{margin:0 auto; width: 95%;}
+		    .gdpr_w{margin:0 auto; width: 85%;}
 		    
 		}<?php 
 	} // GDPR Type 1 End
 	// GDPR Notice bar
-	if($redux_builder_amp['gdpr-type'] == '2'){?>
-		.gdpr{position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index:99999;}
+	if($redux_builder_amp['gdpr-type'] == '2'){
+		$position = ampforwp_get_setting('amp-gdpr-type2-position');
+		?>
+		.gdpr{position: fixed; <?php if($position==1){?>top: 0;<?php }else{?> bottom: 0;<?php }?> left: 0; right: 0; z-index:99999;}
 		.gdpr_w{padding:20px 40px;background: #383B75;width: 95%;position: relative;margin: 0% auto;display: inline-flex;}
 		.gdpr_t h3, .gdpr_fmi{    
 		  font-size: 16px;
@@ -182,7 +188,7 @@ function ampforwp_gdpr_css(){
 		.gdpr_yn form{display: inline;}
 		.gdpr_yn button{background: #FFFC26;border: none;color: #333;padding: 8px 40px;font-size: 15px;margin: 0 3px;font-weight: 600;cursor: pointer;}
 		.gdpr_yn .gdpr_n{background: transparent;}
-		amp-consent{position: relative;margin-left: 10px;top: 2px;width: auto;background: transparent;margin:0;width:100%;}
+		amp-consent{position: relative;margin-left: 10px;width: auto;background: transparent;margin:0;left:40%;}
 		.gdpr_fmi span, .gdpr_fmi a:before{
 		  display:none;
 		}
@@ -249,10 +255,23 @@ function ampforwp_gdpr_css(){
 		}
 		<?php 
 	} ?>
-	amp-consent.amp-active{
-	    z-index:0;
+	footer amp-consent.amp-active {
+	    z-index:9999;
+	    display: initial;
 	    position: inherit;
+	    height:20px;
+	    width:100%;
 	}	
+	body[class*="amp-iso-country-"] .amp-active{
+    	display: contents;
+	}
+	#post-consent-ui {
+		position: fixed;
+		z-index: 9999;
+		left: 45%;
+		margin-top: 10px;
+		top: 0;
+	}
 <?php }
 
 function amp_consent_submission(){

@@ -66,7 +66,7 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
      * @param array $additional Additional parameters
      * @return string|object stdClass
      */
-    public function fetch($method, $url, $call, array $additional = array())
+    public function fetch($method, $url, $call, array $additional = array(), $retry_with_header = false)
     {
         // Get the signed request URL
         $request = $this->getSignedRequest($method, $url, $call, $additional);
@@ -135,7 +135,15 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
             $options[CURLOPT_POSTFIELDS] = $this->inFile;
         } elseif ($method == 'POST') { // POST
             $options[CURLOPT_POST] = true;
-            $options[CURLOPT_POSTFIELDS] = empty($request['postfields']) ? 'null' : $request['postfields'];
+            if (!empty($request['postfields'])) {
+				$options[CURLOPT_POSTFIELDS] = $request['postfields'];
+			} elseif (empty($additional['content_upload'])) {
+				// JSON representation of nullity
+				$options[CURLOPT_POSTFIELDS] = 'null';
+			} elseif ($retry_with_header) {
+				// It's a content upload, and there's no data. Versions of php-curl differ as to whether they add a Content-Length header automatically or not. Dropbox complains if it's not there. Here we have had a Dropbox 400 bad request returned so we try again with the header
+				$options[CURLOPT_HTTPHEADER] = array_merge($options[CURLOPT_HTTPHEADER], array('Content-Length: 0'));
+			}
         } elseif ($method == 'PUT' && $this->inFile) { // PUT
             $options[CURLOPT_PUT] = true;
             $options[CURLOPT_INFILE] = $this->inFile;
@@ -188,12 +196,13 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
                     if (strpos($array[0] , 'incorrect_offset') !== false) {
                         $message = json_encode($array);
                     } elseif (strpos($array[0] , 'lookup_failed') !== false ) {
-                        //re-structure the array so it is correctly formatted for API
-                        //Note: Dropbox v2 returns different errors at different stages hence this fix
+                        // re-structure the array so it is correctly formatted for API
+                        // Note: Dropbox v2 returns different errors at different stages hence this fix
                         $correctOffset = array(
                             '0' => $array[1]->{'.tag'},
-                            '1' => $array[1]->correct_offset
                         );
+                        // the lookup_failed response doesn't always return a correct_offset this happens when the lookup fails because the session has been closed e.g the file has already been uploaded but the response didn't make it back to the client so we try again
+                        if (isset($array[1]->correct_offset)) $correctOffset['1'] = $array[1]->correct_offset;
 
                         $message = json_encode($correctOffset);
                     } else {
@@ -213,6 +222,7 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
                     case 304:
                         throw new Dropbox_NotModifiedException($message, 304);
                     case 400:
+                        if (!$retry_with_header) return $this->fetch($method, $url, $call, $additional, true);
                         throw new Dropbox_BadRequestException($message, 400);
                     case 404:
                         throw new Dropbox_NotFoundException($message, 404);

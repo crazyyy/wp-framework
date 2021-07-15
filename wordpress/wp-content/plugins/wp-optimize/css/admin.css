@@ -138,6 +138,8 @@
 
 /* .wp-optimize-settings-clean-transient label, .wp-optimize-settings-clean-pingbacks label, .wp-optimize-settings-clean-trackbacks label, .wp-optimize-settings-clean-postmeta label, .wp-optimize-settings-clean-orphandata label, .wp-optimize-settings-clean-commentmeta label */
 
+/* Optimizations tab */
+
 .wp-optimize-setting-is-sensitive td > label::before {
 	content: "\f534";
 	font-family: 'dashicons';
@@ -157,6 +159,10 @@
 	margin-bottom: 15px;
 }
 
+.wp-optimize-optimizations-table-placeholder {
+	min-height: 80px;
+}
+
 td.wp-optimize-settings-optimization-checkbox {
 	width: 18px;
 	padding-left: 4px;
@@ -168,7 +174,7 @@ td.wp-optimize-settings-optimization-checkbox {
 	padding: 0px;
 }
 
-#retention-period {
+#retention-period, #revisions-count {
 	width: 60px;
 }
 
@@ -466,9 +472,9 @@ div#wpoptimize_table_list_tables_not_found + h3 {
 .wpo_alert_notice {
 	background-color: #F06666;
 	color: #FFF;
-	padding: 5px;
+	padding: 1em;
 	display: block;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	border-radius: 5px;
 }
 
@@ -515,6 +521,14 @@ div#wpoptimize_table_list_tables_not_found + h3 {
 	margin-top: 3px;
 }
 
+.wpo-confirm h4 span.table-name {
+	font-style: italic;
+	display: inline-block;
+	background: #EFEFEF;
+	padding: 3px 7px;
+	border-radius: 4px;
+}
+
 #wpo_browser_cache_output,
 #wpo_gzip_compression_output,
 #wpo_advanced_cache_output {
@@ -530,8 +544,16 @@ div#wpoptimize_table_list_tables_not_found + h3 {
 }
 
 .notice.wpo-error__enabling-cache {
-	white-space: pre;
+	white-space: pre-wrap;
 	margin-bottom: 15px;
+}
+
+.notice.wpo-warnings__enabling-cache {
+	margin-bottom: 15px;
+}
+
+.notice.wpo-warnings__enabling-cache ul, .notice.wpo-warnings__enabling-cache ul li {
+	list-style: inside disc;
 }
 
 a.loading.wpo-refresh-gzip-status {

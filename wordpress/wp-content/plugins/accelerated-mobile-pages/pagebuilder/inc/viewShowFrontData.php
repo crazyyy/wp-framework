@@ -139,7 +139,7 @@ function amp_pagebuilder_content_styles(){
 
 	$completeCssOfPB .= '.amp_pb{display: inline-block;width: 100%;}
 .row{display: inline-flex;width: 100%;}
-.col-2{width:50%;float:left;}
+.col-2{ width: calc(50% - 5px);float:left;}
 .col-2-wrap .col-2:nth-child(1){
 	padding-right:5px;
 }
@@ -160,6 +160,7 @@ function amp_pagebuilder_content_styles(){
 .col-2{width:100%;float:none;margin-bottom:10%;}
 .col-2-wrap .col-2:nth-child(1){padding-right:0px;}
 .col-2-wrap .col-2:nth-child(2){padding-left:0px;}
+.sbs .col-2{width: calc(50% - 5px);float: left;margin:2px;}
 }
 ';
 
@@ -426,9 +427,10 @@ function amp_pagebuilder_content_styles(){
 			 					if(!isset($moduleTemplate[$contentArray['type']]['repeater']['front_css'])){
 			 						continue;
 			 					}
-			                  	$repeaterFrontCss = $moduleTemplate[$contentArray['type']]['repeater']['front_css'];
-
+			 					$repeaterFrontCss = $moduleTemplate[$contentArray['type']]['repeater']['front_css'];
+			 					$repeaterFrontCss = str_replace("{{acc_head_type}}", $moduleTemplate["accordion-mod"]["repeater"]["fields"][1]["default"] , $repeaterFrontCss );
 			                    if($moduleField['content_type']=='css'){
+			                    	$repeaterFrontCss = str_replace("{{module-class}}", '.ap_m_'.$contentArray['cell_id'], $repeaterFrontCss );
 			                    	$repeaterFrontCss = str_replace('{{repeater-module-class}}', $moduleField['name'].'_'.$repeaterVarIndex, $repeaterFrontCss);
 			                    	$replace = $repeaterUserValues[$moduleField['name'].'_'.$repeaterVarIndex];
 				                    if(is_array($replace)){
@@ -456,8 +458,13 @@ function amp_pagebuilder_content_styles(){
 			                              $repeaterFrontCss
 			                            );
 			                      }
-			 
-			                      
+			 				}else{
+					                $repeaterCss = $moduleTemplate[$contentArray['type']]['repeater']['front_css'];
+			                    	if(strpos($repeaterCss, '{{'.$moduleField['name'].'}}')!==false){
+			                    		$repeaterFrontCss = $repeaterCss;
+			                    		$replace_with = $repeaterUserValues[$moduleField['name'].'_'.$repeaterVarIndex];
+				                    	$repeaterFrontCss = str_replace('{{'.$moduleField['name'].'}}',$replace_with, $repeaterFrontCss);
+				                    }
 			                    }
 			                  }
 			                  $repeaterFieldsCss .= $repeaterFrontCss;
@@ -497,7 +504,6 @@ function amppb_validateCss($css){
 	$css = str_replace(array('.amppb-fluid','.amppb-fixed','.accordion-mod'), array('.ap-fl','.ap-fi','.apac'), $css);
 	$css = preg_replace('/(([a-z -]*:(\s)*;))/', "", $css);
 	$css = preg_replace('/((;[\s\n;]*;))/', ";", $css);
-	$css = preg_replace('/(?:[^\r\n,{}]+)(?:,(?=[^}]*{,)|\s*{[\s]*})/', "", $css);
 	$css = preg_replace('/\s\n+/', "", $css);
 	return ampforwp_pb_autoCompileLess($css);
 }
@@ -519,8 +525,11 @@ function ampforwp_pb_autoCompileLess($css)
     $medias = array();
     foreach ($completeCssMinifies as $key => $value) {
     	preg_match_all('!\d+!', $key, $matches);
-    	if($matches){
+    	if($matches && !isset($medias[$matches[0][0]])){
 			$medias[$matches[0][0]] = $value;
+		}
+		if($matches && isset($medias[$matches[0][0]])){
+			$medias[$matches[0][0]] .= $value;
 		}
     }   
     krsort($medias);
@@ -585,7 +594,7 @@ function amppb_post_content($content){
 		$html ="";
 		$previousData = json_decode($previousData,true);
 		//Call Sorting for rows 
-		if(count($previousData['rows'])>0){
+		if(is_array($previousData) && count($previousData['rows'])>0){
 			$mainContentClass = '';
 			if(isset($previousData['settingdata']) && isset($previousData['settingdata']['front_class'])){
 				$mainContentClass = $previousData['settingdata']['front_class'];
@@ -611,12 +620,12 @@ function amppb_post_content($content){
 							}elseif($field['name']=='grid_type' && $rowsData['data'][$field['name']]=='amppb-fixed'){
 								$replace .= 'ap-fi';
 							}else{
-								$replace .= esc_html($rowsData['data'][$field['name']]);
+								$allowed_tags = '<p><a><b><strong><i><u><ul><ol><li><h1><h2><h3><h4><h5><h6><table><tr><th><td><em><span><div>';
+								$replace .= strip_tags($rowsData['data'][$field['name']],$allowed_tags);
 							}
 						}else{
 							$replace .= '';
 						}
-						$replace = esc_attr($replace);
 						if(! is_array($field['name']) && $field['content_type']=='html'){
 							$rowStartTemplate = str_replace('{{'.$field['name'].'}}', $replace, $rowStartTemplate);
 						}
@@ -635,7 +644,7 @@ function amppb_post_content($content){
 							foreach($rowsData['cell_data'] as $colDevider){
 								$colData[$colDevider['cell_container']][] = $colDevider;
 							}
-							$html .= '<div class="col-2-wrap">';
+							$html .= '<div class="col-2-wrap col">';
 							foreach($colData as $data)
 								$html .= ampforwp_rowData($data,$rowsData['cells'],$moduleTemplate);
 							$html .= '</div>';
@@ -707,6 +716,8 @@ function ampforwp_rowData($container,$col,$moduleTemplate){
 										$replace = "";
 										if(isset($repeaterUserValues[$moduleField['name'].'_'.$repeaterVarIndex])){
 											$replace = $repeaterUserValues[$moduleField['name'].'_'.$repeaterVarIndex];
+										}else{
+											$replace = $moduleField['default'];
 										}
 										if(is_array($replace)){
 											if(count($replace)>0){
@@ -744,7 +755,7 @@ function ampforwp_rowData($container,$col,$moduleTemplate){
 														 $imageUrl, 
 														$repeaterFrontTemplate
 													);
-											if(strpos($repeaterFrontTemplate, '{{'.$moduleField['name'].'-thumbnail}}')!==false){
+											if(strpos($repeaterFrontTemplate, '{{'.$moduleField['name'].'-thumbnail}}')!==false && isset($replace[0])){
 												$imageDetails = ampforwp_get_attachment_id( $replace[0], 'thumbnail');
 												$imageUrl = isset($imageDetails[0])? $imageDetails[0] : '';
 												$repeaterFrontTemplate = str_replace(
@@ -865,6 +876,9 @@ function ampforwp_rowData($container,$col,$moduleTemplate){
 								'post_status'=> 'publish',
 								'post_type' => $fieldValues['post_type_selection']
 								);
+						if($fieldValues['pagination'] == 0){
+							array_push($args, "no_found_rows", true);
+						}
 						if ( (isset($fieldValues['taxonomy_selection']) && 'recent_option' !== $fieldValues['taxonomy_selection']) &&  (isset($fieldValues['category_selection']) && 'recent_option' !== $fieldValues['category_selection'])) {
 							$args['tax_query'] = array(
 									array(
@@ -938,7 +952,7 @@ function ampforwp_rowData($container,$col,$moduleTemplate){
 								if(!is_array($replace)){
 									
 									if($field['type']=="upload"){
-										$image_alt = $imageUrl = $imageWidth = $imageHeight = $image_caption = '';
+										$image_alt = $imageUrl = $imageWidth = $imageHeight = $image_caption = $image_srcset = '';
 										if(isset($contentArray[$field['name']."_image_data"])){
 										 	$replace= $contentArray[$field['name']."_image_data"];
 										 	$imageUrl = $replace[0];
@@ -946,6 +960,7 @@ function ampforwp_rowData($container,$col,$moduleTemplate){
 											$imageHeight = $replace[2];
 											$image_alt = (isset($replace['alt'])? $replace['alt']: "");
 											$image_caption = (isset($replace['caption'])? $replace['caption']: "");
+											$image_srcset = $replace[0];
 										}elseif( $replace != "" ){
 											$imageDetails = ampforwp_get_attachment_id( $replace);
 											if(is_array($imageDetails)){
@@ -996,6 +1011,16 @@ function ampforwp_rowData($container,$col,$moduleTemplate){
 													 	), 
 													$moduleFrontHtml
 												);
+										$moduleFrontHtml = str_replace(
+													array('{{image_srcset}}',
+														  '{{image_srcset_'.$field['name'].'}}'
+														 ), 
+													 array($image_srcset,
+													 	   $image_srcset
+													 	), 
+													$moduleFrontHtml
+												);
+										$moduleFrontHtml = ampforwp_replaceIfContentConditional('image_srcset', $image_srcset, $moduleFrontHtml);
 										$moduleFrontHtml = ampforwp_replaceIfContentConditional('image_alt', $image_alt, $moduleFrontHtml);
 										$moduleFrontHtml = str_replace(
 													array('{{image_caption}}',
@@ -1100,6 +1125,7 @@ function ampforwp_get_attachment_id( $url , $imagetype='full') {
 				'post_type'   => 'attachment',
 				'post_status' => 'inherit',
 				'fields'      => 'ids',
+				'no_found_rows' => true,
 				'meta_query'  => array(
 					array(
 						'value'   => $file,
@@ -1108,6 +1134,7 @@ function ampforwp_get_attachment_id( $url , $imagetype='full') {
 					),
 				)
 			);
+			$query_args = apply_filters('ampforwp_attachment_id_query_args' , $query_args );
 			$query = new WP_Query( $query_args );
 			if ( $query->have_posts() ) {
 				foreach ( $query->posts as $post_id ) {

@@ -23,7 +23,7 @@ function ampforwp_analytics() {
 								'groups'=>'default',
 						)
 					);
-		$ga_fields['vars']['triggers'] = array(
+		$ga_fields['triggers'] = array(
 						'trackPageview'=> array(
 								'on'=>'visible',
 								'request'=>'pageview'			
@@ -37,18 +37,25 @@ function ampforwp_analytics() {
 				'enabled'=> true
 			);
 		}
+		if (ampforwp_get_setting('ampforwp-ga-field-author')) {
+			$author = ampforwp_get_setting('ampforwp-ga-field-author-index');
+			if ($author) {
+				$ga_fields['vars']['config'][$author] = get_the_author_meta('display_name');
+			}
+		}
+		$ga_fields = apply_filters('ampforwp_google_analytics_fields', $ga_fields );
 		$ampforwp_ga_fields = json_encode( $ga_fields);
 		if( ampforwp_get_setting('ampforwp-ga-field-advance-switch') ){
 			$ampforwp_ga_fields = apply_filters('ampforwp_advance_google_analytics', $ampforwp_ga_fields );
 			$ampforwp_ga_fields = preg_replace('!/\*.*?\*/!s', '', $ampforwp_ga_fields);
 			$ampforwp_ga_fields = preg_replace('/\n\s*\n/', '', $ampforwp_ga_fields);
 	 		?>
-	 		<amp-analytics <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?> type="googleanalytics" id="analytics1">
+	 		<amp-analytics <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?> type="gtag" id="analytics1">
 	 		<script type="application/json">
 				<?php echo $ampforwp_ga_fields; ?>
 			</script>
 			</amp-analytics>
-	 		<?php } else { ?>
+	 		<?php } else if (!empty($ga_account) && $ga_account != "UA-XXXXX-Y") { ?>
 			<amp-analytics <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?> type="gtag" id="analytics1" data-credentials="include" >
 				<script type="application/json">
 					<?php echo $ampforwp_ga_fields; ?>
@@ -99,7 +106,6 @@ function ampforwp_analytics() {
 			$url = get_the_permalink();
 			$url = ampforwp_remove_protocol(ampforwp_url_controller($url));
 			$rand = rand(1111,9999);
-			$pview = ampforwp_remove_protocol(site_url());
 			$referer  = $url;
 			if(isset($_SERVER['HTTP_REFERER'])) {
 		      $referer  = $_SERVER['HTTP_REFERER'];
@@ -107,7 +113,7 @@ function ampforwp_analytics() {
 			$piwik_api = str_replace("YOUR_SITE_ID", '1', $idsite);
 			$piwik_api = str_replace("TITLE", esc_attr($title), $piwik_api);
 			$piwik_api = str_replace("DOCUMENT_REFERRER", esc_url($referer), $piwik_api);
-			$piwik_api = str_replace("CANONICAL_URL", esc_url($pview), $piwik_api);
+			$piwik_api = str_replace("CANONICAL_URL", esc_url($url), $piwik_api);
 			$piwik_api = str_replace("RANDOM", intval($rand), $piwik_api);
 			?>
 			<amp-pixel src="<?php echo $piwik_api; // XXS ok, escaped above?>"></amp-pixel>
@@ -295,7 +301,103 @@ function ampforwp_analytics() {
 					</amp-analytics>
 				<!-- End AFS Analytics Javascript -->
 					<?php
-				}			
+				}	
+				if( true == ampforwp_get_setting('ampforwp-callrail-switch')) {
+				$config_url = $number = $analytics_url = '';
+				$config_url = ampforwp_get_setting('ampforwp-callrail-config-url');
+				$number = ampforwp_get_setting('ampforwp-callrail-number');
+				$analytics_url = ampforwp_get_setting('ampforwp-callrail-analytics-url');
+				if(!empty($config_url) && !empty($number) && !empty($analytics_url)){?>
+			    <amp-call-tracking config="<?php echo esc_url($config_url); ?>"><a href="tel:<?php echo esc_attr($number);?>"><?php echo esc_html($number);?></a></amp-call-tracking><amp-analytics config="<?php echo esc_url($analytics_url); ?>"></amp-analytics>   
+			<?php } }	
+			if( true == ampforwp_get_setting('ampforwp-iotech-switch')) {
+                $project_id = $id = $title = $author = $categories = $cat_names = '';
+                $project_id = ampforwp_get_setting('ampforwp-iotech-projectid');
+                if(!empty($project_id)){
+	                $id = ampforwp_get_the_ID();
+					$title = get_the_title($id);
+					$lang = get_locale();
+					$author = get_the_author_meta('display_name');
+		 			$categories = get_the_terms( $id, 'category' );
+					foreach ($categories as $key=>$cat ) {
+					    $cat_names .= '|' . $cat->name ;
+					}
+					$cat_names = substr($cat_names, 1);
+					$content = get_post_field( 'post_content', $id );
+	    			$word_count = str_word_count( strip_tags( $content ) );
+	    			$date = get_post_time('F d, Y g:i a');
+				?>
+            <amp-analytics>
+   			<script type="application/json">
+        	{
+            "requests": {
+                "pageview": "https://tt.onthe.io/?k[]=<?php echo esc_attr($project_id); ?>:pageviews[user_id:${clientId(_io_un)},author:${article_authors},referrer_uri:${documentReferrer},url:${canonicalPath},domain:${canonicalHostname},user_agent:${userAgent},page:${page_title},platform:amp,language:${page_language},category:${article_categories},type_article:${article_type},word_count:${article_word_count},pub_date:${article_publication_date},page_type:${page_type}]",
+                "read_top": "https://tt.onthe.io/?k[]=<?php echo esc_attr($project_id); ?>:read_top[user_id:${clientId(_io_un)},author:${article_authors},referrer_uri:${documentReferrer},url:${canonicalPath},domain:${canonicalHostname},user_agent:${userAgent},page:${page_title},platform:amp,language:${page_language},category:${article_categories},type_article:${article_type},word_count:${article_word_count},pub_date:${article_publication_date},page_type:${page_type}]",
+                "read_middle": "https://tt.onthe.io/?k[]=<?php echo esc_attr($project_id); ?>:read_middle[user_id:${clientId(_io_un)},author:${article_authors},referrer_uri:${documentReferrer},url:${canonicalPath},domain:${canonicalHostname},user_agent:${userAgent},page:${page_title},platform:amp,language:${page_language},category:${article_categories},type_article:${article_type},word_count:${article_word_count},pub_date:${article_publication_date},page_type:${page_type}]",
+                "read_bottom": "https://tt.onthe.io/?k[]=<?php echo esc_attr($project_id); ?>:read_bottom[user_id:${clientId(_io_un)},author:${article_authors},referrer_uri:${documentReferrer},url:${canonicalPath},domain:${canonicalHostname},user_agent:${userAgent},page:${page_title},platform:amp,language:${page_language},category:${article_categories},type_article:${article_type},word_count:${article_word_count},pub_date:${article_publication_date},page_type:${page_type}]",
+                "read_finished": "https://tt.onthe.io/?k[]=<?php echo esc_attr($project_id); ?>:read_finished[user_id:${clientId(_io_un)},author:${article_authors},referrer_uri:${documentReferrer},url:${canonicalPath},domain:${canonicalHostname},user_agent:${userAgent},page:${page_title},platform:amp,language:${page_language},category:${article_categories},type_article:${article_type},word_count:${article_word_count},pub_date:${article_publication_date},page_type:${page_type}]",
+                "time": "https://tt.onthe.io/?k[]=<?php echo esc_attr($project_id); ?>:time[platform:amp,url:${canonicalPath}]"
+            },
+            "vars": {
+                "page_title": "$<?php echo esc_attr($title) ?>",
+                "page_type": "article",
+                "page_language": "<?php echo esc_attr($lang) ?>",
+                "article_authors": "<?php echo esc_attr($author) ?>",
+                "article_categories": "<?php echo esc_attr($cat_names) ?>",
+                "article_type": "longread",
+                "article_word_count": "<?php echo esc_attr($word_count) ?>",
+                "article_publication_date": "<?php echo esc_attr($date) ?>"
+            },
+            "triggers": {
+                "trackPageview": {
+                    "on": "visible",
+                    "request": "pageview"
+                },
+                "trackReadTop" : {
+                    "on" : "scroll",
+                    "scrollSpec": {
+                        "verticalBoundaries": [25]
+                    },
+                    "request": "read_top"
+                },
+                "trackReadMiddle" : {
+                    "on" : "scroll",
+                    "scrollSpec": {
+                        "verticalBoundaries": [50]
+                    },
+                    "request": "read_middle"
+                },
+                "trackReadBottom" : {
+                    "on" : "scroll",
+                    "scrollSpec": {
+                        "verticalBoundaries": [75]
+                    },
+                    "request": "read_bottom"
+                },
+                "trackReadFinished" : {
+                    "on" : "scroll",
+                    "scrollSpec": {
+                        "verticalBoundaries": [90]
+                    },
+                    "request": "read_finished"
+                },
+                "pageTimer": {
+                    "on": "timer",
+                    "timerSpec": {
+                        "interval": 10
+                    },
+                    "request": "time"
+                }
+            },
+            "transport": {
+                "beacon": false,
+                "xhrpost": false,
+                "image": true
+            }
+        }
+   			</script>
+			</amp-analytics> 
+    <?php } }			
 }
 // 89. Facebook Pixel
 add_action('amp_post_template_footer','ampforwp_facebook_pixel',11);
@@ -319,19 +421,6 @@ if( ! function_exists( ' ampforwp_analytics_clientid_api ' ) ) {
 			<meta name="amp-google-client-id-api" content="googleanalytics">
 		<?php }
 	}
-}
-
-// 6.1 Adding Analytics Scripts
-add_filter('amp_post_template_data','ampforwp_register_analytics_script', 20);
-function ampforwp_register_analytics_script( $data ){ 
-	global $redux_builder_amp;
-	if( true == ampforwp_get_setting('ampforwp-ga-switch') || true == ampforwp_get_setting('ampforwp-Segment-switch') || true == ampforwp_get_setting('ampforwp-Quantcast-switch') || true == ampforwp_get_setting('ampforwp-comScore-switch') || true == ampforwp_get_setting('ampforwp-Yandex-switch') || true == ampforwp_get_setting('ampforwp-Chartbeat-switch') || true == ampforwp_get_setting('ampforwp-Alexa-switch') || true == ampforwp_get_setting('ampforwp-afs-analytics-switch') || true == ampforwp_get_setting('amp-use-gtm-option') || true == ampforwp_get_setting('amp-clicky-switch') || true == ampforwp_get_setting('ampforwp-Piwik-switch')) {
-		
-		if ( empty( $data['amp_component_scripts']['amp-analytics'] ) ) {
-			$data['amp_component_scripts']['amp-analytics'] = 'https://cdn.ampproject.org/v0/amp-analytics-0.1.js';
-		}
-	}
-	return $data;
 }
 
 if ( ! function_exists('amp_activate') ) {
@@ -359,6 +448,7 @@ add_action( 'ampforwp_body_beginning', 'ampforwp_add_advance_gtm_fields' );
 function ampforwp_add_advance_gtm_fields( $ampforwp_adv_gtm_fields ) {
 	if(true == ampforwp_get_setting('amp-use-gtm-option')){
 		$gtm_id 	= ampforwp_get_setting('amp-gtm-id');
+		$gtm_analytics 	= ampforwp_get_setting('amp-gtm-analytics-code');
 		if(true == ampforwp_get_setting('ampforwp-gtm-field-advance-switch') ){
 			$ampforwp_adv_gtm_fields = "";
 			$ampforwp_adv_gtm_fields = ampforwp_get_setting('ampforwp-gtm-field-advance');
@@ -366,12 +456,15 @@ function ampforwp_add_advance_gtm_fields( $ampforwp_adv_gtm_fields ) {
 			$ampforwp_adv_gtm_fields = preg_replace('/\n\s*\n/', '', $ampforwp_adv_gtm_fields);
 			$ampforwp_adv_gtm_fields = preg_replace('/\/\/(.*?)\s(.*)/m', '$2', $ampforwp_adv_gtm_fields); 
 			if($gtm_id!=""){?>
-				<amp-analytics config="https://www.googletagmanager.com/amp.json?id=<?php echo esc_attr($gtm_id);?>" <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?>><script type="application/json"><?php echo sanitize_text_field($ampforwp_adv_gtm_fields) ?></script></amp-analytics><?php 
+				<amp-analytics config="https://www.googletagmanager.com/amp.json?id=<?php echo esc_attr($gtm_id);?>" <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?>><script type="application/json"><?php echo sanitize_text_field($ampforwp_adv_gtm_fields) ?></script></amp-analytics> <?php
 			}
 		}else{
-			if($gtm_id!=""){?>
+			if($gtm_id!="" && empty($gtm_analytics)){ ?>
 				<amp-analytics config="https://www.googletagmanager.com/amp.json?id=<?php echo esc_attr($gtm_id);?>" <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?>></amp-analytics> <?php
 			}
+			if($gtm_id!="" && !empty($gtm_analytics)){ ?>
+				<amp-analytics config="https://www.googletagmanager.com/amp.json?id=<?php echo esc_attr($gtm_id);?>" <?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?>data-credentials="include"><script type="application/json">{ "vars": { "account": "<?php echo esc_html($gtm_analytics);?>"} }</script></amp-analytics>
+			<?php }
 		}
 	}
 }
@@ -412,7 +505,7 @@ function ampforwp_add_advance_ga_fields($ga_fields){
 	}
 	$author_id = get_post_field( 'post_author', $id );
 	$author_name = get_the_author_meta( 'display_name' , $author_id );
-	$published_at = get_the_date( 'l F j, Y' , $id );
+	$published_at = get_the_date( 'F j, Y' , $id );
 	$ampforwp_adv_ga_fields = array();
 	$ampforwp_adv_ga_fields = ampforwp_get_setting('ampforwp-ga-field-advance');
 	if($ampforwp_adv_ga_fields)	{

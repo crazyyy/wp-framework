@@ -6,6 +6,7 @@ function ampforwp_framework_get_comments(){
 	global $redux_builder_amp;
 	$display_comments_on = "";
 	$display_comments_on = ampforwp_get_comments_status();
+	do_action('ampforwp_comment_start_hook');
 	if ( $display_comments_on ) {
 		if ( $redux_builder_amp['ampforwp-facebook-comments-support']  ) { 
 		 	echo ampforwp_framework_get_facebook_comments(); 
@@ -31,8 +32,10 @@ function ampforwp_framework_get_comments(){
 					if ( ampforwp_is_front_page() ) {
 						$postID = ampforwp_get_frontpage_id();
 					}
+					$comment_order = get_option( 'comment_order' );
 					$comments = get_comments(array(
 							'post_id' => $postID,
+							'order' => esc_attr($comment_order),
 							'status' => 'approve' //Change this to the type of comments to be displayed
 					));
 					
@@ -50,23 +53,23 @@ function ampforwp_framework_get_comments(){
 									?>
 									<li id="li-comment-<?php comment_ID() ?>"
 									<?php comment_class(); ?> >
-										<article id="comment-<?php comment_ID(); ?>" class="comment-body">
-											<footer class="comment-meta">
+										<article id="comment-<?php comment_ID(); ?>" class="cmt-body">
+											<footer class="cmt-meta">
 											<?php if($comment_author_img_url){ ?>
-			         							<amp-img src="<?php echo esc_url($comment_author_img_url); ?>" width="40" height="40" layout="fixed" class="comment-author-img"></amp-img>
+			         							<amp-img src="<?php echo esc_url($comment_author_img_url); ?>" width="40" height="40" layout="fixed" class="cmt-author-img"></amp-img>
 			         						<?php } ?>
-												<div class="comment-author vcard">
+												<div class="cmt-author vcard">
 													 <?php
 													 printf('<b class="fn">%s</b> <span class="says">'.esc_html(ampforwp_translation(ampforwp_get_setting('amp-translator-says-text'),'says')).':</span>', get_comment_author_link()) ?>
 												</div>
-												<div class="comment-metadata">
+												<div class="cmt-metadata">
 													<a href="<?php echo htmlspecialchars( trailingslashit( get_comment_link( $comment->comment_ID ) ) ) ?>">
 														<?php printf( ampforwp_translation( ('%1$s '. ampforwp_translation($redux_builder_amp['amp-translator-at-text'],'at').' %2$s'), '%1$s at %2$s') , get_comment_date(),  get_comment_time())?>
 													</a>
 													<?php edit_comment_link(  ampforwp_translation( $redux_builder_amp['amp-translator-Edit-text'], 'Edit' )  ) ?>
 												</div>
 											</footer>
-											<div class="comment-content">
+											<div class="cmt-content">
 						                        <?php
 						                          	$comment_content = get_comment_text();
 						                        	$comment_content = wpautop( $comment_content );
@@ -105,6 +108,9 @@ function ampforwp_framework_get_comments(){
 									'echo' 			=> false,
 									'add_fragment' 	=> '#comments',		
 								);
+								if(true == ampforwp_get_setting('ampforwp-amp-takeover')){
+									$args['base'] = get_the_permalink().'comment-page-%#%';
+								}
 						    if ( paginate_comments_links($args) ) { ?>
 								<div class="cmts-wrap">
 					     			<?php echo paginate_comments_links( $args ); ?>
@@ -113,17 +119,22 @@ function ampforwp_framework_get_comments(){
 						</div> <!-- .amp-comments-wrapper -->
 						<?php // if amp-comments extension is enabled then hide this button
 					} // if ( $comments )
-					if ( ! defined( 'AMP_COMMENTS_VERSION' ) ) { ?>
+					if ( ! defined( 'AMP_COMMENTS_VERSION' ) && comments_open($postID) ) { ?>
 						<div class="amp-comment-button">
-							<?php if ( comments_open($postID) ) { ?>
-						    	<a href="<?php echo ampforwp_comment_button_url(); ?>" title="<?php echo ampforwp_get_setting('amp-translator-leave-a-comment-text')?>" rel="nofollow"><?php echo esc_html(ampforwp_translation( $redux_builder_amp['amp-translator-leave-a-comment-text'], 'Leave a Comment' ) ); ?></a> <?php
-							}?>
-						</div> <?php 
-					}?>
+							<?php if ( comments_open($postID) ) {
+								$nofollow = '';
+								if(true ==ampforwp_get_setting('ampforwp-nofollow-comment-btn')){
+									$nofollow = 'rel=nofollow';
+								}
+							 ?>
+							 <a href="<?php echo ampforwp_comment_button_url(); ?>" title="<?php echo ampforwp_get_setting('amp-translator-leave-a-comment-text')?>" <?php echo esc_html($nofollow) ?> ><?php echo esc_html(ampforwp_translation( ampforwp_get_setting('amp-translator-leave-a-comment-text'), 'Leave a Comment' ) ); ?></a> <?php } ?>
+						</div>	 
+				<?php } ?>
 				</div>
 			<?php do_action('ampforwp_after_comment_hook');
 		}
 	} // end $display_comments_on
+	do_action('ampforwp_comment_end_hook');
 }
 
 //Facebook Comments
@@ -137,6 +148,9 @@ global $redux_builder_amp;
 	}
 	else {  
 		$facebook_comments_markup = '<section class="amp-facebook-comments">';
+		if(true == ampforwp_get_setting('ampforwp-facebook-comments-title')){
+			$facebook_comments_markup .= '<h5>'. esc_html__(ampforwp_translation(ampforwp_get_setting('ampforwp-facebook-comments-title'), 'Leave a Comment'),'accelerated-mobile-pages') .'</h5>';
+		}
 		$facebook_comments_markup .= '<amp-facebook-comments width=486 height=357
 	    		layout="responsive" '.'data-locale = "'.esc_attr($lang).'"'.' data-numposts=';
 		$facebook_comments_markup .= '"'. esc_attr($redux_builder_amp['ampforwp-number-of-fb-no-of-comments']). '"';
@@ -159,12 +173,8 @@ function ampforwp_framework_get_disqus_comments(){
 	$layout = 'responsive';
 	if ( isset($redux_builder_amp['ampforwp-disqus-layout']) && 'fixed' == $redux_builder_amp['ampforwp-disqus-layout'] ) {
 		$layout = 'fixed';
-	
-		if ( isset($redux_builder_amp['ampforwp-disqus-height']) && $redux_builder_amp['ampforwp-disqus-height'] ) {
-			$height = $redux_builder_amp['ampforwp-disqus-height'];
-		}
 	}
-
+	$height = ampforwp_get_setting('ampforwp-disqus-height');
 	if( $redux_builder_amp['ampforwp-disqus-comments-name'] !== '' ) {
 		global $post; $post_slug = rawurlencode($post->post_name);
 
@@ -182,6 +192,7 @@ function ampforwp_framework_get_disqus_comments(){
 				width=<?php echo esc_attr($width); ?>
 				layout="<?php echo esc_attr($layout); ?>"
 				sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+				resizable
 				frameborder="0"
 				<?php if(ampforwp_get_data_consent()){?>data-block-on-consent <?php } ?>
 				src="<?php echo esc_url($disqus_url); ?>" title="<?php echo esc_html__('Disqus Comments.','accelerated-mobile-pages'); ?>">
@@ -191,50 +202,9 @@ function ampforwp_framework_get_disqus_comments(){
 	<?php
 	}
 }
-
 function ampforwp_framework_get_vuukle_comments(){
-	global $post, $redux_builder_amp; 
-	$apiKey ='';
-	$tag_name ='';
-	$img = get_the_post_thumbnail_url();
-	$tags = get_the_tags($post->ID);
-	if( isset($redux_builder_amp['ampforwp-vuukle-comments-apiKey']) && $redux_builder_amp['ampforwp-vuukle-comments-apiKey'] !== ""){
-		$apiKey = $redux_builder_amp['ampforwp-vuukle-comments-apiKey'];
-	}
-	$siteUrl = trim(site_url(), '/');  
-	if (!preg_match('#^http(s)?://#', $siteUrl)) {
-	      $siteUrl = 'http://' . $siteUrl;
-	}
-	if($img ==  false){
-		$img = plugins_url('accelerated-mobile-pages/images/150x150.png');
-	}  
-   	if($tags){
-  		foreach($tags as $individual_tag) {
- 				$tag_name = $individual_tag->name;
-		}
-   	}
-    $urlParts = parse_url($siteUrl);
-    $siteUrl = preg_replace('/^www\./', '', $urlParts['host']);// remove www
-	$srcUrl = 'https://cdn.vuukle.com/amp.html?';
-	$srcUrl = add_query_arg('url' ,get_permalink(), $srcUrl);
-	$srcUrl = add_query_arg('host' ,$siteUrl, $srcUrl);
-	$srcUrl = add_query_arg('id' , $post->ID, $srcUrl);
-	if(!empty($apiKey)){
-		$srcUrl = add_query_arg('apiKey' , $apiKey, $srcUrl);
-	} 
-	$srcUrl = add_query_arg('title' , urlencode($post->post_title), $srcUrl);
-	$srcUrl = add_query_arg('img' , esc_url($img), $srcUrl);
-	$srcUrl = add_query_arg('tags' , urlencode($tag_name), $srcUrl);
-	$consent = '';
-	if(ampforwp_get_data_consent()){
-		$consent = 'data-block-on-consent ';
- 	} 
- 	$vuukle_html = '<amp-iframe width="600" height="350" '.esc_attr($consent).'layout="responsive" sandbox="allow-scripts allow-same-origin allow-modals allow-popups allow-forms" resizable frameborder="0" src="'.esc_url($srcUrl).'">
-
-		<div overflow tabindex="0" role="button" aria-label="Show comments">'.esc_html__('Show comments','accelerated-mobile-pages').'</div></amp-iframe>';
-	echo $vuukle_html; // escaped above
+	echo ampforwp_vuukle_comments_markup();
 }
-
 function ampforwp_framework_get_spotim_comments(){
 	global $post;
 	$spotId ='';

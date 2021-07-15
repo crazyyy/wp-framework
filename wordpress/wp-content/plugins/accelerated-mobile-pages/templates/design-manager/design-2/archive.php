@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <head>
 	<meta charset="utf-8">
 	<?php do_action('amp_experiment_meta', $this); ?>
-  	<link rel="dns-prefetch" href="//cdn.ampproject.org">
+  	<link rel="preconnect" href="//cdn.ampproject.org">
 	<?php
 	if ( is_archive() ) {
 		$description 	= get_the_archive_description();
@@ -72,6 +72,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			}else{
  				the_archive_title( '<h2 class="page-title">', '</h2>' );
  			}
+ 			if(function_exists('ampforwp_category_image_compatibility')){
+ 				ampforwp_category_image_compatibility('echo','amp-wp-content taxonomy-image');
+ 			}
 			$arch_desc 		= $sanitizer->get_amp_content();
 			if( $arch_desc ) { 
 				if ( get_query_var( 'paged' ) ) {
@@ -81,7 +84,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		    } else {
 		        $paged = 1;
 		    }
-				if($paged <= '1') {?>
+				if($paged <= '1' && ampforwp_get_setting('ampforwp-cat-description')) {?>
 					<div class="amp-wp-content taxonomy-description">
 						<?php echo do_shortcode($arch_desc);// amphtml content, no kses ?>
 				  </div> <?php
@@ -154,7 +157,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 	<?php do_action('ampforwp_loop_before_pagination') ?>
 		<div class="amp-wp-content pagination-holder">
 			<div id="pagination">
-				<?php if ( get_next_posts_link('next', $q->max_num_pages) ){ ?><div class="next"><?php echo apply_filters('ampforwp_next_posts_link',get_next_posts_link( ampforwp_translation($redux_builder_amp['amp-translator-next-text'], 'Next' ).'&raquo;', 0), $paged);?></div><?php }?>
+				<?php $paged = get_query_var('paged'); if ( get_next_posts_link() ){ ?><div class="next"><?php echo apply_filters('ampforwp_next_posts_link',get_next_posts_link( ampforwp_translation($redux_builder_amp['amp-translator-next-text'], 'Next' ).'&raquo;', 0), $paged);?></div><?php }?>
 				<?php if ( get_previous_posts_link() ){ ?><div class="prev"><?php echo apply_filters( 'ampforwp_previous_posts_link', get_previous_posts_link( '&laquo; '. ampforwp_translation($redux_builder_amp['amp-translator-previous-text'], 'Previous' )), $paged ); ?></div><?php }?>
 				<div class="clearfix"></div>
 			</div>

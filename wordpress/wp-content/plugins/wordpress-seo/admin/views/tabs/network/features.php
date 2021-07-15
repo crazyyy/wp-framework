@@ -52,14 +52,13 @@ $feature_toggles = Yoast_Feature_Toggles::instance()->get_all();
 				'on'  => __( 'Allow Control', 'wordpress-seo' ),
 				'off' => __( 'Disable', 'wordpress-seo' ),
 			],
-			'<strong>' . $feature->name . '</strong>',
+			$feature->name,
 			$feature_help->get_button_html() . $feature_help->get_panel_html()
 		);
 	}
 	?>
 </div>
 <?php
-
 /*
  * Required to prevent our settings framework from saving the default because the field
  * isn't explicitly set when saving the Dashboard page.

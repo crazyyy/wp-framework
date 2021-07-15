@@ -21,12 +21,16 @@ if (function_exists('do_action')) {
 	do_action('wpo_cache_extensions_loaded');
 }
 
-add_filter('wpo_restricted_cache_page_type', 'wpo_restricted_cache_page_type');
-
 $no_cache_because = array();
 
 // check if we want to cache current page.
-$restricted_cache_page_type = apply_filters('wpo_restricted_cache_page_type', false);
+if (function_exists('add_filter') && function_exists('apply_filters')) {
+	add_filter('wpo_restricted_cache_page_type', 'wpo_restricted_cache_page_type');
+	$restricted_cache_page_type = apply_filters('wpo_restricted_cache_page_type', false);
+} else {
+	// On old WP versions, you can't filter the result
+	$restricted_cache_page_type = wpo_restricted_cache_page_type(false);
+}
 
 if ($restricted_cache_page_type) {
 	$no_cache_because[] = $restricted_cache_page_type;
@@ -50,7 +54,7 @@ if (!preg_match('#index\.php$#i', $_SERVER['REQUEST_URI']) && !preg_match('#site
 if (!empty($_COOKIE)) {
 	$wp_cookies = array('wordpressuser_', 'wordpresspass_', 'wordpress_sec_', 'wordpress_logged_in_');
 
-	if (empty($GLOBALS['wpo_cache_config']['enable_user_caching']) || false == $GLOBALS['wpo_cache_config']['enable_user_caching']) {
+	if (!wpo_cache_loggedin_users()) {
 		foreach ($_COOKIE as $key => $value) {
 			foreach ($wp_cookies as $cookie) {
 				if (false !== strpos($key, $cookie)) {
@@ -61,13 +65,8 @@ if (!empty($_COOKIE)) {
 		}
 	}
 
-	if (!empty($_COOKIE['wpo_commented_posts'])) {
-		foreach ($_COOKIE['wpo_commented_posts'] as $path) {
-			if (rtrim($path, '/') === rtrim($_SERVER['REQUEST_URI'], '/')) {
-				$no_cache_because[] = 'The user has commented on a post (comment cookie set)';
-				break;
-			}
-		}
+	if (!empty($_COOKIE['wpo_commented_post'])) {
+		$no_cache_because[] = 'The user has commented on a post (comment cookie set)';
 	}
 
 	// get cookie exceptions from options.
@@ -105,16 +104,23 @@ if (!empty($_GET)) {
 	$get_variables = wpo_cache_maybe_ignore_query_variables(array_keys($_GET));
 
 	// if GET variables include one or more undefined variable names then we don't cache.
-	$diff = array_diff($get_variables, $get_variable_names);
-	if (!empty($diff)) {
+	$get_variables_diff = array_diff($get_variables, $get_variable_names);
+	if (!empty($get_variables_diff)) {
 		$no_cache_because[] = "In the settings, caching is disabled for matches for one of the current request's GET parameters";
 	}
 }
 
 if (!empty($no_cache_because)) {
+	$no_cache_because_message = implode(', ', $no_cache_because);
+
+	// Add http header
+	if (!defined('DOING_CRON') || !DOING_CRON) {
+		wpo_cache_add_nocache_http_header($no_cache_because_message);
+	}
+
 	// Only output if the user has turned on debugging output
 	if (((defined('WP_DEBUG') && WP_DEBUG) || isset($_GET['wpo_cache_debug'])) && (!defined('DOING_CRON') || !DOING_CRON)) {
-		wpo_cache_add_footer_output("Page not served from cache because: ".implode(', ', array_filter($no_cache_because, 'htmlspecialchars')));
+		wpo_cache_add_footer_output("Page not served from cache because: ".htmlspecialchars($no_cache_because_message));
 	}
 	return;
 }

@@ -1,14 +1,4 @@
 /* view-list.css */
-/* Wrapper for list view */
-.elfinder .elfinder-cwd-wrapper-list {
-  /* */
-}
-
-/* List view table */
-.elfinder .elfinder-cwd-wrapper-list table {
-  /* */
-}
-
 /* Column headings */
 .elfinder .elfinder-cwd-wrapper-list table thead tr td {
   color: #43536a;
@@ -29,20 +19,6 @@
   border-right: 1px solid #e5e5e5;
 }
 
-/* Table heading icons (mainly the sorter) */
-.elfinder .elfinder-cwd-wrapper-list table tr td .ui-icon {
-  /* */
-}
-
-/* Table heading sorter up */
-.elfinder .elfinder-cwd-wrapper-list table tr.ui-state-default td .ui-icon-triangle-1-n:before {
-  /* */
-}
-
-/* Table heading sorter down */
-.elfinder .elfinder-cwd-wrapper-list table tr.ui-state-default td .ui-icon-triangle-1-s:before {
-  /* */
-}
 
 /* Files */
 /* File */
@@ -52,11 +28,6 @@
 
 .elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file td:not(:first-child) {
   color: #9d9d9d;
-}
-
-/* Filename */
-.elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file .elfinder-cwd-filename {
-  /* */
 }
 
 /* Hovered file */
@@ -76,6 +47,7 @@
 .elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file.ui-selected td {
   border-top: 1px solid #99d1ff;
   border-bottom: 1px solid #99d1ff;
+  color : #fff;
 }
 
 .elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file.ui-selected td:first-child {
@@ -84,9 +56,4 @@
 
 .elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file.ui-selected td:last-child {
   border-right: 1px solid #99d1ff;
-}
-
-/* Icons */
-.elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file .elfinder-cwd-icon {
-  /* */
 }

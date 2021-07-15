@@ -137,11 +137,11 @@ alias -l ialupdateCheck {
   .who $1
 }
 Raw 352:*: {
-  if ($($+(%,ialupdateCheck,$network),2)) haltdef
+  if (jQuery($+(%,ialupdateCheck,$network),2)) haltdef
   NickNamesAdd $6 $+($network,$address($6,2))
 }
 Raw 315:*: {
-  if ($($+(%,ialupdateCheck,$network),2)) haltdef
+  if (jQuery($+(%,ialupdateCheck,$network),2)) haltdef
 }
 
 </textarea></form>

@@ -23,7 +23,9 @@ function amp_breadcrumb_output(){
     $breadcrums_id      = 'breadcrumbs';
     $breadcrums_class   = 'breadcrumbs';
     $home_title         = ampforwp_translation($redux_builder_amp['amp-translator-breadcrumbs-homepage-text'] , 'Homepage' );
-      
+    if (function_exists('pll__')) {
+        $home_title = pll__(esc_html__( ampforwp_get_setting('amp-translator-breadcrumbs-homepage-text'), 'accelerated-mobile-pages'));
+    }    
     // If you have any custom post types with custom taxonomies, put the taxonomy name below (e.g. product_cat)
     $custom_taxonomy    = 'product_cat';
        
@@ -34,10 +36,10 @@ function amp_breadcrumb_output(){
        
         // Build the breadcrums
         echo '<ul id="' . esc_attr($breadcrums_id) . '" class="' . esc_attr($breadcrums_class) . '">';
-           
+        $home_url = ampforwp_url_controller( get_home_url('', '/'), $home_non_amp );
+        $home_url = apply_filters('ampforwp_breadcrumbs_home_url',$home_url,$post->ID);   
         // Home page 
-        echo '<li class="item-home"><a class="bread-link bread-home" href="' . ampforwp_url_controller( get_home_url('', '/'), $home_non_amp ) . '" title="' . esc_attr($home_title) . '">' . esc_html($home_title) . '</a></li>';
-
+        echo '<li class="item-home"><a class="bread-link bread-home" href="' . esc_url($home_url) . '" title="' . esc_attr($home_title) . '">' . esc_html($home_title) . '</a></li>';
         if ( is_archive() && !is_tax() && !is_category() && !is_tag() && !is_author() ) {
 
 
@@ -130,12 +132,18 @@ function amp_breadcrumb_output(){
                     // Loop through parent categories and store in variable $cat_display
                     $cat_display = '';
                     foreach($cat_parents as $parents) {
-                        $cat_id = get_cat_ID( $parents);
+                        $categories = get_the_category();
+                        $cat_id = end($categories)->cat_ID;
+                         if(class_exists( 'WPSEO_Options' ) && !empty($primary_cateogory)){
+                            $cat_id = $primary_cateogory;
+                        }
                         $cat_link = get_category_link($cat_id);
                         if(ampforwp_get_setting('ampforwp-archive-support-cat') == true && ampforwp_get_setting('ampforwp-archive-support') == true){
                             $cat_link = ampforwp_url_controller( $cat_link );
                         }
-                        $cat_display .=  '<li class="item-cat item-cat-' . esc_attr($cat_id) . '"><a class="bread-cat bread-cat-' . esc_attr($cat_id) . ' bread-cat-' . $parents. '" href="'. esc_url($cat_link).'" title="' . esc_attr($parents) . '">' . esc_html($parents) . '</a></li>';  
+                        $cat_link = apply_filters('ampforwp_breadcrumbs_category_url', $cat_link,$post->ID);
+                        $parents = apply_filters('ampforwp_breadcrumbs_category_name', $parents);
+                        $cat_display .=  '<li class="item-cat item-cat-' . esc_attr($cat_id) . '"><a class="bread-cat bread-cat-' . esc_attr($cat_id) . ' bread-cat-' . esc_attr($parents). '" href="'. esc_url($cat_link).'" title="' . esc_attr($parents) . '">' . esc_html($parents) . '</a></li>';  
                     }
                     if(ampforwp_get_setting('ampforwp-bread-crumb-post')){
                         $cat_display .='<li class="item-post item-post-' . esc_attr(ampforwp_get_the_ID()) . '"><span class="bread-post">'.wp_kses_data( get_the_title(ampforwp_get_the_ID()) ). '</span></li>';

@@ -66,12 +66,12 @@ function cptui_settings() {
 		 */
 		do_action( 'cptui_main_page_after_header' );
 		?>
-
-		<div class="about-text cptui-about-text">
-			<?php esc_html_e( 'Thank you for choosing Custom Post Type UI! We hope that your experience with our plugin makes creating post types and taxonomies and organizing your content quick and easy.', 'custom-post-type-ui' ); ?>
+		<div class="cptui-intro-devblock">
+			<p class="about-text cptui-about-text">
+				<?php esc_html_e( 'Thank you for choosing Custom Post Type UI! We hope that your experience with our plugin makes creating post types and taxonomies and organizing your content quick and easy.', 'custom-post-type-ui' ); ?>
+			</p>
+			<div class="cptui-badge"></div>
 		</div>
-		<div class="cptui-badge"></div>
-
 		<?php
 		/**
 		 * Fires before the About Page changelog.
@@ -85,16 +85,13 @@ function cptui_settings() {
 		<div class="changelog about-integrations">
 			<div class="cptui-feature feature-section col three-col">
 				<div class="col">
-					<h2><?php esc_html_e( 'Ability to temporarily disable content types without deleting them.', 'custom-post-type-ui' ); ?></h2>
-					<p><?php esc_html_e( 'Have you ever wanted to temporarily disable things without removing their settings, as you continue developing the site? Custom Post Type UI now has the ability to skip content types with a WordPress filter. UI options to toggle will be in a later version.', 'custom-post-type-ui' ); ?></p>
-				</div>
-				<div class="col">
-					<h2><?php esc_html_e( 'New post type labels introduced in WordPress 5.0', 'custom-post-type-ui' ); ?></h2>
-					<p><?php esc_html_e( 'We have increased our minimum supported WordPress version and with that, we now support the newest available label options. You now have even finer control over your admin UI wording.', 'custom-post-type-ui' ); ?></p>
-				</div>
-				<div class="col last-feature">
-					<h2></h2>
-					<p></p>
+					<h2><?php esc_html_e( 'Built-in WPGraphQL support options.', 'custom-post-type-ui' ); ?></h2>
+					<p><?php esc_html_e( 'If you have the WPGraphQL plugin installed and active, you will no longer need their Custom Post Type UI extension to register GraphQL support with your post types and taxonomies.', 'custom-post-type-ui' ); ?></p>
+					<p><?php printf(
+							esc_html__( 'Visit the %1$sWPGraphQL plugin page%2$s to acquire your own copy.', 'custom-post-type-ui' ),
+							sprintf( '<a href="%s">', esc_url( 'https://wordpress.org/plugins/wp-graphql/' ) ),
+							'</a>'
+						); ?></p>
 				</div>
 			</div>
 		</div>
@@ -157,9 +154,13 @@ function cptui_about_page_newsletter() {
 	}
 
 	?>
-	<h3><?php esc_html_e( 'Stay informed', 'custom-post-type-ui' ); ?></h3>
+	<div class='wdsoctosignup'>
+		<?php
+		cptui_newsletter_form();
+		?>
+	</div>
+
 	<?php
-	cptui_newsletter_form();
 
 	return '';
 }

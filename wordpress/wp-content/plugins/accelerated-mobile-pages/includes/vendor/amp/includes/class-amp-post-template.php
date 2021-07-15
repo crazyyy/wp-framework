@@ -28,7 +28,7 @@ if ( version_compare( $wp_version, '5.3', '>=' ) ) {
 	require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-gallery-block-sanitizer.php' );
 }
 require_once( AMP__VENDOR__DIR__ . '/includes/sanitizers/class-amp-block-sanitizer.php' );
-
+require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-reddit-embed.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-twitter-embed.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-youtube-embed.php' );
 require_once( AMP__VENDOR__DIR__ . '/includes/embeds/class-amp-dailymotion-embed.php' );
@@ -201,6 +201,10 @@ class AMP_Post_Template {
 				$post_author_image = get_avatar_url($post_author->ID, array('size' => 50));
 			}
 		}
+		$headline_str = $post_title;
+		if (strlen($headline_str) > 110){
+			$headline_str = substr($post_title,0,107) . '...';
+		}
 		$this->add_data( array(
 			'post' => $this->post,
 			'post_id' => $this->ID,
@@ -218,7 +222,7 @@ class AMP_Post_Template {
 				'@type' => 'Organization',
 				'name' => $this->get( 'blog_name' ),
 			),
-			'headline' => $post_title,
+			'headline' => $headline_str,
 			'author' => array(
 				'@type' => 'Person',
 				'name' => $post_author_name,
@@ -286,10 +290,12 @@ class AMP_Post_Template {
 				$new_post_content = '';
 			// #2001 Filter to remove the unused JS from the paginated post
 			$new_post_content = apply_filters( 'ampforwp_post_content_filter', $new_post_content );
+			$new_post_content .= $this->ampforwp_tiktok_video_support($new_post_content);
 
 			$amp_content = new AMP_Content( $new_post_content,
 				apply_filters( 'amp_content_embed_handlers', array(
 					'AMP_Core_Block_Handler' => array(),
+					'AMP_Reddit_Embed_Handler' => array(),
 					'AMP_Twitter_Embed_Handler' => array(),
 					'AMP_YouTube_Embed_Handler' => array(),
 					'AMP_DailyMotion_Embed_Handler' => array(),
@@ -328,6 +334,11 @@ class AMP_Post_Template {
 			if(function_exists('ampforwp_add_fallback_element')){
 				$amp_con = ampforwp_add_fallback_element($amp_con,'amp-img');
 			}
+			if(ampforwp_get_setting('ampforwp-amp-video-lightbox')==true){
+				if(function_exists('ampforwp_video_lightbox')){
+					$amp_con = ampforwp_video_lightbox($amp_con);
+				}
+			}
 			$this->add_data_by_key( 'post_amp_content', $amp_con);
 			$this->merge_data_for_key( 'amp_component_scripts', $amp_content->get_amp_scripts() );
 			$this->merge_data_for_key( 'post_amp_styles', $amp_content->get_amp_styles() );
@@ -337,7 +348,16 @@ class AMP_Post_Template {
 			$this->add_data_by_key( 'post_amp_styles', array() );
 		}
 	}
-
+	public function ampforwp_tiktok_video_support($content){
+		if(preg_match('/<blockquote(.*?)(https?:\/\/(?:www\.)?(?:tiktok\.com\/@(.*?)\/video\/\d+))(.*?)data-video-id="(.*?)"(.*?)<\/blockquote>/i', $content,$matches)){
+			if(isset($matches[5])){
+				$src = 'https://www.tiktok.com/embed/v2/'.$matches[5].'?lang=en-US';
+				$iframe = '<iframe src="'.esc_url_raw($src).'" width="375" height="820" allow="fullscreen"></iframe>';
+				$content = preg_replace('/<blockquote(.*?)(https?:\/\/(?:www\.)?(?:tiktok\.com\/@(.*?)\/video\/\d+))(.*?)data-video-id="(.*?)"(.*?)<\/blockquote>/i', $iframe, $content);
+			}
+			return $content;
+		}
+	}
 	
 	private function build_post_featured_image() {
 		$post_id = $this->ID;

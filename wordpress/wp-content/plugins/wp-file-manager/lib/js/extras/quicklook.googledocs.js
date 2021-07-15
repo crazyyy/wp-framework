@@ -23,22 +23,22 @@ try {
 			if (file.mime.indexOf('application/vnd.google-apps.') === 0) {
 				if (file.url == '1') {
 					preview.hide();
-					$('<div class="elfinder-quicklook-info-data"><button class="elfinder-info-button">'+fm.i18n('getLink')+'</button></div>').appendTo(ql.info.find('.elfinder-quicklook-info'))
+					jQuery('<div class="elfinder-quicklook-info-data"><button class="elfinder-info-button">'+fm.i18n('getLink')+'</button></div>').appendTo(ql.info.find('.elfinder-quicklook-info'))
 					.on('click', function() {
-						$(this).html('<span class="elfinder-spinner">');
+						jQuery(this).html('<span class="elfinder-spinner">');
 						fm.request({
 							data : {cmd : 'url', target : file.hash},
 							preventDefault : true
 						})
 						.always(function() {
 							preview.show();
-							$(this).html('');
+							jQuery(this).html('');
 						})
 						.done(function(data) {
 							var rfile = fm.file(file.hash);
 							ql.value.url = rfile.url = data.url || '';
 							if (ql.value.url) {
-								preview.trigger($.Event('update', {file : ql.value}));
+								preview.trigger(jQuery.Event('update', {file : ql.value}));
 							}
 						});
 					});
@@ -46,9 +46,9 @@ try {
 				if (file.url !== '' && file.url != '1') {
 					e.stopImmediatePropagation();
 
-					loading = $('<div class="elfinder-quicklook-info-data"><span class="elfinder-spinner-text">'+fm.i18n('nowLoading')+'</span><span class="elfinder-spinner"/></div>').appendTo(ql.info.find('.elfinder-quicklook-info'));
+					loading = jQuery('<div class="elfinder-quicklook-info-data"><span class="elfinder-spinner-text">'+fm.i18n('nowLoading')+'</span><span class="elfinder-spinner"></span></div>').appendTo(ql.info.find('.elfinder-quicklook-info'));
 
-					node = $('<iframe class="elfinder-quicklook-preview-iframe"/>')
+					node = jQuery('<iframe class="elfinder-quicklook-preview-iframe"></iframe>')
 						.css('background-color', 'transparent')
 						.on('load', function() {
 							ql.hideinfo();

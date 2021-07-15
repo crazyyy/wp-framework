@@ -33,13 +33,13 @@
 
 			/**
 			 * Scripts that must be included on edit page.
-			 * @var Wbcr_Factory422_ScriptList
+			 * @var Wbcr_Factory443_ScriptList
 			 */
 			public $scripts;
 
 			/**
 			 * Styles that must be included on edit page.
-			 * @var Wbcr_Factory422_StyleList
+			 * @var Wbcr_Factory443_StyleList
 			 */
 			public $styles;
 
@@ -47,9 +47,9 @@
 			 * Creates a new instance of a viewtabl.
 			 *
 			 * @since 1.0.0
-			 * @param Wbcr_Factory422_Plugin $plugin
+			 * @param Wbcr_Factory443_Plugin $plugin
 			 */
-			public function __construct(Wbcr_Factory422_Plugin $plugin)
+			public function __construct(Wbcr_Factory443_Plugin $plugin)
 			{
 				$this->plugin = $plugin;
 			}

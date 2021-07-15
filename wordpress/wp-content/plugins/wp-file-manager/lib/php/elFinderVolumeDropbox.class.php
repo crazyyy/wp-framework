@@ -171,7 +171,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver {
 						$this->dropbox = new Dropbox_API($this->oauth, $this->options['root']);
 						$this->dropbox->getAccountInfo();
 						$script = '<script>
-							$("#'.$options['id'].'").elfinder("instance").trigger("netmount", {protocol: "dropbox", mode: "done"});
+							jQuery("#'.$options['id'].'").elfinder("instance").trigger("netmount", {protocol: "dropbox", mode: "done"});
 						</script>';
 						$html = $script;
 					} catch (Dropbox_Exception $e) {
@@ -204,7 +204,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver {
 					$this->session->set('DropboxAuthTokens', $tokens);
 					$html = '<input id="elf-volumedriver-dropbox-host-btn" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="{msg:btnApprove}" type="button" onclick="window.open(\''.$url.'\')">';
 					$html .= '<script>
-						$("#'.$options['id'].'").elfinder("instance").trigger("netmount", {protocol: "dropbox", mode: "makebtn"});
+						jQuery("#'.$options['id'].'").elfinder("instance").trigger("netmount", {protocol: "dropbox", mode: "makebtn"});
 					</script>';
 				}
 				return array('exit' => true, 'body' => $html);

@@ -92,7 +92,7 @@ function ampforwp_framework_get_social_icons($selected_social_icons){
  
 	 	 ?>	
 	<?php do_action('ampforwp_before_social_icons_hook'); ?>
-	<div class="amp-social">
+	<div class="a-so">
 	     <ul>
 	        <?php if( ( in_array( 'twitter' , $selected_social_icons,true)  || in_array('twitter', $social_icons_names,true) ) && !empty($selected_social_icons['twitter'])  ) { ?> 
 	        <a href="<?php echo esc_url($selected_social_icons['twitter'])  ?>" target ="_blank"><li class="icon-twitter"></li></a>
@@ -178,15 +178,18 @@ function ampforwp_is_associative(array $arr)
 add_action('amp_post_template_css','amp_social_styles',11); 
 
 
-function amp_social_styles(){ ?>
+function amp_social_styles(){ 
+$icon_url = plugin_dir_url(__FILE__);
+$icon_url = ampforwp_font_url($icon_url);
+?>
 @font-face {
   font-family: 'icomoon';
   font-display: swap;
-  src:  url('<?php echo esc_url(plugin_dir_url(__FILE__)) ?>fonts/icomoon.eot');
-  src:  url('<?php echo esc_url(plugin_dir_url(__FILE__)) ?>fonts/icomoon.eot') format('embedded-opentype'),
-    url('<?php echo esc_url(plugin_dir_url(__FILE__)) ?>fonts/icomoon.ttf') format('truetype'),
-    url('<?php echo esc_url(plugin_dir_url(__FILE__)) ?>fonts/icomoon.woff') format('woff'),
-    url('<?php echo esc_url(plugin_dir_url(__FILE__)) ?>fonts/icomoon.svg') format('svg');
+  src:  url('<?php echo esc_url($icon_url) ?>fonts/icomoon.eot');
+  src:  url('<?php echo esc_url($icon_url) ?>fonts/icomoon.eot') format('embedded-opentype'),
+    url('<?php echo esc_url($icon_url) ?>fonts/icomoon.ttf') format('truetype'),
+    url('<?php echo esc_url($icon_url) ?>fonts/icomoon.woff') format('woff'),
+    url('<?php echo esc_url($icon_url) ?>fonts/icomoon.svg') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -209,10 +212,10 @@ function amp_social_styles(){ ?>
 .icon-whatsapp:before{ content: "\f232";background:#075e54 }
 .icon-reddit-alien:before{ content: "\f281";background:#ff4500 }
 .icon-snapchat-ghost:before{ content: "\f2ac"; background:#fffc00 }
-.amp-social{ font-size: 15px; display: inline-block; }
-.amp-social ul{ list-style-type:none; padding:0;margin:0; text-align:center }
-.amp-social li{ box-sizing: initial; display:inline-block; }
-.amp-social li:before{box-sizing: initial;color: #fff;display: inline-block;width: 18px;height: 18px;line-height: 18px;}
+.a-so{ font-size: 15px; display: inline-block; }
+.a-so ul{ list-style-type:none; padding:0;margin:0; text-align:center }
+.a-so li{ box-sizing: initial; display:inline-block; }
+.a-so li:before{box-sizing: initial;color: #fff;display: inline-block;width: 18px;height: 18px;line-height: 18px;}
 amp-facebook-like{top:8px;}
 
 <?php }

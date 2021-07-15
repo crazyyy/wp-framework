@@ -42,11 +42,16 @@ font-weight: 100;
 	top: 32px;
 }
 .ui-widget-content.elfinder-edit-editor{
-	width:100%;
+	width:auto;
 }
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-button .ui-icon {
-	background: #ddd;
+	background-image: url("../images/ui-icons_default_theme256x240.png");
 }
 .std42-dialog .ui-dialog-titlebar .elfinder-titlebar-button.elfinder-titlebar-button-right .ui-icon.ui-icon-closethick{
 	display:none;
+}
+.ui-button.ui-state-active:hover {
+    background: #217dbb;
+    color: #fff;
+    border: none;
 }

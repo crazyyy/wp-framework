@@ -2,9 +2,9 @@
 Contributors: Tips and Tricks HQ, wpsolutions, Peter Petreski, Ruhul Amin, mbrsolution
 Donate link: https://www.tipsandtricks-hq.com
 Tags: security, secure, Anti Virus, antivirus, ban, ban hacker, virus, firewall, firewall security, login, lockdown, htaccess, hack, malware, vulnerability, protect, protection, phishing, database, backup, plugin, sql injection, ssl, restrict, login captcha, bot, hotlink, 404 detection, admin, rename, all in one, scan, scanner, iframe,
-Requires at least: 4.7
-Tested up to: 5.3
-Stable tag: 4.4.3
+Requires at least: 5.0
+Tested up to: 5.7
+Stable tag: 4.4.8
 License: GPLv3
 
 A comprehensive, user-friendly, all in one WordPress security and firewall plugin for your site.
@@ -183,6 +183,31 @@ https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin
 None
 
 == Changelog ==
+
+= 4.4.8 =
+- Fixed an issue with the rename login page feature on WordPress v5.7.
+
+= 4.4.7 =
+- Updated the renamed login page code to reflect the latest WordPress wp-login.php code. 
+- Cleaned up/improved repeated code.
+- Translation string fix in the rename login feature.
+- Added action hook "aiowps_site_lockout_settings_saved" that is triggered after the site lockout configuration is saved.
+- Updated some queries to use $wpdb->prepare() or esc_sql() wherever possible.
+
+= 4.4.6 =
+- Fixed potential vulnerability with the Banned User Agents feature (in the blacklist menu). Thanks to WonTae Jang.
+
+= 4.4.5 =
+- Fixed default DateTime to prevent DB error.
+- Added Korean language translation files. Thanks to Jonghyun Cho.
+- Reworked the code for the "Generate New DB Table Prefix" feature to make it more robust. Thanks to @baddiedev.
+- Added translation ability to some strings.  
+
+= 4.4.4 =
+- Fixed bugs and improved functionality related to "logged in users" functionality.
+- Google recaptha checks for WooCommerce product reviews
+- Replaced use of deprecated hook "wpmu_new_blog" with "wp_insert_site"
+- Fixed a potential XSS issue in the settings menu of the plugin for IE11 or older browsers.
 
 = 4.4.3 =
 - Improved file change detection feature to address DB backups failing silently in some cases due to very large serialized data stored in a single row.

@@ -5,7 +5,6 @@
 }
 .fm_notificationWrap .tab {
     border-bottom: 1px solid #ccc;
-    /*background-color: #f1f1f1;*/
 }
 .fm_notificationWrap .tab::after {
 	content:"";
@@ -28,15 +27,7 @@
 	text-align: center;
 	position:relative;
 }
-/* Change background color of buttons on hover */
-.fm_notificationWrap .tab a:hover {
-    /*background-color: #ddd;*/
-}
-/* Create an active/current tablink class */
-.fm_notificationWrap .tab a.active {
-   /* background-color: #ccc;
-	color: #fff;*/
-}
+
 .fm_notificationWrap .tab a.active::before{
 	content:"";
 	height:3px;
@@ -138,32 +129,35 @@
 .fm_rootWrap .description.mb15{
 	margin:15px 0px;
 }
-.fm_rootWrap p.submit .button {
-	background: #09F;
+.fm_rootWrap p.submit .button{
 	border: none;
-	padding: 8px 25px;
-	color: #fff;
-	text-shadow: none;
-	font-size: 16px;
-	height: inherit;
-	box-shadow: none;
-	border-radius: 0px;
+    background: #267ddd;
+    color: #fff;
+    text-shadow: none;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    height: inherit;
+    line-height: inherit;
+    padding: 12px 20px;
+    border-radius: 5px;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
 }
+.fm_rootWrap p.submit .button:hover,
+.fm_rootWrap p.submit .button:focus{
+	background: #0071a1; 
+}
+
 .fm_systemPropertyTbl th, .fm_systemPropertyTbl td{
 	padding:12px;
 	border:1px solid #f0f0f0;
 }
-.fm_systemPropertyWrap .fm_BuyProBtn {
-	background: #09F;
-	border: none;
-	padding: 3px 20px;
-	color: #fff;
-	text-shadow: none;
-	font-size: 14px;
-	height: inherit;
-	box-shadow: none;
-	border-radius: 0px;
-	margin-top: -6px;
-	margin-left: 15px;
+
+.fm_systemPropertyWrap .fm_BuyProBtn{
 	margin-bottom: -6px;
+	margin-top: -6px;
+	margin-left: 10px;
 }
+.fm_BuyProBtn:hover,
+.fm_BuyProBtn:focus{ box-shadow:none !important; }

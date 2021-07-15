@@ -2,7 +2,7 @@
  * elFinder transport to support old protocol.
  *
  * @example
- * $('selector').elfinder({
+ * jQuery('selector').elfinder({
  *   .... 
  *   transport : new elFinderSupportVer1()
  * })
@@ -29,7 +29,7 @@ window.elFinderSupportVer1 = function(upload) {
 		this.fm.parseUploadData = function(text) {
 			var data;
 
-			if (!$.trim(text)) {
+			if (!jQuery.trim(text)) {
 				return {error : ['errResponse', 'errDataEmpty']};
 			}
 
@@ -47,7 +47,7 @@ window.elFinderSupportVer1 = function(upload) {
 	this.send = function(opts) {
 		var self = this,
 			fm = this.fm,
-			dfrd = $.Deferred(),
+			dfrd = jQuery.Deferred(),
 			cmd = opts.data.cmd,
 			args = [],
 			_opts = {},
@@ -86,10 +86,10 @@ window.elFinderSupportVer1 = function(upload) {
 				opts.data.current = fm.file(opts.data.target).phash;
 				break;
 			case 'duplicate':
-				_opts = $.extend(true, {}, opts);
+				_opts = jQuery.extend(true, {}, opts);
 
-				$.each(opts.data.targets, function(i, hash) {
-					$.ajax(Object.assign(_opts, {data : {cmd : 'duplicate', target : hash, current : fm.file(hash).phash}}))
+				jQuery.each(opts.data.targets, function(i, hash) {
+					jQuery.ajax(Object.assign(_opts, {data : {cmd : 'duplicate', target : hash, current : fm.file(hash).phash}}))
 						.fail(function(error) {
 							fm.error(fm.res('error', 'connect'));
 						})
@@ -111,7 +111,7 @@ window.elFinderSupportVer1 = function(upload) {
 			case 'paste':
 				opts.data.current = opts.data.dst;
 				if (! opts.data.tree) {
-					$.each(opts.data.targets, function(i, h) {
+					jQuery.each(opts.data.targets, function(i, h) {
 						if (fm.file(h) && fm.file(h).mime === 'directory') {
 							opts.data.tree = '1';
 							return false;
@@ -132,7 +132,7 @@ window.elFinderSupportVer1 = function(upload) {
 		}
 		// cmd = opts.data.cmd
 		
-		xhr = $.ajax(opts)
+		xhr = jQuery.ajax(opts)
 			.fail(function(error) {
 				dfrd.reject(error);
 			})
@@ -166,7 +166,7 @@ window.elFinderSupportVer1 = function(upload) {
 			files = {}, 
 			filter = function(file) { return file && file.hash && file.name && file.mime ? file : null; },
 			getDirs = function(items) {
-				return $.grep(items, function(i) {
+				return jQuery.grep(items, function(i) {
 					return i && i.mime && i.mime === 'directory'? true : false;
 				});
 			},
@@ -181,7 +181,7 @@ window.elFinderSupportVer1 = function(upload) {
 				}
 				if (treeDiff.removed.length) {
 					var removed = [];
-					$.each(treeDiff.removed, function(i, h) {
+					jQuery.each(treeDiff.removed, function(i, h) {
 						var item;
 						if ((item = fm.file(h)) && item.mime === 'directory') {
 							removed.push(h);
@@ -198,7 +198,7 @@ window.elFinderSupportVer1 = function(upload) {
 		}
 		
 		// if (data.error) {
-		// 	$.each(data.error, function(i, msg) {
+		// 	jQuery.each(data.error, function(i, msg) {
 		// 		if (self.errors[msg]) {
 		// 			data.error[i] = self.errors[msg];
 		// 		}
@@ -226,12 +226,12 @@ window.elFinderSupportVer1 = function(upload) {
 		isCwd = (phash == fm.cwd().hash);
 		
 		if (data.tree) {
-			$.each(this.normalizeTree(data.tree), function(i, file) {
+			jQuery.each(this.normalizeTree(data.tree), function(i, file) {
 				files[file.hash] = file;
 			});
 		}
 		
-		$.each(data.cdc||[], function(i, file) {
+		jQuery.each(data.cdc||[], function(i, file) {
 			var hash = file.hash,
 				mcts;
 
@@ -251,7 +251,7 @@ window.elFinderSupportVer1 = function(upload) {
 		});
 		
 		if (!data.tree) {
-			$.each(fm.files(), function(hash, file) {
+			jQuery.each(fm.files(), function(hash, file) {
 				if (!files[hash] && file.phash != phash && file.mime == 'directory') {
 					files[hash] = file;
 				}
@@ -261,7 +261,7 @@ window.elFinderSupportVer1 = function(upload) {
 		if (cmd == 'open') {
 			return {
 					cwd     : files[phash] || this.normalizeFile(data.cwd),
-					files   : $.map(files, function(f) { return f; }),
+					files   : jQuery.map(files, function(f) { return f; }),
 					options : self.normalizeOptions(data),
 					init    : !!data.params,
 					debug   : data.debug
@@ -269,7 +269,7 @@ window.elFinderSupportVer1 = function(upload) {
 		}
 		
 		if (isCwd) {
-			diff = fm.diff($.map(files, filter));
+			diff = fm.diff(jQuery.map(files, filter));
 		} else {
 			if (data.tree && cmd !== 'paste') {
 				diff = getTreeDiff(files);
@@ -384,7 +384,7 @@ window.elFinderSupportVer1 = function(upload) {
 	this.normalizeOptions = function(data) {
 		var opts = {
 				path          : data.cwd.rel,
-				disabled      : $.merge((data.disabled || []), [ 'search', 'netmount', 'zipdl' ]),
+				disabled      : jQuery.merge((data.disabled || []), [ 'search', 'netmount', 'zipdl' ]),
 				tmb           : !!data.tmb,
 				copyOverwrite : true
 			};

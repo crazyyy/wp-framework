@@ -31,12 +31,51 @@ function ampforwp_add_admin_styling($hook_suffix){
     wp_enqueue_style( 'ampforwp_admin_css' );
 
     // Admin area scripts file
-    wp_register_script( 'ampforwp_admin_js', untrailingslashit(AMPFORWP_PLUGIN_DIR_URI) . '/includes/admin-script.js', array('wp-color-picker'), AMPFORWP_VERSION );
+    $dep = array('wp-color-picker');
+    $dep = apply_filters('ampforwp_modify_script_dependency', $dep);
+    wp_register_script( 'ampforwp_admin_js', untrailingslashit(AMPFORWP_PLUGIN_DIR_URI) . '/includes/admin-script.js', $dep , AMPFORWP_VERSION );
 
     // Localize the script with new data
     $redux_data = array();
     if( current_user_can("manage_options") && $hook_suffix=='toplevel_page_amp_options' ){
         $redux_data = $redux_builder_amp;
+        wp_dequeue_script( 'insert-post-adschart-admin' );
+        if(function_exists('brokers_page_template_redirect')){
+            wp_dequeue_script( 'broker-js' );
+            wp_dequeue_script( 'broker-min-js' );
+        }
+        if(function_exists('html5blank_header_scripts')){
+            wp_dequeue_script( 'jquery-js' );
+        }
+        if(function_exists('megashop_setup')){
+            wp_dequeue_script( 'adminjs' );
+        }
+        remove_all_actions('admin_notices');
+        remove_all_actions('all_admin_notices');
+        if(class_exists('WC_Ecpay_Apple_Pay')){
+            remove_all_actions('admin_footer');
+        }
+        if (function_exists('wps_pf_pr_filter_register')) {
+            wp_dequeue_script('wpspf-main-js-3');
+        }
+        if (function_exists('aeccglobal_setup')) {
+            remove_action( 'admin_footer', 'js_update_show_in_slider' );
+        }
+        add_action('admin_notices', 'ampforwp_dev_mode_notice');
+        add_action('admin_notices', 'ampforwp_plugins_manager_notice');
+        add_action('admin_notices', 'ampforwp_ampwptheme_notice');
+        add_action('admin_notices', 'ampforwp_automattic_activation' );
+        add_action('admin_notices', 'ampforwp_admin_notices' );
+        add_action('admin_notices', 'ampforwp_seo_selection_notice' );
+        add_action('admin_notices', 'ampforwp_mobile_redirection_notice' );
+        add_action('admin_notices', 'ampforwp_category_base_remove_notice' );
+        add_action('admin_notices', 'ampforwp_internal_feedback_notice' );
+        if ( defined('AMPFORWPPRO_PLUGIN_DIR')  ) {     
+            $license_info = get_option( 'ampforwppro_license_info');
+            if (!$license_info) {
+               add_action('admin_notices', 'ampforwp_pro_extension_manager_notice' );
+            }
+        }
     }else{
         $redux_data['ampforwp-amp-takeover'] =  ampforwp_get_setting('ampforwp-amp-takeover');
     }
@@ -48,7 +87,7 @@ function ampforwp_add_admin_styling($hook_suffix){
     $screen = get_current_screen();
     if ( 'toplevel_page_amp_options' == $screen->base ) {
         $opt = get_option("ampforwp_option_panel_view_type");
-        wp_localize_script( 'ampforwp_admin_js', 'amp_option_panel_view', $opt);
+        wp_localize_script( 'ampforwp_admin_js', 'amp_option_panel_view', array($opt));
     }else{
         $opt = get_option("ampforwp_option_panel_view_type");
         if($opt==1 || $opt==2){
@@ -56,19 +95,20 @@ function ampforwp_add_admin_styling($hook_suffix){
         }else{
             $opt = "31";
         }
-        wp_localize_script( 'ampforwp_admin_js', 'amp_option_panel_view', "$opt");
+        wp_localize_script( 'ampforwp_admin_js', 'amp_option_panel_view', array($opt));
     }
-    wp_localize_script( 'ampforwp_admin_js', 'amp_fields', $amp_fields );
+    wp_localize_script( 'ampforwp_admin_js', 'amp_fields', array($amp_fields));
     $redux_data = apply_filters("ampforwp_custom_localize_data", $redux_data);
     wp_localize_script( 'ampforwp_admin_js', 'redux_data', $redux_data );
-    wp_localize_script( 'ampforwp_admin_js', 'ampforwp_nonce', wp_create_nonce('ampforwp-verify-request') );
+    $ampforwp_nonce = wp_create_nonce( 'ampforwp-verify-request' );
+    wp_localize_script( 'ampforwp_admin_js', 'ampforwp_nonce', $ampforwp_nonce );
     wp_enqueue_script( 'wp-color-picker' );
     wp_enqueue_script( 'ampforwp_admin_js' );
 }
 // 96. ampforwp_is_front_page() ampforwp_is_home() and ampforwp_is_blog is created
 function ampforwp_is_front_page(){
     global $redux_builder_amp;
-
+    $front_page = false;
     // Reading settings me frontpage set
     $get_front_page_reading_settings  = get_option('page_on_front');
 
@@ -90,22 +130,25 @@ function ampforwp_is_front_page(){
     }
     // TRUE: When we have "Your latest posts" in reading settings and custom frontpage in amp
     if ( 'posts' == get_option( 'show_on_front') && is_home() && $get_amp_homepage_settings && $get_custom_frontpage_settings)
-        return true;
+        $front_page = true;
 
      // TRUE: When we have " A static page" in reading settings and custom frontpage in amp
-    if ( 'page' == get_option( 'show_on_front') && (is_home() || is_front_page()) && $get_front_page_reading_settings && $get_amp_homepage_settings && $get_custom_frontpage_settings && $get_amp_custom_frontpage_id) {
+    if ( 'page' == get_option( 'show_on_front') && (is_home() || is_front_page()) && $get_front_page_reading_settings && $get_amp_homepage_settings && $get_custom_frontpage_settings && !empty($get_amp_custom_frontpage_id)) {
+
+        $front_page = true;
 
         $current_page = get_queried_object();
         if ( $current_page ) {
           $current_page =  $current_page->ID;
         }
         if ( get_option( 'page_for_posts') == $current_page ) {
-            return false ;
+            $front_page = false ;
         }
-        return true;
+        
     }
 
-  return false ;
+    $front_page = apply_filters('ampforwp_is_front_page', $front_page);
+    return $front_page;
 
 }
 
@@ -199,10 +242,14 @@ function ampforwp_the_content_filter_full( $content_buffer ) {
         // xlink attribute causes Validatation Issues #1149
         $content_buffer = preg_replace('/xlink="href"/','',$content_buffer);
         $content_buffer = preg_replace('/!important/', '' , $content_buffer);
+        $content_buffer = preg_replace('/<area(.*?)>/', '', $content_buffer);
         //  Compatibility with the footnotes plugin. #2447
         if(class_exists('MCI_Footnotes')){
         $footnote_collapse_link = '';
-        $footnote_collapse = MCI_Footnotes_Convert::toBool(MCI_Footnotes_Settings::instance()->get(MCI_Footnotes_Settings::C_BOOL_REFERENCE_CONTAINER_COLLAPSE));
+        $footnote_collapse = false;
+        if (method_exists('MCI_Footnotes_Convert', 'toBool')) {
+           $footnote_collapse = MCI_Footnotes_Convert::toBool(MCI_Footnotes_Settings::instance()->get(MCI_Footnotes_Settings::C_BOOL_REFERENCE_CONTAINER_COLLAPSE));
+        }
         if( $footnote_collapse == true ){
             $footnote_collapse_link = 'on="tap:footnote_references_container.show" role="click" tabindex="1" ';
             $content_buffer = preg_replace( '/<div id=(.*?)footnote_references_container(.*?)\s/m','<div id=$1footnote_references_container$2 hidden ',$content_buffer);
@@ -244,7 +291,7 @@ function ampforwp_generate_meta_desc($json=""){
         if ( is_archive() ) {
             $desc = addslashes( strip_tags( get_the_archive_description() ) );
         }
-        if ( is_single() || is_page() ) {
+        if ( is_single() || is_page() || ampforwp_is_front_page()) {
             if ( has_excerpt() ) {
                 $desc = get_the_excerpt();
             } else {
@@ -257,12 +304,8 @@ function ampforwp_generate_meta_desc($json=""){
         if ( is_search() ) {
             $desc = addslashes( ampforwp_translation($redux_builder_amp['amp-translator-search-text'], 'You searched for:') . ' ' . get_search_query() );
         }
-        if ( ampforwp_is_front_page() ) {
-            $desc = addslashes( wp_trim_words(  strip_tags( get_post_field('post_content', $post_id) ) , 15 ) );
-        }
-
         // Yoast 
-        if ( class_exists('WPSEO_Frontend') && ('yoast' == ampforwp_get_setting('ampforwp-seo-selection') || 1 == ampforwp_get_setting('ampforwp-seo-selection'))) {
+        if ( class_exists('WPSEO_Frontend') && ('yoast' == ampforwp_get_setting('ampforwp-seo-selection') || 1 == ampforwp_get_setting('ampforwp-seo-selection')) && !class_exists('Yoast\\WP\\SEO\\Integrations\\Front_End_Integration')) {
             $front = $yoast_desc = '';
             $front = WPSEO_Frontend::get_instance();
             $yoast_desc = addslashes( strip_tags( $front->metadesc( false ) ) );
@@ -368,7 +411,10 @@ function ampforwp_generate_meta_desc($json=""){
         // Rank Math SEO #2701
         if ( defined( 'RANK_MATH_FILE' ) && 'rank_math' == ampforwp_get_setting('ampforwp-seo-selection') ) {
             $rank_math_desc = RankMath\Post::get_meta( 'description', $post_id );
-            $desc           = $rank_math_desc ? $rank_math_desc : $desc;
+            if (ampforwp_is_home()) {
+                $rank_math_desc = $desc;
+            }
+            $desc = $rank_math_desc ? $rank_math_desc : $desc;
         }
         //Bridge Qode SEO Compatibility #2538 
         if ( function_exists('qode_header_meta') && 'bridge' == ampforwp_get_setting('ampforwp-seo-selection')){
@@ -487,6 +533,15 @@ if ( ! function_exists( 'ampforwp_isexternal ') ) {
 
 if(!function_exists('ampforwp_findInternalUrl')){
     function ampforwp_findInternalUrl($url){
+        if(function_exists('googlesitekit_activate_plugin')){
+            if(strpos($url, '_gl') !== false){
+               $url = remove_query_arg( '_gl', $url);
+                 //remove ? from jump links.
+                 if(strpos($url, '?#') === 0){     
+                   $url = str_replace('?#', '#', $url);
+                 }
+            } 
+        }
         global $redux_builder_amp;
         if(isset($redux_builder_amp['convert-internal-nonamplinks-to-amp']) && ! $redux_builder_amp['convert-internal-nonamplinks-to-amp']){
             return $url;
@@ -549,14 +604,6 @@ if(!function_exists('ampforwp_findInternalUrl')){
         return $url;
     }
 } // end ampforwp_findInternalUrl
-
-function ampforwp_is_amp_inURL($url){
-    $urlArray = explode("/", $url);
-    if( !in_array( AMPFORWP_AMP_QUERY_VAR , $urlArray ) ) {
-        return false;
-    }
-    return true;
-}
 
 /* AMPforWP allowed html tags #1950
  * ampforwp_wp_kses_allowed_html()
@@ -729,6 +776,19 @@ function ampforwp_url_purifier($url){
                 $wpml_lang_checker = true;
             }
             }
+            $url = esc_url($url);
+            $active_langs = $sitepress_settings['active_languages'];
+            foreach ($active_langs as $active_lang) {
+                if (preg_match('/\?lang='.$active_lang.'/', $url)){
+                    $url = str_replace('&#038;amp=1', '', $url);
+                    if(false == ampforwp_get_setting('amp-core-end-point')){
+                        $url = str_replace('?lang='.$active_lang, 'amp/', $url);
+                    }else{
+                        $url = str_replace('?lang='.$active_lang, '?amp=1', $url);
+                    }
+                    $url = add_query_arg( 'lang',$active_lang, $url);
+                }
+            }
         }
         if ( true == $wpml_lang_checker && ( is_home() || is_archive() || is_front_page() ) ) {
             if ( ( is_archive() || is_home() ) && get_query_var('paged') > 1 ) {
@@ -778,7 +838,11 @@ function ampforwp_url_controller( $url, $nonamp = '' ) {
     }
     $new_url = "";
     $get_permalink_structure = "";
-    if ( ampforwp_amp_nonamp_convert("", "check") || (isset($redux_builder_amp['ampforwp-amp-takeover']) && true == $redux_builder_amp['ampforwp-amp-takeover']) ) {
+    $mob_pres_link = false;
+    if(function_exists('ampforwp_mobile_redirect_preseve_link')){
+      $mob_pres_link = ampforwp_mobile_redirect_preseve_link();
+    }
+    if ( ampforwp_amp_nonamp_convert("", "check") || ($mob_pres_link == true || true == ampforwp_get_setting('ampforwp-amp-takeover'))) {
         $nonamp = 'nonamp';
     }
     if ( isset($nonamp) && 'nonamp' == $nonamp ) {
@@ -786,11 +850,10 @@ function ampforwp_url_controller( $url, $nonamp = '' ) {
     }
     $get_permalink_structure = get_option('permalink_structure');
     if ( $get_permalink_structure ) {
-        if ( isset($redux_builder_amp['amp-core-end-point']) && 1 == $redux_builder_amp['amp-core-end-point'] ) {
-                $new_url = trailingslashit($url);
-                $new_url = $new_url.'?'.AMPFORWP_AMP_QUERY_VAR;
-                //$new_url = add_query_arg(AMPFORWP_AMP_QUERY_VAR,'1', $new_url);
-            }
+        if(true == ampforwp_get_setting('amp-core-end-point')){
+            $new_url = user_trailingslashit($url);
+            $new_url = add_query_arg( 'amp', '', $new_url );
+        }
         else {
                 $new_url = user_trailingslashit( trailingslashit( $url ) . AMPFORWP_AMP_QUERY_VAR);
             // WPML COMPATIBILITY FOR LOOP 
@@ -1189,14 +1252,17 @@ if( ! function_exists( 'ampforwp_additional_style_carousel_caption' ) ){
  }
 
  function ampforwp_role_based_access_options(){
+    $user_role = '';
+    $user_role = true;
     $currentUser = wp_get_current_user();
     $amp_roles = ampforwp_get_setting('ampforwp-role-based-access');
     $currentuserrole = (array) $currentUser->roles;
     $hasrole = array_intersect( $currentuserrole, $amp_roles );
     if( empty($hasrole)){
-        return false;
+        $user_role = false;
     }
-    return true;
+    $user_role = apply_filters('ampforwp_modify_user_access_role', $user_role, $currentUser, $amp_roles, $hasrole );
+    return $user_role;
 }
 if(!function_exists('ampforwp_sassy_share_icons')){
     function ampforwp_sassy_share_icons($ampforwp_the_content) {
@@ -1228,10 +1294,220 @@ if(!function_exists('ampforwp_sassy_share_icons')){
                 preg_match_all('/<div class="heateorSssClear"><\/div><div class="heateor_sss_sharing_container (.*)">(.*)<div class="heateorSssClear"><\/div><\/div><div class="heateorSssClear"><\/div>/', $ampforwp_the_content, $matches);
                 
                 $_actual = $matches[0];
+                if(isset($matches[1][0])){
                 $_replace = '<div class="heateorSssClear"></div><div class="heateor_sss_sharing_container '.$matches[1][0].'"></amp-img></a>'.$_append.'</div><div class="heateorSssClear"></div><div class="heateorSssClear"></div>';
                 $ampforwp_the_content = str_replace($_actual, $_replace, $ampforwp_the_content);
+                }
             }
         }
         return $ampforwp_the_content;
     }
 }
+
+// Notice for Dev Mode
+function ampforwp_dev_mode_notice(){ 
+    global $redux_builder_amp;
+    $message = '';
+    if(isset($redux_builder_amp['ampforwp-development-mode']) && $redux_builder_amp['ampforwp-development-mode']) {
+            $message =  ' Please turn off Development mode, when you are done.';?>
+                    
+            <div class="notice notice-success amp-dev-notice" style="position:relative;
+            height: 40px; overflow: hidden; ">
+                <div class="ampforwp-dev-mode-message" style="margin-top: 10px;">
+                    <?php echo '<strong>'. esc_html__('AMP Dev mode is Enabled!', 'accelerated-mobile-pages').'</strong>'. esc_html__($message, 'accelerated-mobile-pages'); ?>             
+                </div>  
+            </div>
+<?php }
+}
+
+function ampforwp_seo_selection_notice() {
+    $seo = '';
+    if(function_exists('genesis_theme_support')){
+        $seo = 'Genesis';
+    }
+    if(class_exists('WPSEO_Options')){
+        $seo = 'Yoast SEO';
+    }
+    if(class_exists('All_in_One_SEO_Pack')){
+        $seo = 'All in One SEO';
+    }
+    if(function_exists( 'the_seo_framework' )){
+        $seo = 'The SEO Framework';
+    }
+    if(function_exists('qode_header_meta')){
+        $seo = 'Bridge Qode SEO';
+    }
+    if(defined( 'RANK_MATH_FILE' )){
+        $seo = 'Rank Math SEO';
+    }
+    if(defined( 'SQ_ALL_PATTERNS' )){
+        $seo = 'Squirrly SEO';
+    }
+    if(class_exists('Smartcrawl_Loader')){
+        $seo = 'Smartcrawl SEO';
+    }
+    if(function_exists('seopress_activation')){
+        $seo = 'SEO Press';
+    }
+    $seosel = false;
+    if(class_exists('WPSEO_Options') && 'yoast' != ampforwp_get_setting('ampforwp-seo-selection')){ 
+        $seosel = true;
+    }
+    else if (defined( 'RANK_MATH_FILE' ) && 'rank_math' != ampforwp_get_setting('ampforwp-seo-selection')){
+         $seosel = true;
+    }
+    else if (class_exists('All_in_One_SEO_Pack') && 'aioseo' != ampforwp_get_setting('ampforwp-seo-selection')){
+         $seosel = true;
+    }
+    else if (function_exists( 'the_seo_framework' ) && 'seo_framework' != ampforwp_get_setting('ampforwp-seo-selection')){
+         $seosel = true;
+    }
+    else if (defined( 'SQ_ALL_PATTERNS' ) && 'squirrly' != ampforwp_get_setting('ampforwp-seo-selection')){
+         $seosel = true;
+    }
+    else if (class_exists('Smartcrawl_Loader') && 'smartcrawl' != ampforwp_get_setting('ampforwp-seo-selection')){
+         $seosel = true;
+    }
+    else if (function_exists('genesis_theme_support') && 'genesis' != ampforwp_get_setting('ampforwp-seo-selection') && !class_exists('WPSEO_Options') && !defined( 'RANK_MATH_FILE' ) && !class_exists('All_in_One_SEO_Pack') && !defined( 'SQ_ALL_PATTERNS' ) && !class_exists('Smartcrawl_Loader') && !function_exists('seopress_activation')){
+         $seosel = true;
+    }
+    else if (function_exists('seopress_activation') && 'seopress' != ampforwp_get_setting('ampforwp-seo-selection')){
+         $seosel = true;
+    }
+    else if (function_exists('qode_header_meta') && 'bridge' != ampforwp_get_setting('ampforwp-seo-selection')){
+         $seosel = true;
+    }
+    if($seosel && ( '' != ampforwp_get_setting('ampforwp-seo-selection') ) ){
+        echo sprintf(('<div class="notice notice-error"><p>%s</p></div>'), esc_html__('Incorrect SEO plugin has been selected in AMPforWP SEO Settings, Please select '.esc_html($seo).' from SEO Settings.','accelerated-mobile-pages'));
+    }
+
+    if('' != ampforwp_get_setting('ampforwp-seo-selection')){
+        return;
+    }
+    
+    if(!empty($seo)){
+        echo sprintf(('<div class="notice notice-error"><p>%s </p></div>'), esc_html__('The configuration of AMPforWP and '.esc_html($seo).' plugin is seems incorrect. Please go to AMPforWP plugin settings -> SEO -> SEO Plugin Integration and select '.esc_html($seo).' plugin from the drop down.','accelerated-mobile-pages'));
+    }
+}
+add_action('wp_ajax_ampforwp_subscribe_newsletter','ampforwp_subscribe_for_newsletter');
+add_action('wp_ajax_nopriv_ampforwp_subscribe_newsletter','ampforwp_subscribe_for_newsletter');
+function ampforwp_subscribe_for_newsletter(){
+    $api_url = 'http://magazine3.company/wp-json/api/central/email/subscribe';
+    $api_params = array(
+        'name' => sanitize_text_field($_POST['name']),
+        'email'=> sanitize_text_field($_POST['email']),
+        'website'=> sanitize_text_field($_POST['website']),
+        'type'=> 'amp'
+    );
+    $response = wp_remote_post( $api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+    $response = wp_remote_retrieve_body( $response );
+    echo $response;
+    die;
+}
+function ampforwp_mobile_redirection_notice(){
+    if(false == ampforwp_get_setting('amp-mobile-redirection')){
+        return;
+    }
+    $plugin = $option = '';
+    if(function_exists('rocket_load_textdomain') && 0 == get_rocket_option( 'do_caching_mobile_files' )){
+        $plugin = 'WP Rocket';
+        $option = 'Separate cache files for mobile devices';
+    }
+    if(function_exists('wp_super_cache_init_action')) {
+        global $wp_cache_mobile_enabled;
+        if(0 == $wp_cache_mobile_enabled){
+            $plugin = 'WP Super Cache';
+            $option = 'Mobile device support';
+        }else{
+            return;
+        }
+    }
+    if(function_exists('litespeed_purge_single_post') && !LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_mobile_agents()) { 
+          $plugin = 'LiteSpeed Cache';
+          $option = 'Cache Mobile';
+    }
+    if(function_exists('wpfastestcache_activate') && 'on' != $GLOBALS["wp_fastest_cache_options"]->wpFastestCacheMobile) {
+          $plugin = 'WP Fastest Cache';
+          $option = 'Mobile';
+    }
+    if(!empty($plugin) && !empty($option)){
+    echo sprintf(('<div class="notice notice-error"><p>%s <a target="_blank" href="%s">%s</a></p></div>'), esc_html__('You need to enable the option of "'.esc_html($option).'" in '.esc_html($plugin).' plugin for mobile redirection to work properly in AMP','accelerated-mobile-pages'),esc_url('https://ampforwp.com/tutorials/article/how-to-redirect-all-mobile-visitors-to-amp/'),esc_html__('Click here for more info','accelerated-mobile-pages'));  }
+ }
+function ampforwp_category_base_remove_notice(){
+    if(true == ampforwp_get_setting('ampforwp-category-base-removel-link')){
+        return;
+    }
+    if(class_exists('WPSEO_Options') && method_exists('WPSEO_Options', 'get') && WPSEO_Options::get( 'stripcategorybase' ) == true ){
+        echo sprintf(('<div class="notice notice-error"><p>%s <a href="%s">%s</a>%s<a href="%s">%s</a></p></div>'), esc_html__('We have detected that you removed Category Base from Yoast SEO plugin but not from AMPforWP settings. Please','accelerated-mobile-pages'),
+        esc_url('admin.php?page=amp_options&tab=17'),
+        esc_html__('Click here','accelerated-mobile-pages'),
+        esc_html__(' to set up to make sure AMP pages work properly on category pages or ','accelerated-mobile-pages'),
+        esc_url('https://ampforwp.com/tutorials/article/how-to-remove-the-category-base-in-the-amp/'),esc_html__('Click here for the tutorial','accelerated-mobile-pages'),esc_html__('Click here for the tutorial','accelerated-mobile-pages'));
+    }
+}
+
+// HIDE/SHOW TAG AND CATEGORY #4326 
+function ampforwp_get_taxonomy_meta($term_id,$type=''){
+    if($type=='' || $type=='data'){
+        $amp_taxonomy = get_term_meta( $term_id,'amp_taxonomy');
+        $amp_hide_tax = get_term_meta( $term_id,'amp_hide_tax');
+        $data = array('visible'=>$amp_taxonomy,'visible_status'=>$amp_hide_tax);
+        return $data;
+    }else if($type=='status'){
+        $amp_taxonomy = get_term_meta( $term_id,'amp_taxonomy');
+        if(isset($amp_taxonomy[0]) && $amp_taxonomy[0]=='hide'){
+            return false;
+        }else{
+            return true;
+        }
+    }else if($type=='post_status'){
+        $term = wp_get_post_terms(ampforwp_get_the_ID(),array('category','post_tag'));
+        foreach ($term as $key => $value) {
+            $amp_taxonomy = get_term_meta( $value->term_id,'amp_taxonomy');
+            $amp_hide_tax = get_term_meta( $value->term_id,'amp_hide_tax');
+            if(isset($amp_taxonomy[0]) && $amp_taxonomy[0]=='hide' && $amp_hide_tax[0]=='hide-tax-post'){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+function ampforwp_internal_feedback_notice(){
+    $install_date = get_option('ampforwp_plugin_info');
+    if (isset($install_date["activation_data"])) {
+       $install_date = $install_date["activation_data"];
+       $install_date = date("m-d-Y", $install_date);
+    }
+    $activation_never =  get_option("ampforwp_feedback_remove_notice");
+    if (strtotime($install_date) < strtotime('1 month ago') && $activation_never !='remove') {?>
+        <div class="updated notice ampforwp_remove_notice" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);background-color:white;">
+            <p> 
+            <?php esc_html_e('Awesome, you\'ve been using AMPforWP for more than 1 month. May I ask you to give it a 5-star rating on WordPress.org?', 'accelerated-mobile-pages'); ?></br>
+            <?php esc_html_e('This will help spread the word out about this plugin and will encourage us to continue the development.', 'accelerated-mobile-pages'); ?></br>
+            <?php esc_html_e('Much appreciated, thank you very much.', 'accelerated-mobile-pages'); ?></br></br>
+            <a href="https://wordpress.org/support/plugin/accelerated-mobile-pages/reviews/?rate=5#new-post" class="button-primary" target="_new" style="font-weight:bold;" title="Ok, you deserved it"> <?php echo esc_html__('Ok, You deserve it', 'accelerated-mobile-pages') ?></a>
+            <a class="button-primary" id="ampforwp-close-notice" style="font-weight:bold;"><?php echo esc_html__('Not Now', 'accelerated-mobile-pages') ?></a>
+            </p>
+        </div>
+<?php    }
+}
+function ampforwp_feedback_remove_notice(){     
+    $result = update_option( "ampforwp_feedback_remove_notice", 'remove');
+    if($result){
+        echo json_encode(array('status'=>'t'));            
+    }else{    
+        echo json_encode(array('status'=>'f'));                
+    }   
+    wp_die();                
+}
+add_action('wp_ajax_ampforwp_feedback_remove_notice', 'ampforwp_feedback_remove_notice');
+
+function ampforwp_pro_extension_manager_notice(){?>
+    <div class="updated notice ampforwp_remove_notice" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);background-color:white;">
+    <p> 
+    <?php echo esc_html__('AMP Pro Extension Manager has been activated, Please enter your license key', 'accelerated-mobile-pages'); ?>
+    <a href="<?php echo esc_url(admin_url('admin.php?page=amp-extension-manager')) ?>" style="font-weight:bold;"> <?php echo esc_html__('here', 'accelerated-mobile-pages') ?></a>
+    </p>
+    </div>
+<?php }

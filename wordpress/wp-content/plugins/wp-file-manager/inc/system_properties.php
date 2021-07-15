@@ -33,7 +33,7 @@ $this->custom_css();
 	
 	<tr>
 		<th><?php _e('Browser and OS (HTTP_USER_AGENT)','wp-file-manager'); ?></th>
-		<td><code><?php echo $_SERVER['HTTP_USER_AGENT']; ?></code></td>
+		<td><code><?php echo htmlentities($_SERVER['HTTP_USER_AGENT']); ?></code></td>
 	</tr>
 	
 </table>

@@ -9,15 +9,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 <head>
 	<meta charset="utf-8">
 	<?php do_action('amp_experiment_meta', $this); ?>
-    <link rel="dns-prefetch" href="//cdn.ampproject.org">
+    <link rel="preconnect" href="//cdn.ampproject.org">
 	<?php do_action( 'amp_post_template_head', $this ); ?>
 	<style amp-custom>
 		<?php $this->load_parts( array( 'style' ) ); ?>
 		<?php do_action( 'amp_post_template_css', $this ); ?>
 	</style>
 </head>
- 
-<body <?php ampforwp_body_class('design_3_wrapper');?> >
+<?php
+	$lightbox = '';
+    if( false == ampforwp_get_setting('ampforwp-amp-img-lightbox') ){
+    	$lightbox = 'data-amp-auto-lightbox-disable ';
+	}?>
+<body <?php echo esc_attr($lightbox); ?><?php ampforwp_body_class('design_3_wrapper');?> > 
 <?php do_action('ampforwp_body_beginning', $this); ?>
 <?php $this->load_parts( array( 'header-bar' ) ); ?>
 
@@ -27,9 +31,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php do_action('ampforwp_post_before_design_elements') ?>
 		<?php $this->load_parts( apply_filters( 'ampforwp_design_elements', array( 'empty-filter' ) ) ); ?>
 		<?php do_action('ampforwp_post_after_design_elements') ?>
-		<?php if(true==ampforwp_get_setting('ampforwp-design3-recent-posts') && !checkAMPforPageBuilderStatus(get_the_ID()) ) {?>
+		<?php if(true==ampforwp_get_setting('ampforwp-design3-recent-posts') && !checkAMPforPageBuilderStatus(get_the_ID()) && is_single() ) {?>
 					<div class="amp-wp-content relatedpost recentpost">
-						 <div class="related_posts">
+						 <div class="rp">
 						<span class="related-title"><?php echo esc_attr(ampforwp_translation(ampforwp_get_setting('amp-translator-recent-text'), 'Recent Posts' )); ?></span>
 						<ol class="clearfix">
 						<?php 
@@ -55,6 +59,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 			                <div class="related_link">
 			                    <?php $title = get_the_title(); ?>
 			                    <a href="<?php echo esc_url( amp_loop_permalink() ); ?>" title="<?php echo esc_html( $title ); ?>" ><?php the_title(); ?></a>
+			                    <?php
+                                   if( true == ampforwp_get_setting('amforwp-design3-recentpost-excerpt-switch') ){
+                                        $excep_len = 15;
+                                        if(ampforwp_get_setting('amp-design3-recentpost-excerpt-len') && is_numeric(ampforwp_get_setting('amp-design3-recentpost-excerpt-len'))){
+                                            $excep_len = intval(ampforwp_get_setting('amp-design3-recentpost-excerpt-len'));
+                                        }
+                                        amp_loop_excerpt($excep_len);
+                                    }
+                                ?>
 			                    <?php 
 			                    if (true == ampforwp_get_setting('amforwp-design3-recentpost-date-switch') ) {
 			                    		amp_loop_date();

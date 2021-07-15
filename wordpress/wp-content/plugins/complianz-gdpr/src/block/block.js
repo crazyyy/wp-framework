@@ -5,8 +5,8 @@
  */
 
 //  Import CSS.
-import './style.scss';
-import './editor.scss';
+// import './style.scss';
+// import './editor.scss';
 
 import * as api from './utils/api';
 //
@@ -14,6 +14,7 @@ const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 const { InspectorControls } = wp.editor;
 const { SelectControl } = wp.components;
+const { PanelBody, PanelRow } = wp.components;
 const { RichText } = wp.editor;
 const { Component } = wp.element;
 const el = wp.element.createElement;
@@ -41,7 +42,8 @@ const iconEl =
                 documentSyncStatus : attributes.documentSyncStatus,
                 document: {},
                 hasDocuments: true,
-            };
+				preview: false,
+			};
         }
 
         // Constructing our component. With super() we are setting everything to 'this'.
@@ -130,9 +132,6 @@ const iconEl =
                 });
 
             }
-
-
-
         }
 
 
@@ -153,6 +152,13 @@ const iconEl =
                 output = __('No documents found. Please finish the Complianz Privacy Suite wizard to generate documents', 'complianz-gdpr');
                 id = 'no-documents';
             }
+
+            //preview
+			if (this.props.attributes.preview){
+				return(
+						<img src={complianz.cmplz_preview} />
+				);
+			}
 
             //build options
             if (this.state.documents.length > 0) {
@@ -177,19 +183,25 @@ const iconEl =
             if (this.props.attributes.customDocument.length>0){
                 customDocument = this.props.attributes.customDocument;
             }
-            if (documentSyncStatus==='sync') {
-                return [
+
+			if (documentSyncStatus==='sync') {
+
+				return [
                     !!this.props.isSelected && (
                         <InspectorControls key='inspector'>
+							<PanelBody title={ __('Document settings', 'complianz-gdpr' ) }initialOpen={ true } >
+								<PanelRow>
                             <SelectControl onChange={this.onChangeSelectDocument}
                                            value={this.props.attributes.selectedDocument}
                                            label={__('Select a document', 'complianz-gdpr')}
                                            options={options}/>
-
+								</PanelRow><PanelRow>
                             <SelectControl onChange={this.onChangeSelectDocumentSyncStatus}
                                            value={this.props.attributes.documentSyncStatus}
                                            label={__('Document sync status', 'complianz-gdpr')}
                                            options={document_status_options}/>
+								</PanelRow>
+							</PanelBody>
 
                         </InspectorControls>
                     ),
@@ -200,16 +212,20 @@ const iconEl =
                 return [
                     !!this.props.isSelected && (
                         <InspectorControls key='inspector'>
+				<PanelBody title={ __('Document settings', 'complianz-gdpr' ) }initialOpen={ true } >
+				<PanelRow>
                             <SelectControl onChange={this.onChangeSelectDocument}
                                            value={this.props.attributes.selectedDocument}
                                            label={__('Select a document', 'complianz-gdpr')}
                                            options={options}/>
+				</PanelRow><PanelRow>
 
                             <SelectControl onChange={this.onChangeSelectDocumentSyncStatus}
                                            value={this.props.attributes.documentSyncStatus}
                                            label={__('Document sync status', 'complianz-gdpr')}
                                            options={document_status_options}/>
-
+								</PanelRow>
+							</PanelBody>
                         </InspectorControls>
                     ),
 
@@ -245,10 +261,15 @@ const iconEl =
         title: __('Legal document - Complianz', 'complianz-gdpr'), // Block title.
         icon: iconEl, // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
         category: 'widgets',
+		example: {
+			attributes: {
+				'preview' : true,
+			},
+		},
         keywords: [
-            __('privacy statement', 'complianz-gdpr'),
-            __('cookie statement', 'complianz-gdpr'),
-            __('disclaimer', 'complianz-gdpr'),
+            __('Privacy Statement', 'complianz-gdpr'),
+            __('Cookie Policy', 'complianz-gdpr'),
+            __('Disclaimer', 'complianz-gdpr'),
         ],
         //className: 'cmplz-document',
         attributes: {
@@ -278,6 +299,10 @@ const iconEl =
             },
             document: {
                 type: 'array',
+            },
+			preview: {
+                type: 'boolean',
+                default: false,
             }
         },
         /**

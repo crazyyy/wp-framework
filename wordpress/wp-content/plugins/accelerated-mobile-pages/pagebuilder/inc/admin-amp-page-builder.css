@@ -668,15 +668,16 @@ position: fixed;
   display: table-cell;
   vertical-align: middle;
 }
-.modal-header{ 
+#amp-page-builder .modal-header{ 
     background: #fff;
     width: 100%;
-    z-index: 99;
+    z-index: 100;
     border-bottom: 1px solid #D8D8D8;
     position: relative;
     padding-left: 20px;   
+    padding-top: 0px;
 }
-.modal-container {position: fixed;overflow: hidden;top:30px;left: 30px;right: 30px;bottom: 30px;z-index: 160000;overflow: hidden;min-height: 300px;box-shadow: 0 5px 15px rgba(0,0,0,.7);background: #fcfcfc;-webkit-font-smoothing: subpixel-antialiased;}
+#amp-page-builder .modal-container {position: fixed;overflow: hidden;top:30px;left: 30px;right: 30px;bottom: 30px;z-index: 160000;overflow: hidden;min-height: 300px;box-shadow: 0 5px 15px rgba(0,0,0,.7);background: #fcfcfc;-webkit-font-smoothing: subpixel-antialiased;max-width: 1200px;}
 
 .modal-header h3 {
     font-weight: normal;
@@ -1259,7 +1260,7 @@ a.amppb_accordion__panel:hover {
 /*** Backend CSS ***/
 .amp-accordion-head .amp-accordion-label{
     display:none;
-    top: 17px;
+    top: 24px;
     right: 0;
     position: absolute;
     right: 79px;
@@ -1291,6 +1292,7 @@ a.amppb_accordion__panel:hover {
 .amp-repeat-active .amp-accordion-content{
     padding: 0px 10px;
     border: 5px solid #23282d;
+    border-width: 0px 5px 5px 5px;
 }
 
 /*** RTL CSS ***/
@@ -1417,4 +1419,22 @@ body .modal-footer .del-btn-modal{
     position: relative;
     top: -27px;
     right: -18px;
+}
+.amppb-repeaterfields-handle {
+    position: relative;
+    top: 7px;
+    left: -5px;
+    color: #23282d;
+    cursor: grab;
+    opacity: 0;
+}
+..amp-repeat-field.amp-repeat-active .amppb-repeaterfields-handle {
+    color: #fcfcfc;
+}
+.amp-accordion-head.amppb_accordion__panel:hover .amppb-repeaterfields-handle {
+    opacity: 1;
+    transition: 0.2s;
+}   
+span.select2.select2-container.select2-container--default {
+    max-width: 95%;
 }

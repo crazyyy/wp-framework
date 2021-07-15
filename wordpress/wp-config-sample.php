@@ -13,7 +13,7 @@
  * * Префикс таблиц базы данных
  * * ABSPATH
  *
- * @link https://codex.wordpress.org/Editing_wp-config.php
+ * @link https://ru.wordpress.org/support/article/editing-wp-config-php/
  *
  * @package WordPress
  */
@@ -72,9 +72,9 @@ $table_prefix = 'wp_';
  * Разработчикам плагинов и тем настоятельно рекомендуется использовать WP_DEBUG
  * в своём рабочем окружении.
  *
- * Информацию о других отладочных константах можно найти в Кодексе.
+ * Информацию о других отладочных константах можно найти в документации.
  *
- * @link https://codex.wordpress.org/Debugging_in_WordPress
+ * @link https://ru.wordpress.org/support/article/debugging-in-wordpress/
  */
 define( 'WP_DEBUG', false );
 
@@ -82,8 +82,8 @@ define( 'WP_DEBUG', false );
 
 /** Абсолютный путь к директории WordPress. */
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+	define( 'ABSPATH', __DIR__ . '/' );
 }
 
 /** Инициализирует переменные WordPress и подключает файлы. */
-require_once( ABSPATH . 'wp-settings.php' );
+require_once ABSPATH . 'wp-settings.php';

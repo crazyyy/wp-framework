@@ -20,8 +20,6 @@ class UpdraftCentral_UpdraftVault_Commands extends UpdraftCentral_Commands {
 	*						  otherwise, it will contain the error details/info of the generated error.
 	*/
 	public function get_credentials() {
-		global $updraftplus;
-
 		$storage_objects_and_ids = UpdraftPlus_Storage_Methods_Interface::get_storage_objects_and_ids(array('updraftvault'));
 
 		// UpdraftVault isn't expected to have multiple options currently, so we just grab the first instance_id in the settings and use the options from that. If in future we do decide we want to make UpdraftVault multiple options then we will need to update this part of the code e.g a instance_id needs to be passed in and used by the following lines of code.

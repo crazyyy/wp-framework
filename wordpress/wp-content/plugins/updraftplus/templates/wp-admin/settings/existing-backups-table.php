@@ -21,7 +21,13 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 	</thead>
 	<tbody>
 		<?php
-
+		
+		if (!defined('UPDRAFTCENTRAL_COMMAND') && $backup_count <= count($backup_history) - 1) {
+			$backup_history = array_slice($backup_history, 0, $backup_count, true);
+		} else {
+			$show_paging_actions = true;
+		}
+		
 		foreach ($backup_history as $key => $backup) {
 
 			$remote_sent = !empty($backup['service']) && ((is_array($backup['service']) && in_array('remotesend', $backup['service'])) || 'remotesend' === $backup['service']);
@@ -49,7 +55,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 
 			$log_button = $updraftplus_admin->log_button($backup);
 
-			// Remote backups with no log result in useless empty rows. However, not showing anything messes up the "Existing Backups (14)" display, until we tweak that code to count differently
+			// Remote backups with no log result in useless empty rows. However, not showing anything messes up the "Existing backups (14)" display, until we tweak that code to count differently
 			// if ($remote_sent && !$log_button) continue;
 
 			?>
@@ -59,7 +65,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 					<label class="screen-reader-text"><?php _e('Select All'); ?></label><input type="checkbox">
 				</td>
 				<?php endif; ?>
-				<td class="updraft_existingbackup_date " data-rawbackup="<?php echo $rawbackup;?>" data-label="<?php _e('Backup date', 'updraftplus');?>">
+				<td class="updraft_existingbackup_date " data-nonce="<?php echo wp_create_nonce("updraftplus-credentialtest-nonce"); ?>" data-timestamp="<?php echo $key; ?>" data-label="<?php _e('Backup date', 'updraftplus');?>">
 					<div tabindex="0" class="backup_date_label">
 						<?php
 							echo $date_label;
@@ -146,6 +152,15 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 		<?php } ?>	
 
 	</tbody>
+	<?php if (!$show_paging_actions) : ?>
+	<tfoot>
+		<tr class="updraft_existing_backups_page_actions">
+			<td colspan="4" style="text-align: center;">
+				<a class="updraft-load-more-backups"><?php _e('Show more backups...', 'updraftplus');?></a> | <a class="updraft-load-all-backups"><?php _e('Show all backups...', 'updraftplus');?></a>
+			</td>
+		</tr>
+	</tfoot>
+	<?php endif; ?>
 </table>
 <?php if (!defined('UPDRAFTCENTRAL_COMMAND')) : ?>
 <div id="ud_massactions">

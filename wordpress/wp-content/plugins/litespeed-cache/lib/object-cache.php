@@ -1,13 +1,10 @@
 <?php
+defined( 'WPINC' ) || exit ;
 /**
  * LiteSpeed Object Cache
  *
  * @since  1.8
  */
-
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
 
 ! defined( 'LSCWP_OBJECT_CACHE' ) && define( 'LSCWP_OBJECT_CACHE', true ) ;
 
@@ -23,11 +20,10 @@ if ( ! file_exists( $lscwp_dir . 'litespeed-cache.php' ) ) {
 }
 
 $data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
-$lib_file = $lscwp_dir . 'inc/object.lib.php' ;
-$lib_file2 = $lscwp_dir . 'src/object.lib.php' ;
+$lib_file = $lscwp_dir . 'src/object.lib.php' ;
 
 // Can't find LSCWP location, terminate object cache process
-if ( ! $lscwp_dir || ! file_exists( $data_file ) || ( ! file_exists( $lib_file ) && ! file_exists( $lib_file2 ) ) ) {
+if ( ! $lscwp_dir || ! file_exists( $data_file ) || ( ! file_exists( $lib_file ) ) ) {
 	if ( ! is_admin() ) { // Bypass object cache for frontend
 		require_once ABSPATH . WPINC . '/cache.php' ;
 	}
@@ -41,8 +37,5 @@ else {
 	// Init object cache & LSCWP
 	if ( file_exists( $lib_file ) ) {
 		require_once $lib_file ;
-	}
-	elseif ( file_exists( $lib_file2 ) ) {
-		require_once $lib_file2 ;
 	}
 }

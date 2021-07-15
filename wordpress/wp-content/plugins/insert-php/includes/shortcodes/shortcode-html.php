@@ -50,9 +50,7 @@ class WINP_SnippetShortcodeHtml extends WINP_SnippetShortcode {
 			return;
 		}
 
-		$code = do_shortcode( $snippet_content );
-
-		echo( $code );
+		echo( $snippet_content );
 	}
 
 }

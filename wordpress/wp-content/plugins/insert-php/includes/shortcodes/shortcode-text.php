@@ -42,8 +42,13 @@ class WINP_SnippetShortcodeText extends WINP_SnippetShortcode {
 		if ( ! $is_activate || $snippet_scope != 'shortcode' || ! $is_condition ) {
 			return;
 		}
-		
-		echo str_replace( '{{SNIPPET_CONTENT}}', $content, do_shortcode( $snippet->post_content ) );
+
+		$post_content = $snippet->post_content;
+		if ( WINP_Plugin::app()->getOption( 'execute_shortcode' ) ) {
+			$post_content = do_shortcode( $post_content );
+		}
+
+		echo str_replace( '{{SNIPPET_CONTENT}}', $content, $post_content );
 	}
 	
 }

@@ -1,10 +1,15 @@
 <?php #comp-page builds: premium
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Updates for altering the table used to store statistics data.
  * Adds new columns and renames existing ones in order to add support for the new social buttons.
  */
-class WINPUpdate020200 extends Wbcr_Factory422_Update {
+class WINPUpdate020200 extends Wbcr_Factory443_Update {
 
 	public function install() {
 		if ( is_multisite() && $this->plugin->isNetworkActive() ) {

@@ -18,6 +18,13 @@ class WPSEO_Addon_Manager {
 	const SITE_INFORMATION_TRANSIENT = 'wpseo_site_information';
 
 	/**
+	 * Holds the name of the transient.
+	 *
+	 * @var string
+	 */
+	const SITE_INFORMATION_TRANSIENT_QUICK = 'wpseo_site_information_quick';
+
+	/**
 	 * Holds the slug for YoastSEO free.
 	 *
 	 * @var string
@@ -75,7 +82,7 @@ class WPSEO_Addon_Manager {
 	/**
 	 * Holds the site information data.
 	 *
-	 * @var object
+	 * @var stdClass
 	 */
 	private $site_information;
 
@@ -87,6 +94,7 @@ class WPSEO_Addon_Manager {
 	 * @return void
 	 */
 	public function register_hooks() {
+		add_action( 'admin_init', [ $this, 'validate_addons' ], 15 );
 		add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'check_for_updates' ] );
 		add_filter( 'plugins_api', [ $this, 'get_plugin_information' ], 10, 3 );
 	}
@@ -98,6 +106,40 @@ class WPSEO_Addon_Manager {
 	 */
 	public function get_subscriptions() {
 		return $this->get_site_information()->subscriptions;
+	}
+
+	/**
+	 * Provides a list of addon filenames.
+	 *
+	 * @return string[] List of addon filenames with their slugs.
+	 */
+	public function get_addon_filenames() {
+		return self::$addons;
+	}
+
+	/**
+	 * Finds the plugin file.
+	 *
+	 * @param string $plugin_slug The plugin slug to search.
+	 *
+	 * @return boolean|string Plugin file when installed, False when plugin isn't installed.
+	 **/
+	public function get_plugin_file( $plugin_slug ) {
+		$plugins            = $this->get_plugins();
+		$plugin_files       = array_keys( $plugins );
+		$target_plugin_file = array_search( $plugin_slug, $this->get_addon_filenames(), true );
+
+		if ( ! $target_plugin_file ) {
+			return false;
+		}
+
+		foreach ( $plugin_files as $plugin_file ) {
+			if ( strpos( $plugin_file, $target_plugin_file ) !== false ) {
+				return $plugin_file;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -174,6 +216,32 @@ class WPSEO_Addon_Manager {
 	}
 
 	/**
+	 * Retrieves information from MyYoast about which addons are connected to the current site.
+	 *
+	 * @return stdClass The list of addons activated for this site.
+	 */
+	public function get_myyoast_site_information() {
+		if ( $this->site_information === null ) {
+			$this->site_information = $this->get_site_information_transient();
+		}
+
+		if ( $this->site_information ) {
+			return $this->site_information;
+		}
+
+		$this->site_information = $this->request_current_sites();
+		if ( $this->site_information ) {
+			$this->site_information = $this->map_site_information( $this->site_information );
+
+			$this->set_site_information_transient( $this->site_information );
+
+			return $this->site_information;
+		}
+
+		return $this->get_site_information_default();
+	}
+
+	/**
 	 * Checks if the subscription for the given slug is valid.
 	 *
 	 * @param string $slug The plugin slug to retrieve.
@@ -214,9 +282,116 @@ class WPSEO_Addon_Manager {
 			if ( version_compare( $installed_plugin['Version'], $subscription->product->version, '<' ) ) {
 				$data->response[ $plugin_file ] = $this->convert_subscription_to_plugin( $subscription );
 			}
+			else {
+				// Still convert subscription when no updates is available.
+				$data->no_update[ $plugin_file ] = $this->convert_subscription_to_plugin( $subscription );
+			}
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Checks if there are any installed addons.
+	 *
+	 * @return bool True when there are installed Yoast addons.
+	 */
+	public function has_installed_addons() {
+		$installed_addons = $this->get_installed_addons();
+
+		return ! empty( $installed_addons );
+	}
+
+	/**
+	 * Checks if the plugin is installed and activated in WordPress.
+	 *
+	 * @param string $slug The class' slug.
+	 *
+	 * @return bool True when installed and activated.
+	 */
+	public function is_installed( $slug ) {
+		$slug_to_class_map = [
+			static::PREMIUM_SLUG     => 'WPSEO_Premium',
+			static::NEWS_SLUG        => 'WPSEO_News',
+			static::WOOCOMMERCE_SLUG => 'Yoast_WooCommerce_SEO',
+			static::VIDEO_SLUG       => 'WPSEO_Video_Sitemap',
+			static::LOCAL_SLUG       => 'WPSEO_Local_Core',
+		];
+
+		if ( ! isset( $slug_to_class_map[ $slug ] ) ) {
+			return false;
+		}
+
+		return class_exists( $slug_to_class_map[ $slug ] );
+	}
+
+	/**
+	 * Validates the addons and show a notice for the ones that are invalid.
+	 */
+	public function validate_addons() {
+		$notification_center = Yoast_Notification_Center::get();
+
+		if ( $notification_center === null ) {
+			return;
+		}
+
+		$addons = [
+			'Yoast SEO Premium'     => static::PREMIUM_SLUG,
+			'News SEO'              => static::NEWS_SLUG,
+			'Yoast WooCommerce SEO' => static::WOOCOMMERCE_SLUG,
+			'Video SEO'             => static::VIDEO_SLUG,
+			'Local SEO'             => static::LOCAL_SLUG,
+		];
+
+		foreach ( $addons as $product_name => $slug ) {
+			$notification = $this->create_notification( $product_name );
+
+			// Add a notification when the installed plugin isn't activated in My Yoast.
+			if ( $this->is_installed( $slug ) && ! $this->has_valid_subscription( $slug ) ) {
+				$notification_center->add_notification( $notification );
+
+				continue;
+			}
+
+			$notification_center->remove_notification( $notification );
+		}
+	}
+
+	/**
+	 * Removes the site information transients.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
+	public function remove_site_information_transients() {
+		delete_transient( self::SITE_INFORMATION_TRANSIENT );
+		delete_transient( self::SITE_INFORMATION_TRANSIENT_QUICK );
+	}
+
+	/**
+	 * Creates an instance of Yoast_Notification.
+	 *
+	 * @param string $product_name The product to create the notification for.
+	 *
+	 * @return Yoast_Notification The created notification.
+	 */
+	protected function create_notification( $product_name ) {
+		$notification_options = [
+			'type'         => Yoast_Notification::ERROR,
+			'id'           => 'wpseo-dismiss-' . sanitize_title_with_dashes( $product_name, null, 'save' ),
+			'capabilities' => 'wpseo_manage_options',
+		];
+
+		return new Yoast_Notification(
+			sprintf(
+			/* translators: %1$s expands to the product name. %2$s expands to a link to My Yoast  */
+				__( 'You are not receiving updates or support! Fix this problem by adding this site and enabling %1$s for it in %2$s.', 'wordpress-seo' ),
+				$product_name,
+				'<a href="' . WPSEO_Shortlinker::get( 'https://yoa.st/13j' ) . '" target="_blank">My Yoast</a>'
+			),
+			$notification_options
+		);
 	}
 
 	/**
@@ -238,20 +413,91 @@ class WPSEO_Addon_Manager {
 	 * @return stdClass The converted subscription.
 	 */
 	protected function convert_subscription_to_plugin( $subscription ) {
+		// We need to replace h2's and h3's with h4's because the styling expects that.
+		$changelog = str_replace( '</h2', '</h4', str_replace( '<h2', '<h4', $subscription->product->changelog ) );
+		$changelog = str_replace( '</h3', '</h4', str_replace( '<h3', '<h4', $changelog ) );
+
 		return (object) [
-			'new_version'   => $subscription->product->version,
-			'name'          => $subscription->product->name,
-			'slug'          => $subscription->product->slug,
-			'url'           => $subscription->product->store_url,
-			'last_update'   => $subscription->product->last_updated,
-			'homepage'      => $subscription->product->store_url,
-			'download_link' => $subscription->product->download,
-			'package'       => $subscription->product->download,
-			'sections'      =>
-				[
-					'changelog' => $subscription->product->changelog,
-				],
+			'new_version'      => $subscription->product->version,
+			'name'             => $subscription->product->name,
+			'slug'             => $subscription->product->slug,
+			'url'              => $subscription->product->store_url,
+			'last_update'      => $subscription->product->last_updated,
+			'homepage'         => $subscription->product->store_url,
+			'download_link'    => $subscription->product->download,
+			'package'          => $subscription->product->download,
+			'sections'         => [
+				'changelog' => $changelog,
+				'support'   => $this->get_support_section(),
+			],
+			'icons'            => [
+				'2x' => $this->get_icon( $subscription->product->slug ),
+			],
+			'update_supported' => true,
+			'banners'          => $this->get_banners( $subscription->product->slug ),
+			'tested'           => YOAST_SEO_WP_TESTED,
+			'requires'         => YOAST_SEO_WP_REQUIRED,
+			'requires_php'     => YOAST_SEO_PHP_REQUIRED,
 		];
+	}
+
+	/**
+	 * Returns the plugin's icon URL.
+	 *
+	 * @param string $slug The plugin slug.
+	 *
+	 * @return string The icon URL for this plugin.
+	 */
+	protected function get_icon( $slug ) {
+		switch ( $slug ) {
+			case self::LOCAL_SLUG:
+				return 'https://yoa.st/local-seo-icon';
+			case self::NEWS_SLUG:
+				return 'https://yoa.st/news-seo-icon';
+			case self::PREMIUM_SLUG:
+				return 'https://yoa.st/yoast-seo-icon';
+			case self::VIDEO_SLUG:
+				return 'https://yoa.st/video-seo-icon';
+			case self::WOOCOMMERCE_SLUG:
+				return 'https://yoa.st/woo-seo-icon';
+		}
+	}
+
+	/**
+	 * Return an array of plugin banner URLs.
+	 *
+	 * @param string $slug The plugin slug.
+	 *
+	 * @return string[]
+	 */
+	protected function get_banners( $slug ) {
+		switch ( $slug ) {
+			case self::LOCAL_SLUG:
+				return [
+					'high' => 'https://yoa.st/yoast-seo-banner-local',
+					'low'  => 'https://yoa.st/yoast-seo-banner-low-local',
+				];
+			case self::NEWS_SLUG:
+				return [
+					'high' => 'https://yoa.st/yoast-seo-banner-news',
+					'low'  => 'https://yoa.st/yoast-seo-banner-low-news',
+				];
+			case self::PREMIUM_SLUG:
+				return [
+					'high' => 'https://yoa.st/yoast-seo-banner-premium',
+					'low'  => 'https://yoa.st/yoast-seo-banner-low-premium',
+				];
+			case self::VIDEO_SLUG:
+				return [
+					'high' => 'https://yoa.st/yoast-seo-banner-video',
+					'low'  => 'https://yoa.st/yoast-seo-banner-low-video',
+				];
+			case self::WOOCOMMERCE_SLUG:
+				return [
+					'high' => 'https://yoa.st/yoast-seo-banner-woo',
+					'low'  => 'https://yoa.st/yoast-seo-banner-low-woo',
+				];
+		}
 	}
 
 	/**
@@ -276,7 +522,7 @@ class WPSEO_Addon_Manager {
 		$addons = self::$addons;
 
 		// Yoast SEO Free isn't an addon, but we needed it in Premium to fetch translations.
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
+		if ( YoastSEO()->helpers->product->is_premium() ) {
 			$addons['wp-seo.php'] = self::FREE_SLUG;
 		}
 
@@ -295,7 +541,7 @@ class WPSEO_Addon_Manager {
 	 * @return array The installed plugins.
 	 */
 	protected function get_installed_addons() {
-		return $this->filter_by_key( $this->get_plugins(), [ $this, 'is_yoast_addon' ] );
+		return array_filter( $this->get_plugins(), [ $this, 'is_yoast_addon' ], ARRAY_FILTER_USE_KEY );
 	}
 
 	/**
@@ -304,7 +550,7 @@ class WPSEO_Addon_Manager {
 	 * @return array The active addons.
 	 */
 	protected function get_active_addons() {
-		return $this->filter_by_key( $this->get_installed_addons(), [ $this, 'is_plugin_active' ] );
+		return array_filter( $this->get_installed_addons(), [ $this, 'is_plugin_active' ], ARRAY_FILTER_USE_KEY );
 	}
 
 	/**
@@ -335,15 +581,16 @@ class WPSEO_Addon_Manager {
 
 		// Force re-check on license & dashboard pages.
 		$current_page = $this->get_current_page();
+
 		// Check whether the licenses are valid or whether we need to show notifications.
-		$exclude_cache = ( $current_page === 'wpseo_licenses' || $current_page === 'wpseo_dashboard' );
+		$quick = ( $current_page === 'wpseo_licenses' || $current_page === 'wpseo_dashboard' );
 
 		// Also do a fresh request on Plugins & Core Update pages.
-		$exclude_cache = $exclude_cache || $pagenow === 'plugins.php';
-		$exclude_cache = $exclude_cache || $pagenow === 'update-core.php';
+		$quick = $quick || $pagenow === 'plugins.php';
+		$quick = $quick || $pagenow === 'update-core.php';
 
-		if ( $exclude_cache ) {
-			return false;
+		if ( $quick ) {
+			return get_transient( self::SITE_INFORMATION_TRANSIENT_QUICK );
 		}
 
 		return get_transient( self::SITE_INFORMATION_TRANSIENT );
@@ -371,6 +618,7 @@ class WPSEO_Addon_Manager {
 	 */
 	protected function set_site_information_transient( $site_information ) {
 		set_transient( self::SITE_INFORMATION_TRANSIENT, $site_information, DAY_IN_SECONDS );
+		set_transient( self::SITE_INFORMATION_TRANSIENT_QUICK, $site_information, 60 );
 	}
 
 	/**
@@ -381,6 +629,10 @@ class WPSEO_Addon_Manager {
 	 * @return array The plugins.
 	 */
 	protected function get_plugins() {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		return get_plugins();
 	}
 
@@ -412,46 +664,11 @@ class WPSEO_Addon_Manager {
 	}
 
 	/**
-	 * Checks if there are any installed addons.
-	 *
-	 * @return bool True when there are installed Yoast addons.
-	 */
-	protected function has_installed_addons() {
-		$installed_addons = $this->get_installed_addons();
-
-		return ! empty( $installed_addons );
-	}
-
-	/**
-	 * Filters the given array by its keys.
-	 *
-	 * This method is temporary. When WordPress has minimal PHP 5.6 support we can change this to:
-	 *
-	 * array_filter( $array_to_filter, $filter, ARRAY_FILTER_USE_KEY )
-	 *
-	 * @codeCoverageIgnore
-	 *
-	 * @param array    $array_to_filter The array to filter.
-	 * @param callable $callback        The filter callback.
-	 *
-	 * @return array The filtered array,
-	 */
-	private function filter_by_key( $array_to_filter, $callback ) {
-		$keys_to_filter = array_filter( array_keys( $array_to_filter ), $callback );
-		$filtered_array = [];
-		foreach ( $keys_to_filter as $filtered_key ) {
-			$filtered_array[ $filtered_key ] = $array_to_filter[ $filtered_key ];
-		}
-
-		return $filtered_array;
-	}
-
-	/**
 	 * Maps the plugin API response.
 	 *
 	 * @param object $site_information Site information as received from the API.
 	 *
-	 * @return object Mapped site information.
+	 * @return stdClass Mapped site information.
 	 */
 	protected function map_site_information( $site_information ) {
 		return (object) [
@@ -465,14 +682,14 @@ class WPSEO_Addon_Manager {
 	 *
 	 * @param object $subscription Subscription information as received from the API.
 	 *
-	 * @return object Mapped subscription.
+	 * @return stdClass Mapped subscription.
 	 */
 	protected function map_subscription( $subscription ) {
-		// @codingStandardsIgnoreStart
-		return (object) array(
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Not our properties.
+		return (object) [
 			'renewal_url' => $subscription->renewalUrl,
 			'expiry_date' => $subscription->expiryDate,
-			'product'     => (object) array(
+			'product'     => (object) [
 				'version'      => $subscription->product->version,
 				'name'         => $subscription->product->name,
 				'slug'         => $subscription->product->slug,
@@ -481,9 +698,9 @@ class WPSEO_Addon_Manager {
 				// Ternary operator is necessary because download can be undefined.
 				'download'     => isset( $subscription->product->download ) ? $subscription->product->download : null,
 				'changelog'    => $subscription->product->changelog,
-			),
-		);
-		// @codingStandardsIgnoreStop
+			],
+		];
+		// phpcs:enable
 	}
 
 	/**
@@ -496,23 +713,22 @@ class WPSEO_Addon_Manager {
 			return $this->get_site_information_default();
 		}
 
-		if ( $this->site_information === null ) {
-			$this->site_information = $this->get_site_information_transient();
-		}
+		return $this->get_myyoast_site_information();
+	}
 
-		if ( $this->site_information ) {
-			return $this->site_information;
-		}
-
-		$this->site_information = $this->request_current_sites();
-		if ( $this->site_information ) {
-			$this->site_information = $this->map_site_information( $this->site_information );
-
-			$this->set_site_information_transient( $this->site_information );
-
-			return $this->site_information;
-		}
-
-		return $this->get_site_information_default();
+	/**
+	 * Retrieves the contents for the support section.
+	 *
+	 * @return string The support section content.
+	 */
+	protected function get_support_section() {
+		return '<h4>' . __( 'Need support?', 'wordpress-seo' ) . '</h4>'
+			. '<p>'
+			/* translators: 1: expands to <a> that refers to the help page, 2: </a> closing tag. */
+			. sprintf( __( 'You can probably find an answer to your question in our %1$shelp center%2$s.', 'wordpress-seo' ), '<a href="https://yoast.com/help/">', '</a>' )
+			. ' '
+			/* translators: %s expands to a mailto support link. */
+			. sprintf( __( 'If you still need support and have an active subscription for this product, please email %s.', 'wordpress-seo' ), '<a href="mailto:support@yoast.com">support@yoast.com</a>' )
+			. '</p>';
 	}
 }

@@ -5,11 +5,11 @@
 	<h3 class="wpo-first-child"><?php _e('Gzip compression settings', 'wp-optimize');?></h3>
 	<p>
 		<span class="dashicons dashicons-info"></span> <span><?php _e("This option improves the performance of your website and decreases its loading time. When a visitor makes a request, the server compresses the requested resource before sending it leading to smaller file sizes and faster loading.", 'wp-optimize'); ?>
-			<?php echo sprintf('<a href="%s" target="_blank">%s</a>', $info_link, __('Follow this link to get more information about Gzip compression.', 'wp_optimize')); ?>
+			<?php printf('<a href="%s" target="_blank">%s</a>', $info_link, __('Follow this link to get more information about Gzip compression.', 'wp_optimize')); ?>
 		</span>
 	</p>
 
-	<?php if ($wpo_gzip_compression_enabled && !is_wp_error($wpo_gzip_compression_enabled) && false == $wpo_gzip_compression_settings_added) : ?>
+	<?php if ($wpo_gzip_compression_enabled && !is_wp_error($wpo_gzip_compression_enabled) && !$wpo_gzip_compression_enabled_by_wpo) : ?>
 		<div class="wpo-fieldgroup wpo-gzip-already-enabled">
 			<p><span class="dashicons dashicons-yes"></span> 
 			<?php if ('brotli' == $wpo_gzip_headers_information['compression']) { ?>
@@ -17,7 +17,7 @@
 			<?php } else { ?>
 				<?php _e('Gzip compression is already enabled.', 'wp-optimize'); ?>
 			<?php } ?>
-			<?php if ('cloudflare' == $wpo_gzip_headers_information['server']) { ?>
+			<?php if ($is_cloudflare_site) { ?>
 				<em><?php _e('It seems to be handled by Cloudflare.', 'wp-optimize'); ?></em>
 			<?php } ?>
 
@@ -50,7 +50,7 @@
 					</form>
 				<?php
 				} else {
-					echo sprintf('<a href="%s" target="_blank">%s</a>', $faq_link, __('Follow this link to read the article about how to enable Gzip compression with your server software.', 'wp_optimize'));
+					printf('<a href="%s" target="_blank">%s</a>', $faq_link, __('Follow this link to read the article about how to enable Gzip compression with your server software.', 'wp_optimize'));
 				}
 			}
 			?>

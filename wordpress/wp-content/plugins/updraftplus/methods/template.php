@@ -26,9 +26,9 @@ class UpdraftPlus_BackupModule_template extends UpdraftPlus_BackupModule {
 	 * @param  Array $backup_array Array of files (basenames) to sent to remote storage
 	 * @return Mixed - (boolean)false to indicate failure; otherwise, something to be passed back when deleting files
 	 */
-	public function backup($backup_array) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function backup($backup_array) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is a template file and can be ignored
 
-		global $updraftplus;
+		global $updraftplus;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is a template file and can be ignored
 
 		// foreach ($backup_array as $file) {
 
@@ -48,7 +48,7 @@ class UpdraftPlus_BackupModule_template extends UpdraftPlus_BackupModule {
 	 *
 	 * @return Array - each file is represented by an array with entries 'name' and (optional) 'size'
 	 */
-	public function listfiles($match = 'backup_') {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function listfiles($match = 'backup_') {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is a template file and can be ignored
 		// This function needs to return an array of arrays. The keys for the sub-arrays are name (a path-less filename, i.e. a basename), (optional)size, and should be a list of matching files from the storage backend. A WP_Error object can also be returned; and the error code should be no_settings if that is relevant.
 		return array();
 	}
@@ -61,9 +61,9 @@ class UpdraftPlus_BackupModule_template extends UpdraftPlus_BackupModule {
 	 * @param array  $sizeinfo Size information
 	 * @return Boolean - whether the operation succeeded or not
 	 */
-	public function delete($files, $data = false, $sizeinfo = array()) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function delete($files, $data = false, $sizeinfo = array()) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is a template file and can be ignored
 
-		global $updraftplus;
+		global $updraftplus;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is a template file and can be ignored
 
 		if (is_string($files)) $files = array($files);
 
@@ -73,11 +73,11 @@ class UpdraftPlus_BackupModule_template extends UpdraftPlus_BackupModule {
 	 * download method: takes a file name (base name), and brings it back from the cloud storage into Updraft's directory
 	 * You can register errors with $updraftplus->log("my error message", 'error')
 	 *
-	 * @param string $file The specific file to be downloaded from the Cloud Storage
+	 * @param String $file The specific file to be downloaded from the Cloud Storage
 	 */
-	public function download($file) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function download($file) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is a template file and can be ignored
 
-		global $updraftplus;
+		global $updraftplus;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is a template file and can be ignored
 
 	}
 

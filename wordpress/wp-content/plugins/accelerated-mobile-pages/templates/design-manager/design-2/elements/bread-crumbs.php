@@ -16,7 +16,9 @@ if ( ( (is_single() && 1 == ampforwp_get_setting('ampforwp-bread-crumb')) || (is
     $breadcrums_id      = 'breadcrumbs';
     $breadcrums_class   = 'breadcrumbs';
     $home_title         = ampforwp_translation($redux_builder_amp['amp-translator-breadcrumbs-homepage-text'] , 'Homepage' );
-      
+    if (function_exists('pll__')) {
+        $home_title = pll__(esc_html__( ampforwp_get_setting('amp-translator-breadcrumbs-homepage-text'), 'accelerated-mobile-pages'));
+    }  
     // If you have any custom post types with custom taxonomies, put the taxonomy name below (e.g. product_cat)
     $custom_taxonomy    = 'product_cat';
        
@@ -115,7 +117,7 @@ if ( ( (is_single() && 1 == ampforwp_get_setting('ampforwp-bread-crumb')) || (is
                     // Get parent any categories and create array
                     $get_cat_parents = rtrim(get_category_parents($last_category->term_id, false, '>'),'>');
                     if(class_exists( 'WPSEO_Options' )){
-                        $primary_cateogory = get_post_meta(ampforwp_get_the_ID(), '_yoast_wpseo_primary_category', true);
+                        $primary_cateogory = (string) get_post_meta(ampforwp_get_the_ID(), '_yoast_wpseo_primary_category', true);
                     if(isset($primary_cateogory) && $primary_cateogory!=""){
                         $pcname = get_the_category_by_ID($primary_cateogory);
                         $category_name = $pcname;
@@ -128,7 +130,8 @@ if ( ( (is_single() && 1 == ampforwp_get_setting('ampforwp-bread-crumb')) || (is
                     // Loop through parent categories and store in variable $cat_display
                     $cat_display = '';
                     foreach($cat_parents as $parents) {
-                        $cat_id = get_cat_ID( $parents);
+                        $categories = get_the_category();
+                        $cat_id = $categories[0]->cat_ID;
                         $cat_link = get_category_link($cat_id);
                         if(ampforwp_get_setting('ampforwp-archive-support-cat') == true && ampforwp_get_setting('ampforwp-archive-support') == true){
                             $cat_link = ampforwp_url_controller( $cat_link );

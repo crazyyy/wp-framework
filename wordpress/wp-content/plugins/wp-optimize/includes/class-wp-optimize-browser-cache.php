@@ -79,6 +79,20 @@ class WP_Optimize_Browser_Cache {
 	}
 
 	/**
+	 * Check if browser chache option is set to true then add section with gzip settings into .htaccess (used when plugin being activated).
+	 */
+	public function restore() {
+		$expire_days = $this->_options->get_option('browser_cache_expire_days', '');
+		$expire_hours = $this->_options->get_option('browser_cache_expire_hours', '');
+
+		$expiry_time = $this->prepare_interval($expire_days, $expire_hours);
+
+		$enabled = ('' == $expiry_time) ? false : true;
+
+		if ($enabled && $this->_htaccess->is_writable()) $this->enable($expiry_time);
+	}
+
+	/**
 	 * Check if section with browser cache settings already exists.
 	 */
 	public function is_browser_cache_section_exists() {
@@ -187,8 +201,8 @@ class WP_Optimize_Browser_Cache {
 	 */
 	private function prepare_interval($days, $hours) {
 
-		$days = floor($days);
-		$hours = floor($hours);
+		$days = is_numeric($days) ? floor($days) : 0;
+		$hours = is_numeric($hours) ? floor($hours) : 0;
 
 		if (0 == $days && 0 == $hours) {
 			return '';

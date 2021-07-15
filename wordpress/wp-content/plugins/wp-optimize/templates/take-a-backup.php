@@ -51,23 +51,20 @@ if (true === $check_version) {
 	}
 }
 
-if (!is_int($wpo_take_backup_checkbox_id)) {
-	$wpo_take_backup_checkbox_id = 0;
-} else {
-	$wpo_take_backup_checkbox_id++;
-}
-
-$wpo_take_backup_checkbox_dom_id = 'enable-auto-backup'.($wpo_take_backup_checkbox_id > 0 ? '-'.$wpo_take_backup_checkbox_id : '');
-
 $label_text = (isset($label) && '' !== $label) ? $label : __('Take a backup with UpdraftPlus before doing this', 'wp-optimize');
 
 if (!isset($default_checkbox_value)) {
 	$default_checkbox_value = 'false';
 }
+
+$option_value = $options->get_option($checkbox_name, $default_checkbox_value);
+
+$is_checked = ('true' == $option_value);
+
 ?>
 <p class="wpo-take-a-backup">
-	<input class="enable-auto-backup" name="<?php echo $wpo_take_backup_checkbox_dom_id; ?>" id="<?php echo $wpo_take_backup_checkbox_dom_id; ?>" type="checkbox" value="true" <?php echo ($options->get_option($wpo_take_backup_checkbox_dom_id, $default_checkbox_value) == 'true') ? 'checked="checked"' : ''; ?> <?php echo $disabled_backup; ?> />
-	<label for="<?php echo $wpo_take_backup_checkbox_dom_id; ?>"> <?php echo $label_text; ?> </label>
+	<input class="enable-auto-backup" name="<?php echo $checkbox_name; ?>" id="<?php echo $checkbox_name; ?>" type="checkbox" value="true" <?php checked($is_checked);?> <?php echo $disabled_backup; ?> />
+	<label for="<?php echo $checkbox_name; ?>"> <?php echo $label_text; ?> </label>
 
 	<?php
 	// UpdraftPlus is not installed.

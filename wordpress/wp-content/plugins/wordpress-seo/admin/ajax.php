@@ -67,23 +67,6 @@ function wpseo_set_ignore() {
 add_action( 'wp_ajax_wpseo_set_ignore', 'wpseo_set_ignore' );
 
 /**
- * Hides the default tagline notice for a specific user.
- */
-function wpseo_dismiss_tagline_notice() {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		die( '-1' );
-	}
-
-	check_ajax_referer( 'wpseo-dismiss-tagline-notice' );
-
-	update_user_meta( get_current_user_id(), 'wpseo_seen_tagline_notice', 'seen' );
-
-	die( '1' );
-}
-
-add_action( 'wp_ajax_wpseo_dismiss_tagline_notice', 'wpseo_dismiss_tagline_notice' );
-
-/**
  * Save an individual SEO title from the Bulk Editor.
  */
 function wpseo_save_title() {
@@ -187,7 +170,6 @@ function wpseo_upsert_meta( $post_id, $new_meta_value, $orig_meta_value, $meta_k
 		);
 
 		return $upsert_results;
-
 	}
 
 	if ( $sanitized_new_meta_value === $orig_meta_value && $sanitized_new_meta_value !== $new_meta_value ) {
@@ -328,76 +310,23 @@ function wpseo_register_ajax_integrations() {
 
 wpseo_register_ajax_integrations();
 
-// SEO Score Recalculations.
-new WPSEO_Recalculate_Scores_Ajax();
-
-new Yoast_OnPage_Ajax();
-
 new WPSEO_Shortcode_Filter();
 
 new WPSEO_Taxonomy_Columns();
 
-// Setting the notice for the recalculate the posts.
-new Yoast_Dismissable_Notice_Ajax( 'recalculate', Yoast_Dismissable_Notice_Ajax::FOR_SITE );
-
 /* ********************* DEPRECATED FUNCTIONS ********************* */
 
 /**
- * Removes stopword from the sample permalink that is generated in an AJAX request.
+ * Hides the default tagline notice for a specific user.
  *
- * @deprecated 6.3
+ * @deprecated 13.2
  * @codeCoverageIgnore
  */
-function wpseo_remove_stopwords_sample_permalink() {
-	_deprecated_function( __FUNCTION__, 'WPSEO 6.3', 'This method is deprecated.' );
-
-	wpseo_ajax_json_echo_die( '' );
-}
-
-/**
- * Function used to delete blocking files, dies on exit.
- *
- * @deprecated 7.0
- * @codeCoverageIgnore
- */
-function wpseo_kill_blocking_files() {
-	_deprecated_function( __FUNCTION__, 'WPSEO 7.0', 'This method is deprecated.' );
-
-	wpseo_ajax_json_echo_die( '' );
-}
-
-/**
- * Handles the posting of a new FB admin.
- *
- * @deprecated 7.1
- * @codeCoverageIgnore
- */
-function wpseo_add_fb_admin() {
+function wpseo_dismiss_tagline_notice() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		die( '-1' );
 	}
-	_deprecated_function( __FUNCTION__, 'WPSEO 7.0', 'This method is deprecated.' );
+
+	_deprecated_function( __FUNCTION__, 'WPSEO 13.2', 'This method is deprecated.' );
 	wpseo_ajax_json_echo_die( '' );
-}
-
-/**
- * Used in the editor to replace vars for the snippet preview.
- *
- * @deprecated 11.9
- * @codeCoverageIgnore
- */
-function wpseo_ajax_replace_vars() {
-	_deprecated_function( __METHOD__, 'WPSEO 11.9' );
-
-	global $post;
-	check_ajax_referer( 'wpseo-replace-vars' );
-
-	$post = get_post( intval( filter_input( INPUT_POST, 'post_id' ) ) );
-	global $wp_query;
-	$wp_query->queried_object    = $post;
-	$wp_query->queried_object_id = $post->ID;
-
-	$omit = [ 'excerpt', 'excerpt_only', 'title' ];
-	echo wpseo_replace_vars( stripslashes( filter_input( INPUT_POST, 'string' ) ), $post, $omit );
-	die;
 }

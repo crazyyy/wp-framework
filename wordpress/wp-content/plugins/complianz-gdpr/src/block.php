@@ -11,26 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * */
 
 /**
- * Enqueue Gutenberg block assets for both frontend + backend.
- *
- * @uses {wp-editor} for WP editor styles.
- * @since 1.0.0
- */
-// Hook: Frontend assets.
-//handled in documents class
-
-//add_action( 'enqueue_block_assets', 'cmplz_block_assets' );
-//function cmplz_block_assets() { // phpcs:ignore
-//	// Styles.
-//	wp_enqueue_style(
-//		'my_block-cgb-style-css', // Handle.
-//		plugins_url( 'dist/blocks.style.build.css', dirname( __FILE__ ) ), // Block style CSS.
-//		array( 'wp-editor' ) // Dependency to include the CSS after it.
-//		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: File modification time.
-//	);
-//}
-
-/**
  * Enqueue Gutenberg block assets for backend editor.
  *
  * @uses {wp-blocks} for block type registration & related functions.
@@ -55,21 +35,27 @@ function cmplz_editor_assets() { // phpcs:ignore
         'cmplz-block',
         'complianz',
         array(
-            'site_url' => site_url(),
+            'site_url' => get_rest_url(),
+            //'query_preview' => plugins_url( 'img/wp-query-preview.jpg', __FILE__ ),
+            'cmplz_preview' => cmplz_url.  'assets/images/gutenberg-preview.png',
         )
     );
+
     //https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
     //wp package install git@github.com:wp-cli/i18n-command.git
     //wp i18n make-pot . config/languages/complianz-json.pot --include="src"
     //wp i18n make-json . config/languages/complianz-json.pot config/languages/
-    wp_set_script_translations( 'cmplz-block', 'complianz-gdpr' , cmplz_path . 'config/languages');
+    wp_set_script_translations( 'cmplz-block', 'complianz-gdpr' , cmplz_path . '/languages');
 
 	// Styles.
-    wp_enqueue_style(
-        'cmplz-block', // Handle.
-        cmplz_url . "core/assets/css/document.min.css", array( 'wp-edit-blocks' ), cmplz_version
-    );
-
+	$load_css = cmplz_get_value('use_document_css');
+	if ($load_css) {
+		wp_enqueue_style(
+			'cmplz-block', // Handle.
+			cmplz_url . "assets/css/document.min.css",
+			array( 'wp-edit-blocks' ), cmplz_version
+		);
+	}
 }
 
 
@@ -83,12 +69,16 @@ function cmplz_editor_assets() { // phpcs:ignore
 function cmplz_render_document_block($attributes, $content)
 {
     $html = '';
-
     if (isset($attributes['selectedDocument'])) {
         if (isset($attributes['documentSyncStatus']) && $attributes['documentSyncStatus']==='unlink' && isset($attributes['customDocument'])){
             $html = $attributes['customDocument'];
         } else {
-            $html = COMPLIANZ()->document->get_document_html($attributes['selectedDocument']);
+        	$type = $attributes['selectedDocument'];
+	        $region = cmplz_get_region_from_legacy_type($type);
+	        if ($region){
+	        	$type = str_replace('-'.$region, '', $type);
+	        }
+            $html = COMPLIANZ::$document->get_document_html($type, $region);
         }
     }
 

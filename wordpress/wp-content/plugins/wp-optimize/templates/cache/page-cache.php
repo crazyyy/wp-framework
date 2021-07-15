@@ -10,13 +10,14 @@
 	</div>
 </div>
 <div class="wpo-fieldgroup wpo-first-child cache-options">
+	<div class="notice notice-warning below-h2 wpo-warnings__enabling-cache wpo_hidden"><p></p><ul></ul></div>
 	<div class="notice error below-h2 wpo-error wpo-error__enabling-cache wpo_hidden"><p></p></div>
 
 	<pre id="wpo_advanced_cache_output" style="display: none;"></pre>
 
 	<div class="switch-container">
 		<label class="switch">
-			<input name="enable_page_caching" id="enable_page_caching" class="cache-settings" type="checkbox" value="true" <?php checked($wpo_cache_options['enable_page_caching']); ?>>			
+			<input name="enable_page_caching" id="enable_page_caching" class="cache-settings" type="checkbox" value="true" <?php checked($wpo_cache_options['enable_page_caching'] || $wpo_cache->is_enabled()); ?>>
 			<span class="slider round"></span>
 		</label>
 		<label for="enable_page_caching">
@@ -40,7 +41,7 @@
 <h3 class="purge-cache" <?php echo $display; ?>> <?php _e('Purge the cache', 'wp-optimize'); ?></h3>
 <div class="wpo-fieldgroup cache-options purge-cache" <?php echo $display; ?> >
 	<p class="wpo-button-wrap">
-		<input id="wp-optimize-purge-cache" class="button button-primary" type="submit" value="<?php _e('Purge cache', 'wp-optimize'); ?>">
+		<input id="wp-optimize-purge-cache" class="button button-primary <?php echo $can_purge_the_cache ? '' : 'disabled'; ?>" type="submit" value="<?php esc_attr_e('Purge cache', 'wp-optimize'); ?>" <?php echo $can_purge_the_cache ? '' : 'disabled'; ?>>
 		<img class="wpo_spinner" src="<?php echo esc_attr(admin_url('images/spinner-2x.gif')); ?>" alt="...">
 		<span class="save-done dashicons dashicons-yes display-none"></span>
 	</p>
@@ -73,6 +74,8 @@
 		<span tabindex="0" data-tooltip="<?php _e('Enable this option if you do not have user-specific or restricted content on your website.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
 	</div>
 
+	<?php do_action('wpo_after_cache_settings'); ?>
+
 	<div class="wpo-fieldgroup__subgroup">
 		<label for="page_cache_length_value"><?php _e('Cache lifespan', 'wp-optimize'); ?></label>
 		<p>
@@ -92,7 +95,7 @@
 
 </div>
 
-<input id="wp-optimize-save-cache-settings" class="button button-primary" type="submit" name="wp-optimize-save-cache-settings" value="<?php _e('Save changes', 'wp-optimize'); ?>">
+<input id="wp-optimize-save-cache-settings" class="button button-primary" type="submit" name="wp-optimize-save-cache-settings" value="<?php esc_attr_e('Save changes', 'wp-optimize'); ?>">
 
 <img class="wpo_spinner" src="<?php echo esc_attr(admin_url('images/spinner-2x.gif')); ?>" alt="....">
 

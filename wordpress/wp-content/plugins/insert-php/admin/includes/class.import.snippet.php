@@ -147,7 +147,7 @@ class WINP_Import_Snippet {
 	private function saveSnippet( $snippet ) {
 		$content = $snippet['content'];
 
-		if ( WINP_SNIPPET_TYPE_TEXT != $snippet['type'] ) {
+		if ( WINP_SNIPPET_TYPE_TEXT != $snippet['type'] && WINP_SNIPPET_TYPE_AD != $snippet['type'] ) {
 			$content = empty( $content ) && isset( $snippet['code'] ) && ! empty( $snippet['code'] ) ? $snippet['code'] : $content;
 		}
 
@@ -172,6 +172,7 @@ class WINP_Import_Snippet {
 		$this->updateMeta( $snippet['id'], 'snippet_description', $snippet['description'] );
 		$this->updateMeta( $snippet['id'], 'snippet_tags', $snippet['attributes'] );
 		$this->updateMeta( $snippet['id'], 'snippet_activate', 0 );
+		$this->updateMeta( $snippet['id'], 'snippet_priority', $snippet['priority'] );
 
 		$this->updateTaxonomyTags( $snippet['id'], $snippet['tags'] );
 

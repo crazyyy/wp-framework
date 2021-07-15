@@ -35,11 +35,15 @@ class WINP_SnippetShortcodeJs extends WINP_SnippetShortcode {
 			return;
 		}
 
-		$attr = $this->filterAttributes( $attr, $id );
+		$attrs = $this->filterAttributes( $attr, $id );
 
 		// Let users pass arbitrary variables, through shortcode attributes.
-		// @since 2.0.5
-		extract( $attr, EXTR_SKIP );
+		// @since 2.4.0
+		$vars = "";
+		foreach ( $attrs as $var => $value ) {
+			$vars .= PHP_EOL."var {$var} = \"{$value}\";";
+		}
+
 
 		$is_activate     = $this->getSnippetActivate( $snippet_meta );
 		$snippet_content = $this->getSnippetContent( $snippet, $snippet_meta, $id );
@@ -50,6 +54,7 @@ class WINP_SnippetShortcodeJs extends WINP_SnippetShortcode {
 			return;
 		}
 
+		echo "<script type='text/javascript'>{$vars}</script>"; //print attributes
 		echo WINP_Execute_Snippet::getJsCssSnippetData( $id );
 	}
 

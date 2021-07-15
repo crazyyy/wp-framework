@@ -5,15 +5,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 // Callbacks for adding content to an AMP template
 
-add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_title' );
 function amp_post_template_add_title( $amp_template ) {
+	$title = $amp_template->get( 'document_title' );
+	$title = str_replace('&#8211;', '-', $title);
 	?>
-	<title><?php echo esc_html( $amp_template->get( 'document_title' ) ); ?></title>
+	<title><?php echo esc_html( $title ); ?></title>
 	<?php
 }
 
-add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_canonical' );
+if( (class_exists('Yoast\\WP\\SEO\\Integrations\\Front_End_Integration')) ){
+	if ('yoast' == ampforwp_get_setting('ampforwp-seo-selection') && ! is_singular() ){
+		add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_canonical' );
+	}
+	if(false == get_theme_support( 'title-tag' )){
+		add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_title' );
+	}
+} else {
+	add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_canonical' );
+	add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_title' );
+}
 function amp_post_template_add_canonical( $amp_template ) {
+	if (function_exists('aioseo_pro_just_activated')) {
+    	return;
+  	}
 	?>
 	<link rel="canonical" href="<?php echo esc_url( apply_filters('ampforwp_modify_rel_url',$amp_template->get( 'canonical_url' ) ) ); ?>" />
    <?php
@@ -39,11 +53,40 @@ function amp_post_template_add_cached_link($amp_template) {
 		<link rel="preload" as="font" href="<?php echo esc_url($font_url); ?>" type="font/ttf" crossorigin>
 	<?php
 	}
+	?>
+	<link rel="preload" as="script" href="https://cdn.ampproject.org/v0.js">
+		<?php
+			$thumb_id = get_post_thumbnail_id(ampforwp_get_the_ID());
+			$image_size = ampforwp_get_setting('swift-featued-image-size');
+			$image = wp_get_attachment_image_src( $thumb_id, $image_size );
+			if($image!="" && isset($image[0]) && ampforwp_get_setting('swift-featued-image')){
+				if(function_exists('_imagify_init') || function_exists('webp_express_process_post')){
+					$image[0] = esc_url($image[0]).".webp";
+				}?>
+				<link rel="preload" href="<?php echo esc_url($image[0]);?>" as="image">
+			<?php } ?>
+		<?php
+		$scripts = $amp_template->get( 'amp_component_scripts', array() );
+		foreach ( $scripts as $element => $script ) : 
+			if (strpos($script, "amp-experiment") || strpos($script, "amp-dynamic-css-classes")) { 
+		?>
+			<link rel="preload" as="script" href="<?php echo esc_url( $script ); ?>">
+		<?php } 
+		endforeach; 
+
+		// IF GOOGLE FONT EXIST.
+		$font_urls = $amp_template->get( 'font_urls', array() );
+		foreach ( $font_urls as $slug => $url ) : 
+			if (strpos($url, "fonts.googleapis.com")) { 
+		?>
+			<link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
+	<?php } endforeach;
 }
 
 add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_scripts' );
 function amp_post_template_add_scripts( $amp_template ) {
 	$scripts = $amp_template->get( 'amp_component_scripts', array() );
+	$scripts = apply_filters('ampforwp_set_amp_custom_type_script',$scripts);
 	foreach ( $scripts as $element => $script ) : 
 		$custom_type = ($element == 'amp-mustache') ? 'template' : 'element'; ?>
 		<script custom-<?php echo esc_attr( $custom_type ); ?>="<?php echo esc_attr( $element ); ?>" src="<?php echo esc_url( $script ); ?>" async></script>
@@ -63,10 +106,11 @@ function amp_post_template_add_fonts( $amp_template ) {
 add_action( 'amp_post_template_head', 'AMPforWP\\AMPVendor\\amp_post_template_add_boilerplate_css' );
 function amp_post_template_add_boilerplate_css( $amp_template ) {
 	?>
+	<style amp-runtime></style>
 	<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
 	<?php
 }
-if(!function_exists('ampforwp_with_scheme_app_output') && !function_exists('saswp_schema_markup_output') && ( ampforwp_get_setting('ampforwp-seo-selection') != "rank_math" || ! ampforwp_get_setting('ampforwp-seo-rank_math-schema')) && ! class_exists('SQ_Classes_ObjController') ):
+if(ampforwp_get_setting('ampforwp-sd-switch') && !function_exists('ampforwp_with_scheme_app_output') && !function_exists('saswp_schema_markup_output') && ( ampforwp_get_setting('ampforwp-seo-selection') != "rank_math" || ! ampforwp_get_setting('ampforwp-seo-rank_math-schema')) && ! class_exists('SQ_Classes_ObjController') ):
 add_action( 'amp_post_template_footer', 'AMPforWP\\AMPVendor\\amp_post_template_add_schemaorg_metadata' );
 function amp_post_template_add_schemaorg_metadata( $amp_template ) {
 	$metadata = $amp_template->get( 'metadata' );
@@ -84,7 +128,7 @@ function amp_post_template_add_schemaorg_metadata( $amp_template ) {
 	$seo_sel = ampforwp_get_setting('ampforwp-seo-selection');
 	if( (ampforwp_get_setting('ampforwp-seo-yoast-schema') == false && ampforwp_get_setting('ampforwp-seo-selection') == 'yoast') || empty($seo_sel) ){
 	?>
-	<script type="application/ld+json"><?php echo wp_json_encode( $metadata ); ?></script>
+	<script type="application/ld+json"><?php echo wp_json_encode( $metadata, JSON_UNESCAPED_UNICODE ); ?></script>
 	<?php
 	}
 }
@@ -97,6 +141,7 @@ function amp_post_template_add_styles( $amp_template ) {
 		echo '/* Inline styles */' . PHP_EOL;
 		foreach ( $styles as $selector => $declarations ) {
 			$declarations = implode( ';', $declarations ) . ';';
+			$declarations = preg_replace('/\/[*]/', '$1$2', $declarations);
 			printf( '%1$s{%2$s}', $selector, $declarations );
 		}
 	}

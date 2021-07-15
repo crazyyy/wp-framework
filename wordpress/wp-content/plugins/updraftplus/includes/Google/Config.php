@@ -18,7 +18,7 @@
 /**
  * A class to contain the library configuration for the Google API client.
  */
-class Google_Config
+class UDP_Google_Config
 {
   const GZIP_DISABLED = true;
   const GZIP_ENABLED = false;
@@ -31,7 +31,7 @@ class Google_Config
   protected $configuration;
 
   /**
-   * Create a new Google_Config. Can accept an ini file location with the
+   * Create a new UDP_Google_Config. Can accept an ini file location with the
    * local configuration. For example:
    *     application_name="My App"
    *
@@ -55,7 +55,7 @@ class Google_Config
 
       // Definition of class specific values, like file paths and so on.
       'classes' => array(
-        'Google_IO_Abstract' => array(
+        'UDP_Google_IO_Abstract' => array(
           'request_timeout_seconds' => 100,
         ),
         'Google_Logger_Abstract' => array(
@@ -69,7 +69,7 @@ class Google_Config
           'mode' => 0640,
           'lock' => false,
         ),
-        'Google_Http_Request' => array(
+        'UDP_Google_Http_Request' => array(
           // Disable the use of gzip on calls if set to true. Defaults to false.
           'disable_gzip' => self::GZIP_ENABLED,
 
@@ -117,7 +117,7 @@ class Google_Config
           // Maximum number of retries allowed
           'retries' => 0
         ),
-        'Google_Service_Exception' => array(
+        'UDP_Google_Service_Exception' => array(
           'retry_map' => array(
             '500' => self::TASK_RETRY_ALWAYS,
             '503' => self::TASK_RETRY_ALWAYS,
@@ -125,7 +125,7 @@ class Google_Config
             'userRateLimitExceeded' => self::TASK_RETRY_ALWAYS
           )
         ),
-        'Google_IO_Exception' => array(
+        'UDP_Google_IO_Exception' => array(
           'retry_map' => !extension_loaded('curl') ? array() : array(
             CURLE_COULDNT_RESOLVE_HOST => self::TASK_RETRY_ALWAYS,
             CURLE_COULDNT_CONNECT => self::TASK_RETRY_ALWAYS,
@@ -136,10 +136,11 @@ class Google_Config
         ),
         // Set a default directory for the file cache.
         'Google_Cache_File' => array(
-          'directory' => sys_get_temp_dir() . '/Google_Client'
+          'directory' => sys_get_temp_dir() . '/UDP_Google_Client'
         )
       ),
     );
+
     if ($ini_file_location) {
       $ini = parse_ini_file($ini_file_location, true);
       if (is_array($ini) && count($ini)) {

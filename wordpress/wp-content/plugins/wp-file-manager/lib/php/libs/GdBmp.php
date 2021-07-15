@@ -24,18 +24,18 @@
  * bmp ファイルを GD で使えるように
  * 使用例:
  *   //ファイルから読み込む場合はGDでPNGなどを読み込むのと同じような方法で可
- *   $image = imagecreatefrombmpnew("test.bmp");
+ *   $image = imagecreatefrombmp("test.bmp");
  *   imagedestroy($image);
  *   //文字列から読み込む場合は以下の方法で可
  *   $image = GdBmp::loadFromString(file_get_contents("test.bmp"));
  *   //自動判定されるので破損ファイルでなければこれでも上手くいく
- *   //$image = imagecreatefrombmpnew(file_get_contents("test.bmp"));
+ *   //$image = imagecreatefrombmp(file_get_contents("test.bmp"));
  *   imagedestroy($image);
  *   //その他任意のストリームからの読み込みも可能
  *   $stream = fopen("http://127.0.0.1/test.bmp");
  *   $image = GdBmp::loadFromStream($stream);
  *   //自動判定されるのでこれでもいい
- *   //$image = imagecreatefrombmpnew($stream);
+ *   //$image = imagecreatefrombmp($stream);
  *   fclose($stream);
  *   imagedestroy($image);
  * 対応フォーマット
@@ -58,8 +58,8 @@
  * @return bool|resource
  */
 
-if (!function_exists('imagecreatefrombmpnew')) {
-    function imagecreatefrombmpnew($filename_or_stream_or_binary)
+if (!function_exists('imagecreatefrombmp')) {
+    function imagecreatefrombmp($filename_or_stream_or_binary)
     {
         return elFinderLibGdBmp::load($filename_or_stream_or_binary);
     }

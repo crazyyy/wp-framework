@@ -6,4 +6,15 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'tubalmartin\\CssMin\\' => array($vendorDir . '/tubalmartin/cssmin/src'),
+    'WebPConvert\\' => array($vendorDir . '/rosell-dk/webp-convert/src'),
+    'WebPConvertCloudService\\' => array($vendorDir . '/rosell-dk/webp-convert-cloud-service/src'),
+    'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'MatthiasMullie\\PathConverter\\' => array($vendorDir . '/matthiasmullie/path-converter/src'),
+    'MatthiasMullie\\Minify\\' => array($vendorDir . '/matthiasmullie/minify/src'),
+    'Intervention\\HttpAuth\\' => array($vendorDir . '/intervention/httpauth/src'),
+    'ImageMimeTypeGuesser\\' => array($vendorDir . '/rosell-dk/image-mime-type-guesser/src'),
 );

@@ -5,7 +5,7 @@
 
 if (!defined( 'ABSPATH')) exit;
 
-class Expoert_CSV{
+class CFDB7_Export_CSV{
 
     /**
      * Download csv file
@@ -18,14 +18,17 @@ class Expoert_CSV{
         header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
         header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
         header("Last-Modified: {$now} GMT");
-
+		
         // force download
+		header("Content-Description: File Transfer");
+		header("Content-Encoding: UTF-8");
+		header("Content-Type: text/csv; charset=UTF-8");
         header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
 
         // disposition / encoding on response body
-        header("Content-Disposition: attachment;filename={$filename}");
+		header("Content-Disposition: attachment;filename={$filename}");
         header("Content-Transfer-Encoding: binary");
 
     }
@@ -42,12 +45,17 @@ class Expoert_CSV{
 
         $array_keys = array_keys($array);
         $heading    = array();
-        $unwanted   = array('cfdb7_', 'your-');
+        $unwanted   = array('cfdb7_file', 'cfdb7_', 'your-');
 
         foreach ( $array_keys as $aKeys ) {
+            if( $aKeys == 'form_date' ) $aKeys = 'Date';
+            if( $aKeys == 'form_id' ) $aKeys = 'Id';
             $tmp       = str_replace( $unwanted, '', $aKeys );
-            $heading[] = ucfirst( $tmp );
+            $tmp       = str_replace( array('-','_'), ' ', $tmp );
+            $heading[] = ucwords( $tmp );
         }
+
+        fputs( $df, ( chr(0xEF) . chr(0xBB) . chr(0xBF) ) ); 
         fputcsv( $df, $heading );
 
         foreach ( $array['form_id'] as $line => $form_id ) {
@@ -119,7 +127,7 @@ class Expoert_CSV{
                         if( ! empty($matches[0]) ) continue;
 
                         if (strpos($key, 'cfdb7_file') !== false ){
-                            $data[$key][$i] = $cfdb7_dir_url.'/'.$value;
+                            $data[$key][$i] = empty( $value ) ? '' : $cfdb7_dir_url.'/'.$value;
                             continue;
                         }
                         if ( is_array($value) ){
@@ -130,6 +138,7 @@ class Expoert_CSV{
 
                         $data[$key][$i] = str_replace( array('&quot;','&#039;','&#047;','&#092;')
                         , array('"',"'",'/','\\'), $value );
+                        $data[$key][$i] = $this->escape_data( $data[$key][$i]);
 
                     endforeach;
 
@@ -143,4 +152,19 @@ class Expoert_CSV{
             die();
         }
     }
+
+    /**
+    * Escape a string to be used in a CSV context
+    * @param string $data CSV field to escape.
+    * @return string    
+    */
+    public function escape_data( $data ) {
+		$active_content_triggers = array( '=', '+', '-', '@' );
+
+		if ( in_array( mb_substr( $data, 0, 1 ), $active_content_triggers, true ) ) {
+			$data = "'" . $data;
+		}
+
+		return $data;
+	}
 }

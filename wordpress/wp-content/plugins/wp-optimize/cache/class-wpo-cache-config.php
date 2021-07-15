@@ -103,6 +103,8 @@ class WPO_Cache_Config {
 			update_option('wpo_cache_config', $config);
 		}
 
+		do_action('wpo_cache_config_updated', $config);
+
 		return $this->write($config, $skip_disk_if_not_yet_present);
 	}
 
@@ -163,8 +165,22 @@ class WPO_Cache_Config {
 		}
 
 		$this->config = wp_parse_args($config, $this->get_defaults());
-		if ((!$only_if_present || file_exists($config_file)) && !file_put_contents($config_file, json_encode($this->config))) {
-			return false;
+
+		// from 3.0.17 we use more secure way to store cache config files.
+		$advanced_cache_version = WPO_Page_Cache::instance()->get_advanced_cache_version();
+		// if advanced-cache.php exists and has at least 3.0.17 version or
+		// advanced-cache.php doesn't exist then
+		// we write the cache config in a new format.
+		if (($advanced_cache_version && (version_compare($advanced_cache_version, '3.0.17', '>='))) || !$advanced_cache_version) {
+			$config_content = '<?php' . "\n"
+				. 'if (!defined(\'ABSPATH\')) die(\'No direct access allowed\');' . "\n\n"
+				. '$GLOBALS[\'wpo_cache_config\'] = json_decode(\'' . json_encode($this->config) . '\', true);' . "\n";
+		} else {
+			$config_content = json_encode($this->config);
+		}
+
+		if ((!$only_if_present || file_exists($config_file)) && !file_put_contents($config_file, $config_content)) {
+			return new WP_Error('write_cache_config', sprintf(__('The cache configuration file could not be saved to the disk; please check the file/folder permissions of %s .', 'wp-optimize'), $config_file));
 		}
 
 		return true;
@@ -231,6 +247,7 @@ class WPO_Cache_Config {
 			'enable_mobile_caching'						=> false,
 			'enable_user_caching'						=> false,
 			'site_url'									=> network_site_url('/'),
+			'enable_cache_per_country'					=> false,
 		);
 
 		return apply_filters('wpo_cache_defaults', $defaults);

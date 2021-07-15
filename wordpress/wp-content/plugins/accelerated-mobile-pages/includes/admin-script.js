@@ -116,14 +116,148 @@ jQuery(function($) {
     $('.redux-container').each(function() {
         if (!$(this).hasClass('redux-no-sections')) {
             $(this).find('.display_header').append('<span class="search-wrapper"><input  class="redux_field_search" name="" type="text" placeholder="Search the controls" style="display:none"/><span class="redux-amp-search-icon"><i class="dashicons-before dashicons-search"></i></span></span>');
-            $('.redux-amp-search-icon').click(function(){
+            $('.redux-amp-search-icon').on("click", function(){
                 $('.redux_field_search').toggle('slide');
+                var val = $('.redux_field_search').val();
+                var display = $('.redux_field_search').css('display');
+                if(val!='' && display=='block'){
+                    $('.redux_field_search').val('');
+                     var parent = jQuery('.redux_field_search').parents('.redux-container:first');
+                     var expanded_options = parent.find('.expand_options');
+                     if (expanded_options.hasClass('expanded')) {
+                        expanded_options.click();
+                        parent.find('.redux-main').removeClass('redux-search');
+                     }
+                    //parent.find('.redux-section-field, .redux-info-field, .redux-notice-field, .redux-container-group, .redux-section-desc, .redux-group-tab h3').show();
+
+                    if($('.redux-group-tab-link-li.active').length>0){
+                        var rel = $('.redux-group-tab-link-li.active a').attr('data-rel');
+                        var selector = 'div#'+rel+'_section_group';
+                        jQuery(selector).show();
+                        jQuery(selector).css('display','block');
+
+                    }else{
+                        $('.redux-group-tab-link-li.activeChild').click();
+                        $('div#'+rel+'_section_group').show();
+                        $('#'+rel+'_section_group').css('display','block');
+                    }
+                    parent.find('.redux-field-container').each(function() {
+                        $(this).parents('tr:first').show();
+                    });
+                     parent.find('.redux-group-tab').each(function() {
+                         $(this).find("div.redux-section-field").each(function(){
+                            var item = $(this);
+                            if(item.hasClass('hide')){
+                                return false;
+                            }
+                            var divSectionId = $(this).attr('id');
+                            var splitResult = divSectionId.split("-");
+                            splitResult.splice(1, 0, "table");
+                            var divTableId = splitResult.join("-");
+                            var totalTr = $("#"+divTableId).find('tr:visible').length;
+                            if(totalTr>0){
+                                $(this).show();
+                            }
+                        });
+                        $(this).find('.form-table-section tbody').each(function(){
+                            $(this).find('tr').each(function (i, el) {
+                                var item = $(this);
+                                if(item.hasClass('hide')){
+                                    item.hide();
+                                }
+                                if(item.hasClass('redux-section-indent-start')){
+                                    item.hide();
+                                }
+                            });
+                        });
+                    });
+                }
             });
             reduxOptionSearch();
         }
     });
 
-    $(".redux_field_search").keypress(function (evt) {
+    function ampforwp_get_cookie(cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(';');
+      for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    var ref_lap = ampforwp_get_cookie('ref_lap');
+    if(ref_lap==''){
+        var ref_nonce = ampforwp_get_cookie('ref_nonce');
+        var current_post = ampforwp_get_cookie('current_post');
+        if(current_post!='' && ref_nonce!=''){
+            ampforwp_refresh_related_post(ref_nonce, current_post);
+        }
+    }
+
+    function ampforwp_refresh_related_post(ref_nonce='', current_post=''){
+        var elem = document.getElementById("ref_rel_post_bar"); 
+        var first_int = setInterval(first_frame, 1000);
+        var width = current_post;
+        width++; 
+        elem.style.width = width + '%'; 
+        elem.innerHTML = width * 1  + '%';
+        function first_frame() {
+            width++; 
+            elem.style.width = width + '%'; 
+            elem.innerHTML = width * 1  + '%';
+        }  
+       $.ajax({
+            url: ajaxurl,
+            method: 'post',
+            data: {
+                    action:     'ampforwp_referesh_related_post',
+                    verify_nonce: ref_nonce,
+                    current_post: current_post,
+                 },
+            success: function(response){
+                clearInterval(first_int);
+                response = response.replace("}0", "}");
+                var resp = JSON.parse(response);
+                resp = parseInt(resp.response);
+                var id = setInterval(frame, 10);
+                var width = current_post;
+                function frame() {
+                    if (width >= resp) {
+                        clearInterval(id);
+                    } else {
+                        width++; 
+                        elem.style.width = width + '%'; 
+                        elem.innerHTML = width * 1  + '%';
+                        if(width == '100'){
+                            $('#ampforwp-refersh-related-post').remove();
+                            $('#redux_builder_amp-ampforwp-refersh-related-post .description').html('All the posts have been refreshed successfully.');
+                        }
+                    }
+                }
+            }
+        });
+    setTimeout(function(){
+            var ref_nonce = ampforwp_get_cookie('ref_nonce');
+            var current_post = ampforwp_get_cookie('current_post');
+            if(current_post!='' && ref_nonce!='' && current_post<100){
+                ampforwp_refresh_related_post(ref_nonce, current_post);
+            }
+        },30000);
+    }
+
+     $("#ampforwp-refersh-related-post").on('click', function(){
+        var ref_nonce = $(this).attr('data-nonce');
+        var current_post =  parseInt($(this).attr('data-id'));
+        ampforwp_refresh_related_post(ref_nonce, current_post);
+    }); 
+    $(".redux_field_search").on( "keypress", function (evt) {
         //Deterime where our character code is coming from within the event
         var charCode = evt.charCode || evt.keyCode;
         if (charCode  == 13) { //Enter key's keycode
@@ -132,7 +266,7 @@ jQuery(function($) {
     });
     //option panel Section Division
     var optionSectionDevision = function(){
-        $('.afw-accordion-header').click(function(){
+        $('.afw-accordion-header').on("click", function(){
             //Get Cookie Changes
             if ( $.cookie( "redux_current_section_customize" )){
                  var allReduxTabs = JSON.parse($.cookie( "redux_current_section_customize" ));   
@@ -211,7 +345,7 @@ jQuery(function($) {
             }
         });
 
-        jQuery( '.redux-group-tab-link-a' ).click(function(){
+        jQuery( '.redux-group-tab-link-a' ).on("click", function(){
             if(jQuery(this).parent('li').hasClass('otherSectionFields')){
                 jQuery(this).parent('li.otherSectionFields').siblings('li.otherSectionFields').hide();
                 if(!jQuery(this).parent('li').is(':visible')){
@@ -241,7 +375,7 @@ jQuery(function($) {
                 $(this).parent('div.switch-options').find('.switch-text-off').show();
             }
         });        
-        switchText.siblings('label').click(function(){
+        switchText.siblings('label').on("click", function(){
             if ( $(this).siblings('input').attr('value') == 1 ) {
                 $(this).parent().find('.switch-text-on').hide();
                 $(this).parent().find('.switch-text-off').show();
@@ -341,11 +475,15 @@ jQuery(function($) {
 
             // Creating a select 
             var s = $('<select/>');
-
+            var amp_font_selector = redux_data['amp_font_selector'];
             for (var i in allFonts) {
 
                 var fontDetail = allFonts[i].fontFamily;                   
-
+                var selected = '';
+                if(amp_font_selector===fontDetail){
+                    selected = 'selected';
+                }
+               $('#amp_font_selector-select').append($('<option value="'+ fontDetail +'" data-font-number="'+ i +'" '+ selected +'> '+ fontDetail  +' </option>'));
                $('#amp_font_selector-select').append($('<option value="'+ fontDetail +'" data-font-number="'+ i +'"> '+ fontDetail  +' </option>'));
                $('#amp_font_selector_content_single-select').append($('<option value="'+ fontDetail +'" data-font-number="'+ i +'"> '+ fontDetail  +' </option>'));
             }
@@ -582,7 +720,7 @@ var dataTabRequired = function(){
     });
 }    
 var reduxOptionTab = function(){
-    $('.redux-tab-selector').click(function(){
+    $('.redux-tab-selector').on("click", function(){
         var tabId = $(this).attr('data-tab');
         var tabRequired = $(this).attr('data-tab-required');
         $(this).parents().find('.custom-tab-container').hide();   
@@ -611,7 +749,7 @@ var reduxOptionTab = function(){
         });//$(".amp-ls-solve") each closed
    }
 });
-$(".redux-ampforwp-ext-activate").click(function(){
+$(".redux-ampforwp-ext-activate").on("click", function(){
     var currentThis = $(this);
     var plugin_id = currentThis.attr("id");
     var secure_nonce = currentThis.parents("li").attr('data-ext-secure');
@@ -666,8 +804,71 @@ $(".redux-ampforwp-ext-activate").click(function(){
 })
 
 //Deactivate License key
+function AMPforwpreadCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(";");
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==" ") c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
 function deactivatelicence(){
-$(".redux-ampforwp-ext-deactivate").click(function(){
+    $(".ampforwp-ext-refresh").on("click", function(){
+    var currentThis = $(this);
+    var plugin_id = currentThis.attr("id");
+
+    var today = new Date();
+    var lastcheck = AMPforwpreadCookie('plugin_refresh_check');
+    lastcheck = new Date(lastcheck);
+    console.log(lastcheck+ " true");
+    var diffDays = -1;
+    if( typeof lastcheck != undefined){
+        var diffTime = Math.abs(today.getTime() - lastcheck.getTime());
+        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    }
+     var expireDate = new Date(jQuery('[name="redux_builder_amp[amp-license]['+plugin_id+'][all_data][expires]"]').val());
+    var diffTime = Math.abs( expireDate.getTime()-today.getTime() );
+    var expireDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    if(diffDays==-1 || diffDays>1 || expireDays<1){
+        currentThis.text("Please wait...")
+        document.cookie = "plugin_refresh_check="+today;
+        var secure_nonce = currentThis.parents("li").attr('data-ext-secure');
+        $.ajax({
+                url: ajaxurl,
+                method: 'post',
+                data: {action: 'ampforwp_get_licence_activate_update',
+                        update_check: 'yes',
+                       ampforwp_license_activate:plugin_id,
+                       verify_nonce: secure_nonce
+                        },
+                dataType: 'json',
+                success: function(response){
+                    currentThis.parents("li").find(".license-tenure").text('')
+                    currentThis.parents("li").find('.afw-license-response-message').remove();
+                    if(response.status=='200'){
+                        var expireData = new Date(response.other.all_data.expires);
+                        var today = new Date();
+                        var diffTime = Math.abs( expireData.getTime()-today.getTime() );
+                        var expireDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        currentThis.parents("li").find(".license-tenure").text(expireDays+" Days Remaining")
+                    }else{
+                        currentThis.parents("li").find('.license-tenure').text(response.message);
+                    }
+                }
+            })
+        currentThis.html('<i class="dashicons-before dashicons-update"></i>Refresh');
+
+     }else{  
+        $(".dashicons").addClass( 'spin' );
+        setTimeout( function() {
+            $(".dashicons").removeClass( 'spin' );}, 3000 );   
+        lastcheck = Math.abs(lastcheck.getDate()+1)+'/'+Math.abs(lastcheck.getMonth()+1) +'/'+lastcheck.getFullYear()+' '+lastcheck.getHours()+':'+lastcheck.getMinutes()+':'+lastcheck.getSeconds();
+        alert('Please try after '+ lastcheck);
+    }
+});
+$(".redux-ampforwp-ext-deactivate").on("click", function(){
     var currentThis = $(this);
     var plugin_id = currentThis.attr("id");
     var secure_nonce = currentThis.parents("li").attr('data-ext-secure');
@@ -737,7 +938,7 @@ var helpSection = function(){
 helpSection();
 
 var redux_title_modify = function(){
-    $( '.redux-group-tab-link-a' ).click(function(){
+    $( '.redux-group-tab-link-a' ).on("click", function(){
         var link = $( this );
         if ( link.parent().hasClass( 'empty_section' ) && link.parent().hasClass( 'hasSubSections' ) ) {
             var elements = $( this ).closest( 'ul' ).find( '.redux-group-tab-link-a' );
@@ -759,7 +960,7 @@ var redux_title_modify = function(){
     $('li.active .redux-group-tab-link-a').click();
     }
 
-    $("#meta-checkbox").click(function(){ 
+    $("#meta-checkbox").on("click", function(){ 
            ampforwp_check_custom_content_status($(this));
     });
     ampforwp_check_custom_content_status($("#meta-checkbox")); 
@@ -795,7 +996,7 @@ var redux_title_modify = function(){
     });
 
     if($(".amp-preview-button").length>0){
-        $(".amp-preview-button").click(function(){
+        $(".amp-preview-button").on("click", function(){
             var srcLink = $("#amp-preview-iframe").attr('data-src');
            $("#amp-preview-iframe").html("<iframe  src='"+srcLink+"'></iframe>");
         });
@@ -841,7 +1042,7 @@ jQuery(document).ready(function($){
     });
     // AMP FrontPage notice in Reading Settings #2348
     if ( 'false' == redux_data.frontpage){
-        $('#page_on_front').parent('label').append('<p class="afp" style="display:none"><b>We have detected that you have not setup the FrontPage for AMP, </b><a href="'+redux_data.admin_url+'">Click here to setup</a></span>');
+        $('#page_on_front').parent('label').append('<p class="afp" style="margin-left:10px;display:none"><span>We have detected that you have not setup the FrontPage for AMP, </span><a href="'+redux_data.admin_url+'">Click here to setup</a></span>');
     }
     $('#front-static-pages input[type=radio][name=show_on_front]').on('change', function(e) {
        if ( this.value == 'page') {
@@ -951,18 +1152,27 @@ jQuery(document).ready(function($) {
             $('#redux-footer-sticky').hide();
         }
     },10);
-    $(".redux-group-tab-link-li").click(function(){
+    $(".redux-group-tab-link-li").on("click", function(){
         var this_c_val = $(this).children('a').children('span.group_title').html();
-        if($(this).hasClass('ampforwp-new-ux')){
+        if($(this).hasClass('ampforwp-new-ux') || $(this).hasClass('opt-go-premium')){
             $('#redux-footer-sticky').hide();
             $('#redux-footer-sticky #redux-footer').addClass("hide");
         }else{
-            if(this_c_val=="Settings" || this_c_val=="Design"){
-                if($('#redux-footer-sticky #redux-footer').hasClass('hide')){
-                    $('#redux-footer-sticky').show();
-                    $('#redux-footer-sticky #redux-footer').removeClass("hide");
-                    $('#redux-footer-sticky #redux-footer').css({'position': 'fixed', 'bottom': '0px', 'width': '818px', 'left': '379px', 'background': 'rgb(238, 238, 238)'});
-                }
+            $('#redux-footer-sticky').show();
+            $('#redux-footer-sticky #redux-footer').removeClass("hide");
+            
+        }
+         // There is no save button in AMP "Basic setup" #4343
+        var selected = $(".amp-opt-change:checked").parent().find('label').attr('id');
+        if(selected=='basic'){
+            if(!$(this).hasClass('ampforwp-new-ux') && !$(this).hasClass('opt-go-premium')){
+                $('#redux-footer-sticky').show();
+                $('#redux-footer-sticky #redux-footer').removeClass("hide");
+                
+               
+            }else{
+                $('#redux-footer-sticky').hide();
+                $('#redux-footer-sticky #redux-footer').addClass("hide");
             }
         }
     });
@@ -1117,6 +1327,7 @@ jQuery(document).ready(function($) {
             button = "SET UP";
         }else if(active_drower=='ampforwp-ux-analytics-section'){
             var ga_field       = $('#ga-feild').val();
+            var ga_field_gtm    = $('#amp-gtm-id').val();
             var amp_fb_pixel_id = $('#amp-fb-pixel-id').val();
             var sa_feild = $('#sa-feild').val();
             var pa_feild = $('#pa-feild').val();
@@ -1132,12 +1343,16 @@ jQuery(document).ready(function($) {
             var alexa_d = $('#ampforwp-alexa-domain').val();
             var afs_c = $('#ampforwp-afs-siteid').val();
             var clicky_side_id = $('#clicky-site-id').val();
+            var cr_config_url = $('#ampforwp-callrail-config-url').val();
+            var cr_number = $('#ampforwp-callrail-number').val();
+            var cr_analytics_url = $('#ampforwp-callrail-analytics-url').val();
             var analytics_txt = "";
             var analytic_arr = [];
              $(".ampforwp-ux-ana-sub").each(function(){
                 var data_href = $(this).attr('data-href');
                 var hasCls  = $(this).hasClass('hide');
                 if(ga_field!="UA-XXXXX-Y" && ga_field!="" && !hasCls && data_href=='ampforwp-ga-switch'){analytic_arr.push("Google Analytics");}
+                if(ga_field_gtm!="" && !hasCls && data_href=='amp-use-gtm-option'){analytic_arr.push("Google Tag Manager");}
                 if(amp_fb_pixel_id!="" && !hasCls && data_href=='amp-fb-pixel'){analytic_arr.push("Facebook Pixel");}
                 if(sa_feild!="SEGMENT-WRITE-KEY" && sa_feild!="" && !hasCls && data_href=='ampforwp-Segment-switch'){analytic_arr.push("Segment Analytics");}
                 if(pa_feild!="#" && pa_feild!="" && !hasCls && data_href=='ampforwp-Piwik-switch'){ analytic_arr.push("Matomo Analytics");}
@@ -1151,6 +1366,7 @@ jQuery(document).ready(function($) {
                 if(alexa_c!="" && alexa_d!="" && !hasCls && data_href=='ampforwp-Alexa-switch'){analytic_arr.push("Alexa Metrics");}
                 if(afs_c!="" && !hasCls && data_href=='ampforwp-afs-analytics-switch'){analytic_arr.push("AFS Analytics");}
                 if(clicky_side_id!="" && !hasCls && data_href=='amp-clicky-switch'){analytic_arr.push("Clicky Analytics");}
+                if(cr_config_url!="" && cr_number!="" && cr_analytics_url!="" && !hasCls && data_href=='ampforwp-callrail-switch'){analytic_arr.push("Call Rail Analytics");}
             });
             thishtml = analytic_arr.toString().replace(/,/g, ", ");
             button = "CONFIG";
@@ -1195,7 +1411,7 @@ jQuery(document).ready(function($) {
             $(".ux-setup-icon").addClass("amp-ux-warning-okay");
         }
     }
-    $("#ampforwp-prem-upg-to").click(function(){
+    $("#ampforwp-prem-upg-to").on("click", function(){
         $(".redux-group-tab-link-a").each(function(){
             var id = $(this).attr('data-key');
             var thischildelem = $(this).children('.group_title').html();
@@ -1206,7 +1422,7 @@ jQuery(document).ready(function($) {
             }
         });
     }); 
-    $("#ampforwp-goto-analytics").click(function(){
+    $("#ampforwp-goto-analytics").on("click", function(){
         $(".redux-group-tab-link-a").each(function(){
             var id = $(this).attr('data-key');
             var thischildelem = $(this).children('.group_title').html();
@@ -1221,7 +1437,7 @@ jQuery(document).ready(function($) {
             }
         });
     }); 
-     $("[data-href=ampforwp-ux-advertisement-section]").click(function(){
+     $("[data-href=ampforwp-ux-advertisement-section]").on("click", function(){
        $(".redux-group-tab-link-a").each(function(){
             var id = $(this).attr('data-key');
             var thischildelem = $(this).children('.group_title').html();
@@ -1281,7 +1497,7 @@ jQuery(document).ready(function($) {
     });
 
     // Homepage
-    $('input[id="amp-ux-homepage"]').click(function(){
+    $('input[id="amp-ux-homepage"]').on("click", function(){
         if($(this).prop("checked") == true){
             $('.amp-ux-frontpage').show();
             $(this).attr('value', 1);
@@ -1298,7 +1514,7 @@ jQuery(document).ready(function($) {
         
     });
     // Frontpage
-     $('input[id="amp-ux-frontpage"]').click(function(){
+     $('input[id="amp-ux-frontpage"]').on("click", function(){
         if($(this).prop("checked") == true){
             // FrontPage
             $("input[data-id=amp-frontpage-select-option]").prop('checked', true).trigger( 'change' );
@@ -1323,7 +1539,7 @@ jQuery(document).ready(function($) {
         }
     });
     // Posts
-    $('#amp-ux-posts').click(function(){
+    $('#amp-ux-posts').on("click", function(){
         if($(this).prop("checked") == true){
             if($('input[id="amp-on-off-for-all-posts"]').val() != 1 ) {
                 $("input[data-id=amp-on-off-for-all-posts]").prop('checked', true).trigger( 'change' );
@@ -1336,7 +1552,7 @@ jQuery(document).ready(function($) {
         }
     });
     // Pages
-    $('input[id="amp-ux-pages"]').click(function(){
+    $('input[id="amp-ux-pages"]').on("click", function(){
         if($(this).prop("checked") == true){
             if($('input[id="amp-on-off-for-all-pages"]').val() != 1 ) {
                 $("input[data-id=amp-on-off-for-all-pages]").prop('checked', true).trigger( 'change' );
@@ -1349,7 +1565,7 @@ jQuery(document).ready(function($) {
         }
     });
     // Archives
-    $('input[id="amp-ux-archives"]').click(function(){
+    $('input[id="amp-ux-archives"]').on("click", function(){
         if($(this).prop("checked") == true){
             if($('input[id="ampforwp-archive-support"]').val() != 1 ) {
                 $("input[data-id=ampforwp-archive-support]").prop('checked', true).trigger( 'change' );
@@ -1372,7 +1588,7 @@ jQuery(document).ready(function($) {
             }
     });
     // Design and Presentation Section
-    $('.media-amp-ux-opt-media' ).unbind().on(
+    $('.media-amp-ux-opt-media' ).off().on(
         'click', function( event ) {
             redux.field_objects.media.addFile( event, $( this ).parents( 'div.amp-ux-opt-media-container:first' ) );
              $('.media-button-select').on('click', function(){
@@ -1426,6 +1642,7 @@ jQuery(document).ready(function($) {
     });
      function ampforwp_check_analytics(data_href){
         var ga_field       = $('#ga-feild').val();
+        var ga_field_gtm       = $('#amp-gtm-id').val();
         var amp_fb_pixel_id = $('#amp-fb-pixel-id').val();
         var sa_feild = $('#sa-feild').val();
         var pa_feild = $('#pa-feild').val();
@@ -1441,6 +1658,9 @@ jQuery(document).ready(function($) {
         var alexa_d = $('#ampforwp-alexa-domain').val();
         var afs_c = $('#ampforwp-afs-siteid').val();
         var clicky_side_id = $('#clicky-site-id').val();
+        var cr_config_url = $('#ampforwp-callrail-config-url').val();
+        var cr_number = $('#ampforwp-callrail-number').val();
+        var cr_analytics_url = $('#ampforwp-callrail-analytics-url').val();
         var analytics_txt = "";
         var checked = $('#redux_builder_amp-'+data_href).children('.switch-options').children('.ios7-switch').children('.switch-on-off').prop('checked');
 
@@ -1454,6 +1674,18 @@ jQuery(document).ready(function($) {
                 if(checked){
                    $('input[data-id="'+data_href+'"]').click();
                    $('[name="redux_builder_amp['+data_href+']"]').val(0);
+                }
+            }
+            }else if(data_href=='amp-use-gtm-option'){
+            if(ga_field_gtm!=""){
+                if(!checked){
+                    $('input[data-id="'+data_href+'"]').click();
+                    $('[name="redux_builder_amp['+data_href+']"]').val(1);
+                }
+            }else if(ga_field_gtm==""){
+                if(checked){
+                    $('input[data-id="'+data_href+'"]').click();
+                    $('[name="redux_builder_amp['+data_href+']"]').val(0);
                 }
             }
         }else if(data_href=='amp-fb-pixel'){
@@ -1612,10 +1844,22 @@ jQuery(document).ready(function($) {
                    $('[name="redux_builder_amp['+data_href+']"]').val(0);
                 }
             }
+        }else if(data_href=='ampforwp-callrail-switch'){
+            if(cr_config_url!="" && cr_number!="" && cr_analytics_url!=""){
+                if(!checked){
+                    $('input[data-id="'+data_href+'"]').click();
+                    $('[name="redux_builder_amp['+data_href+']"]').val(1);
+                }
+            }else if(cr_config_url=="" && cr_number=="" && cr_analytics_url==""){
+                if(checked){
+                   $('input[data-id="'+data_href+'"]').click();
+                   $('[name="redux_builder_amp['+data_href+']"]').val(0);
+                }
+            }
         }
     }
     // Privacy Settings Section
-    $('input[id="amp-ux-notice-switch"]').click(function(){
+    $('input[id="amp-ux-notice-switch"]').on("click", function(){
         if($(this).prop("checked") == true){
             $(this).val(1);
             if($('input[id="amp-enable-notifications"]').val() != 1 ) {
@@ -1640,7 +1884,7 @@ jQuery(document).ready(function($) {
         
     });
     
-    $('input[id="amp-ux-gdpr-switch"]').click(function(){
+    $('input[id="amp-ux-gdpr-switch"]').on("click", function(){
         if($(this).prop("checked") == true){
             $(this).val(1);
             if($('input[id="amp-gdpr-compliance-switch"]').val() != 1 ) {
@@ -1662,7 +1906,7 @@ jQuery(document).ready(function($) {
             $(this).val(0);
         }
     });
-  $(".amp-ux-section-field").click(function(){
+  $(".amp-ux-section-field").on("click", function(){
         var track = $(this).attr('data-href');
         localStorage.setItem('ampforwp_current_drawer_click',track);
     });
@@ -1690,7 +1934,7 @@ function ampforwp_check_required(value,required){
         $("[required="+required+"]").removeClass("hide");
     }
 }
-$("#ampforwp-add-more-analytics").click(function(){
+$("#ampforwp-add-more-analytics").on("click", function(){
     var analytics = $("#ampforwp-ux-analytics-more").val();
     
     if( analytics && $("[data-href="+analytics+"]").hasClass('hide')){
@@ -1711,7 +1955,7 @@ $("#ampforwp-add-more-analytics").click(function(){
     }
 });
 
-$('.ampforwp-ux-closable').click(function(){
+$('.ampforwp-ux-closable').on("click", function(){
     $(this).parent('.ampforwp-ux-sub-section').addClass('hide');
      var data_href = $(this).parent('.ampforwp-ux-sub-section').attr('data-href');
     var checked = $('#redux_builder_amp-'+data_href).children('.switch-options').children('.ios7-switch').children('.switch-on-off').prop('checked');
@@ -1932,7 +2176,7 @@ function Drawer(drawerElem) {
             } else if (currentId == 'amp-ux-ext-ssd') {
                 activate = '&activate=structure_data';
             } else if (currentId == 'amp-ux-ext-afwp') {
-                activate = '&activate=adsforwp';
+                activate = '&activate=quads-settings';
             }
             console.log(wp.updates.l10n.installing);
 
@@ -2023,7 +2267,7 @@ function Drawer(drawerElem) {
                             }
                         });
                         }else if(self.attr('id')=='amp-ux-ext-afwp'){
-                        msgplug = 'Ads for WP';
+                        msgplug = 'Ads by WPQuads';
                         self.text( 'Importing data...' );
                         //Import Data
                         jQuery.ajax({
@@ -2031,12 +2275,12 @@ function Drawer(drawerElem) {
                             type: 'post',
                             data: 'action=ampforwp_import_modules_ads&verify_nonce='+nonce,
                             success: function () {
-                                console.log("Ads for WP");
+                                console.log("Ads by WPQuads");
                                 var res_url = ampforwp_generate_plugin_ulr(response.redirect_url);
                               $('.amp-ux-ext-afwp').html(res_url);
                               $("[required=amp-ux-ext-afwp]").addClass("hide");
                               var afwp_str = '<div id="section-ampforwp-ads-section" class="redux-section-field redux-field adsactive redux-section-indent-start  afw-accordion-header afw-accordion-tab-open">'+
-                                                '<h3 style="margin-top: 20px;">Introducing Ads for WP</h3>'+
+                                                '<h3 style="margin-top: 20px;">Introducing Ads by WPQuads</h3>'+
                                             '</div>'+
                                             '<table id="section-table-ampforwp-ads-section" data-id="ampforwp-ads-section" class="form-table form-table-section no-border form-table-section-indented" style="display: inline-table;">'+
                                                 '<tbody>'+
@@ -2048,15 +2292,15 @@ function Drawer(drawerElem) {
                                                         '<td colspan="2">'+
                                                             '<fieldset id="redux_builder_amp-ampforwp-ads-module" class="redux-field-container redux-field redux-field-init redux-container-raw redux_remove_th" data-id="ampforwp-ads-module" data-type="raw">'+
                                                                 '<div class="ampforwp-ads-data-update">'+
-                                                                    '<input type="hidden" value="admin.php?page=adsforwp&amp;tab=general&amp;reference=ampforwp" class="ampforwp-activation-url" id="active">'+
-                                                                    'Thank you for upgrading the Ads for WP'+
+                                                                    '<input type="hidden" value="admin.php?page=quads-settings&amp;tab=general&amp;reference=ampforwp" class="ampforwp-activation-url" id="active">'+
+                                                                    'Thank you for upgrading the Ads by WPQuads'+
                                                                     '<div class="row"><div>'+
-                                                                    '<a href="http://localhost/wasweb/wp-admin/edit.php?post_type=adsforwp">'+
+                                                                     '<a href="http://localhost/wasweb/wp-admin/edit.php?post_type=quads-settings">'+
                                                                         '<div class="ampforwp-recommendation-btn updated-message">'+
-                                                                            '<p>Go to Ads for WP settings</p>'+
+                                                                            '<p>Go to Ads by WPQuads settings</p>'+
                                                                         '</div>'+
                                                                     '</a>&nbsp;<br>'+
-                                                                    '<a href="https://ampforwp.com/tutorials/article/what-is-ads-for-wp-update-all-about/" class="amp_recommend_learnmore" target="_blank">Learn more</a>'+
+                                                                     '<a href="https://wpquads.com/documentation/" class="amp_recommend_learnmore" target="_blank">Learn more</a>'+
                                                                 '</div>'+
                                                             '</fieldset>'+
                                                         '</td>'+
@@ -2132,7 +2376,7 @@ function Drawer(drawerElem) {
     }
     amp_option_panel_view_func();
 
-    $(".amp-opt-view").click(function(){
+    $(".amp-opt-view").on("click", function(){
          var thisid = $(this).attr('id');
          amp_options_hide_show(thisid);
          $(".ampforwp-option-panel-view-pop").remove();
@@ -2162,10 +2406,10 @@ function Drawer(drawerElem) {
          var opt_type = 0;
          if(id=='amp-opt-easy-view' || id=='radio-c'){
             opt_type = 1;
-            $(".amp-full-view-options").slideUp();
+            $(".amp-full-view-options").slideUp(0);
          }else if(id=='amp-opt-full-view' || id=='radio-d'){
             opt_type = 2;
-            $(".amp-full-view-options").slideDown();
+            $(".amp-full-view-options").slideDown(0);
          }
          amp_left_sub_menu_opt_hs(opt_type)
          $.ajax({
@@ -2174,7 +2418,7 @@ function Drawer(drawerElem) {
             data: {
                     action:     'ampforwp_set_option_panel_view',
                     option_type: opt_type,
-                    verify_nonce: ampforwp_nonce
+                    verify_nonce: ampforwp_nonce.security
                  },
             dataType: 'json',
             success: function(response){
@@ -2184,14 +2428,14 @@ function Drawer(drawerElem) {
          $("body").css({'overflow':'auto'});
          $("#1_section_group_li_a").click();
     }
-    $("[data-href='ampforwp-ux-design-section']").click(function(){
+    $("[data-href='ampforwp-ux-design-section']").on("click", function(){
         if($("[name='redux_builder_amp[amp-design-selector]']").val() == '4'){
             $('#ampforwp-easy-setup-global-color').show();
         }else{
             $('#ampforwp-easy-setup-global-color').hide();
         }
     });
-    $(".amp-opt-change").click(function(){
+    $(".amp-opt-change").on("click", function(){
         var thisid = $(this).attr('id');
         $(".amp-opt-change").each(function(){
             $(this).parent().removeClass('active');
@@ -2369,4 +2613,35 @@ function DrawerIcon(icon) {
         }
     })();
 }
+$("#subscribe-newsletter-form").on('submit',function(e){
+        e.preventDefault();
+        var $form = $("#subscribe-newsletter-form");
+        var name = $form.find('input[name="name"]').val();
+        var email = $form.find('input[name="email"]').val();
+        var website = $form.find('input[name="company"]').val();
+        $.post(ajaxurl, {action:'ampforwp_subscribe_newsletter',name:name, email:email,website:website},
+          function(data) {}
+        );
+    });
+// HIDE/SHOW TAG AND CATEGORY #4326
+    $("#show_amp_taxonomy").on('change', function(){
+        var thisval = $(this).val();
+        if(thisval=='hide'){
+            $("#amp-show-hide-tax").css({'display':'block'});
+        }else if(thisval=='show'){
+            $("#amp-show-hide-tax").css({'display':'none'});
+        }
+    });
+    $(".hide-show-amp-tax").on('click', function(){
+        var checkBoxes = $(this).children('input:radio')
+         checkBoxes.prop("checked", "true");
+    });
+    $("#ampforwp-close-notice").on("click", function(){
+        var data = {
+            action: 'ampforwp_feedback_remove_notice',
+        };
+        $.post(ajaxurl, data, function(response) {
+            $(".ampforwp_remove_notice").remove();
+        });
+    });
 });

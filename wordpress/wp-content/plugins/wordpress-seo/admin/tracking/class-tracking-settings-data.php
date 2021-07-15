@@ -13,7 +13,7 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 	/**
 	 * The options that need to be anonymized before they can be sent elsewhere.
 	 *
-	 * @var array $anonymous_settings All of the option_names which need to be
+	 * @var array All of the option_names which need to be
 	 * anonymized before they can be sent elsewhere.
 	 */
 	private $anonymous_settings = [
@@ -40,24 +40,29 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 		'og_frontpage_desc',
 		'og_frontpage_image',
 		'og_frontpage_image_id',
+		'open_graph_frontpage_title',
+		'open_graph_frontpage_desc',
+		'open_graph_frontpage_image',
+		'open_graph_frontpage_image_id',
 		'pinterest_url',
 		'pinterestverify',
 		'twitter_site',
 		'youtube_url',
 		'wikipedia_url',
-		'fbadminapp',
+		'semrush_tokens',
+		'zapier_api_key',
 	];
 
 	/**
 	 * The options we want to track.
 	 *
-	 * @var array $include_list The option_names for the options we want to track.
+	 * @var array The option_names for the options we want to track.
 	 */
 	private $include_list = [
 		'ms_defaults_set',
 		'version',
 		'disableadvanced_meta',
-		'onpage_indexability',
+		'ryte_indexability',
 		'baiduverify',
 		'googleverify',
 		'msverify',
@@ -74,13 +79,13 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 		'show_onboarding_notice',
 		'first_activated_on',
 		'myyoast-oauth',
+		'dynamic_permalinks',
 		'website_name',
 		'alternate_website_name',
 		'company_logo',
 		'company_name',
 		'company_or_person',
 		'person_name',
-		'title_test',
 		'forcerewritetitle',
 		'separator',
 		'title-home-wpseo',
@@ -116,13 +121,10 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 		'company_or_person_user_id',
 		'stripcategorybase',
 		'noindex-post',
-		'showdate-post',
 		'display-metabox-pt-post',
 		'noindex-page',
-		'showdate-page',
 		'display-metabox-pt-page',
 		'noindex-attachment',
-		'showdate-attachment',
 		'display-metabox-pt-attachment',
 		'display-metabox-tax-category',
 		'noindex-tax-category',
@@ -150,6 +152,10 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 		'og_frontpage_desc',
 		'og_frontpage_image',
 		'og_frontpage_image_id',
+		'open_graph_frontpage_title',
+		'open_graph_frontpage_desc',
+		'open_graph_frontpage_image',
+		'open_graph_frontpage_image_id',
 		'opengraph',
 		'pinterest_url',
 		'pinterestverify',
@@ -158,7 +164,15 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 		'twitter_card_type',
 		'youtube_url',
 		'wikipedia_url',
-		'fbadminapp',
+		'indexables_indexing_completed',
+		'semrush_integration_active',
+		'semrush_tokens',
+		'semrush_country_code',
+		'enable_enhanced_slack_sharing',
+		'zapier_integration_active',
+		'zapier_api_key',
+		'enable_metabox_insights',
+		'enable_link_suggestions',
 	];
 
 	/**
@@ -187,6 +201,7 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 	 * Anonimizes the WPSEO_Options array by replacing all $anonymous_settings values to 'used'.
 	 *
 	 * @param array $settings The settings.
+	 *
 	 * @return array The anonymized settings.
 	 */
 	private function anonymize_settings( $settings ) {
@@ -195,6 +210,7 @@ class WPSEO_Tracking_Settings_Data implements WPSEO_Collection {
 				$settings[ $setting ] = 'used';
 			}
 		}
+
 		return $settings;
 	}
 }

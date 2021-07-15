@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	        $ampforwp_sd_height = ampforwp_get_setting('ampforwp-sd-logo-height');
 	        $ampforwp_sd_width = ampforwp_get_setting('ampforwp-sd-logo-width');
 	        $ampforwp_sd_logo =  ampforwp_get_setting('amp-structured-data-logo','url');
-	        if (! empty( $redux_builder_amp['opt-media']['url'] ) ) {
-	          $structured_data_main_logo = $redux_builder_amp['opt-media']['url'];
+	        if (ampforwp_get_setting('opt-media','url')!='') {
+	          $structured_data_main_logo = ampforwp_get_setting('opt-media','url');
 	        }
 	        if (! empty( $ampforwp_sd_logo ) ) {
 	          $structured_data_logo = esc_url( __(ampforwp_get_setting('amp-structured-data-logo','url'), 'accelerated-mobile-pages') );
@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	        //code for adding 'description' meta from Yoast SEO
 
-	       	if('yoast' == ampforwp_get_setting('ampforwp-seo-selection') && ampforwp_get_setting('ampforwp-seo-yoast-description')){
+	       	if('yoast' == ampforwp_get_setting('ampforwp-seo-selection') && ampforwp_get_setting('ampforwp-seo-yoast-description') && !class_exists('Yoast\\WP\\SEO\\Integrations\\Front_End_Integration')){
 	         if ( class_exists('WPSEO_Frontend') ) {
 	           $front = WPSEO_Frontend::get_instance();
 	           $desc = $front->metadesc( false );
@@ -268,10 +268,10 @@ function ampforwp_structured_data_type( $metadata ) {
         	}
         	
 	       	if ( isset( $post->post_type ) && $post->post_type == $post_type ) {
-	       		if( empty( ampforwp_get_setting('ampforwp-sd-type-'.esc_attr($post_type)) ) ){
+	       		if(ampforwp_get_setting('ampforwp-sd-type-'.esc_attr($post_type))==''){
 	       			return;
 	       		}
-        		if ( empty( ampforwp_get_setting('ampforwp-sd-type-'.esc_attr($post_type)) ) && ampforwp_get_setting('ampforwp-seo-yoast-description') == 0 ) {
+        		if ( ampforwp_get_setting('ampforwp-sd-type-'.esc_attr($post_type))=='' && ampforwp_get_setting('ampforwp-seo-yoast-description') == 0 ) {
 					return;
 				}
 				if(isset($metadata['@type']) && $metadata['@type']){
@@ -412,11 +412,95 @@ if ( ! function_exists('ampforwp_sd_multiple_images') ) {
 // schema.org/SiteNavigationElement missing from menus #1229 & #2952
 add_action('amp_post_template_footer','ampforwp_sd_sitenavigation');
 function ampforwp_sd_sitenavigation(){
-    if ( ! class_exists('saswp_fields_generator') ) {
+	if (!ampforwp_get_setting('ampforwp-sd-switch')) {
+		return;
+	}
+	if (class_exists('Bunyad_Theme_SmartMag')) {
+	    if (!is_single() || !Bunyad::posts()->meta('reviews')) {
+	      return;
+	    }
+	    $schema_type = Bunyad::posts()->meta('review_schema') ? Bunyad::posts()->meta('review_schema') : 'Product';
+	    $item_author = Bunyad::posts()->meta('review_item_author') ? Bunyad::posts()->meta('review_item_author') : get_the_author();
+	    $item_name   = Bunyad::posts()->meta('review_item_name') ? Bunyad::posts()->meta('review_item_name') : get_the_title();
+	    $item_author_type = Bunyad::posts()->meta('review_item_author_type');
+	     $image_url = ampforwp_get_post_thumbnail('url','full');
+	        $image_width = ampforwp_get_post_thumbnail('width');
+	        $image_height = ampforwp_get_post_thumbnail('height');
+	        $post_image_meta = false;
+	        if (!empty($image_url)) {
+	          $post_image_meta = array(
+	        '@type' => 'ImageObject',
+	        'url' => $image_url,
+	        'width' => $image_width,
+	        'height' => $image_height,
+	      );
+	        }
+	    $publisher = array(
+	      '@type'  => 'Organization',
+	      'name'   => get_bloginfo('name'),
+	      'sameAs' => get_bloginfo('url')
+	    );
+	    $description = (
+	      Bunyad::posts()->meta('review_verdict_text') 
+	        ? Bunyad::posts()->meta('review_verdict_text') 
+	        : strip_tags(Bunyad::posts()->excerpt(null, 180, ['add_more' => false]))
+	    );
+	    $author_data = [
+	      '@type' => $item_author_type ? ucfirst($item_author_type) : 'Person',
+	      'name'  => $item_author
+	    ];
+	    $have_author = [
+	      'CreativeWorkSeason', 'CreativeWorkSeries', 'Game', 'MediaObject', 'MusicPlaylist', 'MusicRecording'
+	    ];
+	    // Final schema.
+	    $schema      = array(
+	      '@context' => 'http://schema.org',
+	      '@type'    => 'Review',
+
+	      'itemReviewed' => array(
+	        '@type'  => $schema_type,
+	        'name'   => $item_name,
+	        'image'  => $post_image_meta,
+	      ),
+	      'author'   => array(
+	        '@type' => 'Person',
+	        'name'  => get_the_author(),
+	      ),
+	      'publisher' => $publisher,
+	      'reviewRating' => array(
+	        '@type'       => 'Rating',
+	        'ratingValue' => Bunyad::posts()->meta('review_overall'),
+	        'bestRating'  => Bunyad::options()->review_scale,
+	      ),
+	      'description'   => substr($description, 0, 200),
+	      'datePublished' => get_the_date(DATE_W3C),
+	    );
+	    if ($link = Bunyad::posts()->meta('review_item_link')) {
+	      $schema['itemReviewed']['sameAs'] = esc_url($link);
+	    }
+	    $schema_id     = esc_url(get_permalink()) . '#review';
+	    $schema['@id'] = $schema_id;
+	    $schema['itemReviewed']['review'] = ['@id' => $schema_id];
+	    if (in_array($schema_type, $have_author)) {
+	      $schema['itemReviewed']['author'] = $author_data;
+	    } 
+	    if ($schema_type == 'Product' ) {
+	      if (Bunyad::posts()->meta('review_item_author')) {
+	        $author_data['@type'] = 'Brand';
+	        $schema['itemReviewed']['brand'] = $author_data;
+	      }
+	      $schema['itemReviewed']['description'] = $description;
+	    }else{
+	      return;
+	    }
+	    echo '<script type="application/ld+json">' . json_encode($schema) . "</script>";
+    }
+    if ( ! class_exists('saswp_fields_generator') && ampforwp_get_setting('ampforwp-sd-navigation-schema')) {
 	    $input = array();           
 	    $navObj = array();
-	    if ( true == get_transient('ampforwp_header_sd_menu') && true == get_transient('ampforwp_footer_sd_menu') && false != get_transient('ampforwp_sd_menu') ) {
-	    	$navObj[] = get_transient('ampforwp_sd_menu');
+	    $ampforwp_sd_menu = get_transient('ampforwp_sd_menu');
+	    if ( true == get_transient('ampforwp_header_sd_menu') && true == get_transient('ampforwp_footer_sd_menu') && false !=  $ampforwp_sd_menu) {
+	    	$navObj[] = $ampforwp_sd_menu;
 	    }
 	    $menuLocations = get_nav_menu_locations();
 	    if(!empty($menuLocations) ){ 
@@ -438,18 +522,18 @@ function ampforwp_sd_sitenavigation(){
 		           		}   
 		            }
 		            if ( 'amp-menu' == $type ) {
-		            	set_transient('ampforwp_header_sd_menu', true , 24*HOUR_IN_SECONDS );
+		            	set_transient('ampforwp_header_sd_menu', true , 15*DAY_IN_SECONDS );
 		            }
 		            if ( 'amp-footer-menu' == $type ) {
-		            	set_transient('ampforwp_footer_sd_menu', true , 24*HOUR_IN_SECONDS );
+		            	set_transient('ampforwp_footer_sd_menu', true , 15*DAY_IN_SECONDS );
 		            }
-	            	set_transient('ampforwp_sd_menu', $navObj , 24*HOUR_IN_SECONDS );
+	            	set_transient('ampforwp_sd_menu', $navObj , 15*DAY_IN_SECONDS );
 		        }
 		    }
 	        if($navObj){  
 	            $input['@context'] = 'https://schema.org'; 
 	            $input['@graph']   = $navObj; ?>       
-	    		<script type="application/ld+json"><?php echo wp_json_encode( $input ); ?></script>
+	    		<script type="application/ld+json"><?php echo wp_json_encode( $input, JSON_UNESCAPED_UNICODE ); ?></script>
 	        <?php }
 	    }
 	}

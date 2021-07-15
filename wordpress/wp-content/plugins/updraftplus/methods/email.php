@@ -10,7 +10,7 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 
 	public function backup($backup_array) {
 
-		global $updraftplus, $updraftplus_backup;
+		global $updraftplus;
 
 		$updraft_dir = trailingslashit($updraftplus->backups_dir_location());
 
@@ -104,7 +104,7 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 		<?php
 	}
 
-	public function delete($files, $data = null, $sizeinfo = array()) {
+	public function delete($files, $data = null, $sizeinfo = array()) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		return true;
 	}
 }

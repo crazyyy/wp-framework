@@ -153,6 +153,7 @@ class UpdraftPlus_Filesystem_Functions {
 			$all_jobs = $wpdb->get_results("SELECT $key_column, $value_column FROM $table WHERE $key_column LIKE 'updraft_jobdata_%' LIMIT 100", ARRAY_A);
 			
 			foreach ($all_jobs as $job) {
+				$nonce = str_replace('updraft_jobdata_', '', $job[$key_column]);
 				$val = maybe_unserialize($job[$value_column]);
 				// TODO: Can simplify this after a while (now all jobs use job_time_ms) - 1 Jan 2014
 				$delete = false;
@@ -165,7 +166,23 @@ class UpdraftPlus_Filesystem_Functions {
 				} elseif (!empty($val['job_type']) && 'backup' != $val['job_type'] && empty($val['backup_time_ms']) && empty($val['job_time_ms'])) {
 					$delete = true;
 				}
-				if ($delete) delete_site_option($job[$key_column]);
+				if (isset($val['temp_import_table_prefix']) && '' != $val['temp_import_table_prefix'] && $wpdb->prefix != $val['temp_import_table_prefix']) {
+					$tables_to_remove = array();
+					$prefix = $wpdb->esc_like($val['temp_import_table_prefix'])."%";
+					$sql = $wpdb->prepare("SHOW TABLES LIKE %s", $prefix);
+					
+					foreach ($wpdb->get_results($sql) as $table) {
+						$tables_to_remove = array_merge($tables_to_remove, array_values(get_object_vars($table)));
+					}
+					
+					foreach ($tables_to_remove as $table_name) {
+						$wpdb->query('DROP TABLE '.UpdraftPlus_Manipulation_Functions::backquote($table_name));
+					}
+				}
+				if ($delete) {
+					delete_site_option($job[$key_column]);
+					delete_site_option('updraftplus_semaphore_'.$nonce);
+				}
 			}
 		}
 		$updraft_dir = $updraftplus->backups_dir_location();
@@ -180,7 +197,7 @@ class UpdraftPlus_Filesystem_Functions {
 				$binzip_match = preg_match("/^zi([A-Za-z0-9]){6}$/", $entry);
 				$cachelist_match = ($include_cachelist) ? preg_match("/$match-cachelist-.*.tmp$/i", $entry) : false;
 				$browserlog_match = preg_match('/^log\.[0-9a-f]+-browser\.txt$/', $entry);
-				// Temporary files from the database dump process - not needed, as is caught by the catch-all
+				// Temporary files from the database dump process - not needed, as is caught by the time-based catch-all
 				// $table_match = preg_match("/${match}-table-(.*)\.table(\.tmp)?\.gz$/i", $entry);
 				// The gz goes in with the txt, because we *don't* want to reap the raw .txt files
 				if ((preg_match("/$match\.(tmp|table|txt\.gz)(\.gz)?$/i", $entry) || $cachelist_match || $ziparchive_match || $binzip_match || $manifest_match || $browserlog_match) && is_file($updraft_dir.'/'.$entry)) {
@@ -640,7 +657,7 @@ class UpdraftPlus_Filesystem_Functions {
 		* Require we have enough space to unzip the file and copy its contents, with a 10% buffer.
 		*/
 		if (self::wp_doing_cron()) {
-			$available_space = @disk_free_space(WP_CONTENT_DIR);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$available_space = function_exists('disk_free_space') ? @disk_free_space(WP_CONTENT_DIR) : false;// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			if ($available_space && ($uncompressed_size * 2.1) > $available_space) {
 				return new WP_Error('disk_full_unzip_file', __('Could not copy files. You may have run out of disk space.'), compact('uncompressed_size', 'available_space'));
 			}

@@ -286,6 +286,23 @@ if(!function_exists('ampforwp_aq_resize')) {
      * need to change any code in your own WP themes. Usage is still the same :)
      */
     function ampforwp_aq_resize( $url, $width = null, $height = null, $crop = null, $single = true, $upscale = false ) {
+        if (empty($url)) {
+           return;
+        }
+        // Disable ampforwp_aq_resize and return images without compressing. 
+        // Useful for some who wants to disable when using CDN images 
+        $disable_aq_resize = false; 
+        if (function_exists('imagify_set_activation') || function_exists('ud_check_stateless_media') || function_exists('webp_express_process_post')) {
+            $disable_aq_resize = true; 
+        }
+        $disable_aq_resize = apply_filters('ampforwp_disable_aq_resize', $disable_aq_resize, $url); 
+        if (true === $disable_aq_resize ){ 
+            return $image = array( 
+                0 => $url, 
+                1 => $width, 
+                2 => $height, 
+            ); 
+        }
         /* WPML Fix */
         if ( defined( 'ICL_SITEPRESS_VERSION' ) ){
             global $sitepress;

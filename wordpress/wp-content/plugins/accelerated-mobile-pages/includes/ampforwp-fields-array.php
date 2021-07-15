@@ -12,7 +12,7 @@ if($current_page=="amp_options"){
 		$options[$page->ID] = $page->post_title;
 	}
 }
-$analytics_options = array(''=>'Add Analytics Type','ampforwp-ga-switch'=>'Google Analytics','ampforwp-Segment-switch'=>'Segment Analytics','ampforwp-Piwik-switch'=>'Matomo (Piwik) Analytics','ampforwp-Quantcast-switch'=>'Quantcast Measurement','ampforwp-comScore-switch'=>'comScore', 'ampforwp-Effective-switch'=>'Effective Measure','ampforwp-StatCounter-switch'=>'StatCounter','ampforwp-Histats-switch'=>'Histats Analytics','ampforwp-Yandex-switch'=>'Yandex Metrika','ampforwp-Chartbeat-switch'=>'Chartbeat Analytics','ampforwp-Alexa-switch'=>'Alexa Metrics','ampforwp-afs-analytics-switch'=>'AFS Analytics','amp-fb-pixel'=>'Facebook Pixel','amp-clicky-switch'=>'Clicky Analytics');
+$analytics_options = array(''=>'Add Analytics Type','ampforwp-ga-switch'=>'Google Analytics','amp-use-gtm-option'=>'Google Tag Manager','ampforwp-Segment-switch'=>'Segment Analytics','ampforwp-Piwik-switch'=>'Matomo (Piwik) Analytics','ampforwp-Quantcast-switch'=>'Quantcast Measurement','ampforwp-comScore-switch'=>'comScore', 'ampforwp-Effective-switch'=>'Effective Measure','ampforwp-StatCounter-switch'=>'StatCounter','ampforwp-Histats-switch'=>'Histats Analytics','ampforwp-Yandex-switch'=>'Yandex Metrika','ampforwp-Chartbeat-switch'=>'Chartbeat Analytics','ampforwp-Alexa-switch'=>'Alexa Metrics','ampforwp-afs-analytics-switch'=>'AFS Analytics','amp-fb-pixel'=>'Facebook Pixel','amp-clicky-switch'=>'Clicky Analytics','ampforwp-callrail-switch'=>'Call Rail Analytics');
 $analytics_default_option = ampforwp_get_setting('amp-analytics-select-option');
 $analytics_default = 'ampforwp-ga-switch';
 switch ($analytics_default_option) {
@@ -57,6 +57,9 @@ switch ($analytics_default_option) {
 		break;
 	case '14': 
 		$analytics_default = 'amp-clicky-switch';
+		break;
+	case '15': 
+		$analytics_default = 'ampforwp-callrail-switch';
 		break;
 	default:
 		break;
@@ -118,8 +121,14 @@ $amp_ws_other_type = '';
 if($amp_website_type!=""){
 	if(preg_match("/Other/", $amp_website_type)!=0){
 		$other = explode("-", $amp_website_type);
-		$amp_website_type=$other[0];
-		$amp_ws_other_type = $other[1];
+		if ( is_array($other)) {
+			if(isset($other[0]) && $other[0]){
+				$amp_website_type = "";
+			}
+			if(isset($other[1]) && $other[1]){
+				$amp_ws_other_type = $other[1];
+			}
+		}	
 	}
 }
 if($amp_website_type==""){
@@ -215,6 +224,15 @@ $amp_ux_fields = array(
 					'field_data'=>array('title'=>'Google Analytics','class'=>'child_opt child_opt_arrow')
 					),
 					array('field_type'=>'text', 'field_data'=>array('title'=>'Tracking ID','id'=>'amp-ux-ga','class'=>'amp-ux-ga google-analytics analytics-text','required'=>array(),'data-text'=>'ga-feild','element-class'=>'ux-label trac-id','default'=>ampforwp_get_setting('ga-feild'))
+					),
+					array('field_type'=>'sub_section_end','field_data'=>array()),
+					array('field_type'=>'sub_section_start',
+						'field_data'=>array('id'=>'ampforwp-ux-gtm-analytics-section','class'=>'ampforwp-ux-sub-section ampforwp-ux-ana-sub','default'=>ampforwp_check_analytics_setup('Google Tag Manager'),'closable'=>1,'data-href'=>'amp-use-gtm-option')
+					),
+					array('field_type'=>'heading',
+					'field_data'=>array('title'=>'Google Tag Manager','class'=>'child_opt child_opt_arrow')
+					),
+					array('field_type'=>'text', 'field_data'=>array('title'=>'Tag Manager ID (Container ID)','id'=>'amp-ux-gtm','class'=>'amp-ux-gtm analytics-text','required'=>array(),'data-text'=>'amp-gtm-id','element-class'=>'ux-label trac-id','default'=>ampforwp_get_setting('amp-gtm-id'))
 					),
 					array('field_type'=>'sub_section_end','field_data'=>array()),
 					array('field_type'=>'sub_section_start',
@@ -339,6 +357,19 @@ $amp_ux_fields = array(
 					),
 					array('field_type'=>'sub_section_end','field_data'=>array()),
 					array('field_type'=>'sub_section_start',
+						'field_data'=>array('id'=>'ampforwp-ux-cr-analytics-section','class'=>'ampforwp-ux-sub-section ampforwp-ux-ana-sub','default'=>ampforwp_check_analytics_setup('Call Rail Analytics'),'closable'=>1,'data-href'=>'ampforwp-callrail-switch')
+					),
+					array('field_type'=>'heading',
+					'field_data'=>array('title'=>'Call Rail Analytics','class'=>'child_opt child_opt_arrow')
+					),
+					array('field_type'=>'text', 'field_data'=>array('title'=>'Config URL','id'=>'amp-ux-cr','class'=>'amp-ux-cr analytics-text','required'=>array(),'element-class'=>'ux-label','data-text'=>'ampforwp-callrail-config-url','default'=>ampforwp_get_setting('ampforwp-callrail-config-url'))
+					),
+					array('field_type'=>'text', 'field_data'=>array('title'=>'Tell Number','id'=>'amp-ux-cr','class'=>'amp-ux-cr analytics-text','required'=>array(),'element-class'=>'ux-label','data-text'=>'ampforwp-callrail-number','default'=>ampforwp_get_setting('ampforwp-callrail-number'))
+					),
+					array('field_type'=>'text', 'field_data'=>array('title'=>'Analytics Config URL','id'=>'amp-ux-cr','class'=>'amp-ux-cr analytics-text','required'=>array(),'element-class'=>'ux-label','data-text'=>'ampforwp-callrail-analytics-url','default'=>ampforwp_get_setting('ampforwp-callrail-analytics-url'))
+					),
+					array('field_type'=>'sub_section_end','field_data'=>array()),
+					array('field_type'=>'sub_section_start',
 						'field_data'=>array('id'=>'ampforwp-ux-ano-analytics-section','class'=>'ampforwp-ux-sub-section','default'=>1,'closable'=>0)
 					),
 					array('field_type'=>'select',
@@ -393,14 +424,14 @@ if(file_exists(AMPFORWP_MAIN_PLUGIN_DIR."schema-and-structured-data-for-wp/struc
 $is_afwp = "not-exist";
 $afwp_active_url = '';
 $afwp_default = 0;
-if(file_exists(AMPFORWP_MAIN_PLUGIN_DIR."ads-for-wp/ads-for-wp.php")){
-	if(!is_plugin_active('ads-for-wp/ads-for-wp.php')){
+if(file_exists(AMPFORWP_MAIN_PLUGIN_DIR."quick-adsense-reloaded/quick-adsense-reloaded.php")){
+	if(!is_plugin_active('quick-adsense-reloaded/quick-adsense-reloaded.php')){
 		$is_afwp = "inactive";
-		$plugin_file = "ads-for-wp/ads-for-wp.php";
+		$plugin_file = "quick-adsense-reloaded/quick-adsense-reloaded.php";
 		$afwp_active_url = ampforwp_wp_plugin_action_link( $plugin_file, 'activate' );
 	}else{
 		$is_afwp = "active";
-		$afwp_active_url = $ampforwp_admin_url.'admin.php?page=adsforwp&amp;tab=general&amp;reference=ampforwp';
+		$afwp_active_url = $ampforwp_admin_url.'admin.php?page=quads-settings&amp;tab=general&amp;reference=ampforwp';
 		$afwp_default = 2;
 	}
 }
@@ -621,7 +652,7 @@ $amp_ux_fields[] = array('field_type'=>'switch','field_data'=>array('title'=>"St
 
 $amp_ux_fields[] = array('field_type'=>'notification', 'field_data'=>array('type'=>'notice','desc'=>'Please wait until process completes.','required'=>array('amp-ux-ext-ssd','=',0),'default'=>0));
 
-$amp_ux_fields[] = array('field_type'=>'switch','field_data'=>array('title'=>"Ads for WP",'id'=>"amp-ux-ext-afwp",'class'=>esc_attr($afwp_class),'data-id'=>'amp-ux-ext-afwp-switch','desc'=>'','data-secure'=>esc_attr($ux_secure),'element-class'=>'third-pp','parent-class'=>'ux-seo-blk','default'=>esc_attr($afwp_default),'data-url'=>esc_url($afwp_active_url)));
+$amp_ux_fields[] = array('field_type'=>'switch','field_data'=>array('title'=>"Ads by WPQuads",'id'=>"amp-ux-ext-afwp",'class'=>esc_attr($afwp_class),'data-id'=>'amp-ux-ext-afwp-switch','desc'=>'','data-secure'=>esc_attr($ux_secure),'element-class'=>'third-pp','parent-class'=>'ux-seo-blk','default'=>esc_attr($afwp_default),'data-url'=>esc_url($afwp_active_url)));
 
 $amp_ux_fields[] = array('field_type'=>'notification', 'field_data'=>array('type'=>'notice','desc'=>'Please wait until process completes.','required'=>array('amp-ux-ext-afwp','=',0),'default'=>0));
 
