@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Font Sizes
 $base-font-size: 16px;
 $em-base: $base-font-size;
@@ -25,7 +27,7 @@ $footer: 50px;
 $footer_margin: $footer - 2 * $footer;
 $base-border-radius: 3px;
 $base-spacing: $base-line-height * 1em;
-$small-spacing: $base-spacing / 2;
+$small-spacing: math.div($base-spacing, 2);
 $base-z-index: 0;
 
 // Colors

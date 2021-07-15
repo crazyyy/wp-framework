@@ -1,3 +1,5 @@
+@use "sass:math";
+
 fieldset {
   margin: 0 0 $small-spacing;
   padding: $base-spacing;
@@ -18,7 +20,7 @@ select {
 label {
   font-weight: 600;
 
-  margin-bottom: $small-spacing / 2;
+  margin-bottom: math.div($small-spacing, 2);
   &.required::after {
     content: '*';
   }
@@ -49,7 +51,7 @@ select[multiple=multiple] {
   box-sizing: border-box;
   width: 100%;
   margin-bottom: $small-spacing;
-  padding: $base-spacing / 3;
+  padding: math.div($base-spacing, 3);
 
   transition: $base-transition;
 
@@ -88,7 +90,7 @@ input[type='checkbox'],
 input[type='radio'] {
   display: inline;
 
-  margin-right: $small-spacing / 2;
+  margin-right:  math.div($small-spacing, 2);
 }
 
 input[type='file'] {
