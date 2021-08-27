@@ -10,7 +10,7 @@
     "images": {
       "src": "assets/img/",
       "srcimg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
-      "srcImgContent": "wordpress/wp-content/uploads/",
+      "srcImgContent": "wp-content/uploads/",
       "dest": "./html/img/"
     },
     "fonts": {
