@@ -16,7 +16,7 @@ if (env_prod === true) {
 }
 
 if (htmlOWp === false) {
-  config.path.base.wp = './wordpress/wp-content/themes/' + config.theme + '/';
+  config.path.base.wp = './wp-content/themes/' + config.theme + '/';
   // config.path.base.wp = './html/'; /* only for php files located in html */
   ChangeBasePath(config);
   config.path.base.dest = config.path.base.wp;
