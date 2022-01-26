@@ -356,7 +356,7 @@ gulp.task('fonts', () => {
     .pipe(flatten())
     // send to /dist/fonts/
     .pipe(gulp.dest(path.fonts.dist))
-    // browsersync result
+    // browser-sync result
     .pipe(gulpif(!argv.q, browsersync.stream()));
 });
 
@@ -388,7 +388,7 @@ gulp.task('images', () => {
     .pipe(flatten())
     .pipe(gulp.dest(path.images.dist))
 
-    // browsersync result
+    // browser-sync result
     .pipe(gulpif(!argv.q, browsersync.stream()));
 
 });
@@ -458,7 +458,7 @@ gulp.task('svgstore', async () => {
   // store SVG into sprite
   .pipe(svgstore())
   .pipe(gulp.dest(path.sprite.dist))
-  // browsersync result
+  // browser-sync result
   .pipe(gulpif(!argv.q, browsersync.stream()));
 
 });
@@ -527,7 +527,7 @@ gulp.task('watch', () => {
   var new_tab = 'local';
 
   if (!argv.q) {
-    // browsersync changes unless in quiet mode
+    // browser-sync changes unless in quiet mode
     browsersync.init({
       files: [
         '{inc,blocks,modules}/**/*.php',
@@ -561,7 +561,7 @@ gulp.task('watch', () => {
     'assets/manifest.js',
     path.modules.source + '*/_.json'
   ], () => {
-    console.error("\n⚠️  Congifuration modified. Restart gulp. ⚠️\n");
+    console.error("\n⚠️  Configuration modified. Restart gulp. ⚠️\n");
     beeper();
     process.exit();
   });

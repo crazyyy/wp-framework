@@ -38,7 +38,7 @@ const setInViewportIndicators = () => {
   // check if given element is visible or partly visible on screen
   const isBlockVisible = (block) => {
 
-    // intersectionobserver should be used when IE11 can be dropped
+    // intersection-observer should be used when IE11 can be dropped
     const bounding = block.getBoundingClientRect();
     if (bounding.top >= -block.offsetHeight && bounding.left >= -block.offsetWidth && bounding.right <= (window.innerWidth || document.documentElement.clientWidth) + block.offsetWidth && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) + block.offsetHeight) {
       return true;
@@ -85,7 +85,7 @@ const setInViewportIndicators = () => {
   setTimeout(() => { viewportElementsNeedToBeChecked = true; }, 1000);
   setTimeout(() => { viewportElementsNeedToBeChecked = true; }, 2500);
 
-  // updaet: after render is complete
+  // update: after render is complete
   window.addEventListener('DOMContentLoaded', (event) => {
     viewportElementsNeedToBeChecked = true;
   });

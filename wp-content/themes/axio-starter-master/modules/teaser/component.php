@@ -65,7 +65,7 @@ class X_Teaser extends X_Component {
       'id'    => 0,
       'post'  => null,
 
-      // optioal
+      // optional
       'attr'  => [],
 
       // internal
