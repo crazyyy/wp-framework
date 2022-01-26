@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600px" height="600px" viewBox="0 0 600 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Square Avatar 02</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Square-Avatar-02">
+            <rect id="bg" fill="#FFFFFF" x="0" y="0" width="600" height="600"></rect>
+            <path d="M300,60 C167.633588,60 60,167.633588 60,300 C60,432.366412 167.633588,540 300,540 C432.366412,540 540,432.366412 540,300 C540,167.633588 432.366412,60 300,60 Z M287.633588,339.847328 L168.091603,339.847328 L287.633588,107.175573 L287.633588,339.847328 Z M311.908397,492.366412 L311.908397,259.694656 L431.450382,259.694656 L311.908397,492.366412 Z" id="Shape" fill="#00BE28" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

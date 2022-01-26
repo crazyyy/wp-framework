@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WINP_Plugin' ) ) {
 
-	class WINP_Plugin extends Wbcr_Factory443_Plugin {
+	class WINP_Plugin extends Wbcr_Factory450_Plugin {
 
 		/**
-		 * @var Wbcr_Factory443_Plugin
+		 * @var Wbcr_Factory450_Plugin
 		 */
 		private static $app;
 
@@ -244,7 +244,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 			# We set the priority to 30 to wait for the premium plugin to load.
 			add_action( 'plugins_loaded', [ $this, 'register_depence_pages' ], 30 );
 
-			add_action( 'wbcr_factory_forms_440_register_controls', function () {
+			add_action( 'wbcr_factory_forms_447_register_controls', function () {
 				$colorControls = array(
 					[
 						'type'    => 'winp-dropdown',

@@ -29,7 +29,7 @@ class AIOWPSecurity_List_Account_Activity extends AIOWPSecurity_List_Table {
         
         //Build row actions
         $actions = array(
-            'delete' => '<a href="'.$delete_url_nonce.'" onclick="return confirm(\'Are you sure you want to delete this item?\')">Delete</a>',
+            'delete' => '<a href="'.$delete_url_nonce.'" onclick="return confirm(\''.esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')).'\')">'.__('Delete').'</a>',
         );
         
         //Return the user_login contents
@@ -39,7 +39,10 @@ class AIOWPSecurity_List_Account_Activity extends AIOWPSecurity_List_Table {
         );
     }
 
-    
+    public function column_logout_date($item) {
+        return '1000-10-10 10:00:00' == $item['logout_date'] ? __('Login session still active', 'all-in-one-wp-security-and-firewall') : $item['logout_date'];
+    }
+
     function column_cb($item){
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',

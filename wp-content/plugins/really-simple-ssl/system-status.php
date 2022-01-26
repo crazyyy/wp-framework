@@ -27,14 +27,19 @@ if ( current_user_can( 'manage_options' ) ) {
 		echo "SAFE MODE\n";
 	}
 
+	global $wp_version;
+
 	echo "General\n";
 	echo "Domain: " . site_url() . "\n";
 	echo "Plugin version: " . rsssl_version . "\n";
+	echo "WordPress version: " . $wp_version . "\n";
 
 	if ( RSSSL()->rsssl_certificate->is_valid() ) {
 		echo "SSL certificate is valid\n";
 	} else {
-		if ( RSSSL()->rsssl_certificate->detection_failed() ) {
+		if ( !function_exists('stream_context_get_params') ) {
+			echo "stream_context_get_params not available\n";
+		} else if ( RSSSL()->rsssl_certificate->detection_failed() ) {
 			echo "Not able to detect certificate\n";
 		} else {
 			echo "Invalid SSL certificate\n";
@@ -60,7 +65,7 @@ if ( current_user_can( 'manage_options' ) ) {
 	if ( RSSSL()->really_simple_ssl->switch_mixed_content_fixer_hook ) {
 		echo "* Use alternative method to fix mixed content\n";
 	}
-	if ( RSSSL()->really_simple_ssl->dismiss_all_notices ) {
+	if ( RSSSL()->really_simple_ssl->dismiss_all_notices || is_multisite() && rsssl_multisite::this()->dismiss_all_notices ) {
 		echo "* Dismiss all Really Simple SSL notices\n";
 	}
 	echo "\n";
@@ -68,6 +73,10 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "Server information\n";
 	echo "Server: " . RSSSL()->rsssl_server->get_server() . "\n";
 	echo "SSL Type: " . RSSSL()->really_simple_ssl->ssl_type . "\n";
+
+	if ( function_exists('phpversion')) {
+		echo "PHP Version: " . phpversion() . "\n";
+	}
 
 	if ( is_multisite() ) {
 		echo "MULTISITE\n";
@@ -80,7 +89,7 @@ if ( current_user_can( 'manage_options' ) ) {
 
 	echo RSSSL()->really_simple_ssl->debug_log;
 
-	echo "\n\nConstants\n";
+	echo "\nConstants\n";
 
 	if ( defined( 'RSSSL_FORCE_ACTIVATE' ) ) {
 		echo "RSSSL_FORCE_ACTIVATE defined\n";

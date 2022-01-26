@@ -42,6 +42,7 @@
 	Progress labels
    */
   .cmplz-progress-warning-container {
+	position:relative;
 	display:grid;
 	grid-template-columns: 126px auto 50px;
 	>div {
@@ -63,7 +64,7 @@
 	}
   }
   .cmplz-scroll-container {
-	height: 260px;
+	height: 254px;
 	margin-top: 20px;
   }
  .cmplz-progress-status-container {
@@ -94,6 +95,10 @@
 	  background-color: @color-warning;
 	  color: white;
 	}
+	&.cmplz-premium {
+	  background-color: @brand-primary;
+	  color: white;
+	}
   }
 
   //progress bar
@@ -113,6 +118,9 @@
 	  background: @color-success;
 	  height: 20px;
 	  width: 0;
+	  &.orange{
+		background-color: @rsp-orange;
+	  }
 	}
   }
 

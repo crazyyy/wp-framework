@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 add_filter( 'cmplz_known_script_tags', 'cmplz_wp_google_maps_widget_script' );
 
 /**
@@ -7,14 +7,12 @@ add_filter( 'cmplz_known_script_tags', 'cmplz_wp_google_maps_widget_script' );
  */
 function cmplz_wp_google_maps_widget_css() {
 	?>
-	<style>
 		.gmw-thumbnail-map.cmplz-blocked-content-container {
 			display: inline-block;
 		}
-	</style>
 	<?php
 }
-add_action( 'wp_footer', 'cmplz_wp_google_maps_widget_css' );
+add_action( 'cmplz_banner_css', 'cmplz_wp_google_maps_widget_css' );
 
 
 function cmplz_wp_google_maps_widget_script( $tags ) {

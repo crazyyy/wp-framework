@@ -1,0 +1,22 @@
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
+
+@include md-register-theme("default", (
+  primary: md-get-palette-color(indigo, 900), // The primary color of your application
+  accent: md-get-palette-color(lightgreen, 500) // The accent or secondary color
+));
+
+@import "~vue-material/dist/theme/all"; // Apply the theme
+
+@import 'mixins';
+
+@import 'global_classes'; // Global styles
+@import 'hello'; // Styles for welcome page
+@import 'find_problem'; // Styles for find a problem
+@import 'bubble'; // Styles for speech bubble
+@import 'corner_otto'; // Styles for otto in the corner
+@import 'screen'; // Styles for screen (iframe)
+@import 'witnesses'; // Styles for the suspects list
+@import 'interrogating'; // Styles for interrogating suspects
+@import 'test'; // Styles for test screen
+@import 'complete'; // Styles for the last screen
+@import 'counter_box'; // Styles for the counter box

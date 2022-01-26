@@ -1,0 +1,105 @@
+/* 
+    Document   : pgc-admin.css
+    Created on : 28.03.2010
+    Author     : Vladimir Garagulya
+    Description:
+        Plugins Garbage Collector WordPress plugin Admin Settings Page CSS
+*/
+
+/* 
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+
+.txt_left {
+  text-align: left;
+}
+.txt_center {
+  text-align: center;
+}
+.txt_right {
+  text-align: right;
+}
+
+.form_color_row {
+  float: left;
+  display: block;  
+  margin-bottom: 5px;
+  width: 100%;
+  clear: both;
+}
+
+img.input_radio {
+	vertical-align: middle;
+}
+
+a.pgc_rsb_link {
+	padding:4px;
+	display:block;
+	padding-left:25px;
+	background-repeat:no-repeat;
+	background-position:5px 50%;
+	text-decoration:none;
+	border:none;
+}
+
+a.pgc_rsb_link:hover {
+	border-bottom-width:1px;
+}
+
+.pgc-submit {
+  width: 130px;
+}
+
+input.warning:hover, a.warning:hover {
+	color: red;
+}
+
+.fli {
+  float: left;
+  display: inline;
+}
+
+#progressbar {
+    width: 700px;
+    position: relative;
+}
+
+#progress_label {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+}
+
+#statusbar {
+  clear: both;
+  float: left;
+  display: none;
+  margin-bottom: 10px;
+}
+
+#scanresults {
+  display:none;
+  margin-bottom: 5px;
+}
+
+.pgc_even {
+  background-color: #fff;
+}
+
+.pgc_odd {
+  background-color: #eee;
+}
+
+.ajax_processing {
+  visibility: hidden;
+  padding: 0 0 0 10px;
+}
+
+.pgc_lm30 {
+  float: left;
+  margin-left: 30px;
+  margin-right:30px;
+}

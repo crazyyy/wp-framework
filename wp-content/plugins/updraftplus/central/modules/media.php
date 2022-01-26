@@ -18,7 +18,7 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 	 *
 	 * link to udrpc_action main function in class UpdraftCentral_Listener
 	 */
-	public function _pre_action($command, $data, $extra_info) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This function is called from listner.php and $extra_info is being sent.
+	public function _pre_action($command, $data, $extra_info) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This function is called from listener.php and $extra_info is being sent.
 		// Here we assign the current blog_id to a variable $blog_id
 		$blog_id = get_current_blog_id();
 		if (!empty($data['site_id'])) $blog_id = $data['site_id'];
@@ -181,11 +181,12 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 		}
 
 		if (!function_exists('get_post_mime_types')) {
-			global $updraftplus;
+			global $updraftcentral_main;
+
 			// For a much later version of WP the "get_post_mime_types" is located
 			// in a different folder. So, we make sure that we have it loaded before
 			// actually using it.
-			if (version_compare($updraftplus->get_wordpress_version(), '3.5', '>=')) {
+			if (version_compare($updraftcentral_main->get_wordpress_version(), '3.5', '>=')) {
 				require_once(ABSPATH.WPINC.'/post.php');
 			} else {
 				// For WP 3.4, the "get_post_mime_types" is located in the location provided below.
@@ -460,15 +461,14 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 	 * @return array
 	 */
 	private function get_type_options() {
-		global $wpdb, $updraftcentral_host_plugin;
-		$options = array();
+		global $wpdb, $updraftcentral_host_plugin, $updraftcentral_main;
 
+		$options = array();
 		if (!function_exists('get_post_mime_types')) {
-			global $updraftplus;
 			// For a much later version of WP the "get_post_mime_types" is located
 			// in a different folder. So, we make sure that we have it loaded before
 			// actually using it.
-			if (version_compare($updraftplus->get_wordpress_version(), '3.5', '>=')) {
+			if (version_compare($updraftcentral_main->get_wordpress_version(), '3.5', '>=')) {
 				require_once(ABSPATH.WPINC.'/post.php');
 			} else {
 				// For WP 3.4, the "get_post_mime_types" is located in the location provided below.

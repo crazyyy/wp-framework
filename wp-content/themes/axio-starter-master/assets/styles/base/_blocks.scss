@@ -1,0 +1,72 @@
+/* ==========================================================================
+ # Blocks
+========================================================================== */
+
+/* Only front-end
+----------------------------------------------- */
+
+.blocks {
+  @include clearfix;
+  @include child-margin-reset;
+  padding-left:  var(--spacing-m);
+  padding-right: var(--spacing-m);
+
+  .alignfull {
+    @include alignfull;
+    @include spacing-l(margin-top, margin-bottom);
+  }
+
+  .alignwide {
+    @include alignwide;
+    @include spacing-m(margin-top, margin-bottom);
+    &.is-first-block {
+      @include spacing-l(margin-top);
+    }
+    &.is-last-block {
+      @include spacing-l(margin-bottom);
+    }
+  }
+
+  // float left tweaks
+  .alignleft {
+    @include breakpoint($breakpoint-sub-m) {
+      float: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  // float right tweaks
+  .alignright {
+    @include breakpoint($breakpoint-sub-m) {
+      float: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+}
+
+// each block takes care of its own width
+.blocks > *,
+.inner-blocks > * {
+  @include spacing(margin-top, margin-bottom);
+  margin-left:  auto;
+  margin-right: auto;
+  max-width: var(--width-content-m);
+}
+
+// fist child margins
+.blocks > :first-child,
+.is-first-block {
+  @include spacing-l(margin-top);
+  .has-no-hero-background & {
+    @include spacing-m(margin-top);
+  }
+}
+
+// last child margins
+.blocks > :last-child,
+.is-last-block {
+  @include spacing-l(margin-bottom);
+}

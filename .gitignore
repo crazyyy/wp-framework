@@ -1,22 +1,47 @@
-/.hg
+# Version control and temp files
+*~
+.DS_Store
+thumbs.db
+.svn
+.cvs
+.git
+.hg
+.listing
+*.bak
+*.swp
+*.tmp
+.vscode
 
+bower_components/*
+!bower_components/.gitkeep
+node_modules
+.sass-cache
+
+# Log and database files
+*.sql
 *.log
+
+# known large file types
+*.zip
+*.tar
+*.tgz
+*.gz
+
+# IDE
+.idea
+.phpintel
+
+
+
 *.map
 *.orig
-.sass*
-*.swp
 *~
 *.iws
 ._*
 *.sublime-project
 *.sublime-workspace
 .sublime-
-sftp-config.json
-thumbs.db
 .project
-.DS_Store
-.idea
-.phpintel
 license.txt
 readme.html
 sitemap*.xml
@@ -28,7 +53,6 @@ Desktop.ini
 node_modules
 node_modules/**
 node_modules_bck
-_gsdata_
 wp-content/advanced-cache.php
 wp-content/backup-db/
 wp-content/backups/
@@ -37,4 +61,4 @@ wp-content/cache/
 wp-content/upgrade/
 wp-content/wp-cache-config.php
 wp-content/db.php
-/package-lock.json
+package-lock.json

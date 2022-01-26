@@ -138,8 +138,10 @@ class CFDB7_List_Table extends WP_List_Table
             foreach ($first_row as $key => $value) {
 
                 $matches = array();
+                $key     = esc_html( $key );
 
                 if ( $key == 'cfdb7_status' ) continue;
+
                 if( $rm_underscore ) preg_match('/^_.*$/m', $key, $matches);
                 if( ! empty($matches[0]) ) continue;
 
@@ -293,7 +295,7 @@ class CFDB7_List_Table extends WP_List_Table
         $table_name = $cfdb->prefix.'db7_forms';
         $action     = $this->current_action();
 
-        if ( isset( $_POST['_wpnonce'] ) && ! empty( $_POST['_wpnonce'] ) ) {
+        if ( !empty( $action ) ) {
 
             $nonce        = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
             $nonce_action = 'bulk-' . $this->_args['plural'];

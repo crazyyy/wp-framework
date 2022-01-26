@@ -1,8 +1,8 @@
 <?php
 
-namespace WBCR\Factory_443;
+namespace WBCR\Factory_450;
 
-use Wbcr_Factory443_Plugin;
+use Wbcr_Factory450_Plugin;
 
 // Exit if accessed directly
 if( !defined('ABSPATH') ) {
@@ -27,7 +27,7 @@ if( !defined('ABSPATH') ) {
 class Notices {
 
 	/**
-	 * @var Wbcr_Factory443_Plugin
+	 * @var Wbcr_Factory450_Plugin
 	 */
 	protected $plugin;
 	/**
@@ -58,7 +58,7 @@ class Notices {
 	/**
 	 * Инициализируем уведомлений сразу после загрузки модуля уведомлений
 	 *
-	 * @param Wbcr_Factory443_Plugin $plugin
+	 * @param Wbcr_Factory450_Plugin $plugin
 	 */
 	public function __construct($plugin)
 	{
@@ -86,7 +86,7 @@ class Notices {
 	public function currentScreenAction()
 	{
 		/**
-		 * @since 2.1.2 - Добавлен, модуль factory_notices_000 был удален. Поэтому в этому хуке мы заменили префикс на factory_443
+		 * @since 2.1.2 - Добавлен, модуль factory_notices_407 был удален. Поэтому в этому хуке мы заменили префикс на factory_450
 		 */
 		$this->notices = apply_filters('wbcr/factory/admin_notices', $this->notices, $this->plugin->getPluginName());
 

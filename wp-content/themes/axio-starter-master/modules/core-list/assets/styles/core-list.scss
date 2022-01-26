@@ -1,0 +1,35 @@
+/* ==========================================================================
+ # List block
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+
+/* Front-end and back-end
+----------------------------------------------- */
+
+.block-editor [data-type="core/list"] > *,
+.blocks .wp-block-list {
+
+}
+
+/* Only front-end
+----------------------------------------------- */
+
+.blocks .wp-block-list {
+
+  // entrance animation
+  &.has-viewport-effect {
+    &.is-in-viewport {
+    }
+  }
+
+}
+
+/* Only back-end
+----------------------------------------------- */
+
+.block-editor [data-type="core/list"] > * {
+
+}
+

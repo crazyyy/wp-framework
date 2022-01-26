@@ -22,6 +22,7 @@ class GUI extends Base {
 	);
 
 	const LIB_GUEST_JS = 'assets/js/guest.min.js';
+	const LIB_GUEST_DOCREF_JS = 'assets/js/guest.docref.min.js';
 	const PHP_GUEST = 'guest.vary.php';
 
 	const TYPE_DISMISS_WHM = 'whm';
@@ -185,7 +186,7 @@ class GUI extends Base {
 					break;
 				}
 
-				$promo_tag = $_GET[ 'promo_tag' ];
+				$promo_tag = sanitize_key( $_GET[ 'promo_tag' ] );
 
 				if ( empty( $_instance->_promo_list[ $promo_tag ] ) ) {
 					break;
@@ -231,7 +232,11 @@ class GUI extends Base {
 	 * @return boolean
 	 */
 	public static function has_msg_ruleconflict() {
-		return self::get_option( Admin_Display::DB_DISMISS_MSG ) == Admin_Display::RULECONFLICT_ON;
+		$db_dismiss_msg = self::get_option( Admin_Display::DB_DISMISS_MSG );
+		if ( ! $db_dismiss_msg ) {
+			self::update_option( Admin_Display::DB_DISMISS_MSG, -1 );
+		}
+		return $db_dismiss_msg == Admin_Display::RULECONFLICT_ON;
 	}
 
 	/**
@@ -242,7 +247,12 @@ class GUI extends Base {
 	 * @return boolean
 	 */
 	public static function has_whm_msg() {
-		return self::get_option( self::WHM_MSG ) == self::WHM_MSG_VAL;
+		$val = self::get_option( self::WHM_MSG );
+		if ( ! $val ) {
+			self::dismiss_whm();
+			return false;
+		}
+		return $val == self::WHM_MSG_VAL;
 	}
 
 	/**
@@ -252,7 +262,7 @@ class GUI extends Base {
 	 * @access public
 	 */
 	public static function dismiss_whm() {
-		self::delete_option( self::WHM_MSG );
+		self::update_option( self::WHM_MSG, -1 );
 	}
 
 	/**
@@ -722,8 +732,8 @@ class GUI extends Base {
 			esc_url( $url ),
 			esc_attr( $name ),
 			esc_attr( $title ),
-			esc_attr( sprintf( __( 'Install %s' ), $title ) ),
-			__( 'Install Now' )
+			esc_attr( sprintf( __( 'Install %s', 'litespeed-cache' ), $title ) ),
+			__( 'Install Now', 'litespeed-cache' )
 		);
 
 		return $action;
@@ -742,15 +752,15 @@ class GUI extends Base {
 		$details_url = self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $name . '&section=changelog&TB_iframe=true&width=600&height=800' );
 		$file = $name . '/' . $name . '.php';
 
-		$msg = sprintf( __( '<a href="%1$s" %2$s>View version %3$s details</a> or <a href="%4$s" %5$s target="_blank">update now</a>.' ),
+		$msg = sprintf( __( '<a href="%1$s" %2$s>View version %3$s details</a> or <a href="%4$s" %5$s target="_blank">update now</a>.', 'litespeed-cache' ),
 			esc_url( $details_url ),
 			sprintf( 'class="thickbox open-plugin-details-modal" aria-label="%s"',
-				esc_attr( sprintf( __( 'View %1$s version %2$s details' ), $title, $v ) )
+				esc_attr( sprintf( __( 'View %1$s version %2$s details', 'litespeed-cache' ), $title, $v ) )
 			),
 			$v,
 			wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=' ) . $file, 'upgrade-plugin_' . $file ),
 			sprintf( 'class="update-link" aria-label="%s"',
-				esc_attr( sprintf( __( 'Update %s now' ), $title ) )
+				esc_attr( sprintf( __( 'Update %s now', 'litespeed-cache' ), $title ) )
 			)
 		);
 
@@ -766,10 +776,26 @@ class GUI extends Base {
 	public function finalize( $buffer ) {
 		$buffer = $this->_clean_wrapper( $buffer );
 
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false ) {
+		// Maybe restore doc.ref
+		if ( $this->conf( Base::O_GUEST ) && strpos( $buffer, '<head>' ) !== false && defined( 'LITESPEED_IS_HTML' ) ) {
+			$buffer = $this->_enqueue_guest_docref_js( $buffer );
+		}
+
+		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST && strpos( $buffer, '</body>' ) !== false && defined( 'LITESPEED_IS_HTML' ) ) {
 			$buffer = $this->_enqueue_guest_js( $buffer );
 		}
 
+		return $buffer;
+	}
+
+	/**
+	 * Append guest restore doc.ref JS for organic traffic count
+	 *
+	 * @since  4.4.6
+	 */
+	private function _enqueue_guest_docref_js( $buffer ) {
+		$js_con = File::read( LSCWP_DIR . self::LIB_GUEST_DOCREF_JS );
+		$buffer = preg_replace( '/<head>/', '<head><script data-no-optimize="1">' . $js_con . '</script>', $buffer, 1 );
 		return $buffer;
 	}
 
@@ -783,7 +809,7 @@ class GUI extends Base {
 		// $guest_update_url = add_query_arg( 'litespeed_guest', 1, home_url( '/' ) );
 		$guest_update_url = LSWCP_PLUGIN_URL . self::PHP_GUEST;
 		$js_con = str_replace( 'litespeed_url', esc_url( $guest_update_url ), $js_con );
-		$buffer = str_replace( '</body>', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer );
+		$buffer = preg_replace( '/<\/body>/', '<script data-no-optimize="1">' . $js_con . '</script></body>', $buffer, 1 );
 		return $buffer;
 	}
 

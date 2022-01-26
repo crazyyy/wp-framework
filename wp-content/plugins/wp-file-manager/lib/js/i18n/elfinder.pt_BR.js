@@ -4,7 +4,7 @@
  * @author Wesley Osorio<wesleyfosorio@hotmail.com>
  * @author Fernando H. Bandeira <fernando.bandeira94@gmail.com>
  * @author Gustavo Brito <britopereiragustavo@gmail.com>
- * @version 2020-09-01
+ * @version 2019-10-22
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -19,9 +19,9 @@
 		translator : 'Leandro Carvalho &lt;contato@leandrowebdev.net&gt;, Wesley Osorio&lt;wesleyfosorio@hotmail.com&gt;, Fernando H. Bandeira &lt;fernando.bandeira94@gmail.com&gt;, Gustavo Brito &lt;britopereiragustavo@gmail.com&gt;',
 		language   : 'Português',
 		direction  : 'ltr',
-		dateFormat : 'd M Y H:i', // will show like: 01 Set 2020 16:10
-		fancyDateFormat : '$1 H:i', // will show like: Hoje 16:10
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200901-161025
+		dateFormat : 'd M Y H:i', // will show like: 22 Out 2019 11:34
+		fancyDateFormat : '$1 H:i', // will show like: Hoje 11:34
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 191022-113433
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -186,7 +186,7 @@
 			'btnMime'   : 'Tipo MIME', // from v2.1 added 22.5.2015
 			'btnFileName':'Nome do arquivo',  // from v2.1 added 22.5.2015
 			'btnSaveClose': 'Salvar & Fechar', // from v2.1 added 12.6.2015
-			'btnBackup' : 'Cópia de segurança', // fromv2.1 added 28.11.2015
+			'btnBackup' : 'Backup', // fromv2.1 added 28.11.2015
 			'btnRename'    : 'Renomear',      // from v2.1.24 added 6.4.2017
 			'btnRenameAll' : 'Renomear (tudo)', // from v2.1.24 added 6.4.2017
 			'btnPrevious' : 'Anterior ($1/$2)', // from v2.1.24 added 11.5.2017
@@ -242,7 +242,7 @@
 			'msMar'       : 'Mar',
 			'msApr'       : 'Abr',
 			'msMay'       : 'Mai',
-			'msJun'       : 'Junho',
+			'msJun'       : 'Jun',
 			'msJul'       : 'Jul',
 			'msAug'       : 'Ago',
 			'msSep'       : 'Set',
@@ -338,7 +338,7 @@
 			'items'           : 'Itens',
 			'yes'             : 'sim',
 			'no'              : 'não',
-			'link'            : 'Ligação',
+			'link'            : 'Link',
 			'searcresult'     : 'Resultados da pesquisa',
 			'selected'        : 'itens selecionados',
 			'about'           : 'Sobre',
@@ -404,7 +404,6 @@
 			'autoSync'        : 'Auto sincronização',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Mover para cima',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Obter link', // from v2.1.7 added 9.2.2016
-			'share'			  : 'Compartilhar',
 			'selectedItems'   : 'Itens selecionados ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID da pasta', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Permitir acesso offline', // from v2.1.10 added 3.25.2016
@@ -446,7 +445,6 @@
 			'clearBrowserData': 'Inicialize as configurações salvas neste navegador', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Barra de ferramentas', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... $1 caracteres restantes.',  // from v2.1.29 added 30.8.2017
-			'linesLeft'       : '... $ 1 linhas restantes.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Somar', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Tamanho aproximado do arquivo', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Focar no elemento do diálogo com o mouse por cima',  // from v2.1.30 added 2.11.2017
@@ -480,7 +478,6 @@
 			'integrations'    : 'Integrações', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Este elFinder possui os seguintes serviços externos integrados. Por favor, verifique os termos de uso, política de privacidade, etc. antes de usá-lo.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : 'Mostrar itens ocultos', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : 'Editor de Código',
 			'hideHidden'      : 'Ocultar itens ocultos', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Mostrar/Ocultar itens ocultos', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : 'Tipos de arquivo para ativar com "Novo arquivo"', // from v2.1.41 added 7.8.2018
@@ -491,7 +488,7 @@
 			'description'     : 'Descrição', // from v2.1.43 added 19.10.2018
 			'website'         : 'Site da internet', // from v2.1.43 added 19.10.2018
 			'author'          : 'Autor', // from v2.1.43 added 19.10.2018
-			'email'           : 'O email', // from v2.1.43 added 19.10.2018
+			'email'           : 'Email', // from v2.1.43 added 19.10.2018
 			'license'         : 'Licença', // from v2.1.43 added 19.10.2018
 			'exportToSave'    : 'Este item não pode ser salvo. Para evitar perder as edições, você precisa exportar para o seu PC.', // from v2.1.44 added 1.12.2018
 			'dblclickToSelect': 'Clique duas vezes no arquivo para selecioná-lo.', // from v2.1.47 added 22.1.2019
@@ -502,7 +499,7 @@
 			'kindRoot'        : 'Raiz do volume', // from v2.1.16 added 16.10.2016
 			'kindFolder'      : 'Pasta',
 			'kindSelects'     : 'Seleções', // from v2.1.29 added 29.8.2017
-			'kindAlias'       : 'Pseudônimo',
+			'kindAlias'       : 'Alias',
 			'kindAliasBroken' : 'Alias inválido',
 			// applications
 			'kindApp'         : 'Aplicação',
@@ -538,7 +535,7 @@
 			'kindCHeader'     : 'C cabeçalho',
 			'kindCPP'         : 'C++',
 			'kindCPPHeader'   : 'C++ cabeçalho',
-			'kindShell'       : 'Script de shell Unix',
+			'kindShell'       : 'Unix shell script',
 			'kindPython'      : 'Python',
 			'kindJava'        : 'Java',
 			'kindRuby'        : 'Ruby',

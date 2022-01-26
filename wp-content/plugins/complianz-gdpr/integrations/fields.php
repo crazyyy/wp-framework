@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 add_filter( 'cmplz_fields_load_types', 'cmplz_filter_integration_fields', 10, 1 );
 function cmplz_filter_integration_fields( $fields ) {
 	global $cmplz_integrations_list;
@@ -18,7 +18,6 @@ function cmplz_filter_integration_fields( $fields ) {
 				'label'                   => $details['label'],
 				'table'                   => true,
 				'disabled'                => true,
-				'cols'                      => false,
 			);
 
 			if ( isset( $details['callback_condition'] ) ) {

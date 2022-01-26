@@ -131,7 +131,7 @@ if (typeof elFinder === "function" && elFinder.prototype.i18) {
       cmdgetfile: "Select files",
       cmdhelp: "About this software",
       cmdhome: "Root",
-      cmdinfo: "Get info & Share",
+      cmdinfo: "Get Info & Share",
       cmdmkdir: "New folder",
       cmdmkdirin: "Into New Folder", // from v2.1.7 added 19.2.2016
       cmdmkfile: "New file",

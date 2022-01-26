@@ -1,6 +1,9 @@
 <?php defined( 'ABSPATH' ) or die( "you do not have access to this page!" );?>
 
 <?php $progress = COMPLIANZ::$wizard->wizard_percentage_complete(); ?>
+<?php $premium = ( ! defined( 'cmplz_premium' ) ) ? true : false; ?>
+<?php $orange = $progress < 80 ? 'orange' : ''; ?>
+
 	<style>
 		@keyframes cmplz-load-progress-bar {
 			0% { width: 0; }
@@ -8,7 +11,7 @@
 		}
 	</style>
 	<div class="cmplz-progress-bar">
-		<div class="cmplz-progress-bar-value"></div>
+		<div class="cmplz-progress-bar-value <?php echo $orange ?>"></div>
 	</div>
 	<div class="cmplz-grid-progress">
 		<div class="cmplz-progress-percentage">
@@ -17,11 +20,29 @@
 		<div class="cmplz-progress-description">
 			<?php if ( $progress < 100
 			) {
-				printf( __( 'Your website is not ready for your selected regions yet.', 'complianz-gdpr' ),
-					cmplz_supported_laws() );
+				$warnings = COMPLIANZ::$admin->get_warnings( array(
+						'status' => array('urgent', 'open'),
+				) );
+				$warning_count = count( $warnings );
+				echo __( 'Consent Management is activated on your site.',  'complianz-gdpr' );
+				if ($warning_count > 0) {
+					echo ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $warning_count, 'complianz-gdpr' ), $warning_count );
+				}
+
+
 			} else {
-				printf( __( 'Well done! Your website is ready for your selected regions.', 'complianz-gdpr' ),
-					cmplz_supported_laws() );
+				if ( $premium ) {
+					_e( 'Well done! Your website is ready for your selected regions.', 'complianz-gdpr' );
+				} else {
+					$regions = cmplz_get_regions();
+					if ( count($regions)>0 ) {
+						$laws = [];
+						foreach ($regions as $region => $value) {
+							$laws[] = COMPLIANZ::$config->regions[$region]['law'];
+						}
+						printf( __( 'Great! Your website is configured for %s.', 'complianz-gdpr' ),  implode(', ', $laws) );
+					}
+				}
 			} ?>
 		</div>
 	</div>
@@ -61,6 +82,10 @@
 				if ( $status === 'urgent' ) {
 					$status_message = __("Urgent", 'complianz-gdpr');
 				}
+				if ( $status === 'premium' ) {
+					$status_message = __("Premium", 'complianz-gdpr');
+				}
+
 				?>
 				<div class="cmplz-progress-warning-container">
 					<div class="cmplz-progress-status-container">
@@ -73,7 +98,7 @@
 						<?php } ?>
 					</div>
 					<div>
-						<?php if ( $status === 'open' ) { ?>
+						<?php if ( $warning['dismissible'] ) { ?>
 						<button type="button" class="cmplz-dismiss-warning" data-warning_id="<?php echo $id?>">
 							<span class="cmplz-close-warning-x">X</span>
 						</button>

@@ -1,0 +1,25 @@
+.md-card {
+	margin: 0 2rem 2rem;
+	&.transparent {
+		background: rgba(white, 0.75);
+	}
+	&.centered {
+		margin-bottom: 1rem;
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 320px;
+		width: 90%;
+	}
+	&.text-centered {
+		text-align: center;
+	}
+	.suspects-list {
+		margin-top: 1em;
+	}
+}
+
+.suspects-box {
+	span {
+		display: block;
+	}
+}

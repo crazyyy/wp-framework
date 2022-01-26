@@ -1,0 +1,90 @@
+/* ==========================================================================
+ # Hero (generic styles)
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+$hero-breakpoint-s:  530px;
+$hero-breakpoint-m:  650px;
+$hero-breakpoint-l:  1120px;
+
+
+/* Only back-end
+----------------------------------------------- */
+
+.block-editor [data-type="acf/hero"] {
+
+  max-width: none;
+  border: 1px solid transparent;
+  &:hover {
+    border: 1px dotted rgba(0,0,0,.33);
+  }
+  &.is-selected {
+    border: 1px solid transparent;
+  }
+
+  .hero--layout-stack {
+    padding-top: 1.5rem;
+  }
+
+  // show placeholder if video is not playing in editor
+  video {
+    background: rgba(0,0,0,.2);
+  }
+
+}
+
+/* Only front-end
+----------------------------------------------- */
+
+.blocks .wp-block-hero {
+
+  &.is-first-block {
+    margin-top: 0;
+  }
+
+  &.is-last-block {
+    margin-bottom: 0;
+  }
+
+}
+
+/* Front-end and back-end
+----------------------------------------------- */
+
+.hero {
+  position: relative;
+  word-break: break-word;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    @include breakpoint($hero-breakpoint-s) {
+      font-size: 2rem;
+    }
+    @include breakpoint($hero-breakpoint-m) {
+      font-size: 2.25rem;
+    }
+    @include breakpoint($hero-breakpoint-l) {
+      font-size: 2.5rem;
+    }
+  }
+
+  p {
+    margin: 1rem 0 0 0;
+    font-size: 1rem;
+    @include breakpoint($hero-breakpoint-s) {
+      margin-top: 1.5rem;
+    }
+    @include breakpoint($hero-breakpoint-m) {
+      font-size: 1.125rem;
+    }
+  }
+
+  img
+  video {
+    display: block;
+    line-height: 0;
+  }
+
+}

@@ -1,14 +1,18 @@
 <?php
 /*
 Plugin Name: All In One WP Security
-Version: 4.4.9
+Version: 4.4.10
 Plugin URI: https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin
+Update URI: https://wordpress.org/plugins/all-in-one-wp-security-and-firewall/
 Author: Tips and Tricks HQ, Peter Petreski, Ruhul, Ivy
 Author URI: https://www.tipsandtricks-hq.com/
 Description: All round best WordPress security plugin!
 Text Domain: all-in-one-wp-security-and-firewall
 Domain Path: /languages
-License: GPL3
+License: GPL v3
+License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
+Requires at least: 5.0
+Requires PHP: 5.6
 */
 
 if(!defined('ABSPATH')){

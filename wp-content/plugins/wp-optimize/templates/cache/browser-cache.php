@@ -4,7 +4,7 @@
 
 	<h3 class="wpo-first-child"><?php _e('Browser static file caching settings (via headers)', 'wp-optimize');?></h3>
 	<p>
-		<?php echo __("Browser static file caching uses HTTP response headers to advise a visitor's browser to cache non-changing files for a while, so that it doesn't attempt to retrieve them upon every visit.", 'wp-optimize').' '.sprintf('<a href="%s" target="_blank">%s</a>', $info_link, __('Follow this link to get more information.', 'wp_optimize')); ?>
+		<?php echo __("Browser static file caching uses HTTP response headers to advise a visitor's browser to cache non-changing files for a while, so that it doesn't attempt to retrieve them upon every visit.", 'wp-optimize').' '.sprintf('<a href="%s" target="_blank">%s</a>', $info_link, __('Follow this link to get more information.', 'wp-optimize')); ?>
 	</p>
 
 	<div class="wpo-fieldgroup">
@@ -51,7 +51,7 @@
 				</form>
 			<?php
 			} else {
-				printf('<a href="%s" target="_blank">%s</a>', $faq_link, __('Follow this link to read the article about how to enable browser cache with your server software.', 'wp_optimize'));
+				printf('<a href="%s" target="_blank">%s</a>', $faq_link, __('Follow this link to read the article about how to enable browser cache with your server software.', 'wp-optimize'));
 			}
 			?>
 

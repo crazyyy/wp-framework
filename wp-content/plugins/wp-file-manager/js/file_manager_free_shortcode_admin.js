@@ -13,6 +13,8 @@ jQuery(document).ready(function () {
       defaultView: "list",
       height: 500,
       lang: fmlang,
+      soundPath: fmfparams.plugin_url+'sounds/',
+      baseUrl: fmfparams.plugin_url,
       /* Start */
       handlers: {
         /* Upload */
@@ -120,7 +122,12 @@ jQuery(document).ready(function () {
           ],
         },
       },
-
+      uiOptions : {
+        toolbarExtra : {
+          displayTextLabel: false,
+          preferenceInContextmenu: false
+        }
+      }
       /* END */
     })
     .elfinder("instance");

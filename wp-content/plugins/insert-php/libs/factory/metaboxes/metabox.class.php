@@ -71,7 +71,7 @@
 			 * Scripts that should be include on the page where the metabox will be shown.
 			 *
 			 * @since 1.0.0
-			 * @var Wbcr_Factory443_ScriptList
+			 * @var Wbcr_Factory450_ScriptList
 			 */
 			public $scripts;
 
@@ -79,7 +79,7 @@
 			 * Styles that should be include on the page where the metabox will be shown.
 			 *
 			 * @since 1.0.0
-			 * @var Wbcr_Factory443_StyleList
+			 * @var Wbcr_Factory450_StyleList
 			 */
 			public $styles;
 
@@ -93,9 +93,9 @@
 
 			/**
 			 * Creates a new instance of a metabox.
-			 * @param Wbcr_Factory443_Plugin $plugin
+			 * @param Wbcr_Factory450_Plugin $plugin
 			 */
-			public function __construct(Wbcr_Factory443_Plugin $plugin)
+			public function __construct(Wbcr_Factory450_Plugin $plugin)
 			{
 				$this->plugin = $plugin;
 				$this->id = empty($this->id)
@@ -120,8 +120,8 @@
 			 * Configures a metabox.
 			 *
 			 * @since 1.0.0
-			 * @param Factory443_ScriptList $scripts A set of scripts to include.
-			 * @param Factory443_StyleList $styles A set of style to include.
+			 * @param Factory450_ScriptList $scripts A set of scripts to include.
+			 * @param Factory450_StyleList $styles A set of style to include.
 			 * @return void
 			 */
 			public function configure($scripts, $styles)

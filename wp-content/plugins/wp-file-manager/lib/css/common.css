@@ -292,3 +292,9 @@ div.elfinder {
 .ui-dialog.elfinder-dialog-info .elfinder-info-tb .elfinder-info-link{
     word-break: break-all;
 }
+
+/*for default theme css*/
+.wrap.wp-filemanager-wrap .ui-front.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-draggable.std42-dialog .ui-dialog-content.ui-widget-content .ui-helper-clearfix.elfinder-rm-title span.elfinder-cwd-icon:before {
+    left: 0;
+    top: 6px;
+}

@@ -152,6 +152,7 @@
 .fm_systemPropertyTbl th, .fm_systemPropertyTbl td{
 	padding:12px;
 	border:1px solid #f0f0f0;
+	text-align: left;
 }
 
 .fm_systemPropertyWrap .fm_BuyProBtn{
@@ -161,3 +162,33 @@
 }
 .fm_BuyProBtn:hover,
 .fm_BuyProBtn:focus{ box-shadow:none !important; }
+td.fm-tr-inline p {
+    margin: 0 !important;
+}
+td.fm-tr-inline input {
+    float: left;
+    margin: 3px 6px 0 0;
+}
+.fm-packet-area span.mb-value {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.fm-packet-area {
+    display: inline-block;
+    position: relative;
+}
+.fm-packet-area input::-webkit-outer-spin-button,
+.fm-packet-area input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.fm-packet-area input[type=number] {
+  -moz-appearance: textfield;
+}
+.fm-packet-area input.regular-text {
+    padding-right: 21px;
+}

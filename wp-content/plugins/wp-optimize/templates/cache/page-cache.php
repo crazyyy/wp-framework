@@ -1,4 +1,12 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
+<?php if ($does_server_handles_cache) : ?>
+<div class="wpo-info highlight-dashicons">
+	<h3><?php _e('Your web hosting company/server handles: ', 'wp-optimize'); ?></h3>
+	<p><?php _e('Page caching', 'wp-optimize'); ?><span class="dashicons dashicons-saved"></span></p>
+	<p><?php _e('Gzip compression', 'wp-optimize'); ?><span class="dashicons dashicons-saved"></span></p>
+	<p><?php _e('Browser static file caching (via headers)', 'wp-optimize'); ?><span class="dashicons dashicons-saved"></span></p>	
+</div>
+<?php else : ?>
 <div class="wpo-info">
 	<a class="wpo-info__trigger" href="#"><span class="dashicons dashicons-sos"></span> <?php _e('How to use the cache feature', 'wp-optimize'); ?> <span class="wpo-info__close"><?php _e('Close', 'wp-optimize'); ?></span></a>
 	<div class="wpo-info__content">
@@ -68,7 +76,7 @@
 
 	<div class="wpo-fieldgroup__subgroup">
 		<label for="enable_user_caching">
-			<input name="enable_user_caching" id="enable_user_caching" class="cache-settings" type="checkbox" value="true" <?php checked($wpo_cache_options['enable_user_caching']); ?>>
+			<input name="enable_user_caching" id="enable_user_caching" class="cache-settings wpo-select-group" type="checkbox" value="true" <?php checked($wpo_cache_options['enable_user_caching']); ?>>
 			<?php _e('Serve cached pages to logged in users', 'wp-optimize'); ?>
 		</label>
 		<span tabindex="0" data-tooltip="<?php _e('Enable this option if you do not have user-specific or restricted content on your website.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
@@ -100,4 +108,4 @@
 <img class="wpo_spinner" src="<?php echo esc_attr(admin_url('images/spinner-2x.gif')); ?>" alt="....">
 
 <span class="save-done dashicons dashicons-yes display-none"></span>
-
+<?php endif;

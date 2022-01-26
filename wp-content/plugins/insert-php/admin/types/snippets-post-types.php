@@ -38,9 +38,9 @@ class WINP_SnippetsType extends Wbcr_FactoryTypes410_Type {
 	public $capabilities = [ 'administrator' ];
 
 	/**
-	 * @param Wbcr_Factory443_Plugin $plugin
+	 * @param Wbcr_Factory450_Plugin $plugin
 	 */
-	function __construct( Wbcr_Factory443_Plugin $plugin ) {
+	function __construct( Wbcr_Factory450_Plugin $plugin ) {
 		$this->name           = WINP_SNIPPETS_POST_TYPE;
 		$this->plural_title   = __( 'Woody snippets', 'insert-php' );
 		$this->singular_title = __( 'Woody snippets', 'insert-php' );
@@ -55,13 +55,13 @@ class WINP_SnippetsType extends Wbcr_FactoryTypes410_Type {
 	 */
 	public function print_left_menu_styles() {
 		?>
-        <!-- Woody ad snippets -->
+        <!-- Woody Code Snippets -->
         <style>
             #menu-posts-wbcr-snippets .wp-menu-open .wp-menu-name {
                 background: #242525;
             }
         </style>
-        <!-- /Woody ad snippets -->
+        <!-- /Woody Code Snippets -->
 		<?php
 	}
 

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 /**
  * Override the forminator captcha message so users understand it doesn't work because recaptcha is blocked.
@@ -103,10 +103,9 @@ function cmplz_forminator_placeholder( $tags ) {
  * Add some custom css for the placeholder
  */
 
-add_action( 'wp_footer', 'cmplz_forminator_css' );
+add_action( 'cmplz_banner_css', 'cmplz_forminator_css' );
 function cmplz_forminator_css() {
 	?>
-	<style>
 		.cmplz-blocked-content-container.forminator-g-recaptcha {
 			max-width: initial !important;
 			height: 70px !important
@@ -121,7 +120,6 @@ function cmplz_forminator_css() {
 		.cmplz-blocked-content-container.forminator-g-recaptcha .cmplz-blocked-content-notice {
 			top: 2px
 		}
-	</style>
 	<?php
 }
 

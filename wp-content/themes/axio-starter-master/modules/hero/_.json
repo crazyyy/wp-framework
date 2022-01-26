@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "title": "hero",
+    "version": "2.0.0"
+  },
+  "php": {
+    "inc": [
+      "component-hero-background.php",
+      "component-hero-columns.php",
+      "component-hero-stack.php",
+      "setup.php"
+    ]
+  },
+  "css": {
+    "main.css": [
+      "assets/styles/hero.scss",
+      "assets/styles/hero-background.scss",
+      "assets/styles/hero-columns.scss",
+      "assets/styles/hero-stack.scss"
+    ],
+    "admin.css": [],
+    "editor-gutenberg.css": [
+      "assets/styles/hero.scss",
+      "assets/styles/hero-background.scss",
+      "assets/styles/hero-columns.scss",
+      "assets/styles/hero-stack.scss"
+    ]
+  },
+  "js": {
+    "main.js": [],
+    "editor-gutenberg.js": []
+  },
+  "img": [],
+  "sprite": []
+}

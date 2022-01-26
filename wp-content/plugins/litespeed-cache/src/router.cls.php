@@ -14,7 +14,6 @@ class Router extends Base {
 	const NONCE = 'LSCWP_NONCE';
 	const ACTION = 'LSCWP_CTRL';
 
-	const ACTION_SAVE_HTACCESS = 'save-htaccess';
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
 	const ACTION_DB_OPTM = 'db_optm';
 	const ACTION_PLACEHOLDER = 'placeholder';
@@ -189,8 +188,9 @@ class Router extends Base {
 		 */
 		$rest_prefix = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' );
 		if (
-			strpos( $_SERVER[ 'REQUEST_URI' ], $rest_prefix . '/wp/v2/media' ) !== false
-			&& strpos( $_SERVER[ 'HTTP_REFERER' ], 'wp-admin') !== false
+			! empty( $_SERVER[ 'REQUEST_URI' ] ) &&
+			strpos( $_SERVER[ 'REQUEST_URI' ], $rest_prefix . '/wp/v2/media' ) !== false &&
+			isset( $_SERVER[ 'HTTP_REFERER' ] ) && strpos( $_SERVER[ 'HTTP_REFERER' ], 'wp-admin') !== false
 		) {
 			Debug2::debug( '[Router] CDN bypassed: wp-json on admin page' );
 			$can = false;
@@ -499,6 +499,11 @@ class Router extends Base {
 				return;
 			}
 
+			if ( apply_filters( 'litespeed_qs_forbidden', false ) ) {
+				Debug2::debug( '[Router] LSCWP_CTRL forbidden by hook litespeed_qs_forbidden' );
+				return;
+			}
+
 			$_is_public_action = true;
 		}
 
@@ -512,13 +517,6 @@ class Router extends Base {
 		$_can_option = current_user_can( 'manage_options' );
 
 		switch ( $action ) {
-			// Save htaccess
-			case self::ACTION_SAVE_HTACCESS:
-				if ( ( ! $_is_multisite && $_can_option ) || $_can_network_option ) {
-					self::$_action = $action;
-				}
-				return;
-
 			// Save network settings
 			case self::ACTION_SAVE_SETTINGS_NETWORK:
 				if ( $_can_network_option ) {
@@ -627,6 +625,10 @@ class Router extends Base {
 		if ( ! isset( self::$_ip ) ) {
 			self::$_ip = self::get_ip();
 		}
+
+		if ( ! self::$_ip ) {
+			return false;
+		}
 		// $uip = explode('.', $_ip);
 		// if(empty($uip) || count($uip) != 4) Return false;
 		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip));
@@ -647,16 +649,16 @@ class Router extends Base {
 	 */
 	public static function get_ip() {
 		$_ip = '';
-		if ( function_exists( 'apache_request_headers' ) ) {
-			$apache_headers = apache_request_headers();
-			$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
-			if ( ! $_ip ) {
-				$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
-				$_ip = explode( ',', $_ip );
-				$_ip = $_ip[ 0 ];
-			}
+		// if ( function_exists( 'apache_request_headers' ) ) {
+		// 	$apache_headers = apache_request_headers();
+		// 	$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false;
+		// 	if ( ! $_ip ) {
+		// 		$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false;
+		// 		$_ip = explode( ',', $_ip );
+		// 		$_ip = $_ip[ 0 ];
+		// 	}
 
-		}
+		// }
 
 		if ( ! $_ip ) {
 			$_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false;

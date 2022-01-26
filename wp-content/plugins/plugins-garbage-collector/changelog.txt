@@ -1,0 +1,147 @@
+=== Changes List ===
+
+= 0.12 [15.08.2020] =
+* Update: Server side "Fatal error: Maximum execution time of NN seconds exceeded" should not take place now. PGC scans plugins with large quantity of files by splitting job to smaller parts per 500 files.
+* Update: "foreign key constraint fails" error should not prevent database table deletion. PGC temporally switches off "foreign keys constraints checking".
+* Fix: Known database tables with DB prefix 'wp_' inside name (like wp_pro_quiz_question from LearnDash LMS) were not recognized. Code had used str_replace( $db_prefix, '', $table_name ) to exclude DB prefix from the table name and broke the name itself.
+
+= 0.11.1 [23.06.2020] =
+* Fix: Checkbox to mark table for deletion was not shown, if table belongs to the known, but unused (uninstalled) plugin.
+* Fix: Plugin state translation is made now exactly before output, to use its value in the code logic safely.
+
+= 0.11. [19.06.2020] =
+* New: "Tools->Plugins Garbage Collector" menu item was renamed to "Tools->Database Cleanup"
+* New: Multisite support was added. It's safe to use PGC at the single sites of the WordPress multisite network.
+* New: PGC uses the list of known database tables and list of plugins which do not create own database tables. 
+This reduces files scanning time as plugins known for PGC are not scanned for database tables usage. PGC checks these lists updates once a day. There is an intent to extend/update known plugins list on the regular base.
+* New: It's possible to hide (temporally exclude from the listing) any found database table. Earlier this feature was available only for the tables belong to the active plugins. You can use this feature to hide the tables which are known for you, but are not recognized by PGC. Thanks for reporting such cases to vladimir@shinephp.com
+* Update: Call to deprecated function mysql_get_server_info() was excluded.
+* Update: PGC shows database tables in the original format, without converting them all to lowercase letters.
+* Fix: Last item in the installed plugins list ( item C in the list (A, B, C) ) was never scanned for database tables. Db tables created by such plugin were always shown as belong to unknown plugin.
+
+= 0.10.4 [20.06.2019] =
+* Marked as compatible with WordPress version 5.2.2
+
+= 0.10.3 [06.04.2018] =
+* Mark as compatible with WordPress version 4.9.5
+
+= 0.10.3 [01.09.2016] =
+* Fix: 1st plugin in the alphabetically ordered plugins list  was always skipped at the scan process.
+
+= 0.10.2 [08.01.2016] =
+* Fix: missed text was added to a translation
+* Japanese translation was added.
+
+
+= 0.10.1 [16.11.2015] =
+* Fix: Wrong "Scan" link under plugin row at the "Plugins" page was updated.
+
+= 0.10 [29.10.2015] =
+* use WordPress AJAX API and JSON for data exchange
+* move some logic to the client and split the whole task for the smaller parts to exclude server time limit PHP error for the sites with large quant of plugins installed.
+* use jQuery UI progress bar
+* restructure code
+* escape translated text
+
+= 0.9.15 =
+* 01.12.2014
+* Fix for fatal error during activation with fresh install of WordPress 4.0 (missed WPLANG constant caused plugin to stop execution).
+  Unfortunately it worked fine under WP 4.0 with wp-config.php from previous version with WPLANG defined.
+
+= 0.9.14 =
+* 30.06.2014
+* Polish translation was updated. Thanks to Grzegorz Janoszka.
+
+= 0.9.12 =
+* 2.12.2012
+* Dutch - Nederlands translation was updated. Thanks to Harald Labout.
+* load_plugin_textdomain() call moved to the 'plugins_loaded' hook for higher compatibility with translation plugins.
+
+= 0.9.11 =
+* 31.10.2012
+* In case other plugin had some uppercase letters at the DB table name PGC failed to define that plugin as table owner. It is fixed now.
+
+= 0.9.10 =
+* 22.08.2012
+* Minor code cleanup and unused piece of code removing
+
+= 0.9.9 =
+* 16.07.2012
+* Polish translation is added, thanks to Esej Konrad Łącki.
+
+= 0.9.8 =
+* 15.04.2012
+* Lithuanian translation is added, thanks to Vincent G.
+
+= 0.9.7 =
+* 28.07.2011
+* AJAX empty response for WordPress multi-site with subdomains is fixed - thanks to alx359. 
+* AJAX error processing is enhanced slightly.
+* Minor enhancements to plugin page CSS are made.
+
+= 0.9.5 =
+* 16.01.2011
+* Chinese Simple translation is added.
+* Minor change to pgc-ajax.js errors processing is made.
+
+= 0.9.4 =
+* 28.12.2010
+* Italian translation is updated.
+* Latin translation is added.
+* Thanks to [Alessandro Mariani](http://technodin.org) for these translations update.
+
+= 0.9.3 =
+* 14.10.2010
+* Bug fix: database table names had been processed in the lowercase format and tables could not be deleted if have uppercase letters in it.  It is fixed now. If database table has 'dbTableWithSomeData' name, you will see it as 'dbTableWithSomeData', not as 'dbtablewithsomedata'. Thanks to [Deirdre](http://unlimitedwhispers.com) who found this bug.
+
+= 0.9.2 =
+* 27.09.2010
+* Technical update for WordPress 3.0 full compatibility. Staff deprecated since WordPress v.3.0 is excluded.
+* Italian translation update. Thanks to [Alessandro Mariani](http://technodin.org).
+
+= 0.9.1 =
+* 07.07.2010
+* options form layout problem is fixed. That was wrong pgc-admin.css file version issue.
+
+= 0.9 =
+* 01.07.2010
+* You can mark tables which you do not wish to see as scan results as hidden.
+* You can search extra columns in the core WordPress tables, which could be added by plugins.
+* Czech translation is added
+
+= 0.6 = 
+* 25.05.2010
+* Dutch translation is updated.
+
+= 0.5.2 =
+* 18.05.2010
+* Italian translation is updated
+
+= 0.5.1 =
+* 14.05.2010
+* German translation is updated
+
+= 0.5 =
+* 12.05.2010
+* Italian translation is added
+* Lost translation domain inserted into a few places in the source code. Translators are welcome to update their work :).
+
+= 0.4 =
+* 03.05.2010
+* "Delete Tables" button is added
+* General code cleanup
+
+= 0.3 =
+* 02.05.2010
+* German, Japanese translations are added
+* Another text domain 'pgc' missing bug is fixed
+
+= 0.2 =
+* 01.05.2010
+* French, Indonesian, Spanish translations are added
+* Text domain 'pgc' missing bug is fixed
+
+
+= 0.1 =
+* 29.04.2010
+* 1st pre-release.

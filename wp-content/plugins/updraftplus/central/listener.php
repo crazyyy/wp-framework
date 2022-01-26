@@ -30,7 +30,7 @@ class UpdraftCentral_Listener {
 	 * @param Array $command_classes - commands
 	 */
 	public function __construct($keys = array(), $command_classes = array()) {
-		global $updraftplus;
+		global $updraftplus, $updraftcentral_host_plugin;
 		$this->ud = $updraftplus;
 		// It seems impossible for this condition to result in a return; but it seems Plesk can do something odd within the control panel that causes a problem - see HS#6276
 		if (!is_a($this->ud, 'UpdraftPlus')) return;
@@ -45,7 +45,8 @@ class UpdraftCentral_Listener {
 			$this->udrpc_version = $ud_rpc->version;
 			
 			// Only turn this on if you are comfortable with potentially anything appearing in your PHP error log
-			if (defined('UPDRAFTPLUS_UDRPC_FORCE_DEBUG') && UPDRAFTPLUS_UDRPC_FORCE_DEBUG) $ud_rpc->set_debug(true);
+			if (defined('UPDRAFTCENTRAL_UDRPC_FORCE_DEBUG') && UPDRAFTCENTRAL_UDRPC_FORCE_DEBUG) $ud_rpc->set_debug(true);
+
 			$this->receivers[$indicator] = $ud_rpc;
 			$this->extra_info[$indicator] = isset($key['extra_info']) ? $key['extra_info'] : null;
 			$ud_rpc->set_key_local($key['key']);
@@ -169,6 +170,7 @@ class UpdraftCentral_Listener {
 	 * @return Array - filtered response
 	 */
 	public function udrpc_action($response, $command, $data, $key_name_indicator, $ud_rpc) {
+		global $updraftcentral_host_plugin;
 
 		try {
 
@@ -195,7 +197,8 @@ class UpdraftCentral_Listener {
 			$command_class = isset($this->commands[$class_prefix]) ? $this->commands[$class_prefix] : new stdClass;
 	
 			if ('_' == substr($command, 0, 1) || !is_a($command_class, $command_php_class) || (!method_exists($command_class, $command) && !method_exists($command_class, '__call'))) {
-				if (defined('UPDRAFTPLUS_UDRPC_FORCE_DEBUG') && UPDRAFTPLUS_UDRPC_FORCE_DEBUG) error_log("Unknown RPC command received: ".$command);
+				if (defined('UPDRAFTCENTRAL_UDRPC_FORCE_DEBUG') && UPDRAFTCENTRAL_UDRPC_FORCE_DEBUG) error_log("Unknown RPC command received: ".$command);
+
 				return $this->return_rpc_message(array('response' => 'rpcerror', 'data' => array('code' => 'unknown_rpc_command', 'data' => array('prefix' => $class_prefix, 'command' => $command, 'class' => $command_php_class))));
 			}
 	
@@ -238,15 +241,17 @@ class UpdraftCentral_Listener {
 	}
 	
 	private function initialise_listener_error_handling() {
+		global $updraftcentral_host_plugin;
+
 		$this->ud->error_reporting_stop_when_logged = true;
 		set_error_handler(array($this->ud, 'php_error'), E_ALL & ~E_STRICT);
 		$this->php_events = array();
 		@ob_start();// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Might be a bigger picture that I am missing but do we need to silence errors here?
-		add_filter('updraftplus_logline', array($this, 'updraftplus_logline'), 10, 4);
-		if (!UpdraftPlus_Options::get_updraft_option('updraft_debug_mode')) return;
+		add_filter($updraftcentral_host_plugin->get_logline_filter(), array($this, 'updraftcentral_logline'), 10, 4);
+		if (!$updraftcentral_host_plugin->get_debug_mode()) return;
 	}
 	
-	public function updraftplus_logline($line, $nonce, $level, $uniq_id) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function updraftcentral_logline($line, $nonce, $level, $uniq_id) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		if ('notice' === $level && 'php_event' === $uniq_id) {
 			$this->php_events[] = $line;
 		}

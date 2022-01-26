@@ -28,11 +28,8 @@ function rsssl_le_get_notices_list($notices) {
 	$renew_link  = rsssl_letsencrypt_wizard_url();
 	$link_open   = '<a href="' . $renew_link . '">';
 
-	$response = RSSSL_LE()->letsencrypt_handler->search_ssl_installation_url();
-	$url      = $response->output;
-
 	$ssl_generate_url = add_query_arg( array( "page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt" ), admin_url( "options-general.php" ) );
-
+	$ssl_download_url = add_query_arg( array( "step" => 6), $ssl_generate_url );
 	if ( rsssl_generated_by_rsssl() ) {
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
@@ -68,14 +65,14 @@ function rsssl_le_get_notices_list($notices) {
 				),
 				'manual-installation'           => array(
 					'msg'         => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl" ),
-						'<a target="_blank" href="' . $url . '">', '</a>' ),
+						'<a href="' . $ssl_download_url . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'manual-generation'             => array(
 					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually.", "really-simple-ssl" ),
-						'<a target="_blank" href="' . $ssl_generate_url . '">', '</a>' ),
+						'<a href="' . $ssl_generate_url . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
@@ -120,7 +117,7 @@ function rsssl_le_get_notices_list($notices) {
 						                 . rsssl_read_more( "https://really-simple-ssl.com/protect-ssl-generation-directories" ),
 						'icon'        => 'warning',
 						'plusone'     => true,
-						'dismissible' => false,
+						'dismissible' => true,
 					),
 				),
 			);
@@ -133,13 +130,18 @@ function rsssl_le_get_notices_list($notices) {
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
 
 /**
- * Extend fields with some custom notices
+ * 	DNS is only necessary for multisite with subdomains, or with domain mapping.
+ *  On other setups, directory verification is the easiest.
+ *  On  cPanel, there are several subdirectories like mail. etc. which can only get an SSL with a wildcard cert.
+ *  For this reason, this option only appears when on cPanel
+ *
  * @param $fields
  *
  * @return array
  */
 
 function rsssl_le_custom_field_notices($fields){
+
 	if ( rsssl_is_cpanel() ) {
 		if( get_option('rsssl_verification_type') === 'DNS' ) {
 			$fields['email_address']['help'] =
@@ -153,6 +155,10 @@ function rsssl_le_custom_field_notices($fields){
 				'<br><br><button class="button button-default" name="rsssl-switch-to-dns">'.__("Switch to DNS verification", "really-simple-ssl").'</button>';
 		}
 	}
+
+
+
+
 	return $fields;
 }
 add_filter( 'rsssl_fields', 'rsssl_le_custom_field_notices', 30, 1 );

@@ -60,28 +60,6 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	 */
 
 	/**
-	 * Retrieves current clean url for anchor link where href attribute value is not url (for ex. #div) or empty
-	 *
-	 * @return string
-	 */
-	public function get_current_clean_url() {
-		$class_name = $this->get_class_name();
-		$url = call_user_func(array($class_name, 'get_current_clean_url'));
-		if (!empty($url)) return $url;
-
-		return '';
-	}
-
-	/**
-	 * Returns the name of the plugin that is associated with this host class
-	 *
-	 * @return string
-	 */
-	public function get_plugin_name() {
-		return self::PLUGIN_NAME;
-	}
-
-	/**
 	 * Checks whether the plugin's DIR constant is currently define or not
 	 *
 	 * @return bool
@@ -91,87 +69,12 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	}
 
 	/**
-	 * Retrieves the host directory associated with the host plugin
-	 *
-	 * @return string
-	 */
-	public function get_host_dir() {
-		return $this->is_host_dir_set() ? UPDRAFTPLUS_DIR : '';
-	}
-
-	/**
-	 * Checks whether the plugin's SET_TIME_LIMIT constant is currently define or not
-	 *
-	 * @return bool
-	 */
-	public function is_time_limit_set() {
-		return defined('UPDRAFTPLUS_SET_TIME_LIMIT') ? true : false;
-	}
-
-	/**
-	 * Retrieves the script execution limit set by the host plugin, otherwise,
-	 * we will pull from the PHP config file (php.ini) or set to 60 (1 minute) by default
-	 *
-	 * @return int
-	 */
-	public function get_time_limit() {
-		$php_limit = ini_get('max_execution_time');
-		$default = !empty($php_limit) ? $php_limit : 60;
-
-		return $this->is_time_limit_set() ? UPDRAFTPLUS_SET_TIME_LIMIT : $default;
-	}
-
-	/**
 	 * Retrieves the filter used by UpdraftPlus to log errors or certain events
 	 *
 	 * @return string
 	 */
 	public function get_logline_filter() {
 		return 'updraftplus_logline';
-	}
-
-	/**
-	 * Retrieves the filter used by UpdraftPlus to pull the authentication headers
-	 *
-	 * @return string
-	 */
-	public function get_auth_headers_filter() {
-		return 'updraftplus_auth_headers';
-	}
-
-	/**
-	 * Retrieves the filter used by UpdraftPlus to pull the remotecontrol login key
-	 *
-	 * @return string
-	 */
-	public function get_login_key_filter() {
-		return 'updraftplus_remotecontrol_login_key';
-	}
-
-	/**
-	 * Retrieves the UpdraftCentral generated keys
-	 *
-	 * @return array|bool
-	 */
-	public function get_central_localkeys() {
-		return $this->get_option('updraft_central_localkeys');
-	}
-
-	/**
-	 * Updates the UpdraftCentral's keys
-	 *
-	 * @param string $value	    Specify option value
-	 * @param bool   $use_cache Whether or not to use the WP options cache
-	 * @param string $autoload	Whether to autoload (only takes effect on a change of value)
-	 *
-	 * @return bool
-	 */
-	public function update_central_localkeys($value, $use_cache = true, $autoload = 'yes') {
-		if ($this->has_options()) {
-			return $this->update_option('updraft_central_localkeys', $value, $use_cache, $autoload);
-		}
-
-		return false;
 	}
 
 	/**
@@ -211,21 +114,6 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 		if ($updraftplus) {
 			$updraftplus->register_wp_http_option_hooks($register);
 		}
-	}
-
-	/**
-	 * Retrieves the WordPress version
-	 *
-	 * @return string|bool
-	 */
-	public function get_wordpress_version() {
-		global $updraftplus;
-
-		if ($updraftplus) {
-			return $updraftplus->get_wordpress_version();
-		}
-
-		return false;
 	}
 
 	/**
@@ -351,19 +239,6 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	}
 
 	/**
-	 * Returns the admin page url of the host plugin
-	 *
-	 * @return string
-	 */
-	public function admin_page_url() {
-		if ($this->has_options()) {
-			return UpdraftPlus_Options::admin_page_url();
-		}
-
-		return '';
-	}
-
-	/**
 	 * Returns the filesystem class of the host's plugin
 	 *
 	 * @return class|bool
@@ -386,74 +261,12 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	}
 
 	/**
-	 * Returns the updraftplus.com destination path
-	 *
-	 * @return string
-	 */
-	public function get_udcom_destination() {
-		return defined('UPDRAFTPLUS_OVERRIDE_UDCOM_DESTINATION') ? UPDRAFTPLUS_OVERRIDE_UDCOM_DESTINATION : 'https://updraftplus.com/?updraftcentral_action=receive_key';
-	}
-
-	/**
-	 * Returns the googlecloud callback url used by the analytics module
-	 *
-	 * @return string
-	 */
-	public function get_googlecloud_callback_url() {
-		return defined('UPDRAFTPLUS_GOOGLECLOUD_CALLBACK_URL') ? UPDRAFTPLUS_GOOGLECLOUD_CALLBACK_URL : 'https://auth.updraftplus.com/auth/googleanalytics';
-	}
-
-	/**
-	 * Returns the googlecloud client id used to connect to the google app
-	 *
-	 * @return string
-	 */
-	public function get_googlecloud_client_id() {
-		return defined('UPDRAFTPLUS_GOOGLECLOUD_CLIENT_ID') ? UPDRAFTPLUS_GOOGLECLOUD_CLIENT_ID : '306245874349-6s896c3tjpra26ns3dpplhqcl6rv6qlb.apps.googleusercontent.com';
-	}
-
-	/**
 	 * Checks whether force debugging is set
 	 *
 	 * @return bool
 	 */
 	public function is_force_debug() {
 		return (defined('UPDRAFTPLUS_UDRPC_FORCE_DEBUG') && UPDRAFTPLUS_UDRPC_FORCE_DEBUG) ? true : false;
-	}
-
-	/**
-	 * Checks whether autobackup addon is present
-	 *
-	 * @return bool
-	 */
-	public function has_autobackup_addon() {
-		return class_exists('UpdraftPlus_Addon_Autobackup');
-	}
-
-	/**
-	 * Get information on disk space used by an entity, or by UD's internal directory. Returns as a human-readable string.
-	 *
-	 * @param string $entity The entity (e.g. 'plugins'; 'all' for all entities, or 'ud' for UD's internal directory)
-	 * @param string $format Return format - 'text' or 'numeric'
-	 * @return string|integer|bool If $format is text, It returns strings. Otherwise integer value.
-	 */
-	public function get_disk_space_used($entity, $format = 'text') {
-		if ($this->has_filesystem_functions()) {
-			return UpdraftPlus_Filesystem_Functions::get_disk_space_used($entity, $format);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Checks whether autobackup is run by default
-	 *
-	 * @param bool $default The default value to set when the option is not found
-	 *
-	 * @return bool
-	 */
-	public function get_autobackup_default($default = true) {
-		return $this->get_option('updraft_autobackup_default', $default);
 	}
 
 	/**

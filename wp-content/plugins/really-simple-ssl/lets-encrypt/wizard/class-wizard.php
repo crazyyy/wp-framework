@@ -110,7 +110,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				delete_option('rsssl_skip_challenge_directory_request' );
 				delete_option('rsssl_force_plesk' );
 				delete_option('rsssl_force_cpanel' );
-				delete_option('rsssl_disable_ocsp' );
 				delete_option('rsssl_create_folders_in_root');
 				delete_option('rsssl_hosting_dashboard');
 				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
@@ -121,6 +120,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
 			    update_option('rsssl_verification_type', 'DNS');
 			    $step = $this->step();
+			    rsssl_progress_add('directories');
 			    //if we're in step directories, skip to DNS step
 			    if ( $step == 3) {
 				    wp_redirect(rsssl_letsencrypt_wizard_url().'&step=4');
@@ -300,7 +300,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 } else {
                                     console.log("response.action not found ".response.action);
                                 }
-
                             },
                             error: function(response) {
                                 console.log("error");
@@ -386,27 +385,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         </div>
                     </div>
                 </div>
-                <div class="rsssl-help-warning-wrap"><?php
-                    if ($this->step() === 1) {
-                        rsssl_sidebar_notice($this->support_form());
-                    } ?>
+                <div class="rsssl-help-warning-wrap">
                 </div>
             </div>
 			<?php
 		}
-
-
-		public function support_form(){
-		    $url = $this->get_support_url();
-			ob_start();?>
-			<h2><?php _e("Before you begin!","really-simple-ssl") ?></h2>
-            <p><?php _e("We're currently in Beta. This means we need your help! During this process you might discover you want to give some feedback about your experiences or need some help. If so, keep or form ready and try to be so complete and precise as possible so we can assist as fast as possible.","really-simple-ssl")?></p>
-            <?php wp_nonce_field('rsssl_save', 'rsssl_le_nonce') ?>
-            <a target="_blank" href="<?php echo $url?>" type="submit" class="button button-default rsssl-priority" name="rsssl-letsencrypt-support"><?php _e("Support","really-simple-ssl")?></a>
-			<?php
-			return ob_get_clean();
-		}
-
 
 		public function get_installation_progress(){
 			$error   = false;
@@ -822,9 +805,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			} else {
 				$args['title'] = RSSSL_LE()->config->steps[$page][$step]['title'];
 			}
-			if ( isset( $_POST['rsssl-save'] ) ) {
-				$args['save_notice'] = rsssl_notice( __( "Changes saved successfully", 'really-simple-ssl' ), 'success', true , false);
-			}
+
 			ob_start();
 			RSSSL_LE()->field->get_fields( $page, $step, $section );
 			$args['fields'] = ob_get_clean();
@@ -839,7 +820,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				if ( count($action_list)>0 ) {
 					$disabled = 'disabled';
 				}
-				$args['next_button'] = '<input '.$disabled.' class="button button-primary rsssl-next" type="submit" name="rsssl-next" value="'. __( "Next", 'really-simple-ssl' ) . '">';
+				$args['next_button'] = '<input '.$disabled.' class="button button-primary rsssl-next" type="submit" name="rsssl-next" value="'. __( "Save and continue", 'really-simple-ssl' ) . '">';
 			}
 
 			if ( $step > 0  && $step < $this->total_steps( $page )) {
@@ -853,6 +834,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		}
 
+		/**
+         * @deprecated
+		 * @return string
+		 */
 		public function get_support_url()
 		{
             $user_info = get_userdata(get_current_user_id());
@@ -953,10 +938,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 
 			// Let's encrypt
-			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard.css", false, rsssl_version );
+			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard$minified.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard' );
 			// @todo admin css in wizard.less
-			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin.css", false, rsssl_version );
+			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin$minified.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard-admin' );
 
 			wp_enqueue_script( 'rsssl-wizard', rsssl_le_url . "wizard/assets/js/wizard$minified.js", array( 'jquery', 'select2' ), rsssl_version.time(), true );

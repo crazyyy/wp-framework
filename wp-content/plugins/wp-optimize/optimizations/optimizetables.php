@@ -80,6 +80,11 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 
 				$this->register_meta('overhead', $overhead_usage);
 				$this->register_meta('overhead_formatted', $wp_optimize->format_size($overhead_usage));
+			} else {
+				$this->register_meta('error', 1);
+				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
+				return false;
+
 			}
 		} else {
 			$tables = $this->optimizer->get_tables();

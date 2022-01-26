@@ -1,0 +1,39 @@
+/* ==========================================================================
+ # Social menu
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+.social-navigation {
+
+  &__items {
+    @include list-reset;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+
+    a {
+      @include transition;
+      color: var(--color-text-light);
+      &:hover, &:focus, &:active {
+        color: var(--color-primary);
+      }
+    }
+
+    svg {
+      height: 1.5rem;
+      width: 1.5rem;
+      @include breakpoint($breakpoint-s) {
+        height: 1.75rem;
+        width: 1.75rem;
+      }
+    }
+
+    .social-navigation__item__label {
+      @include visuallyhidden;
+    }
+
+  }
+
+}
+

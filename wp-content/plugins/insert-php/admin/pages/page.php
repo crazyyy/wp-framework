@@ -17,12 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Common Settings
  */
-class WINP_Page extends Wbcr_FactoryPages442_AdminPage {
+class WINP_Page extends Wbcr_FactoryPages449_AdminPage {
 
 	/**
-	 * @param Wbcr_Factory443_Plugin $plugin
+	 * @param Wbcr_Factory450_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory443_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory450_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		parent::__construct( $plugin );

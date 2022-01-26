@@ -47,6 +47,9 @@ class WPO_Cache_Rules {
 		add_action('wpo_cache_config_updated', array($this, 'cache_config_updated'), 10, 1);
 		add_action('wp_insert_comment', array($this, 'comment_inserted'), 10, 2);
 
+		add_action('woocommerce_variation_set_stock', array($this, 'purge_product_page'), 10, 1);
+		add_action('woocommerce_product_set_stock', array($this, 'purge_product_page'), 10, 1);
+
 		/**
 		 * List of hooks for which when executed, the cache will be purged
 		 *
@@ -60,6 +63,8 @@ class WPO_Cache_Rules {
 				add_action($action, array($this, 'purge_cache'));
 			}
 		}
+
+		add_filter('wpo_cache_cookies', array($this, 'wpo_cache_cookies'), 9);
 	}
 
 	/**
@@ -300,6 +305,15 @@ class WPO_Cache_Rules {
 	}
 
 	/**
+	 * Purge product page upon stock update
+	 */
+	public function purge_product_page($product_with_stock) {
+		if (!empty($product_with_stock->get_id())) {
+			WPO_Page_Cache::delete_single_post_cache($product_with_stock->get_id());
+		}
+	}
+
+	/**
 	 * Clears the cache.
 	 */
 	public function purge_cache() {
@@ -318,6 +332,20 @@ class WPO_Cache_Rules {
 		if (is_array($config['cache_exception_urls']) && in_array('/', $config['cache_exception_urls'])) {
 			WPO_Page_Cache::delete_cache_by_url(home_url());
 		}
+	}
+
+	/**
+	 * Add cookie names that are need separate caching
+	 */
+	public function wpo_cache_cookies($cookies) {
+		$cookies[] = 'cookie_notice_accepted';
+		$cookies[] = 'cookielawinfo-checkbox-necessary';
+		$cookies[] = 'cookielawinfo-checkbox-functional';
+		$cookies[] = 'cookielawinfo-checkbox-advertisement';
+		$cookies[] = 'cookielawinfo-checkbox-others';
+		$cookies[] = 'cookielawinfo-checkbox-analytics';
+		$cookies[] = 'cookielawinfo-checkbox-performance';
+		return $cookies;
 	}
 
 	/**

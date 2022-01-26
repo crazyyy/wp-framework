@@ -3,387 +3,211 @@
 if (!defined('ABSPATH')) die('No direct access.');
 
 /**
- * Semaphore Lock Management Library
- * Adapted from WP Social under the GPL 
- * Thanks to Alex King (https://github.com/crowdfavorite/wp-social)
+ * Class Updraft_Semaphore_3_0
+ *
+ * This class is much simpler to use than the the previous series, as it has dropped support for complicated cases that were not being used. It also now only uses a single row in the options database, and takes care of creating it itself internally.
+ *
+ * Logging, though, may be noisier, unless your loggers are taking note of the log level and only registering what is required.
+ *
+ * Example of use (a lock that will expire if not released within 300 seconds)
+ * 
+ * See test.php for a longer example (including logging).
+ *
+ * $my_lock = new Updraft_Semaphore_3_0('my_lock_name', 300);
+ * // If getting the lock does not succeed first time, try again up to twice
+ * if ($my_lock->lock(2)) {
+ *   try {
+ *     // do stuff ...
+ *   } catch (Exception $e) {
+ *     // We are making sure we release the lock in case of an error
+ *   } catch (Error $e) {
+ *     // We are making sure we release the lock in case of an error
+ *   }
+ *   $my_lock->release();
+ * } else {
+ *   error_log("Sorry, could not get the lock");
+ * }
  */
+class Updraft_Semaphore_3_0 {
 
-if (!class_exists('Updraft_Semaphore_2_2')) :
-
-class Updraft_Semaphore_2_2 {
-
-	/**
-	 * Lock Broke
-	 *
-	 * @var boolean
-	 */
-	protected $lock_broke = false;
-
-	/**
-	 * Gained the lock successfully
-	 *
-	 * @var Integer
-	 */
-	protected $last_updated_lock = 0;
+	// Time after which the lock will expire (in seconds)
+	protected $locked_for;
+	
+	// Name for the lock in the WP options table
+	protected $option_name;
+	
+	// Lock status - a boolean
+	protected $acquired = false;
+	
+	// An array of loggers
+	protected $loggers = array();
 
 	/**
-	 * Array of loggers
+	 * Constructor. Instantiating does not lock anything, but sets up the details for future operations.
 	 *
-	 * @var array
+	 * @param String  $name		  - a unique (across the WP site) name for the lock. Should be no more than 51 characters in length (because of the use of the WP options table, with some further characters used internally)
+	 * @param Integer $locked_for - time (in seconds) after which the lock will expire if not released. This needs to be positive if you don't want bad things to happen.
+	 * @param Array	  $loggers	  - an array of loggers
 	 */
-	protected $loggers;
-
-	/**
-	 * Name of the lock variable
-	 *
-	 * @var String
-	 */
-	public $lock_name = 'lock';
-
-	/**
-	 * Initializes the semaphore object.
-	 *
-	 * @param string $semaphore Name of semaphore lock
-	 * @return WP_Optimize_Semaphore
-	 */
-	public function __construct($semaphore = 'lock') {
-		$this->lock_name = $semaphore;
-		$this->ensure_semaphore_exists();
+	public function __construct($name, $locked_for = 300, $loggers = array()) {
+		$this->option_name = 'updraft_lock_'.$name;
+		$this->locked_for = $locked_for;
+		$this->loggers = $loggers;
 	}
 
 	/**
-	 * Alternate way to inititalise this for backward compat
+	 * Internal function to make sure that the lock is set up in the database
 	 *
-	 * @static
-	 * @return Updraft_Semaphore
+	 * @return Integer - 0 means 'failed' (which could include that someone else concurrently created it); 1 means 'already existed'; 2 means 'exists, because we created it). The intention is that non-zero results mean that the lock exists.
 	 */
-	public static function factory() {
-		return new self;
-	}
-
-	/**
-	 * Call this method if (and *only* if) you previously gained the lock, and if you wish to retain it (so that it doesn't get broken by something else after the time in self::stuck_check() has expired)
-	 *
-	 * @param Boolean $not_more_often_than_every - require at least this number of seconds to have passed since the last update
-	 *
-	 * @return Boolean - whether any update took place (N.B. false can mean that one was not necessary)
-	 */
-	public function update_lock($not_more_often_than_every = 0) {
+	private function ensure_database_initialised() {
 	
-		if (!$this->last_updated_lock) return false;
-		
-		return $this->update_lock_time($not_more_often_than_every);
-	
-	}
-	
-	/**
-	 * Ensures that the semaphore options exists before using them
-	 */
-	public function ensure_semaphore_exists() {
-		// Make sure the options for semaphores exist
 		global $wpdb;
 		
-		$results = $wpdb->get_results("
-			SELECT option_id
-				FROM $wpdb->options
-				WHERE option_name IN ('updraft_locked_".$this->lock_name."', 'updraft_unlocked_".$this->lock_name."', 'updraft_last_lock_time_".$this->lock_name."', 'updraft_semaphore_".$this->lock_name."')
-		");
-
-		if (!is_array($results) || count($results) < 3) {
+		$sql = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name = %s", $this->option_name);
 		
-			if (is_array($results) && count($results) > 0) {
-				$this->log(sprintf('Semaphore (%s, $s) in an impossible/broken state - fixing (%d)', $this->lock_name, $wpdb->options, count($results)));
-			} else {
-				$this->log(sprintf('Semaphore (%s, %s) being initialised', $this->lock_name, $wpdb->options));
-			}
-			
-			$wpdb->query("
-				DELETE FROM $wpdb->options
-				WHERE option_name IN ('updraft_locked_".$this->lock_name."', 'updraft_unlocked_".$this->lock_name."', 'updraft_last_lock_time_".$this->lock_name."', 'updraft_semaphore_".$this->lock_name."')
-			");
-			
-			$wpdb->query($wpdb->prepare("
-				INSERT INTO $wpdb->options (option_name, option_value, autoload)
-				VALUES
-				('updraft_unlocked_".$this->lock_name."', '1', 'no'),
-				('updraft_last_lock_time_".$this->lock_name."', '%s', 'no'),
-				('updraft_semaphore_".$this->lock_name."', '0', 'no')
-			", current_time('mysql', 1)));
+		if (1 === (int) $wpdb->get_var($sql)) {
+			$this->log('Lock option ('.$this->option_name.', '.$wpdb->options.') already existed in the database', 'debug');
+			return 1;
 		}
-	}
-
-	/**
-	 * Attempts to start the lock. If the rename works, the lock is started.
-	 *
-	 * @return bool
-	 */
-	public function lock() {
-		global $wpdb;
-
-		// Attempt to set the lock
-		$affected = $wpdb->query("
-			UPDATE $wpdb->options
-			   SET option_name = 'updraft_locked_".$this->lock_name."'
-			 WHERE option_name = 'updraft_unlocked_".$this->lock_name."'
-		");
-
-		if ('0' == $affected && !$this->stuck_check()) {
-			$this->log('Semaphore lock ('.$this->lock_name.', '.$wpdb->options.') failed (line '.__LINE__.')');
-			$this->last_updated_lock = 0;
-			return false;
-		}
-
-		// Check to see if all processes are complete
-		$affected = $wpdb->query("
-			UPDATE $wpdb->options
-			   SET option_value = CAST(option_value AS UNSIGNED) + 1
-			 WHERE option_name = 'updraft_semaphore_".$this->lock_name."'
-			   AND option_value = '0'
-		");
-		if ('1' != $affected) {
-			if (!$this->stuck_check()) {
-				$this->log('Semaphore lock ('.$this->lock_name.', '.$wpdb->options.') failed (line '.__LINE__.')');
-				$this->last_updated_lock = 0;
-				return false;
-			}
-
-			// Reset the semaphore to 1
-			$wpdb->query("
-				UPDATE $wpdb->options
-				   SET option_value = '1'
-				 WHERE option_name = 'updraft_semaphore_".$this->lock_name."'
-			");
-
-			$this->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') reset to 1');
-		}
-
-		$this->update_lock_time();
-	
-		$this->log('Semaphore lock ('.$this->lock_name.') complete');
-
-		return true;
-	}
-
-	/**
-	 * Updates the lock to the current time (optionally, if it's not been updated in the last X seconds)
-	 *
-	 * @param Boolean $not_more_often_than_every - require at least this number of seconds to have passed since the last update
-	 *
-	 * @return Boolean - whether any update took place
-	 */
-	private function update_lock_time($not_more_often_than_every = 0) {
 		
-		if ($this->last_updated_lock && $this->last_updated_lock + $not_more_often_than_every > time()) return false;
+		$sql = $wpdb->prepare("INSERT INTO {$wpdb->options} (option_name, option_value, autoload) VALUES(%s, '0', 'no');", $this->option_name);
 		
-		global $wpdb;
+		$rows_affected = $wpdb->query($sql);
 		
-		// Set the lock time
-		$wpdb->query($wpdb->prepare("
-			UPDATE $wpdb->options
-			   SET option_value = %s
-			 WHERE option_name = 'updraft_last_lock_time_".$this->lock_name."'
-		", current_time('mysql', 1)));
-		$this->log('Set semaphore last lock ('.$this->lock_name.') time to '.current_time('mysql', 1));
-		
-		$this->last_updated_lock = time();
-		
-		return true;
-	}
-
-	/**
-	 * Increment the semaphore.
-	 *
-	 * @param  array $filters
-	 * @return Updraft_Semaphore
-	 */
-	public function increment(array $filters = array()) {
-		global $wpdb;
-
-		if (count($filters)) {
-			// Loop through all of the filters and increment the semaphore
-			foreach ($filters as $priority) {
-				for ($i = 0, $j = count($priority); $i < $j; ++$i) {
-					$this->increment();
-				}
-			}
+		if ($rows_affected > 0) {
+			$this->log('Lock option ('.$this->option_name.', '.$wpdb->options.') was created in the database', 'debug');
 		} else {
-			$wpdb->query("
-				UPDATE $wpdb->options
-				   SET option_value = CAST(option_value AS UNSIGNED) + 1
-				 WHERE option_name = 'updraft_semaphore_".$this->lock_name."'
-			");
-			$this->log('Incremented the semaphore ('.$this->lock_name.') by 1');
+			$this->log('Lock option ('.$this->option_name.', '.$wpdb->options.') failed to be created in the database (could already exist)', 'notice');
 		}
-
-		return $this;
+		
+		return ($rows_affected > 0) ? 2 : 0;
 	}
 
 	/**
-	 * Decrements the semaphore.
+	 * Attempt to acquire the lock. If it was already acquired, then nothing extra will be done (the method will be a no-op).
 	 *
-	 * @return void
-	 */
-	public function decrement() {
-		global $wpdb;
-
-		$wpdb->query("
-			UPDATE $wpdb->options
-			   SET option_value = CAST(option_value AS UNSIGNED) - 1
-			 WHERE option_name = 'updraft_semaphore_".$this->lock_name."'
-			   AND CAST(option_value AS UNSIGNED) > 0
-		");
-		$this->log('Decremented the semaphore ('.$this->lock_name.') by 1');
-	}
-
-	/**
-	 * Unlocks the process.
+	 * @param Integer $retries - how many times to retry (after a 1 second sleep each time)
 	 *
-	 * @return bool
+	 * @return Boolean - whether the lock was successfully acquired or not
 	 */
-	public function unlock() {
+	public function lock($retries = 0) {
+	
+		if ($this->acquired) return true;
+		
 		global $wpdb;
-
-		// Decrement for the master process.
-		$this->decrement();
-
-		$result = $wpdb->query("
-			UPDATE $wpdb->options
-			   SET option_name = 'updraft_unlocked_".$this->lock_name."'
-			 WHERE option_name = 'updraft_locked_".$this->lock_name."'
-		");
-
-		if ('1' == $result) {
-			$this->log('Semaphore ('.$this->lock_name.') unlocked');
+		
+		$time_now = time();
+		$acquire_until = $time_now + $this->locked_for;
+		
+		$sql = $wpdb->prepare("UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value < %d", $acquire_until, $this->option_name, $time_now);
+		
+		if (1 === $wpdb->query($sql)) {
+			$this->log('Lock ('.$this->option_name.', '.$wpdb->options.') acquired', 'info');
+			$this->acquired = true;
 			return true;
 		}
-
-		$this->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') still locked ('.$result.')');
+		
+		// See if the failure was caused by the row not existing (we check this only after failure, because it should only occur once on the site)
+		if (!$this->ensure_database_initialised()) return false;
+		
+		do {
+			// Now that the row has been created, try again
+			if (1 === $wpdb->query($sql)) {
+				$this->log('Lock ('.$this->option_name.', '.$wpdb->options.') acquired after initialising the database', 'info');
+				$this->acquired = true;
+				return true;
+			}
+			$retries--;
+			if ($retries >=0) {
+				$this->log('Lock ('.$this->option_name.', '.$wpdb->options.') not yet acquired; sleeping', 'debug');
+				sleep(1);
+				// As a second has passed, update the time we are aiming for
+				$time_now = time();
+				$acquire_until = $time_now + $this->locked_for;
+				$sql = $wpdb->prepare("UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value < %d", $acquire_until, $this->option_name, $time_now);
+			}
+		} while ($retries >= 0);
+		
+		$this->log('Lock ('.$this->option_name.', '.$wpdb->options.') could not be acquired (it is locked)', 'info');
+		
 		return false;
 	}
 
 	/**
-	 * Check if semaphore is currently locked.
+	 * Release the lock
 	 *
-	 * @return bool
-	 */
-	public function is_locked() {
-		global $wpdb;
-
-		$result = $wpdb->get_results("
-			SELECT option_name FROM $wpdb->options
-			 WHERE option_name = 'updraft_locked_".$this->lock_name."'
-		");
-
-		return is_array($result) && count($result);
-	}
-
-	/**
-	 * Attempts to jiggle the stuck lock loose.
+	 * N.B. We don't attempt to unlock it unless we locked it. i.e. Lost locks are left to expire rather than being forced. (If we want to force them, we'll need to introduce a new parameter).
 	 *
-	 * @return bool
+	 * @return Boolean - if it returns false, then the lock was apparently not locked by us (and the caller will most likely therefore ignore the result, whatever it is). 
 	 */
-	private function stuck_check() {
+	public function release() {
+		if (!$this->acquired) return false;
 		global $wpdb;
-
-		// Check to see if we already broke the lock.
-		if ($this->lock_broke) {
-			return true;
-		}
-
-		$current_time = current_time('mysql', 1);
-		$timeout = gmdate('Y-m-d H:i:s', time()-(defined('UPDRAFT_SEMAPHORE_LOCK_WAIT') ? UPDRAFT_SEMAPHORE_LOCK_WAIT : 60));
-
-		$affected = $wpdb->query($wpdb->prepare("
-			UPDATE $wpdb->options
-			   SET option_value = %s
-			 WHERE option_name = 'updraft_last_lock_time_".$this->lock_name."'
-			   AND option_value <= %s
-		", $current_time, $timeout));
-
-		if ('1' == $affected) {
-			$this->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') was stuck, set lock time to '.$current_time);
-			$this->lock_broke = true;
-			return true;
-		}
-
-		return false;
+		$sql = $wpdb->prepare("UPDATE {$wpdb->options} SET option_value = '0' WHERE option_name = %s", $this->option_name);
+		
+		$this->log('Lock option ('.$this->option_name.', '.$wpdb->options.') released', 'info');
+		
+		$result = (int) $wpdb->query($sql) === 1;
+		
+		$this->acquired = false;
+		
+		return $result;
 	}
-
+	
 	/**
-	 * Cleans up the DB of any residual data
+	 * Cleans up the DB of any residual data. This should not be used as part of ordinary unlocking; only as part of deinstalling, or if you otherwise know that the lock will not be used again. If calling this, it's redundant to first unlock (and a no-op to attempt to do so afterwards).
 	 */
 	public function delete() {
-
+		$this->acquired = false;
+	
 		global $wpdb;
+		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name = %s", $this->option_name));
 
-		$affected_options = $this->get_used_options();
-
-		foreach ($affected_options as $option) {
-			delete_option($option);
-		}
-
-		$this->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') was successfully cleaned up');
+		$this->log('Lock option ('.$this->option_name.', '.$wpdb->options.') was deleted from the database');
 	}
-
+	
 	/**
-	 * Cleans up the DB of any residual data
-	 */
-	private function get_used_options() {
-
-		$options = array(
-			"updraft_semaphore_{$this->lock_name}",
-			"updraft_last_lock_time_{$this->lock_name}",
-			"updraft_locked_{$this->lock_name}",
-			"updraft_unlocked_{$this->lock_name}",
-		);
-
-		return $options;
-	}
-
-	/**
-	 * Sets the logger for this instance.
+	 * Captures and logs any given messages
 	 *
-	 * @param array $loggers - the loggers for this task
+	 * @param String $message - the error message
+	 * @param String $level	  - the message level (debug, notice, info, warning, error)
+	 */
+	public function log($message, $level = 'info') {
+		if (isset($this->loggers)) {
+			foreach ($this->loggers as $logger) {
+				$logger->log($message, $level);
+			}
+		}
+	}
+	
+	/**
+	 * Sets the list of loggers for this instance (removing any others).
+	 *
+	 * @param Array $loggers - the loggers for this task
 	 */
 	public function set_loggers($loggers) {
-		if (is_array($loggers)) {
-			foreach ($loggers as $logger) {
-				$this->add_logger($logger);
-			}
+		$this->loggers = array();
+		foreach ($loggers as $logger) {
+			$this->add_logger($logger);
 		}
 	}
 
 	/**
 	 * Add a logger to loggers list
 	 *
-	 * @param Object $logger - a logger for the instance
+	 * @param Callable $logger - a logger (a method with a callable function 'log', taking string parameters $level $message)
 	 */
 	public function add_logger($logger) {
-		$this->_loggers[] = $logger;
+		$this->loggers[] = $logger;
 	}
 
 	/**
-	 * Return list of loggers
+	 * Return the current list of loggers
 	 *
-	 * @return array
+	 * @return Array
 	 */
 	public function get_loggers() {
-		return $this->_loggers;
+		return $this->loggers;
 	}
-
-	/**
-	 * Captures and logs any interesting messages
-	 *
-	 * @param String $message    - the error message
-	 * @param String $error_type - the error type
-	 */
-	public function log($message, $error_type = 'info') {
-
-		if (isset($this->_loggers)) {
-			foreach ($this->_loggers as $logger) {
-				$logger->log($error_type, $message);
-			}
-		}
-	}
-} // End UpdraftPlus_Semaphore
-endif;
+}

@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_Request {
 	//В новых версиях Вуди начиная с 2.2.10 будет обращаться к новой версии API библиотеки сниппетов
 	// это делается для обратной совместимости, чтобы старые версии продолжили работать со старым API
+	//const WINP_REQUEST_URL = 'http://185.75.88.217/v2/woody/'; //тестовая после переноса на другой сервер
 	const WINP_REQUEST_URL = 'http://api.woodysnippet.com/v2/woody/';
 	// Старое API http://142.93.91.206/v1/woody/
 

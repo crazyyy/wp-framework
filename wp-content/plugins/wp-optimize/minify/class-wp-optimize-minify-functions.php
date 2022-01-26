@@ -77,12 +77,11 @@ class WP_Optimize_Minify_Functions {
 	 * Functions, get hurl info
 	 *
 	 * @param string $src
-	 * @param string $wp_domain
-	 * @param string $wp_home
 	 * @return string
 	 */
-	public static function get_hurl($src, $wp_domain, $wp_home) {
-
+	public static function get_hurl($src) {
+		$wp_home = site_url();
+		$wp_domain = trim(str_ireplace(array('http://', 'https://'), '', trim($wp_home, '/')));
 		// preserve empty source handles
 		$hurl = trim($src);
 		if (empty($hurl)) {
@@ -173,7 +172,7 @@ class WP_Optimize_Minify_Functions {
 		if (isset($_SERVER['SERVER_NAME']) && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME'])) !== false) {
 			return true;
 		}
-		if (isset($_SERVER['SERVER_ADDR']) && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['SERVER_ADDR'])) !== false) {
+		if (isset($_SERVER['SERVER_ADDR']) && '::1' != $_SERVER['SERVER_ADDR'] && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['SERVER_ADDR'])) !== false) {
 			return true;
 		}
 
@@ -248,6 +247,7 @@ class WP_Optimize_Minify_Functions {
 	 * @return string
 	 */
 	public static function minify_css_string($css) {
+		$css = apply_filters('wpo_minify_css_string', $css);
 		$minifier = new Minify\CSS($css); // phpcs:ignore PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ns_separatorFound
 		$minifier->setMaxImportSize(15); // [css only] embed assets up to 15 Kb (default 5Kb) - processes gif, png, jpg, jpeg, svg & woff
 		$min = $minifier->minify();
@@ -255,27 +255,6 @@ class WP_Optimize_Minify_Functions {
 			return self::compat_urls($min);
 		}
 		return self::compat_urls($css);
-	}
-
-	/**
-	 * Find if we are running windows
-	 *
-	 * @return boolean
-	 */
-	public static function server_is_windows() {
-		// PHP 7.2.0+
-		if (defined('PHP_OS_FAMILY')) {
-		 // phpcs:disable
-		 if (strtolower(PHP_OS_FAMILY) == 'windows') return true;
-		 // phpcs:enable
-		}
-		if (function_exists('php_uname')) {
-			$os = php_uname('s');
-			if (stripos($os, 'Windows') !== false) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -336,6 +315,7 @@ class WP_Optimize_Minify_Functions {
 	 * @return string
 	 */
 	public static function minify_js_string($js) {
+		$js = apply_filters('wpo_minify_js_string', $js);
 		// PHP Minify from https://github.com/matthiasmullie/minify
 		$minifier = new Minify\JS($js); // phpcs:ignore PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ns_separatorFound
 		$min = $minifier->minify();
@@ -355,6 +335,7 @@ class WP_Optimize_Minify_Functions {
 	 * @return string
 	 */
 	public static function minify_inline_js($js) {
+		$js = apply_filters('wpo_minify_inline_js_string', $js);
 		// Do not minify JSON (JS minification will minify `true` to `!0`, which will break the JSON)
 		if (json_decode($js)) return $js;
 		return self::minify_js_string($js, true);
@@ -386,9 +367,6 @@ class WP_Optimize_Minify_Functions {
 	 * @return string
 	 */
 	public static function html_compression_finish($html) {
-		$max_size_to_minify = (defined('WP_OPTIMIZE_MAX_HTML_MINIFY_BYTES') && WP_OPTIMIZE_MAX_HTML_MINIFY_BYTES) ? WP_OPTIMIZE_MAX_HTML_MINIFY_BYTES : 1048576;
-		// Minification of large amounts of HTML is not efficient. This is a quick-fix; in future a better algorithm (e.g. cache pre-loading taking place?) can be devised.
-		if (strlen($html) > $max_size_to_minify) return $html;
 		return self::minify_html($html);
 	}
 
@@ -562,7 +540,7 @@ class WP_Optimize_Minify_Functions {
 	 * @param string  $handle
 	 * @return boolean|string
 	 */
-	public static function download_and_minify($hurl, $inline, $enable_minification, $type, $handle) {
+	public static function download_and_minify($hurl, $inline, $enable_minification, $type, $handle, $version = '') {
 		// must have
 		if (is_null($hurl) || empty($hurl)) {
 			return false;
@@ -600,7 +578,8 @@ class WP_Optimize_Minify_Functions {
 			'inline' => $inline,
 			'enable_minification' => $enable_minification,
 			'type' => $type,
-			'handle' => $handle
+			'handle' => $handle,
+			'version' => $version
 		);
 
 		$asset_content = self::get_asset_content($hurl);
@@ -624,7 +603,8 @@ class WP_Optimize_Minify_Functions {
 
 		// log, save and return
 		if ($wpo_minify_options['debug']) {
-			$log['debug'] = $print_handle.' was '.('local' === $asset_content['method'] ? 'opened' : 'fetched').' from '.$hurl;
+			$version_msg = ('' != $version) ? "[Version: $version]" : "";
+			$log['debug'] = $print_handle . $version_msg . ' was '.('local' === $asset_content['method'] ? 'opened' : 'fetched').' from '.$hurl;
 		}
 		$log['success'] = true;
 		$return = array('request' => $dreq, 'log' => $log, 'code' => $code, 'status' => true);
@@ -641,27 +621,20 @@ class WP_Optimize_Minify_Functions {
 
 		$wp_home = site_url();
 		$wp_domain = parse_url($wp_home, PHP_URL_HOST);
-		// If the server is not Windows, and the file is local.
-		if (self::server_is_windows() === false && stripos($url, $wp_domain) !== false) {
+		// If the file is local.
+		if (false !== stripos($url, $wp_domain)) {
 			// default
 			$f = str_ireplace(rtrim($wp_home, '/'), rtrim(ABSPATH, '/'), $url);
-			clearstatcache();
-			if (file_exists($f)) {
-				$content = file_get_contents($f);
-				// check for php code, skip if found
-				if ("<?php" != strtolower(substr($content, 0, 5)) && stripos($content, "<?php") === false) {
-					return array('content' => $content, 'method' => 'local');
-				}
-			}
-			
 			// failover when home_url != site_url
-			$nhurl = str_ireplace(site_url(), home_url(), $url);
-			$f = str_ireplace(rtrim($wp_home, '/'), rtrim(ABSPATH, '/'), $nhurl);
+			if (!file_exists($f)) {
+				$nhurl = str_ireplace(site_url(), home_url(), $url);
+				$f = str_ireplace(rtrim($wp_home, '/'), rtrim(ABSPATH, '/'), $nhurl);
+			}
 			clearstatcache();
 			if (file_exists($f)) {
 				$content = file_get_contents($f);
 				// check for php code, skip if found
-				if (strtolower(substr($content, 0, 5)) != "<?php" && stripos($content, "<?php") === false) {
+				if ("<?php" != strtolower(substr($content, 0, 5)) && false === stripos($content, "<?php")) {
 					return array('content' => $content, 'method' => 'local');
 				}
 			}
@@ -1018,9 +991,8 @@ class WP_Optimize_Minify_Functions {
 		
 		$args = array(
 			// info (needed for google fonts woff files + hinted fonts) as well as to bypass some security filters
-			'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586',
-			'timeout' => 7,
-			'httpversion' => '1.1'
+			'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',
+			'timeout' => 7
 		);
 
 		// fetch via wordpress functions
@@ -1070,5 +1042,153 @@ class WP_Optimize_Minify_Functions {
 	 */
 	public static function is_font_awesome($href) {
 		return (boolean) preg_match('/font[-_]?awesome/i', $href);
+	}
+
+	/**
+	 * Checks if an URL is a google font resource
+	 *
+	 * @param string $href
+	 * @return boolean
+	 */
+	public static function is_google_font($href) {
+		return 'fonts.googleapis.com' === strtolower(parse_url($href, PHP_URL_HOST));
+	}
+
+	/**
+	 * Get the content of an asset, whether local or remote
+	 *
+	 * @param string $url
+	 * @return int|false
+	 */
+	public static function get_file_size($url) {
+		$original_url = $url;
+		if (is_multisite()) {
+			if (function_exists('get_main_site_id')) {
+				$site_id = get_main_site_id();
+			} else {
+				$network = get_network();
+				$site_id = $network->site_id;
+			}
+			switch_to_blog($site_id);
+		}
+		$upload_dir = wp_upload_dir();
+		$uploads_url = trailingslashit($upload_dir['baseurl']);
+		$uploads_dir = trailingslashit($upload_dir['basedir']);
+		if (is_multisite()) {
+			restore_current_blog();
+		}
+		$possible_urls = array(
+			WP_CONTENT_URL => WP_CONTENT_DIR,
+			WP_PLUGIN_URL => WP_PLUGIN_DIR,
+			$uploads_url => $uploads_dir,
+			get_template_directory_uri() => get_template_directory(),
+			includes_url() => ABSPATH . WPINC,
+		);
+
+		$file = false;
+		foreach ($possible_urls as $possible_url => $path) {
+			$pos = strpos($url, $possible_url);
+			if (false !== $pos) {
+				$file = substr_replace($url, $path, $pos, strlen($possible_url));
+				break;
+			}
+		}
+		if (is_string($file) && file_exists($file)) {
+			return filesize($file);
+		}
+
+		return self::get_remote_file_size($original_url);
+	}
+
+	/**
+	 * Get the file size of a file hosting in other servers
+	 *
+	 * @param string $url
+	 * @return int|false
+	 */
+	public static function get_remote_file_size($url) {
+		$args = array(
+			// info (needed for google fonts woff files + hinted fonts) as well as to bypass some security filters
+			'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',
+			'timeout' => 7
+		);
+
+		// fetch via wordpress functions
+		$response = wp_remote_get($url, $args);
+
+		if (is_wp_error($response)) return false;
+
+		if (!empty($response) && is_array($response) && isset($response['headers']['Content-Length'])) {
+			return $response['headers']['Content-Length'];
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if it is 'flatsome' handle
+	 *
+	 * @param string $handle Handle of enqueued css file
+	 *
+	 * @return bool
+	 */
+	public static function is_flatsome_handle($handle) {
+		return 0 === strcmp('flatsome-googlefonts', $handle);
+	}
+
+	/**
+	 * Fix google fonts url for 'flatsome' theme
+	 *
+	 * @param string $href Enqueued google fonts url
+	 *
+	 * @return string Fixed google fonts url
+	 */
+	public static function fix_flatsome_google_fonts_url($href) {
+		// Get query from $href
+		$query = parse_url($href, PHP_URL_QUERY);
+		$query_arr = explode('&', $query);
+
+		// Separate 'family and display' arguments in query
+		$family = str_replace('family=', '', $query_arr[0]);
+		$display_type = $query_arr[1];
+		
+		// Remove empty fonts
+		$font_families = explode('|', $family);
+		$font_families = array_diff($font_families, array(':regular', 'initial', 'inherit', ''));
+		
+		$system_fonts = array('+apple+system', '-apple-system', 'BlinkMacSystemFont', 'Segoe+UI', 'Helvetica+Neue', 'sans+serif', 'sans-serif', 'Georgia', 'Times', 'Times+New+Roman', 'serif');
+		$google_fonts = array();
+
+		// URL may look like following, fix it
+		// https://fonts.googleapis.com/css?family=-apple-system,+BlinkMacSystemFont,+%22Segoe+UI%22,+Roboto,+Oxygen-Sans,+Ubuntu,+Cantarell,+%22Helvetica+Neue%22,+sans-serif:regular,700,regular,700|Bebas+Neue:regular,regular&display=block
+		// http://fonts.googleapis.com/css?family=Bellota:regular|:regular|Lato:regular|Creepster:regular&display=block
+		// http://fonts.googleapis.com/css?family=Lora:regular,regular|initial|Lato:regular,regular|&display=swap
+
+		foreach ($font_families as $font) {
+			$font_variant = explode(':', $font);
+
+			// Remove beginning '+'
+			$font = str_replace(',+', ',', $font_variant[0]);
+
+			// Replace '-' with '+
+			$font = str_replace(array('-', ' '), '+', $font);
+
+			// Remove '"' or '%22'
+			$font = str_replace(array('%22', '"'), '', $font);
+			$font_arr = explode(',', $font);
+			$font_arr = array_diff($font_arr, $system_fonts);
+			$variant = '';
+			if (!empty($font_variant[1])) {
+				$variant = implode(',', array_unique(explode(',', $font_variant[1])));
+			}
+			if (empty($variant)) {
+				$variant = 'regular';
+			}
+			foreach ($font_arr as $font) {
+				$google_fonts[] = $font . ':' . $variant;
+			}
+		}
+		$protocol = is_ssl() ? 'https:' : 'http:';
+		return $protocol . '//fonts.googleapis.com/css?family=' . implode('|', $google_fonts) . '&' . $display_type;
 	}
 }

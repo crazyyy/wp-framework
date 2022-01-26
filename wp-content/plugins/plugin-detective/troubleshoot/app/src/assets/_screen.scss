@@ -1,0 +1,47 @@
+.screen {
+	box-sizing: border-box;
+	height: 80vh;
+	width: 100%;
+	.frame-address {
+		border-radius: 7px 7px 0 0;
+		display: flex;
+		.site-base {
+			background: md-get-palette-color(indigo, 900);
+			border-radius: 5px 0 0 0;
+			color: white;
+			padding: 0.5em;
+		}
+		.site-path {
+			flex: 1;
+			input {
+				border: 0 none;
+				border-radius: 0 5px 0 0;
+				font-size: inherit;
+				padding: 0.5em;
+				padding-left: 0.1em;
+				width: 100%;
+			}
+		}
+	}
+	.frame-wrap {
+		border: 10px solid md-get-palette-color(indigo, 300);
+		border-radius: 15px;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		opacity: 1;
+		transition: opacity 500ms ease-in;
+		width: 100%;
+	}
+	&.loading {
+		.frame-wrap {
+			opacity: 0;
+		}
+	}
+	iframe,
+	iframe:not(.md-image) {
+		border-radius: 0 0 7px 7px;
+		flex: 1;
+		width: 100%;
+	}
+}

@@ -95,7 +95,11 @@ class WP_Optimize_Minify_Fonts {
 			} else {
 				// if the family was already added, and this new one has weights, merge with previous
 				if (isset($font_family[1])) {
-					self::$fonts[$font_family[0]]['specs'] = array_merge(self::$fonts[$font_family[0]]['specs'], explode(',', rtrim($font_family[1], ',')));
+					if (isset(self::$fonts[$font_family[0]]['version']) && 'V2' == self::$fonts[$font_family[0]]['version']) {
+						self::$fonts[$font_family[0]]['specs'] = explode(',', rtrim($font_family[1], ','));
+					} else {
+						self::$fonts[$font_family[0]]['specs'] = array_merge(self::$fonts[$font_family[0]]['specs'], explode(',', rtrim($font_family[1], ',')));
+					}
 				}
 			}
 			self::$fonts[$font_family[0]]['version'] = 'V1';

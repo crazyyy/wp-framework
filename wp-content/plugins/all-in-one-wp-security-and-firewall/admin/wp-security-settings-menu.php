@@ -73,7 +73,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu
         <div id="poststuff"><div id="post-body">
         <?php
         //$tab_keys = array_keys($this->menu_tabs);
-        call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
+        call_user_func(array($this, $this->menu_tabs_handler[$tab]));
         ?>
         </div></div>
         </div><!-- end of wrap -->
@@ -213,7 +213,6 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu
                     <div class="aio_blue_box">
                         <?php
                         echo '<p>'.__('This setting allows you to enable/disable debug for this plugin.', 'all-in-one-wp-security-and-firewall').'</p>';
-                        echo '<p>'.__('Note: the debug log files are located in the "plugins/all-in-one-wp-security-and-firewall/logs" directory.', 'all-in-one-wp-security-and-firewall').'</p>';
                         ?>
                     </div>
 
@@ -223,7 +222,6 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu
                             <td>
                                 <input name="aiowps_enable_debug" type="checkbox"<?php if($aio_wp_security->configs->get_value('aiowps_enable_debug')=='1') echo ' checked="checked"'; ?> value="1"/>
                                 <span class="description"><?php _e('Check this if you want to enable debug. You should keep this option disabled after you have finished debugging the issue.', 'all-in-one-wp-security-and-firewall'); ?></span>
-                                <p class="description"><?php _e('Please note that the log files are reset on every plugin update.', 'all-in-one-wp-security-and-firewall'); ?></p>
                             </td>
                         </tr>
                     </table>

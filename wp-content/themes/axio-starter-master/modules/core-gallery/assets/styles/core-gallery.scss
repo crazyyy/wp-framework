@@ -1,0 +1,140 @@
+/* ==========================================================================
+ # Gallery block
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+/* Front-end and back-end
+----------------------------------------------- */
+
+.editor-styles-wrapper .wp-block-gallery,
+.blocks .wp-block-gallery {
+
+  @include list-reset;
+  margin: var(--spacing-m) auto;
+
+  &.is-cropped .blocks-gallery-item {
+    figcaption {
+      padding: 3rem .5rem .5rem;
+      position: absolute;
+      bottom: 0;
+      display: block;
+      width: 100%;
+      color: var(--color-white);
+      font-size: 1rem;
+      background: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0, 0));
+    }
+  }
+
+
+}
+
+/* Only front-end
+----------------------------------------------- */
+
+.blocks .wp-block-gallery {
+
+  // entrance animation (whole block)
+  &.has-viewport-effect {
+    &.is-in-viewport {
+    }
+  }
+
+  // entrance animation (separate images)
+  .blocks-gallery-item {
+    &.has-viewport-effect {
+      @include stagger-transitions(75, 0, 20);
+      &.is-in-viewport {
+      }
+    }
+  }
+
+}
+
+/* Only back-end
+----------------------------------------------- */
+
+.editor-styles-wrapper .wp-block-gallery {
+
+}
+
+/* Legacy markup
+----------------------------------------------- */
+
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  img {
+    display: block;
+    line-height: 0;
+  }
+}
+
+.gallery-item {
+  margin: 0;
+  padding: .5rem 0;
+  width: 100%;
+  .gallery-columns-2 & {
+    width: 100%;
+    @include breakpoint($breakpoint-s) {
+      margin-right: 1rem;
+      width: calc(50% - 1rem);
+      &:nth-of-type(2n) {
+        margin-right: 0;
+      }
+    }
+  }
+  .gallery-columns-3 & {
+    width: 100%;
+    @include breakpoint($breakpoint-s) {
+      margin-right: 1rem;
+      width: calc(50% - 1rem);
+      &:nth-of-type(2n) {
+        margin-right: 0;
+      }
+    }
+    @include breakpoint($breakpoint-m) {
+      margin-right: 1rem;
+      width: calc(33.33% - 1rem);
+      &:nth-of-type(2n) {
+        margin-right: 1rem;
+      }
+      &:nth-of-type(3n) {
+        margin-right: 0;
+      }
+    }
+  }
+  .gallery-columns-4 & {
+    width: 100%;
+    @include breakpoint($breakpoint-s) {
+      margin-right: 1rem;
+      width: calc(50% - 1rem);
+      &:nth-of-type(2n) {
+        margin-right: 0;
+      }
+    }
+    @include breakpoint($breakpoint-m) {
+      margin-right: 1rem;
+      width: calc(33.33% - 1rem);
+      &:nth-of-type(2n) {
+        margin-right: 1rem;
+      }
+      &:nth-of-type(3n) {
+        margin-right: 0;
+      }
+    }
+    @include breakpoint($breakpoint-l) {
+      margin-right: 1rem;
+      width: calc(25% - 1rem);
+      &:nth-of-type(2n),
+      &:nth-of-type(3n) {
+        margin-right: 1rem;
+      }
+      &:nth-of-type(4n) {
+        margin-right: 0;
+      }
+    }
+  }
+}

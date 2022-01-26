@@ -1,0 +1,18 @@
+/* Responsive breakpoints */
+@mixin bp($point) {
+  @if $point == xs {
+    @media screen and (min-width: 600px) { @content; }
+  }
+  @else if $point == s {
+    @media screen and (min-width: 768px) { @content; }
+  }
+  @else if $point == m {
+    @media screen and (min-width: 940px) { @content; }
+  }
+  @else if $point == l {
+    @media screen and (min-width: 1000px) { @content; }
+  }
+  @else {
+    @media screen and (min-width: $point) { @content; }
+  }
+}

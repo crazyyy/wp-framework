@@ -7,7 +7,7 @@ if ( !defined('ABSPATH') ) {
 if (!class_exists('AIO_WP_Security')){
 
 class AIO_WP_Security{
-    var $version = '4.4.9';
+    var $version = '4.4.10';
     var $db_version = '1.9';
     var $plugin_url;
     var $plugin_path;
@@ -28,15 +28,15 @@ class AIO_WP_Security{
         $this->includes();
         $this->loader_operations();
 
-        add_action('init', array(&$this, 'wp_security_plugin_init'), 0);
-        add_action('wp_loaded',array(&$this, 'aiowps_wp_loaded_handler'));
+        add_action('init', array($this, 'wp_security_plugin_init'), 0);
+        add_action('wp_loaded',array($this, 'aiowps_wp_loaded_handler'));
         do_action('aiowpsecurity_loaded');
     }
 
     function plugin_url()
     {
         if ($this->plugin_url) return $this->plugin_url;
-        return $this->plugin_url = plugins_url( basename( plugin_dir_path(__FILE__) ), basename( __FILE__ ) );
+        return $this->plugin_url = plugins_url('', __FILE__);
     }
 
     function plugin_path()
@@ -81,6 +81,7 @@ class AIO_WP_Security{
         define('AIOWPSEC_FILESCAN_MENU_SLUG', 'aiowpsec_filescan');
         define('AIOWPSEC_BRUTE_FORCE_MENU_SLUG', 'aiowpsec_brute_force');
         define('AIOWPSEC_MISC_MENU_SLUG', 'aiowpsec_misc');
+        if (!defined('AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS')) define('AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS', 90);
 
         global $wpdb;
         define('AIOWPSEC_TBL_LOGIN_LOCKDOWN', $wpdb->prefix . 'aiowps_login_lockdown');
@@ -89,6 +90,7 @@ class AIO_WP_Security{
         define('AIOWPSEC_TBL_GLOBAL_META_DATA', $wpdb->prefix . 'aiowps_global_meta');
         define('AIOWPSEC_TBL_EVENTS', $wpdb->prefix . 'aiowps_events');
         define('AIOWPSEC_TBL_PERM_BLOCK', $wpdb->prefix . 'aiowps_permanent_block');
+        define('AIOWPSEC_TBL_DEBUG_LOG', $wpdb->prefix . 'aiowps_debug_log');
 
     }
 
@@ -126,7 +128,7 @@ class AIO_WP_Security{
 
     function loader_operations()
     {
-        add_action('plugins_loaded',array(&$this, 'plugins_loaded_handler'));//plugins loaded hook
+        add_action('plugins_loaded',array($this, 'plugins_loaded_handler'));//plugins loaded hook
 
         $debug_config = $this->configs->get_value('aiowps_enable_debug');
         $debug_enabled = empty($debug_config) ? false : true;
@@ -189,8 +191,8 @@ class AIO_WP_Security{
         $this->scan_obj = new AIOWPSecurity_Scan();//Object to handle scan tasks
         $this->cron_handler = new AIOWPSecurity_Cronjob_Handler();
 
-        add_action('login_enqueue_scripts',array(&$this, 'aiowps_login_enqueue'));
-        add_action('wp_footer',array(&$this, 'aiowps_footer_content'));
+        add_action('login_enqueue_scripts',array($this, 'aiowps_login_enqueue'));
+        add_action('wp_footer',array($this, 'aiowps_footer_content'));
 
         add_action('wp_login', array('AIOWPSecurity_User_Login', 'wp_login_action_handler'), 10, 2);
         do_action('aiowps_force_logout_check');

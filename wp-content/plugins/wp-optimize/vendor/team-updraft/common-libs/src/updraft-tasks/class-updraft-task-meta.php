@@ -64,6 +64,8 @@ class Updraft_Task_Meta {
 	 *
 	 * @param  int    $id  the instance id of the task
 	 * @param  String $key the key to delete
+	 *
+	 * @return Mixed  the status of the delete operation
 	 */
 	public static function delete_task_meta($id, $key) {
 		global $wpdb;
@@ -71,7 +73,7 @@ class Updraft_Task_Meta {
 		$id = (int) $id;
 		if (!$id) return false;
 
-		$sql = $wpdb->prepare("DELETE FROM {$wpdb->base_prefix}tm_taskmeta WHERE task_id = %d AND meta_key = %s LIMIT 1", $id, $option);
+		$sql = $wpdb->prepare("DELETE FROM {$wpdb->base_prefix}tm_taskmeta WHERE task_id = %d AND meta_key = %s LIMIT 1", $id, $key);
 		return $wpdb->query($sql);
 	}
 

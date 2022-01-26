@@ -1,10 +1,18 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 add_filter( 'cmplz_known_script_tags', 'cmplz_pixelyoursite_script' );
 function cmplz_pixelyoursite_script( $tags ) {
 	$tags[] = 'pixelyoursite/dist';
-
+	$tags[] = array(
+		'name' => 'facebook',
+		'category' => 'marketing',
+		'placeholder' => 'facebook',
+		'urls' => array(
+			'pixelyoursite/dist',
+			'pys-js-extra',
+		),
+	);
 	return $tags;
 }
 
@@ -19,9 +27,6 @@ function cmplz_pixelyoursite_detected_social_media( $social_media ) {
 	if ( ! in_array( 'facebook', $social_media ) ) {
 		$social_media[] = 'facebook';
 	}
-
 	return $social_media;
 }
-
-add_filter( 'cmplz_detected_social_media',
-	'cmplz_pixelyoursite_detected_social_media' );
+add_filter( 'cmplz_detected_social_media', 'cmplz_pixelyoursite_detected_social_media' );

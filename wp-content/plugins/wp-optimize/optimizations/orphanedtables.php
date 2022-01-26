@@ -27,17 +27,41 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 	 * Run optimization.
 	 */
 	public function optimize() {
+		// check if the data contain action attribute then lead to innoDb conversion.
+		if (isset($this->data['optimization_action']) && 'toinnodb' == $this->data['optimization_action']) {
+			$table = $this->optimizer->get_table($this->data['optimization_table']);
+			if (false === $table) {
+				$this->register_meta('error', 1);
+				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
+				return false;
+			}
+			$result = $this->convert_table($table);
+
+			if (false === $result) {
+				$this->register_meta('message', $this->last_message);
+				return false;
+			}
+			$this->register_meta('success', 1);
+			return true;
+		}
+		
 		// check if single table name posted or optimize all tables.
 		if (isset($this->data['optimization_table']) && '' != $this->data['optimization_table']) {
 			$table = $this->optimizer->get_table($this->data['optimization_table']);
 
-			$result = (false === $table) ? false : $this->delete_table($table);
+			if (false === $table) {
+				$this->register_meta('error', 1);
+				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
+				return false;
+			}
 
-			$this->register_meta('success', $result);
-
+			$result = $this->delete_table($table);
+		
 			if (false === $result) {
 				$this->register_meta('message', $this->last_message);
+				return false;
 			}
+			$this->register_meta('success', 1);
 		} else {
 			// delete all orphaned tables if table name was not selected.
 			$tables = $this->optimizer->get_tables();
@@ -58,6 +82,44 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 			}
 		}
 	}
+			
+			
+	/**
+	 * Alter table engine to InnoDB.
+	 *
+	 * @param object $table_obj object contains information about database table.
+	 *
+	 * @return bool
+	 */
+	private function convert_table($table_obj) {
+		global $wpdb;
+		$inno_db = 0;
+		
+		// check InnoDB is Active
+		$mysql_engine = $wpdb->get_results('SHOW ENGINES');
+		foreach ($mysql_engine as $check) {
+			if ('InnoDB' == $check->Engine && ('DEFAULT' == $check->Support || 'YES' == $check->Support)) {
+				$inno_db=1;
+			}
+		}
+		
+
+		if (0 == $inno_db) return false;
+		// If InnoDB is active then convert MyISAM to InnoDB.
+		else {
+			$table_name = sanitize_text_field($table_obj->Name);
+			$sql_query = $wpdb->prepare("ALTER TABLE `%1s`  ENGINE=InnoDB", $table_name);
+			$this->logger->info($sql_query);
+			$result = $wpdb->query($sql_query);
+		}
+		// check if alter query finished successfully.
+		if ('' != $wpdb->last_error) {
+			$this->last_message = $wpdb->last_error;
+			$this->logger->info($wpdb->last_error);
+		}
+		
+		return $result;
+	}
 
 	/**
 	 * Drop table from database.
@@ -72,7 +134,8 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 		// don't delete table if it in use and plugin active.
 		if (!$table_obj->can_be_removed) return true;
 
-		$sql_query = "DROP TABLE `{$table_obj->Name}`";
+		$table_name = sanitize_text_field($table_obj->Name);
+		$sql_query = $wpdb->prepare("DROP TABLE `%1s`", $table_name);
 
 		$this->logger->info($sql_query);
 

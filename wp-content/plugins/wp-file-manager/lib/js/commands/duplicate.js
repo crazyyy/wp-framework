@@ -5,15 +5,22 @@
  * @type  elFinder.command
  * @author  Dmitry (dio) Levashov
  */
-elFinder.prototype.commands.duplicate = function() {
+ elFinder.prototype.commands.duplicate = function() {
 	"use strict";
 	var fm = this.fm;
 	
 	this.getstate = function(select) {
 		var sel = this.files(select),
-			cnt = sel.length;
+			cnt = sel.length,
+			filter = function(files) {
+				var fres = true;
+				return jQuery.grep(files, function(f) {
+					fres = fres && f.read && f.phash === fm.cwd().hash && ! fm.isRoot(f)? true : false;
+					return fres;
+				});
+			};
 
-		return cnt && fm.cwd().write && jQuery.grep(sel, function(f) { return f.read && f.phash === fm.cwd().hash && ! fm.isRoot(f)? true : false; }).length == cnt ? 0 : -1;
+		return cnt && fm.cwd().write && filter(sel).length == cnt ? 0 : -1;
 	};
 	
 	this.exec = function(hashes) {

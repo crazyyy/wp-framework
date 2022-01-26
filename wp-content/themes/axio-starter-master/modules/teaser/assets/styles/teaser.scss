@@ -1,0 +1,87 @@
+/* ==========================================================================
+ # Teaser
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+.teaser-container {
+  @include narrow-content;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-m);
+}
+
+.teaser {
+  position: relative;
+  word-break: break-word;
+
+  // entrance animation
+  &.has-viewport-effect {
+    &.is-in-viewport {
+    }
+  }
+
+  &__link {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    &:hover, &:focus, &:active {
+      & + .teaser__card {
+        .teaser__title {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &__card {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__thumbnail {
+    flex-shrink: 0;
+    margin-right: 1.5rem;
+    max-width: 4rem;
+    @include breakpoint($breakpoint-s) {
+      max-width: none;
+    }
+    a, img {
+      display: block;
+      line-height: 0;
+    }
+  }
+
+  &__content {
+    @include child-margin-reset;
+    align-self: center;
+    flex-grow: 1;
+  }
+
+  &__header {
+    @include child-margin-reset;
+    margin-bottom: .5rem;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  &__summary {
+    @include child-margin-reset;
+  }
+
+}
+
+
+
+
+

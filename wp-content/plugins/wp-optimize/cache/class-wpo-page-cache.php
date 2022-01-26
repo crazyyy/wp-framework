@@ -663,7 +663,7 @@ EOF;
 	 * Show notification when advanced-cache.php could not be updated.
 	 */
 	public function notice_advanced_cache_autoupdate_error() {
-		$this->show_notice(__('The file advanced-cache.php needs to be updated, but the automatic process failed.', 'wp_optimize').
+		$this->show_notice(__('The file advanced-cache.php needs to be updated, but the automatic process failed.', 'wp-optimize').
 		' <a href="'.admin_url('admin.php?page=wpo_cache').'">'.__('Please try to disable and then re-enable the WP-Optimize cache manually.', 'wp-optimize').'</a>', 'error');
 	}
 
@@ -1083,7 +1083,7 @@ EOF;
 	 */
 	public function log($message) {
 		if (isset($this->logger)) {
-			$this->logger->log('ERROR', $message);
+			$this->logger->log($message, 'error');
 		} else {
 			error_log($message);
 		}

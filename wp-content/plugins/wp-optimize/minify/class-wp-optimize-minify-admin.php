@@ -135,6 +135,10 @@ class WP_Optimize_Minify_Admin {
 	 * @return void
 	 */
 	public function output_status() {
+		if (!class_exists('WP_Optimize_Detect_Minify_Plugins')) {
+			require_once(WP_OPTIMIZE_MINIFY_DIR.'/class-wp-optimize-detect-minify-plugins.php');
+		}
+		$this->found_incompatible_plugins = WP_Optimize_Detect_Minify_Plugins::get_instance()->get_active_minify_plugins();
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
 		WP_Optimize()->include_template(
@@ -145,6 +149,7 @@ class WP_Optimize_Minify_Admin {
 				'show_information_notice' => !get_user_meta(get_current_user_id(), 'wpo-hide-minify-information-notice', true),
 				'cache_dir' => $cache_path['cachedir'],
 				'can_purge_the_cache' => WP_Optimize()->can_purge_the_cache(),
+				'active_minify_plugins' => apply_filters('wpo_minify_found_incompatible_plugins', $this->found_incompatible_plugins),
 			)
 		);
 	}

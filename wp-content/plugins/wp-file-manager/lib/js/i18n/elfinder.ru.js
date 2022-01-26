@@ -3,7 +3,7 @@
  * @author Dmitry "dio" Levashov <dio@std42.ru>
  * @author Andrew Berezovsky <andrew.berezovsky@gmail.com>
  * @author Alex Yashkin <alex@yashkin.by>
- * @version 2020-08-31
+ * @version 2020-01-24
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -18,9 +18,9 @@
 		translator : 'Dmitry "dio" Levashov &lt;dio@std42.ru&gt;, Andrew Berezovsky &lt;andrew.berezovsky@gmail.com&gt;, Alex Yashkin &lt;alex@yashkin.by&gt;',
 		language   : 'Русский язык',
 		direction  : 'ltr',
-		dateFormat : 'd M Y H:i', // will show like: 31 Авг 2020 17:07
-		fancyDateFormat : '$1 H:i', // will show like: Сегодня 17:07
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200831-170750
+		dateFormat : 'd M Y H:i', // will show like: 24 Янв 2020 15:00
+		fancyDateFormat : '$1 H:i', // will show like: Сегодня 15:00
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200124-150054
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -403,7 +403,6 @@
 			'autoSync'        : 'Авто синхронизация',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Передвинуть вверх',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Получить URL ссылку', // from v2.1.7 added 9.2.2016
-			'share'           : 'доля',
 			'selectedItems'   : 'Выбранные объекты ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID папки', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Позволить автономный доступ', // from v2.1.10 added 3.25.2016
@@ -479,7 +478,6 @@
 			'integrations'    : 'Интеграции', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Менеджер elFinder интегрирован со следующими внешними сервисами. Ознакомьтесь с правилами пользования, политиками безопасности и др. перед их использованием.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : 'Показать скрытые элементы', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : 'Редактор кода',
 			'hideHidden'      : 'Скрыть скрытые элементы', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Показать/скрыть скрытые элементы', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : 'Типы файлов в меню "Новый файл"', // from v2.1.41 added 7.8.2018
@@ -532,7 +530,7 @@
 			'kindCSS'         : 'Таблицы стилей CSS',
 			'kindHTML'        : 'Документ HTML',
 			'kindJS'          : 'Исходник Javascript',
-			'kindRTF'         : 'Расширенный текстовый формат',
+			'kindRTF'         : 'Rich Text Format',
 			'kindC'           : 'Исходник C',
 			'kindCHeader'     : 'Заголовочный файл C',
 			'kindCPP'         : 'Исходник C++',
@@ -580,3 +578,4 @@
 		}
 	};
 }));
+

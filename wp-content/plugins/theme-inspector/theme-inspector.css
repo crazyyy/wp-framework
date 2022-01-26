@@ -1,0 +1,133 @@
+/**
+* Theme Inspector WordPress Plugin Styles
+* Author: Melissa Cabral
+*/
+
+
+#wpadminbar li#wp-admin-bar-theme-helper {
+	float: right !important;
+	background-color: rgba(41,200,235,.2) !important;
+	box-sizing: border-box !important;
+	margin:0 !important;
+	padding:0 !important;
+	outline:none !important;
+	border:none !important;
+	position:relative;
+	width:auto;
+}
+#wp-admin-bar-theme-helper *{
+	box-sizing:inherit;
+}
+#theme-helper-toolbar{
+	display:none !important;
+	font-family:"Trebuchet MS"!important;
+	background:#fff !important;
+	color:black !important;
+	font-size:16px;
+	position:absolute !important;
+	top:100% !important;
+	right:0 !important;
+	min-width:25em !important;		
+	padding:0 !important;
+	text-align:left !important;
+	z-index: 9999999 !important;
+	-webkit-box-shadow:  0 4px 4px rgba(0, 0, 0, .2);        
+	box-shadow: 0 4px 4px rgba(0,0,0,0.2);
+}
+.rtl #theme-helper-toolbar{
+    left: 0 !important;
+    right: unset !important;
+}
+#wp-admin-bar-theme-helper:hover #theme-helper-toolbar,
+#wp-admin-bar-theme-helper :focus #theme-helper-toolbar{
+	display:block !important;
+}
+#theme-helper-toolbar *{
+	line-height: inherit !important;
+
+}
+#theme-helper-toolbar table{
+	width: 100% !important;
+	border-collapse: collapse !important;
+	line-height:1.8 !important;
+
+}
+#theme-helper-toolbar th{
+	line-height: inherit;
+	font-weight: bold;
+	background-color:rgba(0,0,0,.06);
+	padding:.5em;
+	color:black;
+	border-color:#ddd !important;
+	border-top:solid 1px #ddd  !important;
+	width:40%;
+	text-shadow:none;
+}
+#theme-helper-toolbar .file-loaded{
+	background-color: #FCFFD2;
+}
+#theme-helper-toolbar td{
+	line-height: inherit;
+	border-color:#ddd !important;
+	color:black;
+	padding:.5em;
+	border-top:solid 1px #ddd  !important;
+	text-shadow:none;
+}
+#theme-helper-toolbar .condition{
+	color:#999;
+	text-shadow:none;
+	font-family: monospace !important;
+}
+#theme-helper-toolbar .first{
+	font-weight: bold;
+	color:#000;
+}
+#theme-helper-toolbar .credits td{
+	text-align: center;
+	font: normal 11px/13px sans-serif;
+	color:#666;
+	line-height:normal;
+	background-color:#EDF5FA;
+
+}
+#theme-helper-toolbar td a{
+	display:inline !important;
+	font-size:inherit !important;
+	color:#5B9DE6 !important;
+	text-shadow:none !important;
+	height: auto !important;
+	line-height:14px !important;
+	margin:0;
+	padding:0;
+	width:auto;
+} 
+#theme-helper-toolbar .usewith td{
+	border-top:none;
+	border-bottom:solid 1px #ddd !important;
+}
+#theme-helper-toolbar .hierarchy {
+	font-family: monospace !important;
+	color:#999 !important;
+}
+#theme-helper-toolbar .template{
+	font-family: inherit;
+	color:black;
+	background-color:rgba(0,0,0,.04);
+	padding:.15em .4em;
+	white-space:nowrap;
+	border:solid 1px rgba(0,0,0,.1) !important;
+}
+#theme-helper-toolbar .current-template{
+	background-color: #FCFFD2;
+	font-weight: bold;
+}
+#theme-helper-toolbar .woocommerce {
+	background-color: #FEECFF;
+	font-size:90%;
+}
+#theme-helper-toolbar .woocommerce th{
+	background-color:rgba(0,0,0,.04);
+
+}
+/*Theme Helper CSS end*/

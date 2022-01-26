@@ -688,6 +688,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     <?php if ( $args['disabled'] ) {
                         echo 'disabled';
                     } ?>
+                       <?php if ( $args['required'] ) {
+	                       echo 'required';
+                       } ?>
                        class="<?php if ( $args['required'] ) {
                            echo 'is-required';
                        } ?>"
@@ -1302,8 +1305,8 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $button_text = __( "Save", 'really-simple-ssl' );
 	        $button_name = 'rsssl-save';
 
-	        $step = RSSSL_LE()->wizard->step();
-            $section = RSSSL_LE()->wizard->section();
+	        $step = RSSSL_LE()->wizard->calculate_next('step');
+            $section = RSSSL_LE()->wizard->calculate_next('section');
 	        $fields = RSSSL_LE()->config->fields( 'lets-encrypt', $step, $section);
 	        reset($fields);
 	        foreach ($fields as $key => $field ) {

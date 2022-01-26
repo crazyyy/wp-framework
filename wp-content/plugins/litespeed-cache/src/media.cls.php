@@ -507,13 +507,7 @@ class Media extends Root {
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
-			if ( ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( Base::O_MEDIA_LAZYJS_INLINE ) ) {
-				$lazy_lib = '<script data-no-optimize="1">' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
-			} else {
-				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD;
-				$lazy_lib = '<script src="' . $lazy_lib_url . '"></script>';
-			}
-
+			$lazy_lib = '<script data-no-optimize="1" defer>' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
 			$this->content = str_replace( '</body>', $lazy_lib . '</body>', $this->content );
 		}
 	}
@@ -550,7 +544,7 @@ class Media extends Root {
 		if ( $parent_cls_exc ) {
 			Debug2::debug2( '[Media] Lazyload Class excludes', $parent_cls_exc );
 			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\2]*' . preg_quote( $v, '#' ) . '[^\2]*\2[^>]*>.*</\1>#sU', '', $content );
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content );
 			}
 		}
 
@@ -625,7 +619,7 @@ class Media extends Root {
 
 						$attrs[ 'width' ] = $ori_width;
 						$attrs[ 'height' ] = $ori_height;
-						$new_html = preg_replace( '#(width|height)=(\'|")[^\2]*\2#', '', $match[ 0 ] );
+						$new_html = preg_replace( '#(width|height)=(["\'])[^\2]*\2#', '', $match[ 0 ] );
 						$new_html = str_replace( '<img ', '<img width="' . $attrs[ 'width' ] . '" height="' . $attrs[ 'height' ] . '" ', $new_html );
 						Debug2::debug( '[Media] Add missing sizes ' . $attrs[ 'width' ] . 'x' . $attrs[ 'height' ] . ' to ' . $attrs[ 'src' ] );
 						$this->content = str_replace( $match[ 0 ], $new_html, $this->content );
@@ -689,7 +683,7 @@ class Media extends Root {
 		if ( $parent_cls_exc ) {
 			Debug2::debug2( '[Media] Iframe Lazyload Class excludes', $parent_cls_exc );
 			foreach ( $parent_cls_exc as $v ) {
-				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\2]*' . preg_quote( $v, '#' ) . '[^\2]*\2[^>]*>.*</\1>#sU', '', $content );
+				$content = preg_replace( '#<(\w+) [^>]*class=(\'|")[^\'"]*' . preg_quote( $v, '#' ) . '[^\'"]*\2[^>]*>.*</\1>#sU', '', $content );
 			}
 		}
 
@@ -753,10 +747,10 @@ class Media extends Root {
 			$v = explode( '.', $v );
 			$attr = preg_quote( $v[ 1 ], '#' );
 			if ( $v[ 0 ] ) {
-				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=(\'|")([^\2]+)\2#iU';
+				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\2#iU';
 			}
 			else {
-				$pattern = '# ' . $attr . '=(\'|")([^\1]+)\1#iU';
+				$pattern = '# ' . $attr . '=([\'"])(.+)\1#iU';
 			}
 
 			preg_match_all( $pattern, $content, $matches );
@@ -792,12 +786,12 @@ class Media extends Root {
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
+		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) && $this->webp_support() ) {
 			$content = Utility::srcset_replace( $content, array( $this, 'replace_webp' ) );
 		}
 
 		// Replace background-image
-		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->webp_support() ) {
 			$content = $this->replace_background_webp( $content );
 		}
 

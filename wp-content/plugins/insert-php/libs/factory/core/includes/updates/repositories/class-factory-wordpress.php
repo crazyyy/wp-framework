@@ -1,9 +1,9 @@
 <?php
 
-namespace WBCR\Factory_443\Updates;
+namespace WBCR\Factory_450\Updates;
 
 // Exit if accessed directly
-use Wbcr_Factory443_Plugin;
+use Wbcr_Factory450_Plugin;
 
 if( !defined('ABSPATH') ) {
 	exit;
@@ -20,10 +20,10 @@ class Wordpress_Repository extends Repository {
 	/**
 	 * Wordpress constructor.
 	 *
-	 * @param Wbcr_Factory443_Plugin $plugin
+	 * @param Wbcr_Factory450_Plugin $plugin
 	 * @param array $settings
 	 */
-	public function __construct(Wbcr_Factory443_Plugin $plugin, array $settings = [])
+	public function __construct(Wbcr_Factory450_Plugin $plugin, array $settings = [])
 	{
 		$this->plugin = $plugin;
 	}

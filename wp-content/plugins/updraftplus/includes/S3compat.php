@@ -137,6 +137,9 @@ class UpdraftPlus_S3_Compat {
 		if ($use_ssl) $opts['ssl.certificate_authority'] = $ssl_ca_cert;
 
 		$this->client = Aws\S3\S3Client::factory($opts);
+		
+		global $updraftplus;
+		$this->client->setUserAgent(' UpdraftPlus/'.$updraftplus->version, true);
 	}
 
 	/**
@@ -558,10 +561,10 @@ class UpdraftPlus_S3_Compat {
 
 		if ($handle = fopen($file_path, "rb")) {
 			if ($file_offset > 0) fseek($handle, $file_offset);
-			$bytes_read = 0;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Its used below on like 564
+			// $bytes_read = 0;
 			while ($file_bytes > 0 && $read = fread($handle, max($file_bytes, 131072))) {
 				$file_bytes = $file_bytes - strlen($read);
-				$bytes_read += strlen($read);
+				// $bytes_read += strlen($read);
 				$data .= $read;
 			}
 			fclose($handle);

@@ -1,0 +1,47 @@
+/* ==========================================================================
+ # Search forms
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+.search-form {
+  display: flex;
+  max-width: 30rem;
+  position: relative;
+  &__input {
+    flex-grow: 1;
+    padding: 1rem 2.75rem 1rem 1rem !important;
+    border-radius: 5rem;
+    border: 2px solid var(--color-border);
+    &:focus {
+      border-color: var(--color-primary);
+      outline: 0;
+    }
+  }
+  &__submit {
+    @include button-reset;
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    &:hover, &:focus, &:active {
+      background: transparent;
+      transform: translateY(-50%);
+      outline-offset: 4px;
+    }
+
+    .icon {
+      fill: var(--color-primary);
+      height: 1.25rem;
+      width: 1.25rem;
+    }
+  }
+
+  // 404 search form
+  &--404,
+  &--no-results {
+    margin: 2rem auto 5rem;
+  }
+
+}
+

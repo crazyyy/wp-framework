@@ -19,7 +19,7 @@ class AIOWPSecurity_WP_Loaded_Tasks {
             $login_object = new AIOWPSecurity_Process_Renamed_Login_Page();
             AIOWPSecurity_Process_Renamed_Login_Page::renamed_login_init_tasks();
         }else{
-            add_action('login_init', array(&$this, 'aiowps_login_init'));
+            add_action('login_init', array($this, 'aiowps_login_init'));
         }
 
         //For site lockout feature (ie, maintenance mode). It needs to be checked after the rename login page

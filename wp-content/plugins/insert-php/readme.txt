@@ -1,9 +1,9 @@
 === Woody code snippets - Insert Header Footer Code, AdSense Ads ===
-Contributors: WillBontrager, webcraftic, creativemotion, alexkovalevv
+Contributors: WillBontrager, creativemotion
 Donate link: https://woodysnippet.com
 Tags: code snippets, woocommerce, shortcode, adsense, header
 Requires at least: 4.8
-Tested up to: 5.6
+Tested up to: 5.8
 Requires PHP: 7.0
 Stable tag: trunk
 License: GPLv2 or later
@@ -22,7 +22,7 @@ Insert Headers and Footers, executes PHP code, uses conditional logic to insert 
 - Stop adding google analytics, yandex metrics and external code to header and footer php files!
 - Stop wasting time on changing 100 pages with repeated content!
 
-Woody ad snippets will make your life so much easier. The plugin helps to create and store code snippets or duplicated text in a special library at the admin bar of your website. Use the shortcode to add a snippet anywhere on your website. Or do it automatically, for example: head, footer and post injections.  You can show or hide code snippets using conditional logic.
+Woody Code Snippets will make your life so much easier. The plugin helps to create and store code snippets or duplicated text in a special library at the admin bar of your website. Use the shortcode to add a snippet anywhere on your website. Or do it automatically, for example: head, footer and post injections.  You can show or hide code snippets using conditional logic.
 
 ### Why do you need this plugin? ###
 
@@ -146,7 +146,7 @@ We provide free support for this plugin. If you are pushed with a problem, just 
 1. **[Get starting free support](http://forum.webcraftic.com)**
 2. **[Documentation](https://woodysnippet.com/getting-started-with-woody-ad-snippets/)**
 
-We are very need for your help with [translating Woody ad snippets plugin](https://translate.wordpress.org/projects/wp-plugins/insert-php) into your native language. We want to make it international and understandable for everyone. Please contact us via email inside the plugin, or create a topic on our [support forum](http://forum.webcraftic.com) if you can help with the translations. In exchange for your help, we will give you better support and our premium plugins absolutely free!
+We are very need for your help with [translating Woody Code Snippets plugin](https://translate.wordpress.org/projects/wp-plugins/insert-php) into your native language. We want to make it international and understandable for everyone. Please contact us via email inside the plugin, or create a topic on our [support forum](http://forum.webcraftic.com) if you can help with the translations. In exchange for your help, we will give you better support and our premium plugins absolutely free!
 
 ### Setting options ###
 * Keep the HTML entities, don't convert to its character - If you want to use an HTML entity in your code (for example > or "), but the editor keeps on changing them to its equivalent character (> and " for the previous example), then you might want to enable this option.
@@ -167,7 +167,7 @@ IP geolocation database (Webnet77 or MaxMind) - Select IP geolocation database
 
 ### History, Developers, Credits ###
 
-If you are a long-term user, you may be confused about the new plugin update. You’ve been using an old plugin – Insert php 1.3.0, and now got an extended product – Woody ad snippets. Insert php was the first plugin version to work with PHP code. It was created by Will Bontrager Software, LLC. In 2018, the Webcraftic studio started to actively develop the plugin. We’ve created a roadmap and released several powerful updates that help you to use PHP code more comfortable and secure. Now plugin supports not only PHP but other snippet types as well. We’ve decided to rename the plugin as Woody ad snippets. This name is more suitable for new and powerful plugin features.
+If you are a long-term user, you may be confused about the new plugin update. You’ve been using an old plugin – Insert php 1.3.0, and now got an extended product – Woody Code Snippets. Insert php was the first plugin version to work with PHP code. It was created by Will Bontrager Software, LLC. In 2018, the Webcraftic studio started to actively develop the plugin. We’ve created a roadmap and released several powerful updates that help you to use PHP code more comfortable and secure. Now plugin supports not only PHP but other snippet types as well. We’ve decided to rename the plugin as Woody Code Snippets. This name is more suitable for new and powerful plugin features.
 
 More information about the Insert PHP plugin can be found here:
 http://www.willmaster.com/software/WPplugins/go/iphphome_iphplugin
@@ -230,7 +230,7 @@ Yes, the plugin is fully compatible with GDPR.
 
 = Can the plugin be completely uninstalled? =
 
-Go to the settings page and enable the "Complete uninstall" option. Than, when you delete Woody ad snippets using the ‘Plugins’ menu in WordPress it will clean up the database table and a few other bits of data. Be careful not to remove Woody ad snippets by deleting it from the Plugins menu unless you want this to happen.
+Go to the settings page and enable the "Complete uninstall" option. Than, when you delete Woody Code Snippets using the ‘Plugins’ menu in WordPress it will clean up the database table and a few other bits of data. Be careful not to remove Woody Code Snippets by deleting it from the Plugins menu unless you want this to happen.
 
 = How to remove plugin via ftp client? =
 
@@ -258,6 +258,10 @@ We will definitely add multisite support in the future. You can speed up this pr
 7. Custom shortcode name
 
 == Changelog ==
+= 2.4.2 =
+* Fix: Snippets library not load
+* Turn off redirect after activate
+
 = 2.4.1 =
 * Fix: Snippets not working after updating to version 2.4.0, if Woocommerce is activated
 

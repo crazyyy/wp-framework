@@ -1,0 +1,116 @@
+/* ==========================================================================
+ # Button block and X_Button component
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+/* Variables
+----------------------------------------------- */
+
+:root {
+  --color-file-icon: var(--color-text);
+  --color-file-text: var(--color-link);
+}
+
+/* Component, block front-end and back-end
+----------------------------------------------- */
+
+.wp-block-acf-files {
+
+  &__empty {
+    border: 2px dotted rgba(0,0,0,.4);
+    padding: 1.5rem;
+  }
+
+}
+
+/* Component
+----------------------------------------------- */
+
+.module-file {
+  & + .module-file {
+    margin-top: .5rem;
+  }
+
+  &__link {
+    display: flex;
+    color: var(--color-file-text);
+  }
+  &__icon {
+    flex-shrink: 0;
+    margin-right: .25rem;
+    svg {
+      fill: var(--color-file-icon);
+    }
+  }
+  &__title {
+
+  }
+
+}
+
+
+/* Block front-end and back-end
+----------------------------------------------- */
+
+.block-editor [data-type="acf/file"],
+.blocks .wp-block-acf-files {
+
+}
+
+/* Block, only front-end
+----------------------------------------------- */
+
+.blocks .wp-block-acf-files {
+
+  // entrance animation
+  &.has-viewport-effect {
+    &.is-in-viewport {
+    }
+  }
+
+}
+
+/* Block, only back-end
+----------------------------------------------- */
+
+.block-editor [data-type="acf/file"] {
+
+  .wp-block-acf-files a {
+    pointer-events: none;
+  }
+
+  [data-name="files"] {
+    margin-top: .5rem;
+    & > .acf-label {
+      display: none;
+    }
+  }
+
+  [data-name="file"] {
+    .acf-label {
+      display: none;
+    }
+    .acf-file-uploader {
+      text-align: center;
+    }
+    .file-wrap {
+      text-align: left;
+    }
+  }
+
+  .acf-actions {
+    text-align: center;
+    .button {
+      background: transparent;
+      color: currentColor;
+      border-color: currentColor;
+      margin: .75rem auto;
+      opacity: .85;
+      &:hover, &:focus, &:active {
+        opacity: 1;
+      }
+    }
+  }
+
+}

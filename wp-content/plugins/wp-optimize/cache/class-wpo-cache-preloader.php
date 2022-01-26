@@ -2,11 +2,11 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-if (!class_exists('Updraft_Task_Manager_1_2')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
+if (!class_exists('Updraft_Task_Manager_1_3')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
 
 if (!class_exists('WP_Optimize_Load_Url_Task')) require_once(dirname(__FILE__) . '/class-wpo-load-url-task.php');
 
-class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
+class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_3 {
 
 	private $task_type = 'load-url-task';
 
@@ -199,7 +199,7 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 
 		// trying to lock semaphore.
 
-		$creating_tasks_semaphore = new Updraft_Semaphore_2_2('wpo_cache_preloader_creating_tasks');
+		$creating_tasks_semaphore = new Updraft_Semaphore_3_0('wpo_cache_preloader_creating_tasks');
 		$lock = $creating_tasks_semaphore->lock();
 
 		// if semaphore haven't locked then just return response.
@@ -237,7 +237,7 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 			}
 		}
 
-		if ($lock) $creating_tasks_semaphore->unlock();
+		if ($lock) $creating_tasks_semaphore->release();
 
 		$this->process_tasks_queue();
 
@@ -495,6 +495,9 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 			'httpversion' => '1.1',
 			'user-agent'  => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36',
 			'timeout'     => 10,
+			'headers'     => array(
+				'X-WP-Optimize-Cache-Preload' => 'Yes',
+			),
 		);
 
 		$desktop_args = apply_filters('wpo_page_cache_preloader_desktop_args', $desktop_args, $url);
@@ -525,6 +528,9 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 			'httpversion' => '1.1',
 			'user-agent'  => 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
 			'timeout'     => 10,
+			'headers'     => array(
+				'X-WP-Optimize-Cache-Preload' => 'Yes',
+			),
 		);
 
 		$mobile_args = apply_filters('wpo_page_cache_preloader_mobile_args', $mobile_args, $url);
@@ -548,6 +554,9 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 			'httpversion' => '1.1',
 			'user-agent'  => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36',
 			'timeout'     => 10,
+			'headers'     => array(
+				'X-WP-Optimize-Cache-Preload' => 'Yes',
+			),
 		);
 
 		$url = untrailingslashit($url) . '/amp/';
@@ -566,7 +575,9 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 	 */
 	public function get_site_urls() {
 
-		if ($this->exists_sitemap_file() && (false !== ($urls = $this->get_sitemap_urls()))) {
+		$urls = $this->get_sitemap_urls();
+
+		if (!empty($urls)) {
 			$this->options->update_option('wpo_last_page_cache_preload_type', 'sitemap');
 		} else {
 			$urls = $this->get_post_urls();
@@ -582,29 +593,6 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 		 * @return array
 		 */
 		return apply_filters('wpo_preload_get_site_urls', $urls);
-	}
-
-	/**
-	 * Check if sitemap file is exists.
-	 *
-	 * @return bool
-	 */
-	public function exists_sitemap_file() {
-
-		$response = wp_remote_get(site_url('/'.$this->get_sitemap_filename()), array('timeout' => 10));
-
-		if (is_wp_error($response) || '200' != wp_remote_retrieve_response_code($response)) {
-			$sitemap_file = $this->get_local_sitemap_file();
-
-			if (is_file($sitemap_file)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return true;
-		}
-
 	}
 
 	/**
@@ -816,7 +804,7 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 
 		if (isset($this->loggers)) {
 			foreach ($this->loggers as $logger) {
-				$logger->log($error_type, $message);
+				$logger->log($message, $error_type);
 			}
 		}
 	}
@@ -856,8 +844,12 @@ class WP_Optimize_Page_Cache_Preloader extends Updraft_Task_Manager_1_2 {
 	 * @return bool
 	 */
 	private function is_semaphore_locked($semaphore) {
-		$semaphore = new Updraft_Semaphore_2_2($semaphore);
-		return $semaphore->is_locked();
+		$semaphore = new Updraft_Semaphore_3_0($semaphore);
+		if ($semaphore->lock()) {
+			$semaphore->release();
+			return false;
+		}
+		return true;
 	}
 
 	/**

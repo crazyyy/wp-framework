@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "buttons",
+    "version": "1.3.0"
+  },
+  "php": {
+    "inc": [
+      "component.php",
+      "setup.php"
+    ]
+  },
+  "css": {
+    "main.css": [
+      "assets/styles/buttons.scss"
+    ],
+    "admin.css": [],
+    "editor-gutenberg.css": [
+      "assets/styles/buttons.scss"
+    ]
+  },
+  "js": {
+    "main.js": [],
+    "editor-gutenberg.js": []
+  }
+}

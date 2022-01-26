@@ -212,8 +212,8 @@ class UpdraftPlus_Database_Utility {
 		if (is_scalar($initial_modes_str) && !is_bool($initial_modes_str)) {
 			$modes = array_unique(array_merge($modes, array_change_key_case(explode(',', $initial_modes_str), CASE_UPPER)));
 		} else {
-			$updraftplus->log("Couldn't get the sql_mode value (".serialize($initial_modes_str).")");
-			unset($initial_modes_str);
+			$updraftplus->log("Couldn't get the sql_mode value (".serialize($initial_modes_str)."); will not attempt any adjustment");
+			return;
 		}
 
 		$modes = array_change_key_case($modes, CASE_UPPER);

@@ -1590,3 +1590,12 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 .elfinder-notify-cancel .elfinder-notify-button.ui-icon.ui-icon-close{ line-height: 19px; font-size: 11px; color:#fff; }  
 .elfinder-notify-cancel .elfinder-notify-button.ui-icon.ui-icon-close:hover{ background: #ff6252; }
 .ui-front.elfinder-quicklook.elfinder-frontmost .ui-dialog-titlebar .ui-icon{ font-size: 11px; line-height: 17px; }
+
+/*for dark css for icon*/
+.wrap.wp-filemanager-wrap .ui-front.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-draggable.std42-dialog .ui-dialog-content.ui-widget-content .ui-helper-clearfix.elfinder-rm-title span.elfinder-cwd-icon:before {
+    left: inherit;
+    background-color: transparent;
+    top: 32px;
+    display: block;
+    margin: 0 auto;
+}

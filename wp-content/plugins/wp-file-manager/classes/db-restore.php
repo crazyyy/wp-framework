@@ -117,6 +117,7 @@ class Restore_Database {
              * Gunzip file if gzipped
              */
             $backupFileIsGzipped = substr($backupFile, -3, 3) == '.gz' ? true : false;
+          
             if ($backupFileIsGzipped) {
                 if (!$backupFile = $this->gunzipBackupFile()) {
                     throw new Exception("ERROR: couldn't gunzip backup file " . $backupDir . '/' . $backupFile);
@@ -142,6 +143,8 @@ class Restore_Database {
                         if (!$lineIsComment) {
                             $sql .= $line;
                             if (preg_match('/;$/', $line)) {
+                                
+                                mysqli_query($this->conn, "SET sql_mode = ''");
                                 // execute query
                                 if(mysqli_query($this->conn, $sql)) {
                                     if (preg_match('/^CREATE TABLE `([^`]+)`/i', $sql, $tableName)) {
@@ -169,7 +172,6 @@ class Restore_Database {
         if ($backupFileIsGzipped) {
             unlink($backupDir . '/' . $backupFile);
         }
-
         return true;
     }
 
@@ -253,8 +255,6 @@ class Restore_Database {
         if (php_sapi_name() == "cli") {
             $output .= "\n";
         }
-
-        echo $output;
 
         if (php_sapi_name() != "cli") {
             ob_flush();

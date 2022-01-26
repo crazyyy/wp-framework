@@ -45,6 +45,16 @@
 				<?php _e('Choose how to include fonts from Google Fonts on your pages, when available:', 'wp-optimize'); ?>
 			</p>
 			<fieldset>
+			<label>
+					<input
+						type="radio"
+						name="gfonts_method"
+						value="inherit"
+						<?php echo checked('inherit' === $wpo_minify_options['gfonts_method']); ?>
+					>
+					<?php _e('Inherit from the CSS settings', 'wp-optimize'); ?>
+					<span tabindex="0" data-tooltip="<?php esc_attr_e('The stylesheets will be merged or inlined.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
+				</label>
 				<label>
 					<input
 						type="radio"
@@ -52,8 +62,8 @@
 						value="inline"
 						<?php echo checked('inline' === $wpo_minify_options['gfonts_method']); ?>
 					>
-					<?php _e('Inherit from the CSS settings', 'wp-optimize'); ?>
-					<span tabindex="0" data-tooltip="<?php esc_attr_e('The stylesheets will be merged or inlined.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
+					<?php _e('Inline google font CSS files', 'wp-optimize'); ?>
+					<span tabindex="0" data-tooltip="<?php esc_attr_e('The stylesheets will be inlined.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 				</label>
 				<label>
 					<input

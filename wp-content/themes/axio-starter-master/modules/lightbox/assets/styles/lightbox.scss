@@ -1,0 +1,22 @@
+/* ==========================================================================
+ # Tobi lightbox custom style
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+.lightbox {
+
+  & + figcaption {
+    pointer-events: none;
+  }
+
+}
+
+.tobi {
+  background: rgba(0,0,0,.9);
+  &__slide {
+    figcaption {
+      text-align: center;
+    }
+  }
+}

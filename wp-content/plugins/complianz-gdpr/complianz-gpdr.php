@@ -3,7 +3,7 @@
  * Plugin Name: Complianz | GDPR/CCPA Cookie Consent
  * Plugin URI: https://www.wordpress.org/plugins/complianz-gdpr
  * Description: Complianz Privacy Suite for GDPR, CaCPA, DSVGO, AVG with a conditional cookie warning and customized cookie policy
- * Version: 5.2.6
+ * Version: 6.0.6
  * Text Domain: complianz-gdpr
  * Domain Path: /languages
  * Author: Really Simple Plugins
@@ -93,18 +93,19 @@ if ( ! class_exists( 'COMPLIANZ' ) ) {
 			}
 
 			if ( is_admin() || defined('CMPLZ_DOING_SYSTEM_STATUS') ) {
-				self::$review          = new cmplz_review();
-				self::$admin           = new cmplz_admin();
-				self::$field           = new cmplz_field();
-				self::$wizard          = new cmplz_wizard();
-				self::$export_settings = new cmplz_export_settings();
-				self::$tour            = new cmplz_tour();
+				self::$review             = new cmplz_review();
+				self::$admin              = new cmplz_admin();
+				self::$field              = new cmplz_field();
+				self::$wizard             = new cmplz_wizard();
+				self::$export_settings    = new cmplz_export_settings();
+				self::$tour               = new cmplz_tour();
 			}
 
 			self::$proof_of_consent = new cmplz_proof_of_consent();
+			self::$cookie_blocker   = new cmplz_cookie_blocker();
 			self::$cookie_admin     = new cmplz_cookie_admin();
 			self::$document         = new cmplz_document();
-			self::$cookie_blocker   = new cmplz_cookie_blocker();
+
 		}
 
 		/**
@@ -112,9 +113,6 @@ if ( ! class_exists( 'COMPLIANZ' ) ) {
 		 */
 
 		private function setup_constants() {
-			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-			$plugin_data = get_plugin_data( __FILE__ );
-
 			define( 'CMPLZ_COOKIEDATABASE_URL', 'https://cookiedatabase.org/wp-json/cookiedatabase/' );
 			define( 'CMPLZ_MAIN_MENU_POSITION', 40 );
 			define( 'CMPLZ_PROCESSING_MENU_POSITION', 41 );
@@ -138,8 +136,10 @@ if ( ! class_exists( 'COMPLIANZ' ) ) {
 			define( 'cmplz_url', plugin_dir_url( __FILE__ ) );
 			define( 'cmplz_path', plugin_dir_path( __FILE__ ) );
 			define( 'cmplz_plugin', plugin_basename( __FILE__ ) );
+			//for auto upgrade functionality
+			define( 'cmplz_plugin_free', plugin_basename( __FILE__ ) );
 			$debug = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? time() : '';
-			define( 'cmplz_version', $plugin_data['Version'] . $debug );
+			define( 'cmplz_version', '6.0.6' . $debug );
 			define( 'cmplz_plugin_file', __FILE__ );
 		}
 
@@ -169,7 +169,7 @@ if ( ! class_exists( 'COMPLIANZ' ) ) {
 
 			/* Gutenberg block */
 			if ( cmplz_uses_gutenberg() ) {
-				require_once plugin_dir_path( __FILE__ ) . 'src/block.php';
+				require_once plugin_dir_path(__FILE__) . 'gutenberg/block.php';
 			}
 			require_once plugin_dir_path( __FILE__ ) . 'rest-api/rest-api.php';
 
@@ -184,6 +184,13 @@ if ( ! class_exists( 'COMPLIANZ' ) ) {
 				require_once( cmplz_path . 'class-export.php' );
 				require_once( cmplz_path . 'shepherd/tour.php' );
 				require_once( cmplz_path . 'grid/grid.php' );
+				if ( isset($_GET['install_pro'])) {
+					require_once( cmplz_path . 'upgrade/upgrade-to-pro.php' );
+				}
+			}
+
+			if (is_admin() || wp_doing_cron() ) {
+				require_once( cmplz_path . 'upgrade.php' );
 			}
 
 			require_once( cmplz_path . 'proof-of-consent/class-proof-of-consent.php' );

@@ -306,7 +306,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 				if (empty($response['code']) || "200" != $response['code']) {
 					$this->log('Unexpected HTTP code returned from Dropbox: '.$response['code']." (".serialize($response).")");
 					if ($response['code'] >= 400) {
-						if ($response['code'] == 401) {
+						if (401 == $response['code']) {
 							$this->log('HTTP code 401 returned from Dropbox, refreshing access token');
 							$dropbox->refreshAccessToken();
 						}
@@ -542,7 +542,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		
 		foreach ($remote_files as $file_info) {
 			if ($file_info['name'] == $file) {
-				return $updraftplus->chunked_download($file, $this, $file_info['size'], true, null, 2*1048576);
+				return $updraftplus->chunked_download($file, $this, $file_info['size'], apply_filters('updraftplus_dropbox_downloads_manually_break_up', false), null, 2*1048576);
 			}
 		}
 
@@ -563,10 +563,10 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	 */
 	public function chunked_download($file, $headers, $data, $fh) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 
-		$opts = $this->get_options();
+		$opts = $this->get_options();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- filter use
 		$storage = $this->get_storage();
 
-		$try_the_other_one = false;
+		$try_the_other_one = false;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- filter use
 
 		$ufile = apply_filters('updraftplus_dropbox_modpath', $file, $this);
 

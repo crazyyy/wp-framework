@@ -43,7 +43,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function emergency($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::EMERGENCY, $message, $context);
+		$this->log($message, Updraft_Log_Levels::EMERGENCY, $context);
 	}
 
 	/**
@@ -54,7 +54,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function alert($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::ALERT, $message, $context);
+		$this->log($message, Updraft_Log_Levels::ALERT, $context);
 	}
 
 	/**
@@ -65,7 +65,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function critical($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::CRITICAL, $message, $context);
+		$this->log($message, Updraft_Log_Levels::CRITICAL, $context);
 	}
 
 	/**
@@ -76,7 +76,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function error($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::ERROR, $message, $context);
+		$this->log($message, Updraft_Log_Levels::ERROR, $context);
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function warning($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::WARNING, $message, $context);
+		$this->log($message, Updraft_Log_Levels::WARNING, $context);
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function notice($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::NOTICE, $message, $context);
+		$this->log($message, Updraft_Log_Levels::NOTICE, $context);
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function info($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::INFO, $message, $context);
+		$this->log($message, Updraft_Log_Levels::INFO, $context);
 	}
 
 	/**
@@ -120,21 +120,21 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 	 * @return null|void
 	 */
 	public function debug($message, array $context = array()) {
-		$this->log(Updraft_Log_Levels::DEBUG, $message, $context);
+		$this->log($message, Updraft_Log_Levels::DEBUG, $context);
 	}
 
 	/**
 	 * Log message with any level
 	 *
-	 * @param  string $level
 	 * @param  string $message
+	 * @param  mixed  $level
 	 * @param  array  $context
 	 * @return null|void
 	 */
-	public function log($level, $message, array $context = array()) {
+	public function log($message, $level, array $context = array()) {
 
 		if (!$this->is_enabled()) return false;
-
+		
 		$message = date("Y-m-d H:i:s").' ['.Updraft_Log_Levels::to_text($level).'] : '.$this->interpolate($message, $context);
 		$this->add_log($message);
 	}

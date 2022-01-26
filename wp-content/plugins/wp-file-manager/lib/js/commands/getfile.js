@@ -5,15 +5,17 @@
  *
  * @author Dmitry (dio) Levashov, dio@std42.ru
  **/
-(elFinder.prototype.commands.getfile = function() {
+ (elFinder.prototype.commands.getfile = function() {
 	"use strict";
 	var self   = this,
 		fm     = this.fm,
 		filter = function(files) {
-			var o = self.options;
+			var o = self.options,
+				fres = true;
 
 			files = jQuery.grep(files, function(file) {
-				return (file.mime != 'directory' || o.folders) && file.read ? true : false;
+				fres = fres && (file.mime != 'directory' || o.folders) && file.read ? true : false;
+				return fres;
 			});
 
 			return o.multiple || files.length == 1 ? files : [];

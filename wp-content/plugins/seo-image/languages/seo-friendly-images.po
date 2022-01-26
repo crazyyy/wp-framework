@@ -1,0 +1,175 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SEO Friendly Images\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-12-27 12:10+0100\n"
+"PO-Revision-Date: 2010-12-27 12:10+0100\n"
+"Last-Translator: Marko <atisha34@yahoo.com>\n"
+"Language-Team: Prelovac Media <http://www.prelovac.com/blog>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: C:\\Program Files (x86)\\Zend\\Apache2\\htdocs\\wordpress-sample\\wp-content\\plugins\\seo-image-pro\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: Serbia\n"
+"X-Poedit-SearchPath-0: C:\\Program Files (x86)\\Zend\\Apache2\\htdocs\\wordpress-sample\\wp-content\\plugins\\seo-image-pro\n"
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:31
+msgid "SEO Friendly Images PRO options"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:31
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:94
+msgid "SEO Friendly Images PRO"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:48
+msgid "Latest version available "
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:67
+msgid "SEO Friendly Images PRO options saved."
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:86
+msgid "Leave as it is"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:87
+msgid "Post"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:88
+msgid "Attachment page"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:89
+msgid "Image"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:106
+msgid "General Options"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:107
+msgid "SEO Friendly Images PRO automatically adds alt and title attributes to all your images in all your posts specified by parameters below."
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:108
+msgid "You can enter any text in the field including two special tags:"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:110
+msgid "replaces post title"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:111
+msgid "replaces image file name (without extension)"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:112
+msgid "replaces post category"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:113
+msgid "replaces post tags"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:115
+msgid "Images options"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:117
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:122
+msgid "attribute (example:"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:128
+msgid "Override default Wordpress image alt tag (recommended)"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:132
+msgid "Override default Wordpress image title"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:136
+msgid "Automatically link images to"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:141
+msgid "Example:"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:142
+msgid "In a post titled Car Pictures there is a picture named Ferrari.jpg"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:143
+msgid "Setting alt attribute to \"%name %title\" will produce alt=\"Ferrari Car Pictures\""
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:144
+msgid "Setting title attribute to \"%name photo\" will produce title=\"Ferrari photo\""
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:154
+msgid "Another fine WordPress plugin by"
+msgstr ""
+
+#: C:\Program
+#: Files
+#: (x86)\Zend\Apache2\htdocs\wordpress-sample\wp-content\plugins\seo-image-pro/seo-friendly-images-pro.php:343
+msgid "Latest version available"
+msgstr ""
+

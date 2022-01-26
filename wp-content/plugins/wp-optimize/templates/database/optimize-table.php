@@ -43,8 +43,7 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 
 		<?php
 		if ($load_data) {
-			// WP_Optimize()->include_template('database/optimizations-table.php');
-			WP_Optimize()->include_template('database/optimizations-table.php');
+			WP_Optimize()->include_template('database/optimizations-table.php', false, array('does_server_allows_table_optimization' => $does_server_allows_table_optimization));
 		} else {
 		?>
 			<div class="wp-optimize-optimizations-table-placeholder">

@@ -19,6 +19,7 @@ if (!class_exists('rsssl_multisite')) {
         public $mixed_content_admin;
         public $cert_expiration_warning;
         public $hide_menu_for_subsites;
+        public $dismiss_all_notices;
 
         function __construct()
         {
@@ -62,9 +63,7 @@ if (!class_exists('rsssl_multisite')) {
             add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 	        add_filter('rsssl_notices', array($this, 'add_multisite_notices'));
 	        add_filter('rsssl_ssl_detected', array($this, 'override_ssl_detection_ms'));
-
 	        add_action('rsssl_progress_feedback', array( $this, 'add_ms_progress_feedback' ));
-
         }
 
         static function this()
@@ -72,8 +71,14 @@ if (!class_exists('rsssl_multisite')) {
             return self::$_this;
         }
 
+	    /**
+         * Conditionally override SSL detection
+         *
+	     * @param $output
+	     *
+	     * @return string
+	     */
         public function override_ssl_detection_ms( $output ){
-
             //if it's multisite, and it's activated per site, this is not important for the main site.
         	if ( is_multisite() && is_main_site() && $this->selected_networkwide_or_per_site && !$this->ssl_enabled_networkwide ) {
         		return 'not-applicable';
@@ -131,9 +136,6 @@ if (!class_exists('rsssl_multisite')) {
 			        ),
 		        ),
 	        );
-
-            //we don't need a no ssl warning on multisite
-            unset( $notices['ssl_detected']['output']['no-ssl-detected'] );
 
 	        $notices['multisite_server_variable_warning'] = array(
 		        'callback' => 'RSSSL()->rsssl_multisite->multisite_server_variable_warning',
@@ -298,6 +300,7 @@ if (!class_exists('rsssl_multisite')) {
             $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
             $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
             $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
+	        $this->dismiss_all_notices = isset($options["dismiss_all_notices"]) ? $options["dismiss_all_notices"] : false;
         }
 
 
@@ -335,7 +338,11 @@ if (!class_exists('rsssl_multisite')) {
             add_settings_section('rsssl_network_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), "really-simple-ssl");
             $help = rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"), true );
             add_settings_field('id_ssl_enabled_networkwide', $help.__("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), "really-simple-ssl", 'rsssl_network_settings');
-            add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'settings_tab'));
+
+	        $help = rsssl_help::this()->get_help_tip(__("Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab", "really-simple-ssl"), true );
+	        add_settings_field('id_dismiss_all_notices', $help.__("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), "really-simple-ssl", 'rsssl_network_settings');
+
+	        add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'settings_tab'));
         }
 
         /**
@@ -357,6 +364,27 @@ if (!class_exists('rsssl_multisite')) {
             </select>
             <?php
         }
+
+	    /**
+	     *
+	     * Get the option to dismiss all Really Simple SSL notices
+	     *
+	     * @since 5.1.2
+	     *
+	     * @access public
+	     *
+	     */
+
+	    public function get_option_dismiss_all_notices()
+	    {
+		    ?>
+            <label class="rsssl-switch">
+                <input id="rlrsssl_network_options" name="rlrsssl_network_options[dismiss_all_notices]" size="40" value="1"
+                       type="checkbox" <?php checked(1, $this->dismiss_all_notices, true) ?> />
+                <span class="rsssl-slider rsssl-round"></span>
+            </label>
+		    <?php
+	    }
 
 
 		/**
@@ -490,6 +518,7 @@ if (!class_exists('rsssl_multisite')) {
                 $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
                 $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
                 $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
+	            $this->dismiss_all_notices = isset($options["dismiss_all_notices"]) ? $options["dismiss_all_notices"] : false;
 
 	            $this->save_options();
 
@@ -652,8 +681,9 @@ if (!class_exists('rsssl_multisite')) {
             $options["mixed_content_admin"] = $this->mixed_content_admin;
             $options["cert_expiration_warning"] = $this->cert_expiration_warning;
             $options["hide_menu_for_subsites"] = $this->hide_menu_for_subsites;
+	        $options["dismiss_all_notices"] = $this->dismiss_all_notices;
 
-            update_site_option("rlrsssl_network_options", $options);
+	        update_site_option("rlrsssl_network_options", $options);
         }
 
 
@@ -808,6 +838,7 @@ if (!class_exists('rsssl_multisite')) {
             $options["mixed_content_admin"] = false;
             $options["cert_expiration_warning"] = false;
             $options["hide_menu_for_subsites"] = false;
+	        $options["dismiss_all_notices"] = false;
 
             unset($options["ssl_enabled_networkwide"]);
             update_site_option("rlrsssl_network_options", $options);

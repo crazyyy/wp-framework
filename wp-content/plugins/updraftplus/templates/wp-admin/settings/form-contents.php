@@ -278,7 +278,7 @@ foreach ($default_options as $k => $v) {
 				</div>
 			</label>
 			<?php
-				if (!class_exists('UpdraftPlus_Addon_Reporting')) echo '<a href="'.$updraftplus->get_url('premium').'" target="_blank">'.__('For more reporting features, use the Preium version', 'updraftplus').'</a>';
+				if (!class_exists('UpdraftPlus_Addon_Reporting')) echo '<a href="'.$updraftplus->get_url('premium').'" target="_blank">'.__('For more reporting features, use the Premium version', 'updraftplus').'</a>';
 			?>
 		</td>
 	</tr>

@@ -1,9 +1,8 @@
 /**
- * Polski translation
+ * Polskie tłumaczenie
  * @author Marcin Mikołajczyk <marcin@pjwstk.edu.pl>
  * @author Bogusław Zięba <bobi@poczta.fm>
- * @author Bogusław Zięba <bobi@poczta.fm>
- * @version 2020-09-01
+ * @version 2020-03-29
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -18,9 +17,9 @@
 		translator : 'Marcin Mikołajczyk &lt;marcin@pjwstk.edu.pl&gt;, Bogusław Zięba &lt;bobi@poczta.fm&gt;, Bogusław Zięba &lt;bobi@poczta.fm&gt;',
 		language   : 'Polski',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 01.09.2020 16:18
-		fancyDateFormat : '$1 H:i', // will show like: Dzisiaj 16:18
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200901-161836
+		dateFormat : 'd.m.Y H:i', // will show like: 29.03.2020 06:58
+		fancyDateFormat : '$1 H:i', // will show like: Dzisiaj 06:58
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200329-065813
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -379,7 +378,7 @@
 			'degree'          : '°',
 			'netMountDialogTitle' : 'Montaż woluminu sieciowego', // added 18.04.2012
 			'protocol'            : 'Protokół', // added 18.04.2012
-			'host'                : 'Gospodarz', // added 18.04.2012
+			'host'                : 'Host', // added 18.04.2012
 			'port'                : 'Port', // added 18.04.2012
 			'user'                : 'Użytkownik', // added 18.04.2012
 			'pass'                : 'Hasło', // added 18.04.2012
@@ -403,7 +402,6 @@
 			'autoSync'        : 'Auto synchronizacja',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Przenieś w górę',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Pobierz URL linku', // from v2.1.7 added 9.2.2016
-			'share'           : 'Dzielić',
 			'selectedItems'   : 'Wybrane pozycje ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID Katalogu', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Zezwól na dostęp offline', // from v2.1.10 added 3.25.2016
@@ -479,7 +477,6 @@
 			'integrations'    : 'Integracje', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Ten elFinder ma zintegrowane następujące usługi zewnętrzne. Przed użyciem ich sprawdź warunki użytkowania, politykę prywatności itp.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : 'Pokaż ukryte pozycje', // from v2.1.41 added 24.7.2018
-			'Code Editor'	  : 'Edytor kodu',
 			'hideHidden'      : 'Ukryj ukryte pozycje', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Pokaż/Ukryj ukryte pozycje', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : 'Typy plików, które można włączyć za pomocą "Nowy plik"', // from v2.1.41 added 7.8.2018
@@ -580,3 +577,4 @@
 		}
 	};
 }));
+

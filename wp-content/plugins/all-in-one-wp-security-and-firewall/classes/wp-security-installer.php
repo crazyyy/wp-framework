@@ -46,6 +46,7 @@ class AIOWPSecurity_Installer
             $aiowps_global_meta_tbl_name = $wpdb->prefix.'aiowps_global_meta';
             $aiowps_event_tbl_name = $wpdb->prefix.'aiowps_events';
             $perm_block_tbl_name = $wpdb->prefix.'aiowps_permanent_block';
+            
         } else {
             $lockdown_tbl_name = AIOWPSEC_TBL_LOGIN_LOCKDOWN;
             $failed_login_tbl_name = AIOWPSEC_TBL_FAILED_LOGINS;

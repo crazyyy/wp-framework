@@ -63,7 +63,7 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu
         <div id="poststuff"><div id="post-body">
         <?php
         //$tab_keys = array_keys($this->menu_tabs);
-        call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
+        call_user_func(array($this, $this->menu_tabs_handler[$tab]));
         ?>
         </div></div>
         </div><!-- end of wrap -->

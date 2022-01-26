@@ -190,7 +190,7 @@ class Mapper {
 				}
 				$type = $this->removeNullable( $type );
 			} else if ( $jvalue === null ) {
-				throw new Exception( 'JSON property "' . $key . '" in class "' . $strClassName . '" must not be NULL' );
+				//throw new Exception( 'JSON property "' . $key . '" in class "' . $strClassName . '" must not be NULL' );
 			}
 
 			if ( $type === null || $type === 'mixed' ) {

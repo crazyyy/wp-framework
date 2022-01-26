@@ -103,6 +103,13 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 
 	}
 
+   /**
+	* This function lists the files found in the configured storage location
+	*
+	* @param  String $match a substring to require
+	*
+	* @return Array - each file is represented by an array with entries 'name' and (optional) 'size'
+	*/
 	public function listfiles($match = 'backup_') {
 
 		try {

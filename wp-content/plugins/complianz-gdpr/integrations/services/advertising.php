@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 add_filter( 'cmplz_known_script_tags', 'cmplz_advertising_script' );
 function cmplz_advertising_script( $tags ) {
@@ -15,7 +15,7 @@ function cmplz_advertising_script( $tags ) {
 }
 
 
-add_filter( 'cmplz_known_iframe_tags', 'cmplz_advertising_iframetags' );
+add_filter( 'cmplz_known_script_tags', 'cmplz_advertising_iframetags' );
 function cmplz_advertising_iframetags( $tags ) {
 	$tags[] = 'googleads';
 	$tags[] = 'doubleclick';

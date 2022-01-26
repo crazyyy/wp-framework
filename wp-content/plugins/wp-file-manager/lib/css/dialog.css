@@ -290,6 +290,10 @@
     height: 10px;
 }
 
+.elfinder > .elfinder-dialog-notify .ui-dialog-titlebar .elfinder-titlebar-button {
+    top: 2px;
+}
+
 .elfinder.elfinder-touch > .elfinder-dialog-notify .ui-dialog-titlebar .elfinder-titlebar-button {
     top: 4px;
 }
@@ -298,6 +302,10 @@
     right: 18px;
 }
 
+.elfinder > .elfinder-dialog-notify .ui-dialog-titlebar .elfinder-titlebar-button.elfinder-titlebar-button-right {
+    left: 18px;
+    right: -18px;
+}
 
 .ui-dialog-titlebar .elfinder-ui-progressbar {
     position: absolute;
@@ -687,3 +695,18 @@ button.elfinder-info-button {
 .ui-front.ui-dialog.elfinder-dialog.elfinder-dialog-notify .ui-widget-content .elfinder-dialog-icon{ bottom: inherit; top:25px; }
 .ui-front.ui-dialog.elfinder-dialog.elfinder-dialog-notify .ui-widget-content .elfinder-notify{ padding-left:50px; font-size: 12px; }
 .ui-front.ui-dialog.elfinder-dialog.elfinder-dialog-notify .ui-widget-content .elfinder-notify-progressbar{  margin-left: 5px;  margin-top: 10px; }
+
+/* css for Arabic language icons*/
+.wrap.wp-filemanager-wrap .elfinder-rtl .ui-front.ui-dialog .ui-dialog-content.ui-widget-content {
+    padding-right: 56px;
+    padding-left: unset;
+}
+.wrap.wp-filemanager-wrap .elfinder-rtl .ui-front.ui-dialog .ui-dialog-content.ui-widget-content .ui-helper-clearfix.elfinder-rm-title {
+    margin-left: 0;
+    margin-right: -49px;
+}
+.wrap.wp-filemanager-wrap .elfinder-rtl .ui-front.ui-dialog .ui-dialog-content.ui-widget-content .ui-helper-clearfix.elfinder-rm-title span.elfinder-cwd-icon:before {
+    right: 0;
+    min-width: 20px;
+    max-width: 30px;
+}

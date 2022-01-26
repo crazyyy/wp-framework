@@ -14,6 +14,7 @@
 	$optimizations = $optimizer->sort_optimizations($optimizer->get_optimizations());
 
 	foreach ($optimizations as $id => $optimization) {
+		if ('optimizetables' == $id && false === $does_server_allows_table_optimization) continue;
 		// If we don't want to show optimization on the first tab.
 		if (false === $optimization->display_in_optimizations_list()) continue;
 		// This is an array, with attributes dom_id, activated, settings_label, info; all values are strings.

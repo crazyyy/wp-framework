@@ -288,7 +288,8 @@
 }
 
 .elfinder-ltr .elfinder-quicklook .elfinder-cwd-icon:before {
-    left: -20px;
+    left: 0;
+    top: 5px;
 }
 
 .elfinder-ltr .elfinder-navdock .elfinder-quicklook .elfinder-cwd-icon:before {

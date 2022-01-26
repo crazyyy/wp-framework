@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_AboutPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory443_Plugin $plugin
+	 * @param Wbcr_Factory450_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory443_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory450_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = "about";
@@ -39,7 +39,7 @@ class WINP_AboutPage extends WINP_Page {
 		?>
         <div class="wrap about-wrap full-width-layout" id="wbcr-inp-about">
         <!-- News Title !-->
-        <h1>Welcome to Woody ad snippets <?php echo $this->plugin->getPluginVersion() ?></h1>
+        <h1>Welcome to Woody Code Snippets <?php echo $this->plugin->getPluginVersion() ?></h1>
         <!-- News Subtext !-->
         <div class="about-text">
             Thanks for upgrading! Many new features and improvements are available that you will enjoy.
@@ -52,7 +52,7 @@ class WINP_AboutPage extends WINP_Page {
         <!-- Latest News !-->
         <div id="wbcr-inp-news-tab">
             <div class="headline">
-                <h3 class="headline-title">PHP snippets (Insert php) Evolution to Woody ad snippets</h3>
+                <h3 class="headline-title">PHP snippets (Insert php) Evolution to Woody Code Snippets</h3>
                 <div class="featured-image">
                     <img src="https://woodysnippet.com/images/about/change-plugin-name.jpg" alt="">
                 </div>
@@ -84,7 +84,7 @@ class WINP_AboutPage extends WINP_Page {
                     plugin supports
                     not only a PHP code but HTML. JS, CSS code and text as well. Obviously, the name <code>Php snippets
                         (Insert php)</code> no longer suited the plugin. </p>
-                <p>So we’ve created a new name – Woody ad snippets. We are hoping that the new name didn’t cause you any
+                <p>So we’ve created a new name – Woody Code Snippets. We are hoping that the new name didn’t cause you any
                     pain. We won’t change the plugin name anymore, as we’ve scheduled a solid roadmap of the plugin
                     development and plan to stick to it!</p>
             </div>

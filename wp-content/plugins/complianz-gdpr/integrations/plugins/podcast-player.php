@@ -1,4 +1,4 @@
-<?php defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+<?php defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 /**
  * Whitelisting podcast player inline script.
@@ -8,11 +8,11 @@
  * author: @vedathemes
  */
 
-add_filter ( 'cmplz_script_class',
-	function( $class, $total_match, $found ) {
+add_filter ( 'cmplz_service_category',
+	function( $category, $total_match, $found ) {
 		if ( $found && false !== strpos( $total_match, 'pppublic-js-extra' ) ) {
-			$class = 'cmplz-native'; // add cmplz-script for Marketing and cmplz-stats for Statistics
+			$category = 'functional';
 		}
-		return $class;
+		return $category;
 	}, 10 , 3
 );

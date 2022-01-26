@@ -83,10 +83,15 @@ class CSS extends Base {
 			return null;
 		}
 
+		$error_tag = '';
+		if ( substr( $rules, 0, 2 ) == '/*' && substr( $rules, -2 ) == '*/' ) {
+			$error_tag = ' data-error="failed to generate"';
+		}
+
 		// Append default critical css
 		$rules .= $this->conf( self::O_OPTM_CCSS_CON );
 
-		return '<style id="litespeed-ccss">' . $rules . '</style>';
+		return '<style id="litespeed-ccss"' . $error_tag . '>' . $rules . '</style>';
 	}
 
 	/**
@@ -158,7 +163,7 @@ class CSS extends Base {
 
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_queue[ $queue_k ] = array(
-			'url'			=> $request_url,
+			'url'			=> apply_filters( 'litespeed_ccss_url', $request_url ),
 			'user_agent'	=> substr( $ua, 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
@@ -194,7 +199,14 @@ class CSS extends Base {
 	 *
 	 * @since  4.0
 	 */
-	public function load_ucss( $request_url ) {
+	public function load_ucss( $request_url, $dry_run = false ) {
+		// Check UCSS URI excludes
+		$ucss_exc = apply_filters( 'litespeed_ucss_exc', $this->conf( self::O_OPTM_UCSS_EXC ) );
+		if ( $ucss_exc && $hit = Utility::str_hit_array( $request_url, $ucss_exc ) ) {
+			Debug2::debug( '[CSS] UCSS bypassed due to UCSS URI Exclude setting: ' . $hit );
+			return false;
+		}
+
 		$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 		$url_tag = is_404() ? '404' : $request_url;
 
@@ -205,8 +217,19 @@ class CSS extends Base {
 
 			if ( file_exists( $static_file ) ) {
 				Debug2::debug2( '[UCSS] existing ucss ' . $static_file );
-				return $filepath_prefix . $filename . '.css';
+				// Check if is error comment inside only
+				$tmp = File::read( $static_file );
+				if ( substr( $tmp, 0, 2 ) == '/*' && substr( $tmp, -2 ) == '*/' ) {
+					Debug2::debug2( '[UCSS] existing ucss is error only: ' . $tmp );
+					return false;
+				}
+
+				return $filename . '.css';
 			}
+		}
+
+		if ( $dry_run ) {
+			return false;
 		}
 
 		$uid = get_current_user_id();
@@ -223,7 +246,7 @@ class CSS extends Base {
 
 		$queue_k = ( strlen( $vary ) > 32 ? md5( $vary ) : $vary ) . ' ' . $url_tag;
 		$this->_queue[ $queue_k ] = array(
-			'url'			=> $request_url,
+			'url'			=> apply_filters( 'litespeed_ucss_url', $request_url ),
 			'user_agent'	=> substr( $ua, 0, 200 ),
 			'is_mobile'		=> $this->_separate_mobile_ccss(),
 			'is_webp'		=> $this->cls( 'Media' )->webp_support() ? 1 : 0,
@@ -328,6 +351,10 @@ class CSS extends Base {
 			if ( ! $res ) { // Status is wrong, drop this this->_queue
 				unset( $this->_queue[ $k ] );
 				$this->save_queue( $type, $this->_queue );
+
+				if ( ! $continue ) {
+					return;
+				}
 
 				if ( $i > 3 ) {
 					$this->_print_loading( count( $this->_queue ), $type_tag );
@@ -490,62 +517,6 @@ class CSS extends Base {
 	}
 
 	/**
-	 * Notify CCSS/UCSS
-	 *
-	 * @since 4.2
-	 */
-	public function notify( $type ) {
-		$post_data = json_decode( file_get_contents( 'php://input' ), true );
-		if( is_null( $post_data ) ) {
-			$post_data = $_POST;
-		}
-
-		if ( empty( $post_data[ 'data' ] ) ) {
-			Debug2::debug( '[CSS] ❌ empty data ' . $type );
-			return;
-		}
-
-		if ( empty( $post_data[ 'status' ] ) ) {
-			Debug2::debug( '[CSS] ❌ empty status' );
-			return;
-		}
-
-		Debug2::debug( '[CSS] Received notification [Type] ' . $type . ' [Count] ' . count( $post_data[ 'data' ] ) );
-
-		$this->_queue = $this->load_queue( $type );
-
-		// Clear existing queues
-		$valid_count = 0;
-		if ( $post_data[ 'status' ] == 'clear' ) {
-			foreach ( $post_data[ 'data' ] as $queue_k ) {
-				if ( ! empty( $this->_queue[ $queue_k ] ) ) {
-					unset( $this->_queue[ $queue_k ] );
-				}
-			}
-		}
-		// Append done list
-		elseif ( $post_data[ 'status' ] == 'done' ) {
-			foreach ( $post_data[ 'data' ] as $queue_k => $css ) {
-				if ( empty( $this->_queue[ $queue_k ] ) ) {
-					continue;
-				}
-
-				$this->_save_con( $type, $css, $queue_k );
-
-				unset( $this->_queue[ $queue_k ] );
-
-				$valid_count++;
-			}
-		}
-
-		$this->save_queue( $type, $this->_queue );
-
-		Debug2::debug( '[CSS] Saved result [valid count] ' . $valid_count );
-
-		return array( 'count' => $valid_count );
-	}
-
-	/**
 	* Print a loading message when redirecting CCSS/UCSS page to aviod whiteboard confusion
 	*/
 	private function _print_loading( $counter, $type ) {
@@ -672,7 +643,7 @@ class CSS extends Base {
 			}
 
 			$con = Optimizer::minify_css( $con );
-			if ( $is_webp ) {
+			if ( $is_webp && $this->cls( 'Media' )->webp_support() ) {
 				$con = $this->cls( 'Media' )->replace_background_webp( $con );
 			}
 

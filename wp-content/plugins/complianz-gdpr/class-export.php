@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 if ( ! class_exists( "cmplz_export_settings" ) ) {
 	class cmplz_export_settings {
@@ -42,7 +42,6 @@ if ( ! class_exists( "cmplz_export_settings" ) ) {
 					'wizard'   => $wizard,
 					'banners'  => cmplz_get_cookiebanners(),
 					'errors'  => cmplz_get_console_errors(),
-					'jquery'  => get_option('cmplz_detected_missing_jquery') ? 'no-jquery' : 'found-jquery',
 				) );
 
 				$json = $json . '#--COMPLIANZ--#'

@@ -11,8 +11,8 @@ class AIOWPSecurity_Backup
 
     function __construct()
     {
-        add_action('aiowps_perform_scheduled_backup_tasks', array(&$this, 'aiowps_scheduled_backup_handler'));
-        add_action('aiowps_perform_db_cleanup_tasks', array(&$this, 'aiowps_scheduled_db_cleanup_handler'));
+        add_action('aiowps_perform_scheduled_backup_tasks', array($this, 'aiowps_scheduled_backup_handler'));
+        add_action('aiowps_perform_db_cleanup_tasks', array($this, 'aiowps_scheduled_db_cleanup_handler'));
     }
 
     /**

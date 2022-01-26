@@ -38,7 +38,7 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 	 * @param String $region	  - or empty to fetch one from saved configuration
 	 * @param String $bucket_name
 	 */
-	protected function set_region($obj, $region = '', $bucket_name = '') {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found - $bucket_name
+	protected function set_region($obj, $region = '', $bucket_name = '') {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $bucket_name
 
 		$config = $this->get_config();
 		$endpoint = ('' != $region && 'n/a' != $region) ? $region : $config['endpoint'];
@@ -145,5 +145,4 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 		$opts['dreamobjects_endpoints'] = $this->dreamobjects_endpoints;
 		return $opts;
 	}
-	
 }

@@ -4,7 +4,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-elFinder.prototype.commands.archive = function() {
+ elFinder.prototype.commands.archive = function() {
 	"use strict";
 	var self  = this,
 		fm    = self.fm,
@@ -33,12 +33,20 @@ elFinder.prototype.commands.archive = function() {
 	this.getstate = function(select) {
 		var sel = this.files(select),
 			cnt = sel.length,
-			chk = (cnt && ! fm.isRoot(sel[0]) && (fm.file(sel[0].phash) || {}).write && ! jQuery.grep(sel, function(f){ return f.read ? false : true; }).length),
+			chk = (cnt && ! fm.isRoot(sel[0]) && (fm.file(sel[0].phash) || {}).write),
+			filter = function(files) {
+				var fres = true;
+				return jQuery.grep(files, function(f) {
+					fres = fres && f.read && f.hash.indexOf(cwdId) === 0 ? true : false;
+					return fres;
+				});
+			},
 			cwdId;
 		
 		if (chk && fm.searchStatus.state > 1) {
-			cwdId = fm.cwd().volumeid;
-			chk = (cnt === jQuery.grep(sel, function(f) { return f.read && f.hash.indexOf(cwdId) === 0 ? true : false; }).length);
+			if (chk = (cnt === filter(sel).length)) {
+				cwdId = fm.cwd().volumeid;
+			}
 		}
 		
 		return chk && !this._disabled && mimes.length && (cnt || (dfrd && dfrd.state() == 'pending')) ? 0 : -1;

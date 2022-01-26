@@ -12,23 +12,9 @@ class WP_Optimize_Minify {
 	 * @return void
 	 */
 	public function __construct() {
-		if (!class_exists('WP_Optimize_Minify_Incompatible_Plugins')) include WP_OPTIMIZE_MINIFY_DIR.'/class-wp-optimize-minify-incompatible-plugins.php';
-		$found_incompatible_plugins = WP_Optimize_Minify_Incompatible_Plugins::instance()->found_incompatible_plugins();
 
 		if (!class_exists('WP_Optimize_Minify_Commands')) include_once(WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-commands.php');
 		$this->minify_commands = new WP_Optimize_Minify_Commands();
-
-		/**
-		 * Filters the list of plugins incompatible with minify which are currently active. Returning false will enable the feature anyways.
-		 *
-		 * @param array|boolean $found_incompatible_plugins - The active incompatible plugins
-		 * @return array|boolean
-		 */
-		if (apply_filters('wpo_minify_found_incompatible_plugins', $found_incompatible_plugins)) {
-			$this->incompatible_plugins = $found_incompatible_plugins;
-			add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'output_incompatible_status'), 20);
-			return;
-		}
 
 		if (!class_exists('WP_Optimize_Minify_Config')) {
 			include WP_OPTIMIZE_MINIFY_DIR.'/class-wp-optimize-minify-config.php';
@@ -228,21 +214,6 @@ class WP_Optimize_Minify {
 			WP_Optimize_Minify_Cache_Functions::purge();
 			WP_Optimize_Minify_Cache_Functions::purge_others();
 		}
-	}
-
-	/**
-	 * Outputs a message in the status tab, when the feature can't be loaded
-	 *
-	 * @return void
-	 */
-	public function output_incompatible_status() {
-		?>
-		<div class="notice notice-error below-h2">
-			<p>
-				<?php printf(__('Minify cannot be loaded, because an incompatible plugin was found: %s', 'wp-optimize'), implode(', ', $this->incompatible_plugins)); ?>
-			</p>
-		</div>
-		<?php
 	}
 
 	/**

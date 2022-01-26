@@ -36,7 +36,7 @@ class WP_Optimize_Cache_Commands {
 		// filter for validate cache settings before save it.
 		$validation = apply_filters('wpo_save_cache_settings_validation', $data['cache-settings']);
 
-		if (!empty($validation) && false === $validation['result']) {
+		if (!empty($validation) && isset($validation['result']) && false === $validation['result']) {
 			return $validation;
 		}
 

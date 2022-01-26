@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "title": "core-image",
+    "version": "1.0.0"
+  },
+  "php": {
+    "inc": [
+      "setup.php"
+    ]
+  },
+  "css": {
+    "main.css": [
+      "assets/styles/core-image.scss"
+    ],
+    "editor-gutenberg.css": [
+      "assets/styles/core-image.scss"
+    ]
+  },
+  "js": {
+    "main.js": [
+      "assets/scripts/front-end.js"
+    ],
+    "editor-gutenberg.js": [
+      "assets/scripts/editor.js"
+    ]
+  }
+}

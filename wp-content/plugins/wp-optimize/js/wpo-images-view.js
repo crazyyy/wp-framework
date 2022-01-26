@@ -72,32 +72,40 @@ WP_Optimize_Images_View = function(settings) {
 		ctrl_shift_on_image_held = e.shiftKey || e.ctrlKey;
 	});
 
+	
 	/**
 	 * Handle checked status changed for single unused image.
 	 */
-	images_view_container.on('change', '.'+options.checkbox_class , function(e) {
-		// Toggle class on image container
-		if (true === $(this).prop('checked')) {
-			$(this).closest(image_container_selector).addClass('selected');
-		} else {
-			$(this).closest(image_container_selector).removeClass('selected');
-		}
+	images_view_container.on('click' , '.'+options.image_container_class , function(e) {
+		
+		var check_box = $(this).find('.'+options.checkbox_class);
+		var image_id = check_box.attr('id');
 
-		var image_id = $(this).attr('id');
-		if ('' === last_clicked_image_id || 0 === $('#'+last_clicked_image_id).length || false === ctrl_shift_on_image_held) {
-			select_images(image_id, null, true === $(this).prop('checked'));
+		// Toggle class on image container
+		if (true === check_box.prop('checked')) {
+			$(this).addClass('selected');
 		} else {
-			if (ctrl_shift_on_image_held) {
-				if (1 === get_selected_images().length) {
-					select_images('', image_id, true === $(this).prop('checked'));
-				} else {
-					select_images(last_clicked_image_id, image_id, true === $(this).prop('checked'));
-				}
+			$(this).removeClass('selected');
+		}
+		if (ctrl_shift_on_image_held) {
+
+			if (true === check_box.prop('checked')) {
+				$(this).removeClass('selected');
+				check_box.prop('checked',false);
 			} else {
-				select_images(image_id, null, true === $(this).prop('checked'));
+				$(this).addClass('selected');
+				check_box.prop('checked',true);
+			}
+			if (1 <= get_selected_images().length) {
+				if (true === $("#"+last_clicked_image_id).prop('checked')) {
+					select_images(last_clicked_image_id, image_id, true === check_box.prop('checked'));
+				}
+				
 			}
 		}
 		last_clicked_image_id = image_id;
+		disable_action_buttons(0 == get_selected_images().length);
+			
 	});
 
 	/**
@@ -308,6 +316,15 @@ WP_Optimize_Images_View = function(settings) {
 	}
 
 	/**
+	 * Get count of loaded images currently displayed in the view container.
+	 *
+	 * @param {int} blog_id
+	 */
+	function get_visible_images_count(blog_id) {
+		return $(['.',options.image_container_blog_class_prefix, blog_id].join(''), images_view_container).length;
+	}
+
+	/**
 	 * Switch view mode grid/list.
 	 *
 	 * @param mode
@@ -451,14 +468,29 @@ WP_Optimize_Images_View = function(settings) {
 	 * Select all images.
 	 */
 	function select_all() {
-		$('.wpo_unused_image__input', images_view_container).prop('checked', true).trigger('change');
+		$('.wpo_unused_image__input').each(function() {
+			if (!$(this).prop('checked')) {
+				$(this).closest('.wpo_unused_image').addClass('selected');
+				$(this).prop('checked', true);
+				last_clicked_image_id = null;
+				disable_action_buttons(0 == get_selected_images().length);
+
+			}
+		 });
 	}
 
 	/**
 	 * Deselect all images.
 	 */
 	function select_none() {
-		$('.wpo_unused_image__input', images_view_container).prop('checked', false).trigger('change');
+		$('.wpo_unused_image__input').each(function() {
+			if ($(this).prop('checked')) {
+				$(this).closest('.wpo_unused_image').removeClass('selected');
+				$(this).prop('checked', false);
+				last_clicked_image_id = null;
+				disable_action_buttons(0 == get_selected_images().length);
+			}
+		 });
 	}
 
 	/**
@@ -496,6 +528,7 @@ WP_Optimize_Images_View = function(settings) {
 		get_selected_images: get_selected_images,
 		remove_selected_images: remove_selected_images,
 		get_images_count: get_images_count,
+		get_visible_images_count: get_visible_images_count,
 		load_next_page_if_need: load_next_page_if_need,
 		filter_by_site: filter_by_site,
 		switch_view_mode: switch_view_mode,

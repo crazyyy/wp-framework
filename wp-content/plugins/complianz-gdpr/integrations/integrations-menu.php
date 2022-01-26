@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 add_action( 'cmplz_integrations_menu', 'cmplz_add_integrations_menu' );
 function cmplz_add_integrations_menu() {
@@ -42,7 +42,6 @@ function cmplz_integrations_page() {
 					'name' => 'custom-scripts',
 					'header' => __('Script Center', 'complianz-gdpr'),
 					'class' => 'big',
-
 					'index' => '13',
 					'controls' => '',
 			),
@@ -65,6 +64,7 @@ function process_integrations_services_save() {
 		if ( ! isset( $_POST['cmplz_nonce'] ) || ! wp_verify_nonce( $_POST['cmplz_nonce'], 'complianz_save' ) ) {
 			return;
 		}
+		delete_transient('cmplz_blocked_scripts');
 
 		if ( isset($_POST["cmplz_save_integrations_type_services"])    ) {
 
@@ -98,8 +98,10 @@ function process_integrations_services_save() {
 					$active_socialmedia[ $service ] = 0;
 				}
 			}
+
 			cmplz_update_option( 'wizard', 'socialmedia_on_site', $active_socialmedia );
-			if ( $_POST['cmplz_advertising'] == 1 ) {
+
+			if ( isset($_POST['cmplz_advertising']) && $_POST['cmplz_advertising'] == 1 ) {
 				cmplz_update_option( 'wizard', 'uses_ad_cookies', 'yes' );
 			} else {
 				cmplz_update_option( 'wizard', 'uses_ad_cookies', 'no' );

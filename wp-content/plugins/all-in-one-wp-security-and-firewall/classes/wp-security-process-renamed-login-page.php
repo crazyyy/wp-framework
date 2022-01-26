@@ -8,12 +8,12 @@ class AIOWPSecurity_Process_Renamed_Login_Page
 
     function __construct()
     {
-        add_action('login_init', array(&$this, 'aiowps_login_init'));
-        add_filter('site_url', array(&$this, 'aiowps_site_url'), 10, 2);
-        add_filter('network_site_url', array(&$this, 'aiowps_site_url'), 10, 2);
-        add_filter('wp_redirect', array(&$this, 'aiowps_wp_redirect'), 10, 2);
-        add_filter('register', array(&$this, 'register_link'));
-        add_filter('user_request_action_email_content', array(&$this, 'aiowps_user_request_email_content'), 10, 2);
+        add_action('login_init', array($this, 'aiowps_login_init'));
+        add_filter('site_url', array($this, 'aiowps_site_url'), 10, 2);
+        add_filter('network_site_url', array($this, 'aiowps_site_url'), 10, 2);
+        add_filter('wp_redirect', array($this, 'aiowps_wp_redirect'), 10, 2);
+        add_filter('register', array($this, 'register_link'));
+        add_filter('user_request_action_email_content', array($this, 'aiowps_user_request_email_content'), 10, 2);
         remove_action('template_redirect', 'wp_redirect_admin_locations', 1000); //To prevent redirect to login page when people type "login" at end of home URL
 
     }

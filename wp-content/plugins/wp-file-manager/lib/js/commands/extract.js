@@ -4,14 +4,16 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-elFinder.prototype.commands.extract = function() {
+ elFinder.prototype.commands.extract = function() {
 	"use strict";
 	var self    = this,
 		fm      = self.fm,
 		mimes   = [],
 		filter  = function(files) {
+			var fres = true;
 			return jQuery.grep(files, function(file) { 
-				return file.read && jQuery.inArray(file.mime, mimes) !== -1 ? true : false;
+				fres = fres && file.read && jQuery.inArray(file.mime, mimes) !== -1 ? true : false;
+				return fres;
 			});
 		};
 	
@@ -31,9 +33,20 @@ elFinder.prototype.commands.extract = function() {
 	
 	this.getstate = function(select) {
 		var sel = this.files(select),
-			cnt = sel.length;
-		
-		return cnt && this.fm.cwd().write && filter(sel).length == cnt ? 0 : -1;
+			cnt = sel.length,
+			cwdHash, cwdChk;
+		if (!cnt || filter(sel).length != cnt) {
+			return -1;
+		} else if (fm.searchStatus.state > 0) {
+			cwdHash = this.fm.cwd().hash;
+			jQuery.each(sel, function(i, file) {
+				cwdChk = (file.phash === cwdHash);
+				return cwdChk;
+			});
+			return cwdChk? 0 : -1;
+		} else {
+			return this.fm.cwd().write? 0 : -1;
+		}
 	};
 	
 	this.exec = function(hashes, opts) {
@@ -42,17 +55,19 @@ elFinder.prototype.commands.extract = function() {
 			cnt      = files.length,
 			makedir  = opts && opts.makedir ? 1 : 0,
 			i, error,
-			decision;
+			decision,
 
-		var overwriteAll = false;
-		var omitAll = false;
-		var mkdirAll = 0;
+			overwriteAll = false,
+			omitAll = false,
+			mkdirAll = 0,
+			siblings = fm.files(files[0].phash),
 
-		var names = jQuery.map(fm.files(hashes), function(file) { return file.name; });
-		var map = {};
-		jQuery.grep(fm.files(hashes), function(file) {
+			names = [],
+			map = {};
+
+		jQuery.each(siblings, function(id, file) {
 			map[file.name] = file;
-			return false;
+			names.push(file.name);
 		});
 		
 		var decide = function(decision) {

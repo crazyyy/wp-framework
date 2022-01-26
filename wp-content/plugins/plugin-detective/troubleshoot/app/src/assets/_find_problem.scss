@@ -1,0 +1,8 @@
+.find-problem {
+	padding: 1rem;
+	padding-top: 6rem;
+	@include bp(s) {
+		padding: 2rem;
+		padding-left: 5rem;
+	}
+}

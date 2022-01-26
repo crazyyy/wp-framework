@@ -88,6 +88,7 @@ abstract class UpdraftCentral_Commands {
 	 * @return array
 	 */
 	final protected function _get_backup_credentials_settings($dir) {
+
 		// Do we need to ask the user for filesystem credentials? when installing and/or deleting items in the given directory
 		$filesystem_method = get_filesystem_method(array(), $dir);
 
@@ -156,7 +157,7 @@ abstract class UpdraftCentral_Commands {
 	 * @return array
 	 */
 	final protected function process_chunk_upload($params, $type) {
-		global $updraftcentral_host_plugin;
+		global $updraftcentral_host_plugin, $updraftcentral_main;
 
 		if (!in_array($type, array('plugin', 'theme'))) {
 			return $this->_generic_error_response('upload_type_not_supported');
@@ -258,7 +259,7 @@ abstract class UpdraftCentral_Commands {
 				add_filter('upgrader_post_install', array($this, 'get_install_data'), 10, 3);
 
 				// WP < 3.7
-				if (!class_exists('Automatic_Upgrader_Skin')) include_once(UPDRAFTPLUS_DIR.'/central/classes/class-automatic-upgrader-skin.php');
+				if (!class_exists('Automatic_Upgrader_Skin')) include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/classes/class-automatic-upgrader-skin.php');
 
 				$skin = new Automatic_Upgrader_Skin();
 				$upgrader = ('plugin' === $type) ? new Plugin_Upgrader($skin) : new Theme_Upgrader($skin);
@@ -311,8 +312,7 @@ abstract class UpdraftCentral_Commands {
 							}
 
 							if (false === $activate || is_wp_error($activate)) {
-								global $updraftplus;
-								$wp_version = $updraftplus->get_wordpress_version();
+								$wp_version = $updraftcentral_main->get_wordpress_version();
 
 								$message = is_wp_error($activate) ? array('message' => $activate->get_error_message()) : array('message' => sprintf($updraftcentral_host_plugin->retrieve_show_message('unable_to_activate'), $type, $type, $wp_version));
 								return $this->_generic_error_response('unable_to_activate_'.$type, $message);

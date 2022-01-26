@@ -1,0 +1,29 @@
+{
+    "name": "rosell-dk/webp-express",
+    "description": "WebP for the masses",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "require": {
+        "composer/installers": "^1.12.0",
+        "rosell-dk/webp-convert": "^2.9.0",
+        "rosell-dk/webp-convert-cloud-service": "^2.0.0",
+        "rosell-dk/dom-util-for-webp": "^0.5.0",
+        "rosell-dk/htaccess-capability-tester": "^0.9.0",
+        "rosell-dk/image-mime-type-guesser": "^0.4.0"
+    },
+    "require-dev": {
+    },
+    "scripts": {
+        "ci": [
+            "@composer validate --no-check-all --strict"
+        ],
+        "copylocalwebpconvert": "rsync -varz /home/rosell/github/webp-convert/src/ /home/rosell/github/webp-express/vendor/rosell-dk/webp-convert/src/"
+    },
+    "authors": [
+      {
+        "name": "Bjørn Rosell",
+        "homepage": "https://www.bitwise-it.dk/contact",
+        "role": "Project Author"
+      }
+    ]
+}

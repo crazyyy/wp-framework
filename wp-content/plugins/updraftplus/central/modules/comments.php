@@ -380,6 +380,7 @@ class UpdraftCentral_Comments_Commands extends UpdraftCentral_Commands {
 	 * @return array
 	 */
 	public function get_settings($params) {
+		global $updraftcentral_main;
 		
 		// Here, we're getting the current blog id. If blog id
 		// is passed along with the parameters then we override
@@ -421,14 +422,21 @@ class UpdraftCentral_Comments_Commands extends UpdraftCentral_Commands {
 				'comments_notify' => $this->_get_wp_option($blog_id, 'comments_notify'),
 				'moderation_notify' => $this->_get_wp_option($blog_id, 'moderation_notify'),
 				'comment_moderation' => $this->_get_wp_option($blog_id, 'comment_moderation'),
-				'comment_whitelist' => $this->_get_wp_option($blog_id, 'comment_whitelist'),
 				'comment_max_links' => $this->_get_wp_option($blog_id, 'comment_max_links'),
 				'moderation_keys' => $this->_get_wp_option($blog_id, 'moderation_keys'),
-				'blacklist_keys' => $this->_get_wp_option($blog_id, 'blacklist_keys'),
 			),
 			'sites' => $sites,
 		);
 		
+		$wp_version = $updraftcentral_main->get_wordpress_version();
+		if (version_compare($wp_version, '5.5.0', '<')) {
+			$result['settings']['comment_whitelist'] = $this->_get_wp_option($blog_id, 'comment_whitelist');
+			$result['settings']['blacklist_keys'] = $this->_get_wp_option($blog_id, 'blacklist_keys');
+		} else {
+			$result['settings']['comment_previously_approved'] = $this->_get_wp_option($blog_id, 'comment_previously_approved');
+			$result['settings']['disallowed_keys'] = $this->_get_wp_option($blog_id, 'disallowed_keys');
+		}
+
 		return $this->_response($result);
 	}
 	

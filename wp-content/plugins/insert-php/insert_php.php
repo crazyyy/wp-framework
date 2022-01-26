@@ -4,7 +4,7 @@
  * Plugin URI: https://woodysnippet.com/
  * Description: Executes PHP code, uses conditional logic to insert ads, text, media content and external service’s code. Ensures no content duplication.
  * Author: Creative Motion, Will Bontrager Software, LLC <will@willmaster.com>
- * Version: 2.4.1
+ * Version: 2.4.2
  * Text Domain: insert-php
  * Domain Path: /languages/
  * Author URI: http://cm-wp.com
@@ -20,7 +20,7 @@
  *
  * If you are a long-term user, you may be confused about the new plugin update.
  * You’ve been using an old plugin – Insert php 1.3.0, and now got an extended
- * product – Woody ad snippets. Insert php was the first plugin version to work
+ * product – Woody Code Snippets. Insert php was the first plugin version to work
  * with PHP code. It was created by Will Bontrager Software, LLC. In 2018, the
  * Webcraftic studio started to actively develop the plugin. We’ve created a
  * roadmap and released several powerful updates that help you to use PHP code
@@ -58,8 +58,6 @@
  * Personal repo: https://github.com/temyk
  * ---------------------------------------------------------------------------------
  *
- * All development rights belong to @webcraftic studio.
- * http://webcraftic.com
  */
 
 // Exit if accessed directly
@@ -83,7 +81,7 @@ require_once( dirname( __FILE__ ) . '/libs/factory/core/includes/class-factory-r
 $plugin_info = array(
 	'prefix'               => 'wbcr_inp_',
 	'plugin_name'          => 'wbcr_insert_php',
-	'plugin_title'         => __( 'Woody ad snippets', 'insert-php' ),
+	'plugin_title'         => __( 'Woody Code Snippets', 'insert-php' ),
 	'plugin_text_domain'   => 'insert-php',
 
 	// PLUGIN SUPPORT
@@ -136,24 +134,24 @@ $plugin_info = array(
 
 	// FRAMEWORK MODULES
 	'load_factory_modules' => array(
-		array( 'libs/factory/bootstrap', 'factory_bootstrap_443', 'admin' ),
-		array( 'libs/factory/forms', 'factory_forms_440', 'admin' ),
-		array( 'libs/factory/pages', 'factory_pages_442', 'admin' ),
+		array( 'libs/factory/bootstrap', 'factory_bootstrap_450', 'admin' ),
+		array( 'libs/factory/forms', 'factory_forms_447', 'admin' ),
+		array( 'libs/factory/pages', 'factory_pages_449', 'admin' ),
 		array( 'libs/factory/types', 'factory_types_410' ),
 		array( 'libs/factory/taxonomies', 'factory_taxonomies_330' ),
 		array( 'libs/factory/metaboxes', 'factory_metaboxes_409', 'admin' ),
 		array( 'libs/factory/viewtables', 'factory_viewtables_410', 'admin' ),
 		array( 'libs/factory/shortcodes', 'factory_shortcodes_329', 'all' ),
-		array( 'libs/factory/freemius', 'factory_freemius_131', 'all' ),
-		array( 'libs/factory/adverts', 'factory_adverts_121', 'admin' ),
-		array( 'libs/factory/feedback', 'factory_feedback_109', 'admin' )
+		array( 'libs/factory/freemius', 'factory_freemius_138', 'all' ),
+		array( 'libs/factory/adverts', 'factory_adverts_128', 'admin' ),
+		array( 'libs/factory/feedback', 'factory_feedback_112', 'admin' )
 	),
 );
 
 /**
  * Checks compatibility with WordPress, php and other plugins.
  */
-$wbcr_compatibility = new Wbcr_Factory443_Requirements( __FILE__, array_merge( $plugin_info, array(
+$wbcr_compatibility = new Wbcr_Factory450_Requirements( __FILE__, array_merge( $plugin_info, array(
 	'plugin_already_activate' => defined( 'WINP_PLUGIN_ACTIVE' ),
 	'required_php_version'    => '7.0',
 	'required_wp_version'     => '4.8.0',

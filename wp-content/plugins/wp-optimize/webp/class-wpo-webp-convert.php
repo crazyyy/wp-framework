@@ -36,8 +36,8 @@ class WPO_WebP_Convert {
 	 * @return string $destination - path of destination file
 	 */
 	protected function get_destination_path($source) {
-		$upload_dir = wp_upload_dir();
-		$destination =  $upload_dir['basedir']. WPO_WEBP_IMAGES_PATH . basename($source) . '.webp';
+		$path_parts = pathinfo($source);
+		$destination =   $path_parts['dirname'] . '/'. basename($source) . '.webp';
 		return $destination;
 	}
 

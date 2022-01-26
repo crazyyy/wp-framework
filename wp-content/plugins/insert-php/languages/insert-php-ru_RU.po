@@ -1,5 +1,5 @@
-# Translation of Plugins - Woody ad snippets &#8211; insert any code, text, or ads via using conditions - Development (trunk) in Russian
-# This file is distributed under the same license as the Plugins - Woody ad snippets &#8211; insert any code, text, or ads via using conditions - Development (trunk) package.
+# Translation of Plugins - Woody Code Snippets &#8211; insert any code, text, or ads via using conditions - Development (trunk) in Russian
+# This file is distributed under the same license as the Plugins - Woody Code Snippets &#8211; insert any code, text, or ads via using conditions - Development (trunk) package.
 msgid ""
 msgstr ""
 "PO-Revision-Date: 2021-02-12 05:58+0000\n"
@@ -10,7 +10,7 @@ msgstr ""
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Language: ru_RU\n"
-"Project-Id-Version: Plugins - Woody ad snippets &#8211; insert any code, "
+"Project-Id-Version: Plugins - Woody Code Snippets &#8211; insert any code, "
 "text, or ads via using conditions - Development (trunk)\n"
 "POT-Creation-Date: 2020-08-07 08:44+0000\n"
 "Last-Translator: \n"
@@ -1890,15 +1890,15 @@ msgid "Woocommerce"
 msgstr "Woocommerce"
 
 #: insert_php.php:178 admin/boot.php:151
-msgid "Woody ad snippets"
-msgstr "Woody ad snippets"
+msgid "Woody Code Snippets"
+msgstr "Woody Code Snippets"
 
 #: admin/pages/import.php:108
-msgid "Woody ad snippets Import"
+msgid "Woody Code Snippets Import"
 msgstr "Woody импорт сниппетов"
 
 #. Name of the plugin
-#| msgid "Woody ad snippets (PHP snippets | Insert PHP)"
+#| msgid "Woody Code Snippets (PHP snippets | Insert PHP)"
 msgid "Woody code snippets (PHP snippets | Insert PHP)"
 msgstr "Woody code snippets (PHP snippets | Insert PHP)"
 

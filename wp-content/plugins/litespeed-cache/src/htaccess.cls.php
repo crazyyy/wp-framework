@@ -13,8 +13,6 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Htaccess extends Root {
-	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
-
 	private $frontend_htaccess = null;
 	private $_default_frontend_htaccess = null;
 	private $backend_htaccess = null;
@@ -62,11 +60,11 @@ class Htaccess extends Root {
 		$this->_default_frontend_htaccess = $this->frontend_htaccess;
 		$this->_default_backend_htaccess = $this->backend_htaccess;
 
-		$frontend_htaccess = $this->conf( Base::O_MISC_HTACCESS_FRONT );
+		$frontend_htaccess = defined( 'LITESPEED_CFG_HTACCESS' ) ? LITESPEED_CFG_HTACCESS : false;
 		if ( $frontend_htaccess && substr( $frontend_htaccess, -10 ) === '/.htaccess' ) {
 			$this->frontend_htaccess = $frontend_htaccess;
 		}
-		$backend_htaccess = $this->conf( Base::O_MISC_HTACCESS_BACK );
+		$backend_htaccess = defined( 'LITESPEED_CFG_HTACCESS_BACKEND' ) ? LITESPEED_CFG_HTACCESS_BACKEND : false;
 		if ( $backend_htaccess && substr( $backend_htaccess, -10 ) === '/.htaccess' ) {
 			$this->backend_htaccess = $backend_htaccess;
 		}
@@ -278,30 +276,6 @@ class Htaccess extends Root {
 		// Remove ^M characters.
 		$content = str_ireplace( "\x0D", "", $content );
 		return $content;
-	}
-
-	/**
-	 * Save the rules file changes.
-	 *
-	 * NOTE: will throw error if failed
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 */
-	public function htaccess_save( $content, $kind = 'frontend' ) {
-		$path = $this->htaccess_path( $kind );
-
-		if ( ! $this->writable( $kind ) ) {
-			Error::t( 'HTA_W' );
-		}
-
-		$this->_htaccess_backup( $kind );
-
-		// File put contents will truncate by default. Will create file if doesn't exist.
-		$res = File::save( $path, $content, false, false, false );
-		if ( $res !== true ) {
-			throw new \Exception( $res );
-		}
 	}
 
 	/**
@@ -551,7 +525,9 @@ class Htaccess extends Root {
 		$id = Base::O_CACHE_LOGIN_COOKIE;
 		$vary_cookies = $cfg[ $id ] ? array( $cfg[ $id ] ) : array();
 		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) { // Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
-			$vary_cookies[] = ',wp-postpass_' . COOKIEHASH;
+			if ( defined( 'COOKIEHASH' ) ) {
+				$vary_cookies[] = ',wp-postpass_' . COOKIEHASH;
+			}
 			$vary_cookies = apply_filters( 'litespeed_vary_cookies', $vary_cookies ); // todo: test if response vary header can work in latest OLS, drop the above two lines
 		}
 		// frontend and backend
@@ -851,32 +827,6 @@ class Htaccess extends Root {
 			$this->_insert_wrapper( false, 'backend' );
 			$this->_insert_wrapper( false, 'backend', self::MARKER_NONLS );
 		}
-	}
-
-	/**
-	 * Parses the .htaccess buffer when the admin saves changes in the edit .htaccess page.
-	 * Only admin can do this
-	 *
-	 * @since 1.0.4
-	 * @since  2.9 Used exception when saving
-	 * @access public
-	 */
-	public function htaccess_editor_save() {
-		if ( ! isset( $_POST[ self::EDITOR_TEXTAREA_NAME ] ) ) {
-			return;
-		}
-
-		$content = Admin::cleanup_text($_POST[self::EDITOR_TEXTAREA_NAME]);
-
-		try {
-			$this->htaccess_save($content);
-		} catch( \Exception $e ) {
-			Admin_Display::error( $e->getMessage() );
-			return;
-		}
-
-		Admin_Display::succeed( __( 'File Saved.', 'litespeed-cache' ) );
-
 	}
 }
 

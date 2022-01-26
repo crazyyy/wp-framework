@@ -40,8 +40,13 @@ class WP_Optimize_Commands {
 		return WP_Optimize()->include_template('database/status-box-contents.php', true, array('optimize_db' => false));
 	}
 	
+	/**
+	 * Get the database tabs information
+	 *
+	 * @return string database table optimization rendered content
+	 */
 	public function get_optimizations_table() {
-		return WP_Optimize()->include_template('database/optimizations-table.php', true);
+		return WP_Optimize()->include_template('database/optimizations-table.php', true, array('does_server_allows_table_optimization' => WP_Optimize()->does_server_allows_table_optimization()));
 	}
 
 	/**
@@ -51,7 +56,7 @@ class WP_Optimize_Commands {
 	 * @return array An array containing the WPO translations and the "WP Optimize" tab's rendered contents
 	 */
 	public function get_wp_optimize_contents() {
-		$content = WP_Optimize()->include_template('database/optimize-table.php', true, array('optimize_db' => false, 'load_data' => WP_Optimize()->template_should_include_data()));
+		$content = WP_Optimize()->include_template('database/optimize-table.php', true, array('optimize_db' => false, 'load_data' => WP_Optimize()->template_should_include_data(), 'does_server_allows_table_optimization' => WP_Optimize()->does_server_allows_table_optimization()));
 		if (WP_Optimize()->is_updraft_central_request()) {
 			$content .= $this->get_status_box_contents();
 		}
@@ -330,7 +335,7 @@ class WP_Optimize_Commands {
 	 * @return array
 	 */
 	public function get_database_tabs() {
-		return array_merge(array('optimizations' => $this->get_optimizations_table()), $this->get_table_list());
+		return array_merge(array('optimizations' => $this->get_optimizations_table(), 'does_server_allows_table_optimization' => WP_Optimize()->does_server_allows_table_optimization()), $this->get_table_list());
 	}
 
 	/**

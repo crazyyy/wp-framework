@@ -91,3 +91,10 @@
 .elfinder .elfinder-cwd-wrapper-list .elfinder-cwd-file .elfinder-cwd-icon {
   /* */
 }
+.elfinder .elfinder-cwd-icon.elfinder-cwd-icon-vnd-openxmlformats-officedocument-wordprocessingml-document {
+  background: url(../images/16px/text_file.svg) !important;
+  background-position: 2px 130px;
+  background: no-repeat;
+  background-size: 13px !important;
+  background-repeat: no-repeat !important;
+}

@@ -8,7 +8,7 @@ class AIOWPSecurity_Scan
 
     function __construct() 
     {
-        add_action('aiowps_perform_fcd_scan_tasks', array(&$this, 'aiowps_scheduled_fcd_scan_handler'));
+        add_action('aiowps_perform_fcd_scan_tasks', array($this, 'aiowps_scheduled_fcd_scan_handler'));
     }
     
     /**

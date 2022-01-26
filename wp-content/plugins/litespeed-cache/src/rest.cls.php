@@ -31,6 +31,13 @@ class REST extends Root {
 	 * @access public
 	 */
 	public function rest_api_init() {
+		// Activate or deactivate a specific crawler callback
+		register_rest_route( 'litespeed/v1', '/toggle_crawler_state', array(
+			'methods' => 'POST',
+			'callback' => array( $this, 'toggle_crawler_state' ),
+			'permission_callback'	=> '__return_true',
+		) );
+
 		register_rest_route( 'litespeed/v1', '/tool/check_ip', array(
 			'methods' => 'GET',
 			'callback' => array( $this, 'check_ip' ),
@@ -70,30 +77,6 @@ class REST extends Root {
 			'permission_callback'	=> array( $this, 'is_from_cloud' ),
 		) );
 
-		register_rest_route( 'litespeed/v1', '/notify_ccss', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_ccss' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
-		register_rest_route( 'litespeed/v1', '/notify_ucss', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_ucss' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
-		register_rest_route( 'litespeed/v1', '/notify_lqip', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_lqip' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
-		register_rest_route( 'litespeed/v1', '/notify_vpi', array(
-			'methods' => 'POST',
-			'callback' => array( $this, 'notify_vpi' ),
-			'permission_callback'	=> array( $this, 'is_from_cloud' ),
-		) );
-
 		// Image optm notify_img
 		// Need validation
 		register_rest_route( 'litespeed/v1', '/notify_img', array(
@@ -113,12 +96,25 @@ class REST extends Root {
 	}
 
 	/**
+	 * Call to freeze or melt the crawler clicked
+	 *
+	 * @since  4.3
+	 */
+	public function toggle_crawler_state() {
+		if( isset( $_POST[ 'crawler_id' ] ) ) {
+			return $this->cls( 'Crawler' )->toggle_activeness( $_POST[ 'crawler_id' ] ) ? 1 : 0;
+		}
+	}
+
+	/**
 	 * Check if the request is from cloud nodes
 	 *
 	 * @since 4.2
+	 * @since 4.4.7 As there is always token/api key validation, ip validation is redundant
 	 */
 	public function is_from_cloud() {
-		return $this->cls( 'Cloud' )->is_from_cloud();
+		return true;
+		// return $this->cls( 'Cloud' )->is_from_cloud();
 	}
 
 	/**
@@ -173,42 +169,6 @@ class REST extends Root {
 	 */
 	public function apikey() {
 		return $this->cls( 'Cloud' )->save_apikey();
-	}
-
-	/**
-	 * Notify CCSS
-	 *
-	 * @since  4.2
-	 */
-	public function notify_ccss() {
-		return $this->cls( 'css' )->notify( 'ccss' );
-	}
-
-	/**
-	 * Notify UCSS
-	 *
-	 * @since  4.2
-	 */
-	public function notify_ucss() {
-		return $this->cls( 'css' )->notify( 'ucss' );
-	}
-
-	/**
-	 * Notify lqip
-	 *
-	 * @since  4.2
-	 */
-	public function notify_lqip() {
-		return $this->cls( 'placeholder' )->notify();
-	}
-
-	/**
-	 * Notify viewport images
-	 *
-	 * @since  4.2
-	 */
-	public function notify_vpi() {
-		return $this->cls( 'media' )->notify();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 /**
   Schedule cron jobs if useCron is true
@@ -23,7 +23,10 @@ function cmplz_schedule_cron() {
 			wp_schedule_event( time(), 'cmplz_monthly', 'cmplz_every_month_hook' );
 		}
 
-		add_action( 'cmplz_every_week_hook', 'cmplz_update_json_files' );
+		if ( function_exists( 'cmplz_update_json_files' ) ) {
+			add_action( 'cmplz_every_day_hook', 'cmplz_update_json_files' );
+		}
+
 		add_action( 'cmplz_every_week_hook', array( COMPLIANZ::$document, 'cron_check_last_updated_status' ) );
 		add_action( 'cmplz_every_month_hook', 'cmplz_cron_clean_placeholders' );
 		add_action( 'cmplz_every_day_hook', array( COMPLIANZ::$proof_of_consent, 'generate_cookie_policy_snapshot' ) );
@@ -59,15 +62,6 @@ function cmplz_clear_scheduled_hooks() {
 	wp_clear_scheduled_hook( 'cmplz_every_month_hook' );
 	wp_clear_scheduled_hook( 'cmplz_every_week_hook' );
 	wp_clear_scheduled_hook( 'cmplz_every_day_hook' );
-}
-
-/**
- * Check if the json files update function exists, and if so, run it weekly
- */
-function cmplz_check_json_files(){
-	if ( function_exists('cmplz_update_json_files') ) {
-		cmplz_update_json_files();
-	}
 }
 
 /**

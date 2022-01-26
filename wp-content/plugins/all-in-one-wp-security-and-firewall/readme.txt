@@ -2,9 +2,10 @@
 Contributors: Tips and Tricks HQ, wpsolutions, Peter Petreski, Ruhul Amin, mbrsolution
 Donate link: https://www.tipsandtricks-hq.com
 Tags: security, secure, Anti Virus, antivirus, ban, ban hacker, virus, firewall, firewall security, login, lockdown, htaccess, hack, malware, vulnerability, protect, protection, phishing, database, backup, plugin, sql injection, ssl, restrict, login captcha, bot, hotlink, 404 detection, admin, rename, all in one, scan, scanner, iframe,
+Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.8
-Stable tag: 4.4.9
+Tested up to: 5.9
+Stable tag: 4.4.10
 License: GPLv3
 
 A comprehensive, user-friendly, all in one WordPress security and firewall plugin for your site.
@@ -183,6 +184,17 @@ https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin
 None
 
 == Changelog ==
+
+= 4.4.10 - 21/Jan/2022 =
+
+* FEATURE: Auto-purge failed login records after 90 days.
+* FEATURE: Change the debug log so it's stored in the database and not a file
+* FIX: Missing Plugin header fields are added.
+* FIX: PHP Warning Notice for finding IP Address appears when a dual proxy used.
+* FIX: Logout date-time shows 1000-10-10 10:00:00 for non-logged out user.
+* FIX: The notification for re-inserting the security rules in your .htaccess file appears after deactivating and activating the plugin to non-admin users.
+* TWEAK: Replace obsolete variable reference style
+* TWEAK: View debug logs from within the UI
 
 = 4.4.9 =
 - Added Polish language translation file to the plugin. Thanks to Dariusz for submitting the language files.

@@ -1,0 +1,79 @@
+/* ==========================================================================
+ # Image block
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+/* Front-end and back-end
+----------------------------------------------- */
+
+.block-editor [data-type="core/image"],
+.blocks .wp-block-image {
+
+  line-height: 0;
+  text-align: center;
+
+  img {
+    display: inline-block;
+    line-height: 0;
+  }
+
+  // wide width
+  &.alignwide {
+    figure, img {
+      width: 100%;
+    }
+  }
+
+  &.alignfull {
+    figcaption {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      max-width: var(--width-content-m);
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  // floated to side
+  figure {
+    margin-top: 0;
+  }
+
+  // caption
+  figcaption {
+    color: var(--color-text-light);
+    display: block;
+    line-height: 1.5;
+    margin-top: .5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+
+}
+
+/* Only front-end
+----------------------------------------------- */
+
+// image block
+.blocks .wp-block-image {
+
+  // entrance animation
+  &.has-viewport-effect {
+    &.is-in-viewport {
+    }
+  }
+
+}
+
+// classic editor images
+.blocks .wp-caption {
+  @extend .wp-block-image;
+}
+
+/* Only back-end
+----------------------------------------------- */
+
+.block-editor [data-type="core/image"] {
+
+}

@@ -465,5 +465,5 @@ class UpdraftPlus_Temporary_Clone_Status {
 }
 
 if (defined('UPDRAFTPLUS_THIS_IS_CLONE') && 1 == UPDRAFTPLUS_THIS_IS_CLONE) {
-	$updraftplus_temporary_clone_status = new UpdraftPlus_Temporary_Clone_Status();
+	new UpdraftPlus_Temporary_Clone_Status();
 }

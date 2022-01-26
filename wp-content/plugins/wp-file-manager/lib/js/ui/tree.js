@@ -3,7 +3,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-jQuery.fn.elfindertree = function(fm, opts) {
+ jQuery.fn.elfindertree = function(fm, opts) {
 	"use strict";
 	var treeclass = fm.res('class', 'tree');
 	
@@ -324,7 +324,7 @@ jQuery.fn.elfindertree = function(fm, opts) {
 						status = 'elfinder-drag-helper-plus';
 					} else {
 						status = 'elfinder-drag-helper-move';
-						if (e.shiftKey || e.ctrlKey || e.metaKey) {
+						if (fm._commands.copy && (e.shiftKey || e.ctrlKey || e.metaKey)) {
 							status += ' elfinder-drag-helper-plus';
 						}
 					}
@@ -1281,11 +1281,11 @@ jQuery.fn.elfindertree = function(fm, opts) {
 					arrow.data('dfrd', dfrd);
 				})
 				.on('contextmenu', selNavdir, function(e) {
+					e.stopPropagation();
 					var self = jQuery(this);
 					
 					// now dirname editing
 					if (self.find('input:text').length) {
-						e.stopPropagation();
 						return;
 					}
 					

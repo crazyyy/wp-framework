@@ -5,7 +5,7 @@ jQuery(function ($) {
 });
 
 (function($) {
-	/**
+	/*
 	 * Form errors store
 	 */
 	var errors = [];
@@ -41,7 +41,6 @@ jQuery(function ($) {
  * Main WP_Optimize - Function for sending communications.
  */
 var WP_Optimize = function () {
-	
 	var $ = jQuery;
 	var debug_level = 0;
 	var queue = new Updraft_Queue();
@@ -50,7 +49,7 @@ var WP_Optimize = function () {
 	var optimization_logged_warnings = false;
 	var force_single_table_optimization = false;
 
-	/**
+	/*
 	 * Enable select all checkbox for optimizations list.
 	 */
 	define_select_all_checkbox($('#select_all_optimizations'), $('#optimizations_list .optimization_checkbox'));
@@ -66,7 +65,6 @@ var WP_Optimize = function () {
 			if (schedule_enabled) {
 				$('#wp-optimize-auto-options').css('opacity', '1');
 			} else {
-
 				$('#wp-optimize-auto-options').css('opacity', '0.5')
 			}
 		}
@@ -98,13 +96,12 @@ var WP_Optimize = function () {
 		type: 'numeric'
 	});
 
-	/**
+	/*
 	 * Triggered when the database tabs are loaded.
 	 */
 
 	$(document).on('wpo_database_tabs_loaded', function() {
-
-		/**
+		/*
 		 * Setup table events and tablesorter
 		 */
 
@@ -135,7 +132,7 @@ var WP_Optimize = function () {
 			}
 		});
 
-		/**
+		/*
 		 * After tables filtered check if we need show table footer and No tables message.
 		 */
 		table_list.on('filterEnd', function() {
@@ -154,7 +151,7 @@ var WP_Optimize = function () {
 			}
 		});
 
-		/**
+		/*
 		 * Setup force optimization checkboxes and associated events
 		 */
 
@@ -217,7 +214,6 @@ var WP_Optimize = function () {
 	 * @return {string}
 	 */
 	function enable_or_disable_feature(type, enable) {
-		
 		var data = {
 			type: type,
 			enable: enable ? 1 : 0
@@ -226,7 +222,6 @@ var WP_Optimize = function () {
 		$('#' + type + '_spinner').show();
 		
 		send_command('enable_or_disable_feature', data, function (resp) {
-			
 			$('#' + type + '_spinner').hide();
 			
 			if (resp && resp.hasOwnProperty('output')) {
@@ -295,7 +290,6 @@ var WP_Optimize = function () {
 
 	// Tabs menu
 	$('.nav-tab-wrapper .nav-tab').on('click', function (e) {
-
 		e.preventDefault();
 
 		var clicked_tab_id = $(this).attr('id'),
@@ -328,7 +322,7 @@ var WP_Optimize = function () {
 		$(this).toggleClass('opened');
 	});
 
-	/**
+	/*
 	 * Setup a simple cross-pages/tabs navigation.
 	 *
 	 * Basic example: <button class="js--wpo-goto" data-page="wpo_minify" data-tab="status">Go to the minify page, status tab</button>
@@ -390,7 +384,6 @@ var WP_Optimize = function () {
 		var shade = container.find('.wpo_shade');
 		shade.removeClass('hidden');
 		send_command('get_database_tabs', {}, function(response) {
-
 			// Set the satus to true, to prevent loading again.
 			database_tabs_loaded = true;
 
@@ -460,7 +453,6 @@ var WP_Optimize = function () {
 	 * @return void
 	 */
 	function process_queue() {
-
 		if (!queue.get_lock()) {
 			if (debug_level > 0) {
 				console.log("WP-Optimize: process_queue(): queue is currently locked - exiting");
@@ -473,11 +465,25 @@ var WP_Optimize = function () {
 		}
 		
 		var id = queue.peek();
+		var blog_id = 0;
+		var sites_container = $("#wpo_all_sites");
+		var active_site = sites_container.data('active_site');
 
 		// Check to see if an object has been returned.
 		if (typeof id == 'object') {
 			data = id;
 			id = id.optimization_id;
+			blog_id = data.blog_id;
+			
+			if ("undefined" == typeof active_site) {
+				sites_container.data('active_site', blog_id);
+				do_site_ui_update(blog_id, 0);
+			} else if (active_site != blog_id) {
+				var prev_blog_id = active_site;
+				sites_container.data('active_site', blog_id);
+				do_site_ui_update(blog_id, prev_blog_id);
+			}
+
 		} else {
 			data = {};
 		}
@@ -485,6 +491,8 @@ var WP_Optimize = function () {
 		if ('undefined' === typeof id) {
 			if (debug_level > 0) console.log("WP-Optimize: process_queue(): queue is apparently empty - exiting");
 			queue.unlock();
+			var prev_blog_id = sites_container.data('active_site');
+			do_site_ui_update(0, prev_blog_id);
 			process_done();
 			return;
 		}
@@ -504,7 +512,6 @@ var WP_Optimize = function () {
 			var request_options = {
 				timeout: timeout,
 				error: function(error, type) {
-
 					optimization_logged_warnings = true;
 					if ('timeout' === type) {
 						console.warn('The request to optimize the table ' + data.optimization_table + ' timed out after ' + (timeout / 1000) + ' seconds');
@@ -512,6 +519,8 @@ var WP_Optimize = function () {
 						console.warn('There was an error when running the optimization "' + id + '".', type, error, data);
 					}
 					if (queue.is_empty()) {
+						var blog_id = sites_container.data('active_site');
+						do_site_ui_update(blog_id, 0);
 						$('#optimization_spinner_' + id).hide();
 						$('#optimization_checkbox_' + id).show();
 						$('.optimization_button_' + id).prop('disabled', false);
@@ -528,7 +537,6 @@ var WP_Optimize = function () {
 		}
 
 		send_command('do_optimization', { optimization_id: id, data: data }, function (response) {
-
 			$('#optimization_spinner_' + id).hide();
 			$('#optimization_checkbox_' + id).show();
 			$('.optimization_button_' + id).prop('disabled', false);
@@ -589,6 +597,23 @@ var WP_Optimize = function () {
 		}, true, request_options);
 	}
 	
+	/**
+	 * Update UI of sites list based on which site is currently being optimizated
+	 *
+	 * @param {Number} blog_id - current site id being optimized
+	 * @param {Number} prev_blog_id - previous site id
+	 *
+	 * @return void
+	 */
+	function do_site_ui_update(blog_id, prev_blog_id) {
+		if (0 != prev_blog_id) {
+			$("#site-" + prev_blog_id).show();
+			$("#optimization_spinner_site-" + prev_blog_id).hide();
+		}
+		$("#site-" + blog_id).hide();
+		$("#optimization_spinner_site-" + blog_id).show();
+	}
+
 	/**
 	 * Runs a specified optimization, displaying the progress and results in the optimization's row
 	 *
@@ -660,6 +685,7 @@ var WP_Optimize = function () {
 					if (1 == parseInt(optimizable) || optimization_force) {
 						var data = {
 							optimization_id: id,
+							blog_id: blog_id,
 							optimization_table: table,
 							optimization_table_type: table_type,
 							optimization_force: optimization_force
@@ -739,7 +765,7 @@ var WP_Optimize = function () {
 		return wpo_sites;
 	}
 
-	/**
+	/*
 	 * Run single optimization click.
 	 */
 	$('#wp-optimize-nav-tab-WP-Optimize-optimize-contents').on('click', 'button.wp-optimize-settings-optimization-run-button', function () {
@@ -759,7 +785,7 @@ var WP_Optimize = function () {
 		});
 	});
 
-	/**
+	/*
 	 * Run all optimizations click.
 	 */
 	$('#wp-optimize-nav-tab-WP-Optimize-optimize-contents').on('click', '#wp-optimize', function (e) {
@@ -891,7 +917,6 @@ var WP_Optimize = function () {
 	 * @return boolean
 	 */
 	function define_moreoptions_settings(show_moreoptions_link, more_options_div, all_items_checkbox, items_list) {
-
 		// toggle show options on click.
 		show_moreoptions_link.on('click', function () {
 			if (!more_options_div.hasClass('wpo_always_visible')) more_options_div.toggleClass('wpo_hidden');
@@ -974,7 +999,6 @@ var WP_Optimize = function () {
 	 * @return {[type]} optimizations
 	 */
 	function run_optimization() {
-
 		$optimizations = $('#optimizations_list .optimization_checkbox:checked');
 
 		$optimizations.sort(function (a, b) {
@@ -1039,7 +1063,6 @@ var WP_Optimize = function () {
 	}
 
 	$('#wp_optimize_table_list_refresh').on('click', function (e) {
-		
 		e.preventDefault();
 		var shade = $(this).closest('.wpo-tab-postbox').find('.wpo_shade');
 		shade.removeClass('hidden');
@@ -1050,7 +1073,6 @@ var WP_Optimize = function () {
 	});
 
 	$('#database_settings_form, #settings_form').on('click', '.wpo-save-settings', function (e) {
-
 		e.preventDefault();
 		var form = $(this).closest('form');
 		var spinner = form.find('.wpo-saving-settings');
@@ -1079,7 +1101,6 @@ var WP_Optimize = function () {
 		}
 
 		send_command('save_settings', form_data, function (resp) {
-
 			spinner.closest('div').find('.save-done').show().delay(5000).fadeOut();
 
 			if (resp && resp.hasOwnProperty('save_results') && resp.save_results && resp.save_results.hasOwnProperty('errors')) {
@@ -1087,7 +1108,6 @@ var WP_Optimize = function () {
 					var new_html = '<div class="error">' + resp.errors[i] + '</div>';
 					temporarily_display_notice(new_html, '#wp-optimize-settings-save-results');
 				}
-				console.log(resp.save_results.messages);
 			}
 			if (resp && resp.hasOwnProperty('status_box_contents')) {
 				$(resp.status_box_contents).each(function(index, el) {
@@ -1110,7 +1130,7 @@ var WP_Optimize = function () {
 		});
 	});
 
-	/**
+	/*
 	 * Handle Wipe Settings click.
 	 */
 	$('#settings_form').on('click', '.wpo-wipe-settings', function() {
@@ -1168,16 +1188,22 @@ var WP_Optimize = function () {
 		spinner.removeClass('visibility-hidden');
 
 		send_command('do_optimization', { optimization_id: 'optimizetables', data: data }, function (response) {
-
-			if (response.result.meta.tableinfo) {
-				var row = btn.closest('tr'),
-					meta = response.result.meta,
-					tableinfo = meta.tableinfo;
-
-				update_single_table_information(row, tableinfo);
-
-				// update total overhead.
-				$('#wpoptimize_table_list > tbody:last th:eq(6)').html(['<span style="color:', meta.overhead > 0 ? '#0000FF' : '#004600', '">', meta.overhead_formatted,'</span>'].join(''));
+			if (response.result.meta.error) {
+				btn.closest('tr').html('<td colspan="8" class="no-table"><p>' + response.result.meta.message + '</p></td>');
+				setTimeout(function() {
+					$('#wp_optimize_table_list_refresh').trigger('click');
+				}, 2000);
+			} else {
+				if (response.result.meta.tableinfo) {
+					var row = btn.closest('tr'),
+						meta = response.result.meta,
+						tableinfo = meta.tableinfo;
+	
+					update_single_table_information(row, tableinfo);
+	
+					// update total overhead.
+					$('#wpoptimize_table_list > tbody:last th:eq(6)').html(['<span style="color:', meta.overhead > 0 ? '#0000FF' : '#004600', '">', meta.overhead_formatted,'</span>'].join(''));
+				}
 			}
 
 			btn.prop('disabled', false);
@@ -1191,13 +1217,12 @@ var WP_Optimize = function () {
 	/**
 	 * Update information about single table in the database tables list.
 	 *
-	 * @param {Object} row		 jQuery object for TR html tag.
+	 * @param {Object} row       jQuery object for TR html tag.
 	 * @param {Object} tableinfo
 	 *
 	 * @return {void}
 	 */
 	function update_single_table_information(row, tableinfo) {
-
 		// update table information in row.
 		$('td:eq(2)', row).text(tableinfo.rows);
 		$('td:eq(3)', row).text(tableinfo.data_size);
@@ -1280,7 +1305,6 @@ var WP_Optimize = function () {
 			update_optimizations_info_view(get_optimizations_info_cache[cache_key]);
 		} else {
 			// else send command update cache and update view.
-
 			send_command('get_optimizations_info', {'wpo-sites':get_selected_sites_list()}, function(response) {
 				// @codingStandardsIgnoreLine
 				if (!response) return;
@@ -1290,7 +1314,7 @@ var WP_Optimize = function () {
 		}
 	}
 
-	/**
+	/*
 	 * Check if settings file selected for import.
 	 */
 	$('#wpo_import_settings_btn').on('click', function(e) {
@@ -1347,14 +1371,14 @@ var WP_Optimize = function () {
 		});
 	}
 
-	/**
+	/*
 	 * Hide file validation message on change file field value.
 	 */
 	$('#wpo_import_settings_file').on('change', function() {
 		$('#wpo_import_error_message').slideUp();
 	});
 
-	/**
+	/*
 	 * Save settings to hidden form field, used for export.
 	 */
 	$('#wpo_export_settings_btn').on('click', function(e) {
@@ -1365,7 +1389,7 @@ var WP_Optimize = function () {
 	/**
 	 * Force download json file with posted data.
 	 *
-	 * @param {Object} data 	 data to put in a file.
+	 * @param {Object} data     data to put in a file.
 	 * @param {string} filename
 	 *
 	 * @return {void}
@@ -1390,8 +1414,8 @@ var WP_Optimize = function () {
 	 * Make ajax request to get optimization info.
 	 *
 	 * @param {Object} optimization_info_container - jquery object obtimization info container.
-	 * @param {string} optimization_id 			   - optimization id.
-	 * @param {Object} params		  			   - custom params posted to optimization get info.
+	 * @param {string} optimization_id             - optimization id.
+	 * @param {Object} params                      - custom params posted to optimization get info.
 	 *
 	 * @return void
 	 */
@@ -1417,7 +1441,7 @@ var WP_Optimize = function () {
 		});
 	};
 
-	/**
+	/*
 	 * Handle ajax information for optimizations.
 	 *
 	 * @return void
@@ -1501,7 +1525,13 @@ var WP_Optimize = function () {
 		});
 	});
 
+	// Handle convert table click
+	$('#wpoptimize_table_list').on('click', '.toinnodb', function () {
+		convert_single_db_table($(this));
+	});
+	
 	var table_to_remove_btn;
+	
 	// Handle delete table click
 	$('#wpoptimize_table_list').on('click', '.run-single-table-delete', function () {
 		table_to_remove_btn = $(this);
@@ -1566,6 +1596,64 @@ var WP_Optimize = function () {
 			}
 		}
 	});
+
+	/**
+	 * Send ajax command to convert single table to InnoDB.
+	 *
+	 * @param {Object} btn jQuery object of clicked "Convert to InnoDB" button.
+	 *
+	 * @return void
+	 */
+	function convert_single_db_table(table_to_convert_btn) {
+		var spinner = table_to_convert_btn.next(),
+			action_done_icon = spinner.next(),
+			table_name = table_to_convert_btn.data('table'),
+			data = {
+				optimization_id: 'orphanedtables',
+				optimization_table: table_name,
+				optimization_action: 'toinnodb'
+			};
+
+		spinner.removeClass('visibility-hidden');
+
+		send_command('do_optimization', { optimization_id: 'orphanedtables', data: data }, function (response) {
+			if (response.result.meta.error) {
+				table_to_convert_btn.closest('tr').html('<td colspan="8" class="no-table"><p>' + response.result.meta.message + '</p></td>');
+				setTimeout(function() {
+					$('#wp_optimize_table_list_refresh').trigger('click');
+				}, 2000);
+				return;
+			}
+			if (response.result.meta.success) {
+				var row = table_to_convert_btn.closest('tr');
+
+				action_done_icon.show().removeClass('visibility-hidden');
+
+				// remove convert to Innodb button.
+				row.find(".toinnodb").remove();
+				
+				
+				setTimeout(function() {
+					action_done_icon.fadeOut('slow', function() {
+						row.find("[data-colname='Type']").text("InnoDB");
+					});
+				}, 500);
+			} else {
+				var message = wpoptimize.table_was_not_converted.replace('%s', table_name);
+
+				if (response.result.meta.message) {
+					message += '(' + response.result.meta.message + ')';
+				}
+
+				alert(message);
+			}
+		}).always(function() {
+			table_to_convert_btn.prop('disabled', false);
+			spinner.addClass('visibility-hidden');
+		});
+	}
+
+
 
 	/**
 	 * Send ajax commant to remove single database table.
@@ -1647,7 +1735,7 @@ var WP_Optimize = function () {
 		});
 	}
 
-	/**
+	/*
 	 * Validate general settings (loggers).
 	 */
 	$('#wp-optimize-general-settings').on('wpo-saving-form-data', function() {

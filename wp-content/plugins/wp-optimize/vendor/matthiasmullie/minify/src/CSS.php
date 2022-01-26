@@ -44,6 +44,10 @@ class CSS extends Minify
         'jpeg' => 'data:image/jpeg',
         'svg' => 'data:image/svg+xml',
         'woff' => 'data:application/x-font-woff',
+        'woff2' => 'data:application/x-font-woff2',
+        'avif' => 'data:image/avif',
+        'apng' => 'data:image/apng',
+        'webp' => 'data:image/webp',
         'tif' => 'image/tiff',
         'tiff' => 'image/tiff',
         'xbm' => 'image/x-xbitmap',
@@ -718,7 +722,11 @@ class CSS extends Minify
             // and since we've captured more code than required, we may have some leftover
             // calc() in here too - go recursive on the remaining but of code to go figure
             // that out and extract what is needed
-            $rest = str_replace($function.$expr, '', $match[0]);
+            $rest = "";
+            $pos = strpos($match[0], $function.$expr);
+            if ($pos !== false) {
+                $rest = substr_replace($match[0], '', $pos, strlen($function.$expr));
+            }
             $rest = preg_replace_callback($pattern, $callback, $rest);
 
             return $placeholder.$rest;

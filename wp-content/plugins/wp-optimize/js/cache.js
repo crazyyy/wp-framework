@@ -231,7 +231,11 @@ var WP_Optimize_Cache = function () {
 			}
 
 			if (el.is('input[type="checkbox"]')) {
-				settings[name].push(el.is(':checked') ? 1 : 0);
+				if ('value' == el.data('saveas')) {
+					if (el.is(':checked')) settings[name].push(el.val());
+				} else {
+					settings[name].push(el.is(':checked') ? 1 : 0);
+				}
 			} else if (el.is('textarea')) {
 				settings[name].push(el.val().split("\n"));
 			} else {

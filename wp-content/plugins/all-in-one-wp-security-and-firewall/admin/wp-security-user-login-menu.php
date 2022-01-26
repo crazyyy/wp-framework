@@ -70,7 +70,7 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
         <div id="poststuff"><div id="post-body">
         <?php  
         //$tab_keys = array_keys($this->menu_tabs);
-        call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
+        call_user_func(array($this, $this->menu_tabs_handler[$tab]));
         ?>
         </div></div>
         </div><!-- end of wrap -->
@@ -411,6 +411,7 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu
             <?php
             echo '<p>'.__('This tab displays the failed login attempts for your site.', 'all-in-one-wp-security-and-firewall').'
             <br />'.__('The information below can be handy if you need to do security investigations because it will show you the IP range, username and ID (if applicable) and the time/date of the failed login attempt.', 'all-in-one-wp-security-and-firewall').'
+            <br /><strong>'.sprintf(__('Failed login records that are older than %1$d days are purged automatically.', 'all-in-one-wp-security-and-firewall'), apply_filters('aiowps_purge_failed_login_records_after_days', AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS)).'</strong>
             </p>';
             ?>
         </div>

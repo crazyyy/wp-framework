@@ -119,7 +119,7 @@ class WP_Optimize_Minify_Config {
 			'merge_google_fonts' => true,
 			'enable_display_swap' => true,
 			'remove_googlefonts' => false,
-			'gfonts_method' => 'inline', // inline, async, exclude
+			'gfonts_method' => 'inherit', // inline, async, exclude
 			'fawesome_method' => 'inherit', // inline, async, exclude
 			'enable_css' => true,
 			'enable_css_minification' => true,

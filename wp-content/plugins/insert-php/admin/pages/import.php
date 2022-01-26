@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_ImportPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory443_Plugin $plugin
+	 * @param Wbcr_Factory450_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory443_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory450_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = "import";
@@ -105,7 +105,7 @@ class WINP_ImportPage extends WINP_Page {
             <div class="<?php echo WINP_Helper::get_factory_class(); ?> winp-import-snippets">
                 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 					<?php $this->getMessage() ?>
-                    <h3><?php _e( 'Woody ad snippets Import', 'insert-php' ) ?></h3>
+                    <h3><?php _e( 'Woody Code Snippets Import', 'insert-php' ) ?></h3>
                     <div class="row">
                         <div class="<?php echo $import_tab ? 'col-md-9' : 'col-md-12' ?>">
                             <div class="nav-tab-wrapper">

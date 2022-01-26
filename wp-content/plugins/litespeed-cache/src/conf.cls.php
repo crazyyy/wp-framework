@@ -63,17 +63,22 @@ class Conf extends Base {
 		$ver = $this->conf( self::_VER );
 
 		/**
-		 * Don't upgrade or run new installations other than from backend visit
+		 * Don't upgrade or run new installations other than from backend visit at the 2nd time (delay the update)
 		 * In this case, just use default conf
 		 */
+		$has_delay_conf_tag = self::get_option( '__activation' );
 		if ( ! $ver || $ver != Core::VER ) {
-			if ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) {
+			if ( ( ! is_admin() && ! defined( 'LITESPEED_CLI' ) ) || ( ! $has_delay_conf_tag || $has_delay_conf_tag == -1 ) ) { // Reuse __activation to control the delay conf update
+				if ( ! $has_delay_conf_tag || $has_delay_conf_tag == -1 ) {
+					self::update_option( '__activation', Core::VER );
+				}
+
 				$this->set_conf( $this->load_default_vals() );
 				$this->_try_load_site_options();
 
 				// Disable new installation auto upgrade to avoid overwritten to customized data.ini
 				if ( ! $ver ) {
-					! defined( 'LITESPEED_BYPASS_AUTO_V' ) && define( 'LITESPEED_BYPASS_AUTO_V', true );
+					defined( 'LITESPEED_BYPASS_AUTO_V' ) || define( 'LITESPEED_BYPASS_AUTO_V', true );
 				}
 				return;
 			}
@@ -87,7 +92,7 @@ class Conf extends Base {
 			Data::cls()->try_upgrade_conf_3_0();
 		}
 		else {
-			! defined( 'LSCWP_CUR_V' ) && define( 'LSCWP_CUR_V', $ver );
+			defined( 'LSCWP_CUR_V' ) || define( 'LSCWP_CUR_V', $ver );
 
 			/**
 			 * Upgrade conf
@@ -125,20 +130,21 @@ class Conf extends Base {
 		$this->_try_load_site_options();
 
 		// Mark as conf loaded
-		! defined( 'LITESPEED_CONF_LOADED' ) && define( 'LITESPEED_CONF_LOADED', true );
+		defined( 'LITESPEED_CONF_LOADED' ) || define( 'LITESPEED_CONF_LOADED', true );
 
 		/**
 		 * Activation delayed file update
 		 * Pros: This is to avoid file correction script changed in new versions
 		 * Cons: Conf upgrade won't get file correction if there is new values that are used in file
 		 */
-		if ( self::get_option( '__activation' ) ) {
+		if ( $has_delay_conf_tag && $has_delay_conf_tag != -1 ) {
 			// Check new version @since 2.9.3
 			Cloud::version_check( 'activate' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) );
 
 			$this->update_confs(); // Files only get corrected in activation or saving settings actions.
-
-			self::delete_option( '__activation' );
+		}
+		if ( $has_delay_conf_tag != -1 ) {
+			self::update_option( '__activation', -1 );
 		}
 	}
 
@@ -476,6 +482,11 @@ class Conf extends Base {
 				// Update cron
 				if ( $this->_conf_cron( $id ) ) {
 					$this->cls( 'Task' )->try_clean( $id );
+				}
+
+				// Reset crawler bypassed list when any of the options WebP replace, guest mode, or cache mobile got changed
+				if ( $id == self::O_IMG_OPTM_WEBP_REPLACE || $id == self::O_GUEST || $id == self::O_CACHE_MOBILE ) {
+					$this->cls( 'Crawler' )->clear_disabled_list();
 				}
 			}
 		}

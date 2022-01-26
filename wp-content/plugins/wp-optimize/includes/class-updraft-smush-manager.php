@@ -5,11 +5,11 @@
 
 if (!defined('ABSPATH')) die('Access denied.');
 
-if (!class_exists('Updraft_Task_Manager_1_2')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
+if (!class_exists('Updraft_Task_Manager_1_3')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
 
 if (!class_exists('Updraft_Smush_Manager')) :
 
-class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
+class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 
 	static protected $_instance = null;
 
@@ -126,6 +126,11 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 
 		$smush_stats = get_post_meta($attachment_id, 'smush-stats', true);
 
+		if (empty($smush_stats)) {
+			_e('The file was either compressed using another tool or marked as compressed', 'wp-optimize');
+			return;
+		}
+
 		$original_size = $smush_stats['original-size'];
 		$smushed_size = $smush_stats['smushed-size'];
 
@@ -137,6 +142,11 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 		}
 
 		echo htmlentities($info);
+
+		// Display additional information about resized images.
+		if (!empty($smush_stats['sizes-info'])) {
+			WP_Optimize()->include_template('images/smush-details.php', false, array('sizes_info' => $smush_stats['sizes-info']));
+		}
 	}
 
 	/**
@@ -155,10 +165,12 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 		
 		if (in_array($subaction, $allowed_commands)) {
 
-			if (isset($_REQUEST['data']))
+			if (isset($_REQUEST['data'])) {
 				$data = $_REQUEST['data'];
-
-			$results = call_user_func(array($this->commands, $subaction), $data);
+				$results = call_user_func(array($this->commands, $subaction), $data);
+			} else {
+				$results = call_user_func(array($this->commands, $subaction));
+			}
 			
 			if (is_wp_error($results)) {
 				$results = array(
@@ -589,9 +601,23 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			$stats = get_post_meta($attachment_id, 'smush-stats', true);
 		}
 
-		$original_size = isset($stats['original-size']) ? $stats['original-size'] : 0;
-		$compressed_size = isset($stats['smushed-size']) ? $stats['smushed-size'] : 0;
-		$percent = isset($stats['savings-percent']) ? $stats['savings-percent'] : 0;
+		if (isset($stats['sizes-info'])) {
+		
+			$original_size = 0;
+			$compressed_size = 0;
+
+			foreach ($stats['sizes-info'] as $info) {
+				$original_size += $info['original'];
+				$compressed_size += $info['compressed'];
+			}
+
+			$percent = round((($original_size - $compressed_size) / $original_size * 100), 2);
+		} else {
+			$original_size = isset($stats['original-size']) ? $stats['original-size'] : 0;
+			$compressed_size = isset($stats['smushed-size']) ? $stats['smushed-size'] : 0;
+			$percent = isset($stats['savings-percent']) ? $stats['savings-percent'] : 0;
+		}
+
 		$saved = $original_size - $compressed_size;
 		$completed_task_count++;
 
@@ -641,7 +667,8 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 				'back_up_delete_after_days' => $this->options->get_option('back_up_delete_after_days', 50),
 				'preserve_exif' => $this->options->get_option('preserve_exif', false),
 				'autosmush' => $this->options->get_option('autosmush', false),
-				'show_smush_metabox' => $this->options->get_option('show_smush_metabox', 'show') == 'show' ? true : false
+				'show_smush_metabox' => $this->options->get_option('show_smush_metabox', 'show') == 'show' ? true : false,
+				'webp_conversion' => $this->options->get_option('webp_conversion', false)
 			);
 		}
 		return $smush_options;
@@ -698,6 +725,8 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			'mark_all_images_uncompressed'	=> __('Do you really want to mark all the images as uncompressed? This action is irreversible.', 'wp-optimize'),
 			'restore_images_from_backup'	=> __('Do you want to restore the original images from the backup (where they exist?)', 'wp-optimize'),
 			'restore_all_compressed_images'	=> __('Do you really want to restore all the compressed images?', 'wp-optimize'),
+			'more' => __('More', 'wp-optimize'),
+			'less' => __('Less', 'wp-optimize'),
 		));
 	}
 
@@ -728,6 +757,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 		$has_backup = get_post_meta($post->ID, 'original-file', true) ? true : false;
 
 		$smush_info = get_post_meta($post->ID, 'smush-info', true);
+		$smush_stats = get_post_meta($post->ID, 'smush-stats', true);
 		$marked = get_post_meta($post->ID, 'smush-marked', false);
 		
 		$options = Updraft_Smush_Manager()->get_smush_options();
@@ -745,8 +775,13 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 			'smush_info'		=> $smush_info ? $smush_info : ' ',
 			'file_size'			=> $file_size,
 			'smush_options'     => $options,
-			'custom'            => 100 == $options['image_quality'] || 90 == $options['image_quality'] ? false : true
+			'custom'            => 100 == $options['image_quality'] || 90 == $options['image_quality'] ? false : true,
+			'smush_details'		=> '',
 		);
+
+		if (!empty($smush_stats['sizes-info'])) {
+			$extract['smush_details'] = WP_Optimize()->include_template('images/smush-details.php', true, array('sizes_info' => $smush_stats['sizes-info']));
+		}
 
 		$extract['compressed_by_another_plugin'] = $this->is_image_compressed_by_another_plugin($post->ID);
 
@@ -1172,7 +1207,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_2 {
 		$total_memory_usage = round(@memory_get_usage(true)/1048576, 1);
 
 		// Attempt to raise limit
-		@set_time_limit(90);
+		@set_time_limit(330);
 
 		$log_header = array();
 

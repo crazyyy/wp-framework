@@ -159,7 +159,7 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 	protected function maybe_use_dns_bucket_name($storage, $config) {
 		if ((!empty($config['endpoint']) && preg_match('/\.aliyuncs\.com$/i', $config['endpoint'])) || (!empty($config['bucket_access_style']) && 'virtual_host_style' === $config['bucket_access_style'])) {
 			// due to the recent merge of S3-generic bucket access style on March 2021, if virtual-host bucket access style is selected, connecting to an amazonaws bucket location where the user doesn't have an access to it will throw an S3 InvalidRequest exception. It requires the signature to be set to version 4
-			if (preg_match('/\.amazonaws\.com$/i', $config['endpoint'])) { 
+			if (preg_match('/\.amazonaws\.com$/i', $config['endpoint'])) {
 				$this->use_v4 = true;
 				$storage->setSignatureVersion('v4');
 			}

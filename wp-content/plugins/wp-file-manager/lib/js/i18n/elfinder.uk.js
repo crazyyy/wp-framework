@@ -2,7 +2,7 @@
  * Українська мова translation
  * @author ITLancer
  * @author cjayho <cj.fooser@gmail.com>
- * @version 2020-08-31
+ * @version 2020-02-10
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -17,9 +17,9 @@
 		translator : 'ITLancer, cjayho &lt;cj.fooser@gmail.com&gt;',
 		language   : 'Українська мова',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 31.08.2020 16:06
-		fancyDateFormat : '$1 H:i', // will show like: сьогодні 16:06
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200831-160609
+		dateFormat : 'd.m.Y H:i', // will show like: 10.02.2020 16:52
+		fancyDateFormat : '$1 H:i', // will show like: сьогодні 16:52
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200210-165246
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -402,7 +402,6 @@
 			'autoSync'        : 'Авто синх.',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Пересунути вгору',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Отримати URL', // from v2.1.7 added 9.2.2016
-			'share'           : 'Поділитися',
 			'selectedItems'   : 'Обрані об\'єкти ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID теки', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Дозволити доступ офлайн', // from v2.1.10 added 3.25.2016
@@ -478,7 +477,6 @@
 			'integrations'    : 'Інтеграції', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Цей elFinder має наступні інтегровані сервіси. Перевірте умови використання, політику приватності та інше перед використанням.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : 'Показати приховані об\'єкти', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : 'Редактор коду',
 			'hideHidden'      : 'Сховати приховані об\'єкти', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Показати/Сховати приховані о\'єкти', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : 'Типи файлів, які можна створювати', // from v2.1.41 added 7.8.2018
@@ -579,3 +577,4 @@
 		}
 	};
 }));
+

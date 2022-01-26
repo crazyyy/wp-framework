@@ -26,7 +26,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 		 */
 		$this->styles->add( WINP_PLUGIN_URL . '/admin/assets/css/list-table.css' );
 		$this->scripts->add( WINP_PLUGIN_URL . '/admin/assets/js/snippet-list.js' );
-		$this->scripts->localize( 'winp_ajax_nonce', wp_create_nonce( 'winp_ajax' ) );
+		$this->scripts->localize( 'winp_ajax', [ 'nonce' => wp_create_nonce( 'winp_ajax' ) ] );
 		$this->runActions();
 
 		add_filter( 'manage_edit-' . WINP_SNIPPETS_POST_TYPE . '_sortable_columns', array(
@@ -204,15 +204,13 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 			} else {
 				wp_send_json( [
 						'error_message' => __( "Priority is not changed! It's must be a number", 'insert-php' ),
-					]
-				);
+					] );
 			}
 
 		} else {
 			wp_send_json( [
 					'error_message' => __( 'Priority is not changed!', 'insert-php' ),
-				]
-			);
+				] );
 		}
 	}
 
@@ -242,8 +240,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 					wp_send_json( [
 							'alert'         => true,
 							'error_message' => __( "The snippet is not activated because errors were detected in the snippet code!", 'insert-php' ),
-						]
-					);
+						] );
 				}
 			}
 
@@ -258,16 +255,14 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
 			} else {
 				wp_send_json( [
 						'error_message' => __( 'Snippet status not changed.', 'insert-php' ),
-					]
-				);
+					] );
 
 			}
 
 		} else {
 			wp_send_json( [
 					'error_message' => __( 'Snippet status not changed. No snippet ID', 'insert-php' ),
-				]
-			);
+				] );
 		}
 	}
 }

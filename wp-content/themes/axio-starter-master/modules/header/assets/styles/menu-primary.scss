@@ -1,0 +1,460 @@
+/* ==========================================================================
+ # Primary menu
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+:root {
+
+  --color-menu-dropdown-bg:         hsl(0, 0%, 100%);
+  --color-menu-dropdown-bg-hover:   hsl(0, 0%, 95%);
+  --color-menu-dropdown-text:       var(--color-text);
+  --width-menu-dropdown:            12rem;
+
+}
+
+.primary-navigation__items {
+
+  /* Both navigations
+  ----------------------------------------------- */
+
+  &, ul {
+    @include list-reset;
+  }
+
+  li {
+
+    // call to action
+    &.cta {
+      & > span > a {
+        @include button('solid');
+      }
+    }
+
+  }
+
+  .menu-item__caret__text-open,
+  .menu-item__caret__text-close {
+    @include visuallyhidden;
+  }
+  .menu-item__caret__text-open {
+    display: block;
+  }
+  .menu-item__caret__text-close {
+    display: none;
+  }
+
+  [aria-expanded="true"] > span > .menu-item__caret {
+    .menu-item__caret__text-open {
+      display: none;
+    }
+    .menu-item__caret__text-close {
+      display: block;
+    }
+  }
+
+  /* Mobile navigation
+  ----------------------------------------------- */
+
+  @include breakpoint($breakpoint-mobile-menu) {
+    display: block;
+    padding-top: 2rem;
+    .desktop-menu & {
+      display: none;
+    }
+
+    // all <li>
+    li {
+
+      // all <a>
+      a {
+        color: var(--color-text);
+        flex-grow: 1;
+        font-size: 1rem;
+        text-decoration: none;
+        outline-offset: 0;
+      }
+
+      & > span {
+        align-items: center;
+        display: flex;
+        min-height: 2rem;
+      }
+
+      &.current-menu-item,
+      &.current-menu-ancestor {
+        & > span > a {
+          font-weight: var(--font-weight-bold);
+        }
+      }
+
+      // call to action
+      &.cta {
+        &:last-of-type {
+          margin-top: 1rem;
+        }
+        & > span > a {
+          display: block;
+          text-align: center;
+          svg {
+            margin-right: .25rem;
+            position: relative;
+            top: -.125rem;
+          }
+        }
+      }
+
+      &.menu-item-has-children {
+        position: relative;
+        & > span {
+          align-items: center;
+          display: flex;
+          width: 100%;
+        }
+
+      }
+    }
+
+    // all carets
+    .menu-item__caret {
+      @include button-reset;
+      color: var(--color-primary);
+      flex-shrink: 0;
+      margin-left: 1rem;
+      &__icon {
+        @include transition;
+        height: 2rem;
+        width: 2rem;
+        &--desktop {
+          display: none;
+        }
+        &--mobile {
+          display: block;
+        }
+        &--close {
+          display: none;
+        }
+        &--open {
+          display: block;
+        }
+      }
+    }
+    [aria-expanded="true"] > span > .menu-item__caret {
+
+      .menu-item__caret__icon {
+        &--close {
+          display: block;
+        }
+        &--open {
+          display: none;
+        }
+      }
+    }
+
+    // all .sub-menu
+    .sub-menu {
+      display: none;
+      padding: .75rem 0 .75rem .75rem;
+      &[aria-hidden="false"] {
+        display: block;
+        animation: mobile-submenu-in .25s ease-in-out;
+      }
+
+      // all lower <li>
+      li {
+        padding: .5rem 0;
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+      }
+
+    }
+
+    // 1st level <li>
+    & > li {
+
+      padding: .75rem 0;
+
+      // 1st level <a>
+      & > span > a {
+        font-size: 1.125rem;
+      }
+
+        // 2nd level <ul class="sub-menu"> [closed]
+        & > ul {
+          max-height: 0;
+          background: var(--color-white);
+          opacity: 0;
+
+          // 2nd level <ul class="sub-menu"> [open]
+          &[aria-hidden="false"] {
+            opacity: 1;
+            max-height: 999px;
+          }
+
+          // 2nd level <li>
+          & > li {
+
+            // 2nd level <a>
+            & > span > a {}
+
+            // 3rd level <ul class="sub-menu"> [closed]
+            & > ul {
+              max-height: 0;
+              opacity: 0;
+
+              // 3rd level <ul class="sub-menu"> [open]
+              &[aria-hidden="false"] {
+                max-height: 999px;
+                opacity: 1;
+              }
+            }
+
+          }
+
+        }
+
+    }
+
+
+  }
+
+  /* Desktop navigation
+  ----------------------------------------------- */
+
+  @include breakpoint($breakpoint-desktop-menu) {
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    // all <li>
+    li {
+      & > span {
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+      &.current-menu-item,
+      &.current-menu-ancestor {
+        & > span > a {
+          font-weight: var(--font-weight-bold);
+        }
+      }
+    }
+
+    // all <a>
+    a {
+      color: var(--color-text);
+      text-decoration: none;
+      flex-grow: 1;
+    }
+
+    // all carets
+    .menu-item__caret {
+      @include button-reset;
+      margin-left: .125em;
+      flex-shrink: 0;
+      &__icon {
+        &--mobile {
+          display: none;
+        }
+      }
+    }
+
+    // all <svg>
+    .icon {
+      width: 1em;
+      height: 1em;
+      top: -.125rem;
+      position: relative;
+      &.icon-from-class {
+        margin-right: .25em;
+        width: 1.25em;
+        height: 1.25em;
+      }
+    }
+    .after-icon .icon {
+      margin-left: .25em;
+      margin-right: 0;
+    }
+
+    // 1st level <li>
+    & > li {
+      position: relative;
+      margin-right: var(--spacing-m);
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      // 1st level <a>
+      & > span > a {
+
+        font-size: 1rem;
+        @include breakpoint($breakpoint-l) {
+          font-size: 1.125rem;
+        }
+
+        &:hover, &:focus, &:active {
+          text-decoration: underline;
+        }
+
+      }
+
+      // all dropdown <li>
+      li {
+        background: var(--color-menu-dropdown-bg);
+        &:first-of-type {
+          margin-top: .5rem;
+        }
+        &:last-of-type {
+          margin-bottom: .5rem;
+        }
+        & > span > a {
+          color: var(--color-menu-dropdown-text);
+          padding: .5rem 1.5rem;
+          font-size: .875rem;
+          display: block;
+        }
+        &:hover, &:focus, &:active {
+          background: var(--color-menu-dropdown-bg-hover);
+        }
+        .icon {
+          color: var(--color-menu-dropdown-text);
+          transform: rotate(-90deg);
+        }
+      }
+
+      // 2nd level <ul class="sub-menu"> [open]
+      &:hover > .sub-menu,
+      & > .sub-menu[aria-hidden="false"] {
+        display: block;
+        opacity: 1;
+        left: 50%;
+        animation: main-submenu-in .25s ease-in-out;
+        &.is-out-of-bounds {
+          left: auto;
+          right: 0;
+          &:before {
+            left: calc(75% - .2rem);
+          }
+        }
+      }
+
+      // 2nd level <ul class="sub-menu"> [closed]
+      & > .sub-menu {
+        display: none;
+        color: var(--color-white);
+        width: var(--width-menu-dropdown);
+        margin: .4rem 0 0 calc(var(--width-menu-dropdown) * -0.5); // margin-left half of the width!
+        background: var(--color-menu-dropdown-bg);
+        position: absolute;
+        left: -999em;
+        z-index: 99;
+        box-shadow: 0 2px 18px 0 rgba(0,0,0,.15);
+        opacity: 0;
+        transition: opacity .2s ease-out;
+
+        .menu-item__caret {
+          align-self: stretch;
+        }
+
+        // 2nd level caret
+        &:before {
+          content: '';
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 0 .4rem .4rem .4rem;
+          border-color: transparent transparent var(--color-menu-dropdown-bg) transparent;
+          position: absolute;
+          top: -.4rem;
+          left: 50%;
+          left: calc(50% - .2rem);
+          filter: drop-shadow(0px -2px 3px rgba(0,0,0,.1));
+        }
+
+        // 2nd level <li>
+        & > li {
+
+          &.menu-item-has-children {
+            position: relative;
+          }
+
+          // 2nd level <a>
+          & > a {
+            display: block;
+          }
+
+          // carets 2nd level and below
+          .menu-item__caret {
+            padding-left: .75rem;
+            padding-right: .75rem;
+          }
+
+          // 3rd level <ul class="sub-menu"> [open]
+          &:hover > .sub-menu,
+          & > .sub-menu[aria-hidden="false"] {
+            animation: child-submenu-in .25s ease-in-out;
+            opacity: 1;
+            display: block;
+            left: var(--width-menu-dropdown);
+            top: 0;
+            &.is-out-of-bounds {
+              left: calc(-1 * var(--width-menu-dropdown));
+              right: 0;
+            }
+          }
+
+          // 3rd level <ul class="sub-menu"> [closed]
+          & > ul {
+            width: var(--width-menu-dropdown);
+            display: none;
+            background: var(--color-white);
+            position: absolute;
+            left: -999em;
+            z-index: 99;
+            box-shadow: 0 5px 18px 0 rgba(0,0,0,.175);
+            opacity: 0;
+            transition: opacity .2s ease-out;
+            margin-top: -.5rem; // compensate extra padding
+
+          }
+
+        }
+
+      }
+
+    }
+  }
+}
+
+@keyframes mobile-submenu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes main-submenu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  };
+}
+
+@keyframes child-submenu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+

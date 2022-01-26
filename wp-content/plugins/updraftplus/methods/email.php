@@ -44,7 +44,9 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 		
 							$subject = __("WordPress Backup", 'updraftplus').': '.get_bloginfo('name').' (UpdraftPlus '.$updraftplus->version.') '.get_date_from_gmt(gmdate('Y-m-d H:i:s', $updraftplus->backup_time), 'Y-m-d H:i');
 		
+							add_action('wp_mail_failed', array($updraftplus, 'log_email_delivery_failure'));
 							$sent = wp_mail(trim($sendmail_addr), $subject, sprintf(__("Backup is of: %s.", 'updraftplus'), site_url().' ('.$descrip_type.')'), null, array($fullpath));
+							remove_action('wp_mail_failed', array($updraftplus, 'log_email_delivery_failure'));
 							if ($sent) $any_sent = true;
 						}
 					}

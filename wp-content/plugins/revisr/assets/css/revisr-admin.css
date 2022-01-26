@@ -1,0 +1,131 @@
+/**
+ * revisr-admin.css
+ *
+ * @package 	Revisr
+ * @license 	GPLv3
+ * @link 		https://revisr.io
+ * @copyright 	Expanded Fronts, LLC
+ */
+
+/*--------------------------------------------------------------
+>>> TABLE OF CONTENTS:
+----------------------------------------------------------------
+# Dashboard Page
+	## Recent Activity
+	## "Quick Actions" metabox
+	## "Branches/Tags" metabox
+# Branches Page
+# Commits Pages
+	## Committed
+	## Staging
+# Settings Pages
+# Setup
+# Misc
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Dashboard Page
+--------------------------------------------------------------*/
+.revisr-poststuff { padding-top: 0 !important; }
+
+/*--------------------------------------------------------------
+## Recent Activity
+--------------------------------------------------------------*/
+#revisr-activity-form table th[id=message] { width: 75%; }
+#revisr-activity-form .alignleft { display: none; }
+
+/*--------------------------------------------------------------
+## "Quick Actions" metabox
+--------------------------------------------------------------*/
+.revisr-quick-action-btn { width: 100%; text-align: left !important; margin-bottom: 4px !important; }
+.revisr-quick-action-btn:before { margin: 5px; display: inline-block; float: left; color: #fff; -webkit-font-smoothing: antialiased; }
+.revisr-quick-action-btn-txt { float: left; }
+#revisr-commit-btn:before { content: "\f132"; margin: 5px 1px !important; font: normal 20px/1 'dashicons'; color: #444; }
+#revisr-discard-btn:before { content: "\f158"; margin: 4px 1px !important; font: normal 20px/1 'dashicons'; color: #444; }
+#revisr-backup-btn:before { content: "\f096"; font: normal 17px/1 'octicons'; color: #444; }
+#revisr-push-btn:before { content: "\f03d"; font: normal 20px/1 'octicons'; color: #444; }
+#revisr-pull-btn:before { content: "\f03f"; font: normal 20px/1 'octicons'; color: #444; }
+#revisr-loader { float: right; }
+
+/*--------------------------------------------------------------
+## "Branches/Tags" metabox
+--------------------------------------------------------------*/
+#revisr-branches-tags-widget #branches { padding: 0; }
+#revisr-branches-tags-widget #branches-table { border: 0; }
+#revisr-branches-tags-widget #branches-table tr:nth-child(odd) { background-color: #f9f9f9; }
+#revisr-manage-branches-link { font-size: 12px; }
+
+/*--------------------------------------------------------------
+# Branches Page
+--------------------------------------------------------------*/
+.revisr-col-container { margin-top: 25px !important; }
+#revisr-branch-form .tablenav.top { display: none; }
+#revisr-add-branch-box { max-width: 280px; }
+#revisr-add-branch-box h3 { font-size: 14px; padding: 8px 12px; margin: 0; line-height: 1.4; }
+#revisr-add-branch-box #add-branch-submit { text-align: center; margin-bottom: 0; padding-bottom: 0; }
+
+/*--------------------------------------------------------------
+# Commits
+--------------------------------------------------------------*/
+.revisr_page_revisr_commits .alignleft.actions.bulkactions { display: none; }
+#revisr-commits-filter #hash, #revisr-commits-filter .column-hash { width:70px !important; }
+#revisr-commits-filter .column-title { width: 400px !important; }
+#revisr-commits-filter #branch, #revisr-commits-filter #tag, #files_changed, #revisr-commits-filter .column-branch, #revisr-commits-filter .column-tag, .column-files_changed { text-align: center !important; }
+.revisr_page_revisr_commits .wrap { margin-top: 27px !important; }
+
+/*--------------------------------------------------------------
+## Committed
+--------------------------------------------------------------*/
+#committed { width: 90%; }
+.admin_page_revisr_view_commit .wrap { margin-top: 27px !important; }
+
+/*--------------------------------------------------------------
+## Staging
+--------------------------------------------------------------*/
+#revisr_save_commit .inside, #revisr_view_commit .inside { padding: 0; }
+.revisr-timestamp:before { margin-right: 3px; }
+#misc-publishing-actions .revisr-octicon-label:before { color: #888; display: inline-block; font: 400 20px/1 octicons; speak: none; left: -1px; position: relative; top: 0; text-decoration: none!important; vertical-align: top; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+#misc-publishing-actions label[for=revisr-branch]:before { content: '\f020'; padding: 0 7px 0 5px; }
+#misc-publishing-actions label[for=revisr-tag]:before { content: '\f015'; padding: 0 5px 0 3px; }
+.stage-container { width: 100%; display: inline-block; }
+#staged { width: 80%; float: left; overflow-y: scroll; }
+#unstaged { width: 80%; float: left; overflow-y: scroll; }
+.stage-nav { float: left; margin: 5px; }
+.stage-nav-button { margin-top: 7px !important; }
+.diff_added { background-color: #cfc; }
+.diff_removed { background-color: #fdd; }
+.admin_page_revisr_new_commit .wrap { margin-top: 27px !important; }
+#revisr-commit-form #title { line-height: normal; }
+
+/*--------------------------------------------------------------
+# Settings
+--------------------------------------------------------------*/
+.revisr-settings-form { margin-left: 15px; }
+#verify-remote { margin-left: 10px; padding: 4px; font-size: 11px; border-radius: 4px; color: #fff; margin-left: 10px; }
+.verify-remote-success { background-color: #5cb85c; }
+.verify-remote-error { background-color: #AFAFAF; }
+#gitignore { width: 35em; }
+.revisr-description { width: 35em; }
+.revisr-text { width: 35em !important; }
+#post-hook-input { width: 35em; }
+#revisr-debug-table { max-width: 750px; }
+body.revisr_page_revisr_settings #site5_wrapper { margin-right: 20px; }
+
+/*--------------------------------------------------------------
+# Setup
+--------------------------------------------------------------*/
+#revisr-setup-container { max-width: 400px; background-color: #fff; color: #444; margin: 140px auto 25px; padding: 30px; -webkit-font-smoothing: subpixel-antialiased; -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.13); box-shadow: 0 1px 3px rgba(0,0,0,.13); }
+.revisr-setup-input	{ width: 100% !important; }
+.select2-hidden { display:none; }
+.revisr-setup-nav { margin-top: 10px; width: 100%; }
+.revisr-setup-nav button { width: 48%; }
+.revisr-setup-nav:last-child { float: right; }
+#revisr-setup-h2 { font-size: 23px; font-weight: 400; padding: 9px 15px 4px 0; line-height: 29px; margin: 0; }
+
+/*--------------------------------------------------------------
+# Misc
+--------------------------------------------------------------*/
+.revisr-arrow-logo { background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOC4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjI0NS44IDM4MS4xIDgxLjkgODkuNSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAyNDUuOCAzODEuMSA4MS45IDg5LjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHBhdGggZmlsbD0iIzQ0NCIgZD0iTTI5NS4yLDM4Ny4yYy01LjEsNS4xLTUuMSwxMy4zLDAsMTguM2MzLjgsMy44LDkuMyw0LjcsMTMuOSwyLjlsNy4yLTcuMmMxLjgtNC43LDAuOS0xMC4yLTIuOS0xMy45DQoJQzMwOC41LDM4Mi4xLDMwMC4zLDM4Mi4xLDI5NS4yLDM4Ny4yeiBNMzA5LjcsNDAxLjZjLTIuOSwyLjktNy42LDIuOS0xMC42LDBjLTIuOS0yLjktMi45LTcuNiwwLTEwLjZjMi45LTIuOSw3LjYtMi45LDEwLjYsMA0KCUMzMTIuNiwzOTQsMzEyLjYsMzk4LjcsMzA5LjcsNDAxLjZ6Ii8+DQo8cGF0aCBmaWxsPSIjNDQ0IiBkPSJNMjY4LjEsNDU0Yy0xMy4yLTEwLjEtMTYuMS0yOS02LjQtNDIuNmM0LTUuNiw5LjQtOS40LDE1LjQtMTEuNGwtMi0xMC4yYy04LjUsMi41LTE2LjIsNy43LTIxLjcsMTUuNQ0KCWMtMTIuOSwxOC4yLTguOSw0My41LDguOCw1N2wtNS42LDguM2wyNS45LTEuMmwtOC42LTIzLjZMMjY4LjEsNDU0eiIvPg0KPHBhdGggZmlsbD0iIzQ0NCIgZD0iTTMxOC4zLDQwMy4zYzEuMS0yLjEsMS43LTQuNSwxLjctN2MwLTguNC02LjgtMTUuMi0xNS4yLTE1LjJzLTE1LjIsNi44LTE1LjIsMTUuMnM2LjgsMTUuMiwxNS4yLDE1LjINCgljMi4xLDAsNC4xLTAuNCw1LjktMS4yYzguNCwxMC42LDkuMiwyNS44LDEsMzcuMmMtMy45LDUuNi05LjQsOS40LTE1LjQsMTEuNGwyLDEwLjJjOC41LTIuNSwxNi4yLTcuNywyMS43LTE1LjUNCglDMzMxLjIsNDM4LjEsMzI5LjksNDE3LjQsMzE4LjMsNDAzLjN6IE0zMDQuOCw0MDMuM2MtMy44LDAtNi45LTMuMS02LjktNi45czMuMS02LjksNi45LTYuOXM2LjksMy4xLDYuOSw2LjkNCglTMzA4LjcsNDAzLjMsMzA0LjgsNDAzLjN6Ii8+DQo8L3N2Zz4=); background-repeat: no-repeat; width: 24px; height: 24px; margin-top: 3px; margin-right: 8px; float: left; }
+#site5_wrapper { width: 80px; text-align: center; font-size: 11px; float: right; margin: 0 10px 10px 10px; padding: 0 5px; background-color: #fff; border: 1px solid #ddd; }
+#site5_logo { width: 80px; margin-top: -5px; }
+.revisr-alert { margin: 20px 0 !important;}

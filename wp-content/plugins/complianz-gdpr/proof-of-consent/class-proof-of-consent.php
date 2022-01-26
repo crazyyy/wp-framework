@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 	class cmplz_proof_of_consent {
@@ -261,10 +261,6 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 					<a href="https://complianz.io/definitions/what-is-proof-of-consent/" target="_blank" class="button button-default cmplz-header-btn"><?php _e( "Read more", "complianz-gdpr" ) ?></a>
 				</form>
 				<?php
-				if ( isset( $_POST['cmplz_generate_snapshot'] ) ) {
-					cmplz_notice( __( "Proof of consent updated!",
-							"complianz-gdpr" ), 'success' );
-				}
 				if ( isset( $_POST['cmplz_generate_snapshot_error'] ) ) {
 					cmplz_notice( __( "Proof of consent generation failed. Check your write permissions in the uploads directory",
 							"complianz-gdpr" ), 'warning' );
@@ -302,18 +298,18 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 			foreach ( $regions as $region => $label ) {
 				$banner_id = cmplz_get_default_banner_id();
 				$banner    = new CMPLZ_COOKIEBANNER( $banner_id );
-				$settings  = $banner->get_settings_array();
+				$settings  = $banner->get_front_end_settings();
+				$settings  += $banner->get_html_settings();
 				$settings['privacy_link_us '] = COMPLIANZ::$document->get_page_url( 'privacy-statement', 'us' );
 				$settings_html = '';
 				$skip          = array(
 					'categorie',
 					'use_custom_cookie_css',
+					'logo',
 					'custom_css_amp',
 					'static',
 					'set_cookies',
-					'hide_revoke',
 					'position',
-					'theme',
 					'version',
 					'banner_version',
 					'a_b_testing',
@@ -332,6 +328,14 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
                     'colorpalette_toggles',
                     'colorpalette_border_radius',
                     'border_width',
+                    'store_consent',
+                    'cookie_domain',
+                    'set_cookies_on_root',
+                    'placeholdertext',
+                    'css_file',
+                    'page_links',
+                    'tm_categories',
+                    'cookie_path',
                     'colorpalette_button_accept',
                     'colorpalette_button_deny',
                     'colorpalette_button_settings',

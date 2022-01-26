@@ -1,9 +1,9 @@
 <?php
-defined('ABSPATH') or die("you do not have acces to this page!");
+defined('ABSPATH') or die("you do not have access to this page!");
 
 $this->pages['za']['cookie-statement']['document_elements'] = array(
 	'last-updated' => array(
-		'content' => '<i>' . sprintf(_x('This Cookie Policy was last updated on %s and applies to citizens and legal permanent residents of South Africa.', 'Legal document cookie policy', 'complianz-gdpr'), '[publish_date]') . '</i>',
+		'content' => '<i>' . sprintf(_x('This Cookie Policy was last updated on %s and applies to citizens and legal permanent residents of South Africa.', 'Legal document cookie policy', 'complianz-gdpr'), '[publish_date]') . '</i><br>',
 	),
 	'introduction' => array(
 		'title' => _x('Introduction', 'Legal document cookie policy:paragraph title', 'complianz-gdpr'),
@@ -101,7 +101,7 @@ $this->pages['za']['cookie-statement']['document_elements'] = array(
 		'title' => _x('Consent', 'Legal document cookie policy:paragraph title', 'complianz-gdpr'),
 		'content' => sprintf(_x('When you visit our website for the first time, we will show you a pop-up with an explanation about cookies. As soon as you click on "%s", you consent to us using all cookies and plug-ins as described in the pop-up and this Cookie Policy. You can disable the use of cookies via your browser, but please note that our website may no longer work properly.', 'Legal document cookie policy', 'complianz-gdpr'), '[cookie_accept_text]'),
 		'callback_condition' => array(
-			'NOT cmplz_za_site_uses_cookie_warning_cats',
+			'NOT cmplz_site_uses_cookie_warning_cats',
 			'cmplz_za_site_needs_cookie_warning'
 		),
 	),
@@ -110,7 +110,7 @@ $this->pages['za']['cookie-statement']['document_elements'] = array(
 		'title' => _x('Consent', 'Legal document cookie policy:paragraph title', 'complianz-gdpr'),
 		'content' => sprintf(_x('When you visit our website for the first time, we will show you a pop-up with an explanation about cookies. As soon as you click on "%s", you consent to us using the categories of cookies and plug-ins you selected in the pop-up, as described in this Cookie Policy. You can disable the use of cookies via your browser, but please note that our website may no longer work properly.', 'Legal document cookie policy', 'complianz-gdpr'), '[cookie_save_preferences_text]'),
 		'callback_condition' => array(
-			'cmplz_za_site_uses_cookie_warning_cats',
+			'cmplz_site_uses_cookie_warning_cats',
 			'cmplz_za_site_needs_cookie_warning',
 		)
 	),
@@ -171,7 +171,7 @@ $this->pages['za']['cookie-statement']['document_elements'] = array(
 	),
 
 	'last-sync' => array(
-		'content' => sprintf(_x('This Cookie Policy was synchronized with %scookiedatabase.org%s on %s', 'Legal document cookie policy', 'complianz-gdpr'),'<a href="https://cookiedatabase.org" target="_blank">', '</a>', '[sync_date]'),
+		'content' => sprintf(_x('This Cookie Policy was synchronized with %scookiedatabase.org%s on %s', 'Legal document cookie policy', 'complianz-gdpr'),'<a href="https://cookiedatabase.org/" target="_blank">', '</a>', '[sync_date]'),
 		'callback_condition' => array(
 			'cmplz_cdb_reference_in_policy',
 		)

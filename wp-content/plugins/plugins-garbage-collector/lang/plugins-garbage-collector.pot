@@ -1,0 +1,223 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Plugins Garbage Collector\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-19 12:34+0700\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Vladimir Garagulya <support@role-editor.com>\n"
+"Language-Team: ShinePHP.com <vladimir@shinephp.com>\n"
+"Language: en_EN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html__;esc_html_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../includes/classes/plugins-garbage-collector.php:65
+msgid "Scan"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:78
+msgid "Changelog"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:136
+msgid "Turn on at least one Search checkbox before start Scan process!"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:137
+msgid "Receive plugins list"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:138
+msgid "Scanning"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:139
+msgid "Checking plugin"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:140
+msgid "will take some time. Please confirm to continue"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:141
+msgid "Select at least one table before click on Delete button"
+msgstr ""
+
+#: ../includes/classes/plugins-garbage-collector.php:142
+msgid ""
+"Delete database tables last confirmation: Click \"Cancel\" if you have any "
+"doubt."
+msgstr ""
+
+#: ../includes/lib.php:177
+msgid "active"
+msgstr ""
+
+#: ../includes/lib.php:180
+msgid "inactive"
+msgstr ""
+
+#: ../includes/lib.php:182 ../includes/lib.php:198
+msgid "unused"
+msgstr ""
+
+#: ../includes/lib.php:253
+msgid " checked"
+msgstr ""
+
+#: ../includes/lib.php:283
+msgid "Tables are deleted: "
+msgstr ""
+
+#: ../includes/lib.php:290
+msgid "Tables are deleted successfully: "
+msgstr ""
+
+#: ../includes/lib.php:319 ../includes/lib.php:450
+msgid "Hide"
+msgstr ""
+
+#: ../includes/lib.php:320 ../includes/lib.php:451
+msgid "Table Name"
+msgstr ""
+
+#: ../includes/lib.php:321
+msgid "Records #"
+msgstr ""
+
+#: ../includes/lib.php:322
+msgid "KBytes #"
+msgstr ""
+
+#: ../includes/lib.php:323 ../includes/lib.php:453
+msgid "Plugin Name"
+msgstr ""
+
+#: ../includes/lib.php:324
+msgid "State"
+msgstr ""
+
+#: ../includes/lib.php:336
+msgid ""
+"Let's see what tables in your database do not belong to the core WordPress "
+"installation:"
+msgstr ""
+
+#: ../includes/lib.php:414 ../includes/lib.php:615
+msgid ""
+"Some tables are hidden by you. Turn on \"Show hidden DB tables\" option and "
+"click \"Scan\" button again to show them."
+msgstr ""
+
+#: ../includes/lib.php:422
+msgid "Delete Tables"
+msgstr ""
+
+#: ../includes/lib.php:426 ../includes/lib.php:627
+msgid "Attention!"
+msgstr ""
+
+#: ../includes/lib.php:427
+msgid ""
+"Operation rollback is not possible. Consider to make database backup first. "
+"Please double think before click \"Delete Tables\" button."
+msgstr ""
+
+#: ../includes/lib.php:436
+msgid "Congratulations! It seems that your WordPress database is clean."
+msgstr ""
+
+#: ../includes/lib.php:452
+msgid "Extra Field"
+msgstr ""
+
+#: ../includes/lib.php:454
+msgid "Plugin State"
+msgstr ""
+
+#: ../includes/lib.php:623
+msgid "Delete Extra Columns"
+msgstr ""
+
+#: ../includes/lib.php:628
+msgid ""
+"Operation rollback is not possible. Consider to make database backup first. "
+"Please double think before click <code>Delete Extra Columns</code> button."
+msgstr ""
+
+#: ../includes/lib.php:637
+msgid ""
+"Congratulations! It seems that your WordPress database tables structure is "
+"not changed"
+msgstr ""
+
+#: ../includes/lib.php:651
+msgid ""
+"This feature is still under development and will be realized in the future "
+"version"
+msgstr ""
+
+#: ../includes/lib.php:724
+msgid "Table was hidden"
+msgstr ""
+
+#: ../includes/lib.php:744
+msgid "Table was shown"
+msgstr ""
+
+#: ../includes/options.php:29
+msgid "Search DB for tables created by plugins"
+msgstr ""
+
+#: ../includes/options.php:30
+msgid "Search none-WP tables"
+msgstr ""
+
+#: ../includes/options.php:33
+msgid ""
+"Search DB for changes which plugins made to the original WP tables structure"
+msgstr ""
+
+#: ../includes/options.php:34
+msgid "Search WP tables structure changes (beta - experimental)"
+msgstr ""
+
+#: ../includes/options.php:37
+msgid "Include tables which are hidden by your request to the search results"
+msgstr ""
+
+#: ../includes/options.php:38
+msgid "Show hidden tables"
+msgstr ""
+
+#: ../includes/options.php:41
+msgid "Scan Database"
+msgstr ""
+
+#: ../includes/options.php:41
+msgid ""
+"Click this button to gather information how plugins use your WordPress "
+"database"
+msgstr ""
+
+#: ../plugins-garbage-collector.php:39
+msgid "Database Cleanup"
+msgstr ""
+
+#: ../plugins-garbage-collector.php:46
+msgid "requires PHP version 5.6 or newer."
+msgstr ""
+
+#: ../plugins-garbage-collector.php:47 ../plugins-garbage-collector.php:54
+msgid "Please update!"
+msgstr ""
+
+#: ../plugins-garbage-collector.php:53
+msgid "requires WordPress 4.0 or newer."
+msgstr ""

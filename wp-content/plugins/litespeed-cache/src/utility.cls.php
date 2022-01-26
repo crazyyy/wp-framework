@@ -304,7 +304,7 @@ class Utility extends Root {
 	 */
 	public static function parse_attr( $str ) {
 		$attrs = array();
-		preg_match_all( '#([\w-]+)=(\'|")([^\2]*)\2#isU', $str, $matches, PREG_SET_ORDER );
+		preg_match_all( '#([\w-]+)=(["\'])([^\2]*)\2#isU', $str, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 			$attrs[ $match[ 1 ] ] = trim( $match[ 3 ] );
 		}
@@ -873,8 +873,8 @@ class Utility extends Root {
 		$page_links = paginate_links( array(
 			'base' => add_query_arg( 'pagenum', '%#%' ),
 			'format' => '',
-			'prev_text' => __( '&laquo;', 'text-domain' ),
-			'next_text' => __( '&raquo;', 'text-domain' ),
+			'prev_text' => '&laquo;',
+			'next_text' => '&raquo;',
 			'total' => $num_of_pages,
 			'current' => $pagenum,
 		) );

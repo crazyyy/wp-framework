@@ -3,7 +3,7 @@
  * @author Régis Guyomarch <regisg@gmail.com>
  * @author Benoit Delachaux <benorde33@gmail.com>
  * @author Jonathan Grunder <jonathan.grunder@gmail.com>
- * @version 2020-09-01
+ * @version 2019-06-11
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -18,9 +18,9 @@
 		translator : 'Régis Guyomarch &lt;regisg@gmail.com&gt;, Benoit Delachaux &lt;benorde33@gmail.com&gt;, Jonathan Grunder &lt;jonathan.grunder@gmail.com&gt;',
 		language   : 'française',
 		direction  : 'ltr',
-		dateFormat : 'd/M/Y H:i', // will show like: 01/Sep/2020 16:46
-		fancyDateFormat : '$1 H:i', // will show like: Aujourd'hui 16:46
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200901-164655
+		dateFormat : 'd/M/Y H:i', // will show like: 11/Jun/2019 19:33
+		fancyDateFormat : '$1 H:i', // will show like: Aujourd'hui 19:33
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 190611-193346
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -116,7 +116,7 @@
 			'errEditorNotFound'    : 'Aucun éditeur n\'a été trouvé pour ce type de fichier.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Une erreur est survenue du côté serveur.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Impossible de vider le dossier "$1".', // from v2.1.25 added 22.6.2017
-			'moreErrors'           : 'Il y a $1 plus d\'erreurs', // from v2.1.44 added 9.12.2018
+			'moreErrors'           : 'There are $1 more errors.', // from v2.1.44 added 9.12.2018
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Créer une archive',
@@ -165,7 +165,7 @@
 			'cmdselectnone': 'Tout désélectionner', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Inverser la sélection', // from v2.1.28 added 15.08.2017
 			'cmdopennew'   : 'Ouvrir dans une nouvelle fenêtre', // from v2.1.38 added 3.4.2018
-			'cmdhide'      : 'Masquer (préférence)', // from v2.1.41 added 24.7.2018
+			'cmdhide'      : 'Hide (Preference)', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Fermer',
@@ -180,7 +180,7 @@
 			'btnUnmount': 'Démonter', // from v2.1 added 30.04.2012
 			'btnConv'   : 'Convertir', // from v2.1 added 08.04.2014
 			'btnCwd'    : 'Ici',      // from v2.1 added 22.5.2015
-			'btnVolume' : 'Le volume',    // from v2.1 added 22.5.2015
+			'btnVolume' : 'Volume',    // from v2.1 added 22.5.2015
 			'btnAll'    : 'Tous',       // from v2.1 added 22.5.2015
 			'btnMime'   : 'Type MIME', // from v2.1 added 22.5.2015
 			'btnFileName':'Nom du fichier',  // from v2.1 added 22.5.2015
@@ -227,7 +227,7 @@
 			'ntfchkdir'   : 'Validation du dossier de destination', // from v2.1.24 added 3.5.2017
 			'ntfundo'     : 'Annuler l\'opération précédente', // from v2.1.27 added 31.07.2017
 			'ntfredo'     : 'Refaire l\'opération annulée', // from v2.1.27 added 31.07.2017
-			'ntfchkcontent' : 'Vérification du contenu', // from v2.1.41 added 3.8.2018
+			'ntfchkcontent' : 'Checking contents', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
 			'volume_Trash' : 'Corbeille', //from v2.1.24 added 29.4.2017
@@ -292,7 +292,7 @@
 			'untitled folder'   : 'NouveauDossier',   // added 10.11.2015
 			'Archive'           : 'NouvelleArchive',  // from v2.1 added 10.11.2015
 			'untitled file'     : 'NewFile.$1',  // from v2.1.41 added 6.8.2018
-			'extentionfile'     : '$1: Fichier',    // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: File',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
@@ -304,11 +304,10 @@
 			'confirmNonUTF8'  : 'Impossible de détecter l\'encodage de ce fichier. Pour être modifié, il doit être temporairement convertit en UTF-8.<br/>Veuillez s\'il vous plaît sélectionner un encodage pour ce fichier.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Ce fichier a été modifié.<br/>Les données seront perdues si les changements ne sont pas sauvegardés.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Êtes-vous certain de vouloir déplacer les éléments vers la corbeille?', //from v2.1.24 added 29.4.2017
-			'confirmMove'     : 'Voulez-vous vraiment déplacer les éléments vers "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Appliquer à tous',
 			'name'            : 'Nom',
 			'size'            : 'Taille',
-			'perms'           : 'Autorisations',
+			'perms'           : 'Permissions',
 			'modify'          : 'Modifié',
 			'kind'            : 'Type',
 			'read'            : 'Lecture',
@@ -394,7 +393,7 @@
 			'group'           : 'Groupe', // from v2.1 added 20.6.2015
 			'other'           : 'Autre', // from v2.1 added 20.6.2015
 			'execute'         : 'Exécuter', // from v2.1 added 20.6.2015
-			'perm'            : 'Autorisation', // from v2.1 added 20.6.2015
+			'perm'            : 'Permission', // from v2.1 added 20.6.2015
 			'mode'            : 'Mode', // from v2.1 added 20.6.2015
 			'emptyFolder'     : 'Le dossier est vide', // from v2.1.6 added 30.12.2015
 			'emptyFolderDrop' : 'Le dossier est vide.\\ Glissez-déposez pour ajouter des éléments.', // from v2.1.6 added 30.12.2015
@@ -403,7 +402,6 @@
 			'autoSync'        : 'Synchronisation automatique',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Déplacer vers le haut',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Obtenir le lien d’URL', // from v2.1.7 added 9.2.2016
-			'share'           : 'Partager',
 			'selectedItems'   : 'Éléments sélectionnés ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID du dossier', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Permettre l\'accès hors-ligne', // from v2.1.10 added 3.25.2016
@@ -445,10 +443,9 @@
 			'clearBrowserData': 'Initialisation des configurations sauvegardées dans ce navigateur', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Paramètres de la barre d\'outils', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... $1 caractères restants.',  // from v2.1.29 added 30.8.2017
-			'linesLeft'       : '... $1 lignes à gauche.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Somme', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Taille de fichier brute', // from v2.1.30 added 2.11.2017
-			'autoFocusDialog' : 'Focus sur l\'élément de dialogue avec survol de la souris',  // from v2.1.30 added 2.11.2017
+			'autoFocusDialog' : 'Focus on the element of dialog with mouseover',  // from v2.1.30 added 2.11.2017
 			'select'          : 'Sélectionner', // from v2.1.30 added 23.11.2017
 			'selectAction'    : 'Action lors de la sélection d\'un fichier', // from v2.1.30 added 23.11.2017
 			'useStoredEditor' : 'Ouvrir avec le dernier éditeur utilisé', // from v2.1.30 added 23.11.2017
@@ -465,36 +462,35 @@
 			'unmountChildren' : 'Le(s) volume(s) suivant(s) montés sur ce volume seront également démontés. Êtes-vous sûr de vouloir le démonter ?', // from v2.1.33 added 5.3.2018
 			'selectionInfo'   : 'Informations sur la sélection', // from v2.1.33 added 7.3.2018
 			'hashChecker'     : 'Algorithme de hachage de fichier', // from v2.1.33 added 10.3.2018
-			'infoItems'       : 'Éléments d\'information (panneau d\'informations sur la sélection)', // from v2.1.38 added 28.3.2018
+			'infoItems'       : 'Info Items (Selection Info Panel)', // from v2.1.38 added 28.3.2018
 			'pressAgainToExit': 'Appuyez à nouveau pour quitter.', // from v2.1.38 added 1.4.2018
 			'toolbar'         : 'Barre d\'outils', // from v2.1.38 added 4.4.2018
 			'workspace'       : 'Espace de travail', // from v2.1.38 added 4.4.2018
 			'dialog'          : 'Dialogue', // from v2.1.38 added 4.4.2018
 			'all'             : 'Tout', // from v2.1.38 added 4.4.2018
-			'iconSize'        : 'Taille de l\'icône (vue Icônes)', // from v2.1.39 added 7.5.2018
-			'editorMaximized' : 'Ouvrez la fenêtre de l\'éditeur agrandie', // from v2.1.40 added 30.6.2018
-			'editorConvNoApi' : 'Étant donné que la conversion par API n\'est actuellement pas disponible, veuillez effectuer la conversion sur le site Web.', //from v2.1.40 added 8.7.2018
-			'editorConvNeedUpload' : 'Après la conversion, vous devez être télécharger avec l\'URL de l\'objet ou d\'un fichier téléchargé pour enregistrer le fichier converti.', //from v2.1.40 added 8.7.2018
-			'convertOn'       : 'Convertir sur le site de $1', // from v2.1.40 added 10.7.2018
-			'integrations'    : 'Intégrations', // from v2.1.40 added 11.7.2018
-			'integrationWith' : 'Cet elFinder intègre les services externes suivants. Veuillez vérifier les conditions d\'utilisation, la politique de confidentialité, etc. avant de l\'utiliser.', // from v2.1.40 added 11.7.2018
-			'showHidden'      : 'Afficher les éléments cachés', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : 'Éditeur de code',
-			'hideHidden'      : 'Masquer les éléments cachés', // from v2.1.41 added 24.7.2018
-			'toggleHidden'    : 'Afficher/masquer les éléments cachés', // from v2.1.41 added 24.7.2018
-			'makefileTypes'   : 'Les types de fichiers pour activer avec "Nouveau fichier"', // from v2.1.41 added 7.8.2018
-			'typeOfTextfile'  : 'Type de fichier texte', // from v2.1.41 added 7.8.2018
-			'add'             : 'Ajouter', // from v2.1.41 added 7.8.2018
-			'theme'           : 'Thème', // from v2.1.43 added 19.10.2018
-			'default'         : 'Défaut', // from v2.1.43 added 19.10.2018
+			'iconSize'        : 'Icon Size (Icons view)', // from v2.1.39 added 7.5.2018
+			'editorMaximized' : 'Open the maximized editor window', // from v2.1.40 added 30.6.2018
+			'editorConvNoApi' : 'Because conversion by API is not currently available, please convert on the website.', //from v2.1.40 added 8.7.2018
+			'editorConvNeedUpload' : 'After conversion, you must be upload with the item URL or a downloaded file to save the converted file.', //from v2.1.40 added 8.7.2018
+			'convertOn'       : 'Convert on the site of $1', // from v2.1.40 added 10.7.2018
+			'integrations'    : 'Integrations', // from v2.1.40 added 11.7.2018
+			'integrationWith' : 'This elFinder has the following external services integrated. Please check the terms of use, privacy policy, etc. before using it.', // from v2.1.40 added 11.7.2018
+			'showHidden'      : 'Show hidden items', // from v2.1.41 added 24.7.2018
+			'hideHidden'      : 'Hide hidden items', // from v2.1.41 added 24.7.2018
+			'toggleHidden'    : 'Show/Hide hidden items', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'File types to enable with "New file"', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Type of the Text file', // from v2.1.41 added 7.8.2018
+			'add'             : 'Add', // from v2.1.41 added 7.8.2018
+			'theme'           : 'Theme', // from v2.1.43 added 19.10.2018
+			'default'         : 'Default', // from v2.1.43 added 19.10.2018
 			'description'     : 'Description', // from v2.1.43 added 19.10.2018
-			'website'         : 'Site Internet', // from v2.1.43 added 19.10.2018
-			'author'          : 'Auteur', // from v2.1.43 added 19.10.2018
+			'website'         : 'Website', // from v2.1.43 added 19.10.2018
+			'author'          : 'Author', // from v2.1.43 added 19.10.2018
 			'email'           : 'Email', // from v2.1.43 added 19.10.2018
-			'license'         : 'la licence', // from v2.1.43 added 19.10.2018
-			'exportToSave'    : 'Cet article ne peut pas être sauvé. Pour éviter de perdre les modifications, vous devez exporter vers votre PC.', // from v2.1.44 added 1.12.2018
-			'dblclickToSelect': 'Double-cliquez sur le fichier pour le sélectionner.', // from v2.1.47 added 22.1.2019
-			'useFullscreen'   : 'Utiliser le mode plein écran', // from v2.1.47 added 19.2.2019
+			'license'         : 'License', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'This item can\'t be saved. To avoid losing the edits you need to export to your PC.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Double click on the file to select it.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Use fullscreen mode', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Inconnu',
@@ -504,7 +500,7 @@
 			'kindAlias'       : 'Raccourci',
 			'kindAliasBroken' : 'Raccourci cassé',
 			// applications
-			'kindApp'         : 'l\'application',
+			'kindApp'         : 'Application',
 			'kindPostscript'  : 'Document Postscript',
 			'kindMsOffice'    : 'Document Microsoft Office',
 			'kindMsWord'      : 'Document Microsoft Word',
@@ -512,7 +508,7 @@
 			'kindMsPP'        : 'Présentation Microsoft PowerPoint',
 			'kindOO'          : 'Document OpenOffice',
 			'kindAppFlash'    : 'Application Flash',
-			'kindPDF'         : 'Format de document portable (PDF)',
+			'kindPDF'         : 'Portable Document Format (PDF)',
 			'kindTorrent'     : 'Fichier BitTorrent',
 			'kind7z'          : 'Archive 7z',
 			'kindTAR'         : 'Archive TAR',
@@ -547,7 +543,7 @@
 			'kindAWK'         : 'Source AWK',
 			'kindCSV'         : 'CSV',
 			'kindDOCBOOK'     : 'Document Docbook XML',
-			'kindMarkdown'    : 'Texte de démarque', // added 20.7.2015
+			'kindMarkdown'    : 'Markdown text', // added 20.7.2015
 			// images
 			'kindImage'       : 'Image',
 			'kindBMP'         : 'Image BMP',

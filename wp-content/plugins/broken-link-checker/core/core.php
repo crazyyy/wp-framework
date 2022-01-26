@@ -447,16 +447,6 @@ if ( ! class_exists( 'wsBrokenLinkChecker' ) ) {
 		public function options_page() {
 			$moduleManager = blcModuleManager::getInstance();
 
-			// Prior to 1.5.2 (released 2012-05-27), there was a bug that would cause the donation flag to be
-			// set incorrectly. So we'll unset the flag in that case.
-			$reset_donation_flag = ( $this->conf->get( 'first_installation_timestamp', 0 ) < strtotime( '2012-05-27 00:00' ) ) && ! $this->conf->get( 'donation_flag_fixed', false );
-
-			if ( $reset_donation_flag ) {
-				$this->conf->set( 'user_has_donated', false );
-				$this->conf->set( 'donation_flag_fixed', true );
-				$this->conf->save_options();
-			}
-
 			if ( isset( $_POST['recheck'] ) && ! empty( $_POST['recheck'] ) ) {
 				$this->initiate_recheck();
 
@@ -759,13 +749,6 @@ if ( ! class_exists( 'wsBrokenLinkChecker' ) ) {
 
 			}
 
-			//Show a thank-you message when a donation is made.
-			if ( ! empty( $_GET['donated'] ) ) {
-				echo '<div id="message" class="updated fade"><p><strong>',__( 'Thank you for your donation!', 'broken-link-checker' ), '</strong></p></div>';
-				$this->conf->set( 'user_has_donated', true );
-				$this->conf->save_options();
-			}
-
 			//Show one when recheck is started, too.
 			if ( ! empty( $_GET['recheck-initiated'] ) ) {
 				echo '<div id="message" class="updated fade"><p><strong>',
@@ -812,14 +795,6 @@ if ( ! class_exists( 'wsBrokenLinkChecker' ) ) {
 			<![endif]-->
 			<div class="wrap" id="blc-settings-wrap">
 			<h2><?php _e( 'Broken Link Checker Options', 'broken-link-checker' ); ?></h2>
-
-
-			<div id="blc-sidebar">
-				<div class="metabox-holder">
-					<?php include BLC_DIRECTORY . '/includes/admin/sidebar.php'; ?>
-				</div>
-			</div>
-
 
 			<div id="blc-admin-content">
 

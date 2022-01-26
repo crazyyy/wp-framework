@@ -1,0 +1,118 @@
+/* ==========================================================================
+ # Typography
+========================================================================== */
+
+html {
+  color: var(--color-text);
+  font-family: var(--font-default);
+  font-size: 100%;
+  line-height: 1.5;
+  -moz-osx-font-smoothing: grayscale;
+   -webkit-font-smoothing: antialiased;
+}
+
+/* All elements
+----------------------------------------------- */
+
+* {
+  text-underline-offset: .125em; // prettier text-decouration: underline
+}
+
+/* Paragraphs
+----------------------------------------------- */
+
+p, .p {
+  display: block;
+  font-size: 1rem;
+  font-weight: var(--font-weight-normal);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+/* Titles
+----------------------------------------------- */
+
+h1 {
+  @include heading(xl);
+  margin-bottom: 2rem;
+}
+
+h2 {
+  @include heading(l);
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  @include heading(m);
+  margin-bottom: 1.5rem;
+}
+
+h4 {
+  @include heading(s);
+  margin-bottom: 1.5rem;
+}
+
+h5 {
+  @include heading(xs);
+  margin-bottom: 0;
+}
+
+/* Lists
+----------------------------------------------- */
+
+ul, ol {
+  margin: 0 0 1rem;
+  li {
+    font-size: 1rem;
+  }
+}
+
+/* Links
+----------------------------------------------- */
+
+a {
+  color: var(--color-link);
+  &:hover, &:active, &:focus {}
+}
+
+/* Accessibility
+----------------------------------------------- */
+
+a:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.screen-reader-text {
+  @include visuallyhidden;
+}
+
+.skip-to-content {
+  background: var(--color-black);
+  color: var(--color-white);
+  display: inline-block;
+  left: -9999em;
+  outline: none;
+  padding: 1rem 1.5rem;
+  position: absolute;
+  text-decoration: none;
+  text-transform: none;
+  top: -9999em;
+  &:focus {
+    clip: auto;
+    height: auto;
+    left: .5rem;
+    top: .5rem;
+    width: auto;
+    z-index: 100000;
+  }
+}
+
+button:focus,
+input[type="button"]:focus,
+input[type="reset"]:focus,
+input[type="submit"]:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}

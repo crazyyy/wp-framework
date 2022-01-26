@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 function cmplz_wpforms_form_types( $formtypes ) {
 	$formtypes['wpf_'] = 'wpforms';
 
@@ -88,10 +88,9 @@ function cmplz_wpforms_add_consent_checkbox( $form_id ) {
 add_action( "cmplz_add_consent_box_wpforms", 'cmplz_wpforms_add_consent_checkbox' );
 
 
-add_action( 'wp_footer', 'cmplz_wpforms_css' );
+add_action( 'cmplz_banner_css', 'cmplz_wpforms_css' );
 function cmplz_wpforms_css() {
 	?>
-	<style>
 		.wpforms-recaptcha-container {
 			position: relative !important;
 		}
@@ -99,7 +98,6 @@ function cmplz_wpforms_css() {
 		div.wpforms-container-full .wpforms-form .cmplz-accept-marketing {
 			background: grey;
 		}
-	</style>
 	<?php
 }
 ;

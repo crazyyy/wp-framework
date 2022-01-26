@@ -95,6 +95,14 @@ class WP_Optimization_trackbacks extends WP_Optimization {
 
 		$comments = $this->query($clean);
 		$this->processed_count += $comments;
+
+		// update comment count
+		$update = "UPDATE `" . $this->wpdb->posts . "` as p
+		INNER JOIN (SELECT comment_post_ID as cid, COUNT(comment_post_ID) as cc 
+		FROM `" . $this->wpdb->comments . "` GROUP BY comment_post_ID) AS c ON p.ID = c.cid
+		SET p.comment_count = c.cc
+		WHERE p.ID = c.cid";
+		$this->query($update);
 	}
 
 	/**

@@ -216,7 +216,7 @@ class Updraft_Logger implements Updraft_Logger_Interface {
 		if (empty($this->_loggers)) return false;
 
 		foreach ($this->_loggers as $logger) {
-			$logger->log($level, $message, $context);
+			$logger->log($message, $level, $context);
 		}
 
 	}

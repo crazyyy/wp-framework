@@ -1028,7 +1028,7 @@ function updraft_updatehistory(rescan, remotescan, debug, backup_count) {
 	}
 
 	if ('undefined' === typeof backup_count) {
-		backup_count = jQuery('#updraft-navtab-backups-content .updraft_existing_backups .updraft_existing_backups_row').length;
+		backup_count = 0;
 	}
 	
 	
@@ -4609,10 +4609,14 @@ jQuery(function($) {
 		var nonce = jQuery(this).data('nonce').toString();
 		var timestamp = jQuery(this).data('timestamp').toString();
 		updraft_send_command('rawbackup_history', { timestamp: timestamp, nonce: nonce }, function (response) {
-			var textArea = document.createElement('textarea');
-			textArea.innerHTML = response;
-			updraft_html_modal(textArea.value, updraftlion.raw, 780, 500);
-		}, { type: 'POST', json_parse: false });
+			if (response.hasOwnProperty('rawbackup')) {
+				var textArea = document.createElement('textarea');
+				textArea.innerHTML = response.rawbackup;
+				updraft_html_modal(textArea.value, updraftlion.raw, 780, 500);
+			} else {
+				updraft_html_modal(updraftlion.jsonnotunderstood, updraftlion.raw, 780, 500);
+			}
+		}, { type: 'POST' });
 
 		updraft_html_modal('<div style="margin:auto;text-align:center;margin-top:150px;"><img src="' + updraftlion.ud_url + '/images/udlogo-rotating.gif" /> <br>'+ updraftlion.loading +'</div>', updraftlion.raw, 780, 500);
 	});

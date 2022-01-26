@@ -184,6 +184,12 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 				return $status;
 			}
 
+			if (is_wp_error($result[$plugin])) {
+				$status['error'] = $result[$plugin]->get_error_code();
+				$status['error_message'] = $result[$plugin]->get_error_message();
+				return $status;
+			}
+			
 			$plugin_data = get_plugins('/' . $result[$plugin]['destination_name']);
 			$plugin_data = reset($plugin_data);
 
@@ -645,8 +651,8 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 	 * @return Boolean
 	 */
 	private function user_can_update_translations() {
-		global $updraftplus;
-		$wp_version = $updraftplus->get_wordpress_version();
+		global $updraftcentral_main;
+		$wp_version = $updraftcentral_main->get_wordpress_version();
 		
 		if (version_compare($wp_version, '4.9', '<')) {
 			if (current_user_can('update_core') || current_user_can('update_plugins') || current_user_can('update_themes')) return true;

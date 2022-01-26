@@ -247,7 +247,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	 * @param String $region
 	 * @param String $bucket_name
 	 */
-	protected function set_region($obj, $region, $bucket_name = '') {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found - $bucket_name
+	protected function set_region($obj, $region, $bucket_name = '') {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $bucket_name
 
 	// AWS Regions: https://docs.aws.amazon.com/general/latest/gr/rande.html
 		switch ($region) {
@@ -394,8 +394,9 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 							if (method_exists($this, 's3_out_of_quota')) call_user_func(array($this, 's3_out_of_quota'), $config['quota'], $this->quota_used, $orig_file_size);
 							continue;
 						} else {
+							$quota_transient_used = $this->quota_transient_used ? ' (via transient)' : '';
 							// We don't need to log this always - the s3_out_of_quota method will do its own logging
-							$this->log("Quota is available: used=$quota_used (".round($quota_used/1048576, 1)." MB), total=".$config['quota']." (".round($config['quota']/1048576, 1)." MB), needed=$orig_file_size (".round($orig_file_size/1048576, 1)." MB)");
+							$this->log("Quota is available: used=$quota_used (".round($quota_used/1048576, 1)." MB), total=".$config['quota']." (".round($config['quota']/1048576, 1)." MB), needed=$orig_file_size (".round($orig_file_size/1048576, 1)." MB)".$quota_transient_used);
 						}
 					}
 				}
@@ -656,7 +657,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			}
 
 			$result = array('name' => $object['name']);
-			if (isset($object['size'])) $result['size'] = $object['size'];
+			if (isset($object['size'])) $result['size'] = (int) $object['size'];
 			unset($bucket[$key]);
 			$results[] = $result;
 		}
@@ -753,10 +754,11 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	}
 
 	/**
-	* Download a file from the remote storage
-	*
-	* @param String $file The specific file to be downloaded
-	*/
+	 * Download a file from the remote storage
+	 *
+	 * @param string $file The specific file to be downloaded
+	 * @return void
+	 */
 	public function download($file) {
 
 		global $updraftplus;
@@ -1035,10 +1037,10 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	/**
 	 * This method contains some repeated code. After getting an S3 object, it's time to see if we can access that bucket - either immediately, or via creating it, etc.
 	 *
-	 * @param Object         $storage  S3 name
-	 * @param Array          $config   array of config details; if the provider does not have the concept of regions, then the key 'endpoint' is required to be set
-	 * @param String         $bucket   S3 Bucket
-	 * @param String         $path	   S3 Path
+	 * @param Object $storage S3 name
+	 * @param Array  $config  array of config details; if the provider does not have the concept of regions, then the key 'endpoint' is required to be set
+	 * @param String $bucket  S3 Bucket
+	 * @param String $path    S3 Path
 	 *
 	 * @return Array - N.B. May contain updated versions of $storage and $config
 	 */

@@ -53,7 +53,7 @@ if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
 		 * Scripts to include on the same page.
 		 *
 		 * @since 1.0.0
-		 * @var Wbcr_Factory443_ScriptList
+		 * @var Wbcr_Factory450_ScriptList
 		 */
 		public $scripts;
 
@@ -61,7 +61,7 @@ if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
 		 * Styles to include on the same page.
 		 *
 		 * @since 1.0.0
-		 * @var Wbcr_Factory443_StyleList
+		 * @var Wbcr_Factory450_StyleList
 		 */
 		public $styles;
 
@@ -89,7 +89,7 @@ if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param Wbcr_Factory443_Plugin $plugin
+		 * @param Wbcr_Factory450_Plugin $plugin
 		 */
 		public function __construct( $plugin ) {
 			$this->plugin = $plugin;

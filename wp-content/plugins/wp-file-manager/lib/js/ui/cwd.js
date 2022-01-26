@@ -3,7 +3,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-jQuery.fn.elfindercwd = function(fm, options) {
+ jQuery.fn.elfindercwd = function(fm, options) {
 	"use strict";
 	this.not('.elfinder-cwd').each(function() {
 		// fm.time('cwdLoad');
@@ -1125,7 +1125,7 @@ jQuery.fn.elfindercwd = function(fm, options) {
 				over : function(e, ui) {
 					var dst    = jQuery(this),
 						helper = ui.helper,
-						ctr    = (e.shiftKey || e.ctrlKey || e.metaKey),
+						ctr    = fm._commands.copy && (e.shiftKey || e.ctrlKey || e.metaKey),
 						hash, status, inParent;
 					e.stopPropagation();
 					helper.data('dropover', helper.data('dropover') + 1);
@@ -1949,7 +1949,8 @@ jQuery.fn.elfindercwd = function(fm, options) {
 
 					if (!mobile && !$this.data('dragRegisted') && !$this.hasClass(clTmp) && !$this.hasClass(clDraggable) && !$this.hasClass(clDisabled)) {
 						$this.data('dragRegisted', true);
-						if (!fm.isCommandEnabled('copy', fm.searchStatus.state > 1 || $this.hasClass('isroot')? fm.cwdId2Hash($this.attr('id')) : void 0)) {
+						if (!fm.isCommandEnabled('copy', fm.searchStatus.state > 1 || $this.hasClass('isroot')? fm.cwdId2Hash($this.attr('id')) : void 0) &&
+							!fm.isCommandEnabled('cut', fm.searchStatus.state > 1 || $this.hasClass('isroot')? fm.cwdId2Hash($this.attr('id')) : void 0)) {
 							return;
 						}
 						$this.on('mousedown', function(e) {

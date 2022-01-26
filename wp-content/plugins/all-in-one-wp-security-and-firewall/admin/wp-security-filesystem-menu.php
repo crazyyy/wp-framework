@@ -17,7 +17,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu
     function __construct() 
     {
         $this->render_menu_page();
-        add_action( 'admin_footer', array( &$this, 'filesystem_menu_footer_code' ) );
+        add_action( 'admin_footer', array($this, 'filesystem_menu_footer_code' ) );
     }
     
     function set_menu_tabs() 
@@ -67,7 +67,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu
         <div id="poststuff"><div id="post-body">
         <?php 
         //$tab_keys = array_keys($this->menu_tabs);
-        call_user_func(array(&$this, $this->menu_tabs_handler[$tab]));
+        call_user_func(array($this, $this->menu_tabs_handler[$tab]));
         ?>
         </div></div>
         </div><!-- end of wrap -->

@@ -1,7 +1,7 @@
 /**
  * Română translation
  * @author Cristian Tabacitu <hello@tabacitu.ro>
- * @version 2020-08-31
+ * @version 2015-11-13
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,9 +16,8 @@
 		translator : 'Cristian Tabacitu &lt;hello@tabacitu.ro&gt;',
 		language   : 'Română',
 		direction  : 'ltr',
-		dateFormat : 'd M Y h:i', // will show like: 31 august 2020 06:00
-		fancyDateFormat : '$1 h:i A', // will show like: Astăzi 06:00 PM
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200831-180048
+		dateFormat : 'd M Y h:i', // Mar 13, 2012 05:27 PM
+		fancyDateFormat : '$1 h:i A', // will produce smth like: Today 12:25 PM
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -50,7 +49,6 @@
 			'errLocked'            : '"$1" este blocat și nu poate fi redenumit, mutat sau șters.',
 			'errExists'            : 'Un fișier cu numele "$1" există deja.',
 			'errInvName'           : 'Numele pentru fișier este greșit.',
-			'errInvDirname'        : 'Nume dosar nevalid.',  // from v2.1.24 added 12.4.2017
 			'errFolderNotFound'    : 'Nu am găsit dosarul.',
 			'errFileNotFound'      : 'Nu am găsit fișierul.',
 			'errTrgFolderNotFound' : 'Nu am găsit dosarul pentru destinație "$1".',
@@ -76,7 +74,6 @@
 			'errMove'              : 'Nu am putut muta "$1".',
 			'errCopyInItself'      : 'Nu am putut copia "$1" în el însuși.',
 			'errRm'                : 'Nu am putut șterge "$1".',
-			'errTrash'             : 'Imposibil în coșul de gunoi.', // from v2.1.24 added 30.4.2017
 			'errRmSrc'             : 'Nu am putut șterge fișierul sursă.',
 			'errExtract'           : 'Nu am putut extrage fișierele din "$1".',
 			'errArchive'           : 'Nu am putut crea arhiva.',
@@ -107,14 +104,6 @@
 			'errNetUnMount'        : 'Nu am putut elimina volumul', // from v2.1 added 30.04.2012
 			'errConvUTF8'          : 'Nu poate fi convertit la UTF-8', // from v2.1 added 08.04.2014
 			'errFolderUpload'      : 'Pentru a urca dosare încearcă Google Chrome.', // from v2.1 added 26.6.2015
-			'errSearchTimeout'     : 'Declanșat în timp ce căutați „$ 1”. Rezultatul căutării este parțial.', // from v2.1 added 12.1.2016
-			'errReauthRequire'     : 'Este necesară o reautorizare.', // from v2.1.10 added 24.3.2016
-			'errMaxTargets'        : 'Numărul maxim de articole selectabile este de $ 1.', // from v2.1.17 added 17.10.2016
-			'errRestore'           : 'Imposibil de restaurat din coșul de gunoi. Nu pot identifica destinația de restaurare.', // from v2.1.24 added 3.5.2017
-			'errEditorNotFound'    : 'Editorul nu a fost găsit la acest tip de fișier.', // from v2.1.25 added 23.5.2017
-			'errServerError'       : 'A apărut o eroare din partea serverului.', // from v2.1.25 added 16.6.2017
-			'errEmpty'             : 'Imposibil să goliți folderul „$ 1”.', // from v2.1.25 added 22.6.2017
-			'moreErrors'           : 'Mai sunt încă $ 1 erori.', // from v2.1.44 added 9.12.2018
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Creeaza arhivă',
@@ -131,7 +120,6 @@
 			'cmdhome'      : 'Acasă',
 			'cmdinfo'      : 'Informații',
 			'cmdmkdir'     : 'Dosar nou',
-			'cmdmkdirin'   : 'În folder nou', // from v2.1.7 added 19.2.2016
 			'cmdmkfile'    : 'Fișier nou',
 			'cmdopen'      : 'Deschide',
 			'cmdpaste'     : 'Lipește',
@@ -139,8 +127,6 @@
 			'cmdreload'    : 'Reîncarcă',
 			'cmdrename'    : 'Redenumește',
 			'cmdrm'        : 'Șterge',
-			'cmdtrash'     : 'În gunoi', //from v2.1.24 added 29.4.2017
-			'cmdrestore'   : 'Restabili', //from v2.1.24 added 3.5.2017
 			'cmdsearch'    : 'Găsește fișiere',
 			'cmdup'        : 'Mergi la dosarul părinte',
 			'cmdupload'    : 'Urcă fișiere',
@@ -151,19 +137,6 @@
 			'cmdnetunmount': 'Elimină volum', // from v2.1 added 30.04.2012
 			'cmdplaces'    : 'La Locuri', // added 28.12.2014
 			'cmdchmod'     : 'Schimbă mod', // from v2.1 added 20.6.2015
-			'cmdopendir'   : 'Deschide un folder', // from v2.1 added 13.1.2016
-			'cmdcolwidth'  : 'Resetați lățimea coloanei', // from v2.1.13 added 12.06.2016
-			'cmdfullscreen': 'Ecran complet', // from v2.1.15 added 03.08.2016
-			'cmdmove'      : 'Mișcare', // from v2.1.15 added 21.08.2016
-			'cmdempty'     : 'Goliți folderul', // from v2.1.25 added 22.06.2017
-			'cmdundo'      : 'Anula', // from v2.1.27 added 31.07.2017
-			'cmdredo'      : 'A reface', // from v2.1.27 added 31.07.2017
-			'cmdpreference': 'Preferințe', // from v2.1.27 added 03.08.2017
-			'cmdselectall' : 'Selectează tot', // from v2.1.28 added 15.08.2017
-			'cmdselectnone': 'Nu selectați niciuna', // from v2.1.28 added 15.08.2017
-			'cmdselectinvert': 'Inverseaza selectia', // from v2.1.28 added 15.08.2017
-			'cmdopennew'   : 'Deschide într-o fereastră nouă', // from v2.1.38 added 3.4.2018
-			'cmdhide'      : 'Ascundeți (preferință)', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Închide',
@@ -183,12 +156,6 @@
 			'btnMime'   : 'Tipuri MIME', // from v2.1 added 22.5.2015
 			'btnFileName':'Nume fișier',  // from v2.1 added 22.5.2015
 			'btnSaveClose': 'Salvează și închide', // from v2.1 added 12.6.2015
-			'btnBackup' : 'Backup', // fromv2.1 added 28.11.2015
-			'btnRename'    : 'Redenumire',      // from v2.1.24 added 6.4.2017
-			'btnRenameAll' : 'Redenumiți (Toate)', // from v2.1.24 added 6.4.2017
-			'btnPrevious' : 'Prev (1 $ / 2 $)', // from v2.1.24 added 11.5.2017
-			'btnNext'     : 'Următorul ($ 1 / $ 2)', // from v2.1.24 added 11.5.2017
-			'btnSaveAs'   : 'Salvează ca', // from v2.1.25 added 24.5.2017
 
 			/******************************** notifications ********************************/
 			'ntfopen'     : 'Deschide dosar',
@@ -216,36 +183,23 @@
 			'ntfreaddir'  : 'Se citesc informațiile dosarului', // from v2.1 added 01.07.2013
 			'ntfurl'      : 'Se preia URL-ul din link', // from v2.1 added 11.03.2014
 			'ntfchmod'    : 'Se schimba modul de fișier', // from v2.1 added 20.6.2015
-			'ntfpreupload': 'Verificarea numelui fișierului de încărcare', // from v2.1 added 31.11.2015
-			'ntfzipdl'    : 'Crearea unui fișier pentru descărcare', // from v2.1.7 added 23.1.2016
-			'ntfparents'  : 'Obținerea informațiilor despre cale', // from v2.1.17 added 2.11.2016
-			'ntfchunkmerge': 'Procesarea fișierului încărcat', // from v2.1.17 added 2.11.2016
-			'ntftrash'    : 'Aruncarea la gunoi', // from v2.1.24 added 2.5.2017
-			'ntfrestore'  : 'Se face restaurarea din coșul de gunoi', // from v2.1.24 added 3.5.2017
-			'ntfchkdir'   : 'Verificarea dosarului destinație', // from v2.1.24 added 3.5.2017
-			'ntfundo'     : 'Anularea operației anterioare', // from v2.1.27 added 31.07.2017
-			'ntfredo'     : 'Refacerea anulară anterioară', // from v2.1.27 added 31.07.2017
-			'ntfchkcontent' : 'Verificarea conținutului', // from v2.1.41 added 3.8.2018
-
-			/*********************************** volumes *********************************/
-			'volume_Trash' : 'Gunoi', //from v2.1.24 added 29.4.2017
 
 			/************************************ dates **********************************/
 			'dateUnknown' : 'necunoscută',
 			'Today'       : 'Astăzi',
 			'Yesterday'   : 'Ieri',
 			'msJan'       : 'Ian',
-			'msFeb'       : 'februarie',
-			'msMar'       : 'strica',
-			'msApr'       : 'Aprilie',
+			'msFeb'       : 'Feb',
+			'msMar'       : 'Mar',
+			'msApr'       : 'Apr',
 			'msMay'       : 'Mai',
 			'msJun'       : 'Iun',
 			'msJul'       : 'Iul',
-			'msAug'       : 'august',
-			'msSep'       : 'septembrie',
-			'msOct'       : 'octombrie',
-			'msNov'       : 'noiembrie',
-			'msDec'       : 'decembrie',
+			'msAug'       : 'Aug',
+			'msSep'       : 'Sep',
+			'msOct'       : 'Oct',
+			'msNov'       : 'Nov',
+			'msDec'       : 'Dec',
 			'January'     : 'Ianuarie',
 			'February'    : 'Februarie',
 			'March'       : 'Martie',
@@ -279,30 +233,18 @@
 			'sortsize'          : 'după mărime',
 			'sortdate'          : 'după dată',
 			'sortFoldersFirst'  : 'Dosarele primele',
-			'sortperm'          : 'prin permis', // from v2.1.13 added 13.06.2016
-			'sortmode'          : 'după modul',       // from v2.1.13 added 13.06.2016
-			'sortowner'         : 'de catre proprietar',      // from v2.1.13 added 13.06.2016
-			'sortgroup'         : 'pe grup',      // from v2.1.13 added 13.06.2016
-			'sortAlsoTreeview'  : 'De asemenea, Treeview',  // from v2.1.15 added 01.08.2016
 
 			/********************************** new items **********************************/
 			'untitled file.txt' : 'FisierNou.txt', // added 10.11.2015
 			'untitled folder'   : 'DosarNou',   // added 10.11.2015
 			'Archive'           : 'ArhivaNoua',  // from v2.1 added 10.11.2015
-			'untitled file'     : 'Newfile. $ De 1',  // from v2.1.41 added 6.8.2018
-			'extentionfile'     : '$ 1: fișier',    // from v2.1.41 added 6.8.2018
-			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Este necesară confirmare',
 			'confirmRm'       : 'Ești sigur că vrei să ștergi fișierele?<br/>Acțiunea este ireversibilă!',
 			'confirmRepl'     : 'Înlocuiește fișierul vechi cu cel nou?',
-			'confirmRest'     : 'Înlocuiți elementul existent cu elementul din coșul de gunoi?', // fromv2.1.24 added 5.5.2017
 			'confirmConvUTF8' : 'Nu este în UTF-8<br/>Convertim la UTF-8?<br/>Conținutul devine UTF-8 după salvarea conversiei.', // from v2.1 added 08.04.2014
-			'confirmNonUTF8'  : 'Codificarea caracterelor acestui fișier nu a putut fi detectată. Trebuie să se convertească temporar în UTF-8 pentru editare. <br/> Vă rugăm să selectați codificarea caracterelor pentru acest fișier.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Au avut loc modificări.<br/>Dacă nu salvezi se vor pierde modificările.', // from v2.1 added 15.7.2015
-			'confirmTrash'    : 'Sigur doriți să mutați articole în coșul de gunoi?', //from v2.1.24 added 29.4.2017
-			'confirmMove'     : 'Sigur doriți să mutați articolele în „$ 1”?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Aplică pentru toate',
 			'name'            : 'Nume',
 			'size'            : 'Mărime',
@@ -320,10 +262,6 @@
 			'selectlfile'     : 'Alege ultimul fișier',
 			'viewlist'        : 'Vezi ca listă',
 			'viewicons'       : 'Vezi ca icoane',
-			'viewSmall'       : 'Icoane mici', // from v2.1.39 added 22.5.2018
-			'viewMedium'      : 'Pictograme medii', // from v2.1.39 added 22.5.2018
-			'viewLarge'       : 'Pictograme mari', // from v2.1.39 added 22.5.2018
-			'viewExtraLarge'  : 'Icoane extra mari', // from v2.1.39 added 22.5.2018
 			'places'          : 'Locuri',
 			'calc'            : 'Calculează',
 			'path'            : 'Cale',
@@ -335,7 +273,7 @@
 			'items'           : 'Elemente',
 			'yes'             : 'da',
 			'no'              : 'nu',
-			'link'            : 'Legătură',
+			'link'            : 'Link',
 			'searcresult'     : 'Rezultatele căutării',
 			'selected'        : 'elemente alese',
 			'about'           : 'Despre',
@@ -350,11 +288,11 @@
 			'twitter'         : 'Urmărește-ne pe twitter',
 			'facebook'        : 'Alătura-te pe facebook',
 			'team'            : 'Echipa',
-			'chiefdev'        : 'dezvoltator sef',
-			'developer'       : 'dezvoltator',
-			'contributor'     : 'colaborator',
+			'chiefdev'        : 'chief developer',
+			'developer'       : 'developer',
+			'contributor'     : 'contributor',
 			'maintainer'      : 'maintainer',
-			'translator'      : 'traducător',
+			'translator'      : 'translator',
 			'icons'           : 'Icoane',
 			'dontforget'      : 'și nu uita să-ți iei prosopul',
 			'shortcutsof'     : 'Scurtăturile sunt dezactivate',
@@ -363,9 +301,8 @@
 			'selectForUpload' : 'Alege fișiere pentru a le urca',
 			'moveFiles'       : 'Mută fișiere',
 			'copyFiles'       : 'Copiază fișiere',
-			'restoreFiles'    : 'Restaurează elemente', // from v2.1.24 added 5.5.2017
 			'rmFromPlaces'    : 'Șterge din locuri',
-			'aspectRatio'     : 'Raportul de aspect',
+			'aspectRatio'     : 'Aspect ratio',
 			'scale'           : 'Scală',
 			'width'           : 'Lățime',
 			'height'          : 'Înălțime',
@@ -385,120 +322,19 @@
 			'dropFilesBrowser': 'Drag&drop sau lipește din browser', // from v2.1 added 30.05.2012
 			'dropPasteFiles'  : 'Drag&drop sau lipește fișiere aici', // from v2.1 added 07.04.2014
 			'encoding'        : 'Encodare', // from v2.1 added 19.12.2014
-			'locale'          : 'locale',   // from v2.1 added 19.12.2014
+			'locale'          : 'Locale',   // from v2.1 added 19.12.2014
 			'searchTarget'    : 'Țintă: $1',                // from v2.1 added 22.5.2015
 			'searchMime'      : 'Caută după tipul MIME', // from v2.1 added 22.5.2015
-			'owner'           : 'Proprietar', // from v2.1 added 20.6.2015
-			'group'           : 'grup', // from v2.1 added 20.6.2015
-			'other'           : 'Alte', // from v2.1 added 20.6.2015
-			'execute'         : 'A executa', // from v2.1 added 20.6.2015
-			'perm'            : 'Permisiune', // from v2.1 added 20.6.2015
+			'owner'           : 'Owner', // from v2.1 added 20.6.2015
+			'group'           : 'Group', // from v2.1 added 20.6.2015
+			'other'           : 'Other', // from v2.1 added 20.6.2015
+			'execute'         : 'Execute', // from v2.1 added 20.6.2015
+			'perm'            : 'Permission', // from v2.1 added 20.6.2015
 			'mode'            : 'Mod', // from v2.1 added 20.6.2015
-			'emptyFolder'     : 'Dosarul este gol', // from v2.1.6 added 30.12.2015
-			'emptyFolderDrop' : 'Folderul este gol \\ O picătură pentru a adăuga articole', // from v2.1.6 added 30.12.2015
-			'emptyFolderLTap' : 'Folderul este gol \\ A Apăsați lung pentru a adăuga articole', // from v2.1.6 added 30.12.2015
-			'quality'         : 'Calitate', // from v2.1.6 added 5.1.2016
-			'autoSync'        : 'Auto-sincronizare',  // from v2.1.6 added 10.1.2016
-			'moveUp'          : 'Mutați în sus',  // from v2.1.6 added 18.1.2016
-			'getLink'         : 'Obțineți un link URL', // from v2.1.7 added 9.2.2016
-			'share'           : 'da mai departe',
-			'selectedItems'   : 'Articole selectate ($ 1)', // from v2.1.7 added 2.19.2016
-			'folderId'        : 'ID dosar', // from v2.1.10 added 3.25.2016
-			'offlineAccess'   : 'Permiteți accesul offline', // from v2.1.10 added 3.25.2016
-			'reAuth'          : 'Pentru a reautentifica', // from v2.1.10 added 3.25.2016
-			'nowLoading'      : 'Acum se încarcă...', // from v2.1.12 added 4.26.2016
-			'openMulti'       : 'Deschideți mai multe fișiere', // from v2.1.12 added 5.14.2016
-			'openMultiConfirm': 'Încercați să deschideți fișierele de $ 1. Sigur doriți să deschideți în browser?', // from v2.1.12 added 5.14.2016
-			'emptySearch'     : 'Rezultatele căutării sunt goale în ținta de căutare.', // from v2.1.12 added 5.16.2016
-			'editingFile'     : 'Este editarea unui fișier.', // from v2.1.13 added 6.3.2016
-			'hasSelected'     : 'Ați selectat $ 1 articole.', // from v2.1.13 added 6.3.2016
-			'hasClipboard'    : 'Aveți articole de $ 1 în clipboard.', // from v2.1.13 added 6.3.2016
-			'incSearchOnly'   : 'Căutarea incrementală se face numai din vizualizarea curentă.', // from v2.1.13 added 6.30.2016
-			'reinstate'       : 'restabiliți', // from v2.1.15 added 3.8.2016
-			'complete'        : '$ 1 completat', // from v2.1.15 added 21.8.2016
-			'contextmenu'     : 'Meniul contextual', // from v2.1.15 added 9.9.2016
-			'pageTurning'     : 'Întoarcerea paginii', // from v2.1.15 added 10.9.2016
-			'volumeRoots'     : 'Radacini de volum', // from v2.1.16 added 16.9.2016
-			'reset'           : 'Resetați', // from v2.1.16 added 1.10.2016
-			'bgcolor'         : 'Culoare de fundal', // from v2.1.16 added 1.10.2016
-			'colorPicker'     : 'Selector de culoare', // from v2.1.16 added 1.10.2016
-			'8pxgrid'         : 'Grila 8px', // from v2.1.16 added 4.10.2016
-			'enabled'         : 'Activat', // from v2.1.16 added 4.10.2016
-			'disabled'        : 'Dezactivat', // from v2.1.16 added 4.10.2016
-			'emptyIncSearch'  : 'Rezultatele căutării sunt goale în vizualizarea curentă. \\ APresa [Enter] pentru a extinde ținta căutării.', // from v2.1.16 added 5.10.2016
-			'emptyLetSearch'  : 'Rezultatele căutării primei litere sunt goale în vizualizarea curentă.', // from v2.1.23 added 24.3.2017
-			'textLabel'       : 'Etichetă text', // from v2.1.17 added 13.10.2016
-			'minsLeft'        : '1 min. Rămas', // from v2.1.17 added 13.11.2016
-			'openAsEncoding'  : 'Redeschideți-vă cu codificarea selectată', // from v2.1.19 added 2.12.2016
-			'saveAsEncoding'  : 'Salvați cu codificarea selectată', // from v2.1.19 added 2.12.2016
-			'selectFolder'    : 'Selectați folderul', // from v2.1.20 added 13.12.2016
-			'firstLetterSearch': 'Căutare primă scrisoare', // from v2.1.23 added 24.3.2017
-			'presets'         : 'presetări', // from v2.1.25 added 26.5.2017
-			'tooManyToTrash'  : 'Sunt prea multe articole, astfel încât să nu poată intra în coșul de gunoi.', // from v2.1.25 added 9.6.2017
-			'TextArea'        : 'TextArea', // from v2.1.25 added 14.6.2017
-			'folderToEmpty'   : 'Goliți dosarul „$ 1”.', // from v2.1.25 added 22.6.2017
-			'filderIsEmpty'   : 'Nu există articole într-un folder "$ 1".', // from v2.1.25 added 22.6.2017
-			'preference'      : 'Preferinţă', // from v2.1.26 added 28.6.2017
-			'language'        : 'Limba', // from v2.1.26 added 28.6.2017
-			'clearBrowserData': 'Inițializați setările salvate în acest browser', // from v2.1.26 added 28.6.2017
-			'toolbarPref'     : 'Inițializați setările salvate în acest browser', // from v2.1.27 added 2.8.2017
-			'charsLeft'       : '... mai rămân 1 caracter.',  // from v2.1.29 added 30.8.2017
-			'linesLeft'       : '... mai rămân 1 linie de dolari.',  // from v2.1.52 added 16.1.2020
-			'sum'             : 'Sumă', // from v2.1.29 added 28.9.2017
-			'roughFileSize'   : 'Dimensiunea grosieră a fișierului', // from v2.1.30 added 2.11.2017
-			'autoFocusDialog' : 'Concentrați-vă pe elementul de dialog cu mouse-ul',  // from v2.1.30 added 2.11.2017
-			'select'          : 'Selectați', // from v2.1.30 added 23.11.2017
-			'selectAction'    : 'Acțiune atunci când selectați fișierul', // from v2.1.30 added 23.11.2017
-			'useStoredEditor' : 'Deschideți cu editorul folosit ultima dată', // from v2.1.30 added 23.11.2017
-			'selectinvert'    : 'Inverseaza selectia', // from v2.1.30 added 25.11.2017
-			'renameMultiple'  : 'Sigur doriți să redenumiți $ 1 elemente selectate precum $ 2? <br/> Acest lucru nu poate fi anulat!', // from v2.1.31 added 4.12.2017
-			'batchRename'     : 'Redenumirea lotului', // from v2.1.31 added 8.12.2017
-			'plusNumber'      : '+ Număr', // from v2.1.31 added 8.12.2017
-			'asPrefix'        : 'Adăugați prefixul', // from v2.1.31 added 8.12.2017
-			'asSuffix'        : 'Adăugați sufixul', // from v2.1.31 added 8.12.2017
-			'changeExtention' : 'Modificați extensia', // from v2.1.31 added 8.12.2017
-			'columnPref'      : 'Setări pentru coloane (afișare listă)', // from v2.1.32 added 6.2.2018
-			'reflectOnImmediate' : 'Toate modificările vor reflecta imediat arhiva.', // from v2.1.33 added 2.3.2018
-			'reflectOnUnmount'   : 'Orice modificare nu se va reflecta până când nu se montează acest volum.', // from v2.1.33 added 2.3.2018
-			'unmountChildren' : 'De asemenea, au fost montate următoarele volum (e) montate pe acest volum. Ești sigur că îl demontezi?', // from v2.1.33 added 5.3.2018
-			'selectionInfo'   : 'Informații de selecție', // from v2.1.33 added 7.3.2018
-			'hashChecker'     : 'Algoritmi pentru a afișa hash-ul fișierului', // from v2.1.33 added 10.3.2018
-			'infoItems'       : 'Elemente de informații (panoul de informații de selecție)', // from v2.1.38 added 28.3.2018
-			'pressAgainToExit': 'Apăsați din nou pentru a ieși.', // from v2.1.38 added 1.4.2018
-			'toolbar'         : 'Bara de instrumente', // from v2.1.38 added 4.4.2018
-			'workspace'       : 'Spațiu de lucru', // from v2.1.38 added 4.4.2018
-			'dialog'          : 'Dialog', // from v2.1.38 added 4.4.2018
-			'all'             : 'Toate', // from v2.1.38 added 4.4.2018
-			'iconSize'        : 'Dimensiunea pictogramei (vizualizarea pictogramelor)', // from v2.1.39 added 7.5.2018
-			'editorMaximized' : 'Deschideți fereastra editorului maximizat', // from v2.1.40 added 30.6.2018
-			'editorConvNoApi' : 'Deoarece conversia prin API nu este disponibilă în prezent, vă rugăm să convertiți pe site-ul web.', //from v2.1.40 added 8.7.2018
-			'editorConvNeedUpload' : 'După conversie, trebuie să fiți încărcat cu adresa URL a articolului sau cu un fișier descărcat pentru a salva fișierul convertit.', //from v2.1.40 added 8.7.2018
-			'convertOn'       : 'Convertiți pe site de $ 1', // from v2.1.40 added 10.7.2018
-			'integrations'    : 'integrările', // from v2.1.40 added 11.7.2018
-			'integrationWith' : 'Acest elFinder are următoarele servicii externe integrate. Vă rugăm să verificați termenii de utilizare, politica de confidențialitate etc. înainte de a o utiliza.', // from v2.1.40 added 11.7.2018
-			'showHidden'      : 'Afișați articole ascunse', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : 'Editor de cod',
-			'hideHidden'      : 'Ascundeți elementele ascunse', // from v2.1.41 added 24.7.2018
-			'toggleHidden'    : 'Afișați / ascundeți elementele ascunse', // from v2.1.41 added 24.7.2018
-			'makefileTypes'   : 'Tipuri de fișiere de activat cu „Fișier nou”', // from v2.1.41 added 7.8.2018
-			'typeOfTextfile'  : 'Tipul fișierului text', // from v2.1.41 added 7.8.2018
-			'add'             : 'Adăuga', // from v2.1.41 added 7.8.2018
-			'theme'           : 'Temă', // from v2.1.43 added 19.10.2018
-			'default'         : 'Mod implicit', // from v2.1.43 added 19.10.2018
-			'description'     : 'Descriere', // from v2.1.43 added 19.10.2018
-			'website'         : 'Website', // from v2.1.43 added 19.10.2018
-			'author'          : 'Autor', // from v2.1.43 added 19.10.2018
-			'email'           : 'E-mail', // from v2.1.43 added 19.10.2018
-			'license'         : 'Licență', // from v2.1.43 added 19.10.2018
-			'exportToSave'    : 'Acest articol nu poate fi salvat. Pentru a evita pierderea modificărilor, trebuie să exportați pe computer.', // from v2.1.44 added 1.12.2018
-			'dblclickToSelect': 'Faceți dublu clic pe fișier pentru a-l selecta.', // from v2.1.47 added 22.1.2019
-			'useFullscreen'   : 'Utilizați modul ecran complet', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Necunoscut',
-			'kindRoot'        : 'Rădăcină de volum', // from v2.1.16 added 16.10.2016
 			'kindFolder'      : 'Dosar',
-			'kindSelects'     : 'selecţii', // from v2.1.29 added 29.8.2017
 			'kindAlias'       : 'Alias',
 			'kindAliasBroken' : 'Alias stricat',
 			// applications
@@ -578,3 +414,4 @@
 		}
 	};
 }));
+

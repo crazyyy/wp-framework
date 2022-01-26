@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( );
 
 if ( ! class_exists( "cmplz_admin" ) ) {
 	class cmplz_admin {
@@ -19,20 +19,54 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 
 			$plugin = cmplz_plugin;
 			add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
+
+			//add_action( "in_plugin_update_message-{$plugin}", array( $this, 'plugin_update_message'), 10, 2 );
+			//add_filter( "auto_update_plugin", array( $this, 'override_auto_updates'), 99, 2 );
+
 			//multisite
 			add_filter( "network_admin_plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
-
-			//some custom warnings
-			add_action( 'admin_init', array( $this, 'check_upgrade' ), 10, 2 );
 			add_action( 'admin_init', array( $this, 'process_reset_action' ), 10, 1 );
-			add_action('cmplz_fieldvalue', array($this, 'filter_cookie_domain'), 10, 2);
+			add_action( 'cmplz_fieldvalue', array($this, 'filter_cookie_domain'), 10, 2);
 			add_action( 'wp_ajax_cmplz_dismiss_warning', array( $this, 'dismiss_warning' ) );
 			add_action( 'wp_ajax_cmplz_load_warnings', array( $this, 'ajax_load_warnings' ) );
 			add_action( 'wp_ajax_cmplz_load_gridblock', array( $this, 'ajax_load_gridblock' ) );
+			add_filter( 'cmplz_warning_types', array( $this, 'filter_enable_dismissable_warnings' ) );
+
+			//admin notices
+			add_action( 'wp_ajax_cmplz_dismiss_admin_notice', array( $this, 'dismiss_warning' ) );
+			add_action( 'admin_notices', array( $this, 'show_admin_notice' ) );
+			add_action( 'admin_print_footer_scripts', array( $this, 'insert_dismiss_admin_notice_script' ) );
+
 		}
 
 		static function this() {
 			return self::$_this;
+		}
+
+		/**
+		 * Check if current day falls within required date range.
+		 *
+		 * @return bool
+		 */
+		public function is_bf(){
+			if ( defined("cmplz_premium" ) ) {
+				return false;
+			}
+			$start_day = 22;
+			$end_day = 29;
+			$current_year = date("Y");//e.g. 2021
+			$current_month = date("n");//e.g. 3
+			$current_day = date("j");//e.g. 4
+
+			if ( $current_year == 2021 &&
+				 $current_month == 11 &&
+				 $current_day >=$start_day &&
+				 $current_day <= $end_day
+			) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		/**
@@ -58,6 +92,8 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					$dismissed_warnings[] = $warning_id;
 				}
 				update_option('cmplz_dismissed_warnings', $dismissed_warnings );
+				delete_transient('complianz_warnings');
+				delete_transient('complianz_warnings_admin_notices');
 			}
 
 			$out = array(
@@ -174,6 +210,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			}
 
 			$options = array(
+				'cmplz_post_scribe_required',
 				'cmplz_activation_time',
 				'cmplz_review_notice_shown',
 				"cmplz_wizard_completed_once",
@@ -231,465 +268,31 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				'complianz-gdpr' );
 		}
 
-		public function check_upgrade() {
-
-			//when debug is enabled, a timestamp is appended. We strip this for version comparison purposes.
-			$prev_version = get_option( 'cmplz-current-version', false );
-
-			/**
-			 * Set a "first version" variable, so we can check if some notices need to be shown
-			 */
-			if ( !$prev_version ) {
-				update_option( 'cmplz_first_version', cmplz_version);
+		/**
+		 * Add a major changes notice to the plugin updates message
+		 * @param $plugin_data
+		 * @param $response
+		 */
+		public function plugin_update_message($plugin_data, $response){
+			if ( strpos($response->slug , 'complianz') !==false && $response->new_version === '6.0.0' ) {
+				echo '<br><b>' . '&nbsp'.sprintf(__("Important: Please %sread about%s Complianz 6.0 before updating. This is a major release and includes changes and new features that might need your attention.").'</b>','<a target="_blank" href="https://complianz.io/upgrade-to-complianz-6-0/">','</a>');
 			}
-
-			/*
-			 * change googlemaps into google-maps
-			 * */
-			if ( $prev_version
-			     && version_compare( $prev_version, '4.0.0', '<' )
-			) {
-				$wizard_settings = get_option( 'complianz_options_wizard' );
-				if ( isset( $wizard_settings['thirdparty_services_on_site']['googlemaps'] )
-				     && $wizard_settings['thirdparty_services_on_site']['googlemaps']
-				        == 1
-				) {
-					unset( $wizard_settings['thirdparty_services_on_site']['googlemaps'] );
-					$wizard_settings['thirdparty_services_on_site']['google-maps']
-						= 1;
-					update_option( 'complianz_options_wizard',
-						$wizard_settings );
-				}
-
-				//migrate detected cookies
-
-				//upgrade only cookies from an accepted list.
-				$upgrade_cookies = COMPLIANZ::$config->upgrade_cookies;
-				$used_cookies    = cmplz_get_value( 'used_cookies' );
-				if ( ! empty( $used_cookies ) || is_array( $used_cookies ) ) {
-					foreach ( $used_cookies as $cookie ) {
-						if ( ! isset( $cookie['used_names'] ) ) {
-							continue;
-						}
-
-						$found_cookies = $cookie['used_names'];
-						$found_cookies = explode( ',', $found_cookies );
-						foreach ( $found_cookies as $name ) {
-							$cookie = new CMPLZ_COOKIE();
-							if ( in_array( $name, $upgrade_cookies ) ) {
-								$cookie->add( $name,
-									COMPLIANZ::$cookie_admin->get_supported_languages() );
-							}
-						}
-
-					}
-				}
-
-			}
-
-			/**
-			 * upgrade existing eu and uk settings to separate uk optinstats
-			 */
-
-			if ( $prev_version
-			     && version_compare( $prev_version, '4.0.0', '<' )
-			) {
-				if ( cmplz_has_region( 'eu' ) && cmplz_has_region( 'uk' ) ) {
-					$banners = cmplz_get_cookiebanners();
-					foreach ( $banners as $banner ) {
-						$banner = new CMPLZ_COOKIEBANNER( $banner->ID );
-						$banner->use_categories_optinstats
-						        = $banner->use_categories;
-						$banner->save();
-					}
-				}
-
-			}
-
-			/**
-			 * migrate to anonymous if anonymous settings are selected
-			 */
-
-			if ( $prev_version
-			     && version_compare( $prev_version, '4.0.4', '<' )
-			) {
-				$selected_stat_service = cmplz_get_value( 'compile_statistics' );
-				if ( $selected_stat_service === 'google-analytics'
-				     || $selected_stat_service === 'matomo'
-				     || $selected_stat_service === 'google-tag-manager'
-				) {
-					$service_name
-						= COMPLIANZ::$cookie_admin->convert_slug_to_name( $selected_stat_service );
-
-					//check if we have ohter types of this service, to prevent double services here.
-					$service_anonymized = new CMPLZ_SERVICE( $service_name . ' (anonymized)' );
-					$service            = new CMPLZ_SERVICE( $service_name );
-
-					//check if we have two service types. If so, just delete the anonymized one
-					if ( $service_anonymized->ID && $service->ID ) {
-						$service_anonymized->delete();
-					} else if ( $service_anonymized->ID && ! $service->ID ) {
-						//just one. If it's the anonymous service, rename, and save it.
-						$service_anonymized->name = $service_name;
-						$service_anonymized->save();
-					}
-				}
-			}
-
-			/**
-			 * ask consent for cookiedatabase sync and reference, and start sync and scan
-			 */
-
-			if ( $prev_version
-			     && version_compare( $prev_version, '4.0.4', '<' )
-			) {
-
-				//upgrade option to transient
-				if ( ! get_transient( 'cmplz_processed_pages_list' ) ) {
-					set_transient( 'cmplz_processed_pages_list',
-						get_option( 'cmplz_processed_pages_list' ),
-						MONTH_IN_SECONDS );
-				}
-
-				//reset scan, delayed
-				COMPLIANZ::$cookie_admin->reset_pages_list( true );
-				//initialize a sync
-				update_option( 'cmplz_run_cdb_sync_once', true );
-			}
-
-			/**
-			 * upgrade publish date to more generic unix
-			 */
-
-			if ( $prev_version
-			     && version_compare( $prev_version, '4.2', '<' )
-			) {
-				$publish_date = strtotime( get_option( 'cmplz_publish_date' ) );
-				if ( intval( $publish_date ) > 0 ) {
-					update_option( 'cmplz_publish_date',
-						intval( $publish_date ) );
-				}
-			}
-
-			/**
-			 * upgrade to new custom and generated document settings
-			 */
-			if (  $prev_version
-			     && version_compare( $prev_version, '4.4.0', '<' )
-			) {
-				//upgrade cookie policy setting to new field
-				$wizard_settings = get_option( 'complianz_options_wizard' );
-				if ( isset($wizard_settings["cookie-policy-type"]) ){
-					$value = $wizard_settings["cookie-policy-type"];
-					unset($wizard_settings["cookie-policy-type"]);
-					//upgrade cookie policy custom url
-					if ($value === 'custom') {
-						$url     = cmplz_get_value( 'custom-cookie-policy-url' );
-						update_option( "cmplz_cookie-statement_custom_page", $url );
-						unset($wizard_settings["custom-cookie-policy-url"]);
-					} else {
-						$value = 'generated';
-					}
-				} else {
-					$value = 'generated';
-				}
-
-				$wizard_settings['cookie-statement'] = $value;
-				$wizard_settings['impressum'] = 'none';
-
-				//upgrade privacy statement settings
-				$value = $wizard_settings["privacy-statement"];
-
-				if ( $value === 'yes' ) {
-					$value = 'generated';
-				} else {
-					$wp_privacy_policy = get_option('wp_page_for_privacy_policy');
-					if ($wp_privacy_policy) {
-						$value = 'custom';
-						update_option("cmplz_privacy-statement_custom_page", $wp_privacy_policy);
-					} else {
-						$value = 'none';
-					}
-				}
-				$wizard_settings['privacy-statement'] = $value;
-
-				//upgrade disclaimer settings
-				$value = $wizard_settings["disclaimer"];
-				if ($value==='yes'){
-					$value = 'generated';
-				} else {
-					$value = 'none';
-				}
-				$wizard_settings['disclaimer'] = $value;
-
-				//save the data
-				update_option( 'complianz_options_wizard', $wizard_settings );
-			}
-
-			/**
-			 * upgrade to new category field
-			 */
-			if (  $prev_version
-			      && version_compare( $prev_version, '4.6.0', '<' )
-			) {
-
-				$banners = cmplz_get_cookiebanners();
-				if ( $banners ) {
-					foreach ( $banners as $banner_item ) {
-						$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID, false );
-						$banner->banner_version++;
-						if ($banner->use_categories ) {
-							$banner->use_categories = 'legacy';
-						} else {
-							$banner->use_categories = 'no';
-						}
-						if ($banner->use_categories_optinstats) {
-							$banner->use_categories_optinstats = 'legacy';
-						} else {
-							$banner->use_categories_optinstats = 'no';
-						}
-						//also set the deny button to banner color, to make sure users start with correct colors
-						$banner->functional_background_color = $banner->colorpalette_background['color'];
-						$banner->functional_border_color = $banner->colorpalette_background['border'];
-						$banner->functional_text_color = $banner->colorpalette_text['color'];
-						$banner->save();
-					}
-				}
-			}
-
-			/**
-			 * migrate policy id to network option for multisites
-			 */
-
-			if (  $prev_version && version_compare( $prev_version, '4.6.7', '<' )
-			) {
-				if (is_multisite()) update_site_option( 'complianz_active_policy_id', get_option( 'complianz_active_policy_id', 1 ));
-			}
-
-			/**
-			 * migrate odd numbers
-			 */
-			if (  $prev_version && version_compare( $prev_version, '4.6.8', '<' )
-			) {
-				$banners = cmplz_get_cookiebanners();
-				if ( $banners ) {
-					foreach ( $banners as $banner_item ) {
-						$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID );
-						if($banner->banner_width % 2 == 1) $banner->banner_width++;
-						$banner->save();
-					}
-				}
-			}
-
-			/**
-			 * new progress option default
-			 */
-
-			if (  $prev_version && version_compare( $prev_version, '4.6.10.1', '<' ) ){
-				if (get_option( 'cmplz_sync_cookies_complete' )) update_option( 'cmplz_sync_cookies_after_services_complete', true );
-			}
-
-			if (  $prev_version
-			     && version_compare( $prev_version, '4.7.1', '<' )
-			) {
-				//upgrade cookie policy setting to new field
-				$wizard_settings = get_option( 'complianz_options_wizard' );
-				$wizard_settings['block_recaptcha_service'] = 'yes';
-				update_option( 'complianz_options_wizard', $wizard_settings );
-			}
-
-			if (  $prev_version
-			      && version_compare( $prev_version, '4.9.6', '<' )
-			) {
-				//this branch aims to revoke consent and clear all cookies. We increase the policy id to do this.
-				COMPLIANZ::$cookie_admin->upgrade_active_policy_id();
-			}
-
-			if (  $prev_version
-				  && version_compare( $prev_version, '4.9.7', '<' )
-			) {
-				update_option('cmplz_show_terms_conditions_notice', time());
-			}
-
-			/**
-			 * upgrade to new cookie banner, and 5.0 message option
-			 */
-
-			if ( $prev_version && version_compare( $prev_version, '5.0.0', '<' ) ) {
-				update_option('cmplz_upgraded_to_five', true);
-
-				//clear notices cache, as the array structure has changed
-				delete_transient( 'complianz_warnings' );
-				global $wpdb;
-
-				$banners = cmplz_get_cookiebanners();
-				if ( $banners ) {
-					foreach ( $banners as $banner_item ) {
-						$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID, false );
-						$sql    = "select * from {$wpdb->prefix}cmplz_cookiebanners where ID = {$banner_item->ID}";
-						$result = $wpdb->get_row( $sql );
-
-						if ( $result ) {
-							$banner->colorpalette_background['color']           = empty($result->popup_background_color) ? '#f1f1f1' : $result->popup_background_color;
-							$banner->colorpalette_background['border']          = empty($result->popup_background_color) ? '#f1f1f1' : $result->popup_background_color;
-							$banner->colorpalette_text['color']                 = empty($result->popup_text_color) ? '#191e23' : $result->popup_text_color;
-							$banner->colorpalette_text['hyperlink']             = empty($result->popup_text_color) ? '#191e23' : $result->popup_text_color;
-							$banner->colorpalette_toggles['background']         = empty($result->slider_background_color) ? '#21759b' : $result->slider_background_color;
-							$banner->colorpalette_toggles['bullet']             = empty($result->slider_bullet_color) ? '#ffffff' : $result->slider_bullet_color;
-							$banner->colorpalette_toggles['inactive']           = empty($result->slider_background_color_inactive) ? '#F56E28' : $result->slider_background_color_inactive;
-
-							$consenttypes = cmplz_get_used_consenttypes();
-							$optout_only = false;
-							if (in_array('optout', $consenttypes) && count($consenttypes)===1) {
-								$optout_only = true;
-							}
-
-							if ( $banner->use_categories === 'no' || $optout_only ) {
-								$banner->colorpalette_button_accept['background']   = empty($result->button_background_color) ? '#21759b' : $result->button_background_color;
-								$banner->colorpalette_button_accept['border']       = empty($result->border_color) ? '#21759b' : $result->border_color;
-								$banner->colorpalette_button_accept['text']         = empty($result->button_text_color) ? '#ffffff' : $result->button_text_color;
-							} else {
-								$banner->colorpalette_button_accept['background']   = empty($result->accept_all_background_color) ? '#21759b' : $result->accept_all_background_color;
-								$banner->colorpalette_button_accept['border']       = empty($result->accept_all_border_color) ? '#21759b' : $result->accept_all_border_color;
-								$banner->colorpalette_button_accept['text']         = empty($result->accept_all_text_color) ? '#ffffff' : $result->accept_all_text_color;
-							}
-							$banner->colorpalette_button_deny['background']     = empty($result->functional_background_color) ? '#f1f1f1' : $result->functional_background_color;
-							$banner->colorpalette_button_deny['border']         = empty($result->functional_border_color) ? '#f1f1f1' : $result->functional_border_color;
-							$banner->colorpalette_button_deny['text']           = empty($result->functional_text_color) ? '#21759b' : $result->functional_text_color;
-
-							$banner->colorpalette_button_settings['background'] = empty($result->button_background_color) ? '#f1f1f1' : $result->button_background_color;
-							$banner->colorpalette_button_settings['border']     = empty($result->border_color) ? '#21759b' : $result->border_color;
-							$banner->colorpalette_button_settings['text']       = empty($result->button_text_color) ? '#21759b' : $result->button_text_color;
-							if ($banner->theme === 'edgeless') {
-								$banner->buttons_border_radius = array(
-										'top'       => '0',
-										'right'     => '0',
-										'bottom'    => '0',
-										'left'      => '0',
-										'type'      => 'px',
-								);
-							}
-
-							$banner->custom_css                                 = $result->custom_css . "\n\n" . $result->custom_css_amp;
-
-							if ( cmplz_tcf_active() ) {
-								$banner->header = __("Manage your privacy", 'complianz-gdpr');
-							}
-							$banner->save();
-						}
-
-					}
-				}
-				/**
-				 * Move custom scripts from 'wizard' to 'custom-scripts'
-				 */
-				//upgrade cookie policy setting to new field
-				$wizard_settings = get_option( 'complianz_options_wizard' );
-				$custom_scripts  = array();
-				if ( isset( $wizard_settings['statistics_script'] ) ) {
-					$custom_scripts['statistics_script'] = $wizard_settings['statistics_script'];
-				}
-				if ( isset( $wizard_settings['cookie_scripts'] ) ) {
-					$custom_scripts['cookie_scripts'] = $wizard_settings['cookie_scripts'];
-				}
-				if ( isset( $wizard_settings['cookie_scripts_async'] ) ) {
-					$custom_scripts['cookie_scripts_async'] = $wizard_settings['cookie_scripts_async'];
-				}
-				if ( isset( $wizard_settings['thirdparty_scripts'] ) ) {
-					$custom_scripts['thirdparty_scripts'] = $wizard_settings['thirdparty_scripts'];
-				}
-				if ( isset( $wizard_settings['thirdparty_iframes'] ) ) {
-					$custom_scripts['thirdparty_iframes'] = $wizard_settings['thirdparty_iframes'];
-				}
-				unset( $wizard_settings['statistics_script'] );
-				unset( $wizard_settings['cookie_scripts'] );
-				unset( $wizard_settings['cookie_scripts_async'] );
-				unset( $wizard_settings['thirdparty_scripts'] );
-				unset( $wizard_settings['thirdparty_iframes'] );
-				update_option( 'complianz_options_custom-scripts', $custom_scripts );
-				update_option( 'complianz_options_wizard', $wizard_settings );
-
-				/**
-				 * we dismiss the integrations enabled notices
-				 */
-
-				$dismissed_warnings = get_option('cmplz_dismissed_warnings', array() );
-				$fields = COMPLIANZ::$config->fields( 'integrations' );
-				foreach ($fields as $warning_id => $field ) {
-					if ($field['disabled']) continue;
-					if ( !in_array($warning_id, $dismissed_warnings) ) {
-						$dismissed_warnings[] = $warning_id;
-					}
-				}
-				update_option('cmplz_dismissed_warnings', $dismissed_warnings );
-			}
-
-			if ( $prev_version && version_compare( $prev_version, '5.1.0', '<' ) ) {
-				update_option( 'cmplz_first_version', '5.0.0');
-			}
-
-			/**
-			 * restore dropshadow in TCF banner.
-			 */
-			if (  $prev_version
-				  && version_compare( $prev_version, '5.1.2', '<' )
-			) {
-				if ( cmplz_tcf_active() ) {
-					$banners = cmplz_get_cookiebanners();
-					if ( $banners ) {
-						foreach ( $banners as $banner_item ) {
-							$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID, false );
-							$banner->use_box_shadow = true;
-							$banner->save();
-						}
-					}
-				}
-			}
-
-			if (  $prev_version
-				  && version_compare( $prev_version, '5.2.0', '<' )
-			) {
-				if ( cmplz_tcf_active() ) {
-					$banners = cmplz_get_cookiebanners();
-					if ( $banners ) {
-						foreach ( $banners as $banner_item ) {
-							$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID, false );
-							$banner->colorpalette_button_accept = array(
-									'background'    => '#333',
-									'border'        => '#333',
-									'text'          => '#fff',
-							);
-							$banner->colorpalette_button_settings = array(
-									'background'    => '#fff',
-									'border'        => '#333',
-									'text'          => '#333',
-							);
-							$banner->save();
-						}
-					}
-				}
-			}
-
-			do_action( 'cmplz_upgrade', $prev_version );
-			update_option( 'cmplz-current-version', cmplz_version );
 		}
 
 		/**
-		 * Check if new features are shipped with the plugin
+		 * If this update is to 6, don't auto update
+		 * Deactivated as of 6.0
 		 *
-		 * @return mixed|void
-		 */
-		public function complianz_plugin_has_new_features() {
-			return get_option( 'cmplz_plugin_new_features' );
-		}
-
-		/**
-		 * Reset the new features option
+		 * @param $update
+		 * @param $item
 		 *
-		 * @return bool
+		 * @return false|mixed
 		 */
-		public function reset_complianz_plugin_has_new_features() {
-			return update_option( 'cmplz_plugin_new_features', false );
+		public function override_auto_updates( $update, $item ) {
+			if ( strpos($item->slug , 'complianz') !==false && version_compare($item->new_version, '6.0.0', '>=') ) {
+				return false;
+			}
+			return $update;
 		}
 
 		/**
@@ -705,17 +308,12 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			}
 
 			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-
 			wp_register_style( 'cmplz', trailingslashit( cmplz_url ) . "assets/css/admin$minified.css", "", cmplz_version );
 			wp_enqueue_style( 'cmplz' );
-
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'cmplz-ace', cmplz_url . "assets/ace/ace.js", array(), cmplz_version, false );
-
-			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-			wp_enqueue_script( 'cmplz-admin', cmplz_url . "assets/js/admin$minified.js", array( 'jquery', 'wp-color-picker' ), cmplz_version, true );
 			wp_enqueue_script( 'cmplz-dashboard', cmplz_url . "assets/js/dashboard$minified.js", array( 'jquery' ), cmplz_version, true );
-
+			wp_enqueue_script( 'cmplz-admin', cmplz_url . "assets/js/admin$minified.js", array( 'jquery', 'wp-color-picker' ), cmplz_version, true );
 			$sync_progress = COMPLIANZ::$cookie_admin->get_sync_progress();
 			$progress      = COMPLIANZ::$cookie_admin->get_progress_count();
 			wp_localize_script(
@@ -763,7 +361,59 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			return $links;
 		}
 
+		/**
+		 * Insert some ajax script to dismiss the admin notice
+		 *
+		 * @since  2.0
+		 *
+		 * @access public
+		 *
+		 * type: dismiss, later
+		 *
+		 */
 
+		public function insert_dismiss_admin_notice_script() {
+			$ajax_nonce = wp_create_nonce( "cmplz_dismiss_admin_notice" );
+			?>
+			<script type='text/javascript'>
+				jQuery(document).ready(function ($) {
+					$(".cmplz-admin-notice.notice.is-dismissible").on("click", ".notice-dismiss, .cmplz-btn-dismiss-notice", function (event) {
+						var id = $('.cmplz-admin-notice').data('admin_notice_id');
+						var data = {
+							'action': 'cmplz_dismiss_admin_notice',
+							'id': id,
+							'token': '<?php echo $ajax_nonce; ?>'
+						};
+						$.post(ajaxurl, data, function (response) {
+							$(".cmplz-admin-notice.notice.is-dismissible").remove();
+						});
+					});
+				});
+			</script>
+			<?php
+		}
+
+		/**
+		 * Show an admin notice from our warnings list
+		 * @return void
+		 */
+		public function show_admin_notice(){
+			delete_transient( 'complianz_warnings' );
+			$warnings = $this->get_warnings( [ 'admin_notices' => true] );
+			if (count($warnings)==0) {
+				return;
+			}
+
+			//only one admin notice at the same time.
+			$keys = array_keys($warnings);
+			$id = $keys[0];
+			$warning = $warnings[$id];
+			if ( !isset($warning['open'])) {
+				return;
+			}
+			$dismiss_btn = '<br><br><button class="cmplz-btn-dismiss-notice button-secondary">'.__("Dismiss","complianz-gdpr").'</button>';
+			cmplz_admin_notice($warning['open'].$dismiss_btn, $id);
+		}
 
 		/**
 		 * get a list of applicable warnings.
@@ -779,14 +429,16 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				'status' => 'all',
 				'plus_ones' => false,
 				'progress_items_only' => false,
+				'admin_notices' => false,
 			);
 			$args = wp_parse_args($args, $defaults);
+			$admin_notice =  $args['admin_notices'] ? '_admin_notices' : '';
 			$cache = $args['cache'];
 			if (isset($_GET['page']) && ($_GET['page']==='complianz' || strpos($_GET['page'],'cmplz') !== false ) ) {
 				$cache = false;
 			}
 
-			$warnings = $cache ? get_transient( 'complianz_warnings' ) : false;
+			$warnings = $cache ? get_transient( 'complianz_warnings'.$admin_notice ) : false;
 			//re-check if there are no warnings, or if the transient has expired
 			if ( ! $warnings ) {
 
@@ -796,7 +448,9 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					'success_conditions' => array(),
 					'relation' => 'OR',
 					'status' => 'open',
+					'dismissible' => true,
 					'include_in_progress' => false,
+					'admin_notice' => false,
 				);
 
 				$warning_types = COMPLIANZ::$config->warning_types;
@@ -807,6 +461,14 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				$dismissed_warnings = get_option('cmplz_dismissed_warnings', array() );
 				foreach ( $warning_types as $id => $warning ) {
 					if ( in_array( $id, $dismissed_warnings) ) {
+						continue;
+					}
+
+					if ( $args['admin_notices'] && !$warning['admin_notice']){
+						continue;
+					}
+
+					if ( !$args['admin_notices'] && $warning['admin_notice']){
 						continue;
 					}
 
@@ -839,6 +501,10 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 							$warning['message'] = $warning['urgent'];
 							$warning['status'] = 'urgent';
 							$warnings[$id] = $warning;
+						} else if (isset( $warning['premium']) ) {
+							$warning['message'] = $warning['premium'];
+							$warning['status'] = 'premium';
+							$warnings[$id] = $warning;
 						}
 					} else {
 						if (isset( $warning['completed']) ) {
@@ -849,7 +515,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 						}
 					}
 				}
-				set_transient( 'complianz_warnings', $warnings, HOUR_IN_SECONDS );
+				set_transient( 'complianz_warnings'.$admin_notice, $warnings, HOUR_IN_SECONDS );
 			}
 
 			//filtering outside cache if, to make sure all warnings are saved for the cache.
@@ -896,22 +562,44 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			$completed = array();
 			$open = array();
 			$urgent = array();
-			foreach ($warnings as $key => $warning){
-				//prevent notices on upgrade to 5.0
-				if ( !isset( $warning['status'])) continue;
+			if (!empty($warnings)) {
+				foreach ( $warnings as $key => $warning ) {
+					//prevent notices on upgrade to 5.0
+					if ( ! isset( $warning['status'] ) ) {
+						continue;
+					}
 
-				if ($warning['status']==='urgent') {
-					$urgent[$key] = $warning;
-				} else if ($warning['status']==='open') {
-					$open[$key] = $warning;
-				} else {
-					$completed[$key] = $warning;
+					if ( $warning['status'] === 'urgent' ) {
+						$urgent[ $key ] = $warning;
+					} else if ( $warning['status'] === 'open' ) {
+						$open[ $key ] = $warning;
+					} else {
+						$completed[ $key ] = $warning;
+					}
 				}
 			}
 			$warnings = $urgent + $open + $completed;
 
 			return $warnings;
 		}
+
+		/**
+		 * Enable dismissable warnings for current free users
+		 * @param $warnings
+		 * @return array
+		 * @filter cmplz_warning_types
+		 */
+		function filter_enable_dismissable_warnings($warnings){
+			if (get_option('complianz_enable_dismissible_premium_warnings') && ! defined( 'cmplz_premium' ) ){
+				$warnings['advertising-enabled']['dismissible'] = true;
+				$warnings['sync-privacy-statement']['dismissible'] = true;
+				$warnings['ecommerce-legal']['dismissible'] = true;
+				$warnings['configure-tag-manager']['dismissible'] = true;
+				$warnings['targeting-multiple-regions']['dismissible'] = true;
+			}
+			return $warnings;
+		}
+
 
 
 		/**
@@ -1079,7 +767,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				$link = admin_url() . "plugin-install.php?s=".$item['search']."&tab=search&type=term";
 				$text = __('Install', 'complianz-gdpr');
 				$status = "<a href=$link>$text</a>";
-			} elseif ($item['constant_free'] == 'wpsi_plugin' || defined($item['constant_premium'] ) ) {
+			} elseif (defined($item['constant_premium'] ) ) {
 				$status = __("Installed", "complianz-gdpr");
 			} elseif (defined($item['constant_free']) && !defined($item['constant_premium'])) {
 				$link = $item['website'];
@@ -1199,7 +887,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		public function get_help_tip( $str ) {
 			?>
 			<span class="cmplz-tooltip-right tooltip-right"
-			      data-cmplz-tooltip="<?php echo $str ?>">
+			      data-cmplz-tooltip="<?php echo esc_attr($str) ?>">
               <span class="dashicons dashicons-editor-help"></span>
             </span>
 			<?php
@@ -1232,7 +920,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
                 'cookie-blocker' => array(
                     'page' => 'settings',
                     'name' => 'cookie-blocker',
-                    'header' => __('Cookie blocker', 'complianz-gdpr'),
+                    'header' => __('Cookies', 'complianz-gdpr'),
                     'class' => 'medium',
                     'index' => '13',
                     'controls' => '',
@@ -1240,7 +928,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
                 'document-styling' => array(
                     'page' => 'settings',
                     'name' => 'document-styling',
-                    'header' => __('Document Styling', 'complianz-gdpr'),
+                    'header' => __('Advanced features', 'complianz-gdpr'),
                     'class' => 'big condition-check-1',
                     'index' => '14',
                     'controls' => '',

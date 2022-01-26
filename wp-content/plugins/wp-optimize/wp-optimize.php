@@ -3,7 +3,7 @@
 Plugin Name: WP-Optimize - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
 Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 3.1.12
+Version: 3.2.2
 Update URI: https://wordpress.org/plugins/wp-optimize/
 Author: David Anderson, Ruhani Rabin, Team Updraft
 Author URI: https://updraftplus.com
@@ -16,12 +16,11 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.1.12');
+define('WPO_VERSION', '3.2.2');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PREMIUM_NOTIFICATION', false);
 define('WPO_MINIFY_PHP_VERSION_MET', version_compare(PHP_VERSION, '5.4', '>=') ? true : false);
-if (!defined('WPO_WEBP_IMAGES_PATH')) define('WPO_WEBP_IMAGES_PATH', '/wpo/webp/');
 
 class WP_Optimize {
 
@@ -56,11 +55,11 @@ class WP_Optimize {
 
 		// Checks if premium is installed along with plugins needed.
 		add_action('plugins_loaded', array($this, 'plugins_loaded'), 1);
-
+		
 		register_activation_hook(__FILE__, 'wpo_activation_actions');
 		register_deactivation_hook(__FILE__, 'wpo_deactivation_actions');
 		register_uninstall_hook(__FILE__, 'wpo_uninstall_actions');
-		
+				
 		add_action('admin_init', array($this, 'admin_init'));
 		add_action('admin_menu', array($this, 'admin_menu'));
 		add_action('admin_bar_menu', array($this, 'cache_admin_bar'), 100, 1);
@@ -95,7 +94,7 @@ class WP_Optimize {
 		include_once(WPO_PLUGIN_MAIN_PATH.'includes/updraftcentral.php');
 
 		include_once(WPO_PLUGIN_MAIN_PATH.'includes/backward-compatibility-functions.php');
-		
+				
 		register_shutdown_function(array($this, 'log_fatal_errors'));
 
 		$this->schedule_plugin_cron_tasks();
@@ -145,11 +144,11 @@ class WP_Optimize {
 		if ($should_purge_cache) do_action('wpo_active_plugin_or_theme_updated');
 
 	}
-	
+			
 	public function admin_page_wpo_images_smush() {
 		$options = Updraft_Smush_Manager()->get_smush_options();
-		$custom = 100 == $options['image_quality'] || 90 == $options['image_quality'] ? false : true;
-		$this->include_template('images/smush.php', false, array('smush_options' => $options, 'custom' => $custom));
+		$custom = 100 != $options['image_quality'] && 90 != $options['image_quality'] ? true : false;
+		$this->include_template('images/smush.php', false, array('smush_options' => $options, 'custom' => $custom, 'does_server_allows_local_webp_conversion' => $this->does_server_allows_local_webp_conversion()));
 	}
 
 	public static function instance() {
@@ -174,10 +173,10 @@ class WP_Optimize {
 	 */
 	public function get_minify() {
 		if (empty(self::$_minify_instance)) {
-				if (!class_exists('WP_Optimize_Minify')) {
-					include_once WPO_PLUGIN_MAIN_PATH.'minify/class-wp-optimize-minify.php';
-				}
-				self::$_minify_instance = new WP_Optimize_Minify();
+			if (!class_exists('WP_Optimize_Minify')) {
+			include_once WPO_PLUGIN_MAIN_PATH.'minify/class-wp-optimize-minify.php';
+			}
+		self::$_minify_instance = new WP_Optimize_Minify();
 		}
 		return self::$_minify_instance;
 	}
@@ -207,6 +206,55 @@ class WP_Optimize {
 		if (!class_exists('WPO_Page_Cache')) include_once(WPO_PLUGIN_MAIN_PATH.'cache/class-wpo-page-cache.php');
 
 		return WPO_Page_Cache::instance();
+	}
+
+	/**
+	 * Returns instance if WP_Optimize_WebP class.
+	 *
+	 * @return WP_Optimize_WebP
+	 */
+	public function get_webp_instance() {
+		if (defined('WPO_USE_WEBP_CONVERSION') && true === WPO_USE_WEBP_CONVERSION) {
+			if (!class_exists('WP_Optimize_WebP')) {
+				include_once WPO_PLUGIN_MAIN_PATH . 'webp/class-wp-optimize-webp.php';
+			}
+			return WP_Optimize_WebP::get_instance();
+		}
+	}
+
+	/**
+	 * Detects if the platform is Kinsta or not
+	 *
+	 * @return bool Returns true if it is Kinsta platform, otherwise returns false
+	 */
+	private function is_kinsta() {
+		return isset($_SERVER['KINSTA_CACHE_ZONE']);
+	}
+
+	/**
+	 * Detects whether the server handles cache. eg. Nginx cache
+	 */
+	private function does_server_handles_cache() {
+		return $this->is_kinsta();
+	}
+
+	/**
+	 * Detects whether the server supports table optimization.
+	 *
+	 * Some servers prevent table optimization
+	 * because InnoDB engine does not optimize table
+	 * instead it drops tables and recreate them
+	 * which results in elevated disk write operations
+	 */
+	public function does_server_allows_table_optimization() {
+		return !$this->is_kinsta();
+	}
+
+	/**
+	 * Detects whether the server supports local webp conversion tools
+	 */
+	private function does_server_allows_local_webp_conversion() {
+		return !$this->is_kinsta();
 	}
 
 	/**
@@ -259,7 +307,8 @@ class WP_Optimize {
 			include_once(WPO_PLUGIN_MAIN_PATH . '/includes/class-wp-optimize-htaccess.php');
 		}
 
-		return new WP_Optimize_Htaccess($htaccess_file);
+	return new WP_Optimize_Htaccess($htaccess_file);
+
 	}
 
 	/**
@@ -301,7 +350,7 @@ class WP_Optimize {
 
 		// load scripts and styles only on WP-Optimize pages.
 		if (!$this->is_wpo_page()) return;
-		
+				
 		wp_enqueue_script('jquery-serialize-json', WPO_PLUGIN_URL.'js/serialize-json/jquery.serializejson'.$min_or_not.'.js', array('jquery'), $enqueue_version);
 
 		wp_register_script('updraft-queue-js', WPO_PLUGIN_URL.'js/queue'.$min_or_not_internal.'.js', array(), $enqueue_version);
@@ -350,7 +399,7 @@ class WP_Optimize {
 		include_once(WPO_PLUGIN_MAIN_PATH . '/vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-meta.php');
 		include_once(WPO_PLUGIN_MAIN_PATH . '/vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-options.php');
 		include_once(WPO_PLUGIN_MAIN_PATH . '/vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task.php');
-		
+				
 		include_once(WPO_PLUGIN_MAIN_PATH . '/includes/class-updraft-smush-task.php');
 		include_once(WPO_PLUGIN_MAIN_PATH . '/includes/class-updraft-smush-manager.php');
 
@@ -399,7 +448,7 @@ class WP_Optimize {
 	 */
 	public function is_apache_module_loaded($module) {
 		if (!$this->is_apache_server()) return false;
-		
+				
 		if (!function_exists('apache_get_modules')) return null;
 
 		$module_loaded = true;
@@ -427,6 +476,16 @@ class WP_Optimize {
 			add_action('network_admin_menu', array($this, 'admin_menu'));
 		}
 
+		if ($this->does_server_handles_cache()) {
+			add_filter('wp_optimize_admin_page_wpo_cache_tabs', array($this, 'filter_cache_tabs'), 99, 1);
+
+			// If newly migrated to server that handles cache, disable wpo cache
+			$cache = $this->get_page_cache();
+			if ($cache->is_enabled()) {
+				$cache->disable();
+			}
+		}
+
 		add_filter('robots_txt', array($this, 'robots_txt'), 99, 1);
 
 		// Run Premium loader if it exists
@@ -437,7 +496,7 @@ class WP_Optimize {
 		// load defaults
 		WP_Optimize()->get_options()->set_default_options();
 
-		// Initialize loggers.
+				// Initialize loggers.
 		$this->setup_loggers();
 
 		if ($this->is_active('premium') && false !== ($free_plugin = $this->is_active('free'))) {
@@ -453,12 +512,12 @@ class WP_Optimize {
 				}
 			}
 
-			// Registers the notice letting the user know it cannot be active if premium is active.
+					// Registers the notice letting the user know it cannot be active if premium is active.
 			add_action('admin_notices', array($this, 'show_admin_notice_premium'));
 			return;
 		}
 
-		// Loads the task manager
+				// Loads the task manager
 		$this->get_task_manager();
 
 		// Loads the language file.
@@ -471,11 +530,22 @@ class WP_Optimize {
 		// Include minify
 		$this->get_minify();
 		$this->run_updates();
+		$this->get_webp_instance();
+	}
 
-		if (defined('WPO_USE_WEBP_CONVERSION') && true === WPO_USE_WEBP_CONVERSION) {
-			// Include webP
-			include_once WPO_PLUGIN_MAIN_PATH . 'webp/class-wp-optimize-webp.php';
-		}
+	/**
+	 * Filter cache tabs (when it is Kinsta)
+	 *
+	 * @param  array $tabs An array of tabs
+	 *
+	 * @return array $tabs An array of tabs
+	 */
+	public function filter_cache_tabs($tabs) {
+		unset($tabs['preload']);
+		unset($tabs['advanced']);
+		unset($tabs['gzip']);
+		unset($tabs['settings']);
+		return $tabs;
 	}
 
 	/**
@@ -607,7 +677,7 @@ class WP_Optimize {
 	public function show_admin_notice_upgradead() {
 		$this->include_template('notices/thanks-for-using-main-dash.php');
 	}
-	
+			
 	public function capability_required() {
 		return apply_filters('wp_optimize_capability_required', 'manage_options');
 	}
@@ -637,9 +707,9 @@ class WP_Optimize {
 
 		// Currently the settings are only available to network admins.
 		if (is_multisite() && !current_user_can('manage_network_options')) {
-			/**
-			 * Filters the commands allowed to the subsite admins. Other commands are only available to network admin. Only used in a multisite context.
-			 */
+		/**
+		 * Filters the commands allowed to the subsite admins. Other commands are only available to network admin. Only used in a multisite context.
+		 */
 			$allowed_commands = apply_filters('wpo_multisite_allowed_commands', array('check_server_status', 'compress_single_image', 'restore_single_image'));
 			if (!in_array($subaction, $allowed_commands)) wp_send_json(array(
 				'result' => false,
@@ -647,7 +717,7 @@ class WP_Optimize {
 				'error_message' => __('Options can only be saved by network admin', 'wp-optimize')
 			));
 		}
-		
+				
 		$options = $this->get_options();
 
 		$results = array();
@@ -658,11 +728,11 @@ class WP_Optimize {
 		} elseif (in_array($subaction, array('dismiss_page_notice_until', 'dismiss_notice'))) {
 			$options->update_option($subaction, (time() + 84 * 86400));
 		} elseif ('dismiss_review_notice' == $subaction) {
-			if (empty($data['dismiss_forever'])) {
-				$options->update_option($subaction, time() + 84*86400);
-			} else {
-				$options->update_option($subaction, 100 * (365.25 * 86400));
-			}
+		if (empty($data['dismiss_forever'])) {
+			$options->update_option($subaction, time() + 84*86400);
+		} else {
+			$options->update_option($subaction, 100 * (365.25 * 86400));
+		}
 		} else {
 			// Other commands, available for any remote method.
 			if (!class_exists('WP_Optimize_Commands')) include_once(WPO_PLUGIN_MAIN_PATH . 'includes/class-commands.php');
@@ -675,7 +745,7 @@ class WP_Optimize {
 
 			if (self::is_premium()) {
 				if (!class_exists('WP_Optimize_Cache_Commands_Premium')) include_once(WPO_PLUGIN_MAIN_PATH . 'cache/class-cache-commands-premium.php');
-				$cache_commands = new WP_Optimize_Cache_Commands_Premium();
+					$cache_commands = new WP_Optimize_Cache_Commands_Premium();
 			} else {
 				$cache_commands = new WP_Optimize_Cache_Commands();
 			}
@@ -911,10 +981,11 @@ class WP_Optimize {
 		/**
 		 * CACHE
 		 */
-
 		add_action('wp_optimize_admin_page_wpo_cache_cache', array($this, 'output_page_cache_tab'), 20);
-		add_action('wp_optimize_admin_page_wpo_cache_preload', array($this, 'output_page_cache_preload_tab'), 20);
-		add_action('wp_optimize_admin_page_wpo_cache_advanced', array($this, 'output_page_cache_advanced_tab'), 20);
+		if (!$this->does_server_handles_cache()) {
+			add_action('wp_optimize_admin_page_wpo_cache_preload', array($this, 'output_page_cache_preload_tab'), 20);
+			add_action('wp_optimize_admin_page_wpo_cache_advanced', array($this, 'output_page_cache_advanced_tab'), 20);
+		}
 		add_action('wp_optimize_admin_page_wpo_cache_gzip', array($this, 'output_cache_gzip_tab'), 20);
 		add_action('wp_optimize_admin_page_wpo_cache_settings', array($this, 'output_cache_settings_tab'), 20);
 		add_action('wpo_page_cache_advanced_settings', array($this, 'output_cloudflare_settings'), 20);
@@ -934,6 +1005,11 @@ class WP_Optimize {
 			 * Add action for display Dashboard > Lazyload tab.
 			 */
 			add_action('wp_optimize_admin_page_wpo_images_lazyload', array($this, 'admin_page_wpo_images_lazyload'));
+		} else {
+			/**
+			 * Add filter for display footer review message and link.
+			 */
+			add_filter('admin_footer_text', array($this, 'display_footer_review_message'));
 		}
 	}
 
@@ -1005,6 +1081,7 @@ class WP_Optimize {
 			'cache_size' => $this->get_page_cache()->get_cache_size(),
 			'display' => $display,
 			'can_purge_the_cache' => $this->can_purge_the_cache(),
+			'does_server_handles_cache' => $this->does_server_handles_cache(),
 		));
 	}
 
@@ -1061,7 +1138,7 @@ class WP_Optimize {
 		$wpo_gzip_headers_information = $wpo_gzip_compression->get_headers_information();
 		$is_cloudflare_site = $this->is_cloudflare_site();
 		$is_gzip_compression_section_exists = $wpo_gzip_compression->is_gzip_compression_section_exists();
-		$wpo_gzip_compression_enabled_by_wpo = $is_gzip_compression_section_exists && $wpo_gzip_compression_enabled && !$is_cloudflare_site && !('brotli' == $wpo_gzip_headers_information['compression']);
+		$wpo_gzip_compression_enabled_by_wpo = $is_gzip_compression_section_exists && $wpo_gzip_compression_enabled && !$is_cloudflare_site && !(is_array($wpo_gzip_headers_information) && 'brotli' == $wpo_gzip_headers_information['compression']);
 
 		WP_Optimize()->include_template('cache/gzip-compression.php', false, array(
 			'wpo_gzip_headers_information' => $wpo_gzip_headers_information,
@@ -1120,19 +1197,19 @@ class WP_Optimize {
 		$optimizer = $this->get_optimizer();
 		$options = $this->get_options();
 
-		// check if nonce passed.
+				// check if nonce passed.
 		$nonce_passed = (!empty($_REQUEST['_wpnonce']) && wp_verify_nonce($_REQUEST['_wpnonce'], 'wpo_optimization')) ? true : false;
 
-		// save options.
+				// save options.
 		if ($nonce_passed && isset($_POST['wp-optimize'])) $options->save_sent_manual_run_optimization_options($_POST, true);
 
 		$optimize_db = ($nonce_passed && isset($_POST["optimize-db"])) ? true : false;
 
 		$optimization_results = (($nonce_passed) ? $optimizer->do_optimizations($_POST) : false);
 
-		// display optimizations table or restricted access message.
+				// display optimizations table or restricted access message.
 		if ($this->can_run_optimizations()) {
-			$this->include_template('database/optimize-table.php', false, array('optimize_db' => $optimize_db, 'optimization_results' => $optimization_results, 'load_data' => false));
+			$this->include_template('database/optimize-table.php', false, array('optimize_db' => $optimize_db, 'optimization_results' => $optimization_results, 'load_data' => false, 'does_server_allows_table_optimization' => $this->does_server_allows_table_optimization()));
 		} else {
 			$this->prevent_run_optimizations_message();
 		}
@@ -1142,12 +1219,15 @@ class WP_Optimize {
 	 * Outputs the DB Tables Tab
 	 */
 	public function output_database_tables_tab() {
-		// check if nonce passed.
+				// check if nonce passed.
 		$nonce_passed = (!empty($_REQUEST['_wpnonce']) && wp_verify_nonce($_REQUEST['_wpnonce'], 'wpo_optimization')) ? true : false;
 
 		$optimize_db = ($nonce_passed && isset($_POST["optimize-db"])) ? true : false;
 
-		if ($this->can_run_optimizations()) {
+		if (!$this->does_server_allows_table_optimization()) {
+			$message = __('Your server takes care of table optimization', 'wp-optimize');
+			$this->prevent_run_optimizations_message($message);
+		} elseif ($this->can_run_optimizations()) {
 			$this->include_template('database/tables.php', false, array('optimize_db' => $optimize_db, 'load_data' => WP_Optimize()->template_should_include_data()));
 		} else {
 			$this->prevent_run_optimizations_message();
@@ -1166,6 +1246,20 @@ class WP_Optimize {
 	 */
 	public function admin_page_wpo_images_lazyload() {
 		WP_Optimize()->include_template('images/lazyload.php');
+	}
+
+	/**
+	 * Show footer review message and link.
+	 *
+	 * @return string
+	 */
+	public function display_footer_review_message() {
+		$message = sprintf(
+			__('Enjoyed %s? Please leave us a %s rating. We really appreciate your support!', 'wp-optimize'),
+			'<b>WP-Optimize</b>',
+			'<a href="https://www.g2.com/products/wp-optimize/reviews" target="_blank">&starf;&starf;&starf;&starf;&starf;</a>'
+		);
+		return $message;
 	}
 
 	/**
@@ -1191,6 +1285,7 @@ class WP_Optimize {
 			'fill_all_settings_fields' => __('Before saving, you need to complete the currently incomplete settings (or remove them).', 'wp-optimize'),
 			'table_was_not_repaired' => __('%s was not repaired. For more details, please check the logs (configured in your logging destinations settings).', 'wp-optimize'),
 			'table_was_not_deleted' => __('%s was not deleted. For more details, please check your logs configured in logging destinations settings.', 'wp-optimize'),
+			'table_was_not_converted' => __('%s was not converted to InnoDB. For more details, please check your logs configured in logging destinations settings.', 'wp-optimize'),
 			'please_use_positive_integers' => __('Please use positive integers.', 'wp-optimize'),
 			'please_use_valid_values' => __('Please use valid values.', 'wp-optimize'),
 			'update' => __('Update', 'wp-optimize'),
@@ -1207,10 +1302,11 @@ class WP_Optimize {
 			'settings_have_been_deleted_successfully' => __('WP-Optimize settings have been deleted successfully.', 'wp-optimize'),
 			'loading_data' => __('Loading data...', 'wp-optimize'),
 			'spinner_src' => esc_attr(admin_url('images/spinner-2x.gif')),
-			'settings_page_url' => admin_url('admin.php?page=wpo_settings'),
+			'settings_page_url' => is_multisite() ? network_admin_url('admin.php?page=wpo_settings') : admin_url('admin.php?page=wpo_settings'),
 			'sites' => $this->get_sites(),
 			'user_always_ignores_table_delete_warning' => (get_user_meta(get_current_user_id(), 'wpo-ignores-table-delete-warning', true)) ? true : false,
 			'post_meta_tweak_completed' => __('The tweak has been performed.', 'wp-optimize'),
+			'no_minified_assets' => __('No minified files are present', 'wp-optimize'),
 		));
 	}
 
@@ -1247,8 +1343,8 @@ class WP_Optimize {
 				continue;
 			}
 
-			// 'menu_slug' => 'WP-Optimize',
-			
+		// 'menu_slug' => 'WP-Optimize',
+					
 			$menu_page_url = menu_page_url($page['menu_slug'], false);
 
 			if (is_multisite()) {
@@ -1349,6 +1445,16 @@ class WP_Optimize {
 				. '</div>';
 		}
 
+		// Add option for MyISAM to InnoDB conversion.
+		if ('MyISAM' == $table_info->Engine) {
+			$content .= '<div class="wpo_button_convert wpo_button_wrap">'
+				. '<button class="button button-secondary toinnodb" data-table="' . esc_attr($table_info->Name) . '">' . __('Convert to InnoDB', 'wp-optimize') . '</button>'
+				. '<img class="optimization_spinner visibility-hidden" src="' . esc_attr(admin_url('images/spinner-2x.gif')) . '" width="20" height="20" alt="...">'
+				. '<span class="optimization_done_icon dashicons dashicons-yes visibility-hidden"></span>'
+				. '</div>';
+						
+		}
+				
 		return $content;
 	}
 
@@ -1485,24 +1591,24 @@ class WP_Optimize {
 
 		if (!current_user_can($capability_required) || (!$this->can_run_optimizations() && !$this->can_manage_options())) return;
 
-		$icon_svg = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgdmlld0JveD0iMCAwIDE2IDE2IgogICB2ZXJzaW9uPSIxLjEiCiAgIGlkPSJzdmc0MzE2IgogICBoZWlnaHQ9IjE2IgogICB3aWR0aD0iMTYiPgogIDxkZWZzCiAgICAgaWQ9ImRlZnM0MzE4IiAvPgogIDxtZXRhZGF0YQogICAgIGlkPSJtZXRhZGF0YTQzMjEiPgogICAgPHJkZjpSREY+CiAgICAgIDxjYzpXb3JrCiAgICAgICAgIHJkZjphYm91dD0iIj4KICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4KICAgICAgICA8ZGM6dHlwZQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+CiAgICAgICAgPGRjOnRpdGxlPjwvZGM6dGl0bGU+CiAgICAgIDwvY2M6V29yaz4KICAgIDwvcmRmOlJERj4KICA8L21ldGFkYXRhPgogIDxnCiAgICAgaWQ9ImxheWVyMSI+CiAgICA8cGF0aAogICAgICAgc3R5bGU9ImZpbGw6I2EwYTVhYTtmaWxsLW9wYWNpdHk6MSIKICAgICAgIGlkPSJwYXRoNTciCiAgICAgICBkPSJtIDEwLjc2ODgwOSw2Ljc2MTYwNTEgMCwwIGMgLTAuMDE2ODgsLTAuMDE2ODc4IC0wLjAyNTMxLC0wLjA0MjE4MSAtMC4wMzM3NCwtMC4wNjc0OTkgLTAuMDA4NCwtMC4wMDgzOSAtMC4wMDg0LC0wLjAxNjg3OCAtMC4wMTY4OCwtMC4wMzM3NDMgQyA5Ljk5MjYxMTIsNS4xOTIzMzY2IDguMjIwODU1Nyw0LjU4NDg3ODEgNi43NDQzOTEyLDUuMjkzNTc5NyA1LjY3MjkwMDUsNS44MDgyMzI4IDUuMDU3MDA0Myw2Ljg4ODE2MTMgNS4wNjU0NDIsOC4wMDE4MzY1IDQuNDU3OTgyMiw3LjMxMDAwNzYgMy42OTg2NTg0LDYuNzk1MzU0NSAyLjg1NDk2NDIsNi40OTE2MjUzIDMuMjY4Mzc0Myw1LjA2NTc4MzEgNC4yNTU0OTYsMy44MTcxMTY2IDUuNjg5Nzc0NiwzLjEyNTI4NzggOC4zNjQyODMyLDEuODM0NDM2OCAxMS41NzAzMTksMi45Mzk2NzQ0IDEyLjg4NjQ4MSw1LjU4ODg3MjYgMTMuNDUxNzU1LDYuNzI3ODU5NiAxNC42NDk4MDEsNy4zNTIxOTIxIDE1Ljg0Nzg0Niw3LjIzNDA3NSAxNS43NjM0ODIsNi4zMzk3NiAxNS41MTg4MDUsNS40MzcwMDg2IDE1LjEwNTM5Niw0LjU3NjQ0MDQgMTMuMjE1NTIxLDAuNjg3MDEzNCA4LjUzMzAyMjYsLTAuOTQxMzE2MjcgNC42NDM1OTQzLDAuOTQwMTIxNzkgMi4zMjM0MzcsMi4wNjIyMzM0IDAuODA0Nzg4MTQsNC4xNzk5MDQ0IDAuMzU3NjMxMzIsNi41MzM4MDk4IDIuNDE2MjQzOCw2LjQyNDEyOSA0LjQzMjY3MTcsNy41MDQwNTc0IDUuNDM2NjY2Miw5LjQzNjExNjcgbCAwLjAwODM5LDAgYyAwLjc1OTMxOTIsMS4zNzUyMjAzIDIuNDcyMDE3OCwxLjk0MDQ5NTMgMy45MDYyOTYsMS4yNDg2NjczIDEuMDQ2MTc5OCwtMC41MDYyMTggMS42NTM2NDA4LC0xLjUzNTUyMzggMS42Nzg5NTA4LC0yLjYxNTQ1MTIgMC41ODIxNDgsMC43MDg3MDE4IDEuMzMzMDM1LDEuMjQ4NjY2OCAyLjE1OTg1NiwxLjU3NzcwNjQgLTAuNDM4NzIxLDEuMzU4MzQ3OCAtMS40MDA1MzMsMi41NDc5NTQ4IC0yLjc5MjYyNywzLjIxNDQ3ODggLTIuNTkwMTM4NywxLjI0ODY1OCAtNS42NzgwNTc0LDAuMjUzMTA0IC03LjA2MTcxNTEsLTIuMjI3MzU3IGwgMCwwIEMgMi43NjIxMDQ4LDkuNDUyOTg5NCAxLjUxMzQzODMsOC44MjAyMTkxIDAuMjgxNjQ1OTIsOC45NzIwODQ0IDAuMzgyODg3NjUsOS43OTg5MDQ2IDAuNjE5MTIzMzEsMTAuNjE3Mjg3IDAuOTk4Nzg1MiwxMS40MDE5MjIgYyAxLjg4MTQzNjgsMy44OTc4NjQgNi41NjM5MzcsNS41MjYxOTggMTAuNDYxODAwOCwzLjY0NDc2IDIuMjQ0MjI2LC0xLjA4ODM2OSAzLjczNzU2MiwtMy4xMDQ3OTYgNC4yMzUzNDIsLTUuMzc0MzMyMyAtMS45OTk1NTQsMC4wNDIxODEgLTMuOTQ4NDg2LC0xLjAyOTMwNjMgLTQuOTI3MTcsLTIuOTEwNzQzMyB6IgogICAgICAgY2xhc3M9InN0MTciIC8+CiAgPC9nPgo8L3N2Zz4K';
+			$icon_svg = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgdmlld0JveD0iMCAwIDE2IDE2IgogICB2ZXJzaW9uPSIxLjEiCiAgIGlkPSJzdmc0MzE2IgogICBoZWlnaHQ9IjE2IgogICB3aWR0aD0iMTYiPgogIDxkZWZzCiAgICAgaWQ9ImRlZnM0MzE4IiAvPgogIDxtZXRhZGF0YQogICAgIGlkPSJtZXRhZGF0YTQzMjEiPgogICAgPHJkZjpSREY+CiAgICAgIDxjYzpXb3JrCiAgICAgICAgIHJkZjphYm91dD0iIj4KICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4KICAgICAgICA8ZGM6dHlwZQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+CiAgICAgICAgPGRjOnRpdGxlPjwvZGM6dGl0bGU+CiAgICAgIDwvY2M6V29yaz4KICAgIDwvcmRmOlJERj4KICA8L21ldGFkYXRhPgogIDxnCiAgICAgaWQ9ImxheWVyMSI+CiAgICA8cGF0aAogICAgICAgc3R5bGU9ImZpbGw6I2EwYTVhYTtmaWxsLW9wYWNpdHk6MSIKICAgICAgIGlkPSJwYXRoNTciCiAgICAgICBkPSJtIDEwLjc2ODgwOSw2Ljc2MTYwNTEgMCwwIGMgLTAuMDE2ODgsLTAuMDE2ODc4IC0wLjAyNTMxLC0wLjA0MjE4MSAtMC4wMzM3NCwtMC4wNjc0OTkgLTAuMDA4NCwtMC4wMDgzOSAtMC4wMDg0LC0wLjAxNjg3OCAtMC4wMTY4OCwtMC4wMzM3NDMgQyA5Ljk5MjYxMTIsNS4xOTIzMzY2IDguMjIwODU1Nyw0LjU4NDg3ODEgNi43NDQzOTEyLDUuMjkzNTc5NyA1LjY3MjkwMDUsNS44MDgyMzI4IDUuMDU3MDA0Myw2Ljg4ODE2MTMgNS4wNjU0NDIsOC4wMDE4MzY1IDQuNDU3OTgyMiw3LjMxMDAwNzYgMy42OTg2NTg0LDYuNzk1MzU0NSAyLjg1NDk2NDIsNi40OTE2MjUzIDMuMjY4Mzc0Myw1LjA2NTc4MzEgNC4yNTU0OTYsMy44MTcxMTY2IDUuNjg5Nzc0NiwzLjEyNTI4NzggOC4zNjQyODMyLDEuODM0NDM2OCAxMS41NzAzMTksMi45Mzk2NzQ0IDEyLjg4NjQ4MSw1LjU4ODg3MjYgMTMuNDUxNzU1LDYuNzI3ODU5NiAxNC42NDk4MDEsNy4zNTIxOTIxIDE1Ljg0Nzg0Niw3LjIzNDA3NSAxNS43NjM0ODIsNi4zMzk3NiAxNS41MTg4MDUsNS40MzcwMDg2IDE1LjEwNTM5Niw0LjU3NjQ0MDQgMTMuMjE1NTIxLDAuNjg3MDEzNCA4LjUzMzAyMjYsLTAuOTQxMzE2MjcgNC42NDM1OTQzLDAuOTQwMTIxNzkgMi4zMjM0MzcsMi4wNjIyMzM0IDAuODA0Nzg4MTQsNC4xNzk5MDQ0IDAuMzU3NjMxMzIsNi41MzM4MDk4IDIuNDE2MjQzOCw2LjQyNDEyOSA0LjQzMjY3MTcsNy41MDQwNTc0IDUuNDM2NjY2Miw5LjQzNjExNjcgbCAwLjAwODM5LDAgYyAwLjc1OTMxOTIsMS4zNzUyMjAzIDIuNDcyMDE3OCwxLjk0MDQ5NTMgMy45MDYyOTYsMS4yNDg2NjczIDEuMDQ2MTc5OCwtMC41MDYyMTggMS42NTM2NDA4LC0xLjUzNTUyMzggMS42Nzg5NTA4LC0yLjYxNTQ1MTIgMC41ODIxNDgsMC43MDg3MDE4IDEuMzMzMDM1LDEuMjQ4NjY2OCAyLjE1OTg1NiwxLjU3NzcwNjQgLTAuNDM4NzIxLDEuMzU4MzQ3OCAtMS40MDA1MzMsMi41NDc5NTQ4IC0yLjc5MjYyNywzLjIxNDQ3ODggLTIuNTkwMTM4NywxLjI0ODY1OCAtNS42NzgwNTc0LDAuMjUzMTA0IC03LjA2MTcxNTEsLTIuMjI3MzU3IGwgMCwwIEMgMi43NjIxMDQ4LDkuNDUyOTg5NCAxLjUxMzQzODMsOC44MjAyMTkxIDAuMjgxNjQ1OTIsOC45NzIwODQ0IDAuMzgyODg3NjUsOS43OTg5MDQ2IDAuNjE5MTIzMzEsMTAuNjE3Mjg3IDAuOTk4Nzg1MiwxMS40MDE5MjIgYyAxLjg4MTQzNjgsMy44OTc4NjQgNi41NjM5MzcsNS41MjYxOTggMTAuNDYxODAwOCwzLjY0NDc2IDIuMjQ0MjI2LC0xLjA4ODM2OSAzLjczNzU2MiwtMy4xMDQ3OTYgNC4yMzUzNDIsLTUuMzc0MzMyMyAtMS45OTk1NTQsMC4wNDIxODEgLTMuOTQ4NDg2LC0xLjAyOTMwNjMgLTQuOTI3MTcsLTIuOTEwNzQzMyB6IgogICAgICAgY2xhc3M9InN0MTciIC8+CiAgPC9nPgo8L3N2Zz4K';
 
-		// Removes the admin menu items on the left WP bar.
-		if (!is_multisite() || (is_multisite() && is_network_admin())) {
-			add_menu_page("WP-Optimize", "WP-Optimize", $capability_required, "WP-Optimize", array($this, "display_admin"), $icon_svg);
+			// Removes the admin menu items on the left WP bar.
+			if (!is_multisite() || (is_multisite() && is_network_admin())) {
+				add_menu_page("WP-Optimize", "WP-Optimize", $capability_required, "WP-Optimize", array($this, "display_admin"), $icon_svg);
 
-			$sub_menu_items = $this->get_submenu_items();
+				$sub_menu_items = $this->get_submenu_items();
 
-			foreach ($sub_menu_items as $menu_item) {
-				if ($menu_item['create_submenu']) add_submenu_page('WP-Optimize', $menu_item['page_title'], $menu_item['menu_title'], $capability_required, $menu_item['menu_slug'], $menu_item['function']);
+				foreach ($sub_menu_items as $menu_item) {
+					if ($menu_item['create_submenu']) add_submenu_page('WP-Optimize', $menu_item['page_title'], $menu_item['menu_title'], $capability_required, $menu_item['menu_slug'], $menu_item['function']);
+				}
 			}
-		}
 
-		$options = $this->get_options();
+			$options = $this->get_options();
 
-		if ($options->get_option('enable-admin-menu', 'false') == 'true') {
-			add_action('wp_before_admin_bar_render', array($this, 'wpo_admin_bar'));
-		}
+			if ($options->get_option('enable-admin-menu', 'false') == 'true') {
+				add_action('wp_before_admin_bar_render', array($this, 'wpo_admin_bar'));
+			}
 	}
 
 	/**
@@ -1593,7 +1699,7 @@ class WP_Optimize {
 		if ($a['order'] == $b['order']) return 0;
 		return ($a['order'] > $b['order']) ? 1 : -1;
 	}
-	
+			
 	private function wp_normalize_path($path) {
 		// Wp_normalize_path is not present before WP 3.9.
 		if (function_exists('wp_normalize_path')) return wp_normalize_path($path);
@@ -1646,15 +1752,15 @@ class WP_Optimize {
 			error_log("WP Optimize: template not found: ".$template_file);
 			echo __('Error:', 'wp-optimize').' '.__('template not found', 'wp-optimize')." (".$path.")";
 		} else {
-			extract($extract_these);
-			// The following are useful variables which can be used in the template.
-			// They appear as unused, but may be used in the $template_file.
-			$wpdb = $GLOBALS['wpdb'];// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $wpdb might be used in the included template
-			$wp_optimize = $this;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $wp_optimize might be used in the included template
-			$optimizer = $this->get_optimizer();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $optimizer might be used in the included template
-			$options = $this->get_options();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $options might be used in the included template
-			$wp_optimize_notices = $this->get_notices();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $wp_optimize_notices might be used in the included template
-			include $template_file;
+				extract($extract_these);
+				// The following are useful variables which can be used in the template.
+				// They appear as unused, but may be used in the $template_file.
+				$wpdb = $GLOBALS['wpdb'];// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $wpdb might be used in the included template
+				$wp_optimize = $this;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $wp_optimize might be used in the included template
+				$optimizer = $this->get_optimizer();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $optimizer might be used in the included template
+				$options = $this->get_options();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $options might be used in the included template
+				$wp_optimize_notices = $this->get_notices();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $wp_optimize_notices might be used in the included template
+				include $template_file;
 		}
 
 		do_action('wp_optimize_after_template', $path, $template_file, $return_instead_of_echo, $extract_these);
@@ -1678,7 +1784,7 @@ class WP_Optimize {
 					$template_directories[$file] = $templates_dir.'/'.$file;
 				}
 			}
-			closedir($dh);
+				closedir($dh);
 		}
 
 		// Optimal hook for most extensions to hook into.
@@ -1703,18 +1809,19 @@ class WP_Optimize {
 	/**
 	 * Format Bytes Into KB/MB
 	 *
-	 * @param  mixed $bytes Number of bytes to be converted.
+	 * @param  mixed   $bytes    Number of bytes to be converted.
+	 * @param  integer $decimals the number of decimal digits
 	 * @return integer        return the correct format size.
 	 */
-	public function format_size($bytes) {
+	public function format_size($bytes, $decimals = 2) {
 		if (!is_numeric($bytes)) return __('N/A', 'wp-optimize');
 
 		if (1073741824 <= $bytes) {
-			$bytes = number_format($bytes / 1073741824, 2) . ' GB';
+			$bytes = number_format($bytes / 1073741824, $decimals) . ' GB';
 		} elseif (1048576 <= $bytes) {
-			$bytes = number_format($bytes / 1048576, 2) . ' MB';
+			$bytes = number_format($bytes / 1048576, $decimals) . ' MB';
 		} elseif (1024 <= $bytes) {
-			$bytes = number_format($bytes / 1024, 2) . ' KB';
+			$bytes = number_format($bytes / 1024, $decimals) . ' KB';
 		} elseif (1 < $bytes) {
 			$bytes = $bytes . ' bytes';
 		} elseif (1 == $bytes) {
@@ -1872,7 +1979,7 @@ class WP_Optimize {
 		}
 
 		$options = $this->get_options();
-		
+				
 		$saved_loggers = $options->get_option('logging');
 		$logger_additional_options = $options->get_option('logging-additional');
 
@@ -1884,20 +1991,20 @@ class WP_Optimize {
 			// if options stored in old format then reformat it.
 			if (false == is_numeric($keys[0])) {
 				$_saved_loggers = array();
-				foreach ($saved_loggers as $logger_id => $enabled) {
-					if ($enabled) {
-						$_saved_loggers[] = $logger_id;
+					foreach ($saved_loggers as $logger_id => $enabled) {
+						if ($enabled) {
+							$_saved_loggers[] = $logger_id;
+						}
 					}
-				}
 
-				// fill email with admin.
-				if (array_key_exists('updraft_email_logger', $saved_loggers) && $saved_loggers['updraft_email_logger']) {
-					$logger_additional_options['updraft_email_logger'] = array(
-						get_option('admin_email')
-					);
-				}
+					// fill email with admin.
+					if (array_key_exists('updraft_email_logger', $saved_loggers) && $saved_loggers['updraft_email_logger']) {
+						$logger_additional_options['updraft_email_logger'] = array(
+							get_option('admin_email')
+						);
+					}
 
-				$saved_loggers = $_saved_loggers;
+					$saved_loggers = $_saved_loggers;
 			}
 
 			foreach ($saved_loggers as $i => $logger_id) {
@@ -1915,7 +2022,7 @@ class WP_Optimize {
 						if (array_key_exists($option_name, $options_keys)) {
 							$options_keys[$option_name]++;
 						} else {
-							$options_keys[$option_name] = 0;
+									$options_keys[$option_name] = 0;
 						}
 
 						$option_value = isset($logger_additional_options[$option_name][$options_keys[$option_name]]) ? $logger_additional_options[$option_name][$options_keys[$option_name]] : '';
@@ -2051,9 +2158,14 @@ class WP_Optimize {
 
 	/**
 	 * Output information message for users who have no permissions to run optimizations.
+	 *
+	 * @param string $message Message to display
 	 */
-	public function prevent_run_optimizations_message() {
-		$this->include_template('info-message.php', false, array('message' => __('You have no permissions to run optimizations.', 'wp-optimize')));
+	public function prevent_run_optimizations_message($message = '') {
+		if (empty($message)) {
+			$message = __('You have no permissions to run optimizations.', 'wp-optimize');
+		}
+		$this->include_template('info-message.php', false, array('message' => $message));
 	}
 
 	/**
@@ -2176,13 +2288,13 @@ class WP_Optimize {
 		$val = (int) $val;
 		switch ($last) {
 			case 'g':
-				$val *= 1024;
-				// no break
+			$val *= 1024;
+			// no break
 			case 'm':
-				$val *= 1024;
-				// no break
+			$val *= 1024;
+			// no break
 			case 'k':
-				$val *= 1024;
+			$val *= 1024;
 		}
 
 		return $val;
@@ -2313,6 +2425,7 @@ class WP_Optimize {
 			'wpo_semaphore_%',
 			'_transient_timeout_wpo_%',
 			'_transient_wpo_%',
+			'updraft_lock_wpo_%',
 		);
 
 		$where_parts = array();
@@ -2328,7 +2441,8 @@ class WP_Optimize {
 	 */
 	public function robots_txt($output) {
 		$upload_dir = wp_upload_dir();
-		$output .= "\nDisallow: " . str_replace(site_url(), '', $upload_dir['baseurl']) . "/wpo-plugins-tables-list.json\n";
+		$path = parse_url($upload_dir['baseurl']);
+		$output .= "\nDisallow: " . str_replace($path['scheme'].'://'.$path['host'], '', $upload_dir['baseurl']) . "/wpo-plugins-tables-list.json\n";
 		return $output;
 	}
 }
@@ -2341,7 +2455,7 @@ function wpo_activation_actions() {
 	if (is_multisite() && !is_network_admin()) {
 		deactivate_plugins(plugin_basename(__FILE__));
 		wp_die(__('Only Network Administrator can activate WP-Optimize plugin.', 'wp-optimize').
-			' <a href="'.admin_url('plugins.php').'">'.__('go back', 'wp-optimize').'</a>');
+					' <a href="'.admin_url('plugins.php').'">'.__('go back', 'wp-optimize').'</a>');
 	}
 
 	// On activation, check if last-optimized option exists. If not, add 'newly-activated' option.
@@ -2355,13 +2469,17 @@ function wpo_activation_actions() {
 	WP_Optimize::get_gzip_compression()->restore();
 	WP_Optimize::get_browser_cache()->restore();
 
+	if (!class_exists('Updraft_Tasks_Activation')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-tasks-activation.php');
+	Updraft_Tasks_Activation::init_db();
+	Updraft_Tasks_Activation::reinstall_if_needed();
+
 	// run premium activation actions.
 	if (file_exists(WPO_PLUGIN_MAIN_PATH.'premium.php')) {
-		if (!class_exists('WP_Optimize_Premium')) {
-			include_once(WPO_PLUGIN_MAIN_PATH.'premium.php');
-		}
+	if (!class_exists('WP_Optimize_Premium')) {
+		include_once(WPO_PLUGIN_MAIN_PATH.'premium.php');
+	}
 
-		WP_Optimize_Premium()->plugin_activation_actions();
+	WP_Optimize_Premium()->plugin_activation_actions();
 	}
 }
 

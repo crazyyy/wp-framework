@@ -1,0 +1,38 @@
+/* ==========================================================================
+ # Social share
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+.social-share {
+  margin-top: var(--spacing-m);
+
+  &__title {
+    @include heading(s);
+    margin-bottom: .25rem;
+  }
+
+  &__link {
+    @include transition;
+    display: inline-block;
+    color: var(--color-link);
+    vertical-align: top;
+    line-height: 0;
+    margin: .5rem .5rem 0 0;
+    position: relative;
+    text-decoration: none;
+    .icon {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    &__label {
+      @include visuallyhidden;
+    }
+
+  }
+
+}

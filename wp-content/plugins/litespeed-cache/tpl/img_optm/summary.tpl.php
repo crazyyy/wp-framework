@@ -63,12 +63,12 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 			</h3>
 
 			<p>
-				<?php echo sprintf( __( 'You can request a maximum of %s images at once.', 'litespeed-cache' ), '<strong>' . $allowance . '</strong>' ); ?>
+				<?php echo sprintf( __( 'You can request a maximum of %s images at once.', 'litespeed-cache' ), '<strong>' . intval( $allowance ) . '</strong>' ); ?>
 			</p>
 
 			<?php if ( $wet_limit ) : ?>
 			<p class="litespeed-desc">
-				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the number of images allowed in a single request is limited.' ); ?>
+				<?php echo __( 'To make sure our server can communicate with your server without any issues and everything works fine, for the few first requests the number of images allowed in a single request is limited.', 'litespeed-cache' ); ?>
 				<?php echo __( 'Current limit is', 'litespeed-cache' ) . ': <strong>' . $wet_limit . '</strong>'; ?>
 			</p>
 			<?php endif; ?>
@@ -194,7 +194,7 @@ if ( ! empty( $img_count[ 'img.' . Img_Optm::STATUS_ERR_FETCH ] ) ) {
 							</p>
 							<?php if ( $optm_summary[ 'bk_summary' ][ 'count' ] ) : ?>
 								<p>
-									<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $optm_summary[ 'bk_summary' ][ 'count' ] . '</code>'; ?>
+									<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . intval( $optm_summary[ 'bk_summary' ][ 'count' ] ) . '</code>'; ?>
 								</p>
 								<p>
 									<?php echo __( 'Total', 'litespeed-cache' ) . ': <code>' . Utility::real_size( $optm_summary[ 'bk_summary' ][ 'sum' ] ) . '</code>'; ?>

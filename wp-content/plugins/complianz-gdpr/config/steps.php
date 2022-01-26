@@ -1,7 +1,6 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
-
-$this->steps = apply_filters('cmplz_steps',array(
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+$this->steps = array(
 	'wizard' =>
 		array(
 			STEP_COMPANY => array(
@@ -51,7 +50,7 @@ $this->steps = apply_filters('cmplz_steps',array(
 			),
 
 			STEP_COOKIES => array(
-				"title"    => __( "Cookies", 'complianz-gdpr' ),
+				"title"    => __( "Consent", 'complianz-gdpr' ),
 				"id"       => "cookies",
 				'sections' => array(
 					1 => array(
@@ -71,10 +70,14 @@ $this->steps = apply_filters('cmplz_steps',array(
 								'intro statistics configuration', 'complianz-gdpr' ) .cmplz_read_more("https://complianz.io/statistics-implementation#configuration") .'</p>'
 					),
 					4 => array(
-						'title' => __( 'Integrations', 'complianz-gdpr' ),
+						'title' => __( 'Services', 'complianz-gdpr' ),
+					),
+					5 => array(
+						'title' => __( 'Plugins', 'complianz-gdpr' ),
+						'intro' => __('We have detected the below plugins.', 'complianz-gdpr' ).'&nbsp;'.__('We have enabled the integrations and possible placeholders.', 'complianz-gdpr' ).'&nbsp;'.__('To change these settings, please visit the script center.','complianz-gdpr'),
 					),
 
-					5 => array(
+					6 => array(
 						'title' => __( 'Cookie descriptions', 'complianz-gdpr' ),
 						'intro' => '<p>'
 						           .__( 'Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by cookiedatabase.org.','complianz-gdpr')
@@ -84,7 +87,7 @@ $this->steps = apply_filters('cmplz_steps',array(
 						           .'</p>',
 
 					),
-					6 => array(
+					7 => array(
 						'title' => __( 'Service descriptions', 'complianz-gdpr' ),
 						'intro' => '<p>'._x( 'Below services use cookies on your website to add functionality. You can use cookiedatabase.org to synchronize information or edit the service if needed. Unknown services will be moderated and added by cookiedatabase.org as soon as possible.',
 							'intro used cookies', 'complianz-gdpr' ).'</p>'
@@ -108,6 +111,7 @@ $this->steps = apply_filters('cmplz_steps',array(
 					),
 					2 => array(
 						'title' => __( 'Link to menu', 'complianz-gdpr' ),
+						'intro' => __( 'It\'s possible to use region redirect when GEO IP is enabled, and you have multiple policies and statements.','complianz-gdpr' ).cmplz_read_more('https://complianz.io/how-to-redirect-your-policies-based-on-region/'),
 					),
 				),
 
@@ -116,4 +120,4 @@ $this->steps = apply_filters('cmplz_steps',array(
 				"title" => __( "Finish", 'complianz-gdpr' ),
 			),
 		),
-));
+);

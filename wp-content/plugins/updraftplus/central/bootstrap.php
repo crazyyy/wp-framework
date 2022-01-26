@@ -53,11 +53,78 @@ class UpdraftCentral_Main {
 		
 		// Remote control keys
 		// These are different from the remote send keys, which are set up in the Migrator add-on
-		$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys');
+		$our_keys = $this->get_central_localkeys();
+		
 		if (is_array($our_keys) && !empty($our_keys)) {
 			new UpdraftCentral_Listener($our_keys, $command_classes);
 		}
 
+	}
+	
+	/**
+	 * Retrieves current clean url for anchor link where href attribute value is not url (for ex. #div) or empty
+	 *
+	 * @return String - current clean url
+	 */
+	public function get_current_clean_url() {
+	
+		// Within an UpdraftCentral context, there should be no prefix on the anchor link
+		if (defined('UPDRAFTCENTRAL_COMMAND') && UPDRAFTCENTRAL_COMMAND || defined('WP_CLI') && WP_CLI) return '';
+		
+		if (defined('DOING_AJAX') && DOING_AJAX && !empty($_SERVER['HTTP_REFERER'])) {
+			$current_url = $_SERVER['HTTP_REFERER'];
+		} else {
+			$url_prefix = is_ssl() ? 'https' : 'http';
+			$host = empty($_SERVER['HTTP_HOST']) ? parse_url(network_site_url(),  PHP_URL_HOST) : $_SERVER['HTTP_HOST'];
+			$current_url = $url_prefix."://".$host.$_SERVER['REQUEST_URI'];
+		}
+		$remove_query_args = array('state', 'action', 'oauth_verifier', 'nonce', 'updraftplus_instance', 'access_token', 'user_id', 'updraftplus_googledriveauth');
+
+		$query_string = remove_query_arg($remove_query_args, $current_url);
+		return function_exists('wp_unslash') ? wp_unslash($query_string) : stripslashes_deep($query_string);
+	}
+	
+	/**
+	 * Get the WordPress version
+	 *
+	 * @return String - the version
+	 */
+	public function get_wordpress_version() {
+		static $got_wp_version = false;
+		if (!$got_wp_version) {
+			@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$got_wp_version = $wp_version;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+		}
+		return $got_wp_version;
+	}
+
+	/**
+	 * Retrieves the UpdraftCentral generated keys
+	 *
+	 * @param Mixed $default default value to return when option is not found
+	 *
+	 * @return Mixed
+	 */
+	public function get_central_localkeys($default = null) {
+		$option = 'updraft_central_localkeys';
+
+		$ret = get_option($option, $default);
+		return apply_filters('updraftcentral_get_option', $ret, $option, $default);
+	}
+
+	/**
+	 * Updates the UpdraftCentral's keys
+	 *
+	 * @param string $value	    Specify option value
+	 * @param bool   $use_cache Whether or not to use the WP options cache
+	 * @param string $autoload	Whether to autoload (only takes effect on a change of value)
+	 *
+	 * @return bool
+	 */
+	public function update_central_localkeys($value, $use_cache = true, $autoload = 'yes') {
+		$option = 'updraft_central_localkeys';
+
+		return update_option($option, apply_filters('updraftcentral_update_option', $value, $option, $use_cache), $autoload);
 	}
 	
 	/**
@@ -98,7 +165,7 @@ class UpdraftCentral_Main {
 			}
 		}
 		
-		echo '</p><p><a href="'.UpdraftPlus::get_current_clean_url().'" onclick="window.close();">'.$updraftcentral_host_plugin->retrieve_show_message('close').'</a></p>';
+		echo '</p><p><a href="'.$this->get_current_clean_url().'" onclick="window.close();">'.$updraftcentral_host_plugin->retrieve_show_message('close').'</a></p>';
 		die;
 	}
 	
@@ -116,8 +183,8 @@ class UpdraftCentral_Main {
 		if (!wp_verify_nonce($_GET['_wpnonce'], 'updraftcentral_receivepublickey')) return array('responsetype' => 'error', 'code' => 'nonce_failure');
 		
 		$updraft_key_index = $_GET['updraft_key_index'];
+		$our_keys = $this->get_central_localkeys();
 
-		$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys');
 		if (!is_array($our_keys)) $our_keys = array();
 		
 		if (!isset($our_keys[$updraft_key_index])) {
@@ -129,7 +196,7 @@ class UpdraftCentral_Main {
 		}
 		
 		$our_keys[$updraft_key_index]['publickey_remote'] = base64_decode(stripslashes($_GET['public_key']));
-		UpdraftPlus_Options::update_updraft_option('updraft_central_localkeys', $our_keys, true, 'no');
+		$this->update_central_localkeys($our_keys, true, 'no');
 		
 		return array('responsetype' => 'ok', 'code' => 'ok');
 	}
@@ -176,11 +243,12 @@ class UpdraftCentral_Main {
 	 * @return array which contains deleted flag and key table. If error, Returns array which contains fatal_error flag and fatal_error_message
 	 */
 	public function delete_key($key_id) {
-		$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys');
+		$our_keys = $this->get_central_localkeys();
+
 		if (!is_array($our_keys)) $our_keys = array();
 		if (isset($our_keys[$key_id])) {
 			unset($our_keys[$key_id]);
-			UpdraftPlus_Options::update_updraft_option('updraft_central_localkeys', $our_keys);
+			$this->update_central_localkeys($our_keys);
 		}
 		return array('deleted' => 1, 'keys_table' => $this->get_keys_table());
 	}
@@ -293,11 +361,23 @@ class UpdraftCentral_Main {
 		return $index.'.central.updraftplus.com';
 	}
 	
-	private function create_remote_control_key($index = false, $extra_info = array(), $post_it = false) {
-
-		global $updraftplus, $updraftcentral_host_plugin;
+	/**
+	 * Gets an RPC object, and sets some defaults on it that we always want
+	 *
+	 * @param  string $indicator_name indicator name
+	 * @return array
+	 */
+	public function get_udrpc($indicator_name = 'migrator.updraftplus.com') {
+		if (!class_exists('UpdraftPlus_Remote_Communications')) include_once(dirname(__FILE__).'/classes/class-udrpc.php');
+		$ud_rpc = new UpdraftPlus_Remote_Communications($indicator_name);
+		$ud_rpc->set_can_generate(true);
+		return $ud_rpc;
+	}
 	
-		$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys');
+	private function create_remote_control_key($index = false, $extra_info = array(), $post_it = false) {
+		global $updraftcentral_host_plugin;
+
+		$our_keys = $this->get_central_localkeys();
 		if (!is_array($our_keys)) $our_keys = array();
 		
 		if (false === $index) {
@@ -315,8 +395,7 @@ class UpdraftCentral_Main {
 		}
 
 		$indicator_name = $this->indicator_name_from_index($name_hash);
-
-		$ud_rpc = $updraftplus->get_udrpc($indicator_name);
+		$ud_rpc = $this->get_udrpc($indicator_name);
 
 		if ('__updraftpluscom' == $post_it) {
 			$post_it = defined('UPDRAFTPLUS_OVERRIDE_UDCOM_DESTINATION') ? UPDRAFTPLUS_OVERRIDE_UDCOM_DESTINATION : 'https://updraftplus.com/?updraftcentral_action=receive_key';
@@ -327,7 +406,7 @@ class UpdraftCentral_Main {
 		
 		// Normally, key generation takes seconds, even on a slow machine. However, some Windows machines appear to have a setup in which it takes a minute or more. And then, if you're on a double-localhost setup on slow hardware - even worse. It doesn't hurt to just raise the maximum execution time.
 		
-		if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTCENTRAL_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		
 		$key_size = (empty($extra_info['key_size']) || !is_numeric($extra_info['key_size']) || $extra_info['key_size'] < 512) ? 2048 : (int) $extra_info['key_size'];
 
@@ -361,14 +440,14 @@ class UpdraftCentral_Main {
 			
 				// This option allows the key to be sent to the other side via a known-secure channel (e.g. http over SSL), rather than potentially allowing it to travel over an unencrypted channel (e.g. http back to the user's browser). As such, if specified, it is compulsory for it to work.
 				
-				$updraftplus->register_wp_http_option_hooks();
+				$updraftcentral_host_plugin->register_wp_http_option_hooks();
 
 				$sent_key = wp_remote_post(
 					$post_it,
 					$post_options
 				);
 				
-				$updraftplus->register_wp_http_option_hooks(false);
+				$updraftcentral_host_plugin->register_wp_http_option_hooks(false);
 				
 				if (is_wp_error($sent_key) || empty($sent_key)) {
 					$err_msg = sprintf($updraftcentral_host_plugin->retrieve_show_message('attempt_to_register_failed'), (string) $post_it_description);
@@ -421,7 +500,7 @@ class UpdraftCentral_Main {
 			if (!empty($response) && is_array($response) && !empty($response['key_public'])) {
 				$our_keys[$name_hash]['publickey_remote'] = $response['key_public'];
 			}
-			UpdraftPlus_Options::update_updraft_option('updraft_central_localkeys', $our_keys, true, 'no');
+			$this->update_central_localkeys($our_keys, true, 'no');
 
 			return array(
 				'bundle' => $local_bundle,
@@ -443,7 +522,7 @@ class UpdraftCentral_Main {
 	
 		$ret = '';
 		
-		$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys');
+		$our_keys = $this->get_central_localkeys();
 		if (!is_array($our_keys)) $our_keys = array();
 
 		if (empty($our_keys)) {
@@ -489,7 +568,7 @@ class UpdraftCentral_Main {
 				$ret .= '<br>';
 			}
 			
-			$ret .= '<a href="'.UpdraftPlus::get_current_clean_url().'" data-key_id="'.esc_attr($i).'" class="updraftcentral_key_delete">'.$updraftcentral_host_plugin->retrieve_show_message('delete').'</a></td></tr>';
+			$ret .= '<a href="'.$this->get_current_clean_url().'" data-key_id="'.esc_attr($i).'" class="updraftcentral_key_delete">'.$updraftcentral_host_plugin->retrieve_show_message('delete').'</a></td></tr>';
 		}
 		
 		
@@ -497,7 +576,7 @@ class UpdraftCentral_Main {
 		?>
 		<div id="updraftcentral_keys_content" style="margin: 10px 0;">
 			<?php if (!empty($our_keys)) { ?>
-				<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" class="updraftcentral_keys_show hidden-in-updraftcentral"><?php printf($updraftcentral_host_plugin->retrieve_show_message('manage_keys'), count($our_keys)); ?></a>
+				<a href="<?php echo $this->get_current_clean_url(); ?>" class="updraftcentral_keys_show hidden-in-updraftcentral"><?php printf($updraftcentral_host_plugin->retrieve_show_message('manage_keys'), count($our_keys)); ?></a>
 			<?php } ?>
 			<table id="updraftcentral_keys_table">
 				<thead>
@@ -582,7 +661,7 @@ class UpdraftCentral_Main {
 								<label>
 									<input id="updraftcentral_keycreate_mothership_firewalled" type="checkbox">
 									<?php $updraftcentral_host_plugin->retrieve_show_message('use_alternative_method', true); ?>
-									<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" id="updraftcentral_keycreate_altmethod_moreinfo_get"><?php $updraftcentral_host_plugin->retrieve_show_message('more_information', true); ?></a>
+									<a href="<?php echo $this->get_current_clean_url(); ?>" id="updraftcentral_keycreate_altmethod_moreinfo_get"><?php $updraftcentral_host_plugin->retrieve_show_message('more_information', true); ?></a>
 									<p id="updraftcentral_keycreate_altmethod_moreinfo" style="display:none; border: 1px dotted; padding: 3px; margin: 2px 10px 2px 24px;">
 										<em><?php $updraftcentral_host_plugin->retrieve_show_message('this_is_useful', true);?></em>
 									</p>
@@ -619,7 +698,7 @@ class UpdraftCentral_Main {
 		ob_start();
 		?>
 			<div id="updraftcentral_view_log_container" style="margin: 10px 0;">
-				<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" id="updraftcentral_view_log"><?php $updraftcentral_host_plugin->retrieve_show_message('view_log_events', true); ?>...</a><br>
+				<a href="<?php echo $this->get_current_clean_url(); ?>" id="updraftcentral_view_log"><?php $updraftcentral_host_plugin->retrieve_show_message('view_log_events', true); ?>...</a><br>
 				<pre id="updraftcentral_view_log_contents" style="min-height: 110px; padding: 0 4px;">
 				</pre>
 			</div>

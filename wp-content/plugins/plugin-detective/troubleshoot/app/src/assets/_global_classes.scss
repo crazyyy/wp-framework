@@ -1,0 +1,30 @@
+.loading {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	left: 0;
+	min-height: 100vh;
+	position: absolute;
+	text-align: center;
+	top: 0;
+	width: 100%;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 500ms;
+}
+
+.fade-enter, .fade-leave-to  {
+  opacity: 0;
+}
+
+#app {
+	min-height: 100vh;
+	position: relative;
+	& > .fade-enter-active,
+	& > .fade-leave-active {
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+}

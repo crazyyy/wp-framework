@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 if ( ! class_exists( "cmplz_company" ) ) {
 	class cmplz_company {
@@ -78,7 +78,7 @@ if ( ! class_exists( "cmplz_company" ) ) {
 		public function get_default_consenttype() {
 			//check default region
 			$region = $this->get_default_region();
-			return apply_filters('cmplz_default_consenttype',cmplz_get_consenttype_for_region( $region ));
+			return apply_filters('cmplz_default_consenttype', cmplz_get_consenttype_for_region( $region ));
 		}
 
 		/**

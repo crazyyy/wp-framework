@@ -1,0 +1,213 @@
+/* ==========================================================================
+ # Media-text block
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+/* Variables
+----------------------------------------------- */
+
+$breakpoint-media-text-mobile:   max-width 919px;
+$breakpoint-media-text-desktop:  min-width 920px;
+
+:root {
+  --color-media-text:         var(--color-text);
+  --color-media-text-bg:      transparent;
+  --color-media-text-shadow:  none;
+}
+
+/* Block
+----------------------------------------------- */
+
+.wp-block-acf-media-text {
+
+  &.alignwide {
+    & + .wp-block-acf-media-text.alignwide,
+    & + .wp-block-acf-background.alignwide {
+      @include negative-spacing-m(margin-top);
+    }
+    @include breakpoint($breakpoint-media-text-mobile) {
+      margin-left: calc(-1 * var(--spacing-m));
+      margin-right: calc(-1 * var(--spacing-m));
+    }
+    @include breakpoint($breakpoint-media-text-desktop) {
+      box-shadow: var(--color-media-text-shadow);
+    }
+  }
+
+  &.alignfull {
+
+    & + .wp-block-acf-media-text.alignfull,
+    & + .wp-block-acf-background.alignfull {
+      @include negative-spacing-l(margin-top);
+    }
+
+    .media-text {
+
+      &__content {
+        @include breakpoint($breakpoint-media-text-desktop) {
+          justify-content: center;
+        }
+        &__inner {
+          max-width: calc(var(--width-l) / 2);
+          @include breakpoint($breakpoint-xl) {
+            max-width: calc(var(--width-xl) / 2);
+          }
+        }
+      }
+
+      &__media {
+        @include breakpoint($breakpoint-media-text-desktop) {
+          width: 50%;
+        }
+      }
+
+    }
+
+  }
+
+}
+
+/* Front-end and back-end
+----------------------------------------------- */
+
+.media-text {
+  display: flex;
+  background: var(--color-media-text-bg);
+
+  &--align-top {
+    align-items: flex-start;
+  }
+  &--align-middle {
+    align-items: center;
+  }
+  &--align-bottom {
+    align-items: flex-end;
+  }
+
+  // alignment right
+  @include breakpoint($breakpoint-m) {
+    &--position-right {
+      .media-text__media {
+        order: 1;
+      }
+    }
+  }
+
+  &__media {
+    align-self: stretch;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    @include breakpoint($breakpoint-m) {
+      width: 50%;
+      flex-shrink: 0;
+    }
+
+    img {
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+    }
+    &__video,
+    &__image {
+      width: 100%;
+      line-height: 0;
+    }
+    video {
+      max-width: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__content {
+    padding: 1.75rem var(--spacing-m);
+    width: 100%;
+    z-index: 1;
+    display: flex;
+    @include breakpoint($breakpoint-m) {
+      padding: 3rem;
+      width: 50%;
+    }
+    &__inner {
+      @include child-margin-reset;
+      width: 100%;
+      color: var(--color-media-text);
+      .is-dark-mode & {
+        color: var(--color-white);
+      }
+    }
+  }
+}
+
+/* Only front-end
+----------------------------------------------- */
+
+
+.blocks .media-text {
+  display: flex;
+  flex-wrap: wrap;
+
+  // entrance animation
+  &.has-viewport-effect {
+    &.is-in-viewport {
+    }
+  }
+
+  &__content {
+    & > * {
+      max-width: 100%;
+      word-break: break-word;
+    }
+  }
+
+  &__media {
+
+  }
+
+}
+
+/* Only back-end
+----------------------------------------------- */
+
+.block-editor [data-type="acf/media-text"] {
+  [data-type="core/paragraph"] {
+    clear: both;
+  }
+  [data-type="acf/buttons"] {
+    clear: both;
+    .is-block-content {
+      width: 100%;
+      clear: both;
+    }
+  }
+  .media-text--no-media {
+    .media-text__media {
+      // placeholder image
+      background:
+        linear-gradient(to top left,
+            rgba(0,0,0,0) 0%,
+            rgba(0,0,0,0) calc(50% - 1px),
+            rgba(0,0,0,.33) 50%,
+            rgba(0,0,0,0) calc(50% + 1px),
+            rgba(0,0,0,0) 100%),
+        linear-gradient(to top right,
+            rgba(0,0,0,0) 0%,
+            rgba(0,0,0,0) calc(50% - 1px),
+            rgba(0,0,0,.33) 50%,
+            rgba(0,0,0,0) calc(50% + 1px),
+            rgba(0,0,0,0) 100%);
+      background-color: rgba(0, 0, 0, .075);
+      &__image {
+        width: 100%;
+        padding-bottom: 62.5%;
+      }
+    }
+  }
+}

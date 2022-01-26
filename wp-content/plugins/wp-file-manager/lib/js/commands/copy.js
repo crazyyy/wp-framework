@@ -5,7 +5,7 @@
  * @type  elFinder.command
  * @author  Dmitry (dio) Levashov
  */
-elFinder.prototype.commands.copy = function() {
+ elFinder.prototype.commands.copy = function() {
 	"use strict";
 	this.shortcuts = [{
 		pattern     : 'ctrl+c ctrl+insert'
@@ -13,9 +13,16 @@ elFinder.prototype.commands.copy = function() {
 	
 	this.getstate = function(select) {
 		var sel = this.files(select),
-			cnt = sel.length;
+			cnt = sel.length,
+			filter = function(files) {
+				var fres = true;
+				return jQuery.grep(files, function(f) {
+					fres = fres && f.read ? true : false;
+					return fres;
+				});
+			};
 
-		return cnt && jQuery.grep(sel, function(f) { return f.read ? true : false; }).length == cnt ? 0 : -1;
+		return cnt && filter(sel).length == cnt ? 0 : -1;
 	};
 	
 	this.exec = function(hashes) {

@@ -1,5 +1,17 @@
 jQuery(function($) {
 	WP_Optimize_Smush = WP_Optimize_Smush();
+
+	$('#wpo_smush_details').on('click', '.wpo-collapsible', toggle_smush_details);
+	$('.column-wpo_smush').on('click', '.wpo-collapsible', toggle_smush_details);
+
+	function toggle_smush_details() {
+		$(this).toggleClass('opened');
+		if ($(this).hasClass('opened')) {
+			$(this).text(wposmush.less);
+		} else {
+			$(this).text(wposmush.more);
+		}
+	}
 });
 
 var WP_Optimize_Smush = function() {
@@ -42,8 +54,7 @@ var WP_Optimize_Smush = function() {
 	/**
 	 * Handle Image Selection
 	 */
-	var last_clicked_image_id = null;
-
+	
 	smush_images_grid.on('click', '.thumbnail', function (e) {
 		$(this).closest('input[type="checkbox"]').prop('checked', true);
 	});
@@ -87,27 +98,28 @@ var WP_Optimize_Smush = function() {
 		update_view_available_options();
 	}
 
-	smush_images_grid.on('change', 'input[type="checkbox"]', function() {
-		var clicked_image_id = parseInt($(this).val());
 
-		if (null === last_clicked_image_id) {
-			last_clicked_image_id = $(this).val();
-		}
-
-		if (true === ctrl_shift_on_image_held) {
-			if (clicked_image_id > last_clicked_image_id) {
-				for (var i = last_clicked_image_id; i <= clicked_image_id; i++) {
-					$('#wpo_smush_images_grid input[type="checkbox"][value="' + i + '"]').prop('checked', true);
-				}
-			} else {
-				for (var i = last_clicked_image_id; i >= clicked_image_id; i--) {
-					$('#wpo_smush_images_grid input[type="checkbox"][value="' + i + '"]').prop('checked', true);
-				}
+	var lastclick = null;
+	smush_images_grid.on('click' , '.wpo_smush_image' , function(e) {
+		var grid_input = $('#wpo_smush_images_grid input[type="checkbox"]');
+		var input = $(this).find('.wpo_smush_image__input');
+		var input_val = (!(input.prop('checked')));
+			if (!lastclick) {
+				$(this).find('.wpo_smush_image__input').prop('checked',input_val);
+				lastclick = input;
 			}
-		} else {
-			last_clicked_image_id = clicked_image_id;
+		if (true === ctrl_shift_on_image_held) {
+			var start = grid_input.index(input);
+			var end = grid_input.index(lastclick);
+			if (start === end) {
+				grid_input.slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', input_val);
+			} else {
+			if (true === lastclick.prop('checked')) {
+				grid_input.slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', input_val);
+			}
+			}
 		}
-
+		lastclick = input;
 		update_smush_action_buttons_state();
 	});
 
@@ -280,6 +292,7 @@ var WP_Optimize_Smush = function() {
 	 */
 	smush_images_select_all_btn.off().on('click', function() {
 		$('#wpo_smush_images_grid input[type="checkbox"]').prop("checked", true);
+		lastclick = null;
 		update_smush_action_buttons_state();
 	});
 
@@ -289,7 +302,7 @@ var WP_Optimize_Smush = function() {
 	 */
 	smush_images_select_none_btn.off().on('click', function() {
 		$('#wpo_smush_images_grid input[type="checkbox"]').prop("checked", false);
-		last_clicked_image_id = null;
+		lastclick = null;
 		update_smush_action_buttons_state();
 	});
 
@@ -312,7 +325,6 @@ var WP_Optimize_Smush = function() {
 			$("#log-panel").html("<pre>" + resp + "</pre>");
 			download_link = ajaxurl + "?action=updraft_smush_ajax&subaction=get_smush_logs&nonce=" + wposmush.smush_ajax_nonce;
 			$("#smush-log-modal a").attr('href', download_link);
-			console.log(download_link);
 		}, false);
 	});
 
@@ -417,6 +429,7 @@ var WP_Optimize_Smush = function() {
 			image_quality = $('#custom_compression_slider').val();
 			lossy_compression = image_quality < 100 ? true : false;
 		} else {
+			// The '90' here has to be kept in sync with WP_Optimize::admin_page_wpo_images_smush()
 			image_quality = $('#enable_lossy_compression').is(":checked") ? 90 : 100;
 			lossy_compression = image_quality < 100 ? true : false;
 		}
@@ -429,7 +442,6 @@ var WP_Optimize_Smush = function() {
 			'preserve_exif': $('#smush_exif_' + image.attachment_id).is(":checked")
 		}
 
-		console.log("Compressing Image : " + image.attachment_id);
 		data = { 'server':  $("input[name='compression_server_" + $(this).attr('id').substring(15) + "']:checked").val() };
 		update_view_modal_message(wposmush.server_check);
 		smush_manager_send_command('check_server_status', data, function(resp) {
@@ -456,8 +468,6 @@ var WP_Optimize_Smush = function() {
 		image_id = clicked_image.data('id');
 
 		if (!image_id || !blog_id) return;
-
-		console.log("Restoring Image : " + image_id);
 		restore_selected_image(blog_id, image_id);
 	});
 
@@ -529,7 +539,7 @@ var WP_Optimize_Smush = function() {
 		$(this).toggleClass('opened');
 	});
 
-	$('.wpo-fieldgroup .autosmush input, .wpo-fieldgroup .compression_level, .wpo-fieldgroup .image_options, #smush-show-metabox').on('change', function(e) {
+	$('.wpo-fieldgroup .autosmush input, .wpo-fieldgroup .compression_level, .wpo-fieldgroup .image_options, #smush-show-metabox, #enable_webp_conversion').on('change', function(e) {
 		save_options();
 	});
 
@@ -556,16 +566,13 @@ var WP_Optimize_Smush = function() {
 
 		var use_cache = (typeof use_cache === 'undefined') ? true : use_cache;
 		var data = { 'use_cache': use_cache };
-		
-		console.log('Loading information about uncompressed images.');
-		
+	
 		smush_images_optimization_message.html('...');
 		smush_images_pending_tasks_container.hide();
 
 		disable_image_optimization_controls(true);
 		
 		smush_manager_send_command('get_ui_update', data, function(resp) {
-			console.log('Information about uncompressed images loaded.');
 			handle_response_from_smush_manager(resp, update_view_show_uncompressed_images);
 			update_view_available_options();
 			disable_image_optimization_controls(false);
@@ -620,6 +627,7 @@ var WP_Optimize_Smush = function() {
 			image_quality = $('#custom_compression_slider').val();
 			lossy_compression = image_quality < 100 ? true : false;
 		} else {
+			// The '90' here has to be kept in sync with WP_Optimize::admin_page_wpo_images_smush()
 			image_quality = $('#enable_lossy_compression').is(":checked") ? 90 : 100;
 			lossy_compression = image_quality < 100 ? true : false;
 		}
@@ -633,7 +641,8 @@ var WP_Optimize_Smush = function() {
 			'back_up_delete_after_days': $('#smush-backup-delete-days').val(),
 			'preserve_exif': $('#smush-preserve-exif').is(":checked"),
 			'autosmush': $('#smush-automatically').is(":checked"),
-			'show_smush_metabox': $('#smush-show-metabox').is(":checked")
+			'show_smush_metabox': $('#smush-show-metabox').is(":checked"),
+			'webp_conversion': $('#enable_webp_conversion').is(":checked")
 		}
 
 		smush_manager_send_command('update_smush_options', smush_options, function(resp) {
@@ -981,7 +990,7 @@ var WP_Optimize_Smush = function() {
 
 			$('.wpo-toggle-advanced-options.wpo_smush_single_image').removeClass('opened');
 
-			update_view_singe_image_compress(resp.operation, resp.summary, resp.restore_possible);
+			update_view_singe_image_compress(resp.operation, resp.summary, resp.restore_possible, resp);
 
 			// here we store data from the the response
 			// this information will be used to show correct UI elements
@@ -1015,15 +1024,22 @@ var WP_Optimize_Smush = function() {
 	 * @param {string}  operation
 	 * @param {string}  summary
 	 * @param {boolean} restore_possible
+	 * @param {object}  smush_image_data
 	 */
-	function update_view_singe_image_compress(operation, summary, restore_possible) {
+	function update_view_singe_image_compress(operation, summary, restore_possible, smush_image_data) {
 		var wrapper = $("#smush_info").closest('#smush-metabox-inside-wrapper');
 
 		if ('compress' == operation) {
 			$(".wpo_smush_single_image").hide();
 			$(".wpo_restore_single_image").show();
-
-			$("#smush_info").text(summary);
+			
+			if (smush_image_data && smush_image_data.hasOwnProperty('sizes-info')) {
+				$("#smush_info").text(summary);
+				$("#wpo_smush_details").html(smush_image_data['sizes-info']);
+			} else {
+				$("#smush_info").text(summary);
+				$("#wpo_smush_details").text('').hide();
+			}
 
 			$('.wpo_smush_mark_single_image').hide();
 
@@ -1053,7 +1069,7 @@ var WP_Optimize_Smush = function() {
 			var smush_image_data = smush_affected_images[image_data.blog][image_data.id];
 
 			if ('compress' == smush_image_data.operation) {
-				update_view_singe_image_compress(smush_image_data.operation, smush_image_data.summary, smush_image_data.restore_possible);
+				update_view_singe_image_compress(smush_image_data.operation, smush_image_data.summary, smush_image_data.restore_possible, smush_image_data);
 			} else {
 				update_view_singe_image_compress(smush_image_data.operation);
 			}
@@ -1190,7 +1206,6 @@ function wpo_parse_json(json_mix_str) {
 		var json_str = json_mix_str.slice(json_start_pos, json_last_pos + 1);
 		try {
 			var parsed = JSON.parse(json_str);
-			console.log("WPO: JSON re-parse successful");
 			return parsed;
 		} catch (e) {
 			console.log("WPO: Exception when trying to parse JSON (2) - will attempt to fix/re-parse based upon bracket counting");
@@ -1222,7 +1237,7 @@ function wpo_parse_json(json_mix_str) {
 
 			try {
 				var parsed = JSON.parse(json_mix_str.substring(json_start_pos, cursor));
-				console.log('WPO: JSON re-parse successful');
+				// console.log('WPO: JSON re-parse successful');
 				return parsed;
 			} catch (e) {
 				// Throw it again, so that our function works just like JSON.parse() in its behaviour.

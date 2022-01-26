@@ -17,10 +17,7 @@ class Optimize extends Base {
 
 	private $content;
 	private $content_ori;
-	private $http2_headers = array();
 
-	private $cfg_http2_css;
-	private $cfg_http2_js;
 	private $cfg_css_min;
 	private $cfg_css_comb;
 	private $cfg_js_min;
@@ -35,6 +32,7 @@ class Optimize extends Base {
 	private $dns_prefetch;
 	private $_ggfonts_urls = array();
 	private $_ccss;
+	private $_ucss = false;
 
 	private $__optimizer;
 
@@ -43,6 +41,7 @@ class Optimize extends Base {
 
 	private static $_var_i = 0;
 	private $_var_preserve_js = array();
+	private $_request_url;
 
 	private $i2 = 0;
 
@@ -65,7 +64,11 @@ class Optimize extends Base {
 		$this->cfg_css_async = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_ASYNC );
 		if ( $this->cfg_css_async ) {
 			if ( ! $this->conf( self::O_API_KEY ) ) {
-				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to lack of domain key' );
+				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to missing domain key' );
+				$this->cfg_css_async = false;
+			}
+			if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_UCSS ) ) && $this->conf( self::O_OPTM_UCSS_INLINE ) ) {
+				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to UCSS Inline' );
 				$this->cfg_css_async = false;
 			}
 		}
@@ -236,8 +239,9 @@ class Optimize extends Base {
 	 * @access private
 	 */
 	private function _optimize() {
-		$this->cfg_http2_css =  defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_HTTP2 );
-		$this->cfg_http2_js = ! defined( 'LITESPEED_GUEST_OPTM' ) && $this->conf( self::O_OPTM_JS_HTTP2 );
+		global $wp;
+		$this->_request_url = home_url( $wp->request );
+
 		$this->cfg_css_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_MIN );
 		$this->cfg_css_comb = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_CSS_COMB );
 		$this->cfg_js_min = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_JS_MIN );
@@ -257,38 +261,54 @@ class Optimize extends Base {
 				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to CCSS not generated yet' );
 				$this->cfg_css_async = false;
 			}
+			else if ( strpos( $this->_ccss, '<style id="litespeed-ccss" data-error' ) === 0 ) {
+				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to CCSS failed to generate' );
+				$this->cfg_css_async = false;
+			}
 		}
 
 		do_action( 'litespeed_optm' );
 
 		// Parse css from content
 		$src_list = false;
-		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
+		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display ) {
 			add_filter( 'litespeed_optimize_css_excludes', array( $this->cls( 'Data' ), 'load_css_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_css();
 		}
 
 		// css optimizer
-		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css ) {
+		if ( $this->cfg_css_min || $this->cfg_css_comb ) {
 
 			if ( $src_list ) {
 				// IF combine
 				if ( $this->cfg_css_comb ) {
-					$url = $this->_build_hash_url( $src_list );
-					if ( $url ) {
-						// Handle css async load
-						if ( $this->cfg_css_async ) {
-							$this->html_head .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
-						}
-						else {
-							$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />';// use 2 as combined
-						}
+					// Check if has inline UCSS enabled or not
+					if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_UCSS ) ) && $this->conf( self::O_OPTM_UCSS_INLINE ) ) {
+						$filename = $this->cls( 'CSS' )->load_ucss( $this->_request_url, true );
+						if ( $filename ) {
+							$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
+							$this->_ucss = File::read( LITESPEED_STATIC_DIR . $filepath_prefix . $filename );
 
-						// Move all css to top
-						$this->content = str_replace( $html_list, '', $this->content );
+							// Drop all css
+							$this->content = str_replace( $html_list, '', $this->content );
+						}
+					}
 
-						// Add to HTTP2
-						$this->append_http2( $url );
+					if ( ! $this->_ucss ) {
+						$url = $this->_build_hash_url( $src_list );
+
+						if ( $url ) {
+							// Handle css async load
+							if ( $this->cfg_css_async ) {
+								$this->html_head .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
+							}
+							else {
+								$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />';// use 2 as combined
+							}
+
+							// Move all css to top
+							$this->content = str_replace( $html_list, '', $this->content );
+						}
 					}
 				}
 				// Only minify
@@ -302,7 +322,6 @@ class Optimize extends Base {
 						if ( ! empty( $src_info[ 'inl' ] ) ) {
 							continue;
 						}
-						$this->append_http2( $src_info[ 'src' ] );
 					}
 				}
 			}
@@ -320,7 +339,7 @@ class Optimize extends Base {
 
 		// Parse js from buffer as needed
 		$src_list = false;
-		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
+		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_js_defer ) {
 			add_filter( 'litespeed_optimize_js_excludes', array( $this->cls( 'Data' ), 'load_js_exc' ) );
 			list( $src_list, $html_list ) = $this->_parse_js();
 		}
@@ -332,9 +351,6 @@ class Optimize extends Base {
 				$url = $this->_build_hash_url( $src_list, 'js' );
 				if ( $url ) {
 					$this->html_foot .= $this->_build_js_tag( $url );
-
-					// Add to HTTP2
-					$this->append_http2( $url, 'js' );
 
 					// Will move all JS to bottom combined one
 					$this->content = str_replace( $html_list, '', $this->content );
@@ -366,18 +382,15 @@ class Optimize extends Base {
 								$this->content = str_replace( $html_list[ $k ], $deferred, $this->content );
 							}
 						}
-						// HTTP2 push
-						if ( $this->cfg_http2_js ) {
-							$this->append_http2( $src_info[ 'src' ], 'js' );
-						}
 					}
 				}
 			}
 		}
 
 		// Append JS inline var for preserved ESI
+		// Shouldn't give any optm (defer/delay) @since 4.4
 		if ( $this->_var_preserve_js ) {
-			$this->html_head .= $this->_build_js_inline( 'var ' . implode( ',', $this->_var_preserve_js ) . ';' );
+			$this->html_head .= '<script>var ' . implode( ',', $this->_var_preserve_js ) . ';</script>';
 			Debug2::debug2( '[Optm] Inline JS defer vars', $this->_var_preserve_js );
 		}
 
@@ -390,7 +403,6 @@ class Optimize extends Base {
 			else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC;
 				$this->html_head .= $this->_build_js_tag( $css_async_lib_url, 'litespeed-css-async-lib' ); // Don't exclude it from defer for now
-				$this->append_http2( $css_async_lib_url, 'js' ); // async lib will be http/2 pushed always
 			}
 		}
 
@@ -416,6 +428,11 @@ class Optimize extends Base {
 			$this->html_head = $this->cls( 'CSS' )->prepare_html_lazy() . $this->html_head;
 		}
 
+		// Maybe prepend inline UCSS
+		if ( $this->_ucss ) {
+			$this->html_head = '<style id="litespeed-ucss">' . $this->_ucss . '</style>' . $this->html_head;
+		}
+
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async && $this->_ccss ) {
 			$this->html_head = $this->_ccss . $this->html_head;
@@ -424,12 +441,17 @@ class Optimize extends Base {
 		// Replace html head part
 		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head );
 		if ( $this->html_head ) {
-			// Put header content to be after charset
-			if ( strpos( $this->content, '<meta charset' ) !== false ) {
-				$this->content = preg_replace( '#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head , $this->content, 1 );
+			if ( apply_filters( 'litespeed_optm_html_after_head', false ) ) {
+				$this->content = str_replace( '</head>', $this->html_head . '</head>', $this->content );
 			}
 			else {
-				$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 );
+				// Put header content to be after charset
+				if ( strpos( $this->content, '<meta charset' ) !== false ) {
+					$this->content = preg_replace( '#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head , $this->content, 1 );
+				}
+				else {
+					$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 );
+				}
 			}
 		}
 
@@ -448,10 +470,6 @@ class Optimize extends Base {
 		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_HTML_MIN ) ) {
 			$this->content = $this->__optimizer->html_min( $this->content );
 		}
-
-		if ( $this->http2_headers ) {
-			@header( 'Link: ' . implode( ',', $this->http2_headers ), false );
-		}
 	}
 
 	/**
@@ -461,7 +479,7 @@ class Optimize extends Base {
 	 */
 	private function _build_js_tag( $src ) {
 		if ( $this->cfg_js_defer === 2 ) {
-			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" data-i="' . ++$this->i2 . '" data-src="' . $src . '"></script>';
 		}
 
 		if ( $this->cfg_js_defer ) {
@@ -560,7 +578,6 @@ class Optimize extends Base {
 
 		// default async, if js defer set use defer
 		$html .= $this->_build_js_tag( $webfont_lib_url );
-		$this->append_http2( $webfont_lib_url, 'js' ); // async lib will be http/2 pushed always
 
 		// Put this in the very beginning for preconnect
 		$this->html_head = $html . $this->html_head;
@@ -657,7 +674,7 @@ class Optimize extends Base {
 	private function _src_queue_handler( $src_list, $html_list, $file_type = 'css' ) {
 		$html_list_ori = $html_list;
 
-		$can_webp = defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE );
+		$can_webp = ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->cls( 'Media' )->webp_support();
 
 		$tag = $file_type == 'css' ? 'link' : 'script';
 		foreach ( $src_list as $key => $src_info ) {
@@ -686,8 +703,6 @@ class Optimize extends Base {
 				$url = $this->_build_single_hash_url( $src_info[ 'src' ], $file_type );
 				if ( $url ) {
 					$snippet = str_replace( $src_info[ 'src' ], $url, $html_list[ $key ] );
-					// Add to HTTP2
-					$this->append_http2( $url, $file_type );
 				}
 
 				// Handle css async load
@@ -724,6 +739,7 @@ class Optimize extends Base {
 		$static_file = LITESPEED_STATIC_DIR . '/' . $filename;
 		File::save( $static_file, $content, true );
 
+		// QS is required as $src may contains version info
 		$qs_hash = substr( md5( $src ), -5 );
 		return LITESPEED_STATIC_URL . "/$filename?ver=$qs_hash";
 	}
@@ -736,8 +752,6 @@ class Optimize extends Base {
 	 */
 	private function _build_hash_url( $src_list, $file_type = 'css' ) {
 		// $url_sensitive = $this->conf( self::O_OPTM_CSS_UNIQUE ) && $file_type == 'css'; // If need to keep unique CSS per URI
-		global $wp;
-		$request_url = home_url( $wp->request );
 
 		// Replace preserved ESI (before generating hash)
 		if ( $file_type == 'js' ) {
@@ -750,15 +764,21 @@ class Optimize extends Base {
 		}
 
 		$minify = $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min;
-		$file_path = $this->__optimizer->serve( $request_url, $file_type, $minify, $src_list );
+		$filename_info = $this->__optimizer->serve( $this->_request_url, $file_type, $minify, $src_list );
 
-		if ( ! $file_path ) {
+		if ( ! $filename_info ) {
 			return false; // Failed to generate
 		}
 
-		// $qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
+		list( $filename, $type ) = $filename_info;
+
+		// Add cache tag in case later file deleted to avoid lscache served stale non-existed files @since 4.4.1
+		Tag::add( Tag::TYPE_MIN . '.' . $filename );
+
+		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
 		// As filename is alreay realted to filecon md5, no need QS anymore
-		return LITESPEED_STATIC_URL . $file_path;
+		$filepath_prefix = $this->_build_filepath_prefix( $type );
+		return LITESPEED_STATIC_URL . $filepath_prefix . $filename . '?ver=' . $qs_hash;
 	}
 
 	/**
@@ -784,6 +804,9 @@ class Optimize extends Base {
 				continue;
 			}
 			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
+				continue;
+			}
+			if ( ! empty( $attrs[ 'data-cfasync' ] ) && $attrs[ 'data-cfasync' ] === 'false'  ) {
 				continue;
 			}
 			if ( ! empty( $attrs[ 'type' ] ) && $attrs[ 'type' ] != 'text/javascript' ) {
@@ -812,25 +835,15 @@ class Optimize extends Base {
 						}
 					}
 
-					if ( $is_internal ) {
-						$this->append_http2( $attrs[ 'src' ], 'js' );
-					}
-
 					Debug2::debug2( '[Optm] _parse_js bypassed due to ' . ( $js_excluded ? 'js files excluded [hit] ' . $js_excluded : 'external js' ) );
 					continue;
 				}
 
 				if ( strpos( $attrs[ 'src' ], '/localres/' ) !== false ) {
-					if ( $is_internal ) {
-						$this->append_http2( $attrs[ 'src' ], 'js' );
-					}
 					continue;
 				}
 
 				if ( strpos( $attrs[ 'src' ], 'instant_click' ) !== false ) {
-					if ( $is_internal ) {
-						$this->append_http2( $attrs[ 'src' ], 'js' );
-					}
 					continue;
 				}
 
@@ -907,8 +920,7 @@ class Optimize extends Base {
 			if ( strpos( $attrs, ' type=' ) !== false ) {
 				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
 			}
-			$this->i2++;
-			return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '">' . $con . '</script>';
+			return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . ++$this->i2 . '">' . $con . '</script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
@@ -932,6 +944,7 @@ class Optimize extends Base {
 			$con = str_replace( $esi_placeholder, $js_var, $con );
 			$this->_var_preserve_js[] = $js_var . '=' . $esi_placeholder;
 		}
+
 		return $con;
 	}
 
@@ -1144,43 +1157,10 @@ class Optimize extends Base {
 			if ( strpos( $ori, ' type=' ) !== false ) {
 				$ori = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $ori );
 			}
-			$this->i2++;
-			return str_replace( ' src=', ' type="litespeed/javascript" data-i="' . $this->i2 . '" data-src=', $ori );
+			return str_replace( ' src=', ' type="litespeed/javascript" data-i="' . ++$this->i2 . '" data-src=', $ori );
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );
-	}
-
-	/**
-	 * Append to HTTP2 header
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 */
-	private function append_http2( $url, $file_type = 'css' ) {
-		if ( ! ( $file_type === 'css' ? $this->cfg_http2_css : $this->cfg_http2_js ) ) {
-			return;
-		}
-
-		/**
-		 * For CDN enabled ones, bypass http/2 push
-		 * @since  1.6.2.1
-		 */
-		if ( $this->cls( 'CDN' )->inc_type( $file_type ) ) {
-			return;
-		}
-
-		/**
-		 * Keep QS for constance by set 2nd param to true
-		 * @since  1.6.2.1
-		 */
-		$uri = Utility::url2uri( $url, true );
-
-		if ( ! $uri ) {
-			return;
-		}
-
-		$this->http2_headers[] = '<' . $uri . '>; rel=preload; as=' . ( $file_type === 'css' ? 'style' : 'script' );
 	}
 
 }

@@ -1,0 +1,4 @@
+#wp-admin-bar-plugin-detective-bar > .ab-item::before {
+	content: "\f179";
+	top: 2px;
+}

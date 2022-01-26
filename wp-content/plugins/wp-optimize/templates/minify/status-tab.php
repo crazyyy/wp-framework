@@ -54,6 +54,14 @@
 
 			<p><?php _e('If this is turned on, then the default settings are that JavaScript and CSS on this website will be concatenated and minified and HTML will be minified.', 'wp-optimize'); ?> <?php _e('You can adjust the settings in the tabs above to control this to meet your requirements.', 'wp-optimize'); ?></p>
 
+			<?php if (!empty($active_minify_plugins)) : ?>
+				<div class="notice notice-error">
+					<p>
+						<?php printf(__('It looks like you already have an active minify plugin (%s) installed. Having more than one active plugin to minify front end assets might cause unexpected results and waste of resources.', 'wp-optimize'), implode(', ', $active_minify_plugins)); ?>
+					</p>
+				</div>
+			<?php endif; ?>
+
 			<?php if (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) : ?>
 				<div class="notice notice-warning">
 					<p><span class="dashicons dashicons-info"></span> <?php printf(__('The constant %s is set to true, so no JavaScript or CSS file will be minified.', 'wp-optimize'), '<code>SCRIPT_DEBUG</code>'); ?></p>
@@ -76,9 +84,9 @@
 							<span class="slider round"></span>
 						</label>
 						<label for="wpo_min_enable_minify_html">
-							<?php _e('Process HTML', 'wp-optimize'); ?>
+							<?php _e('Process HTML (works only when cache pre-loading)', 'wp-optimize'); ?>
 							<?php // Note: the comment added by WPO regarding cacheing will not be removed (it's added later in the process) ?>
-							<span tabindex="0" data-tooltip="<?php esc_attr_e('All HTML will be minified (removal of extra blank space), and all HTML comments will be removed.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
+							<span tabindex="0" data-tooltip="<?php esc_attr_e('All HTML will be minified. It takes effect only when cache pre-loading because it takes time.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
 						</label>
 					</div>
 				</div>
@@ -148,14 +156,26 @@
 				<ul class="ul-disc">
 					<li><?php _e('Current cache:', 'wp-optimize'); ?>
 						<strong id="wpo_min_cache_size">
-							<?php echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats($cache_dir)); ?>
+							<?php
+								if ($wpo_minify_options['enabled']) {
+									echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats($cache_dir));
+								} else {
+									_e('No minified files are present', 'wp-optimize');
+								}
+							?>
 						</strong>
 						<a href="#" class="js--wpo-goto" data-tab="advanced"><?php _e('View the files', 'wp-optimize'); ?></a>
 					</li>
 					<li>
 						<?php _e('Total cache:', 'wp-optimize'); ?>
 						<strong id="wpo_min_cache_total_size">
-							<?php echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats(WPO_CACHE_MIN_FILES_DIR)); ?>
+							<?php
+								if ($wpo_minify_options['enabled']) {
+									echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats(WPO_CACHE_MIN_FILES_DIR));
+								} else {
+									_e('No minified files are present', 'wp-optimize');
+								}
+							?>
 						</strong>
 						<strong tabindex="0" data-tooltip="<?php _e('This includes the older, non-expired cache, as well as the temporary files used to generate the minified files.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></strong>
 					</li>
@@ -167,6 +187,8 @@
 					<?php
 					if (empty($wpo_minify_options['last-cache-update'])) {
 						_e('Never.', 'wp-optimize');
+					} elseif (!$wpo_minify_options['enabled']) {
+						echo '-';
 					} else {
 						echo WP_Optimize_Minify_Cache_Functions::format_date_time($wpo_minify_options['last-cache-update']);
 					}

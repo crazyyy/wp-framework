@@ -7,7 +7,8 @@
 			</label>
 			<input type='button' id='wpo_restore_single_image_<?php echo $post_id; ?>' data-blog='<?php echo get_current_blog_id(); ?>' data-id="<?php echo $post_id; ?>" class='button-primary button alignright' value="<?php esc_attr_e('Restore', 'wp-optimize');?>">
 		</div>
-		<p id='smush_info' class='wpo_restore_single_image'> <?php echo $smush_info; ?> </p>
+		<p id='smush_info' class='wpo_restore_single_image'><?php echo $smush_info; ?></p>
+		<div id="wpo_smush_details"><?php echo $smush_details; ?></div>
 	</div>
 	<div class='wpo_smush_single_image compression_level' <?php echo $smush_display; ?>>
 		<label for="enable_lossy_compression">
@@ -79,6 +80,10 @@
 	<?php
 
 	$menu_page_url = menu_page_url('wpo_images', false);
+
+	if ('' === $menu_page_url && !is_multisite()) {
+		$menu_page_url = admin_url('admin.php?page=wpo_images');
+	}
 
 	if (is_multisite()) {
 		$menu_page_url = network_admin_url('admin.php?page=wpo_images');

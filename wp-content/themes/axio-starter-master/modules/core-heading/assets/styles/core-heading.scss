@@ -1,0 +1,33 @@
+/* ==========================================================================
+ # Heading block
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+/* Front-end and back-end
+----------------------------------------------- */
+
+.block-editor [data-type="core/heading"] > *,
+.blocks .wp-block-heading {
+
+}
+
+/* Only front-end
+----------------------------------------------- */
+
+.blocks .wp-block-heading {
+
+  // entrance animation
+  &.has-viewport-effect {
+    &.is-in-viewport {
+    }
+  }
+
+}
+
+/* Only back-end
+----------------------------------------------- */
+
+.block-editor [data-type="core/heading"] > * {
+
+}

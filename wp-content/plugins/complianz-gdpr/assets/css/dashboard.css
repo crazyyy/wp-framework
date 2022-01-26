@@ -35,6 +35,7 @@
    */
 }
 #cmplz-dashboard .cmplz-progress-warning-container {
+  position: relative;
   display: grid;
   grid-template-columns: 126px auto 50px;
 }
@@ -55,7 +56,7 @@
   font-size: 0.9em;
 }
 #cmplz-dashboard .cmplz-scroll-container {
-  height: 260px;
+  height: 254px;
   margin-top: 20px;
 }
 #cmplz-dashboard .cmplz-progress-status-container {
@@ -83,10 +84,14 @@
   background-color: #D7263D;
   color: white;
 }
+#cmplz-dashboard .cmplz-progress-status.cmplz-premium {
+  background-color: #29b6f6;
+  color: white;
+}
 #cmplz-dashboard .cmplz-progress-bar,
 #cmplz-dashboard .cmplz-sync-progress-bar {
   border-radius: 5px;
-  background: #eeeeee;
+  background: #dadada;
   justify-content: flex-start;
   align-items: center;
   position: relative;
@@ -102,6 +107,10 @@
   background: #61ce70;
   height: 20px;
   width: 0;
+}
+#cmplz-dashboard .cmplz-progress-bar .cmplz-progress-bar-value.orange,
+#cmplz-dashboard .cmplz-sync-progress-bar .cmplz-progress-bar-value.orange {
+  background-color: #f39c12;
 }
 #cmplz-dashboard .cmplz-progress-percentage,
 #cmplz-dashboard .cmplz-progress-description {

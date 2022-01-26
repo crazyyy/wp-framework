@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 /**
  * Tell the consent API we're following the api
  */
@@ -34,7 +34,7 @@ function cmplz_consent_api_active() {
  */
 
 function cmplz_wordpress_maybe_disable_wordpress_personaldata_storage() {
-	if ( ! cmplz_consent_api_active() ) {
+	if ( ! cmplz_consent_mode() ) {
 		if ( cmplz_get_value( 'uses_wordpress_comments' ) === 'yes'
 		     && cmplz_get_value( 'block_wordpress_comment_cookies' ) === 'yes'
 		) {

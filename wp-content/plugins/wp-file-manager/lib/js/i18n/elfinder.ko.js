@@ -4,7 +4,7 @@
  * @author Park Sungyong; <sungyong@gmail.com>
  * @author Yeonjeong Woo <eat_sweetly@naver.com>
  * @author Kwon Hyungjoo <hyung778@gmail.com>
- * @version 2020-09-01
+ * @version 2020-04-07
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -19,9 +19,9 @@
 		translator : 'Hwang Ahreum; &lt;luckmagic@naver.com&gt;, Park Sungyong; &lt;sungyong@gmail.com&gt;, Yeonjeong Woo &lt;eat_sweetly@naver.com&gt;, Kwon Hyungjoo &lt;hyung778@gmail.com&gt;',
 		language   : 'Korea-한국어',
 		direction  : 'ltr',
-		dateFormat : 'Y-m-d H:i', // will show like: 2020-09-01 17:54
-		fancyDateFormat : '$1 H:i', // will show like: 오늘 17:54
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200901-175452
+		dateFormat : 'Y-m-d H:i', // will show like: 2020-04-07 10:24
+		fancyDateFormat : '$1 H:i', // will show like: 오늘 10:24
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200407-102404
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -236,7 +236,7 @@
 			/************************************ dates **********************************/
 			'dateUnknown' : '알 수 없음',
 			'Today'       : '오늘',
-			'Yesterday'   : '내일',
+			'Yesterday'   : '어제',
 			'msJan'       : '1월',
 			'msFeb'       : '2월',
 			'msMar'       : '3월',
@@ -404,7 +404,6 @@
 			'autoSync'        : '자동 동기',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : '위로 이동',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'URL 링크 가져오기', // from v2.1.7 added 9.2.2016
-			'share'           : '공유',
 			'selectedItems'   : '선택된 항목 ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : '폴더 ID', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : '오프라인 접근 허용', // from v2.1.10 added 3.25.2016
@@ -480,7 +479,6 @@
 			'integrations'    : '통합', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'elFinder에는 다음과 같은 외부 서비스가 통합되어 있습니다. 이용하기 전에 이용 약관, 개인정보 보호정책 등을 확인하시기 바랍니다.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : '숨겨진 파일 표시', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : '코드 편집기',
 			'hideHidden'      : '숨겨진 파일 숨기기', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : '숨겨진 항목 표시/숨기기', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : '"새 파일"에서 사용할 파일 형식', // from v2.1.41 added 7.8.2018
@@ -581,3 +579,4 @@
 		}
 	};
 }));
+

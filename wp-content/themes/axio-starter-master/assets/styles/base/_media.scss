@@ -1,0 +1,33 @@
+/* ==========================================================================
+ # Media
+========================================================================== */
+
+/* Images
+----------------------------------------------- */
+
+.wp-caption {
+  float: none;
+  font-size: 1rem;
+  margin: 0;
+  max-width: 100%;
+}
+
+.alignnone {
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+}
+
+.aligncenter {
+  display: block;
+  height: auto;
+  margin: 1rem auto;
+}
+
+/* Iframe
+----------------------------------------------- */
+
+iframe {
+  max-width: 100%;
+}

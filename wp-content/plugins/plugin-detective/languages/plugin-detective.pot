@@ -1,0 +1,557 @@
+# Copyright (C) 2021 N Squared
+# This file is distributed under the GPLv2.
+msgid ""
+msgstr ""
+"Project-Id-Version: Plugin Detective - Troubleshooting 1.1.8\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/plugin-detective\n"
+"POT-Creation-Date: 2021-08-20 18:23:36+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: includes/class-wp-admin.php:143
+#: release/1.1.7/includes/class-wp-admin.php:143
+#: release/1.1.8/includes/class-wp-admin.php:143
+#: release/svn/includes/class-wp-admin.php:143
+msgid "Troubleshoot"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:4
+#: release/1.1.7/languages/troubleshoot-app-translations.php:4
+#: release/1.1.8/languages/troubleshoot-app-translations.php:4
+#: release/svn/languages/troubleshoot-app-translations.php:4
+msgid "Back to WordPress"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:5
+#: release/1.1.7/languages/troubleshoot-app-translations.php:5
+#: release/1.1.8/languages/troubleshoot-app-translations.php:5
+#: release/svn/languages/troubleshoot-app-translations.php:5
+msgid "Return to WordPress dashboard"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:9
+#: release/1.1.7/languages/troubleshoot-app-translations.php:9
+#: release/1.1.8/languages/troubleshoot-app-translations.php:9
+#: release/svn/languages/troubleshoot-app-translations.php:9
+msgid "Just a sec..."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:10
+#: release/1.1.7/languages/troubleshoot-app-translations.php:10
+#: release/1.1.8/languages/troubleshoot-app-translations.php:10
+#: release/svn/languages/troubleshoot-app-translations.php:10
+msgid "Checking records..."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:14
+#: release/1.1.7/languages/troubleshoot-app-translations.php:14
+#: release/1.1.8/languages/troubleshoot-app-translations.php:14
+#: release/svn/languages/troubleshoot-app-translations.php:14
+msgid "Uh oh"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:15
+#: release/1.1.7/languages/troubleshoot-app-translations.php:15
+#: release/1.1.8/languages/troubleshoot-app-translations.php:15
+#: release/svn/languages/troubleshoot-app-translations.php:15
+msgid "Something's gone wrong. Try refreshing the page."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:19
+#: release/1.1.7/languages/troubleshoot-app-translations.php:19
+#: release/1.1.8/languages/troubleshoot-app-translations.php:19
+#: release/svn/languages/troubleshoot-app-translations.php:19
+msgid "Log In"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:20
+#: release/1.1.7/languages/troubleshoot-app-translations.php:20
+#: release/1.1.8/languages/troubleshoot-app-translations.php:20
+#: release/svn/languages/troubleshoot-app-translations.php:20
+msgid "Enter your WordPress username and password to continue."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:21
+#: release/1.1.7/languages/troubleshoot-app-translations.php:21
+#: release/1.1.8/languages/troubleshoot-app-translations.php:21
+#: release/svn/languages/troubleshoot-app-translations.php:21
+msgid "Username"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:22
+#: release/1.1.7/languages/troubleshoot-app-translations.php:22
+#: release/1.1.8/languages/troubleshoot-app-translations.php:22
+#: release/svn/languages/troubleshoot-app-translations.php:22
+msgid "Password"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:23
+#: release/1.1.7/languages/troubleshoot-app-translations.php:23
+#: release/1.1.8/languages/troubleshoot-app-translations.php:23
+#: release/svn/languages/troubleshoot-app-translations.php:23
+msgid "Your username is incorrect"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:24
+#: release/1.1.7/languages/troubleshoot-app-translations.php:24
+#: release/1.1.8/languages/troubleshoot-app-translations.php:24
+#: release/svn/languages/troubleshoot-app-translations.php:24
+msgid "Your password is incorrect"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:25
+#: release/1.1.7/languages/troubleshoot-app-translations.php:25
+#: release/1.1.8/languages/troubleshoot-app-translations.php:25
+#: release/svn/languages/troubleshoot-app-translations.php:25
+msgid "You don't have permission to accesss Plugin Detective"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:26
+#: release/1.1.7/languages/troubleshoot-app-translations.php:26
+#: release/1.1.8/languages/troubleshoot-app-translations.php:26
+#: release/svn/languages/troubleshoot-app-translations.php:26
+msgid "Login error"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:30
+#: release/1.1.7/languages/troubleshoot-app-translations.php:30
+#: release/1.1.8/languages/troubleshoot-app-translations.php:30
+#: release/svn/languages/troubleshoot-app-translations.php:30
+msgid "Getting your site..."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:31
+#: release/1.1.7/languages/troubleshoot-app-translations.php:31
+#: release/1.1.8/languages/troubleshoot-app-translations.php:31
+#: release/svn/languages/troubleshoot-app-translations.php:31
+msgid ""
+"Looks like you already have an open case. Did you want to continue with "
+"that case? Or open a new one?"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:32
+#: release/1.1.7/languages/troubleshoot-app-translations.php:32
+#: release/1.1.8/languages/troubleshoot-app-translations.php:32
+#: release/svn/languages/troubleshoot-app-translations.php:32
+msgid ""
+"Sorry you're having trouble with your site, but don't worry. Detective Otto "
+"Bot is on the case! Just click the button to open a new case and get "
+"started."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:33
+#: release/1.1.7/languages/troubleshoot-app-translations.php:33
+#: release/1.1.8/languages/troubleshoot-app-translations.php:33
+#: release/svn/languages/troubleshoot-app-translations.php:33
+msgid "Continue case"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:34
+#: release/1.1.7/languages/troubleshoot-app-translations.php:34
+#: release/1.1.8/languages/troubleshoot-app-translations.php:34
+#: release/svn/languages/troubleshoot-app-translations.php:34
+msgid "Open a new case"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:35
+#: release/1.1.7/languages/troubleshoot-app-translations.php:35
+#: release/1.1.8/languages/troubleshoot-app-translations.php:35
+#: release/svn/languages/troubleshoot-app-translations.php:35
+msgid ""
+"Is this still where you're seeing the issue? If not, navigate to where you "
+"are seeing the issue and let me know when you're there."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:36
+#: release/1.1.7/languages/troubleshoot-app-translations.php:36
+#: release/1.1.8/languages/troubleshoot-app-translations.php:36
+#: release/svn/languages/troubleshoot-app-translations.php:36
+msgid ""
+"Here's your site. Navigate to where you're seeing the problem. Let me know "
+"when you're there."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:37
+#: release/1.1.7/languages/troubleshoot-app-translations.php:37
+#: release/1.1.8/languages/troubleshoot-app-translations.php:37
+#: release/svn/languages/troubleshoot-app-translations.php:37
+msgid "I'm there"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:38
+#: release/1.1.7/languages/troubleshoot-app-translations.php:38
+#: release/1.1.8/languages/troubleshoot-app-translations.php:38
+#: release/svn/languages/troubleshoot-app-translations.php:38
+msgid "Here's your site again. Is the problem fixed?"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:39
+#: release/1.1.7/languages/troubleshoot-app-translations.php:39
+#: release/1.1.8/languages/troubleshoot-app-translations.php:39
+#: release/svn/languages/troubleshoot-app-translations.php:39
+msgid "Yes it's fixed"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:40
+#: release/1.1.7/languages/troubleshoot-app-translations.php:40
+#: release/1.1.8/languages/troubleshoot-app-translations.php:40
+#: release/svn/languages/troubleshoot-app-translations.php:40
+msgid "No it's still broken"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:44
+#: release/1.1.7/languages/troubleshoot-app-translations.php:44
+#: release/1.1.8/languages/troubleshoot-app-translations.php:44
+#: release/svn/languages/troubleshoot-app-translations.php:44
+msgid "Checking clues..."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:45
+#: release/1.1.7/languages/troubleshoot-app-translations.php:45
+#: release/1.1.8/languages/troubleshoot-app-translations.php:45
+#: release/svn/languages/troubleshoot-app-translations.php:45
+msgid "Interrogating"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:46
+#: release/1.1.7/languages/troubleshoot-app-translations.php:46
+#: release/1.1.8/languages/troubleshoot-app-translations.php:46
+#: release/svn/languages/troubleshoot-app-translations.php:46
+msgid "Start interrogation"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:47
+#: release/1.1.7/languages/troubleshoot-app-translations.php:47
+#: release/1.1.8/languages/troubleshoot-app-translations.php:47
+#: release/svn/languages/troubleshoot-app-translations.php:47
+msgid "Holding Cell"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:48
+#: release/1.1.7/languages/troubleshoot-app-translations.php:48
+#: release/1.1.8/languages/troubleshoot-app-translations.php:48
+#: release/svn/languages/troubleshoot-app-translations.php:48
+msgid "Cleared"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:49
+#: release/1.1.7/languages/troubleshoot-app-translations.php:49
+#: release/1.1.8/languages/troubleshoot-app-translations.php:49
+#: release/svn/languages/troubleshoot-app-translations.php:49
+msgid "Remaining"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:53
+#: release/1.1.7/languages/troubleshoot-app-translations.php:53
+#: release/1.1.8/languages/troubleshoot-app-translations.php:53
+#: release/svn/languages/troubleshoot-app-translations.php:53
+msgid "Key Witnesses (Required Plugins)"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:54
+#: release/1.1.7/languages/troubleshoot-app-translations.php:54
+#: release/1.1.8/languages/troubleshoot-app-translations.php:54
+#: release/svn/languages/troubleshoot-app-translations.php:54
+msgid "Sorting out the suspects..."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:55
+#: release/1.1.7/languages/troubleshoot-app-translations.php:55
+#: release/1.1.8/languages/troubleshoot-app-translations.php:55
+#: release/svn/languages/troubleshoot-app-translations.php:55
+msgid "Which plugins are required for the site's functionality?"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:56
+#: release/1.1.7/languages/troubleshoot-app-translations.php:56
+#: release/1.1.8/languages/troubleshoot-app-translations.php:56
+#: release/svn/languages/troubleshoot-app-translations.php:56
+msgid "Which plugins are required in order for the site to work correctly?"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:60
+#: release/1.1.7/languages/troubleshoot-app-translations.php:60
+#: release/1.1.8/languages/troubleshoot-app-translations.php:60
+#: release/svn/languages/troubleshoot-app-translations.php:60
+msgid ""
+"The culprit doesn't seem to be one of the suspected plugins. Here are some "
+"other possibilities:"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:61
+#: release/1.1.7/languages/troubleshoot-app-translations.php:61
+#: release/1.1.8/languages/troubleshoot-app-translations.php:61
+#: release/svn/languages/troubleshoot-app-translations.php:61
+msgid "Your theme or child theme"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:62
+#: release/1.1.7/languages/troubleshoot-app-translations.php:62
+#: release/1.1.8/languages/troubleshoot-app-translations.php:62
+#: release/svn/languages/troubleshoot-app-translations.php:62
+msgid "One of the plugins you marked as required"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:63
+#: release/1.1.7/languages/troubleshoot-app-translations.php:63
+#: release/1.1.8/languages/troubleshoot-app-translations.php:63
+#: release/svn/languages/troubleshoot-app-translations.php:63
+msgid "Any MU plugins installed on the site"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:64
+#: release/1.1.7/languages/troubleshoot-app-translations.php:64
+#: release/1.1.8/languages/troubleshoot-app-translations.php:64
+#: release/svn/languages/troubleshoot-app-translations.php:64
+msgid "Start Over"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:65
+#: release/1.1.7/languages/troubleshoot-app-translations.php:65
+#: release/1.1.8/languages/troubleshoot-app-translations.php:65
+#: release/svn/languages/troubleshoot-app-translations.php:65
+msgid ""
+"Well, it's not a plugin. Here are some other ideas for what might be "
+"causing the issue."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:66
+#: release/1.1.7/languages/troubleshoot-app-translations.php:66
+#: release/1.1.8/languages/troubleshoot-app-translations.php:66
+#: release/svn/languages/troubleshoot-app-translations.php:66
+msgid ""
+"I wasn't able to find the culprit causing this issue because the clues "
+"contradicted one another. Please try starting over. When interrogating "
+"suspects, please be careful about answering whether the problem is fixed or "
+"still broken."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:67
+#: languages/troubleshoot-app-translations.php:74
+#: release/1.1.7/languages/troubleshoot-app-translations.php:67
+#: release/1.1.7/languages/troubleshoot-app-translations.php:74
+#: release/1.1.8/languages/troubleshoot-app-translations.php:67
+#: release/1.1.8/languages/troubleshoot-app-translations.php:74
+#: release/svn/languages/troubleshoot-app-translations.php:67
+#: release/svn/languages/troubleshoot-app-translations.php:74
+msgid "Hmm...suspicious. The clues seem to conflict. Want to start a new case?"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:68
+#: release/1.1.7/languages/troubleshoot-app-translations.php:68
+#: release/1.1.8/languages/troubleshoot-app-translations.php:68
+#: release/svn/languages/troubleshoot-app-translations.php:68
+msgid ""
+"How would you like to deal with this culprit? You can deactivate it. Or you "
+"can leave it activated and sort out the problem on your own."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:69
+#: release/1.1.7/languages/troubleshoot-app-translations.php:69
+#: release/1.1.8/languages/troubleshoot-app-translations.php:69
+#: release/svn/languages/troubleshoot-app-translations.php:69
+msgid "Deactivate it for me"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:70
+#: release/1.1.7/languages/troubleshoot-app-translations.php:70
+#: release/1.1.8/languages/troubleshoot-app-translations.php:70
+#: release/svn/languages/troubleshoot-app-translations.php:70
+msgid "Aha! The culprit has been found!"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:71
+#: release/1.1.7/languages/troubleshoot-app-translations.php:71
+#: release/1.1.8/languages/troubleshoot-app-translations.php:71
+#: release/svn/languages/troubleshoot-app-translations.php:71
+msgid ""
+"I wasn't able to find the culprit because the clues contradicted one "
+"another. It's possible that:"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:72
+#: release/1.1.7/languages/troubleshoot-app-translations.php:72
+#: release/1.1.8/languages/troubleshoot-app-translations.php:72
+#: release/svn/languages/troubleshoot-app-translations.php:72
+msgid ""
+"There's a conflict between multiple plugins only seen when those plugins "
+"are active together."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:73
+#: release/1.1.7/languages/troubleshoot-app-translations.php:73
+#: release/1.1.8/languages/troubleshoot-app-translations.php:73
+#: release/svn/languages/troubleshoot-app-translations.php:73
+msgid "The clues were incorrect."
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:78
+#: release/1.1.7/languages/troubleshoot-app-translations.php:78
+#: release/1.1.8/languages/troubleshoot-app-translations.php:78
+#: release/svn/languages/troubleshoot-app-translations.php:78
+msgid "Was Plugin Detective helpful for you?"
+msgstr ""
+
+#: languages/troubleshoot-app-translations.php:79
+#: release/1.1.7/languages/troubleshoot-app-translations.php:79
+#: release/1.1.8/languages/troubleshoot-app-translations.php:79
+#: release/svn/languages/troubleshoot-app-translations.php:79
+msgid "Check out some of our other awesome plugins."
+msgstr ""
+
+#: plugin-detective.php:287 release/1.1.7/plugin-detective.php:287
+#: release/1.1.8/plugin-detective.php:287 release/svn/plugin-detective.php:287
+msgid ""
+"Plugin Detective is missing requirements and has been <a "
+"href=\"%s\">deactivated</a>. Please make sure all requirements are "
+"available."
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-api.php:131
+#: release/1.1.8/troubleshoot/includes/class-api.php:131
+#: release/svn/troubleshoot/includes/class-api.php:131
+#: troubleshoot/includes/class-api.php:131
+msgid ""
+"No input detected, possibly due to a malformed request or server setting. "
+"Please contact support"
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-auth.php:51
+#: release/1.1.7/troubleshoot/includes/class-auth.php:71
+#: release/1.1.8/troubleshoot/includes/class-auth.php:51
+#: release/1.1.8/troubleshoot/includes/class-auth.php:71
+#: release/svn/troubleshoot/includes/class-auth.php:51
+#: release/svn/troubleshoot/includes/class-auth.php:71
+#: troubleshoot/includes/class-auth.php:51
+#: troubleshoot/includes/class-auth.php:71
+msgid ""
+"<strong>ERROR</strong>: Invalid username, email address or incorrect "
+"password."
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-auth.php:58
+#: release/1.1.7/troubleshoot/includes/class-auth.php:78
+#: release/1.1.8/troubleshoot/includes/class-auth.php:58
+#: release/1.1.8/troubleshoot/includes/class-auth.php:78
+#: release/svn/troubleshoot/includes/class-auth.php:58
+#: release/svn/troubleshoot/includes/class-auth.php:78
+#: troubleshoot/includes/class-auth.php:58
+#: troubleshoot/includes/class-auth.php:78
+msgid ""
+"<strong>ERROR</strong>: This user does not have permission to "
+"activate/deactivate plugins"
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-cases.php:125
+#: release/1.1.8/troubleshoot/includes/class-cases.php:125
+#: release/svn/troubleshoot/includes/class-cases.php:125
+#: troubleshoot/includes/class-cases.php:125
+msgid "Plugin Detective was unable to open a new case. Please contact support."
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-cases.php:230
+#: release/1.1.8/troubleshoot/includes/class-cases.php:230
+#: release/svn/troubleshoot/includes/class-cases.php:230
+#: troubleshoot/includes/class-cases.php:230
+msgid "No active case found"
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-cases.php:247
+#: release/1.1.8/troubleshoot/includes/class-cases.php:247
+#: release/svn/troubleshoot/includes/class-cases.php:247
+#: troubleshoot/includes/class-cases.php:247
+msgid "No case id specified for get()"
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-cases.php:260
+#: release/1.1.8/troubleshoot/includes/class-cases.php:260
+#: release/svn/troubleshoot/includes/class-cases.php:260
+#: troubleshoot/includes/class-cases.php:260
+msgid "No case id specified for create()"
+msgstr ""
+
+#: release/1.1.7/troubleshoot/includes/class-clues.php:66
+#: release/1.1.8/troubleshoot/includes/class-clues.php:66
+#: release/svn/troubleshoot/includes/class-clues.php:66
+#: troubleshoot/includes/class-clues.php:66
+msgid "outcome field required"
+msgstr ""
+
+#: release/1.1.7/troubleshoot/troubleshoot.php:337
+#: release/1.1.8/troubleshoot/troubleshoot.php:337
+#: release/svn/troubleshoot/troubleshoot.php:337
+#: troubleshoot/troubleshoot.php:337
+msgid ""
+"Troubleshoot is missing requirements and has been <a "
+"href=\"%s\">deactivated</a>. Please make sure all requirements are "
+"available."
+msgstr ""
+
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/basic-theme/exclude/file.php:3
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/plugin-include/plugin-include.php:6
+msgid "Exclude"
+msgstr ""
+
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/plugin-include/include/file.php:2
+#: troubleshoot/node_modules/node-wp-i18n/test/fixtures/makepot/nested-theme/include/include.php:2
+msgid "Include"
+msgstr ""
+
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/add-domain.php:2
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:2
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:3
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:4
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-domains.php:2
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-domains.php:3
+msgid "String"
+msgstr ""
+
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:9
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:10
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:11
+msgid "1 Star"
+msgid_plural "%s Stars"
+msgstr[0] ""
+msgstr[1] ""
+
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/translator-comments/translator-comments.php:7
+#. translators: A single line translators comment.
+msgid "A"
+msgstr ""
+
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/translator-comments/translator-comments.php:15
+#. translators: A multiline translators comment.
+msgid "B"
+msgstr ""
+
+#: troubleshoot/node_modules/node-wp-i18n/test/fixtures/makepot/nested-theme/subdir/index.php:2
+msgid "Index"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Plugin Detective - Troubleshooting"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://nsqua.red"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Quickly troubleshoot & fix plugin conflicts"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "N Squared"
+msgstr ""
+
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:6
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:7
+#: troubleshoot/node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:8
+msgctxt "a string"
+msgid "String"
+msgstr ""

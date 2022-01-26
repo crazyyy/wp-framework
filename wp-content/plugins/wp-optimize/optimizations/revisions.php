@@ -136,7 +136,9 @@ class WP_Optimization_revisions extends WP_Optimization {
 			$tmp = explode(',', $row[1]);
 			rsort($tmp);
 			$tmp = implode(',', array_slice($tmp, $this->revisions_retention_count));
-			$revisions .= $tmp . ',';
+			if ('' !== $tmp) {
+				$revisions .= $tmp . ',';
+			}
 		}
 		$revisions = rtrim($revisions, ',');
 		$revisions = explode(',', $revisions);

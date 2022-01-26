@@ -158,6 +158,25 @@ class UpdraftPlus_Commands {
 			'rawbackup' => html_entity_decode($rawbackup),
 		);
 	}
+
+	/**
+	 * Function to retrieve raw backup history given a timestamp and nonce
+	 *
+	 * @param Array $data - Data parameter; keys: timestamp, nonce
+	 *
+	 * @return Array - An array that contains the raw backup history
+	 */
+	public function rawbackup_history($data) {
+		if (false === ($updraftplus_admin = $this->_load_ud_admin())) return new WP_Error('no_updraftplus');
+
+		$history = UpdraftPlus_Backup_History::get_history();
+
+		$rawbackup = $updraftplus_admin->raw_backup_info($history, $data['timestamp'], $data['nonce'], null);
+
+		return array(
+			'rawbackup' => html_entity_decode($rawbackup),
+		);
+	}
 	
 	private function _load_ud() {
 		global $updraftplus;

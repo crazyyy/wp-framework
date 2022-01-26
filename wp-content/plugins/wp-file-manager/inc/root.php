@@ -1,11 +1,17 @@
 <?php if (!defined('ABSPATH')) { exit; }
 $this->custom_css();
-if (isset($_POST['submit']) && wp_verify_nonce($_POST['wp_filemanager_root_nonce_field'], 'wp_filemanager_root_action')) {
+global $wpdb;
+if (isset($_POST['submit']) && wp_verify_nonce(sanitize_text_field($_POST['wp_filemanager_root_nonce_field']), 'wp_filemanager_root_action')) {
+    if(isset($_POST['fm_max_packet_allowed'])){
+        $packet_value = intval($_POST['fm_max_packet_allowed'] * 1000000);
+        $set_packet_value = $wpdb->query($wpdb->prepare("SET GLOBAL max_allowed_packet = %d",$packet_value));
+    }
     $save = update_option('wp_file_manager_settings', 
 		array(
-			'public_path' => isset($_POST['public_path']) ? htmlentities(trim($_POST['public_path'])) : '',
-            'fm_enable_trash' => isset($_POST['fm_enable_trash']) ? htmlentities($_POST['fm_enable_trash']) : '',
-            'fm_enable_media_upload' => isset($_POST['fm_enable_media_upload']) ? htmlentities($_POST['fm_enable_media_upload']) : '',
+			  'public_path' => isset($_POST['public_path']) ? htmlentities(trim(sanitize_text_field($_POST['public_path']))) : '',
+        'fm_enable_trash' => isset($_POST['fm_enable_trash']) ? intval($_POST['fm_enable_trash']) : '',
+        'fm_enable_media_upload' => isset($_POST['fm_enable_media_upload']) ? intval($_POST['fm_enable_media_upload']) : '',
+        'fm_max_packet_allowed' => isset($_POST['fm_max_packet_allowed']) ? intval($_POST['fm_max_packet_allowed']) : '',
 			)
 		);
     if ($save) {
@@ -18,12 +24,17 @@ if (isset($_POST['submit']) && wp_verify_nonce($_POST['wp_filemanager_root_nonce
         echo '</script>';
     }
 }
-$settings = get_option('wp_file_manager_settings'); ?>
+$settings = get_option('wp_file_manager_settings'); 
+$max_allowed_packet = 'max_allowed_packet';
+$packet_obj = $wpdb->get_row( $wpdb->prepare( "SHOW SESSION VARIABLES WHERE (variable_name = %s)", $max_allowed_packet ) );
+$default_packet_value = intval($packet_obj->Value);
+$default_packet_value = intval($default_packet_value / 1000000);
+?>
 <div class="wrap fm_rootWrap">
-<?php if (isset($_GET['status']) && $_GET['status'] == '1'):?>
+<?php if (isset($_GET['status']) && intval($_GET['status']) == '1'):?>
 <div class="updated settings-error notice is-dismissible" id="setting-error-settings_updated"> 
 <p><strong><?php _e('Settings saved.', 'wp-file-manager'); ?></strong></p><button id="ad_dismiss" class="notice-dismiss" type="button"><span class="screen-reader-text"><?php _e('Dismiss this notice.', 'wp-file-manager-pro'); ?></span></button></div>
-<?php elseif (isset($_GET['status']) && $_GET['status'] == '2'):?>
+<?php elseif (isset($_GET['status']) && intval($_GET['status']) == '2'):?>
 <div class="error updated settings-error notice is-dismissible" id="setting-error-settings_updated"> 
 <p><strong><?php _e('You have not made any changes to be saved.', 'wp-file-manager'); ?></strong></p><button id="ad_dismiss" class="notice-dismiss" type="button"><span class="screen-reader-text"><?php _e('Dismiss this notice.', 'wp-file-manager-pro'); ?></span></button></div>
 <?php endif; ?>
@@ -44,7 +55,7 @@ $settings = get_option('wp_file_manager_settings'); ?>
 </tr>
 <tr>
 <th><?php _e('Enable Trash?', 'wp-file-manager'); ?></th>
-<td>
+<td class="fm-tr-inline">
 <input name="fm_enable_trash" type="checkbox" id="fm_enable_trash" value="1" class="regular-text" <?php echo (isset($settings['fm_enable_trash']) && !empty($settings['fm_enable_trash']) && $settings['fm_enable_trash'] == 1) ? 'checked="checked"' : ''; ?>>
 <p class="description mb15"><?php _e('After enable trash, your files will go to trash folder.', 'wp-file-manager'); ?>
 </p>
@@ -52,10 +63,20 @@ $settings = get_option('wp_file_manager_settings'); ?>
 </tr>
 <tr>
 <th><?php _e('Enable Files Upload to Media Library?', 'wp-file-manager'); ?></th>
-<td>
+<td class="fm-tr-inline">
 <input name="fm_enable_media_upload" type="checkbox" id="fm_enable_media_upload" value="1" class="regular-text" <?php echo (isset($settings['fm_enable_media_upload']) && !empty($settings['fm_enable_media_upload']) && $settings['fm_enable_media_upload'] == 1) ? 'checked="checked"' : ''; ?>>
 <p class="description mb15"><?php _e('After enabling this all files will go to media library.', 'wp-file-manager'); ?>
 </p>
+</td>
+</tr>
+<tr>
+<th><?php _e('Maximum allowed size at the time of database backup restore.', 'wp-file-manager'); ?></th>
+<td>
+  <div class="fm-packet-area">
+    <input name="fm_max_packet_allowed" type="number" id="fm_max_packet_allowed"  class="regular-text" value="<?php echo (isset($settings['fm_max_packet_allowed']) && !empty($settings['fm_max_packet_allowed'])) ? intval($settings['fm_max_packet_allowed']) : $default_packet_value; ?>"><span class="mb-value">MB </span>
+  </div>
+  <p class="description mb15"><?php _e('Please increase field value if you are getting error message at the time of backup restore.', 'wp-file-manager'); ?>
+  </p>
 </td>
 </tr>
 </table>
@@ -64,9 +85,9 @@ $settings = get_option('wp_file_manager_settings'); ?>
 </div>
 </div>
 <script type="text/javascript">
+var admin_page_url = "<?php echo admin_url('admin.php?page=wp_file_manager_root');?>";
+window.history.replaceState({}, document.title, admin_page_url);
 jQuery(document).on('click', '#ad_dismiss', function(){
-  var admin_page_url = "<?php echo admin_url('admin.php?page=wp_file_manager_root');?>";
-  window.history.replaceState({}, document.title, admin_page_url);
   jQuery(this).closest('.notice').remove();
 });
 </script>

@@ -105,5 +105,5 @@ class UpdraftPlus_Temporary_Clone_Auto_Login {
 }
 
 if (defined('UPDRAFTPLUS_THIS_IS_CLONE')) {
-	$updraftplus_temporary_clone_auto_login = new UpdraftPlus_Temporary_Clone_Auto_Login();
+	new UpdraftPlus_Temporary_Clone_Auto_Login();
 }

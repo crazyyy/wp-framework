@@ -266,6 +266,7 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 	 * @param Array  $extra_info  - valid keys are user_id, which should be a numeric user ID to log in as.
 	 */
 	public function get_login_url($redirect_to, $extra_info) {
+
 		if (is_array($extra_info) && !empty($extra_info['user_id']) && is_numeric($extra_info['user_id'])) {
 		
 			$user_id = $extra_info['user_id'];
@@ -279,6 +280,7 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 					case 'updraftplus':
 						if ('initiate_restore' == $redirect_to['action'] && class_exists('UpdraftPlus_Options')) {
 							$redirect_url = UpdraftPlus_Options::admin_page_url().'?page=updraftplus&udaction=initiate_restore&entities='.urlencode($redirect_to['data']['entities']).'&showdata='.urlencode($redirect_to['data']['showdata']).'&backup_timestamp='.(int) $redirect_to['data']['backup_timestamp'];
+
 						} elseif ('download_file' == $redirect_to['action']) {
 							$findex = empty($redirect_to['data']['findex']) ? 0 : (int) $redirect_to['data']['findex'];
 							// e.g. ?udcentral_action=dl&action=updraftplus_spool_file&backup_timestamp=1455101696&findex=0&what=plugins
@@ -339,14 +341,13 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 	}
 	
 	public function site_info() {
-
 		global $wpdb;
 
 		// THis is included so we can get $wp_version
 		@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 		$ud_version = is_a($this->ud, 'UpdraftPlus') ? $this->ud->version : 'none';
-		
+
 		return $this->_response(array(
 			'versions' => array(
 				'ud' => $ud_version,
@@ -370,7 +371,6 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 	 */
 	public function call_wordpress_action($data) {
 		if (false === ($updraftplus_admin = $this->_load_ud_admin())) return $this->_generic_error_response('no_updraftplus');
-
 		$response = $updraftplus_admin->call_wp_action($data);
 
 		if (empty($data["wpaction"])) {
@@ -394,9 +394,7 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 	 * @return Array - response
 	 */
 	public function count($entity) {
-	
 		if (!class_exists('UpdraftPlus_Filesystem_Functions')) return $this->_generic_error_response('no_updraftplus');
-
 		$response = UpdraftPlus_Filesystem_Functions::get_disk_space_used($entity);
 
 		return $this->_response($response);

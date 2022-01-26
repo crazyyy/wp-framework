@@ -7,7 +7,7 @@
  * @author LDMING <china-live@live.cn>
  * @author Andy Lee <oraclei@126.com>
  * @author Cololi <i@cololi.moe>
- * @version 2020-08-31
+ * @version 2020-04-07
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -22,9 +22,9 @@
 		translator : '翻译者 deerchao &lt;deerchao@gmail.com&gt;, Andy Hu &lt;andyhu7@yahoo.com.hk&gt;, Max Wen&lt;max.wen@qq.com&gt;, Kejun Chang &lt;changkejun@hotmail.com&gt;, LDMING &lt;china-live@live.cn&gt;, Andy Lee &lt;oraclei@126.com&gt;, Cololi &lt;i@cololi.moe&gt;',
 		language   : '简体中文',
 		direction  : 'ltr',
-		dateFormat : 'Y-m-d H:i', // will show like: 2020-08-31 15:24
-		fancyDateFormat : '$1 H:i', // will show like: 今天 15:24
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200831-152452
+		dateFormat : 'Y-m-d H:i', // will show like: 2020-04-07 14:53
+		fancyDateFormat : '$1 H:i', // will show like: 今天 14:53
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 200407-145300
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -407,7 +407,6 @@
 			'autoSync'        : '自动同步',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : '向上移动',  // from v2.1.6 added 18.1.2016
 			'getLink'         : '获取URL链接', // from v2.1.7 added 9.2.2016
-			'share'           : '分享',
 			'selectedItems'   : '已选择项目 ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : '目录ID', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : '允许离线操作', // from v2.1.10 added 3.25.2016
@@ -483,7 +482,6 @@
 			'integrations'    : '集成', // from v2.1.40 added 11.7.2018
 			'integrationWith' : '本 elFinder 集成以下外部服务.使用前请检查使用条款、隐私政策等.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : '显示已隐藏的条目', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : '代码编辑器',
 			'hideHidden'      : '隐藏已隐藏的条目', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : '显示/隐藏已隐藏的条目', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : '允许"新文件"使用的文件类型', // from v2.1.41 added 7.8.2018
@@ -584,3 +582,4 @@
 		}
 	};
 }));
+

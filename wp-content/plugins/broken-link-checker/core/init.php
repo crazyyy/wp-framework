@@ -102,8 +102,6 @@ if ( defined( 'BLC_ACTIVE' ) ) {
 			'installation_complete'            => false,
 			'installation_flag_cleared_on'     => 0,
 			'installation_flag_set_on'         => 0,
-			'user_has_donated'                 => false, // Whether the user has donated to the plugin.
-			'donation_flag_fixed'              => false,
 			'show_link_actions'                => array( 'blc-deredirect-action' => false ), //Visible link actions.
 			'youtube_api_key'                  => '',
 			'blc_post_modified'                => '',

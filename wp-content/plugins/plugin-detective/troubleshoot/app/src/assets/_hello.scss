@@ -1,0 +1,15 @@
+.hello {
+  padding: 2rem;
+  padding-top: 6rem;
+  text-align: center;
+  @include bp(s) {
+    padding-top: 2rem;
+  }
+  img {
+    height: auto;
+    margin: 1.5rem auto;
+    max-height: 50vh;
+    max-width: 90vw;
+    width: auto;
+  }
+}

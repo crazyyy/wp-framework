@@ -57,7 +57,7 @@ class blcMetadataParser extends blcParser {
 	 * @param string $default_link_text
 	 * @return array An array of new blcLinkInstance objects.
 	 */
-	function parse_metafield( $metaurl = '', $base_url, $default_link_text = '' ) {
+	function parse_metafield( $metaurl = '', $base_url = '', $default_link_text = '' ) {
 		//The complete contents of the meta field are stored in raw_url.
 		//This is useful for editing/unlinking, when one may need to
 		//distinguish between multiple fields with the same name.

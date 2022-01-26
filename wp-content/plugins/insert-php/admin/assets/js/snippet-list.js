@@ -1,6 +1,6 @@
 jQuery(document).ready(function ($) {
     //Export page
-    $('#bulk-action-selector-top option[value="exportsnp"]').css('color', '#999').prop('disabled', true);
+    //$('#bulk-action-selector-top option[value="exportsnp"]').css('color', '#999').prop('disabled', true);
 
     //
     $("a#winp-snippet-status-switch").on('click', function (e) {
@@ -10,7 +10,7 @@ jQuery(document).ready(function ($) {
         jQuery.post(ajaxurl, {
             action: 'change_snippet_status',
             snippet_id: href.data('snippet-id'),
-            _ajax_nonce: winp_ajax_nonce,
+            _ajax_nonce: winp_ajax.nonce,
         }).done(function (result) {
             href.removeClass('winp-snippet-switch-loader');
             if (result.error_message) {
@@ -36,7 +36,7 @@ jQuery(document).ready(function ($) {
             action: 'change_priority',
             snippet_id: input.data('snippet-id'),
             priority: input.val(),
-            _ajax_nonce: winp_ajax_nonce,
+            _ajax_nonce: winp_ajax.nonce,
         }).done(function (result) {
             //console.log(result);
             if (result.error_message) {

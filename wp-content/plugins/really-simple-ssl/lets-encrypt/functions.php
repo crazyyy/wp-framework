@@ -198,7 +198,7 @@ if ( !function_exists('rsssl_is_directadmin')) {
 function rsssl_check_port( $port)
 {
 	$port_check_status = get_option("rsssl_port_check_$port");
-	if ($port_check_status === 'fail') {
+	if ( !function_exists('fsockopen') || $port_check_status === 'fail' ) {
 		return false;
 	}
 
@@ -501,7 +501,7 @@ if (!function_exists('rsssl_read_more')) {
      * @return string
      */
     function rsssl_read_more( $url, $add_space = true ) {
-        $html = sprintf( __( "For more information on this subject, please read this %sarticle%s",
+        $html = sprintf( __( "For more information, please read this %sarticle%s",
             'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
             '</a>' );
         if ( $add_space ) {

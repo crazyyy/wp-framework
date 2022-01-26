@@ -1,0 +1,351 @@
+/* ==========================================================================
+ # Mixins
+========================================================================== */
+
+/* Buttons
+----------------------------------------------- */
+
+// basic button styles
+@mixin button($style: '') {
+  @include button-reset;
+  @include transition;
+  border: 0;
+  border-radius: 5rem;
+  display: inline-block;
+  position: relative;
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.25;
+  overflow: hidden;
+  padding: .75rem 1.5rem;
+  text-decoration: none;
+  text-shadow: none;
+  vertical-align: baseline;
+  @if $style == 'solid' {
+    background: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    color: var(--color-white);
+  } @else if $style == 'outline' {
+    background: transparent;
+    border: 1px solid;
+    color: var(--color-primary);
+    .is-dark-mode & {
+      border-color: var(--color-white);
+      color: var(--color-white);
+    }
+  } @else {
+    color: var(--color-primary);
+    .is-dark-mode & {
+      color: var(--color-white);
+    }
+    padding: .5rem;
+  }
+
+  & > span {
+    position: relative;
+    z-index: 3;
+  }
+
+  &:hover, &:focus, &:active {
+    @if $style == 'solid' {
+      background: var(--color-primary-dark);
+    } @else if $style == 'outline' {
+      border-color: var(--color-primary-dark);
+      color: var(--color-primary-dark);
+      .is-dark-mode & {
+        border-color: rgba(255,255,255,.925);
+        color: rgba(255,255,255,.925);
+      }
+    } @else {
+      color: var(--color-primary-dark);
+      .is-dark-mode & {
+        color: rgba(255,255,255,.925);
+      }
+      text-decoration: underline;
+    }
+  }
+  &:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Headings
+----------------------------------------------- */
+
+@mixin heading($size: m) {
+
+  @if ($size == xl) {
+
+    font-size: 2rem;
+    @include breakpoint($breakpoint-s) {
+      font-size: 2.5rem;
+    }
+    font-weight: var(--font-weight-bold);
+    line-height: 1.125;
+
+  } @else if ($size == l) {
+
+    font-size: 1.5rem;
+    @include breakpoint($breakpoint-s) {
+      font-size: 2rem;
+    }
+    font-weight: var(--font-weight-bold);
+    line-height: 1.333333;
+
+  } @else if ($size == s) {
+
+    font-size: 1rem;
+    @include breakpoint($breakpoint-s) {
+      font-size: 1.25rem;
+    }
+    font-weight: var(--font-weight-bold);
+
+  } @else if ($size == xs) {
+
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.5;
+
+  } @else {
+
+    font-size: 1.125rem;
+    @include breakpoint($breakpoint-s) {
+      font-size: 1.5rem;
+    }
+    font-weight: var(--font-weight-bold);
+    line-height: 1.5;
+
+  }
+
+  display: block;
+
+}
+
+/* Resets
+----------------------------------------------- */
+
+// reset first and last children margins
+@mixin child-margin-reset {
+  & > :first-child {
+    margin-top: 0;
+  }
+  & > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+// reset <a> styles
+@mixin link-reset {
+  color: inherit;
+  text-decoration: none;
+}
+
+// reset <li> styles
+@mixin list-reset {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+}
+
+// reset <button> styles
+@mixin button-reset {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+}
+
+// reset <input> styles
+@mixin input-reset {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Widths
+----------------------------------------------- */
+
+@mixin alignwide {
+  max-width: var(--width-l);
+  @include breakpoint($breakpoint-xl) {
+    max-width: var(--width-xl);
+  }
+}
+
+@mixin alignfull {
+  margin-left: calc(-1 * var(--spacing-m));
+  margin-right: calc(-1 * var(--spacing-m));
+  max-width: none;
+}
+
+/* Spacing
+----------------------------------------------- */
+
+@mixin spacing($property, $property2: null) {
+  #{$property}: 1.5rem;
+  @if ($property2) {
+    #{$property2}: 1.5rem;
+  }
+}
+
+@mixin negative-spacing($property, $property2: null) {
+  #{$property}: -1.5rem;
+  @if ($property2) {
+    #{$property2}: -1.5rem;
+  }
+}
+
+@mixin spacing-m($property, $property2: null) {
+  #{$property}: 1.5rem;
+  @if ($property2) {
+    #{$property2}: 1.5rem;
+  }
+  @include breakpoint($breakpoint-s) {
+    #{$property}: 3rem;
+    @if ($property2) {
+      #{$property2}: 3rem;
+    }
+  }
+}
+@mixin negative-spacing-m($property, $property2: null) {
+  #{$property}: -1.5rem;
+  @if ($property2) {
+    #{$property2}: -1.5rem;
+  }
+  @include breakpoint($breakpoint-s) {
+    #{$property}: -3rem;
+    @if ($property2) {
+      #{$property2}: -3rem;
+    }
+  }
+}
+
+@mixin spacing-l($property, $property2: null) {
+  #{$property}: 1.5rem;
+  @if ($property2) {
+    #{$property2}: 1.5rem;
+  }
+  @include breakpoint($breakpoint-s) {
+    #{$property}: 3rem;
+    @if ($property2) {
+      #{$property2}: 3rem;
+    }
+  }
+  @include breakpoint($breakpoint-l) {
+    #{$property}: 4rem;
+    @if ($property2) {
+      #{$property2}: 4rem;
+    }
+  }
+}
+@mixin negative-spacing-l($property, $property2: null) {
+  #{$property}: -1.5rem;
+  @if ($property2) {
+    #{$property2}: -1.5rem;
+  }
+  @include breakpoint($breakpoint-s) {
+    #{$property}: -3rem;
+    @if ($property2) {
+      #{$property2}: -3rem;
+    }
+  }
+  @include breakpoint($breakpoint-l) {
+    #{$property}: -4rem;
+    @if ($property2) {
+      #{$property2}: -4rem;
+    }
+  }
+}
+
+/* Tools
+----------------------------------------------- */
+
+// aspect ratio
+@mixin aspect-ratio($width, $height) {
+  padding-bottom: percentage($height / $width);
+}
+
+// unified transition for theme
+@mixin transition($property:all) {
+  transition: $property .2s ease-in-out;
+}
+
+// fix WP admin bar height on sticky menu
+@mixin admin-bar-sticky-fix {
+  .admin-bar & {
+    top: 46px;
+    @media screen and (min-width: 783px) {
+      top: 32px;
+    }
+  }
+}
+
+// show text to screen readers only
+@mixin visuallyhidden {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal;
+}
+
+// fix float overflow
+@mixin clearfix {
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+/* Wrap
+----------------------------------------------- */
+
+// wrap outer containers (width, padding, center)
+@mixin wrap {
+  max-width: calc(var(--width-l) + 2 * var(--spacing-m));
+  padding-left:  var(--spacing-m);
+  padding-right: var(--spacing-m);
+  margin-left:  auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+// narrow content
+@mixin narrow-content {
+  max-width: calc(var(--width-m) + 2 * var(--spacing-m));
+}
+
+/* Animations
+----------------------------------------------- */
+
+@mixin stagger-transitions($interval: 75, $min: 0, $max: 12) {
+  @for $i from $min through $max {
+    &:nth-of-type(#{$i}) {
+      transition-delay: #{$interval * $i}ms
+    }
+  }
+}
+
+@mixin stagger-animations($interval: 75, $min: 0, $max: 12) {
+  @for $i from $min through $max {
+    &:nth-of-type(#{$i}) {
+      animation-delay: #{$interval * $i}ms
+    }
+  }
+}

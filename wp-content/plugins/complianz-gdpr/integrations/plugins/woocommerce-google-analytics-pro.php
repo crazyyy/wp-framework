@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 /**
  * Make sure it's set as not anonymous when tracking enabled
@@ -46,79 +46,29 @@ add_filter( 'cmplz_uses_marketing_cookies', 'cmplz_wc_google_analytics_pro_uses_
 
 /**
  * Add markers to the statistics markers list
- * @param $markers
+ * @param array $markers
  *
  * @return array
  */
-function cmplz_wc_google_analytics_pro_stats_markers( $markers ) {
-	$markers['google-analytics'][] = 'wc_google_analytics_pro_loaded';
-	$markers['google-analytics'][] = "ga( 'send', 'pageview' )";
-	$markers['google-analytics'][] = '_gaq.push';
-	$markers['google-analytics'][] = 'stats.g.doubleclick.net/dc.js';
-	$markers['google-analytics'][] = 'gaProperty';
 
-	//we want TM to be treated as stats
-	$markers['google-analytics'][] = 'googletagmanager.com';
-
-	return $markers;
-}
-add_filter( 'cmplz_stats_markers', 'cmplz_wc_google_analytics_pro_stats_markers', 20, 1 );
-
-/**
- * Entirely remove tag manager blocking if anonymous
- */
-
-function cmplz_wc_google_analytics_pro_drop_tm_blocking(){
-	if ( COMPLIANZ::$cookie_admin->statistics_privacy_friendly() ) {
-		remove_filter( 'cmplz_known_script_tags', 'cmplz_googletagmanager_script' );
-	}
-}
-add_action( 'init', 'cmplz_wc_google_analytics_pro_drop_tm_blocking');
-
-/**
- * Block inline script
- * @param $tags
- *
- * @return array
- */
-function cmplz_wc_google_analytics_pro_script( $tags ) {
-	$tags[] = 'GoogleAnalyticsObject';
-	$tags[] = 'add_to_cart_button';
-	$tags[] = "ga( 'send', 'pageview' )";
-	$tags[] = '_gaq.push';
-	$tags[] = 'stats.g.doubleclick.net/dc.js';
-	$tags[] = 'gaProperty';
-	$tags[] = 'wc_ga_pro';
-
+add_filter( 'cmplz_known_script_tags', 'cmplz_wc_google_analytics_pro_stats_markers' );
+function cmplz_wc_google_analytics_pro_stats_markers( $tags ) {
+	$tags[] = array(
+		'name' => 'google-analytics',
+		'category' => 'statistics',
+		'urls' => array(
+			'wc_google_analytics_pro_loaded',
+			"ga( 'send', 'pageview' )",
+			'_gaq.push',
+			'stats.g.doubleclick.net/dc.js',
+			'gaProperty',
+			'GoogleAnalyticsObject',
+			'add_to_cart_button',
+			'wc_ga_pro',
+		),
+	);
 	return $tags;
 }
-add_filter( 'cmplz_known_script_tags', 'cmplz_wc_google_analytics_pro_script' );
-
-/**
- * If "use advertising features" is enabled, block as if it's marketing
- * @param array $classes
- *
- * @return array
- */
-function cmplz_wc_google_analytics_pro_script_classes( $classes ){
-	$settings = get_option('woocommerce_google_analytics_pro_settings');
-
-	if ( $settings && isset( $settings['enable_displayfeatures']) && $settings['enable_displayfeatures'] !== 'yes' ) {
-		if (!in_array('cmplz-stats', $classes )) {
-			$classes[] = 'cmplz-stats';
-		}
-	}
-
-	if ( $settings && isset( $settings['enable_displayfeatures']) && $settings['enable_displayfeatures'] === 'yes' ) {
-		if (in_array( 'cmplz-native' , $classes) ) {
-			unset($classes[array_search('cmplz-native', $classes)]);
-		}
-	}
-
-	return $classes;
-}
-add_filter( 'cmplz_statistics_script_classes', 'cmplz_wc_google_analytics_pro_script_classes', 10, 1  );
-
 
 /**
  * Remove stuff which is not necessary anymore
@@ -128,7 +78,7 @@ add_filter( 'cmplz_statistics_script_classes', 'cmplz_wc_google_analytics_pro_sc
 function cmplz_wc_google_analytics_pro_remove_actions() {
 	remove_action( 'cmplz_notice_compile_statistics', 'cmplz_show_compile_statistics_notice', 10 );
 }
-add_action( 'init', 'cmplz_wc_google_analytics_pro_remove_actions' );
+add_action( 'admin_init', 'cmplz_wc_google_analytics_pro_remove_actions' );
 
 /**
  * Add notice to tell a user to choose Analytics
@@ -152,8 +102,9 @@ add_action( 'cmplz_notice_compile_statistics', 'cmplz_wc_google_analytics_pro_sh
 function cmplz_wc_google_analytics_pro_filter_fields( $fields ) {
 	unset( $fields['configuration_by_complianz'] );
 	unset( $fields['UA_code'] );
-	unset( $fields['googleads_id'] );
-	unset( $fields['ads_data_redaction'] );
+	unset( $fields['AW_code'] );
+	unset( $fields['consent-mode'] );
+	unset( $fields['compile_statistics_more_info']['help']);
 	return $fields;
 }
 add_filter( 'cmplz_fields', 'cmplz_wc_google_analytics_pro_filter_fields' );
@@ -170,6 +121,5 @@ function cmplz_wc_google_analytics_pro_filter_warnings( $warnings ) {
 	unset($warnings['ga-needs-configuring']);
 	return $warnings;
 }
-
 add_filter( 'cmplz_warning_types', 'cmplz_wc_google_analytics_pro_filter_warnings' );
 

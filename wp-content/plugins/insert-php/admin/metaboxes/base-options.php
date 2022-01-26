@@ -30,7 +30,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	 */
 	public $priority = 'core';
 
-	public $css_class = 'factory-bootstrap-443 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-450 factory-fontawesome-000';
 
 	protected $errors = [];
 	protected $source_channel;
@@ -79,9 +79,9 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	/**
 	 * Configures a metabox.
 	 *
-	 * @param Wbcr_Factory443_StyleList $styles A set of style to include.
+	 * @param Wbcr_Factory450_StyleList $styles A set of style to include.
 	 *
-	 * @param Wbcr_Factory443_ScriptList $scripts A set of scripts to include.
+	 * @param Wbcr_Factory450_ScriptList $scripts A set of scripts to include.
 	 *
 	 * @return void
 	 * @since 1.0.0
@@ -246,7 +246,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 			$button_nonce = ' data-nonce="' . wp_create_nonce( "wbcr_inp_save_snippet_{$snippet_id}_as_template" ) . '"';
 
 			?>
-            <div class="factory-bootstrap-443 factory-fontawesome-000">
+            <div class="factory-bootstrap-450 factory-fontawesome-000">
                 <div class="modal fade" id="winp-sync-modal" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalLabel"
                      aria-hidden="true" style="display: none">
@@ -536,7 +536,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	/**
 	 * Configures a form that will be inside the metabox.
 	 *
-	 * @param Wbcr_FactoryForms440_Form $form A form object to configure.
+	 * @param Wbcr_FactoryForms447_Form $form A form object to configure.
 	 *
 	 * @return void
 	 * @since 1.0.0

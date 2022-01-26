@@ -4,8 +4,11 @@ namespace Yoast\WP\SEO\Integrations\Admin;
 
 use WPSEO_Addon_Manager;
 use Yoast\WP\SEO\Conditionals\Admin_Conditional;
+use Yoast\WP\SEO\Conditionals\Not_Admin_Ajax_Conditional;
+use Yoast\WP\SEO\Conditionals\User_Can_Manage_Wpseo_Options_Conditional;
 use Yoast\WP\SEO\Config\Indexing_Reasons;
 use Yoast\WP\SEO\Helpers\Current_Page_Helper;
+use Yoast\WP\SEO\Helpers\Environment_Helper;
 use Yoast\WP\SEO\Helpers\Indexing_Helper;
 use Yoast\WP\SEO\Helpers\Notification_Helper;
 use Yoast\WP\SEO\Helpers\Product_Helper;
@@ -113,6 +116,13 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	protected $addon_manager;
 
 	/**
+	 * The Environment Helper.
+	 *
+	 * @var Environment_Helper
+	 */
+	protected $environment_helper;
+
+	/**
 	 * Indexing_Notification_Integration constructor.
 	 *
 	 * @param Yoast_Notification_Center $notification_center The notification center.
@@ -122,6 +132,7 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	 * @param Notification_Helper       $notification_helper The notification helper.
 	 * @param Indexing_Helper           $indexing_helper     The indexing helper.
 	 * @param WPSEO_Addon_Manager       $addon_manager       The addon manager.
+	 * @param Environment_Helper        $environment_helper  The environment helper.
 	 */
 	public function __construct(
 		Yoast_Notification_Center $notification_center,
@@ -130,7 +141,8 @@ class Indexing_Notification_Integration implements Integration_Interface {
 		Short_Link_Helper $short_link_helper,
 		Notification_Helper $notification_helper,
 		Indexing_Helper $indexing_helper,
-		WPSEO_Addon_Manager $addon_manager
+		WPSEO_Addon_Manager $addon_manager,
+		Environment_Helper $environment_helper
 	) {
 		$this->notification_center = $notification_center;
 		$this->product_helper      = $product_helper;
@@ -139,6 +151,7 @@ class Indexing_Notification_Integration implements Integration_Interface {
 		$this->notification_helper = $notification_helper;
 		$this->indexing_helper     = $indexing_helper;
 		$this->addon_manager       = $addon_manager;
+		$this->environment_helper  = $environment_helper;
 	}
 
 	/**
@@ -168,6 +181,8 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	public static function get_conditionals() {
 		return [
 			Admin_Conditional::class,
+			Not_Admin_Ajax_Conditional::class,
+			User_Can_Manage_Wpseo_Options_Conditional::class,
 		];
 	}
 
@@ -211,13 +226,16 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	 * @return bool If the notification should be shown.
 	 */
 	protected function should_show_notification() {
+		if ( ! $this->environment_helper->is_production_mode() ) {
+			return false;
+		}
 		// Don't show a notification if the indexing has already been started earlier.
 		if ( $this->indexing_helper->get_started() > 0 ) {
 			return false;
 		}
 
 		// Never show a notification when nothing should be indexed.
-		return $this->indexing_helper->get_filtered_unindexed_count() > 0;
+		return $this->indexing_helper->get_limited_filtered_unindexed_count( 1 ) > 0;
 	}
 
 	/**

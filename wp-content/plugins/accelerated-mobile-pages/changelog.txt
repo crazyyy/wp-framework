@@ -1,5 +1,91 @@
 == Changelog ==
 
+= 1.0.77.35 (21th January 2022) =
+* Fixed: Embed URLs not working with Amp takeover active #5193
+* Fixed: Need to change Google Fonts display to optional #5191
+* Fixed: Need to make compatibility of amp analytics in infinite scroll #5194
+* Fixed: Current year is not showing in design 1,2,3 #5190
+* Fixed: VKontakte social media not working in social media profile links #5196
+* Fixed: PHP Notice: tag_rewrite_rules is deprecated #5197
+
+= 1.0.77.34 (11th January 2022) =
+* Fixed: External stylesheet Errors using Vinkmag theme #5189
+* Fixed: AMP Takeover functionality is not working on the blog posts #5188
+* Fixed: Replace webvitalsdev to Microwork #5183
+* Fixed: Wrong Notice for first time installation #5184
+
+= 1.0.77.33 (15th December 2021) =
+* Fixed: Code improvements in AMP options panel #5179
+* Fixed: Stylesheet errors when using Qoxag theme #5177
+
+= 1.0.77.32 (11th December 2021) =
+* Fixed: Code improvements in AMP pagebuilder #5179
+
+= 1.0.77.31 (7th December 2021) =
+* Fixed: Uncaught ValueError - DOMDocument::loadHTML() Error #5174
+* Fixed: PHP Notice: Undefined index: rgba #5175
+* Fixed: Optional added for font display in google fonts #5176
+
+= 1.0.77.30 (25th November 2021) =
+* Improvements: Added Filter to modify title in AMP #5170
+* Fixed: Whitelisted amp-render tag #5171
+* Fixed: Featured image not appearing in loop with Offload Media Lite #5153
+* Fixed: Infinite scroll showing posts from different categories also when same category is selected #5168
+* Fixed: Webp images not appearing in preload with WEBP express plugin #5165
+* Fixed: pagination 404 issue with infinite scroll #5167
+
+= 1.0.77.29 (28TH October 2021) =
+Improvements: Search results opens directly in Google search in AMP #5161
+Fixed: Undefined variable - pathExploded debug notice #5160
+Fixed: ID has been getting removed from the amp-img tag #5163
+
+= 1.0.77.28 (28TH October 2021) =
+Improvements: License code improved #5151
+Fixed: Default Gravatar not appearing with FV Gravatar Cache #5149
+Fixed: Featured image not appearing with Offload Media Lite #5153
+Fixed: Function name updated in the seo framework #5155
+Fixed: Lifetime license key is showing as expired in admin panel #5156
+Fixed: Video is not loading when created by slider revolution with divi #5159
+
+= 1.0.77.27 (21TH October 2021) =
+Improvements: Added AdPushup Support in AMP #5144
+
+= 1.0.77.26 (20TH October 2021) =
+Improvements: Added FV Gravatar Cache Compatibility in AMP #5149
+Fixed: Images not loading when destination structure is document root in WebP Express #5150
+
+= 1.0.77.25 (1st October 2021) =
+* Improvements: Added Plausible analytics compatible in AMP #5142
+* Fixed: The amp-minute-media-player tag is getting stripped from the content #5146
+* Fixed: Author profile images not loading from Ultimate Member plugin #5141
+* Fixed: AMP Page builder content not rendering with Muffin builder #5147
+* Fixed: Debug log Errors #5145
+
+= 1.0.77.24 (23rd September 2021) =
+* Improvements: Added Filter to disable AMP for all categories except one #5139
+* Improvements: Added Ninja Form in the description of contact form module #5138
+* Fixed: Basic/Advance popup shows everytime when visiting option panel #5143
+* Fixed: Renewal link redirecting to 404 from options panel #5140
+* Fixed: Incorrect URL while using Matomo analytics #5136
+* Fixed: Validation error in the alt tag with Transposh plugin #5135
+* Fixed: Some design issues on one specific users #5134
+* Fixed: Debug Warnings - Use of undefined constant AUTH_KEY and SECURE_AUTH_KEY #5035 
+
+= 1.0.77.23 (16th September 2021) =
+* Improvements: Added Top Mail Ru analytics support in amp #5130
+* Improvements: Added an option to move sponsorship label above the ad
+* Improvements: Updated the facebook instant articles to 50 when limit is not set #5131
+
+= 1.0.77.22 (6th September 2021) =
+* Fixed: Validation error with rankmath's "open external links in new tab" option #5129
+
+= 1.0.77.21 (6th September 2021) =
+* Fixed: Images not displaying in AMP with Lazy loading of Zeen theme #5126
+* Fixed: Missing rel noopener attribute in links #5125
+* Fixed: Incorrect canonical for Homepage if WordPress installation is another folder #5122
+* Fixed: No data hero attribute on featured image of default image #5121
+* Fixed: Debug log errors #5124
+
 = 1.0.77.20 (24th August 2021) =
 * Fixed: Validation errors when Jetpack boost plugin is active #5120
 * Fixed: Display Warning Icon more clearly if setup is not completed #5119

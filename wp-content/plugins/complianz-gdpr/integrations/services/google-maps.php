@@ -1,23 +1,21 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 add_filter( 'cmplz_known_script_tags', 'cmplz_googlemaps_script' );
 function cmplz_googlemaps_script( $tags ) {
-	$tags[] = 'new google.maps.';
-	$tags[] = 'apis.google.com/js/platform.js';
-
-	//$tags[] = 'maps.googleapis.com'; //should be added, but need to test more first.
+	$tags[] = array(
+		'name' => 'google-maps',
+		'placeholder' => 'google-maps',
+		'category' => 'marketing',
+		'urls' => array(
+			'new google.maps.',
+			'maps.google.com',
+			'google.com/maps',
+			'apis.google.com',
+		),
+	);
 	return $tags;
 }
-
-add_filter( 'cmplz_known_iframe_tags', 'cmplz_googlemaps_iframetags' );
-function cmplz_googlemaps_iframetags( $tags ) {
-	$tags[] = 'maps.google.com';
-	$tags[] = 'google.com/maps';
-	$tags[] = 'apis.google.com';
-	return $tags;
-}
-
 
 add_filter( 'cmplz_image_tags', 'cmplz_googlemaps_imagetags' );
 function cmplz_googlemaps_imagetags( $tags ) {
@@ -25,10 +23,16 @@ function cmplz_googlemaps_imagetags( $tags ) {
 	return $tags;
 }
 
+/**
+ * Declare a placeholder
+ * @param string $new_src
+ * @param string $src
+ *
+ * @return mixed|string
+ */
 function cmplz_google_maps_placeholder( $new_src, $src ) {
 
-	$key_pattern
-		= '/maps\.googleapis\.com\/maps\/api\/staticmap/i';
+	$key_pattern = '/maps\.googleapis\.com\/maps\/api\/staticmap/i';
 	if ( preg_match( $key_pattern, $src, $matches ) ) {
 		$id = str_replace(array('http://', 'https://','maps.googleapis.com/maps/api/staticmap'), '', $src);
 		//to prevent issues with the url as ID, we create a separate ID, and look it up by the url of this image
@@ -43,8 +47,7 @@ function cmplz_google_maps_placeholder( $new_src, $src ) {
 	return $new_src;
 }
 
-add_filter( 'cmplz_placeholder_google-maps', 'cmplz_google_maps_placeholder',
-	10, 2 );
+add_filter( 'cmplz_placeholder_google-maps', 'cmplz_google_maps_placeholder', 10, 2 );
 
 
 

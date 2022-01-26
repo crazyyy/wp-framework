@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Menu Social",
+    "version": "1.0.0"
+  },
+  "php": {
+    "inc": [
+      "component.php",
+      "setup.php"
+    ]
+  },
+  "css": {
+    "main.css": [
+      "assets/styles/menu-social.scss"
+    ],
+    "admin.css": [],
+    "editor-gutenberg.css": [
+      "assets/styles/menu-social.scss"
+    ]
+  },
+  "js": {
+    "main.js": [],
+    "editor-gutenberg.js": []
+  }
+}

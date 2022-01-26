@@ -1,0 +1,95 @@
+/* ==========================================================================
+ # Spacer block and X_Spacer component
+========================================================================== */
+
+@import '../../../../assets/styles/utils.scss';
+
+/* Component, block front-end and back-end
+----------------------------------------------- */
+
+.spacer {
+  position: relative;
+  height: 1px;
+
+  &--size-s {
+    @include breakpoint($breakpoint-m) {
+      margin-bottom: var(--spacing-xs);
+      margin-top: var(--spacing-xs);
+    }
+    @include breakpoint($breakpoint-m) {
+      margin-bottom: var(--spacing-m);
+      margin-top: var(--spacing-m);
+    }
+
+    &.is-preview {
+      height: var(--spacing-m);
+    }
+  }
+
+  &--size-m {
+    @include breakpoint($breakpoint-m) {
+      margin-bottom: var(--spacing-m);
+      margin-top: var(--spacing-m);
+    }
+    @include breakpoint($breakpoint-m) {
+      margin-bottom: var(--spacing-l);
+      margin-top: var(--spacing-l);
+    }
+    &.is-preview {
+      height: var(--spacing-l);
+    }
+  }
+
+  &--size-l {
+    @include breakpoint($breakpoint-m) {
+      margin-bottom: var(--spacing-l);
+      margin-top: var(--spacing-l);
+    }
+    @include breakpoint($breakpoint-l) {
+      margin-bottom: var(--spacing-xl);
+      margin-top: var(--spacing-xl);
+    }
+
+    &.is-preview {
+      height: var(--spacing-xl);
+    }
+  }
+
+  &.is-preview {
+    margin: 0;
+  }
+  &__indicator {
+    opacity: .4;
+    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    height: 100%;
+    background: currentColor;
+    .is-dark-mode & {
+      color: var(--color-white);
+    }
+    &:after,
+    &:before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      transform: translateX(-50%);
+      background: currentColor;
+    }
+    &:before {
+      top: 0;
+      bottom: auto;
+    }
+    &:after {
+      top: auto;
+      bottom: 0;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+@keyframes swinging{
+	0% {transform: rotate(6deg); }
+	50% {transform: rotate(-6deg); }
+	100% {transform: rotate(6deg); }
+}
+
+.interrogating {
+	background: md-get-palette-color(bluegrey, 900);
+	box-sizing: border-box;
+	color: white;
+	min-height: 100vh;
+	padding: 30vh 2rem 2rem;
+	width: 100%;
+	.light {
+		animation: swinging 6s ease-in-out forwards infinite;
+		left: 0;
+		margin: auto;
+		max-height: 50vh;
+		position: absolute;
+		right: 0;
+		top: -2px;
+		transform-origin: 50% 0;
+		width: auto;
+		z-index: 0;
+	}
+	.loading {
+		min-height: auto;
+		position: static;
+	}
+}
+
+.continue {
+	margin: 1rem 0;
+	text-align: center;
+}
+
+.more-suspects {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	@include bp(xs) {
+		flex-wrap: nowrap;
+	}
+	.md-card {
+		max-width: 320px;
+		width: 100%;
+		@include bp(xs) {
+			width: 50%;
+		}
+	}
+}

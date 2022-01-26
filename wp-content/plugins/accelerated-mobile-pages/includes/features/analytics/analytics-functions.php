@@ -29,6 +29,26 @@ function ampforwp_analytics() {
 								'request'=>'pageview'			
 						)
 					);
+		if (true == ampforwp_get_setting('ampforwp-infinite-scroll')) {
+			$url = ampforwp_url_controller(get_the_permalink());
+      		$ga_fields['requests'] =  array(
+				'nextpage' => esc_url($url) ,	 
+			);
+			$ga_fields['triggers'] = array(
+						'trackPageview'=> array(
+								'on'=>'visible',
+								'request'=>'pageview'			
+						),
+						'trackScrollThrough'=> array(
+								'on'=>'amp-next-page-scroll',
+								'request'=>'nextpage'			
+						),
+						'trackClickThrough'=> array(
+								'on'=>'amp-next-page-click',
+								'request'=>'nextpage'			
+						)
+					);
+		}
 		if ( true == ampforwp_get_setting('ampforwp-ga-field-anonymizeIP')) {
 			$ga_fields['vars']['anonymizeIP'] = 'true';
 		}
@@ -104,7 +124,11 @@ function ampforwp_analytics() {
 			$idsite = ampforwp_get_setting('pa-feild');
 			$title = urlencode(get_the_title());
 			$url = get_the_permalink();
-			$url = ampforwp_remove_protocol(ampforwp_url_controller($url));
+			if (function_exists( 'is_ssl' ) && !is_ssl()) {
+				$url = ampforwp_remove_protocol(ampforwp_url_controller($url));
+			}else{
+				ampforwp_url_controller($url);
+			}
 			$rand = rand(1111,9999);
 			$referer  = $url;
 			if(isset($_SERVER['HTTP_REFERER'])) {
@@ -317,6 +341,50 @@ function ampforwp_analytics() {
                 $analytics_url = "https://script.dotmetrics.net/AmpConfig.json?id=".esc_html($dot_id); ?>
                 <amp-analytics config="<?php echo esc_url_raw($analytics_url); ?>"></amp-analytics>
                 <?php } }
+            if( true == ampforwp_get_setting('ampforwp-topmailru-switch')) { 
+                $topmailru_id = '';
+                $topmailru_id = ampforwp_get_setting('ampforwp-topmailru-id');
+                if(!empty($topmailru_id)){ ?>
+                <amp-analytics type="topmailru" id="topmailru">
+				<script type="application/json">
+				{
+				    "vars": {
+				        "id": "<?php echo esc_attr($topmailru_id);?>"
+				    }
+				}
+				</script>
+				</amp-analytics>
+                <?php } }    
+                if( true == ampforwp_get_setting('ampforwp-plausible-switch')) { 
+                $site_url = site_url();?>
+                <amp-analytics>
+		    		<script type="application/json">
+				        {
+				            "vars": {
+				                "dataDomain": "<?php echo esc_attr($site_url);?>"
+				            },
+				            "requests": {
+				                "event": "https://plausible.io/api/event"
+				            },
+				            "triggers": {
+				                "trackPageview": {
+				                    "on": "visible",
+				                    "request": "event",
+				                    "extraUrlParams": {
+				                        "n": "pageview"
+				                    }
+				                },
+				            },
+				            "transport": {
+				                "beacon": true,
+				                "xhrpost": true,
+				                "image": false,
+				                "useBody": true
+				            }
+				        }
+				    </script>
+				</amp-analytics>
+                <?php }
 			if( true == ampforwp_get_setting('ampforwp-iotech-switch')) {
                 $project_id = $id = $title = $author = $categories = $cat_names = '';
                 $project_id = ampforwp_get_setting('ampforwp-iotech-projectid');

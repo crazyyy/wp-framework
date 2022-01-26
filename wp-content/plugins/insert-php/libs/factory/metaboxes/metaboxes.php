@@ -58,10 +58,10 @@
 			 *
 			 * @since 1.0.0
 			 * @param string|object $class_name_or_object
-			 * @param Wbcr_Factory443_Plugin $plugin
+			 * @param Wbcr_Factory450_Plugin $plugin
 			 * @return Wbcr_FactoryMetaboxes409_Metabox
 			 */
-			public static function register($class_name_or_object, Wbcr_Factory443_Plugin $plugin)
+			public static function register($class_name_or_object, Wbcr_Factory450_Plugin $plugin)
 			{
 
 				if( is_string($class_name_or_object) ) {

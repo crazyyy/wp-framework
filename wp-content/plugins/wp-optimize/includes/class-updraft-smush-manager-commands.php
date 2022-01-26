@@ -63,7 +63,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			return new WP_Error('compression_not_permitted', __('The blog ID provided does not match the current blog.', 'wp-optimize'));
 		}
 
-		$server = filter_var($options['compression_server'], FILTER_SANITIZE_STRING);
+		$server = sanitize_text_field($options['compression_server']);
 
 		$lossy = filter_var($options['lossy_compression'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 		$backup = filter_var($options['back_up_original'], FILTER_VALIDATE_BOOLEAN) ? true : false;
@@ -97,6 +97,11 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$response['success'] = $success;
 		$response['restore_possible'] = $backup;
 		$response['summary'] = get_post_meta($image, 'smush-info', true);
+
+		$smush_stats = get_post_meta($image, 'smush-stats', true);
+		if (isset($smush_stats['sizes-info'])) {
+			$response['sizes-info'] = WP_Optimize()->include_template('images/smush-details.php', true, array('sizes_info' => $smush_stats['sizes-info']));
+		}
 
 		return $response;
 	}
@@ -196,7 +201,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 */
 	public function update_smush_options($data) {
 		$options = array();
-		$options['compression_server'] = filter_var($data['compression_server'], FILTER_SANITIZE_STRING);
+		$options['compression_server'] = sanitize_text_field($data['compression_server']);
 		$options['lossy_compression'] = filter_var($data['lossy_compression'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 		$options['back_up_original'] = filter_var($data['back_up_original'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 		$options['back_up_delete_after'] = filter_var($data['back_up_delete_after'], FILTER_VALIDATE_BOOLEAN) ? true : false;
@@ -205,6 +210,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$options['autosmush'] = filter_var($data['autosmush'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 		$options['image_quality'] = filter_var($data['image_quality'], FILTER_SANITIZE_NUMBER_INT);
 		$options['show_smush_metabox'] = filter_var($data['show_smush_metabox'], FILTER_VALIDATE_BOOLEAN) ? 'show' : 'hide';
+		$options['webp_conversion'] = filter_var($data['webp_conversion'], FILTER_VALIDATE_BOOLEAN) ? true : false;
 
 		$success = $this->task_manager->update_smush_options($options);
 
@@ -246,7 +252,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @param mixed $data - Sent in via AJAX
 	 */
 	public function check_server_status($data) {
-		$server = filter_var($data['server'], FILTER_SANITIZE_STRING);
+		$server = sanitize_text_field($data['server']);
 		$response = array();
 		$response['status'] = true;
 		$response['online'] = $this->task_manager->check_server_online($server);

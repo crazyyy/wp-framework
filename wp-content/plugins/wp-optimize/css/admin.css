@@ -285,6 +285,12 @@ div#wpoptimize_table_list_tables_not_found + h3 {
 	display: none;
 }
 
+#wpoptimize_table_list tr td.no-table {
+	display: table-cell !important;
+	background: #FB8787;
+	font-weight: bold;
+}
+
 #optimize_form .select2-container,
 #wp-optimize-auto-options .select2-container {
 	width: 50% !important;

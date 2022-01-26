@@ -24,8 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 add_filter( 'wp_php_error_message', function ( $message ) {
 	$safe_mode_url    = admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&wbcr-php-snippets-safe-mode' );
-	$safe_mode_button = '<div style="margin:20px 0;padding:20px; background:#ffe8e8;">' . __( 'If you see this message after saving the snippet to the Woody ad snippets plugin, please enable safe mode in the Woody plugin. Safe mode will allow you to continue working in the admin panel of your site and change the snippet in which you made a php error.', 'insert_php' ) . '</div>';
-	$safe_mode_button .= '<a href="' . $safe_mode_url . '" class="button">' . __( 'Enable safe mode in Woody ad snippets', 'insert_php' ) . '</a>';
+	$safe_mode_button = '<div style="margin:20px 0;padding:20px; background:#ffe8e8;">' . __( 'If you see this message after saving the snippet to the Woody Code Snippets plugin, please enable safe mode in the Woody plugin. Safe mode will allow you to continue working in the admin panel of your site and change the snippet in which you made a php error.', 'insert_php' ) . '</div>';
+	$safe_mode_button .= '<a href="' . $safe_mode_url . '" class="button">' . __( 'Enable safe mode in Woody Code Snippets', 'insert_php' ) . '</a>';
 
 	return $message . $safe_mode_button;
 } );
@@ -60,13 +60,14 @@ add_action( 'admin_init', function () {
 
 	// If the user has updated the plugin or activated it for the first time,
 	// you need to show the page "What's new?"
-	if ( ! WINP_Plugin::app()->isNetworkAdmin() ) {
+	/*
+    if ( ! WINP_Plugin::app()->isNetworkAdmin() ) {
 		$about_page_viewed = WINP_Plugin::app()->request->get( 'wbcr_inp_about_page_viewed', null );
 		if ( is_null( $about_page_viewed ) ) {
 			if ( WINP_Helper::is_need_show_about_page() && current_user_can( 'manage_options' ) ) {
 				try {
 					$redirect_url = '';
-					if ( class_exists( 'Wbcr_FactoryPages442' ) ) {
+					if ( class_exists( 'Wbcr_FactoryPages449' ) ) {
 						$redirect_url = WINP_Plugin::app()->getPluginPageUrl( 'about', [ 'wbcr_inp_about_page_viewed' => 1 ] );
 					}
 					if ( $redirect_url ) {
@@ -82,6 +83,7 @@ add_action( 'admin_init', function () {
 			}
 		}
 	}
+    */
 } );
 
 function wbcr_inp_admin_revisions() {
@@ -148,7 +150,7 @@ function wbcr_inp_tinymce_data( $hook ) {
 
 	// styles for the plugin shorcodes
 	$shortcode_icon  = WINP_PLUGIN_URL . '/admin/assets/img/shortcode-icon5.png';
-	$shortcode_title = __( 'Woody ad snippets', 'insert-php' );
+	$shortcode_title = __( 'Woody Code Snippets', 'insert-php' );
 
 	$result                  = WINP_Helper::get_shortcode_data( true );
 	$shortcode_snippets_json = json_encode( $result );

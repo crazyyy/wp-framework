@@ -20,7 +20,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 *
 	 * link to udrpc_action main function in class UpdraftCentral_Listener
 	 */
-	public function _pre_action($command, $data, $extra_info) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This function is called from listner.php and $extra_info is being sent.
+	public function _pre_action($command, $data, $extra_info) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This function is called from listener.php and $extra_info is being sent.
 		// Here we assign the current blog_id to a variable $blog_id
 		$blog_id = get_current_blog_id();
 		if (!empty($data['site_id'])) $blog_id = $data['site_id'];
@@ -209,7 +209,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @return array
 	 */
 	protected function get_preload_data($timeout, $type = 'post') {
-		global $updraftplus, $updraftcentral_host_plugin;
+		global $updraftcentral_host_plugin, $updraftcentral_main;
 
 		if (!function_exists('get_page_templates')) {
 			require_once(ABSPATH.'wp-admin/includes/theme.php');
@@ -233,7 +233,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			'parent_pages' => $parent_pages['data']['pages'],
 			'templates' => $templates,
 			'editor_styles' => $this->get_editor_styles($timeout),
-			'wp_version' => $updraftplus->get_wordpress_version()
+			'wp_version' => $updraftcentral_main->get_wordpress_version()
 		);
 
 		if ('post' == $type) {

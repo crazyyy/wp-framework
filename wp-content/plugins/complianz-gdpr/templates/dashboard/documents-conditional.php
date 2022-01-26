@@ -2,13 +2,13 @@
 $docs = array(
 	'privacy-statement' => array(
 		'title' => __("Privacy Statements", "complianz-gdpr"),
-		'regions' => array('eu', 'us', 'uk', 'ca', 'za', 'au'),
+		'regions' => array('eu', 'us', 'uk', 'ca', 'za', 'au', 'br'),
 		'read-more' => 'https://complianz.io/definition/what-is-a-privacy-statement/',
 		'subscription' => 'premium',
 	),
 	'cookie-statement' => array(
 		'title' => __("Cookie Policy", 'complianz-gdpr'),
-		'regions' => array('eu', 'us', 'uk', 'ca', 'za', 'au'),
+		'regions' => array('eu', 'us', 'uk', 'ca', 'za', 'au', 'br'),
 		'read-more' => ' https://complianz.io/definition/what-is-a-cookie-policy/',
 		'subscription' => 'free',
 	),
@@ -19,24 +19,36 @@ $docs = array(
 		'subscription' => 'premium',
 	),
 	'do-not-sell-my-info' => array(
-		'title' => __("Do Not Sell My Personal Information", 'complianz-gdpr'),
+		'title' => __("Opt-out preferences", 'complianz-gdpr'),
 		'regions' => array('us'),
 		'read-more' => 'https://complianz.io/definition/what-is-do-not-sell-my-personal-information/',
 		'subscription' => 'free',
 	),
 	'privacy-statement-for-children' => array(
 		'title' => __("Privacy Statement for Children", 'complianz-gdpr'),
-		'regions' => array('us', 'uk', 'ca', 'za', 'au'),
+		'regions' => array('us', 'uk', 'ca', 'za', 'au', 'br'),
 		'read-more' => 'https://complianz.io/definition/what-is-a-privacy-statement-for-children/',
 		'subscription' => 'premium',
 	),
-	'disclaimer' => array(
-		'title' => __("Disclaimer", 'complianz-gdpr'),
-		'regions' => array('eu', 'us', 'uk', 'ca', 'za', 'au'),
-		'read-more' => 'https://complianz.io/definition/what-is-a-disclaimer/',
-		'subscription' => 'premium',
-	),
 );
+
+if (!class_exists('COMPLIANZ_TC') ) {
+	$title = __("Terms and Conditions",'complianz-gdpr');
+	$status = 'disabled';
+	$shortcode_icon = cmplz_icon( 'shortcode', 'disabled' , __( 'Click to copy the document shortcode', 'complianz-gdpr' ));
+	$sync_icon = cmplz_icon('sync', 'disabled');
+	$page_exists = cmplz_icon('bullet', 'disabled');
+	$generated = '<a href="'.add_query_arg( array('s'=>'complianz+terms+conditions+stand-alone', 'tab'=>'search','type'=>'term'),  admin_url('plugin-install.php') ).'">'.__('Install', 'complianz-gdpr').'</a>';
+	$args = array(
+		'status' => $status,
+		'title' => $title,
+		'page_exists' => $page_exists,
+		'sync_icon' => $sync_icon,
+		'shortcode_icon' => $shortcode_icon,
+		'generated' => $generated,
+	);
+	echo cmplz_get_template('dashboard/documents-row.php', $args);
+}
 
 foreach ($docs as $index => $doc) {
 	if ( $doc['subscription'] === 'free' ) continue;
@@ -60,7 +72,7 @@ $args = array(
 	'page_exists' => '',
 	'sync_icon' => '',
 	'shortcode_icon' => '',
-	'generated' => '<a href="https://complianz.io/features/" target="_blank" >'.__("View all documents", "complianz-gdpr").'</a>',
+	'generated' => '<a href="https://complianz.io/features/" target="_blank" >'.__("Read more", "complianz-gdpr").'</a>',
 );
 echo cmplz_get_template('dashboard/documents-row.php', $args);
 
@@ -78,8 +90,4 @@ foreach ($docs as $key => $doc) {
 		echo '</span>';
 	}
 	echo '</div></div>';
-
-
 }
-
-

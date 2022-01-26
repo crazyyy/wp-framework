@@ -43,3 +43,43 @@
 #wpo_always_purge_this_post_type_select + .select2 {
 	width: 90% !important;
 }
+
+.wpo-collapsible-content .smush-details th {
+	font-weight: bold;
+}
+
+.wpo-collapsible-content .smush-details th,
+.wpo-collapsible-content .smush-details td {
+	text-align: left;
+	padding: 0 3px;
+	font-size: 0.8em;
+}
+
+.wpo-collapsible-content .smush-details td:first-child {
+	word-break: break-all;
+}
+
+.wpo-collapsible {
+	cursor: pointer;
+}
+
+.wpo-collapsible::before {
+	display: inline-block;
+	width: 10px;
+}
+
+.wpo-collapsible::before {
+	content: '+';
+}
+
+.wpo-collapsible.opened::before {
+	content: '-';
+}
+
+.wpo-collapsible-content {
+	display: none;
+}
+
+.wpo-collapsible.opened + .wpo-collapsible-content {
+	display: block;
+}

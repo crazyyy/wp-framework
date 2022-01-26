@@ -1,8 +1,8 @@
 /**
- * Slovenčina translation
+ * Slovak translation
  * @author RobiNN <kelcakrobo@gmail.com>
  * @author Jakub Ďuraš <jkblmr@gmail.com>
- * @version 2020-08-31
+ * @version 2021-06-10
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -17,9 +17,9 @@
 		translator : 'RobiNN &lt;kelcakrobo@gmail.com&gt;, Jakub Ďuraš &lt;jkblmr@gmail.com&gt;',
 		language   : 'Slovenčina',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 31.08.2020 16:17
-		fancyDateFormat : '$1 H:i', // will show like: Dnes 16:17
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200831-161710
+		dateFormat : 'd.m.Y H:i', // will show like: 10.06.2021 23:35
+		fancyDateFormat : '$1 H:i', // will show like: Dnes 23:35
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 210610-233522
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -116,6 +116,7 @@
 			'errServerError'       : 'Vyskytla sa chyba na strane servera.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Nepodarilo sa vyprázdniť priečinok "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'Existujú ešte ďalšie $1 chyby.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Môžete vytvoriť až $1 priečinkov naraz.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Vytvoriť archív',
@@ -240,9 +241,9 @@
 			'msMar'       : 'Mar',
 			'msApr'       : 'Apr',
 			'msMay'       : 'Maj',
-			'msJun'       : 'Junij',
+			'msJun'       : 'Jun',
 			'msJul'       : 'Júl',
-			'msAug'       : 'Avg',
+			'msAug'       : 'Aug',
 			'msSep'       : 'Sep',
 			'msOct'       : 'Okt',
 			'msNov'       : 'Nov',
@@ -254,10 +255,10 @@
 			'May'         : 'Máj',
 			'June'        : 'Jún',
 			'July'        : 'Júl',
-			'August'      : 'Avgust',
-			'September'   : 'Septembra',
+			'August'      : 'August',
+			'September'   : 'September',
 			'October'     : 'Október',
-			'November'    : 'Novembra',
+			'November'    : 'November',
 			'December'    : 'December',
 			'Sunday'      : 'Nedeľa',
 			'Monday'      : 'Pondelok',
@@ -379,7 +380,7 @@
 			'netMountDialogTitle' : 'Pripojiť sieťové médium', // added 18.04.2012
 			'protocol'            : 'Protokol', // added 18.04.2012
 			'host'                : 'Hosť', // added 18.04.2012
-			'port'                : 'Pristanišče', // added 18.04.2012
+			'port'                : 'Port', // added 18.04.2012
 			'user'                : 'Užívateľ', // added 18.04.2012
 			'pass'                : 'Heslo', // added 18.04.2012
 			'confirmUnmount'      : 'Naozaj chcete odpojiť $1?',  // from v2.1 added 30.04.2012
@@ -402,7 +403,6 @@
 			'autoSync'        : 'Automatická synchronizácia',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Posunúť nahor',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'Získať URL odkaz', // from v2.1.7 added 9.2.2016
-			'share'           : 'Zdieľať',
 			'selectedItems'   : 'Vybraté položky ($1)', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID priečinka', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Povoliť prístup v offline režime', // from v2.1.10 added 3.25.2016
@@ -478,7 +478,6 @@
 			'integrations'    : 'Integrácie', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Tento elFinder má integrované nasledujúce externé služby. Pred použitím skontrolujte podmienky používania, zásady ochrany osobných údajov atď.', // from v2.1.40 added 11.7.2018
 			'showHidden'      : 'Zobraziť skryté položky', // from v2.1.41 added 24.7.2018
-			'Code Editor'     : 'Editor kódu',
 			'hideHidden'      : 'Skryť skryté položky', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Zobraziť/skryť skryté položky', // from v2.1.41 added 24.7.2018
 			'makefileTypes'   : 'Typy súborov, ktoré sa majú povoliť pomocou "Nový súbor"', // from v2.1.41 added 7.8.2018
@@ -511,7 +510,7 @@
 			'kindMsPP'        : 'Microsoft Powerpoint prezentácia',
 			'kindOO'          : 'Open Office dokument',
 			'kindAppFlash'    : 'Flashová aplikácia',
-			'kindPDF'         : 'Format prenosnega dokumenta (PDF)',
+			'kindPDF'         : 'Portable Document Format (PDF)',
 			'kindTorrent'     : 'Bittorrent súbor',
 			'kind7z'          : '7z archív',
 			'kindTAR'         : 'TAR archív',
@@ -521,8 +520,8 @@
 			'kindZIP'         : 'ZIP archív',
 			'kindRAR'         : 'RAR archív',
 			'kindJAR'         : 'Java JAR súbor',
-			'kindTTF'         : 'Pisava True Type',
-			'kindOTF'         : 'Odprite pisavo Type',
+			'kindTTF'         : 'True Type font',
+			'kindOTF'         : 'Open Type font',
 			'kindRPM'         : 'RPM balík',
 			// texts
 			'kindText'        : 'Textový document',
@@ -531,7 +530,7 @@
 			'kindCSS'         : 'Cascading style sheet (CSS)',
 			'kindHTML'        : 'HTML dokument',
 			'kindJS'          : 'Javascript zdrojový kód',
-			'kindRTF'         : 'Oblika obogatenega besedila',
+			'kindRTF'         : 'Rich Text Format',
 			'kindC'           : 'C zdrojový kód',
 			'kindCHeader'     : 'C header zdrojový kód',
 			'kindCPP'         : 'C++ zdrojový kód',
@@ -546,7 +545,7 @@
 			'kindAWK'         : 'AWK zdrojový kód',
 			'kindCSV'         : 'Čiarkou oddeľované hodnoty',
 			'kindDOCBOOK'     : 'Docbook XML dokument',
-			'kindMarkdown'    : 'Besedilo označevanja', // added 20.7.2015
+			'kindMarkdown'    : 'Markdown text', // added 20.7.2015
 			// images
 			'kindImage'       : 'Obrázok',
 			'kindBMP'         : 'BMP obrázok',
@@ -565,7 +564,7 @@
 			'kindAudioMIDI'   : 'MIDI zvuk',
 			'kindAudioOGG'    : 'Ogg Vorbis zvuk',
 			'kindAudioWAV'    : 'WAV zvuk',
-			'AudioPlaylist'   : 'Seznam predvajanja MP3',
+			'AudioPlaylist'   : 'MP3 playlist',
 			'kindVideo'       : 'Video súbor',
 			'kindVideoDV'     : 'DV video',
 			'kindVideoMPEG'   : 'MPEG video',
@@ -579,3 +578,4 @@
 		}
 	};
 }));
+

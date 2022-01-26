@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Masahiro Nakashima <kanakogi@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+msgid "The theme can be changed and displayed to only logged in users."
+msgstr ""
+"ログインしているユーザーにだけ、テーマを変更して表示することができます。"
+
+msgid "Display the selected theme to the user logged in."
+msgstr "選択したテーマをログインユーザーに表示します。"
+
+msgid "Roles"
+msgstr "表示する権限グループ"
+
+msgid ""
+"User permission group for display of test themes. You can select more than "
+"one."
+msgstr "テストテーマを表示するユーザーの権限グループ。複数選択可能。"
+
+msgid "Parameter Function"
+msgstr "パラメーター機能"
+
+msgid ""
+"When this function is enable the test theme can be displayed even when the "
+"current state is \"Off.\""
+msgstr ""
+"この機能を有効にすると現在の状態が「Off」でも、テストテーマを表示することがで"
+"きます。"
+
+msgid "Saved"
+msgstr "保存しました"
+
+msgid "An invalid value has been sent"
+msgstr "不正な値が送信されました"
+
+msgid "Current state"
+msgstr "現在の状態"
+
+msgid "Test Theme"
+msgstr "テストテーマ"
+
+msgid "Enable"
+msgstr "有効"
+
+msgid "Disable"
+msgstr "無効"
+
+msgid "Save"
+msgstr "変更を保存"
+
+msgid "These IP address users can display the test theme."
+msgstr ""
+"この固定IPアドレスのユーザーにだけ、テストテーマを表示することができます。"

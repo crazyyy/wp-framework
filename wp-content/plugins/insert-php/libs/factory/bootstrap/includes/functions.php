@@ -11,7 +11,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
+if( !defined('ABSPATH') ) {
 	exit;
 }
 
@@ -20,13 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 3.2.0
  */
-class Wbcr_FactoryBootstrap443_Manager {
+class Wbcr_FactoryBootstrap450_Manager {
 
 	/**
 	 * A plugin for which the manager was created.
 	 *
 	 * @since 3.2.0
-	 * @var Wbcr_Factory443_Plugin
+	 * @var Wbcr_Factory450_Plugin
 	 */
 	public $plugin;
 
@@ -51,29 +51,31 @@ class Wbcr_FactoryBootstrap443_Manager {
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct( Wbcr_Factory443_Plugin $plugin ) {
+	public function __construct(Wbcr_Factory450_Plugin $plugin)
+	{
 		$this->plugin = $plugin;
 
-		add_action( 'admin_enqueue_scripts', [ $this, 'loadAssets' ] );
-		add_filter( 'admin_body_class', [ $this, 'adminBodyClass' ] );
+		add_action('admin_enqueue_scripts', [$this, 'loadAssets']);
+		add_filter('admin_body_class', [$this, 'adminBodyClass']);
 	}
 
 	/**
 	 * Includes the Bootstrap scripts.
 	 *
+	 * @param array|string $scripts
 	 * @since 3.2.0
 	 *
-	 * @param array|string $scripts
 	 */
-	public function enqueueScript( $scripts ) {
-		if ( is_array( $scripts ) ) {
-			foreach ( $scripts as $script ) {
-				if ( ! in_array( $script, $this->scripts ) ) {
+	public function enqueueScript($scripts)
+	{
+		if( is_array($scripts) ) {
+			foreach($scripts as $script) {
+				if( !in_array($script, $this->scripts) ) {
 					$this->scripts[] = $script;
 				}
 			}
 		} else {
-			if ( ! in_array( $scripts, $this->scripts ) ) {
+			if( !in_array($scripts, $this->scripts) ) {
 				$this->scripts[] = $scripts;
 			}
 		}
@@ -82,20 +84,21 @@ class Wbcr_FactoryBootstrap443_Manager {
 	/**
 	 *  * Includes the Bootstrap styles.
 	 *
+	 * @param array|string $styles
 	 * @since 3.2.0
 	 *
-	 * @param array|string $styles
 	 */
-	public function enqueueStyle( $styles ) {
+	public function enqueueStyle($styles)
+	{
 
-		if ( is_array( $styles ) ) {
-			foreach ( $styles as $style ) {
-				if ( ! in_array( $style, $this->styles ) ) {
+		if( is_array($styles) ) {
+			foreach($styles as $style) {
+				if( !in_array($style, $this->styles) ) {
 					$this->styles[] = $style;
 				}
 			}
 		} else {
-			if ( ! in_array( $styles, $this->styles ) ) {
+			if( !in_array($styles, $this->styles) ) {
 				$this->styles[] = $styles;
 			}
 		}
@@ -104,25 +107,26 @@ class Wbcr_FactoryBootstrap443_Manager {
 	/**
 	 * Loads Bootstrap assets.
 	 *
-	 * @since 3.2.0
 	 * @return void
+	 * @since 3.2.0
 	 * @see   admin_enqueue_scripts
 	 *
 	 */
-	public function loadAssets( $hook ) {
+	public function loadAssets($hook)
+	{
 
-		do_action( 'wbcr_factory_443_bootstrap_enqueue_scripts', $hook );
-		do_action( 'wbcr_factory_443_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), $hook );
+		do_action('wbcr_factory_450_bootstrap_enqueue_scripts', $hook);
+		do_action('wbcr_factory_450_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), $hook);
 
 		$dependencies = [];
-		if ( ! empty( $this->scripts ) ) {
+		if( !empty($this->scripts) ) {
 			$dependencies[] = 'jquery';
 			$dependencies[] = 'jquery-ui-core';
 			$dependencies[] = 'jquery-ui-widget';
 		}
 
-		foreach ( $this->scripts as $script ) {
-			switch ( $script ) {
+		foreach($this->scripts as $script) {
+			switch( $script ) {
 				case 'plugin.iris':
 					$dependencies[] = 'jquery-ui-widget';
 					$dependencies[] = 'jquery-ui-slider';
@@ -131,20 +135,21 @@ class Wbcr_FactoryBootstrap443_Manager {
 			}
 		}
 
-		if ( ! empty( $this->scripts ) ) {
-			$this->enqueueScripts( $this->scripts, 'js', $dependencies );
+		if( !empty($this->scripts) ) {
+			$this->enqueueScripts($this->scripts, 'js', $dependencies);
 		}
-		if ( ! empty( $this->styles ) ) {
-			$this->enqueueScripts( $this->styles, 'css', $dependencies );
+		if( !empty($this->styles) ) {
+			$this->enqueueScripts($this->styles, 'css', $dependencies);
 		}
 	}
 
 	/**
-	 * @param array  $scripts
+	 * @param array $scripts
 	 * @param string $type
-	 * @param array  $dependencies
+	 * @param array $dependencies
 	 */
-	protected function enqueueScripts( array $scripts, $type, array $dependencies ) {
+	protected function enqueueScripts(array $scripts, $type, array $dependencies)
+	{
 
 		$is_first = true;
 
@@ -153,66 +158,66 @@ class Wbcr_FactoryBootstrap443_Manager {
 		 *
 		 * @since 4.1.0
 		 */
-		$cache_enable = apply_filters( 'wbcr/factory/bootstrap/cache_enable', true );
+		$cache_enable = apply_filters('wbcr/factory/bootstrap/cache_enable', true);
 
-		$cache_id       = md5( implode( ',', $this->scripts ) . $type . $this->plugin->getPluginVersion() );
-		$cache_dir_path = FACTORY_BOOTSTRAP_443_DIR . '/assets/cache/';
-		$cache_dir_url  = FACTORY_BOOTSTRAP_443_URL . '/assets/cache/';
+		$cache_id = md5(implode(',', $this->scripts) . $type . $this->plugin->getPluginVersion());
+		$cache_dir_path = FACTORY_BOOTSTRAP_450_DIR . '/assets/cache/';
+		$cache_dir_url = FACTORY_BOOTSTRAP_450_URL . '/assets/cache/';
 
 		$cache_filepath = $cache_dir_path . $cache_id . ".min." . $type;
-		$cache_fileurl  = $cache_dir_url . $cache_id . ".min." . $type;
+		$cache_fileurl = $cache_dir_url . $cache_id . ".min." . $type;
 
-		if ( $cache_enable && file_exists( $cache_filepath ) ) {
-			if ( $type == 'js' ) {
-				wp_enqueue_script( 'wbcr-factory-bootstrap-' . $cache_id, $cache_fileurl, $dependencies, $this->plugin->getPluginVersion() );
+		if( $cache_enable && file_exists($cache_filepath) ) {
+			if( $type == 'js' ) {
+				wp_enqueue_script('wbcr-factory-bootstrap-cached', $cache_fileurl, $dependencies, $this->plugin->getPluginVersion());
 			} else {
-				wp_enqueue_style( 'wbcr-factory-bootstrap-' . $cache_id, $cache_fileurl, [], $this->plugin->getPluginVersion() );
+				wp_enqueue_style('wbcr-factory-bootstrap-cached', $cache_fileurl, [], $this->plugin->getPluginVersion());
 			}
 		} else {
 			$cache_dir_exists = false;
-			if ( ! file_exists( $cache_dir_path ) ) {
-				if ( @mkdir( $cache_dir_path, 0755 ) && wp_is_writable( $cache_dir_path ) ) {
+			if( !file_exists($cache_dir_path) ) {
+				if( @mkdir($cache_dir_path, 0755) && wp_is_writable($cache_dir_path) ) {
 					$cache_dir_exists = true;
 				}
 			} else {
-				if ( wp_is_writable( $cache_dir_path ) ) {
+				if( wp_is_writable($cache_dir_path) ) {
 					$cache_dir_exists = true;
 				}
 			}
 
 			$concat_files = [];
-			foreach ( $scripts as $script_to_load ) {
-				$script_to_load = sanitize_text_field( $script_to_load );
-				if ( $cache_enable && $cache_dir_exists ) {
-					$fname = FACTORY_BOOTSTRAP_443_DIR . "/assets/$type-min/$script_to_load.min." . $type;
-					if ( file_exists( $fname ) ) {
-						$f              = @fopen( $fname, 'r' );
-						$concat_files[] = @fread( $f, filesize( $fname ) );
-						@fclose( $f );
+			foreach($scripts as $script_to_load) {
+				$script_to_load = sanitize_text_field($script_to_load);
+				if( $cache_enable && $cache_dir_exists ) {
+					$fname = FACTORY_BOOTSTRAP_450_DIR . "/assets/$type-min/$script_to_load.min." . $type;
+					if( file_exists($fname) ) {
+						$f = @fopen($fname, 'r');
+						$concat_files[] = @fread($f, filesize($fname));
+						@fclose($f);
 					}
 				} else {
-					if ( $type == 'js' ) {
-						wp_enqueue_script( md5( $script_to_load ), FACTORY_BOOTSTRAP_443_URL . "/assets/$type-min/$script_to_load.min." . $type, $is_first ? $dependencies : false, $this->plugin->getPluginVersion() );
+					if( $type == 'js' ) {
+						wp_enqueue_script(md5($script_to_load), FACTORY_BOOTSTRAP_450_URL . "/assets/$type-min/$script_to_load.min." . $type, $is_first ? $dependencies : false, $this->plugin->getPluginVersion());
 					} else {
-						wp_enqueue_style( md5( $script_to_load ), FACTORY_BOOTSTRAP_443_URL . "/assets/$type-min/$script_to_load.min." . $type, [], $this->plugin->getPluginVersion() );
+						wp_enqueue_style(md5($script_to_load), FACTORY_BOOTSTRAP_450_URL . "/assets/$type-min/$script_to_load.min." . $type, [], $this->plugin->getPluginVersion());
 					}
 					$is_first = false;
 				}
 			}
 
-			if ( $cache_enable && $cache_dir_exists && ! empty( $concat_files ) ) {
+			if( $cache_enable && $cache_dir_exists && !empty($concat_files) ) {
 
-				$cf            = @fopen( $cache_filepath, 'w' );
-				$write_content = implode( PHP_EOL, $concat_files );
-				@fwrite( $cf, $write_content );
-				@fclose( $cf );
-				chmod( $cache_filepath, 0755 );
+				$cf = @fopen($cache_filepath, 'w');
+				$write_content = implode(PHP_EOL, $concat_files);
+				@fwrite($cf, $write_content);
+				@fclose($cf);
+				chmod($cache_filepath, 0755);
 
-				if ( file_exists( $cache_filepath ) ) {
-					if ( $type == 'js' ) {
-						wp_enqueue_script( 'wbcr-factory-bootstrap-' . $cache_id, $cache_fileurl, $dependencies, $this->plugin->getPluginVersion() );
+				if( file_exists($cache_filepath) ) {
+					if( $type == 'js' ) {
+						wp_enqueue_script('wbcr-factory-bootstrap-' . $cache_id, $cache_fileurl, $dependencies, $this->plugin->getPluginVersion());
 					} else {
-						wp_enqueue_style( 'wbcr-factory-bootstrap-' . $cache_id, $cache_fileurl, [], $this->plugin->getPluginVersion() );
+						wp_enqueue_style('wbcr-factory-bootstrap-' . $cache_id, $cache_fileurl, [], $this->plugin->getPluginVersion());
 					}
 				}
 			}
@@ -222,13 +227,14 @@ class Wbcr_FactoryBootstrap443_Manager {
 	/**
 	 * Adds the body classes: 'factory-flat or 'factory-volumetric'.
 	 *
-	 * @since 3.2.0
-	 *
 	 * @param string $classes
 	 *
 	 * @return string
+	 * @since 3.2.0
+	 *
 	 */
-	public function adminBodyClass( $classes ) {
+	public function adminBodyClass($classes)
+	{
 		$classes .= FACTORY_FLAT_ADMIN ? ' factory-flat ' : ' factory-volumetric ';
 
 		return $classes;

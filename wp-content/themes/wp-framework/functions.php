@@ -43,7 +43,7 @@ function wpeStyles()  {
   wp_enqueue_style('wpeasy-style'); // Enqueue it!
 }
 
-add_action('init', 'wpeHeaderScripts'); // Add Scripts to wp_head
+add_action('wp_enqueue_scripts', 'wpeHeaderScripts'); // Add Scripts to wp_head
 function wpeHeaderScripts() {
   // wp_deregister_script('jquery');
   // wp_deregister_script('jquery-migrate');

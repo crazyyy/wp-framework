@@ -83,11 +83,6 @@ class Re_Smush_It_Task extends Updraft_Smush_Task {
 
 		if ($lossy) {
 			$quality = $this->get_option('image_quality');
-
-			if (89 >= $quality || 100 <= $quality) {
-				$quality = 95;
-			}
-
 		} else {
 			$quality = 100;
 		}

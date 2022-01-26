@@ -76,20 +76,6 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 		// return array('response' => $response['response'], 'status' => $response['status'], 'log' => $response['log'] );
 	}
 	
-	/**
-	 * Function to retrieve raw backup history given a timestamp and nonce
-	 *
-	 * @param Array $data - Data parameter; keys: timestamp, nonce
-	 *
-	 * @return String if empty result will be empty string
-	 */
-	public function rawbackup_history($data) {
-
-		$history = UpdraftPlus_Backup_History::get_history();
-
-		return $this->_updraftplus_admin->raw_backup_info($history, $data['timestamp'], $data['nonce'], null);
-	}
-	
 	public function updraftcentral_delete_key($params) {
 		global $updraftcentral_main;
 		if (!is_a($updraftcentral_main, 'UpdraftCentral_Main')) {

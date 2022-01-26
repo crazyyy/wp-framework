@@ -5,7 +5,7 @@
  * @type  elFinder.command
  * @author  Naoki Sawada
  */
-elFinder.prototype.commands.empty = function() {
+ elFinder.prototype.commands.empty = function() {
 	"use strict";
 	var self, fm,
 		selFiles = function(select) {
@@ -26,10 +26,17 @@ elFinder.prototype.commands.empty = function() {
 
 	this.getstate = function(select) {
 		var sel = selFiles(select),
-			cnt;
+			cnt,
+			filter = function(files) {
+				var fres = true;
+				return jQuery.grep(files, function(f) {
+					fres = fres && f.read && f.write && f.mime === 'directory' ? true : false;
+					return fres;
+				});
+			};
 		
 		cnt = sel.length;
-		return jQuery.grep(sel, function(f) { return f.read && f.write && f.mime === 'directory' ? true : false; }).length == cnt ? 0 : -1;
+		return filter(sel).length == cnt ? 0 : -1;
 	};
 	
 	this.exec = function(hashes) {

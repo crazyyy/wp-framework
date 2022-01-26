@@ -14,22 +14,7 @@ defined( 'WPINC' ) || exit;
 				<?php echo __( 'This option can help to correct the cache vary for certain advanced mobile or tablet visitors.', 'litespeed-cache' ); ?>
 				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/general/#guest-mode' ); ?>
 				<br /><?php Doc::notice_htaccess(); ?>
-				<?php
-					$typeList = array();
-					if ( $this->conf( Base::O_GUEST ) && ! $this->conf( Base::O_OPTM_UCSS ) ) {
-						$typeList[] = 'UCSS';
-					}
-					if ( $this->conf( Base::O_GUEST ) && ! $this->conf( Base::O_OPTM_CSS_ASYNC ) ) {
-						$typeList[] = 'CCSS';
-					}
-					if ( ! empty( $typeList ) ) {
-						$theType = implode( '/', $typeList );
-						echo '<br />';
-						echo '<font class="litespeed-info">';
-						echo '⚠️ ' . sprintf( __( 'Your %1s quota on %2s will still be in use.', 'litespeed-cache' ), $theType, 'QUIC.cloud' );
-						echo '</font>';
-					}
-				?>
+				<br /><?php Doc::crawler_affected(); ?>
 			</div>
 		</td>
 	</tr>
