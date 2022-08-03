@@ -109,7 +109,7 @@ class Slack extends OpenGraph {
 	}
 
 	/**
-	 * Get product data
+	 * Get product data.
 	 *
 	 * @return array
 	 */
@@ -191,7 +191,7 @@ class Slack extends OpenGraph {
 		$data    = [];
 		$product = \wc_get_product( $post );
 
-		$data[ __( 'Price', 'rank-math' ) ]        = strip_tags( \wc_price( $product->get_price() ) ); // phpcs:ignore
+		$data[ __( 'Price', 'rank-math' ) ]        = $this->get_product_price( $product );
 		$data[ __( 'Availability', 'rank-math' ) ] = $this->get_product_availability( $product );
 
 		return $data;
@@ -205,8 +205,8 @@ class Slack extends OpenGraph {
 	private function get_edd_product_data() {
 		global $post;
 
-		$data    = [];
-		$data[ __( 'Price', 'rank-math' ) ] = strip_tags( \edd_price( $post->ID, false ) ); // phpcs:ignore
+		$data                               = [];
+		$data[ __( 'Price', 'rank-math' ) ] = wp_strip_all_tags( \edd_price( $post->ID, false ) );
 
 		return $data;
 	}
@@ -225,6 +225,29 @@ class Slack extends OpenGraph {
 		}
 
 		return $availability_text;
+	}
+
+	/**
+	 * Get price of WooCommerce product.
+	 * Gets price range for variable products.
+	 *
+	 * @param object $product Product object.
+	 *
+	 * @return string
+	 */
+	private function get_product_price( $product ) {
+		$price = wp_strip_all_tags( \wc_price( $product->get_price() ) );
+		if ( $product->is_type( 'variable' ) ) {
+			$lowest  = \wc_format_decimal( $product->get_variation_price( 'min', false ), \wc_get_price_decimals() );
+			$highest = \wc_format_decimal( $product->get_variation_price( 'max', false ), \wc_get_price_decimals() );
+
+			$price = wp_strip_all_tags( \wc_price( $lowest ) . ' - ' . \wc_price( $highest ) );
+			if ( $lowest === $highest ) {
+				$price = wp_strip_all_tags( \wc_price( $lowest ) );
+			}
+		}
+
+		return $price;
 	}
 
 	/**
@@ -251,7 +274,7 @@ class Slack extends OpenGraph {
 	private function get_page_data() {
 		global $post;
 
-		$data = [];
+		$data                                      = [];
 		$data[ __( 'Time to read', 'rank-math' ) ] = $this->calculate_time_to_read( $post );
 
 		return $data;
@@ -265,9 +288,17 @@ class Slack extends OpenGraph {
 	 * @return string
 	 */
 	private function calculate_time_to_read( $post ) {
-		$words_per_minute = 200;
 
-		$content = wp_strip_all_tags( $post->post_content );
+		/**
+		 * Filter: 'rank_math/frontend/time_to_read_content' - Change the text to calculate the time to read.
+		 */
+		$content = $this->do_filter( 'frontend/time_to_read_content', wp_strip_all_tags( $post->post_content ) );
+
+		/**
+		 * Filter: 'rank_math/frontend/time_to_read_wpm' - Change the words per minute to calculate the time to read.
+		 */
+		$words_per_minute = absint( $this->do_filter( 'frontend/time_to_read_wpm', 200 ) );
+
 		$words   = str_word_count( $content );
 		$minutes = floor( $words / $words_per_minute );
 

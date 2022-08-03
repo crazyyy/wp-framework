@@ -1,6 +1,6 @@
 <?php
 /**
- * Outputs schema code specific for Google's JSON LD stuff
+ * Output the Schema.org markup in JSON-LD format.
  *
  * @since      0.9.0
  * @package    RankMath
@@ -100,7 +100,7 @@ class JsonLD {
 		 *
 		 * @param array $unsigned An array of data to output in JSON-LD.
 		 */
-		$data = $this->do_filter( 'schema/preview/validate', $this->validate_schema( $data ) );
+		$data = $this->do_filter( 'schema/preview/validate', $this->do_filter( 'schema/validated_data', $this->validate_schema( $data ) ) );
 
 		echo wp_json_encode( array_values( $data ) );
 	}
@@ -148,7 +148,7 @@ class JsonLD {
 		 * @param JsonLD $unsigned JsonLD instance.
 		 */
 		$data = $this->do_filter( 'json_ld', [], $this );
-		$data = $this->validate_schema( $data );
+		$data = $this->do_filter( 'schema/validated_data', $this->validate_schema( $data ) );
 		if ( is_array( $data ) && ! empty( $data ) ) {
 
 			$class = defined( 'RANK_MATH_PRO_FILE' ) ? 'schema-pro' : 'schema';
@@ -236,8 +236,8 @@ class JsonLD {
 			'\\RankMath\\Schema\\Website'       => $can_add_global,
 			'\\RankMath\\Schema\\PrimaryImage'  => is_singular() && ! post_password_required() && $can_add_global,
 			'\\RankMath\\Schema\\Breadcrumbs'   => $this->can_add_breadcrumb(),
-			'\\RankMath\\Schema\\Author'        => is_author() || ( is_singular() && $can_add_global ),
 			'\\RankMath\\Schema\\Webpage'       => $can_add_global,
+			'\\RankMath\\Schema\\Author'        => is_author() || ( is_singular() && $can_add_global ),
 			'\\RankMath\\Schema\\Products_Page' => $is_product_archive,
 			'\\RankMath\\Schema\\Singular'      => ! post_password_required() && is_singular(),
 		];
@@ -282,6 +282,14 @@ class JsonLD {
 				continue;
 			}
 
+			// Need this conditions to convert date to valid ISO 8601 format.
+			if ( 'datePublished' === $key && '%date(Y-m-dTH:i:sP)%' === $schema ) {
+				$schema = '%date(Y-m-d\TH:i:sP)%';
+			}
+			if ( 'dateModified' === $key && '%modified(Y-m-dTH:i:sP)%' === $schema ) {
+				$schema = '%modified(Y-m-d\TH:i:sP)%';
+			}
+
 			$new_schemas[ $key ] = Str::contains( '%', $schema ) ? Helper::replace_vars( $schema, $object ) : $schema;
 			if ( '' === $new_schemas[ $key ] ) {
 				unset( $new_schemas[ $key ] );
@@ -308,7 +316,10 @@ class JsonLD {
 			return;
 		}
 
-		$schema['author'] = [ '@id' => $data['ProfilePage']['@id'] ];
+		$schema['author'] = [
+			'@id'  => $data['ProfilePage']['@id'],
+			'name' => get_the_author(),
+		];
 	}
 
 	/**

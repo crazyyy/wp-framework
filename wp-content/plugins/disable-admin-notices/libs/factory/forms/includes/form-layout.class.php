@@ -14,12 +14,12 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms450_FormLayout') ) {
+	if( !class_exists('Wbcr_FactoryForms453_FormLayout') ) {
 
 		/**
 		 * The base class for all form layouts.
 		 */
-		abstract class Wbcr_FactoryForms450_FormLayout extends Wbcr_FactoryForms450_Holder {
+		abstract class Wbcr_FactoryForms453_FormLayout extends Wbcr_FactoryForms453_Holder {
 
 			/**
 			 * A form layout name.
@@ -42,7 +42,7 @@
 			 *
 			 * @since 1.0.0
 			 * @param mixed[] $options A holder options.
-			 * @param Wbcr_FactoryForms450_Form $form A parent form.
+			 * @param Wbcr_FactoryForms453_Form $form A parent form.
 			 */
 			public function __construct($options, $form)
 			{
@@ -52,8 +52,8 @@
 
 				parent::__construct($options, $form);
 
-				$this->addCssClass('factory-forms-450-' . $this->type);
-				$this->addCssClass('factory-forms-450-' . $this->name);
+				$this->addCssClass('factory-forms-453-' . $this->type);
+				$this->addCssClass('factory-forms-453-' . $this->name);
 			}
 
 			/**

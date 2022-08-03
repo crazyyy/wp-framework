@@ -1,113 +1,95 @@
-<?php
-
-/** get a random text string from letters and numbers.
- *
- * @param $length
- *
- * @return string
- */
-function imfsRandomString( $length ) {
-  /* some characters removed from this set to reduce confusion reading aloud */
-  $characters       = '23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXYZ';
-  $charactersLength = strlen( $characters );
-  $randomString     = '';
-  for ( $i = 0; $i < $length; $i ++ ) {
-    $randomString .= $characters[ rand( 0, $charactersLength - 1 ) ];
-  }
-
-  return $randomString;
-}
-
-function imfsToObject( $rows ) {
-  $variables = [];
-  foreach ( $rows as $row ) {
-    $variables[ $row->Variable_name ] = is_numeric( $row->Value ) ? intval( $row->Value ) : $row->Value;
-  }
-
-  return (object) $variables;
-}
-
-function imfsToResultSet( $rows, $nameCaption = 'Item', $valueCaption = 'Value' ) {
-  $res = [];
-  foreach ( $rows as $name => $value ) {
-    $rsrow = [ $nameCaption => $name, $valueCaption => $value ];
-    $res[] = $rsrow;
-  }
-
-  return $res;
-}
-
-function getActivePlugins() {
-  $plugins = get_plugins();
-  $result  = [];
-  foreach ( $plugins as $path => $desc ) {
-    if ( is_plugin_active( $path ) ) {
-      $result[] = $desc['Name'];
-    }
-  }
-
-  return $result;
-}
-
-function imfsGetWpDescription( $db ) {
-  global $wp_db_version;
-  global $wp_version;
-  global $required_php_version;
-  global $required_mysql_version;
-  global $_SERVER;
-  /** @noinspection PhpUnnecessaryLocalVariableInspection */
-  $wordpress = [
-    'webserverversion'       => $_SERVER['SERVER_SOFTWARE'],
-    'wp_version'             => $wp_version,
-    'wp_db_version'          => $wp_db_version,
-    'phpversion'             => phpversion(),
-    'required_php_version'   => $required_php_version,
-    'mysqlversion'           => $db->semver->version,
-    'required_mysql_version' => $required_mysql_version,
-    'pluginversion'          => index_wp_mysql_for_speed_VERSION_NUM,
-    'is_multisite'           => is_multisite(),
-    'is_main_site'           => is_main_site(),
-    'current_blog_id'        => get_current_blog_id(),
-    'active_plugins'         => implode( '|', getActivePlugins() ),
-  ];
-
-  return $wordpress;
-}
+<?php /** @noinspection ALL */
 
 function imfsGetAllStats( $db ) {
   global $_SERVER;
-  $variables     = imfsToObject( $db->stats[0] );
-  $globalStatus  = imfsToObject( $db->stats[3] );
-  $innoDbMetrics = imfsToObject( $db->stats[4] );
+  $variables    = ImfsQueries::toObject( $db->getVariables() );
+  $globalStatus = ImfsQueries::toObject( $db->getStatus() );
+  $tableStats   = $db->getTableStats();
 
-  $variables->hostname        = imfsRedactHost( $variables->hostname );
-  $variables->report_host     = imfsRedactHost( $variables->report_host );
-  $variables->report_password = imfsRedactHost( $variables->report_password );
-  if ( $globalStatus->Rsa_public_key ) {
+  $variables->hostname        = ImfsQueries::redactHost( $variables->hostname );
+  $variables->report_host     = ImfsQueries::redactHost( $variables->report_host );
+  $variables->report_password = ImfsQueries::redactHost( $variables->report_password );
+  if ( property_exists( $globalStatus, 'Rsa_public_key' ) ) {
     $globalStatus->Rsa_public_key = 'Redacted';
   }
-  $wordpress = imfsGetWpDescription( $db );
+  if ( property_exists( $globalStatus, 'Caching_sha2_password_rsa_public_key' ) ) {
+    $globalStatus->Caching_sha2_password_rsa_public_key = 'Redacted';
+  }
+  $wordpress = ImfsQueries::getWpDescription( $db );
+  $dbms      = imfs_get_dbms_stats( $globalStatus, $variables );
+
   /** @noinspection PhpUnnecessaryLocalVariableInspection */
   $stats = [
-    'id'            => '', /* id should be first */
-    'wordpress'     => $wordpress,
-    'mysqlVer'      => $db->semver,
-    'keys'          => $db->getIndexList(),
-    'alltables'     => $db->stats[1],
+    'id'           => '', /* id should be first */
+    'wordpress'    => $wordpress,
+    'dbms'         => $dbms,
+    'mysqlVer'     => $db->semver,
+    'keys'         => $db->getIndexList(),
+    'alltables'    => $tableStats,
     //'timings'      => $db->timings,
-    'globalStatus'  => $globalStatus,
-    'innodbMetrics' => $innoDbMetrics,
-    'variables'     => $variables,
+    'globalStatus' => $globalStatus,
+    'variables'    => $variables,
   ];
 
   return $stats;
+}
 
+function imfs_get_dbms_stats( $globalStatus, $variables ) {
+  $dbms = [];
+  if ( isset( $globalStatus->Memory_used ) ) {
+    $dbms['mbytesRam'] = round( $globalStatus->Memory_used / ( 1024 * 1024 ), 0 );
+  }
+  if ( isset( $variables->innodb_buffer_pool_size ) ) {
+    $dbms['mbytesBufferPoolSize'] = round( $variables->innodb_buffer_pool_size / ( 1024 * 1024 ), 0 );
+  }
+  if ( isset( $globalStatus->Innodb_buffer_pool_bytes_data ) ) {
+    $dbms['mbytesBufferPoolActive'] = round( $globalStatus->Innodb_buffer_pool_bytes_data / ( 1024 * 1024 ), 0 );
+  }
+  if ( isset( $globalStatus->Innodb_buffer_pool_bytes_dirty ) ) {
+    $dbms['mbytesBufferPoolDirty'] = round( $globalStatus->Innodb_buffer_pool_bytes_dirty / ( 1024 * 1024 ), 0 );
+  }
+  if ( isset( $globalStatus->Uptime ) ) {
+    $dbms['sUptime'] = round( $globalStatus->Uptime, 0 );
+  }
+
+  $dbms['msNullQueryTime'] = imfsGetNullQueryTime();
+  return $dbms;
+}
+
+function imfsGetNullQueryTime () {
+  /* Measure and report the elapsed wall time for a trivial query,
+ * hopefully to identify bogged-down and/or shared servers. */
+  global $wpdb;
+  $startTime = imfsGetTime();
+  $wpdb->get_var( ImfsQueries::tagQuery('SELECT 1') );
+  return floatval( round( 1000 * ( imfsGetTime() - $startTime ), 3 ) );
+}
+
+function imfsGetTime() {
+  try {
+    $hasHrTime = function_exists( 'hrtime' );
+  } catch ( Exception $ex ) {
+    $hasHrTime = false;
+  }
+
+  try {
+    /** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
+    return $hasHrTime ? hrtime( true ) * 0.000000001 : time();
+  } catch ( Exception $ex ) {
+    return time();
+  }
 }
 
 function imfs_upload_monitor( $db, $idString, $name, $monitor ) {
-
+  $wordpress    = ImfsQueries::getWpDescription( $db );
+  $globalStatus = ImfsQueries::toObject( $db->getStatus() );
+  $variables    = ImfsQueries::toObject( $db->getVariables() );
+  $dbms         = imfs_get_dbms_stats( $globalStatus, $variables );
   try {
-    $monitor['id'] = $idString;
+    $monitor['id']        = $idString;
+    $monitor['wordpress'] = $wordpress;
+    $monitor['dbms']      = $dbms;
+    $monitor['alltables'] = $db->getTableStats();
     imfs_upload_post( (object) $monitor );
   } catch ( Exception $e ) {
     /* empty, intentionally. don't croak on uploading */

@@ -154,6 +154,8 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 			if ( true === $this->show_hints ) {
 				global $current_user;
 
+				$cur_page = '';
+
 				// Users enable/disable hint choice.
 				$hint_status = get_user_meta( $current_user->ID, 'ignore_hints' ) ? get_user_meta( $current_user->ID, 'ignore_hints', true ) : 'true';
 
@@ -187,7 +189,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				}
 
 				// Construct message.
-				// translators: %1$s: Mousr action.  %2$s: Hint status.
+				// translators: %1$s: Mouse action.  %2$s: Hint status.
 				$msg = sprintf( esc_html__( 'Hints are tooltips that popup when %1$s the hint icon, offering addition information about the field in which they appear.  They can be %2$s by using the link below.', 'redux-framework' ), $event, Redux_Core::strtolower( $s ) ) . '<br/><br/>' . $url;
 
 				// Construct hint tab.
@@ -226,7 +228,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 		/**
 		 * Class Add Sub Menu Function, creates options submenu in WordPress admin area.
 		 *
-		 * @param       object $core ReduxFrameword core pointer.
+		 * @param       object $core ReduxFramework core pointer.
 		 *
 		 * @since       3.1.9
 		 * @access      private
@@ -269,7 +271,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				);
 			} else {
 				// Network settings and Post type menus. These do not have
-				// wrappers and need to be appened to using add_submenu_page.
+				// wrappers and need to be appended to using add_submenu_page.
 				// Okay, since we've left the post type menu appending
 				// as default, we need to validate it, so anything that
 				// isn't post_type=<post_type> doesn't get through and mess
@@ -299,7 +301,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 					} else {
 						global $menu;
 
-						foreach ( $menu as $menupriority => $menuitem ) {
+						foreach ( $menu as $menuitem ) {
 							$needle_menu_slug = isset( $menuitem ) ? $menuitem[2] : false;
 							if ( false !== $needle_menu_slug ) {
 
@@ -495,6 +497,8 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 				} else {
 					$filter_path = $core_path;
 				}
+
+				$field_class = '';
 
 				// phpcs:ignore WordPress.NamingConventions.ValidHookName
 				$class_file = apply_filters( "redux/{$core->args['opt_name']}/field/class/{$field['type']}", $filter_path, $field );
@@ -857,17 +861,17 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 			$core = $this->core();
 
-			// Set to empty string to avoid wanrings.
+			// Set to empty string to avoid warnings.
 			$hint = '';
 			$th   = '';
 
 			if ( isset( $field['title'] ) && isset( $field['type'] ) && 'info' !== $field['type'] && 'section' !== $field['type'] ) {
-				$default_mark = ( ! empty( $field['default'] ) && isset( $core->options[ $field['id'] ] ) && $field['default'] === $core->options[ $field['id'] ] && ! empty( $core->args['default_mark'] ) && isset( $field['default'] ) ) ? $core->args['default_mark'] : '';
+				$default_mark = ( ! empty( $field['default'] ) && isset( $core->options[ $field['id'] ] ) && $field['default'] === $core->options[ $field['id'] ] && ! empty( $core->args['default_mark'] ) ) ? $core->args['default_mark'] : '';
 
 				// If a hint is specified in the field, process it.
 				if ( isset( $field['hint'] ) && ! empty( $field['hint'] ) ) {
 
-					// Set show_hints flag to true, so helptab will be displayed.
+					// Set show_hints flag to true, so help tab will be displayed.
 					$this->show_hints = true;
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -875,6 +879,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 					// Get user pref for displaying hints.
 					$meta_val = get_user_meta( $current_user->ID, 'ignore_hints', true );
+
 					if ( 'true' === $meta_val || empty( $meta_val ) && empty( $hint ) ) {
 
 						// Set hand cursor for clickable hints.
@@ -901,9 +906,9 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 				if ( ! empty( $field['title'] ) ) {
 					if ( 'left' === $core->args['hints']['icon_position'] ) {
-						$th = $hint . wp_kses_post( $field['title'] ) . $default_mark . '';
+						$th = $hint . wp_kses_post( $field['title'] ) . $default_mark . ' ';
 					} else {
-						$th = wp_kses_post( $field['title'] ) . $default_mark . '' . $hint;
+						$th = wp_kses_post( $field['title'] ) . $default_mark . ' ' . $hint;
 					}
 				}
 
@@ -999,7 +1004,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 		 * Return Section Menu HTML.
 		 *
 		 * @param int|string $k        Section index.
-		 * @param array      $section  Sectio array.
+		 * @param array      $section  Section array.
 		 * @param string     $suffix   Optional suffix.
 		 * @param array      $sections Sections array.
 		 *
@@ -1068,7 +1073,7 @@ if ( ! class_exists( 'Redux_Page_Render', false ) ) {
 
 				$subsections        = isset( $sections[ ( $k + 1 ) ] ) && isset( $sections[ ( $k + 1 ) ]['subsection'] ) && true === $sections[ ( $k + 1 ) ]['subsection'];
 				$subsections_class  = $subsections ? ' hasSubSections' : '';
-				$subsections_class .= ( ! isset( $section['fields'] ) || empty( $section['fields'] ) ) ? ' empty_section' : '';
+				$subsections_class .= ( empty( $section['fields'] ) ) ? ' empty_section' : '';
 				$rotate             = true === $core->args['pro']['flyout_submenus'] ? ' el-rotate' : '';
 				$extra_icon         = $subsections ? '<span class="extraIconSubsections"><i class="el el-chevron-down' . $rotate . '">&nbsp;</i></span>' : '';
 				$string            .= '<li id="' . esc_attr( $k . $suffix ) . '_section_group_li" class="redux-group-tab-link-li' . esc_attr( $hide_section ) . esc_attr( $section['class'] ) . esc_attr( $subsections_class ) . '">';

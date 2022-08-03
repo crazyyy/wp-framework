@@ -74,7 +74,7 @@ trait Choices {
 			'noindex'      => esc_html__( 'No Index', 'rank-math' ) . Admin_Helper::get_tooltip( esc_html__( 'Prevents pages from being indexed and displayed in search engine result pages', 'rank-math' ) ),
 			'nofollow'     => esc_html__( 'No Follow', 'rank-math' ) . Admin_Helper::get_tooltip( esc_html__( 'Prevents search engines from following links on the pages', 'rank-math' ) ),
 			'noarchive'    => esc_html__( 'No Archive', 'rank-math' ) . Admin_Helper::get_tooltip( esc_html__( 'Prevents search engines from showing Cached links for pages', 'rank-math' ) ),
-			'noimageindex' => esc_html__( 'No Image Index', 'rank-math' ) . Admin_Helper::get_tooltip( esc_html__( 'Lets you specify that you do not want your pages to appear as the referring page for images that appear in image search results', 'rank-math' ) ),
+			'noimageindex' => esc_html__( 'No Image Index', 'rank-math' ) . Admin_Helper::get_tooltip( esc_html__( 'Prevents images on a page from being indexed by Google and other search engines', 'rank-math' ) ),
 			'nosnippet'    => esc_html__( 'No Snippet', 'rank-math' ) . Admin_Helper::get_tooltip( esc_html__( 'Prevents a snippet from being shown in the search results', 'rank-math' ) ),
 		];
 	}
@@ -428,10 +428,11 @@ trait Choices {
 	 *
 	 * @codeCoverageIgnore
 	 *
-	 * @param  bool $none Add none option to the list.
+	 * @param  bool   $none      Add none option to the list.
+	 * @param  string $post_type Post type.
 	 * @return array
 	 */
-	public static function choices_rich_snippet_types( $none = false ) {
+	public static function choices_rich_snippet_types( $none = false, $post_type = '' ) {
 		$types = [
 			'article'    => esc_html__( 'Article', 'rank-math' ),
 			'book'       => esc_html__( 'Book', 'rank-math' ),
@@ -459,9 +460,10 @@ trait Choices {
 		/**
 		 * Allow developers to add/remove Schema type choices.
 		 *
-		 * @param array $types Schema types.
+		 * @param array  $types     Schema types.
+		 * @param string $post_type Post type.
 		 */
-		return apply_filters( 'rank_math/settings/snippet/types', $types );
+		return apply_filters( 'rank_math/settings/snippet/types', $types, $post_type );
 	}
 
 	/**

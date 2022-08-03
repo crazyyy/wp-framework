@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WDN_ConfigHideNotices extends WBCR\Factory_Templates_106\Configurate {
+class WDN_ConfigHideNotices extends WBCR\Factory_Templates_108\Configurate {
 
 	public function registerActionsAndFilters() {
 		if ( is_admin() ) {

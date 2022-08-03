@@ -43,8 +43,8 @@ class Monitor {
 			$this->action( 'rank_math/dashboard/widget', 'dashboard_widget', 11 );
 		}
 
-		$hook = defined( 'CT_VERSION' ) ? 'oxygen_enqueue_frontend_scripts' : 'get_header';
-		$this->action( $hook, 'capture_404' );
+		$this->action( $this->get_hook(), 'capture_404' );
+
 		if ( Helper::has_cap( '404_monitor' ) ) {
 			$this->action( 'rank_math/admin_bar/items', 'admin_bar_items', 11 );
 		}
@@ -160,12 +160,34 @@ class Monitor {
 		}
 
 		foreach ( $excludes as $rule ) {
+			$rule['exclude'] = empty( $rule['exclude'] ) ? '' : $this->sanitize_exclude_pattern( $rule['exclude'], $rule['comparison'] );
+
 			if ( ! empty( $rule['exclude'] ) && Str::comparison( $rule['exclude'], $uri, $rule['comparison'] ) ) {
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if regex pattern has delimiters or not, and add them if not.
+	 *
+	 * @param string $pattern The pattern to check.
+	 * @param string $comparison The comparison type.
+	 *
+	 * @return string
+	 */
+	private function sanitize_exclude_pattern( $pattern, $comparison ) {
+		if ( 'regex' !== $comparison ) {
+			return $pattern;
+		}
+
+		if ( preg_match( '[^(?:([^a-zA-Z0-9\\\\]).*\\1|\\(.*\\)|\\{.*\\}|\\[.*\\]|<.*>)[imsxADSUXJu]*$]', $pattern ) ) {
+			return $pattern;
+		}
+
+		return '[' . addslashes( $pattern ) . ']';
 	}
 
 	/**
@@ -179,7 +201,7 @@ class Monitor {
 			return '';
 		}
 
-		$parsed = $this->parse_user_agent( $u_agent );
+		$parsed  = $this->parse_user_agent( $u_agent );
 		$nice_ua = '';
 		if ( ! empty( $parsed['browser'] ) ) {
 			$nice_ua .= $parsed['browser'];
@@ -217,5 +239,22 @@ class Monitor {
 			'browser'  => $agent->browser(),
 			'version'  => $agent->browserVersion(),
 		];
+	}
+
+	/**
+	 * Function to get the hook name depending on the theme.
+	 *
+	 * @return string WP hook.
+	 */
+	private function get_hook() {
+		if ( defined( 'CT_VERSION' ) ) {
+			return 'oxygen_enqueue_frontend_scripts';
+		}
+
+		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			return 'wp_head';
+		}
+
+		return 'get_header';
 	}
 }

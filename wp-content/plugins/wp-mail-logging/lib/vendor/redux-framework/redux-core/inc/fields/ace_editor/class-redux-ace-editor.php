@@ -56,6 +56,7 @@ if ( ! class_exists( 'Redux_Ace_Editor', false ) ) {
 					type="hidden"
 					class="localize_data"
 					value="<?php echo esc_html( wp_json_encode( $params ) ); ?>"/>
+				<label for="<?php echo esc_attr( $this->field['id'] ); ?>-textarea"></label>
 				<textarea
 					name="<?php echo esc_attr( $this->field['name'] . $this->field['name_suffix'] ); ?>"
 					id="<?php echo esc_attr( $this->field['id'] ); ?>-textarea"
@@ -93,7 +94,7 @@ if ( ! class_exists( 'Redux_Ace_Editor', false ) ) {
 				Redux_CDN::enqueue_script(
 					'ace-editor-js',
 					// phpcs:ignore Generic.Strings.UnnecessaryStringConcat
-					'//' . 'cdnjs' . '.cloudflare' . '.com/ajax/libs/ace/1.4.12/ace.js',
+					'//' . 'cdnjs' . '.cloudflare' . '.com/ajax/libs/ace/1.4.13/ace.js',
 					array( 'jquery' ),
 					'1.4.12',
 					true

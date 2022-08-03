@@ -13,6 +13,8 @@ namespace RankMath\WooCommerce;
 use RankMath\Helper;
 use RankMath\Traits\Hooker;
 use RankMath\Helpers\Sitepress;
+use MyThemeShop\Helpers\Param;
+use RankMath\Redirections\Redirection;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -75,8 +77,7 @@ class Product_Redirection {
 			return false;
 		}
 
-		global $wp;
-		$url                 = $wp->request;
+		$url                 = $this->get_source_url();
 		$is_product          = is_product();
 		$permalink_structure = wc_get_permalink_structure();
 		$base                = $is_product ? $permalink_structure['product_base'] : $permalink_structure['category_base'];
@@ -93,9 +94,7 @@ class Product_Redirection {
 		if ( $is_product ) {
 			$base[] = 'product';
 			$base[] = 'shop';
-			Sitepress::get()->remove_home_url_filter();
-			$new_link = ! is_feed() ? trim( str_replace( get_home_url(), '', get_permalink() ), '/' ) : $new_link;
-			Sitepress::get()->restore_home_url_filter();
+			$new_link = $this->remove_base_from_url( $new_link );
 		}
 
 		foreach ( array_unique( $base ) as $remove ) {
@@ -108,6 +107,66 @@ class Product_Redirection {
 		$new_link = implode( '/', array_map( 'rawurlencode', explode( '/', $new_link ) ) ); // encode everything but slashes.
 
 		return $new_link === $this->strip_ignored_parts( $url ) ? false : trailingslashit( home_url( strtolower( $new_link ) ) );
+	}
+
+	/**
+	 * Remove all bases from the product link.
+	 *
+	 * @param  string $link Product link.
+	 * @return string Modified URL
+	 */
+	private function remove_base_from_url( $link ) {
+		if ( is_feed() ) {
+			return $link;
+		}
+
+		if ( Sitepress::get()->is_active() ) {
+			global $sitepress_settings;
+
+			// Early bail if auto-translation is enabled in WPML.
+			if (
+				isset( $sitepress_settings['custom_posts_sync_option'] ) &&
+				isset( $sitepress_settings['custom_posts_sync_option']['product'] ) &&
+				2 === (int) $sitepress_settings['custom_posts_sync_option']['product']
+			) {
+				return $link;
+			}
+		}
+
+		$link = trim( str_replace( Helper::get_home_url(), '', get_permalink() ), '/' );
+
+		return $link;
+	}
+
+	/**
+	 * Get source URL.
+	 *
+	 * @return string
+	 */
+	private function get_source_url() {
+		global $wp;
+		$url = defined( 'TRP_PLUGIN_DIR' ) ? $wp->request : Param::server( 'REQUEST_URI' );
+		$url = str_replace( home_url( '/' ), '', $url );
+		$url = urldecode( $url );
+		$url = trim( Redirection::strip_subdirectory( $url ), '/' );
+
+		$url = explode( '?', $url );
+		$url = trim( $url[0], '/' );
+
+		if ( $this->is_amp_endpoint() ) {
+			$url = \str_replace( '/' . \amp_get_slug(), '', $url );
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Is AMP url.
+	 *
+	 * @return bool
+	 */
+	private function is_amp_endpoint() {
+		return \function_exists( 'is_amp_endpoint' ) && \function_exists( 'amp_is_canonical' ) && is_amp_endpoint() && ! amp_is_canonical();
 	}
 
 	/**

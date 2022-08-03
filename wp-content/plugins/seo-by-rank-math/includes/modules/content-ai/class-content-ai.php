@@ -33,6 +33,7 @@ class Content_AI {
 			return;
 		}
 
+		$this->filter( 'rank_math/analytics/post_data', 'add_contentai_data', 10, 2 );
 		$this->filter( 'rank_math/settings/general', 'add_settings' );
 		$this->action( 'rest_api_init', 'init_rest_api' );
 		$this->action( 'rank_math/admin/editor_scripts', 'editor_scripts', 20 );
@@ -40,6 +41,35 @@ class Content_AI {
 		$this->action( 'cmb2_admin_init', 'add_content_ai_metabox', 11 );
 		$this->action( 'rank_math/deregister_site', 'remove_credits_data' );
 		$this->ajax( 'get_content_ai_credits', 'update_content_ai_credits' );
+		$this->filter( 'rank_math/elementor/dark_styles', 'add_dark_style' );
+	}
+
+	/**
+	 * Add dark style
+	 *
+	 * @param array $styles The dark mode styles.
+	 */
+	public function add_dark_style( $styles = [] ) {
+
+		$styles['rank-math-content-ai-dark'] = rank_math()->plugin_url() . 'includes/modules/content-ai/assets/css/content-ai-dark.css';
+
+		return $styles;
+	}
+
+	/**
+	 * Add Content AI score in Single Page Site Analytics.
+	 *
+	 * @param  array           $data array.
+	 * @param  WP_REST_Request $request post object.
+	 * @return array $data sorted array.
+	 */
+	public function add_contentai_data( $data, \WP_REST_Request $request ) {
+		$post_id                = $data['object_id'];
+		$content_ai_data        = Helper::get_post_meta( 'contentai_score', $post_id );
+		$content_ai_score       = ! empty( $content_ai_data ) ? round( array_sum( array_values( $content_ai_data ) ) / count( $content_ai_data ) ) : 0;
+		$data['contentAiScore'] = absint( $content_ai_score );
+
+		return $data;
 	}
 
 	/**
@@ -70,7 +100,8 @@ class Content_AI {
 				'content-ai' => [
 					'icon'  => 'rm-icon rm-icon-target',
 					'title' => esc_html__( 'Content AI', 'rank-math' ),
-					'desc'  => esc_html__( 'Get sophisticated AI suggestions for related Keywords, Questions & Links to include in the SEO meta & Content Area. Supports 80+ Countries.', 'rank-math' ),
+					/* translators: Link to kb article */
+					'desc'  => sprintf( esc_html__( 'Get sophisticated AI suggestions for related Keywords, Questions & Links to include in the SEO meta & Content Area. %s.', 'rank-math' ), '<a href="' . \RankMath\KB::get( 'content-ai-settings' ) . '" target="_blank">' . esc_html__( 'Learn more', 'rank-math' ) . '</a>' ),
 					'file'  => dirname( __FILE__ ) . '/views/options.php',
 				],
 			],
@@ -160,7 +191,13 @@ class Content_AI {
 		$values['countries']        = $countries;
 		$values['ca_credits']       = get_option( 'rank_math_ca_credits' );
 		$values['ca_keyword']       = '';
+		$values['ca_viewed']        = true;
 
+		$content_ai_viewed = get_option( 'rank_math_content_ai_viewed', false );
+		if ( ! $content_ai_viewed ) {
+			$values['ca_viewed'] = false;
+			update_option( 'rank_math_content_ai_viewed', true );
+		}
 		$keyword = $screen->get_meta( $screen->get_object_type(), $screen->get_object_id(), 'rank_math_ca_keyword' );
 		if ( empty( $keyword ) ) {
 			return $values;
@@ -170,9 +207,9 @@ class Content_AI {
 		$country = empty( $keyword['country'] ) ? '' : $keyword['country'];
 		if (
 			! empty( $data[ $country ] ) &&
-			! empty( $data[ $country ][ $keyword['keyword'] ] )
+			! empty( $data[ $country ][ mb_strtolower( $keyword['keyword'] ) ] )
 		) {
-			$values['ca_data'] = $data[ $country ][ $keyword['keyword'] ];
+			$values['ca_data'] = $data[ $country ][ mb_strtolower( $keyword['keyword'] ) ];
 		}
 
 		$values['ca_keyword'] = $keyword;

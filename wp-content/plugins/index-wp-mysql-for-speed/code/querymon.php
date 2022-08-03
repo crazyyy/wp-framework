@@ -14,7 +14,6 @@ class ImfsMonitor {
   public $cronInterval = 30; /* seconds, always less than $gatherExpiration */
   public $parser;
   public $explainVerb = "EXPLAIN";
-  public $analyzeVerb = "EXPLAIN"; /* change to EXPLAIN to avoid EXPLAIN ANALYZE overhead */
   public $captureName;
   public $monval;
 
@@ -64,7 +63,7 @@ class ImfsMonitor {
       $this->storeGathered( $optionName, $uploads, $this->gatherDelimiter, $this->queryGatherSizeLimit );
     }
 
-    $nextMonitorUpdate = intval( get_option( index_wp_mysql_for_speed_monitor . 'nextMonitorUpdate' ) );
+    $nextMonitorUpdate = get_option( index_wp_mysql_for_speed_monitor . 'nextMonitorUpdate' ) + 0;
     $now               = time();
     if ( $now > $nextMonitorUpdate ) {
       $this->processGatheredQueries();
@@ -89,9 +88,18 @@ class ImfsMonitor {
       $item->s = intval( $q[3] ); /* query start time */
       $item->a = ! ! is_admin();
       if ( $explain ) {
-        $explainer = stripos( $q[0], 'SELECT ' ) === 0 ? $this->analyzeVerb : $this->explainVerb;
-        $explainq  = $explainer . ' ' . $q[0];
-        $item->e   = $wpdb->get_results( $this->tagQuery( $explainq ) );
+        $explainer = $this->explainVerb;
+        /* EXPLAIN SELECT is the only explain that works in MySQL 5.5 */
+        if ( stripos( $q[0], 'SELECT ' ) !== 0 && $this->monval->semver->major <= 5 && $this->monval->semver->minor <= 5 ) {
+          /* do not do the EXPLAIN */
+          $item->e = null;
+        } else if ( stripos( $q[0], 'SET ' ) === 0 ) {
+          /* do not do the EXPLAIN on SET operations */
+          $item->e = null;
+        } else {
+          $explainq = $explainer . ' ' . $q[0];
+          $item->e  = $wpdb->get_results( $this->tagQuery( $explainq ) );
+        }
       }
 
       return json_encode( $item );
@@ -184,11 +192,12 @@ class ImfsMonitor {
       /* initialize both ends of the time range to the start time. */
       $queryLog->start   = $this->monval->starttime;
       $queryLog->end     = $this->monval->starttime;
+      /* track the minimum query time for all queries */
+      $queryLog->mintime = PHP_INT_MAX;
       $queryLog->queries = [];
       /* get the key status from when the monitor storted, for later reporting */
       $monval         = get_option( index_wp_mysql_for_speed_monitor );
       $queryLog->keys = $monval->keys;
-
     } else {
       /* use the existing monitor log object */
       $queryLogOverflowing = strlen( $queryLog ) > $this->queryLogSizeThreshold;
@@ -273,6 +282,10 @@ class ImfsMonitor {
           $qe    = $queryLog->queries[ $qid ];
           $qe->n += 1;
           $qe->t += $thisQuery->t;
+          /* Keep track of the shortest query time */
+          if ($queryLog->mintime > $thisQuery->t){
+            $queryLog->mintime = $thisQuery->t;
+          }
           /* accumulate list of times taken */
           $qe->ts[] = $thisQuery->t;
           if ( $qe->maxt < $thisQuery->t ) {

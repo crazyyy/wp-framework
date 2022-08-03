@@ -24,42 +24,42 @@ if( !defined('ABSPATH') ) {
  * @package       factory-core
  *
  */
-abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
+abstract class Wbcr_Factory456_Plugin extends Wbcr_Factory456_Base {
 
 	/**
-	 * Instance class Wbcr_Factory453_Request, required manages http requests
+	 * Instance class Wbcr_Factory456_Request, required manages http requests
 	 *
 	 * @see https://webcraftic.atlassian.net/wiki/spaces/FFD/pages/390561806
-	 * @var Wbcr_Factory453_Request
+	 * @var Wbcr_Factory456_Request
 	 */
 	public $request;
 
 	/**
 	 * @see https://webcraftic.atlassian.net/wiki/spaces/FFD/pages/393936924
-	 * @var \WBCR\Factory_453\Premium\Provider
+	 * @var \WBCR\Factory_456\Premium\Provider
 	 */
 	public $premium;
 
 	/**
 	 * The Bootstrap Manager class
 	 *
-	 * @var Wbcr_FactoryBootstrap454_Manager
+	 * @var Wbcr_FactoryBootstrap457_Manager
 	 */
 	public $bootstrap;
 
 	/**
 	 * The Bootstrap Manager class
 	 *
-	 * @var Wbcr_FactoryForms450_Manager
+	 * @var Wbcr_FactoryForms453_Manager
 	 */
 	public $forms;
 
 	/**
-	 * Простой массив со списком зарегистрированных классов унаследованных от Wbcr_Factory453_Activator.
+	 * Простой массив со списком зарегистрированных классов унаследованных от Wbcr_Factory456_Activator.
 	 * Классы активации используются для упаковки набора функций, которые нужно выполнить во время
 	 * активации плагина.
 	 *
-	 * @var array[] Wbcr_Factory453_Activator
+	 * @var array[] Wbcr_Factory456_Activator
 	 */
 	protected $activator_class = [];
 
@@ -86,7 +86,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 *
 	 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 	 * @since  4.1.9
-	 * @var WBCR\Factory_Adverts_130\Base
+	 * @var WBCR\Factory_Adverts_133\Base
 	 */
 	private $adverts;
 
@@ -95,7 +95,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 *
 	 * @author Artem Prihodko <webtemyk@yandex.ru>
 	 * @since  4.3.7
-	 * @var WBCR\Factory_Logger_118\Logger
+	 * @var WBCR\Factory_Logger_121\Logger
 	 */
 	public $logger;
 
@@ -115,8 +115,8 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 
 		parent::__construct($plugin_path, $data);
 
-		$this->request = new Wbcr_Factory453_Request();
-		//$this->route = new Wbcr_Factory453_Route();
+		$this->request = new Wbcr_Factory456_Request();
+		//$this->route = new Wbcr_Factory456_Route();
 
 		// INIT PLUGIN FRAMEWORK MODULES
 		// Framework modules should always be loaded first,
@@ -144,15 +144,15 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		$this->init_plugin_components();
 
 		if( wp_doing_ajax() && isset($_REQUEST['action']) ) {
-			if( "wfactory-453-intall-component" == $_REQUEST['action'] ) {
-				add_action('wp_ajax_wfactory-453-intall-component', [$this, 'ajax_handler_install_components']);
+			if( "wfactory-456-intall-component" == $_REQUEST['action'] ) {
+				add_action('wp_ajax_wfactory-456-intall-component', [$this, 'ajax_handler_install_components']);
 			}
 
-			if( "wfactory-453-prepare-component" == $_REQUEST['action'] ) {
-				add_action('wp_ajax_wfactory-453-prepare-component', [$this, 'ajax_handler_prepare_component']);
+			if( "wfactory-456-prepare-component" == $_REQUEST['action'] ) {
+				add_action('wp_ajax_wfactory-456-prepare-component', [$this, 'ajax_handler_prepare_component']);
 			}
-			if( "wfactory-453-creativemotion-install-plugin" == $_REQUEST['action'] ) {
-				add_action('wp_ajax_wfactory-453-creativemotion-install-plugin', [
+			if( "wfactory-456-creativemotion-install-plugin" == $_REQUEST['action'] ) {
+				add_action('wp_ajax_wfactory-456-creativemotion-install-plugin', [
 					$this,
 					'ajax_handler_install_creativemotion_plugins'
 				]);
@@ -165,20 +165,20 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 
 	public function ajax_handler_install_components()
 	{
-		require_once FACTORY_453_DIR . '/ajax/install-addons.php';
-		wfactory_453_install_components($this);
+		require_once FACTORY_456_DIR . '/ajax/install-addons.php';
+		wfactory_456_install_components($this);
 	}
 
 	public function ajax_handler_prepare_component()
 	{
-		require_once FACTORY_453_DIR . '/ajax/install-addons.php';
-		wfactory_453_prepare_component($this);
+		require_once FACTORY_456_DIR . '/ajax/install-addons.php';
+		wfactory_456_prepare_component($this);
 	}
 
 	public function ajax_handler_install_creativemotion_plugins()
 	{
-		require_once FACTORY_453_DIR . '/ajax/install-addons.php';
-		wfactory_453_creativemotion_install_plugin($this);
+		require_once FACTORY_456_DIR . '/ajax/install-addons.php';
+		wfactory_456_creativemotion_install_plugin($this);
 	}
 	// --------------------------------------------------------
 
@@ -186,9 +186,9 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 * Устанавливает класс менеджер, которому плагин будет делегировать подключение ресурсов (картинок,
 	 * скриптов, стилей) фреймворка.
 	 *
-	 * @param Wbcr_FactoryBootstrap454_Manager $bootstrap
+	 * @param Wbcr_FactoryBootstrap457_Manager $bootstrap
 	 */
-	public function setBootstap(Wbcr_FactoryBootstrap454_Manager $bootstrap)
+	public function setBootstap(Wbcr_FactoryBootstrap457_Manager $bootstrap)
 	{
 		$this->bootstrap = $bootstrap;
 	}
@@ -196,9 +196,9 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	/**
 	 * Устанавливает класс менеджер, которому будет делегирована работа с html формами фреймворка.
 	 *
-	 * @param Wbcr_FactoryForms450_Manager $forms
+	 * @param Wbcr_FactoryForms453_Manager $forms
 	 */
-	public function setForms(Wbcr_FactoryForms450_Manager $forms)
+	public function setForms(Wbcr_FactoryForms453_Manager $forms)
 	{
 		$this->forms = $forms;
 	}
@@ -246,8 +246,8 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 */
 	public function set_license_provider($name, $class_name)
 	{
-		if( !isset(WBCR\Factory_453\Premium\Manager::$providers[$name]) ) {
-			WBCR\Factory_453\Premium\Manager::$providers[$name] = $class_name;
+		if( !isset(WBCR\Factory_456\Premium\Manager::$providers[$name]) ) {
+			WBCR\Factory_456\Premium\Manager::$providers[$name] = $class_name;
 		}
 	}
 
@@ -265,8 +265,8 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 */
 	public function set_update_repository($name, $class_name)
 	{
-		if( !isset(WBCR\Factory_453\Updates\Upgrader::$repositories[$name]) ) {
-			WBCR\Factory_453\Updates\Upgrader::$repositories[$name] = $class_name;
+		if( !isset(WBCR\Factory_456\Updates\Upgrader::$repositories[$name]) ) {
+			WBCR\Factory_456\Updates\Upgrader::$repositories[$name] = $class_name;
 		}
 	}
 
@@ -276,7 +276,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 * Доступен глобально через метод app(), чаще всего используется для создания точек для ротации
 	 * рекламных объявлений.
 	 *
-	 * @return \WBCR\Factory_Adverts_130\Base
+	 * @return \WBCR\Factory_Adverts_133\Base
 	 * @since  1.1
 	 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 	 */
@@ -312,18 +312,18 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 
 	public function newScriptList()
 	{
-		return new Wbcr_Factory453_ScriptList($this);
+		return new Wbcr_Factory456_ScriptList($this);
 	}
 
 	public function newStyleList()
 	{
-		return new Wbcr_Factory453_StyleList($this);
+		return new Wbcr_Factory456_StyleList($this);
 	}
 
 	/**
 	 * Все страницы плагина создаются через специальную обертку, за которую отвечает модуль
 	 * фреймворка pages. Разработчик создает собственный класс, унаследованный от
-	 * Wbcr_FactoryPages452_AdminPage, а затем регистрирует его через этот метод.
+	 * Wbcr_FactoryPages455_AdminPage, а затем регистрирует его через этот метод.
 	 * Метод выполняет подключение класса страницы и регистрирует его в модуле фреймворка
 	 * pages.
 	 *
@@ -333,7 +333,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 * @see https://webcraftic.atlassian.net/wiki/spaces/CNCFC/pages/222887949 - документация по созданию страниц
 	 *
 	 * @param string $class_name Имя регистрируемого класса страницы. Пример: WCL_Page_Name.
-	 *                             Регистрируемый класс должен быть унаследован от класса Wbcr_FactoryPages452_AdminPage.
+	 *                             Регистрируемый класс должен быть унаследован от класса Wbcr_FactoryPages455_AdminPage.
 	 * @param string $file_path Абсолютный путь к файлу с классом страницы.
 	 *
 	 * @throws Exception
@@ -355,11 +355,11 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 			throw new Exception('A class with this name {' . $class_name . '} does not exist.');
 		}
 
-		if( !class_exists('Wbcr_FactoryPages452') ) {
-			throw new Exception('The factory_pages_452 module is not included.');
+		if( !class_exists('Wbcr_FactoryPages455') ) {
+			throw new Exception('The factory_pages_455 module is not included.');
 		}
 
-		Wbcr_FactoryPages452::register($this, $class_name);
+		Wbcr_FactoryPages455::register($this, $class_name);
 	}
 
 	/**
@@ -409,16 +409,16 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		/**
 		 * @since 4.1.1 - change  hook name
 		 */
-		if( apply_filters("wbcr/factory_453/cancel_plugin_activation_{$this->plugin_name}", false) ) {
+		if( apply_filters("wbcr/factory_456/cancel_plugin_activation_{$this->plugin_name}", false) ) {
 			return;
 		}
 
 		/**
-		 * wbcr_factory_453_plugin_activation
+		 * wbcr_factory_456_plugin_activation
 		 *
 		 * @since 4.1.1 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated('wbcr_factory_453_plugin_activation', [
+		wbcr_factory_456_do_action_deprecated('wbcr_factory_456_plugin_activation', [
 			$this
 		], '4.1.1', "wbcr/factory/plugin_activation");
 
@@ -427,7 +427,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		 *
 		 * @since 4.1.2 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated('wbcr/factory/plugin_activation', [
+		wbcr_factory_456_do_action_deprecated('wbcr/factory/plugin_activation', [
 			$this
 		], '4.1.2', "wbcr/factory/before_plugin_activation");
 
@@ -443,16 +443,16 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		 *
 		 * @since 4.1.2 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated("wbcr/factory/plugin_{$this->plugin_name}_activation", [
+		wbcr_factory_456_do_action_deprecated("wbcr/factory/plugin_{$this->plugin_name}_activation", [
 			$this
 		], '4.1.2', "wbcr/factory/before_plugin_{$this->plugin_name}_activation");
 
 		/**
-		 * wbcr_factory_453_plugin_activation_' . $this->plugin_name
+		 * wbcr_factory_456_plugin_activation_' . $this->plugin_name
 		 *
 		 * @since 4.1.1 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated('wbcr_factory_453_plugin_activation_' . $this->plugin_name, [
+		wbcr_factory_456_do_action_deprecated('wbcr_factory_456_plugin_activation_' . $this->plugin_name, [
 			$this
 		], '4.1.1', "wbcr/factory/before_plugin_{$this->plugin_name}_activation");
 
@@ -493,16 +493,16 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		/**
 		 * @since 4.1.1 - change  hook name
 		 */
-		if( apply_filters("wbcr/factory_453/cancel_plugin_deactivation_{$this->plugin_name}", false) ) {
+		if( apply_filters("wbcr/factory_456/cancel_plugin_deactivation_{$this->plugin_name}", false) ) {
 			return;
 		}
 
 		/**
-		 * wbcr_factory_453_plugin_deactivation
+		 * wbcr_factory_456_plugin_deactivation
 		 *
 		 * @since 4.1.1 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated('wbcr_factory_453_plugin_deactivation', [
+		wbcr_factory_456_do_action_deprecated('wbcr_factory_456_plugin_deactivation', [
 			$this
 		], '4.1.1', "wbcr/factory/plugin_deactivation");
 
@@ -511,7 +511,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		 *
 		 * @since 4.1.2 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated('wbcr/factory/plugin_deactivation', [
+		wbcr_factory_456_do_action_deprecated('wbcr/factory/plugin_deactivation', [
 			$this
 		], '4.1.2', "wbcr/factory/before_plugin_deactivation");
 
@@ -523,11 +523,11 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		do_action('wbcr/factory/plugin_deactivation', $this);
 
 		/**
-		 * wbcr_factory_453_plugin_deactivation_ . $this->plugin_name
+		 * wbcr_factory_456_plugin_deactivation_ . $this->plugin_name
 		 *
 		 * @since 4.1.1 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated('wbcr_factory_453_plugin_deactivation_' . $this->plugin_name, [
+		wbcr_factory_456_do_action_deprecated('wbcr_factory_456_plugin_deactivation_' . $this->plugin_name, [
 			$this
 		], '4.1.1', "wbcr/factory/before_plugin_{$this->plugin_name}_deactivation");
 
@@ -536,7 +536,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		 *
 		 * @since 4.1.2 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated("wbcr/factory/plugin_{$this->plugin_name}_deactivation", [
+		wbcr_factory_456_do_action_deprecated("wbcr/factory/plugin_{$this->plugin_name}_deactivation", [
 			$this
 		], '4.1.2', "wbcr/factory/before_plugin_{$this->plugin_name}_deactivation");
 
@@ -574,8 +574,8 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 */
 	public function getPluginPageUrl($page_id, $args = [])
 	{
-		if( !class_exists('Wbcr_FactoryPages452') ) {
-			throw new Exception('The factory_pages_452 module is not included.');
+		if( !class_exists('Wbcr_FactoryPages455') ) {
+			throw new Exception('The factory_pages_455 module is not included.');
 		}
 
 		if( !is_admin() ) {
@@ -584,7 +584,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 			return null;
 		}
 
-		return Wbcr_FactoryPages452::getPageUrl($this, $page_id, $args);
+		return Wbcr_FactoryPages455::getPageUrl($this, $page_id, $args);
 	}
 
 	/**
@@ -594,13 +594,13 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 * @param $slug
 	 * param $premium
 	 *
-	 * @return \WBCR\Factory_453\Components\Install_Button
+	 * @return \WBCR\Factory_456\Components\Install_Button
 	 */
 	public function get_install_component_button($component_type, $slug)
 	{
-		require_once FACTORY_453_DIR . '/includes/components/class-install-component-button.php';
+		require_once FACTORY_456_DIR . '/includes/components/class-install-component-button.php';
 
-		return new \WBCR\Factory_453\Components\Install_Button($this, $component_type, $slug);
+		return new \WBCR\Factory_456\Components\Install_Button($this, $component_type, $slug);
 	}
 
 	/**
@@ -609,13 +609,13 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 * @param $component_type
 	 * @param $slug
 	 *
-	 * @return \WBCR\Factory_453\Components\Delete_Button
+	 * @return \WBCR\Factory_456\Components\Delete_Button
 	 */
 	public function get_delete_component_button($component_type, $slug)
 	{
-		require_once FACTORY_453_DIR . '/includes/components/class-delete-component-button.php';
+		require_once FACTORY_456_DIR . '/includes/components/class-delete-component-button.php';
 
-		return new WBCR\Factory_453\Components\Delete_Button($this, $component_type, $slug);
+		return new WBCR\Factory_456\Components\Delete_Button($this, $component_type, $slug);
 	}
 
 	/**
@@ -798,12 +798,12 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		/**
 		 * @since 4.1.1 - deprecated
 		 */
-		wbcr_factory_453_do_action_deprecated('wbcr_factory_453_core_modules_loaded-' . $this->plugin_name, [], '4.1.1', "wbcr/factory_453/modules_loaded-" . $this->plugin_name);
+		wbcr_factory_456_do_action_deprecated('wbcr_factory_456_core_modules_loaded-' . $this->plugin_name, [], '4.1.1', "wbcr/factory_456/modules_loaded-" . $this->plugin_name);
 
 		/**
 		 * @since 4.1.1 - add
 		 */
-		do_action('wbcr/factory_453/modules_loaded-' . $this->plugin_name);
+		do_action('wbcr/factory_456/modules_loaded-' . $this->plugin_name);
 	}
 
 
@@ -830,7 +830,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		});
 
 		if( is_admin() ) {
-			add_filter('wbcr_factory_453_core_admin_allow_multisite', '__return_true');
+			add_filter('wbcr_factory_456_core_admin_allow_multisite', '__return_true');
 
 			register_activation_hook($this->get_paths()->main_file, [$this, 'activation_hook']);
 			register_deactivation_hook($this->get_paths()->main_file, [$this, 'deactivation_hook']);
@@ -846,7 +846,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 */
 	protected function init_plugin_migrations()
 	{
-		new WBCR\Factory_453\Migrations($this);
+		new WBCR\Factory_456\Migrations($this);
 	}
 
 	/**
@@ -857,7 +857,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	 */
 	protected function init_plugin_notices()
 	{
-		new Wbcr\Factory_453\Notices($this);
+		new Wbcr\Factory_456\Notices($this);
 	}
 
 	/**
@@ -873,7 +873,7 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 	protected function init_plugin_updates()
 	{
 		if( $this->has_updates ) {
-			new WBCR\Factory_453\Updates\Upgrader($this);
+			new WBCR\Factory_456\Updates\Upgrader($this);
 		}
 	}
 
@@ -896,11 +896,11 @@ abstract class Wbcr_Factory453_Plugin extends Wbcr_Factory453_Base {
 		}
 
 		// Создаем экземляр премиум менеджера, мы сможем к нему обращаться глобально.
-		$this->premium = WBCR\Factory_453\Premium\Manager::instance($this, $this->license_settings);
+		$this->premium = WBCR\Factory_456\Premium\Manager::instance($this, $this->license_settings);
 
 		// Подключаем премиум апгрейдер
 		if( isset($this->license_settings['has_updates']) && $this->license_settings['has_updates'] ) {
-			new WBCR\Factory_453\Updates\Premium_Upgrader($this);
+			new WBCR\Factory_456\Updates\Premium_Upgrader($this);
 		}
 	}
 }

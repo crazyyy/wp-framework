@@ -1,12 +1,12 @@
 <?php
 
-namespace WBCR\Factory_453\Updates;
+namespace WBCR\Factory_456\Updates;
 
 use Exception;
 use Plugin_Installer_Skin;
 use Plugin_Upgrader;
-use Wbcr_Factory453_Plugin;
-use Wbcr_FactoryPages452_ImpressiveThemplate;
+use Wbcr_Factory456_Plugin;
+use Wbcr_FactoryPages455_ImpressiveThemplate;
 use WP_Filesystem_Base;
 use WP_Upgrader;
 use WP_Upgrader_Skin;
@@ -45,13 +45,13 @@ class Premium_Upgrader extends Upgrader {
 	 * @param                        $args
 	 * @param bool $is_premium
 	 *
-	 * @param Wbcr_Factory453_Plugin $plugin
+	 * @param Wbcr_Factory456_Plugin $plugin
 	 *
 	 * @throws Exception
 	 * @since 4.1.1
 	 *
 	 */
-	public function __construct(Wbcr_Factory453_Plugin $plugin)
+	public function __construct(Wbcr_Factory456_Plugin $plugin)
 	{
 		parent::__construct($plugin);
 
@@ -242,9 +242,9 @@ class Premium_Upgrader extends Upgrader {
 	/**
 	 * Выводит уведомление внутри интерфейса плагина, на всех страницах плагина.
 	 *
-	 * @param Wbcr_FactoryPages452_ImpressiveThemplate $obj
+	 * @param Wbcr_FactoryPages455_ImpressiveThemplate $obj
 	 *
-	 * @param Wbcr_Factory453_Plugin $plugin
+	 * @param Wbcr_Factory456_Plugin $plugin
 	 *
 	 * @return void
 	 * @since 4.1.1
@@ -809,12 +809,12 @@ class Premium_Upgrader extends Upgrader {
 		$cancel_license_url = $this->get_action_url('cancel_license');
 
 		$texts = [
-			'need_activate_license' => __('License activation required. A license is required to get premium plugin updates, as well as to get additional services.', 'wbcr_factory_453'),
-			'need_renew_license' => __('Your license has expired. You can no longer get premium plugin updates, premium support and your access to Webcraftic services has been suspended.', 'wbcr_factory_453'),
+			'need_activate_license' => __('License activation required. A license is required to get premium plugin updates, as well as to get additional services.', 'wbcr_factory_456'),
+			'need_renew_license' => __('Your license has expired. You can no longer get premium plugin updates, premium support and your access to Webcraftic services has been suspended.', 'wbcr_factory_456'),
 			'please_install_premium' => sprintf(__('Congratulations, you have activated a premium license! Please install premium add-on to use pro features now.
-        <a href="%s">Install</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_453'), $upgrade_url, $cancel_license_url),
+        <a href="%s">Install</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_456'), $upgrade_url, $cancel_license_url),
 			'please_activate_premium' => sprintf(__('Congratulations, you have activated a premium license! Please activate premium add-on to use pro features now.
-        <a href="%s">Activate</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_453'), $activate_plugin_url, $cancel_license_url)
+        <a href="%s">Activate</a> premium add-on or <a href="%s">cancel</a> license.', 'wbcr_factory_456'), $activate_plugin_url, $cancel_license_url)
 		];
 
 		if( isset($texts[$type]) ) {

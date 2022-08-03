@@ -25,7 +25,7 @@ if ( ! class_exists( 'Redux_Color', false ) ) {
 		public function set_defaults() {
 			$defaults = array(
 				'transparent' => true,
-				'alpha'       => false,
+				'color_alpha' => false,
 			);
 
 			$this->field = wp_parse_args( $this->field, $defaults );
@@ -58,7 +58,7 @@ if ( ! class_exists( 'Redux_Color', false ) ) {
 				'index' => '',
 			);
 
-			echo Redux_Functions_Ex::output_alpha_data( $data);
+			echo Redux_Functions_Ex::output_alpha_data( $data );  // phpcs:ignore WordPress.Security.EscapeOutput
 
 			echo '>';
 

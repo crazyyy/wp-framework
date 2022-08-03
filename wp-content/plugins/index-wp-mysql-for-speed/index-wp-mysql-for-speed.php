@@ -11,9 +11,9 @@
  * Plugin Name: Index WP MySQL For Speed
  * Plugin URI:  https://plumislandmedia.org/index-wp-mysql-for-speed/
  * Description: Speed up your WordPress site by adding high-performance keys (database indexes) to your MySQL database tables.
- * Version:           1.4.3
+ * Version:           1.4.6
  * Requires at least: 5.2
- * Tested up to:      5.9
+ * Tested up to:      6.0
  * Requires PHP:      5.6
  * Author:       OllieJones, rjasdfiii
  * Author URI:   https://github.com/OllieJones
@@ -26,26 +26,31 @@
  */
 
 /** current version number  */
-define( 'index_wp_mysql_for_speed_VERSION_NUM', '1.4.3' );
+define( 'index_wp_mysql_for_speed_VERSION_NUM', '1.4.6' );
 define( 'index_mysql_for_speed_major_version', 1.4 );
 define( 'index_mysql_for_speed_inception_major_version', 1.3 );
-define( 'index_mysql_for_speed_inception_wp_version', '5.8.3');
-define( 'index_mysql_for_speed_inception_wp_db_version', 49752);
+define( 'index_mysql_for_speed_inception_wp_version', '5.8.3' );
+define( 'index_mysql_for_speed_inception_wp_db_version', 49752 );
+define( 'index_mysql_for_speed_log', null );
 
 /* set up some handy globals */
 define( 'index_wp_mysql_for_speed_PLUGIN_NAME', trim( dirname( plugin_basename( __FILE__ ) ), '/' ) );
-define( 'index_wp_mysql_for_speed_domain', index_wp_mysql_for_speed_PLUGIN_NAME );
 define( 'index_wp_mysql_for_speed_stats_endpoint', $target = 'https://lit-mesa-75588.herokuapp.com/imfsstats' );
 define( 'index_wp_mysql_for_speed_monitor', 'imfsQueryMonitor' );
 define( 'index_wp_mysql_for_speed_querytag', '*imfs-query-tag*' );
 /* version 32814 was the advent of utfmb4 */
 define( 'index_wp_mysql_for_speed_first_compatible_db_version', 32814 );
-define( 'index_wp_mysql_for_speed_last_compatible_db_version', 0 ); /*tested up to 51917 */
+define( 'index_wp_mysql_for_speed_last_compatible_db_version', 0 ); /*tested up to 53496 */
 
 define( 'index_wp_mysql_for_speed_help_site', 'https://plumislandmedia.net/index-wp-mysql-for-speed/' );
 
 register_activation_hook( __FILE__, 'index_wp_mysql_for_speed_activate' );
 register_deactivation_hook( __FILE__, 'index_wp_mysql_for_speed_deactivate' );
+
+if (defined('WP_DEBUG') && WP_DEBUG) {
+  /* suppress core deprecated hook  TODO remove this after that is fixed. */
+  add_filter( 'deprecated_hook_trigger_error', '__return_false' );
+}
 
 add_action( 'init', 'index_wp_mysql_for_speed_do_everything' );
 
@@ -78,14 +83,14 @@ function updateNag() {
   global $wp_version, $wp_db_version;
   $result = null;
   if ( ! wp_doing_ajax() ) {
-    $imfsPage     = get_option( 'ImfsPage' );
-    $majorVersion = ( $imfsPage !== false && isset( $imfsPage['majorVersion'] ) && is_numeric( $imfsPage['majorVersion'] ) )
+    $imfsPage       = get_option( 'ImfsPage' );
+    $majorVersion   = ( $imfsPage !== false && isset( $imfsPage['majorVersion'] ) && is_numeric( $imfsPage['majorVersion'] ) )
       ? floatval( $imfsPage['majorVersion'] ) : index_mysql_for_speed_inception_major_version;
-    $savedWpVersion = ( $imfsPage !== false && isset( $imfsPage['wp_version'] )) ? $imfsPage['wp_version'] :index_mysql_for_speed_inception_wp_version;
-    $savedDbVersion = ( $imfsPage !== false && isset( $imfsPage['wp_db_version'] )) ? $imfsPage['wp_db_version'] : index_mysql_for_speed_inception_wp_db_version;
+    $savedWpVersion = ( $imfsPage !== false && isset( $imfsPage['wp_version'] ) ) ? $imfsPage['wp_version'] : index_mysql_for_speed_inception_wp_version;
+    $savedDbVersion = ( $imfsPage !== false && isset( $imfsPage['wp_db_version'] ) ) ? $imfsPage['wp_db_version'] : index_mysql_for_speed_inception_wp_db_version;
     if ( ! $imfsPage ) {
       $result = 'add';
-    } else if ($wp_db_version != $savedDbVersion) {
+    } else if ( $wp_db_version != $savedDbVersion ) {
       $result = 'version_update';
     } else if ( $majorVersion !== index_mysql_for_speed_major_version ) {
       $result = 'update';
@@ -131,10 +136,8 @@ function requireThemAll( $nag = false ) {
   require_once( plugin_dir_path( __FILE__ ) . 'code/admin.php' );
   require_once( plugin_dir_path( __FILE__ ) . 'code/upload.php' );
   require_once( plugin_dir_path( __FILE__ ) . 'code/querymoncontrol.php' );
-  if ( $nag ) {
-    require_once( plugin_dir_path( __FILE__ ) . 'code/notice.php' );
-    new ImfsNotice ( $nag );
-  }
+  require_once( plugin_dir_path( __FILE__ ) . 'code/notice.php' );
+  new ImfsNotice ( $nag );
 }
 
 function index_wp_mysql_for_speed_activate() {
@@ -144,19 +147,10 @@ function index_wp_mysql_for_speed_activate() {
 }
 
 function index_wp_mysql_for_speed_deactivate() {
-  /* clean up options and transients */
-  global $wpdb;
-  delete_option( 'ImfsPage' );
-  $q  = "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '" . index_wp_mysql_for_speed_monitor . "%'";
-  $rs = $wpdb->get_results( $q );
-  foreach ( $rs as $r ) {
-    delete_option( $r->option_name );
-  }
-  $q  = "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_" . index_wp_mysql_for_speed_monitor . "%'";
-  $rs = $wpdb->get_results( $q );
-  foreach ( $rs as $r ) {
-    delete_transient( $r->option_name );
-  }
+  /* clean up emphemeral options */
+  delete_option( 'imfsQueryMonitor' );
+  delete_option( 'imfsQueryMonitornextMonitorUpdate' );
+  delete_option( 'imfsQueryMonitorGather' );
 }
 
 /**
@@ -167,7 +161,8 @@ function index_wp_mysql_for_speed_deactivate() {
  * @return array
  */
 function index_wp_mysql_for_speed_action_link( $actions ) {
-  $name    = __( "Settings", index_wp_mysql_for_speed_domain );
+  /* translators: for settings link on plugin page */
+  $name    = __( "Settings", 'index-wp-mysql-for-speed' );
   $mylinks = [
     '<a href="' . admin_url( 'tools.php?page=imfs_settings' ) . '">' . $name . '</a>',
   ];

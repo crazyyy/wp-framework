@@ -1,9 +1,9 @@
 <?php
 
-namespace WBCR\Factory_453\Updates;
+namespace WBCR\Factory_456\Updates;
 
 // Exit if accessed directly
-use Wbcr_Factory453_Plugin;
+use Wbcr_Factory456_Plugin;
 
 if( !defined('ABSPATH') ) {
 	exit;
@@ -57,11 +57,11 @@ class Github_Repository extends Repository {
 	/**
 	 * Wordpress constructor.
 	 *
-	 * @param Wbcr_Factory453_Plugin $plugin
+	 * @param Wbcr_Factory456_Plugin $plugin
 	 * @param bool $is_premium
 	 * @since 4.4.1
 	 */
-	public function __construct(Wbcr_Factory453_Plugin $plugin, array $settings = [])
+	public function __construct(Wbcr_Factory456_Plugin $plugin, array $settings = [])
 	{
 		$settings = wp_parse_args($settings, [
 			'github_username' => '',

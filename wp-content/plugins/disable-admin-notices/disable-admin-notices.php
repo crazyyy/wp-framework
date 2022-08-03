@@ -4,11 +4,11 @@
  * Plugin URI: https://clearfy.pro/disable-admin-notices
  * Description: Disable admin notices plugin gives you the option to hide updates warnings and inline notices in the admin panel.
  * Author: Creative Motion <info@cm-wp.com>
- * Version: 1.2.8
+ * Version: 1.3.0
  * Text Domain: disable-admin-notices
  * Domain Path: /languages/
  * Author URI: https://webcraftic.com
- * Framework Version: FACTORY_453_VERSION
+ * Framework Version: FACTORY_456_VERSION
  */
 
 /**
@@ -93,17 +93,17 @@ $wdan_plugin_info = array(
 
 	// FRAMEWORK MODULES
 	'load_factory_modules' => array(
-		array( 'libs/factory/bootstrap', 'factory_bootstrap_454', 'admin' ),
-		array( 'libs/factory/forms', 'factory_forms_450', 'admin' ),
-		array( 'libs/factory/pages', 'factory_pages_452', 'admin' ),
-		array( 'libs/factory/templates', 'factory_templates_106', 'all' ),
-		array( 'libs/factory/freemius', 'factory_freemius_140', 'all' ),
-		array( 'libs/factory/adverts', 'factory_adverts_130', 'admin' ),
-		//array('libs/factory/logger', 'factory_logger_118', 'all')
+		array( 'libs/factory/bootstrap', 'factory_bootstrap_457', 'admin' ),
+		array( 'libs/factory/forms', 'factory_forms_453', 'admin' ),
+		array( 'libs/factory/pages', 'factory_pages_455', 'admin' ),
+		array( 'libs/factory/templates', 'factory_templates_108', 'all' ),
+		array( 'libs/factory/freemius', 'factory_freemius_143', 'all' ),
+		array( 'libs/factory/adverts', 'factory_adverts_133', 'admin' ),
+		//array('libs/factory/logger', 'factory_logger_121', 'all')
 	)
 );
 
-$wdan_compatibility = new Wbcr_Factory453_Requirements( __FILE__, array_merge( $wdan_plugin_info, array(
+$wdan_compatibility = new Wbcr_Factory456_Requirements( __FILE__, array_merge( $wdan_plugin_info, array(
 	'plugin_already_activate'          => defined( 'WDN_PLUGIN_ACTIVE' ),
 	'required_php_version'             => '7.0',
 	'required_wp_version'              => '4.8.0',

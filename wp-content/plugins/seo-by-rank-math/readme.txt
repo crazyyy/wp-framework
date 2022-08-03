@@ -2,12 +2,12 @@
 Contributors: rankmath
 Plugin link: https://rankmath.com/?utm_source=LP&utm_campaign=WP
 Tags: seo, sitemap, google search console, schema, redirection, WordPress SEO
-Tested up to: 5.9
+Tested up to: 6.0
 Requires at least: 5.6
 Requires PHP: 7.2
-Stable tag: 1.0.81.1
-License: GPL-2.0+
-License URI: https://www.gnu.org/licenses/gpl-2.0.txt
+Stable tag: 1.0.94
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
 Rank Math SEO is the Best WordPress SEO plugin combines the features of many SEO tools in a single package & helps you multiply your SEO traffic.
 
@@ -185,7 +185,7 @@ Even with significantly more features than other plugins, Rank Math SEO loads am
 ### Take a sneak peek into Rank Math SEO’s features ###
 
 #### Detailed Setup Tutorial ####
-[youtube https://www.youtube.com/watch?v=dTvZuMRzW4w]
+[youtube https://www.youtube.com/watch?v=cQLvCBVev3I]
 
 ### List of Best Rank Math SEO Features ###
 
@@ -270,7 +270,6 @@ Even with significantly more features than other plugins, Rank Math SEO loads am
 * **Search Engine Verification Tools**
 	* Bing Site Verification
 	* Baidu Site Verification
-	* Alexa Site Verification
 	* Yandex Site Verification
 	* **Google Site Verification**
 	* Pinterest Site Verification
@@ -581,29 +580,17 @@ Please drop us an email at support@rankmath.com and we would be more than happy 
 
 == Changelog ==
 
-= 1.0.81.1 [Jan 27, 2022] =
-* Fixed: [Variable dropdown](https://rankmath.com/kb/variables-in-seo-title-description/) was not working with the WordPress v5.9
-* Fixed: [SEO Panel](https://rankmath.com/blog/divi-seo/) was not appearing on Divi's frontend editor for WordPress v5.9
-* Fixed: PHP warnings for various non-arrays on some setups
-* Fixed: Wrong changelog link in the [Update email](https://rankmath.com/kb/version-control/#update-notification-email)
-
-
-= 1.0.81 [Jan 26, 2022] =
-* Added: [HUGE!] [Introducing IndexNow integration](https://rankmath.com/kb/how-to-use-indexnow/). We have replaced the old Bing Instant Indexing API with the latest IndexNow API. This new API also supports Yandex
-* Added: [Submission Log in the Instant Indexing](https://rankmath.com/kb/how-to-use-indexnow/#checking-the-history) Settings page to monitor last 100 submissions and removed regular submission notifications
-* Improved: Converted Dashboard widget from PHP to React, around 20% performance improvements
-* Improved: [Content AI](https://rankmath.com/content-ai) recommendation algorithm
-* Improved: Added range value in the Recommended Section of Content AI to make it is easy to understand
-* Improved: You can now use WebP image format for [Twitter Open Graph](https://rankmath.com/kb/sharing-content-on-social-media/#twitter)
-* Improved: Compatibility with PHP 8.1
-* Fixed: Bulk URL submission to Bing was not working from the Post list page
-* Fixed: Secondary language Product pages created using TranslatePress plugin were not working well when [Remove Product Base](https://rankmath.com/kb/general-settings/#remove-base) option was enabled
-* Fixed: Added a condition to add `article:modified_time` & `og:updated_time` only when the post modified time is greater than the published time
-* Fixed: [Length indicator](https://rankmath.com/kb/general-tab/#num-1-4-writing-a-compelling-title-permalink-and-description) was not working on the Attachment pages
-* Fixed: [Slack sharing](https://rankmath.com/kb/titles-and-meta/#authors-slack-enhanced-sharing) was showing in Author settings even when [Author archive pages](https://rankmath.com/kb/titles-and-meta/#author-archives) were disabled
-* Fixed: PHP error in the Dashboard widget on some setups
-* Fixed: Missing Logo error in AMP on [Web Stories](https://rankmath.com/kb/google-web-stories/) posts. The priority is now given to the logo added in the Web Stories settings
-* Fixed: [Importing settings](https://rankmath.com/kb/import-export-settings/#importing-your-settings) was not working on some setups where the `.txt` file upload was not permitted for the security reasons
-* Fixed: Single Post Redirection option was getting enabled after changing the post slug. This was happening when [Auto Post Redirect](https://rankmath.com/kb/general-settings/#auto-post-redirect) option was enabled in the General Settings
+= 1.0.94 [July 28, 2022] =
+* Improved: [NEW!] Major improvement in the plugin's UI
+* Added: Hover effect on inactive radio button type fields like [Redirection Type](https://rankmath.com/kb/general-settings/#redirection-type) & [Breadcrumbs](https://rankmath.com/kb/general-settings/#breadcrumbs)
+* Improved: Show two Schema types in one row in the [Schema Generator](https://rankmath.com/kb/schema-generator/) popup for a better user experience
+* Improved: Disconnect account button styling
+* Improved: Variable dropdown description color for better readability
+* Improved: Width issue of [GSC and GA fields](https://rankmath.com/kb/general-settings/#search-console-settings) if there are no properties in it
+* Improved: Replaced Rank Math's SVG icon in the header of Settings page with the font icon
+* Updated: [Google preview](https://rankmath.com/kb/general-tab/#the-preview-section) as per the current Google design
+* Updated: Font icons in the plugin for better UX
+* Fixed: Adding incorrect [Source URL in Redirection](https://rankmath.com/kb/setting-up-redirections/#source-urls) was leading to a white screen of death
+* Fixed: Pillar icon was incorrectly showing in the [Post list](https://rankmath.com/kb/titles-and-meta/#bulk-editing)
 
 Full changelog can be found here - **[Rank Math SEO changelog](https://rankmath.com/changelog/?utm_source=Plugin&utm_medium=Changelog&utm_campaign=WP)**

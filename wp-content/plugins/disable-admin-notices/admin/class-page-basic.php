@@ -19,16 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WDN_Page extends WBCR\Factory_Templates_106\Pages\PageBase {
+class WDN_Page extends WBCR\Factory_Templates_108\Pages\PageBase {
 
 	/**
 	 * Requests assets (js and css) for the page.
 	 *
-	 * @param Wbcr_Factory453_ScriptList $scripts
-	 * @param Wbcr_Factory453_StyleList $styles
+	 * @param Wbcr_Factory456_ScriptList $scripts
+	 * @param Wbcr_Factory456_StyleList $styles
 	 *
 	 * @return void
-	 * @see Wbcr_FactoryPages452_AdminPage
+	 * @see Wbcr_FactoryPages455_AdminPage
 	 *
 	 */
 	public function assets( $scripts, $styles ) {

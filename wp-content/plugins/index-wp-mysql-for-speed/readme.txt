@@ -1,10 +1,10 @@
 === Index WP MySQL For Speed ===
 Contributors: OllieJones, rjasdfiii
-Tags: database, index, key, mysql, wp-cli
+Tags: database, index, key, performance, mysql, wp-cli
 Requires at least: 5.2
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 1.4.3
+Stable tag: 1.4.6
 Network: true
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -19,15 +19,9 @@ Speed up your WordPress site by adding high-performance keys (database indexes) 
 
 == Description ==
 
-<h4>What's new in version 1.4?</h4>
-
-Since the first release, our users have told us about several more opportunities to speed up their WooCommerce and core WordPress operations. We've added keys to the `meta` tables to help with searching for content, and to the `users` table to look people up by their display names. And, you can now upload saved Monitors so we can see your slowest queries. We'll use that information to improve future versions. Thanks, dear users!
-
-WordPress version updates attempt to restore some of WordPress's default keys. This plugin prompts you to add the high-performance keys after updates.
-
 <h4>How do I use this plugin?</h4>
 
-After you install this plugin, use it with the Index MySQL Tool under the Tools menu. If you have large tables, use it with [WP-CLI](https://wp-cli.org/) instead to avoid timeouts. Give the shell command _wp help index-mysql_ to learn how.
+After you install and activate this plugin, visit the Index MySQL Tool under the Tools menu. From there you can press the *Add Keys Now* button. If you have large tables, use it with [WP-CLI](https://wp-cli.org/) instead to avoid timeouts. See the WP-CLI section to learn more.
 
 
 <h4>What does it do for my site?</h4>
@@ -83,6 +77,31 @@ Once you have gathered monitoring information, you can view the captured queries
 
 It's a good idea to monitor for a five-minute interval at a time of day when your site is busy. Once you've completed a monitor, you can examine it to determine which database operations are slowing you down the most.
 
+Please consider uploading your saved monitors to the plugin's servers. It's how we learn from your experience to keep improving. Push the Upload button on the monitor's tab.
+
+<h4>WP-CLI command line operation</h4>
+
+This plugin supports [WP-CLI](https://wp-cli.org/).  When your tables are large this is the best way to add the high-performance keys: it doesn't time out.
+
+Give the command `wp help index-mysql` for details. A few examples:
+
+* `wp index-mysql status` shows the current status of high-performance keys.
+* `wp index-mysql enable --all` adds the high-performance keys to all tables that don't have them.
+* `wp index-mysql enable wp_postmeta` adds the high-performance keys to the postmeta table.
+* `wp index-mysql disable --all` removes the high-performance keys from all tables that have them, restore WordPress's default keys.
+* `wp index-mysql enable --all --dryrun` writes out the SQL statements necessary to add the high-performance keys to all tables, but does not run them.
+* `wp index-mysql enable --all --dryrun | wp db query` writes out the SQL statements and pipes them to wp db to run them.
+
+Note: avoid saving the --dryrun output statements to run later. The plugin generates them to match the current state of your tables.
+
+<h4>What's new in version 1.4?</h4>
+
+Since the first release, our users have told us about several more opportunities to speed up their WooCommerce and core WordPress operations. We've added keys to the `meta` tables to help with searching for content, and to the `users` table to look people up by their display names. And, you can now upload saved Monitors so we can see your slowest queries. We'll use that information to improve future versions. Thanks, dear users!
+
+WordPress version updates attempt to restore some of WordPress's default keys. This plugin prompts you to add the high-performance keys after updates.
+
+We have added the --dryrun switch to the WP-CLI interface for those who want to see the SQL statements we use.
+
 = Credits =
 * Michael Uno for Admin Page Framework.
 * Marco Cesarato for LiteSQLParser.
@@ -95,6 +114,11 @@ It's a good idea to monitor for a five-minute interval at a time of day when you
 = Should I back up my site before using this? =
 
 **Yes.** You already knew that.
+
+= I don't see any changes to my database speed. Why not? =
+
+* On a modestly sized site (with a few users and a few hundred posts) your database may be fast enough without these keys. The speed improvements are most noticeable on larger sites with many posts and products.
+* Just installing and activating the plugin is **not enough to make it work**. Don't forget to visit the Index MySQL Tool under the Tools menu. From there you can press the **Add Keys Now** button.
 
 = I use a nonstandard database table prefix. Will this work ? =
 
@@ -116,38 +140,45 @@ MySQL versions 5.5.62 and above, 5.6.4 and above, 8 and above. MariaDB versions 
 
 [Please read this](https://www.plumislandmedia.net/index-wp-mysql-for-speed/tables_and_keys/).
 
+= Is this safe? Can I add high-performance keys and revert back to WordPress standard keys safely?
+
+Yes. it is safe to add keys and revert them. Changing keys is a routine database-maintenance operation.
+
+As you know you should still keep backups of your site: other things can cause data loss.
+
+= My site has thousands of registered users. My Users, Posts, and Pages panels in my dashboard are still load slowly even with this plugin.
+
+We have another plugin to handle lots of users, [Index WP Users For Speed](https://wordpress.org/plugins/index-wp-users-for-speed/). Due to the way WordPress handles users, just changing database keys is not enough to solve those performance problems.
+
 = How do I get an answer to another question? ==
 
 Please see more questions and answers [here](https://plumislandmedia.net/index-wp-mysql-for-speed/faq/).
 
 == Changelog ==
 
-= 1.4.1 =
-* WordPress 5.9 and database version 51917 version compatibility tested.
-* Rekeys tables in one go: allows the plugin to work more quickly, and when sql_require_primary_key=ON (typically at managed service providers).
-* Adds high-performance keys to wp_users and wp_commentmeta tables.
-* Adds high-performance keys for filtering on meta_value data quickly in wp_postmeta, wp_termmeta, and wp_usermeta.
-* Handles updates to high-performance keys from previous plugin versions.
-* Checks $wp_db_version number to ensure schema compatibility.
-* Monitor captures include overall database server metrics. Monitor captures can be uploaded.
-* Help pages for each tab of the plugin's Dashboard panel are available.
-* Clearer Dashboard panel displays.
 
-= 1.4.2 =
+= 1.4.4 =
 * (No changes to keys.)
-* Add support for legacy php versions back to 5.6.
-* Avoid attempting to read `INNODB_METRICS` when user lacks `PROCESS` privilege.
-* Correct nag hyperlink on multisite.
+* Add support for internationalization. Speed up rendering of dashboard panels.
+* In MySQL 5.5, avoid using EXPLAIN on anything except SELECT queries.
+* Don't remove settings and monitors on deactivate, only on uninstall.
 
-= 1.4.3 =
+= 1.4.5 =
 * (No changes to keys.)
-* Detect recent WordPress version update and prompt to restore high-performance keys.
+* Ignore FULLTEXT indexes and indexes from Contextual Related Posts plugin.
+* The new --dryrun switch on wp-cli now writes out ALTER TABLE data definition language instead of running it.
+   Now can do `wp index-mysql enable --all --dryrun | wp db query` to run the DML.
+* Fix some metadata-upload issues.
+* Fix a bug when deleting a monitor.
+* Update the $wp_db_monitor version to 53496.
+
+= 1.4.6 =
+(no changes to keys)
+Fix a bug when looking at the stoplist for index names.
 
 == Upgrade Notice ==
-This version offers performance improvements, especially for larger sites and sites using
-managed service providers. It handles WordPress version updates better. It also offers help pages.
 
-After you update the plugin, please go to [Tools / Index MySQL](/wp-admin/tools.php?page=imfs_settings) to update your high-performance keys to the latest version.
+We've added the --dryrun option to the wp-cli interface, and corrected some bugs. Notice that no keys change when upgrading from any version 1.4.x to this version 1.4.5.
 
 == Screenshots ==
 

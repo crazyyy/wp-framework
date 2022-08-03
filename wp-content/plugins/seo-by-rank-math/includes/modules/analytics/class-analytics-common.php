@@ -46,6 +46,7 @@ class Analytics_Common {
 		}
 
 		new GTag();
+		new Analytics_Stats();
 		$this->action( 'plugins_loaded', 'maybe_init_email_reports', 15 );
 		$this->action( 'init', 'maybe_enable_email_reports', 20 );
 		$this->action( 'cmb2_save_options-page_fields_rank-math-options-general_options', 'maybe_update_report_schedule', 20, 3 );
@@ -58,6 +59,7 @@ class Analytics_Common {
 
 		$this->filter( 'rank_math/tools/analytics_clear_caches', 'analytics_clear_caches' );
 		$this->filter( 'rank_math/tools/analytics_reindex_posts', 'analytics_reindex_posts' );
+		$this->filter( 'rank_math/tools/analytics_fix_collations', 'analytics_fix_collations' );
 		$this->filter( 'wp_helpers_notifications_render', 'replace_notice_link', 10, 3 );
 	}
 
@@ -178,6 +180,33 @@ class Analytics_Common {
 	}
 
 	/**
+	 * Fix table & column collations.
+	 *
+	 * @return string
+	 */
+	public function analytics_fix_collations() {
+		$tables = [
+			'rank_math_analytics_ga',
+			'rank_math_analytics_gsc',
+			'rank_math_analytics_keyword_manager',
+			'rank_math_analytics_inspections',
+		];
+
+		$objects_coll = Helper::get_table_collation( 'rank_math_analytics_objects' );
+		$changed      = 0;
+		foreach ( $tables as $table ) {
+			$changed += (int) Helper::check_collation( $table, 'all', $objects_coll );
+		}
+
+		return $changed ? sprintf(
+			/* translators: %1$d: number of changes, %2$s: new collation. */
+			_n( '%1$d collation changed to %2$s.', '%1$d collations changed to %2$s.', $changed, 'rank-math' ),
+			$changed,
+			'`' . $objects_coll . '`'
+		) : __( 'No collation mismatch to fix.', 'rank-math' );
+	}
+
+	/**
 	 * Init Email Reports class if the option is enabled.
 	 *
 	 * @return void
@@ -187,7 +216,6 @@ class Analytics_Common {
 			new Email_Reports();
 		}
 	}
-
 
 	/**
 	 * Enable the email reports option if the `enable_email_reports` param is set.
@@ -309,7 +337,7 @@ class Analytics_Common {
 	 * @param boolean $revert Flag whether to revert difference icon or not.
 	 */
 	private function get_analytic_block( $item, $revert = false ) {
-		$is_negative = absint( $item['difference'] ) !== $item['difference'];
+		$is_negative = abs( $item['difference'] ) !== $item['difference'];
 		$diff_class  = 'up';
 		if ( ( ! $revert && $is_negative ) || ( $revert && ! $is_negative && $item['difference'] > 0 ) ) {
 			$diff_class = 'down';

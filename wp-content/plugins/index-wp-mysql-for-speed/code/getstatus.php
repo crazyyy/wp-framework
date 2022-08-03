@@ -15,7 +15,7 @@ function getGlobalStatus( $prior = false ) {
 
 
   /* add in a copy of some items that's not a difference */
-  $stateVars = 'Uptime|Memory_used|Threads_running';
+  $stateVars = 'Uptime|Memory_used|Threads_running|Innodb_buffer_pool_bytes_data|Innodb_buffer_pool_bytes_dirty';
   $stateVars = explode( '|', $stateVars );
 
   foreach ( $resultSet as $row ) {
@@ -30,10 +30,10 @@ function getGlobalStatus( $prior = false ) {
     $key = $row[0];
     $val = $row[1];
     if ( is_numeric( $val ) ) {
-      $val      = intval( $val );
+      $val      = $val + 0;
       $priorVal = is_array( $prior ) && isset( $prior[ $key ] ) ? $prior[ $key ] : 0;
       if ( is_array( $prior ) && is_numeric( $priorVal ) ) {
-        $val = $val - intval( $priorVal );
+        $val = $val - $priorVal + 0;
       }
     }
     if ( $val !== 0 ) {
