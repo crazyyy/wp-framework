@@ -29,7 +29,6 @@ function ampforwp_add_admin_styling($hook_suffix){
     // Style file to add or modify css inside admin area
     wp_register_style( 'ampforwp_admin_css', untrailingslashit(AMPFORWP_PLUGIN_DIR_URI) . '/includes/admin-style.css', false, AMPFORWP_VERSION );
     wp_enqueue_style( 'ampforwp_admin_css' );
-
     // Admin area scripts file
     $dep = array('wp-color-picker');
     $dep = apply_filters('ampforwp_modify_script_dependency', $dep);
@@ -39,7 +38,7 @@ function ampforwp_add_admin_styling($hook_suffix){
     $redux_data = array();
     global $pagenow;
     if ('plugins.php' == $pagenow) {
-        add_action('admin_notices', 'ampforwp_adpushup_notice' );
+        add_action('admin_notices', 'ampforwp_tpd_notice' );
     }
     if( current_user_can("manage_options") && $hook_suffix=='toplevel_page_amp_options' ){
         $redux_data = $redux_builder_amp;
@@ -65,6 +64,9 @@ function ampforwp_add_admin_styling($hook_suffix){
         if (function_exists('aeccglobal_setup')) {
             remove_action( 'admin_footer', 'js_update_show_in_slider' );
         }
+        if (function_exists('appsero_init_tracker_tour_booking_manager')) {
+           add_action( 'wp_print_scripts', 'ampforwp_dequeue_tour_booking_script', 100 );
+        }
         add_action('admin_notices', 'ampforwp_dev_mode_notice');
         add_action('admin_notices', 'ampforwp_plugins_manager_notice');
         add_action('admin_notices', 'ampforwp_ampwptheme_notice');
@@ -74,7 +76,7 @@ function ampforwp_add_admin_styling($hook_suffix){
         add_action('admin_notices', 'ampforwp_mobile_redirection_notice' );
         add_action('admin_notices', 'ampforwp_category_base_remove_notice' );
         add_action('admin_notices', 'ampforwp_internal_feedback_notice' );
-        add_action('admin_notices', 'ampforwp_adpushup_notice' );
+        add_action('admin_notices', 'ampforwp_tpd_notice' );
         if ( defined('AMPFORWPPRO_PLUGIN_DIR')  ) {     
             $license_info = get_option( 'ampforwppro_license_info');
             if (!$license_info) {
@@ -123,6 +125,9 @@ function ampforwp_add_admin_styling($hook_suffix){
     );
     wp_enqueue_script( 'wp-color-picker' );
     wp_enqueue_script( 'ampforwp_admin_js' );
+}
+function ampforwp_dequeue_tour_booking_script() {
+    wp_dequeue_script( 'ttbm_mp_script' );
 }
 // 96. ampforwp_is_front_page() ampforwp_is_home() and ampforwp_is_blog is created
 function ampforwp_is_front_page(){
@@ -1522,33 +1527,6 @@ function ampforwp_feedback_remove_notice(){
 }
 add_action('wp_ajax_ampforwp_feedback_remove_notice', 'ampforwp_feedback_remove_notice');
 
-function ampforwp_adpushup_notice(){
-    $remove_notice =  get_option("ampforwp_adpushup_remove_notice");
-    if ($remove_notice !='remove' && !ampforwp_get_setting('ampforwp-ads-adpushup')) {?>
-        <div class="updated notice ampforwp_remove_notice" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);background-color:white;">
-            <p> 
-            <?php echo sprintf( 'We have integrated <a href="https://ampforwp.com/tutorials/article/how-to-add-adpushup-ads-in-amp" target="_blank">%s</a> in our AMP plugin, it is a revenue optimization platform that helps publishers increase their ad revenue with fast fetch ad delivery and publishers can get upto 2x of the revenue compared to non-optimized pages',esc_html__('AdPushup ads','accelerated-mobile-pages' ));?></p>
-            <a href="<?php echo esc_url('admin.php?page=amp_options&tab=4') ?>" class="button-primary" target="_self" style="font-weight:bold;" title="Ok, you deserved it"> <?php echo esc_html__('Setup AdPushup in AMP', 'accelerated-mobile-pages') ?></a>
-            <a class="button-primary" id="ampforwp-close-ad-notice" style="font-weight:bold;"><?php echo esc_html__('Dismiss', 'accelerated-mobile-pages') ?></a>
-            </p>
-        </div>
-<?php    }
-}
-
-function ampforwp_adpushup_remove_notice(){    
-    $result = '';
-    if(current_user_can( 'manage_options' )){
-       $result = update_option( "ampforwp_adpushup_remove_notice", 'remove');
-    }
-    if($result){
-        echo json_encode(array('status'=>'t'));            
-    }else{    
-        echo json_encode(array('status'=>'f'));                
-    }   
-    wp_die();                
-}
-add_action('wp_ajax_ampforwp_adpushup_remove_notice', 'ampforwp_adpushup_remove_notice');
-
 function ampforwp_pro_extension_manager_notice(){?>
     <div class="updated notice ampforwp_remove_notice" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);background-color:white;">
     <p> 
@@ -1565,3 +1543,30 @@ function ampforwp_incomplate_setup_notice(){?>
     </p>
     </div>
 <?php }
+
+function ampforwp_tpd_notice(){
+    $remove_notice =  get_option("ampforwp_tpd_remove_notice");
+    if ($remove_notice !='remove' && !ampforwp_get_setting('ampforwp-ads-publisherdesk')) { ?>
+        <div class="updated notice ampforwp_remove_notice" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);background-color:white;">
+            <p> 
+            <?php echo sprintf( 'We have integrated <a href="https://www.publisherdesk.com/amp-for-wp/" target="_blank">%s</a> in our AMP plugin, it is a revenue optimization platform that helps publishers increase their ad revenue with fast fetch ad delivery and publishers can get upto 2x of the revenue compared to non-optimized pages',esc_html__('The Publisher Desk','accelerated-mobile-pages' ));?></p>
+            <a href="<?php echo esc_url('admin.php?page=amp_options&tab=4') ?>" class="button-primary" target="_self" style="font-weight:bold;" title="Ok, you deserved it"> <?php echo esc_html__('Setup The Publisher Desk in AMP', 'accelerated-mobile-pages') ?></a>
+            <a class="button-primary" id="ampforwp-close-ad-notice" style="font-weight:bold;"><?php echo esc_html__('Dismiss', 'accelerated-mobile-pages') ?></a>
+            </p>
+        </div>
+<?php    }
+}
+
+function ampforwp_tpd_remove_notice(){    
+    $result = '';
+    if(current_user_can( 'manage_options' )){
+       $result = update_option( "ampforwp_tpd_remove_notice", 'remove');
+    }
+    if($result){
+        echo json_encode(array('status'=>'t'));            
+    }else{    
+        echo json_encode(array('status'=>'f'));                
+    }   
+    wp_die();                
+}
+add_action('wp_ajax_ampforwp_tpd_remove_notice', 'ampforwp_tpd_remove_notice');

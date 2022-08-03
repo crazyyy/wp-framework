@@ -298,7 +298,7 @@ class Control extends Root {
 	 */
 	public static function is_private() {
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
-			return false;
+			// return false;
 		}
 
 		return self::$_control & self::BM_PRIVATE && ! self::is_public_forced();
@@ -398,7 +398,7 @@ class Control extends Root {
 
 		// Guest mode always cacheable
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
-			return true;
+			// return true;
 		}
 
 		// If its forced public cacheable
@@ -502,6 +502,7 @@ class Control extends Root {
 				PHP_URL_SCHEME,
 				PHP_URL_HOST,
 				PHP_URL_PATH,
+				PHP_URL_QUERY,
 			);
 
 			$is_same_redirect = true;
@@ -544,25 +545,25 @@ class Control extends Root {
 		}
 
 		// Guest mode directly return cacheable result
-		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
-			// If is POST, no cache
-			if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
-				Debug2::debug( "[Ctrl] ❌ forced no cache [reason] LSCACHE_NO_CACHE const" );
-				$hdr .= 'no-cache';
-			}
-			else if( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-				Debug2::debug( "[Ctrl] ❌ forced no cache [reason] req not GET" );
-				$hdr .= 'no-cache';
-			}
-			else {
-				$hdr .= 'public';
-				$hdr .= ',max-age=' . $this->get_ttl();
-			}
+		// if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+		// 	// If is POST, no cache
+		// 	if ( defined( 'LSCACHE_NO_CACHE' ) && LSCACHE_NO_CACHE ) {
+		// 		Debug2::debug( "[Ctrl] ❌ forced no cache [reason] LSCACHE_NO_CACHE const" );
+		// 		$hdr .= 'no-cache';
+		// 	}
+		// 	else if( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
+		// 		Debug2::debug( "[Ctrl] ❌ forced no cache [reason] req not GET" );
+		// 		$hdr .= 'no-cache';
+		// 	}
+		// 	else {
+		// 		$hdr .= 'public';
+		// 		$hdr .= ',max-age=' . $this->get_ttl();
+		// 	}
 
-			$hdr .= $esi_hdr;
+		// 	$hdr .= $esi_hdr;
 
-			return $hdr;
-		}
+		// 	return $hdr;
+		// }
 
 		// Fix cli `uninstall --deactivate` fatal err
 
@@ -597,6 +598,17 @@ class Control extends Root {
 	 */
 	public function finalize() {
 		if ( defined( 'LITESPEED_GUEST' ) && LITESPEED_GUEST ) {
+			// return;
+		}
+
+		if ( is_preview() ) {
+			self::set_nocache( 'preview page' );
+			return;
+		}
+
+		// Check if has metabox non-cacheable setting or not
+		if ( $this->cls( 'Metabox' )->setting( 'litespeed_no_cache' ) ) {
+			self::set_nocache( 'per post metabox setting' );
 			return;
 		}
 
@@ -642,11 +654,6 @@ class Control extends Root {
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
 			Debug2::debug( '[Ctrl] not cacheable after api_control' );
-			return;
-		}
-
-		if ( is_preview() ) {
-			self::set_nocache( 'preview page' );
 			return;
 		}
 

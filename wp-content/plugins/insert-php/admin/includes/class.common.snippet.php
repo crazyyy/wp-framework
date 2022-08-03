@@ -462,7 +462,7 @@ class WINP_Common_Snippet {
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_scope', $snippet['scope'] );
 				WINP_Helper::updateMetaOption( $post_ID, 'snippet_priority', $snippet['priority'] );
 
-				wp_redirect( admin_url( 'post.php?post=' . $post_ID . '&action=edit' ) );
+				wp_safe_redirect( admin_url( 'post.php?post=' . $post_ID . '&action=edit' ) );
 			}
 		}
 	}

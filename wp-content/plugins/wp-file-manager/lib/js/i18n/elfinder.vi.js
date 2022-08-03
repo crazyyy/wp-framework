@@ -3,9 +3,9 @@
  * @author Chung Thủy f <chungthuyf@gmail.com>
  * @author Son Nguyen <son.nguyen@catalyst.net.nz>
  * @author Nguyễn Trần Chung <admin@chungnguyen.xyz>
- * @version 2019-12-03
+ * @version 2022-03-04
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -18,10 +18,12 @@
 		translator : 'Chung Thủy f &lt;chungthuyf@gmail.com&gt;, Son Nguyen &lt;son.nguyen@catalyst.net.nz&gt;, Nguyễn Trần Chung &lt;admin@chungnguyen.xyz&gt;',
 		language   : 'Ngôn ngữ Việt Nam',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 03.12.2019 17:28
-		fancyDateFormat : '$1 H:i', // will show like: Hôm nay 17:28
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 191203-172820
+		dateFormat : 'd.m.Y H:i', // will show like: 04.03.2022 11:11
+		fancyDateFormat : '$1 H:i', // will show like: Hôm nay 11:11
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220304-111107
 		messages   : {
+			'getShareText' : 'Đăng lại',
+			'Editor ': 'Trình chỉnh sửa mã',
 
 			/********************************** errors **********************************/
 			'error'                : 'Lỗi',
@@ -117,6 +119,7 @@
 			'errServerError'       : 'Lỗi xảy ra ở phía máy chủ.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Không thể làm rỗng thư mục "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'Có thêm $1 lỗi.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Bạn có thể tạo tối đa $ 1 thư mục cùng một lúc.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Tạo tập tin nén',
@@ -144,14 +147,14 @@
 			'cmdtrash'     : 'Vào thùng rác', //from v2.1.24 added 29.4.2017
 			'cmdrestore'   : 'Khôi phục', //from v2.1.24 added 3.5.2017
 			'cmdsearch'    : 'Tìm tập tin',
-			'cmdup'        : 'Go to parent directory',
+			'cmdup'        : 'Đi tới thư mục mẹ',
 			'cmdupload'    : 'Tải tập tin lên',
 			'cmdview'      : 'Xem',
 			'cmdresize'    : 'Thay đổi kích thước và xoay',
 			'cmdsort'      : 'Sắp xếp',
-			'cmdnetmount'  : 'Mount network volume', // added 18.04.2012
+			'cmdnetmount'  : 'Gắn kết khối lượng mạng', // added 18.04.2012
 			'cmdnetunmount': 'Gỡ mount', // from v2.1 added 30.04.2012
-			'cmdplaces'    : 'To Places', // added 28.12.2014
+			'cmdplaces'    : 'Đến địa điểm', // added 28.12.2014
 			'cmdchmod'     : 'Thay đổi chế độ', // from v2.1 added 20.6.2015
 			'cmdopendir'   : 'Mở một thư mục', // from v2.1 added 13.1.2016
 			'cmdcolwidth'  : 'Đặt lại chiều rộng cột', // from v2.1.13 added 12.06.2016
@@ -160,7 +163,7 @@
 			'cmdempty'     : 'Làm rỗng thư mục', // from v2.1.25 added 22.06.2017
 			'cmdundo'      : 'Hủy bỏ (hoàn tác)', // from v2.1.27 added 31.07.2017
 			'cmdredo'      : 'Làm lại', // from v2.1.27 added 31.07.2017
-			'cmdpreference': 'Preferences', // from v2.1.27 added 03.08.2017
+			'cmdpreference': 'Sở thích', // from v2.1.27 added 03.08.2017
 			'cmdselectall' : 'Chọn tất cả', // from v2.1.28 added 15.08.2017
 			'cmdselectnone': 'Không chọn gì', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Chọn ngược lại', // from v2.1.28 added 15.08.2017
@@ -175,22 +178,22 @@
 			'btnCancel' : 'Hủy bỏ',
 			'btnNo'     : 'Không',
 			'btnYes'    : 'Đồng ý',
-			'btnMount'  : 'Mount',  // added 18.04.2012
-			'btnApprove': 'Goto $1 & approve', // from v2.1 added 26.04.2012
-			'btnUnmount': 'Unmount', // from v2.1 added 30.04.2012
-			'btnConv'   : 'Convert', // from v2.1 added 08.04.2014
-			'btnCwd'    : 'Here',      // from v2.1 added 22.5.2015
-			'btnVolume' : 'Volume',    // from v2.1 added 22.5.2015
-			'btnAll'    : 'All',       // from v2.1 added 22.5.2015
-			'btnMime'   : 'MIME Type', // from v2.1 added 22.5.2015
-			'btnFileName':'Filename',  // from v2.1 added 22.5.2015
-			'btnSaveClose': 'Save & Close', // from v2.1 added 12.6.2015
-			'btnBackup' : 'Backup', // fromv2.1 added 28.11.2015
-			'btnRename'    : 'Rename',      // from v2.1.24 added 6.4.2017
-			'btnRenameAll' : 'Rename(All)', // from v2.1.24 added 6.4.2017
-			'btnPrevious' : 'Prev ($1/$2)', // from v2.1.24 added 11.5.2017
-			'btnNext'     : 'Next ($1/$2)', // from v2.1.24 added 11.5.2017
-			'btnSaveAs'   : 'Save As', // from v2.1.25 added 24.5.2017
+			'btnMount'  : 'Gắn kết',  // added 18.04.2012
+			'btnApprove': 'Đạt được $ 1 và phê duyệt', // from v2.1 added 26.04.2012
+			'btnUnmount': 'Tháo gỡ', // from v2.1 added 30.04.2012
+			'btnConv'   : 'Chuyển thành', // from v2.1 added 08.04.2014
+			'btnCwd'    : 'Đây',      // from v2.1 added 22.5.2015
+			'btnVolume' : 'Âm lượng',    // from v2.1 added 22.5.2015
+			'btnAll'    : 'Tất cả',       // from v2.1 added 22.5.2015
+			'btnMime'   : 'Loại MIME', // from v2.1 added 22.5.2015
+			'btnFileName':'Tên tệp',  // from v2.1 added 22.5.2015
+			'btnSaveClose': 'Lưu & Đóng', // from v2.1 added 12.6.2015
+			'btnBackup' : 'Sao lưu', // fromv2.1 added 28.11.2015
+			'btnRename'    : 'Đổi tên',      // from v2.1.24 added 6.4.2017
+			'btnRenameAll' : 'Đổi tên (Tất cả)', // from v2.1.24 added 6.4.2017
+			'btnPrevious' : 'Trước đó ($ 1 / $ 2)', // from v2.1.24 added 11.5.2017
+			'btnNext'     : 'Tiếp theo ($ 1 / $ 2)', // from v2.1.24 added 11.5.2017
+			'btnSaveAs'   : 'Lưu thành', // from v2.1.25 added 24.5.2017
 
 			/******************************** notifications ********************************/
 			'ntfopen'     : 'Mở thư mục',
@@ -209,28 +212,28 @@
 			'ntfarchive'  : 'Tạo tập tin nén',
 			'ntfextract'  : 'Giải nén tập tin',
 			'ntfsearch'   : 'Tìm kiếm tập tin',
-			'ntfresize'   : 'Resizing images',
+			'ntfresize'   : 'Thay đổi kích thước hình ảnh',
 			'ntfsmth'     : 'Doing something >_<',
 			'ntfloadimg'  : 'Đang tải hình ảnh',
-			'ntfnetmount' : 'Mounting network volume', // added 18.04.2012
-			'ntfnetunmount': 'Unmounting network volume', // from v2.1 added 30.04.2012
-			'ntfdim'      : 'Acquiring image dimension', // added 20.05.2013
-			'ntfreaddir'  : 'Reading folder infomation', // from v2.1 added 01.07.2013
-			'ntfurl'      : 'Getting URL of link', // from v2.1 added 11.03.2014
-			'ntfchmod'    : 'Changing file mode', // from v2.1 added 20.6.2015
-			'ntfpreupload': 'Verifying upload file name', // from v2.1 added 31.11.2015
-			'ntfzipdl'    : 'Creating a file for download', // from v2.1.7 added 23.1.2016
-			'ntfparents'  : 'Getting path infomation', // from v2.1.17 added 2.11.2016
-			'ntfchunkmerge': 'Processing the uploaded file', // from v2.1.17 added 2.11.2016
-			'ntftrash'    : 'Doing throw in the trash', // from v2.1.24 added 2.5.2017
-			'ntfrestore'  : 'Doing restore from the trash', // from v2.1.24 added 3.5.2017
-			'ntfchkdir'   : 'Checking destination folder', // from v2.1.24 added 3.5.2017
-			'ntfundo'     : 'Undoing previous operation', // from v2.1.27 added 31.07.2017
-			'ntfredo'     : 'Redoing previous undone', // from v2.1.27 added 31.07.2017
-			'ntfchkcontent' : 'Checking contents', // from v2.1.41 added 3.8.2018
+			'ntfnetmount' : 'Gắn kết khối lượng mạng', // added 18.04.2012
+			'ntfnetunmount': 'Ngắt kết nối âm lượng mạng', // from v2.1 added 30.04.2012
+			'ntfdim'      : 'Nhận kích thước hình ảnh', // added 20.05.2013
+			'ntfreaddir'  : 'Đọc thông tin thư mục', // from v2.1 added 01.07.2013
+			'ntfurl'      : 'Lấy URL của liên kết', // from v2.1 added 11.03.2014
+			'ntfchmod'    : 'Thay đổi chế độ tệp', // from v2.1 added 20.6.2015
+			'ntfpreupload': 'Xác minh tên tệp tải lên', // from v2.1 added 31.11.2015
+			'ntfzipdl'    : 'Tạo một tệp để tải xuống', // from v2.1.7 added 23.1.2016
+			'ntfparents'  : 'Nhận thông tin đường dẫn', // from v2.1.17 added 2.11.2016
+			'ntfchunkmerge': 'Xử lý tệp đã tải lên', // from v2.1.17 added 2.11.2016
+			'ntftrash'    : 'Ném vào thùng rác', // from v2.1.24 added 2.5.2017
+			'ntfrestore'  : 'Đang khôi phục từ thùng rác', // from v2.1.24 added 3.5.2017
+			'ntfchkdir'   : 'Kiểm tra thư mục đích', // from v2.1.24 added 3.5.2017
+			'ntfundo'     : 'Hoàn tác hoạt động trước đó', // from v2.1.27 added 31.07.2017
+			'ntfredo'     : 'Làm lại hoàn tác trước đó', // from v2.1.27 added 31.07.2017
+			'ntfchkcontent' : 'Kiểm tra nội dung', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
-			'volume_Trash' : 'Trash', //from v2.1.24 added 29.4.2017
+			'volume_Trash' : 'Rác', //from v2.1.24 added 29.4.2017
 
 			/************************************ dates **********************************/
 			'dateUnknown' : 'Chưa biết',
@@ -285,14 +288,14 @@
 			'sortmode'          : 'theo chế độ',       // from v2.1.13 added 13.06.2016
 			'sortowner'         : 'theo người tạo',      // from v2.1.13 added 13.06.2016
 			'sortgroup'         : 'theo nhóm',      // from v2.1.13 added 13.06.2016
-			'sortAlsoTreeview'  : 'Also Treeview',  // from v2.1.15 added 01.08.2016
+			'sortAlsoTreeview'  : 'Ngoài ra Treeview',  // from v2.1.15 added 01.08.2016
 
 			/********************************** new items **********************************/
-			'untitled file.txt' : 'NewFile.txt', // added 10.11.2015
-			'untitled folder'   : 'NewFolder',   // added 10.11.2015
+			'untitled file.txt' : 'Tập tin mới.txt', // added 10.11.2015
+			'untitled folder'   : 'Thư mục mới',   // added 10.11.2015
 			'Archive'           : 'NewArchive',  // from v2.1 added 10.11.2015
-			'untitled file'     : 'NewFile.$1',  // from v2.1.41 added 6.8.2018
-			'extentionfile'     : '$1: File',    // from v2.1.41 added 6.8.2018
+			'untitled file'     : 'Tập tin mới.$1',  // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$ 1: Tệp',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
@@ -300,9 +303,9 @@
 			'confirmRm'       : 'Bạn có chắc chắn muốn xóa vĩnh viễn các mục?<br/>  Điều này không thể được hoàn tác!',
 			'confirmRepl'     : 'Thay tập tin cũ bằng tập tin mới? (Nếu nó chứa các thư mục, nó sẽ được hợp nhất. Để sao lưu và thay thế, chọn Sao lưu.)',
 			'confirmRest'     : 'Thay thế mục hiện có bằng một mục trong thùng rác?', // fromv2.1.24 added 5.5.2017
-			'confirmConvUTF8' : 'Not in UTF-8<br/>Convert to UTF-8?<br/>Contents become UTF-8 by saving after conversion.', // from v2.1 added 08.04.2014
-			'confirmNonUTF8'  : 'Character encoding of this file couldn\'t be detected. It need to temporarily convert to UTF-8 for editting.<br/>Please select character encoding of this file.', // from v2.1.19 added 28.11.2016
-			'confirmNotSave'  : 'It has been modified.<br/>Losing work if you do not save changes.', // from v2.1 added 15.7.2015
+			'confirmConvUTF8' : 'Không có trong UTF-8 <br/> Chuyển đổi thành UTF-8? <br/> Nội dung trở thành UTF-8 bằng cách lưu sau khi chuyển đổi.', // from v2.1 added 08.04.2014
+			'confirmNonUTF8'  : 'Không thể phát hiện mã hóa ký tự của tệp này. Nó cần tạm thời chuyển đổi thành UTF-8 để chỉnh sửa. <br/> Vui lòng chọn mã hóa ký tự của tệp này.', // from v2.1.19 added 28.11.2016
+			'confirmNotSave'  : 'Nó đã được sửa đổi. <br/> Sẽ mất công nếu bạn không lưu các thay đổi.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Bạn có chắc chắn muốn chuyển các mục vào thùng rác?', //from v2.1.24 added 29.4.2017
 			'confirmMove'     : 'Bạn có chắc chắn muốn chuyển các mục vào "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Áp dụng cho tất cả',
@@ -326,7 +329,7 @@
 			'viewMedium'      : 'Biểu tượng vừa', // from v2.1.39 added 22.5.2018
 			'viewLarge'       : 'Biểu tượng lớn', // from v2.1.39 added 22.5.2018
 			'viewExtraLarge'  : 'Biểu tượng cực lớn', // from v2.1.39 added 22.5.2018
-			'places'          : 'Places',
+			'places'          : 'Nơi',
 			'calc'            : 'Tính toán',
 			'path'            : 'Đường dẫn',
 			'aliasfor'        : 'Bí danh cho',
@@ -334,16 +337,16 @@
 			'dim'             : 'Kích thước',
 			'files'           : 'Tệp',
 			'folders'         : 'Thư mục',
-			'items'           : 'Items',
-			'yes'             : 'yes',
-			'no'              : 'no',
+			'items'           : 'vật phẩm',
+			'yes'             : 'Vâng',
+			'no'              : 'không',
 			'link'            : 'Liên kết',
 			'searcresult'     : 'Kết quả tìm kiếm',
 			'selected'        : 'mục đã chọn',
 			'about'           : 'Về',
 			'shortcuts'       : 'Lối tắt',
 			'help'            : 'Giúp đỡ',
-			'webfm'           : 'Web file manager',
+			'webfm'           : 'Trình quản lý tệp web',
 			'ver'             : 'Phiên bản',
 			'protocolver'     : 'phiên bản protocol',
 			'homepage'        : 'Trang chủ dự án',
@@ -357,16 +360,16 @@
 			'contributor'     : 'người đóng góp',
 			'maintainer'      : 'người bảo trì',
 			'translator'      : 'người dịch',
-			'icons'           : 'Icons',
-			'dontforget'      : 'and don\'t forget to take your towel',
-			'shortcutsof'     : 'Shortcuts disabled',
+			'icons'           : 'Biểu tượng',
+			'dontforget'      : 'và đừng quên lấy khăn tắm của bạn',
+			'shortcutsof'     : 'Các phím tắt bị tắt',
 			'dropFiles'       : 'Thả tệp vào đây',
 			'or'              : 'hoặc',
 			'selectForUpload' : 'Chọn tệp',
 			'moveFiles'       : 'Di chuyển các mục',
 			'copyFiles'       : 'Sao chép các mục',
 			'restoreFiles'    : 'Khôi mục các mục', // from v2.1.24 added 5.5.2017
-			'rmFromPlaces'    : 'Remove from places',
+			'rmFromPlaces'    : 'Xóa khỏi địa điểm',
 			'aspectRatio'     : 'Tỉ lệ khung hình',
 			'scale'           : 'Tỉ lệ',
 			'width'           : 'Rộng',
@@ -377,15 +380,15 @@
 			'rotate-cw'       : 'Xoay 90 độ CW',
 			'rotate-ccw'      : 'Xoay 90 độ CCW',
 			'degree'          : '°',
-			'netMountDialogTitle' : 'Mount network volume', // added 18.04.2012
-			'protocol'            : 'Protocol', // added 18.04.2012
-			'host'                : 'Host', // added 18.04.2012
-			'port'                : 'Port', // added 18.04.2012
-			'user'                : 'User', // added 18.04.2012
-			'pass'                : 'Password', // added 18.04.2012
-			'confirmUnmount'      : 'Are you unmount $1?',  // from v2.1 added 30.04.2012
-			'dropFilesBrowser': 'Drop or Paste files from browser', // from v2.1 added 30.05.2012
-			'dropPasteFiles'  : 'Drop files, Paste URLs or images(clipboard) here', // from v2.1 added 07.04.2014
+			'netMountDialogTitle' : 'Gắn kết khối lượng mạng', // added 18.04.2012
+			'protocol'            : 'Giao thức', // added 18.04.2012
+			'host'                : 'Chủ nhà', // added 18.04.2012
+			'port'                : 'Hải cảng', // added 18.04.2012
+			'user'                : 'Người sử dụng', // added 18.04.2012
+			'pass'                : 'Mật khẩu', // added 18.04.2012
+			'confirmUnmount'      : 'Bạn có ngắt kết nối $ 1 không?',  // from v2.1 added 30.04.2012
+			'dropFilesBrowser': 'Thả hoặc dán tệp từ trình duyệt', // from v2.1 added 30.05.2012
+			'dropPasteFiles'  : 'Thả tệp, dán URL hoặc hình ảnh (khay nhớ tạm) vào đây', // from v2.1 added 07.04.2014
 			'encoding'        : 'Mã hóa', // from v2.1 added 19.12.2014
 			'locale'          : 'Địa phương',   // from v2.1 added 19.12.2014
 			'searchTarget'    : 'Mục tiêu: $1',                // from v2.1 added 22.5.2015
@@ -409,171 +412,173 @@
 			'reAuth'          : 'Xác thực lại', // from v2.1.10 added 3.25.2016
 			'nowLoading'      : 'Đang tải...', // from v2.1.12 added 4.26.2016
 			'openMulti'       : 'Mở nhiều tập tin', // from v2.1.12 added 5.14.2016
-			'openMultiConfirm': 'You are trying to open the $1 files. Are you sure you want to open in browser?', // from v2.1.12 added 5.14.2016
+			'openMultiConfirm': 'Bạn đang cố mở các tệp $ 1. Bạn có chắc chắn muốn mở trong trình duyệt không?', // from v2.1.12 added 5.14.2016
 			'emptySearch'     : 'Kết quả tìm kiếm trống trong mục tiêu tìm kiếm.', // from v2.1.12 added 5.16.2016
 			'editingFile'     : 'Nó là một tập tin đang chỉnh sửa.', // from v2.1.13 added 6.3.2016
-			'hasSelected'     : 'You have selected $1 items.', // from v2.1.13 added 6.3.2016
-			'hasClipboard'    : 'You have $1 items in the clipboard.', // from v2.1.13 added 6.3.2016
+			'hasSelected'     : 'Bạn đã chọn $ 1 mục.', // from v2.1.13 added 6.3.2016
+			'hasClipboard'    : 'Bạn có $ 1 mục trong khay nhớ tạm.', // from v2.1.13 added 6.3.2016
 			'incSearchOnly'   : 'Tìm kiếm gia tăng chỉ từ hiển thị hiện tại.', // from v2.1.13 added 6.30.2016
 			'reinstate'       : 'Phục hồi', // from v2.1.15 added 3.8.2016
 			'complete'        : '$1 hoàn thành', // from v2.1.15 added 21.8.2016
 			'contextmenu'     : 'Trình đơn ngữ cảnh', // from v2.1.15 added 9.9.2016
 			'pageTurning'     : 'Chuyển trang', // from v2.1.15 added 10.9.2016
-			'volumeRoots'     : 'Volume roots', // from v2.1.16 added 16.9.2016
+			'volumeRoots'     : 'Khối lượng rễ', // from v2.1.16 added 16.9.2016
 			'reset'           : 'Đặt lại', // from v2.1.16 added 1.10.2016
 			'bgcolor'         : 'Màu nền', // from v2.1.16 added 1.10.2016
 			'colorPicker'     : 'Chọn màu', // from v2.1.16 added 1.10.2016
-			'8pxgrid'         : '8px Grid', // from v2.1.16 added 4.10.2016
+			'8pxgrid'         : 'Lưới 8px', // from v2.1.16 added 4.10.2016
 			'enabled'         : 'Đã bật', // from v2.1.16 added 4.10.2016
 			'disabled'        : 'Đã tắt', // from v2.1.16 added 4.10.2016
-			'emptyIncSearch'  : 'Search results is empty in current view.\\APress [Enter] to expand search target.', // from v2.1.16 added 5.10.2016
+			'emptyIncSearch'  : 'Kết quả tìm kiếm trống trong chế độ xem hiện tại. \\ APress [Enter] để mở rộng mục tiêu tìm kiếm.', // from v2.1.16 added 5.10.2016
 			'emptyLetSearch'  : 'Kết quả tìm kiếm thư đầu tiên là trống trong chế độ xem hiện tại.', // from v2.1.23 added 24.3.2017
 			'textLabel'       : 'Nhãn văn bản', // from v2.1.17 added 13.10.2016
-			'minsLeft'        : '$1 mins left', // from v2.1.17 added 13.11.2016
-			'openAsEncoding'  : 'Reopen with selected encoding', // from v2.1.19 added 2.12.2016
-			'saveAsEncoding'  : 'Save with the selected encoding', // from v2.1.19 added 2.12.2016
+			'minsLeft'        : 'Còn $ 1 phút', // from v2.1.17 added 13.11.2016
+			'openAsEncoding'  : 'Mở lại với mã hóa đã chọn', // from v2.1.19 added 2.12.2016
+			'saveAsEncoding'  : 'Lưu với mã hóa đã chọn', // from v2.1.19 added 2.12.2016
 			'selectFolder'    : 'Chọn thư mục', // from v2.1.20 added 13.12.2016
-			'firstLetterSearch': 'First letter search', // from v2.1.23 added 24.3.2017
+			'firstLetterSearch': 'Tìm kiếm chữ cái đầu tiên', // from v2.1.23 added 24.3.2017
 			'presets'         : 'Đặt trước', // from v2.1.25 added 26.5.2017
 			'tooManyToTrash'  : 'Có quá nhiều mục vì vậy không thể cho vào thùng rác.', // from v2.1.25 added 9.6.2017
 			'TextArea'        : 'TextArea', // from v2.1.25 added 14.6.2017
-			'folderToEmpty'   : 'Empty the folder "$1".', // from v2.1.25 added 22.6.2017
-			'filderIsEmpty'   : 'There are no items in a folder "$1".', // from v2.1.25 added 22.6.2017
-			'preference'      : 'Preference', // from v2.1.26 added 28.6.2017
+			'folderToEmpty'   : 'Làm trống thư mục "$ 1".', // from v2.1.25 added 22.6.2017
+			'filderIsEmpty'   : 'Không có mục nào trong thư mục "$ 1".', // from v2.1.25 added 22.6.2017
+			'preference'      : 'Sự ưa thích', // from v2.1.26 added 28.6.2017
 			'language'        : 'Ngôn ngữ', // from v2.1.26 added 28.6.2017
-			'clearBrowserData': 'Initialize the settings saved in this browser', // from v2.1.26 added 28.6.2017
+			'clearBrowserData': 'Khởi tạo các cài đặt được lưu trong trình duyệt này', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Cài đặt thanh công cụ', // from v2.1.27 added 2.8.2017
-			'charsLeft'       : '... $1 chars left.',  // from v2.1.29 added 30.8.2017
-			'sum'             : 'Sum', // from v2.1.29 added 28.9.2017
-			'roughFileSize'   : 'Rough file size', // from v2.1.30 added 2.11.2017
-			'autoFocusDialog' : 'Focus on the element of dialog with mouseover',  // from v2.1.30 added 2.11.2017
-			'select'          : 'Select', // from v2.1.30 added 23.11.2017
-			'selectAction'    : 'Action when select file', // from v2.1.30 added 23.11.2017
-			'useStoredEditor' : 'Open with the editor used last time', // from v2.1.30 added 23.11.2017
-			'selectinvert'    : 'Invert selection', // from v2.1.30 added 25.11.2017
-			'renameMultiple'  : 'Are you sure you want to rename $1 selected items like $2?<br/>This cannot be undone!', // from v2.1.31 added 4.12.2017
-			'batchRename'     : 'Batch rename', // from v2.1.31 added 8.12.2017
-			'plusNumber'      : '+ Number', // from v2.1.31 added 8.12.2017
+			'charsLeft'       : '... $ 1 ký tự còn lại.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $ 1 dòng còn lại.',  // from v2.1.52 added 16.1.2020
+			'sum'             : 'Tổng', // from v2.1.29 added 28.9.2017
+			'roughFileSize'   : 'Kích thước tệp thô', // from v2.1.30 added 2.11.2017
+			'autoFocusDialog' : 'Tập trung vào thành phần của hộp thoại bằng cách di chuột qua',  // from v2.1.30 added 2.11.2017
+			'select'          : 'Lựa chọn', // from v2.1.30 added 23.11.2017
+			'selectAction'    : 'Hành động khi chọn tệp', // from v2.1.30 added 23.11.2017
+			'useStoredEditor' : 'Mở bằng trình chỉnh sửa được sử dụng lần trước', // from v2.1.30 added 23.11.2017
+			'selectinvert'    : 'Lựa chọn đối nghịch', // from v2.1.30 added 25.11.2017
+			'renameMultiple'  : 'Bạn có chắc chắn muốn đổi tên $ 1 các mục đã chọn như $ 2 không? <br/> Không thể hoàn tác thao tác này!', // from v2.1.31 added 4.12.2017
+			'batchRename'     : 'Đổi tên hàng loạt', // from v2.1.31 added 8.12.2017
+			'plusNumber'      : '+ Số', // from v2.1.31 added 8.12.2017
 			'asPrefix'        : 'Thêm tiền tố', // from v2.1.31 added 8.12.2017
 			'asSuffix'        : 'Thêm hậu tố', // from v2.1.31 added 8.12.2017
 			'changeExtention' : 'Thay đổi phần mở rộng', // from v2.1.31 added 8.12.2017
-			'columnPref'      : 'Columns settings (List view)', // from v2.1.32 added 6.2.2018
-			'reflectOnImmediate' : 'All changes will reflect immediately to the archive.', // from v2.1.33 added 2.3.2018
-			'reflectOnUnmount'   : 'Any changes will not reflect until un-mount this volume.', // from v2.1.33 added 2.3.2018
-			'unmountChildren' : 'The following volume(s) mounted on this volume also unmounted. Are you sure to unmount it?', // from v2.1.33 added 5.3.2018
-			'selectionInfo'   : 'Selection Info', // from v2.1.33 added 7.3.2018
-			'hashChecker'     : 'Algorithms to show the file hash', // from v2.1.33 added 10.3.2018
-			'infoItems'       : 'Info Items (Selection Info Panel)', // from v2.1.38 added 28.3.2018
+			'columnPref'      : 'Cài đặt cột (Chế độ xem danh sách)', // from v2.1.32 added 6.2.2018
+			'reflectOnImmediate' : 'Tất cả các thay đổi sẽ phản ánh ngay lập tức vào kho lưu trữ.', // from v2.1.33 added 2.3.2018
+			'reflectOnUnmount'   : 'Mọi thay đổi sẽ không phản ánh cho đến khi hủy gắn ổ đĩa này.', // from v2.1.33 added 2.3.2018
+			'unmountChildren' : '(Các) tập sau được gắn trên tập này cũng đã được ngắt kết nối. Bạn có chắc chắn để ngắt kết nối nó không?', // from v2.1.33 added 5.3.2018
+			'selectionInfo'   : 'Thông tin lựa chọn', // from v2.1.33 added 7.3.2018
+			'hashChecker'     : 'Các thuật toán để hiển thị hàm băm của tệp', // from v2.1.33 added 10.3.2018
+			'infoItems'       : 'Mục thông tin (Bảng thông tin lựa chọn)', // from v2.1.38 added 28.3.2018
 			'pressAgainToExit': 'Nhấn một lần nữa để thoát.', // from v2.1.38 added 1.4.2018
-			'toolbar'         : 'Toolbar', // from v2.1.38 added 4.4.2018
-			'workspace'       : 'Work Space', // from v2.1.38 added 4.4.2018
-			'dialog'          : 'Dialog', // from v2.1.38 added 4.4.2018
-			'all'             : 'All', // from v2.1.38 added 4.4.2018
-			'iconSize'        : 'Icon Size (Icons view)', // from v2.1.39 added 7.5.2018
-			'editorMaximized' : 'Open the maximized editor window', // from v2.1.40 added 30.6.2018
-			'editorConvNoApi' : 'Because conversion by API is not currently available, please convert on the website.', //from v2.1.40 added 8.7.2018
-			'editorConvNeedUpload' : 'After conversion, you must be upload with the item URL or a downloaded file to save the converted file.', //from v2.1.40 added 8.7.2018
-			'convertOn'       : 'Convert on the site of $1', // from v2.1.40 added 10.7.2018
-			'integrations'    : 'Integrations', // from v2.1.40 added 11.7.2018
-			'integrationWith' : 'This elFinder has the following external services integrated. Please check the terms of use, privacy policy, etc. before using it.', // from v2.1.40 added 11.7.2018
-			'showHidden'      : 'Show hidden items', // from v2.1.41 added 24.7.2018
-			'hideHidden'      : 'Hide hidden items', // from v2.1.41 added 24.7.2018
-			'toggleHidden'    : 'Show/Hide hidden items', // from v2.1.41 added 24.7.2018
-			'makefileTypes'   : 'File types to enable with "New file"', // from v2.1.41 added 7.8.2018
-			'typeOfTextfile'  : 'Type of the Text file', // from v2.1.41 added 7.8.2018
-			'add'             : 'Add', // from v2.1.41 added 7.8.2018
-			'theme'           : 'Theme', // from v2.1.43 added 19.10.2018
-			'default'         : 'Default', // from v2.1.43 added 19.10.2018
-			'description'     : 'Description', // from v2.1.43 added 19.10.2018
-			'website'         : 'Website', // from v2.1.43 added 19.10.2018
-			'author'          : 'Author', // from v2.1.43 added 19.10.2018
-			'email'           : 'Email', // from v2.1.43 added 19.10.2018
-			'license'         : 'License', // from v2.1.43 added 19.10.2018
-			'exportToSave'    : 'This item can\'t be saved. To avoid losing the edits you need to export to your PC.', // from v2.1.44 added 1.12.2018
-			'dblclickToSelect': 'Double click on the file to select it.', // from v2.1.47 added 22.1.2019
-			'useFullscreen'   : 'Use fullscreen mode', // from v2.1.47 added 19.2.2019
+			'toolbar'         : 'Thanh công cụ', // from v2.1.38 added 4.4.2018
+			'workspace'       : 'Không gian làm việc', // from v2.1.38 added 4.4.2018
+			'dialog'          : 'Hộp thoại', // from v2.1.38 added 4.4.2018
+			'all'             : 'Tất cả', // from v2.1.38 added 4.4.2018
+			'iconSize'        : 'Kích thước biểu tượng (Chế độ xem biểu tượng)', // from v2.1.39 added 7.5.2018
+			'editorMaximized' : 'Mở cửa sổ trình chỉnh sửa tối đa', // from v2.1.40 added 30.6.2018
+			'editorConvNoApi' : 'Bởi vì chuyển đổi bằng API hiện không khả dụng, vui lòng chuyển đổi trên trang web.', //from v2.1.40 added 8.7.2018
+			'editorConvNeedUpload' : 'Sau khi chuyển đổi, bạn phải tải lên với URL mục hoặc tệp đã tải xuống để lưu tệp đã chuyển đổi.', //from v2.1.40 added 8.7.2018
+			'convertOn'       : 'Chuyển đổi trên trang web của $ 1', // from v2.1.40 added 10.7.2018
+			'integrations'    : 'Tích hợp', // from v2.1.40 added 11.7.2018
+			'integrationWith' : 'ElFinder này được tích hợp các dịch vụ bên ngoài sau. Vui lòng kiểm tra các điều khoản sử dụng, chính sách bảo mật, v.v. trước khi sử dụng.', // from v2.1.40 added 11.7.2018
+			'showHidden'      : 'Hiển thị các mục ẩn', // from v2.1.41 added 24.7.2018
+			'hideHidden'      : 'Ẩn các mục ẩn', // from v2.1.41 added 24.7.2018
+			'toggleHidden'    : 'Hiển thị / Ẩn các mục ẩn', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'Loại tệp để bật với "Tệp mới"', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Loại tệp văn bản', // from v2.1.41 added 7.8.2018
+			'add'             : 'Thêm vào', // from v2.1.41 added 7.8.2018
+			'theme'           : 'Chủ đề', // from v2.1.43 added 19.10.2018
+			'default'         : 'Mặc định', // from v2.1.43 added 19.10.2018
+			'description'     : 'Sự miêu tả', // from v2.1.43 added 19.10.2018
+			'website'         : 'Trang mạng', // from v2.1.43 added 19.10.2018
+			'author'          : 'Tác giả', // from v2.1.43 added 19.10.2018
+			'email'           : 'E-mail', // from v2.1.43 added 19.10.2018
+			'license'         : 'Giấy phép', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'Không thể lưu mục này. Để tránh mất các chỉnh sửa, bạn cần xuất sang PC của mình.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Nhấp đúp vào tệp để chọn nó.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Sử dụng chế độ toàn màn hình', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
-			'kindUnknown'     : 'Unknown',
-			'kindRoot'        : 'Volume Root', // from v2.1.16 added 16.10.2016
-			'kindFolder'      : 'Folder',
-			'kindSelects'     : 'Selections', // from v2.1.29 added 29.8.2017
-			'kindAlias'       : 'Alias',
-			'kindAliasBroken' : 'Broken alias',
+			'kindUnknown'     : 'không xác định',
+			'kindRoot'        : 'Khối lượng gốc', // from v2.1.16 added 16.10.2016
+			'kindFolder'      : 'Thư mục',
+			'kindSelects'     : 'Lựa chọn', // from v2.1.29 added 29.8.2017
+			'kindAlias'       : 'Bí danh',
+			'kindAliasBroken' : 'Bí danh bị hỏng',
 			// applications
-			'kindApp'         : 'Application',
-			'kindPostscript'  : 'Postscript document',
-			'kindMsOffice'    : 'Microsoft Office document',
-			'kindMsWord'      : 'Microsoft Word document',
-			'kindMsExcel'     : 'Microsoft Excel document',
-			'kindMsPP'        : 'Microsoft Powerpoint presentation',
-			'kindOO'          : 'Open Office document',
-			'kindAppFlash'    : 'Flash application',
-			'kindPDF'         : 'Portable Document Format (PDF)',
-			'kindTorrent'     : 'Bittorrent file',
-			'kind7z'          : '7z archive',
-			'kindTAR'         : 'TAR archive',
-			'kindGZIP'        : 'GZIP archive',
-			'kindBZIP'        : 'BZIP archive',
-			'kindXZ'          : 'XZ archive',
-			'kindZIP'         : 'ZIP archive',
-			'kindRAR'         : 'RAR archive',
-			'kindJAR'         : 'Java JAR file',
-			'kindTTF'         : 'True Type font',
-			'kindOTF'         : 'Open Type font',
-			'kindRPM'         : 'RPM package',
+			'kindApp'         : 'Ứng dụng',
+			'kindPostscript'  : 'Tài liệu tái bút',
+			'kindMsOffice'    : 'Tài liệu Microsoft Office',
+			'kindMsWord'      : 'Tài liệu Microsoft Word',
+			'kindMsExcel'     : 'Tài liệu Microsoft Excel',
+			'kindMsPP'        : 'Bản trình bày Microsoft Powerpoint',
+			'kindOO'          : 'Mở tài liệu Office',
+			'kindAppFlash'    : 'Ứng dụng flash',
+			'kindPDF'         : 'Định dạng tài liệu di động (PDF)',
+			'kindTorrent'     : 'Tệp bittorrent',
+			'kind7z'          : 'Kho lưu trữ 7z',
+			'kindTAR'         : 'TAR lưu trữ',
+			'kindGZIP'        : 'Kho lưu trữ GZIP',
+			'kindBZIP'        : 'Kho lưu trữ BZIP',
+			'kindXZ'          : 'Kho lưu trữ XZ',
+			'kindZIP'         : 'Kho lưu trữ ZIP',
+			'kindRAR'         : 'Kho lưu trữ RAR',
+			'kindJAR'         : 'Tệp Java JAR',
+			'kindTTF'         : 'Phông chữ True Type',
+			'kindOTF'         : 'Mở loại phông chữ',
+			'kindRPM'         : 'Gói RPM',
 			// texts
-			'kindText'        : 'Text document',
-			'kindTextPlain'   : 'Plain text',
-			'kindPHP'         : 'PHP source',
-			'kindCSS'         : 'Cascading style sheet',
-			'kindHTML'        : 'HTML document',
-			'kindJS'          : 'Javascript source',
-			'kindRTF'         : 'Rich Text Format',
-			'kindC'           : 'C source',
-			'kindCHeader'     : 'C header source',
-			'kindCPP'         : 'C++ source',
-			'kindCPPHeader'   : 'C++ header source',
-			'kindShell'       : 'Unix shell script',
-			'kindPython'      : 'Python source',
-			'kindJava'        : 'Java source',
-			'kindRuby'        : 'Ruby source',
-			'kindPerl'        : 'Perl script',
-			'kindSQL'         : 'SQL source',
-			'kindXML'         : 'XML document',
-			'kindAWK'         : 'AWK source',
-			'kindCSV'         : 'Comma separated values',
-			'kindDOCBOOK'     : 'Docbook XML document',
-			'kindMarkdown'    : 'Markdown text', // added 20.7.2015
+			'kindText'        : 'Tai liệu kiểm tra',
+			'kindTextPlain'   : 'Văn bản thô',
+			'kindPHP'         : 'Nguồn PHP',
+			'kindCSS'         : 'Bảng kiểu xếp tầng',
+			'kindHTML'        : 'Tài liệu HTML',
+			'kindJS'          : 'Nguồn Javascript',
+			'kindRTF'         : 'Định dạng văn bản phong phú',
+			'kindC'           : 'Nguồn C',
+			'kindCHeader'     : 'Nguồn tiêu đề C',
+			'kindCPP'         : 'Nguồn C ++',
+			'kindCPPHeader'   : 'Nguồn tiêu đề C ++',
+			'kindShell'       : 'Tập lệnh shell Unix',
+			'kindPython'      : 'Nguồn Python',
+			'kindJava'        : 'Nguồn Java',
+			'kindRuby'        : 'Nguồn Ruby',
+			'kindPerl'        : 'Tập lệnh Perl',
+			'kindSQL'         : 'Nguồn SQL',
+			'kindXML'         : 'Tài liệu XML',
+			'kindAWK'         : 'Nguồn AWK',
+			'kindCSV'         : 'Các giá trị được phân tách bằng dấu phẩy',
+			'kindDOCBOOK'     : 'Tài liệu XML của Docbook',
+			'kindMarkdown'    : 'Văn bản đánh dấu', // added 20.7.2015
 			// images
-			'kindImage'       : 'Image',
-			'kindBMP'         : 'BMP image',
-			'kindJPEG'        : 'JPEG image',
-			'kindGIF'         : 'GIF Image',
-			'kindPNG'         : 'PNG Image',
-			'kindTIFF'        : 'TIFF image',
-			'kindTGA'         : 'TGA image',
-			'kindPSD'         : 'Adobe Photoshop image',
-			'kindXBITMAP'     : 'X bitmap image',
-			'kindPXM'         : 'Pixelmator image',
+			'kindImage'       : 'Hình ảnh',
+			'kindBMP'         : 'Hình ảnh BMP',
+			'kindJPEG'        : 'Hình ảnh JPEG',
+			'kindGIF'         : 'Ảnh GIF',
+			'kindPNG'         : 'Hình ảnh PNG',
+			'kindTIFF'        : 'Hình ảnh TIFF',
+			'kindTGA'         : 'Hình ảnh TGA',
+			'kindPSD'         : 'Hình ảnh Adobe Photoshop',
+			'kindXBITMAP'     : 'Hình ảnh bitmap X',
+			'kindPXM'         : 'Hình ảnh Pixelmator',
 			// media
-			'kindAudio'       : 'Audio media',
-			'kindAudioMPEG'   : 'MPEG audio',
-			'kindAudioMPEG4'  : 'MPEG-4 audio',
-			'kindAudioMIDI'   : 'MIDI audio',
-			'kindAudioOGG'    : 'Ogg Vorbis audio',
-			'kindAudioWAV'    : 'WAV audio',
-			'AudioPlaylist'   : 'MP3 playlist',
-			'kindVideo'       : 'Video media',
-			'kindVideoDV'     : 'DV movie',
-			'kindVideoMPEG'   : 'MPEG movie',
-			'kindVideoMPEG4'  : 'MPEG-4 movie',
-			'kindVideoAVI'    : 'AVI movie',
-			'kindVideoMOV'    : 'Quick Time movie',
-			'kindVideoWM'     : 'Windows Media movie',
-			'kindVideoFlash'  : 'Flash movie',
-			'kindVideoMKV'    : 'Matroska movie',
-			'kindVideoOGG'    : 'Ogg movie'
+			'kindAudio'       : 'Phương tiện âm thanh',
+			'kindAudioMPEG'   : 'Âm thanh MPEG',
+			'kindAudioMPEG4'  : 'Âm thanh MPEG-4',
+			'kindAudioMIDI'   : 'Âm thanh MIDI',
+			'kindAudioOGG'    : 'Âm thanh Ogg Vorbis',
+			'kindAudioWAV'    : 'Âm thanh WAV',
+			'AudioPlaylist'   : 'Danh sách nhạc MP3',
+			'kindVideo'       : 'Phương tiện video',
+			'kindVideoDV'     : 'Phim DV',
+			'kindVideoMPEG'   : 'Phim MPEG',
+			'kindVideoMPEG4'  : 'Phim MPEG-4',
+			'kindVideoAVI'    : 'Phim AVI',
+			'kindVideoMOV'    : 'Phim thời gian nhanh',
+			'kindVideoWM'     : 'Phim Windows Media',
+			'kindVideoFlash'  : 'Phim flash',
+			'kindVideoMKV'    : 'Phim matroska',
+			'kindVideoOGG'    : 'Phim ogg'
 		}
 	};
 }));
+

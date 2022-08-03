@@ -1,5 +1,86 @@
 == Changelog ==
 
+= 1.0.77.47 (5th July 2022) =
+* Fixed: AMP validation error when youtube video is embeded with query parameters #5292
+* Fixed: Instagram embeds not working when added with blockquote tags #5289
+
+= 1.0.77.46 (28th June 2022) =
+* Fixed: Reduced the execution of JS in youtube embeds #5287
+* Fixed: Instagram embeds not working when added with iframe #5289
+* Fixed: Subchild menu items does not expand with UberMenu plugin
+* Fixed: Incorrect default value in TPD #5286
+* Fixed: Debug Warnings - Undefined array-key: row #5283
+
+= 1.0.77.45 (13th June 2022) =
+* Fixed: Conflict issue with WPML #5274
+* Fixed: Page builder modal is getting hidden below the header of the post/page editor. #5279
+* Fixed: FAQ Schema For Pages And Posts compatibility #5278
+* Fixed: Debug Warnings - Trying to access array offset on value of type null #5277
+* Fixed: fatal error #5280
+
+= 1.0.77.44 (2nd June 2022) =
+* Improvements: Added Marfeel analytics compatibility in AMP #5266
+* Improvements: Added WP Table Builder compatibility in AMP #5270
+* Improvements: Updated the email id in feedback form #5273
+* Fixed: Instagram reels not working in AMP #5269
+* Fixed: Preload Funtionality not working when Image is added #5260
+* Fixed: AMP dashicons CSS overwrites the WP default dashicons #5265
+* Fixed: Tel protocols not working in the AMP #5268
+* Fixed: CTA links saving without '=' character #5267
+
+= 1.0.77.43 (10th May 2022) =
+* Updated: TPD feature updated #5257
+* Fixed: Resolved the issue of Image Gallery Carousel in AMP does not change the gallery view in posts/pages #5259
+
+= 1.0.77.42 (16th April 2022) =
+* Improvements: Added REHub Comparison charts, tables Compatibility #5250
+* Fixed: Debug Warnings - Undefined index: amp-license #5251
+
+= 1.0.77.41 (12th April 2022) =
+* Improvements: Added Compatibility with GenerateBlocks plugin #5248
+* Improvements: Added Web Safe Fonts in Google Fonts List #5242
+* Improvements: AMP Option panel improvements #5239
+* Fixed: White space in footer element between the posts of infinite scroll #5238
+* Fixed: Invalid JSON error in console when using Plausible analytics #5142
+
+= 1.0.77.40 (6th April 2022) =
+* Fixed: The Publisher Desk CDN URL added instead of Heroku link #5237
+* Fixed: AMP Option panel improvements #5240
+
+= 1.0.77.39 (5th April 2022) =
+* Improvements: Added New Guidelines in GDPR #5225
+* Improvements: Added AT internet analytics support #5233
+* Improvements: UI improved of feedback form #5223
+* Fixed: Header and footer showing twice in new infine scroll #5238
+* Fixed: AMP option panel not working with Tour Booking Manager plugin #5236
+* Fixed: Font style not loading correctly on first page load #5224
+* Fixed: The hamburger icon is not clickable when Font Icon Library is selected as CSS Icons #5243
+* Fixed: Duplicate li tags removed #5241
+* Fixed: Warning compatibility PHP 8.0 #5245
+
+= 1.0.77.38 (7th March 2022) =
+* Improvements: Added The Publisher Desk Support #5213
+* Fixed: Displaying a blank white screen when embed URLs are used #5193
+
+1.0.77.37.1 (4TH March 2022)
+* Improvements: Added new infinite scrolling experience #4791
+* Fixed: The links in embed URLs are not clickable #5193
+
+= 1.0.77.37 (2nd March 2022) =
+* Improvements: Added feedback form with auto email system #5223
+* Improvements: Added new infinite scrolling experience #4791
+* Improvements: Added An option to add lang_ and privacyMode values in Quantcast #5206
+* Improvements: Added FireWork compatibility #5210
+* Fixed: AMP autocomplete tag is not working #5217
+* Fixed: Autoplay functionality not working in video module #5219
+* Fixed: Fonts loading twice in Global font family #5220
+* Fixed: Unable to connect to Matomo analytics #5221
+
+= 1.0.77.36 (18th February 2022) =
+* Fixed: If the server-side cache is aggressive then the pagination URL with ?amp=1 is redirecting to non-AMP #5208
+* Fixed: Errror getting in featured-image.php, on line 77 #5207
+* Fixed: Need to keep the mobile redirection filter outside of any condition #5216
+
 = 1.0.77.35 (21th January 2022) =
 * Fixed: Embed URLs not working with Amp takeover active #5193
 * Fixed: Need to change Google Fonts display to optional #5191

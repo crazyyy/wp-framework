@@ -2,9 +2,9 @@
  * Українська мова translation
  * @author ITLancer
  * @author cjayho <cj.fooser@gmail.com>
- * @version 2020-02-10
+ * @version 2022-03-03
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,10 +17,12 @@
 		translator : 'ITLancer, cjayho &lt;cj.fooser@gmail.com&gt;',
 		language   : 'Українська мова',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 10.02.2020 16:52
-		fancyDateFormat : '$1 H:i', // will show like: сьогодні 16:52
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200210-165246
+		dateFormat : 'd.m.Y H:i', // will show like: 03.03.2022 18:02
+		fancyDateFormat : '$1 H:i', // will show like: сьогодні 18:02
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220303-180221
 		messages   : {
+			'getShareText' : 'Поділіться',
+			'Editor ': 'Редактор коду',
 
 			/********************************** errors **********************************/
 			'error'                : 'Помилка',
@@ -116,6 +118,7 @@
 			'errServerError'       : 'Помилка на боці сервера.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Неможливо спорожнити теку "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'Є також ще $1 помилок.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Ви можете створити до $1 папки одночасно.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Архівувати',

@@ -1,5 +1,5 @@
 <?php
-if(!defined('ABSPATH')){
+if (!defined('ABSPATH')) {
 	exit;//Exit if accessed directly
 }
 
@@ -18,8 +18,7 @@ class AIOWPSecurity_Cronjob_Handler {
 		add_action('aiowps_purge_old_debug_logs', array($this, 'purge_old_debug_logs'));
 	}
 	
-	function aiowps_hourly_cron_event_handler()
-	{
+	public function aiowps_hourly_cron_event_handler() {
 		//Do stuff that needs checking hourly
 		do_action('aiowps_perform_scheduled_backup_tasks');
 		do_action('aiowps_perform_fcd_scan_tasks');
@@ -45,7 +44,7 @@ class AIOWPSecurity_Cronjob_Handler {
 		global $wpdb, $aio_wp_security;
 
 		$purge_records_after_days = apply_filters('aiowps_purge_failed_login_records_after_days', AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS);
-		$older_than_date_time 	  = date('Y-m-d H:m:s', strtotime('-' . $purge_records_after_days . ' days', strtotime(current_time('mysql', false))));
+		$older_than_date_time 	  = date('Y-m-d H:m:s', strtotime('-' . $purge_records_after_days . ' days', strtotime(current_time('mysql', true))));
 		$sql					  = $wpdb->prepare('DELETE FROM ' . AIOWPSEC_TBL_FAILED_LOGINS . ' WHERE failed_login_date<%s', $older_than_date_time);
 		$ret_deleted			  = $wpdb->query($sql);
 		if (false === $ret_deleted) {
@@ -59,7 +58,6 @@ class AIOWPSecurity_Cronjob_Handler {
 
 	/**
 	 * Purges debug logs older than 90 days
-	 * 
 	 * The 90 days can be modified using the constant AIOWPSEC_PURGE_DEBUG_LOGS_AFTER_DAYS
 	 *
 	 * @return void
@@ -85,6 +83,4 @@ class AIOWPSecurity_Cronjob_Handler {
 			$aio_wp_security->debug_logger->log_debug_cron("Failed to purge older debug logs : {$error_msg}", 4);
 		}
 	}
-
 }
-

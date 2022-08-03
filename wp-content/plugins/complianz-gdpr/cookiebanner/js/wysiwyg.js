@@ -1,5 +1,7 @@
 'use strict';
 jQuery(document).ready(function ($) {
+	let reset_button = document.querySelector('.reset_cookie_banner');
+	let reset_button_html = reset_button.innerHTML;
 	var bannerVisible = true;
 	var cssGenerationActive = false;
 	var processingReset = false;
@@ -86,12 +88,24 @@ jQuery(document).ready(function ($) {
 	/**
 	 * We want to apply the current settings, then recalculate the banner width, then apply the settings again.
 	 */
+
 	function cmplz_validate_banner_width(){
 		cmplz_apply_style(cmplz_validate_banner_width_after);
 	}
 
 	function cmplz_validate_banner_width_after(){
-		if ($('select[name=cmplz_position]').val() === 'bottom' ) return;
+		if ($('select[name=cmplz_position]').val() === 'bottom' ) {
+			return;
+		}
+
+		if ($('#cmplz-tcf-js').length ) {
+			return;
+		}
+
+		if ( $('input[name="cmplz_disable_width_correction"]').is(':checked') ) {
+			return;
+		}
+
 		//check if cats width is ok
 		let cats_width = document.querySelector('.cmplz-categories').offsetWidth;
 		let message_width = document.querySelector('.cmplz-message').offsetWidth;
@@ -117,12 +131,6 @@ jQuery(document).ready(function ($) {
 
 		let btn_width = 0;
 		btn_width = document.querySelectorAll('.cmplz-buttons .cmplz-btn').offsetWidth;
-		// document.querySelectorAll('.cmplz-buttons .cmplz-btn').forEach(obj => {
-		// 	if (obj.offsetWidth > 0) {
-		// 		btn_width = parseInt(btn_width) + parseInt(obj.offsetWidth) + 20;
-		// 	}
-		// });
-
 		if (btn_width > message_width) {
 			let difference = btn_width - 42 - message_width;
 			new_width_btns = parseInt(btn_width) + parseInt(difference);
@@ -135,7 +143,6 @@ jQuery(document).ready(function ($) {
 			new_width = new_width_cats;
 		}
 
-		console.log("new width "+new_width);
 		if ( new_width > banner_width && new_width < max_banner_change ) {
 
 			if(new_width % 2 != 0) new_width++;
@@ -169,6 +176,7 @@ jQuery(document).ready(function ($) {
 				$('.cmplz-cookiebanner').removeClass('reloading');
 
 				if (response.success) {
+
 					var link = document.createElement("link");
 					var css_file = complianz.css_file;
 					css_file = css_file+Math.random();
@@ -191,7 +199,7 @@ jQuery(document).ready(function ($) {
 						$(this).addClass('cmplz-categories-type-'+$('select[name=cmplz_use_categories]').val());
 					});
 
-					css_file = css_file.replace('type', consenttype ).replace('banner_id', banner_id);
+					css_file = css_file.replace('{type}', consenttype ).replace('{banner_id}', banner_id);
 					link.href = css_file;
 					link.type = "text/css";
 					link.rel = "stylesheet";
@@ -207,7 +215,8 @@ jQuery(document).ready(function ($) {
 						cssIndex++;
 						if (typeof callback == "function") callback();
 					}
-
+					reset_button.disabled = false;
+					reset_button.innerHTML = reset_button_html;
 				}
 				cssGenerationActive = false;
 			}
@@ -284,34 +293,34 @@ jQuery(document).ready(function ($) {
 		typingTimer = setTimeout(cmplz_validate_banner_width, doneTypingInterval);
 	});
 	$(document).on('keyup', "input[name='cmplz_category_functional']", function () {
-		$(".cmplz-functional .cmplz-category-header h2").html($(this).val());
+		$(".cmplz-functional .cmplz-category-title").html($(this).val());
 	});
 	$(document).on('keyup', "input[name='cmplz_category_stats[text]']", function () {
-		$(".cmplz-statistics .cmplz-category-header h2").html($(this).val());
+		$(".cmplz-statistics .cmplz-category-title").html($(this).val());
 	});
 	$(document).on('keyup', "input[name='cmplz_category_prefs[text]']", function () {
-		$(".cmplz-preferences .cmplz-category-header h2").html($(this).val());
+		$(".cmplz-preferences .cmplz-category-title").html($(this).val());
 	});
 	$(document).on('keyup', "input[name='cmplz_category_all[text]']", function () {
-		$(".cmplz-marketing .cmplz-category-header h2").html($(this).val());
+		$(".cmplz-marketing .cmplz-category-title").html($(this).val());
 	});
 
 	$(document).on('keyup', "input[name='cmplz_functional_text[text]']", function () {
-		$(".cmplz-functional .cmplz-description").html($(this).val());
+		$(".cmplz-functional .cmplz-description-functional").html($(this).val());
 	});
 
 	$(document).on('keyup', "input[name='cmplz_preferences_text[text]']", function () {
-		$(".cmplz-preferences .cmplz-description").html($(this).val());
+		$(".cmplz-preferences .cmplz-description-preferences").html($(this).val());
 	});
 
 	$(document).on('keyup', "input[name='cmplz_statistics_text[text]']", function () {
-		$(".cmplz-statistics .cmplz-description").html($(this).val());
-	});
-	$(document).on('keyup', "input[name='cmplz_statistics_anonymous_text[text]']", function () {
 		$(".cmplz-statistics .cmplz-description-statistics").html($(this).val());
 	});
+	$(document).on('keyup', "input[name='cmplz_statistics_text_anonymous[text]']", function () {
+		$(".cmplz-statistics .cmplz-description-statistics-anonymous").html($(this).val());
+	});
 	$(document).on('keyup', "input[name='cmplz_marketing_text[text]']", function () {
-		$(".cmplz-marketing .cmplz-description-statistics-anonymous").html($(this).val());
+		$(".cmplz-marketing .cmplz-description-marketing").html($(this).val());
 	});
 	$(document).on('keyup', "textarea.wp-editor-area", function () {
 		$(".cmplz-message").html($(this).val());
@@ -336,11 +345,14 @@ jQuery(document).ready(function ($) {
 		'select[name=cmplz_position], ' +
 		'select[name=cmplz_checkbox_style], ' +
 		'input[name=cmplz_close_button], ' +
+		'input[name=cmplz_legal_documents], ' +
+		'input[name=cmplz_font_size], ' +
 		'input[name="cmplz_header[show]"], ' +
 		'input[name="cmplz_dismiss[show]"], ' +
 		'input[name="cmplz_accept_informational[show]"], ' +
 		'input[name="cmplz_functional_text[show]"], ' +
 		'input[name="cmplz_statistics_text[show]"], ' +
+		'input[name="cmplz_statistics_text_anonymous[show]"], ' +
 		'input[name="cmplz_preferences_text[show]"], ' +
 		'input[name="cmplz_marketing_text[show]"], ' +
 		'input[name="cmplz_category_stats[show]"], ' +
@@ -407,42 +419,87 @@ jQuery(document).ready(function ($) {
 		}
 	);
 
+
+	function cmplz_set_disabled(callback){
+		reset_button.setAttribute("disabled", "disabled");
+		reset_button.innerHTML = '<div class="cmplz-loader"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>';
+
+		// var observer = new MutationObserver(function(mutations) {
+		// 	mutations.forEach(function(mutation) {
+		// 		if (mutation.type == "attributes") {
+		// 			callback()
+		// 		}
+		// 	});
+		// });
+		// observer.observe(reset_button, {
+		// 	attributes: true //configure it to listen to attribute changes
+		// });
+		callback();
+	}
+
+
 	$(document).on( 'click', '.reset_cookie_banner', function(){
+		if (processingReset) return;
 		processingReset = true;
+		reset_button.setAttribute("disabled", "disabled");
+		reset_button.innerHTML = '<div class="cmplz-loader"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>';
+
+		//cmplz_set_disabled(function(){
+			cmplz_load_defaults(function(){
+				cmplzUpdatePreviewFields( function(){
+					processingReset = false;
+					cmplz_apply_style();
+				});
+			});
+		// });
+	});
+
+	function cmplz_load_defaults(callback){
 		var defaults = complianz.defaults;
 		for (var default_field in defaults) {
-
-			var fieldGroup = $(".field-group."+default_field);
+			var fieldGroup = $(".field-group[data-fieldname="+default_field+"]");
 			if (fieldGroup.hasClass('cmplz-colorpicker') ) {
 				if (defaults[default_field].hasOwnProperty("color")) {
 					fieldGroup.find('.cmplz-color-picker data[hidden-input=cmplz_'+default_field+'_color]').wpColorPicker('color', defaults[default_field]['color']);
-					$("input[name='cmplz_" + default_field + "[color]']").val(defaults[default_field]['color']);
+					var inputField = $("input[name='cmplz_" + default_field + "[color]']");
+					inputField.val(defaults[default_field]['color']);
+					inputField.closest('.cmplz-color-picker-wrap').find('.wp-color-result').css('background-color', defaults[default_field]['color']);
 				}
 				if (defaults[default_field].hasOwnProperty("background")) {
 					fieldGroup.find('.cmplz-color-picker data[hidden-input=cmplz_'+default_field+'_background]').wpColorPicker('color', defaults[default_field]['background']);
-					$("input[name='cmplz_" + default_field + "[background]']").val(defaults[default_field]['background']);
+					var inputField = $("input[name='cmplz_" + default_field + "[background]']");
+					inputField.val(defaults[default_field]['background']);
+					inputField.closest('.cmplz-color-picker-wrap').find('.wp-color-result').css('background-color', defaults[default_field]['background']);
 				}
 				if (defaults[default_field].hasOwnProperty("border")) {
 					fieldGroup.find('.cmplz-color-picker data[hidden-input=cmplz_'+default_field+'_border]').wpColorPicker('color', defaults[default_field]['border']);
-					$("input[name='cmplz_" + default_field + "[border]']").val(defaults[default_field]['border']);
+					var inputField = $("input[name='cmplz_" + default_field + "[border]']");
+					inputField.val(defaults[default_field]['border']);
+					inputField.closest('.cmplz-color-picker-wrap').find('.wp-color-result').css('background-color', defaults[default_field]['border']);
 				}
 				if (defaults[default_field].hasOwnProperty("text")) {
 					fieldGroup.find('.cmplz-color-picker data[hidden-input=cmplz_'+default_field+'_text]').wpColorPicker('color', defaults[default_field]['text']);
-					$("input[name='cmplz_" + default_field + "[text]']").val(defaults[default_field]['text']);
+					var inputField = $("input[name='cmplz_" + default_field + "[text]']");
+					inputField.val(defaults[default_field]['text']);
+					inputField.closest('.cmplz-color-picker-wrap').find('.wp-color-result').css('background-color', defaults[default_field]['text']);
 				}
 				if (defaults[default_field].hasOwnProperty("bullet")) {
 					fieldGroup.find('.cmplz-color-picker data[hidden-input=cmplz_'+default_field+'_bullet]').wpColorPicker('color', defaults[default_field]['bullet']);
-					$("input[name='cmplz_" + default_field + "[bullet]']").val(defaults[default_field]['bullet']);
+					var inputField = $("input[name='cmplz_" + default_field + "[bullet]']");
+					inputField.val(defaults[default_field]['bullet']);
+					inputField.closest('.cmplz-color-picker-wrap').find('.wp-color-result').css('background-color', defaults[default_field]['bullet']);
 				}
 				if (defaults[default_field].hasOwnProperty("inactive")) {
 					fieldGroup.find('.cmplz-color-picker data[hidden-input=cmplz_'+default_field+'_inactive]').wpColorPicker('color', defaults[default_field]['inactive']);
-					$("input[name='cmplz_" + default_field + "[inactive]']").val(defaults[default_field]['inactive']);
+					var inputField = $("input[name='cmplz_" + default_field + "[inactive]']");
+					inputField.val(defaults[default_field]['inactive']);
+					inputField.closest('.cmplz-color-picker-wrap').find('.wp-color-result').css('background-color', defaults[default_field]['inactive']);
 				}
 			} else if (fieldGroup.hasClass('cmplz-text_checkbox') ) {
-				$(".field-group."+default_field+' input[type=text]').val( defaults[default_field]['text'] );
-				$(".field-group."+default_field+' input[type=checkbox]').prop('checked', defaults[default_field]['show'] );
+				$(".field-group[data-fieldname="+default_field+'] input[type=text]').val( defaults[default_field]['text'] );
+				$(".field-group[data-fieldname="+default_field+'] input[type=checkbox]').prop('checked', defaults[default_field]['show'] );
 			} else if ( fieldGroup.hasClass('cmplz-text') ) {
-				$(".field-group."+default_field+' input').val( defaults[default_field] );
+				$(".field-group[data-fieldname="+default_field+'] input').val( defaults[default_field] );
 			} else if (fieldGroup.hasClass('cmplz-borderradius') || fieldGroup.hasClass('cmplz-borderwidth')) {
 				$("input[name='cmplz_"+default_field+"[top]']").val(defaults[default_field]['top']);
 				$("input[name='cmplz_"+default_field+"[right]']").val(defaults[default_field]['right']);
@@ -452,29 +509,28 @@ jQuery(document).ready(function ($) {
 					$("input[name='cmplz_"+default_field+"[type]']").val(defaults[default_field]['type']);
 				}
 			} else if (fieldGroup.hasClass('cmplz-number')){
-				$(".field-group."+default_field+' input').val( defaults[default_field] );
+				$(".field-group[data-fieldname="+default_field+'] input').val( defaults[default_field] );
 			} else if (fieldGroup.hasClass('cmplz-checkbox')) {
-				$(".field-group." + default_field + ' input').prop('checked', defaults[default_field]);
+				var checked = defaults[default_field] ? 'checked' : '';
+				$(".field-group[data-fieldname="+default_field+'] input').prop('checked', checked);
 			} else if (fieldGroup.hasClass('cmplz-select')){
 				if (default_field!=='position') {
-					$(".field-group."+default_field+' select').val( defaults[default_field] );
+					$(".field-group[data-fieldname="+default_field+'] select').val( defaults[default_field] );
 				}
 			} else if (fieldGroup.hasClass('cmplz-editor')){
-					var editor_id = 'cmplz_message_' + consenttype;
-					var textarea_id = 'cmplz_message_' + consenttype;
-					$(".cmplz-message").html(defaults[default_field] );
-					if ($('#wp-' + editor_id + '-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id)) {
-						tinyMCE.get(editor_id).setContent(defaults[default_field]);
-					} else {
-						$('#' + textarea_id).val(defaults[default_field]);
-					}
+				var editor_id = 'cmplz_message_' + consenttype;
+				var textarea_id = 'cmplz_message_' + consenttype;
+				$(".cmplz-message").html(defaults[default_field] );
+				if ($('#wp-' + editor_id + '-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id)) {
+					tinyMCE.get(editor_id).setContent(defaults[default_field]);
+				} else {
+					$('#' + textarea_id).val(defaults[default_field]);
+				}
 			}
 			$('select[name=cmplz_use_logo]').trigger('change');
 		}
-		processingReset = false;
-		cmplzUpdatePreviewFields();
-		cmplz_apply_style();
-	});
+		callback();
+	}
 
 	/**
 	 * TinyMCE Editor
@@ -560,22 +616,23 @@ jQuery(document).ready(function ($) {
 		cmplz_apply_style();
 	});
 
-	function cmplzUpdatePreviewFields(){
+	function cmplzUpdatePreviewFields(callback){
 		$(".cmplz-header .cmplz-title").html($("input[name='cmplz_header[text]']").val());
 		$(".cmplz-manage-consent").html($("input[name='cmplz_revoke[text]']").val());
 		$(".optin button.cmplz-accept").html($("input[name='cmplz_accept']").val());
 		$(".optout button.cmplz-accept").html($("input[name='cmplz_accept_informational[text]']").val());
 		$("button.cmplz-deny").html($("input[name='cmplz_dismiss[text]']").val());
 		$("button.cmplz-view-preferences").html($("input[name='cmplz_view_preferences']").val());
-		$(".cmplz-functional .cmplz-category-header h2").html($("input[name='cmplz_category_functional']").val());
-		$(".cmplz-statistics .cmplz-category-header h2").html($("input[name='cmplz_category_stats[text]']").val());
-		$(".cmplz-preferences .cmplz-category-header h2").html($("input[name='cmplz_category_prefs[text]']").val());
-		$(".cmplz-marketing .cmplz-category-header h2").html($("input[name='cmplz_category_all[text]']").val());
-		$(".cmplz-functional .cmplz-description").html($("input[name='cmplz_functional_text[text]']").val());
-		$(".cmplz-preferences .cmplz-description").html($("input[name='cmplz_preferences_text[text]']").val());
+		$(".cmplz-functional .cmplz-category-title").html($("input[name='cmplz_category_functional']").val());
+		$(".cmplz-statistics .cmplz-category-title").html($("input[name='cmplz_category_stats[text]']").val());
+		$(".cmplz-preferences .cmplz-category-title").html($("input[name='cmplz_category_prefs[text]']").val());
+		$(".cmplz-marketing .cmplz-category-title").html($("input[name='cmplz_category_all[text]']").val());
+		$(".cmplz-functional .cmplz-description-functional").html($("input[name='cmplz_functional_text[text]']").val());
+		$(".cmplz-preferences .cmplz-description-preferences").html($("input[name='cmplz_preferences_text[text]']").val());
 		$(".cmplz-statistics .cmplz-description-statistics").html($("input[name='cmplz_statistics_text[text]']").val());
-		$(".cmplz-statistics .cmplz-description-statistics-anonymous").html($("input[name='cmplz_statistics_anonymous_text[text]']").val());
+		$(".cmplz-statistics .cmplz-description-statistics-anonymous").html($("input[name='cmplz_statistics_text_anonymous[text]']").val());
 		$(".cmplz-marketing .cmplz-description").html($("input[name='cmplz_marketing_text[text]']").val());
+		callback();
 	}
 
 	/**

@@ -790,6 +790,20 @@ function cptui_manage_post_types() {
 									],
 								] );
 
+								echo $ui->get_text_input( [
+									'labeltext' => esc_html__( 'Add Title', 'custom-post-type-ui' ),
+									'helptext'  => esc_html__( 'Placeholder text in the "title" input when creating a post. Not exportable.', 'custom-post-type-ui' ),
+									'namearray' => 'cpt_custom_post_type',
+									'name'      => 'enter_title_here',
+									'textvalue' => isset( $current['enter_title_here'] ) ? esc_attr( $current['enter_title_here'] ) : '',
+									'aftertext' => esc_html__( '(e.g. Add Movie)', 'custom-post-type-ui' ),
+									'data'      => [
+										/* translators: Used for autofill */
+										'label'     => sprintf( esc_attr__( 'Add %s', 'custom-post-type-ui' ), 'item' ),
+										'plurality' => 'singular',
+									],
+								] );
+
 							?>
 						</table>
 					</div>
@@ -923,6 +937,14 @@ function cptui_manage_post_types() {
 								'textvalue' => isset( $current['rest_controller_class'] ) ? esc_attr( $current['rest_controller_class'] ) : '',
 							] );
 
+							echo $ui->get_text_input( [
+								'namearray' => 'cpt_custom_post_type',
+								'name'      => 'rest_namespace',
+								'labeltext' => esc_html__( 'REST API namespace', 'custom-post-type-ui' ),
+								'aftertext' => esc_attr__( '(default: wp/v2) To change the namespace URL of REST API route.', 'custom-post-type-ui' ),
+								'textvalue' => isset( $current['rest_namespace'] ) ? esc_attr( $current['rest_namespace'] ) : '',
+							] );
+
 							echo $ui->get_tr_start() . $ui->get_th_start();
 							echo $ui->get_label( 'has_archive', esc_html__( 'Has Archive', 'custom-post-type-ui' ) );
 							echo $ui->get_p( esc_html__( 'If left blank, the archive slug will default to the post type slug.', 'custom-post-type-ui' ) );
@@ -968,7 +990,7 @@ function cptui_manage_post_types() {
 								'namearray'  => 'cpt_custom_post_type',
 								'name'       => 'exclude_from_search',
 								'labeltext'  => esc_html__( 'Exclude From Search', 'custom-post-type-ui' ),
-								'aftertext'  => esc_html__( '(default: false) Whether or not to exclude posts with this post type from front end search results.', 'custom-post-type-ui' ),
+								'aftertext'  => esc_html__( '(default: false) Whether or not to exclude posts with this post type from front end search results. This also excludes from taxonomy term archives.', 'custom-post-type-ui' ),
 								'selections' => $select,
 							] );
 
@@ -993,6 +1015,22 @@ function cptui_manage_post_types() {
 								'name'       => 'hierarchical',
 								'labeltext'  => esc_html__( 'Hierarchical', 'custom-post-type-ui' ),
 								'aftertext'  => esc_html__( '(default: false) Whether or not the post type can have parent-child relationships. At least one published content item is needed in order to select a parent.', 'custom-post-type-ui' ),
+								'selections' => $select,
+							] );
+
+							$select = [
+								'options' => [
+									[ 'attr' => '0', 'text' => esc_attr__( 'False', 'custom-post-type-ui' ), 'default' => 'false' ],
+									[ 'attr' => '1', 'text' => esc_attr__( 'True', 'custom-post-type-ui' ) ],
+								],
+							];
+							$selected           = isset( $current ) ? disp_boolean( $current['can_export'] ) : '';
+							$select['selected'] = ! empty( $selected ) ? $current['can_export'] : '';
+							echo $ui->get_select_input( [
+								'namearray'  => 'cpt_custom_post_type',
+								'name'       => 'can_export',
+								'labeltext'  => esc_html__( 'Can Export', 'custom-post-type-ui' ),
+								'aftertext'  => esc_html__( '(default: false) Can this post_type be exported.', 'custom-post-type-ui' ),
 								'selections' => $select,
 							] );
 
@@ -1156,6 +1194,14 @@ function cptui_manage_post_types() {
 							echo '</div>';
 
 							echo $ui->get_td_end() . $ui->get_tr_end();
+
+							echo $ui->get_text_input( [
+								'namearray' => 'cpt_custom_post_type',
+								'name'      => 'register_meta_box_cb',
+								'textvalue' => isset( $current['register_meta_box_cb'] ) ? esc_attr( $current['register_meta_box_cb'] ) : '',
+								'labeltext' => esc_html__( 'Metabox callback', 'custom-post-type-ui' ),
+								'helptext'  => esc_html__( 'Provide a callback function that sets up the meta boxes for the edit form. Do `remove_meta_box()` and `add_meta_box()` calls in the callback. Default null.', 'custom-post-type-ui' ),
+							] );
 
 							echo $ui->get_tr_start() . $ui->get_th_start() . esc_html__( 'Supports', 'custom-post-type-ui' );
 
@@ -1697,6 +1743,11 @@ function cptui_update_post_type( $data = [] ) {
 		$data['cpt_custom_post_type']['menu_icon'] = null;
 	}
 
+	$register_meta_box_cb = trim( $data['cpt_custom_post_type']['register_meta_box_cb'] );
+	if ( empty( $register_meta_box_cb ) ) {
+		$register_meta_box_cb = null;
+	}
+
 	$label = ucwords( str_replace( '_', ' ', $data['cpt_custom_post_type']['name'] ) );
 	if ( ! empty( $data['cpt_custom_post_type']['label'] ) ) {
 		$label = str_replace( '"', '', htmlspecialchars_decode( $data['cpt_custom_post_type']['label'] ) );
@@ -1713,6 +1764,7 @@ function cptui_update_post_type( $data = [] ) {
 	$description           = stripslashes_deep( $data['cpt_custom_post_type']['description'] );
 	$rest_base             = trim( $data['cpt_custom_post_type']['rest_base'] );
 	$rest_controller_class = trim( $data['cpt_custom_post_type']['rest_controller_class'] );
+	$rest_namespace        = trim( $data['cpt_custom_post_type']['rest_namespace'] );
 	$has_archive_string    = trim( $data['cpt_custom_post_type']['has_archive_string'] );
 	$capability_type       = trim( $data['cpt_custom_post_type']['capability_type'] );
 	$rewrite_slug          = trim( $data['cpt_custom_post_type']['rewrite_slug'] );
@@ -1721,6 +1773,7 @@ function cptui_update_post_type( $data = [] ) {
 	$show_in_menu_string   = trim( $data['cpt_custom_post_type']['show_in_menu_string'] );
 	$menu_icon             = trim( $data['cpt_custom_post_type']['menu_icon'] );
 	$custom_supports       = trim( $data['cpt_custom_post_type']['custom_supports'] );
+	$enter_title_here      = trim( $data['cpt_custom_post_type']['enter_title_here'] );
 
 	$post_types[ $data['cpt_custom_post_type']['name'] ] = [
 		'name'                  => $name,
@@ -1735,11 +1788,13 @@ function cptui_update_post_type( $data = [] ) {
 		'show_in_rest'          => disp_boolean( $data['cpt_custom_post_type']['show_in_rest'] ),
 		'rest_base'             => $rest_base,
 		'rest_controller_class' => $rest_controller_class,
+		'rest_namespace'        => $rest_namespace,
 		'has_archive'           => disp_boolean( $data['cpt_custom_post_type']['has_archive'] ),
 		'has_archive_string'    => $has_archive_string,
 		'exclude_from_search'   => disp_boolean( $data['cpt_custom_post_type']['exclude_from_search'] ),
 		'capability_type'       => $capability_type,
 		'hierarchical'          => disp_boolean( $data['cpt_custom_post_type']['hierarchical'] ),
+		'can_export'            => disp_boolean( $data['cpt_custom_post_type']['can_export'] ),
 		'rewrite'               => disp_boolean( $data['cpt_custom_post_type']['rewrite'] ),
 		'rewrite_slug'          => $rewrite_slug,
 		'rewrite_withfront'     => disp_boolean( $data['cpt_custom_post_type']['rewrite_withfront'] ),
@@ -1749,10 +1804,12 @@ function cptui_update_post_type( $data = [] ) {
 		'show_in_menu'          => disp_boolean( $data['cpt_custom_post_type']['show_in_menu'] ),
 		'show_in_menu_string'   => $show_in_menu_string,
 		'menu_icon'             => $menu_icon,
+		'register_meta_box_cb'  => $register_meta_box_cb,
 		'supports'              => $data['cpt_supports'],
 		'taxonomies'            => $data['cpt_addon_taxes'],
 		'labels'                => $data['cpt_labels'],
 		'custom_supports'       => $custom_supports,
+		'enter_title_here'      => $enter_title_here,
 	];
 
 	/**
@@ -1820,6 +1877,13 @@ function cptui_reserved_post_types() {
 		'customize_changeset',
 		'author',
 		'post_type',
+		'oembed_cache',
+		'user_request',
+		'wp_block',
+		'wp_template',
+		'wp_template_part',
+		'wp_global_styles',
+		'wp_navigation',
 	];
 
 	/**
@@ -2090,3 +2154,17 @@ function cptui_filtered_post_type_post_global() {
 
 	return $filtered_data;
 }
+
+function cptui_custom_enter_title_here( $text, $post ) {
+	$cptui_obj = cptui_get_cptui_post_type_object( $post->post_type );
+	if ( empty( $cptui_obj ) ) {
+		return $text;
+	}
+
+	if ( empty( $cptui_obj['enter_title_here'] ) ) {
+		return $text;
+	}
+
+	return $cptui_obj['enter_title_here'];
+}
+add_filter( 'enter_title_here', 'cptui_custom_enter_title_here', 10, 2 );

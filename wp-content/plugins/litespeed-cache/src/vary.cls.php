@@ -170,6 +170,11 @@ class Vary extends Root {
 			return;
 		}
 
+		/* @ref https://wordpress.org/support/topic/checkout-add-to-cart-executed-twice/ */
+		if ( ! empty( $_GET[ 'litespeed_guest_off' ] ) ) {
+			return;
+		}
+
 		Debug2::debug( '[Vary] 👒👒 Guest mode' );
 
 		! defined( 'LITESPEED_GUEST' ) && define( 'LITESPEED_GUEST', true );
@@ -347,7 +352,7 @@ class Vary extends Root {
 		 * POST request can set vary to fix #820789 login "loop" guest cache issue
 		 * @since 1.6.5
 		 */
-		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
+		if ( isset( $_SERVER["REQUEST_METHOD"] ) && $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
 			Debug2::debug( '[Vary] can_change_vary bypassed due to method not get/post' );
 			return false;
 		}

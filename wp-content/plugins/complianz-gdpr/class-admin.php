@@ -36,13 +36,60 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			add_action( 'wp_ajax_cmplz_dismiss_admin_notice', array( $this, 'dismiss_warning' ) );
 			add_action( 'admin_notices', array( $this, 'show_admin_notice' ) );
 			add_action( 'admin_print_footer_scripts', array( $this, 'insert_dismiss_admin_notice_script' ) );
-
+			add_action( 'cmplz_install_burst', array( $this, 'install_burst_html' ), 10, 1 );
+			add_action( 'wp_ajax_cmplz_install_plugin', array( $this, 'maybe_install_suggested_plugins' ) );
 		}
 
 		static function this() {
 			return self::$_this;
 		}
 
+		public function install_burst_html(){
+			$burst_installed = class_exists('BURST');
+			require_once( cmplz_path . 'class-installer.php' );
+			$installer = new cmplz_installer( 'burst-statistics' );
+			$plugin_info = $installer->get_plugin_info();
+			?>
+				<div class="cmplz-suggested-plugin">
+					<img class="cmplz-suggested-plugin-img" src="<?php echo cmplz_url?>/upgrade/img/burst.png">
+					<div class="cmplz-suggested-plugin-desc-group">
+						<div class="cmplz-suggested-plugin-title"><?php _e("Burst Statistics from Complianz", 'complianz-gdpr')?></div>
+						<div class="cmplz-suggested-plugin-desc"><?php _e("Self-hosted and privacy-friendly analytics tool", 'complianz-gdpr')?></div>
+						<div class="cmplz-suggested-plugin-rating">
+							<?php
+							wp_star_rating([
+									'rating' => $plugin_info->rating,
+									'type' => 'percent',
+									'number' => $plugin_info->num_ratings
+									]
+							);?>
+						</div>
+					</div>
+					<div class="cmplz-suggested-plugin-desc-long">
+						<?php _e("Get detailed insights into visitors' behavior with Burst Statistics, the privacy-friendly analytics dashboard from Really Simple Plugins", 'complianz-gdpr')?>
+					</div>
+					<div><button type="button" <?php echo $burst_installed ? 'disabled' : ''?> class="button-secondary cmplz-install-burst"><?php echo $burst_installed ? __("Installed","complianz-gdpr") : __("Install","complianz-gdpr")?></button>
+						<div class="cmplz-hidden cmplz-completed-text"><?php _e("Installed", "complianz-gdpr")?></div>
+					</div>
+				</div>
+			<?php
+		}
+
+		public function maybe_install_suggested_plugins(){
+			$error = true;
+			if ( current_user_can('install_plugins')) {
+				$error = false;
+				$step = isset($_GET['step']) ? sanitize_title($_GET['step']) : 'download';
+				require_once( cmplz_path . 'class-installer.php' );
+				$installer = new cmplz_installer( 'burst-statistics' );
+				$installer->install($step);
+			}
+
+			$response = json_encode( [ 'success' => $error ] );
+			header( "Content-Type: application/json" );
+			echo $response;
+			exit;
+		}
 		/**
 		 * Check if current day falls within required date range.
 		 *
@@ -275,7 +322,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		 */
 		public function plugin_update_message($plugin_data, $response){
 			if ( strpos($response->slug , 'complianz') !==false && $response->new_version === '6.0.0' ) {
-				echo '<br><b>' . '&nbsp'.sprintf(__("Important: Please %sread about%s Complianz 6.0 before updating. This is a major release and includes changes and new features that might need your attention.").'</b>','<a target="_blank" href="https://complianz.io/upgrade-to-complianz-6-0/">','</a>');
+				echo '<br><b>' . '&nbsp'.cmplz_sprintf(__("Important: Please %sread about%s Complianz 6.0 before updating. This is a major release and includes changes and new features that might need your attention.").'</b>','<a target="_blank" href="https://complianz.io/upgrade-to-complianz-6-0/">','</a>');
 			}
 		}
 
@@ -311,7 +358,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			wp_register_style( 'cmplz', trailingslashit( cmplz_url ) . "assets/css/admin$minified.css", "", cmplz_version );
 			wp_enqueue_style( 'cmplz' );
 			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_script( 'cmplz-ace', cmplz_url . "assets/ace/ace.js", array(), cmplz_version, false );
+			wp_enqueue_script( 'cmplz-ace', cmplz_url . "assets/vendor/ace/ace.js", array(), cmplz_version, false );
 			wp_enqueue_script( 'cmplz-dashboard', cmplz_url . "assets/js/dashboard$minified.js", array( 'jquery' ), cmplz_version, true );
 			wp_enqueue_script( 'cmplz-admin', cmplz_url . "assets/js/admin$minified.js", array( 'jquery', 'wp-color-picker' ), cmplz_version, true );
 			$sync_progress = COMPLIANZ::$cookie_admin->get_sync_progress();
@@ -323,6 +370,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					'admin_url'    => admin_url( 'admin-ajax.php' ),
 					'progress'     => $progress,
 					'syncProgress' => $sync_progress,
+					'copy_text'	   => __('Copied!', 'complianz-gdpr')
 				)
 			);
 		}
@@ -441,7 +489,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			$warnings = $cache ? get_transient( 'complianz_warnings'.$admin_notice ) : false;
 			//re-check if there are no warnings, or if the transient has expired
 			if ( ! $warnings ) {
-
+				$warnings = [];
 				$warning_type_defaults = array(
 					'plus_one' => false,
 					'warning_condition' => '_true_',
@@ -460,7 +508,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 
 				$dismissed_warnings = get_option('cmplz_dismissed_warnings', array() );
 				foreach ( $warning_types as $id => $warning ) {
-					if ( in_array( $id, $dismissed_warnings) ) {
+					if ( in_array( sanitize_title($id), $dismissed_warnings) ) {
 						continue;
 					}
 
@@ -672,11 +720,10 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					'plus_ones' => true,
 			) );
 			$warning_count = count( $warnings );
-			$warning_title = esc_attr( sprintf( '%d plugin warnings', $warning_count ) );
-			$menu_label    = sprintf( __( 'Complianz %s', 'complianz-gdpr' ),
+			$warning_title = esc_attr( cmplz_sprintf( '%s plugin warnings', $warning_count ) );
+			$menu_label    = cmplz_sprintf( __( 'Complianz %s', 'complianz-gdpr' ),
 				"<span class='update-plugins count-$warning_count' title='$warning_title'><span class='update-count'>"
 				. number_format_i18n( $warning_count ) . "</span></span>" );
-
 
 			global $cmplz_admin_page;
 			$cmplz_admin_page = add_menu_page(
@@ -744,14 +791,12 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		 */
 		public function wizard_page() {
 			?>
-			<div class="wrap">
 				<?php if ( apply_filters( 'cmplz_show_wizard_page', true ) ) {
 					COMPLIANZ::$wizard->wizard( 'wizard' );
 				} else {
 					$link = '<a href="'.add_query_arg(array('page'=>'cmplz-settings#license'), admin_url('admin.php')).'">';
-					cmplz_admin_notice( sprintf(__( 'Your license needs to be %sactivated%s to unlock the wizard', 'complianz-gdpr' ), $link, '</a>' ));
+					cmplz_admin_notice( cmplz_sprintf(__( 'Your license needs to be %sactivated%s to unlock the wizard', 'complianz-gdpr' ), $link, '</a>' ));
 				} ?>
-			</div>
 			<?php
 		}
 
@@ -771,7 +816,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				$status = __("Installed", "complianz-gdpr");
 			} elseif (defined($item['constant_free']) && !defined($item['constant_premium'])) {
 				$link = $item['website'];
-				$text = __('Upgrade to pro', 'complianz-gdpr');
+				$text = __('Upgrade to Pro', 'complianz-gdpr');
 				$status = "<a href=$link>$text</a>";
 			}
 			return $status;
@@ -787,24 +832,24 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					'cache' => false,
 					'status' => array('urgent', 'open'),
 					) ) );
-			$tasks = '<span class="cmplz-task active" href="'.add_query_arg( array('page' => 'complianz'), admin_url('admin.php') ).'">'
-					. sprintf(__("All tasks (%s)", "complianz-gdpr"), '<span class="cmplz-task-count cmplz-all">'.$all_count.'</span>')
-					. '</span><span class="cmplz-task" href="'.add_query_arg( array('page' => 'complianz', 'cmplz-status' => 'remaining'), admin_url('admin.php') ).'">'
-					. sprintf(__("Remaining tasks (%s)", "complianz-gdpr"), '<span class="cmplz-task-count cmplz-remaining">'.$remaining_count .'</span>')
-					. '</span>';
+			$tasks = '<div class="cmplz-task-switcher-container"><span class="cmplz-task-switcher active" href="'.add_query_arg( array('page' => 'complianz'), admin_url('admin.php') ).'">'
+					. sprintf(__("All tasks (%s)", "complianz-gdpr"), '<span class="cmplz-task-switcher-count cmplz-all">'.$all_count.'</span>')
+					. '</span><span class="cmplz-task-switcher" href="'.add_query_arg( array('page' => 'complianz', 'cmplz-status' => 'remaining'), admin_url('admin.php') ).'">'
+					. sprintf(__("Remaining tasks (%s)", "complianz-gdpr"), '<span class="cmplz-task-switcher-count cmplz-remaining">'.$remaining_count .'</span>')
+					. '</span></div>';
 			$grid_items =
 				array(
 					array(
                         'name'  => 'progress',
                         'header' => __("Your progress", "complianz-gdpr"),
-						'class' => '',
+						'class' => 'column-2 row-2',
 						'page' => 'dashboard',
 						'controls' => $tasks,
 					),
 					array(
                         'name'  => 'documents',
                         'header' => __("Documents", "complianz-gdpr"),
-						'class' => 'small',
+						'class' => 'row-2',
 						'page' => 'dashboard',
 						'controls' => __("Last update", "complianz-gdpr"),
 					),
@@ -812,7 +857,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					array(
                         'name'  => 'tools',
                         'header' => __("Tools", "complianz-gdpr"),
-						'class' => 'small',
+						'class' => 'row-2',
 						'page' => 'dashboard',
 						'controls' => '',
 					),
@@ -820,7 +865,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					array(
 							'name'  => 'tips-tricks',
 							'header' => __("Tips & Tricks", "complianz-gdpr"),
-							'class' => 'half-height',
+							'class' => 'column-2',
 							'page' => 'dashboard',
 							'controls' => '',
 					),
@@ -828,11 +873,9 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 					array(
 						'name'  => 'other-plugins',
 						'header' => __("Other plugins", "complianz-gdpr"),
-						'class' => 'half-height',
+						'class' => 'column-2 no-border no-background',
 						'page' => 'dashboard',
-						'controls' => '<a href="https://really-simple-plugins.com/" target="_blank">
-										<img src="'.cmplz_url.'/assets/images/really-simple-plugins.svg" alt="Really Simple Plugins">
-										</a>',
+							'controls' => '<div class="rsp-logo"><a href="https://really-simple-plugins.com/"><img src="' . trailingslashit(cmplz_url) . 'assets/images/really-simple-plugins.svg" alt="Really Simple Plugins" /></a></div>',
 					),
 
 				);
@@ -882,15 +925,18 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		 * Get the html output for a help tip
 		 *
 		 * @param $str
+		 * @param $content
 		 */
 
-		public function get_help_tip( $str ) {
+		public function get_help_tip( $str, $content = false ) {
+			$content = !$content ? cmplz_icon('help') : $content;
+			ob_start();
 			?>
-			<span class="cmplz-tooltip-right tooltip-right"
-			      data-cmplz-tooltip="<?php echo esc_attr($str) ?>">
-              <span class="dashicons dashicons-editor-help"></span>
-            </span>
+			<span class="cmplz-tooltip" cmplz-tooltip="<?php echo esc_attr($str) ?>">
+				<?php echo $content ?>
+			</span>
 			<?php
+			echo ob_get_clean();
 		}
 
 		/**
@@ -917,12 +963,13 @@ if ( ! class_exists( "cmplz_admin" ) ) {
                     'index' => '12',
                     'controls' => '',
                 ),
+
                 'cookie-blocker' => array(
                     'page' => 'settings',
                     'name' => 'cookie-blocker',
                     'header' => __('Cookies', 'complianz-gdpr'),
                     'class' => 'medium',
-                    'index' => '13',
+                    'index' => '14',
                     'controls' => '',
                 ),
                 'document-styling' => array(
@@ -930,7 +977,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
                     'name' => 'document-styling',
                     'header' => __('Advanced features', 'complianz-gdpr'),
                     'class' => 'big condition-check-1',
-                    'index' => '14',
+                    'index' => '15',
                     'controls' => '',
                     'conditions' => 'data-condition-question-1="use_custom_document_css" data-condition-answer-1="1"',
                 ),

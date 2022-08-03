@@ -2,13 +2,12 @@
 Contributors:      bordoni
 Tags:              generator, dummy content, dummy data, lorem ipsun, admin, exemples, testing, images, attachments, featured image, taxonomies, users, post type, faker, fake data, random, developer, dev, development, test, tests
 Requires at least: 4.7
-Tested up to:      5.6
+Tested up to:      5.9.1
 Requires PHP:      5.6
-Stable tag:        trunk
+Stable tag:        0.5.3
 License:           GPLv2 or later
-License URI:       http://www.gnu.org/licenses/gpl-2.0.html'
+License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 Donate link:       https://fakerpress.com/r/sponsor
-
 
 FakerPress is a clean way to generate fake and dummy content to your WordPress, great for developers who need testing
 
@@ -99,6 +98,21 @@ Great! There are several ways you can get involved to help make FakerPress bette
 Thank you for wanting to make FakerPress better for everyone! [We salute you](https://www.youtube.com/watch?v=8fPf6L0XNvM).
 
 == Changelog ==
+
+= 0.5.3 &mdash; 04 of March 2022 =
+
+* Fix - Ensure Select2 usage of AJAX search properly encodes on all usages props @TheMMMdev
+* Fix - Ensure Select2 usage of AJAX properly checks for nonces and permissions props @TheMMMdev
+
+= 0.5.2 &mdash; 27 of January 2022 =
+
+* Feature: Proper changelog page for users trying to figure out what has changed in the latest version of FakerPress.
+* Feature: Excerpt size field added to ensure better control over Post generation prop @gtsantos
+* Tweak: jQuery 3.5.X compatibility
+* Fix: Prevent warning around post_excerpt usage introduced earlier on in the year. props @pattisahusiwa
+* Fix: One more PHP 8 compatibility problem related to the generation of passwords props @DumahX
+* Fix: Prevent PHP 8 from throwing a warning because of unnecessary `unlink()` call for attachments props @wpuzman
+* Fix: Resolve problems around failed inline images that were unavailable which would cause a PHP Warning.
 
 = 0.5.1 &mdash; 05 of January 2021 =
 
@@ -279,8 +293,8 @@ Thank you for wanting to make FakerPress better for everyone! [We salute you](ht
 
 = 0.1.1 &mdash; 17 of June, 2014 =
 
-* Fatal Error gerated by a missing file Carbon related fixed
+* Fatal Error generate by a missing file Carbon related fixed
 
 = 0.1.0 &mdash; 17 of June, 2014 =
 
-* First initial concept of using [Faker](https://github.com/fzaninotto/Faker) to gerenate data on WordPress
+* First initial concept of using [Faker](https://github.com/fzaninotto/Faker) to generate data on WordPress

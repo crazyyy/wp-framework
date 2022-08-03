@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class WINP_MetaBox
  */
-class WINP_MetaBox extends Wbcr_FactoryMetaboxes409_Metabox {
+class WINP_MetaBox extends Wbcr_FactoryMetaboxes413_Metabox {
 
 	public function __construct( $plugin ) {
 		parent::__construct( $plugin );

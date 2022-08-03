@@ -20,13 +20,13 @@ if( !defined('ABSPATH') ) {
  *
  * @since 3.2.0
  */
-class Wbcr_FactoryBootstrap450_Manager {
+class Wbcr_FactoryBootstrap458_Manager {
 
 	/**
 	 * A plugin for which the manager was created.
 	 *
 	 * @since 3.2.0
-	 * @var Wbcr_Factory450_Plugin
+	 * @var Wbcr_Factory457_Plugin
 	 */
 	public $plugin;
 
@@ -51,7 +51,7 @@ class Wbcr_FactoryBootstrap450_Manager {
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct(Wbcr_Factory450_Plugin $plugin)
+	public function __construct(Wbcr_Factory457_Plugin $plugin)
 	{
 		$this->plugin = $plugin;
 
@@ -115,8 +115,8 @@ class Wbcr_FactoryBootstrap450_Manager {
 	public function loadAssets($hook)
 	{
 
-		do_action('wbcr_factory_450_bootstrap_enqueue_scripts', $hook);
-		do_action('wbcr_factory_450_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), $hook);
+		do_action('wbcr_factory_457_bootstrap_enqueue_scripts', $hook);
+		do_action('wbcr_factory_457_bootstrap_enqueue_scripts_' . $this->plugin->getPluginName(), $hook);
 
 		$dependencies = [];
 		if( !empty($this->scripts) ) {
@@ -161,8 +161,8 @@ class Wbcr_FactoryBootstrap450_Manager {
 		$cache_enable = apply_filters('wbcr/factory/bootstrap/cache_enable', true);
 
 		$cache_id = md5(implode(',', $this->scripts) . $type . $this->plugin->getPluginVersion());
-		$cache_dir_path = FACTORY_BOOTSTRAP_450_DIR . '/assets/cache/';
-		$cache_dir_url = FACTORY_BOOTSTRAP_450_URL . '/assets/cache/';
+		$cache_dir_path = FACTORY_BOOTSTRAP_458_DIR . '/assets/cache/';
+		$cache_dir_url = FACTORY_BOOTSTRAP_458_URL . '/assets/cache/';
 
 		$cache_filepath = $cache_dir_path . $cache_id . ".min." . $type;
 		$cache_fileurl = $cache_dir_url . $cache_id . ".min." . $type;
@@ -189,7 +189,7 @@ class Wbcr_FactoryBootstrap450_Manager {
 			foreach($scripts as $script_to_load) {
 				$script_to_load = sanitize_text_field($script_to_load);
 				if( $cache_enable && $cache_dir_exists ) {
-					$fname = FACTORY_BOOTSTRAP_450_DIR . "/assets/$type-min/$script_to_load.min." . $type;
+					$fname = FACTORY_BOOTSTRAP_458_DIR . "/assets/$type-min/$script_to_load.min." . $type;
 					if( file_exists($fname) ) {
 						$f = @fopen($fname, 'r');
 						$concat_files[] = @fread($f, filesize($fname));
@@ -197,9 +197,9 @@ class Wbcr_FactoryBootstrap450_Manager {
 					}
 				} else {
 					if( $type == 'js' ) {
-						wp_enqueue_script(md5($script_to_load), FACTORY_BOOTSTRAP_450_URL . "/assets/$type-min/$script_to_load.min." . $type, $is_first ? $dependencies : false, $this->plugin->getPluginVersion());
+						wp_enqueue_script(md5($script_to_load), FACTORY_BOOTSTRAP_458_URL . "/assets/$type-min/$script_to_load.min." . $type, $is_first ? $dependencies : false, $this->plugin->getPluginVersion());
 					} else {
-						wp_enqueue_style(md5($script_to_load), FACTORY_BOOTSTRAP_450_URL . "/assets/$type-min/$script_to_load.min." . $type, [], $this->plugin->getPluginVersion());
+						wp_enqueue_style(md5($script_to_load), FACTORY_BOOTSTRAP_458_URL . "/assets/$type-min/$script_to_load.min." . $type, [], $this->plugin->getPluginVersion());
 					}
 					$is_first = false;
 				}

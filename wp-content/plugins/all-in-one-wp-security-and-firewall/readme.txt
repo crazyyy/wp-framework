@@ -1,12 +1,12 @@
 === All In One WP Security & Firewall ===
-Contributors: Tips and Tricks HQ, wpsolutions, Peter Petreski, Ruhul Amin, mbrsolution
-Donate link: https://www.tipsandtricks-hq.com
+Contributors: DavidAnderson, pmbaldha, Tips and Tricks HQ, wpsolutions, Peter Petreski, Ruhul Amin, mbrsolution
+Donate link: https://david.dw-perspective.org.uk/donate
 Tags: security, secure, Anti Virus, antivirus, ban, ban hacker, virus, firewall, firewall security, login, lockdown, htaccess, hack, malware, vulnerability, protect, protection, phishing, database, backup, plugin, sql injection, ssl, restrict, login captcha, bot, hotlink, 404 detection, admin, rename, all in one, scan, scanner, iframe,
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.9
-Stable tag: 4.4.10
-License: GPLv3
+Tested up to: 6.0
+Stable tag: 4.4.12
+License: GPLv3 or later
 
 A comprehensive, user-friendly, all in one WordPress security and firewall plugin for your site.
 
@@ -32,8 +32,6 @@ All In One WP Security also uses an unprecedented security points grading system
 Our security and firewall rules are categorized into "basic", "intermediate" and "advanced". This way you can apply the firewall rules progressively without breaking your site's functionality.
 
 The All In One WordPress Security plugin doesn't slow down your site and it is 100% free.
-
-Visit the [WordPress Security Plugin](https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin) page for more details.
 
 Below is a list of the security and firewall features offered in this plugin:
 
@@ -139,7 +137,6 @@ or malicious bots who do not have a special cookie in their browser. You (the si
 
 = Developers =
 * If you are a developer and you need some extra hooks or filters for this plugin then let us know.
-* Github repository - https://github.com/Arsenal21/all-in-one-wordpress-security
 
 = Translations =
 * All In One WP Security plugin can be translated to any language. 
@@ -185,6 +182,46 @@ None
 
 == Changelog ==
 
+= 4.4.12 - 22/April/2022 =
+
+* FEATURE: Disable login lockdown feature when the AIOWPS_DISABLE_LOGIN_LOCKDOWN constant with true value.
+* FIX: For multisite giving fatal error on settings and dashboard page Call to a member function on null.
+* FIX: Scores not updating correctly if a feature activated and "Remove wp generator meta info" activated shows 5/5 for all.
+* FIX: Change hard-coded references of wp-content to WP_CONTENT_DIR constant.
+* TWEAK: Get user IP Address using an external service in local server setup.
+* TWEAK: Filter name changed to "aiowps_pre_add_to_permanent_block" from "pre_add_to_permanent_block".
+* TWEAK: Filter name changed to "aiowps_filter_event_logger_data" from "filter_event_logger_data".
+* TWEAK: Disables the "Secret Word" and "Re-direct URL" input fields when the "Enable Brute Force Attack Prevention" option is unchecked.
+* TWEAK: Show nice error on activation if site php version is lower than 5.6.
+
+= 4.4.11 - 29/March/2022 =
+
+* FEATURE: Reset all settings by clicking on the "Reset Settings" button on the Settings Page.
+* FEATURE: Verify the Google reCaptcha Site key before rendering and disable it if the Google reCaptcha site key is invalid.
+* FIX: PHP Fatal error: Cannot redeclare wp_install_maybe_enable_pretty_permalinks() in specific server.
+* FIX: throwing database error for creating debug log table in specific MySQL server.
+* FIX: Compatibility issue with WPML plugin for login and logout functionality.
+* FIX: Update email sent in English instead of setting language.
+* FIX: The Simple Math Captcha can't be validated when a third-party plugin clears transients more frequently.
+* FIX: The login lockdown unlock request was not working in a few specific server environments.
+* FIX: The warning headers already sent was displayed in a few specific server environments.
+* FIX: Handle invalid tabs appropriately in setting pages.
+* FIX: A Fatal error occurred when WooCommerce was activated, but it was disabled on the frontend by the Asset Cleanup Pro plugin.
+* FIX: Fix login lockout issue with different timezone.
+* TWEAK: Add review notice.
+* TWEAK: Improve functionality of fake google bot prevents to access the site.
+* TWEAK: Remove IP address retrieval setting and detect IP address automatically.
+* TWEAK: Verify Google reCaptcha site key before rendering the reCaptcha. 
+* TWEAK: Remove force logout checking from REST API Call.
+* TWEAK: Made Admin Dashboard > WP Security > Settings tabs extensible.
+* TWEAK: Add G2 review message in the admin footer.
+* TWEAK: Format failed login date time according to WordPress general settings.
+* TWEAK: Remove unused codes from AIOWPSecurity_Config.
+* TWEAK: Add more specific instructions to change the Display name compared to the username in Admin Dashboard > WP Security > User Accounts > "Display Name" tab > "Modify Accounts With Identical Login Name & Display Name" section.
+* TWEAK: Remove Admin Dashboard > WP Security > Site Info tab (now redundant because of WP's "Site Health" tool)
+* TWEAK: The "Allow Login Lockout Request" checkbox is ticked by default.
+
+
 = 4.4.10 - 21/Jan/2022 =
 
 * FEATURE: Auto-purge failed login records after 90 days.
@@ -194,7 +231,10 @@ None
 * FIX: Logout date-time shows 1000-10-10 10:00:00 for non-logged out user.
 * FIX: The notification for re-inserting the security rules in your .htaccess file appears after deactivating and activating the plugin to non-admin users.
 * TWEAK: Replace obsolete variable reference style
+* TWEAK: Sanitize $_REQUEST parameters in redirect function
 * TWEAK: View debug logs from within the UI
+* FIX: Compatibility issues with PHP 8.1.
+* TWEAK: Advertise All in One WP Security Premium Plugin instead of Addons.
 
 = 4.4.9 =
 - Added Polish language translation file to the plugin. Thanks to Dariusz for submitting the language files.

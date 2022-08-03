@@ -262,12 +262,12 @@ if ( ! class_exists( "cmplz_config" ) ) {
 			);
 
 			$this->premium_geo_ip
-				= sprintf( __( "To enable the warning only for countries with a cookie law, %sget premium%s.",
+				= cmplz_sprintf( __( "To enable the warning only for countries with a cookie law, %sget premium%s.",
 					'complianz-gdpr' ),
 					'<a href="https://complianz.io" target="_blank">', '</a>' )
 				  . "&nbsp;";
 			$this->premium_ab_testing
-				= sprintf( __( "If you want to run a/b testing to track which banner gets the highest acceptance ratio, %sget premium%s.",
+				= cmplz_sprintf( __( "If you want to run a/b testing to track which banner gets the highest acceptance ratio, %sget premium%s.",
 					'complianz-gdpr' ),
 					'<a href="https://complianz.io" target="_blank">', '</a>' )
 				  . "&nbsp;";
@@ -296,7 +296,6 @@ if ( ! class_exists( "cmplz_config" ) ) {
 			require_once( cmplz_path . '/config/general-settings.php' );
 			require_once( cmplz_path . '/config/questions-wizard.php' );
 			require_once( cmplz_path . '/config/dynamic-fields.php' );
-			require_once( cmplz_path . '/config/dynamic-document-elements.php' );
 			require_once( cmplz_path . '/config/documents/documents.php' );
 			require_once( cmplz_path . '/config/documents/cookie-policy-eu.php' );
 			require_once( cmplz_path . '/config/documents/cookie-policy-us.php' );
@@ -448,17 +447,17 @@ if ( ! class_exists( "cmplz_config" ) ) {
 			$banner_url = admin_url(add_query_arg(array('page'=>'cmplz-cookiebanner','id'=>cmplz_get_default_banner_id()),'admin.php'));
 			$this->warning_types = apply_filters('cmplz_warning_types' ,array(
 
-//				'upgraded_to_6' => array(
-//					'warning_condition' => 'cmplz_upgraded_to_current_version',
-//					'open' => sprintf(__( 'Complianz GDPR/CCPA %s. Learn more about our newest release.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/meet-complianz-6-0/'),'6.0.0' ),
-//					'plus_one' => true,
-//					'include_in_progress' => false,
-//				),
+				'datarequests' => array(
+					'warning_condition' => 'cmplz_upgraded_to_current_version',
+					'premium' => __( 'New Feature: Data requests for Privacy Statements.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/data-requests/'),
+					'plus_one' => true,
+					'include_in_progress' => false,
+				),
 
 				'upgraded_to_6' => array(
 					'warning_condition'  => 'cmplz_upgraded_to_current_version',
-					'open' => sprintf(__( 'Complianz GDPR/CCPA %s. Learn more about our newest release.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/meet-complianz-6-0/'),'6.0.0' ).'&nbsp;'.
-					          '<br><br>'.sprintf(__('We have changed our Cookie Banner template for future capabilities, please check your %sCookie Banner settings%s.','complianz-gdpr'),'<a href="'.$banner_url.'">','</a>').'&nbsp;'.
+					'open' => cmplz_sprintf(__( 'Complianz GDPR/CCPA %s. Learn more about our newest release.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/meet-complianz-6-0/'),'6.0.0' ).'&nbsp;'.
+					          '<br><br>'.cmplz_sprintf(__('We have changed our Cookie Banner template for future capabilities, please check your %sCookie Banner settings%s.','complianz-gdpr'),'<a href="'.$banner_url.'">','</a>').'&nbsp;'.
 					          __('You can reset to default values, if needed.','complianz-gdpr'),
 					'admin_notice' => true,
 				),
@@ -479,14 +478,22 @@ if ( ! class_exists( "cmplz_config" ) ) {
 						'get_value_respect_dnt==yes'
 					),
 					'completed'    => __( 'Do Not Track and Global Privacy Control are respected.', 'complianz-gdpr' ),
-					'open' => sprintf( __( 'Do Not Track and Global Privacy Control are not yet respected. - (%spremium%s)', 'complianz-gdpr' ), '<a  target="_blank" href="https://complianz.io/browser-privacy-controls/">', '</a>' ),
+					'open' => cmplz_sprintf( __( 'Do Not Track and Global Privacy Control are not yet respected. - (%spremium%s)', 'complianz-gdpr' ), '<a  target="_blank" href="https://complianz.io/browser-privacy-controls/">', '</a>' ),
+				),
+
+				'drop-elementor-banner' => array(
+					'plus_one' => true,
+					'success_conditions' => array(
+						'NOT get_option_cmplz_elementor_banner_dropped'
+					),
+					'urgent' => __( 'We have dropped support for creating a cookie banner with Elementor Pro. Your banner defaults to a standard cookie banner.', 'complianz-gdpr' ).cmplz_read_more("https://complianz.io/elementor-pro-support"),
 				),
 
 				'has_formal' => array(
 					'success_conditions'  => array(
 						'NOT document->locale_has_formal_variant',
 					),
-					'open' => sprintf( __( 'You have currently selected an informal language, which will result in informal use of language on the legal documents. If you prefer the formal style, you can activate this in the %sgeneral settings%s.', 'complianz-gdpr' ), '<a  target="_blank" href="'.admin_url('options-general.php').'">', '</a>' ).
+					'open' => cmplz_sprintf( __( 'You have currently selected an informal language, which will result in informal use of language on the legal documents. If you prefer the formal style, you can activate this in the %sgeneral settings%s.', 'complianz-gdpr' ), '<a  target="_blank" href="'.admin_url('options-general.php').'">', '</a>' ).
 					          cmplz_read_more('https://complianz.io/informal-language-in-legal-documents/'),
 					'include_in_progress' => true,
 
@@ -498,14 +505,14 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'success_conditions'  => array(
 					),
 					'completed'    => __( 'No cookie changes have been detected.', 'complianz-gdpr' ),
-					'open' => __( 'Cookie changes have been detected.', 'complianz-gdpr' ) . " " . sprintf( __( 'Please review step %s of the wizard for changes in cookies.', 'complianz-gdpr' ), STEP_COOKIES ),
+					'open' => __( 'Cookie changes have been detected.', 'complianz-gdpr' ) . " " . cmplz_sprintf( __( 'Please review step %s of the wizard for changes in cookies.', 'complianz-gdpr' ), STEP_COOKIES ),
 					'include_in_progress' => true,
 				),
 				'no-cookie-scan' => array(
 					'success_conditions'  => array(
 						'cookie_admin->get_last_cookie_scan_date',
 					),
-					'completed'    => sprintf( __( 'Last cookie scan completed on %s.', 'complianz-gdpr' ), COMPLIANZ::$cookie_admin->get_last_cookie_scan_date() ),
+					'completed'    => cmplz_sprintf( __( 'Last cookie scan completed on %s.', 'complianz-gdpr' ), COMPLIANZ::$cookie_admin->get_last_cookie_scan_date() ),
 					'open' => __( 'No cookie scan has been completed yet.', 'complianz-gdpr' ),
 					'include_in_progress' => true,
 					'dismissible' => false,
@@ -526,7 +533,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 						'is_ssl'
 					),
 					'completed'    => __( "Great! You're already on SSL!", 'complianz-gdpr' ),
-					'open' => sprintf( __( "You don't have SSL on your site yet. Install SSL for Free with %sReally Simple SSL%s", 'complianz-gdpr' ),
+					'open' => cmplz_sprintf( __( "You don't have SSL on your site yet. Install SSL for Free with %sReally Simple SSL%s", 'complianz-gdpr' ),
 						'<a target="_blank" href="https://wordpress.org/plugins/really-simple-ssl/">', '</a>' ),
 					'include_in_progress' => true,
 				),
@@ -570,7 +577,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				        'NOT cookie_admin->has_empty_cookie_descriptions',
 					),
 					'open' => __( 'You have cookies with incomplete descriptions.', 'complianz-gdpr' ) . " "
-					                 . sprintf( __( 'Enable the cookiedatabase.org API for automatic descriptions, or add these %smanually%s.', 'complianz-gdpr' ), '<a href="' . add_query_arg( array(
+					                 . cmplz_sprintf( __( 'Enable the cookiedatabase.org API for automatic descriptions, or add these %smanually%s.', 'complianz-gdpr' ), '<a href="' . add_query_arg( array(
 								'page'    => 'cmplz-wizard',
 								'step'    => STEP_COOKIES,
 								'section' => 5
@@ -586,6 +593,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					          __( 'After the issue has been resolved, please re-run a scan to clear this message.', 'complianz-gdpr' )
 					                 . cmplz_read_more( 'https://complianz.io/duplicate-implementation-of-analytics/' ),
 					'include_in_progress' => true,
+					'dismissible' => true,
 				),
 
 				'console-errors' => array(
@@ -603,14 +611,13 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				),
 
 				'cookie-banner-enabled' => array(
-					'warning_condition' => 'wizard->wizard_completed_once',
 					'success_conditions'  => array(
-						'cookie_admin->site_needs_cookie_warning',
+						'cmplz_cookiebanner_should_load(true)',
 					),
 					'completed' => __( 'Your site requires a cookie banner, which has been enabled.', 'complianz-gdpr' ),
-					'open' => __( 'Your site does not require a cookie banner.', 'complianz-gdpr' ),
+					'urgent' => __( 'Your site is not configured to show a cookie banner at the moment.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/cookie-banner-does-not-appear/'),
 					'include_in_progress' => true,
-					'dismissible' => false,
+					'dismissible' => true,
 				),
 
 				'pretty-permalinks-error' => array(
@@ -618,7 +625,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 						'document->pretty_permalinks_enabled',
 					),
 					'plus_one' => true,
-					'urgent' => __( 'Pretty permalinks are not enabled on your site. This can cause issues with the REST API, used by Complianz.', 'complianz-gdpr' ),
+					'urgent' => __( 'Pretty permalinks are not enabled on your site. This can cause issues with the REST API, used by Complianz.', 'complianz-gdpr' ).'&nbsp;<a href="'.admin_url('options-permalink.php').'">'.__("Enable", "complianz-gdpr").'</a>',
 					'include_in_progress' => true,
 					'dismissible' => false,
 				),
@@ -646,7 +653,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				'other-cookie-plugins' => array(
 					'warning_condition'  => 'cmplz_detected_cookie_plugin',
 					'plus_one' => true,
-					'urgent' => sprintf(__( 'We have detected the %s plugin on your website.', 'complianz-gdpr' ),cmplz_detected_cookie_plugin(true)).'&nbsp;'.__( 'As Complianz handles all the functionality this plugin provides, you should disable this plugin to prevent unexpected behaviour.', 'complianz-gdpr' ),
+					'urgent' => cmplz_sprintf(__( 'We have detected the %s plugin on your website.', 'complianz-gdpr' ),cmplz_detected_cookie_plugin(true)).'&nbsp;'.__( 'As Complianz handles all the functionality this plugin provides, you should disable this plugin to prevent unexpected behaviour.', 'complianz-gdpr' ),
 					'include_in_progress' => true,
 					'dismissible' => false,
 				),
@@ -690,6 +697,11 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'premium' => __( 'Are you targeting multiple regions?', 'complianz-gdpr' ) . cmplz_read_more('https://complianz.io/what-regions-do-i-target/'),
 					'include_in_progress' => false,
 					'dismissible' => false,
+				),
+				'install-burst' => array(
+					'warning_condition' => 'cmplz_show_install_burst_warning',
+					'open' => __( 'Statistics without Consent. Meet Burst Statistics from Complianz.', 'complianz-gdpr' ) . ' <a href="'. admin_url('admin.php?page=cmplz-wizard&step=2&section=2') .'">' . __('Install directly from our wizard.', 'complianz-gdpr') . '</a>',
+					'include_in_progress' => false,
 				),
 
 			) );

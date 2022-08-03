@@ -2,24 +2,20 @@
 /*
 Plugin Name: Theme Inspector
 Plugin URI: https://wordpress.org/plugins/theme-inspector
-Description:  displays useful technical information on pages and posts to aid in developing Wordpress themes. Only visible to administrators.  Use In Conjunction with the WP Template Hierarchy Document
+Description:  Displays useful technical information on pages and posts to aid in developing WordPress Classic Themes. Only visible to administrators via the Admin Toolbar.
 Author: Melissa Cabral
-Version: 3.0.6
+Version: 4.0.0
 Author URI: http://melissacabral.com/
 */
-
 /**
  * Configure: Debug mode will show ALL the $GLOBALS at the bottom of the page
  * @since ver 3.0.3
  */
 define('ADMINHELPER_DEBUG_MODE', false);
-
 /**
  * Display Theme Inspector as Toolbar (Admin Bar) Item
  * @since ver 2.0
  */
-
-
 add_action( 'admin_bar_menu', 'mmc_toolbar_link', 999 );
 function mmc_toolbar_link( $wp_admin_bar ) {	
 	if (current_user_can('install_themes') && !is_admin()) {
@@ -69,7 +65,6 @@ function mmc_generate_output(){
 					<th>True Condition(s):</th>
 					<td><?php echo adminhelper_true_conditions()?></td>
 				</tr>
-				
 				<?php if( !is_404() && ! is_search() &&  get_post_type() ) { ?>
 				<tr>
 					<th>Post Type:</th>
@@ -99,24 +94,17 @@ function mmc_generate_output(){
 				<th>Template File Loaded:</th>
 				<td>
 					<?php echo adminhelper_get_current_template() ?>
-					<a href="javascript:;" title="<?php echo adminhelper_get_template_path(); ?>">[...]</a>  						
-						
+					<a href="javascript:;" title="<?php echo adminhelper_get_template_path(); ?>">[Source]</a>  						
 				</td>
 			</tr>
-			<?php if(function_exists('is_woocommerce')){
-				if (is_woocommerce()) {
+			<?php if( adminhelper_special_cases() ){				
 			?>
-			<tr class="woocommerce">
-				<th>&nbsp;</th>
-				<td>This is a <a href="https://docs.woocommerce.com/document/template-structure/">WooCommerce template</a></td>
+			<tr class="special-cases">				
+				<td colspan="2">
+					<?php echo adminhelper_special_cases(); ?>						
+				</td>
 			</tr>
-			<?php
-				}
-
-			} ?>
-			
-			
-			
+			<?php } //end special cases ?>				
 			<tr>
 				<td colspan="2" class="hierarchy">
 				<i>Template Hierarchy for this screen:</i><br>
@@ -136,12 +124,9 @@ function mmc_generate_output(){
 	return ob_get_clean();			
 	} //end is user logged in
 }
-
-
 /**
  * helper functions
  */
-
 function adminhelper_taxonomy(){
 	global $post;
 	$queried_object = get_queried_object();
@@ -158,10 +143,8 @@ function adminhelper_content_type(){
 	global $post;
 	$output = '';
 	if (is_admin()) { $output .= "Admin Panel"; }
-
 	if (is_home()) { $output .= "Home (blog) "; }
 	elseif (is_front_page()) { $output .= "Front Page "; }	
-	
 	if (is_single()) { $output .= "Single Post "; }
 	if (is_page() && !is_front_page()) { $output .= "Page "; }
 	if (is_category()) { $output .= "Category "; }
@@ -232,14 +215,12 @@ function adminhelper_hierarchy(){
 	global $post;
 	$output = '';
 	$hierarchy = array();
-
 	//current post info
 	if (isset($post)){
 		$slug = $post->post_name;
 		$id = $post->ID;
 		$type = get_post_type();	
 	}
-
 	if( is_404() ){
 		$hierarchy[] = '404.php';
 	}elseif( is_search() ){
@@ -271,7 +252,6 @@ function adminhelper_hierarchy(){
 			$tax = get_queried_object();
 			$tax_name = $tax->taxonomy;
    			$term =  $tax->slug;	
-		
 			$hierarchy = array( "taxonomy-$tax_name-$term.php", "taxonomy-$tax_name.php", 'taxonomy.php' );
 		}elseif( is_post_type_archive()  ){			
 			$hierarchy = array( "archive-$type.php" );
@@ -292,13 +272,10 @@ function adminhelper_hierarchy(){
 			//single custom post			
 			$hierarchy = array('<i>custom template</i>', "single-$type-$slug.php", "single-$type.php", 'single.php');
 		}
-		
 		$hierarchy[] = 'singular.php';
 	}
-	
 	//default template:
 	$hierarchy[] = 'index.php';
-
 	$sep = '';
 	foreach($hierarchy as $value){
 		$class = 'template';
@@ -310,12 +287,9 @@ function adminhelper_hierarchy(){
 		if( $current_template == $value ){
 			$class .= ' current-template';
 		}
-		
-		
 		$output.=  $sep .  '<span class="' . $class . '">' . $value . '</span>';
 		$sep = ' &rarr; ';
 	}
-	
 	return $output;
 }
 function adminhelper_get_current_template(  ) {
@@ -343,7 +317,6 @@ function var_template_include( $t ){
 	$GLOBALS['current_theme_template'] = basename($t);
 	return $t;
 }
-
 /**
  * Enqueue the stylesheet
  * @since ver 2.0
@@ -357,7 +330,35 @@ function adminhelper_enqueue_stylesheet(){
 		wp_enqueue_style( 'themehelper-style' );
 	}
 }
-
+/**
+ * Check for special cases (plugin incompatibility) to flag an alert
+ * @since ver 4.0.0
+ */
+function adminhelper_special_cases(){	
+	$known_special_cases = array(
+		'wp_is_block_theme' => '<a target="_blank" href="https://developer.wordpress.org/block-editor/how-to-guides/themes/block-theme-overview/">This is a block theme (FSE)</a>',
+		'is_woocommerce' => '<a target="_blank" href="https://docs.woocommerce.com/document/template-structure/">WooCommerce is Active on this screen. </a>',
+		'is_bbpress' 	=> '<a target="_blank" href="https://codex.bbpress.org/themes/theme-compatibility/">BBPress is Active on this screen.</a>',
+		'is_buddypress' => 'BuddyPress is active on this screen<a href="https://codex.buddypress.org/themes/theme-compatibility-1-7/theme-compatibility-2/"></a>',
+	);
+	$active_special_cases = array();
+	foreach ($known_special_cases as $function => $message){
+		if (function_exists($function)) {
+			if( call_user_func($function) ){
+				$active_special_cases[$function] = $message;
+			}
+		}
+	}
+	if (empty($active_special_cases)) {
+		return false;
+	}else{
+		$output = '<h3>The following cases affect the template hierarchy.</h3>';
+		foreach ($active_special_cases as $key => $value) {
+			$output .= "<div class='$key'>$value</div>";
+		}
+		return $output;
+	}
+}
 /**
  * If in debug mode, show ALL the $GLOBALS at the bottom of the page
  * @since ver 3.0.3
@@ -366,9 +367,10 @@ if(ADMINHELPER_DEBUG_MODE){
 add_action( 'shutdown', 'adminhelper_print_them_globals' );
 }
 function adminhelper_print_them_globals() {
-
-    ksort( $GLOBALS );
-    echo '<pre>';
-    print_r( $GLOBALS );
-    echo '</pre>';
+	if(! is_admin() ){
+	    ksort( $GLOBALS );
+	    echo '<pre>';
+	    echo htmlspecialchars(print_r( $GLOBALS, true ));
+	    echo '</pre>';
+	}
 }

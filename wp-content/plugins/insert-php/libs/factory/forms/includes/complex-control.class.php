@@ -13,13 +13,13 @@
 	if( !defined('ABSPATH') ) {
 		exit;
 	}
-	if( !class_exists('Wbcr_FactoryForms447_ComplexControl') ) {
+	if( !class_exists('Wbcr_FactoryForms454_ComplexControl') ) {
 		/**
 		 * The base class for all controls.
 		 *
 		 * @since 1.0.0
 		 */
-		abstract class Wbcr_FactoryForms447_ComplexControl extends Wbcr_FactoryForms447_Control {
+		abstract class Wbcr_FactoryForms454_ComplexControl extends Wbcr_FactoryForms454_Control {
 
 			/**
 			 * Is this element a complex control?
@@ -33,7 +33,7 @@
 			 * Contains a set of internal controls.
 			 *
 			 * @since 1.0.0
-			 * @var Wbcr_FactoryForms447_Control[]
+			 * @var Wbcr_FactoryForms454_Control[]
 			 */
 			public $inner_controls = array();
 
@@ -41,7 +41,7 @@
 			 * Sets a provider for the control.
 			 *
 			 * @since 1.0.0
-			 * @param Wbcr_IFactoryForms447_ValueProvider $provider
+			 * @param Wbcr_IFactoryForms454_ValueProvider $provider
 			 * @return void
 			 */
 			public function setProvider($provider)

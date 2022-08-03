@@ -5,9 +5,9 @@
  * @author Osman KAYAN <osmnkayan@gmail.com>
  * @author alikayan95@gmail.com
  * @author Cengiz AKCAN cengiz@vobo.company
- * @version 2021-02-20
+ * @version 2022-03-03
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -20,10 +20,13 @@
 		translator : 'I.Taskinoglu & A.Kaya &lt;alikaya@armsyazilim.com&gt;, Abdullah ELEN &lt;abdullahelen@msn.com&gt;, Osman KAYAN &lt;osmnkayan@gmail.com&gt;, alikayan95@gmail.com, Cengiz AKCAN cengiz@vobo.company',
 		language   : 'Türkçe',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 20.02.2021 19:30
-		fancyDateFormat : '$1 H:i', // will show like: Bugün 19:30
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 210220-193050
+		dateFormat : 'd.m.Y H:i', // will show like: 03.03.2022 15:56
+		fancyDateFormat : '$1 H:i', // will show like: Bugün 15:56
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220303-155625
 		messages   : {
+			'getShareText' : 'Paylaş',
+			'Editor ': 'Kod Düzenleyici',
+			
 
 			/********************************** errors **********************************/
 			'error'                : 'Hata',
@@ -119,6 +122,7 @@
 			'errServerError'       : 'Sunucu tarafında beklenilmeyen bir hata oluştu.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : '"$1" klasörü boşaltılamıyor.', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : '"$1" veya daha fazla hata', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Tek seferde 1$\'a kadar klasör oluşturabilirsiniz.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Arşiv oluştur',
@@ -240,9 +244,9 @@
 			'Yesterday'   : 'Dün',
 			'msJan'       : 'Oca',
 			'msFeb'       : 'Şub',
-			'msMar'       : 'Mar',
+			'msMar'       : 'Mart',
 			'msApr'       : 'Nis',
-			'msMay'       : 'May',
+			'msMay'       : 'Mayıs',
 			'msJun'       : 'Haz',
 			'msJul'       : 'Tem',
 			'msAug'       : 'Ağu',

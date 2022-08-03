@@ -14,14 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
+if ( ! class_exists( 'Wbcr_FactoryShortcodes333_Shortcode' ) ) {
 
 	/**
 	 * The base class for all shortcodes.
 	 *
 	 * @since 1.0.0
 	 */
-	abstract class Wbcr_FactoryShortcodes329_Shortcode {
+	abstract class Wbcr_FactoryShortcodes333_Shortcode {
 
 		private static $meta_key_shorcode_assets_for_posts = 'factory_shortcodes_assets';
 
@@ -45,7 +45,7 @@ if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
 		 * A manager that created and track this shortcode.
 		 *
 		 * @since 1.0.0
-		 * @var Wbcr_FactoryShortcodes329_ShortcodeManager
+		 * @var Wbcr_FactoryShortcodes333_ShortcodeManager
 		 */
 		private $manager;
 
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
 		 * Scripts to include on the same page.
 		 *
 		 * @since 1.0.0
-		 * @var Wbcr_Factory450_ScriptList
+		 * @var Wbcr_Factory457_ScriptList
 		 */
 		public $scripts;
 
@@ -61,7 +61,7 @@ if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
 		 * Styles to include on the same page.
 		 *
 		 * @since 1.0.0
-		 * @var Wbcr_Factory450_StyleList
+		 * @var Wbcr_Factory457_StyleList
 		 */
 		public $styles;
 
@@ -89,7 +89,7 @@ if ( ! class_exists( 'Wbcr_FactoryShortcodes329_Shortcode' ) ) {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param Wbcr_Factory450_Plugin $plugin
+		 * @param Wbcr_Factory457_Plugin $plugin
 		 */
 		public function __construct( $plugin ) {
 			$this->plugin = $plugin;

@@ -9,9 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class WINP_SnippetShortcodeText extends WINP_SnippetShortcode {
-	
+
 	public $shortcode_name = 'wbcr_text_snippet';
-	
+
 	/**
 	 * Content render
 	 *
@@ -22,23 +22,23 @@ class WINP_SnippetShortcodeText extends WINP_SnippetShortcode {
 	public function html( $attr, $content, $tag ) {
 		$id = $this->getSnippetId( $attr, WINP_SNIPPET_TYPE_TEXT );
 
-		if( !$id ) {
-			echo '<span style="color:red">' . __('[' . esc_html( $tag ) . ']: Text snippets error (not passed the snippet ID)', 'insert-php') . '</span>';
+		if ( ! $id ) {
+			echo '<span style="color:red">' . __( '[' . esc_html( $tag ) . ']: Text snippets error (not passed the snippet ID)', 'insert-php' ) . '</span>';
 
 			return;
 		}
-		
+
 		$snippet      = get_post( $id );
 		$snippet_meta = get_post_meta( $id, '' );
-		
+
 		if ( ! $snippet || empty( $snippet_meta ) ) {
 			return;
 		}
-		
+
 		$is_activate   = $this->getSnippetActivate( $snippet_meta );
 		$snippet_scope = $this->getSnippetScope( $snippet_meta );
 		$is_condition  = WINP_Plugin::app()->getExecuteObject()->checkCondition( $id );
-		
+
 		if ( ! $is_activate || $snippet_scope != 'shortcode' || ! $is_condition ) {
 			return;
 		}
@@ -48,7 +48,12 @@ class WINP_SnippetShortcodeText extends WINP_SnippetShortcode {
 			$post_content = do_shortcode( $post_content );
 		}
 
+		/**
+		 * Shortcode content filter
+		 * @since 2.4.4
+		 */
+		$post_content = apply_filters('wbcr/inp/snippet/shortcode_text/post_content', $post_content, $id);
+
 		echo str_replace( '{{SNIPPET_CONTENT}}', $content, $post_content );
 	}
-	
 }

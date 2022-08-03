@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Adds new columns
  */
-class WINPUpdate020302 extends Wbcr_Factory450_Update {
+class WINPUpdate020302 extends Wbcr_Factory457_Update {
 
 	public function install() {
 		if ( is_multisite() && $this->plugin->isNetworkActive() ) {

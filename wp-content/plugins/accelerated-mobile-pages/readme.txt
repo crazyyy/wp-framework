@@ -3,8 +3,8 @@ Contributors: mohammed_kaludi, ahmedkaludi, ampforwp
 Tags: AMP, accelerated mobile pages, mobile, amp project, google amp, amp wp, google, plugin, SEO
 Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 3.0
-Tested up to: 5.8
-Stable tag: 1.0.77.35
+Tested up to: 6.0
+Stable tag: 1.0.77.47
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Bug reports for AMP for WP are [welcomed on GitHub](https://github.com/ahmedkalu
 * NEW - Google PageSpeed Optimization with SSR (Server Side Rendering)
 * NEW - CSS Optimization (Tree Shaking) - This will automatically remove all the unused CSS from your AMP pages
 * NEW - Google Font API and Local Fonts Support For All Designs
-* Out of the box compatiblity for Yoast SEO, All in One Seo, Rank Math, Genesis, SEOPress, Bridge Qode SEO, The SEO Framework, SmartCrawl and Squrilly SEO Plugin.
+* Out of the box compatibility for Yoast SEO, All in One Seo, Rank Math, Genesis, SEOPress, Bridge Qode SEO, The SEO Framework, SmartCrawl and Squrilly SEO Plugin.
 * Introducing Page Builder 3.0 for AMP! [Learn More & Video](https://ampforwp.com/tutorials/article/amp-page-builder-installation/)
 * New Default Theme for AMP called Swift
 * 3 Pre-built AMP Layouts for Business websites and landing pages 
@@ -194,22 +194,22 @@ You can contact us from [here](https://ampforwp.com/contact/)
 
 == Changelog ==
 
-= 1.0.77.35 (21th January 2022) =
-* Fixed: Embed URLs not working with Amp takeover active #5193
-* Fixed: Need to change Google Fonts display to optional #5191
-* Fixed: Need to make compatibility of amp analytics in infinite scroll #5194
-* Fixed: Current year is not showing in design 1,2,3 #5190
-* Fixed: VKontakte social media not working in social media profile links #5196
-* Fixed: PHP Notice: tag_rewrite_rules is deprecated #5197
+= 1.0.77.47 (5th July 2022) =
+* Fixed: AMP validation error when youtube video is embeded with query parameters #5292
+* Fixed: Instagram embeds not working when added with blockquote tags #5289
 
-= 1.0.77.34 (11th January 2022) =
-* Fixed: External stylesheet Errors using Vinkmag theme #5189
-* Fixed: AMP Takeover functionality is not working on the blog posts #5188
-* Fixed: Replace webvitalsdev to Microwork #5183
-* Fixed: Wrong Notice for first time installation #5184
+= 1.0.77.46 (28th June 2022) =
+* Fixed: Reduced the execution of JS in youtube embeds #5287
+* Fixed: Instagram embeds not working when added with iframe #5289
+* Fixed: Subchild menu items does not expand with UberMenu plugin
+* Fixed: Incorrect default value in TPD #5286
+* Fixed: Debug Warnings - Undefined array-key: row #5283
 
-= 1.0.77.33 (15th December 2021) =
-* Fixed: Code improvements in AMP options panel #5179
-* Fixed: Stylesheet errors when using Qoxag theme #5177
+= 1.0.77.45 (13th June 2022) =
+* Fixed: Conflict issue with WPML #5274
+* Fixed: Page builder modal is getting hidden below the header of the post/page editor. #5279
+* Fixed: FAQ Schema For Pages And Posts compatibility #5278
+* Fixed: Debug Warnings - Trying to access array offset on value of type null #5277
+* Fixed: fatal error #5280
 
 Full changelog available [ at changelog.txt](https://plugins.svn.wordpress.org/accelerated-mobile-pages/trunk/changelog.txt)

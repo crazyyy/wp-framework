@@ -54,4 +54,11 @@ jQuery(document).ready(function($){
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
+
+	// Start of brute force attack prevention toggle handling
+	jQuery('input[name=aiowps_enable_brute_force_attack_prevention]').on('click', function() {
+		jQuery('input[name=aiowps_brute_force_secret_word]').prop('disabled', !jQuery(this).prop('checked'));
+		jQuery('input[name=aiowps_cookie_based_brute_force_redirect_url]').prop('disabled', !jQuery(this).prop('checked'));
+	});
+	// End of brute force attack prevention toggle handling
 });

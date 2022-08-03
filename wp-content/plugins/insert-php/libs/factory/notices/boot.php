@@ -19,17 +19,17 @@
 		return;
 	}
 
-	if( defined('FACTORY_NOTICES_407_LOADED') ) {
+	if( defined('FACTORY_NOTICES_410_LOADED') ) {
 		return;
 	}
 
-	define('FACTORY_NOTICES_407_LOADED', true);
+	define('FACTORY_NOTICES_410_LOADED', true);
 
-	define('FACTORY_NOTICES_407_VERSION', '4.0.7');
+	define('FACTORY_NOTICES_410_VERSION', '4.1.0');
 
-	define('FACTORY_NOTICES_407_DIR', dirname(__FILE__));
-	define('FACTORY_NOTICES_407_URL', plugins_url(null, __FILE__));
+	define('FACTORY_NOTICES_410_DIR', dirname(__FILE__));
+	define('FACTORY_NOTICES_410_URL', plugins_url(null, __FILE__));
 
 	#comp merge
-	require_once(FACTORY_NOTICES_407_DIR . '/notices.php');
+	require_once(FACTORY_NOTICES_410_DIR . '/notices.php');
 	#endcomp

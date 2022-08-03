@@ -4,10 +4,10 @@
  * Plugin URI: https://woodysnippet.com/
  * Description: Executes PHP code, uses conditional logic to insert ads, text, media content and external service’s code. Ensures no content duplication.
  * Author: Creative Motion, Will Bontrager Software, LLC <will@willmaster.com>
- * Version: 2.4.2
+ * Version: 2.4.6
  * Text Domain: insert-php
  * Domain Path: /languages/
- * Author URI: http://cm-wp.com
+ * Author URI: https://cm-wp.com
  */
 
 /**
@@ -57,7 +57,6 @@
  * Email:         webtemyk@yandex.ru
  * Personal repo: https://github.com/temyk
  * ---------------------------------------------------------------------------------
- *
  */
 
 // Exit if accessed directly
@@ -76,36 +75,37 @@ if ( ! defined( 'ABSPATH' ) ) {
  * -----------------------------------------------------------------------------
  */
 
-require_once( dirname( __FILE__ ) . '/libs/factory/core/includes/class-factory-requirements.php' );
+require_once dirname( __FILE__ ) . '/libs/factory/core/includes/class-factory-requirements.php';
 
-$plugin_info = array(
+$plugin_info = [
 	'prefix'               => 'wbcr_inp_',
 	'plugin_name'          => 'wbcr_insert_php',
 	'plugin_title'         => __( 'Woody Code Snippets', 'insert-php' ),
 	'plugin_text_domain'   => 'insert-php',
 
 	// PLUGIN SUPPORT
-	'support_details'      => array(
-		'url'           => 'https://r.freemius.com/3465/1916966/http://woody-ad-snippets.webcraftic.com',
+	'support_details'      => [
+		'url'           => 'https://r.freemius.com/3465/1916966/https://woodysnippet.com',
 		'affiliate_url' => 'https://r.freemius.com/3465/1916966/',
-		'pages_map'     => array(
+		'pages_map'     => [
 			'features' => 'premium-features',                       // {site}/premium-features
 			'pricing'  => 'pricing',                                // {site}/prices
 			'support'  => 'support',                                // {site}/support
 			'docs'     => 'getting-started-with-woody-ad-snippets', // {site}/docs
-		),
-	),
+		],
+	],
 
 	// PLUGIN ADVERTS
 	'render_adverts'       => true,
-	'adverts_settings'     => array(
+	'adverts_settings'     => [
 		'dashboard_widget' => true, // show dashboard widget (default: false)
 		'right_sidebar'    => true, // show adverts sidebar (default: false)
 		'notice'           => true, // show notice message (default: false)
-	),
+	],
 
 	// PLUGIN UPDATED SETTINGS
-	/*'has_updates'          => false,
+	/*
+	'has_updates'          => false,
 	'updates_settings'     => array(
 		'repository'        => 'wordpress',
 		'slug'              => 'woody-ad-snippets',
@@ -117,45 +117,45 @@ $plugin_info = array(
 
 	// PLUGIN PREMIUM SETTINGS
 	'has_premium'          => true,
-	'license_settings'     => array(
+	'license_settings'     => [
 		'provider'         => 'freemius',
 		'slug'             => 'woody-ad-snippets-premium',
 		'plugin_id'        => '3465',
 		'public_key'       => 'pk_fc5703fe4f4fbc3e87f17fce5e0b8',
 		'price'            => 19,
 		'has_updates'      => true,
-		'updates_settings' => array(
+		'updates_settings' => [
 			'maybe_rollback'    => true,
-			'rollback_settings' => array(
+			'rollback_settings' => [
 				'prev_stable_version' => '0.0.0',
-			),
-		),
-	),
+			],
+		],
+	],
 
 	// FRAMEWORK MODULES
-	'load_factory_modules' => array(
-		array( 'libs/factory/bootstrap', 'factory_bootstrap_450', 'admin' ),
-		array( 'libs/factory/forms', 'factory_forms_447', 'admin' ),
-		array( 'libs/factory/pages', 'factory_pages_449', 'admin' ),
-		array( 'libs/factory/types', 'factory_types_410' ),
-		array( 'libs/factory/taxonomies', 'factory_taxonomies_330' ),
-		array( 'libs/factory/metaboxes', 'factory_metaboxes_409', 'admin' ),
-		array( 'libs/factory/viewtables', 'factory_viewtables_410', 'admin' ),
-		array( 'libs/factory/shortcodes', 'factory_shortcodes_329', 'all' ),
-		array( 'libs/factory/freemius', 'factory_freemius_138', 'all' ),
-		array( 'libs/factory/adverts', 'factory_adverts_128', 'admin' ),
-		array( 'libs/factory/feedback', 'factory_feedback_112', 'admin' )
-	),
-);
+	'load_factory_modules' => [
+		[ 'libs/factory/bootstrap', 'factory_bootstrap_458', 'admin' ],
+		[ 'libs/factory/forms', 'factory_forms_454', 'admin' ],
+		[ 'libs/factory/pages', 'factory_pages_456', 'admin' ],
+		[ 'libs/factory/types', 'factory_types_413' ],
+		[ 'libs/factory/taxonomies', 'factory_taxonomies_333' ],
+		[ 'libs/factory/metaboxes', 'factory_metaboxes_413', 'admin' ],
+		[ 'libs/factory/viewtables', 'factory_viewtables_413', 'admin' ],
+		[ 'libs/factory/shortcodes', 'factory_shortcodes_333', 'all' ],
+		[ 'libs/factory/freemius', 'factory_freemius_144', 'all' ],
+		[ 'libs/factory/adverts', 'factory_adverts_134', 'admin' ],
+		[ 'libs/factory/feedback', 'factory_feedback_117', 'admin' ],
+	],
+];
 
 /**
  * Checks compatibility with WordPress, php and other plugins.
  */
-$wbcr_compatibility = new Wbcr_Factory450_Requirements( __FILE__, array_merge( $plugin_info, array(
+$wbcr_compatibility = new Wbcr_Factory457_Requirements( __FILE__, array_merge( $plugin_info, [
 	'plugin_already_activate' => defined( 'WINP_PLUGIN_ACTIVE' ),
 	'required_php_version'    => '7.0',
 	'required_wp_version'     => '4.8.0',
-) ) );
+] ) );
 
 /**
  * If the plugin is compatible, it will continue its work, otherwise it will be stopped and the user will receive a warning.
@@ -197,11 +197,11 @@ define( 'WINP_SNIPPET_TYPE_JS', 'js' );
 define( 'WINP_SNIPPET_TYPE_HTML', 'html' );
 define( 'WINP_SNIPPET_TYPE_AD', 'advert' );
 
-require_once( WINP_PLUGIN_DIR . '/libs/factory/core/boot.php' );
-require_once( WINP_PLUGIN_DIR . '/includes/compat.php' );
-require_once( WINP_PLUGIN_DIR . '/includes/class.insertion.locations.php' );
-require_once( WINP_PLUGIN_DIR . '/includes/class.helpers.php' );
-require_once( WINP_PLUGIN_DIR . '/includes/class.plugin.php' );
+require_once WINP_PLUGIN_DIR . '/libs/factory/core/boot.php';
+require_once WINP_PLUGIN_DIR . '/includes/compat.php';
+require_once WINP_PLUGIN_DIR . '/includes/class.insertion.locations.php';
+require_once WINP_PLUGIN_DIR . '/includes/class.helpers.php';
+require_once WINP_PLUGIN_DIR . '/includes/class.plugin.php';
 
 /*
  * Woocommerce Insertion location
@@ -212,16 +212,16 @@ global $winp_snippets_locations;
 $winp_snippets_locations = new WINP_Insertion_Locations();
 
 try {
-	new WINP_Plugin( __FILE__, array_merge( $plugin_info, array(
+	new WINP_Plugin( __FILE__, array_merge( $plugin_info, [
 		'plugin_version'     => WINP_PLUGIN_VERSION,
 		'plugin_text_domain' => $wbcr_compatibility->get_text_domain(),
-	) ) );
+	] ) );
 } catch ( Exception $exception ) {
 	// Plugin wasn't initialized due to an error
 	define( 'WINP_PLUGIN_THROW_ERROR', true );
 
 	$wbcr_plugin_error_func = function () use ( $exception ) {
-		$error = sprintf( "The %s plugin has stopped. <b>Error:</b> %s Code: %s", 'Woody Ad Snippets', $exception->getMessage(), $exception->getCode() );
+		$error = sprintf( 'The %s plugin has stopped. <b>Error:</b> %s Code: %s', 'Woody Ad Snippets', $exception->getMessage(), $exception->getCode() );
 		echo '<div class="notice notice-error"><p>' . $error . '</p></div>';
 	};
 

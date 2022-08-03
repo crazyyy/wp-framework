@@ -8,6 +8,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Crawler extends Root {
+	const LOG_TAG = '🕸️';
+
 	const TYPE_REFRESH_MAP = 'refresh_map';
 	const TYPE_EMPTY = 'empty';
 	const TYPE_BLACKLIST_EMPTY = 'blacklist_empty';
@@ -23,6 +25,7 @@ class Crawler extends Root {
 	private $_sitemeta = 'meta.data';
 	private $_resetfile;
 	private $_end_reason;
+	private $_ncpu = 1;
 
 	private $_crawler_conf = array(
 		'cookies' => array(),
@@ -55,7 +58,13 @@ class Crawler extends Root {
 
 		$this->_summary = self::get_summary();
 
-		Debug2::debug( '🐞 Init' );
+		if(@is_file('/proc/cpuinfo')) {
+			$cpuinfo = file_get_contents('/proc/cpuinfo');
+			preg_match_all('/^processor/m', $cpuinfo, $matches);
+			$this->_ncpu = count($matches[0]) ?: 1;
+		}
+
+		self::debug( 'Init w/ CPU cores=' . $this->_ncpu );
 	}
 
 	/**
@@ -99,7 +108,7 @@ class Crawler extends Root {
 		$msg = __( 'Crawler disabled list is cleared! All crawlers are set to active! ', 'litespeed-cache' );
 		Admin_Display::note( $msg );
 
-		Debug2::debug( '🐞 All crawlers are set to active...... ' );
+		self::debug( 'All crawlers are set to active...... ' );
 	}
 
 	/**
@@ -150,15 +159,15 @@ class Crawler extends Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function save_summary( $data = null ) {
+	public static function save_summary( $data = false, $reload = false, $overwrite = false ) {
 		$instance = self::cls();
 		$instance->_summary[ 'meta_save_time' ] = time();
 
-		if ( $data === null ) {
+		if ( ! $data ) {
 			$data = $instance->_summary;
 		}
 
-		parent::save_summary( $data );
+		parent::save_summary( $data, $reload, $overwrite );
 
 		File::save( LITESPEED_STATIC_DIR . '/crawler/' . $instance->_sitemeta, json_encode( $data ), true );
 	}
@@ -171,12 +180,12 @@ class Crawler extends Root {
 	 */
 	public static function start( $force = false ) {
 		if ( ! Router::can_crawl() ) {
-			Debug2::debug( '🐞 ......crawler is NOT allowed by the server admin......' );
+			self::debug( '......crawler is NOT allowed by the server admin......' );
 			return false;
 		}
 
 		if ( $force ) {
-			Debug2::debug( '🐞 ......crawler manually ran......' );
+			self::debug( '......crawler manually ran......' );
 		}
 
 		self::cls()->_crawl_data( $force );
@@ -189,7 +198,7 @@ class Crawler extends Root {
 	 * @access   private
 	 */
 	private function _crawl_data( $force ) {
-		Debug2::debug( '🐞 ......crawler started......' );
+		self::debug( '......crawler started......' );
 		// for the first time running
 		if ( ! $this->_summary || ! Data::cls()->tb_exist( 'crawler' ) || ! Data::cls()->tb_exist( 'crawler_blacklist' ) ) {
 			$this->cls( 'Crawler_Map' )->gen();
@@ -200,11 +209,11 @@ class Crawler extends Root {
 			// check whole crawling interval
 			$last_fnished_at = $this->_summary[ 'last_full_time_cost' ] + $this->_summary[ 'this_full_beginning_time' ];
 			if ( ! $force && time() - $last_fnished_at < $this->conf( Base::O_CRAWLER_CRAWL_INTERVAL ) ) {
-				Debug2::debug( '🐞 Cron abort: cache warmed already.' );
+				self::debug( 'Cron abort: cache warmed already.' );
 				// if not reach whole crawling interval, exit
 				return;
 			}
-			Debug2::debug( '🐞 TouchedEnd. regenerate sitemap....' );
+			self::debug( 'TouchedEnd. regenerate sitemap....' );
 			$this->cls( 'Crawler_Map' )->gen();
 		}
 
@@ -212,7 +221,7 @@ class Crawler extends Root {
 
 		// Skip the crawlers that in bypassed list
 		while ( ! $this->is_active( $this->_summary[ 'curr_crawler' ] ) && $this->_summary[ 'curr_crawler' ] < count( $this->_crawlers ) ) {
-			Debug2::debug( '🐞 Skipped the Crawler #' . $this->_summary[ 'curr_crawler' ] . ' ......' );
+			self::debug( 'Skipped the Crawler #' . $this->_summary[ 'curr_crawler' ] . ' ......' );
 			$this->_summary[ 'curr_crawler' ]++;
 		}
 		if ( $this->_summary[ 'curr_crawler' ] >= count( $this->_crawlers ) ) {
@@ -318,7 +327,7 @@ class Crawler extends Root {
 		// check if is running
 		if ( $this->_summary['is_running'] && time() - $this->_summary['is_running'] < $this->_crawler_conf[ 'run_duration' ] ) {
 			$this->_end_reason = 'stopped';
-			Debug2::debug( '🐞 The crawler is running.' );
+			self::debug( 'The crawler is running.' );
 			return;
 		}
 
@@ -326,17 +335,16 @@ class Crawler extends Root {
 		$this->_adjust_current_threads();
 		if ( $this->_cur_threads == 0 ) {
 			$this->_end_reason = 'stopped_highload';
-			Debug2::debug( '🐞 Stopped due to heavy load.' );
+			self::debug( 'Stopped due to heavy load.' );
 			return;
 		}
 
 		// log started time
-		$this->_summary['last_start_time'] = time();
-		self::save_summary();
+		self::save_summary( array( 'last_start_time' => time() ) );
 
 		// set time limit
 		$maxTime = (int) ini_get( 'max_execution_time' );
-		Debug2::debug( '🐞 ini_get max_execution_time=' . $maxTime );
+		self::debug( 'ini_get max_execution_time=' . $maxTime );
 		if ( $maxTime == 0 ) {
 			$maxTime = 300; // hardlimit
 		}
@@ -345,13 +353,13 @@ class Crawler extends Root {
 		}
 		if ( $maxTime >= $this->_crawler_conf[ 'run_duration' ] ) {
 			$maxTime = $this->_crawler_conf[ 'run_duration' ];
-			Debug2::debug( '🐞 Use run_duration setting as max_execution_time=' . $maxTime );
+			self::debug( 'Use run_duration setting as max_execution_time=' . $maxTime );
 		}
 		elseif ( ini_set( 'max_execution_time', $this->_crawler_conf[ 'run_duration' ] + 15 ) !== false ) {
 			$maxTime = $this->_crawler_conf[ 'run_duration' ];
-			Debug2::debug( '🐞 ini_set max_execution_time=' . $maxTime );
+			self::debug( 'ini_set max_execution_time=' . $maxTime );
 		}
-		Debug2::debug( '🐞 final max_execution_time=' . $maxTime );
+		self::debug( 'final max_execution_time=' . $maxTime );
 		$this->_max_run_time = $maxTime + time();
 
 		// mark running
@@ -373,13 +381,17 @@ class Crawler extends Root {
 		 * @see  https://wordpress.org/support/topic/crawler-keeps-causing-crashes/
 		 */
 		if ( ! function_exists( 'sys_getloadavg' ) ) {
-			Debug2::debug( '🐞 set threads=0 due to func sys_getloadavg not exist!' );
+			self::debug( 'set threads=0 due to func sys_getloadavg not exist!' );
 			$this->_cur_threads = 0;
 			return;
 		}
 
-		$load = sys_getloadavg();
-		$curload = 1;
+		$curload = sys_getloadavg();
+		$curload = $curload[0];
+		self::debug( 'Server load: ' . $curload );
+		$curload /= $this->_ncpu;
+
+		// $curload = 1;
 
 		if ( $this->_cur_threads == -1 ) {
 			// init
@@ -406,9 +418,9 @@ class Crawler extends Root {
 				}
 			}
 			elseif ( $curload >= $this->_crawler_conf[ 'load_limit' ] ) {
-				if ( $curthreads > 1 ) {// if already 1, keep
+				// if ( $curthreads > 1 ) {// if already 1, keep
 					$curthreads --;
-				}
+				// }
 			}
 			elseif ( ($curload + 1) < $this->_crawler_conf[ 'load_limit' ] ) {
 				if ( $curthreads < $this->conf( Base::O_CRAWLER_THREADS ) ) {
@@ -478,11 +490,11 @@ class Crawler extends Root {
 					// check response
 					if ( $rets[ $row[ 'id' ] ][ 'code' ] == 428 ) { // HTTP/1.1 428 Precondition Required (need to test)
 						$this->_end_reason = 'crawler_disabled';
-						Debug2::debug( '🐞 crawler_disabled' );
+						self::debug( 'crawler_disabled' );
 						return;
 					}
 
-					$status = $this->_status_parse( $rets[ $row[ 'id' ] ][ 'header' ], $rets[ $row[ 'id' ] ][ 'code' ] ); // B or H or M or N(nocache)
+					$status = $this->_status_parse( $rets[ $row[ 'id' ] ][ 'header' ], $rets[ $row[ 'id' ] ][ 'code' ], $row[ 'url' ] ); // B or H or M or N(nocache)
 					$this->_map_status_list[ $status ][ $row[ 'id' ] ] = array(
 						'url'	=> $row[ 'url' ],
 						'code' 	=> $rets[ $row[ 'id' ] ][ 'code' ], // 201 or 200 or 404
@@ -504,7 +516,7 @@ class Crawler extends Root {
 				// check duration
 				if ( $this->_summary[ 'last_update_time' ] > $this->_max_run_time ) {
 					$this->_end_reason = 'stopped_maxtime';
-					Debug2::debug( '🐞 Terminated due to maxtime' );
+					self::debug( 'Terminated due to maxtime' );
 					return;
 					// return __('Stopped due to exceeding defined Maximum Run Time', 'litespeed-cache');
 				}
@@ -519,7 +531,7 @@ class Crawler extends Root {
 				if ( $_time > $this->_summary[ 'pos_reset_check' ] ) {
 					$this->_summary[ 'pos_reset_check' ] = $_time + 5;
 					if ( file_exists( $this->_resetfile ) && unlink( $this->_resetfile ) ) {
-						Debug2::debug( '🐞 Terminated due to reset file' );
+						self::debug( 'Terminated due to reset file' );
 
 						$this->_summary[ 'last_pos' ] = 0;
 						$this->_summary[ 'curr_crawler' ] = 0;
@@ -538,7 +550,7 @@ class Crawler extends Root {
 					$this->_adjust_current_threads();
 					if ( $this->_cur_threads == 0 ) {
 						$this->_end_reason = 'stopped_highload';
-						Debug2::debug( '🐞 Terminated due to highload' );
+						self::debug( 'Terminated due to highload' );
 						return;
 						// return __('Stopped due to load over limit', 'litespeed-cache');
 					}
@@ -553,7 +565,7 @@ class Crawler extends Root {
 		// All URLs are done for current crawler
 		$this->_end_reason = 'end';
 		$this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ][ 'W' ] = 0;
-		Debug2::debug( '🐞 Crawler #' . $this->_summary['curr_crawler'] . ' touched end' );
+		self::debug( 'Crawler #' . $this->_summary['curr_crawler'] . ' touched end' );
 	}
 
 	/**
@@ -581,7 +593,7 @@ class Crawler extends Root {
 				$url = $this->_crawler_conf[ 'base' ] . $row[ 'url' ];
 			}
 			curl_setopt( $curls[ $row[ 'id' ] ], CURLOPT_URL, $url );
-			Debug2::debug( '🐞 Crawling [url] ' . $url . ( $url == $row[ 'url' ] ? '' : ' [ori] ' . $row[ 'url' ] ) );
+			self::debug( 'Crawling [url] ' . $url . ( $url == $row[ 'url' ] ? '' : ' [ori] ' . $row[ 'url' ] ) );
 
 			curl_setopt_array( $curls[ $row[ 'id' ] ], $options );
 
@@ -635,12 +647,22 @@ class Crawler extends Root {
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _status_parse( $header, $code ) {
+	private function _status_parse( $header, $code, $url ) {
 		if ( $code == 201 ) {
 			return 'H';
 		}
 
 		if ( stripos( $header, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
+			// If is from DIVI, taken as miss
+			if ( defined( 'LITESPEED_CRAWLER_IGNORE_NONCACHEABLE' ) && LITESPEED_CRAWLER_IGNORE_NONCACHEABLE ) {
+				return 'M';
+			}
+
+			// If blacklist is disabled
+			if ( ( defined( 'LITESPEED_CRAWLER_DISABLE_BLOCKLIST' ) && LITESPEED_CRAWLER_DISABLE_BLOCKLIST ) || apply_filters( 'litespeed_crawler_disable_blocklist', '__return_false', $url ) ) {
+				return 'M';
+			}
+
 			return 'N'; // Blacklist
 		}
 
@@ -774,7 +796,13 @@ class Crawler extends Root {
 		curl_setopt_array( $ch, $options );
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		$result = curl_exec( $ch );
+		$code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 		curl_close( $ch );
+
+		if ( $code != 200 ) {
+			self::debug('❌ Response code is not 200 in self_curl() [code] ' . var_export( $code, true ) );
+			return false;
+		}
 
 		return $result;
 	}
@@ -796,7 +824,7 @@ class Crawler extends Root {
 			$this->_summary[ 'last_crawler_total_cost' ] = time() - $this->_summary[ 'curr_crawler_beginning_time' ];
 			$count_crawlers = count( $this->list_crawlers() );
 			if ( $this->_summary[ 'curr_crawler' ] >= $count_crawlers ) {
-				Debug2::debug( '🐞 _terminate_running Touched end, whole crawled. Reload crawler!' );
+				self::debug( '_terminate_running Touched end, whole crawled. Reload crawler!' );
 				$this->_summary[ 'curr_crawler' ] = 0;
 				// $this->_summary[ 'crawler_stats' ][ $this->_summary[ 'curr_crawler' ] ] = array();
 				$this->_summary[ 'done' ] = 'touchedEnd';// log done status
@@ -946,8 +974,7 @@ class Crawler extends Root {
 	public function reset_pos() {
 		File::save( $this->_resetfile, time() , true );
 
-		$this->_summary[ 'is_running' ] = 0;
-		self::save_summary();
+		self::save_summary( array( 'is_running' => 0 ) );
 	}
 
 	/**
@@ -975,10 +1002,10 @@ class Crawler extends Root {
 		foreach ( str_split( $status_row ) as $k => $v ) {
 			$reason = $reason_set[ $k ];
 			if ( $reason == 'Man' ) {
-				$reason = __( 'Manually added to blacklist', 'litespeed-cache' );
+				$reason = __( 'Manually added to blocklist', 'litespeed-cache' );
 			}
 			if ( $reason == 'Existed' ) {
-				$reason = __( 'Previously existed in blacklist', 'litespeed-cache' );
+				$reason = __( 'Previously existed in blocklist', 'litespeed-cache' );
 			}
 			if ( $reason ) {
 				$reason = 'data-balloon-pos="up" aria-label="' . $reason . '"';

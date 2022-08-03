@@ -3,8 +3,8 @@ Contributors: kanakogi
 Donate link: http://www.amazon.co.jp/registry/wishlist/2TUGZOYJW8T4T/?_encoding=UTF8&camp=247&creative=7399&linkCode=ur2&tag=wpccc-22
 Tags: : page, pages,theme, themes
 Requires at least: 3.0 or higher
-Tested up to: 5.4.1
-Stable tag: 1.1.3
+Tested up to: 5.9.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

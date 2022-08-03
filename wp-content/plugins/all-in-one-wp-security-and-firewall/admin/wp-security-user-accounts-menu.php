@@ -35,13 +35,6 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu
         );
     }
 
-    function get_current_tab() 
-    {
-        $tab_keys = array_keys($this->menu_tabs);
-        $tab = isset( $_GET['tab'] ) ? sanitize_text_field($_GET['tab']) : $tab_keys[0];
-        return $tab;
-    }
-
     /*
      * Renders our tabs of this menu as nav items
      */
@@ -174,7 +167,7 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu
             $login_nick_name_accounts = AIOWPSecurity_Utility::check_identical_login_and_nick_names();
             if ($login_nick_name_accounts) {
                 echo '<div class="aio_red_box"><p>'.__('Your site currently has the following accounts which have an identical login name and display name.', 'all-in-one-wp-security-and-firewall').'
-                         <span class="description">('.__('Click on the link to edit the settings of that particular user account', 'all-in-one-wp-security-and-firewall').'</span></p></div>';
+                         <span class="description">('.__('Follow the link to edit the user profile of that particular user account, change Nickname, choose a different Display name compared to Username, and press the "Update User" button.)', 'all-in-one-wp-security-and-firewall').'</span></p></div>';
             ?>
                 <table class="form-table">
                     <?php 

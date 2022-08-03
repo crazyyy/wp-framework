@@ -273,7 +273,7 @@ class WINP_Export_Snippet {
 				case 'close':
 					check_admin_referer( 'winp_close_snippet_' . $post_id );
 					wp_delete_post( $post_id );
-					wp_redirect( admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&page=snippet-library-wbcr_insert_php' ) );
+					wp_safe_redirect( admin_url( 'edit.php?post_type=' . WINP_SNIPPETS_POST_TYPE . '&page=snippet-library-wbcr_insert_php' ) );
 					exit();
 					break;
 				default:

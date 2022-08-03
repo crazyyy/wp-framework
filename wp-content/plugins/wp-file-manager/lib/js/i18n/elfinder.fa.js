@@ -1,10 +1,10 @@
 /**
  * فارسی translation
  * @author Keyhan Mohammadpour <keyhan_universityworks@yahoo.com>
- * @author mhs prog <mhs.prog@gmail.com>
- * @version 2021-04-14
+ * @author Farhad Zare <farhad@persianoc.com>
+ * @version 2022-02-28
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,11 +17,12 @@
 		translator : 'Keyhan Mohammadpour &lt;keyhan_universityworks@yahoo.com&gt;, Farhad Zare &lt;farhad@persianoc.com&gt;',
 		language   : 'فارسی',
 		direction  : 'rtl',
-		dateFormat : 'd.m.Y H:i', // will show like: 14.04.2021 19:24
-		fancyDateFormat : '$1 H:i', // will show like: امروز 19:24
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 210414-192445
+		dateFormat : 'd.m.Y H:i', // will show like: 28.02.2022 15:41
+		fancyDateFormat : '$1 H:i', // will show like: امروز 15:41
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220228-154144
 		messages   : {
-
+			'getShareText' : 'اشتراک گذاری',
+			'Editor ': 'ویرایشگر کد',
 			/********************************** errors **********************************/
 			'error'                : 'خطا',
 			'errUnknown'           : 'خطای ناشناخته.',
@@ -116,6 +117,7 @@
 			'errServerError'       : 'خطایی در سمت سرور به وجود آمده است.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'امکان خالی کردن پوشه "$1" وجود ندارد.', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : '$1 خطای دیگر نیز وجود دارد.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'شما می توانید تا $1 پوشه در یک زمان ایجاد کنید.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'ایجاد فایل فشرده',
@@ -287,10 +289,10 @@
 			'sortAlsoTreeview'  : 'همچنین نمای درختی',  // from v2.1.15 added 01.08.2016
 
 			/********************************** new items **********************************/
-			'untitled file.txt' : 'فایل .txt جدید', // added 10.11.2015
+			'untitled file.txt' : 'فایل.txt جدید', // added 10.11.2015
 			'untitled folder'   : 'پوشه جدید',   // added 10.11.2015
 			'Archive'           : 'بایگانی جدید',  // from v2.1 added 10.11.2015
-			'untitled file'     : '$1 فایل جدید',  // from v2.1.41 added 6.8.2018
+			'untitled file'     : 'فایل جدید.$1',  // from v2.1.41 added 6.8.2018
 			'extentionfile'     : '$1: فایل',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
@@ -357,7 +359,7 @@
 			'maintainer'      : 'پشتیبان',
 			'translator'      : 'مترجم',
 			'icons'           : 'آیکون‌ها',
-			'dontforget'      : 'and don\'t forget to take your towel',
+			'dontforget'      : 'و فراموش نکنید که حوله خود را بردارید',
 			'shortcutsof'     : 'میانبرها غیرفعال شده‌اند.',
 			'dropFiles'       : 'فایل ها در این بخش رها کنید.',
 			'or'              : 'یا',
@@ -479,10 +481,10 @@
 			'showHidden'      : 'نمایش موارد پنهان', // from v2.1.41 added 24.7.2018
 			'hideHidden'      : 'موارد مخفی را پنهان کنید', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'نمایش / پنهان کردن موارد پنهان', // from v2.1.41 added 24.7.2018
-			'makefileTypes'   : 'File types to enable with "New file"', // from v2.1.41 added 7.8.2018
+			'makefileTypes'   : 'انواع فایل برای فعال کردن با "فایل جدید"', // from v2.1.41 added 7.8.2018
 			'typeOfTextfile'  : 'نوع فایل نوشتاری', // from v2.1.41 added 7.8.2018
 			'add'             : 'اضافه کردن', // from v2.1.41 added 7.8.2018
-			'theme'           : 'Theme', // from v2.1.43 added 19.10.2018
+			'theme'           : 'تم', // from v2.1.43 added 19.10.2018
 			'default'         : 'پیش فرض', // from v2.1.43 added 19.10.2018
 			'description'     : 'توضیحات', // from v2.1.43 added 19.10.2018
 			'website'         : 'وب سایت', // from v2.1.43 added 19.10.2018
@@ -577,4 +579,3 @@
 		}
 	};
 }));
-

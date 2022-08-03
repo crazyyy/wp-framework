@@ -7,11 +7,10 @@
 #cmplz-document {
   font-size: 14px;
   margin-top: 0;
-  max-width: 600px;
+  max-width: 800px;
   // text-align: justify;
   text-justify: inter-word;
   /* Buttons styles */
-
   input::-moz-focus-inner,
   button::-moz-focus-inner {
     border: 0;
@@ -39,21 +38,20 @@
 	display:inline-block
   }
 
-  .alert {
+  .cmplz-alert {
+	display:none;
     padding: 7px;
     color: white;
     margin: 10px 0;
+	&.cmplz-error {
+	  background-color: #f44336;
+	}
+	&.cmplz-success {
+	  background-color: green;
+	}
   }
 
-  .alert.error {
-    background-color: #f44336;
-  }
-
-  .alert.success {
-    background-color: green;
-  }
-
-  .close {
+  .cmplz-close {
     margin-left: 15px;
     color: white;
     font-weight: bold;
@@ -62,18 +60,17 @@
     line-height: 20px;
     cursor: pointer;
     transition: 0.3s;
+	&:hover {
+	  color: black;
+	}
   }
 
-  .close:hover {
-    color: black;
-  }
   h2, h3 {
     font-size: 22px;
     text-align: left;
     margin-top: 15px;
     text-transform: initial;
     padding-bottom: 10px;
-    border-bottom: 1px solid #c6c6c6;
     margin-bottom: 10px;
   }
 
@@ -171,7 +168,7 @@
 	font-size: 14px;
 	margin-top: 0;
   }
-  p, a, h4, ul{
+  p, h4, ul{
     padding: 0 15px ;
   }
   p{
@@ -212,16 +209,16 @@
   	  &:after {
   		cursor: pointer;
   		content: '';
-  		background: url(../images/down.png) no-repeat;
+  		background: url(../images/chevron-down.svg) no-repeat;
   		transform: rotate(0deg);
   		-webkit-transition: all 0.5s ease;
   		-moz-transition: all 0.5s ease;
   		-o-transition: all 0.5s ease;
   		transition: all 0.5s ease;
   		background-size: cover;
-  		height: 25px;
-  		width: 25px;
-  		margin: 5px;
+  		height: 18px;
+  		width: 18px;
+  		margin: 3px;
 	  }
 	}
 

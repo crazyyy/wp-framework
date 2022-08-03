@@ -798,7 +798,7 @@
 	 * @default ['toolbar', 'places', 'tree', 'path', 'stat']
 	 * @full ['toolbar', 'places', 'tree', 'path', 'stat']
 	 */
-	ui : ['toolbar', 'places', 'tree', 'path', 'stat'],
+	ui : ['toolbar', 'tree', 'path', 'stat'],
 	
 	/**
 	 * Some UI plugins options.
@@ -819,7 +819,6 @@
 			['extract', 'archive'],
 			['search'],
 			['view', 'sort'],
-			['preference', 'help'],
 			['fullscreen']
 		],
 		// toolbar extra options
@@ -836,7 +835,7 @@
 			// If you do not include 'preference' in the context menu you should specify 'auto' or 'always'
 			showPreferenceButton: 'none',
 			// show Preference button into contextmenu of the toolbar (true / false)
-			preferenceInContextmenu: true
+			preferenceInContextmenu: false
 		},
 		// directories tree options
 		tree : {
@@ -1306,7 +1305,7 @@
 		// navbarfolder menu
 		navbar : ['open', 'opennew', 'download', '|', 'upload', 'mkdir', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', 'empty', 'hide', '|', 'rename', '|', 'archive', '|', 'places', 'info', 'chmod', 'netunmount'],
 		// current directory menu
-		cwd    : ['undo', 'redo', '|', 'back', 'up', 'reload', '|', 'upload', 'mkdir', 'mkfile', 'paste', '|', 'empty', 'hide', '|', 'view', 'sort', 'selectall', 'colwidth', '|', 'places', 'info', 'chmod', 'netunmount', '|', 'fullscreen', '|', 'preference'],
+		cwd    : ['undo', 'redo', '|', 'back', 'up', 'reload', '|', 'upload', 'mkdir', 'mkfile', 'paste', '|', 'empty', 'hide', '|', 'view', 'sort', 'selectall', 'colwidth', '|', 'places', 'info', 'chmod', 'netunmount', '|', 'fullscreen'],
 		// current directory file menu
 		files  : ['getfile', '|' ,'open', 'opennew', 'download', 'opendir', 'quicklook', '|', 'upload', 'mkdir', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', 'empty', 'hide', '|', 'rename', 'edit', 'resize', '|', 'archive', 'extract', '|', 'selectall', 'selectinvert', '|', 'places', 'info', 'chmod', 'netunmount']
 	},

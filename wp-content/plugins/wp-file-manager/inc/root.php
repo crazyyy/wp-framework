@@ -2,26 +2,33 @@
 $this->custom_css();
 global $wpdb;
 if (isset($_POST['submit']) && wp_verify_nonce(sanitize_text_field($_POST['wp_filemanager_root_nonce_field']), 'wp_filemanager_root_action')) {
-    if(isset($_POST['fm_max_packet_allowed'])){
-        $packet_value = intval($_POST['fm_max_packet_allowed'] * 1000000);
+    
+  $save_array = 	array(
+    'public_path' => isset($_POST['public_path']) ? str_replace('..', '', htmlentities(trim($_POST['public_path']))) : '',
+    'fm_enable_trash' => isset($_POST['fm_enable_trash']) ? intval($_POST['fm_enable_trash']) : '',
+    'fm_enable_media_upload' => isset($_POST['fm_enable_media_upload']) ? intval($_POST['fm_enable_media_upload']) : '',
+    'fm_max_packet_allowed' => isset($_POST['fm_max_packet_allowed']) ? intval($_POST['fm_max_packet_allowed']) : '',
+);
+  if(isset($_POST['fm_max_packet_allowed'])){
+    $fm_max_packet_allowed = intval($_POST['fm_max_packet_allowed']);
+    $packet_value = intval($fm_max_packet_allowed * 1000000);
+    if($packet_value <= 0 ){
+        
+        $prev_value = get_option('wp_file_manager_settings',true);
+        $packet_value = isset($prev_value['fm_max_packet_allowed']) ? intval($prev_value['fm_max_packet_allowed']) : 0;
+        $save_array['fm_max_packet_allowed'] = $packet_value;
+        $packet_value = intval($packet_value * 1000000);
+    } else {
+        $save_array['fm_max_packet_allowed'] = isset($packet_value) ? intval($packet_value/1000000) : '';
         $set_packet_value = $wpdb->query($wpdb->prepare("SET GLOBAL max_allowed_packet = %d",$packet_value));
     }
-    $save = update_option('wp_file_manager_settings', 
-		array(
-			  'public_path' => isset($_POST['public_path']) ? htmlentities(trim(sanitize_text_field($_POST['public_path']))) : '',
-        'fm_enable_trash' => isset($_POST['fm_enable_trash']) ? intval($_POST['fm_enable_trash']) : '',
-        'fm_enable_media_upload' => isset($_POST['fm_enable_media_upload']) ? intval($_POST['fm_enable_media_upload']) : '',
-        'fm_max_packet_allowed' => isset($_POST['fm_max_packet_allowed']) ? intval($_POST['fm_max_packet_allowed']) : '',
-			)
-		);
+    }
+    $save = update_option('wp_file_manager_settings', $save_array);
+
     if ($save) {
-        echo '<script>';
-        echo 'window.location.href="?page=wp_file_manager_root&status=1"';
-        echo '</script>';
+      mk_file_folder_manager::mk_fm_redirect('admin.php?page=wp_file_manager_preferences&status=1');
     } else {
-        echo '<script>';
-        echo 'window.location.href="?page=wp_file_manager_root&status=2"';
-        echo '</script>';
+      mk_file_folder_manager::mk_fm_redirect('admin.php?page=wp_file_manager_preferences&status=2');
     }
 }
 $settings = get_option('wp_file_manager_settings'); 
@@ -33,10 +40,10 @@ $default_packet_value = intval($default_packet_value / 1000000);
 <div class="wrap fm_rootWrap">
 <?php if (isset($_GET['status']) && intval($_GET['status']) == '1'):?>
 <div class="updated settings-error notice is-dismissible" id="setting-error-settings_updated"> 
-<p><strong><?php _e('Settings saved.', 'wp-file-manager'); ?></strong></p><button id="ad_dismiss" class="notice-dismiss" type="button"><span class="screen-reader-text"><?php _e('Dismiss this notice.', 'wp-file-manager-pro'); ?></span></button></div>
+<p><strong><?php _e('Settings saved.', 'wp-file-manager'); ?></strong></p><button id="ad_dismiss" class="notice-dismiss" type="button"><span class="screen-reader-text"><?php _e('Dismiss this notice.', 'wp-file-manager'); ?></span></button></div>
 <?php elseif (isset($_GET['status']) && intval($_GET['status']) == '2'):?>
 <div class="error updated settings-error notice is-dismissible" id="setting-error-settings_updated"> 
-<p><strong><?php _e('You have not made any changes to be saved.', 'wp-file-manager'); ?></strong></p><button id="ad_dismiss" class="notice-dismiss" type="button"><span class="screen-reader-text"><?php _e('Dismiss this notice.', 'wp-file-manager-pro'); ?></span></button></div>
+<p><strong><?php _e('You have not made any changes to be saved.', 'wp-file-manager'); ?></strong></p><button id="ad_dismiss" class="notice-dismiss" type="button"><span class="screen-reader-text"><?php _e('Dismiss this notice.', 'wp-file-manager'); ?></span></button></div>
 <?php endif; ?>
 <h3 class="fm_headingTitle"><?php _e('Preferences', 'wp-file-manager'); ?></h3>
 <?php $path = str_replace('\\', '/', ABSPATH); ?>
@@ -73,7 +80,7 @@ $default_packet_value = intval($default_packet_value / 1000000);
 <th><?php _e('Maximum allowed size at the time of database backup restore.', 'wp-file-manager'); ?></th>
 <td>
   <div class="fm-packet-area">
-    <input name="fm_max_packet_allowed" type="number" id="fm_max_packet_allowed"  class="regular-text" value="<?php echo (isset($settings['fm_max_packet_allowed']) && !empty($settings['fm_max_packet_allowed'])) ? intval($settings['fm_max_packet_allowed']) : $default_packet_value; ?>"><span class="mb-value">MB </span>
+    <input name="fm_max_packet_allowed" type="number" id="fm_max_packet_allowed" min="1" class="regular-text" value="<?php echo (isset($settings['fm_max_packet_allowed']) && !empty($settings['fm_max_packet_allowed'])) ? intval($settings['fm_max_packet_allowed']) : $default_packet_value; ?>"><span class="mb-value"><?php _e('MB', 'wp-file-manager'); ?> </span>
   </div>
   <p class="description mb15"><?php _e('Please increase field value if you are getting error message at the time of backup restore.', 'wp-file-manager'); ?>
   </p>
@@ -84,10 +91,17 @@ $default_packet_value = intval($default_packet_value / 1000000);
 </form>
 </div>
 </div>
-<script type="text/javascript">
-var admin_page_url = "<?php echo admin_url('admin.php?page=wp_file_manager_root');?>";
-window.history.replaceState({}, document.title, admin_page_url);
-jQuery(document).on('click', '#ad_dismiss', function(){
-  jQuery(this).closest('.notice').remove();
-});
-</script>
+<?php
+$admin_page_url = admin_url('admin.php?page=wp_file_manager_preferences');
+wp_register_script( 'fm-dismiss-notice-js', '', array("jquery"), '', true );
+wp_enqueue_script( 'fm-dismiss-notice-js' );
+wp_add_inline_script(
+'fm-dismiss-notice-js',
+	'setTimeout(function() {
+  window.history.replaceState({}, document.title, "'.$admin_page_url.'");
+  }, 1000);
+  jQuery(document).on("click", "#ad_dismiss", function(){
+    jQuery(this).closest(".notice").remove();
+  });'
+);
+?>

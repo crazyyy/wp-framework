@@ -1,6 +1,8 @@
 window['gtag_enable_tcf_support'] = {enable_tcf_support};
 window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
+function gtag(){
+	dataLayer.push(arguments);
+}
 gtag('consent', 'default', {
 	'security_storage': "granted",
 	'functionality_storage': "granted",
@@ -10,30 +12,36 @@ gtag('consent', 'default', {
 });
 
 document.addEventListener("cmplz_fire_categories", function (e) {
+	function gtag(){
+		dataLayer.push(arguments);
+	}
 	var consentedCategories = e.detail.categories;
+	let preferences = 'denied';
+	let statistics = 'denied';
+	let marketing = 'denied';
+
 	if (cmplz_in_array( 'preferences', consentedCategories )) {
-		gtag('consent', 'update', {
-			'ad_storage': 'granted',
-			'analytics_storage': 'granted',
-			'personalization_storage': 'granted'
-		});
+		preferences = 'granted';
 	}
 
 	if (cmplz_in_array( 'statistics', consentedCategories )) {
-		gtag('consent', 'update', {
-			'analytics_storage': 'granted',
-			'personalization_storage': 'granted',
-		});
+		statistics = 'granted';
 	}
 
 	if (cmplz_in_array( 'marketing', consentedCategories )) {
-		gtag('consent', 'update', {
-			'ad_storage': 'granted',
-		});
+		marketing = 'granted';
 	}
+	gtag('consent', 'update', {
+		'security_storage': "granted",
+		'functionality_storage': "granted",
+		'personalization_storage': preferences,
+		'analytics_storage': statistics,
+		'ad_storage': marketing,
+	});
 });
 
 document.addEventListener("cmplz_cookie_warning_loaded", function (e) {
+
 	gtag('js', new Date());
 	gtag('config', '{G_code}', {
 		cookie_flags:'secure;samesite=none',

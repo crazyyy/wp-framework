@@ -116,7 +116,7 @@ jQuery(document).ready(function(){
         }); //each
 
         if(delarr == '') {
-        alert(fmbackupparams.delete_backup);
+            alert(fmbackupparams.delete_backup);
         } else {
             var r = confirm(fmbackupparams.confirm_del)
             if (r == true) {

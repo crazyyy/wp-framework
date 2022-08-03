@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WINP_FactoryForms_Dropdown' ) ) {
 
-	class WINP_FactoryForms_Dropdown extends Wbcr_FactoryForms447_DropdownControl {
+	class WINP_FactoryForms_Dropdown extends Wbcr_FactoryForms454_DropdownControl {
 
 		public $type = 'winp-dropdown';
 
@@ -46,7 +46,7 @@ if ( ! class_exists( 'WINP_FactoryForms_Dropdown' ) ) {
 					}
 
 					$value = isset( $item['value'] ) ? $item['value'] : '';
-					$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_447' );
+					$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_454' );
 
 					$data = isset( $item['data'] ) ? $item['data'] : null;
 				} else {

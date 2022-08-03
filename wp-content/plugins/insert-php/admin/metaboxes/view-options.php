@@ -25,14 +25,14 @@ class WINP_ViewOptionsMetaBox extends WINP_MetaBox {
 	 *
 	 * @var string
 	 */
-	public $css_class = 'factory-bootstrap-450 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-458 factory-fontawesome-000';
 
 	/**
 	 * WINP_ViewOptionsMetaBox constructor.
 	 *
-	 * @param Wbcr_Factory450_Plugin $plugin
+	 * @param Wbcr_Factory457_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory450_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory457_Plugin $plugin ) {
 		parent::__construct( $plugin );
 
 		$this->title = __( 'Conditional execution logic for the snippet', 'insert-php' );
@@ -41,8 +41,8 @@ class WINP_ViewOptionsMetaBox extends WINP_MetaBox {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param Wbcr_Factory450_ScriptList $scripts   A set of scripts to include.
-	 * @param Wbcr_Factory450_StyleList  $styles    A set of style to include.
+	 * @param Wbcr_Factory457_ScriptList $scripts   A set of scripts to include.
+	 * @param Wbcr_Factory457_StyleList  $styles    A set of style to include.
 	 *
 	 * @return void
 	 */

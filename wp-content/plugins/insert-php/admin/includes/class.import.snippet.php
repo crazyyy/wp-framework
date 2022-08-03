@@ -33,7 +33,7 @@ class WINP_Import_Snippet {
 	 * Process the uploaded import files
 	 *
 	 * @uses import_snippets() to process the import file
-	 * @uses wp_redirect() to pass the import results to the page
+	 * @uses wp_safe_redirect() to pass the import results to the page
 	 * @uses add_query_arg() to append the results to the current URI
 	 */
 	public function import_snippets_proccess() {
@@ -49,12 +49,12 @@ class WINP_Import_Snippet {
 				return;
 			}
 
-			$url = remove_query_arg( [ 'wbcr_inp_error', 'wbcr_inp_imported' ] );
+			$url = esc_url(remove_query_arg( [ 'wbcr_inp_error', 'wbcr_inp_imported' ] ));
 
 			// Only ine files for free version
 			if ( ! WINP_Plugin::app()->get_api_object()->is_key() && count( $_FILES['wbcr_inp_import_files']['tmp_name'] ) > 1 ) {
-				$url = add_query_arg( [ 'wbcr_import_error' => true ], $url );
-				wp_redirect( esc_url_raw( $url ) );
+				$url = esc_url(add_query_arg( [ 'wbcr_import_error' => true ], $url ));
+				wp_safe_redirect( $url );
 				exit;
 			}
 
@@ -81,8 +81,8 @@ class WINP_Import_Snippet {
 				}
 			}
 
-			$url = add_query_arg( $error ? [ 'wbcr_inp_error' => true ] : [ 'wbcr_inp_imported' => $count ], $url );
-			wp_redirect( esc_url_raw( $url ) );
+			$url = esc_url(add_query_arg( $error ? [ 'wbcr_inp_error' => true ] : [ 'wbcr_inp_imported' => $count ], $url ));
+			wp_safe_redirect( $url );
 			exit;
 		}
 	}

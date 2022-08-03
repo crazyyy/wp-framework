@@ -14,17 +14,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( defined( 'FACTORY_TYPES_410_LOADED' ) ) {
+if ( defined( 'FACTORY_TYPES_413_LOADED' ) ) {
 	return;
 }
 
-define( 'FACTORY_TYPES_410_VERSION', '4.1.0' );
-define( 'FACTORY_TYPES_410_LOADED', true );
+define( 'FACTORY_TYPES_413_VERSION', '4.1.3' );
+define( 'FACTORY_TYPES_413_LOADED', true );
 
-define( 'FACTORY_TYPES_410_DIR', dirname( __FILE__ ) );
-define( 'FACTORY_TYPES_410_URL', plugins_url( null, __FILE__ ) );
+define( 'FACTORY_TYPES_413_DIR', dirname( __FILE__ ) );
+define( 'FACTORY_TYPES_413_URL', plugins_url( null, __FILE__ ) );
 
-load_plugin_textdomain( 'wbcr_factory_types_410', false, dirname( plugin_basename( __FILE__ ) ) . '/langs' );
+load_plugin_textdomain( 'wbcr_factory_types_413', false, dirname( plugin_basename( __FILE__ ) ) . '/langs' );
 
 // sets version of admin interface
 if ( is_admin() ) {
@@ -34,7 +34,7 @@ if ( is_admin() ) {
 }
 
 #comp merge
-require( FACTORY_TYPES_410_DIR . '/types.php' );
-require( FACTORY_TYPES_410_DIR . '/type.class.php' );
-require( FACTORY_TYPES_410_DIR . '/includes/type-menu.class.php' );
+require( FACTORY_TYPES_413_DIR . '/types.php' );
+require( FACTORY_TYPES_413_DIR . '/type.class.php' );
+require( FACTORY_TYPES_413_DIR . '/includes/type-menu.class.php' );
 #endcomp

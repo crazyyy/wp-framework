@@ -499,7 +499,7 @@ class CMPLZ_Link extends Widget_Base {
      * @since 1.5.0
      * @access protected
      */
-    protected function render_text() {
+    protected function render_text(Widget_Base $instance = null) {
         $settings = $this->get_settings_for_display();
 
         $migrated = isset( $settings['__fa4_migrated']['selected_icon'] );

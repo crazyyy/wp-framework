@@ -2,9 +2,9 @@
  * Bulgarian translation
  * @author Stamo Petkov <stamo.petkov@gmail.com>
  * @author Nikolay Petkov <office@cmstory.com>
- * @version 2018-07-28
+ * @version 2022-02-25
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,11 +17,12 @@
 		translator : 'Stamo Petkov &lt;stamo.petkov@gmail.com&gt;, Nikolay Petkov &lt;office@cmstory.com&gt;',
 		language   : 'Bulgarian',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // Mar 13, 2012 05:27 PM
-		fancyDateFormat : '$1 H:i', // will produce smth like: Today 12:25 PM
-		nonameDateFormat : 'Ymd-His', // to apply if upload file is noname: 120513172700
+		dateFormat : 'd.m.Y H:i', // will show like: 25.02.2022 18:31
+		fancyDateFormat : '$1 H:i', // will show like: днес 18:31
+		nonameDateFormat : 'Ymd-His', // noname upload will show like: 20220225-183105
 		messages   : {
-
+			'getShareText' : 'Сподели',
+			'Editor ': 'Редактор на кодове',
 			/********************************** errors **********************************/
 			'error'                : 'Грешка',
 			'errUnknown'           : 'Непозната грешка.',
@@ -115,6 +116,8 @@
 			'errEditorNotFound'    : 'Не е намерен редактор за този тип файл.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Възникна грешка на сървъра.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Папката "$1" не може да се изпразни.', // from v2.1.25 added 22.6.2017
+			'moreErrors'           : 'Има още $1 грешки.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Можете да създадете до $1 папки наведнъж.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Създай архив',
@@ -129,7 +132,7 @@
 			'cmdgetfile'   : 'Избери файлове',
 			'cmdhelp'      : 'За тази програма',
 			'cmdhome'      : 'Начало',
-			'cmdinfo'      : 'Информация',
+			'cmdinfo'      : 'Получете информация и споделете',
 			'cmdmkdir'     : 'Нова папка',
 			'cmdmkdirin'   : 'В нова папка', // from v2.1.7 added 19.2.2016
 			'cmdmkfile'    : 'Нов файл',
@@ -225,6 +228,7 @@
 			'ntfchkdir'   : 'Проверка на целевата папка', // from v2.1.24 added 3.5.2017
 			'ntfundo'     : 'Отмяна на предишната операция', // from v2.1.27 added 31.07.2017
 			'ntfredo'     : 'Възстановяване на предходните отменени', // from v2.1.27 added 31.07.2017
+			'ntfchkcontent' : 'Проверка на съдържанието', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
 			'volume_Trash' : 'Кошче', //from v2.1.24 added 29.4.2017
@@ -285,9 +289,12 @@
 			'sortAlsoTreeview'  : 'Също дървовиден изглед',  // from v2.1.15 added 01.08.2016
 
 			/********************************** new items **********************************/
-			'untitled file.txt' : 'NewFile.txt', // added 10.11.2015
-			'untitled folder'   : 'NewFolder',   // added 10.11.2015
-			'Archive'           : 'NewArchive',  // from v2.1 added 10.11.2015
+			'untitled file.txt' : 'Нов файл.txt', // added 10.11.2015
+			'untitled folder'   : 'Нова папка',   // added 10.11.2015
+			'Archive'           : 'Нов архив',  // from v2.1 added 10.11.2015
+			'untitled file'     : 'Нов файл.$1',  // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: Файл',    // from v2.1.41 added 6.8.2018
+			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Изисква се подтвърждение',
@@ -298,6 +305,7 @@
 			'confirmNonUTF8'  : 'Кодирането на този файл не може да бъде открито. Необходимо е временно да се преобразува в UTF-8 за редактиране. <br/> Моля, изберете кодиране на този файл.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Има направени промени.<br/>Те ще бъдат загубени, ако не запишете промените.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Наистина ли искате да преместите позиции в кошчето за боклук?', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'Наистина ли искате да преместите елементи в "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Приложи за всички',
 			'name'            : 'Име',
 			'size'            : 'Размер',
@@ -437,6 +445,7 @@
 			'clearBrowserData': 'Инициализирайте настройките запаметени в този браузър', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Настройки на лентата с инструменти', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... $1 символа остават.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $1 оставени редове.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Сумарно', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Груб размер на файла', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Фокусирайте върху елемента в диалоговия прозорец с мишката',  // from v2.1.30 added 2.11.2017
@@ -453,10 +462,10 @@
 			'columnPref'      : 'Настройки за колони (Изглед в списък)', // from v2.1.32 added 6.2.2018
 			'reflectOnImmediate' : 'Всички промени ще се отразят незабавно в архива.', // from v2.1.33 added 2.3.2018
 			'reflectOnUnmount'   : 'Промените няма да се отразят, докато не размонтирате този диск.', // from v2.1.33 added 2.3.2018
-			'unmountChildren' : 'The following volume(s) mounted on this volume also unmounted. Are you sure to unmount it?', // from v2.1.33 added 5.3.2018
+			'unmountChildren' : 'Следните томове, монтирани на този том, също са демонтирани. Сигурен ли си, че ще го демонтираш?', // from v2.1.33 added 5.3.2018
 			'selectionInfo'   : 'Информация за селекцията', // from v2.1.33 added 7.3.2018
 			'hashChecker'     : 'Алгоритми за показване на файловия хеш', // from v2.1.33 added 10.3.2018
-			'infoItems'       : 'Info Items (Selection Info Panel)', // from v2.1.38 added 28.3.2018
+			'infoItems'       : 'Информационни елементи (информационен панел за избор)', // from v2.1.38 added 28.3.2018
 			'pressAgainToExit': 'Натиснете отново, за да излезете.', // from v2.1.38 added 1.4.2018
 			'toolbar'         : 'Лента с инструменти', // from v2.1.38 added 4.4.2018
 			'workspace'       : 'Работно пространство', // from v2.1.38 added 4.4.2018
@@ -472,6 +481,19 @@
 			'showHidden'      : 'Покажи скритите елементи', // from v2.1.41 added 24.7.2018
 			'hideHidden'      : 'Скрий скритите елементи', // from v2.1.41 added 24.7.2018
 			'toggleHidden'    : 'Покажи/скрий скритите елементи', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'Типове файлове за активиране с "Нов файл"', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Тип на текстовия файл', // from v2.1.41 added 7.8.2018
+			'add'             : 'Добавете', // from v2.1.41 added 7.8.2018
+			'theme'           : 'Тема', // from v2.1.43 added 19.10.2018
+			'default'         : 'По подразбиране', // from v2.1.43 added 19.10.2018
+			'description'     : 'Описание', // from v2.1.43 added 19.10.2018
+			'website'         : 'уебсайт', // from v2.1.43 added 19.10.2018
+			'author'          : 'Автор', // from v2.1.43 added 19.10.2018
+			'email'           : 'електронна поща', // from v2.1.43 added 19.10.2018
+			'license'         : 'Лиценз', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'Този елемент не може да бъде запазен. За да избегнете загубата на редакциите, трябва да експортирате на вашия компютър.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Щракнете двукратно върху файла, за да го изберете.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Използвайте режим на цял екран', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Непознат',
@@ -557,3 +579,5 @@
 		}
 	};
 }));
+
+D

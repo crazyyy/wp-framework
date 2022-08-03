@@ -41,18 +41,18 @@ add_action( 'admin_init', function () {
 	$plugin = WINP_Plugin::app();
 
 	// Register metaboxes
-	require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/base-options.php' );
+	require_once WINP_PLUGIN_DIR . '/admin/metaboxes/base-options.php' ;
 	WINP_Helper::register_factory_metaboxes( new WINP_BaseOptionsMetaBox( $plugin ), WINP_SNIPPETS_POST_TYPE, $plugin );
 
 	if ( ( defined( 'FACTORY_ADVERTS_DEBUG' ) && FACTORY_ADVERTS_DEBUG ) || ! WINP_Plugin::app()->premium->is_activate() ) {
-		require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/info.php' );
+		require_once WINP_PLUGIN_DIR . '/admin/metaboxes/info.php' ;
 		WINP_Helper::register_factory_metaboxes( new WINP_InfoMetaBox( $plugin ), WINP_SNIPPETS_POST_TYPE, $plugin );
 	}
 
 	$snippet_type = WINP_Helper::get_snippet_type();
 
 	if ( $snippet_type !== WINP_SNIPPET_TYPE_PHP ) {
-		require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/view-options.php' );
+		require_once WINP_PLUGIN_DIR . '/admin/metaboxes/view-options.php' ;
 		WINP_Helper::register_factory_metaboxes( new WINP_ViewOptionsMetaBox( $plugin ), WINP_SNIPPETS_POST_TYPE, $plugin );
 	}
 
@@ -67,7 +67,7 @@ add_action( 'admin_init', function () {
 			if ( WINP_Helper::is_need_show_about_page() && current_user_can( 'manage_options' ) ) {
 				try {
 					$redirect_url = '';
-					if ( class_exists( 'Wbcr_FactoryPages449' ) ) {
+					if ( class_exists( 'Wbcr_FactoryPages456' ) ) {
 						$redirect_url = WINP_Plugin::app()->getPluginPageUrl( 'about', [ 'wbcr_inp_about_page_viewed' => 1 ] );
 					}
 					if ( $redirect_url ) {
@@ -89,7 +89,7 @@ add_action( 'admin_init', function () {
 function wbcr_inp_admin_revisions() {
 	$plugin = WINP_Plugin::app();
 
-	require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/revisions.php' );
+	require_once WINP_PLUGIN_DIR . '/admin/metaboxes/revisions.php' ;
 	WINP_Helper::register_factory_metaboxes( new WINP_RevisionsMetaBox( $plugin ), WINP_SNIPPETS_POST_TYPE, $plugin );
 }
 
@@ -127,7 +127,7 @@ function wbcr_inp_enqueue_tinymce_assets( $hook ) {
 		'widgets.php'
 	];
 
-	if ( ! in_array( $hook, $pages ) || ! current_user_can( 'manage_options' ) ) {
+	if ( ! in_array( $hook, $pages ) || ! current_user_can( 'edit_posts' ) ) {
 		return;
 	}
 
@@ -144,7 +144,7 @@ add_action( 'admin_enqueue_scripts', 'wbcr_inp_enqueue_scripts' );
  * @see   before_wp_tiny_mce
  */
 function wbcr_inp_tinymce_data( $hook ) {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'edit_posts' ) ) {
 		return;
 	}
 

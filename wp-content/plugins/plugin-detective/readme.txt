@@ -2,10 +2,10 @@
 Contributors:      croixhaug, nataliemac
 Donate link:       http://nsqua.red
 Tags:
-Requires at least: 4.4
-Tested up to:      5.8
+Requires at least: 5.8
+Tested up to:      5.9
 Requires PHP:      5.3
-Stable tag:        1.1.9
+Stable tag:        1.2.1
 License:           GPLv2
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ Would this just be a tool for you (the network admin)? Or would you want your si
 
 
 == Changelog ==
+= 1.2.1 =
+* Fixed for WP 5.9 compatibility
+
 = 1.1.8 =
 * Fixed for WP 5.8 compatibility
 

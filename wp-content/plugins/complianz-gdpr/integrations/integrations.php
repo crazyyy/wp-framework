@@ -11,9 +11,6 @@ function cmplz_enqueue_integrations_assets( $hook ) {
 
 	wp_register_script( ' cmplz-pagify', trailingslashit( cmplz_url ) . 'assets/pagify/pagify.min.js', array( "jquery" ), cmplz_version );
 	wp_enqueue_script( ' cmplz-pagify' );
-
-	wp_register_style( ' cmplz-pagify', trailingslashit( cmplz_url ) . 'assets/pagify/pagify.css', false, cmplz_version );
-	wp_enqueue_style( ' cmplz-pagify' );
 }
 add_action( 'admin_enqueue_scripts', 'cmplz_enqueue_integrations_assets' );
 
@@ -25,9 +22,39 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'firstparty_marketing' => false,
 	),
 
+	'advanced-ads' => array(
+			'constant_or_function' => 'ADVADS_VERSION',
+			'label'                => 'Advanced Ads',
+			'firstparty_marketing' => false,
+	),
+
+	'bb-powerpack' => array(
+			'constant_or_function' => 'BB_PowerPack',
+			'label'                => 'Beaver Builder Power Pack',
+			'firstparty_marketing' => false,
+	),
+
+	'lead-forensics' => array(
+			'constant_or_function' => 'LFRTrackingCode',
+			'label'                => 'Lead Forensics',
+			'firstparty_marketing' => false,
+	),
+
+	'burst-statistics' => array(
+			'constant_or_function' => 'burst_version',
+			'label'                => 'Burst Statistics',
+			'firstparty_marketing' => false,
+	),
+
 	'theeventscalendar' => array(
 			'constant_or_function' => 'TRIBE_EVENTS_FILE',
 			'label'                => 'The Events Calendar',
+			'firstparty_marketing' => false,
+	),
+
+	'themify-builder' => array(
+			'constant_or_function' => 'themify_builder_theme_check',
+			'label'                => 'Themify Builder',
 			'firstparty_marketing' => false,
 	),
 
@@ -51,7 +78,7 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 
 	'ultimate-addons-elementor' => array(
 			'constant_or_function' => 'UAEL_FILE',
-			'label'                => 'Ultimate Addons for Elementor',
+			'label'                => 'Ultimate Addons for Elementor - Google Maps',
 			'firstparty_marketing' => false,
 	),
 
@@ -71,6 +98,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'constant_or_function' => 'NOVO_MAP_VERSION',
 			'label'                => 'Novo-Map',
 			'firstparty_marketing' => false,
+	),
+
+	'wpadverts' => array(
+		'constant_or_function' => 'ADVERTS_PATH',
+		'label'                => 'WP Adverts',
+		'firstparty_marketing' => false,
 	),
 
 	'citadela-directory' => array(
@@ -145,6 +178,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'firstparty_marketing' => false,
 	),
 
+	'flexible-map'               => array(
+			'constant_or_function' => 'FLXMAP_PLUGIN_VERSION',
+			'label'                => 'Flexible Map',
+			'firstparty_marketing' => false,
+	),
+
 	'activecampaign'               => array(
 		'constant_or_function' => 'ACTIVECAMPAIGN_URL',
 		'label'                => 'Active Campaign',
@@ -207,6 +246,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 	'user-registration' => array(
 		'constant_or_function' => 'UR',
 		'label'                => 'User Registration',
+		'firstparty_marketing' => false,
+	),
+
+	'user-registration-pro' => array(
+		'constant_or_function' => 'User_Registration_Pro_Shortcodes',
+		'label'                => 'User Registration Pro',
 		'firstparty_marketing' => false,
 	),
 
@@ -373,6 +418,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'firstparty_marketing' => false,
 	),
 
+	'lazy-loader' => array(
+		'constant_or_function' => 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin',
+		'label'                => 'Lazy Loader',
+		'firstparty_marketing' => false,
+	),
+
 	'osm' => array(
 		'constant_or_function' => 'OSM_PLUGIN_URL',
 		'label'                => 'OSM - OpenStreetMap',
@@ -385,9 +436,20 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'firstparty_marketing' => false,
 	),
 
+	'superfly-menu' => array(
+		'constant_or_function' => 'SFM_VERSION_KEY',
+		'label'                => 'Superfly Menu',
+		'firstparty_marketing' => false,
+	),
+
 	'wp-store-locator' => array(
 		'constant_or_function' => 'WPSL_VERSION_NUM',
 		'label'                => 'WP Store Locator',
+		'firstparty_marketing' => false,
+	),
+	'thrive' => array(
+		'constant_or_function' => 'Thrive_Product_Manager',
+		'label'                => 'Thrive',
 		'firstparty_marketing' => false,
 	),
 
@@ -395,6 +457,11 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'constant_or_function' => 'GF_MIN_WP_VERSION',
 		'label'                => 'Gravity Forms',
 		'firstparty_marketing' => false,
+	),
+	'qtranslate'               => array(
+			'constant_or_function' => 'QTX_VERSION',
+			'label'                => 'qTranslate-XT',
+			'firstparty_marketing' => false,
 	),
 ) );
 
@@ -498,9 +565,9 @@ function cmplz_integrations() {
 			}
 		}
 	}
-	update_option('cmplz_active_integrations',  $actual_integrations_count);
 
 	if ( $stored_integrations_count != $actual_integrations_count) {
+		update_option('cmplz_active_integrations',  $actual_integrations_count);
 		update_option('cmplz_integrations_changed', true );
 	}
 
@@ -550,7 +617,9 @@ function cmplz_integrations() {
 	if ( $statistics === 'google-analytics' ) {
 		require_once( 'statistics/google-analytics.php' );
 	}
-
+	if ( $statistics === 'matomo' && cmplz_get_value('configuration_by_complianz') !=='yes' ) {
+		require_once( 'statistics/matomo.php' );
+	}
 }
 
 add_action( 'plugins_loaded', 'cmplz_integrations', 10 );
@@ -667,7 +736,7 @@ function cmplz_notify_of_plugin_integrations( $warnings ){
 	foreach ($fields as $id => $field ) {
 		if ($field['disabled']) continue;
 		$warnings[$id] = array(
-			'open' => sprintf(__( 'We have enabled the %s integration.', 'complianz-gdpr' ), $field['label']).cmplz_read_more("https://complianz.io/enabled-integration"),
+			'open' => cmplz_sprintf(__( 'We have enabled the %s integration.', 'complianz-gdpr' ), $field['label']).cmplz_read_more("https://complianz.io/enabled-integration"),
 			'include_in_progress' => false,
 		);
 	}

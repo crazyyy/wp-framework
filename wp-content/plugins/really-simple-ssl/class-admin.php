@@ -15,7 +15,7 @@ class rsssl_admin extends rsssl_front_end
     public $ssl_enabled = FALSE;
 
     //multisite variables
-    public $sites = Array(); //for multisite, list of all activated sites.
+    public $sites = array(); //for multisite, list of all activated sites.
 
     //general settings
     public $capability = 'activate_plugins';
@@ -236,9 +236,8 @@ class rsssl_admin extends rsssl_front_end
 
         //when configuration should run again
         if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
-            if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
             $this->detect_configuration();
-
+	        if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
             //flush caches when just activated ssl
             //flush the permalinks
             if ($this->clicked_activate_ssl()) {
@@ -316,6 +315,22 @@ class rsssl_admin extends rsssl_front_end
                 $options['disable_ocsp'] = true;
 			    update_option( 'rsssl_options_lets-encrypt', $options );
                 delete_option('rsssl_disable_ocsp');
+		    }
+	    }
+
+	    if ( $prev_version && version_compare( $prev_version, '5.3.0', '<=' ) ) {
+
+		    if ( file_exists($this->htaccess_file() ) && is_writable($this->htaccess_file() ) ) {
+			    $htaccess = file_get_contents( $this->htaccess_file() );
+
+                $pattern_start = "/rlrssslReallySimpleSSL rsssl_version\[.*.]/";
+                $pattern_end = "/rlrssslReallySimpleSSL/";
+
+			    if ( preg_match_all( $pattern_start, $htaccess ) ) {
+				    $htaccess = preg_replace( $pattern_start, "Really Simple SSL Redirect " . rsssl_version, $htaccess );
+				    $htaccess = preg_replace( $pattern_end, "Really Simple SSL Redirect", $htaccess );
+				    file_put_contents( $this->htaccess_file(), $htaccess );
+			    }
 		    }
 	    }
 
@@ -584,7 +599,7 @@ class rsssl_admin extends rsssl_front_end
                 <li class="rsssl-error">
                     <?php _e("Could not test certificate.", "really-simple-ssl") ?>&nbsp;<?php _e("Automatic certificate detection is not possible on your server.", "really-simple-ssl") ?>
 		            <?php RSSSL()->rsssl_help->get_help_tip(__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
-                </li>            
+                </li>
             <?php } else { ?>
                 <li class="rsssl-error"><?php _e("No SSL certificate has been detected.", "really-simple-ssl") ?>&nbsp;
                     <?php printf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>') ?>
@@ -982,54 +997,46 @@ class rsssl_admin extends rsssl_front_end
 
     }
 
-    /**
-     * Creates an array of all domains where the plugin is active AND SSL is active, only used for multisite.
-     *
-     * @since  2.1
-     *
-     * @access public
-     *
-     */
+	/**
+	 * Creates an array of all domains where the plugin is active AND SSL is active, only used for multisite.
+	 *
+	 * @since  2.1
+	 *
+	 * @access public
+	 *
+	 */
 
-    public function build_domain_list()
-    {
-        if (!is_multisite()) return;
+	public function build_domain_list()
+	{
+		if ( !is_multisite() ) return;
 
-        $this->sites = get_transient('rsssl_domain_list');
-        if (!$this->sites) {
+		$this->sites = get_transient('rsssl_domain_list');
+		if ( !$this->sites ) {
+			//create list of all activated sites with SSL
+			$this->sites = array();
+			$nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
+            if ( $nr_of_sites <= 50 ) {
+	            $sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
+	            foreach ($sites as $site) {
+		            $this->switch_to_blog_bw_compatible($site);
+		            $options = get_option('rlrsssl_options');
+		            $ssl_enabled = FALSE;
+		            if (isset($options)) {
+			            $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
+			            $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
+		            }
 
-            //create list of all activated sites with SSL
-            $this->sites = array();
-            $nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
-            $sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
-
-            $this->trace_log("building domain list for multisite...");
-            $has_sites_with_ssl = false;
-            foreach ($sites as $site) {
-                $this->switch_to_blog_bw_compatible($site);
-                $options = get_option('rlrsssl_options');
-
-                $ssl_enabled = FALSE;
-                if (isset($options)) {
-                    $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
-                    $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
-                }
-
-                if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
-                    $this->trace_log("- adding: " . home_url());
-                    $this->sites[] = home_url();
-	                $has_sites_with_ssl = true;
-                }
-                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+		            if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
+			            $this->trace_log("- adding: " . home_url());
+			            $this->sites[] = home_url();
+		            }
+		            restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+	            }
             }
 
-            if (!$has_sites_with_ssl) $this->trace_log("- SSL not enabled on any site " );
-
-            set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
-
-            $this->save_options();
-        }
-    }
+			set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
+		}
+	}
 
     /**
      * check if the plugin was upgraded to a new version
@@ -1073,11 +1080,15 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function trace_log($msg)
+    public function trace_log( $msg )
     {
 	    if (defined('RSSSL_DOING_SYSTEM_STATUS') || (defined('WP_DEBUG') && WP_DEBUG ) )
 
-        if (strpos($this->debug_log, $msg)) return;
+        if ( $this->debug_log !== null ) {
+	        if ( strpos( $this->debug_log, $msg ) ) {
+		        return;
+	        }
+        }
         $this->debug_log = $this->debug_log . "\n" . $msg;
     }
 
@@ -1433,7 +1444,7 @@ class rsssl_admin extends rsssl_front_end
             return "";
         }
 
-        if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide) {
+        if ( is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide ) {
             $rule = "\n" . "//Begin Really Simple SSL Server variable fix" . "\n";
             foreach ($this->sites as $domain) {
                 //remove http or https.
@@ -1609,7 +1620,6 @@ class rsssl_admin extends rsssl_front_end
 	        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
 	        if (is_multisite()) {
 		        RSSSL()->rsssl_multisite->deactivate();
-		        if (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
 	        }
 	        do_action("rsssl_deactivate");
 
@@ -1920,9 +1930,11 @@ class rsssl_admin extends rsssl_front_end
 
             } else {
                 // remove everything
-                $pattern = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+                $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+                $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
                 //only remove if the pattern is there at all
-                if (preg_match($pattern, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
+                if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
+	            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern_new, "", $htaccess);
 
             }
 
@@ -1932,33 +1944,6 @@ class rsssl_admin extends rsssl_front_end
         } else {
             $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
             $this->trace_log("could not remove rules from htaccess, file not writable");
-        }
-    }
-
-    /**
-     * @return bool|string
-     *
-     * Get the .htaccess version
-     *
-     * @access public
-     *
-     */
-
-    public function get_htaccess_version()
-    {
-        if (!file_exists($this->htaccess_file())) return false;
-
-        $htaccess = file_get_contents($this->htaccess_file());
-        $versionpos = strpos($htaccess, "rsssl_version");
-
-        if ($versionpos === false) {
-            //no version found, so not .htaccess rules.
-            return false;
-        } else {
-            //find closing marker of version
-            $close = strpos($htaccess, "]", $versionpos);
-            $version = substr($htaccess, $versionpos + 14, $close - ($versionpos + 14));
-            return $version;
         }
     }
 
@@ -2020,9 +2005,10 @@ class rsssl_admin extends rsssl_front_end
 
         $htaccess = file_get_contents($this->htaccess_file());
 
-        $check = null;
-        preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
-        if (count($check) === 0) {
+        preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $old);
+	    preg_match("/BEGIN Really Simple SSL Redirect/", $htaccess, $new);
+
+        if ( count( $old ) === 0 && count( $new ) === 0 ) {
             return false;
         } else {
             return true;
@@ -2109,10 +2095,6 @@ class rsssl_admin extends rsssl_front_end
 			array(
 				'name' => 'Referrer-Policy',
 				'pattern' =>  'Referrer-Policy',
-			),
-			array(
-				'name' => 'Expect-CT',
-				'pattern' =>  'Expect-CT',
 			),
             array(
                 'name' => 'X-Frame-Options',
@@ -2318,9 +2300,13 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-        $htaccess = file_get_contents($this->htaccess_file());
-        $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
-        $htaccess = preg_replace("/\n+/", "\n", $htaccess);
+	    $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+	    $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
+
+	    $htaccess = file_get_contents($this->htaccess_file());
+        $htaccess = preg_replace($pattern_old, "", $htaccess);
+	    $htaccess = preg_replace($pattern_new, "", $htaccess);
+	    $htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
         $rules = $this->get_redirect_rules();
 
@@ -2510,7 +2496,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if (strlen($rule) > 0) {
-            $rule = "\n" . "# BEGIN rlrssslReallySimpleSSL rsssl_version[" . rsssl_version . "]\n" . $rule . "# END rlrssslReallySimpleSSL" . "\n";
+            $rule = "\n" . "# BEGIN Really Simple SSL Redirect" . " " . rsssl_version . "\n" . $rule . "# END Really Simple SSL Redirect" . "\n";
         }
 
         $rule = apply_filters("rsssl_htaccess_output", $rule);
@@ -2925,7 +2911,7 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function admin_tabs($current = 'homepage')
+    public function admin_tabs($current = 'configuration')
     {
         $tabs = array(
             'configuration' => '',
@@ -3917,10 +3903,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function settings_page()
     {
-        if (!current_user_can($this->capability)) return;
-        if ( isset ($_GET['tab'] ) ) $this->admin_tabs( $_GET['tab'] ); else $this->admin_tabs('configuration');
-        if ( isset ($_GET['tab'] ) ) $tab = $_GET['tab']; else $tab = 'configuration';
-
+	    if (!current_user_can($this->capability)) return;
+	    $tab = isset( $_GET['tab']) ? sanitize_title($_GET['tab']) : 'configuration';
+        $this->admin_tabs($tab );
 	    $high_contrast = $this->high_contrast ? 'rsssl-high-contrast' : ''; ?>
         <div class="rsssl-container <?php echo $high_contrast ?>">
             <div class="rsssl-main"><?php
@@ -3930,8 +3915,8 @@ class rsssl_admin extends rsssl_front_end
                         do_action("rsssl_configuration_page");
                         break;
                 }
-                //possibility to hook into the tabs.
                 do_action("show_tab_{$tab}");
+                do_action("rsssl_show_tab_{$tab}");
                 ?>
             </div>
         </div>
@@ -4465,121 +4450,50 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
 	    <?php add_thickbox();?>
-        <?php if ( is_rtl() ) { ?>
+        <?php { ?>
             <style>
                 #TB_ajaxContent.rsssl-deactivation-popup {
                     text-align: center !important;
-                    width:750px;
                 }
                 #TB_window.rsssl-deactivation-popup {
-                    height: 440px !important;
-                    border-right: 7px solid black;
+                    height:390px!important;
+                    top:initial!important;
+                    margin-top:initial!important;
+                    margin-left:initial!important;
+                    display:flex;
+                    flex-direction: column;
+                    top: 50%!important;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width:576px!important;
+                    border-radius:12px!important;
                 }
                 .rsssl-deactivation-popup #TB_title{
-                    height: 70px;
-                    border-bottom: 1px solid #dedede;
+                    padding-bottom: 20px;
+                    border-radius:12px;
+                    border-bottom:none!important;
+                    background:#fff#important;
                 }
                 .rsssl-deactivation-popup #TB_ajaxWindowTitle {
                     font-weight:bold;
-                    font-size:30px;
+                    font-size:20px;
                     padding: 20px;
+                    background:#fff#important;
                 }
 
                 .rsssl-deactivation-popup .tb-close-icon {
-                    color:#dedede;
-                    width: 50px;
-                    height: 50px;
-                    top: 12px;
-                    left: 20px;
-                }
-                .rsssl-deactivation-popup .tb-close-icon:before {
-                    font: normal 50px/50px dashicons;
-                }
-                .rsssl-deactivation-popup #TB_closeWindowButton:focus .tb-close-icon {
-                    outline:0;
-                    box-shadow: 0 0 0 0 #5b9dd9, 0 0 0 0 rgba(30, 140, 190, .8);
-                    color:#dedede;
-                }
-                .rsssl-deactivation-popup #TB_closeWindowButton .tb-close-icon:hover {
-                    color:#666;
-                }
-                .rsssl-deactivation-popup #TB_closeWindowButton:focus {
-                    outline:0;
-                }
-                .rsssl-deactivation-popup #TB_ajaxContent {
-                    width: 100% !important;
-                    padding: 0;
-                }
-
-                .rsssl-deactivation-popup .button-rsssl-tertiary.button {
-                    background-color: #D7263D !important;
-                    color: white !important;
-                    border-color: #D7263D;
-                }
-
-                .rsssl-deactivation-popup .button-rsssl-tertiary.button:hover {
-                    background-color: #f1f1f1 !important;
-                    color: #d7263d !important;
-                }
-
-                .rsssl-deactivate-notice-content {
-                    margin: 20px
-                }
-                .rsssl-deactivate-notice-content h3 , .rsssl-deactivate-notice-content ul{
-                    font-size:1.1em;
-                }
-
-                .rsssl-deactivate-notice-footer {
-                    padding-top: 20px;
-                    position:absolute;
-                    bottom:15px;
-                    width: 94%;
-                    margin-right: 3%;
-                    border-top: 1px solid #dedede;
-                }
-
-                .rsssl-deactivation-popup ul {
-                    list-style: circle;
-                    padding-right: 20px;
-                }
-                .rsssl-deactivation-popup a {
-                    margin-left:10px !important;
-                }
-            </style>
-        <?php } else { ?>
-            <style>
-                #TB_ajaxContent.rsssl-deactivation-popup {
-                    text-align: center !important;
-                    width:750px;
-                }
-                #TB_window.rsssl-deactivation-popup {
-                    height: 440px !important;
-                    border-left: 7px solid black;
-                }
-                .rsssl-deactivation-popup #TB_title{
-                    height: 70px;
-                    border-bottom: 1px solid #dedede;
-                }
-                .rsssl-deactivation-popup #TB_ajaxWindowTitle {
-                    font-weight:bold;
-                    font-size:30px;
-                    padding: 20px;
-                }
-
-                .rsssl-deactivation-popup .tb-close-icon {
-                    color:#dedede;
-                    width: 50px;
-                    height: 50px;
+                    color:#333;
+                    width: 25px;
+                    height: 25px;
                     top: 12px;
                     right: 20px;
                 }
                 .rsssl-deactivation-popup .tb-close-icon:before {
-                    font: normal 50px/50px dashicons;
+                    font: normal 25px/25px dashicons;
                 }
                 .rsssl-deactivation-popup #TB_closeWindowButton:focus .tb-close-icon {
                     outline:0;
-                    box-shadow: 0 0 0 0 #5b9dd9, 0 0 0 0 rgba(30, 140, 190, .8);
-                    color:#dedede;
+                    color:#666;
                 }
                 .rsssl-deactivation-popup #TB_closeWindowButton .tb-close-icon:hover {
                     color:#666;
@@ -4589,7 +4503,8 @@ class rsssl_admin extends rsssl_front_end
                 }
                 .rsssl-deactivation-popup #TB_ajaxContent {
                     width: 100% !important;
-                    padding: 0;
+                    height:initial!important;
+                    padding-left: 20px!important;
                 }
 
                 .rsssl-deactivation-popup .button-rsssl-tertiary.button {
@@ -4605,26 +4520,33 @@ class rsssl_admin extends rsssl_front_end
 
                 .rsssl-deactivate-notice-content {
                     margin: 20px
+                    font-size: 12px!important;
                 }
                 .rsssl-deactivate-notice-content h3 , .rsssl-deactivate-notice-content ul{
-                    font-size:1.1em;
+                    font-size:12px!important;
                 }
 
                 .rsssl-deactivate-notice-footer {
-                    padding-top: 20px;
+                    display: flex;
+                    gap:10px;
+                    padding: 20px 10px 20px 0;
                     position:absolute;
-                    bottom:15px;
-                    width: 94%;
-                    margin-left: 3%;
-                    border-top: 1px solid #dedede;
                 }
 
                 .rsssl-deactivation-popup ul {
-                    list-style: circle;
+                    list-style: disc;
                     padding-left: 20px;
                 }
-                .rsssl-deactivation-popup a {
-                    margin-right:10px !important;
+                .rsssl-deactivate-notice-footer .button {
+                    border-radius: 6px!important;
+                    padding: 10px;
+                    min-width: 120px;
+                    white-space: nowrap;
+                    border-radius: var(--cmplz_button_border_radius);
+                    cursor: pointer;
+                    text-decoration: none;
+                    text-align: center;
+
                 }
             </style>
         <?php } ?>
@@ -4633,7 +4555,7 @@ class rsssl_admin extends rsssl_front_end
                 $('#rsssl_close_tb_window').click(tb_remove);
                 $(document).on('click', '#deactivate-really-simple-ssl', function(e){
                     e.preventDefault();
-                    tb_show( '<?php _e("Are you sure?", "really-simple-ssl") ?>', '#TB_inline?height=420&inlineId=deactivate_keep_ssl', 'null');
+                    tb_show( '<?php _e("Are you sure?", "really-simple-ssl") ?>', '#TB_inline?height=auto&inlineId=deactivate_keep_ssl', 'null');
                     $("#TB_window").addClass('rsssl-deactivation-popup');
 
                 });
@@ -5158,7 +5080,7 @@ if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
 if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
 	function rsssl_detected_duplicate_ssl_plugin( $return_name = false ){
 		$plugin = false;
-		if ( defined('WPLE_VERSION') ){
+		if ( defined('WPLE_PLUGIN_VERSION') ){
 			$plugin = "WP Encryption";
 		} elseif( defined('WPSSL_VER') ) {
 			$plugin = "WP Free SSL";

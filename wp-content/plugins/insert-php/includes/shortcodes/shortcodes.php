@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes329_Shortcode {
+class WINP_SnippetShortcode extends Wbcr_FactoryShortcodes333_Shortcode {
 
 	public $shortcode_name = 'wbcr_php_snippet';
 

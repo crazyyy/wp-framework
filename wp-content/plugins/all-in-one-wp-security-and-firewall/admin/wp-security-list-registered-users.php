@@ -266,7 +266,7 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
                     }
                 }
                 $msg = __('The selected IP addresses were successfully added to the permanent block list!','all-in-one-wp-security-and-firewall');
-                $msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=tab4" target="_blank">'.__('View Blocked IPs','all-in-one-wp-security-and-firewall').'</a>';
+                $msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=tab3" target="_blank">'.__('View Blocked IPs','all-in-one-wp-security-and-firewall').'</a>';
                 AIOWPSecurity_Admin_Menu::show_msg_updated_st($msg);
             }
         } elseif ($entries != NULL)
@@ -283,7 +283,7 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
             if($result === true)
             {
                 $msg = __('The selected IP was successfully added to the permanent block list!','all-in-one-wp-security-and-firewall');
-                $msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=tab4" target="_blank">'.__('View Blocked IPs','all-in-one-wp-security-and-firewall').'</a>';
+                $msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=tab3" target="_blank">'.__('View Blocked IPs','all-in-one-wp-security-and-firewall').'</a>';
                 AIOWPSecurity_Admin_Menu::show_msg_updated_st($msg);
             }
             else

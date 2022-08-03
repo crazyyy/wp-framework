@@ -228,7 +228,7 @@ class WINP_Helper {
 
 		// (#3)
 		$rest_url    = wp_parse_url( site_url( $prefix ) );
-		$current_url = wp_parse_url( add_query_arg( [] ) );
+		$current_url = wp_parse_url( esc_url(add_query_arg( [] )) );
 
 		return strpos( $current_url['path'], $rest_url['path'], 0 ) === 0;
 	}
@@ -588,7 +588,7 @@ SCRIPT;
 	 * @param $obj
 	 */
 	public static function register_shortcode( $name, $obj ) {
-		Wbcr_FactoryShortcodes329::register( $name, $obj );
+		Wbcr_FactoryShortcodes333::register( $name, $obj );
 	}
 
 	/**
@@ -597,18 +597,18 @@ SCRIPT;
 	 * @return string
 	 */
 	public static function get_factory_class() {
-		return "factory-bootstrap-450 factory-fontawesome-000";
+		return "factory-bootstrap-458 factory-fontawesome-000";
 	}
 
 	/**
-	 * Wrapper for Wbcr_FactoryForms447_OptionsValueProvider object
+	 * Wrapper for Wbcr_FactoryForms454_OptionsValueProvider object
 	 *
 	 * @param $plugin
 	 *
-	 * @return Wbcr_FactoryForms447_OptionsValueProvider
+	 * @return Wbcr_FactoryForms454_OptionsValueProvider
 	 */
 	public static function get_options_value_provider( $plugin ) {
-		return new Wbcr_FactoryForms447_OptionsValueProvider( $plugin );
+		return new Wbcr_FactoryForms454_OptionsValueProvider( $plugin );
 	}
 
 	/**
@@ -617,10 +617,10 @@ SCRIPT;
 	 * @param $options
 	 * @param $plugin
 	 *
-	 * @return Wbcr_FactoryForms447_Form
+	 * @return Wbcr_FactoryForms454_Form
 	 */
 	public static function get_factory_form( $options, $plugin ) {
-		return new Wbcr_FactoryForms447_Form( $options, $plugin );
+		return new Wbcr_FactoryForms454_Form( $options, $plugin );
 	}
 
 	/**
@@ -631,7 +631,7 @@ SCRIPT;
 	 * @param $plugin
 	 */
 	public static function register_factory_metaboxes( $class_name_or_object, $post_type, $plugin ) {
-		Wbcr_FactoryMetaboxes409::registerFor( $class_name_or_object, $post_type, $plugin );
+		Wbcr_FactoryMetaboxes413::registerFor( $class_name_or_object, $post_type, $plugin );
 	}
 
 	/**

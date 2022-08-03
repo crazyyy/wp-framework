@@ -12,6 +12,13 @@
 	max-width: 100%;
   }
 }
+@media (max-width: 1023px ) {
+  .cmplz-cookiebanner {
+	transform: translateX(-50%);
+	bottom: 0;
+	top: initial;
+  }
+}
 
 @media (min-width: 1024px ) {
   .cmplz-cookiebanner {
@@ -74,8 +81,7 @@
 	  grid-column-start: 3;
 	  grid-column-end: 4;
 	  grid-row-start: 5;
-	  //manage third parties hidden until consent per service is released
-	  //display: flex;
+	  display: flex;
 	  justify-content: flex-end;
 	}
 

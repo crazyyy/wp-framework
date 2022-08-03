@@ -131,12 +131,11 @@ class Img_Optm extends Base {
 		// Get images
 		$q = "SELECT b.post_id, b.meta_value
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
 			LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-				AND b.meta_key = '_wp_attachment_metadata'
 				AND c.id IS NULL
 			ORDER BY a.ID DESC
 			LIMIT %d
@@ -1273,7 +1272,7 @@ class Img_Optm extends Base {
 		$list = $wpdb->get_results( $wpdb->prepare( $q, $offset * $limit, $limit + 1 ) ); // last one is the seed for next batch
 
 		if ( ! $list ) {
-			$msg = __( 'Rescaned successfully.', 'litespeed-cache' );
+			$msg = __( 'Rescanned successfully.', 'litespeed-cache' );
 			Admin_Display::succeed( $msg );
 
 			Debug2::debug( '[Img_Optm] rescan bypass: no gathered image found' );
@@ -1338,7 +1337,7 @@ class Img_Optm extends Base {
 			return Router::self_redirect( Router::ACTION_IMG_OPTM, self::TYPE_RESCAN );
 		}
 
-		$msg = $count ? sprintf( __( 'Rescaned %d images successfully.', 'litespeed-cache' ), $count ) : __( 'Rescaned successfully.', 'litespeed-cache' );
+		$msg = $count ? sprintf( __( 'Rescanned %d images successfully.', 'litespeed-cache' ), $count ) : __( 'Rescanned successfully.', 'litespeed-cache' );
 		Admin_Display::succeed( $msg );
 	}
 
@@ -1478,11 +1477,10 @@ class Img_Optm extends Base {
 
 		$q = "SELECT COUNT(*)
 			FROM `$wpdb->posts` a
-			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+			LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
 			WHERE a.post_type = 'attachment'
 				AND a.post_status = 'inherit'
 				AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-				AND b.meta_key = '_wp_attachment_metadata'
 			";
 		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png', 'image/gif') ";
 		$groups_not_gathered = $groups_raw = $groups_all = $wpdb->get_var( $q );
@@ -1492,12 +1490,11 @@ class Img_Optm extends Base {
 		if ( $tb_existed ) {
 			$q = "SELECT COUNT(*)
 				FROM `$wpdb->posts` a
-				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID
+				LEFT JOIN `$wpdb->postmeta` b ON b.post_id = a.ID AND b.meta_key = '_wp_attachment_metadata'
 				LEFT JOIN `$this->_table_img_optm` c ON c.post_id = a.ID
 				WHERE a.post_type = 'attachment'
 					AND a.post_status = 'inherit'
 					AND a.post_mime_type IN ('image/jpeg', 'image/png', 'image/gif')
-					AND b.meta_key = '_wp_attachment_metadata'
 					AND c.id IS NULL
 				";
 			$groups_not_gathered = $wpdb->get_var( $q );

@@ -18,10 +18,12 @@ float:left;
 /**
   Dashboard tour
  */
-.shepherd-element {
-  z-index:2;
 
-  &.shepherd-theme-arrows.shepherd-has-title .shepherd-content header {
+//keep z-index above the no-integrations overlay, 99
+.shepherd-element {
+  z-index:110;
+
+  &.shepherd-theme-arrows.shepherd-has-title.cmplz-shepherd .shepherd-content header {
 	background-color: #29b6f6;
 	display: inline-block;
 	width: 100%;

@@ -518,12 +518,12 @@ function pgc_show_tables() {
         <tr>
           <td>
             <div class="submit">
-              <input type="submit" name="drop_table_action" value="' . esc_html__('Delete Tables', 'plugins-garbage-collector') . '"/>
+              <input type="submit" name="drop_table_action" value="' . esc_html__('Delete selected tables', 'plugins-garbage-collector') . '"/>
             </div>
           </td>
           <td>
             <div style="padding-left: 10px;"><span style="color: red; font-weight: bold;">' . esc_html__('Attention!', 'plugins-garbage-collector') . '</span> ' .
-                    esc_html__('Operation rollback is not possible. Consider to make database backup first. Please double think before click "Delete Tables" button.', 'plugins-garbage-collector') . '
+                    esc_html__('Operation rollback is not possible. Consider to make database backup first. Please double think before click "Delete selected tables" button.', 'plugins-garbage-collector') . '
             </div>
           </td>
         </tr>

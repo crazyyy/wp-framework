@@ -338,11 +338,9 @@ if (!class_exists('rsssl_multisite')) {
             add_settings_section('rsssl_network_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), "really-simple-ssl");
             $help = rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"), true );
             add_settings_field('id_ssl_enabled_networkwide', $help.__("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), "really-simple-ssl", 'rsssl_network_settings');
-
 	        $help = rsssl_help::this()->get_help_tip(__("Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab", "really-simple-ssl"), true );
 	        add_settings_field('id_dismiss_all_notices', $help.__("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), "really-simple-ssl", 'rsssl_network_settings');
-
-	        add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'settings_tab'));
+	        add_submenu_page('settings.php', "SSL", "SSL", 'manage_network_options', "really-simple-ssl", array(&$this, 'settings_tab'));
         }
 
         /**
@@ -353,16 +351,29 @@ if (!class_exists('rsssl_multisite')) {
 
         public function get_option_enable_multisite()
         {
-
+            $disable_per_site = !$this->can_activate_per_site() ? 'disabled="disabled"':''
             ?>
             <select name="rlrsssl_network_options[ssl_enabled_networkwide]">
                 <?php if (!$this->selected_networkwide_or_per_site) { ?>
                 <option value="-1" <?php if (!$this->selected_networkwide_or_per_site) echo "selected"; ?>><?php _e("Choose option", "really-simple-ssl") ?>
                     <?php } ?>
                 <option value="1" <?php if ($this->selected_networkwide_or_per_site && $this->ssl_enabled_networkwide) echo "selected"; ?>><?php _e("networkwide", "really-simple-ssl") ?>
-                <option value="0" <?php if ($this->selected_networkwide_or_per_site && !$this->ssl_enabled_networkwide) echo "selected"; ?>><?php _e("per site", "really-simple-ssl") ?>
+                <option value="0" <?php echo $disable_per_site?> <?php if ($this->selected_networkwide_or_per_site && !$this->ssl_enabled_networkwide) echo "selected"; ?>><?php _e("per site", "really-simple-ssl") ?>
             </select>
             <?php
+        }
+
+	    /**
+         * Check if the plugin can be activated per site
+	     * @return bool|string
+	     */
+        public function can_activate_per_site(){
+	        $can_activate_per_site = true;
+	        //only block the network wide option if it's not enabled.
+	        if ( !$this->selected_networkwide_or_per_site || $this->ssl_enabled_networkwide) {
+		        $can_activate_per_site = $this->get_total_blog_count()<50 || !RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix;
+	        }
+            return $can_activate_per_site;
         }
 
 	    /**
@@ -499,7 +510,7 @@ if (!class_exists('rsssl_multisite')) {
         public function update_network_options()
         {
             if (!isset($_POST['rsssl_ms_nonce']) || !wp_verify_nonce($_POST['rsssl_ms_nonce'], 'rsssl_ms_settings_update')) return;
-            if (!current_user_can('manage_options')) return;
+            if (!current_user_can('manage_network_options')) return;
 
 	        do_action('rsssl_process_network_options');
 
@@ -567,6 +578,8 @@ if (!class_exists('rsssl_multisite')) {
 	        if ( $screen->base === 'post' ) return;
 
             if (is_network_admin() && RSSSL()->really_simple_ssl->wpconfig_ok()) {
+	            $disable_per_site = !$this->can_activate_per_site() ? 'disabled="disabled"':'';
+
                 $class = "updated notice activate-ssl really-simple-plugins";
                 $title = __("Setup", "really-simple-ssl");
                 $content = '<h2>' . __("Some things can't be done automatically. Before you migrate, please check for: ", "really-simple-ssl") . '</h2>';
@@ -578,20 +591,22 @@ if (!class_exists('rsssl_multisite')) {
                     . '<a target="_blank"
                      href="https://really-simple-ssl.com/pro-multisite">' . __("Check out Really Simple SSL Premium", "really-simple-ssl") . '</a>' . "<br>";
 
-                $footer = '<form action="" method="post">
-                            '. wp_nonce_field('rsssl_nonce', 'rsssl_nonce').'
-                            <input type="submit" class="button button-primary"
-                                   value="'. __("Activate SSL networkwide", "really-simple-ssl").'"
-                                   id="rsssl_do_activate_ssl_networkwide" name="rsssl_do_activate_ssl_networkwide">
-                            <input type="submit" class="button button-primary"
-                                   value="'. __("Activate SSL per site", "really-simple-ssl").'"
-                                   id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">
-                        </form>';
-                $content .= __("Networkwide activation does not check if a site has an SSL certificate. It just migrates all sites to SSL.", "really-simple-ssl");
-                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content, $footer);
+                $footer = '<form action="" method="post">'. wp_nonce_field('rsssl_nonce', 'rsssl_nonce').'
+                        <input type="submit" class="button button-primary"
+                       value="'. __("Activate SSL networkwide", "really-simple-ssl").'"
+                       id="rsssl_do_activate_ssl_networkwide" name="rsssl_do_activate_ssl_networkwide">
+                       <input '.$disable_per_site.' type="submit" class="button button-primary"
+                       value="'. __("Activate SSL per site", "really-simple-ssl").'"
+                       id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">';
+                $footer .= '</form>';
+	            $content .= '<ul>';
+                if ( !$this->can_activate_per_site() ) {
+	                $content .= '<li class="rsssl-error">'.__( "Per site activation is not available above 50 sites", "really-simple-ssl" ) . '</li>';
+                }
+                $content .= '<li class="rsssl-error">'.__("Networkwide activation does not check if a site has an SSL certificate. It just migrates all sites to SSL.", "really-simple-ssl"). '</li>';
+                $content .= '</ul>';
+	            echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content, $footer);
             }
-
-
         }
 
         /**
@@ -665,7 +680,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function save_options()
         {
-	        if ( ! current_user_can( 'manage_options' ) ) return;
+	        if ( ! current_user_can( 'manage_network_options' ) ) return;
 
             $options = get_site_option("rlrsssl_network_options");
             if (!is_array($options)) $options = array();
@@ -980,7 +995,7 @@ if (!class_exists('rsssl_multisite')) {
             //check if we are on ssl settings page
             if (!$this->is_settings_page()) return;
             //check user role
-            if (!current_user_can('manage_options')) return;
+            if (!current_user_can('manage_network_options')) return;
             //check nonce
             if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
             //check for action

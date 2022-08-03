@@ -2263,6 +2263,10 @@ abstract class elFinderVolumeDriver
             return $this->setError(elFinder::ERROR_PERM_DENIED);
         }
 
+        if (substr($name, 0, 1) === '/' || substr($name, 0, 1) === '\\') {
+            return $this->setError(elFinder::ERROR_INVALID_DIRNAME);
+        }
+
         $dst = $this->joinPathCE($path, $name);
         $stat = $this->isNameExists($dst);
         if (!empty($stat)) {
@@ -2297,6 +2301,10 @@ abstract class elFinderVolumeDriver
 
         if (!$this->nameAccepted($name, false)) {
             return $this->setError(elFinder::ERROR_INVALID_NAME);
+        }
+
+        if (substr($name, 0, 1) === '/' || substr($name, 0, 1) === '\\') {
+            return $this->setError(elFinder::ERROR_INVALID_DIRNAME);
         }
 
         $mimeByName = $this->mimetype($name, true);
@@ -2893,9 +2901,7 @@ abstract class elFinderVolumeDriver
         if ($path = $this->convEncOut($this->_extract($this->convEncIn($path), $archiver))) {
             if (is_array($path)) {
                 foreach ($path as $_k => $_p) {
-                    if(strpos($_p,'..') !== false){
-                        $path[$_k] = $this->stat($_p);
-                    }
+                    $path[$_k] = $this->stat($_p);
                 }
             } else {
                 $path = $this->stat($path);

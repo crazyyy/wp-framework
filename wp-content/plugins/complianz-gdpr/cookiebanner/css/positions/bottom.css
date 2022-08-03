@@ -11,6 +11,13 @@
     max-width: 100%;
   }
 }
+@media (max-width: 1023px) {
+  .cmplz-cookiebanner {
+    transform: translateX(-50%);
+    bottom: 0;
+    top: initial;
+  }
+}
 @media (min-width: 1024px) {
   .cmplz-cookiebanner {
     margin: 10px;
@@ -65,6 +72,7 @@
     grid-column-start: 3;
     grid-column-end: 4;
     grid-row-start: 5;
+    display: flex;
     justify-content: flex-end;
   }
   .cmplz-cookiebanner .cmplz-links.cmplz-documents {

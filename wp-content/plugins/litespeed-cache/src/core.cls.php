@@ -237,6 +237,8 @@ class Core extends Root {
 
 			$this->cls( 'Router' )->can_optm() && $this->cls( 'Optimize' )->init();
 
+			$this->cls( 'Localization' )->init();
+
 			// Hook cdn for attachements
 			$this->cls( 'CDN' )->init();
 
@@ -463,7 +465,7 @@ class Core extends Root {
 		// Hook to modify buffer after
 		$buffer = apply_filters('litespeed_buffer_after', $buffer);
 
-		Debug2::debug( "End response\n--------------------------------------------------------------------------------\n" );
+		Debug2::ended();
 
 		return $buffer;
 	}

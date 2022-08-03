@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
 
 		$('#winp-sync-snippet-name').val('');
 		$('#winp-sync-content').find('.winp-modal-error').css('visibility', 'hidden');
-		$('#winp-sync-modal').factoryBootstrap450_modal('show');
+		$('#winp-sync-modal').factoryBootstrap458_modal('show');
 	});
 
 	// Экспорт сниппета
@@ -42,7 +42,7 @@ jQuery(document).ready(function($) {
 					$('.winp-sync-buttons').css('color', 'green');
 					$('#winp-snippet-sync').replaceWith('<span class="dashicons dashicons-plus-alt winp-green"></span> ' + winp_snippet_sync.saved);
 
-					$('#winp-sync-modal').factoryBootstrap450_modal('hide');
+					$('#winp-sync-modal').factoryBootstrap458_modal('hide');
 				} else {
 					var error_text = winp_snippet_sync.export_failed;
 					if( typeof data == 'string' ) {
@@ -109,7 +109,7 @@ jQuery(document).ready(function($) {
 						}
 					);
 
-					//$('#winp-sync-modal').factoryBootstrap450_modal('hide');
+					//$('#winp-sync-modal').factoryBootstrap458_modal('hide');
 				}
 			});
 

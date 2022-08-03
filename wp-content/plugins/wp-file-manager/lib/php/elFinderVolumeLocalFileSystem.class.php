@@ -75,6 +75,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         $this->options['alias'] = '';              // alias to replace root dir name
         $this->options['dirMode'] = 0755;            // new dirs mode
         $this->options['fileMode'] = 0644;            // new files mode
+        $this->options['quarantine'] = '.quarantine'; // quarantine folder name - required to check archive (must be hidden)
         $this->options['rootCssClass'] = 'elfinder-navbar-root-local';
         $this->options['followSymLinks'] = true;
         $this->options['detectDirIcon'] = '';         // file name that is detected as a folder icon e.g. '.diricon.png'
@@ -178,20 +179,14 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
             }
         }
         // check quarantine path
-        $_quarantine = '';
         if (!empty($this->options['quarantine'])) {
             if (strpos($this->options['quarantine'], DIRECTORY_SEPARATOR) === false) {
-                //$hiddens['quarantine'] = $this->options['quarantine'];
-                //$this->options['quarantine'] = $this->_abspath($this->options['quarantine']);
-                $_quarantine = $this->_abspath($this->options['quarantine']);
-                $this->options['quarantine'] = '';
+                $hiddens['quarantine'] = $this->options['quarantine'];
+                $this->options['quarantine'] = $this->_abspath($this->options['quarantine']);
             } else {
                 $this->options['quarantine'] = $this->_normpath($this->options['quarantine']);
             }
-        } else {
-            $_quarantine = $this->_abspath('.quarantine');
         }
-        is_dir($_quarantine) && self::localRmdirRecursive($_quarantine);
 
         parent::configure();
 
@@ -235,9 +230,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
                     unset($hiddens['quarantine']);
                 }
             }
-        } else if ($_path = elFinder::getCommonTempPath()) {
-            $this->quarantine = $_path;
-        }
+        } 
 
         if (!$this->quarantine) {
             if (!$this->tmp) {
@@ -1191,24 +1184,12 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
 
             $this->archiveSize = 0;
 
-            // find symlinks and check extracted items
-            $checkRes = $this->checkExtractItems($dir);
-            if ($checkRes['symlinks']) {
-                self::localRmdirRecursive($dir);
-                return $this->setError(array_merge($this->error, array(elFinder::ERROR_ARC_SYMLINKS)));
-            }
-            $this->archiveSize = $checkRes['totalSize'];
-            if ($checkRes['rmNames']) {
-                foreach ($checkRes['rmNames'] as $name) {
-                    $this->addError(elFinder::ERROR_SAVE, $name);
-                }
-            }
-
-            // check max files size
-            if ($this->options['maxArcFilesSize'] > 0 && $this->options['maxArcFilesSize'] < $this->archiveSize) {
-                $this->delTree($dir);
-                return $this->setError(elFinder::ERROR_ARC_MAXSIZE);
-            }
+            $symlinks = $this->_findSymlinks($dir);
+			
+			if ($symlinks) {
+				$this->delTree($dir);
+				return $this->setError(array_merge($this->error, array(elFinder::ERROR_ARC_SYMLINKS)));
+			}
 
             $extractTo = $this->extractToNewdir; // 'auto', ture or false
 

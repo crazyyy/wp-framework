@@ -82,19 +82,20 @@ function cmplz_add_cookiebanner_settings($fields){
 				'type'        => 'text',
 				'label'       => __( "Cookie banner title", 'complianz-gdpr' ),
 				'placeholder' => __( 'Descriptive title of the cookiebanner' ),
-				'tooltip'        => __( 'For internal use only', 'complianz-gdpr' ),
-				'help'   => __("You can customize the cookie banner with custom CSS for endless possibilities.","complianz-gdpr") . cmplz_read_more( 'https://complianz.io/docs/customization/' ),
+				'tooltip'     => __( 'For internal use only', 'complianz-gdpr' ),
+				'help'        => __("You can customize the cookie banner with custom CSS for endless possibilities.","complianz-gdpr") . cmplz_read_more( 'https://complianz.io/docs/customization/' ),
 			),
 
-            'revoke' => array(
-                'source'    => 'CMPLZ_COOKIEBANNER',
-                'step'      => 'general',
-                'type'      => 'text_checkbox',
-                'default'   => ['text' => __( "Manage consent", 'complianz-gdpr' ), 'show' => true ],
-                'placeholder' => __( "Manage consent", 'complianz-gdpr' ),
-                'label'     => __( "Text on the manage consent tab", 'complianz-gdpr' ),
-                'tooltip'      => __( 'The tab will show after the visitor interacted with the banner, and can be used to make the cookie banner reappear.', 'complianz-gdpr' ),
-            ),
+      'revoke' => array(
+          'source'       => 'CMPLZ_COOKIEBANNER',
+          'step'         => 'general',
+          'type'         => 'text_checkbox',
+          'default'      => ['text' => __( "Manage consent", 'complianz-gdpr' ), 'show' => true ],
+          'placeholder'  => __( "Manage consent", 'complianz-gdpr' ),
+          'label'        => __( "Text on the manage consent tab", 'complianz-gdpr' ),
+          'tooltip'      => __( 'The tab will show after the visitor interacted with the banner, and can be used to make the cookie banner reappear.', 'complianz-gdpr' ),
+          'comment'      => __("The tab will not show on mobile devices for UX optimization. You can use CSS to revert this.","complianz-gdpr") . cmplz_read_more( 'https://complianz.io/show-settings-button-on-mobile/' ),
+      ),
 
             'disable_cookiebanner' => array(
                 'source'  => 'CMPLZ_COOKIEBANNER',
@@ -506,11 +507,21 @@ function cmplz_add_cookiebanner_settings($fields){
 
             /* ----- Custom CSS ----- */
 
+			'disable_width_correction' => array(
+				'source'  => 'CMPLZ_COOKIEBANNER',
+				'step'    => 'custom_css',
+				'type'    => 'checkbox',
+				'label'   => __( "Disable width auto correction", 'complianz-gdpr' ),
+				'default' => false,
+				'callback_condition' => 'NOT cmplz_tcf_active',
+				'tooltip' => __('This will disable a back-end javascript to keep the banner width aligned with other elements.','complianz-gdpr'),
+			),
+
 			'custom_css' => array(
 				'source'    => 'CMPLZ_COOKIEBANNER',
 				'step'      => 'custom_css',
 				'type'      => 'css',
-				'help'      => sprintf(__('You can add additional custom CSS here. For tips and CSS lessons, check out our %sdocumentation%s', 'complianz-gdpr'), '<a target="_blank" href="https://complianz.io/?s=css">', '</a>'),
+				'help'      => cmplz_sprintf(__('You can add additional custom CSS here. For tips and CSS lessons, check out our %sdocumentation%s', 'complianz-gdpr'), '<a target="_blank" href="https://complianz.io/?s=css">', '</a>'),
 				'label'     => '',
 				'default'   => '.cmplz-message{}'
 				               . "\n".' /* styles for the message box */'
@@ -627,18 +638,27 @@ function cmplz_add_cookiebanner_settings($fields){
                 'condition'     => array( 'consenttype' => 'optin' ),
             ),
 
-			'documents' => array(
-				'step'               => 'settings',
-				'source'             => 'CMPLZ_COOKIEBANNER',
-				'type'               => 'notice',
-				'label'              => __( "Documents", 'complianz-gdpr' ),
-				'comment'            => __( 'On the cookie banner the generated documents are shown. The title is based on the actual post title.', 'complianz-gdpr' ),
+			'font_size' => array(
+				'source'        => 'CMPLZ_COOKIEBANNER',
+				'step'          => 'settings',
+				'type'          => 'number',
+				'default'       => 12,
+				'label'         => __( "Font size", 'complianz-gdpr' ),
+			),
+
+			'legal_documents' => array(
+				'source'        => 'CMPLZ_COOKIEBANNER',
+				'step'          => 'settings',
+				'type'          => 'checkbox',
+				'default'       => true,
+				'label'         => __( "Legal document links on banner", 'complianz-gdpr' ),
+				'comment'       => __( 'On the cookie banner the generated documents are shown. The title is based on the actual post title.', 'complianz-gdpr' ),
 			),
 
 			/* ----- Categories ----- */
 			'category_functional' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text',
 				'default'            => __( "Functional", 'complianz-gdpr' ),
 				'placeholder'        => __( "Functional", 'complianz-gdpr' ),
@@ -647,7 +667,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'functional_text' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text' => __( "The technical storage or access is strictly necessary for the legitimate purpose of enabling the use of a specific service explicitly requested by the subscriber or user, or for the sole purpose of carrying out the transmission of a communication over an electronic communications network.", 'complianz-gdpr' ), 'show'=>true],
 				'label'              => __( "Functional description", 'complianz-gdpr' ),
@@ -655,7 +675,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'category_prefs' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text' => __( "Preferences", 'complianz-gdpr' ), 'show' => true],
 				'placeholder'        => __( "Preferences", 'complianz-gdpr' ),
@@ -667,7 +687,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'preferences_text' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text' => __( "The technical storage or access is necessary for the legitimate purpose of storing preferences that are not requested by the subscriber or user.", 'complianz-gdpr' ), 'show'=>true],
 				'label'              => __( "Preferences description", 'complianz-gdpr' ),
@@ -678,7 +698,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'category_stats' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text' => __( "Statistics", 'complianz-gdpr' ), 'show' => true],
 				'label'              => __( "Statistics", 'complianz-gdpr' ),
@@ -687,7 +707,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'statistics_text' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text'=>__( "The technical storage or access that is used exclusively for statistical purposes.", 'complianz-gdpr' ), 'show'=>true],
 				'label'              => __( "Statistics description", 'complianz-gdpr' ),
@@ -701,7 +721,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'statistics_text_anonymous' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text' => __( "The technical storage or access that is used exclusively for anonymous statistical purposes. Without a subpoena, voluntary compliance on the part of your Internet Service Provider, or additional records from a third party, information stored or retrieved for this purpose alone cannot usually be used to identify you.", 'complianz-gdpr' ), 'show'=>true],
 				'label'              => __( "Anonymous statistics description", 'complianz-gdpr' ),
@@ -715,7 +735,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'category_all' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text' => __( "Marketing", 'complianz-gdpr' ), 'show' => true],
 				'label'              => __( "Marketing", 'complianz-gdpr' ),
@@ -727,7 +747,7 @@ function cmplz_add_cookiebanner_settings($fields){
 
 			'marketing_text' => array(
 				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'categories',
+				'step'               => 'banner-categories',
 				'type'               => 'text_checkbox',
 				'default'            => ['text'=>__( "The technical storage or access is required to create user profiles to send advertising, or to track the user on a website or across several websites for similar marketing purposes.", 'complianz-gdpr' ), 'show'=>true],
 				'label'              => __( "Marketing description", 'complianz-gdpr' ),

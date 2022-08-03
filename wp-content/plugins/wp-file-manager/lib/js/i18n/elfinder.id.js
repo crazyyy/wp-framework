@@ -2,9 +2,9 @@
  * Bahasa Indonesia translation
  * @author Suyadi <1441177004009@student.unsika.ac.id>
  * @author Ammar Faizi <ammarfaizi2@gmail.com>
- * @version 2017-05-28
+ * @version 2022-03-02
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,10 +17,12 @@
 		translator : 'Suyadi &lt;1441177004009@student.unsika.ac.id&gt;, Ammar Faizi &lt;ammarfaizi2@gmail.com&gt;',
 		language   : 'Bahasa Indonesia',
 		direction  : 'ltr',
-		dateFormat : 'j F, Y H:i', // Mar 13, 2012 05:27 PM
-		fancyDateFormat : '$1 H:i', // will produce smth like: Today 12:25 PM
-		nonameDateFormat : 'd m Y - H : i : s', // to apply if upload file is noname: 120513172700
+		dateFormat : 'j F, Y H:i', // will show like: 2 Maret, 2022 12:14
+		fancyDateFormat : '$1 H:i', // will show like: Hari ini 12:14
+		nonameDateFormat : 'd m Y - H : i : s', // noname upload will show like: 02 03 2022 - 12 : 14 : 15
 		messages   : {
+			'getShareText' : 'Membagikan',
+			'Editor ': 'Editor Kode',
 
 			/********************************** errors **********************************/
 			'error'                : 'Kesalahan',
@@ -113,6 +115,10 @@
 			'errMaxTargets'        : 'Berkas maksimal yang dipilih adalah $1.', // from v2.1.17 added 17.10.2016
 			'errRestore'           : 'Tidak dapat mengembalikan berkas dari tempat sampah. Tujuan tidak ditemukan.', // from v2.1.24 added 3.5.2017
 			'errEditorNotFound'    : 'Tidak ditemukan editor untuk file tipe ini.', // from v2.1.25 added 23.5.2017
+			'errServerError'       : 'Terjadi kesalahan di sisi server.', // from v2.1.25 added 16.6.2017
+			'errEmpty'             : 'Tidak dapat mengosongkan folder "$1".', // from v2.1.25 added 22.6.2017
+			'moreErrors'           : 'Ada $1 kesalahan lagi.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Anda dapat membuat hingga $1 folder sekaligus.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Buat arsip',
@@ -146,13 +152,22 @@
 			'cmdresize'    : 'Ubah ukuran & Putar',
 			'cmdsort'      : 'Urutkan',
 			'cmdnetmount'  : 'Baca-susun volume jaringan', // added 18.04.2012
-			'cmdnetunmount': 'Unmount', // from v2.1 added 30.04.2012
+			'cmdnetunmount': 'Lepas', // from v2.1 added 30.04.2012
 			'cmdplaces'    : 'Ke Tempat', // added 28.12.2014
 			'cmdchmod'     : 'Mode mengubah', // from v2.1 added 20.6.2015
 			'cmdopendir'   : 'Membuka folder', // from v2.1 added 13.1.2016
-			'cmdcolwidth'  : 'Reset column width', // from v2.1.13 added 12.06.2016
+			'cmdcolwidth'  : 'Setel ulang lebar kolom', // from v2.1.13 added 12.06.2016
 			'cmdfullscreen': 'Layar Penuh', // from v2.1.15 added 03.08.2016
 			'cmdmove'      : 'Pindah', // from v2.1.15 added 21.08.2016
+			'cmdempty'     : 'Kosongkan foldernya', // from v2.1.25 added 22.06.2017
+			'cmdundo'      : 'Membuka', // from v2.1.27 added 31.07.2017
+			'cmdredo'      : 'Mengulangi', // from v2.1.27 added 31.07.2017
+			'cmdpreference': 'Preferensi', // from v2.1.27 added 03.08.2017
+			'cmdselectall' : 'Pilih Semua', // from v2.1.28 added 15.08.2017
+			'cmdselectnone': 'Pilih tidak ada', // from v2.1.28 added 15.08.2017
+			'cmdselectinvert': 'Pilihan sebaliknya', // from v2.1.28 added 15.08.2017
+			'cmdopennew'   : 'Buka di jendela baru', // from v2.1.38 added 3.4.2018
+			'cmdhide'      : 'Sembunyikan (Preferensi)', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Tutup',
@@ -164,15 +179,15 @@
 			'btnYes'    : 'Ya',
 			'btnMount'  : 'Baca susunan',  // added 18.04.2012
 			'btnApprove': 'Menuju ke $1 & setujui', // from v2.1 added 26.04.2012
-			'btnUnmount': 'Unmount', // from v2.1 added 30.04.2012
+			'btnUnmount': 'Lepas', // from v2.1 added 30.04.2012
 			'btnConv'   : 'Konversi', // from v2.1 added 08.04.2014
 			'btnCwd'    : 'Disini',      // from v2.1 added 22.5.2015
 			'btnVolume' : 'Volume',    // from v2.1 added 22.5.2015
 			'btnAll'    : 'Semua',       // from v2.1 added 22.5.2015
-			'btnMime'   : 'MIME Type', // from v2.1 added 22.5.2015
+			'btnMime'   : 'Jenis MIME', // from v2.1 added 22.5.2015
 			'btnFileName':'Nama file',  // from v2.1 added 22.5.2015
 			'btnSaveClose': 'Simpan & Tutup', // from v2.1 added 12.6.2015
-			'btnBackup' : 'Backup', // fromv2.1 added 28.11.2015
+			'btnBackup' : 'Cadangan', // fromv2.1 added 28.11.2015
 			'btnRename'    : 'Ubah nama',      // from v2.1.24 added 6.4.2017
 			'btnRenameAll' : 'Ubah nama(Semua)', // from v2.1.24 added 6.4.2017
 			'btnPrevious' : 'Sebelumnya ($1/$2)', // from v2.1.24 added 11.5.2017
@@ -200,7 +215,7 @@
 			'ntfsmth'     : 'Melakukan sesuatu',
 			'ntfloadimg'  : 'Memuat citra',
 			'ntfnetmount' : 'Membaca susunan volume jaringan', // added 18.04.2012
-			'ntfnetunmount': 'Unmounting network volume', // from v2.1 added 30.04.2012
+			'ntfnetunmount': 'Melepas volume jaringan', // from v2.1 added 30.04.2012
 			'ntfdim'      : 'Mendapatkan dimensi citra', // added 20.05.2013
 			'ntfreaddir'  : 'Membaca informasi folder', // from v2.1 added 01.07.2013
 			'ntfurl'      : 'Mendapatkan URL dari link', // from v2.1 added 11.03.2014
@@ -212,6 +227,9 @@
 			'ntftrash'    : 'Sedang melempar ke tempat sampah', // from v2.1.24 added 2.5.2017
 			'ntfrestore'  : 'Sedang mengembalikan dari tempat sampah', // from v2.1.24 added 3.5.2017
 			'ntfchkdir'   : 'Mengecek folder tujuan', // from v2.1.24 added 3.5.2017
+			'ntfundo'     : 'Mengurungkan operasi sebelumnya', // from v2.1.27 added 31.07.2017
+			'ntfredo'     : 'Mengulangi yang dibatalkan sebelumnya', // from v2.1.27 added 31.07.2017
+			'ntfchkcontent' : 'Memeriksa konten', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
 			'volume_Trash' : 'Sampah', //from v2.1.24 added 29.4.2017
@@ -221,12 +239,12 @@
 			'Today'       : 'Hari ini',
 			'Yesterday'   : 'Kemarin',
 			'msJan'       : 'Jan',
-			'msFeb'       : 'Feb',
-			'msMar'       : 'Mar',
-			'msApr'       : 'Apr',
+			'msFeb'       : 'Februari',
+			'msMar'       : 'Merusak',
+			'msApr'       : 'April',
 			'msMay'       : 'Mei',
 			'msJun'       : 'Jun',
-			'msJul'       : 'Jul',
+			'msJul'       : 'Juli',
 			'msAug'       : 'Agt',
 			'msSep'       : 'Sep',
 			'msOct'       : 'Okt',
@@ -269,12 +287,15 @@
 			'sortmode'          : 'menurut mode',       // from v2.1.13 added 13.06.2016
 			'sortowner'         : 'menurut pemilik',      // from v2.1.13 added 13.06.2016
 			'sortgroup'         : 'menurut grup',      // from v2.1.13 added 13.06.2016
-			'sortAlsoTreeview'  : 'Also Treeview',  // from v2.1.15 added 01.08.2016
+			'sortAlsoTreeview'  : 'Juga Treeview',  // from v2.1.15 added 01.08.2016
 
 			/********************************** new items **********************************/
 			'untitled file.txt' : 'FileBaru.txt', // added 10.11.2015
 			'untitled folder'   : 'FolderBaru',   // added 10.11.2015
 			'Archive'           : 'ArsipBaru',  // from v2.1 added 10.11.2015
+			'untitled file'     : 'File Baru.$1',  // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: Berkas',    // from v2.1.41 added 6.8.2018
+			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Diperlukan konfirmasi',
@@ -282,9 +303,10 @@
 			'confirmRepl'     : 'Timpa berkas lama dengan yang baru?',
 			'confirmRest'     : 'Timpa berkas yang ada dengan berkas dari sampah?', // fromv2.1.24 added 5.5.2017
 			'confirmConvUTF8' : 'Bukan UTF-8<br/>Konversi ke UTF-8?<br/>Konten akan berubah menjadi UTF-8 ketika disimpan dengan konversi.', // from v2.1 added 08.04.2014
-			'confirmNonUTF8'  : 'Character encoding of this file couldn\'t be detected. It need to temporarily convert to UTF-8 for editting.<br/>Please select character encoding of this file.', // from v2.1.19 added 28.11.2016
+			'confirmNonUTF8'  : 'Encoding karakter file ini tidak dapat dideteksi. Itu perlu dikonversi sementara ke UTF-8 untuk diedit.<br/>Silakan pilih pengkodean karakter dari file ini.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Telah terjadi perubahan.<br/>Kehilangan perkerjaan jika kamu tidak menyimpan.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Anda yakin untuk membuang berkas ke tempat sampah?', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'Anda yakin ingin memindahkan item ke "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Terapkan ke semua',
 			'name'            : 'Nama',
 			'size'            : 'Ukuran',
@@ -302,6 +324,10 @@
 			'selectlfile'     : 'Pilih berkas terakhir',
 			'viewlist'        : 'Tampilan daftar',
 			'viewicons'       : 'Tampilan ikon',
+			'viewSmall'       : 'Ikon kecil', // from v2.1.39 added 22.5.2018
+			'viewMedium'      : 'Ikon sedang', // from v2.1.39 added 22.5.2018
+			'viewLarge'       : 'Ikon besar', // from v2.1.39 added 22.5.2018
+			'viewExtraLarge'  : 'Ikon ekstra besar', // from v2.1.39 added 22.5.2018
 			'places'          : 'Lokasi',
 			'calc'            : 'Hitung',
 			'path'            : 'Alamat',
@@ -355,14 +381,14 @@
 			'degree'          : '°',
 			'netMountDialogTitle' : 'Baca susunan volume jaringan', // added 18.04.2012
 			'protocol'            : 'Protokol', // added 18.04.2012
-			'host'                : 'Host', // added 18.04.2012
-			'port'                : 'Port', // added 18.04.2012
+			'host'                : 'Tuan rumah', // added 18.04.2012
+			'port'                : 'Pelabuhan', // added 18.04.2012
 			'user'                : 'Pengguna', // added 18.04.2012
 			'pass'                : 'Sandi', // added 18.04.2012
 			'confirmUnmount'      : 'Apakah anda unmount $1?',  // from v2.1 added 30.04.2012
 			'dropFilesBrowser': 'Seret atau Tempel file dari browser', // from v2.1 added 30.05.2012
 			'dropPasteFiles'  : 'Seret file, Tempel URL atau gambar dari clipboard', // from v2.1 added 07.04.2014
-			'encoding'        : 'Encoding', // from v2.1 added 19.12.2014
+			'encoding'        : 'pengkodean', // from v2.1 added 19.12.2014
 			'locale'          : 'Lokasi',   // from v2.1 added 19.12.2014
 			'searchTarget'    : 'Target: $1',                // from v2.1 added 22.5.2015
 			'searchMime'      : 'Mencari berdasarkan inpu MIME Type', // from v2.1 added 22.5.2015
@@ -382,7 +408,7 @@
 			'selectedItems'   : '($1) berkas dipilih', // from v2.1.7 added 2.19.2016
 			'folderId'        : 'ID Folder', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Izin akses offline', // from v2.1.10 added 3.25.2016
-			'reAuth'          : 'To re-authenticate', // from v2.1.10 added 3.25.2016
+			'reAuth'          : 'Untuk mengautentikasi ulang', // from v2.1.10 added 3.25.2016
 			'nowLoading'      : 'Sedang memuat...', // from v2.1.12 added 4.26.2016
 			'openMulti'       : 'Membuka file bersamaan', // from v2.1.12 added 5.14.2016
 			'openMultiConfirm': 'Anda mencoba membuka file $1. Apakah anda ingin membuka di browser?', // from v2.1.12 added 5.14.2016
@@ -391,31 +417,90 @@
 			'hasSelected'     : 'Anda memilih $1 berkas', // from v2.1.13 added 6.3.2016
 			'hasClipboard'    : 'Kamu mempunyai $i berkas di clipboard', // from v2.1.13 added 6.3.2016
 			'incSearchOnly'   : 'Hanya pencarian bertamah untuk menampilkan tampilan sekarang', // from v2.1.13 added 6.30.2016
-			'reinstate'       : 'Reinstate', // from v2.1.15 added 3.8.2016
+			'reinstate'       : 'Mengembalikan lagi', // from v2.1.15 added 3.8.2016
 			'complete'        : '$1 selesai', // from v2.1.15 added 21.8.2016
-			'contextmenu'     : 'Context menu', // from v2.1.15 added 9.9.2016
-			'pageTurning'     : 'Page turning', // from v2.1.15 added 10.9.2016
-			'volumeRoots'     : 'Volume roots', // from v2.1.16 added 16.9.2016
-			'reset'           : 'Reset', // from v2.1.16 added 1.10.2016
+			'contextmenu'     : 'Menu konteks', // from v2.1.15 added 9.9.2016
+			'pageTurning'     : 'Pembalikan halaman', // from v2.1.15 added 10.9.2016
+			'volumeRoots'     : 'akar volume', // from v2.1.16 added 16.9.2016
+			'reset'           : 'Mengatur ulang', // from v2.1.16 added 1.10.2016
 			'bgcolor'         : 'Warna background', // from v2.1.16 added 1.10.2016
 			'colorPicker'     : 'Mengambil warna', // from v2.1.16 added 1.10.2016
-			'8pxgrid'         : '8px Grid', // from v2.1.16 added 4.10.2016
+			'8pxgrid'         : 'Kotak 8px', // from v2.1.16 added 4.10.2016
 			'enabled'         : 'Diaktifkan', // from v2.1.16 added 4.10.2016
 			'disabled'        : 'Nonaktifkan', // from v2.1.16 added 4.10.2016
-			'emptyIncSearch'  : 'Search results is empty in current view.\\APress [Enter] to expand search target.', // from v2.1.16 added 5.10.2016
-			'emptyLetSearch'  : 'First letter search results is empty in current view.', // from v2.1.23 added 24.3.2017
-			'textLabel'       : 'Text label', // from v2.1.17 added 13.10.2016
-			'minsLeft'        : '$1 mins left', // from v2.1.17 added 13.11.2016
-			'openAsEncoding'  : 'Reopen with selected encoding', // from v2.1.19 added 2.12.2016
-			'saveAsEncoding'  : 'Save with the selected encoding', // from v2.1.19 added 2.12.2016
-			'selectFolder'    : 'Select folder', // from v2.1.20 added 13.12.2016
-			'firstLetterSearch': 'First letter search', // from v2.1.23 added 24.3.2017
-			'presets'         : 'Presets', // from v2.1.25 added 26.5.2017
+			'emptyIncSearch'  : 'Hasil pencarian kosong dalam tampilan saat ini.\\ATekan [Enter] untuk memperluas target pencarian.', // from v2.1.16 added 5.10.2016
+			'emptyLetSearch'  : 'Hasil pencarian huruf pertama kosong dalam tampilan saat ini.', // from v2.1.23 added 24.3.2017
+			'textLabel'       : 'Label teks', // from v2.1.17 added 13.10.2016
+			'minsLeft'        : '$1 menit lagi', // from v2.1.17 added 13.11.2016
+			'openAsEncoding'  : 'Buka kembali dengan penyandian yang dipilih', // from v2.1.19 added 2.12.2016
+			'saveAsEncoding'  : 'Simpan dengan pengkodean yang dipilih', // from v2.1.19 added 2.12.2016
+			'selectFolder'    : 'Pilih folder', // from v2.1.20 added 13.12.2016
+			'firstLetterSearch': 'Pencarian huruf pertama', // from v2.1.23 added 24.3.2017
+			'presets'         : 'Preset', // from v2.1.25 added 26.5.2017
+			'tooManyToTrash'  : 'Itu terlalu banyak item sehingga tidak bisa menjadi sampah.', // from v2.1.25 added 9.6.2017
+			'TextArea'        : 'Area Teks', // from v2.1.25 added 14.6.2017
+			'folderToEmpty'   : 'Kosongkan folder "$1".', // from v2.1.25 added 22.6.2017
+			'filderIsEmpty'   : 'Tidak ada item dalam folder "$1".', // from v2.1.25 added 22.6.2017
+			'preference'      : 'Preferensi', // from v2.1.26 added 28.6.2017
+			'language'        : 'Bahasa', // from v2.1.26 added 28.6.2017
+			'clearBrowserData': 'Inisialisasi pengaturan yang disimpan di browser ini', // from v2.1.26 added 28.6.2017
+			'toolbarPref'     : 'Pengaturan bilah alat', // from v2.1.27 added 2.8.2017
+			'charsLeft'       : '... $1 karakter tersisa.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $1 baris tersisa.',  // from v2.1.52 added 16.1.2020
+			'sum'             : 'Jumlah', // from v2.1.29 added 28.9.2017
+			'roughFileSize'   : 'Ukuran file kasar', // from v2.1.30 added 2.11.2017
+			'autoFocusDialog' : 'Fokus pada elemen dialog dengan mouseover',  // from v2.1.30 added 2.11.2017
+			'select'          : 'Pilih', // from v2.1.30 added 23.11.2017
+			'selectAction'    : 'Tindakan saat memilih file', // from v2.1.30 added 23.11.2017
+			'useStoredEditor' : 'Buka dengan editor yang digunakan terakhir kali', // from v2.1.30 added 23.11.2017
+			'selectinvert'    : 'Pilihan sebaliknya', // from v2.1.30 added 25.11.2017
+			'renameMultiple'  : 'Anda yakin ingin mengganti nama $1 item terpilih seperti $2?<br/>Ini tidak dapat diurungkan!', // from v2.1.31 added 4.12.2017
+			'batchRename'     : 'Ganti nama batch', // from v2.1.31 added 8.12.2017
+			'plusNumber'      : '+ Nomor', // from v2.1.31 added 8.12.2017
+			'asPrefix'        : 'Tambahkan awalan', // from v2.1.31 added 8.12.2017
+			'asSuffix'        : 'Tambahkan akhiran', // from v2.1.31 added 8.12.2017
+			'changeExtention' : 'Ubah ekstensi', // from v2.1.31 added 8.12.2017
+			'columnPref'      : 'Pengaturan kolom (Tampilan daftar)', // from v2.1.32 added 6.2.2018
+			'reflectOnImmediate' : 'Semua perubahan akan langsung direfleksikan ke arsip.', // from v2.1.33 added 2.3.2018
+			'reflectOnUnmount'   : 'Perubahan apa pun tidak akan terlihat sampai volume ini dilepas.', // from v2.1.33 added 2.3.2018
+			'unmountChildren' : 'Volume berikut yang dipasang pada volume ini juga dilepas. Apakah Anda yakin untuk melepasnya?', // from v2.1.33 added 5.3.2018
+			'selectionInfo'   : 'Info Seleksi', // from v2.1.33 added 7.3.2018
+			'hashChecker'     : 'Algoritma untuk menampilkan hash file', // from v2.1.33 added 10.3.2018
+			'infoItems'       : 'Item Info (Panel Info Pilihan)', // from v2.1.38 added 28.3.2018
+			'pressAgainToExit': 'Tekan lagi untuk keluar.', // from v2.1.38 added 1.4.2018
+			'toolbar'         : 'Bilah Alat', // from v2.1.38 added 4.4.2018
+			'workspace'       : 'Ruang Kerja', // from v2.1.38 added 4.4.2018
+			'dialog'          : 'Dialog', // from v2.1.38 added 4.4.2018
+			'all'             : 'Semua', // from v2.1.38 added 4.4.2018
+			'iconSize'        : 'Ukuran Ikon (Tampilan ikon)', // from v2.1.39 added 7.5.2018
+			'editorMaximized' : 'Buka jendela editor yang dimaksimalkan', // from v2.1.40 added 30.6.2018
+			'editorConvNoApi' : 'Karena konversi oleh API saat ini tidak tersedia, harap konversi di situs web.', //from v2.1.40 added 8.7.2018
+			'editorConvNeedUpload' : 'Setelah konversi, Anda harus mengunggah dengan URL item atau file yang diunduh untuk menyimpan file yang dikonversi.', //from v2.1.40 added 8.7.2018
+			'convertOn'       : 'Konversi di situs $1', // from v2.1.40 added 10.7.2018
+			'integrations'    : 'Integrasi', // from v2.1.40 added 11.7.2018
+			'integrationWith' : 'ElFinder ini memiliki layanan eksternal berikut yang terintegrasi. Silakan periksa syarat penggunaan, kebijakan privasi, dll. sebelum menggunakannya.', // from v2.1.40 added 11.7.2018
+			'showHidden'      : 'Tampilkan item tersembunyi', // from v2.1.41 added 24.7.2018
+			'hideHidden'      : 'Sembunyikan item tersembunyi', // from v2.1.41 added 24.7.2018
+			'toggleHidden'    : 'Tampilkan/Sembunyikan item tersembunyi', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'Jenis file untuk diaktifkan dengan "File baru"', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Jenis file teks', // from v2.1.41 added 7.8.2018
+			'add'             : 'Menambahkan', // from v2.1.41 added 7.8.2018
+			'theme'           : 'Tema', // from v2.1.43 added 19.10.2018
+			'default'         : 'Bawaan', // from v2.1.43 added 19.10.2018
+			'description'     : 'Keterangan', // from v2.1.43 added 19.10.2018
+			'website'         : 'Situs web', // from v2.1.43 added 19.10.2018
+			'author'          : 'Pengarang', // from v2.1.43 added 19.10.2018
+			'email'           : 'Surel', // from v2.1.43 added 19.10.2018
+			'license'         : 'Lisensi', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'Item ini tidak dapat disimpan. Untuk menghindari kehilangan hasil edit, Anda perlu mengekspor ke PC Anda.', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Klik dua kali pada file untuk memilihnya.', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Gunakan mode layar penuh', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Tak diketahui',
-			'kindRoot'        : 'Volume Root', // from v2.1.16 added 16.10.2016
-			'kindFolder'      : 'Folder',
+			'kindRoot'        : 'Volume Akar', // from v2.1.16 added 16.10.2016
+			'kindFolder'      : 'Map',
+			'kindSelects'     : 'Pilihan', // from v2.1.29 added 29.8.2017
 			'kindAlias'       : 'Nama lain',
 			'kindAliasBroken' : 'Nama lain rusak',
 			// applications
@@ -444,7 +529,7 @@
 			'kindText'        : 'Dokumen teks',
 			'kindTextPlain'   : 'Berkas teks biasa',
 			'kindPHP'         : 'Kode-sumber PHP',
-			'kindCSS'         : 'Cascading style sheet',
+			'kindCSS'         : 'Lembar bergaya susun',
 			'kindHTML'        : 'Dokumen HTML',
 			'kindJS'          : 'Kode-sumber Javascript',
 			'kindRTF'         : 'Berkas Rich Text',
@@ -462,7 +547,7 @@
 			'kindAWK'         : 'Kode-sumber AWK',
 			'kindCSV'         : 'Dokumen CSV',
 			'kindDOCBOOK'     : 'Dokumen Docbook XML',
-			'kindMarkdown'    : 'Markdown text', // added 20.7.2015
+			'kindMarkdown'    : 'teks penurunan harga', // added 20.7.2015
 			// images
 			'kindImage'       : 'Citra',
 			'kindBMP'         : 'Citra BMP',

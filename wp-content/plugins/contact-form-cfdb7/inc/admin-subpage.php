@@ -297,7 +297,7 @@ class CFDB7_List_Table extends WP_List_Table
 
         if ( !empty( $action ) ) {
 
-            $nonce        = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+            $nonce        = isset( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : '';
             $nonce_action = 'bulk-' . $this->_args['plural'];
 
             if ( !wp_verify_nonce( $nonce, $nonce_action ) ){

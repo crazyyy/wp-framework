@@ -1,124 +1,138 @@
 <?php
-/* 
+/**
  * Logs debug data to a file. Here is an example usage
  * global $aio_wp_security;
  * $aio_wp_security->debug_logger->log_debug("Log messaged goes here");
  */
-if(!defined('ABSPATH')){
-    exit;//Exit if accessed directly
+if (!defined('ABSPATH')) {
+	exit;//Exit if accessed directly
 }
 
-class AIOWPSecurity_Logger
-{
-    private $debug_enabled = false;
-    private $debug_readable_level = array('SUCCESS','STATUS','NOTICE','WARNING','FAILURE','CRITICAL');
+class AIOWPSecurity_Logger {
+
+	private $debug_enabled = false;
+
+	private $debug_readable_level = array('SUCCESS','STATUS','NOTICE','WARNING','FAILURE','CRITICAL');
  
-    public function __construct($debug_enabled)
-    {
-        $this->debug_enabled = $debug_enabled;
-        $this->maybe_create_debug_log_table();
-    }
-    
-    /**
-     * Translates the level code to its readable form
-     *
-     * @param  integer $level - The level code to translate (e.g: 2)
-     * @return string         - The level as its readable value (e.g: NOTICE)
-     */
-    private function get_readable_level_from_code($level_code)
-    {
-        return isset($this->debug_readable_level[$level_code]) ? $this->debug_readable_level[$level_code] : 'UNKNOWN';
-    }
+	public function __construct($debug_enabled) {
+		$this->debug_enabled = $debug_enabled;
+		$this->maybe_create_debug_log_table();
+	}
+	
+	/**
+	 * Translates the level code to its readable form
+	 *
+	 * @param  integer $level_code - The level code to translate (e.g: 2)
+	 * @return string         - The level as its readable value (e.g: NOTICE)
+	 */
+	private function get_readable_level_from_code($level_code) {
+		return isset($this->debug_readable_level[$level_code]) ? $this->debug_readable_level[$level_code] : 'UNKNOWN';
+	}
 
-    /**
-     * Creates the debug log table if it doesn't already exist
-     *
-     * @return void
-     */
-    private function maybe_create_debug_log_table() {
+	/**
+	 * Creates the debug log table if it doesn't already exist
+	 *
+	 * @return void
+	 */
+	private function maybe_create_debug_log_table() {
 
-        global $wpdb;
+		global $wpdb;
 
-        //needed for the maybe_create_table function
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		if (!function_exists('maybe_create_table')) {
+			//needed for the maybe_create_table function
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		}
 
-        //This exists as a constant, but multisite will need to refresh $wpdb->prefix
-        $debug_log_tbl_name = $wpdb->prefix.'aiowps_debug_log';
+		$charset_collate = '';
+		if (!empty($wpdb->charset)) {
+			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+		} else {
+			$charset_collate = "DEFAULT CHARSET=utf8";
+		}
+		if (!empty($wpdb->collate)) {
+			$charset_collate .= " COLLATE $wpdb->collate";
+		}
 
-        $debug_log_tbl_sql = "CREATE TABLE " . $debug_log_tbl_name . " (
-            id bigint(20) NOT NULL AUTO_INCREMENT,
-            level varchar(25) NOT NULL DEFAULT '',
-            message text NOT NULL DEFAULT '',
-            type varchar(25) NOT NULL DEFAULT '',
-            created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY  (id)
-            )" . $charset_collate . ";";
+		//This exists as a constant, but multisite will need to refresh $wpdb->prefix
+		$debug_log_tbl_name = $wpdb->prefix.'aiowps_debug_log';
 
-            maybe_create_table($debug_log_tbl_name, $debug_log_tbl_sql);
+		$debug_log_tbl_sql = "CREATE TABLE " . $debug_log_tbl_name . " (
+			id bigint(20) NOT NULL AUTO_INCREMENT,
+			level varchar(25) NOT NULL DEFAULT '',
+			message text NOT NULL DEFAULT '',
+			type varchar(25) NOT NULL DEFAULT '',
+			created datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
+			PRIMARY KEY  (id)
+			)" . $charset_collate . ";";
 
-    }
+		maybe_create_table($debug_log_tbl_name, $debug_log_tbl_sql);
 
-    /**
-     * Clears the debug logs
-     *
-     * @return int|WP_Error     the amount of records deleted or WP_Error if query failed
-     */
-    public function clear_logs() {
-        global $wpdb;
+	}
 
-        $debug_log_tbl = $wpdb->prefix . 'aiowps_debug_log';
+	/**
+	 * Clears the debug logs
+	 *
+	 * @return int|WP_Error     the amount of records deleted or WP_Error if query failed
+	 */
+	public function clear_logs() {
+		global $wpdb;
 
-        $query = "DELETE FROM $debug_log_tbl";
+		$debug_log_tbl = $wpdb->prefix . 'aiowps_debug_log';
 
-        $ret = $wpdb->query($query);
+		$query = "DELETE FROM $debug_log_tbl";
 
-        if (false === $ret) {
-            $error_msg = empty($wpdb->last_error) ? __('Unable to get the reason why', 'all-in-one-wp-security-and-firewall') : $wpdb->last_error;
-            $ret = new WP_Error('db_unable_delete', __('Unable to clear the logs', 'all-in-one-wp-security-and-firewall'), $error_msg);
-        }
+		$ret = $wpdb->query($query);
 
-        return $ret;
-    }
-    
-    /**
-     * Logs the debug messages to the database
-     *
-     * @param string  $message - The main debug message
-     * @param integer $level_code   - The level code which indicates the severity of the message
-     * @param string  $type    - The type of debug message. Seperates general debug messages from those generated by the cron, for example.
-     * @return void
-     */
-    public function log_debug($message, $level_code = 0, $type = 'debug') {
+		if (false === $ret) {
+			$error_msg = empty($wpdb->last_error) ? __('Unable to get the reason why', 'all-in-one-wp-security-and-firewall') : $wpdb->last_error;
+			$ret = new WP_Error('db_unable_delete', __('Unable to clear the logs', 'all-in-one-wp-security-and-firewall'), $error_msg);
+		}
 
-        if (!$this->debug_enabled) { return; }
+		return $ret;
+	}
+	
+	/**
+	 * Logs the debug messages to the database
+	 *
+	 * @param string  $message    - The main debug message
+	 * @param integer $level_code - The level code which indicates the severity of the message
+	 * @param string  $type       - The type of debug message. Seperates general debug messages from those generated by the cron, for example.
+	 * @return void
+	 */
+	public function log_debug($message, $level_code = 0, $type = 'debug') {
 
-        global $wpdb;
-        $debug_tbl_name = AIOWPSEC_TBL_DEBUG_LOG;
+		if (!$this->debug_enabled) {
+			return;
+		}
 
-        $data = array(
-            'level' => $this->get_readable_level_from_code($level_code),
-            'message' => $message,
-            'type' => $type
-        );
+		global $wpdb;
+		$debug_tbl_name = AIOWPSEC_TBL_DEBUG_LOG;
 
-        $ret = $wpdb->insert($debug_tbl_name, $data);
-        if(false === $ret) {
-            $error_msg = empty($wpdb->last_error) ? 'Could not write to the debug log' : $wpdb->last_error;
-            error_log("All In One WP Security : {$error_msg}");
-        }
+		$data = array(
+			'level' => $this->get_readable_level_from_code($level_code),
+			'message' => $message,
+			'type' => $type,
+			'created' => current_time('mysql'),
+		);
 
-    }
+		$ret = $wpdb->insert($debug_tbl_name, $data);
+		if (false === $ret) {
+			$error_msg = empty($wpdb->last_error) ? 'Could not write to the debug log' : $wpdb->last_error;
+			error_log("All In One WP Security : {$error_msg}");
+		}
+
+	}
  
-    /**
-     * Logs the debug messages that relate to the cron
-     *
-     * @param string  $message  - The main debug message
-     * @param integer $level_code    - The level code which indicates the severity of the message
-     * @return void
-     */
-    public function log_debug_cron($message, $level_code = 0) {
-        $this->log_debug($message, $level_code, 'cron_debug');
-    }
+	/**
+	 * Logs the debug messages that relate to the cron
+	 *
+	 * @param string  $message    - The main debug message
+	 * @param integer $level_code - The level code which indicates the severity of the message
+	 * @return void
+	 */
+	public function log_debug_cron($message, $level_code = 0) {
+		$this->log_debug($message, $level_code, 'cron_debug');
+	}
 
 
 }

@@ -43,13 +43,13 @@
               <md-layout>
                 <md-card>
                   <md-card-media style="padding:1rem 1rem 0 1rem">
-                    <a href="https://simplyscheduleappointments.com" target="_blank">
+                    <a href="https://simplyscheduleappointments.com?utm_source=plugin&utm_medium=promo-link&utm_campaign=plugin-detective&utm_content=ssa-banner" target="_blank">
                       <img :src="updatedApi.static_url + '/simply-schedule-appointments-logo.svg'" alt="Simply Schedule Appointments logo"/>
                     </a>
                   </md-card-media>
                   <md-card-header>
                     <h3 class="md-title">
-                      <a href="https://simplyscheduleappointments.com" target="_blank">
+                      <a href="https://simplyscheduleappointments.com?utm_source=plugin&utm_medium=promo-link&utm_campaign=plugin-detective&utm_content=ssa-banner" target="_blank">
                         Simply Schedule Appointments
                       </a>
                     </h3>

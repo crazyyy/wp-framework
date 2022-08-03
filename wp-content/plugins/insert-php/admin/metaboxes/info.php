@@ -39,7 +39,7 @@ class WINP_InfoMetaBox extends WINP_MetaBox {
 	 */
 	public $priority = 'core';
 
-	public $css_class = 'factory-bootstrap-450 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-458 factory-fontawesome-000';
 
 	protected $errors = [];
 	protected $source_channel;
@@ -58,8 +58,8 @@ class WINP_InfoMetaBox extends WINP_MetaBox {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory450_ScriptList $scripts   A set of scripts to include.
-	 * @param Wbcr_Factory450_StyleList  $styles    A set of style to include.
+	 * @param Wbcr_Factory457_ScriptList $scripts   A set of scripts to include.
+	 * @param Wbcr_Factory457_StyleList  $styles    A set of style to include.
 	 *
 	 * @return void
 	 */

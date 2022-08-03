@@ -3,7 +3,7 @@ Contributors: WillBontrager, creativemotion
 Donate link: https://woodysnippet.com
 Tags: code snippets, woocommerce, shortcode, adsense, header
 Requires at least: 4.8
-Tested up to: 5.8
+Tested up to: 6.0
 Requires PHP: 7.0
 Stable tag: trunk
 License: GPLv2 or later
@@ -165,6 +165,9 @@ We are very need for your help with [translating Woody Code Snippets plugin](htt
 #### Geolocation ####
 IP geolocation database (Webnet77 or MaxMind) - Select IP geolocation database
 
+### Use this plugin with care! ###
+ATTENTION! Check your php scripts before inserting on your site. If you don't understand how the php script you are using works, try to avoid using it. Using unverified or outdated php scripts can damage the security of your site! Using the plugin on multisites can be dangerous as it will allow all administrators to insert php, js code. If you cannot control the work of administrators, we recommend that you do not use this plugin for security reasons. We are constantly working to improve the security of the plugin, but unfortunately we cannot check the code scripts you use that may violate the security of your site!
+
 ### History, Developers, Credits ###
 
 If you are a long-term user, you may be confused about the new plugin update. You’ve been using an old plugin – Insert php 1.3.0, and now got an extended product – Woody Code Snippets. Insert php was the first plugin version to work with PHP code. It was created by Will Bontrager Software, LLC. In 2018, the Webcraftic studio started to actively develop the plugin. We’ve created a roadmap and released several powerful updates that help you to use PHP code more comfortable and secure. Now plugin supports not only PHP but other snippet types as well. We’ve decided to rename the plugin as Woody Code Snippets. This name is more suitable for new and powerful plugin features.
@@ -258,6 +261,23 @@ We will definitely add multisite support in the future. You can speed up this pr
 7. Custom shortcode name
 
 == Changelog ==
+= 2.4.6 (31.05.2022) =
+* Fixed: Compatibility with Wordpress 6.0
+* Fixed: Some bugs and issues
+
+= 2.4.4 (23.03.2022) =
+* Fixed: Compatibility with Wordpress 5.9
+* Added: Compatibility with premium plugin
+
+= 2.4.4 (23.03.2022) =
+* Allow post editors to use snippet shortcodes
+* Fixed a bug in TinyMCE
+
+= 2.4.3 =
+* Updated plugin framework
+* Added warning notice that using the plugin may be dangerous
+* Added additional security measures for multisites
+
 = 2.4.2 =
 * Fix: Snippets library not load
 * Turn off redirect after activate

@@ -3,13 +3,13 @@
 <?php
 
 $plugins = array(
-	'ZIP' => array(
-			'constant_free' => 'ZRDN_PLUGIN_BASENAME',
-			'constant_premium' => 'ZRDN_PREMIUM',
-			'website' => 'https://ziprecipes.net/premium/',
-			'search' => 'zip+recipes+recipe+maker+really+simple+plugins+complianz',
-			'url' => 'https://wordpress.org/plugins/zip-recipes/?src=complianz-plugin',
-			'title' => 'Zip Recipes - '. __("Beautiful recipes optimized for Google", "complianz-gdpr"),
+	'BURST' => array(
+			'constant_free' => 'burst_version',
+			'constant_premium' => 'burst_version',
+			'website' => 'https://burst-statistics.com/',
+			'search' => 'burst+statistics+really+simple+plugins+self-hosted',
+			'url' => 'https://wordpress.org/plugins/burst-statistics/?src=complianz-plugin',
+			'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool.", "complianz-gdpr"),
 	),
 	'RSSSL' => array(
 			'constant_free' => 'rsssl_version',
@@ -30,20 +30,18 @@ $plugins = array(
 	),
 );
 ?>
-<div>
+<div class="cmplz-other-plugins-container">
 	<?php foreach ($plugins as $id => $plugin) {
 		$prefix = strtolower($id);
 		?>
-		<div class="cmplz-other-plugin cmplz-<?php echo $prefix?>">
-			<div class="plugin-color">
-				<div class="cmplz-bullet"></div>
+			<div class="cmplz-other-plugins-element cmplz-<?php echo $prefix?>">
+				<a href="<?php echo esc_url_raw($plugin['url'])?>" target="_blank" title="<?php echo esc_html($plugin['title'])?>">
+					<div class="cmplz-bullet"></div>
+					<div class="cmplz-other-plugins-content"><?php echo esc_html($plugin['title'])?></div>
+				</a>
+				<div class="cmplz-other-plugin-status">
+					<?php echo COMPLIANZ::$admin->get_status_link($plugin)?>
+				</div>
 			</div>
-			<div class="plugin-text">
-				<a href="<?php echo esc_url_raw($plugin['url'])?>" target="_blank"><?php echo esc_html($plugin['title'])?></a>
-			</div>
-			<div class="plugin-status">
-				<?php echo COMPLIANZ::$admin->get_status_link($plugin)?>
-			</div>
-		</div>
 	<?php }?>
 </div>

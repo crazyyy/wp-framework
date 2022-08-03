@@ -302,7 +302,7 @@ function ampforwp_analytics_options($opt_name){
                         'desc'  => 'Example: 153246987501548',
                         'required' => array(
                           array('amp-fb-pixel', '=' , '1')),
-                    ),                        
+                    ),                       
                     // Segment Analytics 
                       array(
                         'id' => 'ampforwp-Segment-switch',
@@ -334,7 +334,7 @@ function ampforwp_analytics_options($opt_name){
                       array(
                           'id'       => 'pa-feild',
                           'class' => 'child_opt',
-                          'type'     => 'text',
+                          'type'     => 'multi_text',
                           'title'    => esc_html__( ' Enter Your Piwik Analytics URL', 'accelerated-mobile-pages' ),
                           'desc'=>sprintf( 'Example - 
                           https://YOUR_PIWIK_BASE_INSTALLATION_URL/piwik.php?idsite=1&amp;rec=1&amp;
@@ -649,6 +649,44 @@ function ampforwp_analytics_options($opt_name){
                         'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
                          esc_html__('Enable this option to track plausible analytics in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-plausible-analytics-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
                     ),
+                    // AT internet Analytics    
+                    array(
+                        'id'            =>'amp-atinternet-switch',
+                        'type'          => 'switch',
+                        'title'         => esc_html__('AT internet Analytics','accelerated-mobile-pages'),
+                        'default'       => 0,
+                        'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                         esc_html__('Enable this option to track AT internet analytics in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-atinternet-analytics-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
+                    ),
+                    array(
+                        'id'       => 'amp-atinternet-site-id',
+                        'type'     => 'text',
+                        'title'    => esc_html__( 'Site ID', 'accelerated-mobile-pages' ),
+                        'tooltip-subtitle' =>  
+                            esc_html__( 'Enter your AT internet Analytics Site ID here','accelerated-mobile-pages'),
+                        'required' => array(
+                          array('amp-atinternet-switch', '=' , '1')
+                        ),
+                        'placeholder'  => esc_html__('YOUR_SITE_ID_HERE','accelerated-mobile-pages'),
+                    ),
+                    // Marfeel Analytics
+                       array(
+                        'id'            =>'amp-marfeel-pixel',
+                        'type'          => 'switch',
+                        'title'         => esc_html__('Marfeel Pixel','accelerated-mobile-pages'),
+                        'default'       => 0,
+                        'tooltip-subtitle' => sprintf('%s <a href="%s" target="_blank">%s</a> %s', 
+                         esc_html__('Enable this option to track marfeel pixel in AMP and', 'accelerated-mobile-pages'), esc_url('https://ampforwp.com/tutorials/article/how-to-add-facebook-pixel-in-amp/'),esc_html__('Click Here','accelerated-mobile-pages'), esc_html__('for more info','accelerated-mobile-pages')),
+                    ),
+                    array(
+                        'id'            =>'amp-marfeel-account-id',
+                        'type'          => 'text',
+                        'title'         => esc_html__('Marfeel Account ID','accelerated-mobile-pages'),
+                        'default'       => '0',
+                        'desc'  => 'Example: 153246987501548',
+                        'required' => array(
+                          array('amp-marfeel-pixel', '=' , '1')),
+                    ), 
                         )
             )
    );

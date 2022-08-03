@@ -12,30 +12,30 @@ $this->fm_custom_assets();
 </h3>
 
 <div class="fm_codeParaTxt">
-<div class="para"><div class="lftText"><strong><?php _e('USE:' , 'wp-file-manager'); ?></strong></div>  <div class="rtTxt"><?php _e('<code>[wp_file_manager_admin]</code> -> It will show file manager on front end. You can control all settings from file manager settings. It will work same as backend WP File Manager.','wp-file-manager'); ?></div></div>
+<div class="para"><div class="lftText"><strong><?php _e('USE:' , 'wp-file-manager'); ?></strong></div>  <div class="rtTxt"><code>[wp_file_manager_admin]</code> -> <?php _e('It will show file manager on front end. You can control all settings from file manager settings. It will work same as backend WP File Manager.','wp-file-manager'); ?></div></div>
 
-<div class="para"><div class="lftText"><strong><?php _e('USE:', 'wp-file-manager'); ?></strong></div>  <div class="rtTxt"> <?php _e('<code>[wp_file_manager]</code> -> It will show file manager on front end. But only Administrator can access it and will control from file manager settings.', 'wp-file-manager'); ?></div></div>
+<div class="para"><div class="lftText"><strong><?php _e('USE:', 'wp-file-manager'); ?></strong></div>  <div class="rtTxt"> <code>[wp_file_manager]</code> -> <?php _e('It will show file manager on front end. But only Administrator can access it and will control from file manager settings.', 'wp-file-manager'); ?></div></div>
 
-<div class="para"><div class="lftText"><strong><?php _e('USE:', 'wp-file-manager'); ?></strong></div>  <div class="rtTxt"> <?php _e('<code>[wp_file_manager view="list" lang="en" theme="light" dateformat="d M, Y h:i A" allowed_roles="editor,author" access_folder="wp-content/plugins" write = "true" read = "false" hide_files = "kumar,abc.php" lock_extensions=".php,.css" allowed_operations="upload,download" ban_user_ids="2,3"]', 'wp-file-manager'); ?></code></div></div>
+<div class="para"><div class="lftText"><strong><?php _e('USE:', 'wp-file-manager'); ?></strong></div>  <div class="rtTxt"> <code>[wp_file_manager view="list" lang="en" theme="light" dateformat="d M, Y h:i A" allowed_roles="editor,author" access_folder="wp-content/plugins" write = "true" read = "false" hide_files = "kumar,abc.php" lock_extensions=".php,.css" allowed_operations="upload,download" ban_user_ids="2,3"]</code></div></div>
 
 </div>
 
 <label class="labelHeading"><?php _e('Parameters:', 'wp-file-manager'); ?></label> 
 
 <ul class="shortcodeDocList">
-<li><div class="lftTxt"><span class="num">1</span></div>  <div class="rtTxt"><span class="strongText"><?php _e('allowed_roles = "*"' ,'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> It will allow all roles to access file manager on front end or You can simple use for particular user roles as like allowed_roles="editor,author" (seprated by comma(,))' ,'wp-file-manager'); ?></span></div> </li>
+<li><div class="lftTxt"><span class="num">1</span></div>  <div class="rtTxt"><span class="strongText">allowed_roles = "*"</span> <span class="lineText">-> <?php _e('It will allow all roles to access file manager on front end or You can simple use for particular user roles as like allowed_roles="editor,author" (seprated by comma(,))' ,'wp-file-manager'); ?></span></div> </li>
 
-<li><div class="lftTxt"><span class="num">2</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('access_folder="test"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> Here "test" is the name of folder which is located on root directory, or you can give path for sub folders as like "wp-content/plugins". If leave blank or empty it will access all folders on root directory. Default: Root directory', 'wp-file-manager'); ?></span></div> </li>
+<li><div class="lftTxt"><span class="num">2</span></div>  <div class="rtTxt"> <span class="strongText">access_folder="test"</span> <span class="lineText">-> <?php _e('Here "test" is the name of folder which is located on root directory, or you can give path for sub folders as like "wp-content/plugins". If leave blank or empty it will access all folders on root directory. Default: Root directory', 'wp-file-manager'); ?></span></div> </li>
 
-<li><div class="lftTxt"><span class="num">3</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('write = "true"' , 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> for access to write files permissions, note: true/false, default: false', 'wp-file-manager'); ?></span></div> </li>
+<li><div class="lftTxt"><span class="num">3</span></div>  <div class="rtTxt"> <span class="strongText">write = "true"</span> <span class="lineText">-> <?php _e('for access to write files permissions, note: true/false, default: false', 'wp-file-manager'); ?></span></div> </li>
 
-<li><div class="lftTxt"><span class="num">4</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('read = "true"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> for access to read files permission, note: true/false, default: true', 'wp-file-manager'); ?></span></div> </li>
+<li><div class="lftTxt"><span class="num">4</span></div>  <div class="rtTxt"> <span class="strongText">read = "true"</span> <span class="lineText">-> <?php _e('for access to read files permission, note: true/false, default: true', 'wp-file-manager'); ?></span></div> </li>
 
-<li><div class="lftTxt"><span class="num">5</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('hide_files = "wp-content/plugins,wp-config.php"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> it will hide mentioned here. Note: seprated by comma(,). Default: Null', 'wp-file-manager'); ?></span></div> </li>
+<li><div class="lftTxt"><span class="num">5</span></div>  <div class="rtTxt"> <span class="strongText">hide_files = "wp-content/plugins,wp-config.php"</span> <span class="lineText">-> <?php _e('it will hide mentioned here. Note: seprated by comma(,). Default: Null', 'wp-file-manager'); ?></span></div> </li>
 
-<li><div class="lftTxt"><span class="num">6</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('lock_extensions=".php,.css', 'wp-file-manager'); ?>"</span> <span class="lineText"><?php _e('-> It will lock mentioned in commas. you can lock more as like ".php,.css,.js" etc. Default: Null', 'wp-file-manager'); ?></span></div> </li>
+<li><div class="lftTxt"><span class="num">6</span></div>  <div class="rtTxt"> <span class="strongText">lock_extensions=".php,.css"</span> <span class="lineText">-> <?php _e('It will lock mentioned in commas. you can lock more as like ".php,.css,.js" etc. Default: Null', 'wp-file-manager'); ?></span></div> </li>
 
-<li><div class="lftTxt"><span class="num">7</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('allowed_operations="*"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> * for all operations and to allow some operation you can mention operation name as like, allowed_operations="upload,download". Note: seprated by comma(,). Default: *', 'wp-file-manager'); ?></span> </div></li>
+<li><div class="lftTxt"><span class="num">7</span></div>  <div class="rtTxt"> <span class="strongText">allowed_operations="*"</span> <span class="lineText">-> <?php _e('* for all operations and to allow some operation you can mention operation name as like, allowed_operations="upload,download". Note: seprated by comma(,). Default: *', 'wp-file-manager'); ?></span> </div></li>
 
 </ul>
 
@@ -68,11 +68,11 @@ $this->fm_custom_assets();
 </div>
 
 <ul class="shortcodeDocList">
-<li><div class="lftTxt"><span class="num">8</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('ban_user_ids="2,3"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('->  It will ban particular users by just putting their ids seprated by commas(,). If user is Ban then they will not able to access wp file manager on front end.', 'wp-file-manager'); ?></span></div> </li>
-<li><div class="lftTxt"><span class="num">9</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('view="list"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> Filemanager UI View. Default: grid', 'wp-file-manager'); ?></span> </div></li>
-<li><div class="lftTxt"><span class="num">10</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('dateformat="d M, Y h:i A"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> File Modified or Create date format. Default: d M, Y h:i A', 'wp-file-manager'); ?> </span> </div></li>
-<li><div class="lftTxt"><span class="num">11</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('lang="en"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> File manager Language. Default: English(en)', 'wp-file-manager'); ?> </span> </div></li>
-<li><div class="lftTxt"><span class="num">12</span></div>  <div class="rtTxt"> <span class="strongText"><?php _e('theme="light"', 'wp-file-manager'); ?></span> <span class="lineText"><?php _e('-> File Manager Theme. Default: Light', 'wp-file-manager'); ?> </span> </div></li>
+<li><div class="lftTxt"><span class="num">8</span></div>  <div class="rtTxt"> <span class="strongText">ban_user_ids="2,3"</span> <span class="lineText"><?php _e('->  It will ban particular users by just putting their ids seprated by commas(,). If user is Ban then they will not able to access wp file manager on front end.', 'wp-file-manager'); ?></span></div> </li>
+<li><div class="lftTxt"><span class="num">9</span></div>  <div class="rtTxt"> <span class="strongText">view="list"</span> <span class="lineText"><?php _e('-> Filemanager UI View. Default: grid', 'wp-file-manager'); ?></span> </div></li>
+<li><div class="lftTxt"><span class="num">10</span></div>  <div class="rtTxt"> <span class="strongText">dateformat="d M, Y h:i A"</span> <span class="lineText"><?php _e('-> File Modified or Create date format. Default: d M, Y h:i A', 'wp-file-manager'); ?> </span> </div></li>
+<li><div class="lftTxt"><span class="num">11</span></div>  <div class="rtTxt"> <span class="strongText">lang="en"</span> <span class="lineText"><?php _e('-> File manager Language. Default: English(en)', 'wp-file-manager'); ?> </span> </div></li>
+<li><div class="lftTxt"><span class="num">12</span></div>  <div class="rtTxt"> <span class="strongText">theme="light"</span> <span class="lineText"><?php _e('-> File Manager Theme. Default: Light', 'wp-file-manager'); ?> </span> </div></li>
 </ul>
 
 </div>

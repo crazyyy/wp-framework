@@ -3,12 +3,24 @@
  * Inits the admin dashboard side of things.
  * Main admin file which loads all settings panels and sets up admin menus. 
  */
-if(!defined('ABSPATH')){
-    exit;//Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;// Exit if accessed directly
 }
 
-class AIOWPSecurity_Admin_Init
-{
+class AIOWPSecurity_Admin_Init {
+
+    /**
+     * Whether the page is admin dashboard page.
+     * @var boolean
+     */
+    private $is_admin_dashboard_page;
+
+    /**
+     * Whether the page is admin AIOWPS page.
+     * @var boolean
+     */
+    private $is_aiowps_admin_page;
+
     var $main_menu_page;
     var $dashboard_menu;
     var $settings_menu;
@@ -25,18 +37,29 @@ class AIOWPSecurity_Admin_Init
     var $filescan_menu;
     var $misc_menu;
 
-    function __construct() {
+    /**
+     * Includes admin dependencies and hook admin actions.
+     *
+     * @return void
+     */
+    public function __construct() {
         //This class is only initialized if is_admin() is true
         $this->admin_includes();
         add_action('admin_menu', array($this, 'create_admin_menus'));
         //handle CSV download
         add_action('admin_init', array($this, 'aiowps_csv_download'));
 
+        add_action('admin_init', array($this, 'hook_admin_notices'));
+
         //make sure we are on our plugin's menu pages
-        if (isset($_GET['page']) && strpos($_GET['page'], AIOWPSEC_MENU_SLUG_PREFIX) !== false) {
+        if ($this->is_aiowps_admin_page()) {
             add_action('admin_print_scripts', array($this, 'admin_menu_page_scripts'));
             add_action('admin_print_styles', array($this, 'admin_menu_page_styles'));
             add_action('init', array($this, 'init_hook_handler_for_admin_side'));
+
+            if (class_exists('AIOWPS_PREMIUM')) {
+                add_filter('admin_footer_text', array($this, 'display_footer_review_message'));
+            }
         }
     }
 
@@ -123,6 +146,73 @@ class AIOWPSecurity_Admin_Init
         }
     }
 
+    /**
+     * Check whether current admin page is All In One WP Security admin page or not.
+     *
+     * @return boolean True if All In One WP Security admin page, Otherwise false.
+     */
+    private function is_aiowps_admin_page() {
+        if (isset($this->is_aiowps_admin_page)) {
+            return $this->is_aiowps_admin_page;
+        }
+        global $pagenow;
+        $this->is_aiowps_admin_page = ('admin.php' == $pagenow && isset($_GET['page']) && false !== strpos($_GET['page'], AIOWPSEC_MENU_SLUG_PREFIX));
+        return $this->is_aiowps_admin_page;
+    }
+
+    /**
+     * Hook admin notices on admin dashboard page and admin AIOWPS pages.
+     *
+     * @return void
+     */
+    public function hook_admin_notices() {
+        if (!current_user_can('update_plugins')) {
+            return;
+        }
+
+        // If none of the admin dashboard page or the AIOWPS page, Then bail
+        if (!$this->is_admin_dashboard_page() && !$this->is_aiowps_admin_page()) {
+            return;
+        }
+
+        add_action('all_admin_notices', array($this, 'render_admin_notices'));
+    }
+
+    /**
+     * Check whether current admin page is Admin Dashboard page or not.
+     *
+     * @return boolean True if Admin Dashboard page, Otherwise false.
+     */
+    private function is_admin_dashboard_page() {
+        if (isset($this->is_admin_dashboard_page)) {
+            return $this->is_admin_dashboard_page;
+        }
+        global $pagenow;
+        $this->is_admin_dashboard_page = 'index.php' == $pagenow;
+        return $this->is_admin_dashboard_page;
+    }
+
+    /**
+     * Render admin notices.
+     *
+     * @return void
+     */
+    public function render_admin_notices() {
+        global $aio_wp_security;
+
+        $installed_at = $aio_wp_security->notices->get_aiowps_plugin_installed_timestamp();
+        $time_now = $aio_wp_security->notices->get_time_now();
+        $installed_for = $time_now - $installed_at;
+
+        $dismissed_dash_notice_until = (int) $aio_wp_security->configs->get_value('dismissdashnotice');
+
+        if ($this->is_admin_dashboard_page() && ($installed_at && $time_now > $dismissed_dash_notice_until && $installed_for > (14 * 86400) && !defined('AIOWPSECURITY_NOADS_B')) || (defined('AIOWPSECURITY_FORCE_DASHNOTICE') && AIOWPSECURITY_FORCE_DASHNOTICE)) {
+            $aio_wp_security->include_template('notices/thanks-for-using-main-dash.php');
+        } elseif ($this->is_aiowps_admin_page() && $installed_at && $installed_for > 14*86400) {
+            $aio_wp_security->notices->do_notice(false, 'top');
+        }
+    }
+
     function admin_includes()
     {
         include_once('wp-security-admin-menu.php');
@@ -154,6 +244,21 @@ class AIOWPSecurity_Admin_Init
         $this->aiowps_media_uploader_modification();
         $this->initialize_feature_manager();
         $this->do_other_admin_side_init_tasks();
+    }
+
+    /**
+     * Show footer review message and link.
+     *
+     * @return string
+     */
+    public function display_footer_review_message() {
+        /* translators: 1: All In One WP Security & Firewall 2: G2 review link */
+        $message = sprintf(
+            __('Enjoyed %1$s? Please leave us a %2$s rating. We really appreciate your support!', 'all-in-one-wp-security-and-firewall'),
+            '<b>All In One WP Security & Firewall</b>',
+            '<a href="https://www.g2.com/products/all-in-one-wp-security-firewall/reviews" target="_blank">&starf;&starf;&starf;&starf;&starf;</a>'
+        );
+        return $message;
     }
 
     function aiowps_media_uploader_modification()
@@ -234,7 +339,7 @@ class AIOWPSecurity_Admin_Init
             {
                 $brute_force_feature_secret_word = sanitize_text_field($_POST['aiowps_brute_force_secret_word']);
                 if(empty($brute_force_feature_secret_word)){
-                    $brute_force_feature_secret_word = "aiowps_secret";
+                    $brute_force_feature_secret_word = "aiowpssecret";
                 }
                 AIOWPSecurity_Utility::set_cookie_value($brute_force_feature_secret_word, "1");
             }

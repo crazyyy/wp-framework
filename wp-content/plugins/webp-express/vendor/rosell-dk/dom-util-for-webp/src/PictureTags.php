@@ -35,9 +35,9 @@ class PictureTags
      * would be unsafe. See #21
      * @return  void
      */
-    public final function __construct()
+    final public function __construct()
     {
-      $this->existingPictureTags = [];
+        $this->existingPictureTags = [];
     }
 
     private $existingPictureTags;
@@ -112,27 +112,47 @@ class PictureTags
         return $result;
     }
 
-    private static function getAttributes($html)
+    /**
+     *  Convert to UTF-8 and encode chars outside of ascii-range
+     *
+     *  Input: html that might be in any character encoding and might contain non-ascii characters
+     *  Output: html in UTF-8 encding, where non-ascii characters are encoded
+     *
+     */
+    private static function textToUTF8WithNonAsciiEncoded($html)
     {
         if (function_exists("mb_convert_encoding")) {
-            $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+            $html = mb_convert_encoding($html, 'UTF-8');
+            $html = mb_encode_numericentity($html, array (0x7f, 0xffff, 0, 0xffff), 'UTF-8');
         }
+        return $html;
+    }
+
+    private static function getAttributes($html)
+    {
         if (class_exists('\\DOMDocument')) {
             $dom = new \DOMDocument();
+
+            if (function_exists("mb_encode_numericentity")) {
+                // I'm in doubt if I should add the following line (see #41)
+                // $html = mb_convert_encoding($html, 'UTF-8');
+                $html = mb_encode_numericentity($html, array (0x7f, 0xffff, 0, 0xffff));  // #41
+            }
+
             @$dom->loadHTML($html);
             $image = $dom->getElementsByTagName('img')->item(0);
             $attributes = [];
             foreach ($image->attributes as $attr) {
-                    $attributes[$attr->nodeName] = $attr->nodeValue;
+                $attributes[$attr->nodeName] = $attr->nodeValue;
             }
             return $attributes;
         } else {
-            //$dom = HtmlDomParser::str_get_html($html, false, false, 'UTF-8', false);
-            /*if (!function_exists('str_get_html')) {
-                require_once __DIR__ . '/../src-vendor/simple_html_dom/simple_html_dom.inc';
-            }*/
-
-
+            // Convert to UTF-8 because HtmlDomParser::str_get_html needs to be told the
+            // encoding. As UTF-8 might conflict with the charset set in the meta, we must
+            // encode all characters outside the ascii-range.
+            // It would perhaps have been better to try to guess the encoding rather than
+            // changing it (see #39), but I'm reluctant to introduce changes.
+            $html =  self::textToUTF8WithNonAsciiEncoded($html);
             $dom = HtmlDomParser::str_get_html($html, false, false, 'UTF-8', false);
             if ($dom !== false) {
                 $elems = $dom->find('img,IMG');
@@ -210,7 +230,6 @@ class PictureTags
                 $width = null;
                 if ($result && count($result) >= 2) {
                     list($src, $width) = $result;
-
                 }
 
                 $webpUrl = $this->replaceUrlOr($src, false);
@@ -225,7 +244,6 @@ class PictureTags
         }
 
         foreach ($srcAttributes as $attrName => $attrValue) {
-
             if (substr($attrValue, 0, 5) == 'data:') {
                 // ignore tags with data urls, such as <img src="data:...
                 return $imgTag;
@@ -253,35 +271,6 @@ class PictureTags
             . '<source' . self::createAttributes($sourceTagAttributes) . ' type="image/webp">'
             . '<img' . self::createAttributes($imgAttributes) . '>'
             . '</picture>';
-
-/*
-        //if ($srcsetInfo['value']) {
-        if (isset($srcSetAttributes['srcset'])) {
-            $sourceTagAttributes = $srcSetAttributes;
-
-
-            return '<picture>'
-                . '<source' . self::createAttributes($sourceTagAttributes) . ' type="image/webp">'
-                . '<img' . self::createAttributes($imgAttributes) . '>'
-                . '</picture>';
-        } else {
-            $srcWebP = $this->replaceUrlOr($srcInfo['value'], false);
-            if ($srcWebP === false) {
-                // No reason to create <picture> tag
-                return $imgTag;
-            }
-
-            $sourceSrcAttrName = $srcInfo['attrName'];
-            if ($sourceSrcAttrName == 'src') {
-                // "src" isn't allowed in <source> tag with <picture> tag as parent.
-                $sourceSrcAttrName = 'srcset';
-            }
-
-            return '<picture>'
-                . '<source ' . $sourceSrcAttrName . '="' . $srcWebP . '" type="image/webp">'
-                . '<img' . self::createAttributes($imgAttributes) . '>'
-                . '</picture>';
-        }*/
     }
 
     /*
@@ -309,10 +298,22 @@ class PictureTags
      */
     public function replaceHtml($content)
     {
+        if (!class_exists('\\DOMDocument') && function_exists('mb_detect_encoding')) {
+            // PS: Correctly identifying Windows-1251 encoding only works on some systems
+            //     But at least I'm not aware of any false positives
+            if (mb_detect_encoding($content, ["ASCII", "UTF8", "Windows-1251"]) == 'Windows-1251') {
+                $content = mb_convert_encoding($content, 'UTF-8', 'Windows-1251');
+            }
+        }
+
         $this->existingPictureTags = [];
 
         // Tempororily remove existing <picture> tags
-        $content = preg_replace_callback('/<picture[^>]*>.*?<\/picture>/i', array($this, 'removePictureTagsTemporarily'), $content);
+        $content = preg_replace_callback(
+            '/<picture[^>]*>.*?<\/picture>/is',
+            array($this, 'removePictureTagsTemporarily'),
+            $content
+        );
 
         // Replace "<img>" tags
         $content = preg_replace_callback('/<img[^>]*>/i', array($this, 'replaceCallback'), $content);

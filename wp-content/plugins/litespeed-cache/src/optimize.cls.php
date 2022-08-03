@@ -43,8 +43,6 @@ class Optimize extends Base {
 	private $_var_preserve_js = array();
 	private $_request_url;
 
-	private $i2 = 0;
-
 	/**
 	 * Constructor
 	 * @since  4.0
@@ -67,7 +65,7 @@ class Optimize extends Base {
 				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to missing domain key' );
 				$this->cfg_css_async = false;
 			}
-			if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_UCSS ) ) && $this->conf( self::O_OPTM_UCSS_INLINE ) ) {
+			if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || ( $this->conf( self::O_OPTM_UCSS ) && $this->conf( self::O_OPTM_CSS_COMB ) ) ) && $this->conf( self::O_OPTM_UCSS_INLINE ) ) {
 				Debug2::debug( '[Optm] ❌ CCSS set to OFF due to UCSS Inline' );
 				$this->cfg_css_async = false;
 			}
@@ -75,6 +73,15 @@ class Optimize extends Base {
 		$this->cfg_js_defer = $this->conf( self::O_OPTM_JS_DEFER );
 		if ( defined( 'LITESPEED_GUEST_OPTM' ) ) {
 			$this->cfg_js_defer = 2;
+		}
+		if ( $this->cfg_js_defer == 2 ) {
+			add_filter( 'litespeed_optm_cssjs', function( $con, $file_type ){
+				if ( $file_type == 'js' ) {
+					$con = str_replace( 'DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con );
+					// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
+				}
+				return $con;
+			}, 20, 2 );
 		}
 
 		// To remove emoji from WP
@@ -284,7 +291,7 @@ class Optimize extends Base {
 				if ( $this->cfg_css_comb ) {
 					// Check if has inline UCSS enabled or not
 					if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( self::O_OPTM_UCSS ) ) && $this->conf( self::O_OPTM_UCSS_INLINE ) ) {
-						$filename = $this->cls( 'CSS' )->load_ucss( $this->_request_url, true );
+						$filename = $this->cls( 'UCSS' )->load( $this->_request_url, true );
 						if ( $filename ) {
 							$filepath_prefix = $this->_build_filepath_prefix( 'ucss' );
 							$this->_ucss = File::read( LITESPEED_STATIC_DIR . $filepath_prefix . $filename );
@@ -479,7 +486,7 @@ class Optimize extends Base {
 	 */
 	private function _build_js_tag( $src ) {
 		if ( $this->cfg_js_defer === 2 ) {
-			return '<script data-optimized="1" type="litespeed/javascript" data-i="' . ++$this->i2 . '" data-src="' . $src . '"></script>';
+			return '<script data-optimized="1" type="litespeed/javascript" data-src="' . $src . '"></script>';
 		}
 
 		if ( $this->cfg_js_defer ) {
@@ -734,14 +741,16 @@ class Optimize extends Base {
 
 		$content = $this->__optimizer->optm_snippet( $content, $file_type, ! $is_min, $src );
 
+		$filepath_prefix = $this->_build_filepath_prefix( $file_type );
+
 		// Save to file
-		$filename = $file_type . '/' . md5( $this->remove_query_strings( $src ) ) . '.' . $file_type;
-		$static_file = LITESPEED_STATIC_DIR . '/' . $filename;
+		$filename = $filepath_prefix . md5( $this->remove_query_strings( $src ) ) . '.' . $file_type;
+		$static_file = LITESPEED_STATIC_DIR . $filename;
 		File::save( $static_file, $content, true );
 
 		// QS is required as $src may contains version info
 		$qs_hash = substr( md5( $src ), -5 );
-		return LITESPEED_STATIC_URL . "/$filename?ver=$qs_hash";
+		return LITESPEED_STATIC_URL . "$filename?ver=$qs_hash";
 	}
 
 	/**
@@ -775,7 +784,7 @@ class Optimize extends Base {
 		// Add cache tag in case later file deleted to avoid lscache served stale non-existed files @since 4.4.1
 		Tag::add( Tag::TYPE_MIN . '.' . $filename );
 
-		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS ) ), -5 );
+		$qs_hash = substr( md5( self::get_option( self::ITEM_TIMESTAMP_PURGE_CSS) ), -5 );
 		// As filename is alreay realted to filecon md5, no need QS anymore
 		$filepath_prefix = $this->_build_filepath_prefix( $type );
 		return LITESPEED_STATIC_URL . $filepath_prefix . $filename . '?ver=' . $qs_hash;
@@ -829,7 +838,7 @@ class Optimize extends Base {
 				if ( $js_excluded || $ext_excluded || ! $is_file ) {
 					// Maybe defer
 					if ( $this->cfg_js_defer ) {
-						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] ); // todo: this can't follow the i2 order
+						$deferred = $this->_js_defer( $match[ 0 ], $attrs[ 'src' ] );
 						if ( $deferred ) {
 							$this->content = str_replace( $match[ 0 ], $deferred, $this->content );
 						}
@@ -920,8 +929,10 @@ class Optimize extends Base {
 			if ( strpos( $attrs, ' type=' ) !== false ) {
 				$attrs = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $attrs );
 			}
-			return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . ++$this->i2 . '">' . $con . '</script>';
-			// return '<script' . $attrs . ' type="litespeed/javascript" data-i="' . $this->i2 . '" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
+			// Replace DOMContentLoaded
+			$con = str_replace( 'DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con );
+			return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
+			// return '<script' . $attrs . ' type="litespeed/javascript" src="data:text/javascript;base64,' . base64_encode( $con ) . '"></script>';
 			// return '<script' . $attrs . ' type="litespeed/javascript">' . $con . '</script>';
 		}
 
@@ -1157,7 +1168,7 @@ class Optimize extends Base {
 			if ( strpos( $ori, ' type=' ) !== false ) {
 				$ori = preg_replace( '# type=([\'"])([^\1]+)\1#isU', '', $ori );
 			}
-			return str_replace( ' src=', ' type="litespeed/javascript" data-i="' . ++$this->i2 . '" data-src=', $ori );
+			return str_replace( ' src=', ' type="litespeed/javascript" data-src=', $ori );
 		}
 
 		return str_replace( '></script>', ' defer data-deferred="1"></script>', $ori );

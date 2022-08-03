@@ -15,6 +15,8 @@ if (typeof elFinder === "function" && elFinder.prototype.i18) {
     fancyDateFormat: "$1 h:i A", // will show like: Today 04:39 PM
     nonameDateFormat: "ymd-His", // noname upload will show like: 180824-163916
     messages: {
+      getShareText : 'Share',
+      "Editor ": "Code Editor",
       /********************************** errors **********************************/
       error: "Error",
       errUnknown: "Unknown error.",

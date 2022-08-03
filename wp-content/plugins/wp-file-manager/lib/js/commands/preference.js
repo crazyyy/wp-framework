@@ -75,7 +75,7 @@ elFinder.prototype.commands.preference = function() {
 						ko: '한국어',
 						nl: 'Nederlands',
 						no: 'Norsk',
-						pl: 'Polski',
+						//pl: 'Polski',
 						pt_BR: 'Português',
 						ro: 'Română',
 						ru: 'Pусский',

@@ -88,6 +88,33 @@ function ampforwp_minify_html_output($content_buffer){
     if (function_exists('qoxag_setup')) {
         $content_buffer = preg_replace('/<link rel="stylesheet"(.*?)href="(.*?).css">/', '', $content_buffer);
     }
+    if(preg_match('/<fw-embed-feed(.*?)<\/fw-embed-feed>/', $content_buffer)){
+        $content_buffer = preg_replace('/<fw-embed-feed(.*?)<\/fw-embed-feed>/', '', $content_buffer);
+    }
+
+    if(preg_match('/<blockquote\sclass="wp-embedded-content"(.*?)<a href="(.*?)"(.*?)<\/blockquote>/', $content_buffer)){
+        $content_buffer = preg_replace('/<blockquote\sclass="wp-embedded-content"(.*?)<a href="(.*?)"(.*?)<\/blockquote>/', '<amp-wordpress-embed width="400" height="400" data-url="$2" ></amp-wordpress-embed>', $content_buffer);
+        $content_buffer = preg_replace('/<amp-iframe(.*?)class="wp-embedded-content(.*?)<\/amp-iframe>/', '', $content_buffer);
+    }
+    if (function_exists('wp_faq_schema_load_plugin_textdomain')) {
+        $content_buffer = preg_replace('/<div\sclass="">(.*?)<\/div>/s', '$1', $content_buffer);
+        $content_buffer = preg_replace('/<h4>/s', '<section><h4>', $content_buffer);
+        $content_buffer = preg_replace('/<\/p>/s', '</p></section>', $content_buffer);
+        $content_buffer = preg_replace('/<div\sclass="wp-faq-schema-items">(.*?)<\/div>/s', '<amp-accordion expand-single-section>$1</amp-accordion>', $content_buffer);
+    } 
+   if(preg_match('/<amp-iframe(.*?)src="(.*?)embed\/(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', $content_buffer)){
+        // Youtube Embed with Query Parameters
+        $content_buffer = preg_replace('/<amp-iframe(.*?)src="(.*?)youtube.com\/embed\/(.*?)\?(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', '<amp-youtube data-videoid="$3" layout="responsive" width="$6" height="$8"></amp-youtube>', $content_buffer);
+        $content_buffer = preg_replace('/<amp-iframe(.*?)src="(.*?)embed\/(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', '<amp-youtube data-videoid="$3" layout="responsive" width="$5" height="$7"></amp-youtube>', $content_buffer);
+    }
+    if(preg_match('/<amp-iframe\sclass="instagram-media(.*?)"(.*?)src="https:\/\/instagram.com\/p\/(.*?)\/(.*?)"(.*?)><\/amp-iframe>/', $content_buffer)){
+        $content_buffer = preg_replace('/<amp-iframe\sclass="instagram-media(.*?)"(.*?)src="https:\/\/instagram.com\/p\/(.*?)\/(.*?)"(.*?)><\/amp-iframe>/', '<amp-instagram data-shortcode="$3" data-captioned width="400" height="400"layout="responsive"></amp-instagram>', $content_buffer); 
+    }
+
+    if(preg_match('/<blockquote\sclass="instagram-media\s(.*?)"(.*?)data-instgrm-permalink="(.*?)p\/(.*?)"(.*?)<\/blockquote>/', $content_buffer)){
+        $content_buffer = preg_replace('/<blockquote\sclass="instagram-media\s(.*?)"(.*?)data-instgrm-permalink="(.*?)p\/(.*?)"(.*?)<\/blockquote>/', '<amp-instagram data-shortcode="$4" width="400" height="400"layout="responsive"></amp-instagram>', $content_buffer); 
+    }
+
     global $redux_builder_amp;
     if(!$redux_builder_amp['ampforwp_cache_minimize_mode']){
            return $content_buffer;       

@@ -1,5 +1,11 @@
 === Changes List ===
 
+= 0.14 [03.04.2022] =
+* Update: "Known plugins" JSON data files were moved from Amazon Web Services S3 to Yandex Cloud Object Storage.
+* Update: "Delete Tables" button label was replaced with "Delete Selected Tables".
+* Update: Additional confirmation request was added before database tables deletion. It contains the list of tables selected for deletion.
+
+
 = 0.12 [15.08.2020] =
 * Update: Server side "Fatal error: Maximum execution time of NN seconds exceeded" should not take place now. PGC scans plugins with large quantity of files by splitting job to smaller parts per 500 files.
 * Update: "foreign key constraint fails" error should not prevent database table deletion. PGC temporally switches off "foreign keys constraints checking".

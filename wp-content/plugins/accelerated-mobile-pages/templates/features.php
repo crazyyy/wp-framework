@@ -2399,6 +2399,15 @@ function ampforwp_footer_html_output() {
   	 $hashcode = ampforwp_get_setting('amp-quantcast-hashcode');
   	 $country = ampforwp_get_setting('amp-quantcast-publishercountrycode');
   	 $name = ampforwp_get_setting('amp-quantcast-publishername');
+  	 $privacy = ampforwp_get_setting('amp-quantcast-privacy-mode');
+  	 $lang = ampforwp_get_setting('amp-quantcast-lang');
+  	 if (empty($privacy)) {
+  	 	$privacy = 'GDPR';
+  	 }
+  	 if (empty($lang)) {
+  	 	$lang = 'en';
+  	 }
+
   if (!empty($id) && !empty($hashcode) && !empty($country) && !empty($name) ) {?>
 	<amp-consent id="quantcast" layout="nodisplay">
     	<script type="application/json">
@@ -2410,7 +2419,7 @@ function ampforwp_footer_html_output() {
            "clientConfig": {
                "coreConfig": {
                    "quantcastAccountId": "<?php echo esc_html($id); ?>",
-                   "privacyMode": ["GDPR"],
+                   "privacyMode": ["<?php echo esc_html($privacy); ?>"],
                    "hashCode": "<?php echo esc_html($hashcode); ?>",
                    "publisherCountryCode": "<?php echo esc_html($country); ?>",
                    "publisherName": "<?php echo esc_html($name); ?>",
@@ -2420,7 +2429,7 @@ function ampforwp_footer_html_output() {
                    "vendorSpecialFeaturesIds": [1, 2],
                    "vendorSpecialPurposesIds": [1, 2],
                    "googleEnabled": false,
-                   "lang_": "en",
+                   "lang_": "<?php echo esc_html($lang); ?>",
                    "displayUi": "always",
                    "publisherConsentRestrictionIds": [],
                    "publisherLIRestrictionIds": [],
@@ -4357,7 +4366,11 @@ function ampforwp_modify_rel_amphtml_paginated_post($url) {
 					$new_url = trailingslashit($url) . user_trailingslashit($post_paginated_page);
 				}
 
-				$new_url = add_query_arg(AMPFORWP_AMP_QUERY_VAR,'1',$new_url);
+				if(ampforwp_get_setting('ampforwp-pagination-link-type')==true ){
+		 			$new_url = ampforwp_url_controller($new_url);
+				}else{
+					$new_url = add_query_arg(AMPFORWP_AMP_QUERY_VAR,'1',$new_url);
+				}
 				return $new_url;
 			}
 		} 
@@ -6123,7 +6136,11 @@ if ( ! function_exists( 'ampforwp_google_fonts_generator' ) ) {
 		      	}
 		        $font_output .= "@font-face {  ";
 		        $font_output .= "font-family: " . esc_attr(ampforwp_get_setting('amp_font_selector_content_single')). ';' ;
-		        $font_output .= "font-display: optional".';';
+		        if (ampforwp_get_setting('ampforwp_font_display') == 'optional') {
+		        	$font_output .= "font-display: optional".';';
+		        }else{
+		        	$font_output .= "font-display: swap".';';
+		        }
 		        $font_output .= "font-style: " . esc_attr($font_style) . ';';
 		        $font_output .= "font-weight: " . esc_attr($font_weight) . ';' ;
 		        $font_output .= "src: local('". esc_attr(ampforwp_get_setting('amp_font_selector_content_single'))." ".esc_attr($font_local_weight)." ".esc_attr($font_local_type)."'), local('". esc_attr(ampforwp_get_setting('amp_font_selector_content_single'))."-".esc_attr($font_local_weight).$font_local_type."'), url(" .esc_url(str_replace("http://", "https://", $font_data->files->$value)) . ');' ;
@@ -7592,9 +7609,13 @@ function ampforwp_set_dns_preload_urls(){
 	               	if(isset($data_arr[$j]['value'][$i])){
 	               	 	$value 	= $data_arr[$j+1]['value'][$i];
 	               	}
+	               	$type = ''; 
+	               	if (preg_match('/(\.jpg|\.png|\.webp)$/', $value)) {
+	               		$type = 'as="image"';
+	               	}
 	               	 	if($value!=""){
 	               	 		?>
-	               	 		<link rel="<?php echo esc_attr($key)?>" href="<?php echo esc_url($value);?>" crossorigin>
+	               	 		<link rel="<?php echo esc_attr($key)?>" <?php echo $type; // XXS ok, escaped above ?> href="<?php echo esc_url($value);?>" crossorigin>
 	               	 		<?php
 	               	 	}
 	               	}
@@ -9653,3 +9674,80 @@ function ampforwp_rocket_cache_query_string($query_strings){
 	array_push($query_strings,"amp"); 
 	return $query_strings;
 }
+
+
+function ampforwp_publisher_desk_ads_insert( $ads, $content ) {
+    if ( ! is_array( $ads ) ) {
+        return $content;
+    }
+
+    $closing_p = '</p>';
+    $paragraphs = explode( $closing_p, $content );
+
+    foreach ($paragraphs as $index => $paragraph) {
+        if ( trim( $paragraph ) ) {
+            $paragraphs[$index]  .= $closing_p;
+        }
+
+        $n = $index + 1;
+        if ( isset( $ads[ $n ] ) ) {
+            $paragraphs[$index] .= $ads[ $n ];
+        }
+    }
+
+    return implode( '', $paragraphs );
+}
+
+add_filter( 'ampforwp_modify_the_content', 'ampforwp_publisher_desk_ads' );
+function ampforwp_publisher_desk_ads( $content ) {
+	if (!ampforwp_get_setting('ampforwp-ads-publisherdesk')) {
+		return $content;
+	}
+	$pub_id = $url = '';
+	$pub_id = ampforwp_get_setting('ampforwp-publisherdesk-id');
+	if (!empty($pub_id)) {
+		$url = 'https://cdn.tpdads.com/json/amp-tags/'.esc_html($pub_id).'.json';
+	}
+    
+		$data_api = wp_remote_get($url);
+		if (is_array($data_api) && !empty($data_api['body'])) {
+				$json_data_api = json_decode( $data_api['body'] );
+				
+		    $addList = array();
+		    if(!empty($json_data_api->customHTMLAboveContentAd)){
+		    	$content = $json_data_api->customHTMLAboveContentAd[0]." ".$content;
+		    }
+		   
+		    if(!empty($json_data_api->customHTMLBelowContentAd)){
+		    	$content .= $json_data_api->customHTMLBelowContentAd[0];
+		    }
+		    if ( is_single() && !empty($pub_id) && !empty($json_data_api) ) {
+		      if($json_data_api->inContentPlacementMethod=='Auto'){
+		       
+		        $addList[3] = $json_data_api->customHTMLInContentAds[0];
+		        $addList[6] = $json_data_api->customHTMLInContentAds[1];
+		        $addList[9] = $json_data_api->customHTMLInContentAds[2];
+		      } 
+		      else{
+		      	
+		      	for ($i=0; $i < count($json_data_api->afterParagraphNumbers); $i++) { 
+		      	 $addList[$json_data_api->afterParagraphNumbers[$i]] = $json_data_api->customHTMLInContentAds[$i];
+		      	}
+		      }
+		      $content = ampforwp_publisher_desk_ads_insert( $addList, $content );
+		      $content .= $json_data_api->stickyCustomHTMLAd[0];
+		    	$content = preg_replace('/json="/', 'json=\"' , $content);
+		    	$content = preg_replace('/rtc-config="/', 'rtc-config=\"' , $content);
+		    }
+		  }
+    return $content;
+}
+
+// #5274 AMP Take over conflict with WPML
+add_filter('ampforwp_is_amp_endpoint_takeover', 'ampforwp_wpml_takeover_compatibility');
+function ampforwp_wpml_takeover_compatibility($return) {
+  if (is_user_logged_in() && !empty($_GET['wpml-app'])) {
+  	return false;
+  }
+  return $return;
+};

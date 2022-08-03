@@ -2,12 +2,14 @@ jQuery(document).ready(function () {
   var security_key = fmfparams.nonce;
   var fmlang = fmfparams.lang;
   var ajaxurl = fmfparams.ajaxurl;
+  var href = fm_get_network_url();
   jQuery("#wp_file_manager")
     .elfinder({
       url: ajaxurl,
       customData: {
         action: "mk_file_folder_manager",
         _wpnonce: security_key,
+        networkhref:href,
       },
       uploadMaxChunkSize: 1048576000000,
       defaultView: "list",
@@ -26,11 +28,13 @@ jQuery(document).ready(function () {
               var file = uploadedFiles[i];
               filepaths.push(file.url);
             }
+          
             if (filepaths != "") {
               var data = {
                 action: "mk_file_folder_manager_media_upload",
                 uploadefiles: filepaths,
                 _wpnonce: security_key,
+                networkhref:href,
               };
               jQuery.post(ajaxurl, data, function (response) {});
             }
@@ -124,6 +128,7 @@ jQuery(document).ready(function () {
       },
       uiOptions : {
         toolbarExtra : {
+          autoHideUA: [],
           displayTextLabel: false,
           preferenceInContextmenu: false
         }

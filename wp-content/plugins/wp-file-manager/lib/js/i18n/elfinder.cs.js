@@ -1,10 +1,10 @@
 /**
- * Czech translation
+ * Čeština translation
  * @author RobiNN <kelcakrobo@gmail.com>
  * @author Jay Gridley <gridley.jay@hotmail.com>
- * @version 2021-06-10
+ * @version 2022-02-28
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,11 +17,12 @@
 		translator : 'RobiNN &lt;kelcakrobo@gmail.com&gt;, Jay Gridley &lt;gridley.jay@hotmail.com&gt;',
 		language   : 'Čeština',
 		direction  : 'ltr',
-		dateFormat : 'd. m. Y H:i', // will show like: 10. 06. 2021 23:37
-		fancyDateFormat : '$1 H:i', // will show like: Dnes 23:37
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 210610-233701
+		dateFormat : 'd. m. Y H:i', // will show like: 28. 02. 2022 11:30
+		fancyDateFormat : '$1 H:i', // will show like: Dnes 11:30
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220228-113024
 		messages   : {
-
+			'getShareText' : 'Podíl',
+			'Editor ': 'Editor kódu',
 			/********************************** errors **********************************/
 			'error'                : 'Chyba',
 			'errUnknown'           : 'Neznámá chyba.',
@@ -379,8 +380,8 @@
 			'degree'          : ' stupňů',
 			'netMountDialogTitle' : 'Připojení síťového média', // added 18.04.2012
 			'protocol'            : 'Protokol', // added 18.04.2012
-			'host'                : 'Host', // added 18.04.2012
-			'port'                : 'Port', // added 18.04.2012
+			'host'                : 'Hostitel', // added 18.04.2012
+			'port'                : 'Přístav', // added 18.04.2012
 			'user'                : 'Uživatel', // added 18.04.2012
 			'pass'                : 'Heslo', // added 18.04.2012
 			'confirmUnmount'      : 'Chcete odpojit $1?',  // from v2.1 added 30.04.2012
@@ -468,7 +469,7 @@
 			'pressAgainToExit': 'Dalším stisknutím opustíte.', // from v2.1.38 added 1.4.2018
 			'toolbar'         : 'Panel nástrojů', // from v2.1.38 added 4.4.2018
 			'workspace'       : 'Pracovní prostor', // from v2.1.38 added 4.4.2018
-			'dialog'          : 'Dialog', // from v2.1.38 added 4.4.2018
+			'dialog'          : 'Dialogové okno', // from v2.1.38 added 4.4.2018
 			'all'             : 'Všechno', // from v2.1.38 added 4.4.2018
 			'iconSize'        : 'Velikost ikony (zobrazení ikon)', // from v2.1.39 added 7.5.2018
 			'editorMaximized' : 'Otevřete maximalizované okno editora', // from v2.1.40 added 30.6.2018
@@ -499,7 +500,7 @@
 			'kindRoot'        : 'Kořen média', // from v2.1.16 added 16.10.2016
 			'kindFolder'      : 'Složka',
 			'kindSelects'     : 'Výběry', // from v2.1.29 added 29.8.2017
-			'kindAlias'       : 'Alias',
+			'kindAlias'       : 'Přezdívka',
 			'kindAliasBroken' : 'Zlomený alias',
 			// applications
 			'kindApp'         : 'Aplikace',
@@ -520,8 +521,8 @@
 			'kindZIP'         : 'Archív ZIP',
 			'kindRAR'         : 'Archív RAR',
 			'kindJAR'         : 'Soubor Java JAR',
-			'kindTTF'         : 'True Type font',
-			'kindOTF'         : 'Open Type font',
+			'kindTTF'         : 'True Type písmo',
+			'kindOTF'         : 'Otevřete písmo Type',
 			'kindRPM'         : 'RPM balíček',
 			// texts
 			'kindText'        : 'Textový dokument',
@@ -530,7 +531,7 @@
 			'kindCSS'         : 'Kaskádové styly',
 			'kindHTML'        : 'HTML dokument',
 			'kindJS'          : 'Javascript zdrojový kód',
-			'kindRTF'         : 'Rich Text Format',
+			'kindRTF'         : 'Formát RTF',
 			'kindC'           : 'C zdrojový kód',
 			'kindCHeader'     : 'C hlavička',
 			'kindCPP'         : 'C++ zdrojový kód',
@@ -559,12 +560,12 @@
 			'kindPXM'         : 'Obrázek Pixelmator',
 			// media
 			'kindAudio'       : 'Audio sobory',
-			'kindAudioMPEG'   : 'MPEG audio',
-			'kindAudioMPEG4'  : 'MPEG-4 audio',
-			'kindAudioMIDI'   : 'MIDI audio',
-			'kindAudioOGG'    : 'Ogg Vorbis audio',
-			'kindAudioWAV'    : 'WAV audio',
-			'AudioPlaylist'   : 'MP3 playlist',
+			'kindAudioMPEG'   : 'Zvuk MPEG',
+			'kindAudioMPEG4'  : 'Zvuk MPEG-4',
+			'kindAudioMIDI'   : 'Zvuk MIDI',
+			'kindAudioOGG'    : 'Zvuk Ogg Vorbis',
+			'kindAudioWAV'    : 'Zvuk WAV',
+			'AudioPlaylist'   : 'Seznam skladeb MP3',
 			'kindVideo'       : 'Video sobory',
 			'kindVideoDV'     : 'DV video',
 			'kindVideoMPEG'   : 'MPEG video',
@@ -578,4 +579,3 @@
 		}
 	};
 }));
-

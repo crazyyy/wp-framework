@@ -73,7 +73,7 @@ function cmplz_forminator_add_consent_checkbox( $form_id ) {
 			"required"         => true,
 			'cols'             => '12',
 			'validation'       => '',
-			'gdpr_description' => sprintf( __( "Yes, I agree with the %sPrivacy Statement%s",
+			'gdpr_description' => cmplz_sprintf( __( "Yes, I agree with the %sPrivacy Statement%s",
 				"complianz-gdpr" ), '<a href="'
 			                        . COMPLIANZ::$document->get_permalink( 'privacy-statement',
 					'eu', true ) . '">', '</a>' ),
@@ -108,7 +108,7 @@ function cmplz_forminator_css() {
 	?>
 		.cmplz-blocked-content-container.forminator-g-recaptcha {
 			max-width: initial !important;
-			height: 70px !important
+			height: 90px !important
 		}
 
 		@media only screen and (max-width: 400px) {
@@ -118,7 +118,9 @@ function cmplz_forminator_css() {
 		}
 
 		.cmplz-blocked-content-container.forminator-g-recaptcha .cmplz-blocked-content-notice {
-			top: 2px
+			top: unset;
+			left: unset;
+			transform: unset;
 		}
 	<?php
 }

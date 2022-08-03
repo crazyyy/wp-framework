@@ -71,7 +71,7 @@ ksort( $roles );
 			<?php $this->build_textarea( $id ); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'List the CSS selector that its style should be always contained in UCSS.', 'litespeed-cache' ); ?>
-				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-whitelist', __( 'How to choose an UCSS whitelist selector?', 'litespeed-cache' ) ); ?>
+				<?php Doc::learn_more( 'https://docs.litespeedtech.com/lscache/lscwp/pageopt/#ucss-whitelist', __( 'How to choose an UCSS allowlist selector?', 'litespeed-cache' ) ); ?>
 				<br /><?php echo sprintf( __( 'Wildcard %s supported.', 'litespeed-cache' ), '<code>*</code>' ); ?>
 				<div class="litespeed-callout notice notice-warning inline">
 					<h4><?php echo __( 'Note', 'litespeed-cache' ); ?></h4>
@@ -101,6 +101,9 @@ ksort( $roles );
 					<?php echo __( 'API', 'litespeed-cache' ); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_ucss_exc</code>' ); ?>
 				</span>
+				<br /><font class="litespeed-success">API: <?php echo sprintf( __( 'Use %1$s to generate one single UCSS for the pages which page type is %2$s while other page types still per URL.', 'litespeed-cache' ), "<code>add_filter( 'litespeed_ucss_per_pagetype', function(){return get_post_type() == 'page';} );</code>", '<code>page</code>' ); ?></font>
+				<br /><font class="litespeed-success">API: <?php echo sprintf( __( 'Use %1$s to bypass UCSS for the pages which page type is %2$s.', 'litespeed-cache' ), "<code>add_action( 'litespeed_optm', function(){get_post_type() == 'page' && do_action( 'litespeed_conf_force', 'optm-ucss', false );});</code>", '<code>page</code>' ); ?></font>
+
 			</div>
 		</td>
 	</tr>

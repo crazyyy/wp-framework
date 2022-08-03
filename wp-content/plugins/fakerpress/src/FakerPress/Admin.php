@@ -157,13 +157,15 @@ class Admin extends Template {
 		 * @filter fakerpress.messages.allowed_html
 		 * @since 0.1.2
 		 */
-		self::$messages[] = (object) [
+		self::$messages[] = $message = (object) [
 			'html' => wp_kses( wpautop( $html ), apply_filters( 'fakerpress.messages.allowed_html', [] ), [ 'http', 'https' ] ),
 			'type' => esc_attr( $type ),
 			'priority' => $priority === 0 ? $priority + 1 : $priority,
 		];
 
 		usort( self::$messages, 'fp_sort_by_priority' );
+
+		return $message;
 	}
 
 	/**
@@ -426,7 +428,7 @@ class Admin extends Template {
 			$plugin,
 			'fakerpress-fields',
 			'fields.js',
-			[ 'jquery', 'underscore', 'fakerpress-select2', 'jquery-ui-datepicker' ],
+			[ 'jquery', 'underscore', 'fakerpress-select2', 'jquery-ui-datepicker', 'fakerpress-module' ],
 			'admin_enqueue_scripts',
 			[
 				'conditionals' => $in_plugin_callback,
@@ -577,10 +579,26 @@ class Admin extends Template {
 			return $text;
 		}
 
-		$translate = sprintf( '<a class="fp-translations-link" href="%s" title="%s"><span class="dashicons dashicons-translation"></span></a>', Plugin::ext_site_url( '/r/translate' ), esc_attr__( 'Help us with Translations for the FakerPress project', 'fakerpress' ) );
-		$version = esc_attr__( 'Version', 'fakerpress' ) . ': <a title="' . __( 'View what changed in this version', 'fakerpress' ) . '" href="' . esc_url( Plugin::admin_url( 'view=changelog&version=' . esc_attr( Plugin::VERSION ) ) ) . '">' . esc_attr( Plugin::VERSION ) . '</a>';
+		$sponsor   = sprintf(
+			'<a class="fp-link-footer fp-sponsor-link" href="%2$s" title="%3$s" target="_blank"><span class="dashicons dashicons-money-alt"></span> %1$s</a> | ',
+			esc_html__( 'Sponsor the project on GitHub', 'fakerpress' ),
+			Plugin::ext_site_url( '/r/sponsor' ),
+			esc_attr__( 'Help by sponsoring the Project on GitHub', 'fakerpress' )
+		);
+		$translate = sprintf(
+			'<a class="fp-link-footer fp-translations-link" href="%2$s" title="%3$s" target="_blank"><span class="dashicons dashicons-translation"></span> %1$s</a> | ',
+			esc_html__( 'Translate', 'fakerpress' ),
+			Plugin::ext_site_url( '/r/translate' ),
+			esc_attr__( 'Help us with Translations for the FakerPress project', 'fakerpress' )
+		);
+		$version = sprintf(
+			'<a class="fp-link-footer fp-version-link" href="%2$s" title="%3$s" target="_blank">%1$s</a>',
+			esc_html__( 'Version: ', 'fakerpress' ) . esc_attr( Plugin::VERSION ),
+			esc_url( Plugin::admin_url( 'view=changelog&version=' . esc_attr( Plugin::VERSION ) ) ),
+			esc_attr__( 'View what changed in this version', 'fakerpress' )
+		);
 
-		return $translate . $version;
+		return $sponsor . $translate . $version;
 	}
 
 	public function _filter_body_class( $classes ) {

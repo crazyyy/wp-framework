@@ -19,12 +19,12 @@
 	 *
 	 * @since 1.0.0
 	 */
-	if( !class_exists('Wbcr_FactoryNotices407') ) {
+	if( !class_exists('Wbcr_FactoryNotices410') ) {
 
-		class Wbcr_FactoryNotices407 {
+		class Wbcr_FactoryNotices410 {
 
 			/**
-			 * @var Wbcr_Factory450_Plugin
+			 * @var Wbcr_Factory457_Plugin
 			 */
 			protected $plugin;
 			/**
@@ -57,13 +57,13 @@
 			 */
 			public function __construct()
 			{
-				add_action('wbcr_factory_notices_407_plugin_created', array($this, 'init'));
+				add_action('wbcr_factory_notices_410_plugin_created', array($this, 'init'));
 			}
 
 			/**
-			 * @param Wbcr_Factory450_Plugin $plugin
+			 * @param Wbcr_Factory457_Plugin $plugin
 			 */
-			public function init(Wbcr_Factory450_Plugin $plugin)
+			public function init(Wbcr_Factory457_Plugin $plugin)
 			{
 				//default notices
 				//---
@@ -88,12 +88,12 @@
 			 */
 			public function currentScreenAction()
 			{
-				$this->notices = apply_filters('wbcr_factory_notices_407_list', $this->notices, $this->plugin->getPluginName());
+				$this->notices = apply_filters('wbcr_factory_notices_410_list', $this->notices, $this->plugin->getPluginName());
 
-				$this->notices = wbcr_factory_450_apply_filters_deprecated('wbcr_factory_admin_notices', array(
+				$this->notices = wbcr_factory_457_apply_filters_deprecated('wbcr_factory_admin_notices', array(
 					$this->notices,
 					$this->plugin->getPluginName()
-				), '4.0.5', 'wbcr_factory_notices_407_list');
+				), '4.0.5', 'wbcr_factory_notices_410_list');
 
 				if( count($this->notices) == 0 ) {
 					return;
@@ -294,5 +294,5 @@
 			}
 		}
 
-		new Wbcr_FactoryNotices407();
+		new Wbcr_FactoryNotices410();
 	}

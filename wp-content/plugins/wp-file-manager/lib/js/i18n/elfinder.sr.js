@@ -19,6 +19,8 @@
 		dateFormat : 'd.m.Y H:i',
 		fancyDateFormat : '$1 H:i',
 		messages   : {
+			'getShareText' : 'Објави',
+			'Editor ': 'Цоде Едитор',
 			
 			/********************************** errors **********************************/
 			'error'                : 'Greška',
@@ -129,6 +131,8 @@
 			'cmdresize'    : 'Promeni veličinu slike',
 			'cmdsort'      : 'Sortiraj',
 			'cmdnetmount'  : 'Mount network volume',
+			'cmdselectall': 'Одабери све',
+			'cmdfullscreen': 'Цео екран',
 			
 			/*********************************** buttons ***********************************/ 
 			'btnClose'  : 'Zatvori',
@@ -162,6 +166,7 @@
 			'ntfloadimg'  : 'Učitavanje slike',
 			'ntfnetmount' : 'Montiranje mrežnog volumena', 
 			'ntfdim'      : 'Acquiring image dimension',
+			
 			
 			/************************************ dates **********************************/
 			'dateUnknown' : 'nepoznat',
@@ -212,6 +217,14 @@
 			'sortsize'          : 'po veličini',
 			'sortdate'          : 'po datumu',
 			'sortFoldersFirst'  : 'Prvo folderi',
+
+			/********************************** new items **********************************/
+			'untitled file.txt' : 'Нова датотека.txt', // added 10.11.2015
+			'untitled folder'   : 'НевФолдер',   // added 10.11.2015
+			'Archive'           : 'НоваАрхива',  // from v2.1 added 10.11.2015
+			'untitled file'     : 'Нова датотека.$1',
+			'extentionfile': "$1: Datoteka", // from v2.1.41 added 6.8.2018
+      		'extentiontype': "$1: $2", // from v2.1.43 added 17.10.2018
 			
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Potrebna potvrda',

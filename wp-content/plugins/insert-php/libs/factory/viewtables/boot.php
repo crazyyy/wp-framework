@@ -19,17 +19,17 @@ if ( ! is_admin() ) {
 	return;
 }
 
-if ( defined( 'FACTORY_VIEWTABLES_410_LOADED' ) ) {
+if ( defined( 'FACTORY_VIEWTABLES_413_LOADED' ) ) {
 	return;
 }
 
-define( 'FACTORY_VIEWTABLES_410_VERSION', '4.1.0' );
-define( 'FACTORY_VIEWTABLES_410_LOADED', true );
+define( 'FACTORY_VIEWTABLES_413_VERSION', '4.1.3' );
+define( 'FACTORY_VIEWTABLES_413_LOADED', true );
 
-define( 'FACTORY_VIEWTABLES_410_DIR', dirname( __FILE__ ) );
-define( 'FACTORY_VIEWTABLES_410_URL', plugins_url( null, __FILE__ ) );
+define( 'FACTORY_VIEWTABLES_413_DIR', dirname( __FILE__ ) );
+define( 'FACTORY_VIEWTABLES_413_URL', plugins_url( null, __FILE__ ) );
 
 #comp merge
-require( FACTORY_VIEWTABLES_410_DIR . '/viewtable.class.php' );
-require( FACTORY_VIEWTABLES_410_DIR . '/includes/viewtable-columns.class.php' );
+require( FACTORY_VIEWTABLES_413_DIR . '/viewtable.class.php' );
+require( FACTORY_VIEWTABLES_413_DIR . '/includes/viewtable-columns.class.php' );
 #endcomp

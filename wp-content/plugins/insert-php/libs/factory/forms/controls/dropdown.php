@@ -21,9 +21,9 @@
 		exit;
 	}
 	
-	if ( ! class_exists( 'Wbcr_FactoryForms447_DropdownControl' ) ) {
+	if ( ! class_exists( 'Wbcr_FactoryForms454_DropdownControl' ) ) {
 		
-		class Wbcr_FactoryForms447_DropdownControl extends Wbcr_FactoryForms447_Control {
+		class Wbcr_FactoryForms454_DropdownControl extends Wbcr_FactoryForms454_Control {
 			
 			public $type = 'dropdown';
 			
@@ -100,7 +100,7 @@
 						if( void 0 === window.factory_dropdown_control_events_data ) {
 							window.factory_dropdown_control_events_data = {};
 						}
-						window.factory_dropdown_control_events_data['<?php echo $name_on_form ?>'] = <?= $events_string_data ?>;
+						window.factory_dropdown_control_events_data['<?php echo $name_on_form ?>'] = <?php echo $events_string_data ?>;
                     </script>
 					<?php
 				}
@@ -123,7 +123,7 @@
 							'url': '<?php echo $data['url'] ?>',
 							'data': <?php echo json_encode( $data['data'] ) ?>,
 							'selected': '<?php echo $value ?>',
-							'empty_list': '<?php echo $this->getOption( 'empty', __( 'The list is empty.', 'wbcr_factory_forms_447' ) ) ?>'
+							'empty_list': '<?php echo $this->getOption( 'empty', __( 'The list is empty.', 'wbcr_factory_forms_454' ) ) ?>'
 						};
                     </script>
 					<?php
@@ -268,7 +268,7 @@
 				}
 				
 				$is_empty   = $this->isAjax() || empty( $items );
-				$empty_list = $this->getOption( 'empty', __( '- empty -', 'wbcr_factory_forms_447' ) );
+				$empty_list = $this->getOption( 'empty', __( '- empty -', 'wbcr_factory_forms_454' ) );
 				
 				?>
                 <select <?php $this->attrs() ?>>
@@ -323,7 +323,7 @@
 					$styles = ( $is_visible ) ? 'style="display: none;"' : '';
 					
 					?>
-                    <div style="display: none;" class="factory-hint factory-hint-<?= esc_attr( $name ) ?>"<?= $styles ?>><?php echo $hint ?></div>
+                    <div style="display: none;" class="factory-hint factory-hint-<?php echo esc_attr( $name ) ?>"<?php echo $styles ?>><?php echo $hint ?></div>
 					<?php
 				}
 			}
@@ -349,7 +349,7 @@
 						}
 						
 						$value = isset( $item['value'] ) ? $item['value'] : '';
-						$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_447' );
+						$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_454' );
 						
 						$data = isset( $item['data'] ) ? $item['data'] : null;
 					} else {

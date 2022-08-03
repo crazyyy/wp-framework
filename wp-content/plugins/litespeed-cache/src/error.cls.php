@@ -80,6 +80,10 @@ class Error {
 				$msg = sprintf( __( 'There is proceeding queue not pulled yet. Queue info: %s.', 'litespeed-cache' ), '<code>' . substr( $code, strlen( 'unfinished_queue ' ) ) . '</code>' );
 				break;
 
+			case 'err_alias':
+				$msg = __( 'The site is not a valid alias on QUIC.cloud.', 'litespeed-cache' );
+				break;
+
 			case 'site_not_registered':
 				$msg = __( 'The site is not registered on QUIC.cloud.', 'litespeed-cache' );
 				break;
@@ -167,6 +171,10 @@ class Error {
 
 			case 'forbidden':
 				$msg = __( 'Your domain has been forbidden from using our services due to a previous policy violation.', 'litespeed-cache' );
+				break;
+
+			case 'err_dns_active':
+				$msg = __( 'You cannot remove this DNS zone, because it is still in use. Please update the domain\'s nameservers, then try to delete this zone again, otherwise your site will become inaccessible.', 'litespeed-cache' );
 				break;
 
 			default:

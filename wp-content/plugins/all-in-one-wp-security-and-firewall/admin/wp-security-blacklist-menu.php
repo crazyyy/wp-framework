@@ -26,13 +26,6 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu
         );
     }
 
-    function get_current_tab()
-    {
-        $tab_keys = array_keys($this->menu_tabs);
-        $tab = isset( $_GET['tab'] ) ? sanitize_text_field($_GET['tab']) : $tab_keys[0];
-        return $tab;
-    }
-
     /*
      * Renders our tabs of this menu as nav items
      */
@@ -153,16 +146,22 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu
             </p>';
             ?>
         </div>
-        <div class="aio_grey_box">
-            <?php
-            $addon_link = '<strong><a href="http://www.site-scanners.com/country-blocking-addon/" target="_blank">'.__('Country Blocking Addon', 'all-in-one-wp-security-and-firewall').'</a></strong>';
-            $info_msg = sprintf( __('You may also be interested in our %s.', 'all-in-one-wp-security-and-firewall'), $addon_link);
-            $info_msg2 = __('This addon allows you to automatically block IP addresses based on their country of origin.', 'all-in-one-wp-security-and-firewall');
+        <?php
+/*        if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
+        */?><!--
+            <div class="aio_grey_box">
+                <?php
+/*              $premium_plugin_link = '<strong><a href="https://aiowpsecurity.com/landing/aiowpsecurity-premium" target="_blank">'.__('All In One WP Security & Firewall Premium', 'all-in-one-wp-security-and-firewall').'</a></strong>';
+                $info_msg = sprintf( __('You may also be interested in %s.', 'all-in-one-wp-security-and-firewall'), $premium_plugin_link);
+                $info_msg2 = sprintf(__('This plugin adds a number of extra features including %s and %s.', 'all-in-one-wp-security-and-firewall'), '<strong>'.__('smart 404 blocking', 'all-in-one-wp-security-and-firewall').'</strong>', '<strong>'.__('country IP blocking', 'all-in-one-wp-security-and-firewall').'</strong>');
 
-            echo '<p>'.$info_msg.
-                '<br />'.$info_msg2.'</p>';
-            ?>
-        </div>
+                echo '<p>'.$info_msg.
+                    '<br />'.$info_msg2.'</p>';
+                */?>
+            </div>
+        --><?php
+/*        }
+        */?>
 
         <div class="postbox">
         <h3 class="hndle"><label for="title"><?php _e('IP Hosts and User Agent Blacklist Settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
@@ -243,8 +242,8 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu
         //$errors = '';
 
         $submitted_agents = explode(PHP_EOL, $_POST['aiowps_banned_user_agents']);
-	$agents = array();
-	if (!empty($submitted_agents))
+    $agents = array();
+    if (!empty($submitted_agents))
         {
             foreach ($submitted_agents as $agent)
             {

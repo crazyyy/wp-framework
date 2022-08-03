@@ -1,8 +1,9 @@
 /**
- * Polskie tłumaczenie
+ * Polski translation
  * @author Marcin Mikołajczyk <marcin@pjwstk.edu.pl>
  * @author Bogusław Zięba <bobi@poczta.fm>
- * @version 2020-03-29
+ * @author Bogusław Zięba <bobi@poczta.fm>
+ * @version 2022-03-08
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -15,13 +16,14 @@
 }(this, function(elFinder) {
 	elFinder.prototype.i18.pl = {
 		translator : 'Marcin Mikołajczyk &lt;marcin@pjwstk.edu.pl&gt;, Bogusław Zięba &lt;bobi@poczta.fm&gt;, Bogusław Zięba &lt;bobi@poczta.fm&gt;',
-		language   : 'Polski',
+		language   : 'Język Polski',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 29.03.2020 06:58
-		fancyDateFormat : '$1 H:i', // will show like: Dzisiaj 06:58
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200329-065813
+		dateFormat : 'd.m.Y H:i', // will show like: 08.03.2022 11:30
+		fancyDateFormat : '$1 H:i', // will show like: Dzisiaj 11:30
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220308-113034
 		messages   : {
-
+			'getShareText' : 'Dzielić',
+			'Editor ': 'Edytor kodu',
 			/********************************** errors **********************************/
 			'error'                : 'Błąd',
 			'errUnknown'           : 'Nieznany błąd.',
@@ -116,6 +118,7 @@
 			'errServerError'       : 'Wystąpił błąd po stronie serwera .', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Nie można do pustego folderu "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'Jest jeszcze $1 błąd/błędy.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'You can create up to $1 folders at one time.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Utwórz archiwum',

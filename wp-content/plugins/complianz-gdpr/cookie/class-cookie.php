@@ -254,7 +254,11 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 			}
 
 			if ( $this->ID ) {
-				$cookie = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookies where ID = %s ", $this->ID ) );
+				$cookie = wp_cache_get('cmplz_cookie_'.$this->ID, 'complianz');
+				if ( !$cookie ) {
+					$cookie = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookies where ID = %s ", $this->ID ) );
+					wp_cache_set('cmplz_cookie_'.$this->ID, $cookie, 'complianz', HOUR_IN_SECONDS);
+				}
 			} else {
 				$cookie = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookies where name = %s and language = %s $sql", $this->name, $this->language ) );
 			}
@@ -265,9 +269,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 				$cookies = wp_list_pluck( $cookies, 'name', 'ID' );
 				$cookie_id = $this->get_fuzzy_match( $cookies, $this->name );
 				if ( $cookie_id ) {
-					$cookie
-						= $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookies where ID = %s",
-						$cookie_id ) );
+					$cookie = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookies where ID = %s", $cookie_id ) );
 				}
 			}
 
@@ -293,12 +295,8 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 				$this->lastAddDate           = $cookie->lastAddDate;
 				$this->firstAddDate          = $cookie->firstAddDate;
 				$this->slug                  = $cookie->slug;
-				$this->synced                = $cookie->lastUpdatedDate > 0
-					? true : false;
-				$this->old                   = $cookie->lastAddDate
-				                               < strtotime( '-3 months' )
-				                               && $cookie->lastAddDate > 0
-					? true : false;
+				$this->synced                = $cookie->lastUpdatedDate > 0 ? true : false;
+				$this->old                   = $cookie->lastAddDate < strtotime( '-3 months' ) && $cookie->lastAddDate > 0 ? true : false;
 			}
 
 			/**
@@ -320,7 +318,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 			if ( strpos( $this->name, 'cmplz' ) !== false
 			     || strpos( $this->name, 'complianz' ) !== false
 			) {
-				$this->retention = sprintf( __( "%s days", "complianz-gdpr" ),
+				$this->retention = cmplz_sprintf( __( "%s days", "complianz-gdpr" ),
 					cmplz_get_value( 'cookie_expiry' ) );
 			}
 
@@ -375,7 +373,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 			if ( strpos( $this->name, 'cmplz' ) !== false
 			     || strpos( $this->name, 'complianz' ) !== false
 			) {
-				$this->retention = sprintf( __( "%s days", "complianz-gdpr" ),
+				$this->retention = cmplz_sprintf( __( "%s days", "complianz-gdpr" ),
 					cmplz_get_value( 'cookie_expiry' ) );
 			}
 
@@ -383,13 +381,13 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 			 * Don't translate with Polylang, as polylang does not use the fieldname to translate. This causes mixed up strings when context differs.
 			 */
 
-			if ( !defined('POLYLANG_VERSION') ) {
-				cmplz_register_translation($this->retention, 'cookie_retention');
-				cmplz_register_translation($this->type, 'cookie_storage_type');
-				cmplz_register_translation($this->cookieFunction, 'cookie_function');
-				cmplz_register_translation($this->purpose, 'cookie_purpose');
-				cmplz_register_translation($this->collectedPersonalData, 'cookie_collected_personal_data');
+			if ( !defined('POLYLANG_VERSION') || !$this->sync ) {
+				cmplz_register_translation( $this->purpose, 'cookie_purpose' );
 			}
+			cmplz_register_translation($this->retention, 'cookie_retention');
+			cmplz_register_translation($this->type, 'cookie_storage_type');
+			cmplz_register_translation($this->cookieFunction, 'cookie_function');
+			cmplz_register_translation($this->collectedPersonalData, 'cookie_collected_personal_data');
 
 			$update_array = array(
 				'name'                  => sanitize_text_field( $this->name ),
@@ -412,7 +410,6 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 				'lastAddDate'           => intval( $this->lastAddDate ),
 				'slug'                  => sanitize_title( $this->slug ),
 			);
-
 			if ( strlen( $this->firstAddDate ) == 0 ) {
 				$update_array['firstAddDate'] = time();
 			}
@@ -439,17 +436,34 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 				//keep all translations in sync
 				$translationIDS = $this->get_translations();
 				foreach ( $translationIDS as $translationID ) {
-
 					if ( $this->ID == $translationID ) {
 						continue;
 					}
 					$translation                 = new CMPLZ_COOKIE( $translationID );
-					$translation->name           = $this->name;
-					$translation->serviceID      = $this->serviceID;
-					$translation->sync           = $this->sync;
+					$translation->name                  = $this->name;
+					$translation->serviceID             = $this->serviceID;
+					$translation->sync                  = $this->sync;
+					$translation->isPersonalData        = $this->isPersonalData;
+					$translation->isMembersOnly         = $this->isMembersOnly;
+					$translation->slug                  = $this->slug;
+					$translation->showOnPolicy          = $this->showOnPolicy;
+					$translation->deleted               = $this->deleted;
+					$translation->ignored               = $this->ignored;
+
+//                  dot not update all translations for these fields, even when not synced.
+//					//translated data, only when not synced
+//					if ( !$this->sync ) {
+//						$translation->purpose               = $this->purpose;
+//						$translation->cookieFunction        = $this->cookieFunction;
+//						$translation->retention             = $this->retention;
+//						$translation->type                  = $this->type;
+//						$translation->collectedPersonalData = $this->collectedPersonalData;
+//					}
+
 					$translation->save();
 				}
 			}
+			wp_cache_delete('cmplz_cookie_shredder_list', 'complianz');
 		}
 
 

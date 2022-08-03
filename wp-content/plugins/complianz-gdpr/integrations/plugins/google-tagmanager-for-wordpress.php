@@ -35,7 +35,7 @@ add_action( 'after_setup_theme', 'cmplz_gtm4wp_remove_scripts_statistics' );
  * @param $args
  */
 function cmplz_gtm4wp_show_compile_statistics_notice( $args ) {
-	cmplz_sidebar_notice( sprintf( __( "You use %s, which means the answer to this question should be Google Tag Manager.", 'complianz-gdpr' ), 'Google Tag Manager for WordPress' ) );
+	cmplz_sidebar_notice( cmplz_sprintf( __( "You use %s, which means the answer to this question should be Google Tag Manager.", 'complianz-gdpr' ), 'Google Tag Manager for WordPress' ) );
 }
 add_action( 'cmplz_notice_compile_statistics', 'cmplz_gtm4wp_show_compile_statistics_notice', 10, 1 );
 
@@ -43,36 +43,46 @@ add_action( 'cmplz_notice_compile_statistics', 'cmplz_gtm4wp_show_compile_statis
  * Configure options for GTM4WP
  */
 function cmplz_gtm4wp_options() {
+	if ( !defined('GTM4WP_OPTIONS')) {
+		return;
+	}
+
 	$storedoptions = (array) get_option( GTM4WP_OPTIONS );
 	$save          = false;
 
-	if ( isset( $storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ] ) ) {
-		if ( cmplz_no_ip_addresses() && $storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ]
-		) {
-			$storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ] = false;
-			$save                                              = true;
-		} elseif ( ! cmplz_no_ip_addresses() && ! ! $storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ]
-		) {
-			$save                                              = true;
-			$storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ] = true;
+	if ( defined('GTM4WP_OPTION_INCLUDE_VISITOR_IP' ) ) {
+		if ( isset( $storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ] ) ) {
+			if ( cmplz_no_ip_addresses() && $storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ]
+			) {
+				$storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ] = false;
+				$save                                              = true;
+			} elseif ( ! cmplz_no_ip_addresses() && ! ! $storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ]
+			) {
+				$save                                              = true;
+				$storedoptions[ GTM4WP_OPTION_INCLUDE_VISITOR_IP ] = true;
+			}
 		}
 	}
 
 	//handle sharing of data
-	if ( isset( $storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ] ) ) {
-		if ( cmplz_statistics_no_sharing_allowed()
-		     && $storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ]
-		) {
-			$save                                               = true;
-			$storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ] = false;
+	//since 1.15.1 remarketing constant has been removed
+	if (defined('GTM4WP_OPTION_INCLUDE_REMARKETING')) {
+		if ( isset( $storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ] ) ) {
+			if ( cmplz_statistics_no_sharing_allowed()
+			     && $storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ]
+			) {
+				$save                                               = true;
+				$storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ] = false;
 
-		} elseif ( ! cmplz_statistics_no_sharing_allowed()
-		           && ! $storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ]
-		) {
-			$save                                               = true;
-			$storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ] = true;
+			} elseif ( ! cmplz_statistics_no_sharing_allowed()
+			           && ! $storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ]
+			) {
+				$save                                               = true;
+				$storedoptions[ GTM4WP_OPTION_INCLUDE_REMARKETING ] = true;
+			}
 		}
 	}
+
 
 	if ( $save ) {
 		update_option( GTM4WP_OPTIONS, $storedoptions );
@@ -121,11 +131,11 @@ add_filter( 'cmplz_fields', 'cmplz_gtm4wp_filter_fields', 20, 1 );
  */
 function cmplz_gtm4wp_compile_statistics_more_info_notice() {
 	if ( cmplz_no_ip_addresses() ) {
-		cmplz_sidebar_notice( sprintf( __( "You have selected you anonymize IP addresses. This setting is now enabled in %s.",
+		cmplz_sidebar_notice( cmplz_sprintf( __( "You have selected you anonymize IP addresses. This setting is now enabled in %s.",
 			'complianz-gdpr' ), 'Google Tag Manager for WordPress' ) );
 	}
 	if ( cmplz_statistics_no_sharing_allowed() ) {
-		cmplz_sidebar_notice( sprintf( __( "You have selected you do not share data with third-party networks. Remarketing is now disabled in %s.",
+		cmplz_sidebar_notice( cmplz_sprintf( __( "You have selected you do not share data with third-party networks. Remarketing is now disabled in %s.",
 			'complianz-gdpr' ), 'Google Tag Manager for WordPress' ) );
 	}
 }

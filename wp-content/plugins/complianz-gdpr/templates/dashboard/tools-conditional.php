@@ -1,4 +1,6 @@
-<h3><?php _e( "Other tools", "complianz-gdpr" ) ?></h3>
+<div class="cmplz-document-header">
+	<h3 class="h4"><?php _e( "Other tools", "complianz-gdpr" ) ?></h3>
+</div>
 
 <div class="cmplz-tools-row">
 	<div>
@@ -26,6 +28,16 @@
 	</div>
 	<div>
 		<a target="_blank" href="https://complianz.io/definition/what-is-a-data-breach/" class="cmplz-premium">
+			<?php _e( 'Read more', 'complianz-gdpr' ) ?>
+		</a>
+	</div>
+</div>
+<div class="cmplz-tools-row">
+	<div>
+		<?php _e( "Data requests", 'complianz-gdpr' ); ?>
+	</div>
+	<div>
+		<a target="_blank" href="https://complianz.io/definition/what-is-a-data-request/" class="cmplz-premium">
 			<?php _e( 'Read more', 'complianz-gdpr' ) ?>
 		</a>
 	</div>

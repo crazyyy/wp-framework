@@ -1,11 +1,11 @@
 /**
- * الترجمة العربية
+ * Arabic translation
  * @author Khamis Alqutob <alqutob@outlook.com>
  * @author Tawfek Daghistani <tawfekov@gmail.com>
  * @author Atef Ben Ali <atef.bettaib@gmail.com>
- * @version 2020-12-03
+ * @version 2022-02-25
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -18,11 +18,12 @@
 		translator : 'Khamis Alqutob &lt;alqutob@outlook.com&gt;, Tawfek Daghistani &lt;tawfekov@gmail.com&gt;, Atef Ben Ali &lt;atef.bettaib@gmail.com&gt;',
 		language   : 'Arabic',
 		direction  : 'rtl',
-		dateFormat : 'M d, Y h:i A', // will show like: Aug 24, 2018 04:39 PM
-		fancyDateFormat : '$1 h:i A', // will show like: Today 04:39 PM
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 180824-163916
+		dateFormat : 'M d, Y h:i A', // will show like: شباط 25, 2022 06:20 PM
+		fancyDateFormat : '$1 h:i A', // will show like: اليوم 06:20 PM
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220225-182023
 		messages   : {
-
+			'getShareText' : 'يشارك',
+			'Editor ': 'محرر الكود',
 			/********************************** errors **********************************/
 			'error'                : 'خطأ',
 			'errUnknown'           : 'خطأ غير معروف .',
@@ -117,6 +118,7 @@
 			'errServerError'       : 'حدث خطأ من جانب الخادم.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'تعذر إفراغ المجلد "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'يوجد $1 أخطاء إضافية.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'يمكنك إنشاء ما يصل إلى $1 مجلد في وقت واحد.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'إنشاء أرشيف',
@@ -131,7 +133,7 @@
 			'cmdgetfile'   : 'اختيار الملفات',
 			'cmdhelp'      : 'عن هذه البرمجية',
 			'cmdhome'      : 'الجذر',
-			'cmdinfo'      : 'الحصول على المعلومات ',
+			'cmdinfo'      : 'الحصول على معلومات والمشاركة',
 			'cmdmkdir'     : 'مجلد جديد',
 			'cmdmkdirin'   : 'داخل مجلد جديد', // from v2.1.7 added 19.2.2016
 			'cmdmkfile'    : 'ملف جديد',
@@ -182,7 +184,7 @@
 			'btnCwd'    : 'هنا',      // from v2.1 added 22.5.2015
 			'btnVolume' : 'الحجم',    // from v2.1 added 22.5.2015
 			'btnAll'    : 'الكل',       // from v2.1 added 22.5.2015
-			'btnMime'   : 'نوع MIME', // from v2.1 added 22.5.2015
+			'btnMime'   : 'نوع التمثيل الصامت', // from v2.1 added 22.5.2015
 			'btnFileName':'إسم الملف',  // from v2.1 added 22.5.2015
 			'btnSaveClose': 'حفظ وإغلاق', // from v2.1 added 12.6.2015
 			'btnBackup' : 'نسخ احتياطي', // fromv2.1 added 28.11.2015
@@ -230,7 +232,7 @@
 			'ntfchkcontent' : 'فحص المحتويات', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
-			'volume_Trash' : 'Trash', //from v2.1.24 added 29.4.2017
+			'volume_Trash' : 'مهملات', //from v2.1.24 added 29.4.2017
 
 			/************************************ dates **********************************/
 			'dateUnknown' : 'غير معلوم',
@@ -288,10 +290,10 @@
 			'sortAlsoTreeview'  : 'أيضا عرض الشجرة',  // from v2.1.15 added 01.08.2016
 
 			/********************************** new items **********************************/
-			'file.txt بدون عنوان' : 'NewFile.txt', // added 10.11.2015
-			'مجلد بلا عنوان'   : 'NewFolder',   // added 10.11.2015
-			'Archive'           : 'NewArchive',  // from v2.1 added 10.11.2015
-			'untitled file'     : 'NewFile.$1',  // from v2.1.41 added 6.8.2018
+			'untitled file.txt' : 'NewFile.txt', // added 10.11.2015
+			'untitled folder'   : 'مجلد جديد',   // added 10.11.2015
+			'Archive'           : 'أرشيف جديد',  // from v2.1 added 10.11.2015
+			'untitled file'     : 'الملف الجديد.$1',  // from v2.1.41 added 6.8.2018
 			'extentionfile'     : '$1: ملف',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
@@ -304,7 +306,7 @@
 			'confirmNonUTF8'  : 'تعذر الكشف عن ترميز الأحرف لهذا الملف. تحتاج إلى التحويل مؤقتاً إلى UTF-8 للتحرير.<br/>الرجاء تحديد ترميز الأحرف لهذا الملف.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'لقد تم تعديله.<br/>قد تخسر العمل إذا لم تقم بحفظ التغييرات.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'هل أنت متأكد أنك تريد نقل العناصر إلى سلة المهملات؟', //from v2.1.24 added 29.4.2017
-						'confirmMove'     : 'هل أنت متأكد أنك تريد نقل العناصر إلى "$1"?', //from v2.1.50 added 27.7.2019
+			'confirmMove'     : 'هل أنت متأكد أنك تريد نقل العناصر إلى "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'تطبيق على الكل',
 			'name'            : 'الاسم',
 			'size'            : 'الحجم',
@@ -530,7 +532,7 @@
 			'kindCSS'         : 'ورقة الأنماط المتتالية',
 			'kindHTML'        : 'وثيقة HTML',
 			'kindJS'          : 'مصدر Javascript',
-			'kindRTF'         : 'Rich Text Format',
+			'kindRTF'         : 'تنسيق نص منسق',
 			'kindC'           : 'مصدر C',
 			'kindCHeader'     : 'مصدر C header',
 			'kindCPP'         : 'مصدر C++',

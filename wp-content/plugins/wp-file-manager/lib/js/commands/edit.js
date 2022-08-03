@@ -910,7 +910,7 @@
 						&& typeof editor.load == 'function'
 						&& typeof editor.save == 'function') {
 					
-					name = editor.info.name? editor.info.name : ('Code Editor');
+					name = editor.info.name? editor.info.name : ('Editor ');
 					editor.id = editor.info.id? editor.info.id : ('editor' + i),
 					editor.name = name;
 					editor.i18n = fm.i18n(name);

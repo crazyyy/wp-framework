@@ -70,6 +70,7 @@ $fields[] = new Field(
 		'id' => 'post_parent',
 		'multiple' => true,
 		'data-source' => 'WP_Query',
+		'data-nonce' => wp_create_nonce( Plugin::$slug . '-select2-WP_Query' ),
 	],
 	[
 		'label' => __( 'Parents', 'fakerpress' ),
@@ -196,6 +197,19 @@ $fields[] = new Field(
 	[
 		'label' => __( 'Image Providers', 'fakerpress' ),
 		'description' => __( 'Which image services will the generator use?', 'fakerpress' ),
+	]
+);
+
+$fields[] = new Field(
+	'range',
+	[
+		'id' => 'excerpt_size',
+		'min' => 1,
+		'max' => 3,
+	],
+	[
+		'label' => __( 'Excerpt Size', 'fakerpress' ),
+		'description' => __( 'How many paragraphs we are going to generate of excerpt.', 'fakerpress' ),
 	]
 );
 

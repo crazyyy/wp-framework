@@ -61,9 +61,11 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 				return array();
 			}
 			global $wpdb;
-			$cookies
-				= $wpdb->get_results( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookies where serviceID = %s ",
-				$this->ID ) );
+			$cookies = wp_cache_get('cmplz_service_cookies_'.$this->ID, 'complianz');
+			if ( !$cookies ) {
+				$cookies = $wpdb->get_results( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookies where serviceID = %s ", $this->ID ) );
+				wp_cache_set('cmplz_service_cookies_'.$this->ID, $cookies, 'complianz', HOUR_IN_SECONDS);
+			}
 
 			return $cookies;
 		}
@@ -86,13 +88,13 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 			}
 
 			if ( $this->ID ) {
-				$service
-					= $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_services where ID = %s ",
-					$this->ID ) );
+				$service = wp_cache_get('cmplz_service_'.$this->ID, 'complianz');
+				if ( !$service ) {
+					$service = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_services where ID = %s ", $this->ID ) );
+					wp_cache_set('cmplz_service_'.$this->ID, $service, 'complianz', HOUR_IN_SECONDS);
+				}
 			} else {
-				$service
-					= $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_services where name = %s and language = %s "
-					                                  . $sql, $this->name,
+				$service = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_services where name = %s and language = %s " . $sql, $this->name,
 					$this->language ) );
 			}
 
@@ -185,7 +187,7 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 					$translation->sharesData   = $this->sharesData;
 					$translation->showOnPolicy = $this->showOnPolicy;
 					$translation->lastUpdatedDate = $this->lastUpdatedDate;
-					$translation->save();
+					$translation->save(false, false);
 				}
 			}
 		}
@@ -247,7 +249,6 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 
 		}
 
-
 		/**
 		 * Keep services in sync with the services in the list of the wizard.
 		 *
@@ -255,7 +256,6 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 		 */
 
 		private function add_to_wizard( $service ) {
-
 			$slug                = $this->get_service_slug( $service );
 			$wizard_settings     = get_option( 'complianz_options_wizard' );
 			$registered_services = COMPLIANZ::$config->thirdparty_services;
@@ -351,7 +351,7 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 			if ( ! $this->ID ) {
 				$this->sync     = $sync_on;
 				$this->category = $category;
-				$this->save();
+				$this->save(false, false );
 			}
 
 			$parent_ID = $this->ID;

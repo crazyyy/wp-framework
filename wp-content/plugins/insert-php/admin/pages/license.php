@@ -52,7 +52,7 @@ class WINP_License_Page extends WINP_Page {
 
 	/**
 	 * @since 2.0.7
-	 * @var \WBCR\Factory_450\Premium\Provider
+	 * @var \WBCR\Factory_457\Premium\Provider
 	 */
 	protected $premium;
 
@@ -70,7 +70,7 @@ class WINP_License_Page extends WINP_Page {
 
 	/**
 	 * @since 2.0.7
-	 * @var \WBCR\Factory_450\Premium\Interfaces\License
+	 * @var \WBCR\Factory_457\Premium\Interfaces\License
 	 */
 	protected $premium_license;
 
@@ -79,9 +79,9 @@ class WINP_License_Page extends WINP_Page {
 
 	/**
 	 * {@inheritdoc}
-	 * @param Wbcr_Factory450_Plugin $plugin
+	 * @param Wbcr_Factory457_Plugin $plugin
 	 */
-	public function __construct ( Wbcr_Factory450_Plugin $plugin ) {
+	public function __construct ( Wbcr_Factory457_Plugin $plugin ) {
 		$this->plugin = $plugin;
 
 		parent::__construct( $plugin );
@@ -209,7 +209,7 @@ class WINP_License_Page extends WINP_Page {
                      data-loader="<?php echo WINP_PLUGIN_URL . '/admin/assets/img/loader.gif'; ?>"
                      data-plugin="<?php echo get_class( $this->plugin ) ?>">
 
-                    <div class="factory-bootstrap-450 onp-page-wrap <?php echo $this->get_license_type() ?>-license-manager-content"
+                    <div class="factory-bootstrap-458 onp-page-wrap <?php echo $this->get_license_type() ?>-license-manager-content"
                          id="license-manager">
                         <div>
                             <h3><?php printf( __( 'Activate %s', 'insert-php' ), $this->plan_name ) ?></h3>

@@ -8,13 +8,12 @@
   --cmplz_categories-height:161px;
 
   --cmplz_title_font_size:15px;
-  --cmplz_text_font_size:12px;
   --cmplz_text_line_height: calc( var(--cmplz_text_font_size) * 1.5 );
   --cmplz_text_color:black;
-
   --cmplz_hyperlink_color:black;
+  --cmplz_text_font_size:12px;
   --cmplz_link_font_size:12px;
-
+  --cmplz_category_body_font_size:12px;
   --cmplz_button_accept_background_color:#1e73be;
   --cmplz_button_accept_border_color:#1e73be;
   --cmplz_button_accept_text_color:#fff;
@@ -27,10 +26,9 @@
   --cmplz_button_border_radius:5px;
   --cmplz_button_font_size:15px;
   --cmplz_category_header_always_active_color:green;
-  --cmplz_category_body_font_size:12px;
+
   --cmplz_category_header_title_font_size:14px;
   --cmplz_category_header_active_font_size:12px;
-  --cmplz_category_open_icon_url:url(https://complianz.io/banner-defaults/down.png);
   --cmplz-manage-consent-height:50px;
   --cmplz-manage-consent-offset:-35px;
 
@@ -52,6 +50,9 @@
 	border-color: var(--cmplz_banner_border_color);
 	border-width: var(--cmplz_banner_border_width);
 	border-radius: var(--cmplz_banner_border_radius);
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	line-height:initial;
 	position: fixed;
 	bottom: var(--cmplz-manage-consent-offset);
 	min-width: 100px;
@@ -145,7 +146,6 @@
 	grid-column: span 3;
 	overflow-y: auto;
 	overflow-x:hidden;
-	min-width: 300px;
 	max-height: 55vh;
 	&::-webkit-scrollbar-track {
 	  border-radius: 10px;
@@ -161,6 +161,12 @@
 	&::-webkit-scrollbar-thumb {
 	  background-color: var(--cmplz_button_accept_background_color);
 	  border-radius: 10px;
+	}
+  }
+  //set a min-width above 350px.
+  @media (min-width:350px) {
+	.cmplz-body {
+	  min-width: 300px;
 	}
   }
 
@@ -183,7 +189,6 @@
 	  align-items: center;
 	  display: grid;
 	  grid-column: span 3;
-	  overflow:auto;
 	}
 
 	.cmplz-logo {
@@ -212,8 +217,8 @@
 	  grid-column-start: 3;
 	  font-size: 20px;
 	  cursor: pointer;
-	  width: 24px;
-	  height: 24px;
+	  width: 20px;
+	  height: 20px;
 	  color: var(--cmplz_text_color);
 	  svg {
 		width:20px;
@@ -260,10 +265,10 @@
 	  background-color: rgba(239, 239, 239, .5);
 	  .cmplz-category-header {
 		display: grid;
-		grid-template-columns: 1fr auto 25px;
+		grid-template-columns: 1fr auto 15px;
 		grid-template-rows: minmax(0, 1fr);
 		align-items: center;
-		grid-gap: 0;
+		grid-gap: 10px;
 		padding: 10px;
 		.cmplz-category-title {
 		  font-weight: 500;
@@ -302,16 +307,14 @@
 		  grid-column-start: 3;
 		  cursor: pointer;
 		  content: '';
-		  background: var(--cmplz_category_open_icon_url) no-repeat;
 		  transform: rotate(0deg);
 		  -webkit-transition: all 0.5s ease;
 		  -moz-transition: all 0.5s ease;
 		  -o-transition: all 0.5s ease;
 		  transition: all 0.5s ease;
 		  background-size: cover;
-		  height: 25px;
-		  width: 25px;
-		  margin: 0 5px;
+		  height: 18px;
+		  width: 18px;
 		}
 
 	  }
@@ -376,6 +379,7 @@
 	  text-decoration: none;
 	  line-height: 20px;
 	  text-align: center;
+	  flex: initial;//prevent theme override of flex property
 	  &:hover{
 		text-decoration: none;
 	  }
@@ -416,17 +420,13 @@
 
   // ---------------------------------------------------- Links ----------------------------------------------------- //
 
-  //disabled until consent per services on cookie policy is released
-  .cmplz-links.cmplz-information {
-	  display:none;
+  @media (max-width:425px) {
+	//stack links on small screens
+	.cmplz-links.cmplz-information {
+	  display:initial;
+	  text-align:center;
+	}
   }
-  //@media (max-width:425px) {
-	////stack links on small screens
-	//.cmplz-links.cmplz-information {
-	//  display:initial;
-	//  text-align:center;
-	//}
-  //}
 
   .cmplz-links {
 	&.cmplz-information {

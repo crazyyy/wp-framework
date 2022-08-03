@@ -482,6 +482,59 @@ class AMP_Allowed_Tags_Generated {
 				),
 			),
 		),
+		'amp-autocomplete' => array(
+			array(
+				'attr_spec_list' => array(
+					'data-amp-bind-src' => array(),
+					'filter' => array(
+						'mandatory' => true,
+					),
+					'filter-expr' => array(
+						'requires_extension' => array(
+							'amp-bind',
+						),
+					),
+					'filter-value' => array(),
+					'highlight-user-entry' => array(),
+					'inline' => array(),
+					'items' => array(),
+					'max-entries' => array(),
+					'max-items' => array(),
+					'media' => array(),
+					'min-characters' => array(),
+					'noloading' => array(
+						'value' => array(
+							'',
+						),
+					),
+					'prefetch' => array(),
+					'query' => array(),
+					'src' => array(
+						'value_url' => array(
+							'allow_relative' => true,
+							'protocol' => array(
+								'https',
+							),
+						),
+					),
+					'submit-on-enter' => array(),
+					'suggest-first' => array(),
+					'template' => array(),
+				),
+				'tag_spec' => array(
+					'amp_layout' => array(
+						'supported_layouts' => array(
+							5,
+						),
+					),
+					'requires_extension' => array(
+						'amp-autocomplete',
+					),
+					'spec_name' => 'amp-autocomplete',
+					'spec_url' => 'https://amp.dev/documentation/components/amp-autocomplete/',
+				),
+			),
+		),
 		'amp-beopinion' => array(
 			array(
 				'attr_spec_list' => array(
@@ -2996,6 +3049,44 @@ class AMP_Allowed_Tags_Generated {
 					'requires_extension' => array(
 						'amp-wistia-player',
 					),
+				),
+			),
+		),
+		'amp-wordpress-embed' => array(
+			array(
+				'attr_spec_list' => array(
+					'data-url' => array(
+						'mandatory' => true,
+						'value_url' => array(
+							'allow_relative' => false,
+							'protocol' => array(
+								'https',
+							),
+						),
+					),
+					'media' => array(),
+					'noloading' => array(
+						'value' => array(
+							'',
+						),
+					),
+				),
+				'tag_spec' => array(
+					'amp_layout' => array(
+						'supported_layouts' => array(
+							6,
+							2,
+							3,
+							7,
+							9,
+							1,
+							4,
+						),
+					),
+					'requires_extension' => array(
+						'amp-wordpress-embed',
+					),
+					'spec_url' => 'https://amp.dev/documentation/components/amp-wordpress-embed/',
 				),
 			),
 		),

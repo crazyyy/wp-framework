@@ -9,6 +9,7 @@ return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
+    'FakerPress\\Dev\\' => array($baseDir . '/dev/src'),
     'FakerPress\\' => array($baseDir . '/src/FakerPress'),
     '' => array($vendorDir . '/nesbot/carbon/src'),
 );

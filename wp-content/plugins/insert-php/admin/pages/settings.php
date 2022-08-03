@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_SettingsPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory450_Plugin $plugin
+	 * @param Wbcr_Factory457_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory450_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory457_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = "settings";

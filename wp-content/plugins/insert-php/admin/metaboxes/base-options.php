@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
+class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 
 	/**
 	 * A visible title of the metabox.
@@ -30,7 +30,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	 */
 	public $priority = 'core';
 
-	public $css_class = 'factory-bootstrap-450 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-458 factory-fontawesome-000';
 
 	protected $errors = [];
 	protected $source_channel;
@@ -53,7 +53,8 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 
 		if ( $snippet_type !== WINP_SNIPPET_TYPE_AD ) {
 			add_action( 'admin_head', [ $this, 'removeMediaButton' ] );
-		} else {
+		}
+		else {
 			// Установим HTML (текстовый) редактор, редактором по умолчанию
 			add_filter( 'wp_default_editor', function ( $type ) {
 				return 'html';
@@ -79,9 +80,9 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	/**
 	 * Configures a metabox.
 	 *
-	 * @param Wbcr_Factory450_StyleList $styles A set of style to include.
+	 * @param Wbcr_Factory457_StyleList $styles A set of style to include.
 	 *
-	 * @param Wbcr_Factory450_ScriptList $scripts A set of scripts to include.
+	 * @param Wbcr_Factory457_ScriptList $scripts A set of scripts to include.
 	 *
 	 * @return void
 	 * @since 1.0.0
@@ -246,53 +247,68 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 			$button_nonce = ' data-nonce="' . wp_create_nonce( "wbcr_inp_save_snippet_{$snippet_id}_as_template" ) . '"';
 
 			?>
-            <div class="factory-bootstrap-450 factory-fontawesome-000">
-                <div class="modal fade" id="winp-sync-modal" tabindex="-1" role="dialog"
-                     aria-labelledby="exampleModalLabel"
-                     aria-hidden="true" style="display: none">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body" id="winp-sync-content">
-                                <p class="winp-icon">
-                                    <span class="dashicons dashicons-category"></span>
-                                </p>
-                                <p class="winp-header-modal">
-									<?php _e( 'Save a Snippet as a Template', 'insert-php' ); ?>
-									<?php echo $premium_text; ?>
-                                </p>
-								<?php if ( $is_key ) : ?>
-                                    <p class="winp-title-modal">
-										<?php _e( 'Your snippets will be available for export and reuse on any page or website', 'insert-php' ); ?></p>
-								<?php else : ?>
-                                    <p class="winp-title-modal">
-										<?php _e( 'A copy of your snippet and its settings are stored on our remote server. You can access it from any website where you’ve activated the plugin’s premium version. If you have our plugin on multiple websites or work in a team, it’s quite handy to use templates. The feature is available in the premium version only.', 'insert-php' ); ?>
-                                    </p>
-								<?php endif; ?>
-								<?php if ( $is_key ) : ?>
-                                    <input type="text" id="winp-sync-snippet-name" required
-                                           placeholder="<?php _e( 'Enter template name', 'insert-php' ); ?>">
-                                    <button type="button" class="btn btn-secondary"
-                                            id="winp-sync-save-button"<?php echo $button_nonce; ?>>
-                                        <span style="width: 40px"><?php _e( 'Save', 'insert-php' ); ?></span>
-                                    </button>
-                                    <div class="winp-modal-error">
-                                        <span class="dashicons dashicons-warning"></span>
-                                        <span class="warning-text"></span>
-                                    </div>
-								<?php else : ?>
-									<?php WINP_Helper::get_purchase_button( 'edit-snippet' ) ?>
-								<?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-				<?php //wp_nonce_field( 'winp-snippet-library', 'winp-snippet-library-nonce' ); ?>
-            </div>
+			<div class="factory-bootstrap-458 factory-fontawesome-000">
+				<div class="modal fade" id="winp-sync-modal" tabindex="-1" role="dialog"
+				     aria-labelledby="exampleModalLabel"
+				     aria-hidden="true" style="display: none">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body" id="winp-sync-content">
+								<p class="winp-icon">
+									<span class="dashicons dashicons-category"></span>
+								</p>
+								<p class="winp-header-modal">
+									<?php
+									_e( 'Save a Snippet as a Template', 'insert-php' ); ?>
+									<?php
+									echo $premium_text; ?>
+								</p>
+								<?php
+								if ( $is_key ) : ?>
+									<p class="winp-title-modal">
+										<?php
+										_e( 'Your snippets will be available for export and reuse on any page or website', 'insert-php' ); ?></p>
+								<?php
+								else : ?>
+									<p class="winp-title-modal">
+										<?php
+										_e( 'A copy of your snippet and its settings are stored on our remote server. You can access it from any website where you’ve activated the plugin’s premium version. If you have our plugin on multiple websites or work in a team, it’s quite handy to use templates. The feature is available in the premium version only.', 'insert-php' ); ?>
+									</p>
+								<?php
+								endif; ?>
+								<?php
+								if ( $is_key ) : ?>
+									<input type="text" id="winp-sync-snippet-name" required
+									       placeholder="<?php
+									       _e( 'Enter template name', 'insert-php' ); ?>">
+									<button type="button" class="btn btn-secondary"
+									        id="winp-sync-save-button"<?php
+									echo $button_nonce; ?>>
+										<span style="width: 40px"><?php
+											_e( 'Save', 'insert-php' ); ?></span>
+									</button>
+									<div class="winp-modal-error">
+										<span class="dashicons dashicons-warning"></span>
+										<span class="warning-text"></span>
+									</div>
+								<?php
+								else : ?>
+									<?php
+									WINP_Helper::get_purchase_button( 'edit-snippet' ) ?>
+								<?php
+								endif; ?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
+				//wp_nonce_field( 'winp-snippet-library', 'winp-snippet-library-nonce' ); ?>
+			</div>
 			<?php
 		}
 	}
@@ -322,76 +338,79 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 		$code_editor_mode = 'application/x-httpd-php';
 		if ( $snippet_type == WINP_SNIPPET_TYPE_PHP ) {
 			$code_editor_mode = 'text/x-php';
-		} else if ( $snippet_type === WINP_SNIPPET_TYPE_CSS ) {
+		}
+		else if ( $snippet_type === WINP_SNIPPET_TYPE_CSS ) {
 			$code_editor_mode = 'text/css';
-		} else if ( $snippet_type === WINP_SNIPPET_TYPE_JS ) {
+		}
+		else if ( $snippet_type === WINP_SNIPPET_TYPE_JS ) {
 			$code_editor_mode = 'application/javascript';
-		} else if ( $snippet_type === WINP_SNIPPET_TYPE_HTML ) {
+		}
+		else if ( $snippet_type === WINP_SNIPPET_TYPE_HTML ) {
 			$code_editor_mode = 'text/html';
 		}
 		$code_editor_theme = $this->plugin->getPopulateOption( 'code_editor_theme' );
 		?>
-        <script>
-            /* Loads CodeMirror on the snippet editor */
-            (function () {
+		<script>
+			/* Loads CodeMirror on the snippet editor */
+			(function() {
 
-                var atts = [];
+				var atts = [];
 
-                atts['mode'] = '<?php echo $code_editor_mode ?>';
+				atts['mode'] = '<?php echo $code_editor_mode ?>';
 
-                atts['matchBrackets'] = true;
-                atts['styleActiveLine'] = true;
-                atts['continueComments'] = true;
-                atts['autoCloseTags'] = true;
-                atts['viewportMargin'] = Infinity;
+				atts['matchBrackets'] = true;
+				atts['styleActiveLine'] = true;
+				atts['continueComments'] = true;
+				atts['autoCloseTags'] = true;
+				atts['viewportMargin'] = Infinity;
 
-                atts['inputStyle'] = 'contenteditable';
-                atts['direction'] = 'ltr';
-                atts['lint'] = true;
-                atts['gutters'] = ["CodeMirror-lint-markers"];
+				atts['inputStyle'] = 'contenteditable';
+				atts['direction'] = 'ltr';
+				atts['lint'] = true;
+				atts['gutters'] = ["CodeMirror-lint-markers"];
 
-                atts['matchTags'] = {
-                    'bothTags': true
-                };
+				atts['matchTags'] = {
+					'bothTags': true
+				};
 
-                atts['extraKeys'] = {
-                    'Ctrl-Enter': function (cm) {
-                        document.getElementById('post_content').submit();
-                    },
-                    'Ctrl-Space': 'autocomplete',
-                    'Ctrl-/': 'toggleComment',
-                    'Cmd-/': 'toggleComment',
-                    'Alt-F': 'findPersistent',
-                    'Ctrl-F': 'findPersistent',
-                    'Cmd-F': 'findPersistent'
-                };
+				atts['extraKeys'] = {
+					'Ctrl-Enter': function(cm) {
+						document.getElementById('post_content').submit();
+					},
+					'Ctrl-Space': 'autocomplete',
+					'Ctrl-/': 'toggleComment',
+					'Cmd-/': 'toggleComment',
+					'Alt-F': 'findPersistent',
+					'Ctrl-F': 'findPersistent',
+					'Cmd-F': 'findPersistent'
+				};
 
-                atts['indentWithTabs'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_indent_with_tabs', true ) ) ?>;
-                atts['tabSize'] = <?php echo (int) $this->plugin->getPopulateOption( 'code_editor_tab_size', 4 ) ?>;
-                atts['indentUnit'] = <?php echo (int) $this->plugin->getPopulateOption( 'code_editor_indent_unit', 4 ) ?>;
-                atts['lineNumbers'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_line_numbers', true ) ) ?>;
-                atts['lineWrapping'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_wrap_lines', true ) ) ?>;
-                atts['autoCloseBrackets'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_auto_close_brackets', true ) ) ?>;
+				atts['indentWithTabs'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_indent_with_tabs', true ) ) ?>;
+				atts['tabSize'] = <?php echo (int) $this->plugin->getPopulateOption( 'code_editor_tab_size', 4 ) ?>;
+				atts['indentUnit'] = <?php echo (int) $this->plugin->getPopulateOption( 'code_editor_indent_unit', 4 ) ?>;
+				atts['lineNumbers'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_line_numbers', true ) ) ?>;
+				atts['lineWrapping'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_wrap_lines', true ) ) ?>;
+				atts['autoCloseBrackets'] = <?php $this->printBool( $this->plugin->getPopulateOption( 'code_editor_auto_close_brackets', true ) ) ?>;
 				<?php if ($this->plugin->getPopulateOption( 'code_editor_highlight_selection_matches', true )) { ?>
-                atts['highlightSelectionMatches'] = {
-                    showToken: true,
-                    style: 'winp-matchhighlight'
-                };
+				atts['highlightSelectionMatches'] = {
+					showToken: true,
+					style: 'winp-matchhighlight'
+				};
 				<?php } else { ?>
-                atts['highlightSelectionMatches'] = false;
+				atts['highlightSelectionMatches'] = false;
 				<?php } ?>
 
 				<?php if(! empty( $code_editor_theme ) && $code_editor_theme != 'default'): ?>
-                atts['theme'] = '<?php echo esc_attr( $code_editor_theme ) ?>';
+				atts['theme'] = '<?php echo esc_attr( $code_editor_theme ) ?>';
 				<?php endif; ?>
 
-                Woody_CodeMirror.fromTextArea(document.getElementById('post_content'), atts);
-            })();
+				Woody_CodeMirror.fromTextArea(document.getElementById('post_content'), atts);
+			})();
 
-            jQuery(document).ready(function ($) {
-                $('.wp-editor-tabs').remove();
-            });
-        </script>
+			jQuery(document).ready(function($) {
+				$('.wp-editor-tabs').remove();
+			});
+		</script>
 		<?php
 	}
 
@@ -408,10 +427,11 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 			$snippet_code = WINP_Helper::get_snippet_code( $post );
 
 			?>
-            <div class="wp-editor-container winp-editor-container">
+			<div class="wp-editor-container winp-editor-container">
                 <textarea id="post_content" name="post_content"
-                          class="wp-editor-area winp-php-content"><?php echo esc_html( $snippet_code ); ?></textarea>
-            </div>
+                          class="wp-editor-area winp-php-content"><?php
+	                echo esc_html( $snippet_code ); ?></textarea>
+			</div>
 			<?php
 		}
 	}
@@ -483,13 +503,16 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 			$disabled = WINP_Plugin::app()->get_api_object()->is_changed( $post->ID ) == true ? '' : ' disabled';
 		}
 		?>
-        <div class="winp-sync-buttons">
-            <a class="wbcr-inp-import-snippet-button button<?php echo $disabled; ?>" id="winp-snippet-sync"
-               href="javascript:void(0)">
-                <span class="dashicons dashicons-cloud" title="<?php _e( 'Export snippet', 'insert-php' ); ?>"></span>
-				<?php _e( 'Save as template', 'insert-php' ); ?>
-            </a>
-        </div>
+		<div class="winp-sync-buttons">
+			<a class="wbcr-inp-import-snippet-button button<?php
+			echo $disabled; ?>" id="winp-snippet-sync"
+			   href="javascript:void(0)">
+				<span class="dashicons dashicons-cloud" title="<?php
+				_e( 'Export snippet', 'insert-php' ); ?>"></span>
+				<?php
+				_e( 'Save as template', 'insert-php' ); ?>
+			</a>
+		</div>
 		<?php
 	}
 
@@ -513,7 +536,8 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 
 		if ( $snippet_scope == 'shortcode' ) {
 			$shortcode = WINP_Helper::get_where_use_text( $post );
-		} else {
+		}
+		else {
 			$value     = WINP_Helper::get_where_use_text( $post );
 			$shortcode = WINP_Helper::get_shortcode_text( $post );
 		}
@@ -536,12 +560,12 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 	/**
 	 * Configures a form that will be inside the metabox.
 	 *
-	 * @param Wbcr_FactoryForms447_Form $form A form object to configure.
+	 * @param Wbcr_FactoryForms454_Form $form A form object to configure.
 	 *
 	 * @return void
 	 * @since 1.0.0
 	 *
-	 * @see   Wbcr_FactoryMetaboxes409_FormMetabox
+	 * @see   Wbcr_FactoryMetaboxes413_FormMetabox
 	 */
 	public function form( $form ) {
 		$snippet_type = WINP_Helper::get_snippet_type();
@@ -564,10 +588,12 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 					'hide' => '.wbcr_inp_whereuse_input_container',
 				],
 			];
-		} else {
+		}
+		else {
 			if ( $snippet_type === WINP_SNIPPET_TYPE_TEXT || $snippet_type === WINP_SNIPPET_TYPE_AD ) {
 				$hint = __( 'If you want to place some content into your snippet from the shortcode just wrap it inside [wbcr_text_snippet id="xxx"]content[/wbcr_text_snippet]. To use this content inside the snippet use {{SNIPPET_CONTENT}} variable.', 'insert-php' );
-			} else {
+			}
+			else {
 				$_type = $snippet_type === WINP_SNIPPET_TYPE_UNIVERSAL ? '' : '_' . $snippet_type;
 				$hint  = sprintf( __( 'If you want to place some content into your snippet from the shortcode just wrap it inside [wbcr%s_snippet id="xxx"]content[/wbcr%s_snippet]. To use this content inside the snippet use $content variable.', 'insert-php' ), $_type, $_type );
 			}
@@ -812,9 +838,11 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 
 		if ( $snippet_type == WINP_SNIPPET_TYPE_CSS || $snippet_type == WINP_SNIPPET_TYPE_JS ) {
 			$code = strip_tags( $code );
-		} else if ( $snippet_type == WINP_SNIPPET_TYPE_HTML ) {
+		}
+		else if ( $snippet_type == WINP_SNIPPET_TYPE_HTML ) {
 			$code = preg_replace( '/<\\?.*(\\?>|$)/Us', '', $code );
-		} else if ( $snippet_type != WINP_SNIPPET_TYPE_PHP ) {
+		}
+		else if ( $snippet_type != WINP_SNIPPET_TYPE_PHP ) {
 			/* Remove ?> from beginning of snippet */
 			$code = preg_replace( '|^[\s]*\?>|', '', $code );
 
@@ -825,7 +853,8 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 			if ( $start_count !== $end_count ) {
 				if ( $start_count > $end_count ) {
 					$code = $code . '?>';
-				} else {
+				}
+				else {
 					$code = '<?php ' . $code;
 				}
 			}
@@ -888,7 +917,8 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 
 		if ( $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_AD ) {
 			$snippet_content = ! empty( $post_content ) ? WINP_Plugin::app()->getExecuteObject()->prepareCode( $post_content, $post_id ) : '';
-		} else {
+		}
+		else {
 			$snippet_content = $post_content;
 		}
 
@@ -899,19 +929,21 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes409_FormMetabox {
 		if ( $snippet_scope == 'evrywhere' || $snippet_scope == 'auto' ) {
 			if ( $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_AD && $snippet_type != WINP_SNIPPET_TYPE_CSS && $snippet_type != WINP_SNIPPET_TYPE_JS && $snippet_type != WINP_SNIPPET_TYPE_HTML ) {
 				$validate = $this->validateCode( $snippet_content, $snippet_type );
-			} else {
+			}
+			else {
 				$validate = true;
 			}
 		}
 
 		if ( $validate && $is_default_activate && WINP_Plugin::app()->currentUserCan() ) {
 			WINP_Helper::updateMetaOption( $post_id, 'snippet_activate', true );
-		} else {
+		}
+		else {
 			if ( ! defined( 'WP_SANDBOX_SCRAPING' ) ) {
 				define( 'WP_SANDBOX_SCRAPING', true );
 			}
 			/* Display message if a parse error occurred */
-			wp_redirect( add_query_arg( [
+			wp_safe_redirect( add_query_arg( [
 				'action'                       => 'edit',
 				'post'                         => $post_id,
 				'wbcr_inp_save_snippet_result' => 'code-error',

@@ -4,9 +4,9 @@
  * @author Wesley Osorio<wesleyfosorio@hotmail.com>
  * @author Fernando H. Bandeira <fernando.bandeira94@gmail.com>
  * @author Gustavo Brito <britopereiragustavo@gmail.com>
- * @version 2019-10-22
+ * @version 2022-03-02
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -19,10 +19,13 @@
 		translator : 'Leandro Carvalho &lt;contato@leandrowebdev.net&gt;, Wesley Osorio&lt;wesleyfosorio@hotmail.com&gt;, Fernando H. Bandeira &lt;fernando.bandeira94@gmail.com&gt;, Gustavo Brito &lt;britopereiragustavo@gmail.com&gt;',
 		language   : 'Português',
 		direction  : 'ltr',
-		dateFormat : 'd M Y H:i', // will show like: 22 Out 2019 11:34
-		fancyDateFormat : '$1 H:i', // will show like: Hoje 11:34
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 191022-113433
+		dateFormat : 'd M Y H:i', // will show like: 02 março 2022 16:59
+		fancyDateFormat : '$1 H:i', // will show like: Hoje 16:59
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220302-165954
 		messages   : {
+			'getShareText' : 'Participação',
+			'Editor ': 'Editor de código',
+
 
 			/********************************** errors **********************************/
 			'error'                : 'Erro',
@@ -118,6 +121,7 @@
 			'errServerError'       : 'Ocorreu um erro no lado do servidor.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Não foi possível esvaziar a pasta "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'Existem mais $1 erros.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Você pode criar até $1 pastas de uma vez.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Criar arquivo',
@@ -186,7 +190,7 @@
 			'btnMime'   : 'Tipo MIME', // from v2.1 added 22.5.2015
 			'btnFileName':'Nome do arquivo',  // from v2.1 added 22.5.2015
 			'btnSaveClose': 'Salvar & Fechar', // from v2.1 added 12.6.2015
-			'btnBackup' : 'Backup', // fromv2.1 added 28.11.2015
+			'btnBackup' : 'Cópia de segurança', // fromv2.1 added 28.11.2015
 			'btnRename'    : 'Renomear',      // from v2.1.24 added 6.4.2017
 			'btnRenameAll' : 'Renomear (tudo)', // from v2.1.24 added 6.4.2017
 			'btnPrevious' : 'Anterior ($1/$2)', // from v2.1.24 added 11.5.2017
@@ -237,17 +241,17 @@
 			'dateUnknown' : 'Desconhecido',
 			'Today'       : 'Hoje',
 			'Yesterday'   : 'Ontem',
-			'msJan'       : 'Jan',
+			'msJan'       : 'janeiro',
 			'msFeb'       : 'Fev',
-			'msMar'       : 'Mar',
+			'msMar'       : 'março',
 			'msApr'       : 'Abr',
 			'msMay'       : 'Mai',
 			'msJun'       : 'Jun',
-			'msJul'       : 'Jul',
+			'msJul'       : 'julho',
 			'msAug'       : 'Ago',
 			'msSep'       : 'Set',
 			'msOct'       : 'Out',
-			'msNov'       : 'Nov',
+			'msNov'       : 'novembro',
 			'msDec'       : 'Dez',
 			'January'     : 'Janeiro',
 			'February'    : 'Fevereiro',
@@ -445,6 +449,7 @@
 			'clearBrowserData': 'Inicialize as configurações salvas neste navegador', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Barra de ferramentas', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... $1 caracteres restantes.',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $1 linhas restantes.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Somar', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Tamanho aproximado do arquivo', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Focar no elemento do diálogo com o mouse por cima',  // from v2.1.30 added 2.11.2017
@@ -488,7 +493,7 @@
 			'description'     : 'Descrição', // from v2.1.43 added 19.10.2018
 			'website'         : 'Site da internet', // from v2.1.43 added 19.10.2018
 			'author'          : 'Autor', // from v2.1.43 added 19.10.2018
-			'email'           : 'Email', // from v2.1.43 added 19.10.2018
+			'email'           : 'E-mail', // from v2.1.43 added 19.10.2018
 			'license'         : 'Licença', // from v2.1.43 added 19.10.2018
 			'exportToSave'    : 'Este item não pode ser salvo. Para evitar perder as edições, você precisa exportar para o seu PC.', // from v2.1.44 added 1.12.2018
 			'dblclickToSelect': 'Clique duas vezes no arquivo para selecioná-lo.', // from v2.1.47 added 22.1.2019
@@ -527,7 +532,7 @@
 			'kindText'        : 'Arquivo de texto',
 			'kindTextPlain'   : 'Texto simples',
 			'kindPHP'         : 'PHP',
-			'kindCSS'         : 'CSS',
+			'kindCSS'         : 'Planilha em estilo cascata (CSS)',
 			'kindHTML'        : 'Documento HTML',
 			'kindJS'          : 'Javascript',
 			'kindRTF'         : 'Formato Rich Text',
@@ -535,7 +540,7 @@
 			'kindCHeader'     : 'C cabeçalho',
 			'kindCPP'         : 'C++',
 			'kindCPPHeader'   : 'C++ cabeçalho',
-			'kindShell'       : 'Unix shell script',
+			'kindShell'       : 'script de shell Unix',
 			'kindPython'      : 'Python',
 			'kindJava'        : 'Java',
 			'kindRuby'        : 'Ruby',
@@ -578,3 +583,4 @@
 		}
 	};
 }));
+

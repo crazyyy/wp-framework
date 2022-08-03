@@ -13,8 +13,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
         'tab1' => 'render_tab1',
         'tab2' => 'render_tab2',
         'tab3' => 'render_tab3',
-        'tab4' => 'render_tab4',
-        'tab5' => 'render_tab5'
+        'tab4' => 'render_tab4'
     );
 
     public function __construct()
@@ -26,18 +25,10 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
     {
         $this->menu_tabs = array(
             'tab1' => __('Dashboard', 'all-in-one-wp-security-and-firewall'),
-            'tab2' => __('System Info', 'all-in-one-wp-security-and-firewall'),
-            'tab3' => __('Locked IP Addresses', 'all-in-one-wp-security-and-firewall'),
-            'tab4' => __('Permanent Block List', 'all-in-one-wp-security-and-firewall'),
-            'tab5' => __('Logs', 'all-in-one-wp-security-and-firewall')
+            'tab2' => __('Locked IP Addresses', 'all-in-one-wp-security-and-firewall'),
+            'tab3' => __('Permanent Block List', 'all-in-one-wp-security-and-firewall'),
+            'tab4' => __('Logs', 'all-in-one-wp-security-and-firewall')
         );
-    }
-
-    public function get_current_tab()
-    {
-        $tab_keys = array_keys($this->menu_tabs);
-        $tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : $tab_keys[0];
-        return $tab;
     }
 
     /*
@@ -95,142 +86,6 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
     public function render_tab2()
     {
         global $wpdb;
-        ?>
-        <div class="postbox">
-            <h3 class="hndle"><label for="title"><?php _e('Site Info', 'all-in-one-wp-security-and-firewall');?></label>
-            </h3>
-
-            <div class="inside">
-                <strong><?php _e('Plugin Version', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo AIO_WP_SECURITY_VERSION;?></code><br/>
-                <strong><?php _e('WP Version', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo get_bloginfo("version"); ?></code><br/>
-                <strong>WPMU: </strong><code><?php echo (!defined('MULTISITE') || !MULTISITE) ? "No" : "Yes"; ?></code><br/>
-                <strong>MySQL <?php _e('Version', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo $wpdb->db_version();?></code><br/>
-                <strong>WP <?php _e('Table Prefix', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo $wpdb->prefix; ?></code><br/>
-                <strong>PHP <?php _e('Version', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo phpversion(); ?></code><br/>
-                <strong><?php _e('Session Save Path', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo ini_get("session.save_path"); ?></code><br/>
-                <strong>WP URL: </strong><code><?php echo get_bloginfo('wpurl'); ?></code><br/>
-                <strong><?php _e('Server Name', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo $_SERVER['SERVER_NAME']; ?></code><br/>
-                <strong><?php _e('Cookie Domain', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php $cookieDomain = parse_url(strtolower(get_bloginfo('wpurl')));
-                    echo $cookieDomain['host']; ?></code><br/>
-                <strong>CURL <?php _e('Library Present', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo (function_exists('curl_init')) ? "Yes" : "No"; ?></code><br/>
-                <strong><?php _e('Debug File Write Permissions', 'all-in-one-wp-security-and-firewall');?>
-                    : </strong><code><?php echo (is_writable(AIO_WP_SECURITY_PATH)) ? "Writable" : "Not Writable"; ?></code><br/>
-            </div>
-        </div><!-- End of Site Info -->
-
-        <div class="postbox">
-            <h3 class="hndle"><label for="title"><?php _e('PHP Info', 'all-in-one-wp-security-and-firewall');?></label>
-            </h3>
-
-            <div class="inside">
-                <strong><?php _e('PHP Version', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo PHP_VERSION; ?></code><br/>
-                <strong><?php _e('PHP Memory Usage', 'all-in-one-wp-security-and-firewall'); ?>:
-                </strong><code><?php echo round(memory_get_usage() / 1024 / 1024, 2) . __(' MB', 'all-in-one-wp-security-and-firewall'); ?></code>
-                <br/>
-                <?php
-                if (ini_get('memory_limit')) {
-                    $memory_limit = filter_var(ini_get('memory_limit'), FILTER_SANITIZE_STRING);
-                } else {
-                    $memory_limit = __('N/A', 'all-in-one-wp-security-and-firewall');
-                }
-                ?>
-                <strong><?php _e('PHP Memory Limit', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo $memory_limit; ?></code><br/>
-                <?php
-                if (ini_get('upload_max_filesize')) {
-                    $upload_max = filter_var(ini_get('upload_max_filesize'), FILTER_SANITIZE_STRING);
-                } else {
-                    $upload_max = __('N/A', 'all-in-one-wp-security-and-firewall');
-                }
-                ?>
-                <strong><?php _e('PHP Max Upload Size', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo $upload_max; ?></code><br/>
-                <?php
-                if (ini_get('post_max_size')) {
-                    $post_max = filter_var(ini_get('post_max_size'), FILTER_SANITIZE_STRING);
-                } else {
-                    $post_max = __('N/A', 'all-in-one-wp-security-and-firewall');
-                }
-                ?>
-                <strong><?php _e('PHP Max Post Size', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo $post_max; ?></code><br/>
-                <?php
-                if (ini_get('allow_url_fopen')) {
-                    $allow_url_fopen = __('On', 'all-in-one-wp-security-and-firewall');
-                } else {
-                    $allow_url_fopen = __('Off', 'all-in-one-wp-security-and-firewall');
-                }
-                ?>
-                <strong><?php _e('PHP Allow URL fopen', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo $allow_url_fopen; ?></code>
-                <br/>
-                <?php
-                if (ini_get('display_errors')) {
-                    $display_errors = __('On', 'all-in-one-wp-security-and-firewall');
-                } else {
-                    $display_errors = __('Off', 'all-in-one-wp-security-and-firewall');
-                }
-                ?>
-                <strong><?php _e('PHP Display Errors', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo $display_errors; ?></code>
-                <br/>
-                <?php
-                if (ini_get('max_execution_time')) {
-                    $max_execute = filter_var(ini_get('max_execution_time'));
-                } else {
-                    $max_execute = __('N/A', 'all-in-one-wp-security-and-firewall');
-                }
-                ?>
-                <strong><?php _e('PHP Max Script Execution Time', 'all-in-one-wp-security-and-firewall'); ?>
-                    : </strong><code><?php echo $max_execute; ?> <?php _e('Seconds'); ?></code><br/>
-            </div>
-        </div><!-- End of PHP Info -->
-
-        <div class="postbox">
-            <h3 class="hndle"><label
-                    for="title"><?php _e('Active Plugins', 'all-in-one-wp-security-and-firewall');?></label></h3>
-
-            <div class="inside">
-                <?php
-                $all_plugins = get_plugins();
-                $active_plugins = get_option('active_plugins');
-                //var_dump($all_plugins);
-                ?>
-                <table class="widefat aio_spacer_10_tb">
-                    <thead>
-                    <tr>
-                        <th><?php _e('Name', 'all-in-one-wp-security-and-firewall') ?></th>
-                        <th><?php _e('Version', 'all-in-one-wp-security-and-firewall') ?></th>
-                        <th><?php _e('Plugin URL', 'all-in-one-wp-security-and-firewall') ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    foreach ($active_plugins as $plugin_key) {
-                        $plugin_details = $all_plugins[$plugin_key];
-                        echo '<tr><td>' . $plugin_details['Name'] . '</td><td>' . $plugin_details['Version'] . '</td><td>' . $plugin_details['PluginURI'] . '</td></tr>';
-                    }
-                    ?>
-                    </tbody>
-                </table>
-            </div>
-        </div><!-- End of Active Plugins -->
-    <?php
-    }
-
-    public function render_tab3()
-    {
-        global $wpdb;
         include_once 'wp-security-list-locked-ip.php'; //For rendering the AIOWPSecurity_List_Table in tab1
         $locked_ip_list = new AIOWPSecurity_List_Locked_IP(); //For rendering the AIOWPSecurity_List_Table in tab1
 
@@ -283,7 +138,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
     <?php
     }
 
-   public function render_tab4()
+   public function render_tab3()
     {
         global $wpdb;
         include_once 'wp-security-list-permanent-blocked-ip.php'; //For rendering the AIOWPSecurity_List_Table
@@ -338,7 +193,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
      *
      * @return void
      */
-    public function render_tab5()
+    public function render_tab4()
     {
         //Needed for rendering the debug log table
         include_once 'wp-security-list-debug.php'; 
@@ -370,7 +225,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
                     ?>
                     <div class="notice notice-success is-dismissible">
                         <p><strong><?php _e( 'All In One WP Security & Firewall', 'all-in-one-wp-security-and-firewall' ); ?></strong></p>
-                        <p><?php _e( 'Debug logs have been cleared', 'all-in-one-wp-security-and-firewall' ); ?></p>
+                        <p><?php _e( 'Debug logs have been cleared.', 'all-in-one-wp-security-and-firewall' ); ?></p>
                     </div>
                     <?php
 
@@ -576,10 +431,10 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
     public function widget_spread_the_word() {
 ?>
         <p><?php _e('We are working hard to make your WordPress site more secure. Please support us, here is how:', 'all-in-one-wp-security-and-firewall');?></p>
-        <p><a href="https://www.facebook.com/tipsntrickshq/" target="_blank"><?php _e('Follow us on', 'all-in-one-wp-security-and-firewall');?> Facebook</a>
+        <p><a href="https://twitter.com/intent/user?screen_name=UpdraftPlus" target="_blank"><?php _e('Follow us on', 'all-in-one-wp-security-and-firewall');?> Twitter</a>
         </p>
         <p>
-            <a href="http://twitter.com/intent/tweet?url=https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin&text=I love the All In One WP Security and Firewall plugin!"
+            <a href="http://twitter.com/intent/tweet?url=https://wordpress.org/plugins/all-in-one-wp-security-and-firewall&text=I love the All In One WP Security and Firewall plugin!"
                target="_blank" class="aio_tweet_link"><?php _e('Post to Twitter', 'all-in-one-wp-security-and-firewall');?></a>
         </p>
         <p>
@@ -592,8 +447,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
     public function widget_know_developers() {
 ?>
         <p><?php _e('Wanna know more about the developers behind this plugin?', 'all-in-one-wp-security-and-firewall');?></p>
-        <p><a href="https://wpsolutions-hq.com/" target="_blank">WPSolutions</a></p>
-        <p><a href="https://www.tipsandtricks-hq.com/" target="_blank">Tips and Tricks HQ</a></p>
+        <p><a href="https://teamupdraft.com/" target="_blank">Team UpdraftPlus</a></p>
 
 <?php
     }
@@ -807,7 +661,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu
     }
 
    public function widget_locked_ip_addresses() {
-        $locked_ips_link = '<a href="admin.php?page=' . AIOWPSEC_MAIN_MENU_SLUG . '&tab=tab3">Locked IP Addresses</a>';
+        $locked_ips_link = '<a href="admin.php?page=' . AIOWPSEC_MAIN_MENU_SLUG . '&tab=tab2">Locked IP Addresses</a>';
 
         $locked_ips = AIOWPSecurity_Utility::get_locked_ips();
         if ($locked_ips === FALSE) {

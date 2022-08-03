@@ -1,4 +1,4 @@
-.wbcr-factory-feedback-112-modal {
+.wbcr-factory-feedback-117-modal {
     position: fixed;
     overflow: auto;
     height: 100%;
@@ -9,7 +9,7 @@
     background: rgba(0, 0, 0, 0.6)
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-dialog {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-dialog {
     background: transparent;
     position: absolute;
     left: 50%;
@@ -21,7 +21,7 @@
 }
 
 @media (max-width: 650px) {
-    .wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-dialog {
+    .wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-dialog {
         margin-left: -50%;
         box-sizing: border-box;
         padding-left: 10px;
@@ -29,54 +29,54 @@
         width: 100%
     }
 
-    .wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-dialog .wbcr-factory-feedback-112-modal-panel > h3 > strong {
+    .wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-dialog .wbcr-factory-feedback-117-modal-panel > h3 > strong {
         font-size: 1.3em
     }
 }
 
-.wbcr-factory-feedback-112-modal.active {
+.wbcr-factory-feedback-117-modal.active {
     display: block
 }
 
-.wbcr-factory-feedback-112-modal.active:before {
+.wbcr-factory-feedback-117-modal.active:before {
     display: block
 }
 
-.wbcr-factory-feedback-112-modal.active .wbcr-factory-feedback-112-modal-dialog {
+.wbcr-factory-feedback-117-modal.active .wbcr-factory-feedback-117-modal-dialog {
     top: 10%
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-success .wbcr-factory-feedback-112-modal-header {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-success .wbcr-factory-feedback-117-modal-header {
     border-bottom-color: #46b450
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-success .wbcr-factory-feedback-112-modal-body {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-success .wbcr-factory-feedback-117-modal-body {
     background-color: #f7fff7
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-warn .wbcr-factory-feedback-112-modal-header {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-warn .wbcr-factory-feedback-117-modal-header {
     border-bottom-color: #ffb900
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-warn .wbcr-factory-feedback-112-modal-body {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-warn .wbcr-factory-feedback-117-modal-body {
     background-color: #fff8e5
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-error .wbcr-factory-feedback-112-modal-header {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-error .wbcr-factory-feedback-117-modal-header {
     border-bottom-color: #dc3232
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-error .wbcr-factory-feedback-112-modal-body {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-error .wbcr-factory-feedback-117-modal-body {
     background-color: #ffeaea
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-body, .wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-footer {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-body, .wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-footer {
     border: 0;
     background: #fefefe;
     padding: 20px
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header {
     border-bottom: #eeeeee solid 1px;
     background: #fbfbfb;
     padding: 15px 20px;
@@ -84,7 +84,7 @@
     margin-bottom: -10px
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header h4 {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header h4 {
     margin: 0;
     padding: 0;
     text-transform: uppercase;
@@ -96,7 +96,7 @@
     -webkit-font-smoothing: antialiased
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header .wbcr-factory-feedback-112-close {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header .wbcr-factory-feedback-117-close {
     position: absolute;
     right: 10px;
     top: 12px;
@@ -113,166 +113,166 @@
     transition: all 0.2s ease-in-out
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header .wbcr-factory-feedback-112-close:hover {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header .wbcr-factory-feedback-117-close:hover {
     color: #fff;
     background: #aaa
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header .wbcr-factory-feedback-112-close .dashicons, .wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header .wbcr-factory-feedback-112-close:hover .dashicons {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header .wbcr-factory-feedback-117-close .dashicons, .wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header .wbcr-factory-feedback-117-close:hover .dashicons {
     text-decoration: none
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-body {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-body {
     border-bottom: 0
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-body p {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-body p {
     font-size: 14px
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-body h2 {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-body h2 {
     font-size: 20px;
     line-height: 1.5em
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-body > div {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-body > div {
     margin-top: 10px
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-body > div h2 {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-body > div h2 {
     font-weight: bold;
     font-size: 20px;
     margin-top: 0
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-footer {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-footer {
     border-top: #eeeeee solid 1px;
     text-align: right
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-footer > .button {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-footer > .button {
     margin: 0 7px
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-footer > .button:first-child {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-footer > .button:first-child {
     margin: 0
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-panel > .notice.inline {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-panel > .notice.inline {
     margin: 0;
     display: none
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-panel:not(.active) {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-panel:not(.active) {
     display: none
 }
 
-.rtl .wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header .wbcr-factory-feedback-112-close {
+.rtl .wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header .wbcr-factory-feedback-117-close {
     right: auto;
     left: 20px
 }
 
-body.has-wbcr-factory-feedback-112-modal {
+body.has-wbcr-factory-feedback-117-modal {
     overflow: hidden
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .reason-input, .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .internal-message {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .reason-input, .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .internal-message {
     margin: 3px 0 3px 22px
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .reason-input input, .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .reason-input textarea, .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .internal-message input, .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .internal-message textarea {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .reason-input input, .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .reason-input textarea, .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .internal-message input, .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .internal-message textarea {
     width: 100%
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback li.reason.has-internal-message .internal-message {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback li.reason.has-internal-message .internal-message {
     border: 1px solid #ccc;
     padding: 7px;
     display: none
 }
 
 @media (max-width: 650px) {
-    .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback li.reason li.reason {
+    .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback li.reason li.reason {
         margin-bottom: 10px
     }
 
-    .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback li.reason li.reason .reason-input, .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback li.reason li.reason .internal-message {
+    .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback li.reason li.reason .reason-input, .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback li.reason li.reason .internal-message {
         margin-left: 29px
     }
 
-    .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback li.reason li.reason label {
+    .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback li.reason li.reason label {
         display: table
     }
 
-    .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback li.reason li.reason label > span {
+    .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback li.reason li.reason label > span {
         display: table-cell;
         font-size: 1.3em
     }
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .wbcr-factory-feedback-112-anonymous-feedback-label {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .wbcr-factory-feedback-117-anonymous-feedback-label {
     float: left
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .wbcr-factory-feedback-112-modal-panel {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .wbcr-factory-feedback-117-modal-panel {
     margin-top: 0 !important
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-deactivation-feedback .wbcr-factory-feedback-112-modal-panel h3 {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-deactivation-feedback .wbcr-factory-feedback-117-modal-panel h3 {
     margin-top: 0;
     line-height: 1.5em
 }
 
-#the-list .deactivate > .wbcr-factory-feedback-112-slug {
+#the-list .deactivate > .wbcr-factory-feedback-117-slug {
     display: none
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-subscription-cancellation .wbcr-factory-feedback-112-price-increase-warning {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-subscription-cancellation .wbcr-factory-feedback-117-price-increase-warning {
     color: red;
     font-weight: bold;
     padding: 0 25px;
     margin-bottom: 0
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-subscription-cancellation ul.subscription-actions label input {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-subscription-cancellation ul.subscription-actions label input {
     float: left;
     top: 5px;
     position: relative
 }
 
-.rtl .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-subscription-cancellation ul.subscription-actions label input {
+.rtl .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-subscription-cancellation ul.subscription-actions label input {
     float: right
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-subscription-cancellation ul.subscription-actions label span {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-subscription-cancellation ul.subscription-actions label span {
     display: block;
     margin-left: 24px
 }
 
-.rtl .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-subscription-cancellation ul.subscription-actions label span {
+.rtl .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-subscription-cancellation ul.subscription-actions label span {
     margin-left: 0;
     margin-right: 24px
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-activation .wbcr-factory-feedback-112-modal-body input.wbcr-factory-feedback-112-license-key {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-activation .wbcr-factory-feedback-117-modal-body input.wbcr-factory-feedback-117-license-key {
     width: 100%
 }
 
-.wbcr-factory-feedback-112-license-options-container table, .wbcr-factory-feedback-112-license-options-container table select, .wbcr-factory-feedback-112-license-options-container table .wbcr-factory-feedback-112-available-license-key {
+.wbcr-factory-feedback-117-license-options-container table, .wbcr-factory-feedback-117-license-options-container table select, .wbcr-factory-feedback-117-license-options-container table .wbcr-factory-feedback-117-available-license-key {
     width: 100%
 }
 
-.wbcr-factory-feedback-112-license-options-container table td:first-child {
+.wbcr-factory-feedback-117-license-options-container table td:first-child {
     width: 1%
 }
 
-.wbcr-factory-feedback-112-license-options-container table .wbcr-factory-feedback-112-other-license-key-container label {
+.wbcr-factory-feedback-117-license-options-container table .wbcr-factory-feedback-117-other-license-key-container label {
     position: relative;
     top: 6px;
     float: left;
     margin-right: 5px
 }
 
-.wbcr-factory-feedback-112-license-options-container table .wbcr-factory-feedback-112-other-license-key-container div {
+.wbcr-factory-feedback-117-license-options-container table .wbcr-factory-feedback-117-other-license-key-container div {
     overflow: hidden;
     width: auto;
     height: 30px;
@@ -281,90 +281,90 @@ body.has-wbcr-factory-feedback-112-modal {
     position: relative
 }
 
-.wbcr-factory-feedback-112-license-options-container table .wbcr-factory-feedback-112-other-license-key-container div input {
+.wbcr-factory-feedback-117-license-options-container table .wbcr-factory-feedback-117-other-license-key-container div input {
     margin: 0
 }
 
-.wbcr-factory-feedback-112-sites-list-container td {
+.wbcr-factory-feedback-117-sites-list-container td {
     cursor: pointer
 }
 
-.wbcr-factory-feedback-112-multisite-options-container {
+.wbcr-factory-feedback-117-multisite-options-container {
     margin-top: 10px;
     border: 1px solid #ccc;
     padding: 5px
 }
 
-.wbcr-factory-feedback-112-multisite-options-container a {
+.wbcr-factory-feedback-117-multisite-options-container a {
     text-decoration: none
 }
 
-.wbcr-factory-feedback-112-multisite-options-container a:focus {
+.wbcr-factory-feedback-117-multisite-options-container a:focus {
     box-shadow: none
 }
 
-.wbcr-factory-feedback-112-multisite-options-container a.selected {
+.wbcr-factory-feedback-117-multisite-options-container a.selected {
     font-weight: bold
 }
 
-.wbcr-factory-feedback-112-multisite-options-container.wbcr-factory-feedback-112-apply-on-all-sites {
+.wbcr-factory-feedback-117-multisite-options-container.wbcr-factory-feedback-117-apply-on-all-sites {
     border: 0 none;
     padding: 0
 }
 
-.wbcr-factory-feedback-112-multisite-options-container.wbcr-factory-feedback-112-apply-on-all-sites .wbcr-factory-feedback-112-all-sites-options {
+.wbcr-factory-feedback-117-multisite-options-container.wbcr-factory-feedback-117-apply-on-all-sites .wbcr-factory-feedback-117-all-sites-options {
     border-spacing: 0
 }
 
-.wbcr-factory-feedback-112-multisite-options-container.wbcr-factory-feedback-112-apply-on-all-sites .wbcr-factory-feedback-112-all-sites-options td:not(:first-child) {
+.wbcr-factory-feedback-117-multisite-options-container.wbcr-factory-feedback-117-apply-on-all-sites .wbcr-factory-feedback-117-all-sites-options td:not(:first-child) {
     display: none
 }
 
-.wbcr-factory-feedback-112-multisite-options-container .wbcr-factory-feedback-112-sites-list-container {
+.wbcr-factory-feedback-117-multisite-options-container .wbcr-factory-feedback-117-sites-list-container {
     display: none;
     overflow: auto
 }
 
-.wbcr-factory-feedback-112-multisite-options-container .wbcr-factory-feedback-112-sites-list-container table td {
+.wbcr-factory-feedback-117-multisite-options-container .wbcr-factory-feedback-117-sites-list-container table td {
     border-top: 1px solid #ccc;
     padding: 4px 2px
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend .email-address-container {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend .email-address-container {
     overflow: hidden;
     padding-right: 2px
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend.wbcr-factory-feedback-112-freemium input.email-address {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend.wbcr-factory-feedback-117-freemium input.email-address {
     width: 300px
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend.wbcr-factory-feedback-112-freemium label {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend.wbcr-factory-feedback-117-freemium label {
     display: block;
     margin-bottom: 10px
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend.wbcr-factory-feedback-112-premium input.email-address {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend.wbcr-factory-feedback-117-premium input.email-address {
     width: 100%
 }
 
-.wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend.wbcr-factory-feedback-112-premium .button-container {
+.wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend.wbcr-factory-feedback-117-premium .button-container {
     float: right;
     margin-left: 7px
 }
 
 @media (max-width: 650px) {
-    .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend.wbcr-factory-feedback-112-premium .button-container {
+    .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend.wbcr-factory-feedback-117-premium .button-container {
         margin-top: 2px
     }
 }
 
-.rtl .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend .wbcr-factory-feedback-112-modal-body .input-container > .email-address-container {
+.rtl .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend .wbcr-factory-feedback-117-modal-body .input-container > .email-address-container {
     padding-left: 2px;
     padding-right: 0
 }
 
-.rtl .wbcr-factory-feedback-112-modal.wbcr-factory-feedback-112-modal-license-key-resend .wbcr-factory-feedback-112-modal-body .button-container {
+.rtl .wbcr-factory-feedback-117-modal.wbcr-factory-feedback-117-modal-license-key-resend .wbcr-factory-feedback-117-modal-body .button-container {
     float: left;
     margin-right: 7px;
     margin-left: 0
@@ -375,14 +375,14 @@ a.show-license-resend-modal {
     display: inline-block
 }
 
-.wbcr-factory-feedback-112-ajax-loader {
+.wbcr-factory-feedback-117-ajax-loader {
     position: relative;
     width: 170px;
     height: 20px;
     margin: auto
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar {
     position: absolute;
     top: 0;
     background-color: #0074a3;
@@ -415,7 +415,7 @@ a.show-license-resend-modal {
     transform: 0.3
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-1 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-1 {
     left: 0px;
     animation-delay: 0.6s;
     -o-animation-delay: 0.6s;
@@ -424,7 +424,7 @@ a.show-license-resend-modal {
     -moz-animation-delay: 0.6s
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-2 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-2 {
     left: 19px;
     animation-delay: 0.75s;
     -o-animation-delay: 0.75s;
@@ -433,7 +433,7 @@ a.show-license-resend-modal {
     -moz-animation-delay: 0.75s
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-3 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-3 {
     left: 38px;
     animation-delay: 0.9s;
     -o-animation-delay: 0.9s;
@@ -442,7 +442,7 @@ a.show-license-resend-modal {
     -moz-animation-delay: 0.9s
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-4 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-4 {
     left: 57px;
     animation-delay: 1.05s;
     -o-animation-delay: 1.05s;
@@ -451,7 +451,7 @@ a.show-license-resend-modal {
     -moz-animation-delay: 1.05s
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-5 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-5 {
     left: 76px;
     animation-delay: 1.2s;
     -o-animation-delay: 1.2s;
@@ -460,7 +460,7 @@ a.show-license-resend-modal {
     -moz-animation-delay: 1.2s
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-6 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-6 {
     left: 95px;
     animation-delay: 1.35s;
     -o-animation-delay: 1.35s;
@@ -469,7 +469,7 @@ a.show-license-resend-modal {
     -moz-animation-delay: 1.35s
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-7 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-7 {
     left: 114px;
     animation-delay: 1.5s;
     -o-animation-delay: 1.5s;
@@ -478,7 +478,7 @@ a.show-license-resend-modal {
     -moz-animation-delay: 1.5s
 }
 
-.wbcr-factory-feedback-112-ajax-loader .wbcr-factory-feedback-112-ajax-loader-bar-8 {
+.wbcr-factory-feedback-117-ajax-loader .wbcr-factory-feedback-117-ajax-loader-bar-8 {
     left: 133px;
     animation-delay: 1.65s;
     -o-animation-delay: 1.65s;
@@ -582,18 +582,18 @@ a.show-license-resend-modal {
     }
 }
 
-.wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form h2, .wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form .request-filesystem-credentials-action-buttons {
+.wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form h2, .wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form .request-filesystem-credentials-action-buttons {
     display: none
 }
 
-.wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form input[type=password], .wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form input[type=email], .wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form input[type=text] {
+.wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form input[type=password], .wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form input[type=email], .wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form input[type=text] {
     -webkit-appearance: none;
     padding: 10px 10px 5px 10px;
     width: 300px;
     max-width: 100%
 }
 
-.wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form > div, .wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form label, .wbcr-factory-feedback-112-modal-auto-install #request-filesystem-credentials-form fieldset {
+.wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form > div, .wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form label, .wbcr-factory-feedback-117-modal-auto-install #request-filesystem-credentials-form fieldset {
     width: 300px;
     max-width: 100%;
     margin: 0 auto;
@@ -629,21 +629,21 @@ a.show-license-resend-modal {
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1) !important
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header {
     background: black;
     color: #fff;
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-header h4 {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-header h4 {
     text-shadow: none;
     color: #fff;
 }
 
-.wbcr-factory-feedback-112-modal .wbcr-factory-feedback-112-modal-body {
+.wbcr-factory-feedback-117-modal .wbcr-factory-feedback-117-modal-body {
     padding-top: 35px;
 }
 
-.wbcr-factory-feedback-112-modal a.button-primary {
+.wbcr-factory-feedback-117-modal a.button-primary {
     background-color: #9fbb1a !important;
     color: #fff !important;
     border: none !important;
@@ -659,7 +659,7 @@ a.show-license-resend-modal {
     font-family: Lato, sans-serif;
 }
 
-.wbcr-factory-feedback-112-modal a.button-secondary {
+.wbcr-factory-feedback-117-modal a.button-secondary {
     border: none !important;
     box-shadow: none !important;
     text-shadow: none !important;

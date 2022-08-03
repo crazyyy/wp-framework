@@ -2,9 +2,9 @@
 /**
  * This class is implemented page: snippet library
  *
- * @author Webcraftic <wordpress.webraftic@gmail.com>
+ * @author Webcraftic <WordPress.webraftic@gmail.com>
  * @copyright (c) 2019, OnePress Ltd
- *s
+ * s
  * @package core
  * @since 1.0.0
  */
@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_SnippetLibraryPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory450_Plugin $plugin
+	 * @param Wbcr_Factory457_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory450_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory457_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = 'snippet-library';
@@ -32,7 +32,7 @@ class WINP_SnippetLibraryPage extends WINP_Page {
 
 		$this->plugin = $plugin;
 
-		require_once( WINP_PLUGIN_DIR . '/admin/includes/class.snippets.table.php' );
+		require_once WINP_PLUGIN_DIR . '/admin/includes/class.snippets.table.php';
 	}
 
 	/**
@@ -89,24 +89,25 @@ class WINP_SnippetLibraryPage extends WINP_Page {
             </form>
 
             <?php wp_nonce_field( 'winp-snippet-library', 'winp-snippet-library-nonce' ); ?>
-        <?php else: ?>
+        <?php else : ?>
             <div class="winp-more-padding"></div>
             <div class="row">
                 <div class="col-md-2 col-lg-4">&nbsp;</div>
                 <div class="col-sm-12 col-md-8 col-lg-4" style="text-align: center">
                     <p class="winp-icon"><span class="dashicons dashicons-category"></span></p>
 					<?php if ( $common ) : ?>
-						<p class="winp-header-modal"><?php _e('Snippets Library [Premium]', 'insert-php') ?></p>
-						<p class="winp-title-modal"><?php _e('Here you see all of your snippet templates. We’ve gathered the frequently used snippets so you can use them in your projects. Snippet templates help to implement your ideas faster without wasting time on searching and studying PHP code. The feature is available in the premium version only.', 'insert-php') ?></p>
-					<?php else: ?>
-						<p class="winp-header-modal"><?php _e('My Templates [Premium]', 'insert-php') ?></p>
-						<p class="winp-title-modal"><?php _e('Whenever you or someone from your team save snippets as templates on any website, they go to this section. Our remote server provides snippet synchronization. Thus, snippet templates are always available without extra import/export. The feature is available in the premium version only.', 'insert-php') ?></p>
+						<p class="winp-header-modal"><?php _e( 'Snippets Library [Premium]', 'insert-php' ); ?></p>
+						<p class="winp-title-modal"><?php _e( 'Here you see all of your snippet templates. We’ve gathered the frequently used snippets so you can use them in your projects. Snippet templates help to implement your ideas faster without wasting time on searching and studying PHP code. The feature is available in the premium version only.', 'insert-php' ); ?></p>
+					<?php else : ?>
+						<p class="winp-header-modal"><?php _e( 'My Templates [Premium]', 'insert-php' ); ?></p>
+						<p class="winp-title-modal"><?php _e( 'Whenever you or someone from your team save snippets as templates on any website, they go to this section. Our remote server provides snippet synchronization. Thus, snippet templates are always available without extra import/export. The feature is available in the premium version only.', 'insert-php' ); ?></p>
                     <?php endif; ?>
-                    <?php WINP_Helper::get_purchase_button() ?>
+                    <?php WINP_Helper::get_purchase_button(); ?>
                 </div>
                 <div class="col-md-2 col-lg-4">&nbsp;</div>
             </div>
-        <?php endif;
+			<?php
+        endif;
 	}
 
 	/**
@@ -115,13 +116,14 @@ class WINP_SnippetLibraryPage extends WINP_Page {
 	public function indexAction() {
 		$my_snippets_tab = true;
 		$library_tab     = false;
-		$my_snippets_url = remove_query_arg( array( 'tab' ) );
-		$library_url     = add_query_arg( 'tab', 'library', $my_snippets_url );
+		$my_snippets_url = esc_url( remove_query_arg( array( 'tab' ) ) );
+		$library_url     = esc_url( add_query_arg( 'tab', 'library', $my_snippets_url ) );
 
 		if ( WINP_Plugin::app()->request->get( 'tab' ) == 'library' ) {
 			$my_snippets_tab = false;
 			$library_tab     = true;
-		} ?>
+		}
+        ?>
         <div class="wrap">
             <div class="winp-snippet-library">
                 <h3><?php _e( 'Snippets library', 'insert-php' ); ?></h3>
@@ -139,7 +141,7 @@ class WINP_SnippetLibraryPage extends WINP_Page {
                     <div id="tab1">
 						<?php $this->render_html( true ); ?>
                     </div>
-				<?php else: ?>
+				<?php else : ?>
                     <div id="tab2">
 						<?php $this->render_html( false ); ?>
                     </div>

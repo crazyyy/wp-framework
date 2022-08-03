@@ -324,19 +324,24 @@ function pgc_actions(action) {
 
 function pgc_onsubmit() {
     var checkBoxes = new Array();
-    checkBoxes = document.getElementsByTagName('input');
-    var checkedFound = false;
+    checkBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    var selectedTables = new Array();
+    var table = '';
     for (var i = 0; i < checkBoxes.length; i++) {
-        if (checkBoxes[i].type == 'checkbox' && checkBoxes[i].checked) {
-            checkedFound = true;
-            break;
-        }
+        table = checkBoxes[i].name.substring(7);
+        selectedTables.push(table);
     }
-    if (!checkedFound) {
+    if (selectedTables.length===0) {
         alert(pgcSettings.select_table_before_delete);
         return false;
     }
-    if (!confirm(pgcSettings.confirm_before_table_delete)) {
+    
+    var tablesList = selectedTables.join(', ');
+    if (!confirm(pgcSettings.confirm_before_tables_deletion1 + "\n"+'('+ tablesList +')')) {
+        return false;
+    }
+    
+    if (!confirm(pgcSettings.confirm_before_tables_deletion2)) {
         return false;
     }
     

@@ -29,19 +29,19 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         '/wp-': {
-            target: 'http://drawattention.localdev',
+            target: 'http://plugindetective.localdev',
             changeOrigin: true,
         },
         '/api': {
-            target: 'http://drawattention.localdev',
+            target: 'http://plugindetective.localdev',
             changeOrigin: true,
         },
         '/api.php': {
-            target: 'http://drawattention.localdev/wp-content/plugins/plugin-detective/troubleshoot',
+            target: 'http://plugindetective.localdev/wp-content/plugins/plugin-detective/troubleshoot',
             changeOrigin: true
         },
         '/local-get-app.php': {
-            target: 'http://drawattention.localdev/wp-content/plugins/plugin-detective/troubleshoot/app',
+            target: 'http://plugindetective.localdev/wp-content/plugins/plugin-detective/troubleshoot/app',
             changeOrigin: true
         }
     },

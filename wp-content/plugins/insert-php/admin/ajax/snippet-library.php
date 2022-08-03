@@ -112,7 +112,7 @@ function wbcr_inp_ajax_sts_display_callback() {
 
 	check_ajax_referer( 'winp-ajax-custom-list-nonce', 'winp_ajax_custom_list_nonce' );
 
-	require_once( WINP_PLUGIN_DIR . '/admin/includes/class.snippets.table.php' );
+	require_once WINP_PLUGIN_DIR . '/admin/includes/class.snippets.table.php';
 
 	// Create an instance of our package class...
 	$snippet_list_table = new WINP_Snippet_Library_Table( true );
@@ -138,7 +138,7 @@ function wbcr_inp_ajax_sts_history_callback() {
 
 	check_ajax_referer( 'winp-ajax-custom-list-nonce', 'winp_ajax_custom_list_nonce' );
 
-	require_once( WINP_PLUGIN_DIR . '/admin/includes/class.snippets.table.php' );
+	require_once WINP_PLUGIN_DIR . '/admin/includes/class.snippets.table.php';
 
 	$snippet_list_table = new WINP_Snippet_Library_Table( true );
 	$snippet_list_table->ajax_response();

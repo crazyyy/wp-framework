@@ -4,9 +4,9 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
 Requires at least: 4.9
 License: GPL2
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 5.2.3
+Stable tag: 5.3.2
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -90,6 +90,22 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 5.3.2 =
+* Fix: limit domain list generation function, preventing issues on large multisite installations
+* Fix: Non-network admins can alter network settings props @madtownlems
+* Improvement: drop Expect-CT from recommended headers
+
+= 5.3.1 =
+* Improvement: updated other plugins section
+* Improvement: added space in .htaccess comment for redirects
+
+= 5.3.0 =
+* Improvement: added PHP 8.1 compatibility
+* Improvement: updated .htaccess redirect comment
+* New: add installation helper
+* Improvement: is_writable check in Let's Encrypt
+* Improvement: Catch not set subject alternative and common names in cert
+
 = 5.2.3 =
 * Bumped tested up to 5.9
 

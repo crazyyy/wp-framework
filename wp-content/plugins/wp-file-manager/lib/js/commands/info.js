@@ -31,7 +31,8 @@
 			owner    : fm.i18n('owner'),
 			group    : fm.i18n('group'),
 			perm     : fm.i18n('perm'),
-			getlink  : fm.i18n('getLink')
+			getlink  : fm.i18n('getLink'),
+			share    : fm.i18n('getShareText')
 		},
 		applyZWSP = function(str, remove) {
 			if (remove) {
@@ -173,6 +174,7 @@
 				if (file.url == '1') {
 					content.push(row.replace(l, msg.link).replace(v, '<button class="'+btnclass+' '+spclass+'-url">'+msg.getlink+'</button>'));
 				} else {
+					msg.share =  msg.share == undefined ? 'Share' : msg.share;
 					if (file.url) {
 						href = file.url;
 					} else if (file.mime === 'directory') {
@@ -184,6 +186,11 @@
 						}
 					} else {
 						href = fm.url(file.hash);
+						var network_href = fm_get_network_url();
+						if(network_href) {
+							var filename = href.substring(href.lastIndexOf('/') + 1);
+							href = network_href+filename;
+						}					
 					}
 					href && content.push(row.replace(l, msg.link).replace(v,  '<a href="'+href+'" target="_blank">'+name_esc+'</a>'));
 				}

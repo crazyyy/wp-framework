@@ -1,12 +1,12 @@
 === Complianz - GDPR/CCPA Cookie Consent ===
 Contributors: RogierLankhorst, aahulsebos, leonwimmenhoeve, paapst, markwolters, tomeijkelenkamp, hesseldejong, mujuonly, xantek, pierrotevrard, samu-dn, jarnovos
 Donate link: https://paypal.me/complianz
-Tags: GDPR, Cookie, Cookie Notice, DSGVO, CCPA, Consent, RGPD, LGPD, Privacy, PIPEDA, Cookie Policy, Opt-in
+Tags: GDPR, Cookie, Cookie Notice, DSGVO, CPRA, Consent, RGPD, LGPD, Privacy, PIPEDA, Cookie Policy, Opt-in
 Requires at least: 4.9
 License: GPL2
 Requires PHP: 5.6
-Tested up to: 5.9
-Stable tag: 6.0.6
+Tested up to: 6.0
+Stable tag: 6.2.4
 
 Configure your Cookie Notice, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA.
 
@@ -54,7 +54,7 @@ https://www.youtube.com/watch?v=JJzOzNAd5Bw&ab_channel=ReallySimplePlugins
 
 * Detected Cookie Data is prefilled from cookiedatabase.org, with clear and transparent cookie descriptions, which are continuously updated.
 * Integrated with WordPress Privacy features. Export and erase personal data from our dashboard.
-* Implementation of Google Tag Manager, Google Analytics, Matomo, Clicky, Yandex, Jetpack and Burst Statistics
+* Implementation of Google Tag Manager, Google Analytics, Matomo, Matomo Tag Manager, Clicky, Yandex, Jetpack and Burst Statistics
 * Categorize your Cookies with Tag Manager or our Script Center, if needed.
 * Integration with the [WP Consent API](https://wpconsentapi.org/)
 
@@ -69,7 +69,10 @@ Complianz offers full support on the WordPress.org [Forum](https://wordpress.org
 == Useful Links ==
 
 * [Support Forum](https://wordpress.org/support/plugin/complianz-gdpr/)
+* [Github](https://github.com/Really-Simple-Plugins/complianz-gdpr/)
+* [MU Plugins](https://github.com/Really-Simple-Plugins/complianz-integrations)
 * [Documentation](https://complianz.io/docs/)
+* [Developer's Guide](https://complianz.io/developers-guide-for-third-party-integrations/)
 * [Wizard Manual](https://complianz.io/manual/)
 * [Legal Definitions](https://complianz.io/definitions/)
 * [Translate Complianz](https://translate.wordpress.org/projects/wp-plugins/complianz-gdpr/)
@@ -80,7 +83,6 @@ Complianz offers a Full Privacy Suite for WordPress on [Complianz.io](https://co
 
 = Cookie Consent Notice =
 
-* Elementor Pro - Create a Cookie Banner with Elementor Pop Ups and use Complianz's Consent Management
 * Improve conversion with A/B Testing: which cookie banner has the best consent ratio? Run tests and measure what works best for your site.
 
 = Consent Management =
@@ -90,11 +92,14 @@ Complianz offers a Full Privacy Suite for WordPress on [Complianz.io](https://co
 * Geo IP Cookie Consent: Cookie Consent is different everywhere. Show the correct Cookie Notice based on IP location, but only if a banner is needed.
 * Google Consent Mode - Use Consent Mode by Google with Google Tag Manager or Google Analytics. No further set-up needed.
 * Integration with TCF v2.0. An IAB Europe Consent Framework for Publishers. Registered CMP ID: 332
+* Data Request Forms and Registration
+
 
 = Privacy Laws & Guidelines =
 
 Simultaneously select USA, Canada, United Kingdom, Australie, South Africa, Brazil and the EU as targeted regions with conditional Consent and dedicated Cookie Banners.
 
+* Support for GDPR / ePrivacy - European Union with Extension for Switzerland.
 * Support for UK-GDPR / PECR and ICO Guidelines - United Kingdom.
 * Support for PIPEDA and CASL - Canada.
 * Support for Privacy Act 1988 & Australian Privacy Principles
@@ -106,7 +111,8 @@ Simultaneously select USA, Canada, United Kingdom, Australie, South Africa, Braz
 * Privacy statements (EU, CA, UK, AU, ZA, BR & USA). 
 * Cookie policy (EU, UK, CA, AU, ZA, BR & US).
 * Impressum (Germany & Austria) & Imprint for world wide use.
-* Disclaimer. 
+* Disclaimer
+* Terms & Conditions Integration
 * Processing agreements (EU, UK, CA, AU, ZA, BR & US). 
 * Dataleak reporting tools (EU, UK, CA, AU, ZA, BR & US). 
 * Supports CCPA Consent and Legal documents.
@@ -166,8 +172,161 @@ The Brazilian General Data Protection Law is similar to the GDPR, the UK-GDPR it
 With some custom CSS this is possible, but we do not consider a cookie wall to be GDPR compliant, so it's not actively supported. We do, however, have the option to create a Soft Cookie Wall. Which blocks interaction with the website, but dismissing remains a possibility.
 
 == Changelog ==
+= 6.2.4 =
+* Improvement: Get ready for cookieless tracking in Burst Statistics/Analytics
+* Improvement: shepherd css class
+* Improvement: move ace to vendor dir, to prevent translation scan, props @tobifjellner
+* Improvement: No data requests notice if no datarequests available
+* Improvement: Elementor video playlist integration
+* Improvement: less option updates in integrations
+* Improvement: new filter for compatibility with qTranslate
+* Improvement: drop text/javascript from scripts, as it is default
+* Improvement: no defer on inline scripts, props @Lofesa
+
+= 6.2.0 =
+* New: Beaver Builder Power Pack
+* New: Superfly integration
+* Improvement: Support for Switzerland
+* Improvement: change A tag of close button in banner to div, for WCAG
+* Improvement: add maps.google.de to blocklist
+* Improvement: wp bakery front end editor exclude cookie banner
+* Fix: Guide skips steps
+* Fix: Livetube fatal error props @ltglobal
+* Fix: British word changed to US default
+* Fix: php error php 8 when generating POC
+* Fix: Compatibility with Menu Block editor for legal pages
+* Fix: FitVids not activating on category_enabled hook, props @goretex34
+
+= 6.1.6.1 =
+* Fix: usage of dropped constants in GTM4WP causing fatal error, props @shecky
+
+= 6.1.6 =
+* Fix: elementor fix for inline css, matching regex made more specific
+* Fix: catch serialized string in PolyLang
+* Fix: allow string translations in Polylang, except for purposes. Prevent syncing translatable strings across languages. props @bosendorfer
+* New: WP adverts Google Maps integration, props @titusb
+* Improvement: Advanced Ads Integration
+* Improvement: prevent weird Avada bug triggering save_post hook on front-end, causing issues with Woocommerce PayPal integration, causing order key stripped
+* Improvement: elementor fix for inline css, matching regex made more specific
+* Improvement: extend is_pagebuilder_preview function with more Elementor $_GET variables
+* Improvement: change vimeo purpose to statistics, props @alfi_-1
+* Improvement: Facebook Video Embed Elementor integration
+* Improvement: Exclude WooCommerce products from scan, preventing large nr of not relevant cookies to get detected, props @dwnl
+* Improvement: AMP default hidden in inline amp css
+* Improvement: add support for legacy WordPress Video shortcode, still used in siteorigin pagebuilder, props @stclaus
+
+= 6.1.5 =
+* Fix: 'NOT' condition not loading correctly, props @rickvanleeuwen
+
+= 6.1.4 =
+* Improvement: integration which fixes bug in Thrive theme which removes other plugin's inline css
+* Improvement: Use category as fallback for service consent
+* Improvement: legal update to imprint/impressum
+* Improvement: adjustments to EU configuration to allow for Switzerland as region
+* Improvement: add Burst Statistics to suggested plugins for privacy friendly statistics
+* Improvement: improve caching mechanism to ensure that on even for persistent cached database queries, these get updated when necessary
+* Improvement: new event for integrations 'cmplz_status_change_service'
+* Improvement: when checking callback function, also check for prefix
+* Improvement: user registration pro
+* Fix: reCaptcha integration in combination with consent per service, props @esby
+* Fix: Burst Statistics integration could cause duplicate hits in some situations
+* Fix: Placeholders for Elementor Facebook and Twitter widget, and allow for Consent Per Service
+* Fix: Consent per service icw Elementor Youtube implementation
+* Fix: US revoke statistics with forceEnableStats
+* Fix: drop Elementor Pro Cookie Banner support
+* Fix: drop aria-checked=true for input type=checkbox, props @lofesa
+* Fix: Uncaught TypeError: service is null when Elementor integration used in combination with Cookie Shredder/consent per service
+* Fix: duplicate id in back-end radio field
+
+= 6.1.3 =
+* Fix: Consent Mode consenting to marketing when preferences was accepted
+* Fix: Burst Statistics integration triggering twice
+
+= 6.1.2 =
+* New: Matomo Tag Manager / WP Piwik
+* Improvement: editable "I Agree" button for consent per service/Cookie Shredder
+* Improvement: cache get and cache set on database queries on the cookie policy and cookie shredder, removing duplicate queries, props David
+* Improvement: export banner settings option
+* Improvement: remove space after empty text, causing unnecessary paragraphs
+* Improvement: use close button with enter, props @benqwerty
+* Improvement: limit banner image size to banner editor only, props @bkwineper
+* Improvement: lazy load integration for WP Rocket and LazyLoader plugin, props @Lofesa
+* Improvement: change divs in banner to spans, props @kbelimpassakis
+* Improvement: move inline css to head, props @kbelimpassakis
+* Improvement: lock css file on css generation in banner
+* Improvement: clean up blocked scripts after activation, props @puregraphx
+* Improvement: run load_plugin_textdomain for Loco Translate compatibility props @peterforensys
+* Improvement: upgrade tables for older versions
+* Fix: Woocommerce Google Analytics - Enhanced Ecommerce integration
+* Fix: localhost reference in default css, props @toxicum
+* Fix: saving of border radius of 0 in cookie banner
+* Fix: save/enable on integrations slider
+* Fix: dismiss Elementor pro activated notice
+* Fix: fixed accidentally re-activating deactivated services on cookiedatabase.org sync
+
+= 6.1.0.1 =
+* Fix: Recaptcha integration issue, props @delanthear @peopleinside @soydelia for reporting the issue
+
+= 6.1.0 =
+* New: Consent per Service in combination with CookieShredder.
+* New: Matomo cookieless tracking
+* CSS: simplify scrollbar in dashboard css
+* CSS: drop overflow: auto on header
+* CSS: drop min-width 300px below 350px
+* CSS: set bottom banner to bottom on mobile as well
+* CSS: padding on links in legal pages
+* CSS: override theme flex property on buttons in banner
+* Improvement: hide not required fields if no documents are selected, props @paaljoachim
+* Improvement: allow for time zone offset when saving consent in records of consent
+* Improvement: keep categories in sync https://github.com/Really-Simple-Plugins/complianz-gdpr/issues/324 props @antonellon
+* Improvement: Link to permalink settings when notice is shown
+* Improvement: DNT feedback string improved
+* Improvement: drop fieldname class from fields in settings page, to prevent conflicts
+* Improvement: CloudFlare CFCustom geo ip option
+* Improvement: new options for GEO ip
+* Improvement: allow saving of empty script center blocks
+* Improvement: on switch to TCF banner, regenerate the banner css
+* Improvement: obfuscate email address also with css
+* Improvement: remove condition on categories settings in cookie banner setting, to allow for manage consent area configuration in cookie policy
+* Improvement: catch Tatsu pagebuilder preview
+* Improvement: auto enable GEO ip if records of consent enabled
+* Improvement: disable hide cookiebanner option on legal pages
+* Improvement: added font size option
+* Improvement: responsiveness wizard
+* Improvement: cookiebanner required feedback
+* Improvement: new option to disable width auto correction
+* Improvement: ratio option for placeholders on openstreetmap
+* Improvement: drop title element from svg in banner, props @alexbosch
+* Improvement: p elements on all paragraphs in legal documents
+* Improvement: added Flexible Maps integration
+* Improvement: add toggle to hide the legal document links on the banner
+* Fix: Novo Maps integration
+* Fix: domains with 'type' in the url could not load the css file props @nimdaweb
+* Fix: catch not set enable dependency key
+* Fix: preview cookiebanner not always correctly updated.
+* Fix: paging in integrations
+* Fix: remove <title> tag from close button. props @doubleyourbrand
+* Fix: only reload on a deny action if marketing was accepted props @dasisdormax
+* Fix: allow mappress en google maps enabled at the same time
+* Fix: allow quotes in custom css
+* Fix: export filtered dataset from Records of Consent
+* Fix: in cmplz_fire_categories, declare event as local variable, fixing theme conflicts with global declared variables props @jrt341 and @skydivider
+* Fix: fix revert to defaults for text_checkbox booleans @puregraphx
+* Fix: Due to change from google-analytics.js to gtag.js, anonymizeIp has changed to anonymize_ip, props @ccalislar35
+* Fix: On sync, include services without cookies, even if completed
+
+= 6.0.7 =
+* Changed database upgrade order
+* Improvement: catch Tatsu pagebuilder preview
+* Fix: only reload on a deny action if marketing was accepted props @dasisdormax
+* Fix: allow mappress en google maps enabled at the same time
+* Fix: allow quotes in custom css
+* Improvement: allow saving of empty script center blocks
+* Improvement: obfuscate email address also with css
+* Improvement: remove condition on categories settings in cookie banner setting, to allow for manage consent area configuration in cookie policy
+
 = 6.0.6 =
-* Bumped tested up to 5.9
+* Bumped tested up to
 
 = 6.0.5 =
 * Improvement: auto enable migrate.js when upgrading from <6 to 6.0 and up

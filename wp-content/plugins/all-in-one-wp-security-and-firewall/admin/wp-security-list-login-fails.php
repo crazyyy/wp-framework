@@ -20,7 +20,18 @@ class AIOWPSecurity_List_Login_Failed_Attempts extends AIOWPSecurity_List_Table 
     function column_default($item, $column_name){
     	return $item[$column_name];
     }
-        
+
+    /**
+     * This method returns failed login date after being formatted according to the date_format and time_format options.
+     *
+     * @param Array $item - an array containing data for a single row of the failed logins table
+     * 
+     * @return String      returns formatted date-time string
+     */
+    protected function column_failed_login_date($item) {
+        return get_date_from_gmt(mysql2date('Y-m-d H:i:s', $item['failed_login_date']), get_option('date_format').' '.get_option('time_format'));
+    }
+
     function column_login_attempt_ip($item){
         $tab = strip_tags($_REQUEST['tab']);
         $delete_url = sprintf('admin.php?page=%s&tab=%s&action=%s&failed_login_id=%s', AIOWPSEC_USER_LOGIN_MENU_SLUG, $tab, 'delete_failed_login_rec', $item['id']);

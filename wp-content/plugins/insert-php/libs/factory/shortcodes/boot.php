@@ -9,17 +9,17 @@
  *
  */
 
-if ( defined( 'FACTORY_SHORTCODES_329_LOADED' ) ) {
+if ( defined( 'FACTORY_SHORTCODES_333_LOADED' ) ) {
 	return;
 }
 
-define( 'FACTORY_SHORTCODES_329_VERSION', '3.2.9' );
+define( 'FACTORY_SHORTCODES_333_VERSION', '3.3.3' );
 
-define( 'FACTORY_SHORTCODES_329_LOADED', true );
+define( 'FACTORY_SHORTCODES_333_LOADED', true );
 
-define( 'FACTORY_SHORTCODES_329_DIR', dirname( __FILE__ ) );
+define( 'FACTORY_SHORTCODES_333_DIR', dirname( __FILE__ ) );
 
 #comp merge
-require( FACTORY_SHORTCODES_329_DIR . '/shortcodes.php' );
-require( FACTORY_SHORTCODES_329_DIR . '/shortcode.class.php' );
+require( FACTORY_SHORTCODES_333_DIR . '/shortcodes.php' );
+require( FACTORY_SHORTCODES_333_DIR . '/shortcode.class.php' );
 #endcomp

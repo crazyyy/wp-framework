@@ -1,10 +1,10 @@
 /**
- * Slovak translation
+ * Slovenčina translation
  * @author RobiNN <kelcakrobo@gmail.com>
  * @author Jakub Ďuraš <jkblmr@gmail.com>
- * @version 2021-06-10
+ * @version 2022-03-03
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,10 +17,12 @@
 		translator : 'RobiNN &lt;kelcakrobo@gmail.com&gt;, Jakub Ďuraš &lt;jkblmr@gmail.com&gt;',
 		language   : 'Slovenčina',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 10.06.2021 23:35
-		fancyDateFormat : '$1 H:i', // will show like: Dnes 23:35
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 210610-233522
+		dateFormat : 'd.m.Y H:i', // will show like: 03.03.2022 11:36
+		fancyDateFormat : '$1 H:i', // will show like: Dnes 11:36
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220303-113626
 		messages   : {
+			'getShareText' : 'zdieľam',
+			'Editor ': 'Editor kódu',
 
 			/********************************** errors **********************************/
 			'error'                : 'Chyba',
@@ -236,18 +238,18 @@
 			'dateUnknown' : 'neznámy',
 			'Today'       : 'Dnes',
 			'Yesterday'   : 'Včera',
-			'msJan'       : 'Jan',
-			'msFeb'       : 'Feb',
+			'msJan'       : 'jan',
+			'msFeb'       : 'feb',
 			'msMar'       : 'Mar',
 			'msApr'       : 'Apr',
 			'msMay'       : 'Maj',
 			'msJun'       : 'Jun',
 			'msJul'       : 'Júl',
 			'msAug'       : 'Aug',
-			'msSep'       : 'Sep',
+			'msSep'       : 'sept',
 			'msOct'       : 'Okt',
 			'msNov'       : 'Nov',
-			'msDec'       : 'Dec',
+			'msDec'       : 'dec',
 			'January'     : 'Január',
 			'February'    : 'Február',
 			'March'       : 'Marec',
@@ -255,10 +257,10 @@
 			'May'         : 'Máj',
 			'June'        : 'Jún',
 			'July'        : 'Júl',
-			'August'      : 'August',
-			'September'   : 'September',
+			'August'      : 'augusta',
+			'September'   : 'septembra',
 			'October'     : 'Október',
-			'November'    : 'November',
+			'November'    : 'novembra',
 			'December'    : 'December',
 			'Sunday'      : 'Nedeľa',
 			'Monday'      : 'Pondelok',
@@ -499,7 +501,7 @@
 			'kindRoot'        : 'Koreň média', // from v2.1.16 added 16.10.2016
 			'kindFolder'      : 'Priečinok',
 			'kindSelects'     : 'Výbery', // from v2.1.29 added 29.8.2017
-			'kindAlias'       : 'Alias',
+			'kindAlias'       : 'alias',
 			'kindAliasBroken' : 'Porušený alias',
 			// applications
 			'kindApp'         : 'Aplikácia',
@@ -520,17 +522,17 @@
 			'kindZIP'         : 'ZIP archív',
 			'kindRAR'         : 'RAR archív',
 			'kindJAR'         : 'Java JAR súbor',
-			'kindTTF'         : 'True Type font',
-			'kindOTF'         : 'Open Type font',
+			'kindTTF'         : 'True Type písmo',
+			'kindOTF'         : 'Otvorte písmo Type',
 			'kindRPM'         : 'RPM balík',
 			// texts
 			'kindText'        : 'Textový document',
 			'kindTextPlain'   : 'Obyčajný text',
 			'kindPHP'         : 'PHP zdrojový kód',
-			'kindCSS'         : 'Cascading style sheet (CSS)',
+			'kindCSS'         : 'Kaskádové štýly (CSS)',
 			'kindHTML'        : 'HTML dokument',
 			'kindJS'          : 'Javascript zdrojový kód',
-			'kindRTF'         : 'Rich Text Format',
+			'kindRTF'         : 'Formát RTF',
 			'kindC'           : 'C zdrojový kód',
 			'kindCHeader'     : 'C header zdrojový kód',
 			'kindCPP'         : 'C++ zdrojový kód',
@@ -545,7 +547,7 @@
 			'kindAWK'         : 'AWK zdrojový kód',
 			'kindCSV'         : 'Čiarkou oddeľované hodnoty',
 			'kindDOCBOOK'     : 'Docbook XML dokument',
-			'kindMarkdown'    : 'Markdown text', // added 20.7.2015
+			'kindMarkdown'    : 'Text označenia', // added 20.7.2015
 			// images
 			'kindImage'       : 'Obrázok',
 			'kindBMP'         : 'BMP obrázok',

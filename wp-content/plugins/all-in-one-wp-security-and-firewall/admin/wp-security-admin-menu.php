@@ -9,6 +9,25 @@ if(!defined('ABSPATH')){
 abstract class AIOWPSecurity_Admin_Menu
 {
     /**
+	 * Get valid current tab slug.
+	 *
+	 * @return string current valid tab slug or empty string
+	 */
+	protected function get_current_tab() {
+        if (is_array($this->menu_tabs) && !empty($this->menu_tabs)) {
+            $tab_keys = array_keys($this->menu_tabs);
+            if (empty($_GET['tab'])) {
+                return $tab_keys[0];
+            } else {
+                $current_tab = sanitize_text_field($_GET['tab']);
+                return in_array($current_tab, $tab_keys) ? $current_tab : $tab_keys[0];
+            }
+        } else {
+            return '';
+        }
+	}
+
+    /**
      * Shows postbox for settings menu
      *
      * @param string $id css ID for postbox

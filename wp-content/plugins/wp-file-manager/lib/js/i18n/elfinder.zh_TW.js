@@ -24,6 +24,8 @@
     fancyDateFormat: "$1 H:i", // will produce smth like: Today 12:25 PM
     nonameDateFormat: "ymd-His", // to apply if upload file is noname: 120513172700
     messages: {
+      'getShareText' : '分享',
+			'Editor ': '代碼編輯器',
       /********************************** errors **********************************/
       error: "錯誤",
       errUnknown: "未知的錯誤.",
@@ -293,6 +295,9 @@
       "untitled file.txt": "新檔案.txt", // added 10.11.2015
       "untitled folder": "新資料夾", // added 10.11.2015
       Archive: "新壓縮檔", // from v2.1 added 10.11.2015
+      'untitled file'     : '新檔案.$1',
+      extentionfile: "$1: 文件", // from v2.1.41 added 6.8.2018
+      extentiontype: "$1: $2", // from v2.1.43 added 17.10.2018
 
       /********************************** messages **********************************/
       confirmReq: "請確認",

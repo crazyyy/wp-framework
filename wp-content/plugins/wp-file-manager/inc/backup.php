@@ -174,9 +174,7 @@ wp_enqueue_script( 'fm_backup' );
 	</div>
 	
 	<div class="existing-back">
-		<h3><?php _e('Existing Backup(s)', 'wp-file-manager'); ?> <span><?php echo count($backups);?></span> </h3>
-		<!--p><strong> More tasks: </strong> <a href="#">upload backup files</a> | <a href="#">Rescan local folder for new backup sets </a> | <a href="#">Rescan remote storage</a></p-->
-		
+		<h3><?php _e('Existing Backup(s)', 'wp-file-manager'); ?> <span><?php echo count($backups);?></span> </h3>		
 	</div>
 	
 	<div class="backup-main">

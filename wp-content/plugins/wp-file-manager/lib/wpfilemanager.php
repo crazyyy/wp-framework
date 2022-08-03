@@ -21,7 +21,7 @@
             <h3 class="fm_heading"><span class="fm_head_icon"><img src="<?php echo plugins_url('images/wp_file_manager.svg', dirname(__FILE__)); ?>"></span>
                 <span class="fm_head_txt">
                     <?php _e('WP File Manager', 'wp-file-manager'); ?> </span> <a href="https://filemanagerpro.io/product/file-manager"
-                    class="button button-primary fm_pro_btn" target="_blank" title="Click to Buy PRO">
+                    class="button button-primary fm_pro_btn" target="_blank" title="<?php _e('Click to Buy PRO', 'wp-file-manager'); ?>">
                     <?php _e('Buy PRO', 'wp-file-manager'); ?></a></h3>
         </div>
 

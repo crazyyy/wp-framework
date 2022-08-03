@@ -2,9 +2,9 @@
  * Danish translation
  * @author Mark Topper (webman.io)
  * @author Helmuth Mikkelsen <helmuthm@gmail.com>
- * @version 2020-11-27
+ * @version 2022-02-28
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,11 +17,12 @@
 		translator : 'Mark Topper (webman.io), Helmuth Mikkelsen &lt;helmuthm@gmail.com&gt;',
 		language   : 'Danish',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 27.11.2020 11:50
-		fancyDateFormat : '$1 H:i', // will show like: I dag 11:50
-		nonameDateFormat : 'Ymd-His', // noname upload will show like: 20201127-115006
+		dateFormat : 'd.m.Y H:i', // will show like: 28.02.2022 11:38
+		fancyDateFormat : '$1 H:i', // will show like: I dag 11:38
+		nonameDateFormat : 'Ymd-His', // noname upload will show like: 20220228-113848
 		messages   : {
-
+			'getShareText' : 'Del',
+			'Editor ': 'Kode Editor',
 			/********************************** errors **********************************/
 			'error'                : 'Fejl',
 			'errUnknown'           : 'Ukendt fejl.',
@@ -116,13 +117,14 @@
 			'errServerError'       : 'Der opstod en fejl på serversiden.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Kunne ikke tømme mappen "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'Der er $1 flere fejl.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Du kan oprette op til $1 mapper ad gangen.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Opret arkiv',
 			'cmdback'      : 'Tilbage',
 			'cmdcopy'      : 'Kopier',
 			'cmdcut'       : 'Klip',
-			'cmddownload'  : 'Download',
+			'cmddownload'  : 'Downloade',
 			'cmdduplicate' : 'Dupliker',
 			'cmdedit'      : 'Rediger fil',
 			'cmdextract'   : 'Udpak filer fra arkiv',
@@ -149,7 +151,7 @@
 			'cmdresize'    : 'Tilpas størrelse & Roter',
 			'cmdsort'      : 'Sorter',
 			'cmdnetmount'  : 'Mount netværksdrev', // added 18.04.2012
-			'cmdnetunmount': 'Unmount', // from v2.1 added 30.04.2012
+			'cmdnetunmount': 'Afmonter', // from v2.1 added 30.04.2012
 			'cmdplaces'    : 'Til steder', // added 28.12.2014
 			'cmdchmod'     : 'Skift tilstand', // from v2.1 added 20.6.2015
 			'cmdopendir'   : 'Åbn en mappe', // from v2.1 added 13.1.2016
@@ -176,7 +178,7 @@
 			'btnYes'    : 'Ja',
 			'btnMount'  : 'Mount',  // added 18.04.2012
 			'btnApprove': 'Gå til $1 & godkend', // from v2.1 added 26.04.2012
-			'btnUnmount': 'Unmount', // from v2.1 added 30.04.2012
+			'btnUnmount': 'Afmonter', // from v2.1 added 30.04.2012
 			'btnConv'   : 'Konverter', // from v2.1 added 08.04.2014
 			'btnCwd'    : 'Her',      // from v2.1 added 22.5.2015
 			'btnVolume' : 'Diskenhed',    // from v2.1 added 22.5.2015
@@ -184,7 +186,7 @@
 			'btnMime'   : 'MIME-type', // from v2.1 added 22.5.2015
 			'btnFileName':'Filnavn',  // from v2.1 added 22.5.2015
 			'btnSaveClose': 'Gem & Luk', // from v2.1 added 12.6.2015
-			'btnBackup' : 'Backup', // fromv2.1 added 28.11.2015
+			'btnBackup' : 'Sikkerhedskopiering', // fromv2.1 added 28.11.2015
 			'btnRename'    : 'Omdøb',      // from v2.1.24 added 6.4.2017
 			'btnRenameAll' : 'Omdøb(Alle)', // from v2.1.24 added 6.4.2017
 			'btnPrevious' : 'Forrige ($1/$2)', // from v2.1.24 added 11.5.2017
@@ -235,13 +237,13 @@
 			'dateUnknown' : 'ukendt',
 			'Today'       : 'I dag',
 			'Yesterday'   : 'I går',
-			'msJan'       : 'Jan',
-			'msFeb'       : 'Feb',
-			'msMar'       : 'Mar',
-			'msApr'       : 'Apr',
+			'msJan'       : 'januar',
+			'msFeb'       : 'februar',
+			'msMar'       : 'marts',
+			'msApr'       : 'april',
 			'msMay'       : 'Maj',
-			'msJun'       : 'Jun',
-			'msJul'       : 'Jul',
+			'msJun'       : 'juni',
+			'msJul'       : 'juli',
 			'msAug'       : 'Aug',
 			'msSep'       : 'Sep',
 			'msOct'       : 'Okt',
@@ -385,9 +387,9 @@
 			'confirmUnmount'      : 'Unmounter du $1?',  // from v2.1 added 30.04.2012
 			'dropFilesBrowser': 'Slip eller indsæt filer fra browseren', // from v2.1 added 30.05.2012
 			'dropPasteFiles'  : 'Slip filer, indsæt webadresser eller billeder (udklipsholder) her', // from v2.1 added 07.04.2014
-			'encoding'        : 'Encoding', // from v2.1 added 19.12.2014
-			'locale'          : 'Locale',   // from v2.1 added 19.12.2014
-			'searchTarget'    : 'Target: $1',                // from v2.1 added 22.5.2015
+			'encoding'        : 'Indkodning', // from v2.1 added 19.12.2014
+			'locale'          : 'Sprog',   // from v2.1 added 19.12.2014
+			'searchTarget'    : 'Mål: $1',                // from v2.1 added 22.5.2015
 			'searchMime'      : 'Søg efter input MIME-type', // from v2.1 added 22.5.2015
 			'owner'           : 'Ejer', // from v2.1 added 20.6.2015
 			'group'           : 'Gruppe', // from v2.1 added 20.6.2015
@@ -534,7 +536,7 @@
 			'kindCHeader'     : 'C header-kode',
 			'kindCPP'         : 'C++-kode',
 			'kindCPPHeader'   : 'C++ header-kode',
-			'kindShell'       : 'Unix shell script',
+			'kindShell'       : 'Unix-skal-script',
 			'kindPython'      : 'Python-kode',
 			'kindJava'        : 'Java-kode',
 			'kindRuby'        : 'Ruby-kode',
@@ -544,7 +546,7 @@
 			'kindAWK'         : 'AWK-kode',
 			'kindCSV'         : 'Komma seperarede værdier',
 			'kindDOCBOOK'     : 'Docbook XML-dokument',
-			'kindMarkdown'    : 'Markdown text', // added 20.7.2015
+			'kindMarkdown'    : 'Markdown-tekst', // added 20.7.2015
 			// images
 			'kindImage'       : 'Billede',
 			'kindBMP'         : 'BMP-billede',
@@ -577,4 +579,3 @@
 		}
 	};
 }));
-

@@ -39,6 +39,17 @@ class Debug2 extends Root {
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true );
 		}
 
+		defined( 'LSCWP_DEBUG_EXC_STRINGS' ) || define( 'LSCWP_DEBUG_EXC_STRINGS', $this->conf( Base::O_DEBUG_EXC_STRINGS ) );
+	}
+
+	/**
+	 * End call of one request process
+	 * @since 4.7
+	 * @access public
+	 */
+	public static function ended() {
+		self::debug( 'Response headers', headers_list() );
+		self::debug( "End response\n--------------------------------------------------------------------------------\n" );
 	}
 
 	/**
@@ -143,7 +154,7 @@ class Debug2 extends Root {
 		$debug = $this->conf( Base::O_DEBUG );
 		if ( $debug == Base::VAL_ON2 ) {
 			if ( ! $this->cls( 'Router' )->is_admin_ip() ) {
-				define( 'LSCWP_LOG_BYPASS_NOTADMIN', true );
+				defined( 'LSCWP_LOG_BYPASS_NOTADMIN' ) || define( 'LSCWP_LOG_BYPASS_NOTADMIN', true );
 				return;
 			}
 		}
@@ -317,6 +328,10 @@ class Debug2 extends Root {
 			return;
 		}
 
+		if ( defined( 'LSCWP_DEBUG_EXC_STRINGS' ) && Utility::str_hit_array( $msg, LSCWP_DEBUG_EXC_STRINGS ) ) {
+			return;
+		}
+
 		if ( $backtrace_limit !== false ) {
 			if ( ! is_numeric( $backtrace_limit ) ) {
 				$backtrace_limit = self::trim_longtext( $backtrace_limit );
@@ -434,8 +449,10 @@ class Debug2 extends Root {
 	 * @access private
 	 */
 	private function _clear_log() {
-		File::save( self::$log_path, '' );
-		File::save( self::$log_path_prefix . '/debug.purge.log', '' );
+		$logs = array( 'debug', 'debug.purge', 'crawler' );
+		foreach ( $logs as $log ) {
+			File::save( self::$log_path_prefix . "/{$log}.log", '' );
+		}
 	}
 
 	/**

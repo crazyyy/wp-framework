@@ -3,8 +3,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/rosell-dk/dom-util-for-webp.svg?style=flat-square)](https://packagist.org/packages/rosell-dk/dom-util-for-webp)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg?style=flat-square)](https://php.net)
 [![Build Status](https://img.shields.io/github/workflow/status/rosell-dk/dom-util-for-webp/PHP?logo=GitHub&style=flat-square)](https://github.com/rosell-dk/dom-util-for-webp/actions/workflows/php.yml)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/rosell-dk/dom-util-for-webp.svg?style=flat-square)](https://scrutinizer-ci.com/g/rosell-dk/dom-util-for-webp/code-structure/master)
-[![Quality Score](https://img.shields.io/scrutinizer/g/rosell-dk/dom-util-for-webp.svg?style=flat-square)](https://scrutinizer-ci.com/g/rosell-dk/dom-util-for-webp/)
+[![Coverage](https://img.shields.io/endpoint?url=https://little-b.it/dom-util-for-webp/code-coverage/coverage-badge.json)](http://little-b.it/dom-util-for-webp/code-coverage/coverage/index.html)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/rosell-dk/dom-util-for-webp/blob/master/LICENSE)
 
 *Replace image URLs found in HTML*
@@ -159,3 +158,9 @@ So it is correct behaviour not to copy the *style*, *width*, *class* or any othe
 As with `ImageUrlReplacer`, you can override the *replaceUrl* function. There is however currently no other methods to override.
 
 `PictureTags` currently uses regular expressions to do the replacing. There are plans to change implementation to use `Sunra\PhpSimple\HtmlDomParser`, like our `ImageUrlReplacer` class does.
+
+## Do you like what I do?
+Perhaps you want to support my work, so I can continue doing it :)
+
+- [Become a backer or sponsor on Patreon](https://www.patreon.com/rosell).
+- [Buy me a Coffee](https://ko-fi.com/rosell)

@@ -158,6 +158,14 @@ if(is_search() && 0 == ampforwp_get_setting('amp-redirection-search')){
   if(function_exists('ampforwp_mobile_redirect_preseve_link')){
     $mob_pres_link = ampforwp_mobile_redirect_preseve_link();
   }
+
+  //Stop Mobile Redirection
+  $stop_mob_redirection = false;
+  $stop_mob_redirection = apply_filters('ampforwp_modify_mobile_redirection',$stop_mob_redirection);
+  if($stop_mob_redirection === true){
+    return;
+  }
+
   // AMP Takeover
   if ( (ampforwp_get_setting('ampforwp-amp-takeover') || $mob_pres_link == true) && !ampforwp_is_non_amp() ) {
     $redirection_location = '';
@@ -175,11 +183,6 @@ if(is_search() && 0 == ampforwp_get_setting('amp-redirection-search')){
     // #4541
     $this_url = home_url(add_query_arg(array($_GET), $wp->request));
     if(preg_match('/robots\.txt/', $this_url)){
-      return;
-    }
-    $stop_mob_redirection = false;
-    $stop_mob_redirection = apply_filters('ampforwp_modify_mobile_redirection',$stop_mob_redirection);
-    if($stop_mob_redirection === true){
       return;
     }
     // return if the current page is Feed page, as we don't need anything on feedpaged
@@ -221,8 +224,10 @@ if(is_search() && 0 == ampforwp_get_setting('amp-redirection-search')){
     // Single and Pages
     if ( is_singular() ) {
       $amp_metas = json_decode(get_post_meta( get_the_ID(),'ampforwp-post-metas',true), true );
-      if ( 'hide-amp' == $amp_metas['ampforwp-amp-on-off'] ) {
-        $amp_on_off = true;
+      if(!empty($amp_metas['ampforwp-amp-on-off'])){
+        if ( 'hide-amp' == $amp_metas['ampforwp-amp-on-off'] ) {
+          $amp_on_off = true;
+        }
       }
     }
     if ( ( is_single() && !$redux_builder_amp['amp-on-off-for-all-posts'] ) || ( is_page() && !$redux_builder_amp['amp-on-off-for-all-pages'] ) || ($amp_on_off) ) {

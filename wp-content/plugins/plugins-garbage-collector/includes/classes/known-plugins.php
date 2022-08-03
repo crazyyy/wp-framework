@@ -2,10 +2,10 @@
 
 class PGC_Known_Plugins {
 
-    const VERSION_URL = 'https://database-cleanup.s3.amazonaws.com/version.json';
-    const SKIP_LIST_URL = 'https://database-cleanup.s3.amazonaws.com/skip-list.json';
-    const PLUGINS_URL = 'https://database-cleanup.s3.amazonaws.com/plugins.json';
-    const DB_TABLES_URL = 'https://database-cleanup.s3.amazonaws.com/db-tables.json';
+    const VERSION_URL = 'https://storage.yandexcloud.net/database-cleanup/version.json';
+    const SKIP_LIST_URL = 'https://storage.yandexcloud.net/database-cleanup/skip-list.json';
+    const PLUGINS_URL = 'https://storage.yandexcloud.net/database-cleanup/plugins.json';
+    const DB_TABLES_URL = 'https://storage.yandexcloud.net/database-cleanup/db-tables.json';
     const VERSION_PATH = PGC_PLUGIN_DIR .'/data/version.json';
     
     

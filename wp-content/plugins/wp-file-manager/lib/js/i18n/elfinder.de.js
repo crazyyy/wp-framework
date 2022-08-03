@@ -1,14 +1,14 @@
 /**
- * German Translation / Deutsche Übersetzung
+ * Deutsch translation
  * @author JPG & Mace <dev@flying-datacenter.de>
  * @author tora60 from pragmaMx.org
  * @author Timo-Linde <info@timo-linde.de>
- * @author OSWorX <https://osworx.net>
+ * @author OSWorX <info@osworx.net>
  * @author Maximilian Schwarz <info@deefuse.de>
  * @author SF Webdesign <webdesign@stephan-frank.de>
- * @version 2019-12-13
+ * @version 2022-02-28
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -21,11 +21,12 @@
 		translator : 'JPG & Mace &lt;dev@flying-datacenter.de&gt;, tora60 from pragmaMx.org, Timo-Linde &lt;info@timo-linde.de&gt;, OSWorX &lt;info@osworx.net&gt;, Maximilian Schwarz &lt;info@deefuse.de&gt;, SF Webdesign &lt;webdesign@stephan-frank.de&gt;',
 		language   : 'Deutsch',
 		direction  : 'ltr',
-		dateFormat : 'j. F Y H:i', // 3. März 2020 14:58
-		fancyDateFormat : '$1 H:i', // will produce smth like: Today 12:25 PM
-		nonameDateFormat : 'ymd-His', // to apply if upload file is noname: 120513172700
-		messages : {
-
+		dateFormat : 'j. F Y H:i', // will show like: 28. Februar 2022 13:17
+		fancyDateFormat : '$1 H:i', // will show like: Heute 13:17
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220228-131758
+		messages   : {
+			'getShareText' : 'Aktie',
+			'Editor ': 'Kodex-Editor',
 			/********************************** errors **********************************/
 			'error'                : 'Fehler',
 			'errUnknown'           : 'Unbekannter Fehler.',
@@ -119,7 +120,8 @@
 			'errEditorNotFound'    : 'Kein Editor für diesen Dateityp gefunden.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Ein serverseitiger Fehler trat auf.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Konnte Ordner "$1" nicht Leeren.', // from v2.1.25 added 22.6.2017
-			'moreErrors'           : 'Es sind noch $1 weitere Fehler.', // from v2.1.44 added 13.12.2019
+			'moreErrors'           : 'Es sind noch $1 weitere Fehler.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Sie können bis zu $1 Ordner gleichzeitig erstellen.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Archiv erstellen',
@@ -168,7 +170,7 @@
 			'cmdselectnone': 'Keine auswählen', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Auswahl rückgängig machen', // from v2.1.28 added 15.08.2017
 			'cmdopennew'   : 'In neuem Fenster öffnen', // from v2.1.38 added 3.4.2018
-			'cmdhide'      : 'Verstecken', // from v2.1.41 added 13.12.2019
+			'cmdhide'      : 'Verstecken', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Schließen',
@@ -230,7 +232,7 @@
 			'ntfchkdir'   : 'Prüfe Zielordner', // from v2.1.24 added 3.5.2017
 			'ntfundo'     : 'Vorherige Operation rückgängig machen', // from v2.1.27 added 31.07.2017
 			'ntfredo'     : 'Wiederherstellen', // from v2.1.27 added 31.07.2017
-			'ntfchkcontent' : 'Überprüfe Inhalte', // from v2.1.41 added 13.12.2019
+			'ntfchkcontent' : 'Überprüfe Inhalte', // from v2.1.41 added 3.8.2018
 
 			/*********************************** volumes *********************************/
 			'volume_Trash' : 'Mülleimer', //from v2.1.24 added 29.4.2017
@@ -239,13 +241,13 @@
 			'dateUnknown' : 'unbekannt',
 			'Today'       : 'Heute',
 			'Yesterday'   : 'Gestern',
-			'msJan'       : 'Jan',
-			'msFeb'       : 'Feb',
+			'msJan'       : 'Januar',
+			'msFeb'       : 'Februar',
 			'msMar'       : 'Mär',
 			'msApr'       : 'Apr',
 			'msMay'       : 'Mai',
-			'msJun'       : 'Jun',
-			'msJul'       : 'Jul',
+			'msJun'       : 'Juni',
+			'msJul'       : 'Juli',
 			'msAug'       : 'Aug',
 			'msSep'       : 'Sep',
 			'msOct'       : 'Okt',
@@ -291,12 +293,12 @@
 			'sortAlsoTreeview'  : 'auch Baumansicht',  // from v2.1.15 added 01.08.2016
 
 			/********************************** new items **********************************/
-			'untitled file.txt' : 'Neues Textdokument (.txt)', // added 10.11.2015
+			'untitled file.txt' : 'Neues Textdokument.txt', // added 10.11.2015
 			'untitled folder'   : 'Neuer Ordner',   // added 10.11.2015
 			'Archive'           : 'Neues Archiv',  // from v2.1 added 10.11.2015
-			'untitled file'     : 'Neue Datei $1',  // from v2.1.41 added 13.12.2019
-			'extentionfile'     : '$1: Datei',    // from v2.1.41 added 13.12.2019
-			'extentiontype'     : '$1: $2',      // from v2.1.43 added 13.12.2018
+			'untitled file'     : 'Neue Datei.$1',  // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: Datei',    // from v2.1.41 added 6.8.2018
+			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Bestätigung benötigt',
@@ -306,8 +308,8 @@
 			'confirmConvUTF8' : 'Nicht UTF-8 kodiert<br>Zu UTF-8 konvertieren?<br>Inhalte werden zu UTF-8 konvertiert bei Speicherung.', // from v2.1 added 08.04.2014
 			'confirmNonUTF8'  : 'Die Zeichencodierung dieser Datei konnte nicht erkannt werden. Es muss vorübergehend in UTF-8 zur Bearbeitung konvertiert werden.<br> Bitte eine Zeichenkodierung dieser Datei auswählen.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Die Datei wurde geändert.<br>Änderungen gehen verloren wenn nicht gespeichert wird.', // from v2.1 added 15.7.2015
-			'confirmTrash'    : 'Sicher diese Elemente in den Mülleimer verschieben?', // from v2.1.24 added 29.4.2017
-			'confirmMove'     : 'Sicher alle Elemente nach "$1" verschieben?', // from v2.1.50 added 13.12.2019
+			'confirmTrash'    : 'Sicher diese Elemente in den Mülleimer verschieben?', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'Sicher alle Elemente nach "$1" verschieben?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Alles bestätigen',
 			'name'            : 'Name',
 			'size'            : 'Größe',
@@ -325,10 +327,10 @@
 			'selectlfile'     : 'Letzte Datei auswählen',
 			'viewlist'        : 'Spaltenansicht',
 			'viewicons'       : 'Symbolansicht',
-			'viewSmall'       : 'Kleine Icons', // from v2.1.39 added 13.12.2019
-			'viewMedium'      : 'Medium Icons', // from v2.1.39 added 13.12.2019
-			'viewLarge'       : 'Große Icons', // from v2.1.39 added 13.12.2019
-			'viewExtraLarge'  : 'Extragroße Icons', // from v2.1.39 added 13.12.2019
+			'viewSmall'       : 'Kleine Icons', // from v2.1.39 added 22.5.2018
+			'viewMedium'      : 'Medium Icons', // from v2.1.39 added 22.5.2018
+			'viewLarge'       : 'Große Icons', // from v2.1.39 added 22.5.2018
+			'viewExtraLarge'  : 'Extragroße Icons', // from v2.1.39 added 22.5.2018
 			'places'          : 'Favoriten',
 			'calc'            : 'Berechne',
 			'path'            : 'Pfad',
@@ -347,20 +349,20 @@
 			'shortcuts'       : 'Tastenkombinationen',
 			'help'            : 'Hilfe',
 			'webfm'           : 'Web-Dateiverwaltung',
-			'ver'             : 'Version',
+			'ver'             : 'Fassung',
 			'protocolver'     : 'Protokoll-Version',
 			'homepage'        : 'Projekt-Webseite',
 			'docs'            : 'Dokumentation',
 			'github'          : 'Forke uns auf Github',
 			'twitter'         : 'Folge uns auf twitter',
 			'facebook'        : 'Begleite uns auf facebook',
-			'team'            : 'Team',
+			'team'            : 'Mannschaft',
 			'chiefdev'        : 'Chefentwickler',
 			'developer'       : 'Entwickler',
 			'contributor'     : 'Unterstützer',
 			'maintainer'      : 'Maintainer',
 			'translator'      : 'Übersetzer',
-			'icons'           : 'Icons',
+			'icons'           : 'Symbole',
 			'dontforget'      : 'und vergiss nicht .. morgen ist auch noch ein Tag ..',
 			'shortcutsof'     : 'Tastenkombinationen deaktiviert',
 			'dropFiles'       : 'Dateien hier ablegen',
@@ -382,8 +384,8 @@
 			'degree'          : '°',
 			'netMountDialogTitle' : 'verbinde Netzwerkspeicher', // added 18.04.2012
 			'protocol'            : 'Protokoll', // added 18.04.2012
-			'host'                : 'Host', // added 18.04.2012
-			'port'                : 'Port', // added 18.04.2012
+			'host'                : 'Gastgeber', // added 18.04.2012
+			'port'                : 'Hafen', // added 18.04.2012
 			'user'                : 'Benutzer', // added 18.04.2012
 			'pass'                : 'Passwort', // added 18.04.2012
 			'confirmUnmount'      : 'Soll "$1" ausgehängt werden',  // from v2.1 added 30.04.2012
@@ -447,6 +449,7 @@
 			'clearBrowserData': 'Initialisiere die Einstellungen, welche in diesem Browser gespeichert sind', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Toolbareinstellung', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... $1 Zeichen übrig',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $1 Zeilen übrig.',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Summe', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Ungefähre Dateigröße', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Fokussierung auf das Element Dialog mit Mouseover',  // from v2.1.30 added 2.11.2017
@@ -472,29 +475,29 @@
 			'workspace'       : 'Arbeitsplatz', // from v2.1.38 added 4.4.2018
 			'dialog'          : 'Dialog', // from v2.1.38 added 4.4.2018
 			'all'             : 'Alle', // from v2.1.38 added 4.4.2018
-			'iconSize'        : 'Icongröße (Symbolansicht)', // form v2.1.39 added 7.5.2018
+			'iconSize'        : 'Icongröße (Symbolansicht)', // from v2.1.39 added 7.5.2018
 			'editorMaximized' : 'Öffne Editorfenster in voller Größe', // from v2.1.40 added 30.6.2018
-			'editorConvNoApi' : 'Aktuell keine API zur Bearbeitung verfügbar, bitte auf Webseite bearbeiten', //from v2.1.40 added 13.12.2019
-			'editorConvNeedUpload' : 'Um zu speichern nach der Bearbeitung Element entweder mit URL hochladen oder mit herunter geladener Datei', // from v2.1.40 added 13.12.2019
-			'convertOn'       : 'Bearbeiten auf Seite $1', // from v2.1.40 added 13.12.2019
-			'integrations'    : 'Integrationen', // from v2.1.40 added 13.12.2019
-			'integrationWith' : 'Diese Software hat folgende externe Dienste integriert. Vor Anwendung bitte die jeweiligen Nutzungsbedingungen usw. beachten', // from v2.1.40 added 13.12.2019
-			'showHidden'      : 'Zeige versteckte Elemente', // from v2.1.41 added 13.12.2019
-			'hideHidden'      : 'Verberge versteckte Elemente', // from v2.1.41 added 13.12.2019
-			'toggleHidden'    : 'Zeige/Verberge versteckte Elemente', // from v2.1.41 added 13.12.2019
-			'makefileTypes'   : 'Dateiarten bei "Neue Datei" aktivieren', // from v2.1.41 added 13.12.2019
-			'typeOfTextfile'  : 'Art der Textdatei', // from v2.1.41 added 13.12.2019
-			'add'             : 'Neu', // from v2.1.41 added 13.12.2019
-			'theme'           : 'Thema', // from v2.1.43 added 13.12.2019
-			'default'         : 'Standard', // from v2.1.43 added 13.12.2019
-			'description'     : 'Beschreibung', // from v2.1.43 added 13.12.2019
-			'website'         : 'Webseite', // from v2.1.43 added 13.12.2019
-			'author'          : 'Autor', // from v2.1.43 added 13.12.2019
-			'email'           : 'Email', // from v2.1.43 added 13.12.2019
-			'license'         : 'Lizenz', // from v2.1.43 added 13.12.2019
-			'exportToSave'    : 'Dieses Element kann nicht gespeichert werden. Um Änderungen nicht zu verlieren, muss es auf den lokalen PC exportiert werden', // from v2.1.44 added 13.12.2019
-			'dblclickToSelect': 'Doppelt auf Datei klicken um auszuwählen', // from v2.1.47 added 13.12.2019
-			'useFullscreen'   : 'Gesamter Bildschirm', // from v2.1.47 added 13.12.2019
+			'editorConvNoApi' : 'Aktuell keine API zur Bearbeitung verfügbar, bitte auf Webseite bearbeiten', //from v2.1.40 added 8.7.2018
+			'editorConvNeedUpload' : 'Um zu speichern nach der Bearbeitung Element entweder mit URL hochladen oder mit herunter geladener Datei', //from v2.1.40 added 8.7.2018
+			'convertOn'       : 'Bearbeiten auf Seite $1', // from v2.1.40 added 10.7.2018
+			'integrations'    : 'Integrationen', // from v2.1.40 added 11.7.2018
+			'integrationWith' : 'Diese Software hat folgende externe Dienste integriert. Vor Anwendung bitte die jeweiligen Nutzungsbedingungen usw. beachten', // from v2.1.40 added 11.7.2018
+			'showHidden'      : 'Zeige versteckte Elemente', // from v2.1.41 added 24.7.2018
+			'hideHidden'      : 'Verberge versteckte Elemente', // from v2.1.41 added 24.7.2018
+			'toggleHidden'    : 'Zeige/Verberge versteckte Elemente', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'Dateiarten bei "Neue Datei" aktivieren', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Art der Textdatei', // from v2.1.41 added 7.8.2018
+			'add'             : 'Neu', // from v2.1.41 added 7.8.2018
+			'theme'           : 'Thema', // from v2.1.43 added 19.10.2018
+			'default'         : 'Standard', // from v2.1.43 added 19.10.2018
+			'description'     : 'Beschreibung', // from v2.1.43 added 19.10.2018
+			'website'         : 'Webseite', // from v2.1.43 added 19.10.2018
+			'author'          : 'Autor', // from v2.1.43 added 19.10.2018
+			'email'           : 'Email', // from v2.1.43 added 19.10.2018
+			'license'         : 'Lizenz', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'Dieses Element kann nicht gespeichert werden. Um Änderungen nicht zu verlieren, muss es auf den lokalen PC exportiert werden', // from v2.1.44 added 1.12.2018
+			'dblclickToSelect': 'Doppelt auf Datei klicken um auszuwählen', // from v2.1.47 added 22.1.2019
+			'useFullscreen'   : 'Gesamter Bildschirm', // from v2.1.47 added 19.2.2019
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Unbekannt',

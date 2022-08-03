@@ -61,7 +61,7 @@
 				$warnings['no-tasks'] = array(
 						'status' => 'completed',
 						'plus_one' => false,
-						'message'    => sprintf(
+						'message'    => cmplz_sprintf(
 								__( 'You have no new tasks! Have a look at our %sdocumentation%s and see all the possibilities Complianz has to offer.', 'complianz-gdpr' ),
 						'<a href="https://complianz.io/docs/" target="_blank">',
 								'</a>'
@@ -97,13 +97,13 @@
 							<span class="cmplz-plusone">1</span>
 						<?php } ?>
 					</div>
-					<div>
-						<?php if ( $warning['dismissible'] ) { ?>
-						<button type="button" class="cmplz-dismiss-warning" data-warning_id="<?php echo $id?>">
-							<span class="cmplz-close-warning-x">X</span>
-						</button>
-						<?php } ?>
-					</div>
+					<?php if ( $warning['dismissible'] ) { ?>
+					<button type="button" class="cmplz-dismiss-warning" data-warning_id="<?php echo $id?>">
+						<span class="cmplz-close-warning-x">
+							<?php echo cmplz_icon('times', 'default', false, 13 )?>
+						</span>
+					</button>
+					<?php } ?>
 				</div>
 				<?php
 			}

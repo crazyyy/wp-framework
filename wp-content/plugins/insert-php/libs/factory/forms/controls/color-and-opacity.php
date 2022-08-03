@@ -20,10 +20,10 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms447_ColorAndOpacityControl') ) {
+	if( !class_exists('Wbcr_FactoryForms454_ColorAndOpacityControl') ) {
 	}
 
-	class Wbcr_FactoryForms447_ColorAndOpacityControl extends Wbcr_FactoryForms447_ComplexControl {
+	class Wbcr_FactoryForms454_ColorAndOpacityControl extends Wbcr_FactoryForms454_ComplexControl {
 
 		public $type = 'color-and-opacity';
 
@@ -57,8 +57,8 @@
 				'way' => 'slider'
 			));
 
-			$this->color = new Wbcr_FactoryForms447_ColorControl($options['color'], $form, $provider);
-			$this->opacity = new Wbcr_FactoryForms447_IntegerControl($options['opacity'], $form, $provider);
+			$this->color = new Wbcr_FactoryForms454_ColorControl($options['color'], $form, $provider);
+			$this->opacity = new Wbcr_FactoryForms454_IntegerControl($options['opacity'], $form, $provider);
 
 			$this->innerControls = array($this->color, $this->opacity);
 		}

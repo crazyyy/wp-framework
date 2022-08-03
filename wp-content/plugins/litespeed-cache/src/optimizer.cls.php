@@ -44,7 +44,7 @@ class Optimizer extends Root {
 			$obj = new Lib\HTML_MIN( $content, $options );
 			$content_final = $obj->process();
 			if ( ! defined( 'LSCACHE_ESI_SILENCE' ) ) {
-				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->';
+				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date( 'Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET ) . ' -->';
 			}
 			return $content_final;
 
@@ -66,7 +66,7 @@ class Optimizer extends Root {
 		if ( $file_type == 'css' ) {
 			$content = false;
 			if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_OPTM_UCSS ) ) {
-				$filename = $this->cls( 'CSS' )->load_ucss( $request_url );
+				$filename = $this->cls( 'UCSS' )->load( $request_url );
 
 				if ( $filename ) {
 					return array( $filename, 'ucss' );
@@ -77,7 +77,16 @@ class Optimizer extends Root {
 		// Before generated, don't know the contented hash filename yet, so used url hash as tmp filename
 		$file_path_prefix = $this->_build_filepath_prefix( $file_type );
 
-		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . ( is_404() ? '404' : md5( $request_url ) ) . '.' . $file_type;
+		$url_tag = $request_url;
+		$url_tag_for_file = md5( $request_url );
+		if ( is_404() ) {
+			$url_tag_for_file = $url_tag = '404';
+		}
+		elseif ( $file_type == 'css' && apply_filters( 'litespeed_ucss_per_pagetype', false ) ) {
+			$url_tag_for_file = $url_tag = Utility::page_type();
+		}
+
+		$static_file = LITESPEED_STATIC_DIR . $file_path_prefix . $url_tag_for_file . '.' . $file_type;
 
 		// Create tmp file to avoid conflict
 		$tmp_static_file = $static_file . '.tmp';
@@ -123,7 +132,7 @@ class Optimizer extends Root {
 
 		$vary = $this->cls( 'Vary' )->finalize_full_varies();
 		Debug2::debug2( "[Optmer] Save URL to file for [file_type] $file_type [file] $filecon_md5 [vary] $vary " );
-		$this->cls( 'Data' )->save_url( is_404() ? '404' : $request_url, $vary, $file_type, $filecon_md5, dirname( $realfile ) );
+		$this->cls( 'Data' )->save_url( $url_tag, $vary, $file_type, $filecon_md5, dirname( $realfile ) );
 
 		return array( $filecon_md5 . '.' . $file_type, $file_type );
 	}
@@ -175,6 +184,41 @@ class Optimizer extends Root {
 	}
 
 	/**
+	 * Load remote resource from cache if existed
+	 *
+	 * @since  4.7
+	 */
+	private function load_cached_file( $url, $file_type ) {
+		$file_path_prefix = $this->_build_filepath_prefix( $file_type );
+		$folder_name = LITESPEED_STATIC_DIR . $file_path_prefix;
+		$to_be_deleted_folder = $folder_name . date( 'Ymd', strtotime( '-2 days') );
+		if ( file_exists( $to_be_deleted_folder ) ) {
+			Debug2::debug( '[Optimizer] ❌ Clearning folder [name] ' . $to_be_deleted_folder );
+			File::rrmdir( $to_be_deleted_folder );
+		}
+
+		$today_file = $folder_name . date( 'Ymd' ) . '/' . md5( $url );
+		if( file_exists( $today_file ) ) return File::read( $today_file );
+
+		// Write file
+		$res = wp_remote_get( $url );
+		$res_code = wp_remote_retrieve_response_code( $res );
+		if ( is_wp_error( $res ) || $res_code != 200 ) {
+			Debug2::debug2( '[Optimizer] ❌ Load Remote error [code] ' . $res_code );
+			return false;
+		}
+		$con = wp_remote_retrieve_body( $res );
+		if ( ! $con ) {
+			return false;
+		}
+
+		Debug2::debug( '[Optimizer] ✅ Save remote file to cache [name] ' . $today_file );
+		File::save( $today_file, $con, true );
+
+		return $con;
+	}
+
+	/**
 	 * Load remote/local resource
 	 *
 	 * @since  3.5
@@ -185,16 +229,7 @@ class Optimizer extends Root {
 		if ( ! $real_file || $postfix != $file_type ) {
 			Debug2::debug2( '[CSS] Load Remote [' . $file_type . '] ' . $src );
 			$this_url = substr( $src, 0, 2 ) == '//' ? set_url_scheme( $src ) : $src;
-			$res = wp_remote_get( $this_url );
-			$res_code = wp_remote_retrieve_response_code( $res );
-			if ( is_wp_error( $res ) || $res_code == 404 ) {
-				Debug2::debug2( '[CSS] ❌ Load Remote error [code] ' . $res_code );
-				return false;
-			}
-			$con = wp_remote_retrieve_body( $res );
-			if ( ! $con ) {
-				return false;
-			}
+			$con = $this->load_cached_file($this_url, $file_type);
 
 			if ( $file_type == 'css' ) {
 				$dirname = dirname( $this_url ) . '/';

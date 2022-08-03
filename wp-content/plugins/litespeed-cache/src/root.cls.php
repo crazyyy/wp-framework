@@ -19,6 +19,16 @@ abstract class Root {
 	private static $_network_options = array();
 
 	/**
+	 * Check if need to separate ccss for mobile
+	 *
+	 * @since  4.7
+	 * @access protected
+	 */
+	protected function _separate_mobile() {
+		return ( wp_is_mobile() || apply_filters( 'litespeed_is_mobile', false ) ) && $this->conf( Base::O_CACHE_MOBILE );
+	}
+
+	/**
 	 * Log a debug message.
 	 *
 	 * @since  4.4
@@ -95,8 +105,7 @@ abstract class Root {
 		File::rrmdir( LITESPEED_STATIC_DIR . '/' . $type . '/' . $subsite_id );
 
 		// Clear All summary data
-		$this->_summary = array();
-		self::save_summary();
+		self::save_summary( false, false, true );
 
 		if ( $type == 'ccss' || $type == 'ucss') {
 			Debug2::debug( '[CSS] Cleared ' . $type .  ' queue' );
@@ -541,6 +550,10 @@ abstract class Root {
 	public static function get_summary( $field = false ) {
 		$summary = self::get_option( '_summary', array() );
 
+		if ( ! is_array( $summary ) ) {
+			$summary = array();
+		}
+
 		if ( ! $field ) {
 			return $summary;
 		}
@@ -558,12 +571,29 @@ abstract class Root {
 	 * @since  3.0
 	 * @access public
 	 */
-	public static function save_summary( $data = null ) {
-		if ( $data === null ) {
-			$data = static::cls()->_summary;
+	public static function save_summary( $data = false, $reload = false, $overwrite = false ) {
+		if ( $reload || empty( static::cls()->_summary ) ) {
+			self::reload_summary();
 		}
 
-		self::update_option( '_summary', $data );
+		$existing_summary = static::cls()->_summary;
+		if ( $overwrite || !is_array($existing_summary)) {
+			$existing_summary = array();
+		}
+		$new_summary = array_merge( $existing_summary, $data ?: array() );
+// self::debug2( 'Save after Reloaded summary', $new_summary );
+		static::cls()->_summary = $new_summary;
+
+		self::update_option( '_summary', $new_summary );
+	}
+
+	/**
+	 * Reload summary
+	 * @since 5.0
+	 */
+	public static function reload_summary() {
+		static::cls()->_summary = self::get_summary();
+		// self::debug2( 'Reloaded summary', static::cls()->_summary );
 	}
 
 	/**

@@ -20,9 +20,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms447_CheckboxControl') ) {
+	if( !class_exists('Wbcr_FactoryForms454_CheckboxControl') ) {
 
-		class Wbcr_FactoryForms447_CheckboxControl extends Wbcr_FactoryForms447_Control {
+		class Wbcr_FactoryForms454_CheckboxControl extends Wbcr_FactoryForms454_Control {
 
 			public $type = 'checkbox';
 
@@ -82,8 +82,8 @@
 						if( void 0 === window.__factory_checkbox_control_events_off_data ) {
 							window.__factory_checkbox_control_events_off_data = {};
 						}
-						window.__factory_checkbox_control_events_on_data['<?php echo $name_on_form ?>'] = <?= $events_on_string_data ?>;
-						window.__factory_checkbox_control_events_off_data['<?php echo $name_on_form ?>'] = <?= $events_off_string_data ?>;
+						window.__factory_checkbox_control_events_on_data['<?php echo $name_on_form ?>'] = <?php echo $events_on_string_data ?>;
+						window.__factory_checkbox_control_events_off_data['<?php echo $name_on_form ?>'] = <?php echo $events_off_string_data ?>;
 					</script>
 				<?php
 				}
@@ -130,11 +130,11 @@
 				<div <?php $this->attrs() ?>>
 					<button type="button" class="btn btn-default btn-small btn-sm factory-on <?php if( $value ) {
 						echo 'active';
-					} ?>"><?php _e('On', 'wbcr_factory_forms_447') ?></button>
+					} ?>"><?php _e('On', 'wbcr_factory_forms_454') ?></button>
 					<button type="button" class="btn btn-default btn-small btn-sm factory-off <?php if( !$value ) {
 						echo 'active';
-					} ?>" data-value="0"><?php _e('Off', 'wbcr_factory_forms_447') ?></button>
-					<input type="checkbox" style="display: none" id="<?php echo $name_on_form ?>" class="factory-result" name="<?php echo $name_on_form ?>" value="<?= $value ?>" <?php if( $value ) {
+					} ?>" data-value="0"><?php _e('Off', 'wbcr_factory_forms_454') ?></button>
+					<input type="checkbox" style="display: none" id="<?php echo $name_on_form ?>" class="factory-result" name="<?php echo $name_on_form ?>" value="<?php echo $value ?>" <?php if( $value ) {
 						echo 'checked="checked"';
 					} ?>" />
 				</div>

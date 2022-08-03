@@ -2,8 +2,6 @@
 * Theme Inspector WordPress Plugin Styles
 * Author: Melissa Cabral
 */
-
-
 #wpadminbar li#wp-admin-bar-theme-helper {
 	float: right !important;
 	background-color: rgba(41,200,235,.2) !important;
@@ -50,18 +48,21 @@
 	width: 100% !important;
 	border-collapse: collapse !important;
 	line-height:1.8 !important;
-
+	background-color: #ddd;
 }
 #theme-helper-toolbar th{
 	line-height: inherit;
 	font-weight: bold;
-	background-color:rgba(0,0,0,.06);
+	background-color:#F3F3F3;
 	padding:.5em;
 	color:black;
 	border-color:#ddd !important;
 	border-top:solid 1px #ddd  !important;
 	width:40%;
 	text-shadow:none;
+}
+#theme-helper-toolbar tr{
+	background-color: white;
 }
 #theme-helper-toolbar .file-loaded{
 	background-color: #FCFFD2;
@@ -73,6 +74,7 @@
 	padding:.5em;
 	border-top:solid 1px #ddd  !important;
 	text-shadow:none;
+
 }
 #theme-helper-toolbar .condition{
 	color:#999;
@@ -98,8 +100,8 @@
 	text-shadow:none !important;
 	height: auto !important;
 	line-height:14px !important;
-	margin:0;
-	padding:0;
+	margin:0 !important;
+	padding:0 !important;
 	width:auto;
 } 
 #theme-helper-toolbar .usewith td{
@@ -122,9 +124,22 @@
 	background-color: #FCFFD2;
 	font-weight: bold;
 }
-#theme-helper-toolbar .woocommerce {
-	background-color: #FEECFF;
-	font-size:90%;
+#theme-helper-toolbar .special-cases h3{
+	font-weight: bold;
+}
+#theme-helper-toolbar .special-cases h3:before{
+	content: '\26A0';
+	display: inline-block;
+	color: #B12A2A;
+	font-size: 16px;
+	font-weight: normal;
+}
+#theme-helper-toolbar .special-cases {
+	background-color: #FFDDEB;
+	font-weight: bold;
+}
+#theme-helper-toolbar .special-cases+tr{
+	opacity: .7;
 }
 #theme-helper-toolbar .woocommerce th{
 	background-color:rgba(0,0,0,.04);

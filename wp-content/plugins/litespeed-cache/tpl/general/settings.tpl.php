@@ -5,7 +5,7 @@ defined( 'WPINC' ) || exit;
 $__cloud = Cloud::cls();
 
 // This will drop QS param `qc_res` and `domain_hash` also
-$__cloud->update_is_linked_status();
+$__cloud->parse_qc_redir();
 
 $cloud_summary = Cloud::get_summary();
 
@@ -83,8 +83,8 @@ if ( ! $can_token ) {
 					<p><?php echo sprintf( __( 'There was a problem with retrieving your Domain Key. Please click the %s button to retry.', 'litespeed-cache' ), '<code>' . $apply_btn_txt . '</code>' ); ?></p>
 					<p><?php echo __( 'There are two reasons why we might not be able to communicate with your domain:', 'litespeed-cache' ); ?>:</p>
 					<p>1) <?php echo sprintf( __( 'The POST callback to %s failed.', 'litespeed-cache' ), '<code>' . home_url() . '/' . ( function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : apply_filters( 'rest_url_prefix', 'wp-json' ) ) . '/litespeed/v1/token</code>' ); ?> </p>
-					<p>2) <?php echo sprintf( __( 'Our %s was not whitelisted.', 'litespeed-cache' ), __( 'Current Online Server IPs', 'litespeed-cache' ) ); ?></p>
-					<p><?php echo __( 'Please verify that your other plugins are not blocking REST API calls, whitelist our server IPs, or contact your server admin for assistance.', 'litespeed-cache' ); ?>:</p>
+					<p>2) <?php echo sprintf( __( 'Our %s was not allowlisted.', 'litespeed-cache' ), __( 'Current Online Server IPs', 'litespeed-cache' ) ); ?></p>
+					<p><?php echo __( 'Please verify that your other plugins are not blocking REST API calls, allowlist our server IPs, or contact your server admin for assistance.', 'litespeed-cache' ); ?>:</p>
 				</div>
 			<?php endif; ?>
 
@@ -110,7 +110,18 @@ if ( ! $can_token ) {
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Domain Key is required for QUIC.cloud online services.', 'litespeed-cache' ); ?>
-				<br /><?php Doc::notice_ips(); ?>
+
+				<br />
+				<?php if ( ! empty( $cloud_summary[ 'main_domain' ] ) ) : ?>
+					<?php echo __( 'Main domain', 'litespeed-cache' ); ?>: <code><?php echo $cloud_summary[ 'main_domain' ]; ?></code>
+				<?php else: ?>
+					<font class="litespeed-warning">
+						⚠️ <?php echo __( 'Main domain not generated yet', 'litespeed-cache' ); ?>
+					</font>
+				<?php endif; ?>
+
+				<br />
+				<?php Doc::notice_ips(); ?>
 				<div class="litespeed-callout notice notice-success inline">
 					<h4><?php echo __( 'Current Cloud Nodes in Service','litespeed-cache' ); ?>
 						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i></a>
@@ -130,7 +141,6 @@ if ( ! $can_token ) {
 						?>
 					</p>
 				</div>
-
 			</div>
 		</td>
 	</tr>
@@ -169,7 +179,7 @@ if ( ! $can_token ) {
 
 				<?php if ( ! $this->conf( Base::O_GUEST ) ) : ?>
 					<br /><font class="litespeed-warning litespeed-left10">
-					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'This option only works when turning %s on.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
+					⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( '%s must be turned ON for this setting to work.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_GUEST ) . '</code>' ); ?>
 					</font>
 				<?php endif; ?>
 

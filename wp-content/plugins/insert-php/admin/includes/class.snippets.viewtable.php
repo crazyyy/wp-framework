@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables410_Viewtable {
+class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables413_Viewtable {
 
 	public function configure() {
 		/**

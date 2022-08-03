@@ -484,7 +484,6 @@ jQuery(function($) {
                     selected = 'selected';
                 }
                $('#amp_font_selector-select').append($('<option value="'+ fontDetail +'" data-font-number="'+ i +'" '+ selected +'> '+ fontDetail  +' </option>'));
-               $('#amp_font_selector-select').append($('<option value="'+ fontDetail +'" data-font-number="'+ i +'"> '+ fontDetail  +' </option>'));
                $('#amp_font_selector_content_single-select').append($('<option value="'+ fontDetail +'" data-font-number="'+ i +'"> '+ fontDetail  +' </option>'));
             }
             $('#amp_font_selector-select').append($('<option value="sans-serif" data-font-number="'+ i +'"> sans-serif </option>'));
@@ -864,8 +863,6 @@ function deactivatelicence(){
         $(".dashicons").addClass( 'spin' );
         setTimeout( function() {
             $(".dashicons").removeClass( 'spin' );}, 3000 );   
-        lastcheck = Math.abs(lastcheck.getDate()+1)+'/'+Math.abs(lastcheck.getMonth()+1) +'/'+lastcheck.getFullYear()+' '+lastcheck.getHours()+':'+lastcheck.getMinutes()+':'+lastcheck.getSeconds();
-        alert('Please try after '+ lastcheck);
     }
 });
 
@@ -2761,9 +2758,9 @@ $("#subscribe-newsletter-form").on('submit',function(e){
             $(".ampforwp_remove_notice").remove();
         });
     });
-    $("#ampforwp-close-ad-notice").on("click", function(){
+     $("#ampforwp-close-ad-notice").on("click", function(){
         var data = {
-            action: 'ampforwp_adpushup_remove_notice',
+            action: 'ampforwp_tpd_remove_notice',
         };
         $.post(ajaxurl, data, function(response) {
             $(".ampforwp_remove_notice").remove();

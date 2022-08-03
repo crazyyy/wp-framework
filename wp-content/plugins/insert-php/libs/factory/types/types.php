@@ -14,21 +14,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'wbcr/factory/before_plugin_activation', 'Wbcr_FactoryTypes410::activationHook' );
-add_action( 'wbcr/factory/before_plugin_deactivation', 'Wbcr_FactoryTypes410::deactivationHook' );
+add_action( 'wbcr/factory/before_plugin_activation', 'Wbcr_FactoryTypes413::activationHook' );
+add_action( 'wbcr/factory/before_plugin_deactivation', 'Wbcr_FactoryTypes413::deactivationHook' );
 
 /**
  * A base class to manage types.
  *
  * @since 1.0.0
  */
-class Wbcr_FactoryTypes410 {
+class Wbcr_FactoryTypes413 {
 
 	/**
 	 * Registered custom types.
 	 *
 	 * @since 1.0.0
-	 * @var Wbcr_FactoryTypes410_Type[]
+	 * @var Wbcr_FactoryTypes413_Type[]
 	 */
 	private static $types = [];
 
@@ -39,9 +39,9 @@ class Wbcr_FactoryTypes410 {
 	 * will be setup on the plugin configuration.
 	 *
 	 * @param string                 $class_name
-	 * @param Wbcr_Factory450_Plugin $plugin
+	 * @param Wbcr_Factory457_Plugin $plugin
 	 */
-	public static function register( $class_name, Wbcr_Factory450_Plugin $plugin = null ) {
+	public static function register( $class_name, Wbcr_Factory457_Plugin $plugin = null ) {
 		$type = new $class_name( $plugin );
 
 		$plugin_name = ! empty( $plugin ) ? $plugin->getPluginName() : '-';
@@ -57,7 +57,7 @@ class Wbcr_FactoryTypes410 {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory450_Plugin $plugin
+	 * @param Wbcr_Factory457_Plugin $plugin
 	 *
 	 * @return void
 	 */
@@ -93,11 +93,11 @@ class Wbcr_FactoryTypes410 {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Wbcr_Factory450_Plugin $plugin
+	 * @param Wbcr_Factory457_Plugin $plugin
 	 *
 	 * @return void
 	 */
-	public static function deactivationHook( Wbcr_Factory450_Plugin $plugin ) {
+	public static function deactivationHook( Wbcr_Factory457_Plugin $plugin ) {
 
 		$plugin_name = $plugin->getPluginName();
 		global $wp_roles;

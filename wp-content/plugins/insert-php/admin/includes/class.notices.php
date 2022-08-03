@@ -2,7 +2,7 @@
 /**
  * Warning notices
  *
- * @author        Webcraftic <wordpress.webraftic@gmail.com>
+ * @author        Webcraftic <WordPress.webraftic@gmail.com>
  * @copyright (c) 11.12.2018, Webcraftic
  * @version       1.0
  */
@@ -49,6 +49,8 @@ class WINP_WarningNotices {
 			return $notices;
 		}
 
+		$this->add_notice( 'warning_security_notice', $this->get_warning_notice(), 'warning' );
+
 		if ( WINP_Plugin::app()->getOption( 'need_show_attention_notice' ) ) {
 			$this->add_notice( 'upgrade_plugin2', $this->get_upgrade_notice(), 'warning' );
 		}
@@ -57,9 +59,10 @@ class WINP_WarningNotices {
 		$this->add_notice( 'result_error', $this->get_throw_php_error_notice(), 'error', false, 0, [
 			'post',
 			'post-new',
-			'edit'
+			'edit',
 		] );
-		/*$this->add_notice( 'leave_feedback', $this->get_leave_feedback_notice(), 'success', true, time() + 3600 * 60, [
+		/*
+		$this->add_notice( 'leave_feedback', $this->get_leave_feedback_notice(), 'success', true, time() + 3600 * 60, [
 			'post',
 			'post-new',
 			'edit'
@@ -69,17 +72,33 @@ class WINP_WarningNotices {
 	}
 
 	/**
+	 * This warning is for users of the old version 1.3.0. The plugin has changed the way it works
+	 * and requires user actions to continue working with plugin.
+	 *
+	 * @return string
+	 */
+	public function get_warning_notice() {
+		if ( is_multisite() ) {
+			$notice = '<b>' . WINP_Plugin::app()->getPluginTitle() . '</b>: ' . sprintf( __( "ATTENTION! Use this plugin with care! Check your php scripts before inserting on your site. If you don't understand how the php script you are using works, try to avoid using it. Using unverified or outdated php scripts can damage the security of your site! Using the plugin on multisites can be dangerous as it will allow all administrators to insert php, js code. If you cannot control the work of administrators, we recommend that you do not use this plugin for security reasons. We are constantly working to improve the security of the plugin, but unfortunately we cannot check the code scripts you use that may violate the security of your site!", 'insert-php' ), WINP_Plugin::app()->getPluginVersion() );
+		} else {
+			$notice = '<b>' . WINP_Plugin::app()->getPluginTitle() . '</b>: ' . sprintf( __( "ATTENTION! Use this plugin with care! Check your php scripts before inserting on your site. If you don't understand how the php script you are using works, try to avoid using it. Using unverified or outdated php scripts can damage the security of your site!", 'insert-php' ), WINP_Plugin::app()->getPluginVersion() );
+		}
+		return $notice;
+	}
+
+	/**
 	 * A small line that asks for feedback from user
 	 *
 	 * @return string
 	 */
+	/*
 	public function get_leave_feedback_notice() {
 		$post_type = WINP_Plugin::app()->request->get( 'post_type' );
 		if ( ! empty( $post_type ) && WINP_SNIPPETS_POST_TYPE == $post_type ) {
 			return '<strong>' . __( 'Have feedback on Woody ad Snippets?', 'insert-php' ) . '</strong> ' . __( 'Please take the time to answer a short survey on how you use this plugin and what you\'d like to see changed or added in the future.', 'insert-php' ) . '
 				<a href="http://bit.ly/2MpVokA" class="button secondary" target="_blank" style="margin: auto .5em;">' . __( 'Take the survey now', 'insert-php' ) . '</a>';
 		}
-	}
+	}*/
 
 	/**
 	 * Show error notification after saving snippet. We can also show this message when the snippet is activated.
@@ -138,9 +157,9 @@ class WINP_WarningNotices {
 			return null;
 		}
 
-		$disable_safe_mode_url = add_query_arg( [ 'wbcr-php-snippets-disable-safe-mode' => 1 ] );
+		$disable_safe_mode_url = esc_url( add_query_arg( [ 'wbcr-php-snippets-disable-safe-mode' => 1 ] ) );
 
-		$notice = WINP_Plugin::app()->getPluginTitle() . ': ' . __( 'Running in safe mode. This mode your snippets will not be started.', 'insert-php' );
+		$notice  = WINP_Plugin::app()->getPluginTitle() . ': ' . __( 'Running in safe mode. This mode your snippets will not be started.', 'insert-php' );
 		$notice .= ' <a href="' . $disable_safe_mode_url . '" class="button button-default">' . __( 'Disable Safe Mode', 'insert-php' ) . '</a>';
 
 		return $notice;
@@ -175,7 +194,7 @@ class WINP_WarningNotices {
 			'dismissible'     => (bool) $dismissible,
 			'dismiss_expires' => (int) $dismiss_expires,
 			'where'           => $where,
-			'text'            => '<p>' . $message . '</p>'
+			'text'            => '<p>' . $message . '</p>',
 		];
 	}
 }

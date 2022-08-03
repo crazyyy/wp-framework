@@ -123,30 +123,14 @@ if ( ! class_exists( "cmplz_amp" ) ) {
 
 			//amp only accepts https or //
 			$consentHrefUrl = str_replace( "http://", "//", $consentHrefUrl );
-
 			//check if we're on cookie policy page. If so, we offer a revoke option
-			$regions = cmplz_get_regions();
-			global $post;
-			$post_id   = false;
-			$is_policy = false;
-			if ( $post ) {
-				$post_id = $post->ID;
-			}
-			foreach ( $regions as $region => $label ) {
-				if ( $is_policy ) {
-					break;
-				}
-				$policy_id
-					= COMPLIANZ::$document->get_shortcode_page_id( 'cookie-statement',
-					$region );
-				if ( $policy_id == $post_id ) {
-					$is_policy = true;
-				}
-			}
+			$is_policy = cmplz_page_is_of_type('cookie-statement');
 			$postPromptUI = $is_policy ? '"cmplz-post-consent-ui"' : 'false';
+			$revoke_text = $this->banner->revoke_x['text'];
+			$dismiss_text = $this->banner->dismiss_x['text'];
 			$revoke       = $is_policy
 				? '<div id="cmplz-post-consent-ui"><button on="tap:consent-element.prompt" role="button">'
-				  . $this->banner->revoke_x . '</button></div>' : "";
+				  . $revoke_text . '</button></div>' : "";
 			$html         = '
             <amp-geo layout="nodisplay">
 			  <script type="application/json">
@@ -177,7 +161,7 @@ if ( ! class_exists( "cmplz_amp" ) ) {
                     <button on="tap:consent-element.accept" role="button">'
 			                . $this->banner->accept_x . '</button>
                     <button on="tap:consent-element.reject" role="button">'
-			                . $this->banner->dismiss_x . '</button>
+			                . $dismiss_text . '</button>
                 </div>
                 ' . $revoke . '
 
@@ -223,6 +207,7 @@ if ( ! class_exists( "cmplz_amp" ) ) {
 
 			printf(
 				'
+					.cmplz-hidden{display:none!important;}
 					.cmplz-revoke-custom {
 						display:none;
 					}

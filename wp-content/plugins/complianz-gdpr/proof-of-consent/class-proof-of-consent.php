@@ -17,23 +17,10 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 			}
 
 			add_action( 'admin_init', array( $this, 'force_snapshot_generation' ) );
-			add_action('admin_enqueue_scripts', array($this, 'admin_enqueue'));
-
 		}
 
 		static function this() {
 			return self::$_this;
-		}
-
-		/**
-		 * Enqueue back-end assets
-		 * @param $hook
-		 */
-		public function admin_enqueue($hook){
-			if (!isset($_GET['page']) || $_GET['page'] !== 'cmplz-proof-of-consent' ) return;
-			$min = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
-			wp_register_style('cmplz-posttypes', cmplz_url . "assets/css/posttypes$min.css", false, cmplz_version);
-			wp_enqueue_style('cmplz-posttypes');
 		}
 
 		/**
@@ -218,6 +205,7 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 		 */
 
 		public function cookie_statement_snapshots() {
+			ob_start();
 			include( cmplz_path . 'proof-of-consent/class-cookiestatement-snapshot-table.php' );
 			$snapshots_table = new cmplz_CookieStatement_Snapshots_Table();
 			$snapshots_table->prepare_items();
@@ -248,8 +236,7 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 					});
 				});
 			</script>
-			<div class="wrap">
-			<div id="cookie-policy-snapshots" class="wrap cookie-snapshot">
+			<div id="cookie-policy-snapshots" class="cookie-snapshot">
 				<form id="cmplz-cookiestatement-snapshot-generate" method="POST" action="">
 					<h1 class="wp-heading-inline"><?php _e( "Proof of consent", 'complianz-gdpr' ) ?></h1>
 					<?php echo wp_nonce_field( 'cmplz_generate_snapshot',
@@ -270,16 +257,21 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 				      action="">
 
 					<?php
-					$snapshots_table->search_box( __( 'Filter', 'complianz-gdpr' ), 'cmplz-cookiesnapshot' );
 					$snapshots_table->date_select();
+					$snapshots_table->search_box( __( 'Filter', 'complianz-gdpr' ), 'cmplz-cookiesnapshot' );
 					$snapshots_table->display();
 					?>
 					<input type="hidden" name="page" value="cmplz-proof-of-consent"/>
 				</form>
 				<?php do_action( 'cmplz_after_cookiesnapshot_list' ); ?>
 			</div>
-			</div>
 			<?php
+			$content = ob_get_clean();
+			$args = array(
+					'page' => 'proof-of-consent',
+					'content' => $content,
+			);
+			echo cmplz_get_template('admin_wrap.php', $args );
 		}
 
 		/**
@@ -341,26 +333,10 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
                     'colorpalette_button_settings',
                     'buttons_border_radius',
 				);
-				$cats_pattern = '/data-category="(.*?)"/i';
-				if (isset($settings['categories'])) {
-					if ( preg_match_all( $cats_pattern, $settings['categories'],
-						$matches )
-					) {
-						$categories = $matches[1];
-						foreach($categories as $index => $category ) {
-							$category = str_replace('cmplz_', '', $category);
-							if (is_numeric(intval($category))) {
-								$category = 'Custom event ' . $category;
-							}
-							$categories[$index] = $category;
-						}
-						$settings['categories'] =  implode(', ', $categories);
-					}
-				}
 
+				$settings['categories'] =  isset($settings['categories']) ? implode(', ', $settings['categories']) : '';
 				unset( $settings["readmore_url"] );
 				$settings = apply_filters( 'cmplz_cookie_policy_snapshot_settings' ,$settings );
-
 				foreach ( $settings as $key => $value ) {
 
 					if ( in_array( $key, $skip ) ) {
@@ -373,7 +349,7 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 				$settings_html = '<div><h1>' . __( 'Cookie consent settings', 'complianz-gdpr' ) . '</h1><ul>' . ( $settings_html ) . '</ul></div>';
 				$intro         = '<h1>' . __( "Proof of Consent",
 						"complianz-gdpr" ) . '</h1>
-                     <p>' . sprintf( __( "This document was generated to show efforts made to comply with privacy legislation.
+                     <p>' . cmplz_sprintf( __( "This document was generated to show efforts made to comply with privacy legislation.
                             This document will contain the Cookie Policy and the cookie consent settings to proof consent
                             for the time and region specified below. For more information about this document, please go
                             to %shttps://complianz.io/consent%s.",

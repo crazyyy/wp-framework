@@ -127,7 +127,7 @@ class Plugins_Garbage_Collector {
     
     function admin_scripts() {
 
-        wp_enqueue_script( 'pgc_js_script', PGC_PLUGIN_URL . '/js/pgc.js', array('jquery', 'jquery-form', 'jquery-ui-core', 'jquery-ui-progressbar') );
+        wp_enqueue_script( 'pgc_js_script', PGC_PLUGIN_URL . '/js/pgc.js', array('jquery', 'jquery-form', 'jquery-ui-core', 'jquery-ui-progressbar'), PGC_VERSION );
         wp_localize_script(
                 'pgc_js_script', 'pgcSettings', array('plugin_url' => PGC_PLUGIN_URL,
             'ajax_nonce' => wp_create_nonce('plugins-garbage-collector'),
@@ -139,7 +139,8 @@ class Plugins_Garbage_Collector {
             'checking_plugin' => esc_html__('Checking plugin', 'plugins-garbage-collector'),
             'take_some_time' => esc_html__('will take some time. Please confirm to continue', 'plugins-garbage-collector'),
             'select_table_before_delete' => esc_html__('Select at least one table before click on Delete button', 'plugins-garbage-collector'),
-            'confirm_before_table_delete' => esc_html__('Delete database tables last confirmation: Click "Cancel" if you have any doubt.', 'plugins-garbage-collector'),
+            'confirm_before_tables_deletion1' => esc_html__('These tables will be permanently deleted. Continue?', 'plugins-garbage-collector'),
+            'confirm_before_tables_deletion2' => esc_html__('Delete database tables last confirmation: Click "Cancel" if you have any doubt.', 'plugins-garbage-collector'),
             'work_done' => esc_html('Done', 'plugins-garbage-collector')
         ));
         

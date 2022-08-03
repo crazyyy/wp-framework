@@ -1,7 +1,7 @@
 === Broken Link Checker ===
 Contributors: managewp, wpmudev
 Tags: links, broken links, internal link, external link, broken images, seo, test links, check links, bad links
-Requires at least: 4.6
+Requires at least: 5.2
 Tested up to: 5.8
 Stable tag: 1.11.16
 License: GPLv2 or later
@@ -66,6 +66,9 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.11.17 =
+* Fix security vulnerability
 
 = 1.11.16 =
 * Enhance compatibility with PHP 8

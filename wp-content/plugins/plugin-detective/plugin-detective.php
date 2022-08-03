@@ -3,7 +3,7 @@
  * Plugin Name: Plugin Detective - Troubleshooting
  * Plugin URI:  https://nsqua.red
  * Description: Quickly troubleshoot & fix plugin conflicts
- * Version:     1.1.9
+ * Version:     1.2.1
  * Author:      N Squared
  * Donate link: https://nsqua.red
  * License:     GPLv2
@@ -13,7 +13,7 @@
  * @link    https://nsqua.red
  *
  * @package Plugin_Detective
- * @version 1.1.9
+ * @version 1.2.1
  *
  * Built using generator-plugin-wp (https://github.com/WebDevStudios/generator-plugin-wp)
  */
@@ -71,7 +71,7 @@ final class Plugin_Detective {
 	 * @var    string
 	 * @since  0.0.0
 	 */
-	const VERSION = '1.1.9';
+	const VERSION = '1.2.1';
 
 	/**
 	 * URL of plugin directory.

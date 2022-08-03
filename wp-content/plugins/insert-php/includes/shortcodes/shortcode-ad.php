@@ -48,6 +48,12 @@ class WINP_SnippetShortcodeAdvert extends WINP_SnippetShortcode {
 			$post_content = do_shortcode( $post_content );
 		}
 
+		/**
+		 * Shortcode content filter
+		 * @since 2.4.4
+		 */
+		$post_content = apply_filters('wbcr/inp/snippet/shortcode_ad/post_content', $post_content, $id);
+
 		echo str_replace( '{{SNIPPET_CONTENT}}', $content, $post_content );
 	}
 

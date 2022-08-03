@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Plugins Garbage Collector (Database Cleanup)
+Plugin Name: Plugins Garbage Collector (Database Cleanup) Old!
 Plugin URI: http://www.shinephp.com/plugins-garbage-collector-wordpress-plugin/
 Description: Find and clear unused data from the deactivated or uninstalled plugins. Look at the list of database tables created and used by plugins with quantity of records, size and owner plugin name.
-Version: 0.12
+Version: 0.14
 Author: Vladimir Garagulya
 Author URI: http://www.shinephp.com
 Text Domain: plugins-garbage-collector
@@ -37,7 +37,7 @@ if (!function_exists('get_option')) {
 global $wp_version;
 
 define('PGC_PLUGIN_NAME', esc_html__('Database Cleanup', 'plugins-garbage-collector'));
-define('PGC_VERSION', '0.11.1');
+define('PGC_VERSION', '0.14');
 define('PGC_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('PGC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('PGC_PLUGIN_FILE', __FILE__);

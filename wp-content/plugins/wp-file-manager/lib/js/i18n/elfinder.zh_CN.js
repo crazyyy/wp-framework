@@ -7,9 +7,9 @@
  * @author LDMING <china-live@live.cn>
  * @author Andy Lee <oraclei@126.com>
  * @author Cololi <i@cololi.moe>
- * @version 2020-04-07
+ * @version 2022-03-04
  */
-(function(root, factory) {
+ (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -22,10 +22,12 @@
 		translator : '翻译者 deerchao &lt;deerchao@gmail.com&gt;, Andy Hu &lt;andyhu7@yahoo.com.hk&gt;, Max Wen&lt;max.wen@qq.com&gt;, Kejun Chang &lt;changkejun@hotmail.com&gt;, LDMING &lt;china-live@live.cn&gt;, Andy Lee &lt;oraclei@126.com&gt;, Cololi &lt;i@cololi.moe&gt;',
 		language   : '简体中文',
 		direction  : 'ltr',
-		dateFormat : 'Y-m-d H:i', // will show like: 2020-04-07 14:53
-		fancyDateFormat : '$1 H:i', // will show like: 今天 14:53
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 200407-145300
+		dateFormat : 'Y-m-d H:i', // will show like: 2022-03-04 11:47
+		fancyDateFormat : '$1 H:i', // will show like: 今天 11:47
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220304-114755
 		messages   : {
+			'getShareText' : '分享',
+			'Editor ': '代码编辑器',
 
 			/********************************** errors **********************************/
 			'error'                : '错误',
@@ -121,6 +123,7 @@
 			'errServerError'       : '服务端发生错误.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : '无法清空文件夹 "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : '存在 $1 多个错误.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : '您一次最多可以创建 $1 个文件夹。', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : '创建压缩包',
@@ -297,7 +300,7 @@
 			'Archive'           : '新压缩包',  // from v2.1 added 10.11.2015
 			'untitled file'     : '新文件.$1',  // from v2.1.41 added 6.8.2018
 			'extentionfile'     : '$1: 文件',    // from v2.1.41 added 6.8.2018
-			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
+			'extentiontype'     : '1 美元：2 美元',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : '请确认',

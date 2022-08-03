@@ -192,3 +192,7 @@ td.fm-tr-inline input {
 .fm-packet-area input.regular-text {
     padding-right: 21px;
 }
+.rtl .fm-packet-area span.mb-value {
+    right: unset;
+    left: 10px;
+}

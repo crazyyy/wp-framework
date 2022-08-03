@@ -2,7 +2,7 @@
 /**
  * PHP snippets plugin base
  *
- * @author        Webcraftic <wordpress.webraftic@gmail.com>
+ * @author        Webcraftic <WordPress.webraftic@gmail.com>
  * @copyright (c) 19.02.2018, Webcraftic
  * @version       1.0
  */
@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WINP_Plugin' ) ) {
 
-	class WINP_Plugin extends Wbcr_Factory450_Plugin {
+	class WINP_Plugin extends Wbcr_Factory457_Plugin {
 
 		/**
-		 * @var Wbcr_Factory450_Plugin
+		 * @var Wbcr_Factory457_Plugin
 		 */
 		private static $app;
 
@@ -38,9 +38,9 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 				$this->initActivation();
 
 				if ( WINP_Helper::doing_ajax() ) {
-					require( WINP_PLUGIN_DIR . '/admin/ajax/ajax.php' );
-					require( WINP_PLUGIN_DIR . '/admin/ajax/check-license.php' );
-					require( WINP_PLUGIN_DIR . '/admin/ajax/snippet-library.php' );
+					require WINP_PLUGIN_DIR . '/admin/ajax/ajax.php';
+					require WINP_PLUGIN_DIR . '/admin/ajax/check-license.php';
+					require WINP_PLUGIN_DIR . '/admin/ajax/snippet-library.php';
 				}
 
 				$this->load_backend();
@@ -67,7 +67,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @return WINP_Execute_Snippet
 		 */
 		public function getExecuteObject() {
-			require_once( WINP_PLUGIN_DIR . '/includes/class.execute.snippet.php' );
+			require_once WINP_PLUGIN_DIR . '/includes/class.execute.snippet.php';
 
 			return new WINP_Execute_Snippet();
 		}
@@ -78,7 +78,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @return WINP_Api
 		 */
 		public function get_api_object() {
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.api.php' );
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.api.php';
 
 			return new WINP_Api();
 		}
@@ -89,7 +89,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @return WINP_Common_Snippet
 		 */
 		public function get_common_object() {
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.common.snippet.php' );
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.common.snippet.php';
 
 			return new WINP_Common_Snippet();
 		}
@@ -99,12 +99,13 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @since  2.2.0
 		 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
-		/*public function plugins_loaded() {
+		/*
+		public function plugins_loaded() {
 			$this->register_pages();
 		}*/
 
 		protected function initActivation() {
-			include_once( WINP_PLUGIN_DIR . '/admin/activation.php' );
+			include_once WINP_PLUGIN_DIR . '/admin/activation.php';
 			$this->registerActivation( 'WINP_Activation' );
 		}
 
@@ -114,7 +115,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		public function register_pages() {
-			require_once( WINP_PLUGIN_DIR . '/admin/pages/page.php' );
+			require_once WINP_PLUGIN_DIR . '/admin/pages/page.php';
 
 			$this->registerPage( 'WINP_NewItemPage', WINP_PLUGIN_DIR . '/admin/pages/new-item.php' );
 			$this->registerPage( 'WINP_SettingsPage', WINP_PLUGIN_DIR . '/admin/pages/settings.php' );
@@ -129,7 +130,7 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		public function register_depence_pages() {
-			require_once( WINP_PLUGIN_DIR . '/admin/pages/page.php' );
+			require_once WINP_PLUGIN_DIR . '/admin/pages/page.php';
 
 			if ( ! ( defined( 'WASP_PLUGIN_ACTIVE' ) && WASP_PLUGIN_ACTIVE ) ) {
 				$this->registerPage( 'WINP_ImportPage', WINP_PLUGIN_DIR . '/admin/pages/import.php' );
@@ -142,11 +143,11 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @author  Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		private function register_types() {
-			require_once( WINP_PLUGIN_DIR . '/admin/types/snippets-post-types.php' );
-			Wbcr_FactoryTypes410::register( 'WINP_SnippetsType', $this );
+			require_once WINP_PLUGIN_DIR . '/admin/types/snippets-post-types.php';
+			Wbcr_FactoryTypes413::register( 'WINP_SnippetsType', $this );
 
-			require_once( WINP_PLUGIN_DIR . '/admin/types/snippets-taxonomy.php' );
-			Wbcr_FactoryTaxonomies330::register( 'WINP_SnippetsTaxonomy', $this );
+			require_once WINP_PLUGIN_DIR . '/admin/types/snippets-taxonomy.php';
+			Wbcr_FactoryTaxonomies333::register( 'WINP_SnippetsTaxonomy', $this );
 		}
 
 		/**
@@ -154,21 +155,21 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @since  2.2.0
 		 */
 		private function register_shortcodes() {
-			$action = WINP_Plugin::app()->request->get( 'action', '' );
+			$action = self::app()->request->get( 'action', '' );
 			if ( ! ( 'edit' == $action && is_admin() ) ) {
-				if ( WINP_Plugin::app()->getOption( 'support_old_shortcodes' ) ) {
+				if ( self::app()->getOption( 'support_old_shortcodes' ) ) {
 					// todo: Deprecated
-					require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-insert-php.php' );
+					require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-insert-php.php';
 				}
 
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcodes.php' );
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-php.php' );
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-text.php' );
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-universal.php' );
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-css.php' );
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-js.php' );
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-html.php' );
-				require_once( WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-ad.php' );
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcodes.php';
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-php.php';
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-text.php';
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-universal.php';
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-css.php';
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-js.php';
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-html.php';
+				require_once WINP_PLUGIN_DIR . '/includes/shortcodes/shortcode-ad.php';
 
 				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodePhp', $this );
 				WINP_Helper::register_shortcode( 'WINP_SnippetShortcodeText', $this );
@@ -187,7 +188,8 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @since  2.2.0
 		 */
 		private function load_global() {
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.gutenberg.snippet.php' );
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.gutenberg.snippet.php';
+
 			new WINP_Gutenberg_Snippet();
 
 			$this->getExecuteObject()->registerHooks();
@@ -199,13 +201,13 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 			add_action( 'plugins_loaded', function () {
 				if ( isset( $_GET['wbcr-php-snippets-safe-mode'] ) ) {
 					WINP_Helper::enable_safe_mode();
-					wp_safe_redirect( remove_query_arg( [ 'wbcr-php-snippets-safe-mode' ] ) );
+					wp_safe_redirect( esc_url( remove_query_arg( [ 'wbcr-php-snippets-safe-mode' ] ) ) );
 					die();
 				}
 
 				if ( isset( $_GET['wbcr-php-snippets-disable-safe-mode'] ) ) {
 					WINP_Helper::disable_safe_mode();
-					wp_safe_redirect( remove_query_arg( [ 'wbcr-php-snippets-disable-safe-mode' ] ) );
+					wp_safe_redirect( esc_url( remove_query_arg( [ 'wbcr-php-snippets-disable-safe-mode' ] ) ) );
 					die();
 				}
 			}, - 1 );
@@ -219,14 +221,14 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 		 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 		 */
 		private function load_backend() {
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.snippets.viewtable.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.filter.snippet.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.actions.snippet.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.import.snippet.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.notices.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/includes/class.request.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/metaboxes/metabox.php' );
-			require_once( WINP_PLUGIN_DIR . '/admin/boot.php' );
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.snippets.viewtable.php';
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.filter.snippet.php';
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.actions.snippet.php';
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.import.snippet.php';
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.notices.php';
+			require_once WINP_PLUGIN_DIR . '/admin/includes/class.request.php';
+			require_once WINP_PLUGIN_DIR . '/admin/metaboxes/metabox.php';
+			require_once WINP_PLUGIN_DIR . '/admin/boot.php';
 
 			$this->get_common_object()->registerHooks();
 
@@ -244,14 +246,14 @@ if ( ! class_exists( 'WINP_Plugin' ) ) {
 			# We set the priority to 30 to wait for the premium plugin to load.
 			add_action( 'plugins_loaded', [ $this, 'register_depence_pages' ], 30 );
 
-			add_action( 'wbcr_factory_forms_447_register_controls', function () {
-				$colorControls = array(
+			add_action( 'wbcr_factory_forms_454_register_controls', function () {
+				$colorControls = [
 					[
 						'type'    => 'winp-dropdown',
 						'class'   => 'WINP_FactoryForms_Dropdown',
-						'include' => WINP_PLUGIN_DIR . '/includes/controls/class.dropdown.php'
+						'include' => WINP_PLUGIN_DIR . '/includes/controls/class.dropdown.php',
 					],
-				);
+				];
 				$this->forms->registerControls( $colorControls );
 			} );
 		}

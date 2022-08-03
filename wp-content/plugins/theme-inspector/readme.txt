@@ -3,7 +3,7 @@ Contributors: Melissa Cabral
 Donate link: https://paypal.me/MelissaCSD
 Tags: template, theme, utility, developer, Inspector, tool, wordpress
 Requires at least: 3.0
-Tested up to: 5.6
+Tested up to: 5.9
 Stable tag: trunk
 License: GPLv3 or higher
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -39,6 +39,9 @@ You must be logged in as an administrator, and viewing the Site (not the admin p
 2. /assets/screenshot-1.png
 
 == Changelog ==
+= 4.0.0 =
+* Added clearer warning when using an incompatible plugin or Block Theme 
+
 = 3.0.6 = 
 * Minor CSS changes for compatibility with RTL language settings
 
@@ -63,6 +66,8 @@ You must be logged in as an administrator, and viewing the Site (not the admin p
 
 
 == Upgrade Notice ==
+= 4.0.0 =
+Added clear warning when used with an incompatible plugin or FSE/Block Theme
 
 = 3.0.3 =
 This version has a more thorough template hierarchy display, as well as WooCommerce support!

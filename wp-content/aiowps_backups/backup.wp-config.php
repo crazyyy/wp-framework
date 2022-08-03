@@ -10,9 +10,9 @@ const WP_CACHE = false;
 //define('DB_NAME', 'DBNAME');
 //define('DB_USER', 'DBUSER');
 //define('DB_PASSWORD', 'DBPASS');
-const DB_NAME       = 'dbname';
-const DB_USER       = 'root';
-const DB_PASSWORD   = '';
+const DB_NAME       = 'wpframework';
+const DB_USER       = 'wpframework';
+const DB_PASSWORD   = 'wpframework';
 const DB_HOST       = 'localhost';
 
 const WP_MEMORY_LIMIT = '512M';
@@ -33,7 +33,7 @@ const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache i
 const DB_CHARSET = 'utf8mb4';
 const DB_COLLATE = 'utf8mb4_unicode_ci';
 
-$table_prefix  = 'nammk_';
+$table_prefix  = 'qsena_';
 
 const DISALLOW_FILE_EDIT  = true;
 const FS_METHOD           = 'direct';

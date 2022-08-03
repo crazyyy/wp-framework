@@ -32,13 +32,6 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
         );
     }
 
-    function get_current_tab() 
-    {
-        $tab_keys = array_keys($this->menu_tabs);
-        $tab = isset( $_GET['tab'] ) ? sanitize_text_field($_GET['tab']) : $tab_keys[0];
-        return $tab;
-    }
-
     /*
      * Renders our tabs of this menu as nav items
      */
@@ -322,7 +315,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu
                                 }
                                 echo '<p><strong>'.__('Spammer IPs Added To Permanent Block List Today: ', 'all-in-one-wp-security-and-firewall').$todays_blocked_count.'</strong></p>'.
                                     '<hr><p><strong>'.__('All Time Total: ', 'all-in-one-wp-security-and-firewall').$total_count.'</strong></p>'.
-                                    '<p><a class="button" href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=tab4" target="_blank">'.__('View Blocked IPs','all-in-one-wp-security-and-firewall').'</a></p>';
+                                    '<p><a class="button" href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=tab3" target="_blank">'.__('View Blocked IPs','all-in-one-wp-security-and-firewall').'</a></p>';
                             }
                             ?>
                         </div>

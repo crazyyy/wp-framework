@@ -326,7 +326,10 @@
 	width:calc(100% - 30px);
 	box-sizing: border-box;
 }
-
+.fm_codeParaTxt .rtTxt {
+    padding-left: 40px;
+    box-sizing: border-box;
+}
 @media only screen and (max-width:767px){
 .fmInnerWrap {
     padding: 20px;
