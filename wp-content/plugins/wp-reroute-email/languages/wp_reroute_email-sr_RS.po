@@ -1,0 +1,129 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Sajjad Hossain <msh134@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"Language: sr_RS\n"
+
+msgid "Settings"
+msgstr "Podešavanja"
+
+msgid "All emails will be stored in database after sending."
+msgstr "Svi e-mailovi će biti uskladišteni u bazi podataka nakon slanja."
+
+msgid "Emails will only be stored in database and no email will be sent."
+msgstr "E-pošta će biti sačuvana samo u bazi podataka i neće biti poslata email adresa."
+
+msgid "All emails from the site will be sent to <strong>%1$s</strong>"
+msgstr "Svi e-mailovi sa sajta će biti poslati na <strong>%1$s</strong>"
+
+msgid "This site has %1$sWP Reroute Email%2$s enabled."
+msgstr "Ova stranica ima %1$sWP Preusmjerena Email%2$s omogućena."
+
+msgid "To change settings go %1$shere%2$s."
+msgstr "Da biste promenili podešavanja, idite %$sovde%2$s."
+
+msgid "Enter at least one email address."
+msgstr "Unesite najmanje jednu email adresu."
+
+msgid "Settings saved."
+msgstr "Podešavanja sačuvana."
+
+msgid "Logs"
+msgstr ""
+
+msgid "Email Logs"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
+msgid "Message Details"
+msgstr ""
+
+msgid "Enable rerouting"
+msgstr "Omogućite preusmeravanje"
+
+msgid "Email address"
+msgstr "Email adresa"
+
+msgid "Provide a comma-delimited list of email addresses to pass through."
+msgstr "Obezbedite comma-delimited (“zarezima odvojenu”) listu email adresa za prolaz."
+
+msgid "Append text"
+msgstr "Dodajte tekst"
+
+msgid "This text will be appended with the mail body. Leave it blank if you do not want to append anything."
+msgstr "Ovaj tekst će biti dodat “telu email-a” (mail body). Ostavite prazno ukoliko ne želite ništa da dodajete."
+
+msgid "Append recipient email addresses"
+msgstr "Dodajte email adrese primalaca"
+
+msgid "Enable this if you want to append recipient email addresses at the bottom of the email."
+msgstr "Pregledajte ovu pregradu ukoliko želite da dodate email adrese primalaca u dnu mail-a."
+
+msgid "Log emails in DB"
+msgstr "Prijavite e-poštu u DB"
+
+msgid "Enable this if you want to store a copy of the email in database. You may also skip email sending and store email only to database."
+msgstr "Označite ovo polje ako želite da kopirate e-poštu u bazi podataka. Takođe možete preskočiti slanje e-pošte i spremiti e-poštu samo u bazu podataka."
+
+msgid "Select an option"
+msgstr ""
+
+msgid "Store a copy of email in database and send email"
+msgstr "Spremite kopiju e-pošte u bazu podataka i pošaljite e-poštu"
+
+msgid "Store a copy of email in database and do not send email"
+msgstr "Spremite kopiju e-pošte u bazu podataka i ne šaljite e-poštu"
+
+msgid "Save Changes"
+msgstr "Sačuvajte Promene (Changes)"
+
+msgid "Sent On"
+msgstr "Poslato"
+
+msgid "To"
+msgstr ""
+
+msgid "CC"
+msgstr ""
+
+msgid "BCC"
+msgstr ""
+
+msgid "Subject"
+msgstr "Predmet"
+
+msgid "View Original Message"
+msgstr ""
+
+msgid "Sent To"
+msgstr "Poslato"
+
+msgid "Delete All Messages"
+msgstr "Обриши све поруке"
+
+msgid "Email sent."
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "You may test your settings by sending an email using this form."
+msgstr ""
+
+msgid "Ignore emails containing these texts in subjects"
+msgstr ""
+
+msgid "Provide a comma, semicolon, or newline-delimited list of message subjects or part of the subjects to be ignored when rerouting."
+msgstr ""

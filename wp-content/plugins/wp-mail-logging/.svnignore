@@ -1,0 +1,7 @@
+bin
+tests
+.svnignore
+.travis.yml
+phpunit.xml
+README.md
+CONTRIBUTING.md

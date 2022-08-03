@@ -1,0 +1,127 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Sajjad Hossain <msh134@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Settings"
+msgstr ""
+
+msgid "All emails will be stored in database after sending."
+msgstr ""
+
+msgid "Emails will only be stored in database and no email will be sent."
+msgstr ""
+
+msgid "All emails from the site will be sent to <strong>%1$s</strong>"
+msgstr ""
+
+msgid "This site has %1$sWP Reroute Email%2$s enabled."
+msgstr ""
+
+msgid "To change settings go %1$shere%2$s."
+msgstr ""
+
+msgid "Enter at least one email address."
+msgstr ""
+
+msgid "Settings saved."
+msgstr ""
+
+msgid "Logs"
+msgstr ""
+
+msgid "Email Logs"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
+msgid "Message Details"
+msgstr ""
+
+msgid "Enable rerouting"
+msgstr ""
+
+msgid "Email address"
+msgstr ""
+
+msgid "Provide a comma-delimited list of email addresses to pass through."
+msgstr ""
+
+msgid "Append text"
+msgstr ""
+
+msgid "This text will be appended with the mail body. Leave it blank if you do not want to append anything."
+msgstr ""
+
+msgid "Append recipient email addresses"
+msgstr ""
+
+msgid "Enable this if you want to append recipient email addresses at the bottom of the email."
+msgstr ""
+
+msgid "Log emails in DB"
+msgstr ""
+
+msgid "Enable this if you want to store a copy of the email in database. You may also skip email sending and store email only to database."
+msgstr ""
+
+msgid "Select an option"
+msgstr ""
+
+msgid "Store a copy of email in database and send email"
+msgstr ""
+
+msgid "Store a copy of email in database and do not send email"
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Sent On"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "CC"
+msgstr ""
+
+msgid "BCC"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "View Original Message"
+msgstr ""
+
+msgid "Sent To"
+msgstr ""
+
+msgid "Delete All Messages"
+msgstr ""
+
+msgid "Email sent."
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "You may test your settings by sending an email using this form."
+msgstr ""
+
+msgid "Ignore emails containing these texts in subjects"
+msgstr ""
+
+msgid "Provide a comma, semicolon, or newline-delimited list of message subjects or part of the subjects to be ignored when rerouting."
+msgstr ""

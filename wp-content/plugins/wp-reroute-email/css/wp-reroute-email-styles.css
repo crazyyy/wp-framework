@@ -1,0 +1,34 @@
+.settings-tables, .log-email-options{
+    display: none;
+}
+.log-email-options{
+    margin-top: 5px;
+}
+.btn_container{
+    width: 90%;
+    text-align: right;
+    margin: 0px auto 10px;
+}
+.message_details{
+    background-color: #CCC;
+    border: 3px solid #999;
+    width: 100%;
+    margin: 15px auto;
+}
+.message-table{
+    width: 100%;
+}
+.message-table th{
+    text-align: right;
+    vertical-align: top;
+    width: 100px
+}
+.message-table .message_body{
+    background-color: #FFF;
+    overflow: auto;
+    padding: 20px;
+    border-top: 2px solid #999;
+}
+#original-message{
+    display: none;
+}

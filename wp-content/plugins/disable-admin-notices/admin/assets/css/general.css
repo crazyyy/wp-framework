@@ -1,0 +1,51 @@
+.wbcr-dan-hide-notices {
+  position: initial;
+  padding: 5px 5px 0;
+  background: transparent;
+}
+.wbcr-dan-hide-notices > div {
+  margin: 0 !important;
+}
+.is-dismissible .wbcr-dan-hide-links {
+  margin-right: -25px;
+}
+.wbcr-dan-hide-links {
+  text-align: right;
+  padding: 0 5px 5px 0;
+}
+.wbcr-dan-hide-links .wbcr-dan-hide-notice-link {
+  min-height: 20px;
+  line-height: 2;
+  padding: 0 5px 0 0;
+  font-size: 11px;
+  color: #ec3c47;
+  background: #fff;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid #ec3c47;
+  border-radius: 5px;
+}
+.wbcr-dan-hide-links .wbcr-dan-hide-notice-link:hover {
+  background: #ec3c47;
+  color: #fff;
+}
+.wbcr-dan-hide-links .wbcr-dan-hide-notice-link:hover:before {
+  background-image: url('../img/hide-icon-white.svg');
+}
+.wbcr-dan-hide-links .wbcr-dan-hide-notice-link:focus {
+  border: 2px solid #ec3c47;
+  outline: none;
+}
+.wbcr-dan-hide-links .wbcr-dan-hide-notice-link:before {
+  content: '';
+  display: inline-block;
+  width: 25px;
+  height: 18px;
+  background-color: transparent;
+  background-image: url('../img/hide-icon.svg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 25px;
+  vertical-align: middle;
+}
+/*# sourceMappingURL=general.css.map */

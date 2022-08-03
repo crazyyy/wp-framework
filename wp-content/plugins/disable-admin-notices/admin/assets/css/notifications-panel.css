@@ -1,0 +1,77 @@
+/**
+ * Notification panel in admin bar
+ * @author Alex Kovalev <alex.kovalevv@gmail.com> 
+ * @copyright Alex Kovalev 23.08.2017 
+ */
+#wp-admin-bar-wbcr-han-notify-panel .wbcr-han-adminbar-counter {
+  background-color: #0073aa;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: bold;
+  padding: 2px 6px;
+  font-size: 0.85em;
+  margin-left: 5px;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu {
+  width: 400px;
+  padding: 0;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li {
+  border-left: 4px solid #26292b;
+  padding: 0;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li.wpnc-updated {
+  border-left-color: #7ad03a;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li.wpnc-update-nag {
+  border-left-color: #ffba00;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li.wpnc-error {
+  border-left-color: #dd3d36;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li .wbcr-han-panel-restore-notify-line {
+  text-align: right;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li .wbcr-han-panel-restore-notify-line a {
+  color: #ffba00 !important;
+  text-decoration: none !important;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li .wbcr-han-panel-restore-notify-line a:hover {
+  text-decoration: underline !important;
+  color: #ffc11a !important;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li .ab-item {
+  height: 100% !important;
+  white-space: normal !important;
+  padding: 0.5em 1em;
+  border-bottom: 1px solid #4a4f55;
+  color: #949494;
+  line-height: 1.5 !important;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li .ab-item a {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  text-decoration: underline;
+  line-height: 1.5 !important;
+  color: #949494;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu > li[id^=wp-admin-bar-wbcr-han-notify-panel-group] .ab-item {
+  height: 100%;
+  white-space: normal;
+  padding: 0.5em 1em;
+  border-bottom: 1px solid #fff;
+  color: #fff;
+  line-height: 2;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+#wp-admin-bar-wbcr-han-notify-panel .ab-sub-wrapper ul.ab-submenu li:nth-child(2n) {
+  background: #26292b;
+}
+/*# sourceMappingURL=notifications-panel.css.map */

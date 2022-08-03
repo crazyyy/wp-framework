@@ -1,0 +1,107 @@
+.wbcr_factory_logger_container
+{
+    padding-right: 40px;
+}
+
+.wbcr_factory_logger_page_title
+{
+    text-align: center;
+    padding: 10px 0;
+}
+
+.wbcr-log-viewer
+{
+    width: 100%;
+    min-height: 50vh;
+    max-height: 600px;
+    font-family: "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
+    font-size: 12px;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: auto;
+    -ms-overflow-style: scrollbar;
+    background-color: #ffffff;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #cfcfcf;
+}
+
+.wbcr-log-viewer-loader
+{
+    overflow: hidden;
+}
+
+.wbcr-log-viewer-loader:before
+{
+    content: ' ';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5) url('../img/loader.gif') no-repeat center center;
+    background-size: 64px;
+    width: 82%;
+    height: 600px;
+    left: auto;
+    top: auto;
+    /*right: auto;
+    bottom: auto;*/
+    z-index: 9999;
+
+}
+
+.wbcr-log-row
+{
+    padding: 3px 5px 3px 25px;
+    line-height: 1.5;
+    text-align: justify;
+    text-indent: -20px;
+    /*box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1)*/
+}
+
+.wbcr-log-row:hover
+{
+    background-color: #e9e9e9;
+}
+
+.wbcr_logger_level
+{
+    cursor: pointer;
+}
+
+.wbcr_logger_level_info .wbcr_logger_level,
+.wbcr_logger_level_error .wbcr_logger_level,
+.wbcr_logger_level_warning .wbcr_logger_level,
+.wbcr_logger_level_debug .wbcr_logger_level
+{
+    text-align: center;
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 4px;
+    margin: 0 4px;
+    display: inline-block;
+    width: 70px;
+    text-indent: 0;
+}
+
+.wbcr_logger_level_info .wbcr_logger_level
+{
+    background-color: #52d130;
+}
+
+.wbcr_logger_level_error .wbcr_logger_level
+{
+    background-color: #ff5e5e;
+}
+
+.wbcr_logger_level_warning .wbcr_logger_level
+{
+    background-color: #ef910a;
+}
+
+.wbcr_logger_level_debug .wbcr_logger_level
+{
+    background-color: #8f8d8b;
+}
+
+.wbcr_factory_logger_buttons
+{
+    padding: 10px 0;
+}

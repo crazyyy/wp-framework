@@ -1,0 +1,223 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Webcraftic Disable Admin Notices Individually\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-27 12:50+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.4.2; wp-5.5"
+
+#: disable-admin-notices.php:46
+msgid "Webcraftic disable admin notices"
+msgstr ""
+
+#: admin/boot.php:27
+msgid "Get ultimate plugin free"
+msgstr ""
+
+#: admin/boot.php:82 admin/options.php:66
+#: admin/pages/class-pages-settings.php:72
+msgid "Hide admin notices"
+msgstr ""
+
+#: admin/boot.php:88 admin/options.php:148
+msgid "Enable hidden notices in adminbar"
+msgstr ""
+
+#: admin/class-page-basic.php:41
+msgid "Webcraftic Disable Admin Notices"
+msgstr ""
+
+#: admin/options.php:33
+msgid "Admin notifications, Update nags"
+msgstr ""
+
+#: admin/options.php:33
+msgid ""
+"Do you know the situation, when some plugin offers you to update to premium, "
+"to collect technical data and shows many annoying notices? You are close "
+"these notices every now and again but they newly appears and interfere your "
+"work with WordPress. Even worse, some plugin’s authors delete “close” button "
+"from notices and they shows in your admin panel forever."
+msgstr ""
+
+#: admin/options.php:39
+msgid "Don't hide"
+msgstr ""
+
+#: admin/options.php:40
+msgid ""
+"Do not hide notices and do not show “Hide notification forever” link for "
+"admin."
+msgstr ""
+
+#: admin/options.php:44
+msgid "All notices"
+msgstr ""
+
+#: admin/options.php:45
+msgid "Hide all notices globally."
+msgstr ""
+
+#: admin/options.php:45 admin/options.php:50 admin/options.php:58
+#, php-format
+msgid ""
+"Watch the <a href=\"%s\" target=\"_blank\">video</a> to find out how it "
+"works ."
+msgstr ""
+
+#: admin/options.php:49
+msgid "Only selected"
+msgstr ""
+
+#: admin/options.php:50
+msgid ""
+"Hide selected notices only. You will see the link \"Hide notification "
+"forever\" in each notice. Push it and they will not bother you anymore."
+msgstr ""
+
+#: admin/options.php:57
+msgid "Compact panel"
+msgstr ""
+
+#: admin/options.php:58
+msgid ""
+"Collapse all notifications in one line (panel with notification counters), "
+"to see the notifications, you will need to click this panel."
+msgstr ""
+
+#: admin/options.php:69
+msgid ""
+"Some plugins shows notifications about premium version, data collecting or "
+"promote their services. Even if you push close button (that sometimes are "
+"impossible), notices are shows again in some time. This option allows you to "
+"control notices. Hide them all or each individually. Some plugins shows "
+"notifications about premium version, data collecting or promote their "
+"services. Even if you push close button (that sometimes are impossible), "
+"notices are shows again in some time. This option allows you to control "
+"notices. Hide them all or each individually."
+msgstr ""
+
+#: admin/options.php:92 admin/options.php:94
+msgid "Disable plugins updates nags"
+msgstr ""
+
+#: admin/options.php:103 admin/options.php:105
+msgid "Disable core updates nags"
+msgstr ""
+
+#: admin/options.php:150
+msgid ""
+"By default, the plugin hides all notices, which you specified. If you enable "
+"this option, the plugin will collect all hidden notices and show them into "
+"the top admin toolbar. It will not disturb you but will allow to look "
+"notices at your convenience."
+msgstr ""
+
+#: admin/options.php:235
+msgid "Reset hidden notices for"
+msgstr ""
+
+#: admin/options.php:238
+msgid "Push reset hidden notices if you need to show hidden notices again."
+msgstr ""
+
+#: admin/options.php:249
+msgid "current user"
+msgstr ""
+
+#: admin/options.php:253
+msgid "all users"
+msgstr ""
+
+#: admin/options.php:257
+msgid "Reset notices"
+msgstr ""
+
+#: admin/options.php:261 admin/pages/class-pages-settings.php:116
+msgid "Hidden notices are successfully reset, now you can see them again!"
+msgstr ""
+
+#: admin/ajax/hide-notice.php:27 admin/ajax/restore-notice.php:24
+msgid "Undefinded notice id."
+msgstr ""
+
+#: admin/ajax/hide-notice.php:59 admin/ajax/restore-notice.php:45
+msgid "You don't have enough capability to edit this information."
+msgstr ""
+
+#: admin/pages/class-pages-edit-admin-bar.php:53
+msgid "Hide adminbar items"
+msgstr ""
+
+#: admin/pages/class-pages-edit-admin-bar.php:54
+msgid "You can hide an annoying adminbar menu"
+msgstr ""
+
+#: admin/pages/class-pages-edit-redirects.php:53
+msgid "Block ad redirects"
+msgstr ""
+
+#: admin/pages/class-pages-edit-redirects.php:54
+msgid "Break advertising redirects"
+msgstr ""
+
+#: admin/pages/class-pages-notices.php:51
+msgid "Hidden notices"
+msgstr ""
+
+#: admin/pages/class-pages-notices.php:52
+msgid "Manage hidden notices"
+msgstr ""
+
+#: admin/pages/class-pages-settings.php:73
+msgid "General settings"
+msgstr ""
+
+#: admin/pages/class-pages-settings.php:85
+msgid "Settings"
+msgstr ""
+
+#: includes/classes/class-configurate-notices.php:81
+#, php-format
+msgid "Notifications %s"
+msgstr ""
+
+#: includes/classes/class-configurate-notices.php:92
+msgid "Hidden for you"
+msgstr ""
+
+#: includes/classes/class-configurate-notices.php:289
+msgid "Hide  <b>for me</b>"
+msgstr ""
+
+#: includes/classes/class-configurate-notices.php:293
+msgid "Hide  <b>for all</b>"
+msgstr ""
+
+#. Name of the plugin
+msgid "Disable Admin Notices Individually"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Disable admin notices plugin gives you the option to hide updates warnings "
+"and inline notices in the admin panel."
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://webcraftic.com"
+msgstr ""
+
+#. Author of the plugin
+msgid "Webcraftic <wordpress.webraftic@gmail.com>"
+msgstr ""
