@@ -1,15 +1,18 @@
 <?php
-// TablePress field
+// Advanced Custom Fields: TablePress
+// https://github.com/tylerdigital/acf-tablepress
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Support for table press field
-echo $this->indent . htmlspecialchars("<?php \$".$this->var_name. ' = ' . $this->get_field_method . "( '" . $this->name ."'". $this->location_rendered_param . " );")."\n";
-echo $this->indent . htmlspecialchars("if ( \$".$this->var_name." ) { ")."\n";
-echo $this->indent . htmlspecialchars("    tablepress_print_table( array( ")."\n";
-echo $this->indent . htmlspecialchars("        'id' => \$".$this->var_name.", ")."\n";
-echo $this->indent . htmlspecialchars("        'use_datatables' => true, ")."\n";
-echo $this->indent . htmlspecialchars("        'print_name' => false ")."\n";
-echo $this->indent . htmlspecialchars("     ) );")."\n";
-echo $this->indent . htmlspecialchars("} ?> ")."\n";
+$return_format = isset( $this->settings['return_format'] ) ? $this->settings['return_format'] : '';
+
+if ( 'table_id' == $return_format ) {
+	echo $this->indent . htmlspecialchars("<?php \${$this->var_name} = {$this->get_field_method}( '{$this->name}'{$this->location_rendered_param} ); ?>\n");
+	echo $this->indent . htmlspecialchars("<?php echo do_shortcode( '[table id=\"' . \${$this->var_name} . '\"]' ); ?>\n");
+}
+
+if ( 'rendered_html' == $return_format ) {
+	echo $this->indent . htmlspecialchars("<?php {$this->the_field_method}( '{$this->name}'{$this->location_rendered_param} ); ?>\n");
+}
+

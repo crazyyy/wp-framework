@@ -1,0 +1,46 @@
+/**
+ * ACF Theme Code Pro: License page
+ */
+
+.acftcp-license-page__wrap p.submit {
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-top: 15px;
+}
+
+.acftcp-license-page__wrap .notice {
+	margin-top: 15px;
+}
+
+.acftcp-license-page__key + p.submit {
+	margin-top: 20px;
+}
+
+.acftcp-license-page__label {
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
+.acftcp-license-page__status {
+	font-weight: bold;
+}
+
+.acftcp-license-page__status--active {
+	color: green;
+}
+
+.acftcp-license-page__status--inactive {
+	color: red;
+}
+
+@media (max-width: 782px) {
+
+	.acftcp-license-page__status {
+		margin-top: 0 !important;
+	}
+
+	.acftcp-license-page__key + p.submit {
+		margin-bottom: 15px;
+	}
+
+}

@@ -62,14 +62,23 @@ foreach ( $this->settings['layouts'] as $layout ) {
 	}
 	else {
 		// layout has no sub fields
-		echo $this->indent . htmlspecialchars("			<?php // warning: layout '" . $acftc_layout->name . "' has no sub fields ?>")."\n"; // TODO use Label instead of Name?
+
+		// TODO use Label instead of Name?
+		$i18n_str_no_sub_fields_warning = sprintf(
+			/* translators: %s: layout name */
+			__( 'Warning: Layout %s has no sub fields', 'acf-theme-code' ),
+			"'$acftc_layout->name'" 
+		);
+		echo $this->indent . htmlspecialchars("			<?php // {$i18n_str_no_sub_fields_warning} ?>\n");
 	}
 
 	$layout_count++;
 }
 
+$i18n_str_no_layouts_found = __( 'No layouts found', 'acf-theme-code' );
+
 echo $this->indent . htmlspecialchars("		<?php endif; ?>")."\n";
 echo $this->indent . htmlspecialchars("	<?php endwhile; ?>")."\n";
 echo $this->indent . htmlspecialchars("<?php else: ?>")."\n";
-echo $this->indent . htmlspecialchars("	<?php // no layouts found ?>")."\n";
+echo $this->indent . htmlspecialchars("	<?php // {$i18n_str_no_layouts_found} ?>")."\n";
 echo $this->indent . htmlspecialchars("<?php endif; ?>")."\n";

@@ -4,28 +4,37 @@ if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class ACFTC_Location_Registration extends ACF_Admin_Tool {
 
-	public $name = 'acftc_location_registration';
-	public $title = 'Register ACF Blocks or Options Pages';
+	/**
+	 * This function will initialize the admin tool
+	 */
+	function initialize() {
+		$this->name  = 'acftc_location_registration';
+		$this->title = __( 'Register ACF Blocks or Options Pages', 'acf-theme-code' );
+	}
 
 	/**
 	 * Output the metabox HTML
-	 **/
+	 */
 	function html() {
 
-?><p>The code generated below will need to be included in your functions.php file (or similar).</p>
+?><p><?php sprintf(
+    /* translators: %s: functions.php */
+    __( 'The code generated below will need to be included in your %s file (or similar).', 'acf-theme-code' ),
+    'functions.php'
+); ?></p>
 
 <div class="acftc-tool-inputs">
 
 	<div class="acftc-field acftc-field--top">
 
 		<div class="acftc-label">
-			<label for="acftc-registration-option">Location</label>
+			<label for="acftc-registration-option"><?php _e( 'Location', 'acf-theme-code' ); ?></label>
 		</div>
 
 		<div class="acftc-input">
 			<select id="acftc-registration-option" class="" data-ui="0" data-ajax="0" data-multiple="0" data-placeholder="Select" data-allow_null="0">
-				<option value="acftc-register-block">Block</option>
-				<option value="acftc-register-options">Options</option>
+				<option value="acftc-register-block"><?php _e( 'Block', 'acf-theme-code' ); ?></option>
+				<option value="acftc-register-options"><?php _e( 'Options', 'acf-theme-code' ); ?></option>
 			</select>
 		</div>
 
@@ -40,7 +49,7 @@ class ACFTC_Location_Registration extends ACF_Admin_Tool {
 			<div class="acftc-field">
 
 				<div class="acftc-label">
-					<label>Block Name</label>
+					<label><?php _e( 'Block Name', 'acf-theme-code' ); ?></label>
 				</div>
 
 				<div class="acftc-input">
@@ -54,11 +63,12 @@ function register_<span class="acf-tc-block-name--lower-underscores">example</sp
 
 	if ( function_exists( 'acf_register_block_type' ) ) {
 
-		// Register <span class="acf-tc-block-name--raw">Example</span> block
+		// <?php _e( 'Register', 'acf-theme-code' ); ?> <span class="acf-tc-block-name--raw">Example</span> <?php _e( 'block', 'acf-theme-code' ); ?>
+
 		acf_register_block_type( array(
 			'name' 					=> '<span class="acf-tc-block-name--lower-dashes">example</span>',
 			'title' 				=> __( '<span class="acf-tc-block-name--raw">Example</span>' ),
-			'description' 			=> __( 'A custom <span class="acf-tc-block-name--raw">Example</span> block.' ),
+			'description' 			=> __( '<?php _e( 'A custom', 'acf-theme-code' ); ?> <span class="acf-tc-block-name--raw">Example</span> <?php _e( 'block', 'acf-theme-code' ); ?>.' ),
 			'category' 				=> 'formatting',
 			'icon'					=> 'layout',
 			'keywords'				=> array( '<span class="acf-tc-block-name--lower-keywords">example</span>' ),
@@ -78,11 +88,11 @@ function register_<span class="acf-tc-block-name--lower-underscores">example</sp
 
 			<!-- block registration output -->
 			<div class="acftc-field-meta">
-				<span class="acftc-field-meta__title" data-type="link" data-pseudo-content="Register a Gutenberg Block"></span>
+				<span class="acftc-field-meta__title" data-type="link" data-pseudo-content="<?php _e( 'Register a Gutenberg Block', 'acf-theme-code' ) ?>"></span>
 			</div>
 
 			<div id="acftc-block-code-output" class="acftc-field-code">
-				<a href="#" class="acftc-field__copy acf-js-tooltip" title="Copy to Clipboard"></a>
+				<a href="#" class="acftc-field__copy acf-js-tooltip" title="<?php _e( 'Copy to clipboard', 'acf-theme-code' ) ?>"></a>
 				<pre class="line-numbers language-php"><code id="acftc-block-code-output-code"></code></pre>
 			</div>
 
@@ -98,7 +108,7 @@ function register_<span class="acf-tc-block-name--lower-underscores">example</sp
 			<div class="acftc-field">
 
 				<div class="acftc-label">
-					<label>Page Name</label>
+					<label><?php _e( 'Page Name', 'acf-theme-code' ) ?></label>
 				</div>
 
 				<div class="acftc-input">
@@ -121,11 +131,11 @@ function register_<span class="acf-tc-block-name--lower-underscores">example</sp
 
 			<!-- option registration output -->
 			<div class="acftc-field-meta">
-				<span class="acftc-field-meta__title" data-type="link" data-pseudo-content="Register an Options Page"></span>
+				<span class="acftc-field-meta__title" data-type="link" data-pseudo-content="<?php _e( 'Register an Options Page', 'acf-theme-code' ) ?>"></span>
 			</div>
 
 			<div id="acftc-option-code-output" class="acftc-field-code">
-				<a href="#" class="acftc-field__copy acf-js-tooltip" title="Copy to Clipboard"></a>
+				<a href="#" class="acftc-field__copy acf-js-tooltip" title="<?php _e( 'Copy to clipboard', 'acf-theme-code' ) ?>"></a>
 				<pre class="line-numbers language-php"><code id="acftc-option-code-output-code"></code></pre>
 			</div>
 

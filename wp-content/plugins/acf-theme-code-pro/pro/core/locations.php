@@ -79,7 +79,7 @@ class ACFTC_Pro_Locations extends ACFTC_Locations {
 	</div>
 
 	<div class="acftc-field-code">
-		<a href="#" class="acftc-field__copy acf-js-tooltip" title="Copy to Clipboard"></a>
+		<a href="#" class="acftc-field__copy acf-js-tooltip" title="<?php _e( 'Copy to clipboard', 'acf-theme-code' ) ?>"></a>
 		<pre class="line-numbers"><code class="language-php"><?php echo $location_helper_php; ?></code></pre>
 	</div>
 <?php
@@ -87,6 +87,7 @@ class ACFTC_Pro_Locations extends ACFTC_Locations {
 		return ob_get_clean();
 		
 	}
+
 
 	/**
 	 * Get location helper block title
@@ -108,44 +109,44 @@ class ACFTC_Pro_Locations extends ACFTC_Locations {
 
 		$location_slug = $location_rule['param'];
 
-        switch ( $location_slug ) {
-				
+		switch ( $location_slug ) {
+
 			case 'current_user':
-				return 'User Variables';
+				return __( 'User Variables', 'acf-theme-code' );
 				break;	
 
 			case 'current_user_role':
-				return 'User Variables';
+				return __( 'User Variables', 'acf-theme-code' );
 				break;				
 
 			case 'user_form':
-				return 'User Variables';
+				return __( 'User Variables', 'acf-theme-code' );
 				break;
 
 			case 'user_role':
-				return 'User Variables';
+				return __( 'User Variables', 'acf-theme-code' );
 				break;
 
             case 'attachment':
-                return 'Attachment Variables';
+                return __( 'Attachment Variables', 'acf-theme-code' );
                 break;
                
             case 'taxonomy':
-                return 'Taxonomy Term Variables';
+                return __( 'Taxonomy Term Variables', 'acf-theme-code' );
                 break;
 
             case 'comment':
-                return 'Comment Variables';
+                return __( 'Comment Variables', 'acf-theme-code' );
                 break;
                 
             case 'widget':
-                return 'Widget Variables';
+                return __( 'Widget Variables', 'acf-theme-code' );
                 break;
 
 			case 'block':
-				return 'Block Template';
-                break;                
-                            
+				return __( 'Block Template', 'acf-theme-code' );
+                break;
+
 			default:
 				return false;
 				break;
@@ -183,6 +184,7 @@ class ACFTC_Pro_Locations extends ACFTC_Locations {
 
 	}
 
+	
 	/**
 	 * Get HTML for any notices to be added below field group
 	 * 

@@ -75,6 +75,12 @@ if ( !empty( $cloned_items) ) { // make sure at least one field has been selecte
 
 } else { // no fields selected inside clone field
 
-	echo $this->indent . htmlspecialchars("<?php // warning: clone '" . $this->name . "' has no fields selected ?>")."\n";
+    $i18n_str_warning = sprintf(
+        /* translators: %s: clone field name */
+        __( 'Warning: Clone %s has no fields selected', 'acf-theme-code' ),
+        "'$this->name'"
+    );
+
+	echo $this->indent . htmlspecialchars("<?php // {$i18n_str_warning} ?>\n");
 
 }

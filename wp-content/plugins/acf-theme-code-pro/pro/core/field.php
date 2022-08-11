@@ -106,6 +106,8 @@ class ACFTC_Pro_Field extends ACFTC_Field {
 	 **/
 	protected function get_field_html_body() {
 
+		// TO DO: There is a lot of duplicate code here from extended class field.php (non pro version)
+
 		ob_start();
 
 		if ( file_exists( $this->render_partial ) ) {
@@ -114,8 +116,20 @@ class ACFTC_Pro_Field extends ACFTC_Field {
 
 		} else {
 			
-			echo $this->indent . htmlspecialchars( "<?php // The " . $this->type  . " field type is not supported in this version of the plugin. ?>" ) . "\n";
-			echo $this->indent . htmlspecialchars( "<?php // Contact http://www.hookturn.io to request support for this field type. ?>" ) . "\n";
+			// Field not supported message
+			$error_message_1 = sprintf(
+				/* translators: %s: Field type */
+				__( 'The `%s` field type is not supported in this version of the plugin.', 'acf-theme-code' ),
+				$this->type
+			);
+			$error_message_2 = sprintf(
+				/* translators: %s: Hookturn URL */
+				__( 'Contact %s to request support for this field type.', 'acf-theme-code' ),
+				ACFTC_HOOKTURN_URL
+			);
+
+			echo $this->indent . htmlspecialchars( "<?php // {$error_message_1} ?>\n" );
+			echo $this->indent . htmlspecialchars( "<?php // {$error_message_2} ?>\n" );
 
 		}
 

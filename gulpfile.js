@@ -1,7 +1,7 @@
 'use strict';
 
-/* Set htmlDevelopment to TRUE if work with html, else - FALSE */
-const htmlDevelopment = true;
+/* Set isHtmlDev to TRUE if work with html, else - FALSE */
+const isHtmlDev = true;
 
 /* Set environmentProd to TRUE if build for Production, or FALSE if this is development build*/
 const isProd = process.env.NODE_ENV === 'production';
@@ -34,7 +34,7 @@ const browserSyncArgs = {
   logFileChanges: true
 };
 
-if ( htmlDevelopment ) {
+if ( isHtmlDev ) {
   browserSyncArgs.server = {
     baseDir: config.path.base.dest
   };
@@ -59,7 +59,7 @@ const imagemin = require( 'gulp-imagemin' );
 /* Other Dependencies */
 
 /* Pre-Config Path */
-if ( !htmlDevelopment ) {
+if ( !isHtmlDev ) {
   config.path.base.wp = `./wp-content/themes/${config.theme}/`;
 
   // config.path.base.wp = './html/'; /* only for php files located in html */

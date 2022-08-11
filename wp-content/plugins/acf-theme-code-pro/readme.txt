@@ -1,14 +1,65 @@
 === ACF Theme Code Pro ===
 Contributors: aaronrutley, ben-pearson
 Requires at least: 4.8.0
-Tested up to: 5.4.0
-Stable tag: 2.5.0
+Tested up to: 5.8
+Stable tag: 2.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ACF Theme Code will automatically generate the code needed to implement Advanced Custom Fields in your themes!
 
 == Changelog ==
+
+= 2.5.3 =
+* Add full support for localization (i18n)
+  * Please let us know if you're interested in helping translate ACF Theme Code Pro into your language (https://hookturn.io/contact/)
+* Improve enqueuing of CSS and JS
+* Fix notice that occurs when Location is set to an unregistered block type
+
+= 2.5.2 =
+* Add support for the following third party fields:
+  * ACF Field For Contact Form 7
+  * Advanced Custom Field: Audio/Video Player
+* Improve code rendered for the following third party fields:
+  * Advanced Custom Fields: Gravityforms Add-on (including displaying forms, support for Object and ID return types and Single and Multiple values)
+  * Advanced Custom Fields: Ninjaforms Add-on (including displaying forms, support for Object and ID return types and Single and Multiple values)
+  * TablePress (including support for ID and HTML return types)
+  * Table (including caption support and escaping)
+  * ACF Icon Selector Field (including escaping)
+  * ACF Smart Button (including escaping)
+  * Advanced Custom Fields: RGBA Color Field (including escaping)
+* Update support for the following third party fields:
+  * Advanced Custom Fields: Font Awesome Field
+  * Custom Fields: Nav Menu Field
+  * ACF Code Field
+  * Advanced Custom Fields: SVG Icon
+  * ACF YouTube Picker Field
+  * ACF Address Field
+  * Post Type Select Field for Advanced Custom Fields
+  * Advanced Custom Fields: Number Slider
+  * ACF Color Palette Field
+  * ACF Color Swatches
+* Remove support for the following third party fields that no longer support the latest version of WordPress or ACF:
+  * ACF qTranslate
+  * Advanced Custom Fields: Image Crop
+  * Advanced Custom Fields: Markdown Field
+  * Advanced Custom Fields: Link Picker Field
+  * ACF: Google Font Selector
+  * ACF: Focal Point
+* Ignore `page` field used by Advanced Forms Pro for ACF for multi step forms
+
+= 2.5.1 =
+* Improve support for WordPress 5.6
+* Fix CSS and JS enqueue bugs
+* Fix code formatting bug in "Register ACF Blocks and Options Pages" Tool
+* Add link to Settings page in plugin description on core Plugins page
+* Improve plugin update message on core Plugins page
+* Add instructions to "Download Failed" error message on core Plugins page
+* Updated licensing framework
+* Improve plugin Settings page:
+  * Improve instructions and validation messages
+  * Improve design and responsive styles
+  * Convert license key field from text input to password input to protect customer license keys
 
 = 2.5.0 =
 * Improve support for WordPress 5.4.

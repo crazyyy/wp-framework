@@ -29,6 +29,8 @@ $repeater_field_group = new ACFTC_Group( $args );
 // If repeater has sub fields
 if ( !empty( $repeater_field_group->fields ) ) {
 
+	$i18n_str_no_rows_found = __( 'No rows found', 'acf-theme-code' );
+
 	echo $this->indent . htmlspecialchars("<?php if ( have_rows( '" . $this->name ."'". $this->location_rendered_param . " ) ) : ?>")."\n";
 	echo $this->indent . htmlspecialchars("	<?php while ( have_rows( '" . $this->name ."'". $this->location_rendered_param . " ) ) : the_row(); ?>")."\n";
 
@@ -36,13 +38,18 @@ if ( !empty( $repeater_field_group->fields ) ) {
 
 	echo $this->indent . htmlspecialchars("	<?php endwhile; ?>")."\n";
 	echo $this->indent . htmlspecialchars("<?php else : ?>")."\n";
-	echo $this->indent . htmlspecialchars("	<?php // no rows found ?>")."\n";
+	echo $this->indent . htmlspecialchars("	<?php // {$i18n_str_no_rows_found} ?>")."\n";
 	echo $this->indent . htmlspecialchars("<?php endif; ?>")."\n";
 
 }
 // Repeater has no sub fields
 else {
 
-	echo $this->indent . htmlspecialchars("<?php // warning: repeater field '" . $this->name . "' has no sub fields ?>")."\n";
+	$i18n_str_no_sub_fields_warning = sprintf(
+		/* translators: %s: repeater field name */
+		__( 'Warning: Repeater field %s has no sub fields', 'acf-theme-code' ),
+		"'$this->name'" 
+	);
+	echo $this->indent . htmlspecialchars("<?php // {$i18n_str_no_sub_fields_warning} ?>\n");
 
 }
