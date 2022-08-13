@@ -40,8 +40,12 @@ if ( isHtmlDev ) {
   };
   browserSyncArgs.logPrefix = 'BS-HTML:';
 } else {
-  browserSyncArgs.proxy = config.domain;
-  browserSyncArgs.host = config.domain;
+  browserSyncArgs.https = {
+    key: config.ssl.key,
+    cert: config.ssl.cert
+  };
+  browserSyncArgs.proxy = `https://${config.domain}`;
+  // browserSyncArgs.host = config.domain;
   browserSyncArgs.logPrefix = 'BS-WP:';
 }
 
@@ -81,7 +85,7 @@ if ( isProd ) {
 /* Compile and automatically prefix stylesheets */
 gulp.task( 'styles', () => {
   // For best performance, don't add Sass partials to `gulp.src`
-  const srcPath = config.path.styles.srcfiles,
+  const srcPath = config.path.styles.srcFiles,
     destPath = config.path.styles.dest;
 
   return gulp.src( srcPath, { base: config.path.styles.src } )
@@ -120,29 +124,29 @@ gulp.task( 'styles', () => {
 /* Optimize images */
 // https://github.com/sindresorhus/gulp-imagemin
 gulp.task( 'image:default', () => gulp
-  .src( config.path.images.srcimg )
+  .src( config.path.images.srcImg )
   .pipe( plugin.changed( config.path.images.dest ) )
   .pipe( plugin.bytediff.start() )
   .pipe( imagemin( {
-    interlaced: true,
-    progressive: true,
-    optimizationLevel: 5
-  },
-  [
-    imagemin.gifsicle( { interlaced: true } ),
-    imagemin.mozjpeg( { quality: 75, progressive: true } ),
-    imagemin.optipng( { optimizationLevel: 5 } ),
-    imagemin.svgo( {
-      plugins: [
-        { removeViewBox: true },
-        { cleanupIDs: false }
-      ]
-    } )
-  ] ) )
-  .pipe( plugin.bytediff.stop( function( data ) {
-    const difference = ( data.savings > 0 ) ? ' smaller.' : ' larger.';
+      interlaced: true,
+      progressive: true,
+      optimizationLevel: 5
+    },
+    [
+      imagemin.gifsicle( { interlaced: true } ),
+      imagemin.mozjpeg( { quality: 75, progressive: true } ),
+      imagemin.optipng( { optimizationLevel: 5 } ),
+      imagemin.svgo( {
+        plugins: [
+          { removeViewBox: true },
+          { cleanupIDs: false }
+        ]
+      } )
+    ] ) )
+  .pipe( plugin.bytediff.stop( ( data ) => {
+    const difference = data.savings > 0 ? ' smaller.' : ' larger.';
 
-    return data.fileName + ' is ' + data.percent + '%' + difference;
+    return `${data.fileName} is ${data.percent}%${difference}`;
   } ) )
   .pipe( plugin.size( {
     showFiles: true,
@@ -183,15 +187,13 @@ gulp.task( 'image:spriteSVG', () => gulp
 );
 
 /* Convert images to webp */
-gulp.task( 'image:image2webp', () => {
-  return gulp.src( `${config.path.images.dest}/**/*.+(png|jpg|jpeg)` )
-    .pipe( customErrorPlumber( 'Error Running Webp' ) )
-    .pipe( plugin.changed( config.path.images.dest, {
-      extension: '.webp'
-    } ) )
-    .pipe( plugin.webp() )
-    .pipe( gulp.dest( config.path.images.dest ) );
-} );
+gulp.task( 'image:image2webp', () => gulp.src( `${config.path.images.dest}/**/*.+(png|jpg|jpeg)` )
+  .pipe( customErrorPlumber( 'Error Running Webp' ) )
+  .pipe( plugin.changed( config.path.images.dest, {
+    extension: '.webp'
+  } ) )
+  .pipe( plugin.webp() )
+  .pipe( gulp.dest( config.path.images.dest ) ) );
 
 /* Copy fonts from assets folder to destination */
 gulp.task( 'fonts', () => gulp.src( config.path.fonts.src )
@@ -226,11 +228,11 @@ const jsConcat = lazypipe()
 
 gulp.task( 'scripts', () => gulp.src( config.path.scripts.src )
   .pipe( customErrorPlumber( 'Error Running Scripts' ) )
-  .pipe( plugin.newer( config.path.scripts.dest ) )
+  .pipe( plugin.changed( config.path.scripts.dest ) )
   .pipe( customErrorPlumber( 'Error Compiling Scripts' ) )
   .pipe( plugin.if( isDev, plugin.sourcemaps.init() ) )
   .pipe( plugin.babel( {
-    presets: [ 'env' ]
+    presets: [ '@babel/preset-env' ]
   } ) )
   .pipe( plugin.if( [ 'scripts.js' /*,'scripts2.js'*/], jsConcat() ) )
   .pipe( plugin.if( '*.js', plugin.uglify() ) )
@@ -276,11 +278,11 @@ gulp.task( 'build', gulp.parallel(
 gulp.task( 'watch', () => {
   browserSync.init( browserSyncArgs );
 
-  gulp.watch( config.path.base.desthtml ).on( 'change', browserSync.reload );
+  gulp.watch( config.path.base.destHtml ).on( 'change', browserSync.reload );
 
-  gulp.watch( config.path.styles.srcfiles, gulp.series( 'styles' ) );
+  gulp.watch( config.path.styles.srcFiles, gulp.series( 'styles' ) );
 
-  gulp.watch( config.path.images.srcimg, gulp.series( 'task:images' ) );
+  gulp.watch( config.path.images.srcImg, gulp.series( 'task:images' ) );
 
   gulp.watch( config.path.fonts.src, gulp.series( 'fonts' ) );
 
@@ -322,7 +324,7 @@ function ChangeBasePath ( config ) {
   config.path.scripts.dest = config.path.scripts.dest.replace(
     config.path.base.dest, config.path.base.wp
   );
-  config.path.base.desthtml = config.path.base.desthtml.replace(
+  config.path.base.destHtml = config.path.base.destHtml.replace(
     config.path.base.dest, config.path.base.wp
   );
 }
@@ -351,6 +353,8 @@ function ChangeBasePath ( config ) {
 // https://github.com/adametry/gulp-eslint
 // https://www.npmjs.com/package/chalk
 // https://www.npmjs.com/search?q=gulp%20webfont
+
+// gulp-jshint https://github.com/generaxion/axio-starter/blob/master/package.json
 
 // .pipe(plugins.notify("Hello Gulp!"))
 // .pipe(plugins.notify("Found file: <%= file.relative %>!"))

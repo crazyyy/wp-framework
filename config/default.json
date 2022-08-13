@@ -1,15 +1,19 @@
 {
   "domain": "wp-framework.local",
   "theme": "wp-framework",
+  "ssl": {
+    "key": "d:\\laragon\\etc\\ssl\\laragon.key",
+    "cert": "d:\\laragon\\etc\\ssl\\laragon.crt"
+  },
   "path": {
     "base": {
       "src":"assets/",
       "dest": "./html/",
-      "desthtml": "./html/**/*.{html,htm,php}"
+      "destHtml": "./html/**/*.{html,htm,php}"
     },
     "images": {
       "src": "assets/img/",
-      "srcimg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
+      "srcImg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
       "srcImgContent": "wp-content/uploads/",
       "dest": "./html/img/"
     },
@@ -19,9 +23,9 @@
     },
     "styles": {
       "src": "assets/scss/",
-      "srcfiles": "assets/scss/**/*.scss",
+      "srcFiles": "assets/scss/**/*.scss",
       "css": "assets/css/",
-      "cssfiles": "assets/css/**/*.css",
+      "cssFiles": "assets/css/**/*.css",
       "dest": "./html/css/"
     },
     "scripts": {
