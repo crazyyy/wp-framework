@@ -128,21 +128,23 @@ gulp.task( 'image:default', () => gulp
   .pipe( plugin.changed( config.path.images.dest ) )
   .pipe( plugin.bytediff.start() )
   .pipe( imagemin( {
-      interlaced: true,
-      progressive: true,
-      optimizationLevel: 5
-    },
-    [
-      imagemin.gifsicle( { interlaced: true } ),
-      imagemin.mozjpeg( { quality: 75, progressive: true } ),
-      imagemin.optipng( { optimizationLevel: 5 } ),
-      imagemin.svgo( {
-        plugins: [
-          { removeViewBox: true },
-          { cleanupIDs: false }
-        ]
-      } )
-    ] ) )
+    interlaced: true,
+    progressive: true,
+    optimizationLevel: 5
+  },
+  [
+    imagemin.gifsicle( { interlaced: true } ),
+    imagemin.mozjpeg( { quality: 75, progressive: true } ),
+    imagemin.optipng( { optimizationLevel: 5 } ),
+    imagemin.svgo( {
+      plugins: [
+        { removeUnknownsAndDefaults: false },
+        { removeViewBox: true },
+        { cleanupIDs: false },
+        { removeDimensions: true }
+      ]
+    } )
+  ] ) )
   .pipe( plugin.bytediff.stop( ( data ) => {
     const difference = data.savings > 0 ? ' smaller.' : ' larger.';
 
@@ -353,6 +355,9 @@ function ChangeBasePath ( config ) {
 // https://github.com/adametry/gulp-eslint
 // https://www.npmjs.com/package/chalk
 // https://www.npmjs.com/search?q=gulp%20webfont
+// https://github.com/generaxion/axio-starter
+// https://github.com/generaxion/axio-starter/blob/master/assets/manifest.js
+// https://www.npmjs.com/package/gulp-babel
 
 // gulp-jshint https://github.com/generaxion/axio-starter/blob/master/package.json
 
