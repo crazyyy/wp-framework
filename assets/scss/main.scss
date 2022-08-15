@@ -9,8 +9,9 @@
 @use "import/mixin";
 @use "import/helpers";
 
-//@import 'grid/bootstrap-grid';
-@use "import/grid";
+//@import 'grid/grid-bootstrap';
+//@use "import/grid";
+@use "grid-reflex/reflex";
 
 @use "import/wordpress";
 
