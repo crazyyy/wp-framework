@@ -73,11 +73,9 @@ if ( !isHtmlDev ) {
 
 /* Start Build */
 if ( isProd ) {
-  console.log( '\x1b[32m', process.env.NODE_ENV );
   console.log( '\x1b[32m', '-------------  PRODUCTION -------------' );
   console.log( '\x1b[36m', '--------- Sourcemaps DISABLED ---------' );
 } else if ( isDev ) {
-  console.log( '\x1b[31m', process.env.NODE_ENV );
   console.log( '\x1b[31m', '------------- DEVELOPMENT -------------' );
   console.log( '\x1b[31m', '--------- Sourcemaps ENABLED ---------' );
 }
