@@ -1,3 +1,8 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "sass:meta";
 /*
   linear gradient
   http://sassmeister.com/gist/b58f6e2cc3160007c880
@@ -12,21 +17,21 @@
 @function convert-angle($value, $unit) {
   $convertable-units: deg grad turn rad;
   $conversion-factors: 1 (10grad/9deg) (1turn/360deg) (3.1415926rad/180deg);
-  @if index($convertable-units, unit($value)) and index($convertable-units, $unit) {
+  @if list.index($convertable-units, math.unit($value)) and list.index($convertable-units, $unit) {
     @return $value
-             / nth($conversion-factors, index($convertable-units, unit($value)))
-             * nth($conversion-factors, index($convertable-units, $unit));
+             / list.nth($conversion-factors, list.index($convertable-units, math.unit($value)))
+             * list.nth($conversion-factors, list.index($convertable-units, $unit));
   }
 
-  @warn "Cannot convert `#{unit($value)}` to `#{$unit}`.";
+  @warn "Cannot convert `#{math.unit($value)}` to `#{$unit}`.";
 }
 
 /// Test if `$value` is an angle
 /// @param {*} $value - Value to test
 /// @return {Bool}
 @function is-direction($value) {
-  $is-direction: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
-  $is-angle: type-of($value) == 'number' and index('deg' 'grad' 'turn' 'rad', unit($value));
+  $is-direction: list.index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+  $is-angle: meta.type-of($value) == 'number' and list.index('deg' 'grad' 'turn' 'rad', math.unit($value));
 
   @return $is-direction or $is-angle;
 }
@@ -55,8 +60,8 @@
     to top left     : bottom right
   );
 
-  @if map-has-key($conversion-map, $value) {
-    @return map-get($conversion-map, $value);
+  @if map.has-key($conversion-map, $value) {
+    @return map.get($conversion-map, $value);
   }
 
   @return 90deg - convert-angle($value, 'deg');
@@ -74,7 +79,7 @@
     $direction: 180deg;
   }
 
-  background: nth(nth($color-stops, 1), 1);
+  background: list.nth(list.nth($color-stops, 1), 1);
   background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
   background: linear-gradient($direction, $color-stops);
 }
@@ -84,10 +89,10 @@
 // if the parent is another value say 24px write em(12, 24)
 //  https://github.com/thoughtbot/bourbon/blob/master/app/assets/stylesheets/functions/_px-to-em.scss
 @function em($pxval, $base: $em-base) {
-  @if not unitless($pxval) {
+  @if not math.is-unitless($pxval) {
     $pxval: strip-units($pxval);
   }
-  @if not unitless($base) {
+  @if not math.is-unitless($base) {
     $base: strip-units($base);
   }
   @return ($pxval / $base) * 1em;
@@ -104,16 +109,16 @@
  *
 */
 @mixin triangle($size, $color, $direction) {
-  $width: nth($size, 1);
-  $height: nth($size, length($size));
-  $foreground-color: nth($color, 1);
-  $background-color: if(length($color) == 2, nth($color, 2), transparent);
+  $width: list.nth($size, 1);
+  $height: list.nth($size, list.length($size));
+  $foreground-color: list.nth($color, 1);
+  $background-color: if(list.length($color) == 2, list.nth($color, 2), transparent);
   height: 0;
   width: 0;
 
   @if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
     $width: $width / 2;
-    $height: if(length($size) > 1, $height, $height/2);
+    $height: if(list.length($size) > 1, $height, $height/2);
 
     @if $direction == up {
       border-bottom: $height solid $foreground-color;
@@ -195,10 +200,10 @@
 */
 @mixin text3d($color) {
   color: $color;
-  text-shadow: 1px 1px 0 darken($color, 5%),
-  2px 2px 0 darken($color, 10%),
-  3px 3px 0 darken($color, 15%),
-  4px 4px 0 darken($color, 20%),
+  text-shadow: 1px 1px 0 color.adjust($color, $lightness: -5%),
+  2px 2px 0 color.adjust($color, $lightness: -10%),
+  3px 3px 0 color.adjust($color, $lightness: -15%),
+  4px 4px 0 color.adjust($color, $lightness: -20%),
   4px 4px 2px #000;
 }
 

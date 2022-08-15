@@ -1,18 +1,19 @@
 @use "sass:math";
+@use "variables";
 
 fieldset {
-  margin: 0 0 $small-spacing;
-  padding: $base-spacing;
+  margin: 0 0 variables.$small-spacing;
+  padding: variables.$base-spacing;
 
-  border: $base-border;
-  background-color: $secondary-background-color;
+  border: variables.$base-border;
+  background-color: variables.$secondary-background-color;
 }
 
 input,
 label,
 select {
-  font-family: $font-family-base;
-  font-size: $base-font-size;
+  font-family: variables.$font-family-base;
+  font-size: variables.$base-font-size;
 
   display: block;
 }
@@ -20,7 +21,7 @@ select {
 label {
   font-weight: 600;
 
-  margin-bottom: math.div($small-spacing, 2);
+  margin-bottom: math.div(variables.$small-spacing, 2);
   &.required::after {
     content: '*';
   }
@@ -45,35 +46,35 @@ input[type='url'],
 input[type='week'],
 textarea,
 select[multiple=multiple] {
-  font-family: $font-family-base;
-  font-size: $base-font-size;
+  font-family: variables.$font-family-base;
+  font-size: variables.$base-font-size;
 
   box-sizing: border-box;
   width: 100%;
-  margin-bottom: $small-spacing;
-  padding: math.div($base-spacing, 3);
+  margin-bottom: variables.$small-spacing;
+  padding: math.div(variables.$base-spacing, 3);
 
-  transition: $base-transition;
+  transition: variables.$base-transition;
 
-  border: $base-border;
-  border-radius: $base-border-radius;
+  border: variables.$base-border;
+  border-radius: variables.$base-border-radius;
   outline: none;
-  background-color: $base-background-color;
-  box-shadow: $form-box-shadow;
+  background-color: variables.$base-background-color;
+  box-shadow: variables.$form-box-shadow;
   &:hover {
-    border-color: shade($base-border-color, 20%);
+    border-color: shade(variables.$base-border-color, 20%);
   }
   &:focus {
-    border-color: $action-color;
+    border-color: variables.$action-color;
     outline: none;
-    box-shadow: $form-box-shadow-focus;
+    box-shadow: variables.$form-box-shadow-focus;
   }
   &:disabled {
     cursor: not-allowed;
 
-    background-color: shade($base-background-color, 5%);
+    background-color: shade(variables.$base-background-color, 5%);
     &:hover {
-      border: $base-border;
+      border: variables.$base-border;
     }
   }
 }
@@ -90,16 +91,16 @@ input[type='checkbox'],
 input[type='radio'] {
   display: inline;
 
-  margin-right:  math.div($small-spacing, 2);
+  margin-right:  math.div(variables.$small-spacing, 2);
 }
 
 input[type='file'] {
   width: 100%;
-  margin-bottom: $small-spacing;
+  margin-bottom: variables.$small-spacing;
 }
 
 select {
   width: auto;
   max-width: 100%;
-  margin-bottom: $base-spacing;
+  margin-bottom: variables.$base-spacing;
 }

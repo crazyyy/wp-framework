@@ -1,3 +1,25 @@
+.clearfix {
+  *zoom: 1;
+
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    display: block;
+    clear: both;
+    height: 1px;
+    margin-top: -1px;
+    visibility: hidden;
+  }
+}
+
+.clear {
+  clear: both;
+}
+
 /* display block, simple used for ::after, ::before, sprites */
 .dblock {
   display: block;

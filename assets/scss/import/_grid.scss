@@ -1,5 +1,7 @@
 // grid
 // Learn more and see code samples at: http://simplegrid.io
+@use "sass:math";
+
 $grid-width: 96%;
 $grid-gutter: 4%;
 $grid-breakpoint-small: 33.75em; // 540px
@@ -53,31 +55,31 @@ $grid-breakpoint-large: 60em; // 960px
   width: $grid-width;
 }
 
-.col-1-sm { width:($grid-width / 12) - ($grid-gutter * 11 / 12); }
-.col-2-sm { width: ($grid-width / 6) - ($grid-gutter * 10 / 12); }
-.col-3-sm { width: ($grid-width / 4) - ($grid-gutter * 9 / 12); }
-.col-4-sm { width: ($grid-width / 3) - ($grid-gutter * 8 / 12); }
-.col-5-sm { width: ($grid-width / (12 / 5)) - ($grid-gutter * 7 / 12); }
-.col-6-sm { width: ($grid-width / 2) - ($grid-gutter * 6 / 12); }
-.col-7-sm { width: ($grid-width / (12 / 7)) - ($grid-gutter * 5 / 12); }
-.col-8-sm { width: ($grid-width / (12 / 8)) - ($grid-gutter * 4 / 12); }
-.col-9-sm { width: ($grid-width / (12 / 9)) - ($grid-gutter * 3 / 12); }
-.col-10-sm { width: ($grid-width / (12 / 10)) - ($grid-gutter * 2 / 12); }
-.col-11-sm { width: ($grid-width / (12 / 11)) - ($grid-gutter * 1 / 12); }
+.col-1-sm { width: math.div($grid-width, 12) - ($grid-gutter * math.div(11, 12)); }
+.col-2-sm { width: math.div($grid-width, 6) - ($grid-gutter * math.div(10, 12)); }
+.col-3-sm { width: math.div($grid-width, 4) - ($grid-gutter * math.div(9, 12)); }
+.col-4-sm { width: math.div($grid-width, 3) - ($grid-gutter * math.div(8, 12)); }
+.col-5-sm { width: math.div($grid-width, math.div(12, 5)) - ($grid-gutter * math.div(7, 12)); }
+.col-6-sm { width: math.div($grid-width, 2) - ($grid-gutter * math.div(6, 12)); }
+.col-7-sm { width: math.div($grid-width, math.div(12, 7)) - ($grid-gutter * math.div(5, 12)); }
+.col-8-sm { width: math.div($grid-width, math.div(12, 8)) - ($grid-gutter * math.div(4, 12)); }
+.col-9-sm { width: math.div($grid-width, math.div(12, 9)) - ($grid-gutter * math.div(3, 12)); }
+.col-10-sm { width: math.div($grid-width, math.div(12, 10)) - ($grid-gutter * math.div(2, 12)); }
+.col-11-sm { width: math.div($grid-width, math.div(12, 11)) - ($grid-gutter * math.div(1, 12)); }
 .col-12-sm { width: $grid-width; }
 
 @media only screen and (min-width: $grid-breakpoint-med) {
-  .col-1 { width:($grid-width / 12) - ($grid-gutter * 11 / 12); }
-  .col-2 { width: ($grid-width / 6) - ($grid-gutter * 10 / 12); }
-  .col-3 { width: ($grid-width / 4) - ($grid-gutter * 9 / 12); }
-  .col-4 { width: ($grid-width / 3) - ($grid-gutter * 8 / 12); }
-  .col-5 { width: ($grid-width / (12 / 5)) - ($grid-gutter * 7 / 12); }
-  .col-6 { width: ($grid-width / 2) - ($grid-gutter * 6 / 12); }
-  .col-7 { width: ($grid-width / (12 / 7)) - ($grid-gutter * 5 / 12); }
-  .col-8 { width: ($grid-width / (12 / 8)) - ($grid-gutter * 4 / 12); }
-  .col-9 { width: ($grid-width / (12 / 9)) - ($grid-gutter * 3 / 12); }
-  .col-10 { width: ($grid-width / (12 / 10)) - ($grid-gutter * 2 / 12); }
-  .col-11 { width: ($grid-width / (12 / 11)) - ($grid-gutter * 1 / 12); }
+  .col-1 { width: (math.div($grid-width, 12)) - ($grid-gutter * math.div(11, 12)); }
+  .col-2 { width: (math.div($grid-width, 6)) - ($grid-gutter * math.div(10, 12)); }
+  .col-3 { width: (math.div($grid-width, 4)) - ($grid-gutter * math.div(9, 12)); }
+  .col-4 { width: (math.div($grid-width, 3)) - ($grid-gutter * math.div(8, 12)); }
+  .col-5 { width: (math.div($grid-width, math.div(12, 5))) - ($grid-gutter * math.div(7, 12)); }
+  .col-6 { width: (math.div($grid-width, 2)) - ($grid-gutter * math.div(6, 12)); }
+  .col-7 { width: (math.div($grid-width, math.div(12, 7))) - ($grid-gutter * math.div(5, 12)); }
+  .col-8 { width: (math.div($grid-width, math.div(12, 8))) - ($grid-gutter * math.div(4, 12)); }
+  .col-9 { width: (math.div($grid-width, math.div(12, 9))) - ($grid-gutter * math.div(3, 12)); }
+  .col-10 { width: (math.div($grid-width, math.div(12, 10))) - ($grid-gutter * math.div(2, 12)); }
+  .col-11 { width: (math.div($grid-width, math.div(12, 11))) - ($grid-gutter * math.div(1, 12)); }
   .col-12 { width: $grid-width; }
 
   .hidden-sm {

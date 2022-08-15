@@ -1,31 +1,37 @@
+@use "variables";
+@use "helpers";
+
 .alignnone {
-  margin: $small-spacing;
+  margin: variables.$small-spacing;
 }
+
 .aligncenter,
 div.aligncenter {
   display: block;
 
-  margin: $small-spacing auto;
+  margin: variables.$small-spacing auto;
 }
+
 .alignright {
   float: right;
 
-  margin: $small-spacing 0 $base-spacing $base-spacing;
+  margin: variables.$small-spacing 0 variables.$base-spacing variables.$base-spacing;
 }
+
 .alignleft {
   float: left;
 
-  margin: $small-spacing $base-spacing $base-spacing 0;
+  margin: variables.$small-spacing variables.$base-spacing variables.$base-spacing 0;
 }
 
 .wp-caption {
   max-width: 96%;
-  padding: $small-spacing $small-spacing $small-spacing;
+  padding: variables.$small-spacing variables.$small-spacing variables.$small-spacing;
 
   text-align: center;
 
-  border: $base-border;
-  background-color: $secondary-background-color;
+  border: variables.$base-border;
+  background-color: variables.$secondary-background-color;
   img {
     width: auto;
     max-width: 98.5%;
@@ -37,18 +43,18 @@ div.aligncenter {
   }
   .wp-caption-text {
     font-size: 80%;
-    line-height: $base-line-height;
+    line-height: variables.$base-line-height;
 
     margin: 0;
-    padding: 0 $small-spacing $small-spacing;
+    padding: 0 variables.$small-spacing variables.$small-spacing;
   }
 }
 .gallery-caption {
   font-size: 60%;
-  line-height: $base-line-height;
+  line-height: variables.$base-line-height;
 
   margin: 0;
-  padding: 0 $small-spacing $small-spacing;
+  padding: 0 variables.$small-spacing variables.$small-spacing;
 }
 
 
@@ -58,16 +64,16 @@ div.aligncenter {
 .comment-respond,
 .entry-comments,
 .entry-pings {
-  margin: 0 0 $base-spacing;
+  margin: 0 0 variables.$base-spacing;
 }
 
 .entry-comments {
-  padding: $base-spacing;
+  padding: variables.$base-spacing;
 }
 
 .comment-respond,
 .entry-pings {
-  padding: $base-spacing $base-spacing $base-spacing;
+  padding: variables.$base-spacing variables.$base-spacing variables.$base-spacing;
 }
 
 .comment-content {
@@ -89,7 +95,7 @@ div.aligncenter {
   label {
     display: block;
 
-    margin-right: $base-spacing;
+    margin-right: variables.$base-spacing;
   }
 }
 
@@ -102,10 +108,10 @@ div.aligncenter {
 
 .comment-list {
   li {
-    margin-top: $base-spacing * 1.5;
-    padding: $base-spacing * 2;
+    margin-top: variables.$base-spacing * 1.5;
+    padding: variables.$base-spacing * 2;
     li {
-      margin-right: -$base-spacing * 1.5;
+      margin-right: - variables.$base-spacing * 1.5;
     }
   }
 }
@@ -113,9 +119,9 @@ div.aligncenter {
 .comment {
   border: 2px solid #fff;
   border-right: none;
-  background-color: $secondary-background-color;
+  background-color: variables.$secondary-background-color;
   .avatar {
-    margin: 0 $base-spacing $base-spacing * 1.5 0;
+    margin: 0 variables.$base-spacing variables.$base-spacing * 1.5 0;
   }
 }
 
@@ -128,7 +134,7 @@ div.aligncenter {
 .form-allowed-tags {
   font-size: 80%;
 
-  padding: $base-spacing * 1.5;
+  padding: variables.$base-spacing * 1.5;
 
-  background-color: $secondary-background-color;
+  background-color: variables.$secondary-background-color;
 }
