@@ -1,0 +1,136 @@
+/* display block, simple used for ::after, ::before, sprites */
+.dblock {
+  display: block;
+  content: '';
+}
+
+/*
+  Perfectly Align to Center
+  http://inspirationalpixels.com/articles/10-css-hacks-and-tips
+  By using transform:translate(); and position:absolute;, you can perfectly position something in the center of its parent.
+*/
+.align-center-parent {
+  position:relative;
+}
+
+/* I'm using -webkit- otherwise this won't work on Safari based browsers */
+.align-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+/* Aspect ratio */
+/* https://justmarkup.com/log/2018/03/collection-of-css-snippets/ */
+.video-wrapper {
+  position: relative;
+
+  height: 0;
+  padding-top: 25px;
+  padding-bottom: 56.25%;
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/*
+  Justify Grid — новое слово в разметке
+  http://habrahabr.ru/post/182146/
+*/
+.justify-child {
+  font-size: 0 !important;
+
+  text-align: justify !important;
+  text-justify: distribute-all-lines;
+
+  &:after {
+    display: inline-block;
+
+    width: 100%;
+
+    content: '';
+  }
+  & > * {
+    font-size: medium;
+
+    display: inline-block;
+
+    margin: 0;
+
+    text-align: left;
+    vertical-align: top;
+  }
+}
+
+/*
+ * Hide only visually, but have it available for screen readers:
+ * https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+ *
+ * 1. For long content, line feeds are not interpreted as spaces and small width
+ *    causes content to wrap 1 word per line:
+ *    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+ */
+.visually-hidden {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/*
+ * Extends the .visually-hidden class to allow the element
+ * to be focusable when navigated to via the keyboard:
+ * https://www.drupal.org/node/897638
+ */
+.visually-hidden.focusable:active,
+.visually-hidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  white-space: inherit;
+  width: auto;
+}
+
+/*
+ * Hide visually and from screen readers, but maintain layout
+ */
+.invisible {
+  visibility: hidden;
+}
+
+// utility
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.justify {
+  text-align: justify;
+}
+
+.hidden-sm {
+  display: none;
+}

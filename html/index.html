@@ -13,10 +13,12 @@
   <link href="//cdnjs.cloudflare.com" rel="dns-prefetch">
 
   <!-- icons -->
-  <link href="favicon.ico" rel="shortcut icon">
+  <link rel="icon" href="/img/favicon/favicon.ico" sizes="any" rel="shortcut icon">
+  <link rel="icon" href="/img/favicon/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/favicon/icon.png">
 
   <!-- css + javascript -->
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="css/main.css" media="all">
 
   <!--[if lt IE 9]>
@@ -24,7 +26,8 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+  <meta name="theme-color" content="#fafafa">
 
 </head>
 <body>
@@ -34,11 +37,11 @@
     <div class="container">
       <div class="row">
 
-        <div class="header--logo col-xl-2 col-lg-2 col-md-2 col-sm-2">
+        <div class="header--logo col-2">
           <img src="img/logo.png" alt="" title="">
         </div><!-- /header--logo -->
 
-        <nav class="header--nav col-xl-10 col-lg-10 col-md-10 col-sm-10" role="navigation">
+        <nav class="header--nav col-10" role="navigation">
           <ul class="headnav">
             <li><a href="#">menu</a></li>
             <li><a href="#">menu</a></li>
@@ -56,7 +59,7 @@
     <div class="container">
       <div class="row">
 
-        <article class="col-md-8">
+        <article class="col-8">
           <h1 class="page-title">Пример контента (рыба)</h1>
           <p>The purpose of this HTML is to help determine what default settings are with Bitters and to make sure that all possible HTML Elements are included in this HTML so as to not miss any possible Elements when designing a site.</p>
 
@@ -133,7 +136,7 @@
                   </optgroup>
               </select></p>
 
-              <p><label for="radio_buttons">Radio Buttons:</label>
+              <p><label>Radio Buttons:</label>
                 <label>
                   <input type="radio" class="radio" name="radio_button" value="radio_1"> Radio 1
                 </label>
@@ -146,7 +149,7 @@
               </p>
 
               <p>
-                <label for="checkboxes">Checkboxes:</label>
+                <label>Checkboxes:</label>
                 <label>
                   <input type="checkbox" class="checkbox" name="checkboxes" value="check_1"> Checkbox 1
                 </label>
@@ -159,11 +162,11 @@
               </p>
 
               <p><label for="password">Password:</label>
-                <input type="password" class="password" name="password">
+                <input id="password" type="password" class="password" name="password">
               </p>
 
               <p><label for="file">File Input:</label>
-                <input type="file" class="file" name="file">
+                <input id="file" type="file" class="file" name="file">
               </p>
 
 
@@ -193,7 +196,7 @@
           </table>
         </article>
 
-        <aside class="sidebar col-md-4" role="complementary">
+        <aside class="sidebar col-4" role="complementary">
           <div class="widget">
             <h6>Пример виджета</h6>
             <ul>
@@ -222,7 +225,8 @@
   </div><!-- /.container -->
 </footer><!-- /footer -->
 
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript" src="js/lib/modernizr.js"></script>
   <script type="text/javascript" src="js/scripts.js"></script>
 
 </body>

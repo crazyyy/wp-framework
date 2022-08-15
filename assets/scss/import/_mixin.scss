@@ -1,74 +1,3 @@
-/* display block, simple used for ::after, ::before, sprites */
-.dblock {
-  display: block;
-  content: '';
-}
-/*
-  Perfectly Align to Center
-  http://inspirationalpixels.com/articles/10-css-hacks-and-tips
-  By using transform:translate(); and position:absolute;, you can perfectly position something in the center of its parent.
-*/
-.align-center-parent {
-  position:relative;
-}
-
-/* I'm using -webkit- otherwise this won't work on Safari based browsers */
-.align-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-}
-
-/* Aspect ratio */
-/* https://justmarkup.com/log/2018/03/collection-of-css-snippets/ */
-.video-wrapper {
-  position: relative;
-
-  height: 0;
-  padding-top: 25px;
-  padding-bottom: 56.25%; /* 16:9 */
-}
-.video-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-}
-
-/*
-  Justify Grid — новое слово в разметке
-  http://habrahabr.ru/post/182146/
-*/
-
-.justify-child {
-  font-size: 0 !important;
-
-  text-align: justify !important;
-  text-justify: distribute-all-lines;
-
-  &:after {
-    display: inline-block;
-
-    width: 100%;
-
-    content: '';
-  }
-  & > * {
-    font-size: medium;
-
-    display: inline-block;
-
-    margin: 0;
-
-    text-align: left;
-    vertical-align: top;
-  }
-}
-
 /*
   linear gradient
   http://sassmeister.com/gist/b58f6e2cc3160007c880
@@ -154,7 +83,6 @@
 // eg. for a relational value of 12px write em(12) when the parent is 16px
 // if the parent is another value say 24px write em(12, 24)
 //  https://github.com/thoughtbot/bourbon/blob/master/app/assets/stylesheets/functions/_px-to-em.scss
-
 @function em($pxval, $base: $em-base) {
   @if not unitless($pxval) {
     $pxval: strip-units($pxval);
@@ -259,12 +187,12 @@
        url($font-url + '/' + $font-name + '.svg#' + $font-name) format('svg');
   }
 }
+
 /*
 * 3d text
 * @include text3d(#0982c1);
 * http://forwebdev.ru/css/sass-vs-less-vs-stylus/
 */
-
 @mixin text3d($color) {
   color: $color;
   text-shadow: 1px 1px 0 darken($color, 5%),
@@ -273,6 +201,7 @@
   4px 4px 0 darken($color, 20%),
   4px 4px 2px #000;
 }
+
 /*
 * placeholder mixin
 * https: //stackoverflow.com/questions/17181849/placeholder-mixin-scss-css
