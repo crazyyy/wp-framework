@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // --------------------------------------------------
 // reflex mixins
 // --------------------------------------------------
@@ -13,9 +15,9 @@
 @mixin calc-reflex-columns($index, $class, $type) {
     @if $type == width and $index > 0 {
         .#{$reflex-prefix}#{$class}#{$index} {
-            width: percentage(($index / $reflex-columns));
+            width: percentage(math.div($index, $reflex-columns));
             @if $legacy-support == true {
-                *width: percentage(($index / $reflex-columns)) - .1; // ie7 css hack
+                *width: percentage(math.div($index, $reflex-columns)) - .1; // ie7 css hack
             }
         }
     }
@@ -83,7 +85,6 @@
 
 @mixin order($order: 0) {
     -ms-flex-order: $order;
-    -webkit-order: $order;
     order: $order;
 }
 
@@ -105,14 +106,14 @@
 // offset class generation mixins
 // --------------------------------------------------
 @mixin offset($index: 0) {
-    $offset: ($index / $reflex-columns);
+    $offset: math.div($index, $reflex-columns);
     // convert to percentage only if not zero
     @if $offset != 0 {
         $offset: percentage($offset);
     }
     margin-left: $offset;
     @if $legacy-support == true {
-        *margin-left: percentage(($index / $reflex-columns)) - .1; // ie7 css hack
+        *margin-left: percentage(math.div($index, $reflex-columns)) - .1; // ie7 css hack
     }
 }
 
@@ -146,7 +147,6 @@
 
 @mixin display-flex() {
     display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
 }
 
@@ -161,44 +161,35 @@
         -ms-flex: $grow $shrink $basis;
     }
 
-    -webkit-flex: $grow $shrink $basis;
     flex: $grow $shrink $basis;
 }
 
 @mixin flex-grow($grow:1) {
     -ms-flex-positive: $grow;
-    -webkit-flex-grow: $grow;
     flex-grow: $grow;
 }
 
 @mixin flex-shrink($shrink:1) {
     -ms-flex-negative: $shrink;
-    -webkit-flex-shrink: $shrink;
     flex-shrink: $shrink;
 }
 
 @mixin flex-basis($basis:auto) {
     -ms-flex-preferred-size: $basis;
-    -webkit-flex-basis: $basis;
     flex-basis: $basis;
 }
 
 @mixin flex-flow($direction: row, $wrap: nowrap) {
     -ms-flex-wrap: $wrap;
     -ms-flex-direction: $direction;
-    -webkit-flex-flow: $direction $wrap;
     flex-flow: $direction $wrap;
 }
 
 @mixin flex-wrap($wrap: wrap) {
-    -ms-flex-wrap: $wrap;
-    -webkit-flex-wrap: $wrap;
     flex-wrap: $wrap;
 }
 
 @mixin flex-direction($direction: row) {
-    -ms-flex-direction: $direction;
-    -webkit-flex-direction: $direction;
     flex-direction: $direction;
 }
 
@@ -208,19 +199,16 @@
 
 @mixin align-items($align: stretch) {
     @include ms-align-items($align);
-    -webkit-align-items: $align;
     align-items: $align;
 }
 
 @mixin align-self($align: stretch) {
     @include ms-align-self($align);
-    -webkit-align-self: $align;
     align-self: $align;
 }
 
 @mixin align-content($align: stretch) {
     @include ms-align-content($align);
-    -webkit-align-content: $align;
     align-content: $align;
 }
 
@@ -321,7 +309,7 @@
                     display: none;
                 }
             }
-        
+
 
             .#{$reflex-prefix}hidden-#{$bp}-down {
                 @include media-breakpoint-down($bp) {
@@ -421,7 +409,5 @@
 // --------------------------------------------------
 
 @mixin box-sizing($boxmodel) {
-    -webkit-box-sizing: $boxmodel;
-    -moz-box-sizing: $boxmodel;
     box-sizing: $boxmodel;
 }
