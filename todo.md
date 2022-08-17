@@ -43,6 +43,24 @@ https://github.com/hudochenkov/postcss-sorting
 https://github.com/hudochenkov/stylelint-order
 https://www.npmjs.com/package/css-declaration-sorter
 
+### Scss 
+
+https://github.com/topics/scss
+
+#### Mixins 
+scss lib https://docs.gerillass.com/docs/
+scss https://github.com/kjbrum/juice/
++ https://github.com/kjbrum/juice/blob/master/dist/_juice.scss
+
+random color scss https://gist.github.com/beaugaines/db880be2d67c0a12f7c69b45d310873a
+
+https://github.com/thoughtbot/bourbon
+
+https://github.com/Famolus/awesome-sass
+https://devhints.io/sass
+https://sass-lang.com/documentation/modules
+
+https://github.com/W3cplus/SassMagic
 
 gulp-jshint https://github.com/generaxion/axio-starter/blob/master/package.json
 

@@ -77,7 +77,7 @@ div.aligncenter {
 }
 
 .comment-content {
-  @extend .clearfix;
+  @include helpers.clearfix;
 }
 
 .entry-comments {

@@ -24,7 +24,7 @@ $heading-line-height: 1.2;
 
 // Other Sizes
 $width: 1760px;
-$footer: 50px;
+$footer: 150px;
 $footer_margin: $footer - 2 * $footer;
 $base-border-radius: 3px;
 $base-spacing: $base-line-height * 1em;
@@ -32,12 +32,15 @@ $small-spacing: math.div($base-spacing, 2);
 $base-z-index: 0;
 
 // Colors
-$orange: orange;
+$orange: #f88341;
+$orange-dark: #f78140;
 $red: red;
-$blue: #477dca;
-$gray-medium: #999;
+$blue: #36299a;
+$black: #000000;
+$gray: #898989;
+$gray-medium: #d7d7d7;
 $gray-dark: #333;
-$gray-light: #ddd;
+$gray-light: #a1a1a1;
 
 // Font Colors
 $base-font-color: $gray-dark;
@@ -48,7 +51,7 @@ $base-border-color: $gray-light;
 $base-border: 1px solid $base-border-color;
 
 // Background Colors
-$base-background-color: #fff;
+$base-background-color: #fcf2f0;
 $secondary-background-color: tint($base-border-color, 75%);
 
 // Box Shadows

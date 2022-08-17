@@ -1,12 +1,12 @@
-.clearfix {
+// Clearfix
+@mixin clearfix {
   *zoom: 1;
-
   &:before,
   &:after {
-    content: " ";
+    content: '';
     display: table;
+    line-height: 0;
   }
-
   &:after {
     display: block;
     clear: both;
@@ -18,6 +18,13 @@
 
 .clear {
   clear: both;
+}
+
+// Hide text
+@mixin hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
 }
 
 /* display block, simple used for ::after, ::before, sprites */
@@ -32,7 +39,7 @@
   By using transform:translate(); and position:absolute;, you can perfectly position something in the center of its parent.
 */
 .align-center-parent {
-  position:relative;
+  position: relative;
 }
 
 /* I'm using -webkit- otherwise this won't work on Safari based browsers */
@@ -62,10 +69,8 @@
   }
 }
 
-/*
-  Justify Grid — новое слово в разметке
-  http://habrahabr.ru/post/182146/
-*/
+// Justify Grid
+// http://habrahabr.ru/post/182146/
 .justify-child {
   font-size: 0 !important;
 

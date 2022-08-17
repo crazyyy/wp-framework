@@ -84,18 +84,29 @@
   background: linear-gradient($direction, $color-stops);
 }
 
+// Remove the unit of a length
+// @param {Number} $number - Number to remove unit from
+// @return {Number} - Unitless number
+// https://css-tricks.com/snippets/sass/strip-unit-function/
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return math.div($number, ($number * 0 + 1));
+  }
+  @return $number;
+}
+
 // Convert pixels to ems
 // eg. for a relational value of 12px write em(12) when the parent is 16px
 // if the parent is another value say 24px write em(12, 24)
 //  https://github.com/thoughtbot/bourbon/blob/master/app/assets/stylesheets/functions/_px-to-em.scss
 @function em($pxval, $base: $em-base) {
   @if not math.is-unitless($pxval) {
-    $pxval: strip-units($pxval);
+    $pxval: call($strip-units($pxval));
   }
   @if not math.is-unitless($base) {
-    $base: strip-units($base);
+    $base: call($strip-units($base));
   }
-  @return ($pxval / $base) * 1em;
+  @return math.div($pxval, $base) * 1em;
 }
 
 /*
@@ -106,7 +117,7 @@
  * The $size argument can take one or two values—width height.
  * The $color argument can take one or two values—foreground-color background-color.
  * $direction: up, down, left, right, up-right, up-left, down-right, down-left
- *
+ * Check this https://docs.gerillass.com/docs/triangle/
 */
 @mixin triangle($size, $color, $direction) {
   $width: list.nth($size, 1);
@@ -176,14 +187,14 @@
  * @font-face mixin
  * Bulletproof font-face via Font Squirrel
  * @include fontface('family', 'assets/fonts/', 'myfontname');
- */
-
+*/
 @mixin fontface($font-family, $font-url, $font-name) {
   @font-face {
     font: {
       family: $font-family;
       style: normal;
       weight: normal;
+      display: swap;
     }
     src: url($font-url + '/' + $font-name + '.eot');
     src: url($font-url + '/' + $font-name + '.eot#iefix') format('embedded-opentype'),
@@ -194,9 +205,10 @@
 }
 
 /*
-* 3d text
-* @include text3d(#0982c1);
-* http://forwebdev.ru/css/sass-vs-less-vs-stylus/
+  * 3d text
+  * @include text3d(#0982c1);
+  * http://forwebdev.ru/css/sass-vs-less-vs-stylus/
+  * Check this - https://docs.gerillass.com/docs/text-shadow/
 */
 @mixin text3d($color) {
   color: $color;
@@ -210,14 +222,12 @@
 /*
 * placeholder mixin
 * https: //stackoverflow.com/questions/17181849/placeholder-mixin-scss-css
-
   input {
     @include placeholder {
       font-family: $font-family-base;
       color: red;
     }
   }
-
 */
 @mixin placeholder {
   &::-webkit-input-placeholder {
@@ -231,5 +241,94 @@
   }
   &:-ms-input-placeholder {
     @content
+  }
+  &::placeholder {
+    @content;
+  }
+}
+
+/*
+ * Generate a random hex or rgb color from rgb values.
+  .element {
+    background-color: random-color(50,150,0.75);
+  }
+*/
+//@function random-color($min: 0, $max: 255, $alpha: 1) {
+//  @if $min < 0 {
+//    $min: -1;
+//  } @else {
+//    $min: $min - 1;
+//  }
+//  @if $max > 255 {
+//    $max: 256;
+//  } @else {
+//    $max: $max + 1;
+//  }
+//
+//  $red: random($max) + $min;
+//  $green: random($max) + $min;
+//  $blue: random($max) + $min;
+//
+//  @return rgba($red, $green, $blue, $alpha);
+//}
+
+/*
+ * Loadify
+ * Loadify Sass mixin is a handy tool that can help you make a page element load with a smooth fade-in effect during the time of page loadings.
+ * https://docs.gerillass.com/docs/loadify/
+ * @include loadify(init);
+ * .loadify-img {
+ *    @include loadify();
+ *  }
+ * $mode	string	Accepts init value. This initializes the whole effects for the selected elements. It must be called once at the root of your stylesheet document.
+ * $delay	time	Specifies the amount of time a design element must wait before it starts appearing on the page. The default value is set to 0.2s.
+ * $duration	time Sets the length of time that a page element takes to load. This is the second argument and always must be at the end and cannot be used alone. The deafult value is set to 0.5s.
+ * https://github.com/selfishprimate/gerillass/blob/master/scss/utilities/_is-time.scss
+*/
+@function __isTime($value) {
+  @for $i from 1 through length($value) {
+    @if (type-of($value) == "number" and index("ms" "s", unit($value)) != null) or $value == 0 {
+      @return $value;
+    } @else {
+      @error "'#{$value}' is not a valid time value. Time values must be specified in either seconds (s) or milliseconds (ms). Please try one of the following forms: '1s', '0.2s', or '3ms'";
+    }
+  }
+}
+@mixin loadify($params...) {
+  @if not & {
+    @if length($params) == 0 or (length($params) == 1 and nth($params, 1) == "init") {
+      @keyframes loadify {
+        to {
+          opacity: 1;
+          visibility: visible;
+          backface-visibility: visible;
+        }
+      }
+      %loadify {
+        opacity: 0;
+        visibility: hidden;
+        backface-visibility: hidden;
+        animation-name: loadify;
+        animation-fill-mode: forwards;
+      }
+    } @else if (length($params) == 1 and nth($params, 1) != "init") or (length($params) == 1 and type-of(nth($params, 1)) != "string") {
+      @error "#{nth($params, 1)} is not a valid argument. Please pass `init` as an argument to initialize the effect or do not pass any argument at all.";
+    } @else if length($params) > 1 {
+      @error "Only one argument is allowed when you call this mixin at the root of your stylesheet! Please pass `init` as an argument to initialize the effect or do not pass any argument at all.";
+    }
+  } @else if & {
+    @extend %loadify;
+    @if length($params) == 0 {
+      animation-delay: 0.2s;
+      animation-duration: 0.5s;
+    } @else if length($params) == 1 {
+      animation-delay: #{__isTime(nth($params, 1))};
+      animation-duration: 0.5s;
+    } @else if length($params) == 2 {
+      animation-delay: #{__isTime(nth($params, 1))};
+      animation-duration: #{__isTime(nth($params, 2))};
+    } @else if length($params) > 2 {
+      @error "You cannot pass more than two arguments.";
+    }
   }
 }

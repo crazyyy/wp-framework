@@ -85,7 +85,7 @@ picture {
   min-height: 100%;
   margin: 0 auto;
 
-  @extend .clearfix;
+  @include helpers.clearfix;
 }
 .container {
   position: relative;
@@ -104,7 +104,7 @@ header {
 }
 nav {
   ul {
-    @extend .clearfix;
+    @include helpers.clearfix;
     li {
       display: inline-block;
     }
@@ -115,10 +115,10 @@ section {
   padding: 0;
 }
 article {
-  @extend .clearfix;
+  @include helpers.clearfix;
 }
 .looper {
-  @extend .clearfix;
+  @include helpers.clearfix;
 }
 
 footer {
