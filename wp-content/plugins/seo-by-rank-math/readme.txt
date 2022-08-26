@@ -5,7 +5,7 @@ Tags: seo, sitemap, google search console, schema, redirection, WordPress SEO
 Tested up to: 6.0
 Requires at least: 5.6
 Requires PHP: 7.2
-Stable tag: 1.0.94
+Stable tag: 1.0.96
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -580,17 +580,11 @@ Please drop us an email at support@rankmath.com and we would be more than happy 
 
 == Changelog ==
 
-= 1.0.94 [July 28, 2022] =
-* Improved: [NEW!] Major improvement in the plugin's UI
-* Added: Hover effect on inactive radio button type fields like [Redirection Type](https://rankmath.com/kb/general-settings/#redirection-type) & [Breadcrumbs](https://rankmath.com/kb/general-settings/#breadcrumbs)
-* Improved: Show two Schema types in one row in the [Schema Generator](https://rankmath.com/kb/schema-generator/) popup for a better user experience
-* Improved: Disconnect account button styling
-* Improved: Variable dropdown description color for better readability
-* Improved: Width issue of [GSC and GA fields](https://rankmath.com/kb/general-settings/#search-console-settings) if there are no properties in it
-* Improved: Replaced Rank Math's SVG icon in the header of Settings page with the font icon
-* Updated: [Google preview](https://rankmath.com/kb/general-tab/#the-preview-section) as per the current Google design
-* Updated: Font icons in the plugin for better UX
-* Fixed: Adding incorrect [Source URL in Redirection](https://rankmath.com/kb/setting-up-redirections/#source-urls) was leading to a white screen of death
-* Fixed: Pillar icon was incorrectly showing in the [Post list](https://rankmath.com/kb/titles-and-meta/#bulk-editing)
+= 1.0.96 [Aug 24, 2022] =
+* Improved: [Open Graph image](https://rankmath.com/kb/open-graph-meta-tags/#og-image) generation code to execute faster on the front-end
+* Improved: File structure by moving page builder-related assets to their respective folders
+* Fixed: All Redirection rules were not getting exported to the [.htaccess & Nginx .conf file](https://rankmath.com/kb/setting-up-redirections/#backing-up-your-redirects)
+* Fixed: [Local SEO Sitemap](https://rankmath.com/kb/kml-sitemap/) was showing the wrong date format on non-English sites
+* Fixed: Incompatibility with the Oxygen plugin
 
 Full changelog can be found here - **[Rank Math SEO changelog](https://rankmath.com/changelog/?utm_source=Plugin&utm_medium=Changelog&utm_campaign=WP)**

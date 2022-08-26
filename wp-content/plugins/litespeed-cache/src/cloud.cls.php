@@ -73,12 +73,13 @@ class Cloud extends Base {
 	);
 
 	private static $_QUEUE_SVC_SET = array(
+		self::SVC_UCSS,
 		self::SVC_VPI,
 	);
 
 	public static $SERVICES_LOAD_CHECK = array(
 		self::SVC_CCSS,
-		self::SVC_UCSS,
+		// self::SVC_UCSS,
 		// self::SVC_VPI,
 		self::SVC_LQIP,
 		self::SVC_HEALTH,
@@ -1288,7 +1289,7 @@ class Cloud extends Base {
 
 		$extraRet = array();
 		$qsDrop = array();
-		if ( ! $this->_api_key && $this->_summary[ 'is_linked' ]) {
+		if ( ! $this->_api_key && ! empty( $this->_summary[ 'is_linked' ] ) ) {
 			$this->_summary[ 'is_linked' ] = 0;
 			self::save_summary();
 		}

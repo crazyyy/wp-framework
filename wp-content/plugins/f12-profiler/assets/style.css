@@ -1,0 +1,173 @@
+/* pseudo-fix hand cursor */
+#wp-admin-bar-f12_profiler_1 > *,
+#wp-admin-bar-f12_profiler_2 > * {
+    cursor: pointer !important;
+}
+
+/* profiler menu dimensions */
+#wp-admin-bar-f12_profiler_1-default li {
+    border-bottom: 1px solid #303030;
+}
+
+#wp-admin-bar-f12_profiler_1-default {
+    max-height: 90vh;
+    height:     auto;
+    overflow:   auto;
+    min-width:  400px;
+    padding:    0 !important;
+}
+
+#wp-admin-bar-f12_profiler_1-default .ab-item {
+    height:  auto !important;
+    padding: 0 !important;
+}
+
+#wp-admin-bar-f12_profiler_1-default .list-item-resources .f12-time {
+    text-align: right;
+}
+
+#wp-admin-bar-f12_profiler_1-default .list-item-resources table {
+    width:            100%;
+    background-color: rgba(255, 255, 255, .1);
+    border-collapse:  collapse;
+}
+
+#wp-admin-bar-f12_profiler_1-default .list-item-resources table tr:last-child td {
+    border-bottom: 0;
+}
+
+#wp-admin-bar-f12_profiler_1-default .list-item-resources table td {
+    border-bottom: 1px solid #333;
+}
+
+#wp-admin-bar-f12_profiler_1-default .list-item span {
+    padding: 0px 10px;
+}
+
+#wp-admin-bar-f12_profiler_1-default .list-item {
+    display:   flex;
+    flex:      1 1 100%;
+    width:     100%;
+    flex-flow: row nowrap;
+}
+
+#wp-admin-bar-f12_profiler_1-default .f12-res-container {
+    display:   flex;
+    min-width: 200px;
+    flex-flow: column wrap;
+}
+
+/* row separator */
+
+#wp-admin-bar-f12_profiler_1-default .f12-res-label ~ span {
+    border-left: 1px solid #303030;
+}
+
+#wp-admin-bar-f12_profiler_1-default .f12-res-label {
+    flex:       1 1 75%;
+    overflow-x: hidden; /* trim too long resource names */
+}
+
+/* resource utilization color labels */
+#wp-admin-bar-f12_profiler_1-default .f12-res-heavy,
+#wp-admin-bar-f12_profiler_2-default .f12-res-heavy {
+    color:      #c00;
+    flex:       1 1 20%;
+    text-align: right;
+}
+
+#wp-admin-bar-f12_profiler_1-default .f12-res-medium,
+#wp-admin-bar-f12_profiler_2-default .f12-res-medium {
+    color:      #f50;
+    flex:       1 1 20%;
+    text-align: right;
+}
+
+#wp-admin-bar-f12_profiler_1-default .f12-res-light,
+#wp-admin-bar-f12_profiler_2-default .f12-res-light {
+    color:      #0c0;
+    flex:       1 1 20%;
+    text-align: right;
+}
+
+/* widening of color labels backgrounds */
+#wp-admin-bar-f12_profiler_1 span[class^="f12-res-"]::after,
+#wp-admin-bar-f12_profiler_2 span[class^="f12-res-"]::after,
+#wp-admin-bar-f12_profiler_2 span[class^="f12-res-"]::before {
+    content:     '  ';
+    white-space: pre;
+}
+
+/* page-m menu dimensions */
+#wp-admin-bar-f12_profiler_2 .ab-sub-wrapper {
+    max-height: 90vh;
+    height:     auto;
+    width:      400px;
+    width:      42vw;
+    overflow:   auto;
+}
+
+/* page-m table */
+#wp-admin-bar-f12_profiler_2-default {
+    width:           100%;
+    table-layout:    fixed;
+    white-space:     nowrap;
+    border-collapse: collapse;
+}
+
+/* row separator */
+#wp-admin-bar-f12_profiler_2-default .f12-res-container {
+    border-bottom: 1px solid #303030;
+}
+
+#wp-admin-bar-f12_profiler_2-default th {
+    color:         #fff;
+    border-left:   1px solid #fff;
+    border-bottom: 1px solid #fff;
+    padding:       0 5px 0 5px;
+}
+
+#wp-admin-bar-f12_profiler_2-default td {
+    border-left: 1px solid #fff;
+    padding:     0 5px 0 5px;
+}
+
+#wp-admin-bar-f12_profiler_2-default th:first-child,
+#wp-admin-bar-f12_profiler_2-default td:first-child {
+    border-left: none;
+}
+
+#wp-admin-bar-f12_profiler_2-default th:nth-child(even),
+#wp-admin-bar-f12_profiler_2-default td:nth-child(even) {
+    background-color: rgba(255, 255, 255, .1);
+}
+
+#wp-admin-bar-f12_profiler_2-default td,
+#wp-admin-bar-f12_profiler_2-default td > * {
+    overflow:      hidden;
+    text-overflow: ellipsis;
+}
+
+/* page-m columns dimensions */
+#wp-admin-bar-f12_profiler_2 .f12-link {
+    min-width: 120px;
+}
+
+#wp-admin-bar-f12_profiler_2 .f12-type {
+    width: 50px;
+}
+
+#wp-admin-bar-f12_profiler_2 .f12-name {
+    min-width: 120px;
+}
+
+#wp-admin-bar-f12_profiler_2 .f12-time {
+    width:      70px;
+    text-align: right;
+}
+
+#wp-admin-bar-f12_profiler_2-default .f12-link a {
+    padding: 0;
+    color:   #ccc;
+}
+

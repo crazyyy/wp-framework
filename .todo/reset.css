@@ -1,0 +1,246 @@
+body {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+template, [hidden] {
+  /* template inherits from .block which has `display: grid;` and we need to overwrite that */
+  display: none !important;
+}
+
+div, main, article, section, nav, aside, header, h1, h2, h3, h4, h5, h6, footer,address, p,
+pre, blockquote, figure, figcaption, hr, ul, ol, li, dl, dt, dd, form, label, output, slot,
+button, svg, img, video, audio, iframe, object, input, select, textarea, progress, meter,
+details, summary, fieldset, legend,
+table, thead, tbody, tfoot, tr, td, th, caption, colgroup, col,
+b, i, a, span, strong, em, time, ins, del, s, mark, small, sub, sup, q, abbr, cite, dfn, samp,
+code, var, kbd, bdo, ruby, rt, rb {
+  display: block;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+b, i, a, span, strong, em, time, ins, del, s, mark, small, sub, sup, q, abbr, cite, dfn, samp,
+code, var, kbd, bdo, ruby, rt, rb {
+  display: inline;
+}
+
+a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+pre {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button, input, select, textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+button {
+  width: max-content;
+  height: max-content;
+  background-color: transparent;
+  border: none;
+}
+
+input, select, textarea {
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 3px;
+  padding: 3px;
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgb(0, 0, 0, 0.5);
+}
+
+input[type="checkbox"], input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="radio"] {
+  border-radius: 50%;
+}
+
+input[type="checkbox"]:checked, input[type="radio"]:checked {
+  background-color: rgb(0, 0, 0);
+  box-shadow: rgb(255, 255, 255) 0px 0px 1px 4px inset;
+}
+
+input[type="color"], input[type="file"] {
+  border: none;
+}
+
+select {
+  background-color: transparent;
+  padding: 0px 25px 0 5px;
+  background: url(../../asset/image/arrow-down.svg) no-repeat right center;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+b {
+  font-weight: 700;
+}
+
+i {
+  font-style: italic;
+}
+
+/* spans are buggy so we need another element that is neutral */
+em {
+  font-style: normal;
+}
+
+ins {
+  text-decoration-line: underline;
+}
+
+del, s {
+  text-decoration-line: line-through;
+}
+
+mark {
+  background-color: rgb(255, 255, 0);
+}
+
+small {
+  font-size: small;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+q::before {
+  content: open-quote;
+}
+
+q::after {
+  content: close-quote;
+}
+
+samp, code, kbd {
+  font-family: inherit;
+}
+
+bdo {
+  unicode-bidi: bidi-override;
+}
+
+ruby {
+  text-indent: inherit;
+}
+
+rt {
+  text-indent: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  text-align: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+svg {
+  /* we can't have it because it will overwrite svgs without fill */
+  /* fill: currentcolor; */
+  width: 24px;
+}
+
+video, iframe, object {
+  width: 100%;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
+}
+
+.block {
+  display: grid;
+  min-height: 24px;
+}
+
+summary, summary.block {
+  display: list-item;
+}
+
+hr.block {
+  display: block;
+  height: 0;
+  min-height: 0;
+}
+
+table, table.block {
+  display: table;
+}
+
+thead, thead.block {
+  display: table-header-group;
+}
+
+tfoot, tfoot.block {
+  display: table-footer-group;
+}
+
+tbody, tbody.block {
+  display: table-row-group;
+}
+
+tr, tr.block {
+  display: table-row;
+}
+
+td, td.block,
+th, th.block {
+  display: table-cell;
+}
+
+colgroup, colgroup.block {
+  display: table-column-group;
+}
+
+col, col.block {
+  display: table-column;
+}
+
+caption, caption.block {
+  display: table-caption;
+}
+
+map, map.block, map.text,
+area, area.block, area.text {
+  display: inline;
+}
+
+fieldset, fieldset.block {
+  display: block;
+}

@@ -1,0 +1,61 @@
+.clearfix {
+  clear: both;
+}
+
+.insp-content {
+  float: left;
+  width: 65%;
+}
+
+.insp-sidebar {
+  float: left;
+  width: 33%;
+  margin-left: 2%;
+  padding: 0 0 0 2%;
+  box-sizing: border-box;
+  border-left: 1px solid #CCC;
+}
+
+.insp-feature-box {
+  background: #222;
+  color: #ddd;
+  padding: 20px;
+}
+
+.insp-feature-box h3 {
+  color: #FFF;
+}
+
+.insp-field {
+  height: 30px;
+}
+
+.insp-form-table td, .insp-form-table th {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.insp-inspection {
+  float: left;
+  width: 30%;
+  margin-right: 4%;
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.insp-inspection:last-child {
+  margin-right: 0;
+}
+
+.insp-inspection img {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 5px;
+  border: 1px solid #CCC;
+}
+
+.insp-inspection a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #000;
+}

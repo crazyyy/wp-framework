@@ -332,3 +332,104 @@
     }
   }
 }
+
+// Consistent Font Sizes
+//p {
+//  @include font-size(14px)
+//}
+@function calculateRem($size) {
+  $remSize: math.div($size, 16px);
+  @return $remSize * 1rem;
+}
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: calculateRem($size);
+}
+
+// Font convert px to vw
+$vw-viewport: 1920;
+@function get-vw($font){
+  $vw-context: $vw-viewport * 0.01 * 1px;
+  @return math.div($font, $vw-context) * 1vw;
+  @return $font;
+}
+@mixin font-size-vw($size) {
+  font-size: $size;
+  font-size: get-vw($size);
+}
+
+// Size convert px to vw
+//.element{
+//  width: mixin.get-vw(20px);
+//}
+//$vw-viewport: 1920;
+@function get-vw($px-vw, $base-vw: 1920px){
+  //$vw-context: $vw-viewport * 0.01 * 1px;
+  //@return $size / strip-unit($vw-context) * 1vw;
+  //@return $size;
+  @return #{strip-unit($px-vw) * math.div(100, strip-unit($base-vw))}vw;
+}
+// Size convert px to vh
+//.element{
+//  height: mixin.get-vh(20px);
+//}
+//$vh-viewport: 1080;
+@function get-vh($px-vh, $base-vh: 1080px){
+  //$vh-context: $vh-viewport * 0.01 * 1px;
+  //@return $size / strip-unit($vh-context) * 1vw;
+  //@return $size;
+  @return #{strip-unit($px-vh) * math.div(100, strip-unit($base-vh))}vh;
+}
+
+// RTL
+//.sidebar {
+//  @include rtl(float, left, right);
+//}
+@mixin rtl($property, $ltr-value, $rtl-value) { // with argumens
+  #{$property}: $ltr-value;
+  [dir=rtl] & {
+    #{$property}: $rtl-value;
+  }
+}
+
+// transition to fade-in and fade-out
+//.sidebar {
+//  @include rtl(float, left, right);
+//}
+@mixin fade($type) {
+  @if $type== "hide" {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 1s, opacity 1s;
+  } @else if $type== "show" {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 1s, opacity 1s;
+  }
+}
+
+// Responsive Aspect-Ratio SCSS Mixin
+// https://codepen.io/jakob-e/pen/WvrJwN
+//.example-1 {
+//  @include mixin.aspect-ratio(1, 1);
+//}
+// other example https://css-tricks.com/snippets/sass/maintain-aspect-ratio-mixin/
+@mixin aspect-ratio($arglist... /*$ratio or $width, $height*/){
+  $map : keywords($arglist);
+  $height: map-get($map, height) or nth-value($arglist, 2) or 1;
+  $width:  map-get($map, width)  or nth-value($arglist, 1) or 1;
+  $ratio:  map-get($map, ratio) or if($width and $height, $width / $height, nth-value($arglist, 1)) or 1;
+  $padding: math.div(1, $ratio) * 100%;
+
+  aspect-ratio: list.slash($width, $height);
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    &::before, &::after { content: ''; display: table; clear: both; width: 1px; margin-left: -1px; }
+    &::before { float: left; padding-bottom: $padding; }
+  }
+}
+
+// Helper function
+// Return null rather than throwing an error if index is outside list range.
+@function nth-value($list, $index) {
+  @return if(length($list) >= $index, nth($list, $index), null);
+}

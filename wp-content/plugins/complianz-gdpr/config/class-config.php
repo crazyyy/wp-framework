@@ -23,6 +23,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"videopress"       => 'VideoPress',
 				"dailymotion"      => 'Dailymotion',
 				"soundcloud"       => 'SoundCloud',
+				"twitch"         	 => 'Twitch',
 				"paypal"           => 'PayPal',
 				"spotify"          => 'Spotify',
 				"hotjar"           => 'Hotjar',
@@ -158,7 +159,9 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"livechat"         => array( 'cdn.livechatinc.com/tracking.js' ),
 				"hubspot"         => array( 'js.hs-scripts.com/', 'hbspt.forms.create', 'js.hsforms.net','track.hubspot.com','js.hs-analytics.net'),
 				"calendly"         => array( 'assets.calendly.com' ),
+				"twitch"          => array( 'twitch.tv', 'player.twitch.tv'),
 			);
+
 		public $stats
 			= array(
 				'google-analytics'   => 'Google Analytics',
@@ -454,6 +457,13 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'include_in_progress' => false,
 				),
 
+				'phpversion' => array(
+					'warning_condition' => 'NOT cmplz_has_recommended_phpversion',
+					'urgent' => __( 'Your PHP version is lower than the recommended PHP version. Some features are not available. Support for this PHP version will be dropped soon.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/php-version/'),
+					'plus_one' => true,
+					'include_in_progress' => true,
+				),
+
 				'upgraded_to_6' => array(
 					'warning_condition'  => 'cmplz_upgraded_to_current_version',
 					'open' => cmplz_sprintf(__( 'Complianz GDPR/CCPA %s. Learn more about our newest release.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/meet-complianz-6-0/'),'6.0.0' ).'&nbsp;'.
@@ -622,7 +632,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 
 				'pretty-permalinks-error' => array(
 					'success_conditions'  => array(
-						'document->pretty_permalinks_enabled',
+						'get_option_permalink_structure',
 					),
 					'plus_one' => true,
 					'urgent' => __( 'Pretty permalinks are not enabled on your site. This can cause issues with the REST API, used by Complianz.', 'complianz-gdpr' ).'&nbsp;<a href="'.admin_url('options-permalink.php').'">'.__("Enable", "complianz-gdpr").'</a>',

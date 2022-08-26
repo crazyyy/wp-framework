@@ -221,7 +221,7 @@ class UCSS extends Base {
 		self::save_summary();
 
 		// Gather guest HTML to send
-		$html = $this->prepare_html( $request_url, $user_agent, $uid );
+		$html = $this->cls('CSS')->prepare_html( $request_url, $user_agent, $uid );
 
 		if ( ! $html ) {
 			return false;
@@ -296,7 +296,7 @@ class UCSS extends Base {
 	private function _save_con( $type, $css, $queue_k ) {
 		// Add filters
 		$css = apply_filters( 'litespeed_' . $type, $css, $queue_k );
-		self::debug2( 'con: ' . $css );
+		self::debug2( 'con: ', $css );
 
 		if ( substr( $css, 0, 2 ) == '/*' && substr( $css, -2 ) == '*/' ) {
 			self::debug( '❌ empty ' . $type . ' [content] ' . $css );
@@ -318,23 +318,6 @@ class UCSS extends Base {
 		$this->cls( 'Data' )->save_url( $url_tag, $vary, $type, $filecon_md5, dirname( $static_file ) );
 
 		Purge::add( strtoupper( $type ) . '.' . md5( $queue_k ) );
-	}
-
-	/**
-	 * Prepare HTML from URL
-	 *
-	 * @since  3.4.3
-	 */
-	public function prepare_html( $request_url, $user_agent, $uid = false ) {
-		$html = $this->cls( 'Crawler' )->self_curl( add_query_arg( 'LSCWP_CTRL', 'before_optm', $request_url ), $user_agent, $uid );
-		Debug2::debug2( '[CSS] self_curl result....', $html );
-
-
-		$html = $this->cls( 'Optimizer' )->html_min( $html, true );
-		// Drop <noscript>xxx</noscript>
-		$html = preg_replace( '#<noscript>.*</noscript>#isU', '', $html );
-
-		return $html;
 	}
 
 	/**

@@ -312,7 +312,7 @@ class JsonLD {
 			return;
 		}
 
-		if ( empty( $schema['author'] ) || ! isset( $schema['author']['name'] ) || '%name%' !== $schema['author']['name'] ) {
+		if ( empty( $schema['author'] ) || ! isset( $schema['author']['name'] ) || ! in_array( $schema['author']['name'], [ '%name%', '%post_author%' ], true ) ) {
 			return;
 		}
 
@@ -349,10 +349,12 @@ class JsonLD {
 			$pre = $this->do_filter( $hook, false, $jsonld->parts, $data );
 			if ( false !== $pre ) {
 				$new_schemas[ $key ] = $this->do_filter( $hook . '_entity', $pre );
+				$new_schemas[ $key ] = $this->do_filter( 'snippet/rich_snippet_entity', $new_schemas[ $key ] );
 				continue;
 			}
 
 			$new_schemas[ $key ] = $this->do_filter( $hook . '_entity', $schema );
+			$new_schemas[ $key ] = $this->do_filter( 'snippet/rich_snippet_entity', $new_schemas[ $key ] );
 		}
 
 		return $new_schemas;
@@ -449,14 +451,20 @@ class JsonLD {
 	private function add_prop_image( &$entity ) {
 		$logo = Helper::get_settings( 'titles.knowledgegraph_logo' );
 		if ( ! $logo ) {
+			$logo_id = \get_option( 'site_logo' );
+			$logo    = $logo_id ? wp_get_attachment_image_url( $logo_id ) : '';
+		}
+
+		if ( ! $logo ) {
 			return;
 		}
 
 		$entity['logo'] = [
-			'@type'   => 'ImageObject',
-			'@id'     => home_url( '/#logo' ),
-			'url'     => $logo,
-			'caption' => $this->get_website_name(),
+			'@type'      => 'ImageObject',
+			'@id'        => home_url( '/#logo' ),
+			'url'        => $logo,
+			'contentUrl' => $logo,
+			'caption'    => $this->get_website_name(),
 		];
 		$this->add_prop_language( $entity['logo'] );
 

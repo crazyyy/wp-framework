@@ -9,11 +9,35 @@
 @use "import/mixin";
 @use "import/helpers";
 
+@use "../../node_modules/rfs/scss";
+
 //@import 'grid/grid-bootstrap';
 //@use "import/grid";
 @use "grid-reflex/reflex";
 
 @use "import/wordpress";
+
+$breakpoints: (
+  mobile: 320px,
+  tablet: 768px,
+  desktop: 992px,
+  wide: 1200px,
+  // Tweakpoints
+  desktopAd: 810px,
+  mobileLandscape: 480px,
+);
+$show-breakpoints: (mobile, mobileLandscape, tablet, desktop, wide);
+@use "import/mq" with (
+  $breakpoints: $breakpoints,
+  //$show-breakpoints: $show-breakpoints
+);
+@include mq.add-breakpoint(xs, 576px);
+@include mq.add-breakpoint(xlg, 1600px);
+
+// https://github.com/twbs/rfs
+// https://codepen.io/MartijnCuppens/pen/vqaEBG?editors=0100
+// @use "../../node_modules/rfs/scss";
+// @include scss.rfs(26px, font-size);
 
 html,
 body {

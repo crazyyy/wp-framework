@@ -44,17 +44,37 @@ https://github.com/hudochenkov/stylelint-order
 https://www.npmjs.com/package/css-declaration-sorter
 
 ### Scss 
+https://github.com/mcaskill/sass-mq
+https://github.com/sass-mq/sass-mq
 
+https://github.com/twbs/rfs
 https://github.com/topics/scss
+https://www.easeout.co/blog/2020-08-27-setup-media-queries-with-sass-mixins/
+https://www.toptal.com/css/sass-mixins-keep-your-stylesheets-dry
+https://gist.github.com/DennisMartinez/eabdda63212fda60b9786be9915e2cc1
+https://codepad.co/snippet/scss-font-size-and-line-height-mixin
+https://github.com/frontaid/natural-selection
+https://engageinteractive.co.uk/blog/top-10-scss-mixins
+https://glennmccomb.com/articles/useful-sass-scss-media-query-mixins-for-bootstrap/
+https://www.barrage.net/blog/technology/top-8-sass-mixins
+https://eightshift.com/sass
+
+https://github.com/twbs/rfs
+https://codepen.io/MartijnCuppens/pen/vqaEBG?editors=0100
+
+https://www.koderhq.com/tutorial/sass/native-functions/
 
 #### Mixins 
 scss lib https://docs.gerillass.com/docs/
 scss https://github.com/kjbrum/juice/
 + https://github.com/kjbrum/juice/blob/master/dist/_juice.scss
-
+https://github.com/drublic/Sass-Mixins/blob/master/partials/_rem.scss
+https://gist.github.com/aarongarciah/a8078ddedb9943aa421d58c1e79ea3d7
 random color scss https://gist.github.com/beaugaines/db880be2d67c0a12f7c69b45d310873a
 
-https://github.com/thoughtbot/bourbon
+https://github.com/RamseyInHouse/scut/blob/master/dist/_scut.scss
+https://www.bourbon.io/docs/latest
+https://silvawebdesigns.com/how-to-calculate-css-letter-spacing-vs-tracking-in-typography/
 
 https://github.com/Famolus/awesome-sass
 https://devhints.io/sass

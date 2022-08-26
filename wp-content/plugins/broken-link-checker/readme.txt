@@ -2,8 +2,8 @@
 Contributors: managewp, wpmudev
 Tags: links, broken links, internal link, external link, broken images, seo, test links, check links, bad links
 Requires at least: 5.2
-Tested up to: 5.8
-Stable tag: 1.11.16
+Tested up to: 6.0.1
+Stable tag: 1.11.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.11.18 =
+* Updated UA string
 
 = 1.11.17 =
 * Fix security vulnerability
