@@ -2,8 +2,8 @@
   "domain": "wp-framework.local",
   "theme": "wp-framework",
   "ssl": {
-    "key": "d:\\laragon\\etc\\ssl\\laragon.key",
-    "cert": "d:\\laragon\\etc\\ssl\\laragon.crt"
+    "key": "d:\\apps\\persist\\laragon\\etc\\ssl\\laragon.key",
+    "cert": "d:\\apps\\persist\\laragon\\etc\\ssl\\laragon.crt"
   },
   "path": {
     "base": {
