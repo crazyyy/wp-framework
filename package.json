@@ -1,6 +1,6 @@
 {
   "author": {
-    "name": "Vitali A.",
+    "name": "Vitalii A.",
     "email": "crazyyy@gmail.com",
     "url": "https://github.com/crazyyy"
   },
@@ -56,7 +56,7 @@
     "gulp-filter": "^7.0.0",
     "gulp-if": "^3.0.0",
     "gulp-ignore": "^3.0.0",
-    "gulp-imagemin": "8.0.0",
+    "gulp-imagemin": "7.1.0",
     "gulp-less": "^5.0.0",
     "gulp-load-plugins": "^2.0.8",
     "gulp-newer": "^1.4.0",
@@ -93,7 +93,7 @@
     "webpcss": "^1.3.4",
     "yargs": "17.7.1"
   },
-  "homepage": "https://github.com/crazyyy/wp-framework#readme",
+  "homepage": "https://github.com/crazyyy/wp-framework",
   "keywords": [
     "html",
     "css",
@@ -143,7 +143,7 @@
     "test": "npm run serve:test",
     "tasks": "gulp --tasks"
   },
-  "version": "2023.01.09",
+  "version": "2023.04.19",
   "wp_site_name": "wp-framework.local",
   "wp_theme_name": "wp-framework"
 }
