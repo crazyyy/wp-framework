@@ -156,7 +156,7 @@ class Cdn_Setup extends Base {
 
 			if (!$json) {
 				return;
-			} else if (is_string($json)) {
+			} else if (is_string($json) && $json != 'unauthorized access to REST API.') {
 				self::save_summary( array( 'cdn_setup_err' => $json ) );
 				return;
 			}
@@ -191,7 +191,7 @@ class Cdn_Setup extends Base {
 		if ( isset( $this->_summary[ 'cdn_dns_summary' ] ) ) {
 			unset( $this->_summary[ 'cdn_dns_summary' ] );
 		}
-		self::save_summary();
+		self::save_summary($this->_summary, false, true);
 
 		$this->_setup_token = '';
 		$this->cls( 'Conf' )->update_confs( array( self::O_QC_TOKEN => '', self::O_QC_NAMESERVERS => '', self::O_CDN_QUIC => false ) );
@@ -230,9 +230,9 @@ class Cdn_Setup extends Base {
 			'site_url'		=> home_url(),
 			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-cdn' ),
 		);
-
-		if ($this->_api_key) {
-			$data['domain_hash'] = md5( substr( $this->_api_key, 0, 8 ) );
+		$api_key = $this->conf( self::O_API_KEY );
+		if ($api_key) {
+			$data['domain_hash'] = md5( substr( $api_key, 0, 8 ) );
 		}
 
 		wp_redirect( Cloud::CLOUD_SERVER_DASH . '/u/wptoken?data=' . Utility::arr2str( $data ) );
@@ -277,8 +277,9 @@ class Cdn_Setup extends Base {
 			'server_ip'	=> $this->conf( self::O_SERVER_IP ),
 		);
 
-		if ( $this->_api_key ) {
-			$data['domain_hash'] = md5( substr( $this->_api_key, 0, 8 ) );
+		$api_key = $this->conf( self::O_API_KEY );
+		if ($api_key) {
+			$data['domain_hash'] = md5( substr( $api_key, 0, 8 ) );
 		}
 
         $__cloud = $this->cls( 'Cloud' );

@@ -5,7 +5,7 @@
     <template v-else>
       <h2 class="md-display-3">{{culpritTitle}}</h2>
       <div class="results">
-        <div class="result" v-for="culprit in activeCase.culprits">
+        <div class="result" v-for="(culprit) in activeCase.culprits" :key="culprit">
           <div class="culprit-image">
             <img :src="updatedApi.static_url + '/mugshot.svg'" alt="mug shot" class="bg">
             <div class="plugin" v-if="iconMissing">

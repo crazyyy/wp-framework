@@ -36,7 +36,7 @@ import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import Loading from './Loading'
 
 export default {
-  name: 'witnesses',
+  name: 'witnessesComponent',
   components: { Bubble, Loading, PluginAvatar },
   store,
   data () {

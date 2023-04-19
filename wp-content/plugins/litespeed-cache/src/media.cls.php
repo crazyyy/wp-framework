@@ -43,7 +43,7 @@ class Media extends Root {
 		}
 
 		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+		if ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) {
 			if ( $this->webp_support() ) {
 				// Hook to srcset
 				if ( function_exists( 'wp_calculate_image_srcset' ) ) {
@@ -446,7 +446,7 @@ class Media extends Root {
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
-		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->webp_support() ) {
+		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) && $this->webp_support() ) {
 			$this->content = $this->_replace_buffer_img_webp( $this->content );
 		}
 
@@ -521,7 +521,7 @@ class Media extends Root {
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_lazy || $cfg_iframe_lazy ) {
-			$lazy_lib = '<script data-no-optimize="1" defer>' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
+			$lazy_lib = '<script data-no-optimize="1">' . File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>';
 			$this->content = str_replace( '</body>', $lazy_lib . '</body>', $this->content );
 		}
 	}
@@ -810,7 +810,7 @@ class Media extends Root {
 		}
 
 		// Replace background-image
-		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) && $this->webp_support() ) {
+		if ( ( defined( 'LITESPEED_GUEST_OPTM' ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) && $this->webp_support() ) {
 			$content = $this->replace_background_webp( $content );
 		}
 

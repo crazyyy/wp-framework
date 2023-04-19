@@ -8,6 +8,7 @@
 		<?php WP_Optimize()->include_template('settings/settings-general.php'); ?>
 		<?php WP_Optimize()->include_template('settings/settings-trackback-and-comments.php'); ?>
 		<?php WP_Optimize()->include_template('settings/settings-logging.php'); ?>
+		<?php WP_Optimize()->include_template('settings/settings-export-import.php'); ?>
 
 		<?php do_action('wpo_after_general_settings'); ?>
 
@@ -34,7 +35,7 @@
 		</div>
 
 		<div>
-			<input class="button button-primary wpo-save-settings" type="submit" name="wp-optimize-settings" value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>" />
+			<input id="wp-optimize-save-main-settings" class="button button-primary wpo-save-settings" type="submit" name="wp-optimize-settings" value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>" />
 
 			<img class="wpo_spinner wpo-saving-settings" src="<?php echo esc_attr(admin_url('images/spinner-2x.gif')); ?>" alt="...">
 

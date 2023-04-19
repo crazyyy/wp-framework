@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0a57caae0cffafc974da45eba645dca2
+class ComposerStaticInite4f181c817bb7f56c650b242f9d1d695
 {
     public static $prefixLengthsPsr4 = array (
         't' => 
@@ -14,7 +14,6 @@ class ComposerStaticInit0a57caae0cffafc974da45eba645dca2
         'W' => 
         array (
             'WebPConvert\\' => 12,
-            'WebPConvertCloudService\\' => 24,
         ),
         'P' => 
         array (
@@ -59,10 +58,6 @@ class ComposerStaticInit0a57caae0cffafc974da45eba645dca2
         'WebPConvert\\' => 
         array (
             0 => __DIR__ . '/..' . '/rosell-dk/webp-convert/src',
-        ),
-        'WebPConvertCloudService\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/rosell-dk/webp-convert-cloud-service/src',
         ),
         'Psr\\Log\\' => 
         array (
@@ -151,6 +146,7 @@ class ComposerStaticInit0a57caae0cffafc974da45eba645dca2
         'Minify_CSSmin' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/CSSmin.php',
         'Minify_CacheInterface' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/CacheInterface.php',
         'Minify_Cache_APC' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/APC.php',
+        'Minify_Cache_APCu' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/APCu.php',
         'Minify_Cache_File' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/File.php',
         'Minify_Cache_Memcache' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/Memcache.php',
         'Minify_Cache_Null' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/Null.php',
@@ -194,6 +190,7 @@ class ComposerStaticInit0a57caae0cffafc974da45eba645dca2
         'lessc_parser' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
         'simplehtmldom\\Debug' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/Debug.php',
         'simplehtmldom\\HtmlDocument' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlDocument.php',
+        'simplehtmldom\\HtmlElement' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlElement.php',
         'simplehtmldom\\HtmlNode' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlNode.php',
         'simplehtmldom\\HtmlWeb' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlWeb.php',
     );
@@ -201,10 +198,10 @@ class ComposerStaticInit0a57caae0cffafc974da45eba645dca2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0a57caae0cffafc974da45eba645dca2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0a57caae0cffafc974da45eba645dca2::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0a57caae0cffafc974da45eba645dca2::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0a57caae0cffafc974da45eba645dca2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite4f181c817bb7f56c650b242f9d1d695::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite4f181c817bb7f56c650b242f9d1d695::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite4f181c817bb7f56c650b242f9d1d695::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInite4f181c817bb7f56c650b242f9d1d695::$classMap;
 
         }, null, ClassLoader::class);
     }

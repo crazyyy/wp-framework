@@ -1877,7 +1877,11 @@ class elFinder
                     }
                     $name .= '.' . $dlres['ext'];
                     $uniqid = uniqid();
-                    $this->session->set('zipdl' . $uniqid, basename($path));
+					if(ZEND_THREAD_SAFE){
+						set_transient("zipdl$uniqid", basename($path),MINUTE_IN_SECONDS);
+					} else {
+						$this->session->set('zipdl' . $uniqid, basename($path));
+					}
                     $result = array(
                         'zipdl' => array(
                             'file' => $CriOS? basename($path) : $uniqid,
@@ -1903,12 +1907,18 @@ class elFinder
                 }
             }
             // data check
-            if (count($targets) !== 4 || ($volume = $this->volume($targets[0])) == false || !($file = $CriOS? $targets[1] : $this->session->get('zipdl' . $targets[1]))) {
+            if (count($targets) !== 4 ||
+                ($volume = $this->volume($targets[0])) == false ||
+                !($file = $CriOS ? $targets[1] : ( ZEND_THREAD_SAFE ? get_transient( "zipdl$targets[1]" ) : $this->session->get( 'zipdl' . $targets[1] ) ) )) {
                 return array('error' => 'File not found', 'header' => $h404, 'raw' => true);
             }
             $path = $volume->getTempPath() . DIRECTORY_SEPARATOR . basename($file);
             // remove session data of "zipdl..."
-            $this->session->remove('zipdl' . $targets[1]);
+	        if(ZEND_THREAD_SAFE){
+		        delete_transient("zipdl$targets[1]");
+	        } else {
+		        $this->session->remove('zipdl' . $targets[1]);
+	        }
             if (!$CriOSinit) {
                 // register auto delete on shutdown
                 $GLOBALS['elFinderTempFiles'][$path] = true;

@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/wp-file-manager
   Description: Manage your WP files.
   Author: mndpsingh287
-  Version: 7.1.6
+  Version: 7.1.8
   Author URI: https://profiles.wordpress.org/mndpsingh287
   License: GPLv2
  **/
@@ -16,10 +16,11 @@ if (!class_exists('mk_file_folder_manager')):
     class mk_file_folder_manager
     {
         protected $SERVER = 'https://www.tru.agency/api/plugindata/api.php';
-        var $ver = '7.1.6';
+        var $ver = '7.1.8';
         /* Auto Load Hooks */
         public function __construct()
         {
+	        add_action('activated_plugin', array(&$this, 'deactivate_file_manager_pro'));
             add_action('admin_menu', array(&$this, 'ffm_menu_page'));
             add_action('network_admin_menu', array(&$this, 'ffm_menu_page'));
             add_action('admin_enqueue_scripts', array(&$this, 'ffm_admin_things'));
@@ -30,7 +31,7 @@ if (!class_exists('mk_file_folder_manager')):
             do_action('load_filemanager_extensions');
             add_action('plugins_loaded', array(&$this, 'filemanager_load_text_domain'));
             /*
-            Lokhal Verify Email
+            File Manager Verify Email
             */
             add_action('wp_ajax_mk_filemanager_verify_email', array(&$this, 'mk_filemanager_verify_email_callback'));
             add_action('wp_ajax_verify_filemanager_email', array(&$this, 'verify_filemanager_email_callback'));
@@ -46,7 +47,6 @@ if (!class_exists('mk_file_folder_manager')):
             add_action('wp_ajax_mk_file_manager_single_backup_remove', array(&$this, 'mk_file_manager_single_backup_remove_callback'));
             add_action('wp_ajax_mk_file_manager_single_backup_logs', array(&$this, 'mk_file_manager_single_backup_logs_callback'));
             add_action('wp_ajax_mk_file_manager_single_backup_restore', array(&$this, 'mk_file_manager_single_backup_restore_callback'));
-            add_action('admin_init', array('mk_file_folder_manager', 'mk_file_manager_create_tables'));
             add_action( 'rest_api_init', function () {
                 if(is_user_logged_in() && current_user_can('manage_options')){
                     register_rest_route( 'v1', '/fm/backup/(?P<backup_id>[a-zA-Z0-9-=]+)/(?P<type>[a-zA-Z0-9-=]+)/(?P<key>[a-zA-Z0-9-=]+)', array(
@@ -63,6 +63,44 @@ if (!class_exists('mk_file_folder_manager')):
                 }
             });
         }
+
+	    /**
+	     * Checks if another version of Filemanager/Filemanager PRO is active and deactivates it.
+	     * Hooked on `activated_plugin` so other plugin is deactivated when current plugin is activated.
+	     *
+	     * @return void
+	     */
+	    public function deactivate_file_manager_pro($plugin) {
+
+		    if ( ! in_array( $plugin, array(
+			    'wp-file-manager/file_folder_manager.php',
+			    'wp-file-manager-pro/file_folder_manager_pro.php'
+		    ), true ) ) {
+			    return;
+		    }
+
+		    $plugin_to_deactivate  = 'wp-file-manager/file_folder_manager.php';
+
+		    // If we just activated the free version, deactivate the pro version.
+		    if ( $plugin === $plugin_to_deactivate ) {
+			    $plugin_to_deactivate  = 'wp-file-manager-pro/file_folder_manager_pro.php';
+		    }
+
+		    if ( is_multisite() && is_network_admin() ) {
+			    $active_plugins = (array) get_site_option( 'active_sitewide_plugins', array() );
+			    $active_plugins = array_keys( $active_plugins );
+		    } else {
+			    $active_plugins = (array) get_option( 'active_plugins', array() );
+		    }
+
+		    foreach ( $active_plugins as $plugin_basename ) {
+			    if ( $plugin_to_deactivate === $plugin_basename ) {
+				    deactivate_plugins( $plugin_basename );
+				    return;
+			    }
+		    }
+	    }
+
         /* Auto Directory */
         public function create_auto_directory() {
             $upload_dir = wp_upload_dir();
@@ -95,43 +133,7 @@ if (!class_exists('mk_file_folder_manager')):
                 }
             }
         }
-         /* 
-         function called on activation create table
-        */
-        public static function mk_file_manager_create_tables() {
-            if ( is_multisite() ) {
-				global $wpdb;
-                // Get all blogs in the network and activate plugin on each one
-                $blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
-                foreach ( $blog_ids as $blog_id ) {
-                    switch_to_blog( $blog_id );
-                    self::wp_fm_create_tables();
-                    restore_current_blog();
-                }
-            } else {
-                self::wp_fm_create_tables();
-            }
-        }
 
-        /* 
-         create Backup table
-        */
-
-        public static function wp_fm_create_tables(){
-            global $wpdb;
-            $table_name = $wpdb->prefix . 'wpfm_backup';
-            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-            if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-                $charset_collate = $wpdb->get_charset_collate();        
-                $sql = "CREATE TABLE ".$table_name." (
-                    id int(11) NOT NULL AUTO_INCREMENT,
-                    backup_name text NULL,
-                    backup_date text NULL,
-                    PRIMARY KEY  (id)
-                ) $charset_collate;";                   
-                dbDelta( $sql );
-            }
-        }
         /*
         Backup - Restore
         */
@@ -1512,4 +1514,39 @@ if (!class_exists('mk_file_folder_manager')):
     /* end class */
 endif;
 
-register_activation_hook( __FILE__, array( 'mk_file_folder_manager', 'mk_file_manager_create_tables' ) );
+if(!function_exists('mk_file_folder_manager_wp_fm_create_tables')) {
+	function mk_file_folder_manager_wp_fm_create_tables(){
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'wpfm_backup';
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+			$charset_collate = $wpdb->get_charset_collate();
+			$sql = "CREATE TABLE ".$table_name." (
+                    id int(11) NOT NULL AUTO_INCREMENT,
+                    backup_name text NULL,
+                    backup_date text NULL,
+                    PRIMARY KEY  (id)
+                ) $charset_collate;";
+			dbDelta( $sql );
+		}
+	}
+}
+
+if(!function_exists('mk_file_folder_manager_create_tables')){
+	function mk_file_folder_manager_create_tables(){
+		if ( is_multisite() ) {
+			global $wpdb;
+			// Get all blogs in the network and activate plugin on each one
+			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+			foreach ( $blog_ids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				mk_file_folder_manager_wp_fm_create_tables();
+				restore_current_blog();
+			}
+		} else {
+			mk_file_folder_manager_wp_fm_create_tables();
+		}
+	}
+}
+
+register_activation_hook( __FILE__, 'mk_file_folder_manager_create_tables' );

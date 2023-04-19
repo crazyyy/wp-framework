@@ -6,11 +6,11 @@ FakerPress is a clean way to generate fake and dummy content to your WordPress, 
 
 **Contributors:** [bordoni](http://profiles.wordpress.org/bordoni)  
 **Tags:** [generator](http://wordpress.org/plugins/tags/generator), [dummy content](http://wordpress.org/plugins/tags/dummy+content), [dummy data](http://wordpress.org/plugins/tags/dummy+data), [lorem ipsun](http://wordpress.org/plugins/tags/lorem+ipsun), [admin](http://wordpress.org/plugins/tags/admin), [exemples](http://wordpress.org/plugins/tags/exemples), [testing](http://wordpress.org/plugins/tags/testing), [images](http://wordpress.org/plugins/tags/images), [attachments](http://wordpress.org/plugins/tags/attachments), [featured image](http://wordpress.org/plugins/tags/featured+image), [taxonomies](http://wordpress.org/plugins/tags/taxonomies), [users](http://wordpress.org/plugins/tags/users), [post type](http://wordpress.org/plugins/tags/post+type), [faker](http://wordpress.org/plugins/tags/faker), [fake data](http://wordpress.org/plugins/tags/fake+data), [random](http://wordpress.org/plugins/tags/random), [developer](http://wordpress.org/plugins/tags/developer), [dev](http://wordpress.org/plugins/tags/dev), [development](http://wordpress.org/plugins/tags/development), [test](http://wordpress.org/plugins/tags/test), [tests](http://wordpress.org/plugins/tags/tests)  
-**Requires at least:** 4.7  
-**Tested up to:** 5.9  
-**Stable tag:** trunk (master)  
+**Requires at least:** 5.5  
+**Tested up to:** 6.2  
+**Stable tag:** 0.6.1  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
-**Requires PHP:** 5.6  
+**Requires PHP:** 7.4  
 **Donate link:** https://fakerpress.com/r/sponsor  
 
 ## Description ##
@@ -19,7 +19,7 @@ Whenever you create a new Theme or Plugin you will always need to create custom 
 
 Our goal with this plugin is to fill this gap where you have problem with a good solution both for Developers and for Users of WordPress.
 
-> **Note: This plugin requires PHP 5.6 or higher to be activated.**
+> **Note: This plugin requires PHP 7.1 or higher to be activated.**
 
 [**Checkout our GitHub Repository**](http://fakerpress.com/r/github)
 ### Components Included ###
@@ -96,6 +96,26 @@ Thank you for wanting to make FakerPress better for everyone! [We salute you](ht
 
 
 ## Changelog ##
+
+### 0.6.1 &mdash; 04 of April 2023 ###
+* Requirement - PHP Version 7.4 required for usage of FakerPress, important step to allow further improvements and tests.
+* Version - Updated composer dependency `lucatume/di52` to version `3.3.1`.
+* Version - Updated composer dependency `fakerphp/faker` to version `1.21`.
+* Version - Updated composer dependency `nesbot/carbon to version `2.66`.
+* Fix - Resolve some errors happening with Carbon and version 8.2 of PHP.
+
+### 0.6.0 &mdash; 30 of March 2022 ###
+* Requirement - PHP Version 7.1 required for usage of FakerPress, important step to allow further improvements and tests.
+* Feature - Modifications to the internal Modules of FakerPress to enable future work around WP-CLI.
+* Feature - Include a new way to handle Administration Pages, included here to enable future work.
+* Enhancement - Modifications to Select2 Styles for better accessibility usage.
+* Tweak - Faker version dependency updated from `fzaninotto/Faker` to `fakerphp/Faker/`.
+* Tweak - Move everything into the FakerPress namespace.
+* Tweak - Autoload using Composer properly.
+
+### 0.5.3 &mdash; 04 of March 2022 ###
+* Fix - Ensure Select2 usage of AJAX search properly encodes on all usages props @TheMMMdev
+* Fix - Ensure Select2 usage of AJAX properly checks for nonces and permissions props @TheMMMdev
 
 ### 0.5.2 &mdash; 27 of January 2022 ###
 * Feature: Proper changelog page for users trying to figure out what has changed in the latest version of FakerPress.

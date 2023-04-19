@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'hello',
+  name: 'helloBubble',
   data () {
     return {
       open: true

@@ -75,7 +75,7 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 		$this->update_option('original_filesize', filesize($file_path));
 
 		// build list of files for smush.
-		$files = array_merge(array('full' => $file_path), $this->get_attachment_files($attachment_id));
+		$files = array_merge(array('full' => $file_path), WPO_Image_Utils::get_attachment_files($attachment_id));
 
 		$sizes_info = array();
 
@@ -90,9 +90,18 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 			}
 
 			$this->log($this->get_description());
+			$ext = WPO_Image_Utils::get_extension($file_path);
+			$allowed_extensions = WPO_Image_Utils::get_allowed_extensions();
+			$allowed_extensions = array_diff($allowed_extensions, array('gif'));
+			if (WPO_Image_Utils::can_do_webp_conversion()) {
+				if (WPO_Image_Utils::is_supported_extension($ext, $allowed_extensions)) {
+					WPO_Image_Utils::do_webp_conversion($file_path);
+				}
+			} else {
+				$this->log('There were no WebP conversion tools found on your server.');
+			}
 
-			$this->maybe_do_webp_conversion($file_path);
-			
+
 			/**
 			 * Filters the options for a single image to compress.
 			 * Currently supports:
@@ -127,21 +136,6 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 		$this->update_option('smush-sizes-info', $sizes_info);
 
 		return $this->success;
-	}
-
-	/**
-	 * Converts to WebP format, if possible
-	 *
-	 * @param string $source Source image file path
-	 */
-	public function maybe_do_webp_conversion($source) {
-		$webp_conversion = WP_Optimize()->get_options()->get_option('webp_conversion', false);
-		if (!empty($webp_conversion)) {
-			$webp_converter = new WPO_WebP_Convert();
-			$webp_converter->convert($source);
-		} else {
-			$this->log('There were no WebP conversion tools found on your server.');
-		}
 	}
 
 	/**
@@ -382,7 +376,7 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 	public function get_default_options() {
 
 		return array(
-			'allowed_file_types' => array('gif', 'png', 'jpg', 'tif', 'jpeg'),
+			'allowed_file_types' => WPO_Image_Utils::get_allowed_extensions(),
 			'request_timeout' => 15,
 			'image_quality' => 90,
 			'backup_prefix' => '-updraft-pre-smush-original.'
@@ -414,37 +408,6 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 		if (isset($this->stage))
 			return $this->stage;
 		else return $this->get_option('current_stage');
-	}
-
-	/**
-	 * Get image paths to resized attachment images.
-	 *
-	 * @param int $attachment_id
-	 * @return array
-	 */
-	private function get_attachment_files($attachment_id) {
-		$attachment_images = array();
-		$upload_dir = function_exists('wp_get_upload_dir') ? wp_get_upload_dir() : wp_upload_dir(null, false);
-
-		// get sizes info from attachment meta data.
-		$meta = wp_get_attachment_metadata($attachment_id);
-		if (!is_array($meta) || !array_key_exists('sizes', $meta)) return $attachment_images;
-
-		$image_sizes = array_keys($meta['sizes']);
-
-		// build list of resized images.
-		foreach ($image_sizes as $size) {
-			$image = image_get_intermediate_size($attachment_id, $size);
-
-			if (is_array($image)) {
-				$file = trailingslashit($upload_dir['basedir']) . $image['path'];
-				if (is_file($file) && !in_array($file, $attachment_images)) {
-					$attachment_images[$size] = $file;
-				}
-			}
-		}
-
-		return $attachment_images;
 	}
 
 	/**

@@ -40,6 +40,7 @@ class Metabox extends Root {
 	public function register_settings() {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box_settings' ), 15, 2 );
+		add_action( 'attachment_updated', array( $this, 'save_meta_box_settings' ), 15, 2 );
 	}
 
 	/**
@@ -48,6 +49,11 @@ class Metabox extends Root {
 	 */
 	public function add_meta_boxes( $post_type ) {
 		if ( apply_filters( 'litespeed_bypass_metabox', false, $post_type ) ) {
+			return;
+		}
+		$post_type_obj = get_post_type_object( $post_type );
+		if ( !$post_type_obj->public ) {
+			self::debug('post type public=false, bypass add_meta_boxes');
 			return;
 		}
 		add_meta_box( 'litespeed_meta_boxes', __( 'LiteSpeed Options', 'litespeed-cache' ), array( $this, 'meta_box_options' ), $post_type, 'side', 'core' );
@@ -97,9 +103,11 @@ class Metabox extends Root {
 	public function setting( $conf, $post_id = false ) {
 		// Check if has metabox non-cacheable setting or not
 		if ( ! $post_id ) {
+			$home_id = get_option( 'page_for_posts' );
 			if ( is_singular() ) {
 				$post_id = get_the_ID();
-
+			} elseif ( $home_id > 0 && is_home() ) {
+				$post_id = $home_id;
 			}
 		}
 

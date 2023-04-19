@@ -1,14 +1,15 @@
-@import "~vue-material/dist/theme/engine"; // Import the theme engine
+@import "vue-material/dist/theme/engine"; // Import the theme engine
 
 @include md-register-theme("default", (
   primary: md-get-palette-color(indigo, 900), // The primary color of your application
   accent: md-get-palette-color(lightgreen, 500) // The accent or secondary color
 ));
 
-@import "~vue-material/dist/theme/all"; // Apply the theme
+@import "vue-material/dist/theme/all"; // Apply the theme
 
 @import 'mixins';
 
+@import 'vue-material/dist/vue-material';
 @import 'global_classes'; // Global styles
 @import 'hello'; // Styles for welcome page
 @import 'find_problem'; // Styles for find a problem

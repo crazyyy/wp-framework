@@ -219,6 +219,8 @@ class Debug2 extends Root {
 			'HTTP_USER_AGENT' => '',
 			'HTTP_ACCEPT_ENCODING' => '',
 			'HTTP_COOKIE' => '',
+			'REQUEST_METHOD' => '',
+			'SERVER_PROTOCOL' => '',
 			'X-LSCACHE' => '',
 			'LSCACHE_VARY_COOKIE' => '',
 			'LSCACHE_VARY_VALUE' => '',
@@ -302,12 +304,14 @@ class Debug2 extends Root {
 				if ( isset( $_SERVER[ 'USER' ] ) ) {
 					$addr .= $_SERVER[ 'USER' ];
 				}
-				elseif ( $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] ) {
+				elseif ( !empty($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) ) {
 					$addr .= $_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
 				}
 			}
 			else {
-				$addr = $_SERVER[ 'REMOTE_ADDR' ] . ':' . $_SERVER[ 'REMOTE_PORT' ];
+				$addr = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '';
+				$port = isset( $_SERVER['REMOTE_PORT'] ) ? $_SERVER['REMOTE_PORT'] : '';
+				$addr = "$addr:$port";
 			}
 
 			// Generate a unique string per request

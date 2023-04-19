@@ -156,6 +156,9 @@ function wpo_cache($buffer, $flags) {
 		}
 
 		$modified_time = time(); // Take this as soon before writing as possible
+		if (!empty($GLOBALS['wpo_cache_config']['gmt_offset'])) {
+			$modified_time += $GLOBALS['wpo_cache_config']['gmt_offset'] * 3600;
+		}
 
 		$add_to_footer = '';
 		
@@ -707,7 +710,7 @@ endif;
 if (!function_exists('wpo_is_canonical_redirection_needed')) :
 	function wpo_is_canonical_redirection_needed() {
 		$permalink_structure = isset($GLOBALS['wpo_cache_config']['permalink_structure']) ? $GLOBALS['wpo_cache_config']['permalink_structure'] : '';
-		$site_url = $GLOBALS['wpo_cache_config']['site_url'];
+		$site_url = wpo_site_url();
 		
 		$schema = isset($_SERVER['HTTPS']) && 'on' === $_SERVER['HTTPS'] ? "https" : "http";
 		$url_part = "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -716,12 +719,13 @@ if (!function_exists('wpo_is_canonical_redirection_needed')) :
 		$extension = pathinfo($url_parts['path'], PATHINFO_EXTENSION);
 		
 		if (!empty($permalink_structure) && $requested_url != $site_url) {
+			$request_uri = rtrim($_SERVER['REQUEST_URI'], '?');
 			if ('/' == substr($permalink_structure, -1) && empty($extension) && empty($url_parts['query']) && empty($url_parts['fragment'])) {
-				$url = preg_replace('/(.+?)([\/]*)(\[\?\#][^\/]+|$)/', '$1/$3', $_SERVER['REQUEST_URI']);
-				if (0 !== strcmp($_SERVER['REQUEST_URI'], $url)) return true;
+				$url = preg_replace('/(.+?)([\/]*)(\[\?\#][^\/]+|$)/', '$1/$3', $request_uri);
+				if (0 !== strcmp($request_uri, $url)) return true;
 			} else {
-				$url = rtrim($_SERVER['REQUEST_URI'], '/');
-				if (0 !== strcmp($_SERVER['REQUEST_URI'], $url)) return true;
+				$url = rtrim($request_uri, '/');
+				if (0 !== strcmp($request_uri, $url)) return true;
 			}
 		}
 		return false;
@@ -757,6 +761,16 @@ function wpo_get_url_path($url = '') {
 	
 	if (isset($url_parts['path']) && false !== stripos($url_parts['path'], '/index.php')) {
 		$url_parts['path'] = preg_replace('/(.*?)index\.php(\/.+)/i', '$1index-php$2', $url_parts['path']);
+	}
+
+	/*
+	 * Convert the hexadecimal digits within the percent-encoded triplet to uppercase, to ensure that the path remains
+	 * consistent. For instance, "example.com/%e0%a6" will be converted to "example.com/%E0%A6".
+	 */
+	if (isset($url_parts['path'])) {
+		$url_parts['path'] = preg_replace_callback('/%[0-9A-F]{2}/i', function($matches) {
+			return strtoupper($matches[0]);
+		}, $url_parts['path']);
 	}
 
 	if (!isset($url_parts['host'])) $url_parts['host'] = '';
@@ -1064,13 +1078,18 @@ function wpo_delete_files($src, $recursive = true) {
 					$file = readdir($dir);
 					continue;
 				}
-				if (is_dir($src . '/' . $file)) {
-					if (!wpo_delete_files($src . '/' . $file)) {
+
+				$full_path = $src . '/' . $file;
+
+				if (is_dir($full_path)) {
+					if (!wpo_delete_files($full_path)) {
 						$success = false;
 					}
 				} else {
-					if (!unlink($src . '/' . $file)) {
-						$success = false;
+					if (!@unlink($full_path)) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppressed the first time in case it was already removed by a contemporary process (avoid unwanted logging for harmless races)
+						if (file_exists($full_path) && !unlink($full_path)) {
+							$success = false;
+						}
 					}
 				}
 

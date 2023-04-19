@@ -3,9 +3,9 @@ Contributors: eskapism
 Donate link: https://www.paypal.me/eskapism
 Tags: history, log, changes, changelog, audit, audit log, event log, user tracking, trail, pages, attachments, users, dashboard, admin, syslog, feed, activity, stream, audit trail, brute-force
 Requires at least: 5.2
-Tested up to: 5.9.3
+Tested up to: 6.2
 Requires PHP: 5.6
-Stable tag: 3.3.0
+Stable tag: 3.5.0
 
 View changes made by users within WordPress. See who created a page, uploaded an attachment or approved an comment, and more.
 
@@ -64,7 +64,7 @@ Simple History will log each user switch being made.
 
 **WP Crontrol**<br>
 The [WP Crontrol plugin](https://wordpress.org/plugins/wp-crontrol/) enables you to view and control what's happening in the WP-Cron system.
-Simple History will log when cron events are added, edited, deleted, and manually ran, and when cron schedules are added and deleted.
+Simple History will log when cron events are added, edited, deleted, paused, resumed, and manually ran, and when cron schedules are added and deleted.
 
 **Enable Media Replace**<br>
 The [Enable Media Replace plugin](https://wordpress.org/plugins/enable-media-replace/) allows you to replace a file in your media library by uploading a new file in its place.
@@ -192,6 +192,22 @@ Events in the log are stored for 60 days by default. Events older than this will
    A simple way to see any uncommon activity, for example an increased number of logins or similar.
 
 == Changelog ==
+
+= 3.5.0 (March 2023) =
+
+- Added: Log an entry when a cron event hook is paused or resumed with the WP Crontrol plugin [#328](https://github.com/bonny/WordPress-Simple-History/pull/328).
+- Fixed: DB error on MariaDB database when collation `utf8mb4_unicode_520_ci` is used for the Simple history tables. Reported here: https://wordpress.org/support/topic/database-error-after-upgrade-to-wordpress-6-1/.
+- Tested up to WordPress 6.2.
+
+Note: Next major version of the plugin will require PHP 7. If you are running a PHP version older than that please read https://wordpress.org/support/update-php/.
+
+= 3.4.0 (February 2023) =
+
+- Changed: When exporting a CSV file of the history, each cell is escaped to reduce the risk of "CSV injection" in spreadsheet applications when importing the exported CSV. Reported here: https://patchstack.com/database/vulnerability/simple-history/wordpress-simple-history-plugin-3-3-1-csv-injection-vulnerability.
+
+= 3.3.1 (October 2022) =
+
+- Tested up to WordPress 6.1.
 
 = 3.3.0 (May 2022) =
 

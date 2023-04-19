@@ -1,0 +1,20 @@
+.corner-otto {
+	bottom: 0;
+	max-width: 90%;
+	position: fixed;
+	right: 5%;
+	text-align: right;
+	z-index: 100;
+	@include bp(s) {
+		max-width: 40%;
+	}
+	@include bp(l) {
+		max-width: 20%;
+	}
+	img {
+		height: auto;
+		max-height: 20vh;
+		max-width: 100%;
+		width: auto;
+	}
+}

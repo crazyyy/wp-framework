@@ -9,11 +9,16 @@ if ( ! class_exists( "cmplz_config" ) ) {
 		public $steps = array();
 		public $formal_languages = array();
 		public $generic_documents_list;
+		public $supported_states;
+		public $cookie_consent_converter;
+		public $language_codes;
 
 		public $supported_regions;
 
 		public $thirdparty_services
 			= array(
+				'activecampaign'   => 'Active Campaign',
+				"adobe-fonts"    	 => 'Adobe Fonts',
 				'google-fonts'     => 'Google Fonts',
 				'google-recaptcha' => 'Google reCAPTCHA',
 				"google-maps"      => 'Google Maps',
@@ -23,7 +28,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"videopress"       => 'VideoPress',
 				"dailymotion"      => 'Dailymotion',
 				"soundcloud"       => 'SoundCloud',
-				"twitch"         	 => 'Twitch',
+				"twitch"           => 'Twitch',
 				"paypal"           => 'PayPal',
 				"spotify"          => 'Spotify',
 				"hotjar"           => 'Hotjar',
@@ -33,6 +38,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"livechat"         => 'LiveChat',
 				"hubspot"          => 'HubSpot',
 				"calendly"         => 'Calendly',
+				"microsoftads"     => 'Microsoft Ads'
 			);
 
 		public $thirdparty_socialmedia
@@ -138,7 +144,8 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"youtube"          => array(
 					'youtube.com',
 					'youtube-nocookie.com',
-					'youtu.be'
+					'youtu.be',
+					'yotuwp',
 				),
 				"videopress"       => array(
 					'videopress.com/embed',
@@ -156,10 +163,12 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"addthis"          => array( 'addthis.com' ),
 				"addtoany"          => array( 'addtoany.min.js', 'window.a2a_config' ),
 				"sharethis"        => array( 'sharethis.com' ),
+				"microsoftads"     => array('bat.bing.com'),
 				"livechat"         => array( 'cdn.livechatinc.com/tracking.js' ),
 				"hubspot"         => array( 'js.hs-scripts.com/', 'hbspt.forms.create', 'js.hsforms.net','track.hubspot.com','js.hs-analytics.net'),
 				"calendly"         => array( 'assets.calendly.com' ),
 				"twitch"          => array( 'twitch.tv', 'player.twitch.tv'),
+				"adobe-fonts"    => array( 'p.typekit.net', 'use.typekit.net'),
 			);
 
 		public $stats
@@ -169,6 +178,8 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				'matomo'             => 'Matomo',
 				'clicky'             => 'Clicky',
 				'yandex'             => 'Yandex',
+				'clarity'            => 'Clarity',
+
 			);
 		public $stats_markers = array(
 				'google-analytics'   => array(
@@ -184,6 +195,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				'matomo' => array( 'piwik.js', 'matomo.js' ),
 				'clicky' => array( 'static.getclicky.com/js', 'clicky_site_ids' ),
 				'yandex' => array( 'mc.yandex.ru/metrika/watch.js' ),
+				'clarity' => array( 'clarity.ms' ),
 			);
 
 		public $amp_tags
@@ -236,6 +248,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 		public $eu_countries;
 		public $premium_geo_ip;
 		public $premium_ab_testing;
+		public $premium_ab_testing_buttons;
 		public $collected_info_children;
 
 		function __construct() {
@@ -267,13 +280,19 @@ if ( ! class_exists( "cmplz_config" ) ) {
 			$this->premium_geo_ip
 				= cmplz_sprintf( __( "To enable the warning only for countries with a cookie law, %sget premium%s.",
 					'complianz-gdpr' ),
-					'<a href="https://complianz.io" target="_blank">', '</a>' )
+					'<a href="https://complianz.io/pricing/" target="_blank">', '</a>' )
 				  . "&nbsp;";
 			$this->premium_ab_testing
 				= cmplz_sprintf( __( "If you want to run a/b testing to track which banner gets the highest acceptance ratio, %sget premium%s.",
 					'complianz-gdpr' ),
-					'<a href="https://complianz.io" target="_blank">', '</a>' )
+					'<a href="https://complianz.io/pricing/" target="_blank">', '</a>' )
 				  . "&nbsp;";
+
+			$this->premium_ab_testing_buttons
+						= cmplz_sprintf( __( "If you want to run a/b testing to track which banner gets the highest acceptance ratio, %sget premium%s.",
+							'complianz-gdpr' ),
+							'<a href="https://complianz.io/pricing/" target="_blank">', '</a>' )
+							. "&nbsp;";
 
 			$this->placeholders = array(
 				'default' => __('Default','complianz-gdpr'),
@@ -290,9 +309,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				'tiktok' => 'Tik Tok'
 			);
 
-
-
-				/* config files */
+			/* config files */
 			require_once( cmplz_path . '/config/countries.php' );
 			require_once( cmplz_path . '/config/purpose.php' );
 			require_once( cmplz_path . '/config/steps.php' );
@@ -307,7 +324,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 			require_once( cmplz_path . '/config/documents/cookie-policy-au.php' );
 			require_once( cmplz_path . '/config/documents/cookie-policy-za.php' );
 			require_once( cmplz_path . '/config/documents/cookie-policy-br.php' );
-			require_once(cmplz_path . '/cookiebanner/settings.php' );
+			require_once( cmplz_path . '/cookiebanner/settings.php' );
 
 			if ( file_exists( cmplz_path . '/pro/config/' ) ) {
 				require_once( cmplz_path . '/pro/config/includes.php' );
@@ -431,17 +448,14 @@ if ( ! class_exists( "cmplz_config" ) ) {
 		public function init() {
 			$this->steps = apply_filters('cmplz_steps', $this->steps );
 			$this->fields = apply_filters( 'cmplz_fields', $this->fields );
-			if ( ! is_admin() ) {
-				$regions = cmplz_get_regions(true);
-				foreach ( $regions as $region => $label ) {
-					if ( !isset( $this->pages[ $region ] ) ) continue;
+			$regions = cmplz_get_regions(true);
+			foreach ( $regions as $region => $label ) {
+				if ( !isset( $this->pages[ $region ] ) ) continue;
 
-					foreach ( $this->pages[ $region ] as $type => $data ) {
-						$this->pages[ $region ][ $type ]['document_elements']
-							= apply_filters( 'cmplz_document_elements',
-							$this->pages[ $region ][ $type ]['document_elements'],
-							$region, $type, $this->fields() );
-					}
+				foreach ( $this->pages[ $region ] as $type => $data ) {
+					$this->pages[ $region ][ $type ]['document_elements'] = apply_filters( 'cmplz_document_elements',
+						$this->pages[ $region ][ $type ]['document_elements'],
+						$region, $type, $this->fields() );
 				}
 			}
 		}
@@ -467,7 +481,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				'upgraded_to_6' => array(
 					'warning_condition'  => 'cmplz_upgraded_to_current_version',
 					'open' => cmplz_sprintf(__( 'Complianz GDPR/CCPA %s. Learn more about our newest release.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/meet-complianz-6-0/'),'6.0.0' ).'&nbsp;'.
-					          '<br><br>'.cmplz_sprintf(__('We have changed our Cookie Banner template for future capabilities, please check your %sCookie Banner settings%s.','complianz-gdpr'),'<a href="'.$banner_url.'">','</a>').'&nbsp;'.
+					          '<br /><br />'.cmplz_sprintf(__('We have changed our Cookie Banner template for future capabilities, please check your %sCookie Banner settings%s.','complianz-gdpr'),'<a href="'.$banner_url.'">','</a>').'&nbsp;'.
 					          __('You can reset to default values, if needed.','complianz-gdpr'),
 					'admin_notice' => true,
 				),
@@ -488,7 +502,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 						'get_value_respect_dnt==yes'
 					),
 					'completed'    => __( 'Do Not Track and Global Privacy Control are respected.', 'complianz-gdpr' ),
-					'open' => cmplz_sprintf( __( 'Do Not Track and Global Privacy Control are not yet respected. - (%spremium%s)', 'complianz-gdpr' ), '<a  target="_blank" href="https://complianz.io/browser-privacy-controls/">', '</a>' ),
+					'open' => __( 'Do Not Track and Global Privacy Control are not yet respected.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/browser-privacy-controls/'),
 				),
 
 				'drop-elementor-banner' => array(
@@ -507,6 +521,14 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					          cmplz_read_more('https://complianz.io/informal-language-in-legal-documents/'),
 					'include_in_progress' => true,
 
+				),
+				'google-fonts' => array(
+					'plus_one' => true,
+					'warning_condition' => 'cookie_admin->show_google_fonts_notice',
+					'success_conditions'  => array(
+					),
+					'open' => __( 'Google Fonts requires your attention.', 'complianz-gdpr' ) ." ". cmplz_sprintf(__( 'We have added additional support and recommend reviewing your %ssettings%s.', 'complianz-gdpr' ), '<a href="'. admin_url('admin.php?page=cmplz-wizard&step=2&section=4') .'">','</a>')." " . cmplz_sprintf( __( 'Please read this %sarticle%s to read our position on self-hosting Google Fonts and Privacy by Design.', 'complianz-gdpr' ),  '<a href="http://complianz.io/self-hosting-google-fonts-for-wordpress/" target="_blank">', '</a>'),
+					'include_in_progress' => true,
 				),
 
 				'cookies-changed' => array(
@@ -612,7 +634,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 						'NOT cmplz_get_console_errors',
 					),
 					'open' => __( 'Javascript errors are detected on the front-end of your site. This may break the cookie banner functionality.', 'complianz-gdpr' )
-					                 . '<br>'.__("Last error in the console:", "complianz-gdpr")
+					                 . '<br />'.__("Last error in the console:", "complianz-gdpr")
 					                 .'<div style="color:red">'
 					                 . cmplz_get_console_errors()
 					                 .'</div>'
@@ -676,12 +698,12 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				),
 
 				'sync-privacy-statement' => array(
-					'premium' => __( 'Synchronize your Privacy Statement with Complianz.', 'complianz-gdpr' ) . ' <a href="https://complianz.io/l/pricing/?src=cmplz-plugin" target="_blank">' . __('Upgrade to premium', 'complianz-gdpr') . '</a>',
+					'premium' => __( 'Create a Privacy Statement and other Legal Documents with Complianz.', 'complianz-gdpr' ) . ' <a href="https://complianz.io/l/pricing/?src=cmplz-plugin" target="_blank">' . __('Upgrade to premium', 'complianz-gdpr') . '</a>',
 					'include_in_progress' => false,
 					'dismissible' => false,
 				),
 
-				'bf-notice' => array(
+				'bf-notice2022' => array(
 					'warning_condition'  => 'admin->is_bf',
 					'plus_one' => true,
 					'open' => __( "Black Friday sale! Get 40% Off Complianz GDPR/CCPA premium!", 'complianz-gdpr' ).'&nbsp;'.'<a target="_blank" href="https://complianz.io/pricing">'.__('Learn more.','complianz-gdpr').'</a>',

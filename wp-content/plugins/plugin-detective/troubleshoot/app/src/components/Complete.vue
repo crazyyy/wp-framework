@@ -14,7 +14,7 @@ import RequiredCulprits from './results/RequiredCulprits'
 import BrokenLoop from './results/BrokenLoop'
 
 export default {
-  name: 'complete',
+  name: 'completeComponent',
   components: { NoCulpritFound, CulpritsFound, RequiredCulprits, BrokenLoop },
   store,
   data () {

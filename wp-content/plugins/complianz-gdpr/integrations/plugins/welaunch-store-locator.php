@@ -9,6 +9,17 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
  * @return array
  */
 function cmplz_wordpress_store_locator_googlemaps_script( $tags ) {
+
+	global $post;
+
+	//[wordpress_store_locator] contains all stores on one map which has a different class
+	if ( $post && has_shortcode($post->post_content, 'wordpress_store_locator')) {
+		$class = 'store_locator_map';
+	} else {
+		$class = 'store_locator_single_map';
+	}
+
+
 	$tags[] = array(
 		'name' => 'google-maps',
 		'category' => 'marketing',
@@ -18,7 +29,7 @@ function cmplz_wordpress_store_locator_googlemaps_script( $tags ) {
 				'var store_locator_options',
 		),
 		'enable_placeholder' => '1',
-		'placeholder_class' => 'store_locator_map',
+		'placeholder_class' => $class,
 		'enable_dependency' => '1',
 		'dependency' => [
 			//'wait-for-this-script' => 'script-that-should-wait'

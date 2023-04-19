@@ -61,28 +61,32 @@
 				<span class="slider-end"><?php _e('Best image quality', 'wp-optimize');?></span>
 			</div>
 			<p><?php _e('Not sure what to choose?', 'wp-optimize'); ?> <a href="https://getwpo.com/lossy-vs-lossless-image-compression-a-guide-to-the-trade-off-between-image-size-and-quality/" target="_blank"><?php _e('Read our article "Lossy vs Lossless image compression"', 'wp-optimize'); ?></a></p>
-			<h3><?php _e('WebP conversion', 'wp-optimize');?></h3>
-			<?php
-				$converters = WP_Optimize()->get_options()->get_option('webp_converters', false);
-				if (!$does_server_allows_local_webp_conversion) {
-					printf('<p>%1$s</p>', __('Note: Local WebP conversion tools are not allowed on your server.', 'wp-optimize'));
-				} elseif (!empty($converters)) {
-					printf('<p>%1$s <strong>' . implode(', ', $converters) . '</strong></p>', __('Available WebP conversion tools:', 'wp-optimize'));
+			<?php if (WPO_USE_WEBP_CONVERSION) : ?>
+				<h3><?php _e('WebP conversion', 'wp-optimize');?></h3>
+				<?php
+					$converters = WP_Optimize()->get_options()->get_option('webp_converters', false);
+					if (!$does_server_allows_local_webp_conversion) {
+						printf('<p>%1$s</p>', __('Note: Local WebP conversion tools are not allowed on your server.', 'wp-optimize'));
+					} elseif (!empty($converters)) {
+						printf('<p>%1$s <strong>' . implode(', ', $converters) . '</strong></p>', __('Available WebP conversion tools:', 'wp-optimize'));
+					?>
+						<input type="checkbox" id="enable_webp_conversion" name="webp_conversion" <?php checked($smush_options['webp_conversion']); ?> class="smush-options webp_conversion">
+						<label for="enable_webp_conversion"><?php _e('Create WebP version of image', 'wp-optimize');?></label>
+						<span tabindex="0" data-tooltip="<?php _e('Creates WebP image format and serves it whenever possible.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
+						<br>
+				<?php
+					} else {
+						printf('<p>%1$s <a href="https://getwpo.com/faqs/#How-can-I-get-these-conversion-tools-work-" target="_blank">%2$s</a></p>', __('No WebP conversion tools are available on your web-server.', 'wp-optimize'), __('How to get WebP conversion tools work?', 'wp-optimize'));
+					}
 				?>
-					<input type="checkbox" id="enable_webp_conversion" name="webp_conversion" <?php checked($smush_options['webp_conversion']); ?> class="smush-options webp_conversion"> 
-					<label for="enable_webp_conversion"><?php _e('Create WebP version of image', 'wp-optimize');?></label>
-					<span tabindex="0" data-tooltip="<?php _e('Creates WebP image format and serves it whenever possible.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
-					<br>						
-			<?php
-				} else {
-					printf('<p>%1$s</p>', __('No WebP conversion tools are available on your web-server.', 'wp-optimize'));
-				}
-			?>
+			<?php endif; ?>
 		</div>
 		<button type="button" class="button button-link wpo-toggle-advanced-options"><span class="text"><span class="dashicons dashicons-arrow-down-alt2"></span> <span class="wpo-toggle-advanced-options__text-show"><?php _e('Show advanced options', 'wp-optimize');?></span><span class="wpo-toggle-advanced-options__text-hide"><?php _e('Hide advanced options', 'wp-optimize');?></span></span></button>
 		<div class="smush-advanced wpo-advanced-options">
+			<?php if ($does_server_allows_local_webp_conversion && !empty($converters)) : ?>
 			<button type="button" id="wpo_reset_webp_serving_method" class="wpo_primary_small button"><?php _e('Reset WebP serving method', 'wp-optimize'); ?></button>
 			<span id="wpo_reset_webp_serving_method_done" class="display-none"><span class="dashicons dashicons-yes"></span> <?php _e('The WebP serving method has been reset', 'wp-optimize');?></span>
+			<?php endif; ?>
 			<div class="compression_server">
 				<h3><?php _e('Compression service', 'wp-optimize');?></h3>
 				<div> <input type="radio" name="compression_server" id="resmushit" value="resmushit" <?php checked($smush_options['compression_server'], 'resmushit'); ?> >			  
@@ -99,11 +103,11 @@
 				<input type="checkbox" id="smush-preserve-exif" class="smush-options preserve_exif" <?php checked($smush_options['preserve_exif']); ?> >
 				<label for="smush-preserve-exif" class="smush-options preserve_exif"><?php _e('Preserve EXIF data', 'wp-optimize');?></label>
 				<br>
-				<input type="checkbox" id="smush-backup-original" class="smush-options back_up_original" <?php checked($smush_options['back_up_original']); ?> > 
+				<input type="checkbox" id="smush-backup-original" class="smush-options" <?php checked($smush_options['back_up_original']); ?> > 
 				<label for="smush-backup-original"><?php _e('Backup original images', 'wp-optimize');?></label>
 				<span tabindex="0" data-tooltip="<?php _e('The original images are stored alongside the compressed images, you can visit the edit screen of the individual images in the Media Library to restore them.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
 				<br>
-				<input type="checkbox" id="smush-backup-delete" class="smush-options back_up_original" <?php checked($smush_options['back_up_delete_after']); ?> >
+				<input type="checkbox" id="smush-backup-delete" class="smush-options" <?php checked($smush_options['back_up_delete_after']); ?> >
 				<label for="smush-backup-delete"><?php _e('Automatically delete image backups after', 'wp-optimize');?><input id="smush-backup-delete-days" type="number" min="1" value="<?php echo (0 !== intval($smush_options['back_up_delete_after_days'])) ? intval($smush_options['back_up_delete_after_days']) : 50; ?>"><?php _e('days', 'wp-optimize');?></label><label> — <?php _e('or', 'wp-optimize'); ?></label> <button type="button" id="wpo_smush_delete_backup_btn" class="wpo_primary_small button"><?php _e('Delete all backup images now', 'wp-optimize'); ?></button>
 				<img id="wpo_smush_delete_backup_spinner" class="display-none" src="<?php echo esc_attr(admin_url('images/spinner-2x.gif')); ?>" alt="...">
 				<span id="wpo_smush_delete_backup_done" class="dashicons dashicons-yes display-none save-done"></span>
@@ -124,6 +128,16 @@
 
 	<div class="uncompressed-images">
 		<h3><?php _e('Uncompressed images', 'wp-optimize');?></h3>
+		<?php if (is_multisite()) : ?>
+			<div id="wpo_uncompressed_images_sites_select_container">
+				<label for="wpo_uncompressed_images_sites_select"><?php _e('Select site', 'wp-optimize');?> </label>
+				<select id="wpo_uncompressed_images_sites_select">
+					<?php foreach ($sites as $site) : ?>
+					<option value="<?php echo $site->blog_id; ?>"><?php echo $site->domain . $site->path; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		<?php endif; ?>
 		<div class="wpo_smush_images_buttons_wrap">
 			<div class="smush-select-actions. align-left">
 				<a href="javascript:;" id="wpo_smush_images_select_all"><?php _e('Select all', 'wp-optimize');?></a> /

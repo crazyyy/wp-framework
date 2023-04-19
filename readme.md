@@ -11,6 +11,21 @@ npm i
 npm run start
 ```
 
+## Usefull WP Cli
+
+### Install WP CLi
+
+ToDo: write how to install wp-cli
+
+### Using WP Cli
+
+- [WP Cli documentation](https://developer.wordpress.org/cli/commands/)
+
+```shell
+# Refreshes the salts defined in the wp-config.php file.
+wp config shuffle-salts
+```
+
 ## Howto
 
 - `.dblock` - `@extend .dblock` - for various `:before`/`:after` elements

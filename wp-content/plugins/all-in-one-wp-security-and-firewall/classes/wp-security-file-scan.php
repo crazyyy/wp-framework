@@ -30,10 +30,9 @@ class AIOWPSecurity_Scan {
 			// the fcd file containing the results doesn't exist
 			$random_suffix = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(10);
 			$fcd_filename = 'aiowps_fcd_data_' . $random_suffix;
-			$aio_wp_security->configs->set_value('aiowps_fcd_filename', $fcd_filename);
-			$aio_wp_security->configs->save_config();
+			$aio_wp_security->configs->set_value('aiowps_fcd_filename', $fcd_filename, true);
 		}
-		
+
 		$fcd_data = self::get_fcd_data(); // get previous scan data if any
 
 		if (false === $fcd_data) {
@@ -55,15 +54,13 @@ class AIOWPSecurity_Scan {
 			$this->save_fcd_data($scanned_data, $scan_result);
 			if (!empty($scan_result['files_added']) || !empty($scan_result['files_removed']) || !empty($scan_result['files_changed'])) {
 				//This means there was a change detected
-				$aio_wp_security->configs->set_value('aiowps_fcds_change_detected', true);
-				$aio_wp_security->configs->save_config();
+				$aio_wp_security->configs->set_value('aiowps_fcds_change_detected', true, true);
 				$aio_wp_security->debug_logger->log_debug(__METHOD__ . " - change to filesystem detected!");
 
 				$this->aiowps_send_file_change_alert_email($scan_result); //Send file change scan results via email if applicable
 			} else {
 				//Reset the change flag
-				$aio_wp_security->configs->set_value('aiowps_fcds_change_detected', false);
-				$aio_wp_security->configs->save_config();
+				$aio_wp_security->configs->set_value('aiowps_fcds_change_detected', false, true);
 			}
 			return $scan_result;
 		}
@@ -77,23 +74,23 @@ class AIOWPSecurity_Scan {
 	 */
 	public function aiowps_send_file_change_alert_email($scan_result) {
 		global $aio_wp_security;
-		if ($aio_wp_security->configs->get_value('aiowps_send_fcd_scan_email') == '1') {
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_send_fcd_scan_email')) {
 			$site_title = get_bloginfo('name');
 			$from_name = empty($site_title) ? 'WordPress' : $site_title;
 			
 			$headers = 'From: ' . $from_name . ' <' . get_option('admin_email') . '>' . PHP_EOL;
 			$subject = __('All In One WP Security - File change detected!', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
 			//$attachment = array();
-			$message = __('A file change was detected on your system for site URL', 'all-in-one-wp-security-and-firewall') . ' ' . get_option('siteurl') . __('. Scan was generated on', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
+			$message = __('A file change was detected on your system for site URL', 'all-in-one-wp-security-and-firewall') . ' ' . network_site_url() . __('. Scan was generated on', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
 			$message .= "\r\n\r\n".__('A summary of the scan results is shown below:', 'all-in-one-wp-security-and-firewall');
 			$message .= "\r\n\r\n";
 			$message .= self::get_file_change_summary($scan_result);
 			$message .= "\r\n".__('Login to your site to view the scan details.', 'all-in-one-wp-security-and-firewall');
 
 			// Get the email address(es).
-			$addresses = $aio_wp_security->configs->get_value('aiowps_fcd_scan_email_address');
+			$addresses = AIOWPSecurity_Utility::get_array_from_textarea_val($aio_wp_security->configs->get_value('aiowps_fcd_scan_email_address'));
 			// If no explicit email address(es) are given, send email to site admin.
-			$to = empty($addresses) ? array(get_site_option('admin_email')) : explode(PHP_EOL, $addresses);
+			$to = empty($addresses) ? array(get_site_option('admin_email')) : $addresses;
 			if (!wp_mail($to, $subject, $message, $headers)) {
 				$aio_wp_security->debug_logger->log_debug(__METHOD__ . " - File change notification email failed to send.", 4);
 			}
@@ -130,14 +127,12 @@ class AIOWPSecurity_Scan {
 					if (false === $result) {
 						$aio_wp_security->debug_logger->log_debug(__METHOD__ . " - Scheduled filescan operation failed!", 4);
 					} else {
-						$aio_wp_security->configs->set_value('aiowps_last_fcd_scan_time', $time_now);
-						$aio_wp_security->configs->save_config();
+						$aio_wp_security->configs->set_value('aiowps_last_fcd_scan_time', $time_now, true);
 					}
 				}
 			} else {
 				//Set the last scan time to now so it can trigger for the next scheduled period
-				$aio_wp_security->configs->set_value('aiowps_last_fcd_scan_time', $time_now);
-				$aio_wp_security->configs->save_config();
+				$aio_wp_security->configs->set_value('aiowps_last_fcd_scan_time', $time_now, true);
 			}
 		}
 	}
@@ -220,7 +215,7 @@ class AIOWPSecurity_Scan {
 			}
 
 			if ($fileinfo->getFilename() == 'wp-security-log-cron-job.txt' || $fileinfo->getFilename() == 'wp-security-log.txt') {
-				continue; // skip aiowps log files
+				continue; // Skip AIOS log files
 			}
 
 			// Let's omit any file types from the scan which were specified in the settings if necessary

@@ -69,7 +69,7 @@
 						value="individual"
 						<?php echo checked($wpo_minify_options['enable_defer_js'], 'individual'); ?>
 					>
-					<?php _e('Defer selected JavaScript files', 'wp-optimize'); ?>
+					<?php _e('Asynchronously load selected JavaScript files', 'wp-optimize'); ?>
 					<span tabindex="0" data-tooltip="<?php esc_attr_e('The files in the list will be loaded asynchronously, and will not be minified or merged.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 				</label>
 				</h4>
@@ -77,7 +77,7 @@
 					<label for="async_js">
 						<?php _e('Any JavaScript files that match the paths below will be loaded asynchronously.', 'wp-optmize'); ?>
 						<br/>
-						<?php _e('Use this if you have a completely independent script or would like to exclude scripts from page speed tests (PageSpeed Insights, GTMetrix...)', 'wp-optmize'); ?>
+						<?php _e('Use this if you have a completely independent script', 'wp-optmize'); ?>
 						<span tabindex="0" data-tooltip="<?php esc_attr_e('Independent scripts are for example \'analytics\' or \'pixel\' scripts. They are not required for the website to work', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 					</label>
 					<textarea
@@ -88,6 +88,17 @@
 						class="large-text code"
 						placeholder="<?php esc_attr_e('e.g.: /js/main.js', 'wp-optimize'); ?>"
 					><?php echo esc_textarea($wpo_minify_options['async_js']); ?></textarea>
+					<label for="exclude_js_from_page_speed_tools">
+						<input
+								name="exclude_js_from_page_speed_tools"
+								type="checkbox"
+								id="exclude_js_from_page_speed_tools"
+								value="1"
+								<?php echo checked($wpo_minify_options['exclude_js_from_page_speed_tools']); ?>
+						>
+						<?php _e('Exclude scripts from page speed tests (PageSpeed Insights, GTMetrix...)', 'wp-optimize'); ?>
+						<span tabindex="0" data-tooltip="<?php esc_attr_e('Use this only for testing purpose to find out which scripts are slowing down your site.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
+					</label>
 				</div>
 			</fieldset>
 			
@@ -129,7 +140,7 @@
 							<?php echo checked($wpo_minify_options['defer_js_type'], 'async_using_js'); ?>
 						>
 						<?php _e('Defer using JavaScript', 'wp-optimize'); ?>
-						<em><?php printf(__('(Use this method if you require support for %solder browsers%s).', 'wp-optimize'), '<a href="https://www.w3schools.com/tags/att_script_defer.asp" target="_blank">', '</a>');?></em>
+						<em><?php printf(__('(Asynchronous loading. Use this method if you require support for %solder browsers%s).', 'wp-optimize'), '<a href="https://www.w3schools.com/tags/att_script_defer.asp" target="_blank">', '</a>');?></em>
 					</label>
 					<label for="defer_jquery">
 						<input

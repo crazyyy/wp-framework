@@ -7,6 +7,9 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 add_action( 'plugins_loaded', 'cmplz_install_cookiebanner_table', 10 );
 function cmplz_install_cookiebanner_table() {
+	if (!wp_doing_cron() && !cmplz_user_can_manage() ) {
+		return;
+	}
 	if ( get_option( 'cmplz_cbdb_version' ) !== cmplz_version ) {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		global $wpdb;
@@ -94,13 +97,13 @@ function cmplz_install_cookiebanner_table() {
 			dbDelta( $sql );
 		}
 
-		update_option( 'cmplz_cbdb_version', cmplz_version , false );
+		update_option( 'cmplz_cbdb_version', cmplz_version );
 	}
 }
 
 if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 	class CMPLZ_COOKIEBANNER {
-		public $id = false;
+		public $ID = false;
 		public $banner_version = 0;
 		public $title;
 		public $default = false;
@@ -181,9 +184,9 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		public $disable_width_correction;
 		public $legal_documents;
 
-        function __construct( $id = false, $set_defaults = true ) {
+        function __construct( $ID = false, $set_defaults = true ) {
 	        $this->translation_id = $this->get_translation_id();
-	        $this->id             = $id;
+	        $this->ID             = $ID;
 	        $this->set_defaults   = $set_defaults;
 	        $this->get();
 
@@ -194,7 +197,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		private function add() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return false;
 			}
 			$array = array(
@@ -212,7 +215,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				$wpdb->prefix . 'cmplz_cookiebanners',
 				$array
 			);
-			$this->id = $wpdb->insert_id;
+			$this->ID = $wpdb->insert_id;
 		}
 
 		/**
@@ -223,7 +226,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 		public function process_form( $post ) {
 
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return false;
 			}
 
@@ -252,11 +255,11 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 
 		private function get() {
 			global $wpdb;
-			if ( intval( $this->id ) > 0 ) {
-				$cookiebanner = wp_cache_get('cmplz_cookiebanner_'.$this->id, 'complianz');
+			if ( (int) $this->ID > 0 ) {
+				$cookiebanner = get_transient('cmplz_cookiebanner_'.$this->ID);
 				if ( !$cookiebanner ){
-					$cookiebanner = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookiebanners where ID = %s", intval( $this->id ) ) );
-					wp_cache_set('cmplz_cookiebanner_'.$this->id, $cookiebanner, 'complianz', HOUR_IN_SECONDS);
+					$cookiebanner = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookiebanners where ID = %s", intval( $this->ID ) ) );
+					set_transient('cmplz_cookiebanner_'.$this->ID, $cookiebanner, HOUR_IN_SECONDS);
 				}
 
 				if ( $cookiebanner ) {
@@ -315,6 +318,12 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			$default = $this->get_default( $fieldname );
 			//treat as string
 			if ( $type === 'text' || $type === 'select' || $type === 'editor' ) {
+				//on some websites, the previous value seems to be cached. We try to catch that here.
+				//should be removed at some future point
+				if ( $fieldname==='revoke' && is_serialized($value) ){
+					$value = unserialize($value);
+					$value = isset($value['text']) ? $value['text'] :__( "Manage consent", 'complianz-gdpr' );
+				}
 				if ( empty($value) && $set_defaults ) {
 					$value = $default;
 				}
@@ -326,7 +335,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				if ( empty($value) ) {
 					$value = $default;
 				} else {
-					$value = intval($value);
+					$value = (int) $value;
 				}
 			} else if ( $type === 'text_checkbox' || $type === 'colorpicker' || $type === 'borderradius' || $type === 'borderwidth') {
 				//array types
@@ -390,9 +399,9 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		private function is_translatable($fieldname) {
 			if (property_exists($this, $fieldname.'_x')) {
 				return true;
-			} else {
-				return false;
 			}
+
+			return false;
 		}
 
 		/**
@@ -476,16 +485,16 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		public function get_translation_id() {
 			//if this is the banner with the lowest ID's, no ID
 			global $wpdb;
-			$lowest = wp_cache_get('cmplz_min_banner_id', 'complianz');
+			$lowest = get_transient('cmplz_min_banner_id');
 			if ( !$lowest ){
 				$lowest = $wpdb->get_var( "select min(ID) from {$wpdb->prefix}cmplz_cookiebanners" );
-				wp_cache_set('cmplz_min_banner_id', $lowest,  'complianz', HOUR_IN_SECONDS );
+				set_transient('cmplz_min_banner_id', $lowest, HOUR_IN_SECONDS );
 			}
 
-			if ( $lowest == $this->id ) {
+			if ( $lowest == $this->ID ) {
 				return '';
 			} else {
-				return $this->id;
+				return $this->ID;
 			}
 		}
 
@@ -520,10 +529,10 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		public function save() {
-			if ( !current_user_can( 'manage_options' ) && !wp_doing_cron() ) {
+			if ( !cmplz_user_can_manage() && !wp_doing_cron() ) {
 				return;
 			}
-			if ( ! $this->id ) {
+			if ( ! $this->ID ) {
 				$this->add();
 			}
 			$this->banner_version++;
@@ -545,6 +554,9 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				$this->use_categories = 'view-preferences';
 			}
 
+			if ( !$this->disable_cookiebanner && cmplz_get_value('enable_cookie_banner') === 'no' ) {
+				cmplz_update_option('wizard','enable_cookie_banner', 'yes');
+			}
 
 			$update_array = array(
 				'position'                     => sanitize_title( $this->position ),
@@ -596,17 +608,17 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				'colorpalette_button_settings' => $this->sanitize_hex_array( $this->colorpalette_button_settings ),
 				'buttons_border_radius'        => $this->sanitize_int_array( $this->buttons_border_radius ),
 				'animation'                    => sanitize_title( $this->animation ),
-				'use_box_shadow'               => intval( $this->use_box_shadow ),
-				'header_footer_shadow'         => intval( $this->header_footer_shadow ),
-				'hide_preview'                 => intval( $this->hide_preview ),
-				'disable_width_correction'     => intval( $this->disable_width_correction ),
-				'legal_documents'                   => intval( $this->legal_documents ),
+				'use_box_shadow'               => (int) $this->use_box_shadow,
+				'header_footer_shadow'         => (int) $this->header_footer_shadow,
+				'hide_preview'                 => (int) $this->hide_preview,
+				'disable_width_correction'     => (int) $this->disable_width_correction,
+				'legal_documents'                   => (int) $this->legal_documents,
 			);
 
 			global $wpdb;
 			$updated = $wpdb->update( $wpdb->prefix . 'cmplz_cookiebanners',
 				$update_array,
-				array( 'ID' => $this->id )
+				array( 'ID' => $this->ID )
 			);
 
 			if ( $updated === 0 ) {
@@ -616,14 +628,15 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			//get database value for "default"
 			$db_default
 				= $wpdb->get_var( $wpdb->prepare( "select cdb.default from {$wpdb->prefix}cmplz_cookiebanners as cdb where cdb.ID=%s",
-				$this->id ) );
+				$this->ID ) );
 			if ( $this->default && ! $db_default ) {
 				$this->enable_default();
 			} elseif ( ! $this->default && $db_default ) {
 				$this->remove_default();
 			}
-			wp_cache_delete('cmplz_cookiebanner_'.$this->id, 'complianz');
-			wp_cache_delete('cmplz_min_banner_id', 'complianz');
+			delete_transient('cmplz_cookiebanner_'.$this->ID);
+			delete_transient('cmplz_min_banner_id');
+			delete_transient('cmplz_default_banner_id');
 
 			$this->generate_css();
 		}
@@ -711,7 +724,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		public function delete( $force = false ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return false;
 			}
 
@@ -731,11 +744,11 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				}
 
 				$wpdb->delete( $wpdb->prefix . 'cmplz_cookiebanners', array(
-					'ID' => $this->id,
+					'ID' => $this->ID,
 				) );
 
 				//clear all statistics regarding this banner
-				$sql = $wpdb->prepare( "UPDATE {$wpdb->prefix}cmplz_statistics SET cookiebanner_id = 0 where poc_url=%s", $this->id) ;
+				$sql = $wpdb->prepare( "UPDATE {$wpdb->prefix}cmplz_statistics SET cookiebanner_id = 0 where poc_url=%s", $this->ID) ;
 				$wpdb->query($sql);
 			}
 
@@ -749,7 +762,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		public function archive() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return;
 			}
 			//don't archive the last one
@@ -785,7 +798,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		public function restore() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return;
 			}
 
@@ -837,7 +850,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		public function remove_default() {
-			if ( current_user_can( 'manage_options' ) ) {
+			if ( cmplz_user_can_manage() ) {
 
 				global $wpdb;
 				//first, set one  of the other banners random to default.
@@ -853,7 +866,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				//now set this one to not default and save
 				$wpdb->update( $wpdb->prefix . 'cmplz_cookiebanners',
 					array( 'default' => false ),
-					array( 'ID' => $this->id )
+					array( 'ID' => $this->ID )
 				);
 
 			}
@@ -864,7 +877,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		public function enable_default() {
-			if ( current_user_can( 'manage_options' ) ) {
+			if ( cmplz_user_can_manage() ) {
 
 				global $wpdb;
 				//first set the current default to false
@@ -879,7 +892,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				//now set this one to default
 				$wpdb->update( $wpdb->prefix . 'cmplz_cookiebanners',
 					array( 'default' => true ),
-					array( 'ID' => $this->id )
+					array( 'ID' => $this->ID )
 				);
 			}
 
@@ -965,7 +978,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			$sql = $wpdb->prepare("SELECT count(*) from {$wpdb->prefix}cmplz_statistics WHERE time> %s $category_sql $consenttype_sql" , $ab_testing_start_time );
 
 			if ( cmplz_ab_testing_enabled() ) {
-				$sql = $wpdb->prepare( $sql . " AND cookiebanner_id=%s", $this->id );
+				$sql = $wpdb->prepare( $sql . " AND cookiebanner_id=%s", $this->ID );
 			}
 			return $wpdb->get_var( $sql );
 		}
@@ -1012,7 +1025,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 
 		public function get_html_settings() {
 			$output = array(
-				'id'                        => $this->id,
+				'id'                        => $this->ID,
 				'logo'                      => $this->get_banner_logo(),
 				'header'                    => $this->header_x,
 				'accept_optin'              => $this->accept_x,
@@ -1084,9 +1097,9 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				}
 			}
 			if ( isset($this->functional_text['show']) && !$this->functional_text['show'] )  $css_files[] = "settings/categories/hide-functional_text$minified.css";
-			if ( isset($this->category_prefs['show']) && !$this->category_prefs['show'] || !cmplz_uses_preferences_cookies() ) $css_files[] = "settings/categories/hide-preferences$minified.css";
-			if ( isset($this->category_stats['show']) && !$this->category_stats['show'] || !cmplz_uses_statistic_cookies() ) $css_files[] = "settings/categories/hide-statistics$minified.css";
-			if ( isset($this->category_all['show']) && !$this->category_all['show'] || !cmplz_uses_marketing_cookies() )  $css_files[] = "settings/categories/hide-marketing$minified.css";
+			if ( ( isset( $this->category_prefs['show'] ) && ! $this->category_prefs['show'] ) || !cmplz_uses_preferences_cookies() ) $css_files[] = "settings/categories/hide-preferences$minified.css";
+			if ( ( isset( $this->category_stats['show'] ) && ! $this->category_stats['show'] ) || !cmplz_uses_statistic_cookies() ) $css_files[] = "settings/categories/hide-statistics$minified.css";
+			if ( ( isset( $this->category_all['show'] ) && ! $this->category_all['show'] ) || !cmplz_uses_marketing_cookies() )  $css_files[] = "settings/categories/hide-marketing$minified.css";
 			if ( isset($this->preferences_text['show']) && !$this->preferences_text['show'] )  $css_files[] = "settings/categories/hide-preferences_text$minified.css";
 			if ( isset($this->statistics_text['show']) && !$this->statistics_text['show'] )  $css_files[] = "settings/categories/hide-statistics_text$minified.css";
 			if ( isset($this->statistics_text_anonymous['show']) && !$this->statistics_text_anonymous['show'] )  $css_files[] = "settings/categories/hide-statistics_text$minified.css";
@@ -1123,7 +1136,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 
 		public function get_array_value($field, $key = false ){
 			if ( $key ) {
-				$value = isset($this->{$field}[$key]) ? $this->{$field}[$key] : $this->get_default($field, $key);
+				$value = $this->{$field}[ $key ] ?? $this->get_default( $field, $key );
 			} else {
 				$value = $this->{$field};
 			}
@@ -1173,18 +1186,24 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				return;
 			}
 			set_transient('cmplz_generate_css_active', true, 10 );
-			$uploads    = wp_upload_dir();
-			$upload_dir = $uploads['basedir'];
-			if ( ! file_exists( $upload_dir . '/complianz' ) && is_writable($upload_dir) ) {
-				mkdir( $upload_dir . '/complianz' );
-			}
-			if ( ! file_exists( $upload_dir . '/complianz/css' ) && is_writable($upload_dir . '/complianz') ) {
-				mkdir( $upload_dir . '/complianz/css' );
+
+			if ( defined('CMPLZ_CSS_DIR' ) ) {
+				$css_dir = CMPLZ_CSS_DIR;
+			} else {
+				$uploads    = wp_upload_dir();
+				$upload_dir = $uploads['basedir'];
+				if ( ! file_exists( $upload_dir . '/complianz' ) && is_writable($upload_dir) ) {
+					mkdir( $upload_dir . '/complianz' ,0755);
+				}
+				if ( ! file_exists( $upload_dir . '/complianz/css' ) && is_writable($upload_dir . '/complianz') ) {
+					mkdir( $upload_dir . '/complianz/css',0755 );
+				}
+				$css_dir = $upload_dir . '/complianz/css';
 			}
 
 			$consent_types = cmplz_get_used_consenttypes();
 			$settings = $this->get_css_settings();
-			$banner_id = $this->id ?: 'new';
+			$banner_id = $this->ID ?: 'new';
 			foreach ( $consent_types as $consent_type ) {
 				$css_files = $this->get_css_file_modules($consent_type, $preview);
 				$css = "";
@@ -1192,8 +1211,6 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 					$file_path = trailingslashit(cmplz_path) . "cookiebanner/css/$css_file";
 					if ( file_exists($file_path) ) {
 						$css .= file_get_contents($file_path) . "\n";
-					} else {
-						error_log("missing file $file_path");
 					}
 				}
 
@@ -1223,12 +1240,12 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				$css .= "\n" . ob_get_clean()."\n";
 				$css = $this->sanitize_css( apply_filters('cmplz_cookiebanner_css', $css) );
 				if ( $preview ) {
-					$file = "$upload_dir/complianz/css/banner-preview-{$banner_id}-$consent_type.css";
+					$file = "$css_dir/banner-preview-{$banner_id}-$consent_type.css";
 				} else {
-					$file = "$upload_dir/complianz/css/banner-{$banner_id}-$consent_type.css";
+					$file = "$css_dir/banner-{$banner_id}-$consent_type.css";
 				}
 
-				if (file_exists("$upload_dir/complianz/css") && is_writable("$upload_dir/complianz/css")){
+				if (file_exists($css_dir) && is_writable( $css_dir )){
 					$handle = fopen($file, "w");
 					fwrite($handle, $css);
 					fclose($handle);
@@ -1247,23 +1264,24 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			$this->dismiss_timeout = $this->dismiss_on_timeout ? 1000 * $this->dismiss_timeout : false;
 			$uploads    = wp_upload_dir();
 			$upload_url = is_ssl() ? str_replace('http://', 'https://', $uploads['baseurl']) : $uploads['baseurl'];
+			$css_url = defined('CMPLZ_CSS_URL') ? CMPLZ_CSS_URL : $upload_url . "/complianz/css";
 
 			//check if the css file exists. if not, use default.
-			$css_file = $upload_url . '/complianz/css/banner-{banner_id}-{type}.css';
+			$css_file = "$css_url/banner-{banner_id}-{type}.css";
 			if ( !$preview ) {
 				$upload_dir = $uploads['basedir'];
+				$css_path = defined('CMPLZ_CSS_DIR') ? CMPLZ_CSS_DIR : "$upload_dir/complianz/css";
+
 				$consent_types = cmplz_get_used_consenttypes();
-				$banner_id = $this->id;
+				$banner_id = $this->ID;
 				foreach ( $consent_types as $consent_type ) {
-					$file =  "/complianz/css/banner-$banner_id-$consent_type.css";
-					if ( ! file_exists( $upload_dir . $file ) ) {
+					if ( ! file_exists( $css_path . "/banner-$banner_id-$consent_type.css" ) ) {
 						$css_file = cmplz_url . "cookiebanner/css/defaults/banner-{type}.css";
 					}
 				}
 			}
 
-			$page_links = array();
-			$script_debug = defined('SCRIPT_DEBUG') & SCRIPT_DEBUG ? time() : '';
+			$page_links = [];
 			$pages = COMPLIANZ::$config->pages;
 			foreach ( $pages as $region => $region_pages ) {
 				foreach ( $region_pages as $type => $page ) {
@@ -1297,7 +1315,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				'banner_version'       => $this->banner_version,
 				'version'              => cmplz_version,
 				'store_consent'        => $store_consent,
-				'do_not_track'         => cmplz_dnt_enabled(),
+				'do_not_track_enabled' => cmplz_get_value('respect_dnt') !== 'no',
 				'consenttype'          => COMPLIANZ::$company->get_default_consenttype(),
 				'region'               => $region,
 				'geoip'                => cmplz_geoip_enabled(),
@@ -1315,12 +1333,12 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				'categories'           => ['statistics'=> _x("statistics","as in: click to accept statistics cookies","complianz-gdpr"), 'marketing'=> _x("marketing","as in: click to accept marketing cookies","complianz-gdpr")],
 				'tcf_active'           => cmplz_tcf_active(),
 				'placeholdertext'      => COMPLIANZ::$cookie_blocker->blocked_content_text(),
-				'css_file'             => $css_file . '?v='.$this->banner_version.$script_debug,
+				'css_file'             => $css_file . '?v='.$this->banner_version,
 				'page_links'           => $page_links,
 				'tm_categories'        => COMPLIANZ::$cookie_admin->uses_google_tagmanager() || (cmplz_get_value('compile_statistics')==='matomo-tag-manager'),
 				'forceEnableStats'     => !COMPLIANZ::$cookie_admin->cookie_warning_required_stats( $region ),
 				'preview'              => false,
-				'clean_cookies'        => cmplz_get_value( 'disable_cookie_block' ) != 1 && cmplz_get_value( 'consent_per_service' ) === 'yes',
+				'clean_cookies'        => cmplz_get_value( 'safe_mode' ) != 1 && cmplz_get_value( 'consent_per_service' ) === 'yes',
 			);
 
 			$output = apply_filters( 'cmplz_cookiebanner_settings_front_end', $output, $this );

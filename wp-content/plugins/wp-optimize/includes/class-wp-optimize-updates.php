@@ -26,6 +26,7 @@ class WP_Optimize_Updates {
 		'3.1.0' => array('reset_wpo_plugin_cron_tasks_schedule'),
 		'3.1.4' => array('enable_minify_defer'),
 		'3.1.5' => array('update_minify_excludes'),
+		'3.2.14' => array('update_3214_modify_cache_config_in_windows'),
 	);
 
 	/**
@@ -148,6 +149,38 @@ class WP_Optimize_Updates {
 		// Update the options
 		wp_optimize_minify_config()->update(array('blacklist' => $user_excluded_blacklist_items));
 		wp_optimize_minify_config()->update(array('ignore_list' => $user_excluded_ignorelist_items));
+	}
+
+	/**
+	 * Checks if it's a new installation of the plugin, as opposed to being updated.
+	 *
+	 * @return bool
+	 */
+	public static function is_new_install() {
+		$db_version = get_option('wpo_update_version');
+		return !$db_version;
+	}
+
+	/**
+	 * Modifies the cache configuration for Windows OS by regenerating the 'uploads' path.
+	 */
+	public static function update_3214_modify_cache_config_in_windows() {
+		
+		// Check if the OS is Windows and it's not a new installation.
+		if ('WIN' !== strtoupper(substr(PHP_OS, 0, 3)) || self::is_new_install()) {
+			return;
+		}
+
+		// Retrieve the current cache configuration
+		$config = WPO_Cache_Config::instance()->get();
+
+		// Remove the 'uploads' path from the configuration, this will force the 'uploads' path to regenerate from the defaults
+		if (isset($config['uploads'])) {
+			unset($config['uploads']);
+		}
+
+		// Update the cache configuration
+		WPO_Cache_Config::instance()->update($config);
 	}
 }
 

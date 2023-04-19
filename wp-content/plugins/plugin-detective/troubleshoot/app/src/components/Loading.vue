@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'loading',
+  name: 'loadingComponent',
   props: [ 'text' ],
   data () {
     return {}

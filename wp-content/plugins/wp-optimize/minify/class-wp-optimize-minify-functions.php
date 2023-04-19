@@ -76,14 +76,15 @@ class WP_Optimize_Minify_Functions {
 	/**
 	 * Functions, get hurl info
 	 *
-	 * @param string $src
+	 * @param mixed $src
+	 *
 	 * @return string
 	 */
 	public static function get_hurl($src) {
 		$wp_home = site_url();
 		$wp_domain = trim(str_ireplace(array('http://', 'https://'), '', trim($wp_home, '/')));
 		// preserve empty source handles
-		$hurl = trim($src);
+		$hurl = null === $src ? '' : trim($src);
 		if (empty($hurl)) {
 			return $hurl;
 		}
@@ -276,8 +277,13 @@ class WP_Optimize_Minify_Functions {
 				break;
 			}
 		}
+
+		$encoding = mb_detect_encoding($js);
+
 		// remove BOM
 		$js = self::remove_utf8_bom($js);
+
+		self::maybe_log_error_message($url, $encoding, $js);
 
 		// minify JS
 		if ($enable_js_minification) {
@@ -402,9 +408,13 @@ class WP_Optimize_Minify_Functions {
 	 */
 	public static function get_css($url, $css, $enable_css_minification) {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
-		
+
+		$encoding = mb_detect_encoding($css);
+
 		// remove BOM
 		$css = self::remove_utf8_bom($css);
+
+		self::maybe_log_error_message($url, $encoding, $css);
 
 		// fix url paths
 		if (!empty($url)) {
@@ -693,15 +703,15 @@ class WP_Optimize_Minify_Functions {
 	}
 
 	/**
-	 * Remove UTF8 BOM
+	 * Remove UTF8 BOM.
+	 * Returns BOM removed string or null when `$string` does not have a recognised encoding
 	 *
 	 * @param string $string
-	 * @return string
+	 * @return string|null
 	 */
 	public static function remove_utf8_bom($string) {
 		$bom = pack('H*', 'EFBBBF');
-		$string = preg_replace("/^$bom/ui", '', $string);
-		return $string;
+		return preg_replace("/^$bom/ui", '', $string);
 	}
 
 	/**
@@ -1190,5 +1200,24 @@ class WP_Optimize_Minify_Functions {
 		}
 		$protocol = is_ssl() ? 'https:' : 'http:';
 		return $protocol . '//fonts.googleapis.com/css?family=' . implode('|', $google_fonts) . '&' . $display_type;
+	}
+
+	/**
+	 * When BOM removed code is null (due to unrecognised character encoding), logs error message
+	 *
+	 * @param string        $url      URL of the script/stylesheet
+	 * @param string|false  $encoding Character encoding
+	 * @param string|null   $code     Script/Stylesheet code
+	 *
+	 * @return void
+	 */
+	private static function maybe_log_error_message($url, $encoding, $code) {
+		if (null === $code) {
+			$message = "Minify: Could not process {$url}, it contains invalid characters. ";
+			if (false === $encoding) {
+				$message .= "Could not determine its character encoding.";
+			}
+			error_log($message);
+		}
 	}
 }

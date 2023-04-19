@@ -130,7 +130,7 @@ class Image {
 		$og_image = $image_meta['url'];
 		if ( $overlay && ! empty( $image_meta['id'] ) ) {
 			$secret   = $this->generate_secret( $image_meta['id'], $overlay );
-			$og_image = admin_url( "admin-ajax.php?action=rank_math_overlay_thumb&id={$image_meta['id']}&type={$overlay}&secret={$secret}" );
+			$og_image = admin_url( "admin-ajax.php?action=rank_math_overlay_thumb&id={$image_meta['id']}&type={$overlay}&hash={$secret}" );
 		}
 		$this->opengraph->tag( 'og:image', esc_url_raw( $og_image ) );
 
@@ -210,34 +210,52 @@ class Image {
 	 *
 	 * @param string $attachment Source URL to the image.
 	 */
-	public function add_image( $attachment ) {
+	public function add_image( $attachment = '' ) {
 		// In the past `add_image` accepted an image url, so leave this for backwards compatibility.
 		if ( Str::is_non_empty( $attachment ) ) {
 			$attachment = [ 'url' => $attachment ];
 		}
 
+		$validate_image = true;
+		/**
+		 * Allow changing the OpenGraph image.
+		 * The dynamic part of the hook name, $this->network, is the network slug (facebook, twitter).
+		 *
+		 * @param string $img The image we are about to add.
+		 */
+		$filter_image_url = trim( $this->do_filter( "opengraph/{$this->network}/image", isset( $attachment['url'] ) ? $attachment['url'] : '' ) );
+		if ( ! empty( $filter_image_url ) && ( empty( $attachment['url'] ) || $filter_image_url !== $attachment['url'] ) ) {
+			$attachment     = [ 'url' => $filter_image_url ];
+			$validate_image = false;
+		}
+
+		/**
+		 * Secondary filter to allow changing the whole array.
+		 * The dynamic part of the hook name, $this->network, is the network slug (facebook, twitter).
+		 * This makes it possible to change the image ID too, to allow for image overlays.
+		 *
+		 * @param array $attachment The image we are about to add.
+		 */
+		$attachment = $this->do_filter( "opengraph/{$this->network}/image_array", $attachment );
+
 		if ( ! is_array( $attachment ) || empty( $attachment['url'] ) ) {
 			return;
 		}
 
-		$attachment_url = explode( '?', $attachment['url'] );
-		if ( ! empty( $attachment_url ) ) {
-			$attachment['url'] = $attachment_url[0];
+		// Validate image only when it is not added using the opengraph filter.
+		if ( $validate_image ) {
+			$attachment_url = explode( '?', $attachment['url'] );
+			if ( ! empty( $attachment_url ) ) {
+				$attachment['url'] = $attachment_url[0];
+			}
+
+			// If the URL ends in `.svg`, we need to return.
+			if ( ! $this->is_valid_image_url( $attachment['url'] ) ) {
+				return;
+			}
 		}
 
-		// If the URL ends in `.svg`, we need to return.
-		if ( ! $this->is_valid_image_url( $attachment['url'] ) ) {
-			return;
-		}
-
-		/**
-		 * Allow changing the OpenGraph image.
-		 *
-		 * The dynamic part of the hook name. $this->network, is the network slug.
-		 *
-		 * @param string $img The image we are about to add.
-		 */
-		$image_url = trim( $this->do_filter( "opengraph/{$this->network}/image", $attachment['url'] ) );
+		$image_url = $attachment['url'];
 		if ( empty( $image_url ) ) {
 			return;
 		}
@@ -336,8 +354,13 @@ class Image {
 
 		// If not, get default image.
 		$image_id = Helper::get_settings( 'titles.open_graph_image_id' );
-		if ( ! $this->has_images() && $image_id > 0 ) {
-			$this->add_image_by_id( $image_id );
+		if ( ! $this->has_images() ) {
+			if ( $image_id > 0 ) {
+				$this->add_image_by_id( $image_id );
+				return;
+			}
+
+			$this->add_image(); // This allows "opengraph/{$this->network}/image" filter to be used even if no image is set.
 		}
 	}
 
@@ -491,6 +514,28 @@ class Image {
 			return;
 		}
 
+		$do_og_content_image_cache = $this->do_filter( 'opengraph/content_image_cache', true );
+		if ( $do_og_content_image_cache ) {
+			$cache_key = 'rank_math_og_content_image';
+			$cache = get_post_meta( $post->ID, $cache_key, true );
+			$check = md5( $post->post_content );
+			if ( ! empty( $cache ) && $check === $cache['check'] ) {
+				foreach ( $cache['images'] as $image ) {
+					if ( is_int( $image ) ) {
+						$this->add_image_by_id( $image );
+					} else {
+						$this->add_image( $image );
+					}
+				}
+				return;
+			}
+
+			$cache = [
+				'check'  => $check,
+				'images' => [],
+			];
+		}
+
 		$images = [];
 		if ( preg_match_all( '`<img [^>]+>`', $content, $matches ) ) {
 			foreach ( $matches[0] as $img ) {
@@ -520,12 +565,21 @@ class Image {
 				$attachment_id = Attachment::get_by_url( $image );
 				if ( 0 === $attachment_id ) {
 					$this->add_image( $image );
+					if ( $do_og_content_image_cache ) {
+						$cache['images'][] = $image;
+					}
 				} else {
 					$this->add_image_by_id( $attachment_id );
+					if ( $do_og_content_image_cache ) {
+						$cache['images'][] = $attachment_id;
+					}
 				}
 			}
 		}
 
+		if ( $do_og_content_image_cache ) {
+			update_post_meta( $post->ID, $cache_key, $cache );
+		}
 	}
 
 	/**
@@ -570,10 +624,7 @@ class Image {
 			return false;
 		}
 
-		$extensions = [ 'jpeg', 'jpg', 'gif', 'png' ];
-		if ( 'twitter' === $this->network ) {
-			$extensions[] = 'webp';
-		}
+		$extensions = [ 'jpeg', 'jpg', 'gif', 'png', 'webp' ];
 
 		return in_array( $check['ext'], $extensions, true );
 	}

@@ -20,9 +20,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms454_ColorControl') ) {
+	if( !class_exists('Wbcr_FactoryForms460_ColorControl') ) {
 
-		class Wbcr_FactoryForms454_ColorControl extends Wbcr_FactoryForms454_Control {
+		class Wbcr_FactoryForms460_ColorControl extends Wbcr_FactoryForms460_Control {
 
 			public $type = 'color';
 
@@ -54,7 +54,7 @@
 						? 'style="background:' . $value . ';"'
 						: ''); ?>></div>
 					<div class="factory-pattern"></div>
-					<input type="text" id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="factory-input-text factory-color-hex" value="<?php echo $value; ?>">
+					<input type="text" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" class="factory-input-text factory-color-hex" value="<?php echo esc_attr($value); ?>">
 				</div>
 			<?php
 			}

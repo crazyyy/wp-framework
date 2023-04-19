@@ -34,6 +34,19 @@ class WP_Optimize_Browser_Cache {
 	}
 
 	/**
+	 * Returns singleton instance object
+	 *
+	 * @return WP_Optimize_Browser_Cache Returns `WP_Optimize_Browser_Cache` object
+	 */
+	public static function instance() {
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
+		}
+		return $_instance;
+	}
+
+	/**
 	 * Check headers for Cache-Control and Etag. And if they are exist return true.
 	 *
 	 * @return bool|WP_Error
@@ -68,6 +81,7 @@ class WP_Optimize_Browser_Cache {
 	public function enable($expiry_time = '1 month') {
 		$this->_htaccess->update_commented_section($this->prepare_browser_cache_section($expiry_time), $this->_htaccess_section_comment);
 		$this->_htaccess->write_file();
+		$this->_options->update_option('enable_browser_cache', true);
 	}
 
 	/**
@@ -76,6 +90,7 @@ class WP_Optimize_Browser_Cache {
 	public function disable() {
 		$this->_htaccess->remove_commented_section($this->_htaccess_section_comment);
 		$this->_htaccess->write_file();
+		$this->_options->update_option('enable_browser_cache', false);
 	}
 
 	/**

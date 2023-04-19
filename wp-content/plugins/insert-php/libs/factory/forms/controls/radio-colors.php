@@ -27,9 +27,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms454_RadioColorsControl') ) {
+	if( !class_exists('Wbcr_FactoryForms460_RadioColorsControl') ) {
 
-		class Wbcr_FactoryForms454_RadioColorsControl extends Wbcr_FactoryForms454_Control {
+		class Wbcr_FactoryForms460_RadioColorsControl extends Wbcr_FactoryForms460_Control {
 
 			public $type = 'radio-color';
 
@@ -64,7 +64,7 @@
 				$name_on_form = $this->getNameOnForm();
 				$this->addHtmlAttr('name', $name_on_form);
 
-				echo '<div class="factory-colors-inner-wrap" data-radio-name="' . $name_on_form . '">';
+				echo '<div class="factory-colors-inner-wrap" data-radio-name="' . esc_attr($name_on_form) . '">';
 			}
 
 			/**

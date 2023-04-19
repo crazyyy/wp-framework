@@ -1,4 +1,7 @@
 <?php
+if ( ! is_admin() ) {
+	return;
+}
 class ITC_SVG_Upload_Admin extends ITC_SVG_Upload_BaseController{
 
 	public function __construct() {

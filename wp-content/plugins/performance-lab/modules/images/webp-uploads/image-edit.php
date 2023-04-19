@@ -120,7 +120,10 @@ function webp_uploads_update_image_onchange( $override, $file_path, $editor, $mi
 
 			$old_metadata = wp_get_attachment_metadata( $post_id );
 			$resize_sizes = array();
-			$target       = isset( $_REQUEST['target'] ) ? $_REQUEST['target'] : 'all';
+			// PHPCS ignore reason: A nonce check is not necessary here as this logic directly ties in with WordPress core
+			// function `wp_ajax_image_editor()` which already has one.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$target = isset( $_REQUEST['target'] ) ? sanitize_key( $_REQUEST['target'] ) : 'all';
 
 			foreach ( $old_metadata['sizes'] as $size_name => $size_details ) {
 				// If the target is 'nothumb', skip generating the 'thumbnail' size.
@@ -187,7 +190,10 @@ function webp_uploads_update_image_onchange( $override, $file_path, $editor, $mi
 					// Create a file with then new extension out of the targeted file.
 					$target_file_name     = preg_replace( "/\.$current_extension$/", ".$extension", $thumbnail_file );
 					$target_file_location = path_join( $original_directory, $target_file_name );
-					$result               = $editor->save( $target_file_location, $targeted_mime );
+
+					remove_filter( 'image_editor_output_format', 'webp_uploads_filter_image_editor_output_format', 10, 3 );
+					$result = $editor->save( $target_file_location, $targeted_mime );
+					add_filter( 'image_editor_output_format', 'webp_uploads_filter_image_editor_output_format', 10, 3 );
 
 					if ( is_wp_error( $result ) ) {
 						continue;
@@ -196,7 +202,10 @@ function webp_uploads_update_image_onchange( $override, $file_path, $editor, $mi
 					$subsized_images[ $targeted_mime ] = array( 'thumbnail' => $result );
 				} else {
 					$destination = trailingslashit( $original_directory ) . "{$filename}.{$extension}";
-					$result      = $editor->save( $destination, $targeted_mime );
+
+					remove_filter( 'image_editor_output_format', 'webp_uploads_filter_image_editor_output_format', 10, 3 );
+					$result = $editor->save( $destination, $targeted_mime );
+					add_filter( 'image_editor_output_format', 'webp_uploads_filter_image_editor_output_format', 10, 3 );
 
 					if ( is_wp_error( $result ) ) {
 						continue;
@@ -215,7 +224,7 @@ function webp_uploads_update_image_onchange( $override, $file_path, $editor, $mi
 
 	return $override;
 }
-add_filter( 'wp_save_image_editor_file', 'webp_uploads_update_image_onchange', 10, 7 );
+add_filter( 'wp_save_image_editor_file', 'webp_uploads_update_image_onchange', 10, 5 );
 
 /**
  * Inspect if the current call to `wp_update_attachment_metadata()` was done from within the context
@@ -231,6 +240,8 @@ add_filter( 'wp_save_image_editor_file', 'webp_uploads_update_image_onchange', 1
  * @return array The updated metadata for the attachment to be stored in the meta table.
  */
 function webp_uploads_update_attachment_metadata( $data, $attachment_id ) {
+	// PHPCS ignore reason: Update the attachment's metadata by either restoring or editing it.
+	// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 	$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 10 );
 
 	foreach ( $trace as $element ) {
@@ -266,7 +277,10 @@ add_filter( 'wp_update_attachment_metadata', 'webp_uploads_update_attachment_met
  * @return array The updated metadata for the attachment.
  */
 function webp_uploads_backup_sources( $attachment_id, $data ) {
-	$target = isset( $_REQUEST['target'] ) ? $_REQUEST['target'] : 'all';
+	// PHPCS ignore reason: A nonce check is not necessary here as this logic directly ties in with WordPress core
+	// function `wp_ajax_image_editor()` which already has one.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$target = isset( $_REQUEST['target'] ) ? sanitize_key( $_REQUEST['target'] ) : 'all';
 
 	// When an edit to an image is only applied to a thumbnail there's nothing we need to back up.
 	if ( 'thumbnail' === $target ) {

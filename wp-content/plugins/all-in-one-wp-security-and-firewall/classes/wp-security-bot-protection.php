@@ -16,7 +16,7 @@ class AIOWPSecurity_Fake_Bot_Protection {
 
 		$user_agent = (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
 		if (preg_match('/Googlebot/i', $user_agent, $matches)) {
-			// If user agent says it is googlebot start doing checks
+			// If user agent says it is Googlebot start doing checks
 			$ip = AIOWPSecurity_Utility_IP::get_user_ip_address();
 			if (empty($ip)) {
 				$aio_wp_security->debug_logger->log_debug('block_fake_googlebots(): Empty IP address detected! User Agent = ' . $user_agent, 2);
@@ -38,15 +38,15 @@ class AIOWPSecurity_Fake_Bot_Protection {
 			}
 			if (preg_match('/Google/i', $name, $matches)) {
 				if ($host_ip == $ip) {
-					// Genuine googlebot allow it through....
+					// Genuine Googlebot allow it through....
 				} else {
-					// fake googlebot - block it!
-					$aio_wp_security->debug_logger->log_debug('Fake googlebot detected: IP = '.$ip.' hostname = '.$name.' reverse IP = '. $host_ip, 2);
+					// Fake Googlebot - block it!
+					$aio_wp_security->debug_logger->log_debug('Fake Googlebot detected: IP = '.$ip.' hostname = '.$name.' reverse IP = '. $host_ip, 2);
 					exit();
 				}
 			} else {
-				// fake googlebot - block it!
-				$aio_wp_security->debug_logger->log_debug('Fake googlebot detected: IP = '.$ip.' hostname = '.$name.' reverse IP = '.$host_ip, 2);
+				// Fake Googlebot - block it!
+				$aio_wp_security->debug_logger->log_debug('Fake Googlebot detected: IP = '.$ip.' hostname = '.$name.' reverse IP = '.$host_ip, 2);
 				exit();
 			}
 		}

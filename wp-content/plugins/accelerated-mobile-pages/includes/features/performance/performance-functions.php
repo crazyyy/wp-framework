@@ -10,6 +10,7 @@ function ampforwp_minify_html_output($content_buffer){
     //Removed trbidi attribute #3687
     $content_buffer = str_replace('trbidi="on"', '', $content_buffer);
     $content_buffer = str_replace("trbidi='on'", '', $content_buffer);
+    $content_buffer = str_replace('action=""', 'action-xhr="#"', $content_buffer);
     //Picture-tag is not working in AMP #4051
     if(preg_match('/<picture(.*?)<amp-img(.*?)><\/amp-img>(.*?)<\/picture>/s', $content_buffer)){
         $content_buffer = preg_replace('/<picture(.*?)<amp-img(.*?)><\/amp-img>(.*?)<\/picture>/s', '<noscript><picture$1</picture></noscript><amp-img$2></amp-img>$3', $content_buffer);
@@ -45,6 +46,12 @@ function ampforwp_minify_html_output($content_buffer){
     }
     if(preg_match('/<form(.*?)for="categories-dropdown-(.*?)"(.*?)class="postform(.*?)>/', $content_buffer)){
         $content_buffer = preg_replace('/<form(.*?)for="categories-dropdown-(.*?)"(.*?)class="postform(.*?)>/', '<form id="amp-wp-widget-categories-1" on="change:amp-wp-widget-categories-1.submit" $1for="categories-dropdown-$2"$3class="postform$4>', $content_buffer);
+    }
+    if(preg_match('/<a(.*?)( a )(.*?)<\/a>/', $content_buffer)){
+        $content_buffer = preg_replace('/<a(.*?)( a )(.*?)<\/a>/', '<a$1 $3</a>', $content_buffer);
+    }
+    if(preg_match('/<a(.*?)( a>)(.*?)<\/a>/', $content_buffer)){
+        $content_buffer = preg_replace('/<a(.*?)( a>)(.*?)<\/a>/', '<a$1>$3</a>', $content_buffer);
     }
     if (function_exists('aioseo_pro_just_activated') && preg_match('/<link rel="canonical" href="([^>]*)\/amp\/" \/>/', $content_buffer)) {
         $content_buffer = preg_replace('/<link rel="canonical" href="([^>]*)\/amp\/" \/>/','<link rel="canonical" href="$1/" />', $content_buffer);
@@ -102,10 +109,10 @@ function ampforwp_minify_html_output($content_buffer){
         $content_buffer = preg_replace('/<\/p>/s', '</p></section>', $content_buffer);
         $content_buffer = preg_replace('/<div\sclass="wp-faq-schema-items">(.*?)<\/div>/s', '<amp-accordion expand-single-section>$1</amp-accordion>', $content_buffer);
     } 
-   if(preg_match('/<amp-iframe(.*?)src="(.*?)embed\/(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', $content_buffer)){
+   if(preg_match('/<amp-iframe(.*?)src="(.*?)youtube.com\/embed\/(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', $content_buffer)){
         // Youtube Embed with Query Parameters
         $content_buffer = preg_replace('/<amp-iframe(.*?)src="(.*?)youtube.com\/embed\/(.*?)\?(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', '<amp-youtube data-videoid="$3" layout="responsive" width="$6" height="$8"></amp-youtube>', $content_buffer);
-        $content_buffer = preg_replace('/<amp-iframe(.*?)src="(.*?)embed\/(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', '<amp-youtube data-videoid="$3" layout="responsive" width="$5" height="$7"></amp-youtube>', $content_buffer);
+        $content_buffer = preg_replace('/<amp-iframe(.*?)src="(.*?)youtube.com\/embed\/(.*?)"(.*?)width="(.*?)"(.*?)height="(.*?)"(.*?)<\/amp-iframe>/', '<amp-youtube data-videoid="$3" layout="responsive" width="$5" height="$7"></amp-youtube>', $content_buffer);
     }
     if(preg_match('/<amp-iframe\sclass="instagram-media(.*?)"(.*?)src="https:\/\/instagram.com\/p\/(.*?)\/(.*?)"(.*?)><\/amp-iframe>/', $content_buffer)){
         $content_buffer = preg_replace('/<amp-iframe\sclass="instagram-media(.*?)"(.*?)src="https:\/\/instagram.com\/p\/(.*?)\/(.*?)"(.*?)><\/amp-iframe>/', '<amp-instagram data-shortcode="$3" data-captioned width="400" height="400"layout="responsive"></amp-instagram>', $content_buffer); 

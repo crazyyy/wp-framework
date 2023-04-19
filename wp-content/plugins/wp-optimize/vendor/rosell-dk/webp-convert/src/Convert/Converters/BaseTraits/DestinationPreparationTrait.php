@@ -69,8 +69,10 @@ trait DestinationPreparationTrait
         // So, to be absolute sure that we cannot write, we make an actual write test (writing a dummy file)
         // No harm in doing that for non-Windows systems either.
         if (file_put_contents($destination, 'dummy') !== false) {
-            // all is well, after all
-            unlink($destination);
+			if (file_exists($destination)) {
+				// all is well, after all
+				unlink($destination);
+			}
             return;
         }
 

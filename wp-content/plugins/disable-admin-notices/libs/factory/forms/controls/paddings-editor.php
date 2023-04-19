@@ -14,9 +14,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms453_PaddingsEditorControl') ) {
+	if( !class_exists('Wbcr_FactoryForms463_PaddingsEditorControl') ) {
 
-		class Wbcr_FactoryForms453_PaddingsEditorControl extends Wbcr_FactoryForms453_Control {
+		class Wbcr_FactoryForms463_PaddingsEditorControl extends Wbcr_FactoryForms463_Control {
 
 			public $type = 'paddings-editor';
 
@@ -46,35 +46,35 @@
 
 				?>
 				<div <?php $this->attrs() ?>
-					data-units="<?php echo $unit ?>"
-					data-range-start="<?php echo $range[0] ?>"
-					data-range-end="<?php echo $range[1] ?>"
-					data-step="<?php echo $step ?>">
+					data-units="<?php echo esc_attr($unit); ?>"
+					data-range-start="<?php echo esc_attr($range[0]); ?>"
+					data-range-end="<?php echo esc_attr($range[1]); ?>"
+					data-step="<?php echo esc_attr($step); ?>">
 					<div class="factory-rectangle">
-						<div class="factory-side factory-side-top" data-value="<?php echo $values[0] ?>">
-							<span class="factory-visible-value"><?php echo $values[0] ?><?php echo $units ?></span>
+						<div class="factory-side factory-side-top" data-value="<?php echo esc_attr($values[0]); ?>">
+							<span class="factory-visible-value"><?php echo esc_attr($values[0]); ?><?php echo esc_attr($units); ?></span>
 						</div>
 						<div class="factory-side factory-side-bottom" data-value="<?php echo $values[1] ?>">
-							<span class="factory-visible-value"><?php echo $values[1] ?><?php echo $units ?></span>
+							<span class="factory-visible-value"><?php echo esc_attr($values[1]); ?><?php echo esc_attr($units); ?></span>
 						</div>
 						<div class="factory-side factory-side-left" data-value="<?php echo $values[2] ?>">
-							<span class="factory-visible-value"><?php echo $values[2] ?><?php echo $units ?></span>
+							<span class="factory-visible-value"><?php echo esc_attr($values[2]); ?><?php echo esc_attr($units); ?></span>
 						</div>
 						<div class="factory-side factory-side-right" data-value="<?php echo $values[3] ?>">
-							<span class="factory-visible-value"><?php echo $values[3] ?><?php echo $units ?></span>
+							<span class="factory-visible-value"><?php echo esc_attr($values[3]); ?><?php echo esc_attr($units); ?></span>
 						</div>
-						<div class="factory-side factory-side-center" data-value="<?php echo $values[0] ?>"></div>
+						<div class="factory-side factory-side-center" data-value="<?php echo esc_attr($values[0]); ?>"></div>
 					</div>
 					<div class="factory-slider-container">
 						<label class="factory-title">
-							<?php _e('Select a side and move the slider to set up:', 'wbcr_factory_forms_453') ?>
+							<?php _e('Select a side and move the slider to set up:', 'wbcr_factory_forms_463') ?>
 						</label>
 
 						<div class="factory-slider">
 							<div class="factory-bar"></div>
 						</div>
 					</div>
-					<input type="hidden" class="factory-result" name="<?php echo $name ?>" value="<?php echo $raw_value ?>"/>
+					<input type="hidden" class="factory-result" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($raw_value); ?>"/>
 				</div>
 			<?php
 			}

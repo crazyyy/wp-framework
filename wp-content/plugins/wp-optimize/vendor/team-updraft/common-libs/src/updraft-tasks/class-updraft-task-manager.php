@@ -331,10 +331,11 @@ abstract class Updraft_Task_Manager_1_3 {
 
 		$class_identifier = $_task->class_identifier;
 
-		if (class_exists($class_identifier))
+		if (class_exists($class_identifier)) {
 			$task_instance = new $class_identifier($_task);
 			$task_instance->set_loggers($this->loggers);
 			return $task_instance;
+		}
 
 		return false;
 	}

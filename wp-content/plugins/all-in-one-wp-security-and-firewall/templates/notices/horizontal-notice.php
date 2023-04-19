@@ -14,15 +14,15 @@
 					
 			<?php if (!empty($button_link)) { ?>
 				<div class="aiowps_advert_button_container">
-					<a class="button button-primary" href="<?php esc_attr_e($button_link);?>" target="_blank" onclick="jQuery('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>', dismiss_forever: '1' });">
+					<a class="button button-primary" href="<?php esc_attr_e($button_link);?>" target="_blank" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>', dismiss_forever: '1' });">
 						<?php _e('Ok, you deserve it', 'all-in-one-wp-security-and-firewall'); ?>
 					</a>
 					<div class="dashicons dashicons-calendar"></div>
-					<a class="aiowps_notice_link" href="#" onclick="jQuery('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>', dismiss_forever: '0' });">
+					<a class="aiowps_notice_link" href="#" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>', dismiss_forever: '0' });">
 						<?php _e('Maybe later', 'all-in-one-wp-security-and-firewall'); ?>
 					</a>
 					<div class="dashicons dashicons-no-alt"></div>
-					<a class="aiowps_notice_link" href="#" onclick="jQuery('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>', dismiss_forever: '1' });">
+					<a class="aiowps_notice_link" href="#" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>', dismiss_forever: '1' });">
 						<?php _e('Never', 'all-in-one-wp-security-and-firewall'); ?>
 					</a>
 				</div>
@@ -47,9 +47,9 @@
 				?>
 				<div class="aiowps_advert_dismiss">
 				<?php if (!empty($dismiss_time)) { ?>
-					<a href="#" onclick="jQuery('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>' });"><?php _e('Dismiss', 'all-in-one-wp-security-and-firewall'); ?></a>
+					<a href="#" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: '<?php echo $dismiss_time;?>', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce');?>' });"><?php _e('Dismiss', 'all-in-one-wp-security-and-firewall'); ?></a>
 				<?php } else { ?>
-					<a href="#" onclick="jQuery('.aiowps_ad_container').slideUp();"><?php _e('Dismiss', 'all-in-one-wp-security-and-firewall'); ?></a>
+					<a href="#" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp();"><?php _e('Dismiss', 'all-in-one-wp-security-and-firewall'); ?></a>
 				<?php } ?>
 				</div>
 			</h3>
@@ -69,7 +69,7 @@
 						} elseif ('wp-optimize' == $button_meta) {
 							_e('Get WP-Optimize', 'all-in-one-wp-security-and-firewall');
 						} elseif ('all-in-one-wp-security-and-firewall' == $button_meta) {
-							_e('Find out more.', 'all-in-one-wp-security-and-firewall');
+							_e('Get Premium.', 'all-in-one-wp-security-and-firewall');
 						} elseif ('signup' == $button_meta) {
 							_e('Sign up', 'all-in-one-wp-security-and-firewall');
 						} elseif ('go_there' == $button_meta) {

@@ -118,6 +118,8 @@ class Admin_Display extends Base {
 			// sub menus
 			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' );
 
+			$this->_add_submenu( __( 'Presets', 'litespeed-cache' ), 'litespeed-presets', 'show_menu_presets' );
+
 			$this->_add_submenu( __( 'General', 'litespeed-cache' ), 'litespeed-general', 'show_menu_general' );
 
 			$this->_add_submenu( __( 'Cache', 'litespeed-cache' ), 'litespeed-cache', 'show_menu_cache' );
@@ -321,7 +323,7 @@ class Admin_Display extends Base {
 		// possible translation
 		$str = Lang::maybe_translate( $str );
 
-		return '<div class="' . $cls . '"><p>'. $str . '</p></div>';
+		return '<div class="litespeed_icon ' . $cls . '"><p>'. $str . '</p></div>';
 	}
 
 	/**
@@ -579,6 +581,16 @@ class Admin_Display extends Base {
 	 */
 	public function show_menu_dash() {
 		require_once LSCWP_DIR . 'tpl/dash/entry.tpl.php';
+	}
+
+	/**
+	 * Displays the General page.
+	 *
+	 * @since 5.3
+	 * @access public
+	 */
+	public function show_menu_presets() {
+		require_once LSCWP_DIR . 'tpl/presets/entry.tpl.php';
 	}
 
 	/**

@@ -28,24 +28,25 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 		 * @return void
 		 */
 		public function load_cookie_data(){
-			if ( cmplz_get_value( 'disable_cookie_block' ) == 1 || cmplz_get_value( 'consent_per_service' ) !== 'yes' ) {
+			if ( cmplz_get_value( 'safe_mode' ) == 1 || cmplz_get_value( 'consent_per_service' ) !== 'yes' ) {
 				return;
 			}
-			$cookie_list = get_transient('cmplz_cookie_shredder_list' );
-			if ( !$cookie_list ) {
+			$this->cookie_list = get_transient('cmplz_cookie_shredder_list' );
+			if ( !$this->cookie_list ) {
+				$this->cookie_list = [];
 				$cookie_list = COMPLIANZ::$cookie_admin->get_cookies( array(
 					'ignored'           => false,
 					'hideEmpty'         => false,
+					'language'          => 'en', //only for one language
 					'showOnPolicy'      => true,
 					'deleted'           => false,
 					'isMembersOnly'     => cmplz_get_value( 'wp_admin_access_users' ) === 'yes' ? 'all' : false,
 				) );
-				set_transient('cmplz_cookie_shredder_list', $cookie_list, HOUR_IN_SECONDS);
+				$this->get_cookies($cookie_list, 'preferences');
+				$this->get_cookies($cookie_list, 'statistics');
+				$this->get_cookies($cookie_list, 'marketing');
+				set_transient('cmplz_cookie_shredder_list', $this->cookie_list, HOUR_IN_SECONDS);
 			}
-
-			$this->get_cookies($cookie_list, 'preferences');
-			$this->get_cookies($cookie_list, 'statistics');
-			$this->get_cookies($cookie_list, 'marketing');
 		}
 
 		/**
@@ -54,7 +55,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 		 * @return void
 		 */
 		public function create_delete_cookies_list(){
-			if ( cmplz_get_value( 'disable_cookie_block' ) == 1 || cmplz_get_value( 'consent_per_service' ) !== 'yes' ) {
+			if ( cmplz_get_value( 'safe_mode' ) == 1 || cmplz_get_value( 'consent_per_service' ) !== 'yes' ) {
 				return;
 			}
 			if ( is_admin() ) {
@@ -148,7 +149,51 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 			echo $response;
 			exit;
 		}
+		/**
+		 * Get array of scripts to block in correct format
+		 * This is the base array, of which dependencies and placeholder lists also are derived
+		 *
+		 * @return array
+		 */
+		public function blocked_styles()
+		{
+			$blocked_styles = apply_filters( 'cmplz_known_style_tags', [] );
+			//make sure every item has the default array structure
+			foreach ($blocked_styles as $key => $blocked_style ){
+				$default = [
+					'name'               => 'general',//default service name
+					'enable_placeholder' => 1,
+					'placeholder'        => '',
+					'category'           => 'marketing',
+					'urls'               => array( $blocked_style ),
+					'enable'             => 1,
+					'enable_dependency'  => 0,
+					'dependency'         => '',
+				];
 
+				if ( !is_array($blocked_style) ){
+					$service = cmplz_get_service_by_src( $blocked_style );
+					$default['name'] = $service;
+					$default['placeholder'] = $service;
+					$blocked_styles[$key] = $default;
+				} else {
+					$blocked_styles[$key] = wp_parse_args( $blocked_style, $default);
+				}
+			}
+
+			$formatted_custom_style_tags = [];
+			foreach ( $blocked_styles as $blocked_style ) {
+				$blocked_style['name'] = $this->sanitize_service_name($blocked_style['name']);
+				if ( isset($blocked_style['urls']) ) {
+					foreach ($blocked_style['urls'] as $url ) {
+						$formatted_custom_style_tags[$url] = $blocked_style;
+					}
+				} else if (isset($blocked_style['editor'])) {
+					$formatted_custom_style_tags[$blocked_style['editor']] = $blocked_style;
+				}
+			}
+			return $formatted_custom_style_tags;
+		}
 		/**
 		 * Get array of scripts to block in correct format
 		 * This is the base array, of which dependencies and placeholder lists also are derived
@@ -397,13 +442,13 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 			 * Get style tags
 			 *
 			 * */
-			$known_style_tags = apply_filters( 'cmplz_known_style_tags', array() );
+			$known_style_tags = $this->blocked_styles();
 
             /**
              * Get script tags, including custom user scripts
              *
              * */
-			$blocked_scripts = false;//get_transient('cmplz_blocked_scripts');
+			$blocked_scripts = get_transient('cmplz_blocked_scripts');
 			if ( defined('WP_DEBUG') && WP_DEBUG ) {
 				$blocked_scripts = false;
 			}
@@ -479,18 +524,29 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
 			/**
 			 * Handle styles (e.g. google fonts)
-			 * fonts.google.com has currently been removed in favor of plugin recommendation
 			 *
 			 * */
-			$style_pattern = '/<link rel=[\'|"]stylesheet[\'|"].*?href=[\'|"](\X*?)[\'|"][^>]*?>/i';
+			$style_pattern = '/<link.*?rel=[\'|"]stylesheet[\'|"][^>].*?href=[\'|"](\X*?)[\'|"][^>]*?>/i';
 			if ( preg_match_all( $style_pattern, $output, $matches, PREG_PATTERN_ORDER ) ) {
 				foreach ( $matches[1] as $key => $style_url ) {
 					$total_match = $matches[0][ $key ];
-					if ( cmplz_strpos_arr( $style_url, $known_style_tags ) !== false ) {
-						$new    = $this->replace_href( $total_match );
-						$service_name = cmplz_get_service_by_src( $style_url );
-						$new    = $this->add_data( $new, 'link', 'service', $service_name );
-						$new    = $this->add_data( $new, 'link', 'category', 'marketing' );
+					//we don't block scripts with the functional data attribute
+					if ( strpos( $total_match, 'data-category="functional"' ) !== false ) {
+						continue;
+					}
+
+					//check if we can skip blocking this array if a specific string is included
+					if ( cmplz_strpos_arr($total_match, $whitelisted_script_tags) ) {
+						continue;
+					}
+					$found = cmplz_strpos_arr( $style_url, array_keys($known_style_tags) );
+					if ( $found !== false ) {
+						$match = $known_style_tags[$found];
+						$new = $total_match;
+						$service_name = $this->sanitize_service_name($match['name']);
+						$new = $this->add_data( $new, 'link', 'category', apply_filters('cmplz_service_category', $match['category'], $total_match, $found) );
+						$new = $this->add_data( $new, 'link', 'service', $service_name );
+						$new = $this->replace_href( $new );
 						$output = str_replace( $total_match, $new, $output );
 					}
 				}
@@ -514,7 +570,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 						$is_video = $this->is_video( $iframe_src );
 						$service_name = $this->sanitize_service_name($tag['name']);
 						$new         = $total_match;
-						$new         = preg_replace( '~<iframe\\s~i', '<iframe data-cmplz-target="'.apply_filters('cmplz_data_target', 'src').'" data-src-cmplz="' . $iframe_src . '" ', $new , 1 ); // make sure we replace it only once
+						$new         = preg_replace( '~<iframe\\s~i', '<iframe data-cmplz-target="'.apply_filters('cmplz_data_target', 'src', $total_match).'" data-src-cmplz="' . $iframe_src . '" ', $new , 1 ); // make sure we replace it only once
 
 						//remove lazy loading for iframes, as it is breaking on activation
 						$new = str_replace('loading="lazy"', 'data-deferlazy="1"', $new );
@@ -677,7 +733,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 					}
 
 					//when script contains src
-					$script_src_pattern = '/<script [^>]*?src=[\'"]' . $url_pattern . '[\'"].*?>/is';
+					$script_src_pattern = '/<script[^>]*?src=[\'"]' . $url_pattern . '[\'"].*?>/is';
 					if ( preg_match_all( $script_src_pattern, $total_match, $src_matches, PREG_PATTERN_ORDER ) ) {
 						foreach ( $src_matches[1] as $src_key => $script_src ) {
 							$script_src = $src_matches[1][ $src_key ];
@@ -693,6 +749,8 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 								if ( strpos( $new, 'data-category="functional"' ) === false
 								) {
 									$new = $this->set_javascript_to_plain( $new );
+									$new = str_replace( 'src=', 'data-cmplz-src=', $new );
+
 									if ( cmplz_strpos_arr( $found, $post_scribe_list )
 									) {
 										//will be to late for the first page load, but will enable post scribe on next page load
@@ -772,7 +830,7 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 
 		private function replace_src( $script, $new_src ) {
 
-			$pattern = '/src=[\'"](http:\/\/|https:\/\/|\/\/)([\s\wäöüÄÖÜß.,@!?^=%&:\/~+#-;]*[\w@!?^=%&\/~+#-;]?)[\'"]/i';
+			$pattern = '/src=[\'"](http:\/\/|https:\/\/|\/\/)([\s\wêëèéēėęàáâæãåāäöôòóœøüÄÖÜß.,@!?^=%&:\/~+#-;]*[\w@!?^=%&\/~+#-;]?)[\'"]/i';
 			$new_src = ' src="' . $new_src . '" ';
 			preg_match( $pattern, $script, $matches );
 			$script = preg_replace( $pattern, $new_src, $script );

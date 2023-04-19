@@ -8,22 +8,37 @@ class AIOWPSecurity_Config {
 	public $configs;
 
 	public static $_this;
-	
+
 	public function __construct() {
 	}
 
 	public function load_config() {
-	$this->configs = get_option('aio_wp_security_configs');
+		$this->configs = get_option('aio_wp_security_configs');
 	}
-	
+
 	public function get_value($key) {
 		return isset($this->configs[$key]) ? $this->configs[$key] : '';
 	}
-	
-	public function set_value($key, $value) {
+
+	/**
+	 * Sets a given config $value for a given $key.
+	 *
+	 * @param string  $key
+	 * @param mixed   $value
+	 * @param boolean $save_config - Whether or not to also save the $configs array to the database.
+	 *
+	 * @return boolean
+	 */
+	public function set_value($key, $value, $save_config = false) {
 		$this->configs[$key] = $value;
+
+		if ($save_config) {
+			return $this->save_config();
+		} else {
+			return true;
+		}
 	}
-	
+
 	public function add_value($key, $value) {
 		if (!is_array($this->configs)) {
 			$this->configs = array();
@@ -45,13 +60,13 @@ class AIOWPSecurity_Config {
 		return update_option('aio_wp_security_configs', $this->configs);
 	}
 
-   /**
-	* Remove key element from config.
-	*
-	* @param String $key config key
-	*
-	* @return boolean True if removed, otherwise false.
-	*/
+	/**
+	 * Remove key element from config.
+	 *
+	 * @param String $key config key
+	 *
+	 * @return boolean True if removed, otherwise false.
+	 */
 	public function delete_value($key) {
 		if (!is_array($this->configs)) {
 			$this->configs = array();

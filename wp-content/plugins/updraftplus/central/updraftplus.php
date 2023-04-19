@@ -1,15 +1,21 @@
 <?php
 
-if (!interface_exists('UpdraftCentral_Host_Interface')) require_once('interface.php');
+if (class_exists('UpdraftPlus_Host')) return;
+
+if (!defined('UPDRAFTCENTRAL_CLIENT_DIR')) define('UPDRAFTCENTRAL_CLIENT_DIR', dirname(__FILE__));
+if (!defined('UPDRAFTCENTRAL_CLIENT_URL')) define('UPDRAFTCENTRAL_CLIENT_URL', plugins_url('', __FILE__));
+if (!class_exists('UpdraftCentral_Host')) {
+	include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/host.php');
+}
 
 /**
- * This class is the basic bridge between the UpdraftCentral and UpdraftPlus.
+ * This class is the basic bridge between UpdraftCentral and UpdraftPlus.
  */
-class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
+class UpdraftPlus_Host extends UpdraftCentral_Host {
 
-	const PLUGIN_NAME = 'updraftplus';
+	public $plugin_name = 'updraftplus';
 
-	private $translations;
+	public $translations = array();
 
 	protected static $_instance = null;
 
@@ -30,30 +36,35 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	 * Class constructor
 	 */
 	public function __construct() {
+		parent::__construct();
+		
 		add_action('updraftplus_debugtools_dashboard', array($this, 'debugtools_dashboard'), 20);
 
 		$this->maybe_initialize_required_objects();
 	}
 
 	/**
-	 * Retrieves or shows a message from the translations collection based on its identifier key
+	 * Loads the UpdraftCentral_Main instance
 	 *
-	 * @param string $key  The ID of the the message
-	 * @param bool   $echo Indicate whether the message is to be shown directly (echoed) or just for retrieval
-	 *
-	 * @return string/void
+	 * @return void
 	 */
-	public function retrieve_show_message($key, $echo = false) {
-		if (empty($key) || !isset($this->translations[$key])) return '';
+	public function load_updraftcentral() {
+		$central_path = $this->is_host_dir_set() ? trailingslashit(UPDRAFTPLUS_DIR) : '';
 
-		if ($echo) {
-			echo $this->translations[$key];
-			return;
+		if (file_exists($central_path.'central/bootstrap.php')) {
+			include_once($central_path.'central/bootstrap.php');
 		}
-
-		return $this->translations[$key];
 	}
 
+	/**
+	 * Whether the current user can perform key control AJAX actions
+	 *
+	 * @return Boolean
+	 */
+	public function current_user_can_ajax() {
+		return UpdraftPlus_Options::user_can_manage();
+	}
+	
 	/**
 	 * Below are interface methods' implementations that are required by UpdraftCentral to function properly. Please
 	 * see the "interface.php" to check all the required interface methods.
@@ -66,6 +77,15 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	 */
 	public function is_host_dir_set() {
 		return defined('UPDRAFTPLUS_DIR') ? true : false;
+	}
+
+	/**
+	 * Get the host plugin's dir path
+	 *
+	 * @return string
+	 */
+	public function get_host_dir() {
+		return defined('UPDRAFTPLUS_DIR') ? UPDRAFTPLUS_DIR : dirname(dirname(__FILE__));
 	}
 
 	/**
@@ -83,22 +103,9 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	 * @return bool
 	 */
 	public function get_debug_mode() {
-		return $this->get_option('updraft_debug_mode');
-	}
-
-	/**
-	 * Gets an RPC object, and sets some defaults on it that we always want
-	 *
-	 * @param string $indicator_name indicator name
-	 * @return array|bool
-	 */
-	public function get_udrpc($indicator_name) {
-		global $updraftplus;
-
-		if ($updraftplus) {
-			return $updraftplus->get_udrpc($indicator_name);
+		if (class_exists('UpdraftPlus_Options')) {
+			return UpdraftPlus_Options::get_updraft_option('updraft_debug_mode');
 		}
-
 		return false;
 	}
 
@@ -158,7 +165,7 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 			return $updraftplus_admin;
 		} else {
 			if (defined('UPDRAFTPLUS_DIR') && file_exists(UPDRAFTPLUS_DIR.'/admin.php')) {
-				include_once(UPDRAFTPLUS_DIR.'/admin.php');
+				updraft_try_include_file('admin.php', 'include_once');
 				$updraftplus_admin = new UpdraftPlus_Admin();
 				return $updraftplus_admin;
 			}
@@ -168,59 +175,22 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	}
 
 	/**
-	 * Retrieves the host plugin's Options class
+	 * Logs the given line
 	 *
-	 * @return class|bool
+	 * @param string         $line    The log line
+	 * @param string         $level   The log level: notice, warning, error, etc.
+	 * @param boolean|string $uniq_id Each of these will only be logged once
+	 *
+	 * @return void
 	 */
-	public function get_option_class() {
-		if ($this->has_options()) {
-			return UpdraftPlus_Options;
+	public function log($line, $level = 'notice', $uniq_id = false) {
+		global $updraftplus;
+
+		if ($updraftplus) {
+			if (is_callable(array($updraftplus, 'log'))) {
+				call_user_func(array($updraftplus, 'log'), $line, $level, $uniq_id);
+			}
 		}
-
-		return false;
-	}
-
-	/**
-	 * Checks whether the host plugin's Options class exists
-	 *
-	 * @return bool
-	 */
-	public function has_options() {
-		return class_exists('UpdraftPlus_Options');
-	}
-
-	/**
-	 * Updates a specific option's value
-	 *
-	 * @param string $option	Specify option name
-	 * @param string $value	    Specify option value
-	 * @param bool   $use_cache Whether or not to use the WP options cache
-	 * @param string $autoload	Whether to autoload (only takes effect on a change of value)
-	 *
-	 * @return bool
-	 */
-	public function update_option($option, $value, $use_cache = true, $autoload = 'yes') {
-		if ($this->has_options()) {
-			return UpdraftPlus_Options::update_updraft_option($option, $value, $use_cache, $autoload);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Retrieves a specific option's value
-	 *
-	 * @param string $option  Specify option name
-	 * @param mixed  $default Optional. The default value to return when option is not found
-	 *
-	 * @return mixed|bool
-	 */
-	public function get_option($option, $default = null) {
-		if ($this->has_options()) {
-			return UpdraftPlus_Options::get_updraft_option($option, $default);
-		}
-
-		return false;
 	}
 
 	/**
@@ -270,27 +240,6 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 	}
 
 	/**
-	 * Adds a section to the 'advanced tools' page for generating UpdraftCentral keys. Called by a filter
-	 * inside the constructor method of this class.
-	 *
-	 * @return void
-	 */
-	public function debugtools_dashboard() {
-		global $updraftcentral_main;
-
-		if (!class_exists('UpdraftCentral_Main')) {
-			if (defined('UPDRAFTCENTRAL_CLIENT_DIR') && file_exists(UPDRAFTCENTRAL_CLIENT_DIR.'/bootstrap.php')) {
-				include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/bootstrap.php');
-				$updraftcentral_main = new UpdraftCentral_Main();
-			}
-		}
-
-		if ($updraftcentral_main) {
-			$updraftcentral_main->debugtools_dashboard();
-		}
-	}
-
-	/**
 	 * Initializes required objects (if not yet initialized) for UpdraftCentral usage
 	 *
 	 * @return void
@@ -300,7 +249,7 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 
 		if (!class_exists('UpdraftPlus')) {
 			if (defined('UPDRAFTPLUS_DIR') && file_exists(UPDRAFTPLUS_DIR.'/class-updraftplus.php')) {
-				include_once(UPDRAFTPLUS_DIR.'/class-updraftplus.php');
+				updraft_try_include_file('class-updraftplus.php', 'include_once');
 				if (empty($updraftplus) || !is_a($updraftplus, 'UpdraftPlus')) {
 					$updraftplus = new UpdraftPlus();
 				}
@@ -309,19 +258,19 @@ class UpdraftPlus_Host implements UpdraftCentral_Host_Interface {
 
 		if (!class_exists('UpdraftPlus_Options')) {
 			if (defined('UPDRAFTPLUS_DIR') && file_exists(UPDRAFTPLUS_DIR.'/options.php')) {
-				require_once(UPDRAFTPLUS_DIR.'/options.php');
+				updraft_try_include_file('options.php', 'require_once');
 			}
 		}
 
 		if (!class_exists('UpdraftPlus_Filesystem_Functions')) {
 			if (defined('UPDRAFTPLUS_DIR') && file_exists(UPDRAFTPLUS_DIR.'/includes/class-filesystem-functions.php')) {
-				require_once(UPDRAFTPLUS_DIR.'/includes/class-filesystem-functions.php');
+				updraft_try_include_file('includes/class-filesystem-functions.php', 'require_once');
 			}
 		}
 
 		// Load updraftplus translations
-		if (defined('UPDRAFTCENTRAL_CLIENT_DIR') && file_exists(UPDRAFTCENTRAL_CLIENT_DIR.'/translations-updraftplus.php')) {
-			$this->translations = include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/translations-updraftplus.php');
+		if (defined('UPDRAFTCENTRAL_CLIENT_DIR') && file_exists(UPDRAFTCENTRAL_CLIENT_DIR.'/translations-central.php')) {
+			$this->translations = include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/translations-central.php');
 		}
 	}
 }

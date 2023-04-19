@@ -82,7 +82,7 @@ class Console extends Analytics {
 		$this->http_post( 'https://www.googleapis.com/siteVerification/v1/webResource?verificationMethod=META', $args );
 
 		// Sync sitemap.
-		as_enqueue_async_action( 'rank_math/analytics/sync_sitemaps' );
+		as_enqueue_async_action( 'rank_math/analytics/sync_sitemaps', [], 'rank-math' );
 
 		return $this->is_success();
 	}
@@ -190,12 +190,14 @@ class Console extends Analytics {
 		$rank_math_site_url = get_option( 'rank_math_google_analytic_profile', [ 'profile' => $default ] );
 		$rank_math_site_url = empty( $rank_math_site_url['profile'] ) ? $default : $rank_math_site_url['profile'];
 
+		$workflow = 'console';
+		$this->set_workflow( $workflow );
 		$response = $this->http_post(
 			'https://www.googleapis.com/webmasters/v3/sites/' . rawurlencode( $rank_math_site_url ) . '/searchAnalytics/query',
 			$args
 		);
 
-		$this->log_failed_request( $response, 'console', $start_date, func_get_args() );
+		$this->log_failed_request( $response, $workflow, $start_date, func_get_args() );
 
 		if ( ! $this->is_success() || ! isset( $response['rows'] ) ) {
 			return false;

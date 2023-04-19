@@ -10,7 +10,7 @@ export default {
         dataType: 'json',
         contentType: 'application/json'
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         commit('defineApi', data)
         resolve()
       })
@@ -32,7 +32,7 @@ export default {
           password: state.password
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.errors)) {
           reject(data.errors)
           commit('defineNonce', '')
@@ -59,7 +59,7 @@ export default {
           required_plugins: []
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.errors)) {
           if (data.errors.no_active_case) {
             commit('defineCase', {})
@@ -90,7 +90,7 @@ export default {
           required_plugins: []
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.errors)) {
           reject(data.errors)
         } else {
@@ -118,7 +118,7 @@ export default {
           url: getters.updatedActiveCase.url
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.errors)) {
           reject(data.errors)
         } else {
@@ -143,7 +143,7 @@ export default {
           action: 'close'
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.error)) {
           reject(data.errors)
         } else {
@@ -168,7 +168,7 @@ export default {
           action: 'suspend'
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.error)) {
           reject(data.errors)
         } else {
@@ -181,7 +181,7 @@ export default {
       })
     })
   },
-  resetCase ({commit, state, getters}) {
+  resetCase ({state, getters}) {
     return new Promise((resolve, reject) => {
       $.ajax({
         url: getters.updatedApi.api_url,
@@ -194,7 +194,7 @@ export default {
           reset_active_plugins: true
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.error)) {
           reject(data.errors)
         } else {
@@ -218,7 +218,7 @@ export default {
           action: 'review'
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.error)) {
           reject(data.errors)
         } else {
@@ -244,7 +244,7 @@ export default {
           action: 'create'
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.error)) {
           reject(data.errors)
         } else {
@@ -257,7 +257,7 @@ export default {
       })
     })
   },
-  deactivatePlugins ({commit, state, getters}, plugins) {
+  deactivatePlugins ({state, getters}, plugins) {
     return new Promise((resolve, reject) => {
       $.ajax({
         url: getters.updatedApi.api_url,
@@ -270,7 +270,7 @@ export default {
           plugins
         }
       })
-      .done((data, status, xhr) => {
+      .done((data) => {
         if (!_.isEmpty(data.error)) {
           reject(data.errors)
         } else {

@@ -3,7 +3,7 @@
 Plugin Name: Accelerated Mobile Pages
 Plugin URI: https://wordpress.org/plugins/accelerated-mobile-pages/
 Description: AMP for WP - Accelerated Mobile Pages for WordPress
-Version: 1.0.77.47
+Version: 1.0.83
 Author: Ahmed Kaludi, Mohammed Kaludi
 Author URI: https://ampforwp.com/
 Donate link: https://www.paypal.me/Kaludi/25
@@ -20,8 +20,9 @@ define('AMPFORWP_PLUGIN_DIR_URI', plugin_dir_url(__FILE__));
 define('AMPFORWP_DISQUS_URL',plugin_dir_url(__FILE__).'includes/disqus.html');
 define('AMPFORWP_IMAGE_DIR',plugin_dir_url(__FILE__).'images');
 define('AMPFORWP_MAIN_PLUGIN_DIR', plugin_dir_path( __DIR__ ) );
-define('AMPFORWP_VERSION','1.0.77.47');
+define('AMPFORWP_VERSION','1.0.83');
 define('AMPFORWP_EXTENSION_DIR',plugin_dir_path(__FILE__).'includes/options/extensions');
+define('AMPFORWP_ANALYTICS_URL',plugin_dir_url(__FILE__).'includes/features/analytics');
 if(!defined('AMPFROWP_HOST_NAME')){
 	$urlinfo = get_bloginfo('url');
 	$url = parse_url($urlinfo);
@@ -42,6 +43,10 @@ define('AMPFORWP_AMP_QUERY_VAR', apply_filters( 'amp_query_var', ampforwp_genera
 
 // Rewrite the Endpoints after the plugin is activate, as priority is set to 11
 function ampforwp_add_custom_post_support() {
+	// Adding rewrite rules only when we are in standard mode
+	if (is_amp_plugin_active()) {
+		return;
+	}
 	global $redux_builder_amp;
 	add_rewrite_endpoint( AMPFORWP_AMP_QUERY_VAR, EP_PAGES | EP_PERMALINK | EP_AUTHORS | EP_ALL_ARCHIVES | EP_ROOT );
 	// Pages
@@ -86,8 +91,30 @@ function ampforwp_get_the_page_id_blog_page(){
 	return $output;
 }
 
+/**
+ * All in One SEO Plugin Conflict
+ * for stopping redirecting
+ * on amp query string
+ * @since 1.0.82
+*/
+if( in_array( 'all-in-one-seo-pack/all_in_one_seo_pack.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+    add_filter( 'aioseo_unrecognized_allowed_query_args', 'AMP_for_WP_QueryStringAllowed_for_AIOSEO_Plugin', -1 );
+    function AMP_for_WP_QueryStringAllowed_for_AIOSEO_Plugin($allowedQueryArgs) {
+        return array_merge($allowedQueryArgs, array(
+            'nonamp',
+            'namp',
+            'nonamphead',
+        ));
+    }
+}
+
 // Add Custom Rewrite Rule to make sure pagination & redirection is working correctly
 function ampforwp_add_custom_rewrite_rules() {
+	
+	// Adding rewrite rules only when we are in standard mode
+	if (is_amp_plugin_active()) {
+		return;
+	}
 	global $redux_builder_amp, $wp_rewrite;
     // For Homepage
     add_rewrite_rule(
@@ -95,6 +122,7 @@ function ampforwp_add_custom_rewrite_rules() {
       'index.php?amp',
       'top'
     );
+    do_action('ampforwp_rewrite_rules_hook');
 	// For Homepage with Pagination
     add_rewrite_rule(
         'amp/'.$wp_rewrite->pagination_base.'/([0-9]{1,})/?$',
@@ -338,6 +366,11 @@ function ampforwp_update_option_permalink_structure(){
 add_action( 'init', 'ampforwp_custom_rewrite_rules_for_product_category' );
 if ( ! function_exists('ampforwp_custom_rewrite_rules_for_product_category') ) {
 	function ampforwp_custom_rewrite_rules_for_product_category(){
+		
+		// Adding rewrite rules only when we are in standard mode
+		if (is_amp_plugin_active()) {
+			return;
+		}
 		if ( class_exists('WooCommerce') ) {
 			$permalinks = wp_parse_args( (array) get_option( 'woocommerce_permalinks', array() ), array(
 				'product_base'           => '',
@@ -721,8 +754,11 @@ if ( ! function_exists('ampforwp_init') ) {
 		do_action( 'amp_init' );
 
 		load_plugin_textdomain( 'accelerated-mobile-pages', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-
+		
+		// Adding rewrite rules only when we are in standard mode
+		if (!is_amp_plugin_active()) {
 		add_rewrite_endpoint( AMP_QUERY_VAR, EP_PERMALINK );
+		}
 		add_post_type_support( 'post', AMP_QUERY_VAR );
 
 		add_filter( 'request', 'AMPforWP\\AMPVendor\\amp_force_query_var_value' );
@@ -959,6 +995,8 @@ if(!function_exists('ampforwp_get_setup_info')){
            	$cr_analytics_url = ampforwp_get_setting('ampforwp-callrail-analytics-url');
             $analytics_txt = "";
             $analytic_arr = array();
+			$host = ampforwp_get_setting('ampforwp-adobe-host');
+			$ReportSuiteId = ampforwp_get_setting('ampforwp-adobe-reportsuiteid');
             if(ampforwp_get_setting('ampforwp-ga-switch') && $ga_field!="UA-XXXXX-Y" && $ga_field!=""){$analytic_arr[]="Google Analytics";}
             if(ampforwp_get_setting('amp-use-gtm-option') && $ga_field_gtm!="" && $ga_field_gtm!=""){$analytic_arr[]="Google Tag Manager";}
             if(ampforwp_get_setting('amp-fb-pixel') && $amp_fb_pixel_id!=""){$analytic_arr[]="Facebook Pixel";}
@@ -972,6 +1010,7 @@ if(!function_exists('ampforwp_get_setup_info')){
             if(ampforwp_get_setting('ampforwp-Yandex-switch') && $yemdex_c!=""){$analytic_arr[]="Yandex Metrika";}
             if(ampforwp_get_setting('ampforwp-Chartbeat-switch') && $chartbeat_c!=""){$analytic_arr[]="Chartbeat Analytics";}
             if(ampforwp_get_setting('ampforwp-Alexa-switch') && $alexa_c!="" && $alexa_d!=""){$analytic_arr[]="Alexa Metrics";}
+			if(ampforwp_get_setting('ampforwp-adobe-switch') && $host!=="" && $ReportSuiteId!=""){$analytic_arr[]="Adobe Analytics";}
             if(ampforwp_get_setting('ampforwp-afs-analytics-switch') && $afs_c!=""){$analytic_arr[]="AFS Analytics";}
             if(ampforwp_get_setting('amp-clicky-switch') && $clicky_side_id!=""){$analytic_arr[]="Clicky Analytics";}
             if(ampforwp_get_setting('ampforwp-callrail-switch') && $cr_config_url!="" && $cr_number!="" && $cr_analytics_url!=""){$analytic_arr[]="Call Rail Analytics";}
@@ -1570,4 +1609,19 @@ if(!function_exists('ampforwp_save_local_font')){
 add_action("amp_init", "ampforwp_amp_optimizer");
 function ampforwp_amp_optimizer(){
 	require_once AMPFORWP_PLUGIN_DIR."/includes/amp-optimizer-addon.php";
+}
+
+if(!function_exists('is_amp_plugin_active')){
+	function is_amp_plugin_active()
+	{
+		if (!function_exists('is_plugin_active')) {
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+
+		if (is_plugin_active('amp/amp.php')) {
+			return true;
+		}
+		return false;
+	}
+
 }

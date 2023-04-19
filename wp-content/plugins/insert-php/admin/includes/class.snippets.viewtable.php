@@ -29,10 +29,10 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables413_Viewtable {
 		$this->scripts->localize( 'winp_ajax', [ 'nonce' => wp_create_nonce( 'winp_ajax' ) ] );
 		$this->runActions();
 
-		add_filter( 'manage_edit-' . WINP_SNIPPETS_POST_TYPE . '_sortable_columns', array(
+		add_filter( 'manage_edit-' . WINP_SNIPPETS_POST_TYPE . '_sortable_columns', [
 			$this,
-			'sortable_columns'
-		) );
+			'sortable_columns',
+		] );
 		add_action( 'wp_ajax_change_priority', [ $this, 'change_priority' ] );
 		add_action( 'wp_ajax_change_snippet_status', [ $this, 'change_snippet_status' ] );
 	}
@@ -191,7 +191,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables413_Viewtable {
 		check_ajax_referer( 'winp_ajax' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json( array( 'error_message' => __( "You don't have enough capability to edit this information.", 'insert-php' ) ) );
+			wp_send_json( [ 'error_message' => __( "You don't have enough capability to edit this information.", 'insert-php' ) ] );
 		}
 
 		if ( isset( $_POST['snippet_id'] ) && isset( $_POST['priority'] ) ) {
@@ -203,14 +203,14 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables413_Viewtable {
 				] );
 			} else {
 				wp_send_json( [
-						'error_message' => __( "Priority is not changed! It's must be a number", 'insert-php' ),
-					] );
+					'error_message' => __( "Priority is not changed! It's must be a number", 'insert-php' ),
+				] );
 			}
 
 		} else {
 			wp_send_json( [
-					'error_message' => __( 'Priority is not changed!', 'insert-php' ),
-				] );
+				'error_message' => __( 'Priority is not changed!', 'insert-php' ),
+			] );
 		}
 	}
 
@@ -221,7 +221,7 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables413_Viewtable {
 		check_ajax_referer( 'winp_ajax' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json( array( 'error_message' => __( "You don't have enough capability to edit this information.", 'insert-php' ) ) );
+			wp_send_json( [ 'error_message' => __( "You don't have enough capability to edit this information.", 'insert-php' ) ] );
 		}
 
 		if ( isset( $_POST['snippet_id'] ) ) {
@@ -238,9 +238,9 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables413_Viewtable {
 			if ( ( 'evrywhere' == $snippet_scope || 'auto' == $snippet_scope ) && $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_AD && $snippet_type != WINP_SNIPPET_TYPE_CSS && $snippet_type != WINP_SNIPPET_TYPE_JS && ! $is_activate ) {
 				if ( WINP_Plugin::app()->getExecuteObject()->getSnippetError( $snippet_id ) ) {
 					wp_send_json( [
-							'alert'         => true,
-							'error_message' => __( "The snippet is not activated because errors were detected in the snippet code!", 'insert-php' ),
-						] );
+						'alert'         => true,
+						'error_message' => __( "The snippet is not activated because errors were detected in the snippet code!", 'insert-php' ),
+					] );
 				}
 			}
 
@@ -254,15 +254,15 @@ class WINP_SnippetsViewTable extends Wbcr_FactoryViewtables413_Viewtable {
 				] );
 			} else {
 				wp_send_json( [
-						'error_message' => __( 'Snippet status not changed.', 'insert-php' ),
-					] );
+					'error_message' => __( 'Snippet status not changed.', 'insert-php' ),
+				] );
 
 			}
 
 		} else {
 			wp_send_json( [
-					'error_message' => __( 'Snippet status not changed. No snippet ID', 'insert-php' ),
-				] );
+				'error_message' => __( 'Snippet status not changed. No snippet ID', 'insert-php' ),
+			] );
 		}
 	}
 }

@@ -1,9 +1,1009 @@
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
+     * Checkbox & Radio
+     */
+    acf.registerConditionForFieldType('contains', 'checkbox');
+    acf.registerConditionForFieldType('contains', 'radio');
+
+    /**
+     * Code Editor
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_code_editor');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_code_editor');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_code_editor');
+    acf.registerConditionForFieldType('contains', 'acfe_code_editor');
+    acf.registerConditionForFieldType('hasValue', 'acfe_code_editor');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_code_editor');
+
+    /**
+     * Date Picker
+     */
+    acf.registerConditionForFieldType('equalTo', 'date_picker');
+    acf.registerConditionForFieldType('notEqualTo', 'date_picker');
+    acf.registerConditionForFieldType('patternMatch', 'date_picker');
+    acf.registerConditionForFieldType('contains', 'date_picker');
+    acf.registerConditionForFieldType('greaterThan', 'date_picker');
+    acf.registerConditionForFieldType('lessThan', 'date_picker');
+
+    /**
+     * Date Time Picker
+     */
+    acf.registerConditionForFieldType('equalTo', 'date_time_picker');
+    acf.registerConditionForFieldType('notEqualTo', 'date_time_picker');
+    acf.registerConditionForFieldType('patternMatch', 'date_time_picker');
+    acf.registerConditionForFieldType('contains', 'date_time_picker');
+
+    /**
+     * Forms
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_forms');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_forms');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_forms');
+    acf.registerConditionForFieldType('contains', 'acfe_forms');
+    acf.registerConditionForFieldType('hasValue', 'acfe_forms');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_forms');
+
+    /**
+     * Hidden
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_hidden');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_hidden');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_hidden');
+    acf.registerConditionForFieldType('contains', 'acfe_hidden');
+    acf.registerConditionForFieldType('hasValue', 'acfe_hidden');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_hidden');
+
+    /**
+     * Post Status
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_post_statuses');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_post_statuses');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_post_statuses');
+    acf.registerConditionForFieldType('contains', 'acfe_post_statuses');
+    acf.registerConditionForFieldType('hasValue', 'acfe_post_statuses');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_post_statuses');
+
+    /**
+     * Post Types
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_post_types');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_post_types');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_post_types');
+    acf.registerConditionForFieldType('contains', 'acfe_post_types');
+    acf.registerConditionForFieldType('hasValue', 'acfe_post_types');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_post_types');
+
+    /**
+     * Slug
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_slug');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_slug');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_slug');
+    acf.registerConditionForFieldType('contains', 'acfe_slug');
+    acf.registerConditionForFieldType('hasValue', 'acfe_slug');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_slug');
+
+    /**
+     * Taxonomies
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_taxonomies');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_taxonomies');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_taxonomies');
+    acf.registerConditionForFieldType('contains', 'acfe_taxonomies');
+    acf.registerConditionForFieldType('hasValue', 'acfe_taxonomies');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_taxonomies');
+
+    /**
+     * Taxonomy
+     */
+    acf.registerConditionForFieldType('equalTo', 'taxonomy');
+    acf.registerConditionForFieldType('notEqualTo', 'taxonomy');
+    acf.registerConditionForFieldType('patternMatch', 'taxonomy');
+    acf.registerConditionForFieldType('contains', 'taxonomy');
+    acf.registerConditionForFieldType('hasValue', 'taxonomy');
+    acf.registerConditionForFieldType('hasNoValue', 'taxonomy');
+
+    /**
+     * Taxonomy Terms
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_taxonomy_terms');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_taxonomy_terms');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_taxonomy_terms');
+    acf.registerConditionForFieldType('contains', 'acfe_taxonomy_terms');
+    acf.registerConditionForFieldType('hasValue', 'acfe_taxonomy_terms');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_taxonomy_terms');
+
+    /**
+     * Time Picker
+     */
+    acf.registerConditionForFieldType('equalTo', 'time_picker');
+    acf.registerConditionForFieldType('notEqualTo', 'time_picker');
+    acf.registerConditionForFieldType('patternMatch', 'time_picker');
+    acf.registerConditionForFieldType('contains', 'time_picker');
+
+    /**
+     * User Roles
+     */
+    acf.registerConditionForFieldType('equalTo', 'acfe_user_roles');
+    acf.registerConditionForFieldType('notEqualTo', 'acfe_user_roles');
+    acf.registerConditionForFieldType('patternMatch', 'acfe_user_roles');
+    acf.registerConditionForFieldType('contains', 'acfe_user_roles');
+    acf.registerConditionForFieldType('hasValue', 'acfe_user_roles');
+    acf.registerConditionForFieldType('hasNoValue', 'acfe_user_roles');
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    var storage = [];
+
+    acfe.registerEventForFieldType = function(fieldType, events, callback) {
+
+        // force events to array
+        if (typeof events === 'string') {
+            events = [events];
+        }
+
+        // add to storage
+        storage.push({
+            fieldType: fieldType,
+            events: events,
+            callback: callback || false
+        })
+
+    };
+
+    acfe.getEvents = function(args) {
+
+        // defaults
+        args = acf.parseArgs(args, {
+            fieldType: '',
+        });
+
+        var items = [];
+
+        // loop
+        storage.map(function(item) {
+
+            // check args
+            if (args.fieldType && item.fieldType.indexOf(args.fieldType) === -1) {
+                return;
+            }
+
+            // push
+            items.push(item);
+
+        });
+
+        // return
+        return items;
+
+    };
+
+    var FieldEvent = new acf.Model({
+
+        actions: {
+            'new_field': 'newField'
+        },
+
+        priority: 20,
+
+        data: {},
+
+        parseEvent: function(event) {
+            return event.match(/^(\S+)\s*(.*)$/);
+        },
+
+        newField: function(field) {
+
+            // set previous val
+            this.set(field.cid, field.val());
+
+            // get items
+            var items = acfe.getEvents({
+                fieldType: field.get('type')
+            });
+
+            // loop items
+            items.map(function(item) {
+
+                // loop events
+                item.events.map(function(event) {
+
+                    // match event "change input"
+                    var match = this.parseEvent(event);
+
+                    // add event listener
+                    field.on(match[1], match[2], this.proxy(function(e) {
+
+                        var val = field.val();
+                        var prevVal = this.get(field.cid);
+                        var $el = $(e.currentTarget);
+
+                        var callback = item.callback || this.proxy(function(val, prevVal, field, e, $el) {
+
+                            // vars
+                            var _val = val;
+                            var _prevVal = prevVal;
+
+                            // compare object/array values
+                            if (typeof _val === 'object') {
+                                _val = JSON.stringify(_val);
+                            }
+
+                            if (typeof _prevVal === 'object') {
+                                _prevVal = JSON.stringify(_prevVal);
+                            }
+
+                            // avoid multiple trigger for the same value
+                            if (_prevVal !== _val) {
+
+                                this.set(field.cid, val);
+
+                                // actions
+                                acf.doAction('acfe/change_field', val, prevVal, field, e, $el);
+                                acf.doAction('acfe/change_field/type=' + field.get('type'), val, prevVal, field, e, $el);
+                                acf.doAction('acfe/change_field/name=' + field.get('name'), val, prevVal, field, e, $el);
+                                acf.doAction('acfe/change_field/key=' + field.get('key'), val, prevVal, field, e, $el);
+
+                            }
+
+
+                        });
+
+                        callback(val, prevVal, field, e, $el);
+
+                    }));
+
+                }, this);
+
+            }, this);
+
+        }
+
+    });
+
+    // ACF
+    acfe.registerEventForFieldType('button_group', 'change');
+    acfe.registerEventForFieldType('checkbox', 'change');
+    acfe.registerEventForFieldType('color_picker', 'change');
+    acfe.registerEventForFieldType('date_picker', 'change');
+    acfe.registerEventForFieldType('date_time_picker', 'change');
+    acfe.registerEventForFieldType('email', ['input', 'change']);
+    acfe.registerEventForFieldType('file', 'change');
+    acfe.registerEventForFieldType('flexible_content', 'change');
+    acfe.registerEventForFieldType('gallery', 'change');
+    acfe.registerEventForFieldType('google_map', 'change');
+    acfe.registerEventForFieldType('image', 'change');
+    acfe.registerEventForFieldType('link', 'change');
+    acfe.registerEventForFieldType('number', ['input', 'change']);
+    acfe.registerEventForFieldType('oembed', 'change');
+    acfe.registerEventForFieldType('page_link', 'change');
+    acfe.registerEventForFieldType('post_object', 'change');
+    acfe.registerEventForFieldType('relationship', 'change');
+    acfe.registerEventForFieldType('password', ['input', 'change']);
+    acfe.registerEventForFieldType('radio', 'change');
+    acfe.registerEventForFieldType('range', ['input', 'change']);
+    acfe.registerEventForFieldType('repeater', 'change');
+    acfe.registerEventForFieldType('select', 'change');
+    acfe.registerEventForFieldType('taxonomy', 'change');
+    acfe.registerEventForFieldType('text', ['input', 'change']);
+    acfe.registerEventForFieldType('textarea', ['input', 'change']);
+    acfe.registerEventForFieldType('time_picker', 'change');
+    acfe.registerEventForFieldType('true_false', 'change');
+    acfe.registerEventForFieldType('url', ['input', 'change']);
+    acfe.registerEventForFieldType('user', 'change');
+    acfe.registerEventForFieldType('wysiwyg', 'change');
+
+    // ACFE
+    acfe.registerEventForFieldType('acfe_advanced_link', 'change');
+    acfe.registerEventForFieldType('acfe_block_types', 'change');
+    acfe.registerEventForFieldType('acfe_countries', 'change');
+    acfe.registerEventForFieldType('acfe_currencies', 'change');
+    acfe.registerEventForFieldType('acfe_code_editor', 'change');
+    acfe.registerEventForFieldType('acfe_date_range_picker', 'change');
+    acfe.registerEventForFieldType('acfe_field_groups', 'change');
+    acfe.registerEventForFieldType('acfe_field_types', 'change');
+    acfe.registerEventForFieldType('acfe_fields', 'change');
+    acfe.registerEventForFieldType('acfe_forms', 'change');
+    acfe.registerEventForFieldType('acfe_hidden', 'change');
+    acfe.registerEventForFieldType('acfe_image_selector', 'change');
+    acfe.registerEventForFieldType('acfe_image_sizes', 'change');
+    acfe.registerEventForFieldType('acfe_languages', 'change');
+    acfe.registerEventForFieldType('acfe_menu_locations', 'change');
+    acfe.registerEventForFieldType('acfe_options_pages', 'change');
+    acfe.registerEventForFieldType('acfe_payment', 'change');
+    acfe.registerEventForFieldType('acfe_payment_cart', 'change');
+    acfe.registerEventForFieldType('acfe_payment_selector', 'change');
+    acfe.registerEventForFieldType('acfe_phone_number', 'change');
+    acfe.registerEventForFieldType('acfe_post_formats', 'change');
+    acfe.registerEventForFieldType('acfe_post_statuses', 'change');
+    acfe.registerEventForFieldType('acfe_post_types', 'change');
+    acfe.registerEventForFieldType('acfe_recaptcha', 'change');
+    acfe.registerEventForFieldType('acfe_taxonomies', 'change');
+    acfe.registerEventForFieldType('acfe_taxonomy_terms', 'change');
+    acfe.registerEventForFieldType('acfe_templates', 'change');
+    acfe.registerEventForFieldType('acfe_user_roles', 'change');
+    acfe.registerEventForFieldType('acfe_slug', ['input', 'change']);
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * acfe.FieldExtender
+     *
+     * @param protoProps
+     * @returns {*}
+     * @constructor
+     */
+    var storage = [];
+
+    acfe.FieldExtender = function(protoProps) {
+
+        // vars
+        var id = acfe.extractVar(protoProps, 'id', acf.uniqueId('extender'));
+
+        // validate
+        protoProps.type = acfe.getArray(protoProps.type);
+        protoProps.dependencies = acfe.getArray(protoProps.dependencies);
+        protoProps.extender = id;
+
+        // push to storage
+        storage.push(protoProps);
+
+        // return extender
+        return id;
+
+    }
+
+    /**
+     * acf.Field.setup
+     *
+     * @type {acf.Field.setup}
+     */
+    var setup = acf.Field.prototype.setup;
+
+    acf.Field.prototype.setup = function(props) {
+
+        // parent setup
+        setup.apply(this, arguments);
+
+        var extenders = getFieldExtenders(this);
+
+        if (!extenders.length) {
+            return;
+        }
+
+        // vars
+        var prototype = Object.getPrototypeOf(this);
+        this.extenders = [];
+
+        // loop extenders
+        for (var model of extenders) {
+
+            // append extender
+            this.extenders.push(model.extender);
+
+            // clone model
+            var protoProps = $.extend(true, {}, model);
+            var events = acfe.extractVar(protoProps, 'events');
+
+            // cleanup
+            acfe.extractVars(protoProps, 'type', 'condition', 'dependencies');
+
+            // apply setup method if any
+            if (protoProps.hasOwnProperty('setup')) {
+                protoProps.setup.apply(this, arguments);
+            }
+
+            // generate child
+            var Child = function() {};
+
+            // create proto
+            Child.prototype = Object.create(prototype);
+
+            // extend
+            $.extend(Child.prototype, protoProps);
+
+            // assign events
+            if (events) {
+                Child.prototype.events = $.extend(true, {}, Child.prototype.events, events);
+            }
+
+            // assign parent
+            Child.prototype.__parent__ = prototype;
+
+            // assign prototype for next loop
+            prototype = Child.prototype;
+
+        }
+
+        // getParent function
+        this.getParent = function(extender) {
+
+            var prototype = Object.getPrototypeOf(this);
+            while (prototype) {
+
+                if (prototype.extender === extender) {
+                    return prototype.__parent__;
+                }
+
+                if (!prototype.__parent__) {
+                    return prototype;
+                }
+
+                prototype = prototype.__parent__;
+
+            }
+
+            return prototype;
+
+        }
+
+        // assign prototype
+        Object.setPrototypeOf(this, prototype);
+
+    }
+
+
+    /**
+     * getFieldExtenders
+     *
+     * @param field
+     * @returns {*[]}
+     */
+    var getFieldExtenders = function(field) {
+
+        var extenders = [];
+
+        for (var extender of getValidExtenders(field)) {
+            extenders.push(getExtender(extender));
+        }
+
+        return extenders;
+
+    };
+
+
+    /**
+     * getExtender
+     *
+     * @param extender
+     * @returns {boolean|*}
+     */
+    var getExtender = function(extender) {
+
+        for (var model of storage) {
+            if (model.extender === extender) {
+                return model;
+            }
+        }
+
+        return false;
+
+    };
+
+
+    /**
+     * getValidExtenders
+     *
+     * @param field
+     * @returns {*|*[]}
+     */
+    var getValidExtenders = function(field) {
+
+        var rules = {};
+
+        for (var model of storage) {
+
+            // validate type
+            if (!acfe.inArray(field.get('type'), model.type)) {
+                continue;
+            }
+
+            // validate condition
+            if (model.hasOwnProperty('condition') && !model.condition.apply(field, arguments)) {
+                continue;
+            }
+
+            // append rule
+            rules[model.extender] = model.dependencies;
+
+        }
+
+        // return array
+        return sortExtenders(rules);
+
+    };
+
+
+    /**
+     * sortExtenders
+     *
+     * https://stackoverflow.com/a/54347328
+     *
+     * @param names
+     * @param obj
+     * @param start
+     * @param depth
+     * @returns {*|*[]}
+     */
+    var sortExtenders = function(names, obj = names, start = [], depth = 0) {
+
+        if (typeof names === 'object' && !Array.isArray(names)) {
+            names = Object.keys(names)
+        }
+
+        const processed = names.reduce(function(a, b, i) {
+
+            if (obj[b].every(Array.prototype.includes, a)) {
+                a.push(b)
+            }
+
+            return a;
+
+        }, start);
+
+        const nextNames = names.filter(function(n) {
+            return !processed.includes(n)
+        });
+
+        const goAgain = nextNames.length && depth <= names.length;
+
+        return goAgain ? sortExtenders(nextNames, obj, processed, depth + 1) : processed;
+
+    };
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    new acf.Model({
+        actions: {
+            'new_field': 'newField'
+        },
+        priority: 1,
+        validateField: function(field) {
+
+            // check data correctly set
+            if (!field.has('ftype')) {
+                return false;
+            }
+
+            // check if prototype doesn't already have ftype (acf taxonomy field)
+            return !acf.getFieldType(field.get('type')).prototype.get('ftype');
+
+        },
+        newField: function(field) {
+
+            // validate
+            if (!this.validateField(field)) {
+                return;
+            }
+
+            // real type (checkbox, radio...)
+            field.set('rtype', field.get('type'), true);
+
+            // field type (acfe_post_types, acfe_post_formats...)
+            field.set('type', field.get('ftype'), true);
+
+            // assign attribute
+            field.$el.attr('data-type', field.get('ftype'));
+
+            // cleanup attribute
+            field.$el.removeAttr('data-ftype');
+
+            // cleanup data
+            delete field.data['ftype'];
+
+        }
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Field: Instructions
+     */
+    new acf.Model({
+
+        field: false,
+        placement: false,
+
+        actions: {
+            'new_field': 'newField',
+        },
+
+        newField: function(field) {
+
+            this.field = field;
+
+            if (field.has('instructionTooltip')) {
+                this.setTooltip();
+            }
+
+            if (field.has('instructionAboveField')) {
+                this.setAboveField();
+            }
+
+            if (field.has('instructionPlacement')) {
+                this.overridePlacement(field.get('instructionPlacement'));
+            }
+
+        },
+
+        setTooltip: function() {
+
+            var icon = acfe.versionCompare(acf.get('wp_version'), '>=', '5.5') ? 'dashicons-info-outline' : 'dashicons-info';
+
+            this.field.$labelWrap().prepend('<span class="acfe-field-tooltip acf-js-tooltip dashicons ' + icon + '" title="' + acf.escHtml(this.field.get('instructionTooltip')) + '"></span>');
+            this.field.$labelWrap().find('.description').remove();
+
+        },
+
+        setAboveField: function() {
+
+            this.field.$inputWrap().prepend('<p class="description">' + this.field.get('instructionAboveField') + '</p>');
+            this.field.$labelWrap().find('.description').remove();
+
+        },
+
+        overridePlacement: function(target) {
+
+            var current = this.getPlacement();
+
+            // No instruction
+            if (!current)
+                return;
+
+            // Placement is correct
+            if (current === target)
+                return;
+
+            this.setPlacement(target);
+
+        },
+
+        getPlacement: function() {
+
+            var placement = false;
+
+            if (this.field.$labelWrap().find('>.description').length)
+                placement = 'label';
+
+            else if (this.field.$inputWrap().find('>.description:first-child').length)
+                placement = 'above_field';
+
+            else if (this.field.$inputWrap().find('>.description:last-child').length)
+                placement = 'field';
+
+            else if (this.field.$labelWrap().find('>.acfe-field-tooltip').length)
+                placement = 'tooltip';
+
+            this.placement = placement;
+
+            return this.placement;
+
+        },
+
+        $getInstruction: function() {
+
+            var placement = this.getPlacement();
+
+            if (placement === 'label') {
+
+                return this.field.$labelWrap().find('>.description');
+
+            } else if (placement === 'above_field') {
+
+                return this.field.$inputWrap().find('>.description:first-child');
+
+            } else if (placement === 'field') {
+
+                return this.field.$inputWrap().find('>.description:last-child');
+
+            } else if (placement === 'tooltip') {
+
+                return this.field.$labelWrap().find('>.acfe-field-tooltip');
+
+            }
+
+            return false;
+
+        },
+
+        setPlacement: function(target) {
+
+            var $instruction = this.$getInstruction();
+
+            if (this.placement === 'tooltip') {
+
+                var text = $instruction.attr('title');
+
+                $instruction.remove();
+                $instruction = $('<p class="description">' + text + '</p>');
+
+            }
+
+            if (target === 'label') {
+
+                this.field.$labelWrap().append($instruction);
+
+            } else if (target === 'above_field') {
+
+                this.field.$inputWrap().prepend($instruction);
+
+            } else if (target === 'field') {
+
+                this.field.$inputWrap().append($instruction);
+
+            } else if (target === 'tooltip') {
+
+                var icon = acfe.versionCompare(acf.get('wp_version'), '>=', '5.5') ? 'dashicons-info-outline' : 'dashicons-info';
+
+                this.field.$labelWrap().prepend($('<span class="acfe-field-tooltip acf-js-tooltip dashicons ' + icon + '" title="' + acf.escHtml($instruction.html()) + '"></span>'));
+                $instruction.remove();
+
+            }
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Field: Labels
+     */
+    new acf.Model({
+
+        actions: {
+            'new_field': 'newField',
+        },
+
+        getFieldType: function(field) {
+            return field.get('rtype', field.get('type'));
+        },
+
+        validateField: function(field) {
+
+            // check setting
+            if (!field.has('acfeLabels')) {
+                return false;
+            }
+
+            // check type & real type
+            return this.getFieldType(field) === 'checkbox' || this.getFieldType(field) === 'radio';
+
+        },
+
+        newField: function(field) {
+
+            // bail early
+            if (!this.validateField(field)) {
+                return;
+            }
+
+            // vars
+            var label, item;
+            var labels = field.get('acfeLabels');
+
+            switch (this.getFieldType(field)) {
+
+                case 'checkbox': {
+
+                    // loop
+                    for (label in labels) {
+                        item = labels[label];
+                        field.$control().find('input[type=checkbox][value="' + item + '"]').closest('ul').before('<strong>' + label + '</strong>');
+                    }
+
+                    break;
+
+                }
+
+                case 'radio': {
+
+                    // loop
+                    for (label in labels) {
+                        item = labels[label];
+                        field.$control().find('input[type=radio][value="' + item + '"]').closest('li').addClass('parent').prepend('<strong>' + label + '</strong>');
+                    }
+
+                    // horizontal rule
+                    if (field.$control().hasClass('acf-hl')) {
+
+                        field.$control().find('li.parent').each(function() {
+                            $(this).nextUntil('li.parent').addBack().wrapAll('<li><ul></ul></li>');
+                        });
+
+                    }
+
+                    break;
+
+                }
+
+            }
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    acf.Field.prototype.getModal = function(args) {
+
+        var $modal = acfe.findModal('', this.$inputWrap());
+
+        if (!$modal.length) {
+            return false;
+        }
+
+        return acfe.getModal($modal, args);
+
+    };
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Field: Select Hooks
+     */
+    new acf.Model({
+
+        actions: {
+            'select2_init': 'init',
+        },
+
+        filters: {
+            'select2_args': 'args',
+            'select2_ajax_data': 'ajaxData',
+        },
+
+        init: function($select, options, data, field, instance) {
+
+            // bail early
+            if (!field) {
+                return;
+            }
+
+            // actions
+            acf.doAction('select2_init/type=' + field.get('type'), $select, options, data, field, instance);
+            acf.doAction('select2_init/name=' + field.get('name'), $select, options, data, field, instance);
+            acf.doAction('select2_init/key=' + field.get('key'), $select, options, data, field, instance);
+
+        },
+
+        args: function(options, $select, data, field, instance) {
+
+            // bail early
+            if (!field) {
+                return options;
+            }
+
+            // filters
+            options = acf.applyFilters('select2_args/type=' + field.get('type'), options, $select, data, field, instance);
+            options = acf.applyFilters('select2_args/name=' + field.get('name'), options, $select, data, field, instance);
+            options = acf.applyFilters('select2_args/key=' + field.get('key'), options, $select, data, field, instance);
+
+            // only on pages without woocommerce
+            if (!acf.isset(window, 'jQuery', 'fn', 'selectWoo')) {
+
+                options.templateSelection = function(selection) {
+
+                    var text = selection.text;
+
+                    text = acf.applyFilters('select2_template_selection', text, selection, $select, data, field, instance);
+                    text = acf.applyFilters('select2_template_selection/type=' + field.get('type'), text, selection, $select, data, field, instance);
+                    text = acf.applyFilters('select2_template_selection/name=' + field.get('name'), text, selection, $select, data, field, instance);
+                    text = acf.applyFilters('select2_template_selection/key=' + field.get('key'), text, selection, $select, data, field, instance);
+
+                    var $selection = $('<span class="acf-selection"></span>');
+                    $selection.html(acf.escHtml(text));
+                    $selection.data('element', selection.element);
+
+                    return $selection;
+
+                };
+
+                options.templateResult = function(selection) {
+
+                    var text = selection.text;
+
+                    text = acf.applyFilters('select2_template_result', text, selection, $select, data, field, instance);
+                    text = acf.applyFilters('select2_template_result/type=' + field.get('type'), text, selection, $select, data, field, instance);
+                    text = acf.applyFilters('select2_template_result/name=' + field.get('name'), text, selection, $select, data, field, instance);
+                    text = acf.applyFilters('select2_template_result/key=' + field.get('key'), text, selection, $select, data, field, instance);
+
+                    var $selection = $('<span class="acf-selection"></span>');
+                    $selection.html(acf.escHtml(text));
+                    $selection.data('element', selection.element);
+
+                    return $selection;
+
+                };
+
+                // fix old ACF 5.9 version which doesn't escape markup
+                if (acfe.versionCompare(acf.get('acf_version'), '<', '5.10')) {
+
+                    options.escapeMarkup = function(markup) {
+                        if (typeof markup !== 'string') {
+                            return markup;
+                        }
+                        return acf.escHtml(markup);
+                    }
+
+                }
+
+            }
+
+            return options;
+
+        },
+
+        ajaxData: function(ajaxData, data, $el, field, instance) {
+
+            // bail early
+            if (!field) {
+                return ajaxData;
+            }
+
+            // filters
+            ajaxData = acf.applyFilters('select2_ajax_data/type=' + field.get('type'), ajaxData, data, $el, field, instance);
+            ajaxData = acf.applyFilters('select2_ajax_data/name=' + field.get('name'), ajaxData, data, $el, field, instance);
+            ajaxData = acf.applyFilters('select2_ajax_data/key=' + field.get('key'), ajaxData, data, $el, field, instance);
+
+            if (ajaxData.action) {
+                ajaxData = acf.applyFilters('select2_ajax_data/action=' + ajaxData.action, ajaxData, data, $el, field, instance);
+            }
+
+            return ajaxData;
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
      * Field: Advanced Link
      */
     var ACFE_Advanced_Link = acf.Field.extend({
@@ -20,112 +1020,136 @@
             return this.$('.acf-link');
         },
 
-        initialize: function() {
-            // ...
+        getSubField: function(key) {
+
+            return acf.getFields({
+                key: key,
+                parent: this.$el
+            }).shift();
+
+        },
+
+        getSubFields: function() {
+
+            return acf.getFields({
+                parent: this.$el
+            });
+
         },
 
         getValue: function() {
 
             // return
             var data = {
-                type: this.$('.input-type :checked').val(),
-                title: this.$('.input-title').val(),
-                url: this.$('.input-url').val(),
-                post: this.$('.input-post :selected').text(),
-                term: this.$('.input-term :selected').text(),
-                target: this.$('.input-target').is(':checked')
+                type: this.getSubField('type').val(),
+                title: this.getSubField('title').val(),
+                value: '',
+                name: '',
+                target: Boolean(this.getSubField('target').val())
             };
 
-            if (data.type === 'post') {
+            // assign value
+            data.value = this.getSubField(data.type).val();
+            data.name = data.value;
 
-                data.url = data.post;
-
-            } else if (data.type === 'term') {
-
-                data.url = data.term;
-
+            // post / term value
+            if (data.type === 'post' || data.type === 'term') {
+                data.name = this.getSubField(data.type).$input().find(':selected').text();
             }
 
+            // return
             return data;
 
         },
 
         setValue: function(val) {
 
-            // default
+            // clear value
+            if (!val) {
+                return this.clearValue();
+            }
+
+            // allow val to be a string
+            if (acfe.isString(val)) {
+
+                val = {
+                    type: 'url',
+                    title: '',
+                    value: val,
+                    target: false
+                };
+
+            }
+
             val = acf.parseArgs(val, {
-                remove: false,
+                type: 'url',
+                value: '',
                 title: '',
-                url: '',
                 target: false
             });
 
+            // set sub fields
+            this.getSubField('type').val(val.type);
+            this.getSubField(val.type).val(val.value); // post / term value
+            this.getSubField('title').val(val.title);
+            this.getSubField('target').val(val.target);
+
+            // render value
+            this.renderValue();
+
+        },
+
+        clearValue: function() {
+
+            // clear subfields values
+            this.getSubFields().map(function(field) {
+                field.val('');
+            });
+
+        },
+
+        renderValue: function() {
+
             // vars
-            var $div = this.$control();
+            var val = this.val();
+            var $control = this.$control();
 
             // remove class
-            $div.removeClass('-value -external');
+            $control.removeClass('-value -external');
 
             // add class
-            if (val.url)
-                $div.addClass('-value');
+            if (val.value || val.title) {
+                $control.addClass('-value');
+            }
 
-            if (val.target)
-                $div.addClass('-external');
+            // target
+            if (val.target) {
+                $control.addClass('-external');
+            }
 
             // update text
+            var url = val.type === 'url' ? val.value : '#';
             this.$('.link-title').html(val.title);
-            this.$('.link-url').attr('href', val.url).html(val.url);
-
-            // remove inputs data
-            if (val.remove) {
-
-                this.$('.input-type :checked').prop('checked', false);
-                this.$('.input-type [value="url"]').prop('checked', true).trigger('change');
-                this.$('.input-title').val('');
-                this.$('.input-target').prop('checked', false);
-                this.$('.input-url').val('').trigger('change');
-                this.$('.input-post').val('').trigger('change');
-                this.$('.input-term').val('').trigger('change');
-
-            }
+            this.$('.link-url').attr('href', url).html(val.name);
 
         },
 
         onClickEdit: function(e, $el) {
 
-            var $modal = $el.closest('.acf-input').find('.acfe-modal');
-
-            var title = $modal.attr('data-modal-title');
-
-            var model = this;
-
-            new acfe.Popup($modal, {
-                title: title,
-                size: 'medium',
-                footer: acf.__('Close'),
-                onClose: function() {
-                    model.onChange();
-                }
+            // vars
+            this.getModal({
+                open: true,
+                onClose: this.proxy(function() {
+                    this.renderValue();
+                })
             });
 
         },
 
         onClickRemove: function(e, $el) {
 
-            this.setValue({
-                remove: true
-            });
-
-        },
-
-        onChange: function(e, $el) {
-
-            // get the changed value
-            var val = this.getValue();
-
-            // update inputs
-            this.setValue(val);
+            this.clearValue();
+            this.renderValue();
 
         },
 
@@ -133,44 +1157,24 @@
 
     acf.registerFieldType(ACFE_Advanced_Link);
 
-    /*
-     * Field: Advanced Link Manager
+
+    /**
+     * Field: Advanced Link Ajax Manager
      */
     new acf.Model({
 
-        actions: {
-            'invalid_field': 'invalidField',
-        },
-
         filters: {
-            'select2_ajax_data/type=post_object': 'ajaxField',
+            'select2_ajax_data/action=acfe/fields/advanced_link/post_query': 'ajaxData',
         },
 
-        invalidField: function(field) {
+        ajaxData: function(ajaxData, data, $el, field, select) {
 
-            var $advanced_link = field.$el.closest('.acf-field-acfe-advanced-link').not('.acf-error');
+            // get advanced link field
+            var parentField = field.parent();
 
-            if ($advanced_link.length) {
-
-                var advanced_link_field = acf.getInstance($advanced_link);
-
-                advanced_link_field.showError(field.notice.get('text'));
-
-            }
-
-        },
-
-        ajaxField: function(ajaxData, data, $el, field, select) {
-
-            if (field.get('key') !== 'post')
-                return ajaxData;
-
-            var advanced_link = acf.getInstance($el.closest('.acf-field-acfe-advanced-link'));
-
-            if (advanced_link) {
-
-                ajaxData.field_key = advanced_link.get('key');
-
+            // assign parent field key
+            if (parentField) {
+                ajaxData.field_key = parentField.get('key');
             }
 
             return ajaxData;
@@ -182,10 +1186,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Button
      */
     var ACFE_Button = acf.Field.extend({
@@ -291,29 +1296,59 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Checkbox
      */
-    new acf.Model({
+    var Checkbox = acf.models.CheckboxField;
 
-        actions: {
-            'new_field/type=checkbox': 'newField',
+    acf.models.CheckboxField = Checkbox.extend({
+
+        // add setValue method
+        // this allows to use field.val('new_value') to assign a new value to the field
+        setValue: function(val) {
+
+            // clear value
+            if (!val) {
+                return this.clearValue();
+            }
+
+            // force value as array
+            var vals = acfe.getArray(val);
+
+            // map values
+            vals.map(function(val) {
+
+                // get option with value
+                var $option = this.$(':checkbox[value="' + val + '"]');
+
+                // option exists and is not already selected
+                if ($option.length && !$option.is(':checked')) {
+
+                    // select the option
+                    $option.prop('checked', true).trigger('change');
+
+                }
+
+            }, this);
+
         },
 
-        newField: function(field) {
+        // add clearValue method
+        // this allows to set the value to the first radio or if allow_null is enabled, to null
+        clearValue: function() {
 
-            // bail early
-            if (!field.has('acfeLabels')) return;
+            var $inputs = this.$inputs();
+            var $labels = this.$('label');
 
-            // allow options group
-            $.each(field.get('acfeLabels'), function(group, key) {
+            // update "checked" state.
+            $inputs.prop('checked', false);
 
-                field.$control().find('input[type=checkbox][value="' + key + '"]').closest('ul').before('<strong>' + group + '</strong>');
-
-            });
+            // remove "selected" class.
+            $labels.removeClass('selected');
 
         }
 
@@ -322,10 +1357,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Clone
      */
     var Clone = acf.Field.extend({
@@ -335,7 +1371,6 @@
         type: 'clone',
 
         events: {
-            'click [data-name="edit"]': 'onClick',
             'duplicateField': 'onDuplicate'
         },
 
@@ -343,51 +1378,49 @@
 
             if (this.has('acfeCloneModal')) {
 
-                var edit = this.get('acfeCloneModalButton');
-
                 this.$el.find('> .acf-input > .acf-fields, > .acf-input > .acf-table').wrapAll('<div class="acfe-modal"><div class="acfe-modal-wrapper"><div class="acfe-modal-content"></div></div></div>');
-                this.$el.find('> .acf-input').append('<a data-name="edit" class="acf-button button" href="#">' + edit + '</a>');
+                this.$el.find('> .acf-input').append('<a href="#" class="acf-button button" data-modal>' + this.get('acfeCloneModalButton') + '</a>');
+
+                this.initializeModal();
 
             }
 
         },
 
-        onClick: function(e, $el) {
+        initializeModal: function() {
 
+            // normal title
             var title = this.$labelWrap().find('label').text().trim();
-            var $modal = this.$el.find('> .acf-input > .acfe-modal').addClass('acfe-modal-edit-' + this.get('name') + ' acfe-modal-edit-' + this.get('key'));
 
+            // inside table
+            if (this.$el.is('td')) {
 
-            // Title
+                title = this.get('acfeCloneModalButton');
+                var $th = this.$el.closest('table').find(' > thead th[data-key="' + this.get('key') + '"]');
+
+                if ($th.length) {
+                    title = acfe.getTextNode($th);
+                }
+
+            }
+
+            // fallback to button text
             if (!title.length) {
                 title = this.get('acfeCloneModalButton');
             }
 
-            // Close
-            var close = false;
-
-            if (this.has('acfeCloneModalClose')) {
-                close = acf.__('Close');
-            }
-
-            // Size
-            var size = 'large';
-
-            if (this.has('acfeCloneModalSize')) {
-                size = this.get('acfeCloneModalSize');
-            }
-
-            // Open modal
-            new acfe.Popup($modal, {
+            // modal
+            this.getModal({
                 title: title,
-                size: size,
-                footer: close
+                size: this.has('acfeCloneModalSize') ? this.get('acfeCloneModalSize') : 'large',
+                footer: this.has('acfeCloneModalClose') ? acf.__('Close') : false,
+                class: 'acfe-modal-edit-' + this.get('name') + ' acfe-modal-edit-' + this.get('key')
             });
 
         },
 
         onDuplicate: function(e, $el, $duplicate) {
-            $duplicate.find('a[data-name="edit"]').remove();
+            $duplicate.find('.acf-input:first > a[data-modal]').remove();
         }
 
     });
@@ -397,17 +1430,20 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Code Editor
      */
     var CodeEditor = acf.Field.extend({
 
-        wait: 'ready',
+        wait: false,
 
         type: 'acfe_code_editor',
+
+        editor: {},
 
         events: {
             'showField': 'onShow',
@@ -415,115 +1451,82 @@
         },
 
         $control: function() {
-
-            return this.$el.find('> .acf-input > .acf-input-wrap');
-
+            return this.$('> .acf-input > .acf-input-wrap');
         },
 
         $input: function() {
-
-            return this.$el.find('> .acf-input > .acf-input-wrap > textarea');
-
-        },
-
-        input: function() {
-
-            return this.$input()[0];
-
-        },
-
-        rows: function() {
-
-            return this.$input().attr('rows');
-
+            return this.$control().find('> textarea');
         },
 
         initialize: function() {
 
-            this.rows = this.$control().data('rows');
-            this.max_rows = this.$control().data('max-rows');
+            // bail early
+            if (!acf.isset(wp, 'codeEditor')) {
+                return;
+            }
 
-            this.mode = this.$control().data('mode');
-            this.lines = this.$control().data('lines');
-            this.indentUnit = this.$control().data('indent-unit');
-
-            var codeEditor = [];
-
-            // Default WP settings
-            var wpCodeMirror = wp.codeEditor.defaultSettings.codemirror;
-
-            // Field settings
-            var CodeMirror = {
-                lineNumbers: this.lines,
+            // args
+            var args = {
+                lineNumbers: this.get('lines'),
                 lineWrapping: true,
                 styleActiveLine: false,
                 continueComments: true,
-                indentUnit: this.indentUnit,
+                indentUnit: this.get('indentUnit'),
                 tabSize: 1,
                 indentWithTabs: false,
-                mode: this.mode,
+                autoRefresh: true, // needed for gutenberg metabox
+                mode: this.get('mode'),
                 extraKeys: {
-                    Tab: function(cm) {
-                        cm.execCommand("indentMore")
+                    'Tab': function(cm) {
+                        cm.execCommand('indentMore')
                     },
-                    "Shift-Tab": function(cm) {
-                        cm.execCommand("indentLess")
+                    'Shift-Tab': function(cm) {
+                        cm.execCommand('indentLess')
                     },
                 },
-            };
-
-            // Merge settings
-            var codeMirror = jQuery.extend(wpCodeMirror, CodeMirror);
-
-            // Push CodeMirror settings to codemirror property
-            codeEditor.codemirror = codeMirror;
-
-            // Init WP Code Editor
-            this.editor = wp.codeEditor.initialize(this.input(), codeEditor);
-
-            if (this.rows || this.max_rows) {
-
-                if (this.rows) {
-
-                    this.editor.codemirror.getScrollerElement().style.minHeight = this.rows * 18.5 + 'px';
-
-                }
-
-                if (this.max_rows) {
-
-                    this.editor.codemirror.getScrollerElement().style.maxHeight = this.max_rows * 18.5 + 'px';
-
-                }
-
-                this.editor.codemirror.refresh();
-
             }
 
-            field = this;
+            // filter args
+            args = acf.applyFilters('acfe/fields/code_editor/args', args, this);
+            args = acf.applyFilters('acfe/fields/code_editor/args/name=' + this.get('name'), args, this);
+            args = acf.applyFilters('acfe/fields/code_editor/args/key=' + this.get('key'), args, this);
 
-            this.editor.codemirror.on('change', function() {
-
-                field.editor.codemirror.save();
-                field.$input().change();
-
+            // initialize wp editor
+            this.editor = wp.codeEditor.initialize(this.$input().get(0), {
+                codemirror: $.extend(wp.codeEditor.defaultSettings.codemirror, args)
             });
+
+            if (this.get('rows')) {
+                this.editor.codemirror.getScrollerElement().style.minHeight = this.get('rows') * 18.5 + 'px';
+            }
+
+            if (this.get('maxRows')) {
+                this.editor.codemirror.getScrollerElement().style.maxHeight = this.get('maxRows') * 18.5 + 'px';
+            }
+
+            this.editor.codemirror.on('change', this.proxy(this.onEditorChange));
+
+            acf.doAction('acfe/fields/code_editor/init', this.editor, this);
+            acf.doAction('acfe/fields/code_editor/init/name=' + this.get('name'), this.editor, this);
+            acf.doAction('acfe/fields/code_editor/init/key=' + this.get('key'), this.editor, this);
+
+        },
+
+        onEditorChange: function(e, $el) {
+
+            this.editor.codemirror.save();
+            this.$input().change();
 
         },
 
         onShow: function() {
-
             if (this.editor.codemirror) {
-
                 this.editor.codemirror.refresh();
-
             }
-
         },
 
         onDuplicate: function(e, $el, $duplicate) {
-
             $duplicate.find('.CodeMirror:last').remove();
-
         },
 
     });
@@ -533,10 +1536,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Column
      */
     var Column = acf.Field.extend({
@@ -553,7 +1557,7 @@
 
             if (this.$el.is('td')) {
 
-                var $table = this.$el.closest('.acf-table').find('th[data-type="acfe_column"]').remove();
+                this.$el.closest('.acf-table').find('th[data-type="acfe_column"]').remove();
                 this.remove();
 
             }
@@ -590,216 +1594,305 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
-     * Init
+    /**
+     * Flexible Content: Overwrite
      */
-    var flexible = acf.getFieldType('flexible_content');
-    var model = flexible.prototype;
+    var FlexibleContent = acf.models.FlexibleContentField;
 
-    /*
-     * Actions
-     */
-    model.events['click .acf-fc-layout-handle'] = 'acfeEditLayoutTitleToggleHandle';
-    model.acfeEditLayoutTitleToggleHandle = function(e, $el) {
+    acf.models.FlexibleContentField = FlexibleContent.extend({
 
-        var flexible = this;
+        addSortable: function(self) {
 
-        // Title Edition
-        if (!flexible.has('acfeFlexibleTitleEdition'))
-            return;
-
-        // Vars
-        var $layout = $el.closest('.layout');
-
-        if ($layout.hasClass('acfe-flexible-title-edition')) {
-
-            $layout.find('> .acf-fc-layout-handle > .acfe-layout-title > input.acfe-flexible-control-title').trigger('blur');
-
-        }
-
-    }
-
-    model.events['click .acfe-layout-title-text'] = 'acfeEditLayoutTitle';
-    model.acfeEditLayoutTitle = function(e, $el) {
-
-        // Get Flexible
-        var flexible = this;
-
-        // Title Edition
-        if (!flexible.has('acfeFlexibleTitleEdition'))
-            return;
-
-        // Stop propagation
-        e.stopPropagation();
-
-        // Toggle
-        flexible.acfeEditLayoutTitleToggle(e, $el);
-
-    }
-
-    model.events['blur input.acfe-flexible-control-title'] = 'acfeEditLayoutTitleToggle';
-    model.acfeEditLayoutTitleToggle = function(e, $el) {
-
-        var flexible = this;
-
-        // Vars
-        var $layout = $el.closest('.layout');
-        var $handle = $layout.find('> .acf-fc-layout-handle');
-        var $title = $handle.find('.acfe-layout-title');
-
-        if ($layout.hasClass('acfe-flexible-title-edition')) {
-
-            var $input = $title.find('> input[data-acfe-flexible-control-title-input]');
-
-            if ($input.val() === '')
-                $input.val($input.attr('placeholder')).trigger('input');
-
-            $layout.removeClass('acfe-flexible-title-edition');
-
-            $input.insertAfter($handle);
-
-        } else {
-
-            var $input = $layout.find('> input[data-acfe-flexible-control-title-input]');
-
-            var $input = $input.appendTo($title);
-
-            $layout.addClass('acfe-flexible-title-edition');
-            $input.focus().attr('size', $input.val().length);
-
-        }
-
-    }
-
-    // Layout: Edit Title
-    model.events['click input.acfe-flexible-control-title'] = 'acfeEditLayoutTitlePropagation';
-    model.acfeEditLayoutTitlePropagation = function(e, $el) {
-
-        e.stopPropagation();
-
-    }
-
-    // Layout: Edit Title Input
-    model.events['input [data-acfe-flexible-control-title-input]'] = 'acfeEditLayoutTitleInput';
-    model.acfeEditLayoutTitleInput = function(e, $el) {
-
-        // Vars
-        var $layout = $el.closest('.layout');
-        var $title = $layout.find('> .acf-fc-layout-handle .acfe-layout-title .acfe-layout-title-text');
-
-        var val = $el.val();
-
-        $el.attr('size', val.length);
-
-        $title.html(val);
-
-    }
-
-    // Layout: Edit Title Input Enter
-    model.events['keypress [data-acfe-flexible-control-title-input]'] = 'acfeEditLayoutTitleInputEnter';
-    model.acfeEditLayoutTitleInputEnter = function(e, $el) {
-
-        // Enter Key
-        if (e.keyCode !== 13)
-            return;
-
-        e.preventDefault();
-        $el.blur();
-
-    }
-
-    // Layout: Settings
-    model.events['click [data-acfe-flexible-settings]'] = 'acfeLayoutSettings';
-    model.acfeLayoutSettings = function(e, $el) {
-
-        // Get Flexible
-        var flexible = this;
-
-        // Vars
-        var $layout = $el.closest('.layout');
-
-        // Modal data
-        var $modal = $layout.find('> .acfe-modal.-settings');
-        var $handle = $layout.find('> .acf-fc-layout-handle');
-
-        var $layout_order = $handle.find('> .acf-fc-layout-order').outerHTML();
-        var $layout_title = $handle.find('.acfe-layout-title-text').text();
-
-        // Open modal
-        new acfe.Popup($modal, {
-            title: $layout_order + ' ' + $layout_title,
-            footer: acf.__('Close'),
-            onClose: function() {
-
-                if (!flexible.has('acfeFlexiblePreview'))
-                    return;
-
-                flexible.closeLayout($layout);
-
+            // bail early if max 1 row
+            if (this.get('max') == 1) {
+                return;
             }
-        });
 
-    }
+            // add sortable
+            this.$layoutsWrap().sortable({
+                items: ' > .layout',
+                handle: '> .acf-fc-layout-handle',
+                forceHelperSize: false, // changed to false
+                forcePlaceholderSize: true,
+                revert: 50,
+                tolerance: 'pointer', // changed to pointer
+                scroll: true,
+                stop: function(event, ui) {
+                    self.render();
+                },
+                update: function(event, ui) {
+                    self.$input().trigger('change');
+                }
+            });
 
-    /*
-     * Layout: Toggle Action
+        },
+
+
+        add: function(args) {
+
+            // get element
+            var $el = FlexibleContent.prototype.add.apply(this, arguments);
+
+            if ($el.length) {
+
+                // used in append
+                $el.data('added', true);
+            }
+
+        },
+
+    });
+
+    /**
+     * Flexible Content: Validation
      */
-    model.events['click [data-acfe-flexible-control-toggle]'] = 'acfeLayoutToggle';
-    model.acfeLayoutToggle = function(e, $el) {
+    new acf.Model({
 
-        // Get Flexible
-        var flexible = this;
+        actions: {
+            'invalid_field': 'onInvalidField',
+            'valid_field': 'onValidField',
+        },
 
-        // Vars
-        var $layout = $el.closest('.layout');
+        onInvalidField: function(field) {
 
-        var $field = $layout.find('> .acfe-flexible-layout-toggle');
+            field.$el.parents('.layout').addClass('acfe-flexible-modal-edit-error');
 
-        if (!$field.length)
-            return;
+        },
 
-        if ($field.val() === '1') {
+        onValidField: function(field) {
 
-            $layout.removeClass('acfe-flexible-layout-hidden');
-            $field.val('');
+            field.$el.parents('.layout').each(function() {
 
-        } else {
+                var $layout = $(this);
 
-            $layout.addClass('acfe-flexible-layout-hidden');
-            $field.val('1');
+                if (!$layout.find('.acf-error').length) {
+                    $layout.removeClass('acfe-flexible-modal-edit-error');
+                }
 
-        }
-
-    }
-
-    /*
-     * Layout: Toggle Spawn
-     */
-    acf.addAction('acfe/flexible/layouts', function($layout, flexible) {
-
-        if (!flexible.has('acfeFlexibleToggle'))
-            return;
-
-        // Layout Closed
-        var $field = $layout.find('> .acfe-flexible-layout-toggle');
-
-        if (!$field.length)
-            return;
-
-        if ($field.val() === '1') {
-
-            $layout.addClass('acfe-flexible-layout-hidden');
-
-        } else {
-
-            $layout.removeClass('acfe-flexible-layout-hidden');
+            });
 
         }
 
     });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: Append
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_append',
+
+        type: 'flexible_content',
+
+        initialize: function() {
+
+            // initialize
+            this.getParent(Field).initialize.apply(this, arguments);
+
+            // add events
+            this.addEvents({
+                'appendLayout': 'acfeAppendLayout',
+            });
+
+        },
+
+        acfeAppendLayout: function(e, $el, $layout) {
+
+            // only native acf duplicate
+            // .acfe-layout-duplicated is old clone & copy/paste
+            if (!$layout.is('.acfe-layout-duplicated')) {
+
+                if (this.has('acfeFlexibleModalEdition')) {
+                    this.acfeModalEdit(null, $layout);
+                } else {
+                    this.openLayout($layout);
+                }
+
+            }
+
+            // check if inside modal
+            var modal = acfe.getModal($layout.closest('.acfe-modal.-open'));
+
+            // already inside another modal
+            if (modal) {
+
+                this.acfeScrollToLayout($layout, modal.$content());
+
+                // old clone + copy/paste
+            } else if ($layout.is('.acfe-layout-duplicated')) {
+
+                this.acfeScrollToLayout($layout);
+
+                // added or duplicated
+            } else {
+
+                // we must set timeout to let data() being appended
+                this.setTimeout(function() {
+                    if ($layout.data('added')) {
+                        this.acfeScrollToLayout($layout);
+                    }
+                }, 10);
+
+
+            }
+
+        },
+
+        acfeScrollToLayout: function($layout, $parent) {
+
+            // vars
+            var hasParent = $parent || false;
+            $parent = $parent || $('body, html');
+
+            // emulate acf.focusAttention
+            if (!acf.isInView($layout)) {
+
+                var scrollTop = hasParent ? $layout.position().top : $layout.offset().top - $(window).height() / 2;
+
+                $parent.animate({
+                    scrollTop: scrollTop
+                }, 500);
+
+            }
+
+        },
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: One Click
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_async',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexibleAjax');
+        },
+
+        add: function(args) {
+
+            // defaults
+            args = acf.parseArgs(args, {
+                layout: '',
+                before: false
+            });
+
+            // validate
+            if (!this.allowAdd()) {
+                return false;
+            }
+
+            // ajax data
+            var ajaxData = {
+                action: 'acfe/flexible/models',
+                field_key: this.get('key'),
+                layout: args.layout,
+            };
+
+            // beforeSend callback
+            var beforeSend = function() {
+                $('body').addClass('-loading');
+            }
+
+            // complete callback
+            var complete = function() {
+                $('body').removeClass('-loading');
+            }
+
+            // success callback
+            var success = this.proxy(function(html) {
+
+                if (html) {
+
+                    var $layout = $(html);
+                    var uniqid = acf.uniqid();
+
+                    var search = 'acf[' + this.get('key') + '][acfcloneindex]';
+                    var replace = this.$control().find('> input[type=hidden]').attr('name') + '[' + uniqid + ']';
+
+                    // add row
+                    var $el = acf.duplicate({
+                        target: $layout,
+                        search: search,
+                        replace: replace,
+                        append: this.proxy(function($el, $el2) {
+
+                            // append
+                            if (args.before) {
+                                args.before.before($el2);
+                            } else {
+                                this.$layoutsWrap().append($el2);
+                            }
+
+                            // enable
+                            acf.enable($el2, this.cid);
+
+                            // render
+                            this.render();
+                        })
+                    });
+
+                    // fix data-id
+                    $el.attr('data-id', uniqid);
+
+                    // trigger change for validation errors
+                    this.$input().trigger('change');
+
+                    // return
+                    return $el;
+
+                }
+
+            });
+
+            // ajax
+            $.ajax({
+                url: acf.get('ajaxurl'),
+                data: acf.prepareForAjax(ajaxData),
+                dataType: 'html',
+                type: 'post',
+                beforeSend: beforeSend,
+                success: success,
+                complete: complete
+            });
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Init
+     */
+    var flexible = acf.getFieldType('flexible_content');
+    var model = flexible.prototype;
 
     // Layout: Clone
     model.events['click [data-acfe-flexible-control-clone]'] = 'acfeCloneLayout';
@@ -886,13 +1979,14 @@
         var $input = $('<input type="text" style="clip:rect(0,0,0,0);clip-path:none;position:absolute;" value="" />').appendTo($('body'));
         $input.attr('value', data).select();
 
-        // Command: Copy
-        if (document.execCommand('copy'))
-            alert('Layout has been transferred to your clipboard');
+        // alert
+        if (document.execCommand('copy')) {
+            alert(acf.__('Layout data has been copied to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'));
 
-        // Prompt
-        else
-            prompt('Copy the following layout data to your clipboard', data);
+            // prompt
+        } else {
+            prompt(acf.__('Please copy the following layout(s) data to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'), data);
+        }
 
         // Remove the temp input
         $input.remove();
@@ -925,13 +2019,15 @@
         var $input = $('<input type="text" style="clip:rect(0,0,0,0);clip-path:none;position:absolute;" value="" />').appendTo(flexible.$el);
         $input.attr('value', data).select();
 
-        // Command: Copy
-        if (document.execCommand('copy'))
-            alert('Layouts have been transferred to your clipboard');
+        // alert
+        if (document.execCommand('copy')) {
+            alert(acf.__('Layouts data have been copied to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'));
 
-        // Prompt
-        else
-            prompt('Copy the following layouts data to your clipboard', data);
+            // prompt
+        } else {
+            prompt(acf.__('Please copy the following layout(s) data to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'), data);
+        }
+
 
         $input.remove();
 
@@ -943,7 +2039,7 @@
         // Get Flexible
         var flexible = this;
 
-        var paste = prompt('Paste layouts data in the following field');
+        var paste = prompt(acf.__('Please paste previously copied layout data in the following field:'));
 
         // No input
         if (paste == null || paste === '')
@@ -1179,7 +2275,7 @@
 
     }
 
-    /*
+    /**
      * Based on acf.duplicate (5.9)
      *
      * doAction('duplicate) has been commented out
@@ -1460,759 +2556,416 @@
 
     }
 
-    /*
-     * Spawn
-     */
-    acf.addAction('new_field/type=flexible_content', function(flexible) {
-
-        // ACFE: Lock
-        if (flexible.has('acfeFlexibleLock')) {
-
-            flexible.removeEvents({
-                'mouseover': 'onHover'
-            });
-
-        }
-
-    });
-
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
-
-    /*
-     * Init
-     */
-    var flexible = acf.getFieldType('flexible_content');
-    var model = flexible.prototype;
-
-    /*
-     * Actions
-     */
-    model.events['click [data-action="acfe-flexible-modal-edit"]'] = 'acfeModalEdit';
-    model.acfeModalEdit = function(e, $el) {
-
-        var flexible = this;
-
-        // Layout
-        var $layout = $el.closest('.layout');
-
-        // Modal data
-        var $modal = $layout.find('> .acfe-modal.-fields').addClass('acfe-modal-edit-' + flexible.get('name') + ' acfe-modal-edit-' + flexible.get('key')).addClass('acfe-modal-edit-' + $layout.data('layout'));
-        var $handle = $layout.find('> .acf-fc-layout-handle');
-
-        var $layout_order = $handle.find('> .acf-fc-layout-order').outerHTML();
-        var $layout_title = acfe.getTextNode($handle.find('.acfe-layout-title-text'));
-
-        var close = false;
-        if (flexible.has('acfeFlexibleCloseButton')) {
-            close = acf.__('Close');
-        }
-
-        // Open modal
-        new acfe.Popup($modal, {
-            title: $layout_order + ' ' + $layout_title,
-            footer: close,
-            onOpen: function() {
-
-                flexible.openLayout($layout);
-
-            },
-            onClose: function() {
-
-                flexible.closeLayout($layout);
-
-            }
-        });
-
-    };
-
-    /*
-     * Spawn
-     */
-    acf.addAction('new_field/type=flexible_content', function(flexible) {
-
-        if (flexible.has('acfeFlexibleModalEdition') && (flexible.has('acfeFlexiblePlaceholder') || flexible.has('acfeFlexiblePreview'))) {
-
-            // Remove Collapse Action
-            flexible.removeEvents({
-                'click [data-name="collapse-layout"]': 'onClickCollapse'
-            });
-
-            // Remove placeholder Collapse Action
-            flexible.removeEvents({
-                'click .acfe-fc-placeholder': 'onClickCollapse'
-            });
-
-        }
-
-    });
-
-})(jQuery);
-(function($) {
-
-    if (typeof acf === 'undefined')
-        return;
-
-    /*
-     * Init
-     */
-    var flexible = acf.getFieldType('flexible_content');
-    var model = flexible.prototype;
-
-    /*
-     * Actions
-     */
-    model.acfeModalSelect = function(e, $el) {
-
-        // Get Flexible
-        var flexible = this;
-
-        // Validate
-        if (!flexible.validateAdd())
-            return false;
-
-        // Layout
-        var $layout_source = null;
-
-        if ($el.hasClass('acf-icon'))
-            $layout_source = $el.closest('.layout');
-
-        // Get Available Layouts
-        var layouts = flexible.getPopupHTML();
-
-        // Init Categories
-        var categories = {
-            array: [],
-            html: ''
-        };
-
-        function SearchArray(element, array) {
-
-            var len = array.length,
-                str = element.toString().toLowerCase();
-
-            for (var i = 0; i < len; i++) {
-                if (array[i].toLowerCase() === str) {
-                    return i;
-                }
-            }
-
-            return -1;
-
-        }
-
-        // Get Categories
-        $(layouts).find('li a span[data-acfe-flexible-category]').each(function() {
-
-            var spanCats = $(this).data('acfe-flexible-category');
-
-            $.each(spanCats, function() {
-
-                if (SearchArray(this, categories.array) !== -1)
-                    return;
-
-                categories.array.push(this);
-
-            });
-
-        });
-
-        // Categories HTML
-        if (categories.array.length) {
-
-            categories.array.sort();
-
-            categories.html += '<h2 class="acfe-flexible-categories nav-tab-wrapper">';
-
-            categories.html += '<a href="#" data-acfe-flexible-category="acfe-all" class="nav-tab nav-tab-active"><span class="dashicons dashicons-menu"></span></a>';
-
-            $(categories.array).each(function(k, category) {
-
-                categories.html += '<a href="#" data-acfe-flexible-category="' + category + '" class="nav-tab">' + category + '</a>';
-
-            });
-
-            categories.html += '</h2>';
-
-        }
-
-        // Modal Title
-        var modalTitle = acf.__('Add Row');
-
-        if (flexible.has('acfeFlexibleModalTitle')) {
-            modalTitle = flexible.get('acfeFlexibleModalTitle');
-        }
-
-        // Create Modal
-        var $modal = $('' +
-            '<div class="acfe-modal acfe-modal-select-' + flexible.get('name') + ' acfe-modal-select-' + flexible.get('key') + '">' +
-
-            categories.html +
-            '<div class="acfe-flex-container">' +
-            layouts +
-            '</div>' +
-
-            '</div>'
-
-        ).appendTo('body');
-
-        // Open Modal
-        new acfe.Popup($modal, {
-            title: modalTitle,
-            size: flexible.get('acfeFlexibleModalSize'),
-            destroy: true
-        });
-
-        // Modal: Columns
-        if (flexible.has('acfeFlexibleModalCol')) {
-
-            $modal.find('.acfe-modal-content .acfe-flex-container').addClass('acfe-col-' + flexible.get('acfeFlexibleModalCol'));
-
-        }
-
-        // Modal: Columns
-        if (flexible.has('acfeFlexibleThumbnails')) {
-
-            $modal.find('.acfe-modal-content .acfe-flex-container').addClass('acfe-flex-thumbnails');
-
-        }
-
-        // Modal: ACF autofocus fix
-        $modal.find('li:first-of-type a').blur();
-
-        // Modal: Layouts Badges
-        $modal.find('li a span.badge').each(function() {
-
-            $(this).addClass('acf-js-tooltip dashicons dashicons-info');
-
-        });
-
-        // Modal: Categories Click
-        $modal.find('.acfe-flexible-categories a').click(function(e) {
-
-            e.preventDefault();
-
-            var $link = $(this);
-
-            $link.closest('.acfe-flexible-categories').find('a').removeClass('nav-tab-active');
-            $link.addClass('nav-tab-active');
-
-            var selected_category = $link.data('acfe-flexible-category');
-
-            $modal.find('a[data-layout] span[data-acfe-flexible-category]').each(function() {
-
-                // Get span
-                var $span = $(this);
-
-                // Show All
-                $span.closest('li').show();
-
-                var category = $span.data('acfe-flexible-category');
-
-                // Specific category
-                if (selected_category !== 'acfe-all') {
-
-                    // Hide All
-                    $span.closest('li').hide();
-
-                    $.each(category, function(i, c) {
-
-                        if (selected_category.toLowerCase() === c.toLowerCase()) {
-
-                            $span.closest('li').show();
-
-                            return false;
-
-                        }
-
-                    });
-
-                }
-
-            });
-
-        });
-
-        // Modal: Click Add Layout
-        $modal.on('click', 'a[data-layout]', function(e) {
-
-            e.preventDefault();
-
-            // Close modal
-            acfe.closePopup();
-
-            // Add layout
-            flexible.add({
-                layout: $(this).data('layout'),
-                before: $layout_source
-            });
-
-        });
-
     }
 
-    /*
-     * Spawn
+    /**
+     * Flexible Content: Events
      */
-    acf.addAction('new_field/type=flexible_content', function(flexible) {
-
-        if (!flexible.has('acfeFlexibleModal'))
-            return;
-
-        // Vars
-        var $clones = flexible.$clones();
-
-        if ($clones.length <= 1)
-            return;
-
-        // Remove native ACF Tooltip action
-        flexible.removeEvents({
-            'click [data-name="add-layout"]': 'onClickAdd'
-        });
-
-        // Add ACF Extended Modal action
-        flexible.addEvents({
-            'click [data-name="add-layout"]': 'acfeModalSelect'
-        });
-
-    });
-
-})(jQuery);
-(function($) {
-
-    if (typeof acf === 'undefined')
-        return;
-
-    /*
-     * Field: Flexible Content Overwrite
-     */
-    var FlexibleContent = acf.models.FlexibleContentField;
-
-    acf.models.FlexibleContentField = FlexibleContent.extend({
-
-        addSortable: function(self) {
-
-            // bail early if max 1 row
-            if (this.get('max') == 1) {
-                return;
-            }
-
-            // add sortable
-            this.$layoutsWrap().sortable({
-                items: ' > .layout',
-                handle: '> .acf-fc-layout-handle',
-                forceHelperSize: false, // Changed to false
-                forcePlaceholderSize: true,
-                revert: 50,
-                tolerance: "pointer", // Changed to pointer
-                scroll: true,
-                stop: function(event, ui) {
-                    self.render();
-                },
-                update: function(event, ui) {
-                    self.$input().trigger('change');
-                }
-            });
-
-        },
-
-        acfeOneClick: function(e, $el) {
-
-            // Vars
-            var $clones = this.$clones();
-            var $layout_name = $($clones[0]).data('layout');
-
-            // Source
-            var $layout_source = null;
-
-            if ($el.hasClass('acf-icon')) {
-                $layout_source = $el.closest('.layout');
-            }
-
-            // Add
-            this.add({
-                layout: $layout_name,
-                before: $layout_source
-            });
-
-            // Hide native tooltip
-            var acfPopup = $('.acf-fc-popup');
-
-            if (acfPopup.length) {
-                acfPopup.hide();
-            }
-
-
-        },
-
-        acfeLayoutInit: function($layout) {
-
-            // flexible content
-            var key = this.get('key');
-            var name = this.get('name');
-            var $el = this.$el;
-
-            // layout
-            var layout = $layout.data('layout');
-            var index = $layout.index();
-
-            // Placeholder
-            var $placeholder = $layout.find('> .acfe-fc-placeholder');
-
-            // Placeholder: Show
-            $placeholder.removeClass('acf-hidden');
-
-            // If no modal edition & opened: Hide Placeholder
-            if (!this.has('acfeFlexibleModalEdition') && !this.isLayoutClosed($layout)) {
-
-                $placeholder.addClass('acf-hidden');
-
-            }
-
-            // Flexible has Preview
-            if (this.isLayoutClosed($layout) && this.has('acfeFlexiblePreview') && !$placeholder.hasClass('-loading')) {
-
-                $placeholder.addClass('acfe-fc-preview -loading').find('> .acfe-flexible-placeholder').prepend('<span class="spinner"></span>');
-                $placeholder.find('> .acfe-fc-overlay').addClass('-hover');
-
-                // vars
-                var $input = $layout.children('input');
-                var prefix = $input.attr('name').replace('[acf_fc_layout]', '');
-
-                // ajax data
-                var ajaxData = {
-                    action: 'acfe/flexible/layout_preview',
-                    field_key: key,
-                    i: index,
-                    layout: layout,
-                    value: acf.serialize($layout, prefix)
-                };
-
-                acf.doAction('acfe/fields/flexible_content/before_preview', $el, $layout, ajaxData);
-                acf.doAction('acfe/fields/flexible_content/before_preview/name=' + name, $el, $layout, ajaxData);
-                acf.doAction('acfe/fields/flexible_content/before_preview/key=' + key, $el, $layout, ajaxData);
-                acf.doAction('acfe/fields/flexible_content/before_preview/name=' + name + '&layout=' + layout, $el, $layout, ajaxData);
-                acf.doAction('acfe/fields/flexible_content/before_preview/key=' + key + '&layout=' + layout, $el, $layout, ajaxData);
-
-                // on success
-                var onSuccess = function(response) {
-
-                    if (response) {
-                        $placeholder.find('> .acfe-flexible-placeholder').html(response);
-                    } else {
-                        $placeholder.removeClass('acfe-fc-preview');
-                    }
-
-                    acf.doAction('acfe/fields/flexible_content/preview', response, $el, $layout, ajaxData);
-                    acf.doAction('acfe/fields/flexible_content/preview/name=' + name, response, $el, $layout, ajaxData);
-                    acf.doAction('acfe/fields/flexible_content/preview/key=' + key, response, $el, $layout, ajaxData);
-                    acf.doAction('acfe/fields/flexible_content/preview/name=' + name + '&layout=' + layout, response, $el, $layout, ajaxData);
-                    acf.doAction('acfe/fields/flexible_content/preview/key=' + key + '&layout=' + layout, response, $el, $layout, ajaxData);
-
-                };
-
-                // on complete
-                var onComplete = function() {
-
-                    $placeholder.find('> .acfe-fc-overlay').removeClass('-hover');
-                    $placeholder.removeClass('-loading').find('> .acfe-flexible-placeholder > .spinner').remove();
-
-                };
-
-                // ajax
-                $.ajax({
-                    url: acf.get('ajaxurl'),
-                    data: acf.prepareForAjax(ajaxData),
-                    dataType: 'html',
-                    type: 'post',
-                    success: onSuccess,
-                    complete: onComplete
-                });
-
-            }
-
-        }
-
-    });
-
-    /*
-     * Field: Flexible Content
-     */
-    new acf.Model({
+    var eventManager = new acf.Model({
 
         actions: {
             'new_field/type=flexible_content': 'newField',
-            'acfe/flexible/layouts': 'newLayouts',
             'show': 'onShow',
             'hide': 'onHide',
             'append': 'onAppend',
-            'invalid_field': 'onInvalidField',
-            'valid_field': 'onValidField',
         },
 
-        newField: function(flexible) {
+        newField: function(field) {
 
-            // Vars
-            var $clones = flexible.$clones();
-            var $layouts = flexible.$layouts();
-
-            // Do Actions
-            $layouts.each(function() {
-
-                var $layout = $(this);
-                var $name = $layout.data('layout');
-
-                acf.doAction('acfe/flexible/layouts', $layout, flexible);
-                acf.doAction('acfe/flexible/layout/name=' + $name, $layout, flexible);
-
-            });
-
-            // ACFE: 1 layout available - OneClick
-            if ($clones.length === 1) {
-
-                // Remove native ACF Tooltip action
-                flexible.removeEvents({
-                    'click [data-name="add-layout"]': 'onClickAdd'
-                });
-
-                // Add ACF Extended Modal action
-                flexible.addEvents({
-                    'click [data-name="add-layout"]': 'acfeOneClick'
-                });
-
-            }
-
-            flexible.addEvents({
+            // placeholder
+            field.addEvents({
                 'click .acfe-fc-placeholder': 'onClickCollapse'
             });
 
-            flexible.addEvents({
+            // inline close button
+            field.addEvents({
                 'click .acfe-flexible-opened-actions > a': 'onClickCollapse'
             });
 
-            // Flexible: Ajax
-            if (flexible.has('acfeFlexibleAjax')) {
+            if (field.has('acfeFlexibleModalEdition') && (field.has('acfeFlexiblePlaceholder') || field.has('acfeFlexiblePreview'))) {
 
-                flexible.add = function(args) {
+                // collapse action
+                field.removeEvents({
+                    'click [data-name="collapse-layout"]': 'onClickCollapse'
+                });
 
-                    // Get Flexible
-                    var flexible = this;
+                // placeholder collapse Action
+                field.removeEvents({
+                    'click .acfe-fc-placeholder': 'onClickCollapse'
+                });
 
-                    // defaults
-                    args = acf.parseArgs(args, {
-                        layout: '',
-                        before: false
-                    });
+            }
 
-                    // validate
-                    if (!this.allowAdd()) {
-                        return false;
-                    }
+            // lock
+            if (field.has('acfeFlexibleLock')) {
+                field.removeEvents({
+                    'mouseover': 'onHover'
+                });
+            }
 
-                    // ajax
-                    $.ajax({
-                        url: acf.get('ajaxurl'),
-                        data: acf.prepareForAjax({
-                            action: 'acfe/flexible/models',
-                            field_key: this.get('key'),
-                            layout: args.layout,
-                        }),
-                        dataType: 'html',
-                        type: 'post',
-                        beforeSend: function() {
-                            $('body').addClass('-loading');
-                        },
-                        success: function(html) {
-                            if (html) {
+            field.$layouts().each(function() {
+                field.trigger('newLayout', [$(this)]);
+            });
 
-                                var $layout = $(html);
-                                var uniqid = acf.uniqid();
+        },
 
-                                var search = 'acf[' + flexible.get('key') + '][acfcloneindex]';
-                                var replace = flexible.$control().find('> input[type=hidden]').attr('name') + '[' + uniqid + ']';
+        onShow: function($el, context) {
 
-                                // add row
-                                var $el = acf.duplicate({
-                                    target: $layout,
-                                    search: search,
-                                    replace: replace,
-                                    append: flexible.proxy(function($el, $el2) {
+            // validate
+            if (context === 'collapse' && $el.is('.layout')) {
 
-                                        // append
-                                        if (args.before) {
-                                            args.before.before($el2);
-                                        } else {
-                                            flexible.$layoutsWrap().append($el2);
-                                        }
+                // get field
+                var field = acf.getClosestField($el);
 
-                                        // enable
-                                        acf.enable($el2, flexible.cid);
-
-                                        // render
-                                        flexible.render();
-                                    })
-                                });
-
-                                // Fix data-id
-                                $el.attr('data-id', uniqid);
-
-                                // trigger change for validation errors
-                                flexible.$input().trigger('change');
-
-                                // return
-                                return $el;
-
-                            }
-                        },
-                        'complete': function() {
-                            $('body').removeClass('-loading');
-                        }
-                    });
-
-                };
+                // trigger
+                field.trigger('showLayout', [$el]);
 
             }
 
         },
 
-        newLayouts: function($layout, flexible) {
+        onHide: function($el, context) {
 
-            // Layout Closed
-            if (flexible.isLayoutClosed($layout)) {
+            // validate
+            if (context === 'collapse' && $el.is('.layout') && !$el.is('.acf-clone')) {
 
-                // Placeholder
-                $layout.find('> .acfe-fc-placeholder').removeClass('acf-hidden');
+                // get field
+                var field = acf.getClosestField($el);
 
-                if (flexible.has('acfeFlexibleOpen')) {
-
-                    acfe.enableFilter('acfeFlexibleOpen');
-
-                    flexible.openLayout($layout);
-
-                    acfe.disableFilter('acfeFlexibleOpen');
-
-                }
+                // trigger
+                field.trigger('hideLayout', [$el]);
 
             }
-
-        },
-
-        onShow: function($layout, type) {
-
-            if (type !== 'collapse' || !$layout.is('.layout')) {
-                return;
-            }
-
-            var flexible = acf.getInstance($layout.closest('.acf-field-flexible-content'));
-
-            // Hide Placeholder
-            if (!flexible.has('acfeFlexibleModalEdition')) {
-                $layout.find('> .acfe-fc-placeholder').addClass('acf-hidden');
-            }
-
-        },
-
-        onHide: function($layout, type) {
-
-            if (type !== 'collapse' || !$layout.is('.layout') || $layout.is('.acf-clone')) {
-                return;
-            }
-
-            // Get Flexible
-            var flexible = acf.getInstance($layout.closest('.acf-field-flexible-content'));
-
-            // Remove Ajax Title
-            if (flexible.has('acfeFlexibleRemoveAjaxTitle')) {
-                flexible.renderLayout = function($layout) {};
-            }
-
-            // Preview Ajax
-            flexible.acfeLayoutInit($layout);
 
         },
 
         onAppend: function($el) {
 
-            // Bail early if layout is not layout
-            if (!$el.is('.layout')) {
+            // acf block type "align" attribute pass a react element
+            // with acf.doAction('append', this.state.$el))
+            // which return a fake jQuery element and break $el.is('...') check
+            if (acf.isset($el, 0, '$$typeof')) {
                 return;
             }
 
-            // Get Flexible
-            var flexible = acf.getInstance($el.closest('.acf-field-flexible-content'));
+            // validate
+            if ($el.is('.layout')) {
 
-            // Open Layout
-            if (!$el.is('.acfe-layout-duplicated')) {
+                // get field
+                var field = acf.getClosestField($el);
 
-                // Modal Edition: Open
-                if (flexible.has('acfeFlexibleModalEdition')) {
-                    $el.find('> [data-action="acfe-flexible-modal-edit"]:first').trigger('click');
-                }
-
-                // Normal Edition: Open
-                else {
-                    flexible.openLayout($el);
-                }
+                // trigger
+                field.trigger('newLayout', [$el]);
+                field.trigger('appendLayout', [$el]);
 
             }
 
-            flexible.acfeLayoutInit($el);
+        },
 
-            var $modal = flexible.$el.closest('.acfe-modal.-open');
+    });
 
-            if ($modal.length) {
+})(jQuery);
+(function($) {
 
-                // Scroll to new layout
-                $modal.find('> .acfe-modal-wrapper > .acfe-modal-content').animate({
-                    scrollTop: parseInt($el.offset().top) - 200
-                }, 200);
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
 
-            } else {
+    /**
+     * Flexible Content: Modal Edit
+     */
+    var Field = acfe.FieldExtender({
 
-                if (acfe.versionCompare(acf.get('acf_version'), '<', '5.9')) {
+        id: 'fc_modal_edit',
 
-                    // Scroll to new layout
-                    $('html, body').animate({
-                        scrollTop: parseInt($el.offset().top) - 200
-                    }, 200);
+        type: 'flexible_content',
 
-                } else {
+        events: {
+            'click [data-action="acfe-flexible-modal-edit"]': 'acfeModalEdit',
+        },
 
-                    // Avoid native ACF duplicate
-                    if (!$el.hasClass('-focused')) {
+        acfeModalEdit: function(e, $el) {
 
-                        // Scroll to new layout
-                        $('html, body').animate({
-                            scrollTop: parseInt($el.offset().top) - 200
-                        }, 200);
+            // layout
+            var $layout = $el.closest('.layout');
 
+            // modal
+            var $modal = $layout.find('> .acfe-modal.-fields');
+
+            // vars
+            var $handle = $layout.find('> .acf-fc-layout-handle');
+            var order = $handle.find('> .acf-fc-layout-order').outerHTML();
+            var title = acfe.getTextNode($handle.find('.acfe-layout-title'));
+
+            var modal = acfe.getModal($modal, {
+                open: true,
+                title: order + title,
+                onOpen: this.proxy(function() {
+                    this.openLayout($layout);
+                }),
+                onClose: this.proxy(function() {
+                    this.closeLayout($layout);
+                }),
+            });
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: Modal Select
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_modal_select',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexibleModal') && this.$clones().length > 1;
+        },
+
+        onClickAdd: function(e, $el) {
+
+            // get flexible
+            var flexible = this;
+
+            // validate
+            if (!flexible.validateAdd()) {
+                return false;
+            }
+
+            // vars
+            var layoutsCategories = this.getLayoutsCategories();
+
+            // retrieve original layout (if user clicked on the '+' icon)
+            var $before = $el.hasClass('acf-icon') ? $el.closest('.layout') : null;
+
+            // Open Modal
+            acfe.newModal({
+                title: flexible.get('acfeFlexibleModalTitle', acf.__('Add Row')),
+                class: 'acfe-modal-select-' + flexible.get('name') + ' acfe-modal-select-' + flexible.get('key'),
+                size: flexible.get('acfeFlexibleModalSize'),
+                destroy: true,
+
+                events: {
+                    'click .acfe-flexible-categories a': 'onClickCategory',
+                    'click a[data-layout]': 'onClickLayout',
+                },
+
+                content: function() {
+                    return '<div class="acfe-flex-container">' + flexible.getPopupHTML() + '</div>'
+                },
+
+                onOpen: function() {
+
+                    // add categories tabs
+                    if (layoutsCategories) {
+                        this.$content().prepend(layoutsCategories);
                     }
 
+                    // add columns class
+                    if (flexible.has('acfeFlexibleModalCol')) {
+                        this.$('.acfe-modal-content .acfe-flex-container').addClass('acfe-col-' + flexible.get('acfeFlexibleModalCol'));
+                    }
+
+                    // add thumbnails class
+                    if (flexible.has('acfeFlexibleThumbnails')) {
+                        this.$('.acfe-modal-content .acfe-flex-container').addClass('acfe-flex-thumbnails');
+                    }
+
+                    // add icon info class
+                    var icon = acfe.versionCompare(acf.get('wp_version'), '>=', '5.5') ? 'dashicons-info-outline' : 'dashicons-info';
+                    this.$('li a span.badge').addClass('acf-js-tooltip dashicons ' + icon);
+
+                    // autofocus fix
+                    this.$('li:first-of-type a').blur();
+
+                },
+
+                onClickCategory: function(e, $el) {
+
+                    // prevent default
+                    e.preventDefault();
+
+                    // vars
+                    var $activeCategory = $el;
+                    var activeCategory = $activeCategory.data('acfe-flexible-category');
+
+                    // remove all active
+                    $activeCategory.closest('.acfe-flexible-categories').find('a').removeClass('nav-tab-active');
+
+                    // set active on current
+                    $activeCategory.addClass('nav-tab-active');
+
+                    // show all layouts
+                    this.$('a[data-layout] span[data-acfe-flexible-category]').closest('li').show();
+
+                    // active category is 'show all'
+                    if (activeCategory === 'acfe-all') {
+                        return;
+                    }
+
+                    // loop through layouts to check category
+                    this.$('a[data-layout] span[data-acfe-flexible-category]').each(function() {
+
+                        // vars
+                        var $span = $(this);
+                        var categories = $span.data('acfe-flexible-category');
+
+                        // hide layout
+                        $span.closest('li').hide();
+
+                        for (var category of categories) {
+                            if (acfe.slugify(activeCategory) === acfe.slugify(category)) {
+
+                                // show layout
+                                $span.closest('li').show();
+                                break;
+
+                            }
+                        }
+
+                    });
+
+                },
+
+                onClickLayout: function(e, $el) {
+
+                    e.preventDefault();
+
+                    // close modal
+                    this.close();
+
+                    // Add layout
+                    flexible.add({
+                        layout: $el.data('layout'),
+                        before: $before
+                    });
+
+                },
+            });
+
+        },
+
+        getLayoutsCategories: function() {
+
+            // get layouts selection html
+            var $layouts = $(this.getPopupHTML());
+
+            // categories vars
+            var html = '';
+            var data = [];
+
+            // check if categories exist
+            if ($layouts.find('li a span[data-acfe-flexible-category]').exists()) {
+
+                // loop
+                $layouts.find('li a span[data-acfe-flexible-category]').each(function() {
+
+                    // get categories from data
+                    var categories = $(this).data('acfe-flexible-category');
+
+                    // loop categories
+                    categories.map(function(label) {
+
+                        // generate slug
+                        var slug = acfe.slugify(label);
+
+                        // search for slug
+                        var search = data.filter(function(row) {
+                            return row.slug === slug;
+                        });
+
+                        // slug not found, append
+                        if (acfe.isEmpty(search)) {
+                            data.push({
+                                slug: slug,
+                                label: label
+                            });
+                        }
+
+                    });
+                });
+
+                // prepare html
+                if (data.length) {
+
+                    html += '<h2 class="acfe-flexible-categories nav-tab-wrapper">';
+                    html += '<a href="#" data-acfe-flexible-category="acfe-all" class="nav-tab nav-tab-active"><span class="dashicons dashicons-menu"></span></a>';
+
+                    data.sort(function(a, b) {
+                        return a.slug > b.slug ? 1 : -1;
+                    });
+
+                    data.map(function(row) {
+                        html += '<a href="#" data-acfe-flexible-category="' + row.label + '" class="nav-tab">' + row.label + '</a>';
+                    });
+
+                    html += '</h2>';
+
                 }
 
             }
 
-        },
-
-        onInvalidField: function(field) {
-
-            field.$el.parents('.layout').addClass('acfe-flexible-modal-edit-error');
+            return html;
 
         },
 
-        onValidField: function(field) {
+    });
 
-            field.$el.parents('.layout').each(function() {
+})(jQuery);
+(function($) {
 
-                var $layout = $(this);
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
 
-                if (!$layout.find('.acf-error').length) {
-                    $layout.removeClass('acfe-flexible-modal-edit-error');
-                }
+    /**
+     * Flexible Content: Modal Settings
+     */
+    var Field = acfe.FieldExtender({
 
+        id: 'fc_modal_settings',
+
+        type: 'flexible_content',
+
+        events: {
+            'click [data-acfe-flexible-settings]': 'acfeLayoutSettings',
+        },
+
+        acfeLayoutSettings: function(e, $el) {
+
+            // layout
+            var $layout = $el.closest('.layout');
+
+            // modal
+            var $modal = $layout.find('> .acfe-modal.-settings');
+
+            // vars
+            var $handle = $layout.find('> .acf-fc-layout-handle');
+            var order = $handle.find('> .acf-fc-layout-order').outerHTML();
+            var title = acfe.getTextNode($handle.find('.acfe-layout-title'));
+
+            var modal = acfe.getModal($modal, {
+                open: true,
+                title: order + title,
+                onClose: this.proxy(function() {
+                    if (this.has('acfeFlexiblePreview')) {
+                        this.closeLayout($layout);
+                    }
+                })
             });
 
         }
@@ -2222,10 +2975,448 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
+     * Flexible Content: One Click
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_one_click',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.$clones().length === 1;
+        },
+
+        onClickAdd: function(e, $el) {
+
+            // validate
+            if (!this.validateAdd()) {
+                return false;
+            }
+
+            // vars
+            var $clones = this.$clones();
+            var layout = $($clones[0]).data('layout');
+
+            // within layout
+            var $before = null;
+            if ($el.hasClass('acf-icon')) {
+                $before = $el.closest('.layout');
+            }
+
+            // add layout
+            this.add({
+                layout: layout,
+                before: $before
+            });
+
+            // hide popup just in case
+            var $popup = $('.acf-fc-popup');
+
+            if ($popup.length) {
+                $popup.hide();
+            }
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: Placeholder
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_placeholder',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexiblePlaceholder');
+        },
+
+        initialize: function() {
+
+            // initialize
+            this.getParent(Field).initialize.apply(this, arguments);
+
+            // add events
+            this.addEvents({
+                'showLayout': 'acfePlaceholderShowLayout',
+                'hideLayout': 'acfePlaceholderHideLayout',
+                'newLayout': 'acfePlaceholderNewLayout',
+            });
+
+        },
+
+        acfePlaceholderShowLayout: function(e, $el, $layout) {
+
+            // hide placeholder
+            if (!this.has('acfeFlexibleModalEdition')) {
+                acf.hide($layout.find('> .acfe-fc-placeholder'));
+            }
+
+        },
+
+        acfePlaceholderHideLayout: function(e, $el, $layout) {
+
+            // show placeholder
+            acf.show($layout.find('> .acfe-fc-placeholder'));
+
+        },
+
+        acfePlaceholderNewLayout: function(e, $el, $layout) {
+
+            // show placeholder
+            if (this.isLayoutClosed($layout)) {
+                acf.show($layout.find('> .acfe-fc-placeholder'));
+            }
+
+        },
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: Preview
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_preview',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexiblePreview');
+        },
+
+        events: {
+            'hideLayout': 'acfePreviewHideLayout',
+            'appendLayout': 'acfePreviewAppendLayout',
+        },
+
+        acfeLayoutPreview: function($layout) {
+
+            // validate
+            if (!this.isLayoutClosed($layout) || $layout.find('> .acfe-fc-placeholder').hasClass('-loading')) {
+                return;
+            }
+
+            // vars
+            var key = this.get('key');
+            var name = this.get('name');
+            var $el = this.$el;
+            var layout = $layout.data('layout');
+            var index = $layout.index();
+            var $placeholder = $layout.find('> .acfe-fc-placeholder');
+
+            $placeholder.addClass('acfe-fc-preview -loading').find('> .acfe-flexible-placeholder').prepend('<span class="spinner"></span>');
+            $placeholder.find('> .acfe-fc-overlay').addClass('-hover');
+
+            // vars
+            var $input = $layout.children('input');
+            var prefix = $input.attr('name').replace('[acf_fc_layout]', '');
+
+            // ajax data
+            var ajaxData = {
+                action: 'acfe/flexible/layout_preview',
+                field_key: key,
+                i: index,
+                layout: layout,
+                value: acf.serialize($layout, prefix)
+            };
+
+            acf.doAction('acfe/fields/flexible_content/before_preview', $el, $layout, ajaxData);
+            acf.doAction('acfe/fields/flexible_content/before_preview/name=' + name, $el, $layout, ajaxData);
+            acf.doAction('acfe/fields/flexible_content/before_preview/key=' + key, $el, $layout, ajaxData);
+            acf.doAction('acfe/fields/flexible_content/before_preview/name=' + name + '&layout=' + layout, $el, $layout, ajaxData);
+            acf.doAction('acfe/fields/flexible_content/before_preview/key=' + key + '&layout=' + layout, $el, $layout, ajaxData);
+
+            // on success
+            var onSuccess = function(response) {
+
+                if (response) {
+                    $placeholder.find('> .acfe-flexible-placeholder').html(response);
+                } else {
+                    $placeholder.removeClass('acfe-fc-preview');
+                }
+
+                acf.doAction('acfe/fields/flexible_content/preview', response, $el, $layout, ajaxData);
+                acf.doAction('acfe/fields/flexible_content/preview/name=' + name, response, $el, $layout, ajaxData);
+                acf.doAction('acfe/fields/flexible_content/preview/key=' + key, response, $el, $layout, ajaxData);
+                acf.doAction('acfe/fields/flexible_content/preview/name=' + name + '&layout=' + layout, response, $el, $layout, ajaxData);
+                acf.doAction('acfe/fields/flexible_content/preview/key=' + key + '&layout=' + layout, response, $el, $layout, ajaxData);
+
+            };
+
+            // on complete
+            var onComplete = function() {
+
+                $placeholder.find('> .acfe-fc-overlay').removeClass('-hover');
+                $placeholder.removeClass('-loading').find('> .acfe-flexible-placeholder > .spinner').remove();
+
+            };
+
+            // ajax
+            $.ajax({
+                url: acf.get('ajaxurl'),
+                data: acf.prepareForAjax(ajaxData),
+                dataType: 'html',
+                type: 'post',
+                success: onSuccess,
+                complete: onComplete
+            });
+
+        },
+
+        acfePreviewHideLayout: function(e, $el, $layout) {
+
+            this.acfeLayoutPreview($layout);
+
+        },
+
+        acfePreviewAppendLayout: function(e, $el, $layout) {
+
+            this.acfeLayoutPreview($layout);
+
+        },
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: State
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_state',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexibleOpen');
+        },
+
+        addCollapsed: function() {
+            // ...
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: Title Ajax
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_title_ajax',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexibleRemoveAjaxTitle');
+        },
+
+        renderLayout: function() {
+            // ...
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: Title Inline
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_title_inline',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexibleTitleEdition');
+        },
+
+        events: {
+            'click .acf-fc-layout-handle': 'acfeEditLayoutTitleToggleHandle',
+            'click .acfe-layout-title-text': 'acfeEditLayoutTitle',
+            'blur input.acfe-flexible-control-title': 'acfeEditLayoutTitleToggle',
+            'click input.acfe-flexible-control-title': 'acfeEditLayoutTitlePropagation',
+            'input [data-acfe-flexible-control-title-input]': 'acfeEditLayoutTitleInput',
+            'keypress [data-acfe-flexible-control-title-input]': 'acfeEditLayoutTitleInputEnter',
+        },
+
+        acfeEditLayoutTitleToggleHandle: function(e, $el) {
+
+            // layout
+            var $layout = $el.closest('.layout');
+
+            if ($layout.hasClass('acfe-flexible-title-edition')) {
+                $layout.find('> .acf-fc-layout-handle > .acfe-layout-title > input.acfe-flexible-control-title').trigger('blur');
+            }
+
+        },
+
+        acfeEditLayoutTitle: function(e, $el) {
+
+            e.stopPropagation();
+            this.acfeEditLayoutTitleToggle(e, $el);
+
+        },
+
+        acfeEditLayoutTitleToggle: function(e, $el) {
+
+            // vars
+            var $layout = $el.closest('.layout');
+            var $handle = $layout.find('> .acf-fc-layout-handle');
+            var $title = $handle.find('.acfe-layout-title');
+
+            if ($layout.hasClass('acfe-flexible-title-edition')) {
+
+                var $input = $title.find('> input[data-acfe-flexible-control-title-input]');
+
+                if ($input.val() === '') {
+                    $input.val($input.attr('placeholder')).trigger('input');
+                }
+
+                $layout.removeClass('acfe-flexible-title-edition');
+                $input.insertAfter($handle);
+
+            } else {
+
+                var $input = $layout.find('> input[data-acfe-flexible-control-title-input]');
+                var $input = $input.appendTo($title);
+
+                $layout.addClass('acfe-flexible-title-edition');
+                $input.focus().attr('size', $input.val().length);
+
+            }
+
+        },
+
+        acfeEditLayoutTitlePropagation: function(e, $el) {
+            e.stopPropagation();
+        },
+
+        acfeEditLayoutTitleInput: function(e, $el) {
+
+            // vars
+            var $layout = $el.closest('.layout');
+            var $title = $layout.find('> .acf-fc-layout-handle .acfe-layout-title .acfe-layout-title-text');
+
+            var val = $el.val();
+
+            $el.attr('size', val.length);
+
+            $title.html(val);
+
+        },
+
+        acfeEditLayoutTitleInputEnter: function(e, $el) {
+
+            // 'enter'
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                $el.blur();
+            }
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * Flexible Content: Toggle
+     */
+    var Field = acfe.FieldExtender({
+
+        id: 'fc_toggle',
+
+        type: 'flexible_content',
+
+        condition: function() {
+            return this.has('acfeFlexibleToggle');
+        },
+
+        events: {
+            'click [data-acfe-flexible-control-toggle]': 'acfeLayoutToggle',
+        },
+
+        acfeLayoutToggle: function(e, $el) {
+
+            // vars
+            var $layout = $el.closest('.layout');
+            var $input = $layout.find('> .acfe-flexible-layout-toggle');
+
+            if ($input.length) {
+
+                if ($input.val() === '1') {
+
+                    $layout.removeClass('acfe-flexible-layout-hidden');
+                    $input.val('');
+
+                } else {
+
+                    $layout.addClass('acfe-flexible-layout-hidden');
+                    $input.val('1');
+
+                }
+
+            }
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
      * Field: Group
      */
     var Group = acf.Field.extend({
@@ -2235,7 +3426,6 @@
         type: 'group',
 
         events: {
-            'click [data-name="edit"]': 'onClick',
             'duplicateField': 'onDuplicate'
         },
 
@@ -2243,50 +3433,49 @@
 
             if (this.has('acfeGroupModal')) {
 
-                var edit = this.get('acfeGroupModalButton');
+                this.$inputWrap().find('> .acf-fields, > .acf-table').wrapAll('<div class="acfe-modal"><div class="acfe-modal-wrapper"><div class="acfe-modal-content"></div></div></div>');
+                this.$inputWrap().append('<a href="#" class="acf-button button" data-modal>' + this.get('acfeGroupModalButton') + '</a>');
 
-                this.$el.find('> .acf-input > .acf-fields, > .acf-input > .acf-table').wrapAll('<div class="acfe-modal"><div class="acfe-modal-wrapper"><div class="acfe-modal-content"></div></div></div>');
-                this.$el.find('> .acf-input').append('<a data-name="edit" class="acf-button button" href="#">' + edit + '</a>');
+                this.initializeModal();
 
             }
 
         },
 
-        onClick: function(e, $el) {
+        initializeModal: function() {
 
+            // normal title
             var title = this.$labelWrap().find('label').text().trim();
-            var $modal = this.$el.find('> .acf-input > .acfe-modal').addClass('acfe-modal-edit-' + this.get('name') + ' acfe-modal-edit-' + this.get('key'));
 
-            // Title
+            // inside table
+            if (this.$el.is('td')) {
+
+                title = this.get('acfeGroupModalButton');
+                var $th = this.$el.closest('table').find(' > thead th[data-key="' + this.get('key') + '"]');
+
+                if ($th.length) {
+                    title = acfe.getTextNode($th);
+                }
+
+            }
+
+            // fallback to button text
             if (!title.length) {
                 title = this.get('acfeGroupModalButton');
             }
 
-            // Close
-            var close = false;
-
-            if (this.has('acfeGroupModalClose')) {
-                close = acf.__('Close');
-            }
-
-            // Size
-            var size = 'large';
-
-            if (this.has('acfeGroupModalSize')) {
-                size = this.get('acfeGroupModalSize');
-            }
-
-            // Open modal
-            new acfe.Popup($modal, {
+            // modal
+            this.getModal({
                 title: title,
-                size: size,
-                footer: close
+                size: this.has('acfeGroupModalSize') ? this.get('acfeGroupModalSize') : 'large',
+                footer: this.has('acfeGroupModalClose') ? acf.__('Close') : false,
+                class: 'acfe-modal-edit-' + this.get('name') + ' acfe-modal-edit-' + this.get('key')
             });
 
         },
 
         onDuplicate: function(e, $el, $duplicate) {
-            $duplicate.find('a[data-name="edit"]').remove();
+            $duplicate.find('.acf-input:first > a[data-modal]').remove();
         }
 
     });
@@ -2296,39 +3485,54 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Radio
      */
-    new acf.Model({
+    var Radio = acf.models.RadioField;
 
-        actions: {
-            'new_field/type=radio': 'newField',
+    acf.models.RadioField = Radio.extend({
+
+        // add setValue method
+        // this allows to use field.val('new_value') to assign a new value to the field
+        setValue: function(val) {
+
+            // clear value
+            if (!val) {
+                return this.clearValue();
+            }
+
+            // get option with value
+            var $option = this.$(':radio[value="' + val + '"]');
+
+            // option exists and is not already selected
+            if ($option.length && !$option.is(':checked')) {
+
+                // select the option
+                $option.prop('checked', true).trigger('change');
+                this.onClick(null, $option);
+
+            }
+
         },
 
-        newField: function(field) {
+        // add clearValue method
+        // this allows to set the value to the first radio or if allow_null is enabled, to null
+        clearValue: function() {
 
-            // bail early
-            if (!field.has('acfeLabels')) return;
+            // if allow_null is enabled, get selected option and click it
+            if (this.get('allow_null')) {
 
-            // allow options group
-            $.each(field.get('acfeLabels'), function(group, key) {
+                if (this.$input().length) {
+                    this.onClick(null, this.$input());
+                }
 
-                field.$control().find('input[type=radio][value="' + key + '"]').closest('li').addClass('parent').prepend('<strong>' + group + '</strong>');
-
-            });
-
-            // horizontal rule
-            if (field.$control().hasClass('acf-hl')) {
-
-                field.$control().find('li.parent').each(function() {
-
-                    $(this).nextUntil('li.parent').addBack().wrapAll('<li><ul></ul></li>');
-
-                });
-
+                // otherwise use first radio value as default value
+            } else {
+                this.val(this.$(':radio').first().val());
             }
 
         }
@@ -2338,10 +3542,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: reCaptcha
      */
     var reCaptcha = acf.Field.extend({
@@ -2453,10 +3658,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Init
      */
     var repeater = acf.getFieldType('repeater');
@@ -2472,7 +3678,7 @@
 
     }
 
-    /*
+    /**
      * Spawn
      */
     acf.addAction('new_field/type=repeater', function(repeater) {
@@ -2516,92 +3722,42 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
-     * Field: Select2 Hooks
-     */
-    new acf.Model({
 
-        actions: {
-            'select2_init': 'selectInit',
-        },
-
-        filters: {
-            'select2_args': 'selectArgs',
-            'select2_ajax_data': 'selectAjax',
-        },
-
-        selectInit: function($select, options, data, field, instance) {
-
-            acf.doAction('select2_init/type=' + field.get('type'), $select, options, data, field, instance);
-            acf.doAction('select2_init/name=' + field.get('name'), $select, options, data, field, instance);
-            acf.doAction('select2_init/key=' + field.get('key'), $select, options, data, field, instance);
-
-        },
-
-        selectArgs: function(options, $select, data, field, instance) {
-
-            options = acf.applyFilters('select2_args/type=' + field.get('type'), options, $select, data, field, instance);
-            options = acf.applyFilters('select2_args/name=' + field.get('name'), options, $select, data, field, instance);
-            options = acf.applyFilters('select2_args/key=' + field.get('key'), options, $select, data, field, instance);
-
-            return options;
-
-        },
-
-        selectAjax: function(ajaxData, data, $el, field, instance) {
-
-            ajaxData = acf.applyFilters('select2_ajax_data/type=' + field.get('type'), ajaxData, data, $el, field, instance);
-            ajaxData = acf.applyFilters('select2_ajax_data/name=' + field.get('name'), ajaxData, data, $el, field, instance);
-            ajaxData = acf.applyFilters('select2_ajax_data/key=' + field.get('key'), ajaxData, data, $el, field, instance);
-
-            if (ajaxData.action) {
-                ajaxData = acf.applyFilters('select2_ajax_data/action=' + ajaxData.action, ajaxData, data, $el, field, instance);
-            }
-
-            return ajaxData;
-
-        }
-
-    });
-
-    /*
+    /**
      * Field: Select
      */
     new acf.Model({
 
         actions: {
-            'new_field/type=select': 'selectNew',
-            'select2_init': 'selectInit',
+            'new_field/type=select': 'newSelect',
+            'select2_init': 'init',
         },
 
         filters: {
-            'select2_args': 'selectArgs',
+            'select2_args': 'args',
         },
 
-        selectNew: function(field) {
+        newSelect: function(field) {
 
             // inherit properties
             field.inherit(field.$input());
 
             // remove "- -" characters from placeholder
-            // ACF already apply it to all Select2
+            // acf already apply this to all select2
             if (!field.get('ui') && field.get('allow_null')) {
 
                 field.$input().find('option').each(function(i, option) {
 
-                    if (option.value) {
-                        return;
-                    }
+                    if (!option.value && option.text.startsWith('- ') && option.text.endsWith(' -')) {
 
-                    if (!option.text.startsWith('- ') || !option.text.endsWith(' -')) {
-                        return;
-                    }
+                        option.text = option.text.substring(2); // remove starting "- "
+                        option.text = option.text.substring(0, option.text.length - 2); // remove ending " -"
 
-                    option.text = option.text.substring(2);
-                    option.text = option.text.substring(0, option.text.length - 2);
+                    }
 
                 });
 
@@ -2634,9 +3790,22 @@
 
         },
 
-        selectInit: function($select, options, data, field, instance) {
+        init: function($select, options, data, field, instance) {
 
-            // Add Class on Dropdown with Field Name + key for developers <3
+            // close dropdown on clear
+            $select.on('select2:clear', function(e) {
+                $(this).on('select2:opening.cancelOpen', function(e) {
+                    e.preventDefault();
+                    $(this).off("select2:opening.cancelOpen");
+                });
+            });
+
+            // bail early
+            if (!field) {
+                return;
+            }
+
+            // add css class to dropdown with field name + key for developers <3
             if ($select.data('select2')) {
 
                 $select.data('select2').$dropdown
@@ -2646,81 +3815,107 @@
 
             }
 
+            // search placeholder
             // only in single mode
-            if (!field.get('multiple')) {
+            if (!field.get('multiple') && field.get('acfeSearchPlaceholder')) {
 
-                // search placeholder
-                if (field.get('acfeSearchPlaceholder')) {
-
-                    $select.on('select2:open', function(e) {
-
-                        $('.select2-search.select2-search--dropdown > .select2-search__field').attr('placeholder', field.get('acfeSearchPlaceholder'));
-
-                    });
-
-                }
+                $select.on('select2:open', function(e) {
+                    $('.select2-search.select2-search--dropdown > .select2-search__field').attr('placeholder', field.get('acfeSearchPlaceholder'));
+                });
 
             }
 
         },
 
-        selectArgs: function(options, $select, data, field, instance) {
+        args: function(options, $select, data, field, instance) {
 
-            // Allow Custom tags
-            if (field.get('acfeAllowCustom')) {
-
-                options.tags = true;
-
-                options.createTag = function(params) {
-
-                    var term = $.trim(params.term);
-
-                    if (term === '') {
-                        return null;
-                    }
-
-                    var optionsMatch = false;
-
-                    this.$element.find('option').each(function() {
-
-                        if (this.value.toLowerCase() !== term.toLowerCase()) return;
-
-                        optionsMatch = true;
-                        return false;
-
-                    });
-
-                    if (optionsMatch) {
-                        return null;
-                    }
-
-                    return {
-                        id: term,
-                        text: term
-                    };
-
-                };
-
-                options.insertTag = function(data, tag) {
-
-                    var found = false;
-
-                    $.each(data, function() {
-
-                        if ($.trim(tag.text).toUpperCase() !== $.trim(this.text).toUpperCase()) return;
-
-                        found = true;
-                        return false;
-
-                    });
-
-                    if (!found) {
-                        data.unshift(tag);
-                    }
-
-                };
-
+            // bail early
+            if (!field) {
+                return options;
             }
+
+            // custom tags disallowed
+            if (!field.get('acfeAllowCustom')) {
+                return options;
+            }
+
+            // allow custom tags
+            options.tags = true;
+
+            // create tag
+            options.createTag = function(params) {
+
+                var term = $.trim(params.term);
+
+                if (term === '') {
+                    return null;
+                }
+
+                // vars
+                var foundTerm;
+                var ajaxResults = acf.isget(this, '_request', 'responseJSON', 'results');
+
+                // ajax results
+                if (ajaxResults) {
+
+                    loop: for (var item of ajaxResults) {
+
+                        if (item.children) {
+                            for (var child of item.children) {
+
+                                if (typeof child.id === 'string' && child.id.toLowerCase() === term.toLowerCase()) {
+                                    foundTerm = true;
+                                    break loop;
+                                }
+
+                            }
+                        }
+
+                    }
+
+                    // normal results
+                }
+                else {
+
+                    for (var option of this.$element.find('option')) {
+                        if (option.value.toLowerCase() === term.toLowerCase()) {
+                            foundTerm = true;
+                            break;
+                        }
+                    }
+
+                }
+
+                // found term
+                if (foundTerm) {
+                    return null;
+                }
+
+                // create tag
+                return {
+                    id: term,
+                    text: term
+                };
+
+            };
+
+            // insert tag
+            options.insertTag = function(results, tag) {
+
+                var found;
+
+                for (var result of results) {
+                    if ($.trim(tag.text).toUpperCase() === $.trim(result.text).toUpperCase()) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    results.unshift(tag);
+                }
+
+            };
 
             return options;
 
@@ -2731,10 +3926,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Slug
      */
     var ACFE_Slug = acf.Field.extend({
@@ -2772,10 +3968,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Tab
      */
     new acf.Model({
@@ -2821,10 +4018,11 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
      * Field: Textarea
      */
     var Textarea = acf.Field.extend({
@@ -2864,10 +4062,50 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
+    /**
+     * Field: True/False
+     */
+    var TrueFalse = acf.models.TrueFalseField;
+
+    acf.models.TrueFalseField = TrueFalse.extend({
+
+        // add setValue method
+        // this allows to use field.val('new_value') to assign a new value to the field
+        setValue: function(val) {
+
+            // clear value
+            if (!val) {
+                return this.clearValue();
+            }
+
+            this.switchOn();
+            this.trigger('change'); // trigger change for conditional logic
+
+        },
+
+        // add clearValue method
+        // this allows to set the value to the first radio or if allow_null is enabled, to null
+        clearValue: function() {
+
+            this.switchOff();
+            this.trigger('change'); // trigger change for conditional logic
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
      * Field: WYSIWYG Overwrite
      */
     var Wysiwyg = acf.models.WysiwygField;
@@ -2885,7 +4123,7 @@
 
     });
 
-    /*
+    /**
      * Field: WYSIWYG
      */
     new acf.Model({
@@ -2926,364 +4164,23 @@
 })(jQuery);
 (function($) {
 
-    if (typeof acf === 'undefined')
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
         return;
+    }
 
-    /*
-     * Checkbox & Radio
-     */
-    acf.registerConditionForFieldType('contains', 'checkbox');
-    acf.registerConditionForFieldType('contains', 'radio');
-
-    /*
-     * Code Editor
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_code_editor');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_code_editor');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_code_editor');
-    acf.registerConditionForFieldType('contains', 'acfe_code_editor');
-    acf.registerConditionForFieldType('hasValue', 'acfe_code_editor');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_code_editor');
-
-    /*
-     * Date Picker
-     */
-    acf.registerConditionForFieldType('equalTo', 'date_picker');
-    acf.registerConditionForFieldType('notEqualTo', 'date_picker');
-    acf.registerConditionForFieldType('patternMatch', 'date_picker');
-    acf.registerConditionForFieldType('contains', 'date_picker');
-    acf.registerConditionForFieldType('greaterThan', 'date_picker');
-    acf.registerConditionForFieldType('lessThan', 'date_picker');
-
-    /*
-     * Date Time Picker
-     */
-    acf.registerConditionForFieldType('equalTo', 'date_time_picker');
-    acf.registerConditionForFieldType('notEqualTo', 'date_time_picker');
-    acf.registerConditionForFieldType('patternMatch', 'date_time_picker');
-    acf.registerConditionForFieldType('contains', 'date_time_picker');
-
-    /*
-     * Forms
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_forms');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_forms');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_forms');
-    acf.registerConditionForFieldType('contains', 'acfe_forms');
-    acf.registerConditionForFieldType('hasValue', 'acfe_forms');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_forms');
-
-    /*
-     * Hidden
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_hidden');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_hidden');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_hidden');
-    acf.registerConditionForFieldType('contains', 'acfe_hidden');
-    acf.registerConditionForFieldType('hasValue', 'acfe_hidden');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_hidden');
-
-    /*
-     * Post Status
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_post_statuses');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_post_statuses');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_post_statuses');
-    acf.registerConditionForFieldType('contains', 'acfe_post_statuses');
-    acf.registerConditionForFieldType('hasValue', 'acfe_post_statuses');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_post_statuses');
-
-    /*
-     * Post Types
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_post_types');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_post_types');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_post_types');
-    acf.registerConditionForFieldType('contains', 'acfe_post_types');
-    acf.registerConditionForFieldType('hasValue', 'acfe_post_types');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_post_types');
-
-    /*
-     * Slug
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_slug');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_slug');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_slug');
-    acf.registerConditionForFieldType('contains', 'acfe_slug');
-    acf.registerConditionForFieldType('hasValue', 'acfe_slug');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_slug');
-
-    /*
-     * Taxonomies
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_taxonomies');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_taxonomies');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_taxonomies');
-    acf.registerConditionForFieldType('contains', 'acfe_taxonomies');
-    acf.registerConditionForFieldType('hasValue', 'acfe_taxonomies');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_taxonomies');
-
-    /*
-     * Taxonomy
-     */
-    acf.registerConditionForFieldType('equalTo', 'taxonomy');
-    acf.registerConditionForFieldType('notEqualTo', 'taxonomy');
-    acf.registerConditionForFieldType('patternMatch', 'taxonomy');
-    acf.registerConditionForFieldType('contains', 'taxonomy');
-    acf.registerConditionForFieldType('hasValue', 'taxonomy');
-    acf.registerConditionForFieldType('hasNoValue', 'taxonomy');
-
-    /*
-     * Taxonomy Terms
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_taxonomy_terms');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_taxonomy_terms');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_taxonomy_terms');
-    acf.registerConditionForFieldType('contains', 'acfe_taxonomy_terms');
-    acf.registerConditionForFieldType('hasValue', 'acfe_taxonomy_terms');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_taxonomy_terms');
-
-    /*
-     * Time Picker
-     */
-    acf.registerConditionForFieldType('equalTo', 'time_picker');
-    acf.registerConditionForFieldType('notEqualTo', 'time_picker');
-    acf.registerConditionForFieldType('patternMatch', 'time_picker');
-    acf.registerConditionForFieldType('contains', 'time_picker');
-
-    /*
-     * User Roles
-     */
-    acf.registerConditionForFieldType('equalTo', 'acfe_user_roles');
-    acf.registerConditionForFieldType('notEqualTo', 'acfe_user_roles');
-    acf.registerConditionForFieldType('patternMatch', 'acfe_user_roles');
-    acf.registerConditionForFieldType('contains', 'acfe_user_roles');
-    acf.registerConditionForFieldType('hasValue', 'acfe_user_roles');
-    acf.registerConditionForFieldType('hasNoValue', 'acfe_user_roles');
-
-})(jQuery);
-(function($) {
-
-    if (typeof acf === 'undefined')
-        return;
-
-    /*
-     * Field: Instructions
-     */
-    new acf.Model({
-
-        field: false,
-        placement: false,
-
-        actions: {
-            'new_field': 'newField',
-        },
-
-        newField: function(field) {
-
-            this.field = field;
-
-            if (field.has('instructionTooltip')) {
-                this.setTooltip();
+    var moduleManager = new acf.Model({
+        wait: 'prepare',
+        priority: 1,
+        initialize: function() {
+            if (!acfe.get('is_admin')) {
+                new module();
             }
-
-            if (field.has('instructionAboveField')) {
-                this.setAboveField();
-            }
-
-            if (field.has('instructionPlacement')) {
-                this.overridePlacement(field.get('instructionPlacement'));
-            }
-
-        },
-
-        setTooltip: function() {
-
-            this.field.$labelWrap().prepend('<span class="acfe-field-tooltip acf-js-tooltip dashicons dashicons-info" title="' + _.escape(this.field.get('instructionTooltip')) + '"></span>');
-            this.field.$labelWrap().find('.description').remove();
-
-        },
-
-        setAboveField: function() {
-
-            this.field.$inputWrap().prepend('<p class="description">' + this.field.get('instructionAboveField') + '</p>');
-            this.field.$labelWrap().find('.description').remove();
-
-        },
-
-        overridePlacement: function(target) {
-
-            var current = this.getPlacement();
-
-            // No instruction
-            if (!current)
-                return;
-
-            // Placement is correct
-            if (current === target)
-                return;
-
-            this.setPlacement(target);
-
-        },
-
-        getPlacement: function() {
-
-            var placement = false;
-
-            if (this.field.$labelWrap().find('>.description').length)
-                placement = 'label';
-
-            else if (this.field.$inputWrap().find('>.description:first-child').length)
-                placement = 'above_field';
-
-            else if (this.field.$inputWrap().find('>.description:last-child').length)
-                placement = 'field';
-
-            else if (this.field.$labelWrap().find('>.acfe-field-tooltip').length)
-                placement = 'tooltip';
-
-            this.placement = placement;
-
-            return this.placement;
-
-        },
-
-        $getInstruction: function() {
-
-            var placement = this.getPlacement();
-
-            if (placement === 'label') {
-
-                return this.field.$labelWrap().find('>.description');
-
-            } else if (placement === 'above_field') {
-
-                return this.field.$inputWrap().find('>.description:first-child');
-
-            } else if (placement === 'field') {
-
-                return this.field.$inputWrap().find('>.description:last-child');
-
-            } else if (placement === 'tooltip') {
-
-                return this.field.$labelWrap().find('>.acfe-field-tooltip');
-
-            }
-
-            return false;
-
-        },
-
-        setPlacement: function(target) {
-
-            var $instruction = this.$getInstruction();
-
-            if (this.placement === 'tooltip') {
-
-                var text = $instruction.attr('title');
-
-                $instruction.remove();
-                $instruction = $('<p class="description">' + text + '</p>');
-
-            }
-
-            if (target === 'label') {
-
-                this.field.$labelWrap().append($instruction);
-
-            } else if (target === 'above_field') {
-
-                this.field.$inputWrap().prepend($instruction);
-
-            } else if (target === 'field') {
-
-                this.field.$inputWrap().append($instruction);
-
-            } else if (target === 'tooltip') {
-
-                this.field.$labelWrap().prepend($('<span class="acfe-field-tooltip acf-js-tooltip dashicons dashicons-info" title="' + _.escape($instruction.html()) + '"></span>'));
-                $instruction.remove();
-
-            }
-
         }
-
     });
 
-})(jQuery);
-(function($) {
-
-    if (typeof acf === 'undefined')
-        return;
-
-    /*
-     * Proxy
-     */
-    /*new acf.Model({
+    var module = acf.Model.extend({
 
         actions: {
-            'new_field': 'field',
-        },
-
-        field: function(field){
-
-            // bail early
-            if(!field.has('proxyType')) return;
-
-            // vars
-            var type = field.get('type');
-            var proxyType = field.get('proxyType');
-
-            // set new $el
-            field.$el.data('type', proxyType);
-            field.$el.attr('data-type', proxyType);
-
-            // remove proxy type
-            field.$el.removeData('proxy-type');
-            field.$el.removeAttr('data-proxy-type');
-
-            // save original field & cleanup
-            //field.$el.removeData('acf');
-
-            // init
-            acf.newField(field.$el);
-
-        },
-
-        newField: function( $field ){
-
-            // vars
-            var type = $field.data('type');
-            var mid = modelId( type );
-            var model = acf.models[ mid ] || acf.Field;
-
-            // instantiate
-            var field = new model( $field );
-
-            // actions
-            acf.doAction('new_field', field);
-
-            // return
-            return field;
-
-        },
-
-    });*/
-
-})(jQuery);
-(function($) {
-
-    if (typeof acf === 'undefined')
-        return;
-
-    /*
-     * ACFE Form
-     */
-    new acf.Model({
-
-        actions: {
-            'prepare': 'prepare',
             'new_field/type=date_picker': 'datePicker',
             'new_field/type=date_time_picker': 'datePicker',
             'new_field/type=time_picker': 'datePicker',
@@ -3292,68 +4189,100 @@
             'validation_begin': 'validationBegin',
         },
 
-        prepare: function() {
+        events: {
+            'click .acf-form .button': 'onClickSubmit',
+            'click .acf-form [type="submit"]': 'onClickSubmit',
+            'click .acfe-form .button': 'onClickSubmit',
+            'click .acfe-form [type="submit"]': 'onClickSubmit',
+        },
 
-            if (acfe.get('is_admin')) return;
+        $getForm: function(field = false) {
 
-            // Fix Image/File WP Media upload
-            if (acf.isset(window, 'wp', 'media', 'view', 'settings', 'post')) {
+            var $form = $('.acfe-form');
 
-                // Unset Post ID
-                wp.media.view.settings.post = false;
-
+            if (field) {
+                $form = field.$el.closest('.acfe-form');
             }
 
+            return $form.length ? $form : false;
+
+        },
+
+        getFormFieldClass: function(field) {
+
+            var $form = this.$getForm(field);
+
+            if (!$form) {
+                return false;
+            }
+
+            return $form.data('fields-class') || false;
+
+        },
+
+        initialize: function() {
+
+            // fix image/file/gallery media upload
+            // avoid acf to use current post to determine if the user can upload a file
+            // todo: enhance the logic
+            if (acf.isset(window, 'wp', 'media', 'view', 'settings', 'post')) {
+                wp.media.view.settings.post = false;
+            }
+
+            this.setupUnload();
+            this.setupSuccess();
+
+        },
+
+        setupUnload: function() {
             if ($('.acfe-form[data-hide-unload="1"]').length) {
                 acf.unload.disable();
             }
+        },
 
-            var $form_success = $('.acfe-form-success');
+        setupSuccess: function() {
 
-            if ($form_success.length) {
-
-                // Prevent refresh sending post fields again
-                if (window.history.replaceState) {
-                    window.history.replaceState(null, null, window.location.href);
-                }
-
-                $form_success.each(function() {
-
-                    var form_name = $(this).data('form-name');
-                    var form_id = $(this).data('form-id');
-
-                    acf.doAction('acfe/form/submit/success');
-                    acf.doAction('acfe/form/submit/success/id=' + form_id);
-                    acf.doAction('acfe/form/submit/success/name=' + form_name);
-
-                });
-
+            if (!acfe.get('acfe_form_success')) {
+                return;
             }
 
-            // Prevent form submission click spam
-            $('.acf-form .button, .acf-form [type="submit"], .acfe-form .button, .acfe-form [type="submit"]').click(function(e) {
+            // Prevent refresh sending post fields again
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
 
-                if (!$(this).hasClass('disabled')) return;
+            // loop
+            acfe.get('acfe_form_success').map(function(form) {
 
-                e.preventDefault();
+                // hooks
+                acf.doAction('acfe/form/success');
+                acf.doAction('acfe/form/success/id=' + form.id);
+                acf.doAction('acfe/form/success/name=' + form.name);
+
+                // deprecated
+                acf.doAction('acfe/form/submit/success');
+                acf.doAction('acfe/form/submit/success/id=' + form.id);
+                acf.doAction('acfe/form/submit/success/name=' + form.name);
 
             });
 
         },
 
+        onClickSubmit: function(e, $el) {
+
+            // prevent submit spam
+            if ($el.hasClass('disabled')) {
+                e.preventDefault();
+            }
+        },
+
         // Datepicker: Add field class
         datePicker: function(field) {
 
-            if (acfe.get('is_admin')) return;
+            var fieldClass = this.getFormFieldClass(field);
 
-            var $form = field.$el.closest('.acfe-form');
-
-            if (!$form.length) return;
-
-            var field_class = $form.data('fields-class');
-
-            if (field_class) {
-                field.$inputText().addClass(field_class);
+            if (fieldClass) {
+                field.$inputText().addClass(fieldClass);
             }
 
         },
@@ -3361,16 +4290,10 @@
         // Google Maps: Add field class
         googleMap: function(field) {
 
-            if (acfe.get('is_admin')) return;
+            var fieldClass = this.getFormFieldClass(field);
 
-            var $form = field.$el.closest('.acfe-form');
-
-            if (!$form.length) return;
-
-            var field_class = $form.data('fields-class');
-
-            if (field_class) {
-                field.$search().addClass(field_class);
+            if (fieldClass) {
+                field.$search().addClass(fieldClass);
             }
 
         },
@@ -3378,29 +4301,33 @@
         // Error: Move error
         invalidField: function(field) {
 
-            if (acfe.get('is_admin')) return;
+            var $form = this.$getForm(field);
 
-            var $form = field.$el.closest('.acfe-form');
-
-            if (!$form.length) return;
-
-            var errors_position = $form.data('errors-position');
-            var errors_class = $form.data('errors-class');
-
-            // Class
-            if (errors_class && errors_class.length) {
-                field.$el.find('.acf-notice.-error').addClass(errors_class);
+            if (!$form) {
+                return;
             }
 
-            // Move below
-            if (errors_position && errors_position === 'below') {
+            // errors class
+            var errorsClass = $form.data('errors-class');
+
+            if (errorsClass) {
+                field.$el.find('.acf-notice.-error').addClass(errorsClass);
+            }
+
+            // errors position
+            var errorsPosition = $form.data('errors-position');
+
+            // position: hide
+            if (errorsPosition === 'hide') {
+                field.$el.find('.acf-notice.-error').remove();
+
+                // position: below
+            } else if (errorsPosition === 'below') {
 
                 if (field.$control().length) {
-
                     field.$el.find('.acf-notice.-error').insertAfter(field.$control());
 
                 } else if (field.$input().length) {
-
                     field.$el.find('.acf-notice.-error').insertAfter(field.$input());
 
                 }
@@ -3408,11 +4335,9 @@
                 var $selector = false;
 
                 if (field.$control().length) {
-
                     $selector = field.$control();
 
                 } else if (field.$input().length) {
-
                     $selector = field.$input();
 
                 }
@@ -3421,10 +4346,8 @@
                     field.$el.find('.acf-notice.-error').insertAfter($selector);
                 }
 
-            }
-
-            // Group errors
-            else if (errors_position && errors_position === 'group') {
+                // position: grouped
+            } else if (errorsPosition === 'group') {
 
                 var label = field.$el.find('.acf-label label').text().trim();
                 var placeholder = field.$el.find('.acf-input-wrap [placeholder!=""]').attr('placeholder');
@@ -3432,19 +4355,21 @@
 
                 field.$el.find('.acf-notice.-error').remove();
 
-                // Try label
+                // try label
                 if (label && label.length && label !== '*') {
+
+                    // remove end part " *"
+                    label = label.replace(/ \*$/, '');
                     message = label + ': ' + message;
-                }
 
-                // Try placeholder
-                else if (placeholder && placeholder.length && placeholder !== '') {
+                    // try placeholder
+                } else if (placeholder && placeholder.length && placeholder !== '') {
                     message = placeholder + ': ' + message;
-                }
 
-                // If everything fails, use field name
-                else {
+                    // try field name
+                } else {
                     message = field.get('name') + ': ' + message;
+
                 }
 
                 var $form_error = $form.find('> .acfe-form-error')
@@ -3457,19 +4382,14 @@
 
             }
 
-            // Hide errors
-            else if (errors_position && errors_position === 'hide') {
-                field.$el.find('.acf-notice.-error').remove();
-            }
-
         },
 
         // Ajax Validation
         validationBegin: function($form) {
 
-            if (acfe.get('is_admin')) return;
-
-            if (typeof $form === 'undefined') return;
+            if (typeof $form === 'undefined') {
+                return;
+            }
 
             $form.find('.acf-error-message').remove();
 
@@ -3540,9 +4460,7 @@
 
         // ACF Extended: Check in all form if targeted field not found
         if (target && !field) {
-
             field = acf.getField(rule.field);
-
         }
 
         // bail ealry if no target or no field (possible if field doesn't exist due to HTML error)

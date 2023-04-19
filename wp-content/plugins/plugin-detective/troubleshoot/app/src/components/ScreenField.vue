@@ -24,21 +24,26 @@ export default {
   data () {
     return {
       loading: true,
-      initialized: false
+      initialized: false,
+      urlParser: document.createElement('a')
+    }
+  },
+  watch: {
+    value() {
+      this.urlParser.href = this.value
     }
   },
   computed: {
-    urlParser () {
-      let parser = document.createElement('a')
-      parser.href = this.value
-      return parser
-    },
     urlBase () {
       return this.urlParser.origin
     },
     urlPath () {
-      this.urlParser.protocol = 'ftp://'
-      return this.urlParser.pathname + this.urlParser.search + this.urlParser.hash
+      // clone urlParser DOM element to prevent mutation.
+      const parser = document.createElement('a')
+      parser.href = this.value
+      
+      parser.protocol = 'ftp://'
+      return parser.pathname + parser.search + parser.hash
     },
     ...mapState([
       'translations'

@@ -3474,7 +3474,17 @@ abstract class elFinderVolumeDriver
         if ($tempPath && DIRECTORY_SEPARATOR !== '/') {
             $tempPath = str_replace('/', DIRECTORY_SEPARATOR, $tempPath);
         }
-        return $tempPath;
+		if(opendir($tempPath)){
+			return $tempPath;
+		} else if (defined( 'WP_TEMP_DIR' )) {
+			return get_temp_dir();
+		} else {
+			$custom_temp_path = WP_CONTENT_DIR.'/temp';
+			if (!is_dir($custom_temp_path)) {
+				mkdir($custom_temp_path, 0777, true);
+			}
+			return $custom_temp_path;
+		}
     }
 
     /**

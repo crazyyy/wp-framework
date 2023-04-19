@@ -8,18 +8,21 @@
 
 use RankMath\Admin\Importers\Detector;
 
+use RankMath\KB;
+use RankMath\Helper;
+
 defined( 'ABSPATH' ) || exit;
 
 $detector = new Detector();
 $plugins  = $detector->detect();
-$first = empty( $plugins ) ? '' : array_keys( $plugins )[0];
+$first    = empty( $plugins ) ? '' : array_keys( $plugins )[0];
 ?>
 <h2><?php esc_html_e( 'Other Plugins', 'rank-math' ); ?></h2>
 
 <p class="description">
 	<?php
 	/* translators: Link to learn about import export panel KB article */
-	printf( esc_html__( 'If you were using another plugin to add important SEO information to your website before switching to Rank Math SEO, you can import the settings and data here. %s', 'rank-math' ), '<a href="' . \RankMath\KB::get( 'import-export-settings' ) . '" target="_blank">' . esc_html__( 'Learn more about the Import/Export options.', 'rank-math' ) . '</a>' );
+	printf( esc_html__( 'If you were using another plugin to add important SEO information to your website before switching to Rank Math SEO, you can import the settings and data here. %s', 'rank-math' ), '<a href="' . KB::get( 'import-export-settings', 'Options Panel Import Export Page Other Plugins' ) . '" target="_blank">' . esc_html__( 'Learn more about the Import/Export options.', 'rank-math' ) . '</a>' );
 	?>
 </p>
 
@@ -52,10 +55,17 @@ $first = empty( $plugins ) ? '' : array_keys( $plugins )[0];
 													$id = "{$slug}_{$key}";
 													?>
 													<li>
-														<input type="checkbox" class="cmb2-option" name="<?php echo $slug; ?>[]" id="<?php echo $id; ?>" value="<?php echo $key; ?>" checked="checked">
-														<label for="<?php echo $id; ?>"><?php echo $label; ?></label>
+														<input type="checkbox" class="cmb2-option" name="<?php echo esc_attr( $slug ); ?>[]" id="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $key ); ?>" checked="checked">
+														<label for="<?php echo esc_attr( $id ); ?>"><?php echo wp_kses_post( $label ); ?></label>
 													</li>
 												<?php endforeach; ?>
+
+												<?php if ( 'redirections' !== $slug ) : ?>
+													<li style="margin-top: 20px;">
+														<input type="checkbox" class="cmb2-option" name="<?php echo esc_attr( $slug ); ?>[]" id="<?php echo esc_attr( $slug ); ?>_recalculate" value="recalculate" checked="checked">
+														<label for="<?php echo esc_attr( $slug ); ?>_recalculate"><?php esc_html_e( 'Calculate SEO Scores', 'rank-math' ); ?></label>
+													</li>
+												<?php endif; ?>
 											</ul>
 										</td>
 									</tr>

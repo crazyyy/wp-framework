@@ -7,6 +7,7 @@
  */
 
 use RankMath\Helper;
+use RankMath\KB;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,10 +30,29 @@ $cmb->add_field(
 
 $cmb->add_field(
 	[
+		'id'      => 'website_name',
+		'type'    => 'text',
+		'name'    => esc_html__( 'Website Name', 'rank-math' ),
+		'desc'    => esc_html__( 'Enter the name of your site to appear in search results.', 'rank-math' ),
+		'default' => get_bloginfo( 'name' ),
+	]
+);
+
+$cmb->add_field(
+	[
+		'id'      => 'website_alternate_name',
+		'type'    => 'text',
+		'name'    => esc_html__( 'Website Alternate Name', 'rank-math' ),
+		'desc'    => esc_html__( 'An alternate version of your site name (for example, an acronym or shorter name).', 'rank-math' ),
+	]
+);
+
+$cmb->add_field(
+	[
 		'id'      => 'knowledgegraph_name',
 		'type'    => 'text',
-		'name'    => esc_html__( 'Name', 'rank-math' ),
-		'desc'    => esc_html__( 'Your name or company name', 'rank-math' ),
+		'name'    => esc_html__( 'Person/Organization Name', 'rank-math' ),
+		'desc'    => esc_html__( 'Your name or company name intended to feature in Google\'s Knowledge Panel.', 'rank-math' ),
 		'default' => get_bloginfo( 'name' ),
 	]
 );
@@ -268,6 +288,6 @@ $cmb->add_field(
 		'desc'  => esc_html__( 'Latitude and longitude values separated by comma.', 'rank-math' ),
 		'dep'   => $rank_math_company,
 		/* Translators: placeholder is a link to the Pro version */
-		'after' => '<strong style="margin-top:20px; display:block; text-align:right;">' . sprintf( __( 'Multiple Locations are available in the %s.', 'rank-math' ), '<a href="https://rankmath.com/pricing/?utm_source=Plugin&utm_medium=Multiple%20Location%20Notice&utm_campaign=WP" target="_blank">PRO Version</a>' ) . '</strong>',
+		'after' => '<strong style="margin-top:20px; display:block; text-align:right;">' . sprintf( __( 'Multiple Locations are available in the %s.', 'rank-math' ), '<a href="' . KB::get( 'pro', 'Multiple Location Notice' ) . '" target="_blank">PRO Version</a>' ) . '</strong>',
 	]
 );

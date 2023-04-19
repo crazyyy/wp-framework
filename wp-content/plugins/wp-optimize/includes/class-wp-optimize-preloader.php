@@ -42,7 +42,7 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_3 {
 	 *
 	 * @return integer
 	 */
-	protected function get_continue_preload_cron_interval() {
+	public function get_continue_preload_cron_interval() {
 		/**
 		 * Filters the interval between each preload attempt, in seconds.
 		 */
@@ -435,7 +435,10 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_3 {
 	 *
 	 * @return string
 	 */
-	private function get_local_sitemap_file() {
+	protected function get_local_sitemap_file() {
+		// Make the scope of $wp_file_descriptions global, so that when wp-admin/includes/file.php assigns to it, it is adjusting the global variable as intended
+		global $wp_file_descriptions; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+
 		if (!function_exists('get_home_path')) {
 			include_once ABSPATH . '/wp-admin/includes/file.php';
 		}

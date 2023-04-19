@@ -2,6 +2,7 @@
 <li id="<?php echo $file['uid']; ?>">
 	<span class="filename"><a href="<?php echo esc_url($file['file_url']); ?>" target="_blank"><?php echo htmlspecialchars($file['filename']); ?></a> (<?php echo $file['fsize']; ?>)</span>
 	<a href="#" class="log"><?php _e('Show information', 'wp-optimize'); ?></a>
+	<a href="#" class="delete-file" data-filename='<?php echo esc_attr($file['filename']); ?>'><?php _e('Delete', 'wp-optimize'); ?></a>
 	<div class="hidden save_notice">
 		<p><?php _e('The file was added to the list', 'wp-optimize'); ?></p>
 		<p><button class="button button-primary save-exclusions"><?php _e('Save the changes', 'wp-optimize'); ?></button></p>
@@ -12,7 +13,8 @@
 			'minify/cached-file-log.php',
 			false,
 			array(
-				'log' => $file['log']
+				'log' => $file['log'],
+				'minify_config' => $minify_config,
 			)
 		);
 	}

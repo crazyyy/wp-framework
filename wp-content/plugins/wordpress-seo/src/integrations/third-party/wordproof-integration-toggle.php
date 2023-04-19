@@ -17,7 +17,7 @@ class Wordproof_Integration_Toggle implements Integration_Interface {
 	/**
 	 * The WordProof helper instance.
 	 *
-	 * @var Wordproof_Helper $wordproof The helper instance.
+	 * @var Wordproof_Helper
 	 */
 	protected $wordproof;
 
@@ -56,11 +56,6 @@ class Wordproof_Integration_Toggle implements Integration_Interface {
 		 * Update the default wordproof_integration_active depending if the integration is disabled or not.
 		 */
 		\add_filter( 'wpseo_option_wpseo_defaults', [ $this, 'default_values' ] );
-
-		/**
-		 * Add extra text after the integration toggle if the toggle is disabled.
-		 */
-		\add_action( 'Yoast\WP\SEO\admin_integration_after', [ $this, 'after_integration_toggle' ] );
 
 		/**
 		 * Add extra text after the network integration toggle if the toggle is disabled.
@@ -116,9 +111,13 @@ class Wordproof_Integration_Toggle implements Integration_Interface {
 	/**
 	 * Add an explainer when the integration toggle is disabled.
 	 *
+	 * @deprecated 20.3
+	 * @codeCoverageIgnore
+	 *
 	 * @param Yoast_Feature_Toggle $integration The integration toggle class.
 	 */
 	public function after_integration_toggle( $integration ) {
+		_deprecated_function( __METHOD__, 'Yoast SEO 20.3' );
 		if ( $integration->setting === 'wordproof_integration_active' ) {
 			if ( $integration->disabled ) {
 

@@ -94,7 +94,7 @@ export default {
             }
             this.init()
           })
-          .catch((xhr, error) => {
+          .catch(() => {
             this.loading = false
             this.error = true
             console.log('Error loading API')
@@ -200,7 +200,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-  @import '~vue-material/dist/vue-material.css';
   @import './assets/app.scss';
 </style>

@@ -1,7 +1,8 @@
 <?php
 
-if(!defined('ABSPATH'))
+if(!defined('ABSPATH')){
     exit;
+}
 
 /**
  * acfe_get_fields
@@ -35,7 +36,9 @@ function acfe_get_fields($post_id = false, $format_value = false){
     $meta = array();
     
     // bail early
-    if(!$fields) return false;
+    if(!$fields){
+        return false;
+    }
     
     // populate
     foreach($fields as $k => $field){
@@ -97,12 +100,18 @@ function acfe_get_meta($post_id = false){
     foreach($meta as $key => $value){
         
         // Bail early
-        if(!isset($meta["_$key"])) continue;
+        if(!isset($meta["_$key"])){
+            continue;
+        }
         
         $field_key = $meta["_$key"];
         
         // Bail early if field key isn't valid
-        if(!acf_is_field_key($field_key)) continue;
+        // we need to check if is_string because performance mode use
+        // an array as '_acf = array(_color_picker => field_123456abcdef)'
+        if(!is_string($field_key) || !acf_is_field_key($field_key)){
+            continue;
+        }
         
         // Get field
         $field = acf_get_field($field_key);
@@ -158,7 +167,7 @@ function acfe_delete_orphan_meta($post_id = 0, $confirm = true){
         $name = $row['name'];
         $value = $row['value'];
         
-        // delete single meta
+        // delete meta
         if($confirm){
             
             acf_delete_metadata($post_id, $name, true);  // prefix
@@ -172,89 +181,15 @@ function acfe_delete_orphan_meta($post_id = 0, $confirm = true){
         
     }
     
-    $_deleted = array();
+    $return = array(
+        'normal' => $deleted,
+    );
     
-    // single meta enabled: clean normal meta
-    if(acfe_is_single_meta_enabled($post_id)){
-        
-        if(!empty($deleted)){
-            $_deleted['single_meta'] = $deleted;
-        }
-        
-        // get single meta for comparison (already cleaned)
-        $acf = acf_get_meta($post_id);
-        
-        // disable single meta
-        acf_disable_filter('acfe/single_meta');
+    // filters
+    $return = apply_filters('acfe/delete_orphan_meta', $return, $post_id, $confirm);
     
-        // clean normal meta and keep individual meta
-        $meta = acfe_get_meta($post_id);
-        $normal_deleted = array();
-    
-        foreach($meta as $row){
-            
-            // vars
-            $field = $row['field'];
-            $key = $row['key'];
-            $name = $row['name'];
-            $value = $row['value'];
-        
-            // check if field has 'save as individual meta' and already in 'acf' meta
-            if(acf_maybe_get($field, 'acfe_save_meta') && isset($acf[ $name ])) continue;
-        
-            // delete normal meta
-            if($confirm){
-    
-                acf_delete_metadata($post_id, $name, true);
-                acf_delete_metadata($post_id, $name);
-                
-            }
-            
-            $normal_deleted['normal'][ "_{$name}" ] = $key;
-            $normal_deleted['normal'][ $name ] = $value;
-        
-        }
-        
-        // re-enable single meta
-        acf_enable_filter('acfe/single_meta');
-        
-        // store
-        if($normal_deleted){
-            $deleted = array_merge($_deleted, $normal_deleted);
-        }
-        
-    // single meta disabled: clean 'acf' meta if it is present
-    }else{
-    
-        if(!empty($deleted)){
-            $_deleted['normal'] = $deleted;
-        }
-        
-        // get single meta
-        $meta = acf_get_array(acfe_get_single_meta($post_id));
-        $single_deleted = array();
-    
-        foreach($meta as $key => $val){
-            
-            $single_deleted['single_meta'][ $key ] = $val;
-            
-        }
-    
-        // store
-        if($single_deleted){
-            $deleted = array_merge($_deleted, $single_deleted);
-        }
-        
-        // delete single meta
-        if($confirm){
-            
-            acfe_delete_single_meta($post_id);
-            
-        }
-    
-    }
-    
-    return $deleted;
+    // return
+    return $return;
     
 }
 
@@ -262,6 +197,20 @@ function acfe_delete_orphan_meta($post_id = 0, $confirm = true){
  * acfe_get_orphan_meta
  *
  * Retrieve a list of orphan meta from a post id
+ *
+ * array(
+ *     array(
+ *         'key' => 'field_63f700899a4fb',
+ *         'name' => 'languages',
+ *         'value' => array(
+ *             'fr_FR',
+ *             'en_US',
+ *         ),
+ *         'field' => false,
+ *         'field_group' => false,
+ *     ),
+ * )
+ *
  *
  * @param int $post_id
  *
@@ -369,21 +318,21 @@ function acfe_get_orphan_meta($post_id = 0){
                         }
                         
                         // todo: enhance logic to only allow sub field of the targeted field
-                        /*
-                        $is_enabled = acf_is_filter_enabled('clone');
                         
-                        if($is_enabled){
-                            acf_disable_filter('clone');
-                        }
+                        // $is_enabled = acf_is_filter_enabled('clone');
+                        //
+                        // if($is_enabled){
+                        //     acf_disable_filter('clone');
+                        // }
+                        //
+                        // // also allow descendants in case of repeater, flexible content or group
+                        // $descendants = acfe_get_field_descendants($cloned_key);
+                        // $allowed_fields = array_merge($allowed_fields, $descendants);
+                        //
+                        // if($is_enabled){
+                        //     acf_enable_filter('clone');
+                        // }
                         
-                        // also allow descendants in case of repeater, flexible content or group
-                        $descendants = acfe_get_field_descendants($cloned_key);
-                        $allowed_fields = array_merge($allowed_fields, $descendants);
-    
-                        if($is_enabled){
-                            acf_enable_filter('clone');
-                        }
-                        */
                         
                     }
                     
@@ -405,8 +354,8 @@ function acfe_get_orphan_meta($post_id = 0){
     $allowed_fields = array_unique($allowed_fields);
     $allowed_field_groups = array_unique($allowed_field_groups);
     
-    // delete collection
-    $delete = array();
+    // orphan collection
+    $orphan = array();
     
     foreach($meta as $row){
         
@@ -414,18 +363,18 @@ function acfe_get_orphan_meta($post_id = 0){
         $field = $row['field'];
         $field_group = $row['field_group'];
         
-        // field doesn't exists
+        // field doesn't exist
         if(!$field){
-            
-            $delete[] = $row;
+    
+            $orphan[] = $row;
             continue;
             
         }
         
-        // field group doesn't exists
+        // field group doesn't exist
         if(!$field_group){
-            
-            $delete[] = $row;
+    
+            $orphan[] = $row;
             continue;
             
         }
@@ -436,14 +385,15 @@ function acfe_get_orphan_meta($post_id = 0){
         
         // field is not allowed
         if(!$is_allowed_field && !$is_allowed_field_group){
-            
-            $delete[] = $row;
+    
+            $orphan[] = $row;
             continue;
             
         }
         
     }
     
-    return $delete;
+    // return
+    return $orphan;
     
 }

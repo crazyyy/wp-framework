@@ -1,0 +1,27 @@
+.witnesses {
+	padding: 6rem 2rem 8rem;
+
+}
+
+.md-content {
+	padding: 1rem;
+	p {
+		&:first-child {
+			margin-top: 0;
+			padding-top: 0;
+		}
+		&:last-child {
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
+	}
+}
+
+.md-list-item-content {
+	.md-avatar.checkbox-avatar {
+		margin-right: 18px;
+	}
+	.md-avatar.checkbox-avatar.md-small {
+		margin-right: 9px;
+	}
+}

@@ -18,17 +18,40 @@ $this->fields = $this->fields + array(
 			//setting this to true will set it always to true, as the get_cookie settings will see an empty value
 		),
 
+		/*
+		** a_b_testing = consent statistics
+		** a_b_testing_buttons = buttons to add banners
+		** easier, not prettier
+		*/
+
 		'a_b_testing' => array(
 			'source'   => 'settings',
 			'step'     => 'general',
 			'type'     => 'checkbox',
-			'label'    => __( "Enable A/B testing", 'complianz-gdpr' ).cmplz_upgrade_to_premium('https://complianz.io/pricing'),
+			'label'    => __( "Enable consent statistics", 'complianz-gdpr' ),
 			'comment'  => $this->premium_ab_testing
-			              . __( 'If enabled, the plugin will track which cookie banner has the best conversion rate.', 'complianz-gdpr' ),
+										. __( 'If enabled, the plugin will visualize stored records of consent.', 'complianz-gdpr' ),
 			'disabled' => true,
 			'default'  => false,
 			//setting this to true will set it always to true, as the get_cookie settings will see an empty value
 		),
+
+		'a_b_testing_buttons' => array(
+			'source'   => 'settings',
+			'step'     => 'general',
+			'type'     => 'checkbox',
+			'label'    => __( "Enable A/B testing", 'complianz-gdpr' ),
+			'comment'  => $this->premium_ab_testing_buttons
+										. __( 'If enabled, the plugin will track which cookie banner has the best conversion rate.', 'complianz-gdpr' ),
+			'disabled' => true,
+			'default'  => false,
+			'condition'    => array(
+				'a_b_testing' => true,
+			),
+			//setting this to true will set it always to true, as the get_cookie settings will see an empty value
+		),
+
+
 
 		'use_cdb_api' => array(
 			'source'   => 'settings',
@@ -79,7 +102,7 @@ $this->fields = $this->fields + array(
 			'tooltip'      => __( 'The blocked content text appears when for example a Youtube video is embedded.', 'complianz-gdpr' ),
 			'help'      => __( 'Do not change or translate the {category} string.', 'complianz-gdpr' ).'&nbsp;'.__( 'You may remove it if you want.', 'complianz-gdpr' ).'&nbsp;'.__( 'It will be replaced with the name of the category that is blocked.', 'complianz-gdpr' ),
 			'condition'    => array(
-				'disable_cookie_block' => false,
+				'safe_mode' => false,
 			),
 			'callback_condition' => array(
 				'consent_per_service' => 'no',
@@ -96,7 +119,7 @@ $this->fields = $this->fields + array(
 			'tooltip'      => __( 'The blocked content text appears when for example a Youtube video is embedded.', 'complianz-gdpr' ),
 			'help'      => __( 'Do not change or translate the {service} string.', 'complianz-gdpr' ).'&nbsp;'.__( 'You may remove it if you want.', 'complianz-gdpr' ).'&nbsp;'.__( 'It will be replaced with the name of the service that is blocked.', 'complianz-gdpr' ),
 			'condition'    => array(
-				'disable_cookie_block' => false,
+				'safe_mode' => false,
 			),
 			'callback_condition' => array(
 				'consent_per_service' => 'yes',
@@ -112,7 +135,7 @@ $this->fields = $this->fields + array(
 			'default'      => __( "I agree", 'complianz-gdpr' ),
 			'tooltip'      => __( 'The blocked content text appears when for example a Youtube video is embedded.', 'complianz-gdpr' ),
 			'condition'    => array(
-				'disable_cookie_block' => false,
+				'safe_mode' => false,
 			),
 			'callback_condition' => array(
 				'consent_per_service' => 'yes',
@@ -124,7 +147,7 @@ $this->fields = $this->fields + array(
 			'type'      => 'number',
 			'label'     => __( "Duration in days of the A/B testing period", 'complianz-gdpr' ),
 			'disabled'  => true,
-			'condition' => array( 'a_b_testing' => true ),
+			'condition' => array( 'a_b_testing_buttons' => true ),
 			'default'   => 30,
 		),
 
@@ -178,8 +201,8 @@ $this->fields = $this->fields + array(
 					'label'              => __( "Notification email content", 'complianz-gdpr' ),
 					'default'            => '<p>' .  __( 'Hi {name}', 'complianz-gdpr' ) . '</p>'
 					                        . '<p>' .  __( 'We have received your request on {blogname}. Depending on the specific request and legal obligations we might follow-up.', 'complianz-gdpr' ) . '</p>'
-											. '<br>' . '<p>' . _x( 'Kind regards,' , 'email signature', 'complianz-gdpr' ) . '</p>'
-					                        . '<br>' . '<p>' . '{blogname} ' . '</p>',
+											. '<br />' . '<p>' . _x( 'Kind regards,' , 'email signature', 'complianz-gdpr' ) . '</p>'
+					                        . '<br />' . '<p>' . '{blogname} ' . '</p>',
 					'tooltip' => __( "Email content used for Data Request email notifications.", 'complianz-gdpr' ),
 					'callback_condition' => array(
 						'cmplz_datarequests_or_dnsmpi_active',
@@ -188,7 +211,7 @@ $this->fields = $this->fields + array(
 
         // ---------------- Cookie Blocker ----------------- //
 
-		'disable_cookie_block' => array(
+		'safe_mode' => array(
 			'source'  => 'settings',
 			'type'    => 'checkbox',
 			'step'    => 'cookie-blocker',
@@ -207,7 +230,7 @@ $this->fields = $this->fields + array(
 			'default'   => false,
 			'tooltip'      => __( "If you experience styling issues with videos or iFrames you can disable the placeholder insertion, which in some themes can conflict with theme styling.", 'complianz-gdpr' ),
 			'condition' => array(
-				'disable_cookie_block' => false,
+				'safe_mode' => false,
 			),
 		),
 
@@ -234,7 +257,7 @@ $this->fields = $this->fields + array(
 			'comment'      => __( "You can change your placeholders manually or use Premium to do it for you.", 'complianz-gdpr' ).
 			                  cmplz_read_more('https://complianz.io/changing-the-default-social-placeholders/'),
 			'condition' => array(
-				'disable_cookie_block' => false,
+				'safe_mode' => false,
 			),
 		),
 
@@ -252,7 +275,7 @@ $this->fields = $this->fields + array(
 			'default'   => '1280x920',
 			'tooltip'      => __( "Select the optimal placeholder ratio for your site.", 'complianz-gdpr' ),
 			'condition' => array(
-				'disable_cookie_block' => false,
+				'safe_mode' => false,
 			),
 			'callback_condition' => array(
 				'thirdparty_services_on_site' => 'google-maps,openstreetmaps',

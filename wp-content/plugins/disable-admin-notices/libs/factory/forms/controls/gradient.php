@@ -25,8 +25,8 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms453_GradientControl') ) {
-		class Wbcr_FactoryForms453_GradientControl extends Wbcr_FactoryForms453_Control {
+	if( !class_exists('Wbcr_FactoryForms463_GradientControl') ) {
+		class Wbcr_FactoryForms463_GradientControl extends Wbcr_FactoryForms463_Control {
 
 			public $type = 'gradient';
 
@@ -66,8 +66,8 @@
 					if( !window.factory.res ) {
 						window.factory.res = {};
 					}
-					factory.res.resVertical = '<?php _e( 'vertical', 'wbcr_factory_forms_453' ) ?>';
-					factory.res.resHorizontal = '<?php _e( 'horizontal', 'wbcr_factory_forms_453' ) ?>';
+					factory.res.resVertical = '<?php _e( 'vertical', 'wbcr_factory_forms_463' ) ?>';
+					factory.res.resHorizontal = '<?php _e( 'horizontal', 'wbcr_factory_forms_463' ) ?>';
 				</script>
 				<div <?php $this->attrs() ?>>
 					<div class="factory-gradient-picker">
@@ -95,7 +95,7 @@
 							<div class="factory-color-picker"></div>
 						</div>
 					</div>
-					<input type="hidden" id="<?php echo $name; ?>" class="factory-result" name="<?php echo $name; ?>" value="<?php echo $value; ?>">
+					<input type="hidden" id="<?php echo esc_attr($name); ?>" class="factory-result" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
 				</div>
 			<?php
 			}

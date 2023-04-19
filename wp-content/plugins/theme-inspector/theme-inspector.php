@@ -4,7 +4,7 @@ Plugin Name: Theme Inspector
 Plugin URI: https://wordpress.org/plugins/theme-inspector
 Description:  Displays useful technical information on pages and posts to aid in developing WordPress Classic Themes. Only visible to administrators via the Admin Toolbar.
 Author: Melissa Cabral
-Version: 4.0.0
+Version: 4.0.1
 Author URI: http://melissacabral.com/
 */
 /**

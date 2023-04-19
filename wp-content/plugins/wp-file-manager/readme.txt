@@ -2,9 +2,9 @@
 Contributors: mndpsingh287
 Tags: wp-file-manager, elfinder,file manager, ftp, wp-filemanager,file manager, wp-filemanager, Upload Files, WP File Manager, File Manage, Edit Files, Delete Files, FTP, filemanager, wpfilemanager, ftp, file transfer, update, create, delete, view, rename, editor, Cpanel, Control Panel, Admin, Shortcode, explorer, file explorer, filemanager
 Requires at least: 4.0
-Tested up to: 6.0
+Tested up to: 6.1.1
 Requires PHP: 5.2.4
-Stable tag: 7.1.6
+Stable tag: 7.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,7 @@ Key Features in the Free File Manager plugin include:
 
 = Premium Addons =
 
+<strong>[File Manager Digital Ocean](https://filemanagerpro.io/product/digital-ocean-add-on/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Digital Ocean.
 <strong>[File Manager Google Drive](https://filemanagerpro.io/product/file-manager-google-drive/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Google Drive.
 <strong>[File Manager OneDrive](https://filemanagerpro.io/product/file-manager-one-drive/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in OneDrive from File Manager.
 <strong>[File Manager Dropbox](https://filemanagerpro.io/product/file-manager-dropbox/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in dropbox.
@@ -137,7 +138,16 @@ Yes, You can archive any files and folders as zip then simple download it. Pleas
 
 
 == Changelog ==
+= 7.1.8 (8th Feb, 2023) =
 
+* Fixed confliction with pro version
+* Minor updations
+
+= 7.1.7 (5th December, 2022) =
+
+* Removed Google Fonts External links
+* Issue Resolved for zip download folder
+* Checked compatibility with wordpress 6.1.1
 
 = 7.1.6 (28th June, 2022) =
 

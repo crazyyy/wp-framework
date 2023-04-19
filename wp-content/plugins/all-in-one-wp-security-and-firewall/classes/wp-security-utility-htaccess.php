@@ -95,25 +95,24 @@ class AIOWPSecurity_Utility_Htaccess {
 	public static function write_to_htaccess() {
 		global $aio_wp_security;
 		//figure out what server is being used
-		if (AIOWPSecurity_Utility::get_server_type() == -1) {
-			$aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported!", 4);
+		if (-1 == AIOWPSecurity_Utility::get_server_type() && !defined('WP_CLI')) {
+			$aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported.", 4);
 			return false; //unable to write to the file
 		}
 
 		//clean up old rules first
-		if (AIOWPSecurity_Utility_Htaccess::delete_from_htaccess() == -1) {
-			$aio_wp_security->debug_logger->log_debug("Delete operation of .htaccess file failed!", 4);
+		if (-1 == AIOWPSecurity_Utility_Htaccess::delete_from_htaccess()) {
+			$aio_wp_security->debug_logger->log_debug("Delete operation of .htaccess file failed.", 4);
 			return false; //unable to write to the file
 		}
 
-		if (!function_exists('get_home_path')) require_once(ABSPATH. '/wp-admin/includes/file.php');
-		$home_path = get_home_path();
+		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 		$htaccess = $home_path . '.htaccess';
 
 		if (!$f = @fopen($htaccess, 'a+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 			@chmod($htaccess, 0644);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			if (!$f = @fopen($htaccess, 'a+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-				$aio_wp_security->debug_logger->log_debug("chmod operation on .htaccess failed!", 4);
+				$aio_wp_security->debug_logger->log_debug("chmod operation on .htaccess failed.", 4);
 				return false;
 			}
 		}
@@ -127,7 +126,7 @@ class AIOWPSecurity_Utility_Htaccess {
 		$contents = array_merge($rulesarray, $ht);
 
 		if (!$f = @fopen($htaccess, 'w+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-			$aio_wp_security->debug_logger->log_debug("Write operation on .htaccess failed!", 4);
+			$aio_wp_security->debug_logger->log_debug("Write operation on .htaccess failed.", 4);
 			return false; //we can't write to the file
 		}
 
@@ -154,15 +153,19 @@ class AIOWPSecurity_Utility_Htaccess {
 	 * It will try to find the comment markers "# BEGIN All In One WP Security" and "# END All In One WP Security" and delete contents in between
 	 *
 	 * @param string $section
-	 * @return boolean
+	 * @return Integer{-1,1} -1 for failure, 1 for success.
 	 */
 	public static function delete_from_htaccess($section = 'All In One WP Security') {
-		if (!function_exists('get_home_path')) require_once(ABSPATH. '/wp-admin/includes/file.php');
-		$home_path = get_home_path();
+		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 		$htaccess = $home_path . '.htaccess';
 
 		if (!file_exists($htaccess)) {
 			$ht = @fopen($htaccess, 'a+');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			if (false === $ht) {
+				global $aio_wp_security;
+				$aio_wp_security->debug_logger->log_debug('Failed to create .htaccess file', 4);
+				return -1;
+			}
 			@fclose($ht);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		}
 
@@ -223,11 +226,8 @@ class AIOWPSecurity_Utility_Htaccess {
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_forbid_proxy_comment_posting();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_deny_bad_query_strings();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_advanced_character_string_filter();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_6g_blacklist();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_5g_blacklist();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_enable_brute_force_prevention();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_spambots();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_enable_login_whitelist_v2();
 		$rules .= AIOWPSecurity_Utility_Htaccess::prevent_image_hotlinks();
 		$custom_rules = AIOWPSecurity_Utility_Htaccess::getrules_custom_rules();
 		if ($aio_wp_security->configs->get_value('aiowps_place_custom_rules_at_top')=='1') {
@@ -278,7 +278,7 @@ class AIOWPSecurity_Utility_Htaccess {
 			$hosts = AIOWPSecurity_Utility::explode_trim_filter_empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'));
 			// Filter out duplicate lines, add netmask to IP addresses
 			$ips_with_netmask = self::add_netmask(array_unique($hosts));
-			if (!empty($ips_with_netmask) && ($aio_wp_security->configs->get_value('aiowps_enable_6g_firewall') != '1')) {
+			if (!empty($ips_with_netmask)) {
 				$rules .= AIOWPSecurity_Utility_Htaccess::$ip_blacklist_marker_start . PHP_EOL; //Add feature marker start
 
 				if ($apache_or_litespeed) {
@@ -309,47 +309,6 @@ class AIOWPSecurity_Utility_Htaccess {
 
 				$rules .= AIOWPSecurity_Utility_Htaccess::$ip_blacklist_marker_end . PHP_EOL; //Add feature marker end
 			}
-
-			//Now let's do the user agent list
-			$user_agents = explode(PHP_EOL, $aio_wp_security->configs->get_value('aiowps_banned_user_agents'));
-			if (!empty($user_agents) && !(sizeof($user_agents) == 1 && trim($user_agents[0]) == '')) {
-				if ($apache_or_litespeed) {
-					$rules .= AIOWPSecurity_Utility_Htaccess::$user_agent_blacklist_marker_start . PHP_EOL; //Add feature marker start
-					//Start mod_rewrite rules
-					$rules .= "<IfModule mod_rewrite.c>" . PHP_EOL . "RewriteEngine On" . PHP_EOL . PHP_EOL;
-					$count = 1;
-					foreach ($user_agents as $agent) {
-						$agent_escaped = quotemeta($agent);
-						$pattern = '/\s/'; //Find spaces in the string
-						$replacement = '\s'; //Replace spaces with \s so apache can understand
-						$agent_sanitized = preg_replace($pattern, $replacement, $agent_escaped);
-
-						$rules .= "RewriteCond %{HTTP_USER_AGENT} ^" . trim($agent_sanitized);
-						if ($count < sizeof($user_agents)) {
-							$rules .= " [NC,OR]" . PHP_EOL;
-							$count++;
-						} else {
-							$rules .= " [NC]" . PHP_EOL;
-						}
-
-					}
-					$rules .= "RewriteRule ^(.*)$ - [F,L]" . PHP_EOL . PHP_EOL;
-					// End mod_rewrite rules
-					$rules .= "</IfModule>" . PHP_EOL;
-					$rules .= AIOWPSecurity_Utility_Htaccess::$user_agent_blacklist_marker_end . PHP_EOL; //Add feature marker end
-				} else {
-					$count = 1;
-					$alist = '';
-					foreach ($user_agents as $agent) {
-						$alist .= trim($agent);
-						if ($count < sizeof($user_agents)) {
-							$alist .= '|';
-							$count++;
-						}
-					}
-					$rules .= "\tif (\$http_user_agent ~* " . $alist . ") { return 403; }" . PHP_EOL;
-				}
-			}
 		}
 
 		return implode(PHP_EOL, array_diff(explode(PHP_EOL, $rules), array('Deny from ', 'Deny from')));
@@ -373,7 +332,7 @@ class AIOWPSecurity_Utility_Htaccess {
 			//limit file upload size
 			$upload_limit = $aio_wp_security->configs->get_value('aiowps_max_file_upload_size');
 			//Shouldn't be empty but just in case
-			$upload_limit = empty($upload_limit) ? 10 : $upload_limit;
+			$upload_limit = empty($upload_limit) ? AIOS_FIREWALL_MAX_FILE_UPLOAD_LIMIT_MB : $upload_limit;
 			$upload_limit = $upload_limit * 1024 * 1024; // Convert from MB to Bytes - approx but close enough
 			
 			$rules .= 'LimitRequestBody '.$upload_limit . PHP_EOL;
@@ -407,269 +366,6 @@ class AIOWPSecurity_Utility_Htaccess {
 			$rules .= self::create_apache2_access_denied_rule('debug.log');
 			$rules .= AIOWPSecurity_Utility_Htaccess::$debug_log_block_htaccess_rules_marker_end . PHP_EOL; //Add feature marker end
 		}
-		return $rules;
-	}
-
-	/**
-	 * This function will write some drectives to block all people who do not have a cookie
-	 * when trying to access the WP login page
-	 */
-	public static function getrules_enable_brute_force_prevention() {
-		global $aio_wp_security;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention') == '1') {
-			$cookie_name = $aio_wp_security->configs->get_value('aiowps_brute_force_secret_word');
-			$test_cookie_name = $aio_wp_security->configs->get_value('aiowps_cookie_brute_test');
-			$redirect_url = $aio_wp_security->configs->get_value('aiowps_cookie_based_brute_force_redirect_url');
-			$rules .= AIOWPSecurity_Utility_Htaccess::$enable_brute_force_attack_prevention_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= 'RewriteEngine On' . PHP_EOL;
-			$rules .= 'RewriteCond %{REQUEST_URI} (wp-admin|wp-login)' . PHP_EOL;// If URI contains wp-admin or wp-login
-			if ($aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_ajax_exception') == '1') {
-				$rules .= 'RewriteCond %{REQUEST_URI} !(wp-admin/admin-ajax.php)' . PHP_EOL; // To allow ajax requests through
-			}
-			if ($aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_pw_protected_exception') == '1') {
-				$rules .= 'RewriteCond %{QUERY_STRING} !(action\=postpass)' . PHP_EOL; // Possible workaround for people usign the password protected page/post feature
-			}
-			$rules .= 'RewriteCond %{HTTP_COOKIE} !' . $cookie_name . '= [NC]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP_COOKIE} !' . $test_cookie_name . '= [NC]' . PHP_EOL;
-			$rules .= 'RewriteRule .* ' . $redirect_url . ' [L]' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$enable_brute_force_attack_prevention_marker_end . PHP_EOL; //Add feature marker end
-		}
-
-		return $rules;
-	}
-
-
-	/**
-	 * This function will write some directives to allow IPs in the whitelist to access wp-login.php or wp-admin
-	 * The function also handles the following special cases:
-	 * 1) If the rename login feature is being used: for this scenario instead of protecting wp-login.php we must protect the special page slug
-	 * 2) If the rename login feature is being used AND non permalink URL structure: for this case need to use mod_rewrite because we must check QUERY_STRING
-	 */
-	public static function getrules_enable_login_whitelist() {
-		global $aio_wp_security;
-		$rules = '';
-
-		if ($aio_wp_security->configs->get_value('aiowps_enable_whitelisting') == '1') {
-			$site_url = AIOWPSEC_WP_URL;
-			$parse_url = parse_url($site_url);
-			$hostname = $parse_url['host'];
-			$host_ip = gethostbyname($hostname);
-			$special_case = false;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$enable_login_whitelist_marker_start . PHP_EOL; //Add feature marker start
-			//If the rename login page feature is active, we will need to adjust the directives
-			if ($aio_wp_security->configs->get_value('aiowps_enable_rename_login_page') == '1') {
-				$secret_slug = $aio_wp_security->configs->get_value('aiowps_login_page_slug');
-				if (!get_option('permalink_structure')) {
-					//standard url structure is being used - ie, non permalinks
-					$special_case = true;
-					$rules .= '<IfModule mod_rewrite.c>' . PHP_EOL;
-					$rules .= 'RewriteEngine on' . PHP_EOL;
-					$rules .= 'RewriteCond %{QUERY_STRING} ^' . $secret_slug . '=1.*$' . PHP_EOL;
-					$rules .= 'RewriteCond %{REMOTE_ADDR} !^' . preg_quote($host_ip) . '[OR]' . PHP_EOL;
-				} else {
-					$slug = preg_quote($secret_slug); //escape any applicable chars
-					$rules .= '<FilesMatch "^(' . $slug . ')">' . PHP_EOL;
-				}
-			} else {
-				$rules .= '<FilesMatch "^(wp-login\.php)">' . PHP_EOL;
-			}
-			if (!$special_case) {
-				$rules .= 'Order Allow,Deny' . PHP_EOL;
-				$rules .= 'Allow from ' . $hostname . PHP_EOL;
-				$rules .= 'Allow from ' . $host_ip . PHP_EOL;
-			}
-
-			//Let's get list of whitelisted IPs
-			$hosts = explode(PHP_EOL, $aio_wp_security->configs->get_value('aiowps_allowed_ip_addresses'));
-			if (!empty($hosts) && !(sizeof($hosts) == 1 && trim($hosts[0]) == '')) {
-				$phosts = array();
-				$num_hosts = count($hosts);
-				$i = 0;
-				foreach ($hosts as $host) {
-					$host = trim($host);
-					$or_string = ($i == $num_hosts - 1) ? '' : '[OR]'; //Add an [OR] clause for all except the last condition
-
-					if (!in_array($host, $phosts)) {
-						if (strstr($host, '*')) {
-							$parts = array_reverse(explode('.', $host));
-							$netmask = 32;
-							foreach ($parts as $part) {
-								if (strstr(trim($part), '*')) {
-									$netmask = $netmask - 8;
-
-								}
-							}
-							//*****Bug Fix ******
-							//Seems that netmask does not work when using the following type of directive, ie,
-							//RewriteCond %{REMOTE_ADDR} !^203\.87\.121\.0/24
-
-							//The following works:
-							//RewriteCond %{REMOTE_ADDR} !^203\.87\.121\.
-
-							if ($special_case) {
-								$dhost = trim(str_replace('*', '', implode('.', array_reverse($parts)), $count));
-								if ($count > 1) {
-									//means that we will have consecutive periods in the string and we must remove all except one - eg: 45.12..
-									$dhost = rtrim($dhost, '.');
-									$dhost = $dhost . '.';
-								}
-							} else {
-								$dhost = trim(str_replace('*', '0', implode('.', array_reverse($parts))) . '/' . $netmask);
-							}
-							if (strlen($dhost) > 4) {
-								if ($special_case) {
-									$dhost = preg_quote($dhost); //escape any applicable chars
-									$trule = 'RewriteCond %{REMOTE_ADDR} !^' . $dhost . $or_string . PHP_EOL;
-									if (trim($trule) != 'RewriteCond %{REMOTE_ADDR}!=') {
-										$rules .= $trule;
-									}
-								} else {
-									$trule = 'Allow from ' . $dhost . PHP_EOL;
-									if (trim($trule) != 'Allow from') {
-										$rules .= $trule;
-									}
-								}
-							}
-						} else {
-							$dhost = trim($host);
-							//ipv6 - for now we will support only whole ipv6 addresses, NOT ranges
-							if (strpos($dhost, ':') !== false) {
-								//possible ipv6 addr
-								$res = WP_Http::is_ip_address($dhost);
-								if (false === $res) {
-									continue;
-								}
-							}
-							if (strlen($dhost) > 4 || '6' == $res) {
-								if ($special_case) {
-									$dhost = preg_quote($dhost); //escape any applicable chars
-									$rules .= 'RewriteCond %{REMOTE_ADDR} !^' . $dhost . $or_string . PHP_EOL;
-								} else {
-									$rules .= 'Allow from ' . $dhost . PHP_EOL;
-								}
-
-							}
-						}
-					}
-					$phosts[] = $host;
-					$i++;
-				}
-			}
-
-			if ($special_case) {
-				$rules .= 'RewriteRule .* http://127.0.0.1 [L]' . PHP_EOL;
-				$rules .= '</IfModule>' . PHP_EOL;
-			} else {
-				$rules .= '</FilesMatch>' . PHP_EOL;
-			}
-			$rules .= AIOWPSecurity_Utility_Htaccess::$enable_login_whitelist_marker_end . PHP_EOL; //Add feature marker end
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * (This is an updated and improved version of getrules_enable_login_whitelist())
-	 * This function will write some directives to allow IPs in the whitelist to access wp-login.php or wp-admin
-	 * The function also handles the following special cases:
-	 * 1) If the rename login feature is being used: for this scenario instead of protecting wp-login.php we must protect the special page slug
-	 * 2) If the rename login feature is being used AND non permalink URL structure: for this case need to use mod_rewrite because we must check QUERY_STRING
-	 */
-	public static function getrules_enable_login_whitelist_v2() {
-		global $aio_wp_security;
-		$rules = '';
-		
-		if ($aio_wp_security->configs->get_value('aiowps_enable_whitelisting') == '1') {
-			$site_url = AIOWPSEC_WP_URL;
-			$parse_url = parse_url($site_url);
-			$hostname = $parse_url['host'];
-			$host_ip = gethostbyname($hostname);
-			$hidden_login_pretty_perms = false;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$enable_login_whitelist_marker_start . PHP_EOL; //Add feature marker start
-			//If the rename login page feature is active, we will need to adjust the directives
-			if ($aio_wp_security->configs->get_value('aiowps_enable_rename_login_page') == '1') {
-				$secret_slug = $aio_wp_security->configs->get_value('aiowps_login_page_slug');
-				if (get_option('permalink_structure')) {
-					$slug = preg_quote($secret_slug); //escape any applicable chars
-					$rules .= '<FilesMatch "^(' . $slug . ')">' . PHP_EOL;
-				} else {
-					//standard url structure is being used - ie, non permalinks
-					$hidden_login_pretty_perms = true;
-					$rules .= '<IfModule mod_rewrite.c>' . PHP_EOL;
-					$rules .= 'RewriteEngine on' . PHP_EOL;
-					$rules .= 'RewriteCond %{QUERY_STRING} ^' . $secret_slug . '=1.*$' . PHP_EOL;
-					$rules .= 'RewriteCond %{REMOTE_ADDR} !^' . preg_quote($host_ip) . PHP_EOL;
-				}
-			} else {
-				$rules .= '<FilesMatch "^(wp-login\.php)">' . PHP_EOL;
-			}
-			$rules_apache_pre_24 = '';
-			$rules_apache_24 = '';
-			if (!$hidden_login_pretty_perms) {
-				//start writing rules for versions of apache < 2.4
-				$rules_apache_pre_24 .= '<IfModule !mod_authz_core.c>' . PHP_EOL;
-				$rules_apache_pre_24 .= 'Order Allow,Deny' . PHP_EOL;
-				$rules_apache_pre_24 .= 'Allow from ' . $hostname . PHP_EOL;
-				$rules_apache_pre_24 .= 'Allow from ' . $host_ip . PHP_EOL;
-				
-				//start writing rules for versions of apache >=2.4
-				$rules_apache_24 .= '<IfModule mod_authz_core.c>' . PHP_EOL;
-				$rules_apache_24 .= 'Require all denied' . PHP_EOL;
-				$rules_apache_24 .= 'Require local' . PHP_EOL;
-				$rules_apache_24 .= 'Require ip 127.0.0.1' . PHP_EOL;
-				$rules_apache_24 .= 'Require host ' . $hostname . PHP_EOL;
-			}
-
-			//Let's get list of whitelisted IPs
-			$hosts = AIOWPSecurity_Utility::explode_trim_filter_empty($aio_wp_security->configs->get_value('aiowps_allowed_ip_addresses'));
-			// Filter out duplicate lines, add netmask to IP addresses
-			$ips_with_netmask = self::add_netmask(array_unique($hosts));
-			if (!empty($ips_with_netmask)) {
-				foreach ($ips_with_netmask as $xhost) {
-					$ipv6 = false;
-					if (strpos($xhost, ':') !== false) {
-						//possible ipv6 addr
-						//ipv6 - for now we will support only whole ipv6 addresses, NOT ranges
-						$ipv6 = WP_Http::is_ip_address($xhost);
-						if (false === $ipv6) {
-							continue;
-						}
-					}
-					$ip_range = substr($xhost, 0, strpos($xhost, "/")); //check if address range
-					if ($hidden_login_pretty_perms) {
-						if (!empty($ip_range)) {
-							$xhost = $ip_range; //get the IP minus the slash with netmask bits
-						}
-						if (!$ipv6) {
-							$xhost = preg_replace("/[\.0]+$/", ".", $xhost);
-							$xhost = preg_quote($xhost);
-						}
-						$rules .= 'RewriteCond %{REMOTE_ADDR} !^' . $xhost . PHP_EOL;
-					} else {
-						//write rules for both apache 2.2 and 2.4+
-						$rules_apache_pre_24 .= 'Allow from ' . $xhost . PHP_EOL;
-						$rules_apache_24 .= 'Require ip '. $xhost . PHP_EOL;
-					}
-				}
-				
-			}
-			if (!empty($rules_apache_pre_24)) {
-				$rules_apache_pre_24 .= '</IfModule>' . PHP_EOL;
-			}
-			if (!empty($rules_apache_24)) {
-				$rules_apache_24 .= '</IfModule>' . PHP_EOL;
-			}
-			$rules .= $rules_apache_pre_24 . $rules_apache_24;
-			if ($hidden_login_pretty_perms) {
-				$rules .= 'RewriteRule .* http://127.0.0.1 [L]' . PHP_EOL;
-				$rules .= '</IfModule>' . PHP_EOL;
-			} else {
-				$rules .= '</FilesMatch>' . PHP_EOL;
-			}
-			$rules .= AIOWPSecurity_Utility_Htaccess::$enable_login_whitelist_marker_end . PHP_EOL; //Add feature marker end
-		}
-
 		return $rules;
 	}
 
@@ -766,7 +462,8 @@ class AIOWPSecurity_Utility_Htaccess {
 			//$rules .= 'RewriteCond %{QUERY_STRING} ^.*([|]|(|)||\'|"|;|?|*).* [NC,OR]' . PHP_EOL;
 			//$rules .= 'RewriteCond %{QUERY_STRING} ^.*(%22|%27|%3C|%3E|%5C|%7B|%7C).* [NC,OR]' . PHP_EOL;
 			//$rules .= 'RewriteCond %{QUERY_STRING} ^.*(%0|%A|%B|%C|%D|%E|%F|127.0).* [NC,OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{QUERY_STRING} ^.*(globals|encode|localhost|loopback).* [NC,OR]' . PHP_EOL;
+			// removed localhost because It was giving 403 error while browsing the URL http://localhost/aios2/wp-login.php?redirect_to=http%3A%2F%2Flocalhost%2Faios2%2Fwp-admin%2F&reauth=1
+			$rules .= 'RewriteCond %{QUERY_STRING} ^.*(globals|encode|loopback).* [NC,OR]' . PHP_EOL;
 			$rules .= 'RewriteCond %{QUERY_STRING} (\;|\'|\"|%22).*(request|insert|union|declare|drop) [NC]' . PHP_EOL;
 			$rules .= 'RewriteRule ^(.*)$ - [F,L]' . PHP_EOL;
 			$rules .= '</IfModule>' . PHP_EOL;
@@ -965,119 +662,6 @@ class AIOWPSecurity_Utility_Htaccess {
 	}
 
 	/**
-	 * This function contains the rules for the 6G blacklist produced by Jeff Starr:
-	 * https://perishablepress.com/6g/
-	 */
-	public static function getrules_6g_blacklist() {
-		global $aio_wp_security;
-		$rules = '';
-		$ip_blacklist_23 = '';
-		$ip_blacklist_24 = '';
-		if ($aio_wp_security->configs->get_value('aiowps_enable_6g_firewall') == '1') {
-			//if ip blacklist is enabled we will merge that code with the 6G rules to prevent clashes
-			if ($aio_wp_security->configs->get_value('aiowps_enable_blacklisting') == '1') {
-				// Let's do the list of blacklisted IPs first
-				$hosts = AIOWPSecurity_Utility::explode_trim_filter_empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'));
-				// Filter out duplicate lines, add netmask to IP addresses
-				$ips_with_netmask = self::add_netmask(array_unique($hosts));
-
-				if (!empty($ips_with_netmask)) {
-					// Apache or LiteSpeed webserver
-					// Apache 2.2 and older
-					$ip_blacklist_23 .= '#AIOWPS_IP_BLACKLIST_2_3_START' . PHP_EOL;
-					$ip_blacklist_24 .= '#AIOWPS_IP_BLACKLIST_2_4_START' . PHP_EOL;
-					foreach ($ips_with_netmask as $ip_with_netmask) {
-						$ip_blacklist_23 .= "Deny from " . $ip_with_netmask . PHP_EOL;
-						$ip_blacklist_24 .= "Require not ip " . $ip_with_netmask . PHP_EOL;
-					}
-					$ip_blacklist_23 .= '#AIOWPS_IP_BLACKLIST_2_3_END' . PHP_EOL;
-					$ip_blacklist_24 .= '#AIOWPS_IP_BLACKLIST_2_4_END' . PHP_EOL;
-				}
-			}
-			
-			$rules .= AIOWPSecurity_Utility_Htaccess::$six_g_blacklist_marker_start . PHP_EOL; //Add feature marker start
-
-			$rules .= '# 6G FIREWALL/BLACKLIST
-						# @ https://perishablepress.com/6g/
-
-						# 6G:[QUERY STRINGS]
-						<IfModule mod_rewrite.c>
-								RewriteEngine On
-								RewriteCond %{QUERY_STRING} (eval\() [NC,OR]
-								RewriteCond %{QUERY_STRING} (127\.0\.0\.1) [NC,OR]
-								RewriteCond %{QUERY_STRING} ([a-z0-9]{2000,}) [NC,OR]
-								RewriteCond %{QUERY_STRING} (javascript:)(.*)(;) [NC,OR]
-								RewriteCond %{QUERY_STRING} (base64_encode)(.*)(\() [NC,OR]
-								RewriteCond %{QUERY_STRING} (GLOBALS|REQUEST)(=|\[|%) [NC,OR]
-								RewriteCond %{QUERY_STRING} (<|%3C)(.*)script(.*)(>|%3) [NC,OR]
-								RewriteCond %{QUERY_STRING} (\\|\.\.\.|\.\./|~|`|<|>|\|) [NC,OR]
-								RewriteCond %{QUERY_STRING} (boot\.ini|etc/passwd|self/environ) [NC,OR]
-								RewriteCond %{QUERY_STRING} (thumbs?(_editor|open)?|tim(thumb)?)\.php [NC,OR]
-								RewriteCond %{QUERY_STRING} (\'|\")(.*)(drop|insert|md5|select|union) [NC]
-								RewriteRule .* - [F]
-						</IfModule>
-
-						# 6G:[REQUEST METHOD]
-						<IfModule mod_rewrite.c>
-								RewriteCond %{REQUEST_METHOD} ^(connect|debug|move|put|trace|track) [NC]
-								RewriteRule .* - [F]
-						</IfModule>
-
-						# 6G:[REFERRERS]
-						<IfModule mod_rewrite.c>
-								RewriteCond %{HTTP_REFERER} ([a-z0-9]{2000,}) [NC,OR]
-								RewriteCond %{HTTP_REFERER} (semalt.com|todaperfeita) [NC]
-								RewriteRule .* - [F]
-						</IfModule>
-
-						# 6G:[REQUEST STRINGS]
-						<IfModule mod_alias.c>
-								RedirectMatch 403 (?i)([a-z0-9]{2000,})
-								RedirectMatch 403 (?i)(https?|ftp|php):/
-								RedirectMatch 403 (?i)(base64_encode)(.*)(\()
-								RedirectMatch 403 (?i)(=\\\'|=\\%27|/\\\'/?)\.
-								RedirectMatch 403 (?i)/(\$(\&)?|\*|\"|\.|,|&|&amp;?)/?$
-								RedirectMatch 403 (?i)(\{0\}|\(/\(|\.\.\.|\+\+\+|\\\"\\\")
-								RedirectMatch 403 (?i)(~|`|<|>|:|;|,|%|\\|\s|\{|\}|\[|\]|\|)
-								RedirectMatch 403 (?i)/(=|\$&|_mm|cgi-|etc/passwd|muieblack)
-								RedirectMatch 403 (?i)(&pws=0|_vti_|\(null\)|\{\$itemURL\}|echo(.*)kae|etc/passwd|eval\(|self/environ)
-								RedirectMatch 403 (?i)\.(aspx?|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rar|rdf)$
-								RedirectMatch 403 (?i)/(^$|(wp-)?config|mobiquo|phpinfo|shell|sqlpatch|thumb|thumb_editor|thumbopen|timthumb|webshell)\.php
-						</IfModule>
-
-						# 6G:[USER AGENTS]
-						<IfModule mod_setenvif.c>
-								SetEnvIfNoCase User-Agent ([a-z0-9]{2000,}) bad_bot
-								SetEnvIfNoCase User-Agent (archive.org|binlar|casper|checkpriv|choppy|clshttp|cmsworld|diavol|dotbot|extract|feedfinder|flicky|g00g1e|harvest|heritrix|httrack|kmccrew|loader|miner|nikto|nutch|planetwork|postrank|purebot|pycurl|python|seekerspider|siclab|skygrid|sqlmap|sucker|turnit|vikspider|winhttp|xxxyy|youda|zmeu|zune) bad_bot
-
-								# Apache < 2.3
-								<IfModule !mod_authz_core.c>
-										Order Allow,Deny
-										Allow from all
-										Deny from env=bad_bot';
-			if (!empty($ip_blacklist_23))
-				$rules .= PHP_EOL.$ip_blacklist_23; //add ip blacklist if applicable
-			$rules .= '
-								</IfModule>
-
-								# Apache >= 2.3
-								<IfModule mod_authz_core.c>
-										<RequireAll>
-												Require all Granted
-												Require not env bad_bot';
-			if (!empty($ip_blacklist_24))
-				$rules .= PHP_EOL.$ip_blacklist_24; //add ip blacklist if applicable
-			$rules .= '
-										</RequireAll>
-								</IfModule>
-						</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$six_g_blacklist_marker_end . PHP_EOL; //Add feature marker end
-		}
-
-		return $rules;
-	}
-
-	/**
 	 * This function will write some directives to block all comments which do not originate from the blog's domain
 	 * OR if the user agent is empty. All blocked requests will be redirected to 127.0.0.1
 	 */
@@ -1154,18 +738,19 @@ class AIOWPSecurity_Utility_Htaccess {
 	 * If it finds the tag it will deem the file as being .htaccess specific.
 	 * This was written to supplement the .htaccess restore functionality
 	 *
-	 * @param string $file
+	 * @param string $file_contents - the contents of the .htaccess file
+	 *
 	 * @return boolean
 	 */
-	public static function check_if_htaccess_contents($file) {
+	public static function check_if_htaccess_contents($file_contents) {
 		$is_htaccess = false;
-		$file_contents = file_get_contents($file);
+		
 		if (false === $file_contents || strlen($file_contents) == 0) {
 			return -1;
 		}
 
 		if ((strpos($file_contents, '# BEGIN WordPress') !== false) || (strpos($file_contents, '# BEGIN') !== false)) {
-			$is_htaccess = true; //It appears that we have some sort of .htacces file
+			$is_htaccess = true; // It appears that we have some sort of .htaccess file
 		} else {
 			//see if we're at the end of the section
 			$is_htaccess = false;
@@ -1272,15 +857,13 @@ END;
 		foreach ($ips as $ip) {
 			//Check if ipv6
 			if (strpos($ip, ':') !== false) {
-				//for now we'll only support whole ipv6 (not address ranges)
-				$ipv6 = WP_Http::is_ip_address($ip);
-				if (false === $ipv6) {
-					continue;
+				//for now support whole ipv6 and CIDR range.
+				$checked_ip = AIOWPSecurity_Utility_IP::is_ipv6_address_or_ipv6_range($ip);
+				if (false != $checked_ip) {
+					$output[] = $ip;
 				}
-				$output[] = $ip;
 			}
 			
-
 			$parts = explode('.', $ip);
 
 			// Skip any IP that is empty, has more parts than expected or has

@@ -2,6 +2,9 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
+if (!class_exists('WP_Optimize_Minify_Load_Url_Task')) {
+	require_once(WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-load-url-task.php');
+}
 
 class WP_Optimize_Minify_Preloader extends WP_Optimize_Preloader {
 

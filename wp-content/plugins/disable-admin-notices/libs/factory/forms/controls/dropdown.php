@@ -21,9 +21,9 @@
 		exit;
 	}
 	
-	if ( ! class_exists( 'Wbcr_FactoryForms453_DropdownControl' ) ) {
+	if ( ! class_exists( 'Wbcr_FactoryForms463_DropdownControl' ) ) {
 		
-		class Wbcr_FactoryForms453_DropdownControl extends Wbcr_FactoryForms453_Control {
+		class Wbcr_FactoryForms463_DropdownControl extends Wbcr_FactoryForms463_Control {
 			
 			public $type = 'dropdown';
 			
@@ -92,7 +92,7 @@
 							}
 						}
 						
-						echo '<style>' . $print_styles . '</style>';
+						echo '<style>' . esc_html($print_styles) . '</style>';
 					}
 					?>
                     <script>
@@ -100,7 +100,7 @@
 						if( void 0 === window.factory_dropdown_control_events_data ) {
 							window.factory_dropdown_control_events_data = {};
 						}
-						window.factory_dropdown_control_events_data['<?php echo $name_on_form ?>'] = <?php echo $events_string_data ?>;
+						window.factory_dropdown_control_events_data['<?php echo esc_attr($name_on_form); ?>'] = <?php echo $events_string_data; ?>;
                     </script>
 					<?php
 				}
@@ -116,14 +116,14 @@
 					}
 					
 					?>
-                    <div class="factory-ajax-loader <?php echo $ajax_id . '-loader'; ?>"></div>
+                    <div class="factory-ajax-loader <?php echo esc_attr($ajax_id) . '-loader'; ?>"></div>
                     <script>
 						window['<?php echo $ajax_id ?>'] = {
-							'loader': '.<?php echo $ajax_id . '-loader' ?>',
-							'url': '<?php echo $data['url'] ?>',
+							'loader': '.<?php echo esc_attr($ajax_id) . '-loader' ?>',
+							'url': '<?php echo esc_url($data['url']); ?>',
 							'data': <?php echo json_encode( $data['data'] ) ?>,
-							'selected': '<?php echo $value ?>',
-							'empty_list': '<?php echo $this->getOption( 'empty', __( 'The list is empty.', 'wbcr_factory_forms_453' ) ) ?>'
+							'selected': '<?php echo esc_attr($value); ?>',
+							'empty_list': '<?php echo esc_attr($this->getOption( 'empty', __( 'The list is empty.', 'wbcr_factory_forms_463' ) )); ?>'
 						};
                     </script>
 					<?php
@@ -160,18 +160,18 @@
                 <div <?php $this->attrs() ?>>
                     <div class="btn-group factory-buttons-group">
 						<?php foreach ( $items as $item ) { ?>
-                            <button type="button" class="btn btn-default btn-small factory-<?php echo $item[0] ?> <?php if ( $value == $item[0] ) {
+                            <button type="button" class="btn btn-default btn-small factory-<?php echo esc_attr($item[0]); ?> <?php if ( $value == $item[0] ) {
 								echo 'active';
-							} ?>" data-value="<?php echo $item[0] ?>"><?php echo $item[1] ?></button>
+							} ?>" data-value="<?php echo esc_attr($item[0]); ?>"><?php echo esc_attr($item[1]); ?></button>
 						<?php } ?>
-                        <input type="hidden" id="<?php echo $name_on_form ?>" class="factory-result" name="<?php echo $name_on_form ?>" value="<?php echo $value ?>"/>
+                        <input type="hidden" id="<?php echo esc_attr($name_on_form); ?>" class="factory-result" name="<?php echo esc_attr($name_on_form) ?>" value="<?php echo esc_attr($value); ?>"/>
                     </div>
                     <div class="factory-hints">
 						<?php foreach ( $items as $item ) { ?>
 							<?php if ( isset( $item[2] ) ) { ?>
-                                <div class="factory-hint factory-hint-<?php echo $item[0] ?>" <?php if ( $value !== $item[0] ) {
+                                <div class="factory-hint factory-hint-<?php echo esc_attr($item[0]); ?>" <?php if ( $value !== $item[0] ) {
 									echo 'style="display: none;"';
-								} ?>><?php echo $item[2] ?></div>
+								} ?>><?php echo wp_kses( $item[2], 'default' ); ?></div>
 							<?php } ?>
 						<?php } ?>
                     </div>
@@ -201,25 +201,25 @@
                 <div <?php $this->attrs() ?>>
                     <script>
 						//Dropdown plugin data
-						var factory_<?php echo $name_on_form ?>_data = [
+						var factory_<?php echo esc_attr($name_on_form) ?>_data = [
 							<?php foreach ( $items as $item ) { ?>
 							{
-								text: "<?php echo $item['title'] ?>",
-								value: "<?php echo $item['value'] ?>",
+								text: "<?php echo esc_html($item['title']); ?>",
+								value: "<?php echo esc_html($item['value']); ?>",
 								selected: <?php if ( $value == $item['value'] ) {
 									echo 'true';
 								} else {
 									echo 'false';
 								} ?>,
-								description: "<?php echo( isset( $item['hint'] ) ? $item['hint'] : '' ); ?>",
-								imageSrc: "<?php echo( isset( $item['image'] ) ? $item['image'] : '' ); ?>",
-								imageHoverSrc: "<?php echo( isset( $item['hover'] ) ? $item['hover'] : '' ); ?>"
+								description: "<?php echo( isset( $item['hint'] ) ? wp_kses( $item['hint'], 'default' ) : '' ); ?>",
+								imageSrc: "<?php echo( isset( $item['image'] ) ? esc_url($item['image']) : '' ); ?>",
+								imageHoverSrc: "<?php echo( isset( $item['hover'] ) ? esc_url($item['hover']) : '' ); ?>"
 							},
 							<?php } ?>
 						];
                     </script>
                     <div class="factory-ddslick"></div>
-                    <input type="hidden" class="factory-result" id="<?php echo $name_on_form ?>" name="<?php echo $name_on_form ?>" value="<?php echo $value ?>"/>
+                    <input type="hidden" class="factory-result" id="<?php echo esc_attr($name_on_form); ?>" name="<?php echo esc_attr($name_on_form); ?>" value="<?php echo esc_attr($value); ?>"/>
                 </div>
 				<?php
 			}
@@ -268,7 +268,7 @@
 				}
 				
 				$is_empty   = $this->isAjax() || empty( $items );
-				$empty_list = $this->getOption( 'empty', __( '- empty -', 'wbcr_factory_forms_453' ) );
+				$empty_list = $this->getOption( 'empty', __( '- empty -', 'wbcr_factory_forms_463' ) );
 				
 				?>
                 <select <?php $this->attrs() ?>>
@@ -286,8 +286,8 @@
 							if ( isset( $item['type'] ) && $item['type'] == 'group' && ! empty( $item['items'] ) ) {
 								foreach ( (array) $item['items'] as $group_item ) {
 									
-									$hint = isset( $group_item[2] ) ? esc_attr( $group_item[2] ) : null;
-									$hint = isset( $group_item['hint'] ) ? esc_attr( $group_item['hint'] ) : $hint;
+									$hint = isset( $group_item[2] ) ? wp_kses( $group_item[2], 'default' ) : null;
+									$hint = isset( $group_item['hint'] ) ? wp_kses( $group_item['hint'], 'default' ) : $hint;
 									
 									$value = isset( $group_item[0] ) ? esc_attr( $group_item[0] ) : null;
 									$value = isset( $group_item['value'] ) ? esc_attr( $group_item['value'] ) : $value;
@@ -349,7 +349,7 @@
 						}
 						
 						$value = isset( $item['value'] ) ? $item['value'] : '';
-						$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_453' );
+						$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_463' );
 						
 						$data = isset( $item['data'] ) ? $item['data'] : null;
 					} else {

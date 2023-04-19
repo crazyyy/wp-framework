@@ -178,23 +178,23 @@
         },
         {
             "name": "mythemeshop/wordpress-helpers",
-            "version": "v1.1.18",
-            "version_normalized": "1.1.18.0",
+            "version": "v1.1.20",
+            "version_normalized": "1.1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyThemeShopTeam/wordpress-helpers.git",
-                "reference": "6294c995e9365bee25fcfa8f3c045800620a5278"
+                "reference": "f9416e29c48567e436488b7551f908ccc780c235"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyThemeShopTeam/wordpress-helpers/zipball/6294c995e9365bee25fcfa8f3c045800620a5278",
-                "reference": "6294c995e9365bee25fcfa8f3c045800620a5278",
+                "url": "https://api.github.com/repos/MyThemeShopTeam/wordpress-helpers/zipball/f9416e29c48567e436488b7551f908ccc780c235",
+                "reference": "f9416e29c48567e436488b7551f908ccc780c235",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6"
             },
-            "time": "2022-01-27T12:13:00+00:00",
+            "time": "2022-11-22T05:21:30+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -218,23 +218,23 @@
             "description": "Collection of utilities required during development of a plugin or theme for WordPress. Build for developers by developers.",
             "support": {
                 "issues": "https://github.com/MyThemeShopTeam/wordpress-helpers/issues",
-                "source": "https://github.com/MyThemeShopTeam/wordpress-helpers/tree/v1.1.18"
+                "source": "https://github.com/MyThemeShopTeam/wordpress-helpers/tree/v1.1.20"
             },
             "install-path": "../mythemeshop/wordpress-helpers"
         },
         {
             "name": "woocommerce/action-scheduler",
-            "version": "3.4.2",
-            "version_normalized": "3.4.2.0",
+            "version": "3.5.4",
+            "version_normalized": "3.5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woocommerce/action-scheduler.git",
-                "reference": "7d8e830b6387410ccf11708194d3836f01cb2942"
+                "reference": "9533e71b0eba4a519721dde84a34dfb161f11eb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/7d8e830b6387410ccf11708194d3836f01cb2942",
-                "reference": "7d8e830b6387410ccf11708194d3836f01cb2942",
+                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/9533e71b0eba4a519721dde84a34dfb161f11eb8",
+                "reference": "9533e71b0eba4a519721dde84a34dfb161f11eb8",
                 "shasum": ""
             },
             "require-dev": {
@@ -243,7 +243,7 @@
                 "wp-cli/wp-cli": "~2.5.0",
                 "yoast/phpunit-polyfills": "^1.0"
             },
-            "time": "2022-06-08T15:46:07+00:00",
+            "time": "2023-01-17T20:20:43+00:00",
             "type": "wordpress-plugin",
             "extra": {
                 "scripts-description": {
@@ -261,7 +261,7 @@
             "homepage": "https://actionscheduler.org/",
             "support": {
                 "issues": "https://github.com/woocommerce/action-scheduler/issues",
-                "source": "https://github.com/woocommerce/action-scheduler/tree/3.4.2"
+                "source": "https://github.com/woocommerce/action-scheduler/tree/3.5.4"
             },
             "install-path": "../woocommerce/action-scheduler"
         }

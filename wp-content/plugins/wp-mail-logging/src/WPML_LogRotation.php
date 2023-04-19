@@ -3,6 +3,8 @@
 namespace No3x\WPML;
 
 // Exit if accessed directly.
+use No3x\WPML\Admin\SettingsTab;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -35,7 +37,7 @@ class WPML_LogRotation implements IHooks {
      * @since 1.6.0
      */
     public function init() {
-        global $wpml_settings;
+        $wpml_settings = SettingsTab::get_settings();
 
         // if plugin is installed the first time settings are not initialized properly so quit early.
         if( !isset($wpml_settings) || !array_key_exists('log-rotation-limit-amout', $wpml_settings) ) {
@@ -72,15 +74,21 @@ class WPML_LogRotation implements IHooks {
      * @since 1.6.0
      */
     static function limitNumberOfMailsByAmount() {
-        global $wpml_settings, $wpdb;
+        global $wpdb;
 
-        if(!isset($wpml_settings)) {
+        $wpml_settings = SettingsTab::get_settings();
+
+        if( empty( $wpml_settings ) ) {
             return;
         }
 
         $tableName = WPML_Plugin::getTablename( 'mails' );
 
-        if ( $wpml_settings['log-rotation-limit-amout'] == true) {
+        if (
+            isset( $wpml_settings['log-rotation-limit-amout'] ) &&
+            isset( $wpml_settings['log-rotation-limit-amout-keep'] ) &&
+            $wpml_settings['log-rotation-limit-amout'] == true
+        ) {
             $keep = $wpml_settings['log-rotation-limit-amout-keep'];
             if ( $keep > 0 ) {
                 $wpdb->query($wpdb->prepare("DELETE p
@@ -103,15 +111,21 @@ class WPML_LogRotation implements IHooks {
      * @since 1.6.0
      */
     static function limitNumberOfMailsByTime() {
-        global $wpml_settings, $wpdb;
+        global $wpdb;
 
-        if(!isset($wpml_settings)) {
+        $wpml_settings = get_option( 'wpml_settings', [] );
+
+        if( empty( $wpml_settings ) ) {
             return;
         }
 
         $tableName = WPML_Plugin::getTablename( 'mails' );
 
-        if ( $wpml_settings['log-rotation-delete-time'] == true) {
+        if (
+            isset( $wpml_settings['log-rotation-delete-time'] ) &&
+            isset( $wpml_settings['log-rotation-delete-time-days'] ) &&
+            $wpml_settings['log-rotation-delete-time'] == true
+        ) {
             $days = $wpml_settings['log-rotation-delete-time-days'];
             if ( $days > 0 ) {
                 $wpdb->query($wpdb->prepare("DELETE FROM `$tableName` WHERE DATEDIFF( NOW(), `timestamp` ) >= %d", $days));

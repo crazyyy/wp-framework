@@ -82,12 +82,12 @@ if ( ! class_exists( 'Wbcr_Factory_Compatibility' ) ) {
 
 			if ( ! $this->isPhpCompatibility() ) {
 				$has_one     = true;
-				$notice_text .= '- ' . sprintf( __( 'You need to update the PHP version to %s or higher!', 'wbcr_factory_457' ), $this->required_php_version ) . '<br>';
+				$notice_text .= '- ' . sprintf( __( 'You need to update the PHP version to %s or higher!', 'wbcr_factory_463' ), $this->required_php_version ) . '<br>';
 			}
 
 			if ( ! $this->isWpCompatibility() ) {
 				$has_one     = true;
-				$notice_text .= '- ' . sprintf( __( 'You need to update WordPress to %s or higher!', 'wbcr_factory_457' ), $this->required_wp_version ) . '<br>';
+				$notice_text .= '- ' . sprintf( __( 'You need to update WordPress to %s or higher!', 'wbcr_factory_463' ), $this->required_wp_version ) . '<br>';
 			}
 
 			if ( $has_one ) {
@@ -116,7 +116,7 @@ if ( ! class_exists( 'Wbcr_Factory_Compatibility' ) ) {
 
 			$notice_text = '<p>' . $this->getNoticeText() . '</p>';
 
-			echo '<div class="notice notice-error">' . apply_filters( 'wbcr/factory/check_compatibility/notice_text', $notice_text, $this->plugin_name ) . '</div>';
+			echo '<div class="notice notice-error">' . esc_html(apply_filters( 'wbcr/factory/check_compatibility/notice_text', $notice_text, $this->plugin_name )) . '</div>';
 		}
 	}
 }

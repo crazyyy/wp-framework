@@ -6,6 +6,10 @@ add_action( 'init', 'cmplz_check_upgrade', 10, 2 );
  * Run an upgrade procedure if the version has changed
  */
 function cmplz_check_upgrade() {
+	#only run upgrade check if cron, or if admin.
+	if ( !is_admin() && !wp_doing_cron() ) {
+		return;
+	}
 
 	$prev_version = get_option( 'cmplz-current-version', false );
 	if ( $prev_version === cmplz_version ) {
@@ -938,21 +942,52 @@ function cmplz_check_upgrade() {
 				$banner->save();
 			}
 		}
-
 	}
 
-	//regenerate css
-	$banners = cmplz_get_cookiebanners();
-	if ( $banners ) {
-		foreach ( $banners as $banner_item ) {
-			$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID );
-			$banner->save();
+	if ( $prev_version && version_compare( $prev_version, '6.3.2', '<' ) ) {
+		//upgrade statistics a/b testing
+		$general_settings = get_option( 'complianz_options_settings' );
+		if ( isset( $general_settings['a_b_testing'] ) && $general_settings['a_b_testing'] ) {
+			$general_settings['a_b_testing_buttons'] = true;
 		}
+		update_option( 'complianz_options_settings', $general_settings );
 	}
+
+	if ( $prev_version && version_compare( $prev_version, '6.3.7', '<' ) ) {
+		$wizard_settings = get_option( 'complianz_options_wizard', [] );
+		$wizard_settings['enable_cookie_banner']='yes';
+		$wizard_settings['enable_cookie_blocker']='yes';
+		update_option( 'complianz_options_wizard', $wizard_settings );
+
+		$settings = get_option( 'complianz_options_settings', [] );
+		$settings['safe_mode'] = $settings['disable_cookie_block'] ?? false;
+		if ( isset($settings['disable_cookie_block']) ) {
+			unset($settings['disable_cookie_block']);
+		}
+		update_option( 'complianz_options_settings', $settings );
+	}
+
+	//  regenerate css
+	//	$banners = cmplz_get_cookiebanners();
+	//	if ( $banners ) {
+	//		foreach ( $banners as $banner_item ) {
+	//			$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID );
+	//			$banner->save();
+	//		}
+	//	}
+
+	//ensure new capability
+	if ( $prev_version && version_compare( $prev_version, '6.4.1', '<' ) ) {
+		cmplz_add_manage_privacy_capability();
+	}
+
+
+	#regenerate cookie policy snapshot.
+	update_option('cmplz_generate_new_cookiepolicy_snapshot', true, false);
 
 	//always clear warnings cache on update
 	delete_transient('complianz_warnings');
 	delete_transient('complianz_warnings_admin_notices');
 	do_action( 'cmplz_upgrade', $prev_version );
-	update_option( 'cmplz-current-version', cmplz_version );
+	update_option( 'cmplz-current-version', cmplz_version, false );
 }

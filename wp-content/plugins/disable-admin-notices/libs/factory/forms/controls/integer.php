@@ -32,9 +32,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms453_IntegerControl') ) {
+	if( !class_exists('Wbcr_FactoryForms463_IntegerControl') ) {
 
-		class Wbcr_FactoryForms453_IntegerControl extends Wbcr_FactoryForms453_Control {
+		class Wbcr_FactoryForms463_IntegerControl extends Wbcr_FactoryForms463_Control {
 
 			public $type = 'integer';
 
@@ -83,10 +83,10 @@
 						<?php if( 'checkbox-slider' == $way ) { ?>
 
 							<div>
-								<label for="<?php echo $name; ?>_checker"><?php echo $is_active
+								<label for="<?php echo esc_attr($name); ?>_checker"><?php echo $is_active
 										? $checkbox['off']
 										: $checkbox['on']; ?></label><br>
-								<input type="checkbox" id="<?php echo $name; ?>_checker" class="factory-checkbox" name="<?php echo $name; ?>_checker" <?php echo $is_active
+								<input type="checkbox" id="<?php echo esc_attr($name); ?>_checker" class="factory-checkbox" name="<?php echo esc_attr($name); ?>_checker" <?php echo $is_active
 									? 'checked'
 									: '' ?>>
 							</div>
@@ -94,33 +94,33 @@
 						<?php } ?>
 
 						<div
-							data-units="<?php echo $unit ?>"
-							data-range-start="<?php echo $range[0] ?>"
-							data-range-end="<?php echo $range[1] ?>"
-							data-step="<?php echo $step ?>"
+							data-units="<?php echo esc_attr($unit); ?>"
+							data-range-start="<?php echo esc_attr($range[0]); ?>"
+							data-range-end="<?php echo esc_attr($range[1]); ?>"
+							data-step="<?php echo esc_attr($step) ?>"
 							<?php echo !$is_active
 								? ' style="display:none;"'
 								: '' ?>
-							class="factory-slider-container factory-slider-container-<?php echo $name; ?>">
+							class="factory-slider-container factory-slider-container-<?php echo esc_attr($name); ?>">
 							<?php if( !empty($slider_title) ): ?>
 								<label class="factory-title">
-									<?php echo $this->getOption('slider-title'); ?>
+									<?php echo esc_html($this->getOption('slider-title')); ?>
 								</label>
 							<?php endif; ?>
 
 							<div class="factory-slider">
 								<div class="factory-bar"></div>
                     <span class="factory-visible-value">
-                        <?php echo $value ?><?php echo $unit ?>
+                        <?php echo esc_html($value); ?><?php echo esc_html($unit); ?>
                     </span>
 							</div>
-							<input type="hidden" name="<?php echo $name; ?>" class="factory-result" value="<?php echo $value; ?>"/>
+							<input type="hidden" name="<?php echo esc_attr($name); ?>" class="factory-result" value="<?php echo esc_attr($value); ?>"/>
 						</div>
 
 					<?php } else { ?>
 
-						<input type="number" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>" class="factory-input-text"/>
-						<span class="factory-units"><?php echo $unit ?></span>
+						<input type="number" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>" class="factory-input-text"/>
+						<span class="factory-units"><?php echo esc_html($unit); ?></span>
 
 					<?php } ?>
 				</div><!-- .factory-integer -->

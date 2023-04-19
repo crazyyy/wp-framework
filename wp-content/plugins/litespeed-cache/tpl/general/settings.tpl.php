@@ -36,6 +36,7 @@ if ( ! $can_token ) {
 	$apply_ts_txt .= ' ' . sprintf( __( 'Next available request time: <code>After %s</code>', 'litespeed-cache' ), Utility::readable_time( $next_available_req, 0, true ) );
 }
 
+$this->form_action();
 ?>
 
 <h3 class="litespeed-title-short">
@@ -124,7 +125,7 @@ if ( ! $can_token ) {
 				<?php Doc::notice_ips(); ?>
 				<div class="litespeed-callout notice notice-success inline">
 					<h4><?php echo __( 'Current Cloud Nodes in Service','litespeed-cache' ); ?>
-						<a class="litespeed-right" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i></a>
+						<a class="litespeed-right litespeed-redetect" href="<?php echo Utility::build_url( Router::ACTION_CLOUD, Cloud::TYPE_CLEAR_CLOUD ); ?>" data-balloon-pos="up" data-balloon-break aria-label='<?php echo __( 'Click to clear all nodes for further redetection.', 'litespeed-cache' ); ?>' data-litespeed-cfm="<?php echo __( 'Are you sure you want to clear all cloud nodes?', 'litespeed-cache' ); ?>"><i class='litespeed-quic-icon'></i> <?php echo __( 'Redetect', 'litespeed-cache' ); ?></a>
 					</h4>
 					<p>
 						<?php
@@ -194,12 +195,6 @@ if ( ! $can_token ) {
 				⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'You need to turn %s on and finish all WebP generation to get maximum result.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_IMG_OPTM_WEBP ) . '</code>' ); ?>
 				</font>
 				<?php endif; ?>
-
-				<?php if ( ! $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) : ?>
-				<br /><font class="litespeed-danger litespeed-left10">
-				⚠️ <?php echo __( 'Notice', 'litespeed-cache' ); ?>: <?php echo sprintf( __( 'You need to turn %s on to get maximum result.', 'litespeed-cache' ),  '<code>' . Lang::title( Base::O_IMG_OPTM_WEBP_REPLACE ) . '</code>' ); ?>
-				</font>
-				<?php endif; ?>
 			</div>
 		</td>
 	</tr>
@@ -236,3 +231,5 @@ if ( ! $can_token ) {
 	</tr>
 
 </tbody></table>
+
+<?php $this->form_end(); ?>

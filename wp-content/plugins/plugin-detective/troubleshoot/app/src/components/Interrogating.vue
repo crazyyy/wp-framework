@@ -49,14 +49,12 @@
 <script>
 import store from '@/store'
 import { mapState, mapActions, mapGetters } from 'vuex'
-import Loading from './Loading'
-import PluginAvatar from './PluginAvatar'
 import CounterBox from './CounterBox'
 
 export default {
-  name: 'interrogating',
+  name: 'interrogatingComponent',
   store,
-  components: { Loading, PluginAvatar, CounterBox },
+  components: { CounterBox },
   data () {
     return {
       loading: true

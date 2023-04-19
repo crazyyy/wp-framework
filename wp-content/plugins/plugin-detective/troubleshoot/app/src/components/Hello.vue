@@ -24,7 +24,7 @@ import Bubble from './Bubble'
 import Loading from './Loading'
 
 export default {
-  name: 'hello',
+  name: 'helloStart',
   components: { Bubble, Loading },
   store,
   data () {

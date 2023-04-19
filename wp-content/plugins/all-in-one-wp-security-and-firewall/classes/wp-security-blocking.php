@@ -61,6 +61,11 @@ class AIOWPSecurity_Blocking {
 	 */
 	public static function add_ip_to_block_list($ip_address, $reason = '') {
 		global $wpdb, $aio_wp_security;
+		$user = wp_get_current_user();
+		if (array_intersect(array('administrator', 'editor', 'author'), $user->roles) && AIOWPSecurity_Utility_IP::get_user_ip_address() == $ip_address) {
+			return;
+		}
+
 		//Check if this IP address is already in the block list
 		$blocked = AIOWPSecurity_Blocking::is_ip_blocked($ip_address);
 		$time_now = current_time('mysql');

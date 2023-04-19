@@ -1772,7 +1772,7 @@ function ampforwp_replace_title_tags() {
 				}
 			}
 			// Custom Front Page Title From Yoast SEO #1163
-			if ( ampforwp_is_front_page() || ampforwp_is_blog() && class_exists('Yoast\WP\SEO\Presentations\Indexable_Presentation') ) {
+			if ( ampforwp_is_front_page() || ampforwp_is_blog() && class_exists('Yoast\WP\SEO\Presentations\Indexable_Presentation')) {
 				$yoast_title = get_post_meta(ampforwp_get_the_ID(), '_yoast_wpseo_title', true);
 				$yoast_title = wpseo_replace_vars( $yoast_title,$post );
 				// Get info for custom front page, blog page and blog post paginated pages for v14+ #4574
@@ -1780,7 +1780,7 @@ function ampforwp_replace_title_tags() {
 					$yoast_data = new Ampforwp_Yoast_Data;
 					$context = $yoast_data->get_context_for_post_id(ampforwp_get_the_ID());	
 				}
-				if ( $context) {
+				if (isset($context)) {
 					$yoast_title = $context->title;
 				}
 			}
@@ -2136,7 +2136,14 @@ function ampforwp_modify_archive_title( $title ) {
     } elseif ( is_tag() ) {
         $title = single_tag_title( '', false );
     } elseif ( is_author() ) {
-        $title = '<span class="vcard">' . get_the_author() . '</span>';
+		if(!get_the_author() && function_exists('get_the_coauthor_meta'))
+		{
+			$title = '<span class="vcard">' . ampforwp_get_coauthor_meta('display_name') . '</span>';
+		}
+		else{
+			$title = '<span class="vcard">' . get_the_author() . '</span>';
+		}
+       
     } elseif ( is_post_type_archive() ) {
         $title = post_type_archive_title( '', false );
     } elseif ( is_tax() ) {
@@ -3321,6 +3328,7 @@ function ampforwp_content_sanitizer( $content ) {
 						'AMP_Vine_Embed_Handler' => array(),
 						'AMP_Facebook_Embed_Handler' => array(),
 						'AMP_Gallery_Embed_Handler' => array(),
+						'AMP_Tiktok_Embed_Handler'=>array(),
 				) ),
 				apply_filters(  'amp_content_sanitizers', array(
 						 'AMP_Style_Sanitizer' => array(),
@@ -3841,6 +3849,7 @@ function ampforwp_generate_pagebuilder_data() {
           'AMP_Vine_Embed_Handler' => array(),
           'AMP_Facebook_Embed_Handler' => array(),
           'AMP_Gallery_Embed_Handler' => array(),
+		  'AMP_Tiktok_Embed_Handler'=>array(),
     ) ),
     apply_filters(  'amp_content_sanitizers', array(
            'AMP_Style_Sanitizer' => array(),
@@ -4108,6 +4117,7 @@ function ampforwp_post_pagination( $args = '' ) {
                   			'AMP_Pinterest_Embed_Handler'   => array(),
           				    'AMP_Gallery_Embed_Handler'     => array(),
                       		'AMP_Playlist_Embed_Handler'    => array(),
+							  'AMP_Tiktok_Embed_Handler'=>array(),
              		 ) ),
               apply_filters(  'amp_content_sanitizers', array(
           				    'AMP_Style_Sanitizer'     => array(),
@@ -4304,6 +4314,7 @@ function ampforwp_post_paginated_content($content){
                   			'AMP_Pinterest_Embed_Handler'   => array(),
           				    'AMP_Gallery_Embed_Handler'     => array(),
                       		'AMP_Playlist_Embed_Handler'    => array(),
+							  'AMP_Tiktok_Embed_Handler'=>array(),
              		 ) ),
               apply_filters(  'amp_content_sanitizers', array(
           				    'AMP_Style_Sanitizer'     => array(),
@@ -4544,7 +4555,7 @@ function ampforwp_home_archive_canonical_setter(){
 }
 
 function ampforwp_rel_canonical_home_archive(){
-	if (function_exists('aioseo_pro_just_activated')) {
+	if (function_exists('aioseo') && ((aioseo()->pro && (version_compare(AIOSEO_VERSION,'4.2.6')>=0)) || (!aioseo()->pro && (version_compare(AIOSEO_VERSION,'4.2.4')>0)))) {
 	   return;
 	}
 	global $redux_builder_amp;
@@ -7133,12 +7144,17 @@ add_filter( 'amp_post_template_data', 'ampforwp_backtotop' );
 function ampforwp_backtotop( $data ) {
 	global $redux_builder_amp;
 	if(true == ampforwp_get_setting('ampforwp-footer-top')){
+		$dom = AMP_DOM_Utils::get_dom_from_content($data['post_amp_content']);
+		if ( 0 !== $dom->getElementsByTagName( 'amp-position-observer' )->length ) {
 			if ( empty( $data['amp_component_scripts']['amp-position-observer'] ) ) {
 				$data['amp_component_scripts']['amp-position-observer'] = 'https://cdn.ampproject.org/v0/amp-position-observer-0.1.js';
 			}
+		}
+		if ( 0 !== $dom->getElementsByTagName( 'amp-animation' )->length ) {
 			if ( empty( $data['amp_component_scripts']['amp-animation'] ) ) {
 				$data['amp_component_scripts']['amp-animation'] = 'https://cdn.ampproject.org/v0/amp-animation-0.1.js';
 			}
+		}
 			
 	}
 	return $data;
@@ -7249,6 +7265,7 @@ function ampforwp_comments_sanitizer(){
 		          'AMP_Facebook_Embed_Handler' => array(),
 		          'AMP_Pinterest_Embed_Handler' => array(),
 		          'AMP_Gallery_Embed_Handler' => array(),
+				  'AMP_Tiktok_Embed_Handler'=>array(),
 		    ) ),  apply_filters(  'amp_sidebar_sanitizers', array(
 		           'AMP_Style_Sanitizer' => array(),
 		           'AMP_Blacklist_Sanitizer' => array(),
@@ -8408,7 +8425,7 @@ function ampforwp_pblayout_head_scripts($data){
       $totalmodules = 1;
       if(!empty($previousData)){
          $jsonData = json_decode($previousData,true);
-         if(count($jsonData['rows'])>0){
+         if(isset($jsonData['rows']) && count($jsonData['rows'])>0){
             $totalRows = $jsonData['totalrows'];
             $totalmodules = $jsonData['totalmodules'];
             $previousData = json_encode($jsonData);
@@ -8543,10 +8560,14 @@ function ampforwp_include_required_scripts($content){
 				if($comp == 'auto-ads' || $comp == 'ad'){
 					$script_ver = '0.1';
 				}
-				if($comp=='state'){
+				if($comp=='state' || $comp=='img'){
 					$comp = 'bind';
 				}
-				$comp_url = 'https://cdn.ampproject.org/v0/amp-'.esc_attr($comp).'-'.esc_attr($script_ver).'.js';
+				if($comp == 'img'){
+					$comp_url = "https://cdn.ampproject.org/v0/amp-bind-latest.js";
+				}else{
+					$comp_url = 'https://cdn.ampproject.org/v0/amp-'.esc_attr($comp).'-'.esc_attr($script_ver).'.js';
+				}
 				$is_script = false;
 				$check_comp = 'amp-'.esc_attr($comp);
 				if(!in_array($comp, $comp_to_remove_arr) && !in_array($comp, $comp_to_include_arr) ){
@@ -8577,7 +8598,7 @@ function ampforwp_include_required_scripts($content){
 					}
 				}
 				$comp_to_include_arr = apply_filters('ampforwp_amp_custom_element_to_include',$comp_to_include_arr);
-				if(in_array($comp, $comp_to_include_arr)){
+				if(in_array($comp, $comp_to_include_arr) && $comp_url != ''){
 					if(!preg_match('/<script(\s|\sasync\s)custom-element="amp-'.esc_attr($comp).'"(.*?)>(.*?)<\/script>/s', $content, $matches)){
 						$script_tag = '<head><script custom-element="amp-'.esc_attr($comp).'" src="'.esc_url($comp_url).'" async></script>';
 						$content =  str_replace('<head>', $script_tag, $content);
@@ -8670,6 +8691,25 @@ function ampforwp_include_required_scripts($content){
 			}else{
 				if(preg_match('/<amp-video(.*?) dock|dock=">/', $content)){
 					$content = preg_replace('/<amp-video(.*?) dock|dock=">/','<amp-video $1>', $content);
+				}
+			}
+		}
+	}
+
+	$amp_video_iframe = $xpath->query("//amp-video-iframe");
+	foreach($amp_video_iframe as $node) {
+		if($node->hasAttribute('dock')){
+			if(ampforwp_get_setting('ampforwp-amp-video-docking')){
+				$celem = 'element';
+				$ocomp = 'amp-video-docking';
+				if(!preg_match('/<script(\s|\sasync\s)custom-'.esc_attr($celem).'="'.esc_attr($ocomp).'"(.*?)>(.*?)<\/script>/s', $content)){
+					$o_comp_url = 'https://cdn.ampproject.org/v0/'.esc_attr($ocomp).'-'.esc_attr($script_ver).'.js';
+					$script_tag = '<head><script custom-'.esc_attr($celem).'="'.esc_attr($ocomp).'" src="'.esc_url($o_comp_url).'" async></script>';
+					$content =  str_replace('<head>', $script_tag, $content);
+				}
+			}else{
+				if(preg_match('/<amp-video-iframe(.*?) (dock|dock=")>/', $content)){
+					$content = preg_replace('/<amp-video-iframe(.*?) (dock|dock=")>/','<amp-video-iframe $1>', $content);
 				}
 			}
 		}
@@ -8835,6 +8875,126 @@ if(!function_exists('ampforwp_add_fallback_element')){
 		return $content;
 	}
 }
+
+
+// added fix for youtube video not displaying on AMP using Elementor #5322
+add_filter('ampforwp_modify_the_content','amp_youtube_the_content');
+
+function amp_youtube_the_content($content){
+	/* Check if youtube embed plugin is active
+	This is the solution for facade mode issue
+	if facade mode is enabled in embed youtube plugin then video was not working so this is the 
+	solution for that issue
+	*/
+	if(is_plugin_active('youtube-embed-plus/youtube.php')){
+		$youtube_all_opts = get_option('youtubeprefs_alloptions');
+		if(!empty($youtube_all_opts) && isset($youtube_all_opts['facade_mode'])){
+			if($youtube_all_opts['facade_mode'] == 1){
+				preg_match_all('#<figure class=\"wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio\">(.*?)<\/figure>#is', $content, $video_matches);
+				if(!empty($video_matches) && is_array($video_matches)){
+					foreach ($video_matches as $vmkey => $vmvalue) {
+						if(is_array($vmvalue)){
+							foreach ($vmvalue as $vmkey1 => $vmvalue1) {
+								if(!empty($vmvalue1)){
+									$dochtml = new DOMDocument();
+									$dochtml->loadHTML($vmvalue1);
+									$div_tags = $dochtml->getElementsByTagName('div');
+									if(!empty($div_tags)){
+										foreach($div_tags as $div_tag) {
+											$facade_src = $div_tag->getAttribute('data-facadesrc');
+											if(!empty($facade_src)){
+												$get_id = get_video_id_from_url($facade_src);
+												$content_html = '<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+					<amp-iframe width="800" height="450" src="'.$facade_src.'" class="__youtube_prefs__  epyt-is-override  no-lazyload amp-wp-enforced-sizes" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation" sizes="(min-width: 800px) 800px, 100vw"><div placeholder="" class="amp-wp-iframe-placeholder"></div></amp-iframe>
+					</div></figure>';
+													$content = str_replace($vmvalue1, $content_html, $content);
+											} // facade_src if end
+										} // div_tags foreach end
+									} // div_tags if end 
+								} // vmvalue1 if end
+							} // vmvalue foreach end
+						} // vmvalue if end
+					} // video_matches foreach end
+				} // video_matches if end
+			} // facade_mode if end
+		} // youtube_all_opts if end
+	} // is_plugin_active if end
+
+
+	// checking is Elementor is installed and activated
+	if ( did_action( 'elementor/loaded' ) ) {
+			preg_match_all('/<div\s+class="(.*?)elementor-widget-video"(.*?)data-settings=\'(.*?)\'\sdata-widget_type="video.default">/', $content, $matches);
+				foreach($matches[3] as $video){
+					$video_attr = json_decode($video);
+					$get_url = $video_attr->youtube_url;
+					$get_id = get_video_id_from_url($get_url);
+					if(ampforwp_get_setting('ampforwp-amp-video-lightbox')==true)
+					{
+						$content_html=preg_replace('/<div\s+class="(.*?)elementor-widget-video"(.*?)data-settings=\'(.*?)\'\sdata-widget_type="video.default">/','<amp-lightbox id="open-video'.esc_attr($get_id).'" layout="nodisplay">
+						<div class="amp-lightbox-video" on="tap:open-video'.esc_attr($get_id).'.close,btn-play'.esc_attr($get_id).'.show" role="button" tabindex=0 aria-label="Close Video">
+						<a title="close" class="lb-x" href="#" on="tap:open-video'.esc_attr($get_id).'.close,btn-play'.esc_attr($get_id).'.show" role="button" tabindex=0></a>
+						<div class="amp-video-box"><amp-youtube data-videoid="'.esc_attr($get_id).'" layout="responsive" width="480" height="270"></amp-youtube></div></div></amp-lightbox>
+						<div class="amp-video-img" id="btn-play'.esc_attr($get_id).'" on="tap:video.show, video.play, btn-play'.esc_attr($get_id).'.hide,open-video'.esc_attr($get_id).'" role="button"  aria-label="Play Video">
+						<amp-img alt="Video" src="http://i3.ytimg.com/vi/'.esc_attr($get_id).'/hqdefault.jpg" width="480" height="270" layout="responsive"></amp-img>
+						<div class="amp-video-play-on-image"></div>
+						</div>', $content);
+			
+					}
+					else
+					{
+						$content_html = preg_replace('/<div\s+class="(.*?)elementor-widget-video"(.*?)data-settings=\'(.*?)\'\sdata-widget_type="video.default">/','<amp-youtube 
+						data-videoid="'.esc_attr($get_id).'" 
+						layout="responsive"
+						width="480" height="270"></amp-youtube>', $content);
+						}
+					return $content_html;
+				}
+	}
+	return $content;
+}
+
+ function get_video_id_from_url( $url ) {
+	$short_url_host = 'youtu.be';
+	$video_id = false;
+	$parsed_url = parse_url( $url );
+	
+	if(!isset($parsed_url['host'])){
+		$parsed_url['host'] = '';
+	}
+	if ($short_url_host === substr( $parsed_url['host'], -strlen($short_url_host ) ) ) {
+		// youtu.be/{id}
+		$parts = explode( '/', $parsed_url['path'] );
+		if ( ! empty( $parts ) ) {
+			$video_id = $parts[1];
+		}
+	} else {
+		// ?v={id} or ?list={id}
+		if(isset($parsed_url['query'])){
+		  parse_str( $parsed_url['query'], $query_args );
+		}
+		
+		if ( isset( $query_args['v'] ) ) {
+			if ( false !== strpos( $query_args['v'], '?' ) ) {
+				$video_id = strtok( $query_args['v'], '?' );
+			}
+			else{
+				$video_id = $query_args['v'];
+			}
+		}
+	}
+
+	if ( empty( $video_id ) ) {
+		// /(v|e|embed)/{id}
+		$parts = explode( '/', $parsed_url['path'] );
+
+		if ( in_array( $parts[1], array( 'v', 'e', 'embed' ) ) ) {
+			$video_id = $parts[2];
+		}
+	}
+
+	return $video_id;
+}
+
 if(!function_exists('ampforwp_imagify_webp_compatibility')){
 	function ampforwp_imagify_webp_compatibility($content){
 		if(function_exists('_imagify_init')){
@@ -9296,6 +9456,7 @@ function ampforwp_video_lightbox_css(){
 .amp-lightbox-video{background:rgba(0,0,0,.8);width:100%;height:100%;position:absolute;display:flex;align-items:center;justify-content:center}
 .amp-video-box{max-width:800px}
 .amp-video-img{max-width:600px;position:relative}
+.amp-lightbox-video .lb-x { top: 100px; right: 5%; }
 .amp-video-play-on-image{cursor:pointer;margin:auto;width:56px;height:56px;-webkit-border-radius:50%;border-radius:50%;background-color:rgba(0,0,0,.2);background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAY1BMVEVHcEz///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////80LMUcAAAAIHRSTlMA1d4MSXeg9glf6yEq4hfnnr7Z8qm5U/3Jm1pwFJcmBYTgJ9QAAAIjSURBVGje7VnJdoMwDFSMHVMSQljCklX//5U99NQHGEm22gtz9tPAWNYKsGPHDiou1h3rpvDD4Iumvjp7SWg86yeDM5ipz5KYt53HFfjORn+8KzEI88iizLe4icLlUvtfFZJQ3kXmTzWScTsJPr9FBtovpvn8iExMrJu4jMjGyHh67xIFMOSLOFcoQnUmfr/QPmL1JulfohiGcA/5iBEYt33piFG4br4vjMTGizu1sQRt2FlrjMZNVSBExEBszaoUBOW6JzlMArf6A0XIOzyZoMgkPwDnA5nhsWz/E4wRnBxhVuoTDBMAkGVarma6TQKyTN3iFfttAqJMg1/y1B4JBFSZ+gWCiUZAk+m1QGCIBCSZmoVEhlQCkkxPppP+JiDIZNlxiFmYOXaqnEX2sEwTO9XMq6egTPXsfMMlCMt0mB0v2ARBmYrZYS8gCMjkZ2cHCcG6TMPfE6hLpH7J6m6a+KHN67urdqhQD3bq4Vo94ainTP2kn7RssbqFF7a5buk4dP9T/Ib9KEH5Dg/lBkS/hVJvAiEvU9gPtLFwT0HQh1r9m/IoQX8YEj+t2JwCX+PsT7ojtWH8EIaCJmIo+FQeaxJHs9LBbPkGIt4ilQxjxi8ajj+BgZztra8P8MBcUAi2LCdGXJKsWADgTozeppeuoXJXEPKXfM0FANnDaC7qtlaNbfyq8Uep/rXQYDUvm0M6XKyb6sPPuvdwm5x9wo4dO6j4BoilN6H4pmTiAAAAAElFTkSuQmCC);background-position:center;-webkit-background-size:48px 48px;background-size:48px 48px;position:absolute;top:0;bottom:0;left:0;right:0}';
 }
 
@@ -9317,8 +9478,10 @@ function ampforwp_remove_homepage_breadcrumb($data){
 		if (isset($data["@graph"][2]["breadcrumb"])) {
 			unset($data["@graph"][2]["breadcrumb"]);
 		}
-		if ($data["@graph"][3]["@type"] == 'BreadcrumbList') {
-			unset($data["@graph"][3]);
+		if(array_key_exists(3, $data["@graph"])) {
+			if (!empty($data["@graph"][3]["@type"]) && $data["@graph"][3]["@type"] == 'BreadcrumbList') {
+				unset($data["@graph"][3]);
+			}
 		}
 	}
 	return $data;
@@ -9751,3 +9914,30 @@ function ampforwp_wpml_takeover_compatibility($return) {
   }
   return $return;
 };
+
+if(class_exists('SuperRelatedPosts')){
+	add_action('amp_post_template_css', 'ampforwp_super_related_posts_style'); 
+}
+function ampforwp_super_related_posts_style(){
+	global $wp_filesystem;
+	$css = get_transient('ampforwp_super_related_posts');
+	if($css == false){
+		if(!is_object($wp_filesystem)){
+			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-base.php';
+    		require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-direct.php';
+    		$wp_filesystem = new WP_Filesystem_Direct( array() );
+    	}
+		$css = $wp_filesystem->get_contents(AMPFORWP_PLUGIN_DIR."/includes/super-related-posts.css");
+		set_transient('ampforwp_super_related_posts', $css);
+	}
+	echo ampforwp_css_sanitizer($css);
+}	
+
+if( function_exists('ampforwp_get_setting') && true == ampforwp_get_setting('amp-core-end-point') && class_exists('RankMath') && RankMath\Helper::get_settings( 'general.wc_remove_product_base' ) ){
+  add_filter( 'ampforwp_is_amp_endpoint', 'ampforwp_rankmath_endpoint_fix', 20, 1);
+}
+function ampforwp_rankmath_endpoint_fix($flag){
+  if(isset($_GET['amp'])){
+    return false;
+  }
+}

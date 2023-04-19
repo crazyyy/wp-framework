@@ -151,7 +151,7 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 				'complianz',
 				__( 'Data requests', 'complianz-gdpr' ),
 				__( 'Data requests', 'complianz-gdpr' ),
-				'manage_options',
+				apply_filters('cmplz_capability','manage_privacy'),
 				'cmplz-datarequests',
 				array( $this, 'data_requests_overview' )
 			);
@@ -236,7 +236,7 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 		 */
 
 		public function process_resolve() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( !cmplz_user_can_manage() ) {
 				return;
 			}
 			if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'cmplz-datarequests' )
@@ -262,7 +262,7 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 		 */
 
 		public function process_delete() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( !cmplz_user_can_manage() ) {
 				return;
 			}
 
@@ -283,6 +283,9 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 		 * @return void
 		 */
 		public function update_db_check() {
+			if (!wp_doing_cron() && !cmplz_user_can_manage() ) {
+				return;
+			}
 			if ( get_option( 'cmplz_dnsmpd_db_version' ) != cmplz_version ) {
 				require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 				global $wpdb;
@@ -302,7 +305,7 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 				) $charset_collate;";
 
 				dbDelta( $sql );
-				update_option( 'cmplz_dnsmpd_db_version', cmplz_version, false );
+				update_option( 'cmplz_dnsmpd_db_version', cmplz_version );
 			}
 		}
 
@@ -329,9 +332,9 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 		 */
 
 		private function send_notification_mail(  ) {
-			$email     = sanitize_email( get_option( 'admin_email' ) );
+			$email   = sanitize_email( apply_filters('cmplz_datarequest_email',get_option( 'admin_email' )) );
 			$subject = cmplz_sprintf(__("You have received a new data request on %s", "complianz-gdpr") , get_bloginfo( 'name' ) );
-			$message = $subject.'<br>'.cmplz_sprintf(__("Please check the data request on %s", "complianz-gdpr"), '<a href="'.site_url().'" target="_blank">'.site_url().'</a>');
+			$message = $subject.'<br />'.cmplz_sprintf(__("Please check the data request on %s", "complianz-gdpr"), '<a href="'.site_url().'" target="_blank">'.site_url().'</a>');
 			$this->send_mail( $email, $subject, $message );
 		}
 
@@ -493,9 +496,9 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 				$options = $this->datarequest_options();
 				foreach ( $options as $id => $label ) { ?>
 					<div class="cmplz_datarequest cmplz_datarequest_<?php echo $id?>">
-						<label for="cmplz_datarequest_<?php echo $id?>">
-							<input type="checkbox" value="1" name="cmplz_datarequest_<?php echo $id?>" id="cmplz_datarequest_<?php echo $id?>"/>
-							<?php echo $label['long']?>
+						<label for="cmplz_datarequest_<?php echo esc_attr($id)?>">
+							<input type="checkbox" value="1" name="cmplz_datarequest_<?php echo esc_attr($id)?>" id="cmplz_datarequest_<?php echo esc_attr($id)?>"/>
+							<?php echo esc_html($label['long'])?>
 						</label>
 					</div>
 				<?php } ?>
@@ -510,9 +513,7 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 				}
 			</style>
 			<?php
-			$output = ob_get_contents();
-			ob_end_clean();
-			return $output;
+			return ob_get_clean();
 		}
 	} //class closure
 }

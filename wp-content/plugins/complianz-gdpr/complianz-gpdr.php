@@ -3,7 +3,7 @@
  * Plugin Name: Complianz | GDPR/CCPA Cookie Consent
  * Plugin URI: https://www.wordpress.org/plugins/complianz-gdpr
  * Description: Complianz Privacy Suite for GDPR, CaCPA, DSVGO, AVG with a conditional cookie warning and customized cookie policy
- * Version: 6.3.1
+ * Version: 6.4.3
  * Text Domain: complianz-gdpr
  * Domain Path: /languages
  * Author: Really Simple Plugins
@@ -37,16 +37,16 @@ if ( ! function_exists( 'cmplz_activation_check' ) ) {
 	 * @since 2.1.5
 	 */
 	function cmplz_activation_check() {
-		if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
+		if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
-			wp_die( __( 'Complianz GDPR cannot be activated. The plugin requires PHP 5.6 or higher',
+			wp_die( __( 'Complianz GDPR cannot be activated. The plugin requires PHP 7.2 or higher',
 				'complianz-gdpr' ) );
 		}
 
 		global $wp_version;
-		if ( version_compare( $wp_version, '4.6', '<' ) ) {
+		if ( version_compare( $wp_version, '4.9', '<' ) ) {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
-			wp_die( __( 'Complianz GDPR cannot be activated. The plugin requires WordPress 4.6 or higher',
+			wp_die( __( 'Complianz GDPR cannot be activated. The plugin requires WordPress 4.9 or higher',
 				'complianz-gdpr' ) );
 		}
 	}
@@ -82,9 +82,9 @@ if ( ! class_exists( 'COMPLIANZ' ) ) {
 		public static $records_of_consent;
 
 		private function __construct() {
-			self::setup_constants();
-			self::includes();
-			self::hooks();
+			$this->setup_constants();
+			$this->includes();
+			$this->hooks();
 
 			self::$config  = new cmplz_config();
 			self::$company = new cmplz_company();
@@ -139,7 +139,7 @@ if ( ! class_exists( 'COMPLIANZ' ) ) {
 			//for auto upgrade functionality
 			define( 'cmplz_plugin_free', plugin_basename( __FILE__ ) );
 			$debug = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? time() : '';
-			define( 'cmplz_version', '6.3.1' . $debug );
+			define( 'cmplz_version', '6.4.3' . $debug );
 			define( 'cmplz_plugin_file', __FILE__ );
 		}
 
@@ -246,7 +246,47 @@ if ( ! function_exists( 'cmplz_start_tour' ) ) {
 		if ( ! get_site_option( 'cmplz_tour_shown_once' ) ) {
 			update_site_option( 'cmplz_tour_started', true );
 		}
+		do_action('cmplz_activation');
 	}
 
 	register_activation_hook( __FILE__, 'cmplz_start_tour' );
+}
+
+if ( ! function_exists('cmplz_add_manage_privacy_capability') ){
+	/**
+	 * Add a user capability to WordPress and add to admin and editor role
+	 */
+	function cmplz_add_manage_privacy_capability($handle_subsites = true ){
+		$capability = 'manage_privacy';
+		$role = get_role( 'administrator' );
+		if( $role && !$role->has_cap( $capability ) ){
+			$role->add_cap( $capability );
+		}
+
+		//we need to add this role across subsites as well.
+		if ( $handle_subsites && is_multisite() ) {
+			$sites = get_sites();
+			if (count($sites)>0) {
+				foreach ($sites as $site) {
+					switch_to_blog($site->blog_id);
+					cmplz_add_manage_privacy_capability(false);
+					restore_current_blog();
+				}
+			}
+		}
+	}
+	register_activation_hook( __FILE__, 'cmplz_add_manage_privacy_capability' );
+
+	/**
+	 * When a new site is added, add our capability
+	 * @param $site
+	 *
+	 * @return void
+	 */
+	function cmplz_add_role_to_subsite($site) {
+		switch_to_blog($site->blog_id);
+		cmplz_add_manage_privacy_capability(false);
+		restore_current_blog();
+	}
+	add_action('wp_initialize_site', 'cmplz_add_role_to_subsite', 10, 1);
 }

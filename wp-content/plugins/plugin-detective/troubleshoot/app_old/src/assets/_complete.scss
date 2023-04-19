@@ -1,0 +1,129 @@
+.finished {
+	padding: 1rem 1rem 10rem;
+	&.culprits-found {
+		text-align: center;
+		.culprit-image {
+			text-align: left;
+		}
+	}
+}
+
+.md-empty-state {
+	ul {
+		text-align: left;
+	}
+}
+
+.results {
+	display: flex;
+	flex-direction: column;
+	@include bp(s) {
+		flex-direction: row;
+		justify-content: center;
+	}
+	.result {
+		width: 100%;
+		@include bp(s) {
+			width: 50%;
+		}
+		@include bp(m) {
+			width: 33%;
+		}
+	}
+}
+
+.culprit-image {
+	background: radial-gradient(ellipse at center, rgba(232,234,246,1) 0%,rgba(255,255,255,0) 100%);
+	position: relative;
+	width: 100%;
+	.bg {
+		width: 100%;
+	}
+	.plugin {
+		background: white;
+		border: 2px solid black;
+		border-radius: 5%;
+		bottom: 52%;
+		left: 0;
+		margin: auto;
+		position: absolute;
+		right: 0;
+		text-align: center;
+		width: 40%;
+		.avatar-wrap {
+			width: 100%;
+			&:after {
+				background: md-get-palette-color(lightgreen, 500);
+				border-radius: 50%;
+				content: '';
+				display: block;
+				height: 0;
+				padding-bottom: 100%;
+				width: 100%;
+			}
+		}
+		.avatar {
+			float: left;
+			font-size: 4rem;
+			line-height: 4rem;
+			margin-top: -2rem;
+			padding-top: 50%;
+			text-align: center;
+			width: 100%;
+		}
+	}
+	.sign-text {
+		bottom: 2.5%;
+		color: white;
+		display: flex;
+		flex-direction: column;
+		font-size: 1em;
+		left: 0;
+		height: 25%;
+		margin: auto;
+		position: absolute;
+		right: 0;
+		text-shadow: 1px 1px 1px black;
+		text-transform: uppercase;
+		width: 58%;
+		.text {
+			display: block;
+			line-height: 1.1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			width: 100%;
+		}
+		.multiline-text {
+			line-height: 1.1;
+			max-height: 2.2em;
+			overflow: hidden;
+		}
+		.r {
+			text-align: right;
+		}
+		.top,
+		.bottom {
+			display: flex;
+			font-size: 0.9em;
+			.l, .r {
+				flex: 1;
+			}
+		}
+		.middle {
+			display: flex;
+			flex: 1;
+			flex-direction: column;
+			font-size: 2em;
+			justify-content: center;
+			text-align: center;
+			&.medium-text {
+				font-size: 1.6em;
+			}
+			&.small-text {
+				font-size: 1.2em;
+			}
+		}
+	}
+}
+

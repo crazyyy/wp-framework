@@ -11,6 +11,7 @@
 namespace Google\Site_Kit\Core\Modules;
 
 use Google\Site_Kit\Core\Storage\Setting;
+use Google\Site_Kit\Core\Util\Sanitize;
 
 /**
  * Class for module sharing settings.
@@ -62,7 +63,9 @@ class Module_Sharing_Settings extends Setting {
 				$sanitized_option[ $module_slug ] = array();
 
 				if ( isset( $sharing_settings['sharedRoles'] ) ) {
-					$sanitized_option[ $module_slug ]['sharedRoles'] = $this->sanitize_string_list( $sharing_settings['sharedRoles'] );
+					$filtered_shared_roles = $this->filter_shared_roles( Sanitize::sanitize_string_list( $sharing_settings['sharedRoles'] ) );
+
+					$sanitized_option[ $module_slug ]['sharedRoles'] = $filtered_shared_roles;
 				}
 
 				if ( isset( $sharing_settings['management'] ) ) {
@@ -75,30 +78,28 @@ class Module_Sharing_Settings extends Setting {
 	}
 
 	/**
-	 * Filters empty or non-string elements from a given array.
+	 * Filters the shared roles to only include roles with the edit_posts capability.
 	 *
-	 * @since 1.50.0
+	 * @since 1.85.0.
 	 *
-	 * @param array $elements Array to check.
-	 * @return array Empty array or a filtered array containing only non-empty strings.
+	 * @param array $shared_roles The shared roles list.
+	 * @return string[] The sanitized shared roles list.
 	 */
-	private function sanitize_string_list( $elements = array() ) {
-		if ( ! is_array( $elements ) ) {
-			$elements = array( $elements );
-		}
+	private function filter_shared_roles( array $shared_roles ) {
+		$filtered_shared_roles = array_filter(
+			$shared_roles,
+			function( $role_slug ) {
+				$role = get_role( $role_slug );
 
-		if ( empty( $elements ) ) {
-			return array();
-		}
+				if ( empty( $role ) || ! $role->has_cap( 'edit_posts' ) ) {
+					return false;
+				}
 
-		$filtered_elements = array_filter(
-			$elements,
-			function( $element ) {
-				return is_string( $element ) && ! empty( $element );
+				return true;
 			}
 		);
-		// Avoid index gaps for filtered values.
-		return array_values( $filtered_elements );
+
+		return array_values( $filtered_shared_roles );
 	}
 
 	/**
@@ -117,6 +118,11 @@ class Module_Sharing_Settings extends Setting {
 			}
 			if ( ! isset( $sharing_settings['management'] ) || ! in_array( $sharing_settings['management'], array( 'all_admins', 'owner' ), true ) ) {
 				$settings[ $module_slug ]['management'] = 'owner';
+			}
+
+			if ( isset( $sharing_settings['sharedRoles'] ) && is_array( $sharing_settings['sharedRoles'] ) ) {
+				$filtered_shared_roles                   = $this->filter_shared_roles( $sharing_settings['sharedRoles'] );
+				$settings[ $module_slug ]['sharedRoles'] = $filtered_shared_roles;
 			}
 		}
 
@@ -143,6 +149,34 @@ class Module_Sharing_Settings extends Setting {
 		);
 
 		return $this->set( $this->array_merge_deep( $settings, $partial ) );
+	}
+
+	/**
+	 * Gets the sharing settings for a given module, or the defaults.
+	 *
+	 * @since 1.95.0
+	 *
+	 * @param string $slug Module slug.
+	 * @return array {
+	 *     Sharing settings for the given module.
+	 *     Default sharing settings do not grant any access so they
+	 *     are safe to return for a non-existent or non-shareable module.
+	 *
+	 *     @type array  $sharedRoles A list of WP Role IDs that the module is shared with.
+	 *     @type string $management  Which users can manage the sharing settings.
+	 * }
+	 */
+	public function get_module( $slug ) {
+		$settings = $this->get();
+
+		if ( isset( $settings[ $slug ] ) ) {
+			return $settings[ $slug ];
+		}
+
+		return array(
+			'sharedRoles' => array(),
+			'management'  => 'owner',
+		);
 	}
 
 	/**

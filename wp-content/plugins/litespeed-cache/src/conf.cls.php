@@ -488,7 +488,7 @@ class Conf extends Base {
 				}
 
 				// Reset crawler bypassed list when any of the options WebP replace, guest mode, or cache mobile got changed
-				if ( $id == self::O_IMG_OPTM_WEBP_REPLACE || $id == self::O_GUEST || $id == self::O_CACHE_MOBILE ) {
+				if ( $id == self::O_IMG_OPTM_WEBP || $id == self::O_GUEST || $id == self::O_CACHE_MOBILE ) {
 					$this->cls( 'Crawler' )->clear_disabled_list();
 				}
 			}
@@ -659,7 +659,10 @@ class Conf extends Base {
 			return false;
 		}
 
-		return in_array( $role, $this->conf( self::O_OPTM_EXC_ROLES ) ) ? $role : false;
+		$roles = explode( ',', $role );
+		$found = array_intersect( $roles, $this->conf( self::O_OPTM_EXC_ROLES ) );
+
+		return $found ? implode(',', $found) : false;
 	}
 
 	/**

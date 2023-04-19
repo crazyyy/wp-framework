@@ -27,6 +27,7 @@ class WPCF7_ConfigValidator {
 	const error_attachments_overweight = 112;
 	const error_dots_in_names = 113;
 	const error_colons_in_names = 114;
+	const error_upload_filesize_overlimit = 115;
 
 
 	/**
@@ -410,6 +411,7 @@ class WPCF7_ConfigValidator {
 		$this->detect_unavailable_html_elements( $section, $form );
 		$this->detect_dots_in_names( $section, $form );
 		$this->detect_colons_in_names( $section, $form );
+		$this->detect_upload_filesize_overlimit( $section, $form );
 	}
 
 
@@ -590,9 +592,67 @@ class WPCF7_ConfigValidator {
 
 
 	/**
+	 * Detects errors of uploadable file size overlimit.
+	 *
+	 * @link https://contactform7.com/configuration-errors/upload-filesize-overlimit
+	 */
+	public function detect_upload_filesize_overlimit( $section, $content ) {
+		$upload_max_filesize = ini_get( 'upload_max_filesize' );
+
+		if ( ! $upload_max_filesize ) {
+			return false;
+		}
+
+		$upload_max_filesize = strtolower( $upload_max_filesize );
+		$upload_max_filesize = trim( $upload_max_filesize );
+
+		if ( ! preg_match( '/^(\d+)([kmg]?)$/', $upload_max_filesize, $matches ) ) {
+			return false;
+		}
+
+		if ( 'k' === $matches[2] ) {
+			$upload_max_filesize = (int) $matches[1] * KB_IN_BYTES;
+		} elseif ( 'm' === $matches[2] ) {
+			$upload_max_filesize = (int) $matches[1] * MB_IN_BYTES;
+		} elseif ( 'g' === $matches[2] ) {
+			$upload_max_filesize = (int) $matches[1] * GB_IN_BYTES;
+		} else {
+			$upload_max_filesize = (int) $matches[1];
+		}
+
+		$form_tags_manager = WPCF7_FormTagsManager::get_instance();
+
+		$tags = $form_tags_manager->filter( $content, array(
+			'basetype' => 'file',
+		) );
+
+		foreach ( $tags as $tag ) {
+			if ( $upload_max_filesize < $tag->get_limit_option() ) {
+				return $this->add_error( $section,
+					self::error_upload_filesize_overlimit,
+					array(
+						'message' => __( "Uploadable file size exceeds PHP’s maximum acceptable size.", 'contact-form-7' ),
+						'link' => self::get_doc_link( 'upload_filesize_overlimit' ),
+					)
+				);
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Runs error detection for the mail sections.
 	 */
 	public function validate_mail( $template = 'mail' ) {
+		if (
+			$this->contact_form->is_true( 'demo_mode' ) or
+			$this->contact_form->is_true( 'skip_mail' )
+		) {
+			return;
+		}
+
 		$components = (array) $this->contact_form->prop( $template );
 
 		if ( ! $components ) {

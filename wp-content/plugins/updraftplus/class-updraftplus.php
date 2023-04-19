@@ -23,6 +23,7 @@ class UpdraftPlus {
 		'backblaze'    => 'Backblaze',
 		'webdav' => 'WebDAV',
 		's3generic' => 'S3-Compatible (Generic)',
+		'pcloud' => 'pCloud',
 		'openstack' => 'OpenStack (Swift)',
 		'dreamobjects' => 'DreamObjects',
 		'email' => 'Email'
@@ -55,6 +56,8 @@ class UpdraftPlus {
 	// Used to schedule resumption attempts beyond the tenth, if needed
 	public $current_resumption;
 
+	public $last_successful_resumption;
+
 	public $newresumption_scheduled = false;
 	
 	public $resumption_scheduled_for_cleanup = false;
@@ -73,7 +76,17 @@ class UpdraftPlus {
 	public $no_checkin_last_time;
 	
 	private $removed_autoloaders = array();
+
+	private $no_deprecation_warnings = false;
+
+	private $backup_is_already_complete = false;
 	
+	private $error_count_before_cloud_backup = 0;
+
+	private $semaphore;
+	
+	private $backup_semaphore;
+	 
 	/**
 	 * Class constructor
 	 */
@@ -100,7 +113,7 @@ class UpdraftPlus {
 		);
 		
 		foreach ($load_classes as $class => $relative_path) {
-			if (!class_exists($class)) include_once(UPDRAFTPLUS_DIR.'/'.$relative_path);
+			if (!class_exists($class)) updraft_try_include_file(''.$relative_path, 'include_once');
 		}
 		
 		// Create admin page
@@ -161,6 +174,13 @@ class UpdraftPlus {
 		if ('update-core.php' == $pagenow) {
 			// added filter here instead of admin.php because the  jetpack_just_in_time_msgs filter applied in init hook
 			add_filter('jetpack_just_in_time_msgs', '__return_false', 20);
+		}
+
+		// Cron to clean temporary files even in the absence of a new backup job beginning
+		add_action('updraftplus_clean_temporary_files', 'UpdraftPlus_Filesystem_Functions::clean_temporary_files', 10);
+
+		if (!wp_next_scheduled('updraftplus_clean_temporary_files')) {
+			wp_schedule_event(time(), 'twicedaily', 'updraftplus_clean_temporary_files');
 		}
 	}
 
@@ -264,7 +284,7 @@ class UpdraftPlus {
 					$hash = hash('sha256', $site_id.':::'.$storage_options['token']);
 					if ($hash == $_POST['reset_hash']) {
 						$this->log('This site has been remotely disconnected from UpdraftPlus Vault');
-						include_once(UPDRAFTPLUS_DIR.'/methods/updraftvault.php');
+						updraft_try_include_file('methods/updraftvault.php', 'include_once');
 						$vault = new UpdraftPlus_BackupModule_updraftvault();
 						$vault->ajax_vault_disconnect();
 						// Die, as the vault method has already sent output
@@ -300,6 +320,11 @@ class UpdraftPlus {
 	 * @return Boolean|WP_Error
 	 */
 	public function ensure_phpseclib($classes = array()) {
+
+		if (!$this->phpseclib_requirements_met()) {
+			$this->maybe_log_phpseclib_warnings();
+			// return new WP_Error('phpseclib_php_version', "PHP Secure Communication Library doesn't meet the minimum PHP requirements.");
+		}
 
 		$classes = (array) $classes;
 	
@@ -446,7 +471,7 @@ class UpdraftPlus {
 	public function admin_menu() {
 		// We are in the admin area: now load all that code
 		global $updraftplus_admin;
-		if (empty($updraftplus_admin)) include_once(UPDRAFTPLUS_DIR.'/admin.php');
+		if (empty($updraftplus_admin)) updraft_try_include_file('admin.php', 'include_once');
 
 		if (isset($_GET['wpnonce']) && isset($_GET['page']) && isset($_GET['action']) && 'updraftplus' == $_GET['page'] && 'downloadlatestmodlog' == $_GET['action'] && wp_verify_nonce($_GET['wpnonce'], 'updraftplus_download')) {
 
@@ -553,7 +578,7 @@ class UpdraftPlus {
 					$backup_obj = $storage_objects_and_ids[$method]['object'];
 					$backup_obj->set_options($opts, false, $instance_id);
 				} else {
-					include_once(UPDRAFTPLUS_DIR.'/methods/'.$method.'.php');
+					updraft_try_include_file('methods/'.$method.'.php', 'include_once');
 					$call_class = "UpdraftPlus_BackupModule_".$method;
 					$backup_obj = new $call_class;
 				}
@@ -722,25 +747,38 @@ class UpdraftPlus {
 		add_action('updraftcentral_listener_pre_udrpc_action', array($this, 'updraftcentral_listener_pre_udrpc_action'));
 		add_action('updraftcentral_listener_post_udrpc_action', array($this, 'updraftcentral_listener_post_udrpc_action'));
 
-		if (file_exists(UPDRAFTPLUS_DIR.'/central/bootstrap.php')) {
-			if (file_exists(UPDRAFTPLUS_DIR.'/central/factory.php')) include_once(UPDRAFTPLUS_DIR.'/central/factory.php');
-			include_once(UPDRAFTPLUS_DIR.'/central/bootstrap.php');
-		}
+		add_filter('updraftcentral_host_plugins', array($this, 'attach_updraftcentral_host'));
+		if (file_exists(UPDRAFTPLUS_DIR.'/central/factory.php')) updraft_try_include_file('central/factory.php', 'include_once');
 
 		$load_classes = array();
 
 		if (defined('UPDRAFTPLUS_THIS_IS_CLONE')) {
+			if (is_numeric(UPDRAFTPLUS_THIS_IS_CLONE) && UPDRAFTPLUS_THIS_IS_CLONE < 2) define('DONOTCACHEPAGE', true);
 			$load_classes['UpdraftPlus_Temporary_Clone_Dash_Notice'] = 'includes/updraftclone/temporary-clone-dash-notice.php';
 			$load_classes['UpdraftPlus_Temporary_Clone_User_Notice'] = 'includes/updraftclone/temporary-clone-user-notice.php';
 			$load_classes['UpdraftPlus_Temporary_Clone_Restore'] = 'includes/updraftclone/temporary-clone-restore.php';
 			$load_classes['UpdraftPlus_Temporary_Clone_Auto_Login'] = 'includes/updraftclone/temporary-clone-auto-login.php';
 			$load_classes['UpdraftPlus_Temporary_Clone_Status'] = 'includes/updraftclone/temporary-clone-status.php';
+			add_filter('get_avatar_url', array($this, 'get_avatar_url'), 99);
 		}
 		
 		foreach ($load_classes as $class => $relative_path) {
-			if (!class_exists($class)) include_once(UPDRAFTPLUS_DIR.'/'.$relative_path);
+			if (!class_exists($class)) updraft_try_include_file(''.$relative_path, 'include_once');
 		}
 		
+	}
+
+	/**
+	 * Attach this updraftplus plugin as host of the UpdraftCentral libraries
+	 * (e.g. "central" folder)
+	 *
+	 * @param array $hosts List of plugins having the "central" library integrated into them
+	 *
+	 * @return array
+	 */
+	public function attach_updraftcentral_host($hosts) {
+		$hosts[] = 'updraftplus';
+		return $hosts;
 	}
 	
 	/**
@@ -801,9 +839,9 @@ class UpdraftPlus {
 	 */
 	public function updraftcentral_command_class_wanted($command_php_class) {
 		if ('UpdraftCentral_UpdraftPlus_Commands' == $command_php_class) {
-			include_once(UPDRAFTPLUS_DIR.'/includes/class-updraftcentral-updraftplus-commands.php');
+			updraft_try_include_file('includes/class-updraftcentral-updraftplus-commands.php', 'include_once');
 		} elseif ('UpdraftCentral_UpdraftVault_Commands' == $command_php_class) {
-			include_once(UPDRAFTPLUS_DIR.'/includes/updraftvault.php');
+			updraft_try_include_file('includes/updraftvault.php', 'include_once');
 		}
 	}
 
@@ -904,7 +942,7 @@ class UpdraftPlus {
 				// Return to the end of the file
 				$read_recent = fread($handle, $bytes_back);
 				// Move to end of file - ought to be redundant
-				if (false !== strpos($read_recent, ') The backup apparently succeeded') && false !== strpos($read_recent, 'and is now complete')) {
+				if ((false !== strpos($read_recent, ') The backup apparently succeeded') || false !== strpos($read_recent, ') The backup succeeded')) && false !== strpos($read_recent, 'and is now complete')) {
 					$backup_is_already_complete = true;
 				}
 			}
@@ -2232,7 +2270,7 @@ class UpdraftPlus {
 						$first_opened = strtotime($matches[1]);
 						// The value of 1000 seconds here is somewhat arbitrary; but allows for the problem to occur in ~ the first 15 minutes. In practice, the problem is extremely rare; if this does not catch it, we can tweak the algorithm.
 						if (time() - $first_opened < 1000) {
-							$this->log("This backup task (".$this->nonce.") failed to load its job data (possible database server malfunction), but appears to be only recently started: scheduling a fresh resumption in order to try again, and then ending this resumption ($time_now, ".$this->backup_time.") (existing jobdata keys: ".implode(', ', array_keys($this->jobdata)).")");
+							$this->log("This backup task (".$this->nonce.") failed to load its job data (possible database server malfunction), but has only recently started: scheduling a fresh resumption in order to try again, and then ending this resumption ($time_now, ".$this->backup_time.") (existing jobdata keys: ".implode(', ', array_keys($this->jobdata)).")");
 							UpdraftPlus_Job_Scheduler::reschedule(120);
 							die;
 						}
@@ -2409,7 +2447,7 @@ class UpdraftPlus {
 
 		// Sanity check
 		if (empty($this->backup_time)) {
-			$this->log('The backup_time parameter appears to be empty (usually caused by resuming an already-complete backup).');
+			$this->log('The backup_time parameter is empty (usually caused by resuming an already-complete backup).');
 			return false;
 		}
 
@@ -2429,7 +2467,7 @@ class UpdraftPlus {
 
 		global $updraftplus_backup;
 		// Bring in all the backup routines
-		include_once(UPDRAFTPLUS_DIR.'/backup.php');
+		updraft_try_include_file('backup.php', 'include_once');
 		$updraftplus_backup = new UpdraftPlus_Backup($backup_files, apply_filters('updraftplus_files_altered_since', -1, $job_type));
 
 		$undone_files = array();
@@ -2496,7 +2534,7 @@ class UpdraftPlus {
 					if (!empty($dbinfo) && is_array($dbinfo) && !empty($dbinfo['host'])) {
 						$db_descrip = "External DB $whichdb - ".$dbinfo['user'].'@'.$dbinfo['host'].'/'.$dbinfo['name'];
 					} else {
-						$db_descrip = "External DB $whichdb - details appear to be missing";
+						$db_descrip = "External DB $whichdb - details are missing";
 					}
 				}
 
@@ -2786,7 +2824,7 @@ class UpdraftPlus {
 	 * @return object
 	 */
 	public function get_updraftplus_clone() {
-		if (!class_exists('UpdraftPlus_Clone')) include_once(UPDRAFTPLUS_DIR.'/includes/updraftplus-clone.php');
+		if (!class_exists('UpdraftPlus_Clone')) updraft_try_include_file('includes/updraftplus-clone.php', 'include_once');
 		return new UpdraftPlus_Clone();
 	}
 
@@ -2808,6 +2846,7 @@ class UpdraftPlus {
 		
 		if (isset($request['clone_url'])) $options['clone_url'] = $request['clone_url'];
 		if (isset($request['key'])) $options['key'] = $request['key'];
+		if (isset($request['clone_region'])) $options['clone_region'] = $request['clone_region'];
 		if (isset($request['backup_nonce']) && isset($request['backup_timestamp'])) {
 			if ('current' != $request['backup_nonce'] && 'current' != $request['backup_timestamp']) {
 				$options['use_nonce'] = $request['backup_nonce'];
@@ -2864,6 +2903,8 @@ class UpdraftPlus {
 		$jobdata[] = $options['clone_url'];
 		$jobdata[] = 'clone_key';
 		$jobdata[] = $options['key'];
+		$jobdata[] = 'clone_region';
+		$jobdata[] = $options['clone_region'];
 		$jobdata[] = 'remotesend_info';
 		$jobdata[] = array('url' => $options['clone_url']);
 		$jobdata[$backup_database_key] = $db_backups;
@@ -3034,7 +3075,7 @@ class UpdraftPlus {
 		
 		$semaphore = ($backup_files ? 'f' : '') . ($backup_database ? 'd' : '');
 		
-		if (!class_exists('UpdraftPlus_Semaphore')) include_once(UPDRAFTPLUS_DIR.'/includes/class-semaphore.php');
+		if (!class_exists('UpdraftPlus_Semaphore')) updraft_try_include_file('includes/class-semaphore.php', 'include_once');
 		
 		UpdraftPlus_Semaphore::ensure_semaphore_exists($semaphore);
 
@@ -3085,7 +3126,7 @@ class UpdraftPlus {
 
 		$semaphore = $job_nonce;
 		
-		if (!class_exists('Updraft_Semaphore_3_0')) include_once(UPDRAFTPLUS_DIR.'/includes/class-updraft-semaphore.php');
+		if (!class_exists('Updraft_Semaphore_3_0')) updraft_try_include_file('includes/class-updraft-semaphore.php', 'include_once');
 
 		if (empty($this->backup_semaphore)) {
 			$this->backup_semaphore = new Updraft_Semaphore_3_0($semaphore, 30, array($this));
@@ -3276,6 +3317,8 @@ class UpdraftPlus {
 			return false;
 		}
 
+		$enabled_storage_objects_and_ids = array();
+
 		// All scheduled backups will go through this condition (and some others may too)
 		// This section sets up default options, filters services/instances, and populates $options['remote_storage_instances']
 		if (!is_string($service) && !is_array($service)) {
@@ -3314,29 +3357,29 @@ class UpdraftPlus {
 		}
 		
 		$service = $this->just_one($service);
-		if (is_string($service)) $service = array($service);
-		if (!is_array($service)) $service = array();
+		$service = $this->get_canonical_service_list($service);
 
 		if (!empty($options['extradata']) && !empty($options['extradata']['services']) && preg_match('#remotesend/(\d+)#', $options['extradata']['services'])) {
-			if (array('none') === $service) $service = array();
 			$service[] = 'remotesend';
 		}
 
+		$canonised_storage_objects_and_ids = array_merge(array_flip($service), $enabled_storage_objects_and_ids);
 		$option_cache = array();
-
-		$service = $this->get_canonical_service_list($service);
 		
-		foreach ($service as $serv) {
-			include_once(UPDRAFTPLUS_DIR.'/methods/'.$serv.'.php');
-			$cclass = 'UpdraftPlus_BackupModule_'.$serv;
-			if (!class_exists($cclass)) {
-				error_log("UpdraftPlus: backup class does not exist: $cclass");
-				continue;
+		foreach ($canonised_storage_objects_and_ids as $method_id => $method_info) {
+			// Explained at updraftplus/-/merge_requests/1302#note_206636
+			if (!is_array($method_info)) $canonised_storage_objects_and_ids[$method_id] = $method_info = array();
+			if (!isset($method_info['object']) || !is_object($method_info['object'])) {
+				updraft_try_include_file('methods/'.$method_id.'.php', 'include_once');
+				$cclass = 'UpdraftPlus_BackupModule_'.$method_id;
+				if (class_exists($cclass)) {
+					$method_info['object'] = $canonised_storage_objects_and_ids[$method_id]['object'] = new $cclass;
+				} else {
+					error_log("UpdraftPlus: backup class does not exist: $cclass");
+				}
 			}
-			$obj = new $cclass;
-
-			if (is_callable(array($obj, 'get_credentials'))) {
-				$opts = $obj->get_credentials();
+			if (isset($method_info['object']) && is_object($method_info['object']) && is_callable(array($method_info['object'], 'get_credentials'))) {
+				$opts = $method_info['object']->get_credentials();
 				if (is_array($opts)) {
 					foreach ($opts as $opt) $option_cache[$opt] = UpdraftPlus_Options::get_updraft_option($opt);
 				}
@@ -3554,7 +3597,7 @@ class UpdraftPlus {
 		if ($force_abort) {
 			$send_an_email = true;
 			$final_message = __('The backup was aborted by the user', 'updraftplus');
-			if (!empty($clone_job)) $this->get_updraftplus_clone()->clone_failed_delete(array('clone_id' => $clone_id, 'secret_token' => $secret_token));
+			if (!empty($clone_job)) $this->get_updraftplus_clone()->clone_failed_delete(array('clone_id' => $clone_id, 'secret_token' => $secret_token, 'reason' => 'The backup was aborted by the user'));
 		} elseif (0 == $this->error_count()) {
 			$send_an_email = true;
 			$service = $this->jobdata_get('service');
@@ -3584,10 +3627,30 @@ class UpdraftPlus {
 		
 			$send_an_email = true;
 			$final_message = __('The backup attempt has finished, apparently unsuccessfully', 'updraftplus');
-			if (!empty($clone_job)) $this->get_updraftplus_clone()->clone_failed_delete(array('clone_id' => $clone_id, 'secret_token' => $secret_token));
+			if (!empty($clone_job)) $this->get_updraftplus_clone()->clone_failed_delete(array('clone_id' => $clone_id, 'secret_token' => $secret_token, 'reason' => 'The backup attempt has finished, apparently unsuccessfully'));
 		} else {
 			// There are errors, but a resumption will be attempted
 			$final_message = __('The backup has not finished; a resumption is scheduled', 'updraftplus');
+		}
+
+		if (0 == $this->error_count()) {
+			// delete manifest files
+			$updraft_dir = $this->backups_dir_location();
+			$backup_files_array = $this->jobdata_get('backup_files_array', array());
+
+			if (!empty($backup_files_array)) {
+				foreach ($backup_files_array as $entity => $files) {
+					if ('-size' === substr($entity, -5, 5) || !is_array($files)) continue;
+
+					foreach ($files as $file) {
+						$fullpath = $updraft_dir.'/'.$file;
+						if (file_exists($fullpath.'.list.tmp')) {
+							$this->log("Deleting zip manifest ({$file}.list.tmp)");
+							unlink($fullpath.'.list.tmp');
+						}
+					}
+				}
+			}
 		}
 
 		// Now over-ride the decision to send an email, if needed
@@ -3735,7 +3798,7 @@ class UpdraftPlus {
 		// Make it available to the filter
 		$jobdata['remotestorage_extrainfo'] = $this->remotestorage_extrainfo;
 		
-		if (!class_exists('UpdraftPlus_Notices')) include_once(UPDRAFTPLUS_DIR.'/includes/updraftplus-notices.php');
+		if (!class_exists('UpdraftPlus_Notices')) updraft_try_include_file('includes/updraftplus-notices.php', 'include_once');
 		global $updraftplus_notices;
 		$ws_advert = $updraftplus_notices->do_notice(false, 'report-plain', true);
 		
@@ -3800,8 +3863,9 @@ class UpdraftPlus {
 						$headers[] = "X-UpdraftPlus-Backup-ID: ".$this->nonce;
 						$from_email = apply_filters('updraftplus_email_from_header', $this->get_email_from_header());
 						$from_name = apply_filters('updraftplus_email_from_name_header', $this->get_email_from_name_header());
+						$use_wp_from_name_filter = '' === $from_email;
 						// Notice that we don't use the 'wp_mail_from' filter, but only the 'From:' header to set sender name and sender email address, the reason behind it is that some SMTP plugins override the "wp_mail()" function and they do anything they want inside their own "wp_mail()" function, including not to call the php_mailer filter nor the wp_mail_from and wp_mail_from_name filters, but since the function signature remain the same as the WP one, so they may evaluate and do something with the header parameter
-						if ('' !== $from_email) {
+						if (!$use_wp_from_name_filter) {
 							$headers[] = sprintf('From: %s <%s>', $from_name, $from_email);
 						} else {
 							add_filter('wp_mail_from_name', array($this, 'get_email_from_name_header'), 9);
@@ -3809,6 +3873,7 @@ class UpdraftPlus {
 						add_action('wp_mail_failed', array($this, 'log_email_delivery_failure'));
 						wp_mail(trim($sendmail_addr), $subject, $body, $headers, is_array($this->attachments) ? $this->attachments : array());
 						remove_action('wp_mail_failed', array($this, 'log_email_delivery_failure'));
+						if ($use_wp_from_name_filter) remove_filter('wp_mail_from_name', array($this, 'get_email_from_name_header'), 9);
 					} catch (Exception $e) {
 						$this->log("Exception occurred when sending mail (".get_class($e)."): ".$e->getMessage());
 					}
@@ -3832,12 +3897,12 @@ class UpdraftPlus {
 	}
 
 	/**
-	 * Check whether the provided admin_email is under the same domain with the site, and use it as a sender email to increase the chance of an email being sent successfully (if appropiate)
+	 * Check whether the provided admin_email is under the same domain with the site, and use it as a sender email to increase the chance of an email being sent successfully (if appropriate)
 	 *
 	 * @return String The admin email address if it's found to be in same domain, an empty string otherwise
 	 */
 	public function get_email_from_header() {
-		$sitename = preg_replace('/^www\./i', '', strtolower($_SERVER['SERVER_NAME']));
+		$sitename = $this->get_site_name();
 		$admin_email = get_bloginfo('admin_email');
 		$admin_email_domain = preg_replace('/^[^@]+@(.+)$/', "$1", $admin_email);
 		if (trim(strtolower($sitename)) === trim(strtolower($admin_email_domain))) {
@@ -3853,7 +3918,7 @@ class UpdraftPlus {
 	 * @return String The sender name
 	 */
 	public function get_email_from_name_header() {
-		return sprintf(__('UpdraftPlus on %s', 'updraftplus'), preg_replace('/^www\./i', '', strtolower($_SERVER['SERVER_NAME'])));
+		return sprintf(__('UpdraftPlus on %s', 'updraftplus'), $this->get_site_name());
 	}
 	
 	/**
@@ -4233,10 +4298,6 @@ class UpdraftPlus {
 			if (realpath($fullpath)) {
 				$deleted = unlink($fullpath);
 				$this->log($log.(($deleted) ? 'OK' : 'failed'));
-				if (file_exists($fullpath.'.list.tmp')) {
-					$this->log("Deleting zip manifest ({$file}.list.tmp)");
-					unlink($fullpath.'.list.tmp');
-				}
 				return $deleted;
 			}
 		} else {
@@ -4728,7 +4789,7 @@ class UpdraftPlus {
 
 		$content_type = UpdraftPlus_Manipulation_Functions::get_mime_type_from_filename($fullpath, false);
 		
-		include_once(UPDRAFTPLUS_DIR.'/includes/class-partialfileservlet.php');
+		updraft_try_include_file('includes/class-partialfileservlet.php', 'include_once');
 
 		// Prevent the file being read into memory
 		if (ob_get_level()) {
@@ -4873,7 +4934,7 @@ class UpdraftPlus {
 		$this->jobdata_set('job_type', 'restore');
 		$this->jobdata_set('job_time_ms', $this->job_time_ms);
 		$this->logfile_open($this->nonce);
-		if (!class_exists('Updraft_Restorer')) include_once(UPDRAFTPLUS_DIR.'/restorer.php');
+		if (!class_exists('Updraft_Restorer')) updraft_try_include_file('restorer.php', 'include_once');
 	}
 
 	/**
@@ -4895,7 +4956,7 @@ class UpdraftPlus {
 		$wp_version = $this->get_wordpress_version();
 		global $wpdb;
 
-		if (!class_exists('UpdraftPlus_Database_Utility')) include_once(UPDRAFTPLUS_DIR.'/includes/class-database-utility.php');
+		if (!class_exists('UpdraftPlus_Database_Utility')) updraft_try_include_file('includes/class-database-utility.php', 'include_once');
 
 		$updraft_dir = $this->backups_dir_location();
 
@@ -5397,11 +5458,17 @@ class UpdraftPlus {
 				$select_restore_tables .= '<label for="updraft_restore_table_udp_all_other_tables"  title="'.$all_other_table_title.'">'.__('Include all tables not listed below', 'updraftplus').'</label><br>';
 			}
 
+			$select_table_button = '<p><a href="#" class="updraft-select-all-tables">'.__('Select All', 'updraftplus').'</a> | <a href="#" class="updraft-deselect-all-tables">'.__('Deselect All', 'updraftplus').'</a></p>';
+			$select_restore_tables .= $select_table_button;
+
 			foreach ($tables_found as $table) {
 				$checked = $skip_composite_tables && UpdraftPlus_Database_Utility::table_has_composite_private_key($table) ? '' : 'checked="checked"';
 				$select_restore_tables .= '<input class="updraft_restore_tables_options" id="updraft_restore_table_'.$table.'" '. $checked .' type="checkbox" name="updraft_restore_tables_options[]" value="'.$table.'"> ';
 				$select_restore_tables .= '<label for="updraft_restore_table_'.$table.'">'.$table.'</label><br>';
 			}
+
+			$select_restore_tables .= $select_table_button;
+
 			$select_restore_tables .= '</div></div>';
 
 			$info['addui'] = empty($info['addui']) ? $select_restore_tables : $info['addui'].'<br>'.$select_restore_tables;
@@ -5534,6 +5601,7 @@ class UpdraftPlus {
 		return array(
 			'updraft_autobackup_default',
 			'updraft_dropbox',
+			'updraft_pcloud',
 			'updraft_googledrive',
 			'updraftplus_tmp_googledrive_access_token',
 			'updraftplus_dismissedautobackup',
@@ -5628,6 +5696,8 @@ class UpdraftPlus {
 			'updraft_extradatabases',
 			'updraftplus_tour_cancelled_on',
 			'updraftplus_version',
+			'updraft_dismiss_admin_warning_litespeed',
+			'updraft_dismiss_phpseclib_notice',
 		);
 	}
 
@@ -5642,7 +5712,7 @@ class UpdraftPlus {
 
 		global $wpdb;
 
-		if (!class_exists('UpdraftPlus_Database_Utility')) include_once(UPDRAFTPLUS_DIR.'/includes/class-database-utility.php');
+		if (!class_exists('UpdraftPlus_Database_Utility')) updraft_try_include_file('includes/class-database-utility.php', 'include_once');
 
 		$dbhandle = '';
 		$db_tables_array = array();
@@ -5758,6 +5828,9 @@ class UpdraftPlus {
 				break;
 			case 'shop_vault_50':
 				return apply_filters('updraftplus_com_shop_vault_50', 'https://updraftplus.com/shop/updraftplus-vault-storage-50-gb/');
+				break;
+			case 'shop_vault_250':
+				return apply_filters('updraftplus_com_shop_vault_250', 'https://updraftplus.com/shop/updraftplus-vault-storage-250-gb/');
 				break;
 			case 'anon_backups':
 				return apply_filters('updraftplus_com_anon_backups', 'https://updraftplus.com/upcoming-updraftplus-feature-clone-data-anonymisation/');
@@ -5893,7 +5966,7 @@ class UpdraftPlus {
 				// if multisite do we need site_id column in the where clause?
 				break;
 		}
-		if (!class_exists('UpdraftPlus_Database_Utility')) include_once(UPDRAFTPLUS_DIR.'/includes/class-database-utility.php');
+		if (!class_exists('UpdraftPlus_Database_Utility')) updraft_try_include_file('includes/class-database-utility.php', 'include_once');
 		if ($include_locks) {
 			$wpdb->query($wpdb->prepare("DELETE FROM $table WHERE ($field LIKE %s OR $field LIKE %s OR $field LIKE %s OR $field LIKE %s OR $field LIKE %s OR $field LIKE %s)", UpdraftPlus_Database_Utility::esc_like('updraftplus_unlocked_').'%', UpdraftPlus_Database_Utility::esc_like('updraftplus_locked_').'%', UpdraftPlus_Database_Utility::esc_like('updraftplus_last_lock_time_').'%', UpdraftPlus_Database_Utility::esc_like('updraftplus_semaphore_').'%', UpdraftPlus_Database_Utility::esc_like('updraft_jobdata_').'%', UpdraftPlus_Database_Utility::esc_like('updraft_last_scheduled_').'%'));
 		} else {
@@ -6137,5 +6210,84 @@ class UpdraftPlus {
 			$i++;
 		}
 		return $days_of_the_week;
+	}
+
+	/**
+	 * Identify whether the minimum system requirements for PHPSecLib are met
+	 *
+	 * @return Boolean True if the minimum system requirements are met, false otherwise
+	 */
+	public function phpseclib_requirements_met() {
+		if (version_compare(PHP_VERSION, '5.3', '>=')) return true;
+		$active_phpseclib_related_features = array_intersect($this->list_active_features_requiring_phpseclib(), array('dropbox', 'sftp', 'dbencryption', 'updraftcentral'));
+		if (!empty($active_phpseclib_related_features)) return false;
+		return true;
+	}
+
+	/**
+	 * Log warnings regarding phpseclib requirements that are not met
+	 */
+	public function maybe_log_phpseclib_warnings() {
+		global $updraftplus;
+		static $logged = false;
+		$job_type = $updraftplus->jobdata_get('job_type');
+		if (('backup' === $job_type || 'restore' === $job_type) && !$logged) {
+			$updraftplus->log($this->get_phpseclib_warning_msg(), 'warning');
+			$logged = true; // prevent multiple warnings being logged
+		}
+	}
+
+	/**
+	 * Retrieve phpseclib warning message that will be shown at the front-end and/or included in the backup/restoration logs
+	 *
+	 * @return String The warning message (filterable)
+	 */
+	public function get_phpseclib_warning_msg() {
+		$phpseclib_related_features = array(
+			'dropbox' => 'Dropbox',
+			'sftp' => 'SFTP/SCP',
+			'dbencryption' => 'Database Encryption',
+			'updraftcentral' => 'UpdraftCentral',
+		);
+		$active_phpseclib_related_features = array_intersect_key($phpseclib_related_features, array_flip($this->list_active_features_requiring_phpseclib()));
+		return sprintf(__('Your site is running on PHP version %s and has feature(s) currently enabled (%s) which are deprecated upon this PHP version.', 'updraftplus'), PHP_VERSION, implode(', ', $active_phpseclib_related_features)).' '.sprintf(__('Future releases of UpdraftPlus will require a more recent PHP version to use these features; we recommend that you speak to your web hosting company about updating to version %s or higher.', 'updraftplus'), '5.3');
+	}
+
+	/**
+	 * Get plugin features requiring phpseclib which are active
+	 *
+	 * @return Array an array of active features
+	 */
+	protected function list_active_features_requiring_phpseclib() {
+		$active_features = array();
+		$encryptionphrase = UpdraftPlus_Options::get_updraft_option('updraft_encryptionphrase', '');
+		$updraft_services = $this->get_canonical_service_list();
+		$updraft_central_localkeys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys', '');
+		if (in_array('dropbox', $updraft_services)) $active_features[] = 'dropbox';
+		if ((class_exists('UpdraftPlus_Addons_RemoteStorage_sftp') && in_array('sftp', $updraft_services))) $active_features[] = 'sftp';
+		if (class_exists('UpdraftPlus_Addon_MoreDatabase') && '' !== $encryptionphrase) $active_features[] = 'dbencryption';
+		if (!empty($updraft_central_localkeys)) $active_features[] = 'updraftcentral';
+		return $active_features;
+	}
+
+	/**
+	 * Retrieve site name by outputing the hostname of the URL parsed
+	 *
+	 * @return String Site name
+	 */
+	private function get_site_name() {
+		return preg_replace('/^www\./i', '', strtolower(parse_url(network_site_url(), PHP_URL_HOST)));
+	}
+	
+	/**
+	 * Function to replace avatar with default image in UpdraftClone environment
+	 *
+	 * @param  String $url
+	 *
+	 * @return String $url
+	 */
+	public function get_avatar_url($url) {
+		if (preg_match('/gravatar.com/i', $url)) return UPDRAFTPLUS_URL.'/images/default-avatar.jpg';
+		return $url;
 	}
 }

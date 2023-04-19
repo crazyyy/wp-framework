@@ -1,3 +1,4 @@
+
 <?php if (!defined('ABSPATH')) {
         exit;
     } 
@@ -14,9 +15,6 @@
     $this->load_custom_assets(); 
     $this->load_help_desk();
     ?>
-
-        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700,900" rel="stylesheet">
-
         <div class="wp_fm_lang" style="float:left">
             <h3 class="fm_heading"><span class="fm_head_icon"><img src="<?php echo plugins_url('images/wp_file_manager.svg', dirname(__FILE__)); ?>"></span>
                 <span class="fm_head_txt">
@@ -68,11 +66,10 @@
             <center><img src="<?php echo plugins_url('images/loading.gif', dirname(__FILE__)); ?>" class="wp_fm_loader" /></center>
         </div>
 
-
-        <?php ///***** Verify Lokhal Popup Start *****///
-          //delete_transient( 'filemanager_cancel_lk_popup_'.$current_user->ID );
+        <?php 
         if (false === get_option('filemanager_email_verified_'.$current_user->ID) && (false === (get_transient('filemanager_cancel_lk_popup_'.$current_user->ID)))) {
         ?>
+        
         <div id="lokhal_verify_email_popup" class="lokhal_verify_email_popup">
             <div class="lokhal_verify_email_popup_overlay"></div>
             <div class="lokhal_verify_email_popup_tbl">
@@ -140,8 +137,7 @@
         </div>
 
         <?php
-   } ///***** Verify Lokhal Popup End *****///?>
-
+   } ?>
 
     </div>
 

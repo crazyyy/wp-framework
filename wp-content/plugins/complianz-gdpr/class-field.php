@@ -101,7 +101,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 		}
 
 		public function process_save() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( !cmplz_user_can_manage() ) {
 				return;
 			}
 			if ( isset( $_POST['cmplz_nonce'] ) ) {
@@ -167,6 +167,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 					}
 					if (isset($_POST["cmplz_".$document."_custom_page_url"])){
 						$url = esc_url_raw($_POST["cmplz_".$document."_custom_page_url"]);
+						cmplz_register_translation($url, "cmplz_".$document."_custom_page_url");
 						update_option("cmplz_".$document."_custom_page_url", $url );
 					}
 				}
@@ -250,7 +251,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 
 
 		public function save_multiple( $fieldnames ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return;
 			}
 
@@ -306,7 +307,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 		 */
 
 		public function save_field( $fieldname, $fieldvalue ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return;
 			}
 			$fieldvalue = apply_filters("cmplz_fieldvalue", $fieldvalue, $fieldname);
@@ -355,7 +356,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 
 
 		public function add_multiple_field( $fieldname, $cookie_type = false ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return;
 			}
 
@@ -413,7 +414,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 		 * @return array|bool|int|string|void
 		 */
 		public function sanitize( $value, $type ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return false;
 			}
 			switch ( $type ) {
@@ -1286,12 +1287,14 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			return true;
 		}
 
-		public function get_field_type( $fieldname ) {
-			if ( ! isset( COMPLIANZ::$config->fields[ $fieldname ] ) ) {
-				return false;
-			}
-
-			return COMPLIANZ::$config->fields[ $fieldname ]['type'];
+		/**
+		 * Get current field type
+		 * @param string $fieldname
+		 *
+		 * @return false|string
+		 */
+		public function get_field_type( string $fieldname ) {
+			return COMPLIANZ::$config->fields[ $fieldname ]['type'] ?? false;
 		}
 
 		public
@@ -1988,7 +1991,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			<button class="button" type="submit" name="cmplz_add_multiple"
 			        value="<?php echo esc_html( $args['fieldname'] ) ?>"><?php _e( "Add new",
 					'complianz-gdpr' ) ?></button>
-			<br><br>
+			<br /><br />
 			<?php
 			if ( $values ) {
 				foreach ( $values as $key => $value ) {
@@ -2144,7 +2147,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 					);
 
 					$value  = wp_parse_args( $value, $default_index );
-					$create_processing_agreement_link = '<a href="' . admin_url( "edit.php?post_type=cmplz-processing" ) . '">';
+					$create_processing_agreement_link = '<a href="' . admin_url( "admin.php?page=cmplz-processing-agreements" ) . '">';
 
 					$processing_agreement_outside_c = floatval( ( $value['processing_agreement'] ) == - 1 ) ? 'selected' : '';
 					$html = '<div class="multiple-field">
@@ -2527,7 +2530,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
                             <div class="checkmark">' . cmplz_icon('check', 'success') . '</div>
                         </label>
                         <div class="condition-check-1 '. (!$value['enable_placeholder'] ? 'cmplz-hidden' : '') .'" data-condition-answer-1="1" data-condition-question-1="add_script['.$i.'][enable_placeholder]">
-                            <label>' . __( 'Enter the div class that should be targeted.', 'complianz-gdpr' ) .cmplz_read_more('https://complianz.io/script-center#placeholder/'). '</label>
+                            <label>' . __( 'Enter the div class or ID that should be targeted.', 'complianz-gdpr' ) .cmplz_read_more('https://complianz.io/script-center#placeholder/'). '</label>
                         </div>
                         <div class="condition-check-1 '. (!$value['enable_placeholder'] ? 'cmplz-hidden' : '') .'" data-condition-answer-1="1" data-condition-question-1="add_script['.$i.'][enable_placeholder]">
                             <input type="text"
@@ -2580,7 +2583,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
             $html = "";
             $error = false;
 
-            if ( ! current_user_can( 'manage_options' ) ) {
+            if ( ! cmplz_user_can_manage() ) {
             	$error = true;
             }
             if ( ! isset($_POST['type']) || ($_POST['type'] !== 'add_script' && $_POST['type'] !== 'block_script' && $_POST['type'] !== 'whitelist_script') ) {
@@ -2588,6 +2591,8 @@ if ( ! class_exists( "cmplz_field" ) ) {
             }
 
             if ( !$error ) {
+				//clear cache 
+				delete_transient('cmplz_blocked_scripts');
                 $scripts = get_option("complianz_options_custom-scripts");
 
                 if (!is_array($scripts)) {
@@ -2670,10 +2675,12 @@ if ( ! class_exists( "cmplz_field" ) ) {
         public function ajax_script_save()
         {
             $error = false;
-            if ( ! current_user_can( 'manage_options' ) ) $error = true;
+            if ( ! cmplz_user_can_manage() ) $error = true;
             if ( ! isset($_POST['data']) ) $error = true;
             if ( ! isset($_POST['id']) ) $error = true;
             if ( ! isset($_POST['type']) ) $error = true;
+			//clear transients when updating script
+			delete_transient('cmplz_blocked_scripts');
             if ( $_POST['type'] !== 'add_script' && $_POST['type'] !== 'block_script' && $_POST['type'] !== 'whitelist_script' ) $error = true;
             if ( ! isset($_POST['button_action']) ) $error = true;
             if ( $_POST['button_action'] !== 'save' && $_POST['button_action'] !== 'enable' && $_POST['button_action'] !== 'disable' && $_POST['button_action'] !== 'remove') $error = true;
@@ -2875,7 +2882,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
                         </label>
                         </div>
                         <div class="condition-check-1 '. ($value['iframe'] ? 'cmplz-hidden' : '') .'" data-condition-answer-1="" data-condition-question-1="block_script['.$i.'][iframe]">
-                            <label>' . __( 'Enter the div class that should be targeted.' , 'complianz-gdpr' ) .cmplz_read_more('https://complianz.io/script-center#placeholder/'). '</label>
+                            <label>' . __( 'Enter the div class or ID that should be targeted.' , 'complianz-gdpr' ) .cmplz_read_more('https://complianz.io/script-center#placeholder/'). '</label>
                         </div>
                         <div class="condition-check-1 '. ($value['iframe'] ? 'cmplz-hidden' : '') .'" data-condition-answer-1="" data-condition-question-1="block_script['.$i.'][iframe]">
                             <input type="text"

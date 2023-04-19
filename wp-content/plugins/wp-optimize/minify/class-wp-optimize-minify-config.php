@@ -141,6 +141,8 @@ class WP_Optimize_Minify_Config {
 			'async_js' => '',
 			'disable_css_inline_merge' => true,
 			'ualist' => array('x11.*fox\/54', 'oid\s4.*xus.*ome\/62', 'x11.*ome\/62', 'oobot', 'ighth', 'tmetr', 'eadles', 'ingdo'),
+			'exclude_js_from_page_speed_tools' => false,
+			'exclude_css_from_page_speed_tools' => false,
 			'blacklist' => array(),
 			'ignore_list' => array(),
 			'exclude_js' => '',

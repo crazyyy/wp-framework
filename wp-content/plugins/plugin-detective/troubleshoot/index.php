@@ -22,7 +22,7 @@ $app = pd_troubleshoot();
     var pd_translations = <?php echo json_encode( $app->get_translations() ); ?>;
 	</script>
     <script type=text/javascript src="<?php echo $app->url('app/dist/static/js/manifest.js' ).'?v='.PD_Troubleshoot::VERSION; ?>"></script>
-    <script type=text/javascript src="<?php echo $app->url('app/dist/static/js/vendor.js' ).'?v='.PD_Troubleshoot::VERSION; ?>"></script>
+    <script type=text/javascript src="<?php echo $app->url('app/dist/static/js/chunk-vendors.js' ).'?v='.PD_Troubleshoot::VERSION; ?>"></script>
     <script type=text/javascript src="<?php echo $app->url('app/dist/static/js/app.js' ).'?v='.PD_Troubleshoot::VERSION; ?>"></script>
   </body>
 </html>

@@ -7,6 +7,19 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
  */
 class WP_Optimize_Options {
 
+	/**
+	 * Returns singleton instance object
+	 *
+	 * @return WP_Optimize_Options Returns `WP_Optimize_Options` object
+	 */
+	public static function instance() {
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
+		}
+		return $_instance;
+	}
+
 	public $default_settings = array(
 		'settings' => '',
 		'schedule' => 'false',
@@ -297,8 +310,8 @@ class WP_Optimize_Options {
 		// disable cache and clean any information related to WP-Optimize Cache.
 		WP_Optimize()->get_page_cache()->clean_up();
 		// delete settings from .htaccess
-		WP_Optimize::get_browser_cache()->disable();
-		WP_Optimize::get_gzip_compression()->disable();
+		WP_Optimize()->get_browser_cache()->disable();
+		WP_Optimize()->get_gzip_compression()->disable();
 
 		// delete settings from options table.
 		$keys = '"' . implode('", "', $this->get_additional_settings_keys()) . '"';

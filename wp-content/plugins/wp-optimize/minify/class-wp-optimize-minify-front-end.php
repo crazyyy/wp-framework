@@ -31,6 +31,10 @@ class WP_Optimize_Minify_Front_End {
 
 		// extra_preload_headers is currently not available to users
 		// add_action('send_headers', array($this, 'extra_preload_headers'));
+
+		if (!is_admin()) {
+			add_action('send_headers', array($this, 'add_caching_headers'));
+		}
 	}
 
 	/**
@@ -224,13 +228,13 @@ class WP_Optimize_Minify_Front_End {
 					
 					// decode
 					$res = json_decode($json, true);
-					
-					// add font-display
-					// https://developers.google.com/web/updates/2016/02/font-display
-					$res['code'] = str_ireplace('font-style:normal;', 'font-display:block;font-style:normal;', $res['code']);
-					
+
 					// inline css or fail
-					if (false != $res['status']) {
+					if (null !== $res && false != $res['status']) {
+						// add font-display
+						// https://developers.google.com/web/updates/2016/02/font-display
+						$res['code'] = str_ireplace('font-style:normal;', 'font-display:block;font-style:normal;', $res['code']);
+
 						echo '<style class="optimize_css_1" type="text/css" media="all">'.$res['code'].'</style>' . "\n";
 						return false;
 					} else {
@@ -278,7 +282,7 @@ class WP_Optimize_Minify_Front_End {
 		$res = json_decode($json, true);
 		
 		// inline it + other inlined children styles
-		if (false != $res['status']) {
+		if (null !== $res && false != $res['status']) {
 			echo '<style class="optimize_css_2" type="text/css" media="'.$media.'">'.$res['code'].'</style>' . "\n";
 			
 			// get inline_styles for this handle, minify and print
@@ -509,6 +513,7 @@ class WP_Optimize_Minify_Front_End {
 			
 			// mark duplicates as done and remove from the queue
 			if (!empty($href)) {
+				$version = is_array($version) ? '' : $version;
 				$key = hash('adler32', $href . $version);
 				if (isset($uniq[$key])) {
 					$done = array_merge($done, array($handle));
@@ -595,7 +600,7 @@ class WP_Optimize_Minify_Front_End {
 					$json = WP_Optimize_Minify_Cache_Functions::get_transient($tkey);
 					$json = json_decode($json, true);
 					// check if the cache is empty or if the cache has code
-					if (false === $json || empty($json['code'])) {
+					if (null !== $json && (false === $json || empty($json['code']))) {
 						$res = WP_Optimize_Minify_Functions::download_and_minify($href, null, $minify_css, 'css', null);
 						if ($this->options['debug']) {
 							echo "<!-- wpo_min DEBUG: Uncached file processing now for $href -->\n";
@@ -606,7 +611,7 @@ class WP_Optimize_Minify_Front_End {
 					}
 					
 					// inline css or fail
-					if (!empty($json['code'])) {
+					if (null !== $json && !empty($json['code'])) {
 						// add font-display
 						// https://developers.google.com/web/updates/2016/02/font-display
 						$json['code'] = str_ireplace('font-style:normal;', 'font-display:block;font-style:normal;', $json['code']);
@@ -679,7 +684,11 @@ class WP_Optimize_Minify_Front_End {
 			
 				// push it to the array
 				array_push($header[count($header)-1]['handles'], $handle);
-				array_push($header[count($header)-1]['handles'], $wp_styles->registered[$handle]->ver);
+
+				// We need this because some plugins/theme use empty array as version
+				// https://plugins.trac.wordpress.org/browser/mailin/tags/3.1.54/sendinblue.php#L456
+				$version_str = is_array($wp_styles->registered[$handle]->ver) ? $this->array_to_string_conversion($wp_styles->registered[$handle]->ver) : $wp_styles->registered[$handle]->ver;
+				array_push($header[count($header)-1]['handles'], $version_str);
 
 				// external and ignored css
 			} else {
@@ -705,12 +714,16 @@ class WP_Optimize_Minify_Front_End {
 					// get hash for the inline css in this group
 					$inline_css_group = array();
 					foreach ($header[$i]['handles'] as $h) {
-						if (isset($inline_css[$h]) && !empty($inline_css[$h])) {
+						if (!empty($inline_css) && isset($inline_css[$h]) && !empty($inline_css[$h])) {
 							$inline_css_group[] = $inline_css[$h];
 						}
 					}
 					$inline_css_hash = md5(implode('', $inline_css_group));
-					$hash = hash('adler32', implode('', $header[$i]['handles']).$inline_css_hash . implode('', $header[$i]['versions']));
+					// We need this because some plugins/theme use empty array as version
+					// https://plugins.trac.wordpress.org/browser/mailin/tags/3.1.54/sendinblue.php#L456
+					$version_str = $this->array_to_string_conversion($header[$i]['versions']);
+					$handle_str = $this->array_to_string_conversion($header[$i]['handles']);
+					$hash = hash('adler32', $handle_str . $inline_css_hash . $version_str);
 				} else {
 					$hash = implode('', $header[$i]['handles']) . implode('', $header[$i]['versions']);
 				}
@@ -760,6 +773,8 @@ class WP_Optimize_Minify_Front_End {
 							// decode
 							$res = json_decode($json, true);
 
+							if (null === $res) continue;
+
 							if (isset($res['request']['version']) && $res['request']['version'] != $version && !$this->minify_cache_incremented) {
 								WP_Optimize_Minify_Cache_Functions::reset();
 								$this->minify_cache_incremented = true;
@@ -800,6 +815,7 @@ class WP_Optimize_Minify_Front_End {
 						if (is_object($saved_log) && property_exists($saved_log, 'files')) {
 							$files = (array) $saved_log->files;
 							foreach ($header[$i]['handles'] as $handle) {
+								$handle = is_array($handle) ? '' : $handle;
 								if (isset($files[$handle]) && $files[$handle]->success) {
 									$done[] = $handle;
 								}
@@ -822,17 +838,11 @@ class WP_Optimize_Minify_Front_End {
 					// enqueue file, if not empty
 				} else {
 					if (file_exists($file) && filesize($file) > 0) {
-						
-						// inline CSS if mediatype is not of type "all" (such as mobile only), if the file is smaller than 20KB
-						if (filesize($file) < 20000 && 'all' != $header[$i]['media']) {
-							echo '<style id="wpo-min-header-'.$i.'" media="'.$header[$i]['media'].'">'.file_get_contents($file).'</style>' . "\n";
-						} else {
-							// enqueue it
-							wp_enqueue_style("wpo_min-header-$i", $file_url, array(), 'mycoolversion', $header[$i]['media']);
-							foreach ($header[$i]['handles'] as $h) {
-								if (!$merge_inline_extra_css_js && isset($inline_css[$h]) && !empty($inline_css[$h])) {
-									wp_add_inline_style("wpo_min-header-$i", $inline_css[$h]);
-								}
+						// enqueue it
+						wp_enqueue_style("wpo_min-header-$i", $file_url, array(), 'mycoolversion', $header[$i]['media']);
+						foreach ($header[$i]['handles'] as $h) {
+							if (!$merge_inline_extra_css_js && isset($inline_css[$h]) && !empty($inline_css[$h])) {
+								wp_add_inline_style("wpo_min-header-$i", $inline_css[$h]);
 							}
 						}
 					} else {
@@ -996,7 +1006,9 @@ class WP_Optimize_Minify_Front_End {
 							
 							// decode
 							$res = json_decode($json, true);
-							
+
+							if (null === $res) continue;
+
 							if (isset($res['request']['version']) && $res['request']['version'] != $version && !$this->minify_cache_incremented) {
 								WP_Optimize_Minify_Cache_Functions::reset();
 								$this->minify_cache_incremented = true;
@@ -1292,6 +1304,8 @@ class WP_Optimize_Minify_Front_End {
 							
 							// decode
 							$res = json_decode($json, true);
+
+							if (null === $res) continue;
 							
 							if (isset($res['request']['version']) && $res['request']['version'] != $version && !$this->minify_cache_incremented) {
 								WP_Optimize_Minify_Cache_Functions::reset();
@@ -1352,6 +1366,7 @@ class WP_Optimize_Minify_Front_End {
 						if (is_object($saved_log) && property_exists($saved_log, 'files')) {
 							$files = (array) $saved_log->files;
 							foreach ($header[$i]['handles'] as $handle) {
+								$handle = is_array($handle) ? '' : $handle;
 								if (isset($files[$handle]) && $files[$handle]->success) {
 									$done[] = $handle;
 								}
@@ -1570,6 +1585,7 @@ class WP_Optimize_Minify_Front_End {
 			
 			// mark duplicates as done and remove from the queue
 			if (!empty($href)) {
+				$version = is_array($version) ? '' : $version;
 				$key = hash('adler32', $href . $version);
 				if (isset($uniq[$key])) {
 					$done = array_merge($done, array($handle));
@@ -1710,6 +1726,8 @@ class WP_Optimize_Minify_Front_End {
 							
 							// decode
 							$res = json_decode($json, true);
+
+							if (null === $res) continue;
 
 							if (isset($res['request']['version']) && $res['request']['version'] != $version && !$this->minify_cache_incremented) {
 								WP_Optimize_Minify_Cache_Functions::reset();
@@ -2082,6 +2100,16 @@ class WP_Optimize_Minify_Front_End {
 	}
 
 	/**
+	 * Add caching headers
+	 */
+	public function add_caching_headers() {
+		$cache = WP_Optimize()->get_page_cache();
+		if ($cache->is_enabled()) return;
+		header('Cache-Control: no-cache');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
+	}
+
+	/**
 	 * Includes dependency files
 	 */
 	private function include_dependencies() {
@@ -2202,6 +2230,7 @@ class WP_Optimize_Minify_Front_End {
 	 */
 	private function remove_query_string_from_static_assets() {
 		add_filter('style_loader_src', array('WP_Optimize_Minify_Functions', 'remove_cssjs_ver'), 10, 2);
+		add_filter('script_loader_src', array('WP_Optimize_Minify_Functions', 'remove_cssjs_ver'), 10, 2);
 	}
 
 	/**
@@ -2262,5 +2291,20 @@ class WP_Optimize_Minify_Front_End {
 	private function get_pre_connect_list() {
 		$pre_connect = $this->options['hpreconnect'];
 		return $this->convert_option_to_array($pre_connect);
+	}
+
+	/**
+	 * Array to string conversion
+	 *
+	 * @param array $arr
+	 * @return string
+	 */
+	private function array_to_string_conversion($arr) {
+		$str = '';
+		// implode won't work, because element can be an array
+		foreach ($arr as $value) {
+			$str .= is_array($value) ? '' : $value;
+		}
+		return $str;
 	}
 }

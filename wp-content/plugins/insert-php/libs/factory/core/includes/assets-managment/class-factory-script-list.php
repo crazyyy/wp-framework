@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Wbcr_Factory457_ScriptList extends Wbcr_Factory457_AssetsList {
+class Wbcr_Factory463_ScriptList extends Wbcr_Factory463_AssetsList {
 
 	public $localize_data = [];
 	public $use_ajax = false;
@@ -149,7 +149,7 @@ class Wbcr_Factory457_ScriptList extends Wbcr_Factory457_AssetsList {
 	 * @param string $varname
 	 * @param array $data
 	 *
-	 * @return Wbcr_Factory457_ScriptList $this
+	 * @return Wbcr_Factory463_ScriptList $this
 	 */
 	public function localize( $varname, $data ) {
 		$bindTo = count( $this->all ) == 0 ? null : end( $this->all );

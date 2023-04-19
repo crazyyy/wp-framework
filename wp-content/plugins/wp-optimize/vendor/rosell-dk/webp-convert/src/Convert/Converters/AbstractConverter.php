@@ -212,6 +212,7 @@ abstract class AbstractConverter
 
     protected function logReduction($source, $destination)
     {
+		if (!file_exists($source) || !file_exists($destination)) return;
         $sourceSize = filesize($source);
         $destSize = filesize($destination);
         $this->log(round(($sourceSize - $destSize) / $sourceSize * 100) . '% ');

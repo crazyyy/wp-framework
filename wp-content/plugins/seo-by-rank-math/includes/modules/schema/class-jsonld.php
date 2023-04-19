@@ -17,6 +17,7 @@ use MyThemeShop\Helpers\Url;
 use MyThemeShop\Helpers\Conditional;
 use MyThemeShop\Helpers\WordPress;
 use MyThemeShop\Helpers\Str;
+use MyThemeShop\Helpers\Arr;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -264,7 +265,6 @@ class JsonLD {
 	public function replace_variables( $schemas, $object = [], $data = [] ) {
 		$new_schemas = [];
 		$object      = empty( $object ) ? get_queried_object() : $object;
-
 		foreach ( $schemas as $key => $schema ) {
 			if ( 'metadata' === $key ) {
 				$new_schemas['isPrimary'] = ! empty( $schema['isPrimary'] );
@@ -283,14 +283,14 @@ class JsonLD {
 			}
 
 			// Need this conditions to convert date to valid ISO 8601 format.
-			if ( 'datePublished' === $key && '%date(Y-m-dTH:i:sP)%' === $schema ) {
+			if ( in_array( $key, ['datePublished', 'uploadDate'], true ) && '%date(Y-m-dTH:i:sP)%' === $schema ) {
 				$schema = '%date(Y-m-d\TH:i:sP)%';
 			}
 			if ( 'dateModified' === $key && '%modified(Y-m-dTH:i:sP)%' === $schema ) {
 				$schema = '%modified(Y-m-d\TH:i:sP)%';
 			}
 
-			$new_schemas[ $key ] = Str::contains( '%', $schema ) ? Helper::replace_vars( $schema, $object ) : $schema;
+			$new_schemas[ $key ] = is_string( $schema ) && Str::contains( '%', $schema ) ? Helper::replace_vars( $schema, $object ) : $schema;
 			if ( '' === $new_schemas[ $key ] ) {
 				unset( $new_schemas[ $key ] );
 			}
@@ -524,7 +524,7 @@ class JsonLD {
 	 * @param  array  $data  Schema Data.
 	 */
 	public function add_prop_publisher( &$entity, $key, $data ) {
-		if ( ! isset( $data['publisher'] ) ) {
+		if ( empty( $data['publisher'] ) ) {
 			return;
 		}
 
@@ -589,8 +589,16 @@ class JsonLD {
 	 * @return string
 	 */
 	public function get_website_name() {
-		$name = Helper::get_settings( 'titles.knowledgegraph_name' );
+		return Helper::get_settings( 'titles.website_name', $this->get_organization_name() );
+	}
 
+	/**
+	 * Get website name with a fallback to bloginfo( 'name' ).
+	 *
+	 * @return string
+	 */
+	public function get_organization_name() {
+		$name = Helper::get_settings( 'titles.knowledgegraph_name' );
 		return $name ? $name : get_bloginfo( 'name' );
 	}
 
@@ -699,7 +707,13 @@ class JsonLD {
 			return $description;
 		}
 
-		$description = $product->get_short_description() ? $product->get_short_description() : $product->get_description();
+		$product_object = get_post( $product->get_id() );
+		$description    = Paper::get_from_options( 'pt_product_description', $product_object, '%excerpt%' );
+
+		if ( ! $description ) {
+			$description = $product->get_short_description() ? $product->get_short_description() : $product->get_description();
+		}
+
 		$description = $this->do_filter( 'product_description/apply_shortcode', false ) ? do_shortcode( $description ) : WordPress::strip_shortcodes( $description );
 		return wp_strip_all_tags( $description, true );
 	}
@@ -719,7 +733,10 @@ class JsonLD {
 			return $title;
 		}
 
-		return $product->get_name();
+		$product_object = get_post( $product->get_id() );
+
+		$title = Paper::get_from_options( 'pt_product_title', $product_object, '%title% %sep% %sitename%' );
+		return $title ? $title : $product->get_name();
 	}
 
 	/**
@@ -753,5 +770,26 @@ class JsonLD {
 		}
 
 		$this->parts = $parts;
+	}
+
+	/**
+	 * Get global social profile URLs, to use in the `sameAs` property.
+	 *
+	 * @link https://developers.google.com/webmasters/structured-data/customize/social-profiles
+	 */
+	public function get_social_profiles() {
+		$profiles = [ Helper::get_settings( 'titles.social_url_facebook' ) ];
+
+		$twitter = Helper::get_settings( 'titles.twitter_author_names' );
+		if ( $twitter ) {
+			$profiles[] = "https://twitter.com/$twitter";
+		}
+
+		$addional_profiles = Helper::get_settings( 'titles.social_additional_profiles' );
+		if ( ! empty( $addional_profiles ) ) {
+			$profiles = array_merge( $profiles, Arr::from_string( $addional_profiles, "\n" ) );
+		}
+
+		return array_values( array_filter( $profiles ) );
 	}
 }

@@ -12,11 +12,11 @@ if ( !file_exists(BASE_PATH . 'wp-load.php') ) {
 	die("WordPress not installed here");
 }
 require_once( BASE_PATH . 'wp-load.php' );
-require_once( BASE_PATH . 'wp-includes/class-phpass.php' );
-require_once( BASE_PATH . 'wp-admin/includes/image.php' );
-require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
+require_once( ABSPATH . 'wp-includes/class-phpass.php' );
+require_once( ABSPATH . 'wp-admin/includes/image.php' );
+require_once( ABSPATH . 'wp-admin/includes/plugin.php');
 
-if ( current_user_can( 'manage_options' ) ) {
+if ( cmplz_user_can_manage() ) {
 	ob_start();
 	echo 'Domain:' . esc_url_raw( site_url() ) . "\n";
 	$console_errors = cmplz_get_console_errors();
@@ -32,7 +32,20 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "Server: " . cmplz_get_server() . "\n";
 	$multisite = is_multisite() ? 'yes' : 'no';
 	echo "Multisite: " . $multisite . "\n";
-	echo "\n";
+
+	$auto_updating_plugins = get_option('auto_update_plugins');
+	echo "\n\n"."WordPress settings" . "\n";
+	if ( is_array( $auto_updating_plugins ) && ( in_array('complianz-gdpr-premium/complianz-gpdr-premium.php', $auto_updating_plugins )
+	     || in_array('complianz-gdpr/complianz-gpdr.php', $auto_updating_plugins ) ) ) {
+		echo "auto_update_plugins enabled" . "\n";
+	} else {
+		echo "auto_update_plugins disabled" . "\n";
+	}
+	echo "---------\n\n";
+
+	if (get_option('cmplz_curl_error')) {
+		echo 'CURL error detected: '.get_option('cmplz_curl_error'). "\n";;
+	}
 
 	$plugins = wp_get_active_and_valid_plugins();
 	echo "Active plugins: " . "\n";
@@ -48,16 +61,19 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "---------\n";
 
 	echo implode_array_recursive($settings);
-
 	$wizard   = get_option( 'complianz_options_wizard' );
-	echo "\n\n"."Wizard settings" . "\n";
-	echo "---------\n";
 
-	$t = array_keys($wizard);
-	echo implode_array_recursive($wizard);
+	if ( is_array( $wizard ) ) {
+		echo "\n\n" . "Wizard settings" . "\n";
+		echo "---------\n";
+		$t = array_keys( $wizard );
+		echo implode_array_recursive( $wizard );
+	} else {
+		echo "Wizard not completed yet";
+	}
+
 	do_action( "cmplz_system_status" );
 	$content = ob_get_clean();
-
 
 	if ( function_exists( 'mb_strlen' ) ) {
 		$fsize = mb_strlen( $content, '8bit' );

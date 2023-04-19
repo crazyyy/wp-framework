@@ -2,24 +2,24 @@
     "packages": [
         {
             "name": "afragen/wp-dependency-installer",
-            "version": "4.3.5",
-            "version_normalized": "4.3.5.0",
+            "version": "4.3.12",
+            "version_normalized": "4.3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/wp-dependency-installer.git",
-                "reference": "aee91336474390c60f66398e1d730ea289a36a1f"
+                "reference": "da85ae335c8342878d83b5ed7fe56b58609db4e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/wp-dependency-installer/zipball/aee91336474390c60f66398e1d730ea289a36a1f",
-                "reference": "aee91336474390c60f66398e1d730ea289a36a1f",
+                "url": "https://api.github.com/repos/afragen/wp-dependency-installer/zipball/da85ae335c8342878d83b5ed7fe56b58609db4e1",
+                "reference": "da85ae335c8342878d83b5ed7fe56b58609db4e1",
                 "shasum": ""
             },
             "require": {
                 "afragen/wp-dismiss-notice": "*",
                 "php": ">=5.6"
             },
-            "time": "2022-07-15T19:47:50+00:00",
+            "time": "2023-02-06T04:22:45+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -65,23 +65,23 @@
         },
         {
             "name": "afragen/wp-dismiss-notice",
-            "version": "0.2.5",
-            "version_normalized": "0.2.5.0",
+            "version": "0.3.0",
+            "version_normalized": "0.3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/wp-dismiss-notice.git",
-                "reference": "71029356cc2a8dfa13ee835c08d8a1b484c0e673"
+                "reference": "8b690bc045620811d3c0724c2a2746cf1baab809"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/wp-dismiss-notice/zipball/71029356cc2a8dfa13ee835c08d8a1b484c0e673",
-                "reference": "71029356cc2a8dfa13ee835c08d8a1b484c0e673",
+                "url": "https://api.github.com/repos/afragen/wp-dismiss-notice/zipball/8b690bc045620811d3c0724c2a2746cf1baab809",
+                "reference": "8b690bc045620811d3c0724c2a2746cf1baab809",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6"
             },
-            "time": "2022-05-16T16:32:39+00:00",
+            "time": "2023-01-02T19:27:07+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -127,17 +127,17 @@
         },
         {
             "name": "wp-cli/wp-config-transformer",
-            "version": "v1.3.0",
-            "version_normalized": "1.3.0.0",
+            "version": "v1.3.1",
+            "version_normalized": "1.3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/wp-config-transformer.git",
-                "reference": "2e90eefc6b8f5166f53aa5414fd8f1a572164ef1"
+                "reference": "c5b5349b86a3eea6c8a3f401f556f21a717aa80e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/wp-config-transformer/zipball/2e90eefc6b8f5166f53aa5414fd8f1a572164ef1",
-                "reference": "2e90eefc6b8f5166f53aa5414fd8f1a572164ef1",
+                "url": "https://api.github.com/repos/wp-cli/wp-config-transformer/zipball/c5b5349b86a3eea6c8a3f401f556f21a717aa80e",
+                "reference": "c5b5349b86a3eea6c8a3f401f556f21a717aa80e",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +146,7 @@
             "require-dev": {
                 "wp-cli/wp-cli-tests": "^3.1"
             },
-            "time": "2022-01-10T18:37:52+00:00",
+            "time": "2023-01-12T03:32:05+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -168,7 +168,7 @@
             "homepage": "https://github.com/wp-cli/wp-config-transformer",
             "support": {
                 "issues": "https://github.com/wp-cli/wp-config-transformer/issues",
-                "source": "https://github.com/wp-cli/wp-config-transformer/tree/v1.3.0"
+                "source": "https://github.com/wp-cli/wp-config-transformer/tree/v1.3.1"
             },
             "install-path": "../wp-cli/wp-config-transformer"
         }

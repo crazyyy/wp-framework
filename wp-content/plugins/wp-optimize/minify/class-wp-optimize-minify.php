@@ -6,6 +6,19 @@ define('WP_OPTIMIZE_MINIFY_DIR', dirname(__FILE__));
 if (!defined('WP_OPTIMIZE_SHOW_MINIFY_ADVANCED')) define('WP_OPTIMIZE_SHOW_MINIFY_ADVANCED', false);
 
 class WP_Optimize_Minify {
+
+	/**
+	 * Minify commands object
+	 *
+	 * @var WP_Optimize_Minify_Commands
+	 */
+	public $minify_commands;
+
+	/**
+	 * @var bool
+	 */
+	private $enabled;
+
 	/**
 	 * Constructor - Initialize actions and filters
 	 *
@@ -51,6 +64,19 @@ class WP_Optimize_Minify {
 		// Handle minify cache purging.
 		add_action('wp_loaded', array($this, 'handle_purge_minify_cache'));
 
+	}
+
+	/**
+	 * Returns singleton instance object
+	 *
+	 * @return WP_Optimize_Minify Returns `WP_Optimize_Minify` object
+	 */
+	public static function instance() {
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
+		}
+		return $_instance;
 	}
 
 	/**
@@ -147,7 +173,7 @@ class WP_Optimize_Minify {
 	 * @return void
 	 */
 	private function load_premium() {
-		$this->premium = new WP_Optimize_Minify_Premium();
+		new WP_Optimize_Minify_Premium();
 	}
 
 	/**
@@ -176,7 +202,7 @@ class WP_Optimize_Minify {
 	 */
 	public function plugin_deactivate() {
 		if (defined('WPO_MINIFY_PHP_VERSION_MET') && !WPO_MINIFY_PHP_VERSION_MET) return;
-		if (class_exists('WP_Optimize_Minify_Cache_Functions')) {
+		if (class_exists('WP_Optimize_Minify_Cache_Functions') && WP_Optimize()->get_page_cache()->should_purge) {
 			WP_Optimize_Minify_Cache_Functions::purge_temp_files();
 			WP_Optimize_Minify_Cache_Functions::purge_old();
 			WP_Optimize_Minify_Cache_Functions::purge_others();
@@ -244,5 +270,20 @@ class WP_Optimize_Minify {
 			</div>
 		<?php
 		endif;
+	}
+
+	/**
+	 * Check if current user can purge cache.
+	 *
+	 * @return bool
+	 */
+	public function can_purge_cache() {
+		$required_capability = is_multisite() ? 'manage_network_options' : 'manage_options';
+
+		if (WP_Optimize::is_premium()) {
+			return current_user_can($required_capability) || WP_Optimize_Premium()->can_purge_the_cache();
+		} else {
+			return current_user_can($required_capability);
+		}
 	}
 }

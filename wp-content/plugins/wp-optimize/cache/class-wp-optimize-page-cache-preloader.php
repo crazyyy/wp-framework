@@ -2,6 +2,9 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
+if (!class_exists('WP_Optimize_Load_Url_Task')) {
+	require_once(WPO_PLUGIN_MAIN_PATH . 'cache/class-wpo-load-url-task.php');
+}
 
 class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
@@ -17,7 +20,6 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	public function __construct() {
 		parent::__construct();
 
-		add_filter('cron_schedules', array($this, 'cron_add_intervals'));
 		add_action('wpo_page_cache_schedule_preload', array($this, 'run_scheduled_cache_preload'));
 		add_filter('wpo_preload_headers', array($this, 'preload_headers'));
 	}
@@ -99,29 +101,6 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	}
 
 	/**
-	 * Add intervals to cron schedules.
-	 *
-	 * @param array $schedules
-	 *
-	 * @return array
-	 */
-	public function cron_add_intervals($schedules) {
-		$interval = $this->get_continue_preload_cron_interval();
-		$schedules['wpo_page_cache_preload_continue_interval'] = array(
-			'interval' => $interval,
-			'display' => round($interval / 60, 1).' minutes'
-		);
-
-		$schedules['wpo_use_cache_lifespan'] = array(
-			'interval' => WPO_Cache_Config::instance()->get_option('page_cache_length'),
-			'display' => 'Same as cache lifespan: '.WPO_Cache_Config::instance()->get_option('page_cache_length_value').' '.WPO_Cache_Config::instance()->get_option('page_cache_length_unit')
-		);
-
-		return $schedules;
-	}
-
-
-	/**
 	 * Check if we need run cache preload and run it.
 	 */
 	public function run_scheduled_cache_preload() {
@@ -136,9 +115,11 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			 * Filters the allowed time difference between the cache exiry and the current time, in seconds.
 			 * If the cache expires in less than $allowed_time_difference, preload. Otherwise leave it.
 			 *
-			 * @param integer $allowed_time_difference The time difference, in seconds (default = 600)
+			 * @param integer $allowed_time_difference The time difference, in seconds (default is same as changed time limit)
 			 */
-			$allowed_time_difference = apply_filters('wpo_preload_allowed_time_difference', 600);
+			$time_limit = (defined('WP_OPTIMIZE_SET_TIME_LIMIT') && WP_OPTIMIZE_SET_TIME_LIMIT > 15) ? WP_OPTIMIZE_SET_TIME_LIMIT : 1800;
+
+			$allowed_time_difference = apply_filters('wpo_preload_allowed_time_difference', $time_limit);
 			$page_cache_lifespan = WPO_Cache_Config::instance()->get_option('page_cache_length', 0);
 			$last_preload_time = $this->options->get_option('wpo_last_page_cache_preload', 0);
 			$time_since_last_preload = time() - $last_preload_time;
@@ -351,18 +332,6 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		}
 
 		return $urls;
-	}
-
-	/**
-	 * Get the path to a local sitemap file
-	 *
-	 * @return string
-	 */
-	private function get_local_sitemap_file() {
-		if (!function_exists('get_home_path')) {
-			include_once ABSPATH . '/wp-admin/includes/file.php';
-		}
-		return trailingslashit(get_home_path()) . $this->get_sitemap_filename();
 	}
 
 	/**

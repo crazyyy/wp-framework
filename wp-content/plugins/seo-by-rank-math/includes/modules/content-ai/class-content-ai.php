@@ -10,6 +10,7 @@
 
 namespace RankMath\ContentAI;
 
+use RankMath\KB;
 use RankMath\Helper;
 use RankMath\CMB2;
 use RankMath\Traits\Hooker;
@@ -29,13 +30,14 @@ class Content_AI {
 	 * Class constructor.
 	 */
 	public function __construct() {
+		$this->action( 'rest_api_init', 'init_rest_api' );
+
 		if ( ! Helper::has_cap( 'content_ai' ) ) {
 			return;
 		}
 
 		$this->filter( 'rank_math/analytics/post_data', 'add_contentai_data', 10, 2 );
 		$this->filter( 'rank_math/settings/general', 'add_settings' );
-		$this->action( 'rest_api_init', 'init_rest_api' );
 		$this->action( 'rank_math/admin/editor_scripts', 'editor_scripts', 20 );
 		$this->filter( 'rank_math/metabox/post/values', 'add_metadata', 10, 2 );
 		$this->action( 'cmb2_admin_init', 'add_content_ai_metabox', 11 );
@@ -101,7 +103,7 @@ class Content_AI {
 					'icon'  => 'rm-icon rm-icon-target',
 					'title' => esc_html__( 'Content AI', 'rank-math' ),
 					/* translators: Link to kb article */
-					'desc'  => sprintf( esc_html__( 'Get sophisticated AI suggestions for related Keywords, Questions & Links to include in the SEO meta & Content Area. %s.', 'rank-math' ), '<a href="' . \RankMath\KB::get( 'content-ai-settings' ) . '" target="_blank">' . esc_html__( 'Learn more', 'rank-math' ) . '</a>' ),
+					'desc'  => sprintf( esc_html__( 'Get sophisticated AI suggestions for related Keywords, Questions & Links to include in the SEO meta & Content Area. %s.', 'rank-math' ), '<a href="' . KB::get( 'content-ai-settings', 'Options Panel Content AI Tab' ) . '" target="_blank">' . esc_html__( 'Learn more', 'rank-math' ) . '</a>' ),
 					'file'  => dirname( __FILE__ ) . '/views/options.php',
 				],
 			],
@@ -115,7 +117,7 @@ class Content_AI {
 	 * Add link suggestion metabox.
 	 */
 	public function add_content_ai_metabox() {
-		if ( ! $this->can_add_tab() || 'classic' !== Helper::get_current_editor() ) {
+		if ( ! self::can_add_tab() || 'classic' !== Helper::get_current_editor() ) {
 			return;
 		}
 
@@ -144,7 +146,7 @@ class Content_AI {
 	 * @return void
 	 */
 	public function editor_scripts() {
-		if ( ! $this->can_add_tab() ) {
+		if ( ! self::can_add_tab() ) {
 			return;
 		}
 
@@ -213,6 +215,10 @@ class Content_AI {
 		}
 
 		$values['ca_keyword'] = $keyword;
+
+		$content_ai_data          = $screen->get_meta( $screen->get_object_type(), $screen->get_object_id(), 'rank_math_contentai_score' );
+		$content_ai_score         = ! empty( $content_ai_data ) && is_array( $content_ai_data ) ? round( array_sum( array_values( $content_ai_data ) ) / count( $content_ai_data ) ) : 0;
+		$values['contentAiScore'] = absint( $content_ai_score );
 
 		return $values;
 	}
@@ -288,7 +294,7 @@ class Content_AI {
 	/**
 	 * Whether to load Content AI data.
 	 */
-	private function can_add_tab() {
+	public static function can_add_tab() {
 		return in_array( WordPress::get_post_type(), (array) Helper::get_settings( 'general.content_ai_post_types' ), true );
 	}
 }

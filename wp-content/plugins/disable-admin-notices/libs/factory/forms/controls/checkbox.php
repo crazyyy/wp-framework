@@ -20,9 +20,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms453_CheckboxControl') ) {
+	if( !class_exists('Wbcr_FactoryForms463_CheckboxControl') ) {
 
-		class Wbcr_FactoryForms453_CheckboxControl extends Wbcr_FactoryForms453_Control {
+		class Wbcr_FactoryForms463_CheckboxControl extends Wbcr_FactoryForms463_Control {
 
 			public $type = 'checkbox';
 
@@ -71,7 +71,7 @@
 						}
 					}
 
-					echo '<style>' . $print_styles . '</style>';
+					echo '<style>' . esc_html($print_styles) . '</style>';
 					?>
 
 					<script>
@@ -82,8 +82,8 @@
 						if( void 0 === window.__factory_checkbox_control_events_off_data ) {
 							window.__factory_checkbox_control_events_off_data = {};
 						}
-						window.__factory_checkbox_control_events_on_data['<?php echo $name_on_form ?>'] = <?php echo $events_on_string_data ?>;
-						window.__factory_checkbox_control_events_off_data['<?php echo $name_on_form ?>'] = <?php echo $events_off_string_data ?>;
+						window.__factory_checkbox_control_events_on_data['<?php echo esc_attr($name_on_form); ?>'] = <?php echo $events_on_string_data ?>;
+						window.__factory_checkbox_control_events_off_data['<?php echo esc_attr($name_on_form); ?>'] = <?php echo $events_off_string_data ?>;
 					</script>
 				<?php
 				}
@@ -130,18 +130,18 @@
 				<div <?php $this->attrs() ?>>
 					<button type="button" class="btn btn-default btn-small btn-sm factory-on <?php if( $value ) {
 						echo 'active';
-					} ?>"><?php _e('On', 'wbcr_factory_forms_453') ?></button>
+					} ?>"><?php _e('On', 'wbcr_factory_forms_463') ?></button>
 					<button type="button" class="btn btn-default btn-small btn-sm factory-off <?php if( !$value ) {
 						echo 'active';
-					} ?>" data-value="0"><?php _e('Off', 'wbcr_factory_forms_453') ?></button>
-					<input type="checkbox" style="display: none" id="<?php echo $name_on_form ?>" class="factory-result" name="<?php echo $name_on_form ?>" value="<?php echo $value ?>" <?php if( $value ) {
+					} ?>" data-value="0"><?php _e('Off', 'wbcr_factory_forms_463') ?></button>
+					<input type="checkbox" style="display: none" id="<?php echo esc_attr($name_on_form); ?>" class="factory-result" name="<?php echo esc_attr($name_on_form); ?>" value="<?php echo esc_attr($value); ?>" <?php if( $value ) {
 						echo 'checked="checked"';
 					} ?>" />
 				</div>
 				<?php if( $this->getOption('tumblerHint', false) ) { ?>
 				<div class="factory-checkbox-tumbler-hint factory-tumbler-hint" style="display: none;">
 					<div class="factory-tumbler-content">
-						<?php echo $this->getOption('tumblerHint') ?>
+						<?php echo esc_html($this->getOption('tumblerHint')); ?>
 					</div>
 				</div>
 			<?php } ?>

@@ -7,7 +7,7 @@ function cmplz_add_integrations_menu() {
 		'complianz',
 		__( 'Integrations', 'complianz-gdpr' ),
 		__( 'Integrations', 'complianz-gdpr' ),
-		'manage_options',
+		apply_filters('cmplz_capability','manage_privacy'),
 		"cmplz-script-center",
 		'cmplz_integrations_page'
 	);
@@ -57,7 +57,7 @@ function cmplz_integrations_page() {
 
 function process_integrations_services_save() {
 
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! cmplz_user_can_manage() ) {
 		return;
 	}
 	if ( isset( $_POST['cmplz_save_integrations_type_plugins'] ) || isset($_POST["cmplz_save_integrations_type_services"]) ) {
@@ -69,8 +69,6 @@ function process_integrations_services_save() {
 		if ( isset($_POST["cmplz_save_integrations_type_services"])    ) {
 
 			$thirdparty_services = COMPLIANZ::$config->thirdparty_services;
-			unset( $thirdparty_services['google-fonts'] );
-
 			$active_services = cmplz_get_value( 'thirdparty_services_on_site' );
 			if ( !is_array($active_services) ) $active_services = array();
 			foreach ( $thirdparty_services as $service => $label ) {

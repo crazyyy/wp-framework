@@ -127,29 +127,6 @@ function cmplz_notice_cookie_scan() {
 add_action( 'cmplz_notice_cookie_scan', 'cmplz_notice_cookie_scan' );
 
 
-add_action( 'cmplz_notice_thirdparty_services_on_site', 'cmplz_google_fonts_recommendation' );
-function cmplz_google_fonts_recommendation() {
-	if ( ! cmplz_has_region( 'eu' ) ) {
-		return;
-	}
-
-	$thirdparties = cmplz_get_value( 'thirdparty_services_on_site' );
-	if ( $thirdparties ) {
-		foreach ( $thirdparties as $thirdparty => $key ) {
-			if ( $key != 1 ) {
-				continue;
-			}
-			if ( $thirdparty === 'google-fonts' ) {
-				cmplz_sidebar_notice( cmplz_sprintf( __( "Your site uses Google Fonts. For best privacy compliance, we recommend to self host Google Fonts. To self host, follow the instructions in %sthis article%s",
-					'complianz-gdpr' ),
-					'<a target="_blank" href="https://complianz.io/self-hosting-google-fonts-for-wordpress/">',
-					'</a>' ) );
-
-			}
-		}
-	}
-}
-
 function cmplz_google_fonts_warning() {
     //Divi specific notice
     if (function_exists('et_setup_theme')) {
@@ -166,7 +143,7 @@ function cmplz_used_cookies_notice() {
 	}
 
 	//not relevant if cookie blocker is disabled
-	if ( cmplz_get_value( 'disable_cookie_block' ) == 1 ) {
+	if ( !cmplz_can_run_cookie_blocker() ) {
 		return;
 	}
 
@@ -229,7 +206,6 @@ function cmplz_notice_add_pages_to_menu() {
 	$created_pages = COMPLIANZ::$document->get_created_pages();
 	$pages_not_in_menu = COMPLIANZ::$document->pages_not_in_menu();
 	if ( $pages_not_in_menu ) {
-		cmplz_sidebar_notice( cmplz_sprintf( __( 'You are required to put the "%s" page clearly visible on your homepage.', 'complianz-gdpr' ), cmplz_us_cookie_statement_title() ) );
 		$docs = implode( ", ", $pages_not_in_menu );
 		//not using cmplz_sprintf( here, as one variant does not include a %s, causing a translation error notice
 		cmplz_sidebar_notice( sprintf( esc_html( _n( 'The generated document %s has not been assigned to a menu yet, you can do this now, or skip this step and do it later.',

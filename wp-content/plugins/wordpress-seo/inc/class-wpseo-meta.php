@@ -137,6 +137,12 @@ class WPSEO_Meta {
 				'default_value' => '0',
 				'description'   => '',
 			],
+			'inclusive_language_score' => [
+				'type'          => 'hidden',
+				'title'         => 'inclusive_language_score',
+				'default_value' => '0',
+				'description'   => '',
+			],
 			'is_cornerstone' => [
 				'type'          => 'hidden',
 				'title'         => 'is_cornerstone',
@@ -1018,46 +1024,75 @@ class WPSEO_Meta {
 			->where( 'primary_focus_keyword', $keyword )
 			->where( 'object_type', 'post' )
 			->where_not_equal( 'object_id', $post_id )
-			->limit( 2 )
+			->where_not_equal( 'post_status', 'trash' )
+			->limit( 2 )    // Limit to 2 results to save time and resources.
 			->find_array();
 
-		$callback = static function ( $row ) {
-			return (int) $row['object_id'];
-		};
-		$post_ids = array_map( $callback, $post_ids );
+		// Get object_id from each subarray in $post_ids.
+		$post_ids = array_map(
+			function( $row ) {
+				return $row['object_id'];
+			},
+			$post_ids
+		);
 
 		/*
-		 * If Yoast SEO Premium is active, get the additional keywords as well.
+		 * If Premium is installed, get the additional keywords as well.
 		 * We only check for the additional keywords if we've not already found two.
 		 * In that case there's no use for an additional query as we already know
 		 * that the keyword has been used multiple times before.
 		 */
-		if ( YoastSEO()->helpers->product->is_premium() && count( $post_ids ) < 2 ) {
-			$query = [
-				'meta_query'     => [
-					[
-						'key'     => '_yoast_wpseo_focuskeywords',
-						'value'   => sprintf( '"keyword":"%s"', $keyword ),
-						'compare' => 'LIKE',
-					],
-				],
-				'post__not_in'   => [ $post_id ],
-				'fields'         => 'ids',
-				'post_type'      => 'any',
-
-				/*
-				 * We only need to return zero, one or two results:
-				 * - Zero: keyword hasn't been used before
-				 * - One: Keyword has been used once before
-				 * - Two or more: Keyword has been used twice or more before
-				 */
-				'posts_per_page' => 2,
-			];
-			$get_posts = new WP_Query( $query );
-			$post_ids  = array_merge( $post_ids, $get_posts->posts );
+		if ( count( $post_ids ) < 2 ) {
+			/**
+			 * Allows enhancing the array of posts' that share their focus keywords with the post's focus keywords.
+			 *
+			 * @param array  $post_ids The array of posts' ids that share their related keywords with the post.
+			 * @param string $keyword  The keyword to search for.
+			 * @param int    $post_id  The id of the post the keyword is associated to.
+			 */
+			$post_ids = apply_filters( 'wpseo_posts_for_focus_keyword', $post_ids, $keyword, $post_id );
 		}
 
 		return $post_ids;
+	}
+
+	/**
+	 * Returns the post types for the given post ids.
+	 *
+	 * @param array $post_ids The post ids to get the post types for.
+	 *
+	 * @return array The post types.
+	 */
+	public static function post_types_for_ids( $post_ids ) {
+
+		/**
+		 * The indexable repository.
+		 *
+		 * @var Indexable_Repository
+		 */
+		$repository = YoastSEO()->classes->get( Indexable_Repository::class );
+
+		// Check if post ids is not empty.
+		if ( ! empty( $post_ids ) ) {
+			// Get the post subtypes for the posts that share the keyword.
+			$post_types = $repository->query()
+				->select( 'object_sub_type' )
+				->where_in( 'object_id', $post_ids )
+				->find_array();
+
+			// Get object_sub_type from each subarray in $post_ids.
+			$post_types = array_map(
+				function( $row ) {
+					return $row['object_sub_type'];
+				},
+				$post_types
+			);
+		}
+		else {
+			$post_types = [];
+		}
+
+		return $post_types;
 	}
 
 	/**

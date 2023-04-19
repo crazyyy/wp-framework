@@ -1,15 +1,15 @@
 === Performance Lab ===
 
 Contributors:      wordpressdotorg
-Requires at least: 5.8
-Tested up to:      6.0
+Requires at least: 6.1
+Tested up to:      6.2
 Requires PHP:      5.6
-Stable tag:        1.3.0
+Stable tag:        2.2.0
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 Tags:              performance, images, javascript, site health, measurement, object caching
 
-Performance plugin from the WordPress Performance Group, which is a collection of standalone performance modules.
+Performance plugin from the WordPress Performance Team, which is a collection of standalone performance modules.
 
 == Description ==
 
@@ -17,13 +17,13 @@ The Performance Lab plugin is a collection of modules focused on enhancing perfo
 
 Currently the plugin includes the following performance modules:
 
-* **Dominant Color:** Adds support to store dominant color for an image and create a placeholder background with that color.
+* **Dominant Color Images:** Adds support to store the dominant color of newly uploaded images and create a placeholder background of that color.
+* **Fetchpriority:** Adds a fetchpriority hint for the primary content image on the page to load faster.
+* **WebP Support Health Check:** Adds a WebP support check in Site Health status.
 * **WebP Uploads:** Creates WebP versions for new JPEG image uploads if supported by the server.
-* **Audit Full Page Cache:** Adds a check for full page cache in Site Health status.
-* **WebP Support:** Adds a WebP support check in Site Health status.
-* **Audit Autoloaded Options:** Adds a check for autoloaded options in Site Health status.
-* **Audit Enqueued Assets:** Adds a CSS and JS resource check in Site Health status.
-* **Persistent Object Cache Health Check:** Adds a persistent object cache check for sites with non-trivial amounts of data in Site Health status.
+* **Enqueued Assets Health Check:** Adds a CSS and JS resource check in Site Health status.
+* **Autoloaded Options Health Check:** Adds a check for autoloaded options in Site Health status.
+* **SQLite Integration:** Use an SQLite database instead of MySQL.
 
 == Installation ==
 
@@ -56,17 +56,146 @@ Per the primary purpose of the plugin (see above), it can mostly be considered a
 
 = Where can I submit my plugin feedback? =
 
-Especially since this is a collection of WordPress core feature plugins, providing feedback is encouraged and much appreciated! You can submit your feedback either in the [plugin support forum](https://wordpress.org/support/plugin/performance-lab/) or, if you have a specific issue to report, in its [GitHub repository](https://github.com/WordPress/performance).
+Feedback is encouraged and much appreciated, especially since this plugin is a collection of future WordPress core features. If you have suggestions or requests for new features, you can [submit them as an issue in the Performance Lab GitHub repository](https://github.com/WordPress/performance/issues/new/choose). If you need help with troubleshooting or have a question about the plugin, please [create a new topic on our support forum](https://wordpress.org/support/plugin/performance-lab/#new-topic-0).
+
+= Where can I report security bugs? =
+
+The Performance team and WordPress community take security bugs seriously. We appreciate your efforts to responsibly disclose your findings, and will make every effort to acknowledge your contributions.
+
+To report a security issue, please visit the [WordPress HackerOne](https://hackerone.com/wordpress) program.
 
 = How can I contribute to the plugin? =
 
-Contributions welcome! There are several ways to contribute:
+Contributions are always welcome! Learn more about how to get involved in the [Core Performance Team Handbook](https://make.wordpress.org/performance/handbook/get-involved/).
 
-* Raise an issue or submit a pull request in the [Github repository for the plugin](https://github.com/WordPress/performance)
-* Translate the plugin into your language at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/performance-lab)
-* Join the weekly chat (Tuesdays at 16:00 UTC) in the [#performance channel on Slack](https://wordpress.slack.com/archives/performance)
+= I've activated the WebP Uploads module, but WebP images are not always generated when I upload a JPEG image. Why? =
+
+There are two primary reasons that a WebP image may not be generated:
+
+1. Performance Lab has identified that the WebP version of the uploaded JPEG image would have a larger file size than the original JPEG image, so it does not generate the WebP version.
+2. The JPEG image was not uploaded to the [Media Library](https://wordpress.com/support/media/). At this time, WebP versions are only generated for images to the Media Library. WebP versions are not generated for JPEG images that are added to your site in other ways, such as in a template file or the [Customizer](https://wordpress.com/support/customizer/).
+
+= With the WebP Uploads module activated, will the plugin generate JPEG and WebP versions of every image that I upload? =
+
+By default, the WebP Uploads module will only generate WebP versions of the images that you upload. If you wish to have both WebP **and** JPEG versions generated, you can navigate to **Settings > Media** and enable the **Generate JPEG files in addition to WebP** option.
 
 == Changelog ==
+
+= 2.2.0 =
+
+**Enhancements**
+
+* Images: Remove "experimental" flag from Fetchpriority module. ([702](https://github.com/WordPress/performance/pull/702))
+* Infrastructure: Implement infrastructure for launching standalone plugins from modules, including WebP Uploads. ([699](https://github.com/WordPress/performance/pull/699))
+* Infrastructure: Include `WordPress-Extra` rules in PHPCS configuration and fix resulting problems. ([695](https://github.com/WordPress/performance/pull/695))
+
+**Bug Fixes**
+
+* Images: Sanitize target param before using it. ([690](https://github.com/WordPress/performance/pull/690))
+
+**Documentation**
+
+* Images: Change module slug/directory from `dominant-color` to `dominant-color-images`. ([708](https://github.com/WordPress/performance/pull/708))
+* Images: Rename `Dominant Color` module to `Dominant Color images`. ([705](https://github.com/WordPress/performance/pull/705))
+
+= 2.1.0 =
+
+**Enhancements**
+
+* Infrastructure: Add `wp-total` metric to default Server-Timing metrics. ([669](https://github.com/WordPress/performance/pull/669))
+* Infrastructure: Ensure module `load.php` files really only load other code to prevent conflicts in standalone plugins. ([674](https://github.com/WordPress/performance/pull/674))
+
+**Bug Fixes**
+
+* Infrastructure: Fix problems with placing `object-cache.php` drop-in. ([672](https://github.com/WordPress/performance/pull/672))
+
+= 2.0.0 =
+
+**Enhancements**
+
+* Object Cache: Update WordPress version to 6.1 and remove Cache modules. ([641](https://github.com/WordPress/performance/pull/641))
+* Measurement: Add `perflab_disable_object_cache_dropin` filter. ([629](https://github.com/WordPress/performance/pull/629))
+* Database: Add an indicator in the adminbar to show when using SQLite. ([604](https://github.com/WordPress/performance/pull/604))
+
+**Bug Fixes**
+
+* Images: Check for existing `$metadata['sizes']` to fix PHP warning. ([648](https://github.com/WordPress/performance/pull/648))
+* Images: Use correct number of arguments in filter callback. ([634](https://github.com/WordPress/performance/pull/634))
+* Database: Fix invalid docs and return types as highlighted by static analysis. ([645](https://github.com/WordPress/performance/pull/645))
+* Infrastructure: Fix incorrect usage of `plugin_action_links_*` filter. ([647](https://github.com/WordPress/performance/pull/647))
+
+**Documentation**
+
+* Infrastructure: Add file header to object-cache drop-in to clarify purpose. ([649](https://github.com/WordPress/performance/pull/649))
+
+= 1.9.0 =
+
+**Enhancements**
+
+* Database: Remove warning about multi-server environment from the SQLite module description. ([619](https://github.com/WordPress/performance/pull/619))
+
+**Bug Fixes**
+
+* Infrastructure: Enhance object-cache.php drop-in interoperability with other plugins. ([616](https://github.com/WordPress/performance/pull/616))
+
+= 1.8.0 =
+
+**Features**
+
+* Measurement: Implement Server-Timing API foundation as well as basic load time metrics. ([553](https://github.com/WordPress/performance/pull/553))
+* Database: Implement new experimental SQLite integration module. ([547](https://github.com/WordPress/performance/pull/547))
+* Images: Implement new experimental `fetchpriority` module. ([528](https://github.com/WordPress/performance/pull/528))
+
+**Bug Fixes**
+
+* Database: Fix SQLite notices related to undefined properties. ([600](https://github.com/WordPress/performance/pull/600))
+* Database: Fix incorrect handling of `admin_email` and actual admin user's email when original `admin_email` user was deleted. ([603](https://github.com/WordPress/performance/pull/603))
+* Database: Make WP filesystem setup more robust to prevent potential errors. ([595](https://github.com/WordPress/performance/pull/595))
+
+= 1.7.0 =
+
+**Enhancements**
+
+* Images: Change WP Image editor quality for mime types. ([571](https://github.com/WordPress/performance/pull/571))
+* Infrastructure: Introduce database focus area, rename JavaScript focus area to JS & CSS, and phase out Site Health focus area. ([566](https://github.com/WordPress/performance/pull/566))
+
+**Bug Fixes**
+
+* Images: Avoid potentially adding invalid attributes or duplicates for dominant color images. ([578](https://github.com/WordPress/performance/pull/578))
+* Images: Fix fatal error in REST API response when an image has no attachment metadata. ([568](https://github.com/WordPress/performance/pull/568))
+* Images: Fix image focal point bug when dominant color is enabled by not overriding `style` attribute. ([582](https://github.com/WordPress/performance/pull/582))
+* Images: Fix opt-in checkbox for generating WebP and JPEG to also show on Multisite. ([565](https://github.com/WordPress/performance/pull/565))
+
+= 1.6.0 =
+
+**Enhancements**
+
+* Site Health: Only load Site Health checks for persistent cache and full page cache when not available in core. ([543](https://github.com/WordPress/performance/pull/543))
+* Images: Add checkbox to Settings > Media to control whether to generate JPEG in addition to WebP. ([537](https://github.com/WordPress/performance/pull/537))
+* Images: Generate only WebP images by default for JPEG and WebP uploads. ([527](https://github.com/WordPress/performance/pull/527))
+* Infrastructure: Bump minimum WordPress requirement to 6.0. ([549](https://github.com/WordPress/performance/pull/549))
+
+= 1.5.0 =
+
+**Enhancements**
+
+* Site Health: Improve autoloaded options check by highlighting largest autoloaded options. ([353](https://github.com/WordPress/performance/pull/353))
+
+= 1.4.0 =
+
+**Enhancements**
+
+* Images: Enhance JS replacement mechanism for WebP to JPEG to more reliably replace full file name. ([443](https://github.com/WordPress/performance/pull/443))
+* Images: Introduce `webp_uploads_get_content_image_mimes()` to get content image MIME replacement rules. ([420](https://github.com/WordPress/performance/pull/420))
+* Infrastructure: Add `PERFLAB_PLUGIN_DIR_PATH` constant for `plugin_dir_path()`. ([429](https://github.com/WordPress/performance/pull/429))
+* Infrastructure: Rename Site Health check modules for language and consistency. ([423](https://github.com/WordPress/performance/pull/423))
+
+**Bug Fixes**
+
+* Site Health: Fix incorrect usage of badge colors in all Site Health checks. ([472](https://github.com/WordPress/performance/pull/472))
+* Images: Add the original image's extension to the WebP file name to ensure it is unique. ([444](https://github.com/WordPress/performance/pull/444))
+* Images: Fix REST API support for plain permalinks. ([457](https://github.com/WordPress/performance/pull/457))
+* Infrastructure: Remove plugin option network-wide for Multisite during uninstall. ([458](https://github.com/WordPress/performance/pull/458))
 
 = 1.3.0 =
 

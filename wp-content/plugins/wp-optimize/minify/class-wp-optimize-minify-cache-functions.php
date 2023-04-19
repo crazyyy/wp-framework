@@ -441,10 +441,7 @@ class WP_Optimize_Minify_Cache_Functions {
 				$file = $cache_dir.'/'.$file;
 				$ext = pathinfo($file, PATHINFO_EXTENSION);
 				if (in_array($ext, array('js', 'css'))) {
-					$log = false;
-					if (file_exists($file.'.json')) {
-						$log = json_decode(file_get_contents($file.'.json'));
-					}
+					$log = self::generate_log($file.'.json' );
 					$min_css = substr($file, 0, -4).'.min.css';
 					$minjs = substr($file, 0, -3).'.min.js';
 					$file_name = basename($file);
@@ -464,6 +461,44 @@ class WP_Optimize_Minify_Cache_Functions {
 		}
 		set_transient('wpo_minify_get_cached_files', $return, DAY_IN_SECONDS);
 		return $return;
+	}
+
+	/**
+	 * Generate log information from a json file.
+	 *
+	 * @param string $file Full path of log file.
+	 *
+	 * @return object Could be either a 'json_decode' object upon successful parsing of the JSON file, or a stdClass object
+	 *                upon failure. In the case of stdClass object, $obj->error will contain the error message.
+	 */
+	public static function generate_log($file) {
+		$error_log = new stdClass();
+
+		$cache_path = self::cache_path();
+		$file_name = basename($file);
+		$file_url = trailingslashit($cache_path['cachedirurl']) . $file_name;
+		$file_link_html = '<a href="' . esc_url($file_url) . '" target="_blank">' . $file_name . '</a>';
+
+		if (!file_exists($file)) {
+			$error_log->error = sprintf(__('Log file %s is missing', 'wp-optimize'), $file_link_html);
+			return $error_log;
+		}
+
+		$log = json_decode(file_get_contents($file));
+
+		$is_valid_json = json_last_error() === JSON_ERROR_NONE ? true : false;
+
+		if (!$is_valid_json) {
+			$error_log->error = sprintf(__('JSON error in file %s | Error details: %s', 'wp-optimize'), $file_link_html, json_last_error_msg());
+			return $error_log;
+		}
+
+		if (!isset($log->header) || !isset($log->files)) {
+			$error_log->error = sprintf(__('Some data is missing in the log file %s', 'wp-optimize'), $file_link_html);
+			return $error_log;
+		}
+
+		return $log;
 	}
 
 	/**
@@ -487,7 +522,8 @@ class WP_Optimize_Minify_Cache_Functions {
 			'minify/cached-file-log.php',
 			true,
 			array(
-				'log' => $files['log']
+				'log' => $files['log'],
+				'minify_config' => wp_optimize_minify_config()->get(),
 			)
 		);
 		return $files;

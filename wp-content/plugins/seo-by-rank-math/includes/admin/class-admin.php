@@ -12,6 +12,7 @@ namespace RankMath\Admin;
 
 use RankMath\Runner;
 use RankMath\Helper;
+use RankMath\Admin\Admin_Helper;
 use RankMath\Traits\Ajax;
 use RankMath\Traits\Hooker;
 use MyThemeShop\Helpers\Str;
@@ -35,8 +36,11 @@ class Admin implements Runner {
 	public function hooks() {
 		$this->action( 'init', 'flush', 999 );
 		$this->filter( 'user_contactmethods', 'update_user_contactmethods' );
+		$this->action( 'admin_footer', 'convert_additional_profile_url_to_textarea' );
 		$this->action( 'save_post', 'canonical_check_notice' );
 		$this->action( 'cmb2_save_options-page_fields', 'update_is_configured_value', 10, 2 );
+		$this->filter( 'action_scheduler_pastdue_actions_check_pre', 'as_exclude_pastdue_actions' );
+		$this->action( 'rank_math/pro_badge', 'offer_icon' );
 
 		// AJAX.
 		$this->ajax( 'is_keyword_new', 'is_keyword_new' );
@@ -64,8 +68,9 @@ class Admin implements Runner {
 	 * The following code is a derivative work of the code from the Yoast(https://github.com/Yoast/wordpress-seo/), which is licensed under GPL v3.
 	 */
 	public function update_user_contactmethods( $contactmethods ) {
-		$contactmethods['twitter']  = esc_html__( 'Twitter username (without @)', 'rank-math' );
-		$contactmethods['facebook'] = esc_html__( 'Facebook profile URL', 'rank-math' );
+		$contactmethods['twitter']                 = esc_html__( 'Twitter username (without @)', 'rank-math' );
+		$contactmethods['facebook']                = esc_html__( 'Facebook profile URL', 'rank-math' );
+		$contactmethods['additional_profile_urls'] = esc_html__( 'Additional profile URLs', 'rank-math' );
 
 		return $contactmethods;
 	}
@@ -333,5 +338,100 @@ class Admin implements Runner {
 
 		Importers\Detector::deactivate_all();
 		die( '1' );
+	}
+
+	/**
+	 * Action Scheduler: exclude our actions from the past-due checker.
+	 * Since this is a *_pre hook, it replaces the original checker.
+	 *
+	 * We first do the same check as what ActionScheduler_AdminView->check_pastdue_actions() does,
+	 * but then we also count how many of those past-due actions are ours.
+	 *
+	 * @param null $null Null value.
+	 */
+	public function as_exclude_pastdue_actions( $null ) {
+		$query_args = [
+			'date'     => as_get_datetime_object( time() - DAY_IN_SECONDS ),
+			'status'   => \ActionScheduler_Store::STATUS_PENDING,
+			'per_page' => 1,
+		];
+
+		$store               = \ActionScheduler_Store::instance();
+		$num_pastdue_actions = (int) $store->query_actions( $query_args, 'count' );
+
+		if ( 0 !== $num_pastdue_actions ) {
+			$query_args['group']    = 'rank-math';
+			$num_pastdue_rm_actions = (int) $store->query_actions( $query_args, 'count' );
+
+			$num_pastdue_actions -= $num_pastdue_rm_actions;
+		}
+
+		$threshold_seconds = (int) apply_filters( 'action_scheduler_pastdue_actions_seconds', DAY_IN_SECONDS );
+		$threshhold_min    = (int) apply_filters( 'action_scheduler_pastdue_actions_min', 1 );
+
+		$check = ( $num_pastdue_actions >= $threshhold_min );
+		return (bool) apply_filters( 'action_scheduler_pastdue_actions_check', $check, $num_pastdue_actions, $threshold_seconds, $threshhold_min );
+	}
+
+	/**
+	 * Check and print the Anniversary icon in the header of Rank Math's setting pages.
+	 */
+	public static function offer_icon() {
+		if ( ! current_user_can( 'manage_options' ) || defined( 'RANK_MATH_PRO_FILE' ) ) {
+			return;
+		}
+
+		// Holiday Season related variables.
+		$time                   = time();
+		$current_year           = 2022;
+		$anniversary_start_time = gmmktime( 17, 00, 00, 10, 30, $current_year ); // 30 Oct.
+		$anniversary_end_time   = gmmktime( 17, 00, 00, 11, 30, $current_year ); // 30 Nov.
+		$holiday_start_time     = gmmktime( 17, 00, 00, 12, 20, $current_year ); // 20 Dec.
+		$holiday_end_time       = gmmktime( 17, 00, 00, 01, 07, 2023 ); // 07 Jan.
+
+		if (
+			( $time > $anniversary_start_time && $time < $anniversary_end_time ) ||
+			( $time > $holiday_start_time && $time < $holiday_end_time )
+		) { ?>
+			<a href="https://rankmath.com/pricing/?utm_source=Plugin&utm_medium=Header+Offer+Icon&utm_campaign=WP" target="_blank" class="rank-math-tooltip bottom" style="margin-left:5px;">
+				🎉
+				<span><?php esc_attr_e( 'Exclusive Offer!', 'rank-math' ); ?></span>
+			</a>
+		<?php }
+	}
+
+	/**
+	 * Code to convert Addiontal Profile URLs from input type text to textarea.
+	 */
+	public function convert_additional_profile_url_to_textarea() {
+		if ( ! Admin_Helper::is_user_edit() ) {
+			return;
+		}
+
+		$field_description = wp_kses_post( __( 'Additional Profiles to add in the <code>sameAs</code> Schema property.', 'rank-math' ) );
+		?>
+		<script type="text/javascript">
+			( function( $ ) {
+				$( function() {
+					const twitterWrapper = $( '.user-twitter-wrap' );
+					twitterWrapper.before( '<tr><th><h2 style="margin: 0;">Rank Math SEO</h2></th><td></td></tr>' );
+
+					const additionalProfileField = $( '#additional_profile_urls' );
+					if ( ! additionalProfileField.length ) {
+						return
+					}
+
+					var $txtarea = $( '<textarea />' );
+					$txtarea.attr( 'id', additionalProfileField[0].id );
+					$txtarea.attr( 'name', additionalProfileField[0].name );
+					$txtarea.attr( 'rows', 5 );
+					$txtarea.val( additionalProfileField[0].value.replaceAll( " ", "\n" ) );
+					additionalProfileField.replaceWith( $txtarea );
+
+					$( '<p class="description"><?php echo $field_description; ?></p>' ).insertAfter( $txtarea );
+				} );
+			})(jQuery);
+		</script>
+		<?php
 	}
 }

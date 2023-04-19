@@ -91,7 +91,7 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
 
         global $wpdb;
 
-        $debug_log_tbl = $wpdb->prefix . 'aiowps_debug_log';
+        $debug_log_tbl = AIOWPSEC_TBL_DEBUG_LOG;
 
         /* -- Ordering parameters -- */
         

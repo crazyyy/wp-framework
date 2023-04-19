@@ -1,7 +1,8 @@
 <?php
 
-if(!defined('ABSPATH'))
+if(!defined('ABSPATH')){
     exit;
+}
 
 if(!class_exists('acfe_location_post_type_list')):
 
@@ -189,7 +190,7 @@ class acfe_location_post_type_list{
             );
             
             ?>
-            <div <?php echo acf_esc_attrs($atts); ?>>
+            <div <?php echo acf_esc_atts($atts); ?>>
         
                 <div id="publishing-action">
             
@@ -211,8 +212,7 @@ class acfe_location_post_type_list{
     function rule_types($choices){
         
         $name = __('Post', 'acf');
-        
-        $choices[$name] = acfe_array_insert_after('post_type', $choices[$name], 'post_type_list', __('Post Type List'));
+        $choices[ $name ] = acfe_array_insert_after($choices[ $name ], 'post_type', 'post_type_list', __('Post Type List'));
 
         return $choices;
         

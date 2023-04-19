@@ -40,7 +40,7 @@ import CounterBox from './CounterBox'
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'test',
+  name: 'testComponent',
   components: { Bubble, ScreenField, CounterBox },
   store,
   data () {

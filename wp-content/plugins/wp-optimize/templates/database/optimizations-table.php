@@ -43,6 +43,7 @@
 			'clean-postmeta',
 			'clean-orphandata',
 			'clean-commentmeta',
+			'clean-usermeta',
 		);
 
 		?>

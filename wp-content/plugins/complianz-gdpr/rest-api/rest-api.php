@@ -42,7 +42,7 @@ function cmplz_documents_rest_route() {
 		'methods'  => 'POST',
 		'callback' => 'cmplz_store_detected_cookies',
 		'permission_callback' => function () {
-			return current_user_can( 'manage_options' );
+			return cmplz_user_can_manage();
 		}
 
 	) );
@@ -89,7 +89,6 @@ function cmplz_rest_api_banner_data(WP_REST_Request $request){
 	$data['region']             = $region;
 	$data['version']            = cmplz_version;
 	$data['forceEnableStats']   = !COMPLIANZ::$cookie_admin->cookie_warning_required_stats( $region );
-	$data['do_not_track']       = cmplz_dnt_enabled();
 	//We need this here because the integrations are not loaded yet, so the filter will return empty, overwriting the loaded data.
 	unset( $data["set_cookies"] );
 	$banner_id              = cmplz_get_default_banner_id();
@@ -144,7 +143,7 @@ function cmplz_rest_api_manage_consent_html( WP_REST_Request $request )
 		$consent_type = apply_filters( 'cmplz_user_consenttype', COMPLIANZ::$company->get_default_consenttype() );
 		$path = trailingslashit( cmplz_path ).'cookiebanner/templates/';
 		$banner_html = cmplz_get_template( "cookiebanner.php", array( 'consent_type' => $consent_type ), $path);
-
+		$banner_html = apply_filters("cmplz_banner_html", $banner_html);
 		if ( preg_match( '/<!-- categories start -->(.*?)<!-- categories end -->/s', $banner_html,  $matches ) ) {
 			$html      = $matches[0];
 			$banner_id = apply_filters( 'cmplz_user_banner_id', cmplz_get_default_banner_id() );
@@ -172,7 +171,7 @@ function cmplz_rest_api_manage_consent_html( WP_REST_Request $request )
 function cmplz_store_detected_cookies(WP_REST_Request $request) {
 	$params = $request->get_json_params();
 
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! cmplz_user_can_manage() ) {
 		return;
 	}
 
@@ -199,6 +198,7 @@ function cmplz_store_detected_cookies(WP_REST_Request $request) {
 		foreach ( $localstorage as $key => $value ) {
 			//let's skip cookies with this site url in the name
 			if ( strpos($key, site_url())!==false ) continue;
+			if (apply_filters('cmplz_exclude_from_scan', false, $key, 'localstorage')) continue;
 
 			$cookie = new CMPLZ_COOKIE();
 			$cookie->add( $key, COMPLIANZ::$cookie_admin->get_supported_languages() );
@@ -213,6 +213,7 @@ function cmplz_store_detected_cookies(WP_REST_Request $request) {
 		foreach ( $cookies as $key => $value ) {
 			//let's skip cookies with this site url in the name
 			if ( strpos($key, site_url())!==false ) continue;
+			if (apply_filters('cmplz_exclude_from_scan', false, $key, 'cookie')) continue;
 
 			$cookie = new CMPLZ_COOKIE();
 			$cookie->add( $key, COMPLIANZ::$cookie_admin->get_supported_languages() );

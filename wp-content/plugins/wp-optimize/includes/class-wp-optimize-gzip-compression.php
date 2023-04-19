@@ -35,6 +35,19 @@ class WP_Optimize_Gzip_Compression {
 	}
 
 	/**
+	 * Returns singleton instance object
+	 *
+	 * @return WP_Optimize_Gzip_Compression Returns `WP_Optimize_Gzip_Compression` object
+	 */
+	public static function instance() {
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
+		}
+		return $_instance;
+	}
+
+	/**
 	 * Make http request to theme style.css, get 'server' line and check headers for gzip/brotli encoding option.
 	 *
 	 * @return array|WP_Error
@@ -54,6 +67,7 @@ class WP_Optimize_Gzip_Compression {
 		if (array_key_exists('content-encoding', $headers) && preg_match('/^(.*\W|)br(\W.*|)$/i', $headers['content-encoding'])) {
 			// check if there exists Content-encoding header with br(Brotli) value.
 			$headers_information['compression'] = 'brotli';
+			$this->disable();
 		} elseif (array_key_exists('content-encoding', $headers) && preg_match('/gzip/i', $headers['content-encoding'])) {
 			// check if there exists Content-encoding header with gzip value.
 			$headers_information['compression'] = 'gzip';

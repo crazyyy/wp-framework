@@ -359,19 +359,19 @@ final class Screens {
 					'capability'       => Permissions::VIEW_DASHBOARD,
 					'enqueue_callback' => function( Assets $assets ) {
 						if ( $this->context->input()->filter( INPUT_GET, 'permaLink' ) ) {
-							$assets->enqueue_asset( 'googlesitekit-dashboard-details' );
+							$assets->enqueue_asset( 'googlesitekit-entity-dashboard' );
 						} else {
-							$assets->enqueue_asset( 'googlesitekit-dashboard' );
+							$assets->enqueue_asset( 'googlesitekit-main-dashboard' );
 						}
 					},
 					'render_callback'  => function( Context $context ) {
 						$is_view_only = ! $this->authentication->is_authenticated();
 
-						$setup_slug = $context->input()->filter( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
+						$setup_slug = htmlspecialchars( $context->input()->filter( INPUT_GET, 'slug' ) ?: '' );
 						$reauth = $context->input()->filter( INPUT_GET, 'reAuth', FILTER_VALIDATE_BOOLEAN );
 						if ( $context->input()->filter( INPUT_GET, 'permaLink' ) ) {
 							?>
-							<div id="js-googlesitekit-dashboard-details" data-view-only="<?php echo esc_attr( $is_view_only ); ?>" class="googlesitekit-page"></div>
+							<div id="js-googlesitekit-entity-dashboard" data-view-only="<?php echo esc_attr( $is_view_only ); ?>" class="googlesitekit-page"></div>
 							<?php
 						} else {
 							$setup_module_slug = $setup_slug && $reauth ? $setup_slug : '';
@@ -392,7 +392,7 @@ final class Screens {
 								}
 							}
 							?>
-							<div id="js-googlesitekit-dashboard" data-view-only="<?php echo esc_attr( $is_view_only ); ?>" data-setup-module-slug="<?php echo esc_attr( $setup_module_slug ); ?>" class="googlesitekit-page"></div>
+							<div id="js-googlesitekit-main-dashboard" data-view-only="<?php echo esc_attr( $is_view_only ); ?>" data-setup-module-slug="<?php echo esc_attr( $setup_module_slug ); ?>" class="googlesitekit-page"></div>
 							<?php
 						}
 					},
@@ -457,12 +457,12 @@ final class Screens {
 					}
 				},
 				'enqueue_callback'    => function( Assets $assets ) {
-					$assets->enqueue_asset( 'googlesitekit-dashboard-splash' );
+					$assets->enqueue_asset( 'googlesitekit-splash' );
 				},
 				'render_callback'     => function( Context $context ) {
 					?>
 
-					<div id="js-googlesitekit-dashboard-splash" class="googlesitekit-page"></div>
+					<div id="js-googlesitekit-splash" class="googlesitekit-page"></div>
 
 					<?php
 				},
@@ -487,25 +487,27 @@ final class Screens {
 			)
 		);
 
-		$screens[] = new Screen(
-			self::PREFIX . 'user-input',
-			array(
-				'title'            => __( 'User Input', 'google-site-kit' ),
-				'capability'       => Permissions::MANAGE_OPTIONS,
-				'parent_slug'      => null,
-				'enqueue_callback' => function( Assets $assets ) {
-					$assets->enqueue_asset( 'googlesitekit-user-input' );
-				},
-				'render_callback'  => function( Context $context ) {
-					?>
+		if ( Feature_Flags::enabled( 'userInput' ) ) {
+			$screens[] = new Screen(
+				self::PREFIX . 'user-input',
+				array(
+					'title'            => __( 'User Input', 'google-site-kit' ),
+					'capability'       => Permissions::MANAGE_OPTIONS,
+					'parent_slug'      => null,
+					'enqueue_callback' => function( Assets $assets ) {
+						$assets->enqueue_asset( 'googlesitekit-user-input' );
+					},
+					'render_callback'  => function( Context $context ) {
+						?>
 
-					<div id="js-googlesitekit-user-input" class="googlesitekit-page"></div>
+						<div id="js-googlesitekit-user-input" class="googlesitekit-page"></div>
 
-					<?php
-				},
+						<?php
+					},
 
-			)
-		);
+				)
+			);
+		}
 
 		return $screens;
 	}

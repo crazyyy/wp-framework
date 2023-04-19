@@ -11,27 +11,33 @@ class AIOWPSecurity_Configure_Settings {
 	 * @return boolean True if the settings options was updated, false otherwise.
 	 */
 	public static function set_default_settings() {
+
 		global $aio_wp_security;
-		$blog_email_address = get_bloginfo('admin_email'); //Get the blog admin email address - we will use as the default value
+
+		$blog_email_address = get_bloginfo('admin_email'); // Get the blog admin email address - we will use as the default value
 
 		//Debug
 		$aio_wp_security->configs->set_value('aiowps_enable_debug', '');//Checkbox
 
+		//PHP backtrace
+		$aio_wp_security->configs->set_value('aiowps_enable_php_backtrace_in_email', '');//Checkbox
+
 		//WP Generator Meta Tag feature
 		$aio_wp_security->configs->set_value('aiowps_remove_wp_generator_meta_info', '');//Checkbox
-		
+
 		//Prevent Image Hotlinks
 		$aio_wp_security->configs->set_value('aiowps_prevent_hotlinking', '');//Checkbox
 		//General Settings Page
 
 		//User password feature
 		
-		//Lockdown feature
+		//Lockout feature
 		$aio_wp_security->configs->set_value('aiowps_enable_login_lockdown', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_allow_unlock_requests', '1'); // Checkbox
 		$aio_wp_security->configs->set_value('aiowps_max_login_attempts', '3');
 		$aio_wp_security->configs->set_value('aiowps_retry_time_period', '5');
-		$aio_wp_security->configs->set_value('aiowps_lockout_time_length', '60');
+		$aio_wp_security->configs->set_value('aiowps_lockout_time_length', '5');
+		$aio_wp_security->configs->set_value('aiowps_max_lockout_time_length', '60');
 		$aio_wp_security->configs->set_value('aiowps_set_generic_login_msg', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_email_notify', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_email_address', $blog_email_address);//text field
@@ -43,14 +49,15 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_lockdown_enable_whitelisting', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_lockdown_allowed_ip_addresses', '');
 
-		//Captcha feature
+		// CAPTCHA feature
+		$aio_wp_security->configs->set_value('aiowps_default_captcha', '');
 		$aio_wp_security->configs->set_value('aiowps_enable_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_custom_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_register_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_lost_password_captcha', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_captcha_secret_key', AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20));//Hidden secret value which will be used to do some captcha processing. This will be assigned a random string generated when captcha settings saved
+		$aio_wp_security->configs->set_value('aiowps_captcha_secret_key', AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20)); // Hidden secret value which will be used to do some CAPTCHA processing. This will be assigned a random string generated when CAPTCHA settings saved
 
 		//Login Whitelist feature
 		$aio_wp_security->configs->set_value('aiowps_enable_whitelisting', '');//Checkbox
@@ -60,17 +67,11 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_enable_manual_registration_approval', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_registration_page_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_registration_honeypot', '');//Checkbox
-		
+
 		//DB Security feature
 		//$aio_wp_security->configs->set_value('aiowps_new_manual_db_pefix', ''); //text field
 		$aio_wp_security->configs->set_value('aiowps_enable_random_prefix', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_enable_automated_backups', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_db_backup_frequency', '4');
-		$aio_wp_security->configs->set_value('aiowps_db_backup_interval', '2'); //Dropdown box where (0,1,2) => (hours,days,weeks)
-		$aio_wp_security->configs->set_value('aiowps_backup_files_stored', '2');
-		$aio_wp_security->configs->set_value('aiowps_send_backup_email_address', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_backup_email_address', $blog_email_address);
-		
+
 		//Filesystem Security feature
 		AIOWPSecurity_Utility::enable_file_edits();
 		$aio_wp_security->configs->set_value('aiowps_disable_file_editing', '');//Checkbox
@@ -84,9 +85,10 @@ class AIOWPSecurity_Configure_Settings {
 
 		//Firewall features
 		$aio_wp_security->configs->set_value('aiowps_enable_basic_firewall', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_max_file_upload_size', '10'); //Default 10MB
+		$aio_wp_security->configs->set_value('aiowps_max_file_upload_size', AIOS_FIREWALL_MAX_FILE_UPLOAD_LIMIT_MB); //Default
 		$aio_wp_security->configs->set_value('aiowps_enable_pingback_firewall', '');//Checkbox - blocks all access to XMLRPC
 		$aio_wp_security->configs->set_value('aiowps_disable_xmlrpc_pingback_methods', '');//Checkbox - Disables only pingback methods in XMLRPC functionality
+		$aio_wp_security->configs->set_value('aiowps_disable_rss_and_atom_feeds', ''); // Checkbox
 		$aio_wp_security->configs->set_value('aiowps_block_debug_log_file_access', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_index_views', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_trace_and_track', '');//Checkbox
@@ -99,7 +101,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_enable_custom_rules', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_place_custom_rules_at_top', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_custom_rules', '');
-		
+
 		//404 detection
 		$aio_wp_security->configs->set_value('aiowps_enable_404_logging', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_404_IP_lockout', '');//Checkbox
@@ -109,6 +111,7 @@ class AIOWPSecurity_Configure_Settings {
 		//Brute Force features
 		$aio_wp_security->configs->set_value('aiowps_enable_rename_login_page', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_login_honeypot', '');//Checkbox
+		$aio_wp_security->configs->set_value('aiowps_disable_application_password', '');//Checkbox
 
 		$aio_wp_security->configs->set_value('aiowps_enable_brute_force_attack_prevention', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_brute_force_secret_word', '');
@@ -121,14 +124,16 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_site_lockout', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_site_lockout_msg', '');//Text area/msg box
 
-		//SPAM Prevention menu
+		// Spam prevention menu
 		$aio_wp_security->configs->set_value('aiowps_enable_spambot_blocking', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_comment_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_autoblock_spam_ip', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_spam_ip_min_comments_block', '');
 		$aio_wp_security->configs->set_value('aiowps_enable_bp_register_captcha', '');
 		$aio_wp_security->configs->set_value('aiowps_enable_bbp_new_topic_captcha', '');//Checkbox
-		
+		$aio_wp_security->configs->set_value('aiowps_enable_trash_spam_comments', '');
+		$aio_wp_security->configs->set_value('aiowps_trash_spam_comments_after_days', '14');
+
 		//Filescan features
 		//File change detection feature
 		$aio_wp_security->configs->set_value('aiowps_enable_automated_fcd_scan', '');//Checkbox
@@ -151,40 +156,65 @@ class AIOWPSecurity_Configure_Settings {
 		//REST API Security
 		$aio_wp_security->configs->set_value('aiowps_disallow_unauthorized_rest_requests', '');//Checkbox
 
-		// Google reCaptcha
+		// IP retrieval setting
+		$aio_wp_security->configs->set_value('aiowps_ip_retrieve_method', '0'); // Default is $_SERVER['REMOTE_ADDR']
+
+		// Cloudflare Turnstile
+		$aio_wp_security->configs->set_value('aiowps_turnstile_site_key', '');
+		$aio_wp_security->configs->set_value('aiowps_turnstile_secret_key', '');
+
+		// Google reCAPTCHA
 		$aio_wp_security->configs->set_value('aiowps_recaptcha_site_key', '');
 		$aio_wp_security->configs->set_value('aiowps_recaptcha_secret_key', '');
-		$aio_wp_security->configs->set_value('aiowps_default_recaptcha', '');//Checkbox
-		
+		$aio_wp_security->configs->set_value('aiowps_default_recaptcha', ''); // Not used since 5.1.2
+
+		// Deactivation Handler
+		$aio_wp_security->configs->set_value('aiowps_on_uninstall_delete_db_tables', '1'); //Checkbox
+		$aio_wp_security->configs->set_value('aiowps_on_uninstall_delete_configs', '1'); //Checkbox
+
 		//TODO - keep adding default options for any fields that require it
-		
-		//Save it
+
+		self::turn_off_all_6g_firewall_configs();
+		self::reapply_firewall_configs();
+
+		// Save it
 		return $aio_wp_security->configs->save_config();
 	}
-	
+
+	/**
+	 * Add config settings.
+	 *
+	 * @return Void
+	 */
 	public static function add_option_values() {
 		global $aio_wp_security;
 		$blog_email_address = get_bloginfo('admin_email'); //Get the blog admin email address - we will use as the default value
 
+		$aio_wp_security->configs->load_config();
+
 		//Debug
 		$aio_wp_security->configs->add_value('aiowps_enable_debug', '');//Checkbox
 
+		//PHP backtrace
+		$aio_wp_security->configs->add_value('aiowps_enable_php_backtrace_in_email', '');//Checkbox
+
 		//WP Generator Meta Tag feature
 		$aio_wp_security->configs->add_value('aiowps_remove_wp_generator_meta_info', '');//Checkbox
-		
+
 		//Prevent Image Hotlinks
 		$aio_wp_security->configs->add_value('aiowps_prevent_hotlinking', '');//Checkbox
-		
+
 		//General Settings Page
-		
+
 		//User password feature
 		
-		//Lockdown feature
+		//Lockout feature
 		$aio_wp_security->configs->add_value('aiowps_enable_login_lockdown', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_allow_unlock_requests', '1'); // Checkbox
 		$aio_wp_security->configs->add_value('aiowps_max_login_attempts', '3');
 		$aio_wp_security->configs->add_value('aiowps_retry_time_period', '5');
-		$aio_wp_security->configs->add_value('aiowps_lockout_time_length', '60');
+		$aio_wp_security->configs->add_value('aiowps_lockout_time_length', '5');
+		$aio_wp_security->configs->add_value('aiowps_max_lockout_time_length', '60');
 		$aio_wp_security->configs->add_value('aiowps_set_generic_login_msg', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_email_notify', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_email_address', $blog_email_address);//text field
@@ -195,33 +225,28 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->add_value('aiowps_unlock_request_secret_key', AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20));//Hidden secret value which will be used to do some unlock request processing. This will be assigned a random string generated when lockdown settings saved
 		$aio_wp_security->configs->add_value('aiowps_lockdown_enable_whitelisting', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_lockdown_allowed_ip_addresses', '');
-		
+
 		//Login Whitelist feature
 		$aio_wp_security->configs->add_value('aiowps_enable_whitelisting', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_allowed_ip_addresses', '');
-		//Captcha feature
+		// CAPTCHA feature
+		$aio_wp_security->configs->add_value('aiowps_default_captcha', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_custom_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_register_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_captcha_secret_key', AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20));//Hidden secret value which will be used to do some captcha processing. This will be assigned a random string generated when captcha settings saved
+		$aio_wp_security->configs->add_value('aiowps_captcha_secret_key', AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20)); // Hidden secret value which will be used to do some CAPTCHA processing. This will be assigned a random string generated when CAPTCHA settings saved
 
 		//User registration
 		$aio_wp_security->configs->add_value('aiowps_enable_manual_registration_approval', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_registration_page_captcha', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_enable_registration_honeypot', '');//Checkbox
-	   
+		$aio_wp_security->configs->add_value('aiowps_enable_registration_honeypot', ''); // Checkbox
+
 		//DB Security feature
 		//$aio_wp_security->configs->add_value('aiowps_new_manual_db_pefix', ''); //text field
 		$aio_wp_security->configs->add_value('aiowps_enable_random_prefix', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_enable_automated_backups', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_db_backup_frequency', '4');
-		$aio_wp_security->configs->add_value('aiowps_db_backup_interval', '2'); //Dropdown box where (0,1,2) => (hours,days,weeks)
-		$aio_wp_security->configs->add_value('aiowps_backup_files_stored', '2');
-		$aio_wp_security->configs->add_value('aiowps_send_backup_email_address', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_backup_email_address', $blog_email_address);
-		
+
 		//Filesystem Security feature
 		$aio_wp_security->configs->add_value('aiowps_disable_file_editing', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_prevent_default_wp_file_access', '');//Checkbox
@@ -234,9 +259,10 @@ class AIOWPSecurity_Configure_Settings {
 
 		//Firewall features
 		$aio_wp_security->configs->add_value('aiowps_enable_basic_firewall', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_max_file_upload_size', '10');
+		$aio_wp_security->configs->add_value('aiowps_max_file_upload_size', AIOS_FIREWALL_MAX_FILE_UPLOAD_LIMIT_MB);
 		$aio_wp_security->configs->add_value('aiowps_enable_pingback_firewall', '');//Checkbox - blocks all access to XMLRPC
 		$aio_wp_security->configs->add_value('aiowps_disable_xmlrpc_pingback_methods', '');//Checkbox - Disables only pingback methods in XMLRPC functionality
+		$aio_wp_security->configs->set_value('aiowps_disable_rss_and_atom_feeds', ''); // Checkbox
 		$aio_wp_security->configs->add_value('aiowps_block_debug_log_file_access', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_disable_index_views', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_disable_trace_and_track', '');//Checkbox
@@ -254,29 +280,32 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->add_value('aiowps_enable_404_IP_lockout', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_404_lockout_time_length', '60');
 		$aio_wp_security->configs->add_value('aiowps_404_lock_redirect_url', 'http://127.0.0.1');
-		
+
 		//Brute Force features
 		$aio_wp_security->configs->add_value('aiowps_enable_rename_login_page', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_login_honeypot', '');//Checkbox
-		
+		$aio_wp_security->configs->add_value('aiowps_disable_application_password', ''); // Checkbox
+
 		$aio_wp_security->configs->add_value('aiowps_enable_brute_force_attack_prevention', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_brute_force_secret_word', '');
 		$aio_wp_security->configs->add_value('aiowps_cookie_brute_test', '');
 		$aio_wp_security->configs->add_value('aiowps_cookie_based_brute_force_redirect_url', 'http://127.0.0.1');
 		$aio_wp_security->configs->add_value('aiowps_brute_force_attack_prevention_pw_protected_exception', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_brute_force_attack_prevention_ajax_exception', '');//Checkbox
-		
+
 		//Maintenance menu - Visitor lockout feature
 		$aio_wp_security->configs->add_value('aiowps_site_lockout', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_site_lockout_msg', '');//Text area/msg box
 
-		//SPAM Prevention menu
+		// Spam prevention menu
 		$aio_wp_security->configs->add_value('aiowps_enable_spambot_blocking', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_comment_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_autoblock_spam_ip', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_spam_ip_min_comments_block', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_bp_register_captcha', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_bbp_new_topic_captcha', '');//Checkbox
+		$aio_wp_security->configs->add_value('aiowps_enable_trash_spam_comments', '');
+		$aio_wp_security->configs->add_value('aiowps_trash_spam_comments_after_days', '14');
 
 
 		//Filescan features
@@ -289,7 +318,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->add_value('aiowps_send_fcd_scan_email', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_fcd_scan_email_address', $blog_email_address);
 		$aio_wp_security->configs->add_value('aiowps_fcds_change_detected', false); //used to display a global alert on site when file change detected
-		
+
 		//Misc Options
 		//Copy protection feature
 		$aio_wp_security->configs->add_value('aiowps_copy_protection', '');//Checkbox
@@ -301,36 +330,188 @@ class AIOWPSecurity_Configure_Settings {
 	   //REST API Security
 		$aio_wp_security->configs->add_value('aiowps_disallow_unauthorized_rest_requests', '');//Checkbox
 
-		// Google reCaptcha
+		// IP retrieval setting
+		// Commented the below code line because the IP retrieve method will be configured when the AIOS plugin is activated for the first time.
+		// $aio_wp_security->configs->add_value('aiowps_ip_retrieve_method', '0'); // Default is $_SERVER['REMOTE_ADDR']
+
+		// Cloudflare Turnstile
+		$aio_wp_security->configs->add_value('aiowps_turnstile_site_key', '');
+		$aio_wp_security->configs->add_value('aiowps_turnstile_secret_key', '');
+
+		// Google reCAPTCHA
 		$aio_wp_security->configs->add_value('aiowps_recaptcha_site_key', '');
 		$aio_wp_security->configs->add_value('aiowps_recaptcha_secret_key', '');
-		$aio_wp_security->configs->add_value('aiowps_default_recaptcha', '');//Checkbox
-		
+		$aio_wp_security->configs->add_value('aiowps_default_recaptcha', ''); // Not used since 5.1.2
+
+		// Deactivation Handler
+		$aio_wp_security->configs->add_value('aiowps_on_uninstall_delete_db_tables', '1'); //Checkbox
+		$aio_wp_security->configs->add_value('aiowps_on_uninstall_delete_configs', '1'); //Checkbox
+
+		$aio_wp_security->configs->add_value('installed-at', current_time('timestamp', true));
+
 		//TODO - keep adding default options for any fields that require it
-		
+
 		//Save it
 		$aio_wp_security->configs->save_config();
-	}
 
+		// For Cookie based brute force prevention backward compatibility
+		if (!headers_sent() && '1' == $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')) {
+			$brute_force_secret_word = $aio_wp_security->configs->get_value('aiowps_brute_force_secret_word');
+			if (empty($brute_force_secret_word)) {
+				$brute_force_secret_word = AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD;
+			}
+			AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), wp_hash($brute_force_secret_word));
+		}
+		
+		// Login whitelisting started to work on non-apache server from db_version 1.9.5
+		if (is_main_site() && version_compare(get_option('aiowpsec_db_version'), '1.9.6', '<') && '1' == $aio_wp_security->configs->get_value('aiowps_enable_whitelisting') && !empty($aio_wp_security->configs->get_value('aiowps_allowed_ip_addresses'))) {
+			$aio_wp_security->configs->set_value('aiowps_enable_whitelisting', '0');
+			$aio_wp_security->configs->set_value('aiowps_is_login_whitelist_disabled_on_upgrade', '1');
+			$aio_wp_security->configs->save_config();
+		}
+
+		update_option('aiowpsec_db_version', AIO_WP_SECURITY_DB_VERSION);
+	}
+	
+	/**
+	 * Firewall configs set based on version.
+	 *
+	 * @return void.
+	 */
+	public static function set_firewall_configs() {
+		if (is_main_site()) {
+			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.1', '<')) {
+				self::set_cookie_based_bruteforce_firewall_configs();
+			}
+			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.2', '<')) {
+				self::set_user_agent_firewall_configs();
+			}
+			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.3', '<')) {
+				self::set_ip_retrieve_method_configs();
+			}
+		}
+		update_option('aiowpsec_firewall_version', AIO_WP_SECURITY_FIREWALL_VERSION);
+	}
+	
+	/**
+	 * Reapply firewall configs.
+	 *
+	 * @return void.
+	 */
+	public static function reapply_firewall_configs() {
+		self::set_cookie_based_bruteforce_firewall_configs();
+		self::set_user_agent_firewall_configs();
+		self::set_ip_retrieve_method_configs();
+	}
+	
+	/**
+	 * Turn off Cookie based bruteforce firewall configs.
+	 *
+	 * @return void.
+	 */
+	public static function turn_off_cookie_based_bruteforce_firewall_configs() {
+		global $aiowps_firewall_config;
+		$aiowps_firewall_config->set_value('aios_enable_brute_force_attack_prevention', "0");
+	}
+	
+	/**
+	 * Cookie based bruteforce firewall configs set.
+	 *
+	 * @return void.
+	 */
+	public static function set_cookie_based_bruteforce_firewall_configs() {
+		global $aio_wp_security;
+		global $aiowps_firewall_config;
+		
+		$aiowps_firewall_config->set_value('aios_enable_rename_login_page', $aio_wp_security->configs->get_value('aiowps_enable_rename_login_page'));
+		
+		$aiowps_firewall_config->set_value('aios_login_page_slug', $aio_wp_security->configs->get_value('aiowps_login_page_slug'));
+		
+		$aios_enable_brute_force_attack_prevention = $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention');
+		$aiowps_firewall_config->set_value('aios_enable_brute_force_attack_prevention', $aios_enable_brute_force_attack_prevention);
+		
+		$aiowps_firewall_config->set_value('aios_brute_force_secret_word', $aio_wp_security->configs->get_value('aiowps_brute_force_secret_word'));
+		
+		$aiowps_firewall_config->set_value('aios_cookie_based_brute_force_redirect_url', $aio_wp_security->configs->get_value('aiowps_cookie_based_brute_force_redirect_url'));
+		
+		$aiowps_firewall_config->set_value('aios_brute_force_attack_prevention_pw_protected_exception', $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_pw_protected_exception'));
+		
+		$aiowps_firewall_config->set_value('aios_brute_force_attack_prevention_ajax_exception', $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_ajax_exception'));
+		
+		$aiowps_firewall_config->set_value('aios_brute_force_secret_cookie_name', AIOWPSecurity_Utility::get_brute_force_secret_cookie_name());
+		$aiowps_firewall_config->set_value('aios_brute_force_cookie_salt', wp_salt());
+	}
+	
+	/**
+	 * User agent firewall configs set.
+	 *
+	 * @return void.
+	 */
+	public static function set_user_agent_firewall_configs() {
+		global $aio_wp_security;
+		global $aiowps_firewall_config;
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_blacklisting') && !empty($aio_wp_security->configs->get_value('aiowps_banned_user_agents'))) {
+			$aiowps_firewall_config->set_value('aiowps_blacklist_user_agents', explode("\n", preg_replace("/\r/", "", trim($aio_wp_security->configs->get_value('aiowps_banned_user_agents')))));
+		} else {
+			$aiowps_firewall_config->set_value('aiowps_blacklist_user_agents', array());
+		}
+	}
+	
+	/**
+	 * IP retrieve method configs set.
+	 *
+	 * @return void.
+	 */
+	public static function set_ip_retrieve_method_configs() {
+		global $aio_wp_security;
+		global $aiowps_firewall_config;
+		$aiowps_firewall_config->set_value('aios_ip_retrieve_method', $aio_wp_security->configs->get_value('aiowps_ip_retrieve_method'));
+	}
+	
+	/**
+	 * Turn off all security features.
+	 *
+	 * @return void.
+	 */
 	public static function turn_off_all_security_features() {
 		global $aio_wp_security;
 		AIOWPSecurity_Configure_Settings::set_default_settings();
-		
+
 		//Refresh the .htaccess file based on the new settings
 		$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
 		if (!$res) {
 			$aio_wp_security->debug_logger->log_debug(__METHOD__ . " - Could not write to the .htaccess file. Please check the file permissions.", 4);
 		}
 	}
-
+	
+	/**
+	 * Turn off 6g firewall configs.
+	 *
+	 * @return void.
+	 */
+	public static function turn_off_all_6g_firewall_configs() {
+		global $aiowps_firewall_config;
+		$aiowps_firewall_config->set_value('aiowps_6g_block_request_methods', array());
+		$aiowps_firewall_config->set_value('aiowps_6g_block_query', false);
+		$aiowps_firewall_config->set_value('aiowps_6g_block_request', false);
+		$aiowps_firewall_config->set_value('aiowps_6g_block_referrers', false);
+		$aiowps_firewall_config->set_value('aiowps_6g_block_agents', false);
+	}
+	
+	/**
+	 * Turn off all firewall rules.
+	 *
+	 * @return void.
+	 */
 	public static function turn_off_all_firewall_rules() {
 		global $aio_wp_security;
 		$aio_wp_security->configs->set_value('aiowps_enable_blacklisting', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_whitelisting', '');//Checkbox
-		
+
 		$aio_wp_security->configs->set_value('aiowps_enable_basic_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_pingback_firewall', '');//Checkbox - blocks all access to XMLRPC
 		$aio_wp_security->configs->set_value('aiowps_disable_xmlrpc_pingback_methods', '');//Checkbox - Disables only pingback methods in XMLRPC functionality
+		$aio_wp_security->configs->set_value('aiowps_disable_rss_and_atom_feeds', ''); // Checkbox
 		$aio_wp_security->configs->set_value('aiowps_block_debug_log_file_access', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_index_views', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_trace_and_track', '');//Checkbox
@@ -339,25 +520,27 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_5g_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_6g_firewall', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_enable_brute_force_attack_prevention', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_custom_rules', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_place_custom_rules_at_top', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_custom_rules', '');
 
 		$aio_wp_security->configs->set_value('aiowps_prevent_default_wp_file_access', '');//Checkbox
-		
+
 		$aio_wp_security->configs->set_value('aiowps_enable_spambot_blocking', '');//Checkbox
-		
+
 		//404 detection
 		$aio_wp_security->configs->set_value('aiowps_enable_404_logging', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_404_IP_lockout', '');//Checkbox
-		
+
 		//Prevent Image Hotlinks
 		$aio_wp_security->configs->set_value('aiowps_prevent_hotlinking', '');//Checkbox
-		
+
 		$aio_wp_security->configs->save_config();
-		
-		//Refresh the .htaccess file based on the new settings
+
+		self::turn_off_all_6g_firewall_configs();
+		self::set_user_agent_firewall_configs();
+
+		// Refresh the .htaccess file based on the new settings
 		$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
 
 		if (!$res) {

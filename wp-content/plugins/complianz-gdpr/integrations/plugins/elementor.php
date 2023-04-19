@@ -1,6 +1,21 @@
 <?php
 defined( 'ABSPATH' ) or die();
 
+/**
+ * Whitelist Elementor Add on
+ *
+ */
+
+function cmplz_elementor_whitelist($tags){
+	$tags[] = 'elementorFrontendConfig';
+	return $tags;
+}
+add_filter( 'cmplz_whitelisted_script_tags', 'cmplz_elementor_whitelist');
+
+/**
+ *
+ */
+
 function cmplz_elementor_initDomContentLoaded() {
 	if ( cmplz_uses_thirdparty('youtube') || cmplz_uses_thirdparty('facebook') || cmplz_uses_thirdparty('twitter') ) {
 		ob_start();
@@ -89,7 +104,7 @@ add_action( 'wp_enqueue_scripts', 'cmplz_elementor_initDomContentLoaded',PHP_INT
 function cmplz_elementor_cookieblocker( $output ){
 
 	if ( cmplz_uses_thirdparty('youtube') ) {
-		$iframe_pattern = '/elementor-widget elementor-widget-video[ |\"].*?data-settings=.*?youtube_url.*?&quot;:&quot;(.*?)&quot;/is';
+		$iframe_pattern = '/elementor-widget elementor-widget-video[ |\"][^>]+?data-settings="[^"]+?youtube_url[^;]*?&quot;:&quot;(.+?(?=&quot;))&quot;/is';
 		if ( preg_match_all( $iframe_pattern, $output, $matches, PREG_PATTERN_ORDER ) ) {
 			foreach ( $matches[0] as $key => $total_match ) {
 				$placeholder = '';
@@ -106,7 +121,7 @@ function cmplz_elementor_cookieblocker( $output ){
 		/**
 		 * Playlist
 		 */
-		$iframe_pattern = '/elementor-widget elementor-widget-video-playlist.*?data-settings=.*?youtube_url.*?&quot;:&quot;(.*?)&quot;/is';
+		$iframe_pattern = '/elementor-widget elementor-widget-video-playlist[^>]+?data-settings="[^"]+?youtube_url[^;]*?&quot;:&quot;(.+?(?=&quot;))&quot;/is';
 		if ( preg_match_all( $iframe_pattern, $output, $matches, PREG_PATTERN_ORDER ) ) {
 			foreach ( $matches[0] as $key => $total_match ) {
 				$placeholder = '';

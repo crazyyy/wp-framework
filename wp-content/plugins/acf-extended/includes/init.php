@@ -1,7 +1,39 @@
 <?php
 
-if(!defined('ABSPATH'))
+if(!defined('ABSPATH')){
     exit;
+}
+
+/**
+ * acfe_has_acf
+ *
+ * Checks ACF version
+ *
+ * @return bool
+ */
+function acfe_has_acf(){
+    return class_exists('ACF') && defined('ACF_PRO') && defined('ACF_VERSION') && version_compare(ACF_VERSION, '5.8', '>=');
+}
+
+
+/**
+ * acfe_is_acf_admin_6
+ *
+ * @return bool
+ */
+function acfe_is_acf_6(){
+    return acf_version_compare(acf_get_setting('version'),  '>=', '6.0');
+}
+
+
+/**
+ * acfe_is_acf_admin_61
+ *
+ * @return bool
+ */
+function acfe_is_acf_61(){
+    return acf_version_compare(acf_get_setting('version'),  '>=', '6.1');
+}
 
 /**
  * acfe_include
@@ -100,5 +132,49 @@ function acfe_load_textdomain($domain = 'acfe'){
     
     // Load from plugin lang folder.
     return load_textdomain($domain, acfe_get_path('lang/' . $mofile));
+    
+}
+
+/**
+ * acfe_after_plugin_row
+ *
+ * after_plugin_row
+ *
+ * @param $plugin_file
+ * @param $plugin_data
+ * @param $status
+ */
+add_action('after_plugin_row_' . ACFE_BASENAME, 'acfe_after_plugin_row', 5, 3);
+function acfe_after_plugin_row($plugin_file, $plugin_data, $status){
+    
+    // bail early
+    if(acfe_has_acf()){
+        return;
+    }
+    
+    // vars
+    $colspan = version_compare($GLOBALS['wp_version'], '5.5', '<') ? 3 : 4;
+    
+    // class
+    $class = 'acfe-plugin-tr';
+    if(isset($plugin_data['update']) && !empty($plugin_data['update'])){
+        $class .= ' acfe-plugin-tr-update';
+    }
+    
+    ?>
+    <style>
+        .plugins tr[data-plugin='<?php echo $plugin_file; ?>'] th,
+        .plugins tr[data-plugin='<?php echo $plugin_file; ?>'] td{
+            box-shadow:none;
+        }
+    </style>
+    <tr class="plugin-update-tr active <?php echo $class; ?>">
+        <td colspan="<?php echo $colspan; ?>" class="plugin-update colspanchange">
+            <div class="update-message notice inline notice-error notice-alt">
+                <p><?php _e('ACF Extended requires <a href="https://www.advancedcustomfields.com/pro/" target="_blank">Advanced Custom Fields PRO</a> (minimum: 5.8).', 'acfe'); ?></p>
+            </div>
+        </td>
+    </tr>
+    <?php
     
 }

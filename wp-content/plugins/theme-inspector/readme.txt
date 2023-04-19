@@ -3,16 +3,16 @@ Contributors: Melissa Cabral
 Donate link: https://paypal.me/MelissaCSD
 Tags: template, theme, utility, developer, Inspector, tool, wordpress
 Requires at least: 3.0
-Tested up to: 5.9
+Tested up to: 6.1.1
 Stable tag: trunk
 License: GPLv3 or higher
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A developer's inspector to illuminate the WordPress Template Hierarchy and help with building WordPress themes.
+A developer's inspector to illuminate the WordPress Template Hierarchy and help with building WordPress Classic themes.
 
 == Description ==
 
-A simple, lightweight plugin that displays useful technical information on pages and posts to aid in developing Wordpress themes. Provides quick access to things that are sometimes hidden, like post/page ID, slug, taxonomy terms, and post type slug. Theme Inspector tells you exactly what conditional tags are true on each view, and what template file loaded on each page view. 
+A simple, lightweight plugin that displays useful technical information on pages and posts to aid in developing Wordpress Classic themes. Provides quick access to things that are sometimes hidden, like post/page ID, slug, taxonomy terms, and post type slug. Theme Inspector tells you exactly what conditional tags are true on each view, and what template file loaded on each page view. 
 
 * Use In Conjunction with the [WP Template Hierarchy Document](https://docs.google.com/drawings/d/1hJ0MpHO3HKBT5KsTpGtc_gDYZ5pi-HyxNcRtmPBBULE).
 * Theme Inspector is only visible to logged in Administrators.
@@ -39,6 +39,7 @@ You must be logged in as an administrator, and viewing the Site (not the admin p
 2. /assets/screenshot-1.png
 
 == Changelog ==
+
 = 4.0.0 =
 * Added clearer warning when using an incompatible plugin or Block Theme 
 

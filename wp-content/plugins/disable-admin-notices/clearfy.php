@@ -42,7 +42,7 @@ if ( ! defined( 'WDN_PLUGIN_ACTIVE' ) ) {
 		require_once( WDN_PLUGIN_DIR . '/includes/functions.php' );
 		require_once( WDN_PLUGIN_DIR . '/includes/3rd-party/class-clearfy-plugin.php' );
 		new WDN_Plugin();
-	} catch( Exception $e ) {
+	} catch ( Exception $e ) {
 		$wdan_plugin_error_func = function () use ( $e ) {
 			$error = sprintf( "The %s plugin has stopped. <b>Error:</b> %s Code: %s", 'Webcraftic Disable Admin Notices', $e->getMessage(), $e->getCode() );
 			echo '<div class="notice notice-error"><p>' . $error . '</p></div>';

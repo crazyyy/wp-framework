@@ -125,7 +125,8 @@ class Base extends Root {
 	const O_OPTM_CSS_COMB_EXT_INL	= 'optm-css_comb_ext_inl';
 	const O_OPTM_UCSS 				= 'optm-ucss';
 	const O_OPTM_UCSS_INLINE 		= 'optm-ucss_inline';
-	const O_OPTM_UCSS_WHITELIST 	= 'optm-ucss_whitelist';
+	const O_OPTM_UCSS_SELECTOR_WHITELIST 	= 'optm-ucss_whitelist';
+	const O_OPTM_UCSS_FILE_EXC_INLINE 		= 'optm-ucss_file_exc_inline';
 	const O_OPTM_UCSS_EXC 			= 'optm-ucss_exc';
 	const O_OPTM_CSS_EXC 			= 'optm-css_exc';
 	const O_OPTM_JS_MIN 			= 'optm-js_min';
@@ -216,7 +217,6 @@ class Base extends Root {
 	const O_IMG_OPTM_WEBP 				= 'img_optm-webp';
 	const O_IMG_OPTM_LOSSLESS 			= 'img_optm-lossless';
 	const O_IMG_OPTM_EXIF 				= 'img_optm-exif';
-	const O_IMG_OPTM_WEBP_REPLACE 		= 'img_optm-webp_replace';
 	const O_IMG_OPTM_WEBP_ATTR 			= 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
 	const O_IMG_OPTM_JPG_QUALITY 		= 'img_optm-jpg_quality';
@@ -413,7 +413,8 @@ class Base extends Root {
 		self::O_OPTM_CSS_COMB_EXT_INL	=> false,
 		self::O_OPTM_UCSS 				=> false,
 		self::O_OPTM_UCSS_INLINE 		=> false,
-		self::O_OPTM_UCSS_WHITELIST		=> array(),
+		self::O_OPTM_UCSS_SELECTOR_WHITELIST		=> array(),
+		self::O_OPTM_UCSS_FILE_EXC_INLINE			=> array(),
 		self::O_OPTM_UCSS_EXC			=> array(),
 		self::O_OPTM_CSS_EXC 			=> array(),
 		self::O_OPTM_JS_MIN 			=> false,
@@ -496,7 +497,6 @@ class Base extends Root {
 		self::O_IMG_OPTM_WEBP 			=> false,
 		self::O_IMG_OPTM_LOSSLESS 		=> false,
 		self::O_IMG_OPTM_EXIF 			=> false,
-		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 		self::O_IMG_OPTM_WEBP_ATTR		=> array(),
 		self::O_IMG_OPTM_WEBP_REPLACE_SRCSET 	=> false,
 		self::O_IMG_OPTM_JPG_QUALITY 	=> 0,
@@ -588,7 +588,7 @@ class Base extends Root {
 		self::O_DEBUG_EXC 				=> array(),
 		self::O_DEBUG_EXC_STRINGS 		=> array(),
 
-		self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
+		self::O_IMG_OPTM_WEBP 			=> false,
 
 	);
 

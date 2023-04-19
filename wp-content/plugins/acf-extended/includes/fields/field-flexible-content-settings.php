@@ -1,12 +1,16 @@
 <?php
 
-if(!defined('ABSPATH'))
+if(!defined('ABSPATH')){
     exit;
+}
 
 if(!class_exists('acfe_field_flexible_content_settings')):
 
 class acfe_field_flexible_content_settings{
     
+    /**
+     * construct
+     */
     function __construct(){
     
         // Hooks
@@ -22,6 +26,14 @@ class acfe_field_flexible_content_settings{
         
     }
     
+    
+    /**
+     * defaults_field
+     *
+     * @param $field
+     *
+     * @return mixed
+     */
     function defaults_field($field){
         
         $field['acfe_flexible_layouts_settings'] = false;
@@ -30,6 +42,14 @@ class acfe_field_flexible_content_settings{
         
     }
     
+    
+    /**
+     * defaults_layout
+     *
+     * @param $layout
+     *
+     * @return mixed
+     */
     function defaults_layout($layout){
     
         $layout['acfe_flexible_settings'] = false;
@@ -39,6 +59,12 @@ class acfe_field_flexible_content_settings{
         
     }
     
+    
+    /**
+     * render_field_settings
+     *
+     * @param $field
+     */
     function render_field_settings($field){
         
         acf_render_field_setting($field, array(
@@ -65,10 +91,19 @@ class acfe_field_flexible_content_settings{
         
     }
     
+    
+    /**
+     * render_layout_settings
+     *
+     * @param $flexible
+     * @param $layout
+     * @param $prefix
+     */
     function render_layout_settings($flexible, $layout, $prefix){
         
-        if(!acf_maybe_get($flexible, 'acfe_flexible_layouts_settings'))
+        if(!acf_maybe_get($flexible, 'acfe_flexible_layouts_settings')){
             return;
+        }
         
         acf_disable_filters();
         
@@ -143,11 +178,21 @@ class acfe_field_flexible_content_settings{
         
     }
     
+    
+    /**
+     * load_fields
+     *
+     * @param $fields
+     * @param $field
+     *
+     * @return mixed
+     */
     function load_fields($fields, $field){
         
-        // Check setting
-        if(!acf_maybe_get($field, 'acfe_flexible_layouts_settings'))
+        // check setting
+        if(!acf_maybe_get($field, 'acfe_flexible_layouts_settings')){
             return $fields;
+        }
         
         // Loop
         foreach($field['layouts'] as $i => $layout){
@@ -156,8 +201,9 @@ class acfe_field_flexible_content_settings{
             $field_groups = acf_get_array($field_groups);
             
             // Check
-            if(empty($field_groups))
+            if(empty($field_groups)){
                 continue;
+            }
             
             // Vars
             $key = "field_{$layout['key']}_settings";
@@ -194,31 +240,47 @@ class acfe_field_flexible_content_settings{
         
     }
     
+    
+    /**
+     * prepare_layout
+     *
+     * @param $layout
+     * @param $field
+     * @param $i
+     * @param $value
+     * @param $prefix
+     *
+     * @return mixed
+     */
     function prepare_layout($layout, $field, $i, $value, $prefix){
         
-        if(empty($layout['sub_fields']) || !$field['acfe_flexible_layouts_settings'])
+        if(empty($layout['sub_fields']) || !$field['acfe_flexible_layouts_settings']){
             return $layout;
+        }
     
-        // Sub field
+        // subfield
         $sub_field = acfe_extract_sub_field($layout, 'layout_settings', $value);
     
-        if(!$sub_field)
+        if(!$sub_field){
             return $layout;
+        }
         
         // update prefix to allow for nested values
-        $size = acf_maybe_get($layout, 'acfe_flexible_settings_size', 'medium');
         $sub_field['prefix'] = $prefix;
         
+        // modal
+        $modal = array(
+            'class'       => 'acfe-modal -settings',
+            'data-size'   => acf_maybe_get($layout, 'acfe_flexible_settings_size', 'medium'),
+            'data-footer' => __('Close', 'acfe'),
+        );
+        
         ?>
-        <div class="acfe-modal -settings -<?php echo $size; ?>">
+        <div <?php echo acf_esc_atts($modal); ?>>
             <div class="acfe-modal-wrapper">
                 <div class="acfe-modal-content">
                     <div class="acf-fields -top">
-                        <?php
-                        
-                        acf_render_field_wrap($sub_field);
-                        
-                        ?>
+                        <?php acf_render_field_wrap($sub_field); ?>
                     </div>
                 </div>
             </div>
@@ -229,10 +291,21 @@ class acfe_field_flexible_content_settings{
         
     }
     
+    
+    /**
+     * layout_icons
+     *
+     * @param $icons
+     * @param $layout
+     * @param $field
+     *
+     * @return mixed
+     */
     function layout_icons($icons, $layout, $field){
         
-        if(!acf_maybe_get($field, 'acfe_flexible_layouts_settings') || !acf_maybe_get($layout, 'acfe_flexible_settings'))
+        if(!acf_maybe_get($field, 'acfe_flexible_layouts_settings') || !acf_maybe_get($layout, 'acfe_flexible_settings')){
             return $icons;
+        }
         
         $icons = array_merge($icons, array(
             'settings' => '<a class="acf-icon small acf-js-tooltip acfe-flexible-icon dashicons dashicons-admin-generic" href="#" title="Settings" data-acfe-flexible-settings="' . $layout['name'] . '"></a>'

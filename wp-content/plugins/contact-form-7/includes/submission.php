@@ -1,6 +1,11 @@
 <?php
 
+/**
+ * Class representing contact form submission.
+ */
 class WPCF7_Submission {
+
+	use WPCF7_PocketHolder;
 
 	private static $instance;
 
@@ -20,6 +25,9 @@ class WPCF7_Submission {
 	private $result_props = array();
 
 
+	/**
+	 * Returns the singleton instance of this class.
+	 */
 	public static function get_instance( $contact_form = null, $args = '' ) {
 		if ( $contact_form instanceof WPCF7_ContactForm ) {
 			if ( empty( self::$instance ) ) {
@@ -39,11 +47,17 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Returns true if this submission is created via WP REST API.
+	 */
 	public static function is_restful() {
 		return defined( 'REST_REQUEST' ) && REST_REQUEST;
 	}
 
 
+	/**
+	 * Constructor.
+	 */
 	private function __construct( WPCF7_ContactForm $contact_form, $args = '' ) {
 		$args = wp_parse_args( $args, array(
 			'skip_mail' => false,
@@ -54,71 +68,83 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * The main logic of submission.
+	 */
 	private function proceed() {
-		$contact_form = $this->contact_form;
 
-		switch_to_locale( $contact_form->locale() );
+		$callback = function () {
+			$contact_form = $this->contact_form;
 
-		$this->setup_meta_data();
-		$this->setup_posted_data();
+			$this->setup_meta_data();
+			$this->setup_posted_data();
 
-		if ( $this->is( 'init' ) and ! $this->validate() ) {
-			$this->set_status( 'validation_failed' );
-			$this->set_response( $contact_form->message( 'validation_error' ) );
-		}
-
-		if ( $this->is( 'init' ) and ! $this->accepted() ) {
-			$this->set_status( 'acceptance_missing' );
-			$this->set_response( $contact_form->message( 'accept_terms' ) );
-		}
-
-		if ( $this->is( 'init' ) and $this->spam() ) {
-			$this->set_status( 'spam' );
-			$this->set_response( $contact_form->message( 'spam' ) );
-		}
-
-		if ( $this->is( 'init' ) and ! $this->unship_uploaded_files() ) {
-			$this->set_status( 'validation_failed' );
-			$this->set_response( $contact_form->message( 'validation_error' ) );
-		}
-
-		if ( $this->is( 'init' ) ) {
-			$abort = ! $this->before_send_mail();
-
-			if ( $abort ) {
-				if ( $this->is( 'init' ) ) {
-					$this->set_status( 'aborted' );
-				}
-
-				if ( '' === $this->get_response() ) {
-					$this->set_response( $contact_form->filter_message(
-						__( "Sending mail has been aborted.", 'contact-form-7' ) )
-					);
-				}
-			} elseif ( $this->mail() ) {
-				$this->set_status( 'mail_sent' );
-				$this->set_response( $contact_form->message( 'mail_sent_ok' ) );
-
-				do_action( 'wpcf7_mail_sent', $contact_form );
-			} else {
-				$this->set_status( 'mail_failed' );
-				$this->set_response( $contact_form->message( 'mail_sent_ng' ) );
-
-				do_action( 'wpcf7_mail_failed', $contact_form );
+			if ( $this->is( 'init' ) and ! $this->validate() ) {
+				$this->set_status( 'validation_failed' );
+				$this->set_response( $contact_form->message( 'validation_error' ) );
 			}
-		}
 
-		restore_previous_locale();
+			if ( $this->is( 'init' ) and ! $this->accepted() ) {
+				$this->set_status( 'acceptance_missing' );
+				$this->set_response( $contact_form->message( 'accept_terms' ) );
+			}
 
-		$this->remove_uploaded_files();
+			if ( $this->is( 'init' ) and $this->spam() ) {
+				$this->set_status( 'spam' );
+				$this->set_response( $contact_form->message( 'spam' ) );
+			}
+
+			if ( $this->is( 'init' ) and ! $this->unship_uploaded_files() ) {
+				$this->set_status( 'validation_failed' );
+				$this->set_response( $contact_form->message( 'validation_error' ) );
+			}
+
+			if ( $this->is( 'init' ) ) {
+				$abort = ! $this->before_send_mail();
+
+				if ( $abort ) {
+					if ( $this->is( 'init' ) ) {
+						$this->set_status( 'aborted' );
+					}
+
+					if ( '' === $this->get_response() ) {
+						$this->set_response( $contact_form->filter_message(
+							__( "Sending mail has been aborted.", 'contact-form-7' ) )
+						);
+					}
+				} elseif ( $this->mail() ) {
+					$this->set_status( 'mail_sent' );
+					$this->set_response( $contact_form->message( 'mail_sent_ok' ) );
+
+					do_action( 'wpcf7_mail_sent', $contact_form );
+				} else {
+					$this->set_status( 'mail_failed' );
+					$this->set_response( $contact_form->message( 'mail_sent_ng' ) );
+
+					do_action( 'wpcf7_mail_failed', $contact_form );
+				}
+			}
+
+			$this->remove_uploaded_files();
+		};
+
+		wpcf7_switch_locale( $this->contact_form->locale(), $callback );
 	}
 
 
+	/**
+	 * Returns the current status property.
+	 */
 	public function get_status() {
 		return $this->status;
 	}
 
 
+	/**
+	 * Sets the status property.
+	 *
+	 * @param string $status The status.
+	 */
 	public function set_status( $status ) {
 		if ( preg_match( '/^[a-z][0-9a-z_]+$/', $status ) ) {
 			$this->status = $status;
@@ -129,8 +155,14 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Returns true if the specified status is identical to the current
+	 * status property.
+	 *
+	 * @param string $status The status to compare.
+	 */
 	public function is( $status ) {
-		return $this->status == $status;
+		return $this->status === $status;
 	}
 
 
@@ -182,22 +214,44 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves the response property.
+	 *
+	 * @return string The current response property value.
+	 */
 	public function get_response() {
 		return $this->response;
 	}
 
 
+	/**
+	 * Sets the response property.
+	 *
+	 * @param string $response New response property value.
+	 */
 	public function set_response( $response ) {
 		$this->response = $response;
 		return true;
 	}
 
 
+	/**
+	 * Retrieves the contact form property.
+	 *
+	 * @return WPCF7_ContactForm A contact form object.
+	 */
 	public function get_contact_form() {
 		return $this->contact_form;
 	}
 
 
+	/**
+	 * Search an invalid field by field name.
+	 *
+	 * @param string $name The field name.
+	 * @return array|bool An associative array of validation error
+	 *                    or false when no invalid field.
+	 */
 	public function get_invalid_field( $name ) {
 		if ( isset( $this->invalid_fields[$name] ) ) {
 			return $this->invalid_fields[$name];
@@ -207,11 +261,23 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves all invalid fields.
+	 *
+	 * @return array Invalid fields.
+	 */
 	public function get_invalid_fields() {
 		return $this->invalid_fields;
 	}
 
 
+	/**
+	 * Retrieves meta information.
+	 *
+	 * @param string $name Name of the meta information.
+	 * @return string|null The meta information of the given name if it exists,
+	 *                     null otherwise.
+	 */
 	public function get_meta( $name ) {
 		if ( isset( $this->meta[$name] ) ) {
 			return $this->meta[$name];
@@ -219,6 +285,9 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Collects meta information about this submission.
+	 */
 	private function setup_meta_data() {
 		$timestamp = time();
 
@@ -258,6 +327,13 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves user input data through this submission.
+	 *
+	 * @param string $name Optional field name.
+	 * @return string|array|null The user input of the field, or array of all
+	 *                           fields values if no field name specified.
+	 */
 	public function get_posted_data( $name = '' ) {
 		if ( ! empty( $name ) ) {
 			if ( isset( $this->posted_data[$name] ) ) {
@@ -271,6 +347,13 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves a user input string value through the specified field.
+	 *
+	 * @param string $name Field name.
+	 * @return string The user input. If the input is an array,
+	 *                the first item in the array.
+	 */
 	public function get_posted_string( $name ) {
 		$data = $this->get_posted_data( $name );
 		$data = wpcf7_array_flatten( $data );
@@ -284,6 +367,9 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Constructs posted data property based on user input values.
+	 */
 	private function setup_posted_data() {
 		$posted_data = array_filter( (array) $_POST, function( $key ) {
 			return '_' !== substr( $key, 0, 1 );
@@ -302,11 +388,6 @@ class WPCF7_Submission {
 			$type = $tag->type;
 			$name = $tag->name;
 			$pipes = $tag->pipes;
-
-			if ( wpcf7_form_tag_supports( $type, 'do-not-store' ) ) {
-				unset( $posted_data[$name] );
-				continue;
-			}
 
 			$value_orig = $value = '';
 
@@ -363,7 +444,8 @@ class WPCF7_Submission {
 			}
 
 			$value = apply_filters( "wpcf7_posted_data_{$type}", $value,
-				$value_orig, $tag );
+				$value_orig, $tag
+			);
 
 			$posted_data[$name] = $value;
 
@@ -381,6 +463,9 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Sanitizes user input data.
+	 */
 	private function sanitize_posted_data( $value ) {
 		if ( is_array( $value ) ) {
 			$value = array_map( array( $this, 'sanitize_posted_data' ), $value );
@@ -482,6 +567,9 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves the remote IP address of this submission.
+	 */
 	private function get_remote_ip_addr() {
 		$ip_addr = '';
 
@@ -494,6 +582,9 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves the request URL of this submission.
+	 */
 	private function get_request_url() {
 		$home_url = untrailingslashit( home_url() );
 
@@ -503,7 +594,7 @@ class WPCF7_Submission {
 
 			if ( $referer
 			and 0 === strpos( $referer, $home_url ) ) {
-				return esc_url_raw( $referer );
+				return sanitize_url( $referer );
 			}
 		}
 
@@ -514,6 +605,11 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Runs user input validation.
+	 *
+	 * @return bool True if no invalid field is found.
+	 */
 	private function validate() {
 		if ( $this->invalid_fields ) {
 			return false;
@@ -547,22 +643,41 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Returns true if user consent is obtained.
+	 */
 	private function accepted() {
 		return apply_filters( 'wpcf7_acceptance', true, $this );
 	}
 
 
+	/**
+	 * Adds user consent data to this submission.
+	 *
+	 * @param string $name Field name.
+	 * @param string $conditions Conditions of consent.
+	 */
 	public function add_consent( $name, $conditions ) {
 		$this->consent[$name] = $conditions;
 		return true;
 	}
 
 
+	/**
+	 * Collects user consent data.
+	 *
+	 * @return array User consent data.
+	 */
 	public function collect_consent() {
 		return (array) $this->consent;
 	}
 
 
+	/**
+	 * Executes spam protections.
+	 *
+	 * @return bool True if spam captured.
+	 */
 	private function spam() {
 		$spam = false;
 
@@ -604,6 +719,11 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Adds a spam log.
+	 *
+	 * @link https://contactform7.com/2019/05/31/why-is-this-message-marked-spam/
+	 */
 	public function add_spam_log( $args = '' ) {
 		$args = wp_parse_args( $args, array(
 			'agent' => '',
@@ -614,11 +734,19 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves the spam logging data.
+	 *
+	 * @return array Spam logging data.
+	 */
 	public function get_spam_log() {
 		return $this->spam_log;
 	}
 
 
+	/**
+	 * Verifies that a correct security nonce was used.
+	 */
 	private function verify_nonce() {
 		if ( ! $this->contact_form->nonce_is_active() or ! is_user_logged_in() ) {
 			return true;
@@ -630,8 +758,9 @@ class WPCF7_Submission {
 	}
 
 
-	/* Mail */
-
+	/**
+	 * Function called just before sending email.
+	 */
 	private function before_send_mail() {
 		$abort = false;
 
@@ -645,6 +774,9 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Sends emails based on user input values and contact form email templates.
+	 */
 	private function mail() {
 		$contact_form = $this->contact_form;
 
@@ -681,11 +813,20 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Retrieves files uploaded through this submission.
+	 */
 	public function uploaded_files() {
 		return $this->uploaded_files;
 	}
 
 
+	/**
+	 * Adds a file to the uploaded files array.
+	 *
+	 * @param string $name Field name.
+	 * @param string|array $file_path File path or array of file paths.
+	 */
 	private function add_uploaded_file( $name, $file_path ) {
 		if ( ! wpcf7_is_name( $name ) ) {
 			return false;
@@ -710,6 +851,9 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Removes uploaded files.
+	 */
 	private function remove_uploaded_files() {
 		foreach ( (array) $this->uploaded_files as $file_path ) {
 			$paths = (array) $file_path;
@@ -728,6 +872,11 @@ class WPCF7_Submission {
 	}
 
 
+	/**
+	 * Moves uploaded files to the tmp directory and validates them.
+	 *
+	 * @return bool True if no invalid file is found.
+	 */
 	private function unship_uploaded_files() {
 		$result = new WPCF7_Validation();
 

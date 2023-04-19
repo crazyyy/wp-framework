@@ -5,10 +5,10 @@ Tags: GDPR, Cookie, Cookie Notice, DSGVO, CPRA, Consent, RGPD, LGPD, Privacy, PI
 Requires at least: 4.9
 License: GPL2
 Requires PHP: 7.2
-Tested up to: 6.0
-Stable tag: 6.3.1
+Tested up to: 6.2
+Stable tag: 6.4.3
 
-Configure your Cookie Notice, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA/CPRA and PIPEDA.
+Configure your Cookie Banner, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA/CPRA and PIPEDA.
 
 == Description ==
 Complianz is a GDPR/CCPA Cookie Consent plugin that supports GDPR, ePrivacy, DSGVO, TTDSG, LGPD, POPIA, APA, RGPD, CCPA/CPRA and PIPEDA with a conditional Cookie Notice and customized Cookie Policy based on the results of the built-in Cookie Scan.
@@ -34,7 +34,7 @@ https://www.youtube.com/watch?v=JJzOzNAd5Bw&ab_channel=ReallySimplePlugins
 * Custom integrations for plugins, themes and services are automatically detected. 
 * Blocks iFrames, like YouTube, Vimeo, Dailymotion embedded videos and Social iFrames e.g. Instagram, Facebook et al.
 * Shows placeholders for blocked iFrames. Stills from videos and individual placeholders per (social) service.
-* Script Center to control scripts, iFrames and plugins per category or service. With dependency functionality and placheholders. 
+* Script Center to control scripts, iFrames and plugins per category or service. With dependency functionality and placeholders.
 * Proof of Consent: User consent registration that respects the GDPR data minimization guideline.
 * Periodical Cookie Scan for changes in Cookies, Plugins and 3rd Party services. 
 * Automatically detects if you need a Cookie Notice (also called a Cookie Banner or Pop-Up).
@@ -60,7 +60,7 @@ https://www.youtube.com/watch?v=JJzOzNAd5Bw&ab_channel=ReallySimplePlugins
 * Categorize your Cookies with Tag Manager or our Script Center, if needed.
 * Integration with the [WP Consent API](https://wpconsentapi.org/)
 
-* Integrates seamlessly with Gutenberg, Elementor, Divi, Forminator, WPBakery, Monsterinsights, GADWP, Beehive, WPForms, Gravity Forms, HappyForms, Contact Form 7 <5.4 (CF7), Woocommerce, Easy Digital Downloads, WP Google Maps, Google Maps Widget, CAOS | Host Google Analytics Locally and other popular plugins.
+* Integrates seamlessly with Gutenberg, Elementor, Divi, Forminator, WPBakery, Monsterinsights, GADWP, Beehive, WPForms, Gravity Forms, HappyForms, Contact Form 7 <5.4 (CF7), Woocommerce, Easy Digital Downloads, WP Google Maps, Google Maps Widget, Local Google Fonts, CAOS | Host Google Analytics Locally and other popular plugins.
 * Tested with popular themes en page builders.
 * Gutenberg Blocks enabled.
 
@@ -175,6 +175,165 @@ The Brazilian General Data Protection Law is similar to the GDPR, the UK-GDPR it
 With some custom CSS this is possible, but we do not consider a cookie wall to be GDPR compliant, so it's not actively supported. We do, however, have the option to create a Soft Cookie Wall. Which blocks interaction with the website, but dismissing remains a possibility.
 
 == Changelog ==
+= 6.4.3 =
+* Improvement: add exclude cookies filter
+* Improvement: add support for parent/child themes, props @dominiccarrington
+* Improvement: incorrect bold paragraphs in Privacy Statement for Children
+* Improvement: clear blocked scripts cache on ajax save in script center
+* Improvement: hubspot integration improved
+* fix: cmplz-consent-area shortcode reload loop because of hardcoded marketing category, props @matthiaswagner
+
+= 6.4.2.1 =
+* New: branding update
+
+= 6.4.2 =
+* Security update: authenticated Stored XSS issue
+* Fix: disable cookie banner option in wizard didn't load the complianz.js scripts, causing placeholders not to work when activated.
+* Fix: After switching to unlinked status in a legal document, purpose paragraph got dropped
+* Fix: not all categories within services showing in cookie policy overview
+* Fix: isset check on get_field_type function, props @moxymore
+* Fix: not translatable VAT ID string
+* Fix: With Global Privacy Control or Do Not Track enabled, and the user accepting an embedded service, the service was blocked again after a pageload.
+* Improvement: allow custom directory for cookie banner css generation
+* Improvement: catch open basedir restriction
+* Improvement: catch not existing accept button during initial cookie scan (no banner active yet)
+* Improvement: function cmplz_has_consent() in 'other' region returned false when no cookies present, while it should return true in that case.
+* New: Buttonizer integration
+* New: hCatpcha for WordPress
+
+= 6.4.1 =
+* Improvement: do not copy over async attribute to prevent issues re-initializing scripts in some setups
+* Improvement: get_cookie() function performance, props @lucastello
+* Improvement: add space behind contact details on policy
+* Improvement: add our own 'manage_privacy' capability, as the wordpress core manage_privacy_options is not implemented consistently with other capabilities
+* Improvement: catch not set array class-document.php 1820
+* Improvement: hide blocked iframes until they're consented to, for better UX
+* Improvement: PHP 8.2 compatibility
+* Improvement: export datarequests on symlinked folder setups (BASE_PATH -> ABSPATH)
+* Fix: links to processing agreement create page broken
+* Fix: Divi Recaptcha support
+* Fix: WP Go Maps Pro update
+* Fix: cosmetic change: cmplz_functional should always be allow, props @jidwictut9
+* Fix: when editing consent in unsynced mode in Gutenberg, content went missing because of automatically wrapping with divs by gutenberg and missing key props
+* New: Agile Store Locator integration
+* New: Omnisend Connect integration
+
+= 6.4.0 =
+* Fix: function name error in microsoft ads integrations, props @mustafauysal
+* Fix: GPC & DNT in opt out regions not respected, props @ahegyes
+* Improvement: conditional scroll into view on consent area shortcode, props @falkemediawy
+* Improvement: MPDF update, props @sviluppomania
+* Improvement: catch CURL errors because of local SSL issues, add to system status
+* Improvement: return # for not existing page id in case of generated docs by complianz, but not actually generated
+* Improvement: Fire load event in divi integration after consent
+
+= 6.3.9 =
+* Brought version in sync with premium version
+* Improvement: Add classes to address details
+* Improvement: auto installer for Really Simple SSL multisite compatible
+* Improvement: add filter to allow filtering data-request email recipient 'cmplz_datarequest_email'
+* Improvement: translatable URLs in polylang
+* New: Microsoft Ads/Microsoft Clarity integration
+* Fix: some scripts not executing properly because of copying data-service & data-category attributes props @sophiaknows, @hamil1
+* Fix: new added query added to cookie block exclude to ensure Avada live builder works, props @franck_b, @markusand
+
+= 6.3.6.1 =
+* Fix: unsetting non existing array key in upgrade
+
+= 6.3.6 =
+* Fix: translatable strings, props @bonaldi
+* Fix: only allow saving script center
+* Fix: error on multisite upgrade
+* Fix: catch error when multiple fonts plugins are installed at the same time, props @rkwp
+* Fix: catch missing menu for user roles without manage privacy capability, props @nicmare, @omniafausta
+* Fix: load cookiebanner css on cookie policy, to ensure hiding of obsolete categories, props @troglos
+* Fix: cookieshredder on setInterval instead of setTimeout, to ensure continuous cleaning, props @path0
+* Fix: set a legal document transient if no Complianz shortcodes are used at all
+* New: Adobe Typekit integration
+* New: Divi Google Maps integration, props @satzundmore
+* Improvement: move script sources to data attribute, to prevent Safari from preloading
+* Improvement: consistency in use of capabilities, changed all caps to manage_privacy
+* Improvement: Allow é in google maps address, props @nicmare
+* Improvement: performance improvements, props @paaljoachim
+* Improvement: copy data attributes in script when enabling scripts, props @thebrandonallen
+
+= 6.3.5 =
+* Fix: Change legal document page name on generate, not only on update
+* Fix: remove error_log in proof of consent
+* Fix: prevent duplicate document status field when Terms & conditions is activated
+* Fix: re-enable caching for cookie list when cookie shredder is enabled, props @mkarena
+* Fix: uses_statistics function now also checks if vimeo is used, which is a service using statistics cookies
+* Improvement: drop Mappress integration, as Mappress has implemented the integration on their end
+* Improvement: Extended Google Fonts support
+* Improvement: Explicitly let users enable the cookie banner and cookie blocker
+* Improvement: allow for linebreak in blocked scripts, which fixes ExactMetrics integration
+* Improvement: when checkbox is inserted in Gravity Forms, but the wizard is not completed yet, the privacy statement url will now be updated on the last step of the wizard
+* WCAG: don't add cookie banner html to cookie policy page, to prevent duplicate id issues
+* WCAG: add labels with screen-reader-text class instead of hiding them with display:none, props @sophieweb
+* New: Uncode maps integration
+* New: YotuWP integration
+
+= 6.3.4 =
+* New: Google Maps colibri integration
+* New: WP Google Maps OpenLayers Integration
+* New: Content Views Plugin integration to allow for ajax loaded content
+* New: ActiveCampaign
+* Improvement: some optimizations to make the cookie shredder perform better
+* Improvement: extend translation options for cookies that are not synced with cookiedatabase when using polylang
+* Improvement: use custom thrive hook in certain custom thrive implementations
+* Improvement: also copy 'owndomain' property when creating a cookie in a new language
+* Improvement: regenerate proof of consent pdf on plugin update
+* Improvement: do not offer checkbox on cookie policy for Google Fonts
+* Improvement: extend Matomo Tag Manager integration
+* Improvement: for created directories, set permissions default to 755
+* Improvement: add filter cmplz_banner_html to manage consent area as well, to offer consistent editing of the html
+* Improvement: also change banner status with custom revoke button on status change
+* Improvement: force redirect in firefox to reload with full consent withdrawal, as firefox seems to cache loaded scripts
+* Improvement: bundle integration activation notices
+* Improvement: Updated Google Maps Easy integration
+* Fix: escape translation file string in case of personalized ads option, props @saggre
+* Fix: Incorrect sorting of Proof of Consent files prevented them from showing up in the list
+* Fix: update qTranslate integration to allow for banner fields with $field['text'] strings, props @sviluppomania
+* Fix: cookie policy UK not replacing the cookiedatabase.org link because of too many arguments in sprintf
+
+= 6.3.3 =
+* Improvement: conditionally offer link to create menu page
+* Improvement: remove unnecessary translatable strings from policy UK and AU
+* Improvement: remove unnecessary slash in matomo script
+* Improvement: email obfuscation when line break in the email prevented reversal of email
+* Improvement: block activation of plugin below php version 7.2
+* Improvement: dynamically adjust banner text based on advertising settings
+* Improvement: no script tags when there's no actual script to add for statistics
+* New: WordPress store locator integration
+* New: Presto Player integration
+* Fix: changes in manage consent button option causing issue in AMP integration, props @tarbyonline
+* Fix: document options in region redirect menu not correctly filtered
+* Fix: prevent error in system status when wizard not started yet
+* Fix: NOT EMPTY condition on imprint statement
+* Fix: no javascript error report unless script debug enabled
+* Fix: update qTranslate integration to allow for banner fields with $field['text'] strings, props @sviluppomania
+* Fix: cookie policy UK not replacing the cookiedatabase.org link because of too many arguments in sprintf
+
+= 6.3.2.1 =
+* Fix: catch empty array during cookie list generation for cookie shredder/consent per service
+* Fix: shortcode pattern for Gutenberg shortcode recognition didn't include first character
+* Fix: "NOT EMPTY" condition wasn't validated correctly, props @anil-sardemann
+
+= 6.3.2 =
+* Improvement: some small dashboard changes
+* Improvement: Prevent duplicate cookies in consent per service array
+* Improvement: caching improvements
+* Improvement: sharing of data multicheckbox with "more options" button
+* Improvement: stricter shortcode pattern for gutenberg prevents non intentional redirect to english version when shortcode contains custom class with 'us' string, props @sami54000
+* Improvement: stricter regex pattern for youtube in elementor, preventing issues when video is self hosted, props @hatchjaw
+* Improvement: extend custom css examples
+* Improvement: catch situation where user selects that social media are used, but does not select any social media
+* Improvement: drop defer from matomo js, as it is deprecated in favor of async
+* Fix: changes in manage consent button option causing issue in AMP integration, props @tarbyonline
+* Fix: typo in cookie policy
+* Fix: Woocommerce analytics integration icw Stripe, props @xbaeza
+* Fix: string change: for placeholders, you can now use a DIV class or an ID
+
 = 6.3.1 =
 * Improvement: Catch php 5.6 error for geo ip
 * Improvement: space after missing p tag removed

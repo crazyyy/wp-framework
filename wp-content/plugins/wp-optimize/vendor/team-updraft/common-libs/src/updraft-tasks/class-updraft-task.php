@@ -687,7 +687,8 @@ abstract class Updraft_Task_1_2 {
 	 */
 	private function get_task_from_db($task_id) {
 		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM {$wpdb->base_prefix}tm_tasks WHERE id = {$task_id} LIMIT 1");		
+		$sql = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}tm_tasks WHERE id = %d LIMIT 1", $task_id);
+		return $wpdb->get_row($sql);		
 	}
 }
 endif;

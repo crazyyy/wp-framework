@@ -1,5 +1,18 @@
 #### [unreleased]
 
+#### 2.11.18, 2.11.19, 2.11.20 / 2023-02-07
+* composer update
+
+#### 2.11.17 / 2023-01-27
+* updated link to _Debugging in WordPress_ and improved text for translators
+* composer update
+
+#### 2.11.16 / 2023-01-19
+* composer update
+
+#### 2.11.15 / 2023-01-02
+* composer update
+
 #### 2.11.14 / 2022-07-15
 * composer update
 

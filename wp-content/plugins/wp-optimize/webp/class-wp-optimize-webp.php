@@ -16,11 +16,20 @@ class WP_Optimize_WebP {
 	 * Constructor
 	 */
 	private function __construct() {
-		$this->maybe_set_converter_status();
-		$this->set_rewrite_status();
-		if (!is_admin()) {
-			$this->maybe_decide_webp_serve_method();
+		if ($this->should_run_webp_conversion_test()) {
+			$this->set_converter_status();
 		}
+
+		if ($this->get_webp_conversion_test_result()) {
+			$this->maybe_set_rewrite_status();
+			if (!is_admin()) {
+				$this->maybe_decide_webp_serve_method();
+			}
+		} else {
+			$this->empty_htaccess_file();
+		}
+
+		$this->init_webp_cron_scheduler();
 	}
 
 	/**
@@ -37,16 +46,6 @@ class WP_Optimize_WebP {
 	}
 
 	/**
-	 * Detect working webp converters and set converter status, if needed
-	 */
-	private function maybe_set_converter_status() {
-		$converters = WP_Optimize()->get_options()->get_option('webp_converters', false);
-		if (empty($converters)) {
-			$this->set_converter_status();
-		}
-	}
-
-	/**
 	 * Test Run and find converter status
 	 */
 	private function set_converter_status() {
@@ -54,7 +53,20 @@ class WP_Optimize_WebP {
 			require_once WPO_PLUGIN_MAIN_PATH . 'webp/class-wpo-webp-test-run.php';
 		}
 		$converter_status = WPO_WebP_Test_Run::get_converter_status();
-		WP_Optimize()->get_options()->update_option('webp_converters', $converter_status['working_converters']);
+		if ($this->is_webp_conversion_successful()) {
+			WP_Optimize()->get_options()->update_option('webp_conversion_test', true);
+			WP_Optimize()->get_options()->update_option('webp_converters', $converter_status['working_converters']);
+		}
+	}
+
+	/**
+	 * May be set server's rewrite status
+	 */
+	private function maybe_set_rewrite_status() {
+		$this->_should_use_webp = WP_Optimize()->get_options()->get_option('webp_conversion');
+		if ($this->_should_use_webp) {
+			$this->set_rewrite_status();
+		}
 	}
 
 	/**
@@ -86,19 +98,21 @@ class WP_Optimize_WebP {
 	 * using rewrite rules or using altered html method
 	 */
 	private function maybe_decide_webp_serve_method() {
-		$this->_should_use_webp = WP_Optimize()->get_options()->get_option('webp_conversion');
 		if ('true' === $this->_rewrite_status) {
 			if (!$this->_should_use_webp) {
-				$this->save_htaccess_rules(false);
-				return;
+				$this->empty_htaccess_file();
 			} else {
+				$this->save_htaccess_rules();
 				if (!$this->is_webp_redirection_possible()) {
+					$this->empty_htaccess_file();
 					$this->maybe_use_alter_html();
 				}
 			}
 		} else {
 			if ($this->_should_use_webp) {
 				$this->maybe_use_alter_html();
+			} else {
+				$this->empty_htaccess_file();
 			}
 		}
 	}
@@ -119,17 +133,11 @@ class WP_Optimize_WebP {
 	 * @return bool
 	 */
 	private function is_webp_redirection_possible() {
-		if (!class_exists('WPO_WebP_Self_Test')) {
-			require_once WPO_PLUGIN_MAIN_PATH . 'webp/class-wpo-webp-self-test.php';
+		$redirection_possible = WP_Optimize()->get_options()->get_option('redirection_possible');
+		if ($redirection_possible) {
+			return 'true' === $redirection_possible;
 		}
-		$self_test = WPO_WebP_Self_Test::get_instance();
-
-		if ($self_test->get_webp_image()) {
-			$this->save_htaccess_rules($this->_should_use_webp);
-			if ($self_test->is_webp_served()) return true;
-		}
-		$this->save_htaccess_rules();
-		return false;
+		return $this->run_webp_serving_self_test();
 	}
 
 	/**
@@ -185,18 +193,27 @@ class WP_Optimize_WebP {
 	 *
 	 * @return bool
 	 */
-	private function save_htaccess_rules($webp_conversion_enabled = false) {
+	private function save_htaccess_rules() {
 		$htaccess_comment_section = 'WP-Optimize WebP Rules';
-	
-		if ($this->_htaccess->is_exists() && !$webp_conversion_enabled) {
-			$this->_htaccess->remove_commented_section($htaccess_comment_section);
-			$this->_htaccess->write_file();
-			return true;
-		}
 		if ($this->_htaccess->is_commented_section_exists($htaccess_comment_section)) return false;
 		$this->_htaccess->update_commented_section($this->prepare_webp_htaccess_rules(), $htaccess_comment_section);
 		$this->_htaccess->write_file();
 		return true;
+	}
+
+	/**
+	 * Empty .htaccess file
+	 */
+	public function empty_htaccess_file() {
+		$this->setup_htaccess_file();
+		$htaccess_comment_sections = array(
+			'WP-Optimize WebP Rules',
+			'Register webp mime type',
+		);
+		foreach ($htaccess_comment_sections as $htaccess_comment_section) {
+			$this->_htaccess->remove_commented_section($htaccess_comment_section);
+			$this->_htaccess->write_file();
+		}
 	}
 
 	/**
@@ -257,9 +274,7 @@ class WP_Optimize_WebP {
 	}
 
 	/**
-	 * Prepare array of htaccess rules to use webp images.
-	 *
-	 * @return array
+	 * Add webp mime type to htaccess rules.
 	 */
 	private function add_webp_mime_type() {
 		$htaccess_comment_section = 'Register webp mime type';
@@ -274,6 +289,111 @@ class WP_Optimize_WebP {
 			$this->_htaccess->update_commented_section($webp_mime_type, $htaccess_comment_section);
 			$this->_htaccess->write_file();
 		}
+	}
+
+	/**
+	 * Checks whether webp conversion test is successful or not
+	 *
+	 * @return bool
+	 */
+	private function is_webp_conversion_successful() {
+		$upload_dir = wp_upload_dir();
+		$destination =  $upload_dir['basedir']. '/wpo/images/wpo_logo_small.png.webp';
+		return file_exists($destination);
+	}
+
+	/**
+	 * Checks whether sample webp conversion test should be run or not
+	 *
+	 * @return bool Returns true if sample test should be run, false otherwise
+	 */
+	private function should_run_webp_conversion_test() {
+		$webp_conversion_test = $this->get_webp_conversion_test_result();
+		return (true != $webp_conversion_test);
+	}
+
+	/**
+	 * Returns webp conversion test result
+	 */
+	private function get_webp_conversion_test_result() {
+		return WP_Optimize()->get_options()->get_option('webp_conversion_test');
+	}
+
+	/**
+	 * Checks whether the webp redirection is possible or not and sets flag
+	 *
+	 * @return bool Returns true if webp is served successfully, false otherwise
+	 */
+	private function run_webp_serving_self_test() {
+		if (!class_exists('WPO_WebP_Self_Test')) {
+			require_once WPO_PLUGIN_MAIN_PATH . 'webp/class-wpo-webp-self-test.php';
+		}
+		$self_test = WPO_WebP_Self_Test::get_instance();
+
+		if ($self_test->get_webp_image()) {
+			$this->save_htaccess_rules();
+			if ($self_test->is_webp_served()) {
+				WP_Optimize()->get_options()->update_option('redirection_possible', 'true');
+				return true;
+			}
+		}
+		WP_Optimize()->get_options()->update_option('redirection_possible', 'false');
+		$this->empty_htaccess_file();
+		return false;
+	}
+
+	/**
+	 * Resets webp serving method by setting all flags status to false
+	 *
+	 * @return bool
+	 */
+	public function reset_webp_serving_method() {
+		$options = WP_Optimize()->get_options();
+		$options->update_option('redirection_possible', false);
+		$options->update_option('webp_conversion_test', false);
+		$options->update_option('webp_converters', false);
+		return $options->update_option('rewrite_status', false);
+	}
+
+	/**
+	 * Initialize cron scheduler
+	 */
+	private function init_webp_cron_scheduler() {
+		WPO_WebP_Cron_Scheduler::get_instance();
+	}
+
+	/**
+	 * Determines whether the php shell functions are available or not
+	 *
+	 * @return bool
+	 */
+	public static function is_shell_functions_available() {
+		$shell_functions = self::get_shell_functions();
+		foreach ($shell_functions as $shell_function) {
+			if (!function_exists($shell_function)) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * List of php shell function names
+	 *
+	 * @return string[]
+	 */
+	public static function get_shell_functions() {
+		return array(
+			'escapeshellarg',
+			'escapeshellcmd',
+			'exec',
+			'passthru',
+			'proc_close',
+			'proc_get_status',
+			'proc_nice',
+			'proc_open',
+			'proc_terminate',
+			'shell_exec',
+			'system',
+		);
 	}
 }
 

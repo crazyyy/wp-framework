@@ -1,11 +1,11 @@
 === WP-Optimize - Cache, Clean, Compress. ===  
-Contributors: DavidAnderson, ruhanirabin, DNutbourne, aporter, snightingale, lumberhack
+Contributors: DavidAnderson, ruhanirabin, DNutbourne, aporter, snightingale, lumberhack, webulous
 Donate link: https://david.dw-perspective.org.uk/donate
-Tags: cache, minify, database, image optimize, performance, clean, spam, speed, caching, smush, smushing
+Tags: cache, minify, caching, image cache, performance cache, clean, spam, speed, database, smush, smushing
 Requires PHP: 5.6
 Requires at least: 4.5
-Tested up to: 6.0
-Stable tag: 3.2.6
+Tested up to: 6.2
+Stable tag: 3.2.14
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -217,6 +217,9 @@ Go to WP-Optimize -> Cache and enable caching. For most people, that will be eno
 = Is the caching feature compatible with e-commerce plugins? =
 Yes, caching with WP-Optimize Cache allows you to safely cache your products, with plugins like WooCommerce or Easy Digital Downloads, or any e-commerce that uses `DONOTCACHEPAGE` to exclude sensitive pages from caching (e.g. my account, cart or checkout pages).
 
+= Is the caching feature compatible with multilingual plugins? =
+Yes, WP-Optimize works with popular multilingual plugins like WPML or Polylang. However, it's important to note that when using WP-Optimize with multilingual plugins, the URL format for different languages should not include any query parameters, for example `https://example.com/?lang=en`. Instead, it should be in a pretty permalink format, such as `https://example.com/en`.
+
 = Do I need a special setup to use the caching feature? =
 No, if WordPress works properly, WP-Optimize will be able to cache your pages and posts.
 
@@ -365,10 +368,106 @@ If none of the above works, disable processing of JavaScript files in the minify
 == Changelog ==
 
 
+= 3.2.14 - 30/Mar/2023 =
 
+* FIX: Compatibility with WordPress 6.2 when using PHP 8.x
+* FIX: Divi builder's edit mode when WebP serving is using the "alter HTML" method
+* FIX: Premium - Unused images feature - improve compatibility with Beaver Builder and its addons
+* FIX: Cache - Page caching wasn't working on the IIS webserver
+* TWEAK: Update seasonal notices
+* TWEAK: Prevent deprecation notices in PHP 8.2+
 
+= 3.2.13 - 13/Mar/2023 =
+
+* FEATURE: WebP - Ability to convert to webp format from media library
+* FIX: Prevent PHP warning when minify-log files are missing or corrupted, also added appropriate error message
+* FIX: Delete webp files and uncompressed file when media is deleted
+* FIX: Polylang compatibility - now upon updating any post, caches for all translated languages are cleared
+* FIX: Prevent adding unsupported media types to the smush task list
+* FIX: WebP - Unsupported formats throws a fatal error
+* FIX: Compress image UI for webp images
+* FIX: Premium - WebP Images are marked as unused images
+* FIX: Resolved an issue where Beaver Builder's edit mode was not functioning properly when WebP conversion was enabled
+* FIX: Prevent creating multiple cache directories for URLs that contain non-English characters
+* TWEAK: Preload allowed time difference is set to be the same as max execution time
+* TWEAK: Premium - Unused images feature - Add compatibility with Yoast SEO social images
+* TWEAK: Prevent jQuery deprecation notices
+* SECURITY: Fixed a non-persistent XSS vulnerability that could occur on certain servers when the WebP conversion option was enabled. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the victim's browser by tricking them into clicking on a specially crafted link. Thanks to Paolo Elia for reporting this.
+
+= 3.2.12 - 06/Feb/2023 =
+
+* SECURITY: Today's 3.2.11 release (free version only - there was no 3.2.11 Premium release) checked nonces incorrectly, opening up the possibility of an attacker tricking an admin into clicking links crafted to perform unauthorised actions on the WP Optimize configuration on his site.
+
+= 3.2.11 - 06/Feb/2023 =
+
+* FIX: Empty query string updates cache
+* FIX: Cache - Purge cache after string translation update in WPML
+* FIX: Cache - Preload stuck and fails to complete
+* FIX: Prevent PHP warning when `.htaccess` files don't have write permission
+* FIX: Premium – Fixed compatibility issue with WP Hide plugin
+* FIX: Minify - Less than 20KB stylesheets loading order
+* TWEAK: Add cron event only if clear backup images is enabled
+* TWEAK: Cache - Use WordPress GMT offset for cache comment
+* TWEAK: Only allow image types that can be compressed
+* TWEAK: Cached page is not served for sites that have own directory for WordPress files
+
+= 3.2.10 - 28/Nov/2022 =
+
+* FIX: Prevent php warning and increase SendInBlue `mailin` plugin compatibility
+* FIX: Avoid screen juggling while selecting optimizations from dropdown in scheduled clean up
+* FIX: Prevent cache purge upon deactivation using filter
+* FIX: Cache purge ability of all registered user
+* FIX: Recognise WooCommerce product category images as used images
+* FIX: Multisite support in `cached-file-log.php` template
+* TWEAK: Improve Optimization Schedule UI
+* TWEAK: Consolidated error notices by the use of a global WPO notice object.
+* TWEAK: Remove `Reset WebP serving method` button when there are no webp conversion tools
+* TWEAK: Remove query strings from scripts
+* TWEAK: Add `Restrict Content Pro` plugin slug to `plugin.json`
+* TWEAK: Add option to remove orphaned `user meta` data upon run optimization
+* TWEAK: Add `no-cache` headers when minify is enabled and page cacheing is not
+* TWEAK: Ability to remove `.htaccess` rules when gzip compression is not available
+* TWEAK: WebP: Avoid PHP warnings when using hot linked images (Alter HTML method)
+* TWEAK: WebP conversion is unavailable when php shell functions do not exist
+* TWEAK: Improved UI settings for asynchronous loading and page speed testing exclusion tools
+* TWEAK: Add a constant to enable/disable webp feature
+* TWEAK: Set a global context for $wp_file_descriptions context so that it gets assigned to correctly, preventing a subtle visual change in the theme editor
+* TWEAK: Prevent php warning from `webp-convert` library
+* TWEAK: Update currently-active installs number in thank you for installing notice.
+* TWEAK: Replaced deprecated use of jQuery.change()
+
+= 3.2.9 - 06/Sep/2022 =
+
+* FEATURE: Import and export settings
+* FIX: Avoid infinite loop while using unused images export csv
+* FIX: Scheduled cache preloading issue
+* FIX: WebP testing making unnecessary background HTTP checks
+* FIX: Google fonts compatibility with The7 theme
+* FIX: Prevent console error for undefined `wp_optimize` for smush scripts
+* TWEAK: Avoid PHP warnings on cache cleanup
+* FIX: Ability to disable webp serving while caching is on
+* TWEAK: Reset webp conversion method flags daily using cron job
+* TWEAK: Remove orphaned `wpo_weekly_cron_tasks` cron job upon uninstallation
+
+= 3.2.8 - 23/Aug/2022 =
+
+* FIX: Build system error led to a missing file in 3.2.7 which could cause an error when using related functions
+* FIX: Fix incorrect function name in admin class
+
+= 3.2.7 - 15/Aug/2022 =
+
+* FEATURE: A CLI command for generating lists of unused images as a CSV file (Premium)
 * FIX: The unused images CSV downloads have a few redundant images listed
-
+* FIX: ACF block field images are listed as unused images
+* FIX: Correctly recognize `inherit` in google fonts async loading
+* FIX: Cache - Do not purge when `wp_update_nav_menu` is removed from `wpo_purge_cache_hooks` array
+* TWEAK: Prevent PHP warnings when using `json_decode` result
+* TWEAK: Create cache config file if not present because of site migration
+* TWEAK: Update notice class
+* TWEAK: Recognize WooCommerce scheduled sales and cache accordingly
+* TWEAK: Prevent duplicate `wp-optimize` entry in tables optimization list
+* TWEAK: Test htaccess capability only when needed by webp feature
+* TWEAK: Increase compatibility with Aelia plugins
 
 = 3.2.6 - 15/Jun/2022 =
 
@@ -1264,4 +1363,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 * Fix Interface
 
 == Upgrade Notice ==
-* 3.2.6: WebP - Trailing slash file creation issue in PHP 8 and incorrect static method calling causes parse Error in PHP 5.6.36; a recommended update for all.
+* 3.2.14: Fixes (including WP 6.2/PHP 8.X compatibility fixes) - a recommended update for all

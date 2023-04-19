@@ -2,7 +2,7 @@
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 
-if (!class_exists('UpdraftPlus_RemoteStorage_Addons_Base_v2')) require_once(UPDRAFTPLUS_DIR.'/methods/addon-base-v2.php');
+if (!class_exists('UpdraftPlus_RemoteStorage_Addons_Base_v2')) updraft_try_include_file('methods/addon-base-v2.php', 'require_once');
 
 class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addons_Base_v2 {
 
@@ -280,6 +280,9 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 
 		if (!$remote_sent) return;
 
+		// If this is a partial upload then don't send the upload complete signal
+		if ('partialclouduploading' == $updraftplus->jobdata_get('jobstatus')) return;
+
 		// ensure options have been loaded
 		$this->options = $this->get_options();
 
@@ -448,7 +451,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 		// Don't call self::log() - this then requests options (to get the label), causing an infinite loop.
 	
 		global $updraftplus, $updraftplus_admin;
-		if (empty($updraftplus_admin)) include_once(UPDRAFTPLUS_DIR.'/admin.php');
+		if (empty($updraftplus_admin)) updraft_try_include_file('admin.php', 'include_once');
 		
 		$clone_job = $updraftplus->jobdata_get('clone_job');
 		
@@ -457,20 +460,27 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 
 		// check that we don't already have the needed information
 		if (is_array($opts) && !empty($opts['url']) && !empty($opts['name_indicator']) && !empty($opts['key'])) return $opts;
-
+		$current_stage = $updraftplus->jobdata_get('jobstatus');
 		$updraftplus->jobdata_set('jobstatus', 'clonepolling');
 		$clone_id = $updraftplus->jobdata_get('clone_id');
 		$clone_url = $updraftplus->jobdata_get('clone_url');
 		$clone_key = $updraftplus->jobdata_get('clone_key');
 		$secret_token = $updraftplus->jobdata_get('secret_token');
+		$clone_region = $updraftplus->jobdata_get('clone_region');
 			
 		if (empty($clone_id) && empty($secret_token)) return $opts;
+
+		$updraftplus->log("Polling for UpdraftClone (ID: {$clone_id} Region: {$clone_region}) migration information.");
 		
 		$params = array('clone_id' => $clone_id, 'secret_token' => $secret_token);
 		$response = $updraftplus->get_updraftplus_clone()->clone_info_poll($params);
 
 		if (!isset($response['status']) || 'success' != $response['status']) {
-			$updraftplus->log("UpdraftClone migration information poll failed with code: " . $response['code']);
+			if ('clone_network_not_found' == $response['code'] && 0 === $updraftplus->current_resumption) {
+				$updraftplus->log("UpdraftClone network information is not ready yet please wait while the clone finishes provisioning.");
+			} else {
+				$updraftplus->log("UpdraftClone migration information poll failed with code: " . $response['code']);
+			}
 			return $opts;
 		}
 
@@ -501,7 +511,7 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 		$remotesites[] = $clone_key;
 		UpdraftPlus_Options::update_updraft_option('updraft_remotesites', $remotesites);
 
-		$updraftplus->jobdata_set_multi('clone_url', $clone_url, 'clone_key', $clone_key, 'remotesend_info', $clone_key, 'jobstatus', 'clouduploading');
+		$updraftplus->jobdata_set_multi('clone_url', $clone_url, 'clone_key', $clone_key, 'remotesend_info', $clone_key, 'jobstatus', $current_stage);
 
 		return $clone_key;
 	}

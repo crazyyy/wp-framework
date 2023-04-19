@@ -2,8 +2,8 @@
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 
-if (!class_exists('Updraft_Restorer_Skin')) require_once(UPDRAFTPLUS_DIR.'/includes/updraft-restorer-skin.php');
-if (!class_exists('UpdraftPlus_Search_Replace')) require_once(UPDRAFTPLUS_DIR.'/includes/class-search-replace.php');
+if (!class_exists('Updraft_Restorer_Skin')) updraft_try_include_file('includes/updraft-restorer-skin.php', 'require_once');
+if (!class_exists('UpdraftPlus_Search_Replace')) updraft_try_include_file('includes/class-search-replace.php', 'require_once');
 
 class Updraft_Restorer {
 
@@ -18,14 +18,30 @@ class Updraft_Restorer {
 	// Public: it is manipulated by the caller after the caller gets the object
 	public $delete = false;
 
+	private $errors;
+
 	private $created_by_version = false;
 
 	// This one can be set externally, if the information is available
 	public $ud_backup_is_multisite = -1;
 
+	public $ud_multisite_selective_restore = false;
+
 	private $ud_backup_set;
 
+	private $ud_foreign_working_dir;
+
+	private $ud_foreign_package;
+
 	public $ud_foreign;
+
+	private $ud_extract_count;
+	
+	private $ud_working_dir;
+
+	private $ud_extract_dir;
+	
+	private $ud_made_dirs;
 
 	// store restored table names
 	public $restored_table_names = array();
@@ -35,13 +51,15 @@ class Updraft_Restorer {
 	// The default of false means "use the global $wpdb"
 	private $wpdb_obj = false;
 
+	private $mysql_dbh = false;
+	
+	private $use_mysqli = false;
+
 	private $line_last_logged = 0;
 
 	private $our_siteurl;
 
 	private $configuration_bundle;
-
-	private $ajax_restore_auth_code;
 	
 	private $restore_options;
 	
@@ -66,6 +84,14 @@ class Updraft_Restorer {
 	private $table_engine = '';
 
 	private $table_name = '';
+
+	private $new_table_name = '';
+
+	private $original_table_name = '';
+
+	private $tables_created = 0;
+
+	private $view_names = array();
 	
 	private $continuation_data;
 
@@ -117,10 +143,46 @@ class Updraft_Restorer {
 	private $generated_columns_exist_in_the_statement = array();
 
 	private $printed_new_table_prefix = false;
+
+	private $old_siteurl = '';
+
+	private $old_home = '';
+	
+	private $old_content = '';
+	
+	private $old_uploads = '';
 	
 	private $old_table_prefix = null;
 
 	private $old_abspath = '';
+
+	private $pre_restore_updatedir_writable;
+
+	private $abspath;
+
+	private $create_forbidden = false;
+	
+	private $drop_forbidden = false;
+	
+	private $lock_forbidden = false;
+	
+	private $rename_forbidden = false;
+
+	private $triggers_forbidden = false;
+	
+	private $prior_upload_path;
+	
+	private $insert_statements_run;
+	
+	private $start_time;
+	
+	private $last_error;
+	
+	private $last_error_no;
+	
+	private $max_allowed_packet;
+	
+	private $set_names;
 
 	/**
 	 * Constructor
@@ -210,7 +272,7 @@ class Updraft_Restorer {
 
 		$this->is_multisite = is_multisite();
 
-		require_once(UPDRAFTPLUS_DIR.'/includes/class-database-utility.php');
+		updraft_try_include_file('includes/class-database-utility.php', 'require_once');
 		
 		if (!class_exists('WP_Upgrader')) include_once(ABSPATH.'wp-admin/includes/class-wp-upgrader.php');
 		$this->skin = $skin;
@@ -350,6 +412,9 @@ class Updraft_Restorer {
 				if ($browser_context) echo '</strong>';
 			}
 
+			// preserve labels when restoring (not yet ready)
+			// UpdraftPlus_Backup_History::restore_backup_history_label();
+
 			do_action('updraftplus_restore_completed');
 		}
 
@@ -358,7 +423,7 @@ class Updraft_Restorer {
 		restore_error_handler();
 		
 	}
-	
+
 	/**
 	 * Whether or not we must use the global $wpdb object for database queries.
 	 * That is to say: we *can* always use it. But we prefer to avoid the overhead since we are potentially doing very many queries.
@@ -612,6 +677,7 @@ class Updraft_Restorer {
 				$last_one = (1 == count($second_loop) && 1 == count($files));
 				$last_entity = (1 == count($files));
 				try {
+					do_action('updraftplus_pre_entity_restoration', $type, $fkey);
 					// Returns a boolean or WP_Error
 					$restore_result = $this->restore_backup($file, $type, $info, $last_one, $last_entity);
 				} catch (Exception $e) {
@@ -886,7 +952,7 @@ class Updraft_Restorer {
 		} elseif ('.tar' == strtolower(substr($package, -4, 4)) || '.tar.gz' == strtolower(substr($package, -7, 7)) || '.tar.bz2' == strtolower(substr($package, -8, 8))) {
 			if (!class_exists('UpdraftPlus_Archive_Tar')) {
 				if (false === strpos(get_include_path(), UPDRAFTPLUS_DIR.'/includes/PEAR')) set_include_path(UPDRAFTPLUS_DIR.'/includes/PEAR'.PATH_SEPARATOR.get_include_path());
-				include_once(UPDRAFTPLUS_DIR.'/includes/PEAR/Archive/Tar.php');
+				updraft_try_include_file('includes/PEAR/Archive/Tar.php', 'include_once');
 			}
 
 			$p_compress = null;
@@ -1467,7 +1533,7 @@ class Updraft_Restorer {
 
 			if (isset($this->continuation_data['updraftplus_ajax_restore']) && 'continue_ajax_restore' != $this->continuation_data['updraftplus_ajax_restore'] && (('plugins' == $type || 'uploads' == $type || 'themes' == $type || 'more' == $type) && (!is_multisite() || 0 !== $this->ud_backup_is_multisite || ('uploads' != $type || empty($updraftplus_addons_migrator->new_blogid))))) {
 				if (file_exists($updraft_dir.'/'.basename($wp_filesystem_dir)."-old")) {
-					$ret_val = new WP_Error('already_exists', sprintf(__('Existing unremoved folders from a previous restore exist (please use the "Delete Old Directories" button to delete them before trying again): %s', 'updraftplus'), $updraft_dir.'/'.basename($wp_filesystem_dir)."-old"));
+					$ret_val = new WP_Error('already_exists', sprintf(__('Existing unremoved folders from a previous restore exist (please use the "Delete old folders" button to delete them before trying again): %s', 'updraftplus'), $updraft_dir.'/'.basename($wp_filesystem_dir)."-old"));
 				}
 			}
 		}
@@ -1566,6 +1632,9 @@ class Updraft_Restorer {
 			$now_done = false;
 			$do_not_move_old = true;
 		}
+
+		// preserve labels when restoring (not yet correct)
+		// UpdraftPlus_Backup_History::preserve_backup_history();
 		
 		if (!$now_done) {
 		
@@ -1973,6 +2042,7 @@ class Updraft_Restorer {
 		$cache_sub_directories = array('cache', 'wphb-cache', 'endurance-page-cache');
 		foreach ($cache_sub_directories as $sub_dir) {
 			if (!is_dir(WP_CONTENT_DIR.'/'.$sub_dir)) continue;
+			$updraftplus->log("Purging cache directory: ".WP_CONTENT_DIR.'/'.$sub_dir);
 			UpdraftPlus_Filesystem_Functions::remove_local_directory(WP_CONTENT_DIR.'/'.$sub_dir, true);
 		}
 	}
@@ -2368,7 +2438,7 @@ class Updraft_Restorer {
 				}
 			}
 
-			if ($this->restoring_table != $this->new_table_name) {
+			if ('' !== $this->restoring_table && $this->restoring_table != $this->new_table_name) {
 				$final_table_name = $this->maybe_rename_restored_table();
 				$this->restored_table($final_table_name, $this->final_import_table_prefix, $this->old_table_prefix, $this->table_engine);
 			}
@@ -3098,7 +3168,11 @@ class Updraft_Restorer {
 			}
 
 			// The timed overhead of this is negligible
-			if (preg_match('/^\s*drop table (if exists )?\`?([^\`]*)\`?\s*'.$delimiter_regex.'/i', $sql_line, $matches)) {
+			if (preg_match('/^\s*drop view (if exists )?\`?([^\`]*)\`?\s*'.$delimiter_regex.'/i', $sql_line, $matches)) {
+				$sql_type = 16;
+				$this->view_names[] = $matches[2];
+				$this->view_names = array_unique($this->view_names);
+			} elseif (preg_match('/^\s*drop table (if exists )?\`?([^\`]*)\`?\s*'.$delimiter_regex.'/i', $sql_line, $matches)) {
 				$sql_type = 1;
 
 				if (!$this->printed_new_table_prefix) {
@@ -3375,19 +3449,29 @@ class Updraft_Restorer {
 				if (null !== $this->old_table_prefix) {
 					foreach (array_keys($this->restore_this_table) as $table_name) {
 						// Code for a view can contain pretty much anything. As such, we want to be minimise the risks of unwanted matches.
+						if (in_array($table_name, $this->view_names)) continue; // since DROP VIEW statement is preceded by DROP TABLE statement (@see UpdraftPlus_Backup::write_table_backup_beginning), it makes the view name to be recognised as a real table and to be added to the $this->restore_this_table variable when executing the DROP TABLE statement via UpdraftPlus_Restore::sql_exec method. This line prevents a view name from being replaced and suffixed with $import_table_prefix during an atomic restoration and/or when the view uses the same table prefix
 						if (false !== strpos($sql_line, $table_name)) {
-							$new_table_name = ('' == $this->old_table_prefix) ? $import_table_prefix.$table_name : UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $table_name);
+							$new_table_name = ('' == $this->old_table_prefix) ? $import_table_prefix.$table_name : UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $this->rename_forbidden ? $import_table_prefix : $this->final_import_table_prefix, $table_name);
 							$sql_line = str_replace($table_name, $new_table_name, $sql_line);
 						}
 					}
+					// by default during an atomic restoration, the last created table is renamed at the end of the restoration process (@see the `if ($this->restoring_table)` code at the end of this method), tipically the DB server will throw an error when creating a view that requires a table that doesn't exist in the database
+					if ($this->restoring_table) {
+						$final_table_name = $this->maybe_rename_restored_table();
+						$this->restored_table($final_table_name, $this->final_import_table_prefix, $this->old_table_prefix, $this->table_engine);
+						$this->restoring_table = ''; // reset this variable so that the same table renaming procedure at the end of this method doesn't get executed
+					}
 				}
+			} elseif (preg_match('/^SET @@GLOBAL.GTID_PURGED/i', $sql_line)) {
+				// skip the SET @@GLOBAL.GTID_PURGED command
+				$sql_type = 17;
 			} else {
 				// Prevent the previous value of $sql_type being retained for an unknown type
 				$sql_type = 0;
 			}
 
-			// Do not execute "USE" or "CREATE|DROP DATABASE" commands
-			if (6 != $sql_type && 7 != $sql_type && (9 != $sql_type || false == $this->triggers_forbidden) && 10 != $sql_type) {
+			// Do not execute "USE" or "CREATE|DROP DATABASE" or "SET @@GLOBAL.GTID_PURGED" commands
+			if (6 != $sql_type && 7 != $sql_type && (9 != $sql_type || false == $this->triggers_forbidden) && 10 != $sql_type && 17 != $sql_type) {
 				$do_exec = $this->sql_exec($sql_line, $sql_type);
 				if (is_wp_error($do_exec)) return $do_exec;
 			} else {
@@ -3583,7 +3667,7 @@ class Updraft_Restorer {
 		$current_table_name = UpdraftPlus_Manipulation_Functions::backquote($current_table_name);
 		$new_table_name = UpdraftPlus_Manipulation_Functions::backquote($new_table_name);
 
-		return $this->sql_exec("ALTER TABLE $current_table_name RENAME TO $new_table_name;", 14);
+		return $this->sql_exec("ALTER TABLE $current_table_name RENAME TO $new_table_name;", 14, '', false);
 	}
 
 	private function lock_table($table) {
@@ -3747,11 +3831,13 @@ class Updraft_Restorer {
 	 * 8 SET NAMES
 	 * 9 TRIGGER
 	 * 10 DELIMITER
-	 * 11 CREATE ALGORITHM
+	 * 11 CREATE VIEW
 	 * 12 ROUTINE
 	 * 13 DROP FUNCTION|PROCEDURE
 	 * 14 ALTER
 	 * 15 UNLOCK
+	 * 16 DROP VIEW
+	 * 17 SET GLOBAL.GTID_PURGED
 	 *
 	 * @param  String  $sql_line            sql line to execute
 	 * @param  Integer $sql_type            sql type
@@ -4078,15 +4164,36 @@ class Updraft_Restorer {
 							update_option('cctm_data', $cctm_data);
 						}
 					}
+				}
+
+				if ($table == $import_table_prefix.$mprefix.'options') {
 					// Another - http://www.elegantthemes.com/gallery/elegant-builder/
 					$elegant_data = $wpdb->get_row($wpdb->prepare("SELECT option_value FROM $new_table_name WHERE option_name = %s LIMIT 1", 'et_images_temp_folder'));
 					if (!empty($elegant_data->option_value)) {
 						$dbase = basename($elegant_data->option_value);
 						$wp_upload_dir = wp_upload_dir();
 						$edir = $wp_upload_dir['basedir'];
-						if (!is_dir($edir.'/'.$dbase)) @mkdir($edir.'/'.$dbase);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+						$new_dir = $edir.'/'.$dbase;
+						if (!is_dir($new_dir)) @mkdir($new_dir, 0775, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 						$updraftplus->log_e("Elegant themes theme builder plugin data detected: resetting temporary folder");
-						update_option('et_images_temp_folder', $edir.'/'.$dbase);
+						$wpdb->update($new_table_name, array('option_value' => $new_dir), array('option_name' => 'et_images_temp_folder'));
+					}
+					
+					// check if current restoration is a migration
+					if (!empty($this->restore_options['updraft_restorer_replacesiteurl'])) {
+						$wp_rocket_settings = $wpdb->get_row($wpdb->prepare("SELECT option_value FROM $new_table_name WHERE option_name = %s LIMIT 1", 'wp_rocket_settings'));
+
+						if (!empty($wp_rocket_settings->option_value)) {
+							$wp_rocket_settings = maybe_unserialize($wp_rocket_settings->option_value);
+
+							// if WP Rocket settings is found and cdn is enabled
+							if (isset($wp_rocket_settings['cdn'])) {
+								unset($wp_rocket_settings['cdn']);
+								$wpdb->update($new_table_name, array('option_value' => serialize($wp_rocket_settings)), array('option_name' => 'wp_rocket_settings'));
+
+								$updraftplus->log_e("WP Rocket CDN option detected: disabling the option");
+							}
+						}
 					}
 				}
 

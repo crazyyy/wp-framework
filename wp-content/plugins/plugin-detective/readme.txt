@@ -1,17 +1,17 @@
-=== Plugin Detective - Troubleshooting ===
+=== Plugin Detective - Troubleshooting Conflicts ===
 Contributors:      croixhaug, nataliemac
-Donate link:       http://nsqua.red
-Tags:
+Donate link:       https://nsquared.io
+Tags:    troubleshoot, conflicts, debug, support, administration, site health, performance, error, developer, troubleshooting, development, health check
 Requires at least: 5.8
-Tested up to:      5.9
+Tested up to:      6.1
 Requires PHP:      5.3
-Stable tag:        1.2.1
+Stable tag:        1.2.10
 License:           GPLv2
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-Plugin Detective helps you troubleshoot issues on your site quickly and easily to find the cause of a problem. Once the culprit is found, the problem plugin can be quickly deactivated. You can even fix your site when it has the white screen of death (fatal error). You'll want to have Plugin Detective installed, so if your site crashes from a conflict or bad plugin update, you can get it back up and running quickly!
+**Plugin Detective helps you troubleshoot issues on your site quickly and easily to find the cause of a problem.** Once the culprit is found, the problem plugin can be quickly deactivated. You can even fix your site when it has the white screen of death (fatal error). You'll want to have Plugin Detective installed, so if your site crashes from a conflict or bad plugin update, you can get it back up and running quickly!
 
 ---
 
@@ -23,6 +23,8 @@ Sure, it works. But who has *time* for that?
 
 [vimeo https://vimeo.com/270010645]
 
+= Find Plugin Conflicts with Detective Otto Bot =
+
 Detective Otto Bot walks you through solving your case one step at a time, all from one single screen.
 
 Just open up a case and tell Detective Otto where you're seeing the problem. If there are any plugins that are required for your site to run correctly, tell Otto about those too.
@@ -32,6 +34,25 @@ Then Otto will interrogate the suspects and keep track of clues, checking in wit
 Best of all - Plugin Detective can work even if you're just seeing the White Screen of Death on your site or if all you can see are PHP errors. See the FAQ's for how to access plugin detective and log into WordPress even if you can't get to your login screen.
 
 Once Otto has identified the culprit, you can quickly deactivate the troublesome plugin and go about your day.
+
+= Who Can Use This Troubleshooting Tool? =
+
+Plugin Detective is a tool that requires no coding experience or technical knowledge to use. For that reason, Plugin Detective is the ideal troubleshooting and conflict-checking tool for:
+
+- Any WordPress website owner
+- Developers and technical support engineers
+- Plugin and theme owners and their support teams
+
+= Debug Tool Features =
+
+- Strategically activate and deactivate plugins on your site to help you find the plugin causing trouble
+- Open Plugin Detective for troubleshooting on any page on your site - both in the backend and the frontend!
+- Choose any subset of your active plugins as the baseline for your testing  
+
+= Loved by Plugin Support Teams =
+
+The [Simply Schedule Appointments](https://simplyscheduleappointments.com/guides/plugin-detective-for-plugin-conflicts/) and [Draw Attention](https://wpdrawattention.com/guides/plugin-detective-for-finding-conflicts/) support teams love to share this conflict-checking tool with their customers.
+Plugin Detective makes it easy for their clients to debug performance issues and figure out plugin conflicts in a jiffy!
 
 == Installation ==
 
@@ -92,77 +113,75 @@ Would this just be a tool for you (the network admin)? Or would you want your si
 1. Testing Otto's screen to see if the problem is still there
 1. Culprit found! Option to disable the problem plugin
 
+=== Changelog ===
 
-== Changelog ==
-= 1.2.1 =
-* Fixed for WP 5.9 compatibility
+== 1.2.10 - 2023-04-11 ==
 
-= 1.1.8 =
-* Fixed for WP 5.8 compatibility
+= Fixes =
 
-= 1.1.8 =
-* Fixed for WP 5.5 compatibility
+PR:#19 - Prevent fatal error on WP versions where WP_Textdomain_Registry doesn…
 
-= 1.1.6 =
-* Fixed fatal error with WP 5.2 and some themes
+= Features and Improvements =
 
-= 1.1.4 =
-* Fixed warning on PHP 7.3
+== 1.2.9 - 2023-03-28 ==
 
-= 1.1.2 =
-* Fixed compatibility with servers running older than PHP5.5
+= Fixes =
 
-= 1.1.1 =
-* Fixed issue on some sites where there are redirects or irregularities with http://www.site.com vs http://site.com
+= Features and Improvements =
 
-= 1.1 =
-* Added internationalized strings for future translation
+== 1.2.8 - 2023-03-28 ==
 
-= 1.0.14 =
-* Improved support for HTTPS/HTTP issues on some sites
+= Fixes =
 
-= 1.0.13 =
-* Improved support for installs with wp-config.php outside of webroot
+= Features and Improvements =
 
-= 1.0.12 =
-* Added support for sites that use wp-config-local.php
-* Added support for Pantheon hosting config
-* Added support for Pagely (wp-config-hosting.php file)
+== 1.2.7 - 2023-03-28 ==
 
-= 1.0.11 =
-* Added warnings for multisite
-* Improved searching for ABSPATH
+= Fixes =
 
-= 1.0.9 =
-* Fixed for sites with wp-content/ in a different location (make sure to define WP_CONTENT_URL and WP_CONTENT_DIR in wp-config.php)
-* Fixed for sites with wp-content/ in a new location
-* Added warning for iThemes Security users who need to adjust settings in order to use Plugin Detective
-* Improved handling of https/http connections and mixed content warnings
-* Added support for wp-content/plugin-detective-config.php (it will load before the Plugin Detective Troubleshooting app, so any required constants can also be defined there)
+= Features and Improvements =
 
-= 1.0.8 =
-* Improved handling of unusual location for wp-config.php file
+== 1.2.6 - 2023-02-24 ==
 
-= 1.0.7 =
-* Fixed issue with WordPress installs located in subdirectories
-* Improved handling of unusual formatting in wp-config.php file
+- no changes
 
-= 1.0.6 =
-* Fixed issue with "back to WP" button in upper-left corner reactivating the plugin you just deactivated in the final step after the culprit is identified
+== 1.2.3 ==
 
-= 1.0.5 =
-* Fixed issue with unusual define() syntax in some wp-config.php files
+- Fixed for WP 6.1 compatibility
 
-= 1.0.4 =
-* Fixed issue with required plugins not staying active during all tests
+== 1.2.1 ==
 
-= 1.0.3 =
-* Fixed issues with older PHP environments
+- Fixed for WP 5.9 compatibility
 
-= 1.0.0 =
-* First release
+== 1.1.8 ==
 
-== Upgrade Notice ==
+- Fixed for WP 5.8 compatibility
 
-= 1.0.2 =
-* Fixed issue with plugin activation on some environments
+== 1.1.8 ==
+
+- Fixed for WP 5.5 compatibility
+
+== 1.1.6 ==
+
+- Fixed fatal error with WP 5.2 and some themes
+
+== 1.1.4 ==
+
+- Fixed warning on PHP 7.3
+
+== 1.1.2 ==
+
+- Fixed compatibility with servers running older than PHP5.5
+
+== 1.1.1 ==
+
+- Fixed issue on some sites where there are redirects or irregularities with http://www.site.com vs http://site.com
+
+== 1.1 ==
+
+- Added internationalized strings for future translation
+
+== 1.0.14 ==
+
+
+For older changelog entries, please see the [additional changelog.txt file](https://plugins.svn.wordpress.org/plugin-detective/trunk/CHANGELOG.md) delivered with the plugin.

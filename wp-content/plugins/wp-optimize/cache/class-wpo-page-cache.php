@@ -89,12 +89,14 @@ class WPO_Page_Cache {
 	 */
 	private $_minimum_advanced_cache_file_version = '3.0.17';
 
+	public $should_purge;
+
 	/**
 	 * Set everything up here
 	 */
 	public function __construct() {
 		$this->config = WPO_Cache_Config::instance();
-		$this->rules  = WPO_Cache_Rules::instance();
+		WPO_Cache_Rules::instance();
 		$this->logger = new Updraft_PHP_Logger();
 
 		add_action('activated_plugin', array($this, 'activate_deactivate_plugin'));
@@ -115,6 +117,9 @@ class WPO_Page_Cache {
 		add_action('wp_loaded', array($this, 'handle_purge_single_page_cache'));
 
 		add_action('admin_init', array($this, 'admin_init'));
+
+		add_action('update_option_gmt_offset', array($this, 'update_gmt_offset_timezone_string_config'), 10, 3);
+		add_action('update_option_timezone_string', array($this, 'update_gmt_offset_timezone_string_config'), 10, 3);
 
 		$this->check_compatibility_issues();
 
@@ -141,12 +146,7 @@ class WPO_Page_Cache {
 
 		$this->update_cache_config();
 
-		/**
-		 * Filters whether activating / deactivating a plugin will purge the cache.
-		 */
-		if (apply_filters('wpo_purge_page_cache_on_activate_deactivate_plugin', true)) {
-			$this->purge();
-		}
+		$this->purge();
 	}
 
 	/**
@@ -155,8 +155,14 @@ class WPO_Page_Cache {
 	 * @return bool
 	 */
 	public function can_purge_cache() {
-		if (is_multisite()) return $this->is_enabled() && (current_user_can('manage_network_options') || WP_Optimize()->can_purge_the_cache());
-		return $this->is_enabled() && (current_user_can('manage_options') || WP_Optimize()->can_purge_the_cache());
+		if (!$this->is_enabled()) return false;
+		$required_capability = is_multisite() ? 'manage_network_options' : 'manage_options';
+
+		if (WP_Optimize::is_premium()) {
+			return current_user_can($required_capability) || WP_Optimize_Premium()->can_purge_the_cache();
+		} else {
+			return current_user_can($required_capability);
+		}
 	}
 
 	/**
@@ -340,6 +346,8 @@ class WPO_Page_Cache {
 			$force_enable = true;
 		}
 
+		$this->maybe_regenerate_cache_config_file();
+
 		if (!$force_enable) {
 			$already_ran_enable = true;
 			return true;
@@ -428,6 +436,17 @@ class WPO_Page_Cache {
 	 * @return bool - true on success, false otherwise
 	 */
 	public function purge() {
+		/**
+		 * Filters whether activating / deactivating a plugin will purge the cache.
+		 */
+		$this->should_purge = apply_filters('wpo_purge_page_cache_on_activate_deactivate_plugin', true);
+		$purge_actions = array(
+			'deactivate_' . plugin_basename(WPO_PLUGIN_MAIN_PATH . '/wp-optimize.php'),
+			'deactivate_plugin',
+			'activated_plugin',
+		);
+		$is_deactivation_action = in_array(current_action(), $purge_actions, true);
+		if ($is_deactivation_action && !$this->should_purge) return false;
 
 		if (!self::delete(WPO_CACHE_FILES_DIR)) {
 			$this->log("The request to the filesystem to delete the cache failed");
@@ -444,11 +463,14 @@ class WPO_Page_Cache {
 
 	/**
 	 * Purge cache files older than cache life span
+	 *
+	 * @return array Log messages.
 	 */
 	public function purge_old() {
-		$page_cache_length = $this->config->get_option('page_cache_length');
-		$expires = time() - $page_cache_length;
 		$log = array();
+		$page_cache_length = $this->config->get_option('page_cache_length');
+		if (0 === $page_cache_length) return $log;
+		$expires = time() - $page_cache_length;
 		$cache_folder = WPO_CACHE_FILES_DIR . '/' . str_ireplace(array('http://', 'https://'), '', get_site_url());
 		// get all directories that are a direct child of current directory
 		if (is_dir($cache_folder) && is_writable($cache_folder)) {
@@ -520,19 +542,25 @@ class WPO_Page_Cache {
 		if (!$this->config->get_option('enable_page_caching')) return false;
 
 		if (!defined('WP_CACHE') || !WP_CACHE) {
-			$this->log("WP_CACHE constant is not present in wp-config.php");
-			return false;
+			if ((!(defined('WP_CLI') && WP_CLI)) && (!defined('DOING_AJAX') || !DOING_AJAX)) {
+				$this->log("WP_CACHE constant is not present in wp-config.php");
+				return false;
+			}
 		}
 
 		if (!defined('WPO_ADVANCED_CACHE') || !WPO_ADVANCED_CACHE) {
-			$this->log("WPO_ADVANCED_CACHE constant is not present in advanced-cache.php");
-			return false;
+			if ((!(defined('WP_CLI') && WP_CLI)) && (!defined('DOING_AJAX') || !DOING_AJAX)) {
+				$this->log("WPO_ADVANCED_CACHE constant is not present in advanced-cache.php");
+				return false;
+			}
 		}
 
 		$config_file = WPO_CACHE_CONFIG_DIR . '/'.$this->config->get_cache_config_filename();
 		if (!file_exists($config_file)) {
-			$this->log("$config_file is not present");
-			return false;
+			if ((!(defined('WP_CLI') && WP_CLI)) && (!defined('DOING_AJAX') || !DOING_AJAX)) {
+				$this->log("Cache config file $config_file is not present");
+				return false;
+			}
 		}
 
 		return true;
@@ -543,7 +571,7 @@ class WPO_Page_Cache {
 	 *
 	 * @return bool - true on success, false otherwise
 	 */
-	private function create_folders() {
+	public function create_folders() {
 
 		if (!is_dir(WPO_CACHE_DIR) && !wp_mkdir_p(WPO_CACHE_DIR)) {
 			return new WP_Error('create_folders', sprintf(__('The request to the filesystem failed: unable to create directory %s. Please check your file permissions.'), str_ireplace(ABSPATH, '', WPO_CACHE_DIR)));
@@ -647,7 +675,12 @@ if (empty(\$GLOBALS['wpo_cache_config'])) {
 	include_once(WPO_CACHE_CONFIG_DIR . '/$config_file_basename');
 }
 
-if (empty(\$GLOBALS['wpo_cache_config']) || empty(\$GLOBALS['wpo_cache_config']['enable_page_caching'])) { return; }
+if (empty(\$GLOBALS['wpo_cache_config'])) {
+	error_log('WP-Optimize: Caching failed because the configuration data could not be loaded from the config file.');
+	return;
+}
+
+if (empty(\$GLOBALS['wpo_cache_config']['enable_page_caching'])) { return; }
 
 if (false !== \$plugin_location) { include_once(\$plugin_location.'/file-based-page-cache.php'); }
 
@@ -1006,7 +1039,22 @@ EOF;
 	 * @return bool
 	 */
 	public static function delete_single_post_cache($post_id) {
-	
+		$is_cache_deleted = self::really_delete_single_post_cache($post_id);
+
+		do_action('wpo_single_post_cache_deleted', $post_id);
+
+		return $is_cache_deleted;
+	}
+
+	/**
+	 * Really delete cached files for single post.
+	 *
+	 * @param integer $post_id The post ID
+	 *
+	 * @return bool
+	 */
+	public static function really_delete_single_post_cache($post_id) {
+
 		if (!defined('WPO_CACHE_FILES_DIR')) return;
 
 		$post_url = get_permalink($post_id);
@@ -1088,6 +1136,15 @@ EOF;
 	 * Delete post feed from cache.
 	 */
 	public static function delete_post_feed_cache($post_id) {
+		self::really_delete_post_feed_cache($post_id);
+
+		do_action('wpo_single_post_feed_cache_deleted', $post_id);
+	}
+
+	/**
+	 * Really delete post feed from cache.
+	 */
+	public static function really_delete_post_feed_cache($post_id) {
 		if (!defined('WPO_CACHE_FILES_DIR')) return;
 
 		$post_url = get_permalink($post_id);
@@ -1167,6 +1224,33 @@ EOF;
 			self::$instance = new self();
 		}
 		return self::$instance;
+	}
+
+
+	/**
+	 * Update gmt_offset and timezone_string cache config value, used with hook `update_gmt_offset_timezone_string_config`.
+	 *
+	 * @param {float|string} $old_value GMT offset as a float value or timezone value supported by PHP as a string (https://www.php.net/manual/en/timezones.php)
+	 * @param {float|string} $new_value
+	 * @param {string}    	 $option    gmt_offset|timezone_string
+	 *
+	 * @return null
+	 */
+	public function update_gmt_offset_timezone_string_config($old_value, $new_value, $option) {
+		$option;
+		
+		if ('' == $new_value) return;
+
+		$current_config = $this->config->get();
+		if ('timezone_string' == $option) {
+			$timeZone = new DateTimeZone($new_value);
+			$dateTime = new DateTime("now");
+			$gmt_offset = $timeZone->getOffset($dateTime);
+			$current_config['gmt_offset'] = round($gmt_offset/3600, 1);
+		} elseif ('' !== $new_value) {
+			$current_config['gmt_offset'] = $new_value;
+		}
+		$this->config->update($current_config, true);
 	}
 
 	/**
@@ -1300,7 +1384,26 @@ EOF;
 	 */
 	public function cron_schedules($schedules) {
 		$page_cache_length = $this->config->get_option('page_cache_length');
+		// When the interval is less than `WP_CRON_LOCK_TIMEOUT` error messages are triggered
+		// So, instead of `0` (now) we are making it equal to the constant value.
+		// https://github.com/WordPress/WordPress/commit/84d19848666a81584e0007a6ab7f7ad3c990d71a
+		if (defined('WP_CRON_LOCK_TIMEOUT') && $page_cache_length < WP_CRON_LOCK_TIMEOUT) {
+			$page_cache_length = WP_CRON_LOCK_TIMEOUT;
+		}
+
 		$schedules['wpo_purge_old_cache'] = array('interval' => false === $page_cache_length ? 86400 : $page_cache_length, 'display' => __('Every time after the cache has expired', 'wp-optimize'));
+
+		$interval = WP_Optimize_Page_Cache_Preloader::instance()->get_continue_preload_cron_interval();
+		$schedules['wpo_page_cache_preload_continue_interval'] = array(
+			'interval' => $interval,
+			'display' => sprintf(__('%d minutes', 'wp-optimize'), round($interval / 60, 1))
+		);
+
+		$schedules['wpo_use_cache_lifespan'] = array(
+			'interval' => $page_cache_length,
+			'display' => sprintf(__('Same as cache lifespan: %s', 'wp-optimize'), WPO_Cache_Config::instance()->get_option('page_cache_length_value').' '.WPO_Cache_Config::instance()->get_option('page_cache_length_unit'))
+		);
+
 		return $schedules;
 	}
 
@@ -1312,6 +1415,17 @@ EOF;
 			$cache_settings = WPO_Cache_Config::instance()->get();
 			$cache_settings['use_webp_images'] = WP_Optimize()->get_options()->get_option('webp_conversion');
 			WPO_Cache_Config::instance()->update($cache_settings);
+		}
+	}
+
+	/**
+	 * May be regenerate cache config file, in case of migrations
+	 */
+	public function maybe_regenerate_cache_config_file() {
+		$config_file = WPO_CACHE_CONFIG_DIR . '/'.$this->config->get_cache_config_filename();
+		if (!file_exists($config_file)) {
+			$config = $this->config->get();
+			$this->config->write($config);
 		}
 	}
 }

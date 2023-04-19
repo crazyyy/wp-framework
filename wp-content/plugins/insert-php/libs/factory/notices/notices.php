@@ -24,7 +24,7 @@
 		class Wbcr_FactoryNotices410 {
 
 			/**
-			 * @var Wbcr_Factory457_Plugin
+			 * @var Wbcr_Factory463_Plugin
 			 */
 			protected $plugin;
 			/**
@@ -61,9 +61,9 @@
 			}
 
 			/**
-			 * @param Wbcr_Factory457_Plugin $plugin
+			 * @param Wbcr_Factory463_Plugin $plugin
 			 */
-			public function init(Wbcr_Factory457_Plugin $plugin)
+			public function init(Wbcr_Factory463_Plugin $plugin)
 			{
 				//default notices
 				//---
@@ -90,7 +90,7 @@
 			{
 				$this->notices = apply_filters('wbcr_factory_notices_410_list', $this->notices, $this->plugin->getPluginName());
 
-				$this->notices = wbcr_factory_457_apply_filters_deprecated('wbcr_factory_admin_notices', array(
+				$this->notices = wbcr_factory_463_apply_filters_deprecated('wbcr_factory_admin_notices', array(
 					$this->notices,
 					$this->plugin->getPluginName()
 				), '4.0.5', 'wbcr_factory_notices_410_list');

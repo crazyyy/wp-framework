@@ -156,6 +156,7 @@ class Crawler extends Root {
 			'crawler_stats'		=> array(), // this will store all crawlers hit/miss crawl status
 		);
 
+		wp_cache_delete( 'alloptions', 'options' ); // ensure the summary is current
 		$summary = parent::get_summary();
 		$summary = array_merge( $_default, $summary );
 
@@ -593,6 +594,7 @@ class Crawler extends Root {
 	 * @access private
 	 */
 	private function _multi_request( $rows, $options ) {
+		if (!function_exists('curl_multi_init')) exit('curl_multi_init disabled');
 		$mh = curl_multi_init();
 		$curls = array();
 		foreach ( $rows as $row ) {
@@ -602,6 +604,9 @@ class Crawler extends Root {
 			if ( substr( $row[ 'res' ], $this->_summary[ 'curr_crawler' ], 1 ) == 'N' ) {
 				continue;
 			}
+
+			if (!function_exists('curl_init')) exit('curl_init disabled');
+
 			$curls[ $row[ 'id' ] ] = curl_init();
 
 			// Append URL
@@ -696,6 +701,11 @@ class Crawler extends Root {
 				}
 				return 'H'; // Hit
 			}
+		}
+
+		// If blacklist is disabled
+		if ( ( defined( 'LITESPEED_CRAWLER_DISABLE_BLOCKLIST' ) && LITESPEED_CRAWLER_DISABLE_BLOCKLIST ) || apply_filters( 'litespeed_crawler_disable_blocklist', '__return_false', $url ) ) {
+			return 'M';
 		}
 
 		return 'B'; // Blacklist
@@ -871,7 +881,7 @@ class Crawler extends Root {
 		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) );
 
 		// WebP on/off
-		if ( $this->conf( Base::O_IMG_OPTM_WEBP_REPLACE ) ) {
+		if ( $this->conf( Base::O_GUEST ) || $this->conf( Base::O_IMG_OPTM_WEBP ) ) {
 			$crawler_factors[ 'webp' ] = array( 1 => 'WebP', 0 => '' );
 		}
 

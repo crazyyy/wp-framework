@@ -1,12 +1,16 @@
 <?php
 
-if(!defined('ABSPATH'))
+if(!defined('ABSPATH')){
     exit;
+}
 
 if(!class_exists('acfe_field_flexible_content_preview')):
 
 class acfe_field_flexible_content_preview{
     
+    /**
+     * construct
+     */
     function __construct(){
     
         // Hooks
@@ -25,6 +29,14 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * defaults_field
+     *
+     * @param $field
+     *
+     * @return mixed
+     */
     function defaults_field($field){
         
         $field['acfe_flexible_layouts_templates'] = false;
@@ -35,6 +47,14 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * defaults_layout
+     *
+     * @param $layout
+     *
+     * @return mixed
+     */
     function defaults_layout($layout){
         
         $layout['acfe_flexible_render_template'] = false;
@@ -45,6 +65,12 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * render_field_settings
+     *
+     * @param $field
+     */
     function render_field_settings($field){
     
         // Render
@@ -128,10 +154,19 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * render_layout_settings
+     *
+     * @param $flexible
+     * @param $layout
+     * @param $prefix
+     */
     function render_layout_settings($flexible, $layout, $prefix){
         
-        if(!acf_maybe_get($flexible, 'acfe_flexible_layouts_templates'))
+        if(!acf_maybe_get($flexible, 'acfe_flexible_layouts_templates')){
             return;
+        }
         
         // vars
         $name = $flexible['name'];
@@ -209,26 +244,33 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * render_field
+     *
+     * @param $field
+     */
     function render_field($field){
         
-        // Check setting
-        if(!acf_maybe_get($field, 'acfe_flexible_layouts_templates') || !acf_maybe_get($field, 'acfe_flexible_layouts_previews'))
+        // check setting
+        if(!acf_maybe_get($field, 'acfe_flexible_layouts_templates') || !acf_maybe_get($field, 'acfe_flexible_layouts_previews')){
             return;
+        }
     
-        // Vars
+        // vars
         $name = $field['_name'];
         $key = $field['key'];
     
-        // Vars
+        // vars
         global $is_preview;
         $is_preview = true;
     
-        // Actions
+        // actions
         do_action("acfe/flexible/enqueue",              $field, $is_preview);
         do_action("acfe/flexible/enqueue/name={$name}", $field, $is_preview);
         do_action("acfe/flexible/enqueue/key={$key}",   $field, $is_preview);
     
-        // Loop
+        // loop
         foreach($field['layouts'] as $layout){
         
             // Enqueue
@@ -238,6 +280,15 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * wrapper_attributes
+     *
+     * @param $wrapper
+     * @param $field
+     *
+     * @return mixed
+     */
     function wrapper_attributes($wrapper, $field){
         
         if(acf_maybe_get($field, 'acfe_flexible_layouts_placeholder')){
@@ -245,6 +296,7 @@ class acfe_field_flexible_content_preview{
         }
         
         if(acf_maybe_get($field, 'acfe_flexible_layouts_templates') && acf_maybe_get($field, 'acfe_flexible_layouts_previews')){
+            $wrapper['data-acfe-flexible-placeholder'] = 1;
             $wrapper['data-acfe-flexible-preview'] = 1;
         }
         
@@ -252,10 +304,23 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * prepare_layout
+     *
+     * @param $layout
+     * @param $field
+     * @param $i
+     * @param $value
+     * @param $prefix
+     *
+     * @return mixed
+     */
     function prepare_layout($layout, $field, $i, $value, $prefix){
         
-        if(!acf_maybe_get($field, 'acfe_flexible_layouts_placeholder') && !acf_maybe_get($field, 'acfe_flexible_layouts_previews'))
+        if(!acf_maybe_get($field, 'acfe_flexible_layouts_placeholder') && !acf_maybe_get($field, 'acfe_flexible_layouts_previews')){
             return $layout;
+        }
         
         // Vars
         $name = $field['_name'];
@@ -298,7 +363,7 @@ class acfe_field_flexible_content_preview{
         
         ?>
         
-        <div <?php echo acf_esc_attrs($placeholder); ?>>
+        <div <?php echo acf_esc_atts($placeholder); ?>>
             <a href="#" class="button">
                 <span class="dashicons dashicons-edit"></span>
             </a>
@@ -313,6 +378,14 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * layout_preview
+     *
+     * @param $options
+     *
+     * @return bool|null
+     */
     function layout_preview($options = array()){
         
         if(empty($options)){
@@ -331,15 +404,17 @@ class acfe_field_flexible_content_preview{
         
         // Load field
         $field = acf_get_field($options['field_key']);
-        if(!$field)
+        if(!$field){
             return $this->return_or_die();
+        }
         
         // Layout
         $instance = acf_get_field_type('flexible_content');
         $layout = $instance->get_layout($options['layout'], $field);
         
-        if(!$layout)
+        if(!$layout){
             return $this->return_or_die();
+        }
         
         // Global
         global $is_preview;
@@ -386,10 +461,18 @@ class acfe_field_flexible_content_preview{
         
     }
     
+    
+    /**
+     * return_or_die
+     *
+     * @return bool|void
+     */
     function return_or_die(){
         
-        if(wp_doing_ajax())
+        // check ajax & make sure the action is correct
+        if(wp_doing_ajax() && acf_maybe_get_POST('action') === 'acfe/flexible/layout_preview'){
             die;
+        }
         
         return true;
         

@@ -4,8 +4,6 @@ if (!defined('ABSPATH')) die('Access denied.');
 
 if (!class_exists('Updraft_Task_1_2')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task.php');
 
-if (!class_exists('WP_Optimize_Minify_Preloader')) require_once(dirname(__FILE__) . '/class-wpo-minify-preloader.php');
-
 class WP_Optimize_Minify_Load_Url_Task extends Updraft_Task_1_2 {
 
 	/**

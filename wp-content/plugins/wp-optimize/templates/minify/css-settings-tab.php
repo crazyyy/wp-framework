@@ -89,7 +89,7 @@
 			<fieldset>
 				<label class="wpo-label__bold" for="async_css">
 					<?php _e('Any CSS files that match the paths below will be loaded asynchronously.', 'wp-optimize'); ?><br>
-					<?php _e('Use this if you have a completely independent stylesheet or would like to exclude stylesheets from page speed tests (PageSpeed Insights, GTMetrix...)', 'wp-optmize'); ?>
+					<?php _e('Use this if you have a completely independent stylesheet', 'wp-optmize'); ?>
 					<span tabindex="0" data-tooltip="<?php esc_attr_e("e.g. You may want to exclude 'fontawesome' or other libraries from the initial load", 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 				</label>
 				<textarea
@@ -100,6 +100,17 @@
 					class="large-text code"
 					placeholder="<?php esc_attr_e('e.g.: /wp-content/themes/my-theme/css/custom-font.css', 'wp-optimize'); ?>"
 				><?php echo esc_textarea($wpo_minify_options['async_css']); ?></textarea>
+				<label for="exclude_css_from_page_speed_tools">
+					<input
+							name="exclude_css_from_page_speed_tools"
+							type="checkbox"
+							id="exclude_css_from_page_speed_tools"
+							value="1"
+						<?php echo checked($wpo_minify_options['exclude_css_from_page_speed_tools']); ?>
+					>
+					<?php _e('Exclude stylesheets from page speed tests (PageSpeed Insights, GTMetrix...)', 'wp-optimize'); ?>
+					<span tabindex="0" data-tooltip="<?php esc_attr_e('Use this only for testing purpose to find out which stylesheets are slowing down your site.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
+				</label>
 			</fieldset>
 		</div>
 

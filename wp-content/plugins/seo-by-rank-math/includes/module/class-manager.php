@@ -166,7 +166,7 @@ class Manager {
 		$modules['instant-indexing'] = [
 			'title'    => esc_html__( 'Instant Indexing', 'rank-math' ),
 			// Translators: placeholder is "IndexNow API".
-			'desc'     => sprintf( esc_html__( 'Directly notify search engines like Bing & Yandex using the %s when pages are added, updated and removed, or submit URLs manually.', 'rank-math' ), '<a href="' . KB::get( 'instant-indexing' ) . '" target="_blank">' . __( 'IndexNow API', 'rank-math' ) . '</a>' ),
+			'desc'     => sprintf( esc_html__( 'Directly notify search engines like Bing & Yandex using the %s when pages are added, updated and removed, or submit URLs manually.', 'rank-math' ), '<a href="' . KB::get( 'instant-indexing', 'Instant Indexing Module Description' ) . '" target="_blank">' . __( 'IndexNow API', 'rank-math' ) . '</a>' ),
 			'class'    => 'RankMath\Instant_Indexing\Instant_Indexing',
 			'icon'     => 'instant-indexing',
 			'settings' => Helper::get_admin_url( 'options-instant-indexing' ),
@@ -231,22 +231,23 @@ class Manager {
 		];
 
 		$modules['analytics'] = [
-			'title'    => esc_html__( 'Analytics', 'rank-math' ),
-			'desc'     => esc_html__( 'Connect Rank Math with Google Search Console to see the most important information from Google directly in your WordPress dashboard.', 'rank-math' ),
-			'class'    => 'RankMath\Analytics\Analytics',
-			'icon'     => 'search-console',
-			'only'     => 'admin',
-			'probadge' => defined( 'RANK_MATH_PRO_FILE' ),
-			'settings' => Helper::get_admin_url( 'options-general' ) . '#setting-panel-analytics',
+			'title'       => esc_html__( 'Analytics', 'rank-math' ),
+			'desc'        => esc_html__( 'Connect Rank Math with Google Search Console to see the most important information from Google directly in your WordPress dashboard.', 'rank-math' ),
+			'class'       => 'RankMath\Analytics\Analytics',
+			'icon'        => 'search-console',
+			'only'        => 'admin',
+			'upgradeable' => true,
+			'settings'    => Helper::get_admin_url( 'options-general' ) . '#setting-panel-analytics',
 		];
 
 		$modules['seo-analysis'] = [
-			'title'    => esc_html__( 'SEO Analysis', 'rank-math' ),
-			'desc'     => esc_html__( 'Let Rank Math analyze your website and your website\'s content using 70+ different tests to provide tailor-made SEO Analysis to you.', 'rank-math' ),
-			'class'    => 'RankMath\SEO_Analysis\SEO_Analysis',
-			'icon'     => 'analyzer',
-			'only'     => 'admin',
-			'settings' => Helper::get_admin_url( 'seo-analysis' ),
+			'title'       => esc_html__( 'SEO Analyzer', 'rank-math' ),
+			'desc'        => esc_html__( 'Let Rank Math analyze your website and your website\'s content using 28+ different tests to provide tailor-made SEO Analysis to you.', 'rank-math' ),
+			'class'       => 'RankMath\SEO_Analysis\SEO_Analysis',
+			'icon'        => 'analyzer',
+			'only'        => 'admin',
+			'upgradeable' => true,
+			'settings'    => Helper::get_admin_url( 'seo-analysis' ),
 		];
 
 		return $modules;
@@ -415,7 +416,7 @@ class Manager {
 								<?php } ?>
 								<?php if ( $is_upgradeable && ! defined( 'RANK_MATH_PRO_FILE' ) ) { ?>
 									<span class="is-upgradeable rank-math-tooltip">
-										<a href="https://rankmath.com/pricing/?utm_source=Plugin&utm_medium=<?php echo esc_html( $module->get( 'title' ) ); ?> Module%20Upgradable%20Icon&utm_campaign=WP">
+										<a href="<?php KB::the( 'pro', esc_html( $module->get( 'title' ) ) . ' Module Upgradable Icon' ); ?>">
 											<div>&#171;</div>
 										</a>
 										<span><?php echo esc_html__( 'More powerful options are available in the PRO version.', 'rank-math' ); ?></span>
@@ -519,7 +520,7 @@ class Manager {
 		?>
 			<div class="rank-math-box rank-math-unlock-pro-box">
 				<i class="rm-icon rm-icon-software"></i>
-				<a href="https://rankmath.com/pricing/?utm_source=Plugin&utm_medium=Unlock%20PRO%20Module%20Box&utm_campaign=WP" target="_blank" class="pro-link">
+				<a href="<?php KB::the( 'pro', 'Unlock PRO Module Box' ); ?>" target="_blank" class="pro-link">
 					<header>
 						<h3><?php esc_html_e( 'Take SEO to the Next Level!', 'rank-math' ); ?></h3>
 						<ul>

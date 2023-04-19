@@ -125,7 +125,7 @@ function updraft_delete(key, nonce, showremote) {
 }
 
 function updraft_remote_storage_tab_activation(the_method){
-	jQuery('.updraftplusmethod').hide();
+	jQuery('.updraftplusmethod').not('.error').hide();
 	jQuery('.remote-tab').data('active', false);
 	jQuery('.remote-tab').removeClass('nav-tab-active');
 	jQuery('.updraftplusmethod.'+the_method).show();
@@ -182,6 +182,8 @@ function updraft_remote_storage_tabs_setup() {
 	jQuery(set).each(function(ind, obj) {
 		var ser = jQuery(obj).val();
 		
+		jQuery('.error.updraftplusmethod.'+ser).show();
+
 		if (jQuery(obj).attr('id') != 'updraft_servicecheckbox_none') {
 			anychecked++;
 		}
@@ -218,11 +220,13 @@ function updraft_remote_storage_tabs_setup() {
 			if (null != serv && '' != serv) {
 				if (jQuery(this).is(':checked')) {
 					anychecked++;
+					jQuery('.error.updraftplusmethod.'+serv).show();
 					jQuery('.remote-tab-'+serv).fadeIn();
 					updraft_remote_storage_tab_activation(serv);
 					if (jQuery('#updraft-navtab-settings-content #updraft_report_row_no_addon').length && 'email' === serv) set_email_report_storage_interface(true);
 				} else {
 					anychecked--;
+					jQuery('.error.updraftplusmethod.'+serv).hide();
 					jQuery('.remote-tab-'+serv).hide();
 					// Check if this was the active tab, if yes, switch to another
 					if (jQuery('.remote-tab-'+serv).data('active') == true) {
@@ -1884,11 +1888,15 @@ function updraft_backupnow_go(backupnow_nodb, backupnow_nofiles, backupnow_noclo
 	params.incremental = (typeof extradata.incremental !== 'undefined') ? extradata.incremental : 0;
 	delete extradata.incremental;
 
-	params.db_anon_all = (typeof extradata.db_anon_all !== 'undefined') ? extradata.db_anon_all : 0;
-	delete extradata.db_anon_all;
+	params.db_anon_all = (typeof extradata.db_anon !== 'undefined' && typeof extradata.db_anon.all !== 'undefined') ? extradata.db_anon.all : 0;
+	params.db_anon_non_staff = (typeof extradata.db_anon !== 'undefined' && typeof extradata.db_anon.non_staff !== 'undefined') ? extradata.db_anon.non_staff : 0;
+	params.db_anon_wc_orders = (typeof extradata.db_anon !== 'undefined' && typeof extradata.db_anon.wc_orders !== 'undefined') ? extradata.db_anon.wc_orders : 0;
+	if ('undefined' !== typeof extradata.db_anon) {
+		delete extradata.db_anon.all;
+		delete extradata.db_anon.non_staff;
+		delete extradata.db_anon.wc_orders;
+	}
 
-	params.db_anon_non_staff = (typeof extradata.db_anon_non_staff !== 'undefined') ? extradata.db_anon_non_staff : 0;
-	delete extradata.db_anon_non_staff;
 
 	// Display Request start message
 	if (!jQuery('.updraft_requeststart').length) {
@@ -1960,18 +1968,6 @@ jQuery(function($) {
 					   return ui_dialog_interaction.apply(this, arguments);
 		};
 	}
-
-	$('#updraftcentral_keys').on('click', 'a.updraftcentral_keys_show', function(e) {
-		e.preventDefault();
-		$(this).remove();
-		$('#updraftcentral_keys_table').slideDown();
-	});
-	
-	$('#updraftcentral_keycreate_altmethod_moreinfo_get').on('click', function(e) {
-		e.preventDefault();
-		$(this).remove();
-		$('#updraftcentral_keycreate_altmethod_moreinfo').slideDown();
-	});
 	
 	// Update WebDAV URL as user edits
 	$('#updraft-navtab-settings-content #remote-storage-holder').on('change keyup paste', '.updraft_webdav_settings', function() {
@@ -2002,9 +1998,9 @@ jQuery(function($) {
 				host = "";
 			}
 			if (updraft_webdav_settings[instance_id]['host'].indexOf("/") >= 0) {
-				$('#updraft_webdav_host_error').show();
+				$('.webdav-'+instance_id+' .updraft_webdav_host_error').show();
 			} else {
-				$('#updraft_webdav_host_error').hide();
+				$('.webdav-'+instance_id+' .updraft_webdav_host_error').hide();
 			}
 			
 			if (0 == updraft_webdav_settings[instance_id]['path'].indexOf("/") || "" === updraft_webdav_settings[instance_id]['path']) {
@@ -2026,6 +2022,15 @@ jQuery(function($) {
 		}
 	});
 	
+	$('div.ud-phpseclib-notice').on('click', 'button.notice-dismiss', function (event) {
+		event.stopImmediatePropagation();
+		updraft_send_command('dismiss_phpseclib_notice', null, function(resp, status, response) {
+			if (!resp.hasOwnProperty('success') || 1 !== resp.success) {
+				console.log(resp);
+				alert(updraftlion.unexpectedresponse+' '+response);
+			}
+		});
+	});
 
 	// Delete button
 	$('#updraft-navtab-backups-content').on('click', '.js--delete-selected-backups', function(e) {
@@ -2327,6 +2332,7 @@ jQuery(function($) {
 		var use_queue = $('#updraftplus_clone_use_queue').is(':checked') ? 1 : 0;
 		var db_anon_all = $('#updraft-navtab-migrate-content .updraft_migrate_widget_module_content #updraftplus_clone_backupnow_db_anon_all').is(':checked') ? 1 : 0;
 		var db_anon_non_staff = $('#updraft-navtab-migrate-content .updraft_migrate_widget_module_content #updraftplus_clone_backupnow_db_anon_non_staff').is(':checked') ? 1 : 0;
+		var db_anon_wc_orders = $('#updraft-navtab-migrate-content .updraft_migrate_widget_module_content #updraftplus_clone_backupnow_db_anon_wc_order_data').is(':checked') ? 1 : 0;
 
 		var backup_nonce = 'current';
 		var backup_timestamp = 'current';
@@ -2356,7 +2362,9 @@ jQuery(function($) {
 
 		var backup_options = {
 			db_anon_all: db_anon_all,
-			db_anon_non_staff: db_anon_non_staff
+			db_anon_non_staff: db_anon_non_staff,
+			db_anon_wc_orders: db_anon_wc_orders,
+			clone_region: region
 		}
 
 		if ('wp_only' === backup_nonce) {
@@ -2786,7 +2794,9 @@ jQuery(function($) {
 			backup_nonce: backup_nonce,
 			backup_timestamp: backup_timestamp,
 			db_anon_all: backup_options['db_anon_all'],
-			db_anon_non_staff: backup_options['db_anon_non_staff']
+			db_anon_non_staff: backup_options['db_anon_non_staff'],
+			db_anon_wc_orders: backup_options['db_anon_wc_orders'],
+			clone_region: backup_options['clone_region']
 		};
 
 		updraft_activejobslist_backupnownonce_only = 1;
@@ -3054,12 +3064,25 @@ jQuery(function($) {
 		$('#backupnow_database_moreoptions').toggle();
 	});
 
+	$('#updraft-navtab-migrate-content').on('click', '#backupnow_database_showmoreoptions', function (e) {
+		e.preventDefault();
+		$('#updraft-navtab-migrate-content #backupnow_database_moreoptions').toggle();
+	});
+
 	$('#backupnow_db_anon_all').on('click', function(e) {
 		if ($('#backupnow_db_anon_non_staff').prop('checked')) $('#backupnow_db_anon_non_staff').prop("checked", false);
 	});
 
 	$('#backupnow_db_anon_non_staff').on('click', function(e) {
 		if ($('#backupnow_db_anon_all').prop('checked')) $('#backupnow_db_anon_all').prop("checked", false);
+	});
+
+	$('#updraft-navtab-migrate-content').on('click', '#updraftplus_migration_backupnow_db_anon_all', function() {
+		if ($('#updraftplus_migration_backupnow_db_anon_non_staff').prop('checked')) $('#updraftplus_migration_backupnow_db_anon_non_staff').prop("checked", false);
+	});
+
+	$('#updraft-navtab-migrate-content').on('click', '#updraftplus_migration_backupnow_db_anon_non_staff', function() {
+		if ($('#updraftplus_migration_backupnow_db_anon_all').prop('checked')) $('#updraftplus_migration_backupnow_db_anon_all').prop("checked", false);
 	});
 
 	$('#updraft-navtab-migrate-content').on('click', '#updraftplus_clone_backupnow_db_anon_all', function() {
@@ -3108,227 +3131,6 @@ jQuery(function($) {
 	$('#updraftplus-remote-rescan-debug').on('click', function(e) {
 		e.preventDefault();
 		updraft_updatehistory(1, 1, 1);
-	});
-
-	function updraftcentral_keys_setupform(on_page_load) {
-		var is_other = jQuery('#updraftcentral_mothership_other').is(':checked') ? true : false;
-		if (is_other) {
-			jQuery('#updraftcentral_keycreate_mothership').prop('disabled', false);
-			if (on_page_load) {
-				jQuery('#updraftcentral_keycreate_mothership_firewalled_container').show();
-			} else {
-				jQuery('.updraftcentral_wizard_self_hosted_stage2').show();
-				jQuery('#updraftcentral_keycreate_mothership_firewalled_container').slideDown();
-				jQuery('#updraftcentral_keycreate_mothership').trigger('focus');
-			}
-		} else {
-			jQuery('#updraftcentral_keycreate_mothership').prop('disabled', true);
-			if (!on_page_load) {
-				jQuery('.updraftcentral_wizard_self_hosted_stage2').hide();
-				updraftcentral_stage2_go();
-			}
-		}
-	}
-	
-	function updraftcentral_stage2_go() {
-		// Reset the error message before we continue
-		jQuery('#updraftcentral_wizard_stage1_error').text('');
-
-		var host = '';
-
-		if (jQuery('#updraftcentral_mothership_updraftpluscom').is(':checked')) {
-			jQuery('.updraftcentral_keycreate_description').hide();
-			host = 'updraftplus.com';
-		} else if (jQuery('#updraftcentral_mothership_other').is(':checked')) {
-			jQuery('.updraftcentral_keycreate_description').show();
-			var mothership = jQuery('#updraftcentral_keycreate_mothership').val();
-			if ('' == mothership) {
-				jQuery('#updraftcentral_wizard_stage1_error').text(updraftlion.updraftcentral_wizard_empty_url);
-				return;
-			}
-			try {
-				var url = new URL(mothership);
-				host = url.hostname;
-			} catch (e) {
-				// Try and grab the host name a different way if it failed because of no URL object (e.g. IE 11).
-				if ('undefined' === typeof URL) {
-					host = jQuery('<a>').prop('href', mothership).prop('hostname');
-				}
-				if (!host || 'undefined' !== typeof URL) {
-					jQuery('#updraftcentral_wizard_stage1_error').text(updraftlion.updraftcentral_wizard_invalid_url);
-					return;
-				}
-			}
-		}
-
-		jQuery('#updraftcentral_keycreate_description').val(host);
-
-		jQuery('.updraftcentral_wizard_stage1').hide();
-		jQuery('.updraftcentral_wizard_stage2').show();
-	}
-
-	jQuery('#updraftcentral_keys').on('click', 'input[type="radio"]', function() {
-		updraftcentral_keys_setupform(false);
-	});
-	// Initial setup (for browsers, e.g. Firefox, that remember form selection state but not DOM state, which can leave an inconsistent state)
-	updraftcentral_keys_setupform(true);
-	
-	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_view_log', function(e) {
-		e.preventDefault();
-		jQuery('#updraftcentral_view_log_container').block({ message: '<div style="margin: 8px; font-size:150%;"><img src="'+updraftlion.ud_url+'/images/udlogo-rotating.gif" height="80" width="80" style="padding-bottom:10px;"><br>'+updraftlion.fetching+'</div>'});
-		try {
-			updraft_send_command('updraftcentral_get_log', null, function(response) {
-				jQuery('#updraftcentral_view_log_container').unblock();
-				if (response.hasOwnProperty('log_contents')) {
-					jQuery('#updraftcentral_view_log_contents').html('<div style="border:1px solid;padding: 2px;max-height: 400px; overflow-y:scroll;">'+response.log_contents+'</div>');
-				} else {
-					console.response(resp);
-				}
-			}, { error_callback: function(response, status, error_code, resp) {
-					jQuery('#updraftcentral_view_log_container').unblock();
-					if (typeof resp !== 'undefined' && resp.hasOwnProperty('fatal_error')) {
-					console.error(resp.fatal_error_message);
-					alert(resp.fatal_error_message);
-					} else {
-					var error_message = "updraft_send_command: error: "+status+" ("+error_code+")";
-					console.log(error_message);
-					alert(error_message);
-					console.log(response);
-					}
-				}
-			});
-		} catch (err) {
-			jQuery('#updraft_central_key').html();
-			console.log(err);
-		}
-	});
-	
-	// UpdraftCentral
-	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_wizard_go', function(e) {
-		jQuery('#updraftcentral_wizard_go').hide();
-		jQuery('.updraftcentral_wizard_success').remove();
-		jQuery('.create_key_container').show();
-	});
-	
-	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_stage1_go', function(e) {
-		e.preventDefault();
-		jQuery('.updraftcentral_wizard_stage2').hide();
-		jQuery('.updraftcentral_wizard_stage1').show();
-	});
-
-	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_stage2_go', function(e) {
-		e.preventDefault();
-
-		updraftcentral_stage2_go();
-	});
-	
-	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_keycreate_go', function(e) {
-		e.preventDefault();
-		
-		var is_other = jQuery('#updraftcentral_mothership_other').is(':checked') ? true : false;
-		
-		var key_description = jQuery('#updraftcentral_keycreate_description').val();
-		var key_size = jQuery('#updraftcentral_keycreate_keysize').val();
-
-		var where_send = '__updraftpluscom';
-		
-		data = {
-			key_description: key_description,
-			key_size: key_size,
-		};
-		
-		if (is_other) {
-			where_send = jQuery('#updraftcentral_keycreate_mothership').val();
-			if (where_send.substring(0, 4) != 'http') {
-				alert(updraftlion.enter_mothership_url);
-				return;
-			}
-		}
-		
-		data.mothership_firewalled = jQuery('#updraftcentral_keycreate_mothership_firewalled').is(':checked') ? 1 : 0;
-		data.where_send = where_send;
-
-		jQuery('.create_key_container').hide();
-		jQuery('.updraftcentral_wizard_stage1').show();
-		jQuery('.updraftcentral_wizard_stage2').hide();
-		
-		jQuery('#updraftcentral_keys').block({ message: '<div style="margin: 8px; font-size:150%;"><img src="'+updraftlion.ud_url+'/images/udlogo-rotating.gif" height="80" width="80" style="padding-bottom:10px;"><br>'+updraftlion.creating_please_allow+'</div>'});
-
-		try {
-			updraft_send_command('updraftcentral_create_key', data, function(resp) {
-				jQuery('#updraftcentral_keys').unblock();
-				try {
-					if (resp.hasOwnProperty('error')) {
-						alert(resp.error);
-						console.log(resp);
-						return;
-					}
-					alert(resp.r);
-
-					if (resp.hasOwnProperty('bundle') && resp.hasOwnProperty('keys_guide')) {
-						jQuery('#updraftcentral_keys_content').html(resp.keys_guide);
-						jQuery('#updraftcentral_keys_content').append('<div class="updraftcentral_wizard_success">'+resp.r+'<br><textarea onclick="this.select();" style="width:620px; height:165px; word-wrap:break-word; border: 1px solid #aaa; border-radius: 3px; padding:4px;">'+resp.bundle+'</textarea></div>');
-					} else {
-						console.log(resp);
-					}
-
-					if (resp.hasOwnProperty('keys_table')) {
-						jQuery('#updraftcentral_keys_content').append(resp.keys_table);
-					}
-					
-					jQuery('#updraftcentral_wizard_go').show();
-
-				} catch (err) {
-					alert(updraftlion.unexpectedresponse+' '+response);
-					console.log(err);
-				}
-			}, { error_callback: function(response, status, error_code, resp) {
-					jQuery('#updraftcentral_keys').unblock();
-					if (typeof resp !== 'undefined' && resp.hasOwnProperty('fatal_error')) {
-					console.error(resp.fatal_error_message);
-					alert(resp.fatal_error_message);
-					} else {
-					var error_message = "updraft_send_command: error: "+status+" ("+error_code+")";
-					console.log(error_message);
-					alert(error_message);
-					console.log(response);
-					}
-				}
-			});
-		} catch (err) {
-			jQuery('#updraft_central_key').html();
-			console.log(err);
-		}
-	});
-	
-	jQuery('#updraftcentral_keys').on('click', '.updraftcentral_key_delete', function(e) {
-		e.preventDefault();
-		var key_id = jQuery(this).data('key_id');
-		if ('undefined' == typeof key_id) {
-			console.log("UpdraftPlus: .updraftcentral_key_delete clicked, but no key ID found");
-			return;
-		}
-
-		jQuery('#updraftcentral_keys').block({ message: '<div style="margin: 8px; font-size:150%;"><img src="'+updraftlion.ud_url+'/images/udlogo-rotating.gif" height="80" width="80" style="padding-bottom:10px;"><br>'+updraftlion.deleting+'</div>'});
-		
-		updraft_send_command('updraftcentral_delete_key', { key_id: key_id }, function(response) {
-			jQuery('#updraftcentral_keys').unblock();
-			if (response.hasOwnProperty('keys_table')) {
-				jQuery('#updraftcentral_keys_content').html(response.keys_table);
-			}
-		}, { error_callback: function(response, status, error_code, resp) {
-				jQuery('#updraftcentral_keys').unblock();
-				if (typeof resp !== 'undefined' && resp.hasOwnProperty('fatal_error')) {
-				console.error(resp.fatal_error_message);
-				alert(resp.fatal_error_message);
-				} else {
-				var error_message = "updraft_send_command: error: "+status+" ("+error_code+")";
-				console.log(error_message);
-				alert(error_message);
-				console.log(response);
-				}
-			}
-		});
 	});
 	
 	jQuery('#updraft_reset_sid').on('click', function(e) {
@@ -3515,6 +3317,7 @@ jQuery(function($) {
 			// Setup cancel button events
 			$('.updraft-restore--cancel').on('click', function(e) {
 				e.preventDefault();
+				jQuery('#ud_downloadstatus2').html('');
 				this.close();
 			}.bind(this));
 
@@ -3822,6 +3625,7 @@ jQuery(function($) {
 		var backupnow_nocloud = jQuery('#backupnow_includecloud').is(':checked') ? 0 : 1;
 		var db_anon_all = jQuery('#backupnow_db_anon_all').is(':checked') ? 1 : 0;
 		var db_anon_non_staff = jQuery('#backupnow_db_anon_non_staff').is(':checked') ? 1 : 0;
+		var db_anon_wc_orders = jQuery('#backupnow_db_anon_wc_order_data').is(':checked') ? 1 : 0;
 		var onlythesetableentities = backupnow_whichtables_checked('');
 		var always_keep = jQuery('#always_keep').is(':checked') ? 1 : 0;
 		var incremental = ('incremental' == jQuery('#updraft-backupnow-modal').data('backup-type')) ? 1 : 0;
@@ -3879,7 +3683,7 @@ jQuery(function($) {
 			});
 		}, 1700);
 	
-		updraft_backupnow_go(backupnow_nodb, backupnow_nofiles, backupnow_nocloud, onlythesefileentities, {always_keep: always_keep, incremental: incremental, db_anon_all: db_anon_all, db_anon_non_staff: db_anon_non_staff}, jQuery('#backupnow_label').val(), onlythesetableentities, only_these_cloud_services);
+		updraft_backupnow_go(backupnow_nodb, backupnow_nofiles, backupnow_nocloud, onlythesefileentities, {always_keep: always_keep, incremental: incremental, db_anon: { all: db_anon_all, non_staff: db_anon_non_staff, wc_orders: db_anon_wc_orders }}, jQuery('#backupnow_label').val(), onlythesetableentities, only_these_cloud_services);
 	};
 	backupnow_modal_buttons[updraftlion.cancel] = function() {
 	jQuery(this).dialog("close"); };
@@ -4013,7 +3817,7 @@ jQuery(function($) {
 		}
 	});
 	
-	jQuery('.updraft_exclude_container .updraft_add_exclude_item').on('click', function(event) {
+	jQuery('#updraft_include_others_exclude_container, #updraft_include_uploads_exclude_container, .updraft_exclude_container').on('click', 'a.updraft_add_exclude_item', function(event) {
 		event.preventDefault();
 		var backup_entity = jQuery(this).data('include-backup-file');
 		jQuery('#updraft_exclude_modal_for').val(backup_entity);
@@ -4702,6 +4506,45 @@ jQuery(function($) {
 		e.preventDefault();
 		jQuery('.updraft_restore_plugins_options').prop('checked', false);
 	});
+	jQuery('.updraftmessage.admin-warning-litespeed').on('click', '.notice-dismiss', function(e) {
+		e.preventDefault();
+		updraft_send_command('dismiss_admin_warning_litespeed', 1, function (response) {});
+	});
+	
+	function apply_search_on_db_size() {
+		var value = jQuery('.db-search').val().toLowerCase();
+		jQuery(".db-size-content tr").filter(function() {
+			jQuery(this).toggle(jQuery(this).text().toLowerCase().indexOf(value) > -1)
+		});
+	}
+
+	jQuery('#db_size.advanced_tools_button, .db-size-refresh').on('click', function(e) {
+		e.preventDefault();
+
+		var $total_size = jQuery('.advanced_settings_content .advanced_tools.db_size .total-size');
+		var $table_body = jQuery('.advanced_settings_content .advanced_tools.db_size tbody.db-size-content');
+
+		// trigger the ajax from the 'Database size' menu only for the first time
+		if (jQuery(this).hasClass('advanced_tools_button') && '' != $table_body.html()) { return; }
+		
+		$table_body.html('');
+
+		updraft_send_command('db_size', 1, function (response) {
+			$total_size.html(response.size);
+			$table_body.html(response.html);
+			apply_search_on_db_size();
+		});
+	});
+
+	jQuery('.db-search').on('input', function() {
+		apply_search_on_db_size();
+	});
+
+	jQuery('.db-search-clear').on('click', function(e) {
+		e.preventDefault();
+		jQuery('.db-search').val('');
+		apply_search_on_db_size();
+	});
 });
 
 // UpdraftPlus Vault
@@ -5186,6 +5029,9 @@ jQuery(function($) {
 		for (var method in updraftlion.remote_storage_templates) {
 			if ('undefined' != typeof updraftlion.remote_storage_options[method] && not_instance_ids.length < Object.keys(updraftlion.remote_storage_options[method]).length) {
 				var template = Handlebars.compile(updraftlion.remote_storage_templates[method]);
+				for (var partial_template_name in updraftlion.remote_storage_partial_templates[method]) {
+					Handlebars.registerPartial(partial_template_name, Handlebars.compile(updraftlion.remote_storage_partial_templates[method][partial_template_name]));
+				}
 				var first_instance = true;
 				var instance_count = 1;
 				for (var instance_id in updraftlion.remote_storage_options[method]) {
@@ -5588,6 +5434,35 @@ jQuery(function($) {
 	jQuery('#updraft-restore-modal').on('click', '#updraftplus_restore_themes_showmoreoptions', function(e) {
 		e.preventDefault();
 		jQuery('.updraftplus_restore_themes_options_container').toggle();
+	});
+
+	jQuery('#updraft-restore-modal').on('click', '.updraft-select-all-tables', function(e) {
+		e.preventDefault();
+		jQuery('.updraft_restore_tables_options').prop('checked', true);
+	});
+
+	jQuery('#updraft-restore-modal').on('click', '.updraft-deselect-all-tables', function(e) {
+		e.preventDefault();
+		jQuery('.updraft_restore_tables_options').prop('checked', false);
+	});
+
+	var last_checked = null;
+
+	jQuery('#updraft-restore-modal').on('click', '.updraft_restore_tables_options', function(e) {
+		if (!last_checked) {
+			last_checked = this;
+			return;
+		}
+	
+		if (e.shiftKey) {
+			var start = jQuery('.updraft_restore_tables_options').index(this);
+			var end = jQuery('.updraft_restore_tables_options').index(last_checked);
+	
+			jQuery('.updraft_restore_tables_options').slice(Math.min(start, end), Math.max(start, end)+1).prop('checked', last_checked.checked);
+	
+		}
+	
+		last_checked = this;
 	});
 
 	/**

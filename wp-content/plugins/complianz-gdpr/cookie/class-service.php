@@ -135,6 +135,10 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 		 * @param bool   $forceWizardUpdate
 		 */
 		public function save( $updateAllLanguages = false, $forceWizardUpdate = true) {
+			if ( !cmplz_user_can_manage() ) {
+				return;
+			}
+
 			if ( empty( $this->name ) ) {
 				return;
 			}
@@ -193,6 +197,9 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 					$translation->save(false, false);
 				}
 			}
+
+			wp_cache_delete('cmplz_service_cookies_'.$this->ID, 'complianz');
+			wp_cache_delete('cmplz_service_'.$this->ID, 'complianz');
 		}
 
 
@@ -201,7 +208,7 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 		 */
 
 		public function delete() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( !cmplz_user_can_manage() ) {
 				return;
 			}
 			if ( ! $this->ID ) {
@@ -233,6 +240,9 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 		 */
 
 		private function drop_from_wizard( $service ) {
+			if ( !cmplz_user_can_manage() ) {
+				return;
+			}
 			$slug            = $this->get_service_slug( $service );
 			$wizard_settings = get_option( 'complianz_options_wizard' );
 			if ( isset( $wizard_settings['thirdparty_services_on_site'][ $slug ] )
@@ -259,6 +269,9 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 		 */
 
 		private function add_to_wizard( $service ) {
+			if ( !cmplz_user_can_manage() ) {
+				return;
+			}
 			$slug                = $this->get_service_slug( $service );
 			$wizard_settings     = get_option( 'complianz_options_wizard' );
 			$registered_services = COMPLIANZ::$config->thirdparty_services;
@@ -343,6 +356,9 @@ if ( ! class_exists( "CMPLZ_SERVICE" ) ) {
 			$name, $languages = array( 'en' ), $return_language = 'en',
 			$category = '', $sync_on = true
 		) {
+			if ( !cmplz_user_can_manage() ) {
+				return false;
+			}
 			$return_id = false;
 			//insert for each language
 			$this->languages = cmplz_sanitize_languages( $languages );

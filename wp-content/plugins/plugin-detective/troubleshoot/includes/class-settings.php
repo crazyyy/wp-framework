@@ -194,9 +194,10 @@ if ( SHORTINIT )
 	return false;
 
 // Load the L10n library.
-require_once( ABSPATH . WPINC . '/l10n.php' );
-require_once( ABSPATH . WPINC . '/class-wp-locale.php' );
-require_once( ABSPATH . WPINC . '/class-wp-locale-switcher.php' );
+pd_maybe_require( ABSPATH . WPINC . '/l10n.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-textdomain-registry.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-locale.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-locale-switcher.php' );
 
 // Run the installer if WordPress is not installed.
 /* PD: Start wp_not_installed() disable */
@@ -220,6 +221,7 @@ pd_maybe_require( ABSPATH . WPINC . '/date.php' );
 pd_maybe_require( ABSPATH . WPINC . '/theme.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json-schema.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json-data.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json-resolver.php' );
 pd_maybe_require( ABSPATH . WPINC . '/global-styles-and-settings.php' );
@@ -381,12 +383,31 @@ pd_maybe_require( ABSPATH . WPINC . '/block-supports/generated-classname.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/layout.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/spacing.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/typography.php' );
+pd_maybe_require( ABSPATH . WPINC . '/style-engine.php' );
+pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine.php' );
+pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-css-declarations.php' );
+pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-css-rule.php' );
+pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-css-rules-store.php' );
+pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-processor.php' );
 
 
 /* PD: Start bail out early */
 // return;
 /* PD: End bail out early */
 $GLOBALS['wp_embed'] = new WP_Embed();
+
+/**
+ * WordPress Textdomain Registry object.
+ *
+ * Used to support just-in-time translations for manually loaded text domains.
+ *
+ * @since 6.1.0
+ *
+ * @global WP_Textdomain_Registry $wp_textdomain_registry WordPress Textdomain Registry.
+ */
+if ( class_exists( '\WP_Textdomain_Registry' ) ) {
+	$GLOBALS['wp_textdomain_registry'] = new WP_Textdomain_Registry();
+}
 
 // Load multisite-specific files.
 if ( is_multisite() ) {

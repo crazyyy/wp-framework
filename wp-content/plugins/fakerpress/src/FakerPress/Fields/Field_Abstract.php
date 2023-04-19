@@ -1,8 +1,11 @@
 <?php
+
 namespace FakerPress\Fields;
 
 use FakerPress\Template;
 use FakerPress\Plugin;
+use function FakerPress\get;
+use function FakerPress\make;
 
 /**
  * Abstract for Fields.
@@ -10,15 +13,6 @@ use FakerPress\Plugin;
  * @since  0.5.1
  */
 abstract class Field_Abstract implements Field_Interface {
-
-	/**
-	 * Slug for this type of field.
-	 *
-	 * @since  0.5.1
-	 *
-	 * @var string
-	 */
-	protected $slug;
 
 	/**
 	 * HTML ID for this field.
@@ -37,6 +31,15 @@ abstract class Field_Abstract implements Field_Interface {
 	 * @var int
 	 */
 	protected $priority = 10;
+
+	/**
+	 * Determines if this field was initialized.
+	 *
+	 * @since  0.6.0
+	 *
+	 * @var bool
+	 */
+	protected $is_init = false;
 
 	/**
 	 * Hold the configuration for this field instance.
@@ -74,15 +77,6 @@ abstract class Field_Abstract implements Field_Interface {
 	 */
 	protected $template;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setup_template() {
-		$this->template = new Template();
-		$this->template
-			->set_template_origin( Plugin::$instance )
-			->set_template_folder( 'src/templates/fields' );
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -102,7 +96,7 @@ abstract class Field_Abstract implements Field_Interface {
 	 * {@inheritDoc}
 	 */
 	public function get_html_id( $suffix = null ) {
-		$ids = [];
+		$ids    = [];
 		$parent = $this;
 
 		// Fetch the ID of all parents
@@ -112,8 +106,10 @@ abstract class Field_Abstract implements Field_Interface {
 
 		$ids[] = $this->get_id();
 
+		$plugin = Plugin::$slug;
+		$type   = static::get_slug();
 
-		$id = 'fakerpress-field-' . implode( '-', (array) $ids );
+		$id = "{$plugin}-field-{$type}-" . implode( '-', (array) $ids );
 
 		if ( $suffix ) {
 			$id .= '-' . $suffix;
@@ -125,15 +121,15 @@ abstract class Field_Abstract implements Field_Interface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_slug() {
-		return $this->slug;
+	public static function get_slug(): string {
+		return static::$slug;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_setting( $index, $default = null ) {
-		return fp_array_get( $this->get_settings(), $index, null, $default );
+		return get( $this->get_settings(), $index, $default );
 	}
 
 	/**
@@ -147,35 +143,77 @@ abstract class Field_Abstract implements Field_Interface {
 	 * {@inheritDoc}
 	 */
 	public function get_template() {
+		if ( ! $this->template ) {
+			$this->template = new Template();
+			$this->template
+				->set_template_origin( make( Plugin::class ) )
+				->set_template_folder( 'src/templates/fields' )
+				->set_template_context_extract( true );
+		}
+
 		return $this->template;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_priority() {
+	public function set_priority( int $value ): void {
+		$this->priority = $value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_priority(): int {
 		return $this->priority;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_html( $format = 'string' ) {
+	public function get_html( $format = 'string', $echo = true ) {
 		// Globally set in the template vars this instance of field.
-		$this->template->set( 'field', $this, false );
+		$this->get_template()->set( 'field', $this, false );
 
-		$this->template->render( $this->get_slug() );
+		return $this->get_template()->render( static::get_slug(), [ 'field' => $this ], $echo );
+	}
+
+	/**
+	 * Generates a random ID for when an ID was not supplied.
+	 *
+	 * @since TBD
+	 *
+	 * @return string
+	 */
+	protected function generate_random_id(): string {
+		return sanitize_html_class( wp_generate_uuid4() );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setup( array $args = [] ) {
-		$this->setup_template();
+	public function init( array $args = [] ) {
+		$this->set_id( get( $args, 'id', $this->generate_random_id() ) );
+		$this->set_priority( get( $args, 'priority', $this->priority ) );
+		$this->add_children( get( $args, 'children', [] ) );
 
-		$this->set_id( fp_array_get( $args, 'id' ) );
+		$parent = get( $args, 'parent' );
+		if ( $parent ) {
+			$this->set_parent( $parent );
+		}
+
+		// Mark that this field was initialied.
+		$this->set_init_flag( true );
 
 		return $this;
+	}
+
+	public function set_init_flag( bool $value ): void {
+		$this->is_init = $value;
+	}
+
+	public function is_init(): bool {
+		return $this->is_init;
 	}
 
 	/**
@@ -188,7 +226,7 @@ abstract class Field_Abstract implements Field_Interface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function find_children( $search, $operator = 'and' ) {
+	public function find_children( $search, $operator = ' and ' ) {
 		if ( $search instanceof Field_Interface ) {
 			$args = [
 				'id' => $search->id,
@@ -216,17 +254,21 @@ abstract class Field_Abstract implements Field_Interface {
 	 * {@inheritDoc}
 	 */
 	public function add_children( $children ) {
+		$children = array_map( static function ( $child ) {
+			return make( Factory::class )->make( $child );
+		}, $children );
+
 		// Remove non instances of Field_Interface.
-		$children = array_filter( (array) $children, static function ( $children ) {
-			return $children instanceof Field_Interface;
+		$children = array_filter( (array) $children, static function ( $child ) {
+			return $child instanceof Field_Interface;
 		} );
 
-		$this->children = array_merge( $this->children, $children );
-
 		// Set the parent of all children to the current field.
-		$this->children = array_map( function ( $children ) {
+		$children = array_map( function ( $children ) {
 			return $children->set_parent( $this );
-		}, $this->children );
+		}, $children );
+
+		$this->children = array_merge( $this->children, $children );
 
 		return $this->sort_children();
 	}
@@ -234,7 +276,7 @@ abstract class Field_Abstract implements Field_Interface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function remove_children( $search = [], $operator = 'and' ) {
+	public function remove_children( $search = [], $operator = ' and ' ) {
 		$found = $this->find_children( $search, $operator );
 
 		if ( empty( $found ) ) {
@@ -254,7 +296,8 @@ abstract class Field_Abstract implements Field_Interface {
 	 * {@inheritDoc}
 	 */
 	public function sort_children() {
-		usort( $this->children, 'fp_sort_by_priority' );
+		usort( $this->children, 'FakerPress\sort_by_priority' );
+
 		return $this;
 	}
 

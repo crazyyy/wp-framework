@@ -61,11 +61,11 @@ class WDAN_Block_Ad_Redirects extends WDN_Page {
 	/**
 	 * Requests assets (js and css) for the page.
 	 *
-	 * @param Wbcr_Factory456_ScriptList $scripts
-	 * @param Wbcr_Factory456_StyleList $styles
+	 * @param Wbcr_Factory466_ScriptList $scripts
+	 * @param Wbcr_Factory466_StyleList $styles
 	 *
 	 * @return void
-	 * @see Wbcr_FactoryPages455_AdminPage
+	 * @see Wbcr_FactoryPages466_AdminPage
 	 *
 	 */
 	public function assets( $scripts, $styles ) {
@@ -90,7 +90,8 @@ class WDAN_Block_Ad_Redirects extends WDN_Page {
 					installation, may redirect you to their page with advertisements or news. If plugins do this too
 					often,
 					it can be a headache for you. Break these redirects with our premium features.</p>
-				<a class="wdan-button wdan-button-default wdan-button-go-pro" target="_blank" href="https://clearfy.pro/disable-admin-notices/">
+				<a class="wdan-button wdan-button-default wdan-button-go-pro" target="_blank"
+				   href="https://clearfy.pro/disable-admin-notices/">
 					Go Pro
 				</a>
 			</div>

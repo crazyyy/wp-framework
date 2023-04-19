@@ -30,7 +30,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 	 */
 	public $priority = 'core';
 
-	public $css_class = 'factory-bootstrap-458 factory-fontawesome-000';
+	public $css_class = 'factory-bootstrap-464 factory-fontawesome-000';
 
 	protected $errors = [];
 	protected $source_channel;
@@ -53,8 +53,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 
 		if ( $snippet_type !== WINP_SNIPPET_TYPE_AD ) {
 			add_action( 'admin_head', [ $this, 'removeMediaButton' ] );
-		}
-		else {
+		} else {
 			// Установим HTML (текстовый) редактор, редактором по умолчанию
 			add_filter( 'wp_default_editor', function ( $type ) {
 				return 'html';
@@ -80,9 +79,9 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 	/**
 	 * Configures a metabox.
 	 *
-	 * @param Wbcr_Factory457_StyleList $styles A set of style to include.
+	 * @param Wbcr_Factory463_StyleList $styles A set of style to include.
 	 *
-	 * @param Wbcr_Factory457_ScriptList $scripts A set of scripts to include.
+	 * @param Wbcr_Factory463_ScriptList $scripts A set of scripts to include.
 	 *
 	 * @return void
 	 * @since 1.0.0
@@ -106,13 +105,13 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 
 		if ( WINP_Plugin::app()->get_api_object()->is_key() ) {
 			wp_localize_script( 'winp-snippet-transition', 'winp_snippet_sync', [
-				'import'        => __( 'Import snippet', 'insert-php' ),
-				'export'        => __( 'Export snippet', 'insert-php' ),
-				'import_failed' => __( 'An error occurred during import', 'insert-php' ),
-				'export_failed' => __( 'An error occurred during export', 'insert-php' ),
-				'save'          => __( 'Save', 'insert-php' ),
-				'saved'         => __( 'Snippet template succefully saved!', 'insert-php' ),
-				'src_loader'    => WINP_PLUGIN_URL . '/admin/assets/img/ajax-loader.gif',
+					'import'        => __( 'Import snippet', 'insert-php' ),
+					'export'        => __( 'Export snippet', 'insert-php' ),
+					'import_failed' => __( 'An error occurred during import', 'insert-php' ),
+					'export_failed' => __( 'An error occurred during export', 'insert-php' ),
+					'save'          => __( 'Save', 'insert-php' ),
+					'saved'         => __( 'Snippet template succefully saved!', 'insert-php' ),
+					'src_loader'    => WINP_PLUGIN_URL . '/admin/assets/img/ajax-loader.gif',
 			] );
 		}
 	}
@@ -247,7 +246,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 			$button_nonce = ' data-nonce="' . wp_create_nonce( "wbcr_inp_save_snippet_{$snippet_id}_as_template" ) . '"';
 
 			?>
-			<div class="factory-bootstrap-458 factory-fontawesome-000">
+			<div class="factory-bootstrap-464 factory-fontawesome-000">
 				<div class="modal fade" id="winp-sync-modal" tabindex="-1" role="dialog"
 				     aria-labelledby="exampleModalLabel"
 				     aria-hidden="true" style="display: none">
@@ -338,21 +337,18 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 		$code_editor_mode = 'application/x-httpd-php';
 		if ( $snippet_type == WINP_SNIPPET_TYPE_PHP ) {
 			$code_editor_mode = 'text/x-php';
-		}
-		else if ( $snippet_type === WINP_SNIPPET_TYPE_CSS ) {
+		} else if ( $snippet_type === WINP_SNIPPET_TYPE_CSS ) {
 			$code_editor_mode = 'text/css';
-		}
-		else if ( $snippet_type === WINP_SNIPPET_TYPE_JS ) {
+		} else if ( $snippet_type === WINP_SNIPPET_TYPE_JS ) {
 			$code_editor_mode = 'application/javascript';
-		}
-		else if ( $snippet_type === WINP_SNIPPET_TYPE_HTML ) {
+		} else if ( $snippet_type === WINP_SNIPPET_TYPE_HTML ) {
 			$code_editor_mode = 'text/html';
 		}
 		$code_editor_theme = $this->plugin->getPopulateOption( 'code_editor_theme' );
 		?>
 		<script>
 			/* Loads CodeMirror on the snippet editor */
-			(function() {
+			(function () {
 
 				var atts = [];
 
@@ -374,7 +370,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 				};
 
 				atts['extraKeys'] = {
-					'Ctrl-Enter': function(cm) {
+					'Ctrl-Enter': function (cm) {
 						document.getElementById('post_content').submit();
 					},
 					'Ctrl-Space': 'autocomplete',
@@ -407,7 +403,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 				Woody_CodeMirror.fromTextArea(document.getElementById('post_content'), atts);
 			})();
 
-			jQuery(document).ready(function($) {
+			jQuery(document).ready(function ($) {
 				$('.wp-editor-tabs').remove();
 			});
 		</script>
@@ -536,8 +532,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 
 		if ( $snippet_scope == 'shortcode' ) {
 			$shortcode = WINP_Helper::get_where_use_text( $post );
-		}
-		else {
+		} else {
 			$value     = WINP_Helper::get_where_use_text( $post );
 			$shortcode = WINP_Helper::get_shortcode_text( $post );
 		}
@@ -560,7 +555,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 	/**
 	 * Configures a form that will be inside the metabox.
 	 *
-	 * @param Wbcr_FactoryForms454_Form $form A form object to configure.
+	 * @param Wbcr_FactoryForms460_Form $form A form object to configure.
 	 *
 	 * @return void
 	 * @since 1.0.0
@@ -574,89 +569,87 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 		if ( $snippet_type === WINP_SNIPPET_TYPE_PHP ) {
 			$option_name = 'Run everywhere';
 			$data        = [
-				[ 'evrywhere', __( $option_name, 'insert-php' ) ],
-				[ 'shortcode', __( 'Where there is a shortcode', 'insert-php' ) ],
+					[ 'evrywhere', __( $option_name, 'insert-php' ) ],
+					[ 'shortcode', __( 'Where there is a shortcode', 'insert-php' ) ],
 			];
 
 			$events = [
-				'evrywhere' => [
-					'show' => '.wbcr_inp_whereuse_input_container',
-					'hide' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
-				],
-				'shortcode' => [
-					'show' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
-					'hide' => '.wbcr_inp_whereuse_input_container',
-				],
+					'evrywhere' => [
+							'show' => '.wbcr_inp_whereuse_input_container',
+							'hide' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
+					],
+					'shortcode' => [
+							'show' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
+							'hide' => '.wbcr_inp_whereuse_input_container',
+					],
 			];
-		}
-		else {
+		} else {
 			if ( $snippet_type === WINP_SNIPPET_TYPE_TEXT || $snippet_type === WINP_SNIPPET_TYPE_AD ) {
 				$hint = __( 'If you want to place some content into your snippet from the shortcode just wrap it inside [wbcr_text_snippet id="xxx"]content[/wbcr_text_snippet]. To use this content inside the snippet use {{SNIPPET_CONTENT}} variable.', 'insert-php' );
-			}
-			else {
+			} else {
 				$_type = $snippet_type === WINP_SNIPPET_TYPE_UNIVERSAL ? '' : '_' . $snippet_type;
 				$hint  = sprintf( __( 'If you want to place some content into your snippet from the shortcode just wrap it inside [wbcr%s_snippet id="xxx"]content[/wbcr%s_snippet]. To use this content inside the snippet use $content variable.', 'insert-php' ), $_type, $_type );
 			}
 
 			$option_name = __( 'Automatic insertion', 'insert-php' );
 			$data        = [
-				[ 'auto', __( $option_name, 'insert-php' ) ],
-				[ 'shortcode', __( 'Where there is a shortcode', 'insert-php' ), $hint ],
+					[ 'auto', __( $option_name, 'insert-php' ) ],
+					[ 'shortcode', __( 'Where there is a shortcode', 'insert-php' ), $hint ],
 			];
 
 			$events = [
-				'auto'      => [
-					'show' => '.factory-control-snippet_location, .wbcr_inp_whereuse_input_container',
-					'hide' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
-				],
-				'shortcode' => [
-					'hide' => '.factory-control-snippet_location,.factory-control-snippet_p_number, .wbcr_inp_whereuse_input_container',
-					'show' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
-				],
+					'auto'      => [
+							'show' => '.factory-control-snippet_location, .wbcr_inp_whereuse_input_container',
+							'hide' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
+					],
+					'shortcode' => [
+							'hide' => '.factory-control-snippet_location,.factory-control-snippet_p_number, .wbcr_inp_whereuse_input_container',
+							'show' => '.factory-control-snippet_custom_name, .wbcr_inp_shortcode_input_container',
+					],
 			];
 		}
 
 		$items[] = [
-			'type'    => 'dropdown',
-			'way'     => 'buttons',
-			'name'    => 'snippet_scope',
-			'data'    => $data,
-			'title'   => __( 'Where to execute the code?', 'insert-php' ),
-			'hint'    => sprintf( esc_html__( 'If you select the "%s" option, after activating the widget, the php code will be launched on all pages of your site. Another option works only where you have set a shortcode snippet (widgets, post).', 'insert-php' ), __( $option_name, 'insert-php' ) ),
-			'default' => 'shortcode',
-			'events'  => $events,
+				'type'    => 'dropdown',
+				'way'     => 'buttons',
+				'name'    => 'snippet_scope',
+				'data'    => $data,
+				'title'   => __( 'Where to execute the code?', 'insert-php' ),
+				'hint'    => sprintf( esc_html__( 'If you select the "%s" option, after activating the widget, the php code will be launched on all pages of your site. Another option works only where you have set a shortcode snippet (widgets, post).', 'insert-php' ), __( $option_name, 'insert-php' ) ),
+				'default' => 'shortcode',
+				'events'  => $events,
 		];
 
 		$is_pro  = WINP_Plugin::app()->get_api_object()->is_key();
 		$items[] = [
-			'type'      => 'textbox',
-			'name'      => 'snippet_custom_name',
-			'title'     => __( 'Custom shortcode name', 'insert-php' ),
-			'hint'      => __( 'By default, all snippet shortcodes look like this: [wbcr_snippet id=”121”]. Such shortcodes are hard to remember. In addition, when you move a snippet to another website its ID can be changed. So the best solution for the snippets use regularly is to define a custom shortcode name. The custom shortcode may look like this: [soccer_match_date]', 'insert-php' ),
-			'default'   => '',
+				'type'      => 'textbox',
+				'name'      => 'snippet_custom_name',
+				'title'     => __( 'Custom shortcode name', 'insert-php' ),
+				'hint'      => __( 'By default, all snippet shortcodes look like this: [wbcr_snippet id=”121”]. Such shortcodes are hard to remember. In addition, when you move a snippet to another website its ID can be changed. So the best solution for the snippets use regularly is to define a custom shortcode name. The custom shortcode may look like this: [soccer_match_date]', 'insert-php' ),
+				'default'   => '',
 			// Добавляем класс
-			'cssClass'  => ! $is_pro ? [ 'winp-field-premium-element winp-field-w250' ] : [ 'winp-field-w250' ],
+				'cssClass'  => ! $is_pro ? [ 'winp-field-premium-element winp-field-w250' ] : [ 'winp-field-w250' ],
 			// Добавляем атрибут disable
-			'htmlAttrs' => ! $is_pro ? [ 'disabled' => 'disabled' ] : [],
+				'htmlAttrs' => ! $is_pro ? [ 'disabled' => 'disabled' ] : [],
 		];
 
 		if ( $snippet_type !== WINP_SNIPPET_TYPE_PHP ) {
 			$data = [
-				[
-					'title' => __( 'Everywhere', 'insert-php' ),
-					'type'  => 'group',
-					'items' => $winp_snippets_locations->getInsertionForOptions( 'everywhere' ),
-				],
-				[
-					'title' => __( 'Posts, Pages, Custom post types', 'insert-php' ),
-					'type'  => 'group',
-					'items' => $winp_snippets_locations->getInsertionForOptions( 'posts' ),
-				],
-				[
-					'title' => __( 'Categories, Archives, Tags, Taxonomies', 'insert-php' ),
-					'type'  => 'group',
-					'items' => $winp_snippets_locations->getInsertionForOptions( 'pages' ),
-				],
+					[
+							'title' => __( 'Everywhere', 'insert-php' ),
+							'type'  => 'group',
+							'items' => $winp_snippets_locations->getInsertionForOptions( 'everywhere' ),
+					],
+					[
+							'title' => __( 'Posts, Pages, Custom post types', 'insert-php' ),
+							'type'  => 'group',
+							'items' => $winp_snippets_locations->getInsertionForOptions( 'posts' ),
+					],
+					[
+							'title' => __( 'Categories, Archives, Tags, Taxonomies', 'insert-php' ),
+							'type'  => 'group',
+							'items' => $winp_snippets_locations->getInsertionForOptions( 'pages' ),
+					],
 			];
 
 			if ( ! empty( $winp_snippets_locations->getInsertion( 'woocommerce' ) ) ) {
@@ -665,18 +658,18 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 				$disabled = $pro && $woo ? '' : 'disabled';
 				$addition = $pro ? $woo ? '' : '(not installed)' : ' (PRO)';
 				$data[]   = [
-					'title'    => __( 'Woocommerce', 'insert-php' ) . $addition,
-					'type'     => 'group',
-					'disabled' => $disabled,
-					'items'    => $winp_snippets_locations->getInsertionForOptions( 'woocommerce' ),
+						'title'    => __( 'Woocommerce', 'insert-php' ) . $addition,
+						'type'     => 'group',
+						'disabled' => $disabled,
+						'items'    => $winp_snippets_locations->getInsertionForOptions( 'woocommerce' ),
 				];
 			}
 
 			if ( ! empty( $winp_snippets_locations->getInsertion( 'custom' ) ) ) {
 				$data[] = [
-					'title' => __( 'Custom', 'insert-php' ),
-					'type'  => 'group',
-					'items' => $winp_snippets_locations->getInsertionForOptions( 'custom' ),
+						'title' => __( 'Custom', 'insert-php' ),
+						'type'  => 'group',
+						'items' => $winp_snippets_locations->getInsertionForOptions( 'custom' ),
 				];
 			}
 
@@ -686,59 +679,59 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 			}
 
 			$items[] = [
-				'type'    => 'winp-dropdown',
-				'name'    => 'snippet_location',
-				'data'    => $data,
-				'title'   => __( 'Insertion location', 'insert-php' ),
-				'hint'    => __( 'Select the location for you snippet.', 'insert-php' ),
-				'default' => 'header',
-				'events'  => $winp_snippets_locations->getEventsForOptions(),
+					'type'    => 'winp-dropdown',
+					'name'    => 'snippet_location',
+					'data'    => $data,
+					'title'   => __( 'Insertion location', 'insert-php' ),
+					'hint'    => __( 'Select the location for you snippet.', 'insert-php' ),
+					'default' => 'header',
+					'events'  => $winp_snippets_locations->getEventsForOptions(),
 			];
 
 			$items[] = [
-				'type'    => 'textbox',
-				'name'    => 'snippet_p_number',
-				'title'   => __( 'Location number', 'insert-php' ),
-				'hint'    => __( 'Paragraph / Post number', 'insert-php' ),
-				'default' => 0,
+					'type'    => 'textbox',
+					'name'    => 'snippet_p_number',
+					'title'   => __( 'Location number', 'insert-php' ),
+					'hint'    => __( 'Paragraph / Post number', 'insert-php' ),
+					'default' => 0,
 			];
 		}
 
 		if ( $snippet_type === WINP_SNIPPET_TYPE_CSS || $snippet_type === WINP_SNIPPET_TYPE_JS ) {
 			$items[] = [
-				'type'    => 'dropdown',
-				'way'     => 'buttons',
-				'name'    => 'snippet_linking',
-				'data'    => [
-					[ 'external', __( 'External File', 'insert-php' ) ],
-					[ 'inline', __( 'Inline Code', 'insert-php' ) ],
-				],
-				'title'   => __( 'Linking type', 'insert-php' ),
-				'hint'    => __( 'Select how the snippet will be linked to the page.', 'insert-php' ),
-				'default' => 'external',
+					'type'    => 'dropdown',
+					'way'     => 'buttons',
+					'name'    => 'snippet_linking',
+					'data'    => [
+							[ 'external', __( 'External File', 'insert-php' ) ],
+							[ 'inline', __( 'Inline Code', 'insert-php' ) ],
+					],
+					'title'   => __( 'Linking type', 'insert-php' ),
+					'hint'    => __( 'Select how the snippet will be linked to the page.', 'insert-php' ),
+					'default' => 'external',
 			];
 		}
 
 		$items[] = [
-			'type'    => 'textarea',
-			'name'    => 'snippet_description',
-			'title'   => __( 'Description', 'insert-php' ),
-			'hint'    => __( 'You can write a short note so that you can always remember why this code or your colleague was able to apply this code in his works.', 'insert-php' ),
-			'tinymce' => [
-				'height'  => 150,
-				'plugins' => '',
-			],
-			'default' => '',
+				'type'    => 'textarea',
+				'name'    => 'snippet_description',
+				'title'   => __( 'Description', 'insert-php' ),
+				'hint'    => __( 'You can write a short note so that you can always remember why this code or your colleague was able to apply this code in his works.', 'insert-php' ),
+				'tinymce' => [
+						'height'  => 150,
+						'plugins' => '',
+				],
+				'default' => '',
 		];
 
 		if ( $snippet_type !== WINP_SNIPPET_TYPE_TEXT && $snippet_type !== WINP_SNIPPET_TYPE_AD ) {
 			$shorcode_name = $snippet_type === WINP_SNIPPET_TYPE_UNIVERSAL ? 'wbcr_snippet' : 'wbcr_' . $snippet_type . '_snippet';
 			$items[]       = [
-				'type'        => 'textbox',
-				'name'        => 'snippet_tags',
-				'title'       => __( 'Available attributes', 'insert-php' ),
-				'hint'        => sprintf( esc_html__( "Available attributes for shortcode via comma. Only numbers, letters and underscore characters are allowed. Attribute id is always available. With this option you can set additional attributes for the shortcode. Example: start_date attribute to [%s id='xxx' start_date='2018/01/15'] shortcode. Now we can get attribute value in the snippet with the \$start_date variable. It's convenient if you want to print out different results depending on this attributes.", "insert-php" ), $shorcode_name ),
-				'placeholder' => 'title, pass_attr1, pass_attr2'
+					'type'        => 'textbox',
+					'name'        => 'snippet_tags',
+					'title'       => __( 'Available attributes', 'insert-php' ),
+					'hint'        => sprintf( esc_html__( "Available attributes for shortcode via comma. Only numbers, letters and underscore characters are allowed. Attribute id is always available. With this option you can set additional attributes for the shortcode. Example: start_date attribute to [%s id='xxx' start_date='2018/01/15'] shortcode. Now we can get attribute value in the snippet with the \$start_date variable. It's convenient if you want to print out different results depending on this attributes.", "insert-php" ), $shorcode_name ),
+					'placeholder' => 'title, pass_attr1, pass_attr2',
 				//'default'     => ''
 			];
 		}
@@ -754,13 +747,13 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 				}
 
 				$items[] = [
-					'type'    => 'list',
-					'way'     => 'checklist',
-					'name'    => 'snippet_wpml_lang',
-					'title'   => __( 'WPML Language', 'insert-php' ),
-					'data'    => $wpml_langs,
-					'hint'    => __( 'Select the WPML language/languages that this snippet will work for.', 'insert-php' ),
-					'default' => implode( ',', $wpml_langs_default ),
+						'type'    => 'list',
+						'way'     => 'checklist',
+						'name'    => 'snippet_wpml_lang',
+						'title'   => __( 'WPML Language', 'insert-php' ),
+						'data'    => $wpml_langs,
+						'hint'    => __( 'Select the WPML language/languages that this snippet will work for.', 'insert-php' ),
+						'default' => implode( ',', $wpml_langs_default ),
 				];
 			}
 		}
@@ -838,11 +831,9 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 
 		if ( $snippet_type == WINP_SNIPPET_TYPE_CSS || $snippet_type == WINP_SNIPPET_TYPE_JS ) {
 			$code = strip_tags( $code );
-		}
-		else if ( $snippet_type == WINP_SNIPPET_TYPE_HTML ) {
+		} else if ( $snippet_type == WINP_SNIPPET_TYPE_HTML ) {
 			$code = preg_replace( '/<\\?.*(\\?>|$)/Us', '', $code );
-		}
-		else if ( $snippet_type != WINP_SNIPPET_TYPE_PHP ) {
+		} else if ( $snippet_type != WINP_SNIPPET_TYPE_PHP ) {
 			/* Remove ?> from beginning of snippet */
 			$code = preg_replace( '|^[\s]*\?>|', '', $code );
 
@@ -853,8 +844,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 			if ( $start_count !== $end_count ) {
 				if ( $start_count > $end_count ) {
 					$code = $code . '?>';
-				}
-				else {
+				} else {
 					$code = '<?php ' . $code;
 				}
 			}
@@ -885,7 +875,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 		$linking = WINP_Plugin::app()->request->post( WINP_Plugin::app()->getPrefix() . 'snippet_linking', '', true );
 		WINP_Helper::updateMetaOption( $post_id, 'snippet_linking', $linking );
 
-		$priority = WINP_Helper::get_next_snippet_priority();
+		$priority = WINP_Helper::getMetaOption( $post_id, 'snippet_priority', WINP_Helper::get_next_snippet_priority() );
 		WINP_Helper::updateMetaOption( $post_id, 'snippet_priority', $priority );
 
 		// Save Conditional execution logic for the snippet
@@ -917,8 +907,7 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 
 		if ( $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_AD ) {
 			$snippet_content = ! empty( $post_content ) ? WINP_Plugin::app()->getExecuteObject()->prepareCode( $post_content, $post_id ) : '';
-		}
-		else {
+		} else {
 			$snippet_content = $post_content;
 		}
 
@@ -929,24 +918,22 @@ class WINP_BaseOptionsMetaBox extends Wbcr_FactoryMetaboxes413_FormMetabox {
 		if ( $snippet_scope == 'evrywhere' || $snippet_scope == 'auto' ) {
 			if ( $snippet_type != WINP_SNIPPET_TYPE_TEXT && $snippet_type != WINP_SNIPPET_TYPE_AD && $snippet_type != WINP_SNIPPET_TYPE_CSS && $snippet_type != WINP_SNIPPET_TYPE_JS && $snippet_type != WINP_SNIPPET_TYPE_HTML ) {
 				$validate = $this->validateCode( $snippet_content, $snippet_type );
-			}
-			else {
+			} else {
 				$validate = true;
 			}
 		}
 
 		if ( $validate && $is_default_activate && WINP_Plugin::app()->currentUserCan() ) {
 			WINP_Helper::updateMetaOption( $post_id, 'snippet_activate', true );
-		}
-		else {
+		} else {
 			if ( ! defined( 'WP_SANDBOX_SCRAPING' ) ) {
 				define( 'WP_SANDBOX_SCRAPING', true );
 			}
 			/* Display message if a parse error occurred */
 			wp_safe_redirect( add_query_arg( [
-				'action'                       => 'edit',
-				'post'                         => $post_id,
-				'wbcr_inp_save_snippet_result' => 'code-error',
+					'action'                       => 'edit',
+					'post'                         => $post_id,
+					'wbcr_inp_save_snippet_result' => 'code-error',
 			], admin_url( 'post.php' ) ) );
 
 			exit;

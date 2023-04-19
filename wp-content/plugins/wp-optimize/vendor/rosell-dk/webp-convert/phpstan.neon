@@ -1,0 +1,32 @@
+parameters:
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#Instantiated class Imagick not found.#'
+        - '#Instantiated class Gmagick not found.#'
+        - '#Caught class ImagickException not found.#'
+        - '# on an unknown class Imagick.#'
+        - '# on an unknown class Gmagick.#'
+        - '#Call to an undefined method Gmagick::getImageBlob\(\).#'
+        - '#Strict comparison using === between resource and false will always evaluate to false.#'
+        - '#Strict comparison using === between CurlHandle and false will always evaluate to false.#'
+        - '#Return typehint of method WebPConvert\\Convert\\Converters\\Ewww::initCurl\(\) has invalid type CurlHandle.#'
+        - '#Return typehint of method WebPConvert\\Convert\\Converters\\Wpc::initCurl\(\) has invalid type CurlHandle.#'
+        - '#Function vips_call invoked with 4 parameters, 2 required.#'
+        - '#Function vips_.* not found.#'
+        -
+            message: '#SystemRequirementsNotMet#'
+            path: %currentWorkingDirectory%/src/Convert/Converters/ConverterTraits/ExecTrait.php
+        -
+            message: '#Call to function is_callable\(\) with array.* always evaluate to false#'
+            path: %currentWorkingDirectory%/src/Convert/ConverterFactory.php
+        - '#.+invalid typehint type GdImage#'
+        - '#.+invalid type GdImage#'
+        - '#.+never returns GdImage so it can be removed from the return typehint.#'
+        - '#Method WebPConvert\\Convert\\Converters\\Gd::createImageResource\(\) never returns resource so it can be removed from the return typehint.#'
+        - '#Method WebPConvert\\Convert\\Converters\\Gd::createImageResource\(\) never returns resource so it can be removed from the return type.#'
+        - '#Method WebPConvert\\Convert\\Converters\\Gd::createImageResource\(\) has invalid return type GdImage.#'
+        - '#Method WebPConvert\\Convert\\Converters\\Gd::createImageResource\(\) never returns GdImage so it can be removed from the return type.#'
+        -
+            message: '#Dead catch - Exception is never thrown in the try block.#'
+            path: %currentWorkingDirectory%/src/Convert/Converters/Ewww.php
+        - '#initCurl\(\) has invalid return type CurlHandle.#'

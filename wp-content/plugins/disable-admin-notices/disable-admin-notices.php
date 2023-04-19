@@ -4,11 +4,11 @@
  * Plugin URI: https://clearfy.pro/disable-admin-notices
  * Description: Disable admin notices plugin gives you the option to hide updates warnings and inline notices in the admin panel.
  * Author: Creative Motion <info@cm-wp.com>
- * Version: 1.3.0
+ * Version: 1.3.3
  * Text Domain: disable-admin-notices
  * Domain Path: /languages/
  * Author URI: https://webcraftic.com
- * Framework Version: FACTORY_456_VERSION
+ * Framework Version: FACTORY_466_VERSION
  */
 
 /**
@@ -45,39 +45,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  * -----------------------------------------------------------------------------
  */
 
-require_once( dirname( __FILE__ ) . '/libs/factory/core/includes/class-factory-requirements.php' );
+require_once dirname( __FILE__ ) . '/libs/factory/core/includes/class-factory-requirements.php';
 
 // @formatter:off
-$wdan_plugin_info = array(
+$wdan_plugin_info = [
 	'prefix'               => 'wbcr_dan_',
 	'plugin_name'          => 'wbcr_dan',
 	'plugin_title'         => __( 'Webcraftic disable admin notices', 'disable-admin-notices' ),
 
 	// PLUGIN SUPPORT
-	'support_details'      => array(
+	'support_details'      => [
 		'url'       => 'https://clearfy.pro/',
-		'pages_map' => array(
+		'pages_map' => [
 			'support' => 'support', // {site}/support
 			'docs'    => 'docs',     // {site}/docs,
-			'pricing' => 'disable-admin-notices'
-		)
-	),
+			'pricing' => 'disable-admin-notices',
+		],
+	],
 	// PLUGIN PREMIUM SETTINGS
 	'has_premium'          => true,
-	'license_settings'     => array(
+	'license_settings'     => [
 		'provider'         => 'freemius',
 		'slug'             => 'disable-admin-notices-premium',
 		'plugin_id'        => '6456',
 		'public_key'       => 'pk_0570ec3c1b4100b9c9a0cbfe80f9f',
 		'price'            => 29,
 		'has_updates'      => true,
-		'updates_settings' => array(
+		'updates_settings' => [
 			'maybe_rollback'    => true,
-			'rollback_settings' => array(
-				'prev_stable_version' => '0.0.0'
-			)
-		)
-	),
+			'rollback_settings' => [
+				'prev_stable_version' => '0.0.0',
+			],
+		],
+	],
 
 	// PLUGIN SUBSCRIBE FORM
 	'subscribe_widget'     => true,
@@ -85,30 +85,30 @@ $wdan_plugin_info = array(
 
 	// PLUGIN ADVERTS
 	'render_adverts'       => true,
-	'adverts_settings'     => array(
+	'adverts_settings'     => [
 		'dashboard_widget' => false, // show dashboard widget (default: false)
 		'right_sidebar'    => true, // show adverts sidebar (default: false)
 		'notice'           => false, // show notice message (default: false)
-	),
+	],
 
 	// FRAMEWORK MODULES
-	'load_factory_modules' => array(
-		array( 'libs/factory/bootstrap', 'factory_bootstrap_457', 'admin' ),
-		array( 'libs/factory/forms', 'factory_forms_453', 'admin' ),
-		array( 'libs/factory/pages', 'factory_pages_455', 'admin' ),
-		array( 'libs/factory/templates', 'factory_templates_108', 'all' ),
-		array( 'libs/factory/freemius', 'factory_freemius_143', 'all' ),
-		array( 'libs/factory/adverts', 'factory_adverts_133', 'admin' ),
-		//array('libs/factory/logger', 'factory_logger_121', 'all')
-	)
-);
+	'load_factory_modules' => [
+		[ 'libs/factory/bootstrap', 'factory_bootstrap_467', 'admin' ],
+		[ 'libs/factory/forms', 'factory_forms_463', 'admin' ],
+		[ 'libs/factory/pages', 'factory_pages_466', 'admin' ],
+		[ 'libs/factory/templates', 'factory_templates_116', 'all' ],
+		[ 'libs/factory/freemius', 'factory_freemius_154', 'all' ],
+		[ 'libs/factory/adverts', 'factory_adverts_143', 'admin' ],
+		//array('libs/factory/logger', 'factory_logger_130', 'all')
+	],
+];
 
-$wdan_compatibility = new Wbcr_Factory456_Requirements( __FILE__, array_merge( $wdan_plugin_info, array(
+$wdan_compatibility = new Wbcr_Factory466_Requirements( __FILE__, array_merge( $wdan_plugin_info, [
 	'plugin_already_activate'          => defined( 'WDN_PLUGIN_ACTIVE' ),
 	'required_php_version'             => '7.0',
 	'required_wp_version'              => '4.8.0',
-	'required_clearfy_check_component' => false
-) ) );
+	'required_clearfy_check_component' => false,
+] ) );
 
 
 
@@ -143,21 +143,21 @@ define( 'WDN_PLUGIN_URL', plugins_url( null, __FILE__ ) );
  * -----------------------------------------------------------------------------
  */
 
-require_once( WDN_PLUGIN_DIR . '/libs/factory/core/boot.php' );
-require_once( WDN_PLUGIN_DIR . '/includes/functions.php' );
-require_once( WDN_PLUGIN_DIR . '/includes/class-plugin.php' );
+require_once WDN_PLUGIN_DIR . '/libs/factory/core/boot.php';
+require_once WDN_PLUGIN_DIR . '/includes/functions.php';
+require_once WDN_PLUGIN_DIR . '/includes/class-plugin.php';
 
 try {
-	new WDN_Plugin( __FILE__, array_merge( $wdan_plugin_info, array(
+	new WDN_Plugin( __FILE__, array_merge( $wdan_plugin_info, [
 		'plugin_version'     => WDN_PLUGIN_VERSION,
 		'plugin_text_domain' => $wdan_compatibility->get_text_domain(),
-	) ) );
+	] ) );
 } catch ( Exception $e ) {
 	// Plugin wasn't initialized due to an error
 	define( 'WDN_PLUGIN_THROW_ERROR', true );
 
 	$wdan_plugin_error_func = function () use ( $e ) {
-		$error = sprintf( "The %s plugin has stopped. <b>Error:</b> %s Code: %s", 'Disable Admin Notices', $e->getMessage(), $e->getCode() );
+		$error = sprintf( 'The %s plugin has stopped. <b>Error:</b> %s Code: %s', 'Disable Admin Notices', $e->getMessage(), $e->getCode() );
 		echo '<div class="notice notice-error"><p>' . $error . '</p></div>';
 	};
 

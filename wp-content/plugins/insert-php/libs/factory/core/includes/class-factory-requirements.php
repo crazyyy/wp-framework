@@ -12,8 +12,8 @@
  * @since         4.0.9
  */
 // @formatter:off
-if ( ! class_exists( 'Wbcr_Factory457_Requirements' ) ) {
-	class Wbcr_Factory457_Requirements {
+if ( ! class_exists( 'Wbcr_Factory463_Requirements' ) ) {
+	class Wbcr_Factory463_Requirements {
 
 		/**
 		 * Factory framework version
@@ -180,7 +180,7 @@ if ( ! class_exists( 'Wbcr_Factory457_Requirements' ) ) {
 				return;
 			}
 
-			echo '<div class="notice notice-error"><p>' . $this->get_notice_text() . '</p></div>';
+			echo '<div class="notice notice-error"><p>' . esc_html($this->get_notice_text()) . '</p></div>';
 		}
 
 
@@ -273,21 +273,21 @@ if ( ! class_exists( 'Wbcr_Factory457_Requirements' ) ) {
 		 * @return string
 		 */
 		protected function get_php_incompat_text() {
-			return sprintf( __( 'You need to update the PHP version to %s or higher!', 'wbcr_factory_457' ), $this->required_php_version );
+			return sprintf( __( 'You need to update the PHP version to %s or higher!', 'wbcr_factory_463' ), $this->required_php_version );
 		}
 
 		/**
 		 * @return string
 		 */
 		protected function get_wp_incompat_text() {
-			return sprintf( __( 'You need to update WordPress to %s or higher!', 'wbcr_factory_457' ), $this->required_wp_version );
+			return sprintf( __( 'You need to update WordPress to %s or higher!', 'wbcr_factory_463' ), $this->required_wp_version );
 		}
 
 		/**
 		 * @return string
 		 */
 		protected function get_plugin_already_activate_text() {
-			return sprintf( __( 'Plugin %s is already activated, you are trying to activate it again.', 'wbcr_factory_457' ), $this->plugin_title );
+			return sprintf( __( 'Plugin %s is already activated, you are trying to activate it again.', 'wbcr_factory_463' ), $this->plugin_title );
 		}
 	}
 }

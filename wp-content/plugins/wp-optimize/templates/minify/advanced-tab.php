@@ -28,7 +28,8 @@
 								'minify/cached-file.php',
 								false,
 								array(
-									'file' => $js_file
+									'file' => $js_file,
+									'minify_config' => wp_optimize_minify_config()->get(),
 								)
 							);
 						}
@@ -55,7 +56,8 @@
 								'minify/cached-file.php',
 								false,
 								array(
-									'file' => $css_file
+									'file' => $css_file,
+									'minify_config' => wp_optimize_minify_config()->get(),
 								)
 							);
 						}

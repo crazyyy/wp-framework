@@ -251,7 +251,7 @@ class Setup_Wizard {
 		}
 
 		$this->hook_suffix = add_submenu_page(
-			null,
+			'',
 			esc_html__( 'Setup Wizard', 'rank-math' ),
 			esc_html__( 'Setup Wizard', 'rank-math' ),
 			'manage_options',
@@ -280,8 +280,11 @@ class Setup_Wizard {
 		rank_math()->admin_assets->register();
 		wp_enqueue_style( 'rank-math-wizard', rank_math()->plugin_url() . 'assets/admin/css/setup-wizard.css', [ 'wp-admin', 'buttons', 'cmb2-styles', 'select2-rm', 'rank-math-common', 'rank-math-cmb2' ], rank_math()->version );
 
+		// Enqueue scripts for the SEO Score Updater tool.
+		\RankMath\Tools\Update_Score::get()->enqueue();
+
 		// Enqueue javascript.
-		wp_enqueue_script( 'rank-math-wizard', rank_math()->plugin_url() . 'assets/admin/js/wizard.js', [ 'media-editor', 'select2-rm', 'lodash', 'rank-math-common', 'rank-math-validate' ], rank_math()->version, true );
+		wp_enqueue_script( 'rank-math-wizard', rank_math()->plugin_url() . 'assets/admin/js/wizard.js', [ 'media-editor', 'select2-rm', 'lodash', 'rank-math-common' ], rank_math()->version, true );
 
 		Helper::add_json( 'currentStep', $this->step );
 		Helper::add_json( 'deactivated', esc_html__( 'Deactivated', 'rank-math' ) );

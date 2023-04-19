@@ -64,7 +64,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 			$name = false, $language = 'en', $service_name = false
 		) {
 			if ( is_numeric( $name ) ) {
-				$this->ID = intval( $name );
+				$this->ID = (int) $name;
 			} else {
 				$this->name = $this->sanitize_cookie( $name );
 			}
@@ -97,6 +97,9 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 		public function add(
 			$name, $languages = array( 'en' ), $return_language = false, $service_name = false, $sync_on = true
 		) {
+			if ( !cmplz_user_can_manage() ) {
+				return 0;
+			}
 			$this->name = $this->sanitize_cookie( $name );
 
 			//the parent cookie gets "en" as default language
@@ -121,13 +124,13 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 			//we now should have an ID, which will be the parent item
 			$parent_ID = $this->ID;
 
-			if ( $return_language == 'en' ) {
+			if ( $return_language === 'en' ) {
 				$return_id = $this->ID;
 			}
 
 			//make sure each language is available
 			foreach ( $this->languages as $language ) {
-				if ( $language == 'en' ) {
+				if ( $language === 'en' ) {
 					continue;
 				}
 				$translated_cookie = new CMPLZ_COOKIE( $name, $language, $service_name );
@@ -169,7 +172,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 		 */
 
 		public function delete() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return;
 			}
 			if ( ! $this->ID ) {
@@ -192,7 +195,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 		 */
 
 		public function restore() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! cmplz_user_can_manage() ) {
 				return;
 			}
 			if ( ! $this->ID ) {
@@ -304,15 +307,16 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 			}
 
 			/**
-			 * Don't translate with Polylang, as polylang does not use the fieldname to translate. This causes mixed up strings when context differs.
+			 * Don't translate purpose with Polylang, as polylang does not use the fieldname to translate. This causes mixed up strings when context differs.
 			 * To prevent newly added cookies from getting translated, only translate when not in admin or cron, leaving front-end, where cookies aren't saved.
 			 */
-			if ( !defined('POLYLANG_VERSION') && $this->language !== 'en' && !is_admin() && !wp_doing_cron() ) {
-				if (!empty($this->retention) ) $this->retention = cmplz_translate($this->retention, 'cookie_retention');
-				//type should not be translated
-				if (!empty($this->cookieFunction) ) $this->cookieFunction = cmplz_translate($this->cookieFunction, 'cookie_function');
-				if (!empty($this->purpose) ) $this->purpose = cmplz_translate($this->purpose, 'cookie_purpose');
-				if (!empty($this->collectedPersonalData) ) $this->collectedPersonalData = cmplz_translate($this->collectedPersonalData, 'cookie_collected_personal_data');
+			if ( $this->language !== 'en' && !is_admin() && !wp_doing_cron() ) {
+				if ( !defined('POLYLANG_VERSION') || !$this->sync ) {
+					if (!empty($this->purpose) ) $this->purpose = cmplz_translate($this->purpose, 'cookie_purpose');
+				}
+				if (!empty( $this->retention ) ) $this->retention = cmplz_translate( $this->retention, 'cookie_retention' );
+				if (!empty( $this->cookieFunction) ) $this->cookieFunction = cmplz_translate($this->cookieFunction, 'cookie_function');
+				if (!empty( $this->collectedPersonalData) ) $this->collectedPersonalData = cmplz_translate($this->collectedPersonalData, 'cookie_collected_personal_data');
 			}
 
 			/**
@@ -355,6 +359,9 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 		 */
 
 		public function save( $updateAllLanguages = false ) {
+			if ( !cmplz_user_can_manage() ) {
+				return;
+			}
 			//don't save empty items.
 			if ( empty( $this->name ) ) {
 				return;
@@ -389,7 +396,6 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 				cmplz_register_translation( $this->purpose, 'cookie_purpose' );
 			}
 			cmplz_register_translation($this->retention, 'cookie_retention');
-			cmplz_register_translation($this->type, 'cookie_storage_type');
 			cmplz_register_translation($this->cookieFunction, 'cookie_function');
 			cmplz_register_translation($this->collectedPersonalData, 'cookie_collected_personal_data');
 
@@ -453,6 +459,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 					$translation->showOnPolicy          = $this->showOnPolicy;
 					$translation->deleted               = $this->deleted;
 					$translation->ignored               = $this->ignored;
+					$translation->isOwnDomainCookie     = $this->isOwnDomainCookie;
 
 //                  dot not update all translations for these fields, even when not synced.
 //					//translated data, only when not synced
@@ -467,7 +474,7 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
 					$translation->save();
 				}
 			}
-			wp_cache_delete('cmplz_cookie_shredder_list', 'complianz');
+			wp_cache_delete('cmplz_cookie_'.$this->ID, 'complianz');
 		}
 
 
@@ -602,8 +609,11 @@ if ( ! class_exists( "CMPLZ_COOKIE" ) ) {
  * Install cookies table
  * */
 
-add_action( 'admin_init', 'cmplz_install_cookie_table' );
+add_action( 'plugins_loaded', 'cmplz_install_cookie_table' );
 function cmplz_install_cookie_table() {
+	if (!wp_doing_cron() && !cmplz_user_can_manage() ) {
+		return;
+	}
 	if ( get_option( 'cmplz_cookietable_version' ) != cmplz_version ) {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		global $wpdb;
@@ -657,7 +667,7 @@ function cmplz_install_cookie_table() {
                 ) $charset_collate;";
 		dbDelta( $sql );
 
-		update_option( 'cmplz_cookietable_version', cmplz_version, false );
+		update_option( 'cmplz_cookietable_version', cmplz_version );
 
 	}
 }

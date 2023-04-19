@@ -28,15 +28,52 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'firstparty_marketing' => false,
 	),
 
+//	'hcaptcha' => array(
+//			'constant_or_function' => 'HCAPTCHA_VERSION',
+//			'label'                => 'hCaptcha for WordPress',
+//			'firstparty_marketing' => false,
+//	),
+
+	'omnisend' => array(
+			'constant_or_function' => 'OMNISEND_SETTINGS_PAGE',
+			'label'                => 'Email Marketing for WooCommerce by Omnisend',
+			'firstparty_marketing' => false,
+	),
+
 	'bb-powerpack' => array(
 			'constant_or_function' => 'BB_PowerPack',
 			'label'                => 'Beaver Builder Power Pack',
 			'firstparty_marketing' => false,
 	),
-
+	'content-views-plugin' => array(
+			'constant_or_function' => 'PT_CV_VERSION',
+			'label'                => 'Content Views – Post Grid & Filter for WordPress',
+			'firstparty_marketing' => false,
+	),
+	'divi' => array(
+			'constant_or_function' => 'Divi',
+			'label'                => 'Divi',
+			'firstparty_marketing' => false,
+	),
+	'divi-plugin' => array(
+			'constant_or_function' => 'ET_BUILDER_PLUGIN_DIR',
+			'label'                => 'Divi Plugin',
+			'firstparty_marketing' => false,
+	),
+	'agile-store-locator' => array(
+			'constant_or_function' => 'ASL_PLUGIN_PATH',
+			'label'                => 'Agile Store Locator',
+			'firstparty_marketing' => false,
+	),
 	'lead-forensics' => array(
 			'constant_or_function' => 'LFRTrackingCode',
 			'label'                => 'Lead Forensics',
+			'firstparty_marketing' => false,
+	),
+
+	'mailchimp-woocommerce' => array(
+			'constant_or_function' => 'MAILCHIMP_WOOCOMMERCE_NEWSLETTER_VERSION',
+			'label'                => 'Mailchimp for Woocommerce',
 			'firstparty_marketing' => false,
 	),
 
@@ -195,6 +232,11 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'label'                => 'Google Site Kit',
 	),
 
+	'clarity'               => array(
+		'constant_or_function' => 'clarity_add_origins',
+		'label'                => 'Microsoft Clarity',
+	),
+
 	'beehive'           => array(
 		'constant_or_function' => 'BEEHIVE_PRO',
 		'label'                => 'Beehive',
@@ -243,6 +285,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'firstparty_marketing' => false,
 	),
 
+	'colibriwp'          => array(
+		'constant_or_function' => 'COLIBRI_PAGE_BUILDER_VERSION',
+		'label'                => 'ColibriWP Page Builder',
+		'firstparty_marketing' => false,
+	),
+
 	'user-registration' => array(
 		'constant_or_function' => 'UR',
 		'label'                => 'User Registration',
@@ -258,6 +306,38 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 	'contact-form-7'    => array(
 		'constant_or_function' => 'WPCF7_VERSION',
 		'label'                => 'Contact Form 7',
+		'firstparty_marketing' => false,
+	),
+
+	'disable-and-remove-google-fonts'    => array(
+		'constant_or_function' => 'drgf_dequeueu_fonts',
+		'label'                => 'Disable and remove Google Fonts',
+		'firstparty_marketing' => false,
+	),
+	'embed-google-fonts'    => array(
+		'constant_or_function' => 'Embed_Google_Fonts_Proxy',
+		'label'                => 'Embed Google Fonts',
+		'firstparty_marketing' => false,
+	),
+
+	'omgf'    => array(
+		'constant_or_function' => 'OMGF_PLUGIN_DIR',
+		'label'                => 'OMGF',
+		'firstparty_marketing' => false,
+	),
+	'local-google-fonts'    => array(
+		'constant_or_function' => 'LGF_PLUGIN_FILE',
+		'label'                => 'Local Google Fonts',
+		'firstparty_marketing' => false,
+	),
+	'olympus-google-fonts'    => array(
+		'constant_or_function' => 'ogf_initiate',
+		'label'                => 'Fonts Plugin | Google Fonts Typography',
+		'firstparty_marketing' => false,
+	),
+	'use-any-font'    => array(
+		'constant_or_function' => 'UAF_FILE_PATH',
+		'label'                => 'Use Any Font',
 		'firstparty_marketing' => false,
 	),
 
@@ -297,12 +377,6 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'firstparty_marketing' => false,
 	),
 
-	'mappress' => array(
-		'constant_or_function' => 'Mappress',
-		'label'                => 'MapPress Maps for WordPress',
-		'firstparty_marketing' => false,
-	),
-
 	'map-multi-marker' => array(
 		'constant_or_function' => 'MapMultiMarker',
 		'label'                => 'Map Multi Marker',
@@ -317,7 +391,7 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 	),
 	'wp-google-maps'            => array(
 		'constant_or_function' => 'WPGMZA_VERSION',
-		'label'                => 'WP Google Maps',
+		'label'                => 'WP Go Maps',
 		'firstparty_marketing' => false,
 	),
 	'wp-google-map-plugin'            => array(
@@ -335,6 +409,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'label'                => 'Woocommerce Google Analytics Integration',
 		'firstparty_marketing' => false,
 	),
+		'woocommerce' => array(
+				'constant_or_function' => 'WC_PLUGIN_FILE',
+				'label'                => 'WooCommerce',
+				'firstparty_marketing' => false,
+		),
+
 	'geo-my-wp' => array(
 		'constant_or_function' => 'GMW_VERSION',
 		'label'                => 'Geo My WP',
@@ -401,6 +481,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'firstparty_marketing' => false,
 	),
 
+	'uncode' => array(
+		'constant_or_function' => 'UncodeCore_Plugin',
+		'label'                => 'Uncode Google Maps',
+		'firstparty_marketing' => false,
+	),
+
 	'forminator' => array(
 		'constant_or_function' => 'FORMINATOR_VERSION',
 		'label'                => 'Forminator',
@@ -458,15 +544,34 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'label'                => 'Thrive',
 		'firstparty_marketing' => false,
 	),
-
 	'gravity-forms' => array(
 		'constant_or_function' => 'GF_MIN_WP_VERSION',
 		'label'                => 'Gravity Forms',
 		'firstparty_marketing' => false,
 	),
 	'qtranslate'               => array(
-			'constant_or_function' => 'QTX_VERSION',
-			'label'                => 'qTranslate-XT',
+		'constant_or_function' => 'QTX_VERSION',
+		'label'                => 'qTranslate-XT',
+		'firstparty_marketing' => false,
+	),
+	'welaunch-store-locator'   => array(
+		'constant_or_function' => 'run_WordPress_Store_Locator',
+		'label'                => 'WeLaunch Store Locator',
+		'firstparty_marketing' => false,
+	),
+	'presto-player'               => array(
+			'constant_or_function' => 'PRESTO_PLAYER_PLUGIN_FILE',
+			'label'                => 'Presto Player',
+			'firstparty_marketing' => false,
+	),
+	'yotu-wp'               => array(
+			'constant_or_function' => 'YOTUWP_VERSION',
+			'label'                => 'Video Gallery – YouTube Playlist, Channel Gallery by YotuWP',
+			'firstparty_marketing' => false,
+	),
+	'buttonizer'               => array(
+			'constant_or_function' => 'BUTTONIZER_VERSION',
+			'label'                => 'Buttonizer',
 			'firstparty_marketing' => false,
 	),
 ) );
@@ -497,8 +602,6 @@ foreach ( $cmplz_integrations_list as $plugin => $details ) {
 
 	if ( file_exists( $file ) ) {
 		require_once( $file );
-	} else {
-		error_log( "searched for $plugin integration at $file, but did not find it" );
 	}
 }
 
@@ -538,13 +641,15 @@ function cmplz_integration_plugin_is_active( $plugin ){
 	$details = $cmplz_integrations_list[ $plugin ];
 	$enabled = isset( $fields[ $plugin ] ) ? $fields[ $plugin ] : true;
 	$theme = wp_get_theme();
+
 	if (
-			( defined($details['constant_or_function'])
-			   || function_exists( $details['constant_or_function'] )
-			   || class_exists( $details['constant_or_function'] )
-			   || ( $theme && ($theme->name === $details['constant_or_function']) )
-			)
-	     	&& $enabled
+		( defined($details['constant_or_function'])
+		   || function_exists( $details['constant_or_function'] )
+		   || class_exists( $details['constant_or_function'] )
+		   || ( $theme && ($theme->name === $details['constant_or_function']) )
+		   || ( $theme->parent() !== false && trim( $theme->parent()->Name ) === trim( $details['constant_or_function'] ) )
+		)
+		&& $enabled
 	) {
 		return true;
 	}
@@ -566,8 +671,6 @@ function cmplz_integrations() {
 			$file = apply_filters( 'cmplz_integration_path', cmplz_path . "integrations/plugins/$plugin.php", $plugin );
 			if ( file_exists( $file ) ) {
 				require_once( $file );
-			} else {
-				error_log( "searched for $plugin integration at $file, but did not find it" );
 			}
 		}
 	}
@@ -737,19 +840,26 @@ function cmplz_add_placeholder_checkbox( $args ) {
 	}
 }
 
+
 function cmplz_notify_of_plugin_integrations( $warnings ){
 	$fields = COMPLIANZ::$config->fields( 'integrations' );
 	foreach ($fields as $id => $field ) {
 		if ($field['disabled']) continue;
-		$warnings[$id] = array(
-			'open' => cmplz_sprintf(__( 'We have enabled the %s integration.', 'complianz-gdpr' ), $field['label']).cmplz_read_more("https://complianz.io/enabled-integration"),
+		$warnings['integration_enabled'] = array(
+			'open' => __('We have enabled integrations for plugins and services, please double-check your configuration.', 'complianz-gdpr' ) . cmplz_read_more("https://complianz.io/enabled-integration"),
 			'include_in_progress' => false,
 		);
+
+		break;
+
 	}
 
 	return $warnings;
 }
 add_filter( 'cmplz_warning_types', 'cmplz_notify_of_plugin_integrations' );
+
+
+
 
 
 /**

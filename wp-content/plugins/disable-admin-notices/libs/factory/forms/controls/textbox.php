@@ -29,9 +29,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms453_TextboxControl') ) {
+	if( !class_exists('Wbcr_FactoryForms463_TextboxControl') ) {
 
-		class Wbcr_FactoryForms453_TextboxControl extends Wbcr_FactoryForms453_Control {
+		class Wbcr_FactoryForms463_TextboxControl extends Wbcr_FactoryForms463_Control {
 
 			public $type = 'textbox';
 
@@ -74,7 +74,7 @@
 				<?php if( $units ) { ?><div class="input-group"><?php } ?>
 				<input <?php $this->attrs() ?>/>
 				<?php if( $units ) { ?>
-				<span class="input-group-addon"><?php echo $units; ?></span>
+				<span class="input-group-addon"><?php echo esc_html($units); ?></span>
 			<?php } ?>
 				<?php if( $units ) { ?></div><?php } ?>
 			<?php

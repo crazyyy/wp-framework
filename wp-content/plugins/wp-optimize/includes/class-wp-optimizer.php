@@ -6,7 +6,20 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
  * This class invokes optimiazations. The optimizations themselves live in the 'optimizations' sub-directory of the plugin.  The proper way to obtain access to the instance is via WP_Optimize()->get_optimizer()
  */
 class WP_Optimizer {
-	
+
+	/**
+	 * Returns singleton instance object
+	 *
+	 * @return WP_Optimizer Returns `WP_Optimizer` object
+	 */
+	public static function instance() {
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
+		}
+		return $_instance;
+	}
+
 	public function get_retain_info() {
 	
 		$options = WP_Optimize()->get_options();
@@ -291,7 +304,7 @@ class WP_Optimizer {
 
 		$wpo_db_info = WP_Optimize()->get_db_info();
 
-		$table_status = WP_Optimize()->get_db_info()->get_show_table_status($update);
+		$table_status = $wpo_db_info->get_show_table_status($update);
 
 		// Filter on the site's DB prefix (was not done in releases up to 1.9.1).
 		$table_prefix = $this->get_table_prefix();

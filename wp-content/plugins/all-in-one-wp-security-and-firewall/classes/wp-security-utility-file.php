@@ -13,9 +13,8 @@ class AIOWPSecurity_Utility_File {
 		 // NOTE: we can add to this list in future if we wish
 
 		//Get wp-config.php file path
-		if (!function_exists('get_home_path')) require_once(ABSPATH. '/wp-admin/includes/file.php');
 		$wp_config_path = AIOWPSecurity_Utility_File::get_wp_config_file_path();
-		$home_path = get_home_path();
+		$home_path = self::get_home_path();
 
 		$this->files_and_dirs_to_check = array(
 			array('name' => 'root directory', 'path' => ABSPATH, 'permissions' => '0755'),
@@ -33,6 +32,20 @@ class AIOWPSecurity_Utility_File {
 
 	}
 
+	/**
+	 * Returns full path to mu-plugin directory
+	 *
+	 * @return string
+	 */
+	public static function get_mu_plugin_dir() {
+		return WPMU_PLUGIN_DIR;
+	}
+
+	/**
+	 * Returns path to wp-config
+	 *
+	 * @return string
+	 */
 	public static function get_wp_config_file_path() {
 		$wp_config_file = ABSPATH . 'wp-config.php';
 		if (file_exists($wp_config_file)) {
@@ -126,7 +139,7 @@ class AIOWPSecurity_Utility_File {
 
 		//First check if a backup entry already exists in the global_meta table
 		$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
-		$resultset = $wpdb->get_row($wpdb->prepare("SELECT * FROM $aiowps_global_meta_tbl_name WHERE meta_key1 = '%s'", $key_description));
+		$resultset = $wpdb->get_row($wpdb->prepare("SELECT * FROM $aiowps_global_meta_tbl_name WHERE meta_key1 = %s", $key_description));
 		if ($resultset) {
 			$where = array('meta_key1' => $key_description);
 			$res = $wpdb->update($aiowps_global_meta_tbl_name, $data, $where);
@@ -141,6 +154,15 @@ class AIOWPSecurity_Utility_File {
 	}
 
 
+	/**
+	 * This function will perform a recursive search for files in the path that match the passed in pattern
+	 *
+	 * @param string  $pattern - the file pattern to search for
+	 * @param integer $flags   - flags to apply on the search
+	 * @param string  $path    - the path we want to search
+	 *
+	 * @return boolean|array - an array of files matching the pattern or false if there was an error (directory traversal in path) or none found
+	 */
 	public static function recursive_file_search($pattern = '*', $flags = 0, $path = '') {
 		$paths = glob($path.'*', GLOB_MARK|GLOB_ONLYDIR|GLOB_NOSORT);
 		if (false === $paths) {
@@ -396,7 +418,7 @@ class AIOWPSecurity_Utility_File {
 			// Remove the upload path base directory from the attachment URL
 			$attachment_url = str_replace($upload_dir_paths['baseurl'] . '/', '', $attachment_url);
 			// Now run custom database query to get attachment ID from attachment URL
-			$attachment_id = $wpdb->get_var($wpdb->prepare("SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = '%s' AND wposts.post_type = 'attachment'", $attachment_url));
+			$attachment_id = $wpdb->get_var($wpdb->prepare("SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = %s AND wposts.post_type = 'attachment'", $attachment_url));
 		}
 		return $attachment_id;
 	}
@@ -424,4 +446,42 @@ class AIOWPSecurity_Utility_File {
 		return array_keys($files);
 	}
 
+	/**
+	 * Remove a directory from the local filesystem
+	 *
+	 * @param string  $dir			 - the directory
+	 * @param boolean $contents_only - if set to true, then do not remove the directory, but only empty it of contents
+	 *
+	 * @return boolean - success/failure
+	 */
+	public static function remove_local_directory($dir, $contents_only = false) {
+		
+		$handle = opendir($dir);
+		if ($handle) {
+			while (false !== ($entry = readdir($handle))) {
+				if ('.' !== $entry && '..' !== $entry) {
+					if (is_dir($dir.'/'.$entry)) {
+						self::remove_local_directory($dir.'/'.$entry, false);
+					} else {
+						@unlink($dir.'/'.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+					}
+				}
+			}
+			@closedir($handle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		}
+
+		return $contents_only ? true : rmdir($dir);
+	}
+
+	/**
+	 * Get home path.
+	 *
+	 * @return string
+	 */
+	public static function get_home_path() {
+		// Make the scope of $wp_file_descriptions global, so that when wp-admin/includes/file.php assigns to it, it is adjusting the global variable as intended
+		global $wp_file_descriptions; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if (!function_exists('get_home_path')) require_once(ABSPATH. '/wp-admin/includes/file.php');
+		return wp_normalize_path(get_home_path());
+	}
 }

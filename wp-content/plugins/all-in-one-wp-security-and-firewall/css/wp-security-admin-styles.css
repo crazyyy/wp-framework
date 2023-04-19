@@ -413,3 +413,22 @@
     border: 1px solid #ccc;
     background: #f7f7f7;
 }
+
+svg > g > g.google-visualization-tooltip {
+    pointer-events: none;
+}
+
+.wp-security_page_aiowpsec_settings h2, .wp-security_page_aiowpsec_settings #poststuff h2 {
+    padding-left: 0;
+}
+
+.aio_hidden {
+    display: none;
+}
+
+/* Fix for WordPress thickbox not respecting the set width and height */
+/* Open issue for 8 years : https://core.trac.wordpress.org/ticket/27473 */
+#TB_ajaxContent {
+    width: 95% !important;
+    height: 95% !important;
+}

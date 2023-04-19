@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Plugin activation handler.
  *
@@ -11,13 +11,6 @@ class QM_Activation extends QM_Plugin {
 	 * @param string $file
 	 */
 	protected function __construct( $file ) {
-
-		# PHP version handling
-		if ( ! QM_PHP::version_met() ) {
-			add_action( 'all_admin_notices', array( $this, 'php_notice' ) );
-			return;
-		}
-
 		# Filters
 		add_filter( 'pre_update_option_active_plugins', array( $this, 'filter_active_plugins' ) );
 		add_filter( 'pre_update_site_option_active_sitewide_plugins', array( $this, 'filter_active_sitewide_plugins' ) );
@@ -63,7 +56,7 @@ class QM_Activation extends QM_Plugin {
 		}
 
 		# Only delete db.php if it belongs to Query Monitor
-		if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && class_exists( 'QM_DB' ) ) {
+		if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && class_exists( 'QM_DB', false ) ) {
 			unlink( WP_CONTENT_DIR . '/db.php' ); // phpcs:ignore
 		}
 
@@ -82,10 +75,16 @@ class QM_Activation extends QM_Plugin {
 		}
 
 		$f = preg_quote( basename( $this->plugin_base() ), '/' );
+		$qm = preg_grep( '/' . $f . '$/', $plugins );
+		$notqm = preg_grep( '/' . $f . '$/', $plugins, PREG_GREP_INVERT );
+
+		if ( false === $qm || false === $notqm ) {
+			return $plugins;
+		}
 
 		return array_merge(
-			preg_grep( '/' . $f . '$/', $plugins ),
-			preg_grep( '/' . $f . '$/', $plugins, PREG_GREP_INVERT )
+			$qm,
+			$notqm
 		);
 
 	}
@@ -117,30 +116,10 @@ class QM_Activation extends QM_Plugin {
 	}
 
 	/**
-	 * @return void
-	 */
-	public function php_notice() {
-		?>
-		<div id="qm_php_notice" class="notice notice-error">
-			<p>
-				<?php
-				echo esc_html( sprintf(
-					/* Translators: 1: Minimum required PHP version, 2: Current PHP version. */
-					__( 'The Query Monitor plugin requires PHP version %1$s or higher. This site is running version %2$s.', 'query-monitor' ),
-					QM_PHP::$minimum_version,
-					PHP_VERSION
-				) );
-				?>
-			</p>
-		</div>
-		<?php
-	}
-
-	/**
 	 * @param string $file
 	 * @return self
 	 */
-	public static function init( $file = null ) {
+	public static function init( $file ) {
 
 		static $instance = null;
 

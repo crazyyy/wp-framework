@@ -163,13 +163,16 @@ var WP_Optimize_Cache = function () {
 
 		send_command('enable_browser_cache', {browser_cache_expire_days: browser_cache_expire_days, browser_cache_expire_hours: browser_cache_expire_hours}, function(response) {
 			var cache_status_message = $('#wpo_browser_cache_status');
+			var cache_status_field = $('#wpo_enable_browser_cache');
 			if (response) {
 				if (response.enabled) {
 					button.text(wpoptimize.update);
 					cache_status_message.removeClass('wpo-disabled').addClass('wpo-enabled');
+					cache_status_field.val('true');
 				} else {
 					button.text(wpoptimize.enable);
 					cache_status_message.addClass('wpo-disabled').removeClass('wpo-enabled');
+					cache_status_field.val('false');
 				}
 
 				if (response.message) {
@@ -266,7 +269,7 @@ var WP_Optimize_Cache = function () {
 			if (response.hasOwnProperty('error')) {
 				// show error
 				console.log(response.error);
-				$('.wpo-error__enabling-cache').removeClass('wpo_hidden').find('p').text(response.error.message);
+				wp_optimize.notices.show_notice(response.error.code, response.error.message);
 			} else {
 				$('.wpo-error__enabling-cache').addClass('wpo_hidden').find('p').text('');
 			}
@@ -299,7 +302,7 @@ var WP_Optimize_Cache = function () {
 				// show purge button
 				$('.purge-cache').show();
 				// enable preload button
-				$('#wp_optimize_run_cache_preload').removeProp('disabled');
+				$('#wp_optimize_run_cache_preload').prop('disabled', false);
 				// disable minify preload
 				$('#wp_optimize_run_minify_preload').prop('disabled', true);
 				$('#minify-preload').show();
@@ -492,4 +495,6 @@ var WP_Optimize_Cache = function () {
 		$('#wpo_current_cache_size_information').text(wpoptimize.current_cache_size + ' ' + response.size);
 		$('#wpo_current_cache_file_count').text(wpoptimize.number_of_files + ' ' + response.file_count);
 	}
+
+	wp_optimize.cache_settings = gather_cache_settings;
 };

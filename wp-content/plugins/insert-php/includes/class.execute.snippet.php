@@ -83,7 +83,7 @@ class WINP_Execute_Snippet {
 		if ( ! is_admin() ) { #issue PCS-45 fix bug with WPBPage Builder Frontend Editor
 			add_action( 'wp_head', [ $this, 'executeHeaderSnippets' ] );
 			add_action( 'wp_footer', [ $this, 'executeFooterSnippets' ] );
-			add_filter( 'the_post', [ $this, 'executePostSnippets' ], 10, 2 );
+			add_action( 'the_post', [ $this, 'executePostSnippets' ], 10, 2 );
 			add_filter( 'the_content', [ $this, 'executeContentSnippets' ] );
 			add_filter( 'the_excerpt', [ $this, 'executeExcerptSnippets' ] );
 			// Бесполезный хук, который вызывается на каждый комментарий. Если их много, увеличивается нагрузка
@@ -121,22 +121,19 @@ class WINP_Execute_Snippet {
 	/**
 	 * Execute the snippets before post
 	 *
-	 * @param $data
-	 * @param $query
+	 * @param WP_Post $post
+	 * @param WP_Query $query
 	 */
-	public function executePostSnippets( $data, $query ) {
-		global $post;
-
+	public function executePostSnippets( $post, $query ) {
 		$content = '';
 
-		$post_type = ! empty( $post ) ? $post->post_type : get_post( $data->ID )->post_type;
-		if ( is_singular( [ $post_type ] ) && $post->ID == $data->ID ) {
+		$post_type = ! empty( $post ) ? $post->post_type : get_post( $post->ID )->post_type;
+		if ( is_singular( [ $post_type ] ) ) {
 			if ( did_action( 'get_header' ) ) {
 				// Перед заголовком
 				$content = $this->executeActiveSnippets( 'auto', 'before_post' );
 			}
-		}
-		else {
+		} else {
 			if ( $query->post_count > 0 ) {
 				if ( $query->post_count > 1 && $query->current_post > 0 && $query->post_count > $query->current_post ) {
 					// Между записями
@@ -165,10 +162,9 @@ class WINP_Execute_Snippet {
 	 */
 	private function handleParagraphContent( $content, $snippet_content, $paragraph_number, $type = 'before' ) {
 		if ( 'before' == $type ) {
-			preg_match_all( "/<p(.*?)>/", $content, $matches );
-		}
-		else {
-			preg_match_all( "/<\/p>/", $content, $matches );
+			preg_match_all( '/<p(.*?)>/', $content, $matches );
+		} else {
+			preg_match_all( '/<\/p>/', $content, $matches );
 		}
 		$paragraphs = $matches[0];
 
@@ -184,13 +180,11 @@ class WINP_Execute_Snippet {
 				if ( $paragraph_key + 1 == $paragraph_number ) {
 					if ( 'before' == $type ) {
 						$content = substr( $content, 0, $position ) . $snippet_content . substr( $content, $position );
-					}
-					else {
+					} else {
 						$content = substr( $content, 0, $position + 4 ) . $snippet_content . substr( $content, $position + 4 );
 					}
 					break;
-				}
-				else {
+				} else {
 					$offset = $position + 1;
 				}
 			}
@@ -219,15 +213,13 @@ class WINP_Execute_Snippet {
 
 			if ( 'before' == $type && $query->current_post + 1 == $post_number ) {
 				return $snippet_content;
-			}
-			else if ( 'after' == $type ) {
+			} elseif ( 'after' == $type ) {
 				// Номер поста совпадает
 				if ( $query->current_post == $post_number ) {
 					return $snippet_content;
 					// Если это последний пост и указанный номер поста больше общего количества постов,
 					// то нужно сохранить контент сниппета для вывода в конце данного поста
-				}
-				else if ( $query->current_post + 1 == $query->post_count && $post_number >= $query->post_count ) {
+				} elseif ( $query->current_post + 1 == $query->post_count && $post_number >= $query->post_count ) {
 					$winp_after_post_content[ $query->post->ID ] = $snippet_content;
 				}
 			}
@@ -275,8 +267,7 @@ class WINP_Execute_Snippet {
 			if ( ! comments_open( $post->ID ) && ! get_comments_number( $post->ID ) ) {
 				remove_filter( 'wp_list_comments_args', [ $this, 'executeListCommentsSnippets' ] );
 			}
-		}
-		else if ( ! is_null( $post ) && isset( $winp_after_post_content[ $post->ID ] ) ) {
+		} elseif ( ! is_null( $post ) && isset( $winp_after_post_content[ $post->ID ] ) ) {
 			// После последнего поста в списке
 			$content .= $winp_after_post_content[ $post->ID ];
 			unset( $winp_after_post_content[ $post->ID ] );
@@ -330,7 +321,7 @@ class WINP_Execute_Snippet {
 	public function executeCommentsSnippets( $comment, $args, $depth ) {
 		global $winp_wp_data, $post;
 
-		if ( ! empty ( $winp_wp_data['winp_comments_saved_end_callback'] ) ) {
+		if ( ! empty( $winp_wp_data['winp_comments_saved_end_callback'] ) ) {
 			echo call_user_func( $winp_wp_data['winp_comments_saved_end_callback'], $comment, $args, $depth );
 		}
 
@@ -456,8 +447,8 @@ class WINP_Execute_Snippet {
 					WHERE (( p1.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_scope' AND p1.meta_value = '{$scope}')
 					     AND
 					      ( p3.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_activate' AND p3.meta_value = '1')
-						 AND p2.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_priority' ) 
- 					AND {$wpdb->posts}.post_type = '" . WINP_SNIPPETS_POST_TYPE . "' 
+                         AND p2.meta_key = '" . WINP_Plugin::app()->getPrefix() . "snippet_priority' )
+                    AND {$wpdb->posts}.post_type = '" . WINP_SNIPPETS_POST_TYPE . "'
  					AND ({$wpdb->posts}.post_status = 'publish')
  					ORDER BY CAST(priority AS UNSIGNED) {$sort}" );
 		*/
@@ -510,14 +501,11 @@ class WINP_Execute_Snippet {
 
 				if ( $snippet_type === WINP_SNIPPET_TYPE_TEXT || $snippet_type === WINP_SNIPPET_TYPE_AD ) {
 					$snippet_content = '<div class="winp-text-snippet-container">' . $snippet_code . '</div>';
-				}
-				else if ( $snippet_type === WINP_SNIPPET_TYPE_CSS || $snippet_type === WINP_SNIPPET_TYPE_JS ) {
+				} elseif ( $snippet_type === WINP_SNIPPET_TYPE_CSS || $snippet_type === WINP_SNIPPET_TYPE_JS ) {
 					$snippet_content = self::getJsCssSnippetData( $id );
-				}
-				else if ( $snippet_type === WINP_SNIPPET_TYPE_HTML ) {
+				} elseif ( $snippet_type === WINP_SNIPPET_TYPE_HTML ) {
 					$snippet_content = $snippet_code;
-				}
-				else {
+				} else {
 					$code = $this->prepareCode( $snippet_code, $id );
 					ob_start();
 					$this->executeSnippet( $code, $id, false );
@@ -555,12 +543,11 @@ class WINP_Execute_Snippet {
 					 *
 					 * @since 2.4
 					 */
-					do_action( "wbcr/woody/do_woocommerce_actions", $location, $snippet_content );
+					do_action( 'wbcr/woody/do_woocommerce_actions', $location, $snippet_content );
 
 					//$this->woocommerce_actions( $location, $snippet_content );
 					$this->custom_actions( $location, $snippet_content );
-				}
-				else {
+				} else {
 					$content = $snippet_content . $content;
 				}
 			}
@@ -608,7 +595,7 @@ class WINP_Execute_Snippet {
 			}
 		}
 
-		return "";
+		return '';
 	}
 
 	/**
@@ -643,12 +630,10 @@ class WINP_Execute_Snippet {
 		$snippet_type = WINP_Helper::getMetaOption( $id, 'snippet_type', true );
 
 		if ( $snippet_type == WINP_SNIPPET_TYPE_UNIVERSAL ) {
-			$result = eval( "?>" . $code . "<?php " );
-		}
-		else if ( $snippet_type == WINP_SNIPPET_TYPE_PHP ) {
+			$result = eval( '?>' . $code . '<?php ' );
+		} elseif ( $snippet_type == WINP_SNIPPET_TYPE_PHP ) {
 			$result = eval( $code );
-		}
-		else {
+		} else {
 			$result = ! empty( $code );
 		}
 
@@ -669,9 +654,8 @@ class WINP_Execute_Snippet {
 	 */
 	private function getPropertyValue( $value, $property ) {
 		if ( is_object( $value ) ) {
-			return $value->$property;
-		}
-		else if ( isset( $value[ $property ] ) ) {
+			return $value->$property ?? null;
+		} elseif ( isset( $value[ $property ] ) ) {
 			return $value[ $property ];
 		}
 
@@ -740,8 +724,7 @@ class WINP_Execute_Snippet {
 	private function call_method( $method_name, $operator, $value ) {
 		if ( method_exists( $this, $method_name ) ) {
 			return $this->$method_name( $operator, $value );
-		}
-		else {
+		} else {
 			return apply_filters( 'wbcr/inp/execute/check_condition', false, $method_name, $operator, $value );
 		}
 	}
@@ -809,7 +792,7 @@ class WINP_Execute_Snippet {
 	 * @return string
 	 */
 	private function getCurrentUrl() {
-		$out = "";
+		$out = '';
 		$url = explode( '?', $_SERVER['REQUEST_URI'], 2 );
 		if ( isset( $url[0] ) ) {
 			$out = trim( $url[0], '/' );
@@ -824,7 +807,7 @@ class WINP_Execute_Snippet {
 	 * @return string
 	 */
 	private function getRefererUrl() {
-		$out = "";
+		$out = '';
 		$url = explode( '?', str_replace( site_url(), '', $_SERVER['HTTP_REFERER'] ), 2 );
 		if ( isset( $url[0] ) ) {
 			$out = trim( $url[0], '/' );
@@ -848,15 +831,13 @@ class WINP_Execute_Snippet {
 			case 'equals':
 				if ( is_array( $second ) ) {
 					return in_array( $first, $second );
-				}
-				else {
+				} else {
 					return $first === $second;
 				}
 			case 'notequal':
 				if ( is_array( $second ) ) {
 					return ! in_array( $first, $second );
-				}
-				else {
+				} else {
 					return $first !== $second;
 				}
 			case 'less':
@@ -888,8 +869,7 @@ class WINP_Execute_Snippet {
 	private function user_role( $operator, $value ) {
 		if ( ! is_user_logged_in() ) {
 			return $this->checkByOperator( $operator, $value, 'guest' );
-		}
-		else {
+		} else {
 			$current_user = wp_get_current_user();
 			if ( ! ( $current_user instanceof WP_User ) ) {
 				return false;
@@ -939,8 +919,7 @@ class WINP_Execute_Snippet {
 	public function getDateTimestamp( $value ) {
 		if ( is_object( $value ) ) {
 			return ( current_time( 'timestamp' ) - $this->getTimestamp( $value->units, $value->unitsCount ) ) * 1000;
-		}
-		else {
+		} else {
 			return $value;
 		}
 	}
@@ -957,8 +936,7 @@ class WINP_Execute_Snippet {
 	private function user_registered( $operator, $value ) {
 		if ( ! is_user_logged_in() ) {
 			return false;
-		}
-		else {
+		} else {
 			$user       = wp_get_current_user();
 			$registered = strtotime( $user->data->user_registered ) * 1000;
 
@@ -966,15 +944,13 @@ class WINP_Execute_Snippet {
 				$registered = $registered / 1000;
 				$timestamp  = round( $this->getDateTimestamp( $value ) / 1000 );
 
-				return $this->checkByOperator( $operator, date( "Y-m-d", $timestamp ), date( "Y-m-d", $registered ) );
-			}
-			else if ( $operator == 'between' ) {
+				return $this->checkByOperator( $operator, date( 'Y-m-d', $timestamp ), date( 'Y-m-d', $registered ) );
+			} elseif ( $operator == 'between' ) {
 				$start_timestamp = $this->getDateTimestamp( $value->start );
 				$end_timestamp   = $this->getDateTimestamp( $value->end );
 
 				return $this->checkByOperator( $operator, $start_timestamp, $registered, $end_timestamp );
-			}
-			else {
+			} else {
 				$timestamp = $this->getDateTimestamp( $value );
 
 				return $this->checkByOperator( $operator, $timestamp, $registered );
@@ -997,8 +973,7 @@ class WINP_Execute_Snippet {
 
 		if ( preg_match( '/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i', $useragent ) || preg_match( '/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i', substr( $useragent, 0, 4 ) ) ) {
 			return $operator === 'equals' && $value === 'yes' || $operator === 'notequal' && $value === 'no';
-		}
-		else {
+		} else {
 			return $operator === 'notequal' && $value === 'yes' || $operator === 'equals' && $value === 'no';
 		}
 	}
@@ -1014,8 +989,7 @@ class WINP_Execute_Snippet {
 	private function user_cookie_name( $operator, $value ) {
 		if ( isset( $_COOKIE[ $value ] ) ) {
 			return $operator === 'equals';
-		}
-		else {
+		} else {
 			return $operator === 'notequal';
 		}
 	}
@@ -1179,7 +1153,6 @@ class WINP_Execute_Snippet {
 	 * @return boolean
 	 * @since 2.2.8 The bug is fixed, the condition was not checked
 	 *              for tachonomies, only posts.
-	 *
 	 */
 	private function location_taxonomy( $operator, $value ) {
 		$term_id = null;

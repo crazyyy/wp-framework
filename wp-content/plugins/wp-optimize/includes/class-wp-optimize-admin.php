@@ -86,7 +86,7 @@ class WP_Optimize_Admin {
 		$can_run_optimizations = WP_Optimize()->can_run_optimizations();
 		$can_manage_options = WP_Optimize()->can_manage_options();
 
-		if (!current_user_can($capability_required) || (!$can_run_optimizations && !$can_manage_options())) {
+		if (!current_user_can($capability_required) || (!$can_run_optimizations && !$can_manage_options)) {
 			echo "Permission denied.";
 			return;
 		}
@@ -298,7 +298,7 @@ class WP_Optimize_Admin {
 			'wpo_cache_options' => $wpo_cache_options,
 			'cache_size' => $wpo_cache->get_cache_size(),
 			'display' => $display,
-			'can_purge_the_cache' => WP_Optimize()->can_purge_the_cache(),
+			'can_purge_the_cache' => WP_Optimize()->get_page_cache()->can_purge_cache(),
 			'does_server_handles_cache' => WP_Optimize()->does_server_handles_cache(),
 		));
 	}

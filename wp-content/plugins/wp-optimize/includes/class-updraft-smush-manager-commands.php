@@ -42,6 +42,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			'mark_all_as_uncompressed',
 			'clean_all_backup_images',
 			'reset_webp_serving_method',
+			'convert_to_webp_format',
 		);
 
 		return array_merge($commands, $smush_commands);
@@ -212,14 +213,15 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$options['image_quality'] = filter_var($data['image_quality'], FILTER_SANITIZE_NUMBER_INT);
 		$options['show_smush_metabox'] = filter_var($data['show_smush_metabox'], FILTER_VALIDATE_BOOLEAN) ? 'show' : 'hide';
 		$options['webp_conversion'] = filter_var($data['webp_conversion'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$is_webp_conversion_enabled = $options['webp_conversion'] ? 'true' : 'false';
-		WP_Optimize()->log("WebP conversion is enabled? $is_webp_conversion_enabled");
-		$options['webp_converters'] = false;
 
 		$success = $this->task_manager->update_smush_options($options);
 
+		if (!$this->is_webp_enabled($options['webp_conversion'])) {
+			$this->remove_webp_redirect_rules();
+		}
+
 		if (!$success) {
-			return new WP_Error('update_failed', __('Options could not be updated', 'wp-optimize'));
+			return new WP_Error('update_failed', __('Smush options could not be updated', 'wp-optimize'));
 		}
 
 		do_action('wpo_save_images_settings');
@@ -487,10 +489,64 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @return array
 	 */
 	public function reset_webp_serving_method() {
-		$success = $this->task_manager->reset_webp_serving_method();
+		$success = WP_Optimize()->get_webp_instance()->reset_webp_serving_method();
 		return array(
 			'success' => $success,
 		);
+	}
+
+	/**
+	 * Convert the image to webp format
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function convert_to_webp_format($data) {
+		$attachment_id = isset($data['attachment_id']) ? $data['attachment_id'] : 0;
+		if (0 === $attachment_id) return $this->image_not_found_response();
+
+		$images = WPO_Image_Utils::get_attachment_files($attachment_id);
+		if (empty($images)) return $this->image_not_found_response();
+
+		$images['original'] = get_attached_file($attachment_id);
+		foreach ($images as $image) {
+			WPO_Image_Utils::do_webp_conversion($image);
+		}
+
+		return array(
+			'success' => __('Image is converted to WebP format.', 'wp-optimize'),
+		);
+	}
+
+	/**
+	 * Returns image not found response
+	 *
+	 * @return array
+	 */
+	private function image_not_found_response() {
+		return array(
+			'error' => __('Image not found', 'wp-optimize'),
+		);
+	}
+
+	/**
+	 * Decides whether to use webp images option is enabled or not
+	 *
+	 * @param bool $webp_option
+	 *
+	 * @return bool
+	 */
+	private function is_webp_enabled($webp_option) {
+		return true === $webp_option;
+	}
+
+	/**
+	 * Removes webp redirect rules in .htaccess file
+	 *
+	 * @return void
+	 */
+	private function remove_webp_redirect_rules() {
+		WP_Optimize()->get_webp_instance()->empty_htaccess_file();
 	}
 }
 

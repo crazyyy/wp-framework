@@ -38,9 +38,9 @@ class WINP_SnippetsType extends Wbcr_FactoryTypes413_Type {
 	public $capabilities = [ 'administrator' ];
 
 	/**
-	 * @param Wbcr_Factory457_Plugin $plugin
+	 * @param Wbcr_Factory463_Plugin $plugin
 	 */
-	function __construct( Wbcr_Factory457_Plugin $plugin ) {
+	function __construct( Wbcr_Factory463_Plugin $plugin ) {
 		$this->name           = WINP_SNIPPETS_POST_TYPE;
 		$this->plural_title   = __( 'Woody snippets', 'insert-php' );
 		$this->singular_title = __( 'Woody snippets', 'insert-php' );

@@ -39,10 +39,11 @@
 				$button_text = $wpo_browser_cache_enabled ? __('Update', 'wp-optimize') : __('Enable', 'wp-optimize');
 				?>
 				<form>
+					<input type="hidden" id="wpo_enable_browser_cache" class="cache-settings" name="enable_browser_cache" value="<?php echo $wpo_browser_cache_enabled ? 'true' : 'false'; ?>" />
 					<label><?php _e('Expiration time:', 'wp-optimize'); ?></label>
-					<input id="wpo_browser_cache_expire_days" type="number" min="0" step="1" name="browser_cache_expire_days" value="<?php echo esc_attr($wpo_browser_cache_expire_days); ?>">
+					<input id="wpo_browser_cache_expire_days" class="cache-settings" type="number" min="0" step="1" name="browser_cache_expire_days" value="<?php echo esc_attr($wpo_browser_cache_expire_days); ?>">
 					<label for="wpo_browser_cache_expire"><?php _e('day(s)', 'wp-optimize'); ?></label>
-					<input id="wpo_browser_cache_expire_hours" type="number" min="0" step="1" name="browser_cache_expire_hours" value="<?php echo esc_attr($wpo_browser_cache_expire_hours); ?>">
+					<input id="wpo_browser_cache_expire_hours" class="cache-settings" type="number" min="0" step="1" name="browser_cache_expire_hours" value="<?php echo esc_attr($wpo_browser_cache_expire_hours); ?>">
 					<label for="wpo_browser_cache_expire_hours"><?php _e('hour(s)', 'wp-optimize'); ?></label>
 					<button class="button-primary" type="button" id="wp_optimize_browser_cache_enable"><?php echo $button_text; ?></button>
 					<img class="wpo_spinner display-none" src="<?php echo esc_attr(admin_url('images/spinner-2x.gif')); ?>"

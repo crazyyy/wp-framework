@@ -16,9 +16,18 @@ class WP_Optimize_Minify_Print {
 	 */
 	public static function async_script($href, $print = true) {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
-		$tag = '<script>if (!navigator.userAgent.match(/'.implode('|', $wpo_minify_options['ualist']).'/i)){' . "\n";
+		$tag = '<script>' . "\n";
+		$exclude_js_from_page_speed_tools = $wpo_minify_options['exclude_js_from_page_speed_tools'];
+		$enable_defer_js = $wpo_minify_options['enable_defer_js'];
+		$is_conditional_loading = $exclude_js_from_page_speed_tools && 'all' !== $enable_defer_js;
+		if ($is_conditional_loading) {
+			$tag .= 'if (!navigator.userAgent.match(/'.implode('|', $wpo_minify_options['ualist']).'/i)){' . "\n";
+		}
 		$tag .= "    loadAsync('$href', null);" . "\n";
-		$tag .= '}</script>' . "\n";
+		if ($is_conditional_loading) {
+			$tag .= '}';
+		}
+		$tag .= '</script>' . "\n";
 
 		if ($print) {
 			echo $tag;
@@ -52,9 +61,17 @@ class WP_Optimize_Minify_Print {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		// make a stylesheet, hide from PageSpeedIndex
 		$cssguid = 'wpo_min'.hash('adler32', $href);
-		echo '<script>if (!navigator.userAgent.match(/'.implode('|', $wpo_minify_options['ualist']).'/i)){' . "\n";
-		echo '    var '.$cssguid.'=document.createElement("link");'.$cssguid.'.rel="stylesheet",'.$cssguid.'.type="text/css",'.$cssguid.'.media="async",'.$cssguid.'.href="'.$href.'",'.$cssguid.'.onload=function() {'.$cssguid.'.media="all"},document.getElementsByTagName("head")[0].appendChild('.$cssguid.');' . "\n";
-		echo '}</script>' . "\n";
+		$tag = '<script>' . "\n";
+		$exclude_css_from_page_speed_tools = $wpo_minify_options['exclude_css_from_page_speed_tools'];
+		if ($exclude_css_from_page_speed_tools) {
+			$tag .= 'if (!navigator.userAgent.match(/'.implode('|', $wpo_minify_options['ualist']).'/i)){' . "\n";
+		}
+		$tag .= '    var '.$cssguid.'=document.createElement("link");'.$cssguid.'.rel="stylesheet",'.$cssguid.'.type="text/css",'.$cssguid.'.media="async",'.$cssguid.'.href="'.$href.'",'.$cssguid.'.onload=function() {'.$cssguid.'.media="all"},document.getElementsByTagName("head")[0].appendChild('.$cssguid.');' . "\n";
+		if ($exclude_css_from_page_speed_tools) {
+			$tag .= '}';
+		}
+		$tag .= '</script>' . "\n";
+		echo $tag;
 	}
 
 	/**
@@ -151,7 +168,7 @@ class WP_Optimize_Minify_Print {
 	 * @return void
 	 */
 	public static function add_load_async() {
-		$min_or_not_internal = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '-'. str_replace('.', '-', WPO_VERSION). '.min';
+		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		$contents = file_get_contents(trailingslashit(WPO_PLUGIN_MAIN_PATH) . "js/loadAsync$min_or_not_internal.js");
 		echo "<script>$contents</script>\n";
 	}
@@ -163,7 +180,7 @@ class WP_Optimize_Minify_Print {
 	 * @return void
 	 */
 	public static function add_load_css() {
-		$min_or_not_internal = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '-'. str_replace('.', '-', WPO_VERSION). '.min';
+		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		$contents = file_get_contents(trailingslashit(WPO_PLUGIN_MAIN_PATH) . "js/loadCSS$min_or_not_internal.js");
 		echo "<script>$contents</script>" . "\n";
 	}

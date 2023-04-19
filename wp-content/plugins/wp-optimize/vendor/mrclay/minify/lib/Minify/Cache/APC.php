@@ -13,6 +13,8 @@
  *
  * @package Minify
  * @author Chris Edwards
+ * 
+ * @deprecated Use Minify_Cache_APCu
  **/
 class Minify_Cache_APC implements Minify_CacheInterface
 {

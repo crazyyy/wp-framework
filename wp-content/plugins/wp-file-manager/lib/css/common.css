@@ -3,6 +3,18 @@
 /*********************************************/
 
 /* for old jQuery UI */
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('./../fonts/notosans/NotoSans-Regular.eot');
+    src: url('./../fonts/notosans/NotoSans-Regular.eot?#iefix') format('embedded-opentype'),
+        url('./../fonts/notosans/NotoSans-Regular.woff2') format('woff2'),
+        url('./../fonts/notosans/NotoSans-Regular.woff') format('woff'),
+        url('./../fonts/notosans/NotoSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
 .ui-front {
     z-index: 100;
 }
@@ -237,7 +249,6 @@ div.elfinder {
 .elfinder [contentEditable=true]:empty:not(:focus):before {
     content: attr(data-ph);
 }
-
 /* bottom tray */
 .elfinder div.elfinder-bottomtray {
     position: fixed;

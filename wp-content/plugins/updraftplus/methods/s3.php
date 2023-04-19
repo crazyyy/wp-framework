@@ -15,7 +15,7 @@ class UpdraftPlus_S3Exception extends Exception {
 	}
 }
 
-if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
+if (!class_exists('UpdraftPlus_BackupModule')) updraft_try_include_file('methods/backup-module.php', 'require_once');
 
 class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 
@@ -33,6 +33,8 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	protected $s3_exception;
 
 	protected $download_chunk_size = 10485760;
+
+	protected $current_upload_entity = 'files';
 
 	private $got_with;
 
@@ -100,9 +102,9 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 
 		if (!class_exists($class_to_use)) {
 			if ('UpdraftPlus_S3_Compat' == $class_to_use) {
-				include_once(UPDRAFTPLUS_DIR.'/includes/S3compat.php');
+				updraft_try_include_file('includes/S3compat.php', 'include_once');
 			} else {
-				include_once(UPDRAFTPLUS_DIR.'/includes/S3.php');
+				updraft_try_include_file('includes/S3.php', 'include_once');
 			}
 		}
 		
@@ -199,7 +201,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		
 			// Catch a specific PHP engine bug - see HS#6364
 			if ('UpdraftPlus_S3_Compat' == $use_s3_class && is_a($e, 'InvalidArgumentException') && false !== strpos('Invalid signature type: s3', $e->getMessage())) {
-				include_once(UPDRAFTPLUS_DIR.'/includes/S3.php');
+				updraft_try_include_file('includes/S3.php', 'include_once');
 				$use_s3_class = 'UpdraftPlus_S3';
 				$try_again = true;
 			} else {
@@ -376,6 +378,11 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			$updraft_dir = trailingslashit($updraftplus->backups_dir_location());
 
 			foreach ($backup_array as $key => $file) {
+				if ('db' != substr($key, 0, 2)) {
+					$this->current_upload_entity = 'files';
+				} else {
+					$this->current_upload_entity = 'databases';
+				}
 
 				// We upload in 5MB chunks to allow more efficient resuming and hence uploading of larger files
 				// N.B.: 5MB is Amazon's minimum. So don't go lower or you'll break it.
@@ -450,6 +457,13 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 						
 							$this->log("exception (".get_class($e).") whilst trying initiateMultipartUpload: ".$e->getMessage().' (line: '.$e->getLine().', file: '.$e->getFile().')');
 							
+							if (false !== strpos($e->getMessage(), '[ExpiredToken]')) {
+								$this->log("Re-scheduling resumption and aborting so that new token can be requested upon resumption");
+								UpdraftPlus_Job_Scheduler::reschedule(50);
+								UpdraftPlus_Job_Scheduler::record_still_alive();
+								die;
+							}
+							
 							$upload_id = false;
 							
 						}
@@ -481,7 +495,25 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 								$this->log("error: $key: chunk $i: file was truncated underneath us (orig_size=$orig_file_size, now_size=".filesize($fullpath).")");
 								$this->log(sprintf(__('error: file %s was shortened unexpectedly', 'updraftplus'), $fullpath), 'error');
 							}
-							$etag = $storage->uploadPart($bucket_name, $filepath, $upload_id, $fullpath, $i);
+							
+							$storage->setExceptions(true);
+							try {
+								$etag = $storage->uploadPart($bucket_name, $filepath, $upload_id, $fullpath, $i);
+							} catch (Exception $e) {
+								
+								$this->log("exception (".get_class($e).") during uploadPart: ".$e->getMessage().' (line: '.$e->getLine().', file: '.$e->getFile().')');
+								
+								if (false !== strpos($e->getMessage(), '[ExpiredToken]')) {
+									$this->log("Re-scheduling resumption and aborting so that new token can be requested upon resumption");
+									UpdraftPlus_Job_Scheduler::reschedule(50);
+									UpdraftPlus_Job_Scheduler::record_still_alive();
+									die;
+								}
+								
+								$etag = false;
+							}
+							$storage->setExceptions(false);
+							
 							if (false !== $etag && is_string($etag)) {
 								$updraftplus->record_uploaded_chunk(round(100*$i/$chunks, 1), "$i, $etag", $fullpath);
 								array_push($etags, $etag);
@@ -535,6 +567,13 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		}
 	}
 	
+	/**
+	 * This function lists the files found in the configured storage location
+	 *
+	 * @param  String $match - a substring to require (tested via strpos() !== false)
+	 *
+	 * @return Array - each file is represented by an array with entries 'name' and (optional) 'size'
+	 */
 	public function listfiles($match = 'backup_') {
 		$config = $this->get_config();
 		return $this->listfiles_with_path($config['path'], $match);
@@ -605,7 +644,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	 * The purpose of splitting this into a separate method, is to also allow listing with a different path
 	 *
 	 * @param  String  $path 			   Path to check
-	 * @param  String  $match 			   THe match for idetifying the bucket name
+	 * @param  String  $match 			   The match for idetifying the bucket name
 	 * @param  Boolean $include_subfolders Check if list file need to include sub folders
 	 * @return Array
 	 */
@@ -790,7 +829,6 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			$bucket_name = $bmatches[1];
 			$bucket_path = $bmatches[2]."/";
 		}
-
 		
 		list($storage, $config, $bucket_exists, $region) = $this->get_bucket_access($storage, $config, $bucket_name, $bucket_path);// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- The value is passed back from get_bucket_access
 
@@ -864,15 +902,29 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 
 	/**
 	 * Get the pre configuration template
-	 *
-	 * @return String - the template
 	 */
 	public function get_pre_configuration_template() {
-		$this->get_pre_configuration_template_engine('s3', 'S3', 'Amazon S3', 'AWS', 'https://aws.amazon.com/console/', '<img src="'. UPDRAFTPLUS_URL .'/images/aws_logo.png" alt="Amazon Web Services">');
+		?>
+		<tr class="{{get_template_css_classes false}} S3_pre_config_container">
+			<td colspan="2">
+				<img src="{{storage_image_url}}" alt="Amazon Web Services"><br>
+				{{{xmlwriter_existence_label}}}
+				{{{simplexmlelement_existence_label}}}
+				{{{curl_existence_label}}}
+				<br>
+				<p>
+				{{{console_url}}}
+				{{{ssl_certificates_errors_link_text}}}
+				{{{faqs}}}
+				</p>
+			</td>
+		</tr>
+		<?php
 	}
 
 	/**
 	 * Get pre configuration template engine for remote method which is S3 Compatible
+	 * DEVELOPER NOTE: Please don't use/call this method anymore as it was used by Amazon S3 and S3-Compatible (Generic) storage, and it's consider to be removed in future versions. Once Amazon S3 and S3-Compatible templates are CSP-compliant, this should be removed and should be placed in the class child instead of the base class.
 	 *
 	 * @param String $key             Remote storage method key which is unique
 	 * @param String $whoweare_short  Remote storage method short name which is prefix of field label generally
@@ -923,7 +975,46 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	public function get_configuration_template() {
 		// White: https://d36cz9buwru1tt.cloudfront.net/Powered-by-Amazon-Web-Services.jpg
 		// Black: https://awsmedia.s3.amazonaws.com/AWS_logo_poweredby_black_127px.png
-		return $this->get_configuration_template_engine('s3', 'S3', 'Amazon S3', 'AWS', 'https://aws.amazon.com/console/', '<img src="'. UPDRAFTPLUS_URL .'/images/aws_logo.png" alt="Amazon Web Services">');
+		ob_start();
+		?>
+		{{#ifeq "s3" method_id}}
+			{{#> s3_additional_configuration_top}}
+			{{/s3_additional_configuration_top}}
+		{{else}}
+			{{#> s3generic_additional_configuration_top}}
+			{{/s3generic_additional_configuration_top}}
+		{{/ifeq}}
+		<tr class="{{get_template_css_classes true}}">
+			<th>{{input_access_key_label}}:</th>
+			<td><input class="updraft_input--wide udc-wd-600" data-updraft_settings_test="accesskey" type="text" autocomplete="off" id="{{get_template_input_attribute_value "id" "accesskey"}}" name="{{get_template_input_attribute_value "name" "accesskey"}}" value="{{accesskey}}" /></td>
+		</tr>
+		<tr class="{{get_template_css_classes true}}">
+			<th>{{input_secret_key_label}}:</th>
+			<td><input class="updraft_input--wide udc-wd-600" data-updraft_settings_test="secretkey" type="{{input_secret_key_type}}" autocomplete="off" id="{{get_template_input_attribute_value "id" "secretkey"}}" name="{{get_template_input_attribute_value "name" "secretkey"}}" value="{{secretkey}}" /></td>
+		</tr>
+		<tr class="{{get_template_css_classes true}}">
+			<th>{{input_location_label}}:</th>
+			<td>{{method_id}}://<input class="updraft_input--wide udc-wd-600" data-updraft_settings_test="path" title="{{input_location_title}}" type="text" id="{{get_template_input_attribute_value "id" "path"}}" name="{{get_template_input_attribute_value "name" "path"}}" value="{{path}}" /></td>
+		</tr>
+		{{#ifeq "s3" method_id}}
+			{{#> s3_additional_configuration_bottom}}
+			{{/s3_additional_configuration_bottom}}
+		{{else}}
+			{{#> s3generic_additional_configuration_bottom}}
+			{{/s3generic_additional_configuration_bottom}}
+		{{/ifeq}}
+		{{{get_template_test_button_html method_display_name}}}
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get partial templates associated to the corresponding backup module (remote storage object)
+	 *
+	 * @return Array an associative array keyed by names of the partial template
+	 */
+	public function get_partial_templates() {
+		return wp_parse_args(apply_filters('updraft_'.$this->get_id().'_partial_templates', array()), parent::get_partial_templates());
 	}
 	
 	/**
@@ -938,6 +1029,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	
 	/**
 	 * Get configuration template engine for remote method which is S3 Compatible
+	 * DEVELOPER NOTE: Please don't use/call this method anymore as it was used by Amazon S3 and S3-Compatible (Generic) storage, and it's consider to be removed in future versions. Once Amazon S3 and S3-Compatible templates are CSP-compliant, this should be removed and should be placed in the class child instead of the base class.
 	 *
 	 * @param String $key             Remote storage method key which is unique
 	 * @param String $whoweare_short  Remote storage method short name which is prefix of field label generally
@@ -989,25 +1081,50 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 
 	/**
 	 * Get handlebar partial template string for endpoint of s3 compatible remote storage method. Other child class can extend it.
+	 * DEVELOPER NOTE: Please don't use/call this method anymore as it was used by S3-Compatible (Generic) storage, and it's consider to be removed in future versions. Once Amazon S3-Compatible templates is CSP-compliant, this should be removed and should be placed in the class child instead of the base class.
 	 *
 	 * @return String - the partial template
 	 */
 	protected function get_partial_configuration_template_for_endpoint() {
 		return '';
 	}
+
+	/**
+	 * Retrieve a list of template properties by taking all the persistent variables and methods of the parent class and combining them with the ones that are unique to this module, also the necessary HTML element attributes and texts which are also unique only to this backup module
+	 * NOTE: Please sanitise all strings that are required to be shown as HTML content on the frontend side (i.e. wp_kses()), or any other technique to prevent XSS attacks that could come via WP hooks
+	 *
+	 * @return Array an associative array keyed by names that describe themselves as they are
+	 */
+	public function get_template_properties() {
+		global $updraftplus, $updraftplus_admin;
+		$properties = array(
+			'storage_image_url' => UPDRAFTPLUS_URL .'/images/aws_logo.png',
+			'console_url' => wp_kses(sprintf(__('Get your access key and secret key from your <a href="%s">%s console</a>, then pick a (globally unique - all %s users) bucket name (letters and numbers) (and optionally a path) to use for storage. This bucket will be created for you if it does not already exist.', 'updraftplus'), 'https://aws.amazon.com/console/', 'AWS', $updraftplus->backup_methods[$this->get_id()]), $this->allowed_html_for_content_sanitisation()),
+			'xmlwriter_existence_label' => !apply_filters('updraftplus_s3_xmlwriter_exists', 'UpdraftPlus_S3_Compat' != $this->indicate_s3_class() || !class_exists('XMLWriter')) ? wp_kses($updraftplus_admin->show_double_warning('<strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__("Your web server's PHP installation does not include a required module (%s). Please contact your web hosting provider's support and ask for them to enable it.", 'updraftplus'), 'XMLWriter'), $this->get_id(), false), $this->allowed_html_for_content_sanitisation()) : '',
+			'simplexmlelement_existence_label' => !apply_filters('updraftplus_s3_simplexmlelement_exists', class_exists('SimpleXMLElement')) ? wp_kses($updraftplus_admin->show_double_warning('<strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__("Your web server's PHP installation does not include a required module (%s). Please contact your web hosting provider's support.", 'updraftplus'), 'SimpleXMLElement').' '.sprintf(__("UpdraftPlus's %s module <strong>requires</strong> %s. Please do not file any support requests; there is no alternative.", 'updraftplus'), $updraftplus->backup_methods[$this->get_id()], 'SimpleXMLElement'), $this->get_id(), false), $this->allowed_html_for_content_sanitisation()) : '',
+			'curl_existence_label' => wp_kses($updraftplus_admin->curl_check($updraftplus->backup_methods[$this->get_id()], true, $this->get_id().' hide-in-udc', false), $this->allowed_html_for_content_sanitisation()),
+			'ssl_certificates_errors_link_text' => wp_kses('<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/faqs/i-get-ssl-certificate-errors-when-backing-up-andor-restoring/").'" target="_blank">'.__('If you see errors about SSL certificates, then please go here for help.', 'updraftplus').'</a>', $this->allowed_html_for_content_sanitisation()),
+			'faqs' => wp_kses('<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/faq-category/amazon-s3/").'" target="_blank">'.sprintf(__('Other %s FAQs.', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]).'</a>', $this->allowed_html_for_content_sanitisation()),
+			'input_access_key_label' => sprintf(__('%s access key', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]),
+			'input_secret_key_label' => sprintf(__('%s secret key', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]),
+			'input_secret_key_type' => apply_filters('updraftplus_admin_secret_field_type', 'password'),
+			'input_location_label' => sprintf(__('%s location', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]),
+			'input_location_title' => __('Enter only a bucket name or a bucket and path. Examples: mybucket, mybucket/mypath', 'updraftplus'),
+			'input_test_label' => sprintf(__('Test %s Settings', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]),
+		);
+		return wp_parse_args(apply_filters('updraft_'.$this->get_id().'_template_properties', array()), wp_parse_args($properties, $this->get_persistent_variables_and_methods()));
+	}
 	
 	/**
 	 * Look at the config, and decide whether or not to call self::use_dns_bucket_name()
 	 *
-	 * @param Object $storage S3 Name
+	 * @param Object $storage - S3 Name
 	 * @param String $bucket  - storage path
+	 * @param Array  $config  - configuration - may not be complete at this stage, so be careful about which properties are used
 	 *
 	 * @return Boolean - whether or not DNS bucket naming will be used
 	 */
-	protected function maybe_use_dns_bucket_name($storage, $bucket) {
-		
-		// This gets saved configuration - so should not be used for anything other than what is immutable there, since the context may actually be a credentials test
-		$config = $this->get_config();
+	protected function maybe_use_dns_bucket_name($storage, $bucket, $config) {
 		
 		if ('s3' === $config['key'] && '' !== $bucket) {
 			
@@ -1077,7 +1194,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		$bucket_exists = false;
 		
 		// If using Amazon S3, then always prefer using host-based access
-		$this->maybe_use_dns_bucket_name($storage, $bucket);
+		$this->maybe_use_dns_bucket_name($storage, $bucket, $config);
 		
 		if ($this->provider_has_regions) {
 
@@ -1089,13 +1206,27 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			}
 			try {
 				$region = @$storage->getBucketLocation($bucket);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-
+				
 				// We want to distinguish between an empty region (null), and an exception or missing bucket (false)
 				if (empty($region) && false !== $region) $region = null;
 			} catch (Exception $e) {
 				$region = false;
-		
-				// On this 'first try', we trap this particular condition. So, whatever S3 network call it happens on, we'll eventually get it here on the resumption.
+				
+				// This is not ideal, but helps with detection/trapping of other "permanent" conditions
+				// All these codes are likely to indicate things that we want to be logged, rather than suppressing logging until the final method used to get a bucket location
+				$curl_error_codes = array(1, 2, 3, 4, 5, 6, 7, 8, 16, 23, 26, 27, 28, 33, 35, 41, 43, 47, 48, 49, 53, 54, 55, 56, 58, 59, 60, 61, 66, 77, 81, 82, 83, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99);
+				if (UpdraftPlus_Options::get_updraft_option('updraft_debug_mode') || (preg_match('/\[(\d+)\]/', $e->getMessage(), $matches) && in_array($matches[1], $curl_error_codes))) {
+					global $updraftplus;
+					$updraftplus->log("get_bucket_access(): getBucketLocation exception (".get_class($e)."): ".$e->getMessage());
+				}
+
+				// On this 'first try', we trap these particular conditions. So, whatever S3 network call it happens on, we'll eventually get it here on the resumption.
+				
+				if (false !== strpos($e->getMessage(), '[RequestTimeTooSkewed]')) {
+					$this->s3_exception = $e;
+					return array($storage, $config, false, false);
+				}
+				
 				// TODO: If this is a credentials test, then $config/$new_config may get wrongly populated with saved instead of test values here
 				if (false !== strpos($e->getMessage(), 'The provided token has expired')) {
 				

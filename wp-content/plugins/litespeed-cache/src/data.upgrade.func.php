@@ -14,6 +14,23 @@ use LiteSpeed\Admin_Display;
 use LiteSpeed\File;
 
 /**
+ * Append webp/mobile to url_file
+ * @since 5.3
+ */
+function litespeed_update_5_3() {
+	global $wpdb;
+	Debug2::debug( "[Data] Upgrade url_file table" );
+	$tb_exists = $wpdb->get_var( 'SHOW TABLES LIKE "' . $wpdb->prefix . 'litespeed_url_file"' );
+	if ( $tb_exists ) {
+		$q = 'ALTER TABLE `' . $wpdb->prefix . 'litespeed_url_file`
+				ADD COLUMN `mobile` tinyint(4) NOT NULL COMMENT "mobile=1",
+				ADD COLUMN `webp` tinyint(4) NOT NULL COMMENT "webp=1"
+			';
+		$wpdb->query( $q );
+	}
+}
+
+/**
  * Add expired to url_file table
  * @since 4.4.4
  */
@@ -382,10 +399,10 @@ function litespeed_update_3_0( $ver ) {
 		'media_optm_cron'			=> 'img_optm-cron',
 		'media_optm_ori'			=> 'img_optm-ori',
 		'media_rm_ori_bkup'			=> 'img_optm-rm_bkup',
-		'media_optm_webp'			=> 'img_optm-webp',
+		// 'media_optm_webp'			=> 'img_optm-webp',
+		'media_webp_replace'		=> 'img_optm-webp',
 		'media_optm_lossless'		=> 'img_optm-lossless',
 		'media_optm_exif'			=> 'img_optm-exif',
-		'media_webp_replace'		=> 'img_optm-webp_replace',
 		'media_webp_replace_srcset'	=> 'img_optm-webp_replace_srcset',
 
 		'css_minify'			=> 'optm-css_min',
@@ -571,7 +588,7 @@ function litespeed_update_3_0( $ver ) {
 				'cache_browser'				=> 'cache-browser',
 				'cache_browser_ttl'			=> 'cache-ttl_browser',
 
-				'media_webp_replace'		=> 'img_optm-webp_replace',
+				'media_webp_replace'		=> 'img_optm-webp',
 			) ;
 			foreach ( $data as $k => $v ) {
 				if ( ! isset( $previous_site_options[ $k ] ) ) {

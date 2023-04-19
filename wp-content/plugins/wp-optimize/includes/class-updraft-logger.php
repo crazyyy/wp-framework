@@ -26,6 +26,19 @@ class Updraft_Logger implements Updraft_Logger_Interface {
 	}
 
 	/**
+	 * Returns singleton instance object
+	 *
+	 * @return Updraft_Logger Returns `Updraft_Logger` object
+	 */
+	public static function instance() {
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
+		}
+		return $_instance;
+	}
+
+	/**
 	 * Add logger to loggers list
 	 *
 	 * @param Updraft_Logger_Interface $logger

@@ -27,7 +27,7 @@ class WPO_WebP_Self_Test {
 		if (200 != $response['response']['code']) return false;
 
 		$headers = wp_remote_retrieve_headers($response);
-		if (is_a($headers, 'Requests_Utility_CaseInsensitiveDictionary')) {
+		if (method_exists($headers, 'getAll')) {
 			$headers = $headers->getAll();
 			if (isset($headers['content-type']) && 'image/webp' == $headers['content-type']) {
 				return true;
@@ -58,7 +58,7 @@ class WPO_WebP_Self_Test {
 		if (200 != $response['response']['code']) return false;
 
 		$headers = wp_remote_retrieve_headers($response);
-		if (is_a($headers, 'Requests_Utility_CaseInsensitiveDictionary')) {
+		if (method_exists($headers, 'getAll')) {
 			$headers = $headers->getAll();
 			if (isset($headers['content-type']) && 'image/webp' == $headers['content-type']) {
 				return true;

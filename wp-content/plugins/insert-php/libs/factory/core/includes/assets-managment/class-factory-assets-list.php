@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Wbcr_Factory457_AssetsList {
+class Wbcr_Factory463_AssetsList {
 
 	protected $all = [];
 	public $header_place = [];
@@ -29,15 +29,15 @@ class Wbcr_Factory457_AssetsList {
 	protected $default_place;
 
 	/**
-	 * @var Wbcr_Factory457_Plugin
+	 * @var Wbcr_Factory463_Plugin
 	 */
 	protected $plugin;
 
 	/**
-	 * @param Wbcr_Factory457_Plugin $plugin
+	 * @param Wbcr_Factory463_Plugin $plugin
 	 * @param bool                   $defaultIsFooter
 	 */
-	public function __construct( Wbcr_Factory457_Plugin $plugin, $defaultIsFooter = true ) {
+	public function __construct( Wbcr_Factory463_Plugin $plugin, $defaultIsFooter = true ) {
 		$this->plugin = $plugin;
 
 		if ( $defaultIsFooter ) {

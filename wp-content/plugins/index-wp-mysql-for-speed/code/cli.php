@@ -12,9 +12,12 @@
  * [--all]
  * : Process all eligible tables.
  *
- * [--dryrun]
+ * [--dry-run]
  * : Show SQL statements to change keys but don't run them. If you use this option you can pipe the output to wp db query. For example:
  *     wp index-mysql enable --all --dryrun | wp db query
+ *
+ * [--dryrun]
+ * : Same as --dry-run
  *
  * [--exclude=<table[,table...]]
  * : Exclude named tables.
@@ -53,7 +56,7 @@ class ImsfCli extends WP_CLI_Command {
     global $wp_version;
     global $wp_db_version;
     $this->allSwitch  = ! empty( $assoc_args['all'] );
-    $this->dryrun     = ! empty( $assoc_args['dryrun'] );
+    $this->dryrun     = ! empty( $assoc_args['dry-run'] ) || ! empty( $assoc_args['dryrun'] );
     $this->assoc_args = $assoc_args;
     if ( is_multisite() ) {
       $restoreBlogId = get_current_blog_id();
@@ -196,9 +199,13 @@ class ImsfCli extends WP_CLI_Command {
       $dateMessage = __( 'Generated from %1$s (%2$s) at %3$s.', 'index-wp-mysql-for-speed' );
       $dateMessage = sprintf( $dateMessage, get_option( 'blogname' ), get_option( 'siteurl' ), wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) );
       WP_CLI::log( $this->commentPrefix . __( $dateMessage ) );
-      WP_CLI::log( $this->commentPrefix . __( 'Do not save these statements for later use. Instead, regnerate them.', 'index-wp-mysql-for-speed' ) );
+      WP_CLI::log( $this->commentPrefix . __( 'Do not save these statements for later use. Instead, regenerate them.', 'index-wp-mysql-for-speed' ) );
       WP_CLI::log( $this->commentPrefix . __( 'Dry run SQL statements. These statements were NOT run.', 'index-wp-mysql-for-speed' ) );
       WP_CLI::log( "SET @@sql_mode := REPLACE(@@sql_mode, 'NO_ZERO_DATE', '');" );
+	  $max_statement_time = $this->db->get_max_statement_time();
+	  if ( $max_statement_time ) {
+		  WP_CLI::log( "SET SESSION max_statement_time=$max_statement_time;" );
+	  }
     }
     $tbls = $this->getTablesToProcess( $args, $assoc_args, $action );
     foreach ( $tbls as $tbl ) {

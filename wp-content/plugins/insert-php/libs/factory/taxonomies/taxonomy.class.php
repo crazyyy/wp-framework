@@ -79,7 +79,7 @@
 			 * Scripts that must be included on edit page.
 			 *
 			 * @since 1.0.0
-			 * @var Wbcr_Factory457_ScriptList[]
+			 * @var Wbcr_Factory463_ScriptList[]
 			 */
 			public $scripts;
 
@@ -87,7 +87,7 @@
 			 * Styles that must be included on edit page.
 			 *
 			 * @since 1.0.0
-			 * @var Wbcr_Factory457_StyleList[]
+			 * @var Wbcr_Factory463_StyleList[]
 			 */
 			public $styles;
 
@@ -132,7 +132,7 @@
 			/**
 			 * Creates a new instance of a type.
 			 *
-			 * @param Wbcr_Factory457_Plugin $plugin
+			 * @param Wbcr_Factory463_Plugin $plugin
 			 */
 			public function __construct($plugin)
 			{
@@ -221,7 +221,7 @@
 				add_action('created_' . $this->name, array($this, 'saveCustomFields'), 10);
 
 				/*add_action("{$this->name}_pre_edit_form", function () {
-					echo '<div class="factory-bootstrap-458 factory-fontawesome-000">';
+					echo '<div class="factory-bootstrap-464 factory-fontawesome-000">';
 				});
 				add_action("{$this->name}_edit_form", function () {
 					echo '</div>';

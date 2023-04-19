@@ -25,6 +25,8 @@ use Google\Site_Kit\Core\Authentication\Authentication;
 use Google\Site_Kit\Core\Authentication\Clients\Google_Site_Kit_Client;
 use Google\Site_Kit\Core\REST_API\Exception\Invalid_Datapoint_Exception;
 use Google\Site_Kit\Core\REST_API\Data_Request;
+use Google\Site_Kit\Core\Storage\Transients;
+use Google\Site_Kit\Core\Util\URL;
 use Google\Site_Kit_Dependencies\Google\Service as Google_Service;
 use Google\Site_Kit_Dependencies\Google_Service_Exception;
 use Google\Site_Kit_Dependencies\Psr\Http\Message\RequestInterface;
@@ -90,6 +92,14 @@ abstract class Module {
 	protected $assets;
 
 	/**
+	 * Transients instance.
+	 *
+	 * @since 1.96.0
+	 * @var Transients
+	 */
+	protected $transients;
+
+	/**
 	 * Module information.
 	 *
 	 * @since 1.0.0
@@ -136,6 +146,7 @@ abstract class Module {
 		$this->user_options   = $user_options ?: new User_Options( $this->context );
 		$this->authentication = $authentication ?: new Authentication( $this->context, $this->options, $this->user_options );
 		$this->assets         = $assets ?: new Assets( $this->context );
+		$this->transients     = new Transients( $this->context );
 		$this->info           = $this->parse_info( (array) $this->setup_info() );
 	}
 
@@ -345,6 +356,10 @@ abstract class Module {
 			$restore_defers[] = $this->get_client()->withDefer( true );
 			if ( $this->authentication->get_oauth_client() !== $oauth_client ) {
 				$restore_defers[] = $oauth_client->get_client()->withDefer( true );
+
+				$current_user = wp_get_current_user();
+				// Adds the current user to the active consumers list.
+				$oauth_client->add_active_consumer( $current_user );
 			}
 
 			$request = $this->create_data_request( $data );
@@ -482,8 +497,8 @@ abstract class Module {
 	 * @return array List of permutations.
 	 */
 	final protected function permute_site_url( $site_url ) {
-		$hostname = wp_parse_url( $site_url, PHP_URL_HOST );
-		$path     = wp_parse_url( $site_url, PHP_URL_PATH );
+		$hostname = URL::parse( $site_url, PHP_URL_HOST );
+		$path     = URL::parse( $site_url, PHP_URL_PATH );
 
 		return array_reduce(
 			$this->permute_site_hosts( $hostname ),
@@ -812,6 +827,25 @@ abstract class Module {
 		$items = array_values( $items );
 
 		return $items;
+	}
+
+	/**
+	 * Determines whether the current request is for shared data.
+	 *
+	 * @since 1.98.0
+	 *
+	 * @param Data_Request $data Data request object.
+	 * @return bool TRUE if the request is for shared data, otherwise FALSE.
+	 */
+	protected function is_shared_data_request( Data_Request $data ) {
+		$datapoint    = $this->get_datapoint_definition( "{$data->method}:{$data->datapoint}" );
+		$oauth_client = $this->get_oauth_client_for_datapoint( $datapoint );
+
+		if ( $this->authentication->get_oauth_client() !== $oauth_client ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

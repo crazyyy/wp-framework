@@ -14,11 +14,11 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms454_Bootstrap3FormLayout') ) {
+	if( !class_exists('Wbcr_FactoryForms460_Bootstrap3FormLayout') ) {
 		/**
 		 * A form layout based on Twitter Bootstrap 3
 		 */
-		class Wbcr_FactoryForms454_Bootstrap3FormLayout extends Wbcr_FactoryForms454_FormLayout {
+		class Wbcr_FactoryForms460_Bootstrap3FormLayout extends Wbcr_FactoryForms460_FormLayout {
 
 			public $name = 'default';
 
@@ -27,7 +27,7 @@
 			 *
 			 * @since 1.0.0
 			 * @param array $options A holder options.
-			 * @param Wbcr_FactoryForms454_Form $form A parent form.
+			 * @param Wbcr_FactoryForms460_Form $form A parent form.
 			 */
 			public function __construct($options, $form)
 			{
@@ -68,7 +68,7 @@
 			}
 
 			/**
-			 * @param Wbcr_FactoryForms454_Control $control
+			 * @param Wbcr_FactoryForms460_Control $control
 			 */
 			public function beforeControl($control)
 			{
@@ -89,10 +89,10 @@
 				$col_left = $control->getLayoutOption('column-left', '2');
 				$col_right = $control->getLayoutOption('column-right', '10');
 				?>
-				<div class="form-group form-group-<?php echo $control->getType() ?> <?php echo $theme_class ?> <?php echo $control_name_class ?>">
-				<label for="<?php $control->printNameOnForm() ?>" class="col-sm-<?php echo $col_left ?> control-label">
+				<div class="form-group form-group-<?php echo esc_attr($control->getType()); ?> <?php echo esc_attr($theme_class); ?> <?php echo esc_attr($control_name_class); ?>">
+				<label for="<?php $control->printNameOnForm() ?>" class="col-sm-<?php echo esc_attr($col_left); ?> control-label">
 					<?php if( $control->hasIcon() ) { ?>
-						<img class="control-icon" src="<?php $control->icon() ?>"/>
+						<img class="control-icon" src="<?php $control->icon(); ?>"/>
 					<?php } ?>
 					<?php
 						$hint_type = $control->getLayoutOption('hint-type', 'default');
@@ -101,7 +101,7 @@
 						if( $control->hasHint() ) {
 							if( $hint_type == 'icon' ): ?>
 								<?php $hint_icon_color = $control->getLayoutOption('hint-icon-color', 'green'); ?>
-								<span class="factory-hint-icon factory-hint-icon-<?php echo $hint_icon_color ?>" data-toggle="factory-tooltip" data-placement="right" title="<?php $control->hint(true) ?>">
+								<span class="factory-hint-icon factory-hint-icon-<?php echo esc_attr($hint_icon_color); ?>" data-toggle="factory-tooltip" data-placement="right" title="<?php $control->hint(true); ?>">
 							<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAQAAABKmM6bAAAAUUlEQVQIHU3BsQ1AQABA0X/komIrnQHYwyhqQ1hBo9KZRKL9CBfeAwy2ri42JA4mPQ9rJ6OVt0BisFM3Po7qbEliru7m/FkY+TN64ZVxEzh4ndrMN7+Z+jXCAAAAAElFTkSuQmCC" alt=""/>
 
 						</span>
@@ -111,12 +111,12 @@
 							<?php endif; ?>
 						<?php } ?>
 				</label>
-				<div class="control-group col-sm-<?php echo $col_right ?>">
+				<div class="control-group col-sm-<?php echo esc_attr($col_right); ?>">
 			<?php
 			}
 
 			/**
-			 * @param Wbcr_FactoryForms454_Control $control
+			 * @param Wbcr_FactoryForms460_Control $control
 			 */
 			public function afterControl($control)
 			{
@@ -150,7 +150,7 @@
 			public function startRow($index, $total)
 			{
 				?>
-				<div class='factory-row factory-row-<?php echo $index ?> factory-row-<?php echo $index ?>-of-<?php echo $total ?>'>
+				<div class='factory-row factory-row-<?php echo esc_attr($index); ?> factory-row-<?php echo esc_attr($index); ?>-of-<?php echo esc_attr($total); ?>'>
 				<div class="form-group form-group">
 			<?php
 			}
@@ -168,7 +168,7 @@
 			}
 
 			/**
-			 * @param Wbcr_FactoryForms454_Control $control
+			 * @param Wbcr_FactoryForms460_Control $control
 			 * @param int $index
 			 * @param int $total
 			 */
@@ -193,7 +193,7 @@
 			}
 
 			/**
-			 * @param Wbcr_FactoryForms454_Control $control
+			 * @param Wbcr_FactoryForms460_Control $control
 			 * @param int $index
 			 * @param int $total
 			 */

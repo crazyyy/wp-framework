@@ -28,6 +28,7 @@ class Option extends Base {
 	 *     # Set to not cache the login page
 	 *     $ wp litespeed-option set cache-priv false
 	 *     $ wp litespeed-option set 'cdn-mapping[url][0]' https://cdn.EXAMPLE.com
+	 *     $ wp litespeed-option set media-lqip_exc $'line1\nline2'
 	 *
 	 */
 	public function set( $args, $assoc_args ) {
@@ -55,6 +56,9 @@ class Option extends Base {
 		 * For Crawler cookies:
 		 * 		`set 'crawler-cookies[name][0]' my_currency`
 		 * 		`set 'crawler-cookies[vals][0]' "USD\nTWD"`
+		 *
+		 * For multi lines setting:
+		 * 		`set media-lqip_exc $'img1.jpg\nimg2.jpg'`
 		 */
 
 		// Build raw data
@@ -325,6 +329,46 @@ class Option extends Base {
 
 		WP_CLI::success( 'Options imported. [File] ' . $file );
 	}
+
+	/**
+	 * Import plugin options from a remote file.
+	 *
+	 * The file must be formatted as such:
+	 * option_key=option_value
+	 * One per line.
+	 * A Semicolon at the beginning of the line indicates a comment and will be skipped.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <url>
+	 * : The URL to import options from.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Import options from https://domain.com/options.txt
+	 *     $ wp litespeed-option import_remote https://domain.com/options.txt
+	 *
+	 */
+
+	public function import_remote( $args, $assoc_args ) {
+		$file = $args[0];
+	
+		$tmp_file = download_url( $file );
+
+		if ( is_wp_error( $tmp_file ) ) {
+			WP_CLI::error( 'Failed to download file.' );
+			return;
+		}
+
+		$res = $this->cls( 'Import' )->import( $tmp_file );
+
+		if ( ! $res ) {
+			WP_CLI::error( 'Failed to parse serialized data from file.' );
+		}
+
+		WP_CLI::success( 'Options imported. [File] ' . $file );
+	}
+
 
 	/**
 	 * Reset all options to default.

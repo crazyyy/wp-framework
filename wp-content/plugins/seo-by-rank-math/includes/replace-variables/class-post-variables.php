@@ -10,6 +10,7 @@
 
 namespace RankMath\Replace_Variables;
 
+use RankMath\Helper;
 use RankMath\Post;
 use RankMath\Paper\Paper;
 use MyThemeShop\Helpers\Str;
@@ -59,6 +60,7 @@ class Post_Variables extends Advanced_Variables {
 				'description' => esc_html__( 'Excerpt of the current post (or auto-generated if it does not exist)', 'rank-math' ),
 				'variable'    => 'excerpt',
 				'example'     => $this->get_excerpt(),
+				'nocache'     => true,
 			],
 			[ $this, 'get_excerpt' ]
 		);
@@ -70,6 +72,7 @@ class Post_Variables extends Advanced_Variables {
 				'description' => esc_html__( 'Excerpt of the current post (without auto-generation)', 'rank-math' ),
 				'variable'    => 'excerpt_only',
 				'example'     => $this->is_post_edit && $this->args->post_excerpt ? $this->args->post_excerpt : esc_html__( 'Post Excerpt Only', 'rank-math' ),
+				'nocache'     => true,
 			],
 			[ $this, 'get_excerpt_only' ]
 		);
@@ -212,6 +215,17 @@ class Post_Variables extends Advanced_Variables {
 				'example'     => $categories ? $categories : esc_html__( 'Example Category 1, Example Category 2', 'rank-math' ),
 			],
 			[ $this, 'get_categories' ]
+		);
+
+		$this->register_replacement(
+			'primary_taxonomy_terms',
+			[
+				'name'        => esc_html__( 'Primary Terms', 'rank-math' ),
+				'variable'    => 'primary_taxonomy_terms',
+				'description' => esc_html__( 'Output list of terms from the primary taxonomy associated to the current post.', 'rank-math' ),
+				'example'     => $this->get_primary_taxonomy_terms(),
+			],
+			[ $this, 'get_primary_taxonomy_terms' ]
 		);
 	}
 
@@ -473,6 +487,37 @@ class Post_Variables extends Advanced_Variables {
 	}
 
 	/**
+	 * Get the comma separated post terms.
+	 *
+	 * @return string|null
+	 */
+	public function get_primary_taxonomy_terms() {
+		if ( empty( $this->args->ID ) ) {
+			return;
+		}
+
+		$post_type = get_post_type( $this->args->ID );
+		$main_tax  = Helper::get_settings( "titles.pt_{$post_type}_primary_taxonomy" );
+		if ( ! $main_tax ) {
+			return;
+		}
+
+		$terms = wp_get_object_terms(
+			$this->args->ID,
+			$main_tax,
+			[
+				'fields' => 'names'
+			]
+		);
+
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return;
+		}
+
+		return implode( ', ', $terms );
+	}
+
+	/**
 	 * Get the auto generated post content.
 	 *
 	 * @param array $object Post Object.
@@ -494,8 +539,9 @@ class Post_Variables extends Advanced_Variables {
 
 		// 4. Paragraph with the focus keyword.
 		if ( ! empty( $keywords ) ) {
-			$keywords = implode( ',', array_map( 'preg_quote', Arr::from_string( $keywords ) ) );
-			$regex    = '/<p>(.*' . str_replace( [ ',', ' ', '/' ], [ '|', '.', '\/' ], $keywords ) . '.*)<\/p>/iu';
+			$primary_keyword = explode( ',', $keywords );
+			$primary_keyword = trim( $primary_keyword[0] );
+			$regex           = '/<p>(.*' . str_replace( [ ',', ' ', '/' ], [ '|', '.', '\/' ], $primary_keyword ) . '.*)<\/p>/iu';
 			\preg_match_all( $regex, $post_content, $matches );
 			if ( isset( $matches[1], $matches[1][0] ) ) {
 				return $matches[1][0];

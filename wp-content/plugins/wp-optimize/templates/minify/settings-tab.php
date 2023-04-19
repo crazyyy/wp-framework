@@ -1,6 +1,6 @@
 <?php if (!defined('WPO_VERSION'))  die('No direct access allowed'); ?>
 <div class="wpo_section wpo_group">
-	<form>
+	<form id="wpo_minify_settings_form">
 		<div id="wpo_settings_warnings"></div>
 	
 		<h3><?php _e('Miscellaneous', 'wp-optimize'); ?></h3>

@@ -104,7 +104,6 @@ class Cloud extends Base {
 	const TYPE_LINK 			= 'link';
 	const TYPE_SYNC_USAGE 		= 'sync_usage';
 
-	private $_api_key;
 	private $_setup_token;
 	protected $_summary;
 
@@ -114,9 +113,16 @@ class Cloud extends Base {
 	 * @since  3.0
 	 */
 	public function __construct() {
-		$this->_api_key = $this->conf( self::O_API_KEY );
 		$this->_setup_token = $this->conf( self::O_QC_TOKEN );
 		$this->_summary = self::get_summary();
+	}
+
+	/**
+	 * Get api key from conf
+	 * @since 5.3
+	 */
+	private function _api_key() {
+		return $this->conf( self::O_API_KEY );
 	}
 
 	/**
@@ -522,7 +528,7 @@ class Cloud extends Base {
 
 		$param = array(
 			'site_url'		=> home_url(),
-			'domain_key'	=> $this->_api_key,
+			'domain_key'	=> $this->_api_key(),
 			'main_domain'	=> ! empty( $this->_summary[ 'main_domain' ] ) ? $this->_summary[ 'main_domain' ] : '',
 			'ver'			=> Core::VER,
 		);
@@ -554,6 +560,14 @@ class Cloud extends Base {
 			return false;
 		}
 
+		// Deny if is IP
+		if ( preg_match( '#^(([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)\.){3}([1-9]?\d|1\d\d|25[0-5]|2[0-4]\d)$#', Utility::parse_url_safe($home_url, PHP_URL_HOST) ) ) {
+			self::debug( "IP home url is not allowed for cloud service." );
+			$msg = __( 'In order to use QC services, need a real domain name, cannot use an IP.', 'litespeed-cache' );
+			Admin_Display::error( $msg );
+			return false;
+		}
+
 		/** @since 5.0 If in valid err_domains, bypass request */
 		if ( $this->_is_err_domain( $home_url ) ) {
 			return false;
@@ -564,7 +578,7 @@ class Cloud extends Base {
 			return true;
 		}
 
-		if ( $service_tag == self::SVC_D_SYNC_CONF && $this->_setup_token && ! $this->_api_key ) {
+		if ( $service_tag == self::SVC_D_SYNC_CONF && $this->_setup_token && ! $this->_api_key() ) {
 			self::debug( "Skip sync conf if API key is not available yet." );
 			return false;
 		}
@@ -580,7 +594,7 @@ class Cloud extends Base {
 		}
 		else {
 			// For all other requests, if is under debug mode, will always allow
-			if ( $this->conf( self::O_DEBUG ) && $this->_api_key ) {
+			if ( $this->conf( self::O_DEBUG ) && $this->_api_key() ) {
 				return true;
 			}
 		}
@@ -603,7 +617,7 @@ class Cloud extends Base {
 			return true;
 		}
 
-		if ( ! $this->_api_key ) {
+		if ( ! $this->_api_key() ) {
 			Admin_Display::error( Error::msg( 'lack_of_api_key' ) );
 			return false;
 		}
@@ -653,7 +667,7 @@ class Cloud extends Base {
 
 		$param = array(
 			'site_url'		=> home_url(),
-			'domain_key'	=> $this->_api_key,
+			'domain_key'	=> $this->_api_key(),
 			'main_domain'	=> ! empty( $this->_summary[ 'main_domain' ] ) ? $this->_summary[ 'main_domain' ] : '',
 			'ver'			=> Core::VER,
 			'data' 			=> $data,
@@ -803,7 +817,7 @@ class Cloud extends Base {
 		if ( ! empty( $json[ '_carry_on' ] ) ) {
 			self::debug( 'Carry_on usage', $json[ '_carry_on' ] );
 			// Store generic info
-			foreach ( array( 'usage', 'promo', '_err', '_info', '_note', '_success' ) as $v ) {
+			foreach ( array( 'usage', 'promo', 'partner', '_err', '_info', '_note', '_success' ) as $v ) {
 				if ( ! empty( $json[ '_carry_on' ][ $v ] ) ) {
 					switch ( $v ) {
 						case 'usage':
@@ -816,6 +830,10 @@ class Cloud extends Base {
 								$this->_summary[ $v ] = array();
 							}
 							$this->_summary[ $v ][] = $json[ '_carry_on' ][ $v ];
+							break;
+
+						case 'partner':
+							$this->_summary[ $v ] = $json[ '_carry_on' ][ $v ];
 							break;
 
 						case '_error':
@@ -900,16 +918,16 @@ class Cloud extends Base {
 			return self::err( 'lack_of_param' );
 		}
 
-		if ( ! $this->_api_key || $_POST[ 'hash' ] !== md5( substr( $this->_api_key, 1, 8 ) ) ) {
+		if ( ! $this->_api_key() || $_POST[ 'hash' ] !== md5( substr( $this->_api_key(), 1, 8 ) ) ) {
 			return self::err( 'wrong_hash' );
 		}
 
 		list( $post_data ) = $this->extract_msg( $_POST, 'Quic.cloud', false, true );
 
 		if ( $this->_is_err_domain( $_POST[ 'alias' ] ) ) {
-			$this->_remove_domain_from_err_list( $_POST[ 'alias' ] );
+			if ( $_POST[ 'alias' ] == home_url() ) $this->_remove_domain_from_err_list( $_POST[ 'alias' ] );
 
-			$res_hash = substr( $this->_api_key, 2, 4 );
+			$res_hash = substr( $this->_api_key(), 2, 4 );
 
 			self::debug( '__callback IP request hash: md5(' . $res_hash . ')' );
 
@@ -978,19 +996,29 @@ class Cloud extends Base {
 			self::debug( 'failed to request REST API: ' . $error_message );
 			Admin_Display::error( __( 'Cloud REST Error', 'litespeed-cache' ) . ': ' . $error_message );
 			return $error_message;
+		} else if ( wp_remote_retrieve_response_code( $response ) == '401' ) {
+			return 'unauthorized access to REST API.';
 		}
 
 		$json = json_decode( $response[ 'body' ], true );
 
 		if (!$json['success']) {
+			$contactSupport = false;
 			if (isset($json['info']['errors'])) {
 				$errs = array();
 				foreach ($json['info']['errors'] as $err) {
 					$errs[] = 'Error ' . $err['code'] . ': ' . $err['message'];
+					if ($err['code'] == 1113) {
+						$contactSupport = true;
+					}
 				}
 				$error_message = implode('<br>', $errs);
 			} else {
-				$error_message = 'Unknown error, contact QUIC.cloud support.';
+				$error_message = __('Unknown error.', 'litespeed-cache');
+				$contactSupport = true;
+			}
+			if ($contactSupport) {
+				$error_message .= ' <a href="https://www.quic.cloud/support/" target="_blank">' . __( 'Contact QUIC.cloud support', 'litespeed-cache' ) . '</a>';
 			}
 			Admin_Display::error( __( 'Cloud REST API returned error: ', 'litespeed-cache' ) . $error_message );
 			return $error_message;
@@ -1006,7 +1034,7 @@ class Cloud extends Base {
 	 * @access public
 	 */
 	public function show_promo() {
-		// if ( ! $this->_api_key && ! defined( 'LITESPEED_DISMISS_DOMAIN_KEY' ) ) {
+		// if ( ! $this->_api_key() && ! defined( 'LITESPEED_DISMISS_DOMAIN_KEY' ) ) {
 		// 	Admin_Display::error( Error::msg( 'lack_of_api_key' ), true );
 		// }
 
@@ -1066,12 +1094,12 @@ class Cloud extends Base {
 			return self::err( 'lack_of_param' );
 		}
 
-		if ( empty( $this->_api_key ) ) {
+		if ( empty( $this->_api_key() ) ) {
 			self::debug( 'Lack of API key' );
 			return self::err( 'lack_of_api_key' );
 		}
 
-		$to_validate = substr( $this->_api_key, 0, 4 );
+		$to_validate = substr( $this->_api_key(), 0, 4 );
 		if ( $_POST[ 'hash' ] !== md5( $to_validate ) ) {
 			self::debug( '__callback IP request hash wrong: md5(' . $to_validate . ') !== ' . $_POST[ 'hash' ] );
 			return self::err( 'err_hash' );
@@ -1079,7 +1107,7 @@ class Cloud extends Base {
 
 		Control::set_nocache( 'Cloud IP hash validation' );
 
-		$res_hash = substr( $this->_api_key, 2, 4 );
+		$res_hash = substr( $this->_api_key(), 2, 4 );
 
 		self::debug( '__callback IP request hash: md5(' . $res_hash . ')' );
 
@@ -1251,7 +1279,7 @@ class Cloud extends Base {
 	 * @since  3.0
 	 */
 	public function can_link_qc() {
-		return empty( $this->_summary[ 'is_linked' ] ) && $this->_api_key;
+		return empty( $this->_summary[ 'is_linked' ] ) && $this->_api_key();
 	}
 
 	/**
@@ -1266,7 +1294,7 @@ class Cloud extends Base {
 
 		$data = array(
 			'site_url'		=> home_url(),
-			'domain_hash'	=> md5( substr( $this->_api_key, 0, 8 ) ),
+			'domain_hash'	=> md5( substr( $this->_api_key(), 0, 8 ) ),
 			'ref'			=> get_admin_url( null, 'admin.php?page=litespeed-general' ),
 		);
 
@@ -1289,7 +1317,7 @@ class Cloud extends Base {
 
 		$extraRet = array();
 		$qsDrop = array();
-		if ( ! $this->_api_key && ! empty( $this->_summary[ 'is_linked' ] ) ) {
+		if ( ! $this->_api_key() && ! empty( $this->_summary[ 'is_linked' ] ) ) {
 			$this->_summary[ 'is_linked' ] = 0;
 			self::save_summary();
 		}
@@ -1301,7 +1329,7 @@ class Cloud extends Base {
 
 		if ( ! empty( $_GET[ 'domain_hash' ] ) ) {
 
-			if ( md5( substr( $this->_api_key, 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
+			if ( md5( substr( $this->_api_key(), 2, 8 ) ) !== $_GET[ 'domain_hash' ] ) {
 				Admin_Display::error( __( 'Domain Key hash mismatch', 'litespeed-cache' ), true );
 				return $extraRet;
 			}

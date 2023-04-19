@@ -205,12 +205,19 @@ class WP_Optimize_Minify_Fonts {
 							if (!isset(self::$fonts[$font_name]['specs']['ital,wght'])) {
 								self::$fonts[$font_name]['specs']['ital,wght'] = array();
 							}
-							if (false !== strpos($detail, 'i')) {
+							if ('inherit' === $detail) {
+								array_push(self::$fonts[$font_name]['specs']['ital,wght'], '0,400');
+								array_push(self::$fonts[$font_name]['specs']['ital,wght'], '1,400');
+							} elseif ('regular' === $detail) {
+								$detail = 'regular' === $detail ? 400 : $detail;
+								array_push(self::$fonts[$font_name]['specs']['ital,wght'], '0,' . $detail);
+							} elseif (false !== strpos($detail, 'i')) {
 								$detail = str_replace(array('italic', 'i'), '', $detail);
 								$detail = '' === $detail ? 400 : $detail;
 								array_push(self::$fonts[$font_name]['specs']['ital,wght'], '1,' . $detail);
 							} else {
-								$detail = 'regular' === $detail ? 400 : $detail;
+								$detail = str_replace(array('normal'), '', $detail);
+								$detail = '' === $detail ? 400 : $detail;
 								array_push(self::$fonts[$font_name]['specs']['ital,wght'], '0,' . $detail);
 							}
 							break;

@@ -12,6 +12,8 @@ namespace LiteSpeed;
 defined( 'WPINC' ) || exit;
 
 class Control extends Root {
+	const LOG_TAG = '💵';
+
 	const BM_CACHEABLE = 1;
 	const BM_PRIVATE = 2;
 	const BM_SHARED = 4;
@@ -91,7 +93,10 @@ class Control extends Root {
 			return false;
 		}
 
-		return in_array( $role, $this->conf( Base::O_CACHE_EXC_ROLES ) ) ? $role : false;
+		$roles = explode( ',', $role );
+		$found = array_intersect( $roles, $this->conf( Base::O_CACHE_EXC_ROLES ) );
+
+		return $found ? implode( ',', $found ) : false;
 	}
 
 	/**
@@ -144,6 +149,11 @@ class Control extends Root {
 
 			// Set TTL
 			self::set_custom_ttl( $this->_response_header_ttls[ $code ] );
+		}
+		elseif (self::is_cacheable()) {
+			if ( substr($code, 0, 1)==4 || substr($code, 0, 1)==5 ) {
+				self::set_nocache( '[Ctrl] 4xx/5xx default to no cache [status_header] ' . $code );
+			}
 		}
 
 		// Set cache tag
@@ -495,8 +505,8 @@ class Control extends Root {
 	 */
 	public function check_redirect( $location, $status ) { // TODO: some env don't have SCRIPT_URI but only REQUEST_URI, need to be compatible
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
-			Debug2::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] );
-			Debug2::debug( "[Ctrl] 301 to $location" );
+			self::debug( "301 from " . $_SERVER[ 'SCRIPT_URI' ] );
+			self::debug( "301 to $location" );
 
 			$to_check = array(
 				PHP_URL_SCHEME,
@@ -508,9 +518,19 @@ class Control extends Root {
 			$is_same_redirect = true;
 
 			foreach ( $to_check as $v ) {
-				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
+				$url_parsed = $v == PHP_URL_QUERY ? $_SERVER[ 'QUERY_STRING' ] : parse_url( $_SERVER[ 'SCRIPT_URI' ], $v );
+				$target = parse_url( $location, $v );
+
+				self::debug("Compare [from] $url_parsed [to] $target");
+
+				if($v==PHP_URL_QUERY) {
+					$url_parsed = urldecode($url_parsed);
+					$target = urldecode($target);
+				}
+
+				if ( $url_parsed != $target ) {
 					$is_same_redirect = false;
-					Debug2::debug( "[Ctrl] 301 different redirection" );
+					self::debug( "301 different redirection" );
 					break;
 				}
 			}
@@ -607,7 +627,7 @@ class Control extends Root {
 		}
 
 		// Check if has metabox non-cacheable setting or not
-		if ( $this->cls( 'Metabox' )->setting( 'litespeed_no_cache' ) ) {
+		if ( file_exists( LSCWP_DIR . 'src/metabox.cls.php' ) && $this->cls( 'Metabox' )->setting( 'litespeed_no_cache' ) ) {
 			self::set_nocache( 'per post metabox setting' );
 			return;
 		}
@@ -721,8 +741,9 @@ class Control extends Root {
 			return $this->_no_cache_for( 'Query String Action' );
 		}
 
-		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]);
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : 'unknown';
+		if ( 'GET' !== $method ) {
+			return $this->_no_cache_for('Not GET method: ' . $method);
 		}
 
 		if ( is_feed() && $this->conf( Base::O_CACHE_TTL_FEED ) == 0 ) {

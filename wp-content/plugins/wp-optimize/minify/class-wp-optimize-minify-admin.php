@@ -57,8 +57,8 @@ class WP_Optimize_Minify_Admin {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts($hook) {
-		$enqueue_version = (defined('WP_DEBUG') && WP_DEBUG) ? WPO_VERSION.'.'.time() : WPO_VERSION;
-		$min_or_not_internal = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '-'. str_replace('.', '-', WPO_VERSION). '.min';
+		$enqueue_version = WP_Optimize()->get_enqueue_version();
+		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		if (preg_match('/wp\-optimize/i', $hook)) {
 			wp_enqueue_script('wp-optimize-min-js', WPO_PLUGIN_URL.'js/minify' . $min_or_not_internal . '.js', array('jquery', 'wp-optimize-admin-js'), $enqueue_version);
 		}
@@ -136,7 +136,7 @@ class WP_Optimize_Minify_Admin {
 	 * @return void
 	 */
 	public function output_status() {
-		$this->found_incompatible_plugins = WP_Optimize_Detect_Minify_Plugins::get_instance()->get_active_minify_plugins();
+		$found_incompatible_plugins = WP_Optimize_Detect_Minify_Plugins::get_instance()->get_active_minify_plugins();
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
 		WP_Optimize()->include_template(
@@ -146,8 +146,8 @@ class WP_Optimize_Minify_Admin {
 				'wpo_minify_options' => $wpo_minify_options,
 				'show_information_notice' => !get_user_meta(get_current_user_id(), 'wpo-hide-minify-information-notice', true),
 				'cache_dir' => $cache_path['cachedir'],
-				'can_purge_the_cache' => WP_Optimize()->can_purge_the_cache(),
-				'active_minify_plugins' => apply_filters('wpo_minify_found_incompatible_plugins', $this->found_incompatible_plugins),
+				'can_purge_the_cache' => WP_Optimize()->get_minify()->can_purge_cache(),
+				'active_minify_plugins' => apply_filters('wpo_minify_found_incompatible_plugins', $found_incompatible_plugins),
 			)
 		);
 	}

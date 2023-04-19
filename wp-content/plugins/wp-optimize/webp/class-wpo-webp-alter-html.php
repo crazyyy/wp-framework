@@ -32,6 +32,10 @@ class WPO_WebP_Alter_HTML {
 	 * Start to alter html in output buffer
 	 */
 	public function start() {
+		if (apply_filters('wpo_disable_webp_alter_html', false)) {
+			return;
+		}
+
 		if (!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) {
 			ob_start(array(__CLASS__, 'alter_html'));
 		}
@@ -49,7 +53,7 @@ class WPO_WebP_Alter_HTML {
 
 		$this->maybe_include_simple_html_dom();
 
-		$dom = str_get_html($html, false, false, 'UTF-8', false);
+		$dom = str_get_html($html, false, false, 'UTF-8', false, DEFAULT_BR_TEXT, DEFAULT_SPAN_TEXT, false);
 
 		// MAX_FILE_SIZE is defined in simple_html_dom.
 		// For safety sake, we make sure it is defined before using
@@ -208,6 +212,7 @@ class WPO_WebP_Alter_HTML {
 	 */
 	private function is_webp_version_available($url) {
 		$filename = $this->get_file_path($url);
+		if (empty($filename)) return false;
 		return file_exists($filename . '.webp');
 	}
 
