@@ -4,15 +4,15 @@ const WP_CACHE = false;
 const CACHE_READ_WHITELIST  = '_transient|posts WHERE ID IN|limit_login_'; // do not read from cache is sql contains these
 const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache if sql contains these
 
-define( 'SMTP_username', 'mail@gmail.com' );  // username of host like Gmail
-define( 'SMTP_password', 'password' );   // password for login into the App
-define( 'SMTP_server', 'smtp.gmail.com' );     // SMTP server address
-define( 'SMTP_FROM', 'mail@gmail.com' );   // Your Business Email Address
-define( 'SMTP_NAME', 'SiteFrom' );   //  Business From Name
-define( 'SMTP_PORT', '587' );     // Server Port Number
-define( 'SMTP_SECURE', 'tls' );   // Encryption - ssl or tls
-define( 'SMTP_AUTH', true );  // Use SMTP authentication (true|false)
-define( 'SMTP_DEBUG', 1 );  // for debugging purposes only
+// define( 'SMTP_username', 'mail@gmail.com' );  // username of host like Gmail
+// define( 'SMTP_password', 'password' );   // password for login into the App
+// define( 'SMTP_server', 'smtp.gmail.com' );     // SMTP server address
+// define( 'SMTP_FROM', 'mail@gmail.com' );   // Your Business Email Address
+// define( 'SMTP_NAME', 'SiteFrom' );   //  Business From Name
+// define( 'SMTP_PORT', '587' );     // Server Port Number
+// define( 'SMTP_SECURE', 'tls' );   // Encryption - ssl or tls
+// define( 'SMTP_AUTH', true );  // Use SMTP authentication (true|false)
+// define( 'SMTP_DEBUG', 1 );  // for debugging purposes only
 
 //Begin Really Simple SSL session cookie settings
 @ini_set('session.cookie_httponly', true);
@@ -31,11 +31,19 @@ const DB_HOST       = 'localhost';
 
 const WP_MEMORY_LIMIT   	= '512M';
 
-const WP_DEBUG          	= true;
-const SCRIPT_DEBUG        = true;
-const WP_DEBUG_LOG      	= true;
-const WP_DEBUG_DISPLAY  	= false;
-@ini_set( 'display_errors', 0 );
+const DEV_DEBUG = true;
+if (DEV_DEBUG == true) {
+  define( 'WP_DEBUG', true );
+  define( 'SCRIPT_DEBUG', true );
+  define( 'WP_DEBUG_LOG', true );
+  define( 'WP_DEBUG_DISPLAY', true );
+} else {
+  define( 'WP_DEBUG', false );
+  define( 'SCRIPT_DEBUG', false );
+  define( 'WP_DEBUG_LOG', false );
+  define( 'WP_DEBUG_DISPLAY', false );
+  @ini_set( 'display_errors', 0 );
+}
 
 //if( WP_DEBUG && WP_DEBUG_DISPLAY && (defined('DOING_AJAX') && DOING_AJAX) ){
 //  @ ini_set( 'display_errors', 1 );
