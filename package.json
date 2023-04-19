@@ -4,6 +4,9 @@
     "email": "crazyyy@gmail.com",
     "url": "https://github.com/crazyyy"
   },
+    "engines": {
+    "node": ">=16.0.0"
+  },
   "browser": {},
   "browserslist": {
     "production": [

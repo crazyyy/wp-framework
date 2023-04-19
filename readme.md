@@ -1,4 +1,8 @@
-# WP Bruce Easy Start Framework
+# WP Bruce Easy Start
+
+![License](https://img.shields.io/github/license/boilerplates-collection/wordpress-theme-gulp?color=blue&colorA=4c4f56&label=License&style=flat-square)
+
+A WordPress boilerplate designed to facilitate WordPress theme development by using Gulp.
 
 ## Warning
 
@@ -7,6 +11,7 @@
 ## How to start
 
 ```shell
+npm i -g gulp gulp-cli
 npm i
 npm run start
 ```
@@ -15,7 +20,15 @@ npm run start
 
 ### Install WP CLi
 
-ToDo: write how to install wp-cli
+```sh
+sudo apt-get install curl
+sudo apt-get install php-cli
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+php -r "readfile('https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-cli-checksums.sha256');"
+chmod +x wp-cli.phar
+sudo mv wp-cli.phar /usr/local/bin/wp
+wp --info
+```
 
 ### Using WP Cli
 

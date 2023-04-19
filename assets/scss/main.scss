@@ -47,13 +47,14 @@ body {
   padding: 0;
   left: 0;
   top: 0;
-  font-size: 100%;
+  font: {
+    size: 100%;
+    family: variables.$font-family-base;
+    weight: variables.$fnorm;
+  }
 }
 
 body {
-  font-family: variables.$font-family-base;
-  font-size: variables.$base-font-size;
-  font-weight: variables.$fnorm;
   line-height: variables.$base-line-height;
   min-width: 320px;
   transition: variables.$base-transition;
@@ -61,21 +62,29 @@ body {
   background-color: variables.$base-background-color;
   -webkit-font-smoothing: antialiased;
 }
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: variables.$heading-font-family;
-  font-size: variables.$base-font-size;
+  font: {
+    size: variables.$base-font-size;
+    family: variables.$heading-font-family;
+  }
   line-height: variables.$heading-line-height;
   margin: 0 0 variables.$small-spacing;
 }
+
 p,
-pre {
+pre,
+img,
+picture {
   margin: 0 0 variables.$small-spacing;
+  max-width: 100%;
 }
+
 a {
   transition: variables.$base-transition;
   text-decoration: none;
@@ -91,58 +100,34 @@ a {
     outline: none;
   }
 }
+
 hr {
   margin: variables.$base-spacing 0;
-  border-top: none;
-  border-right: none;
   border-bottom: variables.$base-border;
-  border-left: none;
 }
-img,
-picture {
-  max-width: 100%;
-  margin: 0;
-}
-.wrapper {
+
+.wrapper,
+.container {
   position: relative;
   width: 100%;
   min-height: 100%;
   margin: 0 auto;
-
-  @include helpers.clearfix;
 }
+
 .container {
-  position: relative;
   max-width: variables.$width;
-  width: variables.$width;
+}
+
+header,
+nav ul li {
+  display: inline-block;
 }
 
 header {
   background-color: variables.$gray-light;
-  .header--logo {
-    display: block;
-    img {
-      max-width: 100%;
-    }
+  .header--logo img {
+    max-width: 100%;
   }
-}
-nav {
-  ul {
-    @include helpers.clearfix;
-    li {
-      display: inline-block;
-    }
-  }
-}
-
-section {
-  padding: 0;
-}
-article {
-  @include helpers.clearfix;
-}
-.looper {
-  @include helpers.clearfix;
 }
 
 footer {
@@ -152,7 +137,6 @@ footer {
 }
 
 @include meta.load-css("media");
-
 // @import "fonts/font_roboto";
 
 @include meta.load-css("import/base64");

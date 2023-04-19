@@ -1,6 +1,10 @@
 ## TODO
 ### Projects for investigae
 
+https://github.com/topics/wordpress-boilerplate?l=php
+https://github.com/boilerplates-collection/wordpress-theme-gulp
+https://github.com/Lukas238/wordpress-gulp-boilerplate
+
 https://www.npmjs.com/package/starter-project-cli
 https://www.npmjs.com/package/starter-project
 
@@ -43,7 +47,7 @@ https://github.com/hudochenkov/postcss-sorting
 https://github.com/hudochenkov/stylelint-order
 https://www.npmjs.com/package/css-declaration-sorter
 
-### Scss 
+### Scss
 https://github.com/mcaskill/sass-mq
 https://github.com/sass-mq/sass-mq
 
@@ -64,7 +68,7 @@ https://codepen.io/MartijnCuppens/pen/vqaEBG?editors=0100
 
 https://www.koderhq.com/tutorial/sass/native-functions/
 
-#### Mixins 
+#### Mixins
 scss lib https://docs.gerillass.com/docs/
 scss https://github.com/kjbrum/juice/
 + https://github.com/kjbrum/juice/blob/master/dist/_juice.scss

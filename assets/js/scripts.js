@@ -1,6 +1,5 @@
 // Avoid `console` errors in browsers that lack a console.
-( function() {
-  let method;
+(function() {
   const noop = function() {};
   const methods = [
     'assert',
@@ -28,22 +27,20 @@
     'trace',
     'warn'
   ];
-  let length = methods.length;
-  const console = window.console = window.console || {};
+  const console = window.console || {};
 
-  while ( length-- ) {
-    method = methods[length];
-
+  for (const method of methods) {
     // Only stub undefined methods.
-    if ( !console[method] ) {
+    if (!console[method]) {
       console[method] = noop;
     }
   }
-} )();
-if ( typeof jQuery === 'undefined' ) {
-  console.warn( "jQuery hasn't loaded" );
+})();
+
+if (typeof jQuery === 'undefined') {
+  console.warn("jQuery hasn't loaded");
 } else {
-  console.log( `jQuery ${jQuery.fn.jquery} has loaded` );
+  console.log(`jQuery ${jQuery.fn.jquery} has loaded`);
 }
+
 // Place any jQuery/helper plugins in here.
-console.log( 'Hello!' );
