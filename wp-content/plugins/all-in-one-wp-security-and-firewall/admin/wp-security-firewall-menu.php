@@ -459,17 +459,17 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 		}
 
 
-		if (isset($_POST['action'])) { //Do list table form row action tasks
-			if ('temp_block' == $_POST['action']) { // Temp Block link was clicked for a row in list table
-				$event_list_404->block_ip(strip_tags($_POST['ip_address']));
+		if (isset($_GET['action'])) { //Do list table form row action tasks
+			if ('temp_block' == $_GET['action']) { // Temp Block link was clicked for a row in list table
+				$event_list_404->block_ip(strip_tags($_GET['ip_address']));
 			}
 
-			if ('blacklist_ip' == $_POST['action']) { //Blacklist IP link was clicked for a row in list table
-				$event_list_404->blacklist_ip_address(strip_tags($_POST['ip_address']));
+			if ('blacklist_ip' == $_GET['action']) { //Blacklist IP link was clicked for a row in list table
+				$event_list_404->blacklist_ip_address(strip_tags($_GET['ip_address']));
 			}
 
-			if ('delete_event_log' == $_POST['action']) { //Unlock link was clicked for a row in list table
-				$event_list_404->delete_404_event_records(strip_tags($_POST['id']));
+			if ('delete_event_log' == $_GET['action']) { //Unlock link was clicked for a row in list table
+				$event_list_404->delete_404_event_records(strip_tags($_GET['id']));
 			}
 		}
 		$aio_wp_security->include_template('wp-admin/firewall/404-detection.php', false, array('event_list_404' => $event_list_404));

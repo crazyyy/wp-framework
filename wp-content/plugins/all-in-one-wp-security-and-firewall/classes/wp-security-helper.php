@@ -171,7 +171,9 @@ class AIOS_Helper {
 			}
 			$response = $request_response->body;
 		} catch (\Exception $e) {
-			error_log('AIOS_Helper::request_remote exception - ' . $e->getMessage());
+			$error_message = $e->getMessage();
+			// timed out exception ignore it.
+			if (!preg_match('/timed out/i', $error_message)) error_log('AIOS_Helper::request_remote exception - ' . $error_message);
 		} catch (\Error $e) {
 			error_log('AIOS_Helper::request_remote error - ' . $e->getMessage());
 		}

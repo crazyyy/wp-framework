@@ -89,6 +89,49 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 	}
 
 	/**
+	 * Returns details column html to be rendered.
+	 *
+	 * @param array - data for the columns on the current row
+	 *
+	 * @return string - the html to be rendered
+	 */
+	public function column_details($item) {
+		$details = json_decode($item['details'], true);
+		
+		if (!is_array($details)) return $item['details'];
+
+		if (array_key_exists('plugin', $details)) {
+			$info = $details['plugin'];
+			return sprintf(__('Plugin: %s %s %s (v%s)', 'all-in-one-wp-security-and-firewall'), $info['name'], $info['network'], $info['action'], $info['version']);
+		} elseif (array_key_exists('theme', $details)) {
+			$info = $details['theme'];
+			if ('activated' == $info['action']) {
+				return sprintf(__('Theme: %s %s', 'all-in-one-wp-security-and-firewall'), $info['name'], $info['action']);
+			} else {
+				return sprintf(__('Theme: %s %s %s (v%s)', 'all-in-one-wp-security-and-firewall'), $info['name'], $info['network'], $info['action'], $info['version']);
+			}
+		} elseif (array_key_exists('failed_login', $details)) {
+			$info = $details['failed_login'];
+			if ($info['imported']) {
+				return __('Event imported from the failed logins table', 'all-in-one-wp-security-and-firewall');
+			} elseif ($info['known']) {
+				return sprintf(__('Failed login attempt with a known username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
+			} else {
+				return sprintf(__('Failed login attempt with a unknown username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
+			}
+		} elseif (array_key_exists('table_migration', $details)) {
+			$info = $details['table_migration'];
+			if ($info['success']) {
+				return sprintf(__('Successfully migrated the `%s` table data to the `%s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
+			} else {
+				return sprintf(__('Failed to migrate the `%s` table data to the `%s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
+			}
+		}
+
+		return $item['details'];
+	}
+
+	/**
 	 * Returns stack trace column html to be rendered.
 	 *
 	 * @param array - data for the columns on the current row

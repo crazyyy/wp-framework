@@ -20,18 +20,11 @@ class Lang extends Base {
 	public static function img_status( $status = null )
 	{
 		$list = array(
-			Img_Optm::STATUS_RAW		=> __( 'Images not requested', 'litespeed-cache' ),
+			Img_Optm::STATUS_NEW		=> __( 'Images not requested', 'litespeed-cache' ),
+			Img_Optm::STATUS_RAW		=> __( 'Images ready to request', 'litespeed-cache' ),
 			Img_Optm::STATUS_REQUESTED	=> __( 'Images requested', 'litespeed-cache' ),
 			Img_Optm::STATUS_NOTIFIED	=> __( 'Images notified to pull', 'litespeed-cache' ),
 			Img_Optm::STATUS_PULLED		=> __( 'Images optimized and pulled', 'litespeed-cache' ),
-			Img_Optm::STATUS_FAILED		=> __( 'Images failed to pull', 'litespeed-cache' ),
-			Img_Optm::STATUS_ERR_FETCH	=> __( 'Images failed to fetch', 'litespeed-cache' ),
-			Img_Optm::STATUS_ERR_404	=> __( 'Images failed to fetch', 'litespeed-cache') . ' (404)',
-			Img_Optm::STATUS_ERR_OPTM	=> __( 'Images previously optimized', 'litespeed-cache' ),
-			Img_Optm::STATUS_ERR			=> __( 'Images failed with other errors', 'litespeed-cache' ),
-			Img_Optm::STATUS_MISS		=> __( 'Image files missing', 'litespeed-cache' ),
-			Img_Optm::STATUS_DUPLICATED	=> __( 'Duplicate image files ignored', 'litespeed-cache' ),
-			Img_Optm::STATUS_XMETA		=> __( 'Images with wrong meta', 'litespeed-cache' ),
 		);
 
 		if ( $status !== null ) {

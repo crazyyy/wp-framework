@@ -29,6 +29,17 @@ class AIOWPSecurity_Utility {
 	public static function explode_trim_filter_empty($string, $delimiter = PHP_EOL) {
 		return array_filter(array_map('trim', explode($delimiter, $string)), 'strlen');
 	}
+	
+	/**
+	 * Split $string with newline, trim all lines and filter out empty ones.
+	 * This method to be used on historical settings where the separator may have depended on PHP_EOL
+	 *
+	 * @param string $string
+	 * @return array
+	 */
+	public static function splitby_newline_trim_filter_empty($string) {
+		return array_filter(array_map('trim', preg_split('/\R/', $string)), 'strlen'); //\R line break: matches \n, \r and \r\n
+	}
 
 	/**
 	 * Returns the current URL
@@ -904,5 +915,23 @@ class AIOWPSecurity_Utility {
 		);
 
 		return $aio_wp_security->configs->set_value('aiowps_salt_postfixes', $salt_postfixes, true);
+	}
+
+	/**
+	 * This function checks to see if there is a display condition for the item and if so runs it otherwise it returns true to display the item
+	 *
+	 * @param array $item_info - the item information array
+	 *
+	 * @return boolean - true if the item should be displayed or false to hide it
+	 */
+	public static function should_display_item($item_info) {
+		if (!empty($item_info['display_condition_callback']) && is_callable($item_info['display_condition_callback'])) {
+			return call_user_func($item_info['display_condition_callback']);
+		} elseif (!empty($item_info['display_condition_callback']) && !is_callable($item_info['display_condition_callback'])) {
+			$item = isset($item_info['page_title']) ? $item_info['page_title'] : '';
+			error_log("Callback function set but not callable (coding error). Item: " . $item);
+			return false;
+		}
+		return true;
 	}
 }

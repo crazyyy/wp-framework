@@ -1,10 +1,23 @@
+# Applications
+*.app
+*.exe
+*.war
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
 # Version control and temp files
+.git
+.svn
 *~
 .DS_Store
 thumbs.db
-.svn
 .cvs
-.git
 .hg
 .listing
 *.bak
@@ -17,14 +30,6 @@ thumbs.db
 *.orig
 *.iws
 ._*
-*.sublime-project
-*.sublime-workspace
-.sublime-
-.project
-license.txt
-readme.html
-sitemap*.xml
-sitemap*.xml.gz
 Desktop.ini
 .tmp
 tmp
@@ -43,14 +48,19 @@ bower_components/*
 # *.zip
 # *.tar
 # *.tgz
-*.gz
+# *.gz
 
 # IDE
 .idea
 .phpintel
 .vscode
 .history
+*.sublime-project
+*.sublime-workspace
+.sublime-
+.project
 
+# Node
 node_modules
 node_modules/**
 .sass-cache
@@ -58,11 +68,31 @@ package-lock.json
 yarn.lock
 
 # WordPress
-wp-content/advanced-cache.php
+license.txt
+readme.html
+sitemap*.xml
+sitemap*.xml.gz
+wp-content/blogs.dir/
 wp-content/backup-db/
 wp-content/backups/
-wp-content/blogs.dir/
 wp-content/cache/
+wp-content/litespeed/
 wp-content/upgrade/
+wp-content/ewww/
+/wp-content/wflogs/
+wp-content/advanced-cache.php
 wp-content/wp-cache-config.php
 wp-content/db.php
+
+# Maven
+target/
+dist/
+
+# Compiled Python bytecode
+*.py[cod]
+
+# Log files
+*.log
+
+# Unit test reports
+TEST*.xml

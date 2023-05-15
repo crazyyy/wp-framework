@@ -19,12 +19,14 @@ class AIOWPSecurity_Installer {
 				foreach ($blogids as $blog_id) {
 					switch_to_blog($blog_id);
 					AIOWPSecurity_Installer::create_db_tables();
+					AIOWPSecurity_Installer::migrate_db_tables();
 					AIOWPSecurity_Configure_Settings::add_option_values();
 					restore_current_blog();
 				}
 				AIOWPSecurity_Installer::create_db_backup_dir(); //Create a backup dir in the WP uploads directory
 		} else {
 			AIOWPSecurity_Installer::create_db_tables();
+			AIOWPSecurity_Installer::migrate_db_tables();
 			AIOWPSecurity_Configure_Settings::add_option_values();
 			AIOWPSecurity_Installer::create_db_backup_dir(); //Create a backup dir in the WP uploads directory
 		}
@@ -46,7 +48,6 @@ class AIOWPSecurity_Installer {
 			 *
 			 */
 			$lockout_tbl_name = $wpdb->prefix.'aiowps_login_lockdown';
-			$failed_login_tbl_name = $wpdb->prefix.'aiowps_failed_logins';
 			$user_login_activity_tbl_name = $wpdb->prefix.'aiowps_login_activity';
 			$aiowps_global_meta_tbl_name = $wpdb->prefix.'aiowps_global_meta';
 			$aiowps_event_tbl_name = $wpdb->prefix.'aiowps_events';
@@ -54,7 +55,6 @@ class AIOWPSecurity_Installer {
 			
 		} else {
 			$lockout_tbl_name = AIOWPSEC_TBL_LOGIN_LOCKOUT;
-			$failed_login_tbl_name = AIOWPSEC_TBL_FAILED_LOGINS;
 			$user_login_activity_tbl_name = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;
 			$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
 			$aiowps_event_tbl_name = AIOWPSEC_TBL_EVENTS;
@@ -91,19 +91,6 @@ class AIOWPSecurity_Installer {
 		  KEY unlock_key (unlock_key)
 		)" . $charset_collate . ";";
 		dbDelta($ld_tbl_sql);
-
-		$fl_tbl_sql = "CREATE TABLE " . $failed_login_tbl_name . " (
-		id bigint(20) NOT NULL AUTO_INCREMENT,
-		user_id bigint(20) NOT NULL,
-		user_login VARCHAR(150) NOT NULL,
-		failed_login_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
-		login_attempt_ip varchar(100) NOT NULL DEFAULT '',
-		PRIMARY KEY  (id),
-		  KEY failed_login_date (failed_login_date),
-		  KEY login_attempt_ip (login_attempt_ip),
-		  KEY failed_login_date_and_login_attempt_ip (failed_login_date, login_attempt_ip)
-		)" . $charset_collate . ";";
-		dbDelta($fl_tbl_sql);
 
 		$ula_tbl_sql = "CREATE TABLE " . $user_login_activity_tbl_name . " (
 		id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -190,6 +177,59 @@ class AIOWPSecurity_Installer {
 			PRIMARY KEY  (id)
 			)" . $charset_collate . ";";
 		dbDelta($debug_log_tbl_sql);
+	}
+
+	/**
+	 * This function will handle any database table migrations
+	 *
+	 * @return void
+	 */
+	public static function migrate_db_tables() {
+		global $wpdb;
+
+		if (function_exists('is_multisite') && is_multisite()) {
+			/*
+			 * FIX for multisite table creation case:
+			 * Although each table name is defined in a constant inside the wp-security-core.php,
+			 * we need to do this step for multisite case because we need to refresh the $wpdb->prefix value
+			 * otherwise it will contain the original blog id and not the current id we need.
+			 *
+			 */
+			$failed_login_tbl_name = $wpdb->prefix.'aiowps_failed_logins';
+			
+		} else {
+			$failed_login_tbl_name = AIOWPSEC_TBL_FAILED_LOGINS;
+		}
+
+		$audit_log_tbl_name = AIOWPSEC_TBL_AUDIT_LOG;
+		$network_id = get_current_network_id();
+		$site_id = get_current_blog_id();
+		
+		$query = $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($failed_login_tbl_name));
+		$table_exists = $wpdb->get_var($query);
+		if ($table_exists) {
+			$import_details = array(
+				'failed_login' => array(
+					'imported' => true,
+				)
+			);
+			$import_details = json_encode($import_details, true);
+			$table_migration_details = array(
+				'table_migration' => array(
+					'success' => true,
+					'from_table' => $failed_login_tbl_name,
+					'to_table' => $audit_log_tbl_name
+				)
+			);
+
+			if (false === $wpdb->query($wpdb->prepare("INSERT INTO $audit_log_tbl_name (network_id, site_id, username, ip, level, event_type, details, stacktrace, created) SELECT %d AS network_id, %d AS site_id, fl.user_login AS username, fl.login_attempt_ip AS ip, 'warning' AS level, 'Failed login' AS event_type, %s AS details, '' AS stacktrace, UNIX_TIMESTAMP(fl.failed_login_date) AS created FROM $failed_login_tbl_name fl", $network_id, $site_id, $import_details))) {
+				$table_migration_details['table_migration']['success'] = false;
+				do_action('aiowps_record_event', 'table_migration', $table_migration_details, 'error');
+			} else {
+				do_action('aiowps_record_event', 'table_migration', $table_migration_details, 'info');
+				$wpdb->query("DROP TABLE IF EXISTS `$failed_login_tbl_name`");
+			}
+		}
 	}
 
 	public static function create_db_backup_dir() {

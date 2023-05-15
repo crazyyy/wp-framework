@@ -18,7 +18,6 @@ class AIOWPSecurity_Cronjob_Handler {
 		add_action('aiowps_hourly_cron_event', array($this, 'aiowps_hourly_cron_event_handler'));
 		add_action('aiowps_daily_cron_event', array($this, 'aiowps_daily_cron_event_handler'));
 		add_action('aios_change_auth_keys_and_salt', 'AIOWPSecurity_Utility::change_salt_postfixes');
-		add_action('aiowps_perform_failed_login_cleanup_task', array($this, 'failed_login_cleanup'));
 		add_action('aiowps_purge_old_debug_logs', array($this, 'purge_old_debug_logs'));
 		add_action('aiowps_send_lockout_email', array($this, 'send_lockout_email'));
 	}
@@ -82,30 +81,8 @@ class AIOWPSecurity_Cronjob_Handler {
 	 */
 	public function aiowps_daily_cron_event_handler() {
 		do_action('aiowps_perform_db_cleanup_tasks');
-		do_action('aiowps_perform_failed_login_cleanup_task');
 		do_action('aiowps_purge_old_debug_logs');
 		do_action('aiowps_send_lockout_email');
-	}
-
-	/**
-	 * Purges 90 days old failed login records
-	 *
-	 * @return void
-	 */
-	public function failed_login_cleanup() {
-		global $wpdb, $aio_wp_security;
-
-		$purge_records_after_days = apply_filters('aiowps_purge_failed_login_records_after_days', AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS);
-		$older_than_date_time 	  = date('Y-m-d H:m:s', strtotime('-' . $purge_records_after_days . ' days', current_time('timestamp', true)));
-		$sql					  = $wpdb->prepare('DELETE FROM ' . AIOWPSEC_TBL_FAILED_LOGINS . ' WHERE failed_login_date<%s', $older_than_date_time);
-		$ret_deleted			  = $wpdb->query($sql);
-		if (false === $ret_deleted) {
-			$err_db = !empty($wpdb->last_error) ? ' ('.$wpdb->last_error.' - '.$wpdb->last_query.')' : '';
-			// Status level 4 indicates failure status.
-			$aio_wp_security->debug_logger->log_debug_cron('Purge Failed Login Records - failed to purge solder failed login records.'.$err_db, 4);
-		} else {
-			$aio_wp_security->debug_logger->log_debug_cron(sprintf('Purge Failed Login Records - %d failed login records were deleted.', $ret_deleted));
-		}
 	}
 
 	/**

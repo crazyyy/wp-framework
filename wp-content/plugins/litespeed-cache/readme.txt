@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, core web vitals, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 6.1.1
-Stable tag: 5.3.3
+Tested up to: 6.2
+Stable tag: 5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -249,6 +249,13 @@ For more detailed information about crawler setup, please see [the Crawler docum
 The vast majority of plugins and themes are compatible with LiteSpeed Cache. The most up-to-date compatibility information can be found [in our documentation](https://docs.litespeedtech.com/lscache/lscwp/thirdparty/)
 
 == Changelog ==
+
+= 5.4 - Apr 19 2023 =
+* **Image Optimize** Refactored DB storage for this feature.
+* **Image Optimize** Reduced DB table size.
+* **Image Optimize** Existing `img_optm` DB tables will have their data gradually transitioned to the new storage format with this update. Once an `img_optm` table is empty, it won't be used anymore.
+* **Media** Fixed PHP8 potential warning. (rafaelmcd)
+* **Page Optimize** Enabled WebP support for Googlebot User Agent.
 
 = 5.3.3 - Feb 22 2023 =
 * **Page Optimize** Excluded Jetpack stats JS.

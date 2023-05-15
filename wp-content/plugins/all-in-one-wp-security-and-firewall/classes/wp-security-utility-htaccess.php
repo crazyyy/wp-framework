@@ -275,7 +275,7 @@ class AIOWPSecurity_Utility_Htaccess {
 		$rules = '';
 		if ($aio_wp_security->configs->get_value('aiowps_enable_blacklisting') == '1') {
 			// Let's do the list of blacklisted IPs first
-			$hosts = AIOWPSecurity_Utility::explode_trim_filter_empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'));
+			$hosts = AIOWPSecurity_Utility::splitby_newline_trim_filter_empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'));
 			// Filter out duplicate lines, add netmask to IP addresses
 			$ips_with_netmask = self::add_netmask(array_unique($hosts));
 			if (!empty($ips_with_netmask)) {

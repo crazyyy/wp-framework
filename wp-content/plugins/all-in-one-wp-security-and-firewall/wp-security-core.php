@@ -8,9 +8,9 @@ if (!class_exists('AIO_WP_Security')) {
 
 	class AIO_WP_Security {
 
-		public $version = '5.1.7';
+		public $version = '5.1.8';
 
-		public $db_version = '1.9.8';
+		public $db_version = '1.9.9';
 		
 		public $firewall_version = '1.0.3';
 
@@ -180,6 +180,12 @@ if (!class_exists('AIO_WP_Security')) {
 		}
 
 		public function includes() {
+
+			// Load firewall, if it has not yet been loaded by this point
+			if (!defined('AIOWPSEC_FIREWALL_DONE')) {
+				$this->load_aio_firewall();
+			}
+
 			// Load common files for everywhere
 			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-audit-event-handler.php');
 			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-debug-logger.php');
@@ -227,7 +233,6 @@ if (!class_exists('AIO_WP_Security')) {
 		}
 
 		public function loader_operations() {
-			add_action('plugins_loaded', array($this, 'load_aio_firewall'), 0);
 			add_action('plugins_loaded', array($this, 'plugins_loaded_handler'));//plugins loaded hook
 			add_action('plugins_loaded', array($this, 'load_plugin_textdomain'));
 

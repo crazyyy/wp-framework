@@ -28,6 +28,9 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 	 * @return void
 	 */
 	protected static function run_for_a_site() {
+		// Unset the plugin deletion hooks so that we don't try to log to the audit table after it has been removed
+		AIOWPSecurity_Audit_Events::remove_event_actions();
+
 		// Drop db tables and configs
 		self::drop_database_tables_and_configs();
 	}

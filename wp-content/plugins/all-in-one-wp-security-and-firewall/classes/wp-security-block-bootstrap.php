@@ -13,7 +13,7 @@ class AIOWPSecurity_Block_Bootstrap extends AIOWPSecurity_Block_File {
 	 *
 	 * @var string
 	 */
-	protected $version = '1.0.1';
+	protected $version = '1.0.2';
 
 	/**
 	 * Inserts our code into our bootstrap file.
@@ -145,12 +145,18 @@ class AIOWPSecurity_Block_Bootstrap extends AIOWPSecurity_Block_File {
 		$firewall_path_str = $this->get_firewall_path_str();
 		$firewall_rules_path_str  = $this->get_firewall_rules_path_str();
 
+		// Any extra data we want to have accessible to the firewall
+		$data = array(
+			'ABSPATH' => wp_normalize_path(ABSPATH)
+		);
+
 		$code  = "<?php\n";
 		$code .= $this->get_warning_message();
 	
 		$directive = AIOWPSecurity_Utility_Firewall::get_already_set_directive();
 
 		if (!empty($directive) && $directive !== $this->file_path) {
+			$directive = wp_normalize_path($directive);
 			$code .= "// Previously set auto_prepend_file\n";
 			$code .= "if (file_exists('{$directive}')) {\n";
 			$code .= "\tinclude_once('{$directive}');\n";
@@ -159,6 +165,14 @@ class AIOWPSecurity_Block_Bootstrap extends AIOWPSecurity_Block_File {
 
 		
 		$code .= '$GLOBALS[\'aiowps_firewall_rules_path\'] = '.$firewall_rules_path_str.";\n\n";
+
+		// write any other data we need
+		$code .= "\$GLOBALS['aiowps_firewall_data'] = array(\n";
+		foreach ($data as $name => $value) {
+			$code .= "\t'{$name}' => '{$value}',\n";
+		}
+		$code .= ");\n\n"; //close data array
+
 		$code .= "// Begin AIOWPSEC Firewall\n";
 		$code .= "if (file_exists({$firewall_path_str})) {\n";
 		$code .= "\tinclude_once({$firewall_path_str});\n";

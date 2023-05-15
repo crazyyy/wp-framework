@@ -49,6 +49,16 @@ class AIOWPSecurity_Audit_Events {
 	}
 
 	/**
+	 * This function removes event actions that need to be removed when we are removing the plugin
+	 *
+	 * @return void
+	 */
+	public static function remove_event_actions() {
+		remove_action('delete_plugin', 'AIOWPSecurity_Audit_Events::plugin_delete');
+		remove_action('deleted_plugin', 'AIOWPSecurity_Audit_Events::plugin_deleted');
+	}
+
+	/**
 	 * Populates the event_types array
 	 *
 	 * @return void
@@ -176,10 +186,17 @@ class AIOWPSecurity_Audit_Events {
 			$info = get_plugin_data($filename);
 		}
 
-		$name = empty($info['Name']) ? __('Unknown', 'all-in-one-wp-security-and-firewall') : $info['Name'];
+		$name = empty($info['Name']) ? 'Unknown' : $info['Name'];
 		$version = empty($info['Version']) ? '0.0.0' : $info['Version'];
 
-		$details = sprintf(__('Plugin: %s %s %s (v%s)', 'all-in-one-wp-security-and-firewall'), $name, $network, $action, $version);
+		$details = array(
+			'plugin' => array(
+				'name' => $name,
+				'version' => $version,
+				'action' => $action,
+				'network' => $network
+			)
+		);
 		do_action('aiowps_record_event', 'plugin_' . $action, $details, $level);
 	}
 
@@ -205,7 +222,12 @@ class AIOWPSecurity_Audit_Events {
 	 * @return void
 	 */
 	public static function theme_activated($new_name) {
-		$details = sprintf(__('Theme: %s activated', 'all-in-one-wp-security-and-firewall'), $new_name);
+		$details = array(
+			'theme' => array(
+				'name' => $new_name,
+				'action' => 'activated',
+			)
+		);
 		do_action('aiowps_record_event', 'theme_activated', $details);
 	}
 
@@ -278,10 +300,41 @@ class AIOWPSecurity_Audit_Events {
 			);
 		}
 
-		$name = empty($info['Name']) ? __('Unknown', 'all-in-one-wp-security-and-firewall') : $info['Name'];
+		$name = empty($info['Name']) ? 'Unknown' : $info['Name'];
 		$version = empty($info['Version']) ? '0.0.0' : $info['Version'];
 
-		$details = sprintf(__('Theme: %s %s %s (v%s)', 'all-in-one-wp-security-and-firewall'), $name, $network, $action, $version);
+		$details = array(
+			'theme' => array(
+				'name' => $name,
+				'version' => $version,
+				'action' => $action,
+				'network' => $network
+			)
+		);
 		do_action('aiowps_record_event', 'theme_' . $action, $details, $level);
+	}
+
+	/**
+	 * Adds a failed login event to the audit log
+	 *
+	 * @param string $username - the username for the failed login attempt
+	 *
+	 * @return void
+	 */
+	public static function event_failed_login($username) {
+		$user = is_email($username) ? get_user_by('email', $username) : get_user_by('login', $username);
+		$details = array(
+			'failed_login' => array(
+				'imported' => false,
+				'username' => $username,
+				'known' => true,
+			)
+		);
+		if (is_a($user, 'WP_User')) {
+			do_action('aiowps_record_event', 'failed_login', $details, 'warning', $username);
+		} else {
+			$details['failed_login']['known'] = false;
+			do_action('aiowps_record_event', 'failed_login', $details, 'warning', $username);
+		}
 	}
 }

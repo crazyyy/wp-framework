@@ -156,7 +156,7 @@ jQuery(function($) {
 		
 		if (!user_can_trust) { user_already_trusted = false; }
 		
-		var form_is_gravity_forms = ('object' == typeof window['gform_gravityforms'] && 'gform_' === $(form).attr('id').substring(0, 6));
+		var form_is_gravity_forms = ('object' == typeof window['gform_gravityforms'] && 'undefined' !== typeof $(form).attr('id') && 'gform_' === $(form).attr('id').substring(0, 6));
 		
 		// Gravity Forms won't submit if the elements are hidden
 		var form_retain_existing_elements = form_is_gravity_forms ? true : false;
@@ -290,7 +290,7 @@ jQuery(function($) {
 
 		var form = e.target;
 		
-		var form_is_gravity_forms = ('object' == typeof window['gform_gravityforms'] && 'gform_' === $(form).attr('id').substring(0, 6));
+		var form_is_gravity_forms = ('object' == typeof window['gform_gravityforms'] && 'undefined' !== typeof $(form).attr('id') && 'gform_' === $(form).attr('id').substring(0, 6));
 		
 		// Turn off everything
 		$(form).off();

@@ -2,7 +2,7 @@
 // @codingStandardsIgnoreStart
 /*
 Plugin Name: All In One WP Security
-Version: 5.1.7
+Version: 5.1.8
 Plugin URI: https://wordpress.org/plugins/all-in-one-wp-security-and-firewall/
 Update URI: https://wordpress.org/plugins/all-in-one-wp-security-and-firewall/
 Author: All In One WP Security & Firewall Team

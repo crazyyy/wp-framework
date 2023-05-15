@@ -5,7 +5,7 @@ Tags: security, malware scanning, two factor authentication, firewall, login sec
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.2
-Stable tag: 5.1.7
+Stable tag: 5.1.8
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -35,26 +35,26 @@ https://www.youtube.com/watch?v=CJvCTlVtazA
 * Our security team maintains a list of known exploits, actively building protections against them and releasing these as new firewall rules to free and paying customers, at the same time.
 * We’re already the world’s number one for backups, so you know you can trust us with the security of your website too.
 
-#### LOGIN SECURITY
+#### LOGIN SECURITY FEATURE SUITE
 Protect against brute-force attacks and keep bots at bay. All-In-One Security takes WordPress’ default login security features to a whole new level.
 
 * **Supports best practice:** All-In-One Security detects if an account has the default ‘admin’ username or if a user has identical login and display names, prompting the user to change this in support of better security practices.
 * **Hide login page from bots:** Configure a custom URL for the WordPress ‘Admin’ login page, making it harder for bots to find.
-* **Change default `wp_` prefix to a value of your choice:** Hackers use automated code to attack websites like yours. Make life harder for them and protect your site with this simple but effective AIOS security feature.
+* **Change default `wp_` prefix:** Hackers use automated code to attack websites like yours. Make life harder for them and protect your site with this simple but effective AIOS security feature.
 * **Login lockout:** External users making multiple login attempts can be locked out for a configured period of time. You can also lockout users with invalid usernames. See a list of all locked out users and unlock with one click.
 * **Reporting:**  All-In-One Security provides a wealth of information about website users. View activity by username, IP address, login and logout dates and times. See a list of users currently logged in, and a list of all failed login attempts.
 * **Force logouts:** Ensure users don’t stay logged in indefinitely. With All-In-One Security you can force logouts for all users after a configurable amount of time.
 * **Robot verification:** For additional security and to prevent spam registrations, implement Cloudflare Turnstile, Google reCAPTCHA, plain maths CAPTCHA or a honeypot to registration pages, or enable manual approval of user accounts instead.
 * **Stops user enumeration:** Prevent external users and bots from fetching user information via author permalink.
 * **Two-factor authentication:** All-In-One Security TFA supports Google Authenticator, Microsoft Authenticator, Authy and many more.
-* **Password strength tool:** Calculates how long it would take for your password to be cracked in the event of a brute force attack.
+* **Password strength tool:** Calculates how long it would take for your password to be cracked through a brute force attack.
 * **General visitor lockout** Put your site into “maintenance mode” and lock down the front-end to all visitors. This can be useful while doing back end tasks, like performing site upgrades or investigating security threats.
+* **WordPress Salts Security Feature Extended:** All-In-One Security adds 64 new characters to WordPress Salts and changes them weekly, making it even more challenging for hackers to crack your users’ WordPress passwords. 
 
-#### FIREWALL & FILE PROTECTION
+#### FIREWALL & FILE PROTECTION SECURITY SUITE
 A Web Application Firewall (WAF) is your website’s first line of defence, protecting your site by monitoring traffic and blocking malicious requests.
-Progressively activate firewall settings ranging from basic, intermediate and advanced.
-Get comprehensive, instant protection with All-In-One Security.
 
+* **Progressively activate firewall settings:** These range from basic, intermediate and advanced.
 * **Automatic protection from the latest threats:** Our team maintains a list of known exploits, actively building protections against them which are then released as new firewall rules to free and paying customers.
 * **6G blacklist:** All-In-One Security incorporates ‘6G Blacklist’ firewall rules, protecting your site against a known list of malicious URL requests, bots, spam referrers and other attacks (courtesy of Perishable Press).
 * **Protect against fake Google bots:** Bots presenting as Google crawlers can steal your content and litter your webpage with comment spam. Protect against it with the All-In-One Security Web Application Firewall.
@@ -68,17 +68,64 @@ Get comprehensive, instant protection with All-In-One Security.
 * **Ability to create custom rules:** Advanced users can add custom rules to block access to various resources on your site.
 * **Access prevention:** Prevent external users from accessing the readme.html, license.txt and wp-config-sample.php files of your WordPress site.
 
-#### CONTENT PROTECTION
+#### CONTENT PROTECTION SECURITY SUITE
 Eliminate spam, protect your WordPress content, and your search engine rankings with these important security features from All-In-One-Security.
 
 * **Comment SPAM prevention :** Webpages littered with spam comments damage your brand, effect the user experience and impact SEO.
 All-In-One Security stops SPAM at the source by preventing comments that originate from other domains. AIOS automatically and permanently blocks spammers’ IP addresses. Site owners can use Cloudflare Turnstile or Google reCAPTCHA to reduce comment spam and block malicious users with just one click.
-* **iFrame protection:** Preventing other websites from reproducing your content via an ‘iFrame’ is an useful security feature that protects your intellectual property and your website visitors.
+* **iFrame protection:** Preventing other websites from reproducing your content via an ‘iFrame’ is a useful security feature that protects your intellectual property and your website visitors.
 * **Copywriting protection:** Stop users from stealing your content by disabling the right-click, select and copy text function.
 * **Disable RSS and Atom Feeds:** RSS and Atom Feeds can be used by bots to ‘scrape’ your website content and present it as their own. This feature prevents that by disabling RSS and Atom Feeds on your website.
 
+#### LATEST AND GENERAL SECURITY FEATURES
+* **Audit Log:** The All-In-One Security audit log gives Admins a view of events taking place on their WordPress website. They can see if anything strange is happening and detect security risks. For example, you can see if a plugin or theme has been added, removed, updated, activated or deactivated without your knowledge or consent.
+
+#### INTERESTED IN AIOS PREMIUM?
+For even greater protections, consider All-In-One Security (AIOS) Premium. It’s one of the most cost-effective and comprehensive WordPress Security plugins on the market and extends the powers of ‘Free’ with:
+
+#### MALWARE SCANNING (Premium only)
+Finding out by accident that your website’s security has been compromised due to malware is too late.  
+
+Malware can have a dramatic effect on search rankings. It can slow your site down, access customer data, send unsolicited emails, change your content or prevent users from accessing it.
+
+* **Alerts you to blacklisting:** Search engines can very quickly blacklist a site hacked with malicious code. All-In-One Security Premium monitors your site's status daily and alerts you if you've been blacklisted.
+* **Notification if something is amiss:** We’ll notify you of any malware issues within 24 hours so you can take action, before it’s too late.
+* **Response time monitoring:** You’ll know immediately if website response time is negatively affected.
+* **Up-time monitoring:** All-In-One Security checks website uptime every 5 minutes. We’ll notify you if your site/server goes down.
+* **Flexible assignment:** Register and remove WordPress sites from security scanning at any time.
+* **Security Reports:** Security Reports are available via the ‘My Account’ page and directly via email.
+
+#### FLEXIBLE TWO-FACTOR AUTHENTICATION (PREMIUM ONLY)
+TFA is available in our free packages. All-In-One Security Premium affords whole new levels of control over how TFA is implemented.
+
+* **Role specific configuration:** Make TFA compulsory for certain roles, e.g. for admin and editor roles.
+* **Require TFA after set time period:** For example, you could require all admins to have TFA once their accounts are a week old.
+* **Trusted Devices:** Ask for TFA after a chosen number of days for trusted devices instead of on every login.
+* **Anti-bot Protection:** Option to hide the existence of forms on WooCommerce login pages unless JavaScript is active.
+* **Customise design layout:** Customise the design of TFA so that it aligns with your existing web design.
+* **Emergency Codes:** Generate a one-time use emergency code to allow access if your device is lost.
+* **Multisite Compatible:** Compatible with WordPress multisite networks and sub-sites.
+* **Support for login forms:** Support for WooCommerce and Affiliates-WP, Elementor Pro, bbPress and all third-party login forms without any further coding needed. Also compatible with ‘Theme my Login’
+
+#### SMART 404 BLOCKING (PREMIUM ONLY)
+404 errors occur when someone legitimately mistypes a URL, but they’re also generated by hackers searching for security weaknesses in your site.
+
+* **Block bots producing 404s:** All-In-One Security Premium automatically and permanently blocks IP addresses of bots and hackers based on how many 404 errors they generate.
+* **Reporting:** Handy charts keep you informed of how many 404s have occurred and which IP address or country is producing them
+
+#### COUNTRY BLOCKING (PREMIUM ONLY)
+Most security attacks come from a handful of countries and so it’s possible to prevent most attacks with our country blocking tool.
+* **Block traffic based on country of origin:** All-In-One Security Premium utilises an IP database that promises 99.5% accuracy.
+* **Block traffic to specific pages:** Block access to your whole WordPress site or on a page-by-page basis.
+* **Whitelist some users from blocked countries:** Whitelist IP addresses or IP ranges even if they are part of a blocked country.
+
+#### PREMIUM SUPPORT
+* **Unlimited support:** Personalised, email support as and when you need it.
+* **Fastest response times:** We offer a response time of three days. 99% of All-In-One Security Premium customers receive a response to
+their enquiry within 24 hours.
+
 #### Plugin Support
-* If you have a question or problem with the All-In-One Security plugin, post it on the support forum and we will help you.
+* If you have a question or problem with the All-In-One Security plugin, post it on the support forum and we will help you. Premium customers can log queries directly with the team via aiosplugin.com
 
 = Developers =
 * If you are a developer and you need some extra hooks or filters for this plugin then let us know.
@@ -164,6 +211,17 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.1.8 - 11/April/2023 =
+
+* FIX: 404 detection - Individual record blacklisting, delete, temp block actions stopped working in 5.1.7
+* FIX: Uncaught fatal error on null 'set_value'
+* FIX: Remove audit log event handler actions on plugin deletion to prevent an error
+* FIX: Remove some audit log event handler on plugin deletion to prevent an error
+* FIX: Get correct wp-config path when installed in a subdirectory
+* TWEAK: AIOS_Helper::request_remote timed out exception ignored. 
+* TWEAK: Requests_IPv6 class name deprecated in WordPress 6.2.
+* TWEAK: Failed login attempts are now recorded in the audit log
 
 = 5.1.7 - 24/March/2023 =
 
@@ -1169,4 +1227,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.1.7: Resolves an error introduced in 5.1.6. See changelog for full details. A recommended update for all.
+* 5.1.8: Failed logins are now recorded in the audit log. Various tweaks and fixes. See changelog for full details. A recommended update for all.

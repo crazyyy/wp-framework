@@ -193,7 +193,7 @@ class AIOWPSecurity_User_Login {
 			return $user;
 		}
 		// Login failed for non-trivial reason
-		$this->increment_failed_logins($username);
+		AIOWPSecurity_Audit_Events::event_failed_login($username);
 		if ($aio_wp_security->configs->get_value('aiowps_enable_login_lockdown') == '1') {
 			$is_whitelisted = false;
 			//check if lockout whitelist enabled
@@ -257,20 +257,20 @@ class AIOWPSecurity_User_Login {
 		return $locked_user;
 	}
 	/**
-	 * This function queries the aiowps_failed_logins table and returns the number of failures for current IP range within allowed failure period
+	 * This function queries the aiowps_audit_log table and returns the number of failures for current IP range within allowed failure period
 	 */
 	public function get_login_fail_count() {
 
 		global $wpdb, $aio_wp_security;
 		
-		$failed_logins_table = AIOWPSEC_TBL_FAILED_LOGINS;
-		$login_retry_interval = $aio_wp_security->configs->get_value('aiowps_retry_time_period');
-		$now = current_time('mysql', true);
-		$ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
+		$audit_log_table = AIOWPSEC_TBL_AUDIT_LOG;
+		$login_retry_interval = $aio_wp_security->configs->get_value('aiowps_retry_time_period') * 60;
+		$now = time();
+		$ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); // Get the users IP address
 
 		if (empty($ip)) return false;
 
-		$login_failures = $wpdb->get_var("SELECT COUNT(ID) FROM $failed_logins_table " . "WHERE failed_login_date + INTERVAL " . esc_sql($login_retry_interval) . " MINUTE > '" . esc_sql($now) . "' AND " . "login_attempt_ip = '" . esc_sql($ip) . "'");
+		$login_failures = $wpdb->get_var("SELECT COUNT(ID) FROM $audit_log_table " . "WHERE created + " . esc_sql($login_retry_interval) . " > '" . esc_sql($now) . "' AND " . "ip = '" . esc_sql($ip) . "' AND event_type = 'failed_login'");
 		return $login_failures;
 	}
 
@@ -340,33 +340,6 @@ class AIOWPSecurity_User_Login {
 		} else {
 			do_action('aiowps_lockdown_event', $ip_range, $username);
 			$aio_wp_security->debug_logger->log_debug("The following IP address range has been locked out for exceeding the maximum login attempts: ".$ip_range, 2);//Log the lockdown event
-		}
-	}
-	/**
-	 * Adds an entry to the `aiowps_failed_logins` table.
-	 *
-	 * @param string $username User's username or email
-	 */
-	public function increment_failed_logins($username) {
-		global $wpdb, $aio_wp_security;
-		$login_fails_table = AIOWPSEC_TBL_FAILED_LOGINS;
-		$ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
-		if (empty($ip)) return;
-		$user = is_email($username) ? get_user_by('email', $username) : get_user_by('login', $username); //Returns WP_User object if it exists
-		if ($user) {
-			//If the login attempt was made using a valid user set variables for DB storage later on
-			$user_id = $user->ID;
-		} else {
-			//If the login attempt was made using a non-existent user then let's set user_id to blank and record the attempted user login name for DB storage later on
-			$user_id = 0;
-		}
-		$ip_str = esc_sql($ip);
-		$now = current_time('mysql', true);
-		$data = array('user_id' => $user_id, 'user_login' => $username, 'failed_login_date' => $now, 'login_attempt_ip' => $ip_str);
-		$format = array('%d', '%s', '%s', '%s');
-		$result = $wpdb->insert($login_fails_table, $data, $format);
-		if (false === $result) {
-			$aio_wp_security->debug_logger->log_debug("Error inserting record into ".$login_fails_table, 4);//Log the highly unlikely event of DB error
 		}
 	}
 

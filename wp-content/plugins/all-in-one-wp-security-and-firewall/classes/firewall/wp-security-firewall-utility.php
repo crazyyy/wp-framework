@@ -4,13 +4,31 @@ namespace AIOWPS\Firewall;
 class Utility {
 
 	/**
-	 * Returns the root directory of the WordPress installation
+	 * Returns the directory of where the WordPress files are installed
+	 * This differs from get_root_dir() when WordPress is setup in a subdirectory
+	 *
+	 * @return string
+	 */
+	public static function get_wordpress_dir() {
+
+		if (Context::wordpress_safe()) {
+			return wp_normalize_path(ABSPATH);
+		}
+
+		global $aiowps_firewall_data;
+
+		return isset($aiowps_firewall_data['ABSPATH']) ? $aiowps_firewall_data['ABSPATH'] : '';
+	}
+
+	/**
+	 * Returns the root directory of the site
+	 * This may be different from where the WordPress files are installed if WordPress is setup in a subdirectory
 	 *
 	 * @return string|null
 	 */
 	public static function get_root_dir() {
-		// We're in a WordPress context if this class exists, so use the get_home_path() method
-		if (class_exists('AIOWPSecurity_Utility_File')) {
+		
+		if (Context::wordpress_safe()) {
 			return \AIOWPSecurity_Utility_File::get_home_path();
 		}
 
@@ -56,12 +74,8 @@ class Utility {
 	 */
 	public static function get_wpconfig_path($root = '') {
 
-		if (empty($root)) {
-			$root = self::get_root_dir();
-		}
-
-		if (!is_dir($root)) throw new \Exception("Invalid root provided: {$root}");
-
+		if (empty($root)) $root = self::get_wordpress_dir();
+		
 		$wp_config_file = $root . 'wp-config.php';
 		if (file_exists($wp_config_file)) {
 			return $wp_config_file;

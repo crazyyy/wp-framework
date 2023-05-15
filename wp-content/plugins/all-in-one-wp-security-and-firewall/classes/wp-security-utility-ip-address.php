@@ -95,7 +95,9 @@ class AIOWPSecurity_Utility_IP {
 	public static function is_ipv6_address_or_ipv6_range($item) {
 		$checked_ip = false;
 		$res = WP_Http::is_ip_address($item);
-		if ('6' == $res && Requests_IPv6::check_ipv6($item)) {
+		if ('6' == $res && class_exists('WpOrg\Requests\Ipv6') && WpOrg\Requests\Ipv6::check_ipv6($item)) {
+			$checked_ip = trim($item);
+		} elseif ('6' == $res && class_exists('Requests_IPv6') && Requests_IPv6::check_ipv6($item)) {
 			$checked_ip = trim($item);
 		} else {
 			//ipv6 - range check for valid CIDR range

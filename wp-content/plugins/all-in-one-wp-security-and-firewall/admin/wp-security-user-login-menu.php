@@ -226,39 +226,9 @@ class AIOWPSecurity_User_Login_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return void
 	 */
 	protected function render_failed_login_records() {
-		global $aio_wp_security, $wpdb;
-		if (isset($_POST['aiowps_delete_failed_login_records'])) {
-			if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'aiowpsec-delete-failed-login-records-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed for delete all failed login records operation.", 4);
-				die('Nonce check failed for delete all failed login records operation.');
-			}
-			$failed_logins_table = AIOWPSEC_TBL_FAILED_LOGINS;
-			// Delete all records from the failed logins table
-			$result = $wpdb->query("truncate $failed_logins_table");
-					
-			if (false === $result) {
-				$aio_wp_security->debug_logger->log_debug("User login feature - Delete all failed login records operation failed.", 4);
-				$this->show_msg_error(__('User login feature - Delete all failed login records operation failed.', 'all-in-one-wp-security-and-firewall'));
-			} else {
-				$this->show_msg_updated(__('All records from the failed logins table were deleted successfully.', 'all-in-one-wp-security-and-firewall'));
-			}
-		}
+		global $aio_wp_security;
 
-		include_once 'wp-security-list-login-fails.php'; // For rendering the AIOWPSecurity_List_Table in tab2
-		$failed_login_list = new AIOWPSecurity_List_Login_Failed_Attempts(); // For rendering the AIOWPSecurity_List_Table in tab2
-		
-		if (isset($_REQUEST['action'])) { // Do row action tasks for list table form for failed logins
-			if ($_REQUEST['action'] == 'delete_failed_login_rec') { // Delete link was clicked for a row in list table
-				$nonce = isset($_REQUEST['aiowps_nonce']) ? $_REQUEST['aiowps_nonce'] : '';
-				if (!isset($nonce) || !wp_verify_nonce($nonce, 'delete_failed_login_rec')) {
-					$aio_wp_security->debug_logger->log_debug("Nonce check failed for delete failed login record operation!", 4);
-					die(__('Nonce check failed for delete failed login record operation!','all-in-one-wp-security-and-firewall'));
-				}
-				$failed_login_list->delete_login_failed_records(strip_tags($_REQUEST['failed_login_id']));
-			}
-		}
-
-		$aio_wp_security->include_template('wp-admin/user-login/login-records.php', false, array('failed_login_list' => $failed_login_list));
+		$aio_wp_security->include_template('wp-admin/user-login/login-records.php');
 	}
 
 	/**

@@ -24,7 +24,7 @@ class AIOWPSecurity_Audit_Event_Handler {
 	 * Constructor for the class.
 	 */
 	private function __construct() {
-		add_action('aiowps_record_event', array($this, 'record_event'), 10, 3);
+		add_action('aiowps_record_event', array($this, 'record_event'), 10, 4);
 		add_action('aiowps_clean_old_events', array($this, 'delete_old_events'), 10);
 
 		if (!wp_next_scheduled('aiowps_clean_old_events')) {
@@ -38,21 +38,26 @@ class AIOWPSecurity_Audit_Event_Handler {
 	 * This function records an event in the audit log
 	 *
 	 * @param string $event_type  - the event type
-	 * @param string $details     - details about the event
+	 * @param array  $details     - details about the event
 	 * @param string $event_level - the event level
+	 * @param string $username    - the username, this is only used if there is no user logged in
 	 *
 	 * @return void
 	 */
-	public function record_event($event_type, $details, $event_level = 'info') {
+	public function record_event($event_type, $details, $event_level = 'info', $username = '') {
 		
-		if (!function_exists('wp_get_current_user')) return;
+		if (!function_exists('wp_get_current_user')) {
+			error_log("AIOWPSecurity_Audit_Event_Handler::record_event() called before plugins_loaded hook has run.");
+			return;
+		}
 
 		$user = wp_get_current_user();
-		$username = is_a($user, 'WP_User') ? $user->user_login : '';
-		$ip = AIOS_Helper::get_server_detected_user_ip_address();
+		$username = (is_a($user, 'WP_User') && 0 !== $user->ID) ? $user->user_login : $username;
+		$ip = AIOWPSecurity_Utility_IP::get_user_ip_address();
 		$stacktrace = maybe_serialize(AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace(false)));
 		$network_id = get_current_network_id();
 		$site_id = get_current_blog_id();
+		$details = json_encode($details, true);
 
 		$this->add_new_event($network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace);
 	}

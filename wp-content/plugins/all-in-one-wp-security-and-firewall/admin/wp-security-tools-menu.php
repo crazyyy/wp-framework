@@ -7,74 +7,34 @@ if (!defined('ABSPATH')) {
 class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 
 	/**
-	 * All tab keys, titles and render callbacks.
+	 * Tools menu slug
 	 *
-	 * @var Array
+	 * @var string
 	 */
-	protected $menu_tabs;
+	protected $menu_page_slug = AIOWPSEC_TOOLS_MENU_SLUG;
 
 	/**
-	 * Renders the submenu's current tab page.
-	 *
-	 * @return Void
+	 * Constructor adds menu for Tools
 	 */
 	public function __construct() {
-		$this->render_menu_page();
+		parent::__construct(__('Tools', 'all-in-one-wp-security-and-firewall'));
 	}
 
+
 	/**
-	 * Populates $menu_tabs array.
+	 * This function will setup the menus tabs by setting the array $menu_tabs
 	 *
-	 * @return Void
+	 * @return void
 	 */
-	private function set_menu_tabs() {
-		$this->menu_tabs = apply_filters('aiowpsecurity_tools_tabs',
-			array(
-				'whois-lookup' => array(
-					'title' => __('WHOIS lookup', 'all-in-one-wp-security-and-firewall'),
-					'render_callback' => array($this, 'render_whois_lookup_tab'),
-				)
+	protected function setup_menu_tabs() {
+		$menu_tabs = array(
+			'whois-lookup' => array(
+				'title' => __('WHOIS lookup', 'all-in-one-wp-security-and-firewall'),
+				'render_callback' => array($this, 'render_whois_lookup_tab'),
 			)
 		);
-	}
-
-	/**
-	 * Renders the submenu's tabs as nav items.
-	 *
-	 * @return Void
-	 */
-	private function render_menu_tabs() {
-		$current_tab = $this->get_current_tab();
-
-		echo '<h2 class="nav-tab-wrapper">';
-		foreach ($this->menu_tabs as $tab_key => $tab_info) {
-			$active = $current_tab == $tab_key ? 'nav-tab-active' : '';
-			echo '<a class="nav-tab '.$active.'" href="?page='.AIOWPSEC_TOOLS_MENU_SLUG.'&tab='.$tab_key.'">'.esc_html($tab_info['title']).'</a>';
-		}
-		echo '</h2>';
-	}
-
-	/**
-	 * Renders the submenu's current tab page.
-	 *
-	 * @return Void
-	 */
-	private function render_menu_page() {
-		echo '<div class="wrap">'; // Start of wrap
-		echo '<h2>'.__('Tools', 'all-in-one-wp-security-and-firewall').'</h2>'; // Interface title
-		$this->set_menu_tabs();
-		$tab = $this->get_current_tab();
-		$this->render_menu_tabs();
-
-		?>
-		<div id="poststuff">
-			<div id="post-body">
-				<?php call_user_func($this->menu_tabs[$tab]['render_callback']); ?>
-			</div>
-		</div>
-		<?php
-
-		echo '</div>'; // End of wrap
+		
+		$this->menu_tabs = array_filter($menu_tabs, array($this, 'should_display_tab'));
 	}
 
 	/**
@@ -165,7 +125,7 @@ class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 	 *
 	 * @return Void
 	 */
-	private function render_whois_lookup_tab() {
+	protected function render_whois_lookup_tab() {
 		global $aio_wp_security;
 		
 		$lookup = false;
