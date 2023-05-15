@@ -75,6 +75,7 @@ sitemap*.xml.gz
 wp-content/blogs.dir/
 wp-content/backup-db/
 wp-content/backups/
+wp-content/aiowps_backups/
 wp-content/cache/
 wp-content/litespeed/
 wp-content/upgrade/
