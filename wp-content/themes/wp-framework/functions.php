@@ -427,7 +427,7 @@ function single_result() {
 // Breadcrumbs   http://dimox.name/wordpress-breadcrumbs-without-a-plugin/
 /* <?php if (function_exists('easy_breadcrumbs')) easy_breadcrumbs(); ?> */
 
-function easy_breadcrumbs() {
+  function easy_breadcrumbs() {
 
     // Settings
     $separator = ' > ';
@@ -494,7 +494,7 @@ function easy_breadcrumbs() {
           $cat_display = '';
           $cat_parents_count = count($cat_parents);
           foreach ($cat_parents as $index => $parents) {
-            $cat_display .= '<li class="item-cat">' . $parents . '</li>';
+            $cat_display .= '<li class="item-cat">' . $parents . '</li><li class="separator"> ' . $separator . ' </li>';
             if ($index < $cat_parents_count - 1) {
               $cat_display .= '<li class="separator"> ' . $separator . ' </li>';
             }
