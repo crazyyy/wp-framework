@@ -5,7 +5,7 @@
       <?php if ( has_post_thumbnail()) { ?>
         <img src="<?php echo the_post_thumbnail_url('medium'); ?>" title="<?php the_title(); ?>" alt="<?php the_title(); ?>" />
       <?php } else { ?>
-        <img src="<?php echo catchFirstImage(); ?>" title="<?php the_title(); ?>" alt="<?php the_title(); ?>" />
+        <img src="<?php echo wpeb_catch_first_image(); ?>" title="<?php the_title(); ?>" alt="<?php the_title(); ?>" />
       <?php } ?>
     </a><!-- /post thumbnail -->
 
@@ -17,7 +17,7 @@
     <span class="author"><?php _e( 'Published by', 'wpeasy' ); ?> <?php the_author_posts_link(); ?></span>
     <span class="comments"><?php comments_popup_link( __( 'Leave your thoughts', 'wpeasy' ), __( '1 Comment', 'wpeasy' ), __( '% Comments', 'wpeasy' )); ?></span><!-- /post details -->
 
-    <?php wpeExcerpt('wpeExcerpt40'); ?>
+    <?php wpeb_excerpt('wpeb_excerpt_40'); ?>
 
   </div><!-- /looper -->
 <?php endwhile; endif; ?>

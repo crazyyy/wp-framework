@@ -1,0 +1,58 @@
+User-agent: *
+Disallow: /feed
+Disallow: /comments/feed
+Disallow: /feed/$
+Disallow: /*/feed/$
+Disallow: /*/feed/rss/$
+Disallow: /*/trackback/$
+Disallow: /*/*/feed/$
+Disallow: /*/*/feed/rss/$
+Disallow: /*/*/trackback/$
+Disallow: /*/*/*/feed/$
+Disallow: /*/*/*/feed/rss/$
+Disallow: /*/*/*/trackback/$
+Disallow: /trackback/
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+Disallow: /*.inc$
+Disallow: */trackback/
+
+User-agent: Mediapartners-Google
+Allow: /
+User-agent: Adsbot-Google
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+User-agent: ia_archiver
+Disallow: /
+Sitemap: https://sss.local/sitemap_index.xml
+
+
+####  recomendations
+
+
+User-agent: *
+Allow: */uploads
+Allow: /*/*.js
+Allow: /*/*.css
+Allow: /wp-*.png
+Allow: /wp-*.svg
+Allow: /wp-*.woff
+Allow: /wp-*.ttf
+Allow: /wp-*.jpg
+Allow: /wp-*.jpeg
+Allow: /wp-*.gif
+Allow: /wp-admin/admin-ajax.php
+Disallow: /cgi-bin
+Disallow: /wp-
+Disallow: *?s=
+Disallow: *&s=
+Disallow: /search/
+Disallow: /author/
+Disallow: /users/
+Disallow: */trackback
+Disallow: */feed
+Disallow: */rss
+Disallow: */embed
+Disallow: */wlwmanifest.xml
+Disallow: /xmlrpc.php

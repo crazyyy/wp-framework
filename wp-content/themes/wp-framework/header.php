@@ -36,6 +36,7 @@
   </head>
 
   <body <?php body_class(); ?> itemscope itemtype="https://schema.org/WebPage">
+    <?php wp_body_open(); ?>
     <!-- wrapper -->
     <div class="wrapper">
       <header role="banner">
@@ -43,7 +44,7 @@
 
           <div class="logo">
             <?php if (!is_front_page() && !is_home()) : ?>
-            <a href="<?php echo home_url(); ?>" title="<?php wp_title(''); ?>">
+            <a href="<?php echo home_url(); ?>" title="<?php bloginfo( 'name' ); ?>">
               <?php endif; ?>
 
               <?php if (function_exists('the_custom_logo')) : ?>
@@ -56,7 +57,7 @@
           </div><!-- /logo -->
 
           <nav class="nav" role="navigation">
-            <?php wpeHeadNav(); ?>
+            <?php wpeb_header_navigation(); ?>
           </nav><!-- /nav -->
 
         </div><!-- /.inner -->
