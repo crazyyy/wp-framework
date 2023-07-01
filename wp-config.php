@@ -1,6 +1,4 @@
 <?php
-const WP_CACHE = false;
-
 const CACHE_READ_WHITELIST  = '_transient|posts WHERE ID IN|limit_login_'; // do not read from cache is sql contains these
 const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache if sql contains these
 
@@ -37,6 +35,7 @@ if (DEV_DEBUG == true) {
   define( 'SCRIPT_DEBUG', true );
   define( 'WP_DEBUG_LOG', true );
   define( 'WP_DEBUG_DISPLAY', true );
+
 } else {
   define( 'WP_DEBUG', false );
   define( 'SCRIPT_DEBUG', false );
@@ -55,7 +54,8 @@ const WPCF7_AUTOP 					= false;
 const WP_ALLOW_REPAIR  			= true;
 const DISALLOW_FILE_EDIT  	= true;
 const WP_ALLOW_MULTISITE  	= true;
-const FS_METHOD           	= 'direct';
+//const FS_METHOD           	= 'direct';
+define( 'FS_METHOD', 'direct' );
 // const REVISR_GIT_PATH    = '';
 
 const AUTH_KEY          = 'B]9_9_%uF{fdsasgC)pMx/?-+_bVjX;Xrib=1y23rgghdh3a+dadAEIZ1O/z^2Gv`<GLr<7hKI';

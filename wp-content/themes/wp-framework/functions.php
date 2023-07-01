@@ -892,6 +892,53 @@
     global $post;
     return '... <a rel="nofollow" class="view-article" href="' . get_permalink($post->ID) . '">' . __('View Article', 'wpeb') . '</a>';
   }
-  add_filter('excerpt_more', 'wpeb_blank_view_article'); //
+  add_filter('excerpt_more', 'wpeb_blank_view_article');
 
-  ?>
+  /*
+   * Add Featured Image Column in WordPress Admin
+   * https://bloggerpilot.com/en/featured-image-admin-en/
+   */
+  // Set thumbnail size
+  add_image_size( 'wpeb-admin-featured-image', 60, 60, false );
+
+  // Add the posts and pages columns filter. Same function for both.
+  add_filter('manage_posts_columns', 'wpeb_add_thumbnail_column', 2);
+  add_filter('manage_pages_columns', 'wpeb_add_thumbnail_column', 2);
+  function wpeb_add_thumbnail_column($wpeb_columns){
+    $wpeb_columns['wpeb_thumb'] = __('Image');
+    return $wpeb_columns;
+  }
+
+  // Add featured image thumbnail to the WP Admin table.
+  function wpeb_show_thumbnail_column($wpeb_columns, $wpeb_id){
+    switch($wpeb_columns){
+      case 'wpeb_thumb':
+        if( function_exists('the_post_thumbnail') )
+          echo the_post_thumbnail( 'wpeb_admin-featured-image' );
+        break;
+    }
+  }
+  add_action('manage_posts_custom_column', 'wpeb_show_thumbnail_column', 5, 2);
+  add_action('manage_pages_custom_column', 'wpeb_show_thumbnail_column', 5, 2);
+
+  // Move the new column at the first place.
+  function wpeb_column_order($columns) {
+    $n_columns = array();
+    $move = 'wpeb_thumb'; // which column to move
+    $before = 'title'; // move before this column
+
+    foreach($columns as $key => $value) {
+      if ($key==$before){
+        $n_columns[$move] = $move;
+      }
+      $n_columns[$key] = $value;
+    }
+    return $n_columns;
+  }
+  add_filter('manage_posts_columns', 'wpeb_column_order');
+
+  // Format the column width with CSS
+  function wpeb_add_admin_styles() {
+    echo '<style>.column-wpeb-thumb {width: 60px;}</style>';
+  }
+  add_action('admin_head', 'wpeb_add_admin_styles');

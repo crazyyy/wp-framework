@@ -44,3 +44,10 @@ if (typeof jQuery === 'undefined') {
 }
 
 // Place any jQuery/helper plugins in here.
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Document is ready');
+  // Place your code that needs to run after the document has finished loading
+
+});
+
