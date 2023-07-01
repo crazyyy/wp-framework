@@ -2,3 +2,18 @@
 <Files *.php>
 deny from all
 </Files>
+
+# BEGIN Wordfence code execution protection
+<IfModule mod_php5.c>
+php_flag engine 0
+</IfModule>
+<IfModule mod_php7.c>
+php_flag engine 0
+</IfModule>
+<IfModule mod_php.c>
+php_flag engine 0
+</IfModule>
+
+AddHandler cgi-script .php .phtml .php3 .pl .py .jsp .asp .htm .shtml .sh .cgi
+Options -ExecCGI
+# END Wordfence code execution protection
