@@ -25,7 +25,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 */
 	public static function get_allowed_ajax_commands() {
 
-		$commands = apply_filters('updraft_task_manager_allowed_ajax_commands', array());
+		$commands = parent::get_allowed_ajax_commands();
 
 		$smush_commands = array(
 			'compress_single_image',

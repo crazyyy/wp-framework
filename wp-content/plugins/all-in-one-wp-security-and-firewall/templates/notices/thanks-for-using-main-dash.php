@@ -1,11 +1,10 @@
 <?php if (!defined('AIO_WP_SECURITY_PATH')) die('No direct access allowed'); ?>
 
 <div id="aiowps-dashnotice" class="updated">
-	<div style="float: right;"><a href="#" onclick="jQuery('#aiowps-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'aiowps_ajax', subaction: 'dismissdashnotice', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce'); ?>'});"><?php printf(__('Dismiss (for %s months)', 'all-in-one-wp-security-and-firewall'), 12); ?></a></div>
+	<div style="float: right;"><a href="#" onclick="jQuery('#aiowps-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'aios_ajax', subaction: 'dismiss_notice', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce'); ?>', data: { notice: 'dismissdashnotice'}});"><?php printf(__('Dismiss (for %s months)', 'all-in-one-wp-security-and-firewall'), 12); ?></a></div>
+	<h3><?php printf(htmlspecialchars(__('Thank you for using %s!', 'all-in-one-wp-security-and-firewall')), 'All-In-One Security (AIOS)'); ?></h3>
 
-	<h3><?php echo htmlspecialchars(__('Thank you for installing All In One WP Security & Firewall!', 'all-in-one-wp-security-and-firewall')); ?></h3>
-
-	<a href="https://aiosplugin.com/"><img style="border: 0px; float: right; width: 150px; margin-right: 40px;" alt="<?php echo htmlspecialchars('All In One WP Security & Firewall'); ?>" title="<?php echo htmlspecialchars('All In One WP Security & Firewall'); ?>" src="<?php echo AIO_WP_SECURITY_URL.'/images/ud_smile.png'; ?>"></a>
+	<a href="https://aiosplugin.com/"><img style="border: 0px; float: right; width: 250px; margin-right: 40px; margin-top: 40px;" alt="All-In-One Security (AIOS)" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/aios_logo_wide.png'; ?>"></a>
 
 	<div id="aiowps-dashnotice_wrapper" style="max-width: 800px;">
 

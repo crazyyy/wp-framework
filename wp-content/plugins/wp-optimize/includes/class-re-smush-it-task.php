@@ -87,14 +87,13 @@ class Re_Smush_It_Task extends Updraft_Smush_Task {
 
 		if (isset($options['quality']) && is_int($options['quality']) && 0 < $options['quality']) $quality = $options['quality'];
 
-		$this->log($quality);
 		$post_fields = array(
 			'qlty' => $quality,
 			'exif' => $this->get_option('preserve_exif', false)
 		);
 		$payload = '';
 		$file_name = basename($local_file);
-		
+
 		foreach ($post_fields as $name => $value) {
 			$payload .= "--$boundary";
 			$payload .= "\r\n";

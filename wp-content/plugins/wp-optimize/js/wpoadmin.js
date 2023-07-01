@@ -2189,7 +2189,7 @@ jQuery(function ($) {
 	function get_add_logging_form_html() {
 		var i,
 			select_options = [
-				'<option value="">Select destination</option>'
+				'<option value="">' + wpoptimize.select_destination + '</option>'
 			];
 
 		for (i in wpoptimize.loggers_classes_info) {
@@ -2205,8 +2205,8 @@ jQuery(function ($) {
 				'<select class="wpo_logger_type" name="wpo-logger-type[]">',
 					select_options.join(''),
 				'</select>',
-				'<div class="wpo_logging_edit_row" style="display:block;"><span class="wpo_delete_logger button button-secondary" title="'+wpoptimize.delete_logger+'">'+wpoptimize.delete_logger+'</span>',
-				'<span class="wpo_save_logging button button-primary" title="'+wpoptimize.add_logger+'">'+wpoptimize.add_logger+'</span></div>',
+				'<div class="wpo_logging_edit_row" style="display:block;"><span class="wpo_delete_logger button button-secondary" title="'+wpoptimize.cancel+'">'+wpoptimize.cancel+'</span>',
+				'<span class="wpo_save_logging button button-primary" title="'+wpoptimize.add+'">'+wpoptimize.add+'</span></div>',
 				'<div class="wpo_additional_logger_options"></div>',
 			'</div>'
 		].join('');

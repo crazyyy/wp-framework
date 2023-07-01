@@ -2,10 +2,10 @@
 Contributors:      croixhaug, nataliemac
 Donate link:       https://nsquared.io
 Tags:    troubleshoot, conflicts, debug, support, administration, site health, performance, error, developer, troubleshooting, development, health check
-Requires at least: 5.8
-Tested up to:      6.1
+Requires at least: 6.1
+Tested up to:      6.2
 Requires PHP:      5.3
-Stable tag:        1.2.10
+Stable tag:        1.2.14
 License:           GPLv2
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,30 @@ Would this just be a tool for you (the network admin)? Or would you want your si
 
 === Changelog ===
 
+== 1.2.14 - 2023-06-10 ==
+
+= Features and Improvements =
+
+- Fix PHP 8.2 compatibility
+
+== 1.2.13 - 2023-05-25 ==
+
+= Features and Improvements =
+
+- Update required WP version to 6.1
+
+== 1.2.12 - 2023-05-25 ==
+
+= Features and Improvements =
+
+- Update required WP version to 6.1
+
+== 1.2.11 - 2023-04-27 ==
+
+= Features and Improvements =
+
+PR:#25 - Compatibility with WordPress 6.2
+
 == 1.2.10 - 2023-04-11 ==
 
 = Fixes =
@@ -158,30 +182,6 @@ PR:#19 - Prevent fatal error on WP versions where WP_Textdomain_Registry doesnâ€
 - Fixed for WP 5.8 compatibility
 
 == 1.1.8 ==
-
-- Fixed for WP 5.5 compatibility
-
-== 1.1.6 ==
-
-- Fixed fatal error with WP 5.2 and some themes
-
-== 1.1.4 ==
-
-- Fixed warning on PHP 7.3
-
-== 1.1.2 ==
-
-- Fixed compatibility with servers running older than PHP5.5
-
-== 1.1.1 ==
-
-- Fixed issue on some sites where there are redirects or irregularities with http://www.site.com vs http://site.com
-
-== 1.1 ==
-
-- Added internationalized strings for future translation
-
-== 1.0.14 ==
 
 
 For older changelog entries, please see the [additional changelog.txt file](https://plugins.svn.wordpress.org/plugin-detective/trunk/CHANGELOG.md) delivered with the plugin.

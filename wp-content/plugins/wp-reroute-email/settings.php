@@ -3,9 +3,15 @@
         exit();
     }
     
-    $tab = filter_input(INPUT_GET, 'tab');
+    $tab = sanitize_text_field(filter_input(INPUT_GET, 'tab'));
     
     if($_SERVER['REQUEST_METHOD'] == 'POST' && !in_array($tab, ['test', 'log'])){
+        if(!$_POST['settings_nonce'] 
+            || !wp_verify_nonce($_POST['settings_nonce'], 'wpreroute_save_settings')
+            || $_POST['_wp_http_referer'] != '/wp-admin/admin.php?page=wp-reroute-email%2Fsettings.php') {
+            print esc_html__('Unauthorized access.');
+            exit;
+        }
         $enable = !empty($_POST['enable_reroute']) && sanitize_text_field($_POST['enable_reroute']) ? 1 : 0;
         $append_recipient = !empty($_POST['append_recipient']) && sanitize_text_field($_POST['append_recipient']) ? 1 : 0;
         $email = !empty($_POST['email_address']) ? sanitize_text_field($_POST['email_address']) : '';
@@ -56,6 +62,7 @@
 
     <?php if(empty($tab)): ?>
     <form action="" method="post">
+        <?php wp_nonce_field( 'wpreroute_save_settings', 'settings_nonce' ); ?>
         <table class="form-table">
             <tbody>
                 <tr>

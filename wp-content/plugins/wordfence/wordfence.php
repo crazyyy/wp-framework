@@ -4,13 +4,13 @@ Plugin Name: Wordfence Security
 Plugin URI: http://www.wordfence.com/
 Description: Wordfence Security - Anti-virus, Firewall and Malware Scan
 Author: Wordfence
-Version: 7.9.2
+Version: 7.10.0
 Author URI: http://www.wordfence.com/
 Text Domain: wordfence
 Domain Path: /languages
 Network: true
 Requires at least: 3.9
-Requires PHP: 5.3
+Requires PHP: 5.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -38,8 +38,8 @@ if(defined('WP_INSTALLING') && WP_INSTALLING){
 if (!defined('ABSPATH')) {
 	exit;
 }
-define('WORDFENCE_VERSION', '7.9.2');
-define('WORDFENCE_BUILD_NUMBER', '1679934025');
+define('WORDFENCE_VERSION', '7.10.0');
+define('WORDFENCE_BUILD_NUMBER', '1687359289');
 define('WORDFENCE_BASENAME', function_exists('plugin_basename') ? plugin_basename(__FILE__) :
 	basename(dirname(__FILE__)) . '/' . basename(__FILE__));
 
@@ -66,8 +66,15 @@ if (!defined('WF_IS_FLYWHEEL')) {
 if (!defined('WF_IS_PRESSABLE')) {
 	define('WF_IS_PRESSABLE', (defined('IS_ATOMIC') && IS_ATOMIC) || (defined('IS_PRESSABLE') && IS_PRESSABLE));
 }
+
+require(dirname(__FILE__) . '/lib/wfVersionSupport.php');
+/**
+ * @var string $wfPHPDeprecatingVersion
+ * @var string $wfPHPMinimumVersion
+ */
+
 if (!defined('WF_PHP_UNSUPPORTED')) {
-	define('WF_PHP_UNSUPPORTED', version_compare(PHP_VERSION, '5.3', '<'));
+	define('WF_PHP_UNSUPPORTED', version_compare(PHP_VERSION, $wfPHPMinimumVersion, '<'));
 }
 
 if (WF_PHP_UNSUPPORTED) {

@@ -8,7 +8,9 @@ use No3x\WPML\Admin\SettingsTab;
 use No3x\WPML\Admin\SMTPTab;
 use No3x\WPML\Renderer\Column\AttachmentsColumn;
 use No3x\WPML\Renderer\Column\ColumnFormat;
+use No3x\WPML\Renderer\Column\SubjectColumn;
 use No3x\WPML\Renderer\WPML_ColumnManager;
+use No3x\WPML\Renderer\WPML_MailRenderer;
 use No3x\WPML\WPML_Utils;
 
 abstract class BaseRenderer implements IMailRenderer {
@@ -146,6 +148,7 @@ abstract class BaseRenderer implements IMailRenderer {
      * Render the value.
      *
      * @since 1.11.0
+     * @since 1.12.0
      *
      * @param string $key   Key of the value to render.
      * @param string $value Value to be rendered.
@@ -153,11 +156,27 @@ abstract class BaseRenderer implements IMailRenderer {
      * @return void
      */
     private function render_column_value( $key, $value ) {
+        $format = empty( $_POST['format'] ) ? 'html' : $_POST['format'];
         ?>
         <div class="wp-mail-logging-modal-row-value wp-mail-logging-modal-row-value-<?php echo esc_attr( $key ); ?>">
             <?php
 
-            echo wp_kses_post( $value );
+            if ( $key === WPML_ColumnManager::COLUMN_SUBJECT && $format === WPML_MailRenderer::FORMAT_HTML ) {
+                try {
+                    $value = ( new SubjectColumn() )->render(
+                    [
+                        'subject' => $value,
+                    ],
+                    ColumnFormat::SIMPLE
+                );
+                } catch ( \Exception $e ) {}
+            }
+
+            if ( $key === WPML_ColumnManager::COLUMN_SUBJECT ) {
+                echo esc_html( $value );
+            } else {
+                echo wp_kses_post( $value );
+            }
 
             if ( $key === 'error' ) {
                 ?>

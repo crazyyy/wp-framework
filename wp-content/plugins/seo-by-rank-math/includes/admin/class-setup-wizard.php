@@ -70,6 +70,13 @@ class Setup_Wizard {
 	public $wizard_step = null;
 
 	/**
+	 * Hook suffix.
+	 * 
+	 * @var string
+	 */
+	public $hook_suffix = '';
+
+	/**
 	 * The Constructor.
 	 */
 	public function __construct() {
@@ -108,7 +115,7 @@ class Setup_Wizard {
 				'class' => '\\RankMath\\Wizard\\Your_Site',
 			],
 
-			'analytics' => [
+			'analytics'     => [
 				'name'  => esc_html__( 'Analytics', 'rank-math' ),
 				'class' => '\\RankMath\\Wizard\\Search_Console',
 			],
@@ -212,7 +219,6 @@ class Setup_Wizard {
 		}
 
 		return $url;
-		return rank_math()->admin_dir() . "wizard/views/{$view}.php";
 	}
 
 	/**

@@ -11,6 +11,7 @@ return array(
     'No3x\\WPML\\Admin\\SettingsTab' => $baseDir . '/src/inc/Admin/SettingsTab.php',
     'No3x\\WPML\\Helpers\\PluginSilentUpgrader' => $baseDir . '/src/inc/Helpers/PluginSilentUpgrader.php',
     'No3x\\WPML\\Helpers\\PluginSilentUpgraderSkin' => $baseDir . '/src/inc/Helpers/PluginSilentUpgraderSkin.php',
+    'No3x\\WPML\\Migration\\Migration' => $baseDir . '/src/inc/Migration/Migration.php',
     'No3x\\WPML\\Tests\\Helper\\WPML_IntegrationTestCase' => $baseDir . '/tests/helper/WPML_IntegrationTestCase.php',
     'No3x\\WPML\\Tests\\Helper\\WPMailArrayBuilder' => $baseDir . '/tests/helper/WPMailArrayBuilder.php',
 );

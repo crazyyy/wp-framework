@@ -261,6 +261,10 @@ We will definitely add multisite support in the future. You can speed up this pr
 7. Custom shortcode name
 
 == Changelog ==
+= 2.4.10 =
+* Minor fixes
+* New API for Snippets Library
+
 = 2.4.9 =
 * WP 6.2 compatibility
 

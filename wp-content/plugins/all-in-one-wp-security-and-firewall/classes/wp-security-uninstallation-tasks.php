@@ -41,7 +41,7 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 	 * @return void
 	 */
 	public static function drop_database_tables_and_configs() {
-		global $wpdb, $aio_wp_security, $simba_two_factor_authentication;
+		global $wpdb, $aio_wp_security;
 
 		$database_tables = array(
 			$wpdb->prefix.'aiowps_login_lockdown',
@@ -68,10 +68,6 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 			if (is_main_site()) {
 				$firewall_rules_path = AIOWPSecurity_Utility_Firewall::get_firewall_rules_path();
 				AIOWPSecurity_Utility_File::remove_local_directory($firewall_rules_path);
-
-				if (!empty($simba_two_factor_authentication->is_tfa_integrated)) {
-					$simba_two_factor_authentication->delete_configs();
-				}
 			}
 
 			delete_option('aio_wp_security_configs');

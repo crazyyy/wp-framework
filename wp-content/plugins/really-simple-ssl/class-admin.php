@@ -26,7 +26,7 @@ class rsssl_admin
         register_deactivation_hook( __DIR__ . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
-	    add_action( 'rsssl_weekly_cron', array($this, 'clear_admin_notices_cache') );
+	    add_action( 'rsssl_daily_cron', array($this, 'clear_admin_notices_cache') );
 
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
@@ -443,19 +443,29 @@ class rsssl_admin
 	 */
 
 	public function notice_html( string $class, string $content, $more_info=false, $dismiss_id=false ) {
+        if (!rsssl_user_can_manage() ) {
+            return '';
+        }
 		$class .= ' notice ';
-        $target = strpos($more_info, 'really-simple-ssl.com')!==false ? 'target="_blank"' : '';
+		$is_internal_link = strpos($more_info, 'really-simple-ssl.com')===false;
+        $target = !$is_internal_link ? 'target="_blank"' : '';
         $url = is_ssl() ? "https://" : "http://";
 		$url .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
-        $url = esc_url_raw($url);
+		$url = wp_validate_redirect( $url, apply_filters( 'wp_safe_redirect_fallback', admin_url(), 302 ) );
+
+		$url = esc_url_raw($url);
 		ob_start();?>
             <style>
                 #rsssl-message {
+                    margin:10px 0;
                     padding: 0;
                     border-left-color: #333;
                 }
                 #rsssl-message.error{
                     border-left-color:#d7263d;
+                }
+                #rsssl-message.warning{
+                    border-left-color:#ffb900;
                 }
                 .rsssl-notice {
                     display:flex;
@@ -489,17 +499,19 @@ class rsssl_admin
                 <div class="rsssl-notice-content">
 					<?php echo $content ?>
                 </div>
-                <?php if ($more_info ) { ?>
+                <?php if ( $more_info || $dismiss_id ) { ?>
                     <div class="rsssl-admin-notice-more-info">
                         <?php if ($dismiss_id) { ?>
                             <a class="button" href="<?php echo add_query_arg(['dismiss_notice'=>$dismiss_id], $url )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
                         <?php } ?>
-                        <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a></div>
+                        <?php if ($more_info) { ?>
+                            <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php $is_internal_link ? _e("View", "really-simple-ssl") : _e("More info", "really-simple-ssl")?></a>
+                        <?php } ?>
+                    </div>
                 <?php } ?>
             </div>
         </div>
 		<?php
-
 		return ob_get_clean();
 	}
 
@@ -514,7 +526,6 @@ class rsssl_admin
     public function wpconfig_is_writable()
     {
         $wpconfig_path = $this->find_wp_config_path();
-
         if (empty($wpconfig_path)) {
 		    return false;
 	    }
@@ -573,23 +584,22 @@ class rsssl_admin
      * @since  2.1
      *
      * @access public
-     * @return string|null
+     * @return string|false
      *
      */
 
     public function find_wp_config_path()
     {
-        //limit nr of iterations to 20
-        $i = 0;
-        $maxiterations = 20;
-        $dir = __DIR__;
-        do {
-            $i++;
-            if (file_exists($dir . "/wp-config.php")) {
-                return $dir . "/wp-config.php";
-            }
-        } while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
-        return null;
+	    $location_of_wp_config = ABSPATH;
+	    if ( ! file_exists( ABSPATH . 'wp-config.php' ) && file_exists( dirname( ABSPATH ) . '/wp-config.php' ) ) {
+		    $location_of_wp_config = dirname( ABSPATH );
+	    }
+	    $location_of_wp_config = trailingslashit( $location_of_wp_config );
+        $wpconfig_path = $location_of_wp_config . 'wp-config.php';
+        if ( file_exists( $wpconfig_path ) ) {
+	        return $wpconfig_path;
+        }
+        return false;
     }
 
     /**
@@ -1703,6 +1713,8 @@ class rsssl_admin
         if ( !rsssl_user_can_manage() ){
             return;
         }
+        require_once(ABSPATH . 'wp-admin/includes/screen.php'); //temp fix for WordPress until it gets fixed in core
+
 	    //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
 	    $screen = get_current_screen();
 	    if ( $screen && $screen->base === 'post' ) {
@@ -1715,10 +1727,13 @@ class rsssl_admin
         if ( is_array($notices) ) {
 	        foreach ( $notices as $id => $notice ){
 		        $notice = $notice['output'];
-		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-		        $more_info = $notice['url'] ?? false;
-		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-		        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+		        if ( isset($notice['msg']) ) {
+                    //if there is an open status, we change error to warning.
+                    $class = ( $notice['status'] === 'open' )? 'warning':'error';
+                    $more_info = $notice['url'] ?? false;
+                    $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
+	                echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+                }
 	        }
         }
     }
@@ -1841,7 +1856,6 @@ class rsssl_admin
                 return $cached_notices;
 		    }
 	    }
-
         //not cached, set a default here
         //only cache if the admin_notices are retrieved.
         if ( $args['admin_notices'] ) {
@@ -1905,7 +1919,7 @@ class rsssl_admin
                         'icon' => 'warning',
                         'admin_notice' => true,
                         'plusone' => true,
-                        'dismissible' => false,
+                        'dismissible' => true,
                         'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
                     ),
                 ),
@@ -2097,11 +2111,13 @@ class rsssl_admin
 	            ],
 	            'output' => array(
                     'htaccess-redirect-set' => array(
-                        'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
+                      'title' => __('301 .htaccess redirect', 'really-simple-ssl'),
+                        'msg' =>__('The 301 redirect with .htaccess to HTTPS is now enabled.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     'wp-redirect-to-htaccess' => array(
                         'highlight_field_id' => 'redirect',
+                        'title' => __('301 .htaccess redirect', 'really-simple-ssl'),
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'plusone' => RSSSL()->server->uses_htaccess(),
@@ -2313,7 +2329,7 @@ class rsssl_admin
 		        'output' => array(
 			        'true' => array(
 				        'msg' => __( "Our vulnerability reporting is in beta. Signup for the beta to discover the new features!", 'really-simple-ssl' ),
-				        'icon' => 'open',
+				        'icon' => 'urgent',
 				        'admin_notice' => false,
 				        'url' => 'https://really-simple-ssl.com/vulnerability-reporting/',
 				        'dismissible' => true,
@@ -2402,12 +2418,6 @@ class rsssl_admin
 	                unset( $notices[$id]);
                 }
             }
-            //ensure an empty list is also cached
-		    $cache_notices = empty($notices) ? 'empty' : $notices;
-		    //only cache if the admin_notices are retrieved.
-		    if ( $args['admin_notices'] ) {
-			    update_option( 'rsssl_admin_notices', $cache_notices );
-		    }
         }
 
 	    //sort so warnings are on top
@@ -2435,6 +2445,14 @@ class rsssl_admin
 			    }
 		    }
         }
+
+	    //ensure an empty list is also cached
+	    $cache_notices = empty($notices) ? 'empty' : $notices;
+	    //only cache if the admin_notices are retrieved.
+	    if ( $args['admin_notices'] ) {
+		    update_option( 'rsssl_admin_notices', $cache_notices );
+	    }
+
 	    return $notices;
     }
 
@@ -2563,6 +2581,7 @@ class rsssl_admin
         if ( $hook !== 'settings_page_really-simple-security') {
             return;
         }
+        //only on settings page
 	    $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $rtl = is_rtl() ? 'rtl/' : '';
         $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}admin{$min}.css";
@@ -2806,9 +2825,10 @@ class rsssl_admin
 		//only if cookie settings were not inserted yet
 		if ( $this->secure_cookie_settings_status() !== 'set' ) {
 			$wpconfig_path = RSSSL()->admin->find_wp_config_path();
-			if (empty($wpconfig_path)) {
-				return false;
-			}
+            if (empty($wpconfig_path)) {
+                return;
+            }
+
 			$wpconfig = file_get_contents($wpconfig_path);
 			if ((strlen($wpconfig)!=0) && is_writable($wpconfig_path)) {
 				$rule  = "\n"."//Begin Really Simple SSL session cookie settings"."\n";

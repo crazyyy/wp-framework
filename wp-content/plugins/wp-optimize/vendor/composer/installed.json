@@ -406,24 +406,24 @@
         },
         {
             "name": "mrclay/minify",
-            "version": "3.0.13",
-            "version_normalized": "3.0.13.0",
+            "version": "3.0.14",
+            "version_normalized": "3.0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrclay/minify.git",
-                "reference": "ae5b9f0bfb5f2ab0bcba45289268328be27a7ae6"
+                "reference": "dc02cdfba70737828c947fde33bc3f8235a742f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrclay/minify/zipball/ae5b9f0bfb5f2ab0bcba45289268328be27a7ae6",
-                "reference": "ae5b9f0bfb5f2ab0bcba45289268328be27a7ae6",
+                "url": "https://api.github.com/repos/mrclay/minify/zipball/dc02cdfba70737828c947fde33bc3f8235a742f5",
+                "reference": "dc02cdfba70737828c947fde33bc3f8235a742f5",
                 "shasum": ""
             },
             "require": {
                 "ext-pcre": "*",
                 "intervention/httpauth": "^2.0|^3.0",
                 "marcusschwarz/lesserphp": "^0.5.5",
-                "monolog/monolog": "~1.1|~2.0",
+                "monolog/monolog": "~1.1|~2.0|~3.0",
                 "mrclay/jsmin-php": "~2",
                 "mrclay/props-dic": "^2.2|^3.0",
                 "php": "^5.3.0 || ^7.0 || ^8.0",
@@ -440,7 +440,7 @@
                 "firephp/firephp-core": "Use FirePHP for Log messages",
                 "meenie/javascript-packer": "Keep track of the Packer PHP port using Composer"
             },
-            "time": "2022-10-02T21:12:43+00:00",
+            "time": "2023-05-05T12:03:06+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -469,7 +469,7 @@
             "support": {
                 "email": "minify@googlegroups.com",
                 "issues": "https://github.com/mrclay/minify/issues",
-                "source": "https://github.com/mrclay/minify/tree/3.0.13",
+                "source": "https://github.com/mrclay/minify/tree/3.0.14",
                 "wiki": "https://github.com/mrclay/minify/blob/master/docs"
             },
             "install-path": "../mrclay/minify"
@@ -1385,17 +1385,17 @@
         },
         {
             "name": "team-updraft/common-libs",
-            "version": "3.0.4",
-            "version_normalized": "3.0.4.0",
+            "version": "3.0.6",
+            "version_normalized": "3.0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://source.updraftplus.com/team-updraft/common-libs.git",
-                "reference": "6f4fdb2dba754cd0a5b8457e35ac34f3cd3ef449"
+                "reference": "38ac0cd5b7f7b712ddfb6cb49919668fe810dc07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://source.updraftplus.com/api/v4/projects/28/packages/composer/archives/team-updraft/common-libs.zip?sha=6f4fdb2dba754cd0a5b8457e35ac34f3cd3ef449",
-                "reference": "6f4fdb2dba754cd0a5b8457e35ac34f3cd3ef449",
+                "url": "https://source.updraftplus.com/api/v4/projects/28/packages/composer/archives/team-updraft/common-libs.zip?sha=38ac0cd5b7f7b712ddfb6cb49919668fe810dc07",
+                "reference": "38ac0cd5b7f7b712ddfb6cb49919668fe810dc07",
                 "shasum": ""
             },
             "require-dev": {

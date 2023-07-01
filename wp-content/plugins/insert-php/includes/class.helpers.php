@@ -597,18 +597,18 @@ SCRIPT;
 	 * @return string
 	 */
 	public static function get_factory_class() {
-		return "factory-bootstrap-464 factory-fontawesome-000";
+		return "factory-bootstrap-467 factory-fontawesome-000";
 	}
 
 	/**
-	 * Wrapper for Wbcr_FactoryForms460_OptionsValueProvider object
+	 * Wrapper for Wbcr_FactoryForms463_OptionsValueProvider object
 	 *
 	 * @param $plugin
 	 *
-	 * @return Wbcr_FactoryForms460_OptionsValueProvider
+	 * @return Wbcr_FactoryForms463_OptionsValueProvider
 	 */
 	public static function get_options_value_provider( $plugin ) {
-		return new Wbcr_FactoryForms460_OptionsValueProvider( $plugin );
+		return new Wbcr_FactoryForms463_OptionsValueProvider( $plugin );
 	}
 
 	/**
@@ -617,10 +617,10 @@ SCRIPT;
 	 * @param $options
 	 * @param $plugin
 	 *
-	 * @return Wbcr_FactoryForms460_Form
+	 * @return Wbcr_FactoryForms463_Form
 	 */
 	public static function get_factory_form( $options, $plugin ) {
-		return new Wbcr_FactoryForms460_Form( $options, $plugin );
+		return new Wbcr_FactoryForms463_Form( $options, $plugin );
 	}
 
 	/**

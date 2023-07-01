@@ -182,6 +182,7 @@ class AIOWPSecurity_User_Login {
 		global $aio_wp_security;
 		if (!is_wp_error($user)) {
 			// Authentication has been successful, there's nothing to do here.
+			AIOWPSecurity_Audit_Events::event_successful_login($username);
 			return $user;
 		}
 		if (empty($username) || empty($password)) {
@@ -374,10 +375,8 @@ class AIOWPSecurity_User_Login {
 				}
 			
 				$email_msg .= __("Log into your site WordPress administration panel to see the duration of the lockout or to unlock the user.", 'all-in-one-wp-security-and-firewall') . "\n";
-			
-				$site_title = get_bloginfo('name');
-				$from_name = empty($site_title) ? 'WordPress' : $site_title;
-				$email_header = 'From: '.$from_name.' <'.get_bloginfo('admin_email').'>' . "\r\n\\";
+
+				$email_header = '';
 				$send_mail = wp_mail($to_email_address, $subject, $email_msg, $email_header, $backtrace_filepath);
 			
 				if (false === $send_mail) {
@@ -486,10 +485,8 @@ class AIOWPSecurity_User_Login {
 		global $aio_wp_security;
 		$subject = '['.network_site_url().'] '. __('Unlock request notification', 'all-in-one-wp-security-and-firewall');
 		$email_msg = sprintf(__('You have requested for the account with email address %s to be unlocked. Please press the link below to unlock your account:', 'all-in-one-wp-security-and-firewall'), $email) . "\n" . sprintf(__('Unlock link: %s', 'all-in-one-wp-security-and-firewall'), $unlock_link) . "\n\n" . __('After pressing the above link you will be able to login to the WordPress administration panel.', 'all-in-one-wp-security-and-firewall') . "\n";
-		$site_title = get_bloginfo('name');
-		$from_name = empty($site_title) ? 'WordPress' : $site_title;
-		$email_header = 'From: '.$from_name.' <'.get_bloginfo('admin_email').'>' . "\r\n\\";
-		$sendMail = wp_mail($email, $subject, $email_msg, $email_header);
+		
+		$sendMail = wp_mail($email, $subject, $email_msg);
 		if (false === $sendMail) {
 			$aio_wp_security->debug_logger->log_debug("Unlock Request Notification email failed to send to " . $email, 4);
 		}

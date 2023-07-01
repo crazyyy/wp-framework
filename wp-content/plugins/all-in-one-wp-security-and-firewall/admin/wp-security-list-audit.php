@@ -100,15 +100,34 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 		
 		if (!is_array($details)) return $item['details'];
 
-		if (array_key_exists('plugin', $details)) {
+		if (array_key_exists('core_updated', $details)) {
+			$info = $details['core_updated'];
+			return sprintf(__('WordPress updated from version %s to %s', 'all-in-one-wp-security-and-firewall'), $info['old_version'], $info['new_version']);
+		} elseif (array_key_exists('plugin', $details)) {
 			$info = $details['plugin'];
-			return sprintf(__('Plugin: %s %s %s (v%s)', 'all-in-one-wp-security-and-firewall'), $info['name'], $info['network'], $info['action'], $info['version']);
+			return sprintf(__('Plugin', 'all-in-one-wp-security-and-firewall').': %s %s %s (v%s)', $info['name'], $info['network'], $info['action'], $info['version']);
 		} elseif (array_key_exists('theme', $details)) {
 			$info = $details['theme'];
 			if ('activated' == $info['action']) {
-				return sprintf(__('Theme: %s %s', 'all-in-one-wp-security-and-firewall'), $info['name'], $info['action']);
+				return sprintf(__('Theme', 'all-in-one-wp-security-and-firewall').': %s %s', $info['name'], $info['action']);
 			} else {
-				return sprintf(__('Theme: %s %s %s (v%s)', 'all-in-one-wp-security-and-firewall'), $info['name'], $info['network'], $info['action'], $info['version']);
+				return sprintf(__('Theme', 'all-in-one-wp-security-and-firewall').': %s %s %s (v%s)', $info['name'], $info['network'], $info['action'], $info['version']);
+			}
+		} elseif (array_key_exists('entity_changed', $details)) {
+			$info = $details['entity_changed'];
+			if ($info['entity']) {
+				return sprintf(__('Entity: "%s" has changed, please check the stacktrace for more details', 'all-in-one-wp-security-and-firewall'), $info['entity']);
+			} else {
+				return __('An unknown entity has changed, please check the stacktrace for more details', 'all-in-one-wp-security-and-firewall');
+			}
+		} elseif (array_key_exists('translation_updated', $details)) {
+			$info = $details['translation_updated'];
+			if ('core' == $info['type']) {
+				return sprintf(__('Core %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['language'], $info['version']);
+			} elseif ('plugin' == $info['type']) {
+				return sprintf(__('Plugin "%s" %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
+			} elseif ('theme' == $info['type']) {
+				return sprintf(__('Theme "%s" %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
 			}
 		} elseif (array_key_exists('failed_login', $details)) {
 			$info = $details['failed_login'];
@@ -118,6 +137,18 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 				return sprintf(__('Failed login attempt with a known username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
 			} else {
 				return sprintf(__('Failed login attempt with a unknown username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
+			}
+		} elseif (array_key_exists('successful_login', $details)) {
+			$info = $details['successful_login'];
+			return sprintf(__('Successful login with username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
+		} elseif (array_key_exists('user_registration', $details)) {
+			$info = $details['user_registration'];
+			if ('admin' == $info['type']) {
+				return sprintf(__('Admin %s registered new user: %s', 'all-in-one-wp-security-and-firewall'), $info['admin_username'], $info['registered_username']);
+			} elseif ('pending' == $info['type']) {
+				return sprintf(__('User %s registered and set to pending', 'all-in-one-wp-security-and-firewall'), $info['registered_username']);
+			} elseif ('registered' == $info['type']) {
+				return sprintf(__('User %s registered', 'all-in-one-wp-security-and-firewall'), $info['registered_username']);
 			}
 		} elseif (array_key_exists('table_migration', $details)) {
 			$info = $details['table_migration'];
@@ -204,24 +235,43 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'delete' => __('Delete', 'all-in-one-wp-security-and-firewall')
+			'delete_all' => __('Delete all', 'all-in-one-wp-security-and-firewall'),
+			'delete_selected' => __('Delete selected', 'all-in-one-wp-security-and-firewall'),
+			'delete_filtered' => __('Delete filtered', 'all-in-one-wp-security-and-firewall')
 		);
 		return $actions;
 	}
 
 	/**
-	 * This function will process the bulk action request
+	 * This function will process the bulk action request, $search_term and $filters are only used if the user is trying to bulk delete the filtered items
+	 *
+	 * @param string $search_term - the search string
+	 * @param array  $filters - the filters
 	 *
 	 * @return void
 	 */
-	private function process_bulk_action() {
-		if (empty($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-items')) return;
-		if ('delete' === $this->current_action()) { // Process delete bulk actions
+	private function process_bulk_action($search_term, $filters) {
+		if (empty($_REQUEST['_wpnonce']) || !isset($_REQUEST['_wp_http_referer'])) return;
+		$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_REQUEST['_wpnonce'], 'bulk-items');
+		if (is_wp_error($result)) return;
+		
+		global $wpdb;
+
+		$audit_log_tbl = AIOWPSEC_TBL_AUDIT_LOG;
+		
+		if ('delete_all' === $this->current_action()) { // Process delete bulk actions
+			$this->delete_audit_event_records(array(), true);
+		} elseif ('delete_selected' === $this->current_action()) {
 			if (!isset($_REQUEST['item'])) {
 				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Please select some records using the checkboxes', 'all-in-one-wp-security-and-firewall'));
-			} elseif (isset($_REQUEST['_wp_http_referer'])) {
+			} else {
 				$this->delete_audit_event_records($_REQUEST['item']);
 			}
+		} elseif ('delete_filtered' === $this->current_action()) {
+			$where_sql = $this->get_audit_list_where_sql($search_term, $filters);
+			$results = $wpdb->get_results("SELECT id FROM {$audit_log_tbl} {$where_sql}", 'ARRAY_A');
+			$items = array_column($results, 'id');
+			$this->delete_audit_event_records($items);
 		}
 	}
 
@@ -270,42 +320,112 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 	/**
 	 * This function will process the delete request for the audit event records
 	 *
-	 * @param integer|array $entries - a ID or array of IDs to be deleted
+	 * @param integer|array $entries    - a ID or array of IDs to be deleted
+	 * @param boolean       $delete_all - indicates if all entries should be deleted or not (if true, then $entries will be ignored)
 	 *
 	 * @return void
 	 */
-	public function delete_audit_event_records($entries) {
+	public function delete_audit_event_records($entries, $delete_all = false) {
 		global $wpdb, $aio_wp_security;
 		
 		$audit_log_tbl = AIOWPSEC_TBL_AUDIT_LOG;
+		$result = false;
 		
-		if (is_array($entries)) {
+		if ($delete_all) {
+			// Delete all records
+			$delete_command = "DELETE FROM " . $audit_log_tbl;
+			$result = $wpdb->query($delete_command);
+		} elseif (is_array($entries)) {
 			// Delete multiple records
 			$entries = array_map('esc_sql', $entries); // Escape every array element
 			$entries = array_filter($entries, 'is_numeric'); // Discard non-numeric ID values
-			$id_list = "(" . implode(",", $entries) . ")"; // Create comma separate list for DB operation
-			$delete_command = "DELETE FROM " . $audit_log_tbl . " WHERE id IN " . $id_list;
-			$result = $wpdb->query($delete_command);
-			if ($result) {
-				AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st();
-			} else {
-				// Error on bulk delete
-				$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Audit log table. Database error: '.$wpdb->last_error, 4);
-				AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st();
+			$chunks = array_chunk($entries, 1000);
+
+			// Processing each chunk
+			foreach ($chunks as $chunk) {
+				$id_list = "(" . implode(",", $chunk) . ")"; // Create comma separate list for DB operation
+				$delete_command = "DELETE FROM " . $audit_log_tbl . " WHERE id IN " . $id_list;
+				$result = $wpdb->query($delete_command);
+				if (!$result) {
+					$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Audit log table. Database error: '.$wpdb->last_error, 4);
+					AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st();
+					return;
+				}
 			}
 		} elseif ($entries != NULL) {
 			// Delete single record
 			$delete_command = "DELETE FROM " . $audit_log_tbl . " WHERE id = '" . absint($entries) . "'";
 			$result = $wpdb->query($delete_command);
-			
-			if ($result) {
-				AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st();
-			} elseif ($result === false) {
-				// Error on single delete
-				$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Audit table. Database error: '.$wpdb->last_error, 4);
-				AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st();
-			}
 		}
+
+		if ($result) {
+			AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st();
+		} else {
+			$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Audit log table. Database error: '.$wpdb->last_error, 4);
+			AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st();
+		}
+	}
+
+	/**
+	 * This function will build and return the SQL WHERE statement
+	 *
+	 * @param string $search_term - the search term applied
+	 * @param array  $filters - the filters applied
+	 *
+	 * @return string - the SQL WHERE statement
+	 */
+	private function get_audit_list_where_sql($search_term, $filters) {
+		
+		$where_sql = '';
+
+		if ('' == $search_term) {
+			$where_sql = (is_multisite() && !is_main_site()) ? 'WHERE site_id = '.get_current_blog_id() : '';
+			$extra_where = '';
+			
+			if (!empty($filters)) {
+				$where_sql = empty($where_sql) ? 'WHERE ' : $where_sql . ' AND ';
+				foreach ($filters as $filter => $value) {
+					if (!empty($extra_where)) $extra_where .= ' AND ';
+					$extra_where .= "`{$filter}` = '".esc_sql($value)."'";
+				}
+			}
+
+			$where_sql .= $extra_where;
+		} else {
+			$where_sql = (is_multisite() && !is_main_site()) ? 'WHERE site_id = '.get_current_blog_id().' AND ' : 'WHERE ';
+			$extra_where = '';
+
+			if (!empty($filters)) {
+				foreach ($filters as $filter => $value) {
+					if (!empty($extra_where)) $extra_where .= ' AND ';
+					$extra_where .= "`{$filter}` = '".esc_sql($value)."'";
+				}
+				$where_sql .= $extra_where . ' AND (';
+				$extra_where = '';
+			}
+
+			// We don't use FILTER_VALIDATE_IP here as we want to be able to search for partial IP's
+			if (preg_match('/^[0-9a-f:\.]+$/i', $search_term)) {
+				$extra_where .= "`ip` LIKE '".esc_sql($search_term)."%'";
+			}
+			
+			if (in_array($search_term, AIOWPSecurity_Audit_Events::$log_levels) && !isset($filters['level'])) {
+				if (!empty($extra_where)) $extra_where .= ' OR ';
+				$extra_where .= "`level` = '".esc_sql($search_term)."'";
+			}
+			
+			if (!empty($extra_where)) $extra_where .= ' OR ';
+			if (isset($filters['event_type'])) {
+				$extra_where .= "`username` LIKE '".esc_sql($search_term)."%'";
+			} else {
+				$extra_where .= "(`username` LIKE '".esc_sql($search_term)."%' or `event_type` LIKE '%".esc_sql($search_term)."%')";
+			}
+			if (!empty($filters)) $extra_where .= ')';
+			
+			$where_sql .= $extra_where;
+		}
+
+		return $where_sql;
 	}
 
 	/**
@@ -323,7 +443,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 			$per_page = absint(AIOWPSEC_AUDIT_LOG_PER_PAGE);
 		}
 
-		$per_page = empty($per_page) ? 15 : $per_page;
+		$per_page = empty($per_page) ? 100 : $per_page;
 		$current_page = $this->get_pagenum();
 		$offset = ($current_page - 1) * $per_page;
 		$columns = $this->get_columns();
@@ -340,7 +460,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 
 		$this->_column_headers = array($columns, $hidden, $sortable);
 
-		$this->process_bulk_action();
+		$this->process_bulk_action($search_term, $filters);
 
 		global $wpdb;
 
@@ -361,62 +481,13 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 		$orderby = sanitize_sql_orderby($orderby);
 		$order = sanitize_sql_orderby($order);
 
-		if ('' == $search_term) {
-			$where_sql = (is_multisite() && !is_main_site()) ? 'WHERE site_id = '.get_current_blog_id() : '';
-			$extra_where = '';
-			
-			if (!empty($filters)) {
-				$where_sql = empty($where_sql) ? 'WHERE ' : $where_sql . ' AND ';
-				foreach ($filters as $filter => $value) {
-					if (!empty($extra_where)) $extra_where .= ' AND ';
-					$extra_where .= "`{$filter}` = '".esc_sql($value)."'";
-				}
-			}
+		$where_sql = $this->get_audit_list_where_sql($search_term, $filters);
 
-			$where_sql .= $extra_where;
-			$total_items = $wpdb->get_var("SELECT COUNT(*) FROM {$audit_log_tbl} {$where_sql}");
-			if ($ignore_pagination) {
-				$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order}", 'ARRAY_A');
-			} else {
-				$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}", 'ARRAY_A');
-			}
+		$total_items = $wpdb->get_var("SELECT COUNT(*) FROM {$audit_log_tbl} {$where_sql}");
+		if ($ignore_pagination) {
+			$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order}", 'ARRAY_A');
 		} else {
-			$where_sql = (is_multisite() && !is_main_site()) ? 'WHERE site_id = '.get_current_blog_id().' AND ' : 'WHERE ';
-			$extra_where = '';
-
-			if (!empty($filters)) {
-				foreach ($filters as $filter => $value) {
-					if (!empty($extra_where)) $extra_where .= ' AND ';
-					$extra_where .= "`{$filter}` = '".esc_sql($value)."'";
-				}
-				$where_sql .= $extra_where . ' AND (';
-				$extra_where = '';
-			}
-
-			if (preg_match('/^[0-9a-f:\.]+$/i', $search_term)) {
-				$extra_where .= "`ip` LIKE '".esc_sql($search_term)."%'";
-			}
-			
-			if (in_array($search_term, AIOWPSecurity_Audit_Events::$log_levels) && !isset($filters['level'])) {
-				if (!empty($extra_where)) $extra_where .= ' OR ';
-				$extra_where .= "`level` = '".esc_sql($search_term)."'";
-			}
-			
-			if (!empty($extra_where)) $extra_where .= ' OR ';
-			if (isset($filters['event_type'])) {
-				$extra_where .= "`username` LIKE '".esc_sql($search_term)."%'";
-			} else {
-				$extra_where .= "(`username` LIKE '".esc_sql($search_term)."%' or `event_type` LIKE '%".esc_sql($search_term)."%')";
-			}
-			if (!empty($filters)) $extra_where .= ')';
-			
-			$where_sql .= $extra_where;
-			$total_items = $wpdb->get_var("SELECT COUNT(*) FROM {$audit_log_tbl} {$where_sql}");
-			if ($ignore_pagination) {
-				$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order}", 'ARRAY_A');
-			} else {
-				$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}", 'ARRAY_A');
-			}
+			$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}", 'ARRAY_A');
 		}
 		
 		$this->items = $data;

@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/wp-file-manager
   Description: Manage your WP files.
   Author: mndpsingh287
-  Version: 7.1.8
+  Version: 7.1.9
   Author URI: https://profiles.wordpress.org/mndpsingh287
   License: GPLv2
  **/
@@ -16,7 +16,7 @@ if (!class_exists('mk_file_folder_manager')):
     class mk_file_folder_manager
     {
         protected $SERVER = 'https://www.tru.agency/api/plugindata/api.php';
-        var $ver = '7.1.8';
+        var $ver = '7.1.9';
         /* Auto Load Hooks */
         public function __construct()
         {
@@ -877,7 +877,7 @@ if (!class_exists('mk_file_folder_manager')):
                 }
 
                 wp_enqueue_script('fm_jquery_ui', plugins_url('lib/jquery/'.$jquery_ui_js, __FILE__), $this->ver);
-                wp_enqueue_script('fm_elFinder_min', plugins_url('lib/js/elFinder.min.js', __FILE__), '', $this->ver);
+                wp_enqueue_script('fm_elFinder_min', plugins_url('lib/js/elfinder.min.js', __FILE__), '', $this->ver);
                 wp_enqueue_script('fm_elFinder', plugins_url('lib/js/elFinder.js', __FILE__), '', $this->ver);
                 wp_enqueue_script('fm_elFinder_version', plugins_url('lib/js/elFinder.version.js', __FILE__), '', $this->ver);
                 wp_enqueue_script('fm_jquery_elfinder', plugins_url('lib/js/jquery.elfinder.js', __FILE__), '', $this->ver);

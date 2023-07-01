@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Requires PHP: 7.2
 Tested up to: 6.2
-Stable tag: 6.4.3
+Stable tag: 6.4.7
 
 Configure your Cookie Banner, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA/CPRA and PIPEDA.
 
@@ -75,7 +75,6 @@ Complianz offers full support on the WordPress.org [Forum](https://wordpress.org
 * [MU Plugins](https://github.com/Really-Simple-Plugins/complianz-integrations)
 * [Documentation](https://complianz.io/docs/)
 * [Developer's Guide](https://complianz.io/developers-guide-for-third-party-integrations/)
-* [Wizard Manual](https://complianz.io/manual/)
 * [Legal Definitions](https://complianz.io/definitions/)
 * [Translate Complianz](https://translate.wordpress.org/projects/wp-plugins/complianz-gdpr/)
 
@@ -175,6 +174,38 @@ The Brazilian General Data Protection Law is similar to the GDPR, the UK-GDPR it
 With some custom CSS this is possible, but we do not consider a cookie wall to be GDPR compliant, so it's not actively supported. We do, however, have the option to create a Soft Cookie Wall. Which blocks interaction with the website, but dismissing remains a possibility.
 
 == Changelog ==
+= 6.4.7 =
+* June 14th, 2023
+* Fix: WordPress 6.2 version moved the Privacy Policy function to a different file. Added fallback for older versions.
+* Fix: The fix for the Classic Editor bug which removes summary/details html elements, caused an issue when the post content is empty.
+* Improvement: if configuration by Complianz is set to false, the gtag id was added anyway, but empty.
+* Improvement: strings in UK cookie policy translatable, which shouldn't be the case.
+
+= 6.4.6 =
+* Improvement: unhide pagination on data requests page.
+* Improvement: Jersey and Guernsey included
+* Improvement: move nonce check to earlier in the process
+* Improvement: only show notice about duplicate statistics implementation if stats are actually used.
+* Improvement: Easy Liveblogs integration
+* Fix: Workaround for strange issue where the Classic Tiny MCE editor strips the summary/details tags from the unsynced legal documents html
+
+= 6.4.5 =
+* Security: CSRF fixed
+* Fix: type=module support for scripts other than inline scripts
+* Fix: new shortcode handling for consent area not working for some plugin shortcodes, split in two options: default, the old one, optionally the clientside version.
+
+= 6.4.4 =
+* Fix: catch not existing post_data if post structure is not following WordPress standards
+* Fix: exclude bricks builder from cookie blocker
+* Improvement: AddToAny integration updated, props @micropat
+* Improvement: wording and links in Canadian Cookie Policy
+* Improvement: mailchimp woocommerce integration feature activation after consent
+* Improvement: updated classic consent area to the same new structure as the new Gutenberg consent area
+* Improvement: script type module support in cookie blocker
+* Improvement: exclude cornerstone builder from cookieblocker
+* Improvement: new cmplz_upload_dir and cmplz_upload_url filters, to allow overrides of the plugin folders.
+* Dropped: Ultimate Add ons for Elementor integration, due to incompatibility issues
+
 = 6.4.3 =
 * Improvement: add exclude cookies filter
 * Improvement: add support for parent/child themes, props @dominiccarrington

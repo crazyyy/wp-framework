@@ -89,6 +89,7 @@ final class Analytics_4 extends Module
 	 * Registers functionality through WordPress hooks.
 	 *
 	 * @since 1.30.0
+	 * @since 1.101.0 Added a filter hook to add the required `https://www.googleapis.com/auth/tagmanager.readonly` scope for GTE support.
 	 */
 	public function register() {
 		$this->register_scopes_hook();
@@ -122,6 +123,46 @@ final class Analytics_4 extends Module
 				$this->get_method_proxy( 'replicate_analytics_sharing_settings' )
 			);
 		}
+
+		if ( Feature_Flags::enabled( 'gteSupport' ) ) {
+			add_filter(
+				'googlesitekit_auth_scopes',
+				function( array $scopes ) {
+					$oauth_client = $this->authentication->get_oauth_client();
+
+					$needs_tagmanager_scope = false;
+
+					if ( $oauth_client->has_sufficient_scopes(
+						array(
+							Analytics::READONLY_SCOPE,
+							'https://www.googleapis.com/auth/tagmanager.readonly',
+						)
+					) ) {
+						$needs_tagmanager_scope = true;
+					} else {
+						// Ensure the Tag Manager scope is not added as a required scope in the case where the user has
+						// granted the Analytics scope but not the Tag Manager scope, in order to allow the GTE-specific
+						// Unsatisfied Scopes notification to be displayed without the Additional Permissions Required
+						// modal also appearing.
+						if ( ! $oauth_client->has_sufficient_scopes(
+							array(
+								Analytics::READONLY_SCOPE,
+							)
+						) ) {
+							$needs_tagmanager_scope = true;
+						}
+					}
+
+					if ( $needs_tagmanager_scope ) {
+						$scopes[] = 'https://www.googleapis.com/auth/tagmanager.readonly';
+					}
+
+					return $scopes;
+				}
+			);
+		}
+
+		add_filter( 'googlesitekit_allow_tracking_disabled', $this->get_method_proxy( 'filter_analytics_allow_tracking_disabled' ) );
 	}
 
 	/**
@@ -132,13 +173,7 @@ final class Analytics_4 extends Module
 	 * @return array List of Google OAuth scopes.
 	 */
 	public function get_scopes() {
-		$scopes = array(
-			Analytics::READONLY_SCOPE,
-		);
-		if ( Feature_Flags::enabled( 'gteSupport' ) ) {
-			$scopes[] = 'https://www.googleapis.com/auth/tagmanager.readonly';
-		}
-		return $scopes;
+		return array( Analytics::READONLY_SCOPE );
 	}
 
 	/**
@@ -240,8 +275,18 @@ final class Analytics_4 extends Module
 		$datapoints = array(
 			'GET:account-summaries'      => array( 'service' => 'analyticsadmin' ),
 			'GET:accounts'               => array( 'service' => 'analyticsadmin' ),
-			'GET:container-lookup'       => array( 'service' => 'tagmanager' ),
-			'GET:container-destinations' => array( 'service' => 'tagmanager' ),
+			'GET:container-lookup'       => array(
+				'service' => 'tagmanager',
+				'scopes'  => array(
+					'https://www.googleapis.com/auth/tagmanager.readonly',
+				),
+			),
+			'GET:container-destinations' => array(
+				'service' => 'tagmanager',
+				'scopes'  => array(
+					'https://www.googleapis.com/auth/tagmanager.readonly',
+				),
+			),
 			'GET:conversion-events'      => array(
 				'service'   => 'analyticsadmin',
 				'shareable' => Feature_Flags::enabled( 'dashboardSharing' ),
@@ -251,7 +296,12 @@ final class Analytics_4 extends Module
 				'scopes'                 => array( Analytics::EDIT_SCOPE ),
 				'request_scopes_message' => __( 'You’ll need to grant Site Kit permission to create a new Analytics account on your behalf.', 'google-site-kit' ),
 			),
-			'GET:google-tag-settings'    => array( 'service' => 'tagmanager' ),
+			'GET:google-tag-settings'    => array(
+				'service' => 'tagmanager',
+				'scopes'  => array(
+					'https://www.googleapis.com/auth/tagmanager.readonly',
+				),
+			),
 			'POST:create-property'       => array(
 				'service'                => 'analyticsadmin',
 				'scopes'                 => array( Analytics::EDIT_SCOPE ),
@@ -424,11 +474,33 @@ final class Analytics_4 extends Module
 			)
 		);
 
-		if ( Feature_Flags::enabled( 'gteSupport' ) ) {
-			$container           = $this->get_tagmanager_service()->accounts_containers->lookup( array( 'destinationId' => $measurement_id ) );
-			$google_tag_settings = $this->get_google_tag_settings_for_measurement_id( $container, $measurement_id );
-			$this->get_settings()->merge( $google_tag_settings );
+		$this->sync_google_tag_settings();
+	}
+
+	/**
+	 * Syncs Google tag settings for the currently configured measurementID.
+	 *
+	 * @since 1.102.0
+	 */
+	protected function sync_google_tag_settings() {
+		if ( ! Feature_Flags::enabled( 'gteSupport' ) ) {
+			return;
 		}
+
+		$settings       = $this->get_settings();
+		$measurement_id = $settings->get()['measurementID'];
+
+		if ( ! $measurement_id ) {
+			return;
+		}
+
+		$google_tag_settings = $this->get_data( 'google-tag-settings', array( 'measurementID' => $measurement_id ) );
+
+		if ( is_wp_error( $google_tag_settings ) ) {
+			return;
+		}
+
+		$settings->merge( $google_tag_settings );
 	}
 
 	/**
@@ -1162,4 +1234,26 @@ final class Analytics_4 extends Module
 		return $sharing_settings;
 	}
 
+	/**
+	 * Filters whether or not the option to exclude certain users from tracking should be displayed.
+	 *
+	 * If the Analytics-4 module is enabled, and the snippet is enabled, then the option to exclude
+	 * the option to exclude certain users from tracking should be displayed.
+	 *
+	 * @since 1.101.0
+	 *
+	 * @param bool $allowed Whether to allow tracking exclusion.
+	 * @return bool Filtered value.
+	 */
+	private function filter_analytics_allow_tracking_disabled( $allowed ) {
+		if ( $allowed ) {
+			return $allowed;
+		}
+
+		if ( Feature_Flags::enabled( 'ga4Reporting' ) && $this->get_settings()->get()['useSnippet'] ) {
+			return true;
+		}
+
+		return $allowed;
+	}
 }

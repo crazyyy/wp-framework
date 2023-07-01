@@ -4,7 +4,7 @@
  * Plugin URI: https://woodysnippet.com/
  * Description: Executes PHP code, uses conditional logic to insert ads, text, media content and external service’s code. Ensures no content duplication.
  * Author: Creative Motion, Will Bontrager Software, LLC <will@willmaster.com>
- * Version: 2.4.9
+ * Version: 2.4.10
  * Text Domain: insert-php
  * Domain Path: /languages/
  * Author URI: https://cm-wp.com
@@ -134,24 +134,24 @@ $plugin_info = [
 
 	// FRAMEWORK MODULES
 	'load_factory_modules' => [
-		[ 'libs/factory/bootstrap', 'factory_bootstrap_464', 'admin' ],
-		[ 'libs/factory/forms', 'factory_forms_460', 'admin' ],
-		[ 'libs/factory/pages', 'factory_pages_463', 'admin' ],
+		[ 'libs/factory/bootstrap', 'factory_bootstrap_467', 'admin' ],
+		[ 'libs/factory/forms', 'factory_forms_463', 'admin' ],
+		[ 'libs/factory/pages', 'factory_pages_466', 'admin' ],
 		[ 'libs/factory/types', 'factory_types_413' ],
 		[ 'libs/factory/taxonomies', 'factory_taxonomies_333' ],
 		[ 'libs/factory/metaboxes', 'factory_metaboxes_413', 'admin' ],
 		[ 'libs/factory/viewtables', 'factory_viewtables_413', 'admin' ],
 		[ 'libs/factory/shortcodes', 'factory_shortcodes_333', 'all' ],
-		[ 'libs/factory/freemius', 'factory_freemius_150', 'all' ],
-		[ 'libs/factory/adverts', 'factory_adverts_140', 'admin' ],
-		[ 'libs/factory/feedback', 'factory_feedback_121', 'admin' ],
+		[ 'libs/factory/freemius', 'factory_freemius_154', 'all' ],
+		[ 'libs/factory/adverts', 'factory_adverts_143', 'admin' ],
+		[ 'libs/factory/feedback', 'factory_feedback_122', 'admin' ],
 	],
 ];
 
 /**
  * Checks compatibility with WordPress, php and other plugins.
  */
-$wbcr_compatibility = new Wbcr_Factory463_Requirements( __FILE__, array_merge( $plugin_info, [
+$wbcr_compatibility = new Wbcr_Factory466_Requirements( __FILE__, array_merge( $plugin_info, [
 	'plugin_already_activate' => defined( 'WINP_PLUGIN_ACTIVE' ),
 	'required_php_version'    => '7.0',
 	'required_wp_version'     => '4.8.0',

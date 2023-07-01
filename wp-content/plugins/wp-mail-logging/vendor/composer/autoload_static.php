@@ -4,13 +4,14 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdf2ae46301f4573d07a68bb090e3e922
+class ComposerStaticInit69a7d59a98d30eebcee330fbb3951b1e
 {
     public static $prefixLengthsPsr4 = array (
         'N' => 
         array (
             'No3x\\WPML\\Tests\\Helper\\' => 23,
             'No3x\\WPML\\Tests\\' => 16,
+            'No3x\\WPML\\Migration\\' => 20,
             'No3x\\WPML\\Helpers\\' => 18,
             'No3x\\WPML\\Admin\\' => 16,
         ),
@@ -24,6 +25,10 @@ class ComposerStaticInitdf2ae46301f4573d07a68bb090e3e922
         'No3x\\WPML\\Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests/phpunit/tests',
+        ),
+        'No3x\\WPML\\Migration\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/inc/Migration',
         ),
         'No3x\\WPML\\Helpers\\' => 
         array (
@@ -41,6 +46,7 @@ class ComposerStaticInitdf2ae46301f4573d07a68bb090e3e922
         'No3x\\WPML\\Admin\\SettingsTab' => __DIR__ . '/../..' . '/src/inc/Admin/SettingsTab.php',
         'No3x\\WPML\\Helpers\\PluginSilentUpgrader' => __DIR__ . '/../..' . '/src/inc/Helpers/PluginSilentUpgrader.php',
         'No3x\\WPML\\Helpers\\PluginSilentUpgraderSkin' => __DIR__ . '/../..' . '/src/inc/Helpers/PluginSilentUpgraderSkin.php',
+        'No3x\\WPML\\Migration\\Migration' => __DIR__ . '/../..' . '/src/inc/Migration/Migration.php',
         'No3x\\WPML\\Tests\\Helper\\WPML_IntegrationTestCase' => __DIR__ . '/../..' . '/tests/helper/WPML_IntegrationTestCase.php',
         'No3x\\WPML\\Tests\\Helper\\WPMailArrayBuilder' => __DIR__ . '/../..' . '/tests/helper/WPMailArrayBuilder.php',
     );
@@ -48,9 +54,9 @@ class ComposerStaticInitdf2ae46301f4573d07a68bb090e3e922
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitdf2ae46301f4573d07a68bb090e3e922::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitdf2ae46301f4573d07a68bb090e3e922::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitdf2ae46301f4573d07a68bb090e3e922::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit69a7d59a98d30eebcee330fbb3951b1e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit69a7d59a98d30eebcee330fbb3951b1e::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit69a7d59a98d30eebcee330fbb3951b1e::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -421,7 +421,7 @@ class AIOWPSecurity_Admin_Init {
 		wp_enqueue_script('aiowpsec-admin-js');
 		wp_localize_script('aiowpsec-admin-js', 'aios_data',
 			array(
-				'ajax_nonce' => wp_create_nonce('aios-ajax-nonce'),
+				'ajax_nonce' => wp_create_nonce('wp-security-ajax-nonce'),
 			)
 		);
 		wp_localize_script('aiowpsec-admin-js', 'aios_trans',

@@ -63,6 +63,13 @@ class blcPostTypeOverlord {
 			);
 		}
 
+		if ( ! WPMUDEV_BLC\App\Options\Settings\Model::instance()->get( 'use_legacy_blc_version' ) ) {
+			if ( ! WPMUDEV_BLC\Core\Utils\Utilities::is_subsite() ) {
+				return;
+			}
+			//return;
+		}
+
 		//These hooks update the synch & instance records when posts are added, deleted or modified.
 		add_action( 'delete_post', array( &$this, 'post_deleted' ) );
 		add_action( 'save_post', array( &$this, 'post_saved' ) );
@@ -450,6 +457,8 @@ blcPostTypeOverlord::getInstance();
  */
 class blcAnyPostContainer extends blcContainer {
 	var $default_field = 'post_content';
+
+	public $updating_urls = null;
 
 	/**
 	 * Get action links for this post.

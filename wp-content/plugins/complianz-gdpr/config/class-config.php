@@ -161,7 +161,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				),
 				"disqus"           => array( 'disqus.com' ),
 				"addthis"          => array( 'addthis.com' ),
-				"addtoany"          => array( 'addtoany.min.js', 'window.a2a_config' ),
+				"addtoany"          => array( 'addtoany.min.js', 'window.a2a_config', 'static.addtoany.com' ),
 				"sharethis"        => array( 'sharethis.com' ),
 				"microsoftads"     => array('bat.bing.com'),
 				"livechat"         => array( 'cdn.livechatinc.com/tracking.js' ),
@@ -486,6 +486,13 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'admin_notice' => true,
 				),
 
+				'new_gutenberg_consentarea' => array(
+					'warning_condition'  => 'cmplz_upgraded_to_current_version',
+					'open' => __( 'New: Gutenberg Block with consent capabilities.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/gutenberg-block-consent/'),
+					'admin_notice' => false,
+					'plus_one' => true,
+				),
+
 				'wizard-incomplete'  => array(
 					'success_conditions'  => array(
 						'wizard->all_required_fields_completed_wizard'
@@ -621,6 +628,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'success_conditions'  => array(
 						'NOT get_option_cmplz_double_stats',
 					),
+					'warning_condition' => 'cmplz_uses_statistics',
 					'open' => __( 'You have a duplicate implementation of your statistics tool on your site.', 'complianz-gdpr' ) .
 					          __( 'After the issue has been resolved, please re-run a scan to clear this message.', 'complianz-gdpr' )
 					                 . cmplz_read_more( 'https://complianz.io/duplicate-implementation-of-analytics/' ),

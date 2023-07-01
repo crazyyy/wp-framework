@@ -235,7 +235,7 @@ jQuery(function($) {
 		jQuery('input[name=aiowps_brute_force_secret_word]').prop('disabled', !jQuery(this).prop('checked'));
 		jQuery('input[name=aiowps_cookie_based_brute_force_redirect_url]').prop('disabled', !jQuery(this).prop('checked'));
 		jQuery('input[name=aiowps_brute_force_attack_prevention_pw_protected_exception]').prop('disabled', !jQuery(this).prop('checked'));
-		jQuery('input[name=aiowps_brute_force_attack_prevention_ajax_exception]').prop('disabled', !jQuery(this).prop('checked'));	
+		jQuery('input[name=aiowps_brute_force_attack_prevention_ajax_exception]').prop('disabled', !jQuery(this).prop('checked'));
 	});
 	// End of brute force attack prevention toggle handling
 
@@ -296,7 +296,7 @@ jQuery(function($) {
 	function deprecated_copy(text) {
 		var $temp = $('<input>');
 		$('body').append($temp);
-		$temp.val(event.target.value).select();
+		$temp.val(text).select();
 		if (document.execCommand('copy')) {
 			alert(aios_trans.copied);
 		}
@@ -316,4 +316,18 @@ jQuery(function($) {
 		}
 	});
 	// End of copy-to-clipboard click handling
+
+	// Start of database table prefix handling
+	jQuery('#aiowps_enable_random_prefix').on('click', function() {
+		jQuery('#aiowps_new_manual_db_prefix').prop('disabled', jQuery(this).prop('checked'));
+	});
+
+	jQuery('#aiowps_new_manual_db_prefix').on('input', function() {
+		if (jQuery(this).prop('value')) {
+			jQuery('#aiowps_enable_random_prefix').prop('disabled', true);
+		} else {
+			jQuery('#aiowps_enable_random_prefix').prop('disabled', false);
+		}
+	});
+	// End of database table prefix handling
 });

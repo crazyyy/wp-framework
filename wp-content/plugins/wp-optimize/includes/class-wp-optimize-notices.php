@@ -314,7 +314,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 	 * @param  String $product_name    the name of the plugin
 	 * @return Boolean                 returns true if the user is using a non english language and could translate otherwise false
 	 */
-	protected function translation_needed($plugin_base_dir = null, $product_name = null) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	protected function translation_needed($plugin_base_dir = null, $product_name = null) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- using this because of parent class method signature
 		return parent::translation_needed(WPO_PLUGIN_MAIN_PATH, 'wp-optimize');
 	}
 	

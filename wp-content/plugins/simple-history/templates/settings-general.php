@@ -1,4 +1,8 @@
 <?php
+namespace Simple_History;
+
+use Simple_History\Simple_History;
+
 defined( 'ABSPATH' ) || die();
 ?>
 
@@ -6,7 +10,7 @@ defined( 'ABSPATH' ) || die();
 
 	<?php
 	// Prints out all settings sections added to a particular settings page
-	do_settings_sections( SimpleHistory::SETTINGS_MENU_SLUG );
+	do_settings_sections( Simple_History::SETTINGS_MENU_SLUG );
 	?>
 
 	<?php

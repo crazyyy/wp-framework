@@ -83,6 +83,8 @@ class Simba_Two_Factor_Authentication_1 {
 
 	private static $is_authenticated = array();
 
+	private $tfa_muplugin;
+
 	/**
 	 * Class Constructor, Set basic settings.
 	 *
@@ -109,6 +111,9 @@ class Simba_Two_Factor_Authentication_1 {
 		if (!class_exists('Simba_TFA_Login_Form_Integrations')) require_once($this->includes_dir().'/login-form-integrations.php');
 		new Simba_TFA_Login_Form_Integrations($this);
 
+		if (!class_exists('Simba_TFA_Encryption_Muplugin')) require_once($this->includes_dir().'/tfa-encryption-muplugin.php');
+		$this->tfa_muplugin = new Simba_TFA_Encryption_Muplugin($this);
+
 		// Add TFA column on admin users list
 		add_action('manage_users_columns', array($this, 'manage_users_columns_tfa'));
 		add_action('wpmu_users_columns', array($this, 'manage_users_columns_tfa'));
@@ -127,6 +132,8 @@ class Simba_Two_Factor_Authentication_1 {
 		}
 		
 		add_action('show_user_profile', array($this, 'show_user_profile'), 1);
+		
+		add_filter('pre_update_option', array($this, 'setup_secret_encryption'), 10, 2);
 
 		if (defined('DOING_AJAX') && DOING_AJAX && defined('WP_ADMIN') && WP_ADMIN && !empty($_REQUEST['action']) && 'simbatfa-init-otp' == $_REQUEST['action']) {
 			// Try to prevent PHP notices breaking the AJAX conversation
@@ -149,6 +156,39 @@ class Simba_Two_Factor_Authentication_1 {
 		printf('<a target="_blank" href="%s">%s</a>', $settings_url, __('Go here for your two factor authentication settings...', 'all-in-one-wp-security-and-firewall'));
 	}
 	
+	/**
+	 * This function is called via the filter `pre_update_option` if the option being saved is `tfa_encrypt_secrets` then we will proceed to setup the encryption
+	 *
+	 * @param mixed  $value       - the value of the option
+	 * @param string $option_name - the option name
+	 *
+	 * @return mixed - returns 0 on error to prevent the feature from being turned on otherwise returns the value passed in
+	 */
+	public function setup_secret_encryption($value, $option_name) {
+		if ('tfa_encrypt_secrets' !== $option_name) return $value;
+
+		if (!$this->tfa_muplugin->muplugin_exists() || !defined('SIMBA_TFA_DB_ENCRYPTION_KEY') || '' === SIMBA_TFA_DB_ENCRYPTION_KEY) {
+			$result = $this->tfa_muplugin->insert_contents();
+
+			if (is_wp_error($result)) {
+				add_settings_error('tfa_encrypt_secrets', $result->get_error_code(), $result->get_error_message());
+				return 0;
+			}
+
+			// We now need to include the file as it won't be loaded until WordPress refreshes but we want to use it now
+			include_once($this->tfa_muplugin->get_file_path());
+		}
+		
+		$result = $this->get_controller('totp')->potentially_encrypt_private_keys();
+
+		if (is_wp_error($result)) {
+			add_settings_error('tfa_encrypt_secrets', $result->get_error_code(), $result->get_error_message());
+			return 0;
+		}
+
+		return $value;
+	}
+
 	/**
 	 * Runs upon the WP filter admin_menu
 	 */
@@ -388,6 +428,7 @@ class Simba_Two_Factor_Authentication_1 {
 			'tfa_wc_add_section' => 'simba_tfa_woocommerce_group',
 			'tfa_bot_protection' => 'simba_tfa_woocommerce_group',
 			'tfa_default_hmac' => 'simba_tfa_default_hmac_group',
+			'tfa_encrypt_secrets' => 'simba_tfa_encrypt_secrets_group',
 			'tfa_xmlrpc_on' => 'tfa_xmlrpc_status_group',
 		);
 
@@ -959,7 +1000,9 @@ class Simba_Two_Factor_Authentication_1 {
 			if (is_wp_error($code_ok)) {
 				$ret = $code_ok;
 			} elseif (!$code_ok) {
-				$ret =  new WP_Error('authentication_failed', '<strong>'.__('Error:', 'all-in-one-wp-security-and-firewall').'</strong> '.apply_filters('simba_tfa_message_code_incorrect', __('The one-time password (TFA code) you entered was incorrect.', 'all-in-one-wp-security-and-firewall')));
+				$encryption_enabled = $this->get_option('tfa_encrypt_secrets');
+				$additional = ($encryption_enabled && (!defined('SIMBA_TFA_DB_ENCRYPTION_KEY') || '' === SIMBA_TFA_DB_ENCRYPTION_KEY)) ? ' ' . htmlspecialchars(__('The "encrypt secrets" feature is currently enabled, but no encryption key has been found (set via the SIMBA_TFA_DB_ENCRYPTION_KEY constant).', 'all-in-one-wp-security-and-firewall').' '.__('This indicates that either setup failed, or your WordPress installation has been corrupted.', 'all-in-one-wp-security-and-firewall')) . ' <a href="' . esc_url($this->get_faq_url()) . '">'. __('Go here for the FAQs, which explain how a website owner can de-activate the plugin without needing to login.', 'all-in-one-wp-security-and-firewall') .'</a>' : '';
+				$ret =  new WP_Error('authentication_failed', '<strong>'.__('Error:', 'all-in-one-wp-security-and-firewall').'</strong> '.apply_filters('simba_tfa_message_code_incorrect', __('The one-time password (TFA code) you entered was incorrect.', 'all-in-one-wp-security-and-firewall') . $additional));
 			} elseif ($user) {
 				$ret = $user;
 			} else {

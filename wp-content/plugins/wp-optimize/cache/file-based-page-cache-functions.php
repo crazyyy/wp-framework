@@ -33,7 +33,7 @@ function wpo_cache($buffer, $flags) {
 	}
 
 	// Don't cache pages for logged in users.
-	if (empty($GLOBALS['wpo_cache_config']['enable_user_specific_cache']) && (!function_exists('wpo_we_cache_per_role') || !wpo_we_cache_per_role()) && (!function_exists('is_user_logged_in') || (function_exists('wp_get_current_user') && is_user_logged_in()))) {
+	if (!wpo_cache_loggedin_users() && (!function_exists('is_user_logged_in') || (function_exists('wp_get_current_user') && is_user_logged_in()))) {
 		$no_cache_because[] = __('User is logged in', 'wp-optimize');
 	}
 
@@ -235,9 +235,9 @@ function wpo_cache($buffer, $flags) {
 			if (!wpo_cache_is_in_response_headers_list('Content-Encoding', 'gzip')) {
 				header('Content-Encoding: gzip');
 			}
-		
-			// disable php gzip to avoid double compression.
-			ini_set('zlib.output_compression', 'Off'); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
+
+			// Disable php gzip to avoid double compression.
+			ini_set('zlib.output_compression', 'Off');
 
 			return ob_gzhandler($buffer, $flags);
 		} else {
@@ -305,17 +305,6 @@ if (!function_exists('wpo_cache_loggedin_users')) :
 function wpo_cache_loggedin_users() {
 	return !empty($GLOBALS['wpo_cache_config']['enable_user_caching']) || !empty($GLOBALS['wpo_cache_config']['enable_user_specific_cache']) || (function_exists('wpo_we_cache_per_role') && wpo_we_cache_per_role());
 }
-endif;
-
-/**
- * Returns true if we need to cache content for loggedin users.
- *
- * @return bool
- */
-if (!function_exists('wpo_user_specific_cache_enabled')) :
-	function wpo_user_specific_cache_enabled() {
-		return !empty($GLOBALS['wpo_cache_config']['enable_user_specific_cache']) && !empty($GLOBALS['wpo_cache_config']['wp_salt_auth']) && !empty($GLOBALS['wpo_cache_config']['wp_salt_logged_in']);
-	}
 endif;
 
 /**
@@ -643,9 +632,9 @@ function wpo_serve_cache() {
 		}
 	}
 
-	// disable zlib output compression to avoid double content compression.
 	if ($use_gzip) {
-		ini_set('zlib.output_compression', 'Off'); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
+		// Disable zlib output compression to avoid double content compression
+		ini_set('zlib.output_compression', 'Off');
 	}
 
 	$gzip_header_already_sent = wpo_cache_is_in_response_headers_list('Content-Encoding', 'gzip');
@@ -1048,85 +1037,117 @@ function wpo_is_accepted_user_agent($user_agent) {
 }
 endif;
 
-/**
- * Delete function that deals with directories recursively
- *
- * @param string  $src       Path of the folder
- * @param boolean $recursive If $src is a folder, recursively delete the inner folders. If set to false, only the files will be deleted.
- *
- * @return bool
- */
 if (!function_exists('wpo_delete_files')) :
+/**
+ * Deletes a specified source file or directory.
+ *
+ * If $src is a file, only that file will be deleted. If $src is a directory, the behavior depends on the
+ * $recursive parameter. When $recursive is true, the directory and its contents (including files and subdirectories)
+ * will be deleted. When $recursive is false, only the files in the top-level directory(eg. $src directory) will be deleted,
+ * while the $src directory itself and its subdirectories will remain untouched.
+ *
+ * @param string  $src       The path to the source file or directory to delete.
+ * @param bool    $recursive (Optional) When set to true, the directory and its contents (including files and subdirectories)
+ *                           will be deleted. If false, only the files in the top-level directory will be deleted while
+ *                           its subdirectories will be preserved. Defaults to true.
+ *
+ * @return bool   Returns true if the specified file or all files within the specified directory (and its subdirectories,
+ *                when $recursive is true) are successfully deleted. Returns false if any file(s) could not be deleted
+ *                due to file permissions or other reasons.
+ */
 function wpo_delete_files($src, $recursive = true) {
-	if (!file_exists($src) || '' == $src || '/' == $src) {
+	// If the source doesn't exist, consider it deleted and return true
+	if (!file_exists($src)) {
 		return true;
 	}
 
+	/*
+	 * If the source is a file, delete it and return the result.
+	 * If `unlink()` fails, we also verify if the file still exists before returning the result, as another
+	 * PHP process may have already deleted the file between the execution of `is_file()` and `unlink()` operations.
+	 */
 	if (is_file($src)) {
-		return unlink($src);
+		if (!@unlink($src) && file_exists($src)) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
+			return false;
+		}
+		return true;
 	}
 
 	$success = true;
-	$has_dir = false;
 
-	if ($recursive) {
-		// N.B. If opendir() fails, then a false positive (i.e. true) will be returned
-		if (false !== ($dir = opendir($src))) {
-			$file = readdir($dir);
-			while (false !== $file) {
+	// If recursive is false, delete only the top-level files and return the result
+	if (!$recursive) {
+		$dir_handle = @opendir($src); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
+
+		/*
+		 * If opendir() is successful, process directory contents. If not, check if the directory exists.
+		 * If it exists, return false (failure). Otherwise, assume it's already deleted and return true (success).
+		 */
+		if (false !== $dir_handle) {
+	
+			while (false !== ($file = readdir($dir_handle))) {
 				if ('.' == $file || '..' == $file) {
-					$file = readdir($dir);
 					continue;
 				}
 
 				$full_path = $src . '/' . $file;
 
-				if (is_dir($full_path)) {
+				// If it's a file, delete it
+				if (is_file($full_path)) {
 					if (!wpo_delete_files($full_path)) {
 						$success = false;
 					}
-				} else {
-					if (!@unlink($full_path)) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppressed the first time in case it was already removed by a contemporary process (avoid unwanted logging for harmless races)
-						if (file_exists($full_path) && !unlink($full_path)) {
-							$success = false;
-						}
-					}
 				}
-
-				$file = readdir($dir);
 			}
-			closedir($dir);
+
+			closedir($dir_handle);
+		} else {
+			if (file_exists($src)) {
+				$success = false;
+			}
 		}
+		
+		return $success;
+	}
+
+	// If recursive is true, delete all files and directories recursively
+	$dir_handle = @opendir($src); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
+
+	/*
+	 * If opendir() is successful, process directory contents. If not, check if the directory exists.
+	 * If it exists, return false (failure). Otherwise, assume it's already deleted and return true (success).
+	 */
+	if (false !== $dir_handle) {
+
+		while (false !== ($file = readdir($dir_handle))) {
+			if ('.' == $file || '..' == $file) {
+				continue;
+			}
+			
+			$full_path = $src . '/' . $file;
+
+			if (!wpo_delete_files($full_path)) {
+				$success = false;
+			}
+		}
+
+		closedir($dir_handle);
 	} else {
-		// Not recursive, so we only delete the files
-		// scan directories recursively.
-		$handle = opendir($src);
-
-		if (false === $handle) return false;
-
-		$file = readdir($handle);
-
-		while (false !== $file) {
-
-			if ('.' != $file && '..' != $file) {
-				if (is_dir($src . '/' . $file)) {
-					$has_dir = true;
-				} elseif (!unlink($src . '/' . $file)) {
-					$success = false;
-				}
-			}
-
-			$file = readdir($handle);
-
+		if (file_exists($src)) {
+			$success = false;
 		}
 	}
 
-	if ($success && !$has_dir) {
-		// Success of this operation is not recorded; we only ultimately care about emptying, not removing entirely (empty folders in our context are harmless)
-		rmdir($src);
+	/*
+	 * Delete the source directory itself.
+	 * Success of `rmdir` operation is not recorded; we only ultimately care about emptying, not removing
+	 * entirely (empty folders in our context are harmless)
+	 */
+	if ($success) {
+		@rmdir($src); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
 	}
 
-	// delete cached information about cache size.
+	// Delete cached information about cache size
 	WP_Optimize()->get_page_cache()->delete_cache_size_information();
 
 	return $success;
@@ -1285,7 +1306,7 @@ Options -Indexes
 EOF;
 		// phpcs:enable
 
-		if (!is_file($htaccess_filename)) @file_put_contents($htaccess_filename, $htaccess_content); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (!is_file($htaccess_filename)) @file_put_contents($htaccess_filename, $htaccess_content); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress the error when there is file permission issues
 	}
 
 	// Create web.config file for IIS servers.
@@ -1293,11 +1314,11 @@ EOF;
 		$webconfig_filename = WPO_CACHE_FILES_DIR . '/web.config';
 		$webconfig_content = "<configuration>\n<system.webServer>\n<authorization>\n<deny users=\"*\" />\n</authorization>\n</system.webServer>\n</configuration>\n";
 
-		if (!is_file($webconfig_filename)) @file_put_contents($webconfig_filename, $webconfig_content); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (!is_file($webconfig_filename)) @file_put_contents($webconfig_filename, $webconfig_content); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress the error when there is file permission issues
 	}
 
 	// Create empty index.php file for all servers.
-	if (!is_file(WPO_CACHE_FILES_DIR . '/index.php')) @file_put_contents(WPO_CACHE_FILES_DIR . '/index.php', '');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+	if (!is_file(WPO_CACHE_FILES_DIR . '/index.php')) @file_put_contents(WPO_CACHE_FILES_DIR . '/index.php', '');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged  -- suppress the error when there is file permission issues
 }
 endif;
 

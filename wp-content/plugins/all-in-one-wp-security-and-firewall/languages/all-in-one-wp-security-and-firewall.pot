@@ -80,39 +80,39 @@ msgstr ""
 msgid "Tools"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:284, src/admin/wp-security-list-audit.php:165
+#: src/admin/wp-security-admin-init.php:284, src/admin/wp-security-list-audit.php:196
 msgid "Date and time"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:285, src/admin/wp-security-list-audit.php:166, src/admin/wp-security-list-debug.php:47
+#: src/admin/wp-security-admin-init.php:285, src/admin/wp-security-list-audit.php:197, src/admin/wp-security-list-debug.php:47
 msgid "Level"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:286, src/admin/wp-security-list-audit.php:167
+#: src/admin/wp-security-admin-init.php:286, src/admin/wp-security-list-audit.php:198
 msgid "Network ID"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:287, src/admin/wp-security-list-audit.php:168
+#: src/admin/wp-security-admin-init.php:287, src/admin/wp-security-list-audit.php:199
 msgid "Site ID"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:288, src/admin/wp-security-list-acct-activity.php:62, src/admin/wp-security-list-audit.php:169, src/admin/wp-security-list-locked-ip.php:62
+#: src/admin/wp-security-admin-init.php:288, src/admin/wp-security-list-acct-activity.php:62, src/admin/wp-security-list-audit.php:200, src/admin/wp-security-list-locked-ip.php:62
 msgid "Username"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:289, src/admin/wp-security-dashboard-menu.php:477, src/admin/wp-security-list-audit.php:170
+#: src/admin/wp-security-admin-init.php:289, src/admin/wp-security-dashboard-menu.php:477, src/admin/wp-security-list-audit.php:201
 msgid "IP"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:290, src/admin/wp-security-list-audit.php:171
+#: src/admin/wp-security-admin-init.php:290, src/admin/wp-security-list-audit.php:202
 msgid "Event"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:291, src/admin/wp-security-list-audit.php:172
+#: src/admin/wp-security-admin-init.php:291, src/admin/wp-security-list-audit.php:203
 msgid "Details"
 msgstr ""
 
-#: src/admin/wp-security-admin-init.php:292, src/admin/wp-security-list-audit.php:150, src/admin/wp-security-list-audit.php:173
+#: src/admin/wp-security-admin-init.php:292, src/admin/wp-security-list-audit.php:181, src/admin/wp-security-list-audit.php:204
 msgid "Stack trace"
 msgstr ""
 
@@ -160,10 +160,6 @@ msgstr ""
 msgid "Ban users"
 msgstr ""
 
-#: src/admin/wp-security-blacklist-menu.php:105
-msgid "The plugin was unable to write to the .htaccess file. Please edit the file manually."
-msgstr ""
-
 #: src/admin/wp-security-brute-force-menu.php:24
 msgid "Brute force"
 msgstr ""
@@ -200,7 +196,7 @@ msgstr ""
 msgid "You must use alpha numeric characters for your login page slug."
 msgstr ""
 
-#: src/admin/wp-security-brute-force-menu.php:99, src/admin/wp-security-filescan-menu.php:144, src/admin/wp-security-firewall-menu.php:448, src/admin/wp-security-spam-menu.php:81, src/admin/wp-security-spam-menu.php:137, src/admin/wp-security-spam-menu.php:166, src/admin/wp-security-user-login-menu.php:153, src/admin/wp-security-user-login-menu.php:262, src/templates/partials/non-apache-feature-notice.php:9, src/templates/wp-admin/firewall/partials/xmlrpc-warning-notice.php:10
+#: src/admin/wp-security-brute-force-menu.php:99, src/admin/wp-security-filescan-menu.php:144, src/admin/wp-security-firewall-menu.php:448, src/admin/wp-security-spam-menu.php:82, src/admin/wp-security-spam-menu.php:138, src/admin/wp-security-spam-menu.php:167, src/admin/wp-security-user-login-menu.php:153, src/admin/wp-security-user-login-menu.php:262, src/templates/partials/non-apache-feature-notice.php:9, src/templates/wp-admin/firewall/partials/xmlrpc-warning-notice.php:10
 msgid "Attention:"
 msgstr ""
 
@@ -232,11 +228,19 @@ msgstr ""
 msgid "You have successfully saved cookie based brute force prevention feature settings."
 msgstr ""
 
-#: src/admin/wp-security-brute-force-menu.php:287, src/classes/wp-security-general-init-tasks.php:585
-msgid "Your Google reCAPTCHA configuration is invalid."
+#: src/admin/wp-security-brute-force-menu.php:287
+msgid "Your Cloudflare Turnstile configuration is invalid."
 msgstr ""
 
 #: src/admin/wp-security-brute-force-menu.php:287
+msgid "Please enter the correct Cloudflare Turnstile keys below to use the Turnstile feature."
+msgstr ""
+
+#: src/admin/wp-security-brute-force-menu.php:291, src/classes/wp-security-general-init-tasks.php:638
+msgid "Your Google reCAPTCHA configuration is invalid."
+msgstr ""
+
+#: src/admin/wp-security-brute-force-menu.php:291
 msgid "Please enter the correct reCAPTCHA keys below to use the reCAPTCHA feature."
 msgstr ""
 
@@ -460,7 +464,7 @@ msgstr ""
 msgid "Please enter a value for the DB prefix."
 msgstr ""
 
-#: src/admin/wp-security-database-menu.php:134, src/admin/wp-security-database-menu.php:137, src/admin/wp-security-database-menu.php:141, src/wp-security-core.php:415
+#: src/admin/wp-security-database-menu.php:134, src/admin/wp-security-database-menu.php:137, src/admin/wp-security-database-menu.php:141, src/wp-security-core.php:331
 msgid "Error:"
 msgstr ""
 
@@ -688,7 +692,7 @@ msgstr ""
 msgid "You have successfully saved the Prevent Access to Default WP Files configuration."
 msgstr ""
 
-#: src/admin/wp-security-filesystem-menu.php:169, src/admin/wp-security-firewall-menu.php:114, src/admin/wp-security-firewall-menu.php:182, src/admin/wp-security-firewall-menu.php:284, src/admin/wp-security-firewall-menu.php:386, src/admin/wp-security-spam-menu.php:101
+#: src/admin/wp-security-filesystem-menu.php:169, src/admin/wp-security-firewall-menu.php:114, src/admin/wp-security-firewall-menu.php:182, src/admin/wp-security-firewall-menu.php:284, src/admin/wp-security-firewall-menu.php:386, src/admin/wp-security-spam-menu.php:102
 msgid "Could not write to the .htaccess file. Please check the file permissions."
 msgstr ""
 
@@ -740,7 +744,7 @@ msgstr ""
 msgid "Advanced settings"
 msgstr ""
 
-#: src/admin/wp-security-firewall-menu.php:112, src/admin/wp-security-firewall-menu.php:384, src/admin/wp-security-spam-menu.php:99, src/admin/wp-security-spam-menu.php:231, src/admin/wp-security-spam-menu.php:257, src/admin/wp-security-user-registration-menu.php:70
+#: src/admin/wp-security-firewall-menu.php:112, src/admin/wp-security-firewall-menu.php:384, src/admin/wp-security-spam-menu.php:100, src/admin/wp-security-spam-menu.php:232, src/admin/wp-security-spam-menu.php:258, src/admin/wp-security-user-registration-menu.php:70
 msgid "Settings were successfully saved"
 msgstr ""
 
@@ -796,135 +800,135 @@ msgstr ""
 msgid "You entered an incorrect format for the \"Redirect URL\" field. It has been set to the default value."
 msgstr ""
 
-#: src/admin/wp-security-firewall-menu.php:514, src/admin/wp-security-list-404.php:237, src/admin/wp-security-list-comment-spammer-ip.php:183
+#: src/admin/wp-security-firewall-menu.php:514, src/admin/wp-security-list-comment-spammer-ip.php:183
 msgid "The plugin was unable to write to the .htaccess file. Please edit file manually."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:382, src/admin/wp-security-firewall-setup-notice.php:451, src/admin/wp-security-firewall-setup-notice.php:523, src/admin/wp-security-firewall-setup-notice.php:639, src/wp-security.php:43
+#: src/admin/wp-security-firewall-setup-notice.php:388, src/admin/wp-security-firewall-setup-notice.php:457, src/admin/wp-security-firewall-setup-notice.php:529, src/admin/wp-security-firewall-setup-notice.php:645, src/wp-security.php:43
 msgid "All In One WP Security and Firewall"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:384
+#: src/admin/wp-security-firewall-setup-notice.php:390
 msgid "We were unable to create the file necessary to give you the highest level of protection."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:385
+#: src/admin/wp-security-firewall-setup-notice.php:391
 msgid "Your firewall will have reduced protection which means some of your firewall's functionality will be unavailable."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:386
+#: src/admin/wp-security-firewall-setup-notice.php:392
 msgid "If you would like to manually set up the necessary file, please follow these steps:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:390, src/admin/wp-security-firewall-setup-notice.php:497
+#: src/admin/wp-security-firewall-setup-notice.php:396, src/admin/wp-security-firewall-setup-notice.php:503
 msgid "1. Create a file with the name %s in the same directory as your WordPress install is in, i.e.:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:394
+#: src/admin/wp-security-firewall-setup-notice.php:400
 msgid "2. Paste in the following code:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:396, src/admin/wp-security-firewall-setup-notice.php:506
+#: src/admin/wp-security-firewall-setup-notice.php:402, src/admin/wp-security-firewall-setup-notice.php:512
 msgid "3. Save the file and press the 'Try again' button below:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:416
+#: src/admin/wp-security-firewall-setup-notice.php:422
 msgid "1. Open the following file:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:422
+#: src/admin/wp-security-firewall-setup-notice.php:428
 msgid "2. Look for the auto_prepend_file directive."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:426
+#: src/admin/wp-security-firewall-setup-notice.php:432
 msgid "2. Look for the following:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:432
+#: src/admin/wp-security-firewall-setup-notice.php:438
 msgid "3. Change it to the following:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:436
+#: src/admin/wp-security-firewall-setup-notice.php:442
 msgid "4. Save the file  and press the 'Try again' button below:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:436, src/admin/wp-security-firewall-setup-notice.php:485
+#: src/admin/wp-security-firewall-setup-notice.php:442, src/admin/wp-security-firewall-setup-notice.php:491
 msgid "You may have to wait up to 5 minutes before the settings take effect."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:454
+#: src/admin/wp-security-firewall-setup-notice.php:460
 msgid "Your firewall has been installed with the highest level of protection."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:455
+#: src/admin/wp-security-firewall-setup-notice.php:461
 msgid "You may have to wait 5 minutes for the changes to take effect."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:478
+#: src/admin/wp-security-firewall-setup-notice.php:484
 msgid "1. Open your php.ini file."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:481
+#: src/admin/wp-security-firewall-setup-notice.php:487
 msgid "2. Set the auto_prepend_file directive like below:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:485
+#: src/admin/wp-security-firewall-setup-notice.php:491
 msgid "3. Restart the webserver and refresh the page"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:502
+#: src/admin/wp-security-firewall-setup-notice.php:508
 msgid "2. Paste in the following directives:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:526
+#: src/admin/wp-security-firewall-setup-notice.php:532
 msgid "We were unable to set up your firewall with the highest level of protection."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:527
+#: src/admin/wp-security-firewall-setup-notice.php:533
 msgid "Your firewall will have reduced functionality."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:531
+#: src/admin/wp-security-firewall-setup-notice.php:537
 msgid "To give your site the highest level of protection, please follow these steps:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:544
+#: src/admin/wp-security-firewall-setup-notice.php:550
 msgid "Note: if you're unable to perform any of the aforementioned steps, please ask your web hosting provider for further assistance."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:561
+#: src/admin/wp-security-firewall-setup-notice.php:567
 msgid "Try again"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:583
+#: src/admin/wp-security-firewall-setup-notice.php:589
 msgid "We have detected that your AIOS firewall is not fully installed, and therefore does not have the highest level of protection. "
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:584
+#: src/admin/wp-security-firewall-setup-notice.php:590
 msgid "Your firewall will have reduced functionality until it has been upgraded. "
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:586
+#: src/admin/wp-security-firewall-setup-notice.php:592
 msgid "Upgrade your protection now"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:642
+#: src/admin/wp-security-firewall-setup-notice.php:648
 msgid "Our PHP-based firewall has been created to give you even greater protection."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:646
+#: src/admin/wp-security-firewall-setup-notice.php:652
 msgid "If you already have our .htaccess-based firewall enabled, you will still need to set up the PHP-based firewall to benefit from its protection."
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:649
+#: src/admin/wp-security-firewall-setup-notice.php:655
 msgid "To set up the PHP-based firewall, press the 'Set up now' button below:"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:652
+#: src/admin/wp-security-firewall-setup-notice.php:658
 msgid "Set up now"
 msgstr ""
 
-#: src/admin/wp-security-firewall-setup-notice.php:658, src/templates/notices/custom-notice.php:10, src/templates/notices/custom-notice.php:12, src/templates/notices/horizontal-notice.php:50, src/templates/notices/horizontal-notice.php:52, src/templates/notices/htaccess-to-php-feature-notice.php:10, src/templates/notices/htaccess-to-php-feature-notice.php:12
+#: src/admin/wp-security-firewall-setup-notice.php:664, src/templates/notices/custom-notice.php:10, src/templates/notices/custom-notice.php:12, src/templates/notices/horizontal-notice.php:50, src/templates/notices/horizontal-notice.php:52, src/templates/notices/htaccess-to-php-feature-notice.php:10, src/templates/notices/htaccess-to-php-feature-notice.php:12
 msgid "Dismiss"
 msgstr ""
 
@@ -956,15 +960,19 @@ msgstr ""
 msgid "Blacklist IP"
 msgstr ""
 
-#: src/admin/wp-security-list-404.php:121, src/admin/wp-security-list-acct-activity.php:83, src/admin/wp-security-list-audit.php:207, src/admin/wp-security-list-locked-ip.php:38, src/admin/wp-security-list-locked-ip.php:85, src/admin/wp-security-list-registered-users.php:98
+#: src/admin/wp-security-list-404.php:121, src/admin/wp-security-list-acct-activity.php:83, src/admin/wp-security-list-locked-ip.php:38, src/admin/wp-security-list-locked-ip.php:85, src/admin/wp-security-list-registered-users.php:98
 msgid "Delete"
 msgstr ""
 
-#: src/admin/wp-security-list-404.php:131, src/admin/wp-security-list-404.php:139, src/admin/wp-security-list-404.php:146, src/admin/wp-security-list-acct-activity.php:94, src/admin/wp-security-list-audit.php:221, src/admin/wp-security-list-comment-spammer-ip.php:96, src/admin/wp-security-list-locked-ip.php:100, src/admin/wp-security-list-locked-ip.php:108, src/admin/wp-security-list-permanent-blocked-ip.php:90, src/admin/wp-security-list-registered-users.php:114, src/admin/wp-security-list-registered-users.php:122, src/admin/wp-security-list-registered-users.php:130
+#: src/admin/wp-security-list-404.php:131, src/admin/wp-security-list-404.php:139, src/admin/wp-security-list-404.php:146, src/admin/wp-security-list-acct-activity.php:94, src/admin/wp-security-list-audit.php:266, src/admin/wp-security-list-comment-spammer-ip.php:96, src/admin/wp-security-list-locked-ip.php:100, src/admin/wp-security-list-locked-ip.php:108, src/admin/wp-security-list-permanent-blocked-ip.php:90, src/admin/wp-security-list-registered-users.php:114, src/admin/wp-security-list-registered-users.php:122, src/admin/wp-security-list-registered-users.php:130
 msgid "Please select some records using the checkboxes"
 msgstr ""
 
-#: src/admin/wp-security-list-404.php:281
+#: src/admin/wp-security-list-404.php:234
+msgid "The selected IP addresses have been added to the blacklist and will be permanently blocked."
+msgstr ""
+
+#: src/admin/wp-security-list-404.php:275
 msgid "Nonce check failed for delete selected 404 event logs operation!"
 msgstr ""
 
@@ -997,58 +1005,106 @@ msgid "No event type available."
 msgstr ""
 
 #: src/admin/wp-security-list-audit.php:105
-msgid "Plugin: %s %s %s (v%s)"
+msgid "WordPress updated from version %s to %s"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:109
-msgid "Theme: %s %s"
+#: src/admin/wp-security-list-audit.php:108
+msgid "Plugin"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:111
-msgid "Theme: %s %s %s (v%s)"
+#: src/admin/wp-security-list-audit.php:112, src/admin/wp-security-list-audit.php:114
+msgid "Theme"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:116
+#: src/admin/wp-security-list-audit.php:119
+msgid "Entity: \"%s\" has changed, please check the stacktrace for more details"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:121
+msgid "An unknown entity has changed, please check the stacktrace for more details"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:126
+msgid "Core %s translations updated to version %s"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:128
+msgid "Plugin \"%s\" %s translations updated to version %s"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:130
+msgid "Theme \"%s\" %s translations updated to version %s"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:135
 msgid "Event imported from the failed logins table"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:118
+#: src/admin/wp-security-list-audit.php:137
 msgid "Failed login attempt with a known username: %s"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:120
+#: src/admin/wp-security-list-audit.php:139
 msgid "Failed login attempt with a unknown username: %s"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:125
+#: src/admin/wp-security-list-audit.php:143
+msgid "Successful login with username: %s"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:147
+msgid "Admin %s registered new user: %s"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:149
+msgid "User %s registered and set to pending"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:151
+msgid "User %s registered"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:156
 msgid "Successfully migrated the `%s` table data to the `%s` table"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:127
+#: src/admin/wp-security-list-audit.php:158
 msgid "Failed to migrate the `%s` table data to the `%s` table"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:142
+#: src/admin/wp-security-list-audit.php:173
 msgid "No stack trace available."
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:150
+#: src/admin/wp-security-list-audit.php:181
 msgid "Show trace"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:242
+#: src/admin/wp-security-list-audit.php:238
+msgid "Delete all"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:239
+msgid "Delete selected"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:240
+msgid "Delete filtered"
+msgstr ""
+
+#: src/admin/wp-security-list-audit.php:292
 msgid "All levels"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:252
+#: src/admin/wp-security-list-audit.php:302
 msgid "All events"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:260
+#: src/admin/wp-security-list-audit.php:310
 msgid "Filter"
 msgstr ""
 
-#: src/admin/wp-security-list-audit.php:265, src/templates/wp-admin/firewall/404-detection.php:97, src/templates/wp-admin/firewall/404-detection.php:106, src/templates/wp-admin/user-login/account-activity-logs.php:33, src/templates/wp-admin/user-login/account-activity-logs.php:42
+#: src/admin/wp-security-list-audit.php:315, src/templates/wp-admin/firewall/404-detection.php:97, src/templates/wp-admin/firewall/404-detection.php:106, src/templates/wp-admin/user-login/account-activity-logs.php:33, src/templates/wp-admin/user-login/account-activity-logs.php:42
 msgid "Export to CSV"
 msgstr ""
 
@@ -1228,23 +1284,23 @@ msgstr ""
 msgid " is now active"
 msgstr ""
 
-#: src/admin/wp-security-list-registered-users.php:217
+#: src/admin/wp-security-list-registered-users.php:213
 msgid "The selected accounts were deleted successfully!"
 msgstr ""
 
-#: src/admin/wp-security-list-registered-users.php:224
+#: src/admin/wp-security-list-registered-users.php:220
 msgid "The selected account was deleted successfully!"
 msgstr ""
 
-#: src/admin/wp-security-list-registered-users.php:243
+#: src/admin/wp-security-list-registered-users.php:239
 msgid "The selected IP addresses were successfully added to the permanent block list!"
 msgstr ""
 
-#: src/admin/wp-security-list-registered-users.php:244, src/admin/wp-security-list-registered-users.php:252
+#: src/admin/wp-security-list-registered-users.php:240, src/admin/wp-security-list-registered-users.php:248
 msgid "View Blocked IPs"
 msgstr ""
 
-#: src/admin/wp-security-list-registered-users.php:251
+#: src/admin/wp-security-list-registered-users.php:247
 msgid "The selected IP was successfully added to the permanent block list!"
 msgstr ""
 
@@ -1424,47 +1480,47 @@ msgstr ""
 msgid "bbPress"
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:79
+#: src/admin/wp-security-spam-menu.php:80
 msgid "You entered a non numeric value for the \"move spam comments to trash after number of days\" field."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:79, src/admin/wp-security-spam-menu.php:161, src/admin/wp-security-user-login-menu.php:87, src/admin/wp-security-user-login-menu.php:93, src/admin/wp-security-user-login-menu.php:99, src/admin/wp-security-user-login-menu.php:105
+#: src/admin/wp-security-spam-menu.php:80, src/admin/wp-security-spam-menu.php:162, src/admin/wp-security-user-login-menu.php:87, src/admin/wp-security-user-login-menu.php:93, src/admin/wp-security-user-login-menu.php:99, src/admin/wp-security-user-login-menu.php:105
 msgid "It has been set to the default value."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:129
+#: src/admin/wp-security-spam-menu.php:130
 msgid "You entered a non numeric value for the minimum number of spam comments field. It has been set to the default value."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:132
+#: src/admin/wp-security-spam-menu.php:133
 msgid "You must enter an integer greater than zero for minimum number of spam comments field. It has been set to the default value."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:156
+#: src/admin/wp-security-spam-menu.php:157
 msgid "Nonce check failed for list spam comment IPs."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:161
+#: src/admin/wp-security-spam-menu.php:162
 msgid "You entered a non numeric value for the minimum spam comments per IP field."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:172
+#: src/admin/wp-security-spam-menu.php:173
 msgid "Displaying results for IP addresses which have posted a minimum of %s spam comments."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:190
+#: src/admin/wp-security-spam-menu.php:191
 msgid "You currently have no IP addresses permanently blocked due to spam."
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:203
+#: src/admin/wp-security-spam-menu.php:204
 msgid "Spammer IPs added to permanent block list today: "
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:203
+#: src/admin/wp-security-spam-menu.php:204
 msgid "All time total: "
 msgstr ""
 
-#: src/admin/wp-security-spam-menu.php:203
+#: src/admin/wp-security-spam-menu.php:204
 msgid "View blocked IPs"
 msgstr ""
 
@@ -1588,7 +1644,7 @@ msgstr ""
 msgid "You entered a non numeric value for the logout time period field. It has been set to the default value."
 msgstr ""
 
-#: src/admin/wp-security-user-registration-menu.php:19, src/classes/wp-security-audit-events.php:79
+#: src/admin/wp-security-user-registration-menu.php:19, src/classes/wp-security-audit-events.php:88
 msgid "User registration"
 msgstr ""
 
@@ -1614,18 +1670,6 @@ msgstr ""
 
 #: src/admin/wp-security-user-registration-menu.php:96
 msgid "Nonce check failed for block IP operation of registered user!"
-msgstr ""
-
-#: src/classes/aios-ajax.php:95
-msgid "Invalid IP retrieve method."
-msgstr ""
-
-#: src/classes/aios-ajax.php:138, src/wp-security-core.php:300
-msgid "Options can only be saved by network admin"
-msgstr ""
-
-#: src/classes/aios-ajax.php:167
-msgid "The command \"%s\" was not found"
 msgstr ""
 
 #: src/classes/grade-system/wp-security-feature-item-manager.php:39
@@ -1757,7 +1801,7 @@ msgid "Comment CAPTCHA"
 msgstr ""
 
 #: src/classes/grade-system/wp-security-feature-item-manager.php:119
-msgid "Block spambots"
+msgid "Detect spambots"
 msgstr ""
 
 #: src/classes/grade-system/wp-security-feature-item-manager.php:121
@@ -1784,51 +1828,71 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: src/classes/wp-security-audit-events.php:68
-msgid "Plugin installed"
+#: src/classes/wp-security-ajax.php:136
+msgid "Options can only be saved by network admin"
 msgstr ""
 
-#: src/classes/wp-security-audit-events.php:69
-msgid "Plugin activated"
-msgstr ""
-
-#: src/classes/wp-security-audit-events.php:70
-msgid "Plugin updated"
-msgstr ""
-
-#: src/classes/wp-security-audit-events.php:71
-msgid "Plugin deactivated"
-msgstr ""
-
-#: src/classes/wp-security-audit-events.php:72
-msgid "Plugin deleted"
-msgstr ""
-
-#: src/classes/wp-security-audit-events.php:73
-msgid "Theme installed"
+#: src/classes/wp-security-ajax.php:167
+msgid "The command \"%s\" was not found"
 msgstr ""
 
 #: src/classes/wp-security-audit-events.php:74
-msgid "Theme activated"
+msgid "Core updated"
 msgstr ""
 
 #: src/classes/wp-security-audit-events.php:75
-msgid "Theme updated"
+msgid "Plugin installed"
 msgstr ""
 
 #: src/classes/wp-security-audit-events.php:76
-msgid "Theme deleted"
+msgid "Plugin activated"
 msgstr ""
 
 #: src/classes/wp-security-audit-events.php:77
-msgid "Successful login"
+msgid "Plugin updated"
 msgstr ""
 
 #: src/classes/wp-security-audit-events.php:78
-msgid "Failed login"
+msgid "Plugin deactivated"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:79
+msgid "Plugin deleted"
 msgstr ""
 
 #: src/classes/wp-security-audit-events.php:80
+msgid "Theme installed"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:81
+msgid "Theme activated"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:82
+msgid "Theme updated"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:83
+msgid "Theme deleted"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:84
+msgid "Translation updated"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:85
+msgid "Entity changed"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:86
+msgid "Successful login"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:87
+msgid "Failed login"
+msgstr ""
+
+#: src/classes/wp-security-audit-events.php:89
 msgid "Table migration"
 msgstr ""
 
@@ -1836,88 +1900,112 @@ msgstr ""
 msgid "You should set %s before activating this feature."
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:144, src/classes/wp-security-captcha.php:302
+#: src/classes/wp-security-captcha.php:144, src/classes/wp-security-captcha.php:282
 msgid "Please enter an answer in digits:"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:396
+#: src/classes/wp-security-captcha.php:376
 msgid "one"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:397
+#: src/classes/wp-security-captcha.php:377
 msgid "two"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:398
+#: src/classes/wp-security-captcha.php:378
 msgid "three"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:399
+#: src/classes/wp-security-captcha.php:379
 msgid "four"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:400
+#: src/classes/wp-security-captcha.php:380
 msgid "five"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:401
+#: src/classes/wp-security-captcha.php:381
 msgid "six"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:402
+#: src/classes/wp-security-captcha.php:382
 msgid "seven"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:403
+#: src/classes/wp-security-captcha.php:383
 msgid "eight"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:404
+#: src/classes/wp-security-captcha.php:384
 msgid "nine"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:405
+#: src/classes/wp-security-captcha.php:385
 msgid "ten"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:406
+#: src/classes/wp-security-captcha.php:386
 msgid "eleven"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:407
+#: src/classes/wp-security-captcha.php:387
 msgid "twelve"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:408
+#: src/classes/wp-security-captcha.php:388
 msgid "thirteen"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:409
+#: src/classes/wp-security-captcha.php:389
 msgid "fourteen"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:410
+#: src/classes/wp-security-captcha.php:390
 msgid "fifteen"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:411
+#: src/classes/wp-security-captcha.php:391
 msgid "sixteen"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:412
+#: src/classes/wp-security-captcha.php:392
 msgid "seventeen"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:413
+#: src/classes/wp-security-captcha.php:393
 msgid "eighteen"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:414
+#: src/classes/wp-security-captcha.php:394
 msgid "nineteen"
 msgstr ""
 
-#: src/classes/wp-security-captcha.php:415
+#: src/classes/wp-security-captcha.php:395
 msgid "twenty"
+msgstr ""
+
+#: src/classes/wp-security-commands.php:24
+msgid "Invalid IP retrieve method."
+msgstr ""
+
+#: src/classes/wp-security-configure-settings.php:402
+msgid "Blacklist manager disabled notification"
+msgstr ""
+
+#: src/classes/wp-security-configure-settings.php:403
+msgid "The blacklist manager feature has been updated and to prevent any unexpected site lockouts we have disabled the feature."
+msgstr ""
+
+#: src/classes/wp-security-configure-settings.php:403
+msgid "You can enable the feature again by logging into your WordPress dashboard."
+msgstr ""
+
+#: src/classes/wp-security-configure-settings.php:403
+msgid "Go to dashboard: %s"
+msgstr ""
+
+#: src/classes/wp-security-configure-settings.php:403
+msgid "Once logged in before turning the blacklist manger on please double check your settings to ensure you have not entered your own details."
 msgstr ""
 
 #: src/classes/wp-security-cronjob-handler.php:34
@@ -1932,103 +2020,103 @@ msgstr ""
 msgid "Unable to clear the logs"
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:82
-msgid "All In One WP Security - File change detected!"
+#: src/classes/wp-security-file-scan.php:78
+msgid "All In One WP Security - File change detected"
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:84
+#: src/classes/wp-security-file-scan.php:80
 msgid "A file change was detected on your system for site URL"
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:84
+#: src/classes/wp-security-file-scan.php:80
 msgid ". Scan was generated on"
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:85
+#: src/classes/wp-security-file-scan.php:81
 msgid "A summary of the scan results is shown below:"
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:88
+#: src/classes/wp-security-file-scan.php:84
 msgid "Login to your site to view the scan details."
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:308
+#: src/classes/wp-security-file-scan.php:304
 msgid "The following files were added to your host"
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:310, src/classes/wp-security-file-scan.php:318, src/classes/wp-security-file-scan.php:327
+#: src/classes/wp-security-file-scan.php:306, src/classes/wp-security-file-scan.php:314, src/classes/wp-security-file-scan.php:323
 msgid "modified on: "
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:316
+#: src/classes/wp-security-file-scan.php:312
 msgid "The following files were removed from your host"
 msgstr ""
 
-#: src/classes/wp-security-file-scan.php:325
+#: src/classes/wp-security-file-scan.php:321
 msgid "The following files were changed on your host"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:207, src/classes/wp-security-general-init-tasks.php:424
+#: src/classes/wp-security-general-init-tasks.php:214, src/classes/wp-security-general-init-tasks.php:477
 msgid "Application passwords have been disabled by All In One WP Security & Firewall plugin."
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:400, src/classes/wp-security-general-init-tasks.php:484, src/classes/wp-security-general-init-tasks.php:517, src/classes/wp-security-user-login.php:137, src/classes/wp-security-user-registration.php:74
+#: src/classes/wp-security-general-init-tasks.php:453, src/classes/wp-security-general-init-tasks.php:537, src/classes/wp-security-general-init-tasks.php:570, src/classes/wp-security-user-login.php:137, src/classes/wp-security-user-registration.php:81
 msgid "<strong>ERROR</strong>: Your answer was incorrect - please try again."
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:406
+#: src/classes/wp-security-general-init-tasks.php:459
 msgid "Enter something special:"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:419
+#: src/classes/wp-security-general-init-tasks.php:472
 msgid "Application passwords"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:428
+#: src/classes/wp-security-general-init-tasks.php:481
 msgid "Change setting"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:430
+#: src/classes/wp-security-general-init-tasks.php:483
 msgid "Site admin can only change this setting."
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:459
+#: src/classes/wp-security-general-init-tasks.php:512
 msgid "Error: You entered an incorrect CAPTCHA answer. Please go back and try again."
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:501
+#: src/classes/wp-security-general-init-tasks.php:554
 msgid "Your CAPTCHA answer was incorrect - please try again."
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:510
+#: src/classes/wp-security-general-init-tasks.php:563
 msgid "<strong>ERROR</strong>: Your IP address is currently locked please contact the administrator!"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:585
+#: src/classes/wp-security-general-init-tasks.php:638
 msgid "Please enter the correct reCAPTCHA keys %s to use the Google reCAPTCHA feature."
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:585, src/classes/wp-security-notices.php:99, src/templates/wp-admin/scanner/malware-scan.php:7, src/templates/wp-admin/user-login/login-records.php:6
+#: src/classes/wp-security-general-init-tasks.php:638, src/classes/wp-security-notices.php:117, src/templates/wp-admin/scanner/malware-scan.php:7, src/templates/wp-admin/user-login/login-records.php:6
 msgid "here"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:601
+#: src/classes/wp-security-general-init-tasks.php:654
 msgid "Would you like All In One WP Security & Firewall to restore the config settings and re-insert the security rules in your .htaccess file which were cleared when you deactivated the plugin?"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:601, src/classes/wp-security-general-init-tasks.php:603, src/templates/wp-admin/dashboard/may-also-like.php:40, src/templates/wp-admin/dashboard/may-also-like.php:43, src/templates/wp-admin/dashboard/may-also-like.php:54, src/templates/wp-admin/dashboard/may-also-like.php:57, src/templates/wp-admin/dashboard/may-also-like.php:68, src/templates/wp-admin/dashboard/may-also-like.php:71, src/templates/wp-admin/dashboard/may-also-like.php:91, src/templates/wp-admin/dashboard/may-also-like.php:103, src/templates/wp-admin/dashboard/may-also-like.php:115, src/templates/wp-admin/dashboard/may-also-like.php:127, src/templates/wp-admin/dashboard/may-also-like.php:139, src/templates/wp-admin/dashboard/may-also-like.php:151, src/templates/wp-admin/dashboard/may-also-like.php:168, src/templates/wp-admin/dashboard/may-also-like.php:171, src/templates/wp-admin/dashboard/may-also-like.php:183, src/templates/wp-admin/dashboard/may-also-like.php:195, src/templates/wp-admin/dashboard/may-also-like.php:207, src/templates/wp-admin/dashboard/may-also-like.php:219, src/templates/wp-admin/dashboard/may-also-like.php:231, src/templates/wp-admin/dashboard/may-also-like.php:243, src/templates/wp-admin/dashboard/may-also-like.php:252, src/templates/wp-admin/dashboard/may-also-like.php:255, src/templates/wp-admin/dashboard/may-also-like.php:264, src/templates/wp-admin/dashboard/may-also-like.php:267, src/templates/wp-admin/dashboard/may-also-like.php:279, src/templates/wp-admin/dashboard/may-also-like.php:297, src/templates/wp-admin/dashboard/may-also-like.php:309, src/templates/wp-admin/dashboard/may-also-like.php:327, src/templates/wp-admin/dashboard/may-also-like.php:339, src/templates/wp-admin/dashboard/may-also-like.php:351, src/templates/wp-admin/dashboard/may-also-like.php:368, src/templates/wp-admin/dashboard/may-also-like.php:380
+#: src/classes/wp-security-general-init-tasks.php:654, src/classes/wp-security-general-init-tasks.php:656, src/templates/wp-admin/dashboard/may-also-like.php:40, src/templates/wp-admin/dashboard/may-also-like.php:43, src/templates/wp-admin/dashboard/may-also-like.php:54, src/templates/wp-admin/dashboard/may-also-like.php:57, src/templates/wp-admin/dashboard/may-also-like.php:68, src/templates/wp-admin/dashboard/may-also-like.php:71, src/templates/wp-admin/dashboard/may-also-like.php:91, src/templates/wp-admin/dashboard/may-also-like.php:103, src/templates/wp-admin/dashboard/may-also-like.php:115, src/templates/wp-admin/dashboard/may-also-like.php:127, src/templates/wp-admin/dashboard/may-also-like.php:139, src/templates/wp-admin/dashboard/may-also-like.php:151, src/templates/wp-admin/dashboard/may-also-like.php:168, src/templates/wp-admin/dashboard/may-also-like.php:171, src/templates/wp-admin/dashboard/may-also-like.php:183, src/templates/wp-admin/dashboard/may-also-like.php:195, src/templates/wp-admin/dashboard/may-also-like.php:207, src/templates/wp-admin/dashboard/may-also-like.php:219, src/templates/wp-admin/dashboard/may-also-like.php:231, src/templates/wp-admin/dashboard/may-also-like.php:243, src/templates/wp-admin/dashboard/may-also-like.php:252, src/templates/wp-admin/dashboard/may-also-like.php:255, src/templates/wp-admin/dashboard/may-also-like.php:264, src/templates/wp-admin/dashboard/may-also-like.php:267, src/templates/wp-admin/dashboard/may-also-like.php:279, src/templates/wp-admin/dashboard/may-also-like.php:297, src/templates/wp-admin/dashboard/may-also-like.php:309, src/templates/wp-admin/dashboard/may-also-like.php:327, src/templates/wp-admin/dashboard/may-also-like.php:339, src/templates/wp-admin/dashboard/may-also-like.php:351, src/templates/wp-admin/dashboard/may-also-like.php:368, src/templates/wp-admin/dashboard/may-also-like.php:380
 msgid "Yes"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:601, src/classes/wp-security-general-init-tasks.php:603, src/templates/notices/custom-notice.php:27, src/templates/wp-admin/dashboard/may-also-like.php:88, src/templates/wp-admin/dashboard/may-also-like.php:100, src/templates/wp-admin/dashboard/may-also-like.php:112, src/templates/wp-admin/dashboard/may-also-like.php:124, src/templates/wp-admin/dashboard/may-also-like.php:136, src/templates/wp-admin/dashboard/may-also-like.php:148, src/templates/wp-admin/dashboard/may-also-like.php:180, src/templates/wp-admin/dashboard/may-also-like.php:192, src/templates/wp-admin/dashboard/may-also-like.php:204, src/templates/wp-admin/dashboard/may-also-like.php:216, src/templates/wp-admin/dashboard/may-also-like.php:228, src/templates/wp-admin/dashboard/may-also-like.php:240, src/templates/wp-admin/dashboard/may-also-like.php:276, src/templates/wp-admin/dashboard/may-also-like.php:294, src/templates/wp-admin/dashboard/may-also-like.php:306, src/templates/wp-admin/dashboard/may-also-like.php:324, src/templates/wp-admin/dashboard/may-also-like.php:336, src/templates/wp-admin/dashboard/may-also-like.php:348, src/templates/wp-admin/dashboard/may-also-like.php:365, src/templates/wp-admin/dashboard/may-also-like.php:377
+#: src/classes/wp-security-general-init-tasks.php:654, src/classes/wp-security-general-init-tasks.php:656, src/templates/notices/custom-notice.php:27, src/templates/wp-admin/dashboard/may-also-like.php:88, src/templates/wp-admin/dashboard/may-also-like.php:100, src/templates/wp-admin/dashboard/may-also-like.php:112, src/templates/wp-admin/dashboard/may-also-like.php:124, src/templates/wp-admin/dashboard/may-also-like.php:136, src/templates/wp-admin/dashboard/may-also-like.php:148, src/templates/wp-admin/dashboard/may-also-like.php:180, src/templates/wp-admin/dashboard/may-also-like.php:192, src/templates/wp-admin/dashboard/may-also-like.php:204, src/templates/wp-admin/dashboard/may-also-like.php:216, src/templates/wp-admin/dashboard/may-also-like.php:228, src/templates/wp-admin/dashboard/may-also-like.php:240, src/templates/wp-admin/dashboard/may-also-like.php:276, src/templates/wp-admin/dashboard/may-also-like.php:294, src/templates/wp-admin/dashboard/may-also-like.php:306, src/templates/wp-admin/dashboard/may-also-like.php:324, src/templates/wp-admin/dashboard/may-also-like.php:336, src/templates/wp-admin/dashboard/may-also-like.php:348, src/templates/wp-admin/dashboard/may-also-like.php:365, src/templates/wp-admin/dashboard/may-also-like.php:377
 msgid "No"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:603
+#: src/classes/wp-security-general-init-tasks.php:656
 msgid "Would you like All In One WP Security & Firewall to restore the config settings which were cleared when you deactivated the plugin?"
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:623
+#: src/classes/wp-security-general-init-tasks.php:676
 msgid "Your registration is pending approval."
 msgstr ""
 
@@ -2101,90 +2189,102 @@ msgid "Setup IP address detection settings"
 msgstr ""
 
 #: src/classes/wp-security-notices.php:85
-msgid "Important: Disabled login whitelist setting"
+msgid "Important: Blacklist manager disabled"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:91
-msgid "Turn it back on"
+#: src/classes/wp-security-notices.php:87
+msgid "The blacklist manager feature has been disabled to prevent any unexpected site lockouts."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:92
+#: src/classes/wp-security-notices.php:90
+msgid "This feature will block any IP address or range listed in its settings, please double check your own details are not included before turning it back on."
+msgstr ""
+
+#: src/classes/wp-security-notices.php:96, src/classes/wp-security-notices.php:110
 msgid "Edit the settings"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:95
-msgid "Keep it off"
-msgstr ""
-
-#: src/classes/wp-security-notices.php:99
-msgid "Hey - We noticed All In One WP Security & Firewall has kept your site safe for a while.  If you like us, please consider leaving a positive review to spread the word.  Or if you have any issues or questions please leave us a support message %s."
-msgstr ""
-
-#: src/classes/wp-security-notices.php:99
-msgid "Thank you so much!"
-msgstr ""
-
-#: src/classes/wp-security-notices.php:99
-msgid "Team All In One WP Security & Firewall"
+#: src/classes/wp-security-notices.php:103
+msgid "Important: Disabled login whitelist setting"
 msgstr ""
 
 #: src/classes/wp-security-notices.php:109
+msgid "Turn it back on"
+msgstr ""
+
+#: src/classes/wp-security-notices.php:113
+msgid "Keep it off"
+msgstr ""
+
+#: src/classes/wp-security-notices.php:117
+msgid "Hey - We noticed All In One WP Security & Firewall has kept your site safe for a while.  If you like us, please consider leaving a positive review to spread the word.  Or if you have any issues or questions please leave us a support message %s."
+msgstr ""
+
+#: src/classes/wp-security-notices.php:117
+msgid "Thank you so much!"
+msgstr ""
+
+#: src/classes/wp-security-notices.php:117
+msgid "Team All In One WP Security & Firewall"
+msgstr ""
+
+#: src/classes/wp-security-notices.php:127
 msgid "Enhance your security even more by backing up your site"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:110
+#: src/classes/wp-security-notices.php:128
 msgid "UpdraftPlus is the world's most trusted backup plugin from the owners of All In One WP Security & Firewall"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:121
+#: src/classes/wp-security-notices.php:139
 msgid "After you've secured your site, we recommend you install our WP-Optimize plugin to streamline it for better website performance."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:133
+#: src/classes/wp-security-notices.php:151
 msgid "Black Friday Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:134, src/classes/wp-security-notices.php:148, src/classes/wp-security-notices.php:162, src/classes/wp-security-notices.php:176
+#: src/classes/wp-security-notices.php:152, src/classes/wp-security-notices.php:166, src/classes/wp-security-notices.php:180, src/classes/wp-security-notices.php:194
 msgid "Get added protection with Premium. Scan your site for malware, downtime and response time issues. Block traffic by country of origin, get advanced two-factor authentication, premium support and more."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:134
+#: src/classes/wp-security-notices.php:152
 msgid "Get 20%% off with code %s at %s. Hurry, offer ends 28th November."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:134, src/classes/wp-security-notices.php:148, src/classes/wp-security-notices.php:162, src/classes/wp-security-notices.php:176
+#: src/classes/wp-security-notices.php:152, src/classes/wp-security-notices.php:166, src/classes/wp-security-notices.php:180, src/classes/wp-security-notices.php:194
 msgid "checkout"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:147
+#: src/classes/wp-security-notices.php:165
 msgid "New Year Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:148
+#: src/classes/wp-security-notices.php:166
 msgid "Get 20%% off with code %s at %s. Hurry, offer ends 14th January."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:161
+#: src/classes/wp-security-notices.php:179
 msgid "Spring Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:162
+#: src/classes/wp-security-notices.php:180
 msgid "Get 20%% off with code %s at %s. Hurry, offer ends 30th April."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:175
+#: src/classes/wp-security-notices.php:193
 msgid "Summer Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:176
+#: src/classes/wp-security-notices.php:194
 msgid "Get 20%% off with code %s at %s. Hurry, offer ends 31st July."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:189
+#: src/classes/wp-security-notices.php:207
 msgid "The Updraft Plugin Collection Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:190
+#: src/classes/wp-security-notices.php:208
 msgid "Visit any of our websites and use code %s at checkout to get 20%% off all our plugins. Be quick, offer ends 30th September."
 msgstr ""
 
@@ -2232,11 +2332,11 @@ msgstr ""
 msgid "Two Factor Auth"
 msgstr ""
 
-#: src/classes/wp-security-two-factor-login.php:178
+#: src/classes/wp-security-two-factor-login.php:185
 msgid "PHP OpenSSL or mcrypt module required"
 msgstr ""
 
-#: src/classes/wp-security-two-factor-login.php:178
+#: src/classes/wp-security-two-factor-login.php:185
 msgid "The All In One WP Security plugin's Two Factor Authentication module requires either the PHP openssl (preferred) or mcrypt module to be installed. Please ask your web hosting company to install one of them."
 msgstr ""
 
@@ -2260,67 +2360,67 @@ msgstr ""
 msgid "<strong>ACCOUNT PENDING</strong>: Your account is currently not active. An administrator needs to activate your account before you can login."
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:241
+#: src/classes/wp-security-user-login.php:242
 msgid "<strong>ERROR</strong>: Invalid login credentials."
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:364
+#: src/classes/wp-security-user-login.php:365
 msgid "Site Lockout Notification"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:365
+#: src/classes/wp-security-user-login.php:366
 msgid "User login lockout events had occurred due to too many failed login attempts or invalid username:"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:368
+#: src/classes/wp-security-user-login.php:369
 msgid "Username:"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:369
+#: src/classes/wp-security-user-login.php:370
 msgid "IP address:"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:371
+#: src/classes/wp-security-user-login.php:372
 msgid "IP range:"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:376
+#: src/classes/wp-security-user-login.php:377
 msgid "Log into your site WordPress administration panel to see the duration of the lockout or to unlock the user."
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:487
+#: src/classes/wp-security-user-login.php:486
 msgid "Unlock request notification"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:488
+#: src/classes/wp-security-user-login.php:487
 msgid "You have requested for the account with email address %s to be unlocked. Please press the link below to unlock your account:"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:488
+#: src/classes/wp-security-user-login.php:487
 msgid "Unlock link: %s"
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:488
+#: src/classes/wp-security-user-login.php:487
 msgid "After pressing the above link you will be able to login to the WordPress administration panel."
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:708
+#: src/classes/wp-security-user-login.php:705
 msgid "Your session has expired because it has been over %d minutes since your last login."
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:709, src/classes/wp-security-user-login.php:713
+#: src/classes/wp-security-user-login.php:706, src/classes/wp-security-user-login.php:710
 msgid "Please log back in to continue."
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:712
+#: src/classes/wp-security-user-login.php:709
 msgid "You were logged out because you just changed the \"admin\" username."
 msgstr ""
 
-#: src/classes/wp-security-user-login.php:742
+#: src/classes/wp-security-user-login.php:739
 msgid "Request unlock"
 msgstr ""
 
-#: src/classes/wp-security-user-registration.php:68
+#: src/classes/wp-security-user-registration.php:75
 msgid "<strong>ERROR</strong>: You are not allowed to register because your IP address is currently locked!"
 msgstr ""
 
@@ -2420,7 +2520,7 @@ msgstr ""
 msgid "Two factor authentication in All In One WP Security is currently disabled because the incompatible plugin %s is active."
 msgstr ""
 
-#: src/templates/info/ip-address-ip-range-info.php:2, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:76, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:110, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:133, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:154, src/templates/wp-admin/firewall/6g.php:29, src/templates/wp-admin/firewall/6g.php:47, src/templates/wp-admin/firewall/6g.php:85, src/templates/wp-admin/firewall/advanced-settings.php:17, src/templates/wp-admin/firewall/internet-bots.php:42, src/templates/wp-admin/firewall/partials/advanced-character-filter.php:16, src/templates/wp-admin/firewall/partials/bad-query-strings.php:17, src/templates/wp-admin/firewall/partials/basic-firewall-settings.php:15, src/templates/wp-admin/firewall/partials/block-debug-log.php:16, src/templates/wp-admin/firewall/partials/disable-trace.php:16, src/templates/wp-admin/firewall/partials/listing-directory-contents.php:16, src/templates/wp-admin/firewall/partials/proxy-comment.php:17, src/templates/wp-admin/firewall/partials/xmlrpc-pingback-protection.php:16, src/templates/wp-admin/firewall/partials/xmlrpc-pingback-protection.php:36, src/templates/wp-admin/miscellaneous/salt.php:31, src/templates/wp-admin/scanner/file-change-detect.php:68, src/templates/wp-admin/scanner/file-change-detect.php:86, src/templates/wp-admin/settings/advanced-settings.php:65, src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:36, src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:72, src/templates/wp-admin/spam-prevention/comment-spam.php:53, src/templates/wp-admin/spam-prevention/comment-spam.php:90, src/templates/wp-admin/user-login/login-lockout.php:110
+#: src/templates/info/ip-address-ip-range-info.php:2, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:76, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:110, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:133, src/templates/wp-admin/brute-force/cookie-based-brute-force-prevention.php:154, src/templates/wp-admin/firewall/6g.php:29, src/templates/wp-admin/firewall/6g.php:47, src/templates/wp-admin/firewall/6g.php:85, src/templates/wp-admin/firewall/advanced-settings.php:17, src/templates/wp-admin/firewall/internet-bots.php:42, src/templates/wp-admin/firewall/partials/advanced-character-filter.php:16, src/templates/wp-admin/firewall/partials/bad-query-strings.php:17, src/templates/wp-admin/firewall/partials/basic-firewall-settings.php:15, src/templates/wp-admin/firewall/partials/block-debug-log.php:16, src/templates/wp-admin/firewall/partials/disable-trace.php:16, src/templates/wp-admin/firewall/partials/listing-directory-contents.php:16, src/templates/wp-admin/firewall/partials/proxy-comment.php:17, src/templates/wp-admin/firewall/partials/xmlrpc-pingback-protection.php:16, src/templates/wp-admin/firewall/partials/xmlrpc-pingback-protection.php:36, src/templates/wp-admin/miscellaneous/salt.php:31, src/templates/wp-admin/scanner/file-change-detect.php:68, src/templates/wp-admin/scanner/file-change-detect.php:86, src/templates/wp-admin/settings/advanced-settings.php:65, src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:36, src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:72, src/templates/wp-admin/spam-prevention/comment-spam.php:47, src/templates/wp-admin/spam-prevention/comment-spam.php:91, src/templates/wp-admin/user-login/login-lockout.php:110
 msgid "More info"
 msgstr ""
 
@@ -2520,35 +2620,35 @@ msgstr ""
 msgid "Dismiss (for %s months)"
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:6
-msgid "Thank you for installing All In One WP Security & Firewall!"
+#: src/templates/notices/thanks-for-using-main-dash.php:5
+msgid "Thank you for using %s!"
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:13
+#: src/templates/notices/thanks-for-using-main-dash.php:12
 msgid "Super-charge and secure your WordPress site even more with our other top plugins:"
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:17
+#: src/templates/notices/thanks-for-using-main-dash.php:16
 msgid "%s makes your site fast and efficient. It cleans the database, compresses images and caches pages for ultimate speed."
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:21
+#: src/templates/notices/thanks-for-using-main-dash.php:20
 msgid "%s simplifies backups and restoration. It is the world's highest ranking and most popular scheduled backup plugin, with over three million currently-active installs."
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:25
+#: src/templates/notices/thanks-for-using-main-dash.php:24
 msgid "%s is a highly efficient way to manage, optimize, update and backup multiple websites from one place."
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:29
+#: src/templates/notices/thanks-for-using-main-dash.php:28
 msgid "%s is a WordPress subscription extension for WooCommerce store owners."
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:33
+#: src/templates/notices/thanks-for-using-main-dash.php:32
 msgid "More quality plugins"
 msgstr ""
 
-#: src/templates/notices/thanks-for-using-main-dash.php:33
+#: src/templates/notices/thanks-for-using-main-dash.php:32
 msgid "Premium WooCommerce plugins"
 msgstr ""
 
@@ -2648,7 +2748,7 @@ msgstr ""
 msgid "Example 2 - A list of more than 1 user agent strings to block"
 msgstr ""
 
-#: src/templates/wp-admin/blacklist/ban-users.php:79, src/templates/wp-admin/brute-force/captcha-settings.php:189, src/templates/wp-admin/brute-force/honeypot.php:25, src/templates/wp-admin/brute-force/login-whitelist.php:54, src/templates/wp-admin/brute-force/rename-login.php:55, src/templates/wp-admin/filesystem-security/php-file-editing.php:26, src/templates/wp-admin/firewall/404-detection.php:67, src/templates/wp-admin/firewall/prevent-hotlinks.php:30, src/templates/wp-admin/miscellaneous/frames.php:23, src/templates/wp-admin/miscellaneous/salt.php:43, src/templates/wp-admin/miscellaneous/user-enumeration.php:23, src/templates/wp-admin/miscellaneous/wp-rest-api.php:30, src/templates/wp-admin/scanner/file-change-detect.php:111, src/templates/wp-admin/settings/advanced-settings.php:219, src/templates/wp-admin/settings/delete-plugin-settings.php:25, src/templates/wp-admin/settings/wp-version-info.php:32, src/templates/wp-admin/spam-prevention/bbpress.php:30, src/templates/wp-admin/spam-prevention/buddypress.php:30, src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:52, src/templates/wp-admin/spam-prevention/comment-spam.php:101, src/templates/wp-admin/user-login/additional.php:27, src/templates/wp-admin/user-login/force-logout.php:34, src/templates/wp-admin/user-login/login-lockout.php:132, src/templates/wp-admin/user-login/login-lockout.php:172, src/templates/wp-admin/user-registration/manual-approval.php:33, src/templates/wp-admin/user-registration/registration-captcha.php:36, src/templates/wp-admin/user-registration/registration-honeypot.php:25
+#: src/templates/wp-admin/blacklist/ban-users.php:79, src/templates/wp-admin/brute-force/captcha-settings.php:189, src/templates/wp-admin/brute-force/honeypot.php:25, src/templates/wp-admin/brute-force/login-whitelist.php:54, src/templates/wp-admin/brute-force/rename-login.php:55, src/templates/wp-admin/filesystem-security/php-file-editing.php:26, src/templates/wp-admin/firewall/404-detection.php:67, src/templates/wp-admin/firewall/prevent-hotlinks.php:30, src/templates/wp-admin/miscellaneous/frames.php:23, src/templates/wp-admin/miscellaneous/salt.php:43, src/templates/wp-admin/miscellaneous/user-enumeration.php:23, src/templates/wp-admin/miscellaneous/wp-rest-api.php:30, src/templates/wp-admin/scanner/file-change-detect.php:111, src/templates/wp-admin/settings/advanced-settings.php:219, src/templates/wp-admin/settings/delete-plugin-settings.php:25, src/templates/wp-admin/settings/wp-version-info.php:32, src/templates/wp-admin/spam-prevention/bbpress.php:30, src/templates/wp-admin/spam-prevention/buddypress.php:30, src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:52, src/templates/wp-admin/spam-prevention/comment-spam.php:102, src/templates/wp-admin/user-login/additional.php:27, src/templates/wp-admin/user-login/force-logout.php:34, src/templates/wp-admin/user-login/login-lockout.php:132, src/templates/wp-admin/user-login/login-lockout.php:172, src/templates/wp-admin/user-registration/manual-approval.php:33, src/templates/wp-admin/user-registration/registration-captcha.php:36, src/templates/wp-admin/user-registration/registration-honeypot.php:25
 msgid "Save settings"
 msgstr ""
 
@@ -4529,7 +4629,7 @@ msgid "Check this if you want to enable the salt postfix feature."
 msgstr ""
 
 #: src/templates/wp-admin/miscellaneous/salt.php:30
-msgid "These salt posfixes are changed every week by a scheduled job."
+msgid "These salt postfixes are changed every week by a scheduled job."
 msgstr ""
 
 #: src/templates/wp-admin/miscellaneous/salt.php:34
@@ -5193,15 +5293,19 @@ msgid "Auto block spammer IPs"
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:8
-msgid "This feature has detected that %s is not active. It is highly recommended that you activate the Akismet plugin to make the most of this feature."
+msgid "This feature has detected that %s is not active."
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:8
+msgid "It is highly recommended that you activate to make the most of this feature."
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:15
-msgid "This feature allows you to automatically and permanently block IP addresses which have exceeded a certain number of comments labelled as spam."
+msgid "This feature allows you to automatically and permanently block IP addresses which have exceeded a certain number of spam comments."
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:15
-msgid "Comments are usually labelled as spam either by the Akismet plugin or manually by the WP administrator when they mark a comment as \"spam\" from the WordPress Comments menu."
+msgid "Comments are considered spam if the \"Spam comment detection\" feature is enabled or an administrator manually marks a comment as \"spam\" from the WordPress Comments menu."
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam-ip-monitoring.php:26
@@ -5317,7 +5421,7 @@ msgid "Check this if you want to insert a CAPTCHA field on the comment forms."
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam.php:30
-msgid "Block spambot comments"
+msgid "Spam comment detect"
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam.php:34
@@ -5325,50 +5429,66 @@ msgid "A large portion of WordPress blog comment spam is mainly produced by auto
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam.php:34
-msgid "This feature will greatly minimize the useless and unecessary traffic and load on your server resulting from spam comments by blocking all comment requests which do not originate from your domain."
+msgid "This feature will greatly minimize the useless and unnecessary traffic and load on your server resulting from spam comments."
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam.php:34
-msgid "In other words, if the comment was not submitted by a human who physically submitted the comment on your site, the request will be blocked."
+msgid "In other words, if the comment was not submitted by a human who physically submitted the comment on your site, the request will be discarded or marked as spam."
 msgstr ""
 
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:49
-msgid "Block spambots from posting comments"
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:43
+msgid "Detect spambots posting comments"
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:46
+msgid "Check this if you want to detect comments originating from spambots."
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:50
+msgid "This feature will detect comment attempts which originate from spambots."
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:51
+msgid "A legitimate comment is one which is submitted by a human who physically fills out the comment form and presses the submit button."
 msgstr ""
 
 #: src/templates/wp-admin/spam-prevention/comment-spam.php:52
-msgid "Check this if you want to apply a firewall rule which will block comments originating from spambots."
+msgid "A comment submitted by a spambot is done by directly calling the wp-comments-post.php file."
 msgstr ""
 
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:56
-msgid "This feature will implement a firewall rule to block all comment attempts which do not originate from your domain."
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:53
+msgid "This feature will detect these comments and either discard them completely or mark them as spam."
 msgstr ""
 
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:57
-msgid "A legitimate comment is one which is submitted by a human who physically fills out the comment form and presses the submit button. For such events, the HTTP_REFERRER is always set to your own domain."
-msgstr ""
-
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:58
-msgid "A comment submitted by a spambot is done by directly calling the comments.php file, which usually means that the HTTP_REFERRER value is not your domain and often times empty."
-msgstr ""
-
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:59
-msgid "This feature will check and block comment requests which are not referred by your domain thus greatly reducing your overall blog spam and PHP requests done by the server to process these comments."
-msgstr ""
-
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:71
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:60
 msgid "Comment processing"
 msgstr ""
 
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:76
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:65
+msgid "Spam comments detected should be"
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:69
+msgid "Discarded"
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:70
+msgid "Marked as spam"
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:72
+msgid "Select the value for how you would like a comment detected as spam to be processed"
+msgstr ""
+
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:77
 msgid "Trash spam comments"
 msgstr ""
 
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:85
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:86
 msgid "Move spam comments to trash after %s days."
 msgstr ""
 
-#: src/templates/wp-admin/spam-prevention/comment-spam.php:93
+#: src/templates/wp-admin/spam-prevention/comment-spam.php:94
 msgid "Enble this feature in order to move the spam comments to trash after given number of days."
 msgstr ""
 
@@ -5392,11 +5512,11 @@ msgstr ""
 msgid "Look up IP or domain"
 msgstr ""
 
-#: src/templates/wp-admin/tools/whois-lookup.php:46
+#: src/templates/wp-admin/tools/whois-lookup.php:45
 msgid "Please enter a valid IP address or domain name to look up."
 msgstr ""
 
-#: src/templates/wp-admin/tools/whois-lookup.php:47, src/templates/wp-admin/tools/whois-lookup.php:53
+#: src/templates/wp-admin/tools/whois-lookup.php:46, src/templates/wp-admin/tools/whois-lookup.php:52
 msgid "Nothing to show."
 msgstr ""
 
@@ -5880,7 +6000,7 @@ msgstr ""
 msgid "Check this if you want to enable the honeypot feature for the registration page"
 msgstr ""
 
-#: src/wp-security-core.php:415
+#: src/wp-security-core.php:331
 msgid "template not found"
 msgstr ""
 

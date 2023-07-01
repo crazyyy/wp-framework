@@ -3,6 +3,8 @@
 namespace No3x\WPML\Model;
 
 // Exit if accessed directly
+use No3x\WPML\Migration\Migration;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -111,6 +113,15 @@ class Email_Log_Collection {
      * @var string
      */
     private $search = '';
+
+    /**
+     * What field to search in.
+     *
+     * @since 1.12.0
+     *
+     * @var string
+     */
+    private $search_place = '';
 
     /**
      * Sorting of the email logs.
@@ -244,6 +255,22 @@ class Email_Log_Collection {
     }
 
     /**
+     * Set the field where we want to search in.
+     *
+     * @since 1.12.0
+     *
+     * @param string $search_place Field to search in.
+     *
+     * @return $this
+     */
+    public function search_place( $search_place ) {
+
+        $this->search_place = $search_place;
+
+        return $this;
+    }
+
+    /**
      * Set the sorting field of the collection.
      *
      * @since 1.11.0
@@ -337,7 +364,7 @@ class Email_Log_Collection {
         $status_where = '';
         switch( $this->status ) {
             case self::STATUS_SUCCESSFUL:
-                $status_where .= " WHERE `error` IS NULL";
+                $status_where .= " WHERE `error` IS NULL OR `error` = ''";
                 break;
             case self::STATUS_FAILED:
                 $status_where .= " WHERE `error` IS NOT NULL AND `error` != ''";
@@ -355,8 +382,9 @@ class Email_Log_Collection {
                 $search_where .= ' AND (';
             }
 
-            foreach ( $this->searchable_fields as $field ) {
-                $search_where .= '`' . esc_sql( $field ) . '` LIKE "%' . esc_sql( $this->search ) . '%" OR ';
+            foreach ( $this->get_search_place() as $field ) {
+
+                $search_where .= $this->get_search_sql( $field );
             }
 
             // Remove the last ' OR ' and add the closing ')';
@@ -399,6 +427,46 @@ class Email_Log_Collection {
         }
 
         return $results;
+    }
+
+    /**
+     * Get the fields where the search term will be searched.
+     *
+     * @since 1.12.0
+     *
+     * @return string[]
+     */
+    private function get_search_place() {
+
+        if ( empty( $this->search_place ) || ! in_array( $this->search_place, $this->searchable_fields, true ) ) {
+            return $this->searchable_fields;
+        }
+
+        return [ $this->search_place ];
+    }
+
+    /**
+     * Get the search SQL.
+     *
+     * @since 1.12.0
+     *
+     * @param string $field Field we are trying to search to.
+     *
+     * @return string
+     */
+    private function get_search_sql( $field ) {
+
+        $db_migrate_version = absint( get_option( Migration::OPTION_NAME, 0 ) );
+
+        /*
+         * We use `MATCH AGAINST` for the `message` field if the database is migrated to version 2 or higher.
+         * We add the FULL TEXT index to the `message` field in version 2.
+         */
+        if ( $field === 'message' && version_compare( $db_migrate_version, 2, '>=' ) ) {
+            return "MATCH (`message`) AGAINST ('" . esc_sql( $this->search ) . "') OR ";
+        }
+
+        return '`' . esc_sql( $field ) . '` LIKE "%' . esc_sql( $this->search ) . '%" OR ';
     }
 
     /**

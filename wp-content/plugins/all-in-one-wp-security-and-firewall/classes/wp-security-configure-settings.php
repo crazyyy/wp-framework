@@ -125,12 +125,14 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_site_lockout_msg', '');//Text area/msg box
 
 		// Spam prevention menu
-		$aio_wp_security->configs->set_value('aiowps_enable_spambot_blocking', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_comment_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_autoblock_spam_ip', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_spam_ip_min_comments_block', '');
 		$aio_wp_security->configs->set_value('aiowps_enable_bp_register_captcha', '');
 		$aio_wp_security->configs->set_value('aiowps_enable_bbp_new_topic_captcha', '');//Checkbox
+		$aio_wp_security->configs->set_value('aiowps_enable_spambot_detecting', '');
+		$aio_wp_security->configs->set_value('aiowps_spam_comments_should', '');
+		
 		$aio_wp_security->configs->set_value('aiowps_enable_trash_spam_comments', '');
 		$aio_wp_security->configs->set_value('aiowps_trash_spam_comments_after_days', '14');
 
@@ -300,10 +302,11 @@ class AIOWPSecurity_Configure_Settings {
 		// Spam prevention menu
 		$aio_wp_security->configs->add_value('aiowps_enable_spambot_blocking', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_comment_captcha', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_enable_autoblock_spam_ip', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_spam_ip_min_comments_block', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_bp_register_captcha', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_bbp_new_topic_captcha', '');//Checkbox
+		$aio_wp_security->configs->add_value('aiowps_enable_spambot_detecting', '');
+		$aio_wp_security->configs->add_value('aiowps_spam_comments_should', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_trash_spam_comments', '');
 		$aio_wp_security->configs->add_value('aiowps_trash_spam_comments_after_days', '14');
 
@@ -369,8 +372,40 @@ class AIOWPSecurity_Configure_Settings {
 			$aio_wp_security->configs->set_value('aiowps_is_login_whitelist_disabled_on_upgrade', '1');
 			$aio_wp_security->configs->save_config();
 		}
-
+		
+		if (is_main_site() && version_compare(get_option('aiowpsec_db_version'), '2.0.0', '<') && '1' == $aio_wp_security->configs->get_value('aiowps_enable_blacklisting') && !empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')) && (false !== strpos($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'), '*') || false !== strpos($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'), '/'))) {
+			$aio_wp_security->configs->set_value('aiowps_enable_blacklisting', '0');
+			$aio_wp_security->configs->set_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade', '1');
+			$aio_wp_security->configs->save_config();
+			self::set_user_agent_firewall_configs();
+			self::send_blacklist_manager_disabled_email();
+		}
+		
+		if (is_main_site() && version_compare(get_option('aiowpsec_db_version'), '2.0.0', '<') && '1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_blocking')) {
+			$aio_wp_security->configs->set_value('aiowps_enable_spambot_detecting', '1');
+			$aio_wp_security->configs->set_value('aiowps_spam_comments_should', '0');
+			$aio_wp_security->configs->save_config();
+		}
+		
 		update_option('aiowpsec_db_version', AIO_WP_SECURITY_DB_VERSION);
+	}
+	
+	/**
+	 * This function send blacklist ip manager disabled email.
+	 *
+	 * @return void
+	 */
+	public static function send_blacklist_manager_disabled_email() {
+		global $aio_wp_security;
+		$dashboard_link = 'admin.php?page=aiowpsec';
+		$dashboard_link = is_multisite() ? network_admin_url($dashboard_link) : admin_url($dashboard_link);
+		$subject = '['. get_option('siteurl'). '] '. __('Blacklist manager disabled notification', 'all-in-one-wp-security-and-firewall');
+		$email_msg = __('The blacklist manager feature has been updated and to prevent any unexpected site lockouts we have disabled the feature.', 'all-in-one-wp-security-and-firewall') . "\n\n" . __('You can enable the feature again by logging into your WordPress dashboard.', 'all-in-one-wp-security-and-firewall') . "\n\n" .sprintf(__('Go to dashboard: %s', 'all-in-one-wp-security-and-firewall'), $dashboard_link) . "\n\n" . __('Once logged in before turning the blacklist manger on please double check your settings to ensure you have not entered your own details.', 'all-in-one-wp-security-and-firewall') . "\n";
+		$email = get_bloginfo('admin_email');
+		$mail_sent = wp_mail($email, $subject, $email_msg);
+		if (false === $mail_sent) {
+			$aio_wp_security->debug_logger->log_debug("Blacklist IP manager disabled notification email failed to send to " . $email, 4);
+		}
 	}
 	
 	/**
@@ -389,6 +424,9 @@ class AIOWPSecurity_Configure_Settings {
 			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.3', '<')) {
 				self::set_ip_retrieve_method_configs();
 			}
+			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.4', '<')) {
+				self::set_blacklist_ip_firewall_configs();
+			}
 		}
 		update_option('aiowpsec_firewall_version', AIO_WP_SECURITY_FIREWALL_VERSION);
 	}
@@ -402,6 +440,7 @@ class AIOWPSecurity_Configure_Settings {
 		self::set_cookie_based_bruteforce_firewall_configs();
 		self::set_user_agent_firewall_configs();
 		self::set_ip_retrieve_method_configs();
+		self::set_blacklist_ip_firewall_configs();
 	}
 	
 	/**
@@ -412,6 +451,22 @@ class AIOWPSecurity_Configure_Settings {
 	public static function turn_off_cookie_based_bruteforce_firewall_configs() {
 		global $aiowps_firewall_config;
 		$aiowps_firewall_config->set_value('aios_enable_brute_force_attack_prevention', "0");
+	}
+	
+	/**
+	 * Blacklist IP firewall configs set.
+	 *
+	 * @return void.
+	 */
+	public static function set_blacklist_ip_firewall_configs() {
+		global $aio_wp_security;
+		global $aiowps_firewall_config;
+		$aiowps_firewall_config->set_value('aiowps_ip_retrieve_method', $aio_wp_security->configs->get_value('aiowps_ip_retrieve_method'));
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_blacklisting') && !empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'))) {
+			$aiowps_firewall_config->set_value('aiowps_blacklist_ips', explode("\n", preg_replace("/\r/", "", trim($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')))));
+		} else {
+			$aiowps_firewall_config->set_value('aiowps_blacklist_ips', array());
+		}
 	}
 	
 	/**
@@ -526,8 +581,6 @@ class AIOWPSecurity_Configure_Settings {
 
 		$aio_wp_security->configs->set_value('aiowps_prevent_default_wp_file_access', '');//Checkbox
 
-		$aio_wp_security->configs->set_value('aiowps_enable_spambot_blocking', '');//Checkbox
-
 		//404 detection
 		$aio_wp_security->configs->set_value('aiowps_enable_404_logging', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_404_IP_lockout', '');//Checkbox
@@ -539,6 +592,7 @@ class AIOWPSecurity_Configure_Settings {
 
 		self::turn_off_all_6g_firewall_configs();
 		self::set_user_agent_firewall_configs();
+		self::set_blacklist_ip_firewall_configs();
 
 		// Refresh the .htaccess file based on the new settings
 		$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();

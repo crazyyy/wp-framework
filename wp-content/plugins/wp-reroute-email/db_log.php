@@ -6,9 +6,10 @@
     require_once( ABSPATH . PLUGINDIR . '/wp-reroute-email/includes/db_log_list.class.php' );
 
     $table = new DBLogList();
+    $logId = filter_input(INPUT_GET, 'logid', FILTER_VALIDATE_INT);
 
-    if($tab == 'details' && !empty($_GET['logid'])){
-        $item = $table->get_item(filter_input(INPUT_GET, 'logid'));
+    if($tab == 'details' && !empty($logId)){
+        $item = $table->get_item($logId);
 
         if($item){
 ?>
@@ -43,7 +44,7 @@
                     <div id="processed-message">
                     <?php
                         $is_only_html = preg_match("/<[^<]+>/",  $item->message, $m) != 0;
-                        echo $is_only_html ? wp_kses_post($item->message) : nl2br($item->message);
+                        echo $is_only_html ? wp_kses_post($item->message) : wp_kses_post(nl2br($item->message));
                     ?>
                     </div>   
                     <pre id="original-message"><?php echo htmlentities($item->message); ?></pre>

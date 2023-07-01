@@ -22,14 +22,12 @@ class DBLogList extends WP_List_Table {
     }
 
     function column_subject($item){
+        $page = sanitize_text_field(filter_input(INPUT_GET, 'page'));
         $actions = array(
-            'view'      => sprintf('<a href="?page=%s&tab=details&action=%s&logid=%s">' . esc_attr__('View Message', 'wp_reroute_email') . '</a>',$_REQUEST['page'],'view',$item->id)
+            'view'      => sprintf('<a href="?page=%s&tab=details&action=%s&logid=%s">' . esc_attr__('View Message', 'wp_reroute_email') . '</a>', esc_attr($page),'view', esc_attr($item->id))
         );
 
-        return sprintf('%1$s %2$s',
-            /*$1%s*/ $item->subject,
-            /*$2%s*/ $this->row_actions($actions)
-        );
+        return sprintf('%1$s %2$s', $item->subject, $this->row_actions($actions));
     }
     
     function column_sent_on($item){
@@ -68,7 +66,6 @@ class DBLogList extends WP_List_Table {
             global $wpdb;
             $wpdb->query("DELETE FROM {$wpdb->prefix}wpre_emails");
         }
-
     }
 
     function prepare_items() {
@@ -85,32 +82,31 @@ class DBLogList extends WP_List_Table {
 
         $query = "SELECT * FROM {$wpdb->prefix}wpre_emails";
 
-        $orderby = !empty($_GET["orderby"]) ? esc_sql($_GET["orderby"]) : 'sent_on';
-        $order = !empty($_GET["order"]) ? esc_sql($_GET["order"]) : 'DESC';
+        $orderby = sanitize_text_field(filter_input(INPUT_GET, 'orderby'));
+        $order = sanitize_text_field(filter_input(INPUT_GET, 'order'));
+        $paged = sanitize_text_field(filter_input(INPUT_GET, 'paged', FILTER_VALIDATE_INT));
+
+        $orderby = !empty($orderby) && in_array($orderby, ['sent_on']) ? esc_sql($orderby) : 'sent_on';
+        $order = !empty($order) && in_array($order, ['ASC', 'DESC']) ? esc_sql($order) : 'DESC';
 
         if(!empty($orderby) & !empty($order)){
-            $query.=' ORDER BY '.$orderby.' '.$order;
-        }
+            $query.= ' ORDER BY ' . $orderby . ' ' . $order;
+        } 
 
         $total_items = $wpdb->query($query);
 
-        $paged = !empty($_GET["paged"]) ? esc_sql($_GET["paged"]) : '';
-
-        if(empty($paged) || !is_numeric($paged) || $paged <= 0 ){
-            $paged = 1;
-        }
-
+        $paged = !empty($paged) && is_numeric($paged) && $paged > 0 ? esc_sql($paged) : 1;
         $total_pages = ceil($total_items/$per_page);
 
         if(!empty($paged) && !empty($per_page)){
             $offset = ($paged - 1) * $per_page;
-            $query.=' LIMIT '.(int)$offset.','.(int)$per_page;
+            $query.= ' LIMIT '. $offset . ',' . $per_page;
         }
 
         $this->set_pagination_args( array(
-            "total_items" => $total_items,
-            "total_pages" => $total_pages,
-            "per_page" => $per_page,
+            'total_items' => $total_items,
+            'total_pages' => $total_pages,
+            'per_page' => $per_page,
         ) );
 
         $this->items = $wpdb->get_results($query);
@@ -119,10 +115,13 @@ class DBLogList extends WP_List_Table {
     public function get_item($id){
         global $wpdb;
         $id = (int) $id;
-        $result = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}wpre_emails WHERE id = '$id'");
 
-        if($result){
-            return $result;
+        if($id){
+            $result = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}wpre_emails WHERE id = '$id'");
+
+            if($result){
+                return $result;
+            }
         }
 
         return FALSE;

@@ -236,7 +236,7 @@ class WP_Optimize_Minify_Cache_Functions {
 
 		// Purge Savvii
 		if (defined('\Savvii\CacheFlusherPlugin::NAME_DOMAINFLUSH_NOW')) {
-			$purge_savvii = new \Savvii\CacheFlusherPlugin(); // phpcs:ignore PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ns_separatorFound
+			$purge_savvii = new \Savvii\CacheFlusherPlugin();
 			if (is_callable(array($purge_savvii, 'domainflush'))) {
 				$purge_savvii->domainflush();
 				return sprintf(__('A cache purge request was also sent to %s', 'wp-optimize'), '<strong>Savvii</strong>');
@@ -247,7 +247,7 @@ class WP_Optimize_Minify_Cache_Functions {
 		 * Action triggered when purging other plugins cache, and nothing was triggered
 		 */
 		do_action('wpo_min_after_purge_others');
-
+		return '';
 	}
 
 	/**
@@ -401,7 +401,7 @@ class WP_Optimize_Minify_Cache_Functions {
 	public static function godaddy_request($method, $url = null) {
 		$url  = empty($url) ? home_url() : $url;
 		$host = parse_url($url, PHP_URL_HOST);
-		$url  = set_url_scheme(str_replace($host, WPaas\Plugin::vip(), $url), 'http'); // phpcs:ignore PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ns_separatorFound
+		$url  = set_url_scheme(str_replace($host, WPaas\Plugin::vip(), $url), 'http');
 		wp_cache_flush();
 		update_option('gd_system_last_cache_flush', time()); // purge apc
 		wp_remote_request(esc_url_raw($url), array('method' => $method, 'blocking' => false, 'headers' => array('Host' => $host)));

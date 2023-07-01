@@ -397,7 +397,7 @@ class AIOWPSecurity_Utility {
 			$user_id = 0;
 		}
 
-		if ('404' == $event_type) {
+		if ('404' == $event_type || 'spam_discard' == $event_type) {
 			//if 404 event get some relevant data
 			$url = isset($_SERVER['REQUEST_URI']) ? esc_attr($_SERVER['REQUEST_URI']) : '';
 			$referer_info = isset($_SERVER['HTTP_REFERER']) ? esc_attr($_SERVER['HTTP_REFERER']) : '';

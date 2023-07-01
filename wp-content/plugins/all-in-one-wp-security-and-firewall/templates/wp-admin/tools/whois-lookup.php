@@ -34,8 +34,7 @@ if ($lookup) {
 		</table>
 	</h3>
 	<div class="inside">
-		<pre>
-			<?php
+		<pre><?php
 				$invalid_domain = false;
 				if (empty($ip_or_domain)) {
 					$invalid_domain = true;
@@ -55,8 +54,7 @@ if ($lookup) {
 						echo htmlspecialchars($result);
 					}
 				}
-			?>
-		</pre>
+			?></pre>
 	</div>
 </div>
 <?php

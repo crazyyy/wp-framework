@@ -63,7 +63,7 @@ $this->fields = $this->fields + array(
 			'label'     => __( "Do you consent to the use of the cookiedatabase.org API?", 'complianz-gdpr' ),
 			'help'   => __( "Without the API, you will have to manually describe all found cookies, their purpose, function, service and service types. ",
 					'complianz-gdpr' ),
-			  'comment' => cmplz_sprintf( __( "Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by %scookiedatabase.org%s. We connect to this open-source database using an external API, which sends the results of the cookiescan (a list of found cookies, used plugins and your domain) to cookiedatabase.org, for the sole purpose of providing you with accurate descriptions and keeping them up-to-date on a regular basis. For more information, read the %sPrivacy Statement%s",
+			  'comment' => cmplz_sprintf( __( "Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by %scookiedatabase.org%s. We connect to this open-source database using an external API, which sends the results of the cookie scan (a list of found cookies, used plugins and your domain) to cookiedatabase.org, for the sole purpose of providing you with accurate descriptions and keeping them up-to-date on a regular basis. For more information, read the %sPrivacy Statement%s",
 					'complianz-gdpr' ),
 					'<a target="_blank" href="https://cookiedatabase.org/">', '</a>',
 					'<a target="_blank" href="https://cookiedatabase.org/privacy-statement/">',
@@ -99,7 +99,7 @@ $this->fields = $this->fields + array(
 			'translatable' => true,
 			'label'        => __( "Blocked content text", 'complianz-gdpr' ),
 			'default'      => cmplz_sprintf(__( 'Click to accept %s cookies and enable this content', 'complianz-gdpr' ), '{category}'),
-			'tooltip'      => __( 'The blocked content text appears when for example a Youtube video is embedded.', 'complianz-gdpr' ),
+			'tooltip'      => __( 'The blocked content text appears when for example a YouTube video is embedded.', 'complianz-gdpr' ),
 			'help'      => __( 'Do not change or translate the {category} string.', 'complianz-gdpr' ).'&nbsp;'.__( 'You may remove it if you want.', 'complianz-gdpr' ).'&nbsp;'.__( 'It will be replaced with the name of the category that is blocked.', 'complianz-gdpr' ),
 			'condition'    => array(
 				'safe_mode' => false,
@@ -116,7 +116,7 @@ $this->fields = $this->fields + array(
 			'translatable' => true,
 			'label'        => __( "Blocked content text", 'complianz-gdpr' ),
 			'default'      => cmplz_sprintf(__( "Click 'I agree' to enable %s", 'complianz-gdpr' ), '{service}'),
-			'tooltip'      => __( 'The blocked content text appears when for example a Youtube video is embedded.', 'complianz-gdpr' ),
+			'tooltip'      => __( 'The blocked content text appears when for example a YouTube video is embedded.', 'complianz-gdpr' ),
 			'help'      => __( 'Do not change or translate the {service} string.', 'complianz-gdpr' ).'&nbsp;'.__( 'You may remove it if you want.', 'complianz-gdpr' ).'&nbsp;'.__( 'It will be replaced with the name of the service that is blocked.', 'complianz-gdpr' ),
 			'condition'    => array(
 				'safe_mode' => false,
@@ -133,7 +133,7 @@ $this->fields = $this->fields + array(
 			'translatable' => true,
 			'label'        => __( "Text on 'I agree' button", 'complianz-gdpr' ),
 			'default'      => __( "I agree", 'complianz-gdpr' ),
-			'tooltip'      => __( 'The blocked content text appears when for example a Youtube video is embedded.', 'complianz-gdpr' ),
+			'tooltip'      => __( 'The blocked content text appears when for example a YouTube video is embedded.', 'complianz-gdpr' ),
 			'condition'    => array(
 				'safe_mode' => false,
 			),

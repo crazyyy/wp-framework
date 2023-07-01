@@ -56,8 +56,6 @@ const LetsEncrypt = (props) => {
 
     useEffect(() => {
         previousActionIndex.current = actionIndex;
-        let p = ( 100 / maxIndex.current ) * (actionIndex);
-        console.log(p);
         setProgress( ( 100 / maxIndex.current ) * (actionIndex));
 
         //ensure that progress does not get to 100 when retries are still running
@@ -275,7 +273,7 @@ const LetsEncrypt = (props) => {
                 <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
                     <ul>
                        {actionsOutput.map((action, i) =>
-                              <li key={i}>
+                              <li key={"action-"+i}>
                                   <Icon name = {getStatusIcon(action)} color = {getStatusColor(action)} />
                                         {action.do==='retry' && attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount)} </>}
                                         &nbsp;

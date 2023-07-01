@@ -171,7 +171,7 @@ class Loader {
 		
 		// Manually include needed files
 		if (Context::wordpress_safe()) {
-			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-utility-file.php');
+			include_once(dirname(AIOWPS_FIREWALL_DIR).'/wp-security-utility-file.php');
 		}
 	}
 

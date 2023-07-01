@@ -203,7 +203,9 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 * @return void
 	 */
 	public function handle_setup_form() {
-		if (isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'aiowpsec-firewall-setup')) {
+		$nonce = isset($_POST['_wpnonce']) ? $_POST['_wpnonce'] : '';
+		$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-firewall-setup');
+		if (!is_wp_error($result)) {
 			$this->do_setup();
 			$this->do_redirect();
 		}
@@ -215,7 +217,9 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 * @return void
 	 */
 	public function handle_dismiss_form() {
-		if (isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'aiowpsec-firewall-setup-dismiss')) {
+		$nonce = isset($_POST['_wpnonce']) ? $_POST['_wpnonce'] : '';
+		$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-firewall-setup-dismiss');
+		if (!is_wp_error($result)) {
 			$this->do_dismiss();
 			$this->do_redirect();
 		}
@@ -227,7 +231,9 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 * @return void
 	 */
 	public function handle_downgrade_protection_form() {
-		if (isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'aiowpsec-firewall-downgrade')) {
+		$nonce = isset($_POST['_wpnonce']) ? $_POST['_wpnonce'] : '';
+		$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-firewall-downgrade');
+		if (!is_wp_error($result)) {
 			AIOWPSecurity_Utility_Firewall::remove_firewall();
 			$this->do_redirect();
 		}

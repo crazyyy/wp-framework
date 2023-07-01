@@ -67,10 +67,10 @@ class WP_Optimizer {
 	 *
 	 * @param  array  $optimizations An array of optimizations (i.e. WP_Optimization instances).
 	 * @param  string $sort_on       Specify sort.
-	 * @param  string $sort_rule     Sort Rule.
+	 *
 	 * @return array
 	 */
-	public function sort_optimizations($optimizations, $sort_on = 'ui_sort_order', $sort_rule = 'traditional') {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function sort_optimizations($optimizations, $sort_on = 'ui_sort_order') {
 		if ('run_sort_order' == $sort_on) {
 			uasort($optimizations, array($this, 'sort_optimizations_run_traditional'));
 		} else {

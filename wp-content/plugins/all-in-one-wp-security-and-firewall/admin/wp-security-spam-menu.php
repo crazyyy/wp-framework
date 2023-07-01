@@ -67,7 +67,8 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			$aio_wp_security->configs->set_value('aiowps_captcha_secret_key', $random_20_digit_string);
 
 			$aio_wp_security->configs->set_value('aiowps_enable_comment_captcha',isset($_POST["aiowps_enable_comment_captcha"]) ? '1' : '');
-			$aio_wp_security->configs->set_value('aiowps_enable_spambot_blocking',isset($_POST["aiowps_enable_spambot_blocking"]) ? '1' : '');
+			$aio_wp_security->configs->set_value('aiowps_enable_spambot_detecting',isset($_POST["aiowps_enable_spambot_detecting"]) ? '1' : '');
+			$aio_wp_security->configs->set_value('aiowps_spam_comments_should', !empty($_POST["aiowps_spam_comments_should"]) ? '1' : '0');
 
 			$aio_wp_security->configs->set_value('aiowps_enable_trash_spam_comments', isset($_POST['aiowps_enable_trash_spam_comments']) ? '1' : '');
 			$aiowps_trash_spam_comments_after_days = '';

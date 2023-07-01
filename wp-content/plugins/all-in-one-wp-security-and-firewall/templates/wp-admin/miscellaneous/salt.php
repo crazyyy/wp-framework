@@ -27,7 +27,7 @@
 					</th>
 					<td>
 						<input id="aiowps_enable_salt_postfix" name="aiowps_enable_salt_postfix" type="checkbox"<?php checked($aio_wp_security->configs->get_value('aiowps_enable_salt_postfix'), '1'); ?> value="1"/>
-						<label for="aiowps_enable_salt_postfix" class="description"><?php _e('Check this if you want to enable the salt postfix feature.', 'all-in-one-wp-security-and-firewall'); ?><?php _e('These salt posfixes are changed every week by a scheduled job.', 'all-in-one-wp-security-and-firewall'); ?></label>
+						<label for="aiowps_enable_salt_postfix" class="description"><?php _e('Check this if you want to enable the salt postfix feature.', 'all-in-one-wp-security-and-firewall'); ?><?php _e('These salt postfixes are changed every week by a scheduled job.', 'all-in-one-wp-security-and-firewall'); ?></label>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 							<?php

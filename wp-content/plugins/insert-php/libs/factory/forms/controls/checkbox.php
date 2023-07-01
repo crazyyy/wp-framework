@@ -20,9 +20,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms460_CheckboxControl') ) {
+	if( !class_exists('Wbcr_FactoryForms463_CheckboxControl') ) {
 
-		class Wbcr_FactoryForms460_CheckboxControl extends Wbcr_FactoryForms460_Control {
+		class Wbcr_FactoryForms463_CheckboxControl extends Wbcr_FactoryForms463_Control {
 
 			public $type = 'checkbox';
 
@@ -130,10 +130,10 @@
 				<div <?php $this->attrs() ?>>
 					<button type="button" class="btn btn-default btn-small btn-sm factory-on <?php if( $value ) {
 						echo 'active';
-					} ?>"><?php _e('On', 'wbcr_factory_forms_460') ?></button>
+					} ?>"><?php _e('On', 'wbcr_factory_forms_463') ?></button>
 					<button type="button" class="btn btn-default btn-small btn-sm factory-off <?php if( !$value ) {
 						echo 'active';
-					} ?>" data-value="0"><?php _e('Off', 'wbcr_factory_forms_460') ?></button>
+					} ?>" data-value="0"><?php _e('Off', 'wbcr_factory_forms_463') ?></button>
 					<input type="checkbox" style="display: none" id="<?php echo esc_attr($name_on_form); ?>" class="factory-result" name="<?php echo esc_attr($name_on_form); ?>" value="<?php echo esc_attr($value); ?>" <?php if( $value ) {
 						echo 'checked="checked"';
 					} ?>" />

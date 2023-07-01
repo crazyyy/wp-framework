@@ -2,10 +2,10 @@
 Contributors: rankmath
 Plugin link: https://rankmath.com/?utm_source=LP&utm_campaign=WP
 Tags: seo, sitemap, google search console, schema, redirection, WordPress SEO
-Tested up to: 6.2
+Tested up to: 6.2.2
 Requires at least: 5.6
 Requires PHP: 7.4
-Stable tag: 1.0.112
+Stable tag: 1.0.118
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -315,7 +315,7 @@ Even with significantly more features than other plugins, Rank Math loads amazin
 	* Contextual Help
 
 ### BIG Publications are Raving About Rank Math ###
-**<a href="https://s.rankmath.com/reviews" target="_blank">Rank Math Reviews</a>**
+**<a href="https://rankmath.com/reviews/" target="_blank">Rank Math Reviews</a>**
 
 [youtube https://www.youtube.com/watch?v=cFI_jRVOQZk]
 
@@ -529,14 +529,14 @@ Google WILL NOT necessarily show the Schema data though. They check a few things
 Here is a quote from one of Google's help articles:
 `We perform algorithmic and manual quality checks to ensure that structured data meets relevancy standards. In cases where we see structured data that does not comply with these standards, we reserve the right to disable rich snippets for a site in order to maintain a high-quality search experience for our users. Read our webmaster guidelines for more details.`
 
-Link: <a href="https://s.rankmath.com/googlestructureddata" target="_blank">https://s.rankmath.com/googlestructureddata</a>
+Link: <a href="https://developers.google.com/search/docs/appearance/structured-data/sd-policies/" target="_blank">https://developers.google.com/search/docs/appearance/structured-data/sd-policies</a>
 
 = Why is the Carousel or Data Highlighter Not Working? =
 Google can actually extract content from your pages and display it as a rich carousel (AMP or not).
 
 But to make it easier, the best you can do is to use the Data Highlighter option in your Search Appearance tab in Webmaster Tools for your important pages (especially the pillar posts) but not on all content types. Rank Math makes it extremely convenient to do so.
 
-To learn more about using this feature, visit <a href="https://s.rankmath.com/googledatahighlighter" target="_blank">https://s.rankmath.com/googledatahighlighter</a>
+To learn more about using this feature, visit <a href="https://support.google.com/webmasters/answer/2692911" target="_blank">https://support.google.com/webmasters/answer/2692911?</a>
 
 = How to enter Meta Keywords in the plugin? =
 Google does not use the keyword meta tag in web ranking. Here's a video supporting that:
@@ -583,16 +583,16 @@ Please drop us an email at support@rankmath.com and we would be more than happy 
 
 == Changelog ==
 
-= 1.0.112 [Apr 19, 2023] =
-- Improved: Significant code improvements in the [Analytics module](https://rankmath.com/kb/analytics) resulting in FASTER and LIGHTER performance of the plugin
-- Fixed: [Schema Block](https://rankmath.com/kb/rich-snippets/) was not working with WordPress 6.2
-- Fixed: Missing SEO tab in the beta version of [Elementor editor](https://rankmath.com/blog/elementor-seo/)
-- Fixed: PHP error related to [SEO Analyzer](https://rankmath.com/kb/seo-analysis/) on some setups
-- Fixed: PHP warning related to [Slack Open Graph tags](https://rankmath.com/kb/slack-enhanced-sharing/) on some setups
-- Fixed: [Title wrapper option](https://rankmath.com/kb/table-of-contents-block/#title-wrapper) in the Table of Contents Block was not working with the default TOC title on the frontend
-- Fixed: Redirection rules from Trash will no longer be displayed when searching for [Redirection](https://rankmath.com/kb/setting-up-redirections/).
-- Fixed: Empty Taxonomies & Author archive pages displayed in the [HTML sitemap](https://rankmath.com/kb/html-sitemap/)
-- Fixed: Misaligned [SEO Metabox](https://rankmath.com/kb/on-page-seo/#classic-editor) on Product taxonomy pages in the latest version of WooCommerce
-- Fixed: [Analytics pages](https://rankmath.com/kb/analytics/) were not working with the Gutenberg plugin
+= 1.0.118 [June 28, 2023] =
+- Improved: [`%customfield%` variable](https://rankmath.com/kb/variables-in-seo-title-description/#custom-field-advanced) now works on Taxonomy & Author pages
+- Improved: [Image-related tests in SEO Analyzer](https://rankmath.com/kb/seo-analysis/#image-alt-attributes-test) will now display a clear message when Images are not found on the homepage
+- Fixed: SEO Analyzer was showing an option to [Enable Auto Update](https://rankmath.com/kb/seo-analysis/#priority) even when Auto-updates were disabled on the site using a function
+- Fixed: [Icon Overlay feature](https://rankmath.com/kb/meta-box-social-tab/#add-icon-overlay-to-thumbnails) compatibility issues with sites using the Imagick module
+- Fixed: Incorrect seller ID error in the [Product Schema](https://rankmath.com/kb/product-schema/) on secondary languages
+- Fixed: Timezones in [Sitemap](https://rankmath.com/kb/configure-sitemaps/) were not accurate when using half hours like (+5:30)
+- Fixed: [SEO Score](https://rankmath.com/kb/general-tab/) was shown in Classic Editor even to the users who didn't have the required capabilities
+- Fixed: [404 Monitor](https://rankmath.com/kb/advanced-404-monitor/) log was not including the language slug on multilingual sites
+- Fixed: Redirection with [Contains, Starts With, & Ends with](https://rankmath.com/kb/setting-up-redirections/#contains) was not working well when trailing slash is added in the Source URL
+- Fixed: Incompatibility with the Molongui Authorship plugin
 
 Full changelog can be found here - **[Rank Math changelog](https://rankmath.com/changelog/?utm_source=Plugin&utm_medium=Changelog&utm_campaign=WP)**

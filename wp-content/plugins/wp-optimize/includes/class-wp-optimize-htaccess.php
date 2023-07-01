@@ -133,7 +133,7 @@ class WP_Optimize_Htaccess {
 	public function write_file() {
 		$content = implode(PHP_EOL, $this->get_flat_array($this->_file_tree));
 		if ($this->is_writable()) {
-			file_put_contents($this->_htaccess_file, $content);
+			@file_put_contents($this->_htaccess_file, $content); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Hosts like WP Engine restricts use of `.htaccess` file
 		}
 	}
 

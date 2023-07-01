@@ -77,4 +77,19 @@ class AIOWPSecurity_Comment {
 			$wpdb->delete(AIOWPSEC_TBL_PERM_BLOCK, $where, array('%s'));
 		}
 	}
+	
+	
+	/**
+	 * Checks if comment posted by spambot.
+	 *
+	 * @return boolean.
+	 */
+	public static function is_comment_spam_detected() {
+		
+		if (empty($_SERVER['HTTP_REFERER']) || false === stristr($_SERVER['HTTP_REFERER'], parse_url(home_url(), PHP_URL_HOST)) || empty($_SERVER['HTTP_USER_AGENT'])) {
+			return true;
+		}
+		
+		return false;
+	}
 }

@@ -19,6 +19,22 @@ class AIOWPSecurity_Config {
 	public function get_value($key) {
 		return isset($this->configs[$key]) ? $this->configs[$key] : '';
 	}
+	
+	/**
+	 * Gets for main site config value for a given $key.
+	 *
+	 * @param string $key
+	 *
+	 * @return string|array
+	 */
+	public function get_site_value($key) {
+		if (is_multisite() && !is_main_site()) {
+			$mainsite_aio_config = get_blog_option(get_main_site_id(), 'aio_wp_security_configs');
+			return isset($mainsite_aio_config[$key]) ? $mainsite_aio_config[$key] : '';
+		} else {
+			return $this->get_value($key);
+		}
+	}
 
 	/**
 	 * Sets a given config $value for a given $key.

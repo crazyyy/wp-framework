@@ -14,32 +14,32 @@ class Context {
 	const WP_CONFIG      = 'wp-config';
 	const MU_PLUGIN      = 'mu-plugin';
 
-
 	/**
 	 * Get the current context where the firewall is running
 	 *
-	 * @throws \Exception - Throws an exception if the current context is unable to be determined.
 	 * @return string
 	 */
 	public static function current() {
 
 		$incs  = get_included_files();
 		$index = self::get_bootstrap_index($incs);
-	   
-		if (-1 === $index) {
-			return self::PLUGINS_LOADED;
-		}
-		if (0 === $index) {
-			return self::DIRECTIVE;
-		}
+
+		$is_setup = (-1 !== $index);
+
+		if (!$is_setup) return self::PLUGINS_LOADED;
+
+		if (0 === $index) return self::DIRECTIVE;
+
 		if (preg_match('/wp-config\.php$/i', $incs[$index-1])) {
 			return self::WP_CONFIG;
 		}
+		
 		if (preg_match('/aios-firewall-loader\.php$/', $incs[$index-1])) {
 			return self::MU_PLUGIN;
 		}
 
-		throw new \Exception('Unable to determine the current context.');
+		return self::DIRECTIVE;
+		
 	}
 
 	/**

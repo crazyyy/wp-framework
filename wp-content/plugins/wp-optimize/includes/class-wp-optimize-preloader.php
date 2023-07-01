@@ -2,9 +2,9 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-if (!class_exists('Updraft_Task_Manager_1_3')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
+if (!class_exists('Updraft_Task_Manager_1_4')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
 
-abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_3 {
+abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_4 {
 
 	protected $options;
 
@@ -399,10 +399,10 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_3 {
 
 			if (empty($response)) return $urls;
 
-			$xml = @simplexml_load_string($response); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$xml = @simplexml_load_string($response); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warnings when error found in XML data
 		} else {
 			// parse xml answer.
-			$xml = @simplexml_load_string(wp_remote_retrieve_body($response)); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$xml = @simplexml_load_string(wp_remote_retrieve_body($response)); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warnings when error found in XML data
 		}
 
 		// xml file has not valid xml content then return false.
@@ -436,8 +436,7 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_3 {
 	 * @return string
 	 */
 	protected function get_local_sitemap_file() {
-		// Make the scope of $wp_file_descriptions global, so that when wp-admin/includes/file.php assigns to it, it is adjusting the global variable as intended
-		global $wp_file_descriptions; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		global $wp_file_descriptions; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Make the scope of $wp_file_descriptions global, so that when wp-admin/includes/file.php assigns to it, it is adjusting the global variable as intended
 
 		if (!function_exists('get_home_path')) {
 			include_once ABSPATH . '/wp-admin/includes/file.php';

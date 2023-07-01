@@ -90,6 +90,8 @@ class WP_Optimize_Cache_Commands {
 			$enabled = $previous_settings['enable_page_caching'];
 		}
 
+		$data['cache-settings']['use_webp_images'] = (bool) WP_Optimize()->get_options()->get_option('webp_conversion');
+
 		$skip_if_no_file_yet = !$enabled || is_wp_error($enabled);
 		$save_settings_result = WPO_Cache_Config::instance()->update($data['cache-settings'], $skip_if_no_file_yet);
 

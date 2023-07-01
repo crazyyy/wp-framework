@@ -30,6 +30,14 @@ class AIOWPSecurity_General_Init_Tasks {
 		if (!is_user_logged_in()) {
 			AIOWPSecurity_Blocking::check_visitor_ip_and_perform_blocking();
 		}
+		
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting') && '0' == $aio_wp_security->configs->get_value('aiowps_spam_comments_should')) {
+			add_action('pre_comment_on_post', array($this, 'spam_detecting_and_process_comments_discard'), 10, 2); //this hook gets fired before comment is added
+		}
+		
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting') && '1' == $aio_wp_security->configs->get_value('aiowps_spam_comments_should')) {
+			add_filter('pre_comment_approved', array($this, 'spam_detecting_and_process_comments_mark_spam'), 10, 2); //this hook filters a comments approval status before it is set
+		}
 
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_autoblock_spam_ip')) {
 			add_action('comment_post', array($this, 'spam_detect_process_comment_post'), 10, 2); //this hook gets fired just after comment is saved to DB
@@ -173,10 +181,9 @@ class AIOWPSecurity_General_Init_Tasks {
 		}
 
 		// For custom login form CAPTCHA feature, ie, when wp_login_form() function is used to generate login form
-		if ($aio_wp_security->configs->get_value('aiowps_enable_custom_login_captcha') == '1') {
-			if (!is_user_logged_in()) {
-				add_filter('login_form_middle', array($aio_wp_security->captcha_obj, 'insert_captcha_custom_login'), 10, 2); //For cases where the WP wp_login_form() function is used
-			}
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_custom_login_captcha') && !is_user_logged_in()) {
+			add_filter('login_form_middle', array($aio_wp_security->captcha_obj, 'insert_captcha_custom_login'), 10, 2); //For cases where the WP wp_login_form() function is used
+			add_filter('login_form_bottom', array($aio_wp_security->captcha_obj, 'add_captcha_script'), 20);
 		}
 
 		// For honeypot feature
@@ -249,23 +256,17 @@ class AIOWPSecurity_General_Init_Tasks {
 		if (is_multisite()) {
 			$blog_id = get_current_blog_id();
 			switch_to_blog($blog_id);
-			if ($aio_wp_security->configs->get_value('aiowps_enable_comment_captcha') == '1') {
-				if (!is_user_logged_in()) {
-					add_action('wp_head', array($aio_wp_security->captcha_obj, 'add_captcha_script'));
-					add_action('comment_form_after_fields', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'), 1);
-					add_action('comment_form_logged_in_after', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'), 1);
-					add_filter('preprocess_comment', array($this, 'process_comment_post'));
-				}
+			if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_comment_captcha') && !is_user_logged_in()) {
+				add_action('comment_form_after_fields', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'), 1);
+				add_action('comment_form_after_fields', array($aio_wp_security->captcha_obj, 'add_captcha_script'), 10);
+				add_filter('preprocess_comment', array($this, 'process_comment_post'));
 			}
 			restore_current_blog();
 		} else {
-			if ($aio_wp_security->configs->get_value('aiowps_enable_comment_captcha') == '1') {
-				if (!is_user_logged_in()) {
-					add_action('wp_head', array($aio_wp_security->captcha_obj, 'add_captcha_script'));
-					add_action('comment_form_after_fields', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'), 1);
-					add_action('comment_form_logged_in_after', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'), 1);
-					add_filter('preprocess_comment', array($this, 'process_comment_post'));
-				}
+			if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_comment_captcha') && !is_user_logged_in()) {
+				add_action('comment_form_after_fields', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'), 1);
+				add_action('comment_form_after_fields', array($aio_wp_security->captcha_obj, 'add_captcha_script'), 10);
+				add_filter('preprocess_comment', array($this, 'process_comment_post'));
 			}
 		}
 
@@ -308,6 +309,58 @@ class AIOWPSecurity_General_Init_Tasks {
 	 */
 	public function block_feed() {
 		wp_redirect(home_url());
+	}
+	
+	/**
+	 * Spam detection and discard comment.
+	 *
+	 * @param int $comment_post_id
+	 *
+	 * @return void
+	 */
+	public function spam_detecting_and_process_comments_discard($comment_post_id) {
+		$is_comment_shoud_not_allowed = AIOWPSecurity_Comment::is_comment_spam_detected();
+		if ($is_comment_shoud_not_allowed) {
+			$this->spam_discard_auto_block_ip();
+			$comments = get_comments(array('number' => '1', 'post_id' => $comment_post_id));
+			if ($comments) {
+				$loc = get_comment_link($comments[0]->comment_ID);
+			} else {
+				$loc = get_permalink($comment_post_id) . '#spam-comment-msg';
+			}
+			wp_safe_redirect($loc);
+			exit;
+		}
+	}
+
+	/**
+	 * Block IP for spam discard after minimum comments reached.
+	 *
+	 * @return void
+	 */
+	public function spam_discard_auto_block_ip() {
+		global $aio_wp_security, $wpdb;
+		
+		if ('1' != $aio_wp_security->configs->get_value('aiowps_enable_autoblock_spam_ip')) return;
+		
+		AIOWPSecurity_Utility::event_logger('spam_discard');
+		$comment_ip = AIOWPSecurity_Utility_IP::get_user_ip_address();
+		$spam_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(id) FROM ".AIOWPSEC_TBL_EVENTS." WHERE ip_or_host = %s AND event_type=%s", $comment_ip, 'spam_discard'));
+		$min_comment_before_block = $aio_wp_security->configs->get_value('aiowps_spam_ip_min_comments_block');
+		if (!empty($min_comment_before_block) && $spam_count > $min_comment_before_block) {
+			AIOWPSecurity_Blocking::add_ip_to_block_list($comment_ip, 'spam_discard');
+		}
+	}
+
+	/**
+	 * Spam detection and mark as spam comment.
+	 *
+	 * @param string $approved
+	 *
+	 * @return string status
+	 */
+	public function spam_detecting_and_process_comments_mark_spam($approved) {
+		return AIOWPSecurity_Comment::is_comment_spam_detected() ? 'spam' : $approved;
 	}
 
 	public function spam_detect_process_comment_post($comment_id, $comment_approved) {

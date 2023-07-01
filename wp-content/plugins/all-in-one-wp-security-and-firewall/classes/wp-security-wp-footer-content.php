@@ -17,11 +17,6 @@ class AIOWPSecurity_WP_Footer_Content {
 				$aio_wp_security->captcha_obj->print_captcha_api_woo();
 			}
 		}
-		
-		// For custom wp login form
-		if ($aio_wp_security->configs->get_value('aiowps_enable_custom_login_captcha') == '1') {
-			$aio_wp_security->captcha_obj->print_captcha_api_custom_login();
-		}
 
 		// Activate the copy protection feature for non-admin users
 		$copy_protection_active = $aio_wp_security->configs->get_value('aiowps_copy_protection') == '1';

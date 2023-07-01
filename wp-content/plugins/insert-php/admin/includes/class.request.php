@@ -11,6 +11,8 @@
  */
 
 // Exit if accessed directly
+use WpOrg\Requests\Requests;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -19,8 +21,7 @@ class WINP_Request {
 	//В новых версиях Вуди начиная с 2.2.10 будет обращаться к новой версии API библиотеки сниппетов
 	// это делается для обратной совместимости, чтобы старые версии продолжили работать со старым API
 	//const WINP_REQUEST_URL = 'http://185.75.88.217/v2/woody/'; //тестовая после переноса на другой сервер
-	const WINP_REQUEST_URL = 'http://api.woodysnippet.com/v2/woody/';
-	// Старое API http://142.93.91.206/v1/woody/
+	const WINP_REQUEST_URL = 'https://api.woodysnippet.com/v2/woody/';
 
 	/**
 	 * WINP_REQUEST constructor.
@@ -28,6 +29,12 @@ class WINP_Request {
 	public function __construct() {
 		require_once WINP_PLUGIN_DIR . '/includes/jsonmapper/class-json-mapper.php';
 		require_once WINP_PLUGIN_DIR . '/includes/jsonmapper/exceptions/class-exception.php';
+
+		/*add_filter( 'http_request_args', function ( $parsed_args, $url ) {
+			$parsed_args['sslverify'] = false;
+
+			return $parsed_args;
+		}, 10, 2 );*/
 	}
 
 	/**
@@ -63,10 +70,10 @@ class WINP_Request {
 	 * @return array
 	 */
 	private function get_headers() {
-		return array(
+		return [
 			'Authorization' => 'Bearer ' . $this->get_token(),
 			'PluginId'      => $this->get_plugin_id(),
-		);
+		];
 	}
 
 	/**
@@ -86,7 +93,7 @@ class WINP_Request {
 	 *
 	 * @return array|bool|WP_Error
 	 */
-	public function post( $point, $args = array() ) {
+	public function post( $point, $args = [] ) {
 		if ( ! $this->is_key() ) {
 			return false;
 		}
@@ -104,7 +111,7 @@ class WINP_Request {
 	 *
 	 * @return array|bool|WP_Error
 	 */
-	public function get( $point, $args = array() ) {
+	public function get( $point, $args = [] ) {
 		if ( ! $this->is_key() ) {
 			return false;
 		}
@@ -122,7 +129,7 @@ class WINP_Request {
 	 *
 	 * @return array|bool|WP_Error
 	 */
-	public function put( $point, $args = array() ) {
+	public function put( $point, $args = [] ) {
 		if ( ! $this->is_key() ) {
 			return false;
 		}
@@ -251,9 +258,7 @@ class WINP_Request {
 	 */
 	public function map_objects( $json, $object_name ) {
 		if ( ! $this->check_response( $json ) ) {
-			error_log(
-				'Snippet api [map_objects]: ' . $this->get_response_error( $json )
-			);
+			error_log( 'Snippet api [map_objects]: ' . $this->get_response_error( $json ) );
 
 			return false;
 		}
@@ -272,11 +277,7 @@ class WINP_Request {
 		$mapper->bExceptionOnMissingData       = true;
 
 		try {
-			return $mapper->mapArray(
-				$body,
-				array(),
-				$object_name
-			);
+			return $mapper->mapArray( $body, [], $object_name );
 		} catch ( WINP\JsonMapper\Exception $exception ) {
 			error_log( 'Snippet api [map_objects]: ' . $exception->getMessage() );
 

@@ -13,13 +13,9 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Debug logs', 'all-in-one-wp-security-and-firewall');?></label></h3>
 	<div class="inside">
-		<div class="postbox">
-			<div class="inside">
-				<?php
-					$debug_log_list->prepare_items();
-					$debug_log_list->display();
-				?>
-			</div>
-		</div>
+		<?php
+			$debug_log_list->prepare_items();
+			$debug_log_list->display();
+		?>
 	</div>
 </div>

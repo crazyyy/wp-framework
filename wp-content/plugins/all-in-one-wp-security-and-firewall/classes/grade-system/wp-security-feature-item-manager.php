@@ -116,7 +116,7 @@ class AIOWPSecurity_Feature_Item_Manager {
 		// Spam Prevention menu features
 		// Comment spam
 		$this->feature_items[] = new AIOWPSecurity_Feature_Item('comment-form-captcha', __('Comment CAPTCHA', 'all-in-one-wp-security-and-firewall'), $this->feature_point_4, $this->sec_level_basic);
-		$this->feature_items[] = new AIOWPSecurity_Feature_Item('block-spambots', __('Block spambots', 'all-in-one-wp-security-and-firewall'), $this->feature_point_2, $this->sec_level_basic);
+		$this->feature_items[] = new AIOWPSecurity_Feature_Item('detect-spambots', __('Detect spambots', 'all-in-one-wp-security-and-firewall'), $this->feature_point_2, $this->sec_level_basic);
 		// BuddyPress
 		$this->feature_items[] = new AIOWPSecurity_Feature_Item('bp-register-captcha', __('BuddyPress registration CAPTCHA', 'all-in-one-wp-security-and-firewall'), $this->feature_point_1, $this->sec_level_basic);
 		// bbPress
@@ -282,8 +282,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				case 'disable-application-password':
 					$this->check_disable_application_password_feature($item);
 					break;
-				case 'block-spambots':
-					$this->check_enable_block_spambots_feature($item);
+				case 'detect-spambots':
+					$this->check_enable_detect_spambots_feature($item);
 					break;
 				case 'scan-file-change-detection':
 					$this->check_enable_fcd_scan_feature($item);
@@ -679,9 +679,16 @@ class AIOWPSecurity_Feature_Item_Manager {
 		}
 	}
 
-	public function check_enable_block_spambots_feature($item) {
+	/**
+	 * Features list updated based on the spambot detection on or off
+	 *
+	 * @param object $item
+	 * @global AIO_WP_Security $aio_wp_security
+	 * @return void
+	 */
+	public function check_enable_detect_spambots_feature($item) {
 		global $aio_wp_security;
-		if ($aio_wp_security->configs->get_value('aiowps_enable_spambot_blocking') == '1') {
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting')) {
 			$item->set_feature_status($this->feature_active);
 		} else {
 			$item->set_feature_status($this->feature_inactive);

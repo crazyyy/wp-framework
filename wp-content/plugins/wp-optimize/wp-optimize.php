@@ -2,8 +2,8 @@
 /**
 Plugin Name: WP-Optimize - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
-Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 3.2.14
+Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract moretraffic and users.
+Version: 3.2.15
 Update URI: https://wordpress.org/plugins/wp-optimize/
 Author: David Anderson, Ruhani Rabin, Team Updraft
 Author URI: https://updraftplus.com
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.2.14');
+define('WPO_VERSION', '3.2.15');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PREMIUM_NOTIFICATION', false);
@@ -40,9 +40,9 @@ class WP_Optimize {
 		// Checks if premium is installed along with plugins needed.
 		add_action('plugins_loaded', array($this, 'plugins_loaded'), 1);
 		
-		register_activation_hook(__FILE__, 'wpo_activation_actions');
-		register_deactivation_hook(__FILE__, 'wpo_deactivation_actions');
-		register_uninstall_hook(__FILE__, 'wpo_uninstall_actions');
+		register_activation_hook(__FILE__, array('WPO_Activation', 'actions'));
+		register_deactivation_hook(__FILE__, array('WPO_Deactivation', 'actions'));
+		register_uninstall_hook(__FILE__, array('WPO_Uninstall', 'actions'));
 		
 		$this->load_admin();
 		add_action('admin_init', array($this, 'admin_init'));
@@ -225,6 +225,8 @@ class WP_Optimize {
 	public function load_compatibilities() {
 		WPO_Polylang_Compatibility::instance();
 		WPO_Page_Builder_Compatibility::instance();
+		
+		do_action('wpo_load_compatibilities');
 	}
 
 	/**
@@ -748,6 +750,7 @@ class WP_Optimize {
 			'optimizing_table' => __('Optimizing table:', 'wp-optimize'),
 			'run_optimizations' => __('Run optimizations', 'wp-optimize'),
 			'table_optimization_timeout' => 120000,
+			'add' => __('Add', 'wp-optimize'),
 			'cancel' => __('Cancel', 'wp-optimize'),
 			'cancelling' => __('Cancelling...', 'wp-optimize'),
 			'enable' => __('Enable', 'wp-optimize'),
@@ -789,7 +792,7 @@ class WP_Optimize {
 			'importing_data_from' => __('This will import data from:', 'wp-optimize'),
 			'exported_on' => __('Which was exported on:', 'wp-optimize'),
 			'continue_import' => __('Do you want to carry out the import?', 'wp-optimize'),
-
+			'select_destination' => __('Select destination', 'wp-optimize'),
 		));
 	}
 
@@ -1543,7 +1546,7 @@ class WP_Optimize {
 		// 32MB
 		if ($mp < 33554432) {
 			$save = $wpdb->show_errors(false);
-			@$wpdb->query("SET GLOBAL max_allowed_packet=33554432");// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			@$wpdb->query("SET GLOBAL max_allowed_packet=33554432");// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress errors from displaying
 			$wpdb->show_errors($save);
 
 			$mp = (int) $wpdb->get_var("SELECT @@session.max_allowed_packet");
@@ -1654,8 +1657,7 @@ class WP_Optimize {
 	public function change_time_limit() {
 		$time_limit = (defined('WP_OPTIMIZE_SET_TIME_LIMIT') && WP_OPTIMIZE_SET_TIME_LIMIT > 15) ? WP_OPTIMIZE_SET_TIME_LIMIT : 1800;
 
-		// Try to reduce the chances of PHP self-terminating via reaching max_execution_time.
-		@set_time_limit($time_limit); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		@set_time_limit($time_limit); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Try to reduce the chances of PHP self-terminating via reaching max_execution_time.
 	}
 
 	/**
@@ -1704,6 +1706,7 @@ class WP_Optimize {
 			'_transient_timeout_wpo_%',
 			'_transient_wpo_%',
 			'updraft_lock_wpo_%',
+			'wpo_last_scheduled_%',
 		);
 
 		$where_parts = array();
@@ -1760,69 +1763,10 @@ class WP_Optimize {
 	}
 }
 
-/**
- * Plugin activation actions.
- */
-function wpo_activation_actions() {
-	// If plugin activated by not a Network Administrator then deactivate plugin and show message.
-	if (is_multisite() && !is_network_admin()) {
-		deactivate_plugins(plugin_basename(__FILE__));
-		wp_die(__('Only Network Administrator can activate WP-Optimize plugin.', 'wp-optimize').
-					' <a href="'.admin_url('plugins.php').'">'.__('go back', 'wp-optimize').'</a>');
-	}
-
-	// On activation, check if last-optimized option exists. If not, add 'newly-activated' option.
-	if (!WP_Optimize()->get_options()->get_option('last-optimized', false)) {
-		WP_Optimize()->get_options()->update_option('newly-activated', true);
-	}
-
-	WP_Optimize()->get_options()->set_default_options();
-	WP_Optimize()->get_minify()->plugin_activate();
-
-	WP_Optimize()->get_gzip_compression()->restore();
-	WP_Optimize()->get_browser_cache()->restore();
-
-	if (!class_exists('Updraft_Tasks_Activation')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-tasks-activation.php');
-	Updraft_Tasks_Activation::init_db();
-	Updraft_Tasks_Activation::reinstall_if_needed();
-
-	// run premium activation actions.
-	if (file_exists(WPO_PLUGIN_MAIN_PATH.'premium.php')) {
-		if (!class_exists('WP_Optimize_Premium')) {
-			include_once(WPO_PLUGIN_MAIN_PATH.'premium.php');
-		}
-		WP_Optimize_Premium()->plugin_activation_actions();
-	}
-}
-
-/**
- * Plugin deactivation actions.
- */
-function wpo_deactivation_actions() {
-	WP_Optimize()->wpo_cron_deactivate();
-	WP_Optimize()->get_page_cache()->disable();
-	WP_Optimize()->get_minify()->plugin_deactivate();
-	WP_Optimize()->get_gzip_compression()->disable();
-	WP_Optimize()->get_browser_cache()->disable();
-	WP_Optimize()->get_webp_instance()->empty_htaccess_file();
-}
-
 function wpo_cron_deactivate() {
 	WP_Optimize()->log('running wpo_cron_deactivate()');
 	wp_clear_scheduled_hook('wpo_cron_event2');
 	wp_clear_scheduled_hook('wpo_weekly_cron_tasks');
-}
-
-/**
- * Plugin uninstall actions.
- */
-function wpo_uninstall_actions() {
-	WP_Optimize()->get_gzip_compression()->disable();
-	WP_Optimize()->get_browser_cache()->disable();
-	WP_Optimize()->get_options()->delete_all_options();
-	WP_Optimize()->get_minify()->plugin_uninstall();
-	WP_Optimize()->get_options()->wipe_settings();
-	WP_Optimize()->delete_transients_and_semaphores();
 }
 
 function WP_Optimize() {

@@ -197,7 +197,7 @@ class wfAPI {
 			'lang' => get_site_option('WPLANG'),
 		);
 
-		return wfUtils::base64url_encode(json_encode($values));
+		return wfUtils::base64url_encode(wfUtils::jsonEncodeSafely($values));
 	}
 
 	public function makeAPIQueryString() {

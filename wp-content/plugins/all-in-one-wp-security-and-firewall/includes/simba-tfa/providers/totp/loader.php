@@ -711,6 +711,66 @@ class Simba_TFA_Provider_totp {
 		if ($attempts == 0 || $successes > 0) update_site_option('simba_tfa_priv_key_format', 1);
 		
 	}
+
+	/**
+	 * This function will attempt to encrypt all the users private keys and emergency codes
+	 *
+	 * @return boolean|WP_Error - true on success or WP_Error on failure
+	 */
+	public function potentially_encrypt_private_keys() {
+		
+		error_log("TFA: Beginning attempt to encrypt private keys");
+		
+		global $wpdb;
+		
+		$sql = "SELECT user_id, meta_value FROM ".$wpdb->usermeta." WHERE meta_key = 'tfa_priv_key_64'";
+		
+		$user_results = $wpdb->get_results($sql);
+
+		if (empty($user_results)) {
+			return new WP_Error(
+				'failed_to_get_priv_keys',
+				__('Encrypt secrets feature not enabled: unable to get private keys from the database.', 'all-in-one-wp-security-and-firewall')
+			);
+		}
+
+		$number_ported = 0;
+		$number_failed = 0;
+		
+		foreach ($user_results as $u) {
+			$ported = false;
+			
+			$key = $this->decryptString($u->meta_value, $u->user_id);
+			$enc = $this->encryptString($key, $u->user_id, true);
+
+			if ($enc) {
+				$ported = true;
+				update_user_meta($u->user_id, 'tfa_priv_key_64', $enc);
+			}
+
+			$codes = get_user_meta($u->user_id, 'simba_tfa_emergency_codes_64', true);
+			if (!is_array($codes)) $codes = array();
+			$enc_codes = array();
+
+			foreach ($codes as $code) {
+				$plain_code = $this->decryptString($code, $u->user_id);
+				$enc_codes[] = $this->encryptString($plain_code, $u->user_id, true);
+			}
+
+			if (!empty($enc_codes)) update_user_meta($u->user_id, 'simba_tfa_emergency_codes_64', $enc_codes);
+			
+			if ($ported) {
+				$number_ported++;
+			} else {
+				$number_failed++;
+				error_log("TFA: Failed to encrypt the key for user with ID ".$u->user_id);
+			}
+		}
+
+		error_log("TFA: Number of user keys successfully encrypted: ".$number_ported.", number which failed to encrypt: ".$number_failed);
+
+		return true;
+	}
 	
 	public function getPrivateKeyPlain($enc, $user_ID) {
 		$dec = $this->decryptString($enc, $user_ID);
@@ -745,7 +805,7 @@ class Simba_TFA_Provider_totp {
 		
 		$emergency_str = rtrim($emergency_str, ', ');
 		
-		$emergency_str = $emergency_str ? $emergency_str : '<em>'.__('There are no emergency codes left. You will need to reset your private key.', 'all-in-one-wp-security-and-firewall').'</em>';
+		$emergency_str = $emergency_str ? $emergency_str : '<em>'.__('There are no emergency codes left. You will need to reset your private key to generate new ones.', 'all-in-one-wp-security-and-firewall').'</em>';
 		
 		return $emergency_str;
 	}
@@ -778,7 +838,7 @@ class Simba_TFA_Provider_totp {
 		
 		$match = false;
 		foreach ($codes as $index => $code) {
-			if (trim($code->toHotp(6)) == trim($user_code)) {
+			if (hash_equals(trim($code->toHotp(6)), trim($user_code))) {
 				$match = true;
 				$found_index = $index;
 				break;
@@ -791,16 +851,18 @@ class Simba_TFA_Provider_totp {
 			
 			if (!$emergency_codes) return $match;
 			
-			$dec = array();
-			foreach ($emergency_codes as $emergency_code)
-				$dec[] = trim($this->decryptString(trim($emergency_code), $user_id));
+			foreach ($emergency_codes as $key => $emergency_code) {
+				$dec = trim($this->decryptString(trim($emergency_code), $user_id));
+				if (hash_equals($dec, trim($user_code))) {
+					$match = true;
+					// Remove emergency code
+					unset($emergency_codes[$key]);
+					break;
+				}
+			}
 			
-			$in_array = array_search($user_code, $dec);
-			$match = $in_array !== false;
-			
-			//Remove emergency code
+			// Update emergency codes array
 			if ($match) {
-				array_splice($emergency_codes, $in_array, 1);
 				update_user_meta($user_id, 'simba_tfa_emergency_codes_64', $emergency_codes);
 				do_action('simba_tfa_emergency_code_used', $user_id, $emergency_codes);
 			}
@@ -813,7 +875,7 @@ class Simba_TFA_Provider_totp {
 			
 			if (count($tfa_last_pws) > $nr_of_old_to_save) array_splice($tfa_last_pws, 0, 1);
 
-            update_user_meta($user_id, 'tfa_last_pws', $tfa_last_pws);
+			update_user_meta($user_id, 'tfa_last_pws', $tfa_last_pws);
 		}
 		
 		if ($match) {
@@ -907,8 +969,10 @@ class Simba_TFA_Provider_totp {
 		throw new Exception('One of the mcrypt or openssl PHP modules needs to be installed');
 	}
 	
-	public function encryptString($string, $salt_suffix) {
-		$key = $this->hashAndBin($this->pw_prefix.$salt_suffix, $this->salt_prefix.$salt_suffix);
+	public function encryptString($string, $salt_suffix, $force_encrypt = false) {
+		$key = ($this->tfa->get_option('tfa_encrypt_secrets') && defined('SIMBA_TFA_DB_ENCRYPTION_KEY')) ? base64_decode(SIMBA_TFA_DB_ENCRYPTION_KEY) : $this->hashAndBin($this->pw_prefix.$salt_suffix, $this->salt_prefix.$salt_suffix);
+
+		if ($force_encrypt && defined('SIMBA_TFA_DB_ENCRYPTION_KEY')) $key = base64_decode(SIMBA_TFA_DB_ENCRYPTION_KEY);
 		
 		$iv_size = $this->get_iv_size();
 		$iv = $GLOBALS['simba_two_factor_authentication']->random_bytes($iv_size);
@@ -923,7 +987,7 @@ class Simba_TFA_Provider_totp {
 	}
 	
 	private function decryptString($enc_b64, $salt_suffix, $force_openssl = false) {
-		$key = $this->hashAndBin($this->pw_prefix.$salt_suffix, $this->salt_prefix.$salt_suffix);
+		$key = ($this->tfa->get_option('tfa_encrypt_secrets') && defined('SIMBA_TFA_DB_ENCRYPTION_KEY')) ? base64_decode(SIMBA_TFA_DB_ENCRYPTION_KEY) : $this->hashAndBin($this->pw_prefix.$salt_suffix, $this->salt_prefix.$salt_suffix);
 		
 		$iv_size = $this->get_iv_size();
 		$enc_conc = bin2hex(base64_decode($enc_b64));

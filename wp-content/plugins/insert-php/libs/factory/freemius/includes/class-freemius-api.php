@@ -1,13 +1,17 @@
 <?php
 
-namespace WBCR\Factory_Freemius_150;
+namespace WBCR\Factory_Freemius_154;
 
-use Freemius_Api_WordPress;
-use Freemius_Exception;
-use Wbcr_Factory463_Plugin;
+use WBCR\Factory_Freemius_154\Sdk\Freemius_Api_WordPress;
+use WBCR\Factory_Freemius_154\Sdk\Freemius_Exception;
+use Wbcr_Factory466_Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+if( !defined('FREEMIUS__DIR_SDK') ) {
+	define('FREEMIUS__DIR_SDK', dirname(__FILE__) . '/sdk');
 }
 
 /**
@@ -33,7 +37,7 @@ final class Api {
 	private $api;
 	
 	/**
-	 * @var Wbcr_Factory463_Plugin
+	 * @var Wbcr_Factory466_Plugin
 	 */
 	private $plugin;
 	
@@ -48,16 +52,16 @@ final class Api {
 	private static $clock_diff;
 	
 	/**
-	 * @param Wbcr_Factory463_Plugin $slug
+	 * @param Wbcr_Factory466_Plugin $slug
 	 * @param string $scope 'app', 'developer', 'user' or 'install'.
 	 * @param number $id Element's id.
 	 * @param string $public_key Public key.
 	 * @param bool|string $secret_key Element's secret key.
 	 * @param bool $is_sandbox
 	 */
-	private function __construct( Wbcr_Factory463_Plugin $plugin, $scope, $id, $public_key, $secret_key, $is_sandbox ) {
-		if ( ! class_exists( 'Freemius_Api_WordPress' ) ) {
-			require_once WP_FS__DIR_SDK . '/FreemiusWordPress.php';
+	private function __construct( Wbcr_Factory466_Plugin $plugin, $scope, $id, $public_key, $secret_key, $is_sandbox ) {
+		if ( ! class_exists( 'WBCR\Factory_Freemius_154\Sdk\Freemius_Api_WordPress' ) ) {
+			require_once FREEMIUS__DIR_SDK . '/FreemiusWordPress.php';
 		}
 		
 		$this->api = new Freemius_Api_WordPress( $scope, $id, $public_key, $secret_key, $is_sandbox );
@@ -73,7 +77,7 @@ final class Api {
 	}
 	
 	/**
-	 * @param Wbcr_Factory463_Plugin $plugin
+	 * @param Wbcr_Factory466_Plugin $plugin
 	 * @param string $scope 'app', 'developer', 'user' or 'install'.
 	 * @param number $id Element's id.
 	 * @param string $public_key Public key.
@@ -82,7 +86,7 @@ final class Api {
 	 *
 	 * @return Api
 	 */
-	public static function instance( Wbcr_Factory463_Plugin $plugin, $scope, $id, $public_key, $is_sandbox, $secret_key = false ) {
+	public static function instance( Wbcr_Factory466_Plugin $plugin, $scope, $id, $public_key, $is_sandbox, $secret_key = false ) {
 		$identifier = md5( $plugin->getPluginName() . $scope . $id . $public_key . ( is_string( $secret_key ) ? $secret_key : '' ) . json_encode( $is_sandbox ) );
 		
 		if ( ! isset( self::$instances[ $identifier ] ) ) {

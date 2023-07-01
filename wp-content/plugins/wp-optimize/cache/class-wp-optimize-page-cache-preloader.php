@@ -303,10 +303,10 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 			if (empty($response)) return $urls;
 
-			$xml = @simplexml_load_string($response); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$xml = @simplexml_load_string($response); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warnings when error found in XML data
 		} else {
 			// parse xml answer.
-			$xml = @simplexml_load_string(wp_remote_retrieve_body($response)); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$xml = @simplexml_load_string(wp_remote_retrieve_body($response)); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warnings when error found in XML data
 		}
 
 		// xml file has not valid xml content then return false.

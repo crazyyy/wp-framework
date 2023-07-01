@@ -5,7 +5,7 @@ Tags: cache, minify, caching, image cache, performance cache, clean, spam, speed
 Requires PHP: 5.6
 Requires at least: 4.5
 Tested up to: 6.2
-Stable tag: 3.2.14
+Stable tag: 3.2.15
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -367,6 +367,26 @@ If none of the above works, disable processing of JavaScript files in the minify
 
 == Changelog ==
 
+
+
+= 3.2.15 - 09/May/2023 =
+
+* FEATURE: Premium - Cache - Added compatibility with the "WooCommerce Multilingual & Multicurrency" plugin's multi-currency feature
+* FIX: Premium - Above the folder elements should not be loaded lazily
+* FIX: Prevents minify cache invalidation when asset version is changed but content is same
+* FIX: Prevent PHP 8 uncaught exception `TypeError` when using CloudFlare
+* FIX: Add logging destination UI
+* FIX: Premium - Cache - Prevents a PHP fatal error that occurs when user cache is enabled on sites running on MariaDB with a version prefix of '5.5.5-' and PHP versions prior to 8.0
+* FIX: Serving WebP images only to supported browsers wasn't working properly when page caching is enabled
+* FIX: Minify - `inherit` Google fonts method is not working
+* TWEAK: Prevent PHP deprecation notice when purging minify cache
+* TWEAK: Cache - Prevent PHP warning when deleting cache
+* TWEAK: Suppress PHP notice when cannot write to .htaccess file
+* TWEAK: Add user capability check for smush task manager ajax handling method
+* TWEAK: Minify - Do not send cache control and last modified headers if already present
+* TWEAK: Smush - clean up log entries
+* TWEAK: Correctly handle XX and T1 country codes in Cloudflare's IP country header
+* REFACTOR: Separate classes for activation, deactivation and uninstall actions
 
 = 3.2.14 - 30/Mar/2023 =
 
@@ -1363,4 +1383,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 * Fix Interface
 
 == Upgrade Notice ==
-* 3.2.14: Fixes (including WP 6.2/PHP 8.X compatibility fixes) - a recommended update for all
+* 3.2.15: WooCommerce Multilingual & Multicurrency compatibility, various fixes and tweaks - a recommended update for all

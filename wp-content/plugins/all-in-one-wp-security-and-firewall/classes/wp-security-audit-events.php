@@ -32,6 +32,9 @@ class AIOWPSecurity_Audit_Events {
 		// Setup
 		self::setup_event_types();
 
+		// Core events
+		add_action('_core_updated_successfully', 'AIOWPSecurity_Audit_Events::core_updated', 10, 2);
+
 		// Plugin events
 		add_action('upgrader_process_complete', 'AIOWPSecurity_Audit_Events::plugin_installed', 10, 2);
 		add_action('activated_plugin', 'AIOWPSecurity_Audit_Events::plugin_activated', 10, 2);
@@ -46,6 +49,9 @@ class AIOWPSecurity_Audit_Events {
 		add_action('upgrader_process_complete', 'AIOWPSecurity_Audit_Events::theme_updated', 10, 2);
 		add_action('delete_theme', 'AIOWPSecurity_Audit_Events::theme_delete', 10, 2);
 		add_action('deleted_theme', 'AIOWPSecurity_Audit_Events::theme_deleted', 10, 2);
+
+		// Translation events
+		add_action('upgrader_process_complete', 'AIOWPSecurity_Audit_Events::translation_updated', 10, 2);
 	}
 
 	/**
@@ -65,6 +71,7 @@ class AIOWPSecurity_Audit_Events {
 	 */
 	private static function setup_event_types() {
 		self::$event_types = array(
+			'core_updated' => __('Core updated', 'all-in-one-wp-security-and-firewall'),
 			'plugin_installed' => __('Plugin installed', 'all-in-one-wp-security-and-firewall'),
 			'plugin_activated' => __('Plugin activated', 'all-in-one-wp-security-and-firewall'),
 			'plugin_updated' => __('Plugin updated', 'all-in-one-wp-security-and-firewall'),
@@ -74,11 +81,32 @@ class AIOWPSecurity_Audit_Events {
 			'theme_activated' => __('Theme activated', 'all-in-one-wp-security-and-firewall'),
 			'theme_updated' => __('Theme updated', 'all-in-one-wp-security-and-firewall'),
 			'theme_deleted' => __('Theme deleted', 'all-in-one-wp-security-and-firewall'),
+			'translation_updated' => __('Translation updated', 'all-in-one-wp-security-and-firewall'),
+			'entity_changed' => __('Entity changed', 'all-in-one-wp-security-and-firewall'),
 			'successful_login' => __('Successful login', 'all-in-one-wp-security-and-firewall'),
 			'failed_login' => __('Failed login', 'all-in-one-wp-security-and-firewall'),
 			'user_registration' => __('User registration', 'all-in-one-wp-security-and-firewall'),
 			'table_migration' => __('Table migration', 'all-in-one-wp-security-and-firewall'),
 		);
+	}
+
+	/**
+	 * Adds a core updated event to the audit log
+	 *
+	 * @param string $new_version - the wp version we updated to
+	 *
+	 * @return void
+	 */
+	public static function core_updated($new_version) {
+		global $wp_version;
+
+		$details = array(
+			'core_updated' => array(
+				'old_version' => $wp_version,
+				'new_version' => $new_version
+			)
+		);
+		do_action('aiowps_record_event', 'core_updated', $details, 'info');
 	}
 
 	/**
@@ -90,6 +118,11 @@ class AIOWPSecurity_Audit_Events {
 	 * @return void
 	 */
 	public static function plugin_installed($upgrader, $hook_extra) {
+		// If this is empty then we have no way to know if this is a plugin/theme install/update so create an entity changed event
+		if (empty($hook_extra)) {
+			self::event_entity_changed($upgrader);
+			return;
+		}
 		if ('plugin' !== $hook_extra['type'] || 'install' !== $hook_extra['action']) return;
 		self::$installed_plugin_info = $upgrader->new_plugin_data;
 		self::event_plugin_changed('installed', '', '');
@@ -117,6 +150,8 @@ class AIOWPSecurity_Audit_Events {
 	 * @return void
 	 */
 	public static function plugin_updated($upgrader, $hook_extra) {
+		// If this is empty then we have no way to know if this is a plugin/theme install/update so return as we catch this in plugin_installed()
+		if (empty($hook_extra)) return;
 		if ('plugin' !== $hook_extra['type'] || 'update' !== $hook_extra['action']) return;
 		$plugin = '';
 		if (isset($hook_extra['plugin'])) $plugin = $hook_extra['plugin'];
@@ -209,6 +244,8 @@ class AIOWPSecurity_Audit_Events {
 	 * @return void
 	 */
 	public static function theme_installed($upgrader, $hook_extra) {
+		// If this is empty then we have no way to know if this is a plugin/theme install/update so return as we catch this in plugin_installed()
+		if (empty($hook_extra)) return;
 		if ('theme' !== $hook_extra['type'] || 'install' !== $hook_extra['action']) return;
 		self::$installed_theme_info = $upgrader->new_theme_data;
 		self::event_theme_changed('installed', '', '');
@@ -240,6 +277,8 @@ class AIOWPSecurity_Audit_Events {
 	 * @return void
 	 */
 	public static function theme_updated($upgrader, $hook_extra) {
+		// If this is empty then we have no way to know if this is a plugin/theme install/update so return as we catch this in plugin_installed()
+		if (empty($hook_extra)) return;
 		if ('theme' !== $hook_extra['type'] || 'update' !== $hook_extra['action']) return;
 		$theme = '';
 		if (isset($hook_extra['theme'])) $theme = $hook_extra['theme'];
@@ -315,6 +354,46 @@ class AIOWPSecurity_Audit_Events {
 	}
 
 	/**
+	 * Adds a translation updated event to the audit log
+	 *
+	 * @param WP_Upgrader $upgrader   - WP_Upgrader instance
+	 * @param array       $hook_extra - Array of bulk item update data
+	 *
+	 * @return void
+	 */
+	public static function translation_updated($upgrader, $hook_extra) {
+		if ('translation' !== $hook_extra['type'] || 'update' !== $hook_extra['action']) return;
+
+		if (!isset($hook_extra['translations']) || empty($hook_extra['translations'])) return;
+
+		foreach ($hook_extra['translations'] as $info) {
+			$details = array(
+				'translation_updated' => $info
+			);
+			do_action('aiowps_record_event', 'translation_updated', $details, 'info');
+		}
+	}
+
+	/**
+	 * Adds a entity changed event to the audit log
+	 *
+	 * @param WP_Upgrader $upgrader - WP_Upgrader instance
+	 *
+	 * @return void
+	 */
+	public static function event_entity_changed($upgrader) {
+
+		$entity = (isset($upgrader->result) && isset($upgrader->result['destination_name'])) ? $upgrader->result['destination_name'] : false;
+
+		$details = array(
+			'entity_changed' => array(
+				'entity' => $entity,
+			)
+		);
+		do_action('aiowps_record_event', 'entity_changed', $details, 'warning');
+	}
+
+	/**
 	 * Adds a failed login event to the audit log
 	 *
 	 * @param string $username - the username for the failed login attempt
@@ -337,4 +416,52 @@ class AIOWPSecurity_Audit_Events {
 			do_action('aiowps_record_event', 'failed_login', $details, 'warning', $username);
 		}
 	}
+
+	/**
+	 * Adds a user registration event to the audit log
+	 *
+	 * @param integer $user_id - the user ID of the newly registered user
+	 * @param string  $type    - the type of registration valid values (admin, pending, registered)
+	 *
+	 * @return void
+	 */
+	public static function event_user_registration($user_id, $type) {
+		$registered_user = get_user_by('ID', $user_id);
+		$registered_username = is_a($registered_user, 'WP_User') && 0 !== $registered_user->ID ? $registered_user->user_login : '';
+
+		$details = array(
+			'user_registration' => array(
+				'registered_username' => $registered_username,
+				'type' => $type,
+			)
+		);
+
+		if ('admin' == $type) {
+			$admin_user = wp_get_current_user();
+			$admin_username = is_a($admin_user, 'WP_User') ? $admin_user->user_login : '';
+			$details['user_registration']['admin_username'] = $admin_username;
+			do_action('aiowps_record_event', 'user_registration', $details, 'info');
+		} elseif ('pending' == $type) {
+			do_action('aiowps_record_event', 'user_registration', $details, 'info', $registered_username);
+		} elseif ('registered' == $type) {
+			do_action('aiowps_record_event', 'user_registration', $details, 'info', $registered_username);
+		}
+	}
+
+	/**
+	 * Adds a successful login event to the audit log
+	 *
+	 * @param string $username - the username for the successful login
+	 *
+	 * @return void
+	 */
+	public static function event_successful_login($username) {
+		$details = array(
+			'successful_login' => array(
+				'username' => $username,
+			)
+		);
+		do_action('aiowps_record_event', 'successful_login', $details, 'info', $username);
+	}
+
 }

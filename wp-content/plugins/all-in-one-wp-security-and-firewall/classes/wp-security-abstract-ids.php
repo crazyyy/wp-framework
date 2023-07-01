@@ -55,6 +55,7 @@ class AIOS_Abstracted_Ids {
 	public static function htaccess_to_php_feature_notice_ids() {
 		return array(
 			'login-whitelist-disabled-on-upgrade',
+			'ip-blacklist-settings-on-upgrade',
 		);
 	}
 

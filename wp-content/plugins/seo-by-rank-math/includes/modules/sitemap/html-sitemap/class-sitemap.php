@@ -25,6 +25,20 @@ class Sitemap extends Taxonomy {
 	use Hooker;
 
 	/**
+	 * Generators.
+	 *
+	 * @var array
+	 */
+	private $generators;
+
+	/**
+	 * Cache.
+	 *
+	 * @var object
+	 */
+	private $cache;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -96,8 +110,7 @@ class Sitemap extends Taxonomy {
 	 */
 	public function get_output() {
 		$post_types = self::get_post_types();
-		$taxonomies = Helper::get_accessible_taxonomies();
-		$taxonomies = array_filter( $taxonomies, [ $this, 'handles_type' ] );
+		$taxonomies = self::get_taxonomies();
 
 		/**
 		 * Filter the setting of excluding empty terms from the XML sitemap.
@@ -215,7 +228,7 @@ class Sitemap extends Taxonomy {
 				continue;
 			}
 
-			$taxonomies[] = $taxonomy->name;
+			$taxonomies[ $taxonomy->name ] = $taxonomy;
 		}
 
 		/**

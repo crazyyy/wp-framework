@@ -32,6 +32,23 @@ class Updraft_Tasks_Activation {
 	const UPDRAFT_TASKS_DB_VERSION = '1.1';
 
 	/**
+	 * Initialise the use of Task Manager library
+	 * Example Usage:
+	 * Updraft_Tasks_Activation::init(plugin_basename(__FILE__));
+	 * Updraft_Tasks_Activation::reinstall_if_needed();
+	 *
+	 * @param string $plugin_slug Plugin slug
+	 *
+	 * @return void
+	 */
+	public static function init($plugin_slug) {
+		$used_by_plugins = self::get_used_by_plugins();
+		if (!in_array($plugin_slug, $used_by_plugins)) {
+			self::update_used_by_plugins(array_merge($used_by_plugins, array($plugin_slug)));
+		}
+	}
+
+	/**
 	 * Initialise this class
 	 */
 	public static function init_db() {
@@ -65,12 +82,39 @@ class Updraft_Tasks_Activation {
 	 * Drop database version variable from option from database and run install again.
 	 */
 	public static function reinstall() {
-		if (is_multisite()) {
-			delete_site_option('updraft_task_manager_dbversion');
-		} else {
-			delete_option('updraft_task_manager_dbversion');
-		}
+		self::delete_db_version_variable();
 		self::install();
+	}
+
+	/**
+	 * Delete database version variable from options table
+	 */
+	public static function delete_db_version_variable() {
+		delete_site_option('updraft_task_manager_dbversion');
+	}
+
+	/**
+	 * Drop database tables and version variable from option from database
+	 *
+	 * @param string $plugin_slug Plugin slug
+	 *
+	 * @return void
+	 */
+	public static function uninstall($plugin_slug) {
+		self::delete_used_by_plugins($plugin_slug);
+		$used_by_plugins = self::get_used_by_plugins();
+		if (!empty($used_by_plugins)) return;
+		self::delete_db_version_variable();
+		if (empty(self::$table_prefix)) {
+			self::init_db();
+		}
+		global $wpdb;
+		$tables = array('tasks', 'taskmeta');
+		foreach($tables as $table) {
+			$table_name = $wpdb->prefix . self::$table_prefix . $table;
+			$wpdb->query("DROP TABLE IF EXISTS $table_name");
+		}
+		self::delete_used_by_plugins();
 	}
 
 	/**
@@ -202,6 +246,58 @@ class Updraft_Tasks_Activation {
 		$wpdb->query('ALTER TABLE '.$our_prefix.'tasks ADD last_locked_at BIGINT DEFAULT 0 AFTER time_created');
 	}
 
+	/**
+	 * Get an array of plugin slugs that uses this library
+	 *
+	 * @return array
+	 */
+	private static function get_used_by_plugins() {
+		return get_site_option('updraft_task_manager_plugins', array());
+	}
+
+	/**
+	 * Update the array of plugin slugs that uses this library
+	 *
+	 * @param array $used_by_plugins An array of plugin slugs
+	 */
+	private static function update_used_by_plugins($used_by_plugins) {
+		if (is_multisite()) {
+			update_site_option('updraft_task_manager_plugins', $used_by_plugins);
+		} else {
+			update_option('updraft_task_manager_plugins', $used_by_plugins);
+		}
+	}
+
+	/**
+	 * Removes either given plugin slug. If plugin slug is not provided removes option itself
+	 *
+	 * @param string $plugin_slug Plugin slug
+	 */
+	private static function delete_used_by_plugins($plugin_slug = '') {
+		if (!empty($plugin_slug)) {
+			$used_by_plugins = self::get_used_by_plugins();
+			$used_by_plugins = self::remove_plugin_from_array($used_by_plugins, $plugin_slug);
+			self::update_used_by_plugins($used_by_plugins);
+		} else {
+			delete_site_option('updraft_task_manager_plugins');
+		}
+	}
+
+	/**
+	 * Remove given plugin slug from an array of plugin slugs
+	 *
+	 * @param array $used_by_plugins An array of plugin slugs
+	 * @param string $plugin_slug    Plugin slug
+	 *
+	 * @return array
+	 */
+	private static function remove_plugin_from_array($used_by_plugins, $plugin_slug) {
+		$key = array_search($plugin_slug, $used_by_plugins);
+		if (false !== $key) {
+			unset($used_by_plugins[$key]);
+		}
+		return $used_by_plugins;
+	}
 }
 
 endif;

@@ -27,56 +27,57 @@
 		</div>
 	</div>
 	<div class="postbox">
-		<h3 class="hndle"><label for="title"><?php _e('Block spambot comments', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+		<h3 class="hndle"><label for="title"><?php _e('Spam comment detect', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<div class="aio_blue_box">
 				<?php
-					echo '<p>'.__('A large portion of WordPress blog comment spam is mainly produced by automated bots and not necessarily by humans.', 'all-in-one-wp-security-and-firewall').'<br>'.__('This feature will greatly minimize the useless and unecessary traffic and load on your server resulting from spam comments by blocking all comment requests which do not originate from your domain.', 'all-in-one-wp-security-and-firewall').'<br>'.__('In other words, if the comment was not submitted by a human who physically submitted the comment on your site, the request will be blocked.', 'all-in-one-wp-security-and-firewall').'</p>';
+					echo '<p>'.__('A large portion of WordPress blog comment spam is mainly produced by automated bots and not necessarily by humans.', 'all-in-one-wp-security-and-firewall').'<br>'.__('This feature will greatly minimize the useless and unnecessary traffic and load on your server resulting from spam comments.', 'all-in-one-wp-security-and-firewall').'<br>'.__('In other words, if the comment was not submitted by a human who physically submitted the comment on your site, the request will be discarded or marked as spam.', 'all-in-one-wp-security-and-firewall').'</p>';
 				?>
 			</div>
 			<?php
-				$aio_wp_security->include_template('partials/non-apache-feature-notice.php');
 				// Display security info badge
-				$aiowps_feature_mgr->output_feature_details_badge("block-spambots");
-				$blog_id = get_current_blog_id();
-				if (is_multisite() && !is_main_site($blog_id)) {
-					//Hide config settings if MS and not main site
-					AIOWPSecurity_Utility::display_multisite_message();
-				} else {
+				$aiowps_feature_mgr->output_feature_details_badge("detect-spambots");
 			?>
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row"><?php _e('Block spambots from posting comments', 'all-in-one-wp-security-and-firewall'); ?>:</th>
+					<th scope="row"><?php _e('Detect spambots posting comments', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-						<input id="aiowps_enable_spambot_blocking" name="aiowps_enable_spambot_blocking" type="checkbox"<?php if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_blocking')) echo ' checked="checked"'; ?> value="1"/>
-						<label for="aiowps_enable_spambot_blocking" class="description"><?php _e('Check this if you want to apply a firewall rule which will block comments originating from spambots.', 'all-in-one-wp-security-and-firewall'); ?></label>
+						<input id="aiowps_enable_spambot_detecting" name="aiowps_enable_spambot_detecting" type="checkbox" <?php checked($aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting'));?> value="1">
+						<label for="aiowps_enable_spambot_detcting" class="description"><?php _e('Check this if you want to detect comments originating from spambots.', 'all-in-one-wp-security-and-firewall'); ?></label>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 								<?php
-								echo '<p class="description">'.__('This feature will implement a firewall rule to block all comment attempts which do not originate from your domain.', 'all-in-one-wp-security-and-firewall').'</p>';
-								echo '<p class="description">'.__('A legitimate comment is one which is submitted by a human who physically fills out the comment form and presses the submit button. For such events, the HTTP_REFERRER is always set to your own domain.', 'all-in-one-wp-security-and-firewall').'</p>';
-								echo '<p class="description">'.__('A comment submitted by a spambot is done by directly calling the comments.php file, which usually means that the HTTP_REFERRER value is not your domain and often times empty.', 'all-in-one-wp-security-and-firewall').'</p>';
-								echo '<p class="description">'.__('This feature will check and block comment requests which are not referred by your domain thus greatly reducing your overall blog spam and PHP requests done by the server to process these comments.', 'all-in-one-wp-security-and-firewall').'</p>';
+								echo '<p class="description">'.__('This feature will detect comment attempts which originate from spambots.', 'all-in-one-wp-security-and-firewall').'</p>';
+								echo '<p class="description">'.__('A legitimate comment is one which is submitted by a human who physically fills out the comment form and presses the submit button.', 'all-in-one-wp-security-and-firewall').'</p>';
+								echo '<p class="description">'.__('A comment submitted by a spambot is done by directly calling the wp-comments-post.php file.', 'all-in-one-wp-security-and-firewall').'</p>';
+								echo '<p class="description">'.__('This feature will detect these comments and either discard them completely or mark them as spam.', 'all-in-one-wp-security-and-firewall').'</p>';
 								?>
 						</div>
 					</td>
 				</tr>
 			</table>
-			<?php
-				} //End if statement
-			?>
 		</div>
-	</div>
-	<div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('Comment processing', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">
+						<label for="aiowps_spam_comments_should"><?php _e('Spam comments detected should be', 'all-in-one-wp-security-and-firewall'); ?>:</label>
+					</th>
+					<td>
+						<select id="aiowps_spam_comments_should" name="aiowps_spam_comments_should">
+							<option value="0" <?php selected($aio_wp_security->configs->get_value('aiowps_spam_comments_should'), '0'); ?>><?php _e('Discarded', 'all-in-one-wp-security-and-firewall'); ?></option>
+							<option value="1" <?php selected($aio_wp_security->configs->get_value('aiowps_spam_comments_should'), '1'); ?>><?php _e('Marked as spam', 'all-in-one-wp-security-and-firewall'); ?></option>
+						</select>
+						<span class="description"><?php _e('Select the value for how you would like a comment detected as spam to be processed', 'all-in-one-wp-security-and-firewall'); ?></span>
+					</td>
+				</tr>	
+				<tr valign="top">
+					<th scope="row">
 						<label for="aiowps_trash_spam_comments_after_days"><?php _e('Trash spam comments', 'all-in-one-wp-security-and-firewall'); ?>:</label>
 					</th>
 					<td>
-						<input name="aiowps_enable_trash_spam_comments" id="aiowps_enable_trash_spam_comments" type="checkbox" <?php checked($aio_wp_security->configs->get_value('aiowps_enable_trash_spam_comments'), 1); ?> value="1"/>
+						<input name="aiowps_enable_trash_spam_comments" id="aiowps_enable_trash_spam_comments" type="checkbox" <?php checked($aio_wp_security->configs->get_value('aiowps_enable_trash_spam_comments'), 1); ?> value="1">
 						<?php
 							$disbled = '';
 							if (!$aio_wp_security->configs->get_value('aiowps_enable_trash_spam_comments')) $disbled = "disabled";

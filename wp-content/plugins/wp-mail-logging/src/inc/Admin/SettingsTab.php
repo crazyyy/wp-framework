@@ -118,7 +118,7 @@ class SettingsTab {
     public function save_settings() {
 
          // Check if we need to save data.
-        $data = filter_input( INPUT_POST, 'wp-mail-logging-setting', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
+        $data = filter_input( INPUT_POST, 'wp-mail-logging-setting', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
 
         if ( empty( $data ) || empty( $_POST[ self::SAVE_SETTINGS_NONCE_ACTION ] ) || ! wp_verify_nonce( $_POST[ self::SAVE_SETTINGS_NONCE_ACTION ], self::SAVE_SETTINGS_NONCE_ACTION ) ) {
             return;
@@ -176,7 +176,7 @@ class SettingsTab {
         wp_enqueue_script(
             'wp-mail-logging-admin-settings',
             $assets_url . '/js/wp-mail-logging-admin-settings.js',
-            [ 'jquery' ],
+            [ 'jquery', 'wp-mail-logging-jquery-confirm' ],
             $plugin_meta['version']
         );
     }

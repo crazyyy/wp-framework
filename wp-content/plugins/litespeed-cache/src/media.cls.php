@@ -140,7 +140,13 @@ class Media extends Root
 	 */
 	public function info($short_file_path, $post_id)
 	{
-		$real_file = $this->_wp_upload_dir['basedir'] . '/' . $short_file_path;
+		$short_file_path = wp_normalize_path( $short_file_path );
+		$basedir = $this->_wp_upload_dir['basedir'] . '/';
+		if ( strpos( $short_file_path, $basedir ) === 0 ) {
+			$short_file_path = substr( $short_file_path, strlen( $basedir ) );
+		}
+
+		$real_file = $basedir . $short_file_path;
 
 		if (file_exists($real_file)) {
 			return array(
@@ -583,7 +589,7 @@ class Media extends Root
 			}
 		}
 
-		preg_match_all('#<img \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('#<img\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			$attrs = Utility::parse_attr($match[1]);
 
@@ -653,8 +659,8 @@ class Media extends Root
 
 						$attrs['width'] = $ori_width;
 						$attrs['height'] = $ori_height;
-						$new_html = preg_replace('#(width|height)=(["\'])[^\2]*\2#', '', $match[0]);
-						$new_html = str_replace('<img ', '<img width="' . $attrs['width'] . '" height="' . $attrs['height'] . '" ', $new_html);
+						$new_html = preg_replace('#\s+(width|height)=(["\'])[^\2]*\2#', '', $match[0]);
+						$new_html = preg_replace('#<img\s+#i', '<img width="' . $attrs['width'] . '" height="' . $attrs['height'] . '" ', $new_html);
 						self::debug('Add missing sizes ' . $attrs['width'] . 'x' . $attrs['height'] . ' to ' . $attrs['src']);
 						$this->content = str_replace($match[0], $new_html, $this->content);
 						$match[0] = $new_html;

@@ -46,6 +46,53 @@ function cmplz_documents_rest_route() {
 		}
 
 	) );
+
+	$id_pattern = '([0-9]+)';
+	$string_pattern = '([a-z0-9-_]+)';
+	register_rest_route( 'complianz/v1', 'consent-area/(?P<post_id>'.$id_pattern.')/(?P<block_id>'.$string_pattern.')', array(
+		'methods'             => 'GET',
+		'callback'            => 'cmplz_rest_consented_content',
+		'permission_callback' => '__return_true',
+	) );
+}
+
+/**
+ * Output category consent checkboxes html
+ */
+function cmplz_rest_consented_content( WP_REST_Request $request ) {
+	$post_id = (int) ($request->get_param('post_id'));
+	$block_id = sanitize_title($request->get_param('block_id'));
+	$post = get_post($post_id);
+	if ( !$post ) {
+		return '';
+	}
+
+	$html = $post->post_content;
+	$output = '';
+	if ( has_block('complianz/consent-area', $html)) {
+		$blocks = parse_blocks($post->post_content);
+		foreach($blocks as $block){
+			if ($block['blockName']==='complianz/consent-area' && $block['attrs']['blockId']===$block_id){
+				$output = $block['attrs']['consentedContent'];
+				break;
+			}
+		}
+	} else if (strpos($html, '[cmplz-consent-area')!==false) {
+		//get content of the shortcode.
+		$pattern = '/\[cmplz-consent-area[^\]]*?id=[\"\']'.$block_id.'[\"\'][^\]]*?\](.*?)\[\/cmplz-consent-area\]/is';
+		if ( $block_id==='default' ) {
+			$pattern = '/\[cmplz-consent-area[^\]]*?\](.*?)\[\/cmplz-consent-area\]/is';
+		}
+		if ( preg_match( $pattern, $post->post_content, $matches ) ) {
+			$output  = $matches[1] ?? '';
+		}
+	}
+
+	$output = do_shortcode($output);
+	$response = json_encode( $output );
+	header( "Content-Type: application/json" );
+	echo $response;
+	exit;
 }
 
 /**
@@ -196,6 +243,7 @@ function cmplz_store_detected_cookies(WP_REST_Request $request) {
 		//add local storage data
 		$localstorage = array_map( 'sanitize_text_field', $localstorage );
 		foreach ( $localstorage as $key => $value ) {
+
 			//let's skip cookies with this site url in the name
 			if ( strpos($key, site_url())!==false ) continue;
 			if (apply_filters('cmplz_exclude_from_scan', false, $key, 'localstorage')) continue;
@@ -203,7 +251,7 @@ function cmplz_store_detected_cookies(WP_REST_Request $request) {
 			$cookie = new CMPLZ_COOKIE();
 			$cookie->add( $key, COMPLIANZ::$cookie_admin->get_supported_languages() );
 			$cookie->type = 'localstorage';
-			$cookie->isOwnDomainCookie = true;
+			$cookie->domain = 'self';
 			$cookie->save( true );
 		}
 
@@ -218,7 +266,8 @@ function cmplz_store_detected_cookies(WP_REST_Request $request) {
 			$cookie = new CMPLZ_COOKIE();
 			$cookie->add( $key, COMPLIANZ::$cookie_admin->get_supported_languages() );
 			$cookie->type = 'cookie';
-			$cookie->isOwnDomainCookie = true;
+			//what we detect here is only on the own domain
+			$cookie->domain = 'self';
 			$cookie->save( true );
 		}
 

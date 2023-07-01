@@ -72,7 +72,11 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu {
 						//success case
 						$list = $payload[1];
 						$banned_ip_data = implode("\n", $list);
-						$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses', $banned_ip_data);
+						$banned_ip_addresses_list = preg_split('/\R/', $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')); // historical settings where the separator may have depended on PHP_EOL
+						if ($banned_ip_addresses_list !== $list) {
+							$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses', $banned_ip_data);
+							$aiowps_firewall_config->set_value('aiowps_blacklist_ips', $list);
+						}
 						$_POST['aiowps_banned_ip_addresses'] = ''; // Clear the post variable for the banned address list
 					} else {
 						$result = -1;
@@ -81,6 +85,7 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu {
 					}
 				} else {
 					$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses', ''); // Clear the IP address config value
+					$aiowps_firewall_config->set_value('aiowps_blacklist_ips', array());
 				}
 
 				if ('1' == $aiowps_enable_blacklisting && !empty($_POST['aiowps_banned_user_agents'])) {
@@ -93,18 +98,13 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu {
 
 				if (1 == $result) {
 					$aio_wp_security->configs->set_value('aiowps_enable_blacklisting', $aiowps_enable_blacklisting, true);
+					if ('1' == $aio_wp_security->configs->get_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade')) {
+						$aio_wp_security->configs->delete_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade');
+					}
 
 					// Recalculate points after the feature status/options have been altered
 					$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-					
-					$write_result = AIOWPSecurity_Utility_Htaccess::write_to_htaccess(); // Now let's write to the .htaccess file
-					
-					if ($write_result) {
-						$this->show_msg_settings_updated();
-					} else {
-						$this->show_msg_error(__('The plugin was unable to write to the .htaccess file. Please edit the file manually.', 'all-in-one-wp-security-and-firewall'));
-						$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Blacklist_Menu - The plugin was unable to write to the .htaccess file.");
-					}
+					$this->show_msg_settings_updated();
 				}
 			}
 		}

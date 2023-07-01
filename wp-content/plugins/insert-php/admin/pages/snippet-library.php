@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WINP_SnippetLibraryPage extends WINP_Page {
 
 	/**
-	 * @param Wbcr_Factory463_Plugin $plugin
+	 * @param Wbcr_Factory466_Plugin $plugin
 	 */
-	public function __construct( Wbcr_Factory463_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory466_Plugin $plugin ) {
 		$this->menu_post_type = WINP_SNIPPETS_POST_TYPE;
 
 		$this->id         = 'snippet-library';
@@ -116,8 +116,8 @@ class WINP_SnippetLibraryPage extends WINP_Page {
 	public function indexAction() {
 		$my_snippets_tab = true;
 		$library_tab     = false;
-		$my_snippets_url = esc_url( remove_query_arg( array( 'tab' ) ) );
-		$library_url     = esc_url( add_query_arg( 'tab', 'library', $my_snippets_url ) );
+		$my_snippets_url = esc_url_raw( remove_query_arg( array( 'tab' ) ) );
+		$library_url     = esc_url_raw( add_query_arg( 'tab', 'library', $my_snippets_url ) );
 
 		if ( WINP_Plugin::app()->request->get( 'tab' ) == 'library' ) {
 			$my_snippets_tab = false;

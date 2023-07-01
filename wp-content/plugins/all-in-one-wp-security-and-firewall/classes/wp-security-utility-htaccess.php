@@ -221,13 +221,11 @@ class AIOWPSecurity_Utility_Htaccess {
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_pingback_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_debug_log_access_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_disable_index_views();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_blacklist();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_disable_trace_and_track();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_forbid_proxy_comment_posting();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_deny_bad_query_strings();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_advanced_character_string_filter();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_5g_blacklist();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_spambots();
 		$rules .= AIOWPSecurity_Utility_Htaccess::prevent_image_hotlinks();
 		$custom_rules = AIOWPSecurity_Utility_Htaccess::getrules_custom_rules();
 		if ($aio_wp_security->configs->get_value('aiowps_place_custom_rules_at_top')=='1') {
@@ -265,53 +263,6 @@ class AIOWPSecurity_Utility_Htaccess {
 		}
 
 		return $rules;
-	}
-
-	public static function getrules_blacklist() {
-		global $aio_wp_security;
-		// Are we on Apache or LiteSpeed webserver?
-		$aiowps_server = AIOWPSecurity_Utility::get_server_type();
-		$apache_or_litespeed = 'apache' == $aiowps_server || 'litespeed' == $aiowps_server;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_enable_blacklisting') == '1') {
-			// Let's do the list of blacklisted IPs first
-			$hosts = AIOWPSecurity_Utility::splitby_newline_trim_filter_empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'));
-			// Filter out duplicate lines, add netmask to IP addresses
-			$ips_with_netmask = self::add_netmask(array_unique($hosts));
-			if (!empty($ips_with_netmask)) {
-				$rules .= AIOWPSecurity_Utility_Htaccess::$ip_blacklist_marker_start . PHP_EOL; //Add feature marker start
-
-				if ($apache_or_litespeed) {
-					// Apache or LiteSpeed webserver
-					// Apache 2.2 and older
-					$rules .= "<IfModule !mod_authz_core.c>" . PHP_EOL;
-					$rules .= "Order allow,deny" . PHP_EOL;
-					$rules .= "Allow from all" . PHP_EOL;
-					foreach ($ips_with_netmask as $ip_with_netmask) {
-						$rules .= "Deny from " . $ip_with_netmask . PHP_EOL;
-					}
-					$rules .= "</IfModule>" . PHP_EOL;
-					// Apache 2.3 and newer
-					$rules .= "<IfModule mod_authz_core.c>" . PHP_EOL;
-					$rules .= "<RequireAll>" . PHP_EOL;
-					$rules .= "Require all granted" . PHP_EOL;
-					foreach ($ips_with_netmask as $ip_with_netmask) {
-						$rules .= "Require not ip " . $ip_with_netmask . PHP_EOL;
-					}
-					$rules .= "</RequireAll>" . PHP_EOL;
-					$rules .= "</IfModule>" . PHP_EOL;
-				} else {
-					// Nginx webserver
-					foreach ($ips_with_netmask as $ip_with_netmask) {
-						$rules .= "\tdeny " . $ip_with_netmask . ";" . PHP_EOL;
-					}
-				}
-
-				$rules .= AIOWPSecurity_Utility_Htaccess::$ip_blacklist_marker_end . PHP_EOL; //Add feature marker end
-			}
-		}
-
-		return implode(PHP_EOL, array_diff(explode(PHP_EOL, $rules), array('Deny from ', 'Deny from')));
 	}
 
 	/**
@@ -656,33 +607,6 @@ class AIOWPSecurity_Utility_Htaccess {
 								RewriteRule .* - [F]
 						</IfModule>' . PHP_EOL;
 			$rules .= AIOWPSecurity_Utility_Htaccess::$five_g_blacklist_marker_end . PHP_EOL; //Add feature marker end
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * This function will write some directives to block all comments which do not originate from the blog's domain
-	 * OR if the user agent is empty. All blocked requests will be redirected to 127.0.0.1
-	 */
-	public static function getrules_block_spambots() {
-		global $aio_wp_security;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_enable_spambot_blocking') == '1') {
-			$url_string = AIOWPSecurity_Utility_Htaccess::return_regularized_url(AIOWPSEC_WP_HOME_URL);
-			if (false == $url_string) {
-				$url_string = AIOWPSEC_WP_HOME_URL;
-			}
-			$rules .= AIOWPSecurity_Utility_Htaccess::$block_spambots_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= '<IfModule mod_rewrite.c>' . PHP_EOL;
-			$rules .= 'RewriteEngine On' . PHP_EOL;
-			$rules .= 'RewriteCond %{REQUEST_METHOD} POST' . PHP_EOL;
-			$rules .= 'RewriteCond %{REQUEST_URI} ^(.*)?wp-comments-post\.php(.*)$' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP_REFERER} !^' . $url_string . ' [NC,OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP_USER_AGENT} ^$' . PHP_EOL;
-			$rules .= 'RewriteRule .* http://127.0.0.1 [L]' . PHP_EOL;
-			$rules .= '</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$block_spambots_marker_end . PHP_EOL; //Add feature marker end
 		}
 
 		return $rules;

@@ -5,11 +5,11 @@
 
 if (!defined('ABSPATH')) die('Access denied.');
 
-if (!class_exists('Updraft_Task_Manager_1_3')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
+if (!class_exists('Updraft_Task_Manager_1_4')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
 
 if (!class_exists('Updraft_Smush_Manager')) :
 
-class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
+class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 
 	static protected $_instance = null;
 
@@ -174,6 +174,10 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 
 		if (!wp_verify_nonce($nonce, 'updraft-task-manager-ajax-nonce') || empty($_REQUEST['subaction']))
 			die('Security check failed');
+
+		if (!current_user_can(WP_Optimize()->capability_required())) {
+			die('You are not allowed to run this command.');
+		}
 
 		$subaction = $_REQUEST['subaction'];
 
@@ -1239,7 +1243,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 		// phpcs:disable
 		$wp_version = $this->get_wordpress_version();
 		$mysql_version = $wpdb->db_version();
-		$safe_mode = $this->detect_safe_mode();
+		$disabled_functions = ini_get('disable_functions');
 		$max_execution_time = (int) @ini_get("max_execution_time");
 
 		$memory_limit = ini_get('memory_limit');
@@ -1255,12 +1259,16 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 		$log_header[] = "\n";
 		$log_header[] = "Header for logs at time:  ".date('r')." on ".network_site_url();
 		$log_header[] = "WP: ".$wp_version;
-		$log_header[] = "PHP: ".phpversion()." (".PHP_SAPI.", ".@php_uname().")";// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		$php_uname = '';
+		if (function_exists('php_uname')) {
+			$php_uname = ", " . php_uname();
+		}
+		$log_header[] = "PHP: ".phpversion()." (".PHP_SAPI.$php_uname.")";
 		$log_header[] = "MySQL: $mysql_version";
 		$log_header[] = "WPLANG: ".get_locale();
 		$log_header[] = "Server: ".$_SERVER["SERVER_SOFTWARE"];
 		$log_header[] = "Outbound connections: ".(defined('WP_HTTP_BLOCK_EXTERNAL') ? 'Y' : 'N');
-		$log_header[] = "safe_mode: $safe_mode";
+		$log_header[] = "Disabled Functions: $disabled_functions";
 		$log_header[] = "max_execution_time: $max_execution_time";
 		$log_header[] = "memory_limit: $memory_limit (used: {$memory_usage}M | {$total_memory_usage}M)";
 		$log_header[] = "multisite: ".(is_multisite() ? 'Y' : 'N');
@@ -1300,7 +1308,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 		
 		if (!$got_wp_version) {
 			global $wp_version;
-			@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warning if `version.php` does not exists
 			$got_wp_version = $wp_version;
 		}
 
@@ -1338,15 +1346,6 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 				break;
 		}
 		return $memory_limit;
-	}
-
-	/**
-	 * Detect if safe_mode is on
-	 *
-	 * @return Integer - 1 or 0
-	 */
-	public function detect_safe_mode() {
-		return (@ini_get('safe_mode') && strtolower(@ini_get('safe_mode')) != "off") ? 1 : 0;// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 	}
 
 	/**
@@ -1593,7 +1592,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 		$uploads_dir = wp_get_upload_dir();
 		$the_original_file = trailingslashit($uploads_dir['basedir'])  . $the_original_file;
 		if ('' != $the_original_file && file_exists($the_original_file)) {
-			@unlink($the_original_file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			@unlink($the_original_file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warning because of file permission issues
 		}
 	}
 

@@ -76,6 +76,8 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 					}
 				}
 			}
+			//ensure there are no duplicate arrays
+			$this->delete_cookies_list = array_unique($this->delete_cookies_list);
 		}
 
 		/**
@@ -83,7 +85,14 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 		 * @return void
 		 */
 		public function delete_cookies(){
+			$max = 20;
+			$count=0;
 			foreach ($this->delete_cookies_list as $name ) {
+				//limit header size by limiting number of cookies to delete in one go.
+				if ($count>$max) {
+					continue;
+				}
+				$count++;
 				unset($_COOKIE[$name]);
 				setcookie($name, null, -1, COMPLIANZ::$cookie_admin->get_cookie_path() );
 				setcookie($name, null, -1, '/' );
@@ -234,11 +243,15 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 				} else {
 					$blocked_scripts[$key] = wp_parse_args( $blocked_script, $default);
 				}
+
 			}
 
 			$formatted_custom_script_tags = [];
 			foreach ( $blocked_scripts as $blocked_script ) {
 				$blocked_script['name'] = $this->sanitize_service_name($blocked_script['name']);
+				if ( cmplz_placeholder_disabled($blocked_script['name']) ) {
+					$blocked_script['enable_placeholder'] = 0;
+				}
 				if ( isset($blocked_script['urls']) ) {
 					foreach ($blocked_script['urls'] as $url ) {
 						$formatted_custom_script_tags[$url] = $blocked_script;
@@ -798,22 +811,29 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 		 * @return string
 		 */
 
-		private function set_javascript_to_plain( $script ) {
+		private function set_javascript_to_plain( string $script ): string {
 			//check if it's already set to plain
-			if ( strpos( $script, 'text/plain')!== false ) return $script;
+			if ( strpos( $script, 'text/plain')!== false ) {
+				return $script;
+			}
 
+			// Check text/javascript
 			$pattern = '/<script[^>].*?\K(type=[\'|\"]text\/javascript[\'|\"])(?=.*>)/i';
 			preg_match( $pattern, $script, $matches );
 			if ( $matches ) {
-				$script = preg_replace( $pattern, 'type="text/plain"', $script,
-					1 );
-			} else {
-				$pos = strpos( $script, "<script" );
-				if ( $pos !== false ) {
-					$script = substr_replace( $script,
-						'<script type="text/plain"', $pos,
-						strlen( "<script" ) );
-				}
+				return preg_replace( $pattern, 'type="text/plain"', $script, 1 );
+			}
+
+			// Check type="module"
+			$pattern_module = '/(<script[^>]*?)(type=[\'|\"]module[\'|\"])([^>]*?>)/i';
+			preg_match($pattern_module, $script, $matches_module);
+			if ($matches_module) {
+				return preg_replace($pattern_module, '$1 type="text/plain" data-script-type="module" $3', $script, 1);
+			}
+
+			$pos = strpos( $script, "<script" );
+			if ( $pos !== false ) {
+				return substr_replace( $script, '<script type="text/plain"', $pos, strlen( "<script" ) );
 			}
 
 			return $script;
@@ -897,17 +917,13 @@ if ( ! class_exists( 'cmplz_cookie_blocker' ) ) {
 		public function add_data( $html, $el, $id, $content ) {
 			$content = esc_attr( $content );
 			$id      = esc_attr( $id );
-
-			//don't add if it's already included
-			if ( strpos($html, 'data-'.$id) !== false ) {
-				return $html;
-			}
-
-			$pos = strpos( $html, "<$el" );
-			if ( $pos !== false ) {
-				$html = substr_replace( $html,
-					'<' . $el . ' data-' . $id . '="' . $content . '"', $pos,
-					strlen( "<$el" ) );
+			$pattern = '/<'.$el.'[^>].*?\K(data-'.preg_quote($id, '/').'=[\'|\"]'.preg_quote($content, '/').'[\'|\"])(?=.*>)/i';
+			preg_match( $pattern, $html, $matches );
+			if ( !$matches ) {
+				$pos = strpos( $html, "<$el" );
+				if ( $pos !== false ) {
+					$html = substr_replace( $html, '<' . $el . ' data-' . $id . '="' . $content . '"', $pos, strlen( "<$el" ) );
+				}
 			}
 
 			return $html;

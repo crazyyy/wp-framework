@@ -27,6 +27,7 @@ class WP_Optimize_Updates {
 		'3.1.4' => array('enable_minify_defer'),
 		'3.1.5' => array('update_minify_excludes'),
 		'3.2.14' => array('update_3214_modify_cache_config_in_windows'),
+		'3.2.15' => array('update_3215_modify_cache_config_for_webp'),
 	);
 
 	/**
@@ -181,6 +182,28 @@ class WP_Optimize_Updates {
 
 		// Update the cache configuration
 		WPO_Cache_Config::instance()->update($config);
+	}
+
+	/**
+	 * Updates the cache configuration to incorporate the new 'use_webp_images' default setting in the cache config.
+	 */
+	private static function update_3215_modify_cache_config_for_webp() {
+
+		// Check if it's not a new installation
+		if (self::is_new_install()) {
+			return;
+		}
+		
+		// Retrieve the current status of page caching and WebP conversion
+		$cache_enabled = (bool) WPO_Cache_Config::instance()->get_option('enable_page_caching');
+		$webp_enabled  = (bool) WP_Optimize()->get_options()->get_option('webp_conversion');
+
+		// If both page caching and WebP conversion are enabled, update the cache configuration
+		if ($cache_enabled && $webp_enabled) {
+			$config = WPO_Cache_Config::instance()->get();
+			$config['use_webp_images'] = true;
+			WPO_Cache_Config::instance()->update($config);
+		}
 	}
 }
 

@@ -197,8 +197,8 @@ class AIOWPSecurity_List_404 extends AIOWPSecurity_List_Table {
 	 * @return Boolean|Void
 	 */
 	public function blacklist_ip_address($entries) {
-		global $wpdb, $aio_wp_security;
-		$bl_ip_addresses = $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'); //get the currently saved blacklisted IPs
+        global $wpdb, $aio_wp_security, $aiowps_firewall_config;
+        $bl_ip_addresses = $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'); //get the currently saved blacklisted IPs
 		$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($bl_ip_addresses);
 		
 		if (is_array($entries)) {
@@ -225,20 +225,14 @@ class AIOWPSecurity_List_404 extends AIOWPSecurity_List_Table {
 			//success case
 			$result = 1;
 			$list = $payload[1];
-			$banned_ip_data = implode(PHP_EOL, $list);
+			$banned_ip_data = implode("\n", $list);
 			$aio_wp_security->configs->set_value('aiowps_enable_blacklisting','1'); //Force blacklist feature to be enabled
 			$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses',$banned_ip_data);
 			$aio_wp_security->configs->save_config(); //Save the configuration
 
-			$write_result = AIOWPSecurity_Utility_Htaccess::write_to_htaccess(); //now let's write to the .htaccess file
-			if ( $write_result ) {
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected IP addresses have been added to the blacklist and will be permanently blocked!', 'WPS'));
-			} else {
-				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('The plugin was unable to write to the .htaccess file. Please edit file manually.','all-in-one-wp-security-and-firewall'));
-				$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Blacklist_Menu - The plugin was unable to write to the .htaccess file.");
-			}
-		}
-		else{
+			$aiowps_firewall_config->set_value('aiowps_blacklist_ips', $list);
+            AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected IP addresses have been added to the blacklist and will be permanently blocked.', 'all-in-one-wp-security-and-firewall'));
+		} else {
 			$result = -1;
 			$error_msg = $payload[1][0];
 			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg);

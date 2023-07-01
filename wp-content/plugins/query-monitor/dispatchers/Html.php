@@ -237,13 +237,13 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 			'query-monitor',
 			$this->qm->plugin_url( 'assets/query-monitor.css' ),
 			array(),
-			$this->qm->plugin_ver( 'assets/query-monitor.css' )
+			QM_VERSION
 		);
 		wp_enqueue_script(
 			'query-monitor',
 			$this->qm->plugin_url( 'assets/query-monitor.js' ),
 			$deps,
-			$this->qm->plugin_ver( 'assets/query-monitor.js' ),
+			QM_VERSION,
 			false
 		);
 		wp_localize_script(
@@ -348,7 +348,7 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 			require_once $file;
 		}
 
-		/** @var QM_Output_Html[] */
+		/** @var array<string, QM_Output_Html> $outputters */
 		$outputters = $this->get_outputters( 'html' );
 
 		$this->outputters = $outputters;
@@ -716,8 +716,8 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 		 *
 		 * @since  3.1.0
 		 *
-		 * @param QM_Dispatcher_Html $dispatcher The HTML dispatcher instance.
-		 * @param QM_Output_Html[]   $outputters Array of outputters.
+		 * @param QM_Dispatcher_Html            $dispatcher The HTML dispatcher instance.
+		 * @param array<string, QM_Output_Html> $outputters Array of outputters.
 		 */
 		do_action( 'qm/output/after', $this, $this->outputters );
 
@@ -856,6 +856,12 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 
 		// Don't dispatch inside the Site Editor:
 		if ( isset( $_SERVER['SCRIPT_NAME'] ) && '/wp-admin/site-editor.php' === $_SERVER['SCRIPT_NAME'] ) {
+			return false;
+		}
+
+		// Don't dispatch on the interim login screen:
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! empty( $_GET['interim-login'] ) ) {
 			return false;
 		}
 

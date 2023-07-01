@@ -17,6 +17,7 @@ namespace WPMUDEV_BLC\App\Options\Settings;
 defined( 'WPINC' ) || die;
 
 use WPMUDEV_BLC\Core\Models\Option;
+use WPMUDEV_BLC\Core\Utils\Utilities;
 use function array_filter;
 
 /**
@@ -32,6 +33,7 @@ class Model extends Option {
 	 * @var string|array|null $option_keys
 	 */
 	public $default = array(
+		'plugin_version'                => '',
 		/*
 		 * Scan status (scan_status) :
 		 *  none : Never started
@@ -46,6 +48,9 @@ class Model extends Option {
 		'show_multisite_notice'         => true,
 		'installation_timestamp'        => null,
 		'v2_activation_request'         => false,
+		'version_highlights'            => array(
+			'2_2_0' => false,
+		),
 		'schedule'                      => array(
 			'active'                     => false,
 			'recipients'                 => array(),
@@ -101,5 +106,13 @@ class Model extends Option {
 		);
 
 		return $active_recipients;
+	}
+
+	public function get( string $settings_key = null, string $option_name = null, $default = null, bool $force = false ) {
+		if ( Utilities::is_subsite() && 'use_legacy_blc_version' === $settings_key ) {
+			return false;
+		}
+
+		return parent::get( $settings_key, $option_name, $default, $force );
 	}
 }

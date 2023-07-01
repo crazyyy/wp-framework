@@ -13,7 +13,7 @@ if (isset($log->error)) {
 <ul><?php
 foreach ((array) $log->files as $handle => $file) {
 	$file_path = untrailingslashit(get_home_path()) . $file->url;
-	$file_size = file_exists($file_path) ? ' (' . WP_Optimize()->format_size(@filesize($file_path)) . ')' : ''; // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+	$file_size = file_exists($file_path) ? ' (' . WP_Optimize()->format_size(@filesize($file_path)) . ')' : ''; // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress warning in case of file permission issues
 
 	echo '<li'.($file->success ? '' : ' class="failed"').'><span class="wpo_min_file_url"><a href="'.esc_url(get_home_url().$file->url).'" target="_blank">'.htmlspecialchars($file->url).'</a>'.$file_size.'</span>';
 	if (property_exists($file, 'debug')) echo '<span class="wpo_min_file_debug">'.htmlspecialchars($file->debug).'</span>';

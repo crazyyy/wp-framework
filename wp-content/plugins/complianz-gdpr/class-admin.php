@@ -80,6 +80,13 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		}
 
 		public function maybe_install_suggested_plugins(){
+			if (!isset($_GET['nonce'])) {
+				return;
+			}
+			if (!wp_verify_nonce($_GET['nonce'], 'complianz_save')) {
+				return;
+			}
+
 			$error = true;
 			if ( current_user_can('install_plugins')) {
 				$error = false;
@@ -133,6 +140,10 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				$error = true;
 			}
 
+			$nonce = $_POST['nonce'] ?? false;
+			if (!wp_verify_nonce($nonce, 'complianz_save')){
+				$error = true;
+			}
 			if ( !$error ) {
 				$warning_id = sanitize_title($_POST['id']);
 				$dismissed_warnings = get_option( 'cmplz_dismissed_warnings', array() );
@@ -372,6 +383,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				'complianz_admin',
 				array(
 					'admin_url'    => admin_url( 'admin-ajax.php' ),
+					'nonce'	=> wp_create_nonce( 'complianz_save' ),
 					'progress'     => $progress,
 					'syncProgress' => $sync_progress,
 					'copy_text'	   => __('Copied!', 'complianz-gdpr')

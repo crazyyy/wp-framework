@@ -78,6 +78,15 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 		$files = array_merge(array('full' => $file_path), WPO_Image_Utils::get_attachment_files($attachment_id));
 
 		$sizes_info = array();
+		$webp_tools_available = true;
+		$lossy = $this->get_option('lossy_compression');
+		if ($lossy) {
+			$quality = $this->get_option('image_quality');
+		} else {
+			$quality = 100;
+		}
+		$this->log($this->get_description());
+		$this->log("File: " . basename($file_path) . ", Compression quality: {$quality}");
 
 		foreach ($files as $size => $file_path) {
 
@@ -89,7 +98,6 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 				$this->update_option('request_timeout', 180);
 			}
 
-			$this->log($this->get_description());
 			$ext = WPO_Image_Utils::get_extension($file_path);
 			$allowed_extensions = WPO_Image_Utils::get_allowed_extensions();
 			$allowed_extensions = array_diff($allowed_extensions, array('gif'));
@@ -98,7 +106,7 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 					WPO_Image_Utils::do_webp_conversion($file_path);
 				}
 			} else {
-				$this->log('There were no WebP conversion tools found on your server.');
+				$webp_tools_available = false;
 			}
 
 
@@ -134,6 +142,10 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 		}
 
 		$this->update_option('smush-sizes-info', $sizes_info);
+
+		if (!$webp_tools_available) {
+			$this->log('There were no WebP conversion tools found on your server.');
+		}
 
 		return $this->success;
 	}
@@ -272,7 +284,7 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 		$original_size = $this->get_option('original_filesize');
 		$this->set_current_stage('completed');
 
-		clearstatcache(true, $file_path); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.clearstatcache_clear_realpath_cacheFound,PHPCompatibility.FunctionUse.NewFunctionParameters.clearstatcache_filenameFound
+		clearstatcache(true, $file_path);
 		if (0 == $original_size) {
 			$saved = '';
 			$info = sprintf(__("The file was compressed to %s using WP-Optimize", 'wp-optimize'), WP_Optimize()->format_size(filesize($file_path)));

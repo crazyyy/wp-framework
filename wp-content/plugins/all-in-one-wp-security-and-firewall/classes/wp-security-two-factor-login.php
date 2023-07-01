@@ -163,6 +163,13 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 
 		if (!is_admin() || !AIOWPSecurity_Utility_Permissions::has_manage_cap()) return;
 		
+		// Check if there are any settings errors and display them (this is needed because the forms from this template submit to the TFA options page not AIOS, so we need to grab them and output them manually).
+		$settings_errors = get_settings_errors();
+		foreach ($settings_errors as $error) {
+			$type = 'success' == $error['type'] ? 'updated' : 'error';
+			$this->show_admin_warning($error['message'], $type);
+		}
+		
 		// The value for totp_controller is already set by versions of the TFA plugin after 3 Oct 2022
 		$this->include_template('admin-settings.php', array(
 			'totp_controller' => $this->get_controller('totp'),

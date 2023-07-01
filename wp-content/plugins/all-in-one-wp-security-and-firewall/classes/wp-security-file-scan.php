@@ -75,11 +75,7 @@ class AIOWPSecurity_Scan {
 	public function aiowps_send_file_change_alert_email($scan_result) {
 		global $aio_wp_security;
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_send_fcd_scan_email')) {
-			$site_title = get_bloginfo('name');
-			$from_name = empty($site_title) ? 'WordPress' : $site_title;
-			
-			$headers = 'From: ' . $from_name . ' <' . get_option('admin_email') . '>' . PHP_EOL;
-			$subject = __('All In One WP Security - File change detected!', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
+			$subject = __('All In One WP Security - File change detected', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
 			//$attachment = array();
 			$message = __('A file change was detected on your system for site URL', 'all-in-one-wp-security-and-firewall') . ' ' . network_site_url() . __('. Scan was generated on', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
 			$message .= "\r\n\r\n".__('A summary of the scan results is shown below:', 'all-in-one-wp-security-and-firewall');
@@ -91,7 +87,7 @@ class AIOWPSecurity_Scan {
 			$addresses = AIOWPSecurity_Utility::get_array_from_textarea_val($aio_wp_security->configs->get_value('aiowps_fcd_scan_email_address'));
 			// If no explicit email address(es) are given, send email to site admin.
 			$to = empty($addresses) ? array(get_site_option('admin_email')) : $addresses;
-			if (!wp_mail($to, $subject, $message, $headers)) {
+			if (!wp_mail($to, $subject, $message)) {
 				$aio_wp_security->debug_logger->log_debug(__METHOD__ . " - File change notification email failed to send.", 4);
 			}
 
