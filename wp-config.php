@@ -1,6 +1,68 @@
 <?php
+const WP_MEMORY_LIMIT   	= '1024M';
+
 const CACHE_READ_WHITELIST  = '_transient|posts WHERE ID IN|limit_login_'; // do not read from cache is sql contains these
 const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache if sql contains these
+
+//Begin Really Simple SSL session cookie settings
+@ini_set('session.cookie_httponly', true);
+@ini_set('session.cookie_secure', true);
+@ini_set('session.use_only_cookies', true);
+//END Really Simple SSL
+
+define('DB_NAME', 'wpframework');
+define('DB_USER', 'wpframework');
+define('DB_PASSWORD', 'wpframework');
+define('DB_HOST', 'localhost');
+
+define('DB_CHARSET', 'utf8mb4');
+define('DB_COLLATE', 'utf8mb4_general_ci');
+
+$table_prefix = 'hadpj_';
+
+define( 'DEVELOPMENT_DEBUG', true );
+if (DEVELOPMENT_DEBUG) {
+  @ini_set('display_errors', 1);
+  define( 'WP_DEBUG', true );
+  define( 'WP_DEBUG_LOG', true );
+  define( 'WP_DEBUG_DISPLAY', false );
+  define( 'SCRIPT_DEBUG', true );
+  define( 'SAVEQUERIES', true );
+  define( 'WP_ENVIRONMENT_TYPE', 'development' );
+
+//if( WP_DEBUG && WP_DEBUG_DISPLAY && (defined('DOING_AJAX') && DOING_AJAX) ){
+//  @ ini_set( 'display_errors', 1 );
+//}
+
+  // Query Monitor
+  define('QM_ENABLE_CAPS_PANEL', true);
+} else {
+  define( 'WP_DEBUG', false );
+  define( 'SCRIPT_DEBUG', false );
+  define( 'WP_DEBUG_LOG', false );
+  define( 'WP_DEBUG_DISPLAY', false );
+  define( 'WP_ENVIRONMENT_TYPE', 'production' );
+
+  @ini_set( 'display_errors', 0 );
+}
+
+define( 'DISABLE_WP_CRON', true );
+//define( 'ALTERNATE_WP_CRON', true );
+define( 'WPCF7_AUTOP', false );
+define( 'WP_ALLOW_REPAIR', true );
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'WP_ALLOW_MULTISITE', true );
+define( 'FS_METHOD', 'direct' );
+define( 'REVISR_GIT_PATH', '' );
+
+define('AUTH_KEY',         'PK2?Bu1fPWFWDJt,RtT0xqPi oSR@jMr$.1ERFgZe|sCTi:;?-TIG n;v^Uhl/rM');
+define('SECURE_AUTH_KEY',  'eAf2wy6Q9O2d0A1EP14~D~mk:AuUyXUhGu~7ds{LI[CzFY9)|%LgFha|lkgRlk)r');
+define('LOGGED_IN_KEY',    '>teXm>^t0YX$ @ ku<16q#?5;fc]z1pbR#rH?C#df?NGMK+U>{7Uhmo4,ZVCnBHK');
+define('NONCE_KEY',        '61m=t}qTGaa>O2-)dn,@3[7mMnhLFM|(3/uNf^<-fnyFS]$EoeA|J)@Ri%WK{[`?');
+define('AUTH_SALT',        'Mxj 1j5-_3Cnvq`_[l3rENZEH>q8F0b=@%YeevQZ,cjsd~vDn<V(~K,MN/.seY,2');
+define('SECURE_AUTH_SALT', 'j9(Wsv3h}K-uAN}%6SxaxK_99,Xy-ZGyM|pQA@PlXh<iP*6u_Yj(|G(REF}YpAnv');
+define('LOGGED_IN_SALT',   'j==zh=I^IC%QG&PKj1I1l4]N~1$XW<>Yv#|UgO[ZAfsdRY{fw|qhA0Oy ^`A^_w7');
+define('NONCE_SALT',       '*-p4LlLI>2=Zi0Ni?!EU@Ua.btP[W 1t9-P_&P-7^3A)E@9+n*A1[[=ISwa}}+/0');
 
 // define( 'SMTP_username', 'mail@gmail.com' );  // username of host like Gmail
 // define( 'SMTP_password', 'password' );   // password for login into the App
@@ -11,61 +73,6 @@ const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache i
 // define( 'SMTP_SECURE', 'tls' );   // Encryption - ssl or tls
 // define( 'SMTP_AUTH', true );  // Use SMTP authentication (true|false)
 // define( 'SMTP_DEBUG', 1 );  // for debugging purposes only
-
-//Begin Really Simple SSL session cookie settings
-@ini_set('session.cookie_httponly', true);
-@ini_set('session.cookie_secure', true);
-@ini_set('session.use_only_cookies', true);
-//END Really Simple SSL
-
-$table_prefix           	= 'hadpj_';
-const DB_CHARSET        	= 'utf8mb4';
-const DB_COLLATE        	= 'utf8mb4_general_ci';
-
-const DB_NAME       = 'wpframework';
-const DB_USER       = 'wpframework';
-const DB_PASSWORD   = 'wpframework';
-const DB_HOST       = 'localhost';
-
-const WP_MEMORY_LIMIT   	= '512M';
-
-const DEV_DEBUG = true;
-if (DEV_DEBUG == true) {
-  define( 'WP_DEBUG', true );
-  define( 'SCRIPT_DEBUG', true );
-  define( 'WP_DEBUG_LOG', true );
-  define( 'WP_DEBUG_DISPLAY', true );
-
-} else {
-  define( 'WP_DEBUG', false );
-  define( 'SCRIPT_DEBUG', false );
-  define( 'WP_DEBUG_LOG', false );
-  define( 'WP_DEBUG_DISPLAY', false );
-  @ini_set( 'display_errors', 0 );
-}
-
-//if( WP_DEBUG && WP_DEBUG_DISPLAY && (defined('DOING_AJAX') && DOING_AJAX) ){
-//  @ ini_set( 'display_errors', 1 );
-//}
-
-const DISABLE_WP_CRON   		= true;
-//const ALTERNATE_WP_CRON   = true;
-const WPCF7_AUTOP 					= false;
-const WP_ALLOW_REPAIR  			= true;
-const DISALLOW_FILE_EDIT  	= true;
-const WP_ALLOW_MULTISITE  	= true;
-//const FS_METHOD           	= 'direct';
-define( 'FS_METHOD', 'direct' );
-// const REVISR_GIT_PATH    = '';
-
-const AUTH_KEY          = 'B]9_9_%uF{fdsasgC)pMx/?-+_bVjX;Xrib=1y23rgghdh3a+dadAEIZ1O/z^2Gv`<GLr<7hKI';
-const SECURE_AUTH_KEY   = 'Gasgb43@t+eWU&NhkNXw1daVO,adsa>mFU*kC^;8NAi0&;2RIz}a>:uO0[yU_0Cr<IPep&GG0U';
-const LOGGED_IN_KEY     = 'PvbNzyB^Z?fl|Kad..Du#4/|Y{iV|ntR22zndahar534L!k)T%~vU[5Tv4Vf*4D<m GXp#wAK_';
-const NONCE_KEY         = 'ubFTsbbd34Pf{Bi(ZU^QC!FM=.Qr*|id+i4#/Wvr[tasda~n+RYcs<5I8U+d:C%cb]|d]!|~R=';
-const AUTH_SALT         = '/b2p2we%Gc-NSSxg]R2|P3=+m_*das5mq]a`vc<BZFfg12zsghjhn|^scLAJzF!U@1Lpx1yJhD';
-const SECURE_AUTH_SALT  = 'DGqahU{$#{1])WF?2d1{+v4mWhES6`o@))*asdaGcCa(t,+j~0+je]{`7fHc-=k!IC[U{1bjh-';
-const LOGGED_IN_SALT    = '@a*]7xfnT!asd$-,Cw{~{Y~j38>jv!,]v%tr6jVRrH2:A)asrty3sg&56yuYZ=j+k>u@6`M|A}';
-const NONCE_SALT        = '6jyK<[n:Wbnl)`;q2E:eVhp:[ez<+=|-xPadysegg5435g4n?WzGdEIfHqrFjeqV#zl|(oWv<4';
 
 if ( !defined('ABSPATH') ) {
   define('ABSPATH', dirname(__FILE__) . '/');

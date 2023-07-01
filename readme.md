@@ -18,6 +18,10 @@ npm run start
 
 ## Usefull WP Cli
 
+```sh
+wp search-replace 'wp-framework.local' 'newsite.local' --allow-root
+```
+
 ### Install WP CLi
 
 ```sh
