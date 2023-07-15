@@ -1,11 +1,12 @@
 <?php
-/**
- * Header
- *
- * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
- *
- * @package axio
- */
+  /**
+   * Displays the site header.
+   * @package WordPress
+   * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+   */
+
+  $wrapper_classes  = 'site-header';
+  $wrapper_classes .= has_custom_logo() ? ' has-logo' : '';
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?> class="no-js">
@@ -22,16 +23,17 @@
     <link href="//www.google-analytics.com/" rel="dns-prefetch">
     <link href="//fonts.googleapis.com" rel="dns-prefetch">
     <link href="//cdnjs.cloudflare.com" rel="dns-prefetch">
+    <link href="//cdn.jsdelivr.net" rel="dns-prefetch">
 
     <!-- icons -->
-    <link href="<?php echo get_template_directory_uri(); ?>/favicon.ico" rel="shortcut icon">
+    <link href="<?php echo get_template_directory_uri(); ?>/img/favicon/icon.png" rel="shortcut icon">
 
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
-    <!-- css + javascript -->
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+  	<![endif]-->
+
     <?php wp_head(); ?>
   </head>
 
@@ -39,29 +41,27 @@
     <?php wp_body_open(); ?>
     <!-- wrapper -->
     <div class="wrapper">
-      <header role="banner">
+      <header id="masthead" class="<?php echo esc_attr( $wrapper_classes ); ?>" role="banner">
         <div class="inner">
 
-          <div class="logo">
+          <div class="site-logo">
             <?php if (!is_front_page() && !is_home()) : ?>
-            <a href="<?php echo home_url(); ?>" title="<?php bloginfo( 'name' ); ?>">
-              <?php endif; ?>
-
-              <?php if (function_exists('the_custom_logo')) : ?>
-              <?php the_custom_logo(); ?>
-              <?php endif; ?>
-
-              <?php if (!is_front_page() && !is_home()) : ?>
-            </a>
+            	<a href="<?php echo home_url(); ?>" title="<?php bloginfo( 'name' ); ?>">
             <?php endif; ?>
-          </div><!-- /logo -->
+
+              <?php if (function_exists('the_custom_logo')) { the_custom_logo(); } ?>
+
+            <?php if (!is_front_page() && !is_home()) : ?>
+            	</a>
+            <?php endif; ?>
+          </div><!-- /site-logo -->
 
           <nav class="nav" role="navigation">
             <?php wpeb_header_navigation(); ?>
           </nav><!-- /nav -->
 
         </div><!-- /.inner -->
-      </header><!-- /header -->
+      </header><!-- #masthead -->
 
       <section role="main" itemscope itemprop="mainContentOfPage">
         <div class="inner">
