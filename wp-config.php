@@ -1,6 +1,5 @@
 <?php
-const WP_MEMORY_LIMIT   	= '1024M';
-
+define('WP_MEMORY_LIMIT', '1024M');
 const CACHE_READ_WHITELIST  = '_transient|posts WHERE ID IN|limit_login_'; // do not read from cache is sql contains these
 const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache if sql contains these
 
@@ -16,13 +15,12 @@ define('DB_PASSWORD', 'wpframework');
 define('DB_HOST', 'localhost');
 
 define('DB_CHARSET', 'utf8mb4');
-define('DB_COLLATE', 'utf8mb4_general_ci');
+define('DB_COLLATE', 'utf8mb4_unicode_ci');
 
 $table_prefix = 'hadpj_';
 
 define( 'DEVELOPMENT_DEBUG', true );
 if (DEVELOPMENT_DEBUG) {
-  @ini_set('display_errors', 1);
   define( 'WP_DEBUG', true );
   define( 'WP_DEBUG_LOG', true );
   define( 'WP_DEBUG_DISPLAY', false );
@@ -30,17 +28,21 @@ if (DEVELOPMENT_DEBUG) {
   define( 'SAVEQUERIES', true );
   define( 'WP_ENVIRONMENT_TYPE', 'development' );
 
-//if( WP_DEBUG && WP_DEBUG_DISPLAY && (defined('DOING_AJAX') && DOING_AJAX) ){
-//  @ ini_set( 'display_errors', 1 );
-//}
+  if( WP_DEBUG && WP_DEBUG_DISPLAY && (defined('DOING_AJAX') && DOING_AJAX) ){
+    @ ini_set( 'display_errors', 1 );
+  }
 
   // Query Monitor
   define('QM_ENABLE_CAPS_PANEL', true);
+  define('QM_HIDE_CORE_ACTIONS', true);
+  define('QM_HIDE_SELF', true);
+  //define('QM_HIDE_SELF', true);
 } else {
   define( 'WP_DEBUG', false );
-  define( 'SCRIPT_DEBUG', false );
   define( 'WP_DEBUG_LOG', false );
   define( 'WP_DEBUG_DISPLAY', false );
+  define( 'SCRIPT_DEBUG', false );
+  define( 'SAVEQUERIES', false );
   define( 'WP_ENVIRONMENT_TYPE', 'production' );
 
   @ini_set( 'display_errors', 0 );
