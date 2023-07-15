@@ -1,0 +1,612 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: htaccess\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-25 17:34+0200\n"
+"PO-Revision-Date: 2014-06-25 17:34+0200\n"
+"Last-Translator: bestwebsoft.com <plugins@bestwebsoft.com>\n"
+"Language-Team: bestwebsoft.com <plugin@bestwebsoft.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: https-redirection.php:66
+msgid "requires"
+msgstr "требует"
+
+#: https-redirection.php:66
+msgid ""
+"or higher, that is why it has been deactivated! Please upgrade WordPress and "
+"try again."
+msgstr ""
+"или выше, поэтому плагин был деактивирован! Обновите WordPress и повторите "
+"попытку."
+
+#: https-redirection.php:66
+msgid "Back to the WordPress"
+msgstr "Вернуться назад на WordPress"
+
+#: https-redirection.php:66
+msgid "Plugins page"
+msgstr "Страницу плагинов"
+
+#: https-redirection.php:116 https-redirection.php:128
+msgid "Settings"
+msgstr "Настройки"
+
+#: https-redirection.php:155
+msgid "Settings saved."
+msgstr "Опции сохранены."
+
+#: https-redirection.php:163
+msgid "HTTPS Redirection Settings"
+msgstr "HTTPS Redirection Настройки"
+
+#: https-redirection.php:165 https-redirection.php:176
+msgid "Notice:"
+msgstr "Внимание:"
+
+#: https-redirection.php:165
+msgid ""
+"It is very important to be extremely attentive when making changes to ."
+"htaccess file. This functionality will work if any permalinks except the "
+"default ones are set on the Settings -> Permalink page."
+msgstr ""
+"При внесении правок в файл .htaccess нужно быть очень аккуратными.Данный "
+"функционал будет работать если у вас на странице Settings -> Permalink "
+"выставлены любые пермалинки кроме дефолтных"
+
+#: https-redirection.php:166
+msgid ""
+"If after making changes your site stops functioning, please open .htaccess "
+"file in the root directory and delete this lines"
+msgstr ""
+"Если после внесения изменений сайт перестал функционировать, пожалуйста "
+"откройте .htaccess fфайл в корневой директории вашего сайта и удалить эти "
+"строки"
+
+#: https-redirection.php:171
+msgid "in this line may be differences"
+msgstr "в данной строке могут быть отличия"
+
+#: https-redirection.php:173
+msgid "Save file. Deactivate the plugin or rename the plugin folder."
+msgstr ""
+"Сохраните файл. Деактивируйте плагин или измените название папки плагина"
+
+#: https-redirection.php:174
+msgid ""
+"The changes will be applied immediately after saving the changes, if you are "
+"not sure - do not click the \"Save changes\" button."
+msgstr ""
+"Изменения вступают в силу сразу после сохранения настроек, если вы не "
+"уверены - не нажимайте кнопку \"Сохранить изменения\""
+
+#: https-redirection.php:176
+msgid ""
+"The plugin's settings have been changed. In order to save them please don't "
+"forget to click the 'Save Changes' button."
+msgstr ""
+"Настройки плагина были изменены. Для того, чтобы сохранить их, пожалуйста, "
+"не забудьте нажать кнопку 'Сохранить изменения'."
+
+#: https-redirection.php:182
+msgid "Automatic redirection to the \"HTTPS\""
+msgstr "Автоматическое перенасправление на HTTPS"
+
+#: https-redirection.php:189 https-redirection.php:193
+msgid "Please, fill field"
+msgstr "Пожалуйста, заполните поле."
+
+#: https-redirection.php:200
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#~ msgid "Htaccess Settings"
+#~ msgstr "Настройки Htaccess"
+
+#~ msgid "Htaccess"
+#~ msgstr "Htaccess"
+
+#~ msgid "FAQ"
+#~ msgstr "FAQ"
+
+#~ msgid "Support"
+#~ msgstr "Поддержка"
+
+#~ msgid "Wrong 'Order fields'. You can enter:"
+#~ msgstr "Неправильно введен 'Order fields'. Вы можете ввести:"
+
+#~ msgid "or"
+#~ msgstr "или"
+
+#~ msgid "Order fields"
+#~ msgstr "Order fields"
+
+#~ msgid "Allow from"
+#~ msgstr "Allow from"
+
+#~ msgid "Info about the arguments to the Allow directive"
+#~ msgstr "Информация об аргументах к директиве Allow"
+
+#~ msgid "Controlling access to your website using the .htaccess"
+#~ msgstr "Управление доступом к веб-сайту с помощью .htaccess"
+
+#~ msgid "Deny from"
+#~ msgstr "Deny from"
+
+#~ msgid "Info about the arguments to the Deny directive"
+#~ msgstr "Информация об аргументах к директиве Deny"
+
+#~ msgid "If you enjoy our plugin, please give it 5 stars on WordPress"
+#~ msgstr ""
+#~ "Если вам понравился плагин, пожалуйста, поставте нам 5 звезд на WordPress"
+
+#~ msgid "Rate the plugin"
+#~ msgstr "Оценить плагин"
+
+#~ msgid "If there is something wrong about it, please contact us"
+#~ msgstr "Если у вас есть какие-то вопросы, обращайтесь"
+
+#~ msgid "You can enter:"
+#~ msgstr "Вы можете ввести:"
+
+#~ msgid "or a specific IP"
+#~ msgstr "или определенный IP"
+
+#~ msgid "for a subnet"
+#~ msgstr "для подсети"
+
+#~ msgid "Not set"
+#~ msgstr "Не задан"
+
+#~ msgid "On"
+#~ msgstr "Вкл"
+
+#~ msgid "Off"
+#~ msgstr "Выкл"
+
+#~ msgid "N/A"
+#~ msgstr "Неизвестно"
+
+#~ msgid " Mb"
+#~ msgstr "Mb"
+
+#~ msgid "Yes"
+#~ msgstr "Да"
+
+#~ msgid "No"
+#~ msgstr "Нет"
+
+#~ msgid "Operating System"
+#~ msgstr "Операционная система"
+
+#~ msgid "Server"
+#~ msgstr "Тип сервера"
+
+#~ msgid "Memory usage"
+#~ msgstr "Памяти использовано"
+
+#~ msgid "MYSQL Version"
+#~ msgstr "Версия MYSQL"
+
+#~ msgid "SQL Mode"
+#~ msgstr "Режим SQL"
+
+#, fuzzy
+#~ msgid "PHP Version"
+#~ msgstr "Версия MYSQL"
+
+#~ msgid "PHP Safe Mode"
+#~ msgstr "PHP Safe Mode"
+
+#~ msgid "PHP Allow URL fopen"
+#~ msgstr "PHP Allow URL fopen"
+
+#~ msgid "PHP Memory Limit"
+#~ msgstr "Лимит памяти"
+
+#~ msgid "PHP Max Upload Size"
+#~ msgstr "Макс. размер загружаемого файла"
+
+#~ msgid "PHP Max Post Size"
+#~ msgstr "Макс. размер записи"
+
+#~ msgid "PHP Max Script Execute Time"
+#~ msgstr "Макс. время выполнения сценария"
+
+#~ msgid "PHP Exif support"
+#~ msgstr "Поддержка PHP Exif"
+
+#~ msgid "PHP IPTC support"
+#~ msgstr "Поддержка PHP IPTC"
+
+#~ msgid "PHP XML support"
+#~ msgstr "Поддержка PHP XML"
+
+#~ msgid "Site URL"
+#~ msgstr "Адрес сайта"
+
+#~ msgid "Home URL"
+#~ msgstr "Основной адрес сайта"
+
+#~ msgid "WordPress Version"
+#~ msgstr "Версия WordPress"
+
+#~ msgid "WordPress DB Version"
+#~ msgstr "Версия базы данных WordPress"
+
+#~ msgid "Multisite"
+#~ msgstr "Мультиблог"
+
+#~ msgid "Active Theme"
+#~ msgstr "Текущая тема"
+
+#~ msgid "Please enter a valid email address."
+#~ msgstr "Пожалуйста, введите валидный емайл."
+
+#~ msgid "Email with system info is sent to "
+#~ msgstr "E-mail с системной информацией отправлен на"
+
+#~ msgid "Thank you for contacting us."
+#~ msgstr "Спасибо что связались с нами."
+
+#~ msgid "Sorry, email message could not be delivered."
+#~ msgstr "Извините, ваш email не может быть отправлен."
+
+#, fuzzy
+#~ msgid "Pro plugins"
+#~ msgstr "Бесплатные плагины"
+
+#~ msgid "Activated plugins"
+#~ msgstr "Активированные плагины"
+
+#~ msgid "Read more"
+#~ msgstr "Подробнее..."
+
+#~ msgid "Installed plugins"
+#~ msgstr "Установленные плагины"
+
+#~ msgid "Recommended plugins"
+#~ msgstr "Рекомендованные к установке плагины"
+
+#~ msgid "Purchase"
+#~ msgstr "Купить"
+
+#~ msgid "Free plugins"
+#~ msgstr "Бесплатные плагины"
+
+#~ msgid "Download"
+#~ msgstr "Скачать"
+
+#~ msgid "Install %s"
+#~ msgstr "Установлено %s"
+
+#~ msgid "Install now from wordpress.org"
+#~ msgstr "Установить с wordpress.org"
+
+#, fuzzy
+#~ msgid "Free themes"
+#~ msgstr "Рекомендованные к установке плагины"
+
+#, fuzzy
+#~ msgid "Activated theme"
+#~ msgstr "Текущая тема"
+
+#, fuzzy
+#~ msgid "Installed themes"
+#~ msgstr "Установлено %s"
+
+#, fuzzy
+#~ msgid "Recommended themes"
+#~ msgstr "Рекомендованные к установке плагины"
+
+#~ msgid "If you have any questions, please contact us via"
+#~ msgstr "Если у вас есть какие-то вопросы, обращайтесь на"
+
+#~ msgid "System status"
+#~ msgstr "Системная информация"
+
+#~ msgid "Environment"
+#~ msgstr "Системная среда"
+
+#~ msgid "Active Plugins"
+#~ msgstr "Активированные плагины"
+
+#~ msgid "Inactive Plugins"
+#~ msgstr "Неактивированные плагины"
+
+#~ msgid "Send to support"
+#~ msgstr "Отправить в тех. поддержку"
+
+#~ msgid "Send to custom email &#187;"
+#~ msgstr "Отправить на емейл &#187;"
+
+#, fuzzy
+#~ msgid "Plugins"
+#~ msgstr "Бесплатные плагины"
+
+#, fuzzy
+#~ msgid "Installed"
+#~ msgstr "Установлено %s"
+
+#, fuzzy
+#~ msgid "Recommended"
+#~ msgstr "Рекомендованные к установке плагины"
+
+#, fuzzy
+#~ msgid "Learn more"
+#~ msgstr "Подробнее..."
+
+#, fuzzy
+#~ msgid "Activate this plugin"
+#~ msgstr "Активированные плагины"
+
+#, fuzzy
+#~ msgid "Activate"
+#~ msgstr "Текущая тема"
+
+#, fuzzy
+#~ msgid "Install now"
+#~ msgstr "Установить сейчас"
+
+#~ msgid "Install Now"
+#~ msgstr "Установить сейчас"
+
+#~ msgid "Wrong data for setting 'Allow from'."
+#~ msgstr "Неправильные данные для настройки 'Allow from'."
+
+#~ msgid "Wrong data for setting 'Deny from'."
+#~ msgstr "Неправильные данные для настройки 'Deny from'."
+
+#~ msgid "Enable CAPTCHA for:"
+#~ msgstr "Отображать КАПЧУ для:"
+
+#~ msgid "Captcha"
+#~ msgstr "КАПЧА"
+
+#~ msgid "Login form"
+#~ msgstr "Форма логина"
+
+#~ msgid "Registration form"
+#~ msgstr "Форма регистрации"
+
+#~ msgid "Register form"
+#~ msgstr "Форма регистрации"
+
+#~ msgid "Reset Password form"
+#~ msgstr "Форма восстановления пароля"
+
+#~ msgid "Lost password form"
+#~ msgstr "Форма восстановления пароля"
+
+#~ msgid "Comments form"
+#~ msgstr "Форма комментариев"
+
+#~ msgid "Hide CAPTCHA for registered users"
+#~ msgstr "Не отображать для зарегистрированных пользователей"
+
+#~ msgid "Plus (&#43;)"
+#~ msgstr "Плюс (&#43;)"
+
+#~ msgid "Plus"
+#~ msgstr "Плюс (&#43;)"
+
+#~ msgid "Minus (&minus;)"
+#~ msgstr "Минус (&minus;)"
+
+#~ msgid "Minus"
+#~ msgstr "Минус (&minus;)"
+
+#~ msgid "Multiplication (&times;)"
+#~ msgstr "Умножение (&times;)"
+
+#~ msgid "Multiply"
+#~ msgstr "Умножить"
+
+#~ msgid "Numbers"
+#~ msgstr "Цифры"
+
+#~ msgid "Words"
+#~ msgstr "Слова"
+
+#~ msgid ""
+#~ "Please select one item in the block Arithmetic and Complexity for CAPTCHA"
+#~ msgstr ""
+#~ "Пожалуйста, выберите 1 пункт из блока Арифметические дейтсвия и Сложность "
+#~ "для КАПЧИ"
+
+#~ msgid "Contact form"
+#~ msgstr "Контактная форма"
+
+#~ msgid "powered by"
+#~ msgstr "разработано компанией"
+
+#~ msgid "Activate contact form"
+#~ msgstr "Активировать контакную форму"
+
+#~ msgid "Download contact form"
+#~ msgstr "Скачать контактную форму"
+
+#~ msgid ""
+#~ "If you would like to customize this plugin for a custom form, please see"
+#~ msgstr "Если вы хотите кастомизировать плагин для кастомной формы, смотрите"
+
+#~ msgid "\"Create a Group\" form"
+#~ msgstr "Форма \"Создать группу\""
+
+#~ msgid "Enable CAPTCHA:"
+#~ msgstr "Отображать КАПЧУ:"
+
+#~ msgid ""
+#~ "This functionality is available in the Pro version of the plugin. For "
+#~ "more details, please follow the link"
+#~ msgstr ""
+#~ "Данный функционал доступен в Про версии плагина. Для более детальной "
+#~ "информации смотрите"
+
+#~ msgid "Title for CAPTCHA in the form"
+#~ msgstr "Заголовок для КАПЧИ в форме"
+
+#~ msgid "Required symbol"
+#~ msgstr "Символ, отображающий обязательное поле"
+
+#~ msgid "Arithmetic actions for CAPTCHA"
+#~ msgstr "Арифметические действия для КАПЧИ"
+
+#~ msgid "CAPTCHA complexity level"
+#~ msgstr "Уровень сложности КАПЧИ"
+
+#~ msgid "ERROR"
+#~ msgstr "Ошибка"
+
+#~ msgid "Please enter a valid CAPTCHA value."
+#~ msgstr "Пожалуйста, заполните КАПЧУ."
+
+#~ msgid ""
+#~ "Error: You have entered an incorrect CAPTCHA value. Click the BACK button "
+#~ "on your browser, and try again."
+#~ msgstr ""
+#~ "Ошибка: Вы ввели КАПЧУ неправильно. Нажмите НАЗАД в браузере и попробуйте "
+#~ "еще раз"
+
+#~ msgid "zero"
+#~ msgstr "ноль"
+
+#~ msgid "one"
+#~ msgstr "один"
+
+#~ msgid "two"
+#~ msgstr "два"
+
+#~ msgid "three"
+#~ msgstr "три"
+
+#~ msgid "five"
+#~ msgstr "пять"
+
+#~ msgid "six"
+#~ msgstr "шесть"
+
+#~ msgid "seven"
+#~ msgstr "семь"
+
+#~ msgid "eight"
+#~ msgstr "восемь"
+
+#~ msgid "nine"
+#~ msgstr "девять"
+
+#~ msgid "eleven"
+#~ msgstr "одиннадцать"
+
+#~ msgid "twelve"
+#~ msgstr "двенадать"
+
+#~ msgid "thirteen"
+#~ msgstr "тринадцать"
+
+#~ msgid "fourteen"
+#~ msgstr "четырнадать"
+
+#~ msgid "fifteen"
+#~ msgstr "пятнадцать"
+
+#~ msgid "sixteen"
+#~ msgstr "шестнадцать"
+
+#~ msgid "seventeen"
+#~ msgstr "семнадцать"
+
+#~ msgid "eighteen"
+#~ msgstr "восемнадцать"
+
+#~ msgid "nineteen"
+#~ msgstr "девятнадцать"
+
+#~ msgid "ten"
+#~ msgstr "десять"
+
+#~ msgid "twenty"
+#~ msgstr "двадцать"
+
+#~ msgid "thirty"
+#~ msgstr "тридцать"
+
+#~ msgid "forty"
+#~ msgstr "сорок"
+
+#~ msgid "fifty"
+#~ msgstr "пятьдесят"
+
+#~ msgid "sixty"
+#~ msgstr "шестьдесят"
+
+#~ msgid "seventy"
+#~ msgstr "семьдесят"
+
+#~ msgid "eighty"
+#~ msgstr "восемьдесят"
+
+#~ msgid "ninety"
+#~ msgstr "девяносто"
+
+#~ msgid "and"
+#~ msgstr "и"
+
+#~ msgid "Encryption password is not set"
+#~ msgstr "Пароль для шифрования не установлен"
+
+#~ msgid "Decryption password is not set"
+#~ msgstr "Пароль для дешифровки не установлен"
+
+#~ msgid ""
+#~ "It's time to upgrade your <strong>Captcha plugin</strong> to <strong>PRO</"
+#~ "strong> version"
+#~ msgstr ""
+#~ "Настало время обновить ваш <strong>плагин Капча</strong> до <strong>PRO</"
+#~ "strong> версии"
+
+#~ msgid "Extend standard plugin functionality with new great options"
+#~ msgstr ""
+#~ "Расширение стандартного функционала плагина новыми прекрасными опциями"
+
+#~ msgid "It's time to upgrade your"
+#~ msgstr "Настало время обновить ваш"
+
+#~ msgid "to"
+#~ msgstr "до"
+
+#~ msgid "version"
+#~ msgstr "версии"
+
+#~ msgid "(powered by bestwebsoft.com)"
+#~ msgstr "(разработано компанией bestwebsoft.com)"
+
+#~ msgid ""
+#~ "If you have any questions, please contact us via plugin@bestwebsoft.com "
+#~ "or fill in the contact form on our website"
+#~ msgstr ""
+#~ "Если у вас есть какие-то впросы, обращайтесь на plugin@bestwebsoft.com "
+#~ "или заполните контактную форму на нашем сайте"
+
+#~ msgid "The password of encryption is not set"
+#~ msgstr "Пароль для шифрования не установлен"
+
+#~ msgid "Increase"
+#~ msgstr "Умножить"
+
+#~ msgid "Difficulty for CAPTCHA"
+#~ msgstr "Уровень сложности КАПЧИ"
+
+#~ msgid "That CAPTCHA was incorrect."
+#~ msgstr "КАПЧА введена некорректно"
+
+#~ msgid "null"
+#~ msgstr "ноль"
