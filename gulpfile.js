@@ -1,7 +1,7 @@
 'use strict';
 
 /* Set isHtmlDev to TRUE if work with html, else - FALSE */
-const isHtmlDev = true;
+const isHtmlDev = false;
 
 /* Set environmentProd to TRUE if build for Production, or FALSE if this is development build*/
 const isProd = process.env.NODE_ENV === 'production';
@@ -31,7 +31,11 @@ const browserSyncArgs = {
   ui: false,
   logLevel: 'info',
   logConnections: true,
-  logFileChanges: true
+  logFileChanges: true,
+  https: {
+    key: config.ssl.key,
+    cert: config.ssl.cert
+  }
 };
 
 if ( isHtmlDev ) {
@@ -40,10 +44,6 @@ if ( isHtmlDev ) {
   };
   browserSyncArgs.logPrefix = 'BS-HTML:';
 } else {
-  browserSyncArgs.https = {
-    key: config.ssl.key,
-    cert: config.ssl.cert
-  };
   browserSyncArgs.proxy = `https://${config.domain}`;
   // browserSyncArgs.host = config.domain;
   browserSyncArgs.logPrefix = 'BS-WP:';
@@ -126,23 +126,23 @@ gulp.task( 'image:default', () => gulp
   .pipe( plugin.changed( config.path.images.dest ) )
   .pipe( plugin.bytediff.start() )
   .pipe( imagemin( {
-    interlaced: true,
-    progressive: true,
-    optimizationLevel: 5
-  },
-  [
-    imagemin.gifsicle( { interlaced: true } ),
-    imagemin.mozjpeg( { quality: 75, progressive: true } ),
-    imagemin.optipng( { optimizationLevel: 5 } ),
-    imagemin.svgo( {
-      plugins: [
-        { removeUnknownsAndDefaults: false },
-        { removeViewBox: true },
-        { cleanupIDs: false },
-        { removeDimensions: true }
-      ]
-    } )
-  ] ) )
+      interlaced: true,
+      progressive: true,
+      optimizationLevel: 5
+    },
+    [
+      imagemin.gifsicle( { interlaced: true } ),
+      imagemin.mozjpeg( { quality: 82, progressive: true } ),
+      imagemin.optipng( { optimizationLevel: 5 } ),
+      imagemin.svgo( {
+        plugins: [
+          { removeUnknownsAndDefaults: false },
+          { removeViewBox: true },
+          { cleanupIDs: false },
+          { removeDimensions: true }
+        ]
+      } )
+    ] ) )
   .pipe( plugin.bytediff.stop( ( data ) => {
     const difference = data.savings > 0 ? ' smaller.' : ' larger.';
 

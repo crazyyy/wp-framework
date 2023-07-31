@@ -13,7 +13,7 @@
     },
     "images": {
       "src": "assets/img/",
-      "srcImg": "assets/img/**/*.{png,jpg,jpeg,gif,svg}",
+      "srcImg": "assets/img/**/*.{png,jpg,jpeg,gif,svg,webp}",
       "srcImgContent": "wp-content/uploads/",
       "dest": "./html/img/"
     },

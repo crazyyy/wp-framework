@@ -495,10 +495,6 @@
    * This code adds a thumbnail column to the posts and pages admin table, displaying the featured image.
    * Source: https://bloggerpilot.com/en/featured-image-admin-en/
    */
-
-  // Set thumbnail size
-  add_image_size( 'wpeb-admin-featured-image', 60, 60, false );
-
   // Add the posts and pages columns filter. Same function for both.
   add_filter( 'manage_posts_columns', 'wpeb_add_thumbnail_column', 10, 1 );
   add_filter( 'manage_pages_columns', 'wpeb_add_thumbnail_column', 10, 1 );
@@ -508,10 +504,9 @@
    * @param array $columns The existing columns in the admin table.
    * @return array The modified columns with the added thumbnail column.
    */
-  function wpeb_add_thumbnail_column(array $columns ): array
-  {
-    $columns['wpeb_thumb'] = __( 'Image', 'wpeb' );
-    return $columns;
+  function wpeb_add_thumbnail_column($wpeb_columns){
+    $wpeb_columns['wpeb_thumb'] = __('Featured Image', 'wpeb');
+    return $wpeb_columns;
   }
 
   // Add featured image thumbnail to the WP Admin table.
@@ -523,10 +518,10 @@
    * @param string $column_name The name of the current column being rendered.
    * @param int $post_id     The ID of the current post being rendered.
    */
-  function wpeb_show_thumbnail_column(string $column_name, int $post_id ): void
+  function wpeb_show_thumbnail_column($wpeb_columns, $wpeb_id): void
   {
-    if ( $column_name === 'wpeb_thumb' && function_exists( 'the_post_thumbnail' ) ) {
-      echo the_post_thumbnail( 'wpeb-admin-featured-image' );
+    if (($wpeb_columns === 'wpeb_thumb') && function_exists('the_post_thumbnail')) {
+      echo the_post_thumbnail('post-thumbnail');
     }
   }
 
@@ -538,19 +533,19 @@
    * @param array $columns The existing columns in the admin table.
    * @return array The modified columns with the thumbnail column moved to the first position.
    */
-  function wpeb_column_order(array $columns ): array
+  function wpeb_column_order($columns): array
   {
+    $n_columns = array();
     $move = 'wpeb_thumb'; // which column to move
     $before = 'title'; // move before this column
 
-    $new_columns = array();
-    foreach ( $columns as $key => $value ) {
-      if ( $key === $before ) {
-        $new_columns[ $move ] = $move;
+    foreach($columns as $key => $value) {
+      if ($key === $before){
+        $n_columns[$move] = $move;
       }
-      $new_columns[ $key ] = $value;
+      $n_columns[$key] = $value;
     }
-    return $new_columns;
+    return $n_columns;
   }
 
   // Format the column width with CSS
@@ -559,7 +554,6 @@
   /**
    * Add custom admin styles.
    */
-  function wpeb_add_admin_styles(): void
-  {
-    echo '<style>.column-wpeb-thumb {width: 60px;}</style>';
+  function wpeb_add_admin_styles() {
+    echo '<style>#wpeb_thumb, .attachment-post-thumbnail.size-post-thumbnail {width: 140px;}</style>';
   }
