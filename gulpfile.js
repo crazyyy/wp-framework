@@ -1,7 +1,7 @@
 'use strict';
 
 /* Set isHtmlDev to TRUE if work with html, else - FALSE */
-const isHtmlDev = false;
+const isHtmlDev = true;
 
 /* Set environmentProd to TRUE if build for Production, or FALSE if this is development build*/
 const isProd = process.env.NODE_ENV === 'production';
