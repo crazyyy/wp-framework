@@ -106,13 +106,13 @@ final class Revisr {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'revisr' ), '1.8' );
 	}
 
-	/**
-	 * Prevent direct unserialization by making the method private.
-	 * @access private
-	 */
-	private function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'revisr' ), '1.8' );
-	}
+  /**
+   * Allow direct unserialization by making the method public.
+   * @access public
+   */
+  public function __wakeup() {
+    _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'revisr' ), '1.8' );
+  }
 
 	/**
 	 * Retrieves the current instance of the Revisr plugin,
