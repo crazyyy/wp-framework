@@ -54,27 +54,6 @@
   }
 
   /**
-   * Log data to the error log when WP_DEBUG is enabled.
-   * Below is an example function that requires WP_DEBUG to be enabled.
-   * https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
-   *
-   * @param mixed $data Data to be logged.
-   * @return void
-   *
-   * wpeb_write_log( 'DEBUG TEXT' );
-   * wpeb_write_log( $variable );
-   */
-  function wpeb_write_log( $data ) {
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-      if ( is_array( $data ) || is_object( $data ) ) {
-        error_log( print_r( $data, true ) );
-      } else {
-        error_log( (string) $data );
-      }
-    }
-  }
-
-  /**
    * Sets the admin color scheme and favicon based on the domain.
    * This function retrieves the current domain and sets the admin color scheme
    * and favicon based on the domain name. It uses conditional logic to map specific

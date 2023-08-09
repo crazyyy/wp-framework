@@ -11,11 +11,11 @@
    * By setting the 'gutenberg_can_edit_post_type' filter to return true, it allows
    * the block editor to be used for all post types.
    */
-  function enable_gutenberg_developer_mode(): bool
+  function wpeb_enable_gutenberg_developer_mode(): bool
   {
     return true;
   }
-  add_filter('gutenberg_can_edit_post_type', 'enable_gutenberg_developer_mode');
+  add_filter('gutenberg_can_edit_post_type', 'wpeb_enable_gutenberg_developer_mode');
 
   /**
    * Enables Block Labelling for inspecting blocks.
@@ -23,20 +23,20 @@
    * By setting the 'gutenberg_debug' filter to return true, it adds labels to the blocks
    * in the editor, making it easier to inspect and identify blocks.
    */
-  function enable_block_labelling(): bool
+  function wpeb_enable_block_labelling(): bool
   {
     return true;
   }
-  add_filter('gutenberg_debug', 'enable_block_labelling');
+  add_filter('gutenberg_debug', 'wpeb_enable_block_labelling');
 
   /**
-   * Add Artkai Block Category
+   * Add WPEB Block Category
    * Adds a custom block category to the Gutenberg editor.
    * @param array $block_categories Array of block categories.
    * @param object $editor_context Context of the editor.
    * @return array Updated array of block categories.
    */
-  function add_artkai_block_category(array $block_categories, object $editor_context): array
+  function add_wpeb_block_category(array $block_categories, object $editor_context): array
   {
     // Check if the editor context has a post
     if (!empty($editor_context->post)) {
@@ -51,7 +51,7 @@
     return $block_categories;
   }
 
-  add_filter('block_categories_all', 'add_artkai_block_category', 10, 2);
+  add_filter('block_categories_all', 'add_wpeb_block_category', 10, 2);
 
 
 

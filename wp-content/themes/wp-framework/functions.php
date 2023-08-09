@@ -4,7 +4,7 @@
     *  URL: https://github.com/crazyyy/wp-framework
     *  Custom functions, support, custom post types and more.
   */
-  const WPEB_VERSION = '2023.07.15';
+  const WPEB_VERSION = '2023.08.09';
   define("WPEB_TEMPLATE_URL", get_template_directory_uri());
   define("WPEB_TEMPLATE_PATH", get_template_directory());
 
@@ -46,7 +46,7 @@
   /**
    * Init Custom Gutenberg Blocks
    */
-  include_once( WPEB_TEMPLATE_PATH . '/blocks/init.php' );
+  include_once( WPEB_TEMPLATE_PATH . '/blocks/blocks-init.php' );
 
   /**
    * Init ACF Plugin options
