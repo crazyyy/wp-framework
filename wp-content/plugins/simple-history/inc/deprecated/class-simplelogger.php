@@ -5,6 +5,8 @@ use Simple_History\Loggers\Logger;
  * Un-namespaced class for old loggers that extend \SimpleLogger.
  *
  * New loggers must extend Simple_History\Loggers\Logger.
+ *
+ * @method null warningMessage(string $message, array $context)
  */
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class SimpleLogger extends Logger {
@@ -13,7 +15,7 @@ class SimpleLogger extends Logger {
 	 *
 	 * @var string[] Array of key/value pairs where keys represent old method name and value is name of new method
 	 */
-	private $methods_mapping = array(
+	private array $methods_mapping = array(
 		'getInfoValueByKey' => 'get_info_value_by_key',
 		'getCapability' => 'get_capability',
 		'interpolate' => null, // moved to helper

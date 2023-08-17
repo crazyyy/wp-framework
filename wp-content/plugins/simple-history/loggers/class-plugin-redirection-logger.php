@@ -135,9 +135,7 @@ class Plugin_Redirection_Logger extends Logger {
 				$bulk_items = explode( ',', $bulk_items );
 			}
 
-			if ( is_array( $bulk_items ) ) {
-				$bulk_items = array_map( 'intval', $bulk_items );
-			}
+			$bulk_items = array_map( 'intval', $bulk_items );
 
 			if ( empty( $bulk_items ) ) {
 				return $response;
@@ -306,8 +304,8 @@ class Plugin_Redirection_Logger extends Logger {
 	/**
 	 * Log enable or disable of items.
 	 *
-	 * @param Object $req Req.
-	 * @param Array  $bulk_items Array.
+	 * @param object $req Req.
+	 * @param array  $bulk_items Array.
 	 */
 	protected function log_redirection_enable_or_disable( $req, $bulk_items ) {
 		$bulk_action = $req->get_param( 'bulk' );

@@ -142,7 +142,7 @@ class Privacy_Logger extends Logger {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$send_as_email = isset( $_POST['sendAsEmail'] ) && $_POST['sendAsEmail'] === 'true' ? 1 : 0;
 
-		$message_key = $send_as_email
+		$message_key = $send_as_email !== 0
 						? 'privacy_data_export_emailed'
 						: 'privacy_data_export_admin_downloaded';
 
@@ -169,10 +169,7 @@ class Privacy_Logger extends Logger {
 	 * @param array $skip_posttypes Posttypes to skip.
 	 */
 	public function remove_post_types_from_postlogger( $skip_posttypes ) {
-		array_push(
-			$skip_posttypes,
-			'user_request'
-		);
+		$skip_posttypes[] = 'user_request';
 
 		return $skip_posttypes;
 	}
@@ -228,9 +225,9 @@ class Privacy_Logger extends Logger {
 	 * Used to catch data export request actions from screen at
 	 * /wp-admin/export-personal-data.php
 	 *
-	 * @param int     $post_ID Post ID.
-	 * @param WP_Post $post    Post object.
-	 * @param bool    $update  Whether this is an existing post being updated or not.
+	 * @param int      $post_ID Post ID.
+	 * @param \WP_Post $post    Post object.
+	 * @param bool     $update  Whether this is an existing post being updated or not.
 	 */
 	public function on_save_post_user_request( $post_ID, $post, $update ) {
 		if ( empty( $post_ID ) ) {
@@ -384,10 +381,6 @@ class Privacy_Logger extends Logger {
 	public function on_admin_action_complete() {
 		$request_ids = isset( $_REQUEST['request_id'] ) ? wp_parse_id_list( wp_unslash( $_REQUEST['request_id'] ) ) : array();
 
-		if ( empty( $request_ids ) ) {
-			return;
-		}
-
 		foreach ( $request_ids as $request_id ) {
 			$request = wp_get_user_request( $request_id );
 
@@ -440,6 +433,7 @@ class Privacy_Logger extends Logger {
 	 */
 	public function on_update_option_create_privacy_page( $old_value, $value, $option ) {
 		$post = get_post( $value );
+		$new_post_title = '';
 
 		if ( is_a( $post, 'WP_Post' ) ) {
 			$new_post_title = $post->post_title;
@@ -465,6 +459,7 @@ class Privacy_Logger extends Logger {
 	public function on_update_option_set_privacy_page( $old_value, $value, $option ) {
 
 		$post = get_post( $value );
+		$new_post_title = '';
 
 		if ( is_a( $post, 'WP_Post' ) ) {
 			$new_post_title = $post->post_title;

@@ -37,9 +37,7 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 	}
 
 	public function loaded() {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
-
-		$isPluginActive = is_plugin_active( 'duplicate-post/duplicate-post.php' );
+		$isPluginActive = Helpers::is_plugin_active( 'duplicate-post/duplicate-post.php' );
 
 		if ( ! $isPluginActive ) {
 			return;
@@ -57,9 +55,9 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 	/**
 	 * A post or page was duplicated
 	 *
-	 * @param $new_post_id
-	 * @param $post old post that a copy was made of
-	 * @param $status
+	 * @param int $new_post_id
+	 * @param \WP_Post $post old post that a copy was made of
+	 * @param string $status
 	 */
 	public function onDpDuplicatePost( $newPostID, $post, $status ) {
 		$new_post = get_post( $newPostID );
@@ -96,12 +94,10 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 		$post_type = $postDuplicated->post_type ?? '';
 		$post_type_obj = get_post_type_object( $post_type );
 
-		if ( ! is_null( $post_type_obj ) ) {
-			if ( ! empty( $post_type_obj->labels->singular_name ) ) {
-				$context['duplicated_post_post_type_singular_name'] = strtolower(
-					$post_type_obj->labels->singular_name
-				);
-			}
+		if ( ! is_null( $post_type_obj ) && ! empty( $post_type_obj->labels->singular_name ) ) {
+			$context['duplicated_post_post_type_singular_name'] = strtolower(
+				$post_type_obj->labels->singular_name
+			);
 		}
 
 		$context['duplicated_post_edit_link'] = get_edit_post_link( $duplicated_post_id );

@@ -66,12 +66,20 @@ class WPCLI_Commands {
 	 * @when after_wp_load
 	 */
 	public function list( $args, $assoc_args ) {
+		$assoc_args = wp_parse_args(
+			$assoc_args,
+			array(
+				'format' => 'table',
+				'count' => 10,
+			)
+		);
+
 		if ( ! is_numeric( $assoc_args['count'] ) ) {
 			WP_CLI::error( __( 'Error: parameter "count" must be a number', 'simple-history' ) );
 		}
 
 		// Override capability check: if you can run wp cli commands you can read all loggers.
-		add_action( 'simple_history/loggers_user_can_read/can_read_single_logger', '__return_true', 10, 3 );
+		add_filter( 'simple_history/loggers_user_can_read/can_read_single_logger', '__return_true', 10, 0 );
 
 		$query = new Log_Query();
 
@@ -86,13 +94,14 @@ class WPCLI_Commands {
 
 		foreach ( $events['log_rows'] as $row ) {
 			$header_output = $this->simple_history->get_log_row_header_output( $row );
-			$text_output = $this->simple_history->get_log_row_plain_text_output( $row );
 			$header_output = strip_tags( html_entity_decode( $header_output, ENT_QUOTES, 'UTF-8' ) );
 			$header_output = trim( preg_replace( '/\s\s+/', ' ', $header_output ) );
 
+			$text_output = $this->simple_history->get_log_row_plain_text_output( $row );
 			$text_output = strip_tags( html_entity_decode( $text_output, ENT_QUOTES, 'UTF-8' ) );
 
 			$eventsCleaned[] = array(
+				'id' => $row->id,
 				'date' => get_date_from_gmt( $row->date ),
 				'initiator' => Log_Initiators::get_initiator_text_from_row( $row ),
 				'logger' => $row->logger,
@@ -109,6 +118,7 @@ class WPCLI_Commands {
 			'description',
 			'level',
 			'count',
+			'id',
 		);
 
 		WP_CLI\Utils\format_items( $assoc_args['format'], $eventsCleaned, $fields );

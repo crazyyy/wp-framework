@@ -172,7 +172,7 @@ class Plugin_Logger extends Logger {
 		// Fires after a plugin is deactivated.
 		// If a plugin is silently deactivated (such as during an update),
 		// this hook does not fire.
-		add_action( 'deactivated_plugin', array( $this, 'on_deactivated_plugin' ), 10, 2 );
+		add_action( 'deactivated_plugin', array( $this, 'on_deactivated_plugin' ), 10, 1 );
 
 		// Fires after the upgrades has done it's thing.
 		// Check hook extra for upgrader initiator.
@@ -265,7 +265,7 @@ class Plugin_Logger extends Logger {
 	public function handle_auto_update_change() {
 		$option = 'auto_update_plugins';
 
-		add_filter(
+		add_action(
 			"update_option_{$option}",
 			function ( $old_value, $value, $option ) {
 				/**
@@ -555,7 +555,7 @@ class Plugin_Logger extends Logger {
 
 		$repo = isset( $_GET['repo'] ) ? (string) $_GET['repo'] : '';
 
-		if ( ! $repo ) {
+		if ( $repo !== '' ) {
 			wp_die( esc_html__( 'Could not find GitHub repository.', 'simple-history' ) );
 		}
 
@@ -584,6 +584,7 @@ class Plugin_Logger extends Logger {
 		$response_body = wp_remote_retrieve_body( $response );
 
 		$repo_info = '<p>' . sprintf(
+			// translators: %1$s is a link to the repo, %2$s is the repo name.
 			__( 'Viewing <code>readme</code> from repository <code><a target="_blank" href="%1$s">%2$s</a></code>.', 'simple-history' ),
 			esc_url( $repo ),
 			esc_html( $repo )
@@ -689,10 +690,9 @@ class Plugin_Logger extends Logger {
 	 * Called when plugins is updated or installed
 	 * Called from class-wp-upgrader.php
 	 *
-	 * @param Plugin_Upgrader $this Plugin_Upgrader instance. In other contexts, $this, might
-	 *                              be a Theme_Upgrader or Core_Upgrade instance.
-	 * @param array           $data {
-	 *     Array of bulk item update data.
+	 * @param Plugin_Upgrader $plugin_upgrader_instance Plugin_Upgrader instance. In other contexts, $this, might
+	 *                                                  be a Theme_Upgrader or Core_Upgrade instance.
+	 * @param array           $arr_data                 Array of bulk item update data.
 	 */
 	public function on_upgrader_process_complete( $plugin_upgrader_instance, $arr_data ) {
 		// Can't use get_plugins() here to get version of plugins updated from
@@ -721,7 +721,6 @@ class Plugin_Logger extends Logger {
 			[type] => core
 		)
 
-
 		# Plugin install
 
 		$arr_data:
@@ -730,7 +729,6 @@ class Plugin_Logger extends Logger {
 			[type] => plugin
 			[action] => install
 		)
-
 
 		## Plugin update
 
@@ -757,17 +755,17 @@ class Plugin_Logger extends Logger {
 		$did_log = false;
 
 		if ( isset( $arr_data['type'] ) && 'plugin' == $arr_data['type'] ) {
-			// Single plugin install
+			// Single plugin install.
 			if ( isset( $arr_data['action'] ) && 'install' == $arr_data['action'] && ! $plugin_upgrader_instance->bulk ) {
 				$upgrader_skin_options = isset( $plugin_upgrader_instance->skin->options ) && is_array( $plugin_upgrader_instance->skin->options ) ? $plugin_upgrader_instance->skin->options : array();
 				$upgrader_skin_result  = isset( $plugin_upgrader_instance->skin->result ) && is_array( $plugin_upgrader_instance->skin->result ) ? $plugin_upgrader_instance->skin->result : array();
-				// $upgrader_skin_api  = isset( $plugin_upgrader_instance->skin->api ) ? $plugin_upgrader_instance->skin->api : (object) array();
 				$new_plugin_data       = $plugin_upgrader_instance->new_plugin_data ?? array();
 				$plugin_slug           = $upgrader_skin_result['destination_name'] ?? '';
 
 				$context = array(
 					'plugin_slug'         => $plugin_slug,
 					'plugin_name'         => $new_plugin_data['Name'] ?? '',
+					'plugin_url'          => $new_plugin_data['PluginURI'] ?? '',
 					'plugin_version'      => $new_plugin_data['Version'] ?? '',
 					'plugin_author'       => $new_plugin_data['Author'] ?? '',
 					'plugin_requires_wp'  => $new_plugin_data['RequiresWP'] ?? '',
@@ -792,24 +790,21 @@ class Plugin_Logger extends Logger {
 				$context['plugin_install_source'] = $install_source;
 
 				// If uploaded plugin store name of ZIP
-				if ( 'upload' == $install_source ) {
-					/*
-					_debug_files
-					{
-						"pluginzip": {
-							"name": "WPThumb-master.zip",
-							"type": "application\/zip",
-							"tmp_name": "\/Applications\/MAMP\/tmp\/php\/phpnThImc",
-							"error": 0,
-							"size": 2394625
-						}
-					}
-					*/
-
-					if ( isset( $_FILES['pluginzip']['name'] ) ) {
-						$plugin_upload_name            = $_FILES['pluginzip']['name'];
-						$context['plugin_upload_name'] = $plugin_upload_name;
-					}
+				/*
+				_debug_files
+				{
+				"pluginzip": {
+				"name": "WPThumb-master.zip",
+				"type": "application\/zip",
+				"tmp_name": "\/Applications\/MAMP\/tmp\/php\/phpnThImc",
+				"error": 0,
+				"size": 2394625
+				}
+				}
+				*/
+				if ( 'upload' == $install_source && isset( $_FILES['pluginzip']['name'] ) ) {
+					$plugin_upload_name            = $_FILES['pluginzip']['name'];
+					$context['plugin_upload_name'] = $plugin_upload_name;
 				}
 
 				if ( is_a( $plugin_upgrader_instance->skin->result, 'WP_Error' ) ) {
@@ -1028,20 +1023,6 @@ class Plugin_Logger extends Logger {
 	 * plugin_name is like admin-menu-tree-page-view/index.php
 	 */
 	public function on_activated_plugin( $plugin_name, $network_wide ) {
-
-		/*
-		Plugin data returned array contains the following:
-		'Name' - Name of the plugin, must be unique.
-		'Title' - Title of the plugin and the link to the plugin's web site.
-		'Description' - Description of what the plugin does and/or notes from the author.
-		'Author' - The author's name
-		'AuthorURI' - The authors web site address.
-		'Version' - The plugin version number.
-		'PluginURI' - Plugin web site address.
-		'TextDomain' - Plugin's text domain for localization.
-		'DomainPath' - Plugin's relative directory path to .mo files.
-		'Network' - Boolean. Whether the plugin can only be activated network wide.
-		*/
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin_name, true, false );
 
 		$plugin_slug = dirname( $plugin_name );
@@ -1088,7 +1069,6 @@ class Plugin_Logger extends Logger {
 
 		$this->info_message( 'plugin_deactivated', $context );
 	}
-
 
 	/**
 	 * Get output for detailed log section
@@ -1188,7 +1168,7 @@ class Plugin_Logger extends Logger {
 							break;
 					}// End switch().
 
-					if ( ! trim( $desc_output ) ) {
+					if ( trim( $desc_output ) === '' ) {
 						continue;
 					}
 
@@ -1208,7 +1188,7 @@ class Plugin_Logger extends Logger {
 				// If plugin_install_source = web then it should be a wordpress.org-plugin
 				// If plugin_github_url is set then it's a zip from a github thingie
 				// so use link to that.
-				$plugin_slug = ! empty( $context['plugin_slug'] ) ? $context['plugin_slug'] : '';
+				$plugin_slug = empty( $context['plugin_slug'] ) ? '' : $context['plugin_slug'];
 
 				// Slug + web as install source = show link to wordpress.org
 				if ( $plugin_slug && isset( $context['plugin_install_source'] ) && $context['plugin_install_source'] == 'web' ) {
@@ -1241,7 +1221,7 @@ class Plugin_Logger extends Logger {
 				$output .= '</table>';
 			}// End if().
 		} elseif ( 'plugin_bulk_updated' === $message_key || 'plugin_updated' === $message_key || 'plugin_activated' === $message_key || 'plugin_deactivated' === $message_key ) {
-			$plugin_slug = ! empty( $context['plugin_slug'] ) ? $context['plugin_slug'] : '';
+			$plugin_slug = empty( $context['plugin_slug'] ) ? '' : $context['plugin_slug'];
 
 			if ( $plugin_slug && empty( $context['plugin_github_url'] ) ) {
 				$link_title = esc_html_x( 'View plugin info', 'plugin logger: plugin info thickbox title', 'simple-history' );

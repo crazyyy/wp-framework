@@ -13,11 +13,11 @@ use Simple_History\Helpers;
 class Debug_Dropin extends Dropin {
 	public function loaded() {
 		// Bail if Simple History debug mode is not active.
-		if ( ! defined( 'SIMPLE_HISTORY_LOG_DEBUG' ) || ! SIMPLE_HISTORY_LOG_DEBUG ) {
+		if ( false === Helpers::log_debug_is_enabled() ) {
 			return;
 		}
-		add_action( 'simple_history/log_argument/context', array( $this, 'onLogArgumentContext' ), 10, 4 );
 
+		add_action( 'simple_history/log_argument/context', array( $this, 'onLogArgumentContext' ), 10, 4 );
 	}
 
 	/**
@@ -26,7 +26,7 @@ class Debug_Dropin extends Dropin {
 	 * @param array $context
 	 * @param string $level
 	 * @param string $message
-	 * @param SimpleLogger $logger
+	 * @param \Simple_History\Loggers\Simple_Logger $logger
 	 */
 	public function onLogArgumentContext( $context, $level, $message, $logger ) {
 		$context['_debug_get'] = Helpers::json_encode( $_GET );
@@ -49,6 +49,7 @@ class Debug_Dropin extends Dropin {
 		$context['_debug_is_admin'] = json_encode( is_admin() );
 		$context['_debug_is_ajax'] = json_encode( defined( 'DOING_AJAX' ) && DOING_AJAX );
 		$context['_debug_is_doing_cron'] = json_encode( defined( 'DOING_CRON' ) && DOING_CRON );
+		$context['_debug_is_multisite'] = is_multisite();
 
 		global $wp_current_filter;
 		$context['_debug_current_filter_array'] = $wp_current_filter;

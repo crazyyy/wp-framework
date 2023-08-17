@@ -443,10 +443,11 @@ class Comments_Logger extends Logger {
 	 * Fires after a comment status has been updated in the database.
 	 * The hook also fires immediately before comment status transition hooks are fired.
 	 *
-	 * @param int         $comment_id     The comment ID.
+	 * do_action( 'wp_set_comment_status', $comment_id, $comment_status );
+	 *
+	 * @param int         $comment_ID     The comment ID.
 	 * @param string|bool $comment_status The comment status. Possible values include 'hold',
 	 *                                    'approve', 'spam', 'trash', or false.
-	 * do_action( 'wp_set_comment_status', $comment_id, $comment_status );
 	 */
 	public function on_wp_set_comment_status( $comment_ID, $comment_status ) {
 
@@ -493,7 +494,7 @@ class Comments_Logger extends Logger {
 
 		$comment_data = get_comment( $comment_ID );
 
-		if ( $comment_data->user_id ) {
+		if ( $comment_data->user_id !== '' && $comment_data->user_id !== '0' ) {
 			// comment was from a logged in user
 			$message = "user_{$context["comment_type"]}_added";
 		} else {
@@ -513,7 +514,6 @@ class Comments_Logger extends Logger {
 			$context
 		);
 	}
-
 
 	/**
 	 * Modify plain output to include link to post
@@ -549,7 +549,6 @@ class Comments_Logger extends Logger {
 
 		return helpers::interpolate( $message, $context, $row );
 	}
-
 
 	/**
 	 * Get output for detailed log section
@@ -694,7 +693,7 @@ class Comments_Logger extends Logger {
 		if ( $comment_ID ) {
 			$comment = get_comment( $comment_ID );
 
-			if ( $comment ) {
+			if ( $comment instanceof \WP_Comment ) {
 				// http://site.local/wp/wp-admin/comment.php?action=editcomment&c=
 				$edit_comment_link = get_edit_comment_link( $comment_ID );
 

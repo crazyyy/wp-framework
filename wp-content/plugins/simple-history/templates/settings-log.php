@@ -2,11 +2,12 @@
 
 namespace Simple_History;
 
-use Simple_History\Simple_History;
-
+/**
+ * @var Setup_Settings_Page $this
+ */
 defined( 'ABSPATH' ) || die();
 
-$pager_size = $this->get_pager_size();
+$pager_size = $this->simple_history->get_pager_size();
 
 /**
  * Filter the pager size setting for the settings page
@@ -23,5 +24,5 @@ $pager_size = apply_filters( 'simple_history/settings_page_pager_size', $pager_s
 	 ></div>
 <?php
 
-global $wpdb;
-$table_name = $wpdb->prefix . Simple_History::DBTABLE;
+// global $wpdb;
+// $table_name = $wpdb->prefix . Simple_History::DBTABLE;

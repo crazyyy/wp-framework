@@ -2,6 +2,7 @@
 
 namespace Simple_History\Dropins;
 
+use Simple_History\Helpers;
 use Simple_History\Simple_History;
 use Simple_History\Log_Levels;
 
@@ -13,7 +14,7 @@ use Simple_History\Log_Levels;
 class Filter_Dropin extends Dropin {
 	public function loaded() {
 		add_action( 'simple_history/enqueue_admin_scripts', array( $this, 'enqueue_admin_scripts' ) );
-		add_action( 'simple_history/history_page/before_gui', array( $this, 'gui_page_filters' ) );
+		add_action( 'simple_history/history_page/before_gui', array( $this, 'gui_page_filters' ), 10 );
 		add_action( 'simple_history/dashboard/before_gui', array( $this, 'gui_page_filters' ) );
 		add_action( 'wp_ajax_simple_history_filters_search_user', array( $this, 'ajax_simple_history_filters_search_user' ) );
 	}
@@ -24,7 +25,6 @@ class Filter_Dropin extends Dropin {
 		wp_enqueue_script( 'simple_history_FilterDropin', $file_url . 'filter-dropin.js', array( 'jquery' ), SIMPLE_HISTORY_VERSION, true );
 		wp_enqueue_style( 'simple_history_FilterDropin', $file_url . 'filter-dropin.css', null, SIMPLE_HISTORY_VERSION );
 	}
-
 
 	public function gui_page_filters() {
 		$loggers_user_can_read = $this->simple_history->get_loggers_that_user_can_read();
@@ -537,9 +537,8 @@ class Filter_Dropin extends Dropin {
 			$val->user_email
 		);
 
-		$val->gravatar = $this->simple_history->get_avatar( $val->user_email, '18', 'mm' );
+		$val->gravatar = Helpers::get_avatar( $val->user_email, '18', 'mm' );
 	}
-
 
 	/**
 	 * Print out HTML form date elements for editing post or comment publish date.
@@ -548,11 +547,8 @@ class Filter_Dropin extends Dropin {
 	 *
 	 * @global WP_Locale  $wp_locale
 	 *
-	 * @param int|bool $edit      Accepts 1|true for editing the date, 0|false for adding the date.
-	 * @param int|bool $for_post  Accepts 1|true for applying the date to a post, 0|false for a comment.
-	 * @param int      $tab_index The tabindex attribute to add. Default 0.
-	 * @param int|bool $multi     Optional. Whether the additional fields and buttons should be added.
-	 *                            Default 0|false.
+	 * @param 'from'|'to' $from_or_to
+	 * @param int $edit Unused.
 	 */
 	public function touch_time( $from_or_to, $edit = 1 ) {
 		global $wp_locale;

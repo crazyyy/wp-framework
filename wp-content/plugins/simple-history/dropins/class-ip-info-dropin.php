@@ -20,6 +20,24 @@ class IP_Info_Dropin extends Dropin {
 	}
 
 	/**
+	 * Get Google Maps API key.
+	 *
+	 * @return string
+	 */
+	private function get_maps_api_key() {
+		/**
+		 * Filters the Google Maps API key that is used
+		 * to render a static map image.
+		 *
+		 * @since 4.2
+		 *
+		 * @param string $api_key The API key to use. Default is empty string, causing no Map image to be outputted.
+		 */
+		$api_key = apply_filters( 'simple_history/maps_api_key', '' );
+		return $api_key;
+	}
+
+	/**
 	 * Display IP Addresses for login related messages.
 	 *
 	 * @param bool $bool
@@ -29,6 +47,11 @@ class IP_Info_Dropin extends Dropin {
 	public function row_header_display_ip_address_filter( $bool, $row ) {
 		// Bail if log row in not from our logger.
 		if ( 'SimpleUserLogger' !== $row->logger ) {
+			return $bool;
+		}
+
+		// Bail if no message key.
+		if ( empty( $row->context_message_key ) ) {
 			return $bool;
 		}
 
@@ -94,14 +117,16 @@ class IP_Info_Dropin extends Dropin {
 				<table class="SimpleHistoryIpInfoDropin__ipInfoTable">
 
 					<tr class="SimpleHistoryIpInfoDropin__ipInfoTable__mapRow">
-						<td colspan="2">
-							<!--
-							<# if ( typeof(data.loc) != "undefined" && data.loc ) { #>
+						<td colspan="2">							
+							<# if ( typeof(data.loc) != "undefined" && data.loc && "<?php echo esc_attr( $this->get_maps_api_key() ); ?>" ) { #>
 								<a href="https://www.google.com/maps/place/{{ data.loc }}/@{{ data.loc }},6z" target="_blank">
-									<img src="https://maps.googleapis.com/maps/api/staticmap?center={{ data.loc }}&zoom=7&size=350x100&sensor=false" width="350" height="100" alt="Google Map">
+									<img 
+										src="https://maps.googleapis.com/maps/api/staticmap?center={{ data.loc }}&zoom=7&size=350x100&scale=2&sensor=false&key=<?php echo esc_attr( $this->get_maps_api_key() ); ?>" 
+										width="350" 
+										height="100" 
+										alt="Google Map" />
 								</a>
 							<# } #>
-							-->
 						</td>
 					</tr>
 
@@ -185,7 +210,14 @@ class IP_Info_Dropin extends Dropin {
 				</table>
 
 				<p class="SimpleHistoryIpInfoDropin__provider">
-					<?php printf( esc_html_x( 'IP info provided by %1$s ipinfo.io %2$s', 'IP Info Dropin', 'simple-history' ), "<a href='https://ipinfo.io/{{ data.ip }}' target='_blank'>", '</a>' ); ?>
+					<?php
+					printf(
+						// translators: 1 is an opening A tag to ipinfo.io, 2 is a closing A tag.
+						esc_html_x( 'IP info provided by %1$s ipinfo.io %2$s', 'IP Info Dropin', 'simple-history' ),
+						"<a href='https://ipinfo.io/{{ data.ip }}' target='_blank'>",
+						'</a>'
+					);
+					?>
 				</p>
 
 			<# } #>

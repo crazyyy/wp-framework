@@ -66,10 +66,10 @@ class Post_Logger extends Logger {
 			// the update_item() method: pre_insert and after_insert.
 
 			// Rest pre insert is fired before an updated post is inserted into db.
-			add_action( "rest_pre_insert_{$post_type->name}", array( $this, 'on_rest_pre_insert' ), 10, 2 );
+			add_filter( "rest_pre_insert_{$post_type->name}", array( $this, 'on_rest_pre_insert' ), 10, 2 );
 
 			// Rest insert happens after the post has been updated: "Fires after a single post is completely created or updated via the REST API."
-			add_action( "rest_after_insert_{$post_type->name}", array( $this, 'on_rest_after_insert' ), 10, 3 );
+			add_filter( "rest_after_insert_{$post_type->name}", array( $this, 'on_rest_after_insert' ), 10, 3 );
 		}
 	}
 
@@ -253,7 +253,7 @@ class Post_Logger extends Logger {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$post_ID = isset( $_POST['post_ID'] ) ? (int) $_POST['post_ID'] : 0;
 
-		if ( ! $post_ID ) {
+		if ( $post_ID === 0 ) {
 			return;
 		}
 
@@ -263,7 +263,7 @@ class Post_Logger extends Logger {
 
 		$prev_post_data = get_post( $post_ID );
 
-		if ( is_wp_error( $prev_post_data ) ) {
+		if ( ! $prev_post_data instanceof \WP_Post ) {
 			return;
 		}
 
@@ -357,7 +357,7 @@ class Post_Logger extends Logger {
 	/**
 	 * Fired immediately before a post is deleted from the database.
 	 *
-	 * @param int $postid Post ID.
+	 * @param int $post_id Post ID.
 	 */
 	public function on_delete_post( $post_id ) {
 		$post = get_post( $post_id );
@@ -405,10 +405,8 @@ class Post_Logger extends Logger {
 		]
 		*/
 		global $wp_current_filter;
-		if ( isset( $wp_current_filter ) && is_array( $wp_current_filter ) ) {
-			if ( in_array( 'wp_scheduled_delete', $wp_current_filter, true ) ) {
-				return;
-			}
+		if ( isset( $wp_current_filter ) && is_array( $wp_current_filter ) && in_array( 'wp_scheduled_delete', $wp_current_filter, true ) ) {
+			return;
 		}
 
 		$this->info_message(
@@ -452,7 +450,7 @@ class Post_Logger extends Logger {
 	/**
 	 * Check if post type is ok to log by logger
 	 *
-	 * @param Int or WP_Post $post Post the check.
+	 * @param \WP_Post|int $post Post the check.
 	 *
 	 * @return bool
 	 */
@@ -483,7 +481,7 @@ class Post_Logger extends Logger {
 			'old_post',
 			'old_post_meta',
 			// Old status is included because that's the value we get in filter
-			// "transation_post_status", when a previous post may not exist.
+			// "transition_post_status", when a previous post may not exist.
 			'old_status',
 		);
 
@@ -554,9 +552,9 @@ class Post_Logger extends Logger {
 		 * Filter to control logging.
 		 *
 		 * @param bool $ok_to_log
-		 * @param $new_status
-		 * @param $old_status
-		 * @param $post
+		 * @param string|null $new_status
+		 * @param string|null $old_status
+		 * @param \WP_Post $post
 		 *
 		 * @return bool True to log, false to not log.
 		 *
@@ -605,11 +603,9 @@ class Post_Logger extends Logger {
 			// Existing post was updated.
 
 			// Also add diff between previous saved data and new data.
-			if ( isset( $old_post_data ) && isset( $new_post_data ) ) {
-				// Now we have both old and new post data, including custom fields, in the same format
-				// So let's compare!
-				$context = $this->add_post_data_diff_to_context( $context, $old_post_data, $new_post_data );
-			}
+			// Now we have both old and new post data, including custom fields, in the same format
+			// So let's compare!
+			$context = $this->add_post_data_diff_to_context( $context, $old_post_data, $new_post_data );
 
 			$context['_occasionsID'] = self::class . '/' . __FUNCTION__ . "/post_updated/{$post->ID}";
 
@@ -720,27 +716,25 @@ class Post_Logger extends Logger {
 		}
 
 		// If changes where detected.
-		if ( $post_data_diff ) {
-			// Save at least 2 values for each detected value change, i.e. the old value and the new value.
-			foreach ( $post_data_diff as $diff_key => $diff_values ) {
+		// Save at least 2 values for each detected value change, i.e. the old value and the new value.
+		foreach ( $post_data_diff as $diff_key => $diff_values ) {
 				$context[ "post_prev_{$diff_key}" ] = $diff_values['old'];
 				$context[ "post_new_{$diff_key}" ] = $diff_values['new'];
 
 				// If post_author then get more author info,
 				// because just a user ID does not get us far.
-				if ( 'post_author' == $diff_key ) {
-					$old_author_user = get_userdata( (int) $diff_values['old'] );
-					$new_author_user = get_userdata( (int) $diff_values['new'] );
+			if ( 'post_author' == $diff_key ) {
+				$old_author_user = get_userdata( (int) $diff_values['old'] );
+				$new_author_user = get_userdata( (int) $diff_values['new'] );
 
-					if ( is_a( $old_author_user, 'WP_User' ) && is_a( $new_author_user, 'WP_User' ) ) {
-						$context[ "post_prev_{$diff_key}/user_login" ] = $old_author_user->user_login;
-						$context[ "post_prev_{$diff_key}/user_email" ] = $old_author_user->user_email;
-						$context[ "post_prev_{$diff_key}/display_name" ] = $old_author_user->display_name;
+				if ( is_a( $old_author_user, 'WP_User' ) && is_a( $new_author_user, 'WP_User' ) ) {
+					$context[ "post_prev_{$diff_key}/user_login" ] = $old_author_user->user_login;
+					$context[ "post_prev_{$diff_key}/user_email" ] = $old_author_user->user_email;
+					$context[ "post_prev_{$diff_key}/display_name" ] = $old_author_user->display_name;
 
-						$context[ "post_new_{$diff_key}/user_login" ] = $new_author_user->user_login;
-						$context[ "post_new_{$diff_key}/user_email" ] = $new_author_user->user_email;
-						$context[ "post_new_{$diff_key}/display_name" ] = $new_author_user->display_name;
-					}
+					$context[ "post_new_{$diff_key}/user_login" ] = $new_author_user->user_login;
+					$context[ "post_new_{$diff_key}/user_email" ] = $new_author_user->user_email;
+					$context[ "post_new_{$diff_key}/display_name" ] = $new_author_user->display_name;
 				}
 			}
 		} // End if().
@@ -772,27 +766,21 @@ class Post_Logger extends Logger {
 		$context = $this->add_post_thumb_diff( $context, $old_meta, $new_meta );
 
 		// Page template is stored in _wp_page_template.
-		if ( isset( $old_meta['_wp_page_template'][0] ) && isset( $new_meta['_wp_page_template'][0] ) ) {
-			/*
-			Var is string with length 7: default
-			Var is string with length 20: template-builder.php
-			*/
-
-			if ( $old_meta['_wp_page_template'][0] !== $new_meta['_wp_page_template'][0] ) {
-				// Prev page template is different from new page template,
-				// store template php file name.
-				$context['post_prev_page_template'] = $old_meta['_wp_page_template'][0];
-				$context['post_new_page_template'] = $new_meta['_wp_page_template'][0];
-
-				$theme_templates = (array) $this->get_theme_templates();
-
-				if ( isset( $theme_templates[ $context['post_prev_page_template'] ] ) ) {
+		/*
+		Var is string with length 7: default
+		Var is string with length 20: template-builder.php
+		*/
+		if ( isset( $old_meta['_wp_page_template'][0] ) && isset( $new_meta['_wp_page_template'][0] ) && $old_meta['_wp_page_template'][0] !== $new_meta['_wp_page_template'][0] ) {
+			// Prev page template is different from new page template,
+			// store template php file name.
+			$context['post_prev_page_template'] = $old_meta['_wp_page_template'][0];
+			$context['post_new_page_template'] = $new_meta['_wp_page_template'][0];
+			$theme_templates = (array) $this->get_theme_templates();
+			if ( isset( $theme_templates[ $context['post_prev_page_template'] ] ) ) {
 					$context['post_prev_page_template_name'] = $theme_templates[ $context['post_prev_page_template'] ];
-				}
-
-				if ( isset( $theme_templates[ $context['post_new_page_template'] ] ) ) {
+			}
+			if ( isset( $theme_templates[ $context['post_new_page_template'] ] ) ) {
 					$context['post_new_page_template_name'] = $theme_templates[ $context['post_new_page_template'] ];
-				}
 			}
 		}
 
@@ -811,10 +799,8 @@ class Post_Logger extends Logger {
 
 		// Look for changed meta.
 		foreach ( $old_meta as $meta_key => $meta_value ) {
-			if ( isset( $new_meta[ $meta_key ] ) ) {
-				if ( json_encode( $old_meta[ $meta_key ] ) != json_encode( $new_meta[ $meta_key ] ) ) {
-					$meta_changes['changed'][ $meta_key ] = true;
-				}
+			if ( isset( $new_meta[ $meta_key ] ) && json_encode( $old_meta[ $meta_key ] ) !== json_encode( $new_meta[ $meta_key ] ) ) {
+				$meta_changes['changed'][ $meta_key ] = true;
 			}
 		}
 
@@ -957,10 +943,8 @@ class Post_Logger extends Logger {
 		// Try to get singular name.
 		$post_type = $context['post_type'] ?? '';
 		$post_type_obj = get_post_type_object( $post_type );
-		if ( ! is_null( $post_type_obj ) ) {
-			if ( ! empty( $post_type_obj->labels->singular_name ) ) {
-				$context['post_type'] = strtolower( $post_type_obj->labels->singular_name );
-			}
+		if ( ! is_null( $post_type_obj ) && ! empty( $post_type_obj->labels->singular_name ) ) {
+			$context['post_type'] = strtolower( $post_type_obj->labels->singular_name );
 		}
 
 		$context['edit_link'] = get_edit_post_link( $post_id );
@@ -1292,17 +1276,13 @@ class Post_Logger extends Logger {
 		}
 
 		if ( isset( $row->context['post_id'] ) ) {
-			$permalink = add_query_arg(
+			$link = add_query_arg(
 				array(
 					'action' => 'edit',
 					'post' => $row->context['post_id'],
 				),
 				admin_url( 'post.php' )
 			);
-
-			if ( $permalink ) {
-				$link = $permalink;
-			}
 		}
 
 		return $link;
@@ -1317,24 +1297,20 @@ class Post_Logger extends Logger {
 	 * @return array Maybe modified context.
 	 */
 	public function add_post_thumb_diff( $context, $old_meta, $new_meta ) {
-		$post_thumb_modified = false;
 		$prev_post_thumb_id = null;
 		$new_post_thumb_id = null;
 
 		// If it was changed from one image to another.
 		if ( isset( $old_meta['_thumbnail_id'][0] ) && isset( $new_meta['_thumbnail_id'][0] ) ) {
 			if ( $old_meta['_thumbnail_id'][0] !== $new_meta['_thumbnail_id'][0] ) {
-				$post_thumb_modified = true;
 				$prev_post_thumb_id = $old_meta['_thumbnail_id'][0];
 				$new_post_thumb_id = $new_meta['_thumbnail_id'][0];
 			}
-		} else {
+		} elseif ( isset( $old_meta['_thumbnail_id'][0] ) ) {
 			// Featured image id did not exist on both new and old data. But on any?
-			if ( isset( $old_meta['_thumbnail_id'][0] ) ) {
-				$prev_post_thumb_id = $old_meta['_thumbnail_id'][0];
-			} elseif ( isset( $new_meta['_thumbnail_id'][0] ) ) {
+			$prev_post_thumb_id = $old_meta['_thumbnail_id'][0];
+		} elseif ( isset( $new_meta['_thumbnail_id'][0] ) ) {
 				$new_post_thumb_id = $new_meta['_thumbnail_id'][0];
-			}
 		}
 
 		if ( $prev_post_thumb_id ) {

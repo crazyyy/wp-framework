@@ -2,6 +2,8 @@
 
 namespace Simple_History;
 
+use Simple_History\Simple_History;
+
 class Helpers {
 	/**
 	 * Pretty much same as wp_text_diff() but with this you can set leading and trailing context lines
@@ -62,7 +64,7 @@ class Helpers {
 
 		$diff = $renderer->render( $text_diff );
 
-		if ( ! $diff ) {
+		if ( $diff === '' ) {
 			return '';
 		}
 
@@ -110,7 +112,7 @@ class Helpers {
 	 *
 	 * @param string $message
 	 * @param array  $context
-	 * @param array  $row Currently not always passed, because loggers need to be updated to support this...
+	 * @param object  $row Currently not always passed, because loggers need to be updated to support this...
 	 */
 	public static function interpolate( $message, $context = array(), $row = null ) {
 		if ( ! is_array( $context ) ) {
@@ -149,7 +151,7 @@ class Helpers {
 		 *
 		 * @param array $context
 		 * @param string $message
-		 * @param array $row The row. Not supported by all loggers.
+		 * @param object $row The row. Not supported by all loggers.
 		 */
 		$context = apply_filters(
 			'simple_history/logger/interpolate/context',
@@ -161,16 +163,9 @@ class Helpers {
 		// Build a replacement array with braces around the context keys
 		$replace = array();
 		foreach ( $context as $key => $val ) {
-			// Both key and val must be strings or number (for vals)
-			// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-			if ( is_string( $key ) || is_numeric( $key ) ) {
-				// key ok
-			}
+			// key ok
 
-			// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-			if ( is_string( $val ) || is_numeric( $val ) ) {
-				// val ok
-			} else {
+			if ( ! is_string( $val ) && ! is_numeric( $val ) ) {
 				// not a value we can replace
 				continue;
 			}
@@ -221,19 +216,11 @@ class Helpers {
 	 * @return bool
 	 */
 	public static function is_valid_public_ip( $ip ) {
-		if (
-			filter_var(
-				$ip,
-				FILTER_VALIDATE_IP,
-				FILTER_FLAG_IPV4 |
-				FILTER_FLAG_NO_PRIV_RANGE |
-				FILTER_FLAG_NO_RES_RANGE
-			) === false
-		) {
-			return false;
-		}
-
-		return true;
+		return filter_var(
+			$ip,
+			FILTER_VALIDATE_IP,
+			FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+		) !== false;
 	}
 
 	/**
@@ -265,7 +252,7 @@ class Helpers {
 		);
 
 		/**
-		 * Filters the array with HTTP headers thay may contain user IP address.
+		 * Filters the array with HTTP headers that may contain user IP address.
 		 *
 		 * @param array $headers
 		 */
@@ -292,15 +279,15 @@ class Helpers {
 	 *
 	 * Based on code from https://www.tollmanz.com/invalidation-schemes/.
 	 *
-	 * @param $refresh bool Pass true to invalidate the cache.
-	 * @return int
+	 * @param bool $refresh Pass true to invalidate the cache.
+	 * @return string
 	 */
 	public static function get_cache_incrementor( $refresh = false ) {
 		$incrementor_key = 'simple_history_incrementor';
 		$incrementor_value = wp_cache_get( $incrementor_key );
 
-		if ( false === $incrementor_value || true === $refresh ) {
-			$incrementor_value = time();
+		if ( false === $incrementor_value || $refresh ) {
+			$incrementor_value = uniqid();
 			wp_cache_set( $incrementor_key, $incrementor_value );
 		}
 
@@ -343,7 +330,7 @@ class Helpers {
 	/**
 	 * Get number of rows in the database tables.
 	 *
-	 * @return array Array with table name, size in mb and number of rows.
+	 * @return array Array with table name, size in mb and number of rows, if tables found.
 	 */
 	public static function get_db_table_stats() {
 		global $wpdb;
@@ -365,9 +352,14 @@ class Helpers {
 			)
 		);
 
+		// If empty array returned then tables does not exist.
+		if ( sizeof( $table_size_result ) === 0 ) {
+			return array();
+		}
+
 		// Get num of rows for each table
-		$total_num_rows_table = (int) $wpdb->get_var( "select count(*) FROM {$simple_history->get_events_table_name()}" ); // phpcs:ignore 
-		$total_num_rows_table_contexts = (int) $wpdb->get_var( "select count(*) FROM {$simple_history->get_contexts_table_name()}" ); // phpcs:ignore 
+		$total_num_rows_table = (int) $wpdb->get_var( "select count(*) FROM {$simple_history->get_events_table_name()}" ); // phpcs:ignore
+		$total_num_rows_table_contexts = (int) $wpdb->get_var( "select count(*) FROM {$simple_history->get_contexts_table_name()}" ); // phpcs:ignore
 
 		$table_size_result[0]->num_rows = $total_num_rows_table;
 		$table_size_result[1]->num_rows = $total_num_rows_table_contexts;
@@ -398,4 +390,248 @@ class Helpers {
 		);
 	}
 
+	/**
+	 * Retrieve the avatar for a user who provided a user ID or email address.
+	 * A modified version of the function that comes with WordPress, but we
+	 * want to allow/show gravatars even if they are disabled in discussion settings
+	 *
+	 * @since 2.0
+	 * @since 3.3 Respects gravatar setting in discussion settings.
+	 *
+	 * @param string       $email email address
+	 * @param string       $size Size of the avatar image
+	 * @param string       $default URL to a default image to use if no avatar is available
+	 * @param string|false $alt Alternative text to use in image tag. Defaults to blank
+	 * @param array        $args Avatar arguments
+	 * @return string The img element for the user's avatar
+	 */
+	public static function get_avatar( $email, $size = '96', $default = '', $alt = false, $args = array() ) {
+		$args = array(
+			'force_display' => false,
+		);
+
+		/**
+		 * Filter to control if avatars should be displayed, even if the show_avatars option
+		 * is set to false in WordPress discussion settings.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @example Force display of Gravatars
+		 *
+		 * ```php
+		 *  add_filter(
+		 *      'simple_history/show_avatars',
+		 *      function ( $force ) {
+		 *          $force = true;
+		 *          return $force;
+		 *      }
+		 *  );
+		 * ```
+		 *
+		 * @param bool $force_display Force display. Default false.
+		 */
+		$args['force_display'] = apply_filters( 'simple_history/show_avatars', $args['force_display'] );
+
+		return get_avatar( $email, $size, $default, $alt, $args );
+	}
+
+	/**
+	 * Function that converts camelCase to snake_case.
+	 * Used to map old functions to new ones.
+	 *
+	 * @since 4.3.0
+	 * @param string $input For example "getLogRowHtmlOutput".
+	 * @return string Modified to for example "get_log_row_html_output".
+	 */
+	public static function camel_case_to_snake_case( $input ) {
+		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $input ) );
+	}
+
+	/**
+	 * Anonymize IP-address using the WordPress function wp_privacy_anonymize_ip(),
+	 * with addition that it replaces the last 0 with a "x" so
+	 * users hopefully understand that it is a modified IP-address
+	 * that is anonymized.
+	 *
+	 * @param string $ip_address IP-address to anonymize.
+	 * @return string
+	 */
+	public static function privacy_anonymize_ip( $ip_address ) {
+		/**
+		 * Filter to control if ip addresses should be anonymized or not.
+		 * Defaults to true, meaning that any IP address is anonymized.
+		 *
+		 * @example Disable IP anonymization.
+		 *
+		 * ```php
+		 * add_filter( 'simple_history/privacy/anonymize_ip_address', '__return_false' );
+		 * ```
+		 *
+		 * @since 2.22
+		 *
+		 * @param bool $do_anonymize true to anonymize ip address, false to keep original ip address.
+		 */
+		$anonymize_ip_address = apply_filters(
+			'simple_history/privacy/anonymize_ip_address',
+			true
+		);
+
+		if ( ! $anonymize_ip_address ) {
+			return $ip_address;
+		}
+
+		$ip_address = wp_privacy_anonymize_ip( $ip_address );
+
+		$add_char = apply_filters(
+			'simple_history/privacy/add_char_to_anonymized_ip_address',
+			true
+		);
+
+		$is_ipv4 = ( 3 === substr_count( $ip_address, '.' ) );
+		if ( $add_char && $is_ipv4 ) {
+			$ip_address = preg_replace( '/\.0$/', '.x', $ip_address );
+		}
+
+		return $ip_address;
+	}
+
+	/**
+	 * Static function that receives a possible anonymized IP-address
+	 * and returns a valid one, e.g. the last '.x' replaced with '.0'.
+	 *
+	 * Used when fetching IP-address info from ipinfo.io, or API call
+	 * will fail due to malformed IP address.
+	 */
+	public static function get_valid_ip_address_from_anonymized( $ip_address ) {
+		$ip_address = preg_replace( '/\.x$/', '.0', $ip_address );
+		return $ip_address;
+	}
+
+	/**
+	 * Check if debug logging is enabled.
+	 * Used by loggers to check if they should log debug messages or not.
+	 *
+	 * @return bool True if debug logging is enabled.
+	 */
+	public static function log_debug_is_enabled() {
+		return defined( 'SIMPLE_HISTORY_LOG_DEBUG' ) && \SIMPLE_HISTORY_LOG_DEBUG;
+	}
+
+	/**
+	 * Check if Simple History dev mode is enabled.
+	 * Used by the developer of the plugin to test things.
+	 *
+	 * @return bool True if dev mode is enabled.
+	 */
+	public static function dev_mode_is_enabled() {
+		return defined( 'SIMPLE_HISTORY_DEV' ) && \SIMPLE_HISTORY_DEV;
+	}
+
+	/**
+	 * Wrapper around WordPress function is_plugin_active()
+	 * that loads the required files if function does not exist.
+	 *
+	 * @param string $plugin_file_path Path to plugin file, relative to plugins dir.
+	 * @return bool True if plugin is active.
+	 */
+	public static function is_plugin_active( $plugin_file_path ) {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		return is_plugin_active( $plugin_file_path );
+	}
+
+	/**
+	 * Returns additional headers with ip numbers found in context.
+	 * Additional = headers that are not the main ip number header.
+	 *
+	 * @since 2.0.29
+	 * @param object $row Row with info.
+	 * @return array Headers
+	 */
+	public static function get_event_ip_number_headers( $row ) {
+		$ip_header_names_keys = self::get_ip_number_header_names();
+		$arr_found_additional_ip_headers = array();
+		$context = $row->context;
+
+		foreach ( $ip_header_names_keys as $one_ip_header_key ) {
+			$one_ip_header_key_lower = strtolower( $one_ip_header_key );
+
+			foreach ( $context as $context_key => $context_val ) {
+				// Header value is stored in key with lowercased
+				// header name and with a number appended to it.
+				// Examples:
+				// _server_http_x_forwarded_for_0, _server_http_x_forwarded_for_1, ...
+				$match = preg_match(
+					"/^_server_{$one_ip_header_key_lower}_[\d+]/",
+					$context_key,
+					$matches
+				);
+
+				if ( $match ) {
+					$arr_found_additional_ip_headers[ $context_key ] = $context_val;
+				}
+			}
+		} // End foreach().
+
+		return $arr_found_additional_ip_headers;
+	}
+
+	/**
+	 * Sanitize checkbox inputs with value "0" or "1",
+	 * so unchecked boxes get value 0 instead of null.
+	 * To be used as sanitization callback for register_setting().
+	 *
+	 * @param string $field value of the field.
+	 * @return string "1" if enabled, "0" if disabled.
+	 */
+	public static function sanitize_checkbox_input( $field ) {
+		return ( $field === '1' ) ? '1' : '0';
+	}
+
+	/**
+	 * Get shortname for a class,
+	 * i.e. the unqualified class name.
+	 * Example get_class_short_name( Simple_History\Services\Loggers_Loader )
+	 * returns 'Loggers_Loader'.
+	 *
+	 * Solution from:
+	 * https://stackoverflow.com/a/27457689
+	 *
+	 * @param object $class Class to get short name for.
+	 * @return string
+	 */
+	public static function get_class_short_name( $class ) {
+		return substr( strrchr( get_class( $class ), '\\' ), 1 );
+	}
+
+	/**
+	 * Check if the db tables required by Simple History exists.
+	 *
+	 * @return array Array with info about the tables and their existence.
+	 */
+	public static function required_tables_exist() {
+		global $wpdb;
+
+		$simple_history_instance = Simple_History::get_instance();
+
+		$tables = array(
+			[
+				'table_name' => $simple_history_instance->get_events_table_name(),
+				'table_exists' => null,
+			],
+			[
+				'table_name' => $simple_history_instance->get_contexts_table_name(),
+				'table_exists' => null,
+			],
+		);
+
+		foreach ( $tables as $key => $table ) {
+			$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table['table_name'] ) );
+			$tables[ $key ]['table_exists']  = $table_exists;
+		}
+
+		return $tables;
+	}
 }

@@ -2,6 +2,7 @@
 
 namespace Simple_History\Loggers;
 
+use Simple_History\Helpers;
 use Simple_History\Log_Initiators;
 
 /**
@@ -44,11 +45,8 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 	}
 
 	public function loaded() {
-
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-
 		$pluginFilePath = 'limit-login-attempts/limit-login-attempts.php';
-		$isPluginActive = is_plugin_active( $pluginFilePath );
+		$isPluginActive = Helpers::is_plugin_active( $pluginFilePath );
 
 		// Only continue to add filters if plugin is active.
 		// This minimise the risk of plugin errors, because plugin
@@ -150,13 +148,7 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 			// $when = sprintf( _n( '%d minute', '%d minutes', $time, 'limit-login-attempts' ), $time );
 		}
 
-		if ( $whitelisted ) {
-			// $subject = __( "Failed login attempts from whitelisted IP", 'limit-login-attempts' );
-			$message_key = 'failed_login_whitelisted';
-		} else {
-			// $subject = __( "Too many failed login attempts", 'limit-login-attempts' );
-			$message_key = 'failed_login';
-		}
+		$message_key = $whitelisted ? 'failed_login_whitelisted' : 'failed_login';
 
 		$this->notice_message(
 			$message_key,
@@ -175,7 +167,6 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 		return $value;
 	}
 
-
 	/**
 	 * Add some extra info
 	 */
@@ -192,30 +183,40 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 			$count = $context['count'];
 			$lockouts = $context['lockouts'];
 			$ip = $context['ip'];
-			// $whitelisted = $context["whitelisted"];
 			$lockout_type = $context['lockout_type'];
 			$time = $context['time'];
 
-			$output .= sprintf(
-				'<p>' . _x( '%1$d failed login attempts (%2$d lockout(s)) from IP: %3$s', 'Logger: Plugin Limit Login Attempts', 'simple-history' ) . '</p>',
-				$count, // 1
-				$lockouts,  // 2
-				$ip // 3
+			$message_string = sprintf(
+				/* translators: 1: number of login attempts, 2: number of lockouts, 3: IP that caused lockout. */
+				_x( '%1$d failed login attempts (%2$d lockout(s)) from IP: %3$s', 'Logger: Plugin Limit Login Attempts', 'simple-history' ),
+				$count,
+				$lockouts,
+				$ip
 			);
 
+			$output .= '<p>' . $message_string . '</p>';
+
 			if ( 'longer' == $lockout_type ) {
-				$when = sprintf( _nx( '%d hour', '%d hours', $time, 'Logger: Plugin Limit Login Attempts', 'simple-history' ), $time );
+				$when = sprintf(
+					/* translators: %d number of hours. */
+					_nx( '%d hour', '%d hours', $time, 'Logger: Plugin Limit Login Attempts', 'simple-history' ),
+					$time
+				);
 			} elseif ( 'normal' == $lockout_type ) {
-				$when = sprintf( _nx( '%d minute', '%d minutes', $time, 'Logger: Plugin Limit Login Attempts', 'simple-history' ), $time );
+				$when = sprintf(
+					/* translators: %d number of minutes. */
+					_nx( '%d minute', '%d minutes', $time, 'Logger: Plugin Limit Login Attempts', 'simple-history' ),
+					$time
+				);
 			}
 
 			$output .= '<p>' . sprintf(
-				_x( 'IP was blocked for %1$s', 'Logger: Plugin Limit Login Attempts', 'simple-history' ),
-				$when // 1
+				/* translators: %s time the IP was blocked, e.g. 2 hours. */
+				_x( 'IP was blocked for %s', 'Logger: Plugin Limit Login Attempts', 'simple-history' ),
+				$when
 			) . '</p>';
 		}
 
 		return $output;
 	}
 }
-

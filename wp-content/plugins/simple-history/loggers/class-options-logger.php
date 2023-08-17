@@ -52,8 +52,15 @@ class Options_Logger extends Logger {
 		add_action( 'updated_option', array( $this, 'on_updated_option' ), 10, 3 );
 	}
 
+	/**
+	 * When an option is updated.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed $old_value Old value.
+	 * @param mixed $new_value New value.
+	 * @return void
+	 */
 	public function on_updated_option( $option, $old_value, $new_value ) {
-
 		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 			return;
 		}
@@ -224,7 +231,6 @@ class Options_Logger extends Logger {
 		return $output;
 	}
 
-
 	/**
 	 * Page on front = "Front page displays" -> Your latest posts / A static page
 	 * value 0 = Your latest post
@@ -235,7 +241,7 @@ class Options_Logger extends Logger {
 		if ( ! empty( $old_value ) && is_numeric( $old_value ) ) {
 			$old_post = get_post( $old_value );
 
-			if ( $old_post ) {
+			if ( $old_post instanceof \WP_Post ) {
 				$context['old_post_title'] = $old_post->post_title;
 			}
 		}
@@ -243,7 +249,7 @@ class Options_Logger extends Logger {
 		if ( ! empty( $new_value ) && is_numeric( $new_value ) ) {
 			$new_post = get_post( $new_value );
 
-			if ( $new_post ) {
+			if ( $new_post instanceof \WP_Post ) {
 				$context['new_post_title'] = $new_post->post_title;
 			}
 		}
@@ -285,10 +291,14 @@ class Options_Logger extends Logger {
 			$output .= sprintf(
 				$tmpl_row,
 				__( 'New value', 'simple-history' ),
-				sprintf( __( 'Page %1$s', 'simple-history' ), $post_title_with_link )
+				sprintf(
+					/* translators: %s post title with link. */
+					__( 'Page %s', 'simple-history' ),
+					$post_title_with_link
+				)
 			);
 		}
-		if ( intval( $new_value ) == 0 ) {
+		if ( (int) $new_value == 0 ) {
 			$output .= sprintf(
 				$tmpl_row,
 				__( 'New value', 'simple-history' ),
@@ -306,11 +316,15 @@ class Options_Logger extends Logger {
 			$output .= sprintf(
 				$tmpl_row,
 				__( 'Old value', 'simple-history' ),
-				sprintf( __( 'Page %1$s', 'simple-history' ), $post_title_with_link )
+				sprintf(
+					/* translators: %s post title with link. */
+					__( 'Page %s', 'simple-history' ),
+					$post_title_with_link
+				)
 			);
 		}
 
-		if ( intval( $old_value ) == 0 ) {
+		if ( (int) $old_value == 0 ) {
 			$output .= sprintf(
 				$tmpl_row,
 				__( 'Old value', 'simple-history' ),
@@ -351,7 +365,6 @@ class Options_Logger extends Logger {
 
 		return $context;
 	}
-
 
 	/**
 	 * Add detailed output for default_category
