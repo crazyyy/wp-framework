@@ -211,14 +211,17 @@ if ( ! class_exists( "cmplz_cookie_admin" ) ) {
 		public function maybe_filter_consenttype( $consenttype, $region ) {
 			if ( $region === 'ca'
 				 && cmplz_site_shares_data()
-			     && cmplz_get_value( 'sensitive_information_processed' ) === 'yes'
+				 && cmplz_get_value( 'sensitive_information_processed' ) === 'yes'
 			) {
+				$consenttype = 'optin';
+			} elseif ( $region === 'ca'
+					   && cmplz_get_value('ca_targets_quebec') === 'yes' ) {
 				$consenttype = 'optin';
 			}
 			if ( $region === 'au'
 				 && cmplz_site_shares_data()
-			     && cmplz_get_value( 'sensitive_information_processed' )==='yes'
-			     && cmplz_uses_marketing_cookies()
+				 && cmplz_get_value( 'sensitive_information_processed' ) === 'yes'
+				 && cmplz_uses_marketing_cookies()
 			) {
 				$consenttype = 'optin';
 			}
@@ -3144,6 +3147,9 @@ if ( ! class_exists( "cmplz_cookie_admin" ) ) {
 			if ( function_exists( 'icl_register_string' ) ) {
 				$wpml = apply_filters( 'wpml_active_languages', null,
 					array( 'skip_missing' => 0 ) );
+				if ( !is_array($wpml) ){
+					$wpml = [];
+				}
 				/**
 				 * WPML has changed the index from 'language_code' to 'code' so
 				 * we check for both.

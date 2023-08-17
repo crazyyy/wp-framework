@@ -359,7 +359,6 @@ if ( ! class_exists( "cmplz_config" ) ) {
 		}
 
 		public function get_section_by_id( $id ) {
-
 			$steps = $this->steps['wizard'];
 			foreach ( $steps as $step ) {
 				if ( ! isset( $step['sections'] ) ) {
@@ -463,14 +462,6 @@ if ( ! class_exists( "cmplz_config" ) ) {
 		public function load_warning_types() {
 			$banner_url = admin_url(add_query_arg(array('page'=>'cmplz-cookiebanner','id'=>cmplz_get_default_banner_id()),'admin.php'));
 			$this->warning_types = apply_filters('cmplz_warning_types' ,array(
-
-				'datarequests' => array(
-					'warning_condition' => 'cmplz_upgraded_to_current_version',
-					'premium' => __( 'New Feature: Data requests for Privacy Statements.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/data-requests/'),
-					'plus_one' => true,
-					'include_in_progress' => false,
-				),
-
 				'phpversion' => array(
 					'warning_condition' => 'NOT cmplz_has_recommended_phpversion',
 					'urgent' => __( 'Your PHP version is lower than the recommended PHP version. Some features are not available. Support for this PHP version will be dropped soon.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/php-version/'),
@@ -486,11 +477,12 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'admin_notice' => true,
 				),
 
-				'new_gutenberg_consentarea' => array(
-					'warning_condition'  => 'cmplz_upgraded_to_current_version',
-					'open' => __( 'New: Gutenberg Block with consent capabilities.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/gutenberg-block-consent/'),
-					'admin_notice' => false,
-					'plus_one' => true,
+				'enable_quebec_region' => array(
+					'warning_condition'  => 'cmplz_requires_quebec_notice',
+					'open' => cmplz_quebec_notice(),
+					'url' => 'https://complianz.io/quebec-bill-64/',
+					'admin_notice' => true,
+					'dismissible' => true,
 				),
 
 				'wizard-incomplete'  => array(

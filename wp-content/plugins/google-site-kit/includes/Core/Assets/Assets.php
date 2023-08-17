@@ -16,7 +16,10 @@ use Google\Site_Kit\Core\Permissions\Permissions;
 use Google\Site_Kit\Core\Storage\Options;
 use Google\Site_Kit\Core\Util\BC_Functions;
 use Google\Site_Kit\Core\Util\Feature_Flags;
+use Google\Site_Kit\Core\Util\URL;
 use WP_Dependencies;
+use WP_Post_Type;
+use WP_Post;
 
 /**
  * Class managing assets.
@@ -611,7 +614,7 @@ final class Assets {
 				'googlesitekit-settings',
 				array(
 					'src'          => $base_url . 'js/googlesitekit-settings.js',
-					'dependencies' => $this->get_asset_dependencies( 'dashboard' ),
+					'dependencies' => $this->get_asset_dependencies( 'dashboard-sharing' ),
 				)
 			),
 			new Script(
@@ -723,6 +726,7 @@ final class Assets {
 			'postTypes'        => $this->get_post_types(),
 			'storagePrefix'    => $this->get_storage_prefix(),
 			'referenceDate'    => apply_filters( 'googlesitekit_reference_date', null ),
+			'productBasePaths' => $this->get_product_base_paths(),
 		);
 
 		/**
@@ -1060,6 +1064,50 @@ final class Assets {
 		$session_token = isset( $auth_cookie['token'] ) ? $auth_cookie['token'] : '';
 
 		return wp_hash( $current_user->user_login . '|' . $session_token . '|' . $blog_id );
+	}
+
+	/**
+	 * Returns an array of product base paths.
+	 *
+	 * @since 1.106.0
+	 *
+	 * @return array The array of product base paths.
+	 */
+	private function get_product_base_paths() {
+		if ( ! Feature_Flags::enabled( 'userInput' ) ) {
+			return array();
+		}
+
+		// Return early if permalinks are not used.
+		if ( ! get_option( 'permalink_structure' ) ) {
+			return array();
+		}
+
+		$product_base_paths = array();
+		$product_type       = get_post_type_object( 'product' );
+
+		// Check whether the product post type is available and public.
+		if ( $product_type instanceof WP_Post_Type && $product_type->public ) {
+			global $wp_rewrite;
+			$permastruct               = $wp_rewrite->get_extra_permastruct( 'product' );
+			$permalink_template        = home_url( $permastruct );
+			$product_url_path          = URL::parse( $permalink_template, PHP_URL_PATH );
+			list( $product_base_path ) = explode( '%product%', $product_url_path, 2 );
+			$product_base_paths[]      = $product_base_path;
+		}
+
+		/**
+		 * Filters product base paths found in WordPress. By default the array contains
+		 * the base path for the "product" post type if it is available in WordPress
+		 * and public.
+		 *
+		 * @since 1.106.0
+		 *
+		 * @param array $product_base_paths Array of existing product base paths.
+		 */
+		$product_base_paths = apply_filters( 'googlesitekit_product_base_paths', $product_base_paths );
+
+		return $product_base_paths;
 	}
 
 }

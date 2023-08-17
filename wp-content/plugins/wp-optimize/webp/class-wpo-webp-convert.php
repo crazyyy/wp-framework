@@ -1,10 +1,6 @@
 <?php
 
 if (!defined('WPO_VERSION')) die('No direct access allowed');
-use \WebPConvert\Convert\ConverterFactory;
-
-require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/autoload.php');
-require_once(WPO_PLUGIN_MAIN_PATH . 'webp/class-wpo-webp-test-run.php');
 
 if (!class_exists('WPO_WebP_Convert')) :
 
@@ -49,13 +45,8 @@ class WPO_WebP_Convert {
 	 */
 	protected function check_converters_and_do_conversion($source, $destination) {
 		foreach ($this->converters as $converter) {
-				$converter_instance = ConverterFactory::makeConverter(
-					$converter,
-					$source,
-					$destination
-				);
-				$converter_instance->doConvert();
-				break;
+			WPO_WebP_Utils::perform_webp_conversion($converter, $source, $destination);
+			break;
 		}
 	}
 }

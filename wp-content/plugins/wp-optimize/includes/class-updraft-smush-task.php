@@ -101,9 +101,9 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 			$ext = WPO_Image_Utils::get_extension($file_path);
 			$allowed_extensions = WPO_Image_Utils::get_allowed_extensions();
 			$allowed_extensions = array_diff($allowed_extensions, array('gif'));
-			if (WPO_Image_Utils::can_do_webp_conversion()) {
+			if (WPO_WebP_Utils::can_do_webp_conversion()) {
 				if (WPO_Image_Utils::is_supported_extension($ext, $allowed_extensions)) {
-					WPO_Image_Utils::do_webp_conversion($file_path);
+					WPO_WebP_Utils::do_webp_conversion($file_path);
 				}
 			} else {
 				$webp_tools_available = false;
@@ -290,7 +290,7 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 			$info = sprintf(__("The file was compressed to %s using WP-Optimize", 'wp-optimize'), WP_Optimize()->format_size(filesize($file_path)));
 		} else {
 			$saved = round((($original_size - filesize($file_path)) / $original_size * 100), 2);
-			$info = sprintf(__("The file was compressed from %s to %s saving %s percent using WP-Optimize", 'wp-optimize'), WP_Optimize()->format_size($original_size), WP_Optimize()->format_size(filesize($file_path)), $saved);
+			$info = sprintf(__("The file was compressed from %s to %s, saving %s percent, using WP-Optimize", 'wp-optimize'), WP_Optimize()->format_size($original_size), WP_Optimize()->format_size(filesize($file_path)), $saved);
 		}
 
 		$stats = array(

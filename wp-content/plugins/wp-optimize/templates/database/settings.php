@@ -16,9 +16,9 @@
 
 		<div class="wp-optimize-settings-save-results"></div>
 
-		<input id="wp-optimize-save-database-settings" class="button button-primary wpo-save-settings" type="submit" name="wp-optimize-settings" value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>" />
+		<input id="wp-optimize-save-database-settings" class="button button-primary wpo-save-settings" type="submit" name="wp-optimize-settings" value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>">
 		
-		<img class="wpo_spinner wpo-saving-settings" src="<?php echo esc_attr(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+		<img class="wpo_spinner wpo-saving-settings" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
 		
 		<span class="dashicons dashicons-yes display-none save-done"></span>
 

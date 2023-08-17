@@ -1,9 +1,9 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
 
-<h3><?php _e('Scheduled clean-up settings', 'wp-optimize'); ?></h3>
+<h3><?php esc_html_e('Scheduled clean-up settings', 'wp-optimize'); ?></h3>
 
 <p>
-	<a href="<?php echo WP_Optimize()->premium_version_link; ?>" target="_blank"><?php _e('Take control of clean-ups: Upgrade to Premium for a more powerful and flexible scheduler', 'wp-optimize'); ?></a>
+	<a href="<?php echo esc_url(WP_Optimize()->premium_version_link); ?>" target="_blank"><?php esc_html_e('Take control of clean-ups: Upgrade to Premium for a more powerful and flexible scheduler', 'wp-optimize'); ?></a>
 </p>
 
 <div class="wpo-fieldgroup">
@@ -11,7 +11,7 @@
 	<p>
 
 		<input name="enable-schedule" id="enable-schedule" type="checkbox" value ="true"  <?php checked($options->get_option('schedule'), 'true'); ?>>
-		<label for="enable-schedule"><?php _e('Enable scheduled clean-up and optimization', 'wp-optimize'); ?></label>
+		<label for="enable-schedule"><?php esc_html_e('Enable scheduled clean-up and optimization', 'wp-optimize'); ?></label>
 
 	</p>
 
@@ -19,7 +19,7 @@
 
 		<p>
 
-			<?php _e('Select schedule type (default is Weekly)', 'wp-optimize'); ?><br>
+			<?php esc_html_e('Select schedule type (default is Weekly)', 'wp-optimize'); ?><br>
 			<select id="schedule_type" name="schedule_type">
 
 				<?php
@@ -37,7 +37,7 @@
 
 					foreach ($schedule_options as $opt_id => $opt_description) {
 					?>
-					<option value="<?php echo esc_attr($opt_id); ?>" <?php if ($opt_id == $schedule_type_saved_id) echo 'selected="selected"'; ?>><?php echo htmlspecialchars($opt_description); ?></option>
+					<option value="<?php echo esc_attr($opt_id); ?>" <?php if ($opt_id == $schedule_type_saved_id) echo 'selected="selected"'; ?>><?php echo esc_html($opt_description); ?></option>
 					<?php
 					}
 
@@ -62,7 +62,7 @@
 			$setting_activated = (empty($wpo_auto_options[$auto_id]) || 'false' == $wpo_auto_options[$auto_id]) ? false : true;
 			?>
 			<p>
-			<input name="wp-optimize-auto[<?php echo $auto_id; ?>]" id="<?php echo esc_attr($auto_dom_id); ?>" type="checkbox" value="true" <?php if ($setting_activated) echo 'checked="checked"'; ?>> <label for="<?php echo esc_attr($auto_dom_id); ?>"><?php echo $optimization->get_auto_option_description(); ?></label>
+			<input name="wp-optimize-auto[<?php echo esc_attr($auto_id); ?>]" id="<?php echo esc_attr($auto_dom_id); ?>" type="checkbox" value="true" <?php if ($setting_activated) echo 'checked="checked"'; ?>> <label for="<?php echo esc_attr($auto_dom_id); ?>"><?php echo esc_html($optimization->get_auto_option_description()); ?></label>
 			</p>
 			<?php
 			}

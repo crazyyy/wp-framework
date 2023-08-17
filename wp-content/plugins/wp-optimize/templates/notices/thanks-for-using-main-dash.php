@@ -6,7 +6,7 @@
 
 	<h3><?php _e('Thank you for installing WP-Optimize!', 'wp-optimize'); ?></h3>
 
-	<a href="https://getwpo.com"><img style="border: 0px; float: right; width: 150px; margin-right: 40px;" alt="WP-Optimize" title="WP-Optimize" src="<?php echo WPO_PLUGIN_URL.'/images/logo/wpo_logo_small.png'; ?>"></a>
+	<a href="https://getwpo.com" target="_blank"><img style="border: 0px; float: right; width: 150px; margin-right: 40px;" alt="WP-Optimize" title="WP-Optimize" src="<?php echo WPO_PLUGIN_URL.'/images/logo/wpo_logo_small.png'; ?>"></a>
 
 	<div id="wp-optimize-dashnotice-wrapper" style="max-width: 800px;">
 
@@ -15,19 +15,19 @@
 		</p>
 
 		<p>
-			<?php printf(__('%s offers powerful extra features and flexibility, and WordPress multisite support.', 'wp-optimize'), '<strong>'.$wp_optimize->wp_optimize_url('https://getwpo.com', __('WP-Optimize Premium:', 'wp-optimize'), '', 'target="_blank"', true).'</strong>'); ?>
+			<?php printf(__('%s offers powerful extra features and flexibility, and WordPress multisite support.', 'wp-optimize'), '<strong>'.$wp_optimize->wp_optimize_url('https://getwpo.com', __('WP-Optimize Premium:', 'wp-optimize'), '', '', true).'</strong>'); ?>
 		</p>
 
 		<p>
-			<?php printf(__('%s simplifies backups and restoration. It is the world\'s highest ranking and most popular scheduled backup plugin, with over three million currently-active installs.', 'wp-optimize'), '<strong>'.$wp_optimize->wp_optimize_url('https://wordpress.org/plugins/updraftplus/', 'UpdraftPlus', '', 'target="_blank"', true).'</strong>'); ?>
+			<?php printf(__('%s simplifies backups and restoration.', 'wp-optimize') . ' ' . __('It is the world\'s highest ranking and most popular scheduled backup plugin, with over three million currently-active installs.', 'wp-optimize'), '<strong>'.$wp_optimize->wp_optimize_url('https://wordpress.org/plugins/updraftplus/', 'UpdraftPlus', '', '', true).'</strong>'); ?>
 		</p>
 
 		<p>
-			<?php printf(__('%s is a highly efficient way to manage, optimize, update and backup multiple websites from one place.', 'wp-optimize'), '<strong>'.$wp_optimize->wp_optimize_url('https://updraftcentral.com', 'UpdraftCentral', '', 'target="_blank"', true).'</strong>'); ?>
+			<?php printf(__('%s is a highly efficient way to manage, optimize, update and backup multiple websites from one place.', 'wp-optimize'), '<strong>'.$wp_optimize->wp_optimize_url('https://updraftcentral.com', 'UpdraftCentral', '', '', true).'</strong>'); ?>
 		</p>
 
 		<p>
-			<?php echo '<strong>'.__('More quality plugins', 'wp-optimize').': </strong>'.$wp_optimize->wp_optimize_url('https://www.simbahosting.co.uk/s3/shop/', __('Premium WooCommerce plugins', 'wp-optimize'), '', 'target="_blank"', true); ?>
+			<?php echo '<strong>'.__('More quality plugins', 'wp-optimize').': </strong>'.$wp_optimize->wp_optimize_url('https://www.simbahosting.co.uk/s3/shop/', __('Premium WooCommerce plugins', 'wp-optimize'), '', '', true); ?>
 		</p>
 
 	</div>

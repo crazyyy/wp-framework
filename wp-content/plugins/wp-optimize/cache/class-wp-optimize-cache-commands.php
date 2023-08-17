@@ -163,8 +163,15 @@ class WP_Optimize_Cache_Commands {
 	 * @return array
 	 */
 	public function purge_page_cache() {
-
-		if (!WP_Optimize()->get_page_cache()->can_purge_cache()) {
+		
+		if (!WP_Optimize()->get_page_cache()->is_enabled()) {
+			return array(
+				'success' => false,
+				'error' => __('Cache is not enabled.', 'wp-optimize'),
+			);
+		}
+		
+		if (!WP_Optimize()->get_page_cache()->can_purge_cache() && !(defined('WP_CLI') && WP_CLI)) {
 			return array(
 				'success' => false,
 				'message' => __('You do not have permission to purge the cache', 'wp-optimize'),

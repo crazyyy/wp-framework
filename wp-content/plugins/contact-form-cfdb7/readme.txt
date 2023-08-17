@@ -4,12 +4,12 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=H5F3Z6S3
 Tags: cf7, contact form 7, contact form 7 db, contact form db, contact form seven, contact form storage, export contact form, save contact form, wpcf7
 Requires at least: 4.8
 Tested up to: 6.2
-Stable tag: 1.2.6.5
+Stable tag: 1.2.6.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires PHP: 5.6
 
-Save and manage Contact Form 7 messages. Never lose important data. It is lightweight contact form 7 database plugin.
+Save and manage Contact Form 7 messages. Never lose important data. It is a lightweight contact form 7 database plugin.
 
 
 == Description ==
@@ -28,24 +28,24 @@ By simply installing the plugin, it will automatically begin to capture form sub
 * Display all created contact form 7 form list.
 * Export CF7 DB (CF7 Database - cf7db) data in CSV file
 
+= Form Email Testing Tool =
+* [MailMug - YouTube Video](https://youtu.be/fAXevTJ0r8I) 
+
 = Plugins =
 * [PostBox Email Log](https://wordpress.org/plugins/postbox-email-logs/)
 * [WP mail smtp](https://wordpress.org/plugins/wp-mail-smtp-mailer/)
 
-= Android/iOS App =
-* [Download APP](https://github.com/arshidkv12/cfdb7-connector/blob/main/readme.md)
-
 = Pro Addons =
+* [Advanced MYSQL DB](https://ciphercoin.com/downloads/contact-form-7-column-base-mysql-database-addon/)
+Separate MySQL column for each cf7 input field
 * [CFDB7 DB Switcher](https://ciphercoin.com/downloads/cfdb7-database-switcher/)
 Connect CFDB7 to an external database or another DB
 * [Drag & Drop File Upload](https://ciphercoin.com/downloads/filedrop-contact-form-7/)
 Contact form 7 drag and drop files upload plugin.
 * [Already Submitted?](https://ciphercoin.com/downloads/cfdb7-unique-field/)
 Trigger error if a field is already submitted
-* [CF7 Repeater](https://ciphercoin.com/downloads/contact-form-7-field-repeater-download/)
-CF7 Repeater plugin allows creating one or more field dynamically
 * [Popup Message](https://ciphercoin.com/downloads/cf7-popup-message/)
-Replace your validation and success messages into beautiful popup message to attract visitors.
+Replace your validation and success messages with beautiful popup messages to attract visitors.
 * [Export PDF File](https://ciphercoin.com/downloads/cfdb7-export-pdf-addon/)
 Easy to export contact forms from database to PDF file
  
@@ -58,13 +58,16 @@ Extensions : [Contact form 7 more Add-ons](https://ciphercoin.com/contact-form-7
 
 1. Download and extract plugin files to a wp-content/plugin directory.
 2. Activate the plugin through the WordPress admin interface.
-3. Done !
+3. Done!
 
 
 == Screenshots ==
 1. Admin
 
 == Changelog ==
+
+= 1.2.6.7 =
+Improve I18N Issues
 
 = 1.2.6.5 =
 Fixed csv security issues 
@@ -81,11 +84,7 @@ Fixed nonce issue
 = 1.2.5.9 =
 Fixed upload issue 
 
-= 1.2.5.8 =
-This is a security and maintenance release and we strongly encourage you to update to it immediately.
 
-= 1.2.5.4 =
-Input sanitization 
 
 
 

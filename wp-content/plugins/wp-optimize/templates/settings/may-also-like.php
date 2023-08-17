@@ -32,7 +32,7 @@
 				<p><?php _e('Installed', 'wp-optimize');?></p>
 			</td>
 			<td>
-				<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
+				<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>" target="_blank"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
 			</td>
 		</tr>
 		<tr class="wpo-main-feature-row">
@@ -275,7 +275,7 @@
 				<p><?php _e('Installed', 'wp-optimize');?></p>
 			</td>
 			<td>
-				<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
+				<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>" target="_blank"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
 			</td>
 		</tr>
 		</tbody>
@@ -303,7 +303,12 @@
 				<?php _e("Hacking, server crashes, dodgy updates or simple user error can ruin everything.", 'wp-optimize');?>
 			</p>
 			<p>
-				<?php _e("With UpdraftPlus, you can rest assured that if the worst does happen, it's no big deal. rather than losing everything, you can simply restore the backup and be up and running again in no time at all.", 'wp-optimize');?>
+				<?php
+					$message = __("With UpdraftPlus, you can rest assured that if the worst does happen, it's no big deal.", 'wp-optimize');
+					$message .= ' ';
+					$message .= __("Rather than losing everything, you can simply restore the backup and be up and running again in no time at all.", 'wp-optimize');
+					echo esc_html($message);
+				?>
 			</p>
 			<p>
 				<?php _e("You can also migrate your website with few clicks without hassle.", 'wp-optimize');?>
@@ -323,7 +328,12 @@
 				<?php _e("If you manage a few WordPress sites, you need UpdraftCentral.", 'wp-optimize');?>
 			</p>
 			<p>
-				<?php _e("UpdraftCentral is a powerful tool that allows you to efficiently manage, update, backup and even restore multiple websites from just one location. You can also manage users and comments on all the sites at once, and through its central login feature, you can access each WP-dashboard with a single click.", 'wp-optimize');?>
+				<?php
+					$message = __("UpdraftCentral is a powerful tool that allows you to efficiently manage, update, backup and even restore multiple websites from just one location.", 'wp-optimize');
+					$message .= ' ';
+					$message .= __("You can also manage users and comments on all the sites at once, and through its central login feature, you can access each WP-dashboard with a single click.", 'wp-optimize');
+					echo esc_html($message);
+				?>
 			</p>
 			<p>
 				<?php _e("With a wide range of useful features, including automated backup schedules and sophisticated one click updates, UpdraftCentral is sure to boost to your productivity and save you time.", 'wp-optimize');?>

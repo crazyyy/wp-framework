@@ -61,7 +61,7 @@ class WPO_Activation {
 		if (!class_exists('Updraft_Tasks_Activation')) {
 			require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-tasks-activation.php');
 		}
-		Updraft_Tasks_Activation::init_db();
+		Updraft_Tasks_Activation::init(WPO_PLUGIN_SLUG);
 		Updraft_Tasks_Activation::reinstall_if_needed();
 	}
 

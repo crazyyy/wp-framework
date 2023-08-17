@@ -14,7 +14,7 @@ $check_version = false;
 // If UpdraftPlus Admin exists along with Method and active, then call the update modal.
 if (is_a($updraftplus_admin, 'UpdraftPlus_Admin') && is_callable(array($updraftplus_admin, 'add_backup_scaffolding'))) {
 	if (!$wpo_backup_initialized) {
-		$updraftplus_admin->add_backup_scaffolding(__('Backup before running optimizations', 'wp-optimize'), array($updraftplus_admin, 'backupnow_modal_contents'));
+		$updraftplus_admin->add_backup_scaffolding(esc_html__('Backup before running optimizations', 'wp-optimize'), array($updraftplus_admin, 'backupnow_modal_contents'));
 	}
 	$wpo_backup_initialized = true;
 	$check_version = true;
@@ -63,13 +63,13 @@ $is_checked = ('true' == $option_value);
 
 ?>
 <p class="wpo-take-a-backup">
-	<input class="enable-auto-backup" name="<?php echo $checkbox_name; ?>" id="<?php echo $checkbox_name; ?>" type="checkbox" value="true" <?php checked($is_checked);?> <?php echo $disabled_backup; ?> />
-	<label for="<?php echo $checkbox_name; ?>"> <?php echo $label_text; ?> </label>
+	<input class="enable-auto-backup" name="<?php echo esc_attr($checkbox_name); ?>" id="<?php echo esc_attr($checkbox_name); ?>" type="checkbox" value="true" <?php checked($is_checked);?> <?php echo esc_attr($disabled_backup); ?> />
+	<label for="<?php echo esc_attr($checkbox_name); ?>"> <?php echo esc_html($label_text); ?> </label>
 
 	<?php
 	// UpdraftPlus is not installed.
 	if ('disabled' == $disabled_backup && !$updraftplus_status['installed']) {
-		echo '<small><a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=updraftplus'), 'install-plugin_updraftplus').'"> '.__('Follow this link to install UpdraftPlus, to take a backup before optimization', 'wp-optimize').' </a></small>';
+		echo '<small><a href="'.esc_url(wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=updraftplus'), 'install-plugin_updraftplus')).'"> '.esc_html__('Follow this link to install UpdraftPlus, to take a backup before optimization', 'wp-optimize').' </a></small>';
 	} else {
 		// Build activate url.
 		$activate_url = add_query_arg(array(
@@ -85,10 +85,10 @@ $is_checked = ('true' == $option_value);
 
 		// Check updraftplus version first.
 		if (!empty($updraftplus_version_check)) {
-			echo '<small>'.__('UpdraftPlus needs to be updated to 1.12.33 or higher in order to backup the database before optimization.', 'wp-optimize').' <a href="'.admin_url('update-core.php').'">'.__('Please update UpdraftPlus to the latest version.', 'wp-optimize').'</a></small>';
+			echo '<small>'.esc_html__('UpdraftPlus needs to be updated to 1.12.33 or higher in order to backup the database before optimization.', 'wp-optimize').' <a href="'.esc_url(admin_url('update-core.php')).'">'.esc_html__('Please update UpdraftPlus to the latest version.', 'wp-optimize').'</a></small>';
 		} else {
 			if ($updraftplus_status['installed'] && !$updraftplus_status['active']) {
-				echo '<small><a href="'.$activate_url.'"> '.__('UpdraftPlus is installed but currently not active. Follow this link to activate UpdraftPlus, to take a backup before optimization.', 'wp-optimize').' </a></small>';
+				echo '<small><a href="'.esc_url($activate_url).'"> '.esc_html__('UpdraftPlus is installed but currently not active.', 'wp-optimize').' '.esc_html__('Follow this link to activate UpdraftPlus, to take a backup before optimization.', 'wp-optimize') .'</a></small>';
 			}
 		}
 	}

@@ -3,7 +3,7 @@
  * Plugin Name: WP Reroute Email
  * Plugin URI: http://wordpress.org/extend/plugins/wp-reroute-email/
  * Description: This plugin intercepts all outgoing emails from a WordPress site and reroutes them to a predefined configurable email address.
- * Version: 1.4.9
+ * Version: 1.5.0
  * Author: Sajjad Hossain
  * Author URI: http://www.sajjadhossain.com
  * License: GPLv2 or later
@@ -232,11 +232,11 @@ class WPRerouteEmail {
         $attachments = $phpmailer->getattachments();
         
         $sql = "INSERT INTO $table_name (subject, message, recipients_to, recipients_cc, recipients_bcc, has_attachment, sent_on)
-                VALUES('" . esc_sql($phpmailer->Subject) . "', 
-                '" . esc_sql($phpmailer->Body) . "', 
-                '" . esc_sql($recipients_to) . "', 
-                '" . esc_sql($recipients_cc) . "', 
-                '" . esc_sql($recipients_bcc) . "', 
+                VALUES('" . esc_sql(sanitize_text_field($phpmailer->Subject)) . "', 
+                '" . esc_sql(sanitize_post($phpmailer->Body)) . "', 
+                '" . esc_sql(sanitize_text_field($recipients_to)) . "', 
+                '" . esc_sql(sanitize_text_field($recipients_cc)) . "', 
+                '" . esc_sql(sanitize_text_field($recipients_bcc)) . "', 
                 '" . (empty($attachments) ? 0 : 1) . "',
                 '" . current_time('mysql', TRUE) . "')";
         

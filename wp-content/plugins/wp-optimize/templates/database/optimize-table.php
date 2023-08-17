@@ -5,7 +5,7 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 <div class="wpo_shade hidden">
 	<div class="wpo_shade_inner">
 			<span class="dashicons dashicons-update-alt wpo-rotate"></span>
-		<h4><?php _e('Loading data...', 'wp-optimize'); ?></h4>
+		<h4><?php esc_html_e('Loading data...', 'wp-optimize'); ?></h4>
 	</div>
 </div>
 
@@ -26,17 +26,21 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 	?>
 
 	<?php WP_Optimize()->include_template('database/status-box-contents.php', false, array('optimize_db' => false)); ?>
-
-	<form onsubmit="return confirm('<?php echo esc_js(__('Warning: This operation is permanent. Continue?', 'wp-optimize')); ?>')" action="#" method="post" enctype="multipart/form-data" name="optimize_form" id="optimize_form">
+	<?php
+		$message = __('Warning: This operation is permanent.', 'wp-optimize');
+		$message .= ' ';
+		$message .= __('Continue?', 'wp-optimize');
+	?>
+	<form onsubmit="return confirm('<?php echo esc_js($message); ?>')" action="#" method="post" enctype="multipart/form-data" name="optimize_form" id="optimize_form">
 	
 	<?php wp_nonce_field('wpo_optimization'); ?>
 	
-		<h3><?php _e('Optimizations', 'wp-optimize'); ?></h3>
+		<h3><?php esc_html_e('Optimizations', 'wp-optimize'); ?></h3>
 
 
 		<div class="wpo-run-optimizations__container">
 			<?php $button_caption = apply_filters('wpo_run_button_caption', __('Run all selected optimizations', 'wp-optimize')); ?>
-			<input class="button button-primary button-large" type="submit" id="wp-optimize" name="wp-optimize" value="<?php echo esc_attr($button_caption); ?>" /><?php WP_Optimize()->include_template('take-a-backup.php', false, array('checkbox_name' => 'enable-auto-backup')); ?>
+			<input class="button button-primary button-large" type="submit" id="wp-optimize" name="wp-optimize" value="<?php echo esc_attr($button_caption); ?>"><?php WP_Optimize()->include_template('take-a-backup.php', false, array('checkbox_name' => 'enable-auto-backup')); ?>
 		</div>
 		
 		<?php do_action('wpo_additional_options'); ?>
@@ -51,7 +55,18 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 		<?php } ?>
 		
 		<p class="wp-optimize-sensitive-tables-warning">
-		<span style="color: #E07575;"><span class="dashicons dashicons-warning"></span> <?php echo __('Warning:', 'wp-optimize').'</span> '.__('Items marked with this icon perform more intensive database operations. In very rare cases, if your database server happened to crash or be forcibly powered down at the same time as an optimization operation was running, data might be corrupted. ', 'wp-optimize').' '.__('You may wish to run a backup before optimizing.', 'wp-optimize'); ?>
+			<span style="color: #E07575;">
+				<span class="dashicons dashicons-warning"></span>
+				<?php esc_html_e('Warning:', 'wp-optimize'); ?>
+			</span>
+			<?php
+				$message = __('Items marked with this icon perform more intensive database operations.', 'wp-optimize');
+				$message .= ' ';
+				$message .= __('In very rare cases, if your database server happened to crash or be forcibly powered down at the same time as an optimization operation was running, data might be corrupted.', 'wp-optimize');
+				$message .= ' ';
+				$message .= __('You may wish to run a backup before optimizing.', 'wp-optimize');
+				echo esc_html($message);
+			?>
 		</p>
 	</form>
 </div>

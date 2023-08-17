@@ -75,7 +75,7 @@ class WP_Optimize_Minify_Front_End {
 		}
 
 		if ($this->should_process_html()) {
-			add_action('template_redirect', array('WP_Optimize_Minify_Functions', 'html_compression_start'), PHP_INT_MAX);
+			add_action('template_redirect', array('WP_Optimize_Minify_Functions', 'html_compression_start'), 9);
 		}
 
 		if ($this->should_use_loadCSS()) {
@@ -982,7 +982,9 @@ class WP_Optimize_Minify_Front_End {
 						'header' => "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null)),
 						'files' => array()
 					);
+					$before_code = '';
 					$code = '';
+					$after_code = '';
 				
 					// minify and write to file
 					foreach ($footer[$i]['handles'] as $handle) :
@@ -1027,7 +1029,7 @@ class WP_Optimize_Minify_Front_End {
 							if (!empty($wp_scripts->registered[$handle]->extra)) {
 								if (!empty($wp_scripts->registered[$handle]->extra['before']) && is_array($wp_scripts->registered[$handle]->extra['before'])) {
 									if ($merge_inline_extra_css_js) {
-										$code.= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before'])), $href . ' - BEFORE');
+										$before_code .= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before']));
 									}
 								}
 							}
@@ -1036,20 +1038,23 @@ class WP_Optimize_Minify_Front_End {
 							if (!empty($wp_scripts->registered[$handle]->textdomain)) {
 								$code .= "\n" . $wp_scripts->print_translations($handle, false);
 							}
-
-							// append code to merged file
-							$code .= isset($res['code']) ? WP_Optimize_Minify_Functions::prepare_merged_js($res['code'], $href) : '';
-							$log['files'][$handle] = $res['log'];
 							
 							// Add extra data from wp_add_inline_script after
 							if (!empty($wp_scripts->registered[$handle]->extra)) {
 								if (!empty($wp_scripts->registered[$handle]->extra['after']) && is_array($wp_scripts->registered[$handle]->extra['after'])) {
 									if ($merge_inline_extra_css_js) {
-										$code.= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after'])), $href. ' - AFTER');
+										$after_code .= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after']));
 									}
 								}
 							}
-					
+							
+							// append code to merged file
+							$code .= $before_code . "\n";
+							$code .= isset($res['code']) ? $res['code'] : '';
+							$code .= "\n" . $after_code . "\n";
+							$code = WP_Optimize_Minify_Functions::prepare_merged_js($code, $href);
+							$log['files'][$handle] = $res['log'];
+							
 							// consider dependencies on handles with an empty src
 						} else {
 							wp_dequeue_script($handle);
@@ -1098,12 +1103,12 @@ class WP_Optimize_Minify_Front_End {
 					if (!empty($wp_scripts->registered[$handle]->extra)) {
 						if (!empty($wp_scripts->registered[$handle]->extra['before']) && is_array($wp_scripts->registered[$handle]->extra['before'])) {
 							if (!$merge_inline_extra_css_js) {
-								$before_code.= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before'])), $href.' - BEFORE');
+								$before_code.= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before'])) . "\n";
 							}
 						}
 						if (!empty($wp_scripts->registered[$handle]->extra['after']) && is_array($wp_scripts->registered[$handle]->extra['after'])) {
 							if (!$merge_inline_extra_css_js) {
-								$after_code.= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after'])), $href.' - AFTER');
+								$after_code.= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after'])) . "\n";
 							}
 						}
 					}
@@ -1282,7 +1287,9 @@ class WP_Optimize_Minify_Front_End {
 						'header' => "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null)),
 						'files' => array()
 					);
+					$before_code = '';
 					$code = '';
+					$after_code = '';
 
 					// minify and write to file
 					foreach ($header[$i]['handles'] as $handle) {
@@ -1324,7 +1331,7 @@ class WP_Optimize_Minify_Front_End {
 							if (!empty($wp_scripts->registered[$handle]->extra)) {
 								if (!empty($wp_scripts->registered[$handle]->extra['before']) && is_array($wp_scripts->registered[$handle]->extra['before'])) {
 									if ($merge_inline_extra_css_js) {
-										$code .= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before'])), $href.' - BEFORE');
+										$before_code .= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before']));
 									}
 								}
 							}
@@ -1337,19 +1344,22 @@ class WP_Optimize_Minify_Front_End {
 								$code .= "\n" . $wp_scripts->print_translations($handle, false);
 							}
 
-							// append code to merged file
-							$code .= isset($res['code']) ? WP_Optimize_Minify_Functions::prepare_merged_js($res['code'], $href) : '';
-							$log['files'][$handle] = $res['log'];
-							
 							// Add extra data from wp_add_inline_script after
 							if (!empty($wp_scripts->registered[$handle]->extra)) {
 								if (!empty($wp_scripts->registered[$handle]->extra['after']) && is_array($wp_scripts->registered[$handle]->extra['after'])) {
 									if ($merge_inline_extra_css_js) {
-										$code.= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after'])), $href.' - AFTER');
+										$after_code.= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after']));
 									}
 								}
 							}
-
+							
+							// append code to merged file
+							$code .= $before_code . "\n";
+							$code .= isset($res['code']) ? $res['code'] : '';
+							$code .= "\n" . $after_code . "\n";
+							$code = WP_Optimize_Minify_Functions::prepare_merged_js($code, $href);
+							$log['files'][$handle] = $res['log'];
+							
 							// consider dependencies on handles with an empty src
 						} else {
 							wp_dequeue_script($handle);
@@ -1401,12 +1411,12 @@ class WP_Optimize_Minify_Front_End {
 					if (!empty($wp_scripts->registered[$handle]->extra)) {
 						if (!empty($wp_scripts->registered[$handle]->extra['before']) && is_array($wp_scripts->registered[$handle]->extra['before'])) {
 							if (!$merge_inline_extra_css_js) {
-								$before_code.= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before'])), $href.' - BEFORE');
+								$before_code.= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['before'])) . "\n";
 							}
 						}
 						if (!empty($wp_scripts->registered[$handle]->extra['after']) && is_array($wp_scripts->registered[$handle]->extra['after'])) {
 							if (!$merge_inline_extra_css_js) {
-								$after_code.= "\n" . WP_Optimize_Minify_Functions::prepare_merged_js(implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after'])), $href.' - AFTER');
+								$after_code.= "\n" . implode("\n", array_filter($wp_scripts->registered[$handle]->extra['after'])) . "\n";
 							}
 						}
 					}

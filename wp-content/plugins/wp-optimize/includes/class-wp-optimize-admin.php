@@ -290,7 +290,7 @@ class WP_Optimize_Admin {
 	public function output_page_cache_tab() {
 		$wpo_cache = WP_Optimize()->get_page_cache();
 		$wpo_cache_options = $wpo_cache->config->get();
-		$display = $wpo_cache->is_enabled() ? "style='display:block'" : "style='display:none'";
+		$display = $wpo_cache->is_enabled() ? "display: block;" : "display: none;";
 
 		WP_Optimize()->include_template('cache/page-cache.php', false, array(
 			'wpo_cache' => $wpo_cache,
@@ -475,10 +475,12 @@ class WP_Optimize_Admin {
 	 */
 	public function display_footer_review_message() {
 		$message = sprintf(
-			__('Enjoyed %s? Please leave us a %s rating. We really appreciate your support!', 'wp-optimize'),
+			__('Enjoyed %s? Please leave us a %s rating.', 'wp-optimize'),
 			'<b>WP-Optimize</b>',
 			'<a href="https://www.g2.com/products/wp-optimize/reviews" target="_blank">&starf;&starf;&starf;&starf;&starf;</a>'
 		);
+		$message .= ' ';
+		$message .= __('We really appreciate your support!', 'wp-optimize');
 		return $message;
 	}
 

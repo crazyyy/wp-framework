@@ -55,7 +55,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			),
 			'updraftcentral' => array(
 				'prefix' => '',
-				'title' => __('Save Time and Money. Manage multiple WordPress sites from one location.', 'wp-optimize'),
+				'title' => __('Save Time and Money.', 'wp-optimize') . ' ' . __('Manage multiple WordPress sites from one location.', 'wp-optimize'),
 				'text' => __('UpdraftCentral is a highly efficient way to take backup, update and manage multiple WP sites from one location.', 'wp-optimize'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => 'https://updraftcentral.com',
@@ -65,7 +65,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 				'validity_function' => 'is_updraftcentral_installed',
 			),
 			'rate_plugin' => array(
-				'text' => __("Hey - We noticed WP-Optimize has kept your site running fast for a while.  If you like us, please consider leaving a positive review to spread the word.  Or if you have any issues or questions please leave us a support message", 'wp-optimize') . ' <a href="https://wordpress.org/support/plugin/wp-optimize/" target="_blank">' . __('here', 'wp-optimize') . '.</a><br>' . __('Thank you so much!', 'wp-optimize') . ' - <b>WP-Optimize</b><br>',
+				'text' => __("Hey - We noticed WP-Optimize has kept your site running fast for a while.", 'wp-optimize') . ' ' . __('If you like us, please consider leaving a positive review to spread the word.', 'wp-optimize') . ' ' . sprintf(__('Or if you have any issues or questions please leave us a support message %1$s here %2$s', 'wp-optimize'), '<a href="https://wordpress.org/support/plugin/wp-optimize/" target="_blank">', '</a><br>') . __('Thank you so much!', 'wp-optimize') . ' - <b>WP-Optimize</b><br>',
 				'image' => 'notices/ud_smile.png',
 				'button_link' => 'https://wordpress.org/support/plugin/wp-optimize/reviews/?rate=5#new-post',
 				'button_meta' => 'review',
@@ -154,7 +154,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'blackfriday' => array(
 				'prefix' => '',
 				'title' => __('Black Friday Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 28th November.', 'wp-optimize'), '<b>blackfridaysale2023</b>', $checkout_html),
+				'text' => $sale_description . '<br>' . sprintf(__('Get 20%% off with code %s at %s.', 'wp-optimize'), '<b>blackfridaysale2023</b>', $checkout_html) . ' ' . __('Hurry, offer ends 28th November.', 'wp-optimize'),
 				'image' => 'notices/black_friday.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
@@ -168,7 +168,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'newyear' => array(
 				'prefix' => '',
 				'title' => __('New Year Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Get 20%% off. Use code %s at %s. Hurry, offer ends 14th January.', 'wp-optimize'), '<b>newyearsale2024</b>', $checkout_html),
+				'text' => $sale_description . '<br>' . __('Get 20%% off.', 'wp-optimize') . ' ' . sprintf(__('Use code %s at %s.', 'wp-optimize'), '<b>newyearsale2024</b>', $checkout_html) . ' ' . __('Hurry, offer ends 14th January.', 'wp-optimize'),
 				'image' => 'notices/new_year.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
@@ -182,7 +182,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'spring' => array(
 				'prefix' => '',
 				'title' => __('Spring Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Get 20%% off. Use code %s at %s. Hurry, offer ends 31st May.', 'wp-optimize'), '<b>springsale2023</b>', $checkout_html),
+				'text' => $sale_description . '<br>' . __('Get 20%% off.', 'wp-optimize') . ' ' . sprintf(__('Use code %s at %s.', 'wp-optimize'), '<b>springsale2023</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31st May.', 'wp-optimize'),
 				'image' => 'notices/spring.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
@@ -196,7 +196,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'summer' => array(
 				'prefix' => '',
 				'title' => __('Summer Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Get 20%% off. Use code %s at %s. Hurry, offer ends 31st July.', 'wp-optimize'), '<b>summersale2023</b>', $checkout_html),
+				'text' => $sale_description . '<br>' . __('Get 20%% off.', 'wp-optimize') .' '. sprintf(__('Use code %s at %s.'), '<b>summersale2023</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31st July.', 'wp-optimize'),
 				'image' => 'notices/summer.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
@@ -210,7 +210,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'collection' => array(
 				'prefix' => '',
 				'title' => __('The UpdraftPlus Plugin Collection Sale', 'wp-optimize'),
-				'text' => sprintf(__('Visit any of our websites and use code %s at the checkout to get 20%% off all our plugins. Be quick, offer ends 30th September. ', 'wp-optimize'), '<b>WPO2023</b>'),
+				'text' => sprintf(__('Visit any of our websites and use code %s at the checkout to get 20%% off all our plugins.', 'wp-optimize'), '<b>WPO2023</b>') . ' ' . __('Be quick, offer ends 30th September.', 'wp-optimize'),
 				'image' => 'notices/wp_optimize_logo.png',
 				'button_link' => 'https://teamupdraft.com',
 				'campaign' => 'collection',

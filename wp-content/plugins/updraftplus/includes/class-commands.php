@@ -980,7 +980,7 @@ class UpdraftPlus_Commands {
 
 		$msg = array(
 			'nonce' => $data['use_nonce'],
-			'm' => apply_filters('updraftplus_backupnow_start_message', '<strong>'.__('Start backup', 'updraftplus').':</strong> '.htmlspecialchars(__('OK. You should soon see activity in the "Last log message" field below.', 'updraftplus')), $data['use_nonce'])
+			'm' => apply_filters('updraftplus_backupnow_start_message', '<strong>'.__('Start backup', 'updraftplus').':</strong> '.htmlspecialchars(__('OK.', 'updraftplus').' '.__('You should soon see activity in the "Last log message" field below.', 'updraftplus')), $data['use_nonce'])
 		);
 
 		$close_connection_callable = array($this->_uc_helper, $background_operation_started_method_name);
@@ -1053,11 +1053,16 @@ class UpdraftPlus_Commands {
 		$response = $updraftplus->get_updraftplus_clone()->ajax_process_login($params, false);
 		
 		if (isset($response['status']) && 'authenticated' == $response['status']) {
+			UpdraftPlus::load_checkout_embed();
+
+			global $updraftplus_checkout_embed;
+			$checkout_url = $updraftplus_checkout_embed->get_product('updraftplus-clone-tokens', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=migrate');
+
 			$tokens = isset($response['tokens']) ? $response['tokens'] : 0;
 			$content = '<div class="updraftclone-main-row">';
 			$content .= '<div class="updraftclone-tokens">';
 			$content .= '<p>' . __("Available temporary clone tokens:", "updraftplus") . ' <span class="tokens-number">' . esc_html($tokens) . '</span></p>';
-			$content .= '<p><a href="'.$updraftplus->get_url('buy-tokens').'">'.__('You can buy more temporary clone tokens here.', 'updraftplus').'</a></p>';
+			$content .= '<p><a href="'.esc_attr($checkout_url).'">'.__('You can buy more temporary clone tokens here.', 'updraftplus').'</a></p>';
 			$content .= '</div>';
 			
 			if (0 != $response['tokens']) {
@@ -1125,9 +1130,9 @@ class UpdraftPlus_Commands {
 			$content .= '</div>'; // end .updraftclone-main-row
 		}
 		if (isset($params['form_data']['install_info']['wp_only'])) {
-			$content .= '<p id="updraft_clone_progress">' . __('No backup will be started. The creation of your clone should now begin, and your WordPress username and password will be displayed below when ready.', 'updraftplus') . ' ' . __('N.B. You will be charged one token once the clone is ready. If the clone fails to boot, then the token will be released within an hour.', 'updraftplus') . '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span></p>';
+			$content .= '<p id="updraft_clone_progress">' . __('No backup will be started.', 'updraftplus').' '.__('The creation of your clone should now begin, and your WordPress username and password will be displayed below when ready.', 'updraftplus') . ' ' . __('N.B. You will be charged one token once the clone is ready.', 'updraftplus').' '.__('If the clone fails to boot, then the token will be released within an hour.', 'updraftplus') . '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span></p>';
 		} else {
-			$content .= '<p id="updraft_clone_progress">' . __('The creation of your data for creating the clone should now begin.', 'updraftplus') . ' ' . __('N.B. You will be charged one token once the clone is ready. If the clone fails to boot, then the token will be released within an hour.', 'updraftplus') . '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span></p>';
+			$content .= '<p id="updraft_clone_progress">' . __('The creation of your data for creating the clone should now begin.', 'updraftplus') . ' ' . __('N.B. You will be charged one token once the clone is ready.', 'updraftplus').' '.__('If the clone fails to boot, then the token will be released within an hour.', 'updraftplus') . '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span></p>';
 			$content .= '<div id="updraft_clone_activejobsrow" style="display:none;"></div>';
 		}
 
@@ -1155,7 +1160,7 @@ class UpdraftPlus_Commands {
 	}
 
 	/**
-	 * This function will get the clone netowrk info HTML for the passed in clone URL
+	 * This function will get the clone network info HTML for the passed in clone URL
 	 *
 	 * @param array $params - the parameters for the call
 	 *
@@ -1205,9 +1210,20 @@ class UpdraftPlus_Commands {
 	/**
 	 * This function will add updraft_dismiss_admin_warning_litespeed option to hide litespeed admin warning after dismissed
 	 *
-	 * @return void
+	 * @return array - an empty array
 	 */
 	public function dismiss_admin_warning_litespeed() {
 		UpdraftPlus_Options::update_updraft_option('updraft_dismiss_admin_warning_litespeed', true);
+		return array();
+	}
+	
+	/**
+	 * This function will add updraft_dismiss_admin_warning_pclzip option to hide pclzip admin warning after dismissed
+	 *
+	 * @return array - an empty array
+	 */
+	public function dismiss_admin_warning_pclzip() {
+		UpdraftPlus_Options::update_updraft_option('updraft_dismiss_admin_warning_pclzip', true);
+		return array();
 	}
 }

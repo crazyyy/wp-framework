@@ -67,7 +67,7 @@ class WP_Optimize_Browser_Cache {
 		}
 
 		if ($this->is_browser_cache_section_exists() && false === $this->_wp_optimize->is_apache_module_loaded(array('mod_expires', 'mod_headers'))) {
-			$is_enabled = new WP_Error('Browser cache', __('We successfully updated your .htaccess file. But it seems one of Apache modules - mod_expires or mod_headers is not active.', 'wp-optimize'));
+			$is_enabled = new WP_Error('Browser cache', __('We successfully updated your .htaccess file.', 'wp-optimize') . ' ' . __('But it seems one of Apache modules - mod_expires or mod_headers is not active.', 'wp-optimize'));
 		}
 
 		return $is_enabled;
@@ -187,12 +187,12 @@ class WP_Optimize_Browser_Cache {
 			$cache_section = $this->prepare_browser_cache_section($expiry_time);
 
 			if ($enable) {
-				$message = sprintf(__('We can\'t update your %s file. Please try to add following lines manually:', 'wp-optimize'), $this->_htaccess->get_filename());
+				$message = sprintf(__("We can\'t update your %s file.", 'wp-optimize'), $this->_htaccess->get_filename()) . ' ' . __('Please try to add following lines manually:', 'wp-optimize');
 				$output = htmlentities($this->_htaccess->get_section_begin_comment() . PHP_EOL .
 						  join(PHP_EOL, $this->_htaccess->get_flat_array($cache_section)).
 						  PHP_EOL . $this->_htaccess->get_section_end_comment());
 			} else {
-				$message = sprintf(__('We can\'t update your %s file. Please try to remove following lines manually:', 'wp-optimize'), $this->_htaccess->get_filename());
+				$message = sprintf(__("We can\'t update your %s file.", 'wp-optimize'), $this->_htaccess->get_filename()) . ' ' . __('Please try to remove following lines manually:', 'wp-optimize');
 				$output = htmlentities($this->_htaccess->get_section_begin_comment() . PHP_EOL .
 					' ... ... ... '.
 					PHP_EOL . $this->_htaccess->get_section_end_comment());

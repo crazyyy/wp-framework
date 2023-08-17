@@ -11,14 +11,16 @@
  * Plugin Name: Index WP MySQL For Speed
  * Plugin URI:  https://plumislandmedia.org/index-wp-mysql-for-speed/
  * Description: Speed up your WordPress site by adding high-performance keys (database indexes) to your MySQL database tables.
- * Version:           1.4.13
+ * Version:           1.4.14
  * Requires at least: 5.2
- * Tested up to:      6.2.2
+ * Tested up to:      6.3
  * Requires PHP:      5.6
  * Author:       OllieJones, rjasdfiii
  * Author URI:   https://github.com/OllieJones
  * License:      GPL v2 or later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+ * Github Plugin URI: https://github.com/OllieJones/index-wp-mysql-for-speed
+ * Primary Branch: main
  * Text Domain:  index-wp-mysql-for-speed
  * Domain Path:  /languages
  * Network:      true
@@ -26,7 +28,7 @@
  */
 
 /** current version number  */
-define( 'index_wp_mysql_for_speed_VERSION_NUM', '1.4.13' );
+define( 'index_wp_mysql_for_speed_VERSION_NUM', '1.4.14' );
 define( 'index_mysql_for_speed_major_version', 1.4 );
 define( 'index_mysql_for_speed_inception_major_version', 1.3 );
 define( 'index_mysql_for_speed_inception_wp_version', '5.8.3' );
@@ -49,7 +51,12 @@ register_deactivation_hook( __FILE__, 'index_wp_mysql_for_speed_deactivate' );
 
 add_action( 'init', 'index_wp_mysql_for_speed_do_everything' );
 
-function index_wp_mysql_for_speed_do_everything() {
+function index_wp_mysql_for_speed_do_everything( ) {
+
+//  define( 'INDEX_WP_MYSQL_FOR_SPEED_TEST', true ); /*tested up to 53932 */
+  if ( defined ('INDEX_WP_MYSQL_FOR_SPEED_TEST') && INDEX_WP_MYSQL_FOR_SPEED_TEST) {
+    require_once( plugin_dir_path( __FILE__ ) . 'tests/test-update-filter.php' );
+  }
   /* admin page activation */
   $admin = is_admin();
   if ( $admin ) {

@@ -28,6 +28,8 @@ class WP_Optimize_Updates {
 		'3.1.5' => array('update_minify_excludes'),
 		'3.2.14' => array('update_3214_modify_cache_config_in_windows'),
 		'3.2.15' => array('update_3215_modify_cache_config_for_webp'),
+		'3.2.17' => array('update_3217_remove_htaccess_capability_tester_files'),
+		'3.2.18' => array('update_3218_reset_webp_serving_method'),
 	);
 
 	/**
@@ -204,6 +206,27 @@ class WP_Optimize_Updates {
 			$config['use_webp_images'] = true;
 			WPO_Cache_Config::instance()->update($config);
 		}
+	}
+
+	/**
+	 * Remove files in `uploads/wpo` folder created by htaccess capability tester library which is removed in 3.2.17 version
+	 */
+	private static function update_3217_remove_htaccess_capability_tester_files() {
+		if (self::is_new_install()) return;
+		WPO_Uninstall::delete_wpo_folder();
+	}
+	
+	/**
+	 * Resets WebP serving method
+	 *
+	 * We removed `uploads/wpo` folder in 3.2.17, When the redirection is possible
+	 * it doesn't cause issues. However, when using alter html method
+	 * WPO_WebP_Self_Test::is_webp_served requests a non-existing `uploads/wpo/images/wpo_logo_small.png`
+	 * which causes High CPU usage problem
+	 */
+	private static function update_3218_reset_webp_serving_method() {
+		if (self::is_new_install()) return;
+		WP_Optimize()->get_webp_instance()->reset_webp_serving_method();
 	}
 }
 

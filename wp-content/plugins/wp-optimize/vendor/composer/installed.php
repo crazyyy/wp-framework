@@ -3,7 +3,7 @@
         'name' => 'updraftplus/wp-optimize',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c1ade754768fb77bcf89b518a88ff5f0d37a63b5',
+        'reference' => '2fa061f010c29b3cd91a460c370bd4c88f8174bf',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -135,15 +135,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'rosell-dk/htaccess-capability-tester' => array(
-            'pretty_version' => '1.0.0',
-            'version' => '1.0.0.0',
-            'reference' => 'b4499dcd9fe8b538a617069fdf34ae3de877c977',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../rosell-dk/htaccess-capability-tester',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'rosell-dk/image-mime-type-guesser' => array(
             'pretty_version' => '1.1.1',
             'version' => '1.1.1.0',
@@ -214,7 +205,7 @@
         'updraftplus/wp-optimize' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c1ade754768fb77bcf89b518a88ff5f0d37a63b5',
+            'reference' => '2fa061f010c29b3cd91a460c370bd4c88f8174bf',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

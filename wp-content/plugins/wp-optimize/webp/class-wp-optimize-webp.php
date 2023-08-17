@@ -8,8 +8,6 @@ class WP_Optimize_WebP {
 
 	private $_htaccess = null;
 
-	private $_rewrite_status = '';
-
 	private $_should_use_webp = false;
 
 	/**
@@ -21,7 +19,7 @@ class WP_Optimize_WebP {
 		}
 
 		if ($this->get_webp_conversion_test_result()) {
-			$this->maybe_set_rewrite_status();
+			$this->maybe_setup_htaccess_file();
 			if (!is_admin()) {
 				$this->maybe_decide_webp_serve_method();
 			}
@@ -60,37 +58,13 @@ class WP_Optimize_WebP {
 	}
 
 	/**
-	 * May be set server's rewrite status
+	 * May be set up `uploads/.htaccess` file
 	 */
-	private function maybe_set_rewrite_status() {
+	private function maybe_setup_htaccess_file() {
 		$this->_should_use_webp = WP_Optimize()->get_options()->get_option('webp_conversion');
 		if ($this->_should_use_webp) {
-			$this->set_rewrite_status();
-		}
-	}
-
-	/**
-	 * Sets server's rewrite status
-	 */
-	private function set_rewrite_status() {
-		$this->_rewrite_status = WP_Optimize()->get_options()->get_option('rewrite_status', false);
-		if ('true' === $this->_rewrite_status) {
 			$this->setup_htaccess_file();
-			return;
-		} elseif ('false' === $this->_rewrite_status) return;
-
-		if (!class_exists('WPO_Htaccess_Capabilities')) {
-			require_once WPO_PLUGIN_MAIN_PATH . 'webp/class-wpo-htaccess-capabilities.php';
 		}
-		$htc = WPO_Htaccess_Capabilities::get_instance();
-		
-		if ($htc->htaccess_enabled && $htc->mod_rewrite && $htc->mod_headers && $htc->mod_mime) {
-			$this->_rewrite_status = 'true';
-			$this->setup_htaccess_file();
-		} else {
-			$this->_rewrite_status = 'false';
-		}
-		WP_Optimize()->get_options()->update_option('rewrite_status', $this->_rewrite_status);
 	}
 
 	/**
@@ -98,21 +72,13 @@ class WP_Optimize_WebP {
 	 * using rewrite rules or using altered html method
 	 */
 	private function maybe_decide_webp_serve_method() {
-		if ('true' === $this->_rewrite_status) {
-			if (!$this->_should_use_webp) {
-				$this->empty_htaccess_file();
-			} else {
-				$this->save_htaccess_rules();
-				if (!$this->is_webp_redirection_possible()) {
-					$this->empty_htaccess_file();
-					$this->maybe_use_alter_html();
-				}
-			}
+		if (!$this->_should_use_webp) {
+			$this->empty_htaccess_file();
 		} else {
-			if ($this->_should_use_webp) {
-				$this->maybe_use_alter_html();
-			} else {
+			$this->save_htaccess_rules();
+			if (!$this->is_webp_redirection_possible()) {
 				$this->empty_htaccess_file();
+				$this->maybe_use_alter_html();
 			}
 		}
 	}
@@ -134,9 +100,7 @@ class WP_Optimize_WebP {
 	 */
 	private function is_webp_redirection_possible() {
 		$redirection_possible = WP_Optimize()->get_options()->get_option('redirection_possible');
-		if ($redirection_possible) {
-			return 'true' === $redirection_possible;
-		}
+		if ('true' === $redirection_possible) return true;
 		return $this->run_webp_serving_self_test();
 	}
 
@@ -185,20 +149,19 @@ class WP_Optimize_WebP {
 			require_once WPO_PLUGIN_MAIN_PATH . 'includes/class-wp-optimize-htaccess.php';
 		}
 		$this->_htaccess = new WP_Optimize_Htaccess($htaccess_file);
-		$this->add_webp_mime_type();
 	}
 	
 	/**
 	 * Save .htaccess rules
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	private function save_htaccess_rules() {
+		$this->add_webp_mime_type();
 		$htaccess_comment_section = 'WP-Optimize WebP Rules';
-		if ($this->_htaccess->is_commented_section_exists($htaccess_comment_section)) return false;
+		if ($this->_htaccess->is_commented_section_exists($htaccess_comment_section)) return;
 		$this->_htaccess->update_commented_section($this->prepare_webp_htaccess_rules(), $htaccess_comment_section);
 		$this->_htaccess->write_file();
-		return true;
 	}
 
 	/**
@@ -325,17 +288,11 @@ class WP_Optimize_WebP {
 	 * @return bool Returns true if webp is served successfully, false otherwise
 	 */
 	private function run_webp_serving_self_test() {
-		if (!class_exists('WPO_WebP_Self_Test')) {
-			require_once WPO_PLUGIN_MAIN_PATH . 'webp/class-wpo-webp-self-test.php';
-		}
 		$self_test = WPO_WebP_Self_Test::get_instance();
 
-		if ($self_test->get_webp_image()) {
-			$this->save_htaccess_rules();
-			if ($self_test->is_webp_served()) {
-				WP_Optimize()->get_options()->update_option('redirection_possible', 'true');
-				return true;
-			}
+		if ($self_test->is_webp_served()) {
+			WP_Optimize()->get_options()->update_option('redirection_possible', 'true');
+			return true;
 		}
 		WP_Optimize()->get_options()->update_option('redirection_possible', 'false');
 		$this->empty_htaccess_file();
@@ -344,15 +301,14 @@ class WP_Optimize_WebP {
 
 	/**
 	 * Resets webp serving method by setting all flags status to false
-	 *
-	 * @return bool
 	 */
 	public function reset_webp_serving_method() {
+		WP_Optimize()->get_page_cache()->purge();
+		WP_Optimize()->get_webp_instance()->empty_htaccess_file();
 		$options = WP_Optimize()->get_options();
-		$options->update_option('redirection_possible', false);
 		$options->update_option('webp_conversion_test', false);
 		$options->update_option('webp_converters', false);
-		return $options->update_option('rewrite_status', false);
+		$options->update_option('redirection_possible', 'false');
 	}
 
 	/**

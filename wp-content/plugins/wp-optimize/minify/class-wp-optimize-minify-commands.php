@@ -70,7 +70,12 @@ class WP_Optimize_Minify_Commands {
 	 */
 	public function purge_minify_cache() {
 		if (!WPO_MINIFY_PHP_VERSION_MET) return array('error' => __('WP-Optimize Minify requires a higher PHP version', 'wp-optimize'));
-		if (!WP_Optimize()->get_minify()->can_purge_cache()) return array('error' => __('You do not have permission to purge the cache', 'wp-optimize'));
+		
+		if (!WP_Optimize()->get_minify()->can_purge_cache() && !(defined('WP_CLI') && WP_CLI)) {
+			return array(
+				'error' => __('You do not have permission to purge the cache', 'wp-optimize')
+			);
+		}
 
 		// deletes temp files and old caches incase CRON isn't working
 		WP_Optimize_Minify_Cache_Functions::cache_increment();
@@ -213,7 +218,7 @@ class WP_Optimize_Minify_Commands {
 		$purged = $this->purge_minify_cache();
 		return array(
 			'success' => true,
-			'files' => $purged['files']
+			'files' => isset($purged['files']) ? $purged['files'] : array(),
 		);
 	}
 

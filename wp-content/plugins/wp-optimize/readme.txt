@@ -4,8 +4,8 @@ Donate link: https://david.dw-perspective.org.uk/donate
 Tags: cache, minify, caching, image cache, performance cache, clean, spam, speed, database, smush, smushing
 Requires PHP: 5.6
 Requires at least: 4.5
-Tested up to: 6.2
-Stable tag: 3.2.15
+Tested up to: 6.3
+Stable tag: 3.2.18
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -368,6 +368,36 @@ If none of the above works, disable processing of JavaScript files in the minify
 == Changelog ==
 
 
+= 3.2.18 - 11/Aug/2023 =
+
+* FIX: A bug in the v3.2.17 release that caused certain database optimization buttons to be disabled has been fixed
+* TWEAK: Reset WebP serving method upon updating to version 3.2.18
+
+= 3.2.17 - 08/Aug/2023 =
+
+* FIX: Automatically compress newly-added images feature now works on multisite in case of attachment ID is the same in both sites
+* FIX: Minify - No separate try-catch blocks for same handle
+* FIX: Premium - Unused Images - Recognise Elementor Carousel, Slides, Flip Box, and Site logo widget images
+* FIX: Premium - Prevent memory exhausted PHP fatal error when using unused images feature with Elementor
+* TWEAK: External links will open in new tab/window
+* TWEAK: Remove `htaccess-capability-tester` dependency
+* TWEAK: Remove residue folders in `uploads/wpo`
+
+= 3.2.16 - 06/Jul/2023 =
+
+* FIX: HTML minify should not remove `title` tag added by AIOSEO
+* FIX: Premium - Fetching unused images data is incorrect when previous task queue is not properly unlocked
+* FIX: Premium - Unused Images - Recognise Elementor background images
+* TWEAK: Premium - Prevent conflicts between the minify feature and the `YITH Point of Sale for WooCommerce` plugin
+* TWEAK: Premium - Compatibility issue with Smart Slider 3
+* TWEAK: Suppress PHP warnings caused by WebP converter
+* TWEAK: Database optimization - Prevent duplicate AJAX requests, minor code improvements
+* TWEAK: Smush - Add a cron job to run pending image compressions, ensuring completion of the process even if bulk image compression encounters interruptions or failures
+* TWEAK: Clean up files on uninstall
+* TWEAK: Added compatibility for `Custom Permalinks` plugin
+* TWEAK: If minifying is enabled, then check that the purge cron event exists (not only upon plugin activation)
+* REFACTOR: Premium - Unused Images - Separate classes for Beaver Builder, Estatik, and Yoast SEO plugins
+* FIX: Premium - WP CLI commands permission issues solved
 
 = 3.2.15 - 09/May/2023 =
 
@@ -1383,4 +1413,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 * Fix Interface
 
 == Upgrade Notice ==
-* 3.2.15: WooCommerce Multilingual & Multicurrency compatibility, various fixes and tweaks - a recommended update for all
+* 3.2.18: Fixed couple of bugs in 3.2.17 release - a recommended update for all

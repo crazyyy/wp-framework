@@ -272,10 +272,6 @@ var WP_Optimize = function () {
 	});
 
 	$('#wp-optimize-wrap').on('page-change', function(e, params) {
-		// When changing the page, trigger a click, in case the page was loaded somewhere else.
-		if ('WP-Optimize' == params.page && $('#wp-optimize-nav-tab-WP-Optimize-optimize').is('.nav-tab-active')) {
-			$('#wp-optimize-nav-tab-WP-Optimize-optimize').trigger('click');
-		}
 		// Trigger the global tab change events when changing page
 		var active_tab = $('.wpo-page[data-whichpage='+params.page+']').find('.nav-tab-wrapper .nav-tab-active');
 		$('#wp-optimize-wrap').trigger('tab-change', { page: params.page, tab: active_tab.data('tab') });
@@ -357,13 +353,14 @@ var WP_Optimize = function () {
 		}
 	}
 
+	var database_tabs_loading = false;
 	var database_tabs_loaded = false;
 	// When showing the tables tab
 	$('#wp-optimize-wrap').on('tab-change/WP-Optimize/tables', function(e) {
 		get_database_tabs();
 	});
 
-	// When showing the tables tab
+	// When showing the optimizations tab
 	$('#wp-optimize-wrap').on('tab-change/WP-Optimize/optimize', function(event, data) {
 		get_database_tabs();
 	});
@@ -379,10 +376,11 @@ var WP_Optimize = function () {
 	 * Get the data for the database tabs. We get them at the same time, as they both need the same time consuming requests.
 	 */
 	function get_database_tabs() {
-		if (database_tabs_loaded) return;
+		if (database_tabs_loading || database_tabs_loaded) return;
 		var container = $('.wpo-page[data-whichpage=WP-Optimize]');
 		var shade = container.find('.wpo_shade');
 		shade.removeClass('hidden');
+		database_tabs_loading = true;
 		send_command('get_database_tabs', {}, function(response) {
 			// Set the satus to true, to prevent loading again.
 			database_tabs_loaded = true;
@@ -398,6 +396,7 @@ var WP_Optimize = function () {
 			$(document).trigger('wpo_database_tabs_loaded');
 
 		}).always(function() {
+			database_tabs_loading = false;
 			shade.addClass('hidden');
 		});
 	}

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1493dc76583ca593897e2cddd8086f9f
+class ComposerStaticInitdef6991e56a995327aff5debd307aa68
 {
     public static $prefixLengthsPsr4 = array (
         't' => 
@@ -35,10 +35,6 @@ class ComposerStaticInit1493dc76583ca593897e2cddd8086f9f
             'Intervention\\HttpAuth\\' => 22,
             'ImageMimeTypeSniffer\\' => 21,
             'ImageMimeTypeGuesser\\' => 21,
-        ),
-        'H' => 
-        array (
-            'HtaccessCapabilityTester\\' => 25,
         ),
         'F' => 
         array (
@@ -94,10 +90,6 @@ class ComposerStaticInit1493dc76583ca593897e2cddd8086f9f
         'ImageMimeTypeGuesser\\' => 
         array (
             0 => __DIR__ . '/..' . '/rosell-dk/image-mime-type-guesser/src',
-        ),
-        'HtaccessCapabilityTester\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/rosell-dk/htaccess-capability-tester/src',
         ),
         'FileUtil\\' => 
         array (
@@ -198,10 +190,10 @@ class ComposerStaticInit1493dc76583ca593897e2cddd8086f9f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1493dc76583ca593897e2cddd8086f9f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1493dc76583ca593897e2cddd8086f9f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit1493dc76583ca593897e2cddd8086f9f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit1493dc76583ca593897e2cddd8086f9f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdef6991e56a995327aff5debd307aa68::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdef6991e56a995327aff5debd307aa68::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdef6991e56a995327aff5debd307aa68::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitdef6991e56a995327aff5debd307aa68::$classMap;
 
         }, null, ClassLoader::class);
     }

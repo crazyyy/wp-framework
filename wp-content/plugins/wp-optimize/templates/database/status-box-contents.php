@@ -11,7 +11,7 @@
 
 ?>
 
-<h3 class="wpo-first-child"><?php _e('Status', 'wp-optimize'); ?></h3>
+<h3 class="wpo-first-child"><?php esc_html_e('Status', 'wp-optimize'); ?></h3>
 
 <div class="wpo-fieldgroup" id="wp_optimize_status_box">
 	<p>
@@ -22,12 +22,9 @@
 		if (is_numeric($lastopt)) {
 			$lastopt = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $lastopt + ( get_option('gmt_offset') * HOUR_IN_SECONDS ));
 		}
-		echo __('Last scheduled optimization was at', 'wp-optimize').': ';
-		echo '<span style="font-color: #004600; font-weight:bold;">';
-		echo htmlspecialchars($lastopt);
-		echo '</span>';
+		printf(esc_html__('Last scheduled optimization was at %s', 'wp-optimize'), '<span style="color: #004600; font-weight:bold;">' . esc_html($lastopt) . '</span>');
 	} else {
-		echo __('There was no scheduled optimization', 'wp-optimize');
+		echo esc_html__('There was no scheduled optimization', 'wp-optimize');
 	}
 	?>
 		<br>
@@ -52,10 +49,13 @@
 	}
 
 	if ($scheduled_optimizations_enabled) {
-		echo '<strong>';
-		_e('Scheduled cleaning', 'wp-optimize');
-		echo ' <span style="color: #009B24;">'.__('enabled', 'wp-optimize').'</span>';
-		echo ', </strong>';
+		printf(
+			esc_html__('%sScheduled cleaning %senabled%s%s', 'wp-optimize'),
+			'<strong>',
+			'<span style="color: #009B24;">',
+			'</span>',
+			'</strong> '
+		);
 		
 		$timestamp = apply_filters('wpo_cron_next_event', wp_next_scheduled('wpo_cron_event2'));
 		
@@ -66,50 +66,54 @@
 			$wp_optimize->cron_activate();
 
 			$date = new DateTime("@".$timestamp);
-			_e('Next schedule:', 'wp-optimize');
+			esc_html_e('Next schedule:', 'wp-optimize');
 			echo ' ';
 			echo '<span style="font-color: #004600">';
-			echo gmdate(get_option('date_format') . ' ' . get_option('time_format'), $timestamp);
+			echo esc_html(gmdate(get_option('date_format') . ' ' . get_option('time_format'), $timestamp));
 			echo '</span>';
-			echo ' - <a id="wp_optimize_status_box_refresh" href="'.esc_attr($admin_page_url).'">'.__('Refresh', 'wp-optimize').'</a>';
+			echo ' - <a id="wp_optimize_status_box_refresh" href="'.esc_url($admin_page_url).'">'.esc_html__('Refresh', 'wp-optimize').'</a>';
 		}
 	} else {
-		echo '<strong>';
-		_e('Scheduled cleaning disabled', 'wp-optimize');
-		echo '</strong>';
+		printf(
+			esc_html__('%sScheduled cleaning disabled%s', 'wp-optimize'),
+			'<strong>',
+			'</strong>'
+		);
 	}
 	echo '<br>';
 
 	if ('true' == $retention_enabled) {
 		echo '<strong><span style="font-color: #0000FF;">';
-		printf(__('Keeping last %s weeks data', 'wp-optimize'), $retention_period);
+		printf(esc_html__('Keeping last %s weeks data', 'wp-optimize'), esc_html($retention_period));
 		echo '</span></strong>';
 	} else {
-		echo '<strong>'.__('Not keeping recent data', 'wp-optimize').'</strong>';
+		echo '<strong>'.esc_html__('Not keeping recent data', 'wp-optimize').'</strong>';
 	}
 	
 	echo '<br>';
 
 	if ('true' == $revisions_retention_enabled) {
 		echo '<strong><span style="font-color: #0000FF;">';
-		printf(__('Keeping last %s revisions', 'wp-optimize'), $revisions_retention_count);
+		printf(esc_html__('Keeping last %s revisions', 'wp-optimize'), esc_html($revisions_retention_count));
 		echo '</span></strong>';
 	} else {
-		echo '<strong>'.__('Not keeping any revisions', 'wp-optimize').'</strong>';
+		echo '<strong>'.esc_html__('Not keeping any revisions', 'wp-optimize').'</strong>';
 	}
 	?>
 	</p>
 
 	<p>
 	<?php
-	$total_cleaned = $options->get_option('total-cleaned');
+		$total_cleaned = $options->get_option('total-cleaned');
 		$total_cleaned_num = floatval($total_cleaned);
 
 		if ($total_cleaned_num > 0) {
-		echo '<h5>'.__('Total clean up overall:', 'wp-optimize').' ';
-		echo '<span style="font-color: #004600">';
-		echo $wp_optimize->format_size($total_cleaned);
-		echo '</span></h5>';
+			printf(
+				esc_html__('%sTotal clean up overall: %s %s', 'wp-optimize'),
+				'<h5>',
+				'<span style="color: #004600;">' . esc_html($wp_optimize->format_size($total_cleaned)) . '</span>',
+				'</h5>'
+			);
 		}
 	?>
 	</p>
@@ -120,8 +124,8 @@
 	if ($corrupted_tables_count > 0) {
 	?>
 	<p>
-		<span style="color: #E07575;"><?php printf(_n('Your database has %s corrupted table.', 'Your database has %s corrupted tables.', $corrupted_tables_count, 'wp-optimize'), $corrupted_tables_count); ?></span><br>
-		<a href="<?php echo esc_attr($admin_page_url); ?>&tab=wp_optimize_tables" onclick="jQuery('.wpo-pages-menu > a').first().trigger('click'); jQuery('#wp-optimize-nav-tab-wpo_database-tables').trigger('click'); return false;"><?php _e('Repair corrupted tables here.', 'wp-optimize'); ?></a>
+		<span style="color: #E07575;"><?php echo esc_html(sprintf(_n('Your database has %s corrupted table.', 'Your database has %s corrupted tables.', $corrupted_tables_count, 'wp-optimize'), $corrupted_tables_count)); ?></span><br>
+		<a href="<?php echo esc_url($admin_page_url); ?>&tab=wp_optimize_tables" onclick="jQuery('.wpo-pages-menu > a').first().trigger('click'); jQuery('#wp-optimize-nav-tab-wpo_database-tables').trigger('click'); return false;"><?php esc_html_e('Repair corrupted tables here.', 'wp-optimize'); ?></a>
 	</p>
 	<?php } ?>
 </div>

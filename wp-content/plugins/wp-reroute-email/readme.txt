@@ -2,7 +2,7 @@
 Contributors: msh134
 Tags: mail, email, developer tool, development server
 Tested up to: 6.2.2
-Stable tag: 1.4.9
+Stable tag: 1.5.0
 License: GPLv2 or later
 
 This plugin reroutes all outgoing emails from a WordPress site (sent using the wp_mail() function) to a predefined configurable email address.
@@ -32,6 +32,9 @@ Now, you will be able to disable rerouting based on the subject texts.
 5. Email test form
 
 == Changelog ==
+= 1.5.0 =
+* Fixed the vulnerability - Unauthenticated Stored Cross-Site Scripting via Email Subject.
+
 = 1.4.9 =
 * Security fixes.
 * Compatibility check.

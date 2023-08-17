@@ -376,7 +376,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	}
 
 	/**
-	 * This method gets a list of files from the remote stoage that match the string passed in and returns an array of backups
+	 * This method gets a list of files from the remote storage that match the string passed in and returns an array of backups
 	 *
 	 * @param  String $match a substring to require (tested via strpos() !== false)
 	 * @return Array
@@ -709,6 +709,30 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		<?php
 		return ob_get_clean();
 	}
+
+	/**
+	 * Generates ownername with email
+	 *
+	 * @param array $opts
+	 * @return String - Ownername with email
+	 */
+	private function generate_ownername_with_email($opts) {
+		$ownername_with_email = '';
+		
+		if (!empty($opts['ownername'])) {
+			$ownername_with_email = $opts['ownername'];
+		}
+		
+		if (!empty($opts['email'])) {
+			if (!empty($ownername_with_email)) {
+				$ownername_with_email = $ownername_with_email.' ('.$opts['email'].')';
+			} else {
+				$ownername_with_email = $opts['email'];
+			}
+		}
+
+	   return $ownername_with_email;
+	}
 	
 	/**
 	 * Modifies handerbar template options
@@ -719,8 +743,11 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	public function transform_options_for_template($opts) {
 		if (!empty($opts['tk_access_token'])) {
 			$opts['ownername'] = empty($opts['ownername']) ? '' : $opts['ownername'];
-			if ($opts['ownername']) {
-				$opts['ownername_sentence']	= sprintf(__("Account holder's name: %s.", 'updraftplus'), $opts['ownername']).' ';
+			$opts['email'] = empty($opts['email']) ? '' : $opts['email'];
+			$ownername_with_email = $this->generate_ownername_with_email($opts);
+			
+			if ($ownername_with_email) {
+				$opts['ownername_sentence']	= sprintf(__("Account holder's name: %s.", 'updraftplus'), $ownername_with_email).' ';
 			}
 			$opts['is_authenticated'] = true;
 		}
@@ -890,14 +917,21 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		} else {
 			$body = $account_info['body'];
 			$name = '';
+			$email = '';
 			if (isset($body->display_name)) {
 				$name = $body->display_name;
 			} else {
 				$name = $body->name->display_name;
 			}
-			$message .= ". <br>".sprintf(__('Your %s account name: %s', 'updraftplus'), 'Dropbox', htmlspecialchars($name));
+			if (isset($body->email)) {
+				$email = $body->email;
+			}
+
 			$opts = $this->get_options();
 			$opts['ownername'] = $name;
+			$opts['email'] = $email;
+			$ownername_with_email = $this->generate_ownername_with_email($opts);
+			$message .= ". <br>".sprintf(__('Your %s account name: %s', 'updraftplus'), 'Dropbox', htmlspecialchars($ownername_with_email));
 			$this->set_options($opts, true);
 
 			try {
@@ -1007,7 +1041,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		if (defined('UPDRAFTPLUS_CUSTOM_DROPBOX_APP') && UPDRAFTPLUS_CUSTOM_DROPBOX_APP) $callback = $callbackhome;
 		
 		$instance_id = $this->get_instance_id();
-		// Instantiate the Encrypter and storage objects
+		// Instantiate the Encryptor and storage objects
 		$encrypter = new Dropbox_Encrypter('ThisOneDoesNotMatterBeyondLength');
 
 		// Instantiate the storage

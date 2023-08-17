@@ -2,10 +2,10 @@
 Contributors: rankmath
 Plugin link: https://rankmath.com/?utm_source=LP&utm_campaign=WP
 Tags: seo, sitemap, google search console, schema, redirection, WordPress SEO
-Tested up to: 6.2.2
+Tested up to: 6.3
 Requires at least: 5.6
 Requires PHP: 7.4
-Stable tag: 1.0.118
+Stable tag: 1.0.121.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -583,16 +583,18 @@ Please drop us an email at support@rankmath.com and we would be more than happy 
 
 == Changelog ==
 
-= 1.0.118 [June 28, 2023] =
-- Improved: [`%customfield%` variable](https://rankmath.com/kb/variables-in-seo-title-description/#custom-field-advanced) now works on Taxonomy & Author pages
-- Improved: [Image-related tests in SEO Analyzer](https://rankmath.com/kb/seo-analysis/#image-alt-attributes-test) will now display a clear message when Images are not found on the homepage
-- Fixed: SEO Analyzer was showing an option to [Enable Auto Update](https://rankmath.com/kb/seo-analysis/#priority) even when Auto-updates were disabled on the site using a function
-- Fixed: [Icon Overlay feature](https://rankmath.com/kb/meta-box-social-tab/#add-icon-overlay-to-thumbnails) compatibility issues with sites using the Imagick module
-- Fixed: Incorrect seller ID error in the [Product Schema](https://rankmath.com/kb/product-schema/) on secondary languages
-- Fixed: Timezones in [Sitemap](https://rankmath.com/kb/configure-sitemaps/) were not accurate when using half hours like (+5:30)
-- Fixed: [SEO Score](https://rankmath.com/kb/general-tab/) was shown in Classic Editor even to the users who didn't have the required capabilities
-- Fixed: [404 Monitor](https://rankmath.com/kb/advanced-404-monitor/) log was not including the language slug on multilingual sites
-- Fixed: Redirection with [Contains, Starts With, & Ends with](https://rankmath.com/kb/setting-up-redirections/#contains) was not working well when trailing slash is added in the Source URL
-- Fixed: Incompatibility with the Molongui Authorship plugin
+= 1.0.121 [Aug 09, 2023] =
+- Added: [New filter](https://rankmath.com/kb/filters-hooks-api-developer/#modify-sitemap-index-slug) to change the sitemap_index.xml slug
+- Improved: Query to retrieve score on [Site Analytics page](https://rankmath.com/kb/analytics/#site-analytics)
+- Fixed: PHP error in the [Version Control](https://rankmath.com/kb/rank-math-status-and-tools/#version-control) on sites using Themify Updater plugin
+- Fixed: [Keywords](https://rankmath.com/kb/analytics/#keywords) tab in Analytics was not showing data on some setups due to the nested SELECT queries
+- Fixed: PHP error in the [Error log section](https://rankmath.com/kb/rank-math-status-and-tools/#error-log) on some setups
+- Fixed: HowTo block was not showing the [Step image](https://rankmath.com/blog/howto-schema/#adding-steps) when the [Step description](https://rankmath.com/blog/howto-schema/#step-description) was not added
+- Fixed: PHP error on some setups in Dashboard Widget
+
+= 1.0.121.1 [Aug 11, 2023] =
+- Fixed: [Rank Math Analytics Front-End Bar](https://rankmath.com/kb/analytics-stats-bar/) was not working on WordPress v6.3
+- Fixed: [Table of Contents](https://rankmath.com/kb/table-of-contents-block/) was showing an error when used as a Reusable block 
+- Fixed: [Content AI](https://rankmath.com/kb/how-to-use-content-ai/) was not working properly when diacritics keywords were used
 
 Full changelog can be found here - **[Rank Math changelog](https://rankmath.com/changelog/?utm_source=Plugin&utm_medium=Changelog&utm_campaign=WP)**

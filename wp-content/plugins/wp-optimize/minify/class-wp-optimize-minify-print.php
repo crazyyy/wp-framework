@@ -44,11 +44,11 @@ class WP_Optimize_Minify_Print {
 	 * @return void
 	 */
 	public static function async_style($href, $media = 'all') {
-		echo '<link rel="preload" href="'.$href.'" as="style" media="'.$media.'" onload="this.onload=null;this.rel=\'stylesheet\'" />' . "\n";
+		echo '<link rel="preload" href="'.$href.'" as="style" media="'.$media.'" onload="this.onload=null;this.rel=\'stylesheet\'">' . "\n";
 		// fix for firefox not supporting preload
-		echo '<link rel="stylesheet" href="'.$href.'" media="'.$media.'" />' . "\n";
-		echo '<noscript><link rel="stylesheet" href="'.$href.'" media="'.$media.'" /></noscript>' . "\n";
-		echo '<!--[if IE]><link rel="stylesheet" href="'.$href.'" media="'.$media.'" /><![endif]-->' . "\n";
+		echo '<link rel="stylesheet" href="'.$href.'" media="'.$media.'">' . "\n";
+		echo '<noscript><link rel="stylesheet" href="'.$href.'" media="'.$media.'"></noscript>' . "\n";
+		echo '<!--[if IE]><link rel="stylesheet" href="'.$href.'" media="'.$media.'"><![endif]-->' . "\n";
 	}
 
 	/**

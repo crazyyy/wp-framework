@@ -15,6 +15,7 @@ class ImfsPage extends Imfs_AdminPageFramework {
    * @var bool true if reindexing does not have the 191 prefix index limitation.
    */
   public $unconstrained = false;
+  private $pluginUpgrading = false;
   private $wpDbUpgrading = false;
   private $db;
   private $dontNavigate;
@@ -126,7 +127,7 @@ class ImfsPage extends Imfs_AdminPageFramework {
     $helpUrl = index_wp_mysql_for_speed_help_site . $tabSlug;
     $help    = __( 'Help', 'index-wp-mysql-for-speed' );
     /** @noinspection HtmlUnknownTarget */
-    $helpTag = '<a class="helpbutton nav-tab" target="_blank" href="%s">%s</a>';
+    $helpTag = '<a class="helpbutton nav-tab" target="_blank" href="%s/">%s</a>';
     $helpTag = sprintf( $helpTag, $helpUrl, $help );
 
     $delimiter = '<a class=';

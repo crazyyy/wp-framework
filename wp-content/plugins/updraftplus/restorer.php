@@ -505,7 +505,7 @@ class Updraft_Restorer {
 			if (!isset($entities_to_download[$type])) continue;
 			
 			if ('wpcore' == $type && is_multisite() && 0 === $this->ud_backup_is_multisite) {
-				$updraftplus->log('wpcore: '.__('Skipping restoration of WordPress core when importing a single site into a multisite installation. If you had anything necessary in your WordPress directory then you will need to re-add it manually from the zip file.', 'updraftplus'), 'notice-restore');
+				$updraftplus->log('wpcore: '.__('Skipping restoration of WordPress core when importing a single site into a multisite installation.', 'updraftplus').' '.__('If you had anything necessary in your WordPress directory then you will need to re-add it manually from the zip file.', 'updraftplus'), 'notice-restore');
 				// TODO
 				// $updraftplus->log_e('Skipping restoration of WordPress core when importing a single site into a multisite installation. If you had anything necessary in your WordPress directory then you will need to re-add it manually from the zip file.');
 				continue;
@@ -838,7 +838,7 @@ class Updraft_Restorer {
 	}
 	
 	private function backup_strings() {
-		$this->strings['not_possible'] = __('UpdraftPlus is not able to directly restore this kind of entity. It must be restored manually.', 'updraftplus');
+		$this->strings['not_possible'] = __('UpdraftPlus is not able to directly restore this kind of entity.', 'updraftplus').' '.__('It must be restored manually.', 'updraftplus');
 		$this->strings['no_package'] = __('Backup file not available.', 'updraftplus');
 		$this->strings['copy_failed'] = __('Copying this entity failed.', 'updraftplus');
 		$this->strings['unpack_package'] = __('Unpacking backup...', 'updraftplus');
@@ -850,8 +850,8 @@ class Updraft_Restorer {
 		$this->strings['cleaning_up'] = __('Cleaning up rubbish...', 'updraftplus');
 		$this->strings['old_move_failed'] = __('Could not move old files out of the way.', 'updraftplus').' '.__('You should check the file ownerships and permissions in your WordPress installation', 'updraftplus');
 		$this->strings['old_delete_failed'] = __('Could not delete old path.', 'updraftplus');
-		$this->strings['new_move_failed'] = __('Could not move new files into place. Check your wp-content/upgrade folder.', 'updraftplus');
-		$this->strings['move_failed'] = __('Could not move the files into place. Check your file permissions.', 'updraftplus');
+		$this->strings['new_move_failed'] = __('Could not move new files into place.', 'updraftplus').' '.__('Check your wp-content/upgrade folder.', 'updraftplus');
+		$this->strings['move_failed'] = __('Could not move the files into place.', 'updraftplus').' '.__('Check your file permissions.', 'updraftplus');
 		$this->strings['delete_failed'] = __('Failed to delete working directory after restoring.', 'updraftplus');
 		$this->strings['multisite_error'] = __('You are running on WordPress multisite - but your backup is not of a multisite site.', 'updraftplus');
 		$this->strings['unpack_failed'] = __('Failed to unpack the archive', 'updraftplus');
@@ -1069,7 +1069,7 @@ class Updraft_Restorer {
 			}
 			$put = $wp_filesystem->put_contents($this->ud_working_dir.$leaf, file_get_contents($file));
 			if (is_wp_error($put)) $updraftplus->log_wp_error($put);
-			@unlink($file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			@unlink($file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
 		} else {
 			$modint = 500;
 			$put = true;
@@ -1092,7 +1092,7 @@ class Updraft_Restorer {
 	 * @param  string  $package        The file name of the encrypted File
 	 * @param  boolean $delete_package the file can be removed before going off to the restore stage (this is just incase the user dont want to proceed)
 	 * @param  boolean $type 		   Check if the type is true or false
-	 * @return string                  Returns success or Fail depending on errors and restors DB
+	 * @return string                  Returns success or Fail depending on errors and restores DB
 	 */
 	public function unpack_package($package, $delete_package = true, $type = false) {
 
@@ -1126,14 +1126,14 @@ class Updraft_Restorer {
 
 		$backup_dir = $wp_filesystem->find_folder($updraft_dir);
 
-		if (function_exists('set_time_limit')) @set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (function_exists('set_time_limit')) @set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 
 		$packsize = round(filesize($backup_dir.$package)/1048576, 1).' Mb';
 		
 		$this->skin->feedback($this->strings['unpack_package'].' ('.basename($package).', '.$packsize.')');
 
 		$upgrade_folder = $wp_filesystem->wp_content_dir() . 'upgrade/';
-		@$wp_filesystem->mkdir($upgrade_folder, octdec($this->calculate_additive_chmod_oct(FS_CHMOD_DIR, 0775)));// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		@$wp_filesystem->mkdir($upgrade_folder, octdec($this->calculate_additive_chmod_oct(FS_CHMOD_DIR, 0775)));// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 
 		// Clean up contents of upgrade directory beforehand.
 		$upgrade_files = $wp_filesystem->dirlist($upgrade_folder);
@@ -1163,7 +1163,7 @@ class Updraft_Restorer {
 
 			$encryption = empty($this->restore_options['updraft_encryptionphrase']) ? UpdraftPlus_Options::get_updraft_option('updraft_encryptionphrase') : $this->restore_options['updraft_encryptionphrase'];
 
-			if (!$encryption) return new WP_Error('no_encryption_key', __('Decryption failed. The database file is encrypted, but you have no encryption key entered.', 'updraftplus'));
+			if (!$encryption) return new WP_Error('no_encryption_key', __('Decryption failed.', 'updraftplus').' '.__('The database file is encrypted, but you have no encryption key entered.', 'updraftplus'));
 
 			// function decrypt
 			$decrypted_file = UpdraftPlus_Encryption::decrypt($backup_dir.$package, $encryption);
@@ -1176,7 +1176,7 @@ class Updraft_Restorer {
 					unlink($decrypted_file['fullpath']);
 				}
 			} else {
-				return new WP_Error('decryption_failed', __('Decryption failed. The most likely cause is that you used the wrong key.', 'updraftplus'));
+				return new WP_Error('decryption_failed', __('Decryption failed.', 'updraftplus').' '.__('The most likely cause is that you used the wrong key.', 'updraftplus'));
 			}
 		} else {
 			if (preg_match('/\.sql$/i', $package)) {
@@ -1400,7 +1400,7 @@ class Updraft_Restorer {
 
 			if (self::MOVEIN_DO_NOTHING_IF_EXISTING == $preserve_existing && $wpfs->exists($dest_dir.$file)) {
 				// Something exists - no move. Remove it from the temporary directory - so that it will be clean later
-				@$wpfs->delete($working_dir.'/'.$file, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+				@$wpfs->delete($working_dir.'/'.$file, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 			// The $is_dir check was added in version 1.11.18; without this, files in the top-level that weren't in the first archive didn't get over-written
 			} elseif (self::MOVEIN_COPY_IN_CONTENTS != $preserve_existing || !$wpfs->exists($dest_dir.$file) || !$is_dir) {
 
@@ -1409,7 +1409,7 @@ class Updraft_Restorer {
 					// Make sure permissions are at least as great as those of the parent
 					if ($is_dir) {
 						// This method is broken due to https://core.trac.wordpress.org/ticket/26598
-						if (empty($chmod)) $chmod = octdec(sprintf("%04d", $this->get_current_chmod($dest_dir, $wpfs)));// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+						if (empty($chmod)) $chmod = octdec(sprintf("%04d", $this->get_current_chmod($dest_dir, $wpfs)));// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable -- The variable is defined after the check.
 						if (!empty($chmod)) $this->chmod_if_needed($dest_dir.$file, $chmod, false, $wpfs);
 					}
 				} else {
@@ -1834,7 +1834,7 @@ class Updraft_Restorer {
 					$dirlist = $wp_filesystem->dirlist($working_dir, true, true);
 					if (is_array($dirlist)) {
 						$updraftplus->log(__('Files found:', 'updraftplus'), 'notice-restore');
-						foreach ($dirlist as $name => $struc) {
+						foreach (array_keys($dirlist) as $name) {
 							$updraftplus->log("* $name", 'notice-restore');
 						}
 					} else {
@@ -2269,8 +2269,8 @@ class Updraft_Restorer {
 		$dirlist = $wp_filesystem->dirlist($working_dir, true, false);
 		if (is_array($dirlist)) {
 			$move_from = false;
-			foreach ($dirlist as $name => $struc) {
-				if (isset($struc['type']) && 'd' != $struc['type']) continue;
+			foreach ($dirlist as $name => $struct) {
+				if (isset($struct['type']) && 'd' != $struct['type']) continue;
 				if (false === $move_from) {
 					if (isset($fdirnames[$name])) {
 						$move_from = $working_dir . "/".$name;
@@ -2445,7 +2445,7 @@ class Updraft_Restorer {
 			$this->new_table_name = $import_table_prefix.$this->table_name;
 		} else {
 			$this->new_table_name = $this->old_table_prefix ? UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $this->table_name) : $this->table_name;
-			// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atmoic restore to work on this table we need to attach our temporary prefix
+			// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atomic restore to work on this table we need to attach our temporary prefix
 			if (!$this->rename_forbidden && $this->old_table_prefix && $this->new_table_name == $this->table_name) {
 				$non_wp_table = true;
 				$this->new_table_name = $import_table_prefix.$this->table_name;
@@ -2760,7 +2760,7 @@ class Updraft_Restorer {
 		// The 'off' check is for badly configured setups - http://wordpress.org/support/topic/plugin-wp-super-cache-warning-php-safe-mode-enabled-but-safe-mode-is-off
 		// @codingStandardsIgnoreLine
 		if (@ini_get('safe_mode') && 'off' != strtolower(@ini_get('safe_mode'))) {
-			$updraftplus->log(__('Warning: PHP safe_mode is active on your server. Timeouts are much more likely. If these happen, then you will need to manually restore the file via phpMyAdmin or another method.', 'updraftplus'), 'notice-restore');
+			$updraftplus->log(__('Warning: PHP safe_mode is active on your server.', 'updraftplus').' '.__('Timeouts are much more likely.', 'updraftplus').' '.__('If these happen, then you will need to manually restore the file via phpMyAdmin or another method.', 'updraftplus'), 'notice-restore');
 		}
 
 		$db_basename = 'backup.db.gz';
@@ -2813,7 +2813,7 @@ class Updraft_Restorer {
 		} else {
 			$updraftplus->log("Using direct MySQL access; value of use_mysqli is: ".($this->use_mysqli ? '1' : '0'));
 			if ($this->use_mysqli) {
-				@mysqli_query($this->mysql_dbh, 'SET SESSION query_cache_type = OFF;');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+				@mysqli_query($this->mysql_dbh, 'SET SESSION query_cache_type = OFF;');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 			} else {
 				// @codingStandardsIgnoreLine
 				@mysql_query('SET SESSION query_cache_type = OFF;', $this->mysql_dbh);
@@ -2909,7 +2909,7 @@ class Updraft_Restorer {
 				return new WP_Error('abort_dummy_restore', __('Your database user does not have permission to drop tables', 'updraftplus'));
 			}
 			
-			$updraftplus->log(__('Your database user does not have permission to create tables. We will attempt to restore by simply emptying the tables; this should work as long as a) you are restoring from a WordPress version with the same database structure, and b) Your imported database does not contain any tables which are not already present on the importing site.', 'updraftplus'), 'warning-restore');
+			$updraftplus->log(__('Your database user does not have permission to create tables.', 'updraftplus').' '.__('We will attempt to restore by simply emptying the tables; this should work as long as a) you are restoring from a WordPress version with the same database structure, and b) Your imported database does not contain any tables which are not already present on the importing site.', 'updraftplus'), 'warning-restore');
 			
 			$updraftplus->log('Your database user does not have permission to create tables. We will attempt to restore by simply emptying the tables; this should work as long as a) you are restoring from a WordPress version with the same database structure, and b) Your imported database does not contain any tables which are not already present on the importing site.');
 			
@@ -2962,7 +2962,7 @@ class Updraft_Restorer {
 
 				$updraftplus->log(sprintf('Your database user does not have permission to drop tables. We will attempt to restore by simply emptying the tables; this should work as long as you are restoring from a WordPress version with the same database structure (%s)', '('.$this->last_error.', '.$this->last_error_no.')'));
 				
-				$updraftplus->log(sprintf(__('Your database user does not have permission to drop tables. We will attempt to restore by simply emptying the tables; this should work as long as you are restoring from a WordPress version with the same database structure (%s)', 'updraftplus'), '('.$this->last_error.', '.$this->last_error_no.')'), 'warning-restore');
+				$updraftplus->log(__('Your database user does not have permission to drop tables.', 'updraftplus').' '.sprintf(__('We will attempt to restore by simply emptying the tables; this should work as long as you are restoring from a WordPress version with the same database structure (%s)', 'updraftplus'), '('.$this->last_error.', '.$this->last_error_no.')'), 'warning-restore');
 				
 			}
 		}
@@ -3250,7 +3250,7 @@ class Updraft_Restorer {
 
 				$non_wp_table = false;
 				
-				// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atmoic restore to work on this table we need to attach our temporary prefix
+				// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atomic restore to work on this table we need to attach our temporary prefix
 				if (!$this->rename_forbidden && $this->old_table_prefix && $this->new_table_name == $this->table_name) {
 					$non_wp_table = true;
 					$this->new_table_name = $import_table_prefix.$this->table_name;
@@ -3307,7 +3307,7 @@ class Updraft_Restorer {
 
 				$this->new_table_name = $this->old_table_prefix ? UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $this->table_name) : $this->table_name;
 				
-				// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atmoic restore to work on this table we need to attach our temporary prefix
+				// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atomic restore to work on this table we need to attach our temporary prefix
 				if (!$this->rename_forbidden && $this->old_table_prefix && $this->new_table_name == $this->table_name) {
 					$non_wp_table = true;
 					$this->new_table_name = $import_table_prefix.$this->table_name;
@@ -3392,19 +3392,19 @@ class Updraft_Restorer {
 					$updraftplus->log_restore_update(array('type' => 'state', 'stage' => 'db', 'data' => array('stage' => 'stored_routine', 'routine_name' => preg_replace('/^`?(.+?)`?$/i', "$1", trim(str_replace('``', '`', $routine_matches[1]))))));
 					if ($this->stored_routine_supported['is_binary_logging_enabled'] && !$this->stored_routine_supported['is_function_creators_trusted'] && !isset($this->continuation_data['old_log_bin_trust_function_creators']) && is_null($old_log_bin_trust_function_creators)) {
 						// it's a new restoration
-						// no matter what the database server is and the priviliges the current DB user has, if the binary logging is enabled, log_bin_trust_function_creators is set to off and DB current, we could end up getting the below error when restoring routines
+						// no matter what the database server is and the privileges the current DB user has, if the binary logging is enabled, log_bin_trust_function_creators is set to off and DB current, we could end up getting the below error when restoring routines
 						// ERROR 1418 (HY000): This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
 						// we need to set the log_bin_trust_function_creators "ON" so that the db server will treat all functions as deterministic safe functions.
 						// https://mariadb.com/kb/en/library/binary-logging-of-stored-routines/
 						// https://dev.mysql.com/doc/refman/8.0/en/stored-programs-logging.html
 						// if the DB current user is a non super admin, binary logging is enabled and log_bin_trust_function_creators is set to OFF/0 it will produce this error "(You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)"
-						// the log_bin_tust_function_creators variable is a global variable that should only be changed with caution because other plugins may also use it for some purpose, this can lead to an inaccurate value of log_bin_trust_function_creators especially if the restoration failed and the resumption could not be triggered
+						// the log_bin_trust_function_creators variable is a global variable that should only be changed with caution because other plugins may also use it for some purpose, this can lead to an inaccurate value of log_bin_trust_function_creators especially if the restoration failed and the resumption could not be triggered
 						$old_log_bin_trust_function_creators = $this->set_log_bin_trust_function_creators('ON');
 						if (is_wp_error($old_log_bin_trust_function_creators)) {
 							$updraftplus->log('set_log_bin_trust_function_creators(ON): '.$old_log_bin_trust_function_creators);
 						} else {
 							$updraftplus->log('log_bin_trust_function_creators value has been set to: ON');
-							// we also need to store the original value of the log_bin_trust_function_creator variable to UDP jobdata so that if something goes wrong in the restoration, we're stil able in a earlier time to set this global variable back to what it was (register_shutdown_function seems to be the good one)
+							// we also need to store the original value of the log_bin_trust_function_creator variable to UDP jobdata so that if something goes wrong in the restoration, we're still able in a earlier time to set this global variable back to what it was (register_shutdown_function seems to be the good one)
 							$updraftplus->jobdata_set('old_log_bin_trust_function_creators', $old_log_bin_trust_function_creators);
 							$updraftplus->log('The original value of log_bin_trust_function_creators variable has been successfully added to UDP jobdata');
 						}
@@ -3505,7 +3505,7 @@ class Updraft_Restorer {
 							$sql_line = str_replace($table_name, $new_table_name, $sql_line);
 						}
 					}
-					// by default during an atomic restoration, the last created table is renamed at the end of the restoration process (@see the `if ($this->restoring_table)` code at the end of this method), tipically the DB server will throw an error when creating a view that requires a table that doesn't exist in the database
+					// by default during an atomic restoration, the last created table is renamed at the end of the restoration process (@see the `if ($this->restoring_table)` code at the end of this method), typically the DB server will throw an error when creating a view that requires a table that doesn't exist in the database
 					if ($this->restoring_table) {
 						$final_table_name = $this->maybe_rename_restored_table();
 						$this->restored_table($final_table_name, $this->final_import_table_prefix, $this->old_table_prefix, $this->table_engine);
@@ -3576,7 +3576,7 @@ class Updraft_Restorer {
 			if (is_string($old_log_bin_trust_function_creators) && '' !== $old_log_bin_trust_function_creators) {
 				$this->set_log_bin_trust_function_creators($old_log_bin_trust_function_creators);
 				// no need to check the return value of the set_log_bin_trust_function_creators here as if it is an wp error it has been handled already and this block of code wont be executed
-				$updraftplus->log("log_bin_trust_function_creators variable has been resetted: ".$old_log_bin_trust_function_creators);
+				$updraftplus->log("log_bin_trust_function_creators variable has been reset: ".$old_log_bin_trust_function_creators);
 				// unset the old_log_bin_trust_function_creators index from the continuation_data so that the on_shutdown function won't check it again
 				unset($this->continuation_data['old_log_bin_trust_function_creators']);
 				// also delete the old_log_bin_trust_function_creators jobdata to prevent the on_shutdown function accessing and deleting it twice
@@ -3868,7 +3868,7 @@ class Updraft_Restorer {
 	
 	/**
 	 * UPDATE is sql_type=5 (not used in the function, but used in Migrator and so noted here for reference)
-	 * $import_table_prefix is only use in one place in this function (long INSERTs), and otherwise need/should not be supplied
+	 * $import_table_prefix is only use in one place in this function (long INSERTTs), and otherwise need/should not be supplied
 	 *
 	 * SQL Types:
 	 * 1 DROP
@@ -4600,7 +4600,7 @@ class UpdraftPlus_WP_Filesystem_Direct extends WP_Filesystem_Direct {
 			return false;
 
 		// try using rename first. if that fails (for example, source is read only) try copy
-		if (@rename($source, $destination))// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (@rename($source, $destination))// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 			return true;
 
 		return false;

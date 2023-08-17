@@ -22,7 +22,16 @@
 
 		<div class="wpo-fieldgroup">
 			<p>
-				<small><?php _e('This button will delete all of WP-Optimize\'s settings. You will then need to enter all your settings again. You can also do this before deactivating/deinstalling WP-Optimize if you wish.', 'wp-optimize'); ?></small>
+				<small>
+					<?php
+						$message = __('This button will delete all of WP-Optimize\'s settings.', 'wp-optimize');
+						$message .= ' ';
+						$message .= __('You will then need to enter all your settings again.', 'wp-optimize');
+						$message .= ' ';
+						$message .= __('You can also do this before deactivating/deinstalling WP-Optimize if you wish.', 'wp-optimize');
+						echo esc_html($message);
+					?>
+				</small>
 				<br>
 				<br>
 				<input class="button wpo-wipe-settings" type="button" name="wp-optimize-wipe-settings" value="<?php esc_attr_e('Wipe settings', 'wp-optimize'); ?>" />

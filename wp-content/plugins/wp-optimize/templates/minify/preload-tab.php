@@ -5,11 +5,19 @@
 		<div id="minify-preload" class="notice notice-warning wpo-warning below-h2 wp-optimize-minify-status-information-notice wpo-show">
 			<p>
 				<span class="dashicons dashicons-info"></span>
-				<?php printf(__('You are using WP-Optimize for page caching. Because of that, the pre-load settings used for page-caching are used. i.e. To configure pre-loading, go to the <a href="%s">settings in the caching section</a> instead.', 'wp-optimize'), admin_url('admin.php?page=wpo_cache&tab=wp_optimize_preload'), __('Cache Preload', 'wp-optimize')); ?><br>
+				<?php
+					$message = esc_html__('You are using WP-Optimize for page caching.', 'wp-optimize');
+					$message .= ' ';
+					$message .= esc_html__('Because of that, the pre-load settings used for page-caching are used.', 'wp-optimize');
+					$message .= ' ';
+					$message .= sprintf(esc_html__('i.e. To configure pre-loading, go to the %sCache Preload settings in the caching section%s instead.', 'wp-optimize'), '<a href="' . admin_url('admin.php?page=wpo_cache&tab=wp_optimize_preload') . '">', '</a>');
+					echo $message;
+				?>
+				<br>
 			</p>
 		</div>
 	<?php endif; ?>
-		<h3 class="wpo-first-child"><?php _e('Preload now', 'wp-optimize'); ?></h3>
+		<h3 class="wpo-first-child"><?php esc_html_e('Preload now', 'wp-optimize'); ?></h3>
 		<div class="wpo-fieldgroup">
 			<p>
 				<input id="wp_optimize_run_minify_preload" 
@@ -20,12 +28,12 @@
 					<?php echo $is_cache_enabled ? "disabled" : ""; ?>
 				>
 				<span id="wp_optimize_preload_minify_status"><?php
-					echo htmlspecialchars($status_message);
+					echo esc_html($status_message);
 				?></span>
 			</p>
 			<span>
-				<?php _e('This action will trigger WP-Optimize to generate minify assets by visiting pages to preload them (so that they are ready the first time a human visitor wants them).', 'wp-optimize'); ?>
-				<?php _e('If a sitemap is available, then it will be used to determine which assets get minified.', 'wp-optimize'); ?>
+				<?php esc_html_e('This action will trigger WP-Optimize to generate minify assets by visiting pages to preload them (so that they are ready the first time a human visitor wants them).', 'wp-optimize'); ?>
+				<?php esc_html_e('If a sitemap is available, then it will be used to determine which assets get minified.', 'wp-optimize'); ?>
 			</span>
 		</div>
 	</form>

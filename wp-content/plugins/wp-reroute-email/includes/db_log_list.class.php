@@ -27,7 +27,7 @@ class DBLogList extends WP_List_Table {
             'view'      => sprintf('<a href="?page=%s&tab=details&action=%s&logid=%s">' . esc_attr__('View Message', 'wp_reroute_email') . '</a>', esc_attr($page),'view', esc_attr($item->id))
         );
 
-        return sprintf('%1$s %2$s', $item->subject, $this->row_actions($actions));
+        return sprintf('%1$s %2$s', wp_kses_post($item->subject), $this->row_actions($actions));
     }
     
     function column_sent_on($item){

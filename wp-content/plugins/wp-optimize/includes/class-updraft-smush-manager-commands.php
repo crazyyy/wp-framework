@@ -172,9 +172,9 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$ui_update['percent_saved'] = number_format($this->task_manager->options->get_option('total_percent_saved', 1), 2).'%';
 		$ui_update['failed_task_count'] = $this->task_manager->get_failed_task_count();
 
-		$ui_update['summary'] = sprintf(__("Since your compression statistics were last reset, a total of %d image(s) were compressed on this site, saving approximately %s of space at an average of %02d percent per image.", 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
-		$ui_update['failed'] = sprintf(__("%d image(s) could not be compressed. Please see the logs for more information, or try again later.", 'wp-optimize'), $ui_update['failed_task_count']);
-		$ui_update['pending'] = sprintf(__("%d image(s) images were selected for compressing previously, but were not all processed. You can either complete them now or cancel and retry later.", 'wp-optimize'), $ui_update['pending_tasks']);
+		$ui_update['summary'] = sprintf(__('Since your compression statistics were last reset, a total of %d image(s) were compressed on this site.', 'wp-optimize').' '.__('This saved approximately %s of space at an average of %02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
+		$ui_update['failed'] = sprintf(__("%d image(s) could not be compressed.", 'wp-optimize'), $ui_update['failed_task_count']) . ' ' . __('Please see the logs for more information, or try again later.', 'wp-optimize');
+		$ui_update['pending'] = sprintf(__("%d image(s) images were selected for compressing previously, but were not all processed.", 'wp-optimize'), $ui_update['pending_tasks']) . ' ' . __('You can either complete them now or cancel and retry later.', 'wp-optimize');
 		$ui_update['smush_complete'] = $this->task_manager->is_queue_processed();
 		
 		if (isset($data['image_list'])) {
@@ -183,11 +183,11 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			$ui_update['session_stats'] = "";
 
 			if (!empty($stats['success'])) {
-			$ui_update['session_stats'] .= sprintf(__("A total of %d image(s) were successfully compressed in this iteration. ", 'wp-optimize'), $stats['success']);
+			$ui_update['session_stats'] .= sprintf(__("A total of %d image(s) were successfully compressed in this iteration.", 'wp-optimize'), $stats['success']);
 			}
 
 			if (!empty($stats['fail'])) {
-				$ui_update['session_stats'] .= sprintf(__("%d selected image(s) could not be compressed. Please see the logs for more information, you may try again later.", 'wp-optimize'), $stats['fail']);
+				$ui_update['session_stats'] .= sprintf(__("%d selected image(s) could not be compressed.", 'wp-optimize'), $stats['fail']) . ' ' . __('Please see the logs for more information, you may try again later.', 'wp-optimize');
 			}
 		}
 		
@@ -489,9 +489,9 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @return array
 	 */
 	public function reset_webp_serving_method() {
-		$success = WP_Optimize()->get_webp_instance()->reset_webp_serving_method();
+		WP_Optimize()->get_webp_instance()->reset_webp_serving_method();
 		return array(
-			'success' => $success,
+			'success' => true,
 		);
 	}
 
@@ -510,7 +510,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 
 		$images['original'] = get_attached_file($attachment_id);
 		foreach ($images as $image) {
-			WPO_Image_Utils::do_webp_conversion($image);
+			WPO_WebP_Utils::do_webp_conversion($image);
 		}
 
 		return array(

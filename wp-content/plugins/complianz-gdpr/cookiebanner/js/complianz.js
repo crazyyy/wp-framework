@@ -372,6 +372,33 @@ function cmplz_maybe_run_waiting_scripts( script, category, service, sourceObj )
 	}
 }
 
+const cmplzLazyLoader = () => {
+	// Get all elements with the "lazy-load" class
+	const cmplzLazyLoadElements = document.querySelectorAll('.cmplz-blocked-content-container');
+
+	// Create an Intersection Observer instance
+	const cmplzObserver = new IntersectionObserver((entries, observer) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				// When the element is in view, load the background image
+				const element = entry.target;
+				let src = element.getAttribute('data-placeholder-image');
+				let index = element.getAttribute('data-placeholder_class_index');
+				cmplz_append_css('.cmplz-placeholder-' + index + ' {background-image: url(' + src + ') !important;}');
+				cmplz_set_blocked_content_container_aspect_ratio(element, src, index);
+				// Stop observing the element
+				observer.unobserve(element);
+			}
+
+		});
+	});
+
+	// Start observing each lazy-load element
+	cmplzLazyLoadElements.forEach((element) => {
+		cmplzObserver.observe(element);
+	});
+}
+
 /*
  * Set placeholder image as background on the parent div, set notice, and handle height.
  *
@@ -436,12 +463,13 @@ function cmplz_set_blocked_content_container() {
 			//handle image size for video
 			let src = obj.getAttribute('data-placeholder-image');
 			if (src && typeof src !== 'undefined' && src.length ) {
-				src = src.replace('url(', '').replace(')', '').replace(/\"/gi, "");
-				cmplz_append_css('.cmplz-placeholder-' + cmplz_placeholder_class_index + ' {background-image: url(' + src + ') !important;}');
-				cmplz_set_blocked_content_container_aspect_ratio(obj, src, cmplz_placeholder_class_index);
+				//move src to parent, if needed.
+				blocked_content_container.setAttribute('data-placeholder-image', src);
 			}
 		}
 	});
+
+	cmplzLazyLoader();
 
 	/*
 	 * In some cases, like ajax loaded content, the placeholders are initialized again. In that case, the scripts may need to be fired again as well.
@@ -523,9 +551,6 @@ function cmplz_insert_placeholder_text(container, category, service ){
 function cmplz_set_blocked_content_container_aspect_ratio(container, src, placeholder_class_index) {
 	if ( container == null ) return;
 
-	//we set the first parent div as container with placeholder image
-	let blocked_content_container = container.parentElement;
-
 	//handle image size for video
 	let img = new Image();
 	img.addEventListener("load", function () {
@@ -534,7 +559,7 @@ function cmplz_set_blocked_content_container_aspect_ratio(container, src, placeh
 
 		//prevent division by zero.
 		if (imgWidth === 0) imgWidth = 1;
-		let w = blocked_content_container.clientWidth;
+		let w = container.clientWidth;
 		let h = imgHeight * (w / imgWidth);
 
 		let heightCSS = '';
@@ -855,8 +880,16 @@ function cmplz_run_tm_event(category) {
 	if (cmplz_fired_events.indexOf(category) === -1) {
 		cmplz_fired_events.push(category);
 		window.dataLayer = window.dataLayer || [];
+		//deprecated notice for 7.0
+		if ( complianz.prefix.indexOf('rt_')!==-1 ) {
+			window.dataLayer.push({
+				'event': complianz.prefix+'event_'+category,
+			});
+			console.log('Tag Manager events with prefix cmplz_rt_ will be deprecated in 7.0. The cmplz_rt_ prefix will be dropped from Tag Manager events.');
+		}
+
 		window.dataLayer.push({
-			'event': complianz.prefix+'event_'+category
+			'event': 'cmplz_event_'+category
 		});
 		let event = new CustomEvent('cmplz_tag_manager_event', { detail: category });
 		document.dispatchEvent(event);
@@ -879,6 +912,19 @@ function cmplz_legacy(){
 		console.log('recaptcha as service name is deprecated. Please rename the service in your custom html to google-recaptcha');
 		document.body.classList.add( 'cmplz-google-recaptcha' );
 	}
+}
+
+/*
+ * Accept all categories
+ */
+window.cmplz_accept_all = function(){
+	cmplz_clear_all_service_consents();
+	for (var key in cmplz_categories) {
+		if ( cmplz_categories.hasOwnProperty(key) ) {
+			cmplz_set_consent(cmplz_categories[key], 'allow');
+		}
+	}
+	cmplz_sync_category_checkboxes();
 }
 
 window.conditionally_show_banner = function() {
@@ -1162,13 +1208,14 @@ window.cmplz_has_consent = function ( category ){
 	if ( category === 'functional' ) {
 		return true;
 	}
-
-	//if consent is given on service level, this should be handled by cmplz_has_service_consent
-	if ( cmplz_do_not_track() ){
-		return false;
-	}
-
 	let has_consent, value;
+
+	//if DNT is detected, we should only return the actual cookie value, and not look at the consenttype
+	if ( cmplz_do_not_track() ){
+		value = cmplz_get_cookie(category);
+		has_consent = (value === 'allow');
+		return has_consent;
+	}
 
 	/*
 	 * categories
@@ -1465,19 +1512,6 @@ document.addEventListener('cmplz_consent_action', function (e) {
 	cmplz_fire_categories_event();
 	cmplz_track_status();
 });
-
-/*
- * Accept all categories
- */
-window.cmplz_accept_all = function(){
-	cmplz_clear_all_service_consents();
-	for (var key in cmplz_categories) {
-		if ( cmplz_categories.hasOwnProperty(key) ) {
-			cmplz_set_consent(cmplz_categories[key], 'allow');
-		}
-	}
-	cmplz_sync_category_checkboxes();
-}
 
 /*
  * Deny all categories, and reload if needed.

@@ -2086,11 +2086,62 @@ if ( ! function_exists( 'cmplz_download_to_site' ) ) {
 			unlink( $tmpfile );
 		} // must unlink afterwards
 
+		if ( file_exists( $file ) ) {
+			try {
+				$new_src = cmplz_create_webp( $file, $new_src );
+			} catch ( Exception $e ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( $e->getMessage() );
+				}
+			}
+		}
+
 		if ( ! file_exists( $file ) ) {
 			return cmplz_default_placeholder();
 		}
 
 		return $new_src;
+	}
+}
+
+if (!function_exists('cmplz_create_webp')){
+	function cmplz_create_webp($file, $new_src) {
+		//check webp availability
+		if (
+				!function_exists('imagecreatefromjpeg') ||
+				!function_exists('imagecreatefrompng') ||
+				!function_exists('imagewebp') ||
+				!function_exists('imagedestroy') ||
+				!function_exists('imagepalettetotruecolor') ||
+				!function_exists('imagealphablending') ||
+				!function_exists('imagesavealpha')
+		) {
+			return $new_src;
+		}
+
+		if ( stripos( $file, '.jpeg' ) !== false || stripos( $file, '.jpg' ) !== false ) {
+			$webp_file    = str_replace( array( ".jpeg", '.jpg' ), ".webp", $file );
+			$webp_new_src = str_replace( array( ".jpeg", '.jpg' ), ".webp", $new_src );
+			$image        = imagecreatefromjpeg( $file );
+			imagewebp( $image, $webp_file, 80 );
+			imagedestroy( $image );
+
+			return file_exists( $webp_file ) ? $webp_new_src : $new_src;
+		} elseif ( stripos( $file, '.png' ) !== false ) {
+			$webp_file    = str_replace( '.png', ".webp", $file );
+			$webp_new_src = str_replace( '.png', ".webp", $new_src );
+			$image        = imagecreatefrompng( $file );
+			imagepalettetotruecolor( $image );
+			imagealphablending( $image, true );
+			imagesavealpha( $image, true );
+			imagewebp( $image, $webp_file, 80 );
+			imagedestroy( $image );
+
+			return file_exists( $webp_file ) ? $webp_new_src : $new_src;
+		} else {
+			return $new_src;
+		}
+
 	}
 }
 
@@ -3072,5 +3123,29 @@ if ( ! function_exists( 'cmplz_printf' ) ) {
 			}
 			echo $output;
 		}
+	}
+}
+
+if ( ! function_exists('cmplz_quebec_notice')) {
+	function cmplz_quebec_notice() {
+
+		$text = cmplz_sprintf( __( "In September 2023, Quebec Bill 64 will be enforced in Canada. To keep your site compliant, opt-in must be implemented for Canada %sif you specifically target Quebec%s. Please navigate to the %swizard%s and answer the question about Quebec.", "complianz-gdpr" ), '<strong>', '</strong>' , '<a href="' . admin_url( 'admin.php?page=cmplz-wizard&step=1' ) . '">', '</a>' ) . "<br><br>";
+		$text .= __( "Please be aware that answering 'Yes' will activate opt-in for Canada, altering the banner and blocking non-functional scripts and cookies prior to consent. Please check the front-end of your site after activating opt-in.", "complianz-gdpr" );
+
+		return $text;
+	}
+}
+
+if ( ! function_exists('cmplz_requires_quebec_notice') ) {
+	function cmplz_requires_quebec_notice() {
+
+		if ( array_key_exists('ca', cmplz_get_regions() )
+			 && cmplz_get_value('sensitive_information_processed') !== 'yes'
+			 && cmplz_upgraded_to_current_version() ) {
+			return true;
+		}
+
+		return false;
+
 	}
 }
