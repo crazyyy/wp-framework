@@ -1,0 +1,80 @@
+=== Dev4Press Library ===
+== Changelog ==
+
+= Version 4.2 - 2023.06.16 =
+* New: complete the network based `Menu` class
+* New: added `KSES` class for processing HTML strings for display
+* New: added `Detection` class to detect email sender and source
+* New: added `Source` helper class to detect file source
+* New: added plugin reference and the icon
+* New: added several more UI icons
+* New: added `Elements` method to render grouped checkboxes
+* New: added settings type for the grouped checkboxes
+* New: Database install class `InstallDB` has the version property
+* New: updated and modernized flags library
+* New: expanded the main `WordPress` class
+* New: rewritten GEOIP handling objects
+* Edit: improvements to the `DBLite` class
+* Edit: improvements to the `Scope` class
+* Edit: improvements to the `Panel` class
+* Edit: improvements to the `Table` class
+* Edit: improvements to the `Table` default styling
+* Edit: improvements to database installation process
+* Edit: improvements to the admin core objects
+* Edit: many small tweaks and settings changes for admin panels
+* Edit: many tweaks and updates to the admin styling
+* Edit: improvements to the admin responsiveness
+* Edit: improvements to the `Elements` rendering
+* Edit: improved support for the network plugins
+* Edit: several more strings escaping for display
+* Removed: old flags collection CSS and images
+* Fix: server IP warning when in CLI mode
+* Fix: potential issue with the grouped select render method
+
+= Version 4.1.1 - 2023.05.15 =
+* New: added `exclamation` icon
+* New: few additional styling changes
+* Fix: wrong `question` icon used
+* Fix: issue with the `Table` referer use
+
+= Version 4.1 - 2023.05.04 =
+* New: `Sanitize` includes wrapper for the URL
+* New: Rewritten JavaScript and CSS for the Meta boxes
+* New: Expanded collection of UI icons
+* New: JavaScript library for QRCodes: Kjua-SVG 1.13.1
+* New: Admin panel handling the cards content layout better
+* New: Main admin object handles screen options saving
+* Updated: Improvements to About panel responsive styling
+* Updated: Improvements to the `Table` base class
+* Updated: Various improvements to the PHP code
+* Updated: CSS pack no longer contains Balloon styling
+* Fix: issues with screen load panel initialization
+
+= Version 4.0.1 - 2023.03.28 =
+* Updated: Few changes to the `plugin_locale` filter usage
+* Fix: issue with the `plugin_locale` filter missing domain
+
+= Version 4.0 - 2023.03.28 =
+* New: Expanded collection of UI icons
+* New: Replaced most of the plugin icons
+* New: Base abstract `Store` class for data storage
+* New: `IP` class mostly rewritten and expanded
+* New: Connection between admin and core plugin classes
+* New: Plugin `Core` with abstract method returning `Features` object
+* New: Migration guide file with the class name changes
+* Updated: Namespace changes for some classes
+* Updated: `IP` class expanded Cloudflare IP range
+* Updated: Show knowledge base link for panels if available
+* Updated: `DBLite` readability of the `build_query` method
+* Updated: Few updates to the settings rendering
+* Updated: Various improvements to the styling
+* Updated: Recommendation API list of plugins
+* Updated: Built-in cacert.pem 20230110
+* Deprecated: `DBLite` methods for time zone offset
+* Removed: All previously deprecated methods
+* Fix: `DBLite` method `analyze_table` was not returning results
+* Fix: Few issues with the `IP` class range methods
+* Fix: Icons missing from the `Icons` class
+* Fix: Several minor styling issues
+* Fix: Referencing the namespaces that are not used
+* Fix: Features sidebar references a plugin

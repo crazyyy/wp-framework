@@ -39,7 +39,7 @@ if ($lookup) {
 				if (empty($ip_or_domain)) {
 					$invalid_domain = true;
 				} elseif (version_compare(phpversion(), '5.6', '>')) {
-					if (!(filter_var($ip_or_domain, FILTER_VALIDATE_IP) || filter_var($ip_or_domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME))) $invalid_domain = true; // phpcs:ignore PHPCompatibility.Constants.NewConstants.filter_validate_domainFound
+					if (!(filter_var($ip_or_domain, FILTER_VALIDATE_IP) || filter_var($ip_or_domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME))) $invalid_domain = true; // phpcs:ignore PHPCompatibility.Constants.NewConstants.filter_validate_domainFound -- This code only runs on php 7.0+ so ignore the warning
 				}
 				if ($invalid_domain) {
 					$AIOWPSecurity_Tools_Menu->show_msg_error(__('Please enter a valid IP address or domain name to look up.', 'all-in-one-wp-security-and-firewall'));

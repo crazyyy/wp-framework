@@ -1,0 +1,353 @@
+.d4p-wrap {
+    &.d4p-panel-dashboard {
+        .d4p-sidebar {
+            .d4p-dashboard-badge {
+                padding: 2em 1.5em;
+                text-align: center;
+                border-radius: var(--d4p-layout-main-border-radius);
+
+                * {
+                    color: #FFF;
+                }
+
+                h3 {
+                    word-break: keep-all;
+                    font-weight: 300;
+                    letter-spacing: -1px;
+                    margin: .5em 0 0;
+                    padding: 0;
+                    text-transform: uppercase;
+                    line-height: 1.1;
+                    font-size: 32px;
+                }
+
+                ._version-wrapper {
+                    margin: 1.6em -1.1em -1.2em;
+                    padding: 1em;
+                    border-top: 1px solid var(--d4p-color-main-border);
+                    font-size: 1.3em;
+                    text-align: center;
+                    font-weight: 300;
+                    display: flex;
+
+                    > span {
+                        display: block;
+                    }
+
+                    ._edition {
+                        font-weight: bold;
+                    }
+
+                    ._version {
+                        text-align: right;
+                        flex-grow: 1;
+                    }
+                }
+            }
+
+            .d4p-links-group {
+                margin: 1em 0 0;
+
+                &.buy-me-a-coffee {
+                    text-align: center;
+
+                    img {
+                        width: 100%;
+                        max-width: 250px;
+                    }
+                }
+
+                a {
+                    i {
+                        font-size: 1.3em;
+                        width: 1.3em;
+                        text-align: center;
+                    }
+
+                    span {
+                        font-size: 120%;
+                        font-weight: bold;
+                        vertical-align: top;
+                    }
+                }
+
+                &:not(.buy-me-a-coffee) {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .5em;
+
+                    @media screen and (min-width: 400px) and (max-width: 640px) {
+                        flex-direction: row;
+                        flex-wrap: wrap;
+
+                        a {
+                            display: block;
+                            flex: 1 1 calc(50% - .5em);
+                        }
+                    }
+                }
+            }
+        }
+
+        .d4p-content {
+            .d4p-cards-wrapper {
+                width: 100%;
+                max-width: 1200px;
+                display: flex;
+                flex-wrap: wrap;
+
+                .d4p-group {
+                    &.d4p-dashboard-card {
+                        flex: 0 1 calc(50% - 2em);
+                        margin: 1em;
+                        position: relative;
+                    }
+
+                    &.d4p-card-double {
+                        flex: 1 0 100%;
+                        max-width: calc(100% - 2em);
+                    }
+                }
+
+                @media screen and (max-width: 1200px) {
+                    flex-direction: column;
+
+                    .d4p-group {
+                        &.d4p-dashboard-card {
+                            max-width: calc(100% - 2em);
+                        }
+                    }
+                }
+
+                @media screen and (max-width: 640px) {
+                    .d4p-group {
+                        &.d4p-dashboard-card {
+                            margin: 1em 0;
+                            max-width: 100%;
+                        }
+                    }
+                }
+            }
+
+            .d4p-group {
+                &.d4p-dashboard-card {
+                    display: block;
+
+                    &.d4p-card-double {
+                        .d4p-group-inner {
+                            font-size: 105%;
+                        }
+                    }
+
+                    .d4p-group-inner {
+                        padding: 15px;
+
+                        h4 {
+                            margin: 0 0 .75em;
+                            font-size: 1.15em;
+                        }
+
+                        hr {
+                            margin: .75em 0;
+                            border: 0;
+                            border-top: 1px solid #DDD;
+                        }
+
+                        ul {
+                            list-style: none;
+                            margin: 0;
+
+                            li {
+                                margin: 3px 0;
+                            }
+
+                            &.d4p-with-bullets {
+                                list-style: outside disc;
+                                margin-left: 1em;
+
+                                li {
+                                    list-style: inherit;
+                                }
+                            }
+                        }
+                    }
+
+                    .d4p-group-footer {
+                        position: absolute;
+                        border-top: 1px solid #EEE;
+                        padding: 1em;
+                        text-align: left;
+                        bottom: 0;
+                        width: 100%;
+                    }
+
+                    .d4p-card-badge {
+                        border-radius: var(--d4p-layout-badge-border-radius);
+                        margin-left: 5px;
+                        color: #FFF;
+                        display: inline-block;
+                        padding: 0 6px 2px;
+                        line-height: 1.5;
+
+                        .d4p-icon {
+                            font-size: 82%;
+                            margin-right: 5px;
+                            vertical-align: baseline;
+                        }
+
+                        &.d4p-badge-right {
+                            float: right;
+                        }
+
+                        &.d4p-badge-green,
+                        &.d4p-badge-ok {
+                            background: #090;
+                        }
+
+                        &.d4p-badge-red,
+                        &.d4p-badge-error {
+                            background: #900;
+                        }
+
+                        &.d4p-badge-purple,
+                        &.d4p-badge-maintenance {
+                            background: #813E99;
+                        }
+
+                        &.d4p-badge-blue,
+                        &.d4p-badge-upgrade {
+                            background: #0A63A5;
+                        }
+                    }
+
+                    .d4p-group-header {
+                        border-bottom: 1px solid #EEE;
+                        padding: 1em;
+                        background: #FAFAFA;
+                        text-align: left;
+                    }
+
+                    .d4p-group-inner,
+                    .d4p-group-header,
+                    .d4p-group-footer {
+                        ul {
+                            display: flex;
+                            flex-wrap: wrap;
+                            list-style: none;
+                            padding: 0;
+                            margin: 0;
+                            column-gap: 1em;
+                            row-gap: .25em;
+
+                            li {
+                                list-style: none;
+                                padding: 0;
+                                margin: 0;
+                                line-height: 1.7;
+                                font-size: 1em;
+                                flex: 1 1 calc(50% - .5em);
+
+                                a {
+                                    text-decoration: none;
+
+                                    i {
+                                        color: #555;
+                                        font-size: 105%;
+                                        margin-right: 3px;
+                                    }
+
+                                    strong {
+                                        font-weight: 700;
+                                    }
+                                }
+
+                                .d4p-card-badge {
+                                    margin-top: 2px;
+                                }
+                            }
+
+                            &.d4p-full-width {
+                                flex-direction: column;
+
+                                li {
+                                    width: 100%;
+                                    padding: 0;
+                                }
+                            }
+                        }
+                    }
+
+                    .d4p-status-message {
+                        font-weight: bold;
+                    }
+
+                    .d4p-dashboard-status-row {
+                        display: flex;
+                        gap: .75em;
+                        align-items: flex-start;
+                        flex-wrap: nowrap;
+                        margin: .5em 0;
+                        font-size: 15px;
+                        line-height: 24px;
+
+                        button {
+                            padding: 0;
+                            border: 0;
+                            margin: 0;
+                            background: transparent;
+                            cursor: pointer;
+                        }
+
+                        .d4p-type-toggle {
+                            flex-shrink: 1;
+                            font-size: 22px;
+                            line-height: 1;
+                            vertical-align: top;
+
+                            i {
+                                vertical-align: top;
+                                font-size: 1.2em;
+                            }
+
+                            &.d4p-type-status-enabled {
+                                color: #3B7D33;
+                            }
+
+                            &.d4p-type-status-disabled {
+                                color: #D05757;
+                            }
+                        }
+
+                        div {
+                            flex-grow: 1;
+
+                            em {
+                                display: block;
+                            }
+                        }
+                    }
+
+                    &:not(.d4p-dashboard-card-no-footer) {
+                        .d4p-group-header + .d4p-group-inner {
+                            margin-bottom: 3.5em;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.d4p-status-inline-help {
+    display: inline-block;
+    border-radius: 50%;
+    background: var(--d4p-color-main-text);
+    color: #FFF;
+    font-size: 10px;
+    width: 18px;
+    text-align: center;
+    height: 18px;
+    line-height: 16px;
+    vertical-align: text-bottom;
+    cursor: help;
+}

@@ -230,17 +230,32 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 
 		$now = current_time('mysql', true);
 
-		$data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $lockout_table WHERE `release_date` > %s ORDER BY $orderby $order", $now), ARRAY_A);
+		$current_page = $this->get_pagenum();
+		$offset = ($current_page - 1) * $per_page;
 
-		if (!$ignore_pagination) {
-			$current_page = $this->get_pagenum();
-			$total_items = count($data);
-			$data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
-			$this->set_pagination_args(array(
-				'total_items' => $total_items,  // WE have to calculate the total number of items
-				'per_page'    => $per_page,  // WE have to determine how many items to show on a page
-				'total_pages' => ceil($total_items / $per_page)  // WE have to calculate the total number of pages
-			));
+		$total_items = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$lockout_table} WHERE `release_date` > %s",
+				$now
+			)
+		);
+
+		if ($ignore_pagination) {
+			$data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$lockout_table} WHERE `release_date` > %s ORDER BY {$orderby} {$order}",
+					$now
+				),
+				'ARRAY_A'
+			);
+		} else {
+			$data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$lockout_table} WHERE `release_date` > %s ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}",
+					$now
+				),
+				'ARRAY_A'
+			);
 		}
 
 		foreach ($data as $index => $row) {
@@ -249,6 +264,14 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 		}
 
 		$this->items = $data;
+
+		if ($ignore_pagination) return;
+
+		$this->set_pagination_args(array(
+				'total_items' => $total_items,  // WE have to calculate the total number of items
+				'per_page'    => $per_page,  // WE have to determine how many items to show on a page
+				'total_pages' => ceil($total_items / $per_page)  // WE have to calculate the total number of pages
+		));
 	}
 
 }

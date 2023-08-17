@@ -1,0 +1,314 @@
+.d4plib-widget {
+    border-bottom: 1px solid #DFDFDF;
+    margin: 0 0 1em;
+    min-width: 498px;
+    font-size: 15px;
+    line-height: 1.7;
+
+    h4 {
+        background: #666;
+        border-radius: 3px;
+        color: #FEFEFE;
+        font-size: 1.1em;
+        margin: 1em 0 .3em;
+        padding: .2em .5em;
+    }
+
+    h5 {
+        font-size: 1em;
+        font-weight: bold;
+        margin: 0 0 .5em;
+        padding: 0;
+    }
+
+    table {
+        margin: 0 0 .5em;
+        width: 100%;
+        border-collapse: collapse;
+
+        &.no-margin {
+            margin: 0;
+        }
+
+        td {
+            vertical-align: top;
+            padding-bottom: .5em;
+            line-height: 1.7;
+
+            h4 {
+                margin-top: 0;
+            }
+
+            p {
+                font-size: 1em;
+                line-height: 1.7;
+                margin-bottom: .5em;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        label {
+            display: block;
+            font-size: 1em;
+            font-weight: bold;
+            line-height: 1.8;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        select {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        select[multiple] {
+            height: 5em;
+        }
+
+        textarea {
+            width: 100%;
+            min-width: 100%;
+            min-height: 10em;
+
+            &.half-height {
+                min-height: 5em;
+            }
+        }
+
+        p {
+            margin: 0;
+        }
+
+        em {
+            display: block;
+            font-size: .9em;
+            margin: .3em 0 0;
+
+            &.solo-content {
+                margin: 0;
+            }
+        }
+
+        .cell-right,
+        .cell-left {
+            width: 49%;
+        }
+
+        .cell-three-left,
+        .cell-three-middle,
+        .cell-three-right {
+            width: 32%;
+        }
+
+        .cell-three-middle,
+        .cell-three-left,
+        .cell-left {
+            padding-right: 1%;
+        }
+
+        .cell-three-middle,
+        .cell-three-right,
+        .cell-right {
+            padding-left: 1%;
+        }
+
+        .cell-shortcode {
+            border: 1px dashed #BBB;
+            padding: 0.75em 1em;
+            font-size: 1.1em;
+            line-height: 1.7;
+            font-family: monospace;
+            background: #F0F0F0;
+        }
+    }
+
+    .d4plib-widget-tabs {
+        border-bottom: 1px solid #DFDFDF;
+        display: block;
+        margin: 1em 0;
+        padding: 0 0 0 .5em;
+
+        .d4plib-widget-tab {
+            color: #666;
+            display: inline-block;
+            padding: .3em .6em;
+            cursor: pointer;
+            outline: none;
+            text-decoration: none;
+            position: relative;
+            bottom: -1px;
+            margin: 0 .3em 0 0;
+            line-height: 1.8;
+            font-size: 1em;
+
+            &:hover {
+                background-color: #EEE;
+            }
+
+            &.d4plib-tab-active {
+                border: 1px solid #DDD;
+                font-weight: bold;
+                border-bottom-color: #FFF;
+                cursor: default;
+                color: #333;
+
+                &:hover {
+                    background-color: transparent;
+                    border-bottom-color: #FFF;
+                }
+            }
+
+            .dashicons {
+                margin-top: 3px;
+            }
+        }
+    }
+
+    .d4plib-widget-tabs-content {
+        .d4plib-tab-content {
+            display: none;
+
+            &.d4plib-content-active {
+                display: block;
+            }
+
+            ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .d4plib-checkbox-list {
+                label {
+                    font-weight: normal;
+                }
+
+                input[type="checkbox"],
+                input[type="radio"] {
+                    margin-bottom: -3px;
+                }
+            }
+        }
+
+        .wp-color-result {
+            height: 28px;
+            margin: 0 .4em 0 0;
+
+            &:after {
+                line-height: 28px;
+            }
+        }
+
+        .d4p-wrapper-hierarchy {
+            margin: 0;
+
+            li {
+                margin: 2px 0;
+
+                label {
+                    font-weight: normal;
+                }
+            }
+
+            ul.children {
+                margin-left: 12px;
+            }
+        }
+
+        .d4p-content-wrapper {
+            max-height: 160px;
+            overflow: auto;
+        }
+
+        .d4p-setting-checkboxes {
+            label {
+                font-weight: normal;
+            }
+        }
+
+        .d4p-check-uncheck {
+            font-size: .9em;
+            padding: 0 0 5px;
+            margin: 0 0 5px;
+            border-bottom: 1px dotted #CCC;
+
+            a {
+                text-decoration: none;
+
+                &.d4p-check-all {
+                    margin-right: .5em;
+                }
+
+                i {
+                    vertical-align: -2px;
+                }
+            }
+        }
+
+        .wp-picker-container {
+            .wp-picker-input-wrap input.wp-picker-clear {
+                height: 30px;
+                line-height: 28px;
+            }
+
+            .iris-picker {
+                width: 235px !important;
+            }
+
+            .iris-border {
+                .iris-picker-inner {
+                    bottom: 7px;
+                    left: 7px;
+                    right: 7px;
+                    top: 7px;
+                }
+
+                .iris-palette-container {
+                    bottom: 7px;
+                    left: 7px;
+                }
+
+                .iris-square {
+                    margin-right: .5em;
+                }
+            }
+        }
+    }
+}
+
+.editor-styles-wrapper {
+    .d4plib-widget {
+        border-bottom: 0;
+        margin: 0;
+
+        h4 {
+            margin: 15px 0 5px;
+            padding: 2px 5px;
+            font-weight: bold;
+            text-decoration: none;
+            border: 0;
+            color: #FFF;
+            font-size: 1em;
+        }
+
+        em {
+            font-size: .9em;
+            line-height: 1.5;
+        }
+
+        table {
+            margin: 0 0 .5em !important;
+            border: 0 !important;
+
+            td {
+                border: 0 !important;
+            }
+        }
+    }
+}

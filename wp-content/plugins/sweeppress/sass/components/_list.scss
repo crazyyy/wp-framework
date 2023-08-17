@@ -1,0 +1,22 @@
+.d4p-plugin-sweeppress {
+    dl {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        line-height: 1.8;
+
+        dt {
+            font-weight: bold;
+            flex: 0 0 50%;
+            margin: 0;
+            text-align: left;
+        }
+
+        dd {
+            flex: 0 0 50%;
+            margin: 0;
+            text-align: right;
+        }
+    }
+}

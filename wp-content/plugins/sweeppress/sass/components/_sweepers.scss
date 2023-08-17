@@ -1,0 +1,42 @@
+.d4p-panel-sweepers {
+    .tablenav.top {
+        display: none;
+    }
+
+    .sweeppress-table-sweepers {
+        margin: 0;
+
+        .column-category,
+        .column-scope {
+            width: 9%;
+        }
+
+        .column-auto,
+        .column-quick,
+        .column-cron {
+            width: 14%;
+
+            .d4p-icon {
+                font-size: 1.2em;
+
+                &.d4p-ui-box {
+                    color: red;
+                }
+
+                &.d4p-ui-check-square {
+                    color: green;
+                }
+            }
+        }
+
+        tbody {
+            .column-id {
+                font-family: monospace;
+            }
+
+            .column-sweeper {
+                font-weight: bold;
+            }
+        }
+    }
+}

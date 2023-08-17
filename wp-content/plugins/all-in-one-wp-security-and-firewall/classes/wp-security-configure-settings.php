@@ -11,8 +11,8 @@ class AIOWPSecurity_Configure_Settings {
 	 * @return boolean True if the settings options was updated, false otherwise.
 	 */
 	public static function set_default_settings() {
-
 		global $aio_wp_security;
+		global $aiowps_firewall_config;
 
 		$blog_email_address = get_bloginfo('admin_email'); // Get the blog admin email address - we will use as the default value
 
@@ -86,15 +86,15 @@ class AIOWPSecurity_Configure_Settings {
 		//Firewall features
 		$aio_wp_security->configs->set_value('aiowps_enable_basic_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_max_file_upload_size', AIOS_FIREWALL_MAX_FILE_UPLOAD_LIMIT_MB); //Default
-		$aio_wp_security->configs->set_value('aiowps_enable_pingback_firewall', '');//Checkbox - blocks all access to XMLRPC
+		$aiowps_firewall_config->set_value('aiowps_enable_pingback_firewall', false);//Checkbox - blocks all access to XMLRPC
 		$aio_wp_security->configs->set_value('aiowps_disable_xmlrpc_pingback_methods', '');//Checkbox - Disables only pingback methods in XMLRPC functionality
 		$aio_wp_security->configs->set_value('aiowps_disable_rss_and_atom_feeds', ''); // Checkbox
 		$aio_wp_security->configs->set_value('aiowps_block_debug_log_file_access', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_index_views', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_trace_and_track', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_forbid_proxy_comments', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter', '');//Checkbox
+		$aiowps_firewall_config->set_value('aiowps_forbid_proxy_comments', false);//Checkbox
+		$aiowps_firewall_config->set_value('aiowps_deny_bad_query_strings', false);//Checkbox
+		$aiowps_firewall_config->set_value('aiowps_advanced_char_string_filter', false);//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_5g_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_6g_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_block_fake_googlebots', ''); // Checkbox
@@ -189,7 +189,9 @@ class AIOWPSecurity_Configure_Settings {
 	 * @return Void
 	 */
 	public static function add_option_values() {
+
 		global $aio_wp_security;
+
 		$blog_email_address = get_bloginfo('admin_email'); //Get the blog admin email address - we will use as the default value
 
 		$aio_wp_security->configs->load_config();
@@ -262,15 +264,11 @@ class AIOWPSecurity_Configure_Settings {
 		//Firewall features
 		$aio_wp_security->configs->add_value('aiowps_enable_basic_firewall', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_max_file_upload_size', AIOS_FIREWALL_MAX_FILE_UPLOAD_LIMIT_MB);
-		$aio_wp_security->configs->add_value('aiowps_enable_pingback_firewall', '');//Checkbox - blocks all access to XMLRPC
 		$aio_wp_security->configs->add_value('aiowps_disable_xmlrpc_pingback_methods', '');//Checkbox - Disables only pingback methods in XMLRPC functionality
 		$aio_wp_security->configs->set_value('aiowps_disable_rss_and_atom_feeds', ''); // Checkbox
 		$aio_wp_security->configs->add_value('aiowps_block_debug_log_file_access', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_disable_index_views', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_disable_trace_and_track', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_forbid_proxy_comments', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_deny_bad_query_strings', '');//Checkbox
-		$aio_wp_security->configs->add_value('aiowps_advanced_char_string_filter', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_5g_firewall', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_6g_firewall', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_custom_rules', '');//Checkbox
@@ -386,8 +384,71 @@ class AIOWPSecurity_Configure_Settings {
 			$aio_wp_security->configs->set_value('aiowps_spam_comments_should', '0');
 			$aio_wp_security->configs->save_config();
 		}
+
+
+		if (is_main_site() && version_compare(get_option('aiowpsec_db_version'), '2.0.3', '<')) {
+			$aio_wp_security->configs->set_value('aiowps_enable_pingback_firewall', '0');//Checkbox - blocks all access to XMLRPC
+			$aio_wp_security->configs->set_value('aiowps_forbid_proxy_comments', '0');//Checkbox
+			$aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings', '0');//Checkbox
+			$aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter', '0');//Checkbox
+			$aio_wp_security->configs->save_config();
+		}
+
 		
 		update_option('aiowpsec_db_version', AIO_WP_SECURITY_DB_VERSION);
+	}
+
+	/**
+	 * Upgrades from the old config to the firewall's config
+	 *
+	 * @return void
+	 */
+	public static function upgrade_basic_firewall_rules_configs() {
+		global $aio_wp_security;
+		global $aiowps_firewall_config;
+
+		$settings = array(
+			'aiowps_enable_pingback_firewall',
+			'aiowps_forbid_proxy_comments',
+			'aiowps_deny_bad_query_strings',
+			'aiowps_advanced_char_string_filter',
+		);
+
+		// The settings that have been activated by the user
+		$active = array();
+
+		foreach ($settings as $setting) {
+			if (('1' === $aio_wp_security->configs->get_value($setting))) {
+				$active[] = $setting;
+				$aiowps_firewall_config->set_value($setting, false);
+				$aio_wp_security->configs->delete_value($setting);
+				$aio_wp_security->configs->save_config();
+			}
+
+		}
+
+		if (!empty($active)) {
+			$aio_wp_security->configs->set_value('aiowps_firewall_active_upgrade', json_encode($active));
+			$aio_wp_security->configs->save_config();
+			self::send_basic_firewall_upgrade_email();
+		}
+	}
+
+	/**
+	 * Send an email notifying that the upgraded settings have been disabled
+	 *
+	 * @return void
+	 */
+	private static function send_basic_firewall_upgrade_email() {
+		global $aio_wp_security;
+		$dashboard_link = 'admin.php?page=aiowpsec';
+		$dashboard_link = is_multisite() ? network_admin_url($dashboard_link) : admin_url($dashboard_link);
+		$subject = __('Basic firewall settings disabled', 'all-in-one-wp-security-and-firewall');
+		$email_msg = __('Our basic firewall rules have been upgraded and to prevent any unexpected site issues we have disabled the features.', 'all-in-one-wp-security-and-firewall') . "\n\n" . __('You can enable the features again by logging into your WordPress dashboard.', 'all-in-one-wp-security-and-firewall') . "\n\n" .sprintf(__('Go to dashboard: %s', 'all-in-one-wp-security-and-firewall'), $dashboard_link) . "\n\n" . __('Once logged in you will see a notification where you can decide on which course of action you wish to take.', 'all-in-one-wp-security-and-firewall') . "\n";
+		$email = get_bloginfo('admin_email');
+		if (false === wp_mail($email, $subject, $email_msg)) {
+			$aio_wp_security->debug_logger->log_debug("Basic firewall rules notification email failed to send to " . $email, 4);
+		}
 	}
 	
 	/**
@@ -415,17 +476,21 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function set_firewall_configs() {
 		if (is_main_site()) {
-			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.1', '<')) {
+			$firewall_version = get_option('aiowpsec_firewall_version');
+			if (version_compare($firewall_version, '1.0.1', '<')) {
 				self::set_cookie_based_bruteforce_firewall_configs();
 			}
-			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.2', '<')) {
+			if (version_compare($firewall_version, '1.0.2', '<')) {
 				self::set_user_agent_firewall_configs();
 			}
-			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.3', '<')) {
+			if (version_compare($firewall_version, '1.0.3', '<')) {
 				self::set_ip_retrieve_method_configs();
 			}
-			if (version_compare(get_option('aiowpsec_firewall_version'), '1.0.4', '<')) {
+			if (version_compare($firewall_version, '1.0.4', '<')) {
 				self::set_blacklist_ip_firewall_configs();
+			}
+			if (version_compare($firewall_version, '1.0.5', '<')) {
+				self::upgrade_basic_firewall_rules_configs();
 			}
 		}
 		update_option('aiowpsec_firewall_version', AIO_WP_SECURITY_FIREWALL_VERSION);
@@ -560,19 +625,20 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function turn_off_all_firewall_rules() {
 		global $aio_wp_security;
+		global $aiowps_firewall_config;
 		$aio_wp_security->configs->set_value('aiowps_enable_blacklisting', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_whitelisting', '');//Checkbox
 
 		$aio_wp_security->configs->set_value('aiowps_enable_basic_firewall', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_enable_pingback_firewall', '');//Checkbox - blocks all access to XMLRPC
+		$aiowps_firewall_config->set_value('aiowps_enable_pingback_firewall', false);//Checkbox - blocks all access to XMLRPC
 		$aio_wp_security->configs->set_value('aiowps_disable_xmlrpc_pingback_methods', '');//Checkbox - Disables only pingback methods in XMLRPC functionality
 		$aio_wp_security->configs->set_value('aiowps_disable_rss_and_atom_feeds', ''); // Checkbox
 		$aio_wp_security->configs->set_value('aiowps_block_debug_log_file_access', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_index_views', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_disable_trace_and_track', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_forbid_proxy_comments', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter', '');//Checkbox
+		$aiowps_firewall_config->set_value('aiowps_forbid_proxy_comments', false);//Checkbox
+		$aiowps_firewall_config->set_value('aiowps_deny_bad_query_strings', false);//Checkbox
+		$aiowps_firewall_config->set_value('aiowps_advanced_char_string_filter', false);//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_5g_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_6g_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_custom_rules', '');//Checkbox

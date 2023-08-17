@@ -6,6 +6,8 @@ namespace AIOWPS\Firewall;
  */
 class Config {
 
+	use File_Prefix_Trait;
+
 	/**
 	 * The path to our config file
 	 *
@@ -31,22 +33,12 @@ class Config {
 	private function init_file() {
 		clearstatcache();
 		if (!file_exists($this->path)) {
-			@file_put_contents($this->path, $this->get_file_content_prefix() . json_encode(array())); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this
-		}
-	}
+			
+			$dir = dirname($this->path);
+			if (!file_exists($dir)) Utility::wp_mkdir_p($dir);
 
-	/**
-	 * Get the config file's prefix content. N.B. Some code assumes that this doesn't change, so review all consumers of this method before changing its output.
-	 *
-	 * @return string
-	 */
-	private function get_file_content_prefix() {
-		$prefix  = "<?php __halt_compiler();\n";
-		$prefix .= "/**\n";
-		$prefix .= " * This file was created by All In One Security (AIOS) plugin.\n";
-		$prefix .= " * The file is required for storing and retrieving your firewall's settings.\n";
-		$prefix .= " */\n";
-		return $prefix;
+			file_put_contents($this->path, self::get_file_content_prefix() . json_encode(array()));
+		}
 	}
 
 	/**
@@ -56,7 +48,7 @@ class Config {
 	 */
 	public function update_prefix() {
 
-		$valid_prefix   = $this->get_file_content_prefix();
+		$valid_prefix   = self::get_file_content_prefix();
 		$current_prefix = file_get_contents($this->path, false, null, 0, strlen($valid_prefix));
 
 		if ($current_prefix === $valid_prefix) return; // prefix is valid
@@ -112,9 +104,7 @@ class Config {
 
 		$contents[$key] = $value;
 
-		return (false !== @file_put_contents($this->path, $this->get_file_content_prefix() . json_encode($contents), LOCK_EX)); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this
-
-
+		return (false !== file_put_contents($this->path, self::get_file_content_prefix() . json_encode($contents), LOCK_EX));
 	}
 
 	/**
@@ -123,9 +113,13 @@ class Config {
 	 * @return string
 	 */
 	public function get_contents() {
+
+		clearstatcache();
+		if (!file_exists($this->path)) $this->init_file();
+
 		// __COMPILER_HALT_OFFSET__ doesn't define in a few PHP versions. It's a PHP bug.
 		// https://bugs.php.net/bug.php?id=70164
-		$contents = @file_get_contents($this->path, false, null, strlen($this->get_file_content_prefix())); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this
+		$contents = file_get_contents($this->path, false, null, strlen(self::get_file_content_prefix()));
 
 		if (false === $contents) {
 			return null;
@@ -151,7 +145,7 @@ class Config {
 			return false;
 		}
 
-		return (false !== @file_put_contents($this->path, $this->get_file_content_prefix() . json_encode($contents), LOCK_EX)); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this
+		return (false !== file_put_contents($this->path, self::get_file_content_prefix() . json_encode($contents), LOCK_EX));
 	}
 
 	/**

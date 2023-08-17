@@ -2,6 +2,10 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Prevent users enumeration', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<?php
+		//Display security info badge
+		$aiowps_feature_mgr->output_feature_details_badge("disable-users-enumeration");
+		?>
 		<form action="" method="POST">
 			<?php wp_nonce_field('aiowpsec-users-enumeration'); ?>
 			<div class="aio_blue_box">

@@ -8,6 +8,11 @@ class AIOWPSecurity_User_Registration {
 	public function __construct() {
 		global $aio_wp_security;
 		add_action('user_register', array($this, 'aiowps_user_registration_action_handler'));
+
+		if ($aio_wp_security->configs->get_value('aiowps_enable_manual_registration_approval') == '1') {
+			add_filter("woocommerce_registration_auth_new_customer", array($this, 'aios_registration_auth_new_customer'));
+		}
+
 		if ($aio_wp_security->configs->get_value('aiowps_enable_registration_page_captcha') == '1') {
 			add_filter('registration_errors', array($this, 'aiowps_validate_registration_with_captcha'), 10, 3);
 		}
@@ -82,5 +87,14 @@ class AIOWPSecurity_User_Registration {
 			return $errors;
 		}
 		return $errors;
+	}
+
+	/**
+	 * This function serves the purpose of preventing login in certain plugins that enable user registration, such as WooCommerce and others.
+	 *
+	 * @return bool Retruns false means do not authenticate on registration
+	 */
+	public function aios_registration_auth_new_customer() {
+		return false;
 	}
 }

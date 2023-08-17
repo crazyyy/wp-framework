@@ -5,71 +5,51 @@
    *  Theme Menus Navigation and Widgets
    */
 
-  /**
-   * WPEB Header navigation
-   */
-  function wpeb_header_navigation() {
-    wp_nav_menu(
+  // ToDo: Test and add description
+  function wpeb_register_theme_menus() {
+    $menus = array(
       array(
-        'theme_location'  => 'header-menu',
-        'container'       => 'nav',
-        'container_class' => 'header__nav-container header__nav-{menu slug}-container',
-        'menu_class'      => 'header__menu',
-        'fallback_cb'     => 'wp_page_menu',
-        'depth'           => 0,
-        //'fallback_cb'     => false,
-        //'depth'           => 1,
+        'location'    => 'header-menu',
+        'class'       => 'header',
+        'wrapClass'   => 'header--menu',
+        'name'        => __('Header Navigation', 'wpeb')
+      ),
+      array(
+        'location'    => 'footer-menu',
+        'class'       => 'footer',
+        'wrapClass'   => 'footer--menu',
+        'name'        => __('Footer Navigation', 'wpeb')
+      ),
+      array(
+        'location'    => 'sidebar-menu',
+        'class'       => 'sidebar',
+        'wrapClass'   => 'sidebar--menu',
+        'name'        => __('Sidebar Navigation', 'wpeb')
       )
     );
-  }
 
-  /**
-   * WPEB Footer navigation
-   */
-  function wpeb_footer_navigation() {
-    wp_nav_menu(
-      array(
-        'theme_location'  => 'footer-menu',
-        'container'       => 'nav',
-        'container_class' => 'footer__nav-container footer__nav-{menu slug}-container',
-        'menu_class'      => 'footer__menu',
-        'fallback_cb'     => 'wp_page_menu',
-        'depth'           => 0,
-        //'fallback_cb'     => false,
-        //'depth'           => 1,
-      )
-    );
-  }
+    foreach ($menus as $menu) {
+      $location = $menu['location'];
+      $class = $menu['class'];
+      $wrapClass = $menu['wrapClass'];
+      $name = $menu['name'];
 
-  /**
-   * WPEB Sidebar navigation
-   */
-  function wpeb_sidebar_navigation() {
-    wp_nav_menu(
-      array(
-        'theme_location'  => 'sidebar-menu',
-        'container'       => 'nav',
-        'container_class' => 'sidebar__nav-container sidebar__nav-{menu slug}-container',
-        'menu_class'      => 'sidebar__menu',
-        'fallback_cb'     => 'wp_page_menu',
-        'depth'           => 0,
-        //'fallback_cb'     => false,
-        //'depth'           => 1,
-      )
-    );
-  }
+      wp_nav_menu(
+        array(
+          'theme_location'  => $location,
+          'container'       => false,
+          'menu_class'      => 'menu',
+          'echo'            => true,
+          'fallback_cb'     => 'wp_page_menu',
+          'items_wrap'      => '<ul class="' . $class . '_container">%3$s</ul>',
+          'depth'           => 0,
+        )
+      );
 
-  /**
-   * Register WPE Navigation
-   */
-  function wpeb_menus() {
-    register_nav_menus(array(
-      'header-menu'   => __('Header Navigation', 'wpeb'),
-      'sidebar-menu'  => __('Sidebar Navigation', 'wpeb'),
-      'footer-menu'   => __('Footer Navigation', 'wpeb')
-    ));
+      register_nav_menu($location, $name);
+    }
   }
-  add_action('init', 'wpeb_menus');
+  add_action('init', 'wpeb_register_theme_menus');
 
   /**
    * Remove the <div> surrounding the dynamic WP Navigation to clean up markup

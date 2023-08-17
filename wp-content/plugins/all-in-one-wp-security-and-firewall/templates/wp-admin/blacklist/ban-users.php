@@ -50,7 +50,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_banned_ip_addresses"><?php _e('Enter IP addresses:', 'all-in-one-wp-security-and-firewall'); ?></label></th>
 					<td>
-						<textarea id="aiowps_banned_ip_addresses" name="aiowps_banned_ip_addresses" rows="5" cols="50"><?php echo (-1 == $result) ? esc_textarea(wp_unslash($_POST['aiowps_banned_ip_addresses'])) : esc_textarea($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')); ?></textarea>
+						<textarea id="aiowps_banned_ip_addresses" name="aiowps_banned_ip_addresses" rows="5" cols="50"><?php echo (-1 == $result) ? esc_textarea($aiowps_banned_ip_addresses) : esc_textarea($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')); ?></textarea>
 						<br />
 						<span class="description"><?php _e('Enter one or more IP addresses or IP ranges.', 'all-in-one-wp-security-and-firewall');?></span>
 						<?php $aio_wp_security->include_template('info/ip-address-ip-range-info.php');?>
@@ -59,7 +59,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_banned_user_agents"><?php _e('Enter user agents:', 'all-in-one-wp-security-and-firewall'); ?></label></th>
 					<td>
-						<textarea id="aiowps_banned_user_agents" name="aiowps_banned_user_agents" rows="5" cols="50"><?php echo (-1 == $result) ? esc_textarea(wp_unslash($_POST['aiowps_banned_user_agents'])) : esc_textarea($aio_wp_security->configs->get_value('aiowps_banned_user_agents')); ?></textarea>
+						<textarea id="aiowps_banned_user_agents" name="aiowps_banned_user_agents" rows="5" cols="50"><?php echo (-1 == $result) ? esc_textarea($aiowps_banned_user_agents) : esc_textarea($aio_wp_security->configs->get_value('aiowps_banned_user_agents')); ?></textarea>
 						<br />
 						<span class="description">
 						<?php _e('Enter one or more user agent strings.', 'all-in-one-wp-security-and-firewall');?></span>

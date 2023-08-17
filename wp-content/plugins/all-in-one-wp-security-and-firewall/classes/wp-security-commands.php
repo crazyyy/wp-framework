@@ -66,6 +66,23 @@ class AIOWPSecurity_Commands {
 				AIOWPSecurity_Configure_Settings::set_user_agent_firewall_configs();
 			}
 			$aio_wp_security->configs->delete_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade');
+		} elseif ('dismiss_firewall_settings_disabled_on_upgrade_notice' == $data['notice']) {
+			$is_reactivated = (isset($data['turn_it_back_on']) && '1' == $data['turn_it_back_on']);
+				if ($is_reactivated) {
+					global $aiowps_firewall_config;
+					$active_settings = $aio_wp_security->configs->get_value('aiowps_firewall_active_upgrade');
+	
+					if (!empty($active_settings)) {
+						$active_settings = json_decode($active_settings);
+						if (!empty($active_settings)) {
+							foreach ($active_settings as $setting) {
+								$aiowps_firewall_config->set_value($setting, true);
+							}
+						}
+					}
+				}
+
+				$aio_wp_security->configs->delete_value('aiowps_firewall_active_upgrade');
 		}
 		
 

@@ -15,8 +15,13 @@ class Simba_TFA_Frontend {
 		$this->mother = $mother;
 		add_action('wp_ajax_tfa_frontend', array($this, 'ajax'));
 		add_shortcode('twofactor_user_settings', array($this, 'tfa_user_settings_front'));
+
+		register_block_type('twofactor/user-settings', array(
+			'editor_script' => 'twofactor-gutenberg-blocks',
+			'render_callback' => array($this, 'tfa_user_settings_front'),
+		));
 	}
-	
+
 	/**
 	 * Runs upon the WP action wp_ajax_tfa_frontend
 	 *

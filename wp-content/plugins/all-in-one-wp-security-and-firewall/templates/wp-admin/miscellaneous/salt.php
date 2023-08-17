@@ -3,6 +3,10 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Add salt postfix', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<?php
+		//Display security info badge
+		$aiowps_feature_mgr->output_feature_details_badge("enable-salt-postfix");
+		?>
 		<form action="" method="POST">
 			<?php wp_nonce_field('aios-salt-postfix-settings'); ?>
 			<div class="aio_blue_box">

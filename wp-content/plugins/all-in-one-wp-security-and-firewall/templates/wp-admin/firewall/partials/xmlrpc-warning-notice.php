@@ -2,7 +2,7 @@
 <?php
 
 			//show a warning message if xmlrpc has been completely disabled
-			if ($aio_wp_security->configs->get_value('aiowps_enable_pingback_firewall') == '1') {
+			if ($aiowps_firewall_config->get_value('aiowps_enable_pingback_firewall')) {
 			?>
 		<div class="aio_orange_box">
 			<p>

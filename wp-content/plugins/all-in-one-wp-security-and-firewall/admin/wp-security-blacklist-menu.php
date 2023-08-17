@@ -109,7 +109,10 @@ class AIOWPSecurity_Blacklist_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 		}
 
-		$aio_wp_security->include_template('wp-admin/blacklist/ban-users.php', false, array('result' => $result, 'aiowps_feature_mgr' => $aiowps_feature_mgr));
+        $aiowps_banned_user_agents = isset($_POST['aiowps_banned_user_agents']) ? wp_unslash($_POST['aiowps_banned_user_agents']) : '';
+        $aiowps_banned_ip_addresses = isset($_POST['aiowps_banned_ip_addresses']) ? wp_unslash($_POST['aiowps_banned_ip_addresses']) : '';
+
+		$aio_wp_security->include_template('wp-admin/blacklist/ban-users.php', false, array('result' => $result, 'aiowps_feature_mgr' => $aiowps_feature_mgr, 'aiowps_banned_user_agents' => $aiowps_banned_user_agents, 'aiowps_banned_ip_addresses' => $aiowps_banned_ip_addresses));
 	}
 
 	/**

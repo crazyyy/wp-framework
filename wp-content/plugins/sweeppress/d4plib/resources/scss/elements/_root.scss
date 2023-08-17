@@ -1,0 +1,21 @@
+:root {
+    --d4p-layout-main-border-radius: #{$layout-main-border-radius};
+    --d4p-layout-badge-border-radius: #{$layout-badge-border-radius};
+    --d4p-color-layout-border: #{$color-layout-border};
+    --d4p-color-layout-accent: #{$color-layout-accent};
+    --d4p-color-main-border: #{$color-main-border};
+    --d4p-color-main-background: #{$color-main-background};
+    --d4p-color-main-text: #{$color-main-text};
+    --d4p-color-sidebar-background: #{$color-sidebar-background};
+    --d4p-color-sidebar-text: #{$color-main-text};
+    --d4p-color-section-background: #{$color-section-background};
+    --d4p-color-section-text: #{$color-section-text};
+    --d4p-color-header-background: #{$color-header-background};
+    --d4p-color-header-text: #{$color-header-text};
+    --d4p-color-sidebar-icon-background: #{$color-sidebar-icon-background};
+    --d4p-color-sidebar-icon-text: #{$color-sidebar-icon-text};
+    --d4p-color-feature-active-background: #{$color-feature-active-background};
+    --d4p-color-feature-active-text: #{$color-feature-active-text};
+    --d4p-color-feature-beta-background: #{$color-feature-beta-background};
+    --d4p-color-feature-beta-text: #{$color-feature-beta-text};
+}

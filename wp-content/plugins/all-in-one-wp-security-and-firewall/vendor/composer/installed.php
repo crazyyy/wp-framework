@@ -3,7 +3,7 @@
         'name' => 'updraftplus/all-in-one-wp-security-and-firewall',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'a6c340a44115d38e00ed5adbcc8be93263dc5947',
+        'reference' => '7addd9d3e56a1cf729f709ab9f5a494c6dd28799',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'updraftplus/all-in-one-wp-security-and-firewall' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'a6c340a44115d38e00ed5adbcc8be93263dc5947',
+            'reference' => '7addd9d3e56a1cf729f709ab9f5a494c6dd28799',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

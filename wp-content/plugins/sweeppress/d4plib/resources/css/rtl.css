@@ -1,0 +1,70 @@
+.d4p-wrap {
+  margin: 0 0 0 1em;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-sidebar {
+  padding: 1.5em 0 1.5em 1.5em;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content {
+  padding: 1.5em 1.5em 1.5em 0;
+  border-left: 0;
+  border-right: 1px solid #777;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group .d4p-group-inner {
+  text-align: right;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group h3 {
+  text-align: right;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group.d4p-dashboard-card .d4p-group-inner ul.d4p-with-bullets {
+  margin-left: 0;
+  margin-right: 20px;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group.d4p-dashboard-card .d4p-card-badge {
+  margin-left: 0;
+  margin-right: 5px;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group.d4p-dashboard-card .d4p-card-badge .d4p-icon {
+  margin-right: 0;
+  margin-left: 5px;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group.d4p-dashboard-card .d4p-card-badge.d4p-badge-right {
+  float: left;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group.d4p-dashboard-card .d4p-group-header {
+  text-align: right;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group.d4p-dashboard-card .d4p-status-message {
+  text-align: right;
+}
+.d4p-wrap .d4p-main .d4p-inside-wrapper .d4p-content .d4p-group.d4p-dashboard-card .d4p-dashboard-status-row .d4p-type-toggle {
+  margin: 0 0 0 5px;
+}
+.d4p-wrap .d4p-header .d4p-navigator ul li.d4p-nav-button {
+  margin-right: 0;
+  margin-left: 3em;
+}
+@media screen and (max-width: 768px) {
+  .d4p-wrap .d4p-header .d4p-navigator ul li.d4p-nav-button {
+    margin-right: 0;
+    margin-left: 2%;
+  }
+}
+
+.d4p-panel-break h1 {
+  padding: 5px 15px 5px 30px;
+}
+.d4p-panel-break h1 i {
+  margin: 0 0 0 7px;
+}
+
+.d4p-settings-section .d4p-settings-table > tbody > tr > th,
+.d4p-settings-section .d4p-settings-table > tbody > tr > td {
+  text-align: right;
+}
+.d4p-settings-section .d4p-settings-table > tbody > tr > td {
+  padding: 1.5em 0 1.5em 1.5em;
+}
+.d4p-settings-section .d4p-settings-table .d4p-setting-wrapper .d4p-check-uncheck a.d4p-check-all {
+  margin-left: 10px;
+  margin-right: 0;
+}

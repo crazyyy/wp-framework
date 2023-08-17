@@ -5,10 +5,10 @@
 		<?php $audit_log_list->prepare_items(); ?>
 		<form id="tables-filter" method="post">
 			<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-			<input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
+			<input type="hidden" name="page" value="<?php echo esc_attr($page); ?>" />
 			<?php
-				if (isset($_REQUEST["tab"])) {
-					echo '<input type="hidden" name="tab" value="'.esc_attr($_REQUEST["tab"]).'" />';
+				if (!empty($tab)) {
+					echo '<input type="hidden" name="tab" value="'.esc_attr($tab).'" />';
 				}
 				$audit_log_list->search_box(__('Search', 'all-in-one-wp-security-and-firewall'), 'search_audit_events');
 				$audit_log_list->display();

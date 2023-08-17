@@ -1,0 +1,52 @@
+@import 'includes/_functions';
+@import 'includes/_variables';
+
+@import 'elements/_root';
+@import 'elements/_common';
+
+.d4p-setting-image {
+    .d4plib-button-inner {
+        margin: 0 5px 0 0;
+    }
+}
+
+.d4plib-selected-image {
+    margin: 5px 0 0 0;
+    padding: 5px 0 0 0;
+    border-top: 1px solid #DDD;
+    max-width: 518px;
+    display: block;
+
+    .d4plib-image-name {
+        font-weight: bold;
+        display: block;
+    }
+
+    img {
+        height: auto;
+        margin: 5px 0 0;
+        max-width: 100%;
+        display: none;
+    }
+}
+
+.d4plib-images-image {
+    line-height: 22px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #DDD;
+}
+
+.d4p-setting-images .d4plib-images-image:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.d4plib-images-image img {
+    display: none;
+}
+
+.d4plib-images-image .d4plib-image-name {
+    display: inline;
+}

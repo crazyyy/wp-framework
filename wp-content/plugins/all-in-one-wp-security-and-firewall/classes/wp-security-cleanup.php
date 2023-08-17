@@ -29,14 +29,7 @@ class AIOWPSecurity_Cleanup {
 		$purge_events_records_after_days = apply_filters('aios_purge_events_records_after_days', $purge_events_records_after_days);
 		AIOWPSecurity_Utility::purge_table_records($events_table_name, $purge_events_records_after_days, 'event_date');
 
-		//Check the failed logins table
 		// aiowps_perform_failed_login_cleanup_task already does it.
-		
-		//Check the login activity table
-		$login_activity_table_name = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;
-		$purge_login_activity_records_after_days = AIOS_PURGE_LOGIN_ACTIVITY_RECORDS_AFTER_DAYS; //purge older records in the login activity table
-		$purge_login_activity_records_after_days = apply_filters('aios_purge_login_activity_records_after_days', $purge_login_activity_records_after_days);
-		AIOWPSecurity_Utility::purge_table_records($login_activity_table_name, $purge_login_activity_records_after_days, 'login_date');
 
 		//Check the global meta table
 		$global_meta_table_name = AIOWPSEC_TBL_GLOBAL_META_DATA;

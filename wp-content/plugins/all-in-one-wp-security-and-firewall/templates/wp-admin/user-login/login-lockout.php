@@ -148,6 +148,10 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Login lockout IP whitelist settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<?php
+		// Display security info badge
+		$aiowps_feature_mgr->output_feature_details_badge("user-login-lockout-ip-whitelisting");
+		?>
 		<form action="" method="POST">
 		<?php wp_nonce_field('aiowpsec-lockdown-whitelist-settings-nonce'); ?>
 			<table class="form-table">
@@ -161,7 +165,7 @@
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_lockdown_allowed_ip_addresses"><?php _e('Enter whitelisted IP addresses:', 'all-in-one-wp-security-and-firewall'); ?></label></th>
 					<td>
-						<textarea id="aiowps_lockdown_allowed_ip_addresses" name="aiowps_lockdown_allowed_ip_addresses" rows="5" cols="50"><?php echo esc_textarea(wp_unslash(-1 == $result ? stripslashes($_POST['aiowps_lockdown_allowed_ip_addresses']) : $aio_wp_security->configs->get_value('aiowps_lockdown_allowed_ip_addresses'))); ?></textarea>
+						<textarea id="aiowps_lockdown_allowed_ip_addresses" name="aiowps_lockdown_allowed_ip_addresses" rows="5" cols="50"><?php echo esc_textarea($aiowps_lockdown_allowed_ip_addresses); ?></textarea>
 						<br />
 						<span class="description"><?php echo __('Enter one or more IP addresses or IP ranges you wish to include in your whitelist.', 'all-in-one-wp-security-and-firewall') . ' ' . __('The addresses specified here will never be blocked by the login lockout feature.', 'all-in-one-wp-security-and-firewall'); ?></span>
 						<?php $aio_wp_security->include_template('info/ip-address-ip-range-info.php');?>

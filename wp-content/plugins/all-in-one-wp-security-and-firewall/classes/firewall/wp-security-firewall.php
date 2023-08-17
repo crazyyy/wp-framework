@@ -5,6 +5,7 @@
 
 if (!defined('AIOWPS_FIREWALL_DIR')) {
 	define('AIOWPS_FIREWALL_DIR', dirname(__FILE__));
+	define('AIOWPS_FIREWALL_DIR_PARENT', dirname(AIOWPS_FIREWALL_DIR));
 }
 
 if (!defined('AIOWPSEC_FIREWALL_DONE')) {

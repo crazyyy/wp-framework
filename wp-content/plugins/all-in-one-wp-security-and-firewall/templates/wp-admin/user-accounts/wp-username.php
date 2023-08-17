@@ -10,9 +10,14 @@
 	?>
 </div>
 <?php
-	// display a list of all administrator accounts for this site
-	$postbox_title = __('List of administrator accounts', 'all-in-one-wp-security-and-firewall');
-	$AIOWPSecurity_User_Accounts_Menu->postbox($postbox_title, $user_accounts);
+// display a list of all administrator accounts for this site
+$postbox_title = __('List of administrator accounts', 'all-in-one-wp-security-and-firewall');
+$AIOWPSecurity_User_Accounts_Menu->postbox($postbox_title, $user_accounts);
+
+if (!is_super_admin()) {
+	// Hide config settings if multisite and not super admin.
+	AIOWPSecurity_Utility::display_multisite_super_admin_message();
+} else {
 ?>
 <div class="postbox">
 <h3 class="hndle"><label for="title"><?php _e('Change admin username', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
@@ -49,3 +54,5 @@
 		?>
 	</div>
 </div>
+<?php
+} // End if statements

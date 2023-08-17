@@ -2,6 +2,10 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Prevent your site from being displayed in a frame', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<?php
+		//Display security info badge
+		$aiowps_feature_mgr->output_feature_details_badge("enable-frame-protection");
+		?>
 		<form action="" method="POST">
 			<?php wp_nonce_field('aiowpsec-prevent-display-frame'); ?>
 			<div class="aio_blue_box">

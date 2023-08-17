@@ -49,6 +49,11 @@ class AIOWPSecurity_WP_Loaded_Tasks {
 		if ('wp-login.php' == $GLOBALS['pagenow']) {
 			return;
 		}
+		
+		// WP CLI and cronjob do not required site lockout.
+		if ((defined('DOING_CRON') && DOING_CRON) || 'cli' == PHP_SAPI) {
+			return;
+		}
 
 		// The lockout message should not be displayed to an administrator user.
 		if (is_user_logged_in() && current_user_can('manage_options')) {

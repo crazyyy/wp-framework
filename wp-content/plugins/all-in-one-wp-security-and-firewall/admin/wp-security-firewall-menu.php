@@ -71,6 +71,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_basic_firewall() {
 		global $aiowps_feature_mgr;
 		global $aio_wp_security;
+		global $aiowps_firewall_config;
 
 		if (isset($_POST['aiowps_apply_basic_firewall_settings'])) { // Do form submission tasks
 			$nonce = $_POST['_wpnonce'];
@@ -94,7 +95,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 			//Save settings
 			$aio_wp_security->configs->set_value('aiowps_enable_basic_firewall', isset($_POST["aiowps_enable_basic_firewall"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_max_file_upload_size', $upload_size);
-			$aio_wp_security->configs->set_value('aiowps_enable_pingback_firewall', isset($_POST["aiowps_enable_pingback_firewall"]) ? '1' : ''); //this disables all xmlrpc functionality
+			$aiowps_firewall_config->set_value('aiowps_enable_pingback_firewall', isset($_POST["aiowps_enable_pingback_firewall"]));
 			$aio_wp_security->configs->set_value('aiowps_disable_xmlrpc_pingback_methods', isset($_POST["aiowps_disable_xmlrpc_pingback_methods"]) ? '1' : ''); //this disables only pingback methods of xmlrpc but leaves other methods so that Jetpack and other apps will still work
 			$aio_wp_security->configs->set_value('aiowps_disable_rss_and_atom_feeds', isset($_POST['aiowps_disable_rss_and_atom_feeds']) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_block_debug_log_file_access', isset($_POST["aiowps_block_debug_log_file_access"]) ? '1' : '');
@@ -127,6 +128,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_additional_firewall() {
 		global $aio_wp_security;
 		global $aiowps_feature_mgr;
+		global $aiowps_firewall_config;
 
 		$error = '';
 		if(isset($_POST['aiowps_apply_additional_firewall_settings'])) { // Do advanced firewall submission tasks
@@ -149,23 +151,9 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 				$aio_wp_security->configs->set_value('aiowps_disable_trace_and_track', '');
 			}
 
-			if (isset($_POST['aiowps_forbid_proxy_comments'])) {
-				$aio_wp_security->configs->set_value('aiowps_forbid_proxy_comments', '1');
-			} else {
-				$aio_wp_security->configs->set_value('aiowps_forbid_proxy_comments', '');
-			}
-
-			if (isset($_POST['aiowps_deny_bad_query_strings'])) {
-				$aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings', '1');
-			} else {
-				$aio_wp_security->configs->set_value('aiowps_deny_bad_query_strings', '');
-			}
-
-			if (isset($_POST['aiowps_advanced_char_string_filter'])) {
-				$aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter', '1');
-			} else {
-				$aio_wp_security->configs->set_value('aiowps_advanced_char_string_filter', '');
-			}
+			$aiowps_firewall_config->set_value('aiowps_forbid_proxy_comments', isset($_POST['aiowps_forbid_proxy_comments']));
+			$aiowps_firewall_config->set_value('aiowps_deny_bad_query_strings', isset($_POST['aiowps_deny_bad_query_strings']));
+			$aiowps_firewall_config->set_value('aiowps_advanced_char_string_filter', isset($_POST['aiowps_advanced_char_string_filter']));
 
 			//Commit the config settings
 			$aio_wp_security->configs->save_config();
@@ -363,31 +351,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	 */
 	protected function render_prevent_hotlinks() {
 		global $aio_wp_security;
-		global $aiowps_feature_mgr;
-
-		if (isset($_POST['aiowps_save_prevent_hotlinking'])) { // Do form submission tasks
-			$nonce = $_POST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-prevent-hotlinking-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on prevent hotlinking options save!", 4);
-				die("Nonce check failed on prevent hotlinking options save!");
-			}
-
-			$aio_wp_security->configs->set_value('aiowps_prevent_hotlinking', isset($_POST["aiowps_prevent_hotlinking"]) ? '1' : '', true);
-
-			//Recalculate points after the feature status/options have been altered
-			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-
-			//Now let's write the applicable rules to the .htaccess file
-			$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
-
-			if ($res) {
-				$this->show_msg_updated(__('Settings were successfully saved', 'all-in-one-wp-security-and-firewall'));
-			} else {
-				$this->show_msg_error(__('Could not write to the .htaccess file. Please check the file permissions.', 'all-in-one-wp-security-and-firewall'));
-			}
-		}
-		
-		$aio_wp_security->include_template('wp-admin/firewall/prevent-hotlinks.php');
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'prevent-hotlinks'));
 	}
 
 	/**
@@ -472,7 +436,10 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 				$event_list_404->delete_404_event_records(strip_tags($_GET['id']));
 			}
 		}
-		$aio_wp_security->include_template('wp-admin/firewall/404-detection.php', false, array('event_list_404' => $event_list_404));
+
+		$page = $_REQUEST['page'];
+		$tab = isset($_REQUEST["tab"]) ? $_REQUEST["tab"] : '';
+		$aio_wp_security->include_template('wp-admin/firewall/404-detection.php', false, array('event_list_404' => $event_list_404, 'page' => $page, 'tab' => $tab));
 	}
 
 	/**
@@ -482,43 +449,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	 */
 	protected function render_custom_rules() {
 		global $aio_wp_security;
-		if (isset($_POST['aiowps_save_custom_rules_settings'])) { // Do form submission tasks
-			$nonce = $_POST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-save-custom-rules-settings-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed for save custom rules settings!", 4);
-				die("Nonce check failed for save custom rules settings!");
-			}
-
-			//Save settings
-			if (isset($_POST["aiowps_enable_custom_rules"]) && empty($_POST['aiowps_custom_rules'])) {
-				$this->show_msg_error('You must enter some .htaccess directives code in the text box below','all-in-one-wp-security-and-firewall');
-			} else {
-				if (!empty($_POST['aiowps_custom_rules'])) {
-					// Undo magic quotes that are automatically added to `$_GET`,
-					// `$_POST`, `$_COOKIE`, and `$_SERVER` by WordPress as
-					// they corrupt any custom rule with backslash in it...
-					$custom_rules = stripslashes($_POST['aiowps_custom_rules']);
-				} else {
-					$aio_wp_security->configs->set_value('aiowps_custom_rules', ''); //Clear the custom rules config value
-				}
-
-				$aio_wp_security->configs->set_value('aiowps_custom_rules', $custom_rules);
-				$aio_wp_security->configs->set_value('aiowps_enable_custom_rules', isset($_POST["aiowps_enable_custom_rules"]) ? '1' : '');
-				$aio_wp_security->configs->set_value('aiowps_place_custom_rules_at_top', isset($_POST["aiowps_place_custom_rules_at_top"]) ? '1' : '');
-				$aio_wp_security->configs->save_config(); //Save the configuration
-
-				$this->show_msg_settings_updated();
-
-				$write_result = AIOWPSecurity_Utility_Htaccess::write_to_htaccess(); //now let's write to the .htaccess file
-				if (!$write_result) {
-					$this->show_msg_error(__('The plugin was unable to write to the .htaccess file. Please edit file manually.','all-in-one-wp-security-and-firewall'));
-					$aio_wp_security->debug_logger->log_debug("Custom Rules feature - The plugin was unable to write to the .htaccess file.");
-				}
-			}
-
-		}
-
-		$aio_wp_security->include_template('wp-admin/firewall/custom-htaccess.php');
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'custom-rules'));
 	}
 
 	/**
@@ -529,7 +460,35 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_advanced_settings() {
 		global $aio_wp_security;
 
-		$aio_wp_security->include_template('wp-admin/firewall/advanced-settings.php');
+		$allowlist = \AIOWPS\Firewall\Allow_List::get_ips();
+
+		if (isset($_POST['aios_firewall_allowlist'])) {
+
+			if (is_wp_error(AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_POST['_wpnonce'], 'aios-firewall-allowlist-nonce'))) {
+					$aio_wp_security->debug_logger->log_debug("Nonce check failed for save firewall's allow list.", 4);
+					die('Nonce check failed for firewall\'s allow list.');
+			}
+
+			$allowlist = $_POST['aios_firewall_allowlist'];
+			$ips      = stripslashes($allowlist);
+			$ips      = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ips);
+			$validate = AIOWPSecurity_Utility_IP::validate_ip_list($ips, 'firewall_allowlist');
+			$is_valid = (1 === $validate[0]);
+
+			if ($is_valid) {
+				\AIOWPS\Firewall\Allow_List::add_ips($validate[1]);
+				$this->show_msg_settings_updated();
+			} else {
+				$messages = explode("\n", $validate[1][0]);
+				foreach ($messages as $message) {
+					if (empty(trim($message))) continue;
+					$this->show_msg_error($message);
+				}
+			}
+		}
+
+		
+		$aio_wp_security->include_template('wp-admin/firewall/advanced-settings.php', false, compact('allowlist'));
 	}
 
 } //end class

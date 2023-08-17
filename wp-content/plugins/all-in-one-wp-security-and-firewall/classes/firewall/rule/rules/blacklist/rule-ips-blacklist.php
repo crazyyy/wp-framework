@@ -55,10 +55,7 @@ class Rule_Ips_Blacklist extends Rule {
 	 * @return boolean
 	 */
 	public function is_satisfied() {
-		if (!(include_once AIOWPS_FIREWALL_DIR.'/../wp-security-helper.php')) {
-			throw new \Exception("{$this->family}::{$this->name} failed to load wp-security-helper.php");
-		}
-		
+	
 		$user_ip_blocked = \AIOS_Helper::is_user_ip_address_within_list($this->blocked_ips);
 		
 		if (true == $user_ip_blocked) return Rule::SATISFIED;

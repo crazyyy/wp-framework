@@ -66,7 +66,6 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			$random_20_digit_string = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20); // Generate random 20 char string for use during CAPTCHA encode/decode
 			$aio_wp_security->configs->set_value('aiowps_captcha_secret_key', $random_20_digit_string);
 
-			$aio_wp_security->configs->set_value('aiowps_enable_comment_captcha',isset($_POST["aiowps_enable_comment_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_spambot_detecting',isset($_POST["aiowps_enable_spambot_detecting"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_spam_comments_should', !empty($_POST["aiowps_spam_comments_should"]) ? '1' : '0');
 
@@ -102,7 +101,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 				$this->show_msg_error(__('Could not write to the .htaccess file. Please check the file permissions.', 'all-in-one-wp-security-and-firewall'));
 			}
 		}
-
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'comment-captcha'));
 		$aio_wp_security->include_template('wp-admin/spam-prevention/comment-spam.php', false, array('aiowps_feature_mgr' => $aiowps_feature_mgr));
 	}
 
@@ -205,7 +204,10 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 		}
 
-		$aio_wp_security->include_template('wp-admin/spam-prevention/comment-spam-ip-monitoring.php', false, array('spammer_ip_list' => $spammer_ip_list, 'aiowps_feature_mgr' => $aiowps_feature_mgr, 'block_comments_output' => $block_comments_output));
+		$page = $_REQUEST['page'];
+		$tab =  $_REQUEST['tab'];
+
+		$aio_wp_security->include_template('wp-admin/spam-prevention/comment-spam-ip-monitoring.php', false, array('spammer_ip_list' => $spammer_ip_list, 'aiowps_feature_mgr' => $aiowps_feature_mgr, 'block_comments_output' => $block_comments_output, 'page' => $page, 'tab' => $tab));
 	}
 
 	/**
@@ -214,25 +216,9 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return Void
 	 */
 	protected function render_buddypress() {
-		global $aiowps_feature_mgr, $aio_wp_security;
+		global $aio_wp_security;
 
-		if (isset($_POST['aiowps_save_bp_spam_settings'])) { // Do form submission tasks
-			$nonce = $_REQUEST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-bp-spam-settings-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on save comment spam settings!",4);
-				die("Nonce check failed on save comment spam settings!");
-			}
-
-			// Save settings
-			$aio_wp_security->configs->set_value('aiowps_enable_bp_register_captcha', isset($_POST["aiowps_enable_bp_register_captcha"]) ? '1' : '', true);
-
-			// Recalculate points after the feature status/options have been altered
-			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-
-			$this->show_msg_updated(__('Settings were successfully saved', 'all-in-one-wp-security-and-firewall'));
-		}
-
-		$aio_wp_security->include_template('wp-admin/spam-prevention/buddypress.php', false, array('AIOWPSecurity_Spam_Menu' => $this, 'aiowps_feature_mgr' => $aiowps_feature_mgr));
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'buddypress-captcha'));
 	}
 
 	/**
@@ -241,23 +227,8 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return Void
 	 */
 	protected function render_bbpress() {
-		global $aiowps_feature_mgr, $aio_wp_security;
-		if (isset($_POST['aiowps_save_bbp_spam_settings'])) { // Do form submission tasks
-			$nonce = $_REQUEST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-bbp-spam-settings-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on save bbp spam settings!",4);
-				die('Nonce check failed on save bbPress spam settings.');
-			}
+		global $aio_wp_security;
 
-			// Save settings
-			$aio_wp_security->configs->set_value('aiowps_enable_bbp_new_topic_captcha', isset($_POST["aiowps_enable_bbp_new_topic_captcha"]) ? '1' : '', true);
-
-			// Recalculate points after the feature status/options have been altered
-			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-
-			$this->show_msg_updated(__('Settings were successfully saved', 'all-in-one-wp-security-and-firewall'));
-		}
-
-		$aio_wp_security->include_template('wp-admin/spam-prevention/bbpress.php', false, array('AIOWPSecurity_Spam_Menu' => $this, 'aiowps_feature_mgr' => $aiowps_feature_mgr));
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'bbpress-captcha'));
 	}
 } //end class

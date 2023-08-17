@@ -1,0 +1,15 @@
+.d4p-dialog {
+    &.d4p-dialog-hidex {
+        .ui-dialog-titlebar button {
+            display: none;
+        }
+    }
+
+    .ui-dialog-buttonset {
+        .ui-button {
+            i.d4p-icon {
+                font-size: 115%;
+            }
+        }
+    }
+}

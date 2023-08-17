@@ -2,6 +2,12 @@
 <div class="aio_grey_box">
 	<p><?php _e('For information, updates and documentation, please visit the', 'all-in-one-wp-security-and-firewall'); ?> <a href="https://aiosplugin.com" target="_blank"><?php echo htmlspecialchars('All In One WP Security & Firewall Plugin'); ?></a> <?php _e('Page', 'all-in-one-wp-security-and-firewall'); ?>.</p>
 </div>
+<?php
+if (!is_super_admin()) {
+	// Hide config settings if multisite and not super admin.
+	AIOWPSecurity_Utility::display_multisite_super_admin_message();
+} else {
+?>
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('WP Security plugin', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
@@ -26,7 +32,7 @@
 		<p><?php _e('Before doing anything we advise taking a backup of your .htaccess file, database and wp-config.php.', 'all-in-one-wp-security-and-firewall'); ?></p>
 		<p>
 		<ul class="aiowps_admin_ul_grp1">
-			<li><a href="admin.php?page=aiowpsec_database&tab=tab2" target="_blank"><?php _e('Backup your database', 'all-in-one-wp-security-and-firewall'); ?></a></li>
+			<li><a href="admin.php?page=aiowpsec_database&tab=database-backup" target="_blank"><?php _e('Backup your database', 'all-in-one-wp-security-and-firewall'); ?></a></li>
 			<li><a href="admin.php?page=aiowpsec_settings&tab=htaccess-file-operations" target="_blank"><?php _e('Backup .htaccess file', 'all-in-one-wp-security-and-firewall'); ?></a></li>
 			<li><a href="admin.php?page=aiowpsec_settings&tab=wp-config-file-operations" target="_blank"><?php _e('Backup wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?></a></li>
 		</ul>
@@ -85,6 +91,9 @@
 		</form>
 	</div>
 </div> <!-- end postbox-->
+<?php
+} // End if statements
+?>
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Debug settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">

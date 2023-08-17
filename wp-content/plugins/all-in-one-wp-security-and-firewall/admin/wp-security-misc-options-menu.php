@@ -58,7 +58,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return Void
 	 */
 	protected function render_copy_protection() {
-		global $aio_wp_security;
+		global $aio_wp_security, $aiowps_feature_mgr;
 		$maint_msg = '';
 		if (isset($_POST['aiowpsec_save_copy_protection'])) {
 			$nonce = $_REQUEST['_wpnonce'];
@@ -72,6 +72,9 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 
 			$this->show_msg_updated(__('Copy Protection feature settings saved!', 'all-in-one-wp-security-and-firewall'));
 
+			//Recalculate points after the feature status/options have been altered
+			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
+
 		}
 
 		$aio_wp_security->include_template('wp-admin/miscellaneous/copy-protection.php', false, array());
@@ -83,7 +86,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return Void
 	 */
 	protected function render_frames() {
-		global $aio_wp_security;
+		global $aio_wp_security, $aiowps_feature_mgr;
 		$maint_msg = '';
 		if (isset($_POST['aiowpsec_save_frame_display_prevent'])) {
 			$nonce = $_REQUEST['_wpnonce'];
@@ -97,6 +100,8 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 
 			$this->show_msg_updated(__('Frame Display Prevention feature settings saved!', 'all-in-one-wp-security-and-firewall'));
 
+			//Recalculate points after the feature status/options have been altered
+			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 		}
 
 		$aio_wp_security->include_template('wp-admin/miscellaneous/frames.php', false, array());
@@ -108,7 +113,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return Void
 	 */
 	protected function render_user_enumeration() {
-		global $aio_wp_security;
+		global $aio_wp_security, $aiowps_feature_mgr;
 		$maint_msg = '';
 		if (isset($_POST['aiowpsec_save_users_enumeration'])) {
 			$nonce = $_REQUEST['_wpnonce'];
@@ -122,6 +127,8 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 
 			$this->show_msg_updated(__('User Enumeration Prevention feature settings saved!', 'all-in-one-wp-security-and-firewall'));
 
+			//Recalculate points after the feature status/options have been altered
+			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 		}
 
 		$aio_wp_security->include_template('wp-admin/miscellaneous/user-enumeration.php', false, array());
@@ -133,7 +140,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return Void
 	 */
 	protected function render_wp_rest_api() {
-		global $aio_wp_security;
+		global $aio_wp_security, $aiowps_feature_mgr;
 		$maint_msg = '';
 		if (isset($_POST['aiowpsec_save_rest_settings'])) {
 			$nonce = $_REQUEST['_wpnonce'];
@@ -147,6 +154,8 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 
 			$this->show_msg_updated(__('WP REST API Security feature settings saved!', 'all-in-one-wp-security-and-firewall'));
 
+			//Recalculate points after the feature status/options have been altered
+			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 		}
 
 		$aio_wp_security->include_template('wp-admin/miscellaneous/wp-rest-api.php', false, array());
@@ -158,7 +167,7 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return Void
 	 */
 	protected function render_salt_tab() {
-		global $aio_wp_security;
+		global $aio_wp_security, $aiowps_feature_mgr;
 
 		if (isset($_POST['aios_save_salt_postfix_settings'])) {
 			if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'aios-salt-postfix-settings')) {
@@ -183,6 +192,9 @@ class AIOWPSecurity_Misc_Options_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 
 			$this->show_msg_updated(__('Salt postfix feature settings saved.', 'all-in-one-wp-security-and-firewall'));
+
+			//Recalculate points after the feature status/options have been altered
+			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 		}
 
 		$aio_wp_security->include_template('wp-admin/miscellaneous/salt.php');

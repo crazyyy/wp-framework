@@ -5,6 +5,12 @@ if (!defined('ABSPATH')) {
 
 class AIOWPSecurity_Installer {
 
+	private static $db_tasks = array(
+		'2.0.2' => array(
+			'clean_audit_log_stacktraces',
+		)
+	);
+
 	/**
 	 * Run installer function.
 	 *
@@ -20,6 +26,7 @@ class AIOWPSecurity_Installer {
 					switch_to_blog($blog_id);
 					AIOWPSecurity_Installer::create_db_tables();
 					AIOWPSecurity_Installer::migrate_db_tables();
+					AIOWPSecurity_Installer::check_tasks();
 					AIOWPSecurity_Configure_Settings::add_option_values();
 					restore_current_blog();
 				}
@@ -27,8 +34,28 @@ class AIOWPSecurity_Installer {
 		} else {
 			AIOWPSecurity_Installer::create_db_tables();
 			AIOWPSecurity_Installer::migrate_db_tables();
+			AIOWPSecurity_Installer::check_tasks();
 			AIOWPSecurity_Configure_Settings::add_option_values();
 			AIOWPSecurity_Installer::create_db_backup_dir(); //Create a backup dir in the WP uploads directory
+		}
+	}
+
+	/**
+	 * See if any database tasks need to be run, and perform them if so.
+	 *
+	 * @return void
+	 */
+	public static function check_tasks() {
+		$our_version = AIO_WP_SECURITY_DB_VERSION;
+		$db_version = get_option('aiowpsec_db_version', '1.0');
+		if (version_compare($our_version, $db_version, '>')) {
+			foreach (self::$db_tasks as $version => $updates) {
+				if (version_compare($version, $db_version, '>')) {
+					foreach ($updates as $update) {
+						call_user_func(array(__CLASS__, $update));
+					}
+				}
+			}
 		}
 	}
 
@@ -48,19 +75,18 @@ class AIOWPSecurity_Installer {
 			 *
 			 */
 			$lockout_tbl_name = $wpdb->prefix.'aiowps_login_lockdown';
-			$user_login_activity_tbl_name = $wpdb->prefix.'aiowps_login_activity';
 			$aiowps_global_meta_tbl_name = $wpdb->prefix.'aiowps_global_meta';
 			$aiowps_event_tbl_name = $wpdb->prefix.'aiowps_events';
 			$perm_block_tbl_name = $wpdb->prefix.'aiowps_permanent_block';
 			
 		} else {
 			$lockout_tbl_name = AIOWPSEC_TBL_LOGIN_LOCKOUT;
-			$user_login_activity_tbl_name = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;
 			$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
 			$aiowps_event_tbl_name = AIOWPSEC_TBL_EVENTS;
 			$perm_block_tbl_name = AIOWPSEC_TBL_PERM_BLOCK;
 		}
 
+		$message_store_log_tbl_name = AIOWPSEC_TBL_MESSAGE_STORE;
 		$audit_log_tbl_name = AIOWPSEC_TBL_AUDIT_LOG;
 		$debug_log_tbl_name = AIOWPSEC_TBL_DEBUG_LOG;
 
@@ -91,19 +117,6 @@ class AIOWPSecurity_Installer {
 		  KEY unlock_key (unlock_key)
 		)" . $charset_collate . ";";
 		dbDelta($ld_tbl_sql);
-
-		$ula_tbl_sql = "CREATE TABLE " . $user_login_activity_tbl_name . " (
-		id bigint(20) NOT NULL AUTO_INCREMENT,
-		user_id bigint(20) NOT NULL,
-		user_login VARCHAR(150) NOT NULL,
-		login_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
-		logout_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
-		login_ip varchar(100) NOT NULL DEFAULT '',
-		login_country varchar(150) NOT NULL DEFAULT '',
-		browser_type varchar(150) NOT NULL DEFAULT '',
-		PRIMARY KEY  (id)
-		)" . $charset_collate . ";";
-		dbDelta($ula_tbl_sql);
 
 		$gm_tbl_sql = "CREATE TABLE " . $aiowps_global_meta_tbl_name . " (
 		meta_id bigint(20) NOT NULL auto_increment,
@@ -177,6 +190,15 @@ class AIOWPSecurity_Installer {
 			PRIMARY KEY  (id)
 			)" . $charset_collate . ";";
 		dbDelta($debug_log_tbl_sql);
+
+		$message_store_log_tbl_sql = "CREATE TABLE " . $message_store_log_tbl_name . " (
+			id bigint(20) NOT NULL AUTO_INCREMENT,
+			message_key text NOT NULL DEFAULT '',
+			message_value text NOT NULL DEFAULT '',
+			created INTEGER UNSIGNED,
+			PRIMARY KEY  (id)
+			)" . $charset_collate . ";";
+		dbDelta($message_store_log_tbl_sql);
 	}
 
 	/**
@@ -196,9 +218,11 @@ class AIOWPSecurity_Installer {
 			 *
 			 */
 			$failed_login_tbl_name = $wpdb->prefix.'aiowps_failed_logins';
+			$login_activity_tbl_name = $wpdb->prefix.'aiowps_login_activity';
 			
 		} else {
 			$failed_login_tbl_name = AIOWPSEC_TBL_FAILED_LOGINS;
+			$login_activity_tbl_name = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;
 		}
 
 		$audit_log_tbl_name = AIOWPSEC_TBL_AUDIT_LOG;
@@ -230,6 +254,22 @@ class AIOWPSecurity_Installer {
 				$wpdb->query("DROP TABLE IF EXISTS `$failed_login_tbl_name`");
 			}
 		}
+
+		$query = $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($login_activity_tbl_name));
+		$table_exists = $wpdb->get_var($query);
+		if ($table_exists) {
+			$wpdb->query("DROP TABLE IF EXISTS `$login_activity_tbl_name`");
+		}
+	}
+
+	/**
+	 * This function will run SQL to clean sensitive information from the audit log table stacktrace
+	 *
+	 * @return void
+	 */
+	public static function clean_audit_log_stacktraces() {
+		global $wpdb;
+		$wpdb->query("UPDATE ".AIOWPSEC_TBL_AUDIT_LOG." SET stacktrace = '' WHERE event_type = 'failed_login' OR event_type = 'successful_login' OR event_type = 'user_registration'");
 	}
 
 	public static function create_db_backup_dir() {

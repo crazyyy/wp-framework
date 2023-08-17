@@ -25,7 +25,6 @@ class AIOWPSecurity_Fake_Bot_Protection {
 
 			try {
 				$name = gethostbyaddr($ip); // let's get the internet hostname using the given IP address
-				if ($name == $ip || false === $name) return;
 				$host_ip = gethostbyname($name); // Reverse lookup - let's get the IP using the name
 			} catch (Exception $e) {
 				$log_message = 'block_fake_googlebots(): PHP Fatal Exception error ('.get_class($e).') has occurred during processing gethostbyaddr()/gethostbyname() function. Error Message: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';

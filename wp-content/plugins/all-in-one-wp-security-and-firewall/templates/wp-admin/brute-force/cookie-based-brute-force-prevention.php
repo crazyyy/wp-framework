@@ -10,7 +10,6 @@
 	<?php
 		$tutorial_link = '<a href="https://aiosplugin.com/how-to-use-cookie-based-brute-force-login-attack-prevention-feature/" target="_blank">' . __('tutorial', 'all-in-one-wp-security-and-firewall') . '</a>';
 		$info_msg = sprintf(__('To learn more about how to use this feature, please read the following %s.', 'all-in-one-wp-security-and-firewall'), $tutorial_link);
-		$brute_force_login_feature_link = '<a href="admin.php?page='.AIOWPSEC_FIREWALL_MENU_SLUG.'&tab=tab4" target="_blank">'.__('Cookie-based brute force login prevention', 'all-in-one-wp-security-and-firewall').'</a>';
 		echo '<p>' . $info_msg . '</p>';
 	?>
 </div>
@@ -39,7 +38,7 @@
 				$disable_brute_force_feature_input = true;
 				// If the cookie test is successful or if the feature is already enabled then go ahead as normal
 				if ('1' == $cookie_test_value || '1' == $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')) {
-					if (isset($_POST['aiowps_cookie_test'])) { // Cookie test was just performed and the test succeded
+					if (!empty($aiowps_cookie_test)) { // Cookie test was just performed and the test succeded
 						echo '<div class="aio_green_box"><p>';
 						_e('The cookie test was successful. You can now enable this feature.', 'all-in-one-wp-security-and-firewall');
 						echo '</p></div>';
@@ -47,7 +46,7 @@
 					$disable_brute_force_feature_input = false;
 				} else {
 					// Cookie test needs to be performed
-					if (isset($_POST['aiowps_cookie_test']) && '1' != $cookie_test_value) { // Test failed
+					if (!empty($aiowps_cookie_test) && '1' != $cookie_test_value) { // Test failed
 						echo '<div class="aio_red_box"><p>';
 						_e('The cookie test failed on this server. Consequently, this feature cannot be used on this site.', 'all-in-one-wp-security-and-firewall');
 						echo '</p></div>';

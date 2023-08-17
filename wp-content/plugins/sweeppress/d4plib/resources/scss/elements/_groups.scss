@@ -1,0 +1,115 @@
+.d4p-group {
+    background: var(--d4p-color-main-background);
+    border: 1px solid var(--d4p-color-main-border);
+    color: var(--d4p-color-main-text);
+    border-radius: var(--d4p-layout-main-border-radius);
+    margin: 0 0 2em;
+    text-align: center;
+    max-width: 920px;
+    width: 100%;
+
+    h3 {
+        margin: 0;
+        background: #{$color-header-background};
+        color: #{$color-header-text};
+        border-bottom: 1px solid #{$color-main-border};
+        text-align: left;
+        padding: .75em 1em;
+        line-height: 1.4;
+        font-size: 1.4em;
+        font-weight: 400;
+        vertical-align: top;
+        border-radius: var(--d4p-layout-main-border-radius) var(--d4p-layout-main-border-radius) 0 0;
+
+        i {
+            float: right;
+            cursor: pointer;
+        }
+
+        textarea {
+            height: 160px;
+        }
+
+        .d4p-kb-group {
+            float: right;
+            background: #C00;
+            color: #FFF;
+            padding: 2px 8px;
+            border-radius: var(--d4p-layout-badge-border-radius);
+            text-decoration: none;
+            font-size: 14px;
+        }
+    }
+
+    &.d4p-group-tools {
+        label {
+            display: block;
+            line-height: 1.8;
+        }
+    }
+
+    &.d4p-hidden-group {
+        display: none;
+    }
+
+    .d4p-group-inner {
+        text-align: left;
+        font-size: 15px;
+        line-height: 1.7;
+
+        p {
+            font-size: 1em;
+            line-height: 1.7;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+
+            li {
+                margin: 3px 0;
+            }
+
+            &.d4p-with-bullets {
+                list-style: outside disc;
+                margin-left: 20px;
+
+                li {
+                    list-style: inherit;
+                }
+            }
+        }
+    }
+
+    &:not(.d4p-group-with-settings) {
+        .d4p-group-inner {
+            padding: 1.5em;
+
+            > *:first-child {
+                margin-top: 0;
+            }
+
+            > *:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.d4p-group-error {
+    border-color: #D00;
+
+    h3 {
+        background: #D00;
+        color: #FFF;
+    }
+
+    .d4p-group-inner {
+        text-align: left;
+
+        p {
+            margin-top: 0;
+            font-weight: bold;
+        }
+    }
+}

@@ -3,30 +3,6 @@
 <form action="" method="POST">
 	<?php wp_nonce_field('aiowpsec-comment-spam-settings-nonce'); ?>
 	<div class="postbox">
-		<h3 class="hndle"><label for="title"><?php _e('Add CAPTCHA to comments form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-		<div class="inside">
-			<div class="aio_blue_box">
-				<?php
-					echo '<p>'.__('This feature will add a CAPTCHA field in the WordPress comments form.', 'all-in-one-wp-security-and-firewall').'<br>'.__('Adding a CAPTCHA field in the comment form is a simple way of greatly reducing spam comments from bots without using .htaccess rules.', 'all-in-one-wp-security-and-firewall').'</p>';
-				?>
-			</div>
-			<?php
-				// Display security info badge
-				$aiowps_feature_mgr->output_feature_details_badge("comment-form-captcha");
-			?>
-			<?php AIOWPSecurity_Captcha::warning_captcha_settings_notset(); ?>
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><?php _e('Enable CAPTCHA on comment forms', 'all-in-one-wp-security-and-firewall'); ?>:</th>
-					<td>
-					<input id="aiowps_enable_comment_captcha" name="aiowps_enable_comment_captcha" type="checkbox"<?php if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_comment_captcha')) echo ' checked="checked"'; ?> value="1"/>
-					<label for="aiowps_enable_comment_captcha" class="description"><?php _e('Check this if you want to insert a CAPTCHA field on the comment forms.', 'all-in-one-wp-security-and-firewall'); ?></label>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('Spam comment detect', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<div class="aio_blue_box">

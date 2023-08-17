@@ -1,0 +1,24 @@
+@import 'components/shared';
+@import 'components/list';
+@import 'components/dashboard';
+@import 'components/sweep';
+@import 'components/sweepers';
+@import 'components/statistics';
+
+.d4p-panel-title {
+    h3 {
+        span {
+            display: none;
+        }
+    }
+}
+
+.d4p-group.sweeppress-pro {
+    border-color: #67AF12;
+    border-radius: 8px;
+
+    h3 {
+        background: #67AF12;
+        color: #FFF;
+    }
+}

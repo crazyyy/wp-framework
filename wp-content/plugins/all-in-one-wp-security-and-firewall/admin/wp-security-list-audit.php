@@ -97,66 +97,13 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 	 */
 	public function column_details($item) {
 		$details = json_decode($item['details'], true);
-		
+
 		if (!is_array($details)) return $item['details'];
 
-		if (array_key_exists('core_updated', $details)) {
-			$info = $details['core_updated'];
-			return sprintf(__('WordPress updated from version %s to %s', 'all-in-one-wp-security-and-firewall'), $info['old_version'], $info['new_version']);
-		} elseif (array_key_exists('plugin', $details)) {
-			$info = $details['plugin'];
-			return sprintf(__('Plugin', 'all-in-one-wp-security-and-firewall').': %s %s %s (v%s)', $info['name'], $info['network'], $info['action'], $info['version']);
-		} elseif (array_key_exists('theme', $details)) {
-			$info = $details['theme'];
-			if ('activated' == $info['action']) {
-				return sprintf(__('Theme', 'all-in-one-wp-security-and-firewall').': %s %s', $info['name'], $info['action']);
-			} else {
-				return sprintf(__('Theme', 'all-in-one-wp-security-and-firewall').': %s %s %s (v%s)', $info['name'], $info['network'], $info['action'], $info['version']);
-			}
-		} elseif (array_key_exists('entity_changed', $details)) {
-			$info = $details['entity_changed'];
-			if ($info['entity']) {
-				return sprintf(__('Entity: "%s" has changed, please check the stacktrace for more details', 'all-in-one-wp-security-and-firewall'), $info['entity']);
-			} else {
-				return __('An unknown entity has changed, please check the stacktrace for more details', 'all-in-one-wp-security-and-firewall');
-			}
-		} elseif (array_key_exists('translation_updated', $details)) {
-			$info = $details['translation_updated'];
-			if ('core' == $info['type']) {
-				return sprintf(__('Core %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['language'], $info['version']);
-			} elseif ('plugin' == $info['type']) {
-				return sprintf(__('Plugin "%s" %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
-			} elseif ('theme' == $info['type']) {
-				return sprintf(__('Theme "%s" %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
-			}
-		} elseif (array_key_exists('failed_login', $details)) {
-			$info = $details['failed_login'];
-			if ($info['imported']) {
-				return __('Event imported from the failed logins table', 'all-in-one-wp-security-and-firewall');
-			} elseif ($info['known']) {
-				return sprintf(__('Failed login attempt with a known username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
-			} else {
-				return sprintf(__('Failed login attempt with a unknown username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
-			}
-		} elseif (array_key_exists('successful_login', $details)) {
-			$info = $details['successful_login'];
-			return sprintf(__('Successful login with username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
-		} elseif (array_key_exists('user_registration', $details)) {
-			$info = $details['user_registration'];
-			if ('admin' == $info['type']) {
-				return sprintf(__('Admin %s registered new user: %s', 'all-in-one-wp-security-and-firewall'), $info['admin_username'], $info['registered_username']);
-			} elseif ('pending' == $info['type']) {
-				return sprintf(__('User %s registered and set to pending', 'all-in-one-wp-security-and-firewall'), $info['registered_username']);
-			} elseif ('registered' == $info['type']) {
-				return sprintf(__('User %s registered', 'all-in-one-wp-security-and-firewall'), $info['registered_username']);
-			}
-		} elseif (array_key_exists('table_migration', $details)) {
-			$info = $details['table_migration'];
-			if ($info['success']) {
-				return sprintf(__('Successfully migrated the `%s` table data to the `%s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
-			} else {
-				return sprintf(__('Failed to migrate the `%s` table data to the `%s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
-			}
+		$key = array_keys($details)[0];
+
+		if (method_exists("AIOWPSecurity_Audit_Text_Handler","{$key}_to_text")) {
+			return call_user_func("AIOWPSecurity_Audit_Text_Handler::{$key}_to_text", $details[$key]);
 		}
 
 		return $item['details'];
@@ -379,7 +326,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 		$where_sql = '';
 
 		if ('' == $search_term) {
-			$where_sql = (is_multisite() && !is_main_site()) ? 'WHERE site_id = '.get_current_blog_id() : '';
+			$where_sql = (!is_super_admin()) ? 'WHERE site_id = '.get_current_blog_id() : '';
 			$extra_where = '';
 			
 			if (!empty($filters)) {
@@ -392,7 +339,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 
 			$where_sql .= $extra_where;
 		} else {
-			$where_sql = (is_multisite() && !is_main_site()) ? 'WHERE site_id = '.get_current_blog_id().' AND ' : 'WHERE ';
+			$where_sql = (!is_super_admin()) ? 'WHERE site_id = '.get_current_blog_id().' AND ' : 'WHERE ';
 			$extra_where = '';
 
 			if (!empty($filters)) {
@@ -488,6 +435,11 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 			$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order}", 'ARRAY_A');
 		} else {
 			$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}", 'ARRAY_A');
+		}
+		
+		// Filter the 'details' section
+		foreach ($data as $key => $entry) {
+			$data[$key]['details'] = json_encode(apply_filters('aios_audit_filter_details', json_decode($entry['details'], true), $entry['event_type']));
 		}
 		
 		$this->items = $data;

@@ -3,6 +3,8 @@ if (!defined('ABSPATH')) {
 	exit;//Exit if accessed directly
 }
 
+if (class_exists('AIOWPSecurity_Utility_File')) return;
+
 class AIOWPSecurity_Utility_File {
 
 	// This variable will be an array which will contain all of the files and/or directories we wish to check permissions for
@@ -57,6 +59,8 @@ class AIOWPSecurity_Utility_File {
 	}
 
 	public static function write_content_to_file($file_path, $new_contents) {
+		// Get the file permissions so we can revert back to it when we are done
+		$permissions = octdec(substr(sprintf('%o', fileperms($file_path)), -4));
 		@chmod($file_path, 0777);
 		if (is_writeable($file_path)) {
 			$handle = fopen($file_path, 'w');
@@ -64,7 +68,7 @@ class AIOWPSecurity_Utility_File {
 				fwrite($handle, $line);
 			}
 			fclose($handle);
-			@chmod($file_path, 0644); //Let's change the file back to a secure permission setting
+			@chmod($file_path, $permissions); //Let's change the file back to it's original permission setting
 			return true;
 		} else {
 				return false;
@@ -150,7 +154,6 @@ class AIOWPSecurity_Utility_File {
 		if (false === $res) {
 			$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Utility_File::backup_file_contents_to_db() - Unable to write entry to DB", 4);
 		}
-		return;// phpcs:ignore Squiz.PHP.NonExecutableCode.ReturnNotRequired
 	}
 
 
@@ -463,11 +466,11 @@ class AIOWPSecurity_Utility_File {
 					if (is_dir($dir.'/'.$entry)) {
 						self::remove_local_directory($dir.'/'.$entry, false);
 					} else {
-						@unlink($dir.'/'.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+						@unlink($dir.'/'.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning and proceed to try and remove the rest of the files
 					}
 				}
 			}
-			@closedir($handle);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			if (is_resource($handle)) closedir($handle);
 		}
 
 		return $contents_only ? true : rmdir($dir);
@@ -480,7 +483,7 @@ class AIOWPSecurity_Utility_File {
 	 */
 	public static function get_home_path() {
 		// Make the scope of $wp_file_descriptions global, so that when wp-admin/includes/file.php assigns to it, it is adjusting the global variable as intended
-		global $wp_file_descriptions; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		global $wp_file_descriptions; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- We need to make this global see above comment
 		if (!function_exists('get_home_path')) require_once(ABSPATH. '/wp-admin/includes/file.php');
 		return wp_normalize_path(get_home_path());
 	}

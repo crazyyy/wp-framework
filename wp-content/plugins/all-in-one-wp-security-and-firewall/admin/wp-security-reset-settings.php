@@ -68,7 +68,6 @@ class AIOWPSecurity_Reset_Settings {
 		global $wpdb;
 
 		$wpdb->query('TRUNCATE ' . $wpdb->prefix . 'aiowps_login_lockdown');
-		$wpdb->query('TRUNCATE ' . $wpdb->prefix . 'aiowps_login_activity');
 		$wpdb->query('TRUNCATE ' . $wpdb->prefix . 'aiowps_global_meta');
 		$wpdb->query('TRUNCATE ' . $wpdb->prefix . 'aiowps_events');
 		$wpdb->query('TRUNCATE ' . $wpdb->prefix . 'aiowps_permanent_block');

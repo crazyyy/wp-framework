@@ -8,42 +8,35 @@
 	</p>';
 	?>
 </div>
-<?php
-	$blog_id = get_current_blog_id();
-	if (is_multisite() && !is_main_site($blog_id)) {
-		// Hide config settings if MS and not main site
-		AIOWPSecurity_Utility::display_multisite_message();
-	} else {
-?>
-	<div class="postbox">
-		<h3 class="hndle"><label for="title"><?php _e('Save the current wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-		<div class="inside">
-			<form action="" method="POST">
-				<?php wp_nonce_field('aiowpsec-save-wp-config-nonce'); ?>
-				<p class="description"><?php _e('Press the button below to backup and download the contents of the currently active wp-config.php file.', 'all-in-one-wp-security-and-firewall'); ?></p>
-				<input type="submit" name="aiowps_save_wp_config" value="<?php _e('Backup wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
-			</form>
-		</div>
+<div class="postbox">
+	<h3 class="hndle"><label for="title"><?php _e('Save the current wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+	<div class="inside">
+		<form action="" method="POST">
+			<?php wp_nonce_field('aiowpsec-save-wp-config-nonce'); ?>
+			<p class="description"><?php _e('Press the button below to backup and download the contents of the currently active wp-config.php file.', 'all-in-one-wp-security-and-firewall'); ?></p>
+			<input type="submit" name="aiowps_save_wp_config" value="<?php _e('Backup wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
+		</form>
 	</div>
-	<div class="postbox">
-		<h3 class="hndle"><label for="title"><?php _e('Restore from a backed up wp-config file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-		<div class="inside">
-			<form id="aiowps_restore_wp_config_form" action="" method="POST">
-				<?php wp_nonce_field('aiowpsec-restore-wp-config-nonce'); ?>
-				<table class="form-table">
-					<tr valign="top">
-						<th scope="row"><label for="aiowps_restore_wp_config_button"><?php _e('wp-config file to restore from', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>
-						<td>
-							<input type="submit" name="aiowps_restore_wp_config_button" class="button button-primary" value="<?php _e('Restore your wp-config file', 'all-in-one-wp-security-and-firewall'); ?>">
-							<input name="aiowps_restore_wp_config" type="hidden" value="1">
-							<input name="aiowps_wp_config_file" type="file" id="aiowps_wp_config_file">
-							<input name="aiowps_wp_config_file_contents" type="hidden" id="aiowps_wp_config_file_contents">
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
+</div>
+<div class="postbox">
+	<h3 class="hndle"><label for="title"><?php _e('Restore from a backed up wp-config file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+	<div class="inside">
+		<form id="aiowps_restore_wp_config_form" action="" method="POST">
+			<?php wp_nonce_field('aiowpsec-restore-wp-config-nonce'); ?>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="aiowps_restore_wp_config_button"><?php _e('wp-config file to restore from', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>
+					<td>
+						<input type="submit" name="aiowps_restore_wp_config_button" class="button button-primary" value="<?php _e('Restore your wp-config file', 'all-in-one-wp-security-and-firewall'); ?>">
+						<input name="aiowps_restore_wp_config" type="hidden" value="1">
+						<input name="aiowps_wp_config_file" type="file" id="aiowps_wp_config_file">
+						<input name="aiowps_wp_config_file_contents" type="hidden" id="aiowps_wp_config_file_contents">
+					</td>
+				</tr>
+			</table>
+		</form>
 	</div>
+</div>
 	<!-- <div class="postbox">
 		<h3 class="hndle"><label for="title"><?php // _e('View Contents of the currently active wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
@@ -54,5 +47,3 @@
 			<textarea class="aio_text_area_file_output aio_width_80 aio_spacer_10_tb" rows="20" readonly><?php // echo $wp_config_contents; ?></textarea>
 		</div>
 	</div> -->
-<?php
-	} // End if statements

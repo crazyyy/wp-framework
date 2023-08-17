@@ -95,6 +95,24 @@
 		</div>
 	</div>
 	<div class="postbox">
+		<h3 class="hndle"><label for="title"><?php _e('Registration page CAPTCHA settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+		<div class="inside">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("user-registration-captcha");
+			?>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><?php _e('Enable CAPTCHA on registration page', 'all-in-one-wp-security-and-firewall'); ?>:</th>
+					<td>
+					<input id="aiowps_enable_registration_page_captcha" name="aiowps_enable_registration_page_captcha" type="checkbox"<?php if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_registration_page_captcha')) echo ' checked="checked"'; ?> value="1"/>
+					<label for="aiowps_enable_registration_page_captcha" class="description"><?php _e('Check this if you want to insert a CAPTCHA form on the WordPress user registration page (if you allow user registration).', 'all-in-one-wp-security-and-firewall'); ?></label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('Lost password form CAPTCHA settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<?php
@@ -133,6 +151,74 @@
 			</table>
 		</div>
 	</div>
+	<div class="postbox">
+		<h3 class="hndle"><label for="title"><?php _e('Add CAPTCHA to comments form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+		<div class="inside">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("comment-form-captcha");
+			?>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><?php _e('Enable CAPTCHA on comment forms', 'all-in-one-wp-security-and-firewall'); ?>:</th>
+					<td>
+					<input id="aiowps_enable_comment_captcha" name="aiowps_enable_comment_captcha" type="checkbox"<?php if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_comment_captcha')) echo ' checked="checked"'; ?> value="1"/>
+					<label for="aiowps_enable_comment_captcha" class="description"><?php _e('Check this if you want to insert a CAPTCHA field on the comment forms.', 'all-in-one-wp-security-and-firewall'); ?></label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<?php
+	// Only display BuddyPress CAPTCHA settings if woo is active
+	if (defined('BP_VERSION')) {
+	?>
+	<div class="postbox">
+		<h3 class="hndle"><label for="title"><?php _e('Add CAPTCHA to BuddyPress registration form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+		<div class="inside">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("bp-register-captcha");
+			?>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><?php _e('Enable CAPTCHA on BuddyPress registration form', 'all-in-one-wp-security-and-firewall'); ?>:</label></th>
+					<td>
+					<input id="aiowps_enable_bp_register_captcha" name="aiowps_enable_bp_register_captcha" type="checkbox"<?php if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha')) echo ' checked="checked"'; ?> value="1">
+					<label for="aiowps_enable_bp_register_captcha"><?php _e('Check this if you want to insert a CAPTCHA field on the BuddyPress registration forms.', 'all-in-one-wp-security-and-firewall'); ?></label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<?php
+	}
+	?>
+	<?php
+	// Only display bbPress CAPTCHA settings if woo is active
+	if (class_exists('bbPress')) {
+	?>
+	<div class="postbox">
+		<h3 class="hndle"><label for="title"><?php _e('Add CAPTCHA to bbPress new topic form', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+		<div class="inside">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("bbp-new-topic-captcha");
+			?>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><?php _e('Enable CAPTCHA on bbPress new topic form', 'all-in-one-wp-security-and-firewall'); ?>:</label></th>
+					<td>
+						<input id="aiowps_enable_bbp_new_topic_captcha" name="aiowps_enable_bbp_new_topic_captcha" type="checkbox"<?php if ($aio_wp_security->configs->get_value('aiowps_enable_bbp_new_topic_captcha') == '1') echo ' checked="checked"'; ?> value="1">
+						<label for="aiowps_enable_bbp_new_topic_captcha"><?php _e('Check this if you want to insert a CAPTCHA field on the bbPress new topic forms.', 'all-in-one-wp-security-and-firewall'); ?></label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<?php
+	}
+	?>
 	<?php
 	// Only display WooCommerce CAPTCHA settings if woo is active
 	if (AIOWPSecurity_Utility::is_woocommerce_plugin_active()) {

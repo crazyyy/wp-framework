@@ -83,6 +83,8 @@ class AIOWPSecurity_Settings_Tasks {
 		$reset_option_res = AIOWPSecurity_Reset_Settings::reset_options();
 		$delete_htaccess = AIOWPSecurity_Reset_Settings::delete_htaccess();
 		AIOWPSecurity_Reset_Settings::reset_db_tables();
+		// AIOS premium and other plugin related config settings are reset by adding below action.
+		do_action('aios_reset_all_settings');
 		
 		if (false === $reset_option_res && false === $delete_htaccess) {
 			$msg['error'] = __('Deletion of aio_wp_security_configs option and .htaccess directives failed.', 'all-in-one-wp-security-and-firewall');

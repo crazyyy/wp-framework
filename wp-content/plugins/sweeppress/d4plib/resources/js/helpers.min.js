@@ -1,0 +1,1 @@
+Array.prototype.remove=function(t){return this.splice(this.indexOf(t),1)},Object.prototype.hasOwnProperty=function(t){return void 0!==this[t]};

@@ -70,9 +70,11 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
     /**
      * Grabs the data from database and handles the pagination
      *
+     *  @param boolean $ignore_pagination - whether to not paginate
+     *
      * @return void
      */
-    public function prepare_items()
+    public function prepare_items($ignore_pagination = false)
     {
         /**
          * First, lets decide how many records per page to show
@@ -82,7 +84,8 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
         }
 
         $per_page = empty($per_page) ? 15 : $per_page;
-
+        $current_page = $this->get_pagenum();
+        $offset = ($current_page - 1) * $per_page;
         $columns = $this->get_columns();
         $hidden = array('id'); // we really don't need the IDs of the log entries displayed
         $sortable = $this->get_sortable_columns();
@@ -109,12 +112,16 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
         $orderby = sanitize_sql_orderby($orderby);
         $order = sanitize_sql_orderby($order);
 
-        $data = $wpdb->get_results("SELECT * FROM {$debug_log_tbl} ORDER BY {$orderby} {$order}", 'ARRAY_A');
-
-        $current_page = $this->get_pagenum();
-        $total_items = count($data);
-        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+        if ($ignore_pagination) {
+            $data = $wpdb->get_results("SELECT * FROM {$debug_log_tbl} ORDER BY {$orderby} {$order}", 'ARRAY_A');
+        } else {
+            $data = $wpdb->get_results("SELECT * FROM {$debug_log_tbl} ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}", 'ARRAY_A');
+        }
+        $total_items = $wpdb->get_var("SELECT COUNT(*) FROM {$debug_log_tbl}");
         $this->items = $data;
+
+        if ($ignore_pagination) return;
+
         $this->set_pagination_args(array(
             'total_items' => $total_items,                  //WE have to calculate the total number of items
             'per_page' => $per_page,                     //WE have to determine how many items to show on a page

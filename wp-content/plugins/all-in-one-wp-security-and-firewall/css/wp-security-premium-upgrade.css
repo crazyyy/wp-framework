@@ -69,7 +69,7 @@ img.addons {
 
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1300px) {
 
 	.aiowps-plugin-family__free .aiowps-plugin-family__plugin {
 		width: 50%;
@@ -93,7 +93,7 @@ img.addons {
 	width: 34.5%;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1300px) {
 
 	.aiowps_feature_cont,
 	.aiowps_plugin_family_cont {
@@ -109,7 +109,7 @@ img.addons {
 	padding: 20px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1300px) {
 
 	.aiowps_feature_cont header,
 	.aiowps_plugin_family_cont header {

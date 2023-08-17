@@ -52,7 +52,7 @@ class AIOWPSecurity_User_Login {
 	 */
 	private function is_locked_ip_addresses_tab_admin_page() {
 		global $pagenow;
-		return ('admin.php' == $pagenow && isset($_GET['page']) && 'aiowpsec' == $_GET['page'] && isset($_GET['tab']) && 'tab3' == $_GET['tab']);
+		return ('admin.php' == $pagenow && isset($_GET['page']) && 'aiowpsec' == $_GET['page'] && isset($_GET['tab']) && 'locked-ip' == $_GET['tab']);
 	}
 
 	/**
@@ -71,7 +71,7 @@ class AIOWPSecurity_User_Login {
 						__('You have disabled login lockout by defining the AIOS_DISABLE_LOGIN_LOCKOUT constant value as true, and the login lockout setting has enabled it.', 'all-in-one-wp-security-and-firewall') . ' ' .
 						/* translators: 1: Locked IP Addresses admin page link */
 						sprintf(__('Delete your login lockout IP from %s and define the AIOS_DISABLE_LOGIN_LOCKOUT constant value as false.', 'all-in-one-wp-security-and-firewall'),
-							'<a href="'.admin_url('admin.php?page=aiowpsec&tab=tab2').'">' . __('Locked IP addresses', 'all-in-one-wp-security-and-firewall') . '</a>'
+							'<a href="'.admin_url('admin.php?page=aiowpsec&tab=locked-ip').'">' . __('Locked IP addresses', 'all-in-one-wp-security-and-firewall') . '</a>'
 						).
 					'</p>
 				</div>';
@@ -182,7 +182,6 @@ class AIOWPSecurity_User_Login {
 		global $aio_wp_security;
 		if (!is_wp_error($user)) {
 			// Authentication has been successful, there's nothing to do here.
-			AIOWPSecurity_Audit_Events::event_successful_login($username);
 			return $user;
 		}
 		if (empty($username) || empty($password)) {
@@ -320,7 +319,6 @@ class AIOWPSecurity_User_Login {
 			//If the login attempt was made using a non-existent user then let's set user_id to blank and record the attempted user login name for DB storage later on
 			$user_id = 0;
 		}
-		$ip_range_str = esc_sql($ip_range).'.*';// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 
 		$lock_time = current_time('mysql', true);
 		$date = new DateTime($lock_time);
@@ -541,9 +539,27 @@ class AIOWPSecurity_User_Login {
 		return $last_login;
 	}
 
+	/**
+	 * Updates the audit log, the last login time in user meta, the login activity table and the users online transient.
+	 *
+	 * @global wpdb $wpdb
+	 * @global AIO_WP_Security $aio_wp_security
+	 *
+	 * @param string  $user_login
+	 * @param WP_User $user
+	 *
+	 * @return void
+	 */
+	private static function update_login_activity($user_login, $user) {
+		AIOWPSecurity_Audit_Events::event_successful_login($user_login);
+		$login_date_time = current_time('mysql', true);
+
+		update_user_meta($user->ID, 'aiowps_last_login_time', $login_date_time); //store last login time in meta table
+		self::update_users_online_transient($user->ID);
+	}
+
 	public static function wp_login_action_handler($user_login, $user = '') {
-		global $wpdb, $aio_wp_security;
-		$login_activity_table = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;
+		global $aio_wp_security;
 
 		if ('' == $user) {
 			//Try and get user object
@@ -553,16 +569,34 @@ class AIOWPSecurity_User_Login {
 				return;
 			}
 		}
-		$login_date_time = current_time('mysql', true);
-		update_user_meta($user->ID, 'aiowps_last_login_time', $login_date_time); //store last login time in meta table
-		$curr_ip_address = AIOWPSecurity_Utility_IP::get_user_ip_address();
-		$data = array('user_id' => $user->ID, 'user_login' => $user_login, 'login_date' => $login_date_time, 'login_ip' => $curr_ip_address);
-		$format = array('%d', '%s', '%s', '%s');
-		$result = $wpdb->insert($login_activity_table, $data, $format);
-		if (false === $result) {
-			$aio_wp_security->debug_logger->log_debug("Error inserting record into ".$login_activity_table, 4);//Log the highly unlikely event of DB error
+
+		if (is_super_admin($user->ID)) {
+			$logging_into_correct_site = true;
+		} else {
+			$user_sites = get_blogs_of_user($user->ID);
+
+			$current_site_id = get_current_blog_id();
+
+			$logging_into_correct_site = false;
+
+			foreach ($user_sites as $site) {
+				if ($site->userblog_id == $current_site_id) {
+					$logging_into_correct_site = true;
+					break;
+				}
+			}
 		}
-		self::update_users_online_transient($user->ID);
+
+		if ($logging_into_correct_site) {
+			self::update_login_activity($user_login, $user);
+		} else {
+			$user_primary_site = get_active_blog_for_user($user->ID);
+			switch_to_blog($user_primary_site->blog_id);
+
+			self::update_login_activity($user_login, $user);
+
+			restore_current_blog();
+		}
 	}
 	/**
 	 * The handler for logout events, ie, uses the WP "clear_auth_cookies" action.
@@ -572,20 +606,12 @@ class AIOWPSecurity_User_Login {
 	 * an auto logout occurs due to the "force logout" feature).
 	 */
 	public function wp_logout_action_handler() {
-		global $wpdb, $aio_wp_security;
 		$current_user = wp_get_current_user();
 		$ip_addr = AIOWPSecurity_Utility_IP::get_user_ip_address();
 		$user_id = $current_user->ID;
 		//Clean up transients table
 		$this->cleanup_users_online_transient($user_id, $ip_addr);
-		$login_activity_table = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;
-		$logout_date_time = current_time('mysql', true);
-		$data = array('logout_date' => $logout_date_time);
-		$where = array('user_id' => $user_id, 'login_ip' => $ip_addr, 'logout_date' => '1000-10-10 10:00:00');
-		$result = $wpdb->update($login_activity_table, $data, $where);
-		if (false === $result) {
-			$aio_wp_security->debug_logger->log_debug("Error inserting record into ".$login_activity_table, 4);//Log the highly unlikely event of DB error
-		}
+		// TODO: log a logout event in the audit log
 	}
 
 	/**

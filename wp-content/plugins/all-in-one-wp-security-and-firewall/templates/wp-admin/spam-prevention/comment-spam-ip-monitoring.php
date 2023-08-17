@@ -8,6 +8,8 @@
 				$info_msg = sprintf(__('This feature has detected that %s is not active.', 'all-in-one-wp-security-and-firewall'), $comment_spam_detect_link) . ' ' . __('It is highly recommended that you activate to make the most of this feature.', 'all-in-one-wp-security-and-firewall');
 				echo '<div class="aio_orange_box" id="message"><p><strong>'.$info_msg.'</strong></p></div>';
 			}
+			
+			$aiowps_feature_mgr->output_feature_details_badge("auto-block-spam-ips");
 		?>
 		<form action="" method="POST">
 			<div class="aio_blue_box">
@@ -76,7 +78,7 @@
 								echo '<p class="description">'.__('Example 2: Setting this value to "5" will list only those IP addresses which were used to submit 5 spam comments or more on your site.', 'all-in-one-wp-security-and-firewall').'</p>';
 							?>
 						</div>
-					</td> 
+					</td>
 				</tr>
 			</table>
 			<input type="submit" name="aiowps_ip_spam_comment_search" value="<?php _e('Find IP addresses', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
@@ -98,8 +100,8 @@
 		?>
 		<form id="tables-filter" method="get">
 			<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-			<input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
-			<input type="hidden" name="tab" value="<?php echo esc_attr($_REQUEST['tab']); ?>" />
+			<input type="hidden" name="page" value="<?php echo esc_attr($page); ?>" />
+			<input type="hidden" name="tab" value="<?php echo esc_attr($tab); ?>" />
 			<!-- Now we can render the completed list table -->
 			<?php $spammer_ip_list->display(); ?>
 		</form>

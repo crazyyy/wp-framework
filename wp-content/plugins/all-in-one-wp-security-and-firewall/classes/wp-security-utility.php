@@ -47,7 +47,7 @@ class AIOWPSecurity_Utility {
 	 * @return string
 	 */
 	public static function get_current_page_url() {
-		if (defined('WP_CLI') && WP_CLI) return '';
+		if ((defined('WP_CLI') && WP_CLI) || (defined('DOING_CRON') && DOING_CRON)) return '';
 
 		$pageURL = 'http';
 		if (isset($_SERVER["HTTPS"]) && "on" == $_SERVER["HTTPS"]) {
@@ -248,12 +248,14 @@ class AIOWPSecurity_Utility {
 	}
 
 	/**
-	 * This is a general yellow box message for when we want to suppress a feature's config items because site is subsite of multi-site
+	 * This is a general yellow box message for when we want to suppress a feature's config items on multisite because current user is not super admin.
+	 *
+	 * @return void
 	 */
-	public static function display_multisite_message() {
+	public static function display_multisite_super_admin_message() {
 		echo '<div class="aio_yellow_box">';
 		echo '<p>' . __('The plugin has detected that you are using a Multi-Site WordPress installation.', 'all-in-one-wp-security-and-firewall') . '</p>
-			  <p>' . __('This feature can only be configured by the "superadmin" on the main site.', 'all-in-one-wp-security-and-firewall') . '</p>';
+			  <p>' . __('Some features on this page can only be configured by the "superadmin".', 'all-in-one-wp-security-and-firewall') . '</p>';
 		echo '</div>';
 	}
 
@@ -810,10 +812,21 @@ class AIOWPSecurity_Utility {
 	public static function normalise_call_stack_args($backtrace) {
 		foreach ($backtrace as $index => $element) {
 			if (!isset($element['args']) || !is_array($element['args']) || !isset($element['args'][0])) $backtrace[$index]['args'] = array('');
-			if (is_object($backtrace[$index]['args'][0])) {
-				$backtrace[$index]['args'] = array(get_class($backtrace[$index]['args'][0]));
-			} elseif (!is_string($backtrace[$index]['args'][0])) {
-				$backtrace[$index]['args'] = array('');
+			foreach ($backtrace[$index]['args'] as $key => $arg) {
+				if (is_object($arg)) {
+					$backtrace[$index]['args'][$key] = array(get_class($backtrace[$index]['args'][$key]));
+				} elseif (!is_string($arg)) {
+					$backtrace[$index]['args'][$key] = array('');
+				}
+			}
+			
+			if ('apply_filters' == $backtrace[$index]['function'] && 'authenticate' == $backtrace[$index]['args'][0]) {
+				$backtrace[$index]['args'] = array('authenticate');
+			}
+			
+			$keys_to_filter = array('wp_create_user', 'wpmu_create_user', 'wp_authenticate', 'post_authenticate');
+			if (in_array($backtrace[$index]['function'], $keys_to_filter)) {
+				$backtrace[$index]['args'] = array();
 			}
 		}
 		return $backtrace;
@@ -933,5 +946,82 @@ class AIOWPSecurity_Utility {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Verify the username is valid based on logged_in cookie information
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/wp_validate_auth_cookie/
+	 * @param  string $info  - Cookie info
+	 * @param  int    $grace - A grace period for the expiration in seconds
+	 * @return string       - Username if valid; blank string otherwise
+	 */
+	public static function verify_username($info, $grace = 3600) {
+		
+		if (!is_string($info)) return '';
+
+		$elements = wp_parse_auth_cookie($info, 'logged_in');
+
+		if (empty($elements)) return '';
+
+		$username   = $elements['username'];
+		$expiration = $elements['expiration'];
+		$token      = $elements['token'];
+		$hmac       = $elements['hmac'];
+		$scheme     = $elements['scheme'];
+
+		// Add a grace period to the expiration check since there may be a delay in processing the user data
+		if (!empty($grace) && ($expiration + absint($grace)) < time()) return '';
+
+		$user = get_user_by('login', $username);
+
+		if (false === $user) return '';
+
+		$pass_frag = substr($user->user_pass, 8, 4);
+
+		$key = wp_hash($username . '|' . $pass_frag . '|' . $expiration . '|' . $token, $scheme);
+
+		// Use sha1, if sha256 is not available
+		$algo = function_exists('hash') ? 'sha256' : 'sha1';
+		$hash = hash_hmac($algo, $username . '|' . $expiration . '|' . $token, $key);
+
+		if (hash_equals($hash, $hmac)) {
+			return $username;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Get the blog ID from the provided request
+	 *
+	 * @param array $request
+	 * @return int - returns the blog_id or 0 if it cannot be found
+	 */
+	public static function get_blog_id_from_request($request) {
+
+		if (!is_multisite()) return get_current_blog_id();
+
+		$can_get_blog_id = isset($request['REQUEST_SCHEME']) && isset($request['HTTP_HOST']) && isset($request['REQUEST_URI']);
+		if (!$can_get_blog_id) return 0;
+
+		$site_url   = $request['REQUEST_SCHEME'].'://'.$request['HTTP_HOST'].$request['REQUEST_URI'];
+		$components = parse_url(trailingslashit($site_url));
+
+		$can_get_blog_id = isset($components['host']) && isset($components['path']);
+		if (!$can_get_blog_id) return 0;
+
+		$default_path = defined('PATH_CURRENT_SITE') ? constant('PATH_CURRENT_SITE') : '/';
+
+		$domain = $components['host'];
+		$path   = SUBDOMAIN_INSTALL ? $default_path : ($default_path === $components['path'] ? $components['path'] : '/'.explode('/', $components['path'])[1].'/');
+
+		$blog_id = get_blog_id_from_url($domain, $path);
+		
+		// On a subdirectory installation, if the blog_id cannot be found for the subdirectory given, we assume it's a path belonging to the main site
+		// So use the main site's blog_id.
+		if (0 === $blog_id && !SUBDOMAIN_INSTALL) $blog_id = get_blog_id_from_url($domain, $default_path);
+
+		return $blog_id;
 	}
 }

@@ -34,9 +34,9 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 				'title' => __('PHP file editing', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_php_file_editing'),
 			),
-			'wp-file-access' => array(
-				'title' => __('WP file access', 'all-in-one-wp-security-and-firewall'),
-				'render_callback' => array($this, 'render_wp_file_access'),
+			'file-protection' => array(
+				'title' => __('File protection', 'all-in-one-wp-security-and-firewall'),
+				'render_callback' => array($this, 'render_file_protection'),
 			),
 			'host-system-logs' => array(
 				'title' => __('Host system logs', 'all-in-one-wp-security-and-firewall'),
@@ -133,26 +133,29 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 	}
 
 	/**
-	 * Renders the submenu's wp file access tab
+	 * Renders the submenu's 'File protection' tab
 	 *
-	 * @return Void
+	 * @return void
 	 */
-	protected function render_wp_file_access() {
+	protected function render_file_protection() {
 		global $aio_wp_security, $aiowps_feature_mgr;
 
-		if (isset($_POST['aiowps_save_wp_file_access_settings'])) { // Do form submission tasks
-			$nonce = $_REQUEST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-prevent-default-wp-file-access-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on enable basic firewall settings!",4);
-				die("Nonce check failed on enable basic firewall settings!");
+		if (isset($_POST['aiowps_save_file_protection'])) { // Do form submission tasks
+
+			if (is_wp_error(AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_POST['_wpnonce'], 'aios-firewall-file-protection-nonce'))) {
+				$aio_wp_security->debug_logger->log_debug("Nonce check failed for file protection.", 4);
+				die('Nonce check failed for file protection.');
 			}
 
-			// Save settings
+			// Update settings for wp file access protection
 			if (isset($_POST['aiowps_prevent_default_wp_file_access'])) {
 				$aio_wp_security->configs->set_value('aiowps_prevent_default_wp_file_access','1');
 			} else {
 				$aio_wp_security->configs->set_value('aiowps_prevent_default_wp_file_access','');
 			}
+
+			// Update settings for prevent hotlinking
+			$aio_wp_security->configs->set_value('aiowps_prevent_hotlinking', isset($_POST["aiowps_prevent_hotlinking"]) ? '1' : '', true);
 
 			// Commit the config settings
 			$aio_wp_security->configs->save_config();
@@ -169,7 +172,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 				$this->show_msg_error(__('Could not write to the .htaccess file. Please check the file permissions.', 'all-in-one-wp-security-and-firewall'));
 			}
 		}
-		$aio_wp_security->include_template('wp-admin/filesystem-security/wp-file-access.php', false, array('aiowps_feature_mgr' => $aiowps_feature_mgr));
+		$aio_wp_security->include_template('wp-admin/filesystem-security/file-protection.php');
 	}
 
 	/**

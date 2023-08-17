@@ -1,0 +1,11 @@
+@import 'includes/_functions';
+@import 'includes/_variables';
+
+:root {
+    --d4p-ctrl-color-tabs-background: #{$color-ctrl-tabs-background};
+    --d4p-ctrl-color-tabs-text: #{$color-ctrl-tabs-text};
+    --d4p-ctrl-color-tabs-border: #{$color-ctrl-tabs-border};
+    --d4p-ctrl-layout-tabs-border-radius: #{$layout-ctrl-tabs-border-radius};
+}
+
+@import 'controls/_tabs';

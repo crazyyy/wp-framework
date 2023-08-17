@@ -1,0 +1,17 @@
+.sweeppress-statistics-sweeper {
+    h5 {
+        margin: 0 0 .5em;
+        padding: .25em .5em;
+        font-size: 1.3em;
+        border-radius: 4px;
+        background: #EEE;
+    }
+
+    dl {
+        margin: 0 0 1em;
+
+        &:last-child {
+            margin: 0;
+        }
+    }
+}

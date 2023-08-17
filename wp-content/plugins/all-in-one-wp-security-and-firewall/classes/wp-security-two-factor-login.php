@@ -34,6 +34,7 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 	public function __construct() {
 
 		add_filter('aiowpsecurity_setting_tabs', array($this, 'add_two_factor_setting_tab'));
+		add_filter('tfa_user_ip_address', array($this, 'aios_set_user_ip_address'));
 
 		if (false !== $this->is_incompatible_plugin_active()) return;
 
@@ -124,6 +125,15 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 	}
 	
 	/**
+	 * AIOS settings based user IP address
+	 *
+	 * @return string IP address
+	 */
+	public function aios_set_user_ip_address() {
+		return AIOS_Helper::get_user_ip_address();
+	}
+	
+	/**
 	 * Builds Two Factor Authentication tab
 	 *
 	 * @param array $tabs array that contain tab name and call back function
@@ -144,8 +154,8 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 	 * Display the Two Factor Authentication tab & handle the operations
 	 */
 	public function render_two_factor_authentication() {
-		
-		if (false !== ($plugin = $this->is_incompatible_plugin_active())) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		$plugin = $this->is_incompatible_plugin_active();
+		if (false !== $plugin) {
 			global $aio_wp_security;
 			$aio_wp_security->include_template('admin/incompatible-plugin.php', false, array(
 				'incompatible_plugin' => $plugin,

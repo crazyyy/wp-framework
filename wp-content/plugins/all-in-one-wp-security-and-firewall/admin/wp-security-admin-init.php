@@ -112,6 +112,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_USER_REGISTRATION_MENU_SLUG,
 				'render_callback' => array($this, 'handle_user_registration_menu_rendering'),
 				'icon' => 'user_registration',
+				'display_condition_callback' => 'is_main_site',
 				'order' => 60,
 			),
 			array(
@@ -120,6 +121,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_DB_SEC_MENU_SLUG,
 				'render_callback' => array($this, 'handle_database_menu_rendering'),
 				'icon' => 'database_security',
+				'display_condition_callback' => 'is_super_admin',
 				'order' => 70,
 			),
 			array(
@@ -128,7 +130,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_FILESYSTEM_MENU_SLUG,
 				'render_callback' => array($this, 'handle_filesystem_menu_rendering'),
 				'icon' => 'filesystem_security',
-				'display_condition_callback' => 'is_main_site',
+				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 				'order' => 80,
 			),
 			array(
@@ -137,7 +139,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_BLACKLIST_MENU_SLUG,
 				'render_callback' => array($this, 'handle_blacklist_menu_rendering'),
 				'icon' => 'blacklist_manager',
-				'display_condition_callback' => 'is_main_site',
+				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 				'order' => 90,
 			),
 			array(
@@ -146,7 +148,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_FIREWALL_MENU_SLUG,
 				'render_callback' => array($this, 'handle_firewall_menu_rendering'),
 				'icon' => 'firewall',
-				'display_condition_callback' => 'is_main_site',
+				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 				'order' => 100,
 			),
 			array(
@@ -171,7 +173,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_FILESCAN_MENU_SLUG,
 				'render_callback' => array($this, 'handle_filescan_menu_rendering'),
 				'icon' => 'scanner',
-				'display_condition_callback' => 'is_main_site',
+				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 				'order' => 130,
 			),
 			array(
@@ -248,27 +250,6 @@ class AIOWPSecurity_Admin_Init {
 	 */
 	public function aiowps_csv_download() {
 		global $aio_wp_security;
-		if (isset($_POST['aiowpsec_export_acct_activity_logs_to_csv'])) { //Export account activity logs
-			$nonce = $_REQUEST['_wpnonce'];
-			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-export-acct-activity-logs-to-csv-nonce');
-			if (is_wp_error($result)) {
-				$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-				die($result->get_error_message());
-			}
-			include_once 'wp-security-list-acct-activity.php';
-			$acct_activity_list = new AIOWPSecurity_List_Account_Activity();
-			$acct_activity_list->prepare_items(true);
-			//Let's build a list of items we want to export and give them readable names
-			$export_keys = array(
-				'user_id' => 'User ID',
-				'user_login' => 'Username',
-				'login_date' => 'Login Date',
-				'logout_date' => 'Logout Date',
-				'login_ip' => 'IP'
-			);
-			$this->aiowps_output_csv($acct_activity_list->items, $export_keys, 'account_activity_logs.csv');
-			exit();
-		}
 		if (isset($_POST['aiowps_export_audit_event_logs_to_csv'])) {
 			$nonce = $_REQUEST['_wpnonce'];
 			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'bulk-items');
@@ -479,10 +460,8 @@ class AIOWPSecurity_Admin_Init {
 	 * @return void
 	 */
 	private function initialize_feature_manager() {
-		$aiowps_feature_mgr  = new AIOWPSecurity_Feature_Item_Manager();
-		$aiowps_feature_mgr->initialize_features();
-		$aiowps_feature_mgr->check_and_set_feature_status();
-		$aiowps_feature_mgr->calculate_total_points();
+		$aiowps_feature_mgr = new AIOWPSecurity_Feature_Item_Manager();
+		$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 		$GLOBALS['aiowps_feature_mgr'] = $aiowps_feature_mgr;
 	}
 

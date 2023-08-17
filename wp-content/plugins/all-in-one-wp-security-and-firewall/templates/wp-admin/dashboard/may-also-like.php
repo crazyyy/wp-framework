@@ -382,7 +382,7 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td class="aiowps-feature-text">
+			<td>
 				<p><?php _e('Installed', 'all-in-one-wp-security-and-firewall'); ?></p>
 			</td>
 			<td>

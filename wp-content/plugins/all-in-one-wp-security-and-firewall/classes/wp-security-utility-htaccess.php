@@ -19,10 +19,6 @@ class AIOWPSecurity_Utility_Htaccess {
 
 	public static $basic_htaccess_rules_marker_end = '#AIOWPS_BASIC_HTACCESS_RULES_END';
 
-	public static $pingback_htaccess_rules_marker_start = '#AIOWPS_PINGBACK_HTACCESS_RULES_START';
-
-	public static $pingback_htaccess_rules_marker_end = '#AIOWPS_PINGBACK_HTACCESS_RULES_END';
-
 	public static $debug_log_block_htaccess_rules_marker_start = '#AIOWPS_DEBUG_LOG_BLOCK_HTACCESS_RULES_START';
 
 	public static $debug_log_block_htaccess_rules_marker_end = '#AIOWPS_DEBUG_LOG_BLOCK_HTACCESS_RULES_END';
@@ -42,18 +38,6 @@ class AIOWPSecurity_Utility_Htaccess {
 	public static $disable_trace_track_marker_start = '#AIOWPS_DISABLE_TRACE_TRACK_START';
 
 	public static $disable_trace_track_marker_end = '#AIOWPS_DISABLE_TRACE_TRACK_END';
-
-	public static $forbid_proxy_comments_marker_start = '#AIOWPS_FORBID_PROXY_COMMENTS_START';
-
-	public static $forbid_proxy_comments_marker_end = '#AIOWPS_FORBID_PROXY_COMMENTS_END';
-
-	public static $deny_bad_query_strings_marker_start = '#AIOWPS_DENY_BAD_QUERY_STRINGS_START';
-
-	public static $deny_bad_query_strings_marker_end = '#AIOWPS_DENY_BAD_QUERY_STRINGS_END';
-
-	public static $advanced_char_string_filter_marker_start = '#AIOWPS_ADVANCED_CHAR_STRING_FILTER_START';
-
-	public static $advanced_char_string_filter_marker_end = '#AIOWPS_ADVANCED_CHAR_STRING_FILTER_END';
 
 	public static $five_g_blacklist_marker_start = '#AIOWPS_FIVE_G_BLACKLIST_START';
 
@@ -109,15 +93,17 @@ class AIOWPSecurity_Utility_Htaccess {
 		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 		$htaccess = $home_path . '.htaccess';
 
-		if (!$f = @fopen($htaccess, 'a+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-			@chmod($htaccess, 0644);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-			if (!$f = @fopen($htaccess, 'a+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		$f = @fopen($htaccess, 'a+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+		if (!$f) {
+			@chmod($htaccess, 0644); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+			$f = @fopen($htaccess, 'a+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+			if (!$f) {
 				$aio_wp_security->debug_logger->log_debug("chmod operation on .htaccess failed.", 4);
 				return false;
 			}
 		}
-		AIOWPSecurity_Utility_File::backup_and_rename_htaccess($htaccess); //TODO - we dont want to continually be backing up the htaccess file
-		$ht = explode(PHP_EOL, implode('', file($htaccess))); //parse each line of file into array
+		AIOWPSecurity_Utility_File::backup_and_rename_htaccess($htaccess); // TODO - we dont want to continually be backing up the htaccess file
+		$ht = explode(PHP_EOL, implode('', file($htaccess))); // parse each line of file into array
 
 		$rules = AIOWPSecurity_Utility_Htaccess::getrules();
 
@@ -125,7 +111,8 @@ class AIOWPSecurity_Utility_Htaccess {
 		$rulesarray = apply_filters('aiowps_htaccess_rules_before_writing', $rulesarray);
 		$contents = array_merge($rulesarray, $ht);
 
-		if (!$f = @fopen($htaccess, 'w+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		$f = @fopen($htaccess, 'w+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+		if (!$f) {
 			$aio_wp_security->debug_logger->log_debug("Write operation on .htaccess failed.", 4);
 			return false; //we can't write to the file
 		}
@@ -144,7 +131,7 @@ class AIOWPSecurity_Utility_Htaccess {
 				fwrite($f, PHP_EOL . trim($insertline));
 			}
 		}
-		@fclose($f);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (is_resource($f)) @fclose($f);
 		return true; //success
 	}
 
@@ -160,13 +147,13 @@ class AIOWPSecurity_Utility_Htaccess {
 		$htaccess = $home_path . '.htaccess';
 
 		if (!file_exists($htaccess)) {
-			$ht = @fopen($htaccess, 'a+');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$ht = @fopen($htaccess, 'a+');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
 			if (false === $ht) {
 				global $aio_wp_security;
 				$aio_wp_security->debug_logger->log_debug('Failed to create .htaccess file', 4);
 				return -1;
 			}
-			@fclose($ht);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			if (is_resource($ht)) @fclose($ht);
 		}
 
 		// Bug Fix: On some environments such as windows (xampp) this function was clobbering the non-aiowps-related .htaccess contents for certain cases.
@@ -189,11 +176,11 @@ class AIOWPSecurity_Utility_Htaccess {
 		
 		if ($ht_contents) { //as long as there are lines in the file
 			$state = true;
-			if (!$f = @fopen($htaccess, 'w+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-				@chmod($htaccess, 0644);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-				if (!$f = @fopen($htaccess, 'w+')) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-					return -1;
-				}
+			$f = @fopen($htaccess, 'w+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+			if (!$f) {
+				@chmod($htaccess, 0644);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+				$f = @fopen($htaccess, 'w+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+				if (!$f) return -1;
 			}
 
 			foreach ($ht_contents as $markerline) { //for each line in the file
@@ -207,7 +194,7 @@ class AIOWPSecurity_Utility_Htaccess {
 					$state = true;
 				}
 			}
-			@fclose($f);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			if (is_resource($f)) @fclose($f);
 			return 1;
 		}
 		return 1;
@@ -218,13 +205,9 @@ class AIOWPSecurity_Utility_Htaccess {
 		$rules = "";
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_wp_file_access();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_basic_htaccess();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_pingback_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_debug_log_access_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_disable_index_views();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_disable_trace_and_track();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_forbid_proxy_comment_posting();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_deny_bad_query_strings();
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_advanced_character_string_filter();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_5g_blacklist();
 		$rules .= AIOWPSecurity_Utility_Htaccess::prevent_image_hotlinks();
 		$custom_rules = AIOWPSecurity_Utility_Htaccess::getrules_custom_rules();
@@ -296,18 +279,6 @@ class AIOWPSecurity_Utility_Htaccess {
 		return $rules;
 	}
 
-	public static function getrules_pingback_htaccess() {
-		global $aio_wp_security;
-
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_enable_pingback_firewall') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$pingback_htaccess_rules_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= self::create_apache2_access_denied_rule('xmlrpc.php');
-			$rules .= AIOWPSecurity_Utility_Htaccess::$pingback_htaccess_rules_marker_end . PHP_EOL; //Add feature marker end
-		}
-		return $rules;
-	}
-
 	public static function getrules_block_debug_log_access_htaccess() {
 		global $aio_wp_security;
 
@@ -359,182 +330,6 @@ class AIOWPSecurity_Utility_Htaccess {
 		return $rules;
 	}
 
-	/**
-	 * This function will write rules to prevent proxy comment posting.
-	 * This will deny any requests that use a proxy server when posting
-	 * to comments eliminating some spam and proxy requests.
-	 * Thanks go to the helpful info and suggestions from perishablepress.com and Thomas O. (https://wordpress.org/support/topic/high-server-cpu-with-proxy-login)
-	 */
-	public static function getrules_forbid_proxy_comment_posting() {
-		global $aio_wp_security;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_forbid_proxy_comments') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$forbid_proxy_comments_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= '<IfModule mod_rewrite.c>' . PHP_EOL;
-			$rules .= 'RewriteEngine On' . PHP_EOL;
-			$rules .= 'RewriteCond %{REQUEST_METHOD} ^POST' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:VIA} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:FORWARDED} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:USERAGENT_VIA} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:X_FORWARDED_FOR} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:X_FORWARDED_HOST} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:PROXY_CONNECTION} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:XPROXY_CONNECTION} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:HTTP_PC_REMOTE_ADDR} !^$ [OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP:HTTP_CLIENT_IP} !^$' . PHP_EOL;
-			$rules .= 'RewriteRule wp-comments-post\.php - [F]' . PHP_EOL;
-			$rules .= '</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$forbid_proxy_comments_marker_end . PHP_EOL; //Add feature marker end
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * This function will write rules to prevent malicious string attacks on your site using XSS.
-	 * NOTE: Some of these strings might be used for plugins or themes and doing so will disable the functionality.
-	 * This script is from perishablepress and is fairly safe to use and should not break anything important
-	 * TODO - the currently commented out rules (see function below) break the site - need to investigate why or if we can tweak the rules a bit
-	 */
-	public static function getrules_deny_bad_query_strings() {
-		global $aio_wp_security;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_deny_bad_query_strings') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$deny_bad_query_strings_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= '<IfModule mod_rewrite.c>' . PHP_EOL;
-			$rules .= 'RewriteEngine On' . PHP_EOL;
-			//$rules .= 'RewriteCond %{QUERY_STRING} ../    [NC,OR]' . PHP_EOL;
-			//$rules .= 'RewriteCond %{QUERY_STRING} boot.ini [NC,OR]' . PHP_EOL;
-			//$rules .= 'RewriteCond %{QUERY_STRING} tag=     [NC,OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{QUERY_STRING} ftp:     [NC,OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{QUERY_STRING} http:    [NC,OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{QUERY_STRING} https:   [NC,OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{QUERY_STRING} mosConfig [NC,OR]' . PHP_EOL;
-			//$rules .= 'RewriteCond %{QUERY_STRING} ^.*([|]|(|)||\'|"|;|?|*).* [NC,OR]' . PHP_EOL;
-			//$rules .= 'RewriteCond %{QUERY_STRING} ^.*(%22|%27|%3C|%3E|%5C|%7B|%7C).* [NC,OR]' . PHP_EOL;
-			//$rules .= 'RewriteCond %{QUERY_STRING} ^.*(%0|%A|%B|%C|%D|%E|%F|127.0).* [NC,OR]' . PHP_EOL;
-			// removed localhost because It was giving 403 error while browsing the URL http://localhost/aios2/wp-login.php?redirect_to=http%3A%2F%2Flocalhost%2Faios2%2Fwp-admin%2F&reauth=1
-			$rules .= 'RewriteCond %{QUERY_STRING} ^.*(globals|encode|loopback).* [NC,OR]' . PHP_EOL;
-			$rules .= 'RewriteCond %{QUERY_STRING} (\;|\'|\"|%22).*(request|insert|union|declare|drop) [NC]' . PHP_EOL;
-			$rules .= 'RewriteRule ^(.*)$ - [F,L]' . PHP_EOL;
-			$rules .= '</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$deny_bad_query_strings_marker_end . PHP_EOL; //Add feature marker end
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * This function will write rules to produce an advanced character string filter to prevent malicious string attacks from Cross Site Scripting (XSS)
-	 * NOTE: Some of these strings might be used for plugins or themes and doing so will disable the functionality.
-	 * This script is from perishablepress and is fairly safe to use and should not break anything important
-	 * TODO - the rules below break the site - need to investigate why or if we can tweak the rules a bit
-	 * RedirectMatch 403 ^
-	 * RedirectMatch 403 $
-	 * RedirectMatch 403 |
-	 * RedirectMatch 403 ..
-	 * Redirectmatch 403 select(
-	 * Redirectmatch 403 convert(
-	 * RedirectMatch 403 .inc
-	 * RedirectMatch 403 include.
-	 *
-	 *  The "@" sign is often used in filenames of retina-ready images like
-	 *  "logo@2x.jpg", therefore it has been removed from the list.
-	 * RedirectMatch 403 \@
-	 *
-	 * @return string
-	 */
-	public static function getrules_advanced_character_string_filter() {
-		global $aio_wp_security;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_advanced_char_string_filter') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$advanced_char_string_filter_marker_start . PHP_EOL; //Add feature marker start
-
-			$rules .= '<IfModule mod_alias.c>
-						RedirectMatch 403 \,
-						RedirectMatch 403 \:
-						RedirectMatch 403 \;
-						RedirectMatch 403 \=
-						RedirectMatch 403 \[
-						RedirectMatch 403 \]
-						RedirectMatch 403 \^
-						RedirectMatch 403 \`
-						RedirectMatch 403 \{
-						RedirectMatch 403 \}
-						RedirectMatch 403 \~
-						RedirectMatch 403 \"
-						RedirectMatch 403 \$
-						RedirectMatch 403 \<
-						RedirectMatch 403 \>
-						RedirectMatch 403 \|
-						RedirectMatch 403 \.\.
-						RedirectMatch 403 \%0
-						RedirectMatch 403 \%A
-						RedirectMatch 403 \%B
-						RedirectMatch 403 \%C
-						RedirectMatch 403 \%D
-						RedirectMatch 403 \%E
-						RedirectMatch 403 \%F
-						RedirectMatch 403 \%22
-						RedirectMatch 403 \%27
-						RedirectMatch 403 \%28
-						RedirectMatch 403 \%29
-						RedirectMatch 403 \%3C
-						RedirectMatch 403 \%3E
-						RedirectMatch 403 \%3F
-						RedirectMatch 403 \%5B
-						RedirectMatch 403 \%5C
-						RedirectMatch 403 \%5D
-						RedirectMatch 403 \%7B
-						RedirectMatch 403 \%7C
-						RedirectMatch 403 \%7D
-						# COMMON PATTERNS
-						Redirectmatch 403 \_vpi
-						RedirectMatch 403 \.inc
-						Redirectmatch 403 xAou6
-						Redirectmatch 403 db\_name
-						Redirectmatch 403 select\(
-						Redirectmatch 403 convert\(
-						Redirectmatch 403 \/query\/
-						RedirectMatch 403 ImpEvData
-						Redirectmatch 403 \.XMLHTTP
-						Redirectmatch 403 proxydeny
-						RedirectMatch 403 function\.
-						Redirectmatch 403 remoteFile
-						Redirectmatch 403 servername
-						Redirectmatch 403 \&rptmode\=
-						Redirectmatch 403 sys\_cpanel
-						RedirectMatch 403 db\_connect
-						RedirectMatch 403 doeditconfig
-						RedirectMatch 403 check\_proxy
-						Redirectmatch 403 system\_user
-						Redirectmatch 403 \/\(null\)\/
-						Redirectmatch 403 clientrequest
-						Redirectmatch 403 option\_value
-						RedirectMatch 403 ref\.outcontrol
-						# SPECIFIC EXPLOITS
-						RedirectMatch 403 errors\.
-						RedirectMatch 403 config\.
-						RedirectMatch 403 include\.
-						RedirectMatch 403 display\.
-						RedirectMatch 403 register\.
-						Redirectmatch 403 password\.
-						RedirectMatch 403 maincore\.
-						RedirectMatch 403 authorize\.
-						Redirectmatch 403 macromates\.
-						RedirectMatch 403 head\_auth\.
-						RedirectMatch 403 submit\_links\.
-						RedirectMatch 403 change\_action\.
-						Redirectmatch 403 com\_facileforms\/
-						RedirectMatch 403 admin\_db\_utilities\.
-						RedirectMatch 403 admin\.webring\.docs\.
-						Redirectmatch 403 Table\/Latest\/index\.
-						</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$advanced_char_string_filter_marker_end . PHP_EOL; //Add feature marker end
-		}
-
-		return $rules;
-	}
 
 	/**
 	 * This function contains the rules for the 5G blacklist produced by Jeff Starr from perishablepress.com

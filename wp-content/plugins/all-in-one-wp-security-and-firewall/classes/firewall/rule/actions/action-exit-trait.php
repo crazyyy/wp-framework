@@ -12,6 +12,7 @@ trait Action_Exit_Trait {
 	 * @return void
 	 */
 	public function do_action() {
+		Event::raise('action_before_exit');
 		exit();
 	}
 }

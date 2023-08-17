@@ -253,10 +253,18 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 		}
 	}
 
-	public function prepare_items() {
+	/**
+	 * Grabs the data from database and handles the pagination
+	 *
+	 * @param boolean $ignore_pagination - whether to not paginate
+	 * @return void
+	 */
+	public function prepare_items($ignore_pagination = false) {
 		//First, lets decide how many records per page to show
 		$per_page = 100;
 		$columns = $this->get_columns();
+		$current_page = $this->get_pagenum();
+		$offset = ($current_page - 1) * $per_page;
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();
 		$search = isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : '';
@@ -266,24 +274,39 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 		$this->process_bulk_action();
 		
 		//Get registered users which have the special 'aiowps_account_status' meta key set to 'pending'
-		$data = $this->get_registered_user_data('pending', $search);
-		
-		$current_page = $this->get_pagenum();
-		$total_items = count($data);
-		$data = array_slice($data,(($current_page-1)*$per_page),$per_page);
-		$this->items = $data;
+		if ($ignore_pagination) {
+			$result = $this->get_registered_user_data('pending', $search);
+		} else {
+			$result = $this->get_registered_user_data('pending', $search, $per_page, $offset);
+		}
+
+		$total_items = $result['total'];
+		$this->items = $result['data'];
+
+		if ($ignore_pagination) return;
+
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,                  //WE have to calculate the total number of items
 			'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
 			'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
 		));
 	}
-	
-	// Returns all users who have the special 'aiowps_account_status' meta key
-	public function get_registered_user_data($status='', $search='') {
+
+	/**
+	 * Returns all users who have the special 'aiowps_account_status' meta key
+	 *
+	 * @param string $status   - the status we want to search for
+	 * @param string $search   - the search query
+	 * @param null   $per_page - how many results per page
+	 * @param int    $offset   - the page offset
+	 *
+	 * @return array - an array of users that match the search
+	 */
+	public function get_registered_user_data($status='', $search='', $per_page = null, $offset = 0) {
 		$user_fields = array( 'ID', 'user_login', 'user_email', 'user_registered');
-		$user_query = new WP_User_Query(array('meta_key' => 'aiowps_account_status', 'meta_value' => $status, 'fields' => $user_fields));
+		$user_query = new WP_User_Query(array('meta_key' => 'aiowps_account_status', 'meta_value' => $status, 'fields' => $user_fields, 'number' => $per_page, 'offset' => $offset));
 		$user_results = $user_query->results;
+		$user_total = $user_query->get_total();
 
 		$final_data = array();
 		foreach ($user_results as $user) {
@@ -300,6 +323,10 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 				if (!empty($result)) $final_data[] = $temp_array;
 			}
 		}
-		return $final_data;
+
+		return [
+			'data' => $final_data,
+			'total' => $user_total,
+		];
 	}
 }

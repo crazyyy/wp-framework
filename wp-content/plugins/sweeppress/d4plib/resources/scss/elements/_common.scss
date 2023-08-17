@@ -1,0 +1,26 @@
+.d4p-clearfix:before, .d4p-clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.d4p-clearfix:after {
+    clear: both;
+}
+
+.d4p-sr-only,
+.d4p-accessibility-show-for-sr {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.d4p-break-hypen {
+    word-break: break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}

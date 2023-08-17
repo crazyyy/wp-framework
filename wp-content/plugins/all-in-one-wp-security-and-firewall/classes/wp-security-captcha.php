@@ -46,24 +46,6 @@ class AIOWPSecurity_Captcha {
 			'simple-math' => 'Simple math CAPTCHA'
 		);
 	}
-	
-	/**
-	 * This function will display warning CAPTCHA settings not set.
-	 *
-	 * @global $aio_wp_security;
-	 *
-	 * @return void
-	 */
-	public static function warning_captcha_settings_notset() {
-		global $aio_wp_security;
-		$aiowps_default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
-		if ('' == $aiowps_default_captcha || 'none' == $aiowps_default_captcha) {
-			$captcha_settings_link = '<a href="admin.php?page='.AIOWPSEC_BRUTE_FORCE_MENU_SLUG.'&tab=captcha-settings" target="_blank">' . __('CAPTCHA settings', 'all-in-one-wp-security-and-firewall') . '</a>';
-			echo '<div class="aio_orange_box"><p>';
-			echo sprintf(__('You should set %s before activating this feature.', 'all-in-one-wp-security-and-firewall'), $captcha_settings_link);
-			echo '</p></div>';
-		}
-	}
 
 	/**
 	 * Enqueues the CAPTCHA script for the default CAPTCHA on the standard WP login page
@@ -201,9 +183,10 @@ class AIOWPSecurity_Captcha {
 	 */
 	public function print_captcha_api_woo() {
 		global $aio_wp_security;
-
-		// We don't want to load for woo account page because we have a special function for this
-		if (function_exists('is_account_page') && !is_account_page()) return;
+		
+		
+		//captcha should only show for woo account and checkout page
+		if ((function_exists('is_account_page') && !is_account_page()) && (function_exists('is_checkout') && !is_checkout())) return;
 
 		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
 

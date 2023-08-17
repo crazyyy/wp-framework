@@ -2,6 +2,10 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<?php
+		//Display security info badge
+		$aiowps_feature_mgr->output_feature_details_badge("disallow-unauthorised-requests");
+		?>
 		<form action="" method="POST">
 			<?php wp_nonce_field('aiowpsec-rest-settings'); ?>
 			<div class="aio_blue_box">

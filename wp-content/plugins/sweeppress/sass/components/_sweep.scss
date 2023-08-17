@@ -1,0 +1,195 @@
+.sweeper-category-label {
+    border-radius: 5px;
+    padding: 0.5em;
+    font-size: 1.3em;
+    background: gray;
+    max-width: 1000px;
+    color: #FFF;
+    margin: 0 0 1em;
+
+    &.empty-sweeper-category {
+        display: none;
+
+        &.show-empty-sweeper-category {
+            display: block;
+        }
+    }
+}
+
+.d4p-sweeper-content {
+    .sweeppress-sweepers-controls {
+        margin: 0 0 1.25em;
+        padding: 1em 1.5em;
+        background: #FFF;
+        border-radius: 5px;
+        font-size: 1.1em;
+
+        .toggle-empty-tasks {
+            border: 0;
+            background: none;
+            border-radius: 0;
+            padding: 0;
+            margin: 0 0 0 1em;
+            font-size: 1.2em;
+            cursor: pointer;
+
+            &[aria-expanded=true] {
+                i {
+                    color: var(--d4p-color-sidebar-icon-text);
+                }
+            }
+        }
+    }
+
+    .sweeppress-sweepers-controls,
+    .sweeppress-notice-group {
+        max-width: 1000px;
+    }
+
+    .sweeppress-item-wrapper {
+        font-size: 1.1em;
+        max-width: 1000px;
+
+        &.empty-sweeper {
+            display: none;
+        }
+
+        &.show-empty-sweeper {
+            display: block;
+        }
+
+        h5 {
+            button {
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0 0 0 1em;
+                cursor: pointer;
+
+                i {
+                    font-size: 1.2em;
+                }
+
+                &[aria-expanded=true] {
+                    i {
+                        color: var(--d4p-color-sidebar-icon-text);
+                    }
+                }
+            }
+        }
+
+        .sweeppress-item-limit,
+        .sweeppress-item-tables,
+        .sweeppress-item-help {
+            background: #F8F8F8;
+            border-top: 1px solid #DDD;
+            padding: 1em;
+
+            p {
+                margin: 0 0 1em;
+                font-size: 1em;
+                font-weight: bold;
+            }
+
+            ul {
+                margin: 0;
+                font-size: .95em;
+                font-weight: normal;
+                list-style: inside disc;
+                line-height: 1.7;
+
+                li {
+                    margin: 0;
+                }
+            }
+        }
+
+        .sweeppress-item-help {
+            .sweeppress-item-help-tables,
+            .sweeppress-item-last-used {
+                margin: .75em 0 0;
+            }
+        }
+
+        .sweeppress-item-limit {
+            color: #D00;
+        }
+
+        .sweeppress-item-inside {
+            background: #FFF;
+            padding: .5em 1em 1em;
+            line-height: 1.7em;
+
+            .sweeppress-item-task {
+                border-bottom: 1px dashed #DDD;
+                padding: 4px 0;
+
+                &.empty-task {
+                    display: none;
+                }
+
+                &.task-is-missing {
+                    span {
+                        text-decoration: line-through;
+                    }
+                }
+
+                .d4p-ui-warning {
+                    vertical-align: baseline;
+                    font-size: .9em;
+                    color: #700;
+                }
+            }
+
+            .sweeppress-item-total {
+                .sweeppress-affected-percentage {
+                    float: right;
+                    cursor: help;
+                    font-size: 13px;
+                    padding: 0 6px 1px;
+                    border-radius: 3px;
+                    background: #DDD;
+                    display: inline-block;
+                    line-height: 1.8;
+                }
+
+                p {
+                    margin: 1em 0 0;
+                }
+            }
+        }
+
+        &.show-empty-tasks {
+            .sweeppress-item-inside {
+                .sweeppress-item-task {
+                    &.empty-task {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.d4p-panel-sweep {
+    .sweeppress-sweeper-counters {
+        margin: -1em;
+
+        h5 {
+            background: var(--d4p-color-main-border);
+            color: #000;
+            margin: -2em -1em 1em;
+            padding: .5em;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        dl {
+            dd {
+                strong {
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+}

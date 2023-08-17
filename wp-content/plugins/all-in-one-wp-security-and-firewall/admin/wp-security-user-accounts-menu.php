@@ -17,13 +17,6 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu {
 	 */
 	public function __construct() {
 		parent::__construct(__('User accounts', 'all-in-one-wp-security-and-firewall'));
-		
-		// Add the JS library for password tool - make sure we are on our password tab
-		if (isset($_GET['page']) && strpos($_GET['page'], AIOWPSEC_USER_ACCOUNTS_MENU_SLUG) !== false) {
-			if (isset($_GET['tab']) && $_GET['tab'] == 'password-tool') {
-				wp_enqueue_script('aiowpsec-pw-tool-js');
-			}
-		}
 	}
 	
 	/**
@@ -93,7 +86,7 @@ class AIOWPSecurity_User_Accounts_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_password_tool() {
 		global $aio_wp_security;
 
-		$aio_wp_security->include_template('wp-admin/user-accounts/password-tool.php', false, array());
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'password-tool'));
 	}
 
 	/**

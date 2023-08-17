@@ -44,7 +44,7 @@
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_allowed_ip_addresses"><?php _e('Enter whitelisted IP addresses:', 'all-in-one-wp-security-and-firewall'); ?></label></th>
 					<td>
-						<textarea id="aiowps_allowed_ip_addresses" name="aiowps_allowed_ip_addresses" rows="5" cols="50"><?php echo esc_textarea(wp_unslash(-1 == $result ? $_POST['aiowps_allowed_ip_addresses'] : $aio_wp_security->configs->get_value('aiowps_allowed_ip_addresses'))); ?></textarea>
+						<textarea id="aiowps_allowed_ip_addresses" name="aiowps_allowed_ip_addresses" rows="5" cols="50"><?php echo esc_textarea($aiowps_allowed_ip_addresses); ?></textarea>
 						<br>
 						<span class="description"><?php echo __('Enter one or more IP addresses or IP ranges you wish to include in your whitelist.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Only the addresses specified here will have access to the WordPress login page.', 'all-in-one-wp-security-and-firewall'); ?></span>
 						<?php $aio_wp_security->include_template('info/ip-address-ip-range-info.php'); ?>

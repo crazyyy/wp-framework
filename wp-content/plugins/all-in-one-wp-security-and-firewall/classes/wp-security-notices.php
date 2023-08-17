@@ -21,6 +21,47 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 		global $aio_wp_security;
 		$parent_notice_content = parent::populate_notices_content();
 
+		// Build text for firewall rules that have been upgraded
+		$firewall_upgrade_text = '<p>' .
+		__('The All in One Security plugin has deactivated some of the firewall settings that you had activated.', 'all-in-one-wp-security-and-firewall') .
+		'</p>';
+		$firewall_upgrade_text .= '<p>' .
+		__('We have upgraded the following settings so that they are now part of the PHP firewall instead of .htaccess directives:', 'all-in-one-wp-security-and-firewall') .
+		'</p>';
+		$firewall_upgrade_text .= '<ul style="list-style: inside;">';
+
+		$active_settings = $aio_wp_security->configs->get_value('aiowps_firewall_active_upgrade');
+
+		if (!empty($active_settings)) {
+			$active_settings = json_decode($active_settings);
+			if (!empty($active_settings)) {
+
+				foreach ($active_settings as $setting) {
+					switch ($setting) {
+						case 'aiowps_enable_pingback_firewall':
+							$firewall_upgrade_text .= '<li>'.__('Completely block xmlrpc.php', 'all-in-one-wp-security-and-firewall').'</li>';
+							break;
+						case 'aiowps_forbid_proxy_comments':
+							$firewall_upgrade_text .= '<li>'.__('Forbid proxy comment posting', 'all-in-one-wp-security-and-firewall').'</li>';
+							break;
+						case 'aiowps_deny_bad_query_strings':
+							$firewall_upgrade_text .= '<li>'.__('Deny bad query strings', 'all-in-one-wp-security-and-firewall').'</li>';
+							break;
+						case 'aiowps_advanced_char_string_filter':
+							$firewall_upgrade_text .= '<li>'.__('Advanced character filter', 'all-in-one-wp-security-and-firewall').'</li>';
+							break;
+						default:
+							continue 2;
+					}
+				}
+			}
+		} else {
+			$firewall_upgrade_text .= '<p><strong>'.__('None of the settings that have been upgraded were active.', 'all-in-one-wp-security-and-firewall').'</strong></p>';
+		}
+
+		$firewall_upgrade_text .= '</ul>';
+		$firewall_upgrade_text .= '<p>' . __('What would you like to do?', 'all-in-one-wp-security-and-firewall') .'</p>';
+
 		$login_whitelist_notice_text = '<p>' .
 		__('The All in One Security plugin has disabled the login whitelist setting that you have enabled in the past.', 'all-in-one-wp-security-and-firewall') .
 		'</p>' .
@@ -56,7 +97,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 								'</p>',
 				'button_link' => add_query_arg(array(
 					'page' => 'aiowpsec_database',
-					'tab'  => 'tab2',
+					'tab'  => 'database-backup',
 				), admin_url('admin.php')) . '#automated-scheduled-backups-heading',
 				'button_meta' => __('Setup UpdraftPlus backup plugin', 'all-in-one-wp-security-and-firewall'),
 				'dismiss_time' => 'dismiss_automated_database_backup_notice',
@@ -81,6 +122,20 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 				'supported_positions' => array('ip-retrieval-settings'),
 				'validity_function' => 'should_show_ip_retrieval_settings_notice',
 			),
+			'upgrade-firewall-tab-rules' => array(
+				'title'		  => htmlspecialchars(__('Important: Disabled firewall settings', 'all-in-one-wp-security-and-firewall')),
+				'text' 		  => $firewall_upgrade_text,
+				'button_link' => add_query_arg(array(
+					'page' => AIOWPSEC_FIREWALL_MENU_SLUG,
+					'tab'  => 'basic-firewall',
+				), admin_url('admin.php')),
+				'action_button_text' => __('Reactivate', 'all-in-one-wp-security-and-firewall'),
+				'button_meta' => __('Configure manually', 'all-in-one-wp-security-and-firewall'),
+				'dismiss_time' => 'dismiss_firewall_settings_disabled_on_upgrade_notice',
+				'supported_positions' => array('upgrade-firewall-tab-rules'),
+				'dismiss_text' => __('Keep deactivated', 'all-in-one-wp-security-and-firewall'),
+				'validity_function' => 'should_show_upgrade_firewall_settings_notice',
+			),
 			'ip-blacklist-settings-on-upgrade' => array(
 				'title'		  => htmlspecialchars(__('Important: Blacklist manager disabled', 'all-in-one-wp-security-and-firewall')),
 				'text' 		  => '<p>' .
@@ -104,7 +159,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 				'text' 		  => $login_whitelist_notice_text,
 				'button_link' => add_query_arg(array(
 					'page' => AIOWPSEC_BRUTE_FORCE_MENU_SLUG,
-					'tab'  => 'tab4',
+					'tab'  => 'login-whitelist',
 				), admin_url('admin.php')) . '#poststuff',
 				'action_button_text' => __('Turn it back on', 'all-in-one-wp-security-and-firewall'),
 				'button_meta' => __('Edit the settings', 'all-in-one-wp-security-and-firewall'),
@@ -248,6 +303,32 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 	}
 
 	/**
+	 * Determines whether to show the notice which handles the firewall settings notice
+	 *
+	 * @return boolean
+	 */
+	protected function should_show_upgrade_firewall_settings_notice() {
+		if (!is_main_site()) {
+			return false;
+		}
+
+		$is_firewall_page = ('admin.php' == $GLOBALS['pagenow'] && isset($_GET['page']) && AIOWPSEC_FIREWALL_MENU_SLUG == $_GET['page']);
+		if ($is_firewall_page) return false;
+
+		global $aio_wp_security;
+
+		$active_settings = $aio_wp_security->configs->get_value('aiowps_firewall_active_upgrade');
+
+		if (empty($active_settings)) return false;
+
+		$active_settings = json_decode($active_settings);
+
+		if (empty($active_settings)) return false;
+
+		return true;
+	}
+
+	/**
 	 * Whether the current page is the AIOS database backup admin page
 	 *
 	 * @return Boolean True if the current page is the AIOS database backup admin page, otherwise false.
@@ -271,7 +352,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 	 * @return Boolean True if the current tab is the database backup tab, otherwise false.
 	 */
 	private function is_database_backup_tab() {
-		return (isset($_GET['tab']) && 'tab2' == $_GET['tab']);
+		return (isset($_GET['tab']) && 'database-backup' == $_GET['tab']);
 	}
 
 	/**
@@ -458,7 +539,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 	 * @return Boolean True if the current tab is the advanced settings tab, otherwise false.
 	 */
 	private function is_login_whitelist_tab() {
-		return (isset($_GET['tab']) && 'tab4' == $_GET['tab']);
+		return (isset($_GET['tab']) && 'login-whitelist' == $_GET['tab']);
 	}
 
 	/**
@@ -479,7 +560,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 	 * @return integer AIOS Plugin installation timestamp.
 	 */
 	public function get_aiowps_plugin_installed_timestamp() {
-		$installed_at = @filemtime(AIO_WP_SECURITY_PATH.'/index.html'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		$installed_at = @filemtime(AIO_WP_SECURITY_PATH.'/index.html'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we handle it below
 		if (false === $installed_at) {
 			global $aio_wp_security;
 			$installed_at = (int) $aio_wp_security->configs->get_value('installed-at');

@@ -87,6 +87,8 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		global $aio_wp_security, $wpdb;
 		include_once 'wp-security-list-locked-ip.php';
 		$locked_ip_list = new AIOWPSecurity_List_Locked_IP();
+		$tab = isset($_REQUEST["tab"]) ? $_REQUEST["tab"] : '';
+		$page = $_REQUEST['page'];
 
 		if (isset($_REQUEST['action'])) { // Do list table form row action tasks
 			if ($_REQUEST['action'] == 'delete_blocked_ip') { // Delete link was clicked for a row in list table
@@ -98,7 +100,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 		}
 
-		$aio_wp_security->include_template('wp-admin/dashboard/locked-ip.php', false, array('locked_ip_list' => $locked_ip_list));
+		$aio_wp_security->include_template('wp-admin/dashboard/locked-ip.php', false, array('locked_ip_list' => $locked_ip_list, 'page' => $page, 'tab' => $tab));
 	}
 
 	/**
@@ -110,6 +112,8 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		global $aio_wp_security, $wpdb;
 		include_once 'wp-security-list-permanent-blocked-ip.php'; // For rendering the AIOWPSecurity_List_Table
 		$blocked_ip_list = new AIOWPSecurity_List_Blocked_IP(); // For rendering the AIOWPSecurity_List_Table
+		$tab = isset($_REQUEST["tab"]) ? $_REQUEST["tab"] : '';
+		$page = $_REQUEST['page'];
 
 		if (isset($_REQUEST['action'])) { // Do list table form row action tasks
 			if ($_REQUEST['action'] == 'unblock_ip') { // Unblock link was clicked for a row in list table
@@ -117,8 +121,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 		}
 
-		$aio_wp_security->include_template('wp-admin/dashboard/permanent-block.php', false, array('blocked_ip_list' => $blocked_ip_list));
-	}
+		$aio_wp_security->include_template('wp-admin/dashboard/permanent-block.php', false, array('blocked_ip_list' => $blocked_ip_list, 'page' => $page, 'tab' => $tab));	}
 
 	/**
 	 * Renders the submenu's audit logs tab
@@ -131,6 +134,8 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		// Needed for rendering the audit log table
 		include_once 'wp-security-list-audit.php';
 		$audit_log_list = new AIOWPSecurity_List_Audit_Log();
+		$tab = isset($_REQUEST["tab"]) ? $_REQUEST["tab"] : '';
+		$page = $_REQUEST['page'];
 
 		if (isset($_REQUEST['action'])) { // Do list table form row action tasks
 			if ('delete_audit_log' == $_REQUEST['action']) { // Delete link was clicked for a row in list table
@@ -144,8 +149,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 		}
 
-		$aio_wp_security->include_template('wp-admin/dashboard/audit-logs.php', false, array('audit_log_list' => $audit_log_list));
-	}
+		$aio_wp_security->include_template('wp-admin/dashboard/audit-logs.php', false, array('audit_log_list' => $audit_log_list, 'page' => $page, 'tab' => $tab));	}
 
 	/**
 	 * Renders the submenu's debug logs tab
@@ -328,7 +332,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		$pt_src_chart_data = "";
 		$pt_src_chart_data .= "['Feature Name', 'Points'],";
 		foreach ($feature_items as $item) {
-			if ($item->feature_status == $feature_mgr->feature_active) {
+			if ($item->is_active()) {
 				$pt_src_chart_data .= "['" . $item->feature_name . "', " . $item->item_points . "],";
 			}
 		}
@@ -394,7 +398,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		echo '<div class="aiowps_feature_status_name">' . __('Admin username', 'all-in-one-wp-security-and-firewall') . '</div>';
 		echo '<a href="admin.php?page=' . AIOWPSEC_USER_ACCOUNTS_MENU_SLUG . '">';
 		echo '<div class="aiowps_feature_status_bar">';
-		if ($username_admin_feature->feature_status == $aiowps_feature_mgr->feature_active) {
+		if ($username_admin_feature->is_active()) {
 			echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">On</div>';
 			echo '<div class="aiowps_feature_status_label">Off</div>';
 		} else {
@@ -409,7 +413,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		echo '<div class="aiowps_feature_status_name">' . __('Login lockout', 'all-in-one-wp-security-and-firewall') . '</div>';
 		echo '<a href="admin.php?page=' . AIOWPSEC_USER_LOGIN_MENU_SLUG . '">';
 		echo '<div class="aiowps_feature_status_bar">';
-		if ($login_lockdown_feature->feature_status == $aiowps_feature_mgr->feature_active) {
+		if ($login_lockdown_feature->is_active()) {
 			echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">On</div>';
 			echo '<div class="aiowps_feature_status_label">Off</div>';
 		} else {
@@ -424,7 +428,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		echo '<div class="aiowps_feature_status_name">' . __('File permission', 'all-in-one-wp-security-and-firewall') . '</div>';
 		echo '<a href="admin.php?page=' . AIOWPSEC_FILESYSTEM_MENU_SLUG . '">';
 		echo '<div class="aiowps_feature_status_bar">';
-		if ($filesystem_feature->feature_status == $aiowps_feature_mgr->feature_active) {
+		if ($filesystem_feature->is_active()) {
 			echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">On</div>';
 			echo '<div class="aiowps_feature_status_label">Off</div>';
 		} else {
@@ -439,7 +443,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		echo '<div class="aiowps_feature_status_name">' . __('Basic firewall', 'all-in-one-wp-security-and-firewall') . '</div>';
 		echo '<a href="admin.php?page=' . AIOWPSEC_FIREWALL_MENU_SLUG . '">';
 		echo '<div class="aiowps_feature_status_bar">';
-		if ($basic_firewall_feature->feature_status == $aiowps_feature_mgr->feature_active) {
+		if ($basic_firewall_feature->is_active()) {
 			echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">On</div>';
 			echo '<div class="aiowps_feature_status_label">Off</div>';
 		} else {
@@ -450,9 +454,14 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		echo '<div class="aio_clear_float"></div>';
 	}
 
+	/**
+	 * This outputs the latest logins dashboard widget
+	 *
+	 * @return void
+	 */
 	public function widget_last_5_logins() {
 		global $wpdb;
-		$login_activity_table = AIOWPSEC_TBL_USER_LOGIN_ACTIVITY;
+		$audit_log_table = AIOWPSEC_TBL_AUDIT_LOG;
 
 		/* -- Ordering parameters -- */
 		//Parameters that are going to be used to order the result
@@ -462,7 +471,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		$orderby = !empty($orderby) ? $orderby : 'login_date';
 		$order = !empty($order) ? $order : 'DESC';
 
-		$data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $login_activity_table ORDER BY login_date DESC LIMIT %d", 5), ARRAY_A); //Get the last 5 records
+		$data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $audit_log_table WHERE event_type = %s ORDER BY created DESC LIMIT %d", 'successful_login', 5), ARRAY_A); //Get the last 5 records
 
 		if (null == $data) {
 			echo '<p>' . __('No data found.', 'all-in-one-wp-security-and-firewall') . '</p>';
@@ -479,9 +488,9 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 			$login_summary_table .= '</thead>';
 			foreach ($data as $entry) {
 				$login_summary_table .= '<tr>';
-				$login_summary_table .= '<td>' . $entry['user_login'] . '</td>';
-				$login_summary_table .= '<td>' . get_date_from_gmt(mysql2date('Y-m-d H:i:s', $entry['login_date']), get_option('date_format').' '.get_option('time_format')) . '</td>';
-				$login_summary_table .= '<td>' . $entry['login_ip'] . '</td>';
+				$login_summary_table .= '<td>' . $entry['username'] . '</td>';
+				$login_summary_table .= '<td>' . date('Y-m-d H:i:s', $entry['created']) . '</td>';
+				$login_summary_table .= '<td>' . $entry['ip'] . '</td>';
 				$login_summary_table .= '</tr>';
 			}
 			$login_summary_table .= '</table>';
@@ -489,7 +498,6 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		}
 
 		echo '<div class="aio_clear_float"></div>';
-
 	}
 
 	public function widget_maintenance_mode_status() {

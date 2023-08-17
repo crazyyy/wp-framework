@@ -180,31 +180,9 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 			}
 		}
 
-		$parsed_url_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
 		$login_slug = $aio_wp_security->configs->get_value('aiowps_login_page_slug');
-		$home_url_with_slug = home_url($login_slug, 'relative');
 
-		/*
-		 * Compatibility fix for WPML plugin
-		 */
-		if (function_exists('wpml_object_id') && strpos($home_url_with_slug, $login_slug)) {
-			$home_url_with_slug = home_url($login_slug);// phpcs:ignore Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore,PEAR.WhiteSpace.ScopeClosingBrace.Line,Squiz.PHP.InnerFunctions.NotAllowed
-		}
-
-		/*
-		 * *** Compatibility fix for qTranslate-X plugin ***
-		 * qTranslate-X plugin modifies the result for the following command by adding the protocol and host to the url path:
-		 * home_url($login_slug, 'relative');
-		 * Therefore we will remove the protocol and host for the following cases:
-		 * qTranslate-X is active AND the URL being accessed contains the secret slug
-		 */
-		if (function_exists('qtranxf_init_language') && strpos($home_url_with_slug, $login_slug)) {
-			$parsed_home_url_with_slug = parse_url($home_url_with_slug);
-			$home_url_with_slug = $parsed_home_url_with_slug['path']; //this will return just the path minus the protocol and host
-		}
-
-		if (untrailingslashit($parsed_url_path) === $home_url_with_slug || (!get_option('permalink_structure') && isset($_GET[$login_slug]))) {
+		if (self::is_renamed_login_page_requested($login_slug)) {
 			if (empty($action) && is_user_logged_in()) {
 				//if user is already logged in but tries to access the renamed login page, send them to the dashboard
 				// or to requested redirect-page, filterd in 'login_redirect'.
@@ -253,10 +231,39 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 
 		status_header(404);
 		$wp_query->set_404();
-		if ((($template = get_404_template()) || ($template = get_index_template())) && ($template = apply_filters('template_include', $template))) {// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
-			include($template);
-		}
+		$template = get_404_template();
+		if (empty($template)) $template = get_index_template();
+		$template = apply_filters('template_include', $template);
+		if ($template) include($template);
 		die;
+	}
+	
+	/**
+	 * Check renamed login page is requested
+	 *
+	 * @param string $login_slug Renamed loginpage slug
+	 *
+	 * @return boolean
+	 */
+	public static function is_renamed_login_page_requested($login_slug) {
+	
+		$parsed_url_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$home_url_with_slug = home_url($login_slug, 'relative');
+
+		/*
+		 * Compatibility fix for WPML plugin
+		 */
+		if (function_exists('wpml_object_id')) {
+			$home_url_with_slug = home_url($login_slug);
+			$parsed_home_url_with_slug = parse_url($home_url_with_slug);
+			$home_url_with_slug = $parsed_home_url_with_slug['path']; //this will return just the path minus the protocol and host
+		}
+		
+		if (untrailingslashit($parsed_url_path) === $home_url_with_slug || (!get_option('permalink_structure') && isset($_GET[$login_slug]))) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

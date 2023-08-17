@@ -92,6 +92,9 @@ class Simba_Two_Factor_Authentication_1 {
 	 */
 	public function __construct() {
 
+		if (!defined('TFA_INCORRECT_MAX_ATTEMPTS_ALLOWED_LIMIT')) define('TFA_INCORRECT_MAX_ATTEMPTS_ALLOWED_LIMIT', 5);
+		if (!defined('TFA_INCORRECT_ATTEMPTS_WITHIN_MINUTES_LIMIT')) define('TFA_INCORRECT_ATTEMPTS_WITHIN_MINUTES_LIMIT', 30);
+		
 		$load_providers = apply_filters('simbatfa_load_providers', array('totp'));
 		
 		foreach ($load_providers as $provider_id) {
@@ -132,7 +135,9 @@ class Simba_Two_Factor_Authentication_1 {
 		}
 		
 		add_action('show_user_profile', array($this, 'show_user_profile'), 1);
-		
+
+		add_action('enqueue_block_assets', array($this, 'enqueue_gutenberg_block_scripts'));
+
 		add_filter('pre_update_option', array($this, 'setup_secret_encryption'), 10, 2);
 
 		if (defined('DOING_AJAX') && DOING_AJAX && defined('WP_ADMIN') && WP_ADMIN && !empty($_REQUEST['action']) && 'simbatfa-init-otp' == $_REQUEST['action']) {
@@ -155,7 +160,27 @@ class Simba_Two_Factor_Authentication_1 {
 		$settings_url = admin_url('admin.php').'?page='.$this->get_user_settings_page_slug();
 		printf('<a target="_blank" href="%s">%s</a>', $settings_url, __('Go here for your two factor authentication settings...', 'all-in-one-wp-security-and-firewall'));
 	}
+
+	/**
+	 * Enqueues scripts for Gutenberg blocks.
+	 *
+	 * @return void
+	 */
+	public function enqueue_gutenberg_block_scripts() {
+		global $pagenow;
+		
+		if ($pagenow == 'post.php' || has_block('twofactor/user-settings')) {
+			$script_ver = (defined('WP_DEBUG') && WP_DEBUG) ? time() : filemtime($this->includes_dir() . '/gutenberg-blocks.js');
+			wp_enqueue_script('twofactor-gutenberg-blocks', $this->includes_url() . '/gutenberg-blocks.js', array('wp-blocks', 'wp-element', 'wp-server-side-render'), $script_ver);
 	
+			wp_localize_script('twofactor-gutenberg-blocks', 'tfa_trans',
+				array(
+					'block_title' => __('Two Factor Authentication Settings', 'two-factor-authentication'),
+				)
+			);
+		}
+	}
+
 	/**
 	 * This function is called via the filter `pre_update_option` if the option being saved is `tfa_encrypt_secrets` then we will proceed to setup the encryption
 	 *
@@ -959,6 +984,10 @@ class Simba_Two_Factor_Authentication_1 {
 	 * @return WP_Error|WP_User
 	 */
 	public function tfaVerifyCodeAndUser($user, $username, $password) {
+
+		// Do not require a TFA code when authenticating via cookie (or other non-login-form mechanism)
+		if ('' === $username && is_multisite()) return $user;
+		
 		// When both the AIOWPS and Two Factor Authentication plugins are active, this function is called more than once; that should be short-circuited.
 		if (isset(self::$is_authenticated[$this->authentication_slug]) && self::$is_authenticated[$this->authentication_slug]) {
 			return $user;
@@ -1003,6 +1032,7 @@ class Simba_Two_Factor_Authentication_1 {
 				$encryption_enabled = $this->get_option('tfa_encrypt_secrets');
 				$additional = ($encryption_enabled && (!defined('SIMBA_TFA_DB_ENCRYPTION_KEY') || '' === SIMBA_TFA_DB_ENCRYPTION_KEY)) ? ' ' . htmlspecialchars(__('The "encrypt secrets" feature is currently enabled, but no encryption key has been found (set via the SIMBA_TFA_DB_ENCRYPTION_KEY constant).', 'all-in-one-wp-security-and-firewall').' '.__('This indicates that either setup failed, or your WordPress installation has been corrupted.', 'all-in-one-wp-security-and-firewall')) . ' <a href="' . esc_url($this->get_faq_url()) . '">'. __('Go here for the FAQs, which explain how a website owner can de-activate the plugin without needing to login.', 'all-in-one-wp-security-and-firewall') .'</a>' : '';
 				$ret =  new WP_Error('authentication_failed', '<strong>'.__('Error:', 'all-in-one-wp-security-and-firewall').'</strong> '.apply_filters('simba_tfa_message_code_incorrect', __('The one-time password (TFA code) you entered was incorrect.', 'all-in-one-wp-security-and-firewall') . $additional));
+				$this->log_incorrect_tfa_code_attempt($user);
 			} elseif ($user) {
 				$ret = $user;
 			} else {
@@ -1042,6 +1072,116 @@ class Simba_Two_Factor_Authentication_1 {
 		self::$is_authenticated[$this->authentication_slug] = true;
 
 		return $ret;
+	}
+	
+	/**
+	 * Save incorrect TFA code attempts in database
+	 *
+	 * @param Array   $tfa_incorrect_code_attempts    - all user info with incorrent code attempts 
+	 * @param Boolean $udpate                         - update in option table
+	 *
+	 * @retrun Void
+	 */
+	private function save_incorrect_tfa_code_attempts($tfa_incorrect_code_attempts, $update = false) {
+		if ($update) {
+			update_site_option('tfa_incorrect_code_attempts', $tfa_incorrect_code_attempts);
+		} else {
+			add_site_option('tfa_incorrect_code_attempts', $tfa_incorrect_code_attempts);
+		}
+	}
+	
+	/**
+	 * Remove old incorrect TFA code attempts
+	 *
+	 * @param Array $user_info    - user invalid attempts
+	 *
+	 * @retrun Array
+	 */
+	private function remove_incorrect_tfa_code_old_attempts($user_info) {
+		$splice_recs = 0;
+		foreach ($user_info['attempts'] as $attempt) {
+			$mins_diff = (time() - $attempt['activity_time']) / 60;
+			if ($mins_diff >= TFA_INCORRECT_ATTEMPTS_WITHIN_MINUTES_LIMIT) {
+				$splice_recs++;
+			}
+		}
+		if ($splice_recs > 0) array_splice($user_info['attempts'], 0, $splice_recs); // remove all older attempts.
+		return $user_info;
+	}
+	
+	/**
+	 * Log incorrect TFA code attempt and email user if atttemp exceeded limit
+	 *
+	 * @param WP_User $user    - logging in user object
+	 *
+	 * @retrun Void
+	 */
+	private function log_incorrect_tfa_code_attempt($user) {
+		$tfa_incorrect_code_attempts = get_site_option('tfa_incorrect_code_attempts');
+		if (empty($tfa_incorrect_code_attempts)) $tfa_incorrect_code_attempts = array();
+		$userinfo_added = false;
+		$update = false;
+		if (count($tfa_incorrect_code_attempts) > 0) {
+			foreach ($tfa_incorrect_code_attempts as $i => $user_info) {
+				$user_info = $this->remove_incorrect_tfa_code_old_attempts($user_info); // remove old (before 30 mins) incorrect tfa code attempts by users
+				if ($user_info['username'] == $user->user_login) {
+					$userinfo_added = true;
+					if (count($user_info['attempts']) >= TFA_INCORRECT_MAX_ATTEMPTS_ALLOWED_LIMIT && empty($user_info['mailsent'])) {
+						$this->notify_incorrect_tfa_code_attempts($user_info, $user->user_email); // if incorrect tfa attempts are more than max allowed notify user by email that some one else has your password.
+						$user_info['mailsent'] = 1;
+					} else {
+						if (0 == count($user_info['attempts'])) $user_info['mailsent'] = 0;
+						$user_info['attempts'][] = $this->get_incorrect_tfa_attempt_info(); //add new incorrect attempt for existing user.
+					}
+				}
+				$tfa_incorrect_code_attempts[$i] = $user_info;
+			}
+			$update = true;
+		}
+		if (false == $userinfo_added) {
+			$tfa_incorrect_code_attempts[] = $this->get_incorrect_tfa_user_info($user); //add incorrect attempt with username etc info.
+		}
+		$this->save_incorrect_tfa_code_attempts($tfa_incorrect_code_attempts, $update);
+	}
+
+	/**
+	 * Get incorrect attempt info time and IP address to save in database
+	 * 
+	 * @retrun Array
+	 */
+	private function get_incorrect_tfa_attempt_info() {
+		$ip_address = apply_filters('tfa_user_ip_address', $_SERVER['REMOTE_ADDR']);
+		return array('activity_time' => time(), 'ip_address' => $ip_address);
+	}
+	
+	/**
+	 * Get incorrect attempt with userinfo to save in database
+	 *
+	 * @param WP_User $user    - logging in user object
+	 *
+	 * @retrun Array
+	 */
+	private function get_incorrect_tfa_user_info($user) {
+		return array('username' => $user->user_login, 'attempts' => array($this->get_incorrect_tfa_attempt_info()));
+	}
+	
+	/**
+	 * Notify user might be someone else has your possword  
+	 *
+	 * @param Array  $user_info	    - user's incorrect attempt informaion
+	 * @param String $user_email    - user email address notification to be sent.
+	 */
+	private function notify_incorrect_tfa_code_attempts($user_info, $user_email) {
+		$subject = __('Incorrect TFA code attempts', 'all-in-one-wp-security-and-firewall');
+		$email_msg = sprintf(__('There has been an incorrect TFA code entered for logging in to your account %s.', 'all-in-one-wp-security-and-firewall'), $user_info['username']) . "\n\n" .
+			__('Attempts', 'all-in-one-wp-security-and-firewall') . "\n\n";
+		foreach ($user_info['attempts'] as $index => $attempt) {
+			$email_msg.= ($index+1) . '. ' . wp_date('F j, Y g:i a', $attempt['activity_time'], wp_timezone()) . ' ' . __('from', 'all-in-one-wp-security-and-firewall') . ' ' . $attempt['ip_address']. "\n";
+		}
+		$email_msg.= "\n" . __('If the above attempts were not by you then someone else has your password.', 'all-in-one-wp-security-and-firewall') . "\n" .
+			__('TFA codes are checked only after the password has been successfully checked.', 'all-in-one-wp-security-and-firewall') . "\n\n" .
+			__('Please change your password urgently.', 'all-in-one-wp-security-and-firewall') . "\n";
+		$mail_sent = wp_mail($user_email, $subject, $email_msg);
 	}
 
 	// N.B. - This doesn't check is_activated_for_user() - the caller would normally want to do that first

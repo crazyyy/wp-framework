@@ -52,6 +52,7 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 			$wpdb->prefix.'aiowps_permanent_block',
 			$wpdb->prefix.'aiowps_debug_log',
 			$wpdb->prefix.'aiowps_audit_log',
+			$wpdb->prefix.'aiowps_message_store',
 		);
 
 		$aio_wp_security->configs->load_config();

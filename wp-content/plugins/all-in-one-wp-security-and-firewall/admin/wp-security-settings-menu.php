@@ -37,14 +37,17 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 			'htaccess-file-operations' => array(
 				'title' => '.htaccess '.__('file', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_htaccess_file_operations'),
+				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
 			'wp-config-file-operations' =>  array(
 				'title' => 'wp-config.php '.__('file', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_wp_config_file_operations'),
+				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
 			'delete-plugin-settings' =>  array(
 				'title' => __('Delete plugin settings', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_delete_plugin_settings_tab'),
+				'display_condition_callback' => 'is_super_admin',
 			),
 			'wp-version-info' =>  array(
 				'title' => __('WP version info', 'all-in-one-wp-security-and-firewall'),
@@ -57,7 +60,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 			'advanced-settings' => array(
 				'title' => __('Advanced settings', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_advanced_settings'),
-				'display_condition_callback' => 'is_main_site',
+				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
 		);
 

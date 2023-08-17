@@ -42,26 +42,7 @@ class AIOWPSecurity_Maintenance_Menu extends AIOWPSecurity_Admin_Menu {
 	 */
 	protected function render_visitor_lockout() {
 		global $aio_wp_security;
-		$maint_msg = '';
-		if (isset($_POST['aiowpsec_save_site_lockout'])) {
-			$nonce = $_REQUEST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-site-lockout')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on site lockout feature settings save!",4);
-				die("Nonce check failed on site lockout feature settings save!");
-			}
 
-			// Save settings
-			$aio_wp_security->configs->set_value('aiowps_site_lockout', isset($_POST["aiowps_site_lockout"]) ? '1' : '');
-			$maint_msg = htmlentities(stripslashes($_POST['aiowps_site_lockout_msg']), ENT_COMPAT, "UTF-8");
-			$aio_wp_security->configs->set_value('aiowps_site_lockout_msg',$maint_msg); // Text area/msg box
-			$aio_wp_security->configs->save_config();
-
-			$this->show_msg_updated(__('Site lockout feature settings saved!', 'all-in-one-wp-security-and-firewall'));
-
-			do_action('aiowps_site_lockout_settings_saved'); // Trigger action hook.
-
-		}
-
-		$aio_wp_security->include_template('wp-admin/maintenance/visitor-lockout.php', false, array());
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'visitor-lockout'));
 	}
 } //end class

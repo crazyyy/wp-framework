@@ -479,8 +479,7 @@ class Simba_TFA_Provider_totp {
 		//<strong>Private key:</strong> htmlspecialchars($tfa_priv_key)
 		if ('full' == $type) {
 			?>
-			<strong><?php _e('Private key:', 'two-factor-authentication');?></strong>
-			<?php echo htmlspecialchars($tfa_priv_key_32); ?><br>
+			<strong><?php echo __('Private key:', 'two-factor-authentication').' </strong>'.htmlspecialchars($tfa_priv_key_32); ?><br>
 			<?php
 		} elseif ('plain' == $type) {
 			echo htmlspecialchars($tfa_priv_key);

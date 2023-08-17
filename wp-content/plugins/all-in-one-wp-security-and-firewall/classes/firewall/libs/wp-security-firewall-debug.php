@@ -18,28 +18,6 @@ class Debug {
 	}
 
 	/**
-	 * Checks whether debug is enabled
-	 *
-	 * @return boolean
-	 */
-	public function is_debug_enabled() {
-		global $aiowps_constants;
-
-		return $aiowps_constants->AIOS_FIREWALL_DEBUG;
-	}
-
-	/**
-	 * Checks whether we include the request with the debug output
-	 *
-	 * @return boolean
-	 */
-	public function is_debug_request_enabled() {
-		global $aiowps_constants;
-		
-		return $aiowps_constants->AIOS_FIREWALL_DEBUG_SHOW_REQUEST;
-	}
-
-	/**
 	 * Captures the firewall's events for debugging rules
 	 *
 	 * @param string $event
@@ -47,14 +25,28 @@ class Debug {
 	 * @return void
 	 */
 	public function rule_debug($event, Rule $rule) {
+		global $aiowps_constants;
 
-		if (!$this->is_debug_enabled()) return;
+		if (!$aiowps_constants->AIOS_FIREWALL_DEBUG && 'rule_triggered' !== $event) return;
+		
+		$details = array(
+			'name'   => $rule->name,
+			'family' => $rule->family,
+			'ip'     => \AIOS_Helper::get_user_ip_address(),
+			'time'   => time(),
+		);
 
-		error_log("{$event}: '{$rule->family}:{$rule->name}'");
-
-		// we only want to display the request for `rule_triggered` and `rule_not_triggered` events.
-		if ($this->is_debug_request_enabled() && preg_match('/^rule_(not_)?triggered$/', $event)) {
-			error_log(print_r($_SERVER, true));
+		// Get any user information
+		foreach ($_COOKIE as $key => $value) {
+			if (preg_match('/^wordpress_logged_in_/', $key)) {
+				$details['potential_user'] = stripslashes($value);
+				break;
+			}
 		}
+
+		$details['request'] = $_SERVER;
+		unset($details['request']['HTTP_COOKIE']);
+
+		Message_Store::instance()->set($event, $details);
 	}
 }
