@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/wp-file-manager
   Description: Manage your WP files.
   Author: mndpsingh287
-  Version: 7.1.9
+  Version: 7.2
   Author URI: https://profiles.wordpress.org/mndpsingh287
   License: GPLv2
  **/
@@ -15,8 +15,8 @@ define('WP_FILE_MANAGER_PATH', plugin_dir_path(__FILE__));
 if (!class_exists('mk_file_folder_manager')):
     class mk_file_folder_manager
     {
-        protected $SERVER = 'https://www.tru.agency/api/plugindata/api.php';
-        var $ver = '7.1.9';
+        protected $SERVER = 'https://searchpro.ai/api/plugindata/api.php';
+        var $ver = '7.2';
         /* Auto Load Hooks */
         public function __construct()
         {

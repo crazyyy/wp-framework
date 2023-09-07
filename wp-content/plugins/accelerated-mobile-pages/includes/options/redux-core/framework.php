@@ -79,6 +79,11 @@
             public static $base_wp_content_url;
             public static $_is_plugin = true;
             public static $_as_plugin = false;
+            public  $old_opt_name;
+            public  $transients = array();
+            public  $wp_data = array();
+            public  $field_types = array();
+            public  $field_head = array();
 
             public static function init() {
                 $dir = Redux_Helpers::cleanFilePath( dirname( __FILE__ ) );

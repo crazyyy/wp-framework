@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the UpdraftPlus package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-04-26 22:46:24+0000\n"
+"PO-Revision-Date: 2023-09-03 17:38:32+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -74,7 +74,7 @@ msgstr "Tu respaldo por correo electrónico y un informe se enviarán a"
 
 #: src/templates/wp-admin/settings/form-contents.php:148
 msgid "See also the Premium version from our shop."
-msgstr "Mira también la versión Premium en nuestra tienda."
+msgstr "Mirá también la versión Premium en nuestra tienda."
 
 #: src/templates/wp-admin/settings/exclude-modal.php:93
 msgid "Add exclusion rule"
@@ -170,7 +170,7 @@ msgstr "Para más opciones, usá la versión Premium"
 
 #: src/methods/dropbox.php:628
 msgid "If you backup several sites into the same Dropbox and want to organize with sub-folders, then %scheck out Premium%s"
-msgstr "Si haces respaldos de varios sitios en el mismo Dropbox y querés organizarlos en subcarpetas %sprobá la versión Premium%s"
+msgstr "Si hacés respaldos de varios sitios en el mismo Dropbox y querés organizarlos en subcarpetas %sprobá la versión Premium%s"
 
 #: src/methods/backup-module.php:676
 msgid "Complete manual authentication"
@@ -219,7 +219,7 @@ msgstr "¡Muchas gracias!"
 
 #: src/includes/updraftplus-notices.php:116
 msgid "Hey - We noticed UpdraftPlus has kept your site safe for a while.  If you like us, please consider leaving a positive review to spread the word.  Or if you have any issues or questions please leave us a support message"
-msgstr "Eh, nos hemos dado cuenta de que UpdraftPlus ha mantenido tu sitio a salvo algún tiempo. Si te gustamos, por favor, plantéate dejar una valoración positiva para divulgar la palabra. O, si tenés algún problema o preguntas, por favor, déjanos un mensaje de soporte"
+msgstr "Ey, nos dimos cuenta de que UpdraftPlus ha estadp mantenido tu sitio a salvo algún tiempo. Si te sirvió nuestra ayuda, por favor, dejános una valoración positiva para que más gente nos conozca. O si tenés algún problema o preguntas, por favor, mandá un mensaje a nuestro soporte para poder ayudarte."
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:52
 msgid "Warning: You have no clone tokens remaining and either no subscriptions or no subscription that will renew before the clone expiry date."
@@ -1528,7 +1528,7 @@ msgstr "Azure Government"
 
 #: src/templates/wp-admin/settings/form-contents.php:367
 msgid "Ask WordPress to automatically update UpdraftPlus when it finds an available update."
-msgstr "Pídele a WordPress que actualice automáticamente UpdraftPlus cuando encuentre una actualización disponible."
+msgstr "Pedir a WordPress que actualice automáticamente UpdraftPlus cuando encuentre una nueva versión disponible."
 
 #: src/templates/wp-admin/settings/form-contents.php:366
 msgid "Automatic updates"

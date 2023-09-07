@@ -2,10 +2,10 @@
 Contributors: nosilver4u
 Donate link: https://ewww.io/donate/
 Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization, lossless, lossy, seo, scale
-Requires at least: 5.9
-Tested up to: 6.2
+Requires at least: 6.0
+Tested up to: 6.3
 Requires PHP: 7.3
-Stable tag: 7.2.0
+Stable tag: 7.2.1
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -38,7 +38,10 @@ With Easy IO, images are automatically compressed, scaled to fit the page and de
 
 Stuck? Feeling like maybe you DO need that rocket science degree? [We provide free one-on-one email support to everyone](https://ewww.io/contact-us/).
 Do you have an idea to make EWWW IO even better? [Share it and vote on future features](https://feedback.ewww.io/b/features)!
+
 Found a bug? Report the issue on [GitHub](https://github.com/nosilver4u/ewww-image-optimizer), and we'll get it fixed!
+
+You may report security issues through our Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/ewww-image-optimizer)
 
 = Bulk Optimize =
 
@@ -136,6 +139,12 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
+
+= 7.2.1 =
+* changed: Scheduled Optimizer skips image errors faster
+* changed: use updated coding standards, and restructure code for async/background functions
+* removed: legacy image editor extensions for unmaintained plugins
+* security: randomize filename of debug log
 
 = 7.2.0 =
 * added: Easy IO rewrites poster/thumbnail image URLs for video elements

@@ -5,6 +5,10 @@
  * @package performance-lab
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 /**
  * Adds the modules page to the Settings menu.
  *
@@ -107,7 +111,7 @@ function perflab_render_modules_page() {
 			<?php esc_html_e( 'Performance Modules', 'performance-lab' ); ?>
 		</h1>
 
-		<form action="options.php" method="post" novalidate="novalidate">
+		<form action="options.php" method="post">
 			<?php settings_fields( PERFLAB_MODULES_SCREEN ); ?>
 			<?php do_settings_sections( PERFLAB_MODULES_SCREEN ); ?>
 			<?php submit_button(); ?>
@@ -483,7 +487,7 @@ function perflab_plugin_action_links_add_settings( $links ) {
 }
 
 /**
- * Dismisses notification pointer after verfying nonce.
+ * Dismisses notification pointer after verifying nonce.
  *
  * This function adds a nonce check before dismissing perflab-admin-pointer
  * It runs before the dismiss-wp-pointer AJAX action is performed.
