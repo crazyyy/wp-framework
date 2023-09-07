@@ -489,78 +489,77 @@
     return '...' . $view_article_link;
   }
   add_filter('excerpt_more', 'wpeb_modify_excerpt_more');
-  
-  /**
-   * Add Featured Image Column in WordPress Admin
-   * This code adds a thumbnail column to the posts and pages admin table, displaying the featured image.
-   * Source: https://bloggerpilot.com/en/featured-image-admin-en/
-   */
-  // Add the posts and pages columns filter. Same function for both.
-  add_filter( 'manage_posts_columns', 'wpeb_add_thumbnail_column', 10, 1 );
-  add_filter( 'manage_pages_columns', 'wpeb_add_thumbnail_column', 10, 1 );
 
-  /**
-   * Add thumbnail column to the admin table.
-   * @param $wpeb_columns
-   * @return array The modified columns with the added thumbnail column.
-   */
-  function wpeb_add_thumbnail_column($wpeb_columns): array
-  {
-    $wpeb_columns['wpeb_thumb'] = __('Featured Image', 'wpeb');
-    return $wpeb_columns;
-  }
 
-  // Add featured image thumbnail to the WP Admin table.
-  add_action( 'manage_posts_custom_column', 'wpeb_show_thumbnail_column', 10, 2 );
-  add_action( 'manage_pages_custom_column', 'wpeb_show_thumbnail_column', 10, 2 );
+/**
+ * Add thumbnail column to the admin table.
+ * @param $wpeb_columns
+ * @return array The modified columns with the added thumbnail column.
+ */
+function wpeb_add_thumbnail_column($wpeb_columns): array
+{
+  $wpeb_columns['wpeb_thumb'] = __('Featured Image', 'wpeb');
+  return $wpeb_columns;
+}
+/**
+ * Add Featured Image Column in WordPress Admin
+ * This code adds a thumbnail column to the posts and pages admin table, displaying the featured image.
+ * Source: https://bloggerpilot.com/en/featured-image-admin-en/
+ */
+// Add the posts and pages columns filter. Same function for both.
+add_filter( 'manage_posts_columns', 'wpeb_add_thumbnail_column', 10, 1 );
+add_filter( 'manage_pages_columns', 'wpeb_add_thumbnail_column', 10, 1 );
 
-  /**
-   * Display the featured image thumbnail in the admin table.
-   * @param $wpeb_columns
-   * @param $wpeb_id
-   */
-  function wpeb_show_thumbnail_column($wpeb_columns, $wpeb_id): void
-  {
-    if ($wpeb_columns === 'wpeb_thumb' && function_exists('the_post_thumbnail')) {
-      if (has_post_thumbnail($wpeb_id)) {
-        echo the_post_thumbnail('post-thumbnail');
-      } else {
-        // SVG code for "NO IMAGE AVAILABLE" icon
-        echo '<svg xmlns="http://www.w3.org/2000/svg" height="300" width="300" viewBox="-300 -300 600 600" font-family="Bitstream Vera Sans,Liberation Sans, Arial, sans-serif" font-size="72" text-anchor="middle"><circle stroke="#AAA" stroke-width="10" r="280" fill="#FFF"/><switch style="fill:#444"><text><tspan x="0" y="-8">NO IMAGE</tspan><tspan x="0" y="80">AVAILABLE</tspan></text></switch></svg>';
-      }
+/**
+ * Display the featured image thumbnail in the admin table.
+ * @param $wpeb_columns
+ * @param $wpeb_id
+ */
+function wpeb_show_thumbnail_column($wpeb_columns, $wpeb_id): void
+{
+  if ($wpeb_columns === 'wpeb_thumb' && function_exists('the_post_thumbnail')) {
+    if (has_post_thumbnail($wpeb_id)) {
+      echo the_post_thumbnail('post-thumbnail');
+    } else {
+      // SVG code for "NO IMAGE AVAILABLE" icon
+      echo '<svg xmlns="http://www.w3.org/2000/svg" height="300" width="300" viewBox="-300 -300 600 600" font-family="Bitstream Vera Sans,Liberation Sans, Arial, sans-serif" font-size="72" text-anchor="middle"><circle stroke="#AAA" stroke-width="10" r="280" fill="#FFF"/><switch style="fill:#444"><text><tspan x="0" y="-8">NO IMAGE</tspan><tspan x="0" y="80">AVAILABLE</tspan></text></switch></svg>';
     }
   }
+}
 
-  // Move the new column to the first position.
-  add_filter( 'manage_posts_columns', 'wpeb_column_order', 10, 1 );
+// Add featured image thumbnail to the WP Admin table.
+add_action( 'manage_posts_custom_column', 'wpeb_show_thumbnail_column', 10, 2 );
+add_action( 'manage_pages_custom_column', 'wpeb_show_thumbnail_column', 10, 2 );
 
-  /**
-   * Reorder the admin table columns.
-   * @param array $columns The existing columns in the admin table.
-   * @return array The modified columns with the thumbnail column moved to the first position.
-   */
-  function wpeb_column_order(array $columns): array
-  {
-    $n_columns = array();
-    $move = 'wpeb_thumb'; // which column to move
-    $before = 'title'; // move before this column
+/**
+ * Reorder the admin table columns.
+ * @param array $columns The existing columns in the admin table.
+ * @return array The modified columns with the thumbnail column moved to the first position.
+ */
+function wpeb_column_order(array $columns): array
+{
+  $n_columns = array();
+  $move = 'wpeb_thumb'; // which column to move
+  $before = 'title'; // move before this column
 
-    foreach($columns as $key => $value) {
-      if ($key === $before){
-        $n_columns[$move] = $move;
-      }
-      $n_columns[$key] = $value;
+  foreach($columns as $key => $value) {
+    if ($key === $before){
+      $n_columns[$move] = $move;
     }
-    return $n_columns;
+    $n_columns[$key] = $value;
   }
+  return $n_columns;
+}
+// Move the new column to the first position.
+add_filter( 'manage_posts_columns', 'wpeb_column_order', 10, 1 );
 
-  // Format the column width with CSS
-  add_action( 'admin_head', 'wpeb_add_admin_styles' );
+/**
+ * Add custom admin styles.
+ */
+function wpeb_add_admin_styles(): void
+{
+  echo '<style>#wpeb_thumb, .attachment-post-thumbnail.size-post-thumbnail {width: 140px;} .wpeb_thumb svg {width: 100%; height: auto;}</style>';
+}
 
-  /**
-   * Add custom admin styles.
-   */
-  function wpeb_add_admin_styles(): void
-  {
-    echo '<style>#wpeb_thumb, .attachment-post-thumbnail.size-post-thumbnail {width: 140px;} .wpeb_thumb svg {width: 100%; height: auto;}</style>';
-  }
+// Format the column width with CSS
+add_action( 'admin_head', 'wpeb_add_admin_styles' );

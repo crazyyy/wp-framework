@@ -8322,7 +8322,6 @@
       }
 
       // filter for 3rd party customization
-      //options = acf.applyFilters( 'select2_args', options, $select, this );
       if (!options.suppressFilters) {
         var field = this.get('field');
         options = acf.applyFilters('select2_args', options, $select, this.data, field || false, this);
@@ -9424,6 +9423,11 @@
         this.set('notice', notice);
       }
 
+      // If in a modal, don't try to scroll.
+      if (this.$el.parents('.acf-popup-box').length) {
+        return;
+      }
+
       // if no $scrollTo, set to message
       if (!$scrollTo) {
         $scrollTo = this.get('notice').$el;
@@ -9829,6 +9833,12 @@
 
     // front end form
     var $wrap = $form.find('.acf-form-submit');
+    if ($wrap.length) {
+      return $wrap;
+    }
+
+    // ACF 6.2 options page modal
+    var $wrap = $('#acf-create-options-page-form .acf-actions');
     if ($wrap.length) {
       return $wrap;
     }

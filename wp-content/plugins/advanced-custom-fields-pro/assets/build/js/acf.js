@@ -1354,6 +1354,7 @@
           if (dismissed && typeof dismissed == 'object' && dismissed.includes($(this).data('persist-id'))) {
             $(this).remove();
           } else {
+            $(this).show();
             $(this).on('click', '.notice-dismiss', function (e) {
               dismissed = acf.getPreference('dismissed-notices');
               if (!dismissed || typeof dismissed != 'object') {
@@ -3192,6 +3193,18 @@
     // remove classes
     $el2.removeClass('acf-clone');
     $el2.find('.ui-sortable').removeClass('ui-sortable');
+
+    // remove any initialised select2s prevent the duplicated object stealing the previous select2.
+    $el2.find('[data-select2-id]').removeAttr('data-select2-id');
+    $el2.find('.select2').remove();
+
+    // subfield select2 renames happen after init and contain a duplicated ID. force change those IDs to prevent this.
+    $el2.find('.acf-is-subfields select[data-ui="1"]').each(function () {
+      $(this).prop('id', $(this).prop('id').replace('acf_fields', acf.uniqid('duplicated_') + '_acf_fields'));
+    });
+
+    // remove tab wrapper to ensure proper init
+    $el2.find('.acf-field-settings > .acf-tab-wrap').remove();
 
     // after
     // - allow acf to modify DOM

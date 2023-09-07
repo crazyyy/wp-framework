@@ -352,6 +352,11 @@
           // wipe field
           child.wipe();
 
+          // if the child is open, re-fire the open method to ensure it's initialised correctly.
+          if (child.isOpen()) {
+            child.open();
+          }
+
           // update parent
           child.updateParent();
         });
