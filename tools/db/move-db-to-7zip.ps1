@@ -14,8 +14,6 @@ if (Test-Path -Path $archiveFile) {
 
 # Create a 7z archive with the provided password
 7z a -t7z -p"$passwordPlainText" $archiveFile $sourceFile
-# 7z a -t7z -p$password $archiveFile $sourceFile
-# 7z a -t7z $archiveFile $sourceFile
 
 # Check if the archive file was created successfully
 if (Test-Path -Path $archiveFile) {
