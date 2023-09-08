@@ -6,7 +6,7 @@
 read -s -p "Enter the archive password: " password
 echo  # Print an empty line to move to a new line
 
-archiveFile="./DB/exported-wp-sql.7z"  # Path to the archive file
+archiveFile="./DB/exported-wp-db.7z"  # Path to the archive file
 outputDir="./DB"  # Directory where files will be extracted
 
 # Check if the archive file exists

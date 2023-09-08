@@ -6,7 +6,7 @@
       <h1 class="single-title inner-title"><?php the_title(); ?></h1>
       <?php if ( has_post_thumbnail()) :?>
         <a class="single-thumb" href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
-          <?php the_post_thumbnail(); // Fullsize image for the single post ?>
+          <?php the_post_thumbnail(); // Filesize image for the single post ?>
         </a>
       <?php endif; ?><!-- /post thumbnail -->
 
@@ -18,7 +18,7 @@
 
       <?php the_tags( __( 'Tags: ', 'wpeb' ), ', ', '<br>'); // Separated by commas with a line break at the end ?>
 
-      <p><?php _e( 'Categorised in: ', 'wpeb' ); the_category(', '); // Separated by commas ?></p>
+      <p><?php _e( 'Categorized in: ', 'wpeb' ); the_category(', '); // Separated by commas ?></p>
 
       <p><?php _e( 'This post was written by ', 'wpeb' ); the_author(); ?></p>
 

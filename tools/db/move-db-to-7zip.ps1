@@ -1,5 +1,5 @@
-$sourceFile = "./DB/exported-wp-sql.sql"  # Path to the source file
-$archiveFile = "./DB/exported-wp-sql.7z"  # Path to the archive file to be created
+$sourceFile = "./DB/exported-wp-db.sql"  # Path to the source file
+$archiveFile = "./DB/exported-wp-db.7z"  # Path to the archive file to be created
 
 # Prompt the user for the password
 $password = Read-Host "Enter the archive password" -AsSecureString

@@ -2,8 +2,8 @@
 # sudo apt install p7zip-full
 # 7z --version
 
-sourceFile="./DB/exported-wp-sql.sql"  # Path to the source file
-archiveFile="./DB/exported-wp-sql.7z"  # Path to the archive file to be created
+sourceFile="./DB/exported-wp-db.sql"  # Path to the source file
+archiveFile="./DB/exported-wp-db.7z"  # Path to the archive file to be created
 
 # Prompt the user for the password
 read -s -p "Enter the archive password: " password

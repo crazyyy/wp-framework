@@ -28,7 +28,7 @@
     </div><!-- .search-result-count -->
 
     <?php get_template_part( 'template-parts/loop' ); ?>
-    <?php get_template_part('template-parts/pagination'); ?>
+    <?php get_template_part( 'template-parts/pagination' ); ?>
 
     <?php } else { ?>
 

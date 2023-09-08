@@ -7,7 +7,7 @@
   <div class="inner">
 
     <p class="copyright">
-      &copy; <?php echo date("Y"); ?> Собственность <?php bloginfo('name'); ?>.
+      &copy; <?php echo date("Y"); ?> Owner <?php bloginfo('name'); ?>.
     </p><!-- /copyright -->
 
   </div><!-- /.inner -->
