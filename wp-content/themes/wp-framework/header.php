@@ -60,17 +60,7 @@
         </div><!-- /site-logo -->
 
         <nav class="nav" role="navigation">
-          <?php
-          // Check if the "header-menu" location is defined and if a menu is assigned to it
-          if (has_nav_menu('header-menu')) {
-            // Output the "header-menu"
-            wp_nav_menu(array(
-              'theme_location' => 'header-menu', // Use the same location name as defined in wpeb_register_theme_menus
-              'container' => false, // Don't wrap the menu in a <div>
-              'menu_class' => 'header-menu', // CSS class for the menu
-            ));
-          }
-          ?>
+          <?php /* wp_nav_menu(array('theme_location' => 'header-menu')); */ ?>
         </nav><!-- /nav -->
 
       </div><!-- /.inner -->

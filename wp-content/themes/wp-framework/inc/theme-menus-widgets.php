@@ -49,7 +49,8 @@ function wpeb_register_theme_menus() {
     register_nav_menu($location, $name);
   }
 }
-add_action('init', 'wpeb_register_theme_menus');
+// ToDo: Fix broken menu initialization
+// add_action('init', 'wpeb_register_theme_menus');
 
 /**
  * Remove the <div> surrounding the dynamic WP Navigation to clean up markup
