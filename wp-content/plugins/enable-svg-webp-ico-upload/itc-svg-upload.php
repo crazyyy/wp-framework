@@ -3,10 +3,10 @@
 /**
  * @link              https://ideastocode.com
  * @since             1.0.0
- * @package           Enable SVG, WebP, and ICO Upload
+ * @package           Enable Images Upload
  *
  * @wordpress-plugin
- * Plugin Name:       Enable SVG, WebP, and ICO Upload
+ * Plugin Name:       Enable Images Upload
  * Plugin URI:        https://ideastocode.com/plugins/enable-svg-WebP-ico-upload/
  * Description:       This plugin will enable you to upload SVG, WebP & ICO files
  * Version:           1.0.3

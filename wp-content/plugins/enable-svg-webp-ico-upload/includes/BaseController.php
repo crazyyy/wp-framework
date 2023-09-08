@@ -8,7 +8,7 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
 
 			$this->plugin_detail = array(
 				'name'		=>'itc_svg_upload',
-				'title'		=>'Enable SVG, WebP &amp; ICO Upload',
+				'title'		=>'Enable Images Upload',
 				'slug'		=>'itc-svg-upload',
 				'version'	=> ( defined( 'ITC_SVG_UPLOAD_VERSION' ) ) ? ITC_SVG_UPLOAD_VERSION: '1.0.0',
 				'settings'	=>'itc_svg_upload_settings',
@@ -26,7 +26,7 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
             $plugins[$plugin_name] = $finalModuleDetails;
             update_option($this->plugin_name_parent, $plugins);
         }
-        
+
         public function unregister_Module($plugin_name){
             $plugins = get_option($this->plugin_name_parent);
             if($plugin_name!== "" && isset($plugins[$plugin_name])){
@@ -34,12 +34,12 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
                 update_option($this->plugin_name_parent, $plugins);
             }
         }
-        
+
         public function uninstall_Module($plugin_name){
             $this->unregister_Module($plugin_name);
             //ALSO IF WE WANT TO DEL ANY MODULE SETTINGS ADD HERE.
         }
-        
+
         public function get_Module($plugin_name = ""){
             $plugins = get_option($this->plugin_name_parent);
             if($plugin_name!== "" && isset($plugins[$plugin_name])){
@@ -61,7 +61,7 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
 			$detail = $this->get_plugin_detail();
 			return $detail['title'];
 		}
-		
+
 		public function get_plugin_slug() {
 			$detail = $this->get_plugin_detail();
 			return $detail['slug'];
@@ -71,7 +71,7 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
 			$detail = $this->get_plugin_detail();
 			return $detail['version'];
 		}
-		
+
 		public function get_settings() {
 			$detail = $this->get_plugin_detail();
 			return $detail['settings'];
@@ -99,7 +99,7 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
 			}
 			return $settings;
 		}
-		
+
 		//This is to display msg after plugin activation.
 		public function set_transient(){
 			$notice_dismiss_index = $this->get_settings()."_notice_dismiss";
@@ -113,7 +113,7 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
 			$notice_dismiss_index = $this->get_settings()."_notice_dismiss";
 			delete_transient( $notice_dismiss_index );
 		}
-		
+
 		//This is to display msg after plugin activation.
 		public function set_transient_alert(){
 			$notice_dismiss_index = $this->get_settings()."_notice_dismiss_alert";
