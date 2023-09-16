@@ -1,26 +1,29 @@
-
 # BEGIN HTTPS Redirection Plugin
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteCond %{HTTP:X-Forwarded-Proto} !https
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    RewriteEngine On
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 # END HTTPS Redirection Plugin
 
-AddDefaultCharset utf-8
-php_value memory_limit 1024M
+AddDefaultCharset "utf-8";
 
-# supress php errors
+# Suppress PHP errors
 php_flag display_startup_errors off
 php_flag display_errors off
 php_flag html_errors off
+
+# Set PHP error logging
+php_flag log_errors on
+php_value error_log "./PHP_errors.log"
+
+# Set memory limit
+php_value memory_limit 1024M;
+
+# Set docref_root and docref_ext to 0
 php_value docref_root 0
 php_value docref_ext 0
-
-# enable PHP error logging
-php_flag  log_errors on
-php_value error_log  ./PHP_errors.log
 
 # BEGIN WordPress
 # The directives (lines) between "BEGIN WordPress" and "END WordPress" are
@@ -38,16 +41,17 @@ php_value error_log  ./PHP_errors.log
 # END WordPress
 
 # http://habrahabr.ru/company/xakep/blog/259843/
-# Для противодействия SQL-инъекциям блокируем запросы к URL, содержащие определенные ключевые слова:
-RewriteCond %{query_string} concat.*\( [NC,OR]
-RewriteCond %{query_string} union.*select.*\( [NC,OR]
-RewriteCond %{query_string} union.*all.*select [NC]
+# To prevent SQL injections, block requests to URLs containing specific keywords:
+RewriteCond %{QUERY_STRING} concat.*\(
+RewriteCond %{QUERY_STRING} union.*select.*\(
+RewriteCond %{QUERY_STRING} union.*all.*select
 RewriteRule ^(.*)$ index.php [F,L]
-# Чтобы испортить жизнь распространенным хакерским утилитам, отфильтровываем определенные user-agent’ы:
-SetEnvIf user-agent «Indy Library» stayout=1
-SetEnvIf user-agent «libwww-perl» stayout=1
-SetEnvIf user-agent «Wget» stayout=1
-deny from env=stayout
+
+# To annoy common hacker tools, filter specific user agents:
+SetEnvIf user-agent "Indy Library" stayout=1
+SetEnvIf user-agent "libwww-perl" stayout=1
+SetEnvIf user-agent "Wget" stayout=1
+Deny from env=stayout
 
 # https://github.com/h5bp/html5-boilerplate/blob/master/dist/.htaccess
 <IfModule mod_mime.c>
@@ -196,18 +200,6 @@ deny from env=stayout
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | ETags                                                              |
-# ----------------------------------------------------------------------
-# Remove `ETags` as resources are sent with far-future expires headers.
-# https://developer.yahoo.com/performance/rules.html#etags
-# https://tools.ietf.org/html/rfc7232#section-2.3
-# `FileETag None` doesn't work in all cases.
-<IfModule mod_headers.c>
-  Header unset ETag
-</IfModule>
-FileETag None
-
-# ----------------------------------------------------------------------
 # | Expires headers                                                    |
 # ----------------------------------------------------------------------
 # Serve resources with far-future expires headers.
@@ -250,7 +242,7 @@ FileETag None
   ExpiresByType image/gif                             "access plus 1 month"
   ExpiresByType image/jpeg                            "access plus 1 month"
   ExpiresByType image/png                             "access plus 1 month"
-  ExpiresByType image/webp                             "access plus 1 month"
+  ExpiresByType image/webp                            "access plus 1 month"
   ExpiresByType image/svg+xml                         "access plus 1 month"
   ExpiresByType image/webp                            "access plus 1 month"
   ExpiresByType video/mp4                             "access plus 1 month"
