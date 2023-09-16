@@ -1,0 +1,61 @@
+https://el.wordpress.org/plugins/query-monitor/
+https://el.wordpress.org/plugins/mysql-profiler/
+
+http://php.net/xhprof
+
+http://www.exteon.ro/en/products/php-tools/web3tracer/manual
+http://www.exteon.ro/en/products/php-tools/web3tracer/manual/usage/using-kcachegrind/wordpress-example
+
+https://wpperformanceprofiler.interconnectit.com/
+
+https://github.com/soulseekah/wptop
+https://spinpress.com/profiling-php-code-wordpress/
+http://codeseekah.com/2014/09/05/profiling-php-code-in-wordpress/
+
+===
+
+LIKE P3 WE DO NOT FIND THE DETAIL IN THE PROBLEM
+WE DETECT WHERE ONE SHOULD LOOK FOR LOAD AND BLOATS
+
+USEFUL TO EXTRACT MEAN VALUES AND STATISTICS
+AS TO WHERE THE BOTTLENECKS ARE
+OR WHERE THE OPTIMIZATION IS NECESSARY
+
+===
+
+ - Alert if certain limits are exceeded!!!
+
+ - Check whether installation is setup OK, ie database table exists, 
+   but only in the admin area 
+   or the plugin settings page
+
+ - Indicate in database which resource consumes the most resources
+   a post type, an archive, etc
+   the queried object
+
+ - If you put a special ID (identifier) on each request then you will be able to send back browser load statistics to
+   the server and associate the backend with the frontend usage.
+
+ - Report database table usage
+   Cleanup (periodically? after an amount of rows?)
+   Provide a way for manual cleanup
+
+ - Monitor specific urls
+
+ - Aggregate values per type (theme, admin, ajax, cron)
+   number of requests
+
+ - Charts! Yes!
+   But what kind of charts? Real time? Mean values? Mean values in a specific time window?
+
+ - Daily/monthly/weekly report
+   Why not combine it with a total disk usage?
+
+ - Viewer of all requests and sorting.
+
+ - Frontend show resource usage.
+
+===
+
+ - Check if actions return false values
+ - Add PHPDoc.

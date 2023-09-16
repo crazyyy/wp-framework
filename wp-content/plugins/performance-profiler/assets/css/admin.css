@@ -1,0 +1,80 @@
+/* General stylings. */
+
+	.nppp-selected { font-weight: bold; }
+
+	.text-left { text-align: left; }
+	.text-right { text-align: right; }
+
+	.settings_page_performance-profiler tbody tr:hover { background: #ffe387; }
+
+
+
+/* Make paragraphs in admin notices not bold except for the first one, which is the title. */
+
+	.settings_page_performance-profiler .settings-error p strong { font-weight: normal !important; }
+	.settings_page_performance-profiler .settings-error p:first-of-type,
+	.settings_page_performance-profiler .settings-error p:first-of-type strong { font-weight: bold !important; }
+	
+	.settings_page_performance-profiler .performance-profiler-debug-table p { margin: 0; padding: 0 0 2px 0; font-weight: normal !important; }
+
+
+
+/* List of actions below the main heading of the plugin settings page. */
+
+	.subsubsub { float: none; }
+
+
+
+/* Plugin settings form table. */
+
+	.settings_page_performance-profiler .form-table tr:nth-of-type(2n) { background: rgb(249,249,249); }
+	
+	.settings_page_performance-profiler .form-table th { padding: 20px 10px; } 
+	.settings_page_performance-profiler .form-table td { padding: 20px 10px 20px 20px; position: relative; }
+	
+	p.hndle { padding-bottom: 10px; margin-bottom: 20px; }
+	
+	.performance-profiler-version { font-style: italic; padding: 10px 0; }
+	
+	[for="performance-profiler[content-types-jpeg]"],
+	[for="performance-profiler[content-types-png]"],
+	[for="performance-profiler[content-types-gif]"] { display: inline-block; margin-right: 20px; }
+
+
+
+/* Help messages for the settings. */
+
+	.performance-profiler-help-short { display: inline-block; margin-top: 10px; font-size: 12px; }
+	
+	.performance-profiler-help-button { width: 16px; height: 16px; border-radius: 8px; color: white; background: #45bbe6; border: none; cursor: hand; cursor: pointer; opacity: 0.5; position: absolute; top: 22px; left: -15px; }
+	.form-table tr:hover .performance-profiler-help-button { opacity: 1; }
+	
+	.performance-profiler-help-button::after { display: block; content: "?"; font-size: 10px; font-weight: bold; text-align: center; line-height: 1.3; }
+	
+	.performance-profiler-help-content { display: none; max-width: 560px; padding-top: 10px; }
+	
+	    .performance-profiler-help-content h4 { margin: 0; }
+	    .performance-profiler-help-content p { font-weight: normal; margin: 5px 0 10px 0 !important; }
+
+
+
+/* Sidebar meta box fixes. */
+
+	.settings_page_performance-profiler .hndle { cursor: default !important; }
+	.settings_page_performance-profiler .hndle-reverse { border-top: 1px solid #eeeeee; }
+	
+	.settings_page_performance-profiler .postbox-container .inside p { font-size: 12px; }
+
+	.settings_page_performance-profiler .inside::after { content: ''; display: block; clear: both; }
+		
+		.settings_page_performance-profiler #postbox-container-1 .button-primary { width: 48%; text-align: center; }
+		.settings_page_performance-profiler #postbox-container-1 .button-primary:nth-of-type(1) { float: left; }
+		.settings_page_performance-profiler #postbox-container-1 .button-primary:nth-of-type(2) { float: right; }
+		
+	.settings_page_performance-profiler .button-wrapper { display: block; text-align: right; margin-top: 0.5em; }
+	
+	#performance-profiler-banner { display: block; position: relative; }
+	
+	    #performance-profiler-developer { position: absolute; right: 15px; bottom: 0; height: 50px; width: auto; }
+	
+	.settings_page_performance-profiler input[type="image"] { vertical-align: middle; padding: 0; height: 20px !important; width: auto; }

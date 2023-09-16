@@ -1,0 +1,73 @@
+/*
+*
+* CSS for the newsletter opt-in form in the Post Snippets plugin
+*
+*/
+
+#ps-newsletter-notice #mlb2-6493346.ml-subscribe-form button {
+    -webkit-transition-property: border, background, color;
+    transition-property: border, background, color;
+    -webkit-transition-duration: .05s;
+    transition-duration: .05s;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out;
+
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 26px;
+    height: 28px;
+    margin: 0;
+    //margin-top: -1px;
+    padding: 0 10px 1px 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    white-space: nowrap;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    background: #0085ba;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #0073aa #006799 #006799;
+    -webkit-box-shadow: 0 1px 0 #006799;
+    box-shadow: 0 1px 0 #006799;
+    color: #fff;
+    text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+}
+
+/* Add a nice gradient to the subscribe button */
+#ps-newsletter-notice #mlb2-6493346.ml-subscribe-form button:hover {
+    background: #008ec2;
+    border-color: #006799;
+    color: #fff;
+}
+
+/* Disable the submit button during processing */
+#ps-newsletter-notice #mlb2-6493346.ml-subscribe-form button[disabled] {
+    cursor: not-allowed!important;
+}
+
+/* Make the email field red if the value is incorrect */
+#ps-newsletter-notice #mlb2-6493346.ml-subscribe-form .form-group.ml-error .form-control {
+    border-color: red!important;
+}
+
+/* Align form in notice */
+#ps-newsletter-notice .ml-subscribe-form.ml-subscribe-form-6493346 {
+    margin: 5px 0 5px 0;
+}
+
+/* Make the email field just as big as the buttons */
+#ps-newsletter-notice #mlb2-6493346 .subscribe-form .form-section.horizontal .form-group .form-control {
+    height: 28px;
+}
+
+/* Set the "Hide this" button one pixel lower so it aligns with "Subscribe now" button */
+#ps-newsletter-notice #mlb2-6493346 .subscribe-form .button-secondary {
+    margin-top: 1px;
+}
+
