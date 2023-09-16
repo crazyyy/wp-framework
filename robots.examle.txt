@@ -51,5 +51,4 @@ Allow: /
 User-agent: ia_archiver
 Disallow: /
 
-Sitemap: https://sss.local/sitemap_index.xml
-Sitemap: https://wings.vn.ua/sitemap_index.xml
+Sitemap: https://example.site/sitemap_index.xml

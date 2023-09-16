@@ -10,3 +10,5 @@ cypress
 vendor
 .git
 .hg
+/.history/
+/.vscode/

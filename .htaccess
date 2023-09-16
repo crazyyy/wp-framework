@@ -9,21 +9,62 @@
 
 AddDefaultCharset "utf-8";
 
-# Suppress PHP errors
+# Set memory limit
+php_value memory_limit 1024M;
+
+# PHP error handling for production servers
 php_flag display_startup_errors off
 php_flag display_errors off
 php_flag html_errors off
 
-# Set PHP error logging
+# PHP error handling for development servers
+php_flag display_startup_errors on
+php_flag display_errors on
+php_flag html_errors on
+
+# PHP error handling for all envirioments
+php_flag ignore_repeated_errors off
+php_flag ignore_repeated_source off
+php_flag report_memleaks on
+php_flag track_errors on
 php_flag log_errors on
-php_value error_log "./PHP_errors.log"
-
-# Set memory limit
-php_value memory_limit 1024M;
-
-# Set docref_root and docref_ext to 0
 php_value docref_root 0
 php_value docref_ext 0
+# [see footnote 3] # php_value error_reporting 999999999
+php_value error_reporting -1
+php_value log_errors_max_len 0
+php_value error_log /home/domain/public_html/PHP_errors.log
+
+<Files /home/domain/public_html/PHP_errors.log>
+  Order allow,deny
+  Deny from all
+  Satisfy All
+</Files>
+
+#Increase File Upload Size in WordPress
+php_value upload_max_filesize 256M
+php_value post_max_size 256M
+php_value max_execution_time 300
+php_value max_input_time 300
+
+# Protect wp-config.php
+<Files wp-config.php>
+  order allow,deny
+  deny from all
+</Files>
+
+#Protect .htaccess From Unauthorized Access
+<files ~ "^.*\.([Hh][Tt][Aa])">
+  order allow,deny
+  deny from all
+  satisfy all
+</files>
+
+# Block WordPress xmlrpc.php requests
+<Files xmlrpc.php>
+  order deny,allow
+  deny from all
+</Files>
 
 # BEGIN WordPress
 # The directives (lines) between "BEGIN WordPress" and "END WordPress" are
@@ -39,6 +80,26 @@ php_value docref_ext 0
   RewriteRule . /index.php [L]
 </IfModule>
 # END WordPress
+
+# Really Simple SSL
+# https://really-simple-ssl.com/site-health-recommended-security-headers/
+# Adding HSTS
+Header always set Strict-Transport-Security: "max-age=31536000" env=HTTPS
+# Adding Upgrade-Insecure-Requests
+Header always set Content-Security-Policy "upgrade-insecure-requests"
+# Adding X-XSS-Protection
+Header always set X-Content-Type-Options "nosniff"
+# Adding X-Content-Type-Options
+Header always set X-XSS-Protection "1; mode=block"
+# Adding Expect-CT, Certificate Transparency
+Header always set Expect-CT "max-age=7776000, enforce"
+# Adding No Referrer When Downgrade header
+Header always set Referrer-Policy: "no-referrer-when-downgrade"
+# Adding X-Frame-Options header
+Header always set X-Frame-Options: "SAMEORIGIN"
+# Adding Permissions-Policy header
+Header always set Permissions-Policy: ""
+# End Really Simple SSL
 
 # http://habrahabr.ru/company/xakep/blog/259843/
 # To prevent SQL injections, block requests to URLs containing specific keywords:
@@ -265,23 +326,3 @@ Deny from env=stayout
   # Other
   ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
 </IfModule>
-
-# Really Simple SSL
-# https://really-simple-ssl.com/site-health-recommended-security-headers/
-# Adding HSTS
-Header always set Strict-Transport-Security: "max-age=31536000" env=HTTPS
-# Adding Upgrade-Insecure-Requests
-Header always set Content-Security-Policy "upgrade-insecure-requests"
-# Adding X-XSS-Protection
-Header always set X-Content-Type-Options "nosniff"
-# Adding X-Content-Type-Options
-Header always set X-XSS-Protection "1; mode=block"
-# Adding Expect-CT, Certificate Transparency
-Header always set Expect-CT "max-age=7776000, enforce"
-# Adding No Referrer When Downgrade header
-Header always set Referrer-Policy: "no-referrer-when-downgrade"
-# Adding X-Frame-Options header
-Header always set X-Frame-Options: "SAMEORIGIN"
-# Adding Permissions-Policy header
-Header always set Permissions-Policy: ""
-# End Really Simple SSL
