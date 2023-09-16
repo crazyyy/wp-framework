@@ -1,7 +1,7 @@
 <?php
 
 define('WP_MEMORY_LIMIT', '1024M');
-// define( 'WP_CACHE', false );
+define( "WP_CACHE", true ); // WP Performance
 
 const CACHE_READ_WHITELIST  = '_transient|posts WHERE ID IN|limit_login_'; // do not read from cache is sql contains these
 const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache if sql contains these
@@ -34,6 +34,7 @@ if (DEVELOPMENT_DEBUG) {
   define('SCRIPT_DEBUG', true);
   define('SAVEQUERIES', true);
   define('WP_ENVIRONMENT_TYPE', 'development');
+  define('WP_ENV', 'development');
   if (WP_DEBUG && WP_DEBUG_DISPLAY && (defined('DOING_AJAX') && DOING_AJAX)) {
     @ini_set('display_errors', 1);
   }
@@ -50,6 +51,7 @@ if (DEVELOPMENT_DEBUG) {
   define('SCRIPT_DEBUG', false);
   define('SAVEQUERIES', false);
   define('WP_ENVIRONMENT_TYPE', 'production');
+  define('WP_ENV', 'production');
 }
 
 // define( 'DISABLE_WP_CRON', true );
