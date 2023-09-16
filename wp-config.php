@@ -1,7 +1,6 @@
 <?php
 
 define('WP_MEMORY_LIMIT', '1024M');
-define( "WP_CACHE", true ); // WP Performance
 
 const CACHE_READ_WHITELIST  = '_transient|posts WHERE ID IN|limit_login_'; // do not read from cache is sql contains these
 const CACHE_WRITE_WHITELIST = '_transient|limit_login_'; // do not reset cache if sql contains these
