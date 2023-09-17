@@ -1,0 +1,5 @@
+https://github.com/prettier/prettier-vscode
+https://prettier.io/docs/en/editors
+https://prettier.io/docs/en/webstorm
+https://prettier.io/docs/en/configuration
+https://prettier.io/docs/en/install.html

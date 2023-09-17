@@ -1,0 +1,9 @@
+https://github.com/JetBrains/ideolog/issues/42
+
+https://stackoverflow.com/questions/60099860/log-format-not-recognised-phpstorm-ideolog
+
+https://github.com/JetBrains/ideolog/issues/111
+
+https://www.gsarigiannidis.gr/add-wordpress-support-to-phpstorms-ideolog/
+
+

@@ -11,9 +11,22 @@ A WordPress boilerplate designed to facilitate WordPress theme development by us
 ## How to start
 
 ```shell
+npm install csscomb -g # https://github.com/csscomb/csscomb.js
 npm i -g gulp gulp-cli
 npm i
 npm run start
+```
+
+```sh
+# https://github.com/squizlabs/PHP_CodeSniffer
+composer global require "squizlabs/php_codesniffer=*" 
+
+# https://www.jetbrains.com/help/phpstorm/using-php-cs-fixer.html#enabling-tool-inspection
+```
+
+```shell
+# https://github.com/stylelint/stylelint/blob/HEAD/docs/user-guide/get-started.md
+npm init stylelint
 ```
 
 ## Usefull WP Cli

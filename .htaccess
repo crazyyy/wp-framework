@@ -12,12 +12,12 @@ AddDefaultCharset "utf-8";
 # Set memory limit
 php_value memory_limit 1024M;
 
-# PHP error handling for production servers
-php_flag display_startup_errors off
-php_flag display_errors off
-php_flag html_errors off
+# PHP error handling for PRODUCTION servers
+#php_flag display_startup_errors off
+#php_flag display_errors off
+#php_flag html_errors off
 
-# PHP error handling for development servers
+# PHP error handling for DEVELOPMENT servers
 php_flag display_startup_errors on
 php_flag display_errors on
 php_flag html_errors on

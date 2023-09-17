@@ -10,6 +10,7 @@ const isDev = !isProd && !isTest;
 
 /* Import Base dependencies */
 
+// ToDo: Cosmiconfig searches for and loads configuration for your program https://github.com/cosmiconfig/cosmiconfig
 const config = require( 'config' );
 const gulp = require( 'gulp' );
 const lazypipe = require( 'lazypipe' );
