@@ -2,6 +2,7 @@
 /** @noinspection PhpUnused */
 /** @noinspection PhpDefineCanBeReplacedWithConstInspection */
 define('WP_MEMORY_LIMIT', '1024M');
+define('WP_MAX_MEMORY_LIMIT', '1024M');
 
 // do not read from cache is sql contains these
 const CACHE_READ_WHITELIST  = '_transient|posts WHERE ID IN|limit_login_';

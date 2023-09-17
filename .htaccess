@@ -1,3 +1,8 @@
+AddDefaultCharset UTF-8
+
+# Set memory limit
+php_value memory_limit 1024M
+
 # BEGIN HTTPS Redirection Plugin
 <IfModule mod_rewrite.c>
     RewriteEngine On
@@ -6,11 +11,6 @@
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 # END HTTPS Redirection Plugin
-
-AddDefaultCharset "utf-8";
-
-# Set memory limit
-php_value memory_limit 1024M;
 
 # PHP error handling for PRODUCTION servers
 #php_flag display_startup_errors off
@@ -101,6 +101,25 @@ Header always set X-Frame-Options: "SAMEORIGIN"
 Header always set Permissions-Policy: ""
 # End Really Simple SSL
 
+# Block access to directories without a default document.
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+# Block access to files that can expose sensitive information.
+<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
+  # Apache < 2.3
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+    Satisfy All
+  </IfModule>
+  # Apache ≥ 2.3
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
 # http://habrahabr.ru/company/xakep/blog/259843/
 # To prevent SQL injections, block requests to URLs containing specific keywords:
 RewriteCond %{QUERY_STRING} concat.*\(
@@ -169,23 +188,6 @@ Deny from env=stayout
   AddType text/vtt                                    vtt
   AddType text/x-component                            htc
 </IfModule>
-# Block access to directories without a default document.
-<IfModule mod_autoindex.c>
-  Options -Indexes
-</IfModule>
-# Block access to files that can expose sensitive information.
-<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
-  # Apache < 2.3
-  <IfModule !mod_authz_core.c>
-    Order allow,deny
-    Deny from all
-    Satisfy All
-  </IfModule>
-  # Apache ≥ 2.3
-  <IfModule mod_authz_core.c>
-    Require all denied
-  </IfModule>
-</FilesMatch>
 
 # ----------------------------------------------------------------------
 # | Compression                                                        |
@@ -326,3 +328,14 @@ Deny from env=stayout
   # Other
   ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
 </IfModule>
+
+<ifModule mod_gzip.c>
+  mod_gzip_on Yes
+  mod_gzip_dechunk Yes
+  mod_gzip_item_include file .(html?|txt|css|js|php|pl)$
+  mod_gzip_item_include handler ^cgi-script$
+  mod_gzip_item_include mime ^text/.*
+  mod_gzip_item_include mime ^application/x-javascript.*
+  mod_gzip_item_exclude mime ^image/.*
+  mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</ifModule>
