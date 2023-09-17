@@ -1,5 +1,8 @@
 'use strict';
 
+// # Gulp workflow for WordPress theme development
+// https://gist.github.com/tomazzaman/158c10361c19434b02ad
+
 /* Set isHtmlDev to TRUE if work with html, else - FALSE */
 const isHtmlDev = true;
 

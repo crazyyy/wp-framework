@@ -1,6 +1,7 @@
 <?php
 /** @noinspection PhpUnused */
 /** @noinspection PhpDefineCanBeReplacedWithConstInspection */
+//ToDo: Example https://gist.github.com/bhubbard/8428583
 define('WP_MEMORY_LIMIT', '1024M');
 define('WP_MAX_MEMORY_LIMIT', '1024M');
 
