@@ -56,6 +56,10 @@ wp --info
 wp config shuffle-salts
 ```
 
+## Helping Services 
+
+- (WP Settings API)[http://wpsettingsapi.jeroensormani.com/]
+
 ## Howto
 
 - `.dblock` - `@extend .dblock` - for various `:before`/`:after` elements

@@ -10,3 +10,6 @@ coverage
 
 # Ignore all HTML files:
 **/*.html
+/wp-content/uploads/
+/wp-admin/
+/wp-includes/

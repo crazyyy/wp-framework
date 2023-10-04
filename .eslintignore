@@ -12,3 +12,6 @@ vendor
 .hg
 /.history/
 /.vscode/
+/wp-content/uploads/
+/wp-admin/
+/wp-includes/

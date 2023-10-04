@@ -55,6 +55,8 @@ wp-content/wflogs/
 wp-content/advanced-cache.php
 wp-content/wp-cache-config.php
 wp-content/db.php
+# ToDo: remove query plugin, commint and uncomment this
+#wp-content/object-cache.php
 license.txt
 readme.html
 sitemap*.xml

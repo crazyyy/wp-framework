@@ -5,3 +5,6 @@ modules/*/assets/vendor/**
 modules/*/assets/*/vendor/**/.history/
 /.history/
 /.vscode/
+/wp-content/uploads/
+/wp-admin/
+/wp-includes/

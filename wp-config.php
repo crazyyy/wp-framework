@@ -1,3 +1,6 @@
+/* The above code is a configuration file for a WordPress website. It sets various constants and
+defines different settings for the WordPress installation. Here is a breakdown of what the code is
+doing: */
 <?php
 /** @noinspection PhpUnused */
 /** @noinspection PhpDefineCanBeReplacedWithConstInspection */
@@ -127,15 +130,16 @@ if (WP_DEBUG) {
   //define('QM_DISABLED', true); // Disable Query Monitor entirely. Default value: false
 }
 
-define('SMTP_USERNAME', 'mail@gmail.com'); // Username of host like Gmail
-define('SMTP_PASSWORD', 'password'); // Password for login into the App
-define('SMTP_SERVER', 'smtp.gmail.com'); // SMTP server address
-define('SMTP_FROM', 'mail@gmail.com'); // Your Business Email Address
-define('SMTP_NAME', 'Site From'); // Business From Name
-define('SMTP_PORT', '587'); // Server Port Number
-define('SMTP_SECURE', 'tls'); // Encryption - ssl or tls
-define('SMTP_AUTH', true); // Use SMTP authentication (true|false)
-define('SMTP_DEBUG', 1); // For debugging purposes only
+/** SMTP Config Example */
+//define('SMTP_USERNAME', 'mail@gmail.com'); // Username of host like Gmail
+//define('SMTP_PASSWORD', 'password'); // Password for login into the App
+//define('SMTP_SERVER', 'smtp.gmail.com'); // SMTP server address
+//define('SMTP_FROM', 'mail@gmail.com'); // Your Business Email Address
+//define('SMTP_NAME', 'Site From'); // Business From Name
+//define('SMTP_PORT', '587'); // Server Port Number
+//define('SMTP_SECURE', 'tls'); // Encryption - ssl or tls
+//define('SMTP_AUTH', true); // Use SMTP authentication (true|false)
+//define('SMTP_DEBUG', 1); // For debugging purposes only
 
 define('AUTH_KEY', 'PK2?Bu1fPWFWDJt,RtT0xqPi oSR@jMr$.1ERFgZe|sCTi:;?-TIG n;v^Uhl/rM');
 define('SECURE_AUTH_KEY', 'eAf2wy6Q9O2d0A1EP14~D~mk:AuUyXUhGu~7ds{LI[CzFY9)|%LgFha|lkgRlk)r');

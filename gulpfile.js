@@ -96,7 +96,8 @@ gulp.task( 'styles', () => {
     .pipe( plugin.changed( destPath, { extension: '.css' } ) )
     .pipe( plugin.if( isDev, plugin.sourcemaps.init() ) )
     // .pipe(plugin.sourcemaps.init())
-    // TODO: add minifycss if PROD
+    // TODO: add minify css if PROD
+    // TODO: add both version of css - minified and normal css and change loading at functions
     .pipe( sass( {
       // https://github.com/sass/node-sass#options
       outputStyle: 'expanded',
@@ -333,12 +334,22 @@ function ChangeBasePath ( config ) {
   );
 }
 
+// ToDo: check gulpfile from facebook https://github.com/facebook/relay
+// ToDo: check good framework https://github.com/wowthemesnet/Wow-Gulp-WP-Starter
+// ToDo: check good framework https://github.com/justcoded/web-starter-kit
+
 // https://www.npmjs.com/package/gulp-sourcemaps
 // https://www.npmjs.com/package/gulp-changed
 // https://www.npmjs.com/package/gulp-newer
 // https://www.npmjs.com/package/cross-env
+
 // https://www.npmjs.com/package/yargs
 // https://github.com/postcss/autoprefixer
+// https://github.com/topics/gulp4
+// https://github.com/topics/gulp
+// https://github.com/luangjokaj/wordpressify
+// https://github.com/topics/wordpress-theme
+
 
 // TODO:
 // https://www.npmjs.com/search?q=keywords:postcss

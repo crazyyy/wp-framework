@@ -1,5 +1,20 @@
-## TODO
-### Projects for investigae
+# ToDo
+
+## check this composer plugins
+https://packagist.org/?query=wordpress
+
+## wp-stage-switcher
+WordPress plugin that allows you to switch between different environments from the admin bar
+https://packagist.org/packages/roots/wp-stage-switcher
+
+## inpsyde/wonolog
+Monolog-based logging package for WordPress.
+https://packagist.org/packages/inpsyde/wonolog
+
+## Managing Your WordPress Site With Git and Composer
+https://deliciousbrains.com/storing-wordpress-in-git/
+
+### Projects for investigate
 
 https://github.com/topics/wordpress-boilerplate?l=php
 https://github.com/boilerplates-collection/wordpress-theme-gulp
