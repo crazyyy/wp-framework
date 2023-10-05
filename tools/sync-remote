@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# BEFORE YOU START:
+# replace all instances of exampleproject with your real project usernames and local and remote paths
+
+
+# make a backup of current local db
+wp db export --add-drop-table
+echo "✅ Make a backup of your current database state."
+
+# grab the remote db
+wp db export - --add-drop-table --ssh=exampleproject@sqcdy.com --path='/var/www/vhosts/exampleproject.com/exampleproject.sqcdy.com' > exampleproject_staging.sql
+echo "✅ Grab the remote database"
+
+# import it
+wp db import exampleproject_staging.sql
+echo "✅ import remote database"
+# remove the temp file
+rm exampleproject_staging.sql
+
+# set to your local URL
+wp search-replace "https://exampleproject.sqcdy.com" "http://exampleproject.localhost"
+echo "✅ replace staging URL with http://exampleproject.localhost"
+
+while true; do
+    read -p "Do you want to sync the uploads folder?" yn
+    case $yn in
+        # Yes, sync the uploads folder
+        [Yy]* ) rsync -avh exampleproject@sqcdy.com:~/exampleproject.sqcdy.com/wp-content/uploads/ ./wp-content/uploads;echo "✅ uploads synced"; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+    read -p "Do you want to sync the plugins folder? (CAREFUL: this can overwrite any plugins you are managing with git locally already.)" yn
+    case $yn in
+        # Yes, sync the pluginss folder
+        [Yy]* ) rsync -avh exampleproject@sqcdy.com:~/exampleproject.sqcdy.com/wp-content/plugins/ ./wp-content/plugins;echo "✅ plugins synced"; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+echo "✅ All done."
+echo "Do not forget to make sure your database prefix matches the remote."
