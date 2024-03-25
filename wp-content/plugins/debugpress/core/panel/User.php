@@ -22,7 +22,7 @@ class User extends Panel {
 			'user_url',
 			'user_registered',
 			'user_activation_key',
-			'user_status'
+			'user_status',
 		),
 		'bbpress' => array(
 			'bb_capabilities',
@@ -30,7 +30,7 @@ class User extends Panel {
 			'bb_user_settings_time',
 			'bb_topics_replied',
 			'bbp_last_activity',
-			'_bbp_topics_replied'
+			'_bbp_topics_replied',
 		),
 		'system'  => array(
 			'plugins_last_view',
@@ -57,7 +57,7 @@ class User extends Panel {
 			'screen_layout_%reg%',
 			'metaboxhidden_%reg%',
 			'manageedit%reg%columnshidden',
-			'edit_%reg%_per_page'
+			'edit_%reg%_per_page',
 		),
 		'info'    => array(
 			'display_name',
@@ -70,8 +70,8 @@ class User extends Panel {
 			'jabber',
 			'user_firstname',
 			'user_lastname',
-			'user_description'
-		)
+			'user_description',
+		),
 	);
 
 	public function __construct() {
@@ -83,11 +83,11 @@ class User extends Panel {
 	public function left() {
 		global $userdata;
 
-		$this->title( __( "Basic User Information", "debugpress" ) );
+		$this->title( esc_html__( 'Basic User Information', 'debugpress' ) );
 		$this->block_header();
 		$this->table_init_standard();
 		$this->table_head();
-		foreach ( $this->fields[ 'users' ] as $name ) {
+		foreach ( $this->fields['users'] as $name ) {
 			if ( isset( $userdata->data->$name ) ) {
 				$this->all_found[] = $name;
 				$this->table_row( array( $name, $this->print_it( $userdata->$name ) ) );
@@ -96,14 +96,14 @@ class User extends Panel {
 		$this->table_foot();
 		$this->block_footer();
 
-		$this->title( __( "Core Meta Information", "debugpress" ) );
+		$this->title( esc_html__( 'Core Meta Information', 'debugpress' ) );
 		$this->block_header();
 		$this->table_init_standard();
 		$this->table_head();
 		foreach ( $this->usermeta as $key => $value ) {
 			$found = false;
 			if ( ! in_array( $key, $this->all_found ) ) {
-				foreach ( $this->fields[ 'system' ] as $name ) {
+				foreach ( $this->fields['system'] as $name ) {
 					if ( strpos( $name, '%reg%' ) !== false ) {
 						$name = str_replace( '%reg%', '.+', $name );
 						if ( preg_match( '/' . $name . '/i', $key ) ) {
@@ -131,11 +131,11 @@ class User extends Panel {
 	}
 
 	public function right() {
-		$this->title( __( "User Information", "debugpress" ) );
+		$this->title( esc_html__( 'User Information', 'debugpress' ) );
 		$this->block_header();
 		$this->table_init_standard();
 		$this->table_head();
-		foreach ( $this->fields[ 'info' ] as $name ) {
+		foreach ( $this->fields['info'] as $name ) {
 			if ( isset( $this->usermeta[ $name ] ) ) {
 				$this->all_found[] = $name;
 				$value             = $this->usermeta[ $name ];
@@ -148,7 +148,7 @@ class User extends Panel {
 		$this->table_foot();
 		$this->block_footer();
 
-		$this->title( __( "Rest of User Meta Information", "debugpress" ) );
+		$this->title( esc_html__( 'Rest of User Meta Information', 'debugpress' ) );
 		$this->block_header();
 		$this->table_init_standard();
 		$this->table_head();

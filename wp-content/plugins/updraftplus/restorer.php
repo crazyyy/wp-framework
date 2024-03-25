@@ -1487,12 +1487,10 @@ class Updraft_Restorer {
 				// Directory
 				if ($wp_filesystem->is_file($dest_dir.'/'.$rname)) @$wp_filesystem->delete($dest_dir.'/'.$rname, false, 'f');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 				// No such directory yet: just move it
-				if (!$wp_filesystem->is_dir($dest_dir.'/'.$rname)) {
-					if (!$wp_filesystem->move($source_dir.'/'.$rname, $dest_dir.'/'.$rname, false)) {
+				if ($wp_filesystem->exists($dest_dir.'/'.$rname) && !$wp_filesystem->is_dir($dest_dir.'/'.$rname) && !$wp_filesystem->move($source_dir.'/'.$rname, $dest_dir.'/'.$rname, false)) {
 						$this->restore_log_permission_failure_message($dest_dir, 'Move '.$source_dir.'/'.$rname.' -> '.$dest_dir.'/'.$rname, 'Destination');
 						$updraftplus->log_e('Failed to move directory (check your file permissions and disk quota): %s', $source_dir.'/'.$rname." -&gt; ".$dest_dir.'/'.$rname);
 						return false;
-					}
 				} elseif (!empty($rfile['files'])) {
 					if (!$wp_filesystem->exists($dest_dir.'/'.$rname)) $wp_filesystem->mkdir($dest_dir.'/'.$rname, $chmod);
 					// There is a directory - and we want to to copy in
@@ -3515,13 +3513,16 @@ class Updraft_Restorer {
 			} elseif (preg_match('/^SET @@GLOBAL.GTID_PURGED/i', $sql_line)) {
 				// skip the SET @@GLOBAL.GTID_PURGED command
 				$sql_type = 17;
+			} elseif (preg_match('/^\/\*\!\d+\s+SET\s+(?:[^,].*)?(?=SQL_MODE\s*=\s*\'|\")/i', $sql_line)) {
+				// skip the SET SQL_MODE command because we adjust the SQL mode dynamically during restoration and offer users the flexibility to change it themselves using action or filter, we don't use the SQL mode specified in the dumped file. Skipping this line prevents any unintended changes to the default SQL mode already set by our system or any custom mode chosen by the user.
+				$sql_type = 18;
 			} else {
 				// Prevent the previous value of $sql_type being retained for an unknown type
 				$sql_type = 0;
 			}
 
-			// Do not execute "USE" or "CREATE|DROP DATABASE" or "SET @@GLOBAL.GTID_PURGED" commands
-			if (6 != $sql_type && 7 != $sql_type && (9 != $sql_type || false == $this->triggers_forbidden) && 10 != $sql_type && 17 != $sql_type) {
+			// Do not execute "USE" or "CREATE|DROP DATABASE" or "SET @@GLOBAL.GTID_PURGED" or "SET SQL_MODE" commands
+			if (!in_array($sql_type, array(6, 7, 10, 17, 18)) && (9 != $sql_type || false == $this->triggers_forbidden)) {
 				$do_exec = $this->sql_exec($sql_line, $sql_type);
 				if (is_wp_error($do_exec)) return $do_exec;
 			} else {
@@ -3796,6 +3797,14 @@ class Updraft_Restorer {
 			UpdraftPlus_Options::delete_updraft_option($key);
 			UpdraftPlus_Options::update_updraft_option($key, $value);
 		}
+		// reset the Litespeed server warning message for migration
+		if (!empty($this->restore_options['updraft_restorer_replacesiteurl'])) {
+			if (isset($_SERVER['SERVER_SOFTWARE']) && false !== strpos($_SERVER['SERVER_SOFTWARE'], 'LiteSpeed')) {
+				if (!is_file(ABSPATH.'.htaccess') || !preg_match('/noabort/i', file_get_contents(ABSPATH.'.htaccess'))) {
+					UpdraftPlus_Options::delete_updraft_option('updraft_dismiss_admin_warning_litespeed');
+				}
+			}
+		}
 	}
 
 	/**
@@ -3888,6 +3897,7 @@ class Updraft_Restorer {
 	 * 15 UNLOCK
 	 * 16 DROP VIEW
 	 * 17 SET GLOBAL.GTID_PURGED
+	 * 18 SET SQL_MODE|@OLD_SQL_MODE
 	 *
 	 * @param  String  $sql_line            sql line to execute
 	 * @param  Integer $sql_type            sql type
@@ -4291,7 +4301,7 @@ class Updraft_Restorer {
 				$um_sql = "SELECT umeta_id, meta_key 
 					FROM {$import_table_prefix}usermeta 
 					WHERE meta_key 
-					LIKE '".str_replace('_', '\_', $old_table_prefix)."%'";
+					LIKE '".UpdraftPlus_Database_Utility::esc_like($old_table_prefix)."%'";
 				$meta_keys = $wpdb->get_results($um_sql);
 
 				foreach ($meta_keys as $meta_key) {
@@ -4306,7 +4316,7 @@ class Updraft_Restorer {
 				}
 			} else {
 				// New, fast way: do it in a single query
-				$sql = "UPDATE {$import_table_prefix}usermeta SET meta_key = REPLACE(meta_key, '$old_table_prefix', '{$import_table_prefix}') WHERE meta_key LIKE '".str_replace('_', '\_', $old_table_prefix)."%';";
+				$sql = "UPDATE {$import_table_prefix}usermeta SET meta_key = REPLACE(meta_key, '$old_table_prefix', '{$import_table_prefix}') WHERE meta_key LIKE '".UpdraftPlus_Database_Utility::esc_like($old_table_prefix)."%';";
 				if (false === $wpdb->query($sql)) $errors_occurred = true;
 			}
 
@@ -4635,6 +4645,6 @@ class UpdraftPlus_WPDB extends wpdb {
 	 * @return Boolean
 	 */
 	public function updraftplus_use_mysqli() {
-		return !empty($this->use_mysqli);
+		return $this->dbh instanceof mysqli;
 	}
 }

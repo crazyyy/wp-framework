@@ -243,7 +243,7 @@ class WP_Optimizer {
 	}
 	
 	/**
-	 * THis runs the list of optimizations.
+	 * This runs the list of optimizations.
 	 *
 	 * @param  array  $optimization_options Whether to do an optimization depends on what keys are set (legacy - can be changed hopefully).
 	 * @param  string $which_option         Specify which option.

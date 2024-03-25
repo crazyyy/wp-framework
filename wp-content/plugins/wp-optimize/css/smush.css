@@ -763,6 +763,20 @@ img#wpo_smush_images_clear_stats_spinner {
   line-height: 18px;
 }
 
+#smush-metabox-inside-wrapper .wpo_restore_single_image .restore-icon [data-tooltip] {
+  display: inline;
+  padding-top: 1px;
+}
+
+#smush-metabox-inside-wrapper .wpo_restore_single_image .restore-icon [data-tooltip]:before {
+  margin-left: -110px;
+  bottom: 100%;
+}
+
+#smush-metabox-inside-wrapper .wpo_restore_single_image .restore-icon [data-tooltip]:after {
+  bottom: 100%;
+}
+
 /* Hide the tooltip content by default */
 #smush-metabox-inside-wrapper [data-tooltip]:before,
 #smush-metabox-inside-wrapper [data-tooltip]:after,

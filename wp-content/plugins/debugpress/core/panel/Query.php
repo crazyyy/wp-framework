@@ -14,13 +14,15 @@ class Query extends Panel {
 	public function left() {
 		global $wp_query;
 
-		$this->title( __( "Query Conditionals", "debugpress" ) );
+		$this->title( esc_html__( 'Query Conditionals', 'debugpress' ) );
 		$this->block_header();
 		$this->table_init_standard();
 		$this->table_head();
 		foreach ( $wp_query as $property => $value ) {
-			if ( substr( $property, 0, 3 ) == "is_" && $value === true ) {
-				$this->table_row( array( $property, ucwords( str_replace( "_", " ", substr( $property, 3 ) ) ) ) );
+			if ( substr( $property, 0, 3 ) == 'is_' && $value === true ) {
+				$this->table_row( array( $property, 'WP: ' . ucwords( str_replace( "_", " ", substr( $property, 3 ) ) ) ) );
+			} else if ( substr( $property, 0, 7 ) == 'bbp_is_' && $value === true ) {
+				$this->table_row( array( $property, 'bbPress: ' . ucwords( str_replace( "_", " ", substr( $property, 7 ) ) ) ) );
 			}
 		}
 
@@ -35,13 +37,13 @@ class Query extends Panel {
 		if ( $post instanceof WP_Post ) {
 			$meta = get_post_meta( $post->ID );
 
-			$this->title( __( "Global Post", "debugpress" ) );
+			$this->title( esc_html__( 'Global Post', 'debugpress' ) );
 			$this->block_header();
 			debugpress_r( $post, false );
 			$this->block_footer();
 
 			if ( $meta ) {
-				$this->title( __( "Global Post Meta Data", "debugpress" ) );
+				$this->title( esc_html__( 'Global Post Meta Data', 'debugpress' ) );
 				$this->list_array( $meta );
 			}
 		}
@@ -51,34 +53,34 @@ class Query extends Panel {
 		global $wp_query, $wp;
 
 		if ( ! empty( $wp_query->request ) ) {
-			$this->title( __( "Executed SQL Query", "debugpress" ) );
+			$this->title( esc_html__( 'Executed SQL Query', 'debugpress' ) );
 			$this->block_header();
 			echo '<div class="query-sql-run-full">';
-			echo SQLFormat::format( $wp_query->request );
+			echo SQLFormat::format( $wp_query->request ); // phpcs:ignore WordPress.Security.EscapeOutput
 			echo '</div>';
 			$this->block_footer();
 		}
 
-		$this->title( __( "Complete WP Query object", "debugpress" ) );
+		$this->title( esc_html__( 'Complete WP Query object', 'debugpress' ) );
 		$this->block_header();
 		debugpress_r( $wp_query, false );
 		$this->block_footer();
 
-		$this->title( __( "Complete WP object", "debugpress" ) );
+		$this->title( esc_html__( 'Complete WP object', 'debugpress' ) );
 		$this->block_header();
 		debugpress_r( $wp, false );
 		$this->block_footer();
 
-		$this->title( __( "Query Variables", "debugpress" ), false );
+		$this->title( esc_html__( 'Query Variables', 'debugpress' ), false );
 		$this->block_header( false );
 		if ( $wp_query->query ) {
-			$this->list_array( $wp_query->query, '$' . 'wp_query->query', false );
+			$this->list_array( $wp_query->query, '$' . 'wp_query->query', false ); // phpcs:ignore Generic.Strings.UnnecessaryStringConcat
 		}
 		if ( $wp_query->tax_query ) {
-			$this->list_array( $wp_query->tax_query, '$' . 'wp_query->tax_query', false );
+			$this->list_array( $wp_query->tax_query, '$' . 'wp_query->tax_query', false ); // phpcs:ignore Generic.Strings.UnnecessaryStringConcat
 		}
 		if ( $wp_query->meta_query ) {
-			$this->list_array( $wp_query->meta_query, '$' . 'wp_query->meta_query', false );
+			$this->list_array( $wp_query->meta_query, '$' . 'wp_query->meta_query', false ); // phpcs:ignore Generic.Strings.UnnecessaryStringConcat
 		}
 		$this->block_footer();
 	}

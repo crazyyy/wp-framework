@@ -3,7 +3,10 @@
 if (!defined('ABSPATH')) die('No direct access.');
 
 if (!$is_activated_for_user) {
-	_e('Two factor authentication is not available for your user.', 'all-in-one-wp-security-and-firewall');
+	
+	global $current_user;
+	echo empty($current_user->ID) ? '('.__('Not logged in.', 'all-in-one-wp-security-and-firewall').')' : __('Two factor authentication is not available for your user.', 'all-in-one-wp-security-and-firewall');
+
 } else {
 	
 	?>

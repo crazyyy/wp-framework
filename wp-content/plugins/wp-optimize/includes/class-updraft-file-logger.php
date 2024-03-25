@@ -147,8 +147,10 @@ class Updraft_File_Logger extends Updraft_Abstract_Logger {
 	 */
 	public function prune_logs($how_old = "5 days ago") {
 
-		if (strtotime($how_old)) {
-			$how_old = "5 days ago";
+		// If the $how_old string is invalid revert to default "5 days ago"
+		$prune_period = strtotime($how_old);
+		if (!$prune_period) {
+			$prune_period = strtotime("5 days ago");
 		}
 
 		// phpcs:disable
@@ -156,14 +158,17 @@ class Updraft_File_Logger extends Updraft_Abstract_Logger {
 		// We ignore a few lines here to avoid warnings on file operations
 		// WP.VIP does not like us writing directly to the filesystem
 		$logfile_handle = fopen($this->logfile, "r");
+		if (false === $logfile_handle) return false;
 		$temp_file = fopen(preg_replace("/\.log$/", "-temp.log", $this->logfile), "a");
 
 		// Stream is the preferred way because of potentially large file sizes
 		while ($line = stream_get_line($logfile_handle, 1024 * 1024, "\n")) {
-			$entry_time = strtotime(strstr($line, " : ", true));
 
-			if ($entry_time > $how_old) {
-				fwrite($temp_file, $line."\n");
+			$pattern = '/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/';
+			if (preg_match($pattern, $line, $matches)) {
+				if (strtotime($matches[0]) > $prune_period) {
+					fwrite($temp_file, $line."\n");
+				}
 			}
 		}
 

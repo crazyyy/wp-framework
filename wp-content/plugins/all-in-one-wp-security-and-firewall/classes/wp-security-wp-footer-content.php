@@ -29,7 +29,6 @@ class AIOWPSecurity_WP_Footer_Content {
 
 	public function output_copy_protection_code() {
 		?>
-		<meta http-equiv="imagetoolbar" content="no"><!-- disable image toolbar (if any) -->
 		<style>
 			:root {
 				-webkit-user-select: none;

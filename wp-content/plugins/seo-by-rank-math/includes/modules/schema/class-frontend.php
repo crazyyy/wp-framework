@@ -12,7 +12,7 @@ namespace RankMath\Schema;
 
 use RankMath\Helper;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
+use RankMath\Helpers\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -143,12 +143,12 @@ class Frontend {
 	 */
 	public function validate_event_schema( $schema ) {
 		if ( ! empty( $schema['startDate'] ) ) {
-			$start_date          = Helper::convert_date( strtotime( $schema['startDate'] ), true );
+			$start_date          = date_i18n( 'Y-m-d H:i:sP', strtotime( $schema['startDate'] ) );
 			$schema['startDate'] = str_replace( ' ', 'T', $start_date );
 		}
 
 		if ( ! empty( $schema['endDate'] ) ) {
-			$end_date          = Helper::convert_date( strtotime( $schema['endDate'] ), true );
+			$end_date          = date_i18n( 'Y-m-d H:i:sP', strtotime( $schema['endDate'] ) );
 			$schema['endDate'] = str_replace( ' ', 'T', $end_date );
 		}
 
@@ -170,7 +170,7 @@ class Frontend {
 		}
 
 		// Remove empty ImageObject.
-		if ( isset( $schema['image'] ) && empty( $schema['image']['url'] ) ) {
+		if ( isset( $schema['image'] ) && empty( $schema['image']['url'] ) && ! is_array( $schema['image'] ) ) {
 			unset( $schema['image'] );
 		}
 
@@ -188,11 +188,11 @@ class Frontend {
 			$props = [
 				'is_part_of' => [
 					'key'   => 'webpage',
-					'value' => ! in_array( $type, [ 'jobposting', 'musicgroup', 'person', 'product', 'restaurant', 'service' ], true ) && ! $is_event,
+					'value' => ! in_array( $type, [ 'jobposting', 'musicgroup', 'person', 'product', 'productgroup', 'restaurant', 'service' ], true ) && ! $is_event,
 				],
 				'publisher'  => [
 					'key'   => 'publisher',
-					'value' => ! in_array( $type, [ 'jobposting', 'musicgroup', 'person', 'product', 'restaurant', 'service' ], true ) && ! $is_event,
+					'value' => ! in_array( $type, [ 'jobposting', 'musicgroup', 'person', 'product', 'productgroup', 'restaurant', 'service' ], true ) && ! $is_event,
 				],
 				'thumbnail'  => [
 					'key'   => 'image',
@@ -200,9 +200,13 @@ class Frontend {
 				],
 				'language'   => [
 					'key'   => 'inLanguage',
-					'value' => ! in_array( $type, [ 'person', 'service', 'restaurant', 'product', 'musicgroup', 'musicalbum', 'jobposting' ], true ),
+					'value' => ! in_array( $type, [ 'person', 'service', 'restaurant', 'product', 'productgroup', 'musicgroup', 'musicalbum', 'jobposting' ], true ),
 				],
 			];
+
+			if ( isset( $schema['image'] ) && 'product' === $type && is_array( $schema['image'] ) ) {
+				$props['thumbnail']['value'] = false;
+			}
 
 			foreach ( $props as $prop => $data ) {
 				if ( ! $data['value'] ) {

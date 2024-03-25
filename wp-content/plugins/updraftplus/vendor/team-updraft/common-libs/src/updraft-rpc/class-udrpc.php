@@ -59,7 +59,7 @@ if (!class_exists('UpdraftPlus_Remote_Communications')) :
 class UpdraftPlus_Remote_Communications {
 
 	// Version numbers relate to versions of this PHP library only (i.e. it's not a protocol support number, and version numbers of other compatible libraries (e.g. JavaScript) are not comparable)
-	public $version = '1.4.23';
+	public $version = '1.4.24';
 
 	private $key_name_indicator;
 
@@ -168,7 +168,13 @@ class UpdraftPlus_Remote_Communications {
 
 	private function ensure_crypto_loaded() {
 		if (!class_exists('Crypt_Rijndael') || !class_exists('Crypt_RSA') || !class_exists('Crypt_Hash')) {
-			global $updraftplus;
+			global $updraftplus, $updraftcentral_host_plugin;
+
+			$base_dir = '';
+			if (is_a($updraftcentral_host_plugin, 'UpdraftCentral_Host') && is_callable(array($updraftcentral_host_plugin, 'get_host_dir'))) {
+				$base_dir = trailingslashit($updraftcentral_host_plugin->get_host_dir());
+			}
+
 			// phpseclib 1.x uses deprecated PHP4-style constructors
 			$this->no_deprecation_warnings_on_php7();
 			if (is_a($updraftplus, 'UpdraftPlus')) {
@@ -184,6 +190,12 @@ class UpdraftPlus_Remote_Communications {
 			} elseif (file_exists(dirname(dirname(__FILE__)).'/vendor/phpseclib/phpseclib/phpseclib')) {
 				$pdir = dirname(dirname(__FILE__)).'/vendor/phpseclib/phpseclib/phpseclib';
 				if (false === strpos(get_include_path(), $pdir)) set_include_path($pdir.PATH_SEPARATOR.get_include_path());
+				if (!class_exists('Crypt_Rijndael')) include_once 'Crypt/Rijndael.php';
+				if (!class_exists('Crypt_RSA')) include_once 'Crypt/RSA.php';
+				if (!class_exists('Crypt_Hash')) include_once 'Crypt/Hash.php';
+			} elseif ('' !== $base_dir && file_exists($base_dir.'vendor/phpseclib/phpseclib/phpseclib')) {
+				$phpseclib_dir = $base_dir.'vendor/phpseclib/phpseclib/phpseclib';
+				if (false === strpos(get_include_path(), $phpseclib_dir)) set_include_path($phpseclib_dir.PATH_SEPARATOR.get_include_path());
 				if (!class_exists('Crypt_Rijndael')) include_once 'Crypt/Rijndael.php';
 				if (!class_exists('Crypt_RSA')) include_once 'Crypt/RSA.php';
 				if (!class_exists('Crypt_Hash')) include_once 'Crypt/Hash.php';
@@ -644,8 +656,8 @@ class UpdraftPlus_Remote_Communications {
 						$proxy_auth .= '@';
 					}
 					$guzzle_options['proxy'] = array(
-						'http' => "http://${proxy_auth}$host:$port",
-						'https' => "http://${proxy_auth}$host:$port",
+						'http' => "http://{$proxy_auth}$host:$port",
+						'https' => "http://{$proxy_auth}$host:$port",
 					);
 				}
 			}

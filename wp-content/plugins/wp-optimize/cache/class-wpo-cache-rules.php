@@ -46,6 +46,9 @@ class WPO_Cache_Rules {
 		add_action('wp_insert_comment', array($this, 'comment_inserted'), 10, 2);
 		add_action('import_start', array($this, 'remove_wp_insert_comment'));
 
+		add_action('update_option_page_on_front', array($this, 'purge_cache_on_homepage_change'));
+		add_action('update_option_page_for_posts', array($this, 'purge_cache_on_blog_page_change'), 10, 2);
+
 		add_action('woocommerce_variation_set_stock', array($this, 'purge_product_page'), 10, 1);
 		add_action('woocommerce_product_set_stock', array($this, 'purge_product_page'), 10, 1);
 
@@ -65,6 +68,7 @@ class WPO_Cache_Rules {
 			'wpo_active_plugin_or_theme_updated',
 			'fusion_cache_reset_after',
 			'update_option_permalink_structure',
+			'update_option_posts_per_page',
 			'wpml_st_add_string_translation',
 		);
 		$purge_on_action = apply_filters('wpo_purge_cache_hooks', $actions);
@@ -203,7 +207,7 @@ class WPO_Cache_Rules {
 				WPO_Page_Cache::delete_cache_by_url(get_permalink($blog_post_id), true);
 			}
 		
-			// delete next and previus posts cache.
+			// delete next and previous posts cache.
 			$globals_post = isset($GLOBALS['post']) ? $GLOBALS['post'] : false;
 			$GLOBALS['post'] = get_post($post_id);
 			$previous_post = function_exists('get_previous_post') ? get_previous_post() : false;
@@ -333,6 +337,38 @@ class WPO_Cache_Rules {
 	public function purge_product_page($product_with_stock) {
 		if (!empty($product_with_stock->get_id())) {
 			WPO_Page_Cache::delete_single_post_cache($product_with_stock->get_id());
+		}
+	}
+
+	/**
+	 * Purges relevant caches when the "Homepage" option is changed.
+	 *
+	 * This method is also triggered when the "Homepage displays" option is changed
+	 * from a static page to latest posts. In this scenario, the "Homepage" option value
+	 * becomes zero. Since the cache for the front-page is already purged here, there's no need
+	 * to purge the cache using the`update_option_show_on_front` hook.
+	 *
+	 * @param string $old_value The old value of the "Homepage" option.
+	 */
+	public function purge_cache_on_homepage_change($old_value) {
+		if ($old_value) {
+			WPO_Page_Cache::delete_cache_by_url(get_permalink($old_value));
+		}
+		WPO_Page_Cache::delete_homepage_cache();
+	}
+
+	/**
+	 * Purges relevant caches when the "Posts page" option is changed.
+	 *
+	 * @param string $old_value The old value of the "Posts page" option.
+	 * @param string $value     The new value of the "Posts page" option.
+	 */
+	public function purge_cache_on_blog_page_change($old_value, $value) {
+		if ($old_value) {
+			WPO_Page_Cache::delete_cache_by_url(get_permalink($old_value));
+		}
+		if ($value) {
+			WPO_Page_Cache::delete_cache_by_url(get_permalink($value));
 		}
 	}
 

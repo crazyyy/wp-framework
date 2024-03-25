@@ -14,8 +14,8 @@ namespace RankMath;
 
 use RankMath\Traits\Hooker;
 use RankMath\Admin\Watcher;
+use RankMath\Helper;
 use RankMath\Admin\Admin_Helper;
-use MyThemeShop\Helpers\WordPress;
 use RankMath\Role_Manager\Capability_Manager;
 
 defined( 'ABSPATH' ) || exit;
@@ -370,7 +370,6 @@ class Installer {
 					'content_ai_tone'                     => 'Formal',
 					'content_ai_audience'                 => 'General Audience',
 					'content_ai_language'                 => Helper::content_ai_default_language(),
-					'cotnent_ai_enable_grammarly'         => 'off',
 					'analytics_stats'                     => 'on',
 					'toc_block_title'                     => 'Table of Contents',
 					'toc_block_list_style'                => 'ul',
@@ -387,7 +386,6 @@ class Installer {
 			'items_per_page'          => 200,
 			'include_images'          => 'on',
 			'include_featured_image'  => 'off',
-			'ping_search_engines'     => 'on',
 			'exclude_roles'           => $this->get_excluded_roles(),
 			'html_sitemap'            => 'on',
 			'html_sitemap_display'    => 'shortcode',
@@ -655,7 +653,7 @@ class Installer {
 	 * @return array
 	 */
 	private function get_excluded_roles() {
-		$roles = WordPress::get_roles();
+		$roles = Helper::get_roles();
 		unset( $roles['administrator'], $roles['editor'], $roles['author'] );
 
 		return $roles;

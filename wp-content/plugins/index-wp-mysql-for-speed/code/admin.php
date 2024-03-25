@@ -674,6 +674,26 @@ class ImfsPage extends Imfs_AdminPageFramework {
   }
 
   /**
+   * Database health information report.
+   */
+  private function showHealthInfo( $healthReport ) {
+    global $wp_version;
+    global $wp_db_version;
+    $this->addSettingFields(
+      [
+        'field_id' => 'health',
+        'title'    => __( 'Database Health', 'index-wp-mysql-for-speed' ),
+        'default'  => $healthReport,
+        'save'     => false,
+        'class'    => [
+          'fieldrow' => 'info',
+        ],
+      ]
+    );
+  }
+
+
+  /**
    * text field showing versions
    */
   private
@@ -911,6 +931,7 @@ class ImfsPage extends Imfs_AdminPageFramework {
     }
 
     $this->showIndexStatus( $this->db->getRekeying() );
+    $this->showHealthInfo( $this->db->getHealthReport() );
     $this->uploadMetadata();
     $this->showVersionInfo();
   }
@@ -1278,6 +1299,20 @@ class ImfsPage extends Imfs_AdminPageFramework {
     }
 
     return $this->action( $submitInfo['field_id'], $inputs, $oldInputs, $factory, $submitInfo );
+  }
+
+  /**
+   * Work around a shortcoming in Query Monitor.
+   *
+   * Admin Page Framework registers a 'current_screen' action handler that's invoked via php's __call magic method
+   * rather than by being defined in the class. But Query Monitor's Hooks and Actions display assumes the
+   * action handler is actually defined, and shows an error if it is not.
+   *
+   * @param $arg0
+   * @return void
+   */
+  public function load_pre_imfs_settings ($arg0 ) {
+      $this->__call ('load_pre_imfs_settings', array( $arg0 ) );
   }
 
 }

@@ -11,8 +11,7 @@
 namespace RankMath\Status;
 
 use RankMath\Helper;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\WordPress;
+use RankMath\Helpers\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -115,7 +114,7 @@ class Error_Log {
 	 */
 	private function get_error_log_rows( $limit = -1 ) {
 		if ( is_null( $this->contents ) ) {
-			$wp_filesystem  = WordPress::get_filesystem();
+			$wp_filesystem  = Helper::get_filesystem();
 			$this->contents = $wp_filesystem->get_contents_array( $this->get_log_path() );
 		}
 
@@ -131,7 +130,7 @@ class Error_Log {
 	 */
 	private function can_load() {
 		$log_file      = $this->get_log_path();
-		$wp_filesystem = WordPress::get_filesystem();
+		$wp_filesystem = Helper::get_filesystem();
 
 		if (
 			empty( $log_file ) ||

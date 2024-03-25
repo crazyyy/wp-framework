@@ -656,8 +656,8 @@ class UpdraftPlus_Remote_Communications {
 						$proxy_auth .= '@';
 					}
 					$guzzle_options['proxy'] = array(
-						'http' => "http://${proxy_auth}$host:$port",
-						'https' => "http://${proxy_auth}$host:$port",
+						'http' => "http://{$proxy_auth}$host:$port",
+						'https' => "http://{$proxy_auth}$host:$port",
 					);
 				}
 			}

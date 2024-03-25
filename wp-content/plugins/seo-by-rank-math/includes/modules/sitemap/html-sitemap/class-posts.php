@@ -12,7 +12,7 @@ namespace RankMath\Sitemap\Html;
 
 use RankMath\Helper;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Database\Database;
+use RankMath\Admin\Database\Database;
 use RankMath\Sitemap\Sitemap as SitemapBase;
 
 defined( 'ABSPATH' ) || exit;
@@ -25,20 +25,28 @@ class Posts {
 	use Hooker;
 
 	/**
+	 * An array of posts that have a parent.
+	 *
+	 * @var array
+	 */
+	private $children = [];
+
+	/**
 	 * Get all posts from a given post type.
 	 *
 	 * @param string $post_type   Post type.
-	 * @param int    $post_parent Post parent.
+	 * @param array  $post_parents An array of post parent ids.
 	 *
 	 * @return array
 	 */
-	private function get_posts( $post_type, $post_parent = 0 ) {
+	private function get_posts( $post_type, $post_parents = [] ) {
+		global $wpdb;
 		$sort_map = [
-			'published' => [
+			'published'    => [
 				'field' => 'post_date',
 				'order' => 'DESC',
 			],
-			'modified'  => [
+			'modified'     => [
 				'field' => 'post_modified',
 				'order' => 'DESC',
 			],
@@ -46,14 +54,14 @@ class Posts {
 				'field' => 'post_title',
 				'order' => 'ASC',
 			],
-			'post_id' => [
+			'post_id'      => [
 				'field' => 'ID',
 				'order' => 'DESC',
 			],
 		];
 
 		$sort_setting = Helper::get_settings( 'sitemap.html_sitemap_sort' );
-		$sort = ( isset( $sort_map[ $sort_setting ] ) ) ? $sort_map[ $sort_setting ] : $sort_map['published'];
+		$sort         = ( isset( $sort_map[ $sort_setting ] ) ) ? $sort_map[ $sort_setting ] : $sort_map['published'];
 
 		/**
 		 * Filter: 'rank_math/sitemap/html_sitemap/sort_items' - Allow changing the sort order of the HTML sitemap.
@@ -75,26 +83,22 @@ class Posts {
 		 * @var array  $statuses Post statuses.
 		 * @var string $post_type Post type name.
 		 */
-		$statuses = $this->do_filter( 'sitemap/html_sitemap_post_statuses', $statuses, $post_type );
-
-		$exclude = wp_parse_id_list( Helper::get_settings( 'sitemap.exclude_posts' ) );
-		$table   = Database::table( 'posts' );
-
-		$query = $table
-			->select( [ 'ID', 'post_title', 'post_name', 'post_date', 'post_parent', 'post_type' ] )
-			->where( 'post_type', $post_type )
-			->where( 'post_parent', $post_parent )
-			->whereIn( 'post_status', $statuses );
-
-		if ( ! empty( $exclude ) ) {
-			$query->whereNotIn( 'ID', $exclude );
-		}
-
-		$posts = $query->orderBy( $sort['field'], $sort['order'] )->get();
-
-		return array_filter( $posts, function( $post ) {
-			return SitemapBase::is_object_indexable( $post->ID );
-		} );
+		$statuses  = $this->do_filter( 'sitemap/html_sitemap_post_statuses', $statuses, $post_type );
+		$get_child = ! empty( $post_parents ) ? " WHERE post_parent !='' " : '';
+		$sql       = "
+			SELECT l.ID, post_title, post_name, post_parent, post_date, post_type, l.post_modified
+			FROM (
+				SELECT DISTINCT p.ID, p.post_modified FROM {$wpdb->posts} as p
+				LEFT JOIN {$wpdb->postmeta} AS pm ON ( p.ID = pm.post_id AND pm.meta_key = 'rank_math_robots' )
+				WHERE (
+					( pm.meta_key = 'rank_math_robots' AND pm.meta_value NOT LIKE '%noindex%' ) OR
+					pm.post_id IS NULL
+				)
+				AND p.post_type IN ( '" . $post_type . "' ) AND p.post_status IN ( '" . join( "', '", esc_sql( $statuses ) ) . "' )
+				ORDER BY p.post_modified DESC
+			)
+			o JOIN {$wpdb->posts} l ON l.ID = o.ID " . $get_child . " ORDER BY " . $sort['field'] . " " . $sort['order']; // phpcs:ignore
+		return $wpdb->get_results( $wpdb->prepare( $sql ) ); // phpcs:ignore
 	}
 
 	/**
@@ -139,7 +143,36 @@ class Posts {
 		}
 
 		if ( is_post_type_hierarchical( $post_type ) ) {
-			return $this->generate_posts_list_hierarchical( $posts, $show_dates, $post_type );
+			$post_ids  = [];
+			$post_list = [];
+			array_map(
+				function ( $post ) use ( &$post_ids, &$post_list ) {
+					$post_ids[]             = $post->ID;
+					$post_list[ $post->ID ] = $post;
+				},
+				$posts
+			);
+
+			$children = $this->get_posts( $post_type, $post_ids );
+			foreach ( $children as $child ) {
+				// Confirm if child has a parent available, the parent might not be index-able and re-add the child to $posts!
+				$parent = array_filter(
+					$post_list,
+					function ( $post ) use ( $child ) {
+						return $child->post_parent === $post->ID;
+					}
+				);
+
+				if ( empty( $parent ) ) {
+					$child->child_has_no_parent = true;
+					$post_list[ $child->ID ]    = $child;
+					continue;
+				}
+				$this->children[ $post_type ][ $child->post_parent ][ $child->ID ] = $child;
+			}
+
+			$post_list = $this->remove_with_parent( $post_list );
+			return $this->generate_posts_list_hierarchical( $post_list, $show_dates, $post_type );
 		}
 
 		return $this->generate_posts_list_flat( $posts, $show_dates );
@@ -156,12 +189,21 @@ class Posts {
 	private function generate_posts_list_flat( $posts, $show_dates ) {
 		$output = [];
 		foreach ( $posts as $post ) {
+			if ( ! SitemapBase::is_object_indexable( absint( $post->ID ) ) ) {
+				continue;
+			}
+
+			$url = $this->do_filter( 'sitemap/entry', esc_url( $this->get_post_link( $post ) ), 'post', $post );
+			if ( empty( $url ) ) {
+				continue;
+			}
+
 			$output[] = '<li class="rank-math-html-sitemap__item">'
-				. '<a href="' . esc_url( $this->get_post_link( $post ) ) . '" class="rank-math-html-sitemap__link">'
-				. esc_html( $this->get_post_title( $post ) )
-				. '</a>'
-				. ( $show_dates ? ' <span class="rank-math-html-sitemap__date">(' . esc_html( mysql2date( get_option( 'date_format' ), $post->post_date ) ) . ')</span>' : '' )
-				. '</li>';
+			. '<a href="' . esc_url( $this->get_post_link( $post ) ) . '" class="rank-math-html-sitemap__link">'
+			. esc_html( $this->get_post_title( $post ) )
+			. '</a>'
+			. ( $show_dates ? ' <span class="rank-math-html-sitemap__date">(' . esc_html( mysql2date( get_option( 'date_format' ), $post->post_date ) ) . ')</span>' : '' )
+			. '</li>';
 		}
 
 		return implode( '', $output );
@@ -174,24 +216,40 @@ class Posts {
 	 * @param array  $posts      The posts to output.
 	 * @param bool   $show_dates Whether to show the post dates.
 	 * @param string $post_type  Post type name.
+	 * @param bool   $child      Whether the passed posts are children.
 	 *
 	 * @return string
 	 */
-	private function generate_posts_list_hierarchical( $posts, $show_dates, $post_type ) {
-		$output = [];
+	private function generate_posts_list_hierarchical( $posts, $show_dates, $post_type, $child = false ) {
+		$output  = [];
+		$exclude = wp_parse_id_list( Helper::get_settings( 'sitemap.exclude_posts' ) );
+
 		foreach ( $posts as $post ) {
-			$output[] = '<li class="rank-math-html-sitemap__item">'
+			$check_parent_index = empty( $post->post_parent ) ? 0 : SitemapBase::is_object_indexable( $post->post_parent );
+			$is_indexable       = SitemapBase::is_object_indexable( absint( $post->ID ) );
+
+			if ( ( ! $check_parent_index || $child ) && $is_indexable ) {
+				$output[] = '<li class="rank-math-html-sitemap__item">'
 				. '<a href="' . esc_url( get_permalink( $post->ID ) ) . '" class="rank-math-html-sitemap__link">'
 				. esc_html( $this->get_post_title( $post ) )
 				. '</a>'
-				. ( $show_dates ? ' <span class="rank-math-html-sitemap__date">(' . esc_html( mysql2date( get_option( 'date_format' ), $post->post_date ) ) . ')</span>' : '' )
-				. '</li>';
+				. ( $show_dates ? ' <span class="rank-math-html-sitemap__date">(' . esc_html( mysql2date( get_option( 'date_format' ), $post->post_date ) ) . ')</span>' : '' );
+			}
 
-			$children = $this->get_posts( $post_type, $post->ID );
-			if ( ! empty( $children ) ) {
-				$output[] = '<ul class="rank-math-html-sitemap__list">';
-				$output[] = $this->generate_posts_list_hierarchical( $children, $show_dates, $post_type );
-				$output[] = '</ul>';
+			if ( ! empty( $this->children[ $post_type ][ $post->ID ] ) ) {
+				if ( $is_indexable ) {
+					$output[] = '<ul class="rank-math-html-sitemap__list">';
+				}
+
+				$output[] = $this->generate_posts_list_hierarchical(  $this->children[ $post_type ][ $post->ID ], $show_dates, $post_type, true ); // phpcs:ignore
+
+				if ( $is_indexable ) {
+					$output[] = '</ul>';
+				}
+			}
+
+			if ( $is_indexable ) {
+				$output[] = '</li>';
 			}
 		}
 
@@ -200,6 +258,10 @@ class Posts {
 
 	/**
 	 * Get the post permalink.
+	 *
+	 * @param object $post The post object.
+	 *
+	 * @return string
 	 */
 	private function get_post_link( $post ) {
 		return get_permalink( $post->ID );
@@ -231,5 +293,21 @@ class Posts {
 
 		// Fallback to post title.
 		return $post->post_title;
+	}
+
+	/**
+	 * Removes posts with a parent to avoid them being rendered twice.
+	 *
+	 * @param array $posts Array of post objects.
+	 *
+	 * @return array
+	 */
+	private function remove_with_parent( $posts ) {
+		return array_filter(
+			$posts,
+			function ( $post ) {
+				return ! $post->post_parent || isset( $post->child_has_no_parent );
+			}
+		);
 	}
 }

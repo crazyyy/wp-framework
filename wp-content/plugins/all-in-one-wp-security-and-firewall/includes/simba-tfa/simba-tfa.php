@@ -1032,7 +1032,7 @@ class Simba_Two_Factor_Authentication_1 {
 				$encryption_enabled = $this->get_option('tfa_encrypt_secrets');
 				$additional = ($encryption_enabled && (!defined('SIMBA_TFA_DB_ENCRYPTION_KEY') || '' === SIMBA_TFA_DB_ENCRYPTION_KEY)) ? ' ' . htmlspecialchars(__('The "encrypt secrets" feature is currently enabled, but no encryption key has been found (set via the SIMBA_TFA_DB_ENCRYPTION_KEY constant).', 'all-in-one-wp-security-and-firewall').' '.__('This indicates that either setup failed, or your WordPress installation has been corrupted.', 'all-in-one-wp-security-and-firewall')) . ' <a href="' . esc_url($this->get_faq_url()) . '">'. __('Go here for the FAQs, which explain how a website owner can de-activate the plugin without needing to login.', 'all-in-one-wp-security-and-firewall') .'</a>' : '';
 				$ret =  new WP_Error('authentication_failed', '<strong>'.__('Error:', 'all-in-one-wp-security-and-firewall').'</strong> '.apply_filters('simba_tfa_message_code_incorrect', __('The one-time password (TFA code) you entered was incorrect.', 'all-in-one-wp-security-and-firewall') . $additional));
-				$this->log_incorrect_tfa_code_attempt($user);
+				if (is_a($user, 'WP_User')) $this->log_incorrect_tfa_code_attempt($user);
 			} elseif ($user) {
 				$ret = $user;
 			} else {
@@ -1110,9 +1110,9 @@ class Simba_Two_Factor_Authentication_1 {
 	}
 	
 	/**
-	 * Log incorrect TFA code attempt and email user if atttemp exceeded limit
+	 * Log incorrect TFA code attempt and email user if attempt exceeded limit
 	 *
-	 * @param WP_User $user    - logging in user object
+	 * @param WP_User $user - user object for teh user logging in
 	 *
 	 * @retrun Void
 	 */

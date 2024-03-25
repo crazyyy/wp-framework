@@ -2,7 +2,7 @@
 
 if (!defined('WPO_PLUGIN_MAIN_PATH')) die('No direct access allowed');
 
-if (!class_exists('Updraft_Notices_1_2')) require_once(WPO_PLUGIN_MAIN_PATH.'/vendor/team-updraft/common-libs/src/updraft-notices/updraft-notices.php');
+if (!class_exists('Updraft_Notices_1_2')) require_once(WPO_PLUGIN_MAIN_PATH.'vendor/team-updraft/common-libs/src/updraft-notices/updraft-notices.php');
 
 class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 
@@ -154,13 +154,13 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'blackfriday' => array(
 				'prefix' => '',
 				'title' => __('Black Friday Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Get 20%% off with code %s at %s.', 'wp-optimize'), '<b>blackfridaysale2023</b>', $checkout_html) . ' ' . __('Hurry, offer ends 28th November.', 'wp-optimize'),
+				'text' => $sale_description . '<br>' . sprintf('<a class="updraft_notice_link" href="%1$s" target="_blank">%2$s</a>', 'https://getwpo.com/blackfriday?utm_source=plugin&utm_medium=banner&utm_campaign=black_friday', sprintf(__('Get 20%% off now with code %s', 'wp-optimize'), '<b>blackfridaysale2023</b>'))  . ' ' . __('Hurry, offer ends on 28th November.', 'wp-optimize'),
 				'image' => 'notices/black_friday.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
 				'dismiss_time' => 'dismiss_season',
 				// 'discount_code' => 'blackfridaysale2022',
-				'valid_from' => '2023-11-20 00:00:00',
+				'valid_from' => '2023-11-13 00:00:00',
 				'valid_to' => '2023-11-28 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 				'validity_function' => 'is_wpo_premium_installed',
@@ -308,7 +308,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 	}
 
 	/**
-	 * This method calls the parent verson and will work out if the user is using a non english language and if so returns true so that they can see the translation advert.
+	 * This method calls the parent version and will work out if the user is using a non english language and if so returns true so that they can see the translation advert.
 	 *
 	 * @param  String $plugin_base_dir the plugin base directory
 	 * @param  String $product_name    the name of the plugin

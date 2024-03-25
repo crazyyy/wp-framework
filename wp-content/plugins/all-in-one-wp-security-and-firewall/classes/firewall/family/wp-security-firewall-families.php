@@ -9,4 +9,5 @@ return array(
 	array('name' => 'Blacklist', 'priority' => 1),
 	array('name' => 'Bruteforce', 'priority' => 0),
 	array('name' => 'General', 'priority' => 20),
+	array('name' => 'Bots', 'priority' => 2),
 );

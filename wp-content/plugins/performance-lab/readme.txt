@@ -1,10 +1,10 @@
 === Performance Lab ===
 
 Contributors:      wordpressdotorg
-Requires at least: 6.1
-Tested up to:      6.3
-Requires PHP:      5.6
-Stable tag:        2.6.0
+Requires at least: 6.3
+Tested up to:      6.4
+Requires PHP:      7.0
+Stable tag:        2.9.0
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 Tags:              performance, images, javascript, site health, measurement, object caching
@@ -18,7 +18,6 @@ The Performance Lab plugin is a collection of modules focused on enhancing perfo
 Currently the plugin includes the following performance modules:
 
 * **Dominant Color Images:** Adds support to store the dominant color of newly uploaded images and create a placeholder background of that color.
-* **Fetchpriority:** Adds a fetchpriority hint for the primary content image on the page to load faster.
 * **WebP Support Health Check:** Adds a WebP support check in Site Health status.
 * **WebP Uploads:** Creates WebP versions for new JPEG image uploads if supported by the server.
 * **Enqueued Assets Health Check:** Adds a CSS and JS resource check in Site Health status.
@@ -79,6 +78,59 @@ There are two primary reasons that a WebP image may not be generated:
 By default, the WebP Uploads module will only generate WebP versions of the images that you upload. If you wish to have both WebP **and** JPEG versions generated, you can navigate to **Settings > Media** and enable the **Generate JPEG files in addition to WebP** option.
 
 == Changelog ==
+
+= 2.9.0 =
+
+**Features**
+
+* Infrastructure: Add standalone plugin version constants for auto-sizes and speculation-rules. ([958](https://github.com/WordPress/performance/pull/958))
+
+**Enhancements**
+
+* Infrastructure: Include standalone plugin slugs in generator tag. ([949](https://github.com/WordPress/performance/pull/949))
+
+**Bug Fixes**
+
+* Infrastructure: Sanitize metric name for `Server-Timing` header. ([957](https://github.com/WordPress/performance/pull/957))
+
+= 2.8.0 =
+
+**Features**
+
+* Infrastructure: Introduce UI for managing Performance Lab standalone plugins. ([864](https://github.com/WordPress/performance/pull/864))
+
+**Enhancements**
+
+* Infrastructure: Add support for plugin live preview in the plugin directory. ([890](https://github.com/WordPress/performance/pull/890))
+* Infrastructure: Allow module `can-load.php` callbacks to return a `WP_Error` with more information. ([891](https://github.com/WordPress/performance/pull/891))
+* Infrastructure: Implement admin pointer to indicate to the user they need to migrate modules to their standalone plugins. ([910](https://github.com/WordPress/performance/pull/910))
+* Infrastructure: Implement migration logic and UI from Performance Lab modules to their standalone plugins. ([899](https://github.com/WordPress/performance/pull/899))
+* Infrastructure: Reset admin pointer dismissal for module migration when the user activates a module. ([915](https://github.com/WordPress/performance/pull/915))
+
+**Bug Fixes**
+
+* Infrastructure: Fix construction of translation strings in admin/plugins.php. ([925](https://github.com/WordPress/performance/pull/925))
+
+= 2.7.0 =
+
+**Enhancements**
+
+* Images: Remove Fetchpriority module as the functionality is now available in WordPress core. ([854](https://github.com/WordPress/performance/pull/854))
+* Infrastructure: Bump minimum required PHP version to 7.0 and minimum required WP version to 6.3. ([851](https://github.com/WordPress/performance/pull/851))
+
+**Documentation**
+
+* Infrastructure: Publish Dominant Color Images standalone plugin. ([842](https://github.com/WordPress/performance/pull/842))
+
+= 2.6.1 =
+
+**Bug Fixes**
+
+* Infrastructure: Remove PHPStan config file from plugin directory. ([816](https://github.com/WordPress/performance/pull/816))
+
+**Documentation**
+
+* Infrastructure: Add standalone plugin assets. ([815](https://github.com/WordPress/performance/pull/815))
 
 = 2.6.0 =
 

@@ -20,9 +20,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms463_FontControl') ) {
+	if( !class_exists('Wbcr_FactoryForms469_FontControl') ) {
 
-		class Wbcr_FactoryForms463_FontControl extends Wbcr_FactoryForms463_ComplexControl {
+		class Wbcr_FactoryForms469_FontControl extends Wbcr_FactoryForms469_ComplexControl {
 
 			public $type = 'font';
 
@@ -54,9 +54,9 @@
 					'pickerTarget' => '.factory-control-' . $this->options['name'] . ' .factory-picker-target'
 				);
 
-				$this->size = new Wbcr_FactoryForms463_IntegerControl($option_font_size, $form, $provider);
-				$this->family = new Wbcr_FactoryForms463_DropdownControl($option_font_family, $form, $provider);
-				$this->color = new Wbcr_FactoryForms463_ColorControl($optionFontColor, $form, $provider);
+				$this->size = new Wbcr_FactoryForms469_IntegerControl($option_font_size, $form, $provider);
+				$this->family = new Wbcr_FactoryForms469_DropdownControl($option_font_family, $form, $provider);
+				$this->color = new Wbcr_FactoryForms469_ColorControl($optionFontColor, $form, $provider);
 
 				$this->innerControls = array($this->family, $this->size, $this->color);
 			}
@@ -66,8 +66,8 @@
 
 				$fonts = $this->getDefaultFonts();
 
-				$fonts = apply_filters('wbcr_factory_forms_463_fonts', $fonts);
-				$fonts = apply_filters('wbcr_factory_forms_463_fonts-' . $this->options['name'], $fonts);
+				$fonts = apply_filters('wbcr_factory_forms_469_fonts', $fonts);
+				$fonts = apply_filters('wbcr_factory_forms_469_fonts-' . $this->options['name'], $fonts);
 
 				return $fonts;
 			}
@@ -77,10 +77,10 @@
 
 				$fonts = array(
 
-					array('inherit', __('(use default website font)', 'wbcr_factory_forms_463')),
+					array('inherit', __('(use default website font)', 'wbcr_factory_forms_469')),
 					array(
 						'group',
-						__('Sans Serif:', 'wbcr_factory_forms_463'),
+						__('Sans Serif:', 'wbcr_factory_forms_469'),
 						array(
 							array('Arial, "Helvetica Neue", Helvetica, sans-serif', 'Arial'),
 							array('"Arial Black", "Arial Bold", Gadget, sans-serif', 'Arial Black'),
@@ -131,7 +131,7 @@
 					),
 					array(
 						'group',
-						__('Serif:', 'wbcr_factory_forms_463'),
+						__('Serif:', 'wbcr_factory_forms_469'),
 						array(
 							array(
 								'Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif',
@@ -187,7 +187,7 @@
 					),
 					array(
 						'group',
-						__('Monospaced:', 'wbcr_factory_forms_463'),
+						__('Monospaced:', 'wbcr_factory_forms_469'),
 						array(
 							array('"Andale Mono", AndaleMono, monospace', 'Andale Mono'),
 							array('Consolas, monaco, monospace', 'Consolas'),

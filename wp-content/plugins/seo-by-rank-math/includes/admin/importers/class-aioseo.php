@@ -13,8 +13,7 @@ namespace RankMath\Admin\Importers;
 use RankMath\Helper;
 use RankMath\Admin\Admin_Helper;
 use RankMath\Redirections\Redirection;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\DB;
+use RankMath\Helpers\DB;
 
 defined( 'ABSPATH' ) || exit;
 

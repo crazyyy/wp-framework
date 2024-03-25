@@ -26,6 +26,118 @@ class UpdraftPlus_Migrator_Lite {
 	public $new_blogid;
 
 	/**
+	 * Whether to use $wpdb or not
+	 *
+	 * @var Bool
+	 */
+	private $use_wpdb;
+
+	/**
+	 * Table prefix
+	 *
+	 * @var String
+	 */
+	private $base_prefix;
+
+	/**
+	 * The database handle object or false boolean
+	 *
+	 * @var Mixed
+	 */
+	private $mysql_dbh;
+
+	/**
+	 * Whether the object is using mysqli or not
+	 *
+	 * @var Boolean
+	 */
+	private $use_mysqli;
+
+	/**
+	 * Variable to store migration progress
+	 *
+	 * @var Array
+	 */
+	private $report;
+
+	/**
+	 * The site url
+	 *
+	 * @var String
+	 */
+	protected $siteurl;
+
+	/**
+	 * The old site url
+	 *
+	 * @var String
+	 */
+	private $old_siteurl;
+
+	/**
+	 * The home url
+	 *
+	 * @var String
+	 */
+	protected $home;
+
+	/**
+	 * The old home url
+	 *
+	 * @var String
+	 */
+	private $old_home;
+
+	/**
+	 * The wp-content url
+	 *
+	 * @var String
+	 */
+	protected $content;
+
+	/**
+	 * The old wp-content url
+	 *
+	 * @var String
+	 */
+	protected $old_content;
+
+	/**
+	 * The uploads url
+	 *
+	 * @var String
+	 */
+	protected $uploads;
+
+	/**
+	 * The old uploads url
+	 *
+	 * @var String
+	 */
+	protected $old_uploads;
+	
+	/**
+	 * Tables for search and replace operation
+	 *
+	 * @var Array
+	 */
+	private $which_tables;
+
+	/**
+	 * Tables that have been searched and replaced
+	 *
+	 * @var Array
+	 */
+	private $tables_replaced;
+
+	/**
+	 * Sites array of multisite
+	 *
+	 * @var Array
+	 */
+	private $original_sites;
+
+	/**
 	 * Constructor, called during UD initialisation
 	 */
 	public function __construct() {
@@ -235,7 +347,7 @@ class UpdraftPlus_Migrator_Lite {
 		
 	public function restored_plugins_one($plugin) {
 		global $updraftplus;
-		$updraftplus->log(__('Processed plugin:', 'updraftplus') . ' migrator-lite.php' .$plugin, 'notice-restore');
+		$updraftplus->log(__('Processed plugin:', 'updraftplus').' '.$plugin, 'notice-restore');
 		$updraftplus->log("Processed plugin: $plugin");
 	}
 
@@ -809,7 +921,7 @@ class UpdraftPlus_Migrator_Lite {
 		}
 
 		if (!$tables_mysql) {
-			$updraftplus->log(__('Error:', 'updraftplus') . ' migrator-lite.php' .__('Could not get list of tables', 'updraftplus'), 'warning-restore');
+			$updraftplus->log(__('Error:', 'updraftplus').' '.__('Could not get list of tables', 'updraftplus'), 'warning-restore');
 			$updraftplus->log('Could not get list of tables');
 			$updraftplus_restorer->search_replace_obj->print_error('SHOW TABLES');
 			return false;
@@ -831,7 +943,7 @@ class UpdraftPlus_Migrator_Lite {
 
 					if (!empty($this->which_tables) && is_array($this->which_tables)) {
 						if (!in_array($tablename, $this->which_tables)) {
-							$updraftplus->log(migrator - lite . phpsprintf(__('Search and replacing table:', 'updraftplus')) .': '.__('skipped (not in list)', 'updraftplus'), 'notice-restore', 'restore-skipped-'.$tablename);
+							$updraftplus->log(__('Search and replacing table:', 'updraftplus') .': '.__('skipped (not in list)', 'updraftplus'), 'notice-restore', 'restore-skipped-'.$tablename);
 							continue;
 						}
 					}
@@ -917,12 +1029,12 @@ class UpdraftPlus_Migrator_Lite {
 
 		}
 
-		$updraftplus->log(__('Tables examined:', 'updraftplus') . ' migrator-lite.php' .$final_report['tables'], 'notice-restore', 'restore-tables-examined');
-		$updraftplus->log(__('Rows examined:', 'updraftplus') . ' migrator-lite.php' .$final_report['rows'], 'notice-restore', 'restore-rows-examined');
-		$updraftplus->log(__('Changes made:', 'updraftplus') . ' migrator-lite.php' .$final_report['change'], 'notice-restore', 'restore-changes-made');
-		$updraftplus->log(__('SQL update commands run:', 'updraftplus') . ' migrator-lite.php' .$final_report['updates'], 'notice-restore', 'restore-sql-commands-run');
-		$updraftplus->log(__('Errors:', 'updraftplus') . ' migrator-lite.php' . count($final_report['errors']), 'notice-restore', 'restore-tables-errors');
-		$updraftplus->log(__('Time taken (seconds):', 'updraftplus') . ' migrator-lite.php' .round($final_report['timetaken'], 3), 'notice-restore', 'restore-tables-time-taken');
+		$updraftplus->log(__('Tables examined:', 'updraftplus').' '.$final_report['tables'], 'notice-restore', 'restore-tables-examined');
+		$updraftplus->log(__('Rows examined:', 'updraftplus').' '.$final_report['rows'], 'notice-restore', 'restore-rows-examined');
+		$updraftplus->log(__('Changes made:', 'updraftplus').' '.$final_report['change'], 'notice-restore', 'restore-changes-made');
+		$updraftplus->log(__('SQL update commands run:', 'updraftplus').' '.$final_report['updates'], 'notice-restore', 'restore-sql-commands-run');
+		$updraftplus->log(__('Errors:', 'updraftplus').' '. count($final_report['errors']), 'notice-restore', 'restore-tables-errors');
+		$updraftplus->log(__('Time taken (seconds):', 'updraftplus').' '.round($final_report['timetaken'], 3), 'notice-restore', 'restore-tables-time-taken');
 		
 		// Here, We are saving migrated site url for scanning .htaccess file for migrated site url. if migrated site url exist in .htaccess file, plugin should prompt alert message for it. This site option stored if and if only Migrator addon is exist. It requires to add after search and replace.
 		if (!empty($this->old_siteurl)) update_site_option('updraftplus_migrated_site_domain', rtrim(str_ireplace(array('http://', 'https://'), '', $this->old_siteurl), '/'));

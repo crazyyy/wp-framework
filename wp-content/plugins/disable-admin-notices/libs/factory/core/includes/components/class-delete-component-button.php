@@ -1,6 +1,6 @@
 <?php
 
-namespace WBCR\Factory_466\Components;
+namespace WBCR\Factory_473\Components;
 
 /**
  * This file groups the settings for quick setup
@@ -18,6 +18,8 @@ if( !defined('ABSPATH') ) {
 require_once 'class-install-component-button.php';
 
 class Delete_Button extends Install_Button {
+
+	public $plugin;
 
 	/**
 	 * @throws \Exception

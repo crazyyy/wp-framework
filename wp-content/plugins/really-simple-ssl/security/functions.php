@@ -49,10 +49,12 @@ if ( !function_exists('rsssl_has_fix')) {
 if ( !function_exists('rsssl_admin_url')) {
 	/**
 	 * Get admin url, adjusted for multisite
+	 * @param string $path
 	 * @return string|null
 	 */
-	function rsssl_admin_url(){
-		return is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
+	function rsssl_admin_url(string $path = ''): string {
+		$url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
+		return $url.$path;
 	}
 }
 
@@ -113,7 +115,8 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 	 *
 	 * @return void
 	 */
-	function rsssl_remove_htaccess_security_edits(){
+	function rsssl_remove_htaccess_security_edits() {
+
 		if ( ! rsssl_user_can_manage()  ) {
 			return;
 		}
@@ -123,7 +126,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 		}
 
 		$htaccess_file = RSSSL()->admin->htaccess_file();
-		if ( !file_exists( $htaccess_file ) ) {
+		if ( ! file_exists( $htaccess_file ) ) {
 			return;
 		}
 
@@ -391,6 +394,11 @@ add_action('rsssl_after_saved_fields', 'rsssl_gather_warning_blocks_for_mail', 4
  * @return bool
  */
 function rsssl_uses_htaccess() {
+	//when using WP CLI, the get_server check does not work, so we assume .htaccess is being used
+	//and rely on the file exists check to catch if not.
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		return true;
+	}
 	return rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed';
 }
 
@@ -473,7 +481,7 @@ function rsssl_generate_random_string($length) {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$randomString = '';
 
-	for ($i = 0; $i < $length; $i++) {
+	for ( $i = 0; $i < $length; $i++ ) {
 		$index = rand(0, strlen($characters) - 1);
 		$randomString .= $characters[$index];
 	}
@@ -487,6 +495,7 @@ function rsssl_generate_random_string($length) {
  * Get users as string to display
  */
 function rsssl_list_users_where_display_name_is_login_name() {
+
 	if ( !rsssl_user_can_manage() ) {
 		return '';
 	}
@@ -498,4 +507,42 @@ function rsssl_list_users_where_display_name_is_login_name() {
 	}
 
 	return '';
+}
+
+/**
+ * @return bool|void
+ *
+ * Check if user e-mail is verified
+ */
+function rsssl_is_email_verified() {
+
+    if ( ! rsssl_user_can_manage() ) {
+        return false;
+    }
+
+    if ( get_option('rsssl_email_verification_status') == 'completed' ) {
+        // completed
+        return true;
+    }
+
+    if ( get_option('rsssl_email_verification_status') == 'started' ) {
+	    // started
+        return false;
+    }
+
+	if ( get_option('rsssl_email_verification_status') == 'email_changed' ) {
+	    // e-mail changed, has to re-verify
+        return false;
+    }
+
+    return false;
+}
+
+function rsssl_remove_prefix_from_version($version) {
+	return preg_replace('/^[^\d]*(?=\d)/', '', $version);
+}
+function rsssl_version_compare($version, $compare_to, $operator = null) {
+	$version = rsssl_remove_prefix_from_version($version);
+	$compare_to = rsssl_remove_prefix_from_version($compare_to);
+	return version_compare($version, $compare_to, $operator);
 }

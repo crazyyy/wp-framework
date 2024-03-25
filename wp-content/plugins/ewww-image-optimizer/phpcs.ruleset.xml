@@ -4,8 +4,6 @@
 	<!-- Only sniff PHP files -->
 	<arg name="extensions" value="php"/>
 
-	<arg value="s"/>
-
 	<exclude-pattern>/vendor/*</exclude-pattern>
 	<exclude-pattern>/tests/*</exclude-pattern>
 
@@ -22,19 +20,16 @@
 
 	<rule ref="WordPress.PHP.NoSilencedErrors">
 		<properties>
-			<property name="custom_whitelist" type="array" value="ini_get,exif_read_data,ob_end_flush"/>
+			<property name="customAllowedFunctionsList" type="array" value="ini_get,exif_read_data,ob_end_flush"/>
 		</properties>
 	</rule>
 	<rule ref="WordPress.NamingConventions.ValidVariableName">
 		<properties>
-			<property name="customPropertiesWhitelist" type="array" value="formatOutput,imgQuality,parentNode,nextSibling,documentElement,imagePath,webimagePath,thumbPath,fileName,Version,Name" />
-		</properties>
-		<properties>
-			<property name="customVariablesWhitelist" type="array" value="formatOutput,parentNode,nextSibling,documentElement" />
+			<property name="allowed_custom_properties" type="array" value="formatOutput,imgQuality,parentNode,nextSibling,documentElement,imagePath,webimagePath,thumbPath,fileName,Version,Name" />
 		</properties>
 	</rule>
 
-	<config name="testVersion">7.2-</config>
+	<config name="testVersion">7.3-</config>
 	<rule ref="PHPCompatibilityWP">
 		<severity>10</severity>
 	</rule>

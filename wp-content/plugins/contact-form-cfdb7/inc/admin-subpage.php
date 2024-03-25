@@ -156,7 +156,8 @@ class CFDB7_List_Table extends WP_List_Table
         }
 
 
-        return $columns;
+        return apply_filters('cfdb7_admin_subpage_columns', $columns, $form_post_id);
+
     }
     /**
      * Define check box for bulk action (each row)
@@ -382,7 +383,7 @@ class CFDB7_List_Table extends WP_List_Table
      */
     public function column_default( $item, $column_name )
     {
-        return $item[ $column_name ];
+        return isset( $item[ $column_name ] ) ? $item[ $column_name ]: '';
 
     }
     /**

@@ -37,7 +37,7 @@
 			<?php if ($wpo_is_premium) : ?>
 				<a href="<?php echo esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/premium-support/?utm_source=wp-optimize&utm_medium=quick_feedback&utm_campaign=help_or_bug_report')); ?>" target="_blank"><?php esc_html_e('I need help / something is not working', 'wp-optimize'); ?></a>
 			<?php else : ?>
-				<a href="https://wordpress.org/support/plugin/wp-optimize/" target="_blank"><?php esc_html_e('I need help / something is not working', 'wp-optimize'); ?></a>
+				<?php $wp_optimize->wp_optimize_url('https://wordpress.org/support/plugin/wp-optimize/', __('I need help / something is not working', 'wp-optimize')); ?>
 			<?php endif; ?>
 		</div>
 	</span>

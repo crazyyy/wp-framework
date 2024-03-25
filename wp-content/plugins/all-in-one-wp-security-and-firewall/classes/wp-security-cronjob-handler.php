@@ -72,6 +72,7 @@ class AIOWPSecurity_Cronjob_Handler {
 		//Do stuff that needs checking hourly
 		AIOWPSecurity_Comment::trash_spam_comments();
 		do_action('aiowps_perform_fcd_scan_tasks');
+		do_action('delete_expired_logged_in_users_event');
 	}
 	
 	/**
@@ -83,6 +84,7 @@ class AIOWPSecurity_Cronjob_Handler {
 		do_action('aiowps_perform_db_cleanup_tasks');
 		do_action('aiowps_purge_old_debug_logs');
 		do_action('aiowps_send_lockout_email');
+		do_action('aios_perform_update_antibot_keys');
 	}
 
 	/**
@@ -103,10 +105,10 @@ class AIOWPSecurity_Cronjob_Handler {
 		}
 
 		$after_days = empty($after_days) ? 90 : $after_days;
-		$older_than_date = date('Y-m-d H:m:s', strtotime("-{$after_days} days", strtotime(current_time('mysql', false))));
+		$older_than_date_time = strtotime('-' . $after_days . ' days', time());
 		
-		$query = 'DELETE FROM ' . $debug_tbl_name . ' WHERE created < %s';
-		$ret = $wpdb->query($wpdb->prepare($query, $older_than_date));
+		$query = 'DELETE FROM ' . $debug_tbl_name . ' WHERE logtime < %s';
+		$ret = $wpdb->query($wpdb->prepare($query, $older_than_date_time));
 		if (false === $ret) {
 			$error_msg = empty($wpdb->last_error) ? 'Could not receive the reason for the failure' : $wpdb->last_error;
 			$aio_wp_security->debug_logger->log_debug_cron("Failed to purge older debug logs : {$error_msg}", 4);

@@ -9,19 +9,19 @@
  */
 
 // Exit if accessed directly
-//use WBCR\Factory_Adverts_143\Base;
+//use WBCR\Factory_Adverts_151\Base;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WDN_Plugin extends Wbcr_Factory466_Plugin {
+class WDN_Plugin extends Wbcr_Factory473_Plugin {
 
 	/**
-	 * @var Wbcr_Factory466_Plugin
+	 * @var Wbcr_Factory473_Plugin
 	 */
 	private static $app;
-	private        $plugin_data;
+	private $plugin_data;
 
 
 	/**
@@ -44,7 +44,7 @@ class WDN_Plugin extends Wbcr_Factory466_Plugin {
 	}
 
 	/**
-	 * @return Wbcr_Factory466_Plugin
+	 * @return Wbcr_Factory473_Plugin
 	 */
 	public static function app() {
 		return self::$app;
@@ -64,18 +64,18 @@ class WDN_Plugin extends Wbcr_Factory466_Plugin {
 	}
 
 	private function admin_scripts() {
-		require WDN_PLUGIN_DIR . '/admin/options.php';
-		require WDN_PLUGIN_DIR . '/admin/class-page-basic.php';
+		require( WDN_PLUGIN_DIR . '/admin/options.php' );
+		require( WDN_PLUGIN_DIR . '/admin/class-page-basic.php' );
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			require_once WDN_PLUGIN_DIR . '/admin/ajax/hide-notice.php';
-			require_once WDN_PLUGIN_DIR . '/admin/ajax/restore-notice.php';
+			require_once( WDN_PLUGIN_DIR . '/admin/ajax/hide-notice.php' );
+			require_once( WDN_PLUGIN_DIR . '/admin/ajax/restore-notice.php' );
 		}
 
-		require_once WDN_PLUGIN_DIR . '/admin/boot.php';
-		require_once WDN_PLUGIN_DIR . '/admin/pages/class-pages-edit-admin-bar.php';
-		require_once WDN_PLUGIN_DIR . '/admin/pages/class-pages-edit-redirects.php';
-		require_once WDN_PLUGIN_DIR . '/admin/pages/class-pages-notices.php';
+		require_once( WDN_PLUGIN_DIR . '/admin/boot.php' );
+		require_once( WDN_PLUGIN_DIR . '/admin/pages/class-pages-edit-admin-bar.php' );
+		require_once( WDN_PLUGIN_DIR . '/admin/pages/class-pages-edit-redirects.php' );
+		require_once( WDN_PLUGIN_DIR . '/admin/pages/class-pages-notices.php' );
 
 		add_action( 'plugins_loaded', function () {
 			$this->registerPages();
@@ -83,7 +83,7 @@ class WDN_Plugin extends Wbcr_Factory466_Plugin {
 	}
 
 	private function global_scripts() {
-		require_once WDN_PLUGIN_DIR . '/includes/classes/class-configurate-notices.php';
+		require_once( WDN_PLUGIN_DIR . '/includes/classes/class-configurate-notices.php' );
 		new WDN_ConfigHideNotices( self::$app );
 	}
 
@@ -93,7 +93,11 @@ class WDN_Plugin extends Wbcr_Factory466_Plugin {
 	 * @return bool
 	 */
 	public function is_premium() {
-		if ( $this->premium->is_active() && $this->premium->is_activate() && $this->premium->is_install_package() ) {
+		if (
+			$this->premium->is_active() &&
+			$this->premium->is_activate()
+			&& $this->premium->is_install_package()
+		) {
 			return true;
 		} else {
 			return false;

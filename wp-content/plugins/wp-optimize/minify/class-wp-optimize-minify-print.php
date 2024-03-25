@@ -17,11 +17,14 @@ class WP_Optimize_Minify_Print {
 	public static function async_script($href, $print = true) {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		$tag = '<script>' . "\n";
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		$tag .= 'var wpo_server_info_js = ' . json_encode(array("user_agent" => $user_agent)) . "\n";
+
 		$exclude_js_from_page_speed_tools = $wpo_minify_options['exclude_js_from_page_speed_tools'];
 		$enable_defer_js = $wpo_minify_options['enable_defer_js'];
 		$is_conditional_loading = $exclude_js_from_page_speed_tools && 'all' !== $enable_defer_js;
 		if ($is_conditional_loading) {
-			$tag .= 'if (!navigator.userAgent.match(/'.implode('|', $wpo_minify_options['ualist']).'/i)){' . "\n";
+			$tag .= 'if (!(navigator.userAgent + " " + wpo_server_info_js.user_agent).match(/' . implode("|", $wpo_minify_options['ualist']) .'/i)) {' . "\n";
 		}
 		$tag .= "    loadAsync('$href', null);" . "\n";
 		if ($is_conditional_loading) {
@@ -62,9 +65,12 @@ class WP_Optimize_Minify_Print {
 		// make a stylesheet, hide from PageSpeedIndex
 		$cssguid = 'wpo_min'.hash('adler32', $href);
 		$tag = '<script>' . "\n";
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		$tag .= 'var wpo_server_info_css = ' . json_encode(array("user_agent" => $user_agent)) . "\n";
+
 		$exclude_css_from_page_speed_tools = $wpo_minify_options['exclude_css_from_page_speed_tools'];
 		if ($exclude_css_from_page_speed_tools) {
-			$tag .= 'if (!navigator.userAgent.match(/'.implode('|', $wpo_minify_options['ualist']).'/i)){' . "\n";
+			$tag .= 'if (!(navigator.userAgent + " " + wpo_server_info_css.user_agent).match(/'.implode('|', $wpo_minify_options['ualist']).'/i)){' . "\n";
 		}
 		$tag .= '    var '.$cssguid.'=document.createElement("link");'.$cssguid.'.rel="stylesheet",'.$cssguid.'.type="text/css",'.$cssguid.'.media="async",'.$cssguid.'.href="'.$href.'",'.$cssguid.'.onload=function() {'.$cssguid.'.media="all"},document.getElementsByTagName("head")[0].appendChild('.$cssguid.');' . "\n";
 		if ($exclude_css_from_page_speed_tools) {

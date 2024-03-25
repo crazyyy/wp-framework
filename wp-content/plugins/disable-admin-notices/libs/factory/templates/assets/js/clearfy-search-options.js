@@ -39,10 +39,10 @@
 			throw new Error('Global var {wfactory_clearfy_search_options} is not declared.');
 		}
 
-		$('#wbcr-factory-templates-116__autocomplete').wfactory_clearfy_autocomplete({
+		$('#wbcr-factory-templates-126__autocomplete').wfactory_clearfy_autocomplete({
 			lookup: wfactory_clearfy_search_options,
 			onSelect: function(suggestion) {
-				$('#wbcr-factory-templates-116__autocomplete').prop("disabled", true);
+				$('#wbcr-factory-templates-126__autocomplete').prop("disabled", true);
 				window.location.href = suggestion.data.page_url;
 			}
 		});

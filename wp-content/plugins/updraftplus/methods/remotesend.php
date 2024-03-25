@@ -13,6 +13,12 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 	private $remotesend_chunked_wp_error;
 	
 	private $try_format_upgrade = false;
+
+	private $remotesend_file_size;
+
+	private $remotesend_uploaded_size;
+
+	private $remote_sent_defchunk_transient;
 	
 	/**
 	 * Class constructor
@@ -394,13 +400,15 @@ class UpdraftPlus_BackupModule_remotesend extends UpdraftPlus_RemoteStorage_Addo
 	public function do_bootstrap($opts, $connect = true) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $connect unused
 	
 		global $updraftplus;
+
+		$updraftplus->ensure_phpseclib();
 	
-		if (!class_exists('UpdraftPlus_Remote_Communications')) include_once(apply_filters('updraftplus_class_udrpc_path', UPDRAFTPLUS_DIR.'/vendor/team-updraft/common-libs/src/updraft-rpc/class-udrpc.php', $updraftplus->version));
+		if (!class_exists('UpdraftPlus_Remote_Communications_V2')) include_once(apply_filters('updraftplus_class_udrpc_path', UPDRAFTPLUS_DIR.'/vendor/team-updraft/common-libs/src/updraft-rpc/class-udrpc2.php', $updraftplus->version));
 
 		$opts = $this->get_opts();
 
 		try {
-			$ud_rpc = new UpdraftPlus_Remote_Communications($opts['name_indicator']);
+			$ud_rpc = new UpdraftPlus_Remote_Communications_V2($opts['name_indicator']);
 			if (!empty($opts['format_support']) && 2 == $opts['format_support'] && !empty($opts['local_private']) && !empty($opts['local_public']) && !empty($opts['remote_got_public'])) {
 				$ud_rpc->set_message_format(2);
 				$ud_rpc->set_key_remote($opts['key']);

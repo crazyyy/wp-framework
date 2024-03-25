@@ -14,12 +14,12 @@
 		<div class="wpo-video-preview">
 			<a href="https://vimeo.com/337247770" data-embed="https://player.vimeo.com/video/337247770?color=df6926&title=0&byline=0&portrait=0" target="_blank"><img src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/cache-video-preview.png'); ?>" alt="<?php esc_attr_e('Cache video preview', 'wp-optimize');?>" /></a>
 		</div>
-		<small>(<?php esc_html_e('Loads a video hosted on vimeo.com', 'wp-optimize'); ?>) - <a href="https://vimeo.com/337247770" target="_blank"><?php esc_html_e('Open the video in a new window', 'wp-optimize'); ?></a></small>
+		<small>(<?php esc_html_e('Loads a video hosted on vimeo.com', 'wp-optimize'); ?>) - <?php $wp_optimize->wp_optimize_url('https://vimeo.com/337247770', __('Open the video in a new window', 'wp-optimize')); ?></small>
 	</div>
 </div>
 <div class="wpo-fieldgroup wpo-first-child cache-options">
 	<div class="notice notice-warning below-h2 wpo-warnings__enabling-cache wpo_hidden"><p></p><ul></ul></div>
-	<div class="notice error below-h2 wpo-error wpo-error__enabling-cache wpo_hidden"><p></p></div>
+	<div class="notice error below-h2 wpo-error wpo-error__enabling-cache <?php echo empty($error) ? 'wpo_hidden' : ''; ?>"><p><?php echo htmlentities($error); ?></p></div>
 
 	<pre id="wpo_advanced_cache_output" style="display: none;"></pre>
 
@@ -33,7 +33,7 @@
 		</label>
 	</div>
 	<p>
-		<?php echo esc_html__("This is all that's needed for caching to work.", 'wp-optimize').' '.esc_html__('WP-Optimize will automatically detect and configure itself optimally for your site.', 'wp-optimize').' '.esc_html__('You can tweak the the settings below and in the advanced settings tab, if needed.', 'wp-optimize'); ?>
+		<?php echo esc_html__("This is all that's needed for caching to work.", 'wp-optimize').' '.esc_html__('WP-Optimize will automatically detect and configure itself optimally for your site.', 'wp-optimize').' '.esc_html__('You can tweak the settings below and in the advanced settings tab, if needed.', 'wp-optimize'); ?>
 	</p>
 
 	<?php if (!empty($active_cache_plugins)) { ?>

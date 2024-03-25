@@ -18,8 +18,7 @@
 		// If we don't want to show optimization on the first tab.
 		if (false === $optimization->display_in_optimizations_list()) continue;
 		// This is an array, with attributes dom_id, activated, settings_label, info; all values are strings.
-		$use_ajax = defined('WP_OPTIMIZE_DEBUG_OPTIMIZATIONS') && WP_OPTIMIZE_DEBUG_OPTIMIZATIONS ? false : true;
-		$html = $optimization->get_settings_html($use_ajax);
+		$html = $optimization->get_settings_html();
 		$disable_optimization_button = false;
 
 		// Check if the DOM is optimize-db to generate a list of tables.
@@ -59,18 +58,7 @@
 			<td>
 				<label for="optimization_checkbox_<?php echo esc_attr($id); ?>"><?php echo esc_html($html['settings_label']); ?></label>
 				<div class="wp-optimize-settings-optimization-info" id="optimization_info_<?php echo esc_attr($id); ?>">
-				<?php
-				if ($use_ajax && array_key_exists('support_ajax_get_info', $html) && $html['support_ajax_get_info']) {
-					$last_output = $optimization->get_last_output();
-					if ($last_output) {
-						echo join('<br>', $last_output);
-					} else {
-						echo '<span class="wp-optimize-optimization-info-ajax" data-id="'.esc_attr($id).'">...</span>';
-					}
-				} else {
-					echo join('<br>', $html['info']);
-				}
-				?>
+				<?php echo join('<br>', $html['info']); ?>
 				</div>
 			</td>
 

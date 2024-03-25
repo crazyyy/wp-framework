@@ -17,7 +17,7 @@ class UpdraftPlus_Encryption {
 	
 		global $updraftplus;
 	
-		$ensure_phpseclib = $updraftplus->ensure_phpseclib('Crypt_Rijndael');
+		$ensure_phpseclib = $updraftplus->ensure_phpseclib();
 		
 		if (is_wp_error($ensure_phpseclib)) {
 			$updraftplus->log("Failed to load phpseclib classes (".$ensure_phpseclib->get_error_code()."): ".$ensure_phpseclib->get_error_message());
@@ -33,7 +33,7 @@ class UpdraftPlus_Encryption {
 		if (false === ($decrypted_handle = fopen($decrypted_path, 'wb+'))) return false;
 
 		// setup encryption
-		$rijndael = new Crypt_Rijndael();
+		$rijndael = new phpseclib_Crypt_Rijndael();
 		$rijndael->setKey($key);
 		$rijndael->disablePadding();
 		$rijndael->enableContinuousBuffer();
@@ -149,7 +149,7 @@ class UpdraftPlus_Encryption {
 		}
 
 		// include Rijndael library from phpseclib
-		$ensure_phpseclib = $updraftplus->ensure_phpseclib('Crypt_Rijndael');
+		$ensure_phpseclib = $updraftplus->ensure_phpseclib();
 		
 		if (is_wp_error($ensure_phpseclib)) {
 			$updraftplus->log("Failed to load phpseclib classes (".$ensure_phpseclib->get_error_code()."): ".$ensure_phpseclib->get_error_message());
@@ -176,7 +176,7 @@ class UpdraftPlus_Encryption {
 		$resumption = false;
 
 		// setup encryption
-		$rijndael = new Crypt_Rijndael();
+		$rijndael = new phpseclib_Crypt_Rijndael();
 		$rijndael->setKey($key);
 		$rijndael->disablePadding();
 		$rijndael->enableContinuousBuffer();
@@ -248,7 +248,7 @@ class UpdraftPlus_Encryption {
 				// reset the data encrypted so that the loop can be entered
 				$data_encrypted = 0;
 				// setup encryption to reset the IV
-				$rijndael = new Crypt_Rijndael();
+				$rijndael = new phpseclib_Crypt_Rijndael();
 				$rijndael->setKey($key);
 				$rijndael->disablePadding();
 				$rijndael->enableContinuousBuffer();

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  +=====================================================================+
  |    ____          _        ____             __ _ _                   |
  |   / ___|___   __| | ___  |  _ \ _ __ ___  / _(_) | ___ _ __         |
@@ -11,17 +11,22 @@
  +=====================================================================+
 */
 
-if (! defined('ABSPATH') ) { die('Forbidden'); }
+if (! defined('ABSPATH') ) {
+	die('Forbidden');
+}
 
 // =====================================================================
 // Various constants
 
-$upload_dir = wp_upload_dir();
-define('CODE_PROFILER_UPLOAD_DIR', $upload_dir['basedir'] .'/code-profiler');
+// The profiles directory can be defined in the wp-config.php script
+if (! defined('CODE_PROFILER_UPLOAD_DIR') ) {
+	$upload_dir = wp_upload_dir();
+	define('CODE_PROFILER_UPLOAD_DIR', $upload_dir['basedir'] .'/code-profiler');
+}
 define('CODE_PROFILER_LOG', CODE_PROFILER_UPLOAD_DIR .'/log.php');
 define('CODE_PROFILER_TMP_IOSTATS_LOG', 'iostats.tmp');
 define('CODE_PROFILER_TMP_SUMMARY_LOG', 'summary.tmp');
-define('CODE_PROFILER_TMP_TICKS_LOG', 'ticks.tmp');
+define('CODE_PROFILER_TMP_CALLS_LOG', 'calls.tmp');
 define('CODE_PROFILER_TMP_DISKIO_LOG', 'diskio.tmp');
 define('CODE_PROFILER_TMP_CONNECTIONS_LOG', 'connections.tmp');
 define('CODE_PROFILER_UPDATE_NOTICE', '<div class="updated notice is-dismissible"><p>%s</p></div>');
@@ -59,7 +64,7 @@ if (! defined('CODE_PROFILER_MUPLUGIN') ) {
 	define('CODE_PROFILER_MUPLUGIN', '0----code-profiler.php');
 }
 define('CODE_PROFILER_ACCURACY', [
-	1		=> __('Highest (default)', 'code-profiler'),
+	1		=> __('Highest', 'code-profiler'),
 	5		=> __('High', 'code-profiler'),
 	10		=> __('Moderate', 'code-profiler'),
 	15		=> __('Low', 'code-profiler'),
@@ -280,12 +285,13 @@ function code_profiler_hide_errors() {
 function code_profiler_disable_opcode() {
 
 	try {
-		if (extension_loaded('Zend OPcache')) {
+		if ( extension_loaded('Zend OPcache') ) {
 			ini_set('opcache.enable', 0);
 		} elseif ( extension_loaded('wincache') ) {
 			ini_set('wincache.fcenabled', 0);
 		}
 		set_time_limit(0);
+		ini_set('memory_limit', -1);
 
 	} catch ( Exception $e ) { }
 
@@ -460,7 +466,7 @@ function code_profiler_getsummarystats( $profile_path, $type = 'html') {
 	$string	= $open;
 
 	if ( empty( $decode->items ) ) {
-		$tmp = 'N/A';
+		$tmp = __('N/A', 'code-profiler');
 	} else {
 		$tmp = (int) --$decode->items;
 	}
@@ -472,7 +478,7 @@ function code_profiler_getsummarystats( $profile_path, $type = 'html') {
 	$string .= $div;
 
 	if ( empty( $decode->time ) ) {
-		$tmp = 'N/A';
+		$tmp = __('N/A', 'code-profiler');
 	} else {
 		$tmp = number_format( $decode->time, 4 );
 	}
@@ -484,7 +490,7 @@ function code_profiler_getsummarystats( $profile_path, $type = 'html') {
 	$string .= $div;
 
 	if ( empty( $decode->memory ) ) {
-		$tmp = 'N/A';
+		$tmp = __('N/A', 'code-profiler');
 	} else {
 		$tmp = number_format( $decode->memory, 2);
 	}
@@ -496,9 +502,9 @@ function code_profiler_getsummarystats( $profile_path, $type = 'html') {
 	$string .= $div;
 
 	if ( empty( $decode->io ) ) {
-		$tmp = 'N/A';
+		$tmp = __('N/A', 'code-profiler');
 	} else {
-		$tmp = number_format( $decode->io );
+		$tmp = number_format( (int) $decode->io );
 	}
 	$string .= sprintf(
 		__('File I/O operations: %s', 'code-profiler'),
@@ -508,12 +514,24 @@ function code_profiler_getsummarystats( $profile_path, $type = 'html') {
 	$string .= $div;
 
 	if ( empty( $decode->queries ) ) {
-		$tmp = 'N/A';
+		$tmp = __('N/A', 'code-profiler');
 	} else {
-		$tmp = number_format( $decode->queries );
+		$tmp = number_format( (int) $decode->queries );
 	}
 	$string .= sprintf(
 		__('SQL queries: %s', 'code-profiler'),
+		$tmp
+	);
+
+	$string .= $div;
+
+	if ( empty( CODE_PROFILER_ACCURACY[ $decode->precision ] ) ) {
+		$tmp = __('N/A', 'code-profiler');
+	} else {
+		$tmp = CODE_PROFILER_ACCURACY[ $decode->precision ];
+	}
+	$string .= sprintf(
+		__('Accuracy: %s', 'code-profiler'),
 		$tmp
 	);
 
@@ -578,6 +596,45 @@ function code_profiler_admin_footer () {
 			'</a>'
 		).
 		'</span>';
+}
+
+// =====================================================================
+// Display/hide an element depending on some value
+
+function code_profiler_hide( $var, $val ) {
+
+	if ( $var == $val ) {
+		echo " style='display:none'";
+	}
+}
+
+// =====================================================================
+// Retrieve all themes.
+
+function code_profiler_get_themes() {
+
+	$list = [];
+
+	// Make sure the function is loaded
+	if (! function_exists('wp_get_themes') ) {
+		require_once ABSPATH . 'wp-includes/theme.php';
+	}
+	$themes = wp_get_themes();
+	foreach( $themes as $k => $v ) {
+		if ( $v->Name ) {
+			$list[ $k ] = [
+				'n' => $v->Name,
+
+				't' => $v->Template
+			];
+		} else {
+			$list[ $k ] = [
+				'n' => $k,
+				't' => $v->Template
+			];
+		}
+	}
+	return $list;
 }
 
 // =====================================================================

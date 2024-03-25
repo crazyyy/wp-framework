@@ -67,7 +67,7 @@ class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 
 			//Save settings
 			if (isset($_POST["aiowps_enable_custom_rules"]) && empty($_POST['aiowps_custom_rules'])) {
-				$this->show_msg_error('You must enter some .htaccess directives code in the text box below','all-in-one-wp-security-and-firewall');
+				$this->show_msg_error(__('You must enter some .htaccess directives code in the text box below', 'all-in-one-wp-security-and-firewall'));
 			} else {
 				if (!empty($_POST['aiowps_custom_rules'])) {
 					// Undo magic quotes that are automatically added to `$_GET`,
@@ -86,7 +86,7 @@ class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 
 				$write_result = AIOWPSecurity_Utility_Htaccess::write_to_htaccess(); //now let's write to the .htaccess file
 				if (!$write_result) {
-					$this->show_msg_error(__('The plugin was unable to write to the .htaccess file. Please edit file manually.','all-in-one-wp-security-and-firewall'));
+					$this->show_msg_error(__('The plugin was unable to write to the .htaccess file, please edit file manually.', 'all-in-one-wp-security-and-firewall'));
 					$aio_wp_security->debug_logger->log_debug("Custom Rules feature - The plugin was unable to write to the .htaccess file.");
 				}
 			}
@@ -142,6 +142,8 @@ class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 			$queries .= sprintf(__('Redirected to %s', 'all-in-one-wp-security-and-firewall'), $referral_server)."\n";
 		}
 
+		$referrals = array();
+
 		while (isset($referral_server)) {
 			$referrals[] = $referral_server;
 
@@ -171,11 +173,12 @@ class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 			$out = '';
 			while (!feof($fp)) {
 				$line = fgets($fp);
-				if (preg_match('/Registrar WHOIS Server: +(\S+)/', $line, $matches) ||
-					preg_match('/% referto: +whois -h (\S+)/', $line, $matches) ||
-					preg_match('/% referto: +(\S+)/', $line, $matches) ||
-					preg_match('/ReferralServer: +rwhois:\/\/(\S+)/', $line, $matches) ||
-					preg_match('/ReferralServer: +whois:\/\/(\S+)/', $line, $matches)) {
+				if (preg_match('/Registrar WHOIS Server: +(\S+)/', $line, $matches)
+					|| preg_match('/% referto: +whois -h (\S+)/', $line, $matches)
+					|| preg_match('/% referto: +(\S+)/', $line, $matches)
+					|| preg_match('/ReferralServer: +rwhois:\/\/(\S+)/', $line, $matches)
+					|| preg_match('/ReferralServer: +whois:\/\/(\S+)/', $line, $matches)
+				) {
 					if (!in_array($matches[1], $referrals)) {
 						$referral_server = $matches[1];
 						$queries .= sprintf(__('Redirected to %s', 'all-in-one-wp-security-and-firewall'), $referral_server)."\n";
@@ -226,17 +229,17 @@ class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 		if (isset($_POST['aiowpsec_save_site_lockout'])) {
 			$nonce = $_REQUEST['_wpnonce'];
 			if (!wp_verify_nonce($nonce, 'aiowpsec-site-lockout')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on site lockout feature settings save!",4);
-				die("Nonce check failed on site lockout feature settings save!");
+				$aio_wp_security->debug_logger->log_debug("Nonce check failed on site lockout feature settings save.", 4);
+				die("Nonce check failed on site lockout feature settings save.");
 			}
 
 			// Save settings
 			$aio_wp_security->configs->set_value('aiowps_site_lockout', isset($_POST["aiowps_site_lockout"]) ? '1' : '');
 			$maint_msg = htmlentities(stripslashes($_POST['aiowps_site_lockout_msg']), ENT_COMPAT, "UTF-8");
-			$aio_wp_security->configs->set_value('aiowps_site_lockout_msg',$maint_msg); // Text area/msg box
+			$aio_wp_security->configs->set_value('aiowps_site_lockout_msg', $maint_msg); // Text area/msg box
 			$aio_wp_security->configs->save_config();
 
-			$this->show_msg_updated(__('Site lockout feature settings saved!', 'all-in-one-wp-security-and-firewall'));
+			$this->show_msg_updated(__('Site lockout feature settings saved.', 'all-in-one-wp-security-and-firewall'));
 
 			do_action('aiowps_site_lockout_settings_saved'); // Trigger action hook.
 

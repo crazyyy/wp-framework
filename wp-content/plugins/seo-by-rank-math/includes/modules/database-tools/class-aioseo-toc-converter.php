@@ -10,8 +10,6 @@
 
 namespace RankMath\Tools;
 
-use MyThemeShop\Helpers\HTML;
-
 defined( 'ABSPATH' ) || exit;
 
 /**

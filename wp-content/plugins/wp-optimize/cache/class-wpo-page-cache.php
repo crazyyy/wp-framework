@@ -23,7 +23,7 @@ if (!defined('WPO_CACHE_EXT_DIR')) define('WPO_CACHE_EXT_DIR', dirname(__FILE__)
 if (!defined('WPO_CACHE_CONFIG_DIR')) define('WPO_CACHE_CONFIG_DIR', WPO_CACHE_DIR.'/config');
 
 /**
- * Directory that stores the cache, including gzipped files and mobile specifc cache
+ * Directory that stores the cache, including gzipped files and mobile specific cache
  */
 if (!defined('WPO_CACHE_FILES_DIR')) define('WPO_CACHE_FILES_DIR', untrailingslashit(WP_CONTENT_DIR).'/cache/wpo-cache');
 
@@ -120,6 +120,8 @@ class WPO_Page_Cache {
 
 		add_action('update_option_gmt_offset', array($this, 'update_gmt_offset_timezone_string_config'), 10, 3);
 		add_action('update_option_timezone_string', array($this, 'update_gmt_offset_timezone_string_config'), 10, 3);
+		add_action('update_option_date_format', array($this, 'update_option_date_format'), 10, 2);
+		add_action('update_option_time_format', array($this, 'update_option_time_format'), 10, 2);
 
 		$this->check_compatibility_issues();
 
@@ -341,6 +343,11 @@ class WPO_Page_Cache {
 			return $already_ran_enable;
 		}
 
+		if (!file_exists($this->config->get_config_file_path())) {
+			$result = $this->update_cache_config();
+			if (is_wp_error($result)) return $result;
+		}
+
 		// if WPO_ADVANCED_CACHE isn't set, or environment doesn't contain the right constant, force regeneration
 		if (!defined('WPO_ADVANCED_CACHE') || !defined('WP_CACHE')) {
 			$force_enable = true;
@@ -441,7 +448,7 @@ class WPO_Page_Cache {
 		 */
 		$this->should_purge = apply_filters('wpo_purge_page_cache_on_activate_deactivate_plugin', true);
 		$purge_actions = array(
-			'deactivate_' . plugin_basename(WPO_PLUGIN_MAIN_PATH . '/wp-optimize.php'),
+			'deactivate_' . plugin_basename(WPO_PLUGIN_MAIN_PATH . 'wp-optimize.php'),
 			'deactivate_plugin',
 			'activated_plugin',
 		);
@@ -886,7 +893,7 @@ EOF;
 	}
 
 	/**
-	 * Update permalink strucutre in cache config
+	 * Update permalink structure in cache config
 	 *
 	 * @param string $old_value Old value of permalink_structure option
 	 * @param string $value 	New value of permalink_structure option
@@ -902,12 +909,14 @@ EOF;
 
 	/**
 	 * Update cache config. Used to support 3d party plugins.
+	 *
+	 * @return {boolean|WP_Error}
 	 */
 	public function update_cache_config() {
 		// get current cache settings.
 		$current_config = $this->config->get();
 		// and call update to change if need cookies and query variable names.
-		$this->config->update($current_config, true);
+		return $this->config->update($current_config);
 	}
 
 	/**
@@ -939,7 +948,7 @@ EOF;
 	}
 
 	/**
-	 * Fetch directory informations.
+	 * Fetch directory information.
 	 *
 	 * @param string $dir
 	 * @return array
@@ -1088,7 +1097,7 @@ EOF;
 	}
 
 	/**
-	 * Delete sitemap cahche.
+	 * Delete sitemap cache.
 	 */
 	public static function delete_sitemap_cache() {
 		if (!defined('WPO_CACHE_FILES_DIR')) return;
@@ -1186,7 +1195,7 @@ EOF;
 	 * @param string $url
 	 * @return string
 	 */
-	private static function get_full_path_from_url($url) {
+	public static function get_full_path_from_url($url) {
 		return trailingslashit(WPO_CACHE_FILES_DIR) . trailingslashit(wpo_get_url_path($url));
 	}
 
@@ -1238,8 +1247,6 @@ EOF;
 	 * @return null
 	 */
 	public function update_gmt_offset_timezone_string_config($old_value, $new_value, $option) {
-		$option;
-		
 		if ('' == $new_value) return;
 
 		$current_config = $this->config->get();
@@ -1248,12 +1255,42 @@ EOF;
 			$dateTime = new DateTime("now");
 			$gmt_offset = $timeZone->getOffset($dateTime);
 			$current_config['gmt_offset'] = round($gmt_offset/3600, 1);
+			$current_config['timezone_string'] = $new_value;
 		} elseif ('' !== $new_value) {
 			$current_config['gmt_offset'] = $new_value;
+			$current_config['timezone_string'] = '';
 		}
 		$this->config->update($current_config, true);
 	}
-
+	
+	/**
+	 * Update `date_format` cache config value, used with hook `update_option_date_format`.
+	 *
+	 * @param string $old_value Old date format
+	 * @param string $new_value New date format
+	 *
+	 * @return void
+	 */
+	public function update_option_date_format($old_value, $new_value) {
+		$current_config = $this->config->get();
+		$current_config['date_format'] = $new_value;
+		$this->config->update($current_config, true);
+	}
+	
+	/**
+	 * Update `time_format` cache config value, used with hook `update_option_time_format`.
+	 *
+	 * @param string $old_value Old time format
+	 * @param string $new_value New time format
+	 *
+	 * @return void
+	 */
+	public function update_option_time_format($old_value, $new_value) {
+		$current_config = $this->config->get();
+		$current_config['time_format'] = $new_value;
+		$this->config->update($current_config, true);
+	}
+ 
 	/**
 	 * Adds an error to the error store
 	 *
@@ -1428,6 +1465,33 @@ EOF;
 			$config = $this->config->get();
 			$this->config->write($config);
 		}
+	}
+	
+	/**
+	 * Checks if the given cache directory is empty
+	 *
+	 * @param string $path The path to the cache directory.
+	 * @return bool Returns true if the cache directory is empty, false otherwise.
+	 */
+	public static function is_cache_empty($path) {
+		if (!is_dir($path)) return true;
+		
+		if ($handle = opendir($path)) {
+			while (false !== ($entry = readdir($handle))) {
+				if ("." == $entry || ".." == $entry) {
+					continue;
+				}
+				
+				$full_path = $path . '/' . $entry;
+				if (is_file($full_path)) {
+					closedir($handle);
+					return false;
+				}
+			}
+			closedir($handle);
+			return true;
+		}
+		return true;
 	}
 }
 

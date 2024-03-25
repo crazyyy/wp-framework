@@ -46,7 +46,7 @@ class WP_Optimize_Minify {
 		}
 
 		/**
-		 * Directory that stores the cache, including gzipped files and mobile specifc cache
+		 * Directory that stores the cache, including gzipped files and mobile specific cache
 		 */
 		if (!defined('WPO_CACHE_MIN_FILES_DIR')) define('WPO_CACHE_MIN_FILES_DIR', untrailingslashit(WP_CONTENT_DIR).'/cache/wpo-minify');
 		if (!defined('WPO_CACHE_MIN_FILES_URL')) define('WPO_CACHE_MIN_FILES_URL', untrailingslashit(WP_CONTENT_URL).'/cache/wpo-minify');
@@ -127,7 +127,7 @@ class WP_Optimize_Minify {
 				add_action('admin_notices', array($this, 'notice_purge_minify_cache_success'));
 				return;
 			} else {
-				$message = __('Minify cache purged', 'wp-optmize');
+				$message = __('Minify cache purged', 'wp-optimize');
 				printf('<script>alert("%s");</script>', $message);
 				return;
 			}

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 
 	public function __construct() {
-		global $status, $page;
+
 
 		//Set parent defaults
 		parent::__construct(array(
@@ -17,21 +17,32 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 		));
 
 	}
+	
+	/**
+	 * Returns created column in datetime format as per user setting time zone.
+	 *
+	 * @param array $item - data for the columns on the current row
+	 *
+	 * @return string - the datetime
+	 */
+	public function column_created($item) {
+		return AIOWPSecurity_Utility::convert_timestamp($item['created']);
+	}
 
 	public function column_default($item, $column_name) {
 		return $item[$column_name];
 	}
 
+	/**
+	 * Function to populate the permanent blocked ip actions column in the table
+	 *
+	 * @param array $item - Contains the current item data
+	 *
+	 * @return string
+	 */
 	public function column_id($item) {
-		$tab = isset($_REQUEST['tab']) ? strip_tags($_REQUEST['tab']) : '';
-		//Add nonce to delete URL
-		$unblock_ip_url = sprintf('admin.php?page=%s&tab=%s&action=%s&blocked_id=%s', AIOWPSEC_MAIN_MENU_SLUG, $tab, 'unblock_ip', $item['id']);
-		//Add nonce to unlock IP URL
-		$unblock_ip_nonce = wp_nonce_url($unblock_ip_url, "unblock_ip", "aiowps_nonce");
-
-		//Build row actions
 		$actions = array(
-			'unblock' => '<a href="' . $unblock_ip_nonce . '" onclick="return confirm(\'Are you sure you want to unblock this IP address?\')">Unblock</a>',
+			'unblock' => '<a href="" class="aios-unblock-permanent-ip" data-id="'.esc_attr($item['id']).'" data-message="'.esc_js(__('Are you sure you want to unblock this IP address?', 'all-in-one-wp-security-and-firewall')).'">Unblock</a>',
 		);
 
 		//Return the user_login contents
@@ -60,7 +71,7 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 			'id' => 'ID',
 			'blocked_ip' => __('Blocked IP', 'all-in-one-wp-security-and-firewall'),
 			'block_reason' => __('Reason', 'all-in-one-wp-security-and-firewall'),
-			'blocked_date' => __('Date', 'all-in-one-wp-security-and-firewall')
+			'created' => __('Date', 'all-in-one-wp-security-and-firewall')
 		);
 		return $columns;
 	}
@@ -70,7 +81,7 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 			'id' => array('id', false),
 			'blocked_ip' => array('blocked_ip', false),
 			'block_reason' => array('block_reason', false),
-			'blocked_date' => array('blocked_date', false)
+			'created' => array('created', false)
 		);
 		return $sortable_columns;
 	}
@@ -83,7 +94,9 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 	}
 
 	private function process_bulk_action() {
-		if (empty($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-items')) return;
+		if (empty($_REQUEST['_wpnonce']) || !isset($_REQUEST['_wp_http_referer'])) return;
+		$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_REQUEST['_wpnonce'], 'bulk-items');
+		if (is_wp_error($result)) return;
 
 		if ('unblock' === $this->current_action()) { // Process unlock bulk actions
 			if (!isset($_REQUEST['item'])) {
@@ -97,44 +110,36 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 	/**
 	 * Deletes one or more records from the AIOWPSEC_TBL_PERM_BLOCK table.
 	 *
-	 * @param Array|String|Integer - ids or a single id
+	 * @param array|string|integer $entries - ids or a single id
 	 *
-	 * @return Void
+	 * @return void|string
 	 */
 	public function unblock_ip_address($entries) {
 		global $wpdb, $aio_wp_security;
 		if (is_array($entries)) {
-			if (isset($_REQUEST['_wp_http_referer'])) {
-				// multiple records
-				$tab = strip_tags($_REQUEST['tab']);
+			// multiple records
 
-				$entries = array_filter($entries, 'is_numeric'); //discard non-numeric ID values
-				$id_list = "(" . implode(",", $entries) . ")"; //Create comma separate list for DB operation
-				$delete_command = "DELETE FROM " . AIOWPSEC_TBL_PERM_BLOCK . " WHERE id IN " . $id_list;
-				$result = $wpdb->query($delete_command);
-				if ($result) {
-					AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('Successfully unblocked and deleted the selected record(s).', 'all-in-one-wp-security-and-firewall'));
-				} else {
-					// Error on bulk delete
-					$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Perm Block table. Database error: '.$wpdb->last_error, 4);
-					AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to unblock and delete the selected record(s).', 'all-in-one-wp-security-and-firewall'));
-				}
+			$entries = array_filter($entries, 'is_numeric'); //discard non-numeric ID values
+			$id_list = "(" . implode(",", $entries) . ")"; //Create comma separate list for DB operation
+			$delete_command = "DELETE FROM " . AIOWPSEC_TBL_PERM_BLOCK . " WHERE id IN " . $id_list;
+			$result = $wpdb->query($delete_command);
+			if ($result) {
+				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('Successfully unblocked and deleted the selected record(s).', 'all-in-one-wp-security-and-firewall'));
+			} else {
+				// Error on bulk delete
+				$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Perm Block table. Database error: '.$wpdb->last_error, 4);
+				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to unblock and delete the selected record(s).', 'all-in-one-wp-security-and-firewall'));
 			}
-		} elseif ($entries != NULL) {
-			$nonce = isset($_GET['aiowps_nonce']) ? $_GET['aiowps_nonce'] : '';
-			if (!isset($nonce) || !wp_verify_nonce($nonce, 'unblock_ip')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed for unblock IP operation!", 4);
-				die(__('Nonce check failed for unblock IP operation!', 'all-in-one-wp-security-and-firewall'));
-			}
+		} elseif (!empty($entries)) {
 			//Delete single record
 			$delete_command = "DELETE FROM " . AIOWPSEC_TBL_PERM_BLOCK . " WHERE id = '" . absint($entries) . "'";
 			$result = $wpdb->query($delete_command);
 			if ($result) {
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('Successfully unblocked and deleted the selected record(s).', 'all-in-one-wp-security-and-firewall'));
-			} elseif ($result === false) {
+				return AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('Successfully unblocked and deleted the selected record(s).', 'all-in-one-wp-security-and-firewall'), true);
+			} elseif (false === $result) {
 				// Error on single delete
 				$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Perm Block table. Database error: '.$wpdb->last_error, 4);
-				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to unblock and delete the selected record(s).', 'all-in-one-wp-security-and-firewall'));
+				return AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to unblock and delete the selected record(s).', 'all-in-one-wp-security-and-firewall'), true);
 			}
 		}
 	}
@@ -143,9 +148,10 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 	 * This function will build and return the SQL WHERE statement
 	 *
 	 * @param string $search_term - the search term applied
+	 *
 	 * @return string - the SQL WHERE statement
 	 */
-	private function get_permanent_blocked_ip_list_where_sql($search_term){
+	private function get_permanent_blocked_ip_list_where_sql($search_term) {
 		$where = '';
 		if (!empty($search_term)) {
 			$where = " WHERE";
@@ -164,11 +170,10 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 
 	/**
 	 * Grabs the data from database and handles the pagination
-	 * 
+	 *
 	 * @param boolean $ignore_pagination - whether to not paginate
 	 *
 	 * @return void
-	 *
 	 */
 	public function prepare_items($ignore_pagination = false) {
 		/**
@@ -178,7 +183,7 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 		$columns = $this->get_columns();
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();
-		$search = isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : '';
+		$search = isset($_REQUEST['s']) ? sanitize_text_field($_REQUEST['s']) : '';
 
 		$this->_column_headers = array($columns, $hidden, $sortable);
 
@@ -187,10 +192,10 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 		global $wpdb;
 		$block_table_name = AIOWPSEC_TBL_PERM_BLOCK;
 
-		/* -- Ordering parameters -- */
-		//Parameters that are going to be used to order the result
-		isset($_GET["orderby"]) ? $orderby = strip_tags($_GET["orderby"]) : $orderby = '';
-		isset($_GET["order"]) ? $order = strip_tags($_GET["order"]) : $order = '';
+		// Ordering parameters
+		// Parameters that are going to be used to order the result
+		$orderby = isset($_GET["orderby"]) ? strip_tags($_GET["orderby"]) : '';
+		$order = isset($_GET["order"]) ? strip_tags($_GET["order"]) : '';
 
 		$orderby = !empty($orderby) ? esc_sql($orderby) : 'id';
 		$order = !empty($order) ? esc_sql($order) : 'DESC';
@@ -208,7 +213,7 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 
 		if ($ignore_pagination) {
 			$data = $wpdb->get_results("SELECT * FROM {$block_table_name} {$search_query} ORDER BY {$orderby} {$order}", 'ARRAY_A');
-		}else{
+		} else {
 			$data = $wpdb->get_results("SELECT * FROM {$block_table_name}{$search_query} ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}", 'ARRAY_A');
 		}
 

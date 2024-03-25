@@ -60,9 +60,6 @@ class AIOWPSecurity_General_Init_Tasks {
 				add_action('admin_post_aiowps_firewall_downgrade', array(AIOWPSecurity_Firewall_Setup_Notice::get_instance(), 'handle_downgrade_protection_form'));
 				add_action('admin_post_aiowps_firewall_setup_dismiss', array(AIOWPSecurity_Firewall_Setup_Notice::get_instance(), 'handle_dismiss_form'));
 			}
-
-			$this->reapply_htaccess_rules();
-			add_action('admin_notices', array($this,'reapply_htaccess_rules_notice'));
 		}
 
 		/**
@@ -96,8 +93,10 @@ class AIOWPSecurity_General_Init_Tasks {
 			}
 		}
 		// Stop users enumeration feature
-		if ($aio_wp_security->configs->get_value('aiowps_prevent_users_enumeration') == 1) {
+		if (1 == $aio_wp_security->configs->get_value('aiowps_prevent_users_enumeration')) {
 			include_once(AIO_WP_SECURITY_PATH.'/other-includes/wp-security-stop-users-enumeration.php');
+			add_filter('rest_request_before_callbacks', array($this, 'rest_request_before_callbacks'), 10, 1);
+			add_filter('oembed_response_data', array($this, 'oembed_response_data'), 10, 1);
 		}
 
 		// REST API security
@@ -287,19 +286,31 @@ class AIOWPSecurity_General_Init_Tasks {
 		if ($aio_wp_security->configs->get_value('aiowps_enable_404_logging') == '1') {
 			add_action('wp_head', array($this, 'check_404_event'));
 		}
+
+		// For antibot post page set cookies.
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting')) {
+			add_action('template_redirect', array($this, 'post_antibot_cookie'));
+			add_filter('comment_form_submit_field', array($this, 'comment_form_submit_field'), 10, 1);
+		}
+
+		// For delete readme.html and wp-config-sample.php.
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_auto_delete_default_wp_files')) {
+			add_action('upgrader_process_complete', array($this, 'delete_unneeded_files_after_upgrade'), 10, 2);
+		}
+
 		// Add more tasks that need to be executed at init time
 
 	} // end _construct()
 
 	public function aiowps_disable_xmlrpc_pingback_methods($methods) {
-	   unset($methods['pingback.ping']);
-	   unset($methods['pingback.extensions.getPingbacks']);
-	   return $methods;
+		unset($methods['pingback.ping']);
+		unset($methods['pingback.extensions.getPingbacks']);
+		return $methods;
 	}
 
 	public function aiowps_remove_x_pingback_header($headers) {
-	   unset($headers['X-Pingback']);
-	   return $headers;
+		unset($headers['X-Pingback']);
+		return $headers;
 	}
 
 	/**
@@ -319,8 +330,8 @@ class AIOWPSecurity_General_Init_Tasks {
 	 * @return void
 	 */
 	public function spam_detecting_and_process_comments_discard($comment_post_id) {
-		$is_comment_shoud_not_allowed = AIOWPSecurity_Comment::is_comment_spam_detected();
-		if ($is_comment_shoud_not_allowed) {
+		$is_comment_should_not_allowed = AIOWPSecurity_Comment::is_comment_spam_detected();
+		if ($is_comment_should_not_allowed) {
 			$this->spam_discard_auto_block_ip();
 			$comments = get_comments(array('number' => '1', 'post_id' => $comment_post_id));
 			if ($comments) {
@@ -407,9 +418,17 @@ class AIOWPSecurity_General_Init_Tasks {
 		return '';
 	}
 
+	/**
+	 * This function removes wp meta info from style and script src
+	 *
+	 * @param string|null $src - the src for the style or script
+	 * @return string
+	 */
 	public function remove_wp_css_js_meta_info($src) {
 		global $wp_version;
 		static $wp_version_hash = null; // Cache hash value for all function calls
+
+		if (empty($src)) return '';
 
 		// Replace only version number of assets with WP version
 		if (strpos($src, 'ver=' . $wp_version) !== false) {
@@ -428,7 +447,7 @@ class AIOWPSecurity_General_Init_Tasks {
 
 		$visitor_ip = AIOWPSecurity_Utility_IP::get_user_ip_address();
 
-		$is_locked = AIOWPSecurity_Utility::check_locked_ip($visitor_ip);
+		$is_locked = AIOWPSecurity_Utility::check_locked_ip($visitor_ip, '404');
 
 		if ($is_locked) {
 			//redirect blocked user to configured URL
@@ -455,9 +474,14 @@ class AIOWPSecurity_General_Init_Tasks {
 		return $result;
 	}
 
+	/**
+	 * This function echos a honeypot hidden field into login or register form
+	 *
+	 * @return void
+	 */
 	public function insert_honeypot_hidden_field() {
 		$honey_input = '<p style="display: none;"><label>'.__('Enter something special:', 'all-in-one-wp-security-and-firewall').'</label>';
-		$honey_input .= '<input name="aio_special_field" type="text" id="aio_special_field" class="aio_special_field" value="" /></p>';
+		$honey_input .= '<input name="aio_special_field" type="text" class="aio_special_field" value="" /></p>';
 		echo $honey_input;
 	}
 
@@ -476,8 +500,8 @@ class AIOWPSecurity_General_Init_Tasks {
 			$disabled_message .= '<th>'.__('Disabled').'</th>';
 			$disabled_message .= '<td>'.htmlspecialchars(__('Application passwords have been disabled by All In One WP Security & Firewall plugin.', 'all-in-one-wp-security-and-firewall'));
 			if (AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
-				$aiowps_addtional_setting_url = 'admin.php?page=aiowpsec_userlogin&tab=additional';
-				$change_setting_url = is_multisite() ? network_admin_url($aiowps_addtional_setting_url) : admin_url($aiowps_addtional_setting_url);
+				$aiowps_additional_setting_url = 'admin.php?page=aiowpsec_userlogin&tab=additional';
+				$change_setting_url = is_multisite() ? network_admin_url($aiowps_additional_setting_url) : admin_url($aiowps_additional_setting_url);
 				$disabled_message .= '<p><a href="'.$change_setting_url.'"  class="button">'.__('Change setting', 'all-in-one-wp-security-and-firewall').'</a></p>';
 			} else {
 				$disabled_message .= ' '.__('Site admin can only change this setting.', 'all-in-one-wp-security-and-firewall');
@@ -509,7 +533,7 @@ class AIOWPSecurity_General_Init_Tasks {
 		$verify_captcha = $aio_wp_security->captcha_obj->verify_captcha_submit();
 		if (false === $verify_captcha) {
 			//Wrong answer
-			wp_die(__('Error: You entered an incorrect CAPTCHA answer. Please go back and try again.', 'all-in-one-wp-security-and-firewall'));
+			wp_die(__('Error: You entered an incorrect CAPTCHA answer, please go back and try again.', 'all-in-one-wp-security-and-firewall'));
 		} else {
 			return($comment);
 		}
@@ -543,6 +567,24 @@ class AIOWPSecurity_General_Init_Tasks {
 			AIOWPSecurity_Utility::event_logger('404');
 		}
 
+	}
+
+	/**
+	 * Deletes unneeded default WP files if they're regenerated after core upgrade.
+	 *
+	 * @param WP_Upgrader $upgrader
+	 * @param array       $hook_extra
+	 *
+	 * @return void
+	 */
+	public function delete_unneeded_files_after_upgrade($upgrader, $hook_extra) {
+		if (empty($hook_extra)) {
+			return;
+		}
+
+		if (isset($hook_extra['action']) && 'update' == $hook_extra['action'] && isset($hook_extra['type']) && 'core' == $hook_extra['type']) {
+			AIOWPSecurity_Utility::delete_unneeded_default_files();
+		}
 	}
 
 	public function buddy_press_signup_validate_captcha() {
@@ -589,43 +631,6 @@ class AIOWPSecurity_General_Init_Tasks {
 	}
 
 	/**
-	 * Reapply htaccess rule or dismiss the related notice.
-	 *
-	 * @return void
-	 */
-	public function reapply_htaccess_rules() {
-		if (isset($_REQUEST['aiowps_reapply_htaccess'])) {
-			global $aio_wp_security;
-
-			if (strip_tags($_REQUEST['aiowps_reapply_htaccess']) == 1) {
-				$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_GET['_wpnonce'], 'aiowps-reapply-htaccess-yes');
-				if (is_wp_error($result)) {
-					$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-					die($result->get_error_message());
-				}
-				include_once('wp-security-installer.php');
-				if (AIOWPSecurity_Installer::reactivation_tasks()) {
-					$aio_wp_security->debug_logger->log_debug('The AIOS .htaccess rules were successfully re-inserted.');
-					$_SESSION['reapply_htaccess_rules_action_result'] = '1';//Success indicator.
-					// Can't echo to the screen here. It will create an header already sent error.
-				} else {
-					$aio_wp_security->debug_logger->log_debug('AIOS encountered an error when trying to write to your .htaccess file. Please check the logs.', 5);
-					$_SESSION['reapply_htaccess_rules_action_result'] = '2';//fail indicator.
-					// Can't echo to the screen here. It will create an header already sent error.
-				}
-			} elseif (strip_tags($_REQUEST['aiowps_reapply_htaccess']) == 2) {
-				$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_GET['_wpnonce'], 'aiowps-reapply-htaccess-no');
-				if (is_wp_error($result)) {
-					$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-					return;
-				}
-				// Don't re-write the rules and just delete the temp config item
-				delete_option('aiowps_temp_configs');
-			}
-		}
-	}
-
-	/**
 	 * Displays a notice message if the entered recatcha site key is wrong.
 	 */
 	public function google_recaptcha_notice() {
@@ -637,24 +642,6 @@ class AIOWPSecurity_General_Init_Tasks {
 			/* translators: %s: Admin Dashboard > WP Security > Brute Force > Login CAPTCHA Tab Link */
 			printf(__('Your Google reCAPTCHA configuration is invalid.', 'all-in-one-wp-security-and-firewall').' '.__('Please enter the correct reCAPTCHA keys %s to use the Google reCAPTCHA feature.', 'all-in-one-wp-security-and-firewall'), '<a href="'.esc_url($recaptcha_tab_url).'">'.__('here', 'all-in-one-wp-security-and-firewall').'</a>');
 			echo '</p></div>';
-		}
-	}
-
-	/**
-	 * Displays a notice message if the plugin is reactivated which gives users the option of re-applying the AIOS rules which were deleted from the .htaccess file at the last deactivation.
-	 *
-	 * @return Void
-	 */
-	public function reapply_htaccess_rules_notice() {
-		if (false !== get_option('aiowps_temp_configs')) {
-			$reapply_htaccess_yes_url = wp_nonce_url('admin.php?page='.AIOWPSEC_MENU_SLUG_PREFIX.'&aiowps_reapply_htaccess=1', 'aiowps-reapply-htaccess-yes');
-			$reapply_htaccess_no_url  = wp_nonce_url('admin.php?page='.AIOWPSEC_MENU_SLUG_PREFIX.'&aiowps_reapply_htaccess=2', 'aiowps-reapply-htaccess-no');
-
-			if (is_main_site() && is_super_admin()) {
-				echo '<div class="updated"><p>'.htmlspecialchars(__('Would you like All In One WP Security & Firewall to restore the config settings and re-insert the security rules in your .htaccess file which were cleared when you deactivated the plugin?', 'all-in-one-wp-security-and-firewall')).'&nbsp;&nbsp;<a href="'.esc_url($reapply_htaccess_yes_url).'" class="button-primary">'.__('Yes', 'all-in-one-wp-security-and-firewall').'</a>&nbsp;&nbsp;<a href="'.esc_url($reapply_htaccess_no_url).'" class="button-primary">'.__('No', 'all-in-one-wp-security-and-firewall').'</a></p></div>';
-			} elseif (!is_main_site()) {
-				echo '<div class="updated"><p>'.htmlspecialchars(__('Would you like All In One WP Security & Firewall to restore the config settings which were cleared when you deactivated the plugin?', 'all-in-one-wp-security-and-firewall')).'&nbsp;&nbsp;<a href="'.esc_url($reapply_htaccess_yes_url).'" class="button-primary">'.__('Yes', 'all-in-one-wp-security-and-firewall').'</a>&nbsp;&nbsp;<a href="'.esc_url($reapply_htaccess_no_url).'" class="button-primary">'.__('No', 'all-in-one-wp-security-and-firewall').'</a></p></div>';
-			}
 		}
 	}
 
@@ -707,5 +694,65 @@ class AIOWPSecurity_General_Init_Tasks {
 		$firewall_setup = AIOWPSecurity_Firewall_Setup_Notice::get_instance();
 		$firewall_setup->start_firewall_setup();
 
+	}
+	
+	/**
+	 * Called by the WP filter rest_request_before_callbacks
+	 *
+	 * @param WP_REST_Response $response
+	 *
+	 * @return WP_REST_Response|WP_Error $response
+	 */
+	public function rest_request_before_callbacks($response) {
+		$rest_route = !empty($_GET['rest_route']) ? $_GET['rest_route'] : (empty($_SERVER['REQUEST_URI']) ? '' : (string) parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH));
+		$rest_route = trim($rest_route, '/');
+		if ('' != $rest_route && !current_user_can('edit_others_posts')) {
+			if (preg_match('/wp\/v2\/users$/i', $rest_route)) {
+				$error = new WP_Error('aios_user_lists_forbidden', __('Listing users is forbidden.', 'all-in-one-wp-security-and-firewall'));
+				$response = rest_ensure_response($error);
+			} elseif (preg_match('/wp\/v2\/users\/+(\d+)$/i', $rest_route, $matches)) {
+				$id = empty($matches) ? 0 : (int) $matches[1];
+				if (get_current_user_id() !== $id) {
+					$error = new WP_Error('aios_user_details_forbidden', __('Accessing user details is forbidden.', 'all-in-one-wp-security-and-firewall'), array('status' => 403));
+					$response = rest_ensure_response($error);
+				}
+			}
+		}
+		return $response;
+	}
+	
+	/**
+	 * Called by the WP filter oembed_response_data
+	 *
+	 * @param Array $data
+	 *
+	 * @return Array $data
+	 */
+	public function oembed_response_data($data) {
+		unset($data['author_name']);
+		unset($data['author_url']);
+		return $data;
+	}
+	
+	/**
+	 * Sets the antibot cookie for post page comment form
+	 *
+	 * @return void
+	 */
+	public function post_antibot_cookie() {
+		if (is_singular() || is_archive()) {
+			AIOWPSecurity_Comment::insert_antibot_keys_in_cookie();
+		}
+	}
+	
+	/**
+	 * Sets the hidden fields html code for post page comment form
+	 *
+	 * @param string $submit_field HTML markup for the submit field
+	 *
+	 * @return string
+	 */
+	public function comment_form_submit_field($submit_field) {
+		return $submit_field . " " . AIOWPSecurity_Comment::insert_antibot_keys_in_comment_form();
 	}
 }

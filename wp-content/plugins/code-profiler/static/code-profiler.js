@@ -109,9 +109,35 @@ function cpjs_show_adv_settings() {
 function cpjs_get_post( id ) {
 	if ( id == 1 ) {
 		jQuery('#post-value').prop('disabled', false);
+		jQuery('#id-content-type').prop('disabled', false);
 		jQuery('#post-value').focus();
 	} else {
 		jQuery('#post-value').prop('disabled', true);
+		jQuery('#id-content-type').prop('disabled', true);
+	}
+}
+
+function cpjs_content_type( value ) {
+	if ( value == 1 ) {
+		jQuery('#ct-1').slideDown();
+		jQuery('#ct-2').slideUp();
+	} else {
+		jQuery('#ct-2').slideDown();
+		jQuery('#ct-1').slideUp();
+	}
+}
+
+function cpjs_isJSON( data ) {
+
+	if ( jQuery('#id-content-type').val() == 1 || jQuery('#get-method').prop('checked') == true ) {
+		// Ignore
+		return 1;
+	}
+	try {
+		return JSON.parse( data );
+	} catch (e) {
+		// Not a JSON-encoded string
+		return null;
 	}
 }
 
@@ -214,6 +240,8 @@ function cpjs_start_profiler() {
 		ua = 'FireFox';
 	}
 
+	var theme = jQuery('#id-theme').val();
+
 	// GET or POST
 	var method = jQuery('input[name="method"]:checked').val();
 	var payload = '';
@@ -222,6 +250,17 @@ function cpjs_start_profiler() {
 		payload = jQuery('#post-value').val();
 	} else {
 		method = 'get';
+	}
+
+	//Content type
+	var ct = jQuery('#id-content-type').val();
+	// application/json
+	if ( ct == 2 ) {
+		if ( cpjs_isJSON( payload ) == null ) {
+			alert( cpi18n.missing_ajax );
+			jQuery('#user-name').focus();
+			return;
+		}
 	}
 
 	var cookies = jQuery('#cp-cookies').val();
@@ -240,6 +279,7 @@ function cpjs_start_profiler() {
 		'cp_nonce': cp_nonce,
 		'where': where,
 		'post': post,
+		'content_type': ct,
 		'profile': profile,
 		'user': user,
 		'username': username,
@@ -247,7 +287,8 @@ function cpjs_start_profiler() {
 		'custom_headers': headers,
 		'method': method,
 		'payload': payload,
-		'ua': ua
+		'ua': ua,
+		'theme': theme
 	};
 	// Send the request via AJAX
 	jQuery.ajax( {

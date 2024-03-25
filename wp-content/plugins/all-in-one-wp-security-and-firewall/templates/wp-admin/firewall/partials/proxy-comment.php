@@ -12,17 +12,18 @@
 			<tr valign="top">
 				<th scope="row"><?php _e('Forbid proxy comment posting', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
-				<input id="aiowps_forbid_proxy_comments" name="aiowps_forbid_proxy_comments" type="checkbox"<?php if ($aiowps_firewall_config->get_value('aiowps_forbid_proxy_comments')) echo ' checked="checked"'; ?> value="1"/>
-				<label for="aiowps_forbid_proxy_comments" class="description"><?php _e('Check this if you want to forbid proxy comment posting.', 'all-in-one-wp-security-and-firewall'); ?></label>
-				<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-				<div class="aiowps_more_info_body">
-					<p class="description">
-						<?php
-						_e('This setting will deny any requests that use a proxy server when posting comments.', 'all-in-one-wp-security-and-firewall');
-						echo '<br>'.__('By forbidding proxy comments you are in effect eliminating some spam and other proxy requests.', 'all-in-one-wp-security-and-firewall');
-						?>
-					</p>
-				</div>
+					<div class="aiowps_switch_container">
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to forbid proxy comment posting.', 'all-in-one-wp-security-and-firewall'), 'aiowps_forbid_proxy_comments', $aiowps_firewall_config->get_value('aiowps_forbid_proxy_comments')); ?>
+						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+						<div class="aiowps_more_info_body">
+							<p class="description">
+								<?php
+								_e('This setting will deny any requests that use a proxy server when posting comments.', 'all-in-one-wp-security-and-firewall');
+								echo '<br>'.__('By forbidding proxy comments you are in effect eliminating some spam and other proxy requests.', 'all-in-one-wp-security-and-firewall');
+								?>
+							</p>
+						</div>
+					</div>
 				</td>
 			</tr>
 		</table>

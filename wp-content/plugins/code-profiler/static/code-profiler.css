@@ -1,4 +1,4 @@
-/*
+/**
  +=====================================================================+
  |    ____          _        ____             __ _ _                   |
  |   / ___|___   __| | ___  |  _ \ _ __ ___  / _(_) | ___ _ __         |
@@ -56,21 +56,6 @@
 .wp-list-table .column-mem { width: 11%; }
 .wp-list-table .column-queries { width: 9%; }
 .wp-list-table .column-io { width: 10%; }
-
-
-form.scripts .wp-list-table .column-script { width: 60%; }
-form.scripts .wp-list-table .column-time { width: 20%; text-align:center }
-form.scripts .wp-list-table .column-name { width: 20%; }
-
-form.functions .wp-list-table .column-function { width: 30%; }
-form.functions .wp-list-table .column-time { width: 15%; text-align:center }
-form.functions .wp-list-table .column-calls { width: 10%; }
-form.functions .wp-list-table .column-script { width: 30%; }
-form.functions .wp-list-table .column-name { width: 15%; }
-
-form.iolist .wp-list-table .column-order { width: 10%; text-align: center; }
-form.iolist .wp-list-table .column-file { width: 75%; }
-form.iolist .wp-list-table .column-mode { width: 15%; }
 
 /* TipTip CSS - Version 1.2 */
 .code-profiler-tip{

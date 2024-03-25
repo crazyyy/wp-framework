@@ -5,9 +5,9 @@
 
 if (!defined('ABSPATH')) die('Access denied.');
 
-if (!class_exists('Updraft_Task_Manager_1_3')) :
+if (!class_exists('Updraft_Task_Manager_1_4')) :
 
-abstract class Updraft_Task_Manager_1_3 {
+abstract class Updraft_Task_Manager_1_4 {
 
 	protected $loggers;
 
@@ -32,46 +32,7 @@ abstract class Updraft_Task_Manager_1_3 {
 
 		$this->commands = new Updraft_Task_Manager_Commands_1_0($this);
 
-		add_action('wp_ajax_updraft_taskmanager_ajax', array($this, 'updraft_taskmanager_ajax'));
-
 		do_action('updraft_task_manager_loaded', $this);
-	}
-
-	/**
-	 * The Task Manager AJAX handler
-	 */
-	public function updraft_taskmanager_ajax() {
-
-		$nonce = empty($_REQUEST['nonce']) ? '' : $_REQUEST['nonce'];
-
-		if (!wp_verify_nonce($nonce, 'updraft-task-manager-ajax-nonce') || empty($_REQUEST['subaction']))
-			die('Security check failed');
-
-		$subaction = $_REQUEST['subaction'];
-
-		$allowed_commands = Updraft_Task_Manager_Commands_1_0::get_allowed_ajax_commands();
-		
-		if (in_array($subaction, $allowed_commands)) {
-
-			if (isset($_REQUEST['action_data']))
-				$data = $_REQUEST['action_data'];
-
-			$results = call_user_func(array($this->commands, $subaction), $data);
-			
-			if (is_wp_error($results)) {
-				$results = array(
-					'result' => false,
-					'error_code' => $results->get_error_code(),
-					'error_message' => $results->get_error_message(),
-					'error_data' => $results->get_error_data(),
-				);
-			}
-			
-			echo json_encode($results);
-		} else {
-			echo json_encode("{'error' : 'No such command found'}");
-		}
-		die;
 	}
 
 	/**
@@ -331,10 +292,11 @@ abstract class Updraft_Task_Manager_1_3 {
 
 		$class_identifier = $_task->class_identifier;
 
-		if (class_exists($class_identifier))
+		if (class_exists($class_identifier)) {
 			$task_instance = new $class_identifier($_task);
 			$task_instance->set_loggers($this->loggers);
 			return $task_instance;
+		}
 
 		return false;
 	}

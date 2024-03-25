@@ -1828,6 +1828,7 @@ class ExactDN extends Page_Parser {
 				if ( \count( $bg_image_urls ) > 1 ) {
 					$bg_autoscale = false;
 				}
+				$skip_autoscale = false;
 				foreach ( $bg_image_urls as $bg_image_url ) {
 					$orig_bg_url = $bg_image_url;
 
@@ -1849,7 +1850,10 @@ class ExactDN extends Page_Parser {
 						}
 						$args          = array();
 						$element_class = $this->get_attribute( $element, 'class' );
-						if ( false !== \strpos( $element_class, 'alignfull' ) && \current_theme_supports( 'align-wide' ) ) {
+						if ( false !== \strpos( $element_class, 'vce-asset-background-zoom-item' ) ) {
+							// Don't constrain Visual Composer 'zoom' images AND disable auto-scaling.
+							$skip_autoscale = true;
+						} elseif ( false !== \strpos( $element_class, 'alignfull' ) && \current_theme_supports( 'align-wide' ) ) {
 							$args['w'] = \apply_filters( 'exactdn_full_align_bgimage_width', 1920, $bg_image_url );
 						} elseif ( false !== \strpos( $element_class, 'wp-block-cover' ) && false !== \strpos( $element_class, 'has-parallax' ) ) {
 							$args['w'] = \apply_filters( 'exactdn_wp_cover_parallax_bgimage_width', 1920, $bg_image_url );
@@ -1871,6 +1875,13 @@ class ExactDN extends Page_Parser {
 				}
 				if ( $style !== $new_style ) {
 					$element = \str_replace( $style, $new_style, $element );
+				}
+				if ( $skip_autoscale ) {
+					$new_class = 'skip-autoscale';
+					if ( ! empty( $element_class ) ) {
+						$new_class = $element_class . ' skip-autoscale';
+					}
+					$this->set_attribute( $element, 'class', $new_class, true );
 				}
 				if ( $element !== $elements[ $index ] ) {
 					$content = \str_replace( $elements[ $index ], $element, $content );
@@ -1986,8 +1997,8 @@ class ExactDN extends Page_Parser {
 				$this->debug_message( 'searching for #(https?:)?//(?:www\.)?' . $escaped_upload_domain . $this->remove_path . '/#i and replacing with $1//' . $this->exactdn_domain . '/' );
 				$content = \preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . $this->remove_path . '/#i', '$1//' . $this->exactdn_domain . '/', $content );
 			} else {
-				$this->debug_message( 'searching for #(https?:)?//(?:www\.)?' . $escaped_upload_domain . '(/[^"\'?&>:/]+?)*?/(nextgen-image|' . $this->include_path . '|' . $this->content_path . ')/#i and replacing with $1//' . $this->exactdn_domain . '$2/$3/' );
-				$content = \preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . '(/[^"\'?&>:/]+?)*?/(nextgen-image|' . $this->include_path . '|' . $this->content_path . ')/#i', '$1//' . $this->exactdn_domain . '$2/$3/', $content );
+				$this->debug_message( 'searching for #(https?:)?//(?:www\.)?' . $escaped_upload_domain . '((?:/[^"\'?&>:/]+?){0,3})/(nextgen-image|' . $this->include_path . '|' . $this->content_path . ')/#i and replacing with $1//' . $this->exactdn_domain . '$2/$3/' );
+				$content = \preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . '((?:/[^"\'?&>:/]+?){0,3})/(nextgen-image|' . $this->include_path . '|' . $this->content_path . ')/#i', '$1//' . $this->exactdn_domain . '$2/$3/', $content );
 			}
 			$content = \str_replace( '?wpcontent-bypass?', $this->content_path, $content );
 			$content = $this->replace_fonts( $content );
@@ -2395,11 +2406,12 @@ class ExactDN extends Page_Parser {
 					$image_url_basename = \wp_basename( $image_url );
 					$intermediate_url   = \str_replace( $image_url_basename, $image_meta['sizes'][ $size ]['file'], $image_url );
 
-					if ( empty( $image_meta['width'] ) || empty( $image_meta['height'] ) ) {
+					if ( empty( $image_meta['sizes'][ $size ]['width'] ) || empty( $image_meta['sizes'][ $size ]['height'] ) ) {
 						list( $filename_width, $filename_height ) = $this->get_dimensions_from_filename( $intermediate_url );
+					} else {
+						$filename_width  = $image_meta['sizes'][ $size ]['width'];
+						$filename_height = $image_meta['sizes'][ $size ]['height'];
 					}
-					$filename_width  = ! empty( $image_meta['width'] ) ? $image_meta['width'] : $filename_width;
-					$filename_height = ! empty( $image_meta['height'] ) ? $image_meta['height'] : $filename_height;
 					if ( $filename_width && $filename_height && $image_args['width'] === $filename_width && $image_args['height'] === $filename_height ) {
 						$this->debug_message( "changing $image_url to $intermediate_url" );
 						$image_url = $intermediate_url;
@@ -3627,7 +3639,10 @@ class ExactDN extends Page_Parser {
 		if ( false !== \strpos( $uri, '&builder=true' ) ) {
 			return true;
 		}
-		if ( false !== \strpos( $uri, 'cornerstone=' ) || false !== \strpos( $uri, 'cornerstone-endpoint' ) ) {
+		if ( false !== \strpos( $uri, 'cornerstone=' ) || false !== \strpos( $uri, 'cornerstone-endpoint' ) || false !== \strpos( $uri, 'cornerstone/edit/' ) ) {
+			return true;
+		}
+		if ( \did_action( 'cs_element_rendering' ) || \did_action( 'cornerstone_before_boot_app' ) || \apply_filters( 'cs_is_preview_render', false ) ) {
 			return true;
 		}
 		if ( false !== \strpos( $uri, 'ct_builder=' ) ) {
@@ -3698,6 +3713,9 @@ class ExactDN extends Page_Parser {
 			return $url;
 		}
 		if ( \did_action( 'cornerstone_boot_app' ) || \did_action( 'cs_before_preview_frame' ) ) {
+			return $url;
+		}
+		if ( \did_action( 'cs_element_rendering' ) || \did_action( 'cornerstone_before_boot_app' ) || \apply_filters( 'cs_is_preview_render', false ) ) {
 			return $url;
 		}
 		$this->debug_message( '<b>' . __METHOD__ . '()</b>' );

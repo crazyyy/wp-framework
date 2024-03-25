@@ -77,11 +77,11 @@ function code_profiler_display_tabs( $which ) {
 		<a href="?page=code-profiler&cptab=support" class="nav-tab <?php
 			echo esc_html( $t6 ) ?>"><?php esc_html_e( 'Support', 'code-profiler' ) ?></a>
 		<div style="text-align:center;">
-			<a href="https://code-profiler.com/" target="_blank" rel="noopener noreferrer" class="button-primary"><?php
+			<a href="https://code-profiler.com/" target="_blank" rel="noopener noreferrer" class="button button-primary"><?php
 				esc_html_e('Explore the Pro version', 'code-profiler' );
 			?> »</a>
 			&nbsp;&nbsp;&nbsp;
-			<a href="https://wordpress.org/support/view/plugin-reviews/code-profiler?rate=5#postform" target="_blank" rel="noopener noreferrer" class="button-secondary"><span class="dashicons dashicons-star-half" style="vertical-align:sub;"></span>&nbsp;<?php
+			<a href="https://wordpress.org/support/view/plugin-reviews/code-profiler?rate=5#postform" target="_blank" rel="noopener noreferrer" class="button button-secondary"><span class="dashicons dashicons-star-half" style="vertical-align:sub;"></span>&nbsp;<?php
 				esc_html_e('Rate it on WordPress.org', 'code-profiler' );
 			?> »</a>
 		</div>

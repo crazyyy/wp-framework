@@ -78,7 +78,7 @@ $is_checked = ('true' == $option_value);
 			'plugin'      => 'updraftplus/updraftplus.php'
 		), network_admin_url('plugins.php'));
 
-		// If is network admin then add to link newtwork activation.
+		// If is network admin then add to link network activation.
 		if (is_network_admin()) {
 			$activate_url = add_query_arg(array('networkwide' => 1), $activate_url);
 		}

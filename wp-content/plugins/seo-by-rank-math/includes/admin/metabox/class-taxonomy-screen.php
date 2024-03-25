@@ -12,7 +12,7 @@ namespace RankMath\Admin\Metabox;
 
 use RankMath\Helper;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Param;
+use RankMath\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -156,7 +156,10 @@ class Taxonomy_Screen implements IScreen {
 	 */
 	private function description_field_editor() {
 		$taxonomy = $this->get_taxonomy();
-		if ( ! Helper::get_settings( 'titles.tax_' . $taxonomy . '_add_meta_box' ) ) {
+		if (
+			! Helper::get_settings( 'titles.tax_' . $taxonomy . '_add_meta_box' ) ||
+			$this->do_filter( 'admin/disable_rich_editor', false, $taxonomy )
+		) {
 			return;
 		}
 

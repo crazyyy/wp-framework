@@ -37,7 +37,7 @@ function wbcr_dan_ajax_hide_notices() {
 
 				$get_hidden_notices[ $notice_id ] = rtrim( trim( $notice_html ) );
 
-				WDN_Plugin::app()->updatePopulateOption( 'hidden_notices', $get_hidden_notices );
+				WDN_Plugin::app()->updatePopulateOption('hidden_notices', $get_hidden_notices );
 				break;
 			case 'user':
 			default:

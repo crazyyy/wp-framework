@@ -132,7 +132,7 @@ WP_Optimize_Images_View = function(settings) {
 			index1 = $(checkbox_selector).index($('#' + first_id));
 			index2 = $(checkbox_selector).index($('#' + last_id));
 
-			// check if both item exists. (posibly one of them was deleted)
+			// check if both item exists. (possibly one of them was deleted)
 			if (-1 == index1) index1 = index2;
 			if (-1 == index2) index2 = index1;
 

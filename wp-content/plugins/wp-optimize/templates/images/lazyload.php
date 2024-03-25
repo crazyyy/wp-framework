@@ -21,7 +21,7 @@ $read_more_link = 'https://developers.google.com/web/fundamentals/performance/la
 				echo esc_html($message);
 			?>
 			<br>
-			<a href="<?php echo esc_url($read_more_link); ?>" target="_blank"><?php esc_html_e('Follow this link to read more about lazy-loading images and video', 'wp-optimize'); ?></a>
+			<?php $wp_optimize->wp_optimize_url($read_more_link, __('Follow this link to read more about lazy-loading images and video', 'wp-optimize')); ?>
 		</p>
 		<ul>
 			<li><label><input type="checkbox" name="lazyload[images]" <?php checked($lazyload_options['images']); ?> disabled /><?php esc_html_e('Images', 'wp-optimize'); ?></label></li>

@@ -2,12 +2,12 @@
 # This file is distributed under the same license as the UpdraftPlus package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-06-11 08:03:27+0000\n"
+"PO-Revision-Date: 2024-01-01 14:54:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/2.3.1\n"
+"X-Generator: GlotPress/3.0.0\n"
 "Language: et_EE\n"
 "Project-Id-Version: UpdraftPlus\n"
 
@@ -3746,7 +3746,7 @@ msgstr ""
 
 #: src/central/translations-updraftplus.php:46
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: src/central/translations-updraftplus.php:33
 msgid "Delete..."
@@ -3762,7 +3762,7 @@ msgstr ""
 
 #: src/central/translations-updraftplus.php:36
 msgid "Details"
-msgstr ""
+msgstr "Andmed"
 
 #: src/central/translations-updraftplus.php:35
 msgid "Key description"
@@ -3818,7 +3818,7 @@ msgstr ""
 
 #: src/admin.php:5512
 msgid "Your settings have been saved."
-msgstr ""
+msgstr "Sinu seaded on salvestatud."
 
 #: src/admin.php:4379
 msgid "Total backup size:"
@@ -3826,7 +3826,7 @@ msgstr ""
 
 #: src/admin.php:3768
 msgid "stop"
-msgstr ""
+msgstr "peatus"
 
 #: src/admin.php:971, src/admin.php:3555
 msgid "The backup has finished running"
@@ -3907,7 +3907,7 @@ msgstr ""
 #: src/templates/wp-admin/notices/horizontal-notice.php:48,
 #: src/templates/wp-admin/notices/horizontal-notice.php:50
 msgid "Dismiss"
-msgstr ""
+msgstr "Tühista"
 
 #: src/admin.php:957
 msgid "Please fill in the required information."
@@ -4016,7 +4016,7 @@ msgstr ""
 
 #: src/admin.php:5375
 msgid "settings"
-msgstr "sätted"
+msgstr "seaded"
 
 #: src/admin.php:5375
 msgid "Backup won't be sent to any remote storage - none has been saved in the %s"
@@ -4217,7 +4217,7 @@ msgstr ""
 
 #: src/templates/wp-admin/advanced/site-info.php:70
 msgid "Not installed"
-msgstr ""
+msgstr "Ei ole installeeritud"
 
 #: src/addons/googlecloud.php:1242, src/addons/s3-enhanced.php:58
 msgid "Storage class"
@@ -8382,7 +8382,7 @@ msgstr ""
 #: src/addons/morefiles.php:886, src/admin.php:906,
 #: src/templates/wp-admin/settings/delete-and-restore-modals.php:94
 msgid "Cancel"
-msgstr "Katkesta"
+msgstr "Tühista"
 
 #: src/addons/incremental.php:330, src/addons/incremental.php:338,
 #: src/addons/reporting.php:260, src/admin.php:4374
@@ -8438,7 +8438,7 @@ msgstr ""
 #: src/addons/incremental.php:334, src/addons/incremental.php:347,
 #: src/admin.php:4077, src/admin.php:4090
 msgid "Monthly"
-msgstr ""
+msgstr "Igakuine"
 
 #: src/addons/incremental.php:333, src/addons/incremental.php:346,
 #: src/admin.php:4089
@@ -8448,12 +8448,12 @@ msgstr ""
 #: src/addons/incremental.php:332, src/addons/incremental.php:345,
 #: src/admin.php:4088
 msgid "Weekly"
-msgstr ""
+msgstr "Iganädalaselt"
 
 #: src/addons/incremental.php:331, src/addons/incremental.php:344,
 #: src/admin.php:4087
 msgid "Daily"
-msgstr ""
+msgstr "Igapäevaselt"
 
 #: src/templates/wp-admin/settings/form-contents.php:25
 msgid "Files backup interval"

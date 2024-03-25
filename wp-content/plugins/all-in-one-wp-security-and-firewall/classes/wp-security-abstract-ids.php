@@ -104,4 +104,16 @@ class AIOS_Abstracted_Ids {
 		);
 	}
 
+	/**
+	 * Get Reverse IP Lookup services.
+	 *
+	 * @return array
+	 */
+	public static function get_reverse_ip_lookup_services() {
+		return array(
+			'ip-api' => 'http://ip-api.com/json/%s',
+			'ipinfo' => 'https://ipinfo.io/%s/json'
+		);
+	}
+
 }

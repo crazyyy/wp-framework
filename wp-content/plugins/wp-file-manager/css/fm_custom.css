@@ -196,3 +196,19 @@ td.fm-tr-inline input {
     right: unset;
     left: 10px;
 }
+.form-table .input-addon{
+	padding: 0.5rem 0.75rem;
+	margin-bottom: 0;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 2;
+	color: #464a4c;
+	text-align: center;
+	background-color: #eceeef;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 0.25rem;
+	display: inline-block;
+}
+.fmInput{
+	width:60% !important;
+  }

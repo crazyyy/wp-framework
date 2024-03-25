@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 7.0.9
+ * Version: 7.2.3
  * Requires at least: 5.8
  * Requires PHP: 7.2
  * Author: Really Simple Plugins
@@ -11,6 +11,7 @@
  * License: GPL2
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
+ * Network: true
  */
 /*  Copyright 2023  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
     This program is free software; you can redistribute it and/or modify
@@ -24,16 +25,19 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!function_exists('rsssl_activation_check')) {
 	function rsssl_activation_check()
 	{
-        update_option('rsssl_show_onboarding', true);
+		update_option('rsssl_activation', true, false );
+        update_option('rsssl_show_onboarding', true, false );
         set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
+if ( !class_exists('REALLY_SIMPLE_SSL')) {
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;
@@ -48,6 +52,7 @@ class REALLY_SIMPLE_SSL
 	public $placeholder;
 	public $certificate;
 	public $wp_cli;
+    public $mailer_admin;
 	public $site_health;
     public $vulnerabilities;
 
@@ -75,6 +80,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
 				self::$instance->admin = new rsssl_admin();
+				self::$instance->mailer_admin = new rsssl_mailer_admin();
 				self::$instance->onboarding = new rsssl_onboarding();
 				self::$instance->progress = new rsssl_progress();
 				self::$instance->certificate = new rsssl_certificate();
@@ -94,15 +100,14 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
         define('rsssl_plugin', plugin_basename(__FILE__));
-        define('rsssl_add_on_version_requirement', '7.0.0');
+        define('rsssl_add_on_version_requirement', '7.2.0');
         if ( !defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '7.0.9');
+		define('rsssl_version', '7.2.3');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
-
 	private function includes()
 	{
 		require_once(rsssl_path . 'class-front-end.php');
@@ -118,9 +123,11 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
+			require_once( rsssl_path . 'modal/modal.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
             require_once( rsssl_path . 'class-admin.php');
+            require_once( rsssl_path . 'mailer/class-mail-admin.php');
 			require_once( rsssl_path . 'class-cache.php');
 			require_once( rsssl_path . 'class-server.php');
             require_once( rsssl_path . 'progress/class-progress.php');
@@ -169,7 +176,7 @@ class REALLY_SIMPLE_SSL
 			<div id="message" class="error notice really-simple-plugins">
 				<p><?php echo __("Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
                 <p>
-                    <?php printf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank">','</a>'); ?>
+                    <?php printf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank" rel="noopener noreferrer">','</a>'); ?>
                 </p>
 			</div>
 			<?php
@@ -187,7 +194,7 @@ class REALLY_SIMPLE_SSL
 		require_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$data = false;
 		if ( is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
-		if ($data && version_compare($data['Version'], '6.0.0', '<')) {
+		if ($data && version_compare($data['Version'], '7.0.6', '<')) {
 			return true;
 		}
 
@@ -196,6 +203,13 @@ class REALLY_SIMPLE_SSL
 		}
 		return false;
 	}
+}
+	function RSSSL()
+	{
+		return REALLY_SIMPLE_SSL::instance();
+	}
+	add_action('plugins_loaded', 'RSSSL', 8);
+
 }
 
 if ( ! function_exists('rsssl_add_manage_security_capability')){
@@ -238,11 +252,7 @@ if ( !function_exists('rsssl_admin_logged_in')){
     }
 }
 
-function RSSSL()
-{
-    return REALLY_SIMPLE_SSL::instance();
-}
-add_action('plugins_loaded', 'RSSSL', 8);
+
 
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
@@ -253,3 +263,23 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
         return is_user_logged_in();
 	}
 }
+
+/**
+ * Add rsssl_two_fa_status usermeta field
+ *
+ * @return void
+ */
+function rsssl_register_user_meta() {
+    register_meta('user', 'rsssl_two_fa_status', [
+        'show_in_rest' => true,
+        'single' => true,
+        'type' => 'string',
+        'description' => 'The method of two-factor authentication for the user.',
+        'default' => 'disabled',
+        'auth_callback' => function() {
+            return rsssl_user_can_manage();
+        },
+    ]);
+}
+
+add_action( 'init' , 'rsssl_register_user_meta' );

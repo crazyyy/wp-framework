@@ -15,8 +15,8 @@ namespace RankMath\Sitemap;
 
 use RankMath\Helper;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Url;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Url;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -63,7 +63,7 @@ class Router {
 			return;
 		}
 
-		$xsl = get_query_var( 'xsl' );
+		$xsl = self::get_sitemap_slug( get_query_var( 'xsl' ) );
 		if ( ! empty( $xsl ) ) {
 			$this->filter( 'user_has_cap', 'filter_user_has_cap' );
 			$stylesheet = new Stylesheet();
@@ -147,6 +147,21 @@ class Router {
 		 * @param string $base The string that should be added to home_url() to make the full base URL.
 		 */
 		return apply_filters( 'rank_math/sitemap/base_url', $base );
+	}
+
+	/**
+	 * Get sitemap slug.
+	 *
+	 * @param string $type Sitemap type.
+	 * @return string
+	 */
+	public static function get_sitemap_slug( $type ) {
+		/**
+		 * Filter the slug of the sitemap.
+		 *
+		 * @param string $slug Slug of the sitemap.
+		 */
+		return apply_filters( "rank_math/sitemap/{$type}/slug", $type );
 	}
 
 	/**

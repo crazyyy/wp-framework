@@ -132,7 +132,7 @@ echo code_profiler_display_tabs( 4 );
 						<span style="display: inline-block"><?php esc_html_e('Debug', 'code-profiler') ?></span>&nbsp;
 					</label>
 				</p>
-				<input type="submit" onclick="return cpjs_delete_log();" name="cp-delete-log" class="button-primary" value="<?php esc_attr_e('Delete log', 'code-profiler') ?>"<?php disabled( $logline, '') ?> />
+				<input type="submit" onclick="return cpjs_delete_log();" name="cp-delete-log" class="button button-primary" value="<?php esc_attr_e('Delete log', 'code-profiler') ?>"<?php disabled( $logline, '') ?> />
 				<?php wp_nonce_field('cp_delete_log', 'cp_nonce', 0); ?>
 				<p class="description"><?php esc_html_e('The log is deleted automatically when it reaches 100KB.', 'code-profiler') ?></p>
 			</td>

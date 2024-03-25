@@ -1229,58 +1229,6 @@ class UpdraftPlus_Backup {
 	}
 
 	/**
-	 * The purpose of this function is to make sure that the options table is put in the database first, then the users table, then the site + blogs tables (if present - multisite), then the usermeta table; and after that the core WP tables - so that when restoring we restore the core tables first
-	 *
-	 * @param Array $a_arr First array to be compared
-	 * @param Array $b_arr Second array to be compared
-	 * @return Integer - according to the rules of usort()
-	 */
-	private function backup_db_sorttables($a_arr, $b_arr) {
-
-		$a = $a_arr['name'];
-		$a_table_type = $a_arr['type'];
-		$b = $b_arr['name'];
-		$b_table_type = $b_arr['type'];
-
-		// Views must always go after tables (since they can depend upon them)
-		if ('VIEW' == $a_table_type && 'VIEW' != $b_table_type) return 1;
-		if ('VIEW' == $b_table_type && 'VIEW' != $a_table_type) return -1;
-
-		if ('wp' != $this->whichdb) return strcmp($a, $b);
-
-		global $updraftplus;
-		if ($a == $b) return 0;
-		$our_table_prefix = $this->table_prefix_raw;
-		if ($a == $our_table_prefix.'options') return -1;
-		if ($b == $our_table_prefix.'options') return 1;
-		if ($a == $our_table_prefix.'site') return -1;
-		if ($b == $our_table_prefix.'site') return 1;
-		if ($a == $our_table_prefix.'blogs') return -1;
-		if ($b == $our_table_prefix.'blogs') return 1;
-		if ($a == $our_table_prefix.'users') return -1;
-		if ($b == $our_table_prefix.'users') return 1;
-		if ($a == $our_table_prefix.'usermeta') return -1;
-		if ($b == $our_table_prefix.'usermeta') return 1;
-
-		if (empty($our_table_prefix)) return strcmp($a, $b);
-
-		try {
-			$core_tables = array_merge($this->wpdb_obj->tables, $this->wpdb_obj->global_tables, $this->wpdb_obj->ms_global_tables);
-		} catch (Exception $e) {
-			$updraftplus->log($e->getMessage());
-		}
-
-		if (empty($core_tables)) $core_tables = array('terms', 'term_taxonomy', 'termmeta', 'term_relationships', 'commentmeta', 'comments', 'links', 'postmeta', 'posts', 'site', 'sitemeta', 'blogs', 'blogversions', 'blogmeta');
-
-		global $updraftplus;
-		$na = UpdraftPlus_Manipulation_Functions::str_replace_once($our_table_prefix, '', $a);
-		$nb = UpdraftPlus_Manipulation_Functions::str_replace_once($our_table_prefix, '', $b);
-		if (in_array($na, $core_tables) && !in_array($nb, $core_tables)) return -1;
-		if (!in_array($na, $core_tables) && in_array($nb, $core_tables)) return 1;
-		return strcmp($a, $b);
-	}
-
-	/**
 	 * Log the amount account space free/used, if possible
 	 */
 	private function log_account_space() {
@@ -1699,7 +1647,8 @@ class UpdraftPlus_Backup {
 		}
 
 		// Put the options table first
-		usort($all_tables, array($this, 'backup_db_sorttables'));
+		UpdraftPlus_Database_Utility::init($this->whichdb, $this->table_prefix_raw, $this->wpdb_obj);
+		usort($all_tables, array('UpdraftPlus_Database_Utility', 'backup_db_sorttables'));
 
 		$all_table_names = array_map(array($this, 'cb_get_name'), $all_tables);
 
@@ -2106,7 +2055,10 @@ class UpdraftPlus_Backup {
 			$updraftplus->log($stored_routines->get_error_message());
 		}
 
-		$this->stow("/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;\n/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;\n");
+		$this->stow("/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n");
+		$this->stow("/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;\n");
+		$this->stow("/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;\n");
+		$this->stow("/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;\n");
 
 		$updraftplus->log($file_base.'-db'.$this->whichdb_suffix.'.gz: finished writing out complete database file ('.round(filesize($backup_final_file_name)/1024, 1).' KB)');
 		if (!$this->backup_db_close()) {
@@ -2465,7 +2417,7 @@ class UpdraftPlus_Backup {
 		// If it has changed, then preserve it in the job for the next resumption (of this table)
 		if ($fetch_rows_at_start !== $fetch_rows || $is_first_fetch_for_table) $updraftplus->jobdata_set('fetch_rows', $fetch_rows);
 
-		return $fetch_rows;
+		return apply_filters('updraftplus_number_of_rows_to_fetch', $fetch_rows, $table, $allow_further_reductions, $is_first_fetch_for_table, $expected_rows, $expected_via_count);
 
 	}
 
@@ -3056,7 +3008,7 @@ class UpdraftPlus_Backup {
 						if ($switched) restore_current_blog();
 					}
 					$this->stow("# Site info: multisite_data=".json_encode($multisite_data)."\n");
-					$this->stow("# Site info: multisite_main_site_id=".intval(get_main_site_id())."\n");
+					if (function_exists('get_main_site_id')) $this->stow("# Site info: multisite_main_site_id=".intval(get_main_site_id())."\n");
 				}
 			}
 			$this->stow("# Site info: sql_mode=".$this->wpdb_obj->get_var('SELECT @@SESSION.sql_mode')."\n");
@@ -3091,9 +3043,16 @@ class UpdraftPlus_Backup {
 		$this->stow("/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n");
 		$this->stow("/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;\n");
 		$this->stow("/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;\n");
+		// N.B. Setting this as the mode matches the export behaviour of both mysqldump and phpMyAdmin
+		$this->stow("/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n");
 		$this->stow("/*!40101 SET NAMES ".$updraftplus->get_connection_charset($this->wpdb_obj)." */;\n");
 		$this->stow("/*!40101 SET foreign_key_checks = 0 */;\n\n");
 
+		// This filter allows a user to add their own arbitrary content.
+		if (false !== ($header_append = apply_filters('updraftplus_backup_db_header_append', false))) {
+			$this->stow($header_append);
+		}
+		
 	}
 
 	/**

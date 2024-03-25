@@ -67,6 +67,10 @@ if ( $cp_options['mem_where'] == 'backend') {
 if ( empty( $cp_options['mem_method'] ) ) {
 	$cp_options['mem_method'] = 'get';
 }
+$default_theme = get_option('stylesheet');
+if ( empty( $cp_options['mem_theme'] ) ) {
+	$cp_options['mem_theme'] = $default_theme;
+}
 if ( empty( $cp_options['ua'] ) ) {
 	$cp_options['ua'] = 'Firefox';
 }
@@ -74,10 +78,16 @@ $cookies				= '';
 $payload				= '';
 $custom_headers	= '';
 if ( isset( $cp_options['cookies'] ) ) {
-	$cookies = trim( json_decode( $cp_options['cookies'] ) );
+	// stripslashes is only needed for cookies
+	$cookies = trim( stripslashes( json_decode( $cp_options['cookies'] ) ) );
+}
+if ( empty( $cp_options['mem_content_type'] ) ||
+	! in_array( $cp_options['mem_content_type'], [ 1, 2 ] ) ) {
+
+	$cp_options['mem_content_type'] = 1;
 }
 if ( isset( $cp_options['payload'] ) ) {
-	$payload	= trim( json_decode( $cp_options['payload'] ) );
+	$payload	=  trim( json_decode( $cp_options['payload'] ) );
 }
 if ( isset( $cp_options['custom_headers'] ) ) {
 	$custom_headers = trim( json_decode( $cp_options['custom_headers'] ) );
@@ -149,6 +159,25 @@ if ( isset( $cp_options['custom_headers'] ) ) {
 		</td>
 	</tr>
 	<tr>
+		<th scope="row"><?php esc_html_e('Theme', 'code-profiler') ?> <span class="code-profiler-tip" data-tip="<?php esc_attr_e('If you want to profile different themes, you can use this option so that you don\'t need to modify your WordPress settings. The change will not affect your visitors, but only the profiler when it is running.', 'code-profiler') ?>"></span></th>
+		<td>
+			<select name="theme" id="id-theme">
+			<?php
+			$themes = code_profiler_get_themes();
+			foreach( $themes as $slug => $name ) {
+				if ( $slug == $default_theme ) {
+					echo '<option value=""'. selected( $cp_options['mem_theme'], $slug, false ) .'>'.
+						esc_html( $name['n'] ) .' '. __('(active theme)', 'code-profiler') .'</option>';
+				} else {
+					echo '<option value="'. esc_attr( $slug ) .'"'. selected( $cp_options['mem_theme'], $slug, false ) .'>'.
+						esc_html( $name['n'] ) .'</option>';
+				}
+			}
+			?>
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<th scope="row"><?php esc_html_e('User agent', 'code-profiler') ?> <span class="code-profiler-tip" data-tip="<?php esc_attr_e('Some themes and plugins may execute different code depending on the type of device used to visit the website (e.g., a desktop computer, a mobile phone, a search engine bot etc). This option lets you change the User-Agent request header used by Code Profiler.', 'code-profiler') ?>"></span></th>
 		<td>
 			<select name="ua" id="ua-id">
@@ -185,10 +214,32 @@ if (! empty( $cookies ) || ! empty( $custom_headers ) || $cp_options['mem_method
 		<tr>
 			<th scope="row"><?php esc_html_e('HTTP Method', 'code-profiler') ?> <span class="code-profiler-tip" data-tip="<?php esc_attr_e('You can select which HTTP method will be used by the profiler: GET or POST. If you select POST, you can also send an optional payload.', 'code-profiler') ?>"></span></th>
 			<td>
-				<p><label><input onclick="cpjs_get_post(0);" type="radio" name="method" value="get" id="get-method"<?php checked( $cp_options['mem_method'], 'get') ?> /> <?php esc_html_e('GET (default)', 'code-profiler') ?></label></p>
-				<p><label><input onclick="cpjs_get_post(1);" type="radio" name="method" value="post" id="post-method"<?php checked( $cp_options['mem_method'], 'post') ?> /> POST</label></p>
-				<p><textarea name="post-value" id="post-value" class="regular-text code"<?php disabled( $cp_options['mem_method'], 'get') ?> maxlength="4000" rows="6"><?php echo esc_textarea( $payload ) ?></textarea></p>
-				<p class="description"><?php printf( esc_html__('Optional POST payload in %s format, one item per line.', 'code-profiler'), '<code>name=value</code>') ?> <?php printf( esc_html__('%sView example%s', 'code-profiler'), '<a href="'. plugins_url('/static/help/http_method.png', dirname( __FILE__ ) ) .'" target="_blank" rel="noopener noreferrer">', '</a>') ?> </p>
+				<p>
+					<label>
+						<input onclick="cpjs_get_post(0);" type="radio" name="method" value="get" id="get-method"<?php checked( $cp_options['mem_method'], 'get') ?> /> GET(<?php esc_html_e('default', 'code-profiler') ?>)
+					</label>
+				</p>
+				<p>
+					<label>
+						<input onclick="cpjs_get_post(1);" type="radio" name="method" value="post" id="post-method"<?php checked( $cp_options['mem_method'], 'post') ?> /> POST
+					</label>
+				</p>
+				<p>
+					<?php esc_html_e('Content-type:', 'code-profiler') ?>
+					<select name="cp-content-type" id="id-content-type"<?php disabled( $cp_options['mem_method'], 'get') ?> onChange="cpjs_content_type(this.value);">
+						<option value="1"<?php selected( $cp_options['mem_content_type'], 1 )?>>application/x-www-form-urlencoded (<?php esc_html_e('default', 'code-profiler') ?>)</option>
+						<option value="2"<?php selected( $cp_options['mem_content_type'], 2 )?>>application/json</option>
+					</select>
+				</p>
+				<p>
+					<textarea name="post-value" id="post-value" class="regular-text code"<?php disabled( $cp_options['mem_method'], 'get') ?> maxlength="4000" rows="6"><?php echo esc_textarea( $payload ) ?></textarea>
+				</p>
+				<p class="description" id="ct-1"<?php echo code_profiler_hide( $cp_options['mem_content_type'], 2) ?>>
+					<?php printf( esc_html__('Optional POST payload in %s format, one item per line.', 'code-profiler'), '<code>name=value</code>') ?> <?php printf( esc_html__('%sView example%s', 'code-profiler'), '<a href="'. plugins_url('/static/help/http_method-1.png', dirname( __FILE__ ) ) .'" target="_blank" rel="noopener noreferrer">', '</a>') ?>
+				</p>
+				<p class="description" id="ct-2"<?php echo code_profiler_hide( $cp_options['mem_content_type'], 1) ?>>
+					<?php printf( esc_html__('Optional JSON-encoded payload.', 'code-profiler'), '<code>name=value</code>') ?> <?php printf( esc_html__('%sView example%s', 'code-profiler'), '<a href="'. plugins_url('/static/help/http_method-2.png', dirname( __FILE__ ) ) .'" target="_blank" rel="noopener noreferrer">', '</a>') ?>
+				</p>
 			</td>
 		</tr>
 		<tr>
@@ -210,9 +261,9 @@ if (! empty( $cookies ) || ! empty( $custom_headers ) || $cp_options['mem_method
 <?php wp_nonce_field('start_profiler_nonce', 'cp_nonce', 0); ?>
 <br />
 <div>
-	<input type="button" class="button-secondary" id="button-adv-settings" name="adv-settings" value="<?php esc_attr_e('Advanced Options', 'code-profiler') ?>" onclick="cpjs_show_adv_settings();"<?php echo $disabled_button ?> />
+	<input type="button" class="button button-secondary" id="button-adv-settings" name="adv-settings" value="<?php esc_attr_e('Advanced Options', 'code-profiler') ?>" onclick="cpjs_show_adv_settings();"<?php echo $disabled_button ?> />
 	&nbsp;&nbsp;&nbsp;
-	<input type="button" class="button-primary" id="start-profile" name="start-profile" onClick="cpjs_start_profiler();" value="<?php esc_attr_e('Start Profiling', 'code-profiler') ?> »" title="<?php esc_attr_e('Click to start profiling your code.', 'code-profiler') ?>" />
+	<input type="button" class="button button-primary" id="start-profile" name="start-profile" onClick="cpjs_start_profiler();" value="<?php esc_attr_e('Start Profiling', 'code-profiler') ?> »" title="<?php esc_attr_e('Click to start profiling your code.', 'code-profiler') ?>" />
 </div>
 <div id="cp-progress-div" style="display:none">
 	<br />
@@ -326,7 +377,6 @@ function code_profiler_fetch_admin_pages( $home, $cp_options ) {
 		);
 
 	}
-
 	return $backend;
 }
 

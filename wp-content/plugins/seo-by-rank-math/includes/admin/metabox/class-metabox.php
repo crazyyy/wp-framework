@@ -11,14 +11,11 @@
 namespace RankMath\Admin\Metabox;
 
 use RankMath\CMB2;
-use RankMath\Helper;
 use RankMath\Runner;
 use RankMath\Traits\Hooker;
+use RankMath\Helper;
+use RankMath\Helpers\Param;
 use RankMath\Admin\Admin_Helper;
-use MyThemeShop\Helpers\Param;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Conditional;
-use MyThemeShop\Helpers\WordPress;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -152,27 +149,9 @@ class Metabox implements Runner {
 	 */
 	private function enqueue_translation() {
 		if ( function_exists( 'wp_set_script_translations' ) ) {
-			$this->filter( 'load_script_translation_file', 'load_script_translation_file', 10, 3 );
 			wp_set_script_translations( 'rank-math-analyzer', 'rank-math', rank_math()->plugin_dir() . 'languages/' );
 			wp_set_script_translations( 'rank-math-app', 'rank-math', rank_math()->plugin_dir() . 'languages/' );
 		}
-	}
-
-	/**
-	 * Function to replace domain with seo-by-rank-math in translation file.
-	 *
-	 * @param string|false $file   Path to the translation file to load. False if there isn't one.
-	 * @param string       $handle Name of the script to register a translation domain to.
-	 * @param string       $domain The text domain.
-	 */
-	public function load_script_translation_file( $file, $handle, $domain ) {
-		if ( 'rank-math' !== $domain ) {
-			return $file;
-		}
-
-		$data                       = explode( '/', $file );
-		$data[ count( $data ) - 1 ] = preg_replace( '/rank-math/', 'seo-by-rank-math', $data[ count( $data ) - 1 ], 1 );
-		return implode( '/', $data );
 	}
 
 	/**
@@ -207,7 +186,7 @@ class Metabox implements Runner {
 		 */
 		if ( false === apply_filters_deprecated( 'rank_math/primary_term', [ false ], '1.0.43', 'rank_math/admin/disable_primary_term' )
 		&& false === $this->do_filter( 'admin/disable_primary_term', false ) ) {
-			$taxonomies = Helper::get_object_taxonomies( WordPress::get_post_type(), 'objects' );
+			$taxonomies = Helper::get_object_taxonomies( Helper::get_post_type(), 'objects' );
 			$taxonomies = wp_filter_object_list( $taxonomies, [ 'hierarchical' => true ], 'and', 'name' );
 			foreach ( $taxonomies as $taxonomy ) {
 				$cmb->add_field(
@@ -389,8 +368,8 @@ class Metabox implements Runner {
 	 * @return bool
 	 */
 	private function dont_load() {
-		return Conditional::is_heartbeat() || Conditional::is_ajax() ||
-			( class_exists( 'Vc_Manager' ) && \MyThemeShop\Helpers\Param::get( 'vc_action' ) ) ||
+		return Helper::is_heartbeat() || Helper::is_ajax() ||
+			( class_exists( 'Vc_Manager' ) && Param::get( 'vc_action' ) ) ||
 			is_network_admin();
 	}
 }

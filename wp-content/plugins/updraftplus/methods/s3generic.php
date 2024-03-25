@@ -23,6 +23,9 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 	protected function set_region($obj, $region = '', $bucket_name = '') {
 		$config = $this->get_config();
 		$endpoint = ('' != $region && 'n/a' != $region) ? $region : $config['endpoint'];
+		if (!empty($endpoint)) {
+			$endpoint = preg_replace('/^(http|https):\/\//i', '', $endpoint);
+		}
 		$log_message = "Set endpoint (".get_class($obj)."): $endpoint";
 		$log_message_append = '';
 		if (is_string($endpoint) && preg_match('/^(.*):(\d+)$/', $endpoint, $matches)) {
@@ -236,4 +239,23 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 		}
 		return false;
 	}
+
+	/**
+	 * Acts as a WordPress options filter
+	 *
+	 * @param Array $settings - pre-filtered settings
+	 *
+	 * @return Array filtered settings
+	 */
+	 public function options_filter($settings) {
+		$settings = parent::options_filter($settings);
+		if (!empty($settings['version']) && !empty($settings['settings'])) {
+			foreach ($settings['settings'] as $instance_id => $instance_settings) {
+				if (!empty($instance_settings['endpoint'])) {
+					$settings['settings'][$instance_id]['endpoint'] = preg_replace('/^(http|https):\/\//i', '', $instance_settings['endpoint']);
+				}
+			}
+		}
+		return $settings;
+	 }
 }

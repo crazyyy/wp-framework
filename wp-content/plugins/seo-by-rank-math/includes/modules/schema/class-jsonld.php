@@ -11,13 +11,11 @@
 namespace RankMath\Schema;
 
 use RankMath\Helper;
+use RankMath\Helpers\Url;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Arr;
 use RankMath\Paper\Paper;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Url;
-use MyThemeShop\Helpers\Conditional;
-use MyThemeShop\Helpers\WordPress;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Arr;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -283,14 +281,15 @@ class JsonLD {
 			}
 
 			// Need this conditions to convert date to valid ISO 8601 format.
-			if ( in_array( $key, ['datePublished', 'uploadDate'], true ) && '%date(Y-m-dTH:i:sP)%' === $schema ) {
+			if ( in_array( $key, [ 'datePublished', 'uploadDate' ], true ) && '%date(Y-m-dTH:i:sP)%' === $schema ) {
 				$schema = '%date(Y-m-d\TH:i:sP)%';
 			}
 			if ( 'dateModified' === $key && '%modified(Y-m-dTH:i:sP)%' === $schema ) {
 				$schema = '%modified(Y-m-d\TH:i:sP)%';
 			}
 
-			$new_schemas[ $key ] = is_string( $schema ) && Str::contains( '%', $schema ) ? Helper::replace_vars( $schema, $object ) : $schema;
+			$new_schemas[ $key ] = is_string( $schema ) && Str::contains( '%', $schema ) && ! filter_var( $schema, FILTER_VALIDATE_URL )
+				? Helper::replace_vars( $schema, $object ) : $schema;
 			if ( '' === $new_schemas[ $key ] ) {
 				unset( $new_schemas[ $key ] );
 			}
@@ -411,7 +410,7 @@ class JsonLD {
 	 * @return bool
 	 */
 	private function is_product_archive_page() {
-		return Conditional::is_woocommerce_active() && ( ( is_tax() && in_array( get_query_var( 'taxonomy' ), get_object_taxonomies( 'product' ), true ) ) || is_shop() );
+		return Helper::is_woocommerce_active() && ( ( is_tax() && in_array( get_query_var( 'taxonomy' ), get_object_taxonomies( 'product' ), true ) ) || is_shop() );
 	}
 
 	/**
@@ -714,7 +713,7 @@ class JsonLD {
 			$description = $product->get_short_description() ? $product->get_short_description() : $product->get_description();
 		}
 
-		$description = $this->do_filter( 'product_description/apply_shortcode', false ) ? do_shortcode( $description ) : WordPress::strip_shortcodes( $description );
+		$description = $this->do_filter( 'product_description/apply_shortcode', false ) ? do_shortcode( $description ) : Helper::strip_shortcodes( $description );
 		return wp_strip_all_tags( $description, true );
 	}
 

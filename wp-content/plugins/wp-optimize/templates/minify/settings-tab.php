@@ -96,7 +96,7 @@
 
 		<?php
 		/**
-		 * Called before outputing the submit button in the setting fields in Minify > Advanced
+		 * Called before outputting the submit button in the setting fields in Minify > Advanced
 		 */
 		do_action('wpo_minify_settings_tabs', $wpo_minify_options);
 		?>

@@ -16,8 +16,20 @@
 				<tr valign="top">
 					<th scope="row"><?php _e('Prevent access to WP default install files', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-					<input id="aiowps_prevent_default_wp_file_access" name="aiowps_prevent_default_wp_file_access" type="checkbox"<?php if ('1' == $aio_wp_security->configs->get_value('aiowps_prevent_default_wp_file_access')) echo ' checked="checked"'; ?> value="1"/>
-					<label for="aiowps_prevent_default_wp_file_access" class="description"><?php _e('Check this if you want to prevent access to readme.html, license.txt and wp-config-sample.php.', 'all-in-one-wp-security-and-firewall'); ?></label>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to prevent access to readme.html, license.txt and wp-config-sample.php.', 'all-in-one-wp-security-and-firewall'), 'aiowps_prevent_default_wp_file_access', '1' == $aio_wp_security->configs->get_value('aiowps_prevent_default_wp_file_access')); ?>
+						</div>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<?php _e('Delete readme.html and wp-config-sample.php:', 'all-in-one-wp-security-and-firewall'); ?>
+					</th>
+					<td>
+						<div class="aiowps_switch_container">
+							<input style="margin-right: 15px" type="submit" name="aiowps_delete_default_wp_files" value="<?php _e('Delete', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Automatically delete the files after a WP core update.', 'all-in-one-wp-security-and-firewall'), 'aiowps_auto_delete_default_wp_files', '1' == $aio_wp_security->configs->get_value('aiowps_auto_delete_default_wp_files')); ?>
+						</div>
 					</td>
 				</tr>
 			</table>

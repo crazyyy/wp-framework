@@ -178,7 +178,7 @@ if ( $section == 1 || $section == 2 || $section == 3 ) {
 	?>
 
 	<div class="alignleft actions bulkactions">
-		<input type="button" class="button-primary" style="min-width:100px" value="<?php esc_attr_e('Help', 'code-profiler' )?>" onclick="jQuery('#cp-footer-help').slideToggle(500);"/>
+		<input type="button" class="button button-primary" style="min-width:100px" value="<?php esc_attr_e('Help', 'code-profiler' )?>" onclick="jQuery('#cp-footer-help').slideToggle(500);"/>
 	</div>
 
 	<div class="tablenav-pages">
@@ -186,12 +186,12 @@ if ( $section == 1 || $section == 2 || $section == 3 ) {
 	<?php
 	if ( isset( $rotate_img ) ) {
 	?>
-		<button type="button" class="button-secondary" id="htov" title="<?php esc_attr_e('Click to rotate graph', 'code-profiler' )?>"><span class="dashicons dashicons-image-rotate" style="display: inline-block;vertical-align: middle;"></span></button>&nbsp;
+		<button type="button" class="button button-secondary" id="htov" title="<?php esc_attr_e('Click to rotate graph', 'code-profiler' )?>"><span class="dashicons dashicons-image-rotate" style="display: inline-block;vertical-align: middle;"></span></button>&nbsp;
 	<?php
 	}
 	if ( isset( $save_png ) ) {
 	?>
-		<a type="button" class="button-secondary" id="download-png-img" download="<?php echo esc_attr( $profile_name) ?>_plugins.png" title="<?php esc_attr_e('Click to download as an image', 'code-profiler' )?>" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-download" style="display: inline-block;vertical-align: middle;"></span><?php esc_attr_e('Download as a PNG image', 'code-profiler' )?></a>&nbsp;
+		<a type="button" class="button button-secondary" id="download-png-img" download="<?php echo esc_attr( $profile_name) ?>_plugins.png" title="<?php esc_attr_e('Click to download as an image', 'code-profiler' )?>" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-download" style="display: inline-block;vertical-align: middle;"></span><?php esc_attr_e('Download as a PNG image', 'code-profiler' )?></a>&nbsp;
 	<?php
 	}
 	?>

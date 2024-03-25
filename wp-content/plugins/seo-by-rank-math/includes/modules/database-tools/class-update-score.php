@@ -11,12 +11,11 @@
 namespace RankMath\Tools;
 
 use RankMath\Helper;
+use RankMath\Helpers\Param;
 use RankMath\Traits\Hooker;
 use RankMath\Paper\Paper;
 use RankMath\Admin\Metabox\Screen;
 use RankMath\Schema\DB;
-use MyThemeShop\Helpers\Param;
-use MyThemeShop\Helpers\Conditional;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -157,6 +156,8 @@ class Update_Score {
 				$non_cacheable[] = 'excerpt';
 				$non_cacheable[] = 'excerpt_only';
 				$non_cacheable[] = 'seo_description';
+				$non_cacheable[] = 'keywords';
+				$non_cacheable[] = 'focuskw';
 				return $non_cacheable;
 			}
 		);
@@ -177,7 +178,7 @@ class Update_Score {
 				'keywords'     => $keywords,
 				'keyword'      => $keyword,
 				'content'      => $post->post_content,
-				'url'          => get_the_permalink( $post_id ),
+				'url'          => urldecode( get_the_permalink( $post_id ) ),
 				'hasContentAi' => ! empty( Helper::get_post_meta( 'contentai_score', $post_id ) ),
 			];
 
@@ -188,8 +189,8 @@ class Update_Score {
 			}
 
 			if (
-				( Conditional::is_woocommerce_active() && 'product' === $post_type ) ||
-				( Conditional::is_edd_active() && 'download' === $post_type )
+				( Helper::is_woocommerce_active() && 'product' === $post_type ) ||
+				( Helper::is_edd_active() && 'download' === $post_type )
 			) {
 				$values['isProduct']       = true;
 				$values['isReviewEnabled'] = 'yes' === get_option( 'woocommerce_enable_reviews', 'yes' );

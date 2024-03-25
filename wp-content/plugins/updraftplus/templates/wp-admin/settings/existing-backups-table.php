@@ -58,13 +58,13 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 			// if ($remote_sent && !$log_button) continue;
 
 			?>
-			<tr class="updraft_existing_backups_row updraft_existing_backups_row_<?php echo $key;?>" data-key="<?php echo $key;?>" data-nonce="<?php echo $nonce;?>">
+			<tr class="updraft_existing_backups_row updraft_existing_backups_row_<?php echo esc_attr($key);?>" data-key="<?php echo esc_attr($key);?>" data-nonce="<?php echo esc_attr($nonce);?>">
 				<?php if (!defined('UPDRAFTCENTRAL_COMMAND')) : ?>
 				<td class="backup-select">
 					<label class="screen-reader-text"><?php _e('Select All'); ?></label><input type="checkbox">
 				</td>
 				<?php endif; ?>
-				<td class="updraft_existingbackup_date " data-nonce="<?php echo wp_create_nonce("updraftplus-credentialtest-nonce"); ?>" data-timestamp="<?php echo $key; ?>" data-label="<?php _e('Backup date', 'updraftplus');?>">
+				<td class="updraft_existingbackup_date " data-nonce="<?php echo esc_attr(wp_create_nonce("updraftplus-credentialtest-nonce")); ?>" data-timestamp="<?php echo esc_attr($key); ?>" data-label="<?php esc_attr_e('Backup date', 'updraftplus');?>">
 					<div tabindex="0" class="backup_date_label">
 						<?php
 							echo $date_label;

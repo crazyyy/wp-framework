@@ -3,8 +3,8 @@ Contributors: arshidkv12
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=H5F3Z6S3MNTXA&lc=IN&item_name=wp%2dlogin%2dlimit&amount=5%2e00&currency_code=USD&button_subtype=services&bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHosted
 Tags: cf7, contact form 7, contact form 7 db, contact form db, contact form seven, contact form storage, export contact form, save contact form, wpcf7
 Requires at least: 4.8
-Tested up to: 6.2
-Stable tag: 1.2.6.7
+Tested up to: 6.4
+Stable tag: 1.2.6.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires PHP: 5.6
@@ -29,7 +29,7 @@ By simply installing the plugin, it will automatically begin to capture form sub
 * Export CF7 DB (CF7 Database - cf7db) data in CSV file
 
 = Form Email Testing Tool =
-* [MailMug - YouTube Video](https://youtu.be/fAXevTJ0r8I) 
+* [MailMug - SMTP Sandbox](https://mailmug.net) 
 
 = Plugins =
 * [PostBox Email Log](https://wordpress.org/plugins/postbox-email-logs/)
@@ -66,6 +66,9 @@ Extensions : [Contact form 7 more Add-ons](https://ciphercoin.com/contact-form-7
 
 == Changelog ==
 
+= 1.2.6.8 =
+Added cfdb7_admin_subpage_columns hook
+
 = 1.2.6.7 =
 Improve I18N Issues
 
@@ -80,9 +83,6 @@ Fixed xss issues
 
 = 1.2.6.1 =
 Fixed nonce issue 
-
-= 1.2.5.9 =
-Fixed upload issue 
 
 
 

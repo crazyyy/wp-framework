@@ -16,9 +16,8 @@ use RankMath\Traits\Hooker;
 use RankMath\Helpers\Editor;
 use RankMath\Frontend_SEO_Score;
 use RankMath\Admin\Admin_Helper;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Url;
-use MyThemeShop\Helpers\WordPress;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Url;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -360,8 +359,8 @@ class Post_Screen implements IScreen {
 		$toc_plugins = $this->do_filter(
 			'researches/toc_plugins',
 			[
-				'wp-shortcode/wp-shortcode.php'         => 'WP Shortcode by MyThemeShop',
-				'wp-shortcode-pro/wp-shortcode-pro.php' => 'WP Shortcode Pro by MyThemeShop',
+				'wp-shortcode/wp-shortcode.php'         => 'WP Shortcode by RankMath',
+				'wp-shortcode-pro/wp-shortcode-pro.php' => 'WP Shortcode Pro by RankMath',
 			]
 		);
 

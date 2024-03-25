@@ -260,8 +260,8 @@ abstract class UpdraftPlus_RemoteSend {
 			
 			$signal_ready_for_restore_now = true;
 			
-			if (class_exists('UpdraftPlus_Remote_Communications')) {
-				$test_udrpc = new UpdraftPlus_Remote_Communications();
+			if (class_exists('UpdraftPlus_Remote_Communications_V2')) {
+				$test_udrpc = new UpdraftPlus_Remote_Communications_V2();
 				if (version_compare($test_udrpc->version, '1.4.21', '>=')) {
 					$signal_ready_for_restore_now = false;
 					$this->job_id = $job_id;

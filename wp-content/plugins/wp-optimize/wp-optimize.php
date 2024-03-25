@@ -2,8 +2,8 @@
 /**
 Plugin Name: WP-Optimize - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
-Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract moretraffic and users.
-Version: 3.2.18
+Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
+Version: 3.3.1
 Update URI: https://wordpress.org/plugins/wp-optimize/
 Author: David Anderson, Ruhani Rabin, Team Updraft
 Author URI: https://updraftplus.com
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.2.18');
+define('WPO_VERSION', '3.3.1');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PLUGIN_SLUG', plugin_basename(__FILE__));
@@ -31,6 +31,8 @@ class WP_Optimize {
 	private $template_directories;
 
 	protected static $_instance = null;
+
+	protected $_cache_init_status = null;
 
 	/**
 	 * Class constructor
@@ -99,6 +101,8 @@ class WP_Optimize {
 			add_action($hook, array($this, 'maybe_schedule_update_record_count_event'));
 		}
 		add_action('wpo_update_record_count_event', array($this->get_db_info(), 'wpo_update_record_count'));
+
+		$this->set_heartbeat_api_filters();
 	}
 
 	/**
@@ -171,7 +175,7 @@ class WP_Optimize {
 			$active_theme = get_stylesheet();
 			$parent_theme = get_template();
 			// A theme is updated using the upload system
-			if (isset($options['action']) && 'install' === $options['action'] && 'update-theme' === $skin->options['overwrite']) {
+			if (isset($options['action']) && 'install' === $options['action'] && isset($skin->options['overwrite']) && 'update-theme' === $skin->options['overwrite']) {
 				$updated_theme = $upgrader_object->result['destination_name'];
 				// Check if the theme is in use
 				if ($active_theme == $updated_theme || $parent_theme == $updated_theme) {
@@ -204,7 +208,7 @@ class WP_Optimize {
 			
 	public function admin_page_wpo_images_smush() {
 		$options = Updraft_Smush_Manager()->get_smush_options();
-		$custom = 100 != $options['image_quality'] && 60 != $options['image_quality'] ? true : false;
+		$custom = 90 >= $options['image_quality'] && 65 <= $options['image_quality'];
 		$sites = WP_Optimize()->get_sites();
 		$this->include_template('images/smush.php', false, array('smush_options' => $options, 'custom' => $custom, 'sites' => $sites, 'does_server_allows_local_webp_conversion' => $this->does_server_allows_local_webp_conversion()));
 	}
@@ -227,12 +231,13 @@ class WP_Optimize {
 		WPO_Polylang_Compatibility::instance();
 		WPO_Page_Builder_Compatibility::instance();
 		WPO_Custom_Permalink_Compatibility::instance();
-		
+		WPO_TranslatePress_Compatibility::instance();
+
 		do_action('wpo_load_compatibilities');
 	}
 
 	/**
-	 * Get and instanciate WP_Optimize_Minify
+	 * Get and instantiate WP_Optimize_Minify
 	 *
 	 * @return WP_Optimize_Minify
 	 */
@@ -377,9 +382,17 @@ class WP_Optimize {
 		wp_enqueue_script('jquery-serialize-json', WPO_PLUGIN_URL.'js/serialize-json/jquery.serializejson'.$min_or_not.'.js', array('jquery'), $enqueue_version);
 
 		wp_register_script('updraft-queue-js', WPO_PLUGIN_URL.'js/queue'.$min_or_not_internal.'.js', array(), $enqueue_version);
+
+		wp_enqueue_script('wp-optimize-heartbeat-js', WPO_PLUGIN_URL.'js/heartbeat'.$min_or_not_internal.'.js', array('jquery'), $enqueue_version);
+		wp_localize_script('wp-optimize-heartbeat-js', 'wpo_heartbeat_ajax', array(
+			'ajaxurl' => admin_url('admin-ajax.php'),
+			'nonce' => wp_create_nonce('heartbeat-nonce'),
+			'interval' => WPO_Ajax::HEARTBEAT_INTERVAL
+		));
+
 		wp_enqueue_script('wp-optimize-modal', WPO_PLUGIN_URL.'js/modal'.$min_or_not_internal.'.js', array('jquery', 'backbone', 'wp-util'), $enqueue_version);
-		wp_enqueue_script('wp-optimize-cache-js', WPO_PLUGIN_URL.'js/cache'.$min_or_not_internal.'.js', array('wp-optimize-send-command', 'smush-js'), $enqueue_version);
-		wp_enqueue_script('wp-optimize-admin-js', WPO_PLUGIN_URL.'js/wpoadmin'.$min_or_not_internal.'.js', array('jquery', 'updraft-queue-js', 'wp-optimize-send-command', 'smush-js', 'wp-optimize-modal', 'wp-optimize-cache-js'), $enqueue_version);
+		wp_enqueue_script('wp-optimize-cache-js', WPO_PLUGIN_URL.'js/cache'.$min_or_not_internal.'.js', array('wp-optimize-send-command', 'smush-js', 'wp-optimize-heartbeat-js'), $enqueue_version);
+		wp_enqueue_script('wp-optimize-admin-js', WPO_PLUGIN_URL.'js/wpoadmin'.$min_or_not_internal.'.js', array('jquery', 'updraft-queue-js', 'wp-optimize-send-command', 'smush-js', 'wp-optimize-modal', 'wp-optimize-cache-js', 'wp-optimize-heartbeat-js'), $enqueue_version);
 		wp_enqueue_style('wp-optimize-admin-css', WPO_PLUGIN_URL.'css/wp-optimize-admin'.$min_or_not_internal.'.css', array(), $enqueue_version);
 		// Using tablesorter to help with organising the DB size on Table Information
 		// https://github.com/Mottie/tablesorter
@@ -419,12 +432,12 @@ class WP_Optimize {
 
 		Updraft_Tasks_Activation::check_updates();
 
-		include_once(WPO_PLUGIN_MAIN_PATH . '/vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-meta.php');
-		include_once(WPO_PLUGIN_MAIN_PATH . '/vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-options.php');
-		include_once(WPO_PLUGIN_MAIN_PATH . '/vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task.php');
+		include_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-meta.php');
+		include_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-options.php');
+		include_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task.php');
 				
-		include_once(WPO_PLUGIN_MAIN_PATH . '/includes/class-updraft-smush-task.php');
-		include_once(WPO_PLUGIN_MAIN_PATH . '/includes/class-updraft-smush-manager.php');
+		include_once(WPO_PLUGIN_MAIN_PATH . 'includes/class-updraft-smush-task.php');
+		include_once(WPO_PLUGIN_MAIN_PATH . 'includes/class-updraft-smush-manager.php');
 
 		return Updraft_Smush_Manager();
 	}
@@ -558,9 +571,25 @@ class WP_Optimize {
 		WP_Optimize_WebP_Images::get_instance();
 
 		// Include WebP
-		if (WP_Optimize_WebP::is_shell_functions_available() && WPO_USE_WEBP_CONVERSION) {
+		if (WPO_USE_WEBP_CONVERSION) {
 			$this->get_webp_instance();
 		}
+
+		// add_filter('updraftcentral_host_plugins', array($this, 'attach_updraftcentral_host'));
+		// if (file_exists(WPO_PLUGIN_MAIN_PATH.'central/factory.php')) include_once(WPO_PLUGIN_MAIN_PATH.'central/factory.php');
+	}
+
+	/**
+	 * Attach this wp-optimize plugin as host of the UpdraftCentral libraries
+	 * (e.g. "central" folder)
+	 *
+	 * @param array $hosts List of plugins having the "central" library integrated into them
+	 *
+	 * @return array
+	 */
+	public function attach_updraftcentral_host($hosts) {
+		$hosts[] = 'wp-optimize';
+		return $hosts;
 	}
 
 	/**
@@ -679,13 +708,13 @@ class WP_Optimize {
 
 			$dismissed_until = $options->get_option('dismiss_dash_notice_until', 0);
 
-			if (file_exists(WPO_PLUGIN_MAIN_PATH . '/index.html')) {
-				$installed = filemtime(WPO_PLUGIN_MAIN_PATH . '/index.html');
+			if (file_exists(WPO_PLUGIN_MAIN_PATH . 'index.html')) {
+				$installed = filemtime(WPO_PLUGIN_MAIN_PATH . 'index.html');
 				$installed_for = (time() - $installed);
 			}
 
 			if (($installed && time() > $dismissed_until && $installed_for > (14 * 86400) && !defined('WP_OPTIMIZE_NOADS_B')) || (defined('WP_OPTIMIZE_FORCE_DASHNOTICE') && WP_OPTIMIZE_FORCE_DASHNOTICE)) {
-				add_action('all_admin_notices', array($this, 'show_admin_notice_upgradead'));
+				add_action('all_admin_notices', array($this, 'show_admin_notice_upgraded'));
 			}
 		}
 
@@ -730,8 +759,13 @@ class WP_Optimize {
 		return $instance;
 	}
 
-	public function show_admin_notice_upgradead() {
-		$this->include_template('notices/thanks-for-using-main-dash.php');
+	/**
+	 * Display an admin notice for an upgraded version.
+	 */
+	public function show_admin_notice_upgraded() {
+		$this->include_template('notices/thanks-for-using-main-dash.php', false, array(
+			'is_premium' => WP_Optimize::is_premium()
+		));
 	}
 			
 	public function capability_required() {
@@ -901,9 +935,18 @@ class WP_Optimize {
 	public function init_page_cache() {
 		if ($this->get_page_cache()->config->get_option('enable_page_caching', false)) {
 			if ((!(defined('WP_CLI') && WP_CLI)) && (!defined('DOING_AJAX') || !DOING_AJAX)) {
-				$this->get_page_cache()->enable();
+				$this->_cache_init_status = $this->get_page_cache()->enable();
 			}
 		}
+	}
+
+	/**
+	 * Get init_page_cache() status.
+	 *
+	 * @return bool
+	 */
+	public function get_init_page_cache_status() {
+		return $this->_cache_init_status;
 	}
 
 	/**
@@ -1048,7 +1091,7 @@ class WP_Optimize {
 	}
 
 	public function get_templates_url() {
-		return apply_filters('wp_optimize_templates_url', WPO_PLUGIN_URL.'/templates');
+		return apply_filters('wp_optimize_templates_url', WPO_PLUGIN_URL.'templates');
 	}
 
 	/**
@@ -1224,7 +1267,7 @@ class WP_Optimize {
 	 *
 	 * @param String  $url					  - URL to be check to see if it an updraftplus match.
 	 * @param String  $text					  - Text to be entered within the href a tags.
-	 * @param String  $html					  - Any specific HTML to be added.
+	 * @param String  $html					  - Any specific HTML to be added. Supplied parameter will not be escaped in this function. Provide escaped, safe HTML
 	 * @param String|Array	$attrs                  - Specify the HTML attributes as an array or string. Use the array format for multiple attributes (e.g., array( "class" => "lorem-ipsum", "title" => "Highlighting text" )), and use the string format for a single attribute (e.g., 'class="lorem-ipsum"').
 	 * @param Boolean	$return_instead_of_echo - if set, then the result will be returned, not echo-ed.
 	 * @return String|void
@@ -1246,12 +1289,13 @@ class WP_Optimize {
 			// If $attrs is empty, the explode function will only return an empty array.
 			$attrs = explode('=', $attrs);
 			// Check if $attrs in positions 1 and 2 are not empty and exist; otherwise, return an empty string.
-			$str_attrs = !empty($attrs[0]) && !empty($attrs[1]) ? $attrs[0] . '=' . esc_attr($attrs[1]) : '';
+			$str_attrs = !empty($attrs[0]) && !empty($attrs[1]) ? $attrs[0] . '="' . esc_attr(str_replace('"', '', $attrs[1])) . '"' : '';
 		}
 		
 		// Check if it is necessary to add a target value if the url is external
 		$is_external_url = $this->is_external_url($url);
 		if ($is_external_url) {
+			$str_attrs = preg_replace('/\s+target="_blank"/i', '', $str_attrs);
 			$str_attrs .= ' target="_blank"';
 		}
 		
@@ -1806,8 +1850,67 @@ class WP_Optimize {
 	private function load_ajax_handler() {
 		WPO_Ajax::get_instance();
 	}
+
+	/**
+	 * Set custom heartbeat API interval
+	 *
+	 * @param array $settings Current WP settings
+	 * @return array
+	 */
+	public function set_heartbeat_time_interval($settings) {
+		$settings['interval'] = WPO_Ajax::HEARTBEAT_INTERVAL;
+		return $settings;
+	}
+
+	/**
+	 * Receive Heartbeat data and respond.
+	 *
+	 * Processes data received via a Heartbeat request, and returns additional data to pass back to the front end.
+	 *
+	 * @param array $response Heartbeat response data to pass back to front end.
+	 * @param array $data     Data received from the front end (unslashed).
+	 *
+	 * @return array
+	 */
+	public function receive_heartbeat($response, $data) {
+		foreach ($data as $uid => $command) {
+			$is_wpo_heartbeat = strpos($uid, 'wpo-heartbeat') === 0;
+
+			if ($is_wpo_heartbeat) {
+				$response['callbacks'][$uid] = apply_filters('wp_optimize_heartbeat', $command);
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Add heartbeat API filters if the page is enabled in the array
+	 *
+	 * @return void
+	 */
+	public function set_heartbeat_api_filters() {
+		$pages_enabled = array('WP-Optimize', 'wpo_images', 'wpo_cache', 'wpo_minify', 'wpo_settings', 'wpo_support', 'wpo_mayalso');
+
+		// Change heartbeat API frequency to 15 seconds to improve UI experience
+		// only for the pages that we enable in `$pages_enabled`
+		$query_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification -- not processing form data
+		if (in_array($query_page, $pages_enabled)) {
+			add_filter('heartbeat_settings', array($this, 'set_heartbeat_time_interval'), PHP_INT_MAX);
+		}
+
+		// Handle heartbeat events
+		add_filter('heartbeat_received', array($this, 'receive_heartbeat'), 10, 2);
+	}
 }
 
+/**
+ * Unschedule specific tasks:
+ * `wpo_cron_event2` => DB optimizations
+ * `wpo_weekly_cron_tasks` => ex: plugin.json auto update
+ *
+ * @return void
+ */
 function wpo_cron_deactivate() {
 	WP_Optimize()->log('running wpo_cron_deactivate()');
 	wp_clear_scheduled_hook('wpo_cron_event2');

@@ -1,10 +1,10 @@
 <?php /** @noinspection PhpComposerExtensionStubsInspection */
 
-use security\wordpress\vulnerabilities\FileStorage;
+use security\wordpress\vulnerabilities\Rsssl_File_Storage;
 
 defined('ABSPATH') or die();
 //including the file storage class
-require_once(rsssl_path . 'security/wordpress/vulnerabilities/FileStorage.php');
+require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
 
 /**
  * @package Really Simple SSL
@@ -23,7 +23,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
      */
     class rsssl_vulnerabilities
     {
-        const RSSSL_VULNERABILITIES_LOCATION = '/really-simple-ssl';
         const RSSSL_SECURITY_API = 'https://downloads.really-simple-security.com/rsssl/vulnerabilities/V1/';
         public $workable_plugins = [];
 
@@ -61,7 +60,47 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        //now we add the action to the cron.
 	        add_filter('rsssl_every_three_hours_cron', array($this, 'run_cron'));
 	        add_filter('rsssl_notices', [$this, 'show_help_notices'], 10, 1);
+	        add_action( 'rsssl_after_save_field', array( $this, 'maybe_delete_local_files' ), 10, 4 );
+        }
 
+//	    /**
+//	     * @param $field_id
+//	     * @param $field_value
+//	     * @param $prev_value
+//	     * @param $field_type
+//	     *
+//	     * @return void
+//         *
+//         *
+//	     */
+//        public function maybe_enable_vulnerability_scanner( $field_id, $field_value, $prev_value, $field_type ) {
+//	        if ( $field_id==='enable_vulnerability_scanner' && $field_value !== $prev_value && rsssl_user_can_manage() ) {
+//                if ( $field_value !== false ) {
+//                    // Already enabled
+//	                rsssl_update_option('enable_vulnerability_scanner', 1);
+//                }
+//	        }
+//        }
+
+		/**
+         * Deletes local files if the vulnerability scanner is disabled
+         *
+		 * @param $field_id
+		 * @param $field_value
+		 * @param $prev_value
+		 * @param $field_type
+		 *
+		 * @return void
+		 */
+        public static function maybe_delete_local_files($field_id, $field_value, $prev_value, $field_type): void {
+            if ( $field_id==='enable_vulnerability_scanner' && $field_value !== $prev_value && rsssl_user_can_manage() ) {
+                if ( $field_value == false ) {
+                    // Already disabled
+                    require_once(rsssl_path . 'security/wordpress/vulnerabilities/class-rsssl-file-storage.php');
+                    \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteAll();
+
+                }
+            }
         }
 
         public function riskNaming($risk = null)
@@ -99,7 +138,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $clear_admin_notices_cache = true;
 		        }
 	        }
-            if ($clear_admin_notices_cache) {
+            if ( $clear_admin_notices_cache ) {
 	            RSSSL()->admin->clear_admin_notices_cache();
             }
         }
@@ -108,13 +147,22 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	     * Allow users to manually force a re-check, e.g. in case of manually updating plugins
 	     * @return void
 	     */
-	    public function force_reload_files(){
+	    public function force_reload_files(): void {
 		    if ( ! rsssl_admin_logged_in() ) {
 			    return;
 		    }
+		    \security\wordpress\vulnerabilities\Rsssl_File_Storage::DeleteOldFiles();
 
-		    if ( isset($_GET['rsssl_check_vulnerabilities']) ) {
+		    if ( isset($_GET['rsssl_check_vulnerabilities']) || get_option('rsssl_reload_vulnerability_files') ) {
+			    delete_option('rsssl_reload_vulnerability_files');
 			    $this->reload_files_on_update();
+			    update_option('rsssl_clear_vulnerability_notices', true, false);
+			    set_transient('rsssl_delay_clear', true, 1 * MINUTE_IN_SECONDS );
+		    }
+
+		    if ( get_option('rsssl_clear_vulnerability_notices') && !get_transient('rsssl_delay_clear')) {
+			    RSSSL()->admin->clear_admin_notices_cache();
+			    delete_option('rsssl_clear_vulnerability_notices');
 		    }
 	    }
 
@@ -133,6 +181,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		    $this->download_plugin_vulnerabilities();
 		    $this->download_core_vulnerabilities();
 		    $this->check_notice_reset();
+
 	    }
 
         public function init(): void {
@@ -148,6 +197,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             //we check if upgrader_process_complete is called, so we can reload the files.
             add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
+            add_action('_core_updated_successfully', array($this, 'prepare_reloading_of_files'), 10, 2);
             //After activation, we need to reload the files.
             add_action( 'activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
 	        //we can also force it
@@ -156,6 +206,16 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //same goes for themes.
             add_action('after_switch_theme', array($this, 'reload_files_on_update'), 10, 2);
             add_action('current_screen', array($this, 'show_inline_code'));
+        }
+
+	    /**
+         * Directly hooking into the core upgrader hook doesn't work, so is too early.
+         * To force this, we save an option we can check later
+         *
+	     * @return void
+	     */
+        public function prepare_reloading_of_files(): void {
+            update_option("rsssl_reload_vulnerability_files", true, false);
         }
 
         /**
@@ -182,8 +242,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * Get site health notice for vulnerabilities
 	     * @return array
 	     */
-	    public function get_site_health_notice()
-	    {
+	    public function get_site_health_notice(): array {
             if (!rsssl_admin_logged_in()){
                 return [];
             }
@@ -224,7 +283,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
 				    __( 'Please check the vulnerabilities overview for more information and take appropriate action.' ,'really-simple-ssl' )
 			    ),
 			    'actions'     => sprintf(
-				    '<p><a href="%s" target="_blank" rel="noopener">%s</a></p>',
+				    '<p><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></p>',
 				    esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'), rsssl_admin_url() ) ) ),
 				    __( 'View vulnerabilities', 'really-simple-ssl' )
 			    ),
@@ -269,12 +328,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         'true' => [
                             'title' => $title,
                             'msg' => $title.' '.__('Please take appropriate action.','really-simple-ssl'),
-                            'url' => add_query_arg(['page'=>'really-simple-security#settings/vulnerabilities/vulnerabilities-overview'], rsssl_admin_url() ),
                             'icon' => ($risk_level === 'c' || $risk_level==='h') ? 'warning' : 'open',
                             'type' => 'warning',
                             'dismissible' => true,
                             'admin_notice' => $siteWide,
                             'plusone' => true,
+                            'highlight_field_id' => 'vulnerabilities-overview',
                         ]
                     ],
                 ];
@@ -353,11 +412,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         /* Public Section 2: DataGathering */
 
-        /**
-         * @param $data
-         *
-         * @return array
-         */
+		/**
+		 * @param $stats
+		 *
+		 * @return array
+		 */
         public function get_stats($stats): array
         {
 	        if ( ! rsssl_user_can_manage() ) {
@@ -596,25 +655,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($this->check_vulnerability( $plugin_file ) ) {
 	                switch ( $this->check_severity( $plugin_file ) ) {
 		                case 'c':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['c'] ) );
 			                break;
 		                case 'h':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-high" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['h'] ) );
 			                break;
 		                case 'm':
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-medium" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['m'] ) );
 			                break;
 		                default:
-			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" href="%s">%s</a>',
+			                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-low" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 				                'https://really-simple-ssl.com/vulnerabilities/' . $this->getIdentifier( $plugin_file ), ucfirst( $this->risk_naming['l'] ) );
 			                break;
 	                }
                 }
                 if ( $this->is_quarantined($plugin_file)) {
-	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" href="%s">%s</a>',
+	                echo sprintf( '<a class="rsssl-btn-vulnerable rsssl-critical" target="_blank" rel="noopener noreferrer" href="%s">%s</a>',
 		                'https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine' , __("Quarantined","really-simple-ssl") );
                 }
             }
@@ -746,9 +805,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $file = 'manifest.json';
             }
 
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $file = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION . '/' . $file;
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+            $file = $upload_dir . '/' . $file;
             if (file_exists($file)) {
                 //now we check if the file is older than 3 days, if so, we download it again
                 $file_time = filemtime($file);
@@ -779,16 +837,17 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        }
 
             //now we check if the file remotely exists and then log an error if it does not.
-            if ($this->remote_file_exists($url)) {
-                $json = file_get_contents( $url );
-                return json_decode($json);
+            $response = wp_remote_get( $url );
+            if ( is_wp_error( $response ) ) {
+                return null;
             }
 
-	        if ( defined('WP_DEBUG') && WP_DEBUG ) {
-                error_log('Could not download file from ' . $url);
+            if ( wp_remote_retrieve_response_code($response) !== 200 ) {
+                return null;
             }
 
-	        return null;
+            $json = wp_remote_retrieve_body($response);
+            return json_decode($json);
         }
 
 	    private function remote_file_exists($url): bool {
@@ -803,9 +862,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			    return strpos($headers[0], '200') !== false;
 			    // Rest of your code handling $headers goes here
 		    } catch (Exception $e) {
-                if ( defined('WP_DEBUG') && WP_DEBUG ) {
-                    error_log('Could not check if file exists: ' . $e->getMessage());
-                }
 			    return false;
             }
 
@@ -826,15 +882,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 		        return;
 	        }
 	        //we get the upload directory
-	        $upload_dir = wp_upload_dir();
-	        $upload_dir = $upload_dir['basedir'];
-	        $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+	        $upload_dir = Rsssl_File_Storage::get_upload_dir();
 
 	        if ( !$manifest ) {
 		        $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
 	        } else {
 		        $file = $upload_dir . '/manifest.json';
 	        }
+
 	        //we delete the old file if it exists
 	        if ( file_exists($file) ) {
 		        wp_delete_file($file);
@@ -845,12 +900,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return;
             }
 
-            //we check if the directory exists, if not, we create it
-            if ( !file_exists($upload_dir) ) {
-                mkdir($upload_dir, 0755, true);
-            }
-
-            FileStorage::StoreFile($file, $data);
+	        Rsssl_File_Storage::StoreFile($file, $data);
             $this->jsons_files_updated = true;
         }
 
@@ -859,23 +909,23 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir .= self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             if ($manifest) {
                 $file = $upload_dir . '/manifest.json';
                 if (!file_exists($file)) {
                     return false;
                 }
 
-                return FileStorage::GetDate($file);
+                return Rsssl_File_Storage::GetDate($file);
             }
             $file = $upload_dir . '/' . ($isCore ? 'core.json' : 'components.json');
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetDate($file);
+            return Rsssl_File_Storage::GetDate($file);
         }
 
         /* End of files and Storage */
@@ -900,7 +950,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             $data->vulnerabilities = $this->filter_vulnerabilities($data->vulnerabilities, $wp_version, true);
-            $data->version = $wp_version;
+
             //first we store this as a json file in the uploads folder
             $this->store_file($data, true);
         }
@@ -988,15 +1038,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return [];
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             $file = $upload_dir . '/components.json';
             if (!file_exists($file)) {
                 return [];
             }
 
-            $components =  FileStorage::GetFile($file);
+            $components =  Rsssl_File_Storage::GetFile($file);
             if (!is_array($components)) $components = [];
             return $components;
         }
@@ -1009,15 +1058,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return null;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir = $upload_dir . self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             $file = $upload_dir . '/core.json';
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetFile($file);
+            return Rsssl_File_Storage::GetFile($file);
         }
 
         /* Section for the theme files */
@@ -1103,7 +1152,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             theme_element.insertAdjacentHTML('afterbegin', `
                               <div class="${divClass}">
                                 <div><span class="dashicons dashicons-info"></span>
-                                    <a href="https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine" target="_blank">${text}</a>
+                                    <a href="https://really-simple-ssl.com/instructions/about-vulnerabilities/#quarantine" target="_blank" rel="noopener noreferrer">${text}</a>
                                 </div>
                               </div>
                             `);
@@ -1235,15 +1284,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
 	        if ( ! rsssl_admin_logged_in() ) {
 		        return false;
 	        }
-            $upload_dir = wp_upload_dir();
-            $upload_dir = $upload_dir['basedir'];
-            $upload_dir .= self::RSSSL_VULNERABILITIES_LOCATION;
+
+            $upload_dir = Rsssl_File_Storage::get_upload_dir();
+
             $file = $upload_dir . '/manifest.json';
             if (!file_exists($file)) {
                 return false;
             }
 
-            return FileStorage::GetFile($file);
+            return Rsssl_File_Storage::GetFile($file);
         }
 
         private function filter_vulnerabilities($vulnerabilities, $Version, $core = false): array
@@ -1252,7 +1301,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             foreach ($vulnerabilities as $vulnerability) {
                 //if fixed_in contains a version, and the current version is higher than the fixed_in version, we skip it as fixed.
                 //This needs to be a positive check only, as the fixed_in value is less accurate than the version_from and version_to values
-	            if ($vulnerability->fixed_in !== 'not fixed' && version_compare($Version, $vulnerability->fixed_in, '>=') ) {
+	            if ($vulnerability->fixed_in !== 'not fixed' && rsssl_version_compare($Version, $vulnerability->fixed_in, '>=') ) {
 		            continue;
 	            }
 
@@ -1262,7 +1311,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $operator_from = $vulnerability->operator_from;
                 $operator_to = $vulnerability->operator_to;
                 //we now check if the version is between the two versions
-                if (version_compare($Version, $version_from, $operator_from) && version_compare($Version, $version_to, $operator_to)) {
+                if (rsssl_version_compare($Version, $version_from, $operator_from) && rsssl_version_compare($Version, $version_to, $operator_to)) {
                     $filtered_vulnerabilities[] = $vulnerability;
                 }
             }
@@ -1456,7 +1505,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 'message' => $message . ' ' .
                              __('Based on your settings, Really Simple SSL will take appropriate action, or you will need to solve it manually.','really-simple-ssl') .' '.
                              sprintf(__('Get more information from the Really Simple SSL dashboard on %s'), $this->domain() ),
-                'url' => "https://really-simple-ssl.com/instructions/about-vulnerabilities/",
+                'url' => rsssl_admin_url('#settings/vulnerabilities_notifications'),
             ];
         }
 
@@ -1499,7 +1548,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          * @return string
          */
 	    public function domain(): string {
-		    return '<a href="'.$this->site_url().'" target="_blank">'.$this->site_url().'</a>';
+		    return '<a href="'.$this->site_url().'" target="_blank" rel="noopener noreferrer">'.$this->site_url().'</a>';
 	    }
 
 	    /**

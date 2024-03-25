@@ -16,6 +16,17 @@ class AIOWPSecurity_Audit_Text_Handler {
 	public static function successful_login_to_text($info) {
 		return sprintf(__('Successful login with username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
 	}
+
+	/**
+	 * Return the text version of 'successful_logout' event
+	 *
+	 * @param array $info - contains info used to generate the returned string
+	 *
+	 * @return string - the text to be shown for details on audit log table
+	 */
+	public static function successful_logout_to_text($info) {
+		return __('Successful logout with username:', 'all-in-one-wp-security-and-firewall') . ' ' . $info['username'] . ' ' . $info['force_logout'];
+	}
 	
 	/**
 	 * Return the text version of 'core_updated' event
@@ -163,5 +174,43 @@ class AIOWPSecurity_Audit_Text_Handler {
 		}
 
 		return is_array($output) ? json_encode($output) : $output;
+	}
+
+	/**
+	 * Return the text version of 'password_reset' event
+	 *
+	 * @param array $info
+	 * @return string
+	 */
+	public static function password_reset_to_text($info) {
+		return sprintf(__('Password for user account: `%s` successfully changed', 'all-in-one-wp-security-and-firewall'), $info['user_login']);
+	}
+
+	/**
+	 * Return the text version of 'user_deleted' event
+	 *
+	 * @param array $info
+	 * @return string
+	 */
+	public static function user_deleted_to_text($info) {
+		if (empty($info['reassign'])) {
+			return sprintf(__('User account: %s with ID: `%s` has been deleted', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id']);
+		} else {
+			return sprintf(__('User account: `%s` with ID: `%s` has been deleted and all content has been reassigned to user with ID: `%s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['reassign']);
+		}
+	}
+
+	/**
+	 * Return the text version of 'user_removed' event
+	 *
+	 * @param array $info
+	 * @return string
+	 */
+	public static function user_removed_to_text($info) {
+		if (empty($info['reassign'])) {
+			return sprintf(__('User account: %s with ID: `%s` has been removed from the blog with ID: `%s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['blog_id']);
+		} else {
+			return sprintf(__('User account: `%s` with ID: `%s` has been removed from the blog with ID: `%s` and all content has been reassigned to user with  ID: `%s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['blog_id'], $info['reassign']);
+		}
 	}
 }

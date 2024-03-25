@@ -85,8 +85,8 @@ foreach ( acf_get_combined_post_type_settings_tabs() as $tab_key => $tab_label )
 			break;
 		case 'labels':
 			echo '<div class="acf-field acf-regenerate-labels-bar">';
-			echo '<span class="acf-btn acf-btn-sm acf-btn-clear acf-regenerate-labels"><i class="acf-icon acf-icon-regenerate"></i>' . __( 'Regenerate', 'acf' ) . '</span>';
-			echo '<span class="acf-btn acf-btn-sm acf-btn-clear acf-clear-labels"><i class="acf-icon acf-icon-trash"></i>' . __( 'Clear', 'acf' ) . '</span>';
+			echo '<span class="acf-btn acf-btn-sm acf-btn-clear acf-regenerate-labels"><i class="acf-icon acf-icon-regenerate"></i>' . esc_html__( 'Regenerate', 'acf' ) . '</span>';
+			echo '<span class="acf-btn acf-btn-sm acf-btn-clear acf-clear-labels"><i class="acf-icon acf-icon-trash"></i>' . esc_html__( 'Clear', 'acf' ) . '</span>';
 			echo '<span class="acf-tip acf-labels-tip"><i class="acf-icon acf-icon-help acf-js-tooltip" title="' . esc_attr__( 'Regenerate all labels using the Singular and Plural labels', 'acf' ) . '"></i></span>';
 			echo '</div>';
 
@@ -216,9 +216,14 @@ foreach ( acf_get_combined_post_type_settings_tabs() as $tab_key => $tab_label )
 					'key'          => 'add_new',
 					'prefix'       => 'acf_post_type[labels]',
 					'value'        => $acf_post_type['labels']['add_new'],
+					'data'         => array(
+						/* translators: %s Singular form of post type name */
+						'label'   => __( 'Add New %s', 'acf' ),
+						'replace' => 'singular',
+					),
 					'label'        => __( 'Add New', 'acf' ),
 					'instructions' => __( 'In the post type submenu in the admin dashboard.', 'acf' ),
-					'placeholder'  => __( 'Add New', 'acf' ),
+					'placeholder'  => __( 'Add New Post', 'acf' ),
 				),
 				'div',
 				'field'
@@ -1285,4 +1290,3 @@ foreach ( acf_get_combined_post_type_settings_tabs() as $tab_key => $tab_label )
 
 	echo '</div>';
 }
-

@@ -13,7 +13,7 @@ namespace RankMath\Redirections;
 use WP_Query;
 use RankMath\Helper;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
+use RankMath\Helpers\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -135,7 +135,7 @@ class Redirector {
 
 		$this->do_debugging();
 
-		if ( true === $this->do_filter( 'redirection/add_query_string', true ) && Str::is_non_empty( $this->query_string ) ) {
+		if ( true === $this->do_filter( 'redirection/add_query_string', true, $this->matched ) && Str::is_non_empty( $this->query_string ) ) {
 			$this->redirect_to .= '?' . $this->query_string;
 		}
 

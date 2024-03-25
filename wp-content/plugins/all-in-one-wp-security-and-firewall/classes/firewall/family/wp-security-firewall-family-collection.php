@@ -24,7 +24,7 @@ class Family_Collection {
 	}
 
 	/**
-	 * Generator method to iterate over the familes
+	 * Generator method to iterate over the families
 	 *
 	 * @return iterable
 	 */

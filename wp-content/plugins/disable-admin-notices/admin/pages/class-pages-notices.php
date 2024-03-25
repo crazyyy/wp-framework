@@ -59,11 +59,11 @@ class WDAN_Notices extends WDN_Page {
 	/**
 	 * Requests assets (js and css) for the page.
 	 *
-	 * @param Wbcr_Factory466_ScriptList $scripts
-	 * @param Wbcr_Factory466_StyleList $styles
+	 * @param Wbcr_Factory473_ScriptList $scripts
+	 * @param Wbcr_Factory473_StyleList $styles
 	 *
 	 * @return void
-	 * @see Wbcr_FactoryPages466_AdminPage
+	 * @see Wbcr_FactoryPages473_AdminPage
 	 *
 	 */
 	public function assets( $scripts, $styles ) {
@@ -74,18 +74,18 @@ class WDAN_Notices extends WDN_Page {
 
 	public function showPageContent() {
 		?>
-		<div class="wrdan-premium-fake-content">
-			<div class="wdan-premium-info">
-				<h3>Hidden notices PRO</h3>
-				<p>This function allows you to disable annoying menu items in the admin bar. Some plugins take up space
-					in
-					the admin bar to insert their ads. Just get rid of this ad with the premium features of our
-					plugin.</p>
-				<a class="wdan-button wdan-button-default wdan-button-go-pro" target="_blank"
-				   href="https://clearfy.pro/disable-admin-notices/">Go
-					Pro</a>
-			</div>
-		</div>
+        <div class="wrdan-premium-fake-content">
+            <div class="wdan-premium-info">
+                <h3>Hidden notices PRO</h3>
+                <p>This function allows you to disable annoying menu items in the admin bar. Some plugins take up space
+                    in
+                    the admin bar to insert their ads. Just get rid of this ad with the premium features of our
+                    plugin.</p>
+                <a class="wdan-button wdan-button-default wdan-button-go-pro" target="_blank"
+                   href="https://clearfy.pro/disable-admin-notices/">Go
+                    Pro</a>
+            </div>
+        </div>
 		<?php
 	}
 }

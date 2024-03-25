@@ -11,12 +11,12 @@ use Dev4Press\Plugin\DebugPress\Main\Panel;
 
 class Store extends Panel {
 	public function single() {
-		$this->title( __( "Stored objects and other data", "debugpress" ), true, true );
+		$this->title( esc_html__( 'Stored objects and other data', 'debugpress' ), true, true );
 		$this->block_header();
-		$this->add_column( __( "Time", "debugpress" ), "", "", true );
-		$this->add_column( __( "Title", "debugpress" ) );
-		$this->add_column( __( "Logged Data", "debugpress" ) );
-		$this->add_column( __( "Caller", "debugpress" ) );
+		$this->add_column( __( 'Time', 'debugpress' ), "", "", true );
+		$this->add_column( __( 'Title', 'debugpress' ) );
+		$this->add_column( __( 'Logged Data', 'debugpress' ) );
+		$this->add_column( __( 'Caller', 'debugpress' ) );
 		$this->table_head();
 		foreach ( debugpress_tracker()->logged as $item ) {
 			$this->render_item( $item );
@@ -26,17 +26,17 @@ class Store extends Panel {
 	}
 
 	public function render_item( $item ) {
-		$printed = $item[ 'sql' ]
+		$printed = $item['sql']
 			?
-			'<div class="query-sql-run-full">' . SQLFormat::format( $item[ 'print' ] ) . '</div>'
+			'<div class="query-sql-run-full">' . SQLFormat::format( $item['print'] ) . '</div>'
 			:
-			debugpress_rx( $item[ 'print' ], false );
+			debugpress_rx( $item['print'], false );
 
 		$this->table_row( array(
-				$item[ 'time' ],
-				( empty( $item[ 'title' ] ) ? '/' : '<strong>' . $item[ 'title' ] . '</strong>' ),
+				$item['time'],
+				( empty( $item['title'] ) ? '/' : '<strong>' . $item['title'] . '</strong>' ),
 				$printed,
-				debugpress_rx( $item[ 'caller' ], false )
+				debugpress_rx( $item['caller'], false ),
 			)
 		);
 	}

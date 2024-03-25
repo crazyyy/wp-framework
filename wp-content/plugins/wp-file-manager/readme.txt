@@ -2,9 +2,9 @@
 Contributors: mndpsingh287
 Tags: wp-file-manager, elfinder,file manager, ftp, wp-filemanager,file manager, wp-filemanager, Upload Files, WP File Manager, File Manage, Edit Files, Delete Files, FTP, filemanager, wpfilemanager, ftp, file transfer, update, create, delete, view, rename, editor, Cpanel, Control Panel, Admin, Shortcode, explorer, file explorer, filemanager
 Requires at least: 4.0
-Tested up to: 6.3
+Tested up to: 6.4.3
 Requires PHP: 5.2.4
-Stable tag: 7.2
+Stable tag: 7.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,22 @@ Yes, You can archive any files and folders as zip then simple download it. Pleas
 
 
 == Changelog ==
+
+= 7.2.5 (14 Mar, 2024) =
+* Improved Language check.
+
+= 7.2.4 (28 Feb, 2024) =
+* Fixed Language issue.
+
+= 7.2.3 (26 Feb, 2024) =
+* Fixed Language issue.
+
+= 7.2.2 (18 Jan, 2024) =
+* Fixed Security issue.
+
+= 7.2.1 (26th Oct, 2023) =
+* Directory Traversal issue resolved.
+* Checked compatibility with wordpress 6.3.2
 
 = 7.2 (18th August, 2023) =
 * Api Update

@@ -69,7 +69,7 @@
 			<fieldset>
 				<label class="wpo-label__bold" for="exclude_css">
 					<?php esc_html_e('Any CSS files that match the paths below will be completely ignored.', 'wp-optimize'); ?>
-					<br><?php esc_html_e('Use this if you are having issues with a specific CSS file', 'wp-optmize'); ?>
+					<br><?php esc_html_e('Use this if you are having issues with a specific CSS file', 'wp-optimize'); ?>
 					<span tabindex="0" data-tooltip="<?php esc_attr_e('Any file present here will be loaded normally by WordPress', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 				</label>
 				<textarea
@@ -89,7 +89,7 @@
 			<fieldset>
 				<label class="wpo-label__bold" for="async_css">
 					<?php esc_html_e('Any CSS files that match the paths below will be loaded asynchronously.', 'wp-optimize'); ?><br>
-					<?php esc_html_e('Use this if you have a completely independent stylesheet', 'wp-optmize'); ?>
+					<?php esc_html_e('Use this if you have a completely independent stylesheet', 'wp-optimize'); ?>
 					<span tabindex="0" data-tooltip="<?php esc_attr_e("e.g. You may want to exclude 'fontawesome' or other libraries from the initial load", 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 				</label>
 				<textarea

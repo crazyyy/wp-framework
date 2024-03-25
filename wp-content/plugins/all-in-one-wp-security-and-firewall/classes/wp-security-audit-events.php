@@ -53,6 +53,12 @@ class AIOWPSecurity_Audit_Events {
 		// Translation events
 		add_action('upgrader_process_complete', 'AIOWPSecurity_Audit_Events::translation_updated', 10, 2);
 
+		// User events
+		add_action('password_reset', 'AIOWPSecurity_Audit_Events::password_reset', 10, 1);
+		add_action('deleted_user', 'AIOWPSecurity_Audit_Events::user_deleted', 10, 3);
+		add_action('remove_user_from_blog', 'AIOWPSecurity_Audit_Events::user_removed_from_blog', 10, 3);
+
+		// Uncomment when the firewall config issues have been resolved
 		// Rule events
 		// add_action('plugins_loaded', 'AIOWPSecurity_Audit_Events::rule_event', 10, 2);
 
@@ -107,13 +113,17 @@ class AIOWPSecurity_Audit_Events {
 			'translation_updated' => __('Translation updated', 'all-in-one-wp-security-and-firewall'),
 			'entity_changed' => __('Entity changed', 'all-in-one-wp-security-and-firewall'),
 			'successful_login' => __('Successful login', 'all-in-one-wp-security-and-firewall'),
+			'successful_logout' => __('Successful logout', 'all-in-one-wp-security-and-firewall'),
 			'failed_login' => __('Failed login', 'all-in-one-wp-security-and-firewall'),
 			'user_registration' => __('User registration', 'all-in-one-wp-security-and-firewall'),
+			'user_deleted' => __('User deleted', 'all-in-one-wp-security-and-firewall'),
+			'user_removed' => __('User removed from blog', 'all-in-one-security-and-firewall'),
 			'table_migration' => __('Table migration', 'all-in-one-wp-security-and-firewall'),
-			'rule_triggered' => __('Rule Triggered', 'all-in-one-wp-security-and-firewall'),
-			'rule_not_triggered' => __('Rule Not Triggered', 'all-in-one-wp-security-and-firewall'),
-			'rule_active' => __('Rule Active', 'all-in-one-wp-security-and-firewall'),
-			'rule_not_active' => __('Rule Not Active', 'all-in-one-wp-security-and-firewall'),
+			'rule_triggered' => __('Rule triggered', 'all-in-one-wp-security-and-firewall'),
+			'rule_not_triggered' => __('Rule not triggered', 'all-in-one-wp-security-and-firewall'),
+			'rule_active' => __('Rule active', 'all-in-one-wp-security-and-firewall'),
+			'rule_not_active' => __('Rule not active', 'all-in-one-wp-security-and-firewall'),
+			'password_reset' => __('Password reset', 'all-in-one-wp-security-and-firewall'),
 		);
 	}
 
@@ -475,6 +485,72 @@ class AIOWPSecurity_Audit_Events {
 	}
 
 	/**
+	 * Adds a password reset event to the audit log
+	 *
+	 * @param object $user_data - Object containing user's data
+	 */
+	public static function password_reset($user_data) {
+		
+		$user_login = (false === $user_data) ? 'unknown' : $user_data->user_login;
+
+		$details = array(
+			'password_reset' => array(
+				'user_login' => $user_login
+			)
+		);
+		do_action('aiowps_record_event', 'password_reset', $details, 'warning');
+	}
+
+	/**
+	 * Adds a user deleted event to the audit log
+	 *
+	 * @param int      $user_id   - the id of the deleted user
+	 * @param int|null $reassign  - the id of the user to reassign data to or null
+	 * @param object   $user_data - Object containing user's data
+	 *
+	 * @return void
+	 */
+	public static function user_deleted($user_id, $reassign, $user_data) {
+
+		$user_login = (false === $user_data) ? 'unknown' : $user_data->user_login;
+
+		$details = array(
+			'user_deleted' => array(
+				'user_id' => $user_id,
+				'reassign' => $reassign,
+				'user_login' => $user_login
+
+			)
+		);
+		do_action('aiowps_record_event', 'user_deleted', $details, 'warning');
+	}
+
+	/**
+	 * Adds a user removed event to the audit log
+	 *
+	 * @param int $user_id  - the id of the removed user
+	 * @param int $blog_id  - the id of the blog the user was removed from
+	 * @param int $reassign - the id of the user to reassign data to or null
+	 *
+	 * @return void
+	 */
+	public static function user_removed_from_blog($user_id, $blog_id, $reassign) {
+		$user_data = get_user_by('ID', $user_id);
+		$user_login = is_a($user_data, 'WP_User') && 0 !== $user_data->ID ? $user_data->user_login : 'unknown';
+		
+		$details = array(
+			'user_removed' => array(
+				'user_id' => $user_id,
+				'blog_id' => $blog_id,
+				'reassign' => $reassign,
+				'user_login' => $user_login
+
+			)
+		);
+		do_action('aiowps_record_event', 'user_removed', $details, 'warning');
+	}
+
+	/**
 	 * Adds a failed login event to the audit log
 	 *
 	 * @param string $username - the username for the failed login attempt
@@ -543,6 +619,24 @@ class AIOWPSecurity_Audit_Events {
 			)
 		);
 		do_action('aiowps_record_event', 'successful_login', $details, 'info', $username);
+	}
+
+	/**
+	 * Adds a successful logout event to the audit log
+	 *
+	 * @param string  $username     - the username for the successful logout
+	 * @param boolean $force_logout - if the logout was a force logout
+	 *
+	 * @return void
+	 */
+	public static function event_successful_logout($username, $force_logout = false) {
+		$details = array(
+			'successful_logout' => array(
+				'username' => $username,
+				'force_logout' => $force_logout ? __('(force logout)', 'all-in-one-wp-security-and-firewall') : ''
+			)
+		);
+		do_action('aiowps_record_event', 'successful_logout', $details, 'info', $username);
 	}
 
 }

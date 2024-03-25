@@ -34,12 +34,14 @@ echo code_profiler_display_tabs( 5 );
 	</tr>
 	<tr>
 		<td style="border-bottom:1px solid #c3c4c7">
-			<h4><?php esc_html_e('Why does the execution time returned by Code Profiler seem higher than when I load my site in my browser?', 'code-profiler') ?></h4>
+			<h4><?php esc_html_e('Why does the execution time and memory returned by Code Profiler seem higher than when I load my site in my browser?', 'code-profiler') ?></h4>
 			<?php esc_html_e('Because the profiler needs to analyze your PHP code, it must exclude and disable any kind of website optimization: caching, CDN and PHP OPcache.', 'code-profiler') ?>
 			<br />
 			<?php esc_html_e('A caching sofware and a CDN service will prevent execution of your code and thus must be disabled by the profiler.', 'code-profiler') ?>
 			<br />
-			<?php esc_html_e('Regarding the opcode cache, PHP includes an opcode optimizer (since v7.0): after creating the first set of opcodes, it forwards it to the optimizer where it will get through 13 passes that will optimize it (peephole, jump, call, literal optimizations etc). That means that at the end of the day, the code in the opcache may have been optimized and thus may not match the original code found in your scripts. For that reason, it must be disabled. That problem occurs with other profilers too such as the xdebug extension, which cannot run well when the optimizer is turned on because it removes some virtual machine instructions needed by them.', 'code-profiler') ?>
+			<?php esc_html_e('Regarding the opcode cache, PHP includes an opcode optimizer since version 7.0: after creating the first set of opcodes, it forwards it to the optimizer where it will get through 13 passes that will optimize it (peephole, jump, call, literal optimizations etc). That means that at the end of the day, the code in the opcache may have been optimized and thus may not match the original code found in your scripts. For that reason, it must be disabled. That problem occurs with other profilers too such as the xdebug extension, which cannot run well when the optimizer is turned on because it removes some virtual machine instructions needed by them.', 'code-profiler') ?>
+			<br />
+			<?php esc_html_e('Note that disabling the opcode cache also increases the memory usage because PHP needs to open, read, parse and compile all scripts instead of serving them from the cache.', 'code-profiler') ?>
 		</td>
 	</tr>
 	<tr>

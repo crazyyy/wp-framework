@@ -15,7 +15,7 @@ use RankMath\Module\Base;
 use RankMath\Traits\Hooker;
 use RankMath\Traits\Ajax;
 use RankMath\Admin\Options;
-use MyThemeShop\Helpers\Param;
+use RankMath\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -82,7 +82,7 @@ class Instant_Indexing extends Base {
 		$this->filter( 'page_row_actions', 'post_row_actions', 10, 2 );
 		$this->filter( 'admin_init', 'handle_post_row_actions' );
 
-		$this->action( 'template_redirect', 'serve_api_key' );
+		$this->action( 'wp', 'serve_api_key' );
 		$this->action( 'rest_api_init', 'init_rest_api' );
 	}
 
@@ -303,6 +303,14 @@ class Instant_Indexing extends Base {
 			return;
 		}
 
+		// Check if it's a hidden product.
+		if ( 'product' === $post->post_type && Helper::is_woocommerce_active() ) {
+			$product = wc_get_product( $post_id );
+			if ( $product && ! $product->is_visible() ) {
+				return;
+			}
+		}
+
 		$url = get_permalink( $post );
 		if ( 'trash' === $post->post_status ) {
 			$url = $this->previous_post_permalinks[ $post_id ];
@@ -406,8 +414,9 @@ class Instant_Indexing extends Base {
 			return false;
 		}
 
-		if ( ! $is_manual_submission ) {
-			$logs = array_values( array_reverse( $api->get_log() ) );
+		$api_logs = $api->get_log();
+		if ( ! $is_manual_submission && ! empty( $api_logs ) ) {
+			$logs = array_values( array_reverse( $api_logs ) );
 			if ( ! empty( $logs[0] ) && $logs[0]['url'] === $url && time() - $logs[0]['time'] < self::THROTTLE_LIMIT ) {
 				return false;
 			}

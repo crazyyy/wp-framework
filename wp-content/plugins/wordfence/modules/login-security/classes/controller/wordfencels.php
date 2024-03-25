@@ -82,6 +82,8 @@ class Controller_WordfenceLS {
 		add_action('init', array($this, '_wordpress_init'));
 		if ($this->is_shortcode_enabled())
 			add_action('wp_enqueue_scripts', array($this, '_handle_shortcode_prerequisites'));
+		
+		Controller_Permissions::_init_actions();
 	}
 
 	public function _wordpress_init() {
@@ -214,6 +216,7 @@ END
 	
 	public function _uninstall_plugin() {
 		Controller_Time::shared()->uninstall();
+		Controller_Permissions::shared()->uninstall();
 		
 		foreach (array(self::VERSION_KEY) as $opt) {
 			if (is_multisite() && function_exists('delete_network_option')) {
@@ -338,6 +341,10 @@ END
 					'Send' => __('Send', 'wordfence'),
 					'An error was encountered while trying to send the message. Please try again.' => __('An error was encountered while trying to send the message. Please try again.', 'wordfence'),
 					'<strong>ERROR</strong>: An error was encountered while trying to send the message. Please try again.' => wp_kses(__('<strong>ERROR</strong>: An error was encountered while trying to send the message. Please try again.', 'wordfence'), array('strong' => array())),
+					'Login failed with status code 403. Please contact the site administrator.' => __('Login failed with status code 403. Please contact the site administrator.', 'wordfence'),
+					'<strong>ERROR</strong>: Login failed with status code 403. Please contact the site administrator.' => wp_kses(__('<strong>ERROR</strong>: Login failed with status code 403. Please contact the site administrator.', 'wordfence'), array('strong' => array())),
+					'Login failed with status code 503. Please contact the site administrator.' => __('Login failed with status code 503. Please contact the site administrator.', 'wordfence'),
+					'<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator.' => wp_kses(__('<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator.', 'wordfence'), array('strong' => array())),
 					'Wordfence 2FA Code' => __('Wordfence 2FA Code', 'wordfence'),
 					'Remember for 30 days' => __('Remember for 30 days', 'wordfence'),
 					'Log In' => __('Log In', 'wordfence'),
@@ -348,7 +355,7 @@ END
 				->enqueue();
 			wp_enqueue_style('wordfence-ls-login', Model_Asset::css('login.css'), array(), WORDFENCE_LS_VERSION);
 			wp_localize_script('wordfence-ls-login', 'WFLSVars', array(
-				'ajaxurl' => admin_url('admin-ajax.php'),
+				'ajaxurl' => Utility_URL::relative_admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('wp-ajax'),
 				'recaptchasitekey' => Controller_Settings::shared()->get(Controller_Settings::OPTION_RECAPTCHA_SITE_KEY),
 				'useCAPTCHA' => $useCAPTCHA,
@@ -361,7 +368,7 @@ END
 	private function get_2fa_management_script_data() {
 		return array(
 			'WFLSVars' => array(
-				'ajaxurl' => admin_url('admin-ajax.php'),
+				'ajaxurl' => Utility_URL::relative_admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('wp-ajax'),
 				'modalTemplate' => Model_View::create('common/modal-prompt', array('title' => '${title}', 'message' => '${message}', 'primaryButton' => array('id' => 'wfls-generic-modal-close', 'label' => __('Close', 'wordfence'), 'link' => '#')))->render(),
 				'modalNoButtonsTemplate' => Model_View::create('common/modal-prompt', array('title' => '${title}', 'message' => '${message}'))->render(),
@@ -551,6 +558,7 @@ END
 		}
 
 		$isLogin = !(defined('WORDFENCE_LS_AUTHENTICATION_CHECK') && WORDFENCE_LS_AUTHENTICATION_CHECK); //Checking for the purpose of prompting for 2FA, don't enforce it here
+		$isCombinedCheck = (defined('WORDFENCE_LS_CHECKING_COMBINED') && WORDFENCE_LS_CHECKING_COMBINED);
 		$combinedTwoFactor = false;
 
 		/*
@@ -602,73 +610,75 @@ END
 		 *    no sense.
 		 * 3. A filter does not override it. This is to allow plugins with REST endpoints that handle authentication
 		 *    themselves to opt out of the requirement.
-		 * 4. The user does not have 2FA enabled. 2FA exempts the user from requiring email verification if the score is 
-		 *    below the threshold.
+		 * 4. The user is not providing a combined credentials + 2FA authentication login request.
 		 * 5. The request is not a WooCommerce login while WC integration is disabled
 		 */
-		if ($isLogin && !empty($username) && (!$this->_is_woocommerce_login() || Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION))) { //Login attempt, not just a wp-login.php page load
+		if (!$combinedTwoFactor && !$isCombinedCheck && !empty($username) && (!$this->_is_woocommerce_login() || Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION))) { //Login attempt, not just a wp-login.php page load
 
 			$requireCAPTCHA = Controller_CAPTCHA::shared()->is_captcha_required();
-			
 			$performVerification = false;
+			
 			$token = Controller_CAPTCHA::shared()->get_token();
 			if ($requireCAPTCHA && empty($token) && !Controller_CAPTCHA::shared()->test_mode()) { //No CAPTCHA token means forced additional verification (if neither 2FA nor test mode are active)
 				$performVerification = true;
 			}
 			
+			if (is_object($user) && $user instanceof \WP_User && $this->validate_email_verification_token($user)) { //Skip the CAPTCHA check if the email address was verified
+				$requireCAPTCHA = false;
+				$performVerification = false;
+				
+				//Reset token rate limit
+				$identifier = sprintf('wfls-captcha-%d', $user->ID);
+				$tokenBucket = new Model_TokenBucket('rate:' . $identifier, 3, 1 / (WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES * Model_TokenBucket::MINUTE)); //Maximum of three requests, refilling at a rate of one per token expiration period
+				$tokenBucket->reset();
+			}
+			
+			$score = false;
 			if ($requireCAPTCHA && !$performVerification) {
 				$score = Controller_CAPTCHA::shared()->score($token);
-				if ($score === false && !Controller_CAPTCHA::shared()->test_mode()) { //An invalid token will require additional verification (if neither 2FA nor test mode are active)
+				if ($score === false && !Controller_CAPTCHA::shared()->test_mode()) { //An invalid token will require additional verification (if test mode is not active)
 					$performVerification = true;
 				}
+				else if (is_object($user) && $user instanceof \WP_User) {
+					Controller_Users::shared()->record_captcha_score($user, $score);
+				}
 			}
-
-			if (!isset($score)) { $score = false; }
 			
-			if (is_object($user) && $user instanceof \WP_User) {
-				if (Controller_Users::shared()->has_2fa_active($user)) { //CAPTCHA enforcement skipped for users with 2FA active
-					$requireCAPTCHA = false;
-					$performVerification = false;
-				}
-				
-				Controller_Users::shared()->record_captcha_score($user, $score);
-
-				//Skip the CAPTCHA check if the email address was verified
-				if ($this->validate_email_verification_token($user)) {
-					$requireCAPTCHA = false;
-					$performVerification = false;
-				}
-				
-				if ($requireCAPTCHA && ($performVerification || !Controller_CAPTCHA::shared()->is_human($score))) {
-					if ($this->has_woocommerce() && array_key_exists('woocommerce-login-nonce', $_POST)) {
-						$loginUrl = get_permalink(get_option('woocommerce_myaccount_page_id'));
+			if ($requireCAPTCHA) {
+				if ($performVerification || !Controller_CAPTCHA::shared()->is_human($score)) {
+					if (is_object($user) && $user instanceof \WP_User) {
+						$identifier = sprintf('wfls-captcha-%d', $user->ID);
+						$tokenBucket = new Model_TokenBucket('rate:' . $identifier, 3, 1 / (WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES * Model_TokenBucket::MINUTE)); //Maximum of three requests, refilling at a rate of one per token expiration period
+						if ($tokenBucket->consume(1)) {
+							if ($this->has_woocommerce() && array_key_exists('woocommerce-login-nonce', $_POST)) {
+								$loginUrl = get_permalink(get_option('woocommerce_myaccount_page_id'));
+							}
+							else {
+								$loginUrl = wp_login_url();
+							}
+							$verificationUrl = add_query_arg(
+								array(
+									'wfls-email-verification' => rawurlencode(Controller_Users::shared()->generate_verification_token($user))
+								),
+								$loginUrl
+							);
+							$view = new Model_View('email/login-verification', array(
+								'siteName' => get_bloginfo('name', 'raw'),
+								'verificationURL' => $verificationUrl,
+								'ip' => Model_Request::current()->ip(),
+								'canEnable2FA' => Controller_Users::shared()->can_activate_2fa($user),
+							));
+							wp_mail($user->user_email, __('Login Verification Required', 'wordfence'), $view->render(), "Content-Type: text/html");
+						}
 					}
-					else {
-						$loginUrl = wp_login_url();
-					}
-					$verificationUrl = add_query_arg(
-						array(
-							'wfls-email-verification' => rawurlencode(Controller_Users::shared()->generate_verification_token($user))
-						),
-						$loginUrl
-					);
-					$view = new Model_View('email/login-verification', array(
-						'siteName' => get_bloginfo('name', 'raw'),
-						'siteURL' => rtrim(site_url(), '/') . '/',
-						'verificationURL' => $verificationUrl,
-						'ip' => Model_Request::current()->ip(),
-						'canEnable2FA' => Controller_Users::shared()->can_activate_2fa($user),
-					));
-					wp_mail($user->user_email, __('Login Verification Required', 'wordfence'), $view->render(), "Content-Type: text/html");
 
-					return new \WP_Error('wfls_captcha_verify', wp_kses(__('<strong>VERIFICATION REQUIRED</strong>: Additional verification is required for login. Please check the email address associated with the account for a verification link.', 'wordfence'), array('strong'=>array())));
+					Utility_Sleep::sleep(Model_Crypto::random_int(0, 2000) / 1000);
+					return new \WP_Error('wfls_captcha_verify', wp_kses(__('<strong>VERIFICATION REQUIRED</strong>: Additional verification is required for login. If there is a valid account for the provided login credentials, please check the email address associated with it for a verification link to continue logging in.', 'wordfence'), array('strong' => array())));
 				}
-
 			}
 		}
 
 		if (!$combinedTwoFactor) {
-
 			if ($isLogin && $user instanceof \WP_User) {
 				if (Controller_Users::shared()->has_2fa_active($user)) {
 					if (Controller_Users::shared()->has_remembered_2fa($user)) {

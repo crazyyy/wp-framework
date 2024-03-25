@@ -139,6 +139,7 @@ class Model_TokenBucket {
 			$record = $this->_redis->get('bucket:' . $this->_identifier);
 		}
 		else {
+			$this->_unlock();
 			return false;
 		}
 		
@@ -168,6 +169,19 @@ class Model_TokenBucket {
 		
 		$this->_unlock();
 		return true;
+	}
+	
+	public function reset() {
+		if (!$this->_lock()) { return false; }
+		
+		if ($this->_backing == self::BACKING_WP_OPTIONS) {
+			delete_transient('wflsbucket:' . $this->_identifier);
+		}
+		else if ($this->_backing == self::BACKING_REDIS) {
+			$this->_redis->del('bucket:' . $this->_identifier);
+		}
+		
+		$this->_unlock();
 	}
 	
 	/**

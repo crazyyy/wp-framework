@@ -11,9 +11,11 @@
  +=====================================================================+
 */
 
-if (! defined('ABSPATH') ) { die('Forbidden'); }
+if (! defined('ABSPATH') ) {
+	die('Forbidden');
+}
 
-// =====================================================================
+// ===================================================================== 2023-11-17
 // Start the profiler.
 
 add_action('wp_ajax_codeprofiler_start_profiler', 'codeprofiler_start_profiler');
@@ -46,8 +48,13 @@ function codeprofiler_start_profiler() {
 	);
 
 	// Verify the security nonce
-	if ( empty( $_POST['cp_nonce'] ) || ! wp_verify_nonce( $_POST['cp_nonce'], 'start_profiler_nonce') ) {
-		$msg = esc_html__('Missing or wrong security nonce. Reload the page and try again', 'code-profiler');
+	if ( empty( $_POST['cp_nonce'] ) ||
+		! wp_verify_nonce( $_POST['cp_nonce'], 'start_profiler_nonce') ) {
+
+		$msg = esc_html__(
+			'Missing or wrong security nonce. Reload the page and try again',
+			'code-profiler'
+		);
 		$response['message'] = $msg;
 		code_profiler_log_error( $msg );
 		code_profiler_wp_send_json( $response );
@@ -77,8 +84,12 @@ function codeprofiler_start_profiler() {
 	);
 
 	// Frontend or backend
-	if ( empty( $_POST['where'] ) || ! in_array( $_POST['where'], ['frontend', 'backend', 'custom'] ) ) {
-		$msg = sprintf( esc_html__('Missing or incorrect parameter (%s)', 'code-profiler'), 'where');
+	if ( empty( $_POST['where'] ) ||
+		! in_array( $_POST['where'], ['frontend', 'backend', 'custom'] ) ) {
+
+		$msg = sprintf(
+			esc_html__('Missing or incorrect parameter (%s)', 'code-profiler'), 'where'
+		);
 		$response['message'] = $msg;
 		code_profiler_log_error( $msg );
 		code_profiler_wp_send_json( $response );
@@ -106,11 +117,8 @@ function codeprofiler_start_profiler() {
 	);
 
 	// Authentication
-	if ( empty( $_POST['user'] ) || ! in_array( $_POST['user'], ['authenticated', 'unauthenticated'] ) ) {
-		$msg = sprintf( esc_html__('Missing or incorrect parameter (%s)', 'code-profiler'), 'user');
-		$response['message'] = $msg;
-		code_profiler_log_error( $msg );
-		code_profiler_wp_send_json( $response );
+	if ( empty( $_POST['user'] ) || $_POST['user'] != 'authenticated' ) {
+		$_POST['user'] = 'unauthenticated';
 	}
 	$cp_options['mem_user'] = $_POST['user'];
 
@@ -125,12 +133,15 @@ function codeprofiler_start_profiler() {
 	}
 
 	// URI to profile
-	$url = esc_url_raw( $_POST['post'] );
+	$url		= esc_url_raw( $_POST['post'] );
+	$siteurl	= esc_html( site_url() );
 	code_profiler_log_info( sprintf(
-		esc_html__('Initializing Code Profiler v%s for %s (profile: %s)', 'code-profiler'),
+		/* Translators: version, site url, profile name, profile url */
+		esc_html__('Initializing Code Profiler v%s on %s. Profile:  %s - %s', 'code-profiler'),
 		CODE_PROFILER_VERSION,
-		$url,
-		$profile
+		$siteurl,
+		$profile,
+		$url
 	) );
 
 	code_profiler_log_debug(
@@ -155,6 +166,25 @@ function codeprofiler_start_profiler() {
 		$ua_signature = CODE_PROFILER_UA['Desktop']['Firefox'];
 	}
 	$cp_options['ua'] = $ua;
+
+	// Theme
+	$themes = code_profiler_get_themes();
+	if ( empty( $_POST['theme'] ) || empty( $themes[ $_POST['theme'] ] ) ) {
+		$theme = '';
+		unset( $cp_options['mem_theme'] );
+	} else {
+		code_profiler_log_debug(
+			esc_html__('Retrieving parameters #6', 'code-profiler')
+		);
+		$theme = $_POST['theme'];
+		$cp_options['mem_theme'] = $theme;
+		// Append the template to the stylesheet
+		if (! empty( $themes[ $theme ]['t'] ) ) {
+			$theme .= "::{$themes[ $theme ]['t']}";
+		} else {
+			$theme .= "::$theme";
+		}
+	}
 
 	code_profiler_log_debug(
 		esc_html__('Creating security key', 'code-profiler')
@@ -186,9 +216,10 @@ function codeprofiler_start_profiler() {
 		'redirection'		=> 0,		// We don't want to be redirected
 		'headers'       	=> [
 			// Lowercase header name
-			'code-profiler-key' => $profiler_key,
-			'accept-language'   => 'en-US,en;q=0.5',
-			'user-agent'    	  => $ua_signature
+			'code-profiler-key'	=> $profiler_key,
+			'accept-language'		=> 'en-US,en;q=0.5',
+			'user-agent'			=> $ua_signature,
+			'theme'					=> $theme
 		 ]
 	];
 
@@ -205,7 +236,7 @@ function codeprofiler_start_profiler() {
 				// Lowercase header name
 				$key		= trim( strtolower( $key ) );
 				$value	= trim( $value );
-				//We want printable ASCII characters only
+				// We want printable ASCII characters only
 				$value	= preg_replace('/[\x00-\x1f\x7f-\xff]/', '', $value);
 				if (! empty( $key ) && ! empty( $value ) ) {
 					$headers['headers'][ $key ] = $value;
@@ -244,10 +275,10 @@ function codeprofiler_start_profiler() {
 		// Used for authentication
 		if ( is_ssl() ) {
 			$cookie_auth = SECURE_AUTH_COOKIE;
-			$scheme      = 'secure_auth';
+			$scheme = 'secure_auth';
 		} else {
 			$cookie_auth = AUTH_COOKIE;
-			$scheme      = 'auth';
+			$scheme = 'auth';
 		}
 
 		// Retrieve the user name (since 1.4.3)
@@ -266,15 +297,23 @@ function codeprofiler_start_profiler() {
 				code_profiler_log_error( $msg );
 				code_profiler_wp_send_json( $response );
 			}
-			$cp_options['mem_username']					= strtolower( $username );
-			$headers['cookies'][ $cookie_auth ]			= wp_generate_auth_cookie( $user_object->ID, time() + 180, $scheme );
+			$cp_options['mem_username'] = strtolower( $username );
+			$headers['cookies'][ $cookie_auth ] = wp_generate_auth_cookie(
+				$user_object->ID,
+				time() + 180,
+				$scheme
+			);
 			if ( empty( $headers['cookies'][ $cookie_auth ] ) ) {
 				$msg = esc_html__('Unable to create the authentication cookie', 'code-profiler');
 				code_profiler_log_error( $msg );
 				$response['message'] = $msg;
 				code_profiler_wp_send_json( $response );
 			}
-			$headers['cookies'][ LOGGED_IN_COOKIE ]	= wp_generate_auth_cookie( $user_object->ID, time() + 180, 'logged_in');
+			$headers['cookies'][ LOGGED_IN_COOKIE ] = wp_generate_auth_cookie(
+				$user_object->ID,
+				time() + 180,
+				'logged_in'
+			);
 			if ( empty( $headers['cookies'][ LOGGED_IN_COOKIE ] ) ) {
 				$msg = esc_html__('Unable to create the "logged_in" cookie', 'code-profiler');
 				code_profiler_log_error( $msg );
@@ -283,15 +322,23 @@ function codeprofiler_start_profiler() {
 			}
 		// WP CLI
 		} else {
-			$id 													= get_current_user_id();
-			$headers['cookies'][ $cookie_auth ]			= wp_generate_auth_cookie( $id, time() + 180, $scheme );
+			$id = get_current_user_id();
+			$headers['cookies'][ $cookie_auth ] = wp_generate_auth_cookie(
+				$id,
+				time() + 180,
+				$scheme
+			);
 			if ( empty( $headers['cookies'][ $cookie_auth ] ) ) {
 				$msg = esc_html__('Unable to create the authentication cookie', 'code-profiler');
 				code_profiler_log_error( $msg );
 				$response['message'] = $msg;
 				code_profiler_wp_send_json( $response );
 			}
-			$headers['cookies'][ LOGGED_IN_COOKIE ]	= wp_generate_auth_cookie( $id, time() + 180, 'logged_in');
+			$headers['cookies'][ LOGGED_IN_COOKIE ] = wp_generate_auth_cookie(
+				$id,
+				time() + 180,
+				'logged_in'
+			);
 			if ( empty( $headers['cookies'][ LOGGED_IN_COOKIE ] ) ) {
 				$msg = esc_html__('Unable to create the "logged_in" cookie', 'code-profiler');
 				code_profiler_log_error( $msg );
@@ -299,10 +346,10 @@ function codeprofiler_start_profiler() {
 				code_profiler_wp_send_json( $response );
 			}
 		}
-		$session_id 											= session_id();
+		$session_id = session_id();
 		if ( $session_id !== false ) {
-			$session_name 										= session_name();
-			$headers['cookies'][ $session_name ]		= $session_id;
+			$session_name = session_name();
+			$headers['cookies'][ $session_name ] = $session_id;
 		}
 	}
 
@@ -315,33 +362,56 @@ function codeprofiler_start_profiler() {
 
 	// GET or POST method
 	if (! empty( $_POST['method'] ) && $_POST['method'] == 'post') {
-		$safe_method					= 'wp_safe_remote_post';
-		$cp_options['mem_method']	= 'post';
+		$safe_method = 'wp_safe_remote_post';
+		$cp_options['mem_method'] = 'post';
+
+		// Content-type
+		$content_type = [
+			1 => 'application/x-www-form-urlencoded',
+			2 => 'application/json'
+		];
+		if ( empty( $_POST['content_type'] ) ||
+			! in_array( $_POST['content_type'], [ 1, 2 ] ) ) {
+
+			$cp_options['mem_content_type'] = 1;
+		} else {
+			$cp_options['mem_content_type'] = (int) $_POST['content_type'];
+		}
+		$headers['headers']['content-type'] = $content_type[ $cp_options['mem_content_type'] ];
 
 		// Optional POST payload
 		if (! empty( $_POST['payload'] ) ) {
+			$_payload = trim( stripslashes( $_POST['payload'] ) );
 
 			code_profiler_log_debug(
 				esc_html__('Building POST payload', 'code-profiler')
 			);
 
-			$payload_array = explode( PHP_EOL, trim( stripslashes( $_POST['payload'] ) ) );
-			foreach( $payload_array as $item ) {
-				$payload = explode('=', trim( $item ), 2 );
-				if ( isset( $payload[1] ) ) {
-					$payload[0] = trim( $payload[0] );
-					$payload[1] = trim( $payload[1] );
-					$headers['body'][ $payload[0] ] = $payload[1];
+			// application/x-www-form-urlencoded
+			if ( $cp_options['mem_content_type'] == 1 ) {
+				$payload_array = explode( PHP_EOL, $_payload );
+				foreach( $payload_array as $item ) {
+					$payload = explode('=', trim( $item ), 2 );
+					if ( isset( $payload[1] ) ) {
+						$payload[0] = trim( $payload[0] );
+						$payload[1] = trim( $payload[1] );
+						$headers['body'][ $payload[0] ] = $payload[1];
+					}
 				}
+			} else {
+
+				$headers['body'] = $_payload;
 			}
-			$cp_options['payload']		= json_encode( $_POST['payload'] );
+			$cp_options['payload'] = json_encode( $_payload );
+
 		} else {
 			// POST request without a payload
 			unset( $cp_options['payload'] );
 		}
+
 	} else {
-		$safe_method					= 'wp_safe_remote_get';
-		$cp_options['mem_method']	= 'get';
+		$safe_method = 'wp_safe_remote_get';
+		$cp_options['mem_method'] = 'get';
 	}
 
 	// Optional user-defined cookies
@@ -394,15 +464,28 @@ function codeprofiler_start_profiler() {
 	// HTTP status code
 	if (! empty( $cp_options['http_response'] ) ) {
 		if ( preg_match( "/{$cp_options['http_response']}/", $res['response']['code'] ) ) {
-			$msg = esc_html__('The website returned the following HTTP status code: %s %s.', 'code-profiler').
-					' '.
-					esc_html__('By default, the profiler will always abort and throw an error if the server did not return a 200 HTTP status code. You can change that behaviour in the Settings section if the page you are profiling needs to return a different code (3xx, 4xx or 5xx).', 'code-profiler');
+			$log = esc_html__(
+				'The website returned the following HTTP status code: %s %s.', 'code-profiler'
+			);
+			if ( $res['response']['code'] >= 500 ) {
+				$msg = $log .' '. esc_html__(
+					'You may find more details about this error in your PHP error log.',
+					'code-profiler'
+				);
+			} else {
+				$msg = $log .' '. esc_html__('By default, the profiler will always abort and throw an error '.
+				'if the server did not return a 200 HTTP status code. You can change that behaviour in '.
+				'the Settings section if the page you are profiling needs to return a different '.
+				'code (3xx, 4xx or 5xx).', 'code-profiler');
+			}
 			$response['message'] = sprintf(
 				$msg,
 				(int) $res['response']['code'],
-				esc_html( $res['response']['message'] )
+				$res['response']['message']
 			);
-			code_profiler_log_error( sprintf( $msg, $res['response']['code'], $res['response']['message'] ) );
+			code_profiler_log_error(
+				sprintf( $log, $res['response']['code'], $res['response']['message'] )
+			);
 			code_profiler_wp_send_json( $response );
 		}
 	}
@@ -439,7 +522,7 @@ function codeprofiler_start_profiler() {
 
 }
 
-// =====================================================================
+// ===================================================================== 2023-11-17
 
 add_action('wp_ajax_codeprofiler_prepare_report', 'codeprofiler_prepare_report');
 
@@ -469,8 +552,11 @@ function codeprofiler_prepare_report() {
 	);
 
 	// Verify the security nonce
-	if ( empty( $_POST['cp_nonce'] ) || ! wp_verify_nonce( $_POST['cp_nonce'], 'start_profiler_nonce') ) {
-		$msg = esc_html__('Missing or wrong security nonce. Reload the page and try again', 'code-profiler');
+	if ( empty( $_POST['cp_nonce'] ) ||
+		! wp_verify_nonce( $_POST['cp_nonce'], 'start_profiler_nonce') ) {
+
+		$msg = esc_html__('Missing or wrong security nonce. Reload the page and try again',
+			'code-profiler');
 		$response['message'] = $msg;
 		code_profiler_log_error( $msg );
 		code_profiler_wp_send_json( $response );
@@ -509,7 +595,7 @@ function codeprofiler_prepare_report() {
 
 	// Take a 1s break so that we can spot any potential error
 	// in the backend before AJAX refresh the page
-	usleep(1000000);
+	usleep( 1000000 );
 
 	// Clear hash
 	$cp_options = get_option('code-profiler');
@@ -536,7 +622,7 @@ function codeprofiler_prepare_report() {
 
 }
 
-// =====================================================================
+// ===================================================================== 2023-11-17
 // Rename a profile.
 
 add_action('wp_ajax_codeprofiler_rename', 'codeprofiler_rename');
@@ -549,13 +635,17 @@ function codeprofiler_rename() {
 
 	// Admin/Superadmin only
 	if (! is_super_admin() ) {
-		$response['message'] = esc_html__('You are not allowed to performed this action', 'code-profiler');
+		$response['message'] = esc_html__(
+			'You are not allowed to performed this action', 'code-profiler'
+		);
 		wp_send_json( $response );
 	}
 
 	// Verify the security nonce
 	if ( empty( $_POST['cp_nonce'] ) || ! wp_verify_nonce( $_POST['cp_nonce'], 'rename-profile') ) {
-		$response['message'] = esc_html__('Missing or wrong security nonce. Reload the page and try again', 'code-profiler');
+		$response['message'] = esc_html__(
+			'Missing or wrong security nonce. Reload the page and try again', 'code-profiler'
+		);
 		wp_send_json( $response );
 	}
 
@@ -582,7 +672,9 @@ function codeprofiler_rename() {
 	if ( is_array( $glob ) ) {
 		foreach( $glob as $path ) {
 			// preg_quote is needed for Windows servers because ABSPATH will contain backslashes
-			if ( preg_match('`^'. preg_quote( CODE_PROFILER_UPLOAD_DIR ) .'/(\d{10}\.\d{4})\..+?\.([a-z]+?\.profile)$`', $path, $match ) ) {
+			if ( preg_match('`^'. preg_quote( CODE_PROFILER_UPLOAD_DIR ) .
+				'/(\d{10}\.\d{4})\..+?\.([a-z]+?\.profile)$`', $path, $match ) ) {
+
 				rename( $path, CODE_PROFILER_UPLOAD_DIR . "/{$match[1]}.$new_name.{$match[2]}" );
 			}
 		}

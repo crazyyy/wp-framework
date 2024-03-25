@@ -1,6 +1,6 @@
 <?php
 
-namespace WBCR\Factory_466\Entities;
+namespace WBCR\Factory_473\Entities;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,6 +18,8 @@ class Paths {
 	public $main_file;
 	public $relative;
 	public $url;
+	public $basename;
+	public $migrations;
 
 	protected $plugin_path;
 
@@ -27,7 +29,7 @@ class Paths {
 		$this->main_file  = $plugin_file;
 		$this->absolute   = dirname( $plugin_file );
 		$this->basename   = plugin_basename( $plugin_file );
-		$this->url        = plugins_url( null, $plugin_file );
+		$this->url        = plugins_url( '', $plugin_file );
 		$this->migrations = $this->absolute . '/migrations';
 	}
 }

@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class CSS extends Base
 {
@@ -19,6 +19,7 @@ class CSS extends Base
 
 	protected $_summary;
 	private $_queue;
+	private $_endts;
 
 	/**
 	 * Init
@@ -82,7 +83,7 @@ class CSS extends Base
 		}
 
 		$sep_uri = $this->conf(self::O_OPTM_CCSS_SEP_URI);
-		if ($sep_uri && $hit = Utility::str_hit_array($request_url, $sep_uri)) {
+		if ($sep_uri && ($hit = Utility::str_hit_array($request_url, $sep_uri))) {
 			Debug2::debug('[CCSS] Separate CCSS due to separate URI setting: ' . $hit);
 			return $request_url;
 		}
@@ -127,7 +128,6 @@ class CSS extends Base
 
 		$ua = !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-
 		// Store it to prepare for cron
 		Core::comment('QUIC.cloud CCSS in queue');
 		$this->_queue = $this->load_queue('ccss');
@@ -139,16 +139,16 @@ class CSS extends Base
 
 		$queue_k = (strlen($vary) > 32 ? md5($vary) : $vary) . ' ' . $url_tag;
 		$this->_queue[$queue_k] = array(
-			'url'			=> apply_filters('litespeed_ccss_url', $request_url),
-			'user_agent'	=> substr($ua, 0, 200),
-			'is_mobile'		=> $this->_separate_mobile(),
-			'is_webp'		=> $this->cls('Media')->webp_support() ? 1 : 0,
-			'uid'			=> $uid,
-			'vary'			=> $vary,
-			'url_tag'		=> $url_tag,
+			'url' => apply_filters('litespeed_ccss_url', $request_url),
+			'user_agent' => substr($ua, 0, 200),
+			'is_mobile' => $this->_separate_mobile(),
+			'is_webp' => $this->cls('Media')->webp_support() ? 1 : 0,
+			'uid' => $uid,
+			'vary' => $vary,
+			'url_tag' => $url_tag,
 		); // Current UA will be used to request
 		$this->save_queue('ccss', $this->_queue);
-		self::debug('Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary  . ' [uid] ' . $uid);
+		self::debug('Added queue_ccss [url_tag] ' . $url_tag . ' [UA] ' . $ua . ' [vary] ' . $vary . ' [uid] ' . $uid);
 
 		// Prepare cache tag for later purge
 		Tag::add('CCSS.' . md5($queue_k));
@@ -206,9 +206,20 @@ class CSS extends Base
 		}
 
 		$i = 0;
+		$timeoutLimit = ini_get('max_execution_time');
+		$this->_endts = time() + $timeoutLimit;
 		foreach ($this->_queue as $k => $v) {
 			if (!empty($v['_status'])) {
 				continue;
+			}
+
+			if (function_exists('set_time_limit')) {
+				$this->_endts += 120;
+				set_time_limit(120);
+			}
+			if ($this->_endts - time() < 10) {
+				// self::debug("🚨 End loop due to timeout limit reached " . $timeoutLimit . "s");
+				// return;
 			}
 
 			Debug2::debug('[' . $type_tag . '] cron job [tag] ' . $k . ' [url] ' . $v['url'] . ($v['is_mobile'] ? ' 📱 ' : '') . ' [UA] ' . $v['user_agent']);
@@ -226,7 +237,8 @@ class CSS extends Base
 
 			$i++;
 			$res = $this->_send_req($v['url'], $k, $v['uid'], $v['user_agent'], $v['vary'], $v['url_tag'], $type, $v['is_mobile'], $v['is_webp']);
-			if (!$res) { // Status is wrong, drop this this->_queue
+			if (!$res) {
+				// Status is wrong, drop this this->_queue
 				unset($this->_queue[$k]);
 				$this->save_queue($type, $this->_queue);
 
@@ -279,8 +291,6 @@ class CSS extends Base
 			return 'out_of_quota';
 		}
 
-		set_time_limit(120);
-
 		// Update css request status
 		$this->_summary['curr_request_' . $type] = time();
 		self::save_summary();
@@ -302,13 +312,13 @@ class CSS extends Base
 
 		// Generate critical css
 		$data = array(
-			'url'			=> $request_url,
-			'queue_k'		=> $queue_k,
-			'user_agent'	=> $user_agent,
-			'is_mobile'		=> $is_mobile ? 1 : 0, // todo:compatible w/ tablet
-			'is_webp'		=> $is_webp ? 1 : 0,
-			'html'			=> $html,
-			'css'			=> $css,
+			'url' => $request_url,
+			'queue_k' => $queue_k,
+			'user_agent' => $user_agent,
+			'is_mobile' => $is_mobile ? 1 : 0, // todo:compatible w/ tablet
+			'is_webp' => $is_webp ? 1 : 0,
+			'html' => $html,
+			'css' => $css,
 		);
 
 		self::debug('Generating: ', $data);
@@ -394,13 +404,13 @@ class CSS extends Base
 
 		// EOT;
 		$data = array(
-			'url'			=> $request_url,
-			'ccss_type'		=> 'test',
-			'user_agent'	=> $user_agent,
-			'is_mobile'		=> 0,
-			'html'			=> $html,
-			'css'			=> $css,
-			'type'			=> 'CCSS',
+			'url' => $request_url,
+			'ccss_type' => 'test',
+			'user_agent' => $user_agent,
+			'is_mobile' => 0,
+			'html' => $html,
+			'css' => $css,
+			'type' => 'CCSS',
 		);
 
 		// self::debug( 'Generating: ', $data );
@@ -420,7 +430,7 @@ class CSS extends Base
 		$html = $this->cls('Crawler')->self_curl(add_query_arg('LSCWP_CTRL', 'before_optm', $request_url), $user_agent, $uid);
 		Debug2::debug2('[CSS] self_curl result....', $html);
 
-		if ( ! $html ) {
+		if (!$html) {
 			return false;
 		}
 
@@ -473,7 +483,8 @@ class CSS extends Base
 				$debug_info = $attrs['href'];
 
 				// Load CSS content
-				if (!$dryrun) { // Dryrun will not load CSS but just drop them
+				if (!$dryrun) {
+					// Dryrun will not load CSS but just drop them
 					$con = $this->cls('Optimizer')->load_file($attrs['href']);
 					if (!$con) {
 						continue;
@@ -481,7 +492,8 @@ class CSS extends Base
 				} else {
 					$con = '';
 				}
-			} else { // Inline style
+			} else {
+				// Inline style
 				$attrs = Utility::parse_attr($match[2]);
 
 				if (!empty($attrs['media']) && strpos($attrs['media'], 'print') !== false) {

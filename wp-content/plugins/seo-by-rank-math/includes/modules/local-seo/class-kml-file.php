@@ -13,9 +13,9 @@ namespace RankMath\Local_Seo;
 use RankMath\Helper;
 use RankMath\Traits\Ajax;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
+use RankMath\Helpers\Str;
 use RankMath\Sitemap\Router;
-use MyThemeShop\Helpers\Param;
+use RankMath\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -146,7 +146,7 @@ class KML_File {
 		}
 
 		foreach ( $locations as $location ) {
-			$address   = ! empty( $location['address'] ) ? implode( ', ', array_filter( $location['address'] ) ) : '';
+			$address   = ! empty( $location['address'] ) ? Helper::replace_vars( implode( ', ', array_filter( $location['address'] ) ) ) : '';
 			$has_coord = ! empty( $location['coords']['latitude'] ) && ! empty( $location['coords']['longitude'] );
 
 			$kml .= $this->newline( '<Placemark>', 3 );
@@ -203,7 +203,6 @@ class KML_File {
 
 		if ( count( array_intersect( $local_seo_fields, $updated ) ) ) {
 			update_option( 'rank_math_local_seo_update', date( 'c' ) );
-			\RankMath\Sitemap\Sitemap::ping_google( Router::get_base_url( 'local-sitemap.xml' ) );
 		}
 	}
 

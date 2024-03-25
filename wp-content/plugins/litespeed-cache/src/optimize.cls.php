@@ -8,7 +8,7 @@
 
 namespace LiteSpeed;
 
-defined('WPINC') || exit;
+defined('WPINC') || exit();
 
 class Optimize extends Base
 {
@@ -34,6 +34,7 @@ class Optimize extends Base
 	private $cfg_ggfonts_rm;
 
 	private $dns_prefetch;
+	private $dns_preconnect;
 	private $_ggfonts_urls = array();
 	private $_ccss;
 	private $_ucss = false;
@@ -81,13 +82,18 @@ class Optimize extends Base
 			$this->cfg_js_defer = 2;
 		}
 		if ($this->cfg_js_defer == 2) {
-			add_filter('litespeed_optm_cssjs', function ($con, $file_type) {
-				if ($file_type == 'js') {
-					$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
-					// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
-				}
-				return $con;
-			}, 20, 2);
+			add_filter(
+				'litespeed_optm_cssjs',
+				function ($con, $file_type) {
+					if ($file_type == 'js') {
+						$con = str_replace('DOMContentLoaded', 'DOMContentLiteSpeedLoaded', $con);
+						// $con = str_replace( 'addEventListener("load"', 'addEventListener("litespeedLoad"', $con );
+					}
+					return $con;
+				},
+				20,
+				2
+			);
 		}
 
 		// To remove emoji from WP
@@ -127,6 +133,12 @@ class Optimize extends Base
 		 * @since 1.7.1
 		 */
 		$this->_dns_prefetch_init();
+
+		/**
+		 * Preconnect
+		 * @since 5.6.1
+		 */
+		$this->_dns_preconnect_init();
 
 		add_filter('litespeed_buffer_finalize', array($this, 'finalize'), 20);
 	}
@@ -282,7 +294,7 @@ class Optimize extends Base
 			if (!$this->_ccss) {
 				Debug2::debug('[Optm] ❌ CCSS set to OFF due to CCSS not generated yet');
 				$this->cfg_css_async = false;
-			} else if (strpos($this->_ccss, '<style id="litespeed-ccss" data-error') === 0) {
+			} elseif (strpos($this->_ccss, '<style id="litespeed-ccss" data-error') === 0) {
 				Debug2::debug('[Optm] ❌ CCSS set to OFF due to CCSS failed to generate');
 				$this->cfg_css_async = false;
 			}
@@ -292,14 +304,13 @@ class Optimize extends Base
 
 		// Parse css from content
 		$src_list = false;
-		if ($this->cfg_css_min || $this->cfg_css_comb || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async  || $this->_conf_css_font_display) {
+		if ($this->cfg_css_min || $this->cfg_css_comb || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async || $this->_conf_css_font_display) {
 			add_filter('litespeed_optimize_css_excludes', array($this->cls('Data'), 'load_css_exc'));
 			list($src_list, $html_list) = $this->_parse_css();
 		}
 
 		// css optimizer
 		if ($this->cfg_css_min || $this->cfg_css_comb) {
-
 			if ($src_list) {
 				// IF combine
 				if ($this->cfg_css_comb) {
@@ -321,7 +332,8 @@ class Optimize extends Base
 						if ($url) {
 							// Handle css async load
 							if ($this->cfg_css_async) {
-								$this->html_head .= '<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
+								$this->html_head .=
+									'<link rel="preload" data-asynced="1" data-optimized="2" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" href="' . $url . '" />'; // todo: How to use " in attr wrapper "
 							} else {
 								$this->html_head .= '<link data-optimized="2" rel="stylesheet" href="' . $url . '" />'; // use 2 as combined
 							}
@@ -400,7 +412,7 @@ class Optimize extends Base
 							if ($deferred) {
 								$this->content = str_replace($html_list[$k], $deferred, $this->content);
 							}
-						} else if ($this->cfg_js_delay_inc) {
+						} elseif ($this->cfg_js_delay_inc) {
 							$deferred = $this->_js_delay($html_list[$k], $src_info['src']);
 							if ($deferred) {
 								$this->content = str_replace($html_list[$k], $deferred, $this->content);
@@ -658,6 +670,19 @@ class Optimize extends Base
 	}
 
 	/**
+	 * Preconnect init
+	 *
+	 * @since 5.6.1
+	 */
+	private function _dns_preconnect_init()
+	{
+		$this->dns_preconnect = $this->conf(self::O_OPTM_DNS_PRECONNECT);
+		if ($this->dns_preconnect) {
+			add_action('litespeed_optm', array($this, 'dns_preconnect_output'));
+		}
+	}
+
+	/**
 	 * Prefetch DNS hook for WP
 	 *
 	 * @since 1.7.1
@@ -694,6 +719,21 @@ class Optimize extends Base
 	}
 
 	/**
+	 * Preconnect
+	 *
+	 * @since 5.6.1
+	 * @access public
+	 */
+	public function dns_preconnect_output()
+	{
+		foreach ($this->dns_preconnect as $v) {
+			if ($v) {
+				$this->html_head .= '<link rel="preconnect" href="' . $v . '" />';
+			}
+		}
+	}
+
+	/**
 	 * Run minify with src queue list
 	 *
 	 * @since  1.2.2
@@ -711,7 +751,7 @@ class Optimize extends Base
 			if (!empty($src_info['inl'])) {
 				if ($file_type == 'css') {
 					$code = Optimizer::minify_css($src_info['src']);
-					$can_webp && $code = $this->cls('Media')->replace_background_webp($code);
+					$can_webp && ($code = $this->cls('Media')->replace_background_webp($code));
 					$snippet = str_replace($src_info['src'], $code, $html_list[$key]);
 				} else {
 					// Inline defer JS
@@ -822,6 +862,10 @@ class Optimize extends Base
 		$excludes = apply_filters('litespeed_optimize_js_excludes', $this->conf(self::O_OPTM_JS_EXC));
 
 		$combine_ext_inl = $this->conf(self::O_OPTM_JS_COMB_EXT_INL);
+		if (!apply_filters('litespeed_optm_js_comb_ext_inl', true)) {
+			Debug2::debug2('[Optm] js_comb_ext_inl bypassed via litespeed_optm_js_comb_ext_inl filter');
+			$combine_ext_inl = false;
+		}
 
 		$src_list = array();
 		$html_list = array();
@@ -902,7 +946,8 @@ class Optimize extends Base
 				if ($match[1]) {
 					$this_src_arr['attrs'] = $match[1];
 				}
-			} else { // Compatibility to those who changed src to data-src already
+			} else {
+				// Compatibility to those who changed src to data-src already
 				Debug2::debug2('[Optm] No JS src or inline JS content');
 				continue;
 			}
@@ -935,7 +980,8 @@ class Optimize extends Base
 
 		$con = trim($con);
 		// Minify JS first
-		if (!$minified) { // && $this->cfg_js_defer !== 2
+		if (!$minified) {
+			// && $this->cfg_js_defer !== 2
 			$con = Optimizer::minify_js($con);
 		}
 
@@ -974,7 +1020,7 @@ class Optimize extends Base
 		}
 
 		foreach ($esi_placeholder_list as $esi_placeholder) {
-			$js_var = '__litespeed_var_' . (self::$_var_i++) . '__';
+			$js_var = '__litespeed_var_' . self::$_var_i++ . '__';
 			$con = str_replace($esi_placeholder, $js_var, $con);
 			$this->_var_preserve_js[] = $js_var . '=' . $esi_placeholder;
 		}
@@ -995,6 +1041,10 @@ class Optimize extends Base
 		$ucss_file_exc_inline = apply_filters('litespeed_optimize_ucss_file_exc_inline', $this->conf(self::O_OPTM_UCSS_FILE_EXC_INLINE));
 
 		$combine_ext_inl = $this->conf(self::O_OPTM_CSS_COMB_EXT_INL);
+		if (!apply_filters('litespeed_optm_css_comb_ext_inl', true)) {
+			Debug2::debug2('[Optm] css_comb_ext_inl bypassed via litespeed_optm_css_comb_ext_inl filter');
+			$combine_ext_inl = false;
+		}
 
 		$css_to_be_removed = apply_filters('litespeed_optm_css_to_be_removed', array());
 
@@ -1095,7 +1145,8 @@ class Optimize extends Base
 				}
 
 				$this_src_arr['src'] = $attrs['href'];
-			} else { // Inline style
+			} else {
+				// Inline style
 				if (!$combine_ext_inl) {
 					Debug2::debug2('[Optm] Bypassed due to inline');
 					continue;

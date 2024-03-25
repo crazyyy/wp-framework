@@ -4,9 +4,9 @@
 	<table class="smush-details">
 		<thead>
 			<tr>
-				<th><?php esc_html_e('Size name', 'wp-optimze'); ?></th>
-				<th><?php esc_html_e('Original', 'wp-optimze'); ?></th>
-				<th><?php esc_html_e('Compressed', 'wp-optimze'); ?></th>
+				<th><?php esc_html_e('Size name', 'wp-optimize'); ?></th>
+				<th><?php esc_html_e('Original', 'wp-optimize'); ?></th>
+				<th><?php esc_html_e('Compressed', 'wp-optimize'); ?></th>
 				<th></th>
 			</tr>
 		</thead>

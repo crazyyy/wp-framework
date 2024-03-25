@@ -2,6 +2,8 @@ var WP_Optimize_Cache = function () {
 
 	var $ = jQuery;
 	var send_command = wp_optimize.send_command;
+	var heartbeat = WP_Optimize_Heartbeat();
+	var heartbeat_agents = [];
 
 	var browser_cache_enable_btn = $('#wp_optimize_browser_cache_enable'),
 		purge_cache_btn = $('#wp-optimize-purge-cache'),
@@ -363,7 +365,6 @@ var WP_Optimize_Cache = function () {
 
 	var run_cache_preload_btn = $('#wp_optimize_run_cache_preload'),
 		cache_preload_status_el = $('#wp_optimize_preload_cache_status'),
-		check_status_interval = null,
 		enable_schedule_preloading = $('#enable_schedule_preload'),
 		preloader_schedule_type_select = $('#preload_schedule_type');
 
@@ -386,8 +387,11 @@ var WP_Optimize_Cache = function () {
 
 		if (is_running) {
 			btn.data('running', false);
-			clearInterval(check_status_interval);
-			check_status_interval = null;
+			
+			while(agent_id = heartbeat_agents.shift()) {
+				heartbeat.cancel_agent(agent_id);
+			}
+
 			send_command(
 				'cancel_cache_preload',
 				null,
@@ -418,7 +422,7 @@ var WP_Optimize_Cache = function () {
 					} catch (e) {
 					}
 
-					if (resp && resp.error) {
+					if (resp && resp.error && 'timeout' !== resp.statusText) {
 
 						var error_text = wpoptimize.error_unexpected_response;
 
@@ -453,16 +457,17 @@ var WP_Optimize_Cache = function () {
 	}
 
 	/**
-	 * Create interval action for update preloader status.
+	 * Create heartbeat agent action for update preloader status.
 	 *
 	 * @return void
 	 */
 	function run_update_cache_preload_status() {
-		if (check_status_interval) return;
+		var agent = heartbeat.add_agent({
+			command: 'get_cache_preload_status',
+			callback: update_cache_preload_status
+		});
 
-		check_status_interval = setInterval(function() {
-			update_cache_preload_status();
-		}, 5000);
+		if (null !== agent) heartbeat_agents.push(agent);
 	}
 
 	/**
@@ -470,20 +475,17 @@ var WP_Optimize_Cache = function () {
 	 *
 	 * @return void
 	 */
-	function update_cache_preload_status() {
-		send_command('get_cache_preload_status', null, function(response) {
-			if (response.done) {
-				run_cache_preload_btn.val(wpoptimize.run_now);
-				run_cache_preload_btn.data('running', false);
-				clearInterval(check_status_interval);
-				check_status_interval = null;
-			} else {
-				run_cache_preload_btn.val(wpoptimize.cancel);
-				run_cache_preload_btn.data('running', true);
-			}
-			cache_preload_status_el.text(response.message);
-			update_cache_size_information(response);
-		});
+	function update_cache_preload_status(response) {
+		if (response.done) {
+			run_cache_preload_btn.val(wpoptimize.run_now);
+			run_cache_preload_btn.data('running', false);
+		} else {
+			run_cache_preload_btn.val(wpoptimize.cancel);
+			run_cache_preload_btn.data('running', true);
+			run_update_cache_preload_status();
+		}
+		cache_preload_status_el.text(response.message);
+		update_cache_size_information(response);
 	}
 
 	/**

@@ -46,8 +46,12 @@
 					$status = $plugins_status['status'];
 
 					echo '<br>';
-
-					echo ' <a href="'.esc_url("https://wordpress.org/plugins/{$plugin}/").'" target="_blank"><span style="font-size: 11px;">'.esc_html($plugin).'</a>';
+					
+					if ('sfwd-lms' === $plugin) {
+						$wp_optimize->wp_optimize_url('https://www.learndash.com/', '', '<span style="font-size: 11px;">LearnDash</span>');
+					} else {
+						$wp_optimize->wp_optimize_url('https://wordpress.org/plugins/'.$plugin.'/', '', '<span style="font-size: 11px;">'.esc_html($plugin).'</span>');
+					}
 
 					if (false == $status['installed']) {
 						echo ' <span style="font-size: 11px; color: #9B0000; font-weight: bold;">['.esc_html__('not installed', 'wp-optimize').']</span>';

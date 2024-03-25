@@ -56,7 +56,7 @@ class Controller_CAPTCHA {
 	 * @return float
 	 */
 	public function threshold() {
-		return Controller_Settings::shared()->get_float(Controller_Settings::OPTION_RECAPTCHA_THRESHOLD, 0.5);
+		return max(0.1, Controller_Settings::shared()->get_float(Controller_Settings::OPTION_RECAPTCHA_THRESHOLD, 0.5));
 	}
 
 	/**

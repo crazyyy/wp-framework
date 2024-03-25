@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Wordfence Security
-Plugin URI: http://www.wordfence.com/
+Plugin URI: https://www.wordfence.com/
 Description: Wordfence Security - Anti-virus, Firewall and Malware Scan
 Author: Wordfence
-Version: 7.10.3
-Author URI: http://www.wordfence.com/
+Version: 7.11.4
+Author URI: https://www.wordfence.com/
 Text Domain: wordfence
 Domain Path: /languages
 Network: true
@@ -38,8 +38,8 @@ if(defined('WP_INSTALLING') && WP_INSTALLING){
 if (!defined('ABSPATH')) {
 	exit;
 }
-define('WORDFENCE_VERSION', '7.10.3');
-define('WORDFENCE_BUILD_NUMBER', '1690810710');
+define('WORDFENCE_VERSION', '7.11.4');
+define('WORDFENCE_BUILD_NUMBER', '1710170544');
 define('WORDFENCE_BASENAME', function_exists('plugin_basename') ? plugin_basename(__FILE__) :
 	basename(dirname(__FILE__)) . '/' . basename(__FILE__));
 

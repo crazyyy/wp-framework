@@ -49,8 +49,8 @@
 		<div class="wpo-fieldgroup">
 			<fieldset>
 				<label for="exclude_js">
-					<?php esc_html_e('Any JavaScript files that match the paths below will be completely ignored', 'wp-optmize'); ?>
-					<span tabindex="0" data-tooltip="<?php esc_attr_e('Use this if you are having issues with a certain JavaScript file.', 'wp-optmize'); ?> <?php esc_attr_e('Any file present here will be loaded normally by WordPress', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
+					<?php esc_html_e('Any JavaScript files that match the paths below will be completely ignored', 'wp-optimize'); ?>
+					<span tabindex="0" data-tooltip="<?php esc_attr_e('Use this if you are having issues with a certain JavaScript file.', 'wp-optimize'); ?> <?php esc_attr_e('Any file present here will be loaded normally by WordPress', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 				</label>
 				<textarea
 					name="exclude_js"
@@ -80,9 +80,9 @@
 				</h4>
 				<div class="defer-js-settings">
 					<label for="async_js">
-						<?php esc_html_e('Any JavaScript files that match the paths below will be loaded asynchronously.', 'wp-optmize'); ?>
+						<?php esc_html_e('Any JavaScript files that match the paths below will be loaded asynchronously.', 'wp-optimize'); ?>
 						<br>
-						<?php esc_html_e('Use this if you have a completely independent script', 'wp-optmize'); ?>
+						<?php esc_html_e('Use this if you have a completely independent script', 'wp-optimize'); ?>
 						<?php
 							$message = __('Independent scripts are for example \'analytics\' or \'pixel\' scripts.', 'wp-optimize');
 							$message .= ' ';

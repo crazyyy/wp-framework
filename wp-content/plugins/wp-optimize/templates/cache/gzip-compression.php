@@ -9,7 +9,7 @@
 			esc_html_e("This option improves the performance of your website and decreases its loading time.", 'wp-optimize');
 			esc_html_e('When a visitor makes a request, the server compresses the requested resource before sending it leading to smaller file sizes and faster loading.', 'wp-optimize');
 			?>
-			<?php printf('<a href="%s" target="_blank">%s</a>', $info_link, __('Follow this link to get more information about Gzip compression.', 'wp-optimize')); ?>
+			<?php printf('<a href="%s" target="_blank">%s</a>', esc_url($info_link), esc_html__('Follow this link to get more information about Gzip compression.', 'wp-optimize')); ?>
 		</span>
 	</p>
 

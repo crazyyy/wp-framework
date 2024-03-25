@@ -36,11 +36,10 @@ class WP_Optimize_Minify_Commands {
 		WP_Optimize_Minify_Cache_Functions::cache_increment();
 		$others = WP_Optimize_Minify_Cache_Functions::purge_others();
 		$files = $this->get_minify_cached_files();
-		$message = array(
-			__('The minification cache was deleted.', 'wp-optimize'),
-			strip_tags($others, '<strong>'),
-		);
-		$message = array_filter($message);
+
+		$message = array_merge(array(esc_html__('The minification cache was deleted.', 'wp-optimize')), $others);
+		$message = WP_Optimize_Minify_Functions::apply_strip_tags_for_messages_array($message, '');
+		
 		return array(
 			'success' => true,
 			'message' => implode("\n", $message),
@@ -90,16 +89,15 @@ class WP_Optimize_Minify_Commands {
 		$others = WP_Optimize_Minify_Cache_Functions::purge_others();
 		$files = $this->get_minify_cached_files();
 
-		$notice = array(
-			__('All caches from WP-Optimize Minify have been purged.', 'wp-optimize'),
-			strip_tags($others, '<strong>'),
-		);
-		$notice = array_filter($notice);
+		$notice = array_merge(array(esc_html__('All caches from WP-Optimize Minify have been purged.', 'wp-optimize')), $others);
+		
+		$notice = WP_Optimize_Minify_Functions::apply_strip_tags_for_messages_array($notice, '');
+
 		$notice = json_encode($notice); // encode
 
 		return array(
 			'result' => 'caches cleared',
-			'others' => $others,
+			'others' => implode("\n", $others),
 			'state' => $state,
 			'message' => $notice,
 			'old' => $old,
@@ -252,7 +250,7 @@ class WP_Optimize_Minify_Commands {
 	/**
 	 * Run minify preload action.
 	 *
-	 * @return void|array - Doesn't return anything if run() is successfull (Run() prints a JSON object and closed browser connection) or an array if failed.
+	 * @return void|array - Doesn't return anything if run() is successful (Run() prints a JSON object and closed browser connection) or an array if failed.
 	 */
 	public function run_minify_preload() {
 		return WP_Optimize_Minify_Preloader::instance()->run('manual');
@@ -275,6 +273,59 @@ class WP_Optimize_Minify_Commands {
 	 */
 	public function get_minify_preload_status() {
 		return WP_Optimize_Minify_Preloader::instance()->get_status_info();
+	}
+
+	/**
+	 * Returns the combined json of all available meta.json files
+	 *
+	 * @return array
+	 */
+	public function get_minify_meta_files() {
+		$enabled = wp_optimize_minify_config()->get('enabled');
+		if (!$enabled) return array(
+			'success' => false,
+			'error' => __('Minify not enabled', 'wp-optimize'),
+		);
+		$combined_metas = array(
+			'meta_logs' => array()
+		);
+
+		// loop through wpo-minify cache directory and get the meta.json files, combine into a single json file
+		if (is_dir(WPO_CACHE_MIN_FILES_DIR) && is_writable(dirname(WPO_CACHE_MIN_FILES_DIR))) {
+			if ($handle = opendir(WPO_CACHE_MIN_FILES_DIR)) {
+				while (false !== ($d = readdir($handle))) {
+					if (0 === strcmp($d, '.') || 0 === strcmp($d, '..') || !is_numeric($d)) {
+						continue;
+					}
+					$cache_min_folder = WPO_CACHE_MIN_FILES_DIR.'/'.$d;
+					if ($cache_min_folder_handle = opendir($cache_min_folder)) {
+						while (false !== ($maybe_file = readdir($cache_min_folder_handle))) {
+							if (0 === strcmp($maybe_file, '.') || 0 === strcmp($maybe_file, '..')) {
+								continue;
+							}
+							$maybe_file_path = $cache_min_folder . '/' . $maybe_file;
+							if (is_file($maybe_file_path) && 'meta.json' === basename($maybe_file_path)) {
+								$combined_metas['meta_logs'][$d] = json_decode(file_get_contents($maybe_file_path));
+							}
+						}
+						closedir($cache_min_folder_handle);
+					}
+				}
+				closedir($handle);
+			}
+		}
+
+		if (0 === count($combined_metas['meta_logs'])) {
+			return array(
+				'success' => false,
+				'error' => __('No file was found', 'wp-optimize'),
+			);
+		} else {
+			return array(
+				'success' => true,
+				'combined_metas' => $combined_metas
+			);
+		}
 	}
 
 	/**

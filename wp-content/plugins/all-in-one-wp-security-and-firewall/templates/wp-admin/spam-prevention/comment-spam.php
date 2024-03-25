@@ -7,7 +7,9 @@
 		<div class="inside">
 			<div class="aio_blue_box">
 				<?php
-					echo '<p>'.__('A large portion of WordPress blog comment spam is mainly produced by automated bots and not necessarily by humans.', 'all-in-one-wp-security-and-firewall').'<br>'.__('This feature will greatly minimize the useless and unnecessary traffic and load on your server resulting from spam comments.', 'all-in-one-wp-security-and-firewall').'<br>'.__('In other words, if the comment was not submitted by a human who physically submitted the comment on your site, the request will be discarded or marked as spam.', 'all-in-one-wp-security-and-firewall').'</p>';
+					$know_more_link = '<a target="_blank" href="https://aiosplugin.com/documentation/">'.__('link', 'all-in-one-wp-security-and-firewall').'</a>';
+					
+					echo '<p>'.__('A large portion of WordPress blog comment spam is produced by automated bots and rather than by humans.', 'all-in-one-wp-security-and-firewall').'<br>'.__('This feature will reduce the useless and unnecessary traffic and load on your server resulting from spam comments.', 'all-in-one-wp-security-and-firewall').'<br>'.__('In other words, if the comment was not submitted by a human, the request will be discarded or marked as spam.', 'all-in-one-wp-security-and-firewall').'<br>'.__('This feature uses cookies and JavaScript.', 'all-in-one-wp-security-and-firewall').' '.__('If your visitors have either cookies or JavaScript disabled, their comments will automatically be discarded or marked as spam.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Follow this %s to know more.', 'all-in-one-wp-security-and-firewall'), $know_more_link) .'</p>';
 				?>
 			</div>
 			<?php
@@ -18,16 +20,17 @@
 				<tr valign="top">
 					<th scope="row"><?php _e('Detect spambots posting comments', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-						<input id="aiowps_enable_spambot_detecting" name="aiowps_enable_spambot_detecting" type="checkbox" <?php checked($aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting'));?> value="1">
-						<label for="aiowps_enable_spambot_detcting" class="description"><?php _e('Check this if you want to detect comments originating from spambots.', 'all-in-one-wp-security-and-firewall'); ?></label>
-						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-						<div class="aiowps_more_info_body">
-								<?php
-								echo '<p class="description">'.__('This feature will detect comment attempts which originate from spambots.', 'all-in-one-wp-security-and-firewall').'</p>';
-								echo '<p class="description">'.__('A legitimate comment is one which is submitted by a human who physically fills out the comment form and presses the submit button.', 'all-in-one-wp-security-and-firewall').'</p>';
-								echo '<p class="description">'.__('A comment submitted by a spambot is done by directly calling the wp-comments-post.php file.', 'all-in-one-wp-security-and-firewall').'</p>';
-								echo '<p class="description">'.__('This feature will detect these comments and either discard them completely or mark them as spam.', 'all-in-one-wp-security-and-firewall').'</p>';
-								?>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to detect comments originating from spambots.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_spambot_detecting', $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting')); ?>
+							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+							<div class="aiowps_more_info_body">
+									<?php
+									echo '<p class="description">'.__('This feature will detect comment attempts which originate from spambots.', 'all-in-one-wp-security-and-firewall').'</p>';
+									echo '<p class="description">'.__('A legitimate comment is one which is submitted by a human who physically fills out the comment form and presses the submit button.', 'all-in-one-wp-security-and-firewall').'</p>';
+									echo '<p class="description">'.__('A comment submitted by a spambot is done by directly calling the wp-comments-post.php file.', 'all-in-one-wp-security-and-firewall').'</p>';
+									echo '<p class="description">'.__('This feature will detect these comments and either discard them completely or mark them as spam.', 'all-in-one-wp-security-and-firewall').'</p>';
+									?>
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -53,22 +56,28 @@
 						<label for="aiowps_trash_spam_comments_after_days"><?php _e('Trash spam comments', 'all-in-one-wp-security-and-firewall'); ?>:</label>
 					</th>
 					<td>
-						<input name="aiowps_enable_trash_spam_comments" id="aiowps_enable_trash_spam_comments" type="checkbox" <?php checked($aio_wp_security->configs->get_value('aiowps_enable_trash_spam_comments'), 1); ?> value="1">
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox('', 'aiowps_enable_trash_spam_comments', '1' == $aio_wp_security->configs->get_value('aiowps_enable_trash_spam_comments')); ?>
 						<?php
-							$disbled = '';
-							if (!$aio_wp_security->configs->get_value('aiowps_enable_trash_spam_comments')) $disbled = "disabled";
+							$disabled = '';
+							if (!$aio_wp_security->configs->get_value('aiowps_enable_trash_spam_comments')) $disabled = "disabled";
 							echo '<label for="aiowps_enable_trash_spam_comments" class="description">';
 							printf(
 								__('Move spam comments to trash after %s days.', 'all-in-one-wp-security-and-firewall'),
-								'</label><input type="number" min="1" max="99" name="aiowps_trash_spam_comments_after_days" value="'.$aio_wp_security->configs->get_value('aiowps_trash_spam_comments_after_days').'" '.$disbled.'><label for="aiowps_enable_trash_spam_comments">'
+								'</label><input type="number" min="1" max="99" name="aiowps_trash_spam_comments_after_days" value="'.$aio_wp_security->configs->get_value('aiowps_trash_spam_comments_after_days').'" '.$disabled.'><label for="aiowps_enable_trash_spam_comments">'
 							);
 							echo '</label>';
 						?>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 							<?php
-								echo '<p class="description">'.__('Enble this feature in order to move the spam comments to trash after given number of days.', 'all-in-one-wp-security-and-firewall').'</p>';
+								echo '<p class="description">'.__('Enable this feature in order to move the spam comments to trash after given number of days.', 'all-in-one-wp-security-and-firewall').'</p>';
 							?>
+							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+							<div class="aiowps_more_info_body">
+								<?php
+									echo '<p class="description">'.__('Enable this feature in order to move the spam comments to trash after the given number of days.', 'all-in-one-wp-security-and-firewall').'</p>';
+								?>
+							</div>
 						</div>
 					</td>
 				</tr>

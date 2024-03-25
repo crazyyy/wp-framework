@@ -20,9 +20,9 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms463_TextareaControl') ) {
+	if( !class_exists('Wbcr_FactoryForms469_TextareaControl') ) {
 
-		class Wbcr_FactoryForms463_TextareaControl extends Wbcr_FactoryForms463_Control {
+		class Wbcr_FactoryForms469_TextareaControl extends Wbcr_FactoryForms469_Control {
 
 			public $type = 'textarea';
 
@@ -78,7 +78,7 @@
 			public function html()
 			{
 				?>
-				<textarea <?php $this->attrs(); ?>><?php echo esc_textarea($this->getValue()); ?></textarea>
+				<textarea <?php $this->attrs(); ?>><?php echo esc_textarea(strval($this->getValue())); ?></textarea>
 			<?php
 			}
 		}

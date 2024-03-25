@@ -294,6 +294,7 @@ class UpdraftPlus_Dropbox_API {
             'query' => $query,
             'options' => array(
                 'path' => $path,
+                'filename_only' => true,
                 'max_results' => ($limit < 1) ? 1 : (($limit > 1000) ? 1000 : (int) $limit),
             ),
             'api_v2' => true,

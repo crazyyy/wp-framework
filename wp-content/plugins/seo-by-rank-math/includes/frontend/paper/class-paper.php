@@ -14,8 +14,8 @@ use RankMath\Post;
 use RankMath\Helper;
 use RankMath\Sitemap\Router;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Url;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Url;
 use RankMath\Helpers\Security;
 
 defined( 'ABSPATH' ) || exit;
@@ -315,14 +315,14 @@ class Paper {
 			return $this->keywords;
 		}
 
-		$this->keywords = $this->paper->keywords();
-
 		/**
 		 * Allows filtering of the meta keywords.
 		 *
 		 * @param array $keywords The meta keywords to be echoed.
 		 */
-		return $this->do_filter( 'frontend/keywords', $this->keywords );
+		$this->keywords = $this->do_filter( 'frontend/keywords', $this->paper->keywords() );
+
+		return $this->keywords;
 	}
 
 	/**

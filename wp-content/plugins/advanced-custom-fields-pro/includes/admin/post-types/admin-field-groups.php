@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
-
 	#[AllowDynamicProperties]
 	class ACF_Admin_Field_Groups extends ACF_Admin_Internal_Post_Type_List {
 
@@ -35,10 +34,7 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 		/**
 		 * Constructor.
 		 *
-		 * @date    5/03/2014
 		 * @since   5.0.0
-		 *
-		 * @return  void
 		 */
 		public function __construct() {
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 7 );
@@ -50,12 +46,10 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 
 		/**
 		 * Renders HTML for the ACF PRO features upgrade notice.
-		 *
-		 * @return void
 		 */
 		public function include_pro_features() {
 			// Bail if on PRO.
-			if ( acf_is_pro() ) {
+			if ( acf_is_pro() && acf_pro_is_license_active() ) {
 				return;
 			}
 
@@ -81,14 +75,11 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 		/**
 		 * Redirects users from ACF 4.0 admin page.
 		 *
-		 * @date    17/9/18
-		 * @since   5.7.6
-		 *
-		 * @return void
+		 * @since 5.7.6
 		 */
 		public function handle_redirection() {
 			if ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'acf' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				wp_redirect( $this->get_admin_url() );
+				wp_safe_redirect( $this->get_admin_url() );
 				exit;
 			}
 		}
@@ -301,7 +292,7 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 		 * @date    8/01/2014
 		 * @since   5.0.0
 		 *
-		 * @param   int $post_id The post ID.
+		 * @param   integer $post_id The post ID.
 		 * @return  void
 		 */
 		public function trashed_post( $post_id ) {
@@ -316,7 +307,7 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 		 * @date    8/01/2014
 		 * @since   5.0.0
 		 *
-		 * @param   int $post_id The post ID.
+		 * @param   integer $post_id The post ID.
 		 * @return  void
 		 */
 		public function untrashed_post( $post_id ) {
@@ -331,7 +322,7 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 		 * @date    8/01/2014
 		 * @since   5.0.0
 		 *
-		 * @param   int $post_id The post ID.
+		 * @param   integer $post_id The post ID.
 		 * @return  void
 		 */
 		public function deleted_post( $post_id ) {
@@ -345,8 +336,8 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 		 *
 		 * @since 6.1
 		 *
-		 * @param string $action The action being performed.
-		 * @param int    $count  The number of items the action was performed on.
+		 * @param string  $action The action being performed.
+		 * @param integer $count  The number of items the action was performed on.
 		 * @return string
 		 */
 		public function get_action_notice_text( $action, $count = 1 ) {
@@ -386,10 +377,8 @@ if ( ! class_exists( 'ACF_Admin_Field_Groups' ) ) :
 
 			return $text;
 		}
-
 	}
 
 	// Instantiate.
 	acf_new_instance( 'ACF_Admin_Field_Groups' );
-
 endif; // Class exists check.

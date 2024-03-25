@@ -15,7 +15,6 @@ class OPCache {
 	public $statistics = array();
 
 	public function __construct() {
-
 	}
 
 	public static function instance() : OPCache {
@@ -39,17 +38,17 @@ class OPCache {
 				$_status = opcache_get_status();
 				$_config = opcache_get_configuration();
 
-				$this->version = $_config[ 'version' ][ 'version' ] ?? 'NA';
-				$this->enabled = $_status[ 'opcache_enabled' ] ?? false;
+				$this->version = $_config['version']['version'] ?? 'NA';
+				$this->enabled = $_status['opcache_enabled'] ?? false;
 
-				foreach ( $_config[ 'directives' ] as $key => $value ) {
+				foreach ( $_config['directives'] as $key => $value ) {
 					$name = substr( $key, 8 );
 
 					$this->settings[ $name ] = $value;
 				}
 
-				$this->memory     = $_status[ 'memory_usage' ] ?? 0;
-				$this->statistics = $_status[ 'opcache_statistics' ] ?? 0;
+				$this->memory     = $_status['memory_usage'] ?? 0;
+				$this->statistics = $_status['opcache_statistics'] ?? 0;
 			}
 		}
 	}

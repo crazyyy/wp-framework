@@ -8,8 +8,37 @@
 
 use RankMath\Helper;
 use RankMath\KB;
+use RankMath\Admin\Admin_Helper;
 
 defined( 'ABSPATH' ) || exit;
+
+if ( ! Helper::is_site_connected() ) {
+	$cmb->add_field(
+		[
+			'id'   => 'rank_math_content_ai_settings',
+			'type' => 'raw',
+			'content' => '<div id="setting-panel-content-ai" class="rank-math-tab rank-math-options-panel-content exclude">
+				<div class="wp-core-ui rank-math-ui connect-wrap">
+					<a href="'. Admin_Helper::get_activate_url( admin_url( 'admin.php??page=rank-math-options-general#setting-panel-content-ai' ) ) .'" class="button button-primary button-connect button-animated" name="rank_math_activate">'.
+						esc_html__( 'Connect Your Rank Math Account', 'rank-math' ).
+					'</a>
+				</div>
+				<div id="rank-math-pro-cta" class="content-ai-settings">
+					<div class="rank-math-cta-box width-100 no-shadow no-padding no-border">
+						<h3>'. esc_html__( 'Benefits of Connecting Rank Math Account', 'rank-math' ) .'</h3>
+						<ul>
+							<li>' . esc_html__( 'Gain Access to 40+ Advanced AI Tools.', 'rank-math' ) . '</li>
+							<li>' . esc_html__( 'Experience the Revolutionary AI-Powered Content Editor.', 'rank-math' ) . '</li>
+							<li>' . esc_html__( 'Engage with RankBot, Our AI Chatbot, For SEO Advice.', 'rank-math' ) . '</li>
+							<li>' . esc_html__( 'Escape the Writer\'s Block Using AI to Write Inside WordPress.', 'rank-math' ) . '</li>
+						</ul>
+					</div>
+				</div>
+			</div>',
+		]
+	);
+	return;
+}
 
 $cmb->add_field(
 	[
@@ -127,7 +156,8 @@ $cmb->add_field(
 		'default'    => Helper::content_ai_default_language(),
 		'attributes' => ( 'data-s2' ),
 		'options'    => [
-			'English'    => esc_html__( 'English', 'rank-math' ),
+			'US English'    => esc_html__( 'US English', 'rank-math' ),
+			'UK English' => esc_html__( 'UK English', 'rank-math' ),
 			'Bulgarian'  => esc_html__( 'Bulgarian', 'rank-math' ),
 			'Chinese'    => esc_html__( 'Chinese', 'rank-math' ),
 			'Czech'      => esc_html__( 'Czech', 'rank-math' ),
@@ -159,16 +189,6 @@ $cmb->add_field(
 	],
 );
 
-$cmb->add_field(
-	[
-		'id'      => 'cotnent_ai_enable_grammarly',
-		'type'    => 'toggle',
-		'name'    => esc_html__( 'Enable Grammarly', 'rank-math' ),
-		'desc'    => esc_html__( 'Enable this feature to fix the grammatical errors on the fly while content is being written/generated.', 'rank-math' ),
-		'default' => 'off',
-	],
-);
-
 $post_types = Helper::choices_post_types();
 if ( isset( $post_types['attachment'] ) ) {
 	unset( $post_types['attachment'] );
@@ -192,12 +212,13 @@ if (  Helper::is_site_connected() && false !== $credits  ) {
 		<span>' . esc_html__( 'Click to refresh the available credits.', 'rank-math' ) . '</span>
 	</a>';
 
+	$refresh_date = Helper::get_content_ai_refresh_date();
 	$cmb->add_field(
 		[
 			'id'      => 'content_ai_credits',
 			'type'    => 'raw',
 			/* translators: 1. Credits left 2. Buy more credits link */
-			'content' => '<div class="cmb-row buy-more-credits rank-math-exclude-from-search">' . $update_credits . sprintf( esc_html__( '%1$s credits left this month. Credits will renew next month or you can upgrade to get more credits %2$s.', 'rank-math' ), '<strong>' . $credits . '</strong>', '<a href="' . KB::get( 'content-ai-pricing-tables', 'Buy CAI Credits Options Panel' ) . '" target="_blank">' . esc_html__( 'here', 'rank-math' ) . '</a>' ) . '</div>',
+			'content' => '<div class="cmb-row buy-more-credits rank-math-exclude-from-search">' . $update_credits . sprintf( esc_html__( '%1$s credits left this month. Credits will renew on %2$s or you can upgrade to get more credits %3$s.', 'rank-math' ), '<strong>' . $credits . '</strong>', wp_date( 'Y-m-d g:i a', $refresh_date ), '<a href="' . KB::get( 'content-ai-pricing-tables', 'Buy CAI Credits Options Panel' ) . '" target="_blank">' . esc_html__( 'here', 'rank-math' ) . '</a>' ) . '</div>',
 		]
 	);
 }

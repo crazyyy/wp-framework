@@ -11,9 +11,9 @@
  * Plugin Name: Index WP MySQL For Speed
  * Plugin URI:  https://plumislandmedia.org/index-wp-mysql-for-speed/
  * Description: Speed up your WordPress site by adding high-performance keys (database indexes) to your MySQL database tables.
- * Version:           1.4.14
- * Requires at least: 5.2
- * Tested up to:      6.3
+ * Version:           1.4.16
+ * Requires at least: 4.2
+ * Tested up to:      6.5
  * Requires PHP:      5.6
  * Author:       OllieJones, rjasdfiii
  * Author URI:   https://github.com/OllieJones
@@ -28,7 +28,7 @@
  */
 
 /** current version number  */
-define( 'index_wp_mysql_for_speed_VERSION_NUM', '1.4.14' );
+define( 'index_wp_mysql_for_speed_VERSION_NUM', '1.4.16' );
 define( 'index_mysql_for_speed_major_version', 1.4 );
 define( 'index_mysql_for_speed_inception_major_version', 1.3 );
 define( 'index_mysql_for_speed_inception_wp_version', '5.8.3' );
@@ -41,8 +41,8 @@ define( 'index_wp_mysql_for_speed_stats_endpoint', 'https://upload.plumislandmed
 define( 'index_wp_mysql_for_speed_monitor', 'imfsQueryMonitor' );
 define( 'index_wp_mysql_for_speed_querytag', '*imfs-query-tag*' );
 /* version 32814 was the advent of utfmb4 */
-define( 'index_wp_mysql_for_speed_first_compatible_db_version', 32814 );
-define( 'index_wp_mysql_for_speed_last_compatible_db_version', 0 ); /*tested up to 53932 */
+define( 'index_wp_mysql_for_speed_first_compatible_db_version', 31536 );
+define( 'index_wp_mysql_for_speed_last_compatible_db_version', 0 ); /*tested up to 56657 */
 
 define( 'index_wp_mysql_for_speed_help_site', 'https://plumislandmedia.net/index-wp-mysql-for-speed/' );
 
@@ -87,7 +87,7 @@ function index_wp_mysql_for_speed_do_everything( ) {
 function index_wp_mysql_for_speed_nag() {
   global $wp_version, $wp_db_version;
   $result = false;
-  if ( ! wp_doing_ajax() ) {
+  if ( ! function_exists( 'wp_doing_ajax' ) || ! wp_doing_ajax() ) {
     $imfsPage       = get_option( 'ImfsPage' );
     $majorVersion   = ( $imfsPage !== false && isset( $imfsPage['majorVersion'] ) && is_numeric( $imfsPage['majorVersion'] ) )
       ? floatval( $imfsPage['majorVersion'] ) : index_mysql_for_speed_inception_major_version;
@@ -111,7 +111,7 @@ function index_wp_mysql_for_speed_nag() {
  */
 function index_wp_mysql_for_speed_plugin_updated() {
   global $wp_version, $wp_db_version;
-  if ( ! wp_doing_ajax() ) {
+  if ( ! function_exists( 'wp_doing_ajax' ) || ! wp_doing_ajax() ) {
     $imfsPage = get_option( 'ImfsPage' );
 
     $savedPluginVersion = ( $imfsPage !== false && isset( $imfsPage['plugin_version'] ) ) ? $imfsPage['plugin_version'] : '';
@@ -155,6 +155,23 @@ function index_wp_mysql_for_speed_monitor() {
 }
 
 function index_wp_mysql_for_speed_require( $nag = false ) {
+  if ( ! function_exists('index_wp_mysql_for_speed_timestamp' ) ) {
+    /** Show timestamp in localtime.
+     * Polyfill, for old wp lacking wp_date
+     *
+     * @return string
+     */
+    function index_wp_mysql_for_speed_timestamp( $format, $timestamp = null ) {
+
+      $saved = date_default_timezone_get();
+      date_default_timezone_set( get_option( 'timezone_string', 'UTC' ) );
+      $result = date( $format, $timestamp ?: time() );
+      date_default_timezone_set( $saved );
+
+      return $result;
+    }
+  }
+
   require_once( plugin_dir_path( __FILE__ ) . 'code/imsfdb.php' );
   require_once( plugin_dir_path( __FILE__ ) . 'afp/admin-page-framework.php' );
   require_once( plugin_dir_path( __FILE__ ) . 'code/admin.php' );
@@ -165,7 +182,7 @@ function index_wp_mysql_for_speed_require( $nag = false ) {
 }
 
 function index_wp_mysql_for_speed_activate() {
-  if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) {
+  if ( version_compare( get_bloginfo( 'version' ), '4.2', '<' ) ) {
     deactivate_plugins( basename( __FILE__ ) ); /* fail activation */
     return;
   }

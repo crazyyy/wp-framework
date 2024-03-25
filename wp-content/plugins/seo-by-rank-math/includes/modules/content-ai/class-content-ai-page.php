@@ -11,14 +11,10 @@
 namespace RankMath\ContentAI;
 
 use RankMath\ContentAI\Content_AI;
-use RankMath\Post;
 use RankMath\Helper;
-use RankMath\Paper\Paper;
-use RankMath\Module\Base;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Admin\Page;
-use MyThemeShop\Helpers\Param;
+use RankMath\Admin\Page;
+use RankMath\Helpers\Param;
 use WP_Block_Editor_Context;
 
 defined( 'ABSPATH' ) || exit;
@@ -33,16 +29,12 @@ class Content_AI_Page {
 	 * The Constructor.
 	 */
 	public function __construct() {
-		$post_types = Helper::get_settings( 'general.content_ai_post_types', [] );
-		foreach ( $post_types as $post_type ) {
-			$this->filter( "bulk_actions-edit-{$post_type}", 'post_bulk_actions', 9 );
-			$this->filter( "handle_bulk_actions-edit-{$post_type}", 'handle_post_bulk_actions', 10, 3 );
-		}
-
 		$this->action( 'rank_math/admin_bar/items', 'admin_bar_items', 11 );
 		$this->action( 'rank_math/admin/editor_scripts', 'enqueue' );
 		$this->action( 'init', 'init' );
 		$this->filter( 'wp_insert_post_data', 'remove_unused_generated_content' );
+		$this->filter( 'rank_math/database/tools', 'add_tools' );
+		$this->filter( 'rank_math/tools/content_ai_cancel_bulk_edit_process', 'cancel_bulk_edit_process' );
 
 		if ( Param::get( 'page' ) !== 'rank-math-content-ai-page' ) {
 			return;
@@ -104,6 +96,8 @@ class Content_AI_Page {
 			rank_math()->version,
 			true
 		);
+
+		wp_set_script_translations( 'rank-math-content-ai-page', 'rank-math' );
 	}
 
 	/**
@@ -139,6 +133,7 @@ class Content_AI_Page {
 						'rank-math-content-ai-page' => $uri . '/assets/css/content-ai-page.css',
 					],
 					'scripts' => [
+						'lodash'                    => '',
 						'wp-components'             => '',
 						'wp-block-library'          => '',
 						'wp-format-library'         => '',
@@ -146,6 +141,7 @@ class Content_AI_Page {
 						'wp-blocks'                 => '',
 						'wp-element'                => '',
 						'wp-editor'                 => '',
+						'rank-math-block-faq'       => rank_math()->plugin_url() . 'assets/admin/js/blocks.js',
 						'rank-math-analyzer'        => rank_math()->plugin_url() . 'assets/admin/js/analyzer.js',
 						'rank-math-content-ai'      => rank_math()->plugin_url() . 'includes/modules/content-ai/assets/js/content-ai.js',
 						'rank-math-content-ai-page' => $uri . '/assets/js/content-ai-page.js',
@@ -153,82 +149,6 @@ class Content_AI_Page {
 				],
 			]
 		);
-	}
-
-	/**
-	 * Add bulk actions for applicable posts, pages, CPTs.
-	 *
-	 * @param  array $actions Actions.
-	 * @return array          New actions.
-	 */
-	public function post_bulk_actions( $actions ) {
-		if ( ! Helper::is_site_connected() || ! Helper::get_content_ai_credits() || ! Helper::get_content_ai_plan() ) {
-			return $actions;
-		}
-
-		$actions['rank_math_ai_options']                             = __( '&#8595; Rank Math Content AI', 'rank-math' );
-		$actions['rank_math_content_ai_fetch_seo_title']             = esc_html__( 'Write SEO Title with AI', 'rank-math' );
-		$actions['rank_math_content_ai_fetch_seo_description']       = esc_html__( 'Write SEO Description with AI', 'rank-math' );
-		$actions['rank_math_content_ai_fetch_seo_title_description'] = esc_html__( 'Write SEO Title & Description with AI', 'rank-math' );
-
-		return $actions;
-	}
-
-	/**
-	 * Handle bulk actions for applicable posts, pages, CPTs.
-	 *
-	 * @param  string $redirect   Redirect URL.
-	 * @param  string $doaction   Performed action.
-	 * @param  array  $object_ids Post IDs.
-	 *
-	 * @return string New redirect URL.
-	 */
-	public function handle_post_bulk_actions( $redirect, $doaction, $object_ids ) {
-		if ( empty( $object_ids ) || ! in_array( $doaction, [ 'rank_math_content_ai_fetch_seo_title', 'rank_math_content_ai_fetch_seo_description', 'rank_math_content_ai_fetch_seo_title_description' ], true ) ) {
-			return $redirect;
-		}
-
-		if ( ! empty( get_option( 'rank_math_content_ai_posts' ) ) ) {
-			Helper::add_notification(
-				esc_html__( 'Another bulk editing process is already running. Please try again later after the existing process is complete.', 'rank-math' ),
-				[
-					'type'    => 'warning',
-					'id'      => 'rank_math_content_ai_posts_error',
-					'classes' => 'rank-math-notice',
-				]
-			);
-
-			return $redirect;
-		}
-
-		$action = 'both';
-		if ( 'rank_math_content_ai_fetch_seo_title' === $doaction ) {
-			$action = 'title';
-		}
-
-		if ( 'rank_math_content_ai_fetch_seo_description' === $doaction ) {
-			$action = 'description';
-		}
-
-		$data = [
-			'action' => $action,
-			'posts'  => [],
-		];
-
-		foreach ( $object_ids as $object_id ) {
-			$object          = get_post( $object_id );
-			$data['posts'][] = [
-				'post_id'       => $object_id,
-				'post_type'     => 'download' === $object->post_type ? 'Product' : ucfirst( $object->post_type ),
-				'title'         => get_the_title( $object_id ),
-				'focus_keyword' => Post::get_meta( 'focus_keyword', $object->ID ),
-				'summary'       => Helper::replace_vars( $this->get_description( $object ), $object ),
-			];
-		}
-
-		Bulk_Edit_SEO_Meta::get()->start( $data );
-
-		return $redirect;
 	}
 
 	/**
@@ -294,7 +214,7 @@ class Content_AI_Page {
 			'disablePostFormats'   => true,
 			'autosaveInterval'     => 0,
 			'richEditingEnabled'   => user_can_richedit(),
-			'supportsLayout'       => wp_theme_has_theme_json(),
+			'supportsLayout'       => function_exists( 'wp_theme_has_theme_json' ) ? wp_theme_has_theme_json() : false,
 			'supportsTemplateMode' => false,
 			'enableCustomFields'   => false,
 		];
@@ -309,6 +229,9 @@ class Content_AI_Page {
 
 		<div id="editor2" data-settings='<?php echo esc_attr( wp_json_encode( $editor_settings ) ); ?>' data-post-id="<?php echo esc_attr( $post->ID ); ?>"></div>
 		<?php
+
+		wp_set_script_translations( 'rank-math-content-ai', 'rank-math' );
+		wp_set_script_translations( 'rank-math-content-ai-page', 'rank-math' );
 	}
 
 	/**
@@ -335,6 +258,46 @@ class Content_AI_Page {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Add database tools.
+	 *
+	 * @param array $tools Array of tools.
+	 *
+	 * @return array
+	 */
+	public function add_tools( $tools ) {
+		$posts = get_option( 'rank_math_content_ai_posts' );
+
+		// Early Bail if process is not running.
+		if ( empty( $posts ) ) {
+			return $tools;
+		}
+
+		$processed = get_option( 'rank_math_content_ai_posts_processed' );
+
+		$tools['content_ai_cancel_bulk_edit_process'] = [
+			'title'       => esc_html__( 'Cancel Content AI Bulk Editing Process', 'rank-math' ),
+			'description' => sprintf(
+				// Translators: placeholders are the number of posts that were processed.
+				esc_html__( 'Terminate the ongoing Content AI Bulk Editing Process to halt any pending modifications and revert to the previous state. The bulk metadata has been generated for %1$d out of %1$d posts so far.', 'rank-math' ),
+				$processed,
+				count( $posts )
+			),
+			'button_text' => esc_html__( 'Terminate', 'rank-math' ),
+		];
+
+		return $tools;
+	}
+
+	/**
+	 * Function to cancel the Bulk Edit process.
+	 */
+	public function cancel_bulk_edit_process() {
+		Bulk_Edit_SEO_Meta::get()->cancel();
+		Helper::remove_notification( 'rank_math_content_ai_posts_started' );
+		return __( 'Bulk Editing Process Successfully Cancelled', 'rank-math' );
 	}
 
 	/**
@@ -392,7 +355,7 @@ class Content_AI_Page {
 		$ai_post = current( $posts );
 		$content = $ai_post->post_content;
 		$blocks  = parse_blocks( $content );
-		if ( count( $blocks ) < 2 && 'core/paragraph' === $blocks[0]['blockName'] ) {
+		if ( ! empty( $blocks ) && count( $blocks ) < 2 && 'core/paragraph' === $blocks[0]['blockName'] ) {
 			$content = do_blocks( $ai_post->post_content );
 			$content = trim( preg_replace( '/<p[^>]*><\\/p[^>]*>/', '', $content ) );
 		}
@@ -407,21 +370,5 @@ class Content_AI_Page {
 		}
 
 		return $ai_post;
-	}
-
-	/**
-	 * Get post description.
-	 *
-	 * @param WP_Post $object Post Instance.
-	 *
-	 * @return string Post description.
-	 */
-	private function get_description( $object ) {
-		$description = Post::get_meta( 'description', $object->ID );
-		if ( '' !== $description ) {
-			return $description;
-		}
-
-		return ! empty( $object->post_excerpt ) ? $object->post_excerpt : Str::truncate( Paper::get_from_options( "pt_{$object->post_type}_description", $object ), 160 );
 	}
 }

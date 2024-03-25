@@ -12,17 +12,18 @@
 			<tr valign="top">
 				<th scope="row"><?php _e('Deny bad query strings', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
-				<input id="aiowps_deny_bad_query_strings" name="aiowps_deny_bad_query_strings" type="checkbox"<?php if ($aiowps_firewall_config->get_value('aiowps_deny_bad_query_strings')) echo ' checked="checked"'; ?> value="1"/>
-				<label for="aiowps_deny_bad_query_strings" class="description"><?php _e('This will help protect you against malicious queries via XSS.', 'all-in-one-wp-security-and-firewall'); ?></label>
-				<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-				<div class="aiowps_more_info_body">
-					<p class="description">
-						<?php
-						_e('This feature will prevent malicious string attacks on your site using XSS.', 'all-in-one-wp-security-and-firewall');
-						echo '<br />'.__('NOTE: Some of these strings might be used for plugins or themes and hence this might break some functionality.', 'all-in-one-wp-security-and-firewall');
-						?>
-					</p>
-				</div>
+					<div class="aiowps_switch_container">
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('This will help protect you against malicious queries via XSS.', 'all-in-one-wp-security-and-firewall'), 'aiowps_deny_bad_query_strings', $aiowps_firewall_config->get_value('aiowps_deny_bad_query_strings')); ?>
+						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+						<div class="aiowps_more_info_body">
+							<p class="description">
+								<?php
+								_e('This feature will prevent malicious string attacks on your site using XSS.', 'all-in-one-wp-security-and-firewall');
+								echo '<br />'.__('NOTE: Some of these strings might be used for plugins or themes and hence this might break some functionality.', 'all-in-one-wp-security-and-firewall');
+								?>
+							</p>
+						</div>
+					</div>
 				</td>
 			</tr>
 		</table>

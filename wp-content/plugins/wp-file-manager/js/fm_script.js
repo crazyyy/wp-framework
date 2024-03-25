@@ -4,7 +4,6 @@ jQuery(window).on('load',function (e) {
 	jQuery('.lokhal_verify_email_popup_overlay').show();
 });
 jQuery(document).ready(function () {
-
 	jQuery('.close_fm_help').on('click', function (e) {
 		var what_to_do = jQuery(this).data('ct');
 		jQuery.ajax({
@@ -22,7 +21,7 @@ jQuery(document).ready(function () {
 
 	jQuery('#fm_lang').change(function (e) {
 		var fm_lang = jQuery(this).val();
-		window.location.href = 'admin.php?page=wp_file_manager&lang=' + fm_lang;
+		window.location.href = 'admin.php?page=wp_file_manager&nonce=' + fmscript.nonce + '&lang=' + fm_lang;
 	});
 	jQuery('#fm_theme').change(function (e) {
 		var fm_theme = jQuery(this).val();

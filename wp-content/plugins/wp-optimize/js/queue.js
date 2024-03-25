@@ -138,5 +138,18 @@ function Updraft_Queue() {
 		return true;
 	}
 
+	/**
+	 * Checks if any queue object/element contains the ID
+	 *
+	 * @param {string} id       The ID to search for.
+	 *
+	 * @return {boolean}      Whether any queue object/element contains the ID.
+	 */
+	this.contains_id = function (id) {
+		return queue.some(function (ele) {
+			return ele.optimization_id === id;
+		});
+	}
+
 }
 

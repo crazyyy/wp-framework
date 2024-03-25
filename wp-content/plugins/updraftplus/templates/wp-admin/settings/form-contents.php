@@ -265,7 +265,7 @@ foreach ($default_options as $k => $v) {
 				$is_email_storage = !empty($temp_services) && in_array('email', $temp_services);
 			?>
 			<label for="updraft_email" class="updraft_checkbox email_report">
-				<input type="checkbox" id="updraft_email" name="updraft_email" value="<?php esc_attr_e(get_bloginfo('admin_email')); ?>"<?php if ($is_email_storage || !empty($updraft_email)) echo ' checked="checked"';?> <?php if ($is_email_storage) echo 'disabled onclick="return false"'; ?>> 
+				<input type="checkbox" id="updraft_email" name="updraft_email" value="<?php echo esc_attr(get_bloginfo('admin_email')); ?>"<?php if ($is_email_storage || !empty($updraft_email)) echo ' checked="checked"';?> <?php if ($is_email_storage) echo 'disabled onclick="return false"'; ?>> 
 				<?php
 					// have to add this hidden input so that when the form is submitted and if the udpraft_email checkbox is disabled, this hidden input will be passed to the server along with other active elements
 					if ($is_email_storage) echo '<input type="hidden" name="updraft_email" value="'.esc_attr(get_bloginfo('admin_email')).'">';

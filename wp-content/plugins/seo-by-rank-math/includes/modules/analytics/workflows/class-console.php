@@ -11,7 +11,7 @@
 namespace RankMath\Analytics\Workflow;
 
 use Exception;
-use MyThemeShop\Helpers\DB;
+use RankMath\Helpers\DB;
 use RankMath\Google\Console as GoogleConsole;
 use function as_unschedule_all_actions;
 
@@ -87,8 +87,8 @@ class Console extends Base {
 		}
 
 		// Make sure that collations match the objects table.
-		$objects_coll = \RankMath\Helper::get_table_collation( 'rank_math_analytics_objects' );
-		\RankMath\Helper::check_collation( $table, 'all', $objects_coll );
+		$objects_coll = DB::get_table_collation( 'rank_math_analytics_objects' );
+		DB::check_collation( $table, 'all', $objects_coll );
 	}
 
 	/**

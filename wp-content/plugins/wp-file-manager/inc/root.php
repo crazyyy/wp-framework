@@ -1,10 +1,12 @@
 <?php if (!defined('ABSPATH')) { exit; }
 $this->custom_css();
 global $wpdb;
+$path = str_replace('\\', '/', ABSPATH);
 if (isset($_POST['submit']) && wp_verify_nonce(sanitize_text_field($_POST['wp_filemanager_root_nonce_field']), 'wp_filemanager_root_action')) {
-    
+  $directory_separators = ['../', './','..\\', '.\\', '..'];
+  $public_path = isset($_POST['public_path']) ? str_replace($directory_separators, '', htmlentities(trim($path.$_POST['public_path']))): $path;
   $save_array = 	array(
-    'public_path' => isset($_POST['public_path']) ? str_replace('..', '', htmlentities(trim($_POST['public_path']))) : '',
+    'public_path' => $public_path,
     'fm_enable_trash' => isset($_POST['fm_enable_trash']) ? intval($_POST['fm_enable_trash']) : '',
     'fm_enable_media_upload' => isset($_POST['fm_enable_media_upload']) ? intval($_POST['fm_enable_media_upload']) : '',
     'fm_max_packet_allowed' => isset($_POST['fm_max_packet_allowed']) ? intval($_POST['fm_max_packet_allowed']) : '',
@@ -54,9 +56,12 @@ $default_packet_value = intval($default_packet_value / 1000000);
 <tr>
 <th><?php _e('Public Root Path', 'wp-file-manager'); ?></th>
 <td>
-<input name="public_path" type="text" id="public_path" value="<?php echo isset($settings['public_path']) && !empty($settings['public_path']) ? $settings['public_path'] : $path; ?>" class="regular-text">
-<p class="description mb15"><?php _e('File Manager Root Path, you can change according to your choice.', 'wp-file-manager'); ?></p>
-<p><strong><?php _e('Default:', 'wp-file-manager'); ?></strong> <code><?php echo $path; ?></code></p>
+<?php 
+$path_length = strlen($path);
+$access_folder = isset($settings['public_path']) && !empty($settings['public_path']) ? substr($settings['public_path'],$path_length) : '';
+?>
+<div class="input-addon"><strong><?php _e('Default', 'wp-file-manager'); ?>: </strong><?php echo $path; ?></div>
+<input type="text" name="public_path" id="public_path" placeholder="<?php _e('Path of the folder to display e.g wp-content/uploads', 'wp-file-manager'); ?>" value="<?php echo $access_folder; ?>" class="regular-text fmInput"/>
 <p style="color:#F00" class="description mb15"><?php _e('Please change this carefully, wrong path can lead file manager plugin to go down.', 'wp-file-manager'); ?></p>
 </td>
 </tr>

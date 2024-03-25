@@ -84,6 +84,8 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 				parse_str($args[1], $args);
 				$url = esc_url(add_query_arg($args, AIOWPSecurity_Process_Renamed_Login_Page::new_login_url()));
 				$url = html_entity_decode($url);
+			} elseif (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-admin/install.php')) {
+				return $url;
 			} else {
 				$url = AIOWPSecurity_Process_Renamed_Login_Page::new_login_url();
 			}
@@ -138,7 +140,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		}
 
 		//case where someone attempting to reach wp-login
-		if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-login.php') && !is_user_logged_in()) {
+		if (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-login.php') && !is_user_logged_in()) {
 
 			// Handle export personal data request for rename login case
 			if (isset($_GET['request_id'])) {
@@ -171,7 +173,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		}
 
 		//case where someone attempting to reach the standard register or signup pages
-		if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-register.php') || isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-signup.php')) {
+		if (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-register.php') || isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-signup.php')) {
 			//Check if the maintenance (lockout) mode is active - if so prevent access to site by not displaying 404 page!
 			if ($aio_wp_security->configs->get_value('aiowps_site_lockout') == '1') {
 				AIOWPSecurity_WP_Loaded_Tasks::site_lockout_tasks();
@@ -185,14 +187,14 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		if (self::is_renamed_login_page_requested($login_slug)) {
 			if (empty($action) && is_user_logged_in()) {
 				//if user is already logged in but tries to access the renamed login page, send them to the dashboard
-				// or to requested redirect-page, filterd in 'login_redirect'.
+				// or to requested redirect-page, filtered in 'login_redirect'.
 				if (isset($_REQUEST['redirect_to'])) {
-				  $redirect_to = wp_sanitize_redirect($_REQUEST['redirect_to']);
-				  $redirect_to = wp_validate_redirect($redirect_to, apply_filters('wp_safe_redirect_fallback', admin_url(), 302));
-				  $requested_redirect_to = $redirect_to;
+					$redirect_to = wp_sanitize_redirect($_REQUEST['redirect_to']);
+					$redirect_to = wp_validate_redirect($redirect_to, apply_filters('wp_safe_redirect_fallback', admin_url(), 302));
+					$requested_redirect_to = $redirect_to;
 				} else {
-				  $redirect_to = admin_url();
-				  $requested_redirect_to = '';
+					$redirect_to = admin_url();
+					$requested_redirect_to = '';
 				}
 				$redirect_to = apply_filters('login_redirect', $redirect_to, $requested_redirect_to, wp_get_current_user());
 				AIOWPSecurity_Utility::redirect_to_url($redirect_to);
@@ -251,9 +253,9 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		$home_url_with_slug = home_url($login_slug, 'relative');
 
 		/*
-		 * Compatibility fix for WPML plugin
+		 * Compatibility fix for WPML, TranslatePress plugin
 		 */
-		if (function_exists('wpml_object_id')) {
+		if (function_exists('wpml_object_id') || function_exists('trp_enable_translatepress')) {
 			$home_url_with_slug = home_url($login_slug);
 			$parsed_home_url_with_slug = parse_url($home_url_with_slug);
 			$home_url_with_slug = $parsed_home_url_with_slug['path']; //this will return just the path minus the protocol and host

@@ -9,15 +9,24 @@
 				<tr valign="top">
 					<th scope="row"><?php _e('Delete database tables', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-					<input id="aiowps_on_uninstall_delete_db_tables" name="aiowps_on_uninstall_delete_db_tables" type="checkbox"<?php if ($aio_wp_security->configs->get_value('aiowps_on_uninstall_delete_db_tables')=='1') echo ' checked="checked"'; ?> value="1"/>
-					<label for="aiowps_on_uninstall_delete_db_tables" class="description"><?php _e('Check this if you want to remove database tables when the plugin is uninstalled.', 'all-in-one-wp-security-and-firewall'); ?></label>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to remove all database tables for this site when uninstalling the plugin.', 'all-in-one-wp-security-and-firewall'), 'aiowps_on_uninstall_delete_db_tables', '1' == $aio_wp_security->configs->get_value('aiowps_on_uninstall_delete_db_tables')); ?>
+						</div>
 					</td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e('Delete settings', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-						<input id="aiowps_on_uninstall_delete_configs" name="aiowps_on_uninstall_delete_configs" type="checkbox"<?php checked($aio_wp_security->configs->get_value('aiowps_on_uninstall_delete_configs'), '1'); ?> value="1"/>
-						<label for="aiowps_on_uninstall_delete_configs" class="description"><?php echo __('Check this if you want to remove all plugin settings when uninstalling the plugin.', 'all-in-one-wp-security-and-firewall').' '.__('It will also remove all custom htaccess rules that were added by this plugin.', 'all-in-one-wp-security-and-firewall'); ?></label>
+						<?php
+						$delete_configs_description = __('Check this if you want to remove all plugin settings for this site when uninstalling the plugin.', 'all-in-one-wp-security-and-firewall');
+
+						if (is_main_site()) {
+							$delete_configs_description .= ' ' . __('It will also remove all firewall rules that were added by this plugin.', 'all-in-one-wp-security-and-firewall');
+						}
+						?>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox($delete_configs_description, 'aiowps_on_uninstall_delete_configs', '1' == $aio_wp_security->configs->get_value('aiowps_on_uninstall_delete_configs')); ?>
+						</div>
 					</td>
 				</tr>
 			</table>

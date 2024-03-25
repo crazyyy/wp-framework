@@ -6,8 +6,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: GlotPress/2.3.1\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: GlotPress/3.0.0\n"
 "Language: fa\n"
 "Project-Id-Version: UpdraftPlus\n"
 
@@ -950,6 +950,7 @@ msgstr "کپی گرفتن از %s"
 msgid "%d token"
 msgid_plural "%d tokens"
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:47
 msgid "Each time your clone renews (weekly) it costs %s. You can shut this clone down at the following link:"
@@ -2336,6 +2337,7 @@ msgstr ""
 msgid "The file %s has a \"byte order mark\" (BOM) at its beginning."
 msgid_plural "The files %s have a \"byte order mark\" (BOM) at their beginning."
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/admin.php:1011
 msgid "For future control of all your UpdraftCentral connections, go to the \"Advanced Tools\" tab."
@@ -2637,6 +2639,7 @@ msgstr "نام باکت صحیح نیست"
 msgid "Requested table collation (%1$s) is not present - changing to %2$s."
 msgid_plural "Requested table collations (%1$s) are not present - changing to %2$s."
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/class-updraftplus.php:5222
 msgid "Your chosen replacement collation"
@@ -2650,6 +2653,7 @@ msgstr ""
 msgid "The database server that this WordPress site is running on doesn't support the collation (%s) used in the database which you are trying to import."
 msgid_plural "The database server that this WordPress site is running on doesn't support multiple collations (%s) used in the database which you are trying to import."
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/addons/migrator.php:568
 msgid "Database restoration options:"
@@ -2707,6 +2711,7 @@ msgstr ""
 msgid "Your .htaccess has an old site reference on line number %s. You should remove it manually."
 msgid_plural "Your .htaccess has an old site references on line numbers %s. You should remove them manually."
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/restorer.php:2369
 msgid "Requested table character set (%s) is not present - changing to %s."
@@ -2724,6 +2729,7 @@ msgstr ""
 msgid "The database server that this WordPress site is running on doesn't support the character set (%s) which you are trying to import."
 msgid_plural "The database server that this WordPress site is running on doesn't support the character sets (%s) which you are trying to import."
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/central/translations-updraftplus.php:64
 msgid "Create another key"

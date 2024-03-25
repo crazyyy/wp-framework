@@ -16,7 +16,7 @@
 				
 				if (!empty($button_link) && !empty($button_meta)) {
 			?>
-			<a class="updraft_notice_link" href="<?php esc_attr_e(apply_filters('updraftplus_com_link', $button_link));?>"><?php
+			<a class="updraft_notice_link" href="<?php echo esc_attr(apply_filters('updraftplus_com_link', $button_link));?>"><?php
 					if ('updraftcentral' == $button_meta) {
 						_e('Get UpdraftCentral', 'updraftplus');
 					} elseif ('review' == $button_meta) {

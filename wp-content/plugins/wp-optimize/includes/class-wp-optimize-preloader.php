@@ -102,9 +102,8 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_4 {
 
 		$is_wp_cli = defined('WP_CLI') && WP_CLI;
 
-		// close browser connection and continue work.
-		// don't close connection for WP-CLI
-		if (false == $is_wp_cli) {
+		// close browser connection and continue work for ajax actions.
+		if (defined('DOING_AJAX') && DOING_AJAX) {
 			WP_Optimize()->close_browser_connection(json_encode($response));
 		}
 

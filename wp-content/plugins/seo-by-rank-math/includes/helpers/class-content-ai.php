@@ -11,7 +11,7 @@
 namespace RankMath\Helpers;
 
 use RankMath\Admin\Admin_Helper;
-use MyThemeShop\Helpers\Str;
+use RankMath\Helpers\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -57,53 +57,73 @@ trait Content_AI {
 	/**
 	 * Get the Content AI Credits.
 	 *
-	 * @param bool $force_update Whether to send a request to API to get the new Credits value.
+	 * @param bool $force_update       Whether to send a request to API to get the new Credits value.
+	 * @param bool $return_error       Whether to return error when request fails.
+	 * @param bool $migration_complete Whether the request was send after migrating the user.
 	 */
-	public static function get_content_ai_credits( $force_update = false ) {
+	public static function get_content_ai_credits( $force_update = false, $return_error = false, $migration_complete = false ) {
 		$registered = Admin_Helper::get_registration_data();
 		if ( empty( $registered ) ) {
 			return 0;
 		}
 
-		$credits = self::get_credits();
-		if ( $credits && ! $force_update ) {
+		$transient = 'rank_math_content_ai_requested';
+		$credits   = self::get_credits();
+		if ( ! $force_update || ( get_site_transient( $transient ) && ! $migration_complete ) ) {
 			return $credits;
 		}
 
+		set_site_transient( $transient, true, 20 ); // Set transient for 20 seconds.
+
 		$args = [
-			'username' => rawurlencode( $registered['username'] ),
-			'api_key'  => rawurlencode( $registered['api_key'] ),
-			'site_url' => rawurlencode( self::get_home_url() ),
+			'username'       => rawurlencode( $registered['username'] ),
+			'api_key'        => rawurlencode( $registered['api_key'] ),
+			'site_url'       => rawurlencode( self::get_home_url() ),
+			'embedWallet'    => 'false',
+			'plugin_version' => rawurlencode( rank_math()->version ),
 		];
 
 		$url = add_query_arg(
 			$args,
-			'https://rankmath.com/wp-json/contentai/v1/credits'
+			CONTENT_AI_URL . '/sites/wallet'
 		);
 
-		$data = wp_remote_get(
+		$response = wp_remote_get(
 			$url,
 			[
 				'timeout' => 60,
 			]
 		);
 
-		$response_code = wp_remote_retrieve_response_code( $data );
-		if ( 200 !== $response_code ) {
-			return 0;
+		$response_code = wp_remote_retrieve_response_code( $response );
+		if ( 404 === $response_code && ! $migration_complete ) {
+			return self::maybe_migrate_user( $response );
 		}
 
-		$data = wp_remote_retrieve_body( $data );
+		$is_error = self::is_content_ai_error( $response, $response_code );
+		if ( $is_error ) {
+
+			if ( in_array( $is_error, [ 'domain_limit_reached', 'account_limit_reached' ], true ) ) {
+				$credits = 0;
+				self::update_credits( 0 );
+			}
+
+			return ! $return_error ? $credits : [
+				'credits' => $credits,
+				'error'   => $is_error,
+			];
+		}
+
+		$data = wp_remote_retrieve_body( $response );
 		if ( empty( $data ) ) {
 			return 0;
 		}
 
-		$data    = json_decode( $data, true );
-		$credits = ! empty( $data['credits'] ) ? json_decode( $data['credits'], true ) : [];
-		$data    = [
-			'credits'      => ! empty( $credits['available'] ) ? $credits['available'] - $credits['taken'] : 0,
-			'plan'         => ! empty( $data['plan'] ) ? $data['plan'] : 0,
-			'refresh_date' => ! empty( $data['refreshDate'] ) ? $data['refreshDate'] : 0,
+		$data = json_decode( $data, true );
+		$data = [
+			'credits'      => intval( $data['availableCredits'] ?? 0 ),
+			'plan'         => $data['plan'] ?? '',
+			'refresh_date' => $data['nextResetDate'] ?? '',
 		];
 
 		self::update_credits( $data );
@@ -114,7 +134,7 @@ trait Content_AI {
 	/**
 	 * Function to get Content AI Credits.
 	 *
-	 * @return array Credits data.
+	 * @return int Credits data.
 	 */
 	public static function get_credits() {
 		$credits_data = get_option( self::$credits_key, [] );
@@ -124,11 +144,21 @@ trait Content_AI {
 	/**
 	 * Function to get Content AI Plan.
 	 *
-	 * @return array Credits data.
+	 * @return string Content AI Plan.
 	 */
 	public static function get_content_ai_plan() {
 		$credits_data = get_option( self::$credits_key, [] );
-		return ! empty( $credits_data['plan'] ) ? $credits_data['plan'] : '';
+		return ! empty( $credits_data['plan'] ) ? strtolower( $credits_data['plan'] ) : '';
+	}
+
+	/**
+	 * Function to get Content AI Refresh date.
+	 *
+	 * @return int Content AI Refresh date.
+	 */
+	public static function get_content_ai_refresh_date() {
+		$credits_data = get_option( self::$credits_key, [] );
+		return ! empty( $credits_data['refresh_date'] ) ? $credits_data['refresh_date'] : '';
 	}
 
 	/**
@@ -138,6 +168,7 @@ trait Content_AI {
 	 */
 	public static function update_credits( $credits ) {
 		if ( is_array( $credits ) ) {
+			$credits['refresh_date'] = ! empty( $credits['refresh_date'] ) && ! is_int( $credits['refresh_date'] ) ? strtotime( $credits['refresh_date'] ) : $credits['refresh_date'];
 			update_option( self::$credits_key, $credits );
 			return;
 		}
@@ -213,6 +244,7 @@ trait Content_AI {
 			$output
 		);
 
+		$output  = isset( $output['faqs'] ) ? [ current( $output ) ] : $output;
 		$outputs = array_merge( $output, $outputs );
 		$outputs = array_slice( $outputs, 0, 50 );
 		update_option( self::$output_key, $outputs, false );
@@ -223,10 +255,11 @@ trait Content_AI {
 	/**
 	 * Function to get Default Schema type by post_type.
 	 *
-	 * @param array   $answer   API endpoint.
-	 * @param array   $question API output.
-	 * @param int     $session  Chat session.
-	 * @param boolean $is_new   Whether its a new chat.
+	 * @param array   $answer          API endpoint.
+	 * @param array   $question        API output.
+	 * @param int     $session         Chat session.
+	 * @param boolean $is_new          Whether its a new chat.
+	 * @param boolean $is_regenerating Is regenerating the Chat message.
 	 *
 	 * @return void
 	 */
@@ -377,6 +410,7 @@ trait Content_AI {
 				'Russian'    => Str::starts_with( 'ru_', $locale ),
 				'Chinese'    => Str::starts_with( 'zh_', $locale ),
 				'Korean'     => Str::starts_with( 'ko_', $locale ),
+				'UK English' => 'en_GB' === $locale,
 				'Japanese'   => 'ja' === $locale,
 				'Bulgarian'  => 'bg_BG' === $locale,
 				'Czech'      => 'cs_CZ' === $locale,
@@ -398,7 +432,7 @@ trait Content_AI {
 			]
 		);
 
-		return ! empty( $languages ) ? current( array_keys( $languages ) ) : 'English';
+		return ! empty( $languages ) ? current( array_keys( $languages ) ) : 'US English';
 	}
 
 	/**
@@ -417,6 +451,71 @@ trait Content_AI {
 			'content_filter'         => esc_html__( 'Please revise the entered values in the fields as they are not secure. Make the required adjustments and try again.', 'rank-math' ),
 			'api_content_filter'     => esc_html__( 'The output was stopped as it was identified as potentially unsafe by the content filter.', 'rank-math' ),
 			'could_not_generate'     => esc_html__( 'Could not generate. Please try again later.', 'rank-math' ),
+			'invalid_key'            => esc_html__( 'Invalid API key. Please check your API key or reconnect the site and try again.', 'rank-math' ),
+			'not_found'              => esc_html__( 'User wallet not found.', 'rank-math' ),
 		];
+	}
+
+	/**
+	 * User migration request.
+	 */
+	public static function migrate_user_to_nest_js() {
+		$registered = Admin_Helper::get_registration_data();
+		if ( empty( $registered ) || empty( $registered['username'] ) ) {
+			return;
+		}
+
+		$res = wp_remote_post(
+			CONTENT_AI_URL . '/migrate',
+			[
+				'headers' => [
+					'Content-type' => 'application/json',
+				],
+				'body'    => wp_json_encode( [ 'username' => $registered['username'] ] ),
+			]
+		);
+
+		$res_code = wp_remote_retrieve_response_code( $res );
+		if ( is_wp_error( $res ) || 400 <= $res_code ) {
+			return false;
+		}
+
+		$data             = json_decode( wp_remote_retrieve_body( $res ), true );
+		$migration_status = $data['status'] ?? '';
+
+		return in_array( $migration_status, [ 'added', 'migration_not_needed' ], true ) ? 'completed' : $migration_status;
+	}
+
+	/**
+	 * Function to return the error message.
+	 *
+	 * @param array $response      API response.
+	 * @param int   $response_code API response code.
+	 */
+	public static function is_content_ai_error( $response, $response_code ) {
+		$data = wp_remote_retrieve_body( $response );
+		$data = ! empty( $data ) ? json_decode( $data, true ) : [];
+		if ( is_wp_error( $response ) || 200 !== $response_code || empty( $data ) ) {
+			return ! empty( $data['err_key'] ) ? $data['err_key'] : 'could_not_generate';
+		}
+
+		return ! empty( $data['error'] ) ? $data['error']['code'] : false;
+	}
+
+	/**
+	 * Migrate user depending on the error received in the response
+	 *
+	 * @param array $response API response.
+	 */
+	private static function maybe_migrate_user( $response ) {
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( empty( $data['err_key'] ) || 'not_found' !== $data['err_key'] ) {
+			return;
+		}
+
+		$status = self::migrate_user_to_nest_js();
+		if ( 'completed' === $status ) {
+			return self::get_content_ai_credits( true, false, true );
+		}
 	}
 }

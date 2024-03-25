@@ -14,8 +14,7 @@ use RankMath\Helper;
 use RankMath\Runner;
 use RankMath\Traits\Ajax;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Param;
-use MyThemeShop\Helpers\WordPress;
+use RankMath\Helpers\Param;
 use RankMath\Admin\Importers\Detector;
 
 defined( 'ABSPATH' ) || exit;
@@ -348,7 +347,7 @@ class Import_Export implements Runner {
 		}
 
 		// Parse Options.
-		$wp_filesystem = WordPress::get_filesystem();
+		$wp_filesystem = Helper::get_filesystem();
 		if ( is_null( $wp_filesystem ) || ! Helper::is_filesystem_direct() ) {
 			Helper::add_notification( esc_html__( 'Uploaded file could not be read.', 'rank-math' ), [ 'type' => 'error' ] );
 			return false;

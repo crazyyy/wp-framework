@@ -81,7 +81,7 @@ class AIOWPSecurity_User_Registration {
 			return $errors;
 		}
 		$verify_captcha = $aio_wp_security->captcha_obj->verify_captcha_submit();
-		if (false  === $verify_captcha) {
+		if (false === $verify_captcha) {
 			// wrong answer was entered
 			$errors->add('authentication_failed', __('<strong>ERROR</strong>: Your answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall'));
 			return $errors;
@@ -92,7 +92,7 @@ class AIOWPSecurity_User_Registration {
 	/**
 	 * This function serves the purpose of preventing login in certain plugins that enable user registration, such as WooCommerce and others.
 	 *
-	 * @return bool Retruns false means do not authenticate on registration
+	 * @return bool Returns false means do not authenticate on registration
 	 */
 	public function aios_registration_auth_new_customer() {
 		return false;

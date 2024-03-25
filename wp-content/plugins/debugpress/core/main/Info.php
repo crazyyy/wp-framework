@@ -12,9 +12,9 @@ use PDO;
 class Info {
 	public static function _loaded_status( $value ) : string {
 		if ( $value === true ) {
-			return __( "loaded", "debugpress" );
+			return __( 'loaded', 'debugpress' );
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 		}
 	}
 
@@ -50,15 +50,19 @@ class Info {
 		if ( $plugins === false ) {
 			$all_plugins = get_plugins();
 
-			$plugins = array( 'total' => 0, 'active' => 0, 'inactive' => 0 );
+			$plugins = array(
+				'total'    => 0,
+				'active'   => 0,
+				'inactive' => 0,
+			);
 
 			foreach ( array_keys( $all_plugins ) as $plugin ) {
-				$plugins[ 'total' ] ++;
+				$plugins['total'] ++;
 
 				if ( is_plugin_active( $plugin ) ) {
-					$plugins[ 'active' ] ++;
+					$plugins['active'] ++;
 				} else {
-					$plugins[ 'inactive' ] ++;
+					$plugins['inactive'] ++;
 				}
 			}
 
@@ -69,21 +73,21 @@ class Info {
 	}
 
 	public static function cms_count_plugins_total() : int {
-		$data = Info::cms_count_plugins();
+		$data = self::cms_count_plugins();
 
-		return $data[ 'total' ];
+		return $data['total'];
 	}
 
 	public static function cms_count_plugins_active() : int {
-		$data = Info::cms_count_plugins();
+		$data = self::cms_count_plugins();
 
-		return $data[ 'active' ];
+		return $data['active'];
 	}
 
 	public static function cms_count_plugins_inactive() : int {
-		$data = Info::cms_count_plugins();
+		$data = self::cms_count_plugins();
 
-		return $data[ 'inactive' ];
+		return $data['inactive'];
 	}
 
 	public static function cms_count_themes() : int {
@@ -119,7 +123,7 @@ class Info {
 	}
 
 	public static function apache_modules_list() : array {
-		if ( Info::is_apache() && function_exists( 'apache_get_modules' ) ) {
+		if ( self::is_apache() && function_exists( 'apache_get_modules' ) ) {
 			return apache_get_modules();
 		}
 
@@ -127,8 +131,12 @@ class Info {
 	}
 
 	public static function apache_version() : string {
-		if ( Info::is_apache() && function_exists( 'apache_get_version' ) ) {
-			return apache_get_version();
+		if ( self::is_apache() && function_exists( 'apache_get_version' ) ) {
+			$version = apache_get_version();
+
+			if ( is_string( $version ) ) {
+				return $version;
+			}
 		}
 
 		return '';
@@ -137,41 +145,41 @@ class Info {
 	public static function apache_mod_rewrite() : string {
 		$status = apache_mod_loaded( 'mod_rewrite' );
 
-		return Info::_loaded_status( $status );
+		return self::_loaded_status( $status );
 	}
 
 	public static function apache_mod_headers() : string {
 		$status = apache_mod_loaded( 'mod_headers' );
 
-		return Info::_loaded_status( $status );
+		return self::_loaded_status( $status );
 	}
 
 	public static function apache_mod_security() : string {
 		$status = apache_mod_loaded( 'mod_security' );
 
-		return Info::_loaded_status( $status );
+		return self::_loaded_status( $status );
 	}
 
 	public static function apache_mod_ssl() : string {
 		$status = apache_mod_loaded( 'mod_ssl' );
 
-		return Info::_loaded_status( $status );
+		return self::_loaded_status( $status );
 	}
 
 	public static function apache_mod_setenvif() : string {
 		$status = apache_mod_loaded( 'mod_setenvif' );
 
-		return Info::_loaded_status( $status );
+		return self::_loaded_status( $status );
 	}
 
 	public static function apache_mod_alias() : string {
 		$status = apache_mod_loaded( 'mod_alias' );
 
-		return Info::_loaded_status( $status );
+		return self::_loaded_status( $status );
 	}
 
 	public static function server_name() : string {
-		return (string) $_SERVER[ 'SERVER_SOFTWARE' ];
+		return (string) ( $_SERVER['SERVER_SOFTWARE'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 	}
 
 	public static function server_os() : string {
@@ -179,15 +187,15 @@ class Info {
 	}
 
 	public static function server_hostname() : string {
-		return (string) $_SERVER[ 'SERVER_NAME' ];
+		return (string) ( $_SERVER['SERVER_NAME'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 	}
 
 	public static function server_ip() : string {
-		return (string) $_SERVER[ 'SERVER_ADDR' ];
+		return isset( $_SERVER['SERVER_ADDR'] ) ? (string) $_SERVER['SERVER_ADDR'] : 'Missing'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 	}
 
 	public static function server_port() : string {
-		return (string) $_SERVER[ 'SERVER_PORT' ];
+		return (string) ( $_SERVER['SERVER_PORT'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 	}
 
 	public static function mysql_variant() : string {
@@ -217,7 +225,7 @@ class Info {
 				'tables'  => absint( $raw->tables_count ),
 				'records' => absint( $raw->rows_count ),
 				'size'    => debugpress_format_size( $raw->data_size ),
-				'free'    => debugpress_format_size( $raw->free_space )
+				'free'    => debugpress_format_size( $raw->free_space ),
 			);
 
 			wp_cache_add( 'gd-press-tools', $data, 'database' );
@@ -227,40 +235,41 @@ class Info {
 	}
 
 	public static function mysql_database_size() : string {
-		$data = Info::mysql_database();
+		$data = self::mysql_database();
 
-		return $data[ 'size' ];
+		return $data['size'];
 	}
 
 	public static function mysql_database_free_space() : string {
-		$data = Info::mysql_database();
+		$data = self::mysql_database();
 
-		return $data[ 'free' ];
+		return $data['free'];
 	}
 
 	public static function mysql_database_tables() : int {
-		$data = Info::mysql_database();
+		$data = self::mysql_database();
 
-		return $data[ 'tables' ];
+		return $data['tables'];
 	}
 
 	public static function mysql_database_records() : int {
-		$data = Info::mysql_database();
+		$data = self::mysql_database();
 
-		return $data[ 'records' ];
+		return $data['records'];
 	}
 
 	public static function mysql_wordpress() : array {
 		$data = wp_cache_get( 'database', 'debugpress' );
 
 		if ( $data === false ) {
-			$raw = debugpress_db()->wpdb()->get_row( "SELECT table_schema, COUNT(*) as tables_count, SUM(data_length + index_length) AS data_size, SUM(data_free) AS free_space, SUM(table_rows) AS rows_count FROM information_schema.TABLES WHERE table_schema = '" . DB_NAME . "' AND table_name like '" . debugpress_db()->wpdb()->base_prefix . "%' GROUP BY table_schema" );
+			$sql = "SELECT table_schema, COUNT(*) as tables_count, SUM(data_length + index_length) AS data_size, SUM(data_free) AS free_space, SUM(table_rows) AS rows_count FROM information_schema.TABLES WHERE table_schema = '" . DB_NAME . "' AND table_name like '" . debugpress_db()->wpdb()->base_prefix . "%' GROUP BY table_schema";
+			$raw = debugpress_db()->wpdb()->get_row( $sql );
 
 			$data = array(
-				'tables'  => absint( $raw->tables_count ),
-				'records' => absint( $raw->rows_count ),
-				'size'    => debugpress_format_size( $raw->data_size ),
-				'free'    => debugpress_format_size( $raw->free_space )
+				'tables'  => absint( $raw->tables_count ?? 0 ),
+				'records' => absint( $raw->rows_count ?? 0 ),
+				'size'    => debugpress_format_size( $raw->data_size ?? 0 ),
+				'free'    => debugpress_format_size( $raw->free_space ?? 0 ),
 			);
 
 			wp_cache_add( 'database', 'debugpress' );
@@ -270,35 +279,35 @@ class Info {
 	}
 
 	public static function mysql_wordpress_size() : string {
-		$data = Info::mysql_wordpress();
+		$data = self::mysql_wordpress();
 
-		return $data[ 'size' ];
+		return $data['size'];
 	}
 
 	public static function mysql_wordpress_free_space() : string {
-		$data = Info::mysql_wordpress();
+		$data = self::mysql_wordpress();
 
-		return $data[ 'free' ];
+		return $data['free'];
 	}
 
 	public static function mysql_wordpress_tables() : int {
-		$data = Info::mysql_wordpress();
+		$data = self::mysql_wordpress();
 
-		return $data[ 'tables' ];
+		return $data['tables'];
 	}
 
 	public static function mysql_wordpress_records() : int {
-		$data = Info::mysql_wordpress();
+		$data = self::mysql_wordpress();
 
-		return $data[ 'records' ];
+		return $data['records'];
 	}
 
 	public static function php_error_display() : string {
-		return ini_get( 'display_errors' ) ? __( "On", "debugpress" ) : __( "Off", "debugpress" );
+		return ini_get( 'display_errors' ) ? __( 'On', 'debugpress' ) : __( 'Off', 'debugpress' );
 	}
 
 	public static function php_error_logging() : string {
-		return ini_get( 'log_errors' ) ? __( "On", "debugpress" ) : __( "Off", "debugpress" );
+		return ini_get( 'log_errors' ) ? __( 'On', 'debugpress' ) : __( 'Off', 'debugpress' );
 	}
 
 	public static function php_error_filepath() : string {
@@ -326,14 +335,14 @@ class Info {
 	}
 
 	public static function php_error_levels_display() : array {
-		$levels = Info::php_error_levels();
+		$levels = self::php_error_levels();
 
 		$list = array();
 
 		foreach ( $levels as $level => $status ) {
 			$color = $status ? '#00cc00' : '#cc0000';
 			$tag   = $status ? 'strong' : 'span';
-			$val   = $status ? __( "ON", "debugpress" ) : __( "OFF", "debugpress" );
+			$val   = $status ? __( 'ON', 'debugpress' ) : __( 'OFF', 'debugpress' );
 
 			$list[] = '<' . $tag . ' style="color: ' . $color . '">' . $level . ' / ' . $val . '</' . $tag . '>';
 		}
@@ -358,7 +367,7 @@ class Info {
 			'E_STRICT'            => false,
 			'E_RECOVERABLE_ERROR' => false,
 			'E_DEPRECATED'        => false,
-			'E_USER_DEPRECATED'   => false
+			'E_USER_DEPRECATED'   => false,
 		);
 
 		$error_reporting = error_reporting();
@@ -393,7 +402,7 @@ class Info {
 	}
 
 	public static function php_allow_url_fopen() : string {
-		return ini_get( 'allow_url_fopen' ) ? __( "On", "debugpress" ) : __( "Off", "debugpress" );
+		return ini_get( 'allow_url_fopen' ) ? __( 'On', 'debugpress' ) : __( 'Off', 'debugpress' );
 	}
 
 	public static function php_zlib() : string {
@@ -401,12 +410,12 @@ class Info {
 			if ( function_exists( 'curl_version' ) ) {
 				$gdi = curl_version();
 
-				return $gdi[ 'libz_version' ];
+				return $gdi['libz_version'];
 			} else {
-				return __( "loaded", "debugpress" );
+				return __( 'loaded', 'debugpress' );
 			}
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 		}
 	}
 
@@ -414,9 +423,9 @@ class Info {
 		if ( extension_loaded( 'curl' ) ) {
 			$gdi = curl_version();
 
-			return $gdi[ 'version' ];
+			return $gdi['version'];
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 		}
 	}
 
@@ -424,7 +433,7 @@ class Info {
 		if ( extension_loaded( 'pdo' ) ) {
 			return join( '<br/>', PDO::getAvailableDrivers() );
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 		}
 	}
 
@@ -432,9 +441,9 @@ class Info {
 		if ( extension_loaded( 'gd' ) ) {
 			$gdi = gd_info();
 
-			return $gdi[ 'GD Version' ];
+			return $gdi['GD Version'];
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 		}
 	}
 
@@ -443,12 +452,12 @@ class Info {
 			if ( function_exists( 'opcache_get_configuration' ) ) {
 				$config = opcache_get_configuration();
 
-				return $config[ 'version' ][ 'version' ];
+				return $config['version']['version'] ?? '';
 			} else {
-				return '<strong>' . __( "loaded", "debugpress" ) . '</strong>';
+				return '<strong>' . __( 'loaded', 'debugpress' ) . '</strong>';
 			}
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 		}
 	}
 
@@ -456,7 +465,7 @@ class Info {
 		if ( extension_loaded( 'apc' ) ) {
 			return phpversion( 'apc' );
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 		}
 	}
 
@@ -465,16 +474,17 @@ class Info {
 
 		if ( debugpress_file_exists( $file ) ) {
 			try {
-				@include_once( $file );
+				@include_once $file;
 
 				if ( class_exists( '\System' ) === true ) {
-					return __( "loaded", "debugpress" );
+					return __( 'loaded', 'debugpress' );
 				}
-			} catch ( Exception $exception ) {
+			} catch ( Exception $exception ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement
+				// if file can't be loaded, nothing needs to happen.
 			}
 		}
 
-		return '<strong style="color: #cc0000;">' . __( "not loaded", "debugpress" ) . '</strong>';
+		return '<strong style="color: #cc0000;">' . __( 'not loaded', 'debugpress' ) . '</strong>';
 	}
 
 	public static function php_include_path() : string {
@@ -489,17 +499,17 @@ class Info {
 
 	public static function php_extension( $name ) : string {
 		if ( extension_loaded( $name ) ) {
-			return __( "OK", "debugpress" );
+			return __( 'OK', 'debugpress' );
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not available", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not available', 'debugpress' ) . '</strong>';
 		}
 	}
 
 	public static function php_function( $name ) : string {
 		if ( function_exists( $name ) ) {
-			return __( "OK", "debugpress" );
+			return __( 'OK', 'debugpress' );
 		} else {
-			return '<strong style="color: #cc0000;">' . __( "not available", "debugpress" ) . '</strong>';
+			return '<strong style="color: #cc0000;">' . __( 'not available', 'debugpress' ) . '</strong>';
 		}
 	}
 }

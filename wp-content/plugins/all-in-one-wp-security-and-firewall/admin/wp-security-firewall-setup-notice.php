@@ -57,7 +57,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 * Entry point for the dashboard notice
 	 *
 	 * @return void
-	*/
+	 */
 	public function start_firewall_setup() {
 
 		global $aio_wp_security;
@@ -89,7 +89,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		}
 
 		if (AIOWPSecurity_Utility_Firewall::is_firewall_setup()) {
-			if (true !== $is_firewall_in_server) {
+			if (true !== $is_firewall_in_server) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable -- variable is set in the foreach loop
 				$this->render_upgrade_protection_notice();
 			}
 		} else {
@@ -131,7 +131,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 				if (AIOWPSecurity_Utility_Firewall::get_bootstrap_path() === $directive) {
 					$is_inserted_firewall_file = true;
 				} else {
-					$this->show_notice(self::NOTICE_DIRECTIVE_SET, array('directive'=>$directive));
+					$this->show_notice(self::NOTICE_DIRECTIVE_SET, array('directive' => $directive));
 				}
 
 			} else {
@@ -166,7 +166,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		}
 		$this->log_wp_error($is_inserted_muplugin);
 
-		if (true === $is_inserted_firewall_file) { 
+		if (true === $is_inserted_firewall_file) {
 			$this->show_notice(self::NOTICE_INSTALLED);
 		} else {
 			$this->log_wp_error($is_inserted_firewall_file);
@@ -290,8 +290,8 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	/**
 	 * Sets the flags to show notices
 	 *
-	 * @param string $type - the type of notice we want to set
-	 * @param array $values - any values that need to be passed
+	 * @param string $type   - the type of notice we want to set
+	 * @param array  $values - any values that need to be passed
 	 * @return void
 	 */
 	private function show_notice($type, $values = array()) {
@@ -315,27 +315,27 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		global $aio_wp_security;
 
 		$notices = array(
-			self::NOTICE_BOOTSTRAP, 
-			self::NOTICE_MANUAL, 
-			self::NOTICE_INSTALLED, 
+			self::NOTICE_BOOTSTRAP,
+			self::NOTICE_MANUAL,
+			self::NOTICE_INSTALLED,
 			self::NOTICE_DIRECTIVE_SET,
 		);
 
-		foreach($notices as $notice) {
+		foreach ($notices as $notice) {
 			if ($aio_wp_security->configs->get_value('firewall_notice_'.$notice)) {
 				
-				switch($notice) {
+				switch ($notice) {
 					case self::NOTICE_BOOTSTRAP:
-						$this->render_bootstrap_notice(); break;
-
+						$this->render_bootstrap_notice();
+						break;
 					case self::NOTICE_MANUAL:
 						if (!$this->any_pending_notices(self::NOTICE_MANUAL)) {
 							$this->render_manual_setup_notice();
 						}
 						break;
 					case self::NOTICE_INSTALLED:
-						$this->render_firewall_installed_notice(); break;
-
+						$this->render_firewall_installed_notice();
+						break;
 					case self::NOTICE_DIRECTIVE_SET:
 						$values = $aio_wp_security->configs->get_value('firewall_notice_values');
 						$this->render_userini_directive_set_notice($values['directive']);
@@ -353,7 +353,8 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	/**
 	 * Detects if we have any notices pending to display
 	 *
-	 * @param string $exclude - do not check the status of these notices
+	 * @param string ...$exclude - do not check the status of these notices
+	 *
 	 * @return boolean
 	 */
 	private function any_pending_notices(...$exclude) {
@@ -367,7 +368,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		);
 		$notices = array_diff($notices, $exclude);
 		
-		foreach($notices as $notice) {
+		foreach ($notices as $notice) {
 			if (true === $aio_wp_security->configs->get_value('firewall_notice_'.$notice)) {
 				return true;
 			}
@@ -391,11 +392,11 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 				<p><?php _e('Your firewall will have reduced protection which means some of your firewall\'s functionality will be unavailable.', 'all-in-one-wp-security-and-firewall');?></p>
 				<p><?php _e('If you would like to manually set up the necessary file, please follow these steps:', 'all-in-one-wp-security-and-firewall');?></p>
 				<p>
-				    <?php
-				    /* translators: %s Boostrap file name. */
-				    printf(__('1. Create a file with the name %s in the same directory as your WordPress install is in, i.e.:', 'all-in-one-wp-security-and-firewall'), pathinfo($this->bootstrap, PATHINFO_BASENAME));
-                    ?>
-                </p>
+					<?php
+						/* translators: %s Bootstrap file name. */
+						printf(__('1. Create a file with the name %s in the same directory as your WordPress install is in, i.e.:', 'all-in-one-wp-security-and-firewall'), pathinfo($this->bootstrap, PATHINFO_BASENAME));
+					?>
+				</p>
 				<pre style='max-width: 100%;background-color: #f0f0f0;border:#ccc solid 1px;padding: 10px;white-space:pre-wrap;'><?php echo esc_html($this->bootstrap); ?></pre>
 				<p><?php _e('2. Paste in the following code:', 'all-in-one-wp-security-and-firewall');?></p>
 				<pre style='max-width: 100%;background-color: #f0f0f0;border:#ccc solid 1px;padding: 10px;white-space:pre-wrap;'><?php echo htmlentities($this->bootstrap->get_contents()); ?></pre>
@@ -413,7 +414,6 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 */
 	private function render_userini_directive_set_notice($directive_value) {
 
-		$bootstrap_path = AIOWPSecurity_Utility_Firewall::get_bootstrap_path();
 		$firewall_file = AIOWPSecurity_Utility_Firewall::get_server_file();
 
 		$this->render_manual_notice_header();
@@ -495,13 +495,13 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		} else {
 			//Show users how to manually add the firewall via their own server file
 			$this->render_manual_notice_header();
-            $firewall_file_name = pathinfo($firewall_file, PATHINFO_BASENAME);
+			$firewall_file_name = pathinfo($firewall_file, PATHINFO_BASENAME);
 			?>
 				<p>
-                    <?php
-                    /* translators: %s Firewall file name. */
-                    printf(__('1. Create a file with the name %s in the same directory as your WordPress install is in, i.e.:', 'all-in-one-wp-security-and-firewall'), $firewall_file_name);
-                    ?>
+					<?php
+						/* translators: %s Firewall file name. */
+						printf(__('1. Create a file with the name %s in the same directory as your WordPress install is in, i.e.:', 'all-in-one-wp-security-and-firewall'), $firewall_file_name);
+					?>
 					<p><code><?php echo esc_html($firewall_file); ?></code></p>
 				</p>
 				<p>
@@ -553,22 +553,22 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		<?php
 	}
 
-    /**
-     * Render Try again button.
-     *
-     * @return void
-     */
-    private function render_try_again_button() {
-        ?>
-        <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
-            <?php wp_nonce_field('aiowpsec-firewall-setup'); ?>
-            <input type="hidden" name="action" value="aiowps_firewall_setup">
-            <div style="padding-top: 10px; padding-bottom: 10px;">
-                    <input class="button button-primary" type="submit" name="btn_try_again" value="<?php _e('Try again', 'all-in-one-wp-security-and-firewall'); ?>">
-            </div>
-        </form>
-        <?php
-    }
+	/**
+	 * Render Try again button.
+	 *
+	 * @return void
+	 */
+	private function render_try_again_button() {
+		?>
+		<form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
+			<?php wp_nonce_field('aiowpsec-firewall-setup'); ?>
+			<input type="hidden" name="action" value="aiowps_firewall_setup">
+			<div style="padding-top: 10px; padding-bottom: 10px;">
+					<input class="button button-primary" type="submit" name="btn_try_again" value="<?php _e('Try again', 'all-in-one-wp-security-and-firewall'); ?>">
+			</div>
+		</form>
+		<?php
+	}
 
 	/**
 	 * Renders the warning that users do not have the highest level of protection
@@ -589,7 +589,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 						<?php _e('We have detected that your AIOS firewall is not fully installed, and therefore does not have the highest level of protection. ', 'all-in-one-wp-security-and-firewall');?>
 						<?php _e('Your firewall will have reduced functionality until it has been upgraded. ', 'all-in-one-wp-security-and-firewall');?>
 						<div style="padding-top: 10px;">
-						    <input class="button button-primary" type="submit" name="btn_upgrade_now" value="<?php _e('Upgrade your protection now', 'all-in-one-wp-security-and-firewall'); ?>">
+							<input class="button button-primary" type="submit" name="btn_upgrade_now" value="<?php _e('Upgrade your protection now', 'all-in-one-wp-security-and-firewall'); ?>">
 						</div>
 					</p>
 				</form>
@@ -599,17 +599,17 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		<?php
 	}
 
-    /**
-     * Whether the firewall notice should not be shown.
-     *
-     * return boolean True if the firewall notice should not be shown otherwise false.
-     */
-    private function should_not_show_notice() {
-        if (!is_main_site()) {
-            return true;
-        }
+	/**
+	 * Whether the firewall notice should not be shown.
+	 *
+	 * @return boolean True if the firewall notice should not be shown otherwise false.
+	 */
+	private function should_not_show_notice() {
+		if (!is_main_site()) {
+			return true;
+		}
 
-        if (!AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
+		if (!AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
 			return true;
 		}
 
@@ -621,8 +621,8 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 			return true; //only display if there are no other notices waiting to be displayed
 		}
 
-        return false;
-    }
+		return false;
+	}
 
 	/**
 	 * Renders the 'Set up now' dashboard notice
@@ -646,7 +646,8 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 					</p>
 					<p>
 						<?php echo __('Our PHP-based firewall has been created to give you even greater protection.', 'all-in-one-wp-security-and-firewall').' '.
-								   __('To ensure the PHP-based firewall runs before any potentially vulnerable code in your WordPress site can be reached, it will need to be set up.');?>
+								   __('To ensure the PHP-based firewall runs before any potentially vulnerable code in your WordPress site can be reached, it will need to be set up.', 'all-in-one-wp-security-and-firewall');
+						?>
 					</p>
 					<p>
 						<?php _e('If you already have our .htaccess-based firewall enabled, you will still need to set up the PHP-based firewall to benefit from its protection.', 'all-in-one-wp-security-and-firewall'); ?>
@@ -673,7 +674,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	/**
 	 * Ensures only one instance of the class can be created (singleton)
 	 *
-	 * @return void
+	 * @return AIOWPSecurity_Firewall_Setup_Notice|null
 	 */
 	public static function get_instance() {
 

@@ -14,11 +14,6 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 	 * @global type $aio_wp_security
 	 */
 	public static function run() {
-		if (is_multisite()) {
-			delete_site_transient('users_online');
-		} else {
-			delete_transient('users_online');
-		}
 		parent::run();
 	}
 
@@ -52,6 +47,7 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 			$wpdb->prefix.'aiowps_permanent_block',
 			$wpdb->prefix.'aiowps_debug_log',
 			$wpdb->prefix.'aiowps_audit_log',
+			$wpdb->prefix.'aiowps_logged_in_users',
 			$wpdb->prefix.'aiowps_message_store',
 		);
 
@@ -72,9 +68,9 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 			}
 
 			delete_option('aio_wp_security_configs');
-			delete_option('aiowps_temp_configs');
 			delete_option('aiowpsec_db_version');
 			delete_option('aiowpsec_firewall_version');
+			delete_option('aios_antibot_key_map_info');
 		}
 	}
 }

@@ -1,0 +1,49 @@
+  .rsssl-modal.rsssl-onboarding-modal .rsssl-modal-body, .rsssl-letsencrypt .rsssl-le-activate_ssl {
+
+    .rsssl-override-detection-toggle {
+      margin-bottom: -15px;
+    }
+    input[type=email] {
+      width: 100%;
+      margin-bottom: var(--rsp-spacing-m);
+      border: 2px solid;
+      height: 50px;
+      border-color: var(--rsp-grey-300);
+    }
+    //hide select label
+    .rsssl-select {
+      label {
+        display: none;
+      }
+      .components-select-control__input{
+        height:45px;
+        padding: 8px 20px;
+        color: var(--rsp-grey-500);
+      }
+    }
+
+    .rsssl-activate_ssl, .rsssl-plugins {
+      ul {
+        column-count: 1;
+      }
+    }
+
+    ul {
+      li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: var(--rsp-spacing-xxs);
+        &.rsssl-is-plugin{
+          background-color: var(--rsp-grey-100);
+          border: none;
+          margin: 10px 0;
+          padding:5px 0;
+          position:relative;
+        }
+        .rsssl-icon{
+          margin-right:7px;
+        }
+      }
+    }
+
+}

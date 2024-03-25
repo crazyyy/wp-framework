@@ -312,10 +312,14 @@ if ( ! class_exists( 'ACF_Post_Type' ) ) {
 		 *
 		 * @since 6.1
 		 *
-		 * @return bool validity status
+		 * @return boolean validity status
 		 */
 		public function ajax_validate_values() {
-			$post_type_key = acf_sanitize_request_args( $_POST['acf_post_type']['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
+			if ( empty( $_POST['acf_post_type']['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
+				return false;
+			}
+
+			$post_type_key = acf_sanitize_request_args( wp_unslash( $_POST['acf_post_type']['post_type'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
 			$post_type_key = is_string( $post_type_key ) ? $post_type_key : '';
 			$valid         = true;
 
@@ -336,17 +340,18 @@ if ( ! class_exists( 'ACF_Post_Type' ) ) {
 				acf_add_internal_post_type_validation_error( 'post_type', $message );
 			} else {
 				// Check if this post key exists in the ACF store for registered post types, excluding those which failed registration.
-				$store      = acf_get_store( $this->store );
-				$post_id    = (int) acf_sanitize_request_args( $_POST['post_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
+				$store   = acf_get_store( $this->store );
+				$post_id = (int) acf_maybe_get_POST( 'post_id', 0 );
+
 				$matches    = array_filter(
 					$store->get_data(),
-					function( $item ) use ( $post_type_key ) {
+					function ( $item ) use ( $post_type_key ) {
 						return $item['post_type'] === $post_type_key && empty( $item['not_registered'] );
 					}
 				);
 				$duplicates = array_filter(
 					$matches,
-					function( $item ) use ( $post_id ) {
+					function ( $item ) use ( $post_id ) {
 						return $item['ID'] !== $post_id;
 					}
 				);
@@ -377,17 +382,19 @@ if ( ! class_exists( 'ACF_Post_Type' ) ) {
 		 *
 		 * @since 6.1
 		 *
-		 * @param array $post The main ACF post type settings array.
+		 * @param  array   $post          The main ACF post type settings array.
+		 * @param  boolean $escape_labels Determines if the label values should be escaped.
 		 * @return array
 		 */
-		public function get_post_type_args( $post ) {
+		public function get_post_type_args( $post, $escape_labels = true ) {
 			$args = array();
 
 			// Make sure any provided labels are escaped strings and not empty.
 			$labels = array_filter( $post['labels'] );
 			$labels = array_map( 'strval', $labels );
-			$labels = array_map( 'esc_html', $labels );
-
+			if ( $escape_labels ) {
+				$labels = array_map( 'esc_html', $labels );
+			}
 			if ( ! empty( $labels ) ) {
 				$args['labels'] = $labels;
 			}
@@ -500,7 +507,6 @@ if ( ! class_exists( 'ACF_Post_Type' ) ) {
 			}
 
 			// TODO: We don't handle the `capabilities` arg at the moment, but may in the future.
-
 			// WordPress defaults to the "title" and "editor" supports, but none can be provided by passing false (WP 3.5+).
 			$supports = is_array( $post['supports'] ) ? $post['supports'] : array();
 			$supports = array_unique( array_filter( array_map( 'strval', $supports ) ) );
@@ -620,7 +626,7 @@ if ( ! class_exists( 'ACF_Post_Type' ) ) {
 
 			// Validate and prepare the post for export.
 			$post = $this->validate_post( $post );
-			$args = $this->get_post_type_args( $post );
+			$args = $this->get_post_type_args( $post, false );
 			$code = var_export( $args, true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions -- Used for PHP export.
 
 			if ( ! $code ) {
@@ -767,7 +773,6 @@ if ( ! class_exists( 'ACF_Post_Type' ) ) {
 			}
 
 			// TODO: Investigate CPTUI usage of with_feeds, pages settings.
-
 			// ACF handles capability type differently.
 			if ( isset( $args['capability_type'] ) ) {
 				if ( 'post' !== trim( $args['capability_type'] ) ) {
@@ -844,7 +849,6 @@ if ( ! class_exists( 'ACF_Post_Type' ) ) {
 			// Import the post normally.
 			return $this->import_post( $acf_args );
 		}
-
 	}
 
 }

@@ -16,11 +16,15 @@ class WPO_Ajax {
 
 	private $results;
 
+	const HEARTBEAT_INTERVAL = 15; // in seconds
+
 	/**
 	 * Constructor
 	 */
 	private function __construct() {
 		add_action('wp_ajax_wp_optimize_ajax', array($this, 'handle_ajax_requests'));
+		
+		add_filter('wp_optimize_heartbeat', array($this, 'handle_heartbeat_requests'), 10, 1);
 	}
 
 	/**
@@ -34,6 +38,46 @@ class WPO_Ajax {
 			$instance = new self();
 		}
 		return $instance;
+	}
+
+	/**
+	 * Handles heartbeat requests
+	 *
+	 * @param string $action The action we want to run
+	 * @return mixed
+	 */
+	public function handle_heartbeat_requests($action) {
+		$this->set_heartbeat_subaction($action);
+
+		if (!$this->is_user_capable()) {
+			return json_encode($this->send_user_capability_error_response(false));
+		}
+
+		if (is_multisite() && !current_user_can('manage_network_options')) {
+			if (!$this->is_valid_multisite_command()) {
+				return json_encode($this->send_invalid_multisite_command_error_response(false));
+			}
+		}
+
+		$this->set_commands();
+		if ($this->is_invalid_command()) {
+			$this->add_invalid_command_error_log_entry();
+			$this->set_invalid_command_error_response();
+		} else {
+			$this->execute_command();
+			$this->maybe_fix_status_box_content();
+			$this->set_error_response_on_wp_error();
+			$this->maybe_set_results_as_null();
+		}
+
+		$this->json_encode_results();
+
+		$json_last_error = json_last_error();
+		if ($json_last_error) {
+			$this->set_error_response_on_json_encode_error($json_last_error);
+		}
+
+		return $this->results;
 	}
 
 	/**
@@ -101,6 +145,15 @@ class WPO_Ajax {
 	}
 
 	/**
+	 * Sets heartbeat subaction property value
+	 *
+	 * @param string $action_name The name of the heartbeat action to run
+	 */
+	private function set_heartbeat_subaction($action_name) {
+		$this->subaction = $action_name;
+	}
+
+	/**
 	 * Sets data property value
 	 */
 	private function set_data() {
@@ -138,14 +191,22 @@ class WPO_Ajax {
 	}
 
 	/**
-	 * Send user capability check failed error response to browser and die
+	 * Send user capability check failed error response to browser and possibly die
+	 *
+	 * @param Boolean $send - if true, then the response is output; otherwise, it is returned
 	 */
-	private function send_user_capability_error_response() {
-		wp_send_json(array(
+	private function send_user_capability_error_response($send = true) {
+		$error = array(
 			'result' => false,
 			'error_code' => 'security_check',
 			'error_message' => __('You are not allowed to run this command.', 'wp-optimize')
-		));
+		);
+
+		if (true == $send) {
+			wp_send_json($error);
+		} else {
+			return $error;
+		}
 	}
 
 	/**
@@ -164,12 +225,18 @@ class WPO_Ajax {
 	/**
 	 * Send invalid multisite command error response to browser and die
 	 */
-	private function send_invalid_multisite_command_error_response() {
-		wp_send_json(array(
+	private function send_invalid_multisite_command_error_response($send = true) {
+		$error = array(
 			'result' => false,
 			'error_code' => 'update_failed',
 			'error_message' => __('Options can only be saved by network admin', 'wp-optimize')
-		));
+		);
+
+		if (true == $send) {
+			wp_send_json($error);
+		} else {
+			return $error;
+		}
 	}
 
 	/**

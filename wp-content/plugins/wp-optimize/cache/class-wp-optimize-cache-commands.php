@@ -241,7 +241,7 @@ class WP_Optimize_Cache_Commands {
 	/**
 	 * Run cache preload action.
 	 *
-	 * @return void|array - Doesn't return anything if run() is successfull (Run() prints a JSON object and closed browser connection) or an array if failed.
+	 * @return void|array - Doesn't return anything if run() is successful (Run() prints a JSON object and closed browser connection) or an array if failed.
 	 */
 	public function run_cache_preload() {
 		return WP_Optimize_Page_Cache_Preloader::instance()->run('manual');

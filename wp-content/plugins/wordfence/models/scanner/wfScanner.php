@@ -452,6 +452,74 @@ class wfScanner {
 		return $normalizedSchedule;
 	}
 	
+	public function shouldRunQuickScan() {
+		if (!$this->isEnabled()) {
+			return false;
+		}
+		
+		if (time() - $this->lastQuickScanTime() < 79200) { //Do not run within 22 hours of a completed quick scan
+			return false;
+		} 
+		
+		$lastFullScanCompletion = (int) $this->lastScanTime();
+		if (time() - $lastFullScanCompletion < 43200) { //Do not run within 12 hours of a completed full scan
+			return false;
+		}
+		
+		$nextFullScan = $this->nextScheduledScanTime();
+		if ($nextFullScan === false || $nextFullScan - time() < 3600) { //Scans are not running (e.g., custom schedule selected with no times configured) or if scheduled, then avoid running within 1 hour of a pending full scan
+			return false;
+		}
+		
+		$now = time();
+		$tzOffset = wfUtils::formatLocalTime('Z', $now);
+		$currentDayOfWeekUTC = date('w', $now);
+		$currentHourUTC = date('G', $now);
+		$preferredHourUTC = false;
+		
+		if ($this->schedulingMode() == wfScanner::SCAN_SCHEDULING_MODE_MANUAL) {
+			$manualType = $this->manualSchedulingType();
+			$preferredHourUTC = round(($this->manualSchedulingStartHour() * 3600 - $tzOffset) / 3600, 2) % 24; //round() rather than floor() to account for fractional time zones
+			switch ($manualType) {
+				case self::MANUAL_SCHEDULING_ONCE_DAILY:
+				case self::MANUAL_SCHEDULING_EVERY_OTHER_DAY:
+				case self::MANUAL_SCHEDULING_WEEKDAYS:
+				case self::MANUAL_SCHEDULING_WEEKENDS:
+				case self::MANUAL_SCHEDULING_ODD_DAYS_WEEKENDS:
+					$preferredHourUTC = ($preferredHourUTC + 12) % 24;
+					break;
+				case self::MANUAL_SCHEDULING_TWICE_DAILY:
+					$preferredHourUTC = ($preferredHourUTC + 6) % 24; //When automatic scans run twice daily, possibly run a quick scan 6 hours offset (will only run if either scheduled one fails for some reason)
+					break;
+				case self::MANUAL_SCHEDULING_CUSTOM: //Iterate from the current day backwards and base it on the first time found, may or may not actually run depending on the spacing of the custom schedule
+					$preferredHourUTC = false;
+					$oneWeekSchedule = $this->customSchedule();
+					for ($i = 7; $i > 0; $i--) { //Sample sequence for `$currentDayOfWeekUTC == 2` => 2, 1, 0, 6, 5, 4, 3
+						$checkingDayNumber = ($currentDayOfWeekUTC + $i) % 7;
+						$day = $oneWeekSchedule[$checkingDayNumber];
+						$dayHour = array_search(1, $day);
+						if ($dayHour !== false) {
+							$preferredHourUTC = (round(($dayHour * 3600 - $tzOffset) / 3600, 2) + 12) % 24;
+							break;
+						}
+					}
+					break;
+			}
+			
+			if ($preferredHourUTC !== false) { //The preferred hour of a manual scan schedule has been determined, run the quick scan at the desired offset if we're in that hour
+				return ($currentHourUTC >= $preferredHourUTC);
+			}
+		}
+		
+		$noc1ScanSchedule = wfConfig::get_ser('noc1ScanSchedule', array());
+		if (count($noc1ScanSchedule)) {
+			$preferredHourUTC = (((int) (($noc1ScanSchedule[0] % 86400) / 3600)) + 12) % 24;
+			return ($currentHourUTC >= $preferredHourUTC);
+		}
+		
+		return false; //If we've reached this point, the scan config is in a weird state so just skip the quick scan
+	}
+	
 	/**
 	 * Returns an associative array containing the current state each scan stage and its corresponding status.
 	 * 
@@ -1231,11 +1299,31 @@ class wfScanner {
 		wfConfig::set_ser('allScansScheduled', array());
 	}
 	
+	public function nextScheduledScanTime() {
+		$nextTime = false;
+		$cron = _get_cron_array();
+		foreach($cron as $key => $val){
+			if(isset($val['wordfence_start_scheduled_scan'])){
+				$nextTime = $key;
+				break;
+			}
+		}
+		return $nextTime;
+	}
+	
 	public function lastScanTime() {
 		return wfConfig::get('scanTime');
 	}
 	
 	public function recordLastScanTime() {
 		wfConfig::set('scanTime', microtime(true));
+	}
+	
+	public function lastQuickScanTime() {
+		return wfConfig::get('lastQuickScan', 0);
+	}
+	
+	public function recordLastQuickScanTime() {
+		wfConfig::set('lastQuickScan', microtime(true));
 	}
 }

@@ -2,7 +2,7 @@
 <h2><?php _e('wp-config.php file operations', 'all-in-one-wp-security-and-firewall'); ?></h2>
 <div class="aio_blue_box">
 	<?php
-	echo '<p>'.__('Your "wp-config.php" file is one of the most important in your WordPress installation. It is a primary configuration file and contains crucial things such as details of your database and other critical components.', 'all-in-one-wp-security-and-firewall').'
+	echo '<p>'.__('Your "wp-config.php" file is one of the most important files in your WordPress installation.', 'all-in-one-wp-security-and-firewall') . ' ' . __('It is a primary configuration file and contains crucial things such as details of your database and other critical components.', 'all-in-one-wp-security-and-firewall').'
 	<br />'.__('This feature allows you to backup and save your currently active wp-config.php file should you need to re-use the the backed up file in the future.', 'all-in-one-wp-security-and-firewall').'
 	<br />'.__('You can also restore your site\'s wp-config.php settings using a backed up wp-config.php file.', 'all-in-one-wp-security-and-firewall').'
 	</p>';

@@ -13,10 +13,10 @@ namespace RankMath\Analytics\Workflow;
 use RankMath\Helper;
 use RankMath\Google\Api;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Param;
-use RankMath\Analytics\DB;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Param;
 use RankMath\Helpers\Security;
+use RankMath\Analytics\DB;
 use RankMath\Google\Permissions;
 use RankMath\Google\Authentication;
 

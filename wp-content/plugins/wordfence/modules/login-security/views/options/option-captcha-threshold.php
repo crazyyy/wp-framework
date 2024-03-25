@@ -4,17 +4,16 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 $optionName = \WordfenceLS\Controller_Settings::OPTION_RECAPTCHA_THRESHOLD;
 $currentValue = \WordfenceLS\Controller_Settings::shared()->get_float($optionName, 0.5);
 $selectOptions = array(
-	array('label' => __('1.0 (definitely a human)', 'wordfence'), 'value' => 1.0),
-	array('label' => __('0.9', 'wordfence'), 'value' => 0.9),
-	array('label' => __('0.8', 'wordfence'), 'value' => 0.8),
-	array('label' => __('0.7', 'wordfence'), 'value' => 0.7),
-	array('label' => __('0.6', 'wordfence'), 'value' => 0.6),
-	array('label' => __('0.5 (probably a human)', 'wordfence'), 'value' => 0.5),
-	array('label' => __('0.4', 'wordfence'), 'value' => 0.4),
-	array('label' => __('0.3', 'wordfence'), 'value' => 0.3),
-	array('label' => __('0.2', 'wordfence'), 'value' => 0.2),
-	array('label' => __('0.1', 'wordfence'), 'value' => 0.1),
-	array('label' => __('0.0 (definitely a bot)', 'wordfence'), 'value' => 0.0),
+	array('label' => __('1.0 (definitely a human)', 'wordfence'), 'value' => 1.0, 'selected' => ((int) ($currentValue * 10)) == 10),
+	array('label' => __('0.9', 'wordfence'), 'value' => 0.9, 'selected' => ((int) ($currentValue * 10)) == 9),
+	array('label' => __('0.8', 'wordfence'), 'value' => 0.8, 'selected' => ((int) ($currentValue * 10)) == 8),
+	array('label' => __('0.7', 'wordfence'), 'value' => 0.7, 'selected' => ((int) ($currentValue * 10)) == 7),
+	array('label' => __('0.6', 'wordfence'), 'value' => 0.6, 'selected' => ((int) ($currentValue * 10)) == 6),
+	array('label' => __('0.5 (probably a human)', 'wordfence'), 'value' => 0.5, 'selected' => ((int) ($currentValue * 10)) == 5),
+	array('label' => __('0.4', 'wordfence'), 'value' => 0.4, 'selected' => ((int) ($currentValue * 10)) == 4),
+	array('label' => __('0.3', 'wordfence'), 'value' => 0.3, 'selected' => ((int) ($currentValue * 10)) == 3),
+	array('label' => __('0.2', 'wordfence'), 'value' => 0.2, 'selected' => ((int) ($currentValue * 10)) == 2),
+	array('label' => __('0.1 (probably a bot)', 'wordfence'), 'value' => 0.1, 'selected' => ((int) ($currentValue * 10)) <= 1),
 );
 ?>
 <ul class="wfls-flex-vertical wfls-flex-align-left">
@@ -32,7 +31,7 @@ $selectOptions = array(
 					<li class="wfls-option-select wfls-padding-add-top-xs-small">
 						<select aria-labelledby="wfls-option-recaptcha-threshold-label">
 							<?php foreach ($selectOptions as $o): ?>
-								<option class="wfls-option-select-option" value="<?php echo esc_attr($o['value']); ?>"<?php if (((int) ($o['value'] * 10)) == ((int) ($currentValue * 10))) { echo ' selected'; } ?>><?php echo esc_html($o['label']); ?></option>
+								<option class="wfls-option-select-option" value="<?php echo esc_attr($o['value']); ?>"<?php if ($o['selected']) { echo ' selected'; } ?>><?php echo esc_html($o['label']); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</li>

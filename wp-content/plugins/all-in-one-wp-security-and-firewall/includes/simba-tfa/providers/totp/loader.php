@@ -722,11 +722,11 @@ class Simba_TFA_Provider_totp {
 		
 		global $wpdb;
 		
-		$sql = "SELECT user_id, meta_value FROM ".$wpdb->usermeta." WHERE meta_key = 'tfa_priv_key_64'";
+		$sql = "SELECT user_id, meta_value FROM ".$wpdb->usermeta." WHERE meta_key = 'tfa_priv_key_64' AND meta_value != ''";
 		
 		$user_results = $wpdb->get_results($sql);
 
-		if (empty($user_results)) {
+		if (null === $user_results) {
 			return new WP_Error(
 				'failed_to_get_priv_keys',
 				__('Encrypt secrets feature not enabled: unable to get private keys from the database.', 'all-in-one-wp-security-and-firewall')

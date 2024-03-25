@@ -684,6 +684,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		if ($quota > 0) {
 
 			if (!empty($this->vault_in_config_print) && 'text' == $format) {
+				// See card qwcuddk3 for more info on this; or MR#1175
 				$quota_via_transient = get_transient('updraftvault_quota_text');
 				if (is_string($quota_via_transient) && $quota_via_transient) return $quota_via_transient;
 			} elseif ('numeric' == $format) {

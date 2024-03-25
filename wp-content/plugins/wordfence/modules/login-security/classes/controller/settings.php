@@ -217,7 +217,7 @@ class Controller_Settings {
 			case self::OPTION_REMEMBER_DEVICE_DURATION:
 				return is_numeric($value) && $value > 0;
 			case self::OPTION_RECAPTCHA_THRESHOLD:
-				return is_numeric($value) && $value >= 0 && $value <= 1;
+				return is_numeric($value) && $value > 0 && $value <= 1;
 			case self::OPTION_RECAPTCHA_SITE_KEY:
 				if (empty($value)) {
 					return true;

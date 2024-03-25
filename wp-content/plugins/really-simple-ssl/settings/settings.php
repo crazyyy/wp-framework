@@ -7,9 +7,9 @@ defined('ABSPATH') or die();
  * @since 1.0.0
  */
 
-require_once(rsssl_path . 'settings/config/config.php');
-require_once(rsssl_path . 'settings/config/menu.php');
-require_once(rsssl_path . 'settings/config/disable-fields-filter.php');
+require_once(rsssl_path.'settings/config/config.php');
+require_once(rsssl_path.'settings/config/menu.php');
+require_once(rsssl_path.'settings/config/disable-fields-filter.php');
 
 /**
  * Fix for WPML issue where WPML breaks the rest api by adding a language locale in the url
@@ -37,10 +37,11 @@ function rsssl_fix_rest_url_for_wpml($url, $path, $blog_id, $scheme)
     }
 
     if ($current_language) {
-        if (strpos($url, '/' . $current_language . '/wp-json/')) {
-            $url = str_replace('/' . $current_language . '/wp-json/', '/wp-json/', $url);
+        if (strpos($url, '/'.$current_language.'/wp-json/')) {
+            $url = str_replace('/'.$current_language.'/wp-json/', '/wp-json/', $url);
         }
     }
+
     return $url;
 }
 
@@ -53,11 +54,24 @@ add_filter('rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4);
  *
  * @return array
  */
-function rsssl_get_chunk_translations() {
+function rsssl_get_chunk_translations($path = 'settings/build'  ) {
 	//get all files from the settings/build folder
-	$files = scandir(rsssl_path . 'settings/build');
+	$files = scandir(rsssl_path . $path );
 	$json_translations = [];
+
+	// filter the filenames to get the JavaScript and asset filenames
+	$jsFilename = '';
+	$assetFilename = '';
+
 	foreach ($files as $file) {
+		if (strpos($file, 'index.') === 0) {
+			if (substr($file, -3) === '.js') {
+				$jsFilename = $file;
+			} elseif (substr($file, -10) === '.asset.php') {
+				$assetFilename = $file;
+			}
+		}
+
         if (strpos($file, '.js') === false) {
             continue;
         }
@@ -70,42 +84,32 @@ function rsssl_get_chunk_translations() {
         }
 		wp_deregister_script( $chunk_handle );
 	}
-    return $json_translations;
+    if (empty($jsFilename) || empty($assetFilename) ) {
+        return [];
+    }
+	$assetFile     = require( rsssl_path . trailingslashit( $path ) . $assetFilename );
+    return [
+            'json_translations' => $json_translations,
+            'dependencies'  => $assetFile['dependencies'],
+            'version'  => $assetFile['version'],
+            'js_file'  => $jsFilename,
+        ];
 }
 
 
 function rsssl_plugin_admin_scripts()
 {
-	// replace with the actual path to your build directory
-	$buildDirPath = plugin_dir_path(__FILE__) . '/build';
 
-	// get the filenames in the build directory
-	$filenames = scandir($buildDirPath);
-
-	// filter the filenames to get the JavaScript and asset filenames
-	$jsFilename = '';
-	$assetFilename = '';
-	foreach ($filenames as $filename) {
-		if (strpos($filename, 'index.') === 0) {
-			if (substr($filename, -3) === '.js') {
-				$jsFilename = $filename;
-			} elseif (substr($filename, -10) === '.asset.php') {
-				$assetFilename = $filename;
-			}
-		}
-	}
-
+    $js_data = rsssl_get_chunk_translations();
 	// check if the necessary files are found
-	if ($jsFilename !== '' && $assetFilename !== '') {
-		$assetFilePath = $buildDirPath . '/' . $assetFilename;
-		$assetFile     = require( $assetFilePath );
+	if ( !empty($js_data) ) {
 		$handle = 'rsssl-settings';
 		wp_enqueue_script( $handle);
 		wp_enqueue_script(
 			'rsssl-settings',
-			plugins_url( 'build/' . $jsFilename, __FILE__ ),
-			$assetFile['dependencies'],
-			$assetFile['version'],
+			plugins_url( 'build/' . $js_data['js_file'], __FILE__ ),
+			$js_data['dependencies'],
+			$js_data['version'],
 			true
 		);
 		wp_set_script_translations($handle, 'really-simple-ssl');
@@ -113,8 +117,9 @@ function rsssl_plugin_admin_scripts()
 			'rsssl-settings',
 			'rsssl_settings',
 			apply_filters('rsssl_localize_script', [
-				'json_translations' => rsssl_get_chunk_translations(),
+				'json_translations' => $js_data['json_translations'],
 				'menu' => rsssl_menu(),
+				'is_bf' => RSSSL()->admin->is_bf(),
 				'site_url' => get_rest_url(),
 				'plugins_url' => admin_url('update-core.php'),
 				'admin_ajax_url' => add_query_arg(
@@ -135,9 +140,19 @@ function rsssl_plugin_admin_scripts()
 				'nonce' => wp_create_nonce('wp_rest'),//to authenticate the logged in user
 				'rsssl_nonce' => wp_create_nonce('rsssl_nonce'),
 				'wpconfig_fix_required' => RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes(),
+				'cloudflare' => rsssl_uses_cloudflare(),
 			])
 		);
 	}
+}
+
+/**
+ * Check if this server is behind CloudFlare
+ *
+ * @return bool
+ */
+function rsssl_uses_cloudflare(): bool {
+    return isset( $_SERVER['HTTP_CF_CONNECTING_IP'] );
 }
 
 /**
@@ -147,7 +162,7 @@ function rsssl_plugin_admin_scripts()
  */
 function rsssl_add_option_menu()
 {
-    if (!rsssl_user_can_manage()) {
+    if ( ! rsssl_user_can_manage()) {
         return;
     }
 
@@ -156,11 +171,11 @@ function rsssl_add_option_menu()
         return;
     }
 
-    $count = RSSSL()->admin->count_plusones();
-    $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
+    $count            = RSSSL()->admin->count_plusones();
+    $update_count     = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
     $page_hook_suffix = add_options_page(
-        __("SSL settings", "really-simple-ssl"),
-        __("SSL", "really-simple-ssl") . $update_count,
+        __("SSL & Security", "really-simple-ssl"),
+        __("SSL & Security", "really-simple-ssl").$update_count,
         'manage_security',
         'really-simple-security',
         'rsssl_settings_page'
@@ -177,13 +192,13 @@ add_action('admin_menu', 'rsssl_add_option_menu');
 
 function rsssl_settings_page()
 {
-    if (!rsssl_user_can_manage()) {
+    if ( ! rsssl_user_can_manage()) {
         return;
     }
 
     ?>
-    <div id="really-simple-ssl" class="rsssl"></div>
-    <div id="really-simple-ssl-modal"></div>
+	<div id="really-simple-ssl" class="rsssl"></div>
+	<div id="really-simple-ssl-modal"></div>
     <?php
 }
 
@@ -195,9 +210,9 @@ function rsssl_settings_page()
 function rsssl_rest_api_fallback()
 {
     $response = $data = [];
-    $error = $action = $test = $do_action = false;
+    $error    = $action = $test = $do_action = false;
 
-    if (!rsssl_user_can_manage()) {
+    if ( ! rsssl_user_can_manage()) {
         $error = true;
     }
     //if the site is using this fallback, we want to show a notice
@@ -240,7 +255,7 @@ function rsssl_rest_api_fallback()
                 $data[$key] = sanitize_text_field($value);
             }
             $response = rsssl_run_test($request, $data);
-        } else if ($do_action) {
+        } elseif ($do_action) {
             $request = new WP_REST_Request();
             $request->set_param('action', $do_action);
             $response = rsssl_do_action($request, $data);
@@ -291,6 +306,7 @@ function rsssl_settings_rest_route()
             return rsssl_user_can_manage();
         }
     ));
+
 }
 
 /**
@@ -352,22 +368,39 @@ function rsssl_do_action($request, $ajax_data = false)
             $mailer = new rsssl_mailer();
             $response = $mailer->send_test_mail();
             break;
+        case 'send_verification_mail':
+            $mailer = new rsssl_mailer();
+            $response = $mailer->send_verification_mail( rsssl_get_option('notifications_email_address') );
+            break;
         case 'plugin_actions':
             $response = rsssl_plugin_actions($data);
             break;
         case 'clear_cache':
             $response = rsssl_clear_test_caches($data);
             break;
-	    case 'otherpluginsdata':
-		    $response = rsssl_other_plugins_data();
+        case 'otherpluginsdata':
+            $response = rsssl_other_plugins_data();
+            break;
+	    case 'get_roles':
+		    $roles = rsssl_get_roles();
+		    $response = [];
+		    $response['roles'] = $roles;
 		    break;
+	    case 'get_hosts':
+		    if ( !class_exists('rsssl_le_hosts')) {
+			    require_once( rsssl_path . 'lets-encrypt/config/class-hosts.php');
+		    }
+		    $response = [];
+            $response['hosts'] = ( new rsssl_le_hosts() )->hosts;
+            break;
         default:
-            $response = apply_filters("rsssl_do_action", [], $action, $data);
+	        $response = apply_filters("rsssl_do_action", [], $action, $data);
     }
 
     if (is_array($response)) {
         $response['request_success'] = true;
     }
+
     return $response;
 }
 
@@ -406,9 +439,10 @@ function rsssl_plugin_actions($data)
     $installer = new rsssl_installer($slug);
     if ($action === 'download') {
         $installer->download_plugin();
-    } else if ($action === 'activate') {
+    } elseif ($action === 'activate') {
         $installer->activate_plugin();
     }
+
     return rsssl_other_plugins_data($slug);
 }
 
@@ -561,8 +595,12 @@ function rsssl_sanitize_field_type($type)
         'vulnerablemeasures',
         'LetsEncrypt',
         'postdropdown',
+        'two_fa_roles',
+		'roles_dropdown',
+//        'two_fa_table',
+//        'verify_email',
     ];
-    if (in_array($type, $types)) {
+    if ( in_array( $type, $types, true ) ) {
         return $type;
     }
     return 'checkbox';
@@ -769,7 +807,7 @@ function rsssl_rest_api_fields_get()
  */
 function rsssl_sanitize_field($value, string $type, string $id)
 {
-    switch ($type) {
+	switch ($type) {
         case 'checkbox':
         case 'number':
             return (int)$value;
@@ -798,6 +836,16 @@ function rsssl_sanitize_field($value, string $type, string $id)
         case 'learningmode':
             return rsssl_sanitize_datatable($value, $type, $id);
         case 'mixedcontentscan':
+            return $value;
+		case 'roles_dropdown':
+        case 'two_fa_roles':
+	        $value = !is_array($value) ? [] : $value;
+            $roles = rsssl_get_roles();
+            foreach ($value as $index => $role) {
+                if (! in_array( $role, $roles, true ) ) {
+                    unset($value[$index]);
+                }
+            }
             return $value;
         default:
             return sanitize_text_field($value);
@@ -1063,3 +1111,54 @@ function rsssl_conditions_apply(array $conditions)
 
     return $condition_applies;
 }
+
+/**
+ * Fetch all user roles.
+ *
+ * Tries to get roles from cache first. If roles are not in cache, it fetches them and stores them in cache.
+ *
+ * @return array An array of roles, each role being an associative array with 'label' and 'value' keys.
+ */
+function rsssl_get_roles( ): array {
+	if ( ! rsssl_admin_logged_in() ) {
+		return [];
+	}
+
+	global $wp_roles;
+
+	// Try to get roles from cache
+	$roles = wp_cache_get( 'rsssl_roles' );
+
+	// If roles are not in cache, fetch and set cache
+	if ( ! $roles ) {
+		// Just return the names, not the capabilities
+		$roles_names = array_keys( $wp_roles->roles );
+
+		// Extract unique role values from the role names
+		$roles = array_values( array_unique( $roles_names ));
+		// Set the roles in cache for future use
+		wp_cache_set( 'rsssl_roles', $roles );
+	}
+
+	return $roles;
+}
+
+/**
+ * @param $response
+ * @param $user
+ * @param $request
+ *
+ * @return mixed
+ *
+ * Add user roles to /users endpoint
+ */
+function rsssl_add_user_role_to_api_response( $response, $user, $request ) {
+	if ( rsssl_is_logged_in_rest() ) {
+		$data          = $response->get_data();
+		$data['roles'] = $user->roles;
+		$response->set_data( $data );
+	}
+
+	return $response;
+}
+add_filter( 'rest_prepare_user', 'rsssl_add_user_role_to_api_response', 10, 3 );

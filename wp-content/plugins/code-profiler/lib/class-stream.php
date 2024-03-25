@@ -62,9 +62,19 @@ class CodeProfiler_Stream {
 			$this->resource = fopen( $path, $mode, $options );
 		}
 		self::start();
-		if ( in_array( $mode, ['rb', 'rt', 'r']) && "{$path[-4]}{$path[-3]}{$path[-2]}{$path[-1]}" == '.php') {
-			$this->script = 1;
+
+		if ( version_compare( PHP_VERSION, '8.0', '<') ) {
+			if ( in_array( $mode, ['rb', 'rt', 'r']) &&
+				"{$path[-4]}{$path[-3]}{$path[-2]}{$path[-1]}" == '.php') {
+
+				$this->script = 1;
+			}
+		} else {
+			if ( str_ends_with( $path, '.php') && in_array( $mode, ['rb', 'rt', 'r']) ) {
+				$this->script = 1;
+			}
 		}
+
 		return $this->resource !== false;
 	}
 
@@ -317,12 +327,16 @@ class CodeProfiler_Stream {
 				self::start();
 				$read = fread( $this->resource, $count - CODE_PROFILER_LENGTH );
 				self::$io_read += strlen( $read );
-				return preg_replace(
-					'/<\?php/i',
-					'<?php declare(ticks='. CODE_PROFILER_TICKS .');',
-					$read,
-					1
-				);
+				$pos = stripos( $read, '<?php' );
+				if ( $pos !== false ) {
+					return substr_replace(
+						$read,
+						'<?php declare(ticks='. CODE_PROFILER_TICKS .');',
+						$pos,
+						5
+					);
+				}
+				return $read;
 			}
 			self::start();
 		}

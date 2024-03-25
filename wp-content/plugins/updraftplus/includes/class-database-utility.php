@@ -4,26 +4,45 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 
 class UpdraftPlus_Database_Utility {
 
-	private $whichdb;
-
-	private $table_prefix_raw;
-
-	private $dbhandle;
-
 	/**
-	 * Constructor
+	 * Indicated which database is being used
+	 *
+	 * @var String
 	 */
+	private static $whichdb;
+
 	/**
-	 * Constructor
+	 * The unfiltered table prefix - i.e. the real prefix that things are relative to
+	 *
+	 * @var String
+	 */
+	private static $table_prefix_raw;
+
+	/**
+	 * The object to perform database operations
+	 *
+	 * @var Object
+	 */
+	private static $dbhandle;
+
+	/**
+	 * The array of table status, used as a cache to reduce unnecessary DB reads for doing the same thing over and over
+	 *
+	 * @var Array
+	 */
+	private static $table_status = array();
+
+	/**
+	 * Initialize required variables
 	 *
 	 * @param String $whichdb          - which database is being backed up
 	 * @param String $table_prefix_raw - the base table prefix
 	 * @param Object $dbhandle         - WPDB object
 	 */
-	public function __construct($whichdb, $table_prefix_raw, $dbhandle) {
-		$this->whichdb = $whichdb;
-		$this->table_prefix_raw = $table_prefix_raw;
-		$this->dbhandle = $dbhandle;
+	public static function init($whichdb, $table_prefix_raw, $dbhandle) {
+		self::$whichdb = $whichdb;
+		self::$table_prefix_raw = $table_prefix_raw;
+		self::$dbhandle = $dbhandle;
 	}
 
 	/**
@@ -34,8 +53,7 @@ class UpdraftPlus_Database_Utility {
 	 *
 	 * @return Integer - the sort result, according to the rules of PHP custom sorting functions
 	 */
-	public function backup_db_sorttables($a_arr, $b_arr) {
-
+	public static function backup_db_sorttables($a_arr, $b_arr) {
 		$a = $a_arr['name'];
 		$a_table_type = $a_arr['type'];
 		$b = $b_arr['name'];
@@ -45,11 +63,11 @@ class UpdraftPlus_Database_Utility {
 		if ('VIEW' == $a_table_type && 'VIEW' != $b_table_type) return 1;
 		if ('VIEW' == $b_table_type && 'VIEW' != $a_table_type) return -1;
 	
-		if ('wp' != $this->whichdb) return strcmp($a, $b);
+		if ('wp' != self::$whichdb) return strcmp($a, $b);
 
 		global $updraftplus;
 		if ($a == $b) return 0;
-		$our_table_prefix = $this->table_prefix_raw;
+		$our_table_prefix = self::$table_prefix_raw;
 		if ($a == $our_table_prefix.'options') return -1;
 		if ($b == $our_table_prefix.'options') return 1;
 		if ($a == $our_table_prefix.'site') return -1;
@@ -64,7 +82,7 @@ class UpdraftPlus_Database_Utility {
 		if (empty($our_table_prefix)) return strcmp($a, $b);
 
 		try {
-			$core_tables = array_merge($this->dbhandle->tables, $this->dbhandle->global_tables, $this->dbhandle->ms_global_tables);
+			$core_tables = array_merge(self::$dbhandle->tables, self::$dbhandle->global_tables, self::$dbhandle->ms_global_tables);
 		} catch (Exception $e) {
 			$updraftplus->log($e->getMessage());
 		}
@@ -202,7 +220,7 @@ class UpdraftPlus_Database_Utility {
 			'TRADITIONAL',
 		), $strict_modes));
 
-		$class = get_class();
+		$class = __CLASS__;
 
 		if (is_null($db_handle) || is_a($db_handle, 'WPDB')) {
 			$initial_modes_str = $wpdb_handle_if_used->get_var('SELECT @@SESSION.sql_mode');

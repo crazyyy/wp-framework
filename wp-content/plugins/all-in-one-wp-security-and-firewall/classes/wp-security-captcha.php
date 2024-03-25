@@ -7,9 +7,22 @@ class AIOWPSecurity_Captcha {
 
 	private $google_verify_recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
 
+	/**
+	 * Constructor for the AIOWPSecurity_Captcha class.
+	 *
+	 * Initializes and sets up actions and filters related to AIOWPS Captcha features.
+	 */
 	public function __construct() {
+		global $aio_wp_security;
+
 		$this->upgrade_captcha_options();
 		add_action('login_enqueue_scripts', array($this, 'aiowps_login_enqueue'));
+
+		if (AIOWPSecurity_Utility::is_contact_form_7_plugin_active() && '1' == $aio_wp_security->configs->get_value('aiowps_enable_contact_form_7_captcha')) {
+			add_action('wpcf7_admin_init', array($this, 'add_contact_form_7_captcha_tag_generator_button'), 100, 0);
+			add_filter('wpcf7_contact_form_properties', array($this, 'add_contact_form_7_captcha'));
+			add_filter('wpcf7_validate', array($this, 'verify_contact_form_7_captcha'), 10, 2);
+		}
 	}
 
 	/**
@@ -44,6 +57,19 @@ class AIOWPSecurity_Captcha {
 			'cloudflare-turnstile' => 'Cloudflare Turnstile',
 			'google-recaptcha-v2' => 'Google reCAPTCHA V2',
 			'simple-math' => 'Simple math CAPTCHA'
+		);
+	}
+
+	/**
+	 * This function will return an array of supported CAPTCHA themes
+	 *
+	 * @return array - an array of supported CAPTCHA themes
+	 */
+	public function get_captcha_themes() {
+		return array(
+			'auto'  => __('Auto', 'all-in-one-wp-security-and-firewall'),
+			'light' => __('Light', 'all-in-one-wp-security-and-firewall'),
+			'dark'  => __('Dark', 'all-in-one-wp-security-and-firewall'),
 		);
 	}
 
@@ -240,11 +266,12 @@ class AIOWPSecurity_Captcha {
 	/**
 	 * Displays CAPTCHA form
 	 *
-	 * @param string $default_captcha - the default CAPTCHA
+	 * @param string  $default_captcha        - the default CAPTCHA
+	 * @param boolean $return_instead_of_echo - if we should return the form rather than echo it to page
 	 *
-	 * @return void
+	 * @return string|void
 	 */
-	public function display_captcha_form($default_captcha) {
+	public function display_captcha_form($default_captcha, $return_instead_of_echo = false) {
 		global $aio_wp_security;
 
 		if ($aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha') == '1' && defined('BP_VERSION')) {
@@ -255,10 +282,12 @@ class AIOWPSecurity_Captcha {
 		switch ($default_captcha) {
 			case 'cloudflare-turnstile':
 				if ('1' == $aio_wp_security->configs->get_value('aios_cloudflare_turnstile_invalid_configuration')) return;
+				if ($return_instead_of_echo) return $this->get_captcha_form($default_captcha, 0, $return_instead_of_echo);
 				$this->get_captcha_form($default_captcha);
 				break;
 			case 'google-recaptcha-v2':
 				if ('1' == $aio_wp_security->configs->get_value('aios_google_recaptcha_invalid_configuration')) return;
+				if ($return_instead_of_echo) return $this->get_captcha_form($default_captcha, 0, $return_instead_of_echo);
 				$this->get_captcha_form($default_captcha);
 				break;
 			case 'simple-math':
@@ -266,6 +295,7 @@ class AIOWPSecurity_Captcha {
 				$cap_form .= '<div class="aiowps-captcha-equation hide-when-displaying-tfa-input"><strong>';
 				$maths_question_output = $this->generate_maths_question();
 				$cap_form .= $maths_question_output . '</strong></div></p>';
+				if ($return_instead_of_echo) return $cap_form;
 				echo $cap_form;
 				break;
 		}
@@ -308,7 +338,7 @@ class AIOWPSecurity_Captcha {
 			$second_operand = $second_digit;
 		}
 
-		//Let's caluclate the result and construct the equation string
+		//Let's calculate the result and construct the equation string
 		if ('&#43;' === $operator) {
 			//Addition
 			$result = $first_digit+$second_digit;
@@ -341,9 +371,9 @@ class AIOWPSecurity_Captcha {
 			update_option('aiowps_captcha_string_info_'.$random_str, $enc_result, false);
 			update_option('aiowps_captcha_string_info_time_'.$random_str, $current_time, false);
 		}
-		$equation_string .= '<input type="hidden" name="aiowps-captcha-string-info" id="aiowps-captcha-string-info" value="'.$random_str.'" />';
-		$equation_string .= '<input type="hidden" name="aiowps-captcha-temp-string" id="aiowps-captcha-temp-string" value="'.$current_time.'" />';
-		$equation_string .= '<input type="text" size="2" id="aiowps-captcha-answer" name="aiowps-captcha-answer" value="" autocomplete="off" />';
+		$equation_string .= '<input type="hidden" name="aiowps-captcha-string-info" class="aiowps-captcha-string-info" value="'.$random_str.'" />';
+		$equation_string .= '<input type="hidden" name="aiowps-captcha-temp-string" class="aiowps-captcha-temp-string" value="'.$current_time.'" />';
+		$equation_string .= '<input type="text" size="2" class="aiowps-captcha-answer" name="aiowps-captcha-answer" value="" autocomplete="off" />';
 		return $equation_string;
 	}
 
@@ -421,7 +451,9 @@ class AIOWPSecurity_Captcha {
 		switch ($default_captcha) {
 			case 'cloudflare-turnstile':
 				$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'));
-				$captcha_form = '<div class="cf-turnstile-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="cf-turnstile" data-sitekey="'.$site_key.'"></div></div>';
+				$turnstile_theme = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_theme'));
+				if (empty($turnstile_theme)) $turnstile_theme = 'auto';
+				$captcha_form = '<div class="cf-turnstile-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="cf-turnstile" data-sitekey="'.$site_key.'" data-theme="'.$turnstile_theme.'"></div></div>';
 				break;
 			case 'google-recaptcha-v2':
 				$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_recaptcha_site_key'));
@@ -578,7 +610,7 @@ class AIOWPSecurity_Captcha {
 	}
 
 	/**
-	 *  Get site locale code for Google reCaptcha.
+	 * Get site locale code for Google reCaptcha.
 	 *
 	 * @return string The site locale code.
 	 */
@@ -633,4 +665,183 @@ class AIOWPSecurity_Captcha {
 		}
 	}
 
+	/**
+	 * This function adds captcha to contact form 7
+	 *
+	 * @param array $form_properties - this is the array containing properties for the form
+	 *
+	 * @return array $form_properties - containing the edited form with the captcha if everything is set
+	 */
+	public function add_contact_form_7_captcha($form_properties) {
+		global $aio_wp_security;
+
+		if (!class_exists('WPCF7_RECAPTCHA') || is_admin()) return $form_properties; // if wpc7_recaptcha does not exist or the call is from the admin page
+
+		$recaptcha_service = WPCF7_RECAPTCHA::get_instance();
+
+		// if recaptcha is active return form
+		if ($recaptcha_service->is_active()) return $form_properties;
+
+		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
+
+		// check if default captcha configuration is correct
+		if (!$this->verify_captcha_configuration($default_captcha)) {
+			$aio_wp_security->debug_logger->log_debug("The captcha $default_captcha is not correctly configured", 4);
+			return $form_properties;
+		}
+		$form = isset($form_properties['form']) ? $form_properties['form'] : '';
+		if (empty($form)) return $form_properties;
+
+		// enqueue script
+		wp_enqueue_script($default_captcha, $this->get_captcha_script_url($default_captcha), array(), AIO_WP_SECURITY_VERSION);
+
+		$field = $this->display_captcha_form($default_captcha, true);
+		$field .= "<span class='wpcf7-form-control-wrap' data-name='aiowps-captcha'></span>"; // add validation field for the captcha
+		$captcha_shortcode = sprintf('[%s]', AIOWPSEC_CAPTCHA_SHORTCODE);
+
+		if (false !== strpos($form, $captcha_shortcode)) {
+			$replacement_string = $captcha_shortcode;
+		} else {
+			$replacement_string = '[submit';
+			// if shortcode doesn't exist in form then use the submit button as placement for the captcha
+			if (false !== stripos($form, $replacement_string)) {
+				$field .= $replacement_string;
+			} else {
+				$pattern = '/<input[^>]+type\s*=\s*(["\']?)submit\\1[^>]*>/i';
+
+				if (preg_match($pattern, $form, $matches)) {
+					$field .= $matches[0];
+					$replacement_string = $matches[0];
+				}
+			}
+		}
+		// replace first occurence of replacement string
+		$form = preg_replace('/' . preg_quote($replacement_string, '/') . '/', $field, $form, 1);
+		$form_properties['form'] = $form;
+
+		return $form_properties;
+	}
+
+	/**
+	 * This verifies contact form 7 captcha
+	 *
+	 * @param WPCF7_Validation $result - This is the form result from contact form 7 plugin
+	 * @return WPCF7_Validation - The validation for a contact form 7 form
+	 */
+	public function verify_contact_form_7_captcha($result) {
+		if (!class_exists('WPCF7_Submission') || !class_exists('WPCF7_RECAPTCHA')) return $result;
+
+		$recaptcha_service = WPCF7_RECAPTCHA::get_instance();
+		// if recaptcha is active return result
+		if ($recaptcha_service->is_active()) return $result;
+
+		$post = WPCF7_Submission::get_instance();
+		$message = __('Your CAPTCHA answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall');
+
+		if (!empty($post)) {
+			$data = $post->get_posted_data();
+			$field_name = $this->get_contact_form_7_captcha_post_field_name();
+
+			if (empty($field_name) || false === array_key_exists($field_name, $data)) return $result; // if field name is empty or field doesn't exist return
+
+			if (empty($data[$field_name])) {
+				$result->invalidate(array('type' => 'captcha', 'name' => 'aiowps-captcha'), $message);
+				return $result;
+			}
+
+			$verify = $this->verify_captcha_submit();
+			if (!$verify) {
+				$result->invalidate(array('type' => 'captcha', 'name' => 'aiowps-captcha'), $message);
+				return $result;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * This function gets the field name for the captcha
+	 *
+	 * @return string - The field name for the CAPTCHA if the feature is activated, an empty string if it's not
+	 */
+	private function get_contact_form_7_captcha_post_field_name() {
+		global $aio_wp_security;
+
+		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
+		$field = '';
+
+		switch ($default_captcha) {
+			case 'cloudflare-turnstile':
+				$field = 'cf-turnstile-response';
+				break;
+			case 'google-recaptcha-v2':
+				$field = 'g-recaptcha-response';
+				break;
+			case 'simple-math':
+				$field = 'aiowps-captcha-answer';
+				break;
+		}
+
+		return $field;
+	}
+
+	/**
+	 * This checks if the default captcha is configured correctly
+	 *
+	 * @param string $default_captcha - the default CAPTCHA
+	 *
+	 * @return bool - True if the captcha configuration is correct, otherwise false.
+	 */
+	public function verify_captcha_configuration($default_captcha) {
+		global $aio_wp_security;
+
+		if (empty($default_captcha)) return false;
+
+		$verify = true;
+
+		switch ($default_captcha) {
+			case 'cloudflare-turnstile':
+				$verify = $this->cloudflare_turnstile_verify_configuration($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'), $aio_wp_security->configs->get_value('aiowps_turnstile_secret_key'));
+				break;
+			case 'google-recaptcha-v2':
+				$verify = $this->google_recaptcha_verify_configuration($aio_wp_security->configs->get_value('aiowps_recaptcha_site_key'), $aio_wp_security->configs->get_value('aiowps_recaptcha_secret_key'));
+				break;
+		}
+
+		return $verify;
+	}
+
+	/**
+	 * This function adds the aiowps contact form 7 CAPTCHA
+	 *
+	 * @return void
+	 */
+	public function add_contact_form_7_captcha_tag_generator_button() {
+		if (!class_exists('WPCF7_TagGenerator')) return;
+
+		$tag_generator = WPCF7_TagGenerator::get_instance();
+		$tag_generator->add('aios-captcha', sprintf(__('%s captcha', 'all-in-one-wp-security-and-firewall'), 'aios'), array($this, 'contact_form_7_tag_generator_button'), '');
+	}
+
+	/**
+	 * This function is the callback for adding the captcha tag
+	 *
+	 * @return void
+	 */
+	public function contact_form_7_tag_generator_button() {
+		$type = AIOWPSEC_CAPTCHA_SHORTCODE;
+		?>
+		<div class="control-box">
+			<fieldset>
+				<legend><?php echo esc_html(sprintf(__("Generate a form-tag to use %s CAPTCHA", 'all-in-one-wp-security-and-firewall'), 'AIOS')); ?></legend>
+			</fieldset>
+		</div>
+		<div class="insert-box">
+			<input type="text" name="<?php echo esc_attr($type); ?>" class="tag code" readonly="readonly" onfocus="this.select()" />
+			<div class="submitbox">
+				<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr(__('Insert tag', 'all-in-one-wp-security-and-firewall')); ?>" />
+			</div>
+		</div>
+		<?php
+	}
 }

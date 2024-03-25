@@ -14,9 +14,9 @@ use RankMath\Paper\Paper;
 use RankMath\Traits\Ajax;
 use RankMath\Traits\Meta;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Arr;
-use MyThemeShop\Helpers\Url;
-use MyThemeShop\Helpers\Param;
+use RankMath\Helpers\Arr;
+use RankMath\Helpers\Url;
+use RankMath\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -383,12 +383,6 @@ class Admin_Bar_Menu {
 				'title' => esc_html__( 'Google PageSpeed', 'rank-math' ),
 				'href'  => 'https://developers.google.com/speed/pagespeed/insights/?url=' . $url,
 				'meta'  => [ 'title' => esc_html__( 'Google PageSpeed Insights', 'rank-math' ) ],
-			],
-
-			'google-mobilefriendly'      => [
-				'title' => esc_html__( 'Google Mobile-Friendly', 'rank-math' ),
-				'href'  => 'https://search.google.com/test/mobile-friendly?url=' . $url,
-				'meta'  => [ 'title' => esc_html__( 'Google Mobile-Friendly Test', 'rank-math' ) ],
 			],
 
 			'google-richresults-mobile'  => [

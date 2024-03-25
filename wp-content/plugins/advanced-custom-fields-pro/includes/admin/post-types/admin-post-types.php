@@ -38,10 +38,7 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 		/**
 		 * Constructor.
 		 *
-		 * @date    5/03/2014
-		 * @since   6.2
-		 *
-		 * @return  void
+		 * @since 6.2
 		 */
 		public function __construct() {
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 8 );
@@ -51,12 +48,10 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 
 		/**
 		 * Renders HTML for the ACF PRO features upgrade notice.
-		 *
-		 * @return void
 		 */
 		public function include_pro_features() {
 			// Bail if on PRO.
-			if ( acf_is_pro() ) {
+			if ( acf_is_pro() && acf_pro_is_license_active() ) {
 				return;
 			}
 
@@ -71,9 +66,7 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 		/**
 		 * Current screen actions for the post types list admin page.
 		 *
-		 * @since   6.1
-		 *
-		 * @return  void
+		 * @since 6.1
 		 */
 		public function current_screen() {
 			// Bail early if not post types admin page.
@@ -316,8 +309,8 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 		 *
 		 * @since 6.1
 		 *
-		 * @param string $action The action being performed.
-		 * @param int    $count  The number of items the action was performed on.
+		 * @param string  $action The action being performed.
+		 * @param integer $count  The number of items the action was performed on.
 		 * @return string
 		 */
 		public function get_action_notice_text( $action, $count = 1 ) {
@@ -370,10 +363,8 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 			__( 'This post type could not be registered because its key is in use by another post type registered by another plugin or theme.', 'acf' ) .
 			'"></span> ' . _x( 'Registration Failed', 'post status', 'acf' );
 		}
-
 	}
 
 	// Instantiate.
 	acf_new_instance( 'ACF_Admin_Post_Types' );
-
 endif; // Class exists check.

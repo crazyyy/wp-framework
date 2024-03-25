@@ -29,15 +29,17 @@
 						<tr valign="top">
 							<th scope="row"><?php _e('Enable custom .htaccess rules', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 							<td>
-								<input id="aiowps_enable_custom_rules" name="aiowps_enable_custom_rules" type="checkbox"<?php if ($aio_wp_security->configs->get_value('aiowps_enable_custom_rules')=='1') echo ' checked="checked"'; ?> value="1"/>
-								<label for="aiowps_enable_custom_rules" class="description"><?php _e('Check this if you want to enable custom rules entered in the text box below', 'all-in-one-wp-security-and-firewall'); ?></label>
+								<div class="aiowps_switch_container">
+									<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable custom rules entered in the text box below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_custom_rules', '1' == $aio_wp_security->configs->get_value('aiowps_enable_custom_rules')); ?>
+								</div>
 							</td>
 						</tr>
 						<tr valign="top">
 							<th scope="row"><?php _e('Place custom rules at the top', 'all-in-one-wp-security-and-firewall');?>:</th>
 							<td>
-								<input id="aiowps_place_custom_rules_at_top" name="aiowps_place_custom_rules_at_top" type="checkbox"<?php if ($aio_wp_security->configs->get_value('aiowps_place_custom_rules_at_top')=='1') echo ' checked="checked"'; ?> value="1"/>
-								<label for="aiowps_place_custom_rules_at_top" class="description"><?php _e('Check this if you want to place your custom rules at the beginning of all the rules applied by this plugin', 'all-in-one-wp-security-and-firewall'); ?></label>
+								<div class="aiowps_switch_container">
+									<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to place your custom rules at the beginning of all the rules applied by this plugin', 'all-in-one-wp-security-and-firewall'), 'aiowps_place_custom_rules_at_top', '1' == $aio_wp_security->configs->get_value('aiowps_place_custom_rules_at_top')); ?>
+								</div>
 							</td>
 						</tr>
 						<tr valign="top">

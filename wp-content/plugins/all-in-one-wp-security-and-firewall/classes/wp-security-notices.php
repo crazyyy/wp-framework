@@ -145,7 +145,8 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 					__("This feature will block any IP address or range listed in its settings, please double check your own details are not included before turning it back on.", 'all-in-one-wp-security-and-firewall') .
 					'</p>' ,
 				'button_link' => add_query_arg(array(
-					'page' => AIOWPSEC_BLACKLIST_MENU_SLUG,
+					'page' => AIOWPSEC_FIREWALL_MENU_SLUG,
+					'tab'  => 'blacklist'
 				), admin_url('admin.php')) . '#poststuff',
 				'action_button_text' => 'Turn it on',
 				'button_meta' => __('Edit the settings', 'all-in-one-wp-security-and-firewall'),
@@ -169,7 +170,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 				'validity_function' => 'should_show_login_whitelist_disabled_on_upgrade_notice',
 			),
 			'rate_plugin' => array(
-				'text' => sprintf(htmlspecialchars(__('Hey - We noticed All In One WP Security & Firewall has kept your site safe for a while.  If you like us, please consider leaving a positive review to spread the word.  Or if you have any issues or questions please leave us a support message %s.', 'all-in-one-wp-security-and-firewall')), '<a href="https://wordpress.org/support/plugin/all-in-one-wp-security-and-firewall/" target="_blank">'.__('here', 'all-in-one-wp-security-and-firewall').'</a>').'<br>'.__('Thank you so much!', 'all-in-one-wp-security-and-firewall').'<br><br>- <b>'.htmlspecialchars(__('Team All In One WP Security & Firewall', 'all-in-one-wp-security-and-firewall')).'</b>',
+				'text' => sprintf(htmlspecialchars(__('Hey - We noticed All In One WP Security & Firewall has kept your site safe for a while.', 'all-in-one-wp-security-and-firewall') . ' ' . __('If you like us, please consider leaving a positive review to spread the word.', 'all-in-one-wp-security-and-firewall'). ' ' . __('Or if you have any issues or questions please leave us a support message %s.', 'all-in-one-wp-security-and-firewall')), '<a href="https://wordpress.org/support/plugin/all-in-one-wp-security-and-firewall/" target="_blank">'.__('here', 'all-in-one-wp-security-and-firewall').'</a>').'<br>'.__('Thank you so much!', 'all-in-one-wp-security-and-firewall').'<br><br>- <b>'.htmlspecialchars(__('Team All In One WP Security & Firewall', 'all-in-one-wp-security-and-firewall')).'</b>',
 				'image' => 'plugin-logos/aiowps-logo.png',
 				'button_link' => 'https://wordpress.org/support/plugin/all-in-one-wp-security-and-firewall/reviews/?rate=5#new-post',
 				'button_meta' => 'review',
@@ -204,21 +205,21 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 			'blackfriday' => array(
 				'prefix' => '',
 				'title' => __('Black Friday Sale', 'all-in-one-wp-security-and-firewall'),
-				'text' => __('Get added protection with Premium. Scan your site for malware, downtime and response time issues. Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 28th November.', 'all-in-one-wp-security-and-firewall'), '<b>blackfridaysale2023</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
+				'text' => __('Get added protection with Premium.', 'all-in-one-wp-security-and-firewall'). ' ' . __('Scan your site for malware, downtime and response time issues.', 'all-in-one-wp-security-and-firewall') . ' ' .__(' Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 28th November.', 'all-in-one-wp-security-and-firewall'), '<b>blackfridaysale2023</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com/blackfriday?utm_source=plugin&utm_medium=banner&utm_campaign=black_friday">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
 				'image' => 'notices/black_friday.png',
-				'button_link' => 'https://aiosplugin.com/bf22aiosupgrade',
+				'button_link' => 'https://aiosplugin.com/blackfriday?utm_source=plugin&utm_medium=banner&utm_campaign=black_friday',
 				'campaign' => 'blackfriday',
 				// 'button_meta' => 'all-in-one-wp-security-and-firewall',
 				'dismiss_time' => 'dismiss_season',
 				// 'discount_code' => '‘bf22aiosupgrade’',
-				'valid_from' => '2023-11-20 00:00:00',
+				'valid_from' => '2023-11-13 00:00:00',
 				'valid_to' => '2023-11-28 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'newyear' => array(
 				'prefix' => '',
 				'title' => __('New Year Sale', 'all-in-one-wp-security-and-firewall'),
-				'text' => __('Get added protection with Premium. Scan your site for malware, downtime and response time issues. Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 14th January.', 'all-in-one-wp-security-and-firewall'), '<b>newyearsale2024</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
+				'text' => __('Get added protection with Premium.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Scan your site for malware, downtime and response time issues.', 'all-in-one-wp-security-and-firewall') .' ' .__(' Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 14th January.', 'all-in-one-wp-security-and-firewall'), '<b>newyearsale2024</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
 				'image' => 'notices/new_year.png',
 				'button_link' => 'https://aiosplugin.com',
 				'campaign' => 'newyear',
@@ -232,7 +233,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 			'spring' => array(
 				'prefix' => '',
 				'title' => __('Spring Sale', 'all-in-one-wp-security-and-firewall'),
-				'text' => __('Get added protection with Premium. Scan your site for malware, downtime and response time issues. Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 30th April.', 'all-in-one-wp-security-and-firewall'), '<b>springsale2023</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
+				'text' => __('Get added protection with Premium.', 'all-in-one-wp-security-and-firewall'). ' '. __(' Scan your site for malware, downtime and response time issues.', 'all-in-one-wp-security-and-firewall') . ' ' . __(' Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 30th April.', 'all-in-one-wp-security-and-firewall'), '<b>springsale2023</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
 				'image' => 'notices/spring.png',
 				'button_link' => 'https://aiosplugin.com',
 				'campaign' => 'spring',
@@ -246,7 +247,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 			'summer' => array(
 				'prefix' => '',
 				'title' => __('Summer Sale', 'all-in-one-wp-security-and-firewall'),
-				'text' => __('Get added protection with Premium. Scan your site for malware, downtime and response time issues. Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 31st July.', 'all-in-one-wp-security-and-firewall'), '<b>summersale2023</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
+				'text' => __('Get added protection with Premium.', 'all-in-one-wp-security-and-firewall'). ' '. __(' Scan your site for malware, downtime and response time issues.', 'all-in-one-wp-security-and-firewall') . ' ' . __(' Block traffic by country of origin, get advanced two-factor authentication, premium support and more.', 'all-in-one-wp-security-and-firewall').'<br>'.sprintf(__('Get 20%% off with code %s at %s. Hurry, offer ends 31st July.', 'all-in-one-wp-security-and-firewall'), '<b>summersale2023</b>', '<a class="aiowps_notice_link" href="https://aiosplugin.com">'.__('checkout', 'all-in-one-wp-security-and-firewall').'</a>'),
 				'image' => 'notices/summer.png',
 				'button_link' => 'https://aiosplugin.com',
 				'campaign' => 'summer',
@@ -260,7 +261,7 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 			'collection' => array(
 				'prefix' => '',
 				'title' => __('The Updraft Plugin Collection Sale', 'all-in-one-wp-security-and-firewall'),
-				'text' => sprintf(__('Visit any of our websites and use code %s at checkout to get 20%% off all our plugins. Be quick, offer ends 30th September.', 'all-in-one-wp-security-and-firewall'), '<b>AIOS2023</b>'),
+				'text' => sprintf(__('Visit any of our websites and use code %s at checkout to get 20%% off all our plugins.', 'all-in-one-wp-security-and-firewall') .' '.__('Be quick, offer ends 30th September.', 'all-in-one-wp-security-and-firewall'), '<b>AIOS2023</b>'),
 				'image' => 'plugin-logos/updraft_logo.png',
 				'button_link' => 'https://teamupdraft.com',
 				'campaign' => 'collection',
@@ -478,16 +479,16 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 		
 		return false;
 	}
-	
+
 	/**
 	 * Whether the current page is the AIOS blacklist admin page
 	 *
 	 * @return Boolean True if the current page is the AIOS blacklist admin page, otherwise false.
 	 */
 	private function is_blacklist_admin_page() {
-		return ('admin.php' == $GLOBALS['pagenow'] && isset($_GET['page']) && AIOWPSEC_BLACKLIST_MENU_SLUG == $_GET['page']);
+		return ('admin.php' == $GLOBALS['pagenow'] && isset($_GET['page']) && AIOWPSEC_FIREWALL_MENU_SLUG == $_GET['page'] && isset($_GET['tab']) && 'blacklist' == $_GET['tab']);
 	}
-	
+
 	/**
 	 * Decides whether to show the IP address detection settings notice.
 	 *

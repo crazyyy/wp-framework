@@ -13,29 +13,43 @@ ini_set('pcre.recursion_limit', 5000000);
 
 // Include PHP Minify [1.3.60] - https://github.com/matthiasmullie/minify
 if (!class_exists('\MatthiasMullie\Minify\Minify')) {
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/minify/src/Minify.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/minify/src/CSS.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/minify/src/JS.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/minify/src/Exception.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/minify/src/Exceptions/BasicException.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/minify/src//Exceptions/FileImportException.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/minify/src/Exceptions/IOException.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/path-converter/src/ConverterInterface.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/matthiasmullie/path-converter/src/Converter.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Minify.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/CSS.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/JS.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Exception.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Exceptions/BasicException.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src//Exceptions/FileImportException.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Exceptions/IOException.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/path-converter/src/ConverterInterface.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/path-converter/src/Converter.php';
 }
 	
 use MatthiasMullie\Minify; // phpcs:ignore PHPCompatibility.Keywords.NewKeywords.t_useFound, PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ns_separatorFound
 
 // Use HTML minification
 if (!class_exists('Minify_HTML')) {
-	require_once WPO_PLUGIN_MAIN_PATH.'/vendor/mrclay/minify/lib/Minify/HTML.php';
+	require_once WPO_PLUGIN_MAIN_PATH.'vendor/mrclay/minify/lib/Minify/HTML.php';
 }
 
 if (!class_exists('WP_Optimize_Options')) {
-	include_once WPO_PLUGIN_MAIN_PATH.'/includes/class-wp-optimize-options.php';
+	include_once WPO_PLUGIN_MAIN_PATH.'includes/class-wp-optimize-options.php';
 }
 
 class WP_Optimize_Minify_Functions {
+
+	/**
+	 * Applies `strip_tags` function for given array of messages
+	 *
+	 * @param array  $messages     Array of messages
+	 * @param string $allowed_tags Tags to retain in message (optional)
+	 *
+	 * @return array
+	 */
+	public static function apply_strip_tags_for_messages_array($messages, $allowed_tags = '<strong>') {
+		return array_map(function($message) use ($allowed_tags) {
+			return strip_tags($message, $allowed_tags);
+		}, $messages);
+	}
 
 	/**
 	 * Detect external or internal scripts
@@ -683,7 +697,9 @@ class WP_Optimize_Minify_Functions {
 		remove_action('wp_head', 'print_emoji_detection_script', 7);
 		remove_action('admin_print_scripts', 'print_emoji_detection_script');
 		remove_action('wp_print_styles', 'print_emoji_styles');
+		remove_action('wp_enqueue_scripts', 'wp_enqueue_emoji_styles');
 		remove_action('admin_print_styles', 'print_emoji_styles');
+		remove_action('admin_enqueue_scripts', 'wp_enqueue_emoji_styles');
 		remove_filter('the_content_feed', 'wp_staticize_emoji');
 		remove_filter('comment_text_rss', 'wp_staticize_emoji');
 		remove_filter('wp_mail', 'wp_staticize_emoji_for_email');

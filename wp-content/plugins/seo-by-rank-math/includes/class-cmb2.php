@@ -12,10 +12,10 @@
 
 namespace RankMath;
 
+use RankMath\Helper;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Param;
 use RankMath\Admin\Admin_Helper;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Param;
-use MyThemeShop\Helpers\Conditional;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -99,7 +99,7 @@ class CMB2 {
 			$type = 'term';
 		}
 
-		if ( Conditional::is_ajax() && 'add-tag' === Param::post( 'action' ) ) {
+		if ( Helper::is_ajax() && 'add-tag' === Param::post( 'action' ) ) {
 			$type = 'term';
 		}
 

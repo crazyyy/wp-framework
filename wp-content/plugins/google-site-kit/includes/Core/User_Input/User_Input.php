@@ -10,8 +10,9 @@
 
 namespace Google\Site_Kit\Core\User_Input;
 
+use ArrayAccess;
 use Google\Site_Kit\Context;
-use Google\Site_Kit\Core\Key_Metrics\Key_Metrics_Setup_Completed;
+use Google\Site_Kit\Core\Key_Metrics\Key_Metrics_Setup_Completed_By;
 use Google\Site_Kit\Core\Storage\Options;
 use Google\Site_Kit\Core\Storage\User_Options;
 use Google\Site_Kit\Core\User_Surveys\Survey_Queue;
@@ -99,7 +100,7 @@ class User_Input {
 		$this->rest_controller       = new REST_User_Input_Controller(
 			$this,
 			$survey_queue ?: new Survey_Queue( $this->user_options ),
-			new Key_Metrics_Setup_Completed( $options ?: new Options( $context ) )
+			new Key_Metrics_Setup_Completed_By( $options ?: new Options( $context ) )
 		);
 	}
 
@@ -160,7 +161,6 @@ class User_Input {
 			}
 
 			$answered_by = intval( $setting['answeredBy'] );
-			unset( $setting['answeredBy'] );
 
 			if ( ! $answered_by || $answered_by === $this->user_options->get_user_id() ) {
 				continue;
@@ -227,8 +227,31 @@ class User_Input {
 			$setting_data['scope']  = static::$questions[ $setting_key ]['scope'];
 
 			if ( 'site' === $setting_data['scope'] ) {
-				$setting_data['answeredBy']    = $this->user_options->get_user_id();
+				$existing_answers = $this->get_answers();
+				$answered_by      = $this->user_options->get_user_id();
+
+				if (
+					// If the answer to the "purpose" question changed,
+					// attribute the answer to the current user changing the
+					// answer.
+					(
+						! empty( $existing_answers['purpose']['values'] ) &&
+						! empty( array_diff( $existing_answers['purpose']['values'], $answers ) )
+					) ||
+					// If the answer to the "purpose" question was empty,
+					// attribute the answer to the current user.
+					empty( $existing_answers['purpose']['answeredBy'] )
+				) {
+					$answered_by = $this->user_options->get_user_id();
+				} else {
+					// Otherwise, attribute the answer to the user who answered
+					// the question previously.
+					$answered_by = $existing_answers['purpose']['answeredBy'];
+				}
+
+				$setting_data['answeredBy']    = $answered_by;
 				$site_settings[ $setting_key ] = $setting_data;
+
 			} elseif ( 'user' === $setting_data['scope'] ) {
 				$user_settings[ $setting_key ] = $setting_data;
 			}

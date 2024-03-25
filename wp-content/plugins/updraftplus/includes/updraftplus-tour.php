@@ -171,7 +171,7 @@ class UpdraftPlus_Tour {
 		);
 
 		if (isset($_REQUEST['tab'])) {
-			$tour_data['show_tab_on_load'] = '#updraft-navtab-'.esc_attr($_REQUEST['tab']);
+			$tour_data['show_tab_on_load'] = '#updraft-navtab-'.esc_attr(sanitize_text_field($_REQUEST['tab']));
 		}
 
 		// Change the data for premium users

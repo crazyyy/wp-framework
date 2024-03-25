@@ -62,7 +62,7 @@ class AIOWPSecurity_Audit_Event_Handler {
 		$user = wp_get_current_user();
 		$username = (is_a($user, 'WP_User') && 0 !== $user->ID) ? $user->user_login : $username;
 		$ip = apply_filters('aios_audit_log_event_user_ip', AIOWPSecurity_Utility_IP::get_user_ip_address());
-		$stacktrace = maybe_serialize(AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace(false)));
+		$stacktrace = maybe_serialize(AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)));
 		$network_id = get_current_network_id();
 		$site_id = get_current_blog_id();
 		$details = json_encode($details, true);

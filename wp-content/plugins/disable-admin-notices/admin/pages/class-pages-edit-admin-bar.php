@@ -63,11 +63,11 @@ class WDAN_Edit_Admin_Bar extends WDN_Page {
 	/**
 	 * Requests assets (js and css) for the page.
 	 *
-	 * @param Wbcr_Factory466_ScriptList $scripts
-	 * @param Wbcr_Factory466_StyleList $styles
+	 * @param Wbcr_Factory473_ScriptList $scripts
+	 * @param Wbcr_Factory473_StyleList $styles
 	 *
 	 * @return void
-	 * @see Wbcr_FactoryPages466_AdminPage
+	 * @see Wbcr_FactoryPages473_AdminPage
 	 *
 	 */
 	public function assets( $scripts, $styles ) {
@@ -114,8 +114,7 @@ class WDAN_Edit_Admin_Bar extends WDN_Page {
 					in
 					the admin bar to insert their ads. Just get rid of this ad with the premium features of our
 					plugin.</p>
-				<a class="wdan-button wdan-button-default wdan-button-go-pro" target="_blank"
-				   href="https://clearfy.pro/disable-admin-notices/">Go
+				<a class="wdan-button wdan-button-default wdan-button-go-pro" target="_blank" href="https://clearfy.pro/disable-admin-notices/">Go
 					Pro</a>
 			</div>
 			<div class="wdan-premium-layer"></div>
@@ -132,11 +131,9 @@ class WDAN_Edit_Admin_Bar extends WDN_Page {
 						<td><?php echo $title; ?></td>
 						<td>
 							<?php if ( ! isset( $hidden_items[ $ID ] ) ): ?>
-								<a style="color:#e66113;"
-								   href="<?php echo wp_nonce_url( $this->getActionUrl( 'disable-adminbar-item', [ 'id' => $ID ] ), 'disable_adminbar_item_' . $ID ); ?>">Disable</a>
+								<a style="color:#e66113;" href="<?php echo wp_nonce_url( $this->getActionUrl( 'disable-adminbar-item', [ 'id' => $ID ] ), 'disable_adminbar_item_' . $ID ); ?>">Disable</a>
 							<?php else: ?>
-								<a style="color:#428bca;"
-								   href="<?php echo wp_nonce_url( $this->getActionUrl( 'enable-adminbar-item', [ 'id' => $ID ] ), 'enable_adminbar_item_' . $ID ); ?>">Enable</a>
+								<a style="color:#428bca;" href="<?php echo wp_nonce_url( $this->getActionUrl( 'enable-adminbar-item', [ 'id' => $ID ] ), 'enable_adminbar_item_' . $ID ); ?>">Enable</a>
 							<?php endif; ?>
 						</td>
 					</tr>

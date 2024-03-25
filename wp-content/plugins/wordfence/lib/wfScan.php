@@ -232,7 +232,7 @@ class wfScan {
 			));
 			self::status(2, 'error', sprintf(/* translators: Error message. */ __("Scan terminated with error: %s", 'wordfence'), $e->getMessage()));
 			
-			$nextScheduledScan = wordfence::getNextScanStartTimestamp();
+			$nextScheduledScan = wfScanner::shared()->nextScheduledScanTime();
 			if ($nextScheduledScan !== false && $nextScheduledScan - time() > 21600 /* 6 hours */) {
 				$nextScheduledScan = time() + 3600;
 				wfScanner::shared()->scheduleSingleScan($nextScheduledScan);

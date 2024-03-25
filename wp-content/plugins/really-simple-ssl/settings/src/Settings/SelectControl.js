@@ -2,6 +2,8 @@
 * The native selectControl doesn't allow disabling per option.
 */
 
+import DOMPurify from "dompurify";
+
 const SelectControl = (props) => {
     let field = props.field;
     let selectDisabled = !Array.isArray(props.disabled) && props.disabled;
@@ -13,12 +15,15 @@ const SelectControl = (props) => {
                     <div data-wp-component="HStack" className="components-flex components-select-control">
                         <label htmlFor={field.id} className="components-toggle-control__label">{props.label}</label>
                         <select disabled={selectDisabled} value={props.value} onChange={(e) => props.onChangeHandler(e.target.value)}>
-                            {props.options.map((option,i) => <option key={i} value={option.value} disabled={optionsDisabled && optionsDisabled.includes(option.value)}>{option.label}</option>) }
+                            {props.options.map((option,i) => <option key={'option-'+i} value={option.value} disabled={optionsDisabled && optionsDisabled.includes(option.value)}>{option.label}</option>) }
                         </select>
                     </div>
                 </div>
             </div>
-            {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
+            {field.comment && (
+                <div className="rsssl-comment" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(field.comment) }} ></div>
+                /* nosemgrep: react-dangerouslysetinnerhtml */
+            )}
         </>
     );
 }

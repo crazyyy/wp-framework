@@ -68,6 +68,9 @@ class WP_Optimize_Admin {
 				'settings' => array(
 					'title' => __('Settings', 'wp-optimize'),
 				),
+//				'updraftcentral' => array(
+//					'title' => 'UpdraftCentral'
+//				),
 			),
 			'wpo_support' => array('support' => __('Support / FAQs', 'wp-optimize')),
 			'wpo_mayalso' => array('may_also' => __('Premium / Plugin family', 'wp-optimize')),
@@ -185,6 +188,11 @@ class WP_Optimize_Admin {
 		add_action('wp_optimize_admin_page_wpo_settings_settings', array($this, 'output_dashboard_settings_tab'), 20);
 
 		/**
+		 * UpdraftCentral
+		 */
+//		add_action('wp_optimize_admin_page_wpo_settings_updraftcentral', array($this, 'output_dashboard_updraftcentral_tab'), 20);
+
+		/**
 		 * Premium / other plugins
 		 */
 		add_action('wp_optimize_admin_page_wpo_mayalso_may_also', array($this, 'output_dashboard_other_plugins_tab'), 20);
@@ -271,6 +279,18 @@ class WP_Optimize_Admin {
 	}
 
 	/**
+	 * UpdraftCentral settings tab
+	 */
+	public function output_dashboard_updraftcentral_tab() {
+		if (WP_Optimize()->can_manage_options()) {
+			global $updraftcentral_host_plugin;
+			$updraftcentral_host_plugin->debugtools_dashboard();
+		} else {
+			$this->prevent_manage_options_info();
+		}
+	}
+
+	/**
 	 * Dashboard support tab
 	 */
 	public function output_dashboard_support_tab() {
@@ -291,6 +311,7 @@ class WP_Optimize_Admin {
 		$wpo_cache = WP_Optimize()->get_page_cache();
 		$wpo_cache_options = $wpo_cache->config->get();
 		$display = $wpo_cache->is_enabled() ? "display: block;" : "display: none;";
+		$error = is_wp_error(WP_Optimize()->get_init_page_cache_status()) ? WP_Optimize()->get_init_page_cache_status()->get_error_message() : '';
 
 		WP_Optimize()->include_template('cache/page-cache.php', false, array(
 			'wpo_cache' => $wpo_cache,
@@ -300,6 +321,7 @@ class WP_Optimize_Admin {
 			'display' => $display,
 			'can_purge_the_cache' => WP_Optimize()->get_page_cache()->can_purge_cache(),
 			'does_server_handles_cache' => WP_Optimize()->does_server_handles_cache(),
+			'error' => $error,
 		));
 	}
 
@@ -475,12 +497,12 @@ class WP_Optimize_Admin {
 	 */
 	public function display_footer_review_message() {
 		$message = sprintf(
-			__('Enjoyed %s? Please leave us a %s rating.', 'wp-optimize'),
+			__('Enjoyed %s? Please leave us a %s rating on %s or %s.', 'wp-optimize').' '.__('We really appreciate your support!', 'wp-optimize'),
 			'<b>WP-Optimize</b>',
-			'<a href="https://www.g2.com/products/wp-optimize/reviews" target="_blank">&starf;&starf;&starf;&starf;&starf;</a>'
+			'<span style="color:#2271b1">&starf;&starf;&starf;&starf;&starf;</span>',
+			'<a href="https://uk.trustpilot.com/review/getwpo.com" target="_blank">Trustpilot</a>',
+			'<a href="https://www.g2.com/products/wp-optimize/reviews" target="_blank">G2.com</a>'
 		);
-		$message .= ' ';
-		$message .= __('We really appreciate your support!', 'wp-optimize');
 		return $message;
 	}
 

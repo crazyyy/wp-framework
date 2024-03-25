@@ -3,7 +3,7 @@
 <div class="aio_blue_box">
 	<?php
 	echo '<p>'.__('Poor password selection is one of the most common weak points of many sites and is usually the first thing a hacker will try to exploit when attempting to break into your site.', 'all-in-one-wp-security-and-firewall').'</p>'.
-	'<p>'.__('Many people fall into the trap of using a simple word or series of numbers as their password. Such a predictable and simple password would take a competent hacker merely minutes to guess your password by using a simple script which cycles through the easy and most common combinations.', 'all-in-one-wp-security-and-firewall').'</p>'.
+	'<p>'.__('Many people fall into the trap of using a simple word or series of numbers as their password.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Such a predictable and simple password would take a competent hacker merely minutes to guess your password by using a simple script which cycles through the easy and most common combinations.', 'all-in-one-wp-security-and-firewall').'</p>'.
 	'<p>'.__('The longer and more complex your password is the harder it is for hackers to "crack" because more complex passwords require much greater computing power and time.', 'all-in-one-wp-security-and-firewall').'</p>'.
 	'<p>'.__('This section contains a useful password strength tool which you can use to check whether your password is sufficiently strong enough.', 'all-in-one-wp-security-and-firewall').'</p>';
 	?>

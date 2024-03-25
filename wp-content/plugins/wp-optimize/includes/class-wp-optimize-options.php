@@ -312,6 +312,8 @@ class WP_Optimize_Options {
 		// delete settings from .htaccess
 		WP_Optimize()->get_browser_cache()->disable();
 		WP_Optimize()->get_gzip_compression()->disable();
+		// disable Webp CRON event if enabled
+		WP_Optimize()->get_webp_instance()->remove_webp_cron_schedules();
 
 		// delete settings from options table.
 		$keys = '"' . implode('", "', $this->get_additional_settings_keys()) . '"';

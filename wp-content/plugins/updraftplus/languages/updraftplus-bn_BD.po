@@ -1,4 +1,4 @@
-# Translation of UpdraftPlus in Bengali
+# Translation of UpdraftPlus in Bengali (Bangladesh)
 # This file is distributed under the same license as the UpdraftPlus package.
 msgid ""
 msgstr ""
@@ -7,8 +7,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/2.3.1\n"
-"Language: bn\n"
+"X-Generator: GlotPress/3.0.0\n"
+"Language: bn_BD\n"
 "Project-Id-Version: UpdraftPlus\n"
 
 #: src/admin.php:3632

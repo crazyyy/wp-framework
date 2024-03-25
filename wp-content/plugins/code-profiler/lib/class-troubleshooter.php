@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  +=====================================================================+
  |    ____          _        ____             __ _ _                   |
  |   / ___|___   __| | ___  |  _ \ _ __ ___  / _(_) | ___ _ __         |
@@ -11,18 +11,20 @@
  +=====================================================================+
 */
 
-if (! defined('ABSPATH') ) { die('Forbidden'); }
+if (! defined('ABSPATH') ) {
+	die('Forbidden');
+}
 
 // =====================================================================
 
 class CP_Troubleshooter {
 
-	/********************************************************************
+	/**
 	 * Array to handle all results
 	 */
 	private $buffer = [];
 
-	/********************************************************************
+	/**
 	 * Initialize.
 	 */
 	public function __construct() {
@@ -31,6 +33,7 @@ class CP_Troubleshooter {
 		$this->cp_info('code-profiler');
 		$this->function_exists('code-profiler');
 		$this->check_wpdb('wpdb');
+		$this->check_cache('cache');
 		$this->check_proxy('proxy');
 		$this->get_all_plugins('plugins');
 		$this->get_theme('themes');
@@ -39,7 +42,7 @@ class CP_Troubleshooter {
 		echo esc_textarea( print_r( $this->buffer, true ) );
 	}
 
-	/********************************************************************
+	/**
 	 * Retrieve system info:
 	 * * PHP version
 	 * * PHP SAPI
@@ -132,7 +135,7 @@ class CP_Troubleshooter {
 
 	}
 
-	/********************************************************************
+	/**
 	 * Verify if some important PHP functions are available.
 	 */
 	private function function_exists( $key ) {
@@ -142,16 +145,24 @@ class CP_Troubleshooter {
 			'register_tick_function'		=> 'tick',
 			'stream_wrapper_unregister'	=> 'unregister',
 			'stream_wrapper_register'		=> 'register',
-			'stream_wrapper_restore'		=> 'restore'
+			'stream_wrapper_restore'		=> 'restore',
+			'hrtime'								=> 'hrtime'
 		];
 
 		foreach ( $required_functions as $function => $value ) {
-			$this->buffer[ $key ][ $value ] = function_exists( $function );
+			$this->buffer[ $key ]['function'][ $value ] = function_exists( $function );
+		}
+
+		$required_methods = [
+			'PhpToken' => 'tokenize'
+		];
+		foreach ( $required_methods as $class => $value ) {
+			$this->buffer[ $key ]['method'][ $value ] = method_exists( $class, $value );
 		}
 	}
 
 
-	/********************************************************************
+	/**
 	 * Return the version and type (free/pro) of Code Profiler.
 	 */
 	private function cp_info( $key ) {
@@ -179,7 +190,7 @@ class CP_Troubleshooter {
 	}
 
 
-	/********************************************************************
+	/**
 	 * Check if there are subclasses of the wpdb class and
 	 * look for wp-content/db.php
 	 */
@@ -197,16 +208,19 @@ class CP_Troubleshooter {
 	}
 
 
-	/********************************************************************
+	/**
 	 * Check for advanced cache
 	 */
 	private function check_cache( $key ) {
 
-		$this->buffer[ $key ]['cache'] = defined('WP_CACHE') && file_exists(WP_CONTENT_DIR . '/advanced-cache.php');
+		$this->buffer[ $key ] = [];
+		if ( defined('WP_CACHE') && file_exists( WP_CONTENT_DIR . '/advanced-cache.php') ) {
+			$this->buffer[ $key ][ $this->shorten_path( WP_CONTENT_DIR . '/advanced-cache.php') ] = 1;
+		}
 	}
 
 
-	/********************************************************************
+	/**
 	 * Check for reverse proxy or CDN
 	 */
 	private function check_proxy( $key ) {
@@ -227,7 +241,7 @@ class CP_Troubleshooter {
 	}
 
 
-	/********************************************************************
+	/**
 	 * Retrieve the list of all plugins and sort them
 	 * (active or disabled).
 	 */
@@ -276,7 +290,7 @@ class CP_Troubleshooter {
 	}
 
 
-	/********************************************************************
+	/**
 	 * Retrieve the active theme.
 	 */
 	private function get_theme( $key ) {
@@ -300,7 +314,7 @@ class CP_Troubleshooter {
 	}
 
 
-	/********************************************************************
+	/**
 	 * Retrieve Code Profiler's configuration
 	 */
 	private function get_cp_config() {
@@ -323,7 +337,7 @@ class CP_Troubleshooter {
 		}
 	}
 
-	/********************************************************************
+	/**
 	 * Remove the ABSPATH from a path
 	 */
 	private function shorten_path( $path ) {

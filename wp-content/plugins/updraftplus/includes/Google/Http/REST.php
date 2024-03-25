@@ -39,7 +39,7 @@ class UDP_Google_Http_REST
     $runner = new UDP_Google_Task_Runner(
         $client,
         sprintf('%s %s', $req->getRequestMethod(), $req->getUrl()),
-        array(get_class(), 'doExecute'),
+        array(__CLASS__, 'doExecute'),
         array($client, $req)
     );
 

@@ -1661,7 +1661,7 @@ msgid "Nonce check failed for manual DB backup operation!"
 msgstr ""
 
 #: admin/wp-security-filesystem-menu.php:90
-msgid "The permissions for %s were succesfully changed to %s"
+msgid "The permissions for %s were successfully changed to %s"
 msgstr ""
 
 #: admin/wp-security-filesystem-menu.php:94
@@ -1673,7 +1673,7 @@ msgid "File permissions scan"
 msgstr ""
 
 #: admin/wp-security-filesystem-menu.php:103
-msgid "Your WordPress file and folder permission settings govern the accessability and read/write privileges of the files and folders which make up your WP installation."
+msgid "Your WordPress file and folder permission settings govern the accessibility and read/write privileges of the files and folders which make up your WP installation."
 msgstr ""
 
 #: admin/wp-security-filesystem-menu.php:104
@@ -1818,7 +1818,7 @@ msgid "Depending on the nature and cause of the error or warning, your hosting s
 msgstr ""
 
 #: admin/wp-security-filesystem-menu.php:347
-msgid "By occassionally viewing the contents of these logs files you can keep informed of any underlying problems on your system which you might need to address."
+msgid "By occasionally viewing the contents of these logs files you can keep informed of any underlying problems on your system which you might need to address."
 msgstr ""
 
 #: admin/wp-security-filesystem-menu.php:353
@@ -2424,7 +2424,7 @@ msgid "A bot is a piece of software which runs on the Internet and performs auto
 msgstr ""
 
 #: admin/wp-security-firewall-menu.php:837
-msgid "A lot of bots are legitimate and non-malicous but not all bots are good and often you will find some which try to impersonate legitimate bots such as \"Googlebot\" but in reality they have nohing to do with Google at all."
+msgid "A lot of bots are legitimate and non-malicious but not all bots are good and often you will find some which try to impersonate legitimate bots such as \"Googlebot\" but in reality they have nohing to do with Google at all."
 msgstr ""
 
 #: admin/wp-security-firewall-menu.php:838
@@ -2436,7 +2436,7 @@ msgid "This feature allows you to block bots which are impersonating as a Google
 msgstr ""
 
 #: admin/wp-security-firewall-menu.php:840
-msgid "Googlebots have a unique indentity which cannot easily be forged and this feature will indentify any fake Google bots and block them from reading your site's pages."
+msgid "Googlebots have a unique identity which cannot easily be forged and this feature will identify any fake Google bots and block them from reading your site's pages."
 msgstr ""
 
 #: admin/wp-security-firewall-menu.php:846
@@ -2719,7 +2719,7 @@ msgstr ""
 msgid "If you would like to manually set up the necessary file, please follow these steps:"
 msgstr ""
 
-#. translators: %s Boostrap file name.
+#. translators: %s Bootstrap file name.
 #. translators: %s Firewall file name.
 #: admin/wp-security-firewall-setup-notice.php:346
 #: admin/wp-security-firewall-setup-notice.php:453
@@ -3234,7 +3234,7 @@ msgid "This feature allows you to prevent other sites from displaying any of you
 msgstr ""
 
 #: admin/wp-security-misc-options-menu.php:152
-msgid "When enabled, this feature will set the \"X-Frame-Options\" paramater to \"sameorigin\" in the HTTP header."
+msgid "When enabled, this feature will set the \"X-Frame-Options\" parameter to \"sameorigin\" in the HTTP header."
 msgstr ""
 
 #: admin/wp-security-misc-options-menu.php:157
@@ -3869,7 +3869,7 @@ msgid "A large portion of WordPress blog comment spam is mainly produced by auto
 msgstr ""
 
 #: admin/wp-security-spam-menu.php:163
-msgid "This feature will greatly minimize the useless and unecessary traffic and load on your server resulting from spam comments by blocking all comment requests which do not originate from your domain."
+msgid "This feature will greatly minimize the useless and unnecessary traffic and load on your server resulting from spam comments by blocking all comment requests which do not originate from your domain."
 msgstr ""
 
 #: admin/wp-security-spam-menu.php:164
@@ -3913,7 +3913,7 @@ msgid "Move spam comments to trash after %s days."
 msgstr ""
 
 #: admin/wp-security-spam-menu.php:224
-msgid "Enble this feature in order to move the spam comments to trash after given number of days."
+msgid "Enable this feature in order to move the spam comments to trash after given number of days."
 msgstr ""
 
 #: admin/wp-security-spam-menu.php:262
@@ -4402,7 +4402,7 @@ msgid "You entered a non numeric value for the lockout time length field."
 msgstr ""
 
 #: admin/wp-security-user-login-menu.php:136
-msgid "You entered a non numeric value for the maximim lockout time length field."
+msgid "You entered a non numeric value for the maximum lockout time length field."
 msgstr ""
 
 #: admin/wp-security-user-login-menu.php:141
@@ -4893,7 +4893,7 @@ msgid "Enable pingback vulnerability protection"
 msgstr ""
 
 #: classes/grade-system/wp-security-feature-item-manager.php:83
-msgid "Block accesss to debug log file"
+msgid "Block access to debug log file"
 msgstr ""
 
 #: classes/grade-system/wp-security-feature-item-manager.php:87

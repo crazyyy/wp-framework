@@ -1,9 +1,9 @@
 <?php
 
-namespace WBCR\Factory_466\Updates;
+namespace WBCR\Factory_473\Updates;
 
 // Exit if accessed directly
-use Wbcr_Factory466_Plugin;
+use Wbcr_Factory473_Plugin;
 
 if( !defined('ABSPATH') ) {
 	exit;
@@ -48,6 +48,24 @@ class Github_Repository extends Repository {
 	protected $plugin_slug;
 
 	/**
+	 * @var string
+	 * @since 4.4.1
+	 */
+	protected $plugin_basename;
+
+	/**
+	 * @var string
+	 * @since 4.4.1
+	 */
+	protected $plugin_main_file;
+
+	/**
+	 * @var string
+	 * @since 4.4.1
+	 */
+	protected $plugin_absolute_path;
+
+	/**
 	 * Кешируем результаты запроса в этот параметр
 	 * @var array
 	 * @since 4.4.1
@@ -57,11 +75,11 @@ class Github_Repository extends Repository {
 	/**
 	 * Wordpress constructor.
 	 *
-	 * @param Wbcr_Factory466_Plugin $plugin
+	 * @param Wbcr_Factory473_Plugin $plugin
 	 * @param bool $is_premium
 	 * @since 4.4.1
 	 */
-	public function __construct(Wbcr_Factory466_Plugin $plugin, array $settings = [])
+	public function __construct(Wbcr_Factory473_Plugin $plugin, array $settings = [])
 	{
 		$settings = wp_parse_args($settings, [
 			'github_username' => '',

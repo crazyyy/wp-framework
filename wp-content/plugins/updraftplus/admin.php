@@ -580,19 +580,23 @@ class UpdraftPlus_Admin {
 			$this->setup_all_admin_notices_global($service);
 		}
 		
-		if (!class_exists('Updraft_Dashboard_News')) updraft_try_include_file('includes/class-updraft-dashboard-news.php', 'include_once');
+		if (file_exists(UPDRAFTPLUS_DIR.'/udaddons')) {
+			if (!class_exists('Updraft_Dashboard_News_Offer')) updraft_try_include_file('includes/class-updraft-dashboard-news-offer.php', 'include_once');
 
-		$news_translations = array(
-			'product_title' => 'UpdraftPlus',
-			'item_prefix' => __('UpdraftPlus', 'updraftplus'),
-			'item_description' => __('UpdraftPlus News', 'updraftplus'),
-			'dismiss_tooltip' => __('Dismiss all UpdraftPlus news', 'updraftplus'),
-			'dismiss_confirm' => __('Are you sure you want to dismiss all UpdraftPlus news forever?', 'updraftplus'),
-		);
+			$news_translations = array(
+				'product_title' => 'UpdraftPlus',
+				'item_prefix' => __('UpdraftPlus', 'updraftplus'),
+				'item_description' => __('UpdraftPlus News', 'updraftplus'),
+				'dismiss_tooltip' => __('Dismiss all UpdraftPlus news', 'updraftplus'),
+				'dismiss_confirm' => __('Are you sure you want to dismiss all UpdraftPlus news forever?', 'updraftplus'),
+			);
+		}
 		
 		add_filter('woocommerce_in_plugin_update_message', array($this, 'woocommerce_in_plugin_update_message'));
-		
-		new Updraft_Dashboard_News('https://feeds.feedburner.com/UpdraftPlus', 'https://updraftplus.com/news/', $news_translations);
+
+		if (file_exists(UPDRAFTPLUS_DIR.'/udaddons')) {
+			new Updraft_Dashboard_News_Offer('https://feeds.feedburner.com/UpdraftPlus', 'https://updraftplus.com/news/', $news_translations);
+		}
 
 		// New-install admin tour
 		if ((!defined('UPDRAFTPLUS_ENABLE_TOUR') || UPDRAFTPLUS_ENABLE_TOUR) && (!defined('UPDRAFTPLUS_THIS_IS_CLONE') || !UPDRAFTPLUS_THIS_IS_CLONE)) {
@@ -905,6 +909,7 @@ class UpdraftPlus_Admin {
 			'errornocolon' => __('Error', 'updraftplus'),
 			'existing_backups' => __('Existing backups', 'updraftplus'),
 			'fileready' => __('File ready.', 'updraftplus'),
+			'filesize' => __('File size', 'updraftplus'),
 			'actions' => __('Actions', 'updraftplus'),
 			'deletefromserver' => __('Delete from your web server', 'updraftplus'),
 			'downloadtocomputer' => __('Download to your computer', 'updraftplus'),
@@ -1127,6 +1132,7 @@ class UpdraftPlus_Admin {
 			'expired_tokens' => __('This is usually caused by your dashboard page having been open a long time, and the included security tokens having since expired.', 'updraftplus'),
 			'reload_page'  => __('Therefore, please reload the page.', 'updraftplus'),
 			'save_changes'  => __('Save Changes', 'updraftplus'),
+			'close' => __('Close', 'updraftplus'),
 		));
 	}
 	
@@ -1495,11 +1501,11 @@ class UpdraftPlus_Admin {
 			if (empty($_REQUEST['timestamp']) || !is_numeric($_REQUEST['timestamp']) || empty($_REQUEST['type'])) die;
 	
 			$findexes = empty($_REQUEST['findex']) ? array(0) : $_REQUEST['findex'];
-			$stage = empty($_REQUEST['stage']) ? '' : $_REQUEST['stage'];
+			$stage = empty($_REQUEST['stage']) ? '' : sanitize_text_field($_REQUEST['stage']);
 			$file_path = empty($_REQUEST['filepath']) ? '' : $_REQUEST['filepath'];
 	
 			// This call may not actually return, depending upon what mode it is called in
-			$result = $this->do_updraft_download_backup($findexes, $_REQUEST['type'], $_REQUEST['timestamp'], $stage, false, $file_path);
+			$result = $this->do_updraft_download_backup($findexes, (string) $_REQUEST['type'], (int) $_REQUEST['timestamp'], $stage, false, $file_path);
 			
 			// In theory, if a response was already sent, then Connection: close has been issued, and a Content-Length. However, in https://updraftplus.com/forums/topic/pclzip_err_bad_format-10-invalid-archive-structure/ a browser ignores both of these, and then picks up the second output and complains.
 			if (empty($result['already_closed'])) echo json_encode($result);
@@ -1562,7 +1568,7 @@ class UpdraftPlus_Admin {
 			// This is a bit ugly; these variables get placed back into $_POST (where they may possibly have come from), so that UpdraftPlus::log() can detect exactly where to log the download status.
 			$_POST['findex'] = $findex;
 			$_POST['type'] = $type;
-			$_POST['timestamp'] = $timestamp;
+			$_POST['timestamp'] = (int) $timestamp;
 
 			// We already know that no possible entities have an MD5 clash (even after 2 characters)
 			// Also, there's nothing enforcing a requirement that nonces are hexadecimal
@@ -2852,9 +2858,11 @@ class UpdraftPlus_Admin {
 	 */
 	public function display_footer_review_message() {
 		$message = sprintf(
-			__('Enjoyed %s? Please leave us a %s rating.', 'updraftplus').' '.__('We really appreciate your support!', 'updraftplus'),
+			__('Enjoyed %s? Please leave us a %s rating on %s or %s', 'updraftplus').' '.__('We really appreciate your support!', 'updraftplus'),
 			'<b>UpdraftPlus</b>',
-			'<a href="https://www.g2.com/products/updraftplus/reviews" target="_blank">&starf;&starf;&starf;&starf;&starf;</a>'
+			'<span style="color:#2271b1">&starf;&starf;&starf;&starf;&starf;</span>',
+			'<a href="https://trustpilot.com/review/updraftplus.com" target="_blank">Trustpilot</a>',
+			'<a href="https://www.g2.com/products/updraftplus/reviews" target="_blank">G2.com</a>'
 		);
 		return $message;
 	}
@@ -3264,7 +3272,7 @@ class UpdraftPlus_Admin {
 
 		if ($return_instead_of_echo) return $html;
 
-		echo $html;
+		echo wp_kses_post($html);
 	}
 
 	/**
@@ -3334,7 +3342,7 @@ class UpdraftPlus_Admin {
 		
 			echo $nonce_field;
 
-			$referer = esc_attr(UpdraftPlus_Manipulation_Functions::wp_unslash($_SERVER['REQUEST_URI']));
+			$referer = esc_url(UpdraftPlus_Manipulation_Functions::wp_unslash($_SERVER['REQUEST_URI']));
 
 			// This one is used on single site installs
 			if (false === strpos($referer, '?')) {
@@ -4043,9 +4051,9 @@ class UpdraftPlus_Admin {
 	 */
 	public function storagemethod_row($method, $header, $contents) {
 		?>
-			<tr class="updraftplusmethod <?php echo $method;?>">
-				<th><?php echo $header;?></th>
-				<td><?php echo $contents;?></td>
+			<tr class="updraftplusmethod <?php echo esc_attr($method);?>">
+				<th><?php echo wp_kses_post($header);?></th>
+				<td><?php echo wp_kses_post($contents);?></td>
 			</tr>
 		<?php
 	}
@@ -4059,9 +4067,9 @@ class UpdraftPlus_Admin {
 	 */
 	public function storagemethod_row_multi($classes, $header, $contents) {
 		?>
-			<tr class="<?php echo $classes;?>">
-				<th><?php echo $header;?></th>
-				<td><?php echo $contents;?></td>
+			<tr class="<?php echo esc_attr($classes);?>">
+				<th><?php echo wp_kses_post($header);?></th>
+				<td><?php echo wp_kses_post($contents);?></td>
 			</tr>
 		<?php
 	}
@@ -4251,6 +4259,10 @@ class UpdraftPlus_Admin {
 		global $updraftplus;
 		$for_updraftcentral = defined('UPDRAFTCENTRAL_COMMAND') && UPDRAFTCENTRAL_COMMAND;
 		$backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
+
+		if (!function_exists('get_mu_plugins')) include_once(ABSPATH.'wp-admin/includes/plugin.php');
+		$mu_plugins = get_mu_plugins();
+
 		// The true (default value if non-existent) here has the effect of forcing a default of on.
 		$include_more_paths = UpdraftPlus_Options::get_updraft_option('updraft_include_more_path');
 		foreach ($backupable_entities as $key => $info) {
@@ -4300,8 +4312,14 @@ class UpdraftPlus_Admin {
 				if ('more' != $key || true === $include_more || ('sometimes' === $include_more && !empty($include_more_paths))) {
 				
 					$data_toggle_exclude_field = $show_exclusion_options ? 'data-toggle_exclude_field="'.$key.'"' : '';
+					
+					$force_disabled = '';
+					if ('mu-plugins' == $key && !$mu_plugins) {
+						$force_disabled = 'data-force_disabled="1"';
+						$info['description'] .= ' ('.__('none present', 'updraftplus').')';
+					}
 				
-					$ret .= "<label for=\"".$prefix."updraft_include_$key\"".((isset($info['htmltitle'])) ? ' title="'.htmlspecialchars($info['htmltitle']).'"' : '')." class=\"updraft_checkbox\"><input class=\"updraft_include_entity\" $data_toggle_exclude_field id=\"".$prefix."updraft_include_$key\" type=\"checkbox\" name=\"updraft_include_$key\" value=\"1\" $included /> ".htmlspecialchars($info['description']);
+					$ret .= "<label for=\"".$prefix."updraft_include_$key\"".((isset($info['htmltitle'])) ? ' title="'.htmlspecialchars($info['htmltitle']).'"' : '')." class=\"updraft_checkbox\"><input class=\"updraft_include_entity\" $data_toggle_exclude_field id=\"".$prefix."updraft_include_$key\" type=\"checkbox\" name=\"updraft_include_$key\" value=\"1\" $included $force_disabled/> ".htmlspecialchars($info['description']);
 
 					$ret .= "</label>";
 					$ret .= apply_filters("updraftplus_config_option_include_$key", '', $prefix, $for_updraftcentral);
@@ -4689,23 +4707,20 @@ class UpdraftPlus_Admin {
 		$ret = '';
 		if (isset($backup['nonce']) && preg_match("/^[0-9a-f]{12}$/", $backup['nonce']) && is_readable($updraft_dir.'/log.'.$backup['nonce'].'.txt')) {
 			$nval = $backup['nonce'];
-			$lt = __('View Log', 'updraftplus');
-			$url = esc_attr(UpdraftPlus_Options::admin_page()."?page=updraftplus&action=downloadlog&amp;updraftplus_backup_nonce=$nval");
-			$ret .= <<<ENDHERE
-				<div style="clear:none;" class="updraft-viewlogdiv">
-					<a class="button no-decoration updraft-log-link" href="$url" data-jobid="$nval">
-						$lt
+			$url = UpdraftPlus_Options::admin_page()."?page=updraftplus&action=downloadlog&amp;updraftplus_backup_nonce=$nval";
+			$ret .= '<div style="clear:none;" class="updraft-viewlogdiv">
+					<a class="button no-decoration updraft-log-link" href="'.esc_attr($url).'" data-jobid="'.esc_attr($nval).'">
+						'.__('View Log', 'updraftplus').'
 					</a>
 					<!--
 					<form action="$url" method="get">
 						<input type="hidden" name="action" value="downloadlog" />
 						<input type="hidden" name="page" value="updraftplus" />
 						<input type="hidden" name="updraftplus_backup_nonce" value="$nval" />
-						<input type="submit" value="$lt" class="updraft-log-link" onclick="event.preventDefault(); updraft_popuplog('$nval');" />
+						<input type="submit" value="$lt" class="updraft-log-link" onclick="event.preventDefault(); updraft_popuplog(\''.esc_attr($nval).'\');" />
 					</form>
 					-->
-				</div>
-ENDHERE;
+				</div>';
 			return $ret;
 		}
 	}
@@ -5197,14 +5212,19 @@ ENDHERE;
 			$updraftplus->output_to_browser(''); // Start timer
 			// Force output buffering off so that we get log lines sent to the browser as they come not all at once at the end of the ajax restore
 			// zlib creates an output buffer, and waits for the entire page to be generated before it can send it to the client try to turn it off
-			@ini_set("zlib.output_compression", 0);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
+			@ini_set("zlib.output_compression", '0');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 			// Turn off PHP output buffering for NGINX
 			header('X-Accel-Buffering: no');
 			header('Content-Encoding: none');
 			while (ob_get_level()) {
 				ob_end_flush();
 			}
-			ob_implicit_flush(1);
+			if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
+				$flush = true; // PHP 8.0.0 or newer, use bool
+			} else {
+				$flush = 1; // PHP older than 8.0.0, use int
+			}
+			ob_implicit_flush($flush);
 		}
 
 		$updraftplus->log("Ensuring WP_Filesystem is setup for a restore");

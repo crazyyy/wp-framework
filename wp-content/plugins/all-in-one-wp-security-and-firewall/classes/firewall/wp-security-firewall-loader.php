@@ -165,6 +165,7 @@ class Loader {
 					AIOWPS_FIREWALL_DIR."/rule/rules/bruteforce/{$rule}",
 					AIOWPS_FIREWALL_DIR."/rule/rules/blacklist/{$rule}",
 					AIOWPS_FIREWALL_DIR."/rule/rules/general/{$rule}",
+					AIOWPS_FIREWALL_DIR."/rule/rules/bots/{$rule}",
 					AIOWPS_FIREWALL_DIR."/libs/{$file}",
 					AIOWPS_FIREWALL_DIR."/libs/traits/{$classname}.php",
 				);

@@ -9,7 +9,7 @@ jQuery(function($) {
 	 */
 	function get_username_identifiers() {
 		// 'username' is used by WooCommerce
-		return '[name="log"], [name="username"], #user_login, #affwp-login-user-login, #affwp-user-login, #gform_fields_login input[type="text"]';
+		return '[name="log"], [name="username"], #user_login, #affwp-login-user-login, #affwp-user-login, #gform_fields_login input[type="text"], .um-field-username input[type="text"]';
 	}
 	
 	/**
@@ -37,7 +37,8 @@ jQuery(function($) {
 		} else {
 			console.log("Simba TFA: User does not have OTP enabled: submitting form");
 			// For some reason, .submit() stopped working with TML 7.x. N.B. Used to do this only for form_type == 2 ("TML shortcode or widget, WP Members, bbPress, Ultimate Membership Pro, WooCommerce or Elementor login form")
-			$(form).find('input[type="submit"], button[type="submit"]').first().trigger('click');
+			// The un-disabling is for Ultimate Member, which for unknown reasons outputs the login button in a disabled state
+			$(form).find('input[type="submit"], button[type="submit"]').first().prop('disabled', false).trigger('click');
 			// $('#wp-submit').parents('form').first().trigger('submit');
 		}
 		return false;
@@ -158,6 +159,9 @@ jQuery(function($) {
 		
 		var form_is_gravity_forms = ('object' == typeof window['gform_gravityforms'] && 'undefined' !== typeof $(form).attr('id') && 'gform_' === $(form).attr('id').substring(0, 6));
 		
+		// This is used just for applying similar styling (via adding structure/CSS classes)
+		var form_is_ultimate_member = ($(form).find('.um-row').length > 0) ? true : false;
+
 		// Gravity Forms won't submit if the elements are hidden
 		var form_retain_existing_elements = form_is_gravity_forms ? true : false;
 		
@@ -171,7 +175,8 @@ jQuery(function($) {
 		if (!form_retain_existing_elements) {
 			// Hide all elements in a browser-safe way
 			// .user-pass-wrap is the wrapper used (instead of a paragraph) on wp-login.php from WP 5.3
-			$submit_button.parents('form').first().find('p, .impu-form-line-fr, .tml-field-wrap, .user-pass-wrap, .elementor-field-type-text, .elementor-field-type-submit, .elementor-remember-me, .bbp-username, .bbp-password, .bbp-submit-wrapper, .gform_body').each(function(i) {
+			// .um-row : Ultimate Member
+			$submit_button.parents('form').first().find('p, .impu-form-line-fr, .tml-field-wrap, .user-pass-wrap, .elementor-field-type-text, .elementor-field-type-submit, .elementor-remember-me, .bbp-username, .bbp-password, .bbp-submit-wrapper, .gform_body, .um-row, .um-button').each(function(i) {
 				$(this).css('visibility', 'hidden').css('position', 'absolute');
 				// On the WooCommerce form, the 'required' asterisk in the child <span> still shows without this
 				$(this).find('span').css('visibility', 'hidden').css('position', 'absolute');
@@ -185,11 +190,17 @@ jQuery(function($) {
 		// Add new field and controls
 		var html = '';
 		
+		if (form_is_ultimate_member) {
+			html += '<div class="um-row">';
+		}
+		
 		if (user_already_trusted) {
 			
 			html += '<br><span class="simbaotp_is_trusted">'+simba_tfasettings.is_trusted+'</span>';
 			
 		} else {
+			
+			if (form_is_ultimate_member) { html += '<div class="um-field um-field-text um-field-type_text"><div class="um-field-label">'; }
 			
 			html += '<label ';
 			
@@ -197,7 +208,9 @@ jQuery(function($) {
 				html += 'class="gfield_label"';
 			}
 			
-			html += 'for="simba_two_factor_auth">' + simba_tfasettings.otp + '<br><input type="text" name="two_factor_code" id="simba_two_factor_auth" autocomplete="off" data-lpignore="true"';
+			html += 'for="simba_two_factor_auth">';
+			
+			html += simba_tfasettings.otp + '<br><input type="text" name="two_factor_code" id="simba_two_factor_auth" autocomplete="off" data-lpignore="true"';
 			
 			if ($(form).hasClass('woocommerce-form-login')) {
 				// Retain compatibility with previous full-width layout
@@ -205,6 +218,8 @@ jQuery(function($) {
 			}
 			
 			html += '></label>';
+			
+			if (form_is_ultimate_member) { html += '</div>'; }
 			
 			html += '<p class="forgetmenot';
 			if (form_is_gravity_forms) html += ' gfield';
@@ -215,9 +230,15 @@ jQuery(function($) {
 			}
 			html += '">';
 			
+			if (form_is_ultimate_member) { html += '</div>'; }
+			
 			// Would need further styling investigations to display this
 			if (!form_is_gravity_forms) {
 				html += '<span class="simba_tfa_otp_login_help">'+simba_tfasettings.otp_login_help+'</span>';
+			}
+			
+			if (form_is_ultimate_member) {
+				html += '</div>';
 			}
 			
 			if (user_can_trust) {
@@ -243,7 +264,15 @@ jQuery(function($) {
 				submit_button_name = $submit_button.attr('name');
 			}
 			
-			html += '<p class="submit"><input id="tfa_login_btn" class="button button-primary button-large" type="submit" ';
+			html += '<p class="submit';
+			
+			if (form_is_ultimate_member) { html += ' um-center'; }
+			
+			html += '"><input id="tfa_login_btn" class="button button-primary button-large';
+			
+			if (form_is_ultimate_member) { html += ' um-button'; }
+			
+			html += '" type="submit" ';
 			if ('undefined' !== typeof submit_button_name && '' != submit_button_name) { html += 'name="'+submit_button_name+'" '; }
 			html += 'value="' + submit_button_text + '"></p>';
 			

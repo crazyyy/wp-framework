@@ -2,8 +2,6 @@
 
 if (!defined('UPDRAFTCENTRAL_CLIENT_DIR')) die('Security check');
 
-// Developer note: Please avoid using the 'updraftplus' string within the actual text unless it is being used as a translation domain (e.g. __('TEXT_THAT_NEEDS_TO_BE_TRANSLATED', 'updraftplus'))
-
 // Translations for UpdraftCentral
 return array(
 	'updraftcentral_connection' => __('UpdraftCentral Connection', 'updraftplus'),
@@ -88,4 +86,14 @@ return array(
 	'updraftcentral_wizard_empty_url' => __('Please enter the URL where your UpdraftCentral dashboard is hosted.', 'updraftplus'),
 	'updraftcentral_wizard_invalid_url' => __('Please enter a valid URL e.g http://example.com', 'updraftplus'),
 	'insufficient_privilege' => __('Sorry, you do not have enough privilege to execute the requested action.', 'updraftplus'),
+	'copy_to_clipboard' => __('Copy to clipboard', 'updraftplus'),
+	'key_copied' => __('The key was copied to the clipboard.', 'updraftplus'),
+	'unable_to_copy' => __('The attempt to copy to the clipboard failed.', 'updraftplus'),
+	'wpo_not_active' => __('WP_Optimize is not installed or active.', 'updraftplus'),
+	'log_file_not_exist' => __('Log file does not exist or could not be read.', 'updraftplus'),
+	'security_check_failed' => __('Security check failed; try refreshing the page.', 'updraftplus').' '.__('If refreshing the page does not help then perhaps you do not have sufficient privilege to manage WP-Optimize.', 'updraftplus'),
+	'no_such_command' => __('No such command found.', 'updraftplus'),
+	'command_not_allowed' => __('You are not allowed to run this command.', 'updraftplus'),
+	'command_not_found' => __('The command is either not found or not allowed.', 'updraftplus'),
+	'network_admin_only' => __('The command can only be executed by a network admin.', 'updraftplus'),
 );

@@ -35,11 +35,11 @@
 
 	<p>
 		<label for="cache_exception_conditional_tags">
-	<?php
-	echo strip_tags(sprintf(__('List conditional tags (e.g. %s) that should not be cached (one per line).', 'wp-optimize'), '<code>is_single</code>'), '<code>');
-	echo '&nbsp;';
-	echo strip_tags(sprintf(__('You can find more details about conditional tags from %1$shere%2$s', 'wp-optimize'), '<a href="https://codex.wordpress.org/Conditional_Tags" target="_blank">', '</a>'), '<a>');
-	?>
+		<?php
+			echo strip_tags(sprintf(__('List conditional tags (e.g. %s) that should not be cached (one per line).', 'wp-optimize'), '<code>is_single</code>'), '<code>');
+			echo '&nbsp;';
+			echo strip_tags(sprintf(__('You can find more details about conditional tags from %1$shere%2$s', 'wp-optimize'), '<a href="https://codex.wordpress.org/Conditional_Tags" target="_blank">', '</a>'), '<a>');
+		?>
 		</label>
 		<textarea name="cache_exception_conditional_tags" id="cache_exception_conditional_tags" class="cache-settings" placeholder="is_single"><?php echo esc_textarea($cache_exception_conditional_tags); ?></textarea>
 	</p>

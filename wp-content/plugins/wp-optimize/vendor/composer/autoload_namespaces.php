@@ -6,7 +6,12 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'System' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Props\\' => array($vendorDir . '/mrclay/props-dic/src'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
+    'Net' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Math' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'JSMin\\' => array($vendorDir . '/mrclay/jsmin-php/src'),
+    'File' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Crypt' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
 );

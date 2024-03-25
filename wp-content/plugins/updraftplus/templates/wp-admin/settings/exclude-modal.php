@@ -84,9 +84,9 @@
 		<div class="clause-input-container">
 			<input class="wildcards-input" type="text" size="25" placeholder="<?php _e('these characters', 'updraftplus');?>" />
 			<select class="clause-options wildcards-input">
-				<option value="beginning"><?php _e('at the beginning of their names', 'updraftplus');?></option>
-				<option value="middle"><?php _e('anywhere in their names', 'updraftplus');?></option>
-				<option value="end"><?php _e('at the end of their names', 'updraftplus');?></option>
+				<option value="beginning"><?php esc_html_e('at the beginning of their names', 'updraftplus');?></option>
+				<option value="middle"><?php esc_html_e('anywhere in their names', 'updraftplus');?></option>
+				<option value="end"><?php esc_html_e('at the end of their names', 'updraftplus');?></option>
 			</select>
 		</div>
 		<?php

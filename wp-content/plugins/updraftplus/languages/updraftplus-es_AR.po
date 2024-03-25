@@ -2,12 +2,12 @@
 # This file is distributed under the same license as the UpdraftPlus package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-09-03 17:38:32+0000\n"
+"PO-Revision-Date: 2023-09-04 19:09:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/2.3.1\n"
+"X-Generator: GlotPress/3.0.0\n"
 "Language: es_AR\n"
 "Project-Id-Version: UpdraftPlus\n"
 
@@ -57,7 +57,7 @@ msgstr "Probá UpdraftPlus Premium."
 
 #: src/templates/wp-admin/settings/tab-addons.php:115
 msgid "Anonymise personal data in your database backups."
-msgstr "Anonimiza los datos personales en los respaldos de tu base de datos."
+msgstr "Anonimizá los datos personales en los respaldos de tu base de datos."
 
 #: src/templates/wp-admin/settings/tab-addons.php:113,
 #: src/templates/wp-admin/settings/tab-addons.php:114
@@ -138,7 +138,7 @@ msgstr "Compatible con WordPress multisitio, con características adicionales, g
 
 #: src/methods/updraftvault.php:211
 msgid "An error occurred while fetching your Vault credentials. Please try again after a few minutes."
-msgstr "Ha ocurrido un error al recuperar tus credenciales de Vault. Por favor, intentalo de nuevo después de unos minutos."
+msgstr "Ocurrió un error al recuperar tus credenciales de Vault. Intentalo de nuevo después de unos minutos."
 
 #: src/methods/s3generic.php:146
 msgid "Virtual-host style"
@@ -219,7 +219,7 @@ msgstr "¡Muchas gracias!"
 
 #: src/includes/updraftplus-notices.php:116
 msgid "Hey - We noticed UpdraftPlus has kept your site safe for a while.  If you like us, please consider leaving a positive review to spread the word.  Or if you have any issues or questions please leave us a support message"
-msgstr "Ey, nos dimos cuenta de que UpdraftPlus ha estadp mantenido tu sitio a salvo algún tiempo. Si te sirvió nuestra ayuda, por favor, dejános una valoración positiva para que más gente nos conozca. O si tenés algún problema o preguntas, por favor, mandá un mensaje a nuestro soporte para poder ayudarte."
+msgstr "Ey, nos dimos cuenta de que UpdraftPlus ha estado mantenido tu sitio a salvo algún tiempo. Si te sirvió nuestra ayuda, por favor, dejanos una valoración positiva para que más gente nos conozca. O si tenés algún problema o preguntas, por favor, mandá un mensaje a nuestro soporte para poder ayudarte."
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:52
 msgid "Warning: You have no clone tokens remaining and either no subscriptions or no subscription that will renew before the clone expiry date."
@@ -263,7 +263,7 @@ msgstr "Si tenés un respaldo existente desde la que deseas subir y restaurar us
 
 #: src/class-updraftplus.php:5348
 msgid "Include all tables not listed below"
-msgstr "Incluye todas las tablas que no están en la lista siguiente"
+msgstr "Incluí todas las tablas que no están en la siguiente lista"
 
 #: src/class-updraftplus.php:5346
 msgid "The amount of database tables scanned is near or over the php_max_input_vars value so some tables maybe truncated. This option will ensure all tables not found will be backed up."
@@ -275,7 +275,7 @@ msgstr "La exploración de la base de datos está llevando demasiado tiempo por 
 
 #: src/class-updraftplus.php:5335
 msgid "Therefore, affected tables on the current site which already exist will not be replaced by default, to avoid corrupting them (you can review this in the list of tables below)."
-msgstr "Por tanto, las tablas afectadas en el sitio actual que ya existen no serán reemplazadas predeterminada, para evitar dañarlas (podés revisarlo a continuación en la lista de tablas)."
+msgstr "Por lo tanto, las tablas afectadas en el sitio actual que ya existen no serán reemplazadas predeterminada, para evitar dañarlas (podés revisarlo a continuación en la lista de tablas)."
 
 #: src/class-updraftplus.php:5333
 msgid "Therefore it is advised that you take a fresh backup on the source site, using a later version."
@@ -339,7 +339,7 @@ msgstr "Parece que hay un problema al activar o cambiar al tema deseado. Por fav
 
 #: src/central/modules/plugin.php:144
 msgid "The plugin you wish to deactivate is currently not active or is already deactivated."
-msgstr "El plugin que querés desactivar no está activo actualmente o ya está desactivado."
+msgstr "El plugin que querés desactivar no está activo o ya fue desactivado."
 
 #: src/central/modules/plugin.php:136
 msgid "There appears to be a problem deactivating the intended plugin. Please kindly check your permission and try again."
@@ -666,7 +666,7 @@ msgstr "Realizar un respaldo"
 #: src/templates/wp-admin/settings/tab-addons.php:333,
 #: src/templates/wp-admin/settings/tab-addons.php:334
 msgid "Keep your database fast and efficient"
-msgstr "Mantén tu base de datos rápida y eficiente"
+msgstr "Mantené tu base de datos rápida y eficiente"
 
 #: src/templates/wp-admin/settings/tab-addons.php:328,
 #: src/templates/wp-admin/settings/tab-addons.php:329
@@ -679,7 +679,7 @@ msgstr "Más fantásticos plugins del equipo de Updraft"
 
 #: src/templates/wp-admin/settings/tab-addons.php:128
 msgid "Allows you to only backup changes to your files (such as a new image) that have been made to your site since the last backup."
-msgstr "Te permite hacer respaldo solo de los cambios en tus archivos (como por ejemplo una nueva imagen) que hayan tenido lugar en tu sitio desde la última respaldo."
+msgstr "Te permite hacer respaldo solo de los cambios en tus archivos (como por ejemplo una nueva imagen) que hayan tenido lugar en el sitio desde el último respaldo."
 
 #: src/templates/wp-admin/settings/tab-addons.php:126,
 #: src/templates/wp-admin/settings/tab-addons.php:127
@@ -765,7 +765,7 @@ msgstr "Obtené más información acerca de los respaldos incrementales aquí."
 
 #: src/templates/wp-admin/settings/backupnow-modal.php:17
 msgid "Incremental backups are a feature of %s (upgrade by following this link)."
-msgstr "Las respaldos incrementales son una característica de %s (actualiza siguiendo este enlace)."
+msgstr "Las respaldos incrementales son una característica de %s (actualizá siguiendo este enlace)."
 
 #: src/templates/wp-admin/settings/backupnow-modal.php:13
 msgid "Take an incremental backup"
@@ -970,7 +970,7 @@ msgstr "Los archivos del respaldo fueron procesados correctamente. Ahora, hacé 
 
 #: src/includes/class-wpadmin-commands.php:214
 msgid "This backup set contains incremental backups of your files; please select the time you wish to restore your files to"
-msgstr "Este juego de respaldos contiene respaldos incrementales de tus archivos; seleccioná la hora a la que deseas restaurar tus archivos."
+msgstr "Este conjunto de respaldos contiene respaldos incrementales de tus archivos; seleccioná la hora a la que deseás restaurar tus archivos."
 
 #: src/includes/class-remote-send.php:561
 msgid "The setting %s is turned on in your PHP settings. It is deprecated, causes encryption to malfunction, and should be turned off."
@@ -1200,7 +1200,7 @@ msgstr "Falló la autenticación de '%s'."
 
 #: src/admin.php:1383
 msgid "Connection to your %1$s account was successful. However, we were not able to register this site with %2$s, as there are no available %2$s licences on the account."
-msgstr "La conexión a tu cuenta con %1$s se realizó correctamente. Sin embargo, no hemos sido capaces de registrar este sitio con %2$s, pues no hay ninguna licencia de %2$s disponible en la cuenta."
+msgstr "La conexión a tu cuenta con %1$s se realizó correctamente. Sin embargo, no pudimos registrar este sitio con %2$s porque no hay ninguna licencia de %2$s disponible en la cuenta."
 
 #: src/admin.php:1052
 msgid "Please check the error log for more details"
@@ -1268,7 +1268,7 @@ msgstr "No seleccionaste una ruta de restauración para los respaldos que elegis
 
 #: src/admin.php:1029
 msgid "HTML was detected in the response. You may have a security module on your webserver blocking the restoration operation."
-msgstr "Se ha detectado código HTML en la respuesta. Podés que tengas un módulo de seguridad en tu servidor web que está bloqueando la operación de restauración."
+msgstr "Se detectó código HTML en la respuesta. Puede que tengas un módulo de seguridad en tu servidor web que está bloqueando la operación de restauración."
 
 #: src/admin.php:1028
 msgid "File backup options"
@@ -1470,7 +1470,7 @@ msgstr "ID de clave maestra de aplicación"
 
 #: src/addons/backblaze.php:665
 msgid "For help configuring %s, including screenshots, follow this link."
-msgstr "Para obtener ayuda con la configuración de%s incluyendo capturas de pantalla, seguí este enlace."
+msgstr "Para obtener ayuda con la configuración de %s incluyendo capturas de pantalla, seguí este enlace."
 
 #: src/addons/azure.php:650
 msgid "Azure China"
@@ -1806,7 +1806,7 @@ msgstr "Migrar (crear un respaldo un sitio en un hosting que controlas)"
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:47
 msgid "Manage your clones"
-msgstr "Gestiona tus clones"
+msgstr "Gestioná tus clones"
 
 #: src/methods/dreamobjects.php:28
 msgid "Closing 1st October 2018"
@@ -1922,7 +1922,7 @@ msgstr "Realizar guía"
 
 #: src/includes/updraftplus-tour.php:206
 msgid "Log in here to enable all the features you have access to."
-msgstr "Accede aquí para activar todas las características a las que tenés acceso."
+msgstr "Iniciá sesión aquí para habilitar todas las funciones a las que tenés acceso."
 
 #: src/includes/updraftplus-tour.php:205
 msgid "Connect to updraftplus.com"
@@ -1944,7 +1944,7 @@ msgstr "Terminar"
 
 #: src/includes/updraftplus-tour.php:162
 msgid "UpdraftPlus Premium has many more exciting features!"
-msgstr "¡UpdraftPlus Premium tiene mucha más características apasionantes!"
+msgstr "¡UpdraftPlus Premium tiene mucha más funciones espectaculares!"
 
 #: src/includes/updraftplus-tour.php:161
 msgid "UpdraftPlus Premium and addons"
@@ -1964,7 +1964,7 @@ msgstr "Controla todas tus respaldos en único sitio"
 
 #: src/includes/updraftplus-tour.php:148
 msgid "Congratulations, your settings have successfully been saved."
-msgstr "Enhorabuena, tus ajustes se han guardado con éxito."
+msgstr "Felicitaciones, tus ajustes se guardaron correctamente."
 
 #: src/includes/updraftplus-tour.php:144
 msgid "Press here to save your settings."
@@ -2008,7 +2008,7 @@ msgstr "Elegí la programación de tus respaldos"
 
 #: src/includes/updraftplus-tour.php:121
 msgid "Congratulations! Your first backup is running."
-msgstr "¡Felicidades! Tu primera respaldo está corriendo."
+msgstr "¡Felicidades! Tu primer respaldo está ejecutándose."
 
 #: src/includes/updraftplus-tour.php:117, src/includes/updraftplus-tour.php:122
 msgid "Go to settings"
@@ -2025,7 +2025,7 @@ msgstr "Hacé clic en aquí para realizar un respaldo manual."
 
 #: src/includes/updraftplus-tour.php:115, src/includes/updraftplus-tour.php:120
 msgid "Creating your first backup"
-msgstr "Creando tu primera respaldo"
+msgstr "Creando tu primer respaldo"
 
 #: src/includes/updraftplus-tour.php:112
 msgid "Select what you want to backup"
@@ -2078,7 +2078,7 @@ msgstr "Podés comprar más tokens temporales aquí."
 
 #: src/admin.php:6016
 msgid "Forbid non-administrators to login to WordPress on your clone"
-msgstr "Prohíbe a los nueandá administradores acceder a tu clon de WordPress"
+msgstr "Prohibir a los usuarios que no sean administradores iniciar sesión en WordPress en tu clon."
 
 #: src/templates/wp-admin/settings/temporary-clone.php:35
 msgid "Temporary clones of WordPress subdomain multisite installations are not yet supported. See our documentation on how to carry out a normal migration here"
@@ -2182,7 +2182,7 @@ msgstr "Fallido: no podemos hacer coincidir la huella digital. Sin embargo, pudi
 
 #: src/addons/sftp.php:514, src/addons/sftp.php:515
 msgid "MD5 (128-bit) fingerprint, in hex format - should have the same length and general appearance as this (colons optional): 73:51:43:b1:b5:fc:8b:b7:0a:3a:a9:b1:0f:69:73:a8. Using a fingerprint is not essential, but you are not secure against %s if you do not use one"
-msgstr "Huella digital MD5 (128 bits), en formato hexadecimal - debe tener la misma longitud y apariencia general que esta (dos puntos opcionales): 73:51:43:b1:b5:fc:8b:b7:0a:3a:a9:b1:0f:69:73:a8. Usar una huella digital no es esencial, pero no estás seguro contra %s si no usás una"
+msgstr "Huella MD5 (128 bits), en formato hexadecimal - debe tener la misma longitud y apariencia general que esta (dos puntos opcionales): 73:51:43:b1:b5:fc:8b:b7:0a:3a:a9:b1:0f:69:73:a8. Usar una huella no es esencial, pero no estás protegido contra %s si no la usás."
 
 #: src/addons/sftp.php:512
 msgid "RSA fingerprint"
@@ -2287,7 +2287,7 @@ msgstr "Consiento a %s"
 #: src/admin.php:3346,
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:56
 msgid "One Time Password (check your OTP app to get this password)"
-msgstr "One Time Password (comprueba tu app OTP para recoger esta contraseña)"
+msgstr "Contraseña de un solo uso (One Time Password). Fijate en tu app OTP para obtener esta contraseña."
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:46
 msgid "Login or register with this email address"
@@ -2295,7 +2295,7 @@ msgstr "Accede o regístrate con esta cuenta de email"
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:34
 msgid "If not, then choose your details and a new account will be registered."
-msgstr "De lo contrario, cumplimenta tu información y se registrará una nueva cuenta."
+msgstr "Si no, completá tu información y se registrará una nueva cuenta."
 
 #: src/templates/wp-admin/settings/updraftcentral-connect.php:33
 msgid "If you already have an updraftplus.com account, then enter the details below."
@@ -2331,7 +2331,7 @@ msgstr "Realiza respaldos, actualiza y gestiona todos tus sitios WordPress desde
 
 #: src/includes/updraftcentral.php:21, src/includes/updraftplus-clone.php:21
 msgid "An error has occurred while processing your request. The server might be busy or you have lost your connection to the internet at the time of the request. Please try again later."
-msgstr "Ha ocurrido un error en el procesado de tu solicitud. Podés que el servidor se encuentre ocupado o que hayas perdido conexión a internet durante el tiempo que a durado la solicitud. Por favor intentalo de nuevo más tarde."
+msgstr "Ocurrió un error al procesar de tu solicitud. Puede que el servidor esté ocupado o que hayas perdido la conexión a internet durante el tiempo que haya durado la solicitud. Intentalo de nuevo más tarde."
 
 #: src/admin.php:5925
 msgid "The file %s has a \"byte order mark\" (BOM) at its beginning."
@@ -2529,7 +2529,7 @@ msgstr "Ahora tenés que copiar y pegar esta clave en el sitio de envío - no se
 
 #: src/templates/wp-admin/advanced/lock-admin.php:14
 msgid "This functionality has been disabled by the site administrator."
-msgstr "Esta función fue desactivada por el administrador de tu sitio."
+msgstr "Esta función fue deshabilitada por el administrador del sitio."
 
 #: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:17
 msgid "is a highly efficient way to manage, update and backup multiple websites from one place."
@@ -2537,7 +2537,7 @@ msgstr "es una manera altamente eficiente de gestionar, actualizar y hacer respa
 
 #: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:9
 msgid "Super-charge and secure your WordPress site with our other top plugins:"
-msgstr "Super carga y securiza tu sitio WordPress con nuestros otros plugins top:"
+msgstr "Mejorá el rendimiento y la seguridad de tu sitio WordPress con nuestros otros plugins top:"
 
 #: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:4
 msgid "Thank you for installing UpdraftPlus!"
@@ -2585,7 +2585,7 @@ msgstr "querrás usar la búsqueda a continuación y reemplazar la ubicación de
 
 #: src/addons/migrator.php:433
 msgid "As long as your web hosting allows http (i.e. non-SSL access) or will forward requests to https (which is almost always the case), this is no problem. If that is not yet set up, then you should set it up, or use below search and replace so that the non-https links are automatically replaced."
-msgstr "Siempre que tu hosting web permita http (es decir, acceso no SSL) o reenvíe solicitudes a https (que casi siempre es el caso), esto no será un problema. Si aún no está configurado, tenés que hacerlo o usar la opción de búsqueda y reemplazo a continuación para que los enlaces que no sean https sean corregidos automáticamente."
+msgstr "Siempre que tu hosting web permita http (es decir, acceso sin SSL) o reenvíe solicitudes a https (que casi siempre es el caso), esto no presentará un problema. Si aún no está configurado tenés que hacerlo o usar la opción de búsqueda y reemplazo a continuación, para que los enlaces que no sean https sean corregidos automáticamente."
 
 #: src/addons/migrator.php:422
 msgid "This restoration will work if you still have an SSL certificate (i.e. can use https) to access the site. Otherwise, you will want to use below search and replace to search/replace the site address so that the site can be visited without https."
@@ -2601,11 +2601,11 @@ msgstr "Borrar estos ajustes"
 
 #: src/addons/morestorage.php:83, src/admin.php:991
 msgid "Currently disabled"
-msgstr "Actualmente desactivado"
+msgstr "Deshabilitado"
 
 #: src/addons/morestorage.php:83, src/admin.php:990
 msgid "Currently enabled"
-msgstr "Actualmente activado"
+msgstr "Habilitado"
 
 #: src/templates/wp-admin/settings/tab-addons.php:48
 msgid "If you have purchased from UpdraftPlus.Com, then follow this link to the installation instructions (particularly step 1)."
@@ -2613,7 +2613,7 @@ msgstr "Si has hecho la compra en UpdraftPlus.com entonces sigue este enlace a l
 
 #: src/templates/wp-admin/settings/tab-addons.php:48
 msgid "You are currently using the free version of UpdraftPlus."
-msgstr "Actualmente estás usando la versión gratuita de UpdraftPlus."
+msgstr "Estás usando la versión gratuita de UpdraftPlus."
 
 #: src/templates/wp-admin/settings/tab-addons.php:38
 msgid "Get it here"
@@ -2689,11 +2689,11 @@ msgstr "Pero no se definió ningún bucket por lo que es posible que los respald
 
 #: src/central/translations-updraftplus.php:43
 msgid "URL for the site of your UpdraftCentral dashboard"
-msgstr "URL del sitio de tu escritorio de UpdraftCentral"
+msgstr "URL de tu escritorio de UpdraftCentral"
 
 #: src/central/translations-updraftplus.php:42
 msgid "Enter the URL where your self-hosted install of UpdraftCentral is located:"
-msgstr "Escribe la URL donde está ubicada tu instalación autohospedada de UpdraftCentral:"
+msgstr "Escribí la URL donde está ubicada tu instalación autohospedada de UpdraftCentral:"
 
 #: src/central/translations-updraftplus.php:41
 msgid "A website where you have installed %s"
@@ -2705,7 +2705,7 @@ msgstr "Escritorio autohospedado"
 
 #: src/central/translations-updraftplus.php:21
 msgid "At your UpdraftCentral dashboard you should press the \"Add Site\" button then paste the key in the input box."
-msgstr "En tu escritorio de UpdraftCentral tenés que clic el botón \"Añadir sitio\" y pegar la clave en el campo de texto."
+msgstr "En tu escritorio de UpdraftCentral tenés que clic el botón \"Agregar sitio\" y pegar la clave en el campo de texto."
 
 #: src/addons/migrator.php:978
 msgid "Your .htaccess has an old site reference on line number %s. You should remove it manually."
@@ -2719,11 +2719,11 @@ msgstr "El mapa de tabla de caracteres solicitado (%s) no está presente - cambi
 
 #: src/class-updraftplus.php:5175
 msgid "Your chosen character set to use instead:"
-msgstr "Tu mapa de caracteres elegido a usar en tu lugar:"
+msgstr "Mapa de caracteres que elegiste usar en su lugar:"
 
 #: src/class-updraftplus.php:5165
 msgid "You can choose another suitable character set instead and continue with the restoration at your own risk."
-msgstr "Podés elegir otro mapa de caracteres disponible y seguir con la restauración bajo tu propio riesgo."
+msgstr "Podés elegir otro mapa de caracteres y seguir con la restauración bajo tu propio riesgo."
 
 #: src/class-updraftplus.php:5165
 msgid "The database server that this WordPress site is running on doesn't support the character set (%s) which you are trying to import."
@@ -2775,7 +2775,7 @@ msgstr "Las instrucciones detalladas de esto podés encontrarlas en %s"
 
 #: src/central/translations-updraftplus.php:20
 msgid "You now need to copy the key below and enter it at your %s."
-msgstr "Ahora necesitás copiar la clave de abajo e ingresarla en tu %s."
+msgstr "Ahora tenés que copiar la clave de abajo e ingresarla en tu %s."
 
 #: src/admin.php:984
 msgid "Please enter a valid URL e.g http://example.com"
@@ -2820,7 +2820,7 @@ msgstr "ID de la cuenta"
 
 #: src/class-updraftplus.php:4990
 msgid "As long as your web hosting allows http (i.e. non-SSL access) or will forward requests to https (which is almost always the case), this is no problem. If that is not yet set up, then you should set it up, or use %s so that the non-https links are automatically replaced."
-msgstr "Como tu hosting web permite http (o sea, acceso no-SSL) o redirigirá peticiones a https (que es casi siempre el caso) no hay problema. Si esto no está aún configurado, deberías hacerlo ahora, o usar %s para que los enlaces no-https se reemplacen automáticamente."
+msgstr "Como tu hosting web permite http (o sea, acceso sin SSL) o redirigirá peticiones a https (que es casi siempre el caso) no hay problema. Si esto aún no está configurado tendrías hacerlo ahora o usar %s para que los enlaces no-https se reemplacen automáticamente."
 
 #: src/class-updraftplus.php:4988, src/class-updraftplus.php:4990
 msgid "the migrator add-on"
@@ -2840,7 +2840,7 @@ msgstr "La dirección de la web en el respaldo (%s) es ligeramente diferente de 
 
 #: src/methods/googledrive.php:1506
 msgid "To de-authorize UpdraftPlus (all sites) from accessing your Google Drive, follow this link to your Google account settings."
-msgstr "Para quitar a UpdraftPlus la autorización (en todos los sitios) para acceder a tu Google Drive sigue este enlace a los ajustes de tu cuenta de Google."
+msgstr "Para quitar a UpdraftPlus la autorización (en todos los sitios) de acceder a tu Google Drive seguí este enlace a los ajustes de tu cuenta de Google."
 
 #: src/methods/backup-module.php:631
 msgid "Follow this link to remove these settings for %s."
@@ -2876,7 +2876,7 @@ msgstr "Noreste de Asia"
 
 #: src/udaddons/options.php:129
 msgid "Your web server's version of PHP is too old (%s) - UpdraftPlus expects at least %s. You can try it, but don't be surprised if it does not work. To fix this problem, contact your web hosting company"
-msgstr "La versión de PHP de tu servidor web es vieja (%s) - UpdraftPlus espera como mínimo la versión %s. Podés probarlo, pero no te sorprendas si no funciona. Para solucionar este problema contactate con tu empresa de hosting."
+msgstr "La versión de PHP de tu servidor web es vieja (%s) - UpdraftPlus necesita como mínimo la versión %s. Podés probarlo, pero no te prometemos que funcione. Para solucionar este problema contactate con tu proveedor de hosting."
 
 #: src/templates/wp-admin/settings/take-backup.php:84
 msgid "Remote storage authentication"
@@ -2926,7 +2926,7 @@ msgstr "Archivos en la nube"
 
 #: src/admin.php:5517
 msgid "Your settings failed to save. Please refresh the settings page and try again"
-msgstr "No se pudieron guardar tus ajustes. Por favor, recarga la página de ajustes e intentalo de nuevo"
+msgstr "No se pudieron guardar los ajustes. Por favor, recargá la página de ajustes e intentalo de nuevo."
 
 #: src/admin.php:5476
 msgid "UpdraftPlus seems to have been updated to version (%s), which is different to the version running when this settings page was loaded. Please reload the settings page before trying to save settings."
@@ -7197,7 +7197,7 @@ msgstr "No se pudo encontrar el archivo de respaldo de este archivo. El método 
 
 #: src/restorer.php:746
 msgid "Moving unpacked backup into place..."
-msgstr "Moviendo el respaldo desempaquetada a tu lugar..."
+msgstr "Moviendo el respaldo desempaquetado a..."
 
 #: src/backup.php:3825, src/backup.php:4135
 msgid "Failed to open the zip file (%s) - %s"
@@ -7242,7 +7242,7 @@ msgstr "Arrastrá los archivos cifrados de base de datos (archivos db.gz.crypt) 
 
 #: src/admin.php:4189
 msgid "Your wp-content directory server path: %s"
-msgstr "Tu ruta del directorio wp-content en el servidor: %s"
+msgstr "La ruta del directorio wp-content en el servidor: %s"
 
 #: src/admin.php:892
 msgid "Raw backup history"
@@ -8876,7 +8876,7 @@ msgstr "Tu sitio web está alojado usando el servidor web %s."
 
 #: src/admin.php:1322
 msgid "UpdraftPlus does not officially support versions of WordPress before %s. It may work for you, but if it does not, then please be aware that no support is available until you upgrade WordPress."
-msgstr "UpdraftPlus no da soporte oficial a versiones de WordPress anteriores a %s. Podés que funcione, pero si no, por favor, tené en cuenta que no podremos ofrecerle soporte hasta que actualice WordPress."
+msgstr "UpdraftPlus no da soporte oficial a versiones de WordPress anteriores a %s. Puede que funcione, pero si no, tené en cuenta que no podremos ofrecerle soporte hasta que actualice WordPress."
 
 #: src/admin.php:1318
 msgid "You have less than %s of free disk space on the disk which UpdraftPlus is configured to use to create backups. UpdraftPlus could well run out of space. Contact your the operator of your server (e.g. your web hosting company) to resolve this issue."
@@ -8906,7 +8906,7 @@ msgstr "No se pudo crear el zip %s. Consultá el archivo de registro para más i
 
 #: src/backup.php:2928
 msgid "Infinite recursion: consult your log for more information"
-msgstr "Bucle infinito: consulte tu archivo de registro para más información"
+msgstr "Bucle infinito: consultá el archivo de registro para más información"
 
 #: src/addons/azure.php:267, src/class-updraftplus.php:4663,
 #: src/methods/googledrive.php:1343, src/methods/s3.php:395
@@ -8961,7 +8961,7 @@ msgstr "Se produjo un error de encriptación al cifrar la base de datos. Encript
 
 #: src/class-updraftplus.php:3179
 msgid "Could not create files in the backup directory. Backup aborted - check your UpdraftPlus settings."
-msgstr "No se pudieron crear archivos en el directorio del respaldo. La respaldo se abortó - revisá tus ajustes de UpdraftPlus."
+msgstr "No se pudieron crear archivos en el directorio del respaldo. La respaldo se interumpió - revisá los ajustes de UpdraftPlus."
 
 #: src/class-updraftplus.php:2048
 msgid "Others"

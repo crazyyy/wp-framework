@@ -12,14 +12,13 @@ namespace RankMath\ContentAI;
 
 use RankMath\KB;
 use RankMath\Helper;
-use RankMath\Admin\Admin_Helper as AdminHelper;
 use RankMath\Helpers\Sitepress;
+use RankMath\Helpers\Url;
+use RankMath\Helpers\Arr;
+use RankMath\Admin\Admin_Helper as AdminHelper;
 use RankMath\CMB2;
 use RankMath\Traits\Hooker;
 use RankMath\Traits\Ajax;
-use MyThemeShop\Helpers\Url;
-use MyThemeShop\Helpers\Arr;
-use MyThemeShop\Helpers\WordPress;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,6 +35,7 @@ class Content_AI {
 		$this->action( 'rest_api_init', 'init_rest_api' );
 
 		new Content_AI_Page();
+		new Bulk_Actions();
 		if ( ! Helper::has_cap( 'content_ai' ) ) {
 			return;
 		}
@@ -46,9 +46,9 @@ class Content_AI {
 		$this->filter( 'rank_math/metabox/post/values', 'add_metadata', 10, 2 );
 		$this->action( 'cmb2_admin_init', 'add_content_ai_metabox', 11 );
 		$this->action( 'rank_math/deregister_site', 'remove_credits_data' );
-		$this->ajax( 'get_content_ai_credits', 'update_content_ai_credits' );
 		$this->filter( 'rank_math/elementor/dark_styles', 'add_dark_style' );
-		$this->filter( 'the_editor', 'the_editor', 20 );
+		$this->filter( 'rank_math/status/rank_math_info', 'content_ai_info' );
+		$this->action( 'rank_math/connect/account_connected', 'refresh_content_ai_credits' );
 	}
 
 	/**
@@ -176,6 +176,8 @@ class Content_AI {
 			true
 		);
 
+		wp_set_script_translations( 'rank-math-content-ai', 'rank-math' );
+
 		$this->localized_data();
 	}
 
@@ -231,16 +233,73 @@ class Content_AI {
 	}
 
 	/**
-	 * Ajax callback to update the Content AI Credits.
+	 * Whether to load Content AI data.
 	 */
-	public function update_content_ai_credits() {
-		check_ajax_referer( 'rank-math-ajax-nonce', 'security' );
-		$this->has_cap_ajax( 'content_ai' );
-		$this->success(
-			[
-				'credits' => Helper::get_content_ai_credits( true ),
-			]
-		);
+	public static function can_add_tab() {
+		return in_array( Helper::get_post_type(), (array) Helper::get_settings( 'general.content_ai_post_types' ), true );
+	}
+
+	/**
+	 * Localized data to use on the Content AI page.
+	 */
+	public static function localized_data() {
+		Helper::add_json( 'ca_audience', (array) Helper::get_settings( 'general.content_ai_audience', 'General Audience' ) );
+		Helper::add_json( 'ca_tone', (array) Helper::get_settings( 'general.content_ai_tone', 'Formal' ) );
+		Helper::add_json( 'ca_language', Helper::get_settings( 'general.content_ai_language', Helper::content_ai_default_language() ) );
+		Helper::add_json( 'contentAIHistory', Helper::get_outputs() );
+		Helper::add_json( 'contentAIChats', Helper::get_chats() );
+		Helper::add_json( 'contentAIRecentPrompts', Helper::get_recent_prompts() );
+		Helper::add_json( 'contentAIPrompts', Helper::get_prompts() );
+		Helper::add_json( 'isUserRegistered', Helper::is_site_connected() );
+		Helper::add_json( 'connectSiteUrl', AdminHelper::get_activate_url( Url::get_current_url() ) );
+		Helper::add_json( 'contentAICredits', Helper::get_content_ai_credits() );
+		Helper::add_json( 'contentAIPlan', Helper::get_content_ai_plan() );
+		Helper::add_json( 'contentAIErrors', Helper::get_content_ai_errors() );
+		Helper::add_json( 'connectData', AdminHelper::get_registration_data() );
+		Helper::add_json( 'registerWriteShortcut', version_compare( get_bloginfo( 'version' ), '6.2', '>=' ) );
+		Helper::add_json( 'contentAiMigrating', get_site_transient( 'rank_math_content_ai_migrating_user' ) );
+		Helper::add_json( 'contentAiUrl', CONTENT_AI_URL . '/ai/' );
+
+		$refresh_date = Helper::get_content_ai_refresh_date();
+		Helper::add_json( 'contentAIRefreshDate', $refresh_date ? wp_date( 'Y-m-d g:ia', $refresh_date ) : '' );
+	}
+
+	/**
+	 * Add Content AI details in System Info
+	 *
+	 * @param array $rankmath Array of rankmath.
+	 */
+	public function content_ai_info( $rankmath ) {
+		$refresh_date = Helper::get_content_ai_refresh_date();
+		$content_ai   = [
+			'ca_plan'         => [
+				'label' => esc_html__( 'Content AI Plan', 'rank-math' ),
+				'value' => \ucwords( Helper::get_content_ai_plan() ),
+			],
+			'ca_credits'      => [
+				'label' => esc_html__( 'Content AI Credits', 'rank-math' ),
+				'value' => Helper::get_content_ai_credits(),
+			],
+			'ca_refresh_date' => [
+				'label' => esc_html__( 'Content AI Refresh Date', 'rank-math' ),
+				'value' => $refresh_date ? wp_date( 'Y-m-d g:i a', $refresh_date ) : '',
+			],
+		];
+
+		array_splice( $rankmath['fields'], 3, 0, $content_ai );
+
+		return $rankmath;
+	}
+
+	/**
+	 * Refresh Content AI credits when account is connected.
+	 *
+	 * @param array $data Authentication data.
+	 *
+	 * @return void
+	 */
+	public function refresh_content_ai_credits( $data ) {
+		Helper::get_content_ai_credits( true );
 	}
 
 	/**
@@ -250,7 +309,7 @@ class Content_AI {
 	 * @return void
 	 */
 	private function reorder_content_ai_metabox( $id ) {
-		$post_type = WordPress::get_post_type();
+		$post_type = Helper::get_post_type();
 		if ( ! $post_type ) {
 			return;
 		}
@@ -298,65 +357,4 @@ class Content_AI {
 		update_user_option( $user->ID, 'meta-box-order_' . $post_type, $order, true );
 	}
 
-	/**
-	 * Wrap Grammarly to the editor.
-	 *
-	 * @param  string $editor the Editor markup.
-	 * @return string
-	 */
-	public function the_editor( $editor = '' ) {
-		if ( 'classic' !== Helper::get_current_editor() || ! $this->can_add_grammarly() ) {
-			return $editor;
-		}
-
-		return '<grammarly-editor-plugin>' . $editor . '</grammarly-editor-plugin><grammarly-button class="rank-math-grammarly-button"></grammarly-button>';
-	}
-
-	/**
-	 * Whether to load Content AI data.
-	 */
-	public static function can_add_tab() {
-		return in_array( WordPress::get_post_type(), (array) Helper::get_settings( 'general.content_ai_post_types' ), true );
-	}
-
-	/**
-	 * Localized data to use on the Content AI page.
-	 */
-	public static function localized_data() {
-		Helper::add_json( 'ca_audience', (array) Helper::get_settings( 'general.content_ai_audience', 'General Audience' ) );
-		Helper::add_json( 'ca_tone', (array) Helper::get_settings( 'general.content_ai_tone', 'Formal' ) );
-		Helper::add_json( 'ca_language', Helper::get_settings( 'general.content_ai_language', 'English' ) );
-		Helper::add_json( 'contentAIHistory', Helper::get_outputs() );
-		Helper::add_json( 'contentAIChats', Helper::get_chats() );
-		Helper::add_json( 'contentAIRecentPrompts', Helper::get_recent_prompts() );
-		Helper::add_json( 'contentAIPrompts', Helper::get_prompts() );
-		Helper::add_json( 'isUserRegistered', Helper::is_site_connected() );
-		Helper::add_json( 'connectSiteUrl', AdminHelper::get_activate_url( Url::get_current_url() ) );
-		Helper::add_json( 'contentAICredits', Helper::get_content_ai_credits() );
-		Helper::add_json( 'contentAIPlan', Helper::get_content_ai_plan() );
-		Helper::add_json( 'contentAIErrors', Helper::get_content_ai_errors() );
-		Helper::add_json( 'connectData', AdminHelper::get_registration_data() );
-		Helper::add_json( 'canAddGrammarly', self::can_add_grammarly() );
-	}
-
-	/**
-	 * Check the locale and credits to add the Grammarly support.
-	 *
-	 * @return boolean
-	 */
-	private static function can_add_grammarly() {
-		if ( ! Helper::get_settings( 'general.cotnent_ai_enable_grammarly' ) || ! Helper::get_content_ai_credits() ) {
-			return false;
-		}
-
-		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
-		if ( Sitepress::get()->is_active() ) {
-			global $sitepress;
-			$current_language = $sitepress->get_current_language();
-			$locale           = $sitepress->get_locale( $current_language );
-		}
-
-		// All English language locales.
-		return apply_filters( 'rank_math/content_ai/can_add_grammarly', in_array( $locale, [ 'en_US', 'en_AU', 'en_CA', 'en_NZ', 'art_xpirate', 'en_ZA', 'en_GB' ], true ), $locale );
-	}
 }

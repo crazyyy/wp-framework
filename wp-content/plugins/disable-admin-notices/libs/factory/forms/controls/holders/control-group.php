@@ -14,14 +14,14 @@
 		exit;
 	}
 
-	if( !class_exists('Wbcr_FactoryForms463_ControlGroupHolder') ) {
+	if( !class_exists('Wbcr_FactoryForms469_ControlGroupHolder') ) {
 
 		/**
 		 * Tab Control Holder
 		 *
 		 * @since 1.0.0
 		 */
-		class Wbcr_FactoryForms463_ControlGroupHolder extends Wbcr_FactoryForms463_ControlHolder {
+		class Wbcr_FactoryForms469_ControlGroupHolder extends Wbcr_FactoryForms469_ControlHolder {
 
 			/**
 			 * A holder type.
@@ -61,7 +61,7 @@
 								continue;
 							}
 
-							$builder = new Wbcr_FactoryForms463_HtmlAttributeBuilder();
+							$builder = new Wbcr_FactoryForms469_HtmlAttributeBuilder();
 
 							$builder->addCssClass('factory-control-group-nav-label');
 							$builder->addCssClass('factory-control-group-nav-label-' . $element->getOption('name'));

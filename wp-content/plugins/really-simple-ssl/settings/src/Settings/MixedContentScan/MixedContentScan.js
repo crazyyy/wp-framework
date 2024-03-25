@@ -1,10 +1,11 @@
 import {useState, useEffect} from "@wordpress/element";
-import {ToggleControl} from '@wordpress/components';
+import {Button, ToggleControl} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import ModalControl from "../../Modal/ModalControl";
 import Icon from "../../utils/Icon";
 import UseMixedContent from "./MixedContentData";
 import useModal from "../../Modal/ModalData";
+import React from "react";
 
 const MixedContentScan = (props) => {
     const {fixedItems, ignoredItems} = useModal();
@@ -76,7 +77,7 @@ const MixedContentScan = (props) => {
         if (item.location.length > 0) {
             if (item.location.indexOf('http://') !== -1 || item.location.indexOf('https://') !== -1) {
                 item.locationControl =
-                    <a href={item.location} target="_blank">{__("View", "really-simple-ssl")}</a>
+                    <a href={item.location} target="_blank" rel="noopener noreferrer">{__("View", "really-simple-ssl")}</a>
             } else {
                 item.locationControl = item.location;
             }
@@ -129,6 +130,69 @@ const MixedContentScan = (props) => {
         },
     };
 
+    const ExpandableRow = ({ data, disabled, handleFix }) => {
+        return (
+            <div className="rsssl-container">
+                <div>
+                    <p>
+                        {data.details.description.map((item, i) => (
+                            <React.Fragment key={'fragment-'+i}>
+                                <span>{item}</span>
+                                <br />
+                            </React.Fragment>
+                        ))}
+                    </p>
+                </div>
+                <div
+                    className=""
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                    {data.details.edit && (
+                        <a
+                            href={data.details.edit}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="button button-secondary"
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}
+                        >
+                            {__("Edit", "really-simple-ssl")}
+                        </a>
+                    )}
+                    {data.details.help && (
+                        <button
+                            href={data.details.help}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="button button-red"
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px'}}
+                        >
+                            {__("Help", "really-simple-ssl")}
+                        </button>
+                    )}
+                    {!data.details.ignored && data.details.action === 'ignore_url' && (
+                        <button
+                            disabled={disabled}
+                            className="button button-primary"
+                            onClick={(e) => handleFix(e, 'ignore')}
+                            style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px'}}
+                        >
+                            {__("Ignore", "really-simple-ssl")}
+                        </button>
+                    )}
+                    {data.details.action !== 'ignore_url' && (
+                        <button
+                            disabled={disabled}
+                            className="button button-primary rsssl-action-buttons__button"
+                            onClick={(e) => handleFix(e, 'fix')}
+                        >
+                            {__("Fix", "really-simple-ssl")}
+                        </button>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <>
             <div className="rsssl-progress-container">
@@ -148,16 +212,21 @@ const MixedContentScan = (props) => {
                           <Icon name = "shield"  size="80px"/>
                     </div> }
                     </>}
-                { DataTable && dataTable.length>0 && <div className={'rsssl-mixed-content-datatable'}><DataTable
-                    columns={columns}
-                    data={dataTable}
-                    dense
-                    pagination
-                    paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
-                    noDataComponent={__("No results", "really-simple-ssl")} //or your component
-                    theme={theme}
-                    customStyles={customStyles}
-                /></div>  }
+                { DataTable && dataTable.length>0 &&
+                    <div className={'rsssl-mixed-content-datatable'}>
+                        <DataTable
+                            columns={columns}
+                            data={dataTable}
+                            expandableRows
+                            expandableRowsComponent={ExpandableRow}
+                            dense
+                            pagination
+                            paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+                            noDataComponent={__("No results", "really-simple-ssl")} //or your component
+                            theme={theme}
+                            customStyles={customStyles}
+                        />
+                    </div>  }
             <div className="rsssl-grid-item-content-footer">
                 <button className="button" disabled={startDisabled} onClick={ () => start() }>{__("Start scan","really-simple-ssl")}</button>
                 <button className="button" disabled={stopDisabled} onClick={ () => stop() }>{__("Stop","really-simple-ssl")}</button>

@@ -13,11 +13,11 @@
 		</p>
 
 		<p>
-			<?php printf(__('%s makes your site fast and efficient. It cleans the database, compresses images and caches pages for ultimate speed.', 'all-in-one-wp-security-and-firewall'), '<strong><a href="https://getwpo.com" target="_blank">WP-Optimize</a></strong>'); ?>
+			<?php printf(__('%s makes your site fast and efficient.', 'all-in-one-wp-security-and-firewall') . ' ' . __('It cleans the database, compresses images and caches pages for ultimate speed.', 'all-in-one-wp-security-and-firewall'), '<strong><a href="https://getwpo.com" target="_blank">WP-Optimize</a></strong>'); ?>
 		</p>
 
 		<p>
-			<?php printf(__('%s simplifies backups and restoration. It is the world\'s highest ranking and most popular scheduled backup plugin, with over three million currently-active installs.', 'all-in-one-wp-security-and-firewall'), '<strong><a href="https://wordpress.org/plugins/updraftplus/" target="_blank">UpdraftPlus</a></strong>'); ?>
+			<?php printf(__('%s simplifies backups and restoration.', 'all-in-one-wp-security-and-firewall') . ' ' . __('It is the world\'s highest ranking and most popular scheduled backup plugin, with over three million currently-active installs.', 'all-in-one-wp-security-and-firewall'), '<strong><a href="https://wordpress.org/plugins/updraftplus/" target="_blank">UpdraftPlus</a></strong>'); ?>
 		</p>
 
 		<p>

@@ -74,8 +74,8 @@ class AIOS_Helper {
 		// Check if multiple IPs were given - these will be present as comma-separated list
 		if (preg_match('/^([^,]+),/', $visitor_ip, $matches)) $visitor_ip = $matches[1];
 
-		// Now remove port portion if ipv4 address with port
-		if (preg_match('/(.+):\d+$/', $visitor_ip, $matches)) $visitor_ip = $matches[1];
+		// Now remove port portion if ipv4 address with port, for ipv6 it was making issue so using fiter_var valid ip checked first.
+		if (!filter_var($visitor_ip, FILTER_VALIDATE_IP) && preg_match('/(.+):\d+$/', $visitor_ip, $matches)) $visitor_ip = $matches[1];
 
 		if (!filter_var($visitor_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && !filter_var($visitor_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 			$visitor_ip = empty($_SERVER['REMOTE_ADDR']) ? '' : $_SERVER['REMOTE_ADDR'];
@@ -227,5 +227,53 @@ class AIOS_Helper {
 			$response = @file_get_contents($url, false, stream_context_create(array('http' => array("timeout" => $timeout)))); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this to silence request failed warning for IP lookup services
 		}
 		return $response;
+	}
+
+	/**
+	 * Performs reverse IP lookup for the given IP address
+	 *
+	 * @param string $ip_address - IP address to perform reverse lookup
+	 *
+	 * @return array - Reverse lookup data
+	 */
+	public static function get_ip_reverse_lookup($ip_address) {
+		global $aio_wp_security;
+		$reverse_lookup_data = array();
+		$ip_reverse_lookup_services = AIOS_Abstracted_Ids::get_reverse_ip_lookup_services();
+		$ip_reverse_lookup_services_keys = array_keys($ip_reverse_lookup_services);
+		shuffle($ip_reverse_lookup_services_keys);
+
+		foreach ($ip_reverse_lookup_services_keys as $service_name) {
+			$endpoint = $ip_reverse_lookup_services[$service_name];
+			$url = sprintf($endpoint, $ip_address);
+			$response = wp_safe_remote_get($url, array( 'timeout' => 2 ));
+
+			if (!is_wp_error($response) && $response['body']) {
+				$data = json_decode($response['body'], true);
+				if (!$data) {
+					$aio_wp_security->debug_logger->log_debug("Error decoding IP lookup result", 4);
+					return $reverse_lookup_data;
+				}
+				switch ($service_name) {
+					case 'ip-api':
+						$fields_to_copy = array('org', 'as');
+						foreach ($fields_to_copy as $field) {
+							$reverse_lookup_data[$field] = empty($data[$field]) ? null : $data[$field];
+						}
+						break;
+					case 'ipinfo':
+						$reverse_lookup_data['org'] = empty($data['org']) ? null : $data['org'];
+						$reverse_lookup_data['as'] = $reverse_lookup_data['org'];
+						break;
+					default:
+						break;
+				}
+
+				$reverse_lookup_data = apply_filters('aiowps_login_lockdown_lookup_result', $reverse_lookup_data, $data, $service_name);
+				break;
+			}
+		}
+
+		return $reverse_lookup_data;
 	}
 }

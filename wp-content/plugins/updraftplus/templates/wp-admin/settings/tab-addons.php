@@ -65,11 +65,11 @@ if ($updraftplus_checkout_embed) {
 				<tr class="updraft_feat_table__header">
 					<td></td>
 					<td>
-						<img src="<?php echo UPDRAFTPLUS_URL.'/images/ud-logo.png';?>" alt="UpdraftPlus" width="80" height="80">
+						<img src="<?php echo esc_attr(UPDRAFTPLUS_URL.'/images/ud-logo.png');?>" alt="UpdraftPlus" width="80" height="80">
 						<?php _e('Free', 'updraftplus');?>
 					</td>
 					<td>
-						<img src="<?php echo UPDRAFTPLUS_URL.'/images/ud-logo.png';?>" alt="<?php esc_attr_e('UpdraftPlus Premium', 'updraftplus');?>" width="80" height="80">
+						<img src="<?php echo esc_attr(UPDRAFTPLUS_URL.'/images/ud-logo.png');?>" alt="<?php esc_attr_e('UpdraftPlus Premium', 'updraftplus');?>" width="80" height="80">
 						<?php _e('Premium', 'updraftplus');?>
 					</th>
 				</tr>
@@ -79,7 +79,7 @@ if ($updraftplus_checkout_embed) {
 						<span class="installed updraft-yes"><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'updraftplus');?>"></span> <?php _e('Installed', 'updraftplus');?></span>
 					</td>
 					<td>
-						<a class="button button-primary" href="<?php esc_attr_e(apply_filters('updraftplus_com_link', $updraftplus->get_url('shop_premium')));?>" <?php echo $checkout_embed_premium_attribute; ?>><?php _e('Upgrade now', 'updraftplus');?></a>
+						<a class="button button-primary" href="<?php echo esc_attr(apply_filters('updraftplus_com_link', $updraftplus->get_url('shop_premium')));?>" <?php echo $checkout_embed_premium_attribute; ?>><?php _e('Upgrade now', 'updraftplus');?></a>
 					</td>
 				</tr>
 				<tr>
@@ -296,7 +296,7 @@ if ($updraftplus_checkout_embed) {
 						<h4><?php _e('UpdraftVault storage', 'updraftplus');?></h4>
 						<p>
 							<?php _e('UpdraftPlus has its own embedded storage option, providing a zero-hassle way to download, store and manage all your backups from one place.', 'updraftplus');?>
-							<a href="<?php esc_attr_e(apply_filters('updraftplus_com_link', 'https://updraftplus.com/landing/updraftvault'));?>"><?php _e('Premium / Find out more', 'updraftplus');?></a>
+							<a href="<?php echo esc_attr(apply_filters('updraftplus_com_link', 'https://updraftplus.com/landing/updraftvault'));?>"><?php _e('Premium / Find out more', 'updraftplus');?></a>
 						</p>
 						
 					</td>
@@ -313,7 +313,7 @@ if ($updraftplus_checkout_embed) {
 						<span class="installed updraft-yes"><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'updraftplus');?>"></span> <?php _e('Installed', 'updraftplus');?></span>
 					</td>
 					<td>
-						<p><a class="button button-primary" href="<?php esc_attr_e(apply_filters('updraftplus_com_link', $updraftplus->get_url('shop_premium')));?>" <?php echo $checkout_embed_premium_attribute; ?>><?php _e('Upgrade now', 'updraftplus');?></a></p>
+						<p><a class="button button-primary" href="<?php echo esc_attr(apply_filters('updraftplus_com_link', $updraftplus->get_url('shop_premium')));?>" <?php echo $checkout_embed_premium_attribute; ?>><?php _e('Upgrade now', 'updraftplus');?></a></p>
 					</td>
 				</tr>
 				</tbody>
@@ -327,21 +327,25 @@ if ($updraftplus_checkout_embed) {
 				<img src="<?php echo UPDRAFTPLUS_URL.'/images/other-plugins/wp-optimize.png'; ?>" alt="WP-Optimize">
 				<p><?php echo __('Makes your site fast and efficient.', 'updraftplus').' '.__('It cleans the database, compresses images and caches pages for ultimate speed.', 'updraftplus'); ?></p>
 				<a aria-label="<?php echo 'WP-Optimize. '.__('Makes your site fast and efficient.', 'updraftplus').' '.__('It cleans the database, compresses images and caches pages for ultimate speed.', 'updraftplus').' '.__('Find out more', 'updraftplus'); ?>" target="_blank" href="https://getwpo.com/?utm_source=updraftplus&utm_medium=cross-sell&utm_campaign=addons-tab"><?php _e('Find out more', 'updraftplus'); ?></a>
+				<p><a href="https://playground.wordpress.net/?plugin=wp-optimize&url=/wp-admin/admin.php?page=WP-Optimize" aria-label="<?php echo 'WP-Optimize'.' '.__('Demo in WP Playground', 'updraftplus'); ?>" target="_blank"><?php _e('Demo in WP Playground', 'updraftplus'); ?></a></p>
 			</div>
 			<div class="udp-box">
 				<img src="<?php echo UPDRAFTPLUS_URL.'/images/other-plugins/aios.png'; ?>" alt="All In One WP Security & Firewall">
 				<p><?php _e('A comprehensive and easy to use security plugin and site scanning service.', 'updraftplus'); ?></p>
 				<a aria-label="<?php echo htmlspecialchars('All In One WP Security & Firewall. ').__('A comprehensive and easy to use security plugin and site scanning service.', 'updraftplus').' '.__('Find out more', 'updraftplus'); ?>" target="_blank" href="https://aiosplugin.com/"><?php _e('Find out more', 'updraftplus'); ?></a>
+				<p><a href="https://playground.wordpress.net/?plugin=all-in-one-wp-security-and-firewall&url=/wp-admin/admin.php?page=aiowpsec" aria-label="<?php echo htmlspecialchars('All In One WP Security & Firewall').' '.__('Demo in WP Playground', 'updraftplus'); ?>" target="_blank"><?php _e('Demo in WP Playground', 'updraftplus'); ?></a></p>
 			</div>
 			<div class="udp-box">
 				<img src="<?php echo UPDRAFTPLUS_URL.'/images/other-plugins/updraft-central.png'; ?>" alt="UpdraftCentral">
 				<p><?php _e('Highly efficient way to manage, optimize, update and backup multiple websites from one place.', 'updraftplus'); ?></p>
 				<a aria-label="<?php echo 'UpdraftCentral. '.__('Highly efficient way to manage, optimize, update and backup multiple websites from one place.', 'updraftplus').' '.__('Find out more', 'updraftplus'); ?>" target="_blank" href="https://updraftplus.com/updraftcentral/?utm_source=updraftplus&utm_medium=cross-sell&utm_campaign=addons-tab"><?php _e('Find out more', 'updraftplus'); ?></a>
+				<p><a href="https://playground.wordpress.net/?plugin=updraftcentral&url=/wp-admin/admin.php?page=updraft-central" aria-label="<?php echo 'UpdraftCentral'.' '.__('Demo in WP Playground', 'updraftplus'); ?>" target="_blank"><?php _e('Demo in WP Playground', 'updraftplus'); ?></a></p>
 			</div>
 			<div class="udp-box">
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/other-plugins/easy-updates-manager-logo.png'; ?>" alt="EasyUpdatesManager">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/other-plugins/easy-updates-manager-logo.png'; ?>" alt="Easy Updates Manager">
 				<p><?php _e('Keeps your WordPress site up to date and bug free.', 'updraftplus'); ?></p>
 				<a aria-label="<?php echo 'EasyUpdatesManager. '.__('Keeps your WordPress site up to date and bug free.', 'updraftplus').' '.__('Find out more', 'updraftplus'); ?>" target="_blank" href="https://easyupdatesmanager.com/"><?php _e('Find out more', 'updraftplus'); ?></a>
+				<p><a href="https://playground.wordpress.net/?plugin=stops-core-theme-and-plugin-updates&url=/wp-admin/index.php?page=mpsum-update-options&tab=general" aria-label="<?php echo 'Easy Updates Manager'.' '.__('Demo in WP Playground', 'updraftplus'); ?>" target="_blank"><?php _e('Demo in WP Playground', 'updraftplus'); ?></a></p>
 			</div>
 		</div>
 	</section>

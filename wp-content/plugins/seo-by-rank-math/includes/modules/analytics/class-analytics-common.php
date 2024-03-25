@@ -11,13 +11,13 @@
 namespace RankMath\Analytics;
 
 use RankMath\Helper;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\DB as DB_Helper;
 use RankMath\Traits\Hooker;
 use RankMath\Google\Console;
 use RankMath\Google\Authentication;
 use RankMath\Analytics\Workflow\Jobs;
 use RankMath\Analytics\Workflow\Workflow;
-use MyThemeShop\Helpers\Conditional;
-use MyThemeShop\Helpers\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,7 +32,7 @@ class Analytics_Common {
 	 * The Constructor
 	 */
 	public function __construct() {
-		if ( Conditional::is_heartbeat() ) {
+		if ( Helper::is_heartbeat() ) {
 			return;
 		}
 
@@ -192,10 +192,10 @@ class Analytics_Common {
 			'rank_math_analytics_inspections',
 		];
 
-		$objects_coll = Helper::get_table_collation( 'rank_math_analytics_objects' );
+		$objects_coll = DB_Helper::get_table_collation( 'rank_math_analytics_objects' );
 		$changed      = 0;
 		foreach ( $tables as $table ) {
-			$changed += (int) Helper::check_collation( $table, 'all', $objects_coll );
+			$changed += (int) DB_Helper::check_collation( $table, 'all', $objects_coll );
 		}
 
 		return $changed ? sprintf(
@@ -298,7 +298,7 @@ class Analytics_Common {
 		return [
 			'search-traffic'    => [
 				'label' => __( 'Search Traffic', 'rank-math' ),
-				'desc'  => __( 'This is the number of pageviews carried out by visitors from Google.', 'rank-math' ),
+				'desc'  => __( 'This is the number of pageviews carried out by visitors from Search Engines.', 'rank-math' ),
 				'value' => $is_connected && defined( 'RANK_MATH_PRO_FILE' ),
 				'data'  => isset( $data->pageviews ) ? $data->pageviews : '',
 			],

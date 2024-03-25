@@ -11,11 +11,11 @@
 namespace RankMath\Admin;
 
 use RankMath\Helper;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Param;
 use RankMath\Runner;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Param;
-use MyThemeShop\Database\Database;
+use RankMath\Admin\Database\Database;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -50,7 +50,6 @@ class Post_Columns implements Runner {
 
 		$this->register_post_columns();
 		$this->register_media_columns();
-		$this->action( 'admin_enqueue_scripts', 'enqueue' );
 
 		// Column Content.
 		$this->filter( 'rank_math_title', 'get_column_title', 5 );
@@ -62,7 +61,8 @@ class Post_Columns implements Runner {
 	 * Register post column hooks.
 	 */
 	private function register_post_columns() {
-		foreach ( Helper::get_allowed_post_types() as $post_type ) {
+		$post_types = Helper::get_allowed_post_types();
+		foreach ( $post_types as $post_type ) {
 			$this->filter( 'edd_download_columns', 'add_columns', 11 );
 			$this->filter( "manage_{$post_type}_posts_columns", 'add_columns', 11 );
 			$this->action( "manage_{$post_type}_posts_custom_column", 'columns_contents', 11, 2 );
@@ -95,31 +95,6 @@ class Post_Columns implements Runner {
 
 		$this->filter( 'manage_media_columns', 'add_media_columns', 11 );
 		$this->action( 'manage_media_custom_column', 'media_contents', 11, 2 );
-	}
-
-	/**
-	 * Enqueue styles and scripts.
-	 */
-	public function enqueue() {
-		$screen = get_current_screen();
-
-		$allowed_post_types   = Helper::get_allowed_post_types();
-		$allowed_post_types[] = 'attachment';
-		if ( ! in_array( $screen->post_type, $allowed_post_types, true ) ) {
-			return;
-		}
-
-		wp_enqueue_style( 'rank-math-post-bulk-edit', rank_math()->plugin_url() . 'assets/admin/css/post-list.css', null, rank_math()->version );
-
-		$allow_editing = Helper::get_settings( 'titles.pt_' . $screen->post_type . '_bulk_editing', true );
-		if ( ! $allow_editing || 'readonly' === $allow_editing ) {
-			return;
-		}
-
-		wp_enqueue_script( 'rank-math-post-bulk-edit', rank_math()->plugin_url() . 'assets/admin/js/post-list.js', null, rank_math()->version, true );
-		Helper::add_json( 'bulkEditTitle', esc_attr__( 'Bulk Edit This Field', 'rank-math' ) );
-		Helper::add_json( 'buttonSaveAll', esc_attr__( 'Save All Edits', 'rank-math' ) );
-		Helper::add_json( 'buttonCancel', esc_attr__( 'Cancel', 'rank-math' ) );
 	}
 
 	/**

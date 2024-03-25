@@ -15,9 +15,8 @@ use RankMath\CMB2;
 use RankMath\Helper;
 use RankMath\Runner;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Arr;
-use MyThemeShop\Helpers\Param;
-use MyThemeShop\Helpers\WordPress;
+use RankMath\Helpers\Arr;
+use RankMath\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -395,7 +394,7 @@ class Option_Center implements Runner {
 			return false;
 		}
 
-		$wp_filesystem = WordPress::get_filesystem();
+		$wp_filesystem = Helper::get_filesystem();
 
 		$path = get_home_path();
 		$file = $path . '.htaccess';
@@ -418,7 +417,7 @@ class Option_Center implements Runner {
 			return false;
 		}
 
-		$wp_filesystem = WordPress::get_filesystem();
+		$wp_filesystem = Helper::get_filesystem();
 		$htaccess_file = get_home_path() . '.htaccess';
 
 		return ! $wp_filesystem->is_writable( $htaccess_file ) ? false : $wp_filesystem->put_contents( $htaccess_file, $content );

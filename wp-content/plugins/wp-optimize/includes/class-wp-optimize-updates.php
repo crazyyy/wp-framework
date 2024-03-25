@@ -30,6 +30,8 @@ class WP_Optimize_Updates {
 		'3.2.15' => array('update_3215_modify_cache_config_for_webp'),
 		'3.2.17' => array('update_3217_remove_htaccess_capability_tester_files'),
 		'3.2.18' => array('update_3218_reset_webp_serving_method'),
+		'3.2.19' => array('update_3219_modify_cache_config_for_cache_time'),
+		'3.3.0' => array('update_330_ua_async_exclusion_list')
 	);
 
 	/**
@@ -92,7 +94,7 @@ class WP_Optimize_Updates {
 	 */
 	public static function enable_minify_defer() {
 		if (!function_exists('wp_optimize_minify_config')) {
-			include_once WPO_PLUGIN_MAIN_PATH . '/minify/class-wp-optimize-minify-config.php';
+			include_once WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-config.php';
 		}
 		$current_setting = wp_optimize_minify_config()->get('enable_defer_js');
 		if (true === $current_setting) {
@@ -110,11 +112,11 @@ class WP_Optimize_Updates {
 	public static function update_minify_excludes() {
 		if (!WPO_MINIFY_PHP_VERSION_MET) return;
 		if (!function_exists('wp_optimize_minify_config')) {
-			include_once WPO_PLUGIN_MAIN_PATH . '/minify/class-wp-optimize-minify-config.php';
+			include_once WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-config.php';
 		}
 
 		if (!class_exists('WP_Optimize_Minify_Functions')) {
-			include_once WPO_PLUGIN_MAIN_PATH . '/minify/class-wp-optimize-minify-functions.php';
+			include_once WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-functions.php';
 		}
 
 		$new_default_items = array(
@@ -227,6 +229,33 @@ class WP_Optimize_Updates {
 	private static function update_3218_reset_webp_serving_method() {
 		if (self::is_new_install()) return;
 		WP_Optimize()->get_webp_instance()->reset_webp_serving_method();
+	}
+	
+	/**
+	 * Updates cache config file with date and time format
+	 */
+	private static function update_3219_modify_cache_config_for_cache_time() {
+		if (self::is_new_install()) return;
+		$config = WPO_Cache_Config::instance()->get();
+		$cache_enabled = $config['enable_page_caching'];
+		if ($cache_enabled) {
+			WPO_Cache_Config::instance()->update($config);
+		}
+	}
+
+	/**
+	 * Update async loading exclusion UA list
+	 */
+	private static function update_330_ua_async_exclusion_list() {
+		if (self::is_new_install()) return;
+
+		$config = wp_optimize_minify_config();
+		$defaults = $config->get_defaults();
+		$new_list = $defaults['ualist'];
+
+		$config->update(array(
+			'ualist' => $new_list
+		));
 	}
 }
 

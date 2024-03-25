@@ -1,10 +1,10 @@
 === Index WP MySQL For Speed ===
 Contributors: OllieJones, rjasdfiii
-Tags: database, index, key, performance, mysql, wp-cli
-Requires at least: 5.2
-Tested up to: 6.3
+Tags: index, key, performance, mysql, wp-cli
+Requires at least: 4.2
+Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 1.4.14
+Stable tag: 1.4.16
 Network: true
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,7 +15,7 @@ Primary Branch: main
 Text Domain: index-wp-mysql-for-speed
 Domain Path: /languages
 
-Speed up your WordPress site by adding high-performance keys (database indexes) to your MySQL database tables.
+Speed up your WordPress site by adding high-performance keys (database indexes) to your MariaDB / MySQL database tables.
 
 == Description ==
 
@@ -170,7 +170,7 @@ During composer installation the plugin can automatically copy the necessary sou
 
 = Which versions of MySQL and MariaDB does this support? =
 
-MySQL versions 5.5.62 and above, 5.6.4 and above, 8 and above. MariaDB versions 5.5 and above.
+MySQL versions 5.5.62 and above, 5.6.4 and above, 8 and above. MariaDB versions 5.5.62 and above.
 
 = What database Storage Engine does this support? =
 
@@ -185,6 +185,18 @@ MySQL versions 5.5.62 and above, 5.6.4 and above, 8 and above. MariaDB versions 
 Yes. it is safe to add keys and revert them. Changing keys is a routine database-maintenance operation.
 
 As you know you should still keep backups of your site: other things can cause data loss.
+
+= My site uses WooCommerce HPOS (High Performance Order Storage). Is this plugin still helpful?
+
+**Yes.** WooCommerce still uses core WordPress tables for your shop's products, posts, pages, and users. This plugin adds high-performance keys to those tables.
+
+High Performance Order Storage, true to its name, stores your shop's orders in a more efficient way. Formerly orders were stored in those same core WordPress tables.
+
+= Is this plugin compatible with some other specific plugin? =
+
+This plugin only changes database indexes. If the other plugin does not change database indexes, it is very likely compatible with this one.
+
+Of course, if you find an incompatibility please open a support topic.
 
 = I got a fatal error trying to add keys. How can I fix that? =
 
@@ -222,23 +234,46 @@ Please see more questions and answers [here](https://plumislandmedia.net/index-w
 
 == Changelog ==
 
-= 1.4.12 =
+= 1.4.16 =
 (no changes to keys)
-Change max_statement_time session variable if necessary to avoid "Query execution was interrupted" errors.
-Do ANALYZE TABLE after each rekeying operation.
+WordPress 6.5 compatibility.
+Support WordPress versions back to 4.2 (At MDDHosting's request).
+Avoid attempting to upgrade from storage engines except MyISAM and Aria.
+WP-CLI upgrade, enable, and disable commands are idempotent now. They don't generate errors when they find no tables to process.
+Miscellaneous bug fixes
 
-= 1.4.13 =
+= 1.4.15 =
 (no changes to keys)
-Support MariaDB 11.x in version-detection code.
+Add a Database Health section to the About tab showing some performance metrics.
+Avoid doing EXPLAIN DESCRIBE when capturing monitors.
+Clear the dashboard upgrade nag after doing `wp index-mysql status`.
+Put backticks around table names in data definition language statements.
 
 = 1.4.14 =
 (no changes to keys)
 Handle database version 55853 (no schema changes).
 Deal with php 8.2 deprecations.
 
+= 1.4.13 =
+(no changes to keys)
+Support MariaDB 11.x in version-detection code.
+
+= 1.4.12 =
+(no changes to keys)
+Change max_statement_time session variable if necessary to avoid "Query execution was interrupted" errors.
+Do ANALYZE TABLE after each rekeying operation.
+
 == Upgrade Notice ==
 
+We've added support for versions of WordPress back to 4.2 (the version when utf8mb4 burst on the scene and required prefix indexes).
+
+We've added a Database Health section to the About tab. It shows some current performance measurements made from your MySQL / MariaDB database server, similar to the stored ones shown in monitor displays.
+
 We've removed various programming-language incompatibilities with php 8.2.
+
+We now use backticks to delimit table names, giving compatibility with some strange plugins.
+
+We've fixed some bugs.
 
 == Screenshots ==
 

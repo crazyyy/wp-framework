@@ -9,8 +9,8 @@
  * @copyright 2019 Rank Math
  */
 
-use MyThemeShop\Helpers\Param;
 use RankMath\Helper;
+use RankMath\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 

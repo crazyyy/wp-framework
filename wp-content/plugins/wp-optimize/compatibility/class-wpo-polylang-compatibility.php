@@ -43,7 +43,7 @@ class WPO_Polylang_Compatibility {
 	}
 
 	/**
-	 * Deletes cache files for all connected langauges for a post.
+	 * Deletes cache files for all connected languages for a post.
 	 *
 	 * @param int $deleted_post_id Post id whose cache file is already deleted.
 	 */
@@ -65,7 +65,7 @@ class WPO_Polylang_Compatibility {
 	}
 
 	/**
-	 * Deletes cache files for all connected langauges for a post feed.
+	 * Deletes cache files for all connected languages for a post feed.
 	 *
 	 * @param int $deleted_post_id Post id whose cache file for feed is already deleted.
 	 */

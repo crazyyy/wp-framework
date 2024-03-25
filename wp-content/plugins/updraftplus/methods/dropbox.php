@@ -596,7 +596,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		$partial_templates = $this->get_partial_templates();
 		$properties = array(
 			'storage_image_url' => UPDRAFTPLUS_URL.'/images/dropbox-logo.png',
-			'storage_image_description' => __(sprintf(__('%s logo', 'updraftplus'), 'Dropbox')),
+			'storage_image_description' => sprintf(__('%s logo', 'updraftplus'), 'Dropbox'),
 			'curl_existence_label' => wp_kses($updraftplus_admin->curl_check($updraftplus->backup_methods[$this->get_id()], true, $this->get_id().' hidden-in-updraftcentral', false), $this->allowed_html_for_content_sanitisation()),
 			'app_authorisation_policy_label' => wp_kses(sprintf(__('Please read %s for use of our %s authorization app (none of your backup data is sent to us).', 'updraftplus'), '<a target="_blank" href="https://updraftplus.com/faqs/what-is-your-privacy-policy-for-the-use-of-your-dropbox-app/">'.__('this privacy policy', 'updraftplus').'</a>', 'Dropbox'), $this->allowed_html_for_content_sanitisation()),
 			'sub_folders_instruction_label1' => __('Need to use sub-folders?', 'updraftplus'),

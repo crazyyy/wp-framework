@@ -87,6 +87,9 @@ class Backup extends Base {
 		\add_action( 'wp_ajax_ewww_manual_image_restore_single', array( $this, 'restore_single_image_handler' ) );
 		\add_action( 'ewww_image_optimizer_pre_optimization', array( $this, 'store_local_backup' ) );
 
+		// Makes sure the plugin does not optimize anything in the backups folder.
+		add_filter( 'ewww_image_optimizer_bypass', array( $this, 'ignore_backup_dir' ), 10, 2 );
+
 		$this->exclusions = array(
 			$this->content_dir,
 			'/wp-admin/',
@@ -115,6 +118,20 @@ class Backup extends Base {
 		if ( \is_string( $error ) ) {
 			$this->error_message = \sanitize_text_field( $error );
 		}
+	}
+
+	/**
+	 * Check if a file is within the backup folder and if so, prevent optimization.
+	 *
+	 * @param bool   $skip Whether optimization will be skipped, defaults to false.
+	 * @param string $file The filename to be checked.
+	 * @return bool True to skip optimization, false to let it through.
+	 */
+	public function ignore_backup_dir( $skip, $file ) {
+		if ( $file && $this->backup_dir && false !== \strpos( $file, $this->backup_dir ) ) {
+			return true;
+		}
+		return $skip;
 	}
 
 	/**
@@ -168,8 +185,13 @@ class Backup extends Base {
 				$record = \ewww_image_optimizer_find_already_optimized( $file );
 			}
 			if ( $record && $this->is_iterable( $record ) && ! empty( $record['backup'] ) && ! empty( $record['updated'] ) ) {
-				$updated_time = \strtotime( $record['updated'] );
+				$updated_time = $record['updated'];
+				if ( ! is_numeric( $record['updated'] ) ) {
+					$updated_time = \strtotime( $record['updated'] );
+				}
+				$this->debug_message( "checking if $updated_time (from {$record['updated']}) is too far gone" );
 				if ( DAY_IN_SECONDS * 30 + $updated_time > \time() ) {
+					$this->debug_message( 'backup still good!' );
 					return true;
 				}
 			}
@@ -187,6 +209,7 @@ class Backup extends Base {
 		$this->debug_message( "file: $file " );
 		foreach ( $this->exclusions as $exclusion ) {
 			if ( false !== \strpos( $file, $exclusion ) ) {
+				$this->debug_message( "matched $exclusion, no backup for you!" );
 				return;
 			}
 		}
@@ -209,6 +232,13 @@ class Backup extends Base {
 		}
 		if ( ! $this->is_file( $file ) || ! $this->is_readable( $file ) ) {
 			return;
+		}
+		// Even though these are checked in Backup::backup_file(), this method can be run directly, which bypasses that check.
+		foreach ( $this->exclusions as $exclusion ) {
+			if ( false !== \strpos( $file, $exclusion ) ) {
+				$this->debug_message( "matched $exclusion, no backup for you!" );
+				return;
+			}
 		}
 		if ( apply_filters( 'ewww_image_optimizer_skip_local_backup', false, $file ) ) {
 			return;
@@ -326,15 +356,18 @@ class Backup extends Base {
 		$this->debug_message( "restoring $file from $backup_file" );
 		copy( $backup_file, $file );
 		if ( $this->filesize( $file ) === $this->filesize( $backup_file ) ) {
+			$this->debug_message( 'restore success, checking for .webp variant and resetting db record' );
 			if ( $this->is_file( $file . '.webp' ) && \is_writable( $file . '.webp' ) ) {
+				$this->debug_message( "removing $file.webp" );
 				$this->delete_file( $file . '.webp' );
 			}
 			/* $this->delete_file( $backup_file ); */
 			global $wpdb;
 			// Reset the image record.
-			$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->ewwwio_images SET results = '', image_size = 0, updates = 0, updated=updated, level = 0 WHERE id = %d", $image['id'] ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->ewwwio_images SET results = '', image_size = 0, updates = 0, updated=updated, level = 0, resized_width = 0, resized_height = 0, resize_error = 0, webp_size = 0, webp_error = 0 WHERE id = %d", $image['id'] ) );
 			return true;
 		}
+		$this->debug_message( 'restore not confirmed, filesize does not match: ' . $this->filesize( $file ) . ' vs. ' . $this->filesize( $backup_file ) );
 		/* translators: %s: An image filename */
 		$this->error_message = \sprintf( \__( 'Restore attempted for %s, but could not be confirmed.', 'ewww-image-optimizer' ), $file );
 		return false;
@@ -438,7 +471,13 @@ class Backup extends Base {
 			$this->ob_clean();
 			\wp_die( \wp_json_encode( array( 'error' => \esc_html__( 'No image ID was provided.', 'ewww-image-optimizer' ) ) ) );
 		}
-		if ( empty( $_REQUEST['ewww_wpnonce'] ) || ! \wp_verify_nonce( \sanitize_key( $_REQUEST['ewww_wpnonce'] ), 'ewww-image-optimizer-tools' ) ) {
+		if (
+			empty( $_REQUEST['ewww_wpnonce'] ) ||
+			(
+				! \wp_verify_nonce( \sanitize_key( $_REQUEST['ewww_wpnonce'] ), 'ewww-image-optimizer-tools' ) &&
+				! \wp_verify_nonce( \sanitize_key( $_REQUEST['ewww_wpnonce'] ), 'ewww-image-optimizer-settings' )
+			)
+		) {
 			$this->ob_clean();
 			\wp_die( \wp_json_encode( array( 'error' => \esc_html__( 'Access token has expired, please reload the page.', 'ewww-image-optimizer' ) ) ) );
 		}

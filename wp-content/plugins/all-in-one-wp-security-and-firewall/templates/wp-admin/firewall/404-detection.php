@@ -38,8 +38,9 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable 404 IP detection and lockout', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-						<input id="aiowps_enable_404_IP_lockout" name="aiowps_enable_404_IP_lockout" type="checkbox"<?php if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_404_IP_lockout')) echo ' checked="checked"'; ?> value="1"/>
-						<label for="aiowps_enable_404_IP_lockout" class="description"><?php _e('Check this if you want to enable the lockout of selected IP addresses.', 'all-in-one-wp-security-and-firewall'); ?></label>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the lockout of selected IP addresses.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_404_IP_lockout', '1' == $aio_wp_security->configs->get_value('aiowps_enable_404_IP_lockout')); ?>
+						</div>
 					</td>
 				</tr>
 				<!-- currently this option is automatically set when the aiowps_enable_404_IP_lockout feature is turned on
@@ -59,7 +60,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 				</tr>
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_404_lock_redirect_url"><?php _e('404 lockout redirect URL', 'all-in-one-wp-security-and-firewall'); ?>:</label></th>
-					<td><input id="aiowps_404_lock_redirect_url" type="text" size="50" name="aiowps_404_lock_redirect_url" value="<?php echo esc_url_raw($aio_wp_security->configs->get_value('aiowps_404_lock_redirect_url'), array('http', 'https')); ?>" />
+					<td><input id="aiowps_404_lock_redirect_url" type="text" size="50" name="aiowps_404_lock_redirect_url" value="<?php echo esc_url($aio_wp_security->configs->get_value('aiowps_404_lock_redirect_url'), array('http', 'https')); ?>" />
 					<span class="description"><?php _e('A blocked visitor will be automatically redirected to this URL.', 'all-in-one-wp-security-and-firewall'); ?></span>
 					</td>
 				</tr>
@@ -117,7 +118,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 					<span class="description"><?php _e('Press this button if you wish to purge all 404 event logs from the DB.', 'all-in-one-wp-security-and-firewall'); ?></span>
 					</tr>
 				</table>
-				<input type="submit" name="aiowps_delete_404_event_records" value="<?php _e('Delete all 404 event logs', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary" onclick="return confirm('Are you sure you want to delete all records?')">
+				<input type="submit" name="aiowps_delete_404_event_records" value="<?php _e('Delete all 404 event logs', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary" onclick="return confirm('<?php echo esc_js(__('Are you sure you want to delete all records?', 'all-in-one-wp-security-and-firewall'));?>')">
 			</form>
 		</div>
 	</div>

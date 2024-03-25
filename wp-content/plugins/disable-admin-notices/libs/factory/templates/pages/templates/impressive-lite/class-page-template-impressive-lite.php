@@ -1,6 +1,6 @@
 <?php
 
-namespace WBCR\Factory_Templates_116;
+namespace WBCR\Factory_Templates_126;
 
 /**
  * Impressive lite page template class
@@ -18,11 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
+if ( ! class_exists( 'WBCR\Factory_Templates_126\ImpressiveLite' ) ) {
 	/**
-	 * Class Wbcr_FactoryPages466_ImpressiveLiteTemplate
+	 * Class Wbcr_FactoryPages473_ImpressiveLiteTemplate
 	 */
-	abstract class ImpressiveLite extends \WBCR\Factory_Templates_116\Pages\PageBase {
+	abstract class ImpressiveLite extends \WBCR\Factory_Templates_126\Pages\PageBase {
 
 		/**
 		 * Requests assets (js and css) for the page.
@@ -51,7 +51,7 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 				'holder.more-link'
 			], 'bootstrap' );
 
-			$this->styles->add( FACTORY_TEMPLATES_116_URL . '/pages/templates/impressive-lite/assets/css/impressive-lite.page.template.css' );
+			$this->styles->add( FACTORY_TEMPLATES_126_URL . '/pages/templates/impressive-lite/assets/css/impressive-lite.page.template.css' );
 		}
 
 		public function getPluginTitle() {
@@ -133,7 +133,7 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 			uasort( $page_menu, [ $this, 'pageMenuSort' ] );
 
 			?>
-            <div class="w-factory-templates-116-horizontal-menu wp-clearfix">
+            <div class="w-factory-templates-126-horizontal-menu wp-clearfix">
 				<?php foreach ( (array) $page_menu as $page_screen => $page ): ?>
 					<?php
 					if ( ! $page['show_tab'] ) {
@@ -141,11 +141,11 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 					}
 					$active_tab = '';
 					if ( $page_screen == $this->getResultId() ) {
-						$active_tab = ' w-factory-templates-116-horizontal-menu__nav-tab-active';
+						$active_tab = ' w-factory-templates-126-horizontal-menu__nav-tab-active';
 					}
 					?>
                     <a href="<?php echo $page['url'] ?>" id="<?php echo esc_attr( $page_screen ) ?>-tab"
-                       class="w-factory-templates-116-horizontal-menu__nav-tab<?php echo esc_attr( $active_tab ) ?>">
+                       class="w-factory-templates-126-horizontal-menu__nav-tab<?php echo esc_attr( $active_tab ) ?>">
                         <span><?php echo $page['icon']; ?></span>
                         <span class="wbcr-nav-tab-title"><?php echo $page['title']; ?></span>
                     </a>
@@ -174,12 +174,12 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 		}
 
 		protected function showOptions() {
-			$form = new \Wbcr_FactoryForms463_Form( [
+			$form = new \Wbcr_FactoryForms469_Form( [
 				'scope' => rtrim( $this->plugin->getPrefix(), '_' ),
 				'name'  => $this->getResultId() . "-options"
 			], $this->plugin );
 
-			$form->setProvider( new \Wbcr_FactoryForms463_OptionsValueProvider( $this->plugin ) );
+			$form->setProvider( new \Wbcr_FactoryForms469_OptionsValueProvider( $this->plugin ) );
 
 			$options = $this->getPageOptions();
 
@@ -219,7 +219,7 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 				check_admin_referer( 'wbcr_factory_' . $this->getResultId() . '_save_action' );
 
 				if ( ! current_user_can( 'administrator' ) && ! current_user_can( $this->capabilitiy ) ) {
-					wp_die( __( 'You do not have permission to edit page.', 'wbcr_factory_pages_466' ) );
+					wp_die( __( 'You do not have permission to edit page.', 'wbcr_factory_pages_473' ) );
 				}
 
 				/**
@@ -247,7 +247,7 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 
 			?>
             <div id="WBCR" class="wrap">
-                <div class="wbcr-factory-templates-116-impressive-lite-page-template factory-bootstrap-467 factory-fontawesome-000">
+                <div class="wbcr-factory-templates-126-impressive-lite-page-template factory-bootstrap-475 factory-fontawesome-000">
                     <div class="wbcr-factory-options wbcr-factory-options-<?php echo esc_attr( $this->id ) ?>">
 						<?php $this->showHeader(); ?>
                         <div class="wbcr-factory-page-inner-wrap">
@@ -261,7 +261,7 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 											wp_nonce_field( 'wbcr_factory_' . $this->getResultId() . '_save_action' );
 											$submit_button = "<input name='{$this->plugin->getPluginName()}_save_action'
                                                    class='wbcr-factory-button wbcr-save-button' type='submit'
-                                                   value='" . __( 'Save', 'wbcr_factory_pages_466' ) . "'>";
+                                                   value='" . __( 'Save', 'wbcr_factory_pages_473' ) . "'>";
 										}
 										?>
 										<?php $this->printAllNotices(); ?>
@@ -291,7 +291,7 @@ if ( ! class_exists( 'WBCR\Factory_Templates_116\ImpressiveLite' ) ) {
 
 		protected function showPage( $content = null ) { ?>
             <div id="WBCR" class="wrap">
-                <div class="wbcr-factory-templates-116-impressive-lite-page-template factory-bootstrap-467 factory-fontawesome-000">
+                <div class="wbcr-factory-templates-126-impressive-lite-page-template factory-bootstrap-475 factory-fontawesome-000">
                     <div class="wbcr-factory-page wbcr-factory-page-<?php echo $this->id ?>">
 						<?php $this->showHeader(); ?>
 						<?php

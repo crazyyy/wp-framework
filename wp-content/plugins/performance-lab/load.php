@@ -3,9 +3,9 @@
  * Plugin Name: Performance Lab
  * Plugin URI: https://github.com/WordPress/performance
  * Description: Performance plugin from the WordPress Performance Team, which is a collection of standalone performance modules.
- * Requires at least: 6.1
- * Requires PHP: 5.6
- * Version: 2.6.0
+ * Requires at least: 6.3
+ * Requires PHP: 7.0
+ * Version: 2.9.0
  * Author: WordPress Performance Team
  * Author URI: https://make.wordpress.org/performance/
  * License: GPLv2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'PERFLAB_VERSION', '2.6.0' );
+define( 'PERFLAB_VERSION', '2.9.0' );
 define( 'PERFLAB_MAIN_FILE', __FILE__ );
 define( 'PERFLAB_PLUGIN_DIR_PATH', plugin_dir_path( PERFLAB_MAIN_FILE ) );
 define( 'PERFLAB_MODULES_SETTING', 'perflab_modules_settings' );
@@ -70,7 +70,7 @@ function perflab_get_modules_setting_default() {
 		$default_enabled_modules = require PERFLAB_PLUGIN_DIR_PATH . 'default-enabled-modules.php';
 		$default_option          = array_reduce(
 			$default_enabled_modules,
-			static function( $module_settings, $module_dir ) {
+			static function ( $module_settings, $module_dir ) {
 				$module_settings[ $module_dir ] = array( 'enabled' => true );
 				return $module_settings;
 			},
@@ -97,7 +97,7 @@ function perflab_sanitize_modules_setting( $value ) {
 	// Ensure that every element is an array with an 'enabled' key.
 	return array_filter(
 		array_map(
-			static function( $module_settings ) {
+			static function ( $module_settings ) {
 				if ( ! is_array( $module_settings ) ) {
 					return array();
 				}
@@ -152,7 +152,7 @@ function perflab_get_active_modules() {
 	$modules = array_keys(
 		array_filter(
 			perflab_get_module_settings(),
-			static function( $module_settings ) {
+			static function ( $module_settings ) {
 				return isset( $module_settings['enabled'] ) && $module_settings['enabled'];
 			}
 		)
@@ -197,7 +197,8 @@ function perflab_is_valid_module( $module ) {
 	}
 
 	// Do not load module if it cannot be loaded, e.g. if it was already merged and is available in WordPress core.
-	return perflab_can_load_module( $module );
+	$can_load_module = perflab_can_load_module( $module );
+	return $can_load_module && ! is_wp_error( $can_load_module );
 }
 
 /**
@@ -206,14 +207,23 @@ function perflab_is_valid_module( $module ) {
  * This attribute is then used in {@see perflab_render_generator()}.
  *
  * @since 1.1.0
+ * @since 2.9.0 The generator tag now includes the active standalone plugin slugs.
  */
 function perflab_get_generator_content() {
 	$active_and_valid_modules = array_filter( perflab_get_active_modules(), 'perflab_is_valid_module' );
 
+	$active_plugins = array();
+	foreach ( perflab_get_standalone_plugin_version_constants( 'plugins' ) as $plugin_slug => $constant_name ) {
+		if ( defined( $constant_name ) && ! str_starts_with( constant( $constant_name ), 'Performance Lab ' ) ) {
+			$active_plugins[] = $plugin_slug;
+		}
+	}
+
 	return sprintf(
-		'Performance Lab %1$s; modules: %2$s',
+		'Performance Lab %1$s; modules: %2$s; plugins: %3$s',
 		PERFLAB_VERSION,
-		implode( ', ', $active_and_valid_modules )
+		implode( ', ', $active_and_valid_modules ),
+		implode( ', ', $active_plugins )
 	);
 }
 
@@ -235,9 +245,10 @@ add_action( 'wp_head', 'perflab_render_generator' );
  * Checks whether the given module can be loaded in the current environment.
  *
  * @since 1.3.0
+ * @since 2.8.0 The function may now alternatively return a WP_Error.
  *
  * @param string $module Slug of the module.
- * @return bool Whether the module can be loaded or not.
+ * @return bool|WP_Error True if the module can be loaded, or false or a WP_Error with more concrete information otherwise.
  */
 function perflab_can_load_module( $module ) {
 	$module_load_file = PERFLAB_PLUGIN_DIR_PATH . 'modules/' . $module . '/can-load.php';
@@ -256,7 +267,13 @@ function perflab_can_load_module( $module ) {
 	}
 
 	// Call the closure to determine whether the module can be loaded.
-	return (bool) $module();
+	$result = $module();
+
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+
+	return (bool) $result;
 }
 
 /**
@@ -268,7 +285,7 @@ function perflab_can_load_module( $module ) {
  * @return bool Whether the module has already been loaded by a separate plugin.
  */
 function perflab_is_standalone_plugin_loaded( $module ) {
-	$standalone_plugins_constants = perflab_get_standalone_plugins_constants();
+	$standalone_plugins_constants = perflab_get_standalone_plugin_version_constants( 'modules' );
 	if (
 		isset( $standalone_plugins_constants[ $module ] ) &&
 		defined( $standalone_plugins_constants[ $module ] ) &&
@@ -280,17 +297,48 @@ function perflab_is_standalone_plugin_loaded( $module ) {
 }
 
 /**
- * Gets the standalone plugin constants used for each module / plugin.
+ * Gets the standalone plugin constants used for each module with a standalone plugin.
  *
  * @since 2.2.0
+ * @deprecated 2.9.0
  *
  * @return array Map of module path to version constant used.
  */
 function perflab_get_standalone_plugins_constants() {
+	_deprecated_function( __FUNCTION__, 'Performance Lab 2.9.0', "perflab_get_standalone_plugin_version_constants( 'modules' )" );
+	return perflab_get_standalone_plugin_version_constants( 'modules' );
+}
+
+/**
+ * Gets the standalone plugin constants used for each available standalone plugin, or module with a standalone plugin.
+ *
+ * @since 2.9.0
+ *
+ * @param string $source Optional. Either 'plugins' or 'modules'. Default 'plugins'.
+ * @return array<string, string> Map of plugin slug / module path and the version constant used.
+ */
+function perflab_get_standalone_plugin_version_constants( $source = 'plugins' ) {
+	if ( 'modules' === $source ) {
+		/*
+		 * This list includes all modules which are also available as standalone plugins,
+		 * as `$module_dir => $version_constant` pairs.
+		 */
+		return array(
+			'images/dominant-color-images' => 'DOMINANT_COLOR_IMAGES_VERSION',
+			'images/webp-uploads'          => 'WEBP_UPLOADS_VERSION',
+		);
+	}
+
+	/*
+	 * This list includes all standalone plugins that are part of the Performance Lab project,
+	 * as `$plugin_slug => $version_constant` pairs.
+	 */
 	return array(
-		'images/dominant-color-images' => 'DOMINANT_COLOR_IMAGES_VERSION',
-		'images/fetchpriority'         => 'FETCHPRIORITY_VERSION',
-		'images/webp-uploads'          => 'WEBP_UPLOADS_VERSION',
+		'webp-uploads'            => 'WEBP_UPLOADS_VERSION',
+		'dominant-color-images'   => 'DOMINANT_COLOR_IMAGES_VERSION',
+		'performant-translations' => 'PERFORMANT_TRANSLATIONS_VERSION',
+		'auto-sizes'              => 'IMAGE_AUTO_SIZES_VERSION',
+		'speculation-rules'       => 'SPECULATION_RULES_VERSION',
 	);
 }
 
@@ -442,6 +490,7 @@ register_deactivation_hook( __FILE__, 'perflab_maybe_remove_object_cache_dropin'
 if ( is_admin() ) {
 	require_once PERFLAB_PLUGIN_DIR_PATH . 'admin/load.php';
 	require_once PERFLAB_PLUGIN_DIR_PATH . 'admin/server-timing.php';
+	require_once PERFLAB_PLUGIN_DIR_PATH . 'admin/plugins.php';
 }
 
 /**
@@ -458,9 +507,56 @@ function perflab_run_module_activation_deactivation( $old_value, $value ) {
 
 	// Get the list of modules that were activated, and load the activate.php files if they exist.
 	if ( ! empty( $value ) ) {
+		$reset_migration_pointer_dismissals = false;
 		foreach ( $value as $module => $module_settings ) {
 			if ( ! empty( $module_settings['enabled'] ) && ( empty( $old_value[ $module ] ) || empty( $old_value[ $module ]['enabled'] ) ) ) {
 				perflab_activate_module( PERFLAB_PLUGIN_DIR_PATH . 'modules/' . $module );
+				$reset_migration_pointer_dismissals = true;
+			}
+		}
+		if ( $reset_migration_pointer_dismissals ) {
+			// Retrieve a list of active modules with associated standalone plugins.
+			$active_modules_with_plugins = perflab_get_active_modules_with_standalone_plugins();
+
+			/*
+			 * Check if there are any active modules with compatible standalone plugins.
+			 * If no such modules are found bail early.
+			 */
+			if ( empty( $active_modules_with_plugins ) ) {
+				return;
+			}
+
+			$current_user = wp_get_current_user();
+
+			/*
+			 * Disable WordPress pointers for specific users based on conditions.
+			 *
+			 * Checks if there is a large user count on the site. If true,
+			 * disables pointers for the current user only. Otherwise, disables
+			 * pointers for users with the same role as the current user.
+			 */
+			if ( wp_is_large_user_count() ) {
+				perflab_undismiss_module_migration_pointer( $current_user );
+			} else {
+				$current_user_roles = $current_user->roles;
+				$current_user_role  = array_shift( $current_user_roles );
+
+				$args = array(
+					'role'       => $current_user_role,
+					'meta_query' => array(
+						array(
+							'key'     => 'dismissed_wp_pointers',
+							'value'   => 'perflab-module-migration-pointer',
+							'compare' => 'LIKE',
+						),
+					),
+				);
+
+				$users = get_users( $args );
+
+				foreach ( $users as $user ) {
+					perflab_undismiss_module_migration_pointer( $user );
+				}
 			}
 		}
 	}
@@ -475,6 +571,27 @@ function perflab_run_module_activation_deactivation( $old_value, $value ) {
 	}
 
 	return $value;
+}
+
+/**
+ * Reverts the module migration pointer dismissal for the given user.
+ *
+ * @since 2.8.0
+ *
+ * @param WP_User $user The WP_User object.
+ */
+function perflab_undismiss_module_migration_pointer( $user ) {
+	$dismissed = array_filter( explode( ',', (string) get_user_meta( $user->ID, 'dismissed_wp_pointers', true ) ) );
+
+	$pointer_index = array_search( 'perflab-module-migration-pointer', $dismissed, true );
+	if ( false === $pointer_index ) {
+		return;
+	}
+
+	unset( $dismissed[ $pointer_index ] );
+	$dismissed = implode( ',', $dismissed );
+
+	update_user_meta( $user->ID, 'dismissed_wp_pointers', $dismissed );
 }
 
 /**
@@ -531,7 +648,7 @@ add_action(
 	 * @param string $option Name of the option to add.
 	 * @param mixed  $value  Value of the option.
 	 */
-	static function( $option, $value ) {
+	static function ( $option, $value ) {
 		perflab_run_module_activation_deactivation( perflab_get_modules_setting_default(), $value );
 	},
 	10,

@@ -251,5 +251,5 @@ wp_enqueue_script( 'fm_backup' );
 		<button class="exitBackBtn bkpCheckAll restore_btn <?php echo count($backups) == 0 ? 'disabled_btn' : '';?>"><?php _e('Select All', 'wp-file-manager'); ?></button>
         <button class="exitBackBtn bkpUnCheckAll log_btn disabled_btn"><?php _e('Deselect', 'wp-file-manager'); ?></button>	
 	</div>
-    <p><i><strong><?php _e('Note:', 'wp-file-manager'); ?></strong> <?php _e('Backup files will be under', 'wp-file-manager'); ?> <code><?php echo $backup_dirname; ?></code></i></p>	
+    
 </div>

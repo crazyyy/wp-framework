@@ -39,7 +39,7 @@ img.addons {
 
 .aiowps-plugin-family__plugins {
 	display: -ms-flexbox;
-	display: flex;
+	display: flex; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- first definition is for IE */
 	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
 	padding-left: 1px;
@@ -52,7 +52,7 @@ img.addons {
 	width: 100%;
 	padding: 30px;
 	box-sizing: border-box;
-	border: 1px solid #e3e4e7;
+	border: 1px solid #E3E4E7;
 	margin-left: -1px;
 	margin-bottom: -1px;
 }
@@ -127,13 +127,13 @@ img.addons {
 .aiowps_feat_table td {
 	border: 0;
 	border-collapse: collapse;
-	background-color: white;
+	background-color: #FFF;
 	font-size: 120%;
 	text-align: center;
 }
 
 .aiowps_feat_table td {
-	border: 1px solid #f1f1f1;
+	border: 1px solid #F1F1F1;
 	border-bottom-width: 4px;
 	padding: 15px;
 }
@@ -162,11 +162,11 @@ img.addons {
 }
 
 .aiowps_feat_table .dashicons-yes {
-	color: green;
+	color: #008000;
 }
 
 .aiowps_feat_table .dashicons-no-alt {
-	color: red;
+	color: #FD0000;
 }
 
 .aiowps_feat_table tr td.aiowps-feature-text {
@@ -174,8 +174,8 @@ img.addons {
 }
 
 .aiowps_feat_table tr.aiowps-main-feature-row td {
-	background: #f1f1f1;
-	border-bottom-color: #fafafa;
+	background: #F1F1F1;
+	border-bottom-color: #FAFAFA;
 }
 
 .aiowps-premium-image {
@@ -210,12 +210,12 @@ img.addons {
 @media screen and (max-width: 782px) {
 
 	table.aiowps_feat_table {
-		display:block;
+		display: block;
 	}
 
 	table.aiowps_feat_table tr {
 		display: -ms-flexbox;
-		display: flex;
+		display: flex; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- first definition is for IE */
 		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
 	}

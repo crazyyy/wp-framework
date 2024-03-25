@@ -40,7 +40,7 @@ if ( ! defined( 'LOADING_DISABLE_ADMIN_NOTICES_AS_ADDON' ) ) {
 	 *
 	 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 	 */
-	add_filter( 'wbcr_factory_pages_466_imppage_rating_widget_url', function ( $page_url, $plugin_name ) {
+	add_filter( 'wbcr_factory_pages_473_imppage_rating_widget_url', function ( $page_url, $plugin_name ) {
 		if ( $plugin_name == WDN_Plugin::app()->getPluginName() ) {
 			return 'https://goo.gl/68ucHp';
 		}
@@ -77,12 +77,12 @@ if ( ! defined( 'LOADING_DISABLE_ADMIN_NOTICES_AS_ADDON' ) ) {
 			'name'   => 'hide_admin_notices',
 			'title'  => __( 'Hide admin notices', 'disable-admin-notices' ),
 			'tags'   => [],
-			'values' => [ 'hide_admin_notices' => 'only_selected' ],
+			'values' => [ 'hide_admin_notices' => 'only_selected' ]
 		];
 		$options[] = [
 			'name'  => 'show_notices_in_adminbar',
 			'title' => __( 'Enable hidden notices in adminbar', 'disable-admin-notices' ),
-			'tags'  => [],
+			'tags'  => []
 		];
 
 		return $options;
@@ -109,7 +109,7 @@ add_action( 'wbcr/factory/admin_notices', function ( $notices, $plugin_name ) {
 		'type'            => 'success',
 		'dismissible'     => true,
 		'dismiss_expires' => 0,
-		'text'            => '<p><strong>Disable Admin Notices Individually:</strong><br>' . $notice_text . '</p>',
+		'text'            => '<p><strong>Disable Admin Notices Individually:</strong><br>' . $notice_text . '</p>'
 	];
 
 	return $notices;

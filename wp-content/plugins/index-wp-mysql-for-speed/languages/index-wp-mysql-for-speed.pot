@@ -1,17 +1,17 @@
-# Copyright (C) 2023 Oliver Jones, Rick James
+# Copyright (C) 2024 Oliver Jones, Rick James
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Index WP MySQL For Speed 1.4.14\n"
+"Project-Id-Version: Index WP MySQL For Speed 1.4.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/index-wp-mysql-for-speed\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-08-06T07:18:31-04:00\n"
+"POT-Creation-Date: 2024-03-11T10:29:45-04:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: index-wp-mysql-for-speed\n"
 
 #. Plugin Name of the plugin
@@ -337,7 +337,7 @@ msgstr ""
 
 #. translators: for settings link on plugin page
 #: afp/factory/_common/_abstract/_model/AdminPageFramework_Message.php:93
-#: index-wp-mysql-for-speed.php:232
+#: index-wp-mysql-for-speed.php:249
 msgid "Settings"
 msgstr ""
 
@@ -786,183 +786,187 @@ msgstr ""
 msgid "Using %1$s, %2$s: <code>%3$s %4$s</code>"
 msgstr ""
 
-#: code/admin.php:691
+#: code/admin.php:685
+msgid "Database Health"
+msgstr ""
+
+#: code/admin.php:711
 #: code/cli.php:80
 msgid "Versions"
 msgstr ""
 
 #. translators:  1: a percentage number--50,20,10,5,2,1
-#: code/admin.php:716
+#: code/admin.php:736
 msgid "sampling %1$d%% of pageviews."
 msgstr ""
 
-#: code/admin.php:718
+#: code/admin.php:738
 msgid "We can monitor your site's use of MySQL for a few minutes to help you understand what runs slowly."
 msgstr ""
 
-#: code/admin.php:719
+#: code/admin.php:739
 msgid "To capture monitoring from your site, push the"
 msgstr ""
 
-#: code/admin.php:720
-#: code/admin.php:817
+#: code/admin.php:740
+#: code/admin.php:837
 msgid "Start Monitoring"
 msgstr ""
 
-#: code/admin.php:721
+#: code/admin.php:741
 msgid "button after choosing  a name for your monitor and the options you need."
 msgstr ""
 
-#: code/admin.php:722
+#: code/admin.php:742
 msgid "Then use your site and dashboard to do things that may be slow so the plugin can capture them."
 msgstr ""
 
-#: code/admin.php:723
+#: code/admin.php:743
 msgid "While your monitor is active, the plugin captures database activity on your site,"
 msgstr ""
 
-#: code/admin.php:724
+#: code/admin.php:744
 msgid "both yours and other users'."
 msgstr ""
 
-#: code/admin.php:725
+#: code/admin.php:745
 msgid "When the monitoring time ends, view your saved monitor to see your site's MySQL traffic and identify the slowest operations."
 msgstr ""
 
-#: code/admin.php:731
+#: code/admin.php:751
 msgid "Monitoring"
 msgstr ""
 
-#: code/admin.php:748
+#: code/admin.php:768
 msgid "Monitor Dashboard and Site"
 msgstr ""
 
-#: code/admin.php:749
+#: code/admin.php:769
 msgid "Monitor Site Only"
 msgstr ""
 
-#: code/admin.php:750
+#: code/admin.php:770
 msgid "Monitor Dashboard Only"
 msgstr ""
 
-#: code/admin.php:757
+#: code/admin.php:777
 msgid "for"
 msgstr ""
 
-#: code/admin.php:770
+#: code/admin.php:790
 msgid "minutes"
 msgstr ""
 
-#: code/admin.php:779
+#: code/admin.php:799
 msgid "capturing all pageviews."
 msgstr ""
 
-#: code/admin.php:788
+#: code/admin.php:808
 msgid "If your site is very busy, chooose a lower sample rate."
 msgstr ""
 
-#: code/admin.php:794
+#: code/admin.php:814
 msgid "Save into"
 msgstr ""
 
-#: code/admin.php:808
+#: code/admin.php:828
 msgid "Monitoring stops automatically."
 msgstr ""
 
-#: code/admin.php:836
+#: code/admin.php:856
 msgid "Saved monitors"
 msgstr ""
 
-#: code/admin.php:837
+#: code/admin.php:857
 msgid "No monitors are saved. "
 msgstr ""
 
-#: code/admin.php:842
+#: code/admin.php:862
 msgid "Monitors"
 msgstr ""
 
-#: code/admin.php:866
-#: code/admin.php:869
+#: code/admin.php:886
+#: code/admin.php:889
 msgid "Delete"
 msgstr ""
 
-#: code/admin.php:905
+#: code/admin.php:925
 msgid "Upgrading your MySQL server version will give you better performance when you add high-performance keys."
 msgstr ""
 
-#: code/admin.php:927
+#: code/admin.php:948
 msgid "Diagnostic data"
 msgstr ""
 
-#: code/admin.php:928
+#: code/admin.php:949
 msgid "With your permission we upload metadata about your WordPress site to our plugin's servers. We cannot identify you or your website from it, and we never sell nor give it to any third party. We use it only to improve this plugin."
 msgstr ""
 
-#: code/admin.php:936
+#: code/admin.php:957
 msgid "Upload id"
 msgstr ""
 
-#: code/admin.php:937
+#: code/admin.php:958
 msgid "If you create an issue or contact the authors, please mention this upload id."
 msgstr ""
 
-#: code/admin.php:949
-#: code/admin.php:956
+#: code/admin.php:970
+#: code/admin.php:977
 msgid "Upload metadata"
 msgstr ""
 
-#: code/admin.php:980
+#: code/admin.php:1001
 msgid "Something went wrong inspecting your database"
 msgstr ""
 
-#: code/admin.php:1016
+#: code/admin.php:1037
 msgid "Upload "
 msgstr ""
 
-#: code/admin.php:1019
+#: code/admin.php:1040
 msgid "Upload this monitor to the plugin's servers"
 msgstr ""
 
-#: code/admin.php:1029
+#: code/admin.php:1050
 msgid "this saved monitor to the plugin's servers using upload id"
 msgstr ""
 
-#: code/admin.php:1061
-#: code/admin.php:1270
+#: code/admin.php:1082
+#: code/admin.php:1291
 msgid "Please provide an upload id."
 msgstr ""
 
-#: code/admin.php:1063
-#: code/admin.php:1198
-#: code/admin.php:1248
-#: code/admin.php:1275
+#: code/admin.php:1084
+#: code/admin.php:1219
+#: code/admin.php:1269
+#: code/admin.php:1296
 msgid "Make corrections and try again."
 msgstr ""
 
-#: code/admin.php:1119
-#: code/cli.php:397
+#: code/admin.php:1140
+#: code/cli.php:401
 msgid "Metadata uploaded to id "
 msgstr ""
 
 #. translators: 1: name of captured monitor.  2: upload id
-#: code/admin.php:1126
+#: code/admin.php:1147
 msgid "Monitor %1$s uploaded to id %2$s"
 msgstr ""
 
-#: code/admin.php:1172
+#: code/admin.php:1193
 msgid "Please acknowledge that you have made a backup."
 msgstr ""
 
-#: code/admin.php:1176
+#: code/admin.php:1197
 msgid "Please select at least one table."
 msgstr ""
 
 #. translators: name of a captured monitor object
-#: code/admin.php:1228
+#: code/admin.php:1249
 msgid "Monitor %1$s deleted."
 msgstr ""
 
-#: code/admin.php:1242
+#: code/admin.php:1263
 msgid "Letters and numbers only for your monitor name, please."
 msgstr ""
 
@@ -1003,54 +1007,110 @@ msgstr ""
 msgid "You can revert them to WordPress's standard keys."
 msgstr ""
 
-#: code/cli.php:140
+#: code/cli.php:144
 msgid "Use this command:"
 msgstr ""
 
 #. translators: this appears in wpcli output. 1: site name  2: site URL  3: localized date and time
-#: code/cli.php:199
+#: code/cli.php:203
 msgid "Generated from %1$s (%2$s) at %3$s."
 msgstr ""
 
-#: code/cli.php:202
+#: code/cli.php:206
 msgid "Do not save these statements for later use. Instead, regenerate them."
 msgstr ""
 
-#: code/cli.php:203
-#: code/cli.php:332
+#: code/cli.php:207
+#: code/cli.php:336
 msgid "Dry run SQL statements. These statements were NOT run."
 msgstr ""
 
-#: code/cli.php:262
+#: code/cli.php:266
 msgid "These tables are not found or not eligible to"
 msgstr ""
 
-#: code/cli.php:266
+#: code/cli.php:270
 msgid "No tables are eligible to"
 msgstr ""
 
-#: code/cli.php:288
+#: code/cli.php:292
 msgid "MySQL statement"
 msgid_plural "MySQL statements"
 msgstr[0] ""
 msgstr[1] ""
 
-#: code/cli.php:291
+#: code/cli.php:295
 msgid "complete."
 msgstr ""
 
+#. translators: 1: time interval  2: date-time string  3: hostname or "Redacted, not localhost"
+#: code/health.php:49
+msgid "This database server [%3$s] up for: %1$s (since %2$s)."
+msgstr ""
+
+#. translators: 1: size like 4.3Mib  2: percentage like 40.5  3: complementary percentage like 59.5
+#: code/health.php:68
+msgid "This site's database size: %1$s. %2$s%% data, %3$s%% keys."
+msgstr ""
+
+#. translators: 1: size like 4.3Mib  2: percentage like 40.5  3: complementary percentage like 59.5  4:total number of databases visible
+#: code/health.php:79
+#: code/health.php:80
+msgid "All %4$s databases size: %1$s. %2$s%% data, %3$s%% keys."
+msgstr ""
+
+#. translators: 1: database count
+#: code/health.php:94
+msgid "Shared database servers may contain more than these %1$s databases."
+msgstr ""
+
+#. translators: 1: size like 4.3Mib  2: percentage like 40.5  3: complementary percentage like 59.5
+#: code/health.php:117
+msgid "Database buffer pool size: %1$s. %2$s%% used, %3$s%% dirty."
+msgstr ""
+
+#. translators: 1: formatted number,  2: formatted number
+#: code/health.php:133
+msgid "Number of connections to database server:  current: %1$s  limit: %2$s"
+msgstr ""
+
+#. translators: 1: formatted number
+#: code/health.php:141
+msgid "peak: %1$s"
+msgstr ""
+
+#. translators: 1: time string
+#: code/health.php:146
+msgid "at %1$s"
+msgstr ""
+
+#. translators: 1: time interval with unit like 0.5ms
+#: code/health.php:158
+msgid "Minimum database query round-trip time: %1$s."
+msgstr ""
+
+#. translators: 1: datestamp  2: number  number like 123.4  4: percentage
+#: code/health.php:175
+msgid "Temporary results tables used (since %1$s): %2$s/sec. %3$s%% overflowed to SSD/HDD."
+msgstr ""
+
+#. translators: 1: datestamp  2: byte-count like 3.6GiB  3: byte-count like 3.6GiB
+#: code/health.php:200
+msgid "Database server network traffic (since %1$s): %2$s/sec sent to WordPress, %3$s/sec received."
+msgstr ""
+
 #. translators: 1: number of tables processed
-#: code/imsfdb.php:248
+#: code/imsfdb.php:294
 msgid "High-performance keys added to %1$d tables."
 msgstr ""
 
 #. translators: 1: number of tables processed
-#: code/imsfdb.php:252
+#: code/imsfdb.php:298
 msgid "Keys on %1$d tables reverted to WordPress standard."
 msgstr ""
 
 #. translators: 1: count of tables upgraded from MyISAM to InnoDB
-#: code/imsfdb.php:648
+#: code/imsfdb.php:699
 msgid "%1$d tables upgraded"
 msgstr ""
 
@@ -1107,105 +1167,105 @@ msgstr ""
 msgid "queries captured."
 msgstr ""
 
-#: code/rendermonitor.php:187
+#: code/rendermonitor.php:154
 msgid "Version:"
 msgstr ""
 
-#: code/rendermonitor.php:198
+#: code/rendermonitor.php:165
 msgid "Connections/s"
 msgstr ""
 
-#: code/rendermonitor.php:201
+#: code/rendermonitor.php:168
 msgid "Failed connections/s"
 msgstr ""
 
-#: code/rendermonitor.php:208
+#: code/rendermonitor.php:175
 msgid "Abrupt disconnections/s"
 msgstr ""
 
-#: code/rendermonitor.php:214
+#: code/rendermonitor.php:181
 msgid "Queries/s"
 msgstr ""
 
-#: code/rendermonitor.php:221
+#: code/rendermonitor.php:188
 msgid "Net:"
 msgstr ""
 
-#: code/rendermonitor.php:223
+#: code/rendermonitor.php:190
 msgid "received"
 msgstr ""
 
-#: code/rendermonitor.php:225
+#: code/rendermonitor.php:192
 msgid "sent"
 msgstr ""
 
-#: code/rendermonitor.php:230
+#: code/rendermonitor.php:197
 msgid "IO:"
 msgstr ""
 
-#: code/rendermonitor.php:232
+#: code/rendermonitor.php:199
 msgid "read"
 msgstr ""
 
-#: code/rendermonitor.php:234
+#: code/rendermonitor.php:201
 msgid "rows"
 msgstr ""
 
-#: code/rendermonitor.php:238
+#: code/rendermonitor.php:205
 msgid "fetched"
 msgstr ""
 
-#: code/rendermonitor.php:243
+#: code/rendermonitor.php:210
 msgid "written"
 msgstr ""
 
-#: code/rendermonitor.php:248
+#: code/rendermonitor.php:215
 msgid "retrieved"
 msgstr ""
 
-#: code/rendermonitor.php:253
+#: code/rendermonitor.php:220
 msgid "stored"
 msgstr ""
 
-#: code/rendermonitor.php:260
+#: code/rendermonitor.php:227
 msgid "Shortest Query Time:"
 msgstr ""
 
-#: code/rendermonitor.php:742
+#: code/rendermonitor.php:246
 msgid "Uptime"
 msgstr ""
 
-#: code/rendermonitor.php:754
+#: code/rendermonitor.php:259
 msgid "Buffer Pool: Total:"
 msgstr ""
 
-#: code/rendermonitor.php:759
+#: code/rendermonitor.php:264
 msgid "Active:"
 msgstr ""
 
-#: code/rendermonitor.php:765
+#: code/rendermonitor.php:270
 msgid "% dirty"
 msgstr ""
 
-#: code/rendermonitor.php:777
+#: code/rendermonitor.php:295
 msgid "RAM:"
 msgstr ""
 
-#: code/rendermonitor.php:788
+#: code/rendermonitor.php:307
 msgid "Threads:"
 msgstr ""
 
 #. translators: this goes into error_log()
-#: index-wp-mysql-for-speed.php:197
+#: index-wp-mysql-for-speed.php:214
 msgid "index-wp-mysql-for-speed: Unable to set up the mu-plugin to filter data definition language when preparing for a WordPress upgrade."
 msgstr ""
 
 #. translators: this goes into error_log()
-#: index-wp-mysql-for-speed.php:202
+#: index-wp-mysql-for-speed.php:219
 msgid "index-wp-mysql-for-speed: Exception setting up the mu-plugin to filter data definition language when preparing for a WordPress upgrade."
 msgstr ""
 
 #. translators: this goes into error_log()
-#: index-wp-mysql-for-speed.php:218
+#: index-wp-mysql-for-speed.php:235
 msgid "index-wp-mysql-for-speed: Unable to remove the mu-plugin to filter data definition language."
 msgstr ""

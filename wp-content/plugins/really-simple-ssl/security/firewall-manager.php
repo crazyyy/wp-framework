@@ -49,6 +49,15 @@ class rsssl_firewall_manager {
 	}
 
 	/**
+	 * Check if any rules were added
+	 * @return bool
+	 */
+	public function has_rules(){
+		$rules    = apply_filters('rsssl_firewall_rules', '');
+		return !empty(trim($rules));
+	}
+
+	/**
 	 * Generate security rules, and advanced-headers.php file
 	 *
 	 */
@@ -68,7 +77,7 @@ class rsssl_firewall_manager {
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			if ( file_exists($advanced_headers_file) ) {
-				unlink($advanced_headers_file);
+				if ( !defined('RSSSL_SAFE_MODE')) unlink($advanced_headers_file);
 			}
 			return;
 		}
@@ -77,9 +86,9 @@ class rsssl_firewall_manager {
 		$contents .= '/**' . "\n";
 		$contents .= '* This file is created by Really Simple SSL' . "\n";
 		$contents .= '*/' . "\n\n";
-		$contents .= "defined('ABSPATH') or die();" . "\n\n";
 		//allow disabling of headers for detection purposes
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
+		$contents .= 'if (!defined("RSSSL_HEADERS_ACTIVE")) define("RSSSL_HEADERS_ACTIVE", true);'."\n";
 		$contents .= "//RULES START\n".$rules;
 
 		// write to advanced-header.php file
@@ -133,6 +142,18 @@ class rsssl_firewall_manager {
 	}
 
 	/**
+	 * Get the status for the firewall
+	 *
+	 * @return bool
+	 */
+	public function firewall_active_error(){
+		if (!$this->has_rules()) {
+			return false;
+		}
+		return !defined('RSSSL_HEADERS_ACTIVE');
+	}
+
+	/**
 	 * Show some notices
 	 * @param array $notices
 	 *
@@ -160,6 +181,22 @@ class rsssl_firewall_manager {
 				'disable_http_methods',
 			]
 		);
+		$notices['firewall-active'] = array(
+			'condition' => ['RSSSL_SECURITY()->firewall_manager->firewall_active_error'],
+			'callback' => '_true_',
+			'score' => 5,
+			'output' => array(
+				'true' => array(
+					'title' => __("Firewall", "really-simple-ssl"),
+					'msg' => __("A firewall rule was enabled, but the firewall does not seem to get loaded correctly.", "really-simple-ssl").' '.__("Please check if the advanced-headers.php file is included in the wp-config.php, and exists in the wp-content folder.", "really-simple-ssl"),
+					'icon' => 'open',
+					'dismissible' => true,
+				),
+			),
+			'show_with_options' => [
+				'disable_http_methods',
+			]
+		);
 		return $notices;
 	}
 
@@ -175,7 +212,7 @@ class rsssl_firewall_manager {
 		$dir = ABSPATH;
 		do {
 			$i++;
-			if (file_exists($dir . "/wp-config.php")) {
+			if ( file_exists($dir . "/wp-config.php") ) {
 				return $dir . "/wp-config.php";
 			}
 		} while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
@@ -203,7 +240,7 @@ class rsssl_firewall_manager {
 		}
 
 		if ( file_exists( $file ) ) {
-			unlink( $file );
+			if ( !defined('RSSSL_SAFE_MODE')) unlink( $file );
 		}
 	}
 }

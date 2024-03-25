@@ -34,14 +34,6 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 				'title' => __('Comment spam IP monitoring', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_comment_spam_ip_monitoring'),
 			),
-			'buddypress' => array(
-				'title' => __('BuddyPress', 'all-in-one-wp-security-and-firewall'),
-				'render_callback' => array($this, 'render_buddypress'),
-			),
-			'bbpress' => array(
-				'title' => __('bbPress', 'all-in-one-wp-security-and-firewall'),
-				'render_callback' => array($this, 'render_bbpress'),
-			),
 		);
 
 		$this->menu_tabs = array_filter($menu_tabs, array($this, 'should_display_tab'));
@@ -58,15 +50,15 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 		if (isset($_POST['aiowps_apply_comment_spam_prevention_settings'])) { // Do form submission tasks
 			$nonce = $_REQUEST['_wpnonce'];
 			if (!wp_verify_nonce($nonce, 'aiowpsec-comment-spam-settings-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on save comment spam settings!",4);
-				die("Nonce check failed on save comment spam settings!");
+				$aio_wp_security->debug_logger->log_debug("Nonce check failed on save comment spam settings.", 4);
+				die("Nonce check failed on save comment spam settings.");
 			}
 
 			// Save settings
 			$random_20_digit_string = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20); // Generate random 20 char string for use during CAPTCHA encode/decode
 			$aio_wp_security->configs->set_value('aiowps_captcha_secret_key', $random_20_digit_string);
 
-			$aio_wp_security->configs->set_value('aiowps_enable_spambot_detecting',isset($_POST["aiowps_enable_spambot_detecting"]) ? '1' : '');
+			$aio_wp_security->configs->set_value('aiowps_enable_spambot_detecting', isset($_POST["aiowps_enable_spambot_detecting"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_spam_comments_should', !empty($_POST["aiowps_spam_comments_should"]) ? '1' : '0');
 
 			$aio_wp_security->configs->set_value('aiowps_enable_trash_spam_comments', isset($_POST['aiowps_enable_trash_spam_comments']) ? '1' : '');
@@ -76,7 +68,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 					$aiowps_trash_spam_comments_after_days = sanitize_text_field($_POST['aiowps_trash_spam_comments_after_days']);
 				}
 				if (isset($_POST['aiowps_enable_trash_spam_comments']) && !is_numeric($aiowps_trash_spam_comments_after_days)) {
-					$error = __('You entered a non numeric value for the "move spam comments to trash after number of days" field.','all-in-one-wp-security-and-firewall').' '.__('It has been set to the default value.','all-in-one-wp-security-and-firewall');
+					$error = __('You entered a non numeric value for the "move spam comments to trash after number of days" field.', 'all-in-one-wp-security-and-firewall').' '.__('It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
 					$aiowps_trash_spam_comments_after_days = '14';//Set it to the default value for this field
 					$this->show_msg_error(__('Attention:', 'all-in-one-wp-security-and-firewall').' '.htmlspecialchars($error));
 				}
@@ -98,10 +90,9 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			if ($res) {
 				$this->show_msg_updated(__('Settings were successfully saved', 'all-in-one-wp-security-and-firewall'));
 			} else {
-				$this->show_msg_error(__('Could not write to the .htaccess file. Please check the file permissions.', 'all-in-one-wp-security-and-firewall'));
+				$this->show_msg_error(__('Could not write to the .htaccess file, please check the file permissions.', 'all-in-one-wp-security-and-firewall'));
 			}
 		}
-		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'comment-captcha'));
 		$aio_wp_security->include_template('wp-admin/spam-prevention/comment-spam.php', false, array('aiowps_feature_mgr' => $aiowps_feature_mgr));
 	}
 
@@ -126,10 +117,10 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 
 			$spam_ip_min_comments = sanitize_text_field($_POST['aiowps_spam_ip_min_comments_block']);
 			if (!is_numeric($spam_ip_min_comments)) {
-				$error .= '<br />'.__('You entered a non numeric value for the minimum number of spam comments field. It has been set to the default value.','all-in-one-wp-security-and-firewall');
+				$error .= '<br />'.__('You entered a non numeric value for the minimum number of spam comments field, it has been set to the default value.', 'all-in-one-wp-security-and-firewall');
 				$spam_ip_min_comments = '3';// Set it to the default value for this field
 			} elseif (empty($spam_ip_min_comments)) {
-				$error .= '<br />'.__('You must enter an integer greater than zero for minimum number of spam comments field. It has been set to the default value.','all-in-one-wp-security-and-firewall');
+				$error .= '<br />'.__('You must enter an integer greater than zero for the minimum number of spam comments field, it has been set to the default value.', 'all-in-one-wp-security-and-firewall');
 				$spam_ip_min_comments = '3';// Set it to the default value for this field
 			}
 
@@ -138,8 +129,8 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 
 			// Save all the form values to the options
-			$aio_wp_security->configs->set_value('aiowps_enable_autoblock_spam_ip',isset($_POST["aiowps_enable_autoblock_spam_ip"])?'1':'');
-			$aio_wp_security->configs->set_value('aiowps_spam_ip_min_comments_block',absint($spam_ip_min_comments));
+			$aio_wp_security->configs->set_value('aiowps_enable_autoblock_spam_ip', isset($_POST["aiowps_enable_autoblock_spam_ip"]) ? '1' : '');
+			$aio_wp_security->configs->set_value('aiowps_spam_ip_min_comments_block', absint($spam_ip_min_comments));
 			$aio_wp_security->configs->save_config();
 
 			//Recalculate points after the feature status/options have been altered
@@ -173,9 +164,16 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			$this->show_msg_updated($info_msg_string);
 		}
 
-		if (isset($_REQUEST['action'])) { // Do list table form row action tasks
-			if ($_REQUEST['action'] == 'block_spammer_ip') { //The "block" link was clicked for a row in the list table
-				$spammer_ip_list->block_spammer_ip_records(strip_tags($_REQUEST['spammer_ip']));
+		if (isset($_GET['action'])) { // Do list table form row action tasks
+			$nonce = isset($_GET['aiowps_nonce']) ? $_GET['aiowps_nonce'] : '';
+			$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'block_spammer_ip');
+			
+			if (is_wp_error($nonce_user_cap_result)) {
+				$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
+				die($nonce_user_cap_result->get_error_message());
+			}
+			if ('block_spammer_ip' == $_GET['action']) { //The "block" link was clicked for a row in the list table
+				$spammer_ip_list->block_spammer_ip_records(strip_tags($_GET['spammer_ip']));
 			}
 		}
 
@@ -192,9 +190,8 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 				$total_count = count($total_res);
 				$todays_blocked_count = 0;
 				foreach ($total_res as $blocked_item) {
-					$now = current_time( 'mysql' );
-					$now_date_time = new DateTime($now);
-					$blocked_date = new DateTime($blocked_item->blocked_date);
+					$now_date_time = new DateTime('now', new DateTimeZone('UTC'));
+					$blocked_date = new DateTime('@'.$blocked_item->created); //@ with timestamp creates correct DateTime
 					if ($blocked_date->format('Y-m-d') == $now_date_time->format('Y-m-d')) {
 						//there was an IP added to permanent block list today
 						++$todays_blocked_count;
@@ -205,30 +202,8 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 		}
 
 		$page = $_REQUEST['page'];
-		$tab =  $_REQUEST['tab'];
+		$tab = $_REQUEST['tab'];
 
 		$aio_wp_security->include_template('wp-admin/spam-prevention/comment-spam-ip-monitoring.php', false, array('spammer_ip_list' => $spammer_ip_list, 'aiowps_feature_mgr' => $aiowps_feature_mgr, 'block_comments_output' => $block_comments_output, 'page' => $page, 'tab' => $tab));
 	}
-
-	/**
-	 * Renders the submenu's BuddyPress tab body.
-	 *
-	 * @return Void
-	 */
-	protected function render_buddypress() {
-		global $aio_wp_security;
-
-		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'buddypress-captcha'));
-	}
-
-	/**
-	 * Renders the submenu's bbPress tab body.
-	 *
-	 * @return Void
-	 */
-	protected function render_bbpress() {
-		global $aio_wp_security;
-
-		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'bbpress-captcha'));
-	}
-} //end class
+}

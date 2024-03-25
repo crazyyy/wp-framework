@@ -62,7 +62,7 @@ if (!is_super_admin()) {
 			<?php wp_nonce_field('aiowpsec-disable-all-firewall-rules'); ?>
 			<div class="aio_blue_box">
 				<?php
-				echo '<p>'.__('This feature will disable all firewall rules which are currently active in this plugin and it will also delete these rules from your .htacess file. Use it if you think one of the firewall rules is causing an issue on your site.', 'all-in-one-wp-security-and-firewall').'</p>';
+				echo '<p>'.__('This feature will disable all firewall rules which are currently active in this plugin and it will also delete these rules from your .htaccess file.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Use it if you think one of the firewall rules is causing an issue on your site.', 'all-in-one-wp-security-and-firewall').'</p>';
 				?>
 			</div>
 			<div class="submit">
@@ -108,8 +108,9 @@ if (!is_super_admin()) {
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable debug', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-						<input id="aiowps_enable_debug" name="aiowps_enable_debug" type="checkbox"<?php if ($aio_wp_security->configs->get_value('aiowps_enable_debug')=='1') echo ' checked="checked"'; ?> value="1"/>
-						<label for="aiowps_enable_debug" class="description"><?php _e('Check this if you want to enable debug. You should keep this option disabled after you have finished debugging the issue.', 'all-in-one-wp-security-and-firewall'); ?></label>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable debug.', 'all-in-one-wp-security-and-firewall') . ' ' . __('You should keep this option disabled after you have finished debugging the issue.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_debug', '1' == $aio_wp_security->configs->get_value('aiowps_enable_debug')); ?>
+						</div>
 					</td>
 				</tr>
 			</table>

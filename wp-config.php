@@ -1,6 +1,3 @@
-/* The above code is a configuration file for a WordPress website. It sets various constants and
-defines different settings for the WordPress installation. Here is a breakdown of what the code is
-doing: */
 <?php
 /** @noinspection PhpUnused */
 /** @noinspection PhpDefineCanBeReplacedWithConstInspection */

@@ -3,7 +3,7 @@
 <div class="wpo-fieldgroup">
 	<p class="wpo_min-bold-green wpo_min-rowintro">
 		<?php esc_html_e('Preload critical assets to improve loading speed.', 'wp-optimize'); ?>
-		<a href="https://getwpo.com/faqs/preload-critical-assets/"><?php esc_html_e('Learn more about preloading key requests.', 'wp-optimize'); ?></a>
+		<?php $wp_optimize->wp_optimize_url('https://getwpo.com/faqs/preload-critical-assets/', __('Learn more about preloading key requests.', 'wp-optimize')); ?>
 	</p>
 	<fieldset>
 		<legend class="screen-reader-text">

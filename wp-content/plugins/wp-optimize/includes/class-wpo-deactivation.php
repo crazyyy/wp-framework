@@ -14,7 +14,7 @@ class WPO_Deactivation {
 		WP_Optimize()->get_minify()->plugin_deactivate();
 		WP_Optimize()->get_gzip_compression()->disable();
 		WP_Optimize()->get_browser_cache()->disable();
-		WP_Optimize()->get_webp_instance()->empty_htaccess_file();
+		WP_Optimize()->get_webp_instance()->plugin_deactivate();
 	}
 }
 

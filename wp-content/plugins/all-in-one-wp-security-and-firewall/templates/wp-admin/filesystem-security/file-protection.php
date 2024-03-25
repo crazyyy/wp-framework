@@ -7,10 +7,11 @@
 	?>
 </div>
 <form action="" method="POST">
-	<?php wp_nonce_field('aios-firewall-file-protection-nonce'); ?>   
+	<?php wp_nonce_field('aios-firewall-file-protection-nonce'); ?>
 	<?php
 		$aio_wp_security->include_template('wp-admin/filesystem-security/partials/wp-file-access.php');
 		$aio_wp_security->include_template('wp-admin/filesystem-security/partials/prevent-hotlinks.php');
+		$aio_wp_security->include_template('wp-admin/filesystem-security/partials/php-file-editing.php');
 	?>
 	<input type="submit" name="aiowps_save_file_protection" value="<?php _e('Save settings', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
 </form>

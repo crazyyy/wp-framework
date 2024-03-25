@@ -12,8 +12,8 @@ namespace RankMath\Analytics;
 
 use RankMath\Helper;
 use RankMath\Google\Api;
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Helpers\Param;
+use RankMath\Helpers\Str;
+use RankMath\Helpers\Param;
 use RankMath\Google\Analytics;
 use RankMath\Google\Authentication;
 use RankMath\Sitemap\Sitemap;
@@ -342,7 +342,7 @@ class AJAX {
 		if ( empty( $rows ) ) {
 			delete_option( 'rank_math_analytics_installed' );
 		}
-
+		delete_option( 'rank_math_analytics_last_single_action_schedule_time' );
 		// Start fetching data.
 		foreach ( [ 'console', 'analytics', 'adsense' ] as $action ) {
 			Workflow\Workflow::do_workflow(

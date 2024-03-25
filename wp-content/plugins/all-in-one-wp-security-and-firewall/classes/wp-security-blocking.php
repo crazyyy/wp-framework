@@ -53,7 +53,7 @@ class AIOWPSecurity_Blocking {
 	}
 
 	/**
-	 * Will add an IP address to the permament block list
+	 * Will add an IP address to the permanent block list
 	 *
 	 * @param int    $ip_address
 	 * @param string $reason
@@ -78,7 +78,9 @@ class AIOWPSecurity_Blocking {
 				'blocked_date'=>$time_now
 			);
 			$data = apply_filters('aiowps_pre_add_to_permanent_block', $data);
-			$res = $wpdb->insert(AIOWPSEC_TBL_PERM_BLOCK, $data);
+			$perm_block_tbl_name = AIOWPSEC_TBL_PERM_BLOCK;
+			$sql = $wpdb->prepare("INSERT INTO ".$perm_block_tbl_name." (blocked_ip, block_reason, blocked_date, created) VALUES ('%s', '%s', '%s', UNIX_TIMESTAMP())", $data['blocked_ip'], $data['block_reason'], $data['blocked_date']);
+			$res = $wpdb->query($sql);
 			if (false === $res) {
 				$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Blocking::add_ip_to_block_list - Error inserting record into AIOWPSEC_TBL_PERM_BLOCK table for IP ".$ip_address);
 				return false;

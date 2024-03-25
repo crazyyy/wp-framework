@@ -140,7 +140,15 @@ class WP_Optimize_Minify_Config {
 			'async_css' => '',
 			'async_js' => '',
 			'disable_css_inline_merge' => true,
-			'ualist' => array('x11.*fox\/54', 'oid\s4.*xus.*ome\/62', 'x11.*ome\/62', 'oobot', 'ighth', 'tmetr', 'eadles', 'ingdo'),
+			/**
+			 * UA list compiled from these resources:
+			 * https://explore.whatismybrowser.com/useragents/explore/software_name/gtmetrix-analyser/
+			 * https://explore.whatismybrowser.com/useragents/explore/software_name/pingdom-bot/
+			 * https://explore.whatismybrowser.com/useragents/explore/software_name/google-lighthouse/
+			 * https://explore.whatismybrowser.com/useragents/explore/software_name/googlebot/
+			 * https://explore.whatismybrowser.com/useragents/explore/software_name/headless-chrome/
+			 */
+			'ualist' => array('Googlebot', 'Chrome-Lighthouse', 'GTmetrix', 'HeadlessChrome', 'Pingdom'),
 			'exclude_js_from_page_speed_tools' => false,
 			'exclude_css_from_page_speed_tools' => false,
 			'blacklist' => array(),

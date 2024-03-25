@@ -176,6 +176,7 @@ class wfConfig {
 			'wafAlertInterval' => array('value' => 600, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
 			'wafAlertThreshold' => array('value' => 100, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
 			'howGetIPs_trusted_proxies' => array('value' => '', 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
+			'howGetIPs_trusted_proxy_preset' => array('value' => '', 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
 			'scanType' => array('value' => wfScanner::SCAN_TYPE_STANDARD, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
 			'manualScanType' => array('value' => wfScanner::MANUAL_SCHEDULING_ONCE_DAILY, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
 			'schedStartHour' => array('value' => -1, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
@@ -227,9 +228,12 @@ class wfConfig {
 			'lastPermissionsTemplateCheck' => array('value' => 0, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
 			'previousWflogsFileList' => array('value' => '[]', 'autoload' => self::DONT_AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
 			'diagnosticsWflogsRemovalHistory' => array('value' => '[]', 'autoload' => self::DONT_AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
+			'satisfactionPromptDismissed' => array('value' => 0, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
+			'satisfactionPromptInstallDate' => array('value' => 0, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
+			'satisfactionPromptOverride' => array('value' => true, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_BOOL)),
 		),
 	);
-	public static $serializedOptions = array('lastAdminLogin', 'scanSched', 'emailedIssuesList', 'wf_summaryItems', 'adminUserList', 'twoFactorUsers', 'alertFreqTrack', 'wfStatusStartMsgs', 'vulnerabilities_plugin', 'vulnerabilities_theme', 'dashboardData', 'malwarePrefixes', 'coreHashes', 'noc1ScanSchedule', 'allScansScheduled', 'disclosureStates', 'scanStageStatuses', 'adminNoticeQueue', 'suspiciousAdminUsernames', 'wordpressPluginVersions', 'wordpressThemeVersions');
+	public static $serializedOptions = array('lastAdminLogin', 'scanSched', 'emailedIssuesList', 'wf_summaryItems', 'adminUserList', 'twoFactorUsers', 'alertFreqTrack', 'wfStatusStartMsgs', 'vulnerabilities_core', 'vulnerabilities_plugin', 'vulnerabilities_theme', 'dashboardData', 'malwarePrefixes', 'coreHashes', 'noc1ScanSchedule', 'allScansScheduled', 'disclosureStates', 'scanStageStatuses', 'adminNoticeQueue', 'suspiciousAdminUsernames', 'wordpressPluginVersions', 'wordpressThemeVersions');
 	// Configuration keypairs that can be set from Central.
 	private static $wfCentralInternalConfig = array(
 		'wordfenceCentralUserSiteAuthGrant',
@@ -517,6 +521,9 @@ class wfConfig {
 	public static function setJSON($key, $val, $autoload = self::AUTOLOAD) {
 		self::set($key, @json_encode($val), $autoload);
 	}
+	public static function setBool($key, $val, $autoload = self::AUTOLOAD) {
+		self::set($key, wfUtils::truthyToBoolean($val) ? 1 : 0, $autoload);
+	}
 	public static function setOrRemove($key, $value, $autoload = self::AUTOLOAD) {
 		if ($value === null) {
 			self::remove($key);
@@ -562,6 +569,10 @@ class wfConfig {
 			return $default;
 		}
 		return $decoded;
+	}
+	
+	public static function getBool($key, $default = false, $allowCached = true) {
+		return wfUtils::truthyToBoolean(self::get($key, $default, $allowCached));
 	}
 	
 	/**
@@ -699,7 +710,7 @@ class wfConfig {
 		
 		global $wpdb;
 		$dbh = $wpdb->dbh;
-		$useMySQLi = (is_object($dbh) && $wpdb->use_mysqli && wfConfig::get('allowMySQLi', true) && WORDFENCE_ALLOW_DIRECT_MYSQLI);
+		$useMySQLi = wfUtils::useMySQLi();
 		
 		if (!self::$tableExists) {
 			return;
@@ -1309,6 +1320,21 @@ Options -ExecCGI
 					$checked = true;
 					break;
 				}
+				case 'howGetIPs_trusted_proxy_preset':
+				{
+					$presets = wfConfig::getJSON('ipResolutionList', array());
+					if (!is_array($presets)) {
+						$presets = array();
+					}
+					
+					if (!(empty($value) /* "None" */ || isset($presets[$value]))) {
+						$errors[] = array('option' => $key, 'error' => __('The selected trusted proxy preset is not valid: ', 'wordfence') . esc_html($value));
+					}
+					
+					$checked = true;
+					
+					break;
+				}
 				case 'apiKey':
 				{
 					$value = trim($value);
@@ -1830,7 +1856,7 @@ Options -ExecCGI
 				$api = new wfAPI($apiKey, wfUtils::getWPVersion());
 				try {
 					$keyType = wfLicense::KEY_TYPE_FREE;
-					$keyData = $api->call('ping_api_key', array(), array('supportHash' => wfConfig::get('supportHash', ''), 'whitelistHash' => wfConfig::get('whitelistHash', ''), 'tldlistHash' => wfConfig::get('tldlistHash', '')));
+					$keyData = $api->call('ping_api_key', array(), array('supportHash' => wfConfig::get('supportHash', ''), 'whitelistHash' => wfConfig::get('whitelistHash', ''), 'tldlistHash' => wfConfig::get('tldlistHash', ''), 'ipResolutionListHash' => wfConfig::get('ipResolutionListHash', '')));
 					if (isset($keyData['_isPaidKey'])) {
 						$keyType = wfConfig::get('keyType');
 					}
@@ -1849,6 +1875,10 @@ Options -ExecCGI
 					if (isset($keyData['_tldlist']) && isset($keyData['_tldlistHash'])) {
 						wfConfig::set('tldlist', $keyData['_tldlist']);
 						wfConfig::set('tldlistHash', $keyData['_tldlistHash']);
+					}
+					if (isset($keyData['_ipResolutionList']) && isset($keyData['_ipResolutionListHash'])) {
+						wfConfig::setJSON('ipResolutionList', $keyData['_ipResolutionList']);
+						wfConfig::set('ipResolutionListHash', $keyData['_ipResolutionListHash']);
 					}
 					if (isset($keyData['scanSchedule']) && is_array($keyData['scanSchedule'])) {
 						wfConfig::set_ser('noc1ScanSchedule', $keyData['scanSchedule']);
@@ -1910,6 +1940,7 @@ Options -ExecCGI
 					'email_summary_interval',
 					'email_summary_excluded_directories',
 					'howGetIPs_trusted_proxies',
+					'howGetIPs_trusted_proxy_preset',
 					'displayTopLevelOptions',
 				);
 				break;
@@ -2075,6 +2106,7 @@ Options -ExecCGI
 					'email_summary_interval',
 					'email_summary_excluded_directories',
 					'howGetIPs_trusted_proxies',
+					'howGetIPs_trusted_proxy_preset',
 					'firewallEnabled',
 					'autoBlockScanners',
 					'loginSecurityEnabled',

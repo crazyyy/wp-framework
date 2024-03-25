@@ -1,6 +1,13 @@
 <?php
 require_once(dirname(__FILE__) . '/wfConfig.php');
 class wfUtils {
+	//Flags for wfUtils::parse_version
+	const VERSION_MAJOR = 'major';
+	const VERSION_MINOR = 'minor';
+	const VERSION_PATCH = 'patch';
+	const VERSION_PRE_RELEASE = 'pre-release';
+	const VERSION_BUILD = 'build';
+	
 	private static $isWindows = false;
 	public static $scanLockFH = false;
 	private static $lastErrorReporting = false;
@@ -886,7 +893,7 @@ class wfUtils {
 			}
 			$skipToNext = false;
 			if ($trustedProxies === null) {
-				$trustedProxies = explode("\n", wfConfig::get('howGetIPs_trusted_proxies', ''));
+				$trustedProxies = self::unifiedTrustedProxies();
 			}
 			foreach(array(',', ' ', "\t") as $char){
 				if(strpos($item, $char) !== false){
@@ -943,6 +950,29 @@ class wfUtils {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Returns an array of all trusted proxies, combining both the user-entered ones and those from the selected preset.
+	 * 
+	 * @return string[]
+	 */
+	public static function unifiedTrustedProxies() {
+		$trustedProxies = explode("\n", wfConfig::get('howGetIPs_trusted_proxies', ''));
+		
+		$preset = wfConfig::get('howGetIPs_trusted_proxy_preset');
+		$presets = wfConfig::getJSON('ipResolutionList', array());
+		if (is_array($presets) && isset($presets[$preset])) {
+			$testIPs = array_merge($presets[$preset]['ipv4'], $presets[$preset]['ipv6']);
+			foreach ($testIPs as $val) {
+				if (strlen($val) > 0) {
+					if (wfUtils::isValidIP($val) || wfUtils::isValidCIDRRange($val)) {
+						$trustedProxies[] = $val;
+					}
+				}
+			}
+		}
+		return $trustedProxies;
 	}
 
 	/**
@@ -1240,6 +1270,85 @@ class wfUtils {
 			return $wp_version;
 		}
 	}
+	
+	public static function parse_version($version, $component = null) {
+		$major = 0;
+		$minor = 0;
+		$patch = 0;
+		$prerelease = '';
+		$build = '';
+		
+		if (preg_match('/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/', $version, $matches)) { //semver
+			$major = $matches[1];
+			$minor = $matches[2];
+			$patch = $matches[3];
+			
+			if (preg_match('/^([^\+]+)\+(.*)$/', $version, $matches)) {
+				$version = $matches[1];
+				$build = $matches[2];
+			}
+			
+			if (preg_match('/^([^\-]+)\-(.*)$/', $version, $matches)) {
+				$version = $matches[1];
+				$prerelease = $matches[2];
+			}
+		}
+		else { //Parse as "PHP-standardized" (see version_compare docs: "The function first replaces _, - and + with a dot . in the version strings and also inserts dots . before and after any non number so that for example '4.3.2RC1' becomes '4.3.2.RC.1'.")
+			$version = trim(preg_replace('/\.\.+/', '.', preg_replace('/([^0-9\.]+)/', '.$1.', preg_replace('/[_\-\+]+/', '.', $version))), '.');
+			$components = explode('.', $version);
+			$i = 0;
+			if (isset($components[$i]) && is_numeric($components[$i])) { $major = $components[$i]; $i++; }
+			if (isset($components[$i]) && is_numeric($components[$i])) { $minor = $components[$i]; $i++; }
+			if (isset($components[$i]) && is_numeric($components[$i])) { $patch = $components[$i]; $i++; }
+			while (isset($components[$i]) && is_numeric($components[$i])) {
+				if (!empty($build)) {
+					$build .= '.';
+				}
+				$build .= $components[$i];
+				$i++;
+			}
+			while (isset($components[$i])) {
+				if (!empty($prerelease)) {
+					$prerelease .= '.';
+				}
+				
+				if (preg_match('/^(?:dev|alpha|a|beta|b|rc|#|pl|p)$/i', $components[$i])) {
+					$prerelease .= strtolower($components[$i]);
+					if (isset($components[$i + 1])) {
+						if (!preg_match('/^(?:a|b|rc|#|pl|p)$/i', $components[$i])) {
+							$prerelease .= '-';
+						}
+						$i++;
+					}
+				}
+				
+				$prerelease .= $components[$i];
+				$i++;
+			}
+		}
+		
+		$version = array(
+			self::VERSION_MAJOR => $major,
+			self::VERSION_MINOR => $minor,
+			self::VERSION_PATCH => $patch,
+			self::VERSION_PRE_RELEASE => $prerelease,
+			self::VERSION_BUILD => $build,
+		);
+		
+		$version = array_filter($version, function($v) {
+			return $v !== '';
+		});
+		
+		if ($component === null) {
+			return $version;
+		}
+		else if (isset($version[$component])) {
+			return $version[$component];
+		}
+		
+		return null;
+	}
+	
 	public static function isAdminPageMU(){
 		if(preg_match('/^[\/a-zA-Z0-9\-\_\s\+\~\!\^\.]*\/wp-admin\/network\//', $_SERVER['REQUEST_URI'])){
 			return true;
@@ -1341,39 +1450,12 @@ class wfUtils {
 		$string = str_replace(",", "\n", $string); // fix old format
 		return implode("\n", array_unique(array_filter(array_map('trim', explode("\n", $string)))));
 	}
-	public static function getScanFileError() {
-		$fileTime = wfConfig::get('scanFileProcessing');
-		if (!$fileTime) {
-			return;
-		}
-		list($file, $time) =  unserialize($fileTime);
-		if ($time+10 < time()) {
-			$add = true;
-			$excludePatterns = wordfenceScanner::getExcludeFilePattern(wordfenceScanner::EXCLUSION_PATTERNS_USER);
-			if ($excludePatterns) {
-				foreach ($excludePatterns as $pattern) {
-					if (preg_match($pattern, $file)) {
-						$add = false;
-						break;
-					}
-				}
-			}
-			
-			if ($add) {
-				$files = wfConfig::get('scan_exclude') . "\n" . $file;
-				wfConfig::set('scan_exclude', self::cleanupOneEntryPerLine($files));
-			}
-			
-			self::endProcessingFile();
-		}
-	}
 
 	public static function beginProcessingFile($file) {
-		wfConfig::set('scanFileProcessing', serialize(array($file, time())));
+		//Do nothing
 	}
 
 	public static function endProcessingFile() {
-		wfConfig::set('scanFileProcessing', null);
 		if (wfScanner::shared()->useLowResourceScanning()) {
 			usleep(10000); //10 ms
 		}
@@ -3077,6 +3159,53 @@ class wfUtils {
 		));
 	}
 
+	/**
+	 * Determine the effective port given the output of parse_url
+	 * @param array $urlComponents
+	 * @return int the resolved port number
+	 */
+	private static function resolvePort($urlComponents) {
+		if (array_key_exists('port', $urlComponents) && !empty($urlComponents['port'])) {
+			return $urlComponents['port'];
+		}
+		if (array_key_exists('scheme', $urlComponents) && $urlComponents['scheme'] === 'https') {
+			return 443;
+		}
+		return 80;
+	}
+
+	/**
+	 * Check if two site URLs identify the same site
+	 * @param string $a first url
+	 * @param string $b second url
+	 * @param array $ignoredSubdomains An array of subdomains to ignore when matching (e.g., www)
+	 * @return bool true if the URLs match, false otherwise
+	 */
+	public static function compareSiteUrls($a, $b, $ignoredSubdomains = array()) {
+		$patterns = array_map(function($p) { return '/^' . preg_quote($p, '/') . '\\./i'; }, $ignoredSubdomains);
+		
+		$componentsA = parse_url($a);
+		if (isset($componentsA['host'])) { $componentsA['host'] = preg_replace($patterns, '', $componentsA['host']); }
+		$componentsB = parse_url($b);
+		if (isset($componentsB['host'])) { $componentsB['host'] = preg_replace($patterns, '', $componentsB['host']); }
+		foreach (array('host', 'port', 'path') as $component) {
+			$valueA = array_key_exists($component, $componentsA) ? $componentsA[$component] : null;
+			$valueB = array_key_exists($component, $componentsB) ? $componentsB[$component] : null;
+			if ($valueA !== $valueB) {
+				if ($component === 'port') {
+					$portA = self::resolvePort($componentsA);
+					$portB = self::resolvePort($componentsB);
+					if ($portA !== $portB)
+						return false;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public static function getHomePath() {
 		if (!function_exists('get_home_path')) {
 			include_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -3148,7 +3277,66 @@ class wfUtils {
 		}
 		return $encoded;
 	}
-
+	
+	/**
+	 * Convenience function to extract a matched pattern from a string. If $pattern has no matching groups, the entire
+	 * matched portion is returned. If it has at least one matching group, the first one is returned (others are 
+	 * ignored). If there is no match, false is returned.
+	 * 
+	 * @param string $pattern
+	 * @param string $subject
+	 * @param bool $expandToLine Whether or not to expand the captured value to include the entire line's contents
+	 * @return false|string
+	 */
+	public static function pregExtract($pattern, $subject, $expandToLine = false) {
+		if (preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE)) {
+			if (count($matches) > 1) {
+				$start = $matches[1][1];
+				$text = $matches[1][0];
+				$end = $start + strlen($text);
+			}
+			else {
+				$start = $matches[0][1];
+				$text = $matches[0][0];
+				$end = $start + strlen($text);
+			}
+			
+			if ($expandToLine) {
+				if (preg_match_all('/[\r\n]/', substr($subject, 0, $start), $matches, PREG_OFFSET_CAPTURE)) {
+					$start = $matches[0][count($matches[0]) - 1][1] + 1;
+				}
+				else {
+					$start = 0;
+				}
+				
+				if (preg_match('/[\r\n]/', $subject, $matches, PREG_OFFSET_CAPTURE, $end)) {
+					$end = $matches[0][1];
+				}
+				else {
+					$end = strlen($subject) - 0;
+				}
+				
+				$text = substr($subject, $start, $end - $start);
+			}
+			
+			return $text;
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns whether or not MySQLi should be used directly when needed. Returns true if there's a valid DB handle,
+	 * our database test succeeded, our constant is not set to prevent it, and then either $wpdb indicates it's using
+	 * mysqli (older WordPress versions) or we're on PHP 7+ (only mysqli is ever used).
+	 * 
+	 * @return bool
+	 */
+	public static function useMySQLi() {
+		global $wpdb;
+		$dbh = $wpdb->dbh;
+		$useMySQLi = (is_object($dbh) && (PHP_MAJOR_VERSION >= 7 || $wpdb->use_mysqli) && wfConfig::get('allowMySQLi', true) && WORDFENCE_ALLOW_DIRECT_MYSQLI);
+		return $useMySQLi;
+	}
 }
 
 // GeoIP lib uses these as well

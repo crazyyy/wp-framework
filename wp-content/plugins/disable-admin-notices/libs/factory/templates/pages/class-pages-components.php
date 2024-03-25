@@ -1,6 +1,6 @@
 <?php
 
-namespace WBCR\Factory_Templates_116\Pages;
+namespace WBCR\Factory_Templates_126\Pages;
 
 /**
  * This file is the add-ons page.
@@ -16,7 +16,7 @@ if( !defined('ABSPATH') ) {
 	exit;
 }
 
-class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
+class Components extends \WBCR\Factory_Templates_126\Pages\PageBase {
 
 	/**
 	 * The id of the page in the admin menu.
@@ -24,7 +24,7 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 	 * Mainly used to navigate between pages.
 	 *
 	 * @since 1.0.0
-	 * @see   FactoryPages466_AdminPage
+	 * @see   FactoryPages473_AdminPage
 	 *
 	 * @var string
 	 */
@@ -41,12 +41,12 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 	public $available_for_multisite = true;
 
 	/**
-	 * @param \Wbcr_Factory466_Plugin $plugin
+	 * @param \Wbcr_Factory473_Plugin $plugin
 	 */
-	public function __construct(\Wbcr_Factory466_Plugin $plugin)
+	public function __construct(\Wbcr_Factory473_Plugin $plugin)
 	{
-		$this->menu_title = __('Components', 'wbcr_factory_templates_116');
-		$this->page_menu_short_description = __('More features for plugin', 'wbcr_factory_templates_116');
+		$this->menu_title = __('Components', 'wbcr_factory_templates_126');
+		$this->page_menu_short_description = __('More features for plugin', 'wbcr_factory_templates_126');
 
 		parent::__construct($plugin);
 
@@ -58,18 +58,18 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 	 *
 	 * @return void
 	 * @since 1.0.0
-	 * @see   FactoryPages466_AdminPage
+	 * @see   FactoryPages473_AdminPage
 	 *
 	 */
 	public function assets($scripts, $styles)
 	{
 		parent::assets($scripts, $styles);
 
-		$this->styles->add(FACTORY_TEMPLATES_116_URL . '/assets/css/components.css');
+		$this->styles->add(FACTORY_TEMPLATES_126_URL . '/assets/css/components.css');
 
 		/**
-		 * @param \Wbcr_Factory466_StyleList $styles
-		 * @param \Wbcr_Factory466_ScriptList $scripts
+		 * @param \Wbcr_Factory473_StyleList $styles
+		 * @param \Wbcr_Factory473_ScriptList $scripts
 		 * @since 1.4.0
 		 *
 		 */
@@ -80,10 +80,10 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 	 * We register notifications for some actions
 	 *
 	 * @param                        $notices
-	 * @param \Wbcr_Factory466_Plugin $plugin
+	 * @param \Wbcr_Factory473_Plugin $plugin
 	 *
 	 * @return array
-	 * @see libs\factory\pages\themplates\FactoryPages466_ImpressiveThemplate
+	 * @see libs\factory\pages\themplates\FactoryPages473_ImpressiveThemplate
 	 */
 	public function getActionNotices($notices)
 	{
@@ -92,7 +92,7 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 				'wbcr-force-update-components-success' => 1
 			],
 			'type' => 'success',
-			'message' => __('Components have been successfully updated to the latest version.', 'wbcr_factory_templates_116')
+			'message' => __('Components have been successfully updated to the latest version.', 'wbcr_factory_templates_126')
 		];
 
 		$notices[] = [
@@ -100,7 +100,7 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 				'wbcr-force-update-components-error' => 'inactive_licence'
 			],
 			'type' => 'danger',
-			'message' => __('To use premium components, you need activate a license!', 'wbcr_factory_templates_116') . '<a href="admin.php?page=license-wbcr_clearfy" class="btn btn-gold">' . __('Activate license', 'wbcr_factory_templates_116') . '</a>'
+			'message' => __('To use premium components, you need activate a license!', 'wbcr_factory_templates_126') . '<a href="admin.php?page=license-wbcr_clearfy" class="btn btn-gold">' . __('Activate license', 'wbcr_factory_templates_126') . '</a>'
 		];
 
 		$notices[] = [
@@ -173,12 +173,12 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 		$components = apply_filters('wbcr/clearfy/components/items_list', $components);
 
 		?>
-		<div class="wbcr-factory-page-group-header"><?php _e('<strong>Plugin Components</strong>.', 'wbcr_factory_templates_116') ?>
+		<div class="wbcr-factory-page-group-header"><?php _e('<strong>Plugin Components</strong>.', 'wbcr_factory_templates_126') ?>
 			<p>
-				<?php _e('These are components of the plugin bundle. When you activate the plugin, all the components turned on by default. If you don’t need some function, you can easily turn it off on this page.', 'wbcr_factory_templates_116') ?>
+				<?php _e('These are components of the plugin bundle. When you activate the plugin, all the components turned on by default. If you don’t need some function, you can easily turn it off on this page.', 'wbcr_factory_templates_126') ?>
 			</p>
 		</div>
-		<div class="wbc-factory-templates-116-components">
+		<div class="wbc-factory-templates-126-components">
 			<?php
 			/**
 			 * @since 1.4.0
@@ -229,7 +229,7 @@ class Components extends \WBCR\Factory_Templates_116\Pages\PageBase {
 					<div class="plugin-card-bottom">
 						<?php if( !(isset($component['disable_button']) && $component['disable_button']) ): ?>
 							<?php if( 'premium' === $component['build'] && !($this->plugin->premium->is_activate() && $this->plugin->premium->is_install_package()) ): ?>
-								<a target="_blank" href="<?php echo esc_url($component['url']) ?>" class="button button-default install-now"><?php _e('Read more', 'wbcr_factory_templates_116'); ?></a>
+								<a target="_blank" href="<?php echo esc_url($component['url']) ?>" class="button button-default install-now"><?php _e('Read more', 'wbcr_factory_templates_126'); ?></a>
 							<?php else: ?>
 								<?php $delete_button->render_button(); ?><?php $install_button->render_button(); ?>
 							<?php endif; ?>

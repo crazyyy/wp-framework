@@ -10,8 +10,8 @@
 
 namespace RankMath\Redirections;
 
-use MyThemeShop\Helpers\Str;
-use MyThemeShop\Database\Database;
+use RankMath\Helpers\Str;
+use RankMath\Admin\Database\Database;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -41,9 +41,9 @@ class DB {
 		}
 
 		$redirction_counts = self::table()
-			->selectSum( 'status = "active"', 'active' )
-			->selectSum( 'status = "inactive"', 'inactive' )
-			->selectSum( 'status = "trashed"', 'trashed' )
+			->selectSum( "status = 'active'", 'active' )
+			->selectSum( "status = 'inactive'", 'inactive' )
+			->selectSum( "status = 'trashed'", 'trashed' )
 			->one( ARRAY_A );
 
 		$redirction_counts = array_map(
@@ -316,7 +316,7 @@ class DB {
 			return false;
 		}
 
-		$item['sources'] = maybe_unserialize( $item['sources'] );
+		$item['sources'] = self::get_sources( maybe_unserialize( $item['sources'] ) );
 		return $item;
 	}
 
@@ -521,5 +521,24 @@ class DB {
 	private static function is_valid_status( $status ) {
 		$allowed = [ 'active', 'inactive', 'trashed' ];
 		return in_array( $status, $allowed, true );
+	}
+
+	/**
+	 * Get redirection source.
+	 *
+	 * @param array $sources Unserialized sources.
+	 *
+	 * @return array
+	 */
+	private static function get_sources( $sources ) {
+		if ( ! is_array( $sources ) || empty( $sources ) ) {
+			return $sources;
+		}
+
+		foreach ( $sources as $key => $source ) {
+			$sources[ $key ]['pattern'] = wp_specialchars_decode( $source['pattern'] );
+		}
+
+		return $sources;
 	}
 }

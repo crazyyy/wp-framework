@@ -13,10 +13,9 @@ namespace RankMath\Monitor;
 use RankMath\KB;
 use RankMath\Helper;
 use RankMath\Module\Base;
-use MyThemeShop\Admin\Page;
-use MyThemeShop\Helpers\Arr;
-use MyThemeShop\Helpers\Param;
-use MyThemeShop\Helpers\WordPress;
+use RankMath\Admin\Page;
+use RankMath\Helpers\Arr;
+use RankMath\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -84,7 +83,7 @@ class Admin extends Base {
 	 * Initialize.
 	 */
 	public function init() {
-		$action = WordPress::get_request_action();
+		$action = Helper::get_request_action();
 		if ( false === $action || ! in_array( $action, [ 'delete', 'clear_log' ], true ) ) {
 			return;
 		}

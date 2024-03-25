@@ -234,7 +234,9 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
             // Check if an error occurred and throw an Exception
             if (!empty($response['body']->error) || $code >= 400) {
                 // Dropbox returns error messages inconsistently...
-                if (!empty($response['body']->error) && $response['body']->error instanceof stdClass) {
+                if (!empty($response['body']->error_summary)) {
+                    $message = $response['body']->error_summary;
+                } elseif (!empty($response['body']->error) && $response['body']->error instanceof stdClass) {
                     $array = array_values((array) $response['body']->error);
                     // Dropbox API v2 only throws 409 errors if this error is a incorrect_offset then we need the entire error array not just the message. PHP Exception messages have to be a string so JSON encode the array.
                     $extract_message = (is_object($array[0]) && isset($array[0]->{'.tag'})) ? $array[0]->{'.tag'} : $array[0];
@@ -251,7 +253,16 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
 
                         $message = json_encode($correctOffset);
                     } else {
-                        $message = $extract_message;
+                        $message = '';
+                        $property = 'error';
+                        $resp = $response['body'];
+                        while (isset($resp->$property)) {
+                            if (is_string($resp->$property)) $message .= $resp->$property.'/';
+                            if (!is_object($resp->$property) || empty($resp->$property->{'.tag'})) break;
+                            $property = $resp->$property->{'.tag'};
+                            $message .= $property.'/';
+                            $resp = $response['body']->error;
+                        }
                     }
                 } elseif (!empty($response['body']->error)) {
                     $message = $response['body']->error;

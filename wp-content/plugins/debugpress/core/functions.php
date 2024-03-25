@@ -90,6 +90,15 @@ function debugpress_has_bbpress() : bool {
 }
 
 /**
+ * Check if the coreActivity plugin is currently installed and active.
+ *
+ * @return bool TRUE: if the coreActivity is active, FALSE: if it is not active
+ */
+function debugpress_has_coreactivity() : bool {
+	return defined( 'COREACTIVITY_VERSION' ) && function_exists( 'coreactivity' ) && class_exists( '\Dev4Press\Plugin\CoreActivity\Basic\Plugin' );
+}
+
+/**
  * Check if the currently running CMS is ClassicPress, and not the WordPress.
  *
  * @return bool TRUE: if the ClassicPress is active, FALSE: if it is not active
@@ -201,8 +210,41 @@ function debugpress_rs( $value, bool $echo = true ) : string {
 	}
 
 	if ( $echo ) {
-		echo $result;
+		echo $result; // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 
 	return $result;
+}
+
+function debugpress_kses_basic( string $render ) : string {
+	return wp_kses( $render, array(
+		'br'     => array(),
+		'code'   => array(),
+		'a'      => array(
+			'href'   => array(),
+			'title'  => array(),
+			'class'  => array(),
+			'target' => array(),
+			'data-*' => true,
+		),
+		'em'     => array(
+			'class' => true,
+			'style' => true,
+		),
+		'strong' => array(
+			'class' => true,
+			'style' => true,
+		),
+		'span'   => array(
+			'class'  => true,
+			'style'  => true,
+			'title'  => true,
+			'data-*' => true,
+			'aria-*' => true,
+		),
+		'i'      => array(
+			'class'  => true,
+			'aria-*' => true,
+		),
+	) );
 }

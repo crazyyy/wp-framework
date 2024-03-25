@@ -68,7 +68,7 @@ class AIOWPSecurity_Config {
 	}
 
 	/**
-	 * Save configuaration that are set.
+	 * Save configuration that are set.
 	 *
 	 * @return boolean True on save config, Otherwise false.
 	 */

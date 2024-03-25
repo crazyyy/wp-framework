@@ -14,8 +14,8 @@ class AIOWPSecurity_Utility_Permissions {
 	 * @return WP_Error|boolean - return true if all checks pass otherwise return a WP_Error
 	 */
 	public static function check_nonce_and_user_cap($nonce, $nonce_name) {
-		if (!self::has_manage_cap()) return new WP_Error('missing_capability', 'Current user lacks the required capability for this action');
-		if (!wp_verify_nonce($nonce, $nonce_name)) return new WP_Error('invalid_nonce', 'Invalid nonce ('.$nonce_name.') provided for this action');
+		if (!self::has_manage_cap()) return new WP_Error('missing_capability', 'Current user lacks the required capability for this action.');
+		if (!wp_verify_nonce($nonce, $nonce_name)) return new WP_Error('invalid_nonce', 'Invalid nonce ('.$nonce_name.') provided for this action.');
 		return true;
 	}
 

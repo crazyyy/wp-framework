@@ -30,7 +30,7 @@ class WP_Optimize_Minify_Preloader extends WP_Optimize_Preloader {
 	 */
 	public function is_option_active() {
 		if (!function_exists('wp_optimize_minify_config')) {
-			include_once WPO_PLUGIN_MAIN_PATH . '/minify/class-wp-optimize-minify-config.php';
+			include_once WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-config.php';
 		}
 		return wp_optimize_minify_config()->get('enabled');
 	}

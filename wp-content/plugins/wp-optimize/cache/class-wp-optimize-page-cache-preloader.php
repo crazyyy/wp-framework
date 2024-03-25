@@ -291,6 +291,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		$response = wp_remote_get($sitemap_url, array('timeout' => 30));
 
 		// if we get error then
+		// sometimes returns error due to timeout
 		if (is_wp_error($response)) {
 			$response = file_get_contents($sitemap_url);
 
@@ -298,7 +299,9 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			if (empty($response) && '' == $sitemap_url) {
 				$sitemap_file = $this->get_local_sitemap_file();
 
-				$response = file_get_contents($sitemap_file);
+				if (is_file($sitemap_file)) {
+					$response = file_get_contents($sitemap_file);
+				}
 			}
 
 			if (empty($response)) return $urls;

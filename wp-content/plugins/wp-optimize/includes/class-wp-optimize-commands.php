@@ -461,8 +461,6 @@ class WP_Optimize_Commands {
 			return array('errors' => array(__('Please upload a valid settings file.', 'wp-optimize')));
 		}
 
-		$params['settings'] = stripslashes($params['settings']);
-
 		$settings = json_decode($params['settings'], true);
 
 		// check if valid json file posted (requires PHP 5.3+)
@@ -482,7 +480,7 @@ class WP_Optimize_Commands {
 		}
 
 		$wpo_browser_cache = WP_Optimize()->get_browser_cache();
-		if ($cache_settings['enable_browser_cache']) {
+		if (isset($cache_settings['enable_browser_cache']) && $cache_settings['enable_browser_cache']) {
 			$browser_cache = array(
 				'browser_cache_expire_days' => $cache_settings['browser_cache_expire_days'],
 				'browser_cache_expire_hours' => $cache_settings['browser_cache_expire_hours']
@@ -494,6 +492,7 @@ class WP_Optimize_Commands {
 		$cache_result = WP_Optimize()->get_page_cache()->config->update($cache_settings);
 		$minify_result = WP_Optimize()->get_minify()->minify_commands->save_minify_settings($minify_settings);
 		$smush_result = WP_Optimize()->get_task_manager()->commands->update_smush_options($smush_settings);
+		$webp_result = WP_Optimize()->get_task_manager()->commands->update_webp_options($smush_settings);
 		$this->save_settings($database_settings);
 
 		if (is_wp_error($cache_result)) {
@@ -507,6 +506,10 @@ class WP_Optimize_Commands {
 
 		if (is_wp_error($smush_result)) {
 			$message .= $smush_result->get_error_message() . PHP_EOL;
+		}
+
+		if (is_wp_error($webp_result)) {
+			$message .= $webp_result->get_error_message() . PHP_EOL;
 		}
 
 		return array(

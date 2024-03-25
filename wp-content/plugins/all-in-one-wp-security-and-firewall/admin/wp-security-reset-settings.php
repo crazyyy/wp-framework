@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) die('No direct access.');
 
-if (!class_exists('AIOWPSecurity_Reset_Settings')):
+if (!class_exists('AIOWPSecurity_Reset_Settings')) :
 
 /**
  * Reset Settings various methods
@@ -14,14 +14,15 @@ class AIOWPSecurity_Reset_Settings {
 	 * @return boolean true if the aio_wp_security_configs option deleted successfully.
 	 */
 	public static function reset_options() {
-		$result_delete_option = (false === get_option('aio_wp_security_configs',
-				false)) ? true : delete_option('aio_wp_security_configs');
+		$result_delete_option = false === get_option('aio_wp_security_configs', false) || delete_option('aio_wp_security_configs');
 		$result_reset_settings = AIOWPSecurity_Configure_Settings::set_default_settings();
 		return $result_delete_option && $result_reset_settings;
 	}
 
 	/**
 	 * Delete htaccess rules.
+	 *
+	 * @param string $section - section used to find AIOS rules in .htaccess file
 	 *
 	 * @return boolean true if the aio_wp_security_configs option deleted successfully.
 	 */
@@ -34,18 +35,20 @@ class AIOWPSecurity_Reset_Settings {
 		$ht_contents = preg_split('/\r\n|\r|\n/', file_get_contents($htaccess));
 		if ($ht_contents) { // as long as there are lines in the file
 			$state = true;
-			if (!($f = @fopen($htaccess, 'w+'))) {
+			$f = @fopen($htaccess, 'w+');
+			if (!$f) {
 				@chmod($htaccess, 0644);
-				if (!($f = @fopen($htaccess, 'w+'))) {
+				$f = @fopen($htaccess, 'w+');
+				if (!$f) {
 					return false;
 				}
 			}
 
-			foreach ($ht_contents as $n => $markerline) { // for each line in the file
+			foreach ($ht_contents as $markerline) { // for each line in the file
 				if (strpos($markerline, '# BEGIN ' . $section) !== false) { // if we're at the beginning of the section
 					$state = false;
 				}
-				if ($state == true) { // as long as we're not in the section keep writing
+				if (true == $state) { // as long as we're not in the section keep writing
 					fwrite($f, trim($markerline) . "\n");
 				}
 				if (strpos($markerline, '# END ' . $section) !== false) { // see if we're at the end of the section

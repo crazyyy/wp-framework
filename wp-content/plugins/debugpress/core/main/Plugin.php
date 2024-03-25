@@ -43,7 +43,7 @@ class Plugin {
 		'panel_constants'       => false,
 		'panel_http'            => false,
 		'panel_php'             => false,
-		'panel_bbpress'         => false
+		'panel_bbpress'         => false,
 	);
 
 	private $_extras = array(
@@ -51,7 +51,7 @@ class Plugin {
 		'slow_query_cutoff'    => 10,
 		'use_sql_formatter'    => true,
 		'format_queries_panel' => true,
-		'ajax_header_no_cache' => true
+		'ajax_header_no_cache' => true,
 	);
 
 	private $_allowed = false;
@@ -66,7 +66,6 @@ class Plugin {
 	private $_rest_request = false;
 
 	public function __construct() {
-
 	}
 
 	public static function instance() : Plugin {
@@ -144,7 +143,7 @@ class Plugin {
 		$the_access_key  = $this->get( 'access_key' );
 
 		if ( ! empty( $the_access_key ) ) {
-			$this->_url_activated = isset( $_GET[ 'debugpress' ] ) && sanitize_key( $_GET[ 'debugpress' ] ) === $the_access_key;
+			$this->_url_activated = isset( $_GET['debugpress'] ) && sanitize_key( $_GET['debugpress'] ) === $the_access_key;
 		}
 
 		$this->_allowed = apply_filters( 'debugpress-debugger-is-allowed', $this->is_user_allowed() );
@@ -168,7 +167,7 @@ class Plugin {
 	public function init() {
 		$dependencies = array(
 			'jquery',
-			'animated-popup'
+			'animated-popup',
 		);
 
 		if ( $this->get( 'mousetrap' ) ) {
@@ -214,7 +213,7 @@ class Plugin {
 			'mousetrap_sequence' => 'string',
 			'pr'                 => 'string',
 			'button_admin'       => 'string',
-			'button_frontend'    => 'string'
+			'button_frontend'    => 'string',
 		);
 
 		$settings = array();
@@ -245,22 +244,22 @@ class Plugin {
 		$env = array();
 
 		if ( $this->_wp_version > 54 && function_exists( 'wp_get_environment_type' ) ) {
-			$env[ 'type' ] = wp_get_environment_type();
+			$env['type'] = wp_get_environment_type();
 
-			switch ( $env[ 'type' ] ) {
+			switch ( $env['type'] ) {
 				default:
 				case 'production':
-					$env[ 'type' ]  = 'production';
-					$env[ 'label' ] = __( "Production Environment", "debugpress" );
+					$env['type']  = 'production';
+					$env['label'] = __( 'Production Environment', 'debugpress' );
 					break;
 				case 'staging':
-					$env[ 'label' ] = __( "Staging Environment", "debugpress" );
+					$env['label'] = __( 'Staging Environment', 'debugpress' );
 					break;
 				case 'local':
-					$env[ 'label' ] = __( "Local Environment", "debugpress" );
+					$env['label'] = __( 'Local Environment', 'debugpress' );
 					break;
 				case 'development':
-					$env[ 'label' ] = __( "Development Environment", "debugpress" );
+					$env['label'] = __( 'Development Environment', 'debugpress' );
 					break;
 			}
 		}
@@ -278,16 +277,16 @@ class Plugin {
 		$env = $this->environment();
 
 		if ( ! empty( $env ) ) {
-			$gd .= '<strong class="debugpress-debugger-environment debugpress-env-' . $env[ 'type' ] . '">' . $env[ 'label' ] . '</strong> &middot; ';
+			$gd .= '<strong class="debugpress-debugger-environment debugpress-env-' . $env['type'] . '">' . $env['label'] . '</strong> &middot; ';
 		}
 
 		$gd .= Info::cms_name() . ': <strong>' . Info::cms_version() . '</strong> &middot; ';
-		$gd .= __( "PHP", "debugpress" ) . ': <strong>' . phpversion() . '</strong><span> &middot; </span>';
+		$gd .= __( 'PHP', 'debugpress' ) . ': <strong>' . phpversion() . '</strong><span> &middot; </span>';
 
-		$gd .= __( "IP", "debugpress" ) . ': <strong>' . IP::visitor() . '</strong> &middot; ';
-		$gd .= __( "Queries", "debugpress" ) . ': <strong>' . debugpress_tracker()->get( $key, 'queries' ) . '</strong> &middot; ';
-		$gd .= __( "Memory", "debugpress" ) . ': <strong>' . debugpress_tracker()->get( $key, 'memory' ) . '</strong> &middot; ';
-		$gd .= __( "Loaded", "debugpress" ) . ': <strong>' . debugpress_tracker()->get( $key, 'time' ) . ' ' . __( "seconds.", "debugpress" ) . '</strong>';
+		$gd .= __( 'IP', 'debugpress' ) . ': <strong>' . IP::visitor() . '</strong> &middot; ';
+		$gd .= __( 'Queries', 'debugpress' ) . ': <strong>' . debugpress_tracker()->get( $key, 'queries' ) . '</strong> &middot; ';
+		$gd .= __( 'Memory', 'debugpress' ) . ': <strong>' . debugpress_tracker()->get( $key, 'memory' ) . '</strong> &middot; ';
+		$gd .= __( 'Loaded', 'debugpress' ) . ': <strong>' . debugpress_tracker()->get( $key, 'time' ) . ' ' . __( 'seconds.', 'debugpress' ) . '</strong>';
 		$gd .= '</div>';
 
 		return $gd;
@@ -348,7 +347,7 @@ class Plugin {
 			}
 
 			if ( file_exists( $path ) ) {
-				require_once( $path );
+				require_once $path;
 			} else {
 				$this->load_printer( 'prettyprint' );
 			}

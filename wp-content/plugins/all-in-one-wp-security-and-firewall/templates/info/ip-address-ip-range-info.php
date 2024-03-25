@@ -3,7 +3,7 @@
 	<div class="aiowps_more_info_body">
 	<?php
 		echo '<p class="description">' . __('Each IP address must be on a new line.', 'all-in-one-wp-security-and-firewall') . '</p>';
-		echo '<p class="description">' . __('To specify an IPv4 range use a wildcard "*" character. Acceptable ways to use wildcards is shown in the examples below:', 'all-in-one-wp-security-and-firewall') . '</p>';
+		echo '<p class="description">' . __('To specify an IPv4 range use a wildcard "*" character, acceptable ways to use wildcards is shown in the examples below:', 'all-in-one-wp-security-and-firewall') . '</p>';
 		echo '<p class="description">' . __('Example 1: 195.47.89.*', 'all-in-one-wp-security-and-firewall') . '</p>';
 		echo '<p class="description">' . __('Example 2: 195.47.*.*', 'all-in-one-wp-security-and-firewall') . '</p>';
 		echo '<p class="description">' . __('Example 3: 195.*.*.*', 'all-in-one-wp-security-and-firewall') . '</p>';

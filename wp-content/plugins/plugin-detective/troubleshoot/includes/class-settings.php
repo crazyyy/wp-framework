@@ -1,7 +1,15 @@
 <?php
+// use when needed to compare wp version for compatibility
+global $global_wp_version;
+
 function pd_maybe_require( $path ) {
 	if ( file_exists( $path ) ) {
-		require $path;
+		require_once $path;
+	}
+	
+	if( !empty( $wp_version ) ){
+		global $global_wp_version;
+		$global_wp_version = $wp_version;
 	}
 }
 /**
@@ -64,8 +72,17 @@ class PDT_Settings {
  */
 define( 'WPINC', 'wp-includes' );
 
-// Include files required for initialization.
+/*
+ * These can't be directly globalized in version.php. When updating,
+ * we're including version.php from another installation and don't want
+ * these values to be overridden if already set.
+ */
+global $wp_version, $wp_db_version, $tinymce_version, $required_php_version, $required_mysql_version, $wp_local_package;
+pd_maybe_require( ABSPATH . WPINC . '/version.php' );
+pd_maybe_require( ABSPATH . WPINC . '/compat.php' );
 pd_maybe_require( ABSPATH . WPINC . '/load.php' );
+
+// Include files required for initialization.
 @include( ABSPATH . WPINC . '/class-wp-paused-extensions-storage.php' );
 @include( ABSPATH . WPINC . '/class-wp-fatal-error-handler.php' );
 @include( ABSPATH . WPINC . '/class-wp-recovery-mode-cookie-service.php' );
@@ -76,14 +93,6 @@ pd_maybe_require( ABSPATH . WPINC . '/load.php' );
 @include( ABSPATH . WPINC . '/error-protection.php' );
 @include( ABSPATH . WPINC . '/default-constants.php' );
 require_once( ABSPATH . WPINC . '/plugin.php' );
-
-/*
- * These can't be directly globalized in version.php. When updating,
- * we're including version.php from another installation and don't want
- * these values to be overridden if already set.
- */
-global $wp_version, $wp_db_version, $tinymce_version, $required_php_version, $required_mysql_version, $wp_local_package;
-pd_maybe_require( ABSPATH . WPINC . '/version.php' );
 
 /**
  * If not already configured, `$blog_id` will default to 1 in a single site
@@ -156,7 +165,6 @@ wp_debug_mode();
 wp_set_lang_dir();
 
 // Load early WordPress files.
-pd_maybe_require( ABSPATH . WPINC . '/compat.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-list-util.php' );
 pd_maybe_require( ABSPATH . WPINC . '/functions.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-matchesmapregex.php' );
@@ -224,11 +232,13 @@ pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json-schema.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json-data.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-theme-json-resolver.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-duotone.php' );
 pd_maybe_require( ABSPATH . WPINC . '/global-styles-and-settings.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-template.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-template-utils.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-template.php' );
 pd_maybe_require( ABSPATH . WPINC . '/theme-templates.php' );
+pd_maybe_require( ABSPATH . WPINC . '/theme-previews.php' );
 pd_maybe_require( ABSPATH . WPINC . '/template.php' );
 pd_maybe_require( ABSPATH . WPINC . '/https-detection.php' );
 pd_maybe_require( ABSPATH . WPINC . '/https-migration.php' );
@@ -245,6 +255,7 @@ pd_maybe_require( ABSPATH . WPINC . '/link-template.php' );
 
 
 pd_maybe_require( ABSPATH . WPINC . '/author-template.php' );
+pd_maybe_require( ABSPATH . WPINC . '/robots-template.php' );
 pd_maybe_require( ABSPATH . WPINC . '/post.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-walker-page.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-walker-page-dropdown.php' );
@@ -299,8 +310,8 @@ pd_maybe_require( ABSPATH . WPINC . '/class-wp-http-requests-hooks.php' );
 pd_maybe_require( ABSPATH . WPINC . '/widgets.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-widget.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-widget-factory.php' );
-pd_maybe_require( ABSPATH . WPINC . '/nav-menu.php' );
 pd_maybe_require( ABSPATH . WPINC . '/nav-menu-template.php' );
+pd_maybe_require( ABSPATH . WPINC . '/nav-menu.php' );
 pd_maybe_require( ABSPATH . WPINC . '/admin-bar.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/class-wp-rest-server.php' );
@@ -310,6 +321,7 @@ pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-controlle
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-posts-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-attachments-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-global-styles-controller.php' );
+pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-global-styles-revisions-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-post-types-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-post-statuses-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-revisions-controller.php' );
@@ -367,6 +379,8 @@ pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-type-registry.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-block.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-list.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-parser.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-classic-to-block-menu-converter.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-navigation-fallback.php' );
 pd_maybe_require( ABSPATH . WPINC . '/blocks.php' );
 pd_maybe_require( ABSPATH . WPINC . '/blocks/index.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-editor.php' );
@@ -378,11 +392,13 @@ pd_maybe_require( ABSPATH . WPINC . '/block-supports/colors.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/custom-classname.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/dimensions.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/duotone.php' );
+pd_maybe_require( ABSPATH . WPINC . '/block-supports/shadow.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/elements.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/generated-classname.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/layout.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/spacing.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-supports/typography.php' );
+pd_maybe_require( ABSPATH . WPINC . '/navigation-fallback.php' );
 pd_maybe_require( ABSPATH . WPINC . '/style-engine.php' );
 pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine.php' );
 pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-css-declarations.php' );

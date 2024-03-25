@@ -11,11 +11,10 @@
 namespace RankMath\Role_Manager;
 
 use RankMath\Helper;
+use RankMath\Helpers\Param;
 use RankMath\Module\Base;
-use MyThemeShop\Admin\Page;
-use MyThemeShop\Helpers\WordPress;
+use RankMath\Admin\Page;
 use RankMath\Traits\Hooker;
-use MyThemeShop\Helpers\Param;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -103,7 +102,7 @@ class Role_Manager extends Base {
 
 		$caps = Capability_Manager::get()->get_capabilities();
 
-		foreach ( WordPress::get_roles() as $role => $label ) {
+		foreach ( Helper::get_roles() as $role => $label ) {
 			$cmb->add_field(
 				[
 					'id'                => esc_attr( $role ),

@@ -30,8 +30,6 @@ abstract class WP_Optimization {
 
 	public $support_preview = true; // if true then optimization support preview action for optimization data.
 
-	protected $support_ajax_get_info = false; // set to true if optimization support getting info about optimization asynchronously.
-
 	/**
 	 * This property indicates whether running this optimization is likely to change the overall table optimization state. We set this to 'true' on optimizations that run SQL OPTIMIZE commands. It is only used for the UI. Strictly, of course, any optimization that deletes something can cause increased fragmentation; so; in that sense, it would be true for every optimization; but since we are just using it to keep the UI reasonably fresh, and since there is a manual "refresh" button, we set it only on some optimizations.
 	 *
@@ -140,7 +138,7 @@ abstract class WP_Optimization {
 	 * Convert all applicable characters to HTML entities in array. Used to prepare data for output in browser for preview.
 	 *
 	 * @param  array $array        source array
-	 * @param  array $exclude_keys what items shoudn't be encoded.
+	 * @param  array $exclude_keys what items shouldn't be encoded.
 	 *
 	 * @return array
 	 */
@@ -420,11 +418,9 @@ abstract class WP_Optimization {
 	/**
 	 * Generate information about optimization required for show it.
 	 *
-	 * @param  bool $ajax_get_info if true then information about optimization will not generated, i.e. get_optimization_info() won't call.
-	 *
 	 * @return array
 	 */
-	public function get_settings_html($ajax_get_info = false) {
+	public function get_settings_html() {
 
 		$wpo_user_selection = $this->options->get_main_settings();
 		$setting_id = $this->get_setting_id();
@@ -435,14 +431,13 @@ abstract class WP_Optimization {
 
 		$setting_activated = ((empty($wpo_user_selection[$setting_id]) || 'false' == $wpo_user_selection[$setting_id]) ? false : true);
 
-		$info = ($ajax_get_info && $this->support_ajax_get_info) ? '...' : $this->get_optimization_info()->output;
+		$info = $this->get_optimization_info()->output;
 
 		$settings_html = array(
 			'dom_id' => $dom_id,
 			'activated' => $setting_activated,
 			'settings_label' => $settings_label,
-			'info' => $info,
-			'support_ajax_get_info' => $this->support_ajax_get_info
+			'info' => $info
 		);
 		
 		if (empty($settings_label)) {

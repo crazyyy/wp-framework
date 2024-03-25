@@ -3,9 +3,9 @@ Contributors:      croixhaug, nataliemac
 Donate link:       https://nsquared.io
 Tags:    troubleshoot, conflicts, debug, support, administration, site health, performance, error, developer, troubleshooting, development, health check
 Requires at least: 6.1
-Tested up to:      6.2
+Tested up to:      6.4
 Requires PHP:      5.3
-Stable tag:        1.2.14
+Stable tag:        1.2.19
 License:           GPLv2
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 

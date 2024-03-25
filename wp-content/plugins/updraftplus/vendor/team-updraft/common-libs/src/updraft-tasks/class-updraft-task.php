@@ -74,7 +74,14 @@ abstract class Updraft_Task_1_2 {
 	 * @var Object
 	 */
 	protected $_loggers;
-
+	
+	/**
+	 * Additional dynamic properties, usually copied from the UpdraftPlus_Task object.
+	 *
+	 * @var array<string,mixed>
+	 */
+	protected $extra_properties = array();
+	
 	/**
 	 * The Task constructor
 	 *
@@ -687,7 +694,53 @@ abstract class Updraft_Task_1_2 {
 	 */
 	private function get_task_from_db($task_id) {
 		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM {$wpdb->base_prefix}tm_tasks WHERE id = {$task_id} LIMIT 1");		
+		$sql = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}tm_tasks WHERE id = %d LIMIT 1", $task_id);
+		return $wpdb->get_row($sql);		
+	}
+	
+	/**
+	 * Writing data to inaccessible/non-existing property
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 *
+	 * @return void
+	 */
+	public function __set($name, $value) {
+		$this->extra_properties[$name] = $value;
+	}
+	
+	/**
+	 * Reading data from inaccessible/non-existing property
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed|null
+	 */
+	public function __get($name) {
+		return isset($this->extra_properties[$name]) ? $this->extra_properties[$name] : null;
+	}
+	
+	/**
+	 * Invoked when `isset` or `empty` are called on inaccessible/non-existing property
+	 *
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public function __isset($name) {
+		return isset($this->extra_properties[$name]);
+	}
+	
+	/**
+	 * Invoked when `unset` is called on inaccessible/non-existing property
+	 *
+	 * @param string $name
+	 *
+	 * @return void
+	 */
+	public function __unset($name) {
+		unset($this->extra_properties[$name]);
 	}
 }
 endif;

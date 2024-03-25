@@ -143,7 +143,7 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 		if (!AIOWPSecurity_Utility_Permissions::has_manage_cap()) return;
 
 		$tabs['two-factor-authentication'] = array(
-			'title' => __('Two factor authentication', 'all-in-one-wp-security-and-firewall-premium'),
+			'title' => __('Two factor authentication', 'all-in-one-wp-security-and-firewall'),
 			'render_callback' => array($this, 'render_two_factor_authentication'),
 			'display_condition_callback' => 'is_main_site',
 		);
@@ -192,7 +192,7 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 	 * Runs conditionally on the WP action all_admin_notices.
 	 */
 	public function admin_notice_missing_mcrypt_and_openssl() {
-		$this->show_admin_warning('<strong>'.__('PHP OpenSSL or mcrypt module required', 'all-in-one-wp-security-and-firewall').'</strong><br> '.__('The All In One WP Security plugin\'s Two Factor Authentication module requires either the PHP openssl (preferred) or mcrypt module to be installed. Please ask your web hosting company to install one of them.', 'all-in-one-wp-security-and-firewall'), 'error');
+		$this->show_admin_warning('<strong>'.__('PHP OpenSSL or mcrypt module required', 'all-in-one-wp-security-and-firewall').'</strong><br> '.__('The All In One WP Security plugin\'s Two Factor Authentication module requires either the PHP openssl (preferred) or mcrypt module to be installed.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please ask your web hosting company to install one of them.', 'all-in-one-wp-security-and-firewall'), 'error');
 	}
 }
 

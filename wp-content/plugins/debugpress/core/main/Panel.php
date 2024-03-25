@@ -23,19 +23,15 @@ abstract class Panel {
 	}
 
 	public function left() {
-
 	}
 
 	public function middle() {
-
 	}
 
 	public function right() {
-
 	}
 
 	public function single() {
-
 	}
 
 	public function block_header( $open = true ) {
@@ -55,7 +51,7 @@ abstract class Panel {
 	}
 
 	public function title( $title, $open = true, $hide_button = false, $button_id = '' ) {
-		$render = '<h5 class="debugpress-debugger-panel-block-title">' . esc_html( $title );
+		$render = '<h5 class="debugpress-debugger-panel-block-title">' . debugpress_kses_basic( $title );
 
 		if ( ! $hide_button ) {
 			$id = empty( $button_id ) ? '' : 'debugpress-toggle-' . $button_id;
@@ -65,7 +61,7 @@ abstract class Panel {
 
 		$render .= '</h5>';
 
-		echo $render;
+		echo $render; // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 
 	public function sub_title( $title ) {
@@ -74,7 +70,7 @@ abstract class Panel {
 
 	public function pre( $content ) {
 		echo '<div class="debugpress-pre-wrap"><pre>';
-		echo $content;
+		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput
 		echo '</pre></div>';
 	}
 
@@ -83,17 +79,21 @@ abstract class Panel {
 			$this->_table = array();
 		}
 
-		$this->_table[] = new Wrap( array( 'name' => $name, 'class' => $class, 'style' => $style ) );
+		$this->_table[] = new Wrap( array(
+			'name'  => $name,
+			'class' => $class,
+			'style' => $style,
+		) );
 	}
 
 	public function table_init_standard() {
-		$this->add_column( __( "Name", "debugpress" ), '', '', true );
-		$this->add_column( __( "Value", "debugpress" ) );
+		$this->add_column( __( 'Name', 'debugpress' ), '', '', true );
+		$this->add_column( __( 'Value', 'debugpress' ) );
 	}
 
 	public function table_init_right() {
-		$this->add_column( __( "Name", "debugpress" ), '', '', true );
-		$this->add_column( __( "Value", "debugpress" ), '', 'text-align: right;' );
+		$this->add_column( __( 'Name', 'debugpress' ), '', '', true );
+		$this->add_column( __( 'Value', 'debugpress' ), '', 'text-align: right;' );
 	}
 
 	public function table_head( $columns = array(), $id = '', $class = '', $thead = true ) {
@@ -105,19 +105,19 @@ abstract class Panel {
 			$class .= ' debugpress-table-keyvalue';
 		}
 
-		echo '<table' . ( ! empty( $id ) ? ' id="' . $id . '"' : '' ) . ' class="debugpress-debugger-table ' . trim( $class ) . '">' . D4P_EOL;
+		echo '<table' . ( ! empty( $id ) ? ' id="' . esc_attr( $id ) . '"' : '' ) . ' class="debugpress-debugger-table ' . esc_attr( trim( $class ) ) . '">' . PHP_EOL;
 		if ( $thead ) {
-			echo '<thead><tr>' . D4P_EOL;
+			echo '<thead><tr>' . PHP_EOL;
 			foreach ( $this->_table as $row ) {
-				echo '<th scope="col" class="' . $row->class . '" style="' . $row->style . '">' . $row->name . '</th>' . D4P_EOL;
+				echo '<th scope="col" class="' . esc_attr( $row->class ) . '" style="' . esc_attr( $row->style ) . '">' . esc_html( $row->name ) . '</th>' . PHP_EOL;
 			}
-			echo '</tr></thead>' . D4P_EOL;
+			echo '</tr></thead>' . PHP_EOL;
 		}
-		echo '<tbody>' . D4P_EOL;
+		echo '<tbody>' . PHP_EOL;
 	}
 
 	public function table_foot() {
-		echo '</tbody></table>' . D4P_EOL;
+		echo '</tbody></table>' . PHP_EOL;
 	}
 
 	public function table_row( $data ) {
@@ -125,7 +125,7 @@ abstract class Panel {
 		$i = 0;
 
 		foreach ( $data as $el ) {
-			echo '<td style="' . $this->_table[ $i ]->style . '">' . $el . '</td>' . D4P_EOL;
+			echo '<td style="' . esc_attr( $this->_table[ $i ]->style ) . '">' . $el . '</td>' . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput
 			$i ++;
 		}
 
@@ -144,7 +144,7 @@ abstract class Panel {
 		$this->table_init_standard();
 		$this->table_head();
 		foreach ( $defines as $const ) {
-			$val = defined( $const ) ? $this->print_it( constant( $const ) ) : '<span style="color: #DD0000;">' . __( "NOT DEFINED", "debugpress" ) . '</span>';
+			$val = defined( $const ) ? $this->print_it( constant( $const ) ) : '<span style="color: #DD0000;">' . __( 'NOT DEFINED', 'debugpress' ) . '</span>';
 
 			$this->table_row( array( $const, $val ) );
 		}
@@ -191,7 +191,7 @@ abstract class Panel {
 		$this->table_head();
 
 		foreach ( $properties as $property ) {
-			$value = $object->$property ?? '<span style="color: #d00;">' . __( "not defined", "debugpress" ) . '</span>';
+			$value = $object->$property ?? '<span style="color: #d00;">' . __( 'not defined', 'debugpress' ) . '</span>';
 
 			$this->table_row( array( $property, $this->print_it( $value ) ) );
 		}

@@ -94,7 +94,7 @@ class WP_Optimize_Browser_Cache {
 	}
 
 	/**
-	 * Check if browser chache option is set to true then add section with gzip settings into .htaccess (used when plugin being activated).
+	 * Check if browser cache option is set to true then add section with gzip settings into .htaccess (used when plugin being activated).
 	 */
 	public function restore() {
 		$expire_days = $this->_options->get_option('browser_cache_expire_days', '');

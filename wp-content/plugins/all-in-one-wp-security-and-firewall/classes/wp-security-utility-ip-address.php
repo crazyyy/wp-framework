@@ -116,7 +116,7 @@ class AIOWPSecurity_Utility_IP {
 	 *
 	 * @param array  $ip_list_array
 	 * @param string $list_type
-	 * @return array $return_payload
+	 * @return array|WP_Error
 	 */
 	public static function validate_ip_list($ip_list_array, $list_type = '') {
 		$errors = '';
@@ -153,21 +153,17 @@ class AIOWPSecurity_Utility_IP {
 			//This function was called with an empty IP address array list
 		}
 
-		if (strlen($errors)> 0) {
-			$return_payload = array(-1, array($errors));
-			return $return_payload;
-		}
-		
-		if (sizeof($list) >= 1) {
-			sort($list);
-			$list = array_unique($list, SORT_STRING);
-			
-			$return_payload = array(1, $list);
-			return $return_payload;
+		if (strlen($errors) > 0) {
+			return new WP_Error('invalid_ips', trim($errors));
 		}
 
-		$return_payload = array(1, array());
-		return $return_payload;
+		if (sizeof($list) >= 1) {
+			sort($list);
+
+			return array_unique($list, SORT_STRING);
+		}
+
+		return array();
 	}
 
 	/**

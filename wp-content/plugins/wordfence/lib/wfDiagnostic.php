@@ -92,7 +92,11 @@ class wfDiagnostic
 					'wafAutoPrependFilePath' => __('wordfence-waf.php path', 'wordfence'),
 					'wafFilePermissions' => __('WAF File Permissions', 'wordfence'),
 					'wafRecentlyRemoved' => __('Recently removed wflogs files', 'wordfence'),
-					'wafLoaded' => __('WAF Loaded Successfully', 'wordfence')
+					'wafLoaded' => __('WAF Loaded Successfully', 'wordfence'),
+					'wafAutoPrependHtaccess' => __('WAF .htaccess contents', 'wordfence'),
+					'wafAutoPrependUserIni' => __('WAF .user.ini contents', 'wordfence'),
+					'wafAutoPrependHtaccessOther' => __('.htaccess other auto prepend', 'wordfence'),
+					'wafAutoPrependUserIniOther' => __('.user.ini other auto prepend', 'wordfence'),
 				),
 			),
 			'MySQL' => array(
@@ -361,6 +365,78 @@ class wfDiagnostic
 
 	public function wafAutoPrepend() {
 		return array('test' => true, 'infoOnly' => true, 'message' => (defined('WFWAF_AUTO_PREPEND') && WFWAF_AUTO_PREPEND ? __('Yes', 'wordfence') : __('No', 'wordfence')));
+	}
+	public function wafAutoPrependHtaccess() {
+		$htaccessPath = wfWAFAutoPrependHelper::getHtaccessPath();
+		if (!file_exists($htaccessPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.htaccess not present)', 'wordfence'));
+		}
+		else if (!is_readable($htaccessPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.htaccess not readable)', 'wordfence'));
+		}
+		
+		$htaccessContents = file_get_contents($htaccessPath);
+		$section = wfWAFAutoPrependHelper::getHtaccessSectionContent($htaccessContents);
+		if ($section === false) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(not set)', 'wordfence'));
+		}
+		
+		$snippet = wfUtils::pregExtract("/auto_prepend_file\s+['\"]?[^'\"]*['\"]?/", $section);
+		return array('test' => true, 'infoOnly' => true, 'message' => $snippet, 'detail' => array('escaped' => nl2br(esc_html($section)), 'textonly' => $section));
+	}
+	public function wafAutoPrependHtaccessOther() {
+		$htaccessPath = wfWAFAutoPrependHelper::getHtaccessPath();
+		if (!file_exists($htaccessPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.htaccess not present)', 'wordfence'));
+		}
+		else if (!is_readable($htaccessPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.htaccess not readable)', 'wordfence'));
+		}
+		
+		$htaccessContents = file_get_contents($htaccessPath);
+		$section = wfWAFAutoPrependHelper::getHtaccessSectionContent($htaccessContents);
+		if ($section !== false) {
+			$htaccessContents = str_replace($section, '', $htaccessContents);
+		}
+		
+		$snippet = wfUtils::pregExtract("/auto_prepend_file\s+['\"]?[^'\"]*['\"]?/", $htaccessContents, true);
+		return array('test' => true, 'infoOnly' => true, 'message' => ($snippet === false ? __('(not present)', 'wordfence') : trim($snippet)));
+	}
+	public function wafAutoPrependUserIni() {
+		$userIniPath = wfWAFAutoPrependHelper::getUserIniPath();
+		if (!file_exists($userIniPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.user.ini not present)', 'wordfence'));
+		}
+		else if (!is_readable($userIniPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.user.ini not readable)', 'wordfence'));
+		}
+		
+		$userIniContents = file_get_contents($userIniPath);
+		$section = wfWAFAutoPrependHelper::getUserIniSectionContent($userIniContents);
+		if ($section === false) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(not set)', 'wordfence'));
+		}
+		
+		$snippet = wfUtils::pregExtract("/auto_prepend_file\s*=\s*['\"]?[^'\"]*['\"]?/", $section);
+		return array('test' => true, 'infoOnly' => true, 'message' => $snippet, 'detail' => $section);
+	}
+	public function wafAutoPrependUserIniOther() {
+		$userIniPath = wfWAFAutoPrependHelper::getUserIniPath();
+		if (!file_exists($userIniPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.user.ini not present)', 'wordfence'));
+		}
+		else if (!is_readable($userIniPath)) {
+			return array('test' => true, 'infoOnly' => true, 'message' => __('(.user.ini not readable)', 'wordfence'));
+		}
+		
+		$userIniContents = file_get_contents($userIniPath);
+		$section = wfWAFAutoPrependHelper::getUserIniSectionContent($userIniContents);
+		if ($section !== false) {
+			$userIniContents = str_replace($section, '', $userIniContents);
+		}
+		
+		$snippet = wfUtils::pregExtract("/auto_prepend_file\s*=\s*['\"]?[^'\"]*['\"]?/", $userIniContents, true); 
+		return array('test' => true, 'infoOnly' => true, 'message' => ($snippet === false ? __('(not present)', 'wordfence') : trim($snippet)));
 	}
 	public function wafStorageEngine() {
 		return array('test' => true, 'infoOnly' => true, 'message' => (defined('WFWAF_STORAGE_ENGINE') ? WFWAF_STORAGE_ENGINE : __('(default)', 'wordfence')));
@@ -669,18 +745,27 @@ class wfDiagnostic
 		$detail = '';
 		if (is_wp_error($result)) {
 			$message = __('wp_remote_post() test back to this server failed! Response was: ', 'wordfence') . $result->get_error_message();
+			$messageTextOnly = __('wp_remote_post() test back to this server failed! Response was: ', 'wordfence') . $result->get_error_message();
 		}
 		else {
-			$message = __('wp_remote_post() test back to this server failed! Response was: ', 'wordfence') . $result['response']['code'] . " " . $result['response']['message'] . "\n";
-			$message .= __('This additional info may help you diagnose the issue. The response headers we received were:', 'wordfence') . "\n";
+			$message = __('wp_remote_post() test back to this server failed! Response was: ', 'wordfence') . '<br>' . $result['response']['code'] . ' ' . $result['response']['message'] . '<br><br>';
+			$messageTextOnly = __('wp_remote_post() test back to this server failed! Response was: ', 'wordfence') . "\n" . $result['response']['code'] . ' ' . $result['response']['message'] . "\n\n";
+			if ($this->_detectBlockedByCloudflare($result)) {
+				$message .= __('Cloudflare appears to be blocking your site from connecting to itself.', 'wordfence') . '<br>' . sprintf(' <a href="%s" target="_blank" rel="noopener noreferrer">', wfSupportController::esc_supportURL(wfSupportController::ITEM_DIAGNOSTICS_CLOUDFLARE_BLOCK)) . __('Get help with Cloudflare compatibility', 'wordfence') . '</a><br><br>';
+				$messageTextOnly .= __('Cloudflare appears to be blocking your site from connecting to itself.', 'wordfence') . "\n" . __('Get help with Cloudflare compatibility', 'wordfence') . ': ' . wfSupportController::esc_supportURL(wfSupportController::ITEM_DIAGNOSTICS_CLOUDFLARE_BLOCK) . "\n\n";
+			}
+			$message .= __('This additional info may help you diagnose the issue. The response headers we received were:', 'wordfence') . '<br><br>';
+			$messageTextOnly .= __('This additional info may help you diagnose the issue. The response headers we received were:', 'wordfence') . "\n\n";
 			if (isset($result['http_response']) && is_object($result['http_response']) && method_exists($result['http_response'], 'get_response_object') && is_object($result['http_response']->get_response_object()) && property_exists($result['http_response']->get_response_object(), 'raw')) {
 				$detail = str_replace("\r\n", "\n", $result['http_response']->get_response_object()->raw);
 			}
 		}
 		
+		$message = wp_kses($message, array('a' => array('href' => array(), 'target' => array(), 'rel' => array()), 'span' => array('class' => array()), 'em' => array(), 'code' => array(), 'br' => array()));
+		
 		return array(
 			'test' => false,
-			'message' => $message,
+			'message' => array('escaped' => $message, 'textonly' => $messageTextOnly),
 			'detail' => $detail,
 		);
 	}
@@ -698,11 +783,15 @@ class wfDiagnostic
 					$handle = $interceptor->getHandle();
 					$errorNumber = curl_errno($handle);
 					if ($errorNumber === 6 /* COULDNT_RESOLVE_HOST */) {
+						$detail = sprintf(/* translators: error message from failed request */ __('This likely indicates that the server either does not support IPv6 or does not have an IPv6 address assigned or associated with the domain. Original error message: %s', 'wordfence'), is_array($result['message']) ? $result['message']['escaped'] : $result['message']);
+						$detail = wp_kses($detail, array('a' => array('href' => array(), 'target' => array(), 'rel' => array()), 'span' => array('class' => array()), 'em' => array(), 'code' => array(), 'br' => array()));
+						$detailTextOnly = sprintf(/* translators: error message from failed request */ __('This likely indicates that the server either does not support IPv6 or does not have an IPv6 address assigned or associated with the domain. Original error message: %s', 'wordfence'), is_array($result['message']) ? $result['message']['textonly'] : strip_tags($result['message']));
+						
 						return array(
 							'test' => false,
 							'infoOnly' => true,
 							'message' => __('IPv6 DNS resolution failed', 'wordfence'),
-							'detail' => sprintf(/* translators: error message from failed request */ __('This likely indicates that the server either does not support IPv6 or does not have an IPv6 address assigned or associated with the domain. Original error message: %s', 'wordfence'), $result['message'])
+							'detail' => array('escaped' => $detail, 'textonly' => $detailTextOnly),
 						);
 					}
 				}
@@ -719,6 +808,34 @@ class wfDiagnostic
 			'test' => false,
 			'message' => __('This diagnostic requires cURL', 'wordfence')
 		);
+	}
+	
+	/**
+	 * Looks for markers in $result that indicate it was challenged/blocked by Cloudflare.
+	 * 
+	 * @param $result
+	 * @return bool
+	 */
+	private function _detectBlockedByCloudflare($result) {
+		$headers = $result['headers'];
+		if (isset($headers['cf-mitigated']) && strtolower($headers['cf-mitigated']) == 'challenge' /* managed challenge */) { //$headers is an instance of Requests_Utility_CaseInsensitiveDictionary
+			return true;
+		}
+		
+		$body = $result['body'];
+		$search = array(
+			'/cdn-cgi/styles/challenges.css', //managed challenge
+			'/cdn-cgi/challenge-platform', //managed challenge
+			'/cdn-cgi/styles/cf.errors.css', //block
+			'cf-error-details', //block
+			'Cloudflare Ray ID', //block
+		);
+		foreach ($search as $s) {
+			if (stripos($body, $s) !== false) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public function serverIP() {

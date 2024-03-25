@@ -95,6 +95,20 @@ class WP_Optimize_Minify_Front_End {
 	}
 
 	/**
+	 * Set initial values for the meta log object
+	 *
+	 * @param string $header - Info on time the log was processed
+	 * @return array
+	 */
+	private function meta_log_initialization($header) {
+		return array(
+			'header' => $header,
+			'invalidation_reason' => "",
+			'files_that_changed' => array()
+		);
+	}
+
+	/**
 	 * Wether to run the feature on a page or not
 	 *
 	 * @param string $context - Optional, The context where the check is done
@@ -458,6 +472,7 @@ class WP_Optimize_Minify_Front_End {
 		if (!is_object($wp_styles)) return false;
 
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
+		$cache_base_dir = $cache_path['cachebasedir'];
 		$cache_dir = $cache_path['cachedir'];
 		$cache_dir_url = $cache_path['cachedirurl'];
 		$exclude_css = $this->get_excluded_css_list();
@@ -735,7 +750,7 @@ class WP_Optimize_Minify_Front_End {
 
 				// create cache files and urls
 				$file = $cache_dir.'/'.$file_name.'.css';
-
+				$meta_json_file = $cache_base_dir.'/'.'meta.json';
 				$file_url = WP_Optimize_Minify_Functions::get_protocol("$cache_dir_url/$file_name.css");
 				
 				// generate a new cache file
@@ -743,10 +758,12 @@ class WP_Optimize_Minify_Front_End {
 				if (!file_exists($file)) {
 					
 					// code and log initialization
+					$log_header = "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null));
 					$log = array(
-						'header' => "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null)),
+						'header' => $log_header,
 						'files' => array()
 					);
+					$meta_log = $this->meta_log_initialization($log_header);
 					$code = '';
 
 					// minify and write to file
@@ -780,6 +797,8 @@ class WP_Optimize_Minify_Front_End {
 							if ($this->should_reset_minify_assets($res, $href, 'css', $handle, $version)) {
 								WP_Optimize_Minify_Cache_Functions::reset();
 								$this->minify_cache_incremented = true;
+								$meta_log['invalidation_reason'] = 'Checksum Mismatch and version changed from ' . $res['request']['version'] . ' to ' . $version;
+								$meta_log['files_that_changed'][$handle] = $res['log'];
 							}
 
 							// response has failed
@@ -808,6 +827,10 @@ class WP_Optimize_Minify_Front_End {
 
 					// generate cache, write log
 					if (!empty($code)) {
+						// Only generate meta.json file if cache is reset
+						if (!empty($meta_log['invalidation_reason'])) {
+							file_put_contents($meta_json_file, json_encode($meta_log));
+						}
 						WP_Optimize_Minify_Print::write_combined_asset($file, $code, $log);
 					}
 				} else {
@@ -876,6 +899,7 @@ class WP_Optimize_Minify_Front_End {
 			return;
 		}
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
+		$cache_base_dir = $cache_path['cachebasedir'];
 		$cache_dir = $cache_path['cachedir'];
 		$cache_dir_url = $cache_path['cachedirurl'];
 
@@ -971,6 +995,7 @@ class WP_Optimize_Minify_Front_End {
 				
 				// create cache files and urls
 				$file = $cache_dir.'/'.$file_name.'.js';
+				$meta_json_file = $cache_base_dir.'/'.'meta.json';
 				$file_url = WP_Optimize_Minify_Functions::get_protocol($cache_dir_url.'/'.$file_name.'.js');
 			
 				// generate a new cache file
@@ -978,10 +1003,12 @@ class WP_Optimize_Minify_Front_End {
 				if (!file_exists($file)) {
 					
 					// code and log initialization
+					$log_header = "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null));
 					$log = array(
-						'header' => "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null)),
+						'header' => $log_header,
 						'files' => array()
 					);
+					$meta_log = $this->meta_log_initialization($log_header);
 					$before_code = '';
 					$code = '';
 					$after_code = '';
@@ -989,6 +1016,9 @@ class WP_Optimize_Minify_Front_End {
 					// minify and write to file
 					foreach ($footer[$i]['handles'] as $handle) :
 						if (!empty($wp_scripts->registered[$handle]->src)) {
+							// only add minified scripts once to the bundle
+							if (in_array($handle, $done)) continue;
+							
 							// get href per handle
 							$href = WP_Optimize_Minify_Functions::get_hurl($wp_scripts->registered[$handle]->src);
 							$version = $wp_scripts->registered[$handle]->ver;
@@ -1016,6 +1046,8 @@ class WP_Optimize_Minify_Front_End {
 							if ($this->should_reset_minify_assets($res, $href, 'js', $handle, $version)) {
 								WP_Optimize_Minify_Cache_Functions::reset();
 								$this->minify_cache_incremented = true;
+								$meta_log['invalidation_reason'] = 'Checksum Mismatch and version changed from ' . $res['request']['version'] . ' to ' . $version;
+								$meta_log['files_that_changed'][$handle] = $res['log'];
 							}
 							
 							// response has failed
@@ -1064,6 +1096,10 @@ class WP_Optimize_Minify_Front_End {
 
 					// generate cache, write log
 					if (!empty($code)) {
+						// Only generate meta.json file if cache is reset
+						if (!empty($meta_log['invalidation_reason'])) {
+							file_put_contents($meta_json_file, json_encode($meta_log));
+						}
 						WP_Optimize_Minify_Print::write_combined_asset($file, $code, $log);
 					}
 				} else {
@@ -1153,6 +1189,7 @@ class WP_Optimize_Minify_Front_End {
 		global $wp_scripts;
 		if (!is_object($wp_scripts)) return;
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
+		$cache_base_dir = $cache_path['cachebasedir'];
 		$cache_dir = $cache_path['cachedir'];
 		$cache_dir_url = $cache_path['cachedirurl'];
 		$exclude_js = $this->get_excluded_js_list();
@@ -1199,7 +1236,7 @@ class WP_Optimize_Minify_Front_End {
 					continue;
 				}
 
-				// Skip jQuery from the merged files if defering is ENABLED and defer_jquery is DISABLED
+				// Skip jQuery from the merged files if deferring is ENABLED and defer_jquery is DISABLED
 				if ('all' === $this->options['enable_defer_js']
 					&& !$this->options['defer_jquery']
 					&& (false !== stripos($href, '/jquery.js')
@@ -1276,6 +1313,7 @@ class WP_Optimize_Minify_Front_End {
 				$file_name = 'wpo-minify-header-'.$hash.($minify_js ? '.min' : '');
 				// create cache files and urls
 				$file = $cache_dir.'/'.$file_name.'.js';
+				$meta_json_file = $cache_base_dir.'/'.'meta.json';
 				$file_url = WP_Optimize_Minify_Functions::get_protocol($cache_dir_url.'/'.$file_name.'.js');
 				
 				// generate a new cache file
@@ -1283,10 +1321,12 @@ class WP_Optimize_Minify_Front_End {
 				if (!file_exists($file)) {
 					
 					// code and log initialization
+					$log_header = "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null));
 					$log = array(
-						'header' => "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null)),
+						'header' => $log_header,
 						'files' => array()
 					);
+					$meta_log = $this->meta_log_initialization($log_header);
 					$before_code = '';
 					$code = '';
 					$after_code = '';
@@ -1294,6 +1334,8 @@ class WP_Optimize_Minify_Front_End {
 					// minify and write to file
 					foreach ($header[$i]['handles'] as $handle) {
 						if (!empty($wp_scripts->registered[$handle]->src)) {
+							// only add minified scripts once to the bundle
+							if (in_array($handle, $done)) continue;
 
 							// get href per handle
 							$href = WP_Optimize_Minify_Functions::get_hurl($wp_scripts->registered[$handle]->src);
@@ -1319,6 +1361,8 @@ class WP_Optimize_Minify_Front_End {
 							if ($this->should_reset_minify_assets($res, $href, 'js', $handle, $version)) {
 								WP_Optimize_Minify_Cache_Functions::reset();
 								$this->minify_cache_incremented = true;
+								$meta_log['invalidation_reason'] = 'Checksum Mismatch and version changed from ' . $res['request']['version'] . ' to ' . $version;
+								$meta_log['files_that_changed'][$handle] = $res['log'];
 							}
 
 							// response has failed
@@ -1369,6 +1413,10 @@ class WP_Optimize_Minify_Front_End {
 
 					// generate cache, write log
 					if (!empty($code)) {
+						// Only generate meta.json file if cache is reset
+						if (!empty($meta_log['invalidation_reason'])) {
+							file_put_contents($meta_json_file, json_encode($meta_log));
+						}
 						WP_Optimize_Minify_Print::write_combined_asset($file, $code, $log);
 					}
 				} else {
@@ -1461,6 +1509,7 @@ class WP_Optimize_Minify_Front_End {
 		global $wp_styles;
 		if (!is_object($wp_styles)) return;
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
+		$cache_base_dir = $cache_path['cachebasedir'];
 		$cache_dir = $cache_path['cachedir'];
 		$cache_dir_url = $cache_path['cachedirurl'];
 		$exclude_css = $this->get_excluded_css_list();
@@ -1701,6 +1750,7 @@ class WP_Optimize_Minify_Front_End {
 
 				// create cache files and urls
 				$file = $cache_dir.'/'.$file_name.'.css';
+				$meta_json_file = $cache_base_dir.'/'.'meta.json';
 				$file_url = WP_Optimize_Minify_Functions::get_protocol($cache_dir_url.'/'.$file_name.'.css');
 				
 				// generate a new cache file
@@ -1708,10 +1758,12 @@ class WP_Optimize_Minify_Front_End {
 				if (!file_exists($file)) {
 
 					// code and log initialization
+					$log_header = "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null));
 					$log = array(
-						'header' => "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null)),
+						'header' => $log_header,
 						'files' => array()
 					);
+					$meta_log = $this->meta_log_initialization($log_header);
 					$code = '';
 
 					// minify and write to file
@@ -1744,6 +1796,8 @@ class WP_Optimize_Minify_Front_End {
 							if ($this->should_reset_minify_assets($res, $href, 'css', $handle, $version)) {
 								WP_Optimize_Minify_Cache_Functions::reset();
 								$this->minify_cache_incremented = true;
+								$meta_log['invalidation_reason'] = 'Checksum Mismatch and version changed from ' . $res['request']['version'] . ' to ' . $version;
+								$meta_log['files_that_changed'][$handle] = $res['log'];
 							}
 							
 							// response has failed
@@ -1772,6 +1826,10 @@ class WP_Optimize_Minify_Front_End {
 
 					// generate cache, add inline css, write log
 					if (!empty($code)) {
+						// Only generate meta.json file if cache is reset
+						if (!empty($meta_log['invalidation_reason'])) {
+							file_put_contents($meta_json_file, json_encode($meta_log));
+						}
 						WP_Optimize_Minify_Print::write_combined_asset($file, $code, $log);
 					}
 				} else {
@@ -1924,7 +1982,7 @@ class WP_Optimize_Minify_Front_End {
 		// get host with multisite support and query strings
 		$host = htmlentities($_SERVER['SERVER_NAME']);
 		if (empty($host)) {
-			$host = htmlentities($_SERVER['HTTP_HOST']);
+			$host = isset($_SERVER['HTTP_HOST']) ? htmlentities($_SERVER['HTTP_HOST']) : '';
 		}
 		$request_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 		$request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -2052,7 +2110,7 @@ class WP_Optimize_Minify_Front_End {
 		// get host with multisite support and query strings
 		$host = htmlentities($_SERVER['SERVER_NAME']);
 		if (empty($host)) {
-			$host = htmlentities($_SERVER['HTTP_HOST']);
+			$host = isset($_SERVER['HTTP_HOST']) ? htmlentities($_SERVER['HTTP_HOST']) : '';
 		}
 		$request_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 		$request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

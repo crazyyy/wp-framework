@@ -140,7 +140,7 @@ abstract class AIOWPSecurity_Block_File {
 			);
 		}
 
-	   return (1 === preg_match($this->get_regex_pattern(), $contents));
+		return (1 === preg_match($this->get_regex_pattern(), $contents));
 	}
 
 	 /**

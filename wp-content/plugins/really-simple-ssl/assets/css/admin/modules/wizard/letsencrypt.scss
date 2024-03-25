@@ -1,3 +1,30 @@
+.rsssl-letsencrypt, .rsssl-le-activate_ssl {
+  button {
+    margin-top: 20px;
+    margin-right:20px;
+  }
+  .rsssl-features, .rsssl-pro {
+    ul {
+      -moz-column-count: 2;
+      column-count: 2;
+      -moz-column-gap: 20px;
+      column-gap: 20px;
+      margin-bottom: 0;
+    }
+  }
+  .rsssl-icon {
+    margin-top: 2px;
+  }
+
+  .rsssl-override-detection-toggle input {
+    margin-top: 2px;
+  }
+
+  .rsssl-modal-checkbox-container input {
+    margin-top: 1px;
+  }
+}
+
 .rsssl-lets-encrypt-tests {
   margin:var(--rsp-spacing-xs) var(--rsp-spacing-xl);
   .rsssl-progress-bar {
@@ -98,27 +125,11 @@
     }
   }
 
-  .rsssl-modal-content-step-footer {
-    display:flex;
-    align-items: center;
-    margin-top: var(--rsp-spacing-l);
-    gap: var(--rsp-spacing-m);
-    .components-toggle-control .components-base-control__field{
-      margin:0;
-      flex-direction: initial;
-      .components-toggle-control__label {
-        margin-right:12px;
-      }
-    }
-    //button, a, label{
-    //  font-size: var(--rsp-fs-400);
-    //  font-weight: 500;
-    //  line-height: 1.5;
-    //}
-  }
-
   .rsssl-modal-subtitle {
     display:none;
+  }
+  .components-toggle-control {
+    margin: 20px 0;
   }
 }
 

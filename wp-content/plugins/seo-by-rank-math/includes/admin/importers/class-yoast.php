@@ -13,9 +13,8 @@ namespace RankMath\Admin\Importers;
 use RankMath\Helper;
 use RankMath\Redirections\Redirection;
 use RankMath\Tools\Yoast_Blocks;
-use MyThemeShop\Helpers\DB;
-use MyThemeShop\Helpers\WordPress;
-use MyThemeShop\Helpers\Str;
+use RankMath\Helpers\DB;
+use RankMath\Helpers\Str;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -114,10 +113,12 @@ class Yoast extends Plugin_Importer {
 			'metadesc-archive-wpseo' => 'date_archive_description',
 			'title-search-wpseo'     => 'search_title',
 			'title-404-wpseo'        => '404_title',
+			'org-description'        => 'organization_description',
 		];
 		$this->replace( $hash, $yoast_titles, $this->titles, 'convert_variables' );
 
 		$this->local_seo_settings();
+		$this->set_additional_organization_details( $yoast_titles );
 		$this->set_separator( $yoast_titles );
 		$this->set_post_types( $yoast_titles );
 		$this->set_taxonomies( $yoast_titles );
@@ -570,7 +571,7 @@ class Yoast extends Plugin_Importer {
 	private function set_post_focus_keyword( $post_id ) {
 		$extra_fks = get_post_meta( $post_id, '_yoast_wpseo_focuskeywords', true );
 		$extra_fks = json_decode( $extra_fks, true );
-		if ( empty( $extra_fks ) ) {
+		if ( empty( $extra_fks ) || ! is_array( $extra_fks ) ) {
 			return;
 		}
 
@@ -755,6 +756,41 @@ class Yoast extends Plugin_Importer {
 		);
 
 		return $item->save();
+	}
+
+	/**
+	 * Set additional Organization details.
+	 *
+	 * @param array $yoast_titles Settings.
+	 */
+	private function set_additional_organization_details( $yoast_titles ) {
+		$additional_details = [];
+		$properties         = [
+			'org-legal-name'       => 'legalName',
+			'org-founding-date'    => 'foundingDate',
+			'org-number-employees' => 'numberOfEmployees',
+			'org-vat-id'           => 'vatID',
+			'org-tax-id'           => 'taxID',
+			'org-iso'              => 'iso6523Code',
+			'org-duns'             => 'duns',
+			'org-leicode'          => 'leiCode',
+			'org-naics'            => 'naics',
+		];
+
+		foreach ( $properties as $key => $property ) {
+			if ( empty( $yoast_titles[ $key ] ) ) {
+				continue;
+			}
+
+			$additional_details[] = [
+				'type'  => $property,
+				'value' => $yoast_titles[ $key ],
+			];
+		}
+
+		if ( ! empty( $additional_details ) ) {
+			$this->titles['additional_info'] = $additional_details;
+		}
 	}
 
 	/**
@@ -1044,7 +1080,7 @@ class Yoast extends Plugin_Importer {
 	 * @param array $yoast_sitemap Settings.
 	 */
 	private function sitemap_exclude_roles( $yoast_sitemap ) {
-		foreach ( WordPress::get_roles() as $role => $label ) {
+		foreach ( Helper::get_roles() as $role => $label ) {
 			$key = "user_role-{$role}-not_in_sitemap";
 			if ( isset( $yoast_sitemap[ $key ] ) && $yoast_sitemap[ $key ] ) {
 				$this->sitemap['exclude_roles'][] = $role;

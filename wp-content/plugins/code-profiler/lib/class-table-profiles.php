@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  +=====================================================================+
  |    ____          _        ____             __ _ _                   |
  |   / ___|___   __| | ___  |  _ \ _ __ ___  / _(_) | ___ _ __         |
@@ -30,28 +30,32 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 	private $abspath;
 	private $row_count  = 0;
 
-	/********************************************************************
+
+	/**
 	 * Initialize
 	 */
 	function __construct() {
 
 		$this->abspath = rtrim( ABSPATH, '/\\');
 
-		parent::__construct( array(
+		parent::__construct( [
 			'singular' => esc_html__('profile', 'code-profiler'),
 			'plural'   => esc_html__('profiles', 'code-profiler'),
 			'ajax'     => false
-		));
+		] );
     }
 
-	/********************************************************************
+
+	/**
 	 * Empty list
 	 */
 	function no_items() {
 		esc_html_e('No profile found.', 'code-profiler');
+		$this->is_empty = 1;
 	}
 
-	/********************************************************************
+
+	/**
 	 * Default
 	 */
 	function column_default( $item, $column_name ) {
@@ -62,7 +66,12 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		}
 		switch( $column_name ) {
 			case 'date':
-				return date('Y/m/d \@ H:i', $item[ $column_name ] );
+				return sprintf(
+					/* translators: This is already translated in WordPress core */
+					__('%1$s at %2$s'),
+					date('Y/m/d', $item[ $column_name ] ) .'<br />',
+					date('g:i a', $item[ $column_name ] )
+				);
 				break;
 			case 'time':
 				return $item[ $column_name ] .' s';
@@ -80,26 +89,28 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		}
 	}
 
-	/********************************************************************
+
+	/**
 	 * Sortable columns
 	 */
 	function get_sortable_columns() {
-		return array(
-			'profile'	=> array( 'profile', true ),
-			'date' 		=> array( 'date', true ),
-			'items' 		=> array( 'items', true ),
-			'time' 		=> array( 'time', true ),
-			'mem' 		=> array( 'mem', true ),
-			'io' 			=> array( 'io', true ),
-			'queries'	=> array( 'queries', true )
-		);
+		return [
+			'profile'	=> ['profile', true ],
+			'date' 		=> ['date', true ],
+			'items' 		=> ['items', true ],
+			'time' 		=> ['time', true ],
+			'mem' 		=> ['mem', true ],
+			'io' 			=> ['io', true ],
+			'queries'	=> ['queries', true ]
+		];
 	}
 
-	/********************************************************************
+
+	/**
 	 * Columns
 	 */
 	function get_columns(){
-		return array(
+		return [
 			'cb'			=> '<input type="checkbox" />',
 			'profile'	=> esc_html__( 'Profile', 'code-profiler' ),
 			'date'		=> esc_html__( 'Date', 'code-profiler' ),
@@ -108,10 +119,11 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 			'mem'			=> esc_html__( 'Memory', 'code-profiler' ),
 			'io'			=> esc_html__( 'File I/O', 'code-profiler' ),
 			'queries'	=> esc_html__( 'SQL', 'code-profiler' )
-		);
+		];
     }
 
-	/********************************************************************
+
+	/**
 	 * Sorting
 	 */
 	function usort_reorder( $a, $b ) {
@@ -122,7 +134,8 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		return ( $order === 'asc') ? $result : -$result;
 	}
 
-	/********************************************************************
+
+	/**
 	 * Sort string and numeric values differently
 	 */
 	function cmp_num_or_string( $a, $b ) {
@@ -134,7 +147,7 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 	}
 
 
-	/********************************************************************
+	/**
 	 * Row action links
 	 */
 	function column_profile( $item ) {
@@ -174,9 +187,9 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 			'<div id="profile_div_%1$s" style="display:none">'.
 				'<input type="text" id="edit-%1$s" name="edit_%3$s" value="" maxlength="100" />'.
 				'<p>'.
-					'<input type="button" class="button-primary button button-small" value="%4$s" onClick="cpjs_edit_name(\'%3$s\', \'%1$s\', \'%6$s\', \'%1$s\')"/>'.
+					'<input type="button" class="button button-primary button-small" value="%4$s" onClick="cpjs_edit_name(\'%3$s\', \'%1$s\', \'%6$s\', \'%1$s\')"/>'.
 					'&nbsp;'.
-					'<input type="button" class="button-secondary button button-small" value="%5$s" onClick="cpjs_toggle_name(\'%1$s\')"/>'.
+					'<input type="button" class="button button-secondary button-small" value="%5$s" onClick="cpjs_toggle_name(\'%1$s\')"/>'.
 					'&nbsp;'.
 					'<span id="profile_spinner_%1$s" class="spinner" style="float:none"></span>'.
 				'</p>'.
@@ -192,7 +205,8 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		return sprintf('%1$s %2$s', $profile_name, $this->row_actions( $actions ) );
 	}
 
-	/********************************************************************
+
+	/**
 	 * Bulk action menu (delete)
 	 */
 	function get_bulk_actions() {
@@ -201,7 +215,8 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		];
 	}
 
-	/********************************************************************
+
+	/**
 	 * Checkboxes
 	 */
 	function column_cb($item) {
@@ -211,7 +226,8 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		);
 	}
 
-	/********************************************************************
+
+	/**
 	 * Prepare to display profiles
 	 */
 	function prepare_items() {
@@ -242,7 +258,8 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		));
 	}
 
-	/********************************************************************
+
+	/**
 	 * Retrieve all profiles
 	 */
 	function fetch_profiles() {
@@ -325,7 +342,8 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		return $profiles;
 	}
 
-	/********************************************************************
+
+	/**
 	 * Search a profile file for a string.
 	 */
 	private function search_profile_file( $file, $string ) {
@@ -353,7 +371,8 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 		return false;
 	}
 
-	/********************************************************************
+
+	/**
 	 * Delete one or more profiles.
 	 */
 	 public function delete_profiles( $profiles ) {

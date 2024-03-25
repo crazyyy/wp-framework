@@ -6,7 +6,7 @@
 </div>
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Permanently blocked IP addresses', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-	<div class="inside">
+	<div class="inside" id="permanent-ip-list-table">
 		<?php
 		// Fetch, prepare, sort, and filter our data...
 		$blocked_ip_list->prepare_items();

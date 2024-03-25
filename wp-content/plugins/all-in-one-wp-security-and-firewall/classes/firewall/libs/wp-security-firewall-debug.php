@@ -47,6 +47,7 @@ class Debug {
 		$details['request'] = $_SERVER;
 		unset($details['request']['HTTP_COOKIE']);
 
-		Message_Store::instance()->set($event, $details);
+		// Uncomment when the firewall config issues have been resolved
+		// Message_Store::instance()->set($event, $details);
 	}
 }

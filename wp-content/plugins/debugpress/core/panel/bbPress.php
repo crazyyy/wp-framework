@@ -22,7 +22,7 @@ class bbPress extends Panel {
 		'lang_base',
 		'lang_dir',
 		'themes_dir',
-		'themes_url'
+		'themes_url',
 	);
 
 	public $conditionals = array(
@@ -59,11 +59,11 @@ class bbPress extends Panel {
 		'bbp_is_search_results',
 		'bbp_is_edit',
 		'gdtox_is_topic_prefix',
-		'gdmed_is_members_directory'
+		'gdmed_is_members_directory',
 	);
 
 	public function left() {
-		$this->title( __( "Query Conditionals", "debugpress" ) );
+		$this->title( esc_html__( 'Query Conditionals', 'debugpress' ) );
 		$this->block_header();
 		$this->table_init_standard();
 		$this->table_head();
@@ -73,14 +73,14 @@ class bbPress extends Panel {
 			if ( function_exists( $condition ) && call_user_func( $condition ) ) {
 				$this->table_row( array(
 					$condition . '()',
-					ucwords( str_replace( "_", " ", substr( $condition, strpos( $condition, '_is_' ) + 4 ) ) )
+					ucwords( str_replace( "_", " ", substr( $condition, strpos( $condition, '_is_' ) + 4 ) ) ),
 				) );
 			}
 		}
 		$this->table_foot();
 		$this->block_footer();
 
-		$this->title( __( "bbPress Environment", "debugpress" ) );
+		$this->title( esc_html__( 'bbPress Environment', 'debugpress' ) );
 		$this->block_header();
 		$this->table_init_standard();
 		$this->table_head();
@@ -90,9 +90,9 @@ class bbPress extends Panel {
 		$this->table_foot();
 		$this->block_footer();
 
-		$this->title( __( "Templates Stack", "debugpress" ) );
+		$this->title( esc_html__( 'Templates Stack', 'debugpress' ) );
 		$this->block_header();
-		$this->add_column( __( "Path", "debugpress" ), '', '', true );
+		$this->add_column( __( 'Path', 'debugpress' ), '', '', true );
 		$this->table_head();
 		foreach ( bbp_get_template_stack() as $path ) {
 			$this->table_row( array( $path ) );
@@ -102,30 +102,30 @@ class bbPress extends Panel {
 	}
 
 	public function right() {
-		$this->title( __( "bbPress Queries", "debugpress" ) );
+		$this->title( esc_html__( 'bbPress Queries', 'debugpress' ) );
 		$this->block_header();
-		if ( isset( debugpress_tracker()->objects[ 'bbpress' ][ 'forum_query' ] ) ) {
-			$this->sub_title( __( "Forum Query", "debugpress" ) );
-			debugpress_r( debugpress_tracker()->objects[ 'bbpress' ][ 'forum_query' ], false );
+		if ( isset( debugpress_tracker()->objects['bbpress']['forum_query'] ) ) {
+			$this->sub_title( __( 'Forum Query', 'debugpress' ) );
+			debugpress_r( debugpress_tracker()->objects['bbpress']['forum_query'], false );
 		}
 
-		if ( isset( debugpress_tracker()->objects[ 'bbpress' ][ 'topic_query' ] ) ) {
-			$this->sub_title( __( "Topic Query", "debugpress" ) );
-			debugpress_r( debugpress_tracker()->objects[ 'bbpress' ][ 'topic_query' ], false );
+		if ( isset( debugpress_tracker()->objects['bbpress']['topic_query'] ) ) {
+			$this->sub_title( __( 'Topic Query', 'debugpress' ) );
+			debugpress_r( debugpress_tracker()->objects['bbpress']['topic_query'], false );
 		}
 
-		if ( isset( debugpress_tracker()->objects[ 'bbpress' ][ 'reply_query' ] ) ) {
-			$this->sub_title( __( "Reply Query", "debugpress" ) );
-			debugpress_r( debugpress_tracker()->objects[ 'bbpress' ][ 'reply_query' ], false );
+		if ( isset( debugpress_tracker()->objects['bbpress']['reply_query'] ) ) {
+			$this->sub_title( __( 'Reply Query', 'debugpress' ) );
+			debugpress_r( debugpress_tracker()->objects['bbpress']['reply_query'], false );
 		}
 
-		if ( isset( debugpress_tracker()->objects[ 'bbpress' ][ 'search_query' ] ) ) {
-			$this->sub_title( __( "Search Query", "debugpress" ) );
-			debugpress_r( debugpress_tracker()->objects[ 'bbpress' ][ 'search_query' ], false );
+		if ( isset( debugpress_tracker()->objects['bbpress']['search_query'] ) ) {
+			$this->sub_title( __( 'Search Query', 'debugpress' ) );
+			debugpress_r( debugpress_tracker()->objects['bbpress']['search_query'], false );
 		}
 		$this->block_footer();
 
-		$this->title( __( "Basic bbPress Object", "debugpress" ) );
+		$this->title( esc_html__( 'Basic bbPress Object', 'debugpress' ) );
 		$this->block_header();
 		debugpress_r( bbpress(), false );
 		$this->block_footer();

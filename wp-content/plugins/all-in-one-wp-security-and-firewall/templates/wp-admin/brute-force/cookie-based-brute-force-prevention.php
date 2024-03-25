@@ -29,7 +29,7 @@
 			<?php wp_nonce_field('aiowpsec-enable-cookie-based-brute-force-prevention'); ?>
 			<div class="aio_orange_box">
 				<p>
-				<?php echo sprintf(__('This feature can lock you out of admin if it doesn\'t work correctly on your site. Before activating this feature you must read the following %s.', 'all-in-one-wp-security-and-firewall'), '<a href="https://aiosplugin.com/important-note-on-intermediate-and-advanced-features" target="_blank">'.__('message', 'all-in-one-wp-security-and-firewall').'</a>'); ?>
+				<?php echo __('This feature can lock you out of admin if it doesn\'t work correctly on your site.', 'all-in-one-wp-security-and-firewall').' ' . sprintf(__('Before activating this feature you must read the following %s.', 'all-in-one-wp-security-and-firewall'), '<a href="https://aiosplugin.com/important-note-on-intermediate-and-advanced-features" target="_blank">'.__('message', 'all-in-one-wp-security-and-firewall').'</a>'); ?>
 				</p>
 			</div>
 			<?php
@@ -38,9 +38,9 @@
 				$disable_brute_force_feature_input = true;
 				// If the cookie test is successful or if the feature is already enabled then go ahead as normal
 				if ('1' == $cookie_test_value || '1' == $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')) {
-					if (!empty($aiowps_cookie_test)) { // Cookie test was just performed and the test succeded
+					if (!empty($aiowps_cookie_test)) { // Cookie test was just performed and the test succeeded
 						echo '<div class="aio_green_box"><p>';
-						_e('The cookie test was successful. You can now enable this feature.', 'all-in-one-wp-security-and-firewall');
+						_e('The cookie test was successful, you can now enable this feature.', 'all-in-one-wp-security-and-firewall');
 						echo '</p></div>';
 					}
 					$disable_brute_force_feature_input = false;
@@ -48,7 +48,7 @@
 					// Cookie test needs to be performed
 					if (!empty($aiowps_cookie_test) && '1' != $cookie_test_value) { // Test failed
 						echo '<div class="aio_red_box"><p>';
-						_e('The cookie test failed on this server. Consequently, this feature cannot be used on this site.', 'all-in-one-wp-security-and-firewall');
+						echo __('The cookie test failed on this server.', 'all-in-one-wp-security-and-firewall') .' '. __('Consequently, this feature cannot be used on this site.', 'all-in-one-wp-security-and-firewall');
 						echo '</p></div>';
 					}
 			?>
@@ -70,32 +70,35 @@
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable brute force attack prevention', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-					<input id="aiowps_enable_brute_force_attack_prevention" name="aiowps_enable_brute_force_attack_prevention" type="checkbox"<?php checked($aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention'));?> value="1"<?php disabled($disable_brute_force_feature_input); ?>/>
-						<label for="aiowps_enable_brute_force_attack_prevention" class="description"><?php _e('Check this if you want to protect your login page from Brute Force Attack.', 'all-in-one-wp-security-and-firewall'); ?></label>
-					<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-					<div class="aiowps_more_info_body">
-						<p class="description">
-							<?php
-							_e('This feature will deny access to your WordPress login page for all people except those who have a special cookie in their browser.', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							_e('To use this feature do the following:', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							_e('1) Enable the checkbox.', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							_e('2) Enter a secret word consisting of alphanumeric characters which will be difficult to guess. This secret word will be useful whenever you need to know the special URL which you will use to access the login page (see point below).', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							_e('3) You will then be provided with a special login URL. You will need to use this URL to login to your WordPress site instead of the usual login URL. NOTE: The system will deposit a special cookie in your browser which will allow you access to the WordPress administration login page.', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							_e('Any person trying to access your login page who does not have the special cookie in their browser will be automatically blocked.', 'all-in-one-wp-security-and-firewall');
-							?>
-						</p>
-					</div>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to protect your login page from Brute Force Attack.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_brute_force_attack_prevention', $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')); ?>
+							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+							<div class="aiowps_more_info_body">
+								<p class="description">
+									<?php
+									_e('This feature will deny access to your WordPress login page for all people except those who have a special cookie in their browser.', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('To use this feature do the following:', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('1) Enable the checkbox.', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('2) Enter a secret word consisting of alphanumeric characters which will be difficult to guess.', 'all-in-one-wp-security-and-firewall') . _e(' This secret word will be useful whenever you need to know the special URL which you will use to access the login page (see point below).', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('3) You will then be provided with a special login URL.', 'all-in-one-wp-security-and-firewall')  . _e(' You will need to use this URL to login to your WordPress site instead of the usual login URL.', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('NOTE: The system will deposit a special cookie in your browser which will allow you access to the WordPress administration login page.', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('Any person trying to access your login page who does not have the special cookie in their browser will be automatically blocked.', 'all-in-one-wp-security-and-firewall');
+									?>
+								</p>
+							</div>
+						</div>
 					</td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_brute_force_secret_word"><?php _e('Secret word', 'all-in-one-wp-security-and-firewall'); ?>:</label></th>
 					<td><input id="aiowps_brute_force_secret_word" type="text" size="40" name="aiowps_brute_force_secret_word" value="<?php echo $aio_wp_security->configs->get_value('aiowps_brute_force_secret_word'); ?>"<?php disabled($disable_brute_force_sub_fields); ?>>
-					<span class="description"><?php _e('Choose a secret word consisting of alphanumeric characters which you can use to access your special URL. Your are highly encouraged to choose a word which will be difficult to guess.', 'all-in-one-wp-security-and-firewall'); ?></span>
+					<span class="description"><?php echo __('Choose a secret word consisting of alphanumeric characters which you can use to access your special URL.', 'all-in-one-wp-security-and-firewall') . ' ' . __('You are highly encouraged to choose a word which will be difficult to guess.', 'all-in-one-wp-security-and-firewall'); ?></span>
 					</td>
 				</tr>
 				<tr valign="top">
@@ -127,39 +130,41 @@
 				<tr valign="top">
 					<th scope="row"><?php _e('My site has posts or pages which are password protected', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-					<input id="aiowps_brute_force_attack_prevention_pw_protected_exception" name="aiowps_brute_force_attack_prevention_pw_protected_exception" type="checkbox"<?php checked($aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_pw_protected_exception')); ?> value="1"<?php disabled($disable_brute_force_sub_fields); ?> />
-					<label for="aiowps_brute_force_attack_prevention_pw_protected_exception" class="description"><?php _e('Check this if you are using the native WordPress password protection feature for some or all of your blog posts or pages.', 'all-in-one-wp-security-and-firewall'); ?></label>
-					<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-					<div class="aiowps_more_info_body">
-						<p class="description">
-							<?php
-							_e('In the cases where you are protecting some of your posts or pages using the in-built WordPress password protection feature, a few extra lines of directives and exceptions need to be added so that people trying to access pages are not automatically blocked.', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							_e('By enabling this checkbox, the plugin will add the necessary rules and exceptions so that people trying to access these pages are not automatically blocked.', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							echo "<strong>".__('Helpful Tip:', 'all-in-one-wp-security-and-firewall')."</strong>";
-							echo '<br>';
-							_e('If you do not use the WordPress password protection feature for your posts or pages then it is highly recommended that you leave this checkbox disabled.', 'all-in-one-wp-security-and-firewall');
-							?>
-						</p>
-					</div>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you are using the native WordPress password protection feature for some or all of your blog posts or pages.', 'all-in-one-wp-security-and-firewall'), 'aiowps_brute_force_attack_prevention_pw_protected_exception', '1' == $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_pw_protected_exception')); ?>
+							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+							<div class="aiowps_more_info_body">
+								<p class="description">
+									<?php
+									_e('In the cases where you are protecting some of your posts or pages using the in-built WordPress password protection feature, a few extra lines of directives and exceptions need to be added so that people trying to access pages are not automatically blocked.', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('By enabling this checkbox, the plugin will add the necessary rules and exceptions so that people trying to access these pages are not automatically blocked.', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									echo "<strong>".__('Helpful Tip:', 'all-in-one-wp-security-and-firewall')."</strong>";
+									echo '<br>';
+									_e('If you do not use the WordPress password protection feature for your posts or pages then it is highly recommended that you leave this checkbox disabled.', 'all-in-one-wp-security-and-firewall');
+									?>
+								</p>
+							</div>
+						</div>
 					</td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e('My site has a theme or plugins which use AJAX', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
-					<input id="aiowps_brute_force_attack_prevention_ajax_exception" name="aiowps_brute_force_attack_prevention_ajax_exception" type="checkbox"<?php checked($aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_ajax_exception')); ?> value="1"<?php disabled($disable_brute_force_sub_fields); ?>/>
-					<label for="aiowps_brute_force_attack_prevention_ajax_exception" class="description"><?php _e('Check this if your site uses AJAX functionality.', 'all-in-one-wp-security-and-firewall'); ?></label>
-					<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-					<div class="aiowps_more_info_body">
-						<p class="description">
-							<?php
-							_e('In the cases where your WordPress installation has a theme or plugin that uses AJAX, a few extra lines of directives and exceptions need to be added to prevent AJAX requests from being automatically blocked by the brute force prevention feature.', 'all-in-one-wp-security-and-firewall');
-							echo '<br>';
-							_e('By enabling this checkbox, the plugin will add the necessary rules and exceptions so that AJAX operations will work as expected.', 'all-in-one-wp-security-and-firewall');
-							?>
-						</p>
-					</div>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if your site uses AJAX functionality.', 'all-in-one-wp-security-and-firewall'), 'aiowps_brute_force_attack_prevention_ajax_exception', '1' == $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_ajax_exception')); ?>
+							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+							<div class="aiowps_more_info_body">
+								<p class="description">
+									<?php
+									_e('In the cases where your WordPress installation has a theme or plugin that uses AJAX, a few extra lines of directives and exceptions need to be added to prevent AJAX requests from being automatically blocked by the brute force prevention feature.', 'all-in-one-wp-security-and-firewall');
+									echo '<br>';
+									_e('By enabling this checkbox, the plugin will add the necessary rules and exceptions so that AJAX operations will work as expected.', 'all-in-one-wp-security-and-firewall');
+									?>
+								</p>
+							</div>
+						</div>
 					</td>
 				</tr>
 			</table>

@@ -7,7 +7,7 @@
 			<div class="wpo-video-preview">
 				<a href="https://vimeo.com/333938451" data-embed="https://player.vimeo.com/video/333938451?color=df6926&title=0&byline=0&portrait=0" target="_blank"><img src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/image-compression-video-preview.png'); ?>" alt="<?php esc_attr_e('Video preview', 'wp-optimize'); ?>" /></a>
 			</div>
-			<small>(<?php esc_html_e('Loads a video hosted on vimeo.com', 'wp-optimize'); ?>) - <a href="https://vimeo.com/333938451" target="_blank"><?php esc_html_e('Open the video in a new window', 'wp-optimize'); ?></a></small>
+			<small>(<?php esc_html_e('Loads a video hosted on vimeo.com', 'wp-optimize'); ?>) - <?php $wp_optimize->wp_optimize_url('https://vimeo.com/333938451', __('Open the video in a new window', 'wp-optimize')); ?></small>
 		</div>
 	</div>
 	<p>
@@ -50,7 +50,7 @@
 		<div class="compression_options">
 			<h3><?php esc_html_e('Compression options', 'wp-optimize');?></h3>
 			<input type="radio" id="enable_lossy_compression" name="compression_level" <?php checked($smush_options['image_quality'], 60); ?> class="smush-options compression_level"> 
-			<label for="enable_lossy_compression"><?php _e('Prioritize maximum compression', 'wp-optimize');?></label>
+			<label for="enable_lossy_compression"><?php esc_html_e('Prioritize maximum compression', 'wp-optimize');?></label>
 			<?php
 				$message = __('Uses lossy compression to ensure maximum savings per image.', 'wp-optimize');
 				$message .= ' ';
@@ -58,7 +58,7 @@
 			?>
 			<span tabindex="0" data-tooltip="<?php echo esc_attr($message); ?>"><span class="dashicons dashicons-editor-help"></span> </span>
 			<br>
-			<input type="radio" id="enable_lossless_compression" <?php checked($smush_options['image_quality'], 100); ?>name="compression_level" class="smush-options compression_level"> 
+			<input type="radio" id="enable_lossless_compression" <?php checked($smush_options['image_quality'], 92); ?>name="compression_level" class="smush-options compression_level">
 			<label for="enable_lossless_compression"><?php esc_html_e('Prioritize retention of detail', 'wp-optimize');?></label>
 			<span tabindex="0" data-tooltip="<?php esc_attr_e('Uses lossless compression, which results in much better image quality but lower file size savings per image', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
 			<br>
@@ -67,35 +67,38 @@
 			<br>
 			<div class="smush-options custom_compression" <?php if (!$custom) echo 'style="display:none;"';?> >
 				<span class="slider-start"><?php esc_html_e('Maximum compression', 'wp-optimize');?></span>
-				<input id="custom_compression_slider" class="compression_level" data-max="<?php esc_attr_e('Maximum Compression', 'wp-optimize'); ?>"  type="range" step="5" value="<?php echo esc_attr($smush_options['image_quality']); ?>" min="65" max="85" list="number" />
+				<input id="custom_compression_slider" class="compression_level" data-max="<?php esc_attr_e('Maximum Compression', 'wp-optimize'); ?>"  type="range" step="5" value="<?php echo esc_attr($smush_options['image_quality']); ?>" min="65" max="90" list="number" />
 				<datalist id="number">
 					<option value="65"/>
 					<option value="70"/>
 					<option value="75"/>
 					<option value="80"/>
 					<option value="85"/>
+					<option value="90"/>
 				</datalist>
 				<span class="slider-end"><?php esc_html_e('Best image quality', 'wp-optimize');?></span>
 			</div>
-			<p><?php esc_html_e('Not sure what to choose?', 'wp-optimize'); ?> <a href="https://getwpo.com/lossy-vs-lossless-image-compression-a-guide-to-the-trade-off-between-image-size-and-quality/" target="_blank"><?php esc_html_e('Read our article "Lossy vs Lossless image compression"', 'wp-optimize'); ?></a></p>
+			<p><?php esc_html_e('Not sure what to choose?', 'wp-optimize'); ?> <?php $wp_optimize->wp_optimize_url('https://getwpo.com/lossy-vs-lossless-image-compression-a-guide-to-the-trade-off-between-image-size-and-quality/', __('Read our article "Lossy vs Lossless image compression"', 'wp-optimize')); ?></p>
+
 			<?php if (WPO_USE_WEBP_CONVERSION) : ?>
 				<h3><?php esc_html_e('WebP conversion', 'wp-optimize');?></h3>
-				<?php
-					$converters = WP_Optimize()->get_options()->get_option('webp_converters', false);
-					if (!$does_server_allows_local_webp_conversion) {
-						printf('<p>%1$s</p>', esc_html__('Note: Local WebP conversion tools are not allowed on your server.', 'wp-optimize'));
-					} elseif (!empty($converters)) {
-						printf('<p>%1$s <strong>%2$s</strong></p>', esc_html__('Available WebP conversion tools:', 'wp-optimize'),  esc_html(implode(', ', $converters)));
+
+				<?php if ($does_server_allows_local_webp_conversion) : ?>
+					<input type="checkbox" id="enable_webp_conversion" name="webp_conversion" <?php checked($smush_options['webp_conversion']); ?> class="smush-options webp_conversion">
+					<label for="enable_webp_conversion"><?php esc_html_e('Create WebP version of image', 'wp-optimize');?></label>
+					<span tabindex="0" data-tooltip="<?php esc_attr_e('Creates WebP image format and serves it whenever possible.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
+					<br>
+
+					<?php
+						$converters = WP_Optimize()->get_options()->get_option('webp_converters', false);
+						if ($smush_options['webp_conversion'] && !empty($converters)) {
+							printf('<p>%1$s <strong>%2$s</strong></p>', esc_html__('Available WebP conversion tools:', 'wp-optimize'),  esc_html(implode(', ', $converters)));
+						}
 					?>
-						<input type="checkbox" id="enable_webp_conversion" name="webp_conversion" <?php checked($smush_options['webp_conversion']); ?> class="smush-options webp_conversion">
-						<label for="enable_webp_conversion"><?php esc_html_e('Create WebP version of image', 'wp-optimize');?></label>
-						<span tabindex="0" data-tooltip="<?php esc_attr_e('Creates WebP image format and serves it whenever possible.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
-						<br>
-				<?php
-					} else {
-						printf('<p>%1$s <a href="https://getwpo.com/faqs/#How-can-I-get-these-conversion-tools-work-" target="_blank">%2$s</a></p>', esc_html__('No WebP conversion tools are available on your web-server.', 'wp-optimize'), esc_html__('How to get WebP conversion tools work?', 'wp-optimize'));
-					}
-				?>
+				<?php else: ?>
+					<?php printf('<p>%1$s</p>', esc_html__('Note: Local WebP conversion tools are not allowed on your server.', 'wp-optimize')); ?>
+				<?php endif; ?>
+
 			<?php endif; ?>
 		</div>
 		<button type="button" class="button button-link wpo-toggle-advanced-options"><span class="text"><span class="dashicons dashicons-arrow-down-alt2"></span> <span class="wpo-toggle-advanced-options__text-show"><?php esc_html_e('Show advanced options', 'wp-optimize');?></span><span class="wpo-toggle-advanced-options__text-hide"><?php esc_html_e('Hide advanced options', 'wp-optimize');?></span></span></button>
@@ -132,7 +135,7 @@
 				<button type="button" id="wpo_smush_mark_all_as_uncompressed_btn" class="wpo_primary_small button"><?php esc_html_e('Mark all images as uncompressed', 'wp-optimize'); ?></button>
 				<br>
 				<br>
-				<button type="button" id="wpo_smush_restore_all_compressed_images_btn" class="wpo_primary_small button"><?php _e('Restore all compressed images', 'wp-optimize'); ?></button>
+				<button type="button" id="wpo_smush_restore_all_compressed_images_btn" class="wpo_primary_small button"><?php esc_html_e('Restore all compressed images', 'wp-optimize'); ?></button>
 				<?php
 					$message = __('Only the original image will be restored.', 'wp-optimize');
 					$message .= ' ';
