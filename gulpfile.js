@@ -85,44 +85,78 @@ if ( isProd ) {
 }
 
 /* Compile and automatically prefix stylesheets */
-gulp.task( 'styles', () => {
-  // For best performance, don't add Sass partials to `gulp.src`
-  const srcPath = config.path.styles.srcFiles,
-    destPath = config.path.styles.dest;
+// gulp.task( 'styles', () => {
+//   // For best performance, don't add Sass partials to `gulp.src`
+//   const srcPath = config.path.styles.srcFiles,
+//     destPath = config.path.styles.dest;
+//
+//   return gulp.src( srcPath, { base: config.path.styles.src } )
+//     .pipe( customErrorPlumber( 'Error Running Sass' ) )
+//     // .pipe(plugin.newer(destPath))
+//     .pipe( plugin.changed( destPath, { extension: '.css' } ) )
+//     .pipe( plugin.if( isDev, plugin.sourcemaps.init() ) )
+//     // .pipe(plugin.sourcemaps.init())
+//     // TODO: add minify css if PROD
+//     // TODO: add both version of css - minified and normal css and change loading at functions
+//     .pipe( sass( {
+//       // https://github.com/sass/node-sass#options
+//       outputStyle: 'expanded',
+//       precision: 5,
+//       onError: console.error.bind( console, 'Sass error:' )
+//     } ) )
+//     // .pipe(plugin.postcss(processors))
+//     .pipe( plugin.postcss( [ autoprefixer() ] ) )
+//     .pipe( plugin.cleanCss( {
+//       // https://github.com/clean-css/clean-css#how-to-use-clean-css-api
+//       compatibility: '*', // (default) - Internet Explorer 10+ compatibility mode
+//       level: 1 // Optimization levels. The level option can be either 0, 1 (default), or 2, e.g.
+//     } ) )
+//     .pipe( plugin.if( isDev, plugin.sourcemaps.write( 'maps', {
+//       includeContent: true
+//     } ) ) )
+//     // .pipe(plugin.sourcemaps.write('maps', {includeContent: true}))
+//     .pipe( gulp.dest( destPath ) )
+//     .pipe( plugin.filter( '**/*.css' ) )
+//     .pipe( plugin.size( {
+//       showFiles: true,
+//       title: 'task: SCSS && PostCSS'
+//     } ) )
+//     .pipe( browserSync.reload( { stream: true } ) );
+// } );
 
-  return gulp.src( srcPath, { base: config.path.styles.src } )
-    .pipe( customErrorPlumber( 'Error Running Sass' ) )
-    // .pipe(plugin.newer(destPath))
-    .pipe( plugin.changed( destPath, { extension: '.css' } ) )
-    .pipe( plugin.if( isDev, plugin.sourcemaps.init() ) )
-    // .pipe(plugin.sourcemaps.init())
-    // TODO: add minify css if PROD
-    // TODO: add both version of css - minified and normal css and change loading at functions
-    .pipe( sass( {
-      // https://github.com/sass/node-sass#options
+// const gulp = require('gulp');
+// const sass = require('gulp-sass');
+// const autoprefixer = require('autoprefixer');
+// const postcss = require('gulp-postcss');
+// const cleanCss = require('gulp-clean-css');
+// const changed = require('gulp-changed');
+// const sourcemaps = require('gulp-sourcemaps');
+// const browserSync = require('browser-sync').create();
+
+gulp.task('styles', () => {
+  const srcPath = config.path.styles.srcFiles;
+  const destPath = config.path.styles.dest;
+
+  return gulp.src(srcPath, { base: config.path.styles.src })
+    .pipe(customErrorPlumber('Error Running Sass'))
+    .pipe(plugin.changed(destPath, { extension: '.css' }))
+    .pipe(plugin.sourcemaps.init())
+    .pipe(sass({
       outputStyle: 'expanded',
       precision: 5,
-      onError: console.error.bind( console, 'Sass error:' )
-    } ) )
-    // .pipe(plugin.postcss(processors))
-    .pipe( plugin.postcss( [ autoprefixer() ] ) )
-    .pipe( plugin.cleanCss( {
-      // https://github.com/clean-css/clean-css#how-to-use-clean-css-api
-      compatibility: '*', // (default) - Internet Explorer 10+ compatibility mode
-      level: 1 // Optimization levels. The level option can be either 0, 1 (default), or 2, e.g.
-    } ) )
-    .pipe( plugin.if( isDev, plugin.sourcemaps.write( 'maps', {
-      includeContent: true
-    } ) ) )
-    // .pipe(plugin.sourcemaps.write('maps', {includeContent: true}))
-    .pipe( gulp.dest( destPath ) )
-    .pipe( plugin.filter( '**/*.css' ) )
-    .pipe( plugin.size( {
-      showFiles: true,
-      title: 'task: SCSS && PostCSS'
-    } ) )
-    .pipe( browserSync.reload( { stream: true } ) );
-} );
+      onError: console.error.bind(console, 'Sass error:')
+    }))
+    .pipe(plugin.postcss([autoprefixer()]))
+    .pipe(plugin.cleanCss({
+      compatibility: '*',
+      level: 1
+    }))
+    .pipe(plugin.sourcemaps.write('maps', { includeContent: true }))
+    .pipe(gulp.dest(destPath))
+    .pipe(browserSync.reload({ stream: true }));
+});
+
+
 
 /* Optimize images */
 // https://github.com/sindresorhus/gulp-imagemin
@@ -231,27 +265,44 @@ const jsConcat = lazypipe()
 //   return lintBase('test/spec/**/*.js');
 // };
 
-gulp.task( 'scripts', () => gulp.src( config.path.scripts.src )
-  .pipe( customErrorPlumber( 'Error Running Scripts' ) )
-  .pipe( plugin.changed( config.path.scripts.dest ) )
-  .pipe( customErrorPlumber( 'Error Compiling Scripts' ) )
-  .pipe( plugin.if( isDev, plugin.sourcemaps.init() ) )
-  .pipe( plugin.babel( {
-    presets: [ '@babel/preset-env' ]
-  } ) )
-  .pipe( plugin.if( [ 'scripts.js' /*,'scripts2.js'*/], jsConcat() ) )
-  .pipe( plugin.if( '*.js', plugin.uglify() ) )
-  .pipe( plugin.if( isDev, plugin.sourcemaps.write(
-    'maps',
-    { includeContent: true }
-  ) ) )
-  .pipe( gulp.dest( config.path.scripts.dest ) )
-  .pipe( plugin.filter( '**/*.js' ) )
-  .pipe( plugin.size( {
-    showFiles: true,
-    title: 'task:scripts:'
-  } ) )
-  .pipe( browserSync.reload( { stream: true } ) ) );
+// gulp.task( 'scripts', () => gulp.src( config.path.scripts.src )
+//   .pipe( customErrorPlumber( 'Error Running Scripts' ) )
+//   .pipe( plugin.changed( config.path.scripts.dest ) )
+//   .pipe( customErrorPlumber( 'Error Compiling Scripts' ) )
+//   .pipe( plugin.if( isDev, plugin.sourcemaps.init() ) )
+//   .pipe( plugin.babel( {
+//     presets: [ '@babel/preset-env' ]
+//   } ) )
+//   .pipe( plugin.if( [ 'scripts.js' /*,'scripts2.js'*/], jsConcat() ) )
+//   .pipe( plugin.if( '*.js', plugin.uglify() ) )
+//   .pipe( plugin.if( isDev, plugin.sourcemaps.write(
+//     'maps',
+//     { includeContent: true }
+//   ) ) )
+//   .pipe( gulp.dest( config.path.scripts.dest ) )
+//   .pipe( plugin.filter( '**/*.js' ) )
+//   .pipe( plugin.size( {
+//     showFiles: true,
+//     title: 'task:scripts:'
+//   } ) )
+//   .pipe( browserSync.reload( { stream: true } ) )
+// );
+
+gulp.task('scripts', () => {
+  return gulp.src(config.path.scripts.src)
+    .pipe(customErrorPlumber('Error Running Scripts'))
+    .pipe(plugin.changed(config.path.scripts.dest))
+    .pipe(customErrorPlumber('Error Compiling Scripts'))
+    .pipe(plugin.sourcemaps.init())
+    .pipe(plugin.babel({
+      presets: ['@babel/preset-env']
+    }))
+    .pipe(plugin.uglify())
+    .pipe(plugin.sourcemaps.write('maps', { includeContent: true }))
+    .pipe(gulp.dest(config.path.scripts.dest))
+    .pipe(browserSync.reload({ stream: true }));
+});
+
 
 /* Base Gulp tasks */
 gulp.task( 'task:images',
