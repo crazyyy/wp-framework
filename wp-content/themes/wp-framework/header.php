@@ -42,29 +42,30 @@
   <?php wp_body_open(); ?>
   <!-- wrapper -->
   <div class="wrapper">
-    <header id="masthead" class="<?php echo esc_attr($wrapper_classes); ?>" role="banner">
-      <div class="inner">
 
-        <div class="site-logo">
-          <?php if (!is_front_page() && !is_home()) : ?>
-            <a href="<?php echo home_url(); ?>" title="<?php bloginfo('name'); ?>">
-            <?php endif; ?>
+    <header id="masthead" class="<?php echo esc_attr($wrapper_classes); ?>" role="banner">
+      <div class="grid">
+
+        <div class="header__logo col-6">
+          <?php //if (!is_front_page() && !is_home()) : ?>
+          <!--  <a href="--><?php //echo home_url(); ?><!--" title="--><?php //bloginfo('name'); ?><!--">-->
+          <!--  --><?php //endif; ?>
 
             <?php if (function_exists('the_custom_logo')) {
               the_custom_logo();
             } ?>
 
-            <?php if (!is_front_page() && !is_home()) : ?>
-            </a>
-          <?php endif; ?>
-        </div><!-- /site-logo -->
+          <!--  --><?php //if (!is_front_page() && !is_home()) : ?>
+          <!--  </a>-->
+          <?php //endif; ?>
+        </div><!-- /.header__logo -->
 
-        <nav class="nav" role="navigation">
-          <?php /* wp_nav_menu(array('theme_location' => 'header-menu')); */ ?>
-        </nav><!-- /nav -->
+        <nav class="header__nav col-6" role="navigation">
+          <?php wp_nav_menu(array('theme_location' => 'header-menu')); ?>
+        </nav><!-- /.header__nav -->
 
-      </div><!-- /.inner -->
-    </header><!-- #masthead -->
+      </div><!-- /.grid -->
+    </header><!-- /header .container-->
 
-    <section role="main" itemscope itemprop="mainContentOfPage">
-      <div class="inner">
+    <section class="container" role="main" itemscope itemprop="mainContentOfPage">
+      <div class="grid">

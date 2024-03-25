@@ -31,26 +31,26 @@ function wpeb_register_theme_menus() {
   foreach ($menus as $menu) {
     $location = $menu['location'];
     $class = $menu['class'];
-    $wrapClass = $menu['wrapClass'];
+    // $wrapClass = $menu['wrapClass'];
     $name = $menu['name'];
 
-    wp_nav_menu(
-      array(
-        'theme_location'  => $location,
-        'container'       => false,
-        'menu_class'      => 'menu',
-        'echo'            => true,
-        'fallback_cb'     => 'wp_page_menu',
-        'items_wrap'      => '<ul class="' . $class . '_container">%3$s</ul>',
-        'depth'           => 0,
-      )
-    );
+    // wp_nav_menu(
+    //   array(
+    //     'theme_location'  => $location,
+    //     'container'       => false,
+    //     'menu_class'      => 'menu',
+    //     'echo'            => true,
+    //     'fallback_cb'     => 'wp_page_menu',
+    //     'items_wrap'      => '<ul class="' . $class . '_container">%3$s</ul>',
+    //     'depth'           => 0,
+    //   )
+    // );
 
     register_nav_menu($location, $name);
   }
 }
 // ToDo: Fix broken menu initialization
-// add_action('init', 'wpeb_register_theme_menus');
+add_action('init', 'wpeb_register_theme_menus');
 
 /**
  * Remove the <div> surrounding the dynamic WP Navigation to clean up markup
