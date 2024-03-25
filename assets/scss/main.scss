@@ -39,6 +39,9 @@ $show-breakpoints: (mobile, mobileLandscape, tablet, desktop, wide);
 // @use "../../node_modules/rfs/scss";
 // @include scss.rfs(26px, font-size);
 
+// Basic Styles
+////////////////////////////////////////////////
+
 html,
 body {
   height: 100%;
@@ -47,15 +50,13 @@ body {
   padding: 0;
   left: 0;
   top: 0;
-  font: {
-    size: 100%;
-    family: variables.$font-family-base;
-    weight: variables.$fnorm;
-  }
+  font-size: 100%;
+  font-family: variables.$font-family-base;
+  font-weight: variables.$fnorm;
+  line-height: variables.$base-line-height;
 }
 
 body {
-  line-height: variables.$base-line-height;
   min-width: 320px;
   transition: variables.$base-transition;
   color: variables.$base-font-color;
@@ -69,19 +70,20 @@ h3,
 h4,
 h5,
 h6 {
-  font: {
-    size: variables.$base-font-size;
-    family: variables.$heading-font-family;
-  }
+  //font-size: variables.$base-font-size;
+  @include scss.rfs(variables.$base-font-size, font-size);
+  font-family: variables.$heading-font-family;
   line-height: variables.$heading-line-height;
-  margin: 0 0 variables.$small-spacing;
+  //margin: 0 0 variables.$small-spacing;
+  @include scss.rfs(0 0 variables.$small-spacing, margin);
 }
 
 p,
 pre,
 img,
 picture {
-  margin: 0 0 variables.$small-spacing;
+  //margin: 0 0 variables.$small-spacing;
+  @include scss.rfs(0 0 variables.$small-spacing, margin);
   max-width: 100%;
 }
 
@@ -102,9 +104,13 @@ a {
 }
 
 hr {
-  margin: variables.$base-spacing 0;
+  //margin: 0 0 variables.$small-spacing;
+  @include scss.rfs(0 0 variables.$small-spacing, margin);
   border-bottom: variables.$base-border;
 }
+
+// Grid
+////////////////////////////////////////////////
 
 .wrapper,
 .container {
@@ -118,6 +124,9 @@ hr {
   max-width: variables.$width;
 }
 
+// Header
+////////////////////////////////////////////////
+
 header,
 nav ul li {
   display: inline-block;
@@ -130,11 +139,29 @@ header {
   }
 }
 
+// Content
+////////////////////////////////////////////////
+
+
+// Footer
+////////////////////////////////////////////////
+
 footer {
   height: variables.$footer;
   margin: auto 0;
   background-color: variables.$gray-light;
 }
+
+// Mobile
+////////////////////////////////////////////////
+
+@media (min-width: 576px) { .col-xs-example {} }
+
+@media (min-width: 768px) { .col-sm-example {} }
+
+@media (min-width: 992px) { .col-md-example {} }
+
+@media (min-width: 1200px) { .col-lg-example {} }
 
 @include meta.load-css("media");
 // @import "fonts/font_roboto";

@@ -1,30 +1,28 @@
-<?php
-  get_header(); ?>
+<?php get_header(); ?>
 
-<header class="page-header">
-  <?php
-    if (is_home() && ! is_front_page() && ! empty(
-      single_post_title(
-        '',
-        false
-      )
-      )) : ?>
-      <h1 class="page-title"><?php
-          single_post_title(); ?></h1>
-    <?php
-    else: ?>
-      <h1 class="page-title"><?php
-          _e('Latest Posts', 'wpeb'); ?></h1>
-    <?php
-    endif; ?>
-</header><!-- .page-header -->
+  <header class="post-header col-12">
+    <?php if (is_home() && ! is_front_page() && ! empty( single_post_title('',false))) : ?>
+      <h1 class="post-title"><?php single_post_title(); ?></h1>
+    <?php else: ?>
+      <h1 class="post-title"><?php _e('Latest Posts', 'wpeb'); ?></h1>
+    <?php endif; ?>
+  </header><!-- .post-header -->
 
-<?php
-  get_template_part('template-parts/loop'); ?>
-<?php
-  get_template_part('template-parts/pagination'); ?>
+  <div class="loop-container col-9">
+    <div class="container">
+      <div class="grid">
 
-<?php
-  get_sidebar(); ?>
-<?php
-  get_footer(); ?>
+        <?php get_template_part('template-parts/loop'); ?>
+
+        <?php get_template_part('template-parts/pagination'); ?>
+
+      </div>
+      <!-- /.grid -->
+    </div>
+    <!-- /.container -->
+  </div>
+  <!-- /.loop-container -->
+
+  <?php get_sidebar(); ?>
+
+<?php get_footer(); ?>

@@ -51,3 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+jQuery(document).ready(function() {
+  const $ = jQuery
+
+});
+
+
+console.log('All Scripts Loaded');

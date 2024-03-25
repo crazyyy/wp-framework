@@ -1,17 +1,15 @@
 <?php get_header(); ?>
 
-	<?php if ( have_posts() ) { ?>
-    <header class="page-header">
-      <h1 class="page-title">
-        <?php
-        printf( esc_html__( 'Results for "%s"', 'wpeb' ),
+  <?php if ( have_posts() ) { ?>
+    <header class="post-header col-12">
+      <h1 class="post-title">
+        <?php printf( esc_html__( 'Results for "%s"', 'wpeb' ),
           '<span class="page-description search-term">' . esc_html( get_search_query() ) . '</span>'
-        );
-        ?>
+        ); ?>
       </h1>
-    </header><!-- .page-header -->
+    </header><!-- /.post-header -->
 
-    <div class="search-result-count default-max-width">
+    <div class="search-result-count default-max-width col-12">
       <?php
       printf(
         esc_html(
@@ -27,16 +25,30 @@
       ?>
     </div><!-- .search-result-count -->
 
-    <?php get_template_part( 'template-parts/loop' ); ?>
-    <?php get_template_part( 'template-parts/pagination' ); ?>
+    <div class="loop-container col-9">
+      <div class="container">
+        <div class="grid">
 
-    <?php } else { ?>
+          <?php get_template_part('template-parts/loop'); ?>
 
-      <header class="page-header">
-        <h1 class="page-title"><?php __( 'Nothing Found', 'wpeb' ); ?></h1>
-      </header><!-- .page-header -->
+          <?php get_template_part('template-parts/pagination'); ?>
 
-    <?php } ?>
+        </div>
+        <!-- /.grid -->
+      </div>
+      <!-- /.container -->
+    </div>
+    <!-- /.loop-container -->
+
+  <?php } else { ?>
+
+    <header class="post-header col-12">
+      <h1 class="post-title">
+        <?php __( 'Nothing Found', 'wpeb' ); ?>
+      </h1>
+    </header><!-- .post-header -->
+
+  <?php } ?>
 
   <?php get_sidebar(); ?>
 

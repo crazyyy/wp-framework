@@ -62,9 +62,9 @@ function wpeb_enqueue_theme_header_scripts()
 
   wp_enqueue_script(
     'jquery',
-    '//cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js',
+    '//cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js',
     array(),
-    '3.7.0'
+    '3.7.1'
   );
 
   wp_enqueue_script(
