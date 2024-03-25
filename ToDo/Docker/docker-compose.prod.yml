@@ -1,0 +1,49 @@
+version: '2'
+services:
+  ##local DB
+  pente_db:
+    image: 'mariadb:latest'
+    container_name: PENTE_DB
+    env_file: docker/env/.env
+    ports:
+      - "3309:3306"
+    volumes:
+      - ./docker/db/mysql-data:/var/lib/mysql
+      - ./docker/db/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+
+  ##WordPress
+  pente_wp:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: pente_wp
+    container_name: PENTE_WP
+    env_file: docker/env/.env
+    environment:
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_CACHE', false);
+        define('WP_MEMORY_LIMIT', '512M');
+        define('WP_MAX_MEMORY_LIMIT', '512M');
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./docker/robots.txt:/var/www/html/robots.txt
+      - ./docker/.htaccess:/var/www/html/.htaccess
+    depends_on:
+      - pente_db
+    links:
+      - pente_db
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+
