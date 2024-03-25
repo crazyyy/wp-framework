@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 jQuery(document).ready(function() {
+  // Place your code that needs to run after the document has finished loading
   const $ = jQuery
 
 });
