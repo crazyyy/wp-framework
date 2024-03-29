@@ -17,16 +17,41 @@
 
 @use "import/wordpress";
 
+//////////////////////////// col-     | mobile      |   320-575
+$mobile: 320px; // mobile
+$mobile-lst: 575px; // mobile last
+//////////////////////////// col-xs   | mobile wide |   576-767
+$xs: 576px; // xs
+$xs-lst: 767px; // xs last
+//////////////////////////// col-sm   | tablet      |   768-991
+$sm: 768px; // sm tablet
+$sm-lst: 991px; // sm tablet last
+//////////////////////////// col-md   | desktop     |   992-1199
+$md: 992px; // desktop
+$md-lst: 1199px; // md desktop last
+//////////////////////////// col-lg   | hd          |   1200-1599
+$lg: 1200px; // hd lg
+$lg-lst: 1599px; // hd lg last
+//////////////////////////// col-xlg  | full-hd     |   1600+
+$xlg: 1600px; // full-hd xlg
+
 $breakpoints: (
-  mobile: 320px,
-  tablet: 768px,
-  desktop: 992px,
-  wide: 1200px,
+  mobile:     $mobile, // mobile
+  mobile-lst: $mobile-lst, // mobile last
+  xs:     $xs, // xs
+  xs-lst: $xs-lst, // xs last
+  sm:     $sm, // sm tablet
+  sm-lst: $sm-lst, // sm tablet last
+  md:     $md, // desktop
+  md-lst: $md-lst, // md desktop last
+  lg:      $lg, // hd lg
+  lg-last: $lg-lst, // hd lg last
+  xlg: $xlg, // full-hd xlg
   // Tweakpoints
-  desktopAd: 810px,
-  mobileLandscape: 480px,
+  //desktopAd: 810px,
+  //mobileLandscape: 480px,
 );
-$show-breakpoints: (mobile, mobileLandscape, tablet, desktop, wide);
+$show-breakpoints: (mobile, xs, sm, md, lg, xlg);
 @use "import/mq" with (
   $breakpoints: $breakpoints,
   //$show-breakpoints: $show-breakpoints
@@ -34,10 +59,19 @@ $show-breakpoints: (mobile, mobileLandscape, tablet, desktop, wide);
 @include mq.add-breakpoint(xs, 576px);
 @include mq.add-breakpoint(xlg, 1600px);
 
+//@media (min-width: $lg) and (max-width: $lg-lst) {}
+
 // https://github.com/twbs/rfs
 // https://codepen.io/MartijnCuppens/pen/vqaEBG?editors=0100
 // @use "../../node_modules/rfs/scss";
 // @include scss.rfs(26px, font-size);
+
+// Grid Debugger
+//[class*=col-] {
+//  box-sizing: border-box;
+//  border: 1px solid red;
+//  margin-bottom: 0 !important;
+//}
 
 // Basic Styles
 ////////////////////////////////////////////////
@@ -115,7 +149,7 @@ hr {
 .wrapper,
 .container {
   position: relative;
-  width: 100%;
+  //width: 100%; // fix responsive
   min-height: 100%;
   margin: 0 auto;
 }
