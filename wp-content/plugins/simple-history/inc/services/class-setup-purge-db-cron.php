@@ -2,10 +2,13 @@
 
 namespace Simple_History\Services;
 
-use Simple_History\Simple_History;
 use Simple_History\Helpers;
 
+/**
+ * Setup a wp-cron job that daily checks if the database should be cleared.
+ */
 class Setup_Purge_DB_Cron extends Service {
+	/** @inheritdoc */
 	public function loaded() {
 		add_action( 'after_setup_theme', array( $this, 'setup_cron' ) );
 	}
@@ -37,6 +40,7 @@ class Setup_Purge_DB_Cron extends Service {
 	public function maybe_purge_db() {
 		/**
 		 * Day of week today.
+		 *
 		 * @int $current_day_of_week
 		 */
 		$current_day_of_week = (int) gmdate( 'N' );
@@ -64,6 +68,9 @@ class Setup_Purge_DB_Cron extends Service {
 
 	/**
 	 * Removes old entries from the db.
+	 *
+	 * Removes in batches of 100 000 rows.
+	 *
 	 */
 	public function purge_db() {
 		$do_purge_history = true;
@@ -75,7 +82,7 @@ class Setup_Purge_DB_Cron extends Service {
 			return;
 		}
 
-		$days = $this->simple_history->get_clear_history_interval();
+		$days = Helpers::get_clear_history_interval();
 
 		// Never clear log if days = 0.
 		if ( 0 == $days ) {
@@ -129,7 +136,7 @@ class Setup_Purge_DB_Cron extends Service {
 			 */
 			do_action( 'simple_history/db/events_purged', $days, $num_rows_purged );
 
-			Helpers::get_cache_incrementor( true );
+			Helpers::clear_cache();
 		}
 	}
 }

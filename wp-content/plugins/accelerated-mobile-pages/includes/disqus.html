@@ -31,10 +31,14 @@
     };
 
     (function () {
-        var d = document, s = d.createElement('script');
-        s.src = disqus_name;
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
+        const pattern = /https:\/\/[\w-]+\.disqus\.com/;
+        const matches = disqus_name.match(pattern);
+        if (matches) {
+            var d = document, s = d.createElement('script');
+            s.src = matches;
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
     })();
 
     (function () {

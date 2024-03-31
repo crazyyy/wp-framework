@@ -8,7 +8,7 @@ use Simple_History\Helpers;
  * Logs WordPress menu edits
  */
 class Menu_Logger extends Logger {
-
+	/** @var string Logger slug */
 	public $slug = 'SimpleMenuLogger';
 
 	/**
@@ -46,13 +46,16 @@ class Menu_Logger extends Logger {
 							'deleted_menu',
 						),
 					),
-				), // end search array
-			), // end labels
+				),
+			),
 		);
 
 		return $arr_info;
 	}
 
+	/**
+	 * Called when logger is loaded.
+	 */
 	public function loaded() {
 		/*
 		 * Fires after a navigation menu has been successfully deleted.
@@ -77,10 +80,10 @@ class Menu_Logger extends Logger {
 		// good to log because user might not end up saving the changes
 		// add_action("wp_update_nav_menu_item", array($this, "on_wp_update_nav_menu_item"), 10, 3 );
 		// Fired before "wp_update_nav_menu" below, to remember menu layout before it's updated
-		// so we can't detect changes
+		// so we can't detect changes.
 		add_action( 'load-nav-menus.php', array( $this, 'on_load_nav_menus_page_detect_update' ) );
 
-		// Detect menu location change in "manage locations"
+		// Detect menu location change in "manage locations".
 		add_action( 'load-nav-menus.php', array( $this, 'on_load_nav_menus_page_detect_locations_update' ) );
 
 		add_filter( 'simple_history/categories_logger/skip_taxonomies', array( $this, 'on_categories_logger_skip_taxonomy' ) );
@@ -93,7 +96,7 @@ class Menu_Logger extends Logger {
 	 * so don't let categories logger log this
 	 * or there will be duplicates.
 	 *
-	 * @param mixed $taxonomies_to_skip
+	 * @param mixed $taxonomies_to_skip Array with taxonomies to skip.
 	 * @return array
 	 */
 	public function on_categories_logger_skip_taxonomy( $taxonomies_to_skip ) {
@@ -106,20 +109,7 @@ class Menu_Logger extends Logger {
 	 * it's fired after menu is deleted, so we don't have the name in this action
 	 */
 	public function on_load_nav_menus_page_detect_delete() {
-
-		/*
-		http://playground-root.ep/wp-admin/nav-menus.php?menu=22&action=delete&0=http%3A%2F%2Fplayground-root.ep%2Fwp-admin%2F&_wpnonce=f52e8a31ba
-		$_REQUEST:
-		Array
-		(
-			[menu] => 22
-			[action] => delete
-			[0] => http://playground-root.ep/wp-admin/
-			[_wpnonce] => ...
-		)
-		*/
-
-		// Check that needed vars are set
+		// Check that needed vars are set.
 		if ( ! isset( $_REQUEST['menu'], $_REQUEST['action'] ) ) {
 			return;
 		}
@@ -128,7 +118,7 @@ class Menu_Logger extends Logger {
 			return;
 		}
 
-		$menu_id = $_REQUEST['menu'];
+		$menu_id = sanitize_text_field( wp_unslash( $_REQUEST['menu'] ) );
 		if ( ! is_nav_menu( $menu_id ) ) {
 			return;
 		}
@@ -145,24 +135,11 @@ class Menu_Logger extends Logger {
 	}
 
 	/**
-	 * Fired after menu is deleted, so we don't have the name in this action
-	 * So that's why we can't use this only
+	 * Detect menu being created
+	 *
+	 * @param int   $term_id ID of the new menu.
+	 * @param array $menu_data An array of menu data.
 	 */
-	/*
-	function on_wp_delete_nav_menu($menu_term_id) {
-
-		$this->info_message(
-			"deleted_menu",
-			array(
-				"menu_term_id" => $menu_term_id,
-				"menu" => print_r($menu, true),
-				"request" => print_r($_REQUEST, true),
-			)
-		);
-
-	}
-	*/
-
 	public function on_wp_create_nav_menu( $term_id, $menu_data ) {
 
 		$menu = wp_get_nav_menu_object( $term_id );
@@ -180,27 +157,10 @@ class Menu_Logger extends Logger {
 		);
 	}
 
-	/*
-	function on_wp_update_nav_menu_item($menu_id, $menu_item_db_id, $args) {
-
-		$this->info_message(
-			"edited_menu_item",
-			array(
-				"menu_id" => $menu_id,
-				"menu_item_db_id" => $menu_item_db_id,
-				"args" => Helpers::json_encode($args),
-				"request" => Helpers::json_encode($_REQUEST)
-			)
-		);
-
-	}
-	*/
-
 	/**
 	 * Detect menu being saved
 	 */
 	public function on_load_nav_menus_page_detect_update() {
-
 		/*
 		This is the data to be saved
 		$_REQUEST:
@@ -224,44 +184,44 @@ class Menu_Logger extends Logger {
 		)
 		*/
 
-		// Check that needed vars are set
+		// Check that needed vars are set.
 		if ( ! isset( $_REQUEST['menu'], $_REQUEST['action'], $_REQUEST['menu-name'] ) ) {
 			return;
 		}
 
-		// Only go on for update action
+		// Only go on for update action.
 		if ( 'update' !== $_REQUEST['action'] ) {
 			return;
 		}
 
-		// Make sure we got the id of a menu
-		$menu_id = $_REQUEST['menu'];
+		// Make sure we got the id of a menu.
+		$menu_id = sanitize_text_field( wp_unslash( $_REQUEST['menu'] ) );
 		if ( ! is_nav_menu( $menu_id ) ) {
 			return;
 		}
 
-		// Get saved menu. May be empty if this is the first time we save the menu
+		// Get saved menu. May be empty if this is the first time we save the menu.
 		$arr_prev_menu_items = wp_get_nav_menu_items( $menu_id );
 
-		// Compare new items to be saved with old version
+		// Compare new items to be saved with old version.
 		$old_ids = wp_list_pluck( $arr_prev_menu_items, 'db_id' );
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$new_ids = array_values( isset( $_POST['menu-item-db-id'] ) ? (array) $_POST['menu-item-db-id'] : array() );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$new_ids = array_values( isset( $_POST['menu-item-db-id'] ) ? (array) wp_unslash( $_POST['menu-item-db-id'] ) : array() );
 
-		// Get ids of added and removed post ids
+		// Get ids of added and removed post ids.
 		$arr_removed = array_diff( $old_ids, $new_ids );
 		$arr_added = array_diff( $new_ids, $old_ids );
 
 		// Get old version location
 		// $prev_menu = wp_get_nav_menu_object( $menu_id );
 		// $locations = get_registered_nav_menus();
-		// $menu_locations = get_nav_menu_locations();
+		// $menu_locations = get_nav_menu_locations();.
 		$this->info_message(
 			'edited_menu',
 			array(
 				'menu_id' => $menu_id,
-				// phpcs:ignore WordPress.Security.NonceVerification.Missing
-				'menu_name' => sanitize_text_field( $_POST['menu-name'] ),
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+				'menu_name' => sanitize_text_field( wp_unslash( $_POST['menu-name'] ) ),
 				'menu_items_added' => count( $arr_added ),
 				'menu_items_removed' => count( $arr_removed ),
 			)
@@ -270,6 +230,8 @@ class Menu_Logger extends Logger {
 
 	/**
 	 * Get detailed output
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_details_output( $row ) {
 
@@ -281,14 +243,14 @@ class Menu_Logger extends Logger {
 			$output .= '<p>';
 			$output .= '<span class="SimpleHistoryLogitem__inlineDivided">';
 			$output .= sprintf(
-					// translators: Number of menu items added
+					// translators: Number of menu items added.
 				_nx( '%1$s menu item added', '%1$s menu items added', $context['menu_items_added'], 'menu logger', 'simple-history' ),
 				esc_attr( $context['menu_items_added'] )
 			);
 			$output .= '</span> ';
 			$output .= '<span class="SimpleHistoryLogitem__inlineDivided">';
 			$output .= sprintf(
-					// translators: Number of menu items removed
+					// translators: Number of menu items removed.
 				_nx( '%1$s menu item removed', '%1$s menu items removed', $context['menu_items_removed'], 'menu logger', 'simple-history' ),
 				esc_attr( $context['menu_items_removed'] )
 			);
@@ -304,7 +266,7 @@ class Menu_Logger extends Logger {
 	 */
 	public function on_load_nav_menus_page_detect_locations_update() {
 
-		// Check that needed vars are set
+		// Check that needed vars are set.
 		if ( ! isset( $_REQUEST['menu'], $_REQUEST['action'] ) ) {
 			return;
 		}
@@ -322,8 +284,8 @@ class Menu_Logger extends Logger {
 				)
 		)
 		*/
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$menu_locations = (array) $_POST['menu-locations'];
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$menu_locations = (array) wp_unslash( $_POST['menu-locations'] );
 
 		$this->info_message(
 			'edited_menu_locations',

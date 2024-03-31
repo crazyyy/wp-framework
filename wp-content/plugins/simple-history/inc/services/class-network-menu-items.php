@@ -4,7 +4,13 @@ namespace Simple_History\Services;
 
 use Simple_History\Helpers;
 
+/**
+ * Add a "View history" item/shortcut to the admin bar.
+ */
 class Network_Menu_Items extends Service {
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_network_menu_item' ), 40 );
 		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_menu_item' ), 40 );
@@ -17,6 +23,7 @@ class Network_Menu_Items extends Service {
 	 * Useful because Simple History is something at least the author of this plugin often use on a site :)
 	 *
 	 * @since 2.7.1
+	 * @param \WP_Admin_Bar $wp_admin_bar Admin bar instance.
 	 */
 	public function add_admin_bar_network_menu_item( $wp_admin_bar ) {
 		/**
@@ -42,13 +49,13 @@ class Network_Menu_Items extends Service {
 			return;
 		}
 
-		// Setting to show as page must be true
-		if ( ! $this->simple_history->setting_show_as_page() ) {
+		// Setting to show as page must be true.
+		if ( ! Helpers::setting_show_as_page() ) {
 			return;
 		}
 
-		// User must have capability to view the history page
-		if ( ! current_user_can( $this->simple_history->get_view_history_capability() ) ) {
+		// User must have capability to view the history page.
+		if ( ! current_user_can( Helpers::get_view_history_capability() ) ) {
 			return;
 		}
 
@@ -59,17 +66,14 @@ class Network_Menu_Items extends Service {
 			if ( Helpers::is_plugin_active( SIMPLE_HISTORY_BASENAME ) ) {
 				$menu_id = 'simple-history-blog-' . $blog->userblog_id;
 				$parent_menu_id = 'blog-' . $blog->userblog_id;
-				$url = admin_url(
-					apply_filters( 'simple_history/admin_location', 'index' ) . '.php?page=simple_history_page'
-				);
 
 				// Each network site is added by WP core with id "blog-1", "blog-2" ... "blog-n"
-				// https://codex.wordpress.org/Function_Reference/add_node
+				// https://codex.wordpress.org/Function_Reference/add_node.
 				$args = array(
 					'id' => $menu_id,
 					'parent' => $parent_menu_id,
 					'title' => _x( 'View History', 'Admin bar network name', 'simple-history' ),
-					'href' => $url,
+					'href' => $this->simple_history->get_view_history_page_admin_url(),
 					'meta' => array(
 						'class' => 'ab-item--simplehistory',
 					),
@@ -88,10 +92,11 @@ class Network_Menu_Items extends Service {
 	 * Useful because Simple History is something at least the author of this plugin often use on a site :)
 	 *
 	 * @since 2.7.1
+	 * @param \WP_Admin_Bar $wp_admin_bar Admin bar object.
 	 */
 	public function add_admin_bar_menu_item( $wp_admin_bar ) {
 		/**
-		 * Filter to control if admin bar shortcut should be added
+		 * Filter to control if admin bar shortcut should be added.
 		 *
 		 * @since 2.7.1
 		 *
@@ -103,30 +108,26 @@ class Network_Menu_Items extends Service {
 			return;
 		}
 
-		// Don't show for logged out users
+		// Don't show for logged out users.
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
 
-		// Setting to show as page must be true
-		if ( ! $this->simple_history->setting_show_as_page() ) {
+		// Setting to show as page must be true.
+		if ( ! Helpers::setting_show_as_page() ) {
 			return;
 		}
 
-		// User must have capability to view the history page
-		if ( ! current_user_can( $this->simple_history->get_view_history_capability() ) ) {
+		// User must have capability to view the history page.
+		if ( ! current_user_can( Helpers::get_view_history_capability() ) ) {
 			return;
 		}
-
-		$menu_id = 'simple-history-view-history';
-		$parent_menu_id = 'site-name';
-		$url = admin_url( apply_filters( 'simple_history/admin_location', 'index' ) . '.php?page=simple_history_page' );
 
 		$args = array(
-			'id' => $menu_id,
-			'parent' => $parent_menu_id,
+			'id' => 'simple-history-view-history',
+			'parent' => 'site-name',
 			'title' => _x( 'View History', 'Admin bar name', 'simple-history' ),
-			'href' => $url,
+			'href' => $this->simple_history->get_view_history_page_admin_url(),
 			'meta' => array(
 				'class' => 'ab-item--simplehistory',
 			),
@@ -134,5 +135,4 @@ class Network_Menu_Items extends Service {
 
 		$wp_admin_bar->add_node( $args );
 	}
-
 }

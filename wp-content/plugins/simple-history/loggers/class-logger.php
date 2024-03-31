@@ -8,6 +8,8 @@ use Simple_History\Simple_History;
 use Simple_History\Log_Levels;
 use Simple_History\Log_Initiators;
 use Simple_History\Helpers;
+use Simple_History\Event_Details\Event_Details_Container_Interface;
+use Simple_History\Event_Details\Event_Details_Group;
 
 /**
  * Abstract base class for loggers.
@@ -45,7 +47,7 @@ abstract class Logger {
 	 * which results in the original, untranslated, string being added to the log and database
 	 * the translated string are then only used when showing the log in the GUI.
 	 *
-	 * @array $messages
+	 * @var array $messages
 	 */
 	public $messages;
 
@@ -63,6 +65,13 @@ abstract class Logger {
 	 * @since 2.2x
 	 */
 	public $last_insert_context;
+
+	/**
+	 * Data of last inserted row.
+	 *
+	 * @var array $last_insert_data
+	 */
+	public $last_insert_data;
 
 	/**
 	 * Simple History instance.
@@ -88,7 +97,7 @@ abstract class Logger {
 	/**
 	 * Constructor. Remember to call this as parent constructor if making a child logger.
 	 *
-	 * @param Simple_History $simple_history
+	 * @param Simple_History $simple_history Simple History instance.
 	 */
 	public function __construct( $simple_history = null ) {
 		$this->simple_history = $simple_history;
@@ -118,7 +127,7 @@ abstract class Logger {
 	/**
 	 * Get array with information about this logger.
 	 *
-	 * @return array<mixed> Array with keys 'name', 'description', 'messages', and so on.
+	 * @return array<string,mixed> Array with keys 'name', 'description', 'messages', and so on.
 	 *               See existing loggers for examples.
 	 */
 	abstract public function get_info();
@@ -129,6 +138,7 @@ abstract class Logger {
 	 * or null if no value exists.
 	 *
 	 * @since 2.5.4
+	 * @param string $key Key to get value for.
 	 * @return Mixed
 	 */
 	public function get_info_value_by_key( $key ) {
@@ -147,7 +157,11 @@ abstract class Logger {
 	}
 
 	/**
-	 * @param object $row
+	 * Returns the header initiator output for a row.
+	 * Example return value is similar to:
+	 * "You" or "par • par.thernstrom@gmail.com"
+	 *
+	 * @param object $row Log row.
 	 * @return string HTML
 	 */
 	public function get_log_row_header_initiator_output( $row ) {
@@ -166,17 +180,16 @@ abstract class Logger {
 					'<strong class="SimpleHistoryLogitem__inlineDivided">WP-CLI</strong> ';
 				break;
 
-			// wp_user = wordpress uses, but user may have been deleted since log entry was added
+			// wp_user = wordpress uses, but user may have been deleted since log entry was added.
 			case 'wp_user':
 				$user_id = $row->context['_user_id'] ?? null;
 
 				$user = get_user_by( 'id', $user_id );
 				if ( $user_id > 0 && ( $user ) ) {
 					// Sender is user and user still exists.
-					$is_current_user =
-						get_current_user_id() == $user_id;
+					$is_current_user = get_current_user_id() == $user_id;
 
-					// get user role, as done in user-edit.php
+					// get user role, as done in user-edit.php.
 					$wp_roles = $GLOBALS['wp_roles'];
 					$user_roles = array_intersect(
 						array_values( (array) $user->roles ),
@@ -240,11 +253,7 @@ abstract class Logger {
 					);
 				} elseif ( $user_id > 0 ) {
 					// Sender was a user, but user is deleted now
-					// output all info we have
-					// _user_id
-					// _username
-					// _user_login
-					// _user_email
+					// output all info we have.
 					$initiator_html .= sprintf(
 						'<strong class="SimpleHistoryLogitem__inlineDivided">' .
 							/* translators: 1: user id, 2: user email address, 3: user account name. */
@@ -288,9 +297,8 @@ abstract class Logger {
 					'</strong>';
 				break;
 
-			// no initiator
+			// no initiator.
 			case null:
-				// $initiator_html .= "<strong class='SimpleHistoryLogitem__inlineDivided'>Null</strong>";
 				break;
 
 			default:
@@ -317,17 +325,23 @@ abstract class Logger {
 		return $initiator_html;
 	}
 
+	/**
+	 * Generate date output for a row.
+	 *
+	 * @param object $row Log row.
+	 * @return string HTML
+	 */
 	public function get_log_row_header_date_output( $row ) {
 		// HTML for date
 		// Date (should...) always exist
-		// http://developers.whatwg.org/text-level-semantics.html#the-time-element
+		// http://developers.whatwg.org/text-level-semantics.html#the-time-element.
 		$date_html = '';
 		$str_when = '';
 
 		// $row->date is in GMT
 		$date_datetime = new DateTime( $row->date, new DateTimeZone( 'GMT' ) );
 
-		// Current datetime in GMT
+		// Current datetime in GMT.
 		$time_current = strtotime( current_time( 'mysql', 1 ) );
 
 		/**
@@ -390,7 +404,7 @@ abstract class Logger {
 				strtotime( get_date_from_gmt( $row->date ) )
 			);
 		} else {
-			// Show "nn minutes ago" when event is xx seconds ago or earlier
+			// Show "nn minutes ago" when event is xx seconds ago or earlier.
 			$date_human_time_diff = human_time_diff(
 				$date_datetime->getTimestamp(),
 				$time_current
@@ -403,7 +417,8 @@ abstract class Logger {
 			);
 		}
 
-		$item_permalink = admin_url( apply_filters( 'simple_history/admin_location', 'index' ) . '.php?page=simple_history_page' );
+		$item_permalink = $this->simple_history->get_view_history_page_admin_url();
+
 		if ( ! empty( $row->id ) ) {
 			$item_permalink .= "#item/{$row->id}";
 		}
@@ -416,7 +431,7 @@ abstract class Logger {
 				$date_datetime->format( 'Y-m-d H:i:s' ),
 				$date_and_time_format
 			), // 1 local time
-			$date_datetime->format( $date_and_time_format ), // GMT time
+			$date_datetime->format( $date_and_time_format ), // GMT time.
 			PHP_EOL // 3, new line
 		);
 
@@ -463,18 +478,19 @@ abstract class Logger {
 	/**
 	 * Get the log row header output for the row when "name_via" is set.
 	 *
-	 * @param object $row Log row
+	 * @param object $row Log row.
 	 * @return string HTML
 	 */
 	public function get_log_row_header_using_plugin_output( $row ) {
 		// Logger "via" info in header, i.e. output some extra
 		// info next to the time to make it more clear what plugin etc.
-		// that "caused" this event
+		// that "caused" this event.
 		$logger_name_via = $this->get_info_value_by_key( 'name_via' );
 
 		if ( ! $logger_name_via ) {
 			return;
 		}
+
 		$via_html = "<span class='SimpleHistoryLogitem__inlineDivided SimpleHistoryLogitem__via'>";
 		$via_html .= $logger_name_via;
 		$via_html .= '</span>';
@@ -493,7 +509,7 @@ abstract class Logger {
 	 *   Also each key can exist multiple times.
 	 *   Final key name will be like "_server_http_x_forwarded_for_0", "_server_http_x_forwarded_for_1" and so on.
 	 *
-	 * @param mixed $row
+	 * @param mixed $row Log row.
 	 * @return string
 	 */
 	public function get_log_row_header_ip_address_output( $row ) {
@@ -531,7 +547,7 @@ abstract class Logger {
 
 		// Output single or plural text.
 		if ( count( $arr_ip_addresses ) === 1 ) {
-			// Single ip address
+			// Single ip address.
 			$iplookup_link = sprintf(
 				'https://ipinfo.io/%1$s',
 				esc_attr( Helpers::get_valid_ip_address_from_anonymized( $first_ip_address ) )
@@ -578,14 +594,15 @@ abstract class Logger {
 	}
 
 	/**
-	 * Returns header output for a log row.
+	 * Returns header output for a log row,
+	 * by concatenating the output from the other header methods.
 	 *
 	 * Format should be common for all log rows and should be like:
-	 * Username (user role) · Date · IP Address · Via plugin abc
+	 * Username (user role) • Date • IP Address • Via plugin abc
 	 * I.e.:
-	 * Initiator * Date/time * IP Address * Via logger
+	 * Initiator • Date/time • IP Address • Via logger
 	 *
-	 * @param object $row Row data
+	 * @param object $row Row data.
 	 * @return string HTML
 	 */
 	public function get_log_row_header_output( $row ) {
@@ -654,7 +671,7 @@ abstract class Logger {
 	 * Image that the name of the user is added in front of the text:
 	 * Jessie James: Edited post "About the company"
 	 *
-	 * @param object $row Log row
+	 * @param object $row Log row.
 	 * @return string Plain text
 	 */
 	public function get_log_row_plain_text_output( $row ) {
@@ -662,9 +679,9 @@ abstract class Logger {
 		$message_key = $row->context['_message_key'] ?? null;
 
 		// Message is translated here, but translation must be added in
-		// plain text before
+		// plain text before.
 		if ( empty( $message_key ) ) {
-			// Message key did not exist, so check if we should translate using textdomain
+			// Message key did not exist, so check if we should translate using textdomain.
 			if ( ! empty( $row->context['_gettext_domain'] ) ) {
    				// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain, WordPress.WP.I18n.NonSingularStringLiteralText
 				$message = __( $message, $row->context['_gettext_domain'] );
@@ -682,7 +699,7 @@ abstract class Logger {
 
 		// All messages are escaped by default.
 		// If you need unescaped output override this method
-		// in your own logger
+		// in your own logger.
 		$html = esc_html( $html );
 
 		/**
@@ -706,6 +723,8 @@ abstract class Logger {
 	 * Get output for image
 	 * Image can be for example gravatar if sender is user,
 	 * or other images if sender i system, wordpress, and so on
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_sender_image_output( $row ) {
 		$sender_image_html = '';
@@ -717,13 +736,13 @@ abstract class Logger {
 			$user_id = $row->context['_user_id'] ?? null;
 			$user = get_user_by( 'id', $user_id );
 			if ( $user_id > 0 && ( $user ) ) {
-					// Sender was user
+					// Sender was user.
 					$sender_image_html = Helpers::get_avatar(
 						$user->user_email,
 						$sender_image_size
 					);
 			} elseif ( $user_id > 0 ) {
-				// Sender was a user, but user is deleted now
+				// Sender was a user, but user is deleted now.
 				$sender_image_html = Helpers::get_avatar(
 					'',
 					$sender_image_size
@@ -758,8 +777,8 @@ abstract class Logger {
 	 * Example usage is if a user has uploaded an image then a
 	 * thumbnail of that image can bo outputted here
 	 *
-	 * @param object $row
-	 * @return string HTML-formatted output
+	 * @param object $row Log row.
+	 * @return string|Event_Details_Container_Interface|Event_Details_Group HTML-formatted output or Event_Details_Container (stringable object).
 	 */
 	public function get_log_row_details_output( $row ) {
 		$html = '';
@@ -780,8 +799,9 @@ abstract class Logger {
 	/**
 	 * System is unusable.
 	 *
-	 * @param string $message
-	 * @return null
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
+	 * @return Logger
 	 */
 	public function emergency( $message, array $context = array() ) {
 		return $this->log( Log_Levels::EMERGENCY, $message, $context );
@@ -790,8 +810,8 @@ abstract class Logger {
 	/**
 	 * System is unusable.
 	 *
-	 * @param string $message key from get_info messages array
-	 * @return null
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context Context to log.
 	 */
 	public function emergency_message( $message, array $context = array() ) {
 		return $this->log_by_message_key(
@@ -804,13 +824,17 @@ abstract class Logger {
 	/**
 	 * Log with message
 	 * Called from info_message(), error_message(), and so on
+	 *
+	 * @param string $SimpleLoggerLogLevelsLevel Log level.
+	 * @param string $messageKey Message key.
+	 * @param array  $context Context to log.
 	 */
 	private function log_by_message_key(
 		$SimpleLoggerLogLevelsLevel,
 		$messageKey,
 		$context
 	) {
-		// When logging by message then the key must exist
+		// When logging by message then the key must exist.
 		if ( ! isset( $this->messages[ $messageKey ]['untranslated_text'] ) ) {
 			return;
 		}
@@ -849,7 +873,8 @@ abstract class Logger {
 	/**
 	 * Action must be taken immediately.
 	 *
-	 * @param string $message
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function alert( $message, array $context = array() ) {
@@ -859,7 +884,8 @@ abstract class Logger {
 	/**
 	 * Action must be taken immediately.
 	 *
-	 * @param string $message key from get_info messages array
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context  Context to log.
 	 * @return null
 	 */
 	public function alert_message( $message, array $context = array() ) {
@@ -875,8 +901,8 @@ abstract class Logger {
 	 *
 	 * Example: Application component unavailable, unexpected exception.
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function critical( $message, array $context = array() ) {
@@ -886,8 +912,8 @@ abstract class Logger {
 	/**
 	 * Critical conditions.
 	 *
-	 * @param string $message key from get_info messages array
-	 * @return null
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context Context to log.
 	 */
 	public function critical_message( $message, array $context = array() ) {
 		if ( ! isset( $this->messages[ $message ]['untranslated_text'] ) ) {
@@ -904,8 +930,8 @@ abstract class Logger {
 	 * Runtime errors that do not require immediate action but should typically
 	 * be logged and monitored.
 	 *
-	 * @param string $message
-	 * @return null
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
 	 */
 	public function error( $message, array $context = array() ) {
 		return $this->log( Log_Levels::ERROR, $message, $context );
@@ -915,7 +941,8 @@ abstract class Logger {
 	 * Runtime errors that do not require immediate action but should typically
 	 * be logged and monitored.
 	 *
-	 * @param string $message key from get_info messages array
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function error_message( $message, array $context = array() ) {
@@ -932,8 +959,8 @@ abstract class Logger {
 	 * Example: Use of deprecated APIs, poor use of an API, undesirable things
 	 * that are not necessarily wrong.
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function warning( $message, array $context = array() ) {
@@ -943,7 +970,8 @@ abstract class Logger {
 	/**
 	 * Exceptional occurrences that are not errors.
 	 *
-	 * @param string $message key from get_info messages array
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function warning_message( $message, array $context = array() ) {
@@ -957,7 +985,8 @@ abstract class Logger {
 	/**
 	 * Normal but significant events.
 	 *
-	 * @param string $message
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function notice( $message, array $context = array() ) {
@@ -967,7 +996,8 @@ abstract class Logger {
 	/**
 	 * Normal but significant events.
 	 *
-	 * @param string $message key from get_info messages array
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function notice_message( $message, array $context = array() ) {
@@ -983,9 +1013,9 @@ abstract class Logger {
 	 *
 	 * Example: User logs in, SQL logs.
 	 *
-	 * @param string $message
-	 * @param array  $context
-	 * @return null
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
+	 * @return Logger SimpleLogger instance
 	 */
 	public function info( $message, array $context = array() ) {
 		return $this->log( Log_Levels::INFO, $message, $context );
@@ -996,8 +1026,8 @@ abstract class Logger {
 	 *
 	 * Example: User logs in, SQL logs.
 	 *
-	 * @param string $message key from get_info messages array
-	 * @param array  $context
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function info_message( $message, array $context = array() ) {
@@ -1011,7 +1041,8 @@ abstract class Logger {
 	/**
 	 * Detailed debug information.
 	 *
-	 * @param string $message
+	 * @param string $message Message to log.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function debug( $message, array $context = array() ) {
@@ -1021,7 +1052,8 @@ abstract class Logger {
 	/**
 	 * Detailed debug information.
 	 *
-	 * @param string $message key from get_info messages array
+	 * @param string $message key from get_info messages array.
+	 * @param array  $context Context to log.
 	 * @return null
 	 */
 	public function debug_message( $message, array $context = array() ) {
@@ -1062,7 +1094,7 @@ abstract class Logger {
 
 		/**
 		 * Filter that makes it possible to shortcut the logging of a message.
-		 * Return bool false to cancel logging .
+		 * Return bool false to cancel logging.
 		 *
 		 * @since 2.3.1
 		 *
@@ -1200,6 +1232,61 @@ abstract class Logger {
 		 */
 		$data = apply_filters( 'simple_history/log_insert_data', $data );
 
+		if ( ! is_array( $context ) ) {
+			$context = array();
+		}
+
+		$context = $this->append_user_context( $context );
+		$context = $this->append_remote_addr_to_context( $context );
+
+		/**
+		 * Filters the context to store for this event/row
+		 *
+		 * @example Skip adding things to the context table during logging.
+		 * Useful if you don't want to add cool and possible super useful info to your logged events.
+		 * Also nice to have if you want to make sure your database does not grow.
+		 *
+		 * ```php
+		 *  add_filter(
+		 *      'simple_history/log_insert_context',
+		 *      function ( $context, $data ) {
+		 *          unset( $context['_user_id'] );
+		 *          unset( $context['_user_login'] );
+		 *          unset( $context['_user_email'] );
+		 *          unset( $context['server_http_user_agent'] );
+		 *
+		 *          return $context;
+		 *      },
+		 *      10,
+		 *      2
+		 *  );
+		 * ```
+		 *
+		 * @since 2.0.29
+		 *
+		 * @param array $context Array with all context data to store. Modify and return this.
+		 * @param array $data Array with data used for parent row.
+		 * @param Logger $instance Reference to this logger instance.
+		 */
+		$context = apply_filters(
+			'simple_history/log_insert_context',
+			$context,
+			$data,
+			$this
+		);
+
+		/**
+		 * Filter that lets user modify both data and context before logging.
+		 *
+		 * @param array $arr_data_and_context Array with numerical keys [0] = data and [1] = context.
+		 * @param Logger $instance Reference to this logger instance.
+		 */
+		[$data, $context] = apply_filters(
+			'simple_history/log_insert_data_and_context',
+			array( $data, $context ),
+			$this
+		);
+
 		// Insert data into db.
 		$result = $wpdb->insert( $this->db_table, $data );
 
@@ -1209,57 +1296,15 @@ abstract class Logger {
 		} else {
 			$history_inserted_id = $wpdb->insert_id;
 
-			if ( ! is_array( $context ) ) {
-				$context = array();
-			}
-
-			$context = $this->append_user_context( $context );
-			$context = $this->append_remote_addr_to_context( $context );
-
-			/**
-			 * Filters the context to store for this event/row
-			 *
-			 * @example Skip adding things to the context table during logging.
-			 * Useful if you don't want to add cool and possible super useful info to your logged events.
-			 * Also nice to have if you want to make sure your database does not grow.
-			 *
-			 * ```php
-			 *  add_filter(
-			 *      'simple_history/log_insert_context',
-			 *      function ( $context, $data ) {
-			 *          unset( $context['_user_id'] );
-			 *          unset( $context['_user_login'] );
-			 *          unset( $context['_user_email'] );
-			 *          unset( $context['server_http_user_agent'] );
-			 *
-			 *          return $context;
-			 *      },
-			 *      10,
-			 *      2
-			 *  );
-			 * ```
-			 *
-			 * @since 2.0.29
-			 *
-			 * @param array $context Array with all context data to store. Modify and return this.
-			 * @param array $data Array with data used for parent row.
-			 * @param Logger $instance Reference to this logger instance.
-			 */
-			$context = apply_filters(
-				'simple_history/log_insert_context',
-				$context,
-				$data,
-				$this
-			);
-
 			// Insert all context values into db.
 			$this->append_context( $history_inserted_id, $context );
 		} // End if().
 
 		$this->last_insert_id = $history_inserted_id;
 		$this->last_insert_context = $context;
+		$this->last_insert_data = $data;
 
-		Helpers::get_cache_incrementor( true );
+		Helpers::clear_cache();
 
 		/**
 		 * Fired after an event has been logged.
@@ -1360,8 +1405,8 @@ abstract class Logger {
 	/**
 	 * Append user data to context.
 	 *
-	 * @param array $context
-	 * @return array
+	 * @param array $context Context.
+	 * @return array $context Context with user data appended.
 	 */
 	private function append_user_context( $context ) {
 		if ( isset( $context['_user_id'] ) ) {
@@ -1371,7 +1416,7 @@ abstract class Logger {
 		// Bail if `wp_get_current_user` is not loaded,
 		// because is not available early. (?)
 		// https://developer.wordpress.org/reference/functions/wp_get_current_user/
-		// https://core.trac.wordpress.org/ticket/14024
+		// https://core.trac.wordpress.org/ticket/14024.
 		if ( ! function_exists( 'wp_get_current_user' ) ) {
 			return $context;
 		}
@@ -1394,18 +1439,18 @@ abstract class Logger {
 	 * Append initiator to context
 	 * If no initiator is set then try to determine it
 	 *
-	 * @param array $data
-	 * @param array $context
+	 * @param array $data Data.
+	 * @param array $context Context.
 	 * @return array $data as first key, $context as second key.
 	 */
 	private function append_initiator_to_context( $data, $context ) {
 		if ( isset( $context['_initiator'] ) ) {
-			// Manually set in contextn
+			// Manually set in context.
 			$data['initiator'] = $context['_initiator'];
 			unset( $context['_initiator'] );
 		} else {
 			// No initiator set, try to determine
-			// Default to other
+			// Default to other.
 			$data['initiator'] = Log_Initiators::OTHER;
 
 			// Check if user is responsible.
@@ -1420,7 +1465,7 @@ abstract class Logger {
 				}
 			}
 
-			// If cron then set WordPress as responsible
+			// If cron then set WordPress as responsible.
 			if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
 				$data['initiator'] = Log_Initiators::WORDPRESS;
 				$context['_wp_cron_running'] = true;
@@ -1431,7 +1476,7 @@ abstract class Logger {
 				}
 			}
 
-			// If running as CLI and WP_CLI_PHP_USED is set then it is WP CLI that is doing it
+			// If running as CLI and WP_CLI_PHP_USED is set then it is WP CLI that is doing it.
 			if ( defined( \WP_CLI::class ) && WP_CLI ) {
 				$data['initiator'] = Log_Initiators::WP_CLI;
 			}
@@ -1443,12 +1488,12 @@ abstract class Logger {
 	/**
 	 * Append remote addr and other related headers to to context.
 	 *
-	 * @param array $context
+	 * @param array $context Context.
 	 * @return array $context
 	 */
 	private function append_remote_addr_to_context( $context ) {
 		if ( ! isset( $context['_server_remote_addr'] ) ) {
-			$remote_addr = empty( $_SERVER['REMOTE_ADDR'] ) ? '' : wp_unslash( $_SERVER['REMOTE_ADDR'] );
+			$remote_addr = empty( $_SERVER['REMOTE_ADDR'] ) ? '' : sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 
 			$remote_addr = Helpers::privacy_anonymize_ip( $remote_addr );
 
@@ -1462,14 +1507,14 @@ abstract class Logger {
 			// Ref: http://blackbe.lt/advanced-method-to-obtain-the-client-ip-in-php/
 			// Check for IP in lots of headers
 			// Based on code:
-			// http://blackbe.lt/advanced-method-to-obtain-the-client-ip-in-php/
+			// http://blackbe.lt/advanced-method-to-obtain-the-client-ip-in-php/.
 			$ip_keys = Helpers::get_ip_number_header_names();
 
 			foreach ( $ip_keys as $key ) {
 				if ( array_key_exists( $key, $_SERVER ) ) {
 					// Loop through all IPs.
 					$ip_loop_num = 0;
-					foreach ( explode( ',', $_SERVER[ $key ] ) as $ip ) {
+					foreach ( explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $key ] ) ) ) as $ip ) {
 						// trim for safety measures.
 						$ip = trim( $ip );
 
@@ -1493,7 +1538,7 @@ abstract class Logger {
 			! isset( $context['_server_http_referer'] ) &&
 			isset( $_SERVER['HTTP_REFERER'] )
 		) {
-			$context['_server_http_referer'] = $_SERVER['HTTP_REFERER'];
+			$context['_server_http_referer'] = sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
 		}
 
 		return $context;
@@ -1502,8 +1547,8 @@ abstract class Logger {
 	/**
 	 * Append occasionsID to context.
 	 *
-	 * @param array $data
-	 * @param array $context
+	 * @param array $data Data.
+	 * @param array $context Context.
 	 * @return array $data as first key, $context as second key.
 	 */
 	private function append_occasions_id_to_context( $data, $context ) {
@@ -1534,8 +1579,8 @@ abstract class Logger {
 	/**
 	 * Append _xmlrpc_request to context if this is a XMLRPC request.
 	 *
-	 * @param array $context
-	 * @return array $context
+	 * @param array $context Context.
+	 * @return array $context Context with _xmlrpc_request appended.
 	 */
 	private function append_xmlrpc_request_to_context( $context ) {
 		if ( ! defined( 'XMLRPC_REQUEST' ) || ! XMLRPC_REQUEST ) {
@@ -1550,8 +1595,8 @@ abstract class Logger {
 	/**
 	 * Append _rest_api_request to context if this is a REST API request.
 	 *
-	 * @param array $context
-	 * @return array $context
+	 * @param array $context Context.
+	 * @return array $context Context with _rest_api_request appended.
 	 */
 	private function append_rest_api_request_to_context( $context ) {
 		// Detect REST calls and append to context, if not already there.
@@ -1570,8 +1615,8 @@ abstract class Logger {
 	 * This is used to override the date that is set by default.
 	 * The date must be in format 'Y-m-d H:i:s'.
 	 *
-	 * @param array $data
-	 * @param array $context
+	 * @param array $data Data.
+	 * @param array $context Context.
 	 * @return array $data as first key, $context as second key.
 	 */
 	private function append_date_to_context( $data, $context ) {
@@ -1583,5 +1628,44 @@ abstract class Logger {
 		}
 
 		return array( $data, $context );
+	}
+
+	/**
+	 *  Magic getter for "_slug".
+	 *  Used for backwards compatibility.
+	 *
+	 * @param string $name Name of property to get.
+	 */
+	public function __get( $name ) {
+		if ( 'slug' === $name ) {
+			_deprecated_function( __METHOD__, '4.5.1', 'get_slug()' );
+			return $this->get_slug();
+		}
+	}
+
+	/**
+	 * Check if logger is enabled or disabled.
+	 * If a logger is missing the "enabled_by_default" they are considered enabled by default.
+	 *
+	 * @return bool True if enabled, false if disabled.
+	 */
+	public function is_enabled() {
+		/** @var bool $is_enabled_by_default */
+		$is_enabled_by_default = $this->get_info_value_by_key( 'enabled_by_default' ) ?? true;
+
+		/**
+		 * Filter the default enabled state of a logger.
+		 *
+		 * @param bool $is_enabled_by_default
+		 * @param string $slug
+		 * @return bool
+		 */
+		$is_enabled = apply_filters(
+			'simple_history/logger/enabled',
+			$is_enabled_by_default,
+			$this->get_slug()
+		);
+
+		return $is_enabled;
 	}
 }

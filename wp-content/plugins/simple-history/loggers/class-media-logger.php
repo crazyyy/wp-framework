@@ -8,7 +8,7 @@ use Simple_History\Helpers;
  * Logs media uploads
  */
 class Media_Logger extends Logger {
-
+	/** @var string Logger slug */
 	public $slug = 'SimpleMediaLogger';
 
 	/**
@@ -42,13 +42,16 @@ class Media_Logger extends Logger {
 							'attachment_deleted',
 						),
 					),
-				), // end search array
-			), // end labels
+				),
+			),
 		);
 
 		return $arr_info;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		add_action( 'add_attachment', array( $this, 'on_add_attachment' ) );
 		add_action( 'edit_attachment', array( $this, 'on_edit_attachment' ) );
@@ -91,6 +94,8 @@ class Media_Logger extends Logger {
 
 	/**
 	 * Modify plain output to include link to post
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_plain_text_output( $row ) {
 
@@ -135,7 +140,7 @@ class Media_Logger extends Logger {
 
 			$message = helpers::interpolate( $message, $context, $row );
 		} else {
-			// Attachment post is not available, attachment has probably been deleted
+			// Attachment post is not available, attachment has probably been deleted.
 			$message = parent::get_log_row_plain_text_output( $row );
 		}
 
@@ -158,7 +163,7 @@ class Media_Logger extends Logger {
 		$attachment_is_available = is_a( $attachment_post, 'WP_Post' );
 
 		if ( 'attachment_created' == $message_key ) {
-			// Attachment is created/uploaded = show details with image thumbnail
+			// Attachment is created/uploaded = show details with image thumbnail.
 			$attachment_id = $context['attachment_id'];
 			$filetype = wp_check_filetype( $context['attachment_filename'] );
 			$file_url = wp_get_attachment_url( $attachment_id );
@@ -184,13 +189,13 @@ class Media_Logger extends Logger {
 				$full_image_height = $full_src[2];
 
 				// is_image is also true for mime types that WP can't create thumbs for
-				// so we need to check that wp got an resized version
+				// so we need to check that wp got an resized version.
 				if ( $full_image_width && $full_image_height ) {
 					$context['full_image_width'] = $full_image_width;
 					$context['full_image_height'] = $full_image_height;
 
 					// Only output thumb if file exists
-					// For example images deleted on file system but not in WP cause broken images (rare case, but has happened to me.)
+					// For example images deleted on file system but not in WP cause broken images (rare case, but has happened to me.).
 					if ( file_exists( $attached_file ) && $thumb_src ) {
 						$context['attachment_thumb'] = sprintf( '<div class="SimpleHistoryLogitemThumbnail"><img src="%1$s" alt=""></div>', $thumb_src[0] );
 					}
@@ -245,7 +250,7 @@ class Media_Logger extends Logger {
 	 * Fired from filter 'add_attachment'.
 	 * Is not fired when image is added in Block Editor
 	 *
-	 * @param int $attachment_id.
+	 * @param int $attachment_id Attachment ID.
 	 */
 	public function on_add_attachment( $attachment_id ) {
 
@@ -290,7 +295,7 @@ class Media_Logger extends Logger {
 	 * An attachment is changed
 	 * is this only being called if the title of the attachment is changed?!
 	 *
-	 * @param int $attachment_id
+	 * @param int $attachment_id Attachment ID.
 	 */
 	public function on_edit_attachment( $attachment_id ) {
 
@@ -310,8 +315,10 @@ class Media_Logger extends Logger {
 		);
 	}
 
-	/*
-	 * Called when an attachment is deleted
+	/**
+	 * Called when an attachment is deleted.
+	 *
+	 * @param int $attachment_id Attachment ID.
 	 */
 	public function on_delete_attachment( $attachment_id ) {
 
@@ -335,8 +342,8 @@ class Media_Logger extends Logger {
 	 * Modify RSS links so they go directly to the correct media in WP admin.
 	 *
 	 * @since 2.0.23
-	 * @param string $link
-	 * @param object  $row
+	 * @param string $link Link to the log item.
+	 * @param object $row Log item.
 	 */
 	public function filter_rss_item_link( $link, $row ) {
 		if ( $row->logger != $this->get_slug() ) {

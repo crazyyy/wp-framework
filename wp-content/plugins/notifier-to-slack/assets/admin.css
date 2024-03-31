@@ -1,0 +1,4 @@
+#toplevel_page_wpnts_notifier li.current {
+	box-shadow: inset 4px 0 0 0 currentColor;
+	transition: box-shadow .1s linear;
+}

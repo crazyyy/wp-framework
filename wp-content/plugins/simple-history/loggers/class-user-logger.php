@@ -1,6 +1,7 @@
 <?php
 namespace Simple_History\Loggers;
 
+use Error;
 use Simple_History\Log_Initiators;
 use Simple_History\Helpers;
 
@@ -8,7 +9,17 @@ use Simple_History\Helpers;
  * Logs changes to user logins (and logouts).
  */
 class User_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'SimpleUserLogger';
+
+	/** @var array<int,array> Context for modified user. */
+	private $user_profile_update_modified_context = [];
+
+	/** @var array Detected WP Cli Changes */
+	private $wp_cli_changes = [
+		'user_roles_added' => [],
+		'user_roles_removed' => [],
+	];
 
 	/** @inheritDoc */
 	public function get_info() {
@@ -53,14 +64,24 @@ class User_Logger extends Logger {
 					'User destroys all login sessions for a user',
 					'simple-history'
 				),
-				'user_admin_email_confirm_correct_clicked' => _x(
-					'Verified that administration email for website is correct',
-					'User clicks confirm admin email on admin email confirm screen',
-					'simple-history'
-				),
 				'user_role_updated' => _x(
 					'Changed role for user "{edited_user_login}" to "{new_role}" from "{old_role}"',
 					'User updates the role for a user',
+					'simple-history'
+				),
+				'user_role_added' => _x(
+					'Added role(s) "{roles}" to user "{edited_user_login}"',
+					'A role is added to a user',
+					'simple-history'
+				),
+				'user_role_removed' => _x(
+					'Removed role(s) "{roles}" from user "{edited_user_login}"',
+					'A role is removed from a user',
+					'simple-history'
+				),
+				'user_admin_email_confirm_correct_clicked' => _x(
+					'Verified that administration email for website is correct',
+					'User clicks confirm admin email on admin email confirm screen',
 					'simple-history'
 				),
 				'user_application_password_created' => _x(
@@ -72,44 +93,6 @@ class User_Logger extends Logger {
 					'Revoked application password "{application_password_name}" for user "{edited_user_login}"',
 					'User revoke application password',
 					'simple-history'
-				),
-			),
-			// Examples used for documentation.
-			'examples' => array(
-				array(
-					'description' => 'User fails to login',
-					'message' => 'user_login_failed',
-					'context' => array(
-						'login' => 'jane.doe@example.com',
-					),
-				),
-				array(
-					'description' => 'Another user fails to login',
-					'message' => 'user_login_failed',
-					'context' => array(
-						'login' => 'john.smith@example.com',
-					),
-				),
-				array(
-					'description' => 'User fails to login due to user account not existing',
-					'message' => 'user_unknown_login_failed',
-					'context' => array(
-						'failed_username' => 'janet',
-					),
-				),
-				array(
-					'message' => 'user_logged_in',
-					'user' => 'Jane Doe',
-					'description' => 'User logs in',
-				),
-				array(
-					'message' => 'user_unknown_logged_in',
-					'description' => 'Unknown user logs in',
-				),
-				array(
-					'message' => 'user_logged_out',
-					'user' => 'Jane Doe',
-					'description' => 'User logs out',
 				),
 			),
 			'labels'      => array(
@@ -134,11 +117,11 @@ class User_Logger extends Logger {
 						_x( 'User profile updates', 'User logger: search', 'simple-history' ) => array(
 							'user_updated_profile',
 						),
-						_x( 'User deletions', 'User logger: search', 'simple-history' ) => array(
-							'user_deleted',
-						),
 						_x( 'User role changes', 'User logger: search', 'simple-history' ) => array(
 							'user_role_updated',
+						),
+						_x( 'User deletions', 'User logger: search', 'simple-history' ) => array(
+							'user_deleted',
 						),
 						_x( 'User application password created', 'User logger: search', 'simple-history' ) => array(
 							'user_application_password_created',
@@ -148,9 +131,9 @@ class User_Logger extends Logger {
 						),
 
 					),
-				), // end search
+				),
 
-			), // end labels
+			),
 		);
 
 		return $arr_info;
@@ -160,59 +143,152 @@ class User_Logger extends Logger {
 	 * Add actions and filters when logger is loaded by Simple History
 	 */
 	public function loaded() {
-		// Plain logins and logouts
+		// Plain logins and logouts.
 		add_action( 'wp_login', array( $this, 'onWpLogin' ), 10, 2 );
 		add_action( 'wp_logout', array( $this, 'onWpLogout' ), 10, 1 );
 
-		// Failed login attempt to username that exists
+		// Failed login attempt to username that exists.
 		add_action( 'wp_authenticate_user', array( $this, 'onWpAuthenticateUser' ), 10, 2 );
 
 		// Failed to login to user that did not exist (perhaps brute force)
 		// run this later than 10 because wordpress own email login check is done with priority 20
-		// so if we run at 10 we just get null
+		// so if we run at 10 we just get null.
 		add_filter( 'authenticate', array( $this, 'onAuthenticate' ), 30, 3 );
 
-		// User is created
+		// User is created.
 		add_action( 'user_register', array( $this, 'on_user_register' ), 10, 2 );
 
-		// User is deleted
+		// User is deleted.
 		add_action( 'delete_user', array( $this, 'onDeleteUser' ), 10, 2 );
 
 		// User sessions is destroyed. AJAX call that we hook onto early.
 		add_action( 'wp_ajax_destroy-sessions', array( $this, 'onDestroyUserSession' ), 0 );
 
-		// User reaches reset password (from link or only from user created link)
+		// User reaches reset password (from link or only from user created link).
 		add_action( 'validate_password_reset', array( $this, 'onValidatePasswordReset' ), 10, 2 );
 		add_action( 'retrieve_password_message', array( $this, 'onRetrievePasswordMessage' ), 10, 4 );
 
-		// New way, fired before update so we can get old user data.
-		add_filter( 'wp_pre_insert_user_data', array( $this, 'on_pre_insert_user_data' ), 10, 4 );
+		// New way, fired before update so we can get old user data. Does not commit, that's done in another hook.
+		add_filter( 'wp_pre_insert_user_data', array( $this, 'on_pre_insert_user_data_collect' ), 10, 4 );
 
-		add_action( 'set_user_role', array( $this, 'on_set_user_role' ), 10, 3 );
+		// Commit changes to user profile. Run on hook with higher prio, so other plugins,
+		// for example the "Members" plugin for roles, can modify user data before we commit.
+		add_action( 'profile_update', [ $this, 'on_profile_update_commit' ], 50, 1 );
 
-		// Administration email verification-screen
+		add_action( 'set_user_role', array( $this, 'on_set_user_role_on_admin_overview_screen' ), 10, 3 );
 
-		// Run this to force-show the admin email confirm screen.
-		// add_filter(
-		// 	'option_admin_email_lifespan',
-		// 	function( $value, $option ) {
-		// 		return 1;
-		// 	},
-		// 	10,
-		// 	2
-		// );
-
+		// Administration email verification-screen.
 		add_action( 'login_form_confirm_admin_email', array( $this, 'on_action_login_form_confirm_admin_email' ) );
 
 		add_action( 'wp_create_application_password', array( $this, 'on_action_wp_create_application_password' ), 10, 4 );
 		add_action( 'wp_delete_application_password', array( $this, 'on_action_wp_delete_application_password' ), 10, 2 );
+
+		$this->add_wp_cli_hooks();
+	}
+
+	/**
+	 * Adds hooks for WP CLI.
+	 */
+	private function add_wp_cli_hooks() {
+		if ( ! Helpers::is_wp_cli() ) {
+			return;
+		}
+
+		// Add hooks to collect and commit add-role changes.
+		\WP_CLI::add_hook( 'before_invoke:user add-role', [ $this, 'on_wp_cli_before_invoke_user_add_role_collect' ] );
+		\WP_CLI::add_hook( 'after_invoke:user add-role', [ $this, 'on_wp_cli_after_invoke_user_add_role_commit_changes' ] );
+
+		// Add hooks to collect and commit remove-role changes.
+		\WP_CLI::add_hook( 'before_invoke:user remove-role', [ $this, 'on_wp_cli_before_invoke_user_remove_role_collect' ] );
+		\WP_CLI::add_hook( 'after_invoke:user remove-role', [ $this, 'on_wp_cli_after_invoke_user_remove_role_commit_changes' ] );
+	}
+
+	/**
+	 * Collect user add role changes.
+	 */
+	public function on_wp_cli_before_invoke_user_add_role_collect() {
+		add_action( 'add_user_role', [ $this, 'on_wp_cli_add_user_role_collect' ], 10, 2 );
+	}
+
+	/**
+	 * Commit changes when functions has run.
+	 */
+	public function on_wp_cli_after_invoke_user_add_role_commit_changes() {
+		// Keyed by user id. Roles as array.
+		$user_roles_added = $this->wp_cli_changes['user_roles_added'];
+
+		foreach ( $user_roles_added as $user_id => $roles ) {
+			$user = get_user_by( 'ID', $user_id );
+
+			$context = [
+				'roles' => implode( ', ', $roles ),
+				'edited_user_id' => $user_id,
+				'edited_user_email' => $user->user_email,
+				'edited_user_login' => $user->user_login,
+			];
+
+			$this->info_message( 'user_role_added', $context );
+		}
+	}
+
+	/**
+	 * Collect user add role changes.
+	 */
+	public function on_wp_cli_before_invoke_user_remove_role_collect() {
+		add_action( 'remove_user_role', [ $this, 'on_wp_cli_remove_user_role_collect' ], 10, 2 );
+	}
+
+	/**
+	 * Commit changes when functions has run.
+	 */
+	public function on_wp_cli_after_invoke_user_remove_role_commit_changes() {
+		// Keyed by user id. Roles as array.
+		$user_roles_removed = $this->wp_cli_changes['user_roles_removed'];
+
+		foreach ( $user_roles_removed as $user_id => $roles ) {
+			$user = get_user_by( 'ID', $user_id );
+
+			$context = [
+				'roles' => implode( ', ', $roles ),
+				'edited_user_id' => $user_id,
+				'edited_user_email' => $user->user_email,
+				'edited_user_login' => $user->user_login,
+			];
+
+			$this->info_message( 'user_role_removed', $context );
+		}
+	}
+
+	public function on_wp_cli_remove_user_role_collect( $user_id, $role ) {
+		if ( ! isset( $this->wp_cli_changes['user_roles_removed'][ $user_id ] ) ) {
+			$this->wp_cli_changes['user_roles_removed'][ $user_id ] = [];
+		}
+
+		$this->wp_cli_changes['user_roles_removed'][ $user_id ][] = $role;
+	}
+
+	/**
+	 * From WP_CLI this filter is only called when a user role is actually added,
+	 * it is not fired if the user already has the role.
+	 *
+	 * The filter will be called multiple times if multiple roles are added at the same time.
+	 *
+	 * @param mixed $user_id The user ID.
+	 * @param mixed $role The new role.
+	 */
+	public function on_wp_cli_add_user_role_collect( $user_id, $role ) {
+		if ( ! isset( $this->wp_cli_changes['user_roles_added'][ $user_id ] ) ) {
+			$this->wp_cli_changes['user_roles_added'][ $user_id ] = [];
+		}
+
+		$this->wp_cli_changes['user_roles_added'][ $user_id ][] = $role;
 	}
 
 	/**
 	 * Log when an Application Password is created for a user.
 	 *
 	 * Fired from action `wp_create_application_password`.
- *
+	 *
 	 * @param int    $user_id      The user ID.
 	 * @param array  $item     {
 	 *     The details about the created password.
@@ -272,16 +348,14 @@ class User_Logger extends Logger {
 	}
 
 	/**
-	 * Fires after the user's role has changed.
-	 *
-	 * @since 2.9.0
-	 * @since 3.6.0 Added $old_roles to include an array of the user's previous roles.
+	 * Fires after the user's role has changed,
+	 * used when quick editing a user on the user admin overview screen.
 	 *
 	 * @param int      $user_id   The user ID.
 	 * @param string   $role      The new role.
 	 * @param string[] $old_roles An array of the user's previous roles.
 	 */
-	public function on_set_user_role( $user_id, $role, $old_roles ) {
+	public function on_set_user_role_on_admin_overview_screen( $user_id, $role, $old_roles ) {
 		$current_screen = helpers::get_current_screen();
 
 		// Bail if we are not on the users screen.
@@ -309,6 +383,11 @@ class User_Logger extends Logger {
 		);
 	}
 
+
+	/**
+	 * Log when user confirms that admin email is correct.
+	 * Fired from filter 'login_form_confirm_admin_email'.
+	 */
 	public function on_action_login_form_confirm_admin_email() {
 		// Bail if button with name "correct-admin-email" was not clicked or if no nonce field exists.
 		if ( empty( $_POST['confirm_admin_email_nonce'] ) || empty( $_POST['correct-admin-email'] ) ) {
@@ -316,7 +395,7 @@ class User_Logger extends Logger {
 		}
 
 		// Bail if nonce not valid.
-		$nonce_valid = wp_verify_nonce( $_POST['confirm_admin_email_nonce'], 'confirm_admin_email' );
+		$nonce_valid = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['confirm_admin_email_nonce'] ) ), 'confirm_admin_email' );
 		if ( $nonce_valid === false ) {
 			return;
 		}
@@ -325,13 +404,49 @@ class User_Logger extends Logger {
 	}
 
 	/**
+	 * Commits the context previously collected.
+	 * In this hook the changes are written, so we can get any new data from the user object.
+	 *
+	 * @param int $user_id ID of the user that was created or updated.
+	 */
+	public function on_profile_update_commit( $user_id ) {
+		$context = $this->user_profile_update_modified_context[ $user_id ] ?? null;
+
+		// Bail if we don't have any context.
+		if ( ! $context ) {
+			return;
+		}
+
+		$user = get_user_by( 'ID', $user_id );
+
+		// Get new roles, to detect changes.
+		$context['user_new_roles'] = (array) $user->roles;
+
+		$prev_roles = $context['user_prev_roles'] ?? [];
+
+		$added_roles = array_values( array_diff( $context['user_new_roles'], $prev_roles ) );
+		if ( $added_roles ) {
+			// Comma separated list of added roles.
+			$context['user_added_roles'] = implode( ', ', $added_roles );
+		}
+
+		$removed_roles = array_values( array_diff( $prev_roles, $context['user_new_roles'] ) );
+		if ( $removed_roles ) {
+			// Comma separated list of removed roles.
+			$context['user_removed_roles'] = implode( ', ', $removed_roles );
+		}
+
+		// Remove keys used for diff.
+		unset( $context['user_prev_roles'], $context['user_new_roles'] );
+
+		$this->info_message( 'user_updated_profile', $context );
+	}
+
+	/**
 	 * Filters user data before the record is created or updated.
-	 * Used to log user profile updates.
+	 * Used to gather user profile updates.
 	 *
 	 * It only includes data in the users table, not any user metadata.
-	 *
-	 * @since 4.9.0
-	 * @since 5.8.0 The `$userdata` parameter was added.
 	 *
 	 * @param array    $data {
 	 *     Values and keys for the user.
@@ -349,8 +464,8 @@ class User_Logger extends Logger {
 	 * @param int|null $user_id  ID of the user to be updated, or NULL if the user is being created.
 	 * @param array    $userdata The raw array of data passed to wp_insert_user().
 	 */
-	public function on_pre_insert_user_data( $data, $update, $user_id, $userdata = array() ) {
-		// Bail if this is not a user update.
+	public function on_pre_insert_user_data_collect( $data, $update, $user_id, $userdata = array() ) {
+		// Bail if this is not a user update, i.e. only collect for user edits.
 		if ( ! $update ) {
 			return $data;
 		}
@@ -380,11 +495,7 @@ class User_Logger extends Logger {
 			$add_diff = true;
 
 			// Some options need special treatment.
-			if ( $option_key === 'role' ) {
-				// Get text name of previous role.
-				$user_roles = array_intersect( array_values( $user_before_update->roles ), array_keys( get_editable_roles() ) );
-				$prev_option_value = reset( $user_roles );
-			} elseif ( $option_key === 'user_pass' ) {
+			if ( $option_key === 'user_pass' ) {
 				$password_changed = $one_maybe_updated_option_value !== $prev_option_value;
 				$add_diff = false;
 			} elseif ( $option_key === 'comment_shortcuts' ) {
@@ -410,20 +521,23 @@ class User_Logger extends Logger {
 			'edited_user_id' => $user_id,
 			'edited_user_email' => $user_before_update->user_email,
 			'edited_user_login' => $user_before_update->user_login,
-			'server_http_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+			'server_http_user_agent' => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
 		);
 
 		if ( $password_changed ) {
 			$context['edited_user_password_changed'] = '1';
 		}
 
-		// Add diff to context
+		// Add diff to context.
 		foreach ( $user_data_diff as $one_diff_key => $one_diff_vals ) {
 				$context[ "user_prev_{$one_diff_key}" ] = $one_diff_vals['old'];
 				$context[ "user_new_{$one_diff_key}" ] = $one_diff_vals['new'];
 		}
 
-		$this->info_message( 'user_updated_profile', $context );
+		$context['user_prev_roles'] = (array) $user_before_update->roles;
+
+		// Store in private var to retrieve in commit function.
+		$this->user_profile_update_modified_context[ $user_id ] = $context;
 
 		return $data;
 	}
@@ -436,6 +550,11 @@ class User_Logger extends Logger {
 	 *
 	 * This hook is not fired when using for example WooCommerce because it has it's own reset password system.
 	 * Maybe get_password_reset_key() can be used instead?
+	 *
+	 * @param string $message    Default mail message.
+	 * @param string $key        The activation key.
+	 * @param string $user_login The username for the user.
+	 * @param object $user_data  WP_User object.
 	 */
 	public function onRetrievePasswordMessage( $message, $key, $user_login, $user_data = null ) {
 		$context = array(
@@ -499,13 +618,13 @@ class User_Logger extends Logger {
 	 * @since 2.0.6
 	 */
 	public function onDestroyUserSession() {
-		// PHPCS:ignore WordPress.Security.NonceVerification.Missing
+		// PHPCS:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		$user = get_userdata( (int) $_POST['user_id'] );
 
 		if ( $user ) {
 			if ( ! current_user_can( 'edit_user', $user->ID ) ) {
 				$user = false;
-			} elseif ( ! wp_verify_nonce( $_POST['nonce'], 'update-user_' . $user->ID ) ) {
+			} elseif ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'update-user_' . $user->ID ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 				$user = false;
 			}
 		}
@@ -536,22 +655,15 @@ class User_Logger extends Logger {
 	 *                           Default null, for no reassignment.
 	 */
 	public function onDeleteUser( $user_id, $reassign ) {
-
 		$wp_user_to_delete = get_userdata( $user_id );
-
-		// wp_user->roles (array) - the roles the user is part of.
-		$role = null;
-		if ( is_array( $wp_user_to_delete->roles ) && ! empty( $wp_user_to_delete->roles[0] ) ) {
-			$role = $wp_user_to_delete->roles[0];
-		}
 
 		$context = array(
 			'deleted_user_id' => $wp_user_to_delete->ID,
 			'deleted_user_email' => $wp_user_to_delete->user_email,
 			'deleted_user_login' => $wp_user_to_delete->user_login,
-			'deleted_user_role' => $role,
+			'deleted_user_role' => implode( ', ', $wp_user_to_delete->roles ),
 			'reassign_user_id' => $reassign,
-			'server_http_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+			'server_http_user_agent' => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
 		);
 
 		$this->notice_message( 'user_deleted', $context );
@@ -561,9 +673,11 @@ class User_Logger extends Logger {
 	 * Modify plain text row output
 	 * - adds link to user profile
 	 * - change to "your profile" if you're looking at your own edit
+	 *
+	 * @param object $row Log row.
+	 * @return string
 	 */
 	public function get_log_row_plain_text_output( $row ) {
-
 		$context = $row->context;
 
 		$output = parent::get_log_row_plain_text_output( $row );
@@ -573,16 +687,16 @@ class User_Logger extends Logger {
 			$wp_user = get_user_by( 'id', $context['edited_user_id'] );
 
 			// If edited_user_id and _user_id is the same then a user edited their own profile
-			// Note: it's not the same thing as the currently logged in user (but.. it can be!)
+			// Note: it's not the same thing as the currently logged in user (but.. it can be!).
 			if ( ! empty( $context['_user_id'] ) && $context['edited_user_id'] === $context['_user_id'] ) {
 				if ( $wp_user ) {
 					$context['edit_profile_link'] = get_edit_user_link( $wp_user->ID );
 
 					$use_you = apply_filters( 'simple_history/user_logger/plain_text_output_use_you', true );
 
-					// User still exist, so link to their profile
+					// User still exist, so link to their profile.
 					if ( $current_user_id === (int) $context['_user_id'] && $use_you ) {
-						// User that is viewing the log is the same as the edited user
+						// User that is viewing the log is the same as the edited user.
 						$msg = __( 'Edited <a href="{edit_profile_link}">your profile</a>', 'simple-history' );
 					} else {
 						$msg = __( 'Edited <a href="{edit_profile_link}">their profile</a>', 'simple-history' );
@@ -590,12 +704,12 @@ class User_Logger extends Logger {
 
 					$output = helpers::interpolate( $msg, $context, $row );
 				} else {
-					// User does not exist any longer
+					// User does not exist any longer.
 					$output = __( 'Edited your profile', 'simple-history' );
 				}
 			} elseif ( $wp_user ) {
 				// User edited another users profile
-				// Edited user still exist, so link to their profile
+				// Edited user still exist, so link to their profile.
 				$context['edit_profile_link'] = get_edit_user_link( $wp_user->ID );
 				$msg = __( 'Edited the profile for user <a href="{edit_profile_link}">{edited_user_login} ({edited_user_email})</a>', 'simple-history' );
 				$output = helpers::interpolate( $msg, $context, $row );
@@ -604,12 +718,9 @@ class User_Logger extends Logger {
 			// A user was created. Create link of username that goes to user profile.
 			$wp_user = get_user_by( 'id', $context['created_user_id'] );
 
-			// If edited_user_id and _user_id is the same then a user edited their own profile
-			// Note: it's not the same thing as the currently logged in user (but.. it can be!)
 			if ( $wp_user ) {
 				$context['edit_profile_link'] = get_edit_user_link( $wp_user->ID );
 
-				// User that is viewing the log is the same as the edited user
 				$msg = __(
 					'Created user <a href="{edit_profile_link}">{created_user_login} ({created_user_email})</a> with role {created_user_role}',
 					'simple-history'
@@ -629,8 +740,8 @@ class User_Logger extends Logger {
 	/**
 	 * User logs in
 	 *
-	 * @param string $user_login
-	 * @param object $user
+	 * @param string $user_login Username.
+	 * @param object $user   WP_User object.
 	 */
 	public function onWpLogin( $user_login = null, $user = null ) {
 
@@ -653,16 +764,16 @@ class User_Logger extends Logger {
 			);
 
 			// Override some data that is usually set automagically by Simple History
-			// Because wp_get_current_user() does not return any data yet at this point
+			// Because wp_get_current_user() does not return any data yet at this point.
 			$context['_initiator'] = Log_Initiators::WP_USER;
 			$context['_user_id'] = $user_obj->ID;
 			$context['_user_login'] = $user_obj->user_login;
 			$context['_user_email'] = $user_obj->user_email;
-			$context['server_http_user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? null;
+			$context['server_http_user_agent'] = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) );
 
 			$this->info_message( 'user_logged_in', $context );
 		} else {
-			// Could not get any info about the user logging in
+			// Could not get any info about the user logging in.
 			$this->warning_message( 'user_unknown_logged_in', $context );
 		}
 	}
@@ -699,33 +810,36 @@ class User_Logger extends Logger {
 		}
 
 		$wp_user_added = get_userdata( $user_id );
+
 		$role = '';
+		$roles = [];
 
 		// On a subsite of a multisite network,
 		// newly created users have no roles or caps until they are added to a blog.
 		// So at this time we can't get the role of the user, if on a subsite.
 		// Use value from $_POST instead.
 		if ( is_multisite() ) {
-      // PHPCS:ignore WordPress.Security.NonceVerification.Missing
-			$role = sanitize_title( $_POST['role'] ?? '' );
+      		// PHPCS:ignore WordPress.Security.NonceVerification.Missing
+			$role = sanitize_title( wp_unslash( $_POST['role'] ?? '' ) );
+			$roles = array( $role );
 		} elseif ( is_array( $wp_user_added->roles ) && ! empty( $wp_user_added->roles[0] ) ) {
 			// Single site, get role from user object.
-			$role = $wp_user_added->roles[0];
+			$roles = $wp_user_added->roles;
 		}
 
 		// PHPCS:ignore WordPress.Security.NonceVerification.Missing
-		$send_user_notification = (int) ( isset( $_POST['send_user_notification'] ) && $_POST['send_user_notification'] );
+		$send_user_notification = (int) ( isset( $_POST['send_user_notification'] ) && sanitize_text_field( wp_unslash( $_POST['send_user_notification'] ) ) );
 
 		$context = array(
 			'created_user_id' => $wp_user_added->ID,
 			'created_user_email' => $wp_user_added->user_email,
-			'created_user_login' => $wp_user_added->user_login, // username
-			'created_user_role' => $role,
+			'created_user_login' => $wp_user_added->user_login,
 			'created_user_first_name' => $wp_user_added->first_name,
 			'created_user_last_name' => $wp_user_added->last_name,
 			'created_user_url' => $wp_user_added->user_url,
+			'created_user_role' => implode( ', ', $roles ),
 			'send_user_notification' => $send_user_notification,
-			'server_http_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+			'server_http_user_agent' => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
 		);
 
 		$this->info_message( 'user_created', $context );
@@ -736,24 +850,22 @@ class User_Logger extends Logger {
 	 *
 	 * @param \WP_User|\WP_Error $userOrError The WP_User object of the user being edited,
 	 *                                        or a WP_Error object if validation has already failed.
-	 * @param string             $password
+	 * @param string             $password  The user's password.
 	 */
 	public function onWpAuthenticateUser( $userOrError, $password ) {
-
-		// Only continue if $userOrError is a WP_user object
 		if ( ! is_a( $userOrError, 'WP_User' ) ) {
 			return $userOrError;
 		}
 
-		// Only log failed attempts
+		// Only log failed attempts.
 		if ( ! wp_check_password( $password, $userOrError->user_pass, $userOrError->ID ) ) {
-			// Overwrite some vars that Simple History set automagically
+			// Overwrite some vars that Simple History set automagically.
 			$context = array(
 				'_initiator' => Log_Initiators::WEB_USER,
 				'login_id' => $userOrError->ID,
 				'login_email' => $userOrError->user_email,
 				'login' => $userOrError->user_login,
-				'server_http_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+				'server_http_user_agent' => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
 				'_occasionsID' => self::class . '/failed_user_login',
 			);
 
@@ -784,8 +896,8 @@ class User_Logger extends Logger {
 	 *        null indicates no process has authenticated the user yet.
 	 *        A WP_Error object indicates another process has failed the authentication.
 	 *        A WP_User object indicates another process has authenticated the user.
-	 * @param string $username The user's username. since 4.5.0 `$username` now accepts an email address.
-	 * @param string $password The user's password (encrypted)
+	 * @param string                  $username The user's username. since 4.5.0 `$username` now accepts an email address.
+	 * @param string                  $password The user's password (encrypted).
 	 */
 	public function onAuthenticate( $user, $username, $password ) {
 		// Don't log empty usernames.
@@ -798,7 +910,7 @@ class User_Logger extends Logger {
 			return $user;
 		}
 
-		// If auth ok then $user is a wp_user object
+		// If auth ok then $user is a wp_user object.
 		if ( is_a( $user, 'WP_User' ) ) {
 			return $user;
 		}
@@ -806,18 +918,14 @@ class User_Logger extends Logger {
 		// If user is a WP_Error object then auth failed
 		// Error codes can be:
 		// "incorrect_password" | "empty_password" | "invalid_email" | "invalid_username"
-		// We only act on invalid emails and invalid usernames
+		// We only act on invalid emails and invalid usernames.
 		if ( is_a( $user, 'WP_Error' ) && ( $user->get_error_code() == 'invalid_username' || $user->get_error_code() == 'invalid_email' ) ) {
 			$context = array(
 				'_initiator' => Log_Initiators::WEB_USER,
 				'failed_username' => $username,
-				'server_http_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
-				// count all failed logins to unknown users as the same occasions,
-				// to prevent log being flooded with login/hack attempts
-				// "_occasionsID" => __CLASS__  . '/' . __FUNCTION__
-				// Use same occasionsID as for failed login attempts to existing users,
-				// because log can flood otherwise if hacker is rotating existing and non-existing usernames
-				// "_occasionsID" => __CLASS__  . '/' . __FUNCTION__ . "/failed_user_login/userid:{$user->ID}"
+				'server_http_user_agent' => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
+				// Count all failed logins to unknown users as the same occasions,
+				// to prevent log being flooded with login/hack attempts.
 				'_occasionsID' => self::class . '/failed_user_login',
 			);
 
@@ -849,11 +957,11 @@ class User_Logger extends Logger {
 	 *
 	 * Since 2.0.29
 	 *
-	 * @param array $post_data_diff
-	 * @param string $key
-	 * @param string $old_value
-	 * @param string $new_value
-	 * @return array
+	 * @param array  $post_data_diff Array with diffs.
+	 * @param string $key         Key in $post_data_diff array.
+	 * @param string $old_value       Old value.
+	 * @param string $new_value       New value.
+	 * @return array $post_data_diff
 	 */
 	public function addDiff( $post_data_diff, $key, $old_value, $new_value ) {
 		if ( $old_value != $new_value ) {
@@ -869,7 +977,8 @@ class User_Logger extends Logger {
 	/**
 	 * Return more info about an logged event.
 	 *
-	 * @param object $row
+	 * @param object $row Log row.
+	 * @return string
 	 */
 	public function get_log_row_details_output( $row ) {
 		$context = $row->context;
@@ -904,9 +1013,6 @@ class User_Logger extends Logger {
 				),
 				'locale' => array(
 					'title' => _x( 'Language', 'User logger', 'simple-history' ),
-				),
-				'role' => array(
-					'title' => _x( 'Role', 'User logger', 'simple-history' ),
 				),
 				'first_name' => array(
 					'title' => _x( 'First name', 'User logger', 'simple-history' ),
@@ -1005,15 +1111,12 @@ class User_Logger extends Logger {
 					_x( 'Changed', 'User logger', 'simple-history' )
 				);
 			}
-
-			if ( $diff_table_output !== '' ) {
-				$diff_table_output = '<table class="SimpleHistoryLogitem__keyValueTable">' . $diff_table_output . '</table>';
-			}
-
-			$out .= $diff_table_output;
 		} elseif ( 'user_created' == $message_key ) {
-			// Show fields for created users
+			// Show fields for created users.
 			$arr_user_keys_to_show_diff_for = array(
+				'created_user_role' => array(
+					'title' => _x( 'Role', 'User logger', 'simple-history' ),
+				),
 				'created_user_first_name' => array(
 					'title' => _x( 'First name', 'User logger', 'simple-history' ),
 				),
@@ -1066,16 +1169,41 @@ class User_Logger extends Logger {
 								esc_html( $context[ $key ] ) // 1
 							)
 						);
-					}// End if().
-				}// End if().
-			}// End foreach().
-
-			if ( $diff_table_output !== '' ) {
-				$diff_table_output = '<table class="SimpleHistoryLogitem__keyValueTable">' . $diff_table_output . '</table>';
-			}
-
-			$out .= $diff_table_output;
+					} // End if().
+				} // End if().
+			} // End foreach().
 		} // End if().
+
+		// Common for both modified and added users.
+		if ( isset( $context['user_added_roles'] ) ) {
+			$diff_table_output .= sprintf(
+				'
+					<tr>
+						<td>%1$s</td>
+						<td>%2$s</td>
+					</tr>
+				',
+				__( 'Role added', 'simple-history' ),
+				esc_html( $context['user_added_roles'] )
+			);
+		}
+
+		if ( isset( $context['user_removed_roles'] ) ) {
+			$diff_table_output .= sprintf(
+				'
+					<tr>
+						<td>%1$s</td>
+						<td>%2$s</td>
+					</tr>
+				',
+				__( 'Role removed', 'simple-history' ),
+				esc_html( $context['user_removed_roles'] )
+			);
+		}
+
+		if ( $diff_table_output !== '' ) {
+			$out .= '<table class="SimpleHistoryLogitem__keyValueTable">' . $diff_table_output . '</table>';
+		}
 
 		return $out;
 	}

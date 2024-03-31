@@ -4,6 +4,9 @@ namespace Simple_History;
 
 use Simple_History\Simple_History;
 
+/**
+ * Helper functions.
+ */
 class Helpers {
 	/**
 	 * Pretty much same as wp_text_diff() but with this you can set leading and trailing context lines
@@ -31,8 +34,8 @@ class Helpers {
 	 * @uses Text_Diff
 	 * @uses WP_Text_Diff_Renderer_Table
 	 *
-	 * @param string       $left_string "old" (left) version of string
-	 * @param string       $right_string "new" (right) version of string
+	 * @param string       $left_string "old" (left) version of string.
+	 * @param string       $right_string "new" (right) version of string.
 	 * @param string|array $args Optional. Change 'title', 'title_left', and 'title_right' defaults. And leading_context_lines and trailing_context_lines.
 	 * @return string Empty string if strings are equivalent or HTML with differences.
 	 */
@@ -110,9 +113,9 @@ class Helpers {
 	/**
 	 * Interpolates context values into the message placeholders.
 	 *
-	 * @param string $message
-	 * @param array  $context
-	 * @param object  $row Currently not always passed, because loggers need to be updated to support this...
+	 * @param string $message Message with placeholders.
+	 * @param array  $context Context values to replace placeholders with.
+	 * @param object $row Currently not always passed, because loggers need to be updated to support this...
 	 */
 	public static function interpolate( $message, $context = array(), $row = null ) {
 		if ( ! is_array( $context ) ) {
@@ -160,20 +163,20 @@ class Helpers {
 			$row
 		);
 
-		// Build a replacement array with braces around the context keys
+		// Build a replacement array with braces around the context keys.
 		$replace = array();
 		foreach ( $context as $key => $val ) {
-			// key ok
+			// key ok.
 
 			if ( ! is_string( $val ) && ! is_numeric( $val ) ) {
-				// not a value we can replace
+				// not a value we can replace.
 				continue;
 			}
 
 			$replace[ '{' . $key . '}' ] = $val;
 		}
 
-		// Interpolate replacement values into the message and return
+		// Interpolate replacement values into the message and return.
 		return strtr( $message, $replace );
 	}
 
@@ -267,8 +270,8 @@ class Helpers {
 	/**
 	 * Returns true if $haystack ends with $needle
 	 *
-	 * @param string $haystack
-	 * @param string $needle
+	 * @param string $haystack String to check.
+	 * @param string $needle String to check if $haystack ends with.
 	 */
 	public static function ends_with( $haystack, $needle ) {
 		return $needle === substr( $haystack, -strlen( $needle ) );
@@ -292,6 +295,25 @@ class Helpers {
 		}
 
 		return $incrementor_value;
+	}
+
+	/**
+	 * Get the cache group for the cache.
+	 * Used by all function that use cache, so they use the
+	 * same cache group, meaning if we invalidate the cache group
+	 * all caches will be cleared/flushed.
+	 *
+	 * @return string
+	 */
+	public static function get_cache_group() {
+		return 'simple-history-' . self::get_cache_incrementor();
+	}
+
+	/**
+	 * Clears the cache.
+	 */
+	public static function clear_cache() {
+		self::get_cache_incrementor( true );
 	}
 
 	/**
@@ -357,7 +379,7 @@ class Helpers {
 			return array();
 		}
 
-		// Get num of rows for each table
+		// Get num of rows for each table.
 		$total_num_rows_table = (int) $wpdb->get_var( "select count(*) FROM {$simple_history->get_events_table_name()}" ); // phpcs:ignore
 		$total_num_rows_table_contexts = (int) $wpdb->get_var( "select count(*) FROM {$simple_history->get_contexts_table_name()}" ); // phpcs:ignore
 
@@ -373,7 +395,7 @@ class Helpers {
 	 * An easier method that using filters manually each time.
 	 *
 	 * @param string $taxonomy_slug Slug of taxonomy to disable logging for.
-	 * @param bool $disable Pass true to disable logging of $taxonomy.
+	 * @param bool   $disable Pass true to disable logging of $taxonomy.
 	 */
 	public static function disable_taxonomy_log( $taxonomy_slug, $disable = false ) {
 		// Bail if taxonomy should not be disabled.
@@ -383,7 +405,7 @@ class Helpers {
 
 		add_filter(
 			'simple_history/categories_logger/skip_taxonomies',
-			function( $taxononomies_to_skip ) use ( $taxonomy_slug ) {
+			function ( $taxononomies_to_skip ) use ( $taxonomy_slug ) {
 				$taxononomies_to_skip[] = $taxonomy_slug;
 				return $taxononomies_to_skip;
 			},
@@ -398,11 +420,11 @@ class Helpers {
 	 * @since 2.0
 	 * @since 3.3 Respects gravatar setting in discussion settings.
 	 *
-	 * @param string       $email email address
-	 * @param string       $size Size of the avatar image
-	 * @param string       $default URL to a default image to use if no avatar is available
-	 * @param string|false $alt Alternative text to use in image tag. Defaults to blank
-	 * @param array        $args Avatar arguments
+	 * @param string       $email email address.
+	 * @param string       $size Size of the avatar image.
+	 * @param string       $default URL to a default image to use if no avatar is available.
+	 * @param string|false $alt Alternative text to use in image tag. Defaults to blank.
+	 * @param array        $args Avatar arguments.
 	 * @return string The img element for the user's avatar
 	 */
 	public static function get_avatar( $email, $size = '96', $default = '', $alt = false, $args = array() ) {
@@ -501,6 +523,9 @@ class Helpers {
 	 *
 	 * Used when fetching IP-address info from ipinfo.io, or API call
 	 * will fail due to malformed IP address.
+	 *
+	 * @param string $ip_address IP-address to get valid IP-address from.
+	 * @return string
 	 */
 	public static function get_valid_ip_address_from_anonymized( $ip_address ) {
 		$ip_address = preg_replace( '/\.x$/', '.0', $ip_address );
@@ -633,5 +658,595 @@ class Helpers {
 		}
 
 		return $tables;
+	}
+
+	/**
+	 * Output title for settings section title.
+	 * with wrapper classes and markup + classes for icon appended.
+	 *
+	 * @param string  $title Title.
+	 * @param ?string $icon_class_suffix Icon class suffix.
+	 * @return string
+	 */
+	public static function get_settings_section_title_output( $title, $icon_class_suffix = null ) {
+		$icon_output = '';
+
+		if ( ! is_null( $icon_class_suffix ) ) {
+			$icon_output = sprintf(
+				'<span class="sh-SettingsPage-settingsSection-icon sh-Icon--%1$s"></span>',
+				esc_attr( $icon_class_suffix )
+			);
+		}
+
+		return sprintf(
+			'
+			<span class="sh-SettingsPage-settingsSection-title">
+				%2$s
+				%1$s
+			</span>
+			',
+			esc_html( $title ),
+			$icon_output
+		);
+	}
+
+	/**
+	 * Output title for settings field title.
+	 * with wrapper classes and markup + classes for icon appended.
+	 *
+	 * @param string  $title Title.
+	 * @param ?string $icon_class_suffix Icon class suffix.
+	 * @return string
+	 */
+	public static function get_settings_field_title_output( $title, $icon_class_suffix = null ) {
+		$icon_output = '';
+
+		if ( ! is_null( $icon_class_suffix ) ) {
+			$icon_output = sprintf(
+				'<span class="sh-SettingsPage-settingsField-icon sh-Icon--%1$s"></span>',
+				esc_attr( $icon_class_suffix )
+			);
+		}
+
+		return sprintf(
+			'
+			<span class="sh-SettingsPage-settingsField">
+				%2$s
+				%1$s
+			</span>
+			',
+			esc_html( $title ),
+			$icon_output
+		);
+	}
+
+	/**
+	 * Wrapper for \add_settings_section with added support for:
+	 * - Icon before title.
+	 * - Wrapper div automatically added.
+	 *
+	 * @param string       $id Slug-name to identify the section. Used in the 'id' attribute of tags.
+	 * @param string|array $title Formatted title of the section. Shown as the heading for the section.
+	 *                     Pass in array instead of string to use as ['Section title', 'icon-slug'].
+	 * @param callable     $callback Function that echos out any content at the top of the section (between heading and fields).
+	 * @param string       $page The slug-name of the settings page on which to show the section. Built-in pages include 'general', 'reading', 'writing', 'discussion', 'media', etc. Create your own using add_options_page().
+	 * @param array        $args Optional. Additional arguments that are passed to the $callback function. Default empty array.
+	 */
+	public static function add_settings_section( $id, $title, $callback, $page, $args = [] ) {
+		// If title is array then it is [title, icon-slug].
+		if ( is_array( $title ) ) {
+			$title = self::get_settings_section_title_output( $title[0], $title[1] );
+		} else {
+			$title = self::get_settings_section_title_output( $title );
+		}
+
+		$args = [
+			'before_section' => '<div class="sh-SettingsPage-settingsSection-wrap">',
+			'after_section' => '</div>',
+		];
+
+		add_settings_section( $id, $title, $callback, $page, $args );
+	}
+
+	/**
+	 * Get URL for a main tab in the settings page.
+	 *
+	 * @param string $tab_slug Slug for the tab.
+	 * @return string URL for the tab, unescaped.
+	 */
+	public static function get_settings_page_tab_url( $tab_slug ) {
+		$settings_base_url = menu_page_url( Simple_History::SETTINGS_MENU_SLUG, 0 );
+		$settings_tab_url = add_query_arg( 'selected-tab', $tab_slug, $settings_base_url );
+		return $settings_tab_url;
+	}
+
+	/**
+	 * Get URL for a sub-tab in the settings page.
+	 *
+	 * @param string $sub_tab_slug Slug for the sub-tab.
+	 * @return string URL for the sub-tab, unescaped.
+	 */
+	public static function get_settings_page_sub_tab_url( $sub_tab_slug ) {
+		$settings_base_url = menu_page_url( Simple_History::SETTINGS_MENU_SLUG, 0 );
+		$settings_sub_tab_url = add_query_arg( 'selected-sub-tab', $sub_tab_slug, $settings_base_url );
+		return $settings_sub_tab_url;
+	}
+
+	/**
+	 *  Add link to add-ons.
+	 *
+	 * @return string HTML for link to add-ons.
+	 */
+	public static function get_header_add_ons_link() {
+		ob_start();
+
+		?>
+		<a href="https://simple-history.com/add-ons/?utm_source=wpadmin" class="sh-PageHeader-rightLink" target="_blank">
+			<span class="sh-PageHeader-settingsLinkIcon sh-Icon sh-Icon--extension"></span>
+			<span class="sh-PageHeader-settingsLinkText"><?php esc_html_e( 'Add-ons', 'simple-history' ); ?></span>
+			<em class="sh-PageHeader-settingsLinkIcon-new"><?php esc_html_e( 'New', 'simple-history' ); ?></em>
+		</a>
+		<?php
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * Gets the pager size,
+	 * i.e. the number of items to show on each page in the history
+	 *
+	 * @return int
+	 */
+	public static function get_pager_size() {
+		$pager_size = get_option( 'simple_history_pager_size', 20 );
+
+		/**
+		 * Filter the pager size setting
+		 *
+		 * @since 2.0
+		 *
+		 * @param int $pager_size
+		 */
+		$pager_size = apply_filters( 'simple_history/pager_size', $pager_size );
+
+		return $pager_size;
+	}
+
+	/**
+	 * Gets the pager size for the dashboard widget,
+	 * i.e. the number of items to show on each page in the history
+	 *
+	 * @since 2.12
+	 * @return int
+	 */
+	public static function get_pager_size_dashboard() {
+		$pager_size = get_option( 'simple_history_pager_size_dashboard', 5 );
+
+		/**
+		 * Filter the pager size setting for the dashboard.
+		 *
+		 * @since 2.0
+		 *
+		 * @param int $pager_size
+		 */
+		$pager_size = apply_filters( 'simple_history/dashboard_pager_size', $pager_size );
+
+		/**
+		 * Filter the pager size setting
+		 *
+		 * @since 2.12
+		 *
+		 * @param int $pager_size
+		 */
+		$pager_size = apply_filters( 'simple_history/pager_size_dashboard', $pager_size );
+
+		return $pager_size;
+	}
+
+	/**
+	 * Check if the current user can clear the log.
+	 *
+	 * @since 2.19
+	 * @return bool
+	 */
+	public static function user_can_clear_log() {
+		/**
+		 * Allows controlling who can manually clear the log.
+		 * When this is true then the "Clear"-button in shown in the settings.
+		 * When this is false then no button is shown.
+		 *
+		 * @example
+		 * ```php
+		 *  // Remove the "Clear log"-button, so a user with admin access can not clear the log
+		 *  // and wipe their mischievous behavior from the log.
+		 *  add_filter(
+		 *      'simple_history/user_can_clear_log',
+		 *      function ( $user_can_clear_log ) {
+		 *          $user_can_clear_log = false;
+		 *          return $user_can_clear_log;
+		 *      }
+		 *  );
+		 * ```
+		 *
+		 * @param bool $allow Whether the current user is allowed to clear the log.
+		*/
+		return apply_filters( 'simple_history/user_can_clear_log', true );
+	}
+
+	/**
+	 * Removes all items from the log.
+	 *
+	 * @return int Number of rows removed.
+	 */
+	public static function clear_log() {
+		global $wpdb;
+
+		$simple_history = Simple_History::get_instance();
+
+		$simple_history_table = $simple_history->get_events_table_name();
+		$simple_history_contexts_table = $simple_history->get_contexts_table_name();
+
+		// Get number of rows before delete.
+		$sql_num_rows = "SELECT count(id) AS num_rows FROM {$simple_history_table}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$num_rows = $wpdb->get_var( $sql_num_rows, 0 );
+
+		// Use truncate instead of delete because it's much faster (I think, writing this much later).
+		$sql = "TRUNCATE {$simple_history_table}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $sql );
+
+		$sql = "TRUNCATE {$simple_history_contexts_table}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $sql );
+
+		self::clear_cache();
+
+		return $num_rows;
+	}
+
+	/**
+	 * How old log entried are allowed to be.
+	 * 0 = don't delete old entries.
+	 *
+	 * @return int Number of days.
+	 */
+	public static function get_clear_history_interval() {
+		$days = 60;
+
+		/**
+		 * Deprecated filter name, use `simple_history/db_purge_days_interval` instead.
+		 * @deprecated
+		 */
+		$days = (int) apply_filters( 'simple_history_db_purge_days_interval', $days );
+
+		/**
+		 * Filter to modify number of days of history to keep.
+		 * Default is 60 days.
+		 *
+		 * @example Keep only the most recent 7 days in the log.
+		 *
+		 * ```php
+		 * add_filter( "simple_history/db_purge_days_interval", function( $days ) {
+		 *      $days = 7;
+		 *      return $days;
+		 *  } );
+		 * ```
+		 *
+		 * @example Expand the log to keep 90 days in the log.
+		 *
+		 * ```php
+		 * add_filter( "simple_history/db_purge_days_interval", function( $days ) {
+		 *      $days = 90;
+		 *      return $days;
+		 *  } );
+		 * ```
+		 *
+		 * @param int $days Number of days of history to keep
+		 */
+		$days = apply_filters( 'simple_history/db_purge_days_interval', $days );
+
+		return $days;
+	}
+
+	/**
+	 * Return capability required to view history = for who will the History page be added.
+	 * Default capability is "edit_pages".
+	 *
+	 * @since 2.1.5
+	 * @return string capability
+	 */
+	public static function get_view_history_capability() {
+		$view_history_capability = 'edit_pages';
+
+		/**
+		 * Deprecated, use filter `simple_history/view_history_capability` instead.
+		 */
+		$view_history_capability = apply_filters( 'simple_history_view_history_capability', $view_history_capability );
+
+		/**
+		 * Filter the capability required to view main simple history page, with the activity feed.
+		 * Default capability is "edit_pages".
+		 *
+		 * @example Change the capability required to view the log to "manage options", so only allow admins are allowed to view the history log page.
+		 *
+		 * ```php
+		 *  add_filter(
+		 *      'simple_history/view_history_capability',
+		 *      function ( $capability ) {
+		 *          $capability = 'manage_options';
+		 *          return $capability;
+		 *      }
+		 *  );
+		 * ```
+		 *
+		 * @param string $view_history_capability
+		 */
+		$view_history_capability = apply_filters( 'simple_history/view_history_capability', $view_history_capability );
+
+		return $view_history_capability;
+	}
+
+	/**
+	 * Return capability required to view settings.
+	 * Default capability is "manage_options",
+	 * but can be modified using filter.
+	 *
+	 * @since 2.1.5
+	 * @return string capability
+	 */
+	public static function get_view_settings_capability() {
+		$view_settings_capability = 'manage_options';
+
+		/**
+		 * Old filter name, use `simple_history/view_settings_capability` instead.
+		 */
+		$view_settings_capability = apply_filters( 'simple_history_view_settings_capability', $view_settings_capability );
+
+		/**
+		 * Filters the capability required to view the settings page.
+		 *
+		 * @example Change capability required to view the
+		 *
+		 * ```php
+		 *  add_filter(
+		 *      'simple_history/view_settings_capability',
+		 *      function ( $capability ) {
+		 *
+		 *          $capability = 'manage_options';
+		 *          return $capability;
+		 *      }
+		 *  );
+		 * ```
+		 *
+		 * @param string $view_settings_capability
+		 */
+		$view_settings_capability = apply_filters( 'simple_history/view_settings_capability', $view_settings_capability );
+
+		return $view_settings_capability;
+	}
+
+	/**
+	 * Check if the current page is any of the pages that belong
+	 * to Simple History.
+	 *
+	 * @param string $hook The current page hook.
+	 * @return bool
+	 */
+	public static function is_on_our_own_pages( $hook = '' ) {
+		$current_screen = self::get_current_screen();
+
+		$basePrefix = apply_filters( 'simple_history/admin_location', 'index' );
+		$basePrefix = $basePrefix === 'index' ? 'dashboard' : $basePrefix;
+
+		if ( $current_screen && $current_screen->base == 'settings_page_' . Simple_History::SETTINGS_MENU_SLUG ) {
+			return true;
+		} elseif ( $current_screen && $current_screen->base === $basePrefix . '_page_simple_history_page' ) {
+			return true;
+		} elseif (
+			$hook == 'settings_page_' . Simple_History::SETTINGS_MENU_SLUG ||
+			( self::setting_show_on_dashboard() && $hook == 'index.php' ) ||
+			( self::setting_show_as_page() && $hook == $basePrefix . '_page_simple_history_page' )
+		) {
+			return true;
+		} elseif ( $current_screen && $current_screen->base == 'dashboard' && self::setting_show_on_dashboard() ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if the database has any data, i.e. at least 1 row.
+	 *
+	 * @since 2.1.6
+	 * @return bool True if database is not empty, false if database is empty = contains no data
+	 */
+	public static function db_has_data() {
+		global $wpdb;
+
+		$simple_history = Simple_History::get_instance();
+
+		$table_name = $simple_history->get_events_table_name();
+
+		$sql_data_exists = "SELECT id AS id_exists FROM {$table_name} LIMIT 1";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$data_exists = (bool) $wpdb->get_var( $sql_data_exists, 0 );
+
+		return $data_exists;
+	}
+
+	/**
+	 * Get setting if plugin should be visible on dashboard.
+	 * Defaults to true
+	 *
+	 * @return bool
+	 */
+	public static function setting_show_on_dashboard() {
+		$show_on_dashboard = get_option( 'simple_history_show_on_dashboard', 1 );
+		$show_on_dashboard = apply_filters( 'simple_history_show_on_dashboard', $show_on_dashboard );
+		return (bool) $show_on_dashboard;
+	}
+
+	/**
+	 * Should simple history be shown as a page
+	 * Defaults to true
+	 *
+	 * @return bool
+	 */
+	public static function setting_show_as_page() {
+		$setting = get_option( 'simple_history_show_as_page', 1 );
+		$setting = apply_filters( 'simple_history_show_as_page', $setting );
+
+		return (bool) $setting;
+	}
+
+	/**
+	 * Get number of events the last n days.
+	 *
+	 * @param int $period_days Number of days to get events for.
+	 * @return int Number of days.
+	 */
+	public static function get_num_events_last_n_days( $period_days = 28 ) {
+		$simple_history = Simple_History::get_instance();
+		$transient_key = 'sh_' . md5( __METHOD__ . $period_days . '_2' );
+
+		$count = get_transient( $transient_key );
+
+		if ( false === $count ) {
+			global $wpdb;
+
+			$sqlStringLoggersUserCanRead = $simple_history->get_loggers_that_user_can_read( null, 'sql' );
+
+			$sql = sprintf(
+				'
+                    SELECT count(*)
+                    FROM %1$s
+                    WHERE UNIX_TIMESTAMP(date) >= %2$d
+                    AND logger IN %3$s
+                ',
+				$simple_history->get_events_table_name(),
+				strtotime( "-$period_days days" ),
+				$sqlStringLoggersUserCanRead
+			);
+
+			$count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			set_transient( $transient_key, $count, HOUR_IN_SECONDS );
+		}
+
+		return $count;
+	}
+
+	/**
+	 * Get number of events per day the last n days.
+	 *
+	 * @param int $period_days Number of days to get events for.
+	 * @return array Array with date as key and number of events as value.
+	 */
+	public static function get_num_events_per_day_last_n_days( $period_days = 28 ) {
+		$simple_history = Simple_History::get_instance();
+		$transient_key = 'sh_' . md5( __METHOD__ . $period_days . '_3' );
+		$dates = get_transient( $transient_key );
+
+		if ( false === $dates ) {
+			/** @var \wpdb $wpdb */
+			global $wpdb;
+
+			$sqlStringLoggersUserCanRead = $simple_history->get_loggers_that_user_can_read( null, 'sql' );
+
+			$db_engine = Log_Query::get_db_engine();
+
+			$sql = null;
+
+			if ( $db_engine === 'mysql' ) {
+				$sql = sprintf(
+					'
+						SELECT
+							date_format(date, "%%Y-%%m-%%d") AS yearDate,
+							count(date) AS count
+						FROM
+							%1$s
+						WHERE
+							UNIX_TIMESTAMP(date) >= %2$d
+							AND logger IN %3$s
+						GROUP BY yearDate
+						ORDER BY yearDate ASC
+					',
+					$simple_history->get_events_table_name(),
+					strtotime( "-$period_days days" ),
+					$sqlStringLoggersUserCanRead
+				);
+			} elseif ( $db_engine === 'sqlite' ) {
+				// SQLite does not support date_format() or UNIX_TIMESTAMP so we need to use strftime().
+				$sql = sprintf(
+					'
+						SELECT
+							strftime("%%Y-%%m-%%d", date) AS yearDate,
+							count(date) AS count
+						FROM
+							%1$s
+						WHERE
+							unixepoch(date) >= %2$d
+							AND logger IN %3$s
+						GROUP BY yearDate
+						ORDER BY yearDate ASC
+					',
+					$simple_history->get_events_table_name(),
+					strtotime( "-$period_days days" ),
+					$sqlStringLoggersUserCanRead
+				);
+			}
+
+			$dates = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			set_transient( $transient_key, $dates, HOUR_IN_SECONDS );
+		}
+
+		return $dates;
+	}
+
+	/**
+	 * Get number of unique events the last n days.
+	 *
+	 * @param int $days Number of days to get events for.
+	 * @return int Number of days.
+	 */
+	public static function get_unique_events_for_days( $days = 7 ) {
+		global $wpdb;
+		$simple_history = Simple_History::get_instance();
+
+		$days = (int) $days;
+		$table_name = $simple_history->get_events_table_name();
+		$cache_key = 'sh_' . md5( __METHOD__ . $days );
+		$numEvents = get_transient( $cache_key );
+
+		if ( false == $numEvents ) {
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$sql = $wpdb->prepare(
+				"
+                SELECT count( DISTINCT occasionsID )
+                FROM $table_name
+                WHERE date >= DATE_ADD(CURDATE(), INTERVAL -%d DAY)
+            	",
+				$days
+			);
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+			$numEvents = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			set_transient( $cache_key, $numEvents, HOUR_IN_SECONDS );
+		}
+
+		return $numEvents;
+	}
+
+	/**
+	 * Check if the current request is a request made from WP CLI.
+	 *
+	 * @return bool
+	 */
+	public static function is_wp_cli() {
+		return defined( 'WP_CLI' ) && WP_CLI;
 	}
 }

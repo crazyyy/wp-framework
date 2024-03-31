@@ -3,7 +3,6 @@
 namespace Simple_History\Dropins;
 
 use Simple_History\Helpers;
-use Simple_History\Simple_History;
 use Simple_History\Log_Levels;
 
 /**
@@ -12,6 +11,7 @@ use Simple_History\Log_Levels;
  * Author: Pär Thernström
  */
 class Filter_Dropin extends Dropin {
+	/** @inheritdoc */
 	public function loaded() {
 		add_action( 'simple_history/enqueue_admin_scripts', array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'simple_history/history_page/before_gui', array( $this, 'gui_page_filters' ), 10 );
@@ -19,6 +19,7 @@ class Filter_Dropin extends Dropin {
 		add_action( 'wp_ajax_simple_history_filters_search_user', array( $this, 'ajax_simple_history_filters_search_user' ) );
 	}
 
+	/** Enqueue scripts and styles */
 	public function enqueue_admin_scripts() {
 		$file_url = plugin_dir_url( __FILE__ );
 
@@ -26,6 +27,7 @@ class Filter_Dropin extends Dropin {
 		wp_enqueue_style( 'simple_history_FilterDropin', $file_url . 'filter-dropin.css', null, SIMPLE_HISTORY_VERSION );
 	}
 
+	/** Add JS template */
 	public function gui_page_filters() {
 		$loggers_user_can_read = $this->simple_history->get_loggers_that_user_can_read();
 
@@ -48,12 +50,13 @@ class Filter_Dropin extends Dropin {
 			<form class="SimpleHistory__filters__form js-SimpleHistory__filters__form">
 				<?php
 
-				// Start months filter
 				global $wpdb;
-				$table_name = $wpdb->prefix . Simple_History::DBTABLE;
+
+				// Start months filter.
+				$table_name = $this->simple_history->get_events_table_name();
 				$loggers_user_can_read_sql_in = $this->simple_history->get_loggers_that_user_can_read( null, 'sql' );
 
-				// Get unique months
+				// Get unique months.
 				$cache_key = 'sh_filter_unique_months';
 				$result_months = get_transient( $cache_key );
 
@@ -79,14 +82,14 @@ class Filter_Dropin extends Dropin {
 				// Default month = current month
 				// Mainly for performance reasons, since often
 				// it's not the users intention to view all events,
-				// but just the latest
+				// but just the latest.
 
-				// Determine if we limit the date range by default
+				// Determine if we limit the date range by default.
 				$daysToShow = 1;
 
-				// Start with the latest day
-				$numEvents = $this->simple_history->get_unique_events_for_days( $daysToShow );
-				$numPages = $numEvents / $this->simple_history->get_pager_size();
+				// Start with the latest day.
+				$numEvents = Helpers::get_unique_events_for_days( $daysToShow );
+				$numPages = $numEvents / Helpers::get_pager_size();
 
 				$arr_days_and_pages[] = array(
 					'daysToShow' => $daysToShow,
@@ -99,8 +102,8 @@ class Filter_Dropin extends Dropin {
 				if ( $numPages < 20 ) {
 					// Not that many things the last day. Let's try to expand to 7 days instead.
 					$daysToShow = 7;
-					$numEvents = $this->simple_history->get_unique_events_for_days( $daysToShow );
-					$numPages = $numEvents / $this->simple_history->get_pager_size();
+					$numEvents = Helpers::get_unique_events_for_days( $daysToShow );
+					$numPages = $numEvents / Helpers::get_pager_size();
 
 					$arr_days_and_pages[] = array(
 						'daysToShow' => $daysToShow,
@@ -110,8 +113,8 @@ class Filter_Dropin extends Dropin {
 					if ( $numPages < 20 ) {
 						// Not that many things the last 7 days. Let's try to expand to 14 days instead.
 						$daysToShow = 14;
-						$numEvents = $this->simple_history->get_unique_events_for_days( $daysToShow );
-						$numPages = $numEvents / $this->simple_history->get_pager_size();
+						$numEvents = Helpers::get_unique_events_for_days( $daysToShow );
+						$numPages = $numEvents / Helpers::get_pager_size();
 
 						$arr_days_and_pages[] = array(
 							'daysToShow' => $daysToShow,
@@ -121,15 +124,15 @@ class Filter_Dropin extends Dropin {
 						if ( $numPages < 20 ) {
 							// Not many things the last 14 days either. Let try with 30 days.
 							$daysToShow = 30;
-							$numEvents = $this->simple_history->get_unique_events_for_days( $daysToShow );
-							$numPages = $numEvents / $this->simple_history->get_pager_size();
+							$numEvents = Helpers::get_unique_events_for_days( $daysToShow );
+							$numPages = $numEvents / Helpers::get_pager_size();
 
 							$arr_days_and_pages[] = array(
 								'daysToShow' => $daysToShow,
 								'numPages' => $numPages,
 							);
 
-							// If 30 days gives a big amount of pages, go back to 14 days
+							// If 30 days gives a big amount of pages, go back to 14 days.
 							if ( $numPages > 1000 ) {
 								$daysToShow = 14;
 							}
@@ -151,7 +154,7 @@ class Filter_Dropin extends Dropin {
 						<?php
 
 						// custom date range
-						// since 2.8.1
+						// since 2.8.1.
 						printf(
 							'<option value="%1$s" %3$s>%2$s</option>',
 							'customRange', // 1 - value
@@ -159,7 +162,7 @@ class Filter_Dropin extends Dropin {
 							selected( $daysToShow, 'customRange', 0 )
 						);
 
-						// One day+ Last week + two weeks back + 30 days back
+						// One day+ Last week + two weeks back + 30 days back.
 						printf(
 							'<option value="%1$s" %3$s>%2$s</option>',
 							'lastdays:1', // 1 - value
@@ -195,15 +198,15 @@ class Filter_Dropin extends Dropin {
 							selected( $daysToShow, 60, 0 )
 						);
 
-						// Months
+						// Months.
 						foreach ( $result_months as $row ) {
 							printf(
 								'<option value="%1$s">%2$s</option>',
-								'month:' . esc_attr( $row->yearMonth ),
+								'month:' . esc_attr( $row->yearMonth ), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 								esc_attr(
 									date_i18n(
 										'F Y',
-										strtotime( $row->yearMonth )
+										strtotime( $row->yearMonth ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 									)
 								)
 							);
@@ -344,11 +347,11 @@ class Filter_Dropin extends Dropin {
 								$logger_info = $logger['instance']->get_info();
 								$logger_slug = $logger['instance']->get_slug();
 
-								// Get labels for logger
+								// Get labels for logger.
 								if ( isset( $logger_info['labels']['search'] ) ) {
 									printf( '<optgroup label="%1$s">', esc_attr( $logger_info['labels']['search']['label'] ) );
 
-									// If all activity
+									// If all activity.
 									if ( ! empty( $logger_info['labels']['search']['label_all'] ) ) {
 										$arr_all_search_messages = array();
 										foreach ( $logger_info['labels']['search']['options'] as $option_messages ) {
@@ -362,7 +365,7 @@ class Filter_Dropin extends Dropin {
 										printf( '<option value="%2$s">%1$s</option>', esc_attr( $logger_info['labels']['search']['label_all'] ), esc_attr( implode( ',', $arr_all_search_messages ) ) );
 									}
 
-									// For each specific search option
+									// For each specific search option.
 									foreach ( $logger_info['labels']['search']['options'] as $option_key => $option_messages ) {
 										foreach ( $option_messages as $key => $val ) {
 											$option_messages[ $key ] = $logger_slug . ':' . $val;
@@ -450,7 +453,7 @@ class Filter_Dropin extends Dropin {
 	/**
 	 * Return format used for select2 for a single user id.
 	 *
-	 * @param int $userID
+	 * @param int $userID User ID.
 	 * @return array Array with each user as an object
 	 */
 	public function get_data_for_user( $userID ) {
@@ -481,15 +484,15 @@ class Filter_Dropin extends Dropin {
 	 */
 	public function ajax_simple_history_filters_search_user() {
 
-		$q = $_GET['q'] ?? '';
+		$q = sanitize_text_field( wp_unslash( $_GET['q'] ?? '' ) );
 		$page_limit = isset( $_GET['page_limit'] ) ? (int) $_GET['page_limit'] : '';
 
-		// query and page limit must be set
+		// query and page limit must be set.
 		if ( ! $q || ! $page_limit ) {
 			wp_send_json_error();
 		}
 
-		// user must have list_users capability (default super admin + administrators have this)
+		// user must have list_users capability (default super admin + administrators have this).
 		if ( ! current_user_can( 'list_users' ) ) {
 			wp_send_json_error();
 		}
@@ -498,7 +501,7 @@ class Filter_Dropin extends Dropin {
 		// because a user can change email
 		// search in context: user_id, user_email, user_login
 		// search in wp_users: login, nicename, user_email
-		// search and get users. make sure to use "fields" and "number" or we can get timeout/use lots of memory if we have a large amount of users
+		// search and get users. make sure to use "fields" and "number" or we can get timeout/use lots of memory if we have a large amount of users.
 		$results_user = get_users(
 			array(
 				'search' => "*{$q}*",
@@ -507,7 +510,7 @@ class Filter_Dropin extends Dropin {
 			)
 		);
 
-		// add lower case id to user array
+		// add lower case id to user array.
 		array_walk(
 			$results_user,
 			function ( $val ) {
@@ -515,7 +518,7 @@ class Filter_Dropin extends Dropin {
 			}
 		);
 
-		// add gravatars to user array
+		// add gravatars to user array.
 		array_walk( $results_user, array( $this, 'add_gravatar_to_user_array' ) );
 
 		$data = array(
@@ -530,6 +533,12 @@ class Filter_Dropin extends Dropin {
 		wp_send_json_success( $data );
 	}
 
+	/**
+	 * Add gravatar to user array
+	 *
+	 * @param object $val User object.
+	 * @param int    $index Index.
+	 */
 	public function add_gravatar_to_user_array( &$val, $index = null ) {
 		$val->text = sprintf(
 			'%1$s - %2$s',
@@ -547,13 +556,13 @@ class Filter_Dropin extends Dropin {
 	 *
 	 * @global WP_Locale  $wp_locale
 	 *
-	 * @param 'from'|'to' $from_or_to
-	 * @param int $edit Unused.
+	 * @param 'from'|'to' $from_or_to From or to.
+	 * @param int         $edit Unused.
 	 */
 	public function touch_time( $from_or_to, $edit = 1 ) {
 		global $wp_locale;
 
-		// Prefix = text before the inputs
+		// Prefix = text before the inputs.
 		$prefix = '';
 		$input_prefix = '';
 		if ( 'from' == $from_or_to ) {
@@ -564,7 +573,7 @@ class Filter_Dropin extends Dropin {
 			$input_prefix = 'to_';
 		}
 
-		// The default date to show in the inputs
+		// The default date to show in the inputs.
 		$date = gmdate( 'Y-m-d' );
 
 		$jj = mysql2date( 'd', $date, false );

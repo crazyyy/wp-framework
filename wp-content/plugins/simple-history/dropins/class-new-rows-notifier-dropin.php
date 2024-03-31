@@ -2,6 +2,7 @@
 
 namespace Simple_History\Dropins;
 
+use Simple_History\Helpers;
 use Simple_History\Log_Query;
 
 /**
@@ -11,9 +12,10 @@ use Simple_History\Log_Query;
  * Author: Pär Thernström
  */
 class New_Rows_Notifier_Dropin extends Dropin {
-	// How often we should check for new rows, in ms.
+	/** @var int How often we should check for new rows, in ms. */
 	private $interval = 10000;
 
+	/** @inheritdoc */
 	public function loaded() {
 
 		/**
@@ -39,6 +41,9 @@ class New_Rows_Notifier_Dropin extends Dropin {
 		add_action( 'simple_history/enqueue_admin_scripts', array( $this, 'enqueue_admin_scripts' ) );
 	}
 
+	/**
+	 * Enqueue scripts.
+	 */
 	public function enqueue_admin_scripts() {
 
 		$file_url = plugin_dir_url( __FILE__ );
@@ -53,9 +58,12 @@ class New_Rows_Notifier_Dropin extends Dropin {
 		wp_enqueue_style( 'simple_history_NewRowsNotifierDropin', $file_url . 'new-rows-notifier-dropin.css', null, SIMPLE_HISTORY_VERSION );
 	}
 
+	/**
+	 * Ajax callback.
+	 */
 	public function ajax() {
-
-		$apiArgs = $_GET['apiArgs'] ?? array();
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$apiArgs = wp_unslash( $_GET['apiArgs'] ?? array() );
 
 		if ( ! $apiArgs ) {
 			wp_send_json_error(
@@ -73,8 +81,8 @@ class New_Rows_Notifier_Dropin extends Dropin {
 			);
 		}
 
-		// User must have capability to view the history page
-		if ( ! current_user_can( $this->simple_history->get_view_history_capability() ) ) {
+		// User must have capability to view the history page.
+		if ( ! current_user_can( Helpers::get_view_history_capability() ) ) {
 			wp_send_json_error(
 				array(
 					'error' => 'CAPABILITY_ERROR',
@@ -82,13 +90,12 @@ class New_Rows_Notifier_Dropin extends Dropin {
 			);
 		}
 
-		// $since_id = isset( $_GET["since_id"] ) ? absint($_GET["since_id"]) : null;
 		$logQueryArgs = $apiArgs;
 
 		$logQuery = new Log_Query();
 		$answer = $logQuery->query( $logQueryArgs );
 
-		// Use our own response array instead of $answer to keep size down
+		// Use our own response array instead of $answer to keep size down.
 		$json_data = array();
 
 		$numNewRows = $answer['total_row_count'] ?? 0;
@@ -98,9 +105,9 @@ class New_Rows_Notifier_Dropin extends Dropin {
 
 		if ( $numNewRows ) {
 			// We have new rows
-			// Append strings
+			// Append strings.
 			$textRowsFound = sprintf(
-				// translators: %s is the number of new events
+				// translators: %s is the number of new events.
 				_n( '%s new event', '%s new events', $numNewRows, 'simple-history' ),
 				$numNewRows
 			);

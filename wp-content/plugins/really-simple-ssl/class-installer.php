@@ -82,12 +82,12 @@ if ( ! class_exists( 'rsssl_installer' ) ) {
 			update_site_option( $prefix . '_tour_started', false );
 			update_site_option( $prefix . '_tour_shown_once', true );
 			delete_transient( $prefix . '_redirect_to_settings' );
+			delete_transient( $prefix . '_redirect_to_settings_page' );
 		}
 
 		/**
 		 * Download the plugin
 		 * @return bool
-		 * @todo restore
 		 */
 		public function download_plugin() {
 			if ( ! current_user_can( 'install_plugins' ) ) {

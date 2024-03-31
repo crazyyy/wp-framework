@@ -267,15 +267,14 @@ function ewww_image_optimizer_aux_images_table() {
 	foreach ( $already_optimized as $optimized_image ) {
 		$file       = ewww_image_optimizer_absolutize_path( $optimized_image['path'] );
 		$image_name = str_replace( ABSPATH, '', $file );
-		$image_url  = esc_url( site_url( 'wp-includes/images/media/default.png' ) );
+		$thumb_url  = '';
+		$image_url  = '';
 		$trace      = maybe_unserialize( $optimized_image['trace'] );
 		ewwwio_debug_message( "name is $image_name after replacing ABSPATH" );
 		if ( 'media' === $optimized_image['gallery'] && ! empty( $optimized_image['attachment_id'] ) ) {
 			$thumb_url = wp_get_attachment_image_url( $optimized_image['attachment_id'] );
 		}
-		if ( ! empty( $thumb_url ) ) {
-			$image_url = esc_url( $thumb_url );
-		} elseif ( $file !== $image_name ) {
+		if ( $file !== $image_name ) {
 			$image_url = esc_url( site_url( $image_name ) );
 		} else {
 			$image_name = str_replace( WP_CONTENT_DIR, '', $file );
@@ -283,6 +282,12 @@ function ewww_image_optimizer_aux_images_table() {
 				$image_url = esc_url( content_url( $image_name ) );
 			}
 		}
+		if ( empty( $thumb_url ) && ! empty( $image_url ) ) {
+			$thumb_url = $image_url;
+		} elseif ( empty( $thumb_url ) ) {
+			$thumb_url = esc_url( site_url( 'wp-includes/images/media/default.png' ) );
+		}
+
 		$image_name = esc_html( $image_name );
 		$savings    = '';
 		if ( $optimized_image['image_size'] ) {
@@ -303,6 +308,7 @@ function ewww_image_optimizer_aux_images_table() {
 		// Check for WebP results.
 		$webp_info  = '';
 		$webp_error = '';
+		$webpurl    = '';
 		$webpfile   = $file . '.webp';
 		$webp_size  = ewww_image_optimizer_filesize( $webpfile );
 		if ( ! $webp_size ) {
@@ -315,17 +321,17 @@ function ewww_image_optimizer_aux_images_table() {
 		if ( $webp_size ) {
 			// Get a human readable filesize.
 			$webp_size = ewww_image_optimizer_size_format( $webp_size );
-			$webpurl   = $image_url . '.webp';
-			$webp_info = "<br>WebP: <a href=\"$webpurl\" target=\"_blank\">$webp_size</a>";
+			$webp_info = "<br>WebP: $webp_size";
+			if ( $image_url ) {
+				$webpurl   = $image_url . '.webp';
+				$webp_info = "<br>WebP: <a href=\"$webpurl\" target=\"_blank\">$webp_size</a>";
+			}
 		} elseif ( $webp_error ) {
 			$webp_info = "<br>$webp_error";
 		}
 		$resize_status = '<br>' . esc_html( ewww_image_optimizer_resize_results_message( $optimized_image['path'], $optimized_image['resize_error'] ) );
 		// Retrieve the mimetype of the attachment.
 		$type = ewww_image_optimizer_quick_mimetype( $file, 'i' );
-		if ( 'application/pdf' === $type ) {
-			$image_url = esc_url( site_url( 'wp-includes/images/media/default.png' ) );
-		}
 
 		// Get a human readable filesize.
 		$file_size = ewww_image_optimizer_size_format( $optimized_image['image_size'] );
@@ -347,7 +353,7 @@ function ewww_image_optimizer_aux_images_table() {
 
 		$output['table'] .= '<tr ' . ( $alternate ? "class='alternate' " : '' ) . 'id="ewww-image-' . $optimized_image['id'] . '">';
 		if ( ewww_image_optimizer_stream_wrapped( $file ) || ewwwio_is_file( $file ) ) {
-			$output['table'] .= "<td style='width:50px;' class='column-icon'><img style='width:50px;height:50px;object-fit:contain;' loading='lazy' src='$image_url' /></td>";
+			$output['table'] .= "<td style='width:50px;' class='column-icon'><img style='width:50px;height:50px;object-fit:contain;' loading='lazy' src='$thumb_url' /></td>";
 		} else {
 			$output['table'] .= "<td style='width:50px;' class='column-icon'>" . esc_html__( 'file not found', 'ewww-image-optimizer' ) . '</td>';
 			ewwwio_debug_message( "could not find $file" );

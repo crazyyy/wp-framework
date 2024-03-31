@@ -71,24 +71,24 @@ class Autoloader {
 	 * @param string $prefix The namespace prefix.
 	 * @param string $base_dir A base directory for class files in the
 	 * namespace.
-	 * @param bool $prepend If true, prepend the base directory to the stack
-	 * instead of appending it; this causes it to be searched first rather
-	 * than last.
+	 * @param bool   $prepend If true, prepend the base directory to the stack
+	 *   instead of appending it; this causes it to be searched first rather
+	 *   than last.
 	 * @return void
 	 */
 	public function add_namespace( $prefix, $base_dir, $prepend = false ) {
-		// normalize namespace prefix
+		// normalize namespace prefix.
 		$prefix = trim( $prefix, '\\' ) . '\\';
 
-		// normalize the base directory with a trailing separator
+		// normalize the base directory with a trailing separator.
 		$base_dir = rtrim( $base_dir, DIRECTORY_SEPARATOR ) . '/';
 
-		// initialize the namespace prefix array
+		// initialize the namespace prefix array.
 		if ( ! isset( $this->prefixes[ $prefix ] ) ) {
 			$this->prefixes[ $prefix ] = array();
 		}
 
-		// retain the base directory for the namespace prefix
+		// retain the base directory for the namespace prefix.
 		if ( $prepend ) {
 			array_unshift( $this->prefixes[ $prefix ], $base_dir );
 		} else {
@@ -104,31 +104,31 @@ class Autoloader {
 	 * failure.
 	 */
 	public function load_class( $class ) {
-		// the current namespace prefix
+		// the current namespace prefix.
 		$prefix = $class;
 
 		// work backwards through the namespace names of the fully-qualified
-		// class name to find a mapped file name
+		// class name to find a mapped file name.
 		while ( false !== $pos = strrpos( $prefix, '\\' ) ) {
 
-			// retain the trailing namespace separator in the prefix
+			// retain the trailing namespace separator in the prefix.
 			$prefix = substr( $class, 0, $pos + 1 );
 
-			// the rest is the relative class name
+			// the rest is the relative class name.
 			$relative_class = substr( $class, $pos + 1 );
 
-			// try to load a mapped file for the prefix and relative class
+			// try to load a mapped file for the prefix and relative class.
 			$mapped_file = $this->load_mapped_file( $prefix, $relative_class );
 			if ( $mapped_file ) {
 				return $mapped_file;
 			}
 
 			// remove the trailing namespace separator for the next iteration
-			// of strrpos()
+			// of strrpos().
 			$prefix = rtrim( $prefix, '\\' );
 		}
 
-		// never found a mapped file
+		// never found a mapped file.
 		return false;
 	}
 
@@ -146,12 +146,12 @@ class Autoloader {
 			return false;
 		}
 
-		// look through base directories for this namespace prefix
+		// look through base directories for this namespace prefix.
 		foreach ( $this->prefixes[ $prefix ] as $base_dir ) {
 
 			// replace the namespace prefix with the base directory,
 			// replace namespace separators with directory separators
-			// in the relative class name, append with .php
+			// in the relative class name, append with .php.
 
 			// "Dropins/Debug_Dropin"
 			$path_and_file = str_replace( '\\', '/', $relative_class );
@@ -170,10 +170,28 @@ class Autoloader {
 			. $path_and_file_lowercased_and_prefixed
 			. '.php';
 
-			// if the mapped file with "class-" prefix exists, require it
+			// Check for file with prefixed 'namespace-' and lowercase filename.
+			$path_and_file_lowercased_and_prefixed_with_interface = strtolower( $path_and_file );
+			$path_and_file_lowercased_and_prefixed_with_interface = str_replace( '_', '-', $path_and_file_lowercased_and_prefixed_with_interface );
+			$path_and_file_lowercased_and_prefixed_with_interface = str_replace( '/', '/interface-', $path_and_file_lowercased_and_prefixed_with_interface );
+			if ( ! str_contains( $path_and_file_lowercased_and_prefixed_with_interface, 'interface-' ) ) {
+				$path_and_file_lowercased_and_prefixed_with_interface = "interface-{$path_and_file_lowercased_and_prefixed_with_interface}";
+			}
+
+			$file_with_interface_prefix = $base_dir
+			. $path_and_file_lowercased_and_prefixed_with_interface
+			. '.php';
+
+			// if the mapped file with "class-" prefix exists, require it.
 			if ( $this->require_file( $file_with_class_prefix ) ) {
-				// yes, we're done
+				// yes, we're done.
 				return $file_with_class_prefix;
+			}
+
+			// if the mapped file with "class-" prefix exists, require it.
+			if ( $this->require_file( $file_with_interface_prefix ) ) {
+				// yes, we're done.
+				return $file_with_interface_prefix;
 			}
 
 			// <path>/WordPress-Simple-History/Dropins/Debug_Dropin.php
@@ -181,14 +199,14 @@ class Autoloader {
 				  . $path_and_file
 				  . '.php';
 
-			// if the mapped file exists, require it
+			// if the mapped file exists, require it.
 			if ( $this->require_file( $file ) ) {
-				// yes, we're done
+				// yes, we're done.
 				return $file;
 			}
 		}
 
-		// never found it
+		// never found it.
 		return false;
 	}
 

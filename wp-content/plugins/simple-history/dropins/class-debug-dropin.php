@@ -11,6 +11,7 @@ use Simple_History\Helpers;
  * Author: Pär Thernström
  */
 class Debug_Dropin extends Dropin {
+	/** @inheritdoc */
 	public function loaded() {
 		// Bail if Simple History debug mode is not active.
 		if ( false === Helpers::log_debug_is_enabled() ) {
@@ -23,16 +24,16 @@ class Debug_Dropin extends Dropin {
 	/**
 	 * Modify the context to add debug information.
 	 *
-	 * @param array $context
-	 * @param string $level
-	 * @param string $message
-	 * @param \Simple_History\Loggers\Simple_Logger $logger
+	 * @param array                                 $context Context array.
+	 * @param string                                $level Log level.
+	 * @param string                                $message Log message.
+	 * @param \Simple_History\Loggers\Simple_Logger $logger Logger instance.
 	 */
 	public function onLogArgumentContext( $context, $level, $message, $logger ) {
 		$context['_debug_get'] = Helpers::json_encode( $_GET );
 		$context['_debug_post'] = Helpers::json_encode( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$context['_debug_server'] = Helpers::json_encode( $_SERVER );
-		$context['_debug_files'] = Helpers::json_encode( $_FILES );
+		$context['_debug_files'] = Helpers::json_encode( $_FILES ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$context['_debug_php_sapi_name'] = php_sapi_name();
 
 		global $argv;

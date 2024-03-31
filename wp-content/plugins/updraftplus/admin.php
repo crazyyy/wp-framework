@@ -3202,6 +3202,8 @@ class UpdraftPlus_Admin {
 			$this->restore_in_progress_jobdata = $restore_jobdata;
 
 			add_action('all_admin_notices', array($this, 'show_admin_restore_in_progress_notice'));
+			add_action('admin_print_footer_scripts', array($this, 'print_unfinished_restoration_dialog_scripts'));
+			add_action('admin_print_styles', array($this, 'print_unfinished_restoration_dialog_styles'));
 		}
 	}
 
@@ -3224,7 +3226,7 @@ class UpdraftPlus_Admin {
 		$restore_jobdata['jobid'] = $job_id;
 		$this->restore_in_progress_jobdata = $restore_jobdata;
 
-		$html = $this->show_admin_restore_in_progress_notice(true, true);
+		$html = $this->show_admin_restore_in_progress_notice(true);
 
 		if (empty($html)) return new WP_Error('job_aborted', 'Job aborted.');
 
@@ -3239,7 +3241,7 @@ class UpdraftPlus_Admin {
 	 *
 	 * @return void|string - can return a string containing html or echo the html to page
 	 */
-	public function show_admin_restore_in_progress_notice($return_instead_of_echo = false, $exclude_js = false) {
+	public function show_admin_restore_in_progress_notice($return_instead_of_echo = false) {
 	
 		if (isset($_REQUEST['action']) && 'updraft_restore_abort' === $_REQUEST['action'] && !empty($_REQUEST['job_id'])) {
 			delete_site_option('updraft_restore_in_progress');
@@ -3252,27 +3254,23 @@ class UpdraftPlus_Admin {
 		$seconds_ago = $seconds_ago - $minutes_ago*60;
 		$time_ago = sprintf(__("%s minutes, %s seconds", 'updraftplus'), $minutes_ago, $seconds_ago);
 
-		$html = '<div class="updated show_admin_restore_in_progress_notice">';
+		$html = '<div class="updated show_admin_restore_in_progress_notice"><div class="updraft_admin_restore_dialog">';
 		$html .= '<span class="unfinished-restoration"><strong>UpdraftPlus: '.__('Unfinished restoration', 'updraftplus').'</strong></span><br>';
 		$html .= '<p>'.sprintf(__('You have an unfinished restoration operation, begun %s ago.', 'updraftplus'), $time_ago).'</p>';
-		$html .= '<form method="post" action="'.UpdraftPlus_Options::admin_page_url().'?page=updraftplus">';
+		$html .= '<form method="post" action="'.esc_url(UpdraftPlus_Options::admin_page_url()).'?page=updraftplus">';
 		$html .= wp_nonce_field('updraftplus-credentialtest-nonce');
 		$html .= '<input id="updraft_restore_continue_action" type="hidden" name="action" value="updraft_restore_continue">';
 		$html .= '<input type="hidden" name="updraftplus_ajax_restore" value="continue_ajax_restore">';
-		$html .= '<input type="hidden" name="job_id" value="'.$restore_jobdata['jobid'].'" value="'.esc_attr($restore_jobdata['jobid']).'">';
-
-		if ($exclude_js) {
-			$html .= '<button id="updraft_restore_resume" type="submit" class="button-primary">'.__('Continue restoration', 'updraftplus').'</button>';
-		} else {
-			$html .= '<button id="updraft_restore_resume" onclick="jQuery(\'#updraft_restore_continue_action\').val(\'updraft_restore_continue\'); jQuery(this).parent(\'form\').trigger(\'submit\');" type="submit" class="button-primary">'.__('Continue restoration', 'updraftplus').'</button>';
-		}
-		$html .= '<button id="updraft_restore_abort" onclick="jQuery(\'#updraft_restore_continue_action\').val(\'updraft_restore_abort\'); jQuery(this).parent(\'form\').trigger(\'submit\');" class="button-secondary">'.__('Dismiss', 'updraftplus').'</button>';
-
-		$html .= '</form></div>';
+		$html .= '<input type="hidden" name="job_id" value="'.esc_attr($restore_jobdata['jobid']).'">';
+		$html .= '<button id="updraft_restore_resume" type="submit" class="button-primary">'.__('Continue restoration', 'updraftplus').'</button>';
+		$html .= '<button id="updraft_restore_abort" class="button-secondary">'.__('Dismiss', 'updraftplus').'</button>';
+		$html .= '</form></div></div>';
 
 		if ($return_instead_of_echo) return $html;
 
+		add_filter('wp_kses_allowed_html', array($this, 'kses_allow_input_tags_on_unfinished_restoration_dialog'));
 		echo wp_kses_post($html);
+		remove_filter('wp_kses_allowed_html', array($this, 'kses_allow_input_tags_on_unfinished_restoration_dialog'));
 	}
 
 	/**
@@ -6363,6 +6361,60 @@ class UpdraftPlus_Admin {
 			});
 		});
 	</script>
+		<?php
+	}
+
+	/**
+	 * Allow HTML input elements on the unfinished restoration dialog ensuring the HTML form element doesn't get stripped during the call of wp_kses_post
+	 *
+	 * @param Array $allowed_html Allowed HTML elements
+	 * @return Array The filtered allowed HTML elements
+	 */
+	public function kses_allow_input_tags_on_unfinished_restoration_dialog($allowed_html) {
+		if (!isset($allowed_html['input'])) $allowed_html['input'] = array();
+		$allowed_html['input']['type'] = true;
+		$allowed_html['input']['name'] = true;
+		$allowed_html['input']['value'] = true;
+		$allowed_html['input']['id'] = true;
+		return $allowed_html;
+	}
+
+	/**
+	 * Print the unfinished restoration dialog scripts
+	 */
+	public function print_unfinished_restoration_dialog_scripts() {
+		?>
+	<script>
+		jQuery(function($) {
+			$('.show_admin_restore_in_progress_notice').on('click', 'button#updraft_restore_abort', function(e) {
+				e.preventDefault();
+				jQuery('#updraft_restore_continue_action').val('updraft_restore_abort');
+				jQuery(this).parent('form').trigger('submit');
+			});
+		});
+	</script>
+		<?php
+	}
+
+	/**
+	 * Print CSS rules for the unfinished restoration dialog
+	 */
+	public function print_unfinished_restoration_dialog_styles() {
+		?>
+		<style>
+			.show_admin_restore_in_progress_notice .updraft_admin_restore_dialog .unfinished-restoration {
+				font-size: 120% !important;
+			}
+
+			.show_admin_restore_in_progress_notice .updraft_admin_restore_dialog {
+				padding-top: 12px;
+				padding-bottom: 12px;
+			}
+
+			.show_admin_restore_in_progress_notice .updraft_admin_restore_dialog button {
+				margin-right: 5px;
+			}
+		</style>
 		<?php
 	}
 }

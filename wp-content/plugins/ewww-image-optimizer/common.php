@@ -1330,8 +1330,10 @@ function ewww_image_optimizer_install_table() {
 			ewwwio_debug_message( 'getting rid of path_image_size index' );
 			$wpdb->query( "ALTER TABLE $wpdb->ewwwio_images DROP INDEX path_image_size" );
 		}
-		// Make sure there are valid dates in updated column.
-		$wpdb->query( "UPDATE $wpdb->ewwwio_images SET updated = '1971-01-01 00:00:00' WHERE updated < '1001-01-01 00:00:01'" );
+		if ( get_option( 'ewww_image_optimizer_version' ) < 340 ) {
+			// Make sure there are valid dates in updated column.
+			$wpdb->query( "UPDATE $wpdb->ewwwio_images SET updated = '1971-01-01 00:00:00' WHERE updated < '1001-01-01 00:00:01'" );
+		}
 		// Get the current table layout.
 		$suppress    = $wpdb->suppress_errors();
 		$tablefields = $wpdb->get_results( "DESCRIBE {$wpdb->ewwwio_images};" );
@@ -12600,7 +12602,7 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 			}
 		}
 		// NOTE: we don't check cwebp here, because we allow WebP for pretty much everyone, with a fallback to the API if all else fails.
-		if ( $tools['svgcleaner']['enabled'] && ewwwio()->local->exec_check() ) {
+		if ( $tools['svgcleaner']['enabled'] && ewww_image_optimizer_svgcleaner_installer_available() ) {
 			if ( empty( $tools['svgcleaner']['path'] ) ) {
 				$speed_recommendations[] = '<a href="' . admin_url( 'admin.php?action=ewww_image_optimizer_install_svgcleaner' ) . '">' . __( 'Install svgcleaner', 'ewww-image-optimizer' ) . '</a>';
 			}
@@ -13911,7 +13913,9 @@ AddType image/webp .webp</pre>
 							</option>
 						</select>
 	<?php if ( $disable_svg_level || ( empty( $tools['svgcleaner']['path'] ) && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) ) ) : ?>
+		<?php if ( ewww_image_optimizer_svgcleaner_installer_available() ) : ?>
 						<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?action=ewww_image_optimizer_install_svgcleaner' ), 'ewww_image_optimizer_options-options' ) ); ?>"><?php esc_html_e( 'Install svgcleaner', 'ewww-image-optimizer' ); ?></a>
+		<?php endif; ?>
 	<?php endif; ?>
 					</td>
 				</tr>

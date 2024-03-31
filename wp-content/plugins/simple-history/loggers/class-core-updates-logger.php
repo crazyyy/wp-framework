@@ -6,14 +6,19 @@ namespace Simple_History\Loggers;
  * Logs WordPress core updates
  */
 class Core_Updates_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'SimpleCoreUpdatesLogger';
 
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		add_action( '_core_updated_successfully', array( $this, 'on_core_updated' ) );
 		add_action( 'update_feedback', array( $this, 'on_update_feedback' ) );
 
 		// TODO: check if this works after refactoring and autoloading and stuff
-		// Can't log db updates at the moment, because loaded() is not called yet when the action fires
+		// Can't log db updates at the moment, because loaded() is not called yet when the action fires.
+		// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
 		// add_action( 'wp_upgrade', array( $this, "on_wp_upgrade" ), 10, 2 );
 	}
 
@@ -71,8 +76,8 @@ class Core_Updates_Logger extends Logger {
 							'core_auto_updated',
 						),
 					),
-				), // end search array
-			), // end labels
+				),
+			),
 		);
 
 		return $arr_info;
@@ -81,7 +86,7 @@ class Core_Updates_Logger extends Logger {
 	/**
 	 * Called when WordPress is updated
 	 *
-	 * @param string $new_wp_version
+	 * @param string $new_wp_version The new WordPress version.
 	 */
 	public function on_core_updated( $new_wp_version ) {
 

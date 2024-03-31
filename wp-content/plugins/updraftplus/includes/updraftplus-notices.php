@@ -27,8 +27,9 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 
 		$sale_description = __('Backup, migrate and restore with Premium.', 'updraftplus');
 		$sale_description .= ' '.__('Backup incremental changes instead of full backups (saving server resources), clone or migrate your site with ease, get more remote storage locations, premium support and more.', 'updraftplus');
-
-		$checkout_html = '<a class="updraft_notice_link" href="https://updraftplus.com/shop/updraftplus-premium/">'.__('checkout', 'updraftplus').'</a>';
+		
+		// Not used in 2024
+		// $checkout_html = '<a class="updraft_notice_link" href="https://updraftplus.com/shop/updraftplus-premium/">'.__('checkout', 'updraftplus').'</a>';
 
 		$child_notice_content = array(
 			1 => array(
@@ -219,65 +220,66 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 			'blackfriday' => array(
 				'prefix' => '',
 				'title' => __('Black Friday Sale', 'updraftplus'),
-				'text' => __('Backup automatically before updates.', 'updraftplus').' '.__('Backup incremental changes, instead of full backups (saving server resources), migrate your site with ease, get more remote storage locations, premium support and more.', 'updraftplus').' <b><a href="https://updraftplus.com/blackfriday?utm_source=plugin&utm_medium=banner&utm_campaign=black_friday"> '.sprintf(__('Get 20%% off now with code %s.', 'updraftplus'), 'blackfridaysale2023').'</a></b> '.sprintf(__('Hurry, offer ends %s.', 'updraftplus'), __('28 November', 'updraftplus')),
-				'image' => 'notices/black_friday.png',
+				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'blackfridaysale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('3 December', 'updraftplus')).'</b>',
+				'image' => 'notices/sale_20_24.png',
+				'button_link' => 'https://www.updraftplus.com/blackfriday?utm_source=plugin&utm_medium=banner&utm_campaign=black_friday',
 				'campaign' => 'blackfriday',
-				'button_meta' => 'updraftplus',
+				'button_meta' => 'learnmore',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2023-11-20 00:00:00',
-				'valid_to' => '2023-11-28 23:59:59',
+				'valid_from' => '2024-11-14 00:00:00',
+				'valid_to' => '2024-12-02 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'newyear' => array(
 				'prefix' => '',
 				'title' => __('New Year Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.__('Get 20% off for a limited time.', 'updraftplus').' '.sprintf(__('Use code %s at %s.', 'updraftplus'), 'newyearsale2024', $checkout_html).' '.sprintf(__('Offer ends %s', 'updraftplus'), __('14 January', 'updraftplus')).'</b>',
-				'image' => 'notices/new_year.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'newyearsale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('28 January', 'updraftplus')).'</b>',
+				'image' => 'notices/sale_20_24.png',
+				'button_link' => 'https://updraftplus.com/shop/updraftplus-premium/',
 				'campaign' => 'newyear',
-				'button_meta' => 'updraftplus',
+				'button_meta' => 'learnmore',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2023-12-26 00:00:00',
-				'valid_to' => '2024-01-14 23:59:59',
+				'valid_from' => '2025-01-01 00:00:00',
+				'valid_to' => '2025-01-28 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'spring' => array(
 				'prefix' => '',
 				'title' => __('Spring Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.__('Get 20% off for a limited time.', 'updraftplus').' '.sprintf(__('Use code %s at %s.', 'updraftplus'), 'springsale2023', $checkout_html).' '.sprintf(__('Offer ends %s', 'updraftplus'), __('31 May', 'updraftplus')).'</b>',
-				'image' => 'notices/updraft_logo.png', // TODO: Change image and date back to april/spring next year
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'springsale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('31 May', 'updraftplus')).'</b>',
+				'image' => 'notices/sale_20_24.png',
+				'button_link' => 'https://updraftplus.com/shop/updraftplus-premium/',
 				'campaign' => 'spring',
-				'button_meta' => 'updraftplus',
+				'button_meta' => 'learnmore',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2023-05-01 00:00:00',
-				'valid_to' => '2023-05-31 23:59:59',
+				'valid_from' => '2024-05-01 00:00:00',
+				'valid_to' => '2024-05-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'summer' => array(
 				'prefix' => '',
 				'title' => __('Summer Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.__('Get 20% off for a limited time.', 'updraftplus').' '.sprintf(__('Use code %s at %s.', 'updraftplus'), 'summersale2023', $checkout_html).' '.sprintf(__('Offer ends %s', 'updraftplus'), __('31 July', 'updraftplus')).'</b>',
-				'image' => 'notices/summer.png',
+				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'summersale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('31 July', 'updraftplus')).'</b>',
+				'image' => 'notices/sale_20_24.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'campaign' => 'summer',
-				'button_meta' => 'updraftplus',
+				'button_meta' => 'learnmore',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2023-07-01 00:00:00',
-				'valid_to' => '2023-07-31 23:59:59',
+				'valid_from' => '2024-07-01 00:00:00',
+				'valid_to' => '2024-07-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'collection' => array(
 				'prefix' => '',
 				'title' => __('The UpdraftPlus Plugin Collection Sale', 'updraftplus'),
-				'text' => sprintf(__('Visit any of our websites and <b>use code %s</b> at checkout to get <b>20%% off all our plugins</b>.', 'updraftplus'), 'UDP2023').' '.sprintf(__('Be quick, offer ends %s.', 'updraftplus'), __('30 September', 'updraftplus')),
-				'image' => 'notices/updraft_logo.png',
+				'text' => sprintf(__('Visit any of our websites and <b>use code %s</b> at checkout to get <b>20%% off all our plugins</b>.', 'updraftplus'), 'udp2024').' '.sprintf(__('Be quick, offer ends %s.', 'updraftplus'), __('30 September', 'updraftplus')),
+				'image' => 'notices/sale_20_24.png',
 				'button_link' => 'https://teamupdraft.com',
 				'campaign' => 'collection',
-				'button_meta' => 'collection',
+				'button_meta' => 'learnmore',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2023-09-01 00:00:00',
-				'valid_to' => '2023-09-30 23:59:59',
+				'valid_from' => '2024-09-01 00:00:00',
+				'valid_to' => '2024-09-30 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			)
 		);

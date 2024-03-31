@@ -2,14 +2,23 @@
 
 namespace Simple_History\Event_Details;
 
+/**
+ * Formatter for a group of items.
+ */
 class Event_Details_Group_Diff_Table_Formatter extends Event_Details_Group_Formatter {
-	public function get_html_output( $group ) {
+	/**
+	 * @inheritdoc
+	 *
+	 * @param Event_Details_Group $group Group to output HTML for.
+	 * @return string
+	 */
+	public function to_html( $group ) {
 		$output = '<table class="SimpleHistoryLogitem__keyValueTable">';
 		$output .= '<tbody>';
 
 		foreach ( $group->items as $item ) {
-			$item_formatter = $item->get_formatter( new Event_Details_Item_Diff_Table_Row_Formatter( $item ) );
-			$output .= $item_formatter->get_html_output();
+			$item_formatter = $item->get_formatter( new Event_Details_Item_Diff_Table_Row_Formatter() );
+			$output .= $item_formatter->to_html();
 		}
 
 		$output .= '</tbody>';
@@ -18,12 +27,18 @@ class Event_Details_Group_Diff_Table_Formatter extends Event_Details_Group_Forma
 		return $output;
 	}
 
-	public function get_json_output( $group ) {
+	/**
+	 * @inheritdoc
+	 *
+	 * @param Event_Details_Group $group Group to output JSON for.
+	 * @return array<mixed>
+	 */
+	public function to_json( $group ) {
 		$output = [];
 
 		foreach ( $group->items as $item ) {
-			$item_formatter = $item->get_formatter( new Event_Details_Item_Diff_Table_Row_Formatter( $item ) );
-			$output[] = $item_formatter->get_json_output();
+			$item_formatter = $item->get_formatter( new Event_Details_Item_Diff_Table_Row_Formatter() );
+			$output[] = $item_formatter->to_json();
 		}
 
 		return [

@@ -31,14 +31,14 @@ class Event_Details_Item {
 	public ?bool $is_removed = null;
 
 	/** @var ?Event_Details_Item_Formatter */
-	public ?Event_Details_Item_Formatter $formatter = null;
+	protected $formatter = null;
 
 	/**
-	 * @param string|array<string> $slug_or_slugs
-	 * @param string $name
+	 * @param string|array<string> $slug_or_slugs Key slug of current, new, or updated value.
+	 * @param string               $name        Human readable name of setting.
 	 */
 	public function __construct( $slug_or_slugs = null, $name = null ) {
-		// Set keys to use for new/current and old/prev values
+		// Set keys to use for new/current and old/prev values.
 		if ( is_array( $slug_or_slugs ) && count( $slug_or_slugs ) === 2 ) {
 			// Single slug as string = just exactly that context key.
 			// Array as slugs = 0 key = new/updated value, 1 = old/prev value.
@@ -60,7 +60,7 @@ class Event_Details_Item {
 	 * Manually set the current/new value of the item.
 	 * If used then value will not be fetched from context.
 	 *
-	 * @param string $new_value
+	 * @param string $new_value New value.
 	 * @return Event_Details_Item $this
 	 */
 	public function set_new_value( $new_value ) {
@@ -73,7 +73,7 @@ class Event_Details_Item {
 	 * Manually set the previous value of the item.
 	 * If used then value will not be fetched from context.
 	 *
-	 * @param string $prev_value
+	 * @param string $prev_value Previous value.
 	 * @return Event_Details_Item $this
 	 */
 	public function set_prev_value( $prev_value ) {
@@ -86,8 +86,8 @@ class Event_Details_Item {
 	 * Manually set both new/current value and
 	 * previous value of the item.
 	 *
-	 * @param string $new_value
-	 * @param string $prev_value
+	 * @param string $new_value New value.
+	 * @param string $prev_value Previous value.
 	 * @return Event_Details_Item $this
 	 */
 	public function set_values( $new_value, $prev_value ) {
@@ -98,31 +98,49 @@ class Event_Details_Item {
 	}
 
 	/**
-	 * @param Event_Details_Item_Formatter $formatter
-	* @return Event_Details_Item $this
+	 * Sets a formatter to use for item.
+	 * Accepts an instance of a formatter, useful for example when passing in a custom raw formatter, where
+	 * HTML and JSON output is set manually.
+	 *
+	 * @param class-string<Event_Details_Item_Formatter>|Event_Details_Item_Formatter $formatter_or_formatter_class Formatter class name to use if item does not have any formatter specified.
+	 * @return Event_Details_Item $this
 	 */
-	public function set_formatter( $formatter ) {
-		$this->formatter = $formatter;
+	public function set_formatter( $formatter_or_formatter_class ) {
+		if ( $formatter_or_formatter_class instanceof Event_Details_Item_Formatter ) {
+			$this->formatter = $formatter_or_formatter_class;
+			$this->formatter->set_item( $this );
+		} else if ( is_subclass_of( $formatter_or_formatter_class, Event_Details_Item_Formatter::class ) ) {
+			$this->formatter = new $formatter_or_formatter_class( $this );
+		}
 
 		return $this;
 	}
 
 	/**
-	 * @param ?Event_Details_Item_Formatter $fallback_formatter Formatter to use if item does not have any formatter specified.
-	 * @return Event_Details_Item_Formatter|null
+	 * @param class-string<Event_Details_Item_Formatter>|Event_Details_Item_Formatter|null $fallback_formatter_or_formatter_class Formatter class name to use if item does not have any formatter specified.
+	 * @return Event_Details_Item_Formatter
 	 */
-	public function get_formatter( $fallback_formatter = null ) {
+	public function get_formatter( $fallback_formatter_or_formatter_class = null ) {
+		$formatter = null;
+
+		// Use fallback formatter if item formatter is not already set.
 		if ( $this->formatter instanceof Event_Details_Item_Formatter ) {
-			return $this->formatter;
+			$formatter = $this->formatter;
+		} elseif ( $fallback_formatter_or_formatter_class instanceof Event_Details_Item_Formatter ) {
+			$formatter = $fallback_formatter_or_formatter_class;
+		} elseif ( is_subclass_of( $fallback_formatter_or_formatter_class, Event_Details_Item_Formatter::class ) ) {
+			$formatter = new $fallback_formatter_or_formatter_class();
 		}
 
-		return $fallback_formatter;
+		$formatter->set_item( $this );
+
+		return $formatter;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function has_formatter() {
-		return $this->formatter instanceof Event_Details_Item_Formatter;
+		return true;
 	}
 }

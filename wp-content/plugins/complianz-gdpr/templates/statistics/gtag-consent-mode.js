@@ -3,12 +3,17 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){
 	dataLayer.push(arguments);
 }
+gtag('set', 'dYWVlZG', true);
+gtag('set', 'ads_data_redaction', {ads_data_redaction});
+gtag('set', 'url_passthrough', {url_passthrough});
 gtag('consent', 'default', {
 	'security_storage': "granted",
 	'functionality_storage': "granted",
 	'personalization_storage': "denied",
 	'analytics_storage': 'denied',
 	'ad_storage': "denied",
+	'ad_user_data': 'denied',
+	'ad_personalization': 'denied',
 });
 
 document.addEventListener("cmplz_fire_categories", function (e) {
@@ -37,13 +42,16 @@ document.addEventListener("cmplz_fire_categories", function (e) {
 		'personalization_storage': preferences,
 		'analytics_storage': statistics,
 		'ad_storage': marketing,
+		'ad_user_data': marketing,
+		'ad_personalization': marketing,
 	});
 });
 
 gtag('js', new Date());
+{additional_tags}
 gtag('config', '{G_code}', {
 	cookie_flags:'secure;samesite=none',
-{anonymize_ip}
+	{anonymize_ip}
 });
 
 document.addEventListener("cmplz_revoke", function (e) {
@@ -53,5 +61,7 @@ document.addEventListener("cmplz_revoke", function (e) {
 		'personalization_storage': "denied",
 		'analytics_storage': 'denied',
 		'ad_storage': "denied",
+		'ad_user_data': 'denied',
+		'ad_personalization': 'denied',
 	});
 });

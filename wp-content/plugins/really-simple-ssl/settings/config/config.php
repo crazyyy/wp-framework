@@ -1658,7 +1658,7 @@ function rsssl_fields( $load_values = true ) {
 			'help'     => [
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/instructions/password-security/?mtm_campaign=definition&mtm_source=free',
-				'title' => __( "Enforce Strong Passwords", 'really-simple-ssl' ),
+				'title' => __( "Enforce strong passwords", 'really-simple-ssl' ),
 				'text'  => __( 'Improve the default WordPress password strength check. You can also enforce frequent password changes for user roles.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 			],
 			'disabled' => false,
@@ -1726,6 +1726,7 @@ function rsssl_fields( $load_values = true ) {
 			],
 			'label'    => __( "Let login cookie expire after", "really-simple-ssl" ),
 		],
+
 	];
 
 	$fields = apply_filters( 'rsssl_fields', $fields );

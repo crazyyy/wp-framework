@@ -348,7 +348,6 @@ class UpdraftPlus {
 		
 		$phpseclib_dir = UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib';
 		if (false === strpos(get_include_path(), $phpseclib_dir)) set_include_path(get_include_path().PATH_SEPARATOR.$phpseclib_dir);
-		if (version_compare(PHP_VERSION, '5.3', '>=')) updraft_try_include_file('vendor/autoload.php', 'require_once');
 		spl_autoload_register(array($this, 'autoload_phpseclib_class'));
 		return $ret;
 	}
@@ -357,17 +356,18 @@ class UpdraftPlus {
 	 * Load phpseclib class automatically. Note that this method is hooked into the PHP's spl_auto_register and this is exclusively used for phpseclib only
 	 *
 	 * @param String $class A class name that's going to be used for instantiating an object
+	 * @return Void
 	 */
 	public function autoload_phpseclib_class($class) {
+		if (!preg_match('#^phpseclib_#', $class)) return; // only deals with class prefixed with "phpseclib_", because we use that prefix to our customised phpseclib class and to call/instantiate object of phpseclib classes (e.g. new phpseclib_Crypt_RSA = new phpseclib\Crypt\RSA)
 		$phpseclib_dir = UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib';
-		$class = str_replace(array('\\', '_'), '/', $class); // turn the class name into paths by replacing backslashes and/or underscores from the given class with slashes, this could be a class that uses namespace e.g. phpseclib\Crypt\Rijndael (phpseclib v2) or just a normal class Crypt_Rijndael (phpseclib v1)
-		$class = preg_replace('#^phpseclib/(.+)$#', "$1", $class); // take out the 'phpseclib' if it's found to be existed in the beginning of the class name as we already have the root directory of phpseclib defined in the $phpseclib_dir variable
+		$class = str_replace('_', '/', $class); // turn the class name into paths by replacing underscores from the given class with slashes, this is to change our customised phpseclib class name to a fully qualified phpseclib v2 namespace
+		$class = preg_replace('#^phpseclib/(.+)$#', "$1", $class); // take out the 'phpseclib' from the beginning of the class name as we already have the root directory of phpseclib defined in the $phpseclib_dir variable
 		if (file_exists($phpseclib_dir.'/'.$class.'.php') == true) { // check whether the class name that has been transformed into directory paths mathces with one of the phpseclib class files
 			$phpseclib_class_v2 = 'phpseclib\\'.str_replace('/', '\\', $class);
-			$phpseclib_class_v1 = str_replace('/', '_', $class);
-			$phpseclib_class_v1_prefixed = 'phpseclib_'.$phpseclib_class_v1;
-			if (version_compare(PHP_VERSION, '5.3', '>=') && !class_exists($phpseclib_class_v2)) require_once($phpseclib_dir.'/'.$class.'.php');
-			if (class_exists($phpseclib_class_v2) && !class_exists($phpseclib_class_v1_prefixed)) class_alias($phpseclib_class_v2, $phpseclib_class_v1_prefixed); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctions.class_aliasFound -- the use of class_alias here to make sure that existing classes like `Crypt_Rijndael` (which is now phpseclib/Crypt/Rijndael) can still be used without having to change old class names in several places.
+			$phpseclib_updraft_class = 'phpseclib_'.str_replace('/', '_', $class);
+			updraft_try_include_file('vendor/autoload.php', 'require_once'); // load the composer autoload.php every time our customised phpseclib class is called (if not already loaded)
+			if (class_exists($phpseclib_class_v2) && !class_exists($phpseclib_updraft_class)) class_alias($phpseclib_class_v2, $phpseclib_updraft_class); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctions.class_aliasFound -- the use of class_alias here to map our customised phpseclib class to the real one owned by the phpseclib v2 class (e.g. phpseclib_Crypt_RSA => phpseclib\Crypt\RSA)
 		}
 	}
 
@@ -5121,9 +5121,9 @@ class UpdraftPlus {
 								if (('https' == $old_siteurl_parsed['scheme'] && 'http' == $actual_siteurl_parsed['scheme']) || ('http' == $old_siteurl_parsed['scheme'] && 'https' == $actual_siteurl_parsed['scheme'])) {
 									$powarn .= sprintf(__('This backup set is of this site, but at the time of the backup you were using %s, whereas the site now uses %s.', 'updraftplus'), $old_siteurl_parsed['scheme'], $actual_siteurl_parsed['scheme']);
 									if ('https' == $old_siteurl_parsed['scheme']) {
-										$powarn .= ' '.apply_filters('updraftplus_https_to_http_additional_warning', sprintf(__('This restoration will work if you still have an SSL certificate (i.e. can use https) to access the site.', 'updraftplus').' '.__('Otherwise, you will want to use %s to search/replace the site address so that the site can be visited without https.', 'updraftplus'), '<a href="https://updraftplus.com/shop/migrator/" target="_blank">'.__('the migrator add-on', 'updraftplus').'</a>'));
+										$powarn .= ' '.apply_filters('updraftplus_https_to_http_additional_warning', '');
 									} else {
-										$powarn .= ' '.apply_filters('updraftplus_http_to_https_additional_warning', sprintf(__('As long as your web hosting allows http (i.e. non-SSL access) or will forward requests to https (which is almost always the case), this is no problem.', 'updraftplus').' '.__('If that is not yet set up, then you should set it up, or use %s so that the non-https links are automatically replaced.', 'updraftplus'), apply_filters('updraftplus_migrator_addon_link', '<a href="https://updraftplus.com/shop/migrator/" target="_blank">'.__('the migrator add-on', 'updraftplus').'</a>')));
+										$powarn .= ' '.apply_filters('updraftplus_http_to_https_additional_warning', '');
 									}
 								} else {
 									$powarn .= apply_filters('updraftplus_dbscan_urlchange_www_append_warning', '');

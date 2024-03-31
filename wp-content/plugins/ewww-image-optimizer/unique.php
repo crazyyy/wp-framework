@@ -1523,13 +1523,18 @@ function ewww_image_optimizer_install_svgcleaner() {
 	if ( ! extension_loaded( 'zlib' ) || ! class_exists( 'PharData' ) ) {
 		$download_error = __( 'zlib or phar extension missing from PHP', 'ewww-image-optimizer' );
 	}
+	if ( ! ewwwio()->local->exec_check() ) {
+		$download_error = __( 'Your web server does not meet the requirements for free server-based compression with EWWW Image Optimizer.', 'ewww-image-optimizer' );
+	}
 	$os_chmod  = true;
 	$os_binary = 'svgcleaner';
 	$os_ext    = 'tar.gz';
 	if ( PHP_OS === 'Linux' ) {
 		$arch_type = 'x86_64';
 		if ( ewww_image_optimizer_function_exists( 'php_uname' ) ) {
-			$arch_type = php_uname( 'm' );
+			if ( php_uname( 'm' ) !== $arch_type ) {
+				$download_error = __( 'svgcleaner on Linux only supports the x86_64 architecture', 'ewww-image-optimizer' );
+			}
 		}
 		$os_string = 'linux_' . $arch_type;
 	} elseif ( PHP_OS === 'Darwin' ) {
@@ -1540,6 +1545,8 @@ function ewww_image_optimizer_install_svgcleaner() {
 		$os_string = 'win32';
 		$os_binary = 'svgcleaner.exe';
 		$os_ext    = 'zip';
+	} elseif ( PHP_OS === 'FreeBSD' ) {
+		$download_error = __( 'svgcleaner is not available for FreeBSD', 'ewww-image-optimizer' );
 	}
 	$latest    = '0.9.5';
 	$tool_path = trailingslashit( EWWW_IMAGE_OPTIMIZER_TOOL_PATH );
@@ -1597,7 +1604,7 @@ function ewww_image_optimizer_install_svgcleaner() {
 			}
 		}
 	}
-	if ( is_string( $download_result ) && is_writable( $download_result ) ) {
+	if ( isset( $download_result ) && is_string( $download_result ) && is_writable( $download_result ) ) {
 		unlink( $download_result );
 	}
 	if ( ! empty( $pkg_version ) ) {
@@ -1617,6 +1624,28 @@ function ewww_image_optimizer_install_svgcleaner() {
 		);
 	}
 	return $sendback;
+}
+
+/**
+ * Checks availability of svgcleaner installer.
+ */
+function ewww_image_optimizer_svgcleaner_installer_available() {
+	if ( ! ewwwio()->local->exec_check() ) {
+		return false;
+	}
+	if ( PHP_OS === 'Linux' ) {
+		if ( ewww_image_optimizer_function_exists( 'php_uname' ) ) {
+			if ( php_uname( 'm' ) !== 'x86_64' ) {
+				return false;
+			}
+		}
+		return true;
+	} elseif ( PHP_OS === 'Darwin' ) {
+		return true;
+	} elseif ( PHP_OS === 'WINNT' ) {
+		return true;
+	}
+	return false;
 }
 
 /**

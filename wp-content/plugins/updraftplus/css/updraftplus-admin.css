@@ -1511,6 +1511,7 @@ p[id^="updraftplus_manual_authentication_error_"] {
 
 .updraft-viewlogdiv {
 	display: inline-block;
+	margin-left: 4px;
 }
 
 .updraft-viewlogdiv input, .updraft-viewlogdiv a {

@@ -10,8 +10,12 @@ use Simple_History\Log_Initiators;
  * https://sv.wordpress.org/plugins/limit-login-attempts/
  */
 class Plugin_Limit_Login_Attempts_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'Plugin_LimitLoginAttempts';
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_info() {
 
 		$arr_info = array(
@@ -28,22 +32,14 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 				'cleared_current_lockouts' => _x( 'Cleared current lockouts', 'Logger: Plugin Limit Login Attempts', 'simple-history' ),
 				'updated_options'          => _x( 'Updated options', 'Logger: Plugin Limit Login Attempts', 'simple-history' ),
 			),
-			/*
-			"labels" => array(
-				"search" => array(
-					"label" => _x( "Limit Login Attempts", "Logger: Plugin Limit Login Attempts", "simple-history" ),
-					"options" => array(
-						_x( "xxxPages not found", "User logger: 404", "simple-history" ) => array(
-							"page_not_found",
-						),
-					),
-				), // end search
-			),*/  // end labels
 		);
 
 		return $arr_info;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		$pluginFilePath = 'limit-login-attempts/limit-login-attempts.php';
 		$isPluginActive = Helpers::is_plugin_active( $pluginFilePath );
@@ -56,18 +52,18 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 		}
 
 		add_filter( 'pre_option_limit_login_lockouts_total', array( $this, 'on_option_limit_login_lockouts_total' ), 10, 1 );
-
 		add_action( 'load-settings_page_limit-login-attempts', array( $this, 'on_load_settings_page' ), 10, 1 );
 	}
 
 	/**
 	 * Fired when plugin options screen is loaded
+	 *
+	 * @param string $a Hook name.
 	 */
 	public function on_load_settings_page( $a ) {
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( $_POST && wp_verify_nonce( $_POST['_wpnonce'], 'limit-login-attempts-options' ) ) {
-			// Settings saved
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( $_POST && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'limit-login-attempts-options' ) ) {
+			// Settings saved..
 			if ( isset( $_POST['clear_log'] ) ) {
 				$this->notice_message( 'cleared_ip_log' );
 			}
@@ -82,14 +78,16 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 
 			if ( isset( $_POST['update_options'] ) ) {
 				$options = array(
-					'client_type' => sanitize_text_field( $_POST['client_type'] ),
-					'allowed_retries' => sanitize_text_field( $_POST['allowed_retries'] ),
-					'lockout_duration' => sanitize_text_field( $_POST['lockout_duration'] ) * 60,
-					'valid_duration' => sanitize_text_field( $_POST['valid_duration'] ) * 3600,
-					'allowed_lockouts' => sanitize_text_field( $_POST['allowed_lockouts'] ),
-					'long_duration' => sanitize_text_field( $_POST['long_duration'] ) * 3600,
-					'email_after' => sanitize_text_field( $_POST['email_after'] ),
-					'cookies' => ( isset( $_POST['cookies'] ) && $_POST['cookies'] == '1' ) ? 'yes' : 'no',
+					// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+					'client_type' => sanitize_text_field( wp_unslash( $_POST['client_type'] ) ),
+					'allowed_retries' => sanitize_text_field( wp_unslash( $_POST['allowed_retries'] ) ),
+					'lockout_duration' => sanitize_text_field( wp_unslash( $_POST['lockout_duration'] ) ) * 60,
+					'valid_duration' => sanitize_text_field( wp_unslash( $_POST['valid_duration'] ) ) * 3600,
+					'allowed_lockouts' => sanitize_text_field( wp_unslash( $_POST['allowed_lockouts'] ) ),
+					'long_duration' => sanitize_text_field( wp_unslash( $_POST['long_duration'] ) ) * 3600,
+					'email_after' => sanitize_text_field( wp_unslash( $_POST['email_after'] ) ),
+					'cookies' => ( isset( $_POST['cookies'] ) && sanitize_text_field( wp_unslash( $_POST['cookies'] ) ) == '1' ) ? 'yes' : 'no',
+					// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 				);
 
 				$v = array();
@@ -116,6 +114,8 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 	 * When option value is updated
 	 * do same checks as plugin itself does
 	 * and log if we match something
+	 *
+	 * @param mixed $value Option value.
 	 */
 	public function on_option_limit_login_lockouts_total( $value ) {
 
@@ -156,8 +156,8 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 				'_initiator' => Log_Initiators::WEB_USER,
 				'value' => $value,
 				'limit_login_just_lockedout' => $limit_login_just_lockedout,
-				'count' => $count, // num of failed login attempts before block
-				'time' => $time, // duration in minutes for block
+				'count' => $count, // num of failed login attempts before block.
+				'time' => $time, // duration in minutes for block.
 				'lockouts' => $lockouts,
 				'ip' => $ip,
 				'lockout_type' => $lockout_type,
@@ -169,6 +169,8 @@ class Plugin_Limit_Login_Attempts_Logger extends Logger {
 
 	/**
 	 * Add some extra info
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_details_output( $row ) {
 

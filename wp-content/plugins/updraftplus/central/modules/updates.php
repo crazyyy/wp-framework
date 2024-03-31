@@ -663,6 +663,64 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 		return false;
 	}
 
+	/**
+	 * Checks basic WP and PHP compatibility for plugins and themes
+	 *
+	 * @param  string $type The type of the entity to check (e.g. 'plugin' or 'theme')
+	 * @param  array  $info Data or information to check
+	 * @return array
+	 */
+	private function is_compatible($type, $info) {
+		global $updraftcentral_main;
+		$wp_version = $updraftcentral_main->get_wordpress_version();
+
+		$is_compatible = null;
+		$message = '';
+
+		if (isset($info['update'])) {
+
+			// Check for WP Compatibility based from the update information
+			if (!empty($info['update']['requires'])) {
+				if (version_compare($wp_version, $info['update']['requires'], '<')) {
+					$is_compatible = false;
+					$message = esc_attr(sprintf(__('The latest update for this %s is not compatible with the WordPress version installed on the remote site.', 'updraftplus').' '.__('The minimum WordPress version supported by this %s is %s.', 'updraftplus'), $type, $type, $info['update']['requires']));
+				} else {
+					$is_compatible = true;
+				}
+			}
+
+			// Check for PHP Compatibility based from the update information
+			if (!empty($info['update']['requires_php'])) {
+				if (version_compare(PHP_VERSION, $info['update']['requires_php'], '<')) {
+					$is_compatible = false;
+					$message = esc_attr(sprintf(__('The latest update for this %s is not compatible with the PHP version installed on the remote site.', 'updraftplus').' '.__('The minimum PHP version supported by this %s is %s.', 'updraftplus'), $type, $type, $info['update']['requires_php']));
+				} else {
+					$is_compatible = true;
+				}
+			}
+
+			// Check whether Plugin/Theme has been tested based from the update information
+			if (!empty($info['update']['tested'])) {
+				if (version_compare($wp_version, $info['update']['tested'], '>')) {
+					$is_compatible = false;
+					$message = esc_attr(sprintf(__('The latest update for this %s has not been tested with the WordPress version installed on the remote site and may have compatibility issues when used.', 'updraftplus'), $type));
+				} else {
+					$is_compatible = true;
+				}
+			}
+		}
+
+		if (is_null($is_compatible)) {
+			$is_compatible = false;
+			$message = esc_attr(sprintf(__('There are currently no available fields or data that we can use to determine whether this latest %s is compatible with your WordPress or PHP install.', 'updraftplus'), $type).' '.__('Please install with caution by doing a backup first before installing.', 'updraftplus'));
+		}
+
+		return array(
+			'compatible' => $is_compatible,
+			'compatible_message' => $message,
+		);
+	}
+
 	public function get_updates($options) {
 
 		// Forcing Elegant Themes (Divi) updates component to load if it exist.
@@ -695,7 +753,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 					// only return those items for update that has new versions greater than the currently installed version.
 					if (version_compare($update->Version, $update->update->new_version, '>=')) continue;
 					
-					$plugin_updates[] = array(
+					$info = array(
 						'name' => $update->Name,
 						'plugin_uri' => $update->PluginURI,
 						'version' => $update->Version,
@@ -713,8 +771,14 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 							'tested' => isset($update->update->tested) ? $update->update->tested : null,
 							'compatibility' => isset($update->update->compatibility) ? (array) $update->update->compatibility : null,
 							'sections' => isset($update->update->sections) ? (array) $update->update->sections : null,
+							'requires' => isset($update->update->requires) ? $update->update->requires : null,
+							'requires_php' => isset($update->update->requires_php) ? $update->update->requires_php : null,
 						),
 					);
+
+					// Check for compatibility and merge result into info
+					$result = $this->is_compatible('plugin', $info);
+					$plugin_updates[] = array_merge($info, $result);
 				}
 			}
 		}
@@ -739,7 +803,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 					$name = $update->Name;
 					$theme_name = !empty($name) ? $name : $update->update['theme'];
 
-					$theme_updates[] = array(
+					$info = array(
 						'name' => $theme_name,
 						'theme_uri' => $update->ThemeURI,
 						'version' => $update->Version,
@@ -751,9 +815,15 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 							'new_version' => $update->update['new_version'],
 							'package' => $update->update['package'],
 							'url' => $update->update['url'],
+							'tested' => isset($update->update['tested']) ? $update->update['tested'] : null,
+							'requires' => $update->update['requires'],
+							'requires_php' => $update->update['requires_php'],
 						),
 					);
 
+					// Check for compatibility and merge result into info
+					$result = $this->is_compatible('theme', $info);
+					$theme_updates[] = array_merge($info, $result);
 				}
 			}
 		}

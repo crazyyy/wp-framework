@@ -11,10 +11,16 @@ use Simple_History\Helpers;
  * Author: Pär Thernström
  */
 class Plugin_Patches_Dropin extends Dropin {
+	/** @inheritdoc */
 	public function loaded() {
 		add_filter(
 			'simple_history/post_logger/skip_posttypes',
 			array( $this, 'woocommerce_skip_scheduled_actions_posttype' )
+		);
+
+		add_filter(
+			'simple_history/post_logger/skip_posttypes',
+			array( $this, 'woocommerce_skip_hpos_posttype' )
 		);
 
 		$this->patch_co_authors_plus();
@@ -43,9 +49,28 @@ class Plugin_Patches_Dropin extends Dropin {
 	 * a large amount of actions for this posttype.
 	 *
 	 * @since 2.3
+	 * @param array $skip_posttypes Array with post types to skip.
+	 * @return array
 	 */
 	public function woocommerce_skip_scheduled_actions_posttype( $skip_posttypes ) {
 		$skip_posttypes[] = 'scheduled-action';
+		return $skip_posttypes;
+	}
+
+	/**
+	 * WooCommerce new High-Performance Order Storage (HPOS) system
+	 * uses a custom post type called "shop_order_placehold" to store
+	 * order placehold posts.
+	 *
+	 * If post type is not skipped every manually added new WC order is logged as
+	 * 'Updated post ""'.
+	 *
+	 * @since 4.6.0
+	 * @param array $skip_posttypes Array with post types to skip.
+	 * @return array
+	 */
+	public function woocommerce_skip_hpos_posttype( $skip_posttypes ) {
+		$skip_posttypes[] = 'shop_order_placehold';
 		return $skip_posttypes;
 	}
 }

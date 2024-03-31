@@ -4,6 +4,7 @@ namespace Simple_History\Services;
 
 use Simple_History\Simple_History;
 use Simple_History\Loggers\Simple_Logger;
+use Simple_History\Loggers\Logger;
 
 /**
  * Class that load loggers.
@@ -24,6 +25,7 @@ class Loggers_Loader extends Service {
 	 */
 	private $do_filter_gettext_current_logger;
 
+	/** @inheritdoc */
 	public function loaded() {
 		add_action( 'after_setup_theme', array( $this, 'load_loggers' ) );
 	}
@@ -56,6 +58,7 @@ class Loggers_Loader extends Service {
 		 */
 		do_action( 'simple_history/add_custom_logger', $this->simple_history );
 
+		/** @var Logger[] $arr_loggers_to_instantiate */
 		$arr_loggers_to_instantiate = array_merge( $arr_loggers_to_instantiate, $this->simple_history->get_external_loggers() );
 
 		/**
@@ -70,8 +73,9 @@ class Loggers_Loader extends Service {
 		 *
 		 * @since 2.0
 		 *
-		 * @param array $arr_loggers_to_instantiate Array with class names
+		 * @param array<Logger> $arr_loggers_to_instantiate Array with class names
 		 */
+		/** @var Logger[] $arr_loggers_to_instantiate */
 		$arr_loggers_to_instantiate = apply_filters(
 			'simple_history/loggers_to_instantiate',
 			$arr_loggers_to_instantiate
@@ -83,8 +87,8 @@ class Loggers_Loader extends Service {
 
 		// Instantiate each logger.
 		foreach ( $arr_loggers_to_instantiate as $one_logger_class ) {
-			$is_valid_logger_subclass = is_subclass_of( $one_logger_class, 'Simple_History\Loggers\Logger' );
-			$is_valid_old_simplelogger_subclass = is_subclass_of( $one_logger_class, 'SimpleLogger' );
+			$is_valid_logger_subclass = is_subclass_of( $one_logger_class, Logger::class );
+			$is_valid_old_simplelogger_subclass = is_subclass_of( $one_logger_class, \SimpleLogger::class );
 
 			if ( ! $is_valid_logger_subclass && ! $is_valid_old_simplelogger_subclass ) {
 				continue;
@@ -92,7 +96,11 @@ class Loggers_Loader extends Service {
 
 			/** @var Simple_Logger $logger_instance */
 			$logger_instance = new $one_logger_class( $this->simple_history );
-			$logger_instance->loaded();
+
+			// Call loaded() function on logger if logger is enabled.
+			if ( $logger_instance->is_enabled() ) {
+				$logger_instance->loaded();
+			}
 
 			// Tell gettext-filter to add untranslated messages.
 			$this->do_filter_gettext = true;
@@ -192,10 +200,10 @@ class Loggers_Loader extends Service {
 	/**
 	 * Store both translated and untranslated versions of a text.
 	 *
-	 * @param string $translated_text
-	 * @param string $untranslated_text
-	 * @param string $domain
-	 * @return string
+	 * @param string $translated_text Translated text.
+	 * @param string $untranslated_text Untranslated text.
+	 * @param string $domain Text domain. Unique identifier for retrieving translated strings.
+	 * @return string Translated text.
 	 */
 	public function filter_gettext( $translated_text, $untranslated_text, $domain ) {
 		if ( $this->do_filter_gettext ) {
@@ -213,11 +221,11 @@ class Loggers_Loader extends Service {
 	/**
 	 * Store both translated and untranslated versions of a text with context.
 	 *
-	 * @param string $translated_text
-	 * @param string $untranslated_text
-	 * @param string $context
-	 * @param string $domain
-	 * @return string
+	 * @param string $translated_text Translated text.
+	 * @param string $untranslated_text Untranslated text.
+	 * @param string $context Context information for the translators.
+	 * @param string $domain Text domain. Unique identifier for retrieving translated strings.
+	 * @return string Translated text.
 	 */
 	public function filter_gettext_with_context( $translated_text, $untranslated_text, $context, $domain ) {
 		if ( $this->do_filter_gettext ) {

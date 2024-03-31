@@ -3,9 +3,9 @@ Contributors: nosilver4u
 Donate link: https://ewww.io/donate/
 Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization, lossless, lossy, seo, scale
 Requires at least: 6.1
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.3
-Stable tag: 7.4.0
+Stable tag: 7.5.0
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -139,6 +139,23 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
+
+= 7.5.0 =
+*Release Date - March 26, 2024*
+
+* added: Easy IO support for upcoming Slider Revolution 7 rendering engine
+* added: Easy IO updates existing image preload URLs
+* added: Lazy Load automatically excludes preloaded images
+* changed: async process locking uses unique key on disk to avoid duplicate processes
+* fixed: Easy IO skipping Slider Revolution 6 URLs
+* fixed: Lazy Load incorrectly auto-scales fixed group background images
+* fixed: uncaught errors when attempting svgcleaner install on FreeBSD
+* fixed: optimized images list links to WebP thumbnail for all sizes
+* fixed: optimized images list shows wrong thumbnail for non-media library images
+* fixed: quirks with new bulk interface and optimized images list
+* updated: cwebp to version 1.3.2
+* updated: gifsicle to version 1.95
+* updated: optipng to version 0.7.8
 
 = 7.4.0 =
 *Release Date - March 6, 2024*

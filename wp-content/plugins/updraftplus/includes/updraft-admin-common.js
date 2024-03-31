@@ -4618,6 +4618,12 @@ jQuery(function($) {
 		jQuery('.db-search').val('');
 		apply_search_on_db_size();
 	});
+
+	jQuery('.updraft_restore_main').on('click', 'button#updraft_restore_abort', function(e) {
+		e.preventDefault();
+		jQuery('#updraft_restore_continue_action').val('updraft_restore_abort');
+		jQuery(this).parent('form').trigger('submit');
+	});
 });
 
 // UpdraftVault

@@ -6,7 +6,7 @@ namespace Simple_History\Loggers;
  * Logs changes to wordpress options
  */
 class Options_Logger extends Logger {
-
+	/** @var string Logger slug */
 	public $slug = 'SimpleOptionsLogger';
 
 	/**
@@ -21,16 +21,7 @@ class Options_Logger extends Logger {
 			'description' => __( 'Logs updates to WordPress settings', 'simple-history' ),
 			'capability'  => 'manage_options',
 			'messages'    => array(
-				// 'option_updated' => __('Updated option "{option}" on settings page "{option_page}"', "simple-history"),
 				'option_updated' => __( 'Updated option "{option}"', 'simple-history' ),
-				/*
-				Updated option "default_comment_status" on settings page "discussion"
-				Edited option "default_comment_status" on settings page "discussion"
-				Modified option "default_comment_status" on settings page "discussion"
-
-				Edited settings page "discussion" and the "default_comment_status" options
-
-				*/
 			),
 			'labels'      => array(
 				'search' => array(
@@ -40,15 +31,17 @@ class Options_Logger extends Logger {
 							'option_updated',
 						),
 					),
-				), // end search array
-			), // end labels
+				),
+			),
 		);
 
 		return $arr_info;
 	}
 
+	/**
+	 * Called when logger is loaded.
+	 */
 	public function loaded() {
-
 		add_action( 'updated_option', array( $this, 'on_updated_option' ), 10, 3 );
 	}
 
@@ -56,8 +49,8 @@ class Options_Logger extends Logger {
 	 * When an option is updated.
 	 *
 	 * @param string $option Option name.
-	 * @param mixed $old_value Old value.
-	 * @param mixed $new_value New value.
+	 * @param mixed  $old_value Old value.
+	 * @param mixed  $new_value New value.
 	 * @return void
 	 */
 	public function on_updated_option( $option, $old_value, $new_value ) {
@@ -70,14 +63,14 @@ class Options_Logger extends Logger {
 			1 => 'options-permalink.php',
 		);
 
-		// We only want to log options being added via pages in $arr_option_pages
-		if ( ! in_array( basename( $_SERVER['REQUEST_URI'] ), $arr_option_pages ) || basename( dirname( $_SERVER['REQUEST_URI'] ) ) !== 'wp-admin' ) {
+		// We only want to log options being added via pages in $arr_option_pages.
+		if ( ! in_array( basename( $_SERVER['REQUEST_URI'] ), $arr_option_pages ) || basename( dirname( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) ) !== 'wp-admin' ) {
 			return;
 		}
 
 		// Also only if "option_page" is set to one of these "built in" ones
-		// We don't wanna start logging things from other plugins, like EDD
-		$option_page = $_REQUEST['option_page'] ?? ''; // general | discussion | ...
+		// We don't wanna start logging things from other plugins, like EDD.
+		$option_page = sanitize_text_field( wp_unslash( $_REQUEST['option_page'] ?? '' ) ); // general | discussion | ...
 
 		$arr_valid_option_pages = array(
 			'general',
@@ -89,8 +82,8 @@ class Options_Logger extends Logger {
 
 		$is_valid_options_page = $option_page && in_array( $option_page, $arr_valid_option_pages );
 
-		// Permalink settings page does not post any "option_page", so use http referer instead
-		if ( strpos( $_SERVER['REQUEST_URI'], 'options-permalink.php' ) !== false ) {
+		// Permalink settings page does not post any "option_page", so use http referer instead.
+		if ( strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'options-permalink.php' ) !== false ) {
 			$is_valid_options_page = true;
 		}
 
@@ -99,7 +92,7 @@ class Options_Logger extends Logger {
 		}
 
 		// Check if option name is ok
-		// For example if you change front page displays setting the "rewrite_rules" options gets updated too
+		// For example if you change front page displays setting the "rewrite_rules" options gets updated too.
 		$arr_invalid_option_names = array(
 			'rewrite_rules',
 		);
@@ -120,7 +113,7 @@ class Options_Logger extends Logger {
 
 		// Store a bit more about some options
 		// Like "page_on_front" we also store post title
-		// Check for a method for current option in this class and calls it automagically
+		// Check for a method for current option in this class and calls it automagically.
 		$methodname = "add_context_for_option_{$option}";
 		if ( method_exists( $this, $methodname ) ) {
 			$context = $this->$methodname( $context, $old_value, $new_value, $option, $option_page );
@@ -131,6 +124,8 @@ class Options_Logger extends Logger {
 
 	/**
 	 * Get detailed output
+	 *
+	 * @param object $row Log row object.
 	 */
 	public function get_log_row_details_output( $row ) {
 
@@ -154,7 +149,7 @@ class Options_Logger extends Logger {
 			// $message = 'Old value was {old_value} and new value is {new_value}';
 			$output .= "<table class='SimpleHistoryLogitem__keyValueTable'>";
 
-			// Output old and new values
+			// Output old and new values.
 			if ( $context['new_value'] || $context['old_value'] ) {
 				$option_custom_output = '';
 				$methodname = "get_details_output_for_option_{$option}";
@@ -164,7 +159,7 @@ class Options_Logger extends Logger {
 				}
 
 				if ( empty( $option_custom_output ) ) {
-					// all other options or fallback if custom output did not find all it's stuff
+					// all other options or fallback if custom output did not find all it's stuff.
 					$more = __( '&hellip;', 'simple-history' );
 					$trim_length = 250;
 
@@ -195,7 +190,7 @@ class Options_Logger extends Logger {
 				}
 			} // End if().
 
-			// If key option_page this was saved from regular settings pages
+			// If key option_page this was saved from regular settings pages.
 			if ( ! empty( $option_page ) ) {
 				$output .= sprintf(
 					'
@@ -210,7 +205,7 @@ class Options_Logger extends Logger {
 				);
 			}
 
-			// If option = permalink_structure then we did it from permalink page
+			// If option = permalink_structure then we did it from permalink page.
 			if ( ! empty( $option ) && ( 'permalink_structure' == $option || 'tag_base' == $option || 'category_base' == $option ) ) {
 				$output .= sprintf(
 					'
@@ -235,6 +230,13 @@ class Options_Logger extends Logger {
 	 * Page on front = "Front page displays" -> Your latest posts / A static page
 	 * value 0 = Your latest post
 	 * value int n = A static page
+	 *
+	 * @param array  $context context.
+	 * @param mixed  $old_value old value.
+	 * @param mixed  $new_value new value.
+	 * @param string $option option name.
+	 * @param string $option_page option page name.
+	 * @return array context
 	 */
 	public function add_context_for_option_page_on_front( $context, $old_value, $new_value, $option, $option_page ) {
 
@@ -257,24 +259,48 @@ class Options_Logger extends Logger {
 		return $context;
 	}
 
+	/**
+	 * Add context for option page_on_front for posts page.
+	 *
+	 * @param array $context context.
+	 * @param mixed $old_value old value.
+	 * @param mixed $new_value new value.
+	 * @param mixed $option option name.
+	 * @param mixed $option_page option page name.
+	 * @return array Updated context.
+	 */
 	public function add_context_for_option_page_for_posts( $context, $old_value, $new_value, $option, $option_page ) {
 
-		// Get same info as for page_on_front
+		// Get same info as for page_on_front.
 		$context = call_user_func_array( array( $this, 'add_context_for_option_page_on_front' ), func_get_args() );
 
 		return $context;
 	}
 
+	/**
+	 * Get detailed output for page_on_front for posts page.
+	 *
+	 * @param array  $context context.
+	 * @param mixed  $old_value old value.
+	 * @param mixed  $new_value new value.
+	 * @param string $option option name.
+	 * @param string $option_page option page name.
+	 * @return string output
+	 */
 	public function get_details_output_for_option_page_for_posts( $context, $old_value, $new_value, $option, $option_page ) {
-
 		$output = call_user_func_array( array( $this, 'get_details_output_for_option_page_on_front' ), func_get_args() );
-
 		return $output;
 	}
 
 	/**
 	 * Add detailed output for page_on_front
 	 *
+	 * @param array  $context context.
+	 * @param mixed  $old_value old value.
+	 * @param mixed  $new_value new value.
+	 * @param string $option option name.
+	 * @param string $option_page option page name.
+	 * @param string $tmpl_row template row.
 	 * @return string output
 	 */
 	public function get_details_output_for_option_page_on_front( $context, $old_value, $new_value, $option, $option_page, $tmpl_row ) {
@@ -337,6 +363,12 @@ class Options_Logger extends Logger {
 
 	/**
 	 * "default_category" = Writing Settings » Default Post Category
+	 *
+	 * @param array  $context context.
+	 * @param mixed  $old_value old value.
+	 * @param mixed  $new_value new value.
+	 * @param string $option option name.
+	 * @param string $option_page option page name.
 	 */
 	public function add_context_for_option_default_category( $context, $old_value, $new_value, $option, $option_page ) {
 
@@ -359,16 +391,30 @@ class Options_Logger extends Logger {
 		return $context;
 	}
 
+	/**
+	 * Add context for option default_category for default_email_category.
+	 *
+	 * @param array $context context.
+	 * @param mixed $old_value old value.
+	 * @param mixed $new_value new value.
+	 * @param mixed $option option name.
+	 * @param mixed $option_page option page name.
+	 * @return array Updated context.
+	 */
 	public function add_context_for_option_default_email_category( $context, $old_value, $new_value, $option, $option_page ) {
-
 		$context = call_user_func_array( array( $this, 'add_context_for_option_default_category' ), func_get_args() );
-
 		return $context;
 	}
 
 	/**
 	 * Add detailed output for default_category
 	 *
+	 * @param array  $context context.
+	 * @param mixed  $old_value old value.
+	 * @param mixed  $new_value new value.
+	 * @param string $option option name.
+	 * @param string $option_page option page name.
+	 * @param string $tmpl_row template row.
 	 * @return string output
 	 */
 	public function get_details_output_for_option_default_category( $context, $old_value, $new_value, $option, $option_page, $tmpl_row ) {
@@ -396,10 +442,19 @@ class Options_Logger extends Logger {
 		return $output;
 	}
 
+	/**
+	 * Get detailed output for default_category for default_email_category.
+	 *
+	 * @param array  $context context.
+	 * @param mixed  $old_value old value.
+	 * @param mixed  $new_value new value.
+	 * @param string $option option name.
+	 * @param string $option_page option page name.
+	 * @param string $tmpl_row template row.
+	 * @return string output
+	 */
 	public function get_details_output_for_option_default_email_category( $context, $old_value, $new_value, $option, $option_page, $tmpl_row ) {
-
 		$output = call_user_func_array( array( $this, 'get_details_output_for_option_default_category' ), func_get_args() );
-
 		return $output;
 	}
 }

@@ -13,9 +13,12 @@ use Simple_History\Log_Levels;
  * Author: Pär Thernström
  */
 class RSS_Dropin extends Dropin {
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		if ( ! function_exists( 'get_editable_roles' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/user.php' );
+			require_once ABSPATH . '/wp-admin/includes/user.php';
 		}
 
 		// Check the status of the RSS feed.
@@ -28,32 +31,9 @@ class RSS_Dropin extends Dropin {
 
 		add_action( 'init', array( $this, 'check_for_rss_feed_request' ) );
 
-		// Add settings with priority 11 so it' added after the main Simple History settings.
-		add_action( 'admin_menu', array( $this, 'add_settings' ), 11 );
-
-		// Output CSS in admin header for this page.
-		add_action( 'admin_print_styles-settings_page_' . $this->simple_history::SETTINGS_MENU_SLUG, array( $this, 'admin_print_styles' ) );
+		// Add settings with priority 15 so it' added after the main Simple History settings.
+		add_action( 'admin_menu', array( $this, 'add_settings' ), 15 );
 	}
-
-	/**
-	 * Output CSS in admin header for this page.
-	 */
-	public function admin_print_styles() {
-		if ( $this->is_rss_enabled() === false ) {
-			return;
-		}
-
-		?>
-		<style>
-			.simple_history_rss_feed_query_parameters a::after {
-				/* External icon on link */
-				content: "\f504";
-				font-family: dashicons;
-			}
-		</style>
-		<?php
-	}
-
 
 	/**
 	 * Add settings for the RSS feed.
@@ -90,17 +70,17 @@ class RSS_Dropin extends Dropin {
 			_x( 'RSS feed', 'rss settings headline', 'simple-history' )
 		);
 
-		add_settings_section(
+		Helpers::add_settings_section(
 			$settings_section_rss_id,
-			$rss_section_title,
+			[ $rss_section_title, 'rss_feed' ],
 			array( $this, 'settings_section_output' ),
-			Simple_History::SETTINGS_MENU_SLUG // same slug as for options menu page
+			Simple_History::SETTINGS_MENU_SLUG // same slug as for options menu page.
 		);
 
 		// Enable/Disable RSS feed.
 		add_settings_field(
 			'simple_history_enable_rss_feed',
-			__( 'Enable', 'simple-history' ),
+			Helpers::get_settings_field_title_output( __( 'Enable', 'simple-history' ), 'toggle-on' ),
 			array( $this, 'settings_field_rss_enable' ),
 			Simple_History::SETTINGS_MENU_SLUG,
 			$settings_section_rss_id
@@ -111,7 +91,7 @@ class RSS_Dropin extends Dropin {
 			// RSS address.
 			add_settings_field(
 				'simple_history_rss_feed',
-				__( 'Address', 'simple-history' ),
+				Helpers::get_settings_field_title_output( __( 'Address', 'simple-history' ), 'link' ),
 				array( $this, 'settings_field_rss' ),
 				Simple_History::SETTINGS_MENU_SLUG,
 				$settings_section_rss_id
@@ -120,7 +100,7 @@ class RSS_Dropin extends Dropin {
 			// Link button to regenerate RSS secret.
 			add_settings_field(
 				'simple_history_rss_feed_regenerate_secret',
-				__( 'Regenerate', 'simple-history' ),
+				Helpers::get_settings_field_title_output( __( 'Regenerate', 'simple-history' ), 'autorenew' ),
 				array( $this, 'settings_field_rss_regenerate' ),
 				Simple_History::SETTINGS_MENU_SLUG,
 				$settings_section_rss_id
@@ -129,7 +109,7 @@ class RSS_Dropin extends Dropin {
 
 		// Create new RSS secret.
 		$create_secret_nonce_name = 'simple_history_rss_secret_regenerate_nonce';
-		$create_nonce_ok = isset( $_GET[ $create_secret_nonce_name ] ) && wp_verify_nonce( $_GET[ $create_secret_nonce_name ], 'simple_history_rss_update_secret' );
+		$create_nonce_ok = isset( $_GET[ $create_secret_nonce_name ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET[ $create_secret_nonce_name ] ) ), 'simple_history_rss_update_secret' );
 
 		if ( $create_nonce_ok ) {
 			$this->update_rss_secret();
@@ -159,7 +139,7 @@ class RSS_Dropin extends Dropin {
 	public function is_rss_enabled() {
 		$is_enabled = false;
 
-		// User has never used the plugin we disable RSS feed
+		// User has never used the plugin we disable RSS feed.
 		if ( $this->get_rss_secret() === false && get_option( 'simple_history_enable_rss_feed' ) === false ) {
 			// We disable RSS by default, we use 0/1 to prevent fake disabled with bools from functions returning false for unset.
 			update_option( 'simple_history_enable_rss_feed', '0' );
@@ -182,7 +162,7 @@ class RSS_Dropin extends Dropin {
 		/**
 		 * Filters the text for the RSS enable checkbox.
 		 *
-		 * @var string $rss_section_title
+		 * @var string $enable_rss_text
 		 */
 		$enable_rss_text = apply_filters(
 			'simple_history/feeds/enable_feeds_checkbox_text',
@@ -219,7 +199,7 @@ class RSS_Dropin extends Dropin {
 	 */
 	public function output_rss() {
 		$rss_secret_option = get_option( 'simple_history_rss_secret' );
-		$rss_secret_get = $_GET['rss_secret'] ?? '';
+		$rss_secret_get = sanitize_text_field( wp_unslash( $_GET['rss_secret'] ?? '' ) );
 
 		if ( empty( $rss_secret_option ) || empty( $rss_secret_get ) ) {
 			die();
@@ -270,12 +250,12 @@ class RSS_Dropin extends Dropin {
 					<atom:link href="<?php echo esc_url( $self_link ); ?>" rel="self" type="application/atom+xml" />
 					<?php
 
-					// Override capability check: if you have a valid rss_secret_key you can read it all
+					// Override capability check: if you have a valid rss_secret_key you can read it all.
 					$action_tag = 'simple_history/loggers_user_can_read/can_read_single_logger';
 					add_filter( $action_tag, '__return_true', 10, 0 );
 
 					// Modify header time output so it does not show relative date or time ago-format
-					// Because we don't know when a user reads the RSS feed, time ago format may be very inaccurate
+					// Because we don't know when a user reads the RSS feed, time ago format may be very inaccurate.
 					add_filter( 'simple_history/header_just_now_max_time', '__return_zero' );
 					add_filter( 'simple_history/header_time_ago_max_time', '__return_zero' );
 
@@ -320,14 +300,14 @@ class RSS_Dropin extends Dropin {
 					$queryResults = $logQuery->query( $args );
 
 					// Remove capability override after query is done
-					// remove_action( $action_tag, '__return_true', 10 );
+					// remove_action( $action_tag, '__return_true', 10 );.
 					foreach ( $queryResults['log_rows'] as $row ) {
 						$header_output = $this->simple_history->get_log_row_header_output( $row );
 						$text_output = $this->simple_history->get_log_row_plain_text_output( $row );
 						$details_output = $this->simple_history->get_log_row_details_output( $row );
 
 						// http://cyber.law.harvard.edu/rss/rss.html#ltguidgtSubelementOfLtitemgt
-						// $item_guid = home_url() . "?SimpleHistoryGuid=" . $row->id;
+						// $item_guid = home_url() . "?SimpleHistoryGuid=" . $row->id;.
 						$item_guid = esc_url( add_query_arg( 'SimpleHistoryGuid', $row->id, home_url() ) );
 						$item_link = esc_url( add_query_arg( 'SimpleHistoryGuid', $row->id, home_url() ) );
 
@@ -404,7 +384,9 @@ class RSS_Dropin extends Dropin {
 								<div><?php echo wp_kses( $details_output, $wp_kses_attrs ); ?></div>
 								<p><?php echo wp_kses( $level_output, $wp_kses_attrs ); ?></p>
 								<?php
+								// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 								$occasions = $row->subsequentOccasions - 1;
+
 								if ( $occasions ) {
 									echo '<p>';
 									esc_html(
@@ -419,7 +401,7 @@ class RSS_Dropin extends Dropin {
 								?>
 							]]></description>
 							<?php
-							// author must be email to validate, but the field is optional, so we skip it
+							// author must be email to validate, but the field is optional, so we skip it.
 							/* <author><?php echo $row->initiator ?></author> */
 							?>
 							<pubDate><?php echo esc_xml( gmdate( 'D, d M Y H:i:s', strtotime( $row->date ) ) ); ?> GMT</pubDate>
@@ -434,7 +416,7 @@ class RSS_Dropin extends Dropin {
 			</rss>
 			<?php
 		} else {
-			// RSS secret was not ok
+			// RSS secret was not ok.
 			echo PHP_EOL;
 			?>
 			<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -489,13 +471,14 @@ class RSS_Dropin extends Dropin {
 		echo wp_kses(
 			sprintf(
 				/* translators: %s is a link to the documentation */
-				__( 'Query parameters can be used to control what to include in the feed. <a href="%1$s" target="_blank">View documentation</a>.', 'simple-history' ),
+				__( 'Query parameters can be used to control what to include in the feed. <a href="%1$s" class="sh-ExternalLink" target="_blank">View documentation</a>.', 'simple-history' ),
 				'https://simple-history.com/docs/feeds/?utm_source=wpadmin'
 			),
 			[
 				'a' => [
 					'href' => [],
 					'target' => [],
+					'class' => [],
 				],
 			]
 		);
@@ -504,7 +487,7 @@ class RSS_Dropin extends Dropin {
 		/**
 		 * Fires after the RSS address has been output.
 		 *
-		 * @param RSS_Dropin $this
+		 * @param RSS_Dropin $instance
 		 */
 		do_action( 'simple_history/feeds/after_address', $this );
 	}

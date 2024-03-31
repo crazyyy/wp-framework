@@ -1,8 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+
 /**
- * Deprecated, use Simple_History\Log_Levels instead.
+ * Log levels.
+ *
+ * @deprecated, use Simple_History\Log_Levels instead.
  */
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class SimpleLoggerLogLevels {
 	public const EMERGENCY = 'emergency';
 	public const ALERT = 'alert';

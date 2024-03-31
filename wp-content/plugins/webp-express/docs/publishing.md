@@ -43,7 +43,7 @@ before rsync, do this:
 - Make sure you remembered to update version in:
   1. the *webp-express.php* file
   2. in `lib/options/enqueue_scripts.php`
-  3. in `lib/classes/ConverterHelperIndependent.php`
+  3. in `lib/classes/ConvertHelperIndependent.php`
   4. in `README.txt` (Stable tag) - UNLESS IT IS A PRE-RELEASE :)
 - Perhaps make some final improvements of the readme.
     Inspiration: https://www.smashingmagazine.com/2011/11/improve-wordpress-plugins-readme-txt/
@@ -116,12 +116,12 @@ svn status | grep '^!' | awk '{print $2}' | xargs svn delete --force          (t
 Then add a new tag
 ```
 cd svn
-svn cp trunk tags/0.25.6       (this will copy trunk into a new tag)
+svn cp trunk tags/0.25.7       (this will copy trunk into a new tag)
 ```
 
 And commit!
 ```
-svn ci -m '0.25.6'
+svn ci -m '0.25.7'
 ```
 
 

@@ -13,6 +13,52 @@ function cmplz_elementor_whitelist($tags){
 add_filter( 'cmplz_whitelisted_script_tags', 'cmplz_elementor_whitelist');
 
 /**
+ * Add script to remove the placeholders which are left in place when the consent is already given and the popup is opened.
+ * @return void
+ */
+function cmplz_elementor_popup_content_blocking() {
+    ob_start();
+    ?>
+    <script>
+		if ('undefined' != typeof window.jQuery) {
+			jQuery(document).ready(function ($) {
+				$(document).on('elementor/popup/show', () => {
+					let rev_cats = cmplz_categories.reverse();
+					for (let key in rev_cats) {
+						if (rev_cats.hasOwnProperty(key)) {
+							let category = cmplz_categories[key];
+							if (cmplz_has_consent(category)) {
+								document.querySelectorAll('[data-category="' + category + '"]').forEach(obj => {
+									cmplz_remove_placeholder(obj);
+								});
+							}
+						}
+					}
+
+					let services = cmplz_get_services_on_page();
+					for (let key in services) {
+						if (services.hasOwnProperty(key)) {
+							let service = services[key].service;
+							let category = services[key].category;
+							if (cmplz_has_service_consent(service, category)) {
+								document.querySelectorAll('[data-service="' + service + '"]').forEach(obj => {
+									cmplz_remove_placeholder(obj);
+								});
+							}
+						}
+					}
+				});
+			});
+		}
+    </script>
+    <?php
+    $script = ob_get_clean();
+    $script = str_replace(array('<script>', '</script>'), '', $script);
+    wp_add_inline_script( 'cmplz-cookiebanner', $script);
+}
+add_action( 'wp_enqueue_scripts', 'cmplz_elementor_popup_content_blocking', PHP_INT_MAX );
+
+/**
  *
  */
 
@@ -176,7 +222,7 @@ add_filter('cmplz_cookie_blocker_output', 'cmplz_elementor_cookieblocker');
 
 add_action( 'cmplz_banner_css', 'cmplz_elementor_css' );
 function cmplz_elementor_css() {
-	if (cmplz_get_value('block_recaptcha_service') === 'yes'){ ?>
+	if (cmplz_get_option('block_recaptcha_service') === 'yes'){ ?>
 	.cmplz-blocked-content-container.elementor-g-recaptcha  {
 		max-width: initial !important;
 		height: 80px !important;

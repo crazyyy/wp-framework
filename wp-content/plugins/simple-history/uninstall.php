@@ -1,12 +1,11 @@
 <?php
-
 /**
  * File that is run during plugin uninstall (not just de-activate)
  *
  * @TODO: delete all tables in network if on multisite
  */
 
-// If uninstall not called from WordPress exit
+// If uninstall not called from WordPress exit.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit();
 }
@@ -17,7 +16,7 @@ Go on with uninstall actions:
  - Remove options:
 */
 
-// Remove options
+// Remove options.
 $arr_options = array(
 	'simple_history_pager_size',
 	'simple_history_db_version',

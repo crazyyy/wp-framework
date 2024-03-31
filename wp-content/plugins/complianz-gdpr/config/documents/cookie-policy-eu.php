@@ -32,7 +32,6 @@ $this->pages['eu']['cookie-statement']['document_elements'] = array(
 	    'content' => _x('Some cookies ensure that certain parts of the website work properly and that your user preferences remain known. By placing functional cookies, we make it easier for you to visit our website. This way, you do not need to repeatedly enter the same information when visiting our website and, for example, the items remain in your shopping cart until you have paid. We may place these cookies without your consent.', 'Legal document cookie policy', 'complianz-gdpr'),
     ),
 
-	//statistics
     array(
 	    'subtitle' => _x('Statistics cookies', 'Legal document cookie policy:paragraph title', 'complianz-gdpr'),
 	    'content' => _x('We use statistics cookies to optimize the website experience for our users. With these statistics cookies we get insights in the usage of our website.', 'Legal document cookie policy', 'complianz-gdpr')
@@ -67,6 +66,22 @@ $this->pages['eu']['cookie-statement']['document_elements'] = array(
 		    'uses_ad_cookies_personalized' => 'no'
 	    ),
     ),
+
+    // consent mode v2, DMA
+
+    // array(
+    //   'content' => cmplz_sprintf(_x('We also use a subset of Google\'s core platform services, for the purpose of providing online advertising services, personal data of end users using services of third parties that make use of core platform services, limited to %s.', 'Legal document cookie policy', 'complianz-gdpr'), '[domain_cps]'),
+    //   'condition' => array(
+    //     'uses_ad_cookies_consent_mode' => 'manual'
+    //   ),
+    // ),
+    //
+    // array(
+    //   'content' => _x('We use Google\'s services to process, for the purpose of providing online advertising services, personal data of end users using services of third parties that make use of core platform services. These services and their privacy policies are available on policies.google.com/privacy', 'Legal document cookie policy', 'complianz-gdpr'),
+    //   'condition' => array(
+    //     'uses_ad_cookies_consent_mode' => 'yes'
+    //   ),
+    // ),
 
 	array(
 		'subtitle' => _x('Marketing/Tracking cookies', 'cookie policy', 'complianz-gdpr'),

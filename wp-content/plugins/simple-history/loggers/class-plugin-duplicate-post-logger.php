@@ -12,8 +12,14 @@ use Simple_History\Helpers;
  * @since 2.13
  */
 class Plugin_Duplicate_Post_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'Plugin_DuplicatePost';
 
+	/**
+	 * Return info about this logger
+	 *
+	 * @return array
+	 */
 	public function get_info() {
 		$arr_info = array(
 			'name'        => _x( 'Plugin: Duplicate Posts Logger', 'Logger: Plugin Duplicate Post', 'simple-history' ),
@@ -36,6 +42,9 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 		return $arr_info;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		$isPluginActive = Helpers::is_plugin_active( 'duplicate-post/duplicate-post.php' );
 
@@ -47,7 +56,7 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 		// the action 'dp_duplicate_page' or 'dp_duplicate_post'
 		// is fired with args $new_post_id, $post, $status.
 		// We add actions with priority 20 so we probably run after
-		// the plugins own
+		// the plugins own.
 		add_action( 'dp_duplicate_post', array( $this, 'onDpDuplicatePost' ), 100, 3 );
 		add_action( 'dp_duplicate_page', array( $this, 'onDpDuplicatePost' ), 100, 3 );
 	}
@@ -55,20 +64,18 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 	/**
 	 * A post or page was duplicated
 	 *
-	 * @param int $new_post_id
-	 * @param \WP_Post $post old post that a copy was made of
-	 * @param string $status
+	 * @param int      $new_post_id id of new post that was created.
+	 * @param \WP_Post $post old post that a copy was made of.
+	 * @param string   $status status of new post.
 	 */
-	public function onDpDuplicatePost( $newPostID, $post, $status ) {
-		$new_post = get_post( $newPostID );
+	public function onDpDuplicatePost( $new_post_id, $post, $status ) {
+		$new_post = get_post( $new_post_id );
 
 		$context = array(
 			'new_post_title' => $new_post->post_title,
 			'new_post_id' => $new_post->ID,
 			'duplicated_post_title' => $post->post_title,
 			'duplicated_post_id' => $post->ID,
-			// "duplicate_new_post_id" => $newPostID,
-			// "status" => $status
 		);
 
 		$this->info_message( 'post_duplicated', $context );
@@ -76,6 +83,8 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 
 	/**
 	 * Modify plain output to include link to post
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_plain_text_output( $row ) {
 		$context = $row->context;
@@ -86,11 +95,11 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 
 		// Check if post still is available
 		// It will return a WP_Post Object if post still is in system
-		// If post is deleted from trash (not just moved there), then null is returned
+		// If post is deleted from trash (not just moved there), then null is returned.
 		$postDuplicated = get_post( $duplicated_post_id );
 		$post_is_available = is_a( $postDuplicated, 'WP_Post' );
 
-		// Try to get singular name
+		// Try to get singular name.
 		$post_type = $postDuplicated->post_type ?? '';
 		$post_type_obj = get_post_type_object( $post_type );
 
@@ -104,7 +113,7 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 		$context['new_post_edit_link'] = get_edit_post_link( $new_post_id );
 
 		// If post is not available any longer then we can't link to it, so keep plain message then
-		// Also keep plain format if user is not allowed to edit post (edit link is empty)
+		// Also keep plain format if user is not allowed to edit post (edit link is empty).
 		if ( $post_is_available && $context['duplicated_post_edit_link'] ) {
 			$message = _x(
 				'Cloned {duplicated_post_post_type_singular_name} <a href="{duplicated_post_edit_link}">"{duplicated_post_title}"</a> to <a href="{new_post_edit_link}">a new {duplicated_post_post_type_singular_name}</a>',
@@ -138,4 +147,3 @@ class Plugin_Duplicate_Post_Logger extends Logger {
 		return helpers::interpolate( $message, $context, $row );
 	}
 }
-

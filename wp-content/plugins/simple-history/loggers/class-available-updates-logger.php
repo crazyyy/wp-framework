@@ -10,6 +10,7 @@ use Simple_History\Log_Initiators;
  * @package SimpleHistory
  */
 class Available_Updates_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'AvailableUpdatesLogger';
 
 	/**
@@ -20,6 +21,7 @@ class Available_Updates_Logger extends Logger {
 	public function get_info() {
 		$arr_info = array(
 			'name'        => _x( 'Available Updates Logger', 'AvailableUpdatesLogger', 'simple-history' ),
+			'type'        => 'core',
 			'description' => __( 'Logs found updates to WordPress, plugins, and themes', 'simple-history' ),
 			'capability'  => 'manage_options',
 			'messages'    => array(
@@ -55,39 +57,46 @@ class Available_Updates_Logger extends Logger {
 	public function loaded() {
 
 		// When WP is done checking for core updates it sets a site transient called "update_core"
-		// set_site_transient( 'update_core', null ); // Uncomment to test
+		// set_site_transient( 'update_core', null ); // Uncomment to test.
 		add_action( 'set_site_transient_update_core', array( $this, 'on_setted_update_core_transient' ), 10, 1 );
 
 		// Ditto for plugins
-		// set_site_transient( 'update_plugins', null ); // Uncomment to test
+		// set_site_transient( 'update_plugins', null ); // Uncomment to test.
 		add_action( 'set_site_transient_update_plugins', array( $this, 'on_setted_update_plugins_transient' ), 10, 1 );
 
 		add_action( 'set_site_transient_update_themes', array( $this, 'on_setted_update_update_themes' ), 10, 1 );
 	}
 
+	/**
+	 * Called when WordPress is done checking for core updates.
+	 * WP sets site transient 'update_core' when done.
+	 * Log found core update.
+	 *
+	 * @param object $updates Updates object.
+	 */
 	public function on_setted_update_core_transient( $updates ) {
 
 		global $wp_version;
 
 		$last_version_checked = get_option( "simplehistory_{$this->get_slug()}_wp_core_version_available" );
 
-		// During update of network sites this was not set, so make sure to check
+		// During update of network sites this was not set, so make sure to check.
 		if ( empty( $updates->updates[0]->current ) ) {
 			return;
 		}
 
-		$new_wp_core_version = $updates->updates[0]->current; // The new WP core version
+		$new_wp_core_version = $updates->updates[0]->current; // The new WP core version.
 
 		// Some plugins can mess with version, so get fresh from the version file.
 		require_once ABSPATH . WPINC . '/version.php';
 
-		// If found version is same version as we have logged about before then don't continue
+		// If found version is same version as we have logged about before then don't continue.
 		if ( $last_version_checked == $new_wp_core_version ) {
 			return;
 		}
 
 		// is WP core update available?
-		if ( 'upgrade' == $updates->updates[0]->response ) {
+		if ( isset( $updates->updates[0]->response ) && 'upgrade' == $updates->updates[0]->response ) {
 			$this->notice_message(
 				'core_update_available',
 				array(
@@ -97,7 +106,7 @@ class Available_Updates_Logger extends Logger {
 				)
 			);
 
-			// Store updated version available, so we don't log that version again
+			// Store updated version available, so we don't log that version again.
 			update_option( "simplehistory_{$this->get_slug()}_wp_core_version_available", $new_wp_core_version );
 		}
 	}
@@ -106,19 +115,14 @@ class Available_Updates_Logger extends Logger {
 	 * Called when WordPress is done checking for plugin updates.
 	 * WP sets site transient 'update_plugins' when done.
 	 * Log found plugin updates.
+	 *
+	 * @param object $updates Updates object.
 	 */
 	public function on_setted_update_plugins_transient( $updates ) {
 
 		if ( empty( $updates->response ) || ! is_array( $updates->response ) ) {
 			return;
 		}
-
-		// If we only want to notify about active plugins
-		/*
-		$active_plugins = get_option( 'active_plugins' );
-		$active_plugins = array_flip( $active_plugins ); // find which plugins are active
-		$plugins_need_update = array_intersect_key( $plugins_need_update, $active_plugins ); // only keep plugins that are active
-		*/
 
 		$option_key = "simplehistory_{$this->get_slug()}_plugin_updates_available";
 		$checked_updates = get_option( $option_key );
@@ -127,16 +131,14 @@ class Available_Updates_Logger extends Logger {
 			$checked_updates = array();
 		}
 
-		// File needed plugin API
+		// File needed plugin API.
 		if ( ! function_exists( 'get_plugin_data' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
 		// For each available update.
 		foreach ( $updates->response as $key => $data ) {
-			// Make sure plugin directory exists or get_plugin_data will
-			// give warning like
-			// "PHP Warning:  fread() expects parameter 1 to be resource, boolean given in /wp/wp-includes/functions.php on line 4837"
+			// Make sure plugin directory exists or get_plugin_data will give warning.
 			$file = WP_PLUGIN_DIR . '/' . $key;
 
 			// Continue with next plugin if plugin file did not exist.
@@ -163,7 +165,7 @@ class Available_Updates_Logger extends Logger {
 			}
 
 			if ( $checked_updates[ $key ]['checked_version'] == $plugin_new_version ) {
-				// This version has been checked/logged already
+				// This version has been checked/logged already.
 				continue;
 			}
 
@@ -183,6 +185,13 @@ class Available_Updates_Logger extends Logger {
 		update_option( $option_key, $checked_updates );
 	}
 
+	/**
+	 * Called when WordPress is done checking for theme updates.
+	 * WP sets site transient 'update_themes' when done.
+	 * Log found theme updates.
+	 *
+	 * @param object $updates Updates object.
+	 */
 	public function on_setted_update_update_themes( $updates ) {
 
 		if ( empty( $updates->response ) || ! is_array( $updates->response ) ) {
@@ -196,16 +205,16 @@ class Available_Updates_Logger extends Logger {
 			$checked_updates = array();
 		}
 
-		// For each available update
+		// For each available update.
 		foreach ( $updates->response as $key => $data ) {
 			$theme_info = wp_get_theme( $key );
 
 			// $message .= "\n" . sprintf( __( "Theme: %s is out of date. Please update from version %s to %s", "wp-updates-notifier" ), $theme_info['Name'], $theme_info['Version'], $data['new_version'] ) . "\n";
-			$settings['notified']['theme'][ $key ] = $data['new_version']; // set theme version we are notifying about
+			$settings['notified']['theme'][ $key ] = $data['new_version']; // set theme version we are notifying about.
 
 			$theme_new_version = $data['new_version'] ?? '';
 
-			// check if this plugin and this version has been checked/logged already
+			// check if this plugin and this version has been checked/logged already.
 			if ( ! array_key_exists( $key, $checked_updates ) ) {
 				$checked_updates[ $key ] = array(
 					'checked_version' => null,
@@ -213,7 +222,7 @@ class Available_Updates_Logger extends Logger {
 			}
 
 			if ( $checked_updates[ $key ]['checked_version'] == $theme_new_version ) {
-				// This version has been checked/logged already
+				// This version has been checked/logged already.
 				continue;
 			}
 
@@ -239,6 +248,8 @@ class Available_Updates_Logger extends Logger {
 
 	/**
 	 * Append prev and current version of update object as details in the output
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_details_output( $row ) {
 

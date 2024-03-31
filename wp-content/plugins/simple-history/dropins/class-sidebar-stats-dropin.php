@@ -5,6 +5,7 @@ namespace Simple_History\Dropins;
 use DateTime;
 use DateInterval;
 use DatePeriod;
+use Simple_History\Helpers;
 
 /**
  * Dropin Name: Sidebar with short stats
@@ -12,16 +13,23 @@ use DatePeriod;
  * Author: Pär Thernström
  */
 class Sidebar_Stats_Dropin extends Dropin {
+	/** @inheritdoc */
 	public function loaded() {
 		add_action( 'simple_history/dropin/sidebar/sidebar_html', array( $this, 'on_sidebar_html' ), 5 );
 		add_action( 'simple_history/enqueue_admin_scripts', array( $this, 'on_admin_enqueue_scripts' ) );
 		add_action( 'simple_history/admin_footer', array( $this, 'on_admin_footer' ) );
 	}
 
+	/**
+	 * Enqueue scripts.
+	 */
 	public function on_admin_enqueue_scripts() {
 		wp_enqueue_script( 'simple_history_chart.js', SIMPLE_HISTORY_DIR_URL . 'js/chart.4.3.0.min.js', array( 'jquery' ), '4.3.0', true );
 	}
 
+	/**
+	 * Run JS in footer.
+	 */
 	public function on_admin_footer() {
 		?>
 		<script>
@@ -124,12 +132,15 @@ class Sidebar_Stats_Dropin extends Dropin {
 		<?php
 	}
 
+	/**
+	 * Output HTML for sidebar.
+	 */
 	public function on_sidebar_html() {
 		$num_days = 28;
 
-		$num_events_per_day_for_period = $this->simple_history->get_num_events_per_day_last_n_days( $num_days );
+		$num_events_per_day_for_period = Helpers::get_num_events_per_day_last_n_days( $num_days );
 
-		// Period = all dates, so empty ones don't get lost
+		// Period = all dates, so empty ones don't get lost.
 		$period_start_date = DateTime::createFromFormat( 'U', strtotime( "-$num_days days" ) );
 		$period_end_date = DateTime::createFromFormat( 'U', time() );
 		$interval = DateInterval::createFromDateString( '1 day' );
@@ -148,7 +159,7 @@ class Sidebar_Stats_Dropin extends Dropin {
 						sprintf(
 							// translators: 1 is number of events, 2 is number of days.
 							__( '<b>%1$s events</b> have been logged the last <b>%2$s days</b>.', 'simple-history' ),
-							$this->simple_history->get_num_events_last_n_days( $num_days ),
+							Helpers::get_num_events_last_n_days( $num_days ),
 							number_format_i18n( $num_days )
 						),
 						array(
@@ -178,7 +189,7 @@ class Sidebar_Stats_Dropin extends Dropin {
 					$str_date_ymd = gmdate( 'Y-m-d', $dt->getTimestamp() );
 
 					// Get data for this day, if exist
-					// Day in object is in format '2014-09-07'
+					// Day in object is in format '2014-09-07'.
 					$yearDate = $dt->format( 'Y-m-d' );
 					$day_data = wp_filter_object_list(
 						$num_events_per_day_for_period,

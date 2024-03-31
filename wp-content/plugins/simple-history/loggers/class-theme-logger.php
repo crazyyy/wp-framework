@@ -8,10 +8,8 @@ use Simple_History\Helpers;
  * Logs WordPress theme edits
  */
 class Theme_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'SimpleThemeLogger';
-
-	/** @var array<string> When switching themes, this will contain info about the theme we are switching from. */
-	private ?array $prev_theme_data = null;
 
 	/**
 	 * Used to collect information about a theme before it is deleted.
@@ -21,6 +19,11 @@ class Theme_Logger extends Logger {
 	 */
 	protected $themes_data = array();
 
+	/**
+	 * Return logger info
+	 *
+	 * @return array
+	 */
 	public function get_info() {
 		$arr_info = array(
 			'name'        => __( 'Theme Logger', 'simple-history' ),
@@ -74,29 +77,30 @@ class Theme_Logger extends Logger {
 							'custom_background_changed',
 						),
 					),
-				), // end search array
-			), // end labels
+				),
+			),
 		);
 
 		return $arr_info;
 	}
 
+	/**
+	 * Called when logger is loaded.
+	 */
 	public function loaded() {
 		/**
 		 * Fires after the theme is switched.
 		 *
 		 * @param string   $new_name  Name of the new theme.
-		 * @param WP_Theme $new_theme WP_Theme instance of the new theme.
+		 * @param \WP_Theme $new_theme WP_Theme instance of the new theme.
+		 * @param \WP_Theme $old_theme WP_Theme instance of the old theme.
 		 */
-		add_action( 'switch_theme', array( $this, 'on_switch_theme' ), 10, 2 );
-		add_action( 'load-themes.php', array( $this, 'on_page_load_themes' ) );
+		add_action( 'switch_theme', array( $this, 'on_switch_theme' ), 10, 3 );
 
 		add_action( 'customize_save', array( $this, 'on_action_customize_save' ) );
 
 		add_action( 'sidebar_admin_setup', array( $this, 'on_action_sidebar_admin_setup__detect_widget_delete' ) );
 		add_action( 'sidebar_admin_setup', array( $this, 'on_action_sidebar_admin_setup__detect_widget_add' ) );
-		// add_action("wp_ajax_widgets-order", array( $this, "on_action_sidebar_admin_setup__detect_widget_order_change"), 1 );
-		// add_action("sidebar_admin_setup", array( $this, "on_action_sidebar_admin_setup__detect_widget_edit") );
 		add_filter( 'widget_update_callback', array( $this, 'on_widget_update_callback' ), 10, 4 );
 
 		add_action( 'load-appearance_page_custom-background', array( $this, 'on_page_load_custom_background' ) );
@@ -203,7 +207,7 @@ class Theme_Logger extends Logger {
 		)
 		*/
 
-		// Both args must be set
+		// Both args must be set.
 		if ( empty( $upgrader_instance ) || empty( $arr_data ) ) {
 			return;
 		}
@@ -213,12 +217,12 @@ class Theme_Logger extends Logger {
 			return;
 		}
 
-		// Must be type theme and action install
+		// Must be type theme and action install.
 		if ( $arr_data['type'] !== 'theme' || $arr_data['action'] !== 'update' ) {
 			return;
 		}
 
-		// If single install make an array so it look like bulk and we can use same code
+		// If single install make an array so it look like bulk and we can use same code.
 		if ( isset( $arr_data['bulk'] ) && $arr_data['bulk'] && isset( $arr_data['themes'] ) ) {
 			$arr_themes = (array) $arr_data['themes'];
 		} else {
@@ -226,15 +230,6 @@ class Theme_Logger extends Logger {
 				$arr_data['theme'],
 			);
 		}
-
-		/*
-		ob_start();
-		print_r($skin);
-		$skin_str = ob_get_clean();
-		echo "<pre>";
-		print_r($arr_data);
-		print_r($skin);
-		// */
 
 		// $one_updated_theme is the theme slug
 		foreach ( $arr_themes as $one_updated_theme ) {
@@ -351,7 +346,6 @@ class Theme_Logger extends Logger {
 	 * @return void
 	 */
 	public function on_action_customize_save( $customize_manager ) {
-
 		/*
 		- Loop through all sections
 			- And then through all controls in section
@@ -372,13 +366,14 @@ class Theme_Logger extends Logger {
 		static_front_page - Static Front Page
 		*/
 
-		// Needed to get sections and controls in sorted order
+		// Needed to get sections and controls in sorted order.
 		$customize_manager->prepare_controls();
 
 		$settings = $customize_manager->settings();
 		$controls = $customize_manager->controls();
 
-		$customized = json_decode( wp_unslash( $_REQUEST['customized'] ) );
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		$customized = json_decode( sanitize_text_field( wp_unslash( $_REQUEST['customized'] ) ) );
 
 		foreach ( $customized as $setting_id => $posted_values ) {
 			foreach ( $settings as $one_setting ) {
@@ -394,7 +389,7 @@ class Theme_Logger extends Logger {
 						);
 
 						// value is changed
-						// find which control it belongs to
+						// find which control it belongs to.
 						foreach ( $controls as $one_control ) {
 							foreach ( $one_control->settings as $section_control_setting ) {
 								if ( $section_control_setting->id == $setting_id ) {
@@ -416,73 +411,41 @@ class Theme_Logger extends Logger {
 	}
 
 	/**
-	 * When a new theme is about to get switched to
-	 * we save info about the old one
-	 *
-	 * Request looks like:
-	 *  Array
-	 *  (
-	 *    [action] => activate
-	 *    [stylesheet] => wp-theme-bonny-starter
-	 *    [_wpnonce] => ...
-	 *  )
-	 *
-	 * @return void
-	 */
-	public function on_page_load_themes() {
-
-		if ( ! isset( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
-			return;
-		}
-
-		// Get current theme / the theme we are switching from
-		$current_theme = wp_get_theme();
-
-		if ( ! is_a( $current_theme, 'WP_Theme' ) ) {
-			return;
-		}
-
-		$this->prev_theme_data = array(
-			'name' => $current_theme->name,
-			'version' => $current_theme->version,
-		);
-	}
-
-	/**
-	 * @param string   $new_name  Name of the new theme.
+	 * @param string    $new_name  Name of the new theme.
 	 * @param \WP_Theme $new_theme WP_Theme instance of the new theme.
+	 * @param \WP_Theme $old_theme WP_Theme instance of the old theme.
 	 * @return void
 	 */
-	public function on_switch_theme( $new_name, $new_theme ) {
-		$prev_theme_data = $this->prev_theme_data;
+	public function on_switch_theme( $new_name, $new_theme, $old_theme ) {
 
 		$this->info_message(
 			'theme_switched',
 			array(
 				'theme_name' => $new_name,
 				'theme_version' => $new_theme->version,
-				'prev_theme_name' => $prev_theme_data['name'],
-				'prev_theme_version' => $prev_theme_data['version'],
+				'prev_theme_name' => $old_theme->name ?? null,
+				'prev_theme_version' => $old_theme->version ?? null,
 			)
 		);
 	}
 
+	/**
+	 * Get detailed output for a row.
+	 *
+	 * @param object $row Log row.
+	 * @return string
+	 */
 	public function get_log_row_details_output( $row ) {
 		$context = $row->context;
 		$message_key = $context['_message_key'];
 		$output = '';
 
-		// Theme customizer
+		// Theme customizer.
 		if ( 'appearance_customized' == $message_key ) {
-			// if ( ! class_exists("WP_Customize_Manager") ) {
-			// require_once( ABSPATH . WPINC . '/class-wp-customize-manager.php' );
-			// $wp_customize = new WP_Customize_Manager;
-			// }
-			// $output .= "<pre>" . print_r($context, true);
 			if ( isset( $context['setting_old_value'] ) && isset( $context['setting_new_value'] ) ) {
 				$output .= "<table class='SimpleHistoryLogitem__keyValueTable'>";
 
-				// Output section, if saved
+				// Output section, if saved.
 				if ( ! empty( $context['section_id'] ) ) {
 					$output .= sprintf(
 						'
@@ -496,12 +459,12 @@ class Theme_Logger extends Logger {
 					);
 				}
 
-				// Don't output prev and new value if none exist
+				// Don't output prev and new value if none exist.
 				// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 				if ( empty( $context['setting_old_value'] ) && empty( $context['setting_new_value'] ) ) {
 					// Empty, so skip.
 				} else {
-					// if control is color let's be fancy and output as color
+					// if control is color let's be fancy and output as color.
 					$control_type = $context['control_type'] ?? '';
 					$str_old_value_prepend = '';
 					$str_new_value_prepend = '';
@@ -552,6 +515,8 @@ class Theme_Logger extends Logger {
 
 	/**
 	 * Add widget name and sidebar name to output
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_plain_text_output( $row ) {
 		$context = $row->context;
@@ -560,13 +525,13 @@ class Theme_Logger extends Logger {
 		$output = '';
 
 		// Widget changed or added or removed
-		// Simple replace widget_id_base and sidebar_id with widget name and sidebar name
+		// Simple replace widget_id_base and sidebar_id with widget name and sidebar name.
 		if ( in_array( $message_key, array( 'widget_added', 'widget_edited', 'widget_removed' ) ) ) {
 			$widget = $this->get_widget_by_id_base( $context['widget_id_base'] );
 			$sidebar = $this->get_sidebar_by_id( $context['sidebar_id'] );
 
 			if ( $widget && $sidebar ) {
-				// Translate message first
+				// Translate message first.
 				$message = $this->messages[ $message_key ]['translated_text'];
 
 				$message = helpers::interpolate(
@@ -582,7 +547,7 @@ class Theme_Logger extends Logger {
 			}
 		}
 
-		// Fallback to default/parent output if nothing was added to output
+		// Fallback to default/parent output if nothing was added to output.
 		if ( $output === '' ) {
 			$output .= parent::get_log_row_plain_text_output( $row );
 		}
@@ -590,60 +555,18 @@ class Theme_Logger extends Logger {
 		return $output;
 	}
 
-	/*
-	function on_action_sidebar_admin_setup__detect_widget_edit() {
-
-		if ( isset( $_REQUEST["action"] ) && ( $_REQUEST["action"] == "save-widget" ) && isset( $_POST["sidebar"] ) && isset( $_POST["id_base"] ) ) {
-
-			$widget_id_base = $_POST["id_base"];
-
-			// a key with widget-{$widget_id_base} exists if we are saving
-			if ( ! isset( $_POST["widget-{$widget_id_base}"] ) ) {
-				return;
-			}
-
-			$context = array();
-
-			$widget_save_data = $_POST["widget-{$widget_id_base}"];
-			$context["widget_save_data"] = Helpers::json_encode( $widget_save_data );
-
-			// Add widget info
-			$context["widget_id_base"] = $widget_id_base;
-			$widget = $this->getWidgetByIdBase( $widget_id_base );
-			if ($widget) {
-				$context["widget_name_translated"] = $widget->name;
-			}
-
-			// Add sidebar info
-			$sidebar_id = $_POST["sidebar"];
-			$context["sidebar_id"] = $sidebar_id;
-			$sidebar = $this->getSidebarById( $sidebar_id );
-			if ($sidebar) {
-				$context["sidebar_name_translated"] = $sidebar["name"];
-			}
-
-			$this->info_message(
-				"widget_edited",
-				$context
-			);
-
-		}
-
-	}
-		*/
-
 	/**
 	 * A widget is changed, i.e. new values are saved
 	 *
 	 * @param array<mixed> $instance       The current widget instance's settings.
 	 * @param array<mixed> $new_instance   Array of new widget settings.
 	 * @param array<mixed> $old_instance   Array of old widget settings.
-	 * @param \WP_Widget $widget_instance WP_Widget instance.
+	 * @param \WP_Widget   $widget_instance WP_Widget instance.
 	 * @return array<mixed> Original instance.
 	 */
 	public function on_widget_update_callback( $instance, $new_instance, $old_instance, $widget_instance ) {
 		// If old_instance is empty then this widget has just been added
-		// and we log that as "Added" not "Edited"
+		// and we log that as "Added" not "Edited".
 		if ( empty( $old_instance ) ) {
 			return $instance;
 		}
@@ -661,7 +584,7 @@ class Theme_Logger extends Logger {
 
 		// Add sidebar info.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$sidebar_id = $_POST['sidebar'] ?? null;
+		$sidebar_id = sanitize_text_field( wp_unslash( $_POST['sidebar'] ?? '' ) );
 		$context['sidebar_id'] = $sidebar_id;
 
 		$sidebar = $this->get_sidebar_by_id( $sidebar_id );
@@ -691,18 +614,18 @@ class Theme_Logger extends Logger {
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['add_new'] ) && ! empty( $_POST['add_new'] ) && isset( $_POST['sidebar'] ) && isset( $_POST['id_base'] ) ) {
-			// Add widget info
+			// Add widget info.
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$widget_id_base = $_POST['id_base'];
+			$widget_id_base = sanitize_text_field( wp_unslash( $_POST['id_base'] ) );
 			$context['widget_id_base'] = $widget_id_base;
 			$widget = $this->get_widget_by_id_base( $widget_id_base );
 			if ( $widget ) {
 				$context['widget_name_translated'] = $widget->name;
 			}
 
-			// Add sidebar info
+			// Add sidebar info.
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$sidebar_id = $_POST['sidebar'];
+			$sidebar_id = sanitize_text_field( wp_unslash( $_POST['sidebar'] ) );
 			$context['sidebar_id'] = $sidebar_id;
 			$sidebar = $this->get_sidebar_by_id( $sidebar_id );
 
@@ -723,23 +646,23 @@ class Theme_Logger extends Logger {
 	 * @return void
 	 */
 	public function on_action_sidebar_admin_setup__detect_widget_delete() {
-		// Widget was deleted
+		// Widget was deleted.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['delete_widget'] ) ) {
 			$context = array();
 
 			// Add widget info.
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$widget_id_base = $_POST['id_base'];
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+			$widget_id_base = sanitize_text_field( wp_unslash( $_POST['id_base'] ) );
 			$context['widget_id_base'] = $widget_id_base;
 			$widget = $this->get_widget_by_id_base( $widget_id_base );
 			if ( $widget ) {
 				$context['widget_name_translated'] = $widget->name;
 			}
 
-			// Add sidebar info
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$sidebar_id = $_POST['sidebar'];
+			// Add sidebar info.
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+			$sidebar_id = sanitize_text_field( wp_unslash( $_POST['sidebar'] ) );
 			$context['sidebar_id'] = $sidebar_id;
 
 			$sidebar = $this->get_sidebar_by_id( $sidebar_id );
@@ -778,7 +701,7 @@ class Theme_Logger extends Logger {
 	/**
 	 * Get an widget by id's id_base
 	 *
-	 * @param string $widget_id_base
+	 * @param string $widget_id_base ID base of widget.
 	 * @return \WP_Widget|false wp_widget object or false on failure
 	 */
 	public function get_widget_by_id_base( $widget_id_base ) {

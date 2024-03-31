@@ -9,9 +9,10 @@ use Simple_History\Log_Initiators;
  * Logs things related to comments
  */
 class Comments_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'SimpleCommentsLogger';
 
-		/**
+	/**
 	 * Get array with information about this logger
 	 *
 	 * @return array
@@ -23,7 +24,7 @@ class Comments_Logger extends Logger {
 			'description' => __( 'Logs comments, and modifications to them', 'simple-history' ),
 			'capability'  => 'moderate_comments',
 			'messages'    => array(
-				// Comments
+				// Comments.
 				'anon_comment_added' => _x(
 					'Added a comment to {comment_post_type} "{comment_post_title}"',
 					'A comment was added to the database by a non-logged in internet user',
@@ -78,7 +79,7 @@ class Comments_Logger extends Logger {
 					'simple-history'
 				),
 
-				// Trackbacks
+				// Trackbacks.
 				'anon_trackback_added' => _x(
 					'Added a trackback to {comment_post_type} "{comment_post_title}"',
 					'A trackback was added to the database by a non-logged in internet user',
@@ -188,7 +189,7 @@ class Comments_Logger extends Logger {
 					'simple-history'
 				),
 
-			), // end messages
+			), // end messages.
 
 			'labels' => array(
 
@@ -240,9 +241,9 @@ class Comments_Logger extends Logger {
 							'pingback_deleted',
 						),
 					),
-				), // end search
+				), // end search.
 
-			), // labels
+			), // labels.
 
 		);
 
@@ -252,12 +253,12 @@ class Comments_Logger extends Logger {
 	/**
 	 * Modify sql query to exclude comments of type spam
 	 *
-	 * @param string $where sql query where
+	 * @param string $where sql query where.
 	 */
 	public function maybe_modify_log_query_sql_where( $where ) {
 
 		// since 19 sept 2016 we do include spam, to skip the subquery
-		// spam comments should not be logged anyway since some time
+		// spam comments should not be logged anyway since some time.
 		$include_spam = true;
 
 		/**
@@ -309,12 +310,14 @@ class Comments_Logger extends Logger {
 			$this->get_slug()
 		);
 
-		// echo $where;
 		return $where;
 	}
 
+	/**
+	 * Called when logger is loaded.
+	 */
 	public function loaded() {
-		// Add option to not show spam comments, because to much things getting logged
+		// Add option to not show spam comments, because to much things getting logged.
 		add_filter( 'simple_history/log_query_inner_where', array( $this, 'maybe_modify_log_query_sql_where' ) );
 		add_filter( 'simple_history/quick_stats_where', array( $this, 'maybe_modify_log_query_sql_where' ) );
 
@@ -349,12 +352,12 @@ class Comments_Logger extends Logger {
 	/**
 	 * Get comments context.
 	 *
-	 * @param int $comment_ID
+	 * @param int $comment_ID Comment ID.
 	 * @return mixed array with context if comment found, false if comment not found
 	 */
 	public function get_context_for_comment( $comment_ID ) {
 
-		// get_comment passes comment_ID by reference, so it can be unset by that function
+		// get_comment passes comment_ID by reference, so it can be unset by that function.
 		$comment_ID_original = $comment_ID;
 		$comment_data = get_comment( $comment_ID );
 
@@ -380,7 +383,7 @@ class Comments_Logger extends Logger {
 			'comment_post_type' => $comment_parent_post->post_type,
 		);
 
-		// Note: comment type is empty for normal comments
+		// Note: comment type is empty for normal comments.
 		if ( empty( $context['comment_type'] ) ) {
 			$context['comment_type'] = 'comment';
 		}
@@ -388,8 +391,12 @@ class Comments_Logger extends Logger {
 		return $context;
 	}
 
+	/**
+	 * Fires immediately after a comment is updated in the database.
+	 *
+	 * @param int $comment_ID The comment ID.
+	 */
 	public function on_edit_comment( $comment_ID ) {
-
 		$context = $this->get_context_for_comment( $comment_ID );
 
 		if ( ! $context ) {
@@ -402,8 +409,12 @@ class Comments_Logger extends Logger {
 		);
 	}
 
+	/**
+	 * Fires immediately before a comment is deleted from the database.
+	 *
+	 * @param int $comment_ID The comment ID.
+	 */
 	public function on_delete_comment( $comment_ID ) {
-
 		$context = $this->get_context_for_comment( $comment_ID );
 
 		if ( ! $context ) {
@@ -414,7 +425,7 @@ class Comments_Logger extends Logger {
 
 		// add occasions if comment was considered spam
 		// if not added, spam comments can easily flood the log
-		// Deletions of spam easily flood log
+		// Deletions of spam easily flood log.
 		if ( isset( $comment_data->comment_approved ) && 'spam' === $comment_data->comment_approved ) {
 			// Since 2.5.5 we don't log deletion of spam comments.
 			return;
@@ -426,6 +437,11 @@ class Comments_Logger extends Logger {
 		);
 	}
 
+	/**
+	 * Fires immediately after a comment is restored from the Trash.
+	 *
+	 * @param int $comment_ID The comment ID.
+	 */
 	public function on_untrashed_comment( $comment_ID ) {
 
 		$context = $this->get_context_for_comment( $comment_ID );
@@ -478,6 +494,9 @@ class Comments_Logger extends Logger {
 
 	/**
 	 * Fires immediately after a comment is inserted into the database.
+	 *
+	 * @param int $comment_ID The comment ID.
+	 * @param int $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
 	 */
 	public function on_comment_post( $comment_ID, $comment_approved ) {
 
@@ -487,23 +506,23 @@ class Comments_Logger extends Logger {
 			return;
 		}
 
-		// since 2.5.5: no more logging of spam comments
-		if ( isset( $comment_approved ) && 'spam' === $comment_approved ) {
+		// since 2.5.5: no more logging of spam comments.
+		if ( 'spam' === $comment_approved ) {
 			return;
 		}
 
 		$comment_data = get_comment( $comment_ID );
 
 		if ( $comment_data->user_id !== '' && $comment_data->user_id !== '0' ) {
-			// comment was from a logged in user
+			// comment was from a logged in user.
 			$message = "user_{$context["comment_type"]}_added";
 		} else {
-			// comment was from a non-logged in user
+			// comment was from a non-logged in user.
 			$message = "anon_{$context["comment_type"]}_added";
 			$context['_initiator'] = Log_Initiators::WEB_USER;
 
 			// add occasions if comment is considered spam
-			// if not added, spam comments can easily flood the log
+			// if not added, spam comments can easily flood the log.
 			if ( isset( $comment_data->comment_approved ) && 'spam' === $comment_data->comment_approved ) {
 				$context['_occasionsID'] = self::class . '/' . __FUNCTION__ . "/anon_{$context["comment_type"]}_added/type:spam";
 			}
@@ -519,7 +538,7 @@ class Comments_Logger extends Logger {
 	 * Modify plain output to include link to post
 	 * and link to comment
 	 *
-	 * @param object $row
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_plain_text_output( $row ) {
 
@@ -528,12 +547,12 @@ class Comments_Logger extends Logger {
 		$message_key = $context['_message_key'];
 
 		// Message is untranslated here, so get translated text
-		// Can't call parent __FUNCTION__ because it will interpolate too, which we don't want
+		// Can't call parent __FUNCTION__ because it will interpolate too, which we don't want.
 		if ( ! empty( $message_key ) ) {
 			$message = $this->messages[ $message_key ]['translated_text'];
 		}
 
-		// Wrap links around {comment_post_title}
+		// Wrap links around {comment_post_title}.
 		$comment_post_ID = isset( $context['comment_post_ID'] ) ? (int) $context['comment_post_ID'] : null;
 		if ( $comment_post_ID ) {
 			$edit_post_link = get_edit_post_link( $comment_post_ID );
@@ -552,6 +571,8 @@ class Comments_Logger extends Logger {
 
 	/**
 	 * Get output for detailed log section
+	 *
+	 * @param object $row Log row.
 	 */
 	public function get_log_row_details_output( $row ) {
 
@@ -670,7 +691,7 @@ class Comments_Logger extends Logger {
 					break;
 			}// End switch().
 
-			// Skip empty rows
+			// Skip empty rows.
 			if ( empty( $desc_output ) ) {
 				continue;
 			}
@@ -687,19 +708,19 @@ class Comments_Logger extends Logger {
 			);
 		}// End foreach().
 
-		// Add link to edit comment
+		// Add link to edit comment.
 		$comment_ID = isset( $context['comment_ID'] ) && is_numeric( $context['comment_ID'] ) ? (int) $context['comment_ID'] : false;
 
 		if ( $comment_ID ) {
 			$comment = get_comment( $comment_ID );
 
 			if ( $comment instanceof \WP_Comment ) {
-				// http://site.local/wp/wp-admin/comment.php?action=editcomment&c=
+				// http://site.local/wp/wp-admin/comment.php?action=editcomment&c=.
 				$edit_comment_link = get_edit_comment_link( $comment_ID );
 
 				// Edit link sometimes does not contain comment ID
 				// Probably because comment has been removed or something
-				// So only continue if link does not end with "=""
+				// So only continue if link does not end with "="".
 				if ( $edit_comment_link && $edit_comment_link[ strlen( $edit_comment_link ) - 1 ] !== '=' ) {
 					$output .= sprintf(
 						'
@@ -715,12 +736,15 @@ class Comments_Logger extends Logger {
 			}
 		} // End if().
 
-		// End table
+		// End table.
 		$output .= '</table>';
 
 		return $output;
 	}
 
+	/**
+	 * Get output for detailed log section.
+	 */
 	public function admin_css() {
 		?>
 		<style>

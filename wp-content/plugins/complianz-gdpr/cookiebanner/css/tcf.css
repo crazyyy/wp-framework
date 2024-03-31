@@ -2,12 +2,31 @@
   --cmplz_bottom_banner_breakpoint: 768px;
   display: block;
 }
+/*Do not preprocess the below */
+/**
+* Hack to hide banner header on smaller screens on safari only.
+ */
+/*Do not preprocess the below */
+@media (max-width:425px) {
+	@media not all and (min-resolution:.001dpcm)
+	{ @supports (-webkit-appearance:none) {
+		.cmplz-cookiebanner .cmplz-header {
+			display:none;
+		}
+	}
+	}
+}
+.cmplz-cookiebanner .optin .cmplz-categories.cmplz-tcf {
+  display: block;
+}
+.cmplz-cookiebanner .optout .cmplz-categories.cmplz-tcf {
+  display: none;
+}
 .cmplz-cookiebanner .cmplz-categories:not(.cmplz-tcf),
 .cmplz-cookiebanner .cmplz-manage-third-parties,
 .cmplz-cookiebanner .cmplz-save-preferences,
 .cmplz-cookiebanner .cmplz-view-preferences,
-.cmplz-cookiebanner .cmplz-manage-options,
-.cmplz-cookiebanner .cmplz-deny {
+.cmplz-cookiebanner .cmplz-manage-options {
   display: none;
 }
 .cmplz-cookiebanner .cmplz-categories .cmplz-category .cmplz-category-header .cmplz-title {
@@ -47,16 +66,6 @@
     height: 280px;
   }
 }
-@media (max-width: 768px) {
-  .cmplz-cookiebanner .cmplz-buttons {
-    flex-direction: row;
-  }
-}
-@media (max-width: 425px) {
-  .cmplz-cookiebanner .cmplz-buttons {
-    flex-direction: column;
-  }
-}
 .cmplz-cookiebanner.cmplz-bottom .cmplz-buttons {
   flex-direction: column;
 }
@@ -67,6 +76,7 @@
   display: none;
 }
 .cmplz-tcf-type-description {
+  margin: 20px;
   display: none;
 }
 #cmplz-document .cmplz-tcf-rm:after {
@@ -121,8 +131,26 @@
 .cmplz-tcf-container .cmplz-tcf-vendor-container {
   margin-bottom: 20px;
 }
+.cmplz-tcf-container .cmplz-tcf-vendor-container.cmplz-vendortype-tcf .cmplz-vendortype-label {
+  display: none;
+}
+.cmplz-tcf-container .cmplz-tcf-vendor-container label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cmplz-tcf-container .cmplz-tcf-vendor-container label .cmplz-vendortype-label {
+  background-color: #333;
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
 .cmplz-tcf-container .cmplz-tcf-checkbox-container input {
   margin-right: 5px;
+}
+.cmplz-tcf-container .cmplz-tcf-checkbox-container.cmplz-vendortype-ac .cmplz-tcf-info .cmplz-tcf-info-content:not(:first-child) {
+  display: none;
 }
 .cmplz-tcf-container .cmplz-tcf-checkbox-container .cmplz-tcf-links {
   display: flex;

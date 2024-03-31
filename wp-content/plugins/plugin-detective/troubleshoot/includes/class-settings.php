@@ -171,6 +171,11 @@ pd_maybe_require( ABSPATH . WPINC . '/class-wp-matchesmapregex.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-error.php' );
 pd_maybe_require( ABSPATH . WPINC . '/pomo/mo.php' );
+pd_maybe_require( ABSPATH . WPINC . '/l10n/class-wp-translation-controller.php' );
+pd_maybe_require( ABSPATH . WPINC . '/l10n/class-wp-translations.php' );
+pd_maybe_require( ABSPATH . WPINC . '/l10n/class-wp-translation-file.php' );
+pd_maybe_require( ABSPATH . WPINC . '/l10n/class-wp-translation-file-mo.php' );
+pd_maybe_require( ABSPATH . WPINC . '/l10n/class-wp-translation-file-php.php' );
 
 // Include the wpdb class and, if present, a db.php database drop-in.
 global $wpdb;
@@ -298,6 +303,16 @@ pd_maybe_require( ABSPATH . WPINC . '/class-wp-oembed-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/media.php' );
 pd_maybe_require( ABSPATH . WPINC . '/http.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-http.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-attribute-token.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-span.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-text-replacement.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-tag-processor.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-unsupported-exception.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-active-formatting-elements.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-open-elements.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-token.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-processor-state.php' );
+pd_maybe_require( ABSPATH . WPINC . '/html-api/class-wp-html-processor.php' );
 // pd_maybe_require( ABSPATH . WPINC . '/class-wp-http.php' ); // fatal error if both are here. class-http is better for backcompat. class-wp-http was introduced in 5.9
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-http-streams.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-http-curl.php' );
@@ -350,6 +365,10 @@ pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-widget-ty
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-widgets-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-templates-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-url-details-controller.php' );
+pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-navigation-fallback-controller.php' );
+pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-font-families-controller.php' );
+pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-font-faces-controller.php' );
+pd_maybe_require( ABSPATH . WPINC . '/rest-api/endpoints/class-wp-rest-font-collections-controller.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/fields/class-wp-rest-meta-fields.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/fields/class-wp-rest-comment-meta-fields.php' );
 pd_maybe_require( ABSPATH . WPINC . '/rest-api/fields/class-wp-rest-post-meta-fields.php' );
@@ -368,6 +387,8 @@ pd_maybe_require( ABSPATH . WPINC . '/sitemaps/class-wp-sitemaps-stylesheet.php'
 pd_maybe_require( ABSPATH . WPINC . '/sitemaps/providers/class-wp-sitemaps-posts.php' );
 pd_maybe_require( ABSPATH . WPINC . '/sitemaps/providers/class-wp-sitemaps-taxonomies.php' );
 pd_maybe_require( ABSPATH . WPINC . '/sitemaps/providers/class-wp-sitemaps-users.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-bindings-source.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-bindings-registry.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-editor-context.php' );
 
 
@@ -381,6 +402,9 @@ pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-list.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-block-parser.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-classic-to-block-menu-converter.php' );
 pd_maybe_require( ABSPATH . WPINC . '/class-wp-navigation-fallback.php' );
+pd_maybe_require( ABSPATH . WPINC . '/block-bindings.php' );
+pd_maybe_require( ABSPATH . WPINC . '/block-bindings/pattern-overrides.php' );
+pd_maybe_require( ABSPATH . WPINC . '/block-bindings/post-meta.php' );
 pd_maybe_require( ABSPATH . WPINC . '/blocks.php' );
 pd_maybe_require( ABSPATH . WPINC . '/blocks/index.php' );
 pd_maybe_require( ABSPATH . WPINC . '/block-editor.php' );
@@ -405,7 +429,25 @@ pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-css-dec
 pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-css-rule.php' );
 pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-css-rules-store.php' );
 pd_maybe_require( ABSPATH . WPINC . '/style-engine/class-wp-style-engine-processor.php' );
+pd_maybe_require( ABSPATH . WPINC . '/fonts/class-wp-font-face-resolver.php' );
+pd_maybe_require( ABSPATH . WPINC . '/fonts/class-wp-font-collection.php' );
+pd_maybe_require( ABSPATH . WPINC . '/fonts/class-wp-font-face.php' );
+pd_maybe_require( ABSPATH . WPINC . '/fonts/class-wp-font-library.php' );
+pd_maybe_require( ABSPATH . WPINC . '/fonts/class-wp-font-utils.php' );
+pd_maybe_require( ABSPATH . WPINC . '/fonts.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-script-modules.php' );
+pd_maybe_require( ABSPATH . WPINC . '/script-modules.php' );
+pd_maybe_require( ABSPATH . WPINC . '/interactivity-api/class-wp-interactivity-api.php' );
+pd_maybe_require( ABSPATH . WPINC . '/interactivity-api/class-wp-interactivity-api-directives-processor.php' );
+pd_maybe_require( ABSPATH . WPINC . '/interactivity-api/interactivity-api.php' );
+pd_maybe_require( ABSPATH . WPINC . '/class-wp-plugin-dependencies.php' );
 
+if ( function_exists( 'wp_script_modules' ) ) {
+	add_action( 'after_setup_theme', array( wp_script_modules(), 'add_hooks' ) );
+}
+if ( function_exists( 'wp_interactivity' ) ) {
+	add_action( 'after_setup_theme', array( wp_interactivity(), 'add_hooks' ) );
+}
 
 /* PD: Start bail out early */
 // return;
@@ -423,6 +465,10 @@ $GLOBALS['wp_embed'] = new WP_Embed();
  */
 if ( class_exists( '\WP_Textdomain_Registry' ) ) {
 	$GLOBALS['wp_textdomain_registry'] = new WP_Textdomain_Registry();
+	if( method_exists( $GLOBALS['wp_textdomain_registry'], 'init' ) ) {
+		// introduced in WP6.5
+		$GLOBALS['wp_textdomain_registry']->init();
+	}
 }
 
 // Load multisite-specific files.
@@ -440,9 +486,20 @@ $GLOBALS['wp_plugin_paths'] = array();
 
 // Load must-use plugins.
 foreach ( wp_get_mu_plugins() as $mu_plugin ) {
-	include_once( $mu_plugin );
+	$_wp_plugin_file = $mu_plugin;
+	include_once $mu_plugin;
+	$mu_plugin = $_wp_plugin_file; // Avoid stomping of the $mu_plugin variable in a plugin.
+
+	/**
+	 * Fires once a single must-use plugin has loaded.
+	 *
+	 * @since 5.1.0
+	 *
+	 * @param string $mu_plugin Full path to the plugin's main file.
+	 */
+	do_action( 'mu_plugin_loaded', $mu_plugin );
 }
-unset( $mu_plugin );
+unset( $mu_plugin, $_wp_plugin_file );
 
 // Load network activated plugins.
 if ( is_multisite() ) {
@@ -460,8 +517,9 @@ if ( is_multisite() ) {
  */
 do_action( 'muplugins_loaded' );
 
-if ( is_multisite() )
-	ms_cookie_constants(  );
+if ( is_multisite() ) {
+	ms_cookie_constants();
+}
 
 // Define constants after multisite is loaded.
 wp_cookie_constants();
@@ -503,9 +561,9 @@ pd_maybe_require( ABSPATH . WPINC . '/pluggable-deprecated.php' );
 wp_set_internal_encoding();
 
 // Run wp_cache_postload() if object cache is enabled and the function exists.
-if ( WP_CACHE && function_exists( 'wp_cache_postload' ) )
+if ( WP_CACHE && function_exists( 'wp_cache_postload' ) ) {
 	wp_cache_postload();
-
+}
 /**
  * Fires once activated plugins have loaded.
  *
@@ -579,7 +637,11 @@ $GLOBALS['wp_roles'] = new WP_Roles();
 do_action( 'setup_theme' );
 
 // Define the template related constants.
-wp_templating_constants(  );
+wp_templating_constants();
+if( function_exists( 'wp_set_template_globals' ) ) {
+	// introduced in WP6.5
+	wp_set_template_globals();
+}
 
 // Load the default text localization domain.
 load_default_textdomain();
@@ -614,6 +676,7 @@ if ( ! wp_installing() || 'wp-activate.php' === $pagenow ) {
 	if ( file_exists( TEMPLATEPATH . '/functions.php' ) )
 		include( TEMPLATEPATH . '/functions.php' );
 }
+unset( $theme );
 
 /**
  * Fires after the theme is loaded.

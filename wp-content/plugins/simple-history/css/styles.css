@@ -1,3 +1,13 @@
+@import url(icons.css);
+
+/**
+ * Use SuitCSS based classnames.
+ */
+:root {
+	--sh-color-gray: #c3c4c7;
+	--sh-color-green: #3f9349;
+}
+
 /* clearfix */
 .SimpleHistory__cf:before,
 .SimpleHistory__cf:after {
@@ -275,7 +285,12 @@ Style different log levels.
 	color: rgb(137, 143, 156);
 	margin-top: 0.4em;
 	line-height: 1;
-	max-height: 1em;
+	/* max-height: 1em; */
+}
+
+.SimpleHistoryLogitem__occasionsAddOnsText {
+	margin: 0.4em 0 0 0;
+	line-height: 1;
 }
 
 .SimpleHistoryLogitem__details {
@@ -306,7 +321,8 @@ Style different log levels.
 	text-align: right;
 	padding-right: 1em;
 	color: #757575;
-	white-space: nowrap;
+	min-width: 8em;
+	/* white-space: nowrap; */
 }
 
 .SimpleHistoryLogitem__keyValueTable p {
@@ -455,9 +471,39 @@ Images/thumbs can be styles nicely
 }
 
 /*
-customizations for the dashboard
-i.e. the log is inside a .postbox element
+Customizations for the dashboard,
+i.e. the log is inside a .postbox element.
 */
+#simple_history_dashboard_widget .postbox-header {
+	background-image: url(./simple-history-logo-icon.svg);
+	background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: 12px center;
+}
+
+.postbox.closed .sh-Dashboard-settingsLink {
+	display: none;
+}
+
+.sh-Dashboard-settingsLink {
+	background-color: #787c82;
+	mask-image: url(./icons/settings_FILL0_wght400_GRAD0_opsz48.svg);
+	-webkit-mask-image: url(./icons/settings_FILL0_wght400_GRAD0_opsz48.svg);
+	mask-size: 100%;
+	-webkit-mask-size: 100%;
+}
+
+.sh-Dashboard-settingsLink:focus {
+	box-shadow: 0 0 0 1px #4f94d4, 0 0 2px 1px rgba(79, 148, 212, 0.8);
+	mask-image: none;
+	background-color: transparent;
+	background-image: url(./icons/settings_FILL0_wght400_GRAD0_opsz48.svg);
+}
+
+#simple_history_dashboard_widget .postbox-header h2 {
+	margin-left: 25px;
+}
+
 #simple_history_dashboard_widget .inside {
 	padding: 0;
 	margin-top: 0;
@@ -843,19 +889,6 @@ Modal window with detailss
 	text-decoration: none;
 }
 
-/* icon on log page*/
-.SimpleHistoryPageHeadline__icon {
-	font-size: 24px;
-	line-height: 30px;
-	width: 24px;
-	color: rgb(63, 147, 73);
-}
-
-/* For WP < 4.3 */
-.branch-4-2 .SimpleHistoryPageHeadline__icon {
-	line-height: 18px;
-}
-
 /* if not hits when using filter function + if ajax error */
 
 .SimpleHistory--hasNoHits .SimpleHistoryLogitems__pagination {
@@ -943,3 +976,303 @@ Modal window with detailss
 .SimpleHistory__diff.SimpleHistory__diff tbody tr td:nth-child(2) {
 	width: auto;
 }
+
+.sh-ExternalLink::after {
+	/* External icon on link */
+	content: "\f504";
+	font-family: dashicons;
+	line-height: 1;
+}
+
+/**
+ * White page header. Used for plugin title, tab navigation, settings/tools to the right.
+ * Based on style uses by core for Site Health and Privacy Policy, to keep things consistent.
+ */
+.sh-PageHeader {
+	margin: 0 0 2rem -20px;
+	padding: 1.5rem;
+	background: #fff;
+	border-bottom: 1px solid var(--sh-color-gray);
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	column-gap: 1rem;
+}
+
+/* 
+When an admin notice with additional class "inline" is added it is shown above the header,
+so add some extra place then to make it look a bit less ugly.
+*/
+.notice + .sh-PageHeader {
+	margin-top: 25px;
+}
+
+.sh-PageHeader-title {
+	flex: 1;
+	font-size: 23px;
+	font-weight: 400;
+	margin: 0;
+	line-height: 1;
+}
+
+.sh-PageHeader-logo {
+	width: 200px;
+	height: auto;
+}
+
+.sh-PageHeader-titleLink {
+	display: block;
+	color: inherit;
+	text-decoration: none;
+}
+
+.sh-PageHeader-rightLink {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.sh-PageHeader-settingsLinkIcon {
+	--icon-size: 25px;
+}
+
+.sh-PageHeader-settingsLinkIcon-new {
+	font-style: normal;
+	display: inline-block;
+	text-transform: uppercase;
+	font-size: 0.8em;
+	background: green;
+	text-decoration: underline;
+	text-decoration-color: green;
+	padding: 3px 4px;
+	line-height: 1;
+	border-radius: 3px;
+	color: #eee;
+	margin-left: 0.1em;
+}
+
+.sh-Page-content {
+	margin: 0 1rem;
+}
+
+.sh-PageNav {
+	width: 100%;
+	display: flex;
+	margin-top: 1rem;
+	margin-left: -1rem;
+	margin-bottom: -1.5rem;
+	gap: 2rem;
+}
+
+.sh-PageNav-tab {
+	display: block;
+	position: relative;
+	text-decoration: none;
+	color: inherit;
+	padding: 0.5rem 1rem 1rem;
+}
+
+.sh-PageNav-tab::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0.5rem;
+	right: 0.5rem;
+	height: 3px;
+	font-weight: 600;
+	transition: background-color 0.25s ease-in-out, height 0.15s ease-in-out;
+}
+
+.sh-PageNav-tab:hover::after {
+	background-color: #dcdcde;
+}
+
+.sh-PageNav-tab.is-active::after {
+	background: var(--sh-color-green);
+}
+
+.sh-SettingsPage-settingsField {
+	/* font-size: 1rem; */
+	color: #3c434a;
+}
+
+.sh-SettingsPage-settingsSection-wrap {
+	padding: 1rem 0;
+	margin: 1rem 0;
+}
+
+.sh-SettingsPage-settingsSection-wrap h2 {
+	margin: 0;
+}
+
+.sh-SettingsPage-settingsSection-title {
+	display: block;
+	font-size: 23px;
+	font-weight: 400;
+	margin: 0;
+	padding: 9px 0 4px;
+	line-height: 1.3;
+}
+
+.sh-SettingsPage-settingsSection-icon {
+	--icon-size: 24px;
+	width: var(--icon-size);
+	height: var(--icon-size);
+	/* background-image: url(./icons/info_FILL0_wght400_GRAD0_opsz48.svg); */
+	display: inline-block;
+	background-size: 100%;
+	vertical-align: middle;
+	margin-right: 0.5em;
+	position: relative;
+	top: -2px;
+}
+
+.sh-SettingsPage-settingsField-icon {
+	--icon-size: 20px;
+	width: var(--icon-size);
+	height: var(--icon-size);
+	/* background-image: url(./icons/info_FILL0_wght400_GRAD0_opsz48.svg); */
+	display: inline-block;
+	background-size: 100%;
+	vertical-align: middle;
+	margin-right: 0.5em;
+	position: relative;
+	top: -1px;
+	left: 2px;
+}
+
+.sh-PageNav-icon {
+	--icon-size: 20px;
+	width: var(--icon-size);
+	height: var(--icon-size);
+	/* background-image: url(./icons/info_FILL0_wght400_GRAD0_opsz48.svg); */
+	display: inline-block;
+	background-size: 100%;
+	vertical-align: middle;
+	margin-right: 0.5em;
+	position: relative;
+	top: -2px;
+}
+
+/** Subtabs on settings page */
+.sh-SettingsTabs {
+	/* --color-link-hover: #3f9349; */
+	/* background-color: #f8f8f8; */
+	border-bottom: 1px solid rgb(206, 206, 206);
+	margin-bottom: 0;
+	margin-top: -1.5rem;
+	margin-left: -2.5em;
+	padding-left: 2.5em;
+}
+
+.sh-SettingsTabs-tabs {
+	display: flex;
+	margin: 0;
+	/* border-bottom: 1px solid #dcdcde; */
+}
+
+.sh-SettingsTabs-tab {
+	margin-bottom: 0;
+}
+
+.sh-SettingsTabs-link {
+	text-decoration: none;
+	display: block;
+	padding: 1rem 1.5rem;
+	color: inherit;
+}
+
+.sh-SettingsTabs-link.is-active {
+	font-weight: bold;
+	box-shadow: inset 0 -2px #979797;
+}
+
+a.sh-SettingsTabs-link:hover {
+	color: var(--sh-color-green);
+}
+
+.sh-SettingsSection {
+	font-size: 1.5rem;
+}
+
+.sh-SettingsSectionIntroduction {
+	margin-bottom: 1.5em;
+}
+
+.sh-SettingsSectionIntroduction p {
+	font-size: 1rem;
+}
+
+.sh-mr-0 {
+	margin-right: 0px;
+}
+
+.sh-mr-1 {
+	margin-right: 0.25rem; /* 4px */
+}
+.sh-mr-2 {
+	margin-right: 0.5rem; /* 8px */
+}
+.sh-mr-3 {
+	margin-right: 0.75rem; /* 12px */
+}
+
+.sh-LicencesPage-plugin {
+	background: #fff;
+	border-radius: 0.5rem;
+	margin-bottom: 2rem;
+	padding: 1.5rem;
+}
+
+.form-table .sh-LicencesPage-plugin-name {
+	margin: 0;
+	font-weight: bold;
+	font-size: 1.25em;
+	font-weight: 400;
+}
+
+.form-table .sh-LicencesPage-plugin-version {
+	color: #888;
+	margin-bottom: 1rem;
+}
+
+.form-table .sh-LicencesPage-plugin-active {
+	margin-bottom: 1rem;
+}
+
+.sh-FeedIntroduction {
+	background: #f6f7f7;
+	border-radius: 5px;
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	max-width: 80ch;
+	font-size: 15px;
+}
+
+.sh-FeedIntroduction img {
+	border-radius: 10px;
+	width: 1.25rem;
+	height: auto;
+	line-height: 1;
+	vertical-align: text-bottom;
+}
+
+.sh-FeedIntroduction-row {
+	display: flex;
+	gap: 1em;
+	margin: 0;
+	font-size: 1em;
+}
+
+.sh-FeedIntroduction-emoji {
+	display: block;
+	font-size: 1.5em;
+	line-height: 1;
+}
+
+/* .sh-FeedIntroduction-ps {
+	font-size: 13px;
+} */

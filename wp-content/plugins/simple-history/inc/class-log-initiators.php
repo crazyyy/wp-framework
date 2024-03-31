@@ -1,8 +1,6 @@
 <?php
 namespace Simple_History;
 
-// phpcs:disable PSR12.Properties.ConstantVisibility.NotFound
-
 /**
  * Describes log initiator, i.e. who caused to log event to happened
  */
@@ -29,7 +27,7 @@ class Log_Initiators {
 	 * Translate the initiator value from a log row to a human readable string.
 	 * E.g.
 	 * "wp" becomes "WordPress".
-	 * "wp_user" becomes "User (email)".
+	 * "wp_user" becomes "User (email@example.com)".
 	 * "web_user" becomes "Anonymous web user".
 	 * "other" becomes "Other".
 	 *
@@ -58,7 +56,7 @@ class Log_Initiators {
 				$user = get_user_by( 'id', $user_id );
 
 				if ( $user_id > 0 && $user ) {
-					// User still exists
+					// User still exists.
 					$initiatorText = sprintf(
 						'%1$s (%2$s)',
 						$user->user_login,  // 1

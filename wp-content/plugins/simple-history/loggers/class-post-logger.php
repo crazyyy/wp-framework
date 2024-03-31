@@ -5,20 +5,10 @@ namespace Simple_History\Loggers;
 use Simple_History\Helpers;
 
 /**
- * Todo/@HERE
- * - [ ] install and test with ACF again
- *   - Install 5.7.13 and then each save or preview results in 2 or 3 adds to the log.
- *   - The second save saves all the post meta. So it's technically two saves but not for the user.
- *  Both requests have the same HTTP_X_WP_NONCE
- * - [ ] test REST API update from curl or similar
- * - [ ] test REST API from Android/Ios-apps
- * - [ ] Save auto-saves? Not done by user but still done...
- */
-
-/**
  * Logs changes to posts and pages, including custom post types
  */
 class Post_Logger extends Logger {
+	/** @var string Logger slug */
 	public $slug = 'SimplePostLogger';
 
 	/**
@@ -32,6 +22,9 @@ class Post_Logger extends Logger {
 	 */
 	protected $old_post_data = array();
 
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		add_action( 'admin_action_editpost', array( $this, 'on_admin_action_editpost' ) );
 		add_action( 'transition_post_status', array( $this, 'on_transition_post_status' ), 10, 3 );
@@ -68,7 +61,7 @@ class Post_Logger extends Logger {
 			// Rest pre insert is fired before an updated post is inserted into db.
 			add_filter( "rest_pre_insert_{$post_type->name}", array( $this, 'on_rest_pre_insert' ), 10, 2 );
 
-			// Rest insert happens after the post has been updated: "Fires after a single post is completely created or updated via the REST API."
+			// Rest insert happens after the post has been updated: "Fires after a single post is completely created or updated via the REST API.".
 			add_filter( "rest_after_insert_{$post_type->name}", array( $this, 'on_rest_after_insert' ), 10, 3 );
 		}
 	}
@@ -79,10 +72,10 @@ class Post_Logger extends Logger {
 	 *
 	 * Here we can get the old post object.
 	 *
-	 * @param stdClass        $prepared_post An object representing a single post prepared
+	 * @param \stdClass        $prepared_post An object representing a single post prepared
 	 *                                       for inserting or updating the database, i.e. the new updated post.
-	 * @param WP_REST_Request $request       Request object.
-	 * @return stdClass $prepared_post
+	 * @param \WP_REST_Request $request       Request object.
+	 * @return \stdClass $prepared_post
 	 */
 	public function on_rest_pre_insert( $prepared_post, $request ) {
 		// $prepared_post = stdClass Object with new and modified content.
@@ -93,12 +86,13 @@ class Post_Logger extends Logger {
 			return $prepared_post;
 		}
 
-		// $old_post = post with old content and old meta
+		// Post with old content and old meta.
 		$old_post = get_post( $prepared_post->ID );
 
 		$this->old_post_data[ $old_post->ID ] = array(
 			'post_data' => $old_post,
 			'post_meta' => get_post_custom( $old_post->ID ),
+			'post_terms' => wp_get_object_terms( $old_post->ID, get_object_taxonomies( $old_post->post_type ) ),
 		);
 
 		return $prepared_post;
@@ -109,22 +103,25 @@ class Post_Logger extends Logger {
 	 *
 	 * Here we get the updated post, after it is updated in the db.
 	 *
-	 * @param WP_Post         $updated_post     Inserted or updated post object.
-	 * @param WP_REST_Request $request  Request object.
-	 * @param bool            $creating True when creating a post, false when updating.
+	 * @param \WP_Post         $updated_post     Inserted or updated post object.
+	 * @param \WP_REST_Request $request  Request object.
+	 * @param bool             $creating True when creating a post, false when updating.
 	 */
-	public function on_rest_after_insert( $updatedPost, $request, $creating ) {
-		$updatedPost = get_post( $updatedPost->ID );
-		$post_meta = get_post_custom( $updatedPost->ID );
+	public function on_rest_after_insert( $updated_post, $request, $creating ) {
+		$updated_post = get_post( $updated_post->ID );
+		$post_meta = get_post_custom( $updated_post->ID );
 
-		$old_post = isset( $this->old_post_data[ $updatedPost->ID ] ) ? $this->old_post_data[ $updatedPost->ID ]['post_data'] : null;
-		$old_post_meta = isset( $this->old_post_data[ $updatedPost->ID ] ) ? $this->old_post_data[ $updatedPost->ID ]['post_meta'] : null;
+		$old_post = $this->old_post_data[ $updated_post->ID ]['post_data'] ?? null;
+		$old_post_meta = $this->old_post_data[ $updated_post->ID ]['post_meta'] ?? null;
+		$old_post_terms = $this->old_post_data[ $updated_post->ID ]['post_terms'] ?? null;
 
 		$args = array(
-			'new_post' => $updatedPost,
+			'new_post' => $updated_post,
 			'new_post_meta' => $post_meta,
+			'new_post_terms' => wp_get_object_terms( $updated_post->ID, get_object_taxonomies( $updated_post->post_type ) ),
 			'old_post' => $old_post,
 			'old_post_meta' => $old_post_meta,
+			'old_post_terms' => $old_post_terms,
 			'old_status' => $old_post ? $old_post->post_status : null,
 			'_debug_caller_method' => __METHOD__,
 		);
@@ -136,13 +133,6 @@ class Post_Logger extends Logger {
 	 * Filters to XML RPC calls needs to be added early, admin_init is to late.
 	 */
 	public function add_xml_rpc_hooks() {
-		// Debug: log all XML-RPC requests
-		/*
-		add_action("xmlrpc_call", function($method) {
-			SimpleLogger()->debug("XML-RPC call for method '{method}'", array("method" => $method));
-		}, 10, 1);
-		*/
-
 		add_action( 'xmlrpc_call_success_blogger_newPost', array( $this, 'on_xmlrpc_newPost' ), 10, 2 );
 		add_action( 'xmlrpc_call_success_mw_newPost', array( $this, 'on_xmlrpc_newPost' ), 10, 2 );
 
@@ -155,6 +145,12 @@ class Post_Logger extends Logger {
 		add_action( 'xmlrpc_call', array( $this, 'on_xmlrpc_call' ), 10, 1 );
 	}
 
+	/**
+	 * Detect when a post is deleted using a XML-RPC call.
+	 * Fired from action "xmlrpc_call".
+	 *
+	 * @param string $method Method called.
+	 */
 	public function on_xmlrpc_call( $method ) {
 		$arr_methods_to_act_on = array( 'wp.deletePost' );
 
@@ -163,7 +159,7 @@ class Post_Logger extends Logger {
 		$context = array();
 
 		if ( in_array( $method, $arr_methods_to_act_on ) ) {
-			// Setup common stuff
+			// Setup common stuff.
 			$raw_post_data = file_get_contents( 'php://input' );
 			$context['wp.deletePost.xmldata'] = Helpers::json_encode( $raw_post_data );
 			$message = new \IXR_Message( $raw_post_data );
@@ -173,17 +169,16 @@ class Post_Logger extends Logger {
 			}
 
 			$context['wp.deletePost.xmlrpc_message'] = Helpers::json_encode( $message );
-			$context['wp.deletePost.xmlrpc_message.messageType'] = Helpers::json_encode(
-				$message->messageType
-			);
-			$context['wp.deletePost.xmlrpc_message.methodName'] = Helpers::json_encode(
-				$message->methodName
-			);
-			$context['wp.deletePost.xmlrpc_message.messageParams'] = Helpers::json_encode(
-				$message->params
-			);
 
-			// Actions for delete post
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$context['wp.deletePost.xmlrpc_message.messageType'] = Helpers::json_encode( $message->messageType );
+
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$context['wp.deletePost.xmlrpc_message.methodName'] = Helpers::json_encode( $message->methodName );
+
+			$context['wp.deletePost.xmlrpc_message.messageParams'] = Helpers::json_encode( $message->params );
+
+			// Actions for delete post.
 			if ( 'wp.deletePost' == $method ) {
 				// 4 params, where the last is the post id
 				if ( ! isset( $message->params[3] ) ) {
@@ -233,8 +228,8 @@ class Post_Logger extends Logger {
 						_x( 'Posts deleted', 'Post logger: search', 'simple-history' ) => array( 'post_deleted' ),
 						_x( 'Posts restored', 'Post logger: search', 'simple-history' ) => array( 'post_restored' ),
 					),
-				), // end search array
-			), // end labels
+				),
+			),
 		);
 
 		return $arr_info;
@@ -246,6 +241,8 @@ class Post_Logger extends Logger {
 	 * This function is called on edit screen but before post edits are saved.
 	 *
 	 * Can't use the regular filters like "pre_post_update" because custom fields are already written by then.
+	 *
+	 * This functions is not fird when using the block editor, then we use the REST API hooks instead.
 	 *
 	 * @since 2.0.29
 	 */
@@ -270,6 +267,7 @@ class Post_Logger extends Logger {
 		$this->old_post_data[ $post_ID ] = array(
 			'post_data' => $prev_post_data,
 			'post_meta' => get_post_custom( $post_ID ),
+			'post_terms' => wp_get_object_terms( $post_ID, get_object_taxonomies( $prev_post_data->post_type ) ),
 		);
 	}
 
@@ -335,7 +333,7 @@ class Post_Logger extends Logger {
 
 	/**
 	 * Called when a post is restored from the trash
-	 * @param int $post_id
+	 * @param int $post_id Post ID.
 	 */
 	public function on_untrash_post( $post_id ) {
 		$post = get_post( $post_id );
@@ -497,6 +495,7 @@ class Post_Logger extends Logger {
 		$new_post_data = array(
 			'post_data' => $post,
 			'post_meta' => $args['new_post_meta'],
+			'post_terms' => $args['new_post_terms'],
 		);
 
 		// Set old status to status from old post with fallback to old_status variable.
@@ -508,6 +507,7 @@ class Post_Logger extends Logger {
 		$old_post_data = array(
 			'post_data' => $old_post,
 			'post_meta' => $old_post_meta,
+			'post_terms' => $args['old_post_terms'] ?? null,
 		);
 
 		// Default to log.
@@ -527,7 +527,8 @@ class Post_Logger extends Logger {
 			$ok_to_log = true;
 		}
 
-		// Also accept calls from REST API
+		// Also accept calls from REST API.
+		// "REST_API_REQUEST" is used by Jetpack I believe.
 		$isRestApiRequest =
 			( defined( 'REST_API_REQUEST' ) && REST_API_REQUEST ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST );
 		if ( $isRestApiRequest ) {
@@ -540,7 +541,7 @@ class Post_Logger extends Logger {
 		}
 
 		// Don't log Gutenberg saving meta boxes.
-		if ( isset( $_GET['meta-box-loader'] ) && $_GET['meta-box-loader'] ) {
+		if ( isset( $_GET['meta-box-loader'] ) && sanitize_text_field( wp_unslash( $_GET['meta-box-loader'] ) ) ) {
 			$ok_to_log = false;
 		}
 
@@ -591,13 +592,13 @@ class Post_Logger extends Logger {
 		);
 
 		if ( 'auto-draft' === $old_status && ( 'auto-draft' !== $new_status && 'inherit' !== $new_status ) ) {
-			// Post created
+			// Post created.
 			$this->info_message( 'post_created', $context );
 		} elseif ( 'auto-draft' === $new_status || ( 'new' === $old_status && 'inherit' === $new_status ) ) {
-			// Post was automagically saved by WordPress
+			// Post was automagically saved by WordPress.
 			return;
 		} elseif ( 'trash' === $new_status ) {
-			// Post trashed
+			// Post trashed.
 			$this->info_message( 'post_trashed', $context );
 		} else {
 			// Existing post was updated.
@@ -632,9 +633,9 @@ class Post_Logger extends Logger {
 	 * because when always enabled it catches a lots of edits made by plugins during cron jobs etc,
 	 * which by definition is not wrong, but perhaps not wanted/annoying.
 	 *
-	 * @param string $new_status One of auto-draft, inherit, draft, pending, publish, future.
-	 * @param string $old_status Same as above.
-	 * @param WP_Post $post New updated post.
+	 * @param string   $new_status One of auto-draft, inherit, draft, pending, publish, future.
+	 * @param string   $old_status Same as above.
+	 * @param \WP_Post $post New updated post.
 	 */
 	public function on_transition_post_status( $new_status, $old_status, $post ) {
 		$isRestApiRequest = defined( 'REST_REQUEST' ) && REST_REQUEST;
@@ -649,21 +650,17 @@ class Post_Logger extends Logger {
 			return;
 		}
 
-		// $old_post_data_exists = ! empty( $this->old_post_data[ $post->ID ] );
-
-		$old_post = null;
-		$old_post_meta = null;
-
-		if ( ! empty( $this->old_post_data[ $post->ID ] ) ) {
-			$old_post = $this->old_post_data[ $post->ID ]['post_data'];
-			$old_post_meta = $this->old_post_data[ $post->ID ]['post_meta'];
-		}
+		$old_post = $this->old_post_data[ $post->ID ]['post_data'] ?? null;
+		$old_post_meta = $this->old_post_data[ $post->ID ]['post_meta'] ?? null;
+		$old_post_terms = $this->old_post_data[ $post->ID ]['post_terms'] ?? null;
 
 		$args = array(
 			'new_post' => $post,
 			'new_post_meta' => get_post_custom( $post->ID ),
+			'new_post_terms' => wp_get_object_terms( $post->ID, get_object_taxonomies( $post->post_type ) ),
 			'old_post' => $old_post,
 			'old_post_meta' => $old_post_meta,
+			'old_post_terms' => $old_post_terms,
 			'old_status' => $old_status,
 			'_debug_caller_method' => __METHOD__,
 		);
@@ -765,20 +762,19 @@ class Post_Logger extends Logger {
 		// Add post featured thumb data.
 		$context = $this->add_post_thumb_diff( $context, $old_meta, $new_meta );
 
+		// Detect page template changes.
 		// Page template is stored in _wp_page_template.
-		/*
-		Var is string with length 7: default
-		Var is string with length 20: template-builder.php
-		*/
 		if ( isset( $old_meta['_wp_page_template'][0] ) && isset( $new_meta['_wp_page_template'][0] ) && $old_meta['_wp_page_template'][0] !== $new_meta['_wp_page_template'][0] ) {
 			// Prev page template is different from new page template,
 			// store template php file name.
 			$context['post_prev_page_template'] = $old_meta['_wp_page_template'][0];
 			$context['post_new_page_template'] = $new_meta['_wp_page_template'][0];
 			$theme_templates = (array) $this->get_theme_templates();
+
 			if ( isset( $theme_templates[ $context['post_prev_page_template'] ] ) ) {
 					$context['post_prev_page_template_name'] = $theme_templates[ $context['post_prev_page_template'] ];
 			}
+
 			if ( isset( $theme_templates[ $context['post_new_page_template'] ] ) ) {
 					$context['post_new_page_template_name'] = $theme_templates[ $context['post_new_page_template'] ];
 			}
@@ -790,14 +786,14 @@ class Post_Logger extends Logger {
 			unset( $new_meta[ $key_to_ignore ] );
 		}
 
-		// Look for added custom fields.
+		// Look for added custom fields/meta.
 		foreach ( $new_meta as $meta_key => $meta_value ) {
 			if ( ! isset( $old_meta[ $meta_key ] ) ) {
 				$meta_changes['added'][ $meta_key ] = true;
 			}
 		}
 
-		// Look for changed meta.
+		// Look for changed custom fields/meta.
 		foreach ( $old_meta as $meta_key => $meta_value ) {
 			if ( isset( $new_meta[ $meta_key ] ) && json_encode( $old_meta[ $meta_key ] ) !== json_encode( $new_meta[ $meta_key ] ) ) {
 				$meta_changes['changed'][ $meta_key ] = true;
@@ -819,7 +815,7 @@ class Post_Logger extends Logger {
 		// Check for changes in post visibility and post password usage and store in context.
 		// publish = public
 		// publish + post_password = password protected
-		// private = post private
+		// private = post private.
 		$old_post_has_password = ! empty( $old_data->post_password );
 		$old_post_password = $old_post_has_password ? $old_data->post_password : null;
 		$old_post_status = $old_data->post_status ?? null;
@@ -839,7 +835,7 @@ class Post_Logger extends Logger {
 			'publish' === $new_post_status
 		) {
 			// Old post is publish and had password protection and new post is publish but no password
-			// = post changed to be un-password protected
+			// = post changed to be un-password protected.
 			$context['post_password_unprotected'] = true;
 		} elseif ( $old_post_has_password && $new_post_has_password && $old_post_password !== $new_post_password ) {
 			// If old post had password and new post has password, but passwords are note same
@@ -857,7 +853,49 @@ class Post_Logger extends Logger {
 
 		// Todo: detect sticky.
 		// Sticky is stored in option:
-		// $sticky_posts = get_option('sticky_posts');
+		// $sticky_posts = get_option('sticky_posts');.
+
+		// Check for changes in post terms.
+		$old_post_terms = $old_post_data['post_terms'] ?? [];
+		$new_post_terms = $new_post_data['post_terms'] ?? [];
+
+		// Keys to keep for each term: term_id, name, slug, term_taxonomy_id, taxonomy.
+		$term_keys_to_keep = [
+			'term_id',
+			'name',
+			'slug',
+			'term_taxonomy_id',
+			'taxonomy',
+		];
+
+		$old_post_terms = array_map(
+			function ( $term ) use ( $term_keys_to_keep ) {
+				return array_intersect_key( (array) $term, array_flip( $term_keys_to_keep ) );
+			},
+			$old_post_terms
+		);
+
+		$new_post_terms = array_map(
+			function ( $term ) use ( $term_keys_to_keep ) {
+				return array_intersect_key( (array) $term, array_flip( $term_keys_to_keep ) );
+			},
+			$new_post_terms
+		);
+
+		// Detect added and removed terms.
+		$term_changes = [
+			// Added = exists in new but not in old.
+			'added' => [],
+			// Removed = exists in old but not in new.
+			'removed' => [],
+		];
+
+		$term_changes['added'] = array_values( array_udiff( $new_post_terms, $old_post_terms, [ $this, 'compare_terms' ] ) );
+		$term_changes['removed'] = array_values( array_udiff( $old_post_terms, $new_post_terms, [ $this, 'compare_terms' ] ) );
+
+		// Add old and new terms to context.
+		$context['post_terms_added'] = $term_changes['added'];
+		$context['post_terms_removed'] = $term_changes['removed'];
 
 		/**
 		 * Filter to control context sent to the diff output.
@@ -873,6 +911,16 @@ class Post_Logger extends Logger {
 		 * @since 2.36.0
 		 */
 		return apply_filters( 'simple_history/post_logger/context', $context, $old_data, $new_data, $old_meta, $new_meta );
+	}
+
+	/**
+	 * Compare function for terms to check terms by id.
+	 *
+	 * @param array $a Term A.
+	 * @param array $b Term B.
+	 */
+	private function compare_terms( $a, $b ) {
+		return $a['term_id'] <=> $b['term_id'];
 	}
 
 	/**
@@ -1226,6 +1274,10 @@ class Post_Logger extends Logger {
 			";
 			*/
 
+			// Changed terms.
+			$diff_table_output .= $this->get_log_row_details_output_for_post_terms( $context, 'added' );
+			$diff_table_output .= $this->get_log_row_details_output_for_post_terms( $context, 'removed' );
+
 			// Changed post thumb/featured image.
 			// post_prev_thumb, int of prev thumb, empty if not prev thumb.
 			// post_new_thumb, int of new thumb, empty if no new thumb.
@@ -1255,10 +1307,26 @@ class Post_Logger extends Logger {
 		return $out;
 	}
 
+	/**
+	 * Modify the label for a key.
+	 *
+	 * @param string $key Key.
+	 * @param string $label Label.
+	 * @param array  $context Context.
+	 * @return string
+	 */
 	protected function label_for( $key, $label, $context ) {
 		return apply_filters( 'simple_history/post_logger/label_for_key', $label, $key, $context );
 	}
 
+	/**
+	 * Get extra diff record.
+	 *
+	 * @param string $key Key.
+	 * @param string $old_value Old value.
+	 * @param string $new_value New value.
+	 * @return string
+	 */
 	public function extra_diff_record( $key, $old_value, $new_value ) {
 		return sprintf( '<tr><td>%1$s</td><td>%2$s</td></tr>', $key, helpers::text_diff( $old_value, $new_value ) );
 	}
@@ -1268,7 +1336,7 @@ class Post_Logger extends Logger {
 	 *
 	 * @since 2.0.23
 	 * @param string $link Link.
-	 * @param object  $row Row.
+	 * @param object $row Row.
 	 */
 	public function filter_rss_item_link( $link, $row ) {
 		if ( $row->logger != $this->get_slug() ) {
@@ -1326,8 +1394,77 @@ class Post_Logger extends Logger {
 		return $context;
 	}
 
+	/**
+	 * Add keys to diff.
+	 *
+	 * @param array $arr_keys_to_diff Array with keys to diff.
+	 * @return array
+	 */
 	protected function add_keys_to_diff( $arr_keys_to_diff ) {
 		return apply_filters( 'simple_history/post_logger/keys_to_diff', $arr_keys_to_diff );
+	}
+
+	/**
+	 * Get the HTML output for context that contains modified post meta.
+	 *
+	 * @param array  $context Context that may contains prev- and new thumb ids.
+	 * @param string $type Type of meta change, "added" or "removed".
+	 * @return string HTML to be used in keyvale table.
+	 */
+	private function get_log_row_details_output_for_post_terms( $context = [], $type = 'added' ) {
+		// Bail if type is not added or removed.
+		if ( ! in_array( $type, [ 'added', 'removed' ], true ) ) {
+			return '';
+		}
+
+		$post_terms = json_decode( $context[ "post_terms_{$type}" ] ?? '' ) ?? null;
+
+		// Bail if no terms.
+		if ( $post_terms === null || sizeof( $post_terms ) === 0 ) {
+			return '';
+		}
+
+		if ( $type === 'added' ) {
+			$label = _n(
+				'Added term',
+				'Added terms',
+				sizeof( $post_terms ),
+				'simple-history'
+			);
+		} else if ( $type === 'removed' ) {
+			$label = _n(
+				'Removed term',
+				'Removed terms',
+				sizeof( $post_terms ),
+				'simple-history'
+			);
+		}
+
+		$terms_values = [];
+		foreach ( $post_terms as $term ) {
+			$taxonomy_name = get_taxonomy( $term->taxonomy )->labels->singular_name ?? '';
+			$terms_values[] = sprintf(
+				'%1$s (%2$s)',
+				$term->name,
+				$taxonomy_name,
+			);
+		}
+
+		$term_added_values_as_comma_separated_list = wp_sprintf(
+			'%l',
+			$terms_values
+		);
+
+		$diff_table_output = sprintf(
+			'<tr>
+				<td>%1$s</td>
+				<td>%2$s</td>
+			</tr>',
+			esc_html( $label ),
+			esc_html( $term_added_values_as_comma_separated_list ),
+		);
+
+		return $diff_table_output;
 	}
 
 	/**

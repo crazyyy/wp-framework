@@ -6,6 +6,8 @@ gtag('consent', 'default', {
 	'personalization_storage': "denied",
 	'analytics_storage': 'denied',
 	'ad_storage': "denied",
+	'ad_user_data': 'denied',
+	'ad_personalization': 'denied',
 });
 
 dataLayer.push({
@@ -39,14 +41,18 @@ document.addEventListener("cmplz_fire_categories", function (e) {
 		'personalization_storage': preferences,
 		'analytics_storage': statistics,
 		'ad_storage': marketing,
+		'ad_user_data': marketing,
+		'ad_personalization': marketing,
 	});
 });
 
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','{GTM_code}');
+document.addEventListener("cmplz_cookie_warning_loaded", function (e) {
+	(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+			new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','{gtm_code}');
+});
 
 document.addEventListener("cmplz_revoke", function (e) {
 	gtag('consent', 'update', {
@@ -55,5 +61,7 @@ document.addEventListener("cmplz_revoke", function (e) {
 		'personalization_storage': "denied",
 		'analytics_storage': 'denied',
 		'ad_storage': "denied",
+		'ad_user_data': 'denied',
+		'ad_personalization': 'denied',
 	});
 });

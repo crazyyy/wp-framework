@@ -551,6 +551,24 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://support.upress.io',
 	            ),
+	            'infomaniak' => array(
+		            'name' => 'Infomaniak',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activation_required',
+		            'hosting_dashboard' => 'infomaniak',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://www.infomaniak.com/en/secure/ssl-certificates',
+	            ),
+	            'dandomain' => array(
+		            'name' => 'DanDomain',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'paid_only',
+		            'hosting_dashboard' => 'dandomain',
+		            'api' => false,
+		            'ssl_installation_link' => '',
+	            ),
             );
 
 	        $this->not_local_certificate_hosts = $this->filter_hosts( 'local_ssl_generation_needed', false);

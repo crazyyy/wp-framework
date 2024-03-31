@@ -66,6 +66,8 @@
 							_e('Get Premium', 'updraftplus');
 						} elseif ('signup' == $button_meta) {
 							_e('Sign up', 'updraftplus');
+						} elseif ('learnmore' == $button_meta) {
+							_e('Learn more', 'updraftplus');
 						} elseif ('go_there' == $button_meta) {
 							_e('Go there', 'updraftplus');
 						} else {

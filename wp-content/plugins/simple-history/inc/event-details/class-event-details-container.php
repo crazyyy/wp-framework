@@ -7,7 +7,7 @@ namespace Simple_History\Event_Details;
  * Items in a group will be formatted in the same way.
  * To format another set of items in another way then add a new config group.
  */
-class Event_Details_Container {
+class Event_Details_Container implements Event_Details_Container_Interface {
 	/** @var array<Event_Details_Group> */
 	public array $groups;
 
@@ -16,7 +16,7 @@ class Event_Details_Container {
 
 	/**
 	 * @param Event_Details_Group|array<Event_Details_Group> $group_or_groups Group or array of groups.
-	 * @param array<string,mixed> $context
+	 * @param array<string,mixed>                            $context       Context to use for setting prev and new values.
 	 */
 	public function __construct( $group_or_groups = [], $context = [] ) {
 		$this->context = $context;
@@ -30,10 +30,19 @@ class Event_Details_Container {
 	}
 
 	/**
+	 * Return the HTML output when accessing this object as a string.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->to_html();
+	}
+
+	/**
 	 * Add context and use context to set prev and new values
 	 * for each item in each group.
 	 *
-	 * @param array<string,mixed> $context
+	 * @param array<string,mixed> $context Context to use for setting prev and new values.
 	 * @return Event_Details_Container $this
 	 */
 	public function set_context( $context ) {
@@ -74,6 +83,29 @@ class Event_Details_Container {
 
 		$this->context = $context;
 
+		$this->remove_empty_items();
+
+		return $this;
+	}
+
+	/**
+	 * Remove items with empty values.
+	 * Empty = no new_value set.
+	 * But if item has an old_value it's still interesting, because
+	 * then a change has been made from "something" to "nothing".
+	 *
+	 * @return Event_Details_Container $this
+	 */
+	private function remove_empty_items() {
+
+		foreach ( $this->groups as $group_key => $group ) {
+			foreach ( $group->items as $item_key => $item ) {
+				if ( empty( $item->new_value ) && empty( $item->prev_value ) ) {
+					unset( $this->groups[ $group_key ]->items[ $item_key ] );
+				}
+			}
+		}
+
 		return $this;
 	}
 
@@ -81,8 +113,8 @@ class Event_Details_Container {
 	 * Shortcut to add a single item,
 	 * the item will be added to a group first.
 	 *
-	 * @param Event_Details_Item $context_item
-	 * @param string|null $group_title Optional name of the auto created group.
+	 * @param Event_Details_Item $context_item Item to add.
+	 * @param string|null        $group_title Optional name of the auto created group.
 	 * @return Event_Details_Container $this
 	 */
 	public function add_item( $context_item, $group_title = null ) {
@@ -96,7 +128,7 @@ class Event_Details_Container {
 	}
 
 	/**
-	 * @param Event_Details_Group $group
+	 * @param Event_Details_Group $group Group to add.
 	 * @return Event_Details_Container $this
 	 */
 	public function add_group( $group ) {
@@ -111,7 +143,7 @@ class Event_Details_Container {
 	/**
 	 * Add groups.
 	 *
-	 * @param array<Event_Details_Group> $groups
+	 * @param array<Event_Details_Group> $groups Groups to add.
 	 * @return Event_Details_Container $this
 	 */
 	public function add_groups( $groups ) {
@@ -126,8 +158,8 @@ class Event_Details_Container {
 	 * Add many items. They will automatically
 	 * be added to a group first to share common styles.
 	 *
-	 * @param array<Event_Details_Item> $items
-	 * @param string|null $group_title Optional name of the auto created group.
+	 * @param array<Event_Details_Item> $items   Items to add.
+	 * @param string|null               $group_title Optional name of the auto created group.
 	 * @return Event_Details_Container $this
 	 */
 	public function add_items( $items, $group_title = null ) {
@@ -142,11 +174,11 @@ class Event_Details_Container {
 	/**
 	 * @return string
 	 */
-	public function get_html_output() {
+	public function to_html() {
 		$output = '';
 
 		foreach ( $this->groups as $group ) {
-			$output .= $group->formatter->get_html_output( $group );
+			$output .= $group->formatter->to_html( $group );
 		}
 
 		return $output;
@@ -155,105 +187,13 @@ class Event_Details_Container {
 	/**
 	 * @return array<mixed>
 	 */
-	public function get_json_output() {
+	public function to_json() {
 		$output = [];
 
 		foreach ( $this->groups as $group ) {
-			$output[] = $group->formatter->get_json_output( $group );
+			$output[] = $group->formatter->to_json( $group );
 		}
 
 		return $output;
 	}
 }
-
-/**
- * Append prev and new values and modification status to each item
- * in the context_output_config array.
- *
- * @param array $context Context array.
- * @param Event_Details_Container $context_output_config DTO object with config for each setting.
- * @return Event_Details_Container Modified $context_output_config.
- */
-/* function append_modified_values_status_to_context_output_config_array( $context, $context_output_config ) {
-	// Find prev and new values for each setting,
-	// e.g. the slug + "_new" or "_prev".
-	foreach ( $context_output_config->groups as $key => $setting ) {
-		$slug = $setting->slug;
-
-		$prev_value = $context[ "{$slug}_prev" ] ?? null;
-		$new_value = $context[ "{$slug}_new" ] ?? null;
-
-		$context_output_config->groups[ $key ]->is_changed = false;
-		$context_output_config->groups[ $key ]->is_added = false;
-		$context_output_config->groups[ $key ]->is_removed = false;
-
-		// If both prev and new are null then no change was made.
-		if ( is_null( $prev_value ) && is_null( $new_value ) ) {
-			continue;
-		}
-
-		// If both prev and new are the same then no change was made.
-		if ( $prev_value === $new_value ) {
-			continue;
-		}
-
-		if ( is_null( $prev_value ) ) {
-			// If prev is null then it was added.
-			$prev_value = '<em>' . __( 'Not set', 'simple-history' ) . '</em>';
-			$context_output_config->groups[ $key ]->is_added = true;
-		} else if ( is_null( $new_value ) ) {
-			// If new is null then it was removed.
-			$new_value = '<em>' . __( 'Not set', 'simple-history' ) . '</em>';
-			$context_output_config->groups[ $key ]->is_removed = true;
-		} else {
-			$context_output_config->groups[ $key ]->is_changed = true;
-		}
-
-		$context_output_config->groups[ $key ]->prev_value = $prev_value;
-		$context_output_config->groups[ $key ]->new_value = $new_value;
-	}
-
-	return $context_output_config;
-} */
-
-/**
- * Generate a table with items that are modified, added, or removed.
- *
- * @param array $context Context array.
- * @param Event_Details_Container $context_config Array with config for each setting.
- * @return string HTML table.
- */
-/* function generate_added_removed_table_from_context_output_config_array( $context, $context_config ) {
-	$context_config = append_modified_values_status_to_context_output_config_array( $context, $context_config );
-
-	$table = '<table class="SimpleHistoryLogitem__keyValueTable"><tbody>';
-
-	foreach ( $context_config->groups as $setting ) {
-		if ( $setting->is_changed ) {
-			$new_value_to_show = $setting->new_value;
-			$prev_value_to_show = $setting->prev_value;
-
-			if ( $setting->number_yes_no ) {
-				$new_value_to_show = $setting->new_value === '1' ? 'Yes' : 'No';
-				$prev_value_to_show = $setting->prev_value === '1' ? 'Yes' : 'No';
-			}
-
-			$table .= sprintf(
-				'
-					<tr>
-						<td>%1$s</td>
-						<td>
-						</td>
-					</tr>
-					',
-				esc_html( $setting->name ),
-				esc_html( $new_value_to_show ),
-				esc_html( $prev_value_to_show ),
-			);
-		}
-	}
-
-	$table .= '</tbody></table>';
-
-	return $table;
-} */

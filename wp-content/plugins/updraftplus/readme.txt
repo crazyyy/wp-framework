@@ -2,8 +2,8 @@
 Contributors: Backup with UpdraftPlus, DavidAnderson, pmbaldha, DNutbourne, aporter, bcrodua
 Tags: backup, database backup, wordpress backup, cloud backup, migration
 Requires at least: 3.2
-Tested up to: 6.5
-Stable tag: 1.24.1
+Tested up to: 6.4
+Stable tag: 1.24.2
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -179,9 +179,26 @@ The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the b
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.32.x of the free version correspond to changes made in 2.16.32.x of the paid version.
 
+
 The [UpdraftPlus backup blog](https://updraftplus.com/news/) is the best place to learn in more detail about any important changes.
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.23.1.x of the free version correspond to changes made in 2.23.1.x of the paid version.
+
+= 1.24.2 - 26/Mar/2024 =
+
+* FIX: The "Continue restoration" and "Dismiss" buttons on the unfinished restoration dialog were not responsive to being pressed due to a recent regression
+* FIX: Conflict with other plugins due to different version of third party library (Guzzle) and the composer autoload.php was called too early
+* FIX: Undefined "NET_SCP_LOCAL_FILE" constant when SCP was in use for the SFTP/SCP remote storage
+* TWEAK: Add compatibility fields when returning plugins and themes to UpdraftCentral
+* TWEAK: Due to issues in some cURL versions 7.x in handling HTTP/2 connections, all HTTP connections to the OneDrive API are now forced to use HTTP/1.1 version, on cURL versions after 7.61 and before 8.0. Also, a constant named UPDRAFTPLUS_ONEDRIVE_CURL_HTTP_VERSION can be set in the wp-config.php file to change the default HTTP version to another preferred version
+* TWEAK: Adjust margin to fix broken UI for the 'View logs' button on backups.
+* TWEAK: Ensure all "SET SQL_MODE" statements in the database backup file are internally handled and are subjected only to a restoration outside UpdraftPlus plugin
+* TWEAK: Prevent PHP 8.2 coding style deprecation notices in the autobackup addon
+* TWEAK: In the context of OneDrive's chunk upload, authorisation header and bearer token should not be included during upload session as it may lead to 401 HTTP status due to different upload URL
+* TWEAK: Remove default value for updraftplus_https_to_http_additional_warning and updraftplus_http_to_https_additional_warning filters.
+* TWEAK: Set the SQL_MODE to 'NO_AUTO_VALUE_ON_ZERO' in the database backup file.
+* TWEAK: Seasonal notice content update for 2024 
+* TWEAK: During the operations that require phpseclib, include the composer autoload.php only when the phpseclib is really needed
 
 = 1.24.1 - 21/Feb/2024 =
 
@@ -1896,4 +1913,4 @@ Non-English translators are provided by volunteers, and wordpress.org does not g
 We recognise and thank those mentioned at https://updraftplus.com/acknowledgements/ for code and/or libraries used and/or modified under the terms of their open source licences.
 
 == Upgrade Notice ==
-* 1.24.1: Resolve PHPSecLib conflicts with other plugins, Backblaze Object Lock support, and various small tweaks. A recommended update for all.
+* 1.24.2: PHPSecLib and restoration related issues, unresponsive user interface, OneDrive functionality improvements and various small tweaks. A recommended update for all.

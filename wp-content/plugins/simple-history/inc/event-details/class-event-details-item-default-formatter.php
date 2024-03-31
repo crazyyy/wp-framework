@@ -2,9 +2,18 @@
 
 namespace Simple_History\Event_Details;
 
+/**
+ * Formatter for a group of items.
+ */
 class Event_Details_Item_Default_Formatter extends Event_Details_Item_Formatter {
-	public function get_html_output() {
+	/**
+	 * @inheritdoc
+	 *
+	 * @return string
+	 */
+	public function to_html() {
 		$name = '';
+
 		if ( ! empty( $this->item->name ) ) {
 			$name = sprintf( '<em>%1$s:</em> ', esc_html( $this->item->name ) );
 		}
@@ -16,7 +25,12 @@ class Event_Details_Item_Default_Formatter extends Event_Details_Item_Formatter 
 		);
 	}
 
-	public function get_json_output() {
+	/**
+	 * @inheritdoc
+	 *
+	 * @return array<mixed>
+	 */
+	public function to_json() {
 		$return = [];
 
 		if ( isset( $this->item->name ) ) {

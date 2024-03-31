@@ -2,7 +2,16 @@
 
 namespace Simple_History\Services;
 
+use Simple_History\Helpers;
+use Simple_History\Simple_History;
+
+/**
+ * Setup scripts and templates.
+ */
 class Scripts_And_Templates extends Service {
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		add_action( 'admin_footer', array( $this, 'add_js_templates' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
@@ -10,9 +19,11 @@ class Scripts_And_Templates extends Service {
 
 	/**
 	 * Output JS templated into footer
+	 *
+	 * @param string $hook The current admin page.
 	 */
 	public function add_js_templates( $hook ) {
-		if ( $this->simple_history->is_on_our_own_pages() ) {
+		if ( Helpers::is_on_our_own_pages() ) {
 			?>
 			<script type="text/html" id="tmpl-simple-history-base">
 
@@ -122,14 +133,23 @@ class Scripts_And_Templates extends Service {
 	 * Enqueue styles and scripts for Simple History but only to our own pages.
 	 *
 	 * Only adds scripts to pages where the log is shown or the settings page.
+	 *
+	 * @param string $hook The current admin page.
 	 */
 	public function enqueue_admin_scripts( $hook ) {
-		if ( $this->simple_history->is_on_our_own_pages() ) {
+		if ( Helpers::is_on_our_own_pages() ) {
 			add_thickbox();
 
 			wp_enqueue_style(
 				'simple_history_styles',
 				SIMPLE_HISTORY_DIR_URL . 'css/styles.css',
+				false,
+				SIMPLE_HISTORY_VERSION
+			);
+
+			wp_enqueue_style(
+				'simple_history_utility_styles',
+				SIMPLE_HISTORY_DIR_URL . 'css/utility-classes.css',
 				false,
 				SIMPLE_HISTORY_VERSION
 			);
@@ -145,7 +165,7 @@ class Scripts_And_Templates extends Service {
 			wp_enqueue_script( 'select2', SIMPLE_HISTORY_DIR_URL . 'js/select2/select2.full.min.js', array( 'jquery' ), SIMPLE_HISTORY_VERSION );
 			wp_enqueue_style( 'select2', SIMPLE_HISTORY_DIR_URL . 'js/select2/select2.min.css', array(), SIMPLE_HISTORY_VERSION );
 
-			// Translations that we use in JavaScript
+			// Translations that we use in JavaScript.
 			wp_localize_script(
 				'simple_history_script',
 				'simple_history_script_vars',
@@ -172,7 +192,7 @@ class Scripts_And_Templates extends Service {
 				$one_logger['instance']->admin_css();
 			}
 
-			// Add timeago.js
+			// Add timeago.js.
 			wp_enqueue_script(
 				'timeago',
 				SIMPLE_HISTORY_DIR_URL . 'js/timeago/jquery.timeago.js',
@@ -182,12 +202,12 @@ class Scripts_And_Templates extends Service {
 			);
 
 			// Determine current locale to load timeago and Select 2locale.
-			$user_locale = strtolower( substr( get_user_locale(), 0, 2 ) ); // en_US
+			$user_locale = strtolower( substr( get_user_locale(), 0, 2 ) ); // en_US.
 
 			$locale_url_path = SIMPLE_HISTORY_DIR_URL . 'js/timeago/locales/jquery.timeago.%s.js';
 			$locale_dir_path = SIMPLE_HISTORY_PATH . 'js/timeago/locales/jquery.timeago.%s.js';
 
-			// Only enqueue if locale-file exists on file system
+			// Only enqueue if locale-file exists on file system.
 			if ( file_exists( sprintf( $locale_dir_path, $user_locale ) ) ) {
 				wp_enqueue_script( 'timeago-locale', sprintf( $locale_url_path, $user_locale ), array( 'jquery' ), '1.5.2', true );
 			} else {
@@ -195,7 +215,7 @@ class Scripts_And_Templates extends Service {
 			}
 
 			// end add timeago
-			// Load Select2 locale
+			// Load Select2 locale.
 			$locale_url_path = SIMPLE_HISTORY_DIR_URL . 'js/select2/i18n/%s.js';
 			$locale_dir_path = SIMPLE_HISTORY_PATH . 'js/select2/i18n/%s.js';
 

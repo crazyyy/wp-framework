@@ -3513,7 +3513,7 @@ class Updraft_Restorer {
 			} elseif (preg_match('/^SET @@GLOBAL.GTID_PURGED/i', $sql_line)) {
 				// skip the SET @@GLOBAL.GTID_PURGED command
 				$sql_type = 17;
-			} elseif (preg_match('/^\/\*\!\d+\s+SET\s+(?:[^,].*)?(?=SQL_MODE\s*=\s*\'|\")/i', $sql_line)) {
+			} elseif (preg_match('/^\/\*\!\d+\s+SET\s+(?:[^,].*)?(?=SQL_MODE\s*=)/i', $sql_line)) {
 				// skip the SET SQL_MODE command because we adjust the SQL mode dynamically during restoration and offer users the flexibility to change it themselves using action or filter, we don't use the SQL mode specified in the dumped file. Skipping this line prevents any unintended changes to the default SQL mode already set by our system or any custom mode chosen by the user.
 				$sql_type = 18;
 			} else {

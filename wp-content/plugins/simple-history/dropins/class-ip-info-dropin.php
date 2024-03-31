@@ -8,6 +8,9 @@ namespace Simple_History\Dropins;
  * Author: Pär Thernström
  */
 class IP_Info_Dropin extends Dropin {
+	/**
+	 * @inheritdoc
+	 */
 	public function loaded() {
 		add_action( 'simple_history/enqueue_admin_scripts', array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'simple_history/admin_footer', array( $this, 'add_js_template' ) );
@@ -40,8 +43,8 @@ class IP_Info_Dropin extends Dropin {
 	/**
 	 * Display IP Addresses for login related messages.
 	 *
-	 * @param bool $bool
-	 * @param object $row
+	 * @param bool   $bool True if IP Address should be displayed.
+	 * @param object $row Log row.
 	 * @return bool
 	 */
 	public function row_header_display_ip_address_filter( $bool, $row ) {
@@ -71,6 +74,9 @@ class IP_Info_Dropin extends Dropin {
 		return true;
 	}
 
+	/**
+	 * Enqueue admin scripts.
+	 */
 	public function enqueue_admin_scripts() {
 		$file_url = plugin_dir_url( __FILE__ );
 
@@ -78,6 +84,10 @@ class IP_Info_Dropin extends Dropin {
 		wp_enqueue_style( 'simple_history_IpInfoDropin', $file_url . 'ip-info-dropin.css', null, SIMPLE_HISTORY_VERSION );
 	}
 
+	/**
+	 * Add JS template.
+	 * Added from filter simple_history/admin_footer.
+	 */
 	public function add_js_template() {
 		?>
 
@@ -132,7 +142,7 @@ class IP_Info_Dropin extends Dropin {
 
 					<# if ( typeof(data.ip) != "undefined" && data.ip ) { #>
 					<tr>
-						<td>
+						<td class="SimpleHistoryIpInfoDropin__ipInfoTable__key">
 							<?php echo esc_html_x( 'IP address', 'IP Info Dropin', 'simple-history' ); ?>
 						</td>
 						<td>
@@ -143,7 +153,7 @@ class IP_Info_Dropin extends Dropin {
 
 					<# if ( typeof(data.hostname) != "undefined" && data.hostname ) { #>
 					<tr>
-						<td>
+						<td class="SimpleHistoryIpInfoDropin__ipInfoTable__key">
 							<?php echo esc_html_x( 'Hostname', 'IP Info Dropin', 'simple-history' ); ?>
 						</td>
 						<td>
@@ -154,7 +164,7 @@ class IP_Info_Dropin extends Dropin {
 
 					<# if ( typeof(data.org) != "undefined" && data.org ) { #>
 					<tr>
-						<td>
+						<td class="SimpleHistoryIpInfoDropin__ipInfoTable__key">
 							<?php echo esc_html_x( 'Network', 'IP Info Dropin', 'simple-history' ); ?>
 						</td>
 						<td>
@@ -165,7 +175,7 @@ class IP_Info_Dropin extends Dropin {
 
 					<# if ( typeof(data.network) != "undefined" && data.network ) { #>
 					<tr>
-						<td>
+						<td class="SimpleHistoryIpInfoDropin__ipInfoTable__key">
 							<?php echo esc_html_x( 'Network', 'IP Info Dropin', 'simple-history' ); ?>
 						</td>
 						<td>
@@ -176,7 +186,7 @@ class IP_Info_Dropin extends Dropin {
 
 					<# if ( typeof(data.city) != "undefined" && data.city ) { #>
 					<tr>
-						<td>
+						<td class="SimpleHistoryIpInfoDropin__ipInfoTable__key">
 							<?php echo esc_html_x( 'City', 'IP Info Dropin', 'simple-history' ); ?>
 						</td>
 						<td>
@@ -187,7 +197,7 @@ class IP_Info_Dropin extends Dropin {
 
 					<# if ( typeof(data.region) != "undefined" && data.region ) { #>
 					<tr>
-						<td>
+						<td class="SimpleHistoryIpInfoDropin__ipInfoTable__key">
 							<?php echo esc_html_x( 'Region', 'IP Info Dropin', 'simple-history' ); ?>
 						</td>
 						<td>
@@ -198,7 +208,7 @@ class IP_Info_Dropin extends Dropin {
 
 					<# if ( typeof(data.country) != "undefined" && data.country ) { #>
 					<tr>
-						<td>
+						<td class="SimpleHistoryIpInfoDropin__ipInfoTable__key">
 							<?php echo esc_html_x( 'Country', 'IP Info Dropin', 'simple-history' ); ?>
 						</td>
 						<td>

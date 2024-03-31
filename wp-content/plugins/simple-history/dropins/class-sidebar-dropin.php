@@ -9,14 +9,18 @@ namespace Simple_History\Dropins;
  * Author: Pär Thernström
  */
 class Sidebar_Dropin extends Dropin {
+	/** @inheritdoc */
 	public function loaded() {
 		add_action( 'simple_history/enqueue_admin_scripts', array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'simple_history/history_page/after_gui', array( $this, 'output_sidebar_html' ) );
 		add_action( 'simple_history/dropin/sidebar/sidebar_html', array( $this, 'default_sidebar_contents' ) );
 	}
 
+	/**
+	 * Output default sidebar contents
+	 */
 	public function default_sidebar_contents() {
-		// Box about donation
+		// Box about donation.
 		$headline = _x( 'Donate to support development', 'Sidebar box', 'simple-history' );
 
 		$bodyDonate = sprintf(
@@ -41,7 +45,7 @@ class Sidebar_Dropin extends Dropin {
 			</div>
 		';
 
-		// Box about review
+		// Box about review.
 		$headline = _x( 'Review this plugin if you like it', 'Sidebar box', 'simple-history' );
 
 		$body1 = sprintf(
@@ -62,7 +66,7 @@ class Sidebar_Dropin extends Dropin {
 			</div>
 		';
 
-		// Box about support
+		// Box about support.
 		$boxSupport = sprintf(
 			'
 			<div class="postbox">
@@ -98,6 +102,9 @@ class Sidebar_Dropin extends Dropin {
 		echo implode( '', $arrBoxes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
+	/**
+	 * Enqueue CSS.
+	 */
 	public function enqueue_admin_scripts() {
 		$file_url = plugin_dir_url( __FILE__ );
 
@@ -117,7 +124,6 @@ class Sidebar_Dropin extends Dropin {
 	 *  </div>
 	 */
 	public function output_sidebar_html() {
-
 		?>
 		<div class="SimpleHistory__pageSidebar">
 

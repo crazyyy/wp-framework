@@ -1615,7 +1615,7 @@ function ampforwp_newsp_td_render_css(){
 	  }
 		echo $newspaper_css;
 		echo $amp_td_custom_css;
-		if(class_exists('td_util') && class_exists('td_block')){
+		if(method_exists('td_block', 'get_common_css') && method_exists('td_util', 'remove_style_tag')){
 			echo td_util::remove_style_tag(td_block::get_common_css());
 		}
 	}
@@ -1877,4 +1877,12 @@ function ampforwp_fix_a_attr_in_anchor_tag($target_link){
 		}
  	}
 	return $target_link;
+}
+
+//ftc theme compatibility
+add_action( 'admin_init', 'ampforwp_fTC_theme_remove_scripts');
+function ampforwp_fTC_theme_remove_scripts() {
+    if ( isset ( $_GET['page'] ) && $_GET['page'] == 'amp_options' ) {
+        remove_action('admin_enqueue_scripts', 'ftc_register_admin_scripts');
+    }
 }

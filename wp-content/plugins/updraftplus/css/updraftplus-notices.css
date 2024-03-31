@@ -28,7 +28,9 @@
 
 .updraft_advert_content_left {
 	float: none;
-	width: 65px;
+	width: 80px;
+	padding-top: 9px;
+	margin-right: 9px;
 }
 
 .updraft_advert_content_left_extra {
@@ -43,10 +45,20 @@
 	        align-items: center;
 }
 
+.updraft_advert_content_left img {
+	min-height: 72px;
+	min-width: 72px;
+}
+
 .updraft_advert_content_right {
 	float: none;
 	width: auto;
 	overflow: hidden;
+	font-size: 16px;
+}
+
+.updraft_advert_content_right p {
+	font-size: 16px!important;
 }
 
 .updraft_advert_bottom {
