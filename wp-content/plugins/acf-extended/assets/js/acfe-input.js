@@ -4,6 +4,76 @@
         return;
     }
 
+
+    /**
+     * acf.newCondition
+     *
+     * Allows field conditions to work between two field groups
+     */
+    acf.newCondition = function(rule, conditions) {
+
+        // currently setting up conditions for fieldX, this field is the 'target'
+        var target = conditions.get('field');
+
+        // use the 'target' to find the 'trigger' field.
+        // - this field is used to setup the conditional logic events
+        var field = target.getField(rule.field);
+
+        // acfe: found target, but not the field to check value against
+        if (target && !field) {
+
+            // acfe: find the field in the whole page
+            // we must add this step because acf.getField('do_not_exists') will instantiate an empty field
+            var findField = acf.findField(rule.field);
+
+            // instatiate field once found
+            if (findField.length) {
+                field = acf.getField(rule.field);
+            }
+
+        }
+
+        // bail ealry if no target or no field (possible if field doesn't exist due to HTML error)
+        if (!target || !field) {
+            return false;
+        }
+
+        // vars
+        var args = {
+            rule: rule,
+            target: target,
+            conditions: conditions,
+            field: field
+        };
+
+        // vars
+        var fieldType = field.get('type');
+        var operator = rule.operator;
+
+        // get avaibale conditions
+        var conditionTypes = acf.getConditionTypes({
+            fieldType: fieldType,
+            operator: operator,
+        });
+
+        // instantiate
+        var model = conditionTypes[0] || acf.Condition;
+
+        // instantiate
+        var condition = new model(args);
+
+        // return
+        return condition;
+
+    };
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
     /**
      * Checkbox & Radio
      */
@@ -1003,6 +1073,1310 @@
         return;
     }
 
+
+    /**
+     * acfe.Form model
+     */
+    acfe.Form = acf.Model.extend({
+
+        notice: false,
+        validator: false,
+
+        events: {
+            'click .button': 'onClickSubmit',
+            'click [type="submit"]': 'onClickSubmit',
+            'invalidField': 'onInvalidField', // inherited from fields
+            'changed:status': 'onChangeStatus', // inherited from validator
+            'showErrors': 'onShowErrors', // inherited from validator
+        },
+
+        setup: function($el) {
+            this.$el = $el;
+
+            var cid = $el.data('cid');
+            $.extend(this.data, acfe.getFormData(cid));
+
+            this.$el.data('acfe_form', this);
+        },
+
+        initialize: function() {
+
+            // compatibility for acf validator
+            this.$el.removeData('acf');
+
+            // hide unload
+            if (this.get('hide_unload')) {
+                acf.unload.disable();
+            }
+
+        },
+
+        onClickSubmit: function(e, $el) {
+            // prevent submit spam
+            if ($el.hasClass('disabled')) {
+                e.preventDefault();
+            }
+        },
+
+        onInvalidField: function(e, $el) {
+
+            // get field
+            var field = acf.getField($(e.target));
+
+            // make sure notice is an error
+            if (!field.notice || field.notice.get('type') !== 'error') {
+                return;
+            }
+
+            // error class
+            if (this.get('error_class')) {
+                field.notice.$el.addClass(this.get('error_class'));
+            }
+
+            // error position
+            switch (this.get('error_position')) {
+
+                case 'hide': {
+                    field.notice.remove();
+                    break;
+                }
+
+                case 'below': {
+
+                    if (field.$control().length) {
+                        field.notice.$el.insertAfter(field.$control());
+                    } else if (field.$inputWrap().length) {
+                        field.notice.$el.appendTo(field.$inputWrap());
+                    }
+
+                    field.notice.$el.addClass('-below');
+                    break;
+                }
+
+                case 'group': {
+
+                    // vars
+                    var label = acfe.getTextNode(field.$labelWrap().find('label')).trim();
+                    var placeholder = field.$('.acf-input-wrap [placeholder!=""]').attr('placeholder');
+                    var message = field.notice.$el.text().trim();
+
+                    // remove acf notice
+                    field.notice.remove();
+
+                    // try get label
+                    if (label && label.length && label !== '*') {
+                        message = `${label}: ${message}`;
+
+                        // otherwise placeholder
+                    } else if (placeholder && placeholder.length && placeholder !== '') {
+                        message = `${placeholder}: ${message}`;
+
+                        // otherwise field name
+                    } else {
+                        var name = acfe.ucFirst(field.get('name')).replace(/_/g, ' ');
+                        message = `${name}: ${message}`;
+                    }
+
+                    // append notice error
+                    if (this.notice) {
+                        this.notice.$el.append(acf.escHtml(`<p>${message}</p>`));
+                    }
+                    break;
+
+                }
+
+            }
+
+        },
+
+        onChangeStatus: function(e, $el, status, prevStatus) {
+
+            switch (status) {
+
+                // validating
+                case 'validating': {
+
+                    // already has validator
+                    if (this.validator) {
+                        return;
+                    }
+
+                    // vars
+                    var validator = this.$el.data('acf');
+                    var prototype = Object.getPrototypeOf(validator);
+
+                    // methods
+                    var showErrors = prototype.showErrors;
+
+                    // showErrors
+                    validator.showErrors = function() {
+                        showErrors.apply(this, arguments);
+                        validator.trigger('showErrors');
+                    }
+
+                    this.validator = validator;
+
+                    break;
+
+                }
+
+                // invalid
+                case 'invalid': {
+
+                    if (this.get('error_position') === 'group') {
+
+                        // no field errors, probably a global error
+                        // remove grouped notice
+                        if (!this.validator.getFieldErrors().length) {
+                            if (this.notice) {
+                                this.notice.remove();
+                                this.notice = false;
+                            }
+                            break;
+                        }
+
+                        // notice exists
+                        if (this.notice) {
+
+                            // reset
+                            this.notice.update({
+                                type: 'error',
+                                html: '',
+                            });
+
+                            // new notice
+                        } else {
+
+                            this.notice = acf.newNotice({
+                                type: 'error',
+                                target: this.$el
+                            });
+
+                        }
+
+                        // error class
+                        if (this.get('error_class')) {
+                            this.notice.$el.addClass(this.get('error_class'));
+                        }
+
+                        // remove empty <p></p> added by "html: ''"
+                        this.notice.$el.find('p:empty').remove();
+
+                        // timeout
+                        this.setTimeout(function() {
+                            acfe.scrollTo(this.notice.$el);
+                        }, 20);
+
+                    }
+
+                    break;
+
+                }
+
+                // valid
+                case 'valid': {
+
+                    if (this.get('error_position') === 'group') {
+                        if (this.notice) {
+                            this.notice.remove();
+                            this.notice = false;
+                        }
+                    }
+
+                    if (this.get('hide_revalidation')) {
+
+                        if (this.validator.has('notice')) {
+                            this.validator.get('notice').remove();
+                            this.validator.set('notice', null); // remove notice from data
+                        }
+
+                    }
+
+                    break;
+
+                }
+
+            }
+
+        },
+
+        onShowErrors: function(e, $el) {
+
+            if (this.get('hide_error')) {
+
+                if (this.validator.has('notice')) {
+                    this.validator.get('notice').remove();
+                    this.validator.set('notice', null); // remove notice from data
+                }
+
+            } else {
+
+                if (this.validator.has('notice')) {
+
+                    var fieldErrors = this.validator.getFieldErrors();
+                    var globalErrors = this.validator.getGlobalErrors();
+                    var errorCount = 0;
+
+                    // loop
+                    fieldErrors.map(function(error) {
+
+                        // get input
+                        var $input = this.validator.$('[name="' + error.input + '"]').first();
+
+                        // if $_POST value was an array, this $input may not exist
+                        if (!$input.length) {
+                            $input = this.validator.$('[name^="' + error.input + '"]').first();
+                        }
+
+                        if ($input.length) {
+                            errorCount++;
+                        }
+
+                    }, this);
+
+                    // errorMessage
+                    var errorMessage = this.get('messages.failure');
+
+                    // global error
+                    globalErrors.map(function(error) {
+                        errorMessage += errorMessage.length ? '. ' : '';
+                        errorMessage += error.message;
+                    });
+
+                    // single error
+                    if (errorCount === 1 && this.get('messages.error')) {
+                        errorMessage += errorMessage.length ? '. ' : '';
+                        errorMessage += this.get('messages.error');
+
+                        // multiple errors
+                    } else if (errorCount > 1 && this.get('messages.errors')) {
+                        errorMessage += errorMessage.length ? '. ' : '';
+                        errorMessage += this.get('messages.errors').replace('%d', errorCount);
+                    }
+
+                    // update notice text
+                    this.validator.get('notice').update({
+                        text: errorMessage
+                    });
+
+                }
+
+            }
+
+        },
+
+        set: function(name, value, silent) {
+
+            // bail if unchanged
+            var prevValue = this.get(name);
+            if (prevValue === value) {
+                return this;
+            }
+
+            // nameRoot
+            // dot notation, ie: 'path.to.key'
+            var nameArray = name.split('.');
+            var nameRoot = nameArray.shift();
+            var prevValueRoot = this.get(nameRoot);
+
+            // set data
+            acfe.arraySet(this.data, name, value);
+
+            // update formData
+            acfe.setFormData(this.get('cid'), name, value);
+
+            // valueRoot
+            var valueRoot = this.get(nameRoot);
+
+            // trigger events
+            if (!silent) {
+
+                this.changed = true;
+
+                if (nameArray.length > 1) {
+                    this.trigger(`changedData:${nameRoot}`, [valueRoot, prevValueRoot]);
+                }
+
+                this.trigger('changedData:' + name, [value, prevValue]);
+                this.trigger('changedData', [name, value, prevValue]);
+
+            }
+
+            // return
+            return this;
+
+        },
+
+    });
+
+    acf.addAction('acfe/form/validation_success', function($form, validator, form) {
+
+        if (validator.has('notice')) {
+
+            validator.get('notice').update({
+                type: 'success',
+                text: form.get('messages.success'),
+                timeout: 1000
+            });
+
+        }
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * spawner
+     */
+    new acf.Model({
+        wait: 'prepare',
+        priority: 1,
+        initialize: function() {
+            if (!acfe.get('is_admin')) {
+                new formFields();
+            }
+        }
+    });
+
+
+    /**
+     * formFields
+     */
+    var formFields = acf.Model.extend({
+
+        actions: {
+            'new_field/type=date_picker': 'datePicker',
+            'new_field/type=date_time_picker': 'datePicker',
+            'new_field/type=time_picker': 'datePicker',
+            'new_field/type=acfe_date_range_picker': 'datePicker',
+            'new_field/type=google_map': 'googleMap',
+        },
+
+        datePicker: function(field) {
+
+            var form = field.getForm();
+
+            if (form && form.get('field_class')) {
+                field.$inputText().addClass(form.get('field_class'));
+            }
+
+        },
+
+        googleMap: function(field) {
+
+            var form = field.getForm();
+
+            if (form && form.get('field_class')) {
+                field.$search().addClass(form.get('field_class'));
+            }
+
+        },
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * acf.Field.prototype.getForm
+     *
+     * Allows to retrieve the front-end form instance from a field
+     *
+     * @returns {*|jQuery}
+     */
+    acf.Field.prototype.getForm = function() {
+        return acfe.getForm(this.$el.closest('.acfe-form'));
+    };
+
+
+    /**
+     * acfe.findForms
+     *
+     * @returns {jQuery|HTMLElement|*}
+     */
+    acfe.findForms = function(args) {
+
+        // string / array
+        if (!acfe.isObject(args)) {
+            args = {
+                name: args,
+            };
+        }
+
+        // vars
+        var selector = '.acfe-form';
+        var $forms = false;
+
+        // args
+        args = acf.parseArgs(args, {
+            cid: [],
+            name: [],
+            parent: false,
+            limit: false,
+        });
+
+        // force array
+        args.cid = acfe.getArray(args.cid);
+        args.name = acfe.getArray(args.name);
+
+        // name
+        if (args.name.length) {
+
+            for (var name of args.name) {
+                acfe.getFormsData({
+                    name: name
+                }).map(function(form) {
+                    args.cid.push(form.cid);
+                });
+            }
+
+            // no data found
+            if (!args.cid.length) {
+                return $();
+            }
+
+        }
+
+        // cid
+        if (args.cid.length) {
+
+            // vars
+            var array = [];
+
+            // loop
+            for (var cid of args.cid) {
+                array.push(selector + '[data-cid="' + cid + '"]');
+            }
+
+            selector = array.join(',');
+        }
+
+        // query
+        if (args.parent) {
+            $forms = args.parent.find(selector);
+        } else {
+            $forms = $(selector);
+        }
+
+        // limit
+        if (args.limit) {
+            $forms = $forms.slice(0, args.limit);
+        }
+
+        return $forms;
+
+    };
+
+
+    /**
+     * acfe.getForms
+     *
+     * @param $forms
+     * @returns {*[]}
+     */
+    acfe.getForms = function($forms) {
+
+        // allow jQuery
+        if ($forms instanceof jQuery) {
+
+            // find forms
+        } else {
+            $forms = acfe.findForms($forms);
+        }
+
+        // loop
+        var forms = [];
+        $forms.each(function() {
+            var form = acfe.getForm($(this));
+            if (form) {
+                forms.push(form);
+            }
+        });
+
+        // return
+        return forms;
+
+    };
+
+
+    /**
+     * acfe.getForm
+     *
+     * @param $form
+     * @returns {*|jQuery}
+     */
+    acfe.getForm = function($form) {
+
+        // allow jQuery
+        if ($form instanceof jQuery) {
+
+            if (!$form.hasClass('acfe-form')) {
+                return false;
+            }
+
+            // find form
+        } else {
+            $form = acfe.findForm($form);
+        }
+
+        // found form
+        if ($form.length) {
+
+            // instantiate
+            var form = $form.data('acfe_form');
+            if (!form) {
+                form = acfe.newForm($form);
+            }
+
+            // return
+            return form;
+
+        }
+
+        return false;
+
+    };
+
+
+    /**
+     * acfe.findForm
+     *
+     * @param args
+     * @returns {*}
+     */
+    acfe.findForm = function(args) {
+
+        // if string / array
+        // use form name as default
+        if (!acfe.isObject(args)) {
+            args = {
+                name: args,
+            };
+        }
+
+        args = acf.parseArgs(args, {
+            limit: 1,
+        });
+
+        return acfe.findForms(args);
+    };
+
+
+    /**
+     * acfe.newForm
+     *
+     * @param $form
+     * @returns {*}
+     */
+    acfe.newForm = function($form) {
+
+        // instantiate
+        var form = new acfe.Form($form);
+
+        // actions
+        acf.doAction(`acfe/new_form`, form);
+        acf.doAction(`acfe/new_form/form=${form.get('name')}`, form);
+
+        // return
+        return form;
+    };
+
+
+    /**
+     * acfe.getFormsData
+     *
+     * @param args
+     * @returns {*[]}
+     */
+    acfe.getFormsData = function(args) {
+
+        // acfe.Form instance
+        if (args instanceof acfe.Form) {
+            args = {
+                form: args,
+            };
+
+            // string
+        } else if (!acfe.isObject(args)) {
+            args = {
+                cid: args,
+            };
+        }
+
+        // args
+        args = acf.parseArgs(args, {
+            form: '',
+            cid: '',
+            name: '',
+            success: '',
+        });
+
+        if (args.form && args.form instanceof acfe.Form) {
+            args.cid = args.form.get('cid');
+        }
+
+        // get data
+        var forms = [];
+        var data = acfe.get('forms', {});
+
+        // empty data
+        if (!Object.keys(data).length) {
+            return forms;
+        }
+
+        for (var cid in data) {
+            if (data[cid]) {
+
+                var matchCid = true;
+                var matchName = true;
+                var matchSuccess = true;
+
+                if (args.cid.length) {
+                    matchCid = args.cid === cid;
+                }
+                if (args.name.length) {
+                    matchName = args.name === data[cid].name;
+                }
+                if (args.success !== '') {
+                    matchSuccess = args.success === data[cid].success;
+                }
+
+                if (matchCid && matchName && matchSuccess) {
+                    forms.push(data[cid]);
+                }
+
+            }
+        }
+
+        return forms;
+
+    };
+
+
+    /**
+     * acfe.getFormData
+     *
+     * @param args
+     * @returns {*|boolean}
+     */
+    acfe.getFormData = function(args) {
+
+        var forms = acfe.getFormsData(args);
+
+        if (forms.length) {
+            return forms.shift();
+        }
+
+        return false;
+
+    };
+
+
+    /**
+     * acfe.setFormData
+     *
+     * @param cid
+     * @param path
+     * @param value
+     */
+    acfe.setFormData = function(cid, path, value) {
+        acfe.set(`forms.${cid}.${path}`, value);
+    };
+
+
+    /**
+     * acfe.loadForm
+     *
+     * @param $parent
+     */
+    acfe.renderForm = function($parent) {
+
+        // form is passed instead of parent
+        if ($parent && $parent.length && $parent.hasClass('acfe-form')) {
+            $parent = $parent.parent();
+        }
+
+        // initialize fields and forms
+        acf.doAction('append', $parent);
+
+    };
+
+
+    /**
+     * acfe.renderFormAjax
+     *
+     * @param args
+     */
+    acfe.renderFormAjax = function(args) {
+
+        args = acf.parseArgs(args, {
+            url: acf.get('ajaxurl'),
+            data: acf.prepareForAjax({
+                action: 'acfe/form/render_form_ajax',
+            }),
+            type: 'post',
+            dataType: 'html',
+            success: function() {},
+            replace: 'html',
+            form: '',
+            target: '',
+        });
+
+
+        // form
+        if (args.form) {
+            args.data.form = args.form;
+        }
+
+        // target
+        if (args.target) {
+
+            // backup success
+            var success = args.success;
+
+            // replace success
+            args.success = function(response) {
+
+                // string selector
+                if (acfe.isString(args.target)) {
+                    args.target = $(args.target);
+                }
+
+                args.target[args.replace]($(response));
+                acfe.renderForm(args.target);
+
+                // original success
+                success(response);
+
+            }
+
+        }
+
+        $.ajax(args);
+
+    };
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    new acf.Model({
+        wait: 'prepare',
+        priority: 5,
+        initialize: function() {
+            if (!acfe.get('is_admin')) {
+                new renderHooks();
+            }
+        }
+    });
+
+
+    /**
+     * renderHooks
+     */
+    var renderHooks = acf.Model.extend({
+
+        actions: {
+            'validation_begin': 'validationBegin',
+            'validation_failure': 'validationFailure',
+            'validation_success': 'validationSuccess',
+            'submit': 'submit',
+        },
+        filters: {
+            'validation_complete': 'validationComplete',
+        },
+
+        validationBegin: function($el) {
+
+            var form = acfe.getForm($el);
+            if (form) {
+                var validator = $el.data('acf');
+                acf.doAction('acfe/form/validation_begin', $el, validator, form);
+                acf.doAction(`acfe/form/validation_begin/form=${form.get('name')}`, $el, validator, form);
+            }
+
+
+        },
+
+        validationFailure: function($el, validator) {
+
+            var form = acfe.getForm($el);
+            if (form) {
+                acf.doAction('acfe/form/validation_failure', $el, validator, form);
+                acf.doAction(`acfe/form/validation_failure/form=${form.get('name')}`, $el, validator, form);
+            }
+
+        },
+
+        validationSuccess: function($el, validator) {
+
+            var form = acfe.getForm($el);
+            if (form) {
+                acf.doAction('acfe/form/validation_success', $el, validator, form);
+                acf.doAction(`acfe/form/validation_success/form=${form.get('name')}`, $el, validator, form);
+            }
+
+        },
+
+        submit: function($el) {
+
+            var form = acfe.getForm($el);
+            if (form) {
+                var validator = $el.data('acf');
+                acf.doAction('acfe/form/submit', $el, validator, form);
+                acf.doAction(`acfe/form/submit/form=${form.get('name')}`, $el, validator, form);
+            }
+
+        },
+
+        validationComplete: function(data, $el, validator) {
+
+            var form = acfe.getForm($el);
+            if (form) {
+                data = acf.applyFilters('acfe/form/validation_complete', data, $el, validator, form);
+                data = acf.applyFilters(`acfe/form/validation_complete/form=${form.get('name')}`, data, $el, validator, form);
+            }
+
+            return data;
+        },
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * form initializer
+     *
+     * @type {string[]}
+     */
+    var actions = ['prepare', 'ready', 'load', 'append'];
+
+    actions.map(function(action) {
+
+        acf.addAction(action, function($el) {
+
+            // initialize front-end forms
+            if (!acfe.get('is_admin')) {
+                acfe.getForms({
+                    parent: $el
+                });
+            }
+
+        }, 1);
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+    /**
+     * spawner
+     */
+    new acf.Model({
+        wait: 'prepare',
+        priority: 5,
+        initialize: function() {
+            if (!acfe.get('is_admin')) {
+                new renderMedia();
+                new overridePrototypes();
+            }
+        }
+    });
+
+
+    /**
+     * renderMedia
+     */
+    var renderMedia = acf.Model.extend({
+
+        actions: {
+            'new_media_popup': 'newMediaPopup',
+        },
+
+        initialize: function() {
+            this.resetMedia();
+        },
+
+        newMediaPopup: function(popup) {
+
+            // check post id was set in prototypes
+            if (popup.get('post_id')) {
+                if (acf.isset(window, 'wp', 'media', 'view', 'settings', 'post')) {
+                    wp.media.view.settings.post = {
+                        id: popup.get('post_id')
+                    };
+                }
+            }
+
+            // reset media modal on close
+            popup.frame.on('close', this.proxy(this.resetMedia));
+
+        },
+
+        resetMedia: function() {
+
+            // fix image/file/gallery media upload
+            // avoid acf to use current post to determine if the user can upload a file
+            if (acf.isset(window, 'wp', 'media', 'view', 'settings', 'post')) {
+                wp.media.view.settings.post = false;
+            }
+
+        },
+
+    });
+
+
+    /**
+     * overridePrototypes
+     */
+    var overridePrototypes = acf.Model.extend({
+
+        initialize: function() {
+
+            /**
+             * Image/File selectAttachment
+             */
+            var selectAttachment = function() {
+
+                // vars
+                var parent = this.parent();
+                var multiple = parent && parent.get('type') === 'repeater';
+
+                // default args
+                var args = {
+                    mode: 'select',
+                    field: this.get('key'),
+                    multiple: multiple,
+                    library: this.get('library'),
+                    allowedTypes: this.get('mime_types'),
+                    select: $.proxy(function(attachment, i) {
+                        if (i > 0) {
+                            this.append(attachment, parent);
+                        } else {
+                            this.render(attachment);
+                        }
+                    }, this)
+                };
+
+                // field type
+                switch (this.get('type')) {
+
+                    // image args
+                    case 'image': {
+                        args.type = 'image';
+                        args.title = acf.__('Select Image');
+                        break;
+                    }
+
+                    // file args
+                    case 'file': {
+                        args.title = acf.__('Select File');
+                        break;
+                    }
+
+                }
+
+                // get form
+                var form = this.getForm();
+
+                if (form && form.get('media.fields') && form.get('media.post_id')) {
+                    if (acfe.inArray(this.get('key'), form.get('media.fields'))) {
+                        args.post_id = form.get('media.post_id');
+                    }
+                }
+
+                // new frame
+                var frame = acf.newMediaPopup(args);
+
+            };
+
+            // assign new function
+            acf.models.ImageField.prototype.selectAttachment = selectAttachment;
+            acf.models.FileField.prototype.selectAttachment = selectAttachment;
+
+
+            /**
+             * Gallery onClickAdd
+             */
+            var onClickAdd = function(e, $el) {
+
+                // validate
+                if (this.isFull()) {
+                    this.showNotice({
+                        text: acf.__('Maximum selection reached'),
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                // args
+                var args = {
+                    mode: 'select',
+                    title: acf.__('Add Image to Gallery'),
+                    field: this.get('key'),
+                    multiple: 'add',
+                    library: this.get('library'),
+                    allowedTypes: this.get('mime_types'),
+                    selected: this.val(),
+                    select: $.proxy(function(attachment, i) {
+                        this.appendAttachment(attachment, i);
+                    }, this)
+                };
+
+                // get form
+                var form = this.getForm();
+
+                if (form && form.get('media.fields') && form.get('media.post_id')) {
+                    if (acfe.inArray(this.get('key'), form.get('media.fields'))) {
+                        args.post_id = form.get('media.post_id');
+                    }
+                }
+
+                // new frame
+                var frame = acf.newMediaPopup(args);
+
+            };
+
+            acf.models.GalleryField.prototype.onClickAdd = onClickAdd;
+
+
+            /**
+             * MediaPopup getFrameOptions
+             *
+             * @type {function(): *}
+             */
+            var getFrameOptions = acf.models.SelectMediaPopup.prototype.getFrameOptions;
+
+            acf.models.SelectMediaPopup.prototype.getFrameOptions = function() {
+
+                // call original function
+                var options = getFrameOptions.apply(this, arguments);
+
+                // custom library
+                if (this.get('library') === 'uploadedTo' && this.get('post_id')) {
+                    options.library.uploadedTo = this.get('post_id');
+                }
+
+                return options;
+
+            }
+
+        },
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+
+    new acf.Model({
+        wait: 'prepare',
+        priority: 5,
+        initialize: function() {
+            if (!acfe.get('is_admin')) {
+                new renderSuccess();
+            }
+        }
+    });
+
+
+    /**
+     * renderSuccess
+     */
+    var renderSuccess = acf.Model.extend({
+
+        initialize: function() {
+
+            // get form success
+            var object = this.getFormSuccess();
+
+            // validate form success
+            if (!object) {
+                return;
+            }
+
+            // vars
+            // form instance might not exist if form is hidden on success
+            var data = object.data;
+            var $el = object.form ? object.form.$el : false;
+            var form = object.form ? object.form : false;
+            var formData = object.form ? object.form.get('success_data') : object.data.success_data;
+
+            // hooks
+            acf.doAction(`acfe/form/submit_success`, $el, form, formData);
+            acf.doAction(`acfe/form/submit_success/form=${data.name}`, $el, form, formData);
+
+            // deprecated
+            acfe.doActionDeprecated(`acfe/form/success`, [$el], '0.9.0.3', `acfe/form/submit_success`);
+            acfe.doActionDeprecated(`acfe/form/success/id=${data.id}`, [$el], '0.9.0.3', `acfe/form/submit_success/form=${data.name}`);
+            acfe.doActionDeprecated(`acfe/form/success/form=${data.name}`, [$el], '0.9.0.3', `acfe/form/submit_success/form=${data.name}`);
+            acfe.doActionDeprecated(`acfe/form/success/name=${data.name}`, [$el], '0.9.0.3', `acfe/form/submit_success/form=${data.name}`);
+
+            // deprecated
+            acfe.doActionDeprecated(`acfe/form/submit/success`, [$el], '0.9.0.3', `acfe/form/submit_success`);
+            acfe.doActionDeprecated(`acfe/form/submit/success/id=${data.id}`, [$el], '0.9.0.3', `acfe/form/submit_success/form=${data.name}`);
+            acfe.doActionDeprecated(`acfe/form/submit/success/name=${data.name}`, [$el], '0.9.0.3', `acfe/form/submit_success/form=${data.name}`);
+
+            // should scroll
+            if (data.scroll) {
+
+                // scroll to message
+                if (data.selector) {
+                    acfe.scrollTo($(data.selector));
+
+                    // scroll to previous element
+                } else if ($el) {
+                    acfe.scrollTo($el.prev());
+
+                }
+
+            }
+
+        },
+
+        getFormSuccess: function() {
+
+            var formData = acfe.getFormData({
+                success: true
+            });
+            if (formData) {
+                return {
+                    form: acfe.getForm({
+                        cid: formData.cid
+                    }),
+                    data: formData,
+                };
+            }
+
+            return false;
+
+        },
+
+    });
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
+
+    /**
+     * acf.validation.onClickSubmit
+     *
+     * Fix front-end form triggering validation for all forms is there are multiple forms on the page
+     * This function is untouched. We just pass the $el to ensureInvalidFieldVisibility($el)
+     *
+     * @param e
+     * @param $el
+     *
+     * @since ACF 5.11
+     */
+    acf.validation.onClickSubmit = function(e, $el) {
+
+        // some browsers (safari) force their browser validation before our AJAX validation,
+        // so we need to make sure fields are visible earlier than showErrors()
+        ensureInvalidFieldVisibility($el);
+
+        // store the "click event" for later use in this.onSubmit()
+        this.set('originalEvent', e);
+
+    }
+
+
+    /**
+     * ensureInvalidFieldVisibility
+     *
+     * Add current element as argument
+     *
+     * @param $el
+     *
+     * @since ACF 5.11.4
+     */
+    var ensureInvalidFieldVisibility = function($el) {
+
+        // load each ACF input field and check it's browser validation state.
+        var $inputs = $('.acf-field input');
+
+        // acfe: retrieve the current element parents form
+        var $form = $el.closest('form');
+
+        // acfe: find fields inside the current form only
+        if ($form.length) {
+            $inputs = $form.find('.acf-field input');
+        }
+
+        $inputs.each(function() {
+            if (!this.checkValidity()) {
+
+                // field is invalid, so we need to make sure it's metabox is visible.
+                ensureFieldPostBoxIsVisible($(this));
+
+            }
+        });
+
+    };
+
+
+    /**
+     * ensureFieldPostBoxIsVisible
+     *
+     * @param $el
+     *
+     * @since ACF 5.11.4
+     */
+    var ensureFieldPostBoxIsVisible = function($el) {
+
+        // Find the postbox element containing this field.
+        var $postbox = $el.parents('.acf-postbox');
+
+        if ($postbox.length) {
+            var acf_postbox = acf.getPostbox($postbox);
+
+            // ACFE: use class check instead of isHiddenByScreenOptions() for older ACF versions
+            if (acf_postbox && (acf_postbox.$el.hasClass('hide-if-js') || acf_postbox.$el.css('display') == 'none')) {
+                // Rather than using .show() here, we don't want the field to appear next reload.
+                // So just temporarily show the field group so validation can complete.
+                acf_postbox.$el.removeClass('hide-if-js');
+                acf_postbox.$el.css('display', '');
+            }
+        }
+
+    };
+
+})(jQuery);
+(function($) {
+
+    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
+        return;
+    }
+
     /**
      * Field: Advanced Link
      */
@@ -1975,21 +3349,11 @@
             layouts: $layout[0].outerHTML
         });
 
-        // Append Temp Input
-        var $input = $('<input type="text" style="clip:rect(0,0,0,0);clip-path:none;position:absolute;" value="" />').appendTo($('body'));
-        $input.attr('value', data).select();
+        acfe.copyClipboard(data, {
+            auto: acf.__('Layout data has been copied to your clipboard.') + "\n" + acf.__('You can now paste it on another page, using the "Paste" button action.'),
+            manual: acf.__('Please copy the following data to your clipboard.') + "\n" + acf.__('You can then paste it on another page, using the "Paste" button action.'),
+        });
 
-        // alert
-        if (document.execCommand('copy')) {
-            alert(acf.__('Layout data has been copied to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'));
-
-            // prompt
-        } else {
-            prompt(acf.__('Please copy the following layout(s) data to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'), data);
-        }
-
-        // Remove the temp input
-        $input.remove();
 
     }
 
@@ -2015,21 +3379,10 @@
             layouts: $layouts.html()
         });
 
-        // Append Temp Input
-        var $input = $('<input type="text" style="clip:rect(0,0,0,0);clip-path:none;position:absolute;" value="" />').appendTo(flexible.$el);
-        $input.attr('value', data).select();
-
-        // alert
-        if (document.execCommand('copy')) {
-            alert(acf.__('Layouts data have been copied to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'));
-
-            // prompt
-        } else {
-            prompt(acf.__('Please copy the following layout(s) data to your clipboard.') + "\n" + acf.__('You can now paste it in the same Flexible Content on another page, using the "Paste" button action.'), data);
-        }
-
-
-        $input.remove();
+        acfe.copyClipboard(data, {
+            auto: acf.__('Layouts data have been copied to your clipboard.') + "\n" + acf.__('You can now paste it on another page, using the "Paste" button action.'),
+            manual: acf.__('Please copy the following data to your clipboard.') + "\n" + acf.__('You can then paste it on another page, using the "Paste" button action.'),
+        });
 
     }
 
@@ -2412,6 +3765,15 @@
 
         });
 
+        // Clean Block Editor
+        $layout.find('.acfe-block-editor-wrapper').each(function() {
+
+            var $editor = $(this);
+
+            $editor.find('.editor').remove();
+
+        });
+
         // Clean Date
         $layout.find('.acf-date-picker').each(function() {
 
@@ -2646,15 +4008,8 @@
 
         onAppend: function($el) {
 
-            // acf block type "align" attribute pass a react element
-            // with acf.doAction('append', this.state.$el))
-            // which return a fake jQuery element and break $el.is('...') check
-            if (acf.isset($el, 0, '$$typeof')) {
-                return;
-            }
-
-            // validate
-            if ($el.is('.layout')) {
+            // check element is a jQuery object with .layout class
+            if ($el?.[0]?.classList?.contains('layout')) {
 
                 // get field
                 var field = acf.getClosestField($el);
@@ -3146,6 +4501,7 @@
             acf.doAction('acfe/fields/flexible_content/before_preview', $el, $layout, ajaxData);
             acf.doAction('acfe/fields/flexible_content/before_preview/name=' + name, $el, $layout, ajaxData);
             acf.doAction('acfe/fields/flexible_content/before_preview/key=' + key, $el, $layout, ajaxData);
+            acf.doAction('acfe/fields/flexible_content/before_preview/layout=' + layout, $el, $layout, ajaxData);
             acf.doAction('acfe/fields/flexible_content/before_preview/name=' + name + '&layout=' + layout, $el, $layout, ajaxData);
             acf.doAction('acfe/fields/flexible_content/before_preview/key=' + key + '&layout=' + layout, $el, $layout, ajaxData);
 
@@ -3161,6 +4517,7 @@
                 acf.doAction('acfe/fields/flexible_content/preview', response, $el, $layout, ajaxData);
                 acf.doAction('acfe/fields/flexible_content/preview/name=' + name, response, $el, $layout, ajaxData);
                 acf.doAction('acfe/fields/flexible_content/preview/key=' + key, response, $el, $layout, ajaxData);
+                acf.doAction('acfe/fields/flexible_content/preview/layout=' + layout, response, $el, $layout, ajaxData);
                 acf.doAction('acfe/fields/flexible_content/preview/name=' + name + '&layout=' + layout, response, $el, $layout, ajaxData);
                 acf.doAction('acfe/fields/flexible_content/preview/key=' + key + '&layout=' + layout, response, $el, $layout, ajaxData);
 
@@ -3555,71 +4912,56 @@
 
         wait: 'load',
 
-        actions: {
-            'validation_failure': 'validationFailure'
+        widgetID: 0,
+
+        events: {
+            'invalidField': 'onInvalidField'
         },
 
         $control: function() {
-            return this.$('.acfe-field-recaptcha');
+            return this.$('.acf-input-wrap');
         },
 
         $input: function() {
             return this.$('input[type="hidden"]');
         },
 
-        $selector: function() {
-            return this.$control().find('> div');
-        },
-
-        selector: function() {
-            return this.$selector()[0];
-        },
-
         initialize: function() {
+            reCaptchaAPI.load(this, this.render);
+        },
+
+        render: function() {
 
             if (this.get('version') === 'v2') {
-
-                this.renderV2(this);
+                this.renderV2();
 
             } else if (this.get('version') === 'v3') {
-
                 this.renderV3();
-
             }
-
         },
 
-        renderV2: function(self) {
-
-            // selectors
-            var selector = this.selector();
-            var $input = this.$input();
-
-            // vars
-            var sitekey = this.get('siteKey');
-            var theme = this.get('theme');
-            var size = this.get('size');
+        renderV2: function() {
 
             // request
-            this.recaptcha = grecaptcha.render(selector, {
-                'sitekey': sitekey,
-                'theme': theme,
-                'size': size,
+            this.widgetID = grecaptcha.render(this.$control().find('> div')[0], {
+                'sitekey': this.get('siteKey'),
+                'theme': this.get('theme'),
+                'size': this.get('size'),
 
-                'callback': function(response) {
-                    acf.val($input, response, true);
-                    self.removeError();
-                },
+                'callback': this.proxy(function(response) {
 
-                'error-callback': function() {
-                    acf.val($input, '', true);
-                    self.showError('An error has occured');
-                },
+                    acf.val(this.$input(), response, true);
+                    this.removeError();
 
-                'expired-callback': function() {
-                    acf.val($input, '', true);
-                    self.showError('reCaptcha has expired');
-                }
+                }),
+
+                'error-callback': this.proxy(function() {
+                    this.showError('An error has occured');
+                }),
+
+                'expired-callback': this.proxy(function() {
+                    this.showError('reCaptcha has expired');
+                })
             });
 
         },
@@ -3633,18 +4975,14 @@
             // request
             var request = function() {
 
-                // execute recaptcha v3
-                grecaptcha.ready(function() {
-                    grecaptcha.execute(sitekey, {
-                        action: 'homepage'
-                    }).then(function(response) {
-
-                        acf.val($input, response, true);
-
-                    });
+                grecaptcha.execute(sitekey, {
+                    action: 'homepage'
+                }).then(function(response) {
+                    acf.val($input, response, true);
                 });
 
                 // refresh every 80sec
+                // this avoid an issue where token becomes invalid after 2min
                 setTimeout(request, 80 * 1000);
 
             }
@@ -3654,17 +4992,83 @@
 
         },
 
-        validationFailure: function($form) {
+        reset: function() {
 
+            // reset v2
             if (this.get('version') === 'v2') {
-                grecaptcha.reset(this.recaptcha);
+                grecaptcha.reset(this.widgetID);
+                acf.val(this.$input(), '', true);
+
+                // reset v3
+            } else if (this.get('version') === 'v3') {
+                this.renderV3();
+
             }
 
-        }
+        },
+
+        onInvalidField: function(e, $el) {
+            this.reset();
+        },
 
     });
 
     acf.registerFieldType(reCaptcha);
+
+
+    /**
+     * recpatchaAPI
+     *
+     * @type {acf.Model}
+     */
+    var reCaptchaAPI = new acf.Model({
+
+        busy: false,
+
+        load: function(field, callback) {
+
+            // defaults
+            callback = field.proxy(callback);
+
+            // vars
+            var url_v2 = 'https://www.google.com/recaptcha/api.js?render=explicit';
+            var url_v3 = 'https://www.google.com/recaptcha/api.js?render=' + field.get('siteKey');
+            var url = field.get('version') === 'v2' ? url_v2 : url_v3;
+
+            // check if recaptcha exists
+            if (typeof grecaptcha !== 'undefined' || acf.isset(window, 'grecaptcha')) {
+                return callback();
+            }
+
+            acf.addAction('acfe/recpatcha_loaded', callback);
+
+            // already busy
+            if (this.busy) {
+                return;
+            }
+
+            // set busy
+            this.busy = true;
+
+            // load api
+            $.ajax({
+                url: url,
+                dataType: 'script',
+                cache: true,
+                context: this,
+                success: function() {
+
+                    grecaptcha.ready(this.proxy(function() {
+                        acf.doAction('acfe/recpatcha_loaded');
+                        this.busy = false;
+                    }));
+
+                }
+            });
+
+        }
+
+    });
 
 })(jQuery);
 (function($) {
@@ -4140,28 +5544,35 @@
     new acf.Model({
 
         actions: {
+            'append_field/type=wysiwyg': 'appendField',
             'show_field/type=wysiwyg': 'showField',
             'ready_field/type=wysiwyg': 'showField',
         },
 
+        appendField: function(field) {
+
+            // initialize editor when inside flexible content > repeater
+            // on click repeater add row
+            this.setTimeout(function() {
+                this.showField(field);
+            }, 1);
+
+        },
+
         showField: function(field) {
 
-            if (!field.has('acfeWysiwygAutoInit') || !field.$el.is(':visible') || field.has('id') || acfe.isFilterEnabled('acfeFlexibleOpen')) {
-                return;
+            if (field.has('acfeWysiwygAutoInit') && field.$el.is(':visible') && !field.has('id') && !acfe.isFilterEnabled('acfeFlexibleOpen')) {
+                this.initializeEditor(field);
             }
-
-            this.initializeEditor(field);
 
         },
 
         initializeEditor: function(field) {
 
-            var $wrap = field.$control();
+            if (field.$control().hasClass('delay')) {
 
-            if ($wrap.hasClass('delay')) {
-
-                $wrap.removeClass('delay');
-                $wrap.find('.acf-editor-toolbar').remove();
+                field.$control().removeClass('delay');
+                field.$control().find('.acf-editor-toolbar').remove();
 
                 // initialize
                 field.initializeEditor();
@@ -4171,341 +5582,5 @@
         },
 
     });
-
-})(jQuery);
-(function($) {
-
-    if (typeof acf === 'undefined' || typeof acfe === 'undefined') {
-        return;
-    }
-
-    var moduleManager = new acf.Model({
-        wait: 'prepare',
-        priority: 1,
-        initialize: function() {
-            if (!acfe.get('is_admin')) {
-                new module();
-            }
-        }
-    });
-
-    var module = acf.Model.extend({
-
-        actions: {
-            'new_field/type=date_picker': 'datePicker',
-            'new_field/type=date_time_picker': 'datePicker',
-            'new_field/type=time_picker': 'datePicker',
-            'new_field/type=google_map': 'googleMap',
-            'invalid_field': 'invalidField',
-            'validation_begin': 'validationBegin',
-        },
-
-        events: {
-            'click .acf-form .button': 'onClickSubmit',
-            'click .acf-form [type="submit"]': 'onClickSubmit',
-            'click .acfe-form .button': 'onClickSubmit',
-            'click .acfe-form [type="submit"]': 'onClickSubmit',
-        },
-
-        $getForm: function(field = false) {
-
-            var $form = $('.acfe-form');
-
-            if (field) {
-                $form = field.$el.closest('.acfe-form');
-            }
-
-            return $form.length ? $form : false;
-
-        },
-
-        getFormFieldClass: function(field) {
-
-            var $form = this.$getForm(field);
-
-            if (!$form) {
-                return false;
-            }
-
-            return $form.data('fields-class') || false;
-
-        },
-
-        initialize: function() {
-
-            // fix image/file/gallery media upload
-            // avoid acf to use current post to determine if the user can upload a file
-            // todo: enhance the logic
-            if (acf.isset(window, 'wp', 'media', 'view', 'settings', 'post')) {
-                wp.media.view.settings.post = false;
-            }
-
-            this.setupUnload();
-            this.setupSuccess();
-
-        },
-
-        setupUnload: function() {
-            if ($('.acfe-form[data-hide-unload="1"]').length) {
-                acf.unload.disable();
-            }
-        },
-
-        setupSuccess: function() {
-
-            if (!acfe.get('acfe_form_success')) {
-                return;
-            }
-
-            // Prevent refresh sending post fields again
-            if (window.history.replaceState) {
-                window.history.replaceState(null, null, window.location.href);
-            }
-
-            // loop
-            acfe.get('acfe_form_success').map(function(form) {
-
-                // hooks
-                acf.doAction('acfe/form/success');
-                acf.doAction('acfe/form/success/id=' + form.id);
-                acf.doAction('acfe/form/success/name=' + form.name);
-
-                // deprecated
-                acf.doAction('acfe/form/submit/success');
-                acf.doAction('acfe/form/submit/success/id=' + form.id);
-                acf.doAction('acfe/form/submit/success/name=' + form.name);
-
-            });
-
-        },
-
-        onClickSubmit: function(e, $el) {
-
-            // prevent submit spam
-            if ($el.hasClass('disabled')) {
-                e.preventDefault();
-            }
-        },
-
-        // Datepicker: Add field class
-        datePicker: function(field) {
-
-            var fieldClass = this.getFormFieldClass(field);
-
-            if (fieldClass) {
-                field.$inputText().addClass(fieldClass);
-            }
-
-        },
-
-        // Google Maps: Add field class
-        googleMap: function(field) {
-
-            var fieldClass = this.getFormFieldClass(field);
-
-            if (fieldClass) {
-                field.$search().addClass(fieldClass);
-            }
-
-        },
-
-        // Error: Move error
-        invalidField: function(field) {
-
-            var $form = this.$getForm(field);
-
-            if (!$form) {
-                return;
-            }
-
-            // errors class
-            var errorsClass = $form.data('errors-class');
-
-            if (errorsClass) {
-                field.$el.find('.acf-notice.-error').addClass(errorsClass);
-            }
-
-            // errors position
-            var errorsPosition = $form.data('errors-position');
-
-            // position: hide
-            if (errorsPosition === 'hide') {
-                field.$el.find('.acf-notice.-error').remove();
-
-                // position: below
-            } else if (errorsPosition === 'below') {
-
-                if (field.$control().length) {
-                    field.$el.find('.acf-notice.-error').insertAfter(field.$control());
-
-                } else if (field.$input().length) {
-                    field.$el.find('.acf-notice.-error').insertAfter(field.$input());
-
-                }
-
-                var $selector = false;
-
-                if (field.$control().length) {
-                    $selector = field.$control();
-
-                } else if (field.$input().length) {
-                    $selector = field.$input();
-
-                }
-
-                if ($selector) {
-                    field.$el.find('.acf-notice.-error').insertAfter($selector);
-                }
-
-                // position: grouped
-            } else if (errorsPosition === 'group') {
-
-                var label = field.$el.find('.acf-label label').text().trim();
-                var placeholder = field.$el.find('.acf-input-wrap [placeholder!=""]').attr('placeholder');
-                var message = field.$el.find('.acf-notice.-error').text().trim();
-
-                field.$el.find('.acf-notice.-error').remove();
-
-                // try label
-                if (label && label.length && label !== '*') {
-
-                    // remove end part " *"
-                    label = label.replace(/ \*$/, '');
-                    message = label + ': ' + message;
-
-                    // try placeholder
-                } else if (placeholder && placeholder.length && placeholder !== '') {
-                    message = placeholder + ': ' + message;
-
-                    // try field name
-                } else {
-                    message = field.get('name') + ': ' + message;
-
-                }
-
-                var $form_error = $form.find('> .acfe-form-error')
-
-                if (!$form_error.length) {
-                    $form_error = $('<div class="acf-notice -error acf-error-message acfe-form-error" />').prependTo($form);
-                }
-
-                $form_error.append('<p>' + message + '</p>');
-
-            }
-
-        },
-
-        // Ajax Validation
-        validationBegin: function($form) {
-
-            if (typeof $form === 'undefined') {
-                return;
-            }
-
-            $form.find('.acf-error-message').remove();
-
-        }
-
-    });
-
-    // ACF 5.11.4
-    var ensureFieldPostBoxIsVisible = function($el) {
-        // Find the postbox element containing this field.
-        var $postbox = $el.parents('.acf-postbox');
-
-        if ($postbox.length) {
-            var acf_postbox = acf.getPostbox($postbox);
-
-            // ACFE: use class check instead of isHiddenByScreenOptions() for older ACF versions
-            if (acf_postbox && (acf_postbox.$el.hasClass('hide-if-js') || acf_postbox.$el.css('display') == 'none')) {
-                // Rather than using .show() here, we don't want the field to appear next reload.
-                // So just temporarily show the field group so validation can complete.
-                acf_postbox.$el.removeClass('hide-if-js');
-                acf_postbox.$el.css('display', '');
-            }
-        }
-    };
-
-    // ACF 5.11.4
-    // added current element as argument
-    var ensureInvalidFieldVisibility = function($el) {
-
-        var $inputs = $('.acf-field input');
-
-        // retrieve the current element parents form
-        var $form = $el.closest('form');
-
-        // find fields inside the current form only
-        if ($form.length) {
-            $inputs = $form.find('.acf-field input');
-        }
-
-        $inputs.each(function() {
-            if (!this.checkValidity()) {
-                ensureFieldPostBoxIsVisible($(this));
-            }
-        });
-
-    };
-
-    // ACF 5.11
-    // Fix double front-end form that trigger validation for the other form
-    acf.validation.onClickSubmit = function(e, $el) {
-
-        ensureInvalidFieldVisibility($el);
-
-        this.set('originalEvent', e);
-
-    }
-
-    // Rewrite ACF New Condition
-    // Allow conditions to work within wrapped div
-    acf.newCondition = function(rule, conditions) {
-
-        // currently setting up conditions for fieldX, this field is the 'target'
-        var target = conditions.get('field');
-
-        // use the 'target' to find the 'trigger' field.
-        // - this field is used to setup the conditional logic events
-        var field = target.getField(rule.field);
-
-        // ACF Extended: Check in all form if targeted field not found
-        if (target && !field) {
-            field = acf.getField(rule.field);
-        }
-
-        // bail ealry if no target or no field (possible if field doesn't exist due to HTML error)
-        if (!target || !field) {
-            return false;
-        }
-
-        // vars
-        var args = {
-            rule: rule,
-            target: target,
-            conditions: conditions,
-            field: field
-        };
-
-        // vars
-        var fieldType = field.get('type');
-        var operator = rule.operator;
-
-        // get avaibale conditions
-        var conditionTypes = acf.getConditionTypes({
-            fieldType: fieldType,
-            operator: operator,
-        });
-
-        // instantiate
-        var model = conditionTypes[0] || acf.Condition;
-
-        // instantiate
-        var condition = new model(args);
-
-        // return
-        return condition;
-
-    };
 
 })(jQuery);

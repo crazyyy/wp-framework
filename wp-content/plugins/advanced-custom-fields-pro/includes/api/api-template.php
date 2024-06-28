@@ -142,6 +142,11 @@ function _acf_log_escaped_html( $function, $selector, $field, $post_id ) {
 		return;
 	}
 
+	// If the notice has been dismissed, don't log further errors.
+	if ( get_option( 'acf_escaped_html_notice_dismissed' ) ) {
+		return;
+	}
+
 	// If the field isn't set, we've output a non-ACF field, so don't log anything.
 	if ( ! is_array( $field ) ) {
 		return;
@@ -191,7 +196,7 @@ function _acf_get_escaped_html_log() {
  * @return boolean True on success, or false on failure.
  */
 function _acf_update_escaped_html_log( $escaped = array() ) {
-	return update_option( 'acf_escaped_html_log', (array) $escaped, true );
+	return update_option( 'acf_escaped_html_log', (array) $escaped, false );
 }
 
 /**
@@ -367,7 +372,7 @@ function acf_maybe_get_sub_field( $selectors, $post_id = false, $strict = true )
  * @param boolean $format_value Whether or not to format the field value.
  * @param boolean $escape_html  Should the field return a HTML safe formatted value if $format_value is true.
  *
- * @return array associative array where field name => field value
+ * @return array|false Associative array where field name => field value, or false on failure.
  */
 function get_fields( $post_id = false, $format_value = true, $escape_html = false ) {
 
@@ -407,7 +412,7 @@ function get_fields( $post_id = false, $format_value = true, $escape_html = fals
  * @param boolean $load_value   Whether or not to load the field value.
  * @param boolean $escape_html  Should the field return a HTML safe formatted value if $format_value is true.
  *
- * @return array associative array where field name => field
+ * @return array|false Associative array where field name => field, or false on failure.
  */
 function get_field_objects( $post_id = false, $format_value = true, $load_value = true, $escape_html = false ) {
 

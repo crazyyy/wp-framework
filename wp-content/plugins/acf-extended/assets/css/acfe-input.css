@@ -1084,11 +1084,15 @@ input.acfe-flexible-control-title {
     position: relative
 }
 
-.layout.acfe-flexible-layout-hidden>.acf-fc-layout-controls,
 .layout.acfe-flexible-layout-hidden>.acf-fc-layout-handle,
-.layout.acfe-flexible-layout-hidden>.acf-fields,
 .layout.acfe-flexible-layout-hidden>.acfe-fc-placeholder {
     opacity: .5
+}
+
+.layout.acfe-flexible-layout-hidden>.acf-fc-layout-controls>.acfe-flexible-icon.dashicons-hidden {
+    background: #2c3338;
+    border-color: #111;
+    color: #fff
 }
 
 .acf-field-flexible-content[data-acfe-flexible-modal-edition="1"]>.acf-input>.acf-flexible-content>.values>.layout>.acf-fc-layout-controls>a.-collapse {
@@ -1096,7 +1100,7 @@ input.acfe-flexible-control-title {
 }
 
 .acf-range-wrap input[type=number] {
-    min-width: 3.5em
+    min-width: 4.5em
 }
 
 .acf-fields>.acf-field-group.acfe-field-group-layout-block.acfe-seamless-style:not([data-acfe-group-modal="1"])>.acf-input,
@@ -1328,6 +1332,10 @@ body:not(.acf-admin-5-3) .acf-repeater.-row>table>tbody>tr>td:last-of-type {
     vertical-align: text-top
 }
 
+.acf-tab-wrap {
+    overflow: unset
+}
+
 .acf-field-textarea[data-acfe-textarea-code="1"]>.acf-input>textarea {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     font-size: 1em
@@ -1351,15 +1359,7 @@ body:not(.acf-admin-5-3) .acf-repeater.-row>table>tbody>tr>td:last-of-type {
     color: #aaa
 }
 
-form.acfe-form.is-valid[data-hide-revalidation="1"]>.acf-notice.-success {
-    display: none
-}
-
-form.acfe-form.is-invalid[data-hide-error="1"]>.acf-error-message.-dismiss {
-    display: none
-}
-
-form.acfe-form.is-invalid[data-errors-position=below] .acf-field .acf-notice {
+.acfe-form .acf-field .acf-notice.-below {
     margin: 15px 0 0
 }
 
@@ -1368,7 +1368,6 @@ form.acfe-form.is-invalid[data-errors-position=below] .acf-field .acf-notice {
 .acf-media-modal .ui-helper-hidden-accessible {
     border: 0;
     clip: rect(1px, 1px, 1px, 1px);
-    -webkit-clip-path: inset(50%);
     clip-path: inset(50%);
     height: 1px;
     margin: -1px;

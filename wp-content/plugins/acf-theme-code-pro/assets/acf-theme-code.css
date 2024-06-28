@@ -1,0 +1,370 @@
+/**
+ * ACF Theme Code
+ * 
+ * These styles are for ACF version 6 and greater
+ */
+
+
+
+/**
+ * General in both:
+ * - ACF Edit Field Group page
+ * - ACF Tools page
+ */
+
+/* Metabox titles */
+#acftc-meta-box .postbox-header h2,
+#acf-admin-tool-acftc-location-registration .acf-postbox-header h2 {
+	display: inline-flex;
+	justify-content: flex-start;
+	align-content: stretch;
+	align-items: center;
+}
+
+#acftc-meta-box .postbox-header h2:before,
+#acf-admin-tool-acftc-location-registration .acf-postbox-header h2:before {
+	content: '';
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin-right: 8px;
+	background-color: #98A2B3;
+	border: none;
+	border-radius: 0;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-image: url(icon-code-simple.svg);
+	mask-image: url(icon-code-simple.svg);
+}
+
+/* Wrapper for the meta bar above field code and the registration tool */
+.acftc-field-meta {
+	position: relative;
+	width: 100%;
+	height: 22px;
+	padding-top: 15px;
+}
+
+/* Meta bar */
+.acftc-field-meta__title {
+	font-size: 12.5px;
+}
+
+.acftc-field-meta__title[data-pseudo-content]::before {
+	content: attr(data-pseudo-content);
+	display: block;
+	color: #667085;
+	-webkit-user-select: none;
+	/* Chrome all / Safari all */
+	-moz-user-select: none;
+	/* Firefox all */
+	-ms-user-select: none;
+	/* IE 10+ */
+	user-select: none;
+	position: absolute;
+	top: 15px;
+	left: 25px;
+}
+
+/* Code block */
+.acftc-field-code {
+	position: relative;
+}
+
+pre.line-numbers {
+	padding-left: 60px !important;
+}
+
+pre[class*="language-"] {
+	background: #F9FAFB;
+	border: solid 1px #EAECF0;
+	border-left: none;
+	border-right: none;
+}
+
+
+
+/**
+ * Copy buttons in both:
+ * - ACF Edit Field Group page
+ * - ACF Tools page
+ */
+
+/* All copy buttons */
+.acftc-field__copy,
+.acftc-copy-all {
+	position: absolute;
+	background-size: 12px auto;
+	background-position: center center;
+	background-repeat: no-repeat;
+	display: block;
+	opacity: 0.3;
+	transition: all 300ms ease-in;
+	z-index: 10;
+}
+
+/* Copy button for individual fields and registration tool */
+.acftc-field__copy {
+	top: -25px;
+	right: 24px;
+	width: 12px;
+	height: 20px;
+	background-image: url(icon-clipboard.svg);
+}
+
+/* Copy all button (ACF Edit field group page) */
+.acftc-copy-all {
+	top: -42px;
+    right: 20px;
+	width: 20px;
+	height: 20px;
+	background-image: url(icon-clipboard.svg);
+}
+
+/* All copy buttons: Hover state */
+.acftc-copy-all:hover,
+.acftc-field__copy:hover {
+	opacity: 1;
+}
+
+/* All copy buttons: Click animations */
+@-webkit-keyframes zoomitbig {
+
+	15%,
+	40%,
+	75%,
+	100% {
+		-webkit-transform-origin: center center
+	}
+
+	15% {
+		-webkit-transform: scale(1.4, 1.2)
+	}
+
+	40% {
+		-webkit-transform: scale(0.9, 0.9)
+	}
+
+	75% {
+		-webkit-transform: scale(1.08, 1)
+	}
+
+	100% {
+		-webkit-transform: scale(1, 1)
+	}
+}
+
+@-moz-keyframes zoomitbig {
+
+	15%,
+	40%,
+	75%,
+	100% {
+		-moz-transform-origin: center center
+	}
+
+	15% {
+		-moz-transform: scale(1.4, 1.2)
+	}
+
+	40% {
+		-moz-transform: scale(0.9, 0.9)
+	}
+
+	75% {
+		-moz-transform: scale(1.08, 1)
+	}
+
+	100% {
+		-moz-transform: scale(1, 1)
+	}
+}
+
+.acftc-copy-all:focus,
+.acftc-field__copy:focus {
+	outline: 0;
+	border: none;
+	box-shadow: none !important;
+	-webkit-animation: zoomitbig 300ms ease-out;
+	-moz-animation: zoomitbig 300ms ease-out
+}
+
+
+
+/**
+ * ACF Edit Field Group page only
+ */
+
+/* Reset WP core container */
+#acftc-meta-box .inside {
+	margin: 0;
+	padding: 0;
+}
+
+/* Theme Code Pro only: Last code block in a location: Add border radius to match metabox. (Theme Code Free has upgrade notice below locations) */
+.acftc-pro-meta-box .location-wrap div:last-child pre {
+	border-radius: 0 0 8px 8px;
+}
+
+
+
+/**
+ * Notices
+ */
+
+.acftc-notice {
+	padding: 20px 25px;
+}
+	
+.acftc-notice p {
+	font-weight: 600;
+	line-height: 1.4;
+	font-size: 1em;
+	margin: 0;
+}
+
+/* Notice: Empty field group */
+.acftc-notice--empty-field-group {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+/* Notice: Upgrade to Pro */
+.acftc-notice--upgrade {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.acftc-notice--upgrade p {
+	display: inline-block;
+	margin-right: 25px;
+}
+
+.acftc-notice--upgrade a {
+	white-space: nowrap;
+}
+
+@media screen and (max-width: 768px) {
+
+	.acftc-notice--upgrade {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.acftc-notice--upgrade p {
+		margin-right: 0;
+		margin-bottom: 15px;
+	}
+
+}
+		
+
+
+/**
+ * Location select section (ACF Edit Field Group page)
+ */
+
+/* Location settings (location select) */
+.acftc-location-settings {
+	padding: 24px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.acftc-location-settings__inside {
+	max-width: 600px;
+}
+
+/* .acf-field is used to style settings, but need to reset margins */
+.acftc-location-settings .acf-field {
+	margin: 0;
+}
+
+/* Wrapper for each blcok of location code. Initally hide all the location code blocks */
+.location-wrap {
+	display: none;
+}
+
+/* Show first location code block */
+#acftc-group-0.location-wrap {
+	display: block;
+}
+
+
+
+/**
+ * Registration Tool (on ACF Tools page)
+ */
+
+/* Register title inside metabox */
+.acftc-registration-tool-title {
+	color: #3c434a;
+	font-size: 14px;
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+
+/* Wrapper around Block and Options UIs: Hide on page load  */
+.acftc-registration-wrap {
+	display: none;
+}
+
+/* Show the Block registration UI on page load */
+#acftc-register-block {
+	display: block;
+}
+
+/* Block and Options code sources are hidden */
+.acftc-block-code-hidden,
+.acftc-option-code-hidden {
+	display: none;
+}
+
+/* Labels for select and inputs */
+.acftc-label {
+	font-weight: bold;
+	margin-bottom: 6px;
+}
+
+.acftc-label label:hover {
+	cursor: default !important;
+}
+
+/* Select and inputs */
+.acftc-input select,
+.acftc-input input {
+	width: 100%;
+}
+
+/* Select field for location (block or options) */
+.acftc-field--top {
+	margin-bottom: 20px;
+}
+
+/* Input field for block or page name */
+.acftc-field--name {
+	margin-bottom: 25px;
+}
+
+/* Meta above code block */
+.acftc-field-meta--registration {
+	margin-left: -25px;
+	margin-right: -25px;
+	width: calc(100% + 50px);
+	border-top: 1px solid #EAECF0;
+}
+
+/* Copy button */
+.acftc-field__copy--registration {
+	right: -1px;
+}
+
+.acftc-registration-wrap pre.line-numbers {
+    margin: 0 -24px -26px -24px !important;
+    box-shadow: 0px 1px 2px rgb(16 24 40 / 10%);
+    border-radius: 0 0 8px 8px;
+}

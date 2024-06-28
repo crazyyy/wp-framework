@@ -1,22 +1,16 @@
-      </div><!-- /.grid -->
-    </section><!-- /section .container -->
+    <footer class="footer-container" role="contentinfo">
+      <div class="container">
+        <div class="grid">
 
-  </div><!-- /.wrapper -->
+          <p class="copyright col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            &copy; <?php echo date("Y"); ?> Owner <?php bloginfo('name'); ?>.
+          </p><!-- /copyright -->
 
-  <div class="wrapper footer--wrapper">
+        </div><!-- /.grid -->
+      </div><!-- /.container -->
 
-    <footer class="container" role="contentinfo">
-      <div class="grid">
-
-        <p class="copyright col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          &copy; <?php echo date("Y"); ?> Owner <?php bloginfo('name'); ?>.
-        </p><!-- /copyright -->
-
-      </div><!-- /.grid -->
     </footer><!-- /footer .container -->
-
-  </div>
-  <!-- /.wrapper .footer--wrapper -->
+  </div><!-- /.wrapper -->
 
   <?php wp_footer(); ?>
 

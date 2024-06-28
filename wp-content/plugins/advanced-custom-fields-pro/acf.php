@@ -9,14 +9,14 @@
  * Plugin Name:       Advanced Custom Fields PRO
  * Plugin URI:        https://www.advancedcustomfields.com
  * Description:       Customize WordPress with powerful, professional and intuitive fields.
- * Version:           6.2.7
+ * Version:           6.3.2.1
  * Author:            WP Engine
  * Author URI:        https://wpengine.com/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=plugin_directory&utm_content=advanced_custom_fields
  * Update URI:        https://www.advancedcustomfields.com/pro
  * Text Domain:       acf
  * Domain Path:       /lang
- * Requires PHP:      7.0
- * Requires at least: 5.8
+ * Requires PHP:      7.4
+ * Requires at least: 6.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,7 +36,7 @@ if ( ! class_exists( 'ACF' ) ) {
 		 *
 		 * @var string
 		 */
-		public $version = '6.2.7';
+		public $version = '6.3.2.1';
 
 		/**
 		 * The plugin settings array.
@@ -129,6 +129,7 @@ if ( ! class_exists( 'ACF' ) ) {
 				'preload_blocks'          => true,
 				'enable_shortcode'        => true,
 				'enable_bidirection'      => true,
+				'enable_block_bindings'   => true,
 			);
 
 			// Include utility functions.
@@ -142,6 +143,7 @@ if ( ! class_exists( 'ACF' ) ) {
 			// Include classes.
 			acf_include( 'includes/class-acf-data.php' );
 			acf_include( 'includes/class-acf-internal-post-type.php' );
+			acf_include( 'includes/class-acf-site-health.php' );
 			acf_include( 'includes/fields/class-acf-field.php' );
 			acf_include( 'includes/locations/abstract-acf-legacy-location.php' );
 			acf_include( 'includes/locations/abstract-acf-location.php' );
@@ -162,6 +164,14 @@ if ( ! class_exists( 'ACF' ) ) {
 			acf_include( 'includes/acf-value-functions.php' );
 			acf_include( 'includes/acf-input-functions.php' );
 			acf_include( 'includes/acf-wp-functions.php' );
+
+			// Override the shortcode default value based on the version when installed.
+			$first_activated_version = acf_get_version_when_first_activated();
+
+			// Only enable shortcode by default for versions prior to 6.3
+			if ( $first_activated_version && version_compare( $first_activated_version, '6.3', '>=' ) ) {
+				$this->settings['enable_shortcode'] = false;
+			}
 
 			// Include core.
 			acf_include( 'includes/fields.php' );
@@ -304,6 +314,7 @@ if ( ! class_exists( 'ACF' ) ) {
 			acf_include( 'includes/fields/class-acf-field-date_time_picker.php' );
 			acf_include( 'includes/fields/class-acf-field-time_picker.php' );
 			acf_include( 'includes/fields/class-acf-field-color_picker.php' );
+			acf_include( 'includes/fields/class-acf-field-icon_picker.php' );
 			acf_include( 'includes/fields/class-acf-field-message.php' );
 			acf_include( 'includes/fields/class-acf-field-accordion.php' );
 			acf_include( 'includes/fields/class-acf-field-tab.php' );
@@ -379,6 +390,12 @@ if ( ! class_exists( 'ACF' ) ) {
 			 * @param int ACF_MAJOR_VERSION The major version of ACF.
 			 */
 			do_action( 'acf/include_taxonomies', ACF_MAJOR_VERSION );
+
+			// If we're on 6.5 or newer, load block bindings. This will move to an autoloader in 6.3.
+			if ( version_compare( get_bloginfo( 'version' ), '6.5-beta1', '>=' ) ) {
+				acf_include( 'includes/Blocks/Bindings.php' );
+				new ACF\Blocks\Bindings();
+			}
 
 			/**
 			 * Fires after ACF is completely "initialized".
@@ -755,7 +772,13 @@ if ( ! class_exists( 'ACF' ) ) {
 				// If acf_version is set, this isn't the first activated version, so leave it unset so it's legacy.
 				if ( null === get_option( 'acf_version', null ) ) {
 					update_option( 'acf_first_activated_version', ACF_VERSION, true );
+
+					do_action( 'acf/first_activated' );
 				}
+			}
+
+			if ( acf_is_pro() ) {
+				do_action( 'acf/activated_pro' );
 			}
 		}
 	}

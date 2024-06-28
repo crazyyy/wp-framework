@@ -5,7 +5,7 @@
    * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
    */
 
-  $wrapper_classes  = 'container site-header';
+  $wrapper_classes  = 'site-header';
   $wrapper_classes .= has_custom_logo() ? ' has-logo' : '';
 ?>
 <!doctype html>
@@ -46,26 +46,26 @@
   <div class="wrapper">
 
     <header id="masthead" class="<?php echo esc_attr($wrapper_classes); ?>" role="banner">
-      <div class="grid">
+      <div class="container">
+        <div class="grid">
 
-        <div class="header__logo col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <?php
-          $logo_id = get_theme_mod( 'dark_logo_setting' );
-          if ( $logo_id ) {
-            $logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
-            echo '<img src="' . esc_url( $logo_url ) . '" alt="' . get_bloginfo( 'name' ) . '">';
-          } elseif (function_exists('the_custom_logo')) {
-            the_custom_logo();
-          }
-          ?>
-        </div><!-- /.header__logo -->
+          <div class="header__logo col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <?php
+            $logo_id = get_theme_mod( 'dark_logo_setting' );
+            if ( $logo_id ) {
+              $logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
+              echo '<img src="' . esc_url( $logo_url ) . '" alt="' . get_bloginfo( 'name' ) . '">';
+            } elseif (function_exists('the_custom_logo')) {
+              the_custom_logo();
+            }
+            ?>
+          </div><!-- /.header__logo -->
 
-        <nav class="header__nav col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6" role="navigation">
-          <?php wp_nav_menu(array('theme_location' => 'header-menu')); ?>
-        </nav><!-- /.header__nav -->
+          <nav class="header__nav col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6" role="navigation">
+            <?php wp_nav_menu(array('theme_location' => 'header-menu')); ?>
+          </nav><!-- /.header__nav -->
 
-      </div><!-- /.grid -->
-    </header><!-- /header .container-->
+        </div><!-- /.grid -->
+      </div><!-- /.container -->
+    </header><!-- /header -->
 
-    <section class="container" role="main" itemscope itemprop="mainContentOfPage">
-      <div class="grid">

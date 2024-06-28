@@ -228,8 +228,17 @@ class acfe_field_taxonomy_terms extends acf_field{
      */
     function ajax_query(){
         
+        $nonce = acf_request_arg('nonce', '');
+        $key   = acf_request_arg('field_key', '');
+        
+        // Back-compat for field settings.
+        if(!acf_is_field_key($key)){
+            $nonce = '';
+            $key   = '';
+        }
+        
         // validate
-        if(!acf_verify_ajax()){
+        if(!acf_verify_ajax($nonce, $key)){
             die();
         }
         
@@ -932,7 +941,7 @@ class acfe_field_taxonomy_terms extends acf_field{
         }
     
         // bail early front-end form
-        if(acfe_starts_with($post_id, 'acfe_form-')){
+        if(acfe_starts_with($post_id, 'acfe_form')){
             return $value;
         }
         
@@ -1008,7 +1017,7 @@ class acfe_field_taxonomy_terms extends acf_field{
         }
     
         // bail early front-end form
-        if(acfe_starts_with($post_id, 'acfe_form-')){
+        if(acfe_starts_with($post_id, 'acfe_form')){
             return $value;
         }
         

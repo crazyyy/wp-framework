@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Advanced Custom Fields: Extended
  * Description: All-in-one enhancement suite that improves WordPress & Advanced Custom Fields.
- * Version:     0.8.9.5
+ * Version:     0.9.0.6
  * Author:      ACF Extended
  * Plugin URI:  https://www.acf-extended.com
  * Author URI:  https://www.acf-extended.com
@@ -19,7 +19,7 @@ if(!class_exists('ACFE')):
 class ACFE{
     
     // vars
-    var $version = '0.8.9.5';
+    var $version = '0.9.0.6';
     
     /**
      * construct
@@ -95,9 +95,9 @@ class ACFE{
             'theme_path'                    => $theme_path,
             'theme_url'                     => $theme_url,
             'theme_folder'                  => parse_url($theme_url, PHP_URL_PATH),
-            'reserved_post_types'           => array('acf-field', 'acf-field-group', 'acfe-form'),
+            'reserved_post_types'           => array('acf-field', 'acf-field-group'),
             'reserved_taxonomies'           => array('acf-field-group-category'),
-            'reserved_field_groups'         => array('group_acfe_dynamic_form'),
+            'reserved_field_groups'         => array(),
             
             // php
             'php'                           => true,
@@ -117,6 +117,7 @@ class ACFE{
             'modules/categories'            => true,
             'modules/block_types'           => true,
             'modules/forms'                 => true,
+            'modules/forms/top_level'       => false,
             'modules/options_pages'         => true,
             'modules/post_types'            => true,
             'modules/taxonomies'            => true,
@@ -126,12 +127,12 @@ class ACFE{
             'modules/ui'                    => true,
             
             // fields
-            'field/recaptcha/site_key'      => null,
-            'field/recaptcha/secret_key'    => null,
-            'field/recaptcha/version'       => null,
-            'field/recaptcha/v2/theme'      => null,
-            'field/recaptcha/v2/size'       => null,
-            'field/recaptcha/v3/hide_logo'  => null,
+            'field/recaptcha/site_key'      => '',
+            'field/recaptcha/secret_key'    => '',
+            'field/recaptcha/version'       => '',
+            'field/recaptcha/v2/theme'      => '',
+            'field/recaptcha/v2/size'       => '',
+            'field/recaptcha/v3/hide_logo'  => '',
             
         ));
     
@@ -159,6 +160,7 @@ class ACFE{
         acfe_include('includes/local-meta.php');
         acfe_include('includes/multilang.php');
         acfe_include('includes/settings.php');
+        acfe_include('includes/template-tags.php');
         acfe_include('includes/upgrades.php');
     
         // module
@@ -177,6 +179,22 @@ class ACFE{
         acfe_include('includes/modules/block-type/module-block-type-upgrades.php');
         
         // form
+        acfe_include('includes/modules/form/module-form.php');
+        acfe_include('includes/modules/form/module-form-action.php');
+        acfe_include('includes/modules/form/module-form-action-custom.php');
+        acfe_include('includes/modules/form/module-form-action-email.php');
+        acfe_include('includes/modules/form/module-form-action-post.php');
+        acfe_include('includes/modules/form/module-form-action-redirect.php');
+        acfe_include('includes/modules/form/module-form-action-term.php');
+        acfe_include('includes/modules/form/module-form-action-user.php');
+        acfe_include('includes/modules/form/module-form-compatibility.php');
+        acfe_include('includes/modules/form/module-form-deprecated.php');
+        acfe_include('includes/modules/form/module-form-fields.php');
+        acfe_include('includes/modules/form/module-form-format.php');
+        acfe_include('includes/modules/form/module-form-front.php');
+        acfe_include('includes/modules/form/module-form-front-hooks.php');
+        acfe_include('includes/modules/form/module-form-front-render.php');
+        acfe_include('includes/modules/form/module-form-shortcode.php');
         acfe_include('includes/modules/form/module-form-upgrades.php');
         
         // performance
@@ -240,6 +258,7 @@ class ACFE{
         acfe_include('includes/fields/field-repeater.php');
         acfe_include('includes/fields/field-select.php');
         acfe_include('includes/fields/field-textarea.php');
+        acfe_include('includes/fields/field-taxonomy.php');
         acfe_include('includes/fields/field-wysiwyg.php');
         
         // fields settings
@@ -261,6 +280,7 @@ class ACFE{
         acfe_include('includes/field-groups/field-group-permissions.php');
         acfe_include('includes/field-groups/field-groups.php');
         acfe_include('includes/field-groups/field-groups-local.php');
+        acfe_include('includes/field-groups/field-types.php');
         
         // locations
         acfe_include('includes/locations/post-type-all.php');
@@ -284,10 +304,6 @@ class ACFE{
         acfe_include('includes/modules/performance/module-performance-ultra-fields.php');
         acfe_include('includes/modules/performance/module-performance-ultra-revisions.php');
         
-        // modules legacy
-        acfe_include('includes/module-legacy.php');
-        acfe_include('includes/modules/form/module-form.php');
-        
     }
     
     
@@ -299,7 +315,8 @@ class ACFE{
     function include_fields(){
         
         // autosync
-        acfe_include('includes/modules/autosync.php');
+        acfe_include('includes/modules/autosync-php.php');
+        acfe_include('includes/modules/autosync-json.php');
         
     }
     
@@ -339,12 +356,6 @@ class ACFE{
         // modules
         acfe_include('includes/admin/tools/module-export.php');
         acfe_include('includes/admin/tools/module-import.php');
-    
-        // modules legacy
-        acfe_include('includes/admin/tools/tools-legacy/module-export-legacy.php');
-        acfe_include('includes/admin/tools/tools-legacy/module-import-legacy.php');
-        acfe_include('includes/admin/tools/tools-legacy/forms-export.php');
-        acfe_include('includes/admin/tools/tools-legacy/forms-import.php');
         
     }
     

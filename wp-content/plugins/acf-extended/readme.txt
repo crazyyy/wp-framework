@@ -1,11 +1,11 @@
-﻿=== Advanced Custom Fields: Extended ===
+=== Advanced Custom Fields: Extended ===
 Contributors: hwk-fr
 Donate link: https://www.acf-extended.com
-Tags: acf, custom fields, meta, admin, fields, form, repeater, content
+Tags: acf, custom fields, meta, admin, fields
 Requires at least: 4.9
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 0.8.9.5
+Stable tag: 0.9.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,7 @@ If you don't already own [ACF Pro](https://www.advancedcustomfields.com/pro/), y
 * Advanced Fields Validation
 * Flexible Content as Page Builder
 * Optimize metadata with Performance Mode
-* ACF Forms Manager
+* Advanced Front-End Forms Manager
 * ACF Options Pages / Block Types Manager
 * ACF & WordPress Meta Overview
 * WordPress Post Types / Taxonomies Manager
@@ -128,6 +128,9 @@ Display field groups on all post types edition screen.
 **[Location: Attachment List](https://www.acf-extended.com/features/field-groups/locations/attachment-list)** **(PRO)**
 Display field group on attachment admin list screen.
 
+**[Location: Dashboard Widgets](https://www.acf-extended.com/features/field-groups/locations/dashboard)** **(PRO)**
+Display field groups and update ACF Fields from the WP Dashboard.
+
 **[Location: Field Value](https://www.acf-extended.com/features/field-groups/locations/field-value)** **(PRO)**
 Display a field group based on the field value of an another field group.
 
@@ -142,6 +145,9 @@ Display field group on taxonomies admin list screen.
 
 **[Location: User List](https://www.acf-extended.com/features/field-groups/locations/user-list)** **(PRO)**
 Display field group on user admin list screen.
+
+**[Location: Woocommerce](https://www.acf-extended.com/features/field-groups/locations/woocommerce)** **(PRO)**
+Display field groups on Woocommerce pages.
 
 **[Location: WP Settings](https://www.acf-extended.com/features/field-groups/locations/wp-settings)** **(PRO)**
 Display field groups on WP Settings pages: General, Writing, Reading, Discussion, Media and Permalinks.
@@ -488,6 +494,194 @@ The content of the upcoming patch and work in progress features are all listed o
 
 == Changelog ==
 
+= 0.9.0.6 =
+
+**ACF Extended Pro 0.9.0.6:**
+
+* Field: Flexible Content - Grid - Added filter to rename columns (1/12, 2/12, 3/12…)
+* Field: Google Map - Added small UI settings tweaks
+* Field: Payment - Removed Polyfill library dependency
+* Field Settings: Global Condition - Fixed Global Field Condition operators with ACF 6.3
+* Field Settings: Instructions Tooltip - Fixed tooltip always visible when switching tab
+* Module: Force Sync - Fixed sync from Dashboard with Flexible Content Toggle Layout
+* Module: Force Sync - Enhanced Force Delete compatibility with Json and PHP sync
+
+**ACF Extended Basic 0.9.0.6:**
+
+* Field: Flexible Content - Added missing "Copy/Toggle Layout" localized strings
+* Field: Flexible Content - Added JS hook `acfe/flexible/preview/layout=my-layout` variation
+* Field: Flexible Content - Enhanced ACF UI CSS settings with "Tabs Hidden"
+* Field: Forms - Fixed potential warning when switching from Checkbox to Radio
+* Module: Form - Added safe guard logic for ACF fields in "Load" actions
+* Module: Form - Fixed outsourced Clone Seamless Fields values
+* Module: Form - Fixed Template Tags warning with PHP 8
+* Module: Form - User - Builtin Validation now check if email is already used
+* Module: Form - User - Builtin Validation now check the login during the insert
+* Module: Form - User - Builtin Validation now check the `illegal_user_logins` wp filter
+* Module: Form - User - Updating user login now automatically re-log the user
+* Global: Fixed Ajax Nonce verification compatibility with ACF 6.3.2
+
+= 0.9.0.5 =
+
+**ACF Extended Pro 0.9.0.5:**
+
+* Field Group Location: Added "Dashboard > Widget" Location
+* Field Group Location: Dashboard Widget allows to update fields from the WP Dashboard
+* Field Group Location: Added "Woocommerce" Cart, Checkout, Account, Shop & Terms
+* Modules: AutoSync - `acfe/php` & `acfe/json` settings control the AutoSync metabox visbility
+
+**ACF Extended Basic 0.9.0.5:**
+
+* Module: Form - Added ability to load form with ajax
+* Module: Form - Added "Validation > Global Error" settings to customize error messages
+* Module: Form - Added Instruction Placement "Tooltip" & "Above Field" options
+* Module: Form - Cleaned front-end forms HTML markup
+* Module: Form - Enhanced front-end forms JS logic
+* Module: Form - Enhanced compatibility for multiple forms on the same page
+* Module: Form - Enhanced `{field:gallery}` formatted value
+* Module: Form - Enhanced "Validation > Grouped Errors" to use the "Errors Class" setting
+* Module: Form - Fixed missing `l10n` acf setting compatibility for export
+* Module: Form - Fixed Shortcode usage in Success Message
+* Module: Form - Fixed slashed text in Success Message template tags
+* Module: Form - Post - Fixed Image/File/Gallery "Uploaded to" filter in Media Modal
+* Module: Form - Post - Fixed Gallery attachement not being connected to created/updated post
+* Module: Form - Post - Fixed Shortcode usage in Post Content
+* Module: Form - Post - Fixed current post not displaying new data if updated without redirect
+* Module: Form - Email - Fixed Shortcode usage in e-mail content/html
+* Module: Form - User - "Log In" action doesn’t require to redirect on success anymore
+* Module: Form - Added `acfe.renderForm()` & `acfe.renderFormAjax()` JS helpers
+* Module: Form - Added `acfe_enqueue_form()` PHP helper
+* Module: Form - Added `acfe_get_form_action()` allowing dot notation & default arguments
+* Module: Form - Added `acfe/form/submit_success_data` PHP hook to pass data to the JS
+* Module: Form - Added `acfe/form/validation_begin` JS hook to target front-end validation
+* Module: Form - Added `acfe/form/validation_failure` JS hook to target front-end validation
+* Module: Form - Added `acfe/form/validation_success` JS hook to target front-end validation
+* Module: Form - Added `acfe/form/validation_complete` JS hook to target front-end validation
+* Field Groups: Advanced Settings - Added ability to assign field’s sub array settings using dot notation
+* Field Groups: AutoSync - Added ability to remove existing Json/PHP sync from the Field Group UI
+* Field Groups: AutoSync - `acfe/php` & `acfe/json` settings now control the sync metabox visbility
+* Field Groups: AutoSync - Added `acfe/settings/should_delete_php` hook to control the file removal
+* Field Groups: AutoSync - Added `acfe/settings/should_delete_json` hook to control the file removal
+* Field Groups: AutoSync - Fixed Json files not being correctly deleted when Field Group use a custom path
+* Global: Modal - Renamed `new_modal` js hook into `acfe/new_modal` for consistency
+* Global: Enhanced `acfe_get_post_id()` helper
+
+= 0.9.0.4 =
+
+**ACF Extended Pro 0.9.0.4:**
+
+* Modules: Added "Bulk Sync Changes from DB/JSON/PHP" feature
+* Field: Block Editor - Fixed field when copy/pasted within a Flexible Content
+* Field: Color Picker - Fixed "Palette" tooltip title being duplicated on change
+
+**ACF Extended Basic 0.9.0.4:**
+
+* Module: Form - Fixed `acfe/form/submit_post_args` not passing new `post_id` to fields if changed
+* Module: Form - Fixed `{field:field_6635cd66ba409}` not working with group subfields
+* Module: Form - Fixed Post Thumbnail reset when a Form has no post thumbnail
+* Field: Flexible Content - Fixed "Settings Modal" subfields loop within a sub flexible content
+* Field: Flexible Content - Fixed "Copy/Paste Layout" not working on non-HTTPS environments
+* Field: Taxonomy Terms - Enhanced front-end forms compatibility
+* Field: Taxonomy Terms - Improved `{field:taxonomy_terms}` tag format
+* Field: Taxonomy - Enhanced front-end forms compatibility
+
+= 0.9.0.3 =
+
+**ACF Extended Pro 0.9.0.3:**
+
+* Module: Form - Added Ajax Submission feature
+* Module: Form - Ajax Submission can be enabled in the Form "Settings" tab
+
+**ACF Extended Basic 0.9.0.3:**
+
+* Module: Form - Added "Scroll to message" setting in the "Success" tab
+* Module: Form - Enhanced `acfe/form/load_form` strategy
+* Module: Form - Enhanced `map` argument to allow override loaded values from Actions
+* Module: Form - Enhanced `{render:field_name}` to first search within mapped field groups
+* Module: Form - Renamed `acfe/form/success_form` to `acfe/form/render_success` for consistency
+* Module: Form - Added `acfe/form/submit_success` as very early hook, in page headers
+* Module: Form - Fixed Select field "Custom Value" setting compatibility with forms
+* Module: Form - Fixed duplicate rows in `{field:repeater}` Template Tag
+* Module: Form - Added missing `wpautop()` on Success Message
+* Module: Form - Minor CSS compatibility tweaks for mac
+* Module: Form - User Action - Fixed the "Roles" load value as raw array
+* Module: AutoSync - Fixed PHP files not being correctly deleted when Field Group was removed using a custom path
+* Field Groups - Local - Fixed missing "Local" tab when there are only AutoSync PHP files
+* Field Groups: Minor CSS tweaks
+* Field: reCaptcha - Reworked & enhanced code logic
+* Settings UI: Fixed missing reCaptcha ACF settings in the "Fields" tab
+
+= 0.9.0.2 =
+
+**ACF Extended Pro 0.9.0.2:**
+
+* Module: Global Field Location - Fixed Field Group Location escaping issues
+* Field Groups: Advanced Locations - Fixed Field Group Location escaping issues
+* Field: Payment - Fixed `{field:payment}` Template Tag output
+* Field: Flexible Content - Grid - Added translatable strings
+* Global: Country/Currency/Language - Added PHP filters to allow customization
+
+**ACF Extended Basic 0.9.0.2:**
+
+* Module: Form - Enhanced load/validate/submit/render hooks strategy
+* Module: Form - Fixed instruction placement undefined key warning
+* Module: Form - "Current Post" Target/Source now correctly use the WP Query loop `post_id`
+* Module: Form - Enhanced multiple forms on single page support
+* Module: Form - Added missing `wpautop()` on email content when using "Content Editor"
+* Module: Form - Fixed Taxonomy "Load Terms" & Image "Featured Thumbnail" compatibility
+* Fields Condition - Enhanced `acf.newCondition` closer to native ACF logic
+* Global: Updated French translation
+
+= 0.9.0.1 =
+
+* Module: Forms - Fixed upgrade issues when using distant Auto Update
+* Module: Forms - Added safeguard logic when third party plugin enqueue selectWoo
+* Field: Flexible Content - Added Navigator Clipboard API to allow copy very large layout data
+
+= 0.9 =
+
+**ACF Extended Pro 0.9:**
+
+* Module: Forms - Added Json & PHP Sync feature
+* Module: Forms - PHP sync files are saved/loaded from `/my-theme/acfe-php/forms`
+* Module: Forms - Json sync files are saved/loaded from `/my-theme/acf-json/forms`
+* Modules: "View" link in posts list view is now removed when the item disabled
+* Field: Block Editor - Fixed Woocommerce `get_current_screen()` usage on front-end
+* Field: Block Editor - Fixed crash when used within a Flexible Content with Woocommerce
+* Field: Block Editor - Enhanced Woocommerce compatibility
+* Field: Block Editor - Fixed blocks arguments being stripped when submitted on front-end
+* Field: Block Editor - Added WP 6.5 compatibility
+* Field: Flexible Content - Grid - Fixed "No Wrap" setting not using "Default size: 12" when adding a layout
+* Field: Image Sizes - Fixed field not using the correct "Display Format" setting
+
+**ACF Extended Basic 0.9:**
+
+* Module: Forms - Updated module to v3
+* Module: Forms - Ability to register/render forms using PHP code only
+* Module: Forms - Updated Template Tags logic with a new API, allowing developers to create their own tag
+* Module: Forms - New Template Tags: `{render}`, `{get_post}`, `{get_term}`, `{get_user}` & `{date}`
+* Module: Forms - Ability to use Tags in Tags. Ie: `{get_field:my_field:{action:post:ID}:false}`
+* Module: Forms - Ability to render submit button with `{render:submit}` anywhere in the form
+* Module: Forms - ACF Group subfields can now be saved/loaded individually in Forms Actions UI
+* Module: Forms - New Email Action settings: "Content Editor/Raw HTML Editor" switch
+* Module: Forms - New Post Action settings: "Post Date/Schedule", "Post Thumbnail" & "Append Post terms"
+* Module: Forms - New User Action settings: "Built-in Validation" & "Log user once created"
+* Module: Forms - Reworked form arguments for better readability and usability
+* Module: Forms - All hooks have been deprecated and renamed. New hooks are simplified and provide more context
+* Module: Forms - Added `acfe/modules/forms/top_level` setting to set the "Forms" admin menu as top level
+* Module: Performance Mode - Deprecated `acfe_is_single_meta_enabled()` now allow generic call (without id)
+* Module: Added safeguard logic to double-check `WP_Post` object in `add_meta_boxes`
+* Field: Advanced Link - Fixed URL value in Flexible Content Preview Mode
+* Field: Flexible Content - Toggle Layout - Enhanced CSS effect to allow fields edit
+* Field: Forms - Field now store forms names as value instead of IDs, for portability
+* Field: WYSIWYG - Fixed editor being delayed inside a Flexible Content > Sub Repeater
+* Field Settings: Enhanced escaping logic in the "Data" modal
+* Field Settings: Enhanced "Permissions" setting to allow new lines
+* Field Groups: Local - "Sync Back to DB" feature now correctly ignore Inline Hooks
+* Settings UI: Enhanced array settings values render
+* General: Fixed ACF postboxes setting icon alignment in WP 6.5
+* General: Bump WP version up to 6.5
+
 = 0.8.9.5 =
 
 **ACF Extended Pro 0.8.9.5:**
@@ -600,7 +794,7 @@ The content of the upcoming patch and work in progress features are all listed o
 **ACF Extended Pro 0.8.9.1:**
 
 * Field: Date Range Picker - Added string value fallback in `format_value()`
-* Field: Menu Locations - Added "Name", "Label" & "Both (Array)"" Return Format
+* Field: Menu Locations - Added "Name", "Label" & "Both (Array)" Return Format
 * Field: Options Pages - Fixed potential warning when "Allowed Options Pages" setting was empty
 * Field Group: Global Conditional Logic - Added <, <=, >, >= Field Group Locations Operators
 * Module: Rewrite Rules - Enhanced invalid regex rule fallback

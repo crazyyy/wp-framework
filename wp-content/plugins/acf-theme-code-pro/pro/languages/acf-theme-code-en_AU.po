@@ -1,0 +1,483 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Advanced Custom Fields: Theme Code Pro 2.5.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/acf-theme-code-pro\n"
+"POT-Creation-Date: 2021-12-17T01:30:21+00:00\n"
+"PO-Revision-Date: 2021-12-17 12:36+1100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_AU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Domain: acf-theme-code\n"
+
+#. Plugin Name of the plugin
+msgid "Advanced Custom Fields: Theme Code Pro"
+msgstr "Advanced Custom Fields: Theme Code Pro"
+
+#. Plugin URI of the plugin
+msgid "https://hookturn.io/downloads/acf-theme-code-pro/"
+msgstr "https://hookturn.io/downloads/acf-theme-code-pro/"
+
+#. Description of the plugin
+msgid "Generates theme code for ACF Pro field groups to speed up development."
+msgstr "Generates theme code for ACF Pro field groups to speed up development."
+
+#. Author of the plugin
+msgid "Hookturn with Ben Pearson"
+msgstr "Hookturn with Ben Pearson"
+
+#. Author URI of the plugin
+msgid "https://hookturn.io"
+msgstr "https://hookturn.io"
+
+#: core/ACFTC_Conflict.php:22
+msgid "It appears you have more than one version of the <strong>Advanced Custom Fields: Theme Code</strong> plugin activated. To avoid conflicts <strong>all versions</strong> of this plugin have been deactivated."
+msgstr "It appears you have more than one version of the <strong>Advanced Custom Fields: Theme Code</strong> plugin activated. To avoid conflicts <strong>all versions</strong> of this plugin have been deactivated."
+
+#: core/ACFTC_Conflict.php:23
+msgid "Please activate your preferred version."
+msgstr "Please activate your preferred version."
+
+#: core/core.php:208
+msgid "Theme Code"
+msgstr "Theme Code"
+
+#. translators: %s: Field type
+#: core/field.php:342
+msgid "Upgrade to ACF Theme Code Pro for `%s` field support."
+msgstr "Upgrade to ACF Theme Code Pro for `%s` field support."
+
+#. translators: %s: Hookturn URL
+#: core/field.php:347 core/locations.php:374
+msgid "Visit %s for more information."
+msgstr "Visit %s for more information."
+
+#. translators: %s: Field type
+#: core/field.php:356 pro/core/field.php:122
+msgid "The `%s` field type is not supported in this version of the plugin."
+msgstr "The `%s` field type is not supported in this version of the plugin."
+
+#. translators: %s: Hookturn URL
+#: core/field.php:361 pro/core/field.php:127
+msgid "Contact %s to request support for this field type."
+msgstr "Contact %s to request support for this field type."
+
+#: core/field.php:397 core/locations.php:388 pro/core/locations.php:82
+#: pro/location-registration/ACFTC_Location_Registration.php:95
+#: pro/location-registration/ACFTC_Location_Registration.php:138
+msgid "Copy to clipboard"
+msgstr "Copy to clipboard"
+
+#: core/locations.php:204
+msgid "Create some fields and publish the field group to generate theme code."
+msgstr "Create some fields and publish the field group to generate theme code."
+
+#: core/locations.php:287
+#: pro/location-registration/ACFTC_Location_Registration.php:31
+msgid "Location"
+msgstr "Location"
+
+#: core/locations.php:288
+msgid "Select a location to see the relevant theme code"
+msgstr "Select a location to see the relevant theme code"
+
+#: core/locations.php:291
+msgid "Select"
+msgstr "Select"
+
+#. translators: %s: Location type
+#: core/locations.php:368
+msgid "Upgrade to ACF Theme Code Pro for `%s` location support."
+msgstr "Upgrade to ACF Theme Code Pro for `%s` location support."
+
+#: core/locations.php:378
+msgid "Alternatively add a Post or Page option to the Location Rules for this field group."
+msgstr "Alternatively add a Post or Page option to the Location Rules for this field group."
+
+#: core/locations.php:411
+msgid "Upgrade to"
+msgstr "Upgrade to"
+
+#: core/locations.php:411 pro/updates/settings-page.php:24
+msgid "ACF Theme Code Pro"
+msgstr "ACF Theme Code Pro"
+
+#: pro/core/locations.php:115 pro/core/locations.php:119
+#: pro/core/locations.php:123 pro/core/locations.php:127
+msgid "User Variables"
+msgstr "User Variables"
+
+#: pro/core/locations.php:131
+msgid "Attachment Variables"
+msgstr "Attachment Variables"
+
+#: pro/core/locations.php:135
+msgid "Taxonomy Term Variables"
+msgstr "Taxonomy Term Variables"
+
+#: pro/core/locations.php:139
+msgid "Comment Variables"
+msgstr "Comment Variables"
+
+#: pro/core/locations.php:143
+msgid "Widget Variables"
+msgstr "Widget Variables"
+
+#: pro/core/locations.php:147 pro/location-helpers/block.php:39
+msgid "Block Template"
+msgstr "Block Template"
+
+#: pro/core/settings-link.php:9
+msgid "Settings"
+msgstr "Settings"
+
+#. translators: %s: ID
+#: pro/location-helpers/attachment.php:9
+msgid "Define attachment %s"
+msgstr "Define attachment %s"
+
+#. translators: 1: NULL 2: ID
+#: pro/location-helpers/attachment.php:14
+msgid "Replace %1$s with %2$s of attachment to be queried"
+msgstr "Replace %1$s with %2$s of attachment to be queried"
+
+#. translators: 1: ID 2: attachment.php
+#: pro/location-helpers/attachment.php:20
+msgid "Example: Get attachment %1$s (for use in %2$s)"
+msgstr "Example: Get attachment %1$s (for use in %2$s)"
+
+#: pro/location-helpers/block.php:12
+msgid "No registered block selected."
+msgstr "No registered block selected."
+
+#. translators: %s: >
+#: pro/location-helpers/block.php:15
+msgid "1. Go to the Custom Fields %s Tools page and use the Register ACF Blocks or Options Page tool"
+msgstr "1. Go to the Custom Fields %s Tools page and use the Register ACF Blocks or Options Page tool"
+
+#: pro/location-helpers/block.php:18
+msgid "to generate the code for registering a new block."
+msgstr "to generate the code for registering a new block."
+
+#: pro/location-helpers/block.php:19
+msgid "2. Add the block registration code to your theme."
+msgstr "2. Add the block registration code to your theme."
+
+#: pro/location-helpers/block.php:20
+msgid "3. Select your new block in the Locations meta box on this page and"
+msgstr "3. Select your new block in the Locations meta box on this page and"
+
+#: pro/location-helpers/block.php:21
+msgid "hit Update on this field group"
+msgstr "hit Update on this field group"
+
+#: pro/location-helpers/block.php:38
+msgid "Block template file"
+msgstr "Block template file"
+
+#: pro/location-helpers/block.php:40
+msgid "The block settings and attributes."
+msgstr "The block settings and attributes."
+
+#: pro/location-helpers/block.php:41
+msgid "The block inner HTML (empty)."
+msgstr "The block inner HTML (empty)."
+
+#: pro/location-helpers/block.php:42
+msgid "True during AJAX preview."
+msgstr "True during AJAX preview."
+
+#: pro/location-helpers/block.php:43
+msgid "The post ID this block is saved to."
+msgstr "The post ID this block is saved to."
+
+#. translators: %s: "anchor"
+#: pro/location-helpers/block.php:46
+msgid "Create id attribute allowing for custom %s value."
+msgstr "Create id attribute allowing for custom %s value."
+
+#. translators: 1: "className" 2: "align"
+#: pro/location-helpers/block.php:51
+msgid "Create class attribute allowing for custom %1$s and %2$s values."
+msgstr "Create class attribute allowing for custom %1$s and %2$s values."
+
+#: pro/location-helpers/block.php:55
+msgid "Add styles that use ACF values here"
+msgstr "Add styles that use ACF values here"
+
+#. translators: %s: ID
+#: pro/location-helpers/comment.php:9
+msgid "Define comment %s"
+msgstr "Define comment %s"
+
+#. translators: 1: NULL 2: ID
+#: pro/location-helpers/comment.php:14
+msgid "Replace %1$s with %2$s of comment to be queried"
+msgstr "Replace %1$s with %2$s of comment to be queried"
+
+#. translators: %s: ID
+#: pro/location-helpers/comment.php:20
+msgid "Define prefixed comment %s"
+msgstr "Define prefixed comment %s"
+
+#. translators: %s: 'category'
+#: pro/location-helpers/taxonomy.php:9
+msgid "Define taxonomy prefix eg %s"
+msgstr "Define taxonomy prefix eg %s"
+
+#. translators: %s: 'term'
+#: pro/location-helpers/taxonomy.php:14
+msgid "Use %s for all taxonomies"
+msgstr "Use %s for all taxonomies"
+
+#. translators: %s: ID
+#: pro/location-helpers/taxonomy.php:19
+msgid "Define term %s"
+msgstr "Define term %s"
+
+#. translators: 1: NULL 2: ID 3: '123'
+#: pro/location-helpers/taxonomy.php:24
+msgid "Replace %1$s with %2$s of term to be queried eg %3$s"
+msgstr "Replace %1$s with %2$s of term to be queried eg %3$s"
+
+#. translators: %s: ID
+#: pro/location-helpers/taxonomy.php:31
+msgid "Example: Get the term %s in a term archive template"
+msgstr "Example: Get the term %s in a term archive template"
+
+#. translators: %s: ID
+#: pro/location-helpers/taxonomy.php:36
+msgid "Define prefixed term %s"
+msgstr "Define prefixed term %s"
+
+#. translators: %s: ID
+#: pro/location-helpers/user_form.php:16
+msgid "Define user %s"
+msgstr "Define user %s"
+
+#. translators: 1: NULL 2: ID
+#: pro/location-helpers/user_form.php:21
+msgid "Replace %1$s with %2$s of user to be queried"
+msgstr "Replace %1$s with %2$s of user to be queried"
+
+#. translators: %s: ID
+#: pro/location-helpers/user_form.php:27
+msgid "Example: Get %s of current user"
+msgstr "Example: Get %s of current user"
+
+#. translators: %s: ID
+#: pro/location-helpers/user_form.php:32
+msgid "Define prefixed user %s"
+msgstr "Define prefixed user %s"
+
+#. translators: %s: ID
+#: pro/location-helpers/widget.php:9
+msgid "Define widget  %s"
+msgstr "Define widget  %s"
+
+#. translators: 1: NULL 2: ID 3: 'pages-2' 4: $args['widget_id']
+#: pro/location-helpers/widget.php:14
+msgid "Replace %1$s with %2$s of widget to be queried eg %3$s or %4$s"
+msgstr "Replace %1$s with %2$s of widget to be queried eg %3$s or %4$s"
+
+#. translators: %s: ID
+#: pro/location-helpers/widget.php:22
+msgid "Define prefixed widget %s"
+msgstr "Define prefixed widget %s"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:12
+msgid "Register ACF Blocks or Options Pages"
+msgstr "Register ACF Blocks or Options Pages"
+
+#. translators: %s: functions.php
+#: pro/location-registration/ACFTC_Location_Registration.php:22
+msgid "The code generated below will need to be included in your %s file (or similar)."
+msgstr "The code generated below will need to be included in your %s file (or similar)."
+
+#: pro/location-registration/ACFTC_Location_Registration.php:36
+msgid "Block"
+msgstr "Block"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:37
+msgid "Options"
+msgstr "Options"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:52
+msgid "Block Name"
+msgstr "Block Name"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:66
+msgid "Register"
+msgstr "Register"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:66
+#: pro/location-registration/ACFTC_Location_Registration.php:71
+msgid "block"
+msgstr "block"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:71
+msgid "A custom"
+msgstr "A custom"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:91
+msgid "Register a Gutenberg Block"
+msgstr "Register a Gutenberg Block"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:111
+msgid "Page Name"
+msgstr "Page Name"
+
+#: pro/location-registration/ACFTC_Location_Registration.php:134
+msgid "Register an Options Page"
+msgstr "Register an Options Page"
+
+#. translators: %s: clone field name
+#: pro/render/clone.php:80
+msgid "Warning: Clone %s has no fields selected"
+msgstr "Warning: Clone %s has no fields selected"
+
+#. translators: %s: layout name
+#: pro/render/flexible_content.php:69
+msgid "Warning: Layout %s has no sub fields"
+msgstr "Warning: Layout %s has no sub fields"
+
+#: pro/render/flexible_content.php:78
+msgid "No layouts found"
+msgstr "No layouts found"
+
+#: pro/render/repeater.php:32
+msgid "No rows found"
+msgstr "No rows found"
+
+#. translators: %s: repeater field name
+#: pro/render/repeater.php:50
+msgid "Warning: Repeater field %s has no sub fields"
+msgstr "Warning: Repeater field %s has no sub fields"
+
+#. translators: 1: version name 2: changelog link opening tag 3: new version 4: changelog link closing tag
+#: pro/updates/Hookturn_ACFTCP_Plugin_Updater.php:267
+msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+
+#. translators: 1: version name 2: changelog link opening tag 3: new version 4: changelog link closing tag 5: update link opening tag 6: update link closing tag
+#: pro/updates/Hookturn_ACFTCP_Plugin_Updater.php:276
+msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
+msgstr "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
+
+#: pro/updates/Hookturn_ACFTCP_Plugin_Updater.php:519
+msgid "You do not have permission to install plugin updates"
+msgstr "You do not have permission to install plugin updates"
+
+#: pro/updates/Hookturn_ACFTCP_Plugin_Updater.php:519
+msgid "Error"
+msgstr "Error"
+
+#: pro/updates/settings-page.php:10
+msgid "Theme Code Pro License"
+msgstr "Theme Code Pro License"
+
+#: pro/updates/settings-page.php:11
+msgid "Theme Code Pro"
+msgstr "Theme Code Pro"
+
+#: pro/updates/settings-page.php:34
+msgid "To unlock updates please enter your license key, save it and then activate it."
+msgstr "To unlock updates please enter your license key, save it and then activate it."
+
+#: pro/updates/settings-page.php:44
+msgid "License Key"
+msgstr "License Key"
+
+#: pro/updates/settings-page.php:49
+msgid "Enter your license key."
+msgstr "Enter your license key."
+
+#: pro/updates/settings-page.php:52
+msgid "Save License Key"
+msgstr "Save License Key"
+
+#: pro/updates/settings-page.php:60
+msgid "License Status"
+msgstr "License Status"
+
+#: pro/updates/settings-page.php:64
+msgid "Active"
+msgstr "Active"
+
+#: pro/updates/settings-page.php:67
+msgid "Deactivate License"
+msgstr "Deactivate License"
+
+#: pro/updates/settings-page.php:71
+msgid "Inactive"
+msgstr "Inactive"
+
+#: pro/updates/settings-page.php:72
+msgid "Activate license to enable plugin updates."
+msgstr "Activate license to enable plugin updates."
+
+#: pro/updates/settings-page.php:74
+msgid "Activate License"
+msgstr "Activate License"
+
+#: pro/updates/settings-page.php:143 pro/updates/settings-page.php:201
+msgid "An error occurred, please try again."
+msgstr "An error occurred, please try again."
+
+#. translators: 1: license key expiry date 2: Hookturn account URL
+#: pro/updates/settings-page.php:158
+msgid "<b>Your license key expired on %1$s</b>.<br/><br/>To continue receiving new features, security updates and support, log into your <a href=\"%2$s\" target=\"_blank\">Hookturn account</a> and renew your license."
+msgstr "<b>Your license key expired on %1$s</b>.<br/><br/>To continue receiving new features, security updates and support, log into your <a href=\"%2$s\" target=\"_blank\">Hookturn account</a> and renew your license."
+
+#: pro/updates/settings-page.php:167
+msgid "Your license key has been disabled."
+msgstr "Your license key has been disabled."
+
+#. translators: 1: Hookturn account URL
+#: pro/updates/settings-page.php:174
+msgid "<b>Invalid license</b>.<br/><br/>Try entering your <em>License Key</em> again. Then hit the <em>Save License Key</em> button followed by the <em>Activate License</em> button. If the issue persists, log into your <a href=\"%s\" target=\"_blank\">Hookturn account</a> and check the status of your license."
+msgstr "<b>Invalid license</b>.<br/><br/>Try entering your <em>License Key</em> again. Then hit the <em>Save License Key</em> button followed by the <em>Activate License</em> button. If the issue persists, log into your <a href=\"%s\" target=\"_blank\">Hookturn account</a> and check the status of your license."
+
+#: pro/updates/settings-page.php:182
+msgid "Your license is not active for this URL."
+msgstr "Your license is not active for this URL."
+
+#. translators: 1: plugin name
+#: pro/updates/settings-page.php:189
+msgid "This appears to be an invalid license key for %s."
+msgstr "This appears to be an invalid license key for %s."
+
+#: pro/updates/settings-page.php:196
+msgid "Your license key has reached its activation limit."
+msgstr "Your license key has reached its activation limit."
+
+#: pro/updates/settings-page.php:220
+msgid "<b>Licence key activated</b>.<br/><br/>Plugin updates are now enabled."
+msgstr "<b>Licence key activated</b>.<br/><br/>Plugin updates are now enabled."
+
+#: pro/updates/settings-page.php:284
+msgid "<b>License key deactived</b>. Updates now disabled."
+msgstr "<b>License key deactived</b>. Updates now disabled."
+
+#. translators: 1: plugin settings page URL 2: Hookturn plugin URL
+#: pro/updates/updater-actions.php:39
+msgid "To enable updates, please save and activate your license key on the <a href=\"%1$s\">Theme Code Pro Settings</a> page. If you don't have a licence key, please visit <a href=\"%2$s\" target=\"_blank\">Hookturn</a> for details and pricing."
+msgstr "To enable updates, please save and activate your license key on the <a href=\"%1$s\">Theme Code Pro Settings</a> page. If you don't have a licence key, please visit <a href=\"%2$s\" target=\"_blank\">Hookturn</a> for details and pricing."
+
+#. translators: 1: plugin settings page URL
+#: pro/updates/updater-actions.php:64
+msgid "please check the status of your license key on the <a href=\"%s\">Theme Code Pro Settings</a> page."
+msgstr "please check the status of your license key on the <a href=\"%s\">Theme Code Pro Settings</a> page."
+
+#: render/file.php:24
+msgid "Download File"
+msgstr "Download File"
+
+#. translators: %s: repeater field name
+#: render/group.php:40
+msgid "Warning: Group field %s has no sub fields"
+msgstr "Warning: Group field %s has no sub fields"
