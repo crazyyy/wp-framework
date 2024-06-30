@@ -1,4 +1,7 @@
-    <footer class="footer-container" role="contentinfo">
+    </main><!-- /.global -->
+
+    <footer class="footer-container" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
+
       <div class="container">
         <div class="grid">
 
@@ -8,8 +11,8 @@
 
         </div><!-- /.grid -->
       </div><!-- /.container -->
-
     </footer><!-- /footer .container -->
+
   </div><!-- /.wrapper -->
 
   <?php wp_footer(); ?>

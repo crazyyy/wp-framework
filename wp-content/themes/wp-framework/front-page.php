@@ -1,27 +1,31 @@
 <?php /* Template Name: Home Page */ get_header(); ?>
-  <section class="container" role="main" itemscope itemprop="mainContentOfPage">
-    <div class="grid">
 
-      <?php if (have_posts()): while (have_posts()) : the_post(); ?>
+  <section class="front-page" role="main" itemscope itemprop="mainContentOfPage">
+    <div class="container">
+      <div class="grid">
 
-        <header class="page-header col-12">
-          <h1 class="page-title">
-            <?php the_title(); ?>
-          </h1>
-        </header><!-- /.page-header col-12 -->
+        <?php if (have_posts()): while (have_posts()) : the_post(); ?>
 
-        <article id="post-<?php the_ID(); ?>" <?php post_class('col-9'); ?>>
+          <header class="page-header col-12">
+            <h1 class="page-title">
+              <?php the_title(); ?>
+            </h1>
+          </header><!-- /.page-header col-12 -->
 
-          <?php the_content(); ?>
+          <article id="post-<?php the_ID(); ?>" <?php post_class('col-9'); ?>>
 
-          <?php edit_post_link(); ?>
+            <?php the_content(); ?>
 
-        </article>
+            <?php edit_post_link(); ?>
 
-      <?php endwhile; endif; ?>
+          </article><!-- /.<?php post_class(); ?>> -->
 
-      <?php get_sidebar(); ?>
+        <?php endwhile; endif; ?>
 
-    </div><!-- /.grid -->
-  </section><!-- /section .container -->
+        <?php get_sidebar(); ?>
+
+      </div><!-- /.grid -->
+    </div><!-- /.container -->
+  </section><!-- /front-page -->
+
 <?php get_footer(); ?>

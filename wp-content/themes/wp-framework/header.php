@@ -17,9 +17,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="profile" href="https://gmpg.org/xfn/11">
 
-  <title>
-    <?php wp_title(''); ?><?php if (wp_title('', false)) { echo ' :'; } ?> <?php bloginfo('name'); ?>
-  </title>
+  <title><?php wp_title('|', true, 'right'); ?><?php bloginfo('name'); ?></title>
 
   <link href="//www.google-analytics.com/" rel="dns-prefetch">
   <link href="//fonts.googleapis.com" rel="dns-prefetch">
@@ -42,22 +40,22 @@
 
 <body <?php body_class(); ?> itemscope itemtype="https://schema.org/WebPage">
   <?php wp_body_open(); ?>
-  <!-- wrapper -->
+
   <div class="wrapper">
 
-    <header id="masthead" class="<?php echo esc_attr($wrapper_classes); ?>" role="banner">
+    <header id="masthead" class="<?php echo esc_attr($wrapper_classes); ?>" role="banner" itemscope itemtype="https://schema.org/WPHeader">
+
       <div class="container">
         <div class="grid">
 
           <div class="header__logo col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <?php
-            $logo_id = get_theme_mod( 'dark_logo_setting' );
-            if ( $logo_id ) {
-              $logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
-              echo '<img src="' . esc_url( $logo_url ) . '" alt="' . get_bloginfo( 'name' ) . '">';
-            } elseif (function_exists('the_custom_logo')) {
-              the_custom_logo();
-            }
+            <?php $logo_id = get_theme_mod( 'dark_logo_setting' );
+              if ( $logo_id ) {
+                $logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
+                echo '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '">';
+              } elseif (function_exists('the_custom_logo')) {
+                the_custom_logo();
+              }
             ?>
           </div><!-- /.header__logo -->
 
@@ -68,4 +66,9 @@
         </div><!-- /.grid -->
       </div><!-- /.container -->
     </header><!-- /header -->
+
+    <main class="global" itemscope itemprop="mainContentOfPage">
+
+
+
 
