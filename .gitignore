@@ -68,6 +68,10 @@ readme.html
 sitemap*.xml
 sitemap*.xml.gz
 
+######### ddev-generated: Automatically generated ddev .gitignore.
+/wp-config-ddev.php
+/drushrc.php
+
 ######### Maven
 target/
 dist/
