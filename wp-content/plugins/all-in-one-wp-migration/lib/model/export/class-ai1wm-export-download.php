@@ -59,22 +59,40 @@ class Ai1wm_Export_Download {
 			$name = ai1wm_site_name( $blog_id );
 
 			// Set progress
-			Ai1wm_Status::download(
-				sprintf(
-					__(
-						'<a href="%s" class="ai1wm-button-green ai1wm-emphasize ai1wm-button-download" title="%s" download="%s">' .
-						'<span>Download %s</span>' .
-						'<em>Size: %s</em>' .
-						'</a>',
-						AI1WM_PLUGIN_NAME
-					),
-					$link,
-					$name,
-					$file,
-					$name,
-					$size
-				)
-			);
+			if ( ai1wm_direct_download_supported() ) {
+				Ai1wm_Status::download(
+					sprintf(
+						__(
+							'<a href="%s" class="ai1wm-button-green ai1wm-emphasize ai1wm-button-download" title="%s" download="%s">' .
+							'<span>Download %s</span>' .
+							'<em>Size: %s</em>' .
+							'</a>',
+							AI1WM_PLUGIN_NAME
+						),
+						$link,
+						$name,
+						$file,
+						$name,
+						$size
+					)
+				);
+			} else {
+				Ai1wm_Status::download(
+					sprintf(
+						__(
+							'<a href="#" class="ai1wm-button-green ai1wm-emphasize ai1wm-direct-download" title="%s" download="%s">' .
+							'<span>Download %s</span>' .
+							'<em>Size: %s</em>' .
+							'</a>',
+							AI1WM_PLUGIN_NAME
+						),
+						$name,
+						$file,
+						$name,
+						$size
+					)
+				);
+			}
 		}
 
 		do_action( 'ai1wm_status_export_done', $params );

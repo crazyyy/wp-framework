@@ -1,10 +1,10 @@
 === FakerPress ===
 Contributors:      bordoni
-Tags:              generator, dummy content, dummy data, lorem ipsun, admin, exemples, testing, images, attachments, featured image, taxonomies, users, post type, faker, fake data, random, developer, dev, development, test, tests
+Tags:              generator, dummy content, lorem ipsun, testing, developer
 Requires at least: 5.5
-Tested up to:      6.2
+Tested up to:      6.5.2
 Requires PHP:      7.4
-Stable tag:        0.6.1
+Stable tag:        0.6.6
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 Donate link:       https://fakerpress.com/r/sponsor
@@ -99,12 +99,42 @@ Thank you for wanting to make FakerPress better for everyone! [We salute you](ht
 
 == Changelog ==
 
+= 0.6.6 &mdash; 26 of April 2024 =
+
+* Fix - Prevent notices related to deprecated usage of Faker methods that were being called as properties.
+* Fix - Prevent fatals related to bad typecasting of Faker methods used for meta generation. props @helgatheviking
+
+= 0.6.5 &mdash; 26 of April 2024 =
+
+* Fix - Ensure meta generation for Users, Terms and Comments work since changes made on version `0.6.2`. props @helgatheviking
+
+= 0.6.4 &mdash; 21 of April 2024 =
+
+* Fix - Ensure that Faker is also included via Strauss, to prevent conflicts with other plugins.
+* Fix - Resolve Fatal where trying to create posts, comments or terms would fail because of missing classes.
+
+= 0.6.3 &mdash; 21 of April 2024 =
+
+* Fix - Prevent fatal errors because of malformed composer autoload files.
+
+= 0.6.2 &mdash; 21 of April 2024 =
+
+* Version - Updated composer dependency `fakerphp/faker` to version `1.23`.
+* Feature - Include consistent user generation, to avoid users feeling a disjointed. props @helgatheviking
+* Tweak - Include the ability to regenerate module data, allowing us to fetch values from earlier generations.
+* Tweak - Include properly use Composer for autoloading and dependencies without conflicting with other plugins.
+* Tweak - Include `lucatume/di52` and `nesbot/carbon` Strauss dependencies, which prevents conflicts with other plugins.
+* Fix - Switch from using Placeholder.com to Placehold.co, as the first one was not working properly anymore. props @cgarofalo
+* Fix - Searching terms nonce had a typo, preventing terms search from working as expected. props @cyrusdavid
+* Fix - Prevent namespace problems with nonexistent classes, specially around Exceptions.
+* Fix - Resolve a problem with Numbers Meta throwing errors on PHP 8.0+ [#168]
+
 = 0.6.1 &mdash; 04 of April 2023 =
 
 * Requirement - PHP Version 7.4 required for usage of FakerPress, important step to allow further improvements and tests.
 * Version - Updated composer dependency `lucatume/di52` to version `3.3.1`.
 * Version - Updated composer dependency `fakerphp/faker` to version `1.21`.
-* Version - Updated composer dependency `nesbot/carbon to version `2.66`.2
+* Version - Updated composer dependency `nesbot/carbon` to version `2.66`.
 * Fix - Resolve some errors happening with Carbon and version 8.2 of PHP.
 
 = 0.6.0 &mdash; 30 of March 2022 =

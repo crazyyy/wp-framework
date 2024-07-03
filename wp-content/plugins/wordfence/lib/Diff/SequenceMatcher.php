@@ -74,6 +74,10 @@ class Diff_SequenceMatcher
 		'ignoreWhitespace' => false,
 		'ignoreCase' => false
 	);
+	
+	private $matchingBlocks = null;
+	private $opCodes = null;
+	private $fullBCount = null;
 
 	/**
 	 * The constructor. With the sequences being passed, they'll be set for the
@@ -679,7 +683,7 @@ class Diff_SequenceMatcher
 			}
 		}
 
-		if(count($a) == $count($b)) {
+		if(count($a) == count($b)) {
 			return 0;
 		}
 		else if(count($a) < count($b)) {

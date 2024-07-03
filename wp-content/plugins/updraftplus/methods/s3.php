@@ -1377,7 +1377,7 @@ Check your permissions and credentials.','updraftplus'), 'error');
 		$useservercerts = isset($posted_settings['useservercerts']) ? absint($posted_settings['useservercerts']) : 0;
 		$disableverify = isset($posted_settings['disableverify']) ? absint($posted_settings['disableverify']) : 0;
 		$nossl = isset($posted_settings['nossl']) ? absint($posted_settings['nossl']) : 0;
-		$endpoint = isset($posted_settings['endpoint']) ? $posted_settings['endpoint'] : '';
+		$endpoint = isset($posted_settings['endpoint']) ? trim($posted_settings['endpoint']) : '';
 		$sse = empty($posted_settings['server_side_encryption']) ? false : true;
 
 		if (preg_match("#^/*([^/]+)/(.*)$#", $path, $bmatches)) {

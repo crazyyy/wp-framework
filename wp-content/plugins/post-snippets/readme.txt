@@ -2,9 +2,9 @@
 Contributors: Postsnippets
 Tags: custom snippet, custom shortcode, snippet, snippets, shortcode, shortcodes, block, blocks, html
 Requires at least: 5.3
-Tested up to: 6.2.2
+Tested up to: 6.5.3
 Requires PHP: 8
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,8 @@ This plugin lets you build a library with snippets of HTML, PHP code or reoccurr
 * **Cloud snippet** Save, edit, download, and delete snippets directly on the cloud by using the cloud snippets feature.
 * **Gutenberg Block Editor Support** Gutenberg block types can support any number of built-in core features such as name, icon, description, category and more.
 * **Snippet type** Display the snippet types (PHP, JS, CSS) by adding a column in the snippet listing page.
+* **The Gutenberg editor** integrates source code snippets block to insert and preview selected snippet's code on the front-end without execution.
+* **Elementor editor** adds a post-snippet block for inserting snippets with PHP execution, formatting, shortcode support, and a Post Snippet source block to showcase snippet source code. 
 
 = Technical Documentation =
 To obtain more information, including instructions for plugin installation, we recommend referring to our technical [documentation](https://postsnippets.com/documentation/) page on Post Snippets. Additionally, to stay informed about the latest plugin updates, enhancements, and relevant news, you can always visit our [Post Snippets blog.](https://postsnippets.com/blog/)
@@ -112,6 +114,9 @@ your clients to be able to use PHP code in a post snippet.
 
 == Changelog ==
 
+= Version 4.0.5 - 17 may 2024 =
+
+- Tweak - Added compatibility for WordPress Version 6.5.3
 
 = Version 4.0.4 - 6 july 2023 =
 

@@ -79,7 +79,7 @@
 						<script>
 							jQuery(function() {
 								var get_ip_error_count = 0;
-								var unexpected_response_text = '<?php _e('Unexpected response:', 'updraftplus'); ?> ';
+								var unexpected_response_text = '<?php _e('Unexpected response:', 'all-in-one-wp-security-and-firewall'); ?> ';
 								var getting_text = ' ' + '<?php _e('getting...', 'all-in-one-wp-security-and-firewall'); ?>'
 
 

@@ -5,6 +5,41 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased] Unreleased
 
+## [3.3.6] 2024-04-02;
+
+### Added
+
+- The `afterBuildAll` parameter to the `bindDecorators` and `singletonDecorators` method, fixes #61.
+
+## [3.3.5] 2023-09-01;
+
+### Changed
+
+- Added [PHPStan generics](https://phpstan.org/blog/generics-in-php-using-phpdocs) to multiple classes. IDEs that support them will get autocompletion (.phpstorm.meta.php not required) if a fully-qualified class name is used, e.g. `$instance = $container->get( Test::class );`. 
+
+## [3.3.4] 2023-06-20;
+
+### Added
+
+- Implement the `Container::__clone` method to clone the container accessory classes correctly upon cloning.
+
+### Changed
+
+- The `Container::__construct` method will bind itself to the `Psr\Container\ContainerInterface` interface as a singleton.
+- If the `Container` class is extended, it will bind itself to the extended class in the `__construct` and `__clone` methods.
+
+## [3.3.3] 2023-04-28;
+
+### Fixed
+
+- Return value of the `App::callback` method to be `callable` (thanks @estevao90).
+
+## [3.3.2] 2023-04-07;
+
+### Fixed
+
+- Set the correct return type for the `Container::callback` function (thanks @estevao90).
+
 ## [3.3.1] 2023-03-17;
 
 ### Fixed
@@ -493,4 +528,9 @@ org/psr/psr-11/)
 [3.2.1]: https://github.com/lucatume/di52/compare/3.2.0...3.2.1
 [3.3.0]: https://github.com/lucatume/di52/compare/3.2.1...3.3.0
 [3.3.1]: https://github.com/lucatume/di52/compare/3.3.0...3.3.1
-[unreleased]: https://github.com/lucatume/di52/compare/3.3.1...HEAD
+[3.3.2]: https://github.com/lucatume/di52/compare/3.3.1...3.3.2
+[3.3.3]: https://github.com/lucatume/di52/compare/3.3.2...3.3.3
+[3.3.4]: https://github.com/lucatume/di52/compare/3.3.3...3.3.4
+[3.3.5]: https://github.com/lucatume/di52/compare/3.3.4...3.3.5
+[3.3.6]: https://github.com/lucatume/di52/compare/3.3.5...3.3.6
+[unreleased]: https://github.com/lucatume/di52/compare/3.3.6...HEAD

@@ -24,7 +24,7 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 		$config = $this->get_config();
 		$endpoint = ('' != $region && 'n/a' != $region) ? $region : $config['endpoint'];
 		if (!empty($endpoint)) {
-			$endpoint = preg_replace('/^(http|https):\/\//i', '', $endpoint);
+			$endpoint = preg_replace('/^(http|https):\/\//i', '', trim($endpoint));
 		}
 		$log_message = "Set endpoint (".get_class($obj)."): $endpoint";
 		$log_message_append = '';
@@ -252,7 +252,7 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 		if (!empty($settings['version']) && !empty($settings['settings'])) {
 			foreach ($settings['settings'] as $instance_id => $instance_settings) {
 				if (!empty($instance_settings['endpoint'])) {
-					$settings['settings'][$instance_id]['endpoint'] = preg_replace('/^(http|https):\/\//i', '', $instance_settings['endpoint']);
+					$settings['settings'][$instance_id]['endpoint'] = preg_replace('/^(http|https):\/\//i', '', trim($instance_settings['endpoint']));
 				}
 			}
 		}

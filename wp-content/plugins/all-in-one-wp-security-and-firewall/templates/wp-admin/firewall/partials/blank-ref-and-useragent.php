@@ -12,7 +12,7 @@ $aiowps_feature_mgr->output_feature_details_badge("firewall-ban-post-blank-heade
 		<th scope="row"><?php _e('Ban POST requests that have a blank user-agent and referer', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 		<td>
 			<div class="aiowps_switch_container">
-				<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to ban POST requests that have a blank user-agent and referer.', 'all-in-one-wp-security-and-firewall'), 'aiowps_ban_post_blank_headers', $aiowps_firewall_config->get_value('aiowps_ban_post_blank_headers')); ?>
+				<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to ban POST requests that have a blank user-agent and referer.', 'all-in-one-wp-security-and-firewall'), 'aiowps_ban_post_blank_headers', $aiowps_firewall_config->get_value('aiowps_ban_post_blank_headers')); ?>
 				<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 				<div class="aiowps_more_info_body">
 						<?php

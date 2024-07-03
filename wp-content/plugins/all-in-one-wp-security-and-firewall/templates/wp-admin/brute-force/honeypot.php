@@ -18,7 +18,7 @@
 					<th scope="row"><?php _e('Enable honeypot on login page', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the honeypot feature for the login page', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_login_honeypot', '1' == $aio_wp_security->configs->get_value('aiowps_enable_login_honeypot')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the honeypot feature for the login page', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_login_honeypot', '1' == $aio_wp_security->configs->get_value('aiowps_enable_login_honeypot')); ?>
 						</div>
 					</td>
 				</tr>
@@ -37,7 +37,7 @@
 					<th scope="row"><?php _e('Enable honeypot on registration page', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the honeypot feature for the registration page', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_registration_honeypot', '1' == $aio_wp_security->configs->get_value('aiowps_enable_registration_honeypot')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the honeypot feature for the registration page', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_registration_honeypot', '1' == $aio_wp_security->configs->get_value('aiowps_enable_registration_honeypot')); ?>
 						</div>
 					</td>
 				</tr>

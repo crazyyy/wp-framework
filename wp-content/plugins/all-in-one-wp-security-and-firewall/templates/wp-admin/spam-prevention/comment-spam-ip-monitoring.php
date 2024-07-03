@@ -4,7 +4,7 @@
 	<div class="inside">
 		<?php
 			if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_autoblock_spam_ip') && '1' != $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting')) {
-				$comment_spam_detect_link = "<a href='".esc_url(admin_url(sanitize_url(sprintf('admin.php?page=%s&tab=%s', AIOWPSEC_SPAM_MENU_SLUG, 'comment-spam'))))."'>" . __('spam comment detection') . "</a>";
+				$comment_spam_detect_link = "<a href='".esc_url(admin_url(sanitize_url(sprintf('admin.php?page=%s&tab=%s', AIOWPSEC_SPAM_MENU_SLUG, 'comment-spam'))))."'>" . __('spam comment detection', 'all-in-one-wp-security-and-firewall') . "</a>";
 				$info_msg = sprintf(__('This feature has detected that %s is not active.', 'all-in-one-wp-security-and-firewall'), $comment_spam_detect_link) . ' ' . __('It is highly recommended that you activate to make the most of this feature.', 'all-in-one-wp-security-and-firewall');
 				echo '<div class="aio_orange_box" id="message"><p><strong>'.$info_msg.'</strong></p></div>';
 			}
@@ -28,7 +28,7 @@
 					<th scope="row"><?php _e('Enable auto block of spam comment IPs', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this box if you want this plugin to automatically block IP addresses which submit spam comments.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_autoblock_spam_ip', '1' == $aio_wp_security->configs->get_value('aiowps_enable_autoblock_spam_ip')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want this plugin to automatically block IP addresses which submit spam comments.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_autoblock_spam_ip', '1' == $aio_wp_security->configs->get_value('aiowps_enable_autoblock_spam_ip')); ?>
 						</div>
 					</td>
 				</tr>

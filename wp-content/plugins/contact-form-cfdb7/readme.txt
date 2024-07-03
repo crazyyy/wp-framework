@@ -3,11 +3,11 @@ Contributors: arshidkv12
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=H5F3Z6S3MNTXA&lc=IN&item_name=wp%2dlogin%2dlimit&amount=5%2e00&currency_code=USD&button_subtype=services&bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHosted
 Tags: cf7, contact form 7, contact form 7 db, contact form db, contact form seven, contact form storage, export contact form, save contact form, wpcf7
 Requires at least: 4.8
-Tested up to: 6.4
-Stable tag: 1.2.6.8
+Tested up to: 6.5
+Stable tag: 1.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires PHP: 5.6
+Requires PHP: 7.0
 
 Save and manage Contact Form 7 messages. Never lose important data. It is a lightweight contact form 7 database plugin.
 
@@ -66,6 +66,9 @@ Extensions : [Contact form 7 more Add-ons](https://ciphercoin.com/contact-form-7
 
 == Changelog ==
 
+= 1.2.7 =
+Extra protection for files
+
 = 1.2.6.8 =
 Added cfdb7_admin_subpage_columns hook
 
@@ -81,8 +84,6 @@ Fixed php 8.1 issues
 = 1.2.6.2 =
 Fixed xss issues 
 
-= 1.2.6.1 =
-Fixed nonce issue 
 
 
 

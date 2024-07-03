@@ -2,18 +2,18 @@
 
 namespace FakerPress\Fields;
 
-use lucatume\DI52\ServiceProvider;
+use FakerPress\Contracts\Service_Provider;
 use function FakerPress\get;
 use function FakerPress\make;
 
 /**
  * Class Factory
  *
- * @since   TBD
+ * @since   0.6.4
  *
  * @package FakerPress\Fields
  */
-class Factory extends ServiceProvider {
+class Factory extends Service_Provider {
 	protected $types = [];
 
 	/**

@@ -176,7 +176,7 @@ function wbcr_dan_is_active_clearfy_component() {
  * с настройками этого плагина, потому что это ухудшает юзабилити.
  *
  * @param array $form Массив с группой настроек, страницы "Дополнительно" в плагине Clearfy
- * @param Wbcr_FactoryPages473_ImpressiveThemplate $page Экземпляр страницы
+ * @param Wbcr_FactoryPages474_ImpressiveThemplate $page Экземпляр страницы
  *
  * @return mixed Отсортированный массив с группой опций
  */
@@ -203,7 +203,7 @@ add_filter( 'wbcr_clr_additionally_form_options', 'wbcr_dan_additionally_form_op
  * Эта модикация является не стандартной, поэтому мы не можете реалировать ее
  * через фреймворк.
  *
- * @param  @param $html_builder Wbcr_FactoryForms469_Html
+ * @param  @param $html_builder Wbcr_FactoryForms474_Html
  *
  * @since  1.0
  *

@@ -30,7 +30,7 @@
 							<th scope="row"><?php _e('Enable custom .htaccess rules', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 							<td>
 								<div class="aiowps_switch_container">
-									<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable custom rules entered in the text box below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_custom_rules', '1' == $aio_wp_security->configs->get_value('aiowps_enable_custom_rules')); ?>
+									<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to activate the custom rules entered in the text box below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_custom_rules', '1' == $aio_wp_security->configs->get_value('aiowps_enable_custom_rules')); ?>
 								</div>
 							</td>
 						</tr>
@@ -38,7 +38,7 @@
 							<th scope="row"><?php _e('Place custom rules at the top', 'all-in-one-wp-security-and-firewall');?>:</th>
 							<td>
 								<div class="aiowps_switch_container">
-									<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to place your custom rules at the beginning of all the rules applied by this plugin', 'all-in-one-wp-security-and-firewall'), 'aiowps_place_custom_rules_at_top', '1' == $aio_wp_security->configs->get_value('aiowps_place_custom_rules_at_top')); ?>
+									<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to place your custom rules at the beginning of all the rules applied by this plugin', 'all-in-one-wp-security-and-firewall'), 'aiowps_place_custom_rules_at_top', '1' == $aio_wp_security->configs->get_value('aiowps_place_custom_rules_at_top')); ?>
 								</div>
 							</td>
 						</tr>

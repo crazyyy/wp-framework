@@ -915,7 +915,7 @@ foreach ($extension_listing_array as $key => $extension) {
     if ( isset($extension['class']) && $extension['class'] && !$currentStatus ) {
         $secondPageClickClass = $secondPageClickClass. ' ' . $extension['class'];
     }
-    $ampforwp_extension_list_html .= '<li class="first '.esc_attr($currentStatus).' '.esc_attr($secondPageClickClass).'" data-ext-details=\''.json_encode($extension).'\' data-ext-secure="'.wp_create_nonce('verify_extension').'">
+    $ampforwp_extension_list_html .= '<li class="first '.esc_attr($currentStatus).' '.esc_attr($secondPageClickClass).'" data-ext-details=\''.wp_json_encode($extension).'\' data-ext-secure="'.wp_create_nonce('verify_extension').'">
         '.$onclickUrl.'
         <div class="align_left"><img src="'.esc_url($extension['img_src']).'" /></div>
         <div class="extension_desc">
@@ -8380,14 +8380,14 @@ else{
           array(
               'id'        =>  'enable-single-twitter-share',
               'type'      =>  'switch',
-              'title'     =>  esc_html__('Twitter', 'accelerated-mobile-pages'),
+              'title'     =>  esc_html__('X', 'accelerated-mobile-pages'),
               'default'   =>  1,
           ),
           array(
               'id'        =>  'enable-single-twitter-share-handle',
               'type'      =>  'text',
               'class' => 'child_opt',
-              'title'     =>  esc_html__('Twitter Handle', 'accelerated-mobile-pages'),
+              'title'     =>  esc_html__('X Handle', 'accelerated-mobile-pages'),
               'required'  => array('enable-single-twitter-share', '=' , '1'),
               'placeholder'  => esc_html__('username','accelerated-mobile-pages'),
               'default'   =>  '',
@@ -8396,7 +8396,7 @@ else{
               'id'        =>  'enable-single-twitter-share-link',
               'type'      =>  'switch',
               'class' => 'child_opt',
-              'title'     =>  esc_html__('Pretty Permalinks for Twitter Share?', 'accelerated-mobile-pages'),
+              'title'     =>  esc_html__('Pretty Permalinks for X Share?', 'accelerated-mobile-pages'),
               'tooltip-subtitle'  => esc_html__('Enable this to have pretty links for twitter sharing'),
               'default'   =>  0,
               'required'  => array('enable-single-twitter-share', '=' , '1'),

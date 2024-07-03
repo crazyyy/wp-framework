@@ -5761,6 +5761,12 @@ function ampforwp_merriweather_font_management( $data ) {
 add_filter('ampforwp_menu_content','ampforwp_modify_menu_content');
 if( ! function_exists(' ampforwp_modify_menu_content ') ){
 	function ampforwp_modify_menu_content($menu){
+		
+		// Return $menu If tagDiv Composer plugin is active 
+		if(function_exists('tdc_error_handler')){
+			return $menu;
+		}
+		
 		$dom 		= '';
 		$nodes 		= '';
 		$num_nodes 	= '';
@@ -5768,7 +5774,13 @@ if( ! function_exists(' ampforwp_modify_menu_content ') ){
 			// Create a new document
 			$dom = new DOMDocument();
 			if( function_exists( 'mb_convert_encoding' ) ){
-				$menu = mb_convert_encoding($menu, 'HTML-ENTITIES', 'UTF-8');			
+				if (version_compare(PHP_VERSION, '8.2.0', '>=')) {
+					$menu = htmlentities($menu);
+					$menu = html_entity_decode($menu, ENT_QUOTES | ENT_HTML401, 'UTF-8');
+					$menu = mb_convert_encoding($menu, 'UTF-8', 'UTF-8');
+				} else {
+					$menu = mb_convert_encoding($menu, 'HTML-ENTITIES', 'UTF-8');
+				}
 			}
 			else{
 				$menu =  preg_replace( '/&[^amp|#038].*?;/', 'x', $menu ); // multi-byte characters converted to X
@@ -7157,7 +7169,7 @@ add_action( 'wp_ajax_ampforwp_categories', 'ampforwp_ajax_cats' );
 function ampforwp_ajax_cats(){
 	$ampforwp_nonce = wp_create_nonce( 'ampforwp-verify-request' );
  	if(!wp_verify_nonce($ampforwp_nonce,'ampforwp-verify-request') ){
-		echo json_encode(array('status'=>403,'message'=>'user request is not allowed')) ;
+		echo wp_json_encode(array('status'=>403,'message'=>esc_html__('user request is not allowed','accelerated-mobile-pages'))) ;
 		die;
 	}
 	$return = array();
@@ -7174,7 +7186,7 @@ add_action( 'wp_ajax_ampforwp_tags', 'ampforwp_ajax_tags' );
 function ampforwp_ajax_tags(){
 	$ampforwp_nonce = wp_create_nonce( 'ampforwp-verify-request' );
  	if(!wp_verify_nonce($ampforwp_nonce,'ampforwp-verify-request') ){
-		echo json_encode(array('status'=>403,'message'=>'user request is not allowed')) ;
+		echo wp_json_encode(array('status'=>403,'message'=>esc_html__('user request is not allowed','accelerated-mobile-pages'))) ;
 		die;
 	}
 	$return = array();
@@ -7570,6 +7582,11 @@ if(false==ampforwp_get_setting('hide-amp-version-from-source')){
 add_filter('ampforwp_menu_content','ampforwp_modify_ivory_search');
 if( ! function_exists(' ampforwp_modify_ivory_search ') ){
 	function ampforwp_modify_ivory_search($menu){
+		
+		if(!class_exists('Ivory_Search')){
+			return $menu;
+		}
+		
 		$dom 		= '';
 		$nodes 		= '';
 		$num_nodes 	= '';
@@ -8279,7 +8296,7 @@ function ampforwp_set_option_panel_view(){
 		return ;
 	}
 	if(!wp_verify_nonce($_POST['verify_nonce'],'ampforwp-verify-request') ){
-		echo json_encode(array('status'=>403,'message'=>'user request is not allowed')) ;
+		echo wp_json_encode(array('status'=>403,'message'=>esc_html__('user request is not allowed','accelerated-mobile-pages'))) ;
 		die;
 	}
 	$opt_type = intval($_POST['option_type']);
@@ -8474,12 +8491,12 @@ function ampforwp_pblayout_head_scripts($data){
          if(isset($jsonData['rows']) && count($jsonData['rows'])>0){
             $totalRows = $jsonData['totalrows'];
             $totalmodules = $jsonData['totalmodules'];
-            $previousData = json_encode($jsonData);
+            $previousData = wp_json_encode($jsonData);
          }else{
             $jsonData['rows'] = array();
             $jsonData['totalrows']=1;
             $jsonData['totalmodules'] = 1;
-            $previousData = json_encode($jsonData);
+            $previousData = wp_json_encode($jsonData);
          }
       }
       $jarr = json_decode($previousData);
@@ -8642,11 +8659,11 @@ function ampforwp_include_required_scripts($content){
 					}
 					if($is_script){
 						$comp_to_include_arr[] = $comp;
-						$inc_json = json_encode($comp_to_include_arr);
+						$inc_json = wp_json_encode($comp_to_include_arr);
 						set_transient('ampforwp_amp_included_custom_element',$inc_json, 30 * DAY_IN_SECONDS);
 					}else{
 						$comp_to_remove_arr[] = $comp;
-						$ex_json = json_encode($comp_to_remove_arr);
+						$ex_json = wp_json_encode($comp_to_remove_arr);
 						set_transient('ampforwp_amp_exclude_custom_element',$ex_json, 30 * DAY_IN_SECONDS);
 					}
 				}
@@ -8919,7 +8936,11 @@ if(!function_exists('ampforwp_add_fallback_element')){
 					if(function_exists('rocket_activation')){
 						$m1_content = preg_replace('/srcset="(.*?)"/', '', $m1_content);
 					}
-					$fallback_img = "<amp-img data-hero ".$m_content."<amp-img fallback data-hero ".$m1_content."</amp-img></amp-img>";//$m_content, $m1_content escaped above.
+					if(has_action('penci_loop_product_image')){
+						$fallback_img = "<amp-img data-hero ".$m_content."</amp-img>";
+					}else{
+						$fallback_img = "<amp-img data-hero ".$m_content."<amp-img fallback data-hero ".$m1_content."</amp-img></amp-img>";//$m_content, $m1_content escaped above.
+					}
 					$content = str_replace("$match", $fallback_img, $content);
 				}
 				}
@@ -9081,7 +9102,7 @@ if(!function_exists('ampforwp_imagify_webp_compatibility')){
 }
 if(!function_exists('ampforwp_set_default_fallback_image')){
 	function ampforwp_set_default_fallback_image($content){
-		if(!function_exists('_imagify_init') && !function_exists('ewww_image_optimizer_webp_initialize')){
+		if(!function_exists('_imagify_init') && !function_exists('ewww_image_optimizer_webp_initialize') && !has_action('penci_loop_product_image')){
 			preg_match_all('/src="(.*?)"/', $content,$cc); // need to check extenstion for fallback.
 			if(isset($cc[1][0])){
 				$img = $cc[1][0];
@@ -9175,7 +9196,7 @@ function ampforwp_themify_compatibility($content){
 add_action( 'wp_ajax_ampforwp_referesh_related_post', 'ampforwp_referesh_related_post' );
 function ampforwp_referesh_related_post(){
 	if(!wp_verify_nonce($_POST['verify_nonce'],'ampforwp_refresh_related_poost') ){
-		echo json_encode(array('status'=>403,'message'=>'user request is not allowed')) ;
+		echo wp_json_encode(array('status'=>403,'message'=>esc_html__('user request is not allowed','accelerated-mobile-pages'))) ;
 		die;
 	}
 	$orderby = 'ID';
@@ -9220,7 +9241,7 @@ function ampforwp_referesh_related_post(){
 		update_post_meta(get_the_ID(),'ampforwp-ia-on-off','default');
 	}*/
 	$data['response'] = ampforwp_get_post_percent();
-	echo json_encode($data);
+	echo wp_json_encode($data);
 }
 
 // HIDE/SHOW TAG AND CATEGORY #4326
@@ -9989,17 +10010,19 @@ function ampforwp_publisher_desk_ads( $content ) {
 		    	$content .= $json_data_api->customHTMLBelowContentAd[0];
 		    }
 		    if ( is_single() && !empty($pub_id) && !empty($json_data_api) ) {
-		      if($json_data_api->inContentPlacementMethod=='Auto'){
+		      if(isset($json_data_api->inContentPlacementMethod) && $json_data_api->inContentPlacementMethod=='Auto'){
 		       
 		        $addList[3] = $json_data_api->customHTMLInContentAds[0];
 		        $addList[6] = $json_data_api->customHTMLInContentAds[1];
 		        $addList[9] = $json_data_api->customHTMLInContentAds[2];
 		      } 
 		      else{
-		      	
-		      	for ($i=0; $i < count($json_data_api->afterParagraphNumbers); $i++) { 
-		      	 $addList[$json_data_api->afterParagraphNumbers[$i]] = $json_data_api->customHTMLInContentAds[$i];
+		      	if($json_data_api->afterParagraphNumbers){ 
+		      		for ($i=0; $i < count($json_data_api->afterParagraphNumbers); $i++) { 
+			      	 $addList[$json_data_api->afterParagraphNumbers[$i]] = $json_data_api->customHTMLInContentAds[$i];
+			      	}
 		      	}
+		      	
 		      }
 		      $content = ampforwp_publisher_desk_ads_insert( $addList, $content );
 		      $content .= $json_data_api->stickyCustomHTMLAd[0];

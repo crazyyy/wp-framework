@@ -3,7 +3,7 @@ Tags: notices, notification, notifications, disable, upgrade, nag
 Contributors: webcraftic, alexkovalevv, creativemotion
 Donate link: https://clearfy.pro/disable-admin-notices/
 Requires at least: 5.2
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.0
 Stable tag: trunk
 License: GPLv2
@@ -62,6 +62,10 @@ If you want to help with the translation, please contact me through this site or
 3. Notifications panel (optional)
 
 == Changelog ==
+= 1.3.5 (22.03.2024) =
+* Added: Compatibility with Wordpress 6.5
+* Added: Compatibility with php 8.3
+
 = 1.3.4 (22.03.2023) =
 * Added: Compatibility with Wordpress 6.4
 * Added: Compatibility with php 8.2

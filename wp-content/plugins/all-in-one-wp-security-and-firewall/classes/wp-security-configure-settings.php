@@ -53,6 +53,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_default_captcha', '');
 		$aio_wp_security->configs->set_value('aiowps_enable_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_custom_login_captcha', '');//Checkbox
+		$aio_wp_security->configs->set_value('aiowps_enable_password_protected_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_register_captcha', '');//Checkbox
@@ -95,7 +96,6 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_disable_trace_and_track', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_5g_firewall', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_6g_firewall', '');//Checkbox
-		$aio_wp_security->configs->set_value('aiowps_block_fake_googlebots', ''); // Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_custom_rules', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_place_custom_rules_at_top', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_custom_rules', '');
@@ -179,6 +179,8 @@ class AIOWPSecurity_Configure_Settings {
 			$aiowps_firewall_config->set_value('aiowps_forbid_proxy_comments', false);//Checkbox
 			$aiowps_firewall_config->set_value('aiowps_deny_bad_query_strings', false);//Checkbox
 			$aiowps_firewall_config->set_value('aiowps_advanced_char_string_filter', false);//Checkbox
+			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false); // Checkbox
+			$aiowps_firewall_config->set_value('aiowps_googlebot_ip_ranges', array());
 
 			self::turn_off_all_6g_firewall_configs();
 			self::set_cookie_based_bruteforce_firewall_configs();
@@ -245,6 +247,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->add_value('aiowps_default_captcha', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_custom_login_captcha', '');//Checkbox
+		$aio_wp_security->configs->add_value('aiowps_enable_password_protected_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_register_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
@@ -369,7 +372,7 @@ class AIOWPSecurity_Configure_Settings {
 			if (empty($brute_force_secret_word)) {
 				$brute_force_secret_word = AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD;
 			}
-			AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), wp_hash($brute_force_secret_word));
+			AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), AIOS_Helper::get_hash($brute_force_secret_word));
 		}
 		
 		// Login whitelisting started to work on non-apache server from db_version 1.9.5
@@ -407,6 +410,14 @@ class AIOWPSecurity_Configure_Settings {
 		}
 
 		AIOWPSecurity_Comment::generate_antibot_keys(true);
+	}
+
+	/**
+	 * Method to update the plugin db version.
+	 *
+	 * @return void
+	 */
+	public static function update_aiowpsec_db_version() {
 		update_option('aiowpsec_db_version', AIO_WP_SECURITY_DB_VERSION);
 	}
 
@@ -484,7 +495,7 @@ class AIOWPSecurity_Configure_Settings {
 	/**
 	 * Firewall configs set based on version.
 	 *
-	 * @return void.
+	 * @return void
 	 */
 	public static function set_firewall_configs() {
 		if (is_main_site()) {
@@ -503,6 +514,9 @@ class AIOWPSecurity_Configure_Settings {
 			}
 			if (version_compare($firewall_version, '1.0.6', '<')) { //1.0.2 set but here making sure the blank user agent is not saved in settings.php which  may show a 403 error due to not empty user agent check removed from the rule
 				self::set_user_agent_firewall_configs();
+			}
+			if (version_compare($firewall_version, '1.0.8', '<')) {
+				self::port_block_fake_googlebots_config();
 			}
 		}
 		update_option('aiowpsec_firewall_version', AIO_WP_SECURITY_FIREWALL_VERSION);
@@ -549,7 +563,6 @@ class AIOWPSecurity_Configure_Settings {
 		$aiowps_firewall_config->set_value('aios_brute_force_attack_prevention_ajax_exception', $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_ajax_exception'));
 		
 		$aiowps_firewall_config->set_value('aios_brute_force_secret_cookie_name', AIOWPSecurity_Utility::get_brute_force_secret_cookie_name());
-		$aiowps_firewall_config->set_value('aios_brute_force_cookie_salt', wp_salt());
 	}
 	
 	/**
@@ -566,7 +579,31 @@ class AIOWPSecurity_Configure_Settings {
 			$aiowps_firewall_config->set_value('aiowps_blacklist_user_agents', array());
 		}
 	}
-	
+
+	/**
+	 * Port block fake Googlebots config to firewall config.
+	 *
+	 * @global AIO_WP_Security $aio_wp_security
+	 * @global AIOWPS\Firewall\Config $aiowps_firewall_config
+	 *
+	 * @return void
+	 */
+	private static function port_block_fake_googlebots_config() {
+		global $aio_wp_security, $aiowps_firewall_config;
+
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_block_fake_googlebots')) {
+			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', true);
+
+			$validated_ip_list_array = AIOWPSecurity_Utility::get_googlebot_ip_ranges();
+
+			if (!is_wp_error($validated_ip_list_array)) {
+				$aiowps_firewall_config->set_value('aiowps_googlebot_ip_ranges', $validated_ip_list_array);
+			}
+		} else {
+			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false);
+		}
+	}
+
 	/**
 	 * IP retrieve method configs set.
 	 *

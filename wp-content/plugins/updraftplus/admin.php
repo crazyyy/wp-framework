@@ -571,8 +571,8 @@ class UpdraftPlus_Admin {
 				$installed = @filemtime($backup_dir.'/index.html');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 				$installed_for = time() - $installed;
 
-				if (($installed && time() > $dismissed_until && $installed_for > 28*86400 && !defined('UPDRAFTPLUS_NOADS_B')) || (defined('UPDRAFTPLUS_FORCE_DASHNOTICE') && UPDRAFTPLUS_FORCE_DASHNOTICE)) {
-					add_action('all_admin_notices', array($this, 'show_admin_notice_upgradead'));
+				if (($installed && time() > $dismissed_until && $installed_for > 28*86400 && !defined('UPDRAFTPLUS_NOADS_B')) || (defined('UPDRAFTPLUS_NOADS_B') && !UPDRAFTPLUS_NOADS_B)) {
+					add_action('all_admin_notices', array($this, 'show_admin_notice_ad'));
 				}
 			}
 			
@@ -785,9 +785,9 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
-	 * Output HTML for a dashboard notice highlighting the benefits of upgrading to Premium
+	 * Output HTML for a dashboard notice highlighting the benefits of upgrading to Premium and other plugin
 	 */
-	public function show_admin_notice_upgradead() {
+	public function show_admin_notice_ad() {
 		$this->include_template('wp-admin/notices/thanks-for-using-main-dash.php');
 	}
 

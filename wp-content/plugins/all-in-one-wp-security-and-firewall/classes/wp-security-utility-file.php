@@ -7,18 +7,19 @@ if (class_exists('AIOWPSecurity_Utility_File')) return;
 
 class AIOWPSecurity_Utility_File {
 
-	// This variable will be an array which will contain all of the files and/or directories we wish to check permissions for
-	public $files_and_dirs_to_check;
-
-	public function __construct() {
-		// Let's initialize our class variable array with all of the files and/or directories we wish to check permissions for.
+	/**
+	 * This function returns an array of all the files and/or directories we wish to check permissions for
+	 *
+	 * @return array - array containing files and/or directories
+	 */
+	public static function get_files_and_dirs_to_check() {
 		// NOTE: we can add to this list in future if we wish
 
 		//Get wp-config.php file path
-		$wp_config_path = AIOWPSecurity_Utility_File::get_wp_config_file_path();
+		$wp_config_path = self::get_wp_config_file_path();
 		$home_path = self::get_home_path();
 
-		$this->files_and_dirs_to_check = array(
+		$file_list = array(
 			array('name' => 'root directory', 'path' => ABSPATH, 'permissions' => '0755'),
 			array('name' => 'wp-includes/', 'path' => ABSPATH."wp-includes", 'permissions' => '0755'),
 			array('name' => '.htaccess', 'path' => $home_path.".htaccess", 'permissions' => '0644'),
@@ -32,6 +33,7 @@ class AIOWPSecurity_Utility_File {
 			//Add as many files or dirs as needed by following the convention above
 		);
 
+		return apply_filters('aiowpsecurity_file_permission_list', $file_list);
 	}
 
 	/**

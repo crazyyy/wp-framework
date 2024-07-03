@@ -15,7 +15,7 @@
  * under the License.
  */
 
-namespace WBCR\Factory_Freemius_163\Sdk;
+namespace WBCR\Factory_Freemius_164\Sdk;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,7 +48,7 @@ foreach($exceptions as $e) {
 	require_once FREEMIUS_SDK__EXCEPTIONS_PATH . $e . '.php';
 }
 
-if( class_exists('WBCR\Factory_Freemius_163\Sdk\Freemius_Api_Base') ) {
+if( class_exists('WBCR\Factory_Freemius_164\Sdk\Freemius_Api_Base') ) {
 	return;
 }
 

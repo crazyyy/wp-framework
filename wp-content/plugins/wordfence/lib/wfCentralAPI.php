@@ -584,6 +584,7 @@ class wfCentral {
 		));
 		try {
 			$response = $request->execute();
+			wfConfig::set('lastScanStageStatusUpdate', time(), wfConfig::DONT_AUTOLOAD);
 			return $response;
 		}
 		catch (wfCentralAPIException $e) {

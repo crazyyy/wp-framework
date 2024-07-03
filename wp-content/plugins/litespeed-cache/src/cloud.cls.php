@@ -164,6 +164,7 @@ class Cloud extends Base
 		$req_data = array(
 			'v' => defined('LSCWP_CUR_V') ? LSCWP_CUR_V : '',
 			'src' => $src,
+			'php' => phpversion(),
 		);
 		if (defined('LITESPEED_ERR')) {
 			$req_data['err'] = base64_encode(!is_string(LITESPEED_ERR) ? json_encode(LITESPEED_ERR) : LITESPEED_ERR);
@@ -866,7 +867,7 @@ class Cloud extends Base
 		if (!empty($json['_carry_on'])) {
 			self::debug('Carry_on usage', $json['_carry_on']);
 			// Store generic info
-			foreach (array('usage', 'promo', 'partner', '_err', '_info', '_note', '_success') as $v) {
+			foreach (array('usage', 'promo', 'partner', '_error', '_info', '_note', '_success') as $v) {
 				if (!empty($json['_carry_on'][$v])) {
 					switch ($v) {
 						case 'usage':
@@ -1155,7 +1156,8 @@ class Cloud extends Base
 			return self::err('lack_of_param');
 		}
 
-		if (empty($this->_api_key())) {
+		// Note: Using empty here throws a fatal error in PHP v5.3
+		if (!$this->_api_key()) {
 			self::debug('Lack of API key');
 			return self::err('lack_of_api_key');
 		}
@@ -1451,7 +1453,9 @@ class Cloud extends Base
 	 */
 	public function is_from_cloud()
 	{
-		if (empty($this->_summary['ips']) || empty($this->_summary['ips_ts']) || time() - $this->_summary['ips_ts'] > 86400 * self::TTL_IPS) {
+		$check_point = time() - 86400 * self::TTL_IPS;
+		if (empty($this->_summary['ips']) || empty($this->_summary['ips_ts']) || $this->_summary['ips_ts'] < $check_point) {
+			self::debug('Force updating ip as ips_ts is older than ' . self::TTL_IPS . ' days');
 			$this->_update_ips();
 		}
 
@@ -1459,8 +1463,19 @@ class Cloud extends Base
 		if (!$res) {
 			self::debug('❌ Not our cloud IP');
 
-			// Refresh IP list for future detection
-			$this->_update_ips();
+			// Auto check ip list again but need an interval limit safety.
+			if (empty($this->_summary['ips_ts_runner']) || time() - $this->_summary['ips_ts_runner'] > 600) {
+				self::debug('Force updating ip as ips_ts_runner is older than 10mins');
+				// Refresh IP list for future detection
+				$this->_update_ips();
+				$res = $this->cls('Router')->ip_access($this->_summary['ips']);
+				if (!$res) {
+					self::debug('❌ 2nd time: Not our cloud IP');
+				} else {
+					self::debug('✅ Passed Cloud IP verification');
+				}
+				return $res;
+			}
 		} else {
 			self::debug('✅ Passed Cloud IP verification');
 		}
@@ -1476,6 +1491,8 @@ class Cloud extends Base
 	private function _update_ips()
 	{
 		self::debug('Load remote Cloud IP list from ' . self::CLOUD_IPS);
+		// Prevent multiple call in a short period
+		self::save_summary(array('ips_ts' => time(), 'ips_ts_runner' => time()));
 
 		$response = wp_remote_get(self::CLOUD_IPS . '?json');
 		if (is_wp_error($response)) {
@@ -1486,7 +1503,8 @@ class Cloud extends Base
 
 		$json = json_decode($response['body'], true);
 
-		self::save_summary(array('ips_ts' => time(), 'ips' => $json));
+		self::debug('Load ips', $json);
+		self::save_summary(array('ips' => $json));
 	}
 
 	/**

@@ -200,4 +200,26 @@ class AIOWPSecurity_Commands {
 		$aiowps_feature_mgr->output_feature_details_badge($feature_id);
 		return ob_get_clean();
 	}
+
+	/**
+	 * Retrieves the IDs and HTML content for features.
+	 *
+	 * This method processes an array of features and returns an associative array containing
+	 * the IDs and corresponding HTML content for each feature badge.
+	 *
+	 * @param array $features - An array containing the features to retrieve IDs and HTML for.
+	 *
+	 * @return array An associative array containing the IDs and HTML content for each feature badge.
+	 */
+	public function get_features_id_and_html($features) {
+		$result = array();
+		foreach ($features as $feature) {
+			$result[] = array(
+				'id' => '#' . $feature . '-badge',
+				'html' => $this->get_feature_details_badge($feature)
+			);
+		}
+
+		return $result;
+	}
 }

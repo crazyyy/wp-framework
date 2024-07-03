@@ -127,7 +127,7 @@ if (!defined('ABSPATH')) die('Access denied.');
 		<?php if ($encryption_enabled) { ?>
 		<h2><?php _e('Encrypt keys in database', 'all-in-one-wp-security-and-firewall'); ?></h2>
 		<p>
-		<strong><?php echo __('Encrypt keys in database has been enabled.', 'all-in-one-wp-security-and-firewall').' '.__('This feature cannot be turned off.', 'all-in-one-wp-security-and-firewall'); ?></strong>
+		<strong><?php echo __('Encryption of keys in the database has been enabled.', 'all-in-one-wp-security-and-firewall').' '.__('This feature cannot be turned off.', 'all-in-one-wp-security-and-firewall'); ?></strong>
 		</p>
 		<?php } else { ?>
 		<form method="post" action="options.php" style="margin-top: 40px">

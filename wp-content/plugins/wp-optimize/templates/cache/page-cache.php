@@ -82,7 +82,7 @@
 			<input name="enable_user_caching" id="enable_user_caching" class="cache-settings wpo-select-group" type="checkbox" value="true" <?php checked($wpo_cache_options['enable_user_caching']); ?>>
 			<?php esc_html_e('Serve cached pages to logged in users', 'wp-optimize'); ?>
 		</label>
-		<span tabindex="0" data-tooltip="<?php esc_attr_e('Enable this option if you do not have user-specific or restricted content on your website.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
+		<span tabindex="0" data-tooltip="<?php esc_attr_e('Enable this option if you do not have user-specific or restricted content on your website (this works only when the cache is preloaded).', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
 	</div>
 
 	<?php do_action('wpo_after_cache_settings'); ?>

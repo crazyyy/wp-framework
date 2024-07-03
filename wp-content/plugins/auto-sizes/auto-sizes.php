@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Auto-sizes for Lazy-loaded Images
- * Plugin URI: https://github.com/WordPress/performance/tree/trunk/modules/images/auto-sizes
- * Description: This plugin implements the HTML spec for adding `sizes="auto"` to lazy-loaded images.
- * Requires at least: 6.3
- * Requires PHP: 7.0
- * Version: 1.0.0
+ * Plugin URI: https://github.com/WordPress/performance/tree/trunk/plugins/auto-sizes
+ * Description: Instructs browsers to automatically choose the right image size for lazy-loaded images.
+ * Requires at least: 6.4
+ * Requires PHP: 7.2
+ * Version: 1.0.2
  * Author: WordPress Performance Team
  * Author URI: https://make.wordpress.org/performance/
  * License: GPLv2 or later
@@ -15,8 +15,9 @@
  * @package auto-sizes
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 // Define the constant.
@@ -24,6 +25,6 @@ if ( defined( 'IMAGE_AUTO_SIZES_VERSION' ) ) {
 	return;
 }
 
-define( 'IMAGE_AUTO_SIZES_VERSION', '1.0.0' );
+define( 'IMAGE_AUTO_SIZES_VERSION', '1.0.2' );
 
 require_once __DIR__ . '/hooks.php';

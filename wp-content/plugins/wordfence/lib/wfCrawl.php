@@ -22,7 +22,8 @@ class wfCrawl {
 		$table = wfDB::networkTable('wfCrawlers');
 		$db = new wfDB();
 		$IPn = wfUtils::inet_pton($IP);
-		$status = $db->querySingle("select status from $table where IP=%s and patternSig=UNHEX(MD5('%s')) and lastUpdate > unix_timestamp() - %d", $IPn, $hostPattern, WORDFENCE_CRAWLER_VERIFY_CACHE_TIME);
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($IPn));
+		$status = $db->querySingle("select status from $table where IP={$ipHex} and patternSig=UNHEX(MD5('%s')) and lastUpdate > unix_timestamp() - %d", $hostPattern, WORDFENCE_CRAWLER_VERIFY_CACHE_TIME);
 		if($status){
 			if($status == 'verified'){
 				return true;
@@ -32,7 +33,7 @@ class wfCrawl {
 		}
 		$host = wfUtils::reverseLookup($IP);
 		if(! $host){ 
-			$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values (%s, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $IPn, $hostPattern, 'noPTR', '', 'noPTR', '');
+			$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values ({$ipHex}, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $hostPattern, 'noPTR', '', 'noPTR', '');
 			return false; 
 		}
 		if(preg_match($hostPattern, $host)){
@@ -45,14 +46,14 @@ class wfCrawl {
 				}
 			}
 			if($addrsMatch){
-				$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values (%s, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $IPn, $hostPattern, 'verified', $host, 'verified', $host);
+				$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values ({$ipHex}, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $hostPattern, 'verified', $host, 'verified', $host);
 				return true;
 			} else {
-				$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values (%s, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $IPn, $hostPattern, 'fwdFail', $host, 'fwdFail', $host);
+				$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values ({$ipHex}, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $hostPattern, 'fwdFail', $host, 'fwdFail', $host);
 				return false;
 			}
 		} else {
-			$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values (%s, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $IPn, $hostPattern, 'badPTR', $host, 'badPTR', $host);
+			$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate, PTR) values ({$ipHex}, UNHEX(MD5('%s')), '%s', unix_timestamp(), '%s') ON DUPLICATE KEY UPDATE status='%s', lastUpdate=unix_timestamp(), PTR='%s'", $hostPattern, 'badPTR', $host, 'badPTR', $host);
 			return false;
 		}
 	}
@@ -157,12 +158,12 @@ class wfCrawl {
 		}
 		$db = new wfDB();
 		$IPn = wfUtils::inet_pton($ip);
+		$ipHex = wfDB::binaryValueToSQLHex($IPn);
 		$patternSig = 'googlenoc1';
 		$status = $db->querySingle("select status from $table
-				where IP=%s
+				where IP={$ipHex}
 				and patternSig=UNHEX(MD5('%s'))
 				and lastUpdate > unix_timestamp() - %d",
-				$IPn,
 				$patternSig,
 				WORDFENCE_CRAWLER_VERIFY_CACHE_TIME);
 		if ($status === 'verified') {
@@ -178,10 +179,10 @@ class wfCrawl {
 			));
 			if (is_array($data) && !empty($data['verified'])) {
 				// Cache results
-				$db->queryWrite("INSERT INTO {$table} (IP, patternSig, status, lastUpdate) VALUES ('%s', UNHEX(MD5('%s')), '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE status = VALUES(status), lastUpdate = VALUES(lastUpdate)", $IPn, $patternSig, 'verified');
+				$db->queryWrite("INSERT INTO {$table} (IP, patternSig, status, lastUpdate) VALUES ({$ipHex}, UNHEX(MD5('%s')), '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE status = VALUES(status), lastUpdate = VALUES(lastUpdate)", $patternSig, 'verified');
 				return self::GOOGLE_BOT_VERIFIED;
 			} else {
-				$db->queryWrite("INSERT INTO {$table} (IP, patternSig, status, lastUpdate) VALUES ('%s', UNHEX(MD5('%s')), '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE status = VALUES(status), lastUpdate = VALUES(lastUpdate)", $IPn, $patternSig, 'fakeBot');
+				$db->queryWrite("INSERT INTO {$table} (IP, patternSig, status, lastUpdate) VALUES ({$ipHex}, UNHEX(MD5('%s')), '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE status = VALUES(status), lastUpdate = VALUES(lastUpdate)", $patternSig, 'fakeBot');
 				self::GOOGLE_BOT_FAKE;
 			}
 		} catch (Exception $e) {

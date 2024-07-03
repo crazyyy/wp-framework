@@ -315,75 +315,20 @@
 }
 
 #aiowps_pw_tool_main {
-	width: 440px;
-	margin: 40px auto 120px;
-	position: relative;
-	text-align: center;
-	background: url("../images/form_bg.png") no-repeat scroll 0 0 transparent;
-	height: 450px;
-	padding-top: 50px;
+	padding-top: 10px;
 }
 
 .aiowps_password_tool_field {
-	text-align: center;
-	padding-top: 40px;
-}
-
-#aiowps_pw_tool_main .arrow {
-	background: url("../images/arrow.png") no-repeat -10px 0;
-	height: 120px;
-	left: 249px;
-	position: absolute;
-	top: 301px;
-	width: 11px;
-	/* Defining a smooth CSS3 animation for turning the arrow */
-	-moz-transition: 0.3s;
-	-webkit-transition: 0.3s;
-	-o-transition: 0.3s;
-	-ms-transition: 0.3s;
-	transition: 0.3s;
-	/* Putting the arrow in its initial position */
-	-moz-transform: rotate(-134deg);
-	-webkit-transform: rotate(-134deg);
-	-o-transform: rotate(-134deg);
-	-ms-transform: rotate(-134deg);
-	transform: rotate(-134deg);
-}
-
-#aiowps_pw_tool_main .arrowCap {
-	background: url("../images/arrow.png") no-repeat -43px 0;
-	height: 20px;
-	left: 208px;
-	position: absolute;
-	top: 351px;
-	width: 20px;
-	z-index: 10;
-}
-
-#aiowps_pw_tool_main .meterText {
-	color: #575757;
-	font-size: 10px;
-	left: 189px;
-	line-height: 1.1;
-	position: absolute;
-	top: 385px;
-	width: 60px;
+	padding: 20px 0;
 }
 
 .aiowps_password_crack_info_text {
-	font-size: 2.125em;
 	line-height: 1.16667em;
-	padding-left: 6.25%;
-	padding-right: 6.25%;
-	text-align: center;
+	max-width: 40%;
 }
 
 #aiowps_password_crack_time_calculation {
-	font-size: 1.125em;
 	line-height: 1.16667em;
-	padding-left: 6.25%;
-	padding-right: 6.25%;
-	text-align: center;
 	color: darkorange;
 }
 
@@ -877,4 +822,116 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 	overflow-x: hidden;
 	display: block;
 	word-wrap: break-word;
+}
+
+.blockUI.blockOverlay.ui-widget-overlay {
+	background: #000;
+}
+
+.aios_success_popup {
+	text-align: center;
+	padding-bottom: 30px;
+}
+
+.aios_success_popup > .dashicons {
+	font-size: 100px;
+	width: 100px;
+	height: 100px;
+	line-height: 100px;
+	padding: 0;
+	border-radius: 50%;
+	margin-top: 30px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	background: #E2E6E5;
+}
+
+.aios_success_popup > .dashicons.dashicons-yes {
+	text-indent: -5px;
+}
+
+.aios_success_popup.success > .dashicons {
+	color: #008000;
+}
+
+.aios_success_popup.warning > .dashicons {
+	color: #888;
+}
+
+.aios_success_popup--message {
+	padding: 20px;
+}
+
+.button.aios-close-overlay .dashicons {
+	text-decoration: none;
+	font-size: 20px;
+	margin-left: -5px;
+	padding: 0;
+	transform: translatey(3px);
+}
+
+.aios_saving_popup img {
+	animation-name: aios_blink;
+	animation-duration: 610ms;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-timing-function: ease-out;
+}
+
+.aios-modal-info {
+	text-align: justify;
+	display: inline-block;
+}
+
+@keyframes aios_blink {
+
+	from {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	to {
+		opacity: 0.4;
+		transform: scale(0.85);
+	}
+
+}
+
+#aios_ajax_moreoptions {
+	max-height: 150px; /* Set the maximum height */
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 6px 10px;
+	margin: 4px 16px 6px 16px;
+}
+
+.aios_password_meter {
+	width: 100%;
+}
+
+.aios_meter_bar {
+	width: 40%;
+	background-color: #EEE;
+	border-radius: 10px;
+	overflow: hidden;
+	height: 10px;
+	margin: 10px 10px 0 0;
+}
+
+#aios_meter_fill {
+	height: 100%;
+	width: 0;
+	background-color: #F00;
+	border-radius: 5px;
+	transition: width 0.5s ease-in-out;
+}
+
+#aiowps_password_test {
+	width: 40%;
+}
+
+.simbaotp_qr_container img {
+	max-width: 150px;
+	max-height: 150px;
 }

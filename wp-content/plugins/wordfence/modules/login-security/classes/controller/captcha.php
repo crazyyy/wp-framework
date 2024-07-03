@@ -98,9 +98,11 @@ class Controller_CAPTCHA {
 			if (!is_wp_error($response)) {
 				$jsonResponse = wp_remote_retrieve_body($response);
 				$decoded = @json_decode($jsonResponse, true);
-				if (is_array($decoded) && isset($decoded['success']) && isset($decoded['score']) && isset($decoded['action'])) {
-					if ($decoded['success'] && $decoded['action'] == $action) {
-						return (float) $decoded['score'];
+				if (is_array($decoded) && isset($decoded['success'])) {
+					if ($decoded['success']) {
+						if (isset($decoded['score']) && isset($decoded['action']) && $decoded['action'] == $action) {
+							return (float) $decoded['score'];
+						}
 					}
 					return false;
 				}

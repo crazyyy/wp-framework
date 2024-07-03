@@ -50,22 +50,54 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_List_Table {
 	/**
 	 * Returns created column html to be rendered.
 	 *
-	 * @param array $item - data for the columns on the current row
+	 * @param array $item Data for the columns on the current row.
 	 *
-	 * @return string - the html to be rendered
+	 * @return string The html to be rendered.
 	 */
 	public function column_created($item) {
-		// Build row actions
 		$actions = array(
-			'delete' => '<a class="aios-delete-audit-log" data-id="'.esc_attr($item['id']).'" data-message="'.esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')).'"  href="" >'.__('Delete').'</a>',
+			'delete' => '<a class="aios-delete-audit-log" data-id="' . esc_attr($item['id']) . '" data-message="' . esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')) . '" href="">' . esc_html__('Delete', 'all-in-one-wp-security-and-firewall') . '</a>'
 		);
-		// Return the user_login contents
-		$date_time = AIOWPSecurity_Utility::convert_timestamp($item['created']);
 
-		return sprintf('%1$s <span style="color:silver"></span>%2$s',
-			/* $1%s */ $date_time,
-			/* $2%s */ $this->row_actions($actions)
-		);
+		return AIOWPSecurity_Utility::convert_timestamp($item['created']) . '<span style="color:silver"></span>' . $this->row_actions($actions);
+	}
+
+	/**
+	 * Returns ip column html to be rendered.
+	 *
+	 * @global AIO_WP_Security $aio_wp_security
+	 *
+	 * @param array $item Data for the columns on the current row.
+	 *
+	 * @return string The html to be rendered.
+	 */
+	public function column_ip($item) {
+		global $aio_wp_security;
+
+		$ip = $item['ip'];
+
+		$unblacklist_ip_warning_translation = __('Are you sure you want to unblacklist this IP address?', 'all-in-one-wp-security-and-firewall');
+		$unlock_ip_warning_translation = __('Are you sure you want to unlock this IP address?', 'all-in-one-wp-security-and-firewall');
+		$lock_ip_warning_translation = __('Are you sure you want to temporarily lock this IP address?', 'all-in-one-wp-security-and-firewall');
+		$blacklist_ip_warning_translation = __('Are you sure you want to blacklist this IP address?', 'all-in-one-wp-security-and-firewall');
+
+		// Build row actions.
+		if (false !== strpos($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'), $ip)) {
+			$actions = array(
+				'unblacklist' => '<a class="aios-unblacklist-ip-button" data-ip="' . esc_attr($ip) . '" data-message="' . esc_js($unblacklist_ip_warning_translation) . '" href="">' . esc_html__('Unblacklist', 'all-in-one-wp-security-and-firewall') . '</a>',
+			);
+		} elseif (AIOWPSecurity_Utility::check_locked_ip($ip, 'audit-log')) {
+			$actions = array(
+				'unlock' => '<a class="aios-unlock-ip-button" data-ip="' . esc_attr($ip) . '" data-message="' . esc_js($unlock_ip_warning_translation) . '" href="">' . esc_html__('Unlock', 'all-in-one-wp-security-and-firewall') . '</a>',
+			);
+		} else {
+			$actions = array(
+				'lock_ip' => '<a class="aios-lock-ip-button" data-ip="' . esc_attr($ip) . '" data-message="' . esc_js($lock_ip_warning_translation) . '" href="">' . esc_html__('Lock IP', 'all-in-one-wp-security-and-firewall') . '</a>',
+				'blacklist_ip' => '<a class="aios-blacklist-ip-button" data-ip="' . esc_attr($ip) . '" data-message="' . esc_js($blacklist_ip_warning_translation) . '" href="">' . esc_html__('Blacklist IP', 'all-in-one-wp-security-and-firewall') . '</a>',
+			);
+		}
+
+		return $ip . '<span style="color:silver"></span>' . $this->row_actions($actions);
 	}
 
 	/**

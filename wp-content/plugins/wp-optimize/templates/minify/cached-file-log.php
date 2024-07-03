@@ -21,7 +21,7 @@ foreach ((array) $log->files as $handle => $file) {
 	printf(' <a href="#" data-url="%1$s" class="exclude">%2$s</a>', esc_attr($file->url), esc_html__('Exclude', 'wp-optimize'));
 
 	if (preg_match('/\.js$/i', $file->url, $matches)) {
-		if ('individual' === $minify_config['enable_defer_js']) {
+		if ('individual' === $minify_config['enable_defer_js'] && (property_exists($file, 'uses_loading_strategy') && !$file->uses_loading_strategy)) {
 			printf(' | <a href="#" data-url="%1$s" class="defer">%2$s</a>', esc_attr($file->url), esc_html__('Defer loading', 'wp-optimize'));
 		}
 	} elseif (preg_match('/\.css$/i', $file->url, $matches)) {

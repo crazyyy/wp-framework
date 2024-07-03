@@ -169,6 +169,201 @@ function aios_parse_json(json_mix_str, analyse) {
 
 }
 
+/**
+ * Updates the content of an HTML element identified by its ID with the provided badge text.
+ *
+ * @param {Array} badges - An array of objects representing badges to update.
+ * @param {string} badges.id - The ID of the HTML element to update.
+ * @param {string} badges.html - The HTML content to set for the element.
+ * @returns {void}
+ */
+function aios_update_badge(badges) {
+	badges.forEach(function(badge) {
+		aios_update_content(badge.id, badge.html);
+	});
+}
+
+/**
+ * Update the content of an element with the specified HTML.
+ *
+ * @param {string} id - The ID of the element to update.
+ * @param {string} html - The HTML content to set for the element.
+ * @returns {void}
+ */
+function aios_update_content(id, html) {
+	jQuery(id).html(html);
+}
+
+
+/**
+ * Function to block the UI and display a loading message.
+ * Uses jQuery blockUI plugin.
+ *
+ * @param {string} message - A string to be shown when function is called
+ *
+ * @returns {void}
+ */
+function aios_block_ui(message = aios_trans.saving) {
+	jQuery.blockUI({
+		css: {
+			width: '500px',
+			border: 'none',
+			'border-radius': '10px',
+			left: 'calc(50% - 150px)',
+			top: 'calc(50% - 150px)',
+			padding: '20px'
+		},
+		message: '<div style="margin: 8px; font-size:150%;" class="aios_saving_popup"><img src="'+aios_trans.logo+'" height="80" width="80" style="padding-bottom:10px;"><br>'+message+'</div>'
+	});
+}
+
+/**
+ * Display a success modal with optional message and icon.
+ *
+ * @param {Object|string} args - Configuration object or message string.
+ *
+ * @returns {void}
+ */
+function aios_show_success_modal(args) {
+	if (typeof args == 'string') {
+		args = {
+			message: args
+		};
+	}
+	var data = jQuery.extend(
+		{
+			icon: 'yes',
+			close: aios_trans.close,
+			message: '',
+			classes: 'success'
+		},
+		args
+	);
+	jQuery.blockUI({
+		css: {
+			width: '500px',
+			border: 'none',
+			'border-radius': '10px',
+			left: 'calc(50% - 150px)',
+			top: 'calc(50% - 150px)'
+		},
+		onOverlayClick: jQuery.unblockUI,
+		message: '<div class="aios_success_popup '+data.classes+'"><span class="dashicons dashicons-'+data.icon+'"></span><div class="aios_success_popup--message">'+data.message+'</div><button class="button aios-close-overlay"><span class="dashicons dashicons-no-alt"></span>'+data.close+'</button></div>'
+	});
+	// close success popup
+	jQuery('.blockUI .aios-close-overlay').on('click', function() {
+		jQuery.unblockUI();
+	})
+}
+
+/**
+ * Submits a form using AJAX and handles the response.
+ *
+ * @param {jQuery} form - The jQuery object representing the form element.
+ * @param {string} action - The action to perform when submitting the form.
+ * @param {boolean|Object} [use_data=true] - Indicates whether to include form data in the AJAX request.
+ * @param {string} [block_ui_message="Saving..."] - The message to display while blocking UI during AJAX request.
+ * @param {Function} [pre_ajax_callback] - Optional callback function to execute before the AJAX request.
+ * @param {Function} [post_ajax_callback] - Optional callback function to execute after the AJAX request.
+ */
+function aios_submit_form(form, action, use_data = true, block_ui_message = aios_trans.saving, pre_ajax_callback, post_ajax_callback ) {
+	aios_block_ui(block_ui_message);
+	var submitButton = form.find(':submit');
+	submitButton.prop('disabled', true);
+	var data = {};
+
+	if (typeof use_data === 'object') {
+		data = use_data; // Use custom data object
+	} else if (use_data) {
+		var dataArray = form.serializeArray();
+		var dataLength = dataArray.length;
+		for (var i = 0; i < dataLength; i++) {
+			data[dataArray[i].name] = dataArray[i].value;
+		}
+	}
+	if (typeof pre_ajax_callback === 'function') {
+		pre_ajax_callback();
+	}
+	aios_send_command(action, data, function(response) {
+		aios_handle_ajax_update(response, post_ajax_callback);
+		submitButton.prop('disabled', false);
+	})
+}
+
+/**
+ * Handle AJAX response and update UI elements accordingly.
+ * If a callback function is provided, it will be executed.
+ *
+ * @param {Object} response - The AJAX response object.
+ * @param {Function} [callback] - Optional callback function to execute.
+ *
+ * @returns {void}
+ */
+function aios_handle_ajax_update(response, callback) {
+
+	var update_message = (response.hasOwnProperty('message') && response.message.length > 0) || (response.hasOwnProperty('info') && response.info.length > 0);
+
+	if (update_message) {
+		var messageContainer = jQuery('<div></div>');
+
+		// display single message
+		if (response.hasOwnProperty('message')) {
+			messageContainer.append(response.message);
+			messageContainer.append('<br>');
+		}
+
+		if (response.hasOwnProperty('info') && response.info.length > 0) {
+			// info toggle
+			let toggle = jQuery('<span>' + aios_trans.show_notices + ' (<a href="#" id="aios_ajax_showmoreoptions">'+aios_trans.show_info+'</a>)</span>');
+			toggle.appendTo(messageContainer)
+
+
+			let infoContainer = jQuery('<div id="aios_ajax_moreoptions" class="aiowps_more_info_body" style="display:none;"></div>');
+			response.info.forEach(function (info) {
+				infoContainer.append(`<span class="aios-modal-info">${info}</span>`, '<br>');
+			});
+
+			infoContainer.appendTo(messageContainer);
+		}
+
+
+		if ('error' === response.status) {
+			aios_show_success_modal({
+				message: messageContainer.html(),
+				icon: 'no-alt',
+				classes: 'warning'
+			});
+		} else {
+			aios_show_success_modal(messageContainer.html())
+		}
+	} else {
+		aios_show_success_modal(aios_trans.completed)
+	}
+
+	// update contents on the page
+	if (response.hasOwnProperty('content')) {
+		jQuery.each(response.content, function(key, value) {
+			aios_update_content('#' + key, value)
+		});
+	}
+
+	// update fields with new values if changed
+	if (response.hasOwnProperty('values')) {
+		jQuery.each(response.values, function(key, value) {
+			jQuery('#' + key).val(value);
+		});
+	}
+
+	// update badges
+	if (response.hasOwnProperty('badges')) {
+		aios_update_badge(response.badges)
+	}
+
+	if (typeof callback === 'function') {
+		callback();
+	}
+}
+
 jQuery(function($) {
 	//Add Generic Admin Dashboard JS Code in this file
 
@@ -331,40 +526,76 @@ jQuery(function($) {
 	// End of database table prefix handling
 
 	// Dashboard menu ajaxify
-	jQuery("#locked-ip-list-table .aios-unlock-ip-button").on('click', function(e) {
+	jQuery("#locked-ip-list-table").on('click', '.aios-unlock-ip-button', function(e) {
 		e.preventDefault();
-		confirm(jQuery(this).data('message')) ? aios_send_command('unlocked_ip', {id: jQuery(this).data('id')}, function(response) {
+		confirm(jQuery(this).data('message')) ? aios_send_command('unlock_ip', {ip: jQuery(this).data('ip')}, function(response) {
 			jQuery('#aios_message').remove();
 			jQuery('#wpbody-content .wrap h2:first').after(response.message);
 			if (response.status === 'success') $('#locked-ip-list-table').load(' #locked-ip-list-table > *');
 		}): false
 	});
 
-	jQuery("#locked-ip-list-table .aios-delete-ip-button").on('click', function(e) {
+	jQuery("#locked-ip-list-table").on('click', '.aios-delete-locked-ip-record-button', function(e) {
 		e.preventDefault();
-		confirm(jQuery(this).data('message')) ? aios_send_command('delete_locked_ip', {id: jQuery(this).data('id')}, function(response) {
+		confirm(jQuery(this).data('message')) ? aios_send_command('delete_locked_ip_record', {id: jQuery(this).data('id')}, function(response) {
 			jQuery('#aios_message').remove();
 			jQuery('#wpbody-content .wrap h2:first').after(response.message);
 			if (response.status === 'success') $('#locked-ip-list-table').load(' #locked-ip-list-table > *');
 		}): false
 	});
 
-	jQuery("#permanent-ip-list-table .aios-unblock-permanent-ip").on('click', function(e) {
+	jQuery("#permanent-ip-list-table").on('click', '.aios-unblock-permanent-ip', function(e) {
 		e.preventDefault();
-		confirm(jQuery(this).data('message')) ? aios_send_command('unblock_ip', {id: jQuery(this).data('id')}, function(response) {
+		confirm(jQuery(this).data('message')) ? aios_send_command('blocked_ip_list_unblock_ip', {id: jQuery(this).data('id')}, function(response) {
 			jQuery('#aios_message').remove();
 			jQuery('#wpbody-content .wrap h2:first').after(response.message)
 			if (response.status === 'success') $('#permanent-ip-list-table').load(' #permanent-ip-list-table > *');
 		}): false
 	});
-
-	jQuery("#audit-log-list-table .aios-delete-audit-log").on('click', function(e) {
+	
+	jQuery("#audit-log-list-table").on('click', '.aios-delete-audit-log', function(e) {
 		e.preventDefault();
 		confirm(jQuery(this).data('message')) ? aios_send_command('delete_audit_log', {id: jQuery(this).data('id')}, function(response) {
 			jQuery('#aios_message').remove();
 			jQuery('#wpbody-content .wrap h2:first').after(response.message);
 			if (response.status === 'success') $('#audit-log-list-table').load(' #audit-log-list-table > *');
 		}): false;
+	});
+
+	jQuery("#audit-log-list-table .aios-unlock-ip-button").on('click', function(e) {
+		e.preventDefault();
+		confirm(jQuery(this).data('message')) ? aios_send_command('unlock_ip', {ip: jQuery(this).data('ip')}, function(response) {
+			jQuery('#aios_message').remove();
+			jQuery('#wpbody-content .wrap h2:first').after(response.message);
+			if (response.status === 'success') $('#audit-log-list-table').load(' #audit-log-list-table > *');
+		}) : false;
+	});
+
+	jQuery("#audit-log-list-table .aios-unblacklist-ip-button").on('click', function(e) {
+		e.preventDefault();
+		confirm(jQuery(this).data('message')) ? aios_send_command('unblacklist_ip', {ip: jQuery(this).data('ip')}, function(response) {
+			jQuery('#aios_message').remove();
+			jQuery('#wpbody-content .wrap h2:first').after(response.message);
+			if (response.status === 'success') $('#audit-log-list-table').load(' #audit-log-list-table > *');
+		}) : false;
+	});
+
+	jQuery("#audit-log-list-table .aios-lock-ip-button").on('click', function(e) {
+		e.preventDefault();
+		confirm(jQuery(this).data('message')) ? aios_send_command('lock_ip', {ip: jQuery(this).data('ip'), lock_reason: 'audit-log'}, function(response) {
+			jQuery('#aios_message').remove();
+			jQuery('#wpbody-content .wrap h2:first').after(response.message);
+			if (response.status === 'success') $('#audit-log-list-table').load(' #audit-log-list-table > *');
+		}) : false;
+	});
+
+	jQuery("#audit-log-list-table .aios-blacklist-ip-button").on('click', function(e) {
+		e.preventDefault();
+		confirm(jQuery(this).data('message')) ? aios_send_command('blacklist_ip', {ip: jQuery(this).data('ip')}, function(response) {
+			jQuery('#aios_message').remove();
+			jQuery('#wpbody-content .wrap h2:first').after(response.message);
+			if (response.status === 'success') $('#audit-log-list-table').load(' #audit-log-list-table > *');
+		}) : false;
 	});
 
 	jQuery("#aios-clear-debug-logs").on('submit', function(e) {
@@ -376,6 +607,7 @@ jQuery(function($) {
 		})
 	});
 	// End of dashboard menu ajaxify
+
 	// Start of file scan handling
 	jQuery('.aiowps_next_scheduled_scan_wrapper').on('click', '.aiowps_view_last_fcd_results', view_scan_results_handler);
 	jQuery('#aiowps_fcds_change_detected').on('click', '.aiowps_view_last_fcd_results', view_scan_results_handler);
@@ -453,6 +685,18 @@ jQuery(function($) {
 
 	// Click the 'show/hide advanced options' button
 	jQuery('button.button-link.aios-toggle-advanced-options').on('click', function() {
-		if (!jQuery(this).hasClass('advanced-options-disabled')) jQuery(this).toggleClass('opened');
+		if (!jQuery(this).hasClass('advanced-options-disabled')) {
+			jQuery(this).toggleClass('opened');
+		}
+	});
+
+	// click the show more for AJAX info
+	jQuery(document).on('click','#aios_ajax_showmoreoptions', function (e) {
+		e.preventDefault()
+		let moreOptions = jQuery('#aios_ajax_moreoptions');
+		moreOptions.toggle()
+		// Toggle text between "Show more" and "Hide"
+		let newText = moreOptions.is(':visible') ? aios_trans.hide_info : aios_trans.show_info;
+		jQuery(this).text(newText);
 	});
 });

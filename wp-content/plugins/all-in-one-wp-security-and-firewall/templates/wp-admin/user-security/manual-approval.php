@@ -6,7 +6,7 @@
 		<div class="aio_blue_box">
 			<?php
 			echo '<p>'.__('If your site allows people to create their own accounts via the WordPress registration form, then you can minimize spam or bogus registrations by manually approving each registration.', 'all-in-one-wp-security-and-firewall').
-			'<br>'.__('This feature will automatically set a newly registered account to "pending" until the administrator activates it.', 'all-in-one-wp-security-and-firewall') . ' ' . __(' Therefore undesirable registrants will be unable to log in without your express approval.', 'all-in-one-wp-security-and-firewall').
+			'<br>'.__('This feature will automatically set a newly registered account to "pending" until the administrator activates it.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Therefore undesirable registrants will be unable to log in without your express approval.', 'all-in-one-wp-security-and-firewall').
 			'<br>'.__('You can view all accounts which have been newly registered via the handy table below and you can also perform bulk activation/deactivation/deletion tasks on each account.', 'all-in-one-wp-security-and-firewall').'</p>';
 			?>
 		</div>
@@ -21,7 +21,7 @@
 					<th scope="row"><?php _e('Enable manual approval of new registrations', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to automatically disable all newly registered accounts so that you can approve them manually.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_manual_registration_approval', '1' == $aio_wp_security->configs->get_value('aiowps_enable_manual_registration_approval')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to automatically disable all newly registered accounts so that you can approve them manually.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_manual_registration_approval', '1' == $aio_wp_security->configs->get_value('aiowps_enable_manual_registration_approval')); ?>
 						</div>
 					</td>
 				</tr>

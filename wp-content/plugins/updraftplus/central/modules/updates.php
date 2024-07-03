@@ -712,7 +712,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 
 		if (is_null($is_compatible)) {
 			$is_compatible = false;
-			$message = esc_attr(sprintf(__('There are currently no available fields or data that we can use to determine whether this latest %s is compatible with your WordPress or PHP install.', 'updraftplus'), $type).' '.__('Please install with caution by doing a backup first before installing.', 'updraftplus'));
+			$message = esc_attr(sprintf(__('This % does not provide information to allow determining whether the latest version is compatible with your WordPress or PHP installation.', 'updraftplus'), $type).' '.__('If installing, then proceed with caution by first doing a backup.', 'updraftplus'));
 		}
 
 		return array(

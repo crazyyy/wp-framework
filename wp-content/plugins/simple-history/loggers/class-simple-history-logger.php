@@ -211,6 +211,10 @@ class Simple_History_Logger extends Logger {
 						[ 'enable_rss_feed' ],
 						__( 'RSS feed enabled', 'simple-history' ),
 					),
+					new Event_Details_Item(
+						[ 'detective_mode_enabled' ],
+						__( 'Detective Mode enabled', 'simple-history' ),
+					),
 				]
 			)
 			->set_title( __( 'Changed items', 'simple-history' ) );

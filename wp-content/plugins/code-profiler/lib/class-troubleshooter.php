@@ -330,7 +330,8 @@ class CP_Troubleshooter {
 			'http_response',
 			// 'backtrace_limit',
 			'accuracy',
-			'buffer'
+			'buffer',
+			'exclusions'
 		];
 		foreach( $list as $element ) {
 			$this->buffer['options'][ $element ] = isset( $cp_options[ $element ] )? $cp_options[ $element ]:0;

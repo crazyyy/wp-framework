@@ -20,13 +20,20 @@ class wfHelperString {
 		return $return_val;
 	}
 
-	public static function plainTextTable($table) {
+	public static function plainTextTable($table, $maxColumnWidth = 60) {
 		if (count($table) === 0) {
 			return '';
 		}
+		
 		$colLengths = array();
 		for ($row = 0; $row < count($table); $row++) {
+			if (is_string($table[$row])) { //Special handling to show a sub-header/divider
+				continue;
+			}
+			
 			for ($col = 0; $col < count($table[$row]); $col++) {
+				$table[$row][$col] = wordwrap(str_replace("\t", "    ", $table[$row][$col]), $maxColumnWidth, "\n", true);
+				
 				foreach (explode("\n", $table[$row][$col]) as $colText) {
 					if (!isset($colLengths[$col])) {
 						$colLengths[$col] = strlen($colText);
@@ -39,9 +46,17 @@ class wfHelperString {
 				}
 			}
 		}
-		$hr = str_repeat('-', array_sum($colLengths) + (count($colLengths) * 3) + 1);
+		$totalWidth = array_sum($colLengths) + (count($colLengths) * 3) + 1;
+		$hr = str_repeat('-', $totalWidth);
 		$output = $hr . "\n";
 		for ($row = 0; $row < count($table); $row++) {
+			if (is_string($table[$row])) { //Special handling to show a sub-header/divider
+				if ($row > 1) { $output .= $hr . "\n"; }
+				$output .= '| ' . str_pad($table[$row], $totalWidth - 4, ' ', STR_PAD_BOTH) . ' ' . "|\n";
+				$output .= $hr . "\n";
+				continue;
+			}
+			
 			$colHeight = 0;
 			for ($col = 0; $col < count($table[$row]); $col++) {
 				$height = substr_count($table[$row][$col], "\n");

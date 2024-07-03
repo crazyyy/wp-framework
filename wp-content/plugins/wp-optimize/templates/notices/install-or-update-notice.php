@@ -2,23 +2,58 @@
 <div class="notice wpo-introduction-notice is-dismissible below-h2">
 
 	<?php if ($is_new_install) : ?>
-
-		<h3><?php esc_html_e('Thank you for installing WP-Optimize!', 'wp-optimize'); ?></h3>
-		<p><?php esc_html_e('The team at WP-Optimize is working hard to make your site fast and efficient.', 'wp-optimize'); ?></p>
-		<p>
-			<?php printf(esc_html_x('The plugin settings are split into three parts: %sclean%s the database, %scompress%s images and %scaching%s.', '%s will be replaced by a "strong" tag', 'wp-optimize'), '<strong>', '</strong>', '<strong>', '</strong>', '<strong>', '</strong>'); ?>
-		</p>
-		<p><?php printf(esc_html__('If you are unsure what settings to use, please take a look at the %sdocumentation%s.', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/support/')).'" target="_blank">', '</a>'); ?></p>
-		<p>
-			<?php printf(esc_html_x('We also recently added the ability to %scombine and minify%s CSS, JavaScript and HTML, for an increased performance boost.', '%s will be replaced by a "strong" tag', 'wp-optimize'), '<strong>', '</strong>'); ?>
-			<?php printf(esc_html_x('Read more about this feature %son our website%s.', '%s will be replaced by a link tag', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/faqs/category/minification/')).'" target="_blank">', '</a>'); ?>
-		</p>
-		<?php if (!$is_updraftplus_installed) : ?>
-			<p>
-				<?php printf(esc_html__('But first, we strongly recommend you backup your site with %sUpdraftPlus%s.', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://updraftplus.com/')).'" target="_blank">', '</a>'); ?>
-				<?php esc_html_e('WP-Optimize can trigger UpdraftPlus to automatically back up right before any optimization takes place, so you can undo any changes you make.', 'wp-optimize'); ?>
-			</p>
+		
+		<?php if ($is_premium) : ?>
+			<h3><?php esc_html_e('Thank you for installing WP-Optimize Premium!', 'wp-optimize'); ?></h3>
+		<?php else : ?>
+			<h3><?php esc_html_e('Thank you for installing WP-Optimize!', 'wp-optimize'); ?></h3>
 		<?php endif; ?>
+		<p>
+			<?php
+			esc_html_e('To really turbo boost the performance of your WordPress website, check out WP-Optimize Premium or get more rated plugins below:', 'wp-optimize');
+			?>
+		</p>
+		<ul>
+			<?php if (!$is_premium) : ?>
+			<li>
+				<a href="<?php echo esc_url('https://getwpo.com/buy/?utm_medium=software&utm_source=wpo&utm_content=wpo-introduction-notice&utm_term=try-now-wpo&utm_campaign=ad'); ?>" target="_blank">
+					<strong><?php esc_html_e('WP-Optimize Premium:', 'wp-optimize'); ?></strong>
+				</a>
+				<?php echo esc_html__('Unlock new ways to speed up your WordPress website.', 'wp-optimize') . ' ' . esc_html__('Optimize from the WP-CLI, cache multilingual and multicurrency websites, get premium support and more.', 'wp-optimize'); ?>
+			</li>
+			<?php endif; ?>
+			<?php if (!$is_updraftplus_installed) : ?>
+			<li>
+				<a href="<?php echo esc_url('https://updraftplus.com/?utm_medium=software&utm_source=wpo&utm_content=wpo-introduction-notice&utm_term=try-now-udp&utm_campaign=ad'); ?>" target="_blank">
+					<strong><?php esc_html_e('UpdraftPlus:', 'wp-optimize'); ?></strong>
+				</a>
+				<?php echo esc_html__('Back up your website with the world’s leading backup and migration plugin.', 'wp-optimize') . ' ' . esc_html__('Actively installed on more than 3 million WordPress websites!', 'wp-optimize');
+				?>
+			</li>
+			<?php endif; ?>
+			<?php if (!$is_aios_prem_installed) : ?>
+			<li>
+				<a href="<?php echo esc_url('https://aiosplugin.com/?utm_medium=software&utm_source=wpo&utm_content=wpo-introduction-notice&utm_term=try-now-aios&utm_campaign=ad'); ?>" target="_blank">
+					<strong><?php esc_html_e('All-In-One Security (AIOS):', 'wp-optimize'); ?></strong>
+				</a>
+				<?php echo esc_html__('Still on the fence? Secure your WordPress website with AIOS.', 'wp-optimize') . ' ' . esc_html__('Comprehensive, cost-effective, 5* rated and easy to use.', 'wp-optimize'); ?>
+			</li>
+			<?php endif; ?>
+			<?php if (!$is_ilj_installed) : ?>
+			<li>
+				<a href="<?php echo esc_url('https://www.internallinkjuicer.com/?utm_medium=software&utm_source=wpo&utm_content=ilj-mayalso-like-tab&utm_term=try-now-ilj&utm_campaign=ad'); ?>" target="_blank">
+					<strong><?php esc_html_e('Internal Link Juicer:', 'wp-optimize'); ?></strong>
+				</a>
+				<?php echo esc_html__('Automate the building of internal links on your WordPress website.', 'wp-optimize') . ' ' . esc_html__('Save time and boost SEO!', 'wp-optimize') . ' ' . esc_html__('You don’t need to be an SEO expert to use this plugin.', 'wp-optimize');?>
+			</li>
+			<?php endif; ?>
+			<li>
+				<a href="<?php echo esc_url('https://wpovernight.com/?utm_medium=software&utm_source=wpo&utm_content=wpo-introduction-notice&utm_term=try-now-wp-overnight&utm_campaign=ad'); ?>" target="_blank">
+					<strong><?php esc_html_e('WP Overnight:', 'wp-optimize'); ?></strong>
+				</a>
+				<?php echo esc_html__('Quality add-ons for WooCommerce.', 'wp-optimize') . ' ' . esc_html__('Designed to optimize your store, enhance user experience and increase revenue!', 'wp-optimize');?>
+			</li>
+		</ul>
 		<?php if (!$is_premium) : ?>
 			<p><?php printf(esc_html__('Finally, please take a look at our %spremium version%s, which is packed full of additional speed enhancements to make your site go even faster!', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/buy/')).'" target="_blank">', '</a>'); ?></p>
 		<?php endif; ?>

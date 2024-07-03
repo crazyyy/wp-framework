@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
+import Icon from "../../utils/Icon";
 import {
     Modal,
     MenuItem,
     SelectControl,
     Button,
-    __experimentalConfirmDialog as ConfirmDialog
+    __experimentalConfirmDialog as ConfirmDialog, TextControl
 } from "@wordpress/components";
 import {__} from "@wordpress/i18n";
 import IpAddressInput from "../LimitLoginAttempts/IpAddressInput";
@@ -51,6 +52,15 @@ const TrustIpAddressModal = (props) => {
     if (!props.isOpen) {
         return null;
     }
+
+    const changeHandler = (e) => {
+       if (e.length > 0) {
+           setIpAddress(e);
+        } else {
+           resetRange()
+       }
+    }
+
     return (
         <Modal
             title={__("Add IP Address", "really-simple-ssl")}
@@ -73,15 +83,25 @@ const TrustIpAddressModal = (props) => {
                             padding: "10px",
                         }}
                     >
-                        <div>
-                            <IpAddressInput
-                                label={__("IP Address", "really-simple-ssl")}
+                        <div style={{position: 'relative'}}>
+                            <label
+                                htmlFor={'ip-address'}
+                                className={'rsssl-label'}
+                            >{__('IP Address', 'really-simple-ssl')}</label>
+                            <TextControl
                                 id="ip-address"
                                 name="ip-address"
-                                showSwitch={true}
+                                onChange={changeHandler}
                                 value={ipAddress}
-                                onChange={(e) => setIpAddress(e.target.value)}
                             />
+                            <div className="rsssl-ip-verified">
+                                {Boolean(!maskError && ipAddress.length > 0)
+                                    ? <Icon name='circle-check' color={'green'}/>
+                                    : <Icon name='circle-times' color={'red'}/>
+                                }
+                            </div>
+                        </div>
+                        <div>
                             <label
                                 htmlFor={'note'}
                                 className={'rsssl-label'}

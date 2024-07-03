@@ -193,6 +193,11 @@ class WP_Optimize_Minify_Front_End {
 			return $html;
 		}
 
+		// return if already minified
+		if (WP_Optimize_Minify_Functions::is_minified_css_js_filename($href)) {
+			return $html;
+		}
+
 		// check if working with a font awesom link
 		if (WP_Optimize_Minify_Functions::is_font_awesome($href)) {
 			// font awesome processing, async css
@@ -681,9 +686,12 @@ class WP_Optimize_Minify_Front_End {
 
 			// If we can't determine file size, then we still need to proceed with normal minify process
 			if (!apply_filters('wp_optimize_skip_inlining', false === $file_size || $file_size > 20480 || !$this->options['inline_css'], $file_size, $href)) continue;
-	
+
+			// check if the current URL points to a minified file.
+			$exclude_minified_css = WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+			$normal_processing = $exclude_minified_css && !$merge_css;
 			// skip ignore list, conditional css, external css, font-awesome merge
-			if (($process_css && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($conditional) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
+			if (($process_css && !$normal_processing && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($conditional) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
 				|| empty($href)
 				|| ($process_css && 'inherit' == $this->options['fawesome_method'] && WP_Optimize_Minify_Functions::is_font_awesome($href))
 				|| ($process_css && 'inherit' == $this->options['gfonts_method'] && WP_Optimize_Minify_Functions::is_google_font($href))
@@ -709,7 +717,6 @@ class WP_Optimize_Minify_Front_End {
 
 				// external and ignored css
 			} else {
-
 				// normal enqueuing
 				array_push($header, array('handle' => $handle));
 			}
@@ -782,7 +789,8 @@ class WP_Optimize_Minify_Front_End {
 							$json = false;
 							$json = WP_Optimize_Minify_Cache_Functions::get_transient($tkey);
 							if (false === $json) {
-								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $this->options['enable_css_minification'], 'css', $handle, $version);
+								$enable_minification = $this->options['enable_css_minification'] && !WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $enable_minification, 'css', $handle, $version);
 								if ($this->options['debug']) {
 									echo "<!-- wpo_min DEBUG: Uncached file processing now for $handle / $href / $version -->" . "\n";
 								}
@@ -918,6 +926,8 @@ class WP_Optimize_Minify_Front_End {
 		// mark as done (as we go)
 		$done = $scripts->done;
 
+		$previous_load_strategy = null;
+
 		// get groups of handles
 		foreach ($scripts->to_do as $handle) :
 
@@ -954,13 +964,22 @@ class WP_Optimize_Minify_Front_End {
 				continue;
 			}
 
+			// check if the current URL points to a minified file.
+			$exclude_minified_js = WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+			$normal_processing = $exclude_minified_js && !$merge_js;
+
 			// skip ignore list, scripts with conditionals, external scripts
-			if (($process_js && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($wp_scripts->registered[$handle]->extra["conditional"]) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
+			if (($process_js && !$normal_processing && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($wp_scripts->registered[$handle]->extra["conditional"]) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
 				|| empty($href)
 			) {
 					
 				// process
-				if (isset($footer[count($footer)-1]['handle']) || !count($footer) || !$merge_js) {
+				if (isset($footer[count($footer)-1]['handle'])
+					|| !count($footer)
+					|| !$merge_js
+					|| (isset($scripts->registered[$handle]->extra['strategy']) && $previous_load_strategy != $scripts->registered[$handle]->extra['strategy'])
+					|| (!isset($scripts->registered[$handle]->extra['strategy']) && null != $previous_load_strategy)
+				) {
 					array_push($footer, array('handles' => array(), 'versions' => array()));
 				}
 				
@@ -973,7 +992,18 @@ class WP_Optimize_Minify_Front_End {
 				// push it to the array
 				array_push($footer[count($footer)-1]['handles'], $handle);
 				array_push($footer[count($footer)-1]['versions'], $wp_scripts->registered[$handle]->ver);
+
+				// Register strategy if it is used
+				if (isset($scripts->registered[$handle]->extra['strategy'])) $footer[count($footer)-1]['strategy'] = $scripts->registered[$handle]->extra['strategy'];
+
 				// external and ignored scripts
+
+				if (isset($scripts->registered[$handle]->extra['strategy'])) {
+					$previous_load_strategy = $scripts->registered[$handle]->extra['strategy'];
+				} else {
+					$previous_load_strategy = null;
+				}
+					
 			} else {
 				array_push($footer, array('handle' => $handle));
 			}
@@ -1031,7 +1061,8 @@ class WP_Optimize_Minify_Front_End {
 							$json = false;
 							$json = WP_Optimize_Minify_Cache_Functions::get_transient($tkey);
 							if (false === $json) {
-								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $minify_js, 'js', $handle, $version);
+								$enable_minification = $minify_js && !WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $enable_minification, 'js', $handle, $version);
 								if ($this->options['debug']) {
 									echo "<!-- wpo_min DEBUG: Uncached file processing now for $handle / $href / $version -->\n";
 								}
@@ -1053,6 +1084,7 @@ class WP_Optimize_Minify_Front_End {
 							// response has failed
 							if (true != $res['status']) {
 								$log['files'][$handle] = $res['log'];
+								$log['files'][$handle]['uses_loading_strategy'] = isset($footer[$i]['strategy']);
 								continue;
 							}
 
@@ -1086,6 +1118,7 @@ class WP_Optimize_Minify_Front_End {
 							$code .= "\n" . $after_code . "\n";
 							$code = WP_Optimize_Minify_Functions::prepare_merged_js($code, $href);
 							$log['files'][$handle] = $res['log'];
+							$log['files'][$handle]['uses_loading_strategy'] = isset($footer[$i]['strategy']);
 							
 							// consider dependencies on handles with an empty src
 						} else {
@@ -1162,6 +1195,11 @@ class WP_Optimize_Minify_Front_End {
 					if (!empty($after_code)) {
 						wp_add_inline_script("wpo_min-footer-$i", $after_code, 'after');
 					}
+
+					if (isset($footer[$i]['strategy'])) {
+						// Backward compatible way of doing this
+						wp_script_add_data( "wpo_min-footer-$i", 'strategy', $footer[$i]['strategy']);
+					}
 				} else {
 					// file could not be generated, output something meaningful
 					echo "<!-- ERROR: WP-Optimize Minify was not allowed to save its cache on - ".str_replace(ABSPATH, '', $file)." -->";
@@ -1206,6 +1244,8 @@ class WP_Optimize_Minify_Front_End {
 		$done = $scripts->done;
 		$excluded_dependencies = array();
 
+		$previous_load_strategy = null;
+
 		// Prepare and separate assets (get groups of handles)
 		foreach ($scripts->to_do as $handle) {
 			// get full url
@@ -1246,12 +1286,21 @@ class WP_Optimize_Minify_Front_End {
 					continue;
 				}
 
+				// check if the current URL points to a minified file.
+				$exclude_minified_js = WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+				$normal_processing = $exclude_minified_js && !$merge_js;
+
 				// Group handles - skip ignore list, scripts with conditionals, external scripts
-				if (($process_js && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($wp_scripts->registered[$handle]->extra["conditional"]) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
+				if (($process_js && !$normal_processing && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($wp_scripts->registered[$handle]->extra["conditional"]) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
 					|| empty($href)
 				) {
 					// process
-					if (isset($header[count($header)-1]['handle']) || !count($header) || !$merge_js) {
+					if (isset($header[count($header)-1]['handle'])
+						|| !count($header)
+						|| !$merge_js
+						|| (isset($scripts->registered[$handle]->extra['strategy']) && $previous_load_strategy != $scripts->registered[$handle]->extra['strategy'])
+						|| (!isset($scripts->registered[$handle]->extra['strategy']) && null != $previous_load_strategy)
+					) {
 						array_push($header, array('handles' => array(), 'versions' => array()));
 					}
 
@@ -1286,6 +1335,16 @@ class WP_Optimize_Minify_Front_End {
 					// push it to the array
 					array_push($header[count($header)-1]['handles'], $handle);
 					array_push($header[count($header)-1]['versions'], $scripts->registered[$handle]->ver);
+
+					// Register strategy if it is used
+					if (isset($scripts->registered[$handle]->extra['strategy'])) $header[count($header)-1]['strategy'] = $scripts->registered[$handle]->extra['strategy'];
+
+					if (isset($scripts->registered[$handle]->extra['strategy'])) {
+						$previous_load_strategy = $scripts->registered[$handle]->extra['strategy'];
+					} else {
+						$previous_load_strategy = null;
+					}
+					
 
 					// external and ignored scripts
 				} else {
@@ -1346,7 +1405,8 @@ class WP_Optimize_Minify_Front_End {
 							$json = false;
 							$json = WP_Optimize_Minify_Cache_Functions::get_transient($tkey);
 							if (false === $json) {
-								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $minify_js, 'js', $handle, $version);
+								$enable_minification = $minify_js && !WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $enable_minification, 'js', $handle, $version);
 								if ($this->options['debug']) {
 									echo "<!-- wpo_min DEBUG: Uncached file processing now for $handle / $href / $version -->" . "\n";
 								}
@@ -1368,6 +1428,7 @@ class WP_Optimize_Minify_Front_End {
 							// response has failed
 							if (true != $res['status']) {
 								$log['files'][$handle] = $res['log'];
+								$log['files'][$handle]['uses_loading_strategy'] = isset($header[$i]['strategy']);
 								continue;
 							}
 
@@ -1403,6 +1464,7 @@ class WP_Optimize_Minify_Front_End {
 							$code .= "\n" . $after_code . "\n";
 							$code = WP_Optimize_Minify_Functions::prepare_merged_js($code, $href);
 							$log['files'][$handle] = $res['log'];
+							$log['files'][$handle]['uses_loading_strategy'] = isset($header[$i]['strategy']);
 							
 							// consider dependencies on handles with an empty src
 						} else {
@@ -1481,6 +1543,11 @@ class WP_Optimize_Minify_Front_End {
 					wp_enqueue_script("wpo_min-header-$i");
 					if (!empty($after_code)) {
 						wp_add_inline_script("wpo_min-header-$i", $after_code, 'after');
+					}
+
+					if (isset($header[$i]['strategy'])) {
+						// Backward compatible way of doing this
+						wp_script_add_data( "wpo_min-header-$i", 'strategy', $header[$i]['strategy']);
 					}
 				} else {
 					// file could not be generated, output something meaningful
@@ -1691,8 +1758,11 @@ class WP_Optimize_Minify_Front_End {
 				continue;
 			}
 			
+			// check if the current URL points to a minified file.
+			$exclude_minified_css = WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+			$normal_processing = $exclude_minified_css && !$merge_css;
 			// skip ignore list, conditional css, external css, font-awesome merge
-			if (($process_css && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($conditional) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
+			if (($process_css && !$normal_processing && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($conditional) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
 				|| empty($href)
 			) {
 					
@@ -1781,7 +1851,8 @@ class WP_Optimize_Minify_Front_End {
 							$json = false;
 							$json = WP_Optimize_Minify_Cache_Functions::get_transient($tkey);
 							if (false === $json) {
-								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $minify_css, 'css', $handle, $version);
+								$enable_minification = $minify_css && !WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+								$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $enable_minification, 'css', $handle, $version);
 								if ($this->options['debug']) {
 									echo "<!-- wpo_min DEBUG: Uncached file processing now for $handle / $href / $version -->" . "\n";
 								}
@@ -2403,7 +2474,8 @@ class WP_Optimize_Minify_Front_End {
 	 */
 	private function should_reset_minify_assets($res, $href, $type, $handle, $version) {
 		if (isset($res['request']['version']) && $res['request']['version'] != $version && !$this->minify_cache_incremented) {
-			$new_json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $this->options['enable_css_minification'], $type, $handle, $version);
+			$enable_minification = $this->options['enable_'.$type.'_minification'] && !WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+			$new_json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $enable_minification, $type, $handle, $version);
 			$new_res = json_decode($new_json, true);
 
 			/**

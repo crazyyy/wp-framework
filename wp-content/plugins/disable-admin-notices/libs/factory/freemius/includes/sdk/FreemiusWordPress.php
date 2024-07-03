@@ -15,7 +15,7 @@
  * under the License.
  */
 
-namespace WBCR\Factory_Freemius_163\Sdk;
+namespace WBCR\Factory_Freemius_164\Sdk;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -81,7 +81,7 @@ if( !defined('FREEMIUS_API__SANDBOX_ADDRESS') ) {
 	define('FREEMIUS_API__SANDBOX_ADDRESS', '://sandbox-api.freemius.com');
 }
 
-if( class_exists('WBCR\Factory_Freemius_163\Sdk\Freemius_Api_WordPress') ) {
+if( class_exists('WBCR\Factory_Freemius_164\Sdk\Freemius_Api_WordPress') ) {
 	return;
 }
 
@@ -418,7 +418,7 @@ class Freemius_Api_WordPress extends Freemius_Api_Base {
 						if( strlen(inet_pton($matches[1])) === 16 ) {
 							//						    error_log('Invalid IPv6 configuration on server, Please disable or get native IPv6 on your server.');
 							// Hook to an action triggered just before cURL is executed to resolve the IP version to v4.
-							add_action('http_api_curl', 'WBCR\Factory_Freemius_163\Sdk\Freemius_Api_WordPress::CurlResolveToIPv4', 10, 1);
+							add_action('http_api_curl', 'WBCR\Factory_Freemius_164\Sdk\Freemius_Api_WordPress::CurlResolveToIPv4', 10, 1);
 
 							// Re-run request.
 							$result = self::ExecuteRequest($request_url, $pWPRemoteArgs);

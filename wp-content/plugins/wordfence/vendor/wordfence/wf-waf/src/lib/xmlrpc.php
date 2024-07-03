@@ -179,7 +179,7 @@ class wfXMLRPCBody
 	function tag_open($parser, $tag, $attr)
 	{
 		$this->_currentTagContents = '';
-		$this->currentTag = $tag;
+		$this->_currentTag = $tag;
 		switch($tag) {
 			case 'methodCall':
 			case 'methodResponse':

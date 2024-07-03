@@ -19,7 +19,7 @@
 					<th scope="row"><?php _e('Disable application password', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to disable the application password.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_application_password', '1' == $aio_wp_security->configs->get_value('aiowps_disable_application_password')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to disable the application password.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_application_password', '1' == $aio_wp_security->configs->get_value('aiowps_disable_application_password')); ?>
 						</div>
 					</td>
 				</tr>

@@ -396,39 +396,94 @@
 	<header>
 		<h3><?php _e('Our other plugins', 'all-in-one-wp-security-and-firewall'); ?></h3>
 		<p>
-			<a href="https://updraftplus.com/"><?php echo 'UpdraftPlus'; ?></a>
+			<a href="https://updraftplus.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-udp&utm_campaign=ad"><?php echo 'UpdraftPlus'; ?></a>
 			|
-			<a href="https://getwpo.com/"><?php echo 'WP-Optimize'; ?></a>
+			<a href="https://getwpo.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wpo&utm_campaign=ad"><?php echo 'WP-Optimize'; ?></a>
 			|
-			<a href="https://updraftplus.com/updraftcentral/"><?php echo 'UpdraftCentral'; ?></a>
+			<a href="https://updraftplus.com/updraftcentral/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-udc&utm_campaign=ad"><?php echo 'UpdraftCentral'; ?></a>
 			|
-			<a href="https://easyupdatesmanager.com/"><?php echo 'Easy Updates Manager'; ?></a>
+			<a href="https://easyupdatesmanager.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-eum&utm_campaign=ad"><?php echo 'Easy Updates Manager'; ?></a>
+			|
+			<a href="https://www.internallinkjuicer.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-ilj&utm_campaign=ad"><?php echo 'Internal Link Juicer'; ?></a>
+			|
+			<a href="https://wpovernight.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wp-overnight&utm_campaign=ad"><?php echo 'WP Overnight'; ?></a>
+			|
+			<a href="https://wpgetapi.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wpgetapi&utm_campaign=ad"><?php echo 'WPGetAPI'; ?></a>
 		</p>
 	</header>
 	<div class="aiowps-plugin-family__plugins">
 		<div class="aiowps-plugin-family__plugin">
-			<a href="https://updraftplus.com/"><img class="addons" alt="UpdraftPlus" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/updraftplus_logo.png'; ?>"></a>
+			<a href="https://updraftplus.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-udp&utm_campaign=ad"><img class="addons" alt="UpdraftPlus" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/updraftplus_logo.png'; ?>"></a>
 			<a class="other-plugin-title" href="https://updraftplus.com/"><h3><?php _e('UpdraftPlus – the ultimate protection for your site, hard work and business', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
 			<p><?php echo __('Simplifies backups and restoration.', 'all-in-one-wp-security-and-firewall').' '.__('It is the world\'s highest ranking and most popular scheduled backup plugin, with over three million currently-active installs.', 'all-in-one-wp-security-and-firewall'); ?></p>
-			<a href="https://updraftplus.com/"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="https://updraftplus.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-udp&utm_campaign=ad"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
 		</div>
 		<div class="aiowps-plugin-family__plugin">
-			<a href="https://getwpo.com/"><img class="addons" alt="WP-Optimize" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/wp-optimize.png'; ?>"></a>
+			<a href="https://getwpo.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wpo&utm_campaign=ad"><img class="addons" alt="WP-Optimize" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/wp-optimize.png'; ?>"></a>
 			<a class="other-plugin-title" href="https://getwpo.com/"><h3><?php _e('WP-Optimize – keep your database fast and efficient', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
 			<p><?php echo __('Makes your site fast and efficient.', 'all-in-one-wp-security-and-firewall').' '.__('It cleans the database, compresses images and caches pages for ultimate speed.', 'all-in-one-wp-security-and-firewall'); ?></p>
-			<a href="https://getwpo.com/"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="https://getwpo.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wpo&utm_campaign=ad"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
 		</div>
 		<div class="aiowps-plugin-family__plugin">
-			<a href="https://updraftplus.com/updraftcentral/"><img class="addons" alt="UpdraftCentral" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/updraft-central.png'; ?>"></a>
+			<a href="https://updraftplus.com/updraftcentral/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-udc&utm_campaign=ad"><img class="addons" alt="UpdraftCentral" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/updraft-central.png'; ?>"></a>
 			<a class="other-plugin-title" href="https://updraftplus.com/updraftcentral/"><h3><?php _e('UpdraftCentral – save hours managing multiple WP sites from one place', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
 			<p><?php _e('Highly efficient way to manage, optimize, update and backup multiple websites from one place.', 'all-in-one-wp-security-and-firewall'); ?></p>
-			<a href="https://updraftplus.com/updraftcentral/"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="https://updraftplus.com/updraftcentral/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-udc&utm_campaign=ad"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
 		</div>
 		<div class="aiowps-plugin-family__plugin">
-			<a href="https://easyupdatesmanager.com/"><img class="addons" alt="Easy Updates Manager" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/easy-updates-manager-logo.png'; ?>"></a>
-			<a class="other-plugin-title" href="https://easyupdatesmanager.com/"><h3><?php _e('Easy Updates Manager', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
-			<p><?php _e('Keeps your WordPress site up to date and bug free.', 'all-in-one-wp-security-and-firewall'); ?></p>
-			<a href="https://easyupdatesmanager.com/"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="https://easyupdatesmanager.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-eum&utm_campaign=ad"><img class="addons" alt="Easy Updates Manager" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/easy-updates-manager-logo.png'; ?>"></a>
+			<a class="other-plugin-title" href="https://easyupdatesmanager.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-eum&utm_campaign=ad"><h3><?php _e('Easy Updates Manager - keep your WordPress site up to date and bug free', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
+			<p>
+				<?php
+					echo esc_html__("A light yet powerful plugin that allows you to manage all kinds of updates.", 'all-in-one-wp-security-and-firewall') . "&nbsp;" .
+						esc_html__("With a huge number of settings for endless customization.", 'all-in-one-wp-security-and-firewall') . "&nbsp;" .
+						esc_html__("Easy Updates Manager is an obvious choice for anyone wanting to take control of their website updates.", 'all-in-one-wp-security-and-firewall');
+				?>
+	
+			</p>
+			<a href="https://easyupdatesmanager.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-eum&utm_campaign=ad"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
+		</div>
+		<div class="aiowps-plugin-family__plugin">
+			<a href="https://www.internallinkjuicer.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-ilj&utm_campaign=ad"><img class="addons" alt="Internal Link Juicer" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/internal-link-juicer-logo-sm.png'; ?>"></a>
+			<a class="other-plugin-title" href="https://www.internallinkjuicer.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-ilj&utm_campaign=ad"><h3><?php _e('Internal Link Juicer - a five-star rated internal linking plugin for WordPress', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
+			
+			<p>
+				<?php
+				echo esc_html__("This five-star rated plugin automates internal linking.", 'all-in-one-wp-security-and-firewall') . "&nbsp;" .
+					esc_html__("It strategically places relevant links within your content.", 'all-in-one-wp-security-and-firewall');
+				?>
+			</p>
+			<p>
+				<?php _e("Improve your SEO with just a few clicks.", 'all-in-one-wp-security-and-firewall');?>
+			</p>
+			<a href="https://www.internallinkjuicer.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-ilj&utm_campaign=ad"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
+		</div>
+		<div class="aiowps-plugin-family__plugin">
+			<a href="https://wpovernight.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wp-overnight&utm_campaign=ad"><img class="addons" alt="WP Overnight" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/wp-overnight-sm.png'; ?>"></a>
+			<a class="other-plugin-title" href="https://wpovernight.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wp-overnight&utm_campaign=ad"><h3><?php _e('WP Overnight - quality plugins for your WooCommerce store. 5 star rated invoicing, order and product management tools', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
+			<p>
+				<?php
+					echo esc_html__("WP Overnight is an independent plugin shop with a range of WooCommerce plugins.", 'all-in-one-wp-security-and-firewall') . "&nbsp;" .
+						esc_html__("Our range of plugins have over 7,500,000 downloads and thousands of loyal customers.", 'all-in-one-wp-security-and-firewall');
+				?>
+			</p>
+			<p>
+				<?php _e("Create PDF invoices, automations, barcodes, reports and so much more.", 'all-in-one-wp-security-and-firewall');?>
+			</p>
+			<a href="https://wpovernight.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wp-overnight&utm_campaign=ad"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
+		</div>
+		<div class="aiowps-plugin-family__plugin">
+			<a href="https://wpgetapi.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wpgetapi&utm_campaign=ad"><img class="addons" alt="WP Get API" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/wpgetapi-sm.png'; ?>"></a>
+			<a class="other-plugin-title" href="https://wpgetapi.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wpgetapi&utm_campaign=ad"><h3><?php _e('WPGetAPI - connect WordPress to APIs without a developer', 'all-in-one-wp-security-and-firewall'); ?></h3></a>
+			
+			<p>
+				<?php
+					echo esc_html__("The easiest way to connect your WordPress website to an external API.", 'all-in-one-wp-security-and-firewall') . "&nbsp;" .
+						esc_html__("WPGetAPI is free, powerful and easy to use.", 'all-in-one-wp-security-and-firewall') . "&nbsp;" .
+						esc_html__("Connect to virtually any REST API and retrieve data without writing a line of code.", 'all-in-one-wp-security-and-firewall');
+				?>
+			</p>
+			<a href="https://wpgetapi.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wpgetapi&utm_campaign=ad"><?php _e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
 		</div>
 	</div><!-- END aiowps-plugin-family__plugins -->
 </div>

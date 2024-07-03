@@ -9,15 +9,13 @@
  * remove_action( 'some_action', [ make( FakerPress\Hooks::class ), 'some_method' ] );
  *
  * @since   0.6.0
- *
- * @package StellarWP\Jobvite
  */
 
 namespace FakerPress;
 
 use FakerPress\Admin\Menu;
 use FakerPress\Admin\View\Factory as View_Factory;
-use lucatume\DI52\ServiceProvider;
+use FakerPress\Contracts\Service_Provider;
 
 /**
  * Class Hooks.
@@ -26,7 +24,7 @@ use lucatume\DI52\ServiceProvider;
  *
  * @package FakerPress
  */
-class Hooks extends ServiceProvider {
+class Hooks extends Service_Provider {
 
 	/**
 	 * Binds and sets up implementations.
@@ -34,6 +32,8 @@ class Hooks extends ServiceProvider {
 	 * @since 0.6.0
 	 */
 	public function register() {
+		singleton( static::class, $this );
+
 		$this->add_actions();
 		$this->add_filters();
 	}
@@ -80,6 +80,7 @@ class Hooks extends ServiceProvider {
 
 		add_filter( 'admin_title', [ $admin, '_filter_set_admin_page_title' ], 15, 2 );
 
+		add_filter( 'plugin_row_meta', [ $admin, 'filter_plugin_row_meta' ], 10, 2 );
 
 		// Allow WordPress
 		add_filter( 'fakerpress.messages.allowed_html', [ $admin, '_filter_messages_allowed_html' ], 1, 1 );
@@ -134,7 +135,7 @@ class Hooks extends ServiceProvider {
 	/**
 	 * Sets the current screen on the administration properly for subviews.
 	 *
-	 * @since TBD
+	 * @since 0.6.4
 	 *
 	 * @param \WP_Screen $screen
 	 *

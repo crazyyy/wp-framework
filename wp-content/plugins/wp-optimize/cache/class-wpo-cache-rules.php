@@ -177,7 +177,6 @@ class WPO_Cache_Rules {
 			if (apply_filters('wpo_delete_cached_homepage_on_post_update', true, $post_id)) WPO_Page_Cache::delete_homepage_cache();
 			WPO_Page_Cache::delete_feed_cache();
 			WPO_Page_Cache::delete_single_post_cache($post_id);
-			WPO_Page_Cache::delete_sitemap_cache();
 			WPO_Page_Cache::delete_post_feed_cache($post_id);
 		}
 	}

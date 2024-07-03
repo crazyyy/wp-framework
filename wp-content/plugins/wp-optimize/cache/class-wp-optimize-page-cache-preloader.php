@@ -50,9 +50,15 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 
 			$last_schedule_type = $previous_settings['preload_schedule_type'];
 
+			$last_use_nighttime = $this->options->get_option('page_cache_schedule_preload_nighttime');
+			// By default, we schedule preload events to the nighttime.
+			$use_nighttime = apply_filters('wpo_page_cache_schedule_preload_use_nighttime', 1);
+
+			$this->options->update_option('page_cache_schedule_preload_nighttime', $use_nighttime);
+
 			if (wp_next_scheduled('wpo_page_cache_schedule_preload')) {
 				// if already scheduled this schedule type
-				if ($new_settings['preload_schedule_type'] == $last_schedule_type) {
+				if ($new_settings['preload_schedule_type'] == $last_schedule_type && ($last_use_nighttime === $use_nighttime)) {
 					// If the schedule type is cache lifespan, check if the cache lifespan changed.
 					if ('wpo_use_cache_lifespan' == $new_settings['preload_schedule_type']) {
 						// Else, if the settings cache lifespan settings haven't changed, returns
@@ -66,8 +72,15 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 				// clear currently scheduled preload action.
 				wp_clear_scheduled_hook('wpo_page_cache_schedule_preload');
 			}
+
 			// schedule preload action.
-			wp_schedule_event((time() + $this->get_schedule_interval($new_settings['preload_schedule_type'])), $new_settings['preload_schedule_type'], 'wpo_page_cache_schedule_preload');
+			$timestamp = time() + $this->get_schedule_interval($new_settings['preload_schedule_type']);
+
+			if ($use_nighttime) {
+				$timestamp = $this->make_nighttime($timestamp);
+			}
+
+			wp_schedule_event($timestamp, $new_settings['preload_schedule_type'], 'wpo_page_cache_schedule_preload');
 		} else {
 			wp_clear_scheduled_hook('wpo_page_cache_schedule_preload');
 		}
@@ -86,7 +99,15 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		// schedule preload action if need.
 		if ($this->is_scheduled_preload_enabled()) {
 			$preload_schedule_type = $this->get_cache_config('preload_schedule_type');
-			wp_schedule_event(time() + $this->get_schedule_interval($preload_schedule_type), $preload_schedule_type, 'wpo_page_cache_schedule_preload');
+			// By default, we schedule preload events to the nighttime.
+			$use_nighttime = apply_filters('wpo_page_cache_schedule_preload_use_nighttime', 1);
+
+			$timestamp = time() + $this->get_schedule_interval($preload_schedule_type);
+			if ($use_nighttime) {
+				$timestamp = $this->make_nighttime($timestamp);
+			}
+
+			wp_schedule_event($timestamp, $preload_schedule_type, 'wpo_page_cache_schedule_preload');
 		}
 	}
 
@@ -668,6 +689,26 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			'file_count' => $cache_size['file_count'],
 			'resume_in' => $preload_resuming_in
 		);
+	}
+
+	/**
+	 * Shifts the given timestamp to nighttime.
+	 *
+	 * @param int $time
+	 *
+	 * @return int
+	 */
+	private function make_nighttime($time) {
+		
+		$gmt_offset = WP_Optimize_Utils::get_gmt_offset();
+
+		// Set time to random time from 1 a.m. to 4:59 a.m.
+		$random_time = sprintf('%02d:%02d', rand(1, 4), rand(0, 59));
+		$nighttime = strtotime(date("Y-m-d {$random_time}:00", $time)) - $gmt_offset;
+		
+		if ($nighttime < time()) $nighttime += 24 * 3600;
+
+		return $nighttime;
 	}
 }
 

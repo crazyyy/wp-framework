@@ -232,9 +232,7 @@ class Helpers {
 	 * @param mixed $value array|object|string|whatever that is json_encode'able.
 	 */
 	public static function json_encode( $value ) {
-		return version_compare( PHP_VERSION, '5.4.0' ) >= 0
-			? json_encode( $value, JSON_PRETTY_PRINT )
-			: json_encode( $value );
+		return json_encode( $value, JSON_PRETTY_PRINT );
 	}
 
 	/**
@@ -543,8 +541,8 @@ class Helpers {
 	}
 
 	/**
-	 * Check if Simple History dev mode is enabled.
 	 * Used by the developer of the plugin to test things.
+	 * Check if Simple History dev mode is enabled.
 	 *
 	 * @return bool True if dev mode is enabled.
 	 */
@@ -1099,6 +1097,20 @@ class Helpers {
 		$setting = apply_filters( 'simple_history_show_as_page', $setting );
 
 		return (bool) $setting;
+	}
+
+	/**
+	 * Returns true if Detective Mode is active.
+	 *
+	 * Default is false.
+	 *
+	 * @return bool
+	 */
+	public static function detective_mode_is_enabled() {
+		return (bool) apply_filters(
+			'simple_history/detective_mode_enabled',
+			get_option( 'simple_history_detective_mode_enabled', 0 )
+		);
 	}
 
 	/**

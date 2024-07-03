@@ -276,4 +276,17 @@ class AIOS_Helper {
 
 		return $reverse_lookup_data;
 	}
+	
+	/**
+	 * Gets hash of given string using auth Authentication scheme
+	 *
+	 * @param string $data - Plain text to hash.
+	 *
+	 * @return string - Hash of $data
+	 */
+	 public static function get_hash($data) {
+		global $aiowps_constants;
+		$salt = $aiowps_constants->AUTH_KEY.$aiowps_constants->AUTH_SALT;
+		return hash_hmac('md5', $data, $salt);
+	 }
 }

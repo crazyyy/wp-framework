@@ -195,18 +195,18 @@ class AIOWPSecurity_User_Security_Menu extends AIOWPSecurity_Admin_Menu {
 		}
 		// now let's put the results in an HTML table
 		$account_output = "";
-		if (null == $admin_users) {
+		if (!empty($admin_users)) {
 			$account_output .= '<table>';
-			$account_output .= '<tr><th>'.__('Account login name', 'all-in-one-wp-security-and-firewall').'</th></tr>';
+			$account_output .= '<tr><th>'.esc_html(__('Account login name', 'all-in-one-wp-security-and-firewall')).'</th></tr>';
 			foreach ($admin_users as $entry) {
 				$account_output .= '<tr>';
 				if (strtolower($entry->user_login) == 'admin') {
-					$account_output .= '<td style="color:red; font-weight: bold;">'.$entry->user_login.'</td>';
+					$account_output .= '<td style="color:red; font-weight: bold;">'.esc_html($entry->user_login).'</td>';
 				} else {
-					$account_output .= '<td>'.$entry->user_login.'</td>';
+					$account_output .= '<td>'.esc_html($entry->user_login).'</td>';
 				}
 				$user_acct_edit_link = admin_url('user-edit.php?user_id=' . $entry->ID);
-				$account_output .= '<td><a href="'.$user_acct_edit_link.'" target="_blank">'.__('Edit user', 'all-in-one-wp-security-and-firewall').'</a></td>';
+				$account_output .= '<td><a href="'.esc_url($user_acct_edit_link).'" target="_blank">'.esc_html(__('Edit user', 'all-in-one-wp-security-and-firewall')).'</a></td>';
 				$account_output .= '</tr>';
 			}
 			$account_output .= '</table>';
@@ -337,32 +337,28 @@ class AIOWPSecurity_User_Security_Menu extends AIOWPSecurity_Admin_Menu {
 				die('Nonce check failed for save lockout whitelist settings.');
 			}
 
-			if (isset($_POST["aiowps_lockdown_enable_whitelisting"]) && empty($_POST['aiowps_lockdown_allowed_ip_addresses'])) {
-				$this->show_msg_error('You must submit at least one IP address.', 'all-in-one-wp-security-and-firewall');
-			} else {
-				if (!empty($_POST['aiowps_lockdown_allowed_ip_addresses'])) {
-					$ip_addresses = stripslashes($_POST['aiowps_lockdown_allowed_ip_addresses']);
-					$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ip_addresses);
-					$validated_ip_list_array = AIOWPSecurity_Utility_IP::validate_ip_list($ip_list_array, 'whitelist');
-					if (is_wp_error($validated_ip_list_array)) {
-						$result = -1;
-						$this->show_msg_error(nl2br($validated_ip_list_array->get_error_message()));
-					} else {
-						$allowed_ip_data = implode("\n", $validated_ip_list_array);
-						$aio_wp_security->configs->set_value('aiowps_lockdown_allowed_ip_addresses', $allowed_ip_data);
-						$_POST['aiowps_lockdown_allowed_ip_addresses'] = ''; // Clear the post variable for the allowed address list.
-					}
+			if (!empty($_POST['aiowps_lockdown_allowed_ip_addresses'])) {
+				$ip_addresses = stripslashes($_POST['aiowps_lockdown_allowed_ip_addresses']);
+				$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ip_addresses);
+				$validated_ip_list_array = AIOWPSecurity_Utility_IP::validate_ip_list($ip_list_array, 'whitelist');
+				if (is_wp_error($validated_ip_list_array)) {
+					$result = -1;
+					$this->show_msg_error(nl2br($validated_ip_list_array->get_error_message()));
 				} else {
-					$aio_wp_security->configs->set_value('aiowps_lockdown_allowed_ip_addresses', ''); //Clear the IP address config value
+					$allowed_ip_data = implode("\n", $validated_ip_list_array);
+					$aio_wp_security->configs->set_value('aiowps_lockdown_allowed_ip_addresses', $allowed_ip_data);
+					$_POST['aiowps_lockdown_allowed_ip_addresses'] = ''; // Clear the post variable for the allowed address list.
 				}
+			} else {
+				$aio_wp_security->configs->set_value('aiowps_lockdown_allowed_ip_addresses', ''); //Clear the IP address config value
+			}
 
-				if (1 == $result) {
-					$aio_wp_security->configs->set_value('aiowps_lockdown_enable_whitelisting', isset($_POST["aiowps_lockdown_enable_whitelisting"]) ? '1' : '', true);
+			if (1 == $result) {
+				$aio_wp_security->configs->set_value('aiowps_lockdown_enable_whitelisting', isset($_POST["aiowps_lockdown_enable_whitelisting"]) ? '1' : '', true);
 
-					$this->show_msg_settings_updated();
-					//Recalculate points after the feature status/options have been altered
-					$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-				}
+				$this->show_msg_settings_updated();
+				//Recalculate points after the feature status/options have been altered
+				$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 			}
 		}
 
@@ -430,7 +426,13 @@ class AIOWPSecurity_User_Security_Menu extends AIOWPSecurity_Admin_Menu {
 		$user_list = new AIOWPSecurity_List_Logged_In_Users();
 		if (isset($_REQUEST['action'])) { // Do row action tasks for list table form for login activity display
 			if ('force_user_logout' == $_REQUEST['action']) { // Force Logout link was clicked for a row in list table
-				$user_list->force_user_logout(strip_tags($_REQUEST['logged_in_id']), strip_tags($_REQUEST['ip_address']));
+				$nonce = isset($_REQUEST['aiowps_nonce']) ? $_REQUEST['aiowps_nonce'] : '';
+				$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'force_user_logout');
+				if (is_wp_error($result)) {
+					$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
+					die($result->get_error_message());
+				}
+				$user_list->force_user_logout(strip_tags($_REQUEST['logged_in_id']));
 			}
 		}
 		

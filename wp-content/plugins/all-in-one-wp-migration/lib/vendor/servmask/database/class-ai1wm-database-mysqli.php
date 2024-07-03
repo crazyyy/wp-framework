@@ -67,7 +67,7 @@ class Ai1wm_Database_Mysqli extends Ai1wm_Database {
 	}
 
 	/**
-	 * Escape string input for mysql query
+	 * Escape string input for MySQL query
 	 *
 	 * @param  string $input String to escape
 	 * @return string
@@ -95,51 +95,51 @@ class Ai1wm_Database_Mysqli extends Ai1wm_Database {
 	}
 
 	/**
-	 * Return server version
+	 * Return server info
 	 *
 	 * @return string
 	 */
-	public function version() {
+	public function server_info() {
 		return mysqli_get_server_info( $this->wpdb->dbh );
 	}
 
 	/**
 	 * Return the result from MySQL query as associative array
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return array
 	 */
-	public function fetch_assoc( $result ) {
+	public function fetch_assoc( &$result ) {
 		return mysqli_fetch_assoc( $result );
 	}
 
 	/**
 	 * Return the result from MySQL query as row
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return array
 	 */
-	public function fetch_row( $result ) {
+	public function fetch_row( &$result ) {
 		return mysqli_fetch_row( $result );
 	}
 
 	/**
 	 * Return the number for rows from MySQL results
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return integer
 	 */
-	public function num_rows( $result ) {
+	public function num_rows( &$result ) {
 		return mysqli_num_rows( $result );
 	}
 
 	/**
 	 * Free MySQL result memory
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return boolean
 	 */
-	public function free_result( $result ) {
+	public function free_result( &$result ) {
 		return mysqli_free_result( $result );
 	}
 }

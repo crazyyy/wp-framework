@@ -93,9 +93,7 @@ class Rsssl_File_Storage {
 
 		// Check if IV generation was successful and cryptographically strong
 		if ($iv === false || $crypto_strong === false) {
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( "Really Simple SSL: Could not generate a secure initialization vector." );
-			}
+			return '';
 		}
 
 		$encrypted = openssl_encrypt($data, 'aes-256-cbc', $this->hash, 0, $iv);
@@ -117,12 +115,17 @@ class Rsssl_File_Storage {
 
 		// Check if IV was successfully retrieved
 		if ( $iv === false ) {
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( 'Really Simple SSL: Could not retrieve the initialization vector.' );
-			}
+			return '';
 		}
 
-		$decrypted = openssl_decrypt( $encrypted_data, 'aes-256-cbc', $this->hash, 0, $iv );
+		if ( function_exists( 'openssl_decrypt' ) ) {
+			$decrypted = openssl_decrypt( $encrypted_data, 'aes-256-cbc', $this->hash, 0, $iv );
+		} else {
+			$decrypted = '';
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( 'Really Simple SSL: OpenSSL functions do not exist. Check with your host if the OpenSSL library for PHP can be enabled.' );
+			}
+		}
 
 		return $decrypted;
 	}

@@ -263,8 +263,9 @@ function cpjs_start_profiler() {
 		}
 	}
 
-	var cookies = jQuery('#cp-cookies').val();
-	var headers = jQuery('#custom-headers').val();
+	var cookies    = jQuery('#cp-cookies').val();
+	var headers    = jQuery('#custom-headers').val();
+	var exclusions = jQuery('#exclusions').val();
 
 	// Change buttons status and add animated image with status message
 	jQuery('#start-profile').prop('disabled', true);
@@ -285,6 +286,7 @@ function cpjs_start_profiler() {
 		'username': username,
 		'cookies': cookies,
 		'custom_headers': headers,
+		'exclusions': exclusions,
 		'method': method,
 		'payload': payload,
 		'ua': ua,

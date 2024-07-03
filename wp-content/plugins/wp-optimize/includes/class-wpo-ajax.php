@@ -23,8 +23,20 @@ class WPO_Ajax {
 	 */
 	private function __construct() {
 		add_action('wp_ajax_wp_optimize_ajax', array($this, 'handle_ajax_requests'));
-		
-		add_filter('wp_optimize_heartbeat', array($this, 'handle_heartbeat_requests'), 10, 1);
+		add_filter('wp_optimize_heartbeat_ajax', array($this, 'handle_heartbeat_requests'), 10, 1);
+		add_filter('wp_optimize_is_heartbeat_valid_ajax_command', array($this, 'is_heartbeat_command_valid'), 10, 1);
+	}
+
+	/**
+	 * Check if a command is valid for this class
+	 *
+	 * @param string $command
+	 * @return bool
+	 */
+	public function is_heartbeat_command_valid($command) {
+		$this->set_heartbeat_subaction($command);
+		$this->set_commands();
+		return !$this->is_invalid_command();
 	}
 
 	/**

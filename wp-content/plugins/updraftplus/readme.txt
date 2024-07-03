@@ -2,8 +2,8 @@
 Contributors: Backup with UpdraftPlus, DavidAnderson, pmbaldha, DNutbourne, aporter, bcrodua
 Tags: backup, database backup, wordpress backup, cloud backup, migration
 Requires at least: 3.2
-Tested up to: 6.4
-Stable tag: 1.24.2
+Tested up to: 6.6
+Stable tag: 1.24.3
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -179,10 +179,19 @@ The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the b
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.32.x of the free version correspond to changes made in 2.16.32.x of the paid version.
 
-
 The [UpdraftPlus backup blog](https://updraftplus.com/news/) is the best place to learn in more detail about any important changes.
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.23.1.x of the free version correspond to changes made in 2.23.1.x of the paid version.
+
+= 1.24.3 - 30/Apr/2024 =
+
+* FIX: Regression in 1.23.16 for improving logs which then caused incorrect_offset error reported by Dropbox wasn't properly handled.
+* PERFORMANCE: The UpdraftVault remote storage can handle Wasabi as well as Amazon S3 storage in the background.
+* TWEAK: Fix WP_Theme_JSON_Resolver::theme_has_support deprecation warning for UpdraftCentral  
+* TWEAK: Prevent "PHP Warning: Undefined property: UpdraftPlus_BackupModule_pcloud::$description" during rescan remote storage.
+* TWEAK: Prevent PHP deprecation warnings during database backups when encountering null values in bit field types.
+* TWEAK: Show a warning message when the WP_ACCESSIBLE_HOSTS constant is defined and updraftplus.com does not exist in its value
+* TWEAK: Update notices
 
 = 1.24.2 - 26/Mar/2024 =
 
@@ -1913,4 +1922,4 @@ Non-English translators are provided by volunteers, and wordpress.org does not g
 We recognise and thank those mentioned at https://updraftplus.com/acknowledgements/ for code and/or libraries used and/or modified under the terms of their open source licences.
 
 == Upgrade Notice ==
-* 1.24.2: PHPSecLib and restoration related issues, unresponsive user interface, OneDrive functionality improvements and various small tweaks. A recommended update for all.
+* 1.24.3: Regression for improving Dropbox-related logs, improvements and various small tweaks. A recommended update for all.

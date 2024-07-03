@@ -1,6 +1,6 @@
 <?php
 
-namespace WBCR\Factory_Templates_126\Pages;
+namespace WBCR\Factory_Templates_127\Pages;
 
 // Exit if accessed directly
 if( !defined('ABSPATH') ) {
@@ -82,7 +82,7 @@ class License extends PageBase {
 
 	/**
 	 * @since 2.0.7
-	 * @var \WBCR\Factory_473\Premium\Provider
+	 * @var \WBCR\Factory_474\Premium\Provider
 	 */
 	protected $premium;
 
@@ -100,7 +100,7 @@ class License extends PageBase {
 
 	/**
 	 * @since 2.0.7
-	 * @var \WBCR\Factory_473\Premium\Interfaces\License
+	 * @var \WBCR\Factory_474\Premium\Interfaces\License
 	 */
 	protected $premium_license;
 
@@ -109,9 +109,9 @@ class License extends PageBase {
 
 	/**
 	 * {@inheritdoc}
-	 * @param \Wbcr_Factory473_Plugin $plugin
+	 * @param \Wbcr_Factory474_Plugin $plugin
 	 */
-	public function __construct(\Wbcr_Factory473_Plugin $plugin)
+	public function __construct(\Wbcr_Factory474_Plugin $plugin)
 	{
 		$this->plugin = $plugin;
 
@@ -138,8 +138,8 @@ class License extends PageBase {
 	{
 		parent::assets($scripts, $styles);
 
-		$this->styles->add(FACTORY_TEMPLATES_126_URL . '/assets/css/license-manager.css');
-		$this->scripts->add(FACTORY_TEMPLATES_126_URL . '/assets/js/clearfy-license-manager.js');
+		$this->styles->add(FACTORY_TEMPLATES_127_URL . '/assets/css/license-manager.css');
+		$this->scripts->add(FACTORY_TEMPLATES_127_URL . '/assets/js/clearfy-license-manager.js');
 	}
 
 	/**
@@ -149,7 +149,7 @@ class License extends PageBase {
 	 */
 	public function ajax_handler()
 	{
-		wbcr_factory_templates_126_check_license($this->plugin);
+		wbcr_factory_templates_127_check_license($this->plugin);
 	}
 
 	/**
@@ -159,7 +159,7 @@ class License extends PageBase {
 	{
 		?>
 		<div id="wcl-license-wrapper"
-		     data-loader="<?php echo FACTORY_TEMPLATES_126_URL . '/assets/img/loader.gif'; ?>"
+		     data-loader="<?php echo FACTORY_TEMPLATES_127_URL . '/assets/img/loader.gif'; ?>"
 		     data-plugin-name="<?php echo esc_attr($this->plugin_name); ?>"
 		     data-nonce="<?php echo wp_create_nonce("clearfy_activate_license_for_{$this->plugin_name}") ?>">
 			<?php $this->show_license_form(); ?>
@@ -265,11 +265,11 @@ class License extends PageBase {
 		if( $this->is_premium ):
 			?>
 			<p style="margin-top: 10px;">
-				<?php printf(__('<a href="%s" target="_blank" rel="noopener">Lean more</a> about the premium version and get the license key to activate it now!', 'wbcr_factory_templates_126'), $this->plugin->get_support()->get_pricing_url(true, 'license_page')); ?>
+				<?php printf(__('<a href="%s" target="_blank" rel="noopener">Lean more</a> about the premium version and get the license key to activate it now!', 'wbcr_factory_templates_127'), $this->plugin->get_support()->get_pricing_url(true, 'license_page')); ?>
 			</p>
 		<?php else: ?>
 			<p style="margin-top: 10px;">
-				<?php printf(__('Can’t find your key? Go to <a href="%s" target="_blank" rel="noopener">this page</a> and login using the e-mail address associated with your purchase.', 'wbcr_factory_templates_126'), $this->plugin->get_support()->get_contacts_url(true, 'license_page')) ?>
+				<?php printf(__('Can’t find your key? Go to <a href="%s" target="_blank" rel="noopener">this page</a> and login using the e-mail address associated with your purchase.', 'wbcr_factory_templates_127'), $this->plugin->get_support()->get_contacts_url(true, 'license_page')) ?>
 			</p>
 		<?php endif;
 	}
@@ -281,16 +281,16 @@ class License extends PageBase {
 	{
 		?>
 		<div id="license-manager"
-		     class="factory-bootstrap-475 onp-page-wrap <?php echo $this->get_license_type() ?>-license-manager-content">
+		     class="factory-bootstrap-476 onp-page-wrap <?php echo $this->get_license_type() ?>-license-manager-content">
 			<div>
-				<h3><?php printf(__('Activate %s', 'wbcr_factory_templates_126'), $this->plan_name) ?></h3>
+				<h3><?php printf(__('Activate %s', 'wbcr_factory_templates_127'), $this->plan_name) ?></h3>
 				<?php echo $this->get_plan_description() ?>
 			</div>
 			<br>
 			<?php if( is_wp_error($notice) ) : ?>
 				<div class="license-message <?php echo $this->get_license_type() ?>-license-message">
 					<div class="alert <?php echo esc_attr($notice->get_error_code()); ?>">
-						<h4 class="alert-heading"><?php _e($notice->get_error_message(), 'wbcr_factory_templates_126') ?></h4>
+						<h4 class="alert-heading"><?php _e($notice->get_error_message(), 'wbcr_factory_templates_127') ?></h4>
 					</div>
 				</div>
 			<?php endif; ?>
@@ -300,20 +300,20 @@ class License extends PageBase {
 						<a href="<?php echo $this->plugin->get_support()->get_pricing_url(true, 'license_page'); ?>"
 						   class="purchase-premium" target="_blank" rel="noopener">
                             <span class="btn btn-gold btn-inner-wrap">
-                            <?php _e('Upgrade to Premium', 'wbcr_factory_templates_126') ?>
+                            <?php _e('Upgrade to Premium', 'wbcr_factory_templates_127') ?>
                             </span>
 						</a>
-						<p><?php printf(__('Your current license for %1$s:', 'wbcr_factory_templates_126'), $this->plugin->getPluginTitle()) ?></p>
+						<p><?php printf(__('Your current license for %1$s:', 'wbcr_factory_templates_127'), $this->plugin->getPluginTitle()) ?></p>
 					<?php endif; ?>
 					<div class="license-details-block <?php echo $this->get_license_type() ?>-details-block">
 						<?php if( $this->is_premium ): ?>
 							<a data-action="deactivate" href="#"
 							   class="btn btn-default btn-small license-delete-button wcl-control-btn">
-								<?php _e('Delete Key', 'wbcr_factory_templates_126') ?>
+								<?php _e('Delete Key', 'wbcr_factory_templates_127') ?>
 							</a>
 							<a data-action="sync" href="#"
 							   class="btn btn-default btn-small license-synchronization-button wcl-control-btn">
-								<?php _e('Synchronization', 'wbcr_factory_templates_126') ?>
+								<?php _e('Synchronization', 'wbcr_factory_templates_127') ?>
 							</a>
 						<?php endif; ?>
 						<h3>
@@ -332,19 +332,19 @@ class License extends PageBase {
 						<?php endif; ?>
 						<div class="license-key-description">
 							<?php if( !$this->is_premium ): ?>
-								<p><?php _e('Public License is a GPLv3 compatible license allowing you to change and use this version of the plugin for free. Please keep in mind this license covers only free edition of the plugin. Premium versions are distributed with other type of a license.', 'wbcr_factory_templates_126') ?></p>
+								<p><?php _e('Public License is a GPLv3 compatible license allowing you to change and use this version of the plugin for free. Please keep in mind this license covers only free edition of the plugin. Premium versions are distributed with other type of a license.', 'wbcr_factory_templates_127') ?></p>
 							<?php else: ?>
-								<p><?php _e('Сommercial license, only to the premium add-on to this free plugin. You cannot distribute or modify the premium add-on. But free plugin is a GPLv3 compatible license allowing you to change and use this version of the plugin for free.', 'wbcr_factory_templates_126') ?></p>
+								<p><?php _e('Сommercial license, only to the premium add-on to this free plugin. You cannot distribute or modify the premium add-on. But free plugin is a GPLv3 compatible license allowing you to change and use this version of the plugin for free.', 'wbcr_factory_templates_127') ?></p>
 							<?php endif; ?>
 							<?php if( $this->is_premium && $this->premium_has_subscription ): ?>
 								<p class="activate-trial-hint">
-									<?php _e('You use a paid subscription for the plugin updates. In case you don’t want to receive paid updates, please, click <a data-action="unsubscribe" class="wcl-control-btn" href="#">cancel subscription</a>', 'wbcr_factory_templates_126') ?>
+									<?php _e('You use a paid subscription for the plugin updates. In case you don’t want to receive paid updates, please, click <a data-action="unsubscribe" class="wcl-control-btn" href="#">cancel subscription</a>', 'wbcr_factory_templates_127') ?>
 								</p>
 							<?php endif; ?>
 
 							<?php if( $this->get_license_type() == 'trial' ): ?>
 								<p class="activate-error-hint">
-									<?php printf(__('Your license has expired, please extend the license to get updates and support.', 'wbcr_factory_templates_126'), '') ?>
+									<?php printf(__('Your license has expired, please extend the license to get updates and support.', 'wbcr_factory_templates_127'), '') ?>
 								</p>
 							<?php endif; ?>
 						</div>
@@ -352,19 +352,19 @@ class License extends PageBase {
 							<tr>
 								<!--<td class="license-param license-param-domain">
 										<span class="license-value"><?php echo esc_attr($_SERVER['SERVER_NAME']); ?></span>
-										<span class="license-value-name"><?php _e('domain', 'wbcr_factory_templates_126') ?></span>
+										<span class="license-value-name"><?php _e('domain', 'wbcr_factory_templates_127') ?></span>
 									</td>-->
 								<td class="license-param license-param-days">
 									<span class="license-value"><?php echo $this->get_plan() ?></span>
-									<span class="license-value-name"><?php _e('plan', 'wbcr_factory_templates_126') ?></span>
+									<span class="license-value-name"><?php _e('plan', 'wbcr_factory_templates_127') ?></span>
 								</td>
 								<?php if( $this->is_premium ) : ?>
 									<td class="license-param license-param-sites">
                                         <span class="license-value">
                                             <?php echo esc_attr($this->premium_license->get_count_active_sites()); ?>
-                                            <?php _e('of', 'wbcr_factory_templates_126') ?>
+                                            <?php _e('of', 'wbcr_factory_templates_127') ?>
                                             <?php echo esc_attr($this->premium_license->get_sites_quota()); ?></span>
-										<span class="license-value-name"><?php _e('active sites', 'wbcr_factory_templates_126') ?></span>
+										<span class="license-value-name"><?php _e('active sites', 'wbcr_factory_templates_127') ?></span>
 									</td>
 								<?php endif; ?>
 								<td class="license-param license-param-version">
@@ -374,8 +374,8 @@ class License extends PageBase {
 								<?php if( $this->is_premium ): ?>
 									<td class="license-param license-param-days">
 										<?php if( $this->get_license_type() == 'trial' ): ?>
-											<span class="license-value"><?php _e('EXPIRED!', 'wbcr_factory_templates_126') ?></span>
-											<span class="license-value-name"><?php _e('please update the key', 'wbcr_factory_templates_126') ?></span>
+											<span class="license-value"><?php _e('EXPIRED!', 'wbcr_factory_templates_127') ?></span>
+											<span class="license-value-name"><?php _e('please update the key', 'wbcr_factory_templates_127') ?></span>
 										<?php else: ?>
 											<span class="license-value">
 													<?php
@@ -385,9 +385,9 @@ class License extends PageBase {
 														echo $this->get_expiration_days();
 													}
 													?>
-                                                <small> <?php _e('day(s)', 'wbcr_factory_templates_126') ?></small>
+                                                <small> <?php _e('day(s)', 'wbcr_factory_templates_127') ?></small>
                                              </span>
-											<span class="license-value-name"><?php _e('remained', 'wbcr_factory_templates_126') ?></span>
+											<span class="license-value-name"><?php _e('remained', 'wbcr_factory_templates_127') ?></span>
 										<?php endif; ?>
 									</td>
 								<?php endif; ?>
@@ -398,14 +398,14 @@ class License extends PageBase {
 				<div class="license-input">
 					<form action="" method="post">
 						<?php if($this->is_premium): ?>
-					<p><?php _e('Have a key to activate the premium version? Paste it here:', 'wbcr_factory_templates_126') ?><p>
+					<p><?php _e('Have a key to activate the premium version? Paste it here:', 'wbcr_factory_templates_127') ?><p>
 					<?php else: ?>
-						<p><?php _e('Have a key to activate the plugin? Paste it here:', 'wbcr_factory_templates_126') ?>
+						<p><?php _e('Have a key to activate the plugin? Paste it here:', 'wbcr_factory_templates_127') ?>
 						<p>
 							<?php endif; ?>
 							<button data-action="activate" class="btn btn-default wcl-control-btn" type="button"
 							        id="license-submit">
-								<?php _e('Submit Key', 'wbcr_factory_templates_126') ?>
+								<?php _e('Submit Key', 'wbcr_factory_templates_127') ?>
 							</button>
 						<div class="license-key-wrap">
 							<input type="text" id="license-key" name="licensekey" value="" class="form-control"/>

@@ -635,12 +635,26 @@ END
 			
 			$score = false;
 			if ($requireCAPTCHA && !$performVerification) {
-				$score = Controller_CAPTCHA::shared()->score($token);
+				$expired = false;
+				if (is_object($user) && $user instanceof \WP_User) {
+					$score = Controller_Users::shared()->cached_captcha_score($token, $user, $expired);
+				}
+				
+				if ($score === false) {
+					if ($expired) {
+						return new \WP_Error('wfls_captcha_expired', wp_kses(__('<strong>CAPTCHA EXPIRED</strong>: The CAPTCHA verification for this login attempt has expired. Please try again.', 'wordfence'), array('strong'=>array())));
+					}
+					
+					$score = Controller_CAPTCHA::shared()->score($token);
+					
+					if ($score !== false && is_object($user) && $user instanceof \WP_User) {
+						Controller_Users::shared()->cache_captcha_score($token, $score, $user);
+						Controller_Users::shared()->record_captcha_score($user, $score);
+					}
+				}
+				
 				if ($score === false && !Controller_CAPTCHA::shared()->test_mode()) { //An invalid token will require additional verification (if test mode is not active)
 					$performVerification = true;
-				}
-				else if (is_object($user) && $user instanceof \WP_User) {
-					Controller_Users::shared()->record_captcha_score($user, $score);
 				}
 			}
 			

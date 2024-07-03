@@ -521,7 +521,7 @@ class wfUpdateCheck {
 				'core' => json_encode($core),
 			));
 			
-			wfConfig::set_ser('vulnerabilities_core', $result['vulnerable']); //Will have the index `current` with possibly `edge` and `patch` depending on what was provided above
+			wfConfig::set_ser('vulnerabilities_core', $result['vulnerable'], false, wfConfig::DONT_AUTOLOAD); //Will have the index `current` with possibly `edge` and `patch` depending on what was provided above
 		}
 		catch (Exception $e) {
 			//Do nothing
@@ -609,7 +609,7 @@ class wfUpdateCheck {
 				//Do nothing
 			}
 			
-			wfConfig::set_ser('vulnerabilities_plugin', $vulnerabilities);
+			wfConfig::set_ser('vulnerabilities_plugin', $vulnerabilities, false, wfConfig::DONT_AUTOLOAD);
 		}
 	}
 
@@ -674,7 +674,7 @@ class wfUpdateCheck {
 				//Do nothing
 			}
 			
-			wfConfig::set_ser('vulnerabilities_theme', $vulnerabilities);
+			wfConfig::set_ser('vulnerabilities_theme', $vulnerabilities, false, wfConfig::DONT_AUTOLOAD);
 		}
 	}
 	

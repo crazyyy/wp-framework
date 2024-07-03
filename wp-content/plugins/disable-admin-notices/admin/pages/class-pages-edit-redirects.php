@@ -61,11 +61,11 @@ class WDAN_Block_Ad_Redirects extends WDN_Page {
 	/**
 	 * Requests assets (js and css) for the page.
 	 *
-	 * @param Wbcr_Factory473_ScriptList $scripts
-	 * @param Wbcr_Factory473_StyleList $styles
+	 * @param Wbcr_Factory474_ScriptList $scripts
+	 * @param Wbcr_Factory474_StyleList $styles
 	 *
 	 * @return void
-	 * @see Wbcr_FactoryPages473_AdminPage
+	 * @see Wbcr_FactoryPages474_AdminPage
 	 *
 	 */
 	public function assets( $scripts, $styles ) {

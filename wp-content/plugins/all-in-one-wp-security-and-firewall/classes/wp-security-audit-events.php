@@ -117,7 +117,7 @@ class AIOWPSecurity_Audit_Events {
 			'failed_login' => __('Failed login', 'all-in-one-wp-security-and-firewall'),
 			'user_registration' => __('User registration', 'all-in-one-wp-security-and-firewall'),
 			'user_deleted' => __('User deleted', 'all-in-one-wp-security-and-firewall'),
-			'user_removed' => __('User removed from blog', 'all-in-one-security-and-firewall'),
+			'user_removed' => __('User removed from blog', 'all-in-one-wp-security-and-firewall'),
 			'table_migration' => __('Table migration', 'all-in-one-wp-security-and-firewall'),
 			'rule_triggered' => __('Rule triggered', 'all-in-one-wp-security-and-firewall'),
 			'rule_not_triggered' => __('Rule not triggered', 'all-in-one-wp-security-and-firewall'),

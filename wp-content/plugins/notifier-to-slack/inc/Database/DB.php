@@ -91,15 +91,51 @@ class DB {
 		return nts_fs()->can_use_premium_code__premium_only() && $is_pro_installed;
 	}
 
-	public function woocommercewoocommerce_status() {
-		$cf7_is_installed = is_plugin_active('woocommerce/woocommerce.php');
-		if ( $cf7_is_installed ) {
-			return $cf7_is_installed;
 
+	/**
+	 * FormFlow
+	 */
+	public function formflow_status() {
+		if ( is_plugin_active('simple-form/simple-form.php') ) {
+			return 'active';
+		} elseif ( file_exists(WP_PLUGIN_DIR . '/simple-form/simple-form.php') ) {
+				// 'Installed but not activated'.
+			return 'inactive';
 		} else {
-			return $cf7_is_installed;
+			// 'Not installed'.
+			return 'notinstalled';
 		}
-		wp_die();
+	}
+
+	/**
+	 * WooCommerce
+	 */
+	public function woocommercewoocommerce_status() {
+		if ( is_plugin_active('woocommerce/woocommerce.php') ) {
+			return 'active';
+		} elseif ( file_exists(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php') ) {
+				// 'Installed but not activated'.
+			return 'inactive';
+		} else {
+			// 'Not installed'.
+			return 'notinstalled';
+		}
+	}
+
+
+	/**
+	 * Contact Form 7
+	 */
+	public function cf7_status() {
+		if ( is_plugin_active('contact-form-7/wp-contact-form-7.php') ) {
+			return 'active';
+		} elseif ( file_exists(WP_PLUGIN_DIR . '/contact-form-7/wp-contact-form-7.php') ) {
+				// 'Installed but not activated'.
+			return 'inactive';
+		} else {
+			// 'Not installed'.
+			return 'notinstalled';
+		}
 	}
 
 
@@ -162,6 +198,11 @@ class DB {
 		$response['global_webhook'] = $global_webhook;
 
 		return $response;
+	}
+
+	public function get_current_user_id() {
+		$current_user_id = get_current_user_id();
+		return $current_user_id;
 	}
 
 	/**

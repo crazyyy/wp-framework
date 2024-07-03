@@ -1,5 +1,34 @@
 == Changelog ==
 
+= 1.0.96.1 (1st July 2024) =
+* Fixed: Update Twitter Icon as X  in author box #5609
+* Fixed: AMP footer Menu showing as text for some users
+
+= 1.0.96 (28th June 2024) =
+* Fixed: Featured image caption is not working #5574
+* Fixed: PHP deprecated error (PHP 8.2) #5587
+* Fixed: PHP warning message displayed on the user's end. #5594
+* Fixed: Publisher desk "Dismiss" button is not working.  #5591
+* Fixed: PHP error on the user end. #5605
+* Fixed: Undefined property: stdClass::$inContentPlacementMethod #5607
+* Fixed: While using the News12Paper theme and tagDiv Composer plugin, there is an issue with the AMP menu (user-end issue). #5608
+* Fixed: Fixed: Change Twitter as X #5609
+* Fixed: Amazon auto links are not working on AMP #5583
+
+= 1.0.95 (7th May 2024) =
+* Fixed: rtrim(): Argument #1 ($string) must be of type string, WP_Error given #5588
+* Fixed: Issue persist due to recent update with poll maker plugin #5585
+* Fixed: PHP Warning: Attempt to read property "ID" on null #5589
+* Test: Test with new version of wordpress i.e. 6.5v #5581
+* Fixed: Validation issues in images when using Pencil builder #5592
+
+= 1.0.94 (3rd April 2024) =
+* New: Added Shortcode so that user can show or hide some content in AMP. #5474
+* Improvements: Code improvement part 2 #5567
+* Fixed: Warning appears related to author-box #5577
+* Fixed: The excerpt is not showing inside the em tag in AMP, and the font is not working. #5487
+* Fixed: Issue with a cookie banner (GDPR) #5561
+
 = 1.0.93.2 (1st February 2024) =
 * Fixed: Video docking not working in AMP Newspaper theme #5566
 * Fixed: Video not loading on Amp if video set in Soledad theme Video Embed. #5571

@@ -206,7 +206,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')
 			|| '1' == $aio_wp_security->configs->get_value('aiowps_enable_rename_login_page')
 		) {
-			wp_add_dashboard_widget('brute_force', __('Brute force prevention login page'), array($this, 'widget_brute_force'));
+			wp_add_dashboard_widget('brute_force', __('Brute force prevention login page', 'all-in-one-wp-security-and-firewall'), array($this, 'widget_brute_force'));
 		}
 		wp_add_dashboard_widget('logged_in_users', __('Logged in users', 'all-in-one-wp-security-and-firewall'), array($this, 'widget_logged_in_users'));
 		wp_add_dashboard_widget('locked_ip_addresses', __('Locked IP addresses', 'all-in-one-wp-security-and-firewall'), array($this, 'widget_locked_ip_addresses'));
@@ -215,7 +215,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		$dashboard_widgets = apply_filters('aiowps_dashboard_widgets', array());
 
 		foreach ($dashboard_widgets as $widget_id) {
-			$name = empty($wp_registered_widgets[$widget_id]['all_link']) ? $wp_registered_widgets[$widget_id]['name'] : $wp_registered_widgets[$widget_id]['name'] . " <a href='{$wp_registered_widgets[$widget_id]['all_link']}' class='edit-box open-box'>" . __('View all') . '</a>';
+			$name = empty($wp_registered_widgets[$widget_id]['all_link']) ? $wp_registered_widgets[$widget_id]['name'] : $wp_registered_widgets[$widget_id]['name'] . " <a href='{$wp_registered_widgets[$widget_id]['all_link']}' class='edit-box open-box'>" . __('View all', 'all-in-one-wp-security-and-firewall') . '</a>';
 			wp_add_dashboard_widget($widget_id, $name, $wp_registered_widgets[$widget_id]['callback'], $wp_registered_widget_controls[$widget_id]['callback']);
 		}
 	}

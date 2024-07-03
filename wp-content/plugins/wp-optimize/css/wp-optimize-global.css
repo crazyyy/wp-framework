@@ -79,7 +79,7 @@
   content: "-";
 }
 
-.wpo-collapsible-content {
+.wpo-collapsible-content, .display-none {
   display: none;
 }
 

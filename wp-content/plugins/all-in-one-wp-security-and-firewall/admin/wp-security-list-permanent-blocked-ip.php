@@ -71,7 +71,7 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 			'id' => 'ID',
 			'blocked_ip' => __('Blocked IP', 'all-in-one-wp-security-and-firewall'),
 			'block_reason' => __('Reason', 'all-in-one-wp-security-and-firewall'),
-			'created' => __('Date', 'all-in-one-wp-security-and-firewall')
+			'created' => __('Date and Time', 'all-in-one-wp-security-and-firewall')
 		);
 		return $columns;
 	}

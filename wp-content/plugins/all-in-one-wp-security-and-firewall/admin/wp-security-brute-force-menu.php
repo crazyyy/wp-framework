@@ -256,6 +256,7 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 			$aio_wp_security->configs->set_value('aiowps_enable_woo_register_captcha', isset($_POST["aiowps_enable_woo_register_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_woo_lostpassword_captcha', isset($_POST["aiowps_enable_woo_lostpassword_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_custom_login_captcha', isset($_POST["aiowps_enable_custom_login_captcha"]) ? '1' : '');
+			$aio_wp_security->configs->set_value('aiowps_enable_password_protected_captcha', isset($_POST["aiowps_enable_password_protected_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_lost_password_captcha', isset($_POST["aiowps_enable_lost_password_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_contact_form_7_captcha', isset($_POST["aiowps_enable_contact_form_7_captcha"]) ? '1' : '');
 
@@ -327,39 +328,35 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 				die('Nonce check failed for save whitelist settings.');
 			}
 
-			if (isset($_POST["aiowps_enable_whitelisting"]) && empty($_POST['aiowps_allowed_ip_addresses'])) {
-				$this->show_msg_error(__('You must submit at least one IP address.', 'all-in-one-wp-security-and-firewall'));
-			} else {
-				if (!empty($_POST['aiowps_allowed_ip_addresses'])) {
-					$ip_addresses = $_POST['aiowps_allowed_ip_addresses'];
-					$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ip_addresses);
-					$validated_ip_list_array = AIOWPSecurity_Utility_IP::validate_ip_list($ip_list_array, 'whitelist');
-					if (is_wp_error($validated_ip_list_array)) {
-						$result = -1;
-						$this->show_msg_error(nl2br($validated_ip_list_array->get_error_message()));
-					} else {
-						$result = 1;
-						$whitelist_ip_data = implode("\n", $validated_ip_list_array);
-						$aio_wp_security->configs->set_value('aiowps_allowed_ip_addresses', $whitelist_ip_data);
-						$_POST['aiowps_allowed_ip_addresses'] = ''; // Clear the post variable for the banned address list.
-					}
+			if (!empty($_POST['aiowps_allowed_ip_addresses'])) {
+				$ip_addresses = $_POST['aiowps_allowed_ip_addresses'];
+				$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ip_addresses);
+				$validated_ip_list_array = AIOWPSecurity_Utility_IP::validate_ip_list($ip_list_array, 'whitelist');
+				if (is_wp_error($validated_ip_list_array)) {
+					$result = -1;
+					$this->show_msg_error(nl2br($validated_ip_list_array->get_error_message()));
 				} else {
 					$result = 1;
-					$aio_wp_security->configs->set_value('aiowps_allowed_ip_addresses', ''); // Clear the IP address config value
+					$whitelist_ip_data = implode("\n", $validated_ip_list_array);
+					$aio_wp_security->configs->set_value('aiowps_allowed_ip_addresses', $whitelist_ip_data);
+					$_POST['aiowps_allowed_ip_addresses'] = ''; // Clear the post variable for the banned address list.
 				}
+			} else {
+				$result = 1;
+				$aio_wp_security->configs->set_value('aiowps_allowed_ip_addresses', ''); // Clear the IP address config value
+			}
 
-				if (1 == $result) {
-					$aio_wp_security->configs->set_value('aiowps_enable_whitelisting', isset($_POST["aiowps_enable_whitelisting"]) ? '1' : '');
-					if ('1' == $aio_wp_security->configs->get_value('aiowps_is_login_whitelist_disabled_on_upgrade')) {
-						$aio_wp_security->configs->delete_value('aiowps_is_login_whitelist_disabled_on_upgrade');
-					}
-					$aio_wp_security->configs->save_config(); //Save the configuration
-
-					// Recalculate points after the feature status/options have been altered
-					$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-
-					$this->show_msg_settings_updated();
+			if (1 == $result) {
+				$aio_wp_security->configs->set_value('aiowps_enable_whitelisting', isset($_POST["aiowps_enable_whitelisting"]) ? '1' : '');
+				if ('1' == $aio_wp_security->configs->get_value('aiowps_is_login_whitelist_disabled_on_upgrade')) {
+					$aio_wp_security->configs->delete_value('aiowps_is_login_whitelist_disabled_on_upgrade');
 				}
+				$aio_wp_security->configs->save_config(); //Save the configuration
+
+				// Recalculate points after the feature status/options have been altered
+				$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
+
+				$this->show_msg_settings_updated();
 			}
 		}
 
@@ -413,13 +410,13 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 
 			$lockout_time_length = isset($_POST['aiowps_404_lockout_time_length']) ? sanitize_text_field($_POST['aiowps_404_lockout_time_length']) : '';
 			if (!is_numeric($lockout_time_length)) {
-				$error .= '<br />'.__('You entered a non numeric value for the lockout time length field. It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
+				$error .= '<br />'.__('You entered a non numeric value for the lockout time length field.', 'all-in-one-wp-security-and-firewall') . ' ' . __('It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
 				$lockout_time_length = '60';//Set it to the default value for this field
 			}
 
 			$redirect_url = isset($_POST['aiowps_404_lock_redirect_url']) ? trim($_POST['aiowps_404_lock_redirect_url']) : '';
 			if ('' == $redirect_url || '' == esc_url($redirect_url, array('http', 'https'))) {
-				$error .= '<br />'.__('You entered an incorrect format for the "Redirect URL" field. It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
+				$error .= '<br />'.__('You entered an incorrect format for the "Redirect URL" field.', 'all-in-one-wp-security-and-firewall') . ' ' . __('It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
 				$redirect_url = 'http://127.0.0.1';
 			}
 

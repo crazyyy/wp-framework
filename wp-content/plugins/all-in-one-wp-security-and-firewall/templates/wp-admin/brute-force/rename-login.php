@@ -34,7 +34,7 @@
 			<div class="aio_orange_box">
 				<?php
 				echo __('This feature can lock you out of admin if it doesn\'t work correctly on your site.', 'all-in-one-wp-security-and-firewall') . ' '. sprintf(__('Before activating this feature you must read the following %s.', 'all-in-one-wp-security-and-firewall'), '<a href="https://aiosplugin.com/important-note-on-intermediate-and-advanced-features" target="_blank">'.__('message', 'all-in-one-wp-security-and-firewall').'</a>');
-				echo '<p>' . __("NOTE: If you are hosting your site on WPEngine or a provider which performs server caching, you will need to ask the host support people to NOT cache your renamed login page.", "all-in-one-wp-security-and-firewall") . '</p>';
+				echo '<p>' . __("NOTE: If you are hosting your site on WPEngine or a provider which performs server caching, you will need to ask the host support people to NOT cache your renamed login page.", 'all-in-one-wp-security-and-firewall') . '</p>';
 				?>
 			</div>
 			<table class="form-table">
@@ -42,7 +42,7 @@
 					<th scope="row"><?php _e('Enable rename login page feature', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the rename login page feature', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_rename_login_page', '1' == $aio_wp_security->configs->get_value('aiowps_enable_rename_login_page')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the rename login page feature', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_rename_login_page', '1' == $aio_wp_security->configs->get_value('aiowps_enable_rename_login_page')); ?>
 						</div>
 					</td>
 				</tr>

@@ -80,7 +80,7 @@
             "version_normalized": "3.0.3.0",
             "source": {
                 "type": "git",
-                "url": "git@source.updraftplus.com:team-updraft/common-libs.git",
+                "url": "ssh://git@source.updraftplus.com:20022/team-updraft/common-libs.git",
                 "reference": "cd30bf3b65e2cadcea1cca01deb32f5cd21a0b63"
             },
             "dist": {

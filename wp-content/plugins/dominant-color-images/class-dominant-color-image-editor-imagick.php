@@ -4,16 +4,15 @@
  * with dominant color detection
  *
  * @package dominant-color-images
- * @group dominant-color-images
  *
- * @since 1.2.0
+ * @since 1.0.0
  */
 
 /**
  * WordPress Image Editor Class for Image Manipulation through Imagick
  * with dominant color detection.
  *
- * @since 1.2.0
+ * @since 1.0.0
  *
  * @see WP_Image_Editor
  */
@@ -22,7 +21,7 @@ class Dominant_Color_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 	/**
 	 * Get dominant color from a file.
 	 *
-	 * @since 1.2.0
+	 * @since 1.0.0
 	 *
 	 * @return string|WP_Error Dominant hex color string, or an error on failure.
 	 */
@@ -54,7 +53,7 @@ class Dominant_Color_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 	 * Looks for transparent pixels in the image.
 	 * If there are none, it returns false.
 	 *
-	 * @since 1.2.0
+	 * @since 1.0.0
 	 *
 	 * @return bool|WP_Error True or false based on whether there are transparent pixels, or an error on failure.
 	 */
@@ -83,7 +82,7 @@ class Dominant_Color_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 			for ( $x = 0; $x < $w; $x++ ) {
 				for ( $y = 0; $y < $h; $y++ ) {
 					$pixel = $this->image->getImagePixelColor( $x, $y );
-					$color = $pixel->getColor();
+					$color = $pixel->getColor( 2 );
 					if ( $color['a'] > 0 ) {
 						return true;
 					}

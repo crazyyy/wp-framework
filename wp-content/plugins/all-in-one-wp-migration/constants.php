@@ -35,7 +35,7 @@ define( 'AI1WM_DEBUG', false );
 // ==================
 // = Plugin Version =
 // ==================
-define( 'AI1WM_VERSION', '7.81' );
+define( 'AI1WM_VERSION', '7.83' );
 
 // ===============
 // = Plugin Name =
@@ -207,10 +207,15 @@ define( 'AI1WM_COOKIES_NAME', 'cookies.txt' );
 // =================================
 define( 'AI1WM_MUPLUGINS_NAME', 'mu-plugins' );
 
+// ========================
+// = Less Cache Extension =
+// ========================
+define( 'AI1WM_LESS_CACHE_EXTENSION', '.less.cache' );
+
 // =============================
-// = Less Cache Extension Name =
+// = SQLite Database Extension =
 // =============================
-define( 'AI1WM_LESS_CACHE_NAME', '.less.cache' );
+define( 'AI1WM_SQLITE_DATABASE_EXTENSION', '.sqlite' );
 
 // ============================
 // = Elementor CSS Cache Name =
@@ -256,6 +261,16 @@ define( 'AI1WM_WP_COMSH_LOADER_NAME', 'wpcomsh-loader.php' );
 // = WP.com Site Helper Name =
 // ===========================
 define( 'AI1WM_WP_COMSH_HELPER_NAME', 'wpcomsh' );
+
+// ====================================
+// = SQLite Database Integration Name =
+// ====================================
+define( 'AI1WM_SQLITE_DATABASE_INTEGRATION_NAME', 'sqlite-database-integration' );
+
+// =============================
+// = SQLite Database Zero Name =
+// =============================
+define( 'AI1WM_SQLITE_DATABASE_ZERO_NAME', '0-sqlite.php' );
 
 // ================================
 // = WP Engine System Plugin Name =

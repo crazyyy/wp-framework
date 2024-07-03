@@ -3,7 +3,7 @@
 Plugin Name: WP-Optimize - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
 Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 3.3.1
+Version: 3.4.1
 Update URI: https://wordpress.org/plugins/wp-optimize/
 Author: David Anderson, Ruhani Rabin, Team Updraft
 Author URI: https://updraftplus.com
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.3.1');
+define('WPO_VERSION', '3.4.1');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PLUGIN_SLUG', plugin_basename(__FILE__));
@@ -68,6 +68,7 @@ class WP_Optimize {
 		add_action('wp_enqueue_scripts', array($this, 'frontend_enqueue_scripts'));
 
 		$this->load_ajax_handler();
+		WP_Optimize_Heartbeat::get_instance();
 
 		// Show update to Premium notice for non-premium multisite.
 		add_action('wpo_additional_options', array($this, 'show_multisite_update_to_premium_notice'));
@@ -102,7 +103,6 @@ class WP_Optimize {
 		}
 		add_action('wpo_update_record_count_event', array($this->get_db_info(), 'wpo_update_record_count'));
 
-		$this->set_heartbeat_api_filters();
 	}
 
 	/**
@@ -119,6 +119,21 @@ class WP_Optimize {
 				require_once($class_file);
 				return;
 			}
+		}
+
+		// Include PHP Minify - https://github.com/matthiasmullie/minify
+		if (strpos($class_name, 'MatthiasMullie') !== false) {
+			$class_name_parts = explode('\\', $class_name);
+			$class_file = WPO_PLUGIN_MAIN_PATH.'vendor/'.strtolower($class_name_parts[0]).'/'.strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $class_name_parts[1])).'/src/'.implode('/', array_slice($class_name_parts, 2)).'.php';
+			if (file_exists($class_file)) {
+				require_once($class_file);
+				return;
+			}
+		}
+		
+		if ('Minify_HTML' == $class_name) {
+			require_once WPO_PLUGIN_MAIN_PATH.'vendor/mrclay/minify/lib/Minify/HTML.php';
+			return;
 		}
 	}
 
@@ -211,6 +226,7 @@ class WP_Optimize {
 		$custom = 90 >= $options['image_quality'] && 65 <= $options['image_quality'];
 		$sites = WP_Optimize()->get_sites();
 		$this->include_template('images/smush.php', false, array('smush_options' => $options, 'custom' => $custom, 'sites' => $sites, 'does_server_allows_local_webp_conversion' => $this->does_server_allows_local_webp_conversion()));
+		$this->include_template('images/smush-popup.php');
 	}
 
 	public static function instance() {
@@ -382,13 +398,6 @@ class WP_Optimize {
 		wp_enqueue_script('jquery-serialize-json', WPO_PLUGIN_URL.'js/serialize-json/jquery.serializejson'.$min_or_not.'.js', array('jquery'), $enqueue_version);
 
 		wp_register_script('updraft-queue-js', WPO_PLUGIN_URL.'js/queue'.$min_or_not_internal.'.js', array(), $enqueue_version);
-
-		wp_enqueue_script('wp-optimize-heartbeat-js', WPO_PLUGIN_URL.'js/heartbeat'.$min_or_not_internal.'.js', array('jquery'), $enqueue_version);
-		wp_localize_script('wp-optimize-heartbeat-js', 'wpo_heartbeat_ajax', array(
-			'ajaxurl' => admin_url('admin-ajax.php'),
-			'nonce' => wp_create_nonce('heartbeat-nonce'),
-			'interval' => WPO_Ajax::HEARTBEAT_INTERVAL
-		));
 
 		wp_enqueue_script('wp-optimize-modal', WPO_PLUGIN_URL.'js/modal'.$min_or_not_internal.'.js', array('jquery', 'backbone', 'wp-util'), $enqueue_version);
 		wp_enqueue_script('wp-optimize-cache-js', WPO_PLUGIN_URL.'js/cache'.$min_or_not_internal.'.js', array('wp-optimize-send-command', 'smush-js', 'wp-optimize-heartbeat-js'), $enqueue_version);
@@ -830,6 +839,8 @@ class WP_Optimize {
 			'exported_on' => __('Which was exported on:', 'wp-optimize'),
 			'continue_import' => __('Do you want to carry out the import?', 'wp-optimize'),
 			'select_destination' => __('Select destination', 'wp-optimize'),
+			'show_information' => __('Show information', 'wp-optimize'),
+			'hide_information' => __('Hide information', 'wp-optimize'),
 		));
 	}
 
@@ -1691,6 +1702,7 @@ class WP_Optimize {
 		if (!headers_sent()) {
 			// Close browser connection so that it can resume AJAX polling
 			header('Content-Length: '.(empty($txt) ? '0' : 4+strlen($txt)));
+			header('Content-Type: application/json');
 			header('Connection: close');
 			header('Content-Encoding: none');
 		}
@@ -1706,6 +1718,7 @@ class WP_Optimize {
 		}
 		flush();
 		if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+		if (function_exists('litespeed_finish_request')) litespeed_finish_request();
 	}
 
 	/**
@@ -1849,58 +1862,6 @@ class WP_Optimize {
 	 */
 	private function load_ajax_handler() {
 		WPO_Ajax::get_instance();
-	}
-
-	/**
-	 * Set custom heartbeat API interval
-	 *
-	 * @param array $settings Current WP settings
-	 * @return array
-	 */
-	public function set_heartbeat_time_interval($settings) {
-		$settings['interval'] = WPO_Ajax::HEARTBEAT_INTERVAL;
-		return $settings;
-	}
-
-	/**
-	 * Receive Heartbeat data and respond.
-	 *
-	 * Processes data received via a Heartbeat request, and returns additional data to pass back to the front end.
-	 *
-	 * @param array $response Heartbeat response data to pass back to front end.
-	 * @param array $data     Data received from the front end (unslashed).
-	 *
-	 * @return array
-	 */
-	public function receive_heartbeat($response, $data) {
-		foreach ($data as $uid => $command) {
-			$is_wpo_heartbeat = strpos($uid, 'wpo-heartbeat') === 0;
-
-			if ($is_wpo_heartbeat) {
-				$response['callbacks'][$uid] = apply_filters('wp_optimize_heartbeat', $command);
-			}
-		}
-
-		return $response;
-	}
-
-	/**
-	 * Add heartbeat API filters if the page is enabled in the array
-	 *
-	 * @return void
-	 */
-	public function set_heartbeat_api_filters() {
-		$pages_enabled = array('WP-Optimize', 'wpo_images', 'wpo_cache', 'wpo_minify', 'wpo_settings', 'wpo_support', 'wpo_mayalso');
-
-		// Change heartbeat API frequency to 15 seconds to improve UI experience
-		// only for the pages that we enable in `$pages_enabled`
-		$query_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification -- not processing form data
-		if (in_array($query_page, $pages_enabled)) {
-			add_filter('heartbeat_settings', array($this, 'set_heartbeat_time_interval'), PHP_INT_MAX);
-		}
-
-		// Handle heartbeat events
-		add_filter('heartbeat_received', array($this, 'receive_heartbeat'), 10, 2);
 	}
 }
 

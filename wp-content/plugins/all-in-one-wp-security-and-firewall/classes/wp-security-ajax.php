@@ -120,8 +120,19 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 			/**
 			 * Filters the commands allowed to the sub site admins. Other commands are only available to network admin. Only used in a multisite context.
 			 */
-			$allowed_commands = apply_filters('aios_multisite_allowed_commands', array('get_ip_address_of_given_method'));
-			return !in_array($this->subaction, $allowed_commands);
+			$allowed_commands = apply_filters('aios_multisite_allowed_commands', array(
+				'delete_audit_log',
+				'delete_locked_ip_record',
+				'clear_debug_logs',
+				'unlock_ip',
+				'unblacklist_ip',
+				'blocked_ip_list_unblock_ip',
+				'lock_ip',
+				'blacklist_ip',
+				'dismiss_notice',
+			));
+
+			return in_array($this->subaction, $allowed_commands);
 		}
 
 		/**

@@ -19,7 +19,7 @@
 					<th scope="row"><?php _e('Enable iFrame protection', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to stop other sites from displaying your content in a frame or iframe.', 'all-in-one-wp-security-and-firewall'), 'aiowps_prevent_site_display_inside_frame', '1' == $aio_wp_security->configs->get_value('aiowps_prevent_site_display_inside_frame')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to stop other sites from displaying your content in a frame or iframe.', 'all-in-one-wp-security-and-firewall'), 'aiowps_prevent_site_display_inside_frame', '1' == $aio_wp_security->configs->get_value('aiowps_prevent_site_display_inside_frame')); ?>
 						</div>
 					</td>
 				</tr>

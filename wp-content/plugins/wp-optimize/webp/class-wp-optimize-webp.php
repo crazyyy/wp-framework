@@ -23,7 +23,9 @@ class WP_Optimize_WebP {
 
 		if ($this->_should_use_webp && $this->get_webp_conversion_test_result()) {
 			if (!is_admin()) {
-				$this->maybe_decide_webp_serve_method();
+
+				// Allow filters added in theme files to run
+				add_action('after_setup_theme', array($this, 'maybe_decide_webp_serve_method'));
 			}
 		}
 
@@ -55,13 +57,10 @@ class WP_Optimize_WebP {
 	}
 
 	/**
-	 * If webp images should be used, then decide whether it is possible to server webp
-	 * using rewrite rules or using altered html method
+	 * If .htaccess redirection is not possible, attempts to use the alter_html method
 	 */
-	private function maybe_decide_webp_serve_method() {
-		$this->save_htaccess_rules();
+	public function maybe_decide_webp_serve_method() {
 		if (!$this->is_webp_redirection_possible()) {
-			$this->empty_htaccess_file();
 			$this->maybe_use_alter_html();
 		}
 	}
@@ -71,6 +70,7 @@ class WP_Optimize_WebP {
 	 */
 	private function maybe_use_alter_html() {
 		if ($this->is_alter_html_possible()) {
+			$this->empty_htaccess_file();
 			$this->use_alter_html();
 		}
 	}
@@ -78,10 +78,15 @@ class WP_Optimize_WebP {
 	/**
 	 * Even if server support .htaccess rewrite, sometimes it is not possible
 	 * to serve webp images. So, find it webp redirection is possible or not
+	 * Also applies `wpo_force_webp_serve_using_altered_html` filter for users to be able to
+	 * force Altered HTML method
 	 *
 	 * @return bool
 	 */
 	public function is_webp_redirection_possible() {
+		if (apply_filters('wpo_force_webp_serve_using_altered_html', false)) {
+			return false;
+		}
 		$redirection_possible = WP_Optimize()->get_options()->get_option('redirection_possible');
 		if (!empty($redirection_possible)) return 'true' === $redirection_possible;
 		return $this->run_webp_serving_self_test();
@@ -140,21 +145,26 @@ class WP_Optimize_WebP {
 		if ($this->_htaccess->is_commented_section_exists($htaccess_comment_section)) return;
 		$this->_htaccess->update_commented_section($this->prepare_webp_htaccess_rules(), $htaccess_comment_section);
 		$this->_htaccess->write_file();
+		WP_Optimize()->get_options()->update_option('htaccess_has_webp_rules', true);
 	}
 
 	/**
 	 * Empty .htaccess file
 	 */
 	public function empty_htaccess_file() {
+		// Setting default to true, so on initial run (when option is not yet present in the DB) we don't break the function here
+		if (!WP_Optimize()->get_options()->get_option('htaccess_has_webp_rules', true)) return;
 		$this->setup_htaccess_file();
 		$htaccess_comment_sections = array(
 			'WP-Optimize WebP Rules',
 			'Register webp mime type',
 		);
 		foreach ($htaccess_comment_sections as $htaccess_comment_section) {
+			if (!$this->_htaccess->is_commented_section_exists($htaccess_comment_section)) continue;
 			$this->_htaccess->remove_commented_section($htaccess_comment_section);
 			$this->_htaccess->write_file();
 		}
+		WP_Optimize()->get_options()->update_option('htaccess_has_webp_rules', false);
 	}
 
 	/**

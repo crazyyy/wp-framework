@@ -181,6 +181,32 @@ function rsssl_upgrade() {
 		do_action( 'rsssl_update_rules' );
 	}
 
+	// Update the config to auto prepend
+	if ( $prev_version && version_compare( $prev_version, '8.0', '<' ) ) {
+		RSSSL_SECURITY()->firewall_manager->update_wp_config_rule();
+	}
+	//free
+	if ( $prev_version && version_compare( $prev_version, '8.1.2', '<' ) ) {
+		do_action('rsssl_update_rules');
+	}
+	//pro
+	if ( $prev_version && version_compare( $prev_version, '8.2.1', '<' ) ) {
+		do_action('rsssl_update_rules');
+	}
+
+
+	if ( $prev_version && version_compare( $prev_version, '8.2.1', '<' ) ) {
+		delete_option( 'rsssl_xmlrpc_db_version' );
+		delete_option( 'rsssl_csp_db_version' );
+		delete_option( 'rsssl_geo_block_db_version' );
+		delete_option( 'rsssl_login_attempts_db_version' );
+		delete_option( 'rsssl_event_log_db_version' );
+	}
+
+	if ( $prev_version && version_compare( $prev_version, '8.2.3', '<' ) ) {
+		update_site_option('rsssl_geo_ip_database_file', get_option('rsssl_geo_ip_database_file') );
+	}
+
 	//don't clear on each update.
 	//RSSSL()->admin->clear_admin_notices_cache();
 

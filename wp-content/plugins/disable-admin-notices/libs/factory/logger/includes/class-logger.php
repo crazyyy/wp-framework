@@ -1,6 +1,6 @@
 <?php
 
-namespace WBCR\Factory_Logger_138;
+namespace WBCR\Factory_Logger_140;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -48,7 +48,7 @@ class Logger {
 	const LEVEL_DEBUG = 'debug';
 
 	/**
-	 * @var \Wbcr_Factory473_Plugin Plugin class.
+	 * @var \Wbcr_Factory474_Plugin Plugin class.
 	 */
 	public $plugin;
 
@@ -92,7 +92,7 @@ class Logger {
 	/**
 	 * Logger constructor.
 	 *
-	 * @param \Wbcr_Factory473_Plugin $plugin
+	 * @param \Wbcr_Factory474_Plugin $plugin
 	 * @param array $settings
 	 */
 	public function __construct( $plugin, $settings = [] ) {
@@ -443,11 +443,13 @@ class Logger {
 	 */
 	public function prettify() {
 		$content = $this->get_content();
-		$replace = "<div class='wbcr-log-row wbcr_logger_level_$4'><strong>$1 $2</strong> [$3]<div class='wbcr_logger_level'>$4</div>$5</div>";
 
-		$content = str_replace( [ "\n", "\r<br>" ], [ "<br>", "\r\n" ], $content );
-		$content = preg_replace( "/^(\S+)\s*(\S+)\s*\[(.+)\]\s*\[(.+)\]\s*(.*)$/m", $replace, $content );
+		if(!empty($content)) {
+			$replace = "<div class='wbcr-log-row wbcr_logger_level_$4'><strong>$1 $2</strong> [$3]<div class='wbcr_logger_level'>$4</div>$5</div>";
 
+			$content = str_replace( [ "\n", "\r<br>" ], [ "<br>", "\r\n" ], $content );
+			$content = preg_replace( "/^(\S+)\s*(\S+)\s*\[(.+)\]\s*\[(.+)\]\s*(.*)$/m", $replace, $content );
+		}
 		return $content;
 	}
 }

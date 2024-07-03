@@ -2,9 +2,9 @@
 Contributors: wpxpertise, devsabbirahmed
 Tags: notifier, shutdown, monitoring, turnstile, billing
 Requires at least: 5.9
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 5.6
-Stable Tag: 2.11.1
+Stable Tag: 2.13.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -122,7 +122,11 @@ With the mobile Slack in your hand, you will be aware of user feedback regarding
 
 **🆘 Enable day to day notification for support:** - With the help of this plugin, you can start getting daily updates as well. New suppor query will be sent to your Slack account promptly, saving you from having to repeatedly receive the same query.
 
+**⚙️ Integration list** - If the most common forms on your website (Contact Form 7, FormFlow and more) have been filled out and submitted, you will receive immediate notifications along with the leads. This will allow you to view leads without logging into the website. The rapid notification allows you to respond to the user instantly following a form submission.
+
 **🚨 Visitor traffic list :** - Keep track of your website visits! When visitors arrive to your site, you'll get a full breakdown of who they are.
+
+**🔔 Forcefully logout currently active user :** -  This tool allows you to manage your website's active user more efficiently. Instantly update the status of active users in your WordPress dashboard; This ensuring accurate tracking of online users. Moreover, you can now take immediate action by forcefully logging out any selected user. In case of emergencies, simply click on "logout" to terminate a user's session instantly, providing enhanced control over your website's user management.
 
 **🛑 IP Blocker :** - The IP Blocker feature empowers you with direct control over your website's security by allowing you to manually/Auto block specific IP addresses or ranges. 🚫 Whether you need to restrict access for a particular user or block a range of IPs using CIDR notation, this tool provides you with the flexibility to enhance your site's security. Simply input the desired IP address or range, and visitors from those locations will be restricted from accessing your site. 🧑‍💻
 
@@ -134,7 +138,7 @@ Usage:
 
 **🤖 Conditional IP Blocker :** - The Conditional IP Blocker is your automated defense against suspicious login attempts. 🛡️ When a user repeatedly fails to log in within a specified time frame, this feature automatically blocks their IP address. This proactive approach helps prevent potential security threats and unauthorized access to your site. The system Conditionally identifies patterns of failed login attempts and takes swift action to safeguard your platform. ⚠️
 
-🚀 Emergency Shutdown Mode: - Ensure the utmost security for your website with the Emergency Shutdown Mode. In times of crisis, this feature allows you to swiftly block access to all users, including administrators, except for the super admin. By implementing this safeguard, you can protect sensitive data and maintain control over your site's operations during emergencies.
+**🚀 Emergency Shutdown Mode:** - Ensure the utmost security for your website with the Emergency Shutdown Mode. In times of crisis, this feature allows you to swiftly block access to all users, including administrators, except for the super admin. By implementing this safeguard, you can protect sensitive data and maintain control over your site's operations during emergencies.
 
 **📊 Enable weekly plugin download notification** - You will get a weekly calculation in the form of notification of how many users have downloaded your plugin daily in your Slack workspace.
 
@@ -185,7 +189,6 @@ Usage:
 
 **🚮 Page/Post deleted alert:** - Stay informed about deletions! Receive alerts when a page or post bids farewell, allowing you to manage and organize your content effectively.
 
-
 == Installation ==
 
 1. Go to your Dashboard
@@ -220,15 +223,46 @@ You will not receive any notifications on Slack, but the plugin will still funct
 
 == Screenshots ==
 
-1.Notifier To Slack
-2. Slack webhook page
-6. Dashboard, Plugin add page
-7. Setting page
+1.Notifier To Slack Dashboard
+2. Author page
+3. Slack integration page
+4. Setting and Integration page
+5. Advance Security settings page
+6. WooCommerce page 
+7. Advance Error Log panel page
+8. Slack Response
+9. Slack notifications
 
 == Changelog ==
 
+= 2.13.1 – 28 May 2024 =
+- Fix: Resolved issues when click to get slack global webhook triggered its not updated the latest changes.
+
+= 2.13.0 – 06 May 2024 =
+- New: Introduce Integration panel 
+- New: FormFlow Integration support added 
+- New: Contact Form 7 Integration support added 
+- New: Implement new HeadwayWidget 
+- New: Implement new notice
+
+= 2.12.1 – 02 May 2024 =
+- Enhancement: In the active user list, set the default login user to be the current active user.
+- Enhancement: Add current user suffix as "me" and modal to request confirmation before logout.
+
+= 2.12.0 – 01 May 2024 =
+- New: Find the current active user list on your website.
+- New: Forcefully logout any currently active user from the list on your website.
+- Enhancement: See who visited your website
+
+= 2.11.3 – 26 Apr 2024 =
+- Enhancement: Update the Freemius module 
+- Fix: Resolved issues during installation and direct active plugin from plugin download page
+
+= 2.11.2 – 08 Apr 2024 =
+- Enhancement: Enhanced compatibility to support WordPress 6.5
+
 = 2.11.1 - 17 March 2024 =
-Improvement: Readme and Others file Tag Updated
+- Improvement: Readme and Others file Tag Updated
 
 = 2.11.0 - 16 March 2024 =
 - New: The emergency shutdown mode was developed, which blocked all users, including the administrator, in the event of an emergency. Only the super admin can access the site, and all other users will automatically log out.   

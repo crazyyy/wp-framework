@@ -102,7 +102,7 @@ class AIOWPSecurity_List_Comment_Spammer_IP extends AIOWPSecurity_List_Table {
 				$error_msg = '<div id="message" class="error"><p><strong>';
 				$error_msg .= __('Please select some records using the checkboxes', 'all-in-one-wp-security-and-firewall');
 				$error_msg .= '</strong></p></div>';
-				_e($error_msg);
+				echo $error_msg;
 			} else {
 				$this->block_spammer_ip_records(($_REQUEST['item']));
 			}

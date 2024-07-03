@@ -18,7 +18,7 @@
 				<th scope="row"><?php _e('Prevent image hotlinking', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to prevent hotlinking to images on your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_prevent_hotlinking', '1' == $aio_wp_security->configs->get_value('aiowps_prevent_hotlinking')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to prevent hotlinking to images on your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_prevent_hotlinking', '1' == $aio_wp_security->configs->get_value('aiowps_prevent_hotlinking')); ?>
 					</div>
 				</td>
 			</tr>

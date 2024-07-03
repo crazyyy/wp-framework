@@ -43,14 +43,22 @@ class AIOWPSecurity_List_404 extends AIOWPSecurity_List_Table {
 		$ip = $item['ip_or_host'];
 
 		$blocked_ips_tab = 'locked-ip';
+		$blacklist_tab = 'blacklist';
 		//Check if this IP address is locked
 		$is_locked = AIOWPSecurity_Utility::check_locked_ip($ip, '404');
+		$is_blacklist = AIOWPSecurity_Utility::check_blacklist_ip($ip);
 		$delete_url = sprintf('admin.php?page=%s&tab=%s&action=%s&id=%s', AIOWPSEC_BRUTE_FORCE_MENU_SLUG, $tab, 'delete_event_log', $item['id']);
 		//Add nonce to delete URL
 		$delete_url_nonce = wp_nonce_url($delete_url, "404_log_item_action", "aiowps_nonce");
 		if ($is_locked) {
 			//Build row actions
 			$unblock_url_nonce = wp_nonce_url(sprintf('admin.php?page=%s&tab=%s', AIOWPSEC_MAIN_MENU_SLUG, $blocked_ips_tab), "404_log_item_action", "aiowps_nonce");
+			$actions = array(
+				'unblock' => '<a href="'.$unblock_url_nonce.'" onclick="return confirm(\'' . esc_js(__('Are you sure you want to unblock this item?', 'all-in-one-wp-security-and-firewall')) . '\')">'.__('Unblock', 'all-in-one-wp-security-and-firewall').'</a>',
+				'delete' => '<a href="'.$delete_url_nonce.'" onclick="return confirm(\'' . esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')) . '\')">'. __('Delete', 'all-in-one-wp-security-and-firewall') . '</a>',
+			);
+		} elseif ($is_blacklist) {
+			$unblock_url_nonce = wp_nonce_url(sprintf('admin.php?page=%s&tab=%s', AIOWPSEC_FIREWALL_MENU_SLUG, $blacklist_tab), "404_log_item_action", "aiowps_nonce");
 			$actions = array(
 				'unblock' => '<a href="'.$unblock_url_nonce.'" onclick="return confirm(\'' . esc_js(__('Are you sure you want to unblock this item?', 'all-in-one-wp-security-and-firewall')) . '\')">'.__('Unblock', 'all-in-one-wp-security-and-firewall').'</a>',
 				'delete' => '<a href="'.$delete_url_nonce.'" onclick="return confirm(\'' . esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')) . '\')">'. __('Delete', 'all-in-one-wp-security-and-firewall') . '</a>',

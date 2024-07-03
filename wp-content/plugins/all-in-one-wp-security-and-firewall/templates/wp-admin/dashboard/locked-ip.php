@@ -2,7 +2,7 @@
 <div class="aio_blue_box">
 	<?php
 	$login_lockout_feature_url = '<a href="admin.php?page=' . AIOWPSEC_USER_SECURITY_MENU_SLUG . '&tab=login-lockout" target="_blank">'.__('Login lockout', 'all-in-one-wp-security-and-firewall').'</a>';
-	echo '<p>' . __('This tab displays the list of all IP addresses which are currently temporarily locked out due to the login lockout feature:', 'all-in-one-wp-security-and-firewall') . '</p>' . '<p>' . $login_lockout_feature_url . '</p>';
+	echo '<p>' . esc_html__('This tab displays the list of all IP addresses which are currently temporarily locked out.', 'all-in-one-wp-security-and-firewall') . '</p>';
 	?>
 </div>
 <div class="postbox">

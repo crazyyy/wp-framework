@@ -21,9 +21,9 @@
 		exit;
 	}
 	
-	if ( ! class_exists( 'Wbcr_FactoryForms469_DropdownControl' ) ) {
+	if ( ! class_exists( 'Wbcr_FactoryForms474_DropdownControl' ) ) {
 		
-		class Wbcr_FactoryForms469_DropdownControl extends Wbcr_FactoryForms469_Control {
+		class Wbcr_FactoryForms474_DropdownControl extends Wbcr_FactoryForms474_Control {
 			
 			public $type = 'dropdown';
 			
@@ -123,7 +123,7 @@
 							'url': '<?php echo esc_url($data['url']); ?>',
 							'data': <?php echo json_encode( $data['data'] ) ?>,
 							'selected': '<?php echo esc_attr($value); ?>',
-							'empty_list': '<?php echo esc_attr($this->getOption( 'empty', __( 'The list is empty.', 'wbcr_factory_forms_469' ) )); ?>'
+							'empty_list': '<?php echo esc_attr($this->getOption( 'empty', __( 'The list is empty.', 'wbcr_factory_forms_474' ) )); ?>'
 						};
                     </script>
 					<?php
@@ -268,7 +268,7 @@
 				}
 				
 				$is_empty   = $this->isAjax() || empty( $items );
-				$empty_list = $this->getOption( 'empty', __( '- empty -', 'wbcr_factory_forms_469' ) );
+				$empty_list = $this->getOption( 'empty', __( '- empty -', 'wbcr_factory_forms_474' ) );
 				
 				?>
                 <select <?php $this->attrs() ?>>
@@ -349,7 +349,7 @@
 						}
 						
 						$value = isset( $item['value'] ) ? $item['value'] : '';
-						$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_469' );
+						$title = isset( $item['title'] ) ? $item['title'] : __( '- empty -', 'wbcr_factory_forms_474' );
 						
 						$data = isset( $item['data'] ) ? $item['data'] : null;
 					} else {

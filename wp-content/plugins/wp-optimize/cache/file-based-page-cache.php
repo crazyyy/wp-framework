@@ -59,7 +59,7 @@ $file_extension = preg_replace('#^(.*?)\?.*$#', '$1', $file_extension);
 $file_extension = trim(preg_replace('#^.*\.(.*)$#', '$1', $file_extension));
 
 // Don't cache disallowed extensions. Prevents wp-cron.php, xmlrpc.php, etc.
-if (!preg_match('#index\.php$#i', $_SERVER['REQUEST_URI']) && !preg_match('#sitemap([a-zA-Z0-9_-]+)?\.xml$#i', $_SERVER['REQUEST_URI']) && in_array($file_extension, array('php', 'xml', 'xsl'))) {
+if (!preg_match('#index\.php$#i', $_SERVER['REQUEST_URI']) && preg_match('#sitemap([a-zA-Z0-9_-]+)?\.xml$#i', $_SERVER['REQUEST_URI']) && in_array($file_extension, array('php', 'xml', 'xsl'))) {
 	$no_cache_because[] = 'The request extension is not suitable for caching';
 }
 
@@ -128,7 +128,7 @@ if (!empty($no_cache_because)) {
 
 	// Add http header
 	if (!defined('DOING_CRON') || !DOING_CRON) {
-		wpo_cache_add_nocache_http_header($no_cache_because_message);
+		wpo_cache_add_nocache_http_header_with_send_headers_action($no_cache_because_message);
 	}
 
 	if ((!defined('DOING_CRON') || !DOING_CRON)) {

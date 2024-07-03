@@ -191,6 +191,14 @@ require_once AI1WM_VENDOR_PATH .
 			DIRECTORY_SEPARATOR .
 			'database' .
 			DIRECTORY_SEPARATOR .
+			'class-ai1wm-database-sqlite.php';
+
+require_once AI1WM_VENDOR_PATH .
+			DIRECTORY_SEPARATOR .
+			'servmask' .
+			DIRECTORY_SEPARATOR .
+			'database' .
+			DIRECTORY_SEPARATOR .
 			'class-ai1wm-database-utility.php';
 
 require_once AI1WM_CONTROLLER_PATH .

@@ -758,6 +758,98 @@ if (!isset($sendingDiagnosticEmail)) {
 		}
 	}
 	?>
+	
+	<?php if (!empty($inEmail)): ?>
+	<div class="wf-diagnostics-wrapper">
+		<div class="wf-block<?php echo(wfPersistenceController::shared()->isActive('wf-diagnostics-wordfence-settings') ? ' wf-active' : '') ?>" data-persistence-key="<?php echo esc_attr('wf-diagnostics-wordfence-settings') ?>">
+			<div class="wf-block-header">
+				<div class="wf-block-header-content">
+					<div class="wf-block-title">
+						<strong><?php esc_html_e('Wordfence Settings', 'wordfence') ?></strong>
+						<span class="wf-text-small"><?php esc_html_e('Diagnostic Wordfence settings/constants.', 'wordfence') ?></span>
+					</div>
+					<div class="wf-block-header-action">
+						<div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive('wf-diagnostics-wordfence-settings') ? 'true' : 'false'); ?>" tabindex="0"></div>
+					</div>
+				</div>
+			</div>
+			<div class="wf-block-content wf-clearfix wf-padding-no-left wf-padding-no-right">
+				<table class="wf-striped-table"<?php echo !empty($inEmail) ? ' border=1' : '' ?>>
+					<tbody>
+					<?php
+					foreach (wfDiagnostic::getWordfenceValues() as $settingName => $settingData):
+						if (isset($settingData['subheader'])) {
+						?>
+							<tr>
+								<td colspan="2"><strong><?php echo esc_html($settingData['subheader']) ?></strong></td>
+							</tr>
+						<?php
+							continue;
+						}
+						
+						$escapedDescription = strip_tags($settingData['description']);
+						$escapedValue = __('(not set)', 'wordfence');
+						if (isset($settingData['value'])) {
+							$escapedValue = nl2br(strip_tags($settingData['value']));
+						}
+						?>
+						<tr>
+							<td><?php echo $escapedDescription ?></td>
+							<td><?php echo $escapedValue ?></td>
+						</tr>
+					<?php endforeach ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<?php endif ?>
+	
+	<?php if (!empty($inEmail)): ?>
+		<div class="wf-diagnostics-wrapper">
+			<div class="wf-block<?php echo(wfPersistenceController::shared()->isActive('wf-diagnostics-wordfence-central') ? ' wf-active' : '') ?>" data-persistence-key="<?php echo esc_attr('wf-diagnostics-wordfence-central') ?>">
+				<div class="wf-block-header">
+					<div class="wf-block-header-content">
+						<div class="wf-block-title">
+							<strong><?php esc_html_e('Wordfence Central', 'wordfence') ?></strong>
+							<span class="wf-text-small"><?php esc_html_e('Diagnostic connection information for Wordfence Central.', 'wordfence') ?></span>
+						</div>
+						<div class="wf-block-header-action">
+							<div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive('wf-diagnostics-wordfence-central') ? 'true' : 'false'); ?>" tabindex="0"></div>
+						</div>
+					</div>
+				</div>
+				<div class="wf-block-content wf-clearfix wf-padding-no-left wf-padding-no-right">
+					<table class="wf-striped-table"<?php echo !empty($inEmail) ? ' border=1' : '' ?>>
+						<tbody>
+						<?php
+						foreach (wfDiagnostic::getWordfenceCentralValues() as $settingName => $settingData):
+							if (isset($settingData['subheader'])) {
+								?>
+								<tr>
+									<td colspan="2"><strong><?php echo esc_html($settingData['subheader']) ?></strong></td>
+								</tr>
+								<?php
+								continue;
+							}
+							
+							$escapedDescription = strip_tags($settingData['description']);
+							$escapedValue = __('(not set)', 'wordfence');
+							if (isset($settingData['value'])) {
+								$escapedValue = nl2br(strip_tags($settingData['value']));
+							}
+							?>
+							<tr>
+								<td><?php echo $escapedDescription ?></td>
+								<td><?php echo $escapedValue ?></td>
+							</tr>
+						<?php endforeach ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	<?php endif ?>
 
 	<?php if (!empty($inEmail)): ?>
 		<?php if (wfUtils::funcEnabled('phpinfo')) { phpinfo(); } else { echo '<strong>' . esc_html__('Unable to output phpinfo content because it is disabled', 'wordfence') . "</strong>\n"; } ?>

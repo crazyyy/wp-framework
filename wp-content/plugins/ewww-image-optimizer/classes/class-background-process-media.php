@@ -54,7 +54,7 @@ class Background_Process_Media extends Background_Process {
 	 * Wrapper around parent::handle() to verify that background processing isn't paused.
 	 */
 	protected function handle() {
-		if ( \ewwwio()->get_option( 'ewww_image_optimizer_pause_queues' ) ) {
+		if ( \get_option( 'ewww_image_optimizer_pause_queues' ) ) {
 			return;
 		}
 
@@ -225,6 +225,7 @@ class Background_Process_Media extends Background_Process {
 				$ewwwdb->ewwwio_images,
 				array(
 					'path'          => \ewww_image_optimizer_relativize_path( $file_path ),
+					'converted'     => '',
 					'gallery'       => 'media',
 					'orig_size'     => $image_size,
 					'attachment_id' => $id,
@@ -363,6 +364,7 @@ class Background_Process_Media extends Background_Process {
 				if ( empty( $data['file'] ) ) {
 					continue;
 				}
+				ewwwio_debug_message( "maybe optimizing {$data['file']}" );
 				// Check through all the sizes we've processed so far.
 				foreach ( $processed as $proc => $scan ) {
 					// If a previous resize had identical dimensions.
@@ -442,7 +444,7 @@ class Background_Process_Media extends Background_Process {
 			}
 		}
 
-		if ( $queued && ! ewwwio()->background_image->is_process_running() && ! ewwwio()->get_option( 'ewww_image_optimizer_pause_image_queue' ) ) {
+		if ( $queued && ! ewwwio()->background_image->is_process_running() && ! \get_option( 'ewww_image_optimizer_pause_image_queue' ) ) {
 			ewwwio()->background_image->dispatch();
 		}
 	}

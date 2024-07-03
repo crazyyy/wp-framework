@@ -59,6 +59,17 @@ class wfDB {
 	  	return self::blogPrefix($blogID) . $table;
 	}
 	
+	/**
+	 * Converts the given value into a MySQL hex string. This is needed because WordPress will run an unnecessary `SHOW
+	 * FULL COLUMNS` on every hit where we use non-ASCII data (e.g., packed binary-encoded IP addresses) in queries.
+	 * 
+	 * @param string $binary
+	 * @return string
+	 */
+	public static function binaryValueToSQLHex($binary) {
+		return sprintf("X'%s'", bin2hex($binary));
+	}
+	
 	public function querySingle(){
 		global $wpdb;
 		if(func_num_args() > 1){

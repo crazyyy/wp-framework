@@ -7,7 +7,7 @@ Author: Arshid
 Author URI: http://ciphercoin.com/
 Text Domain: contact-form-cfdb7
 Domain Path: /languages/
-Version: 1.2.6.8
+Version: 1.2.7
 */
 
 function cfdb7_create_table(){
@@ -106,7 +106,8 @@ function cfdb7_before_send_mail( $form_tag ) {
     $table_name    = $cfdb->prefix.'db7_forms';
     $upload_dir    = wp_upload_dir();
     $cfdb7_dirname = $upload_dir['basedir'].'/cfdb7_uploads';
-    $time_now      = time();
+    $bytes         = random_bytes(5);
+    $time_now      = time().bin2hex($bytes);
 
     $submission   = WPCF7_Submission::get_instance();
     $contact_form = $submission->get_contact_form();

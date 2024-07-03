@@ -2,8 +2,8 @@
 
 namespace FakerPress\Module;
 
-use Faker\Generator;
-use Faker\Provider\Base;
+use FakerPress\ThirdParty\Faker\Generator;
+use FakerPress\ThirdParty\Faker\Provider\Base;
 use function FakerPress\is_truthy;
 
 /**
@@ -109,7 +109,7 @@ abstract class Abstract_Module implements Interface_Module {
 	 */
 	public function get_faker(): Generator {
 		if ( ! $this->faker ) {
-			$this->faker = \Faker\Factory::create();
+			$this->faker = \FakerPress\ThirdParty\Faker\Factory::create();
 
 			// We need to merge the Provider to the Dependencies, so everything is loaded.
 			$providers = array_merge( $this->get_dependencies(), (array) $this->get_provider_class() );
@@ -261,7 +261,7 @@ abstract class Abstract_Module implements Interface_Module {
 	 * Modules extending this Abstract should use this module to make sure their data is properly saved as the actual
 	 * save method is final.
 	 *
-	 * @since TBD
+	 * @since 0.6.4
 	 *
 	 * @param mixed           $response
 	 * @param array           $data
@@ -409,8 +409,12 @@ abstract class Abstract_Module implements Interface_Module {
 	/**
 	 * @inheritDoc
 	 */
-	public function generate(): Interface_Module {
+	public function generate( bool $force = false ): Interface_Module {
 		foreach ( $this->data as $name => $item ) {
+			if ( ! $force && $this->has_value( $name ) ) {
+				continue;
+			}
+
 			$this->data[ $name ]->value = $this->apply( $item );
 		}
 
@@ -446,5 +450,28 @@ abstract class Abstract_Module implements Interface_Module {
 		}
 
 		return $values;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get( string $key ): ?object {
+		return $this->data[ $key ] ?? null;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_value( string $key ) {
+		$data = $this->get( $key );
+		return $data->value ?? null;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function has_value( string $key ): bool {
+		$data = $this->get( $key );
+		return isset( $data->value );
 	}
 }

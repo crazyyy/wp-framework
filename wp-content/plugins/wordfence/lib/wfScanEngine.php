@@ -1858,15 +1858,10 @@ class wfScanEngine {
 		$this->scanController->startStage(wfScanner::STAGE_VULNERABILITY_SCAN);
 
 		$this->updateCheck = new wfUpdateCheck();
-		if ($this->isFullScan()) {
-			$this->updateCheck->checkAllUpdates(false);
-			$this->updateCheck->checkCoreVulnerabilities();
-			$this->updateCheck->checkPluginVulnerabilities();
-			$this->updateCheck->checkThemeVulnerabilities();
-		} else {
-			$this->updateCheck->checkAllUpdates();
-			$this->updateCheck->checkCoreVulnerabilities();
-		}
+		$this->updateCheck->checkCoreVulnerabilities();
+		$this->updateCheck->checkPluginVulnerabilities();
+		$this->updateCheck->checkThemeVulnerabilities();
+		$this->updateCheck->checkAllUpdates(!$this->isFullScan());
 
 		foreach ($this->updateCheck->getPluginSlugs() as $slug) {
 			$this->pluginRepoStatus[$slug] = false;

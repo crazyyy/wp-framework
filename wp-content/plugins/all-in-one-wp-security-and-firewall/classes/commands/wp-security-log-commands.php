@@ -7,23 +7,46 @@ if (trait_exists('AIOWPSecurity_Log_Commands_Trait')) return;
 trait AIOWPSecurity_Log_Commands_Trait {
 
 	/**
-	 * Delete audit logs
+	 * Deletes an audit log.
 	 *
-	 * @param array $data - the request data contains the ID of the audit
+	 * @param array $data Contains the ID of the log to be deleted.
 	 *
 	 * @return array
 	 */
 	public function delete_audit_log($data) {
 
 		if (!isset($data['id'])) {
-			return array('status' => 'error', 'message' => AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Invalid audit log ID provided.', 'all-in-one-wp-security-and-firewall'), true));
+			return array('status' => 'error', 'message' => AIOWPSecurity_Admin_Menu::show_msg_error_st(__('No audit log ID provided.', 'all-in-one-wp-security-and-firewall'), true));
 		}
 
 		include_once AIO_WP_SECURITY_PATH.'/admin/wp-security-list-audit.php';
 		$audit_log_list = new AIOWPSecurity_List_Audit_Log();
-		$message = $audit_log_list->delete_audit_event_records($data['id']);
+
 		return array(
-			'message' => $message,
+			'status' => 'success',
+			'message' => $audit_log_list->delete_audit_event_records($data['id']),
+		);
+	}
+
+	/**
+	 * Deletes an IP lockout record.
+	 *
+	 * @param array $data Contains the ID of the entry in the AIOWPSEC_TBL_LOGIN_LOCKOUT table.
+	 *
+	 * @return array
+	 */
+	public function delete_locked_ip_record($data) {
+
+		if (!isset($data['id'])) {
+			return array('status' => 'error', 'message' => AIOWPSecurity_Admin_Menu::show_msg_error_st(__('No locked IP record ID provided.', 'all-in-one-wp-security-and-firewall'), true));
+		}
+
+		include_once AIO_WP_SECURITY_PATH . '/admin/wp-security-list-locked-ip.php';
+
+		$locked_ip_list = new AIOWPSecurity_List_Locked_IP();
+		$result = $locked_ip_list->delete_lockout_records($data['id']);
+		return array(
+			'message' => $result,
 			'status' => 'success'
 		);
 	}

@@ -23,10 +23,12 @@ class CodeProfiler_Profiler {
 	static $fh;
 	static $connections_list = [];
 	static $connections_start;
+	static $exclusions = [];
 	private $tmp_iostats;
 	private $tmp_summary;
 	private $tmp_diskio;
 	private $tmp_calls;
+	private $tmp_connections;
 
 	/**
 	 * Initialize
@@ -110,6 +112,11 @@ class CodeProfiler_Profiler {
 				self::$buffer / 1000000
 			)
 		);
+
+		// File & folder exclusions
+		if ( isset( $cp_options['exclusions'] ) ) {
+			self::$exclusions = json_decode( $cp_options['exclusions'] );
+		}
 
 		add_filter('pre_http_request', [ $this, 'pre_http_request'], 10000, 3 );
 		add_action('http_api_debug', [ $this, 'http_api_debug'], 10000, 5 );

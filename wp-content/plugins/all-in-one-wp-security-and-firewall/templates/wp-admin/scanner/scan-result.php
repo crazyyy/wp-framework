@@ -25,7 +25,8 @@
 				foreach ($last_scan_results[$type] as $key => $value) {
 					$output .= '<tr>';
 					$output .= '<td>' . esc_html($key) . '</td>';
-					$output .= '<td>' . esc_html($value['filesize']) . '</td>';
+					$file_size = AIOWPSecurity_Utility::convert_numeric_size_to_text($value['filesize']);
+					$output .= '<td>' . esc_html($file_size) . '</td>';
 					$last_modified = AIOWPSecurity_Utility::convert_timestamp($value['last_modified']);
 					$output .= '<td>' . esc_html($last_modified) . '</td>';
 					$output .= '</tr>';

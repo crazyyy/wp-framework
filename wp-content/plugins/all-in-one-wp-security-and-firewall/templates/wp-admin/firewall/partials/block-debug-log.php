@@ -12,7 +12,7 @@
 				<th scope="row"><?php _e('Block access to debug.log file', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to block access to the debug.log file that WordPress creates when debug logging is enabled.', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_debug_log_file_access', '1' == $aio_wp_security->configs->get_value('aiowps_block_debug_log_file_access')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to block access to the debug.log file that WordPress creates when debug logging is enabled.', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_debug_log_file_access', '1' == $aio_wp_security->configs->get_value('aiowps_block_debug_log_file_access')); ?>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 							<?php

@@ -72,7 +72,7 @@ class wfDashboard {
 			
 			unset($data['revoked']);
 		}
-		wfConfig::set_ser('dashboardData', $data);
+		wfConfig::set_ser('dashboardData', $data, false, wfConfig::DONT_AUTOLOAD);
 	}
 	
 	public function __construct() {

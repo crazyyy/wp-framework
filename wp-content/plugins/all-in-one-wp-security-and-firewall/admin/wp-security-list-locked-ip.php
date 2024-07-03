@@ -51,7 +51,7 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 	public function column_default($item, $column_name) {
 		return $item[$column_name];
 	}
-	
+
 	/**
 	 * Function to populate the locked ip actions column in the table
 	 *
@@ -61,10 +61,10 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 	 */
 	public function column_failed_login_ip($item) {
 		$actions = array(
-			'unlock' => '<a href="" data-id="'.esc_attr($item['id']).'" data-message="'.esc_js(__('Are you sure you want to unlock this address range?', 'all-in-one-wp-security-and-firewall')).'" class="aios-unlock-ip-button">'.__('Unlock', 'all-in-one-wp-security-and-firewall').'</a>',
-			'delete' => '<a href="" data-id="'.esc_attr($item['id']).'" data-message="'.esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')).'"  class="aios-delete-ip-button">'.__('Delete', 'all-in-one-wp-security-and-firewall').'</a>',
+			'unlock' => '<a href="" data-ip="'.esc_attr($item['failed_login_ip']).'" data-message="'.esc_js(__('Are you sure you want to unlock this address range?', 'all-in-one-wp-security-and-firewall')).'" class="aios-unlock-ip-button">'.esc_html__('Unlock', 'all-in-one-wp-security-and-firewall').'</a>',
+			'delete' => '<a href="" data-id="'.esc_attr($item['id']).'" data-message="'.esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')).'"  class="aios-delete-locked-ip-record-button">'.esc_html__('Delete', 'all-in-one-wp-security-and-firewall').'</a>',
 		);
-		
+
 		//Return the user_login contents
 		return sprintf('%1$s <span style="color:silver"></span>%2$s',
 			/*$1%s*/ $item['failed_login_ip'],
@@ -183,39 +183,30 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 			if (!isset($_REQUEST['item'])) {
 				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Please select some records using the checkboxes', 'all-in-one-wp-security-and-firewall'));
 			} else {
-				$this->unlock_ip_range(($_REQUEST['item']));
+				$this->unlock_ips(($_REQUEST['item']));
 			}
 		}
 	}
 
 	/**
-	 * Unlocks an IP range by modifying the release_date column of a record in the AIOWPSEC_TBL_LOGIN_LOCKOUT table.
+	 * Unlocks multiple IP addresses by modifying the released column of records in the AIOWPSEC_TBL_LOGIN_LOCKOUT table.
 	 *
-	 * @param array|integer $entries - ids or a single id
+	 * @param array $entries IDs that correspond to IP addresses in the AIOWPSEC_TBL_LOGIN_LOCKOUT table.
 	 *
-	 * @return string|void
+	 * @return void
 	 */
-	public function unlock_ip_range($entries) {
+	public function unlock_ips($entries) {
 		global $wpdb;
 
 		$lockout_table = AIOWPSEC_TBL_LOGIN_LOCKOUT;
 
-		if (is_array($entries)) {
-			// Unlock multiple records
-			$entries = array_filter($entries, 'is_numeric');  // Discard non-numeric ID values
-			$id_list = '(' .implode(',', $entries) .')';  // Create comma separate list for DB operation
-			$result = $wpdb->query("UPDATE $lockout_table SET `released` = UNIX_TIMESTAMP() WHERE `id` IN $id_list");
+		// Unlock multiple records
+		$entries = array_filter($entries, 'is_numeric');  // Discard non-numeric ID values
+		$id_list = '(' .implode(',', $entries) .')';  // Create comma separate list for DB operation
+		$result = $wpdb->query("UPDATE $lockout_table SET `released` = UNIX_TIMESTAMP() WHERE `id` IN $id_list");
 
-			if (null != $result) {
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected IP entries were unlocked successfully.', 'all-in-one-wp-security-and-firewall'));
-			}
-		} elseif (null != $entries) {
-			// Unlock single record
-			$result = $wpdb->query($wpdb->prepare("UPDATE $lockout_table SET `released` = UNIX_TIMESTAMP() WHERE `id` = %d", absint($entries)));
-
-			if (null != $result) {
-				return AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected IP entry was unlocked successfully.', 'all-in-one-wp-security-and-firewall'), true);
-			}
+		if (null != $result) {
+			AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected IP entries were unlocked successfully.', 'all-in-one-wp-security-and-firewall'));
 		}
 	}
 

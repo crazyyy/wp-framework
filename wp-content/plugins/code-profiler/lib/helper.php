@@ -35,19 +35,19 @@ global $wp_version;
 if (! defined('CODE_PROFILER_UA') ) { // UA signatures can be user-defined in the wp-config.php
 	define ('CODE_PROFILER_UA', [
 		esc_html__('Desktop', 'code-profiler') => [
-			'Firefox'			=> 'Mozilla/5.0 (Linux x86_64; rv:110.0) Gecko/20100101 Firefox/110.0',
-			'Chrome'				=> 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)'.
-										' Chrome/111.0.0.0 Safari/537.36',
+			'Firefox'			=> 'Mozilla/5.0 (Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0',
+			'Chrome'				=> 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML,'.
+										' like Gecko) Chrome/125.0.0.0 Safari/537.36',
 			'Edge'				=> 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,'.
-										' like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/110.0.1587.63'
+										' like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.2535.67'
 		],
 		esc_html__('Mobile', 'code-profiler') => [
-			'Android Phone'	=> 'Mozilla/5.0 (Android 13; Mobile; rv:68.0) Gecko/68.0 Firefox/110.0',
-			'Android Tablet'	=> 'Mozilla/5.0 (Linux; Android 13.0; SAMSUNG-SM-T377A Build/NMF26X)'.
-									' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36',
-			'iPhone'				=> 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_3_1 like Mac OS X) AppleWebKit/605.1.15'.
-									' (KHTML, like Gecko) Version/16.3 Mobile/15E148 Safari/604.1',
-			'iPad'				=> 'Mozilla/5.0 (iPad; CPU OS 16_3_1 like Mac OS X) AppleWebKit/605.1.15'.
+			'Android Phone'	=> 'Mozilla/5.0 (Android 14; Mobile; rv:68.0) Gecko/68.0 Firefox/126.0',
+			'Android Tablet'	=> 'Mozilla/5.0 (Linux; Android 14.0; SAMSUNG-SM-T377A Build/NMF26X)'.
+									' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36',
+			'iPhone'				=> 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15'.
+									' (KHTML, like Gecko) Version/17.4.1 Mobile/15E148 Safari/604.1',
+			'iPad'				=> 'Mozilla/5.0 (iPad; CPU OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15'.
 									' (KHTML, like Gecko) GSA/213.0.449417121 Mobile/15E148 Safari/605.1.15'
 		],
 		esc_html__('Bot', 'code-profiler')    => [
@@ -369,16 +369,35 @@ function code_profiler_log_debug( $string, $create = 0 ) {
 }
 
 // =====================================================================
+// Retrieve and return matching files from a directory.
+
+function code_profiler_glob( $directory, $regex, $pathname = false ) {
+
+	$list = [];
+
+	foreach ( new DirectoryIterator( $directory ) as $finfo ) {
+		if (! $finfo->isDot() && preg_match("`$regex`", $finfo->getFilename() ) ) {
+			if ( $pathname ) {
+				$list[] = $finfo->getPathname();
+			} else {
+				$list[] = $finfo->getFilename();
+			}
+		}
+	}
+	return $list;
+}
+
+// =====================================================================
 // Verify if a profile exists and return its full path.
 
 function code_profiler_get_profile_path( $id, $type = 'slugs') {
 
-	$return = false;
-
 	if (! empty( $id ) && preg_match('/^\d{10}\.\d+$/', $id ) ) {
-		$glob = glob( CODE_PROFILER_UPLOAD_DIR ."/$id.*.$type.profile" );
+
+		$glob = code_profiler_glob(CODE_PROFILER_UPLOAD_DIR, "$id\..+\.$type\.profile$", true);
+
 		if ( is_array( $glob ) && ! empty( $glob[0] ) ) {
-			if ( preg_match( "`/$id\.(.+?).$type.profile$`", $glob[0], $match ) ) {
+			if ( preg_match( "`$id\.(.+?).$type.profile$`", $glob[0], $match ) ) {
 
 				return CODE_PROFILER_UPLOAD_DIR. "/$id.{$match[1]}";
 			}
@@ -545,7 +564,8 @@ function code_profiler_getsummarystats( $profile_path, $type = 'html') {
 
 function code_profiler_cleantmpfiles() {
 
-	$glob = glob( CODE_PROFILER_UPLOAD_DIR .'/*.tmp');
+	$glob = code_profiler_glob( CODE_PROFILER_UPLOAD_DIR, '\.tmp$', true );
+
 	if ( is_array( $glob ) ) {
 		$count = 0;
 		foreach( $glob as $file ) {
@@ -559,6 +579,14 @@ function code_profiler_cleantmpfiles() {
 			) );
 		}
 	}
+}
+
+// =====================================================================
+// Remove non-ASCII characters from a string.
+
+function code_profiler_ASCII_filter( $string ) {
+
+	return preg_replace('/[\x00-\x1f\x7f-\xff]/', '', $string );
 }
 
 // =====================================================================

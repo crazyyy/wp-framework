@@ -56,7 +56,24 @@
 			}
 			?>
 
-			<div id="wpo_browser_cache_message"></div>
+			<div id="wpo_browser_cache_message"><?php
+				if (false == $wpo_browser_cache_enabled && $wpo_browser_cache_settings_added) {
+			?>
+				<div class="notice notice-error">
+					<p>
+						<?php
+						$message = esc_html__('The .htaccess file already contains browser static caching settings, but browser caching is not functioning as expected.', 'wp-optimize');
+						$message .= ' ';
+						$message .= esc_html__('This indicates that your webserver does not support .htaccess browser caching rules.', 'wp-optimize');
+						$message .= ' ';
+						$message .= esc_html__('To further investigate this, you must contact your web hosting provider.', 'wp-optimize');
+						echo $message; // phpcs:ignore WordPress.Security.EscapeOutput -- Output is already escaped
+						?>
+					</p>
+				</div>
+			<?php
+				}
+			?></div>
 			<pre id="wpo_browser_cache_output" style="display: none;"></pre>
 			<?php
 		}

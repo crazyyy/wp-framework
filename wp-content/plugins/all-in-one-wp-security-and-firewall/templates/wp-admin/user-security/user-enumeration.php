@@ -19,7 +19,7 @@
 					<th scope="row"><?php _e('Disable users enumeration', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to stop users enumeration.', 'all-in-one-wp-security-and-firewall'), 'aiowps_prevent_users_enumeration', '1' == $aio_wp_security->configs->get_value('aiowps_prevent_users_enumeration')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to stop user enumeration.', 'all-in-one-wp-security-and-firewall'), 'aiowps_prevent_users_enumeration', '1' == $aio_wp_security->configs->get_value('aiowps_prevent_users_enumeration')); ?>
 						</div>
 					</td>
 				</tr>

@@ -70,7 +70,7 @@
 					<th scope="row"><?php _e('Enable automated file change detection scan', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want the system to automatically/periodically scan your files to check for file changes based on the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_automated_fcd_scan', '1' == $aio_wp_security->configs->get_value('aiowps_enable_automated_fcd_scan')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the system to automatically and periodically scan your files to check for file changes based on the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_automated_fcd_scan', '1' == $aio_wp_security->configs->get_value('aiowps_enable_automated_fcd_scan')); ?>
 						</div>
 					</td>
 				</tr>
@@ -126,7 +126,7 @@
 					</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want the system to email you if a file change was detected', 'all-in-one-wp-security-and-firewall'), 'aiowps_send_fcd_scan_email', '1' == $aio_wp_security->configs->get_value('aiowps_send_fcd_scan_email')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the system to email you if a file change was detected', 'all-in-one-wp-security-and-firewall'), 'aiowps_send_fcd_scan_email', '1' == $aio_wp_security->configs->get_value('aiowps_send_fcd_scan_email')); ?>
 						</div>
 						<br>
 							<textarea name="aiowps_fcd_scan_email_address" id="aiowps_fcd_scan_email_address" rows="5" cols="50"><?php echo esc_textarea(wp_unslash(AIOWPSecurity_Utility::get_textarea_str_val($aio_wp_security->configs->get_value('aiowps_fcd_scan_email_address')))); ?></textarea>

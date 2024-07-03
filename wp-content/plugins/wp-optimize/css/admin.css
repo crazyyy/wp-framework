@@ -604,3 +604,8 @@ a.loading.wpo-refresh-gzip-status img.wpo_spinner.display-none {
 .wpo-button-wrap {
   margin-top: 10px;
 }
+
+.wpo-disabled-section {
+  pointer-events: none;
+  opacity: 0.4;
+}

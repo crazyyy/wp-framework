@@ -7,7 +7,7 @@ updraft_try_include_file('methods/s3.php', 'require_once');
 class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 {
 
 	private $vault_mothership = 'https://vault.updraftplus.com/plugin-info/';
-	
+
 	private $vault_config;
 
 	/**
@@ -231,6 +231,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 					$config['secretkey'] = $response['secretkey'];
 					$config['path'] = $response['path'];
 					$config['sessiontoken'] = (isset($response['sessiontoken']) ? $response['sessiontoken'] : '');
+					$config['provider'] = !empty($response['provider']) ? $response['provider'] : 'amazonaws';
 				} elseif (is_array($response) && isset($response['result']) && ('token_unknown' == $response['result'] || 'site_duplicated' == $response['result'])) {
 					$this->log("This site appears to not be connected to UpdraftVault (".$response['result'].")");
 					$config['error'] = array('message' => 'site_not_connected', 'values' => array($response['result']));
@@ -985,5 +986,79 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		}
 
 		return $opts;
+	}
+
+	/**
+	 * Set region that was recieved by previously performing location detection (i.e. getBucketLocation) and set the endpoint by concatenating the service hostname of the provider in use and the region
+	 *
+	 * @param Object $obj         Storage object
+	 * @param String $region      bucket location
+	 * @param String $bucket_name bucket name
+	 */
+	protected function set_region($obj, $region = '', $bucket_name = '') {
+		$config = $this->get_config();
+		if (isset($config['provider']) && 'wasabi' == $config['provider']) {
+			// https://knowledgebase.wasabi.com/hc/en-us/articles/360015106031-What-are-the-service-URLs-for-Wasabi-s-different-storage-regions
+			$endpoint = '';
+			switch ($region) {
+				case 'US':
+				$endpoint = 's3.wasabisys.com';
+				$region = 'us-east-1';
+					break;
+				case 'us-east-1':
+				case 'us-east-2':
+				case 'ap-southeast-1':
+				case 'ap-southeast-2':
+				case 'ap-northeast-1':
+				case 'ap-northeast-2':
+				case 'eu-west-1':
+				case 'eu-west-2':
+				case 'eu-central-1':
+				case 'eu-central-2':
+				case 'ca-central-1':
+				case 'us-west-1':
+				case 'us-central-1':
+				$endpoint = 's3.'.$region.'.wasabisys.com';
+					break;
+				default:
+					break;
+			}
+			if ($endpoint) {
+				$this->log("Set region (".get_class($obj)."): $region");
+				$obj->setRegion($region);
+				if (!is_a($obj, 'UpdraftPlus_S3_Compat')) {
+					$this->log("Set endpoint: $endpoint");
+					$obj->setEndpoint($endpoint);
+				}
+			}
+		} else {
+			// the default AWS provider is in use, so we set region using mechanism defined for the AWS in the parent class
+			parent::set_region($obj, $region, $bucket_name);
+		}
+	}
+
+	/**
+	 * Get an S3 object by specifying the global endpoint of the provider being used
+	 *
+	 * @param  String	   $key            S3 Key
+	 * @param  String	   $secret         S3 secret
+	 * @param  Boolean	   $useservercerts User server certificates
+	 * @param  Boolean     $disableverify  Check if disableverify is enabled
+	 * @param  Boolean     $nossl          Check if there is SSL or not
+	 * @param  Null|String $endpoint       S3 endpoint to use
+	 * @param  Boolean	   $sse            A flag to use server side encryption
+	 * @param  String	   $session_token  The session token returned by AWS for temporary credentials access
+	 *
+	 * @return Object|WP_Error
+	 */
+	public function getS3($key, $secret, $useservercerts, $disableverify, $nossl, $endpoint = null, $sse = false, $session_token = null) {
+		$config = $this->get_config();
+		if (isset($config['provider']) && 'wasabi' == $config['provider']) {
+			// UpdraftPlus_BackupModule_s3 is abstract and by default linked to S3 AWS provider, the same with Vault which is the descendant class of UpdraftPlus_BackupModule_s3 which also uses S3 AWS by default
+			// but since Vault now supports Wasabi provider and Wasabi is a provider that also has regions, we override and choose not to pass the "s3.wasabisys.com" endpoint directly to every method that calls getS3() in the UpdraftPlus_BackupModule_s3 class to prevent unnecessary checks being done in the abstract layer
+			return parent::getS3($key, $secret, $useservercerts, $disableverify, $nossl, 's3.wasabisys.com', $sse, $session_token);
+		} else {
+			return parent::getS3($key, $secret, $useservercerts, $disableverify, $nossl, $endpoint, $sse, $session_token);
+		}
 	}
 }

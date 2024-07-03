@@ -30,7 +30,7 @@ class Model_2faInitializationData {
 	}
 
 	private function generate_otp_url() {
-		return "otpauth://totp/" . rawurlencode(preg_replace('~^https?://~i', '', home_url()) . ' (' . $this->user->user_login . ')') . '?secret=' . $this->get_base32_secret() . '&algorithm=SHA1&digits=6&period=30&issuer=Wordfence';
+		return "otpauth://totp/" . rawurlencode(preg_replace('~^https?://(?:www\.)?~i', '', home_url()) . ':' . $this->user->user_login) . '?secret=' . $this->get_base32_secret() . '&algorithm=SHA1&digits=6&period=30&issuer=' . rawurlencode(preg_replace('~^https?://(?:www\.)?~i', '', home_url()));
 	}
 
 	public function get_otp_url() {

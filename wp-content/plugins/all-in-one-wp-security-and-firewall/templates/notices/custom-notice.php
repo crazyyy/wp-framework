@@ -20,7 +20,7 @@
 			if (!empty($button_link) && !empty($button_meta)) {
 			?>
 			<p>
-				<a class="aiowps_notice_link button button-primary" href="<?php esc_attr_e($button_link);?>">
+				<a class="aiowps_notice_link button button-primary" href="<?php esc_attr_e($button_link, 'all-in-one-wp-security-and-firewall');?>">
 					<?php echo $button_meta; ?>
 				</a>
 				<a class="aiowps_notice_link button button-secondary" style="margin-left: 8px;" href="#" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aios_ajax', subaction: 'dismiss_notice', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce'); ?>', data: { notice: '<?php echo $dismiss_time;?>', dismiss_forever: '1'}});">

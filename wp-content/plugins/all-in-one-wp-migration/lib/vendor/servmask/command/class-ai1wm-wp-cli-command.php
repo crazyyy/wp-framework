@@ -22,12 +22,78 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( defined( 'WP_CLI' ) ) {
 	class Ai1wm_WP_CLI_Command extends WP_CLI_Command {
-		public function __invoke() {
+
+		/**
+		 * Creates a new backup.
+		 *
+		 * ## EXAMPLES
+		 *
+		 * $ wp ai1wm export
+		 *
+		 * @subcommand export
+		 */
+		public function export( $args = array(), $assoc_args = array() ) {
+			$this->info();
+		}
+
+		/**
+		 * Creates a new backup.
+		 *
+		 * ## EXAMPLES
+		 *
+		 * $ wp ai1wm backup
+		 *
+		 * @subcommand backup
+		 */
+		public function backup( $args = array(), $assoc_args = array() ) {
+			$this->info();
+		}
+
+		/**
+		 * Imports a backup.
+		 *
+		 * ## EXAMPLES
+		 *
+		 * $ wp ai1wm import
+		 *
+		 * @subcommand import
+		 */
+		public function import( $args = array(), $assoc_args = array() ) {
+			$this->info();
+		}
+
+		/**
+		 * Restores a backup.
+		 *
+		 * ## EXAMPLES
+		 *
+		 * $ wp ai1wm restore
+		 *
+		 * @subcommand restore
+		 */
+		public function restore( $args = array(), $assoc_args = array() ) {
+			$this->info();
+		}
+
+		/**
+		 * Resets site to default WordPress installation.
+		 *
+		 * ## EXAMPLES
+		 *
+		 * $ wp ai1wm reset
+		 *
+		 * @subcommand reset
+		 */
+		public function reset( $args = array(), $assoc_args = array() ) {
+			$this->info();
+		}
+
+		protected function info() {
 			if ( is_multisite() ) {
 				WP_CLI::error_multi_line(
 					array(
-						__( 'WordPress Multisite is supported via our All-in-One WP Migration Multisite Extension.', AI1WM_PLUGIN_NAME ),
-						__( 'You can get a copy of it here: https://servmask.com/products/multisite-extension', AI1WM_PLUGIN_NAME ),
+						__( 'This feature is available in Multisite Extension.', AI1WM_PLUGIN_NAME ),
+						__( 'You can purchase it from this address: https://servmask.com/products/multisite-extension', AI1WM_PLUGIN_NAME ),
 					)
 				);
 				exit;
@@ -35,11 +101,10 @@ if ( defined( 'WP_CLI' ) ) {
 
 			WP_CLI::error_multi_line(
 				array(
-					__( 'WordPress CLI is supported via our All-in-One WP Migration Unlimited Extension.', AI1WM_PLUGIN_NAME ),
-					__( 'You can get a copy of it here: https://servmask.com/products/unlimited-extension', AI1WM_PLUGIN_NAME ),
+					__( 'This feature is available in Unlimited Extension.', AI1WM_PLUGIN_NAME ),
+					__( 'You can purchase it from this address: https://servmask.com/products/unlimited-extension', AI1WM_PLUGIN_NAME ),
 				)
 			);
-			exit;
 		}
 	}
 }

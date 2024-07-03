@@ -2739,7 +2739,7 @@ class UpdraftPlus_Backup {
 							}
 						} elseif (isset($bit_fields[$key])) {
 							mbstring_binary_safe_encoding();
-							$val_len = strlen($value);
+							$val_len = is_string($value) ? strlen($value) : 0;
 							reset_mbstring_encoding();
 							$hex = '';
 							for ($i=0; $i<$val_len; $i++) {

@@ -199,11 +199,11 @@ class rsssl_letsencrypt_handler {
 		    rsssl_progress_remove('system-status');
 		    $action = 'stop';
 		    $status = 'error';
-		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
+		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more(rsssl_link('install-ssl-on-subfolders') );
 	    } elseif ( rsssl_caa_record_prevents_le() ) {
 		    $action = 'stop';
 		    $status = 'error';
-		    $message = __("Please adjust the CAA records via your DNS provider to allow Let’s Encrypt SSL certificates", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/instructions/edit-dns-caa-records-to-allow-lets-encrypt-ssl-certificates/');
+		    $message = __("Please adjust the CAA records via your DNS provider to allow Let’s Encrypt SSL certificates", "really-simple-ssl" ).rsssl_le_read_more(rsssl_link('instructions/edit-dns-caa-records-to-allow-lets-encrypt-ssl-certificates/') );
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';
@@ -219,7 +219,7 @@ class rsssl_letsencrypt_handler {
 
     public function search_ssl_installation_url(){
     	//start with most generic, then more specific if possible.
-	    $url = 'https://really-simple-ssl.com/install-ssl-certificate';
+	    $url = rsssl_link('install-ssl-certificate');
 	    $host = 'enter-your-dashboard-url-here';
 
 	    if (function_exists('wp_get_direct_update_https_url') && !empty(wp_get_direct_update_https_url())) {
@@ -1009,7 +1009,6 @@ class rsssl_letsencrypt_handler {
 	    try {
 	        $this->account->update($new_email);
         } catch (Exception $e) {
-            //error_log(print_r($e, true));
         }
     }
 
@@ -1296,11 +1295,11 @@ class rsssl_letsencrypt_handler {
 			if (get_option('rsssl_skip_challenge_directory_request')) {
 				$status  = 'warning';
 				$action = 'continue';
-				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
+				$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status_code );
 			} else {
 				$status  = 'error';
 				$action = 'stop';
-				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
+				$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status_code );
 				rsssl_progress_remove('directories');
 			}
 		} else {
@@ -1540,7 +1539,7 @@ class rsssl_letsencrypt_handler {
 		if ($is_subdomain) {
 			$status  = 'error';
 			$action  = 'stop';
-			$message = sprintf(__("This is a multisite configuration with subdomains. You should generate a wildcard certificate on the root domain.",'really-simple-ssl'), '<a href="https://really-simple-ssl.com/pro/?mtm_campaign=error&mtm_kwd=multisite&mtm_source=free&mtm_medium=letsencrypt&mtm_content=upgrade" target="_blank">','</a>');
+			$message = sprintf(__("This is a multisite configuration with subdomains. You should generate a wildcard certificate on the root domain.",'really-simple-ssl'), '<a href="'.rsssl_link('pro','error', 'letsencrypt').'" target="_blank">','</a>');
 			rsssl_progress_remove('system-status');
 		} else {
 			$status  = 'success';

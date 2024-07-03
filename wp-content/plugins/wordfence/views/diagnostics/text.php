@@ -549,6 +549,68 @@ else {
 
 ?>
 
+## <?php esc_html_e('Wordfence Settings', 'wordfence') ?>: <?php esc_html_e('Diagnostic Wordfence settings/constants.', 'wordfence') ?> ##
+
+<?php
+$table = array(
+	array(
+		__('Setting', 'wordfence'),
+		__('Value', 'wordfence'),
+	),
+);
+
+foreach (wfDiagnostic::getWordfenceValues() as $settingData) {
+	if (isset($settingData['subheader'])) {
+		$table[] = strip_tags($settingData['subheader']);
+		continue;
+	}
+	
+	$escapedDescription = strip_tags($settingData['description']);
+	$escapedValue = __('(not set)', 'wordfence');
+	if (isset($settingData['value'])) {
+		$escapedValue = strip_tags($settingData['value']);
+	}
+
+	$table[] = array(
+		$escapedDescription,
+		$escapedValue,
+	);
+}
+
+echo wfHelperString::plainTextTable($table) . "\n\n";
+?>
+
+## <?php esc_html_e('Wordfence Central', 'wordfence') ?>: <?php esc_html_e('Diagnostic connection information for Wordfence Central.', 'wordfence') ?> ##
+
+<?php
+$table = array(
+	array(
+		__('Name', 'wordfence'),
+		__('Value', 'wordfence'),
+	),
+);
+
+foreach (wfDiagnostic::getWordfenceCentralValues() as $settingData) {
+	if (isset($settingData['subheader'])) {
+		$table[] = strip_tags($settingData['subheader']);
+		continue;
+	}
+	
+	$escapedDescription = strip_tags($settingData['description']);
+	$escapedValue = __('(not set)', 'wordfence');
+	if (isset($settingData['value'])) {
+		$escapedValue = strip_tags($settingData['value']);
+	}
+	
+	$table[] = array(
+		$escapedDescription,
+		$escapedValue,
+	);
+}
+
+echo wfHelperString::plainTextTable($table) . "\n\n";
+?>
+
 ## PHPInfo ##
 
 <?php

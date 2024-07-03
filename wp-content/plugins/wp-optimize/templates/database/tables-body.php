@@ -47,6 +47,12 @@
 
 					echo '<br>';
 					
+					$closed_plugins = array('404-monitor', 'redirections');
+					
+					if (in_array($plugin, $closed_plugins)) {
+					  continue;
+					}
+
 					if ('sfwd-lms' === $plugin) {
 						$wp_optimize->wp_optimize_url('https://www.learndash.com/', '', '<span style="font-size: 11px;">LearnDash</span>');
 					} else {

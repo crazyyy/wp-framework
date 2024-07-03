@@ -36,7 +36,7 @@
 					<th scope="row"><?php _e('Enable IP whitelisting', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the whitelisting of selected IP addresses specified in the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_whitelisting', '1' == $aio_wp_security->configs->get_value('aiowps_enable_whitelisting')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the whitelisting of selected IP addresses specified in the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_whitelisting', '1' == $aio_wp_security->configs->get_value('aiowps_enable_whitelisting')); ?>
 						</div>
 					</td>
 				</tr>

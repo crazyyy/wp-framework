@@ -8,11 +8,11 @@ if (!class_exists('AIO_WP_Security')) {
 
 	class AIO_WP_Security {
 
-		public $version = '5.2.9';
+		public $version = '5.3.1';
 
 		public $db_version = '2.0.10';
 
-		public $firewall_version = '1.0.6';
+		public $firewall_version = '1.0.8';
 
 		public $plugin_url;
 
@@ -157,6 +157,7 @@ if (!class_exists('AIO_WP_Security')) {
 			
 			if (!defined('AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS')) define('AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_PURGE_EVENTS_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_EVENTS_RECORDS_AFTER_DAYS', 90);
+			if (!defined('AIOS_PURGE_LOGIN_LOCKOUT_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_LOGIN_LOCKOUT_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_PURGE_LOGIN_ACTIVITY_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_LOGIN_ACTIVITY_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_PURGE_GLOBAL_META_DATA_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_GLOBAL_META_DATA_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD')) define('AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD', 'aiossecret');
@@ -374,11 +375,9 @@ if (!class_exists('AIO_WP_Security')) {
 		 * @return void.
 		 */
 		public function firewall_upgrade_handler() {
-			if (is_admin()) {
-				if (get_option('aiowpsec_firewall_version') != AIO_WP_SECURITY_FIREWALL_VERSION) {
-					AIOWPSecurity_Configure_Settings::set_firewall_configs();
-					AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
-				}
+			if (get_option('aiowpsec_firewall_version') != AIO_WP_SECURITY_FIREWALL_VERSION) {
+				AIOWPSecurity_Configure_Settings::set_firewall_configs();
+				AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
 			}
 		}
 
@@ -428,12 +427,13 @@ if (!class_exists('AIO_WP_Security')) {
 			$this->cron_handler = new AIOWPSecurity_Cronjob_Handler();
 			// DB upgrade handler - run outside admin interface
 			$this->db_upgrade_handler();
+			$this->firewall_upgrade_handler();
 			if (is_admin()) {
 				//Do plugins_loaded operations for admin side
-				$this->firewall_upgrade_handler();
 				$this->admin_init = new AIOWPSecurity_Admin_Init();
 				$this->notices = new AIOWPSecurity_Notices();
 			}
+			AIOWPSecurity_Audit_Event_Handler::instance();
 		}
 
 		/**

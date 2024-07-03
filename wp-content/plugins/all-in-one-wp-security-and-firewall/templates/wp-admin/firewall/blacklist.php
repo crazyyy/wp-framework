@@ -44,7 +44,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 					<th scope="row"><?php _e('Enable IP or user agent blacklisting', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the banning (or blacklisting) of selected IP addresses and/or user agents specified in the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_blacklisting', '1' == $aio_wp_security->configs->get_value('aiowps_enable_blacklisting')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the banning (or blacklisting) of selected IP addresses and/or user agents specified in the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_blacklisting', '1' == $aio_wp_security->configs->get_value('aiowps_enable_blacklisting')); ?>
 						</div>
 					</td>
 				</tr>

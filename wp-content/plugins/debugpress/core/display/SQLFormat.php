@@ -874,21 +874,21 @@ class SQLFormat {
 			if ( preg_match( '/^(' . self::$regex_reserved_toplevel . ')($|\s|' . self::$regex_boundaries . ')/', $upper, $matches ) ) {
 				return array(
 					self::TOKEN_TYPE  => self::TOKEN_TYPE_RESERVED_TOPLEVEL,
-					self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ) ),
+					self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ?? '' ) ),
 				);
 			}
 			// Newline Reserved Word
 			if ( preg_match( '/^(' . self::$regex_reserved_newline . ')($|\s|' . self::$regex_boundaries . ')/', $upper, $matches ) ) {
 				return array(
 					self::TOKEN_TYPE  => self::TOKEN_TYPE_RESERVED_NEWLINE,
-					self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ) ),
+					self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ?? '' ) ),
 				);
 			}
 			// Other Reserved Word
 			if ( preg_match( '/^(' . self::$regex_reserved . ')($|\s|' . self::$regex_boundaries . ')/', $upper, $matches ) ) {
 				return array(
 					self::TOKEN_TYPE  => self::TOKEN_TYPE_RESERVED,
-					self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ) ),
+					self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ?? '' ) ),
 				);
 			}
 		}
@@ -900,7 +900,7 @@ class SQLFormat {
 		if ( preg_match( '/^(' . self::$regex_function . '[(]|\s|[)])/', $upper, $matches ) ) {
 			return array(
 				self::TOKEN_TYPE  => self::TOKEN_TYPE_RESERVED,
-				self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ) - 1 ),
+				self::TOKEN_VALUE => substr( $string, 0, strlen( $matches[1] ?? '' ) - 1 ),
 			);
 		}
 
@@ -975,12 +975,12 @@ class SQLFormat {
 			if ( $cacheKey && isset( self::$token_cache[ $cacheKey ] ) ) {
 				// Retrieve from cache
 				$token        = self::$token_cache[ $cacheKey ];
-				$token_length = strlen( $token[ self::TOKEN_VALUE ] );
+				$token_length = strlen( $token[ self::TOKEN_VALUE ] ?? '' );
 				self::$cache_hits ++;
 			} else {
 				// Get the next token and the token type
 				$token        = self::getNextToken( $string, $token );
-				$token_length = strlen( $token[ self::TOKEN_VALUE ] );
+				$token_length = strlen( $token[ self::TOKEN_VALUE ] ?? '' );
 				self::$cache_misses ++;
 
 				// If the token is shorter than the max length, store it in cache
@@ -1106,7 +1106,7 @@ class SQLFormat {
 					}
 				}
 
-				$inline_count += strlen( $token[ self::TOKEN_VALUE ] );
+				$inline_count += strlen( $token[ self::TOKEN_VALUE ] ?? '' );
 			}
 
 			// Opening parentheses increase the block indent level and start a new line
@@ -1141,7 +1141,7 @@ class SQLFormat {
 						break;
 					}
 
-					$length += strlen( $next[ self::TOKEN_VALUE ] );
+					$length += strlen( $next[ self::TOKEN_VALUE ] ?? '' );
 				}
 
 				if ( $inline_parentheses && $length > 30 ) {
@@ -1428,9 +1428,9 @@ class SQLFormat {
 			$token = $token[ self::TOKEN_VALUE ];
 		} else {
 			if ( defined( 'ENT_IGNORE' ) ) {
-				$token = htmlentities( $token[ self::TOKEN_VALUE ], ENT_COMPAT | ENT_IGNORE, 'UTF-8' );
+				$token = htmlentities( $token[ self::TOKEN_VALUE ] ?? '', ENT_COMPAT | ENT_IGNORE, 'UTF-8' );
 			} else {
-				$token = htmlentities( $token[ self::TOKEN_VALUE ], ENT_COMPAT, 'UTF-8' );
+				$token = htmlentities( $token[ self::TOKEN_VALUE ] ?? '', ENT_COMPAT, 'UTF-8' );
 			}
 		}
 

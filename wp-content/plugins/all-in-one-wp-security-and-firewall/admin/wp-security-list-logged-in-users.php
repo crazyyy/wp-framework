@@ -30,8 +30,8 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 	 * @return string - the html to be rendered
 	 */
 	public function column_user_id($item) {
-		$tab = 'logged-in-users';
-		$force_logout_url = sprintf('admin.php?page=%s&tab=%s&action=%s&logged_in_id=%s&ip_address=%s', AIOWPSEC_USER_SECURITY_MENU_SLUG, $tab, 'force_user_logout', $item['user_id'], $item['ip_address']);
+		$tab = strip_tags($_REQUEST['tab']);
+		$force_logout_url = sprintf('admin.php?page=%s&tab=%s&action=%s&logged_in_id=%s', AIOWPSEC_USER_SECURITY_MENU_SLUG, $tab, 'force_user_logout', $item['user_id']);
 		//Add nonce to URL
 		$force_logout_nonce = wp_nonce_url($force_logout_url, "force_user_logout", "aiowps_nonce");
 		
@@ -54,12 +54,28 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'user_id' => __('User ID', 'all-in-one-wp-security-and-firewall'),
-			'username' => __('Login name', 'all-in-one-wp-security-and-firewall'),
+			'cb'         => '<input type="checkbox">',
+			'user_id'    => __('User ID', 'all-in-one-wp-security-and-firewall'),
+			'username'   => __('Login name', 'all-in-one-wp-security-and-firewall'),
 			'ip_address' => __('IP address', 'all-in-one-wp-security-and-firewall'),
-			'site_id' => __('Site ID', 'all-in-one-wp-security-and-firewall'),
+			'site_id'    => __('Site ID', 'all-in-one-wp-security-and-firewall'),
 		);
 		return $columns;
+	}
+
+	/**
+	 * Returns cb column html to be rendered.
+	 *
+	 * @param array $item - data for the columns on the current row
+	 *
+	 * @return string - the html to be rendered
+	 */
+	public function column_cb($item) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/* $1%s */ $this->_args['singular'], // Let's simply repurpose the table's singular label
+			/* $2%s */ $item['user_id'] // The value of the checkbox should be the record's id and its ip address
+		);
 	}
 
 	/**
@@ -77,47 +93,147 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 		return $sortable_columns;
 	}
 	
+	/**
+	 * Adds a bulk action user interface
+	 *
+	 * @return array
+	 */
 	public function get_bulk_actions() {
-		return array();
-	}
-
-	private function process_bulk_action() {
-		if (empty($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-items')) return;
+		return array(
+			'force_logout_all' => __('Logout all', 'all-in-one-wp-security-and-firewall'),
+			'force_logout_selected' => __('Logout selected', 'all-in-one-wp-security-and-firewall'),
+		);
 	}
 
 	/**
-	 * This function will force a selected user to be logged out.
-	 * The function accepts either an array of IDs or a single ID (TODO - bulk actions not implemented yet!)
+	 * Process Bulk action from menu
 	 *
-	 * @param int $user_id - ID of user being logged out
+	 * @return void
 	 */
-	public function force_user_logout($user_id) {
-		global $aio_wp_security;
-		if (is_array($user_id)) {
-			if (isset($_REQUEST['_wp_http_referer'])) {
-				//TODO - implement bulk action in future release!
-			}
-		} elseif (null != $user_id) {
-			$nonce = isset($_GET['aiowps_nonce']) ? $_GET['aiowps_nonce'] : '';
-			if (!isset($nonce) || !wp_verify_nonce($nonce, 'force_user_logout')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed for force user logout operation.", 4);
-				die(__('Nonce check failed for force user logout operation', 'all-in-one-wp-security-and-firewall'));
-			}
-			// Force single user logout
-			$user_id = absint($user_id);
-			$manager = WP_Session_Tokens::get_instance($user_id);
-			$manager->destroy_all();
+	private function process_bulk_action() {
+		if (empty($_REQUEST['_wpnonce']) || !isset($_REQUEST['_wp_http_referer'])) return;
+		$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_REQUEST['_wpnonce'], 'bulk-items');
+		if (is_wp_error($result)) return;
 
-			$aio_wp_security->user_login_obj->wp_logout_action_handler($user_id, true);
-			$success_msg = '<div id="message" class="updated fade"><p><strong>';
-			$success_msg .= __('The selected user was logged out successfully', 'all-in-one-wp-security-and-firewall');
-			$success_msg .= '</strong></p></div>';
-			_e($success_msg);
+		if ('force_logout_all' === $this->current_action()) {
+			$this->force_user_logout(array(), true);
+		} elseif ('force_logout_selected' === $this->current_action()) {
+			if (isset($_REQUEST['item'])) {
+				if (is_array($_REQUEST['item'])) $this->force_user_logout($_REQUEST['item']);
+			}
 		}
 	}
 
 	/**
-	 * Prepares the items for the logged-in users table
+	 * This function will force selected user(s) to be logged out.
+	 *
+	 * @param int|array $users      - id of selected user or array of user ids to be logged out
+	 * @param bool      $logout_all - Boolean to show if all users should be logged out
+	 *
+	 * @return void
+	 */
+	public function force_user_logout($users, $logout_all = false) {
+		global $wpdb, $aio_wp_security;
+
+		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$current_user_id = get_current_user_id();
+
+		if ($logout_all) {
+			// get all user_id(except for the admin) in the table and make it an array for users
+			$users = $wpdb->get_col("SELECT user_id FROM $logged_in_users_table");
+		}
+
+		if (is_array($users)) {
+
+			if (empty($users)) {
+				AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st();
+				return;
+			}
+
+			$errors = 0;
+
+			// Escape the user IDs for security
+			$users = array_map('esc_sql', $users);
+
+			foreach ($users as $user_id) {
+				if (is_numeric($user_id) && !is_super_admin($user_id) && $this->is_user_member_of_blog($user_id)) {
+					if ($aio_wp_security->user_login_obj->delete_logged_in_user($user_id)) {
+						$this->logout_user($user_id);
+						continue;
+					}
+				}
+				$errors++;
+			}
+
+			if ($errors > 0) {
+				AIOWPSecurity_Admin_Menu::show_msg_error_st(__("Some users were not logged out due to the ID being invalid, or them being a super admin or a member of a different subsite on a multisite", 'all-in-one-wp-security-and-firewall'));
+				return;
+			}
+
+			AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st();
+		} elseif (null != $users) {
+			$error = '';
+
+			if (!is_numeric($users)) {
+				$error = __("Invalid user ID provided.", 'all-in-one-wp-security-and-firewall');
+			} elseif ($current_user_id == $users) {
+				$error = __("You cannot log yourself out", 'all-in-one-wp-security-and-firewall');
+			} elseif (is_super_admin($users)) {
+				$error = __("Super admins cannot be logged out.", 'all-in-one-wp-security-and-firewall');
+			} elseif (!$this->is_user_member_of_blog($users)) {
+				$error = __("You cannot log out a user from a different subsite.", 'all-in-one-wp-security-and-firewall');
+			}
+
+			if ($error) {
+				AIOWPSecurity_Admin_Menu::show_msg_error_st($error);
+				return;
+			}
+			$users = esc_sql($users);
+			$result = $aio_wp_security->user_login_obj->delete_logged_in_user($users);
+
+			if ($result) {
+				$this->logout_user($users);
+				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected user has been logged out successfully.', 'all-in-one-wp-security-and-firewall'));
+			} else {
+				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to log out the selected user.', 'all-in-one-wp-security-and-firewall'));
+			}
+		}
+	}
+
+	/**
+	 * Check if a user is a member of the current blog ID in a multisite environment.
+	 *
+	 * @param int $user_id - User ID to check.
+	 *
+	 * @return bool Whether the user is a member of the current blog ID.
+	 */
+	protected function is_user_member_of_blog($user_id) {
+		$current_user_id = get_current_user_id();
+
+		if (is_multisite() && !is_super_admin($current_user_id)) {
+			$blog_id = get_current_blog_id();
+			return is_user_member_of_blog($user_id, $blog_id);
+		}
+
+		// Non-multisite or super admin, consider the user a member
+		return true;
+	}
+
+	/**
+	 * This function handles logging out a user using user_id
+	 *
+	 * @param int $user_id - id of user being logged out
+	 *
+	 * @return void
+	 */
+	private function logout_user($user_id) {
+		$user_id = absint($user_id);
+		$manager = WP_Session_Tokens::get_instance($user_id);
+		$manager->destroy_all();
+	}
+
+	/**
+	 * Prepares the items for the logged in users table
 	 *
 	 * @param bool $ignore_pagination - this is to check if data should be paginated or not
 	 *
@@ -150,6 +266,8 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 		$order = sanitize_sql_orderby($order);
 
 		$this->_column_headers = array($columns, $hidden, $sortable);
+		
+		$this->process_bulk_action(); // Process bulk actions
 
 		$where_sql = $this->get_where_sql();
 		$total_items = $wpdb->get_var("SELECT COUNT(*) FROM `{$logged_in_users_table}` {$where_sql}");

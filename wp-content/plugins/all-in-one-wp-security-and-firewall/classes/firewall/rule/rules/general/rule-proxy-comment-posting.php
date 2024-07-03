@@ -39,7 +39,7 @@ class Rule_Proxy_Comment_Posting extends Rule {
 	public function is_satisfied() {
 
 		//Preconditions for the rule
-		$is_comment_form = (1 === preg_match('/\/wp-comments-post\.php$/i', $_SERVER['SCRIPT_FILENAME']));
+		$is_comment_form = (isset($_SERVER['SCRIPT_FILENAME']) && 1 === preg_match('/\/wp-comments-post\.php$/i', $_SERVER['SCRIPT_FILENAME']));
 		$is_post         = (isset($_SERVER['REQUEST_METHOD']) && 0 === strcasecmp($_SERVER['REQUEST_METHOD'], "POST"));
 
 		if (!$is_post || !$is_comment_form)  return Rule::NOT_SATISFIED;

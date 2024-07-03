@@ -26,7 +26,7 @@ const useFields = create(( set, get ) => ({
     refreshTests:false,
     highLightField: '',
     setHighLightField: (highLightField) => {
-        set(state => ({ highLightField }))
+        set({ highLightField });
     },
 
     setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),
@@ -53,8 +53,8 @@ const useFields = create(( set, get ) => ({
             })
         )
     },
-    showSavedSettingsNotice : (text) => {
-        handleShowSavedSettingsNotice(text);
+    showSavedSettingsNotice : (text , type = 'success') => {
+        handleShowSavedSettingsNotice(text, type);
     },
 
     updateField: (id, value) => {
@@ -149,7 +149,7 @@ const useFields = create(( set, get ) => ({
         }
         return false;
     },
-    saveFields: async (skipRefreshTests, showSavedNotice) => {
+    saveFields: async (skipRefreshTests, showSavedNotice, force = false) => {
         let refreshTests = typeof skipRefreshTests !== 'undefined' ? skipRefreshTests : true;
         showSavedNotice = typeof showSavedNotice !== 'undefined' ? showSavedNotice : true;
         let fields = get().fields;
@@ -169,7 +169,7 @@ const useFields = create(( set, get ) => ({
         }
 
         //if no fields were changed, do nothing.
-        if (saveFields.length > 0) {
+        if (saveFields.length > 0 || force === true) {
             let response = rsssl_api.setFields(saveFields).then((response) => {
                 return response;
             })
@@ -278,12 +278,30 @@ const updateFieldsListWithConditions = (fields) => {
     return newFields;
 }
 
-const handleShowSavedSettingsNotice = (text) => {
+const handleShowSavedSettingsNotice = ( text, type ) => {
     if (typeof text === 'undefined') {
-        text = __( 'Settings Saved', 'really-simple-ssl' );
+        text = __( 'Settings saved', 'really-simple-ssl' );
     }
 
-    toast.success(text);
+    if (typeof type === 'undefined') {
+        type = 'success';
+    }
+
+    if (type === 'error') {
+        toast.error(text);
+    }
+
+    if (type === 'warning') {
+        toast.warning(text);
+    }
+
+    if (type === 'info') {
+        toast.info(text);
+    }
+
+    if (type === 'success') {
+        toast.success(text);
+    }
 }
 
 

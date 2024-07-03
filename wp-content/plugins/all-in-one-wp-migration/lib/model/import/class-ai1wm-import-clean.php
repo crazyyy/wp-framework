@@ -31,11 +31,11 @@ class Ai1wm_Import_Clean {
 
 	public static function execute( $params ) {
 		// Get database client
-		$mysql = Ai1wm_Database_Utility::create_client();
+		$db_client = Ai1wm_Database_Utility::create_client();
 
 		// Flush mainsite tables
-		$mysql->add_table_prefix_filter( ai1wm_table_prefix( 'mainsite' ) );
-		$mysql->flush();
+		$db_client->add_table_prefix_filter( ai1wm_table_prefix( 'mainsite' ) );
+		$db_client->flush();
 
 		// Delete storage files
 		Ai1wm_Directory::delete( ai1wm_storage_path( $params ) );

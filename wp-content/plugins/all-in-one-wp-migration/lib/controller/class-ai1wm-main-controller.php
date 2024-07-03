@@ -267,7 +267,7 @@ class Ai1wm_Main_Controller {
 	 * @return void
 	 */
 	public function wp_cli() {
-		if ( defined( 'WP_CLI' ) ) {
+		if ( defined( 'WP_CLI' ) && count( Ai1wm_Extensions::get() ) === 0 ) {
 			WP_CLI::add_command( 'ai1wm', 'Ai1wm_WP_CLI_Command', array( 'shortdesc' => __( 'All-in-One WP Migration Command', AI1WM_PLUGIN_NAME ) ) );
 		}
 	}
@@ -784,6 +784,9 @@ class Ai1wm_Main_Controller {
 				'ajax'       => array(
 					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_export' ) ) ),
 				),
+				'download'   => array(
+					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_backup_download_file' ) ) ),
+				),
 				'status'     => array(
 					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1, 'secret_key' => get_option( AI1WM_SECRET_KEY ) ), admin_url( 'admin-ajax.php?action=ai1wm_status' ) ) ),
 				),
@@ -810,6 +813,7 @@ class Ai1wm_Main_Controller {
 				'thanks_for_submitting_your_request'  => __( 'Thanks for submitting your request!', AI1WM_PLUGIN_NAME ),
 				'backups_count_singular'              => __( 'You have %d backup', AI1WM_PLUGIN_NAME ),
 				'backups_count_plural'                => __( 'You have %d backups', AI1WM_PLUGIN_NAME ),
+				'archive_browser_download_error'      => __( 'Error while downloading file', AI1WM_PLUGIN_NAME ),
 			)
 		);
 	}
@@ -1053,13 +1057,19 @@ class Ai1wm_Main_Controller {
 			'ai1wm_backups',
 			array(
 				'ajax'       => array(
-					'url' => wp_make_link_relative( admin_url( 'admin-ajax.php?action=ai1wm_backups' ) ),
+					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_backups' ) ) ),
 				),
 				'backups'    => array(
-					'url' => wp_make_link_relative( admin_url( 'admin-ajax.php?action=ai1wm_backup_list' ) ),
+					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_backup_list' ) ) ),
 				),
 				'labels'     => array(
-					'url' => wp_make_link_relative( admin_url( 'admin-ajax.php?action=ai1wm_add_backup_label' ) ),
+					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_add_backup_label' ) ) ),
+				),
+				'content'    => array(
+					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_backup_list_content' ) ) ),
+				),
+				'download'   => array(
+					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_backup_download_file' ) ) ),
 				),
 				'secret_key' => get_option( AI1WM_SECRET_KEY ),
 			)
@@ -1072,20 +1082,6 @@ class Ai1wm_Main_Controller {
 				'free'   => ai1wm_disk_free_space( AI1WM_STORAGE_PATH ),
 				'factor' => AI1WM_DISK_SPACE_FACTOR,
 				'extra'  => AI1WM_DISK_SPACE_EXTRA,
-			)
-		);
-
-		wp_localize_script(
-			'ai1wm_backups',
-			'ai1wm_list',
-			array(
-				'ajax'       => array(
-					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_backup_list_content' ) ) ),
-				),
-				'download'   => array(
-					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_backup_download_file' ) ) ),
-				),
-				'secret_key' => get_option( AI1WM_SECRET_KEY ),
 			)
 		);
 

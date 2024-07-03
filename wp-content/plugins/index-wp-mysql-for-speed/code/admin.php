@@ -124,7 +124,8 @@ class ImfsPage extends Imfs_AdminPageFramework {
    */
   private function insertHelpTab( $monitor, $sHTML ) {
     $tabSlug = $monitor ? 'monitor' : $this->oProp->getCurrentTabSlug();
-    $helpUrl = index_wp_mysql_for_speed_help_site . $tabSlug;
+    $tabSlug = ctype_alnum ( $tabSlug ) ? $tabSlug : 'about';
+    $helpUrl = index_wp_mysql_for_speed_help_site .  $tabSlug;
     $help    = __( 'Help', 'index-wp-mysql-for-speed' );
     /** @noinspection HtmlUnknownTarget */
     $helpTag = '<a class="helpbutton nav-tab" target="_blank" href="%s/">%s</a>';
@@ -1299,20 +1300,6 @@ class ImfsPage extends Imfs_AdminPageFramework {
     }
 
     return $this->action( $submitInfo['field_id'], $inputs, $oldInputs, $factory, $submitInfo );
-  }
-
-  /**
-   * Work around a shortcoming in Query Monitor.
-   *
-   * Admin Page Framework registers a 'current_screen' action handler that's invoked via php's __call magic method
-   * rather than by being defined in the class. But Query Monitor's Hooks and Actions display assumes the
-   * action handler is actually defined, and shows an error if it is not.
-   *
-   * @param $arg0
-   * @return void
-   */
-  public function load_pre_imfs_settings ($arg0 ) {
-      $this->__call ('load_pre_imfs_settings', array( $arg0 ) );
   }
 
 }

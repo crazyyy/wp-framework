@@ -39,7 +39,7 @@ class Ai1wm_Export_Config {
 		$options = wp_load_alloptions();
 
 		// Get database client
-		$mysql = Ai1wm_Database_Utility::create_client();
+		$db_client = Ai1wm_Database_Utility::create_client();
 
 		$config = array();
 
@@ -132,7 +132,7 @@ class Ai1wm_Export_Config {
 
 		// Set database version
 		$config['Database'] = array(
-			'Version' => $mysql->version(),
+			'Version' => $db_client->server_info(),
 			'Charset' => defined( 'DB_CHARSET' ) ? DB_CHARSET : 'undefined',
 			'Collate' => defined( 'DB_COLLATE' ) ? DB_COLLATE : 'undefined',
 			'Prefix'  => $table_prefix,

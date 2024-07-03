@@ -83,9 +83,9 @@ const WhiteListDatatable = (props) => {
     useEffect(() => {
             fetchWhiteListData(field.action);
 
-    }, [fieldAlreadyEnabled('geo_blocklist_enabled')]);
+    }, [fieldAlreadyEnabled('firewall_enabled')]);
 
-    let enabled = getFieldValue('geo_blocklist_enabled');
+    let enabled = getFieldValue('firewall_enabled');
 
 
     useEffect(() => {

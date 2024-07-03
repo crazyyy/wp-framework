@@ -152,5 +152,3 @@ class AIOWPSecurity_Audit_Event_Handler {
 		$wpdb->query($sql);
 	}
 }
-
-AIOWPSecurity_Audit_Event_Handler::instance();

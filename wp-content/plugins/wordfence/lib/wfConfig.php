@@ -1,6 +1,6 @@
 <?php
 class wfConfig {
-	const TABLE_EXISTS_OPTION = 'wordfence_installed';
+	const TABLE_EXISTS_OPTION = 'wordfence_installed'; //Also exists in bootstrap.php
 	
 	const AUTOLOAD = 'yes';
 	const DONT_AUTOLOAD = 'no';
@@ -325,12 +325,23 @@ class wfConfig {
 	public static function updateTableExists($change = null) {
 		if ($change !== null) {
 			self::$tableExists = !!$change;
-			update_option(wfConfig::TABLE_EXISTS_OPTION, self::$tableExists);
+			if (is_multisite() && function_exists('update_network_option')) {
+				update_network_option(null, wfConfig::TABLE_EXISTS_OPTION, self::$tableExists);
+			}
+			else {
+				update_option(wfConfig::TABLE_EXISTS_OPTION, self::$tableExists);
+			}
 			return;
 		}
 		
 		self::$tableExists = true;
-		$optionValue = get_option(wfConfig::TABLE_EXISTS_OPTION, null);
+		if (is_multisite() && function_exists('get_network_option')) {
+			$optionValue = get_network_option(null, wfConfig::TABLE_EXISTS_OPTION, null);
+		}
+		else {
+			$optionValue = get_option(wfConfig::TABLE_EXISTS_OPTION, null);
+		}
+		
 		if ($optionValue === null) { //No value, set an initial one
 			global $wpdb;
 			self::updateTableExists(!!$wpdb->get_col($wpdb->prepare('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=%s', self::table())));
@@ -798,7 +809,7 @@ class wfConfig {
 			
 			if ($useMySQLi) {
 				if ($exists) {
-					$stmt = $dbh->prepare("UPDATE " . self::table() . " SET val=? WHERE name=?");
+					$stmt = $dbh->prepare("UPDATE " . self::table() . " SET val=?, autoload=? WHERE name=?");
 					if ($stmt === false) {
 						wordfence::status(2, 'error', sprintf(
 						/* translators: 1. Key in key-value store. 2. MySQL error number. 3. MySQL error message. */
@@ -806,7 +817,7 @@ class wfConfig {
 						return false;
 					}
 					$null = NULL;
-					$stmt->bind_param("bs", $null, $key);
+					$stmt->bind_param("bss", $null, $autoload, $key);
 				}
 				else {
 					$stmt = $dbh->prepare("INSERT IGNORE INTO " . self::table() . " (val, name, autoload) VALUES (?, ?, ?)");
@@ -836,7 +847,7 @@ class wfConfig {
 			}
 			else {
 				if ($exists) {
-					self::getDB()->queryWrite(sprintf("update " . self::table() . " set val=X'%s' where name=%%s", $data), $key);
+					self::getDB()->queryWrite(sprintf("update " . self::table() . " set val=X'%s', autoload=%%s where name=%%s", $data), $autoload, $key);
 				}
 				else {
 					self::getDB()->queryWrite(sprintf("insert ignore into " . self::table() . " (name, val, autoload) values (%%s, X'%s', %%s)", $data), $key, $autoload);
@@ -1865,7 +1876,7 @@ Options -ExecCGI
 						wfDashboard::processDashboardResponse($keyData['dashboard']);
 					}
 					if (isset($keyData['support']) && isset($keyData['supportHash'])) {
-						wfConfig::set('supportContent', $keyData['support']);
+						wfConfig::set('supportContent', $keyData['support'], wfConfig::DONT_AUTOLOAD);
 						wfConfig::set('supportHash', $keyData['supportHash']);
 					}
 					if (isset($keyData['_whitelist']) && isset($keyData['_whitelistHash'])) {
@@ -1873,7 +1884,7 @@ Options -ExecCGI
 						wfConfig::set('whitelistHash', $keyData['_whitelistHash']);
 					}
 					if (isset($keyData['_tldlist']) && isset($keyData['_tldlistHash'])) {
-						wfConfig::set('tldlist', $keyData['_tldlist']);
+						wfConfig::set('tldlist', $keyData['_tldlist'], wfConfig::DONT_AUTOLOAD);
 						wfConfig::set('tldlistHash', $keyData['_tldlistHash']);
 					}
 					if (isset($keyData['_ipResolutionList']) && isset($keyData['_ipResolutionListHash'])) {

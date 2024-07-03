@@ -130,12 +130,16 @@ class WPO_Page_Cache {
 	}
 
 	/**
-	 * Activate cron job for deleting expired cache files
+	 * Activate cron job when the cache is enabled for deleting expired cache files
 	 */
 	public function cron_activate() {
 		$page_cache_length = $this->config->get_option('page_cache_length');
-		if (!wp_next_scheduled('wpo_purge_old_cache')) {
-			wp_schedule_event(time() + (false === $page_cache_length ? '86400' : $page_cache_length), 'wpo_purge_old_cache', 'wpo_purge_old_cache');
+		if ($this->is_enabled()) {
+			if (!wp_next_scheduled('wpo_purge_old_cache')) {
+				wp_schedule_event(time() + (false === $page_cache_length ? '86400' : $page_cache_length), 'wpo_purge_old_cache', 'wpo_purge_old_cache');
+			}
+		} else {
+			wp_clear_scheduled_hook('wpo_purge_old_cache');
 		}
 	}
 
@@ -433,6 +437,9 @@ class WPO_Page_Cache {
 		// Delete cache to avoid stale cache on next activation
 		$this->purge();
 
+		// Unschedule cron job to purge old cache
+		wp_clear_scheduled_hook('wpo_purge_old_cache');
+
 		return $ret;
 	}
 
@@ -624,6 +631,7 @@ class WPO_Page_Cache {
 		$cache_extensions_path = WPO_CACHE_EXT_DIR;
 		$wpo_version = WPO_VERSION;
 		$wpo_home_url = trailingslashit(home_url());
+		$abspath = ABSPATH;
 
 		// CS does not like heredoc
 		// phpcs:disable
@@ -632,7 +640,7 @@ class WPO_Page_Cache {
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-// WP-Optimize advanced-cache.php (written by version: $wpo_version) (do not change this line, it is used for correctness checks)
+// WP-Optimize advanced-cache.php (written by version: $wpo_version) (homeurl: $wpo_home_url) (abspath: $abspath) (do not change this line, it is used for correctness checks)
 
 if (!defined('WPO_ADVANCED_CACHE')) define('WPO_ADVANCED_CACHE', true);
 
@@ -744,14 +752,38 @@ EOF;
 		}
 
 		// from 3.0.17 we use more secure way to store cache config files and need update advanced-cache.php
+		// if the site url or folder changed we also update advanced-cache.php
 		$advanced_cache_current_version = $this->get_advanced_cache_version();
-		if ($advanced_cache_current_version && version_compare($advanced_cache_current_version, $this->_minimum_advanced_cache_file_version, '>=')) return;
+		if ($advanced_cache_current_version && version_compare($advanced_cache_current_version, $this->_minimum_advanced_cache_file_version, '>=') && !$this->is_the_site_url_or_folder_changed()) return;
 
 		if (!$this->write_advanced_cache()) {
 			add_action('admin_notices', array($this, 'notice_advanced_cache_autoupdate_error'));
 		} else {
 			$this->update_cache_config();
 		}
+	}
+
+	/**
+	 * Check if the site url or folder doesn't equal to values from advanced-cache.php
+	 *
+	 * @return bool
+	 */
+	private function is_the_site_url_or_folder_changed() {
+		if (!is_file($this->get_advanced_cache_filename())) return false;
+
+		$content = file_get_contents($this->get_advanced_cache_filename());
+		
+		if (false === $content) return false;
+
+		if (preg_match('/WP\-Optimize advanced\-cache\.php \(written by version\: (.+)\) (\(homeurl: (.+)\)) (\(abspath: (.+)\)) \(do not change/Ui', $content, $match)) {
+			$wpo_home_url = trailingslashit(home_url());
+			$abspath = ABSPATH;
+			return ($wpo_home_url != $match[3] || $abspath != $match[5]);
+		} elseif (preg_match('/WP\-Optimize advanced\-cache\.php \(written by version\: (.+)\)/Ui', $content, $match)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -1094,37 +1126,6 @@ EOF;
 		do_action('wpo_delete_cache_by_url', $homepage_url, false);
 
 		wpo_delete_files($path, false);
-	}
-
-	/**
-	 * Delete sitemap cache.
-	 */
-	public static function delete_sitemap_cache() {
-		if (!defined('WPO_CACHE_FILES_DIR')) return;
-
-		$homepage_url = get_home_url(get_current_blog_id());
-
-		$path = trailingslashit(WPO_CACHE_FILES_DIR) . trailingslashit(wpo_get_url_path($homepage_url));
-
-		if (!is_dir($path)) return;
-
-		$handle = opendir($path);
-
-		if (false !== $handle) {
-			$file = readdir($handle);
-
-			while (false !== $file) {
-	
-				if ('.' != $file && '..' != $file && is_dir($path . $file) && preg_match('/.*sitemap.*\.xml/i', $file)) {
-					do_action('wpo_delete_cache_by_url', $path . $file, false);
-					wpo_delete_files($path . $file, true);
-				}
-	
-				$file = readdir($handle);
-			}
-		}
-
-		closedir($handle);
 	}
 
 	/**

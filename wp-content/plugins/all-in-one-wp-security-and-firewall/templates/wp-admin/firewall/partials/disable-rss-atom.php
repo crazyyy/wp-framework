@@ -11,7 +11,7 @@
 						<th scope="row"><?php _e('Disable RSS and ATOM feeds:', 'all-in-one-wp-security-and-firewall'); ?></th>
 						<td>
 							<div class="aiowps_switch_container">
-								<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you do not want users using feeds.', 'all-in-one-wp-security-and-firewall') . ' ' .__(' RSS and ATOM feeds are used to read content from your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_rss_and_atom_feeds', '1' == $aio_wp_security->configs->get_value('aiowps_disable_rss_and_atom_feeds')); ?>
+								<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you do not want users using feeds.', 'all-in-one-wp-security-and-firewall') . ' ' .__('RSS and ATOM feeds are used to read content from your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_rss_and_atom_feeds', '1' == $aio_wp_security->configs->get_value('aiowps_disable_rss_and_atom_feeds')); ?>
 								<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 								<div class="aiowps_more_info_body">
 									<?php

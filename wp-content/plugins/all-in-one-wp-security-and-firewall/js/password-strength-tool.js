@@ -20,7 +20,7 @@
 					var decimalYears = s/(3600*24*365);
 					var years = Math.floor(decimalYears);
 
-					var decimalMonths =(decimalYears-years)*12;
+					var decimalMonths = (decimalYears-years)*12;
 					var months = Math.floor(decimalMonths);
 
 					var decimalDays = (decimalMonths-months)*30;
@@ -97,16 +97,17 @@
 						//1000yrs < Time to crack
 						complexity = 10;
 					}
-					calculated = (complexity/10)*268 - 134;
-					prop = 'rotate('+(calculated)+'deg)';
 					// Rotate the arrow
-					$('.arrow').css({
-							'-moz-transform': prop,
-							'-webkit-transform': prop,
-							'-o-transform': prop,
-							'-ms-transform': prop,
-							'transform': prop
-					});
+					var meterFill = $('#aios_meter_fill');
+					if (str.length === 0) {
+						meterFill.css('width', '0').css('background-color', 'transparent');
+					} else if (complexity < 3) {
+						meterFill.css('width', (complexity * 10) + '%').css('background-color', 'red');
+					} else if (complexity < 6) {
+						meterFill.css('width', (complexity * 10) + '%').css('background-color', 'orange');
+					} else {
+						meterFill.css('width', (complexity * 10) + '%').css('background-color', 'green');
+					}
 					
 					return time.substring(0,time.length-2);
 				}

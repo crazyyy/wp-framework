@@ -274,10 +274,11 @@ class wfBlock {
 			$blockedTime = time();
 		}
 		
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
 		$blocksTable = wfBlock::blocksTable();
-		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = %s", $reason, ($duration ? $blockedTime + $duration : $duration), $type, wfUtils::inet_pton($ip)));
+		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = {$ipHex}", $reason, ($duration ? $blockedTime + $duration : $duration), $type));
 		if (!$hasExisting) {
-			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, NULL)", $type, wfUtils::inet_pton($ip), $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
+			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, NULL)", $type, $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
 			
 			wfConfig::inc('totalIPsBlocked');
 		}
@@ -306,10 +307,11 @@ class wfBlock {
 			$blockedTime = time();
 		}
 		
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
 		$blocksTable = wfBlock::blocksTable();
-		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = %s", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_WFSN_TEMPORARY, wfUtils::inet_pton($ip)));
+		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = {$ipHex}", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_WFSN_TEMPORARY));
 		if (!$hasExisting) {
-			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, NULL)", self::TYPE_WFSN_TEMPORARY, wfUtils::inet_pton($ip), $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
+			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, NULL)", self::TYPE_WFSN_TEMPORARY, $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
 			
 			wfConfig::inc('totalIPsBlocked');
 		}
@@ -338,10 +340,11 @@ class wfBlock {
 			$blockedTime = time();
 		}
 		
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
 		$blocksTable = wfBlock::blocksTable();
-		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = %s", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_RATE_BLOCK, wfUtils::inet_pton($ip)));
+		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = {$ipHex}", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_RATE_BLOCK));
 		if (!$hasExisting) {
-			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, NULL)", self::TYPE_RATE_BLOCK, wfUtils::inet_pton($ip), $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
+			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, NULL)", self::TYPE_RATE_BLOCK, $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
 			
 			wfConfig::inc('totalIPsBlocked');
 		}
@@ -370,10 +373,11 @@ class wfBlock {
 			$blockedTime = time();
 		}
 		
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
 		$blocksTable = wfBlock::blocksTable();
-		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = %s", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_RATE_THROTTLE, wfUtils::inet_pton($ip)));
+		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = {$ipHex}", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_RATE_THROTTLE));
 		if (!$hasExisting) {
-			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, NULL)", self::TYPE_RATE_THROTTLE, wfUtils::inet_pton($ip), $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
+			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, NULL)", self::TYPE_RATE_THROTTLE, $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
 			
 			wfConfig::inc('totalIPsBlocked');
 		}
@@ -403,9 +407,10 @@ class wfBlock {
 		}
 		
 		$blocksTable = wfBlock::blocksTable();
-		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = %s", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_LOCKOUT, wfUtils::inet_pton($ip)));
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
+		$hasExisting = $wpdb->query($wpdb->prepare("UPDATE `{$blocksTable}` SET `reason` = %s, `expiration` = %d WHERE `expiration` > UNIX_TIMESTAMP() AND `type` = %d AND `IP` = {$ipHex}", $reason, ($duration ? $blockedTime + $duration : $duration), self::TYPE_LOCKOUT));
 		if (!$hasExisting) {
-			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, NULL)", self::TYPE_LOCKOUT, wfUtils::inet_pton($ip), $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
+			$wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, NULL)", self::TYPE_LOCKOUT, $blockedTime, $reason, (int) $lastAttempt, (int) $blockedHits, ($duration ? $blockedTime + $duration : $duration)));
 			
 			wfConfig::inc('totalIPsLocked');
 		}
@@ -546,8 +551,9 @@ class wfBlock {
 			case self::TYPE_RATE_THROTTLE:
 			case self::TYPE_LOCKOUT:
 				if (self::isWhitelisted($ip)) { return false; }
-				
-				return $wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, NULL)", (int) $b['type'], wfUtils::inet_pton($ip), (int) $b['blockedTime'], $b['reason'], (int) $b['lastAttempt'], (int) $b['blockedHits'], self::DURATION_FOREVER)) !== false;
+			
+				$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
+				return $wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, NULL)", (int) $b['type'], (int) $b['blockedTime'], $b['reason'], (int) $b['lastAttempt'], (int) $b['blockedHits'], self::DURATION_FOREVER)) !== false;
 			case self::TYPE_COUNTRY:
 				if (!isset($b['parameters'])) { return false; }
 				if (wfUtils::inet_pton($ip) != self::MARKER_COUNTRY) { return false; }
@@ -565,7 +571,8 @@ class wfBlock {
 				
 				$parameters = array('blockLogin' => $parameters['blockLogin'], 'blockSite' => $parameters['blockSite'], 'countries' => $parameters['countries']);
 				
-				return $wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, %s)", self::TYPE_COUNTRY, self::MARKER_COUNTRY, (int) $b['blockedTime'], $b['reason'], (int) $b['lastAttempt'], (int) $b['blockedHits'], self::DURATION_FOREVER, json_encode($parameters))) !== false;
+				$ipHex = wfDB::binaryValueToSQLHex(self::MARKER_COUNTRY);
+				return $wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, %s)", self::TYPE_COUNTRY, (int) $b['blockedTime'], $b['reason'], (int) $b['lastAttempt'], (int) $b['blockedHits'], self::DURATION_FOREVER, json_encode($parameters))) !== false;
 			case self::TYPE_PATTERN:
 				if (!isset($b['parameters'])) { return false; }
 				if (wfUtils::inet_pton($ip) != self::MARKER_PATTERN) { return false; }
@@ -610,7 +617,8 @@ class wfBlock {
 					'referrer' => $parameters['referrer'],
 				);
 				
-				return $wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, %s, %d, %s, %d, %d, %d, %s)", self::TYPE_PATTERN, self::MARKER_PATTERN, (int) $b['blockedTime'], $b['reason'], (int) $b['lastAttempt'], (int) $b['blockedHits'], self::DURATION_FOREVER, json_encode($parameters))) !== false;
+				$ipHex = wfDB::binaryValueToSQLHex(self::MARKER_PATTERN);
+				return $wpdb->query($wpdb->prepare("INSERT INTO `{$blocksTable}` (`type`, `IP`, `blockedTime`, `reason`, `lastAttempt`, `blockedHits`, `expiration`, `parameters`) VALUES (%d, {$ipHex}, %d, %s, %d, %d, %d, %s)", self::TYPE_PATTERN, (int) $b['blockedTime'], $b['reason'], (int) $b['lastAttempt'], (int) $b['blockedHits'], self::DURATION_FOREVER, json_encode($parameters))) !== false;
 		}
 		
 		return false;
@@ -897,14 +905,16 @@ END AS `detailSort`
 		global $wpdb;
 		$blocksTable = wfBlock::blocksTable();
 		
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
+		
 		$query = "SELECT * FROM `{$blocksTable}` WHERE ";
 		
 		$ofTypes = array(self::TYPE_IP_MANUAL, self::TYPE_IP_AUTOMATIC_TEMPORARY, self::TYPE_IP_AUTOMATIC_PERMANENT, self::TYPE_WFSN_TEMPORARY, self::TYPE_RATE_BLOCK, self::TYPE_RATE_THROTTLE);
 		$query .= "`type` IN (" . implode(', ', $ofTypes) . ') AND ';
-		$query .= "`IP` = %s AND ";
+		$query .= "`IP` = {$ipHex} AND ";
 		$query .= '(`expiration` = ' . self::DURATION_FOREVER . ' OR `expiration` > UNIX_TIMESTAMP()) ORDER BY `blockedTime` DESC LIMIT 1';
 		
-		$r = $wpdb->get_row($wpdb->prepare($query, wfUtils::inet_pton($ip)), ARRAY_A);
+		$r = $wpdb->get_row($query, ARRAY_A);
 		if (is_array($r)) {
 			$ip = wfUtils::inet_ntop($r['IP']);
 			return new wfBlock($r['id'], $r['type'], $ip, $r['blockedTime'], $r['reason'], $r['lastAttempt'], $r['blockedHits'], $r['expiration'], null);
@@ -975,8 +985,9 @@ END AS `detailSort`
 	public static function lockoutForIP($ip) {
 		global $wpdb;
 		$blocksTable = wfBlock::blocksTable();
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
 		
-		$row = $wpdb->get_row($wpdb->prepare("SELECT * FROM `{$blocksTable}` WHERE `IP` = %s AND `type` = %d AND (`expiration` = %d OR `expiration` > UNIX_TIMESTAMP())", wfUtils::inet_pton($ip), self::TYPE_LOCKOUT, self::DURATION_FOREVER), ARRAY_A);
+		$row = $wpdb->get_row($wpdb->prepare("SELECT * FROM `{$blocksTable}` WHERE `IP` = {$ipHex} AND `type` = %d AND (`expiration` = %d OR `expiration` > UNIX_TIMESTAMP())",  self::TYPE_LOCKOUT, self::DURATION_FOREVER), ARRAY_A);
 		if ($row) {
 			return new wfBlock($row['id'], $row['type'], wfUtils::inet_ntop($row['IP']), $row['blockedTime'], $row['reason'], $row['lastAttempt'], $row['blockedHits'], $row['expiration'], null);
 		}
@@ -1076,7 +1087,8 @@ END AS `detailSort`
 	public static function unblockIP($ip) {
 		global $wpdb;
 		$blocksTable = wfBlock::blocksTable();
-		$wpdb->query($wpdb->prepare("DELETE FROM `{$blocksTable}` WHERE `IP` = %s", wfUtils::inet_pton($ip)));
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
+		$wpdb->query("DELETE FROM `{$blocksTable}` WHERE `IP` = {$ipHex}");
 	}
 	
 	/**
@@ -1087,7 +1099,8 @@ END AS `detailSort`
 	public static function unlockOutIP($ip) {
 		global $wpdb;
 		$blocksTable = wfBlock::blocksTable();
-		$wpdb->query($wpdb->prepare("DELETE FROM `{$blocksTable}` WHERE `IP` = %s AND `type` = %d", wfUtils::inet_pton($ip), self::TYPE_LOCKOUT));
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
+		$wpdb->query($wpdb->prepare("DELETE FROM `{$blocksTable}` WHERE `IP` = {$ipHex} AND `type` = %d", self::TYPE_LOCKOUT));
 	}
 	
 	/**

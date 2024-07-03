@@ -320,14 +320,6 @@ function honeypot4cf7_admin_page() {
 		</div>
 
 		<div class="honeypot4cf7-admin__secondary">
-			<div class="honeypot4cf7-admin__box honeypot4cf7-admin__box--coffee">
-				<p class="honeypot4cf7-admin__coffee-message">
-					<?php esc_html_e( 'Do you like Honeypot for CF7? Consider showing your support:', 'contact-form-7-honeypot' ); ?><br>
-					<a href="http://www.nocean.ca/buy-us-a-coffee/" target="_blank" class="button button-primary"><strong>
-						<span class="dashicons dashicons-coffee"></span> <?php esc_html_e( 'Buy Us a Coffee', 'contact-form-7-honeypot' ); ?>
-					</strong></a>
-				</p>
-			</div>
 			<div class="honeypot4cf7-admin__box">
 				<h3><?php esc_html_e( 'Recommended', 'contact-form-7-honeypot' ); ?></h3>
 				<div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--2">

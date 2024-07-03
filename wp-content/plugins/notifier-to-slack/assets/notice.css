@@ -1,0 +1,561 @@
+.banner-content {
+    display: flex;
+}
+
+.upgrade-btn-wrapper{
+    margin-top: 30px;
+}
+
+.wpnts-upgrade-banner,
+.wpnts-influencer-banner,
+.wpnts-ratting-banner {
+	margin: 20px 10px;
+
+	border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+    box-shadow: 1px 1px 1px 1px #008080;
+
+}
+
+.link-wrapper.notice-actions h3 {
+    color: #013f3f;
+}
+
+p.review-notice {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: inter;
+}
+
+.wpnts-image-icon {
+	margin: 20px;
+	padding: 10px;
+	vertical-align: top;
+	align-self: flex-start;
+	width: 110px;
+}
+
+.bottom-fields {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.already-did-hook {
+	padding: 15px 20px;
+    background: #ffe9a4;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 21px;
+    color: #7d7d7d;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.already-did-hook:hover{
+	background: #ffd13e;
+    color: #ffffff;
+}
+
+
+.coupon-offer {
+	margin-top: 18px;
+    padding: 11px 30px;
+    background: #EC4899;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 21px;
+    color: #f3f3f3;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.coupon-offer:hover{
+	background: #f6288f;
+	color: #ffffff;
+}
+
+.ratting_popup-container {
+    z-index: 1000;
+}
+
+.wpnts-upgrade-close,
+.wpnts-influencer-close,
+.wpnts-ratting-open {
+	position: absolute;
+	right: 35px;
+	cursor: pointer;
+}
+
+.wpnts-upgrade-close::before,
+.wpnts-influencer-close::before,
+.wpnts-ratting-open::before {
+	content: url("./top-banner/cross.svg");
+}
+
+.upgrade-btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-top: 18px;
+}
+
+.upgrade-button {
+	background-color: #008080;
+	border-radius: 10px;
+	padding: 12px 40px 12px 18px;
+	margin: 20px 0px;
+	border: none;
+	backface-visibility: hidden;
+	font-size: 16px;
+	color: #fff;
+	cursor: pointer;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.upgrade-button:hover,
+.upgrade-button:link,
+.upgrade-button:visited,
+.influencer-button:hover,
+.influencer-button:link,
+.influencer-button:visited {
+	color: #fff;
+}
+
+.upgrade-button span::after,
+.influencer-button span::after {
+	content: url("./top-banner/right-arrow.svg");
+	position: absolute;
+	margin-left: 5px;
+	margin-top: -1px;
+}
+
+.upgrade-button:hover span::after,
+.influencer-button:hover span::after {
+	content: url("./top-banner/right-arrow.svg");
+	margin-left: 10px;
+	transition: 0.3s all ease-out;
+}
+
+.wpnts-influencer-banner h3 {
+	font-family: inherit;
+	font-weight: 400;
+	font-size: 20px;
+	line-height: 30px;
+	margin: 0;
+	padding: 0px;
+}
+
+.wpnts-influencer-banner h3 span {
+	font-weight: 600;
+	color: #7c3aed;
+}
+
+.wpnts-influencer-banner .link-wrapper {
+	display: flex;
+	flex-direction: row;
+	margin-top: 20px;
+}
+
+.wpnts-influencer-wrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: left;
+	margin-right: 10px;
+    margin-top: 10px;
+}
+
+.wpnts-upgrade-banner {
+	/* display: none; */
+	flex-direction: row;
+	padding: 20px 10px;
+	margin: 20px auto;
+	font-family: inter;
+	box-sizing: border-box;
+	border: 2px solid #e5e7eb;
+	background-color: #fff;
+	border-radius: 4px;
+}
+
+.wpnts-upgrade-banner .content {
+	display: flex;
+	flex-direction: column;
+	margin: 30px 0px 0px 0px;
+	justify-content: left;
+}
+
+.wpnts-upgrade-banner .content h3 {
+	font-family: inherit;
+	font-weight: 400;
+	font-size: 20px;
+	line-height: 30px;
+	margin: 0;
+	padding: 0px;
+}
+
+.wpnts-upgrade-banner .content span {
+	font-weight: 600;
+}
+
+.wpnts-influencer-banner, 
+.wpnts-ratting-banner {
+	/* display: none; */
+	flex-direction: row;
+	padding: 20px 10px;
+	font-family: inter;
+	box-sizing: border-box;
+	margin: 20px auto;
+	border: 2px solid #e5e7eb;
+	background-color: #fff;
+	border-radius: 4px;
+}
+
+.affiliate-button {
+	padding: 10px 18px;
+	border: 2px solid #7c3aed;
+	background-color: #fff;
+	font-size: 16px;
+	color: #7c3aed;
+	border-radius: 8px;
+	text-decoration: none;
+	margin-right: 10px;
+}
+
+.influencer-button {
+	padding: 10px 35px 10px 18px;
+	border: 2px solid #7c3aed;
+	color: #fff;
+	font-size: 16px;
+	background-color: #7c3aed;
+	backface-visibility: hidden;
+	border-radius: 8px;
+	text-decoration: none;
+}
+
+
+/* Review  */
+.ratting_popup-container {
+	/* visibility: hidden; */
+	transition: all 0.3s ease-in-out;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(55, 65, 81, 0.3);
+	vertical-align: middle;
+	display: flex;
+	align-items: center;
+	transform: scale(1);
+  }
+  
+  .ratting_popup-container h3 {
+	margin: 10px;
+  }
+  
+  .rating-container {
+	display: flex;
+	flex-direction: row;
+	cursor: pointer;
+  }
+
+  h3.rating-heading {
+    font-weight: 400;
+  }
+  span.wpnts-plugin-title {
+    font-weight: 600;
+	color: #013f3f;
+  }
+  
+  .ratting-yellow-icon {
+	content: url("./top-banner/yellow-star2.svg");
+	width: 28px;
+	height: 28px;
+  }
+  
+  .ratting-gray-icon {
+	content: url("./top-banner/gray-star.svg");
+	width: 28px;
+	height: 28px;
+  }
+  
+  .ratting-orange-icon {
+	content: url("./top-banner/orange-star.svg");
+	width: 28px;
+	height: 28px;
+	/* transition: 0.2s all ease-out; */
+  }
+
+  
+  .ratting-image-icon {
+	margin: 20px;
+	padding: 10px;
+	vertical-align: top;
+	align-self: flex-start;
+  }
+  .ratting-rating-close,
+  .ratting-upgrade-close,
+  .ratting-influencer-close {
+	position: absolute;
+	right: 35px;
+	cursor: pointer;
+  }
+  
+  .ratting-rating-close::before,
+  .ratting-upgrade-close::before,
+  .ratting-influencer-close::before {
+	content: url("./top-banner/cross.svg");
+  }
+  
+  .ratting_custom-select option {
+	font-size: 16px; 
+  }
+  
+  .ratting_custom-select option:checked {
+	font-size: 16px;
+  }
+  .ratting_custom-select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-color: #f7f7f7;
+	border: 2px solid rgba(156, 163, 175, 1) !important;
+	padding: 10px;
+	width: auto;
+	min-width: 95%;
+	border-radius: 0.3rem !important;
+	cursor: pointer;
+  }
+
+
+  /* Custom Select  */
+  .custom-select {
+    position: relative;
+    width: 200px; 
+	margin-top: 5px;
+}
+
+.selected-option {
+    display: block;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+span.selected-option {
+    width: 395px;
+    height: 45px;
+    border-radius: 8px;
+    line-height: 2;
+	position: relative;
+}
+
+
+
+.options-list {
+    display: none;
+    position: absolute;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.options-list li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.options-list li:hover {
+    background-color: #EFF6FF;
+	border-radius: 5px;
+}
+
+.options-list li:nth-child(1) {
+    background-color: #EFF6FF;
+    border-radius: 5px;
+}
+
+ul.options-list {
+    width: 395px;
+    height: 170px;
+    border-radius: 8px;
+    line-height: 2;
+	font-size: 16px;
+	font-weight: 400;
+}
+
+li.remind-me-text {
+    font-weight: 300;
+    font-size: 16px;
+	color: #7c7c7c;
+}
+
+
+  /* END  */
+  
+  .ratting_select-wrapper {
+	margin-top: 35px;
+	margin-left: 10px;
+  }
+
+  /* Select Carrot  */
+  .selected-option::after {
+	content: url("./top-banner/arrow-down.svg");
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	font-size: 16px;
+	line-height: 24px;
+	color: #555;
+	z-index: 9;
+	pointer-events: none;
+  }
+
+  .custom-select.open .selected-option::after {
+    transform: translateY(-50%) rotateX(180deg);
+  }
+  
+  .ratting_show_the_popup_start {
+	font-weight: 600;
+	font-size: 15px;
+	margin-bottom: 5px;
+  }
+  .ratting_show_the_popup_start {
+	align-self: flex-start;
+  }
+  
+  .ratting_custom-select {
+	margin-top: auto;
+  }
+
+  .ratting_custom-button {
+	display: inline-block;
+	padding: 10px 40px 10px 40px;
+	background-color: #2563eb;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 8px;
+	font-weight: normal;
+	font-size: 16px;
+	cursor: pointer;
+	border: none;
+	transition: all 0.3s ease;
+  }
+  
+  @media (max-width: 768px) {
+	.ratting_custom-select {
+	  width: 100%;
+	}
+	.ratting_select-wrapper {
+	  margin-top: 50px;
+	  padding-left: 0%;
+	}
+  }
+  @media (max-width: 968px) {
+	.ratting_select-wrapper {
+	  margin-top: 50px;
+	}
+  }
+  @media (max-width: 1200px) {
+	.ratting_select-wrapper {
+	  margin-top: 50px;
+	}
+  }
+
+  .ratting_popup_wrap1.ratting_popup_wrap13 {
+	margin-top: 40px;
+  }
+
+  .ratting_custom-button:hover {
+    color: #fff;
+    background-color: #003bbe;
+	}
+  
+  .promo_close_btn_submit {
+	margin: 10px 0px;
+	text-align: right;
+	margin-right: 10px;
+  }
+  .ratting_popup_wrap1 {
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 20px;
+  }
+  .ratting_popup_wrap1 p {
+	font-size: 16px !important;
+	color: darkslategrey;
+	font-weight: 500;
+  }
+  .ratting_just_margin-up {
+	margin-top: -24px;
+  }
+  .ratting_popup_wrap {
+	text-align: left;
+	margin-left: 10px;
+  }
+  .ratting_popup_wrap h4 {
+	font-size: 18px;
+	font-family: inherit;
+	color: #111827;
+	line-height: 28px;
+	margin: 0;
+	padding: 0px;
+	font-weight: 500;
+  }
+  .ratting_popup_wrap1 h2 {
+	font-weight: 700;
+  }
+  .ratting_next_heading {
+	margin-top: -10px;
+  }
+  .ratting_popup-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 15px;
+	border: 1px solid rgba(18, 27, 33, 0.2);
+	border-radius: 0.95rem;
+	width: 450px;
+  }
+  @media (max-width: 1056px) {
+	.ratting_popup-content {
+	  background-color: #fefefe;
+	  margin: auto;
+	  padding: 15px;
+	  border: 1px solid #888;
+	  width: 50%;
+	}
+  }
+  .ratting_popup-content a.close {
+	color: #aaaaaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	background: none;
+	padding: 0;
+	margin-right: 5px;
+	text-decoration: none;
+  }
+  
+  .ratting_popup-content a.close:hover {
+	color: #333;
+  }
+  

@@ -39,6 +39,25 @@ class WP_Optimize_Utils {
 	public static function get_log_file_path($prefix) {
 		return self::get_log_folder_path() . self::get_log_file_name($prefix);
 	}
+
+	/**
+	 * Returns WordPress GMT offset in seconds.
+	 *
+	 * @return int
+	 */
+	public static function get_gmt_offset() {
+		$timezone_string = get_option('timezone_string');
+
+		if (!empty($timezone_string)) {
+			$timezone = new DateTimeZone($timezone_string);
+			$gmt_offset = $timezone->getOffset(new DateTime());
+		} else {
+			$gmt_offset_option = get_option('gmt_offset');
+			$gmt_offset = (int) (3600 * $gmt_offset_option);
+		}
+
+		return $gmt_offset;
+	}
 }
 
 endif;

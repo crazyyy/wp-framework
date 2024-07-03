@@ -121,6 +121,7 @@ class Route {
 			'callback' => [ $this, 'set_slack_slack_webhook_media_settings' ],
 			'permission_callback' => [ $this, 'set_slack_webhook_permission_media_settings' ],
 		] );
+		
 		register_rest_route( 'wpnts/v1', '/slack_webhook_theme_settings',[
 			'methods' => 'POST',
 			'callback' => [ $this, 'set_slack_webhook_theme_settings' ],
@@ -131,6 +132,12 @@ class Route {
 			'methods' => 'GET',
 			'callback' => [ $this, 'get_plugin_corn_run' ],
 			'permission_callback' => [ $this, 'get_plugin_corn_run_permission' ],
+		] );
+
+		register_rest_route( 'wpnts/v1', '/slack_webhook_integration_settings',[
+			'methods' => 'POST',
+			'callback' => [ $this, 'set_slack_slack_webhook_integration_settings' ],
+			'permission_callback' => [ $this, 'set_slack_webhook_permission_integration_settings' ],
 		] );
 	}
 
@@ -681,4 +688,27 @@ class Route {
 	public function get_plugin_corn_run_permission() {
 		return true;
 	}
+
+
+	/**
+	 * MEDIA Settings
+	 */
+	public function set_slack_slack_webhook_integration_settings( $req ) {
+
+		$reuest_data = isset( $req['wpntswebhook_integration_settings'] ) ? rest_sanitize_object( wp_unslash($req['wpntswebhook_integration_settings']) ) : [];
+
+		if ( $reuest_data ) {
+			update_option( 'wpntswebhook_integration_settings', json_encode($reuest_data) );
+			return rest_ensure_response(1);
+			wp_die();
+		} else {
+			return rest_ensure_response(0);
+			wp_die();
+		}
+	}
+	public function set_slack_webhook_permission_integration_settings() {
+		// return true;
+		return current_user_can( 'administrator' );
+	}
+	
 }

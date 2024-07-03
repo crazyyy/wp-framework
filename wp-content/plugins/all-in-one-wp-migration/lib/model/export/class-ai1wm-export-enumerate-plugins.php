@@ -31,7 +31,7 @@ class Ai1wm_Export_Enumerate_Plugins {
 
 	public static function execute( $params ) {
 
-		$exclude_filters = array();
+		$exclude_filters = array( AI1WM_SQLITE_DATABASE_INTEGRATION_NAME );
 
 		// Get total plugins files count
 		if ( isset( $params['total_plugins_files_count'] ) ) {

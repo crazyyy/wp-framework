@@ -29,16 +29,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Ai1wm_Import_Options {
 
-	public static function execute( $params, Ai1wm_Database $mysql = null ) {
+	public static function execute( $params, Ai1wm_Database $db_client = null ) {
 		// Set progress
 		Ai1wm_Status::info( __( 'Preparing options...', AI1WM_PLUGIN_NAME ) );
 
 		// Get database client
-		if ( is_null( $mysql ) ) {
-			$mysql = Ai1wm_Database_Utility::create_client();
+		if ( is_null( $db_client ) ) {
+			$db_client = Ai1wm_Database_Utility::create_client();
 		}
 
-		$tables = $mysql->get_tables();
+		$tables = $db_client->get_tables();
 
 		// Get base prefix
 		$base_prefix = ai1wm_table_prefix();
@@ -50,8 +50,8 @@ class Ai1wm_Import_Options {
 		if ( in_array( "{$mainsite_prefix}sitemeta", $tables ) ) {
 
 			// Get fs_accounts option value (Freemius)
-			$result = $mysql->query( "SELECT meta_value FROM `{$mainsite_prefix}sitemeta` WHERE meta_key = 'fs_accounts'" );
-			if ( ( $row = $mysql->fetch_assoc( $result ) ) ) {
+			$result = $db_client->query( "SELECT meta_value FROM `{$mainsite_prefix}sitemeta` WHERE meta_key = 'fs_accounts'" );
+			if ( ( $row = $db_client->fetch_assoc( $result ) ) ) {
 				$fs_accounts = get_option( 'fs_accounts', array() );
 				$meta_value  = maybe_unserialize( $row['meta_value'] );
 

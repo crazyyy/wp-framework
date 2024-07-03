@@ -309,29 +309,37 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 		global $aio_wp_security;
 		global $aiowps_firewall_config;
 
-		if (isset($_POST['aiowps_save_internet_bot_settings'])) { // Do form submission tasks
-			$nonce = $_POST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-save-internet-bot-settings-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed for save internet bot settings!", 4);
-				die("Nonce check failed for save internet bot settings!");
+		if (isset($_POST['aiowps_save_internet_bot_settings'])) { // Do form submission tasks.
+			$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_POST['_wpnonce'], 'aiowpsec-save-internet-bot-settings-nonce');
+
+			if (is_wp_error($nonce_user_cap_result)) {
+				$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
+				die($nonce_user_cap_result->get_error_message());
 			}
 
-			//Save settings
+			$error = false;
+
 			if (isset($_POST['aiowps_block_fake_googlebots'])) {
-				$aio_wp_security->configs->set_value('aiowps_block_fake_googlebots', '1');
+				$validated_ip_list_array = AIOWPSecurity_Utility::get_googlebot_ip_ranges();
+
+				if (is_wp_error($validated_ip_list_array)) {
+					$this->show_msg_error(__('The attempt to save the \'Block fake Googlebots\' settings failed, because it was not possible to validate the Googlebot IP addresses:', 'all-in-one-wp-security-and-firewall') . ' ' . $validated_ip_list_array->get_error_message());
+					$error = true;
+				} else {
+					$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', true);
+				}
 			} else {
-				$aio_wp_security->configs->set_value('aiowps_block_fake_googlebots', '');
+				$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false);
 			}
 
 			$aiowps_firewall_config->set_value('aiowps_ban_post_blank_headers', isset($_POST['aiowps_ban_post_blank_headers']));
 
-			//Commit the config settings
-			$aio_wp_security->configs->save_config();
-
-			//Recalculate points after the feature status/options have been altered
+			// Recalculate points after the feature status/options have been altered.
 			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 
-			$this->show_msg_updated(__('The Internet bot settings were successfully saved', 'all-in-one-wp-security-and-firewall'));
+			if (!$error) {
+				$this->show_msg_settings_updated();
+			}
 		}
 
 		$aio_wp_security->include_template('wp-admin/firewall/internet-bots.php');
@@ -391,54 +399,46 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 				die($nonce_user_cap_result->get_error_message());
 			}
 
-			$aiowps_enable_blacklisting = isset($_POST["aiowps_enable_blacklisting"]) ? '1' : '';
-			$aiowps_banned_ip_addresses = $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses');
-			$aiowps_banned_user_agents = $aio_wp_security->configs->get_value('aiowps_banned_user_agents');
-			if ('' == $aiowps_enable_blacklisting && empty($aiowps_banned_ip_addresses) && empty($aiowps_banned_user_agents) && (!empty($_POST['aiowps_banned_ip_addresses']) || !empty($_POST['aiowps_banned_user_agents']))) {
-				$result = -1;
-				$this->show_msg_error('You must check the enable IP or user agent blacklisting.', 'all-in-one-wp-security-and-firewall');
-			} elseif ('1' == $aiowps_enable_blacklisting && empty($_POST['aiowps_banned_ip_addresses']) && empty($_POST['aiowps_banned_user_agents'])) {
-				$this->show_msg_error('You must submit at least one IP address or one user agent value.', 'all-in-one-wp-security-and-firewall');
+			if (!empty($_POST['aiowps_banned_ip_addresses'])) {
+				$ip_addresses = stripslashes($_POST['aiowps_banned_ip_addresses']);
+				$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ip_addresses);
+				$validated_ip_list_array = AIOWPSecurity_Utility_IP::validate_ip_list($ip_list_array, 'blacklist');
+				if (is_wp_error($validated_ip_list_array)) {
+					$result = -1;
+					$this->show_msg_error(nl2br($validated_ip_list_array->get_error_message()));
+				} else {
+					$banned_ip_addresses_list = preg_split('/\R/', $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')); // Historical settings where the separator may have depended on PHP_EOL.
+					if ($banned_ip_addresses_list !== $validated_ip_list_array) {
+						$banned_ip_data = implode("\n", $validated_ip_list_array);
+						$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses', $banned_ip_data);
+						$aiowps_firewall_config->set_value('aiowps_blacklist_ips', $validated_ip_list_array);
+					}
+					$_POST['aiowps_banned_ip_addresses'] = ''; // Clear the post variable for the banned address list.
+				}
 			} else {
-				if ('1' == $aiowps_enable_blacklisting && !empty($_POST['aiowps_banned_ip_addresses'])) {
-					$ip_addresses = stripslashes($_POST['aiowps_banned_ip_addresses']);
-					$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ip_addresses);
-					$validated_ip_list_array = AIOWPSecurity_Utility_IP::validate_ip_list($ip_list_array, 'blacklist');
-					if (is_wp_error($validated_ip_list_array)) {
-						$result = -1;
-						$this->show_msg_error(nl2br($validated_ip_list_array->get_error_message()));
-					} else {
-						$banned_ip_addresses_list = preg_split('/\R/', $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')); // Historical settings where the separator may have depended on PHP_EOL.
-						if ($banned_ip_addresses_list !== $validated_ip_list_array) {
-							$banned_ip_data = implode("\n", $validated_ip_list_array);
-							$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses', $banned_ip_data);
-							$aiowps_firewall_config->set_value('aiowps_blacklist_ips', $validated_ip_list_array);
-						}
-						$_POST['aiowps_banned_ip_addresses'] = ''; // Clear the post variable for the banned address list.
-					}
-				} else {
-					$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses', ''); // Clear the IP address config value
-					$aiowps_firewall_config->set_value('aiowps_blacklist_ips', array());
+				$aio_wp_security->configs->set_value('aiowps_banned_ip_addresses', ''); // Clear the IP address config value
+				$aiowps_firewall_config->set_value('aiowps_blacklist_ips', array());
+			}
+
+			if (!empty($_POST['aiowps_banned_user_agents'])) {
+				$result = $result * $this->validate_user_agent_list(stripslashes($_POST['aiowps_banned_user_agents']));
+			} else {
+				// Clear the user agent list
+				$aio_wp_security->configs->set_value('aiowps_banned_user_agents', '');
+				$aiowps_firewall_config->set_value('aiowps_blacklist_user_agents', array());
+			}
+
+			if (1 == $result) {
+				$aio_wp_security->configs->set_value('aiowps_enable_blacklisting', isset($_POST["aiowps_enable_blacklisting"]) ? '1' : '');
+				if ('1' == $aio_wp_security->configs->get_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade')) {
+					$aio_wp_security->configs->delete_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade');
 				}
 
-				if ('1' == $aiowps_enable_blacklisting && !empty($_POST['aiowps_banned_user_agents'])) {
-					$result = $result * $this->validate_user_agent_list(stripslashes($_POST['aiowps_banned_user_agents']));
-				} else {
-					// Clear the user agent list
-					$aio_wp_security->configs->set_value('aiowps_banned_user_agents', '');
-					$aiowps_firewall_config->set_value('aiowps_blacklist_user_agents', array());
-				}
+				$aio_wp_security->configs->save_config();
 
-				if (1 == $result) {
-					$aio_wp_security->configs->set_value('aiowps_enable_blacklisting', $aiowps_enable_blacklisting, true);
-					if ('1' == $aio_wp_security->configs->get_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade')) {
-						$aio_wp_security->configs->delete_value('aiowps_is_ip_blacklist_settings_notice_on_upgrade');
-					}
-
-					// Recalculate points after the feature status/options have been altered
-					$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-					$this->show_msg_settings_updated();
-				}
+				// Recalculate points after the feature status/options have been altered
+				$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
+				$this->show_msg_settings_updated();
 			}
 		}
 

@@ -17,12 +17,42 @@ class AIOWPSecurity_Captcha {
 
 		$this->upgrade_captcha_options();
 		add_action('login_enqueue_scripts', array($this, 'aiowps_login_enqueue'));
+		add_filter('script_loader_tag', array($this, 'add_cfasync_data_attribute_to_captcha_tag'), 10, 2);
+
 
 		if (AIOWPSecurity_Utility::is_contact_form_7_plugin_active() && '1' == $aio_wp_security->configs->get_value('aiowps_enable_contact_form_7_captcha')) {
 			add_action('wpcf7_admin_init', array($this, 'add_contact_form_7_captcha_tag_generator_button'), 100, 0);
 			add_filter('wpcf7_contact_form_properties', array($this, 'add_contact_form_7_captcha'));
 			add_filter('wpcf7_validate', array($this, 'verify_contact_form_7_captcha'), 10, 2);
 		}
+	}
+
+
+	/**
+	 * This method modifies the script tag output by adding 'data-cfasync="false"' attribute,
+	 * which is used to disable Cloudflare Rocket Loader for the specified captcha script handle.
+	 *
+	 * @param string $tag    - The generated HTML tag for the script.
+	 * @param string $handle - The script handle being processed.
+	 *
+	 * @return string The modified HTML tag with 'data-cfasync="false"' if applicable.
+	 */
+	public function add_cfasync_data_attribute_to_captcha_tag($tag, $handle) {
+		global $aio_wp_security;
+
+		// Get the default captcha from AIO WP Security configurations
+		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
+
+		// Check if the current script handle matches the default captcha handle
+		if ($default_captcha === $handle) {
+			if (!preg_match('/\sdata-cfasync\s*=\s*["\']false["\']/', $tag)) {
+				// Add 'data-cfasync="false"' attribute to the script tag
+				$tag = str_replace('src=', 'data-cfasync="false" src=', $tag);
+			}
+		}
+
+		// Return the modified or original script tag
+		return $tag;
 	}
 
 	/**
@@ -164,6 +194,60 @@ class AIOWPSecurity_Captcha {
 	}
 
 	/**
+	 * Inserts captcha into the password-protected page form.
+	 *
+	 * @param string $cust_html_code The HTML code for the password form.
+	 * @return string The modified HTML code with the captcha inserted.
+	 */
+	public function insert_captcha_password_protected($cust_html_code) {
+		global $post, $aio_wp_security;
+
+		$loginurl = esc_url(site_url('/wp-login.php?action=postpass'));
+
+		$label = 'pwbox-' . empty($post->ID) ? rand() : $post->ID;
+		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
+
+		$cust_html_code = '<div class="container-custom">         
+			<form action="'.esc_attr($loginurl).'" method="post">
+				<label>'.__('This content is password protected.', 'all-in-one-wp-security-and-firewall').' '.__('To view it please enter your password below:', 'all-in-one-wp-security-and-firewall').'</label>
+				<label for="'.esc_attr($label).'">'.__('Password:', 'all-in-one-wp-security-and-firewall').'</label>
+				<input name="post_password" id="'.esc_attr($label).'" type="password" size="20" />';
+				switch ($default_captcha) {
+					case 'cloudflare-turnstile':
+					case 'google-recaptcha-v2':
+						$cust_html_code .= $this->get_captcha_form($default_captcha, 0, true);
+						$this->add_captcha_script();
+						break;
+					case 'simple-math':
+						$captcha_form = '<p class="aiowps-captcha"><label>'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
+						$captcha_form .= '<div class="aiowps-captcha-equation"><strong>';
+						$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question();
+						$captcha_form .= $maths_question_output . '</strong></div></p>';
+						$cust_html_code .= $captcha_form;
+						break;
+					default:
+						break;
+				}
+				$cust_html_code .= '<input type="submit" name="Submit" class="button" value="'.__('Enter', 'all-in-one-wp-security-and-firewall').'" />
+			</form>
+		</div>';
+		return $cust_html_code;
+	}
+
+	/**
+	 * Validates the password form on password protected pages with captcha.
+	 *
+	 * @return void
+	 */
+	public function validate_password_protected_password_form_with_captcha() {
+		// Check password protected page captcha
+		$verify = $this->verify_captcha_submit();
+		if (!$verify) {
+			wp_die(__('Captcha verification failed.', 'all-in-one-wp-security-and-firewall'). ' ' . __('Please try again.', 'all-in-one-wp-security-and-firewall'));
+		}
+	}
+
+	/**
 	 * Explicit render CAPTCHA on WooCommerce my account page forms or if not just render normally
 	 *
 	 * @return void
@@ -186,7 +270,7 @@ class AIOWPSecurity_Captcha {
 				}
 
 				if ('woocommerce_register_form' == $calling_hook) {
-					$this->get_captcha_form($default_captcha, 2);
+					$this->get_captcha_form($default_captcha, 1);
 					return;
 				}
 
@@ -212,7 +296,7 @@ class AIOWPSecurity_Captcha {
 		
 		
 		//captcha should only show for woo account and checkout page
-		if ((function_exists('is_account_page') && !is_account_page()) && (function_exists('is_checkout') && !is_checkout())) return;
+		if ((function_exists('is_account_page') && !is_account_page()) && (function_exists('is_checkout') && !is_checkout()) && !apply_filters('aios_print_captcha_api_woo', false)) return;
 
 		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
 
@@ -224,14 +308,11 @@ class AIOWPSecurity_Captcha {
 					alert(response);
 				};
 				var onloadCallback = function() {
-					if ( jQuery('#woo_recaptcha_1').length ) {
-						turnstile.render('#woo_recaptcha_1', {
-							sitekey: '<?php echo esc_js($site_key); ?>'
-						});
-					}
-					if ( jQuery('#woo_recaptcha_2').length ) {
-						turnstile.render('#woo_recaptcha_2', {
-							sitekey: '<?php echo esc_js($site_key); ?>'
+					if (jQuery('.aios-wc-captcha').length) {
+						jQuery('.aios-wc-captcha').each(function(index, element) {
+							turnstile.render(element, {
+								sitekey: '<?php echo esc_js($site_key); ?>'
+							});
 						});
 					}
 				};
@@ -246,14 +327,11 @@ class AIOWPSecurity_Captcha {
 					alert(response);
 				};
 				var onloadCallback = function() {
-					if ( jQuery('#woo_recaptcha_1').length ) {
-						grecaptcha.render('woo_recaptcha_1', {
-						'sitekey' : '<?php echo $site_key; ?>',
-						});
-					}
-					if ( jQuery('#woo_recaptcha_2').length ) {
-						grecaptcha.render('woo_recaptcha_2', {
-						'sitekey' : '<?php echo $site_key; ?>',
+					if (jQuery('.aios-wc-captcha').length) {
+						jQuery('.aios-wc-captcha').each(function(index, element) {
+							grecaptcha.render(element, {
+							'sitekey' : '<?php echo $site_key; ?>',
+							});
 						});
 					}
 				};
@@ -437,27 +515,27 @@ class AIOWPSecurity_Captcha {
 	 * This function will return the CAPTCHA form
 	 *
 	 * @param string  $default_captcha        - the default CAPTCHA
-	 * @param integer $include_wc_id          - the WooCommerce form id to include, if 0 no id is included
+	 * @param integer $include_wc_id          - the WooCommerce form id to include, if 0 no id is included if 1 dynamic id included
 	 * @param boolean $return_instead_of_echo - if we should return the form rather than echo it to page
 	 *
 	 * @return string - can return the CAPTCHA form
 	 */
 	private function get_captcha_form($default_captcha, $include_wc_id = 0, $return_instead_of_echo = false) {
 		global $aio_wp_security;
-
+		static $aios_wc_element_id;
 		$captcha_form = '';
-		$wc_form_id = !empty($include_wc_id) ? 'id="woo_recaptcha_'.$include_wc_id.'"' : '';
+		$wc_form_id = !empty($include_wc_id) ? 'id="woo_recaptcha_'.(++$aios_wc_element_id).'"' : '';
 
 		switch ($default_captcha) {
 			case 'cloudflare-turnstile':
 				$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'));
 				$turnstile_theme = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_theme'));
 				if (empty($turnstile_theme)) $turnstile_theme = 'auto';
-				$captcha_form = '<div class="cf-turnstile-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="cf-turnstile" data-sitekey="'.$site_key.'" data-theme="'.$turnstile_theme.'"></div></div>';
+				$captcha_form = '<div class="cf-turnstile-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="cf-turnstile'. (!empty($include_wc_id) ? ' aios-wc-captcha' : '') . '" data-sitekey="'.$site_key.'" data-theme="'.$turnstile_theme.'"></div></div>';
 				break;
 			case 'google-recaptcha-v2':
 				$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_recaptcha_site_key'));
-				$captcha_form = '<div class="g-recaptcha-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="g-recaptcha" data-sitekey="'.$site_key.'"></div></div>';
+				$captcha_form = '<div class="g-recaptcha-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="g-recaptcha'. (!empty($include_wc_id) ? ' aios-wc-captcha' : '') . '" data-sitekey="'.$site_key.'"></div></div>';
 				break;
 			default:
 				return '';

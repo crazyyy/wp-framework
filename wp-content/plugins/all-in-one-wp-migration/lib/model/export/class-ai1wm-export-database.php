@@ -89,17 +89,17 @@ class Ai1wm_Export_Database {
 		ai1wm_close( $tables_list );
 
 		// Get database client
-		$mysql = Ai1wm_Database_Utility::create_client();
+		$db_client = Ai1wm_Database_Utility::create_client();
 
 		// Exclude spam comments
 		if ( isset( $params['options']['no_spam_comments'] ) ) {
-			$mysql->set_table_where_query( ai1wm_table_prefix() . 'comments', "`comment_approved` != 'spam'" )
+			$db_client->set_table_where_query( ai1wm_table_prefix() . 'comments', "`comment_approved` != 'spam'" )
 				->set_table_where_query( ai1wm_table_prefix() . 'commentmeta', sprintf( "`comment_ID` IN ( SELECT `comment_ID` FROM `%s` WHERE `comment_approved` != 'spam' )", ai1wm_table_prefix() . 'comments' ) );
 		}
 
 		// Exclude post revisions
 		if ( isset( $params['options']['no_post_revisions'] ) ) {
-			$mysql->set_table_where_query( ai1wm_table_prefix() . 'posts', "`post_type` != 'revision'" );
+			$db_client->set_table_where_query( ai1wm_table_prefix() . 'posts', "`post_type` != 'revision'" );
 		}
 
 		$old_table_prefixes = $old_column_prefixes = array();
@@ -127,33 +127,33 @@ class Ai1wm_Export_Database {
 			}
 		}
 
-		$mysql->set_tables( $tables )
+		$db_client->set_tables( $tables )
 			->set_old_table_prefixes( $old_table_prefixes )
 			->set_new_table_prefixes( $new_table_prefixes )
 			->set_old_column_prefixes( $old_column_prefixes )
 			->set_new_column_prefixes( $new_column_prefixes );
 
 		// Exclude column prefixes
-		$mysql->set_reserved_column_prefixes( array( 'wp_force_deactivated_plugins', 'wp_page_for_privacy_policy' ) );
+		$db_client->set_reserved_column_prefixes( array( 'wp_force_deactivated_plugins', 'wp_page_for_privacy_policy' ) );
 
 		// Exclude site options
-		$mysql->set_table_where_query( ai1wm_table_prefix() . 'options', sprintf( "`option_name` NOT IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", AI1WM_STATUS, AI1WM_SECRET_KEY, AI1WM_AUTH_USER, AI1WM_AUTH_PASSWORD, AI1WM_AUTH_HEADER, AI1WM_BACKUPS_LABELS, AI1WM_SITES_LINKS ) );
+		$db_client->set_table_where_query( ai1wm_table_prefix() . 'options', sprintf( "`option_name` NOT IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", AI1WM_STATUS, AI1WM_SECRET_KEY, AI1WM_AUTH_USER, AI1WM_AUTH_PASSWORD, AI1WM_AUTH_HEADER, AI1WM_BACKUPS_LABELS, AI1WM_SITES_LINKS ) );
 
 		// Set table select columns
-		if ( ( $column_names = $mysql->get_column_names( ai1wm_table_prefix() . 'options' ) ) ) {
+		if ( ( $column_names = $db_client->get_column_names( ai1wm_table_prefix() . 'options' ) ) ) {
 			if ( isset( $column_names['option_name'], $column_names['option_value'] ) ) {
 				$column_names['option_value'] = sprintf( "(CASE WHEN option_name = '%s' THEN 'a:0:{}' WHEN (option_name = '%s' OR option_name = '%s') THEN '' ELSE option_value END) AS option_value", AI1WM_ACTIVE_PLUGINS, AI1WM_ACTIVE_TEMPLATE, AI1WM_ACTIVE_STYLESHEET );
 			}
 
-			$mysql->set_table_select_columns( ai1wm_table_prefix() . 'options', $column_names );
+			$db_client->set_table_select_columns( ai1wm_table_prefix() . 'options', $column_names );
 		}
 
 		// Set table prefix columns
-		$mysql->set_table_prefix_columns( ai1wm_table_prefix() . 'options', array( 'option_name' ) )
+		$db_client->set_table_prefix_columns( ai1wm_table_prefix() . 'options', array( 'option_name' ) )
 			->set_table_prefix_columns( ai1wm_table_prefix() . 'usermeta', array( 'meta_key' ) );
 
 		// Export database
-		if ( $mysql->export( ai1wm_database_path( $params ), $query_offset, $table_index, $table_offset, $table_rows ) ) {
+		if ( $db_client->export( ai1wm_database_path( $params ), $query_offset, $table_index, $table_offset, $table_rows ) ) {
 
 			// Set progress
 			Ai1wm_Status::info( __( 'Done exporting database.', AI1WM_PLUGIN_NAME ) );

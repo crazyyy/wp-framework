@@ -63,8 +63,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 		// if this is the case there is no need to display a "fix permissions" button
 		global $aio_wp_security, $aiowps_feature_mgr;
 		
-		$util = new AIOWPSecurity_Utility_File;
-		$files_dirs_to_check = $util->files_and_dirs_to_check;
+		$files_dirs_to_check = AIOWPSecurity_Utility_File::get_files_and_dirs_to_check();
 
 		if (isset($_POST['aiowps_fix_permissions'])) {
 			$nonce = $_REQUEST['_wpnonce'];
@@ -107,6 +106,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_file_protection() {
 		global $aio_wp_security, $aiowps_feature_mgr;
 
+		$show_disallow_file_edit_warning = (defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT && '1' != $aio_wp_security->configs->get_value('aiowps_disable_file_editing')) ? true : false;
 		if (isset($_POST['aiowps_save_file_protection'])) { // Do form submission tasks.
 			$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_POST['_wpnonce'], 'aios-firewall-file-protection-nonce');
 
@@ -130,6 +130,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 			if ($disable_file_editing_status) {
 				// Save settings if no errors
 				$aio_wp_security->configs->set_value('aiowps_disable_file_editing', $disable_file_editing, true);
+				$show_disallow_file_edit_warning = false;
 			} else {
 				$this->show_msg_error(__('Disable PHP file editing failed, unable to modify or make a backup of wp-config.php file.', 'all-in-one-wp-security-and-firewall'));
 			}
@@ -161,7 +162,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 			AIOWPSecurity_Utility::delete_unneeded_default_files(true);
 		}
 
-		$aio_wp_security->include_template('wp-admin/filesystem-security/file-protection.php');
+		$aio_wp_security->include_template('wp-admin/filesystem-security/file-protection.php', false, array('show_disallow_file_edit_warning' => $show_disallow_file_edit_warning));
 	}
 
 	/**

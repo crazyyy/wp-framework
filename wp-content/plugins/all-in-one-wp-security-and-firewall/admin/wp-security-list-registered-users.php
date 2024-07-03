@@ -277,6 +277,14 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 	public function block_selected_ips($entries) {
 		global $aio_wp_security;
 		if (is_array($entries)) {
+			$entries = array_filter($entries, function ($entry) {
+				return AIOWPSecurity_Utility_IP::get_user_ip_address() != $entry;
+			});
+
+			if (empty($entries)) {
+				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Only invalid IP addresses were provided: you can not block your own IP address', 'all-in-one-wp-security-and-firewall'));
+				return;
+			}
 			$entries = array_map('esc_sql', $entries); // Escape every array element
 			//Let's go through each entry and block IP
 			foreach ($entries as $id) {
@@ -286,10 +294,15 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 					$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_List_Registered_Users::block_selected_ips() - could not block IP : $ip_address", 4);
 				}
 			}
+
 			$msg = __('The selected IP addresses were successfully added to the permanent block list.', 'all-in-one-wp-security-and-firewall');
 			$msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=permanent-block" target="_blank">'.__('View Blocked IPs', 'all-in-one-wp-security-and-firewall').'</a>';
 			AIOWPSecurity_Admin_Menu::show_msg_updated_st($msg);
 		} elseif (!empty($entries)) {
+			if (AIOWPSecurity_Utility_IP::get_user_ip_address() == $entries) {
+				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('You cannot block your own IP address:', 'all-in-one-wp-security-and-firewall') . ' ' . $entries);
+				return;
+			}
 			$entries = esc_sql($entries);
 			// Block single IP
 			$result = AIOWPSecurity_Blocking::add_ip_to_block_list($entries, 'registration_spam');

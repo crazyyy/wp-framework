@@ -204,7 +204,7 @@ class CodeProfiler_CLI extends WP_CLI_Command {
 	 */
 	 private function find_last_profile() {
 
-		$profiles = glob( CODE_PROFILER_UPLOAD_DIR .'/*.slugs.profile');
+		$profiles = code_profiler_glob( CODE_PROFILER_UPLOAD_DIR, '\.slugs\.profile$', true );
 
 		array_multisort(
 			array_map('filectime', $profiles ),

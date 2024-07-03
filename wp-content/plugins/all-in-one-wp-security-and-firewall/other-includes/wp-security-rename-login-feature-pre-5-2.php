@@ -57,7 +57,7 @@ if ($shake_error_codes && $wp_error->get_error_code() && in_array($wp_error->get
 $login_title = get_bloginfo('name', 'display');
 
 /* translators: Login screen title. 1: Login screen name, 2: Network or site name */
-$login_title = sprintf(__('%1$s &lsaquo; %2$s &#8212; WordPress'), $title, $login_title);
+$login_title = sprintf(__('%1$s &lsaquo; %2$s &#8212; WordPress', 'all-in-one-wp-security-and-firewall'), $title, $login_title);
 
 /**
  * Filters the title tag content for login page.
@@ -112,8 +112,8 @@ $login_title = apply_filters('login_title', $login_title, $title);
 		$login_header_url   = network_home_url();
 		$login_header_title = get_network()->site_name;
 	} else {
-		$login_header_url   = __('https://wordpress.org/');
-		$login_header_title = __('Powered by WordPress');
+		$login_header_url   = 'https://wordpress.org/';
+		$login_header_title = __('Powered by WordPress', 'all-in-one-wp-security-and-firewall');
 	}
 
 	/**
@@ -318,11 +318,11 @@ function retrieve_password() {
 	$errors = new WP_Error();
 
 	if (empty($_POST['user_login']) || ! is_string($_POST['user_login'])) {
-		$errors->add('empty_username', __('<strong>ERROR</strong>: Enter a username or email address.'));
+		$errors->add('empty_username', __('<strong>ERROR</strong>: Enter a username or email address.', 'all-in-one-wp-security-and-firewall'));
 	} elseif (strpos($_POST['user_login'], '@')) {
 		$user_data = get_user_by('email', trim(wp_unslash($_POST['user_login'])));
 		if (empty($user_data))
-			$errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.'));
+			$errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.', 'all-in-one-wp-security-and-firewall'));
 	} else {
 		$login = trim($_POST['user_login']);
 		$user_data = get_user_by('login', $login);
@@ -343,7 +343,7 @@ function retrieve_password() {
 		return $errors;
 
 	if (!$user_data) {
-		$errors->add('invalidcombo', __('<strong>ERROR</strong>: Invalid username or email.'));
+		$errors->add('invalidcombo', __('<strong>ERROR</strong>: Invalid username or email.', 'all-in-one-wp-security-and-firewall'));
 		return $errors;
 	}
 
@@ -366,17 +366,17 @@ function retrieve_password() {
 			$site_name = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 	}
 
-	$message = __('Someone has requested a password reset for the following account:') . "\r\n\r\n";
+	$message = __('Someone has requested a password reset for the following account:', 'all-in-one-wp-security-and-firewall') . "\r\n\r\n";
 	/* translators: %s: site name */
-	$message .= sprintf(__('Site Name: %s'), $site_name) . "\r\n\r\n";
+	$message .= sprintf(__('Site Name: %s', 'all-in-one-wp-security-and-firewall'), $site_name) . "\r\n\r\n";
 	/* translators: %s: user login */
-	$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
-	$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "\r\n\r\n";
-	$message .= __('To reset your password, visit the following address:') . "\r\n\r\n";
+	$message .= sprintf(__('Username: %s', 'all-in-one-wp-security-and-firewall'), $user_login) . "\r\n\r\n";
+	$message .= __('If this was a mistake, just ignore this email and nothing will happen.', 'all-in-one-wp-security-and-firewall') . "\r\n\r\n";
+	$message .= __('To reset your password, visit the following address:', 'all-in-one-wp-security-and-firewall') . "\r\n\r\n";
 	$message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . ">\r\n";
 
 	// translators: Password reset email subject. %s: Site name
-	$title = sprintf(__('[%s] Password Reset'), $site_name);
+	$title = sprintf(__('[%s] Password Reset', 'all-in-one-wp-security-and-firewall'), $site_name);
 
 	/**
 	 * Filters the subject of the password reset email.
@@ -406,7 +406,7 @@ function retrieve_password() {
 	$message = apply_filters('retrieve_password_message', $message, $key, $user_login, $user_data);
 
 	if ($message && !wp_mail($user_email, wp_specialchars_decode($title), $message))
-		wp_die(__('The email could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.'));
+		wp_die(__('The email could not be sent.', 'all-in-one-wp-security-and-firewall') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.', 'all-in-one-wp-security-and-firewall'));
 
 	return true;
 }
@@ -555,9 +555,9 @@ switch ($action) {
 
 	if (isset($_GET['error'])) {
 			if ('invalidkey' == $_GET['error']) {
-			$errors->add('invalidkey', __('Your password reset link appears to be invalid. Please request a new link below.'));
+			$errors->add('invalidkey', __('Your password reset link appears to be invalid.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please request a new link below.', 'all-in-one-wp-security-and-firewall'));
 				} elseif ('expiredkey' == $_GET['error']) {
-			$errors->add('expiredkey', __('Your password reset link has expired. Please request a new link below.'));
+			$errors->add('expiredkey', __('Your password reset link has expired.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please request a new link below.', 'all-in-one-wp-security-and-firewall'));
 				}
 		}
 
@@ -578,7 +578,7 @@ switch ($action) {
 	 */
 	do_action('lost_password');
 
-	login_header(__('Lost Password'), '<p class="message">' . __('Please enter your username or email address. You will receive a link to create a new password via email.') . '</p>', $errors);
+	login_header(__('Lost Password', 'all-in-one-wp-security-and-firewall'), '<p class="message">' . __('Please enter your username or email address.', 'all-in-one-wp-security-and-firewall') . ' ' . __('You will receive a link to create a new password via email.', 'all-in-one-wp-security-and-firewall') . '</p>', $errors);
 
 	$user_login = '';
 
@@ -590,7 +590,7 @@ switch ($action) {
 
 		<form name="lostpasswordform" id="lostpasswordform" action="<?php echo esc_url(network_site_url('wp-login.php?action=lostpassword', 'login_post')); ?>" method="post">
 			<p>
-				<label for="user_login" ><?php _e('Username or Email Address'); ?><br />
+				<label for="user_login" ><?php _e('Username or Email Address', 'all-in-one-wp-security-and-firewall'); ?><br />
 					<input type="text" name="user_login" id="user_login" class="input" value="<?php echo esc_attr($user_login); ?>" size="20" /></label>
 			</p>
 	<?php
@@ -601,14 +601,14 @@ switch ($action) {
 	 */
 	do_action('lostpassword_form'); ?>
 			<input type="hidden" name="redirect_to" value="<?php echo esc_attr($redirect_to); ?>" />
-			<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Get new password'); ?>"></p>
+			<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Get new password', 'all-in-one-wp-security-and-firewall'); ?>"></p>
 		</form>
 
 		<p id="nav">
-			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in'); ?></a>
+			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
 			<?php
 			if (get_option('users_can_register')) :
-				$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register'));
+				$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register', 'all-in-one-wp-security-and-firewall'));
 
 				echo esc_html($login_link_separator);
 
@@ -659,7 +659,7 @@ switch ($action) {
 	$errors = new WP_Error();
 
 	if (isset($_POST['pass1']) && $_POST['pass1'] != $_POST['pass2'])
-	$errors->add('password_reset_mismatch', __('The passwords do not match.'));
+	$errors->add('password_reset_mismatch', __('The passwords do not match.', 'all-in-one-wp-security-and-firewall'));
 
 	/**
 	 * Fires before the password reset procedure is validated.
@@ -674,7 +674,7 @@ switch ($action) {
 	if ((! $errors->get_error_code()) && isset($_POST['pass1']) && !empty($_POST['pass1'])) {
 			reset_password($user, $_POST['pass1']);
 			setcookie($rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true);
-			login_header(__('Password Reset'), '<p class="message reset-pass">' . __('Your password has been reset.') . ' <a href="' . esc_url(wp_login_url()) . '">' . __('Log in') . '</a></p>');
+			login_header(__('Password Reset', 'all-in-one-wp-security-and-firewall'), '<p class="message reset-pass">' . __('Your password has been reset.', 'all-in-one-wp-security-and-firewall') . ' <a href="' . esc_url(wp_login_url()) . '">' . __('Log in', 'all-in-one-wp-security-and-firewall') . '</a></p>');
 			login_footer();
 			exit;
 		}
@@ -682,14 +682,14 @@ switch ($action) {
 	wp_enqueue_script('utils');
 	wp_enqueue_script('user-profile');
 
-	login_header(__('Reset Password'), '<p class="message reset-pass">' . __('Enter your new password below.') . '</p>', $errors);
+	login_header(__('Reset Password', 'all-in-one-wp-security-and-firewall'), '<p class="message reset-pass">' . __('Enter your new password below.', 'all-in-one-wp-security-and-firewall') . '</p>', $errors);
 	?>
 		<form name="resetpassform" id="resetpassform" action="<?php echo esc_url(network_site_url('wp-login.php?action=resetpass', 'login_post')); ?>" method="post" autocomplete="off">
 			<input type="hidden" id="user_login" value="<?php echo esc_attr($rp_login); ?>" autocomplete="off" />
 
 			<div class="user-pass1-wrap">
 					<p>
-							<label for="pass1"><?php _e('New password'); ?></label>
+							<label for="pass1"><?php _e('New password', 'all-in-one-wp-security-and-firewall'); ?></label>
 					</p>
 
 					<div class="wp-pwd">
@@ -699,17 +699,17 @@ switch ($action) {
 											<span class="dashicons dashicons-hidden"></span>
 									</span>
 							</div>
-							<div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php _e('Strength indicator'); ?></div>
+							<div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php _e('Strength indicator', 'all-in-one-wp-security-and-firewall'); ?></div>
 					</div>
 					<div class="pw-weak">
 							<label>
 									<input type="checkbox" name="pw_weak" class="pw-checkbox" />
-	<?php _e('Confirm use of weak password'); ?>
+	<?php _e('Confirm use of weak password', 'all-in-one-wp-security-and-firewall'); ?>
 							</label>
 					</div>
 			</div>
 			<p class="user-pass2-wrap">
-				<label for="pass2"><?php _e('Confirm new password'); ?></label><br />
+				<label for="pass2"><?php _e('Confirm new password', 'all-in-one-wp-security-and-firewall'); ?></label><br />
 				<input type="password" name="pass2" id="pass2" class="input" size="20" value="" autocomplete="off" />
 			</p>
 
@@ -727,14 +727,14 @@ switch ($action) {
 	do_action('resetpass_form', $user);
 	?>
 			<input type="hidden" name="rp_key" value="<?php echo esc_attr($rp_key); ?>" />
-			<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Reset password'); ?>"></p>
+			<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Reset password', 'all-in-one-wp-security-and-firewall'); ?>"></p>
 		</form>
 
 		<p id="nav">
-			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in'); ?></a>
+			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
 	<?php
 	if (get_option('users_can_register')) :
-			$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register'));
+			$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register', 'all-in-one-wp-security-and-firewall'));
 
 			echo esc_html($login_link_separator);
 
@@ -797,16 +797,16 @@ switch ($action) {
 	 * @param string $registration_redirect The redirect destination URL.
 	 */
 	$redirect_to = apply_filters('registration_redirect', $registration_redirect);
-	login_header(__('Registration Form'), '<p class="message register">' . __('Register For This Site') . '</p>', $errors);
+	login_header(__('Registration Form', 'all-in-one-wp-security-and-firewall'), '<p class="message register">' . __('Register For This Site', 'all-in-one-wp-security-and-firewall') . '</p>', $errors);
 	?>
 
 		<form name="registerform" id="registerform" action="<?php echo esc_url(site_url('wp-login.php?action=register', 'login_post')); ?>" method="post" novalidate="novalidate">
 			<p>
-				<label for="user_login"><?php _e('Username'); ?><br />
+				<label for="user_login"><?php _e('Username', 'all-in-one-wp-security-and-firewall'); ?><br />
 					<input type="text" name="user_login" id="user_login" class="input" value="<?php echo esc_attr(wp_unslash($user_login)); ?>" size="20" /></label>
 			</p>
 			<p>
-				<label for="user_email"><?php _e('Email'); ?><br />
+				<label for="user_email"><?php _e('Email', 'all-in-one-wp-security-and-firewall'); ?><br />
 					<input type="email" name="user_email" id="user_email" class="input" value="<?php echo esc_attr(wp_unslash($user_email)); ?>" size="25" /></label>
 			</p>
 	<?php
@@ -817,16 +817,16 @@ switch ($action) {
 	 */
 	do_action('register_form');
 	?>
-			<p id="reg_passmail"><?php _e('Registration confirmation will be emailed to you.'); ?></p>
+			<p id="reg_passmail"><?php _e('Registration confirmation will be emailed to you.', 'all-in-one-wp-security-and-firewall'); ?></p>
 			<br class="clear" />
 			<input type="hidden" name="redirect_to" value="<?php echo esc_attr($redirect_to); ?>" />
-			<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Register'); ?>"></p>
+			<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Register', 'all-in-one-wp-security-and-firewall'); ?>"></p>
 		</form>
 
 		<p id="nav">
-			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in'); ?></a>
+			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
 	<?php echo esc_html($login_link_separator); ?>
-			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php _e('Lost your password?'); ?></a>
+			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php _e('Lost your password?', 'all-in-one-wp-security-and-firewall'); ?></a>
 		</p>
 
 	<?php
@@ -838,7 +838,7 @@ switch ($action) {
 		break;
 	case 'confirmaction':
 	if (! isset($_GET['request_id'])) {
-			wp_die(__('Invalid request.'));
+			wp_die(__('Invalid request.', 'all-in-one-wp-security-and-firewall'));
 		}
 
 	$request_id = (int) $_GET['request_id'];
@@ -847,7 +847,7 @@ switch ($action) {
 			$key    = sanitize_text_field(wp_unslash($_GET['confirm_key']));
 			$result = wp_validate_user_request_key($request_id, $key);
 		} else {
-		$result = new WP_Error('invalid_key', __('Invalid key'));
+		$result = new WP_Error('invalid_key', __('Invalid key', 'all-in-one-wp-security-and-firewall'));
 		}
 
 	if (is_wp_error($result)) {
@@ -869,7 +869,7 @@ switch ($action) {
 
 	$message = _wp_privacy_account_request_confirmed_message($request_id);
 
-	login_header(__('User action confirmed.'), $message);
+	login_header(__('User action confirmed.', 'all-in-one-wp-security-and-firewall'), $message);
 	login_footer();
 		exit;
 
@@ -912,12 +912,12 @@ switch ($action) {
 
 	if (empty($_COOKIE[LOGGED_IN_COOKIE])) {
 			if (headers_sent()) {
-			// translators: 1: Browser cookie documentation URL, 2: Support forums URL
-			$user = new WP_Error('test_cookie', sprintf(__('<strong>ERROR</strong>: Cookies are blocked due to unexpected output. For help, please see <a href="%1$s">this documentation</a> or try the <a href="%2$s">support forums</a>.'), __('https://codex.wordpress.org/Cookies'), __('https://wordpress.org/support/')));
+			// translators: 1: 'ERROR', 2: 'this documentation'(Browser cookie documentation link), 3: 'support forums'(Support forums link)
+			$user = new WP_Error('test_cookie', sprintf(__('%1$s: Cookies are blocked due to unexpected output.', 'all-in-one-wp-security-and-firewall') . ' ' . __('For help, please see %2$s or try the %3$s.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>', '<a href="https://codex.wordpress.org/Cookies">' . __('this documentation', 'all-in-one-wp-security-and-firewall') . '</a>', '<a href="https://wordpress.org/support/">' . __('support forums', 'all-in-one-wp-security-and-firewall') . '</a>'));
 				} elseif (isset($_POST['testcookie']) && empty($_COOKIE[TEST_COOKIE])) {
 			// If cookies are disabled we can't log in even with a valid user+pass
-			// translators: 1: Browser cookie documentation URL
-			$user = new WP_Error('test_cookie', sprintf(__('<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href="%s">enable cookies</a> to use WordPress.'), __('https://codex.wordpress.org/Cookies')));
+			// translators: 1: 'ERROR', 2: 'enable cookies'(Browser cookie documentation link)
+			$user = new WP_Error('test_cookie', sprintf(__('%1$s: Cookies are blocked or not supported by your browser.', 'all-in-one-wp-security-and-firewall') . ' ' . __('You must %2$s to use WordPress.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>', '<a href="https://codex.wordpress.org/Cookies">' . __('enable cookies', 'all-in-one-wp-security-and-firewall') . '</a>'));
 				}
 		}
 
@@ -935,7 +935,7 @@ switch ($action) {
 
 	if (!is_wp_error($user) && !$reauth) {
 			if ($interim_login) {
-			$message = '<p class="message">' . __('You have logged in successfully.') . '</p>';
+			$message = '<p class="message">' . __('You have logged in successfully.', 'all-in-one-wp-security-and-firewall') . '</p>';
 			$interim_login = 'success';
 			login_header('', $message); ?>
 			</div>
@@ -972,21 +972,21 @@ switch ($action) {
 
 	if ($interim_login) {
 			if (! $errors->get_error_code())
-			$errors->add('expired', __('Your session has expired. Please log in to continue where you left off.'), 'message');
+			$errors->add('expired', __('Your session has expired.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please log in to continue where you left off.', 'all-in-one-wp-security-and-firewall'), 'message');
 		} else {
 		// Some parts of this script use the main login form to display a message
 		if (isset($_GET['loggedout']) && true == $_GET['loggedout'])
-		$errors->add('loggedout', __('You are now logged out.'), 'message');
+		$errors->add('loggedout', __('You are now logged out.', 'all-in-one-wp-security-and-firewall'), 'message');
 		elseif (isset($_GET['registration']) && 'disabled' == $_GET['registration'])
-		$errors->add('registerdisabled', __('User registration is currently not allowed.'));
+		$errors->add('registerdisabled', __('User registration is currently not allowed.', 'all-in-one-wp-security-and-firewall'));
 		elseif (isset($_GET['checkemail']) && 'confirm' == $_GET['checkemail'])
-		$errors->add('confirm', __('Check your email for the confirmation link.'), 'message');
+		$errors->add('confirm', __('Check your email for the confirmation link.', 'all-in-one-wp-security-and-firewall'), 'message');
 		elseif (isset($_GET['checkemail']) && 'newpass' == $_GET['checkemail'])
-		$errors->add('newpass', __('Check your email for your new password.'), 'message');
+		$errors->add('newpass', __('Check your email for your new password.', 'all-in-one-wp-security-and-firewall'), 'message');
 		elseif (isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'])
-		$errors->add('registered', __('Registration complete. Please check your email.'), 'message');
+		$errors->add('registered', __('Registration complete.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please check your email.', 'all-in-one-wp-security-and-firewall'), 'message');
 		elseif (strpos($redirect_to, 'about.php?updated'))
-		$errors->add('updated', __('<strong>You have successfully updated WordPress!</strong> Please log back in to see what&#8217;s new.'), 'message');
+		$errors->add('updated', __('<strong>You have successfully updated WordPress!</strong> Please log back in to see what&#8217;s new.', 'all-in-one-wp-security-and-firewall'), 'message');
 		}
 
 	/**
@@ -1003,7 +1003,7 @@ switch ($action) {
 	if ($reauth)
 	wp_clear_auth_cookie();
 
-	login_header(__('Log In'), '', $errors);
+	login_header(__('Log In', 'all-in-one-wp-security-and-firewall'), '', $errors);
 
 	if (isset($_POST['log']))
 	$user_login = ('incorrect_password' == $errors->get_error_code() || 'empty_password' == $errors->get_error_code()) ? esc_attr(wp_unslash($_POST['log'])) : '';
@@ -1027,11 +1027,11 @@ switch ($action) {
 
 <form name="loginform" id="loginform" action="<?php echo esc_url(site_url('wp-login.php', 'login_post')); ?>" method="post">
 	<p>
-		<label for="user_login"><?php _e('Username or Email Address'); ?><br />
+		<label for="user_login"><?php _e('Username or Email Address', 'all-in-one-wp-security-and-firewall'); ?><br />
 		<input type="text" name="log" id="user_login"<?php echo $aria_describedby_error; ?> class="input" value="<?php echo esc_attr($user_login); ?>" size="20" /></label>
 	</p>
 	<p>
-		<label for="user_pass"><?php _e('Password'); ?><br />
+		<label for="user_pass"><?php _e('Password', 'all-in-one-wp-security-and-firewall'); ?><br />
 		<input type="password" name="pwd" id="user_pass"<?php echo $aria_describedby_error; ?> class="input" value="" size="20" /></label>
 	</p>
 <?php
@@ -1042,9 +1042,9 @@ switch ($action) {
 	 */
 	do_action('login_form');
 	?>
-	<p class="forgetmenot"><label for="rememberme"><input name="rememberme" type="checkbox" id="rememberme" value="forever" <?php checked($rememberme); ?> /> <?php esc_html_e('Remember Me'); ?></label></p>
+	<p class="forgetmenot"><label for="rememberme"><input name="rememberme" type="checkbox" id="rememberme" value="forever" <?php checked($rememberme); ?> /> <?php esc_html_e('Remember Me', 'all-in-one-wp-security-and-firewall'); ?></label></p>
 	<p class="submit">
-		<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Log in'); ?>">
+		<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Log in', 'all-in-one-wp-security-and-firewall'); ?>">
 <?php	if ($interim_login) { ?>
 		<input type="hidden" name="interim-login" value="1" />
 			<?php	} else { ?>
@@ -1061,7 +1061,7 @@ switch ($action) {
 		<p id="nav">
 			<?php if (! isset($_GET['checkemail']) || ! in_array($_GET['checkemail'], array('confirm', 'newpass'))) :
 				if (get_option('users_can_register')) :
-					$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register'));
+					$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register', 'all-in-one-wp-security-and-firewall'));
 
 					// This filter is documented in wp-includes/general-template.php
 					echo apply_filters('register', $registration_url);
@@ -1069,7 +1069,7 @@ switch ($action) {
 					echo esc_html($login_link_separator);
 				endif;
 				?>
-			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php _e('Lost your password?'); ?></a>
+			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php _e('Lost your password?', 'all-in-one-wp-security-and-firewall'); ?></a>
 			<?php endif; ?>
 		</p>
 					<?php } ?>

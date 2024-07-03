@@ -12,7 +12,7 @@
 				<th scope="row"><?php _e('Disable index views', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to disable directory and file listing.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_index_views', '1' == $aio_wp_security->configs->get_value('aiowps_disable_index_views')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to disable directory and file listing.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_index_views', '1' == $aio_wp_security->configs->get_value('aiowps_disable_index_views')); ?>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 							<p class="description">
@@ -21,7 +21,7 @@
 								echo '<br />';
 								_e('This feature will prevent the listing of contents for all directories.', 'all-in-one-wp-security-and-firewall');
 								echo '<br />';
-								_e('NOTE: In order for this feature to work "AllowOverride" of the Indexes directive must be enabled in your httpd.conf file. ', 'all-in-one-wp-security-and-firewall') . _e('Ask your hosting provider to check this if you don\'t have access to httpd.conf', 'all-in-one-wp-security-and-firewall');
+								echo __('NOTE: In order for this feature to work "AllowOverride" of the Indexes directive must be enabled in your httpd.conf file.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Ask your hosting provider to check this if you don\'t have access to httpd.conf', 'all-in-one-wp-security-and-firewall');
 								?>
 							</p>
 						</div>

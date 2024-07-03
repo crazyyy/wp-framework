@@ -368,7 +368,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 						//Just in case user submits partial config settings
 						//Run add_option_values to make sure any missing config items are at least set to default
 						AIOWPSecurity_Configure_Settings::add_option_values();
-						
+
 						$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
 
 						// Now let's refresh the .htaccess file with any modified rules if applicable

@@ -77,6 +77,8 @@ if ( empty( $cp_options['ua'] ) ) {
 $cookies				= '';
 $payload				= '';
 $custom_headers	= '';
+$exclusions			= [];
+
 if ( isset( $cp_options['cookies'] ) ) {
 	// stripslashes is only needed for cookies
 	$cookies = trim( stripslashes( json_decode( $cp_options['cookies'] ) ) );
@@ -91,6 +93,9 @@ if ( isset( $cp_options['payload'] ) ) {
 }
 if ( isset( $cp_options['custom_headers'] ) ) {
 	$custom_headers = trim( json_decode( $cp_options['custom_headers'] ) );
+}
+if ( isset( $cp_options['exclusions'] ) ) {
+	$exclusions = json_decode( $cp_options['exclusions'] );
 }
 ?>
 <table class="form-table">
@@ -202,7 +207,7 @@ if ( isset( $cp_options['custom_headers'] ) ) {
 	</tr>
 </table>
 <?php
-if (! empty( $cookies ) || ! empty( $custom_headers ) || $cp_options['mem_method'] == 'post') {
+if (! empty( $cookies ) || ! empty( $custom_headers ) || $cp_options['mem_method'] == 'post' || ! empty( $exclusions ) ) {
 	echo '<div id="cp-advanced-settings">';
 	$disabled_button = ' disabled';
 } else {
@@ -254,6 +259,17 @@ if (! empty( $cookies ) || ! empty( $custom_headers ) || $cp_options['mem_method
 			<td>
 				<textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" id="custom-headers" name="custom_headers" class="regular-text code" rows="6"><?php echo esc_textarea( $custom_headers ) ?></textarea>
 				<p class="description"><?php printf( esc_html__('Optional HTTP header in %s format, one item per line.', 'code-profiler'), '<code>name: value</code>') ?> <?php printf( esc_html__('%sView example%s', 'code-profiler'), '<a href="'. plugins_url('/static/help/custom_headers.png', dirname( __FILE__ ) ) .'" target="_blank" rel="noopener noreferrer">', '</a>') ?></p>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="row-med"><?php esc_html_e('File and folder exclusions', 'code-profiler'); ?> <span class="code-profiler-tip" data-tip="<?php esc_attr_e('This option lets you exclude files and folders from the profiling process. It can be a full path, a file or a folder name, or any part of them (substring). Values are case-sensitive and only ASCII printable characters are allowed.', 'code-profiler') ?>"></span></th>
+			<td>
+				<textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" id="exclusions" name="exclusions" class="regular-text code" rows="6"><?php
+					foreach( $exclusions as $item ) {
+						echo esc_textarea( $item ) ."\n";
+					}
+				?></textarea>
+			<p class="description"><?php esc_html_e('One item per line.', 'code-profiler') ?> <?php printf( esc_html__('%sView example%s', 'code-profiler'), '<a href="'. plugins_url('/static/help/exclusions.png', dirname( __FILE__ ) ) .'" target="_blank" rel="noopener noreferrer">', '</a>') ?></p>
 			</td>
 		</tr>
 	</table>

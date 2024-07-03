@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Team Updraft <mail@example.com>\n"
 "Last-Translator: Team Updraft <mail@example.com>\n"
-"POT-Creation-Date: 2024-03-26 17:57+0000\n"
+"POT-Creation-Date: 2024-04-30 14:29+0000\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/updraftplus\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/admin.php:99, src/admin.php:908, src/restorer.php:539, src/restorer.php:567, src/restorer.php:2327, src/restorer.php:4368, src/addons/backblaze.php:247, src/addons/backblaze.php:272, src/addons/cloudfiles-enhanced.php:123, src/addons/s3-enhanced.php:236, src/addons/s3-enhanced.php:241, src/addons/s3-enhanced.php:243, src/addons/sftp.php:1040, src/addons/webdav.php:434, src/includes/class-remote-send.php:359, src/includes/class-remote-send.php:411, src/includes/class-remote-send.php:405, src/includes/class-remote-send.php:480, src/includes/class-remote-send.php:538, src/includes/class-remote-send.php:565, src/includes/class-remote-send.php:620, src/includes/class-remote-send.php:608, src/includes/class-remote-send.php:603, src/includes/class-remote-send.php:593, src/includes/class-search-replace.php:333, src/includes/class-search-replace.php:519, src/includes/migrator-lite.php:614, src/includes/migrator-lite.php:924, src/includes/migrator-lite.php:1002, src/methods/remotesend.php:80, src/methods/remotesend.php:258, src/methods/updraftvault.php:721
+#: src/admin.php:99, src/admin.php:908, src/restorer.php:539, src/restorer.php:567, src/restorer.php:2327, src/restorer.php:4368, src/addons/backblaze.php:247, src/addons/backblaze.php:272, src/addons/cloudfiles-enhanced.php:123, src/addons/s3-enhanced.php:236, src/addons/s3-enhanced.php:241, src/addons/s3-enhanced.php:243, src/addons/sftp.php:1040, src/addons/webdav.php:434, src/includes/class-remote-send.php:359, src/includes/class-remote-send.php:411, src/includes/class-remote-send.php:405, src/includes/class-remote-send.php:480, src/includes/class-remote-send.php:538, src/includes/class-remote-send.php:565, src/includes/class-remote-send.php:620, src/includes/class-remote-send.php:608, src/includes/class-remote-send.php:603, src/includes/class-remote-send.php:593, src/includes/class-search-replace.php:333, src/includes/class-search-replace.php:519, src/includes/migrator-lite.php:614, src/includes/migrator-lite.php:924, src/includes/migrator-lite.php:1002, src/methods/remotesend.php:80, src/methods/remotesend.php:258, src/methods/updraftvault.php:722
 msgid "Error:"
 msgstr ""
 
@@ -373,7 +373,7 @@ msgstr ""
 msgid "Saving..."
 msgstr ""
 
-#: src/admin.php:949, src/admin.php:3304, src/methods/updraftvault.php:483, src/methods/updraftvault.php:524, src/templates/wp-admin/settings/temporary-clone.php:87
+#: src/admin.php:949, src/admin.php:3304, src/methods/updraftvault.php:484, src/methods/updraftvault.php:525, src/templates/wp-admin/settings/temporary-clone.php:87
 msgid "Connect"
 msgstr ""
 
@@ -381,7 +381,7 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
-#: src/admin.php:951, src/methods/updraftvault.php:532, src/methods/updraftvault.php:614
+#: src/admin.php:951, src/methods/updraftvault.php:533, src/methods/updraftvault.php:615
 msgid "Disconnect"
 msgstr ""
 
@@ -834,7 +834,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/admin.php:1069, src/admin.php:3373, src/addons/lockadmin.php:178, src/addons/moredatabase.php:265, src/addons/sftp.php:612, src/addons/webdav.php:431, src/methods/openstack2.php:255, src/methods/updraftvault.php:522, src/templates/wp-admin/settings/updraftcentral-connect.php:50
+#: src/admin.php:1069, src/admin.php:3373, src/addons/lockadmin.php:178, src/addons/moredatabase.php:265, src/addons/sftp.php:612, src/addons/webdav.php:431, src/methods/openstack2.php:255, src/methods/updraftvault.php:523, src/templates/wp-admin/settings/updraftcentral-connect.php:50
 msgid "Password"
 msgstr ""
 
@@ -1026,7 +1026,7 @@ msgstr ""
 msgid "To change any of the default settings of what is backed up, to configure scheduled backups, to send your backups to remote storage (recommended), and more, go to the settings tab."
 msgstr ""
 
-#: src/admin.php:1347, src/admin.php:1352, src/admin.php:1358, src/admin.php:1362, src/admin.php:1366, src/admin.php:1370, src/admin.php:1388, src/admin.php:1401, src/admin.php:4379, src/admin.php:4377, src/admin.php:4370, src/admin.php:6036, src/admin.php:6316, src/addons/azure.php:689, src/includes/migrator-lite.php:668, src/methods/cloudfiles-new.php:281, src/methods/cloudfiles-new.php:282, src/methods/cloudfiles.php:455, src/methods/dreamobjects.php:181, src/methods/dreamobjects.php:182, src/methods/ftp.php:116, src/methods/openstack-base.php:577, src/methods/openstack2.php:242, src/methods/s3.php:926, src/methods/s3.php:930, src/methods/s3.php:1080, src/methods/s3.php:1081, src/methods/s3generic.php:192, src/methods/s3generic.php:193, src/methods/updraftvault.php:476, src/udaddons/updraftplus-addons.php:325, src/templates/wp-admin/settings/downloading-and-restoring.php:27, src/templates/wp-admin/settings/tab-backups.php:27
+#: src/admin.php:1347, src/admin.php:1352, src/admin.php:1358, src/admin.php:1362, src/admin.php:1366, src/admin.php:1370, src/admin.php:1388, src/admin.php:1401, src/admin.php:4379, src/admin.php:4377, src/admin.php:4370, src/admin.php:6036, src/admin.php:6316, src/addons/azure.php:689, src/includes/migrator-lite.php:668, src/methods/cloudfiles-new.php:281, src/methods/cloudfiles-new.php:282, src/methods/cloudfiles.php:455, src/methods/dreamobjects.php:181, src/methods/dreamobjects.php:182, src/methods/ftp.php:116, src/methods/openstack-base.php:577, src/methods/openstack2.php:242, src/methods/s3.php:926, src/methods/s3.php:930, src/methods/s3.php:1080, src/methods/s3.php:1081, src/methods/s3generic.php:192, src/methods/s3generic.php:193, src/methods/updraftvault.php:477, src/udaddons/updraftplus-addons.php:325, src/templates/wp-admin/settings/downloading-and-restoring.php:27, src/templates/wp-admin/settings/tab-backups.php:27
 msgid "Warning"
 msgstr ""
 
@@ -1386,7 +1386,7 @@ msgstr ""
 msgid "Connect with your UpdraftPlus.Com account"
 msgstr ""
 
-#: src/admin.php:3363, src/methods/updraftvault.php:520, src/templates/wp-admin/settings/form-contents.php:256, src/templates/wp-admin/settings/updraftcentral-connect.php:44
+#: src/admin.php:3363, src/methods/updraftvault.php:521, src/templates/wp-admin/settings/form-contents.php:256, src/templates/wp-admin/settings/updraftcentral-connect.php:44
 msgid "Email"
 msgstr ""
 
@@ -1478,7 +1478,7 @@ msgstr ""
 msgid "Backup finished"
 msgstr ""
 
-#: src/admin.php:3777, src/methods/updraftvault.php:556, src/methods/updraftvault.php:603, src/methods/updraftvault.php:723
+#: src/admin.php:3777, src/methods/updraftvault.php:557, src/methods/updraftvault.php:604, src/methods/updraftvault.php:724
 msgid "Unknown"
 msgstr ""
 
@@ -1695,7 +1695,7 @@ msgstr ""
 msgid "Your web server's PHP installation does not included a <strong>required</strong> (for %s) module (%s)."
 msgstr ""
 
-#: src/admin.php:4370, src/addons/azure.php:689, src/methods/dreamobjects.php:182, src/methods/s3.php:926, src/methods/s3.php:1080, src/methods/s3generic.php:192, src/methods/updraftvault.php:476
+#: src/admin.php:4370, src/addons/azure.php:689, src/methods/dreamobjects.php:182, src/methods/s3.php:926, src/methods/s3.php:1080, src/methods/s3generic.php:192, src/methods/updraftvault.php:477
 msgid "Please contact your web hosting provider's support and ask for them to enable it."
 msgstr ""
 
@@ -2530,7 +2530,7 @@ msgid "This is older than the server which you are now restoring onto (version %
 msgstr ""
 
 #: src/class-updraftplus.php:5172
-msgid "You should only proceed if you have checked and are confident (or willing to risk) that your plugins/themes/etc. are compatible with the new %s version."
+msgid "You should only proceed if you have checked and are confident (or willing to risk) that your plugins/themes/etc are compatible with the new %s version."
 msgstr ""
 
 #: src/class-updraftplus.php:5172, src/class-updraftplus.php:5170
@@ -2542,7 +2542,7 @@ msgid "This is significantly newer than the server which you are now restoring o
 msgstr ""
 
 #: src/class-updraftplus.php:5170
-msgid "You should only proceed if you cannot update the current server and are confident (or willing to risk) that your plugins/themes/etc. are compatible with the older %s version."
+msgid "You should only proceed if you cannot update the current server and are confident (or willing to risk) that your plugins/themes/etc are compatible with the older %s version."
 msgstr ""
 
 #: src/class-updraftplus.php:5154, src/class-updraftplus.php:5136
@@ -4648,7 +4648,7 @@ msgstr ""
 msgid "An error response was received; HTTP code:"
 msgstr ""
 
-#: src/addons/onedrive.php:739, src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:894, src/udaddons/updraftplus-addons.php:1040, src/udaddons/updraftplus-addons.php:1053
+#: src/addons/onedrive.php:739, src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:895, src/udaddons/updraftplus-addons.php:1040, src/udaddons/updraftplus-addons.php:1053
 msgid "This most likely means that you share a webserver with a hacked website that has been used in previous attacks."
 msgstr ""
 
@@ -4660,15 +4660,15 @@ msgstr ""
 msgid "Your IP address:"
 msgstr ""
 
-#: src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:894, src/udaddons/updraftplus-addons.php:1053
+#: src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:895, src/udaddons/updraftplus-addons.php:1053
 msgid "UpdraftPlus.com has responded with 'Access Denied'."
 msgstr ""
 
-#: src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:894, src/udaddons/updraftplus-addons.php:1053
+#: src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:895, src/udaddons/updraftplus-addons.php:1053
 msgid "It appears that your web server's IP Address (%s) is blocked."
 msgstr ""
 
-#: src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:894
+#: src/addons/onedrive.php:762, src/includes/updraftplus-login.php:55, src/methods/updraftvault.php:895
 msgid "To remove the block, please go here."
 msgstr ""
 
@@ -5185,7 +5185,11 @@ msgid "Error: Failed to download"
 msgstr ""
 
 #: src/addons/sftp.php:426
-msgid "The key provided is encrypted. You need to provide the unencrypted key (see: https://updraftplus.com/faqs/why-must-i-use-a-non-encrypted-sftp-key/)."
+msgid "The key provided is encrypted."
+msgstr ""
+
+#: src/addons/sftp.php:426
+msgid "You need to provide the unencrypted key (see: https://updraftplus.com/faqs/why-must-i-use-a-non-encrypted-sftp-key/)."
 msgstr ""
 
 #: src/addons/sftp.php:428
@@ -5501,7 +5505,7 @@ msgstr ""
 msgid "You successfully logged in to UpdraftPlus.Com and connected this plugin with your account"
 msgstr ""
 
-#: src/addons/wp-cli.php:1082, src/includes/class-commands.php:908, src/methods/updraftvault.php:843, src/udaddons/options.php:244
+#: src/addons/wp-cli.php:1082, src/includes/class-commands.php:908, src/methods/updraftvault.php:844, src/udaddons/options.php:244
 msgid "An unknown error occurred when trying to connect to UpdraftPlus.Com"
 msgstr ""
 
@@ -6545,7 +6549,7 @@ msgstr ""
 msgid "Clone of %s"
 msgstr ""
 
-#: src/includes/updraftplus-login.php:57, src/methods/updraftvault.php:896, src/udaddons/updraftplus-addons.php:1058
+#: src/includes/updraftplus-login.php:57, src/methods/updraftvault.php:897, src/udaddons/updraftplus-addons.php:1058
 msgid "UpdraftPlus.Com returned a response which we could not understand (data: %s)"
 msgstr ""
 
@@ -6717,7 +6721,7 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: src/includes/updraftplus-notices.php:200, src/templates/wp-admin/notices/thanks-for-using-main-dash.php:23
+#: src/includes/updraftplus-notices.php:200
 msgid "The WordPress subscription extension for WooCommerce store owners."
 msgstr ""
 
@@ -6895,7 +6899,7 @@ msgstr ""
 msgid "Congratulations, your settings have successfully been saved."
 msgstr ""
 
-#: src/includes/updraftplus-tour.php:151, src/templates/wp-admin/notices/thanks-for-using-main-dash.php:17
+#: src/includes/updraftplus-tour.php:151
 msgid "UpdraftCentral"
 msgstr ""
 
@@ -7614,235 +7618,235 @@ msgstr ""
 msgid "Updraft Vault"
 msgstr ""
 
-#: src/methods/updraftvault.php:256, src/methods/updraftvault.php:940
+#: src/methods/updraftvault.php:257, src/methods/updraftvault.php:941
 msgid "An error occurred while fetching your Vault credentials."
 msgstr ""
 
-#: src/methods/updraftvault.php:256
+#: src/methods/updraftvault.php:257
 msgid "Please try again after a few minutes."
 msgstr ""
 
-#: src/methods/updraftvault.php:324
+#: src/methods/updraftvault.php:325
 msgid "Your UpdraftPlus Premium purchase is over a year ago."
 msgstr ""
 
-#: src/methods/updraftvault.php:324
+#: src/methods/updraftvault.php:325
 msgid "You should renew immediately to avoid losing the 12 months of free storage allowance that you get for being a current UpdraftPlus Premium customer."
 msgstr ""
 
-#: src/methods/updraftvault.php:327
+#: src/methods/updraftvault.php:328
 msgid "You have an UpdraftPlus Vault subscription with overdue payment."
 msgstr ""
 
-#: src/methods/updraftvault.php:327
+#: src/methods/updraftvault.php:328
 msgid "You are within the few days of grace period before it will be suspended, and you will lose your quota and access to data stored within it."
 msgstr ""
 
-#: src/methods/updraftvault.php:327
+#: src/methods/updraftvault.php:328
 msgid "Please renew as soon as possible!"
 msgstr ""
 
-#: src/methods/updraftvault.php:330
+#: src/methods/updraftvault.php:331
 msgid "You have an UpdraftPlus Vault subscription that has not been renewed, and the grace period has expired."
 msgstr ""
 
-#: src/methods/updraftvault.php:330
+#: src/methods/updraftvault.php:331
 msgid "In a few days' time, your stored data will be permanently removed."
 msgstr ""
 
-#: src/methods/updraftvault.php:330
+#: src/methods/updraftvault.php:331
 msgid "If you do not wish this to happen, then you should renew as soon as possible."
 msgstr ""
 
-#: src/methods/updraftvault.php:335
+#: src/methods/updraftvault.php:336
 msgid "No Vault connection was found for this site (has it moved?); please disconnect and re-connect."
 msgstr ""
 
-#: src/methods/updraftvault.php:476
+#: src/methods/updraftvault.php:477
 msgid "Your web server's PHP installation does not include a <strong>required</strong> (for %s) module (%s)."
 msgstr ""
 
-#: src/methods/updraftvault.php:478, src/methods/updraftvault.php:489
+#: src/methods/updraftvault.php:479, src/methods/updraftvault.php:490
 msgid "UpdraftVault brings you storage that is <strong>reliable, easy to use and a great price</strong>."
 msgstr ""
 
-#: src/methods/updraftvault.php:478, src/methods/updraftvault.php:489
+#: src/methods/updraftvault.php:479, src/methods/updraftvault.php:490
 msgid "Press a button to get started."
 msgstr ""
 
-#: src/methods/updraftvault.php:479
+#: src/methods/updraftvault.php:480
 msgid "Need to get space?"
 msgstr ""
 
-#: src/methods/updraftvault.php:480
+#: src/methods/updraftvault.php:481
 msgid "Show the options"
 msgstr ""
 
-#: src/methods/updraftvault.php:481
+#: src/methods/updraftvault.php:482
 msgid "Already got space?"
 msgstr ""
 
-#: src/methods/updraftvault.php:482
+#: src/methods/updraftvault.php:483
 msgid "Connect to your %s account"
 msgstr ""
 
-#: src/methods/updraftvault.php:484
+#: src/methods/updraftvault.php:485
 msgid "UpdraftVault is built on top of Amazon's world-leading data-centres, with redundant data storage to achieve 99.999999999% reliability."
 msgstr ""
 
-#: src/methods/updraftvault.php:485
+#: src/methods/updraftvault.php:486
 msgid "Read more about %s here."
 msgstr ""
 
-#: src/methods/updraftvault.php:486
+#: src/methods/updraftvault.php:487
 msgid "Read the %s FAQs here."
 msgstr ""
 
-#: src/methods/updraftvault.php:490
+#: src/methods/updraftvault.php:491
 msgid "Start Subscription"
 msgstr ""
 
-#: src/methods/updraftvault.php:491, src/methods/updraftvault.php:492, src/methods/updraftvault.php:493
+#: src/methods/updraftvault.php:492, src/methods/updraftvault.php:493, src/methods/updraftvault.php:494
 msgid "Start %s Subscription"
 msgstr ""
 
-#: src/methods/updraftvault.php:494
+#: src/methods/updraftvault.php:495
 msgid "Start Trial"
 msgstr ""
 
-#: src/methods/updraftvault.php:495
+#: src/methods/updraftvault.php:496
 msgid "Start %s Trial"
 msgstr ""
 
-#: src/methods/updraftvault.php:496
+#: src/methods/updraftvault.php:497
 msgid "or (annual discount)"
 msgstr ""
 
-#: src/methods/updraftvault.php:497
+#: src/methods/updraftvault.php:498
 msgid "with the option of"
 msgstr ""
 
-#: src/methods/updraftvault.php:498, src/methods/updraftvault.php:503, src/methods/updraftvault.php:504, src/methods/updraftvault.php:505
+#: src/methods/updraftvault.php:499, src/methods/updraftvault.php:504, src/methods/updraftvault.php:505, src/methods/updraftvault.php:506
 msgid "%s per year"
 msgstr ""
 
-#: src/methods/updraftvault.php:499, src/methods/updraftvault.php:500, src/methods/updraftvault.php:501
+#: src/methods/updraftvault.php:500, src/methods/updraftvault.php:501, src/methods/updraftvault.php:502
 msgid "%s per quarter"
 msgstr ""
 
-#: src/methods/updraftvault.php:502
+#: src/methods/updraftvault.php:503
 msgid "%s month %s trial"
 msgstr ""
 
-#: src/methods/updraftvault.php:506, src/methods/updraftvault.php:507, src/methods/updraftvault.php:508, src/methods/updraftvault.php:509
+#: src/methods/updraftvault.php:507, src/methods/updraftvault.php:508, src/methods/updraftvault.php:509, src/methods/updraftvault.php:510
 msgid "Start a %s UpdraftVault Subscription"
 msgstr ""
 
-#: src/methods/updraftvault.php:514, src/templates/wp-admin/settings/exclude-settings-modal/exclude-panel-heading.php:4
+#: src/methods/updraftvault.php:515, src/templates/wp-admin/settings/exclude-settings-modal/exclude-panel-heading.php:4
 msgid "Back..."
 msgstr ""
 
-#: src/methods/updraftvault.php:517
+#: src/methods/updraftvault.php:518
 msgid "Payments can be made in US dollars, euros or GB pounds sterling, via card or PayPal."
 msgstr ""
 
-#: src/methods/updraftvault.php:517
+#: src/methods/updraftvault.php:518
 msgid "Subscriptions can be cancelled at any time."
 msgstr ""
 
-#: src/methods/updraftvault.php:518
+#: src/methods/updraftvault.php:519
 msgid "Enter your UpdraftPlus.Com email / password here to connect:"
 msgstr ""
 
-#: src/methods/updraftvault.php:519
+#: src/methods/updraftvault.php:520
 msgid "Please enter your %s email address"
 msgstr ""
 
-#: src/methods/updraftvault.php:521
+#: src/methods/updraftvault.php:522
 msgid "Please enter your %s password"
 msgstr ""
 
-#: src/methods/updraftvault.php:525, src/methods/updraftvault.php:526
+#: src/methods/updraftvault.php:526, src/methods/updraftvault.php:527
 msgid "Don't know your email address, or forgotten your password?"
 msgstr ""
 
-#: src/methods/updraftvault.php:526
+#: src/methods/updraftvault.php:527
 msgid "Follow this link for help"
 msgstr ""
 
-#: src/methods/updraftvault.php:528
+#: src/methods/updraftvault.php:529
 msgid "Go here for help"
 msgstr ""
 
-#: src/methods/updraftvault.php:529, src/methods/updraftvault.php:598
+#: src/methods/updraftvault.php:530, src/methods/updraftvault.php:599
 msgid "This site is <strong>connected</strong> to UpdraftVault."
 msgstr ""
 
-#: src/methods/updraftvault.php:529, src/methods/updraftvault.php:598
+#: src/methods/updraftvault.php:530, src/methods/updraftvault.php:599
 msgid "Well done - there's nothing more needed to set up."
 msgstr ""
 
-#: src/methods/updraftvault.php:530, src/methods/updraftvault.php:598
+#: src/methods/updraftvault.php:531, src/methods/updraftvault.php:599
 msgid "Vault owner"
 msgstr ""
 
-#: src/methods/updraftvault.php:531, src/methods/updraftvault.php:600
+#: src/methods/updraftvault.php:532, src/methods/updraftvault.php:601
 msgid "Quota:"
 msgstr ""
 
-#: src/methods/updraftvault.php:533, src/methods/updraftvault.php:594
+#: src/methods/updraftvault.php:534, src/methods/updraftvault.php:595
 msgid "You are <strong>not connected</strong> to UpdraftVault."
 msgstr ""
 
-#: src/methods/updraftvault.php:631
+#: src/methods/updraftvault.php:632
 msgid "Error: you have insufficient storage quota available (%s) to upload this archive (%s) (%s)."
 msgstr ""
 
-#: src/methods/updraftvault.php:631
+#: src/methods/updraftvault.php:632
 msgid "You can get more quota here"
 msgstr ""
 
-#: src/methods/updraftvault.php:646, src/methods/updraftvault.php:663, src/methods/updraftvault.php:718
+#: src/methods/updraftvault.php:647, src/methods/updraftvault.php:664, src/methods/updraftvault.php:719
 msgid "Current use:"
 msgstr ""
 
-#: src/methods/updraftvault.php:649, src/methods/updraftvault.php:666, src/methods/updraftvault.php:668, src/methods/updraftvault.php:754
+#: src/methods/updraftvault.php:650, src/methods/updraftvault.php:667, src/methods/updraftvault.php:669, src/methods/updraftvault.php:755
 msgid "Get more quota"
 msgstr ""
 
-#: src/methods/updraftvault.php:651, src/methods/updraftvault.php:754
+#: src/methods/updraftvault.php:652, src/methods/updraftvault.php:755
 msgid "Refresh current status"
 msgstr ""
 
-#: src/methods/updraftvault.php:869, src/udaddons/updraftplus-addons.php:957
+#: src/methods/updraftvault.php:870, src/udaddons/updraftplus-addons.php:957
 msgid "You need to supply both an email address and a password"
 msgstr ""
 
-#: src/methods/updraftvault.php:923, src/methods/updraftvault.php:946, src/methods/updraftvault.php:949, src/udaddons/updraftplus-addons.php:1099
+#: src/methods/updraftvault.php:924, src/methods/updraftvault.php:947, src/methods/updraftvault.php:950, src/udaddons/updraftplus-addons.php:1099
 msgid "UpdraftPlus.Com returned a response, but we could not understand it"
 msgstr ""
 
-#: src/methods/updraftvault.php:921
+#: src/methods/updraftvault.php:922
 msgid "You do not currently have any UpdraftVault quota"
 msgstr ""
 
-#: src/methods/updraftvault.php:932, src/udaddons/updraftplus-addons.php:1092
+#: src/methods/updraftvault.php:933, src/udaddons/updraftplus-addons.php:1092
 msgid "You entered an email address that was not recognised by UpdraftPlus.Com"
 msgstr ""
 
-#: src/methods/updraftvault.php:929, src/udaddons/updraftplus-addons.php:1088
+#: src/methods/updraftvault.php:930, src/udaddons/updraftplus-addons.php:1088
 msgid "Your email address was valid, but your password was not recognised by UpdraftPlus.Com."
 msgstr ""
 
-#: src/methods/updraftvault.php:929
+#: src/methods/updraftvault.php:930
 msgid "If you have forgotten your password, then go here to change your password on updraftplus.com."
 msgstr ""
 
-#: src/methods/updraftvault.php:935, src/udaddons/updraftplus-addons.php:1095
+#: src/methods/updraftvault.php:936, src/udaddons/updraftplus-addons.php:1095
 msgid "Your email address and password were not recognised by UpdraftPlus.Com"
 msgstr ""
 
-#: src/methods/updraftvault.php:942
+#: src/methods/updraftvault.php:943
 msgid "An unknown error occurred while connecting to Vault."
 msgstr ""
 
@@ -7914,159 +7918,167 @@ msgstr ""
 msgid "Please make sure that %s is not set to \"true\" in your wp-config file - this ensures UpdraftPlus can connect and update."
 msgstr ""
 
-#: src/udaddons/options.php:273
-msgid "You are presently <strong>not connected</strong> to an UpdraftPlus.Com account."
+#: src/udaddons/options.php:259
+msgid "Please list %s in the %s constant."
 msgstr ""
 
-#: src/udaddons/options.php:258
-msgid "You are presently <strong class=\"success\">connected</strong> to an UpdraftPlus.Com account."
-msgstr ""
-
-#: src/udaddons/options.php:265
-msgid "If you bought new add-ons, then follow this link to refresh your connection"
-msgstr ""
-
-#: src/udaddons/options.php:266
-msgid "Note that after you have claimed your add-ons, you can remove your password (but not the email address) from the settings below, without affecting this site's access to updates."
+#: src/udaddons/options.php:259
+msgid "This ensures %s can connect and update."
 msgstr ""
 
 #: src/udaddons/options.php:278
+msgid "You are presently <strong>not connected</strong> to an UpdraftPlus.Com account."
+msgstr ""
+
+#: src/udaddons/options.php:263
+msgid "You are presently <strong class=\"success\">connected</strong> to an UpdraftPlus.Com account."
+msgstr ""
+
+#: src/udaddons/options.php:270
+msgid "If you bought new add-ons, then follow this link to refresh your connection"
+msgstr ""
+
+#: src/udaddons/options.php:271
+msgid "Note that after you have claimed your add-ons, you can remove your password (but not the email address) from the settings below, without affecting this site's access to updates."
+msgstr ""
+
+#: src/udaddons/options.php:283
 msgid "Errors occurred when trying to connect to UpdraftPlus.Com:"
 msgstr ""
 
-#: src/udaddons/options.php:289
+#: src/udaddons/options.php:294
 msgid "You successfully logged in to UpdraftPlus and connected this site to UpdraftCentral Cloud."
 msgstr ""
 
-#: src/udaddons/options.php:290
+#: src/udaddons/options.php:295
 msgid "Go to your UpdraftCentral Cloud dashboard"
 msgstr ""
 
-#: src/udaddons/options.php:330
+#: src/udaddons/options.php:335
 msgid "Please wait whilst we make the claim..."
 msgstr ""
 
-#: src/udaddons/options.php:331
+#: src/udaddons/options.php:336
 msgid "Claim not granted - perhaps you have already used this purchase somewhere else, or your paid period for downloading from updraftplus.com has expired?"
 msgstr ""
 
-#: src/udaddons/options.php:332
+#: src/udaddons/options.php:337
 msgid "Claim not granted - your account login details were wrong"
 msgstr ""
 
-#: src/udaddons/options.php:333
+#: src/udaddons/options.php:338
 msgid "An unknown response was received."
 msgstr ""
 
-#: src/udaddons/options.php:333
+#: src/udaddons/options.php:338
 msgid "Response was:"
 msgstr ""
 
-#: src/udaddons/options.php:334
+#: src/udaddons/options.php:339
 msgid "The claim and installation was successful."
 msgstr ""
 
-#: src/udaddons/options.php:334
+#: src/udaddons/options.php:339
 msgid "You can now use your purchase!"
 msgstr ""
 
-#: src/udaddons/options.php:390, src/udaddons/updraftplus-addons.php:384
+#: src/udaddons/options.php:395, src/udaddons/updraftplus-addons.php:384
 msgid "UpdraftPlus Addons"
 msgstr ""
 
-#: src/udaddons/options.php:401
+#: src/udaddons/options.php:406
 msgid "An update containing your addons is available for UpdraftPlus - please follow this link to get it."
 msgstr ""
 
-#: src/udaddons/options.php:447
+#: src/udaddons/options.php:452
 msgid "An error occurred when trying to retrieve your add-ons."
 msgstr ""
 
-#: src/udaddons/options.php:463
+#: src/udaddons/options.php:468
 msgid "UpdraftPlus Support"
 msgstr ""
 
-#: src/udaddons/options.php:465, src/udaddons/options.php:465
+#: src/udaddons/options.php:470, src/udaddons/options.php:470
 msgid "Need to get support?"
 msgstr ""
 
-#: src/udaddons/options.php:465, src/udaddons/options.php:465
+#: src/udaddons/options.php:470, src/udaddons/options.php:470
 msgid "Go here"
 msgstr ""
 
-#: src/udaddons/options.php:531
+#: src/udaddons/options.php:536
 msgid "Get %s from the UpdraftPlus.com Store"
 msgstr ""
 
-#: src/udaddons/options.php:531, src/udaddons/options.php:531
+#: src/udaddons/options.php:536, src/udaddons/options.php:536
 msgid "(or connect using the form on this page if you have already purchased it)"
 msgstr ""
 
-#: src/udaddons/options.php:531
+#: src/udaddons/options.php:536
 msgid "Get it from the UpdraftPlus.Com Store"
 msgstr ""
 
-#: src/udaddons/options.php:532
+#: src/udaddons/options.php:537
 msgid "Buy %s"
 msgstr ""
 
-#: src/udaddons/options.php:532
+#: src/udaddons/options.php:537
 msgid "Buy It"
 msgstr ""
 
-#: src/udaddons/options.php:527
+#: src/udaddons/options.php:532
 msgid "You have an inactive purchase"
 msgstr ""
 
-#: src/udaddons/options.php:527, src/udaddons/options.php:525
+#: src/udaddons/options.php:532, src/udaddons/options.php:530
 msgid "activate it on this site"
 msgstr ""
 
-#: src/udaddons/options.php:525
+#: src/udaddons/options.php:530
 msgid "Available to claim on this site"
 msgstr ""
 
-#: src/udaddons/options.php:525
+#: src/udaddons/options.php:530
 msgid "%s available to claim on this site."
 msgstr ""
 
-#: src/udaddons/options.php:525
+#: src/udaddons/options.php:530
 msgid "Follow this link to activate this licence"
 msgstr ""
 
-#: src/udaddons/options.php:519
+#: src/udaddons/options.php:524
 msgid "Assigned to this site"
 msgstr ""
 
-#: src/udaddons/options.php:519
+#: src/udaddons/options.php:524
 msgid "please  follow this link to update the plugin in order to activate it"
 msgstr ""
 
-#: src/udaddons/options.php:516
+#: src/udaddons/options.php:521
 msgid "Available for this site (via your all-addons purchase)"
 msgstr ""
 
-#: src/udaddons/options.php:516
+#: src/udaddons/options.php:521
 msgid "please follow this link to update the plugin in order to get it"
 msgstr ""
 
-#: src/udaddons/options.php:502, src/udaddons/options.php:502
+#: src/udaddons/options.php:507, src/udaddons/options.php:507
 msgid "You've got it"
 msgstr ""
 
-#: src/udaddons/options.php:504
+#: src/udaddons/options.php:509
 msgid "Your version: %s"
 msgstr ""
 
-#: src/udaddons/options.php:510
+#: src/udaddons/options.php:515
 msgid "(apparently a pre-release or withdrawn release)"
 msgstr ""
 
-#: src/udaddons/options.php:508, src/udaddons/options.php:506
+#: src/udaddons/options.php:513, src/udaddons/options.php:511
 msgid "latest"
 msgstr ""
 
-#: src/udaddons/options.php:551
+#: src/udaddons/options.php:556
 msgid "Manage Addons"
 msgstr ""
 
@@ -8151,7 +8163,11 @@ msgid "UpdraftPlus.Com responded, but we did not understand the response"
 msgstr ""
 
 #: src/udaddons/updraftplus-addons.php:1056
-msgid "No response data was received. This usually indicates a network connectivity issue (e.g. an outgoing firewall or overloaded network) between this site and UpdraftPlus.com."
+msgid "No response data was received."
+msgstr ""
+
+#: src/udaddons/updraftplus-addons.php:1056
+msgid "This usually indicates a network connectivity issue (e.g. an outgoing firewall or overloaded network) between this site and UpdraftPlus.com."
 msgstr ""
 
 #: src/udaddons/updraftplus-addons.php:1088
@@ -8187,11 +8203,11 @@ msgid "The latest update for this %s has not been tested with the WordPress vers
 msgstr ""
 
 #: src/central/modules/updates.php:715
-msgid "There are currently no available fields or data that we can use to determine whether this latest %s is compatible with your WordPress or PHP install."
+msgid "This % does not provide information to allow determining whether the latest version is compatible with your WordPress or PHP installation."
 msgstr ""
 
 #: src/central/modules/updates.php:715
-msgid "Please install with caution by doing a backup first before installing."
+msgid "If installing, then proceed with caution by first doing a backup."
 msgstr ""
 
 #: src/includes/updraftclone/temporary-clone-dash-notice.php:36
@@ -8588,7 +8604,7 @@ msgstr ""
 msgid "Never"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:2, src/templates/wp-admin/notices/thanks-for-using-main-dash.php:32
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:2, src/templates/wp-admin/notices/thanks-for-using-main-dash.php:43
 msgid "Dismiss (for %s months)"
 msgstr ""
 
@@ -8596,59 +8612,91 @@ msgstr ""
 msgid "Thank you for installing UpdraftPlus!"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:9
-msgid "Super-charge and secure your WordPress site with our other top plugins:"
-msgstr ""
-
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:12, src/templates/wp-admin/settings/tab-addons.php:72
-msgid "UpdraftPlus Premium"
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:12
+msgid "If you like UpdraftPlus, you'll love our other plugins."
 msgstr ""
 
 #: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:12
-msgid "For personal support, the ability to copy sites, more storage destinations, encrypted backups for security, multiple backup destinations, better reporting, no adverts and plenty more, take a look at the premium version of UpdraftPlus - the world's most popular backup plugin."
+msgid "All 5* rated and actively installed on millions of WordPress websites:"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:13
-msgid "Compare with the free version"
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:10
+msgid "Protect your WordPress investment with premium features, or check out our other 5* rated  plugins below:"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:13
-msgid "Go to the shop."
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:18, src/templates/wp-admin/settings/tab-addons.php:72
+msgid "UpdraftPlus Premium"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:17
-msgid "is a highly efficient way to manage, update and backup multiple websites from one place."
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:18
+msgid " Upgrade for automatic backups before updates, incremental backups, more remote storage locations, premium support and"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:20, src/templates/wp-admin/settings/tab-addons.php:328, src/templates/wp-admin/settings/tab-addons.php:329
-msgid "Makes your site fast and efficient."
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:19
+msgid "more"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:20, src/templates/wp-admin/settings/tab-addons.php:328, src/templates/wp-admin/settings/tab-addons.php:329
-msgid "It cleans the database, compresses images and caches pages for ultimate speed."
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:24
+msgid "Speed up and optimize your WordPress website."
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:26
-msgid "Free Newsletter"
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:24
+msgid "Cache your site, clean the database and compress images."
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:26
-msgid "UpdraftPlus news, high-quality training materials for WordPress developers and site-owners, and general WordPress news."
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:27
+msgid "All-In-One Security (AIOS)"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:26
-msgid "You can de-subscribe at any time."
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:27
+msgid "Still on the fence?"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:29
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:27
+msgid "Secure your WordPress website with AIOS."
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:27
+msgid " Comprehensive, cost-effective, 5* rated and easy to use."
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:31
+msgid "Internal Link Juicer"
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:31
+msgid "Automate the building of internal links on your WordPress website."
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:31
+msgid "Save time and boost SEO!"
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:31
+msgid "You don’t need to be an SEO expert to use this plugin."
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:35
+msgid "WP Overnight"
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:35
+msgid "Quality add-ons for WooCommerce."
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:35
+msgid "Designed to optimize your store, enhance user experience  and increase revenue!"
+msgstr ""
+
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:39
 msgid "More quality plugins"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:30
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:40
 msgid "Premium WooCommerce plugins"
 msgstr ""
 
-#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:30
+#: src/templates/wp-admin/notices/thanks-for-using-main-dash.php:40
 msgid "Free two-factor security plugin"
 msgstr ""
 
@@ -9503,6 +9551,14 @@ msgstr ""
 
 #: src/templates/wp-admin/settings/tab-addons.php:324
 msgid "More great plugins by the Updraft Team"
+msgstr ""
+
+#: src/templates/wp-admin/settings/tab-addons.php:328, src/templates/wp-admin/settings/tab-addons.php:329
+msgid "Makes your site fast and efficient."
+msgstr ""
+
+#: src/templates/wp-admin/settings/tab-addons.php:328, src/templates/wp-admin/settings/tab-addons.php:329
+msgid "It cleans the database, compresses images and caches pages for ultimate speed."
 msgstr ""
 
 #: src/templates/wp-admin/settings/tab-addons.php:329, src/templates/wp-admin/settings/tab-addons.php:329, src/templates/wp-admin/settings/tab-addons.php:335, src/templates/wp-admin/settings/tab-addons.php:335, src/templates/wp-admin/settings/tab-addons.php:341, src/templates/wp-admin/settings/tab-addons.php:341, src/templates/wp-admin/settings/tab-addons.php:347, src/templates/wp-admin/settings/tab-addons.php:347

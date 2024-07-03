@@ -1253,6 +1253,7 @@ if ( ! function_exists( 'cmplz_is_pagebuilder_preview' ) ) {
 			 || isset( $_GET['tatsu'] ) //tatsu
 			 || isset( $_GET['tatsu-header'] ) //tatsu
 			 || isset( $_GET['tatsu-footer'] ) //tatsu
+	         || ( isset( $_GET['action'] ) && $_GET['action'] === 'ms_get_preview' ) //meta slider
 			 || strpos( $_SERVER['REQUEST_URI'], 'cornerstone/edit') !== false
 		) {
 			$preview = true;
@@ -1267,7 +1268,6 @@ if ( ! function_exists( 'cmplz_is_pagebuilder_preview' ) ) {
 		if (isset($_GET['context']) &&  $_GET['context']==='edit') {
 			return true;
 		}
-
 		return apply_filters( 'cmplz_is_preview', $preview );
 	}
 }
@@ -2028,21 +2028,6 @@ if ( ! function_exists( 'cmplz_used_cookies' ) ) {
 	}
 }
 
-if ( !function_exists('cmplz_uses_complianz_documents') ) {
-	function cmplz_uses_complianz_documents(){
-		$types = [];
-		$required_pages = COMPLIANZ::$document->get_required_pages();
-		if ( is_array( $required_pages ) ) {
-			foreach ( $required_pages as $region => $region_documents ) {
-				foreach ( $region_documents as $type => $document ) {
-					$types[] = $type;
-				}
-			}
-		}
-		return count(array_unique($types))>0;
-	}
-}
-
 if (!function_exists('cmplz_has_consent')) {
 	/**
 	 * @param string $category
@@ -2207,8 +2192,7 @@ if ( ! function_exists( 'cmplz_register_translation' ) ) {
 			icl_register_string( 'complianz', $fieldname, $string );
 		}
 
-		do_action( 'wpml_register_single_string', 'complianz', $fieldname,
-			$string );
+		do_action( 'wpml_register_single_string', 'complianz', $fieldname, $string );
 
 	}
 }
@@ -2714,7 +2698,7 @@ if ( ! function_exists( 'cmplz_remove_free_translation_files' ) ) {
 		//can't use cmplz_path here, it may not have been defined yet on activation
 		$path = plugin_dir_path(__FILE__);
 		$path = dirname( $path, 2 ) . "/languages/plugins/";
-		$extensions = array( "po", "mo" );
+		$extensions = array( "po", "mo", "php" );
 		if ( $handle = opendir( $path ) ) {
 			while ( false !== ( $file = readdir( $handle ) ) ) {
 				if ( $file != "." && $file != ".." ) {
@@ -2725,11 +2709,7 @@ if ( ! function_exists( 'cmplz_remove_free_translation_files' ) ) {
 					     && strpos( $file, 'complianz-gdpr' ) !== false
 					     && strpos( $file, 'backup' ) === false
 					) {
-						//copy to new file
-						$new_name = str_replace( 'complianz-gdpr',
-							'complianz-gdpr-backup-' . time(), $file );
-
-						rename( $file, $new_name );
+						unlink($file);
 					}
 				}
 			}

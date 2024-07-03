@@ -1,10 +1,10 @@
 ﻿=== AMP for WP - Accelerated Mobile Pages ===
 Contributors: mohammed_kaludi, ahmedkaludi, ampforwp
-Tags: AMP, accelerated mobile pages, mobile, amp project, google amp, amp wp, google, plugin, SEO
+Tags: AMP, accelerated mobile pages, mobile, google amp, SEO
 Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 3.0
-Tested up to: 6.4
-Stable tag: 1.0.93.2
+Tested up to: 6.5
+Stable tag: 1.0.96.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -196,6 +196,35 @@ You can contact us from [here](https://ampforwp.com/contact/)
 == Changelog ==
 
 
+= 1.0.96.1 (1st July 2024) =
+* Fixed: Update Twitter Icon as X  in author box #5609
+* Fixed: AMP footer Menu showing as text for some users
+
+= 1.0.96 (28th June 2024) =
+* Fixed: Featured image caption is not working #5574
+* Fixed: PHP deprecated error (PHP 8.2) #5587
+* Fixed: PHP warning message displayed on the user's end. #5594
+* Fixed: Publisher desk "Dismiss" button is not working.  #5591
+* Fixed: PHP error on the user end. #5605
+* Fixed: Undefined property: stdClass::$inContentPlacementMethod #5607
+* Fixed: While using the News12Paper theme and tagDiv Composer plugin, there is an issue with the AMP menu (user-end issue). #5608
+* Fixed: Change Twitter as X #5609
+* Fixed: Amazon auto links are not working on AMP #5583
+
+= 1.0.95 (7th May 2024) =
+* Fixed: rtrim(): Argument #1 ($string) must be of type string, WP_Error given #5588
+* Fixed: Issue persist due to recent update with poll maker plugin #5585
+* Fixed: PHP Warning: Attempt to read property "ID" on null #5589
+* Test: Test with new version of wordpress i.e. 6.5v #5581
+* Fixed: Validation issues in images when using Pencil builder #5592
+
+= 1.0.94 (3rd April 2024) =
+* New: Added Shortcode so that user can show or hide some content in AMP. #5474
+* Improvements: Code improvement part 2 #5567
+* Fixed: Warning appears related to author-box #5577
+* Fixed: The excerpt is not showing inside the em tag in AMP, and the font is not working. #5487
+* Fixed: Issue with a cookie banner (GDPR) #5561
+
 = 1.0.93.2 (1st February 2024) =
 * Fixed: Video docking not working in AMP Newspaper theme #5566
 * Fixed: Video not loading on Amp if video set in Soledad theme Video Embed. #5571
@@ -303,133 +332,5 @@ You can contact us from [here](https://ampforwp.com/contact/)
 * Fixed: NON-AMP site is slowed down if the mobile redirection is enabled in AMP #5451
 * Fixed: "Preview AMP" shows a blank modal #5454
 
-= 1.0.85 (10th May 2023) =
-* Fixed: Notice : Function WP_Scripts::localize was called incorrectly. The $l10n parameter must be array #5435
-* Fixed: PHP error after the recent update 1.0.84 #5436
-* Fixed: Dismiss button not working #5437
-* Fixed: Issue with Google Font and Global Font Weight Selector #5440
-* Fixed: Some issue in extension section #5433
-
-= 1.0.84 (28th April 2023) =
-* Fixed: Conflict issue with Jetpack Tiled gallery #5424
-* Fixed: An Author's page amphtml is not getting generated if the author name has "-" character. #5426
-* Fixed: Incorrect hook used to add admin scripts #4457
-* Fixed: when user is not an ampforwp admin, then newely created posts are not getting added in the instantarticles feed #4588
-* Fixed: Fatal error with Nitropack #5427
-* Fixed: Conflict issue with Imagify and WP Offload Media Lite plugin #5432
-* Fixed: The Analytic option Google Tag Manager is causing an error in the console while using with AMP Pop-up #5429
-* Improvement: Test with WordPress 6.2 and update Tested Up To in readme.txt #5431
-
-= 1.0.83 (4th April 2023) =
-* Fixed: The Facebook like button is not showing up properly on the AMP version. #5416
-* Fixed: Conflict WP-Bakery page builder with AMP. #5417
-* Fixed: Deprecated error messages in debug log in wordpress 6.2. #5418
-
-= 1.0.82 (24th March 2023) =
-* Fixed: Callrail conflicting with contact number format. #5392
-* Fixed: Adobe Analytics support in AMPforWP. #5395
-* Fixed: While AMP is active, errors and warnings appear on the user website.  #5396
-* Fixed: The attribute "action" may not appear in tag form. #5398
-* Fixed: View non-amp and Leave a comment not working. #5404
-* Fixed: While using the Yuki Blogger theme, when we edit the AMP customization, it shows a fatal error. #5405
-* Fixed: The option Infinite Scroll is not working. #5408
-* Fixed: An error is appearing on GSC "custom java Script is not allowed. #5411
-* Fixed: An error is appearing on GSC due to an option of the plugin Embed Plus YouTube WordPress Plugin #5413
-
-= 1.0.81 (27th February 2023) =
-* Fixed: When selecting a post with custom structure /%postname%/amp/ issue resolved. #5379
-* Fixed: TagDiv composer recent posts grid breaks if the AMP takeover is enabled issue resolved #5387
-* Fixed: Validation error while using the JetPack Boost plugin issue resolved #5391
-* Fixed: Warning: Cannot modify header information - headers already sent issue resolved #5394
-* Fixed: Product Base Remover not working properly with ?amp issue resolved #5397
-
-= 1.0.80 (10th February 2023) =
-* Improvements: Added Support for Google Analytics 4 #4793 (Thanks to David Vallejo)
-* Improvements: Added 3D Viewer plugin compatibility #5372
-* Fixed: Getting error Attribute 'visible-when-invalid' missing or incorrect issue resolved #5382
-* Fixed: AMP version removing the "\_blank" attribute #5383
-* Fixed: Autoplay is not working #5386
-* Fixed: Uncaught TypeError: count() Argument #1 must be of type Countable|array issue resolved #5388
-
-= 1.0.79 (25th January 2023) =
-* Fixed: Errors because of the FAQ blocks of schema issue resolved #5352
-* New  : Core Web Vitals Option  #5363
-
-= 1.0.78 (10th January 2023) =
-* Fixed: Unnecessary character showing issue resolved #5334
-* Fixed: Youtube close button not appearing in lightbox issue resolved #5357
-* Fixed: Iframe code not loading issue resolved #5358
-* Fixed: Jet Booster not connecting to site issue resolved #5362
-* Fixed: After the update there is no control="" in video's code issue resolved #5366
-* Fixed: Warning: Array to string conversion issue resolved #5367
-* Fixed: TypeError: jQuery(...).typeWatch is not a function issue resolved #5368
-* Fixed: Removed Offer Bannner #5370
-* Fixed: Fatal error: Uncaught TypeError: array_merge() issue resolved #5371
-* Fixed: Fatal error: Uncaught TypeError: call_user_func_array() issue resolved #5373
-
-= 1.0.77.55.1 (2nd January 2023) =
-* Fixed: Disallowed attribute or attribute value present in HTML tag error issue resolved #5360
-
-= 1.0.77.55 (27th December 2022) =
-* Fixed: Unable to add STN video Ads due to the outdated tag #5334
-* Fixed: Jetpack Boost disappears after enabling the AMP Takeover #5343
-* Fixed: When implementing callRail analytics, it throws error in console #5344
-* Fixed: Fallback attribute is getting stripped when Change Pagination Links to /amp option is enabled #5345
-* Fixed: AMP is reacting with the Scripts in the WP root folder #5346
-* Fixed: PHP warning appears after activating AMP with WP Fastest Cache #5348
-
-= 1.0.77.54.1 (22nd November 2022) =
-* Fixed: PHP Fatal error: Uncaught Value Error #5174
-
-= 1.0.77.54 (21st November 2022) =
-* Fixed: Tested compatibility with wp 6.1 #5331
-* Fixed: Removed deprecated warning in php 8.1.10 #5333
-* Fixed: Resolved STN video Ads due to the outdated tag issue #5334
-* New  : BFCM internal offer  #5336
-
-= 1.0.77.53 (25th October 2022) =
-* Fixed: Backslash in custom css error #5329
-* Fixed: If we enable the Responsive ad option then no need to show size option. #5302
-* Fixed: TikTok embed video is not working in AMP #5325
-* Fixed: lightbox for Youtube feature is not working properly #5327
-
-= 1.0.77.52 (14th October 2022) =
-* Fixed: Duplicate canonical URL when AIOSEO Pro is active. #5320 
-* Fixed: Youtube embedded videos via elementor is not displaying in the AMP version #5322
-* Fixed: Slide Anything image src not loading properly. #5315
-* Fixed: PHP Warning Attempt to read property "post_type" on null #5323
-* Fixed: While adding the multiple Webstories  on the website page, the image is not showing of the web stories the AMP Pages. #5301
-* Fixed: Author names are not shown in AMP when the Co-Authors Plus plugin is activated #5319
-
-= 1.0.77.51 (9th September 2022) =
-* Fixed: Infinite scroll doesn't work with custom post type. #5309
-* Fixed: Need to make it compatible with the Co-Authors Plus plugin  #5313
-* Fixed: Slide Anything image src not loading properly. #5315
-
-= 1.0.77.50 (24th August 2022) =
-* Fixed: "Back to Top link" option adds amp-animation & amp-position-observer script without its usage on page #5305
-* Fixed: AMPforWP is creating "/amp" as an endpoint in Addon mode. #5303
-* Improvements: Strange Exclamation mark . #5304
-
-= 1.0.77.49 (22nd August 2022) =
-* Fixed: There is a compatibility issue with the latest version of the All in One SEO Plugin. #5306
-
-= 1.0.77.48 (11th August 2022) =
-* Improvements: Added Super Related Posts plugin compatibility #5298
-* Improvements: Added Inline Related Post plugin compatibility #5296
-* Fixed: Fatal error while activating official AMP. #5300
-* Fixed: Spotify Embed not working after 1.0.77.46 version #5294
-* Fixed: AMP Pagebuilder not loading with All in One SEO latest update #5299
-
-= 1.0.77.47 (5th July 2022) =
-* Fixed: AMP validation error when youtube video is embeded with query parameters #5292
-* Fixed: Instagram embeds not working when added with blockquote tags #5289
-
-= 1.0.77.46 (28th June 2022) =
-* Fixed: Reduced the execution of JS in youtube embeds #5287
-* Fixed: Instagram embeds not working when added with iframe #5289
-* Fixed: Subchild menu items does not expand with UberMenu plugin
-* Fixed: Incorrect default value in TPD #5286
-* Fixed: Debug Warnings - Undefined array-key: row #5283
 
 Full changelog available [ at changelog.txt](https://plugins.svn.wordpress.org/accelerated-mobile-pages/trunk/changelog.txt)

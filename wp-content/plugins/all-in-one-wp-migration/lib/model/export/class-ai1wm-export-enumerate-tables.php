@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Ai1wm_Export_Enumerate_Tables {
 
-	public static function execute( $params, Ai1wm_Database $mysql = null ) {
+	public static function execute( $params, Ai1wm_Database $db_client = null ) {
 		// Set exclude database
 		if ( isset( $params['options']['no_database'] ) ) {
 			return $params;
@@ -46,17 +46,17 @@ class Ai1wm_Export_Enumerate_Tables {
 		Ai1wm_Status::info( __( 'Retrieving a list of WordPress database tables...', AI1WM_PLUGIN_NAME ) );
 
 		// Get database client
-		if ( is_null( $mysql ) ) {
-			$mysql = Ai1wm_Database_Utility::create_client();
+		if ( is_null( $db_client ) ) {
+			$db_client = Ai1wm_Database_Utility::create_client();
 		}
 
 		// Include table prefixes
 		if ( ai1wm_table_prefix() ) {
-			$mysql->add_table_prefix_filter( ai1wm_table_prefix() );
+			$db_client->add_table_prefix_filter( ai1wm_table_prefix() );
 
 			// Include table prefixes (Webba Booking)
 			foreach ( array( 'wbk_services', 'wbk_days_on_off', 'wbk_locked_time_slots', 'wbk_appointments', 'wbk_cancelled_appointments', 'wbk_email_templates', 'wbk_service_categories', 'wbk_gg_calendars', 'wbk_coupons' ) as $table_name ) {
-				$mysql->add_table_prefix_filter( $table_name );
+				$db_client->add_table_prefix_filter( $table_name );
 			}
 		}
 
@@ -70,7 +70,7 @@ class Ai1wm_Export_Enumerate_Tables {
 		}
 
 		// Write table line
-		foreach ( $mysql->get_tables() as $table_name ) {
+		foreach ( $db_client->get_tables() as $table_name ) {
 			if ( ! in_array( $table_name, $excluded_db_tables ) && ai1wm_putcsv( $tables_list, array( $table_name ) ) ) {
 				$total_tables_count++;
 			}

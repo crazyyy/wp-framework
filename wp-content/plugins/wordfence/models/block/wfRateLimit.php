@@ -165,7 +165,8 @@ class wfRateLimit {
 	
 	public static function countHit($hitType, $ip) {
 		$table  = self::table();
-		wfDB::shared()->queryWrite("INSERT INTO {$table} (eMin, IP, hitType, hits) VALUES (FLOOR(UNIX_TIMESTAMP() / 60), %s, %s, @wfcurrenthits := 1) ON DUPLICATE KEY UPDATE hits = IF(@wfcurrenthits := hits + 1, hits + 1, hits + 1)", wfUtils::inet_pton($ip), $hitType);
+		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($ip));
+		wfDB::shared()->queryWrite("INSERT INTO {$table} (eMin, IP, hitType, hits) VALUES (FLOOR(UNIX_TIMESTAMP() / 60), {$ipHex}, %s, @wfcurrenthits := 1) ON DUPLICATE KEY UPDATE hits = IF(@wfcurrenthits := hits + 1, hits + 1, hits + 1)", $hitType);
 	}
 	
 	/**

@@ -2169,3 +2169,12 @@ function ai1wm_auth_headers( $headers = array() ) {
 
 	return $headers;
 }
+
+/**
+ * Check if direct download of backup supported
+ *
+ * @return bool
+ */
+function ai1wm_direct_download_supported() {
+	return ! ( $_SERVER['SERVER_NAME'] === 'playground.wordpress.net' || $_SERVER['SERVER_SOFTWARE'] === 'PHP.wasm' );
+}

@@ -584,7 +584,16 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			require_once($resolver);
 		}
 
-		if (class_exists('WP_Theme_JSON_Resolver') && WP_Theme_JSON_Resolver::theme_has_support()) {
+		$theme_has_support = false;
+		if (function_exists('wp_theme_has_theme_json')) {
+			$theme_has_support = wp_theme_has_theme_json();
+		} else {
+			if (class_exists('WP_Theme_JSON_Resolver')) {
+				$theme_has_support = WP_Theme_JSON_Resolver::theme_has_support();
+			}
+		}
+
+		if (class_exists('WP_Theme_JSON_Resolver') && $theme_has_support) {
 			$theme_json = ABSPATH.WPINC.'/class-wp-theme-json.php';
 			if (!class_exists('WP_Theme_JSON') && file_exists($theme_json)) require_once($theme_json);
 

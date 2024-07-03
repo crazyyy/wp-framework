@@ -15,7 +15,7 @@
 					<th scope="row"><?php _e('Enable front-end lockout', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want all visitors except those who are logged in as an administrator to be locked out of the front-end of your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_site_lockout', '1' == $aio_wp_security->configs->get_value('aiowps_site_lockout')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want all visitors except those who are logged in as an administrator to be locked out of the front-end of your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_site_lockout', '1' == $aio_wp_security->configs->get_value('aiowps_site_lockout')); ?>
 						</div>
 					</td>
 				</tr>

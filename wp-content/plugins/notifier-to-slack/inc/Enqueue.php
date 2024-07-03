@@ -35,7 +35,22 @@ class Enqueue extends BaseController {
 	 * @since  1.0.0
 	 */
 	public function admin_enqueue( $screen ) {
-		// toplevel_page_wpnts_notifier
+		
+		 /**
+		 * Banner content & notices
+		 */
+		$pages = [ 'toplevel_page_wpnts_notifier', 'edit.php', 'plugins.php', 'index.php' ];
+
+		if ( ! in_array($screen, $pages) ) {
+			wp_enqueue_style( 'wpnts_noice_prevent_css_style', WP_NOTIFIER_TO_SLACK_DIR_URL . 'assets/prevent-notice.css',[], time(),'all' );
+			return;
+		}
+
+		if ( 'edit.php' !== $screen || 'product' === get_current_screen()->post_type || in_array($screen, $pages) ) {
+			wp_enqueue_style( 'wpnts_noice_css_style', WP_NOTIFIER_TO_SLACK_DIR_URL . 'assets/notice.css',[], time(),'all' );
+		}
+
+		
 		/**
 		 * WPNTS admin-all screen loaded file.
 		 */
@@ -73,11 +88,14 @@ class Enqueue extends BaseController {
 
 			$wpnts_db_instance = new DB();
 			$dashboard_data = $wpnts_db_instance->get_all();
+			$formflow_status = $wpnts_db_instance->formflow_status();
 			$woocommercewoocommerce_status = $wpnts_db_instance->woocommercewoocommerce_status();
+			$cf7_status = $wpnts_db_instance->cf7_status();
 			$is_pro_active = $wpnts_db_instance->is_pro_active();
 			$debug_mode_status = $wpnts_db_instance->debug_mode_status();
 			$maintenannotice_mode_status = $wpnts_db_instance->maintenannotice_mode_status();
 			$global_settings = $wpnts_db_instance->global_settings();
+			$get_current_user_id = $wpnts_db_instance->get_current_user_id();
 			$visitor_data = $wpnts_db_instance->visitor_data();
 			$notice_settings = $wpnts_db_instance->notice_settings();
 			$admin_list = $wpnts_db_instance->admin_list();
@@ -90,10 +108,13 @@ class Enqueue extends BaseController {
 				'admin_ajax' => esc_url( admin_url( 'admin-ajax.php' ) ),
 				'dashboard_data'  => $dashboard_data,
 				'isPro'  => $is_pro_active,
+				'formflow_status'  => $formflow_status,
 				'isWooactive'  => $woocommercewoocommerce_status,
+				'cf7_status'  => $cf7_status,
 				'debugMode'  => $debug_mode_status,
 				'maintenannoticeMode'  => $maintenannotice_mode_status,
 				'globalhook'  => $global_settings,
+				'get_current_user_id'  => $get_current_user_id,
 				'visitor_data'  => $visitor_data,
 				'notice_settings'  => $notice_settings,
 				'admin_list'  => $admin_list,

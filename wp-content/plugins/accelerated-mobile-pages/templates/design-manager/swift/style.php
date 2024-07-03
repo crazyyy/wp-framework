@@ -99,7 +99,7 @@ figure.aligncenter amp-img {margin: 0 auto;}
 .fsp-cnt .loop-category li {padding: 8px 0px;}
 .fbp-cnt h2.loop-title {padding: 8px 0px;}
 <?php global $post;
-if( class_exists('\Elementor\Plugin') && \Elementor\Plugin::$instance->db->is_built_with_elementor($post->ID) &&  (is_page() || ampforwp_is_front_page() ) && ( function_exists( 'amp_pagebuilder_compatibility_init' ) || class_exists('Elementor_For_Amp') ) ) { }
+if( class_exists('\Elementor\Plugin') && is_object($post) && isset($post->ID) && \Elementor\Plugin::$instance->db->is_built_with_elementor($post->ID) &&  (is_page() || ampforwp_is_front_page() ) && ( function_exists( 'amp_pagebuilder_compatibility_init' ) || class_exists('Elementor_For_Amp') ) ) { }
 else{ ?>.cntr {max-width: 1100px;margin: 0 auto;width:100%;padding:0px 20px} <?php } ?>
 <?php if(!ampforwp_levelup_compatibility('levelup_elementor') ){  // Level up Condition starts 
 if ( $ampforwp_font_icon  == 'swift-icons' || ( $ampforwp_font_icon == 'fontawesome-icons'  && checkAMPforPageBuilderStatus(ampforwp_get_the_ID()) ) ){ ?>
@@ -676,7 +676,7 @@ table {
     overflow-x: auto;
     word-break: normal;
 }
-.author-tw:after {font-family:icomoon;content: "\e942";color: #fff;background: #1da1f2;padding: 4px;border-radius: 3px;margin: 0px 5px;text-decoration: none;}
+.author-tw:after {content: "";background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI2ZmZiIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPSJNMTIuNi43NWgyLjQ1NGwtNS4zNiA2LjE0MkwxNiAxNS4yNWgtNC45MzdsLTMuODY3LTUuMDctNC40MjUgNS4wN0guMzE2bDUuNzMzLTYuNTdMMCAuNzVoNS4wNjNsMy40OTUgNC42MzNMMTIuNjAxLjc1Wm0tLjg2IDEzLjAyOGgxLjM2TDQuMzIzIDIuMTQ1SDIuODY1bDguODc1IDExLjYzM1oiLz48L3N2Zz4=);background-size: cover;width: 15px;height: 15px;display: inline-block;background-color: #000;border-radius: 3px;margin: 0px 5px;text-decoration: none;}
 .author-tw:hover{text-decoration: none;}
 .artl-cnt table{ margin: 0 auto; text-align: center; width: 100%; }
 p.nocomments {padding: 10px;color: #fff;}

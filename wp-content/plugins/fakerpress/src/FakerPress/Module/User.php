@@ -6,7 +6,7 @@ use function FakerPress\get_request_var;
 use function FakerPress\get;
 use function FakerPress\make;
 use FakerPress\Plugin;
-use Faker;
+use FakerPress\ThirdParty\Faker;
 use FakerPress;
 
 class User extends Abstract_Module {
@@ -15,8 +15,8 @@ class User extends Abstract_Module {
 	 * @inheritDoc
 	 */
 	protected $dependencies = [
-		Faker\Provider\Lorem::class,
-		Faker\Provider\DateTime::class,
+		FakerPress\ThirdParty\Faker\Provider\Lorem::class,
+		FakerPress\ThirdParty\Faker\Provider\DateTime::class,
 		FakerPress\Provider\HTML::class,
 	];
 
@@ -158,22 +158,42 @@ class User extends Abstract_Module {
 			$this->set( 'user_registered', 'yesterday', 'now' );
 
 			$this->set( [
-				'user_login',
-				'user_pass',
-				'user_nicename',
-				'user_url',
-				'user_email',
-				'display_name',
-				'nickname',
 				'first_name',
 				'last_name',
+				'user_pass',
+				'user_url',
 			] );
+
+			$this->generate();
+
+			$username_from_generated_first_last = strtolower( implode( '.', [ $this->get_value( 'first_name' ), $this->get_value( 'last_name' ) ] ) );
+
+			$this->set( 'user_login', $username_from_generated_first_last );
+			$this->set( 'user_nicename', $username_from_generated_first_last );
+			$this->set( 'user_email', $username_from_generated_first_last . '@' . FakerPress\ThirdParty\Faker\Provider\Internet::safeEmailDomain() );
+			$this->set( 'display_name', $this->get_value( 'first_name' ) );
+			$this->set( 'nickname', $username_from_generated_first_last );
 
 			$user_id = $this->generate()->save();
 
 			if ( $user_id && is_numeric( $user_id ) ) {
 				foreach ( $metas as $meta_index => $meta ) {
-					make( Meta::class )->object( $user_id, 'user' )->generate( $meta['type'], $meta['name'], $meta )->save();
+					if ( ! isset( $meta['type'], $meta['name'] ) ) {
+						continue;
+					}
+
+					$type = get( $meta, 'type' );
+					$name = get( $meta, 'name' );
+					unset( $meta['type'], $meta['name'] );
+
+					if ( isset( $meta['weight'] ) ) {
+						$meta['weight'] = absint( $meta['weight'] );
+						$meta['weight'] = $meta['weight'] > 0 ? $meta['weight'] : 100;
+					} else {
+						$meta['weight'] = 100;
+					}
+
+					make( Meta::class )->object( $user_id, 'user' )->with( $type, $name, $meta )->generate()->save();
 				}
 			}
 			$results[] = $user_id;

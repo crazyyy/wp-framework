@@ -435,7 +435,8 @@ class Admin implements Runner {
 				🎉
 				<span><?php esc_attr_e( 'Exclusive Offer!', 'rank-math' ); ?></span>
 			</a>
-		<?php }
+			<?php
+		}
 	}
 
 	/**
@@ -446,7 +447,7 @@ class Admin implements Runner {
 			return;
 		}
 
-		$field_description = wp_kses_post( __( 'Additional Profiles to add in the <code>sameAs</code> Schema property.', 'rank-math' ) );
+		$field_description = __( 'Additional Profiles to add in the <code>sameAs</code> Schema property.', 'rank-math' );
 		?>
 		<script type="text/javascript">
 			( function( $ ) {
@@ -466,7 +467,7 @@ class Admin implements Runner {
 					$txtarea.val( additionalProfileField[0].value.replaceAll( " ", "\n" ) );
 					additionalProfileField.replaceWith( $txtarea );
 
-					$( '<p class="description"><?php echo $field_description; ?></p>' ).insertAfter( $txtarea );
+					$( '<p class="description"><?php echo wp_kses_post( $field_description ); ?></p>' ).insertAfter( $txtarea );
 				} );
 			})(jQuery);
 		</script>

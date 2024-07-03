@@ -1,5 +1,5 @@
 <?php if (!defined('WPO_VERSION'))  die('No direct access allowed'); ?>
-<div class="wpo_section wpo_group">
+<div id='wpo_section_css' class="wpo_section wpo_group">
 	<div id="wpo_settings_warnings"></div>
 	<form>
 		<h3><?php esc_html_e('CSS options', 'wp-optimize'); ?></h3>

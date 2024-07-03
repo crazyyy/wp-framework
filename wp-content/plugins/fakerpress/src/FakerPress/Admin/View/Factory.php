@@ -3,7 +3,7 @@
 namespace FakerPress\Admin\View;
 
 use FakerPress\Plugin;
-use lucatume\DI52\ServiceProvider;
+use FakerPress\Contracts\Service_Provider;
 use function FakerPress\get_request_var;
 
 /**
@@ -13,7 +13,7 @@ use function FakerPress\get_request_var;
  *
  * @package FakerPress\Admin\View
  */
-class Factory extends ServiceProvider {
+class Factory extends Service_Provider {
 	/**
 	 * Store the views that were initialized.
 	 *
@@ -74,7 +74,7 @@ class Factory extends ServiceProvider {
 	/**
 	 * Fetches the current FakerPress view.
 	 *
-	 * @since TBD
+	 * @since 0.6.4
 	 *
 	 * @return Abstract_View|null
 	 */
@@ -99,7 +99,7 @@ class Factory extends ServiceProvider {
 	/**
 	 * Gets a specific view based on its slug.
 	 *
-	 * @since TBD
+	 * @since 0.6.4
 	 *
 	 * @param string $slug Which view we are looking for.
 	 *
@@ -120,7 +120,7 @@ class Factory extends ServiceProvider {
 	/**
 	 * If we are in a particular view of FakerPress we trigger the parse of that request.
 	 *
-	 * @since TBD
+	 * @since 0.6.4
 	 */
 	public function parse_current_view_request(): void {
 		$view = $this->get_current_view();

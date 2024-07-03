@@ -716,7 +716,6 @@ abstract class Ai1wm_Database {
 				}
 			}
 
-			// Close result cursor
 			$this->free_result( $result );
 		}
 
@@ -766,7 +765,6 @@ abstract class Ai1wm_Database {
 				}
 			}
 
-			// Close result cursor
 			$this->free_result( $result );
 		}
 
@@ -859,6 +857,9 @@ abstract class Ai1wm_Database {
 						// Get create view statement
 						$create_view = $this->get_create_view( $table_name );
 
+						// Replace create view quotes
+						$create_view = $this->replace_view_quotes( $create_view );
+
 						// Replace create view name
 						$create_view = $this->replace_view_name( $create_view, $table_name, $new_table_name );
 
@@ -895,6 +896,9 @@ abstract class Ai1wm_Database {
 						// Get create table statement
 						$create_table = $this->get_create_table( $table_name );
 
+						// Replace create table quotes
+						$create_table = $this->replace_table_quotes( $create_table );
+
 						// Replace create table name
 						$create_table = $this->replace_table_name( $create_table, $table_name, $new_table_name );
 
@@ -906,6 +910,9 @@ abstract class Ai1wm_Database {
 
 						// Replace create table options
 						$create_table = $this->replace_table_options( $create_table );
+
+						// Replace create table defaults
+						$create_table = $this->replace_table_defaults( $create_table );
 
 						// Write create table statement
 						ai1wm_write( $file_handler, $create_table );
@@ -1091,7 +1098,9 @@ abstract class Ai1wm_Database {
 			$query = null;
 
 			// Start transaction
-			$this->query( 'START TRANSACTION' );
+			if ( $this->use_transactions() ) {
+				$this->query( 'START TRANSACTION' );
+			}
 
 			// Read database file line by line
 			while ( ( $line = fgets( $file_handler ) ) !== false ) {
@@ -1220,7 +1229,9 @@ abstract class Ai1wm_Database {
 			}
 
 			// End transaction
-			$this->query( 'COMMIT' );
+			if ( $this->use_transactions() ) {
+				$this->query( 'COMMIT' );
+			}
 		}
 
 		// Set query offset
@@ -1245,24 +1256,6 @@ abstract class Ai1wm_Database {
 			} else {
 				$this->query( "DROP TABLE IF EXISTS `{$table_name}`" );
 			}
-		}
-	}
-
-	/**
-	 * Get MySQL version
-	 *
-	 * @return string
-	 */
-	protected function get_version() {
-		$result = $this->query( "SHOW VARIABLES LIKE 'version'" );
-		$row    = $this->fetch_assoc( $result );
-
-		// Close result cursor
-		$this->free_result( $result );
-
-		// Get version
-		if ( isset( $row['Value'] ) ) {
-			return $row['Value'];
 		}
 	}
 
@@ -1447,7 +1440,7 @@ abstract class Ai1wm_Database {
 	public function get_column_names( $table_name ) {
 		$column_names = array();
 
-		// Get column types
+		// Get column names
 		$result = $this->query( "SHOW COLUMNS FROM `{$table_name}`" );
 		while ( $row = $this->fetch_assoc( $result ) ) {
 			if ( isset( $row['Field'] ) ) {
@@ -1459,6 +1452,16 @@ abstract class Ai1wm_Database {
 		$this->free_result( $result );
 
 		return $column_names;
+	}
+
+	/**
+	 * Replace table quotes
+	 *
+	 * @param  string $input Table value
+	 * @return string
+	 */
+	protected function replace_table_quotes( $input ) {
+		return $input;
 	}
 
 	/**
@@ -1475,6 +1478,16 @@ abstract class Ai1wm_Database {
 			$input = substr_replace( $input, "`$new_table_name`", $position, strlen( "`$old_table_name`" ) );
 		}
 
+		return $input;
+	}
+
+	/**
+	 * Replace view quotes
+	 *
+	 * @param  string $input View value
+	 * @return string
+	 */
+	protected function replace_view_quotes( $input ) {
 		return $input;
 	}
 
@@ -1762,6 +1775,8 @@ abstract class Ai1wm_Database {
 		$pattern = array(
 			'/\s+CONSTRAINT(.+)REFERENCES(.+),/i',
 			'/,\s+CONSTRAINT(.+)REFERENCES(.+)/i',
+			'/\s+ON(.+)CONFLICT(.+)(ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)/i',
+			'/\s+COLLATE(.+)(BINARY|NOCASE|RTRIM)/i',
 		);
 
 		return preg_replace( $pattern, '', $input );
@@ -1795,6 +1810,16 @@ abstract class Ai1wm_Database {
 	 */
 	protected function is_wc_session_query( $input ) {
 		return strpos( $input, "'_wc_session_" ) !== false;
+	}
+
+	/**
+	 * Check whether input is WP All Import session query
+	 *
+	 * @param  string  $input SQL statement
+	 * @return boolean
+	 */
+	protected function is_wpallimport_session_query( $input ) {
+		return strpos( $input, "'_wpallimport_session_" ) !== false;
 	}
 
 	/**
@@ -1862,6 +1887,7 @@ abstract class Ai1wm_Database {
 			case $this->is_transient_query( $input ):
 			case $this->is_site_transient_query( $input ):
 			case $this->is_wc_session_query( $input ):
+			case $this->is_wpallimport_session_query( $input ):
 				$ignore = true;
 				break;
 
@@ -1909,6 +1935,16 @@ abstract class Ai1wm_Database {
 	}
 
 	/**
+	 * Replace table definitions
+	 *
+	 * @param  string $input SQL statement
+	 * @return string
+	 */
+	protected function replace_table_defaults( $input ) {
+		return $input;
+	}
+
+	/**
 	 * Replace table options
 	 *
 	 * @param  string $input SQL statement
@@ -1928,6 +1964,7 @@ abstract class Ai1wm_Database {
 			'ROW_FORMAT=PAGE',
 			'ROW_FORMAT=FIXED',
 			'ROW_FORMAT=DYNAMIC',
+			'AUTOINCREMENT',
 		);
 		$replace = array(
 			'ENGINE=InnoDB',
@@ -1942,6 +1979,7 @@ abstract class Ai1wm_Database {
 			'',
 			'',
 			'',
+			'AUTO_INCREMENT',
 		);
 
 		return str_ireplace( $search, $replace, $input );
@@ -2059,6 +2097,15 @@ abstract class Ai1wm_Database {
 	}
 
 	/**
+	 * Use MySQL transactions
+	 *
+	 * @return bolean
+	 */
+	protected function use_transactions() {
+		return true;
+	}
+
+	/**
 	 * Run MySQL query
 	 *
 	 * @param  string   $input SQL query
@@ -2067,7 +2114,7 @@ abstract class Ai1wm_Database {
 	abstract public function query( $input );
 
 	/**
-	 * Escape string input for mysql query
+	 * Escape string input for MySQL query
 	 *
 	 * @param  string $input String to escape
 	 * @return string
@@ -2089,41 +2136,41 @@ abstract class Ai1wm_Database {
 	abstract public function error();
 
 	/**
-	 * Return server version
+	 * Return server info
 	 *
 	 * @return string
 	 */
-	abstract public function version();
+	abstract public function server_info();
 
 	/**
 	 * Return the result from MySQL query as associative array
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return array
 	 */
-	abstract public function fetch_assoc( $result );
+	abstract public function fetch_assoc( &$result );
 
 	/**
 	 * Return the result from MySQL query as row
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return array
 	 */
-	abstract public function fetch_row( $result );
+	abstract public function fetch_row( &$result );
 
 	/**
 	 * Return the number for rows from MySQL results
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return integer
 	 */
-	abstract public function num_rows( $result );
+	abstract public function num_rows( &$result );
 
 	/**
 	 * Free MySQL result memory
 	 *
-	 * @param  resource $result MySQL resource
+	 * @param  mixed $result MySQL resource
 	 * @return boolean
 	 */
-	abstract public function free_result( $result );
+	abstract public function free_result( &$result );
 }

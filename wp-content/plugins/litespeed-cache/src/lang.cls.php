@@ -108,7 +108,6 @@ class Lang extends Base
 			self::O_CACHE_COMMENTER => __('Cache Commenters', 'litespeed-cache'),
 			self::O_CACHE_REST => __('Cache REST API', 'litespeed-cache'),
 			self::O_CACHE_PAGE_LOGIN => __('Cache Login Page', 'litespeed-cache'),
-			self::O_CACHE_FAVICON => __('Cache favicon.ico', 'litespeed-cache'),
 			self::O_CACHE_RES => __('Cache PHP Resources', 'litespeed-cache'),
 			self::O_CACHE_MOBILE => __('Cache Mobile', 'litespeed-cache'),
 			self::O_CACHE_MOBILE_RULES => __('List of Mobile User Agents', 'litespeed-cache'),
@@ -184,7 +183,6 @@ class Lang extends Base
 			self::O_DISCUSS_AVATAR_CRON => __('Gravatar Cache Cron', 'litespeed-cache'),
 			self::O_DISCUSS_AVATAR_CACHE_TTL => __('Gravatar Cache TTL', 'litespeed-cache'),
 
-			self::O_MEDIA_PRELOAD_FEATURED => __('Preload Featured Image', 'litespeed-cache'),
 			self::O_MEDIA_LAZY => __('Lazy Load Images', 'litespeed-cache'),
 			self::O_MEDIA_LAZY_EXC => __('Lazy Load Image Excludes', 'litespeed-cache'),
 			self::O_MEDIA_LAZY_CLS_EXC => __('Lazy Load Image Class Name Excludes', 'litespeed-cache'),

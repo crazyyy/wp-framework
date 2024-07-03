@@ -37,7 +37,7 @@ class Rule_Block_Xmlrpc extends Rule {
 	 * @return boolean
 	 */
 	public function is_satisfied() {
-		return (1 === preg_match('/\/xmlrpc\.php$/i', $_SERVER['SCRIPT_FILENAME']));
+		return (isset($_SERVER['SCRIPT_FILENAME']) && 1 === preg_match('/\/xmlrpc\.php$/i', $_SERVER['SCRIPT_FILENAME']));
 	}
 
 }

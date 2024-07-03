@@ -12,7 +12,7 @@
 				<th scope="row"><?php _e('Completely block access to XMLRPC', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you are not using the WP XML-RPC functionality and you want to completely block external access to XMLRPC.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_pingback_firewall', $aiowps_firewall_config->get_value('aiowps_enable_pingback_firewall')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you are not using the WP XML-RPC functionality and you want to completely block external access to XMLRPC.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_pingback_firewall', $aiowps_firewall_config->get_value('aiowps_enable_pingback_firewall')); ?>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 								<?php

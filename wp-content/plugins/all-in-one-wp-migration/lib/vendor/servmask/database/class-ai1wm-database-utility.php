@@ -37,6 +37,10 @@ class Ai1wm_Database_Utility {
 	public static function create_client() {
 		global $wpdb;
 
+		if ( $wpdb instanceof WP_SQLite_DB ) {
+			return new Ai1wm_Database_Sqlite( $wpdb );
+		}
+
 		if ( PHP_MAJOR_VERSION >= 7 ) {
 			return new Ai1wm_Database_Mysqli( $wpdb );
 		}

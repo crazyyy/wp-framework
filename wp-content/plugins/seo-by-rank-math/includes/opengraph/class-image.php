@@ -519,7 +519,7 @@ class Image {
 			$cache_key = 'rank_math_og_content_image';
 			$cache     = get_post_meta( $post->ID, $cache_key, true );
 			$check     = md5( $post->post_content );
-			if ( ! empty( $cache ) && $check === $cache['check'] ) {
+			if ( ! empty( $cache ) && isset( $cache['check'] ) && $check === $cache['check'] ) {
 				foreach ( $cache['images'] as $image ) {
 					if ( is_int( $image ) ) {
 						$this->add_image_by_id( $image );
@@ -624,7 +624,7 @@ class Image {
 			return false;
 		}
 
-		$extensions = [ 'jpeg', 'jpg', 'gif', 'png', 'webp' ];
+		$extensions = [ 'jpeg', 'jpg', 'gif', 'png', 'webp', 'avif' ];
 
 		return in_array( $check['ext'], $extensions, true );
 	}

@@ -70,7 +70,10 @@ class WP_Optimize_Install_Or_Update_Notice {
 		WP_Optimize()->include_template('notices/install-or-update-notice.php', false, array(
 			'is_new_install' => $this->is_new_install(),
 			'is_premium' => WP_Optimize::is_premium(),
-			'is_updraftplus_installed' => $this->is_updraftplus_installed()
+			'is_updraftplus_installed' => $this->is_plugin_installed("updraftplus"),
+			'is_ilj_installed' => $this->is_plugin_installed("internal-links"),
+			'is_aios_installed' => $this->is_plugin_installed("all-in-one-wp-security-and-firewall"),
+			'is_aios_prem_installed' => $this->is_plugin_installed("all-in-one-wp-security-and-firewall-premium"),
 		));
 	}
 
@@ -107,15 +110,15 @@ class WP_Optimize_Install_Or_Update_Notice {
 
 		return true;
 	}
-
+	
 	/**
-	 * Check if updraftplus is installed.
+	 * Checks if a specific plugin is installed.
 	 *
-	 * @return bool
+	 * @param string $plugin_name The name of the plugin to check for installation status.
+	 * @return bool True if the plugin is installed, false otherwise.
 	 */
-	private function is_updraftplus_installed() {
-		$status = WP_Optimize()->get_db_info()->get_plugin_status('updraftplus');
-
+	private function is_plugin_installed($plugin_name) {
+		$status = WP_Optimize()->get_db_info()->get_plugin_status($plugin_name);
 		return $status['installed'];
 	}
 }

@@ -20,7 +20,7 @@
 					<th scope="row"><?php _e('Enable force user logout', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to force a user to be logged out after a configured amount of time', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_forced_logout', '1' == $aio_wp_security->configs->get_value('aiowps_enable_forced_logout')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to force a user to be logged out after a configured amount of time', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_forced_logout', '1' == $aio_wp_security->configs->get_value('aiowps_enable_forced_logout')); ?>
 						</div>
 					</td>
 				</tr>

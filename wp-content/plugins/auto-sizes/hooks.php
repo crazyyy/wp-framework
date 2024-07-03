@@ -3,7 +3,7 @@
  * Hook callbacks used for Auto-sizes for Lazy-loaded Images.
  *
  * @package auto-sizes
- * @since n.e.x.t
+ * @since 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,12 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Adds auto to the sizes attribute to the image, if applicable.
  *
- * @since n.e.x.t
+ * @since 1.0.0
  *
- * @param array $attr Attributes for the image markup.
- * @return array The filtered attributes for the image markup.
+ * @param array<string, string>|mixed $attr Attributes for the image markup.
+ * @return array<string, string> The filtered attributes for the image markup.
  */
-function auto_sizes_update_image_attributes( $attr ) {
+function auto_sizes_update_image_attributes( $attr ): array {
+	if ( ! is_array( $attr ) ) {
+		$attr = array();
+	}
+
 	// Bail early if the image is not lazy-loaded.
 	if ( ! isset( $attr['loading'] ) || 'lazy' !== $attr['loading'] ) {
 		return $attr;
@@ -30,7 +34,7 @@ function auto_sizes_update_image_attributes( $attr ) {
 	}
 
 	// Don't add 'auto' to the sizes attribute if it already exists.
-	if ( false !== strpos( $attr['sizes'], 'auto,' ) ) {
+	if ( str_contains( $attr['sizes'], 'auto,' ) ) {
 		return $attr;
 	}
 
@@ -43,12 +47,16 @@ add_filter( 'wp_get_attachment_image_attributes', 'auto_sizes_update_image_attri
 /**
  * Adds auto to the sizes attribute to the image, if applicable.
  *
- * @since n.e.x.t
+ * @since 1.0.0
  *
- * @param string $html The HTML image tag markup being filtered.
+ * @param string|mixed $html The HTML image tag markup being filtered.
  * @return string The filtered HTML image tag markup.
  */
-function auto_sizes_update_content_img_tag( $html ) {
+function auto_sizes_update_content_img_tag( $html ): string {
+	if ( ! is_string( $html ) ) {
+		$html = '';
+	}
+
 	// Bail early if the image is not lazy-loaded.
 	if ( false === strpos( $html, 'loading="lazy"' ) ) {
 		return $html;
@@ -69,3 +77,16 @@ function auto_sizes_update_content_img_tag( $html ) {
 	return $html;
 }
 add_filter( 'wp_content_img_tag', 'auto_sizes_update_content_img_tag' );
+
+/**
+ * Displays the HTML generator tag for the plugin.
+ *
+ * See {@see 'wp_head'}.
+ *
+ * @since 1.0.1
+ */
+function auto_sizes_render_generator(): void {
+	// Use the plugin slug as it is immutable.
+	echo '<meta name="generator" content="auto-sizes ' . esc_attr( IMAGE_AUTO_SIZES_VERSION ) . '">' . "\n";
+}
+add_action( 'wp_head', 'auto_sizes_render_generator' );

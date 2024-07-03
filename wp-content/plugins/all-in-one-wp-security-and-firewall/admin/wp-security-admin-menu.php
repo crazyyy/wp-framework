@@ -119,7 +119,7 @@ abstract class AIOWPSecurity_Admin_Menu {
 		//Always send string with translation markers in it
 		?>
 		<div id="<?php echo $id; ?>" class="postbox">
-			<div class="handlediv" title="<?php echo __('Press to toggle'); ?>"><br /></div>
+			<div class="handlediv" title="<?php echo __('Press to toggle', 'all-in-one-wp-security-and-firewall'); ?>"><br /></div>
 			<h3 class="hndle"><span><?php echo $title; ?></span></h3>
 			<div class="inside">
 			<?php echo $content; ?>

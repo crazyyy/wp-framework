@@ -2,8 +2,8 @@
 
 namespace FakerPress\Module;
 
-use Faker\Generator;
-use Faker\Provider\Base;
+use FakerPress\ThirdParty\Faker\Generator;
+use FakerPress\ThirdParty\Faker\Provider\Base;
 
 interface Interface_Module {
 
@@ -83,7 +83,7 @@ interface Interface_Module {
 	/**
 	 * Method that sets the data for an individual generator method.
 	 *
-	 * @since TBD
+	 * @since 0.6.4
 	 *
 	 * @param array|string $key Name of a particular method or a set of methods.
 	 * @param ...mixed $data Any number of arguments.
@@ -136,10 +136,13 @@ interface Interface_Module {
 	 * Use this method to generate all the needed data.
 	 *
 	 * @since 0.6.0
+	 * @since 0.6.2 Added the $force parameter.
+	 *
+	 * @param bool $force Whether to force the regeneration of the data.
 	 *
 	 * @return self
 	 */
-	public function generate(): Interface_Module;
+	public function generate( bool $force = false ): Interface_Module;
 
 	/**
 	 * A method to make it easier to debug which variables will be actually saved.
@@ -149,4 +152,31 @@ interface Interface_Module {
 	 * @return array
 	 */
 	public function get_values(): array;
+
+	/**
+	 * A method to get the data for a given key.
+	 *
+	 * @param string $key
+	 *
+	 * @return array|null
+	 */
+	public function get( string $key ): ?object;
+
+	/**
+	 * A method to get the value for a given key.
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public function get_value( string $key );
+
+	/**
+	 * Determines if a value is set for a given key.
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public function has_value( string $key ): bool;
 }

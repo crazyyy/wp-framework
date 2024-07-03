@@ -285,7 +285,7 @@ class AIOWPSecurity_User_Login {
 	 *
 	 * @return Integer get lockout time length.
 	 */
-	private function get_dynamic_lockout_time_length() {
+	public function get_dynamic_lockout_time_length() {
 		global $aio_wp_security;
 
 		$login_fail_count = $this->get_login_fail_count();
@@ -908,29 +908,27 @@ class AIOWPSecurity_User_Login {
 	 * Deletes logged-in user from the logged_in_user table
 	 *
 	 * @param int $user_id
-	 * @return void
+	 * @return bool
 	 */
 	public function delete_logged_in_user($user_id) {
 		global $wpdb, $aio_wp_security;
 
 		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
 
-		$existing_record = $wpdb->get_row(
-			$wpdb->prepare("SELECT * FROM `{$logged_in_users_table}` WHERE user_id = %d", $user_id)
-		);
+		if (empty($user_id)) return true;
 
-		if (!$existing_record) return;
-
-		// Delete the record
 		$result = $wpdb->delete(
 			$logged_in_users_table,
 			array('user_id' => $user_id)
 		);
 
+
 		if (false === $result) {
-			$error_message = empty($wpdb->last_error) ? "Error deleting record from ".$logged_in_users_table : $wpdb->last_error;
+			$error_message = empty($wpdb->last_error) ? "Error deleting record from " . $logged_in_users_table : $wpdb->last_error;
 			$aio_wp_security->debug_logger->log_debug($error_message, 4);
 		}
+
+		return $result;
 	}
 
 	/**

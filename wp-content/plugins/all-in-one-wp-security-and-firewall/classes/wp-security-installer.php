@@ -33,6 +33,7 @@ class AIOWPSecurity_Installer {
 				AIOWPSecurity_Installer::migrate_db_tables();
 				AIOWPSecurity_Installer::check_tasks();
 				AIOWPSecurity_Configure_Settings::add_option_values();
+				AIOWPSecurity_Configure_Settings::update_aiowpsec_db_version();
 				restore_current_blog();
 			}
 		} else {
@@ -40,6 +41,7 @@ class AIOWPSecurity_Installer {
 			AIOWPSecurity_Installer::migrate_db_tables();
 			AIOWPSecurity_Installer::check_tasks();
 			AIOWPSecurity_Configure_Settings::add_option_values();
+			AIOWPSecurity_Configure_Settings::update_aiowpsec_db_version();
 		}
 
 		AIOWPSecurity_Installer::create_db_backup_dir(); // Create a backup dir in the WP uploads directory.

@@ -1,9 +1,9 @@
 === Code Profiler - WordPress Performance Profiling and Debugging Made Easy ===
 Contributors: bruandet, nintechnet
-Tags: profiler, debug, optimize, performance, seo, benchmark, statistics, debugging, speed, profiling
+Tags: profiler, debug, optimize, performance, benchmark
 Requires at least: 5.0
-Tested up to: 6.4
-Stable tag: 1.6.8
+Tested up to: 6.5
+Stable tag: 1.6.10
 License: GPLv3 or later
 Requires PHP: 7.1
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -92,6 +92,18 @@ Code Profiler does not collect any private data from you or your visitors. It do
 12. [Pro version]: Remote connections monitoring.
 
 == Changelog ==
+
+= 1.6.10 (May 30, 2024) =
+
+* Fixed a bug that affected Microsoft Windows OS only. In some cases, it wasn't possible to view, delete or rename a profile.
+
+= 1.6.9 (May 27, 2024) =
+
+* You can now exclude files and folders from the profiling process. See "Advanced Options > File and folder exclusions" in the profiler's main page.
+* Fixed a bug where optional HTTP headers could be truncated.
+* Replaced all calls to glob() with DirectoryIterator() to make file search compatible with remote files.
+* Updated ChartJS.
+* Updated browser's signatures.
 
 = 1.6.8 (February 14, 2024) =
 

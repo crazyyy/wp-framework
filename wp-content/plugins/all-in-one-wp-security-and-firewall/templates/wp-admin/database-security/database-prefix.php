@@ -43,7 +43,7 @@
 					</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want the plugin to generate a random 6 character string for the table prefix', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_random_prefix', '1' == $aio_wp_security->configs->get_value('aiowps_enable_random_prefix')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the plugin to generate a random 6 character string for the table prefix', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_random_prefix', '1' == $aio_wp_security->configs->get_value('aiowps_enable_random_prefix')); ?>
 							<br><?php _e('OR', 'all-in-one-wp-security-and-firewall'); ?>
 							<br><input type="text" size="10" id="aiowps_new_manual_db_prefix" name="aiowps_new_manual_db_prefix" value="" />
 							<label for="aiowps_new_manual_db_prefix" class="description"><?php _e('Choose your own database prefix by specifying a string which contains letters and/or numbers and/or underscores, example: xyz_', 'all-in-one-wp-security-and-firewall'); ?></label>

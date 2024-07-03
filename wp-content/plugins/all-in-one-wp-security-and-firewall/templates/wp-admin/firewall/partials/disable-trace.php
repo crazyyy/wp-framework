@@ -12,7 +12,7 @@
 				<th scope="row"><?php _e('Disable trace and track', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to disable trace and track.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_trace_and_track', '1' == $aio_wp_security->configs->get_value('aiowps_disable_trace_and_track')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to disable trace and track.', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_trace_and_track', '1' == $aio_wp_security->configs->get_value('aiowps_disable_trace_and_track')); ?>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 							<p class="description">

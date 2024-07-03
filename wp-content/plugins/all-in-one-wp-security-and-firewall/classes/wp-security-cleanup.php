@@ -29,7 +29,11 @@ class AIOWPSecurity_Cleanup {
 		$purge_events_records_after_days = apply_filters('aios_purge_events_records_after_days', $purge_events_records_after_days);
 		AIOWPSecurity_Utility::purge_table_records($events_table_name, $purge_events_records_after_days, 'created');
 
-		// aiowps_perform_failed_login_cleanup_task already does it.
+		//Check the login lockout table
+		$login_lockout_table_name = AIOWPSEC_TBL_LOGIN_LOCKOUT;
+		$purge_login_lockout_records_after_days = AIOS_PURGE_LOGIN_LOCKOUT_RECORDS_AFTER_DAYS; //purge older records in the events table
+		$purge_login_lockout_records_after_days = apply_filters('aios_purge_login_lockout_records_after_days', $purge_login_lockout_records_after_days);
+		AIOWPSecurity_Utility::purge_table_records($login_lockout_table_name, $purge_login_lockout_records_after_days, 'created');
 
 		//Check the global meta table
 		$global_meta_table_name = AIOWPSEC_TBL_GLOBAL_META_DATA;

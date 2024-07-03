@@ -125,17 +125,17 @@
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "1.3.71",
-            "version_normalized": "1.3.71.0",
+            "version": "1.3.73",
+            "version_normalized": "1.3.73.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1"
+                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1",
-                "reference": "ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/cb7a9297b4ab070909cefade30ee95054d4ae87a",
+                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
             "suggest": {
                 "psr/cache-implementation": "Cache implementation to use with Minify::cache"
             },
-            "time": "2023-04-25T20:33:03+00:00",
+            "time": "2024-03-15T10:27:10+00:00",
             "bin": [
                 "bin/minifycss",
                 "bin/minifyjs"
@@ -187,7 +187,7 @@
             ],
             "support": {
                 "issues": "https://github.com/matthiasmullie/minify/issues",
-                "source": "https://github.com/matthiasmullie/minify/tree/1.3.71"
+                "source": "https://github.com/matthiasmullie/minify/tree/1.3.73"
             },
             "funding": [
                 {
@@ -988,17 +988,17 @@
         },
         {
             "name": "rosell-dk/image-mime-type-guesser",
-            "version": "1.1.1",
-            "version_normalized": "1.1.1.0",
+            "version": "1.1.2",
+            "version_normalized": "1.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rosell-dk/image-mime-type-guesser.git",
-                "reference": "72f7040e95a78937ae2edece452530224fcacea6"
+                "reference": "9cac5a19e799a0ef1f7cffbce36ec33485080b39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rosell-dk/image-mime-type-guesser/zipball/72f7040e95a78937ae2edece452530224fcacea6",
-                "reference": "72f7040e95a78937ae2edece452530224fcacea6",
+                "url": "https://api.github.com/repos/rosell-dk/image-mime-type-guesser/zipball/9cac5a19e799a0ef1f7cffbce36ec33485080b39",
+                "reference": "9cac5a19e799a0ef1f7cffbce36ec33485080b39",
                 "shasum": ""
             },
             "require": {
@@ -1007,11 +1007,11 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.11",
-                "phpstan/phpstan": "^1.5",
+                "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^9.3",
                 "squizlabs/php_codesniffer": "3.*"
             },
-            "time": "2022-05-19T09:57:15+00:00",
+            "time": "2024-04-06T13:55:15+00:00",
             "type": "library",
             "extra": {
                 "scripts-descriptions": {
@@ -1049,7 +1049,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rosell-dk/image-mime-type-guesser/issues",
-                "source": "https://github.com/rosell-dk/image-mime-type-guesser/tree/1.1.1"
+                "source": "https://github.com/rosell-dk/image-mime-type-guesser/tree/1.1.2"
             },
             "funding": [
                 {

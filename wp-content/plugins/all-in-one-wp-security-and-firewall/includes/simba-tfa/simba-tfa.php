@@ -84,6 +84,8 @@ class Simba_Two_Factor_Authentication_1 {
 	private static $is_authenticated = array();
 
 	private $tfa_muplugin;
+	
+	private $application_passwords_authenticated = array();
 
 	/**
 	 * Class Constructor, Set basic settings.
@@ -131,6 +133,9 @@ class Simba_Two_Factor_Authentication_1 {
 		add_action('init', array($this, 'init'));
 
 		if (!defined('TWO_FACTOR_DISABLE') || !TWO_FACTOR_DISABLE) {
+			
+			add_filter('application_password_did_authenticate', array($this, 'application_password_did_authenticate'));
+			
 			add_filter('authenticate', array($this, 'tfaVerifyCodeAndUser'), 99999999999, 3);
 		}
 		
@@ -149,6 +154,22 @@ class Simba_Two_Factor_Authentication_1 {
 		}
 	}
 
+	/**
+	 * Runs upon the WP action application_password_did_authenticate when a user successfully authenticates with an application password
+	 *
+	 * @param WP_User $user
+	 */
+	public function application_password_did_authenticate($user) {
+		
+		// This case is handled elsewhere
+		if (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) return;
+		
+		if (!in_array($user->ID, $this->application_passwords_authenticated)) {
+			$this->application_passwords_authenticated[] = $user->ID;
+		}
+		
+	}
+	
 	/**
 	 * Runs upon the WP action show_user_profile
 	 *
@@ -993,9 +1014,16 @@ class Simba_Two_Factor_Authentication_1 {
 			return $user;
 		}
 
+		if (is_a($user, 'WP_User') && !empty($user->ID)) {
+			if (in_array($user->ID, $this->application_passwords_authenticated)) {
+				// User authenticated via an application password (and thus - see wp_authenticate_application_password - via an API request). Do not require a TFA code.
+				return $user;
+			}
+		}
+		
 		$original_user = $user;
 		$params = stripslashes_deep($_POST);
-
+		
 		// If (only) the error was a wrong password, but it looks like the user appended a TFA code to their password, then have another go
 		if (is_wp_error($user) && array('incorrect_password') == $user->get_error_codes() && !isset($params['two_factor_code']) && false !== ($from_password = apply_filters('simba_tfa_tfa_from_password', false, $password))) {
 			// This forces a new password authentication below

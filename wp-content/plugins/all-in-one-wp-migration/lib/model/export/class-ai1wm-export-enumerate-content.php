@@ -65,6 +65,11 @@ class Ai1wm_Export_Enumerate_Content {
 			$exclude_filters[] = 'blogs.dir';
 		}
 
+		// Exclude SQLite file
+		if ( defined( 'FQDB' ) ) {
+			$exclude_filters[] = FQDB;
+		}
+
 		// Exclude selected files
 		if ( isset( $params['options']['exclude_files'], $params['excluded_files'] ) ) {
 			if ( ( $excluded_files = explode( ',', $params['excluded_files'] ) ) ) {

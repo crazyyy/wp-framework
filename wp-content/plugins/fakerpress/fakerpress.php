@@ -3,9 +3,9 @@
  * Plugin Name:       FakerPress
  * Plugin URI:        https://fakerpress.com
  * Description:       FakerPress is a clean way to generate fake data to your WordPress installation, great for developers who need testing
- * Version:           0.6.1
+ * Version:           0.6.6
  * Author:            Gustavo Bordoni
- * Author URI:        http://bordoni.me
+ * Author URI:        https://bordoni.me
  * Text Domain:       fakerpress
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -27,7 +27,7 @@ if ( PHP_VERSION_ID < 70400 ) {
 		if ( ! is_plugin_active( plugin_basename( __FP_FILE__ ) ) ) {
 			wp_print_styles( 'open-sans' );
 			echo "<style>body{margin: 0 2px;font-family: 'Open Sans',sans-serif;font-size: 13px;line-height: 1.5em;}</style>";
-			echo '<b>FakerPress</b> requires PHP 7.1 or higher, and the plugin has now disabled itself.' .
+			echo '<b>FakerPress</b> requires PHP 7.4 or higher, and the plugin has now disabled itself.' .
 			     '<br />' .
 			     'To allow better control over dates, advanced security improvements and performance gain.' .
 			     '<br />' .
@@ -38,9 +38,7 @@ if ( PHP_VERSION_ID < 70400 ) {
 		deactivate_plugins( __FP_FILE__ );
 	}
 } else {
-	// Load Composer Vendor Modules
-	require_once plugin_dir_path( __FP_FILE__ ) . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
+	require_once dirname( __FP_FILE__ ) . '/src/functions/load.php';
 	// Add a second action to handle the case where Common is not loaded, we still want to let the user know what is happening.
-	add_action( 'plugins_loaded', '\FakerPress\load_plugin', 50 );
+	add_action( 'plugins_loaded', 'fakerpress_load_plugin', 50 );
 }

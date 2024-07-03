@@ -71,7 +71,7 @@
 					<th scope="row"><?php _e('Enable brute force attack prevention', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to protect your login page from Brute Force Attack.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_brute_force_attack_prevention', $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to protect your login page from a brute force attack.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_brute_force_attack_prevention', $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')); ?>
 							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 							<div class="aiowps_more_info_body">
 								<p class="description">
@@ -82,9 +82,9 @@
 									echo '<br>';
 									_e('1) Enable the checkbox.', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';
-									_e('2) Enter a secret word consisting of alphanumeric characters which will be difficult to guess.', 'all-in-one-wp-security-and-firewall') . _e(' This secret word will be useful whenever you need to know the special URL which you will use to access the login page (see point below).', 'all-in-one-wp-security-and-firewall');
+									echo __('2) Enter a secret word consisting of alphanumeric characters which will be difficult to guess.', 'all-in-one-wp-security-and-firewall') . ' ' . __('This secret word will be useful whenever you need to know the special URL which you will use to access the login page (see point below).', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';
-									_e('3) You will then be provided with a special login URL.', 'all-in-one-wp-security-and-firewall')  . _e(' You will need to use this URL to login to your WordPress site instead of the usual login URL.', 'all-in-one-wp-security-and-firewall');
+									echo __('3) You will then be provided with a special login URL.', 'all-in-one-wp-security-and-firewall') . ' ' . __('You will need to use this URL to login to your WordPress site instead of the usual login URL.', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';
 									_e('NOTE: The system will deposit a special cookie in your browser which will allow you access to the WordPress administration login page.', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';
@@ -131,7 +131,7 @@
 					<th scope="row"><?php _e('My site has posts or pages which are password protected', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you are using the native WordPress password protection feature for some or all of your blog posts or pages.', 'all-in-one-wp-security-and-firewall'), 'aiowps_brute_force_attack_prevention_pw_protected_exception', '1' == $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_pw_protected_exception')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you are using the native WordPress password protection feature for some or all of your blog posts or pages.', 'all-in-one-wp-security-and-firewall'), 'aiowps_brute_force_attack_prevention_pw_protected_exception', '1' == $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_pw_protected_exception')); ?>
 							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 							<div class="aiowps_more_info_body">
 								<p class="description">
@@ -153,7 +153,7 @@
 					<th scope="row"><?php _e('My site has a theme or plugins which use AJAX', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if your site uses AJAX functionality.', 'all-in-one-wp-security-and-firewall'), 'aiowps_brute_force_attack_prevention_ajax_exception', '1' == $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_ajax_exception')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if your site uses AJAX functionality.', 'all-in-one-wp-security-and-firewall'), 'aiowps_brute_force_attack_prevention_ajax_exception', '1' == $aio_wp_security->configs->get_value('aiowps_brute_force_attack_prevention_ajax_exception')); ?>
 							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 							<div class="aiowps_more_info_body">
 								<p class="description">

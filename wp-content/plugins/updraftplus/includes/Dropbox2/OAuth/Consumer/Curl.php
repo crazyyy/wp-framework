@@ -234,9 +234,7 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
             // Check if an error occurred and throw an Exception
             if (!empty($response['body']->error) || $code >= 400) {
                 // Dropbox returns error messages inconsistently...
-                if (!empty($response['body']->error_summary)) {
-                    $message = $response['body']->error_summary;
-                } elseif (!empty($response['body']->error) && $response['body']->error instanceof stdClass) {
+                if (!empty($response['body']->error) && $response['body']->error instanceof stdClass) {
                     $array = array_values((array) $response['body']->error);
                     // Dropbox API v2 only throws 409 errors if this error is a incorrect_offset then we need the entire error array not just the message. PHP Exception messages have to be a string so JSON encode the array.
                     $extract_message = (is_object($array[0]) && isset($array[0]->{'.tag'})) ? $array[0]->{'.tag'} : $array[0];
@@ -269,6 +267,8 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
                 } elseif (is_string($response['body'])) {
 					// 31 Mar 2017 - This case has been found to exist; though the docs imply that there's always an 'error' property and that what is returned in JSON, we found a case of this being returned just as a simple string, but detectable via an HTTP 400: Error in call to API function "files/upload_session/append_v2": HTTP header "Dropbox-API-Arg": cursor.offset: expected integer, got string
 					$message = $response['body'];
+                } elseif (!empty($response['body']->error_summary)) {
+                    $message = $response['body']->error_summary;
                 } else {
 					$message = "HTTP bad response code: $code";
                 }

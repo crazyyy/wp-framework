@@ -23,6 +23,8 @@
 .aiowps_advert_content_left {
 	float: none;
 	width: 65px;
+	padding-top: 9px;
+	margin-right: 9px;
 }
 
 .aiowps_advert_content_left_extra {
@@ -33,10 +35,20 @@
 	align-items: center;
 }
 
+.updraft_advert_content_left img {
+	min-height: 72px;
+	min-width: 72px;
+}
+
 .aiowps_advert_content_right {
 	float: none;
 	width: auto;
 	overflow: hidden;
+	font-size: 16px;
+}
+
+.updraft_advert_content_right p {
+	font-size: 16px !important;
 }
 
 .aiowps_advert_bottom {
@@ -72,6 +84,12 @@ h4.aiowps_advert_heading {
 
 .aiowps_text_center {
 	text-align: center;
+}
+
+#aiowps-dashnotice #aiowps-dashnotice_wrapper ul {
+	list-style: disc inside;
+	text-indent: -18px;
+	margin-left: 18px;
 }
 
 @media screen and (min-width: 560px) {

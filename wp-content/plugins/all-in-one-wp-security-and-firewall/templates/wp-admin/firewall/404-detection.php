@@ -39,7 +39,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 					<th scope="row"><?php _e('Enable 404 IP detection and lockout', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the lockout of selected IP addresses.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_404_IP_lockout', '1' == $aio_wp_security->configs->get_value('aiowps_enable_404_IP_lockout')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the lockout of selected IP addresses.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_404_IP_lockout', '1' == $aio_wp_security->configs->get_value('aiowps_enable_404_IP_lockout')); ?>
 						</div>
 					</td>
 				</tr>

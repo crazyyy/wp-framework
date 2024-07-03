@@ -10,30 +10,8 @@ if (function_exists('mb_internal_encoding')) {
 // must have
 ini_set('pcre.backtrack_limit', 5000000);
 ini_set('pcre.recursion_limit', 5000000);
-
-// Include PHP Minify [1.3.60] - https://github.com/matthiasmullie/minify
-if (!class_exists('\MatthiasMullie\Minify\Minify')) {
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Minify.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/CSS.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/JS.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Exception.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Exceptions/BasicException.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src//Exceptions/FileImportException.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/minify/src/Exceptions/IOException.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/path-converter/src/ConverterInterface.php';
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/matthiasmullie/path-converter/src/Converter.php';
-}
 	
 use MatthiasMullie\Minify; // phpcs:ignore PHPCompatibility.Keywords.NewKeywords.t_useFound, PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ns_separatorFound
-
-// Use HTML minification
-if (!class_exists('Minify_HTML')) {
-	require_once WPO_PLUGIN_MAIN_PATH.'vendor/mrclay/minify/lib/Minify/HTML.php';
-}
-
-if (!class_exists('WP_Optimize_Options')) {
-	include_once WPO_PLUGIN_MAIN_PATH.'includes/class-wp-optimize-options.php';
-}
 
 class WP_Optimize_Minify_Functions {
 
@@ -228,6 +206,18 @@ class WP_Optimize_Minify_Functions {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Check if selected url is point to already minifiled css/js file
+	 *
+	 * @param string $url
+	 * @return bool
+	 */
+	public static function is_minified_css_js_filename($url) {
+		$parts = wp_parse_url($url);
+		if (empty($parts['path']) || !is_string(basename($parts['path']))) return false;
+		return 1 === preg_match('/\.min\.(js|css)$/i', basename($parts['path']));
 	}
 
 	/**

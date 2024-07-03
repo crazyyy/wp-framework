@@ -45,7 +45,7 @@ const GeoDatatable = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    let enabled = getFieldValue('geo_blocklist_enabled');
+    let enabled = getFieldValue('firewall_enabled');
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -302,7 +302,6 @@ const GeoDatatable = (props) => {
     }, [dataLoaded]);
 
     const handleSelection = useCallback((state) => {
-        console.log(state);
         //based on the current page and the rows per page we get the rows that are selected
         const {selectedCount, selectedRows, allSelected, allRowsSelected} = state;
         let rows = [];
@@ -464,7 +463,7 @@ const GeoDatatable = (props) => {
                 customStyles={customStyles}
             >
             </DataTable>
-            {!getFieldValue('geo_blocklist_enabled') && (
+            {!getFieldValue('firewall_enabled') && (
                 <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay"><span
                         className="rsssl-task-status rsssl-open">{__('Disabled', 'really-simple-ssl')}</span><span>{__('Restrict access from specific countries or continents. You can also allow only specific countries.', 'really-simple-ssl')}</span>

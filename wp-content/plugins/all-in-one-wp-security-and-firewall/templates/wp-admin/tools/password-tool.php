@@ -11,19 +11,17 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Password strength tool', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<div class="aio_grey_box aio_half_width"><p><?php _e('This password tool uses an algorithm which calculates how long it would take for your password to be cracked using the computing power of an off-the-shelf current model desktop PC with high end processor, graphics card and appropriate password cracking software.', 'all-in-one-wp-security-and-firewall');?></p></div>
+		<div class="aio_grey_box"><p><?php _e('This password tool uses an algorithm which calculates how long it would take for your password to be cracked using the computing power of an off-the-shelf current model desktop PC with high end processor, graphics card and appropriate password cracking software.', 'all-in-one-wp-security-and-firewall');?></p></div>
 		<div class="aiowps_password_tool_field">
-			<input size="40" id="aiowps_password_test" name="aiowps_password_test" type="text" />
-			<div class="description"><?php _e('Start typing a password.', 'all-in-one-wp-security-and-firewall'); ?></div>
-		</div>
-		<div id="aiowps_pw_tool_main">
-			<div class="aiowps_password_crack_info_text"><?php _e('It would take a desktop PC approximately', 'all-in-one-wp-security-and-firewall'); ?>
-			<div id="aiowps_password_crack_time_calculation"><?php _e('1 sec', 'all-in-one-wp-security-and-firewall'); ?></div> <?php _e('to crack your password!', 'all-in-one-wp-security-and-firewall'); ?></div>
-			<!-- The rotating arrow -->
-			<div class="arrowCap"></div>
-			<div class="arrow"></div>
-
-			<p class="meterText"><?php _e('Password Strength', 'all-in-one-wp-security-and-firewall'); ?></p>
+			<input size="40" id="aiowps_password_test" name="aiowps_password_test" type="text" placeholder="<?php _e('Start typing a password.', 'all-in-one-wp-security-and-firewall');?>" />
+			<div class="aios_password_meter">
+				<div class="aios_meter_bar">
+					<div id="aios_meter_fill"></div>
+				</div>
+			</div>
+			<div id="aiowps_pw_tool_main">
+				<div class="aiowps_password_crack_info_text"><?php printf(__('It would take a desktop PC approximately %s to crack your password!', 'all-in-one-wp-security-and-firewall'), '<span id="aiowps_password_crack_time_calculation">1 sec</span>'); ?></div>
+			</div>
 		</div>
 	</div>
 </div>

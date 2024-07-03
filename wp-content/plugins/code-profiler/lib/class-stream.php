@@ -67,15 +67,28 @@ class CodeProfiler_Stream {
 			if ( in_array( $mode, ['rb', 'rt', 'r']) &&
 				"{$path[-4]}{$path[-3]}{$path[-2]}{$path[-1]}" == '.php') {
 
-				$this->script = 1;
+				$this->script = $this->check_exclusions( $path );
 			}
 		} else {
 			if ( str_ends_with( $path, '.php') && in_array( $mode, ['rb', 'rt', 'r']) ) {
-				$this->script = 1;
+				$this->script = $this->check_exclusions( $path );
 			}
 		}
 
 		return $this->resource !== false;
+	}
+
+	/**
+	 * Check file and folder exclusions.
+	 */
+	private function check_exclusions( $path ) {
+
+		foreach( CodeProfiler_Profiler::$exclusions as $item ) {
+			if ( $item && strpos( $path, $item ) !== false ) {
+				return;
+			}
+		}
+		return 1;
 	}
 
 	/**

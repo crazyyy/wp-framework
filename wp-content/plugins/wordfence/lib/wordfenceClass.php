@@ -250,7 +250,7 @@ class wordfence {
 				wfDashboard::processDashboardResponse($keyData['dashboard']);
 			}
 			if (isset($keyData['support']) && isset($keyData['supportHash'])) {
-				wfConfig::set('supportContent', $keyData['support']);
+				wfConfig::set('supportContent', $keyData['support'], wfConfig::DONT_AUTOLOAD);
 				wfConfig::set('supportHash', $keyData['supportHash']);
 			}
 			if (isset($keyData['_whitelist']) && isset($keyData['_whitelistHash'])) {
@@ -258,7 +258,7 @@ class wordfence {
 				wfConfig::set('whitelistHash', $keyData['_whitelistHash']);
 			}
 			if (isset($keyData['_tldlist']) && isset($keyData['_tldlistHash'])) {
-				wfConfig::set('tldlist', $keyData['_tldlist']);
+				wfConfig::set('tldlist', $keyData['_tldlist'], wfConfig::DONT_AUTOLOAD);
 				wfConfig::set('tldlistHash', $keyData['_tldlistHash']);
 			}
 			if (isset($keyData['_ipResolutionList']) && isset($keyData['_ipResolutionListHash'])) {
@@ -345,8 +345,6 @@ class wordfence {
 				$wfdb->queryWrite("delete from {$table_wfStatus} where level = 10 order by ctime asc limit %d", ($count5 - 100) );
 			}
 		}
-		
-		self::_refreshVulnerabilityCache();
 
 		$report = new wfActivityReport();
 		$report->rotateIPLog();
@@ -1108,13 +1106,6 @@ SQL
 
 		//Must be the final line
 	}
-	public static function _refreshVulnerabilityCache($upgrader = null, $hook_extra = null) {
-		if($hook_extra ===null || in_array($hook_extra['type'], array('plugin', 'theme'))){
-			$update_check = new wfUpdateCheck();
-			$update_check->checkPluginVulnerabilities();
-			$update_check->checkThemeVulnerabilities();
-		}
-	}
 	private static function doEarlyAccessLogging(){
 		$wfLog = self::getLog();
 		if($wfLog->logHitOK()){
@@ -1310,7 +1301,6 @@ SQL
 			add_action('login_errors', array('wordfence', 'fixGDLimitLoginsErrors'), 11);
 		}
 		
-		add_action('upgrader_process_complete', 'wordfence::_refreshVulnerabilityCache', 10, 2);
 		add_action('upgrader_process_complete', 'wfUpdateCheck::syncAllVersionInfo');
 		add_action('upgrader_process_complete', 'wordfence::_scheduleRefreshUpdateNotification', 99, 2);
 		add_action('automatic_updates_complete', 'wordfence::_scheduleRefreshUpdateNotification', 99, 0);
@@ -1320,7 +1310,7 @@ SQL
 		add_action('wfls_xml_rpc_blocked', 'wordfence::checkSecurityNetwork');
 		add_action('wfls_registration_blocked', 'wordfence::checkSecurityNetwork');
 		add_action('wfls_activation_page_footer', 'wordfence::_outputLoginSecurityTour');
-		add_action('wfls_settings_set', 'wordfence::queueCentralConfigurationSync');
+		add_action('wfls_settings_set', 'wordfence::queueCentralConfigurationSync', 10, 2);
 
 		if(is_admin()){
 			add_action('admin_init', 'wordfence::admin_init');
@@ -1714,7 +1704,13 @@ SQL
 		}
 		
 		if ($enforceStrongPasswds && !wordfence::isStrongPasswd($password, $username)) {
-			$errors->add('pass', __('Please choose a stronger password. Use at least 12 characters, and include numbers, symbols, and a mix of upper and lowercase letters. Do not use common words or sequences of letters or numbers.', 'wordfence'));
+			$errors->add('pass', __('<strong>ERROR</strong>: The password could not be changed. Please choose a stronger password and try again. A strong password will follow these guidelines: <ul class="wf-password-requirements">
+					<li>At least 12 characters</li>
+					<li>Uppercase and lowercase letters</li>
+					<li>At least one symbol</li>
+					<li>At least one number</li>
+					<li>Avoid common words or sequences of letters/numbers</li>
+				</ul>', 'wordfence'));
 			return $errors;
 		}
 		
@@ -9878,11 +9874,23 @@ if (file_exists(__DIR__.%1$s)) {
 		);
 	}
 
-	public static function queueCentralConfigurationSync() {
+	public static function queueCentralConfigurationSync($key, $value) {
 		static $hasRun;
 		if ($hasRun) {
 			return;
 		}
+		
+		$ignored = array(
+			\WordfenceLS\Controller_Settings::OPTION_USE_NTP,
+			\WordfenceLS\Controller_Settings::OPTION_NTP_OFFSET,
+			\WordfenceLS\Controller_Settings::OPTION_ALLOW_DISABLING_NTP,
+			\WordfenceLS\Controller_Settings::OPTION_NTP_FAILURE_COUNT,
+			\WordfenceLS\Controller_Settings::OPTION_CAPTCHA_STATS,
+		);
+		if (in_array($key, $ignored)) {
+			return;
+		}
+		
 		$hasRun = true;
 		add_action('shutdown', 'wfCentral::requestConfigurationSync');
 	}

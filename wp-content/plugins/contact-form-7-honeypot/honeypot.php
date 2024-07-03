@@ -1,16 +1,16 @@
 <?php
 /*
 Plugin Name: Honeypot for Contact Form 7
-Plugin URI: http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-wordpress-plugin/
+Plugin URI: https://wpexperts.io/
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
-Author: Nocean
-Author URI: http://www.nocean.ca
-Version: 2.1.1
+Author: WPExperts
+Author URI: https://wpexperts.io/
+Version: 2.1.3
 Text Domain: contact-form-7-honeypot
 Domain Path: /languages/
 */
 
-define( 'HONEYPOT4CF7_VERSION', '2.1.1' );
+define( 'HONEYPOT4CF7_VERSION', '2.1.3' );
 define( 'HONEYPOT4CF7_PLUGIN', __FILE__ );
 define( 'HONEYPOT4CF7_PLUGIN_BASENAME', plugin_basename( HONEYPOT4CF7_PLUGIN ) );
 define( 'HONEYPOT4CF7_PLUGIN_NAME', trim( dirname( HONEYPOT4CF7_PLUGIN_BASENAME ), '/' ) );

@@ -47,7 +47,7 @@ class AIOWPSecurity_Admin_Init {
 		
 		if (AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
 			$this->admin_includes();
-			$this->setup_menu_items();
+			add_action('admin_menu', array($this, 'setup_menu_items'));
 			add_action('admin_menu', array($this, 'create_admin_menus'));
 			add_action('admin_menu', array($this, 'premium_upgrade_submenu'), 40);
 			add_action('admin_init', array($this, 'aiowps_csv_download'));
@@ -72,7 +72,7 @@ class AIOWPSecurity_Admin_Init {
 	 *
 	 * @return void
 	 */
-	private function setup_menu_items() {
+	public function setup_menu_items() {
 		$menu_items = array(
 			array(
 				'page_title' => __('Dashboard', 'all-in-one-wp-security-and-firewall'),
@@ -355,6 +355,8 @@ class AIOWPSecurity_Admin_Init {
 		wp_enqueue_script('dashboard');
 		wp_enqueue_script('thickbox');
 		wp_enqueue_script('media-upload');
+		wp_register_script('jquery-blockui', AIO_WP_SECURITY_URL.'/includes/blockui/jquery.blockUI.js', array('jquery'), AIO_WP_SECURITY_VERSION, true);
+		wp_enqueue_script('jquery-blockui');
 		wp_register_script('aiowpsec-admin-js', AIO_WP_SECURITY_URL. '/js/wp-security-admin-script.js', array('jquery'), AIO_WP_SECURITY_VERSION, true);
 		wp_enqueue_script('aiowpsec-admin-js');
 		wp_localize_script('aiowpsec-admin-js',
@@ -369,7 +371,23 @@ class AIOWPSecurity_Admin_Init {
 				'unexpected_response' => __('Unexpected response:', 'all-in-one-wp-security-and-firewall'),
 				'copied' => __('Copied', 'all-in-one-wp-security-and-firewall'),
 				'no_import_file' => __('You have not yet selected a file to import.', 'all-in-one-wp-security-and-firewall'),
-				'processing' => __('Processing...', 'all-in-one-wp-security-and-firewall')
+				'processing' => __('Processing...', 'all-in-one-wp-security-and-firewall'),
+				'logo' => AIO_WP_SECURITY_URL.'/images/plugin-logos/aios-logo.png',
+				'saving' => __('Saving...', 'all-in-one-wp-security-and-firewall'),
+				'deleting' => __('Deleting...', 'all-in-one-wp-security-and-firewall'),
+				'blocking' => __('Blocking...', 'all-in-one-wp-security-and-firewall'),
+				'unlocking' => __('Unlocking...', 'all-in-one-wp-security-and-firewall'),
+				'clearing' => __('Clearing...', 'all-in-one-wp-security-and-firewall'),
+				'importing' => __('Importing...', 'all-in-one-wp-security-and-firewall'),
+				'exporting' => __('Exporting...', 'all-in-one-wp-security-and-firewall'),
+				'refreshing' => __('Refreshing...', 'all-in-one-wp-security-and-firewall'),
+				'close' => __('Close', 'all-in-one-wp-security-and-firewall'),
+				'completed' => __('Completed.', 'all-in-one-wp-security-and-firewall'),
+				'refreshed' => __('Refreshed.', 'all-in-one-wp-security-and-firewall'),
+				'deleted' => __('Deleted.', 'all-in-one-wp-security-and-firewall'),
+				'show_info' => __('show more', 'all-in-one-wp-security-and-firewall'),
+				'hide_info' => __('hide', 'all-in-one-wp-security-and-firewall'),
+				'show_notices' => __('But the following notices have been raised', 'all-in-one-wp-security-and-firewall'),
 			)
 		);
 		wp_register_script('aiowpsec-pw-tool-js', AIO_WP_SECURITY_URL. '/js/password-strength-tool.js', array('jquery')); // We will enqueue this in the user acct menu class
@@ -477,7 +495,7 @@ class AIOWPSecurity_Admin_Init {
 				if (empty($brute_force_feature_secret_word)) {
 					$brute_force_feature_secret_word = AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD;
 				}
-				AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), wp_hash($brute_force_feature_secret_word));
+				AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), AIOS_Helper::get_hash($brute_force_feature_secret_word));
 			}
 
 			if (isset($_REQUEST['aiowps_cookie_test'])) {
@@ -575,7 +593,6 @@ class AIOWPSecurity_Admin_Init {
 	public function handle_settings_menu_rendering() {
 		include_once('wp-security-settings-menu.php');
 		new AIOWPSecurity_Settings_Menu();
-		
 	}
 
 	/**
@@ -609,16 +626,6 @@ class AIOWPSecurity_Admin_Init {
 	}
 
 	/**
-	 * Renders 'Blacklist Manager' submenu page.
-	 *
-	 * @return Void
-	 */
-	public function handle_blacklist_menu_rendering() {
-		include_once('wp-security-blacklist-menu.php');
-		new AIOWPSecurity_Blacklist_Menu();
-	}
-
-	/**
 	 * Renders 'Firewall' submenu page.
 	 *
 	 * @return Void
@@ -627,7 +634,7 @@ class AIOWPSecurity_Admin_Init {
 		include_once('wp-security-firewall-menu.php');
 		new AIOWPSecurity_Firewall_Menu();
 	}
-	
+
 	/**
 	 * Renders 'Brute Force' submenu page.
 	 *
@@ -637,7 +644,7 @@ class AIOWPSecurity_Admin_Init {
 		include_once('wp-security-brute-force-menu.php');
 		new AIOWPSecurity_Brute_Force_Menu();
 	}
-	
+
 	/**
 	 * Renders 'Spam Prevention' submenu page.
 	 *
@@ -647,7 +654,7 @@ class AIOWPSecurity_Admin_Init {
 		include_once('wp-security-spam-menu.php');
 		new AIOWPSecurity_Spam_Menu();
 	}
-	
+
 	/**
 	 * Renders 'Scanner' submenu page.
 	 *
@@ -656,16 +663,6 @@ class AIOWPSecurity_Admin_Init {
 	public function handle_filescan_menu_rendering() {
 		include_once('wp-security-filescan-menu.php');
 		new AIOWPSecurity_Filescan_Menu();
-	}
-	
-	/**
-	 * Renders 'Miscellaneous' submenu page.
-	 *
-	 * @return Void
-	 */
-	public function handle_misc_menu_rendering() {
-		include_once('wp-security-misc-options-menu.php');
-		new AIOWPSecurity_Misc_Options_Menu();
 	}
 
 	/**

@@ -1,27 +1,19 @@
 === Performance Lab ===
 
 Contributors:      wordpressdotorg
-Requires at least: 6.3
-Tested up to:      6.4
-Requires PHP:      7.0
-Stable tag:        2.9.0
+Requires at least: 6.4
+Tested up to:      6.5
+Requires PHP:      7.2
+Stable tag:        3.2.0
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
-Tags:              performance, images, javascript, site health, measurement, object caching
+Tags:              performance, site health, measurement, optimization, diagnostics
 
-Performance plugin from the WordPress Performance Team, which is a collection of standalone performance modules.
+Performance plugin from the WordPress Performance Team, which is a collection of standalone performance features.
 
 == Description ==
 
-The Performance Lab plugin is a collection of modules focused on enhancing performance of your site, most of which should eventually be merged into WordPress core. The plugin allows to individually enable and test the modules to get their benefits before they become available in WordPress core, and to provide feedback to further improve the solutions.
-
-Currently the plugin includes the following performance modules:
-
-* **Dominant Color Images:** Adds support to store the dominant color of newly uploaded images and create a placeholder background of that color.
-* **WebP Support Health Check:** Adds a WebP support check in Site Health status.
-* **WebP Uploads:** Creates WebP versions for new JPEG image uploads if supported by the server.
-* **Enqueued Assets Health Check:** Adds a CSS and JS resource check in Site Health status.
-* **Autoloaded Options Health Check:** Adds a check for autoloaded options in Site Health status.
+The Performance Lab plugin is a collection of features focused on enhancing performance of your site, most of which should eventually be merged into WordPress core. The plugin allows to individually enable and test the features to get their benefits before they become available in WordPress core, and to provide feedback to further improve the solutions.
 
 == Installation ==
 
@@ -40,17 +32,17 @@ Currently the plugin includes the following performance modules:
 = After activation =
 
 1. Visit the new **Settings > Performance** menu.
-2. Enable the individual modules you would like to use.
+2. Enable the individual features you would like to use.
 
 == Frequently Asked Questions ==
 
 = What is the purpose of this plugin? =
 
-The primary purpose of the Performance Lab plugin is to allow testing of various performance modules for which the goal is to eventually land in WordPress core. It is essentially a collection of "feature plugins", which makes it different from other performance plugins that offer performance features which are not targeted at WordPress core and potentially rely on functionality that would not be feasible to use in WordPress core. The list of available modules will regularly change: Existing modules may be removed after they have been released in WordPress core, while new modules may be added in any release.
+The primary purpose of the Performance Lab plugin is to allow testing of various performance features for which the goal is to eventually land in WordPress core. It is essentially a collection of "feature plugins", which makes it different from other performance plugins that offer performance features which are not targeted at WordPress core and potentially rely on functionality that would not be feasible to use in WordPress core. The list of available features will regularly change: Existing features may be removed after they have been released in WordPress core, while new features may be added in any release.
 
 = Can I use this plugin on my production site? =
 
-Per the primary purpose of the plugin (see above), it can mostly be considered a beta testing plugin for the various performance modules it includes. However, unless a module is explicitly marked as "experimental", it has been tested and established to a degree where it should be okay to use in production. Still, as with every plugin, you are doing so at your own risk.
+Per the primary purpose of the plugin (see above), it can mostly be considered a beta testing plugin for the various performance features it includes. However, it's essential to understand that utilizing it comes with inherent risks. Users are encouraged to proceed with caution and understand that they are doing so at their own risk.
 
 = Where can I submit my plugin feedback? =
 
@@ -66,18 +58,56 @@ To report a security issue, please visit the [WordPress HackerOne](https://hacke
 
 Contributions are always welcome! Learn more about how to get involved in the [Core Performance Team Handbook](https://make.wordpress.org/performance/handbook/get-involved/).
 
-= I've activated the WebP Uploads module, but WebP images are not always generated when I upload a JPEG image. Why? =
-
-There are two primary reasons that a WebP image may not be generated:
-
-1. Performance Lab has identified that the WebP version of the uploaded JPEG image would have a larger file size than the original JPEG image, so it does not generate the WebP version.
-2. The JPEG image was not uploaded to the [Media Library](https://wordpress.com/support/media/). At this time, WebP versions are only generated for images to the Media Library. WebP versions are not generated for JPEG images that are added to your site in other ways, such as in a template file or the [Customizer](https://wordpress.com/support/customizer/).
-
-= With the WebP Uploads module activated, will the plugin generate JPEG and WebP versions of every image that I upload? =
-
-By default, the WebP Uploads module will only generate WebP versions of the images that you upload. If you wish to have both WebP **and** JPEG versions generated, you can navigate to **Settings > Media** and enable the **Generate JPEG files in addition to WebP** option.
-
 == Changelog ==
+
+= 3.2.0 =
+
+**Enhancements**
+
+* Add install note after each PerfLab feature plugin in the plugin list table. ([1265](https://github.com/WordPress/performance/pull/1265))
+* Update plugins with new banners and icons. ([1272](https://github.com/WordPress/performance/pull/1272))
+
+**Bug Fixes**
+
+* Fix Server-Timing compatibility with other plugins that do output buffering. ([1260](https://github.com/WordPress/performance/pull/1260))
+* Harden autoloaded-options site health test for incorrectly implemented external object cache plugins. ([1238](https://github.com/WordPress/performance/pull/1238))
+
+= 3.1.0 =
+
+**Enhancements**
+
+* Add progress indicator when activating a feature. ([1190](https://github.com/WordPress/performance/pull/1190))
+* Display plugin settings links in the features screen and fix responsive layout for mobile. ([1208](https://github.com/WordPress/performance/pull/1208))
+* Add plugin dependency support for activating performance features. ([1184](https://github.com/WordPress/performance/pull/1184))
+* Add support for AVIF image format in site health. ([1177](https://github.com/WordPress/performance/pull/1177))
+* Add server timing to REST API response. ([1206](https://github.com/WordPress/performance/pull/1206))
+* Bump minimum PHP requirement to 7.2. ([1130](https://github.com/WordPress/performance/pull/1130))
+* Refine logic in perflab_install_activate_plugin_callback() to rely only on validated slug. ([1170](https://github.com/WordPress/performance/pull/1170))
+* Improve overall code quality with stricter static analysis checks. ([775](https://github.com/WordPress/performance/issues/775))
+
+**Bug Fixes**
+
+* Avoid passing incomplete data to perflab_render_plugin_card() and show error when plugin directory API query fails. ([1175](https://github.com/WordPress/performance/pull/1175))
+* Do not show admin pointer on the Performance screen and dismiss the pointer when visited. ([1147](https://github.com/WordPress/performance/pull/1147))
+* Fix `WordPress.DB.DirectDatabaseQuery.DirectQuery` warning for Autoloaded Options Health Check. ([1179](https://github.com/WordPress/performance/pull/1179))
+
+= 3.0.0 =
+
+**Enhancements**
+
+* Add caching to the wordpress.org query to get plugin information. ([1022](https://github.com/WordPress/performance/pull/1022))
+* Add support for autoloading enhancements in WordPress 6.6 trunk to autoloaded options Site Health check. ([1112](https://github.com/WordPress/performance/pull/1112))
+* Bump minimum required WordPress version to 6.4. ([1062](https://github.com/WordPress/performance/pull/1062))
+* Enhance `object-cache.php` drop-in placement logic to support updating to a newer version of the file. ([1047](https://github.com/WordPress/performance/pull/1047))
+* Implement support for annotating certain plugins as experimental. ([1111](https://github.com/WordPress/performance/pull/1111))
+* Migrate Site Health checks from being modules to becoming part of the plugin core. ([1042](https://github.com/WordPress/performance/pull/1042))
+* Remove modules infrastructure and UI from the plugin. ([1060](https://github.com/WordPress/performance/pull/1060))
+* Support changing autoload value for largest autoloaded options in Site Health check. ([1048](https://github.com/WordPress/performance/pull/1048))
+* Use plugin slug for generator tag. ([1103](https://github.com/WordPress/performance/pull/1103))
+
+**Documentation**
+
+* Update tested WordPress version to 6.5. ([1027](https://github.com/WordPress/performance/pull/1027))
 
 = 2.9.0 =
 
@@ -120,7 +150,7 @@ By default, the WebP Uploads module will only generate WebP versions of the imag
 
 **Documentation**
 
-* Infrastructure: Publish Dominant Color Images standalone plugin. ([842](https://github.com/WordPress/performance/pull/842))
+* Infrastructure: Publish Image Placeholders standalone plugin. ([842](https://github.com/WordPress/performance/pull/842))
 
 = 2.6.1 =
 
@@ -141,7 +171,7 @@ By default, the WebP Uploads module will only generate WebP versions of the imag
 
 **Enhancements**
 
-* Images: Fix incorrect function prefixes in Dominant Color Images. ([789](https://github.com/WordPress/performance/pull/789))
+* Images: Fix incorrect function prefixes in Image Placeholders. ([789](https://github.com/WordPress/performance/pull/789))
 * Infrastructure: Add early exit clauses to files with procedural code. ([790](https://github.com/WordPress/performance/pull/790))
 * Infrastructure: Allow disabling Server-Timing entirely using `PERFLAB_DISABLE_SERVER_TIMING` constant. ([795](https://github.com/WordPress/performance/pull/795))
 
@@ -176,7 +206,7 @@ By default, the WebP Uploads module will only generate WebP versions of the imag
 **Enhancements**
 
 * Images: Configure `Dominant Color` and `Fetchpriority` modules for their standalone plugins. ([704](https://github.com/WordPress/performance/pull/704))
-* Infrastructure: Temporarily remove Dominant Color Images from standalone `plugins.json` definition. ([719](https://github.com/WordPress/performance/pull/719))
+* Infrastructure: Temporarily remove Image Placeholders from standalone `plugins.json` definition. ([719](https://github.com/WordPress/performance/pull/719))
 * Infrastructure: Use dynamic version from `plugins.json` for manual workflow. ([710](https://github.com/WordPress/performance/pull/710))
 
 **Bug Fixes**
@@ -189,7 +219,7 @@ By default, the WebP Uploads module will only generate WebP versions of the imag
 **Enhancements**
 
 * Images: Remove "experimental" flag from Fetchpriority module. ([702](https://github.com/WordPress/performance/pull/702))
-* Infrastructure: Implement infrastructure for launching standalone plugins from modules, including WebP Uploads. ([699](https://github.com/WordPress/performance/pull/699))
+* Infrastructure: Implement infrastructure for launching standalone plugins from modules, including Modern Image Formats. ([699](https://github.com/WordPress/performance/pull/699))
 * Infrastructure: Include `WordPress-Extra` rules in PHPCS configuration and fix resulting problems. ([695](https://github.com/WordPress/performance/pull/695))
 
 **Bug Fixes**
@@ -465,6 +495,14 @@ By default, the WebP Uploads module will only generate WebP versions of the imag
 * Infrastructure: Define module specification in documentation. ([26](https://github.com/WordPress/performance/pull/26))
 
 == Upgrade Notice ==
+
+= 3.2.0 =
+
+This release introduces a new feature plugin called Image Prioritizer which optimizes the loading of images to improve LCP.
+
+= 3.0.0 =
+
+Starting with this release, modules such as Image Placeholders and Modern Image Formats are only available as standalone plugins as opposed to bundled modules. After updating, you will be able to easily migrate to this new structure.
 
 = 2.5.0 =
 

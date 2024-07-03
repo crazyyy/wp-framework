@@ -1505,11 +1505,13 @@ class wfUtils {
 				$ip_printable = $IP;
 				$ip_bin = wfUtils::inet_pton($IP);
 			}
-
-			$row = $db->querySingleRec("select IP, ctime, failed, city, region, countryName, countryCode, lat, lon, unix_timestamp() - ctime as age from " . $locsTable . " where IP=%s", $ip_bin);
+			
+			$ipHex = wfDB::binaryValueToSQLHex($ip_bin);
+			$row = $db->querySingleRec("select IP, ctime, failed, city, region, countryName, countryCode, lat, lon, unix_timestamp() - ctime as age from " . $locsTable . " where IP={$ipHex}");
 			if($row){
 				if($row['age'] > WORDFENCE_MAX_IPLOC_AGE){
-					$db->queryWrite("delete from " . $locsTable . " where IP=%s", $row['IP']);
+					$ipHex = wfDB::binaryValueToSQLHex($row['IP']);
+					$db->queryWrite("delete from " . $locsTable . " where IP={$ipHex}");
 				} else {
 					if($row['failed'] == 1){
 						$IPLocs[$ip_printable] = false;
@@ -1559,16 +1561,16 @@ class wfUtils {
 			if(is_array($freshIPs)){
 				foreach($freshIPs as $IP => $value){
 					$IP_bin = wfUtils::inet_pton($IP);
+					$ipHex = wfDB::binaryValueToSQLHex($IP_bin);
 					if($value == 'failed'){
-						$db->queryWrite("insert IGNORE into " . $locsTable . " (IP, ctime, failed) values (%s, unix_timestamp(), 1)", $IP_bin);
+						$db->queryWrite("insert IGNORE into " . $locsTable . " (IP, ctime, failed) values ({$ipHex}, unix_timestamp(), 1)");
 						$IPLocs[$IP] = false;
 					} else if(is_array($value)){
 						for($i = 0; $i <= 5; $i++){
 							//Prevent warnings in debug mode about uninitialized values
 							if(! isset($value[$i])){ $value[$i] = ''; }
 						}
-						$db->queryWrite("insert IGNORE into " . $locsTable . " (IP, ctime, failed, city, region, countryName, countryCode, lat, lon) values (%s, unix_timestamp(), 0, '%s', '%s', '%s', '%s', %s, %s)",
-							$IP_bin,
+						$db->queryWrite("insert IGNORE into " . $locsTable . " (IP, ctime, failed, city, region, countryName, countryCode, lat, lon) values ({$ipHex}, unix_timestamp(), 0, '%s', '%s', '%s', '%s', %s, %s)",
 							$value[3], //city
 							$value[2], //region
 							$value[1], //countryName
@@ -1601,7 +1603,8 @@ class wfUtils {
 		$db = new wfDB();
 		$reverseTable = wfDB::networkTable('wfReverseCache');
 		$IPn = wfUtils::inet_pton($IP);
-		$host = $db->querySingle("select host from " . $reverseTable . " where IP=%s and unix_timestamp() - lastUpdate < %d", $IPn, WORDFENCE_REVERSE_LOOKUP_CACHE_TIME);
+		$ipHex = wfDB::binaryValueToSQLHex($IPn);
+		$host = $db->querySingle("select host from " . $reverseTable . " where IP={$ipHex} and unix_timestamp() - lastUpdate < %d", WORDFENCE_REVERSE_LOOKUP_CACHE_TIME);
 		if (!$host) {
 			// This function works for IPv4 or IPv6
 			if (function_exists('gethostbyaddr')) {
@@ -1626,7 +1629,7 @@ class wfUtils {
 			if (!$host) {
 				$host = 'NONE';
 			}
-			$db->queryWrite("insert into " . $reverseTable . " (IP, host, lastUpdate) values (%s, '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE host='%s', lastUpdate=unix_timestamp()", $IPn, $host, $host);
+			$db->queryWrite("insert into " . $reverseTable . " (IP, host, lastUpdate) values ({$ipHex}, '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE host='%s', lastUpdate=unix_timestamp()", $host, $host);
 		}
 		if ($host == 'NONE') {
 			$_memoryCache[$IP] = '';
@@ -2852,6 +2855,21 @@ class wfUtils {
 		return $result;
 	}
 	
+	/**
+	 * Convenience function to return the value in an array or the given default if not present.
+	 * 
+	 * @param array $array
+	 * @param string|int $key
+	 * @param mixed $default
+	 * @return mixed|null
+	 */
+	public static function array_choose($array, $key, $default = null) {
+		if (isset($array[$key])) {
+			return $array[$key];
+		}
+		return $default;
+	}
+	
 	public static function array_column($input = null, $columnKey = null, $indexKey = null) { //Polyfill from https://github.com/ramsey/array_column/blob/master/src/array_column.php
 		$argc = func_num_args();
 		$params = func_get_args();
@@ -2919,6 +2937,20 @@ class wfUtils {
 		}
 		
 		return $resultArray;
+	}
+	
+	/**
+	 * Returns $string if it isn't empty, $ifEmpty if it is.
+	 * 
+	 * @param string $string
+	 * @param string $ifEmpty
+	 * @return string
+	 */
+	public static function string_empty($string, $ifEmpty) {
+		if (empty($string)) {
+			return $ifEmpty;
+		}
+		return $string;
 	}
 	
 	/**

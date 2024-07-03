@@ -1,9 +1,10 @@
 <?php
 /**
- * Hook callbacks used for WebP Uploads.
+ * Hook callbacks used for Modern Image Formats.
  *
  * @package webp-uploads
- * @since 2.1.0
+ *
+ * @since 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,23 +26,44 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @see   wp_generate_attachment_metadata()
  * @see   webp_uploads_get_upload_image_mime_transforms()
  *
- * @param array $metadata      An array with the metadata from this attachment.
- * @param int   $attachment_id The ID of the attachment where the hook was dispatched.
- * @return array An array with the updated structure for the metadata before is stored in the database.
+ * @phpstan-param array{
+ *      width: int,
+ *      height: int,
+ *      file: string,
+ *      sizes: array<string, array{ file: string, width: int, height: int, 'mime-type': string }>,
+ *      image_meta: array<string, mixed>,
+ *      filesize: int
+ *  } $metadata
+ *
+ * @param array<string, mixed> $metadata      An array with the metadata from this attachment.
+ * @param int                  $attachment_id The ID of the attachment where the hook was dispatched.
+ *
+ * @return array{
+ *     width: int,
+ *     height: int,
+ *     file: string,
+ *     sizes: array<string, array{ file: string, width: int, height: int, 'mime-type': string, sources?: array<string, array{ file: string, filesize: int }> }>,
+ *     image_meta: array<string, mixed>,
+ *     filesize: int,
+ *     sources?: array<string, array{
+ *         file: string,
+ *         filesize: int
+ *     }>
+ * } An array with the updated structure for the metadata before is stored in the database.
  */
-function webp_uploads_create_sources_property( array $metadata, $attachment_id ) {
+function webp_uploads_create_sources_property( array $metadata, int $attachment_id ): array {
 	// This should take place only on the JPEG image.
 	$valid_mime_transforms = webp_uploads_get_upload_image_mime_transforms();
 
 	// Not a supported mime type to create the sources property.
 	$mime_type = get_post_mime_type( $attachment_id );
-	if ( ! isset( $valid_mime_transforms[ $mime_type ] ) ) {
+	if ( ! is_string( $mime_type ) || ! isset( $valid_mime_transforms[ $mime_type ] ) ) {
 		return $metadata;
 	}
 
 	$file = get_attached_file( $attachment_id, true );
 	// File does not exist.
-	if ( ! file_exists( $file ) ) {
+	if ( ! $file || ! file_exists( $file ) ) {
 		return $metadata;
 	}
 
@@ -104,7 +126,9 @@ function webp_uploads_create_sources_property( array $metadata, $attachment_id )
 	if (
 		! in_array( $mime_type, $valid_mime_transforms[ $mime_type ], true ) &&
 		isset( $valid_mime_transforms[ $mime_type ][0] ) &&
-		isset( $allowed_mimes[ $mime_type ] )
+		isset( $allowed_mimes[ $mime_type ] ) &&
+		array_key_exists( 'file', $metadata ) &&
+		is_string( $metadata['file'] )
 	) {
 		$valid_mime_type = $valid_mime_transforms[ $mime_type ][0];
 
@@ -122,12 +146,17 @@ function webp_uploads_create_sources_property( array $metadata, $attachment_id )
 
 			// If WordPress already modified the original itself, keep the original and discard WordPress's generated version.
 			if ( ! empty( $metadata['original_image'] ) ) {
-				$uploadpath = wp_get_upload_dir();
-				wp_delete_file_from_directory( get_attached_file( $attachment_id ), $uploadpath['basedir'] );
+				$uploadpath    = wp_get_upload_dir();
+				$attached_file = get_attached_file( $attachment_id );
+				if ( $attached_file ) {
+					wp_delete_file_from_directory( $attached_file, $uploadpath['basedir'] );
+				}
 			}
 
 			// Replace the attached file with the custom MIME type version.
-			$metadata = _wp_image_meta_replace_original( $saved_data, $original_image, $metadata, $attachment_id );
+			if ( $original_image ) {
+				$metadata = _wp_image_meta_replace_original( $saved_data, $original_image, $metadata, $attachment_id );
+			}
 
 			// Unset sources entry for the original MIME type, then save (to avoid inconsistent data
 			// in case of an error after this logic).
@@ -221,12 +250,25 @@ add_filter( 'wp_generate_attachment_metadata', 'webp_uploads_create_sources_prop
  *
  * @see wp_get_missing_image_subsizes()
  *
- * @param array $missing_sizes Associative array of arrays of image sub-sizes.
- * @param array $image_meta The metadata from the image.
- * @param int   $attachment_id The ID of the attachment.
- * @return array Associative array of arrays of image sub-sizes.
+ * @phpstan-param array{
+ *     width: int,
+ *     height: int,
+ *     file: string,
+ *     sizes: array<string, array{file: string, width: int, height: int, mime-type: string}>,
+ *     image_meta: array<string, mixed>,
+ *     filesize: int
+ * } $image_meta
+ *
+ * @param array|mixed          $missing_sizes Associative array of arrays of image sub-sizes.
+ * @param array<string, mixed> $image_meta    The metadata from the image.
+ * @param int                  $attachment_id The ID of the attachment.
+ * @return array<string, array{ width: int, height: int, crop: bool }> Associative array of arrays of image sub-sizes.
  */
-function webp_uploads_wp_get_missing_image_subsizes( $missing_sizes, $image_meta, $attachment_id ) {
+function webp_uploads_wp_get_missing_image_subsizes( $missing_sizes, array $image_meta, int $attachment_id ): array {
+	if ( ! is_array( $missing_sizes ) ) {
+		$missing_sizes = array();
+	}
+
 	// Only setup the trace array if we no longer have more sizes.
 	if ( ! empty( $missing_sizes ) ) {
 		return $missing_sizes;
@@ -251,7 +293,7 @@ function webp_uploads_wp_get_missing_image_subsizes( $missing_sizes, $image_meta
 	$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 10 );
 
 	foreach ( $trace as $element ) {
-		if ( isset( $element['function'] ) && 'wp_update_image_subsizes' === $element['function'] ) {
+		if ( 'wp_update_image_subsizes' === $element['function'] ) {
 			webp_uploads_create_sources_property( $image_meta, $attachment_id );
 			break;
 		}
@@ -268,12 +310,16 @@ add_filter( 'wp_get_missing_image_subsizes', 'webp_uploads_wp_get_missing_image_
  *
  * @since 1.0.0
  *
- * @param string $output_format The image editor default output format mapping.
- * @param string $filename      Path to the image.
- * @param string $mime_type     The source image mime type.
- * @return string The new output format mapping.
+ * @param array<string, string>|mixed $output_format An array of mime type mappings. Maps a source mime type to a new destination mime type. Default empty array.
+ * @param string|null                 $filename      Path to the image.
+ * @param string|null                 $mime_type     The source image mime type.
+ * @return array<string, string> The new output format mapping.
  */
-function webp_uploads_filter_image_editor_output_format( $output_format, $filename, $mime_type ) {
+function webp_uploads_filter_image_editor_output_format( $output_format, ?string $filename, ?string $mime_type ): array {
+	if ( ! is_array( $output_format ) ) {
+		$output_format = array();
+	}
+
 	// Use the original mime type if this type is allowed.
 	$valid_mime_transforms = webp_uploads_get_upload_image_mime_transforms();
 	if (
@@ -308,7 +354,7 @@ add_filter( 'image_editor_output_format', 'webp_uploads_filter_image_editor_outp
  *
  * @param int $attachment_id The ID of the attachment the sources are going to be deleted.
  */
-function webp_uploads_remove_sources_files( $attachment_id ) {
+function webp_uploads_remove_sources_files( int $attachment_id ): void {
 	$file = get_attached_file( $attachment_id );
 
 	if ( empty( $file ) ) {
@@ -351,7 +397,7 @@ function webp_uploads_remove_sources_files( $attachment_id ) {
 			}
 
 			$intermediate_file = str_replace( $basename, $properties['file'], $file );
-			if ( empty( $intermediate_file ) ) {
+			if ( ! $intermediate_file ) {
 				continue;
 			}
 
@@ -383,7 +429,7 @@ function webp_uploads_remove_sources_files( $attachment_id ) {
 		}
 
 		$full_size = str_replace( $basename, $properties['file'], $file );
-		if ( empty( $full_size ) ) {
+		if ( ! $full_size ) {
 			continue;
 		}
 
@@ -473,10 +519,14 @@ add_action( 'delete_attachment', 'webp_uploads_remove_sources_files', 10, 1 );
  *
  * @see wp_filter_content_tags()
  *
- * @param string $content The content of the current post.
+ * @param string|mixed $content The content of the current post.
  * @return string The content with the updated references to the images.
  */
-function webp_uploads_update_image_references( $content ) {
+function webp_uploads_update_image_references( $content ): string {
+	if ( ! is_string( $content ) ) {
+		$content = '';
+	}
+
 	// Bail early if request is not for the frontend.
 	if ( ! webp_uploads_in_frontend_body() ) {
 		return $content;
@@ -523,21 +573,20 @@ function webp_uploads_update_image_references( $content ) {
 
 	return $content;
 }
-add_filter( 'the_content', 'webp_uploads_update_image_references', 10 );
+add_filter( 'the_content', 'webp_uploads_update_image_references', 13 ); // Run after wp_filter_content_tags.
 
 /**
  * Finds all the urls with *.jpg and *.jpeg extension and updates with *.webp version for the provided image
  * for the specified image sizes, the *.webp references are stored inside of each size.
  *
  * @since 1.0.0
- * @since 1.3.0 Remove `webp_uploads_prefer_smaller_image_file` filter.
  *
  * @param string $original_image An <img> tag where the urls would be updated.
  * @param string $context        The context where this is function is being used.
  * @param int    $attachment_id  The ID of the attachment being modified.
  * @return string The updated img tag.
  */
-function webp_uploads_img_tag_update_mime_type( $original_image, $context, $attachment_id ) {
+function webp_uploads_img_tag_update_mime_type( string $original_image, string $context, int $attachment_id ): string {
 	$image    = $original_image;
 	$metadata = wp_get_attachment_metadata( $attachment_id );
 
@@ -607,7 +656,7 @@ function webp_uploads_img_tag_update_mime_type( $original_image, $context, $atta
 					continue;
 				}
 
-				/** This filter is documented in modules/images/webp-uploads/load.php */
+				/** This filter is documented in plugins/webp-uploads/load.php */
 				$filtered_image = (string) apply_filters( 'webp_uploads_pre_replace_additional_image_source', $image, $attachment_id, $size, $target_mime, $context );
 
 				// If filtered image is same as the image, run our own replacement logic, otherwise rely on the filtered image.
@@ -624,22 +673,6 @@ function webp_uploads_img_tag_update_mime_type( $original_image, $context, $atta
 		}
 	}
 
-	foreach ( $target_mimes as $target_mime ) {
-		if ( $target_mime === $original_mime ) {
-			continue;
-		}
-
-		if (
-			! has_action( 'wp_footer', 'webp_uploads_wepb_fallback' ) &&
-			$image !== $original_image &&
-			'the_content' === $context &&
-			'image/jpeg' === $original_mime &&
-			'image/webp' === $target_mime
-		) {
-			add_action( 'wp_footer', 'webp_uploads_wepb_fallback' );
-		}
-	}
-
 	return $image;
 }
 
@@ -647,63 +680,17 @@ function webp_uploads_img_tag_update_mime_type( $original_image, $context, $atta
  * Updates the references of the featured image to the a new image format if available, in the same way it
  * occurs in the_content of a post.
  *
- * @since 1.1.0
+ * @since 1.0.0
  *
  * @param string $html          The current HTML markup of the featured image.
  * @param int    $post_id       The current post ID where the featured image is requested.
  * @param int    $attachment_id The ID of the attachment image.
  * @return string The updated HTML markup.
  */
-function webp_uploads_update_featured_image( $html, $post_id, $attachment_id ) {
+function webp_uploads_update_featured_image( string $html, int $post_id, int $attachment_id ): string {
 	return webp_uploads_img_tag_update_mime_type( $html, 'post_thumbnail_html', $attachment_id );
 }
 add_filter( 'post_thumbnail_html', 'webp_uploads_update_featured_image', 10, 3 );
-
-/**
- * Adds a fallback mechanism to replace webp images with jpeg alternatives on older browsers.
- *
- * @since 1.3.0
- */
-function webp_uploads_wepb_fallback() {
-	// Get mime type transforms for the site.
-	$transforms = webp_uploads_get_upload_image_mime_transforms();
-
-	// We need to add fallback only if jpeg alternatives for the webp images are enabled for the server.
-	$preserve_jpegs_for_jpeg_transforms = isset( $transforms['image/jpeg'] ) && in_array( 'image/jpeg', $transforms['image/jpeg'], true ) && in_array( 'image/webp', $transforms['image/jpeg'], true );
-	$preserve_jpegs_for_webp_transforms = isset( $transforms['image/webp'] ) && in_array( 'image/jpeg', $transforms['image/webp'], true ) && in_array( 'image/webp', $transforms['image/webp'], true );
-	if ( ! $preserve_jpegs_for_jpeg_transforms && ! $preserve_jpegs_for_webp_transforms ) {
-		return;
-	}
-
-	ob_start();
-
-	?>
-	( function( d, i, s, p ) {
-		s = d.createElement( s );
-		s.src = '<?php echo esc_url_raw( plugins_url( '/fallback.js', __FILE__ ) ); ?>';
-
-		i = d.createElement( i );
-		i.src = p + 'jIAAABXRUJQVlA4ICYAAACyAgCdASoCAAEALmk0mk0iIiIiIgBoSygABc6zbAAA/v56QAAAAA==';
-		i.onload = function() {
-			i.onload = undefined;
-			i.src = p + 'h4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//73v/+BiOh/AAA=';
-		};
-
-		i.onerror = function() {
-			d.body.appendChild( s );
-		};
-	} )( document, 'img', 'script', 'data:image/webp;base64,UklGR' );
-	<?php
-	$javascript = ob_get_clean();
-
-	wp_print_inline_script_tag(
-		preg_replace( '/\s+/', '', $javascript ),
-		array(
-			'id'            => 'webpUploadsFallbackWebpImages',
-			'data-rest-api' => esc_url_raw( trailingslashit( get_rest_url() ) ),
-		)
-	);
-}
 
 /**
  * Returns an array of image size names that have secondary mime type output enabled. Core sizes and
@@ -712,11 +699,11 @@ function webp_uploads_wepb_fallback() {
  * Developers can control the generation of additional mime images for all sizes using the
  * webp_uploads_image_sizes_with_additional_mime_type_support filter.
  *
- * @since 1.3.0
+ * @since 1.0.0
  *
- * @return array An array of image sizes that can have additional mime types.
+ * @return array<string, bool> An array of image sizes that can have additional mime types.
  */
-function webp_uploads_get_image_sizes_additional_mime_type_support() {
+function webp_uploads_get_image_sizes_additional_mime_type_support(): array {
 	$additional_sizes = wp_get_additional_image_sizes();
 	$allowed_sizes    = array(
 		'thumbnail'      => true,
@@ -733,11 +720,11 @@ function webp_uploads_get_image_sizes_additional_mime_type_support() {
 	/**
 	 * Filters whether additional mime types are allowed for image sizes.
 	 *
-	 * @since 1.3.0
+	 * @since 1.0.0
 	 *
-	 * @param array $allowed_sizes A map of image size names and whether they are allowed to have additional mime types.
+	 * @param array<string, bool> $allowed_sizes A map of image size names and whether they are allowed to have additional mime types.
 	 */
-	$allowed_sizes = apply_filters( 'webp_uploads_image_sizes_with_additional_mime_type_support', $allowed_sizes );
+	$allowed_sizes = (array) apply_filters( 'webp_uploads_image_sizes_with_additional_mime_type_support', $allowed_sizes );
 
 	return $allowed_sizes;
 }
@@ -745,14 +732,13 @@ function webp_uploads_get_image_sizes_additional_mime_type_support() {
 /**
  * Updates the quality of WebP image sizes generated by WordPress to 82.
  *
- * @since 1.7.0
- * @since 2.7.0 Bump minimum WP to 6.3 so remove WP 6.1 related checks.
+ * @since 1.0.0
  *
  * @param int    $quality   Quality level between 1 (low) and 100 (high).
  * @param string $mime_type Image mime type.
  * @return int The updated quality for mime types.
  */
-function webp_uploads_modify_webp_quality( $quality, $mime_type ) {
+function webp_uploads_modify_webp_quality( int $quality, string $mime_type ): int {
 	// For WebP images, always return 82 (other MIME types were already using 82 by default anyway).
 	if ( 'image/webp' === $mime_type ) {
 		return 82;
@@ -764,18 +750,18 @@ function webp_uploads_modify_webp_quality( $quality, $mime_type ) {
 add_filter( 'wp_editor_set_quality', 'webp_uploads_modify_webp_quality', 10, 2 );
 
 /**
- * Displays the HTML generator tag for the WebP Uploads plugin.
+ * Displays the HTML generator tag for the Modern Image Formats plugin.
  *
  * See {@see 'wp_head'}.
  *
- * @since 2.2.0
+ * @since 1.0.0
  */
-function webp_uploads_render_generator() {
-	if (
-		defined( 'WEBP_UPLOADS_VERSION' ) &&
-		! str_starts_with( WEBP_UPLOADS_VERSION, 'Performance Lab ' )
-	) {
-		echo '<meta name="generator" content="WebP Uploads ' . esc_attr( WEBP_UPLOADS_VERSION ) . '">' . "\n";
-	}
+function webp_uploads_render_generator(): void {
+	// Use the plugin slug as it is immutable.
+	echo '<meta name="generator" content="webp-uploads ' . esc_attr( WEBP_UPLOADS_VERSION ) . '">' . "\n";
 }
 add_action( 'wp_head', 'webp_uploads_render_generator' );
+
+if ( webp_uploads_is_picture_element_enabled() ) {
+	add_filter( 'wp_content_img_tag', 'webp_uploads_wrap_image_in_picture', 10, 3 );
+}

@@ -446,13 +446,14 @@ SQL
 		}
 
 		$country = wfUtils::IP2Country($ip_address);
-
+		
+		$ipHex = wfDB::binaryValueToSQLHex($ip_bin);
 		$wpdb->query($wpdb->prepare(<<<SQL
 INSERT INTO $blocked_table (IP, countryCode, blockCount, unixday, blockType)
-VALUES (%s, %s, 1, $unixday_insert, %s)
+VALUES ({$ipHex}, %s, 1, $unixday_insert, %s)
 ON DUPLICATE KEY UPDATE blockCount = blockCount + 1
 SQL
-			, $ip_bin, $country, $type));
+			, $country, $type));
 	}
 
 	/**

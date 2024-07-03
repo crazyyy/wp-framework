@@ -232,12 +232,15 @@ function codeprofiler_start_profiler() {
 			);
 			$is_custom_headers = '';
 			foreach( $custom_headers as $custom_header ) {
-				list( $key, $value ) = explode( ':', "$custom_header:" );
+				if ( strpos( $custom_header, ':') === false ) {
+					continue;
+				}
+				list( $key, $value ) = explode(':', $custom_header, 2 );
 				// Lowercase header name
 				$key		= trim( strtolower( $key ) );
 				$value	= trim( $value );
 				// We want printable ASCII characters only
-				$value	= preg_replace('/[\x00-\x1f\x7f-\xff]/', '', $value);
+				$value	= code_profiler_ASCII_filter( $value );
 				if (! empty( $key ) && ! empty( $value ) ) {
 					$headers['headers'][ $key ] = $value;
 					$is_custom_headers .= "$key: $value\n";
@@ -435,6 +438,23 @@ function codeprofiler_start_profiler() {
 		unset( $cp_options['cookies'] );
 	}
 
+	// Optional file and folder exclusions
+	$exclusions = [];
+	if (! empty( $_POST['exclusions'] ) ) {
+		$tmp_array = explode( PHP_EOL, trim( stripslashes( $_POST['exclusions'] ) ) );
+		foreach( $tmp_array as $item ) {
+			$item = trim( code_profiler_ASCII_filter( $item ) );
+			if ( $item ) {
+				$exclusions[] = $item;
+			}
+		}
+	}
+	if ( $exclusions) {
+		$cp_options['exclusions'] = json_encode( $exclusions );
+	} else {
+		unset( $cp_options['exclusions'] );
+	}
+
 	update_option('code-profiler', $cp_options );
 
 	code_profiler_log_debug(
@@ -530,12 +550,6 @@ function codeprofiler_prepare_report() {
 
 	$response = ['status' => 'error'];
 
-	code_profiler_log_debug(
-		esc_html__('Entering AJAX endpoint (report preparation)', 'code-profiler')
-	);
-
-	code_profiler_hide_errors();
-
 	// If this is an AJAX call, make sure it comes from an admin/superadmin.
 	if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'codeprofiler_prepare_report') {
 		// Admin/Superadmin only
@@ -546,6 +560,12 @@ function codeprofiler_prepare_report() {
 			code_profiler_wp_send_json( $response );
 		}
 	}
+
+	code_profiler_log_debug(
+		esc_html__('Entering AJAX endpoint (report preparation)', 'code-profiler')
+	);
+
+	code_profiler_hide_errors();
 
 	code_profiler_log_debug(
 		esc_html__('Verifying security nonce', 'code-profiler')
@@ -636,7 +656,7 @@ function codeprofiler_rename() {
 	// Admin/Superadmin only
 	if (! is_super_admin() ) {
 		$response['message'] = esc_html__(
-			'You are not allowed to performed this action', 'code-profiler'
+			'You are not allowed to performed this action.', 'code-profiler'
 		);
 		wp_send_json( $response );
 	}
@@ -644,7 +664,7 @@ function codeprofiler_rename() {
 	// Verify the security nonce
 	if ( empty( $_POST['cp_nonce'] ) || ! wp_verify_nonce( $_POST['cp_nonce'], 'rename-profile') ) {
 		$response['message'] = esc_html__(
-			'Missing or wrong security nonce. Reload the page and try again', 'code-profiler'
+			'Missing or wrong security nonce. Reload the page and try again.', 'code-profiler'
 		);
 		wp_send_json( $response );
 	}
@@ -668,16 +688,32 @@ function codeprofiler_rename() {
 	}
 	$profile = $_POST['profile'];
 
-	$glob = glob( CODE_PROFILER_UPLOAD_DIR ."/$profile*" );
+	$glob = code_profiler_glob( CODE_PROFILER_UPLOAD_DIR, "^$profile", true );
+
+	$res = false;
+
 	if ( is_array( $glob ) ) {
 		foreach( $glob as $path ) {
 			// preg_quote is needed for Windows servers because ABSPATH will contain backslashes
-			if ( preg_match('`^'. preg_quote( CODE_PROFILER_UPLOAD_DIR ) .
-				'/(\d{10}\.\d{4})\..+?\.([a-z]+?\.profile)$`', $path, $match ) ) {
+			if ( preg_match('`^'. preg_quote( CODE_PROFILER_UPLOAD_DIR . DIRECTORY_SEPARATOR ) .
+				'(\d{10}\.\d{4})\..+?\.([a-z]+?\.profile)$`', $path, $match ) ) {
 
-				rename( $path, CODE_PROFILER_UPLOAD_DIR . "/{$match[1]}.$new_name.{$match[2]}" );
+				$res = rename( $path, CODE_PROFILER_UPLOAD_DIR . "/{$match[1]}.$new_name.{$match[2]}" );
+				if ( $res === false ) {
+					$response['message'] = esc_html__(
+						'The operation failed.', 'code-profiler'
+					);
+					wp_send_json( $response );
+				}
 			}
 		}
+	}
+
+	if ( $res === false ) {
+		$response['message'] = esc_html__(
+			'The operation failed.', 'code-profiler'
+		);
+		wp_send_json( $response );
 	}
 
 	$response['status']  = 'success';

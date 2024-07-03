@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @copyright (c) 2018 Webraftic Ltd
  */
-class WDN_LicensePage extends WBCR\Factory_Templates_126\Pages\License {
+class WDN_LicensePage extends WBCR\Factory_Templates_127\Pages\License {
 
 	/**
 	 * {@inheritdoc}
@@ -36,12 +36,12 @@ class WDN_LicensePage extends WBCR\Factory_Templates_126\Pages\License {
 	/**
 	 * WCL_LicensePage constructor.
 	 *
-	 * @param \Wbcr_Factory473_Plugin $plugin
+	 * @param \Wbcr_Factory474_Plugin $plugin
 	 *
 	 * @author Alexander Kovalev <alex.kovalevv@gmail.com>
 	 *
 	 */
-	public function __construct( Wbcr_Factory473_Plugin $plugin ) {
+	public function __construct( Wbcr_Factory474_Plugin $plugin ) {
 		$this->menu_title                  = __( 'License', 'robin-image-optimizer' );
 		$this->page_menu_short_description = __( 'Product activation', 'robin-image-optimizer' );
 		$this->plan_name                   = __( 'Disable admin notices premium', 'robin-image-optimizer' );

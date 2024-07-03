@@ -26,7 +26,7 @@ function rsssl_le_get_notices_list($notices) {
 					'output'    => array(
 						'true' => array(
 							'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" ),
-							'url'         => "https://really-simple-ssl.com/protect-ssl-generation-directories",
+							'url'         => rsssl_link( "protect-ssl-generation-directories"),
 							'icon'        => 'warning',
 							'plusone'     => true,
 							'dismissible' => true,
@@ -36,28 +36,30 @@ function rsssl_le_get_notices_list($notices) {
 			}
 		}
 
-		if ( strpos(site_url(), 'www.') !== false ) {
-			$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
-		} else {
-			$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
-		}
-		$notices['alias_domain_notice'] = array(
-			'condition' => array( 'NOT rsssl_is_subdomain' ),
-			'callback'  => 'RSSSL_LE()->letsencrypt_handler->alias_domain_available',
-			'score'     => 10,
-			'output'    => array(
-				'false'  => array(
-					'title' => 	 __( "Domain", 'really-simple-ssl' ),
-					'msg'         => $text,
-					'icon'        => 'open',
-					'plusone'     => true,
-					'dismissible' => true,
+		if ( rsssl_letsencrypt_generation_allowed() ) {
+			if ( strpos(site_url(), 'www.') !== false ) {
+				$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+			} else {
+				$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+			}
+			$notices['alias_domain_notice'] = array(
+				'condition'         => array( 'NOT rsssl_is_subdomain' ),
+				'callback'          => 'RSSSL_LE()->letsencrypt_handler->alias_domain_available',
+				'score'             => 10,
+				'output'            => array(
+					'false' => array(
+						'title'       => __( "Domain", 'really-simple-ssl' ),
+						'msg'         => $text,
+						'icon'        => 'open',
+						'plusone'     => true,
+						'dismissible' => true,
+					),
 				),
-			),
-			'show_with_options' => [
-				'domain',
-			]
-		);
+				'show_with_options' => [
+					'domain',
+				]
+			);
+		}
 
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
@@ -125,7 +127,7 @@ function rsssl_le_get_notices_list($notices) {
 				'true' => array(
 					'msg'         => __( "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on.", "really-simple-ssl" ),
 					'icon'        => 'open',
-					'url'         => "https://really-simple-ssl.com/installing-ssl-using-shell-functions",
+					'url'         => "installing-ssl-using-shell-functions",
 					'plusone'     => true,
 					'dismissible' => true,
 				),
@@ -141,7 +143,7 @@ function rsssl_le_get_notices_list($notices) {
 					'true' => array(
 						'msg'         => __( "You are using the Really Simple SSL Shell Exec add on, but your current version needs to be updated.", "really-simple-ssl" ),
 						'icon'        => 'warning',
-						'url'         => "https://really-simple-ssl.com/installing-ssl-using-shell-functions",
+						'url'         => "installing-ssl-using-shell-functions",
 						'plusone'     => true,
 						'dismissible' => false,
 					),

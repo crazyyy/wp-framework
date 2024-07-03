@@ -59,9 +59,9 @@ class Block {
 	 * @return string
 	 */
 	protected function get_styles( $attributes ) {
-		return empty( $attributes['textAlign'] ) || 'left' === $attributes['textAlign']
+		return empty( $attributes['textAlign'] ) || ! in_array( $attributes['textAlign'], [ 'right', 'center' ], true )
 			? ''
-			: ' style="' . join( ';', 'text-align:' . $attributes['textAlign'] ) . '"';
+			: ' style="text-align:' . $attributes['textAlign'] . '"';
 	}
 
 	/**
@@ -91,6 +91,18 @@ class Block {
 	}
 
 	/**
+	 * Get title wrapper tag.
+	 *
+	 * @param string $title_wrapper Title wrapper attribute.
+	 * @param string $block         Block name.
+	 */
+	protected function get_title_wrapper( $title_wrapper, $block = 'faq' ) {
+		$wrapper = in_array( $title_wrapper, [ 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' ], true ) ? $title_wrapper : 'h2';
+
+		return apply_filters( "rank_math/blocks/{$block}/title_wrapper", $wrapper );
+	}
+
+	/**
 	 * Normalize the block text.
 	 *
 	 * @param string $text  Text.
@@ -105,6 +117,6 @@ class Block {
 		 * @param bool   $return If set, this will convert all remaining line breaks after paragraphing.
 		 * @param string $block  Block name.
 		 */
-		return wpautop( $text, apply_filters( 'rank_math/block/preserve_line_breaks', true, $block ) );
+		return wpautop( wp_kses_post( $text ), apply_filters( 'rank_math/block/preserve_line_breaks', true, $block ) );
 	}
 }

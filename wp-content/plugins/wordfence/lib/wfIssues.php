@@ -460,7 +460,7 @@ class wfIssues {
 			}
 			$totals[$i['severity']]++;
 		}
-		wfConfig::set_ser('emailedIssuesList', $emailedIssues);
+		wfConfig::set_ser('emailedIssuesList', $emailedIssues, false, wfConfig::DONT_AUTOLOAD);
 		$needsToAlert = false;
 		foreach ($totals as $issueSeverity => $totalIssuesBySeverity) {
 			if ($issueSeverity >= $level && $totalIssuesBySeverity > 0) {
@@ -509,7 +509,7 @@ class wfIssues {
 			}
 		}
 		
-		wfConfig::set_ser('emailedIssuesList', $updated);
+		wfConfig::set_ser('emailedIssuesList', $updated, false, wfConfig::DONT_AUTOLOAD);
 	}
 	public function deleteIssue($id){ 
 		$this->clearEmailedStatus(array($this->getIssueByID($id)));

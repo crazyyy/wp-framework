@@ -121,10 +121,12 @@
 			// Set value on status change
 			.on('wp-optimize/minify/saved_setting', function() {
 				$('#wp-optimize-nav-tab-wrapper__wpo_minify a[data-tab="' + $(this).data('tabname') + '"] span.disabled').toggleClass('hidden', $(this).is(':checked'));
+				$('#wpo_section_' + $(this).data('tabname')).toggleClass('wpo-disabled-section', $(this).is(':not(:checked)'));
 			})
 			// Set value on page load
 			.each(function() {
 				$('#wp-optimize-nav-tab-wrapper__wpo_minify a[data-tab="' + $(this).data('tabname') + '"] span.disabled').toggleClass('hidden', $(this).is(':checked'));
+				$('#wpo_section_' + $(this).data('tabname')).toggleClass('wpo-disabled-section', $(this).is(':not(:checked)'));
 			});
 
 		// slider enable Debug mode
@@ -198,7 +200,13 @@
 		$('#wpo_min_jsprocessed, #wpo_min_cssprocessed').on('click', '.log', function(e) {
 			e.preventDefault();
 			$(this).nextAll('.wpo_min_log').slideToggle('fast');
-		});
+			var link_text = $(this).text().trim();
+			if (wpoptimize.show_information === link_text) {
+				$(this).text(wpoptimize.hide_information);
+			} else {
+				$(this).text(wpoptimize.show_information);
+			}
+	});
 
 		// Delete log file
 		$('#wpo_min_jsprocessed, #wpo_min_cssprocessed').on('click', '.delete-file', function(e) {
@@ -406,10 +414,7 @@
 			if (is_running) {
 				btn.data('running', false);
 
-
-				while(agent_id = heartbeat_agents.shift()) {
-					heartbeat.cancel_agent(agent_id);
-				}
+				heartbeat.cancel_agents(heartbeat_agents);
 				
 				send_command(
 					'cancel_minify_preload',
@@ -482,7 +487,8 @@
 		function run_update_minify_preload_status() {
 			var agent = heartbeat.add_agent({
 				command: 'get_minify_preload_status',
-				callback: update_minify_preload_status
+				callback: update_minify_preload_status,
+				_keep: false
 			});
 
 			if (null !== agent) heartbeat_agents.push(agent);
@@ -550,7 +556,7 @@
 					$('#wpo_min_jsprocessed ul.processed').append('\
 					<li id="'+this.uid+'">\
 						<span class="filename"><a href="'+this.file_url+'" target="_blank">'+this.filename+'</a> ('+this.fsize+')</span>\
-						<a href="#" class="log">' + wpoptimize.toggle_info + '</a>\
+						<a href="#" class="log">' + wpoptimize.show_information + '</a>\
 						<a href="#" class="delete-file" data-filename="' + this.filename + '">' + wpoptimize.delete_file + '</a>\
 						<div class="hidden save_notice">\
 							<p>' + wpoptimize.added_notice + '</p>\
@@ -573,7 +579,7 @@
 					$('#wpo_min_cssprocessed ul.processed').append('\
 					<li id="'+this.uid+'">\
 						<span class="filename"><a href="'+this.file_url+'" target="_blank">'+this.filename+'</a> ('+this.fsize+')</span>\
-						<a href="#" class="log">' + wpoptimize.toggle_info + '</a>\
+						<a href="#" class="log">' + wpoptimize.show_information + '</a>\
 						<a href="#" class="delete-file" data-filename="' + this.filename + '">' + wpoptimize.delete_file + '</a>\
 						<div class="hidden save_notice">\
 							<p>' + wpoptimize.added_to_list + '</p>\
@@ -608,7 +614,7 @@
 	};
 
 	 /**
-	  * Gather data from the given form
+	  *  Gather data from the given form
 	  *
 	  * @param {HTMLFormElement} form
 	  *

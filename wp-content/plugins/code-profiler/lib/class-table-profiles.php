@@ -265,7 +265,7 @@ class CodeProfiler_Table_Profiles extends WP_List_Table {
 	function fetch_profiles() {
 
 		$profiles = [];
-		$glob = glob( CODE_PROFILER_UPLOAD_DIR .'/*.slugs.profile');
+		$glob = code_profiler_glob( CODE_PROFILER_UPLOAD_DIR, '\.slugs\.profile$', true );
 
 		if ( is_array( $glob ) ) {
 			$count = 0;

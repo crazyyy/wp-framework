@@ -21,7 +21,7 @@
 					<th scope="row"><?php _e('Detect spambots posting comments', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to detect comments originating from spambots.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_spambot_detecting', $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to detect comments originating from spambots.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_spambot_detecting', $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting')); ?>
 							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 							<div class="aiowps_more_info_body">
 									<?php
@@ -72,12 +72,6 @@
 							<?php
 								echo '<p class="description">'.__('Enable this feature in order to move the spam comments to trash after given number of days.', 'all-in-one-wp-security-and-firewall').'</p>';
 							?>
-							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-							<div class="aiowps_more_info_body">
-								<?php
-									echo '<p class="description">'.__('Enable this feature in order to move the spam comments to trash after the given number of days.', 'all-in-one-wp-security-and-firewall').'</p>';
-								?>
-							</div>
 						</div>
 					</td>
 				</tr>

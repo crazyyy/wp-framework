@@ -10,13 +10,17 @@
 		<?php
 			// Display security info badge
 			$aiowps_feature_mgr->output_feature_details_badge("filesystem-file-editing");
+			
+			if ($show_disallow_file_edit_warning) {
+				echo '<div class="aio_red_box"><p>' . __('The DISALLOW_FILE_EDIT constant has already been defined, please remove it before enabling this feature.', 'all-in-one-wp-security-and-firewall') . '<br />' . __('The constant is likely already defined in your wp-config.php file.', 'all-in-one-wp-security-and-firewall') . '</p></div>';
+			}
 		?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Disable ability to edit PHP files', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to remove the ability for people to edit PHP files via the WP dashboard', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_file_editing', '1' == $aio_wp_security->configs->get_value('aiowps_disable_file_editing')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to remove the ability for people to edit PHP files via the WP dashboard', 'all-in-one-wp-security-and-firewall'), 'aiowps_disable_file_editing', '1' == $aio_wp_security->configs->get_value('aiowps_disable_file_editing')); ?>
 					</div>
 				</td>
 			</tr>

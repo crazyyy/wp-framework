@@ -12,9 +12,9 @@ class Setup_Settings_Page extends Service {
 	 * @inheritdoc
 	 */
 	public function loaded() {
-		add_action( 'after_setup_theme', array( $this, 'add_default_settings_tabs' ) );
-		add_action( 'admin_menu', array( $this, 'add_settings' ), 10 );
-		add_action( 'admin_menu', array( $this, 'add_admin_pages' ) );
+		add_action( 'after_setup_theme', [ $this, 'add_default_settings_tabs' ] );
+		add_action( 'admin_menu', [ $this, 'add_settings' ], 10 );
+		add_action( 'admin_menu', [ $this, 'add_admin_pages' ] );
 	}
 
 	/**
@@ -46,7 +46,6 @@ class Setup_Settings_Page extends Service {
 		if ( Helpers::dev_mode_is_enabled() ) {
 			$this->simple_history->register_settings_tab(
 				[
-
 					'slug' => 'log',
 					'name' => __( 'Log (dev)', 'simple-history' ),
 					'order' => 5,
@@ -109,8 +108,9 @@ class Setup_Settings_Page extends Service {
 	}
 
 	/**
-	 * Add setting sections and settings for the settings page
-	 * Also maybe save some settings before outputting them
+	 * Add setting sections and settings for the settings page.
+	 *
+	 * Also save some settings before outputting them.
 	 */
 	public function add_settings() {
 		$this->clear_log_from_url_request();
@@ -190,7 +190,7 @@ class Setup_Settings_Page extends Service {
 	public function settings_section_output() {
 		/**
 		 * Fires before the general settings section output.
-		 * Can be used to output content before the general settings section.
+		 * Can be used to output content in the general settings section.
 		 */
 		do_action( 'simple_history/settings_page/general_section_output' );
 	}

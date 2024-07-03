@@ -112,6 +112,12 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		//Normally this is done by wp-login.php file but we cannot use that since the login page has been renamed
 		$action = isset($_GET['action']) ? strip_tags($_GET['action']) : '';
 		if (isset($_POST['post_password']) && 'postpass' == $action) {
+
+			// Check if the captcha is enabled for the password protected pages and process validation if the login page was renamed
+			if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_password_protected_captcha')) {
+				$aio_wp_security->captcha_obj->validate_password_protected_password_form_with_captcha();
+			}
+
 			require_once ABSPATH . 'wp-includes/class-phpass.php';
 			$hasher = new PasswordHash(8, true);
 
@@ -136,7 +142,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		if (is_admin() && !is_user_logged_in() && basename($_SERVER["SCRIPT_FILENAME"]) !== 'admin-post.php') {
 			//Fix to prevent fatal error caused by some themes and Yoast SEO
 			do_action('aiowps_before_wp_die_renamed_login');
-			wp_die(__('Not available.', 'all-in-one-wp-security-and-firewall'), 403);
+			wp_die(__('You do not have permission to access this page. Please log in and try again.', 'all-in-one-wp-security-and-firewall'), 403);
 		}
 
 		//case where someone attempting to reach wp-login
@@ -150,7 +156,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 					$key = sanitize_text_field(wp_unslash($_GET['confirm_key']));
 					$result = wp_validate_user_request_key($request_id, $key);
 				} else {
-					$result = new WP_Error('invalid_key', __('Invalid key'));
+					$result = new WP_Error('invalid_key', __('Invalid key', 'all-in-one-wp-security-and-firewall'));
 				}
 
 				if (is_wp_error($result)) {
@@ -158,7 +164,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 				} elseif (!empty($result)) {
 					_wp_privacy_account_request_confirmed($request_id);
 					$message = _wp_privacy_account_request_confirmed_message($request_id);
-					login_header(__('User action confirmed.'), $message);
+					login_header(__('User action confirmed.', 'all-in-one-wp-security-and-firewall'), $message);
 					login_footer();
 					exit;
 				}
@@ -201,7 +207,10 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 			} else {
 				global $wp_version;
 				do_action('aiowps_rename_login_load');
-				AIOWPSecurity_Utility_IP::check_login_whitelist_and_forbid();
+				// logout action called by WooCommerce does not apply the login whitelist which shows a 403 error for the customer
+				if (!(isset($_GET['action']) && 'logout' == $_GET['action'])) {
+					AIOWPSecurity_Utility_IP::check_login_whitelist_and_forbid();
+				}
 
 				status_header(200);
 				if (version_compare($wp_version, '5.7', '>=')) {

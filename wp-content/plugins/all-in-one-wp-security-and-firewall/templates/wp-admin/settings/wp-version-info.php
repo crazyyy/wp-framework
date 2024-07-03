@@ -25,7 +25,7 @@
 					<th scope="row"><?php _e('Remove WP generator meta info', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to remove the version and meta info produced by WP from all pages', 'all-in-one-wp-security-and-firewall'), 'aiowps_remove_wp_generator_meta_info', '1' == $aio_wp_security->configs->get_value('aiowps_remove_wp_generator_meta_info')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to remove the version and meta info produced by WP from all pages', 'all-in-one-wp-security-and-firewall'), 'aiowps_remove_wp_generator_meta_info', '1' == $aio_wp_security->configs->get_value('aiowps_remove_wp_generator_meta_info')); ?>
 						</div>
 					</td>
 				</tr>
