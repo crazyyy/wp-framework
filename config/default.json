@@ -1,6 +1,6 @@
 {
-  "domain": "wp-framework.local",
-  "theme": "wp-framework",
+  "domain": "wpeb.ddev.site",
+  "theme": "wp-wpeb",
   "ssl": {
     "key": "c:\\apps\\persist\\laragon\\etc\\ssl\\laragon.key",
     "cert": "c:\\apps\\persist\\laragon\\etc\\ssl\\laragon.crt"
