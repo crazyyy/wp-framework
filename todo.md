@@ -1,5 +1,52 @@
 # ToDo
 
+## Check this Gulps
+
+https://www.tutorialspoint.com/babeljs/babeljs_working_with_gulp.htm
+https://snyk.io/advisor/code/javascript/g?page=1
+https://only-to-top.ru/blog/tools/2019-10-20-gulp-babel.html
+https://babeljs.io/docs/configuration
+https://babeljs.io/docs/options
+https://rollupjs.org/
+https://github.com/rollup/rollup
+
+## DevEnv
+
+https://gist.github.com/oranblackwell/9479a6387cb8e80f08e6
+https://gist.github.com/search?p=2&q=wordpress+bitbucket&ref=searchresults
+https://github.com/sdras/awesome-actions
+https://github.com/tfirdaus/wp-docklines/wiki/Bitbucket-Pipelines
+https://medium.com/@aaloktrivedi/creating-a-ci-cd-pipeline-with-terraform-cloud-to-deploy-wordpress-application-infrastructure-part-8f1cb9f4f022
+https://www.hostinger.com/tutorials/wordpress-continuous-integration-and-deployment
+https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/
+https://medium.com/@prosenjit/wordpress-deploy-in-aws-with-bitbucket-pipeline-12dab29b57aa
+https://forum.gitlab.com/t/wordpress-pipeline/97775
+https://www.toptal.com/wordpress/bitbucket-wordpress-version-control
+https://gist.github.com/kjbrum/e345835092baffdb08a0
+https://github.com/daytonaio/daytona
+https://github.com/sdobreff/vscode-php-resolver
+https://github.com/vysker/vscode-php-formatter/wiki/Prerequisites
+
+## PHP Codestyle
+
+https://gist.github.com/hofmannsven/2c300b0b66828e0fba5e
+https://www.jetbrains.com/help/phpstorm/2023.2/using-php-code-sniffer.html#installing-configuring-code-sniffer
+https://github.com/squizlabs/PHP_CodeSniffer/
+https://laracasts.com/series/how-to-be-awesome-in-phpstorm
+https://laracasts.com/series/how-to-be-awesome-in-phpstorm/episodes/26
+
+
+## Stylelint
+
+https://github.com/hudochenkov/stylelint-order
+https://github.com/stylelint-scss/stylelint-scss
+
+
+## SCSS
+
+https://github.com/sds/scss-lint#installation
+
+
 ## check this composer plugins
 https://packagist.org/?query=wordpress
 
