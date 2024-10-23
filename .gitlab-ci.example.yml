@@ -1,0 +1,81 @@
+stages:
+  - deploy
+
+deploy_dev:
+  environment: development
+  stage: deploy
+  tags:
+    - afs-dev
+  only:
+    - dev
+  script:
+    - cd /var/www/html/wp.site.com/
+    - git rm --cached --sparse wp-config.php || true
+    - git fetch --all
+    - git reset --hard origin/dev
+    - echo "Deployment script executed. Database import can be triggered manually."
+
+manual_import_db_dev:
+  stage: deploy
+  tags:
+    - afs-dev
+  only:
+    - dev
+  script:
+    - cd /var/www/html/wp.site.com/
+    - wp db import /var/www/html/wp.site.com/db/db.sql
+    - wp search-replace 'wp.ddev.site' 'wp.site.com'
+  when: manual
+
+deploy_stage:
+  environment: development
+  stage: deploy
+  tags:
+    - afs-dev
+  only:
+    - stage
+  script:
+    - cd /var/www/html/wp.stage.com/
+    - git rm --cached --sparse wp-config.php || true
+    - git fetch --all
+    - git reset --hard origin/stage
+    - echo "Deployment script executed. Database import can be triggered manually."
+
+manual_import_db_stage:
+  stage: deploy
+  tags:
+    - afs-dev
+  only:
+    - stage
+  script:
+    - cd /var/www/html/wp.stage.com/
+    - wp db import /var/www/html/wp.stage.com/db/db.sql
+    - wp search-replace 'wp.ddev.site' 'wp.stage.com'
+  when: manual
+
+deploy_prelive:
+  environment: development
+  stage: deploy
+  tags:
+    - afs-dev
+  only:
+    - main
+  script:
+    - cd /var/www/html/wp.prelive.com/
+    - git rm --cached --sparse wp-config.php || true
+    - git fetch --all
+    - git reset --hard origin/main
+    - echo "Deployment script executed. Database import can be triggered manually."
+
+manual_import_db_prelive:
+  stage: deploy
+  tags:
+    - afs-dev
+  only:
+    - main
+  script:
+    - cd /var/www/html/wp.prelive.com/
+    - wp db import /var/www/html/wp.prelive.com/db/db.sql
+    - wp search-replace 'wp.ddev.site' 'wp.prelive.com'
+  when: manual
+

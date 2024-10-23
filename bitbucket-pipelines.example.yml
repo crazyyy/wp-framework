@@ -1,0 +1,53 @@
+pipelines:
+  branches:
+    staging:
+      - step:
+          name: Pull and build
+          deployment: Staging
+          script:
+            - ssh -p $DEV_PORT $DEV_USER@$DEV_HOST 'cd backend-api/ && git reset --hard'
+            - ssh -p $DEV_PORT $DEV_USER@$DEV_HOST 'cd backend-api/ && git pull origin staging'
+    from-demo-to-stage:
+      - step:
+          name: Pull and build
+          deployment: Staging
+          script:
+            - ssh -p $DEV_PORT $DEV_USER@$DEV_HOST 'cd /var/lib/jenkins/database && /bin/bash db_backup.sh'
+            - ssh -p $DEV_PORT $DEV_USER@$DEV_HOST 'rsync -av /var/www/backend-api/* /var/www/backup/backend-api/ --exclude .git'
+            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'cd /home/ubuntu && /bin/bash db_backup.sh'
+            - scp $DEMO_USER@$DEMO_HOST:/home/ubuntu/db_wp.sql.gz $DEV_USER2@$DEV_HOST:~/
+            - ssh -p $DEMO_PORT $DEMO_USER2@$DEMO_HOST "rsync -av -e 'ssh -ax' --exclude 'backup' --exclude 'mailchimp-for-wp' --exclude 'revisr-backups' --exclude 'webp-express-test-conversion.webp' --exclude 'wp-file-manager-pro' --exclude 'wp-migrate-db' --exclude 'wp-staging' --exclude 'wpforms' --exclude '.htaccess' /home/ubuntu/front-api/wp-content/uploads/* ${DEV_USER2}@${DEV_HOST}:/var/www/backend-api/wp-content/uploads/"
+            - ssh -p $DEV_PORT $DEV_USER2@$DEV_HOST 'gunzip -f db_wp.sql.gz'
+            - ssh -p $DEV_PORT $DEV_USER2@$DEV_HOST './replace.sh'
+            - ssh -p $DEV_PORT $DEV_USER2@$DEV_HOST './restore_dump.sh'
+            - ssh -p $DEV_PORT $DEV_USER@$DEV_HOST "cd /var/www/backend-api/ && wp search-replace 'aussiecasinoexperts.ddev.site' 'aussiecasinoexperts.com' --report-changed-only=true --precise --all-tables && wp search-replace 'aussiecasinoexperts.ddev.site' 'aussiecasinoexperts.com' --report-changed-only=true --precise --all-tables"
+            - ssh -p $DEV_PORT $DEV_USER@$DEV_HOST 'cd /var/www/backend-api/ && sudo wp transient delete --expired --allow-root && sudo wp rewrite flush --allow-root && sudo wp cache flush --allow-root'
+    demo:
+      - step:
+          name: Pull and build
+          deployment: Staging
+          script:
+#           - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'mysqldump db_user_wp -u root -pKkl5DyzDlP2CdtvK > db_wp.sql'
+            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'sudo rsync -av /home/ubuntu/front-api/ /opt/backend-api --exclude .git'
+            - ssh -p $DEV_PORT $DEV_USER2@$DEV_HOST "rsync -av -e 'ssh -ax' --exclude 'wp-config.php' --exclude 'robots.txt' --exclude '.git' --exclude 'wp-content/debug.log' --exclude 'wp-content/db.php' --exclude 'wp-content/dump.txt' --exclude 'wp-content/index.php' --exclude 'wp-content/object-cache.php' /var/www/backend-api/* ${ROOT_USER}@${DEMO_HOST}:/home/ubuntu/front-api/"
+#            - ssh -p $DEV_PORT $DEV_USER@$DEV_HOST 'cd /var/lib/jenkins/database && /bin/bash db_backup.sh'
+            - scp $DEV_USER2@$DEV_HOST:/var/lib/jenkins/database/db_wp.sql.gz $DEMO_USER@$DEMO_HOST:~/
+#            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'gunzip -f db_wp.sql.gz'
+#            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'cd /home/ubuntu && ./replace.sh'
+#            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'cd /home/ubuntu && ./restore_dump.sh'
+#            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST "cd /home/ubuntu/front-api && wp search-replace 'aussiecasinoexperts.com' 'aussiecasinoexperts.ddev.site' --report-changed-only=true --precise --all-tables && wp search-replace 'aussiecasinoexperts.com' 'aussiecasinoexperts.com' --report-changed-only=true --precise --all-tables"
+            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'cd /home/ubuntu/front-api && sudo chown -R www-data:www-data ./ && sudo wp transient delete --expired --allow-root && sudo wp rewrite flush --allow-root && sudo wp cache flush --allow-root'
+    master:
+      - step:
+          name: Pull and build
+          script:
+            - ssh -p $PROD_PORT $PROD_USER@$PROD_HOST "mysqldump db_user_wp -u root -p${DB_PASSWORD} > db_user_wp_back.sql"
+            - ssh -p $PROD_PORT $PROD_USER@$PROD_HOST 'sudo rsync -av /home/ubuntu/front-api/ /opt/backend-api --exclude .git'
+            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST 'cd /home/ubuntu && /bin/bash db_backup.sh'
+            - scp $DEMO_USER@$DEMO_HOST:~/db_wp.sql.gz $PROD_USER@$PROD_HOST:~/
+            - ssh -p $PROD_PORT $PROD_USER@$PROD_HOST 'cd /home/ubuntu && gunzip -f db_wp.sql.gz'
+            - ssh -p $DEMO_PORT $DEMO_USER@$DEMO_HOST "sudo rsync -av -e 'ssh -ax' --exclude 'wp-config.php' --exclude 'robots.txt' --exclude '.git' --exclude 'wp-content/debug.log' --exclude 'wp-content/db.php' --exclude 'wp-content/dump.txt' --exclude 'wp-content/index.php' --exclude 'wp-content/object-cache.php' /home/ubuntu/front-api/* ${ROOT_USER}@${PROD_HOST}:/home/ubuntu/front-api/"
+            - ssh -p $PROD_PORT $PROD_USER@$PROD_HOST 'cd /home/ubuntu && ./replace.sh'
+            - ssh -p $PROD_PORT $PROD_USER@$PROD_HOST 'cd /home/ubuntu && ./restore_dump.sh'
+            - ssh -p $PROD_PORT $PROD_USER@$PROD_HOST "cd /home/ubuntu/front-api && wp search-replace 'aussiecasinoexperts.ddev.site' 'api.aussiecasinoexperts.com' --report-changed-only=true --precise --all-tables && wp search-replace 'aussiecasinoexperts.com' 'aussiecasinoexperts.com' --report-changed-only=true --precise --all-tables && wp yoast index --reindex --skip-confirmation"
+            - ssh -p $PROD_PORT $PROD_USER@$PROD_HOST 'cd /home/ubuntu/front-api && sudo chown -R www-data:www-data ./ && sudo wp transient delete --expired --allow-root && sudo wp rewrite flush --allow-root && sudo wp plugin activate wp-rest-cache --allow-root && sudo wp wp-rest-cache flush --allow-root && sudo wp plugin activate redis-cache --allow-root && sudo wp redis update-dropin --allow-root && sudo wp redis enable --allow-root && sudo wp cache flush --allow-root'
