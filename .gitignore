@@ -11,6 +11,7 @@
 *.sublime-*
 .project
 .fleet
+GitExtensions.settings
 
 ######### Version control and temp files
 .git
