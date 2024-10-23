@@ -2,10 +2,12 @@
 <div class="postbox">
 <h3 class="hndle"><label for="title"><?php _e('Blank HTTP headers', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 <div class="inside">
-<?php
-//Display security info badge
-$aiowps_feature_mgr->output_feature_details_badge("firewall-ban-post-blank-headers");
-?>
+	<div id="firewall-ban-post-blank-headers-badge">
+		<?php
+		// Display security info badge
+		$aiowps_feature_mgr->output_feature_details_badge("firewall-ban-post-blank-headers");
+		?>
+	</div>
 
 <table class="form-table">
 	<tr valign="top">

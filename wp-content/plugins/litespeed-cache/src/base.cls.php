@@ -63,6 +63,7 @@ class Base extends Root
 	const O_CACHE_TTL_REST = 'cache-ttl_rest';
 	const O_CACHE_TTL_STATUS = 'cache-ttl_status';
 	const O_CACHE_TTL_BROWSER = 'cache-ttl_browser';
+	const O_CACHE_AJAX_TTL = 'cache-ajax_ttl';
 	const O_CACHE_LOGIN_COOKIE = 'cache-login_cookie';
 	const O_CACHE_VARY_COOKIES = 'cache-vary_cookies';
 	const O_CACHE_VARY_GROUP = 'cache-vary_group';
@@ -109,8 +110,9 @@ class Base extends Root
 	const O_DEBUG_IPS = 'debug-ips';
 	const O_DEBUG_LEVEL = 'debug-level';
 	const O_DEBUG_FILESIZE = 'debug-filesize';
-	const O_DEBUG_COOKIE = 'debug-cookie';
-	const O_DEBUG_COLLAPS_QS = 'debug-collaps_qs';
+	const O_DEBUG_COOKIE = 'debug-cookie'; // For backwards compatibility, will drop after v7.0
+	const O_DEBUG_COLLAPSE_QS = 'debug-collapse_qs';
+	const O_DEBUG_COLLAPS_QS = 'debug-collapse_qs'; // For backwards compatibility, will drop after v6.5
 	const O_DEBUG_INC = 'debug-inc';
 	const O_DEBUG_EXC = 'debug-exc';
 	const O_DEBUG_EXC_STRINGS = 'debug-exc_strings';
@@ -140,6 +142,7 @@ class Base extends Root
 	const O_OPTM_JS_EXC = 'optm-js_exc';
 	const O_OPTM_HTML_MIN = 'optm-html_min';
 	const O_OPTM_HTML_LAZY = 'optm-html_lazy';
+	const O_OPTM_HTML_SKIP_COMMENTS = 'optm-html_skip_comment';
 	const O_OPTM_QS_RM = 'optm-qs_rm';
 	const O_OPTM_GGFONTS_RM = 'optm-ggfonts_rm';
 	const O_OPTM_CSS_ASYNC = 'optm-css_async';
@@ -213,6 +216,7 @@ class Base extends Root
 	const O_MEDIA_LQIP_EXC = 'media-lqip_exc';
 	const O_MEDIA_VPI = 'media-vpi';
 	const O_MEDIA_VPI_CRON = 'media-vpi_cron';
+	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------	  Image Optm 	----------------- ##
@@ -226,7 +230,6 @@ class Base extends Root
 	const O_IMG_OPTM_EXIF = 'img_optm-exif';
 	const O_IMG_OPTM_WEBP_ATTR = 'img_optm-webp_attr';
 	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm-webp_replace_srcset';
-	const O_IMG_OPTM_JPG_QUALITY = 'img_optm-jpg_quality';
 
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
@@ -365,6 +368,7 @@ class Base extends Root
 		self::O_CACHE_TTL_BROWSER => 0,
 		self::O_CACHE_TTL_STATUS => array(),
 		self::O_CACHE_LOGIN_COOKIE => '',
+		self::O_CACHE_AJAX_TTL => array(),
 		self::O_CACHE_VARY_COOKIES => array(),
 		self::O_CACHE_VARY_GROUP => array(),
 
@@ -402,8 +406,7 @@ class Base extends Root
 		self::O_DEBUG_IPS => array(),
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
-		self::O_DEBUG_COOKIE => false,
-		self::O_DEBUG_COLLAPS_QS => false,
+		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),
 		self::O_DEBUG_EXC_STRINGS => array(),
@@ -429,6 +432,7 @@ class Base extends Root
 		self::O_OPTM_JS_EXC => array(),
 		self::O_OPTM_HTML_MIN => false,
 		self::O_OPTM_HTML_LAZY => array(),
+		self::O_OPTM_HTML_SKIP_COMMENTS => array(),
 		self::O_OPTM_QS_RM => false,
 		self::O_OPTM_GGFONTS_RM => false,
 		self::O_OPTM_CSS_ASYNC => false,
@@ -588,8 +592,7 @@ class Base extends Root
 		self::O_DEBUG_IPS => array(),
 		self::O_DEBUG_LEVEL => false,
 		self::O_DEBUG_FILESIZE => 0,
-		self::O_DEBUG_COOKIE => false,
-		self::O_DEBUG_COLLAPS_QS => false,
+		self::O_DEBUG_COLLAPSE_QS => false,
 		self::O_DEBUG_INC => array(),
 		self::O_DEBUG_EXC => array(),
 		self::O_DEBUG_EXC_STRINGS => array(),
@@ -793,7 +796,7 @@ class Base extends Root
 	}
 
 	/**
-	 * Append a new multi swith max limit for the bool option
+	 * Append a new multi switch max limit for the bool option
 	 *
 	 * @since  3.0
 	 */

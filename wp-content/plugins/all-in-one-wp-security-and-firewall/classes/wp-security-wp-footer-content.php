@@ -13,7 +13,7 @@ class AIOWPSecurity_WP_Footer_Content {
 		// For WooCommerce forms.
 		// Only proceed if WooCommerce installed and active
 		if (AIOWPSecurity_Utility::is_woocommerce_plugin_active()) {
-			if ($aio_wp_security->configs->get_value('aiowps_enable_woo_login_captcha') == '1' || $aio_wp_security->configs->get_value('aiowps_enable_woo_register_captcha') == '1' || $aio_wp_security->configs->get_value('aiowps_enable_woo_lostpassword_captcha') == '1') {
+			if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_woo_login_captcha') || '1' == $aio_wp_security->configs->get_value('aiowps_enable_woo_register_captcha') || '1' == $aio_wp_security->configs->get_value('aiowps_enable_woo_checkout_captcha') || '1' == $aio_wp_security->configs->get_value('aiowps_enable_woo_lostpassword_captcha')) {
 				$aio_wp_security->captcha_obj->print_captcha_api_woo();
 			}
 		}

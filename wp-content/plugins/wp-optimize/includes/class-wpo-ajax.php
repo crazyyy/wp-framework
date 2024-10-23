@@ -299,7 +299,7 @@ class WPO_Ajax {
 	 * Sets commands property value
 	 */
 	private function set_commands() {
-		$this->commands = new WP_Optimize_Commands();
+		$this->commands = apply_filters('wpo_premium_ajax_commands', new WP_Optimize_Commands());
 
 		$minify_commands = $this->get_minify_commands();
 		if ($this->is_subaction_a_minify_command($minify_commands)) {

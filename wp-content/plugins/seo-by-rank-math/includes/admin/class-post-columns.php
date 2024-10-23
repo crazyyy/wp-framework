@@ -292,21 +292,10 @@ class Post_Columns implements Runner {
 	 * Get SEO data.
 	 */
 	private function get_seo_data() {
-		global $wp_query;
 		$post_ids = [];
 
-		if ( $wp_query->posts ) {
-			$post_ids = array_filter(
-				array_map(
-					function( $post ) {
-						return isset( $post->ID ) ? $post->ID : '';
-					},
-					$wp_query->posts
-				)
-			);
-		}
-
-		$post_id = (int) Param::post( 'post_ID' );
+		$post_ids = array_filter( $this->get_post_ids() );
+		$post_id  = (int) Param::post( 'post_ID' );
 		if ( $post_id ) {
 			$post_ids[] = $post_id;
 		}
@@ -322,6 +311,88 @@ class Post_Columns implements Runner {
 
 		foreach ( $results as $result ) {
 			$this->data[ $result['post_id'] ][ $result['meta_key'] ] = $result['meta_value'];
+		}
+	}
+
+	/**
+	 * Get Post IDs dispalyed on the Post lists page.
+	 */
+	private function get_post_ids() {
+		global $wp_query, $per_page;
+		if ( empty( $wp_query->posts ) ) {
+			return [];
+		}
+
+		$pages = $wp_query->posts;
+		if (
+			! is_post_type_hierarchical( Param::get( 'post_type' ) ) ||
+			'menu_order title' !== $wp_query->query['orderby']
+		) {
+			return array_map(
+				function( $post ) {
+					return isset( $post->ID ) ? $post->ID : '';
+				},
+				$pages
+			);
+		}
+
+		$children_pages = [];
+		if ( empty( Param::request( 's' ) ) ) {
+			$top_level_pages = [];
+
+			foreach ( $pages as $page ) {
+				if ( $page->post_parent > 0 ) {
+					$children_pages[ $page->post_parent ][] = $page;
+				} else {
+					$top_level_pages[] = $page;
+				}
+			}
+
+			$pages = &$top_level_pages;
+		}
+
+		$pagenum = max( 1, Param::request( 'paged', 0 ) );
+		$count   = 0;
+		$start   = ( $pagenum - 1 ) * $per_page;
+		$end     = $start + $per_page;
+		$ids     = [];
+
+		foreach ( $pages as $page ) {
+			if ( $count >= $end ) {
+				break;
+			}
+
+			if ( $count >= $start ) {
+				$ids[] = $page->ID;
+			}
+
+			++$count;
+
+			$this->add_child_page_ids( $children_pages, $page->ID, $ids, $count );
+		}
+
+		return $ids;
+	}
+
+	/**
+	 * Add the child page IDs to the list of IDs to be processed.
+	 *
+	 * @param array $children_pages Child Pages.
+	 * @param int   $id             Current page ID.
+	 * @param array $ids            IDs to be processed.
+	 * @param int   $count          Counter.
+	 */
+	private function add_child_page_ids( $children_pages, $id, &$ids, &$count ) {
+		if ( empty( $children_pages ) || empty( $children_pages[ $id ] ) ) {
+			return;
+		}
+
+		foreach ( $children_pages[ $id ] as $child_page ) {
+			$id    = $child_page->ID;
+			$ids[] = $child_page->ID;
+			++$count;
+
+			$this->add_child_page_ids( $children_pages, $id, $ids, $count );
 		}
 	}
 

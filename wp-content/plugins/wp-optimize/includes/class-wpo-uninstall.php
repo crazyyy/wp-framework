@@ -15,15 +15,8 @@ class WPO_Uninstall {
 		WP_Optimize()->get_minify()->plugin_uninstall();
 		WP_Optimize()->get_options()->wipe_settings();
 		WP_Optimize()->delete_transients_and_semaphores();
-		// Using Updraft_Smush_Manager() throws `Call to undefined function` fatal error
-		Updraft_Smush_Manager::instance()->delete_log_files();
 		Updraft_Tasks_Activation::uninstall(WPO_PLUGIN_SLUG);
 		self::delete_wpo_folder();
-
-		$wpo_plugins_table_list = self::get_upload_basedir() . 'wpo-plugins-tables-list.json';
-		if (is_file($wpo_plugins_table_list)) {
-			unlink($wpo_plugins_table_list);
-		}
 		
 		$htaccess_file = self::get_upload_basedir() . '.htaccess';
 		if (is_file($htaccess_file) && 0 === filesize($htaccess_file)) {

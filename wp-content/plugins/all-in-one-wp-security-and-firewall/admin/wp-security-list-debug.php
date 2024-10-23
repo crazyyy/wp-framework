@@ -50,7 +50,6 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'id' => 'ID',
 			'logtime' => __('Date and time', 'all-in-one-wp-security-and-firewall'),
 			'level' => __('Level', 'all-in-one-wp-security-and-firewall'),
 			'network_id' => __('Network ID', 'all-in-one-wp-security-and-firewall'),

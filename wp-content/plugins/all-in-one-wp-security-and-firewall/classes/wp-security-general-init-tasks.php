@@ -140,6 +140,10 @@ class AIOWPSecurity_General_Init_Tasks {
 		if ($aio_wp_security->configs->get_value('aiowps_enable_login_captcha') == '1') {
 			if (!is_user_logged_in()) {
 				add_action('login_form', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'));
+				if (AIOWPSecurity_Utility::is_memberpress_plugin_active()) {
+					add_action('mepr-login-form-before-submit', array($aio_wp_security->captcha_obj, 'add_captcha_script'));
+					add_action('mepr-login-form-before-submit', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form')); // for memberpress login form
+				}
 			}
 		}
 
@@ -161,6 +165,11 @@ class AIOWPSecurity_General_Init_Tasks {
 			if (isset($_POST['woocommerce-register-nonce'])) {
 				add_filter('woocommerce_process_registration_errors', array($this, 'aiowps_validate_woo_login_or_reg_captcha'), 10, 3);
 			}
+		}
+		
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_woo_checkout_captcha') && !is_user_logged_in()) {
+			add_action('woocommerce_after_checkout_billing_form', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'));
+			add_action('woocommerce_after_checkout_validation', array($this, 'aiowps_validate_woo_checkout_captcha'), 10, 2);
 		}
 
 		if ($aio_wp_security->configs->get_value('aiowps_enable_woo_lostpassword_captcha') == '1') {
@@ -229,6 +238,12 @@ class AIOWPSecurity_General_Init_Tasks {
 			if (!is_user_logged_in()) {
 				add_action('lostpassword_form', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'));
 				add_action('lostpassword_post', array($this, 'process_lost_password_form_post'));
+
+				if (AIOWPSecurity_Utility::is_memberpress_plugin_active()) {
+					add_action('mepr-forgot-password-form', array($aio_wp_security->captcha_obj, 'add_captcha_script'));
+					add_action('mepr-forgot-password-form', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form')); // for memberpress forgot password form
+					add_filter('mepr-validate-forgot-password', array($aio_wp_security->captcha_obj, 'verify_memberpress_form')); // for memberpress forgot password form
+				}
 			}
 		}
 
@@ -254,6 +269,14 @@ class AIOWPSecurity_General_Init_Tasks {
 				if (!is_user_logged_in()) {
 					add_action('register_form', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'));
 				}
+			}
+		}
+
+		if ($aio_wp_security->configs->get_value('aiowps_enable_registration_page_captcha') == '1') {
+			if (AIOWPSecurity_Utility::is_memberpress_plugin_active()) {
+				add_action('mepr-checkout-after-password-fields', array($aio_wp_security->captcha_obj, 'add_captcha_script'));
+				add_action('mepr-checkout-after-password-fields', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form')); // for memberpress register form
+				add_filter('mepr-validate-signup', array($aio_wp_security->captcha_obj, 'verify_memberpress_form')); // for memberpress register form
 			}
 		}
 
@@ -288,14 +311,21 @@ class AIOWPSecurity_General_Init_Tasks {
 		}
 
 		// For antibot post page set cookies.
-		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting')) {
-			add_action('template_redirect', array($this, 'post_antibot_cookie'));
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_spambot_detecting') && !is_user_logged_in()) {
+			if ('1' == $aio_wp_security->configs->get_value('aiowps_spambot_detect_usecookies')) {
+				add_action('template_redirect', array($this, 'post_antibot_cookie'));
+			}
 			add_filter('comment_form_submit_field', array($this, 'comment_form_submit_field'), 10, 1);
 		}
 
 		// For delete readme.html and wp-config-sample.php.
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_auto_delete_default_wp_files')) {
 			add_action('upgrader_process_complete', array($this, 'delete_unneeded_files_after_upgrade'), 10, 2);
+		}
+
+		// For HTTP authentication.
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_http_authentication_admin') || '1' == $aio_wp_security->configs->get_value('aiowps_http_authentication_frontend')) {
+			$this->http_authentication();
 		}
 
 		// Add more tasks that need to be executed at init time
@@ -587,6 +617,59 @@ class AIOWPSecurity_General_Init_Tasks {
 		}
 	}
 
+	/**
+	 * Sends WWW-Authenticate header for frontend or admin protection according to user configuration.
+	 *
+	 * @global AIO_WP_Security $aio_wp_security
+	 *
+	 * @return void
+	 */
+	private function http_authentication() {
+		global $aio_wp_security;
+
+		$request_uri = parse_url(urldecode($_SERVER['REQUEST_URI']));
+
+		$request_path = $request_uri['path'];
+		$request_query = isset($request_uri['query']) ? $request_uri['query'] : '';
+
+		$non_logged_in_admin_ajax_request = !is_user_logged_in() && defined('DOING_AJAX') && DOING_AJAX;
+
+		// Can't use defined('REST_REQUEST') && REST_REQUEST because REST_REQUEST isn't defined until after init.
+		$logged_in_rest_request = is_user_logged_in() && (1 === preg_match('/^\/'.rest_get_url_prefix().'(?:\/.*)?$/', $request_path) || 1 === preg_match('/^rest_route=.+$/', $request_query));
+
+		$is_login_page = 'wp-login.php' == $GLOBALS['pagenow'];
+
+		if ('cli' == PHP_SAPI || (defined('WP_CLI') && WP_CLI)) {
+			// CLI
+			return;
+		} elseif ((is_admin() && !$non_logged_in_admin_ajax_request) || $logged_in_rest_request || $is_login_page) {
+			// Admin
+			if ('1' != $aio_wp_security->configs->get_value('aiowps_http_authentication_admin')) {
+				return;
+			}
+		} else {
+			// Frontend
+			if ('1' != $aio_wp_security->configs->get_value('aiowps_http_authentication_frontend')) {
+				return;
+			}
+		}
+
+		$username = $aio_wp_security->configs->get_value('aiowps_http_authentication_username');
+		$password = $aio_wp_security->configs->get_value('aiowps_http_authentication_password');
+
+		// Check that the user hasn't already logged in with credentials.
+		if (!(isset($_SERVER['PHP_AUTH_USER']) && $_SERVER['PHP_AUTH_USER'] == $username && isset($_SERVER['PHP_AUTH_PW']) && $_SERVER['PHP_AUTH_PW'] == $password)) {
+			header('WWW-Authenticate: Basic charset="UTF-8"');
+			header('HTTP/1.0 401 Unauthorized');
+
+			// Show failure message when the user clicks on the cancel button of the login prompt.
+			$aiowps_failure_message = $aio_wp_security->configs->get_value('aiowps_http_authentication_failure_message');
+			$aiowps_failure_message_raw = html_entity_decode($aiowps_failure_message, ENT_COMPAT, 'UTF-8');
+			echo $aiowps_failure_message_raw;
+			exit;
+		}
+	}
+
 	public function buddy_press_signup_validate_captcha() {
 		global $bp, $aio_wp_security;
 		// Check CAPTCHA if required
@@ -615,6 +698,30 @@ class AIOWPSecurity_General_Init_Tasks {
 
 	}
 
+	/**
+	 * Process the WooCommerce checkout validation
+	 * Called by WooCommerce hook "woocommerce_after_checkout_validation"
+	 *
+	 * @param array    $data   An array of posted data
+	 * @param WP_ERROR $errors Validation errors
+	 */
+	public function aiowps_validate_woo_checkout_captcha($data, $errors) {
+		global $aio_wp_security;
+		$locked = $aio_wp_security->user_login_obj->check_locked_user();
+		if (!empty($locked)) {
+			$errors->add('authentication_failed', sprintf(__('%s: Your IP address is currently locked.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please contact the administrator.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>'));
+			return $errors;
+		}
+
+		$verify_captcha = $aio_wp_security->captcha_obj->verify_captcha_submit();
+		if (false === $verify_captcha) {
+			// wrong answer was entered
+			$errors->add('authentication_failed', sprintf(__('%s: Your answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>'));
+		}
+		return $errors;
+
+	}
+	
 	/**
 	 * Process the WooCommerce lost password login form post
 	 * Called by wp hook "lostpassword_post"
@@ -740,7 +847,7 @@ class AIOWPSecurity_General_Init_Tasks {
 	 * @return void
 	 */
 	public function post_antibot_cookie() {
-		if (is_singular() || is_archive()) {
+		if (is_single()) {
 			AIOWPSecurity_Comment::insert_antibot_keys_in_cookie();
 		}
 	}

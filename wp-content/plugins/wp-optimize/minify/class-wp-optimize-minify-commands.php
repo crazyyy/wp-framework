@@ -184,7 +184,7 @@ class WP_Optimize_Minify_Commands {
 			} elseif ('false' === $value) {
 				$new_data[$key] = false;
 			} else {
-				$new_data[$key] = $value;
+				$new_data[$key] = trim($value);
 			}
 		}
 

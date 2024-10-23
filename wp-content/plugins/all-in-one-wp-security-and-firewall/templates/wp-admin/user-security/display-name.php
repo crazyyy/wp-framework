@@ -18,7 +18,7 @@
 			// now let's find any accounts which have login name same as display name
 			$login_nick_name_accounts = AIOWPSecurity_Utility::check_identical_login_and_nick_names();
 			if ($login_nick_name_accounts) {
-				echo '<div class="aio_red_box"><p>'.__('Your site currently has the following accounts which have an identical login name and display name.', 'all-in-one-wp-security-and-firewall').'<span class="description">('.__('Follow the link to edit the user profile of that particular user account, change Nickname, choose a different Display name compared to Username, and press the "Update Profile" button.)', 'all-in-one-wp-security-and-firewall').'</span></p></div>';
+				echo '<div class="aio_red_box"><p>'.__('Your site currently has the following accounts with identical login and display names.', 'all-in-one-wp-security-and-firewall').'<span class="description">('.__('Follow the link to edit the user profile of that particular user account, change Nickname, choose a different Display name compared to Username, and press the "Update Profile" button.', 'all-in-one-wp-security-and-firewall').')</span></p></div>';
 		?>
 		<table class="form-table">
 			<?php

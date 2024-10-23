@@ -86,3 +86,39 @@
 .wpo-collapsible.opened + .wpo-collapsible-content {
   display: block;
 }
+
+.wpo-action-separator {
+  color: #A7AAAD;
+}
+
+.wpo-disabled-section {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.wp_optimize_blink_animation {
+  margin: 8px;
+  font-size: 120%;
+}
+
+.wp_optimize_blink_animation img {
+  animation-name: wpo_blink;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-out;
+  padding-bottom: 10px;
+}
+
+.wp_optimize_blink_animation-message_text--small {
+  font-size: 100%;
+}
+
+.wp_optimize_blink_animation-message_text--medium {
+  font-size: 120%;
+  line-height: normal;
+}
+
+.wp_optimize_blink_animation-message_text--large {
+  font-size: 140%;
+}

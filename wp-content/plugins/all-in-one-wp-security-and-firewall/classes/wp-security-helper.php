@@ -120,7 +120,9 @@ class AIOS_Helper {
 		if (!(include_once AIOWPS_FIREWALL_DIR.'/../../vendor/mlocati/ip-lib/ip-lib.php')) {
 			throw new \Exception("AIOS_Helper::is_user_ip_address_within_list failed to load ip-lib.php");
 		}
-		
+
+		if (empty($ip_address_list)) return false;
+
 		$user_ip = self::get_user_ip_address();
 		$user_ip_address = \IPLib\Factory::parseAddressString($user_ip);
 		if (null != $user_ip_address) {

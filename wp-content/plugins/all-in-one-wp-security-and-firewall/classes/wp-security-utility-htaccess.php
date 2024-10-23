@@ -70,68 +70,187 @@ class AIOWPSecurity_Utility_Htaccess {
 		//NOP
 	}
 
+	/**
+	 * This function is used to scan the htaccess file for valid markers
+	 *
+	 * @param string $htaccess - The htaccess file to scan
+	 * @return boolean
+	 */
+	public static function htaccess_has_valid_markers($htaccess) {
+
+		$markers = array(
+			'# BEGIN WordPress',
+			'# END WordPress',
+			'# BEGIN All In One WP Security',
+			'# END All In One WP Security',
+			self::$ip_blacklist_marker_start,
+			self::$ip_blacklist_marker_end,
+			self::$prevent_wp_file_access_marker_start,
+			self::$prevent_wp_file_access_marker_end,
+			self::$basic_htaccess_rules_marker_start,
+			self::$basic_htaccess_rules_marker_end,
+			self::$debug_log_block_htaccess_rules_marker_start,
+			self::$debug_log_block_htaccess_rules_marker_end,
+			self::$user_agent_blacklist_marker_start,
+			self::$user_agent_blacklist_marker_end,
+			self::$enable_brute_force_attack_prevention_marker_start,
+			self::$enable_brute_force_attack_prevention_marker_end,
+			self::$disable_index_views_marker_start,
+			self::$disable_index_views_marker_end,
+			self::$disable_trace_track_marker_start,
+			self::$disable_trace_track_marker_end,
+			self::$five_g_blacklist_marker_start,
+			self::$five_g_blacklist_marker_end,
+			self::$six_g_blacklist_marker_start,
+			self::$six_g_blacklist_marker_end,
+			self::$block_spambots_marker_start,
+			self::$block_spambots_marker_end,
+			self::$enable_login_whitelist_marker_start,
+			self::$enable_login_whitelist_marker_end,
+			self::$prevent_image_hotlinks_marker_start,
+			self::$prevent_image_hotlinks_marker_end,
+			self::$custom_rules_marker_start,
+			self::$custom_rules_marker_end,
+		);
+		
+		$markerCounts = array();
+		$htaccessContent = file_get_contents($htaccess);
+
+		foreach ($markers as $marker) {
+			$count = preg_match_all('/^' . preg_quote($marker, '/') . '$/m', $htaccessContent);
+			$markerCounts[$marker] = $count;
+		}
+
+		foreach ($markerCounts as $count) {
+			if ($count > 1) return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * This function checks if .htaccess file exists and is readable
+	 *
+	 * @param string $htaccess - The path to .htaccess file
+	 * @return boolean
+	 */
+	public static function htaccess_exist_and_readable($htaccess) {
+		global $aio_wp_security;
+
+		if (!file_exists($htaccess)) {
+			$aio_wp_security->debug_logger->log_debug("The .htaccess file is missing", 4);
+			return false;
+		} elseif (!is_readable($htaccess)) {
+			$aio_wp_security->debug_logger->log_debug("The .htaccess file exists, but it is not readable.", 4);
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Write all active rules to .htaccess file.
 	 *
+	 * @param boolean $show_error - if the error should be shown
+	 *
 	 * @return boolean True on success, false on failure.
 	 */
-	public static function write_to_htaccess() {
+	public static function write_to_htaccess($show_error = true) {
 		global $aio_wp_security;
-		//figure out what server is being used
-		if (-1 == AIOWPSecurity_Utility::get_server_type() && !defined('WP_CLI')) {
-			$aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported.", 4);
-			return false; //unable to write to the file
+
+		if (!class_exists('AIOWPSecurity_Admin_Menu')) {
+			include_once AIO_WP_SECURITY_PATH . '/admin/wp-security-admin-menu.php';
 		}
 
-		//clean up old rules first
-		if (-1 == AIOWPSecurity_Utility_Htaccess::delete_from_htaccess()) {
-			$aio_wp_security->debug_logger->log_debug("Delete operation of .htaccess file failed.", 4);
-			return false; //unable to write to the file
+		// figure out what server is being used
+		$serverType = AIOWPSecurity_Utility::get_server_type();
+		$error_msg = __('An error has occurred while writing to the .htaccess file.', 'all-in-one-wp-security');
+
+		if (in_array($serverType, array('-1', 'nginx', 'iis')) && !defined('WP_CLI')) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('The .htaccess file is not supported by your web server.', 'all-in-one-wp-security'), !$show_error);
+			$aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported.", 4);
+			return false; // unable to write to the file
 		}
 
 		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 		$htaccess = $home_path . '.htaccess';
+		if (!self::htaccess_exist_and_readable($htaccess)) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__($error_msg . ' ' . 'The .htaccess file either does not exist or is unreadable', 'all-in-one-wp-security'), !$show_error);
+			$aio_wp_security->debug_logger->log_debug("The .htaccess file either does not exist or is unreadable", 4);
+			return false;
+		} // check the existence of the file and if its readable
 
-		$f = @fopen($htaccess, 'a+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
-		if (!$f) {
-			@chmod($htaccess, 0644); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
-			$f = @fopen($htaccess, 'a+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
-			if (!$f) {
-				$aio_wp_security->debug_logger->log_debug("chmod operation on .htaccess failed.", 4);
-				return false;
-			}
+		// confirm the hataccess has valid markers
+		if (!self::htaccess_has_valid_markers($htaccess)) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('The .htaccess file contains invalid content, please manually verify the file contents', 'all-in-one-wp-security'), !$show_error);
+			$aio_wp_security->debug_logger->log_debug("Unable to edit the .htaccess file as it contains invalid content, please manually verify the file contents", 4);
+			return false;
 		}
-		AIOWPSecurity_Utility_File::backup_and_rename_htaccess($htaccess); // TODO - we dont want to continually be backing up the htaccess file
-		$ht = explode(PHP_EOL, implode('', file($htaccess))); // parse each line of file into array
+
+		AIOWPSecurity_Utility_File::backup_and_rename_htaccess($htaccess);
+
+		// creating a copy of htaccess file to work on
+		$temp_htaccess = $home_path.'.htaccess_temp';
+		if (!copy($htaccess, $temp_htaccess)) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('A copy of the file could not be created', 'all-in-one-wp-security'), !$show_error);
+			$aio_wp_security->debug_logger->log_debug("Write operation on .htaccess file failed, unable to create a copy of the file", 4);
+			return false;
+		}
+
+		// clean up old rules first
+		if (-1 == AIOWPSecurity_Utility_Htaccess::delete_from_htaccess($temp_htaccess)) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . __("Unable to delete plugin's content from .htaccess file.", 'all-in-one-wp-security'), !$show_error);
+			$aio_wp_security->debug_logger->log_debug("Unable to delete plugin's content from .htaccess file.", 4);
+			return false; //unable to write to the file
+		}
+
+		
+		$ht = explode("\n", implode('', file($temp_htaccess))); // parse each line of file into array
 
 		$rules = AIOWPSecurity_Utility_Htaccess::getrules();
 
-		$rulesarray = explode(PHP_EOL, $rules);
+		$rulesarray = explode("\n", $rules);
 		$rulesarray = apply_filters('aiowps_htaccess_rules_before_writing', $rulesarray);
 		$contents = array_merge($rulesarray, $ht);
 
-		$f = @fopen($htaccess, 'w+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
+		$f = @fopen($temp_htaccess, 'w+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
 		if (!$f) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg, !$show_error);
 			$aio_wp_security->debug_logger->log_debug("Write operation on .htaccess failed.", 4);
 			return false; //we can't write to the file
 		}
 
 		$blank = false;
 
-		//write each line to file
+		// write each line to file
 		foreach ($contents as $insertline) {
 			if (trim($insertline) == '') {
 				if (false == $blank) {
-					fwrite($f, PHP_EOL . trim($insertline));
+					fwrite($f, "\n" . trim($insertline));
 				}
 				$blank = true;
 			} else {
 				$blank = false;
-				fwrite($f, PHP_EOL . trim($insertline));
+				fwrite($f, "\n" . trim($insertline));
 			}
 		}
 		if (is_resource($f)) @fclose($f);
+
+		// before writing into the live htaccess confirm the markers still valid
+		if (!self::htaccess_has_valid_markers($temp_htaccess)) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg .__('The .htaccess file has invalid content, please manually verify that the file is properly formatted', 'all-in-one-wp-security'), !$show_error);
+			$aio_wp_security->debug_logger->log_debug("The .htaccess file has invalid content, please manually verify that the file is properly formatted", 4);
+			return false;
+		}
+		
+		// copy the changes from the temp htaccess into the live htaccess from here
+		if (!copy($temp_htaccess, $htaccess)) {
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg, !$show_error);
+			$aio_wp_security->debug_logger->log_debug("Failed to write to the .htaccess file", 4);
+			return false;
+		}
+		// Remove the temp htaccess file created
+		unlink($temp_htaccess);
+
 		return true; //success
 	}
 
@@ -139,12 +258,16 @@ class AIOWPSecurity_Utility_Htaccess {
 	 * This function will delete the code which has been added to the .htaccess file by this plugin
 	 * It will try to find the comment markers "# BEGIN All In One WP Security" and "# END All In One WP Security" and delete contents in between
 	 *
-	 * @param string $section
-	 * @return Integer{-1,1} -1 for failure, 1 for success.
+	 * @param string $htaccess - The htaccess file path to manipulate
+	 * @param string $section  - All in One Security
+	 * @return Integer {-1,1} -1 for failure, 1 for success.
 	 */
-	public static function delete_from_htaccess($section = 'All In One WP Security') {
-		$home_path = AIOWPSecurity_Utility_File::get_home_path();
-		$htaccess = $home_path . '.htaccess';
+	public static function delete_from_htaccess($htaccess = '', $section = 'All In One WP Security') {
+
+		if (empty($htaccess)) {
+			$home_path = AIOWPSecurity_Utility_File::get_home_path();
+			$htaccess = $home_path . '.htaccess';
+		}
 
 		if (!file_exists($htaccess)) {
 			$ht = @fopen($htaccess, 'a+');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
@@ -158,14 +281,12 @@ class AIOWPSecurity_Utility_Htaccess {
 
 		// Bug Fix: On some environments such as windows (xampp) this function was clobbering the non-aiowps-related .htaccess contents for certain cases.
 		// In some cases when WordPress saves the .htaccess file (eg, when saving permalink settings),
-		// the line endings differ from the expected PHP_EOL endings. (WordPress saves with "\n" (UNIX style) but PHP_EOL may be set as "\r\n" (WIN/DOS))
-		// In this case exploding via PHP_EOL may not yield the result we expect.
+		// the line endings differ from the expected "\n" endings. (WordPress saves with "\n" (UNIX style) but "\n" may be set as "\r\n" (WIN/DOS))
+		// In this case exploding via "\n" may not yield the result we expect.
 		// Therefore we need to do the following extra checks.
 		$ht_contents_imploded = implode('', file($htaccess));
 		if (empty($ht_contents_imploded)) {
 			return 1;
-		} elseif (strstr($ht_contents_imploded, PHP_EOL)) {
-			$ht_contents = explode(PHP_EOL, $ht_contents_imploded); //parse each line of file into array
 		} elseif (strstr($ht_contents_imploded, "\n")) {
 			$ht_contents = explode("\n", $ht_contents_imploded); //parse each line of file into array
 		} elseif (strstr($ht_contents_imploded, "\r")) {
@@ -188,7 +309,7 @@ class AIOWPSecurity_Utility_Htaccess {
 					$state = false;
 				}
 				if (true == $state) { //as long as we're not in the section keep writing
-					fwrite($f, trim($markerline) . PHP_EOL);
+					fwrite($f, trim($markerline) . "\n");
 				}
 				if (strpos($markerline, '# END ' . $section) !== false) { //see if we're at the end of the section
 					$state = true;
@@ -203,7 +324,6 @@ class AIOWPSecurity_Utility_Htaccess {
 	public static function getrules() {
 		global $aio_wp_security;
 		$rules = "";
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_wp_file_access();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_basic_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_debug_log_access_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_disable_index_views();
@@ -224,25 +344,7 @@ class AIOWPSecurity_Utility_Htaccess {
 
 		//Add outer markers if we have rules
 		if ('' != $rules) {
-			$rules = "# BEGIN All In One WP Security" . PHP_EOL . $rules . "# END All In One WP Security" . PHP_EOL;
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * This function will write rules to prevent people from accessing the following files:
-	 * readme.html, license.txt and wp-config-sample.php.
-	 */
-	public static function getrules_block_wp_file_access() {
-		global $aio_wp_security;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_prevent_default_wp_file_access') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_wp_file_access_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= self::create_apache2_access_denied_rule('license.txt');
-			$rules .= self::create_apache2_access_denied_rule('wp-config-sample.php');
-			$rules .= self::create_apache2_access_denied_rule('readme.html');
-			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_wp_file_access_marker_end . PHP_EOL; //Add feature marker end
+			$rules = "# BEGIN All In One WP Security" . "\n" . $rules . "# END All In One WP Security" . "\n";
 		}
 
 		return $rules;
@@ -256,12 +358,12 @@ class AIOWPSecurity_Utility_Htaccess {
 
 		$rules = '';
 		if ($aio_wp_security->configs->get_value('aiowps_enable_basic_firewall') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$basic_htaccess_rules_marker_start . PHP_EOL; //Add feature marker start
+			$rules .= AIOWPSecurity_Utility_Htaccess::$basic_htaccess_rules_marker_start . "\n"; //Add feature marker start
 			//protect the htaccess file - this is done by default with apache config file but we are including it here for good measure
 			$rules .= self::create_apache2_access_denied_rule('.htaccess');
 
 			//disable the server signature
-			$rules .= 'ServerSignature Off' . PHP_EOL;
+			$rules .= 'ServerSignature Off' . "\n";
 
 			//limit file upload size
 			$upload_limit = $aio_wp_security->configs->get_value('aiowps_max_file_upload_size');
@@ -269,12 +371,12 @@ class AIOWPSecurity_Utility_Htaccess {
 			$upload_limit = empty($upload_limit) ? AIOS_FIREWALL_MAX_FILE_UPLOAD_LIMIT_MB : $upload_limit;
 			$upload_limit = $upload_limit * 1024 * 1024; // Convert from MB to Bytes - approx but close enough
 			
-			$rules .= 'LimitRequestBody '.$upload_limit . PHP_EOL;
+			$rules .= 'LimitRequestBody '.$upload_limit . "\n";
 
 			// protect wpconfig.php.
 			$rules .= self::create_apache2_access_denied_rule('wp-config.php');
 
-			$rules .= AIOWPSecurity_Utility_Htaccess::$basic_htaccess_rules_marker_end . PHP_EOL; //Add feature marker end
+			$rules .= AIOWPSecurity_Utility_Htaccess::$basic_htaccess_rules_marker_end . "\n"; //Add feature marker end
 		}
 		return $rules;
 	}
@@ -284,9 +386,9 @@ class AIOWPSecurity_Utility_Htaccess {
 
 		$rules = '';
 		if ($aio_wp_security->configs->get_value('aiowps_block_debug_log_file_access') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$debug_log_block_htaccess_rules_marker_start . PHP_EOL; //Add feature marker start
+			$rules .= AIOWPSecurity_Utility_Htaccess::$debug_log_block_htaccess_rules_marker_start . "\n"; //Add feature marker start
 			$rules .= self::create_apache2_access_denied_rule('debug.log');
-			$rules .= AIOWPSecurity_Utility_Htaccess::$debug_log_block_htaccess_rules_marker_end . PHP_EOL; //Add feature marker end
+			$rules .= AIOWPSecurity_Utility_Htaccess::$debug_log_block_htaccess_rules_marker_end . "\n"; //Add feature marker end
 		}
 		return $rules;
 	}
@@ -300,9 +402,9 @@ class AIOWPSecurity_Utility_Htaccess {
 		global $aio_wp_security;
 		$rules = '';
 		if ($aio_wp_security->configs->get_value('aiowps_disable_index_views') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_index_views_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= 'Options -Indexes' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_index_views_marker_end . PHP_EOL; //Add feature marker end
+			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_index_views_marker_start . "\n"; //Add feature marker start
+			$rules .= 'Options -Indexes' . "\n";
+			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_index_views_marker_end . "\n"; //Add feature marker end
 		}
 
 		return $rules;
@@ -318,13 +420,13 @@ class AIOWPSecurity_Utility_Htaccess {
 		global $aio_wp_security;
 		$rules = '';
 		if ($aio_wp_security->configs->get_value('aiowps_disable_trace_and_track') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_trace_track_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= '<IfModule mod_rewrite.c>' . PHP_EOL;
-			$rules .= 'RewriteEngine On' . PHP_EOL;
-			$rules .= 'RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)' . PHP_EOL;
-			$rules .= 'RewriteRule .* - [F]' . PHP_EOL;
-			$rules .= '</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_trace_track_marker_end . PHP_EOL; //Add feature marker end
+			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_trace_track_marker_start . "\n"; //Add feature marker start
+			$rules .= '<IfModule mod_rewrite.c>' . "\n";
+			$rules .= 'RewriteEngine On' . "\n";
+			$rules .= 'RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)' . "\n";
+			$rules .= 'RewriteRule .* - [F]' . "\n";
+			$rules .= '</IfModule>' . "\n";
+			$rules .= AIOWPSecurity_Utility_Htaccess::$disable_trace_track_marker_end . "\n"; //Add feature marker end
 		}
 
 		return $rules;
@@ -339,7 +441,7 @@ class AIOWPSecurity_Utility_Htaccess {
 		global $aio_wp_security;
 		$rules = '';
 		if ($aio_wp_security->configs->get_value('aiowps_enable_5g_firewall') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$five_g_blacklist_marker_start . PHP_EOL; //Add feature marker start
+			$rules .= AIOWPSecurity_Utility_Htaccess::$five_g_blacklist_marker_start . "\n"; //Add feature marker start
 
 			$rules .= '# 5G BLACKLIST/FIREWALL (2013)
 						# @ http://perishablepress.com/5g-blacklist-2013/
@@ -400,8 +502,8 @@ class AIOWPSecurity_Utility_Htaccess {
 						<ifModule mod_rewrite.c>
 								RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
 								RewriteRule .* - [F]
-						</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$five_g_blacklist_marker_end . PHP_EOL; //Add feature marker end
+						</IfModule>' . "\n";
+			$rules .= AIOWPSecurity_Utility_Htaccess::$five_g_blacklist_marker_end . "\n"; //Add feature marker end
 		}
 
 		return $rules;
@@ -418,16 +520,16 @@ class AIOWPSecurity_Utility_Htaccess {
 			if (false == $url_string) {
 				$url_string = AIOWPSEC_WP_HOME_URL;
 			}
-			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_image_hotlinks_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= '<IfModule mod_rewrite.c>' . PHP_EOL;
-			$rules .= 'RewriteEngine On' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP_REFERER} !^$' . PHP_EOL;
-			$rules .= 'RewriteCond %{REQUEST_FILENAME} -f' . PHP_EOL;
-			$rules .= 'RewriteCond %{REQUEST_FILENAME} \.(gif|jpe?g?|png)$ [NC]' . PHP_EOL;
-			$rules .= 'RewriteCond %{HTTP_REFERER} !^' . $url_string . ' [NC]' . PHP_EOL;
-			$rules .= 'RewriteRule \.(gif|jpe?g?|png)$ - [F,NC,L]' . PHP_EOL;
-			$rules .= '</IfModule>' . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_image_hotlinks_marker_end . PHP_EOL; //Add feature marker end
+			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_image_hotlinks_marker_start . "\n"; //Add feature marker start
+			$rules .= '<IfModule mod_rewrite.c>' . "\n";
+			$rules .= 'RewriteEngine On' . "\n";
+			$rules .= 'RewriteCond %{HTTP_REFERER} !^$' . "\n";
+			$rules .= 'RewriteCond %{REQUEST_FILENAME} -f' . "\n";
+			$rules .= 'RewriteCond %{REQUEST_FILENAME} \.(gif|jpe?g?|png)$ [NC]' . "\n";
+			$rules .= 'RewriteCond %{HTTP_REFERER} !^' . $url_string . ' [NC]' . "\n";
+			$rules .= 'RewriteRule \.(gif|jpe?g?|png)$ - [F,NC,L]' . "\n";
+			$rules .= '</IfModule>' . "\n";
+			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_image_hotlinks_marker_end . "\n"; //Add feature marker end
 		}
 
 		return $rules;
@@ -443,9 +545,9 @@ class AIOWPSecurity_Utility_Htaccess {
 		$rules = '';
 		if ($aio_wp_security->configs->get_value('aiowps_enable_custom_rules') == '1') {
 			$custom_rules = $aio_wp_security->configs->get_value('aiowps_custom_rules');
-			$rules .= AIOWPSecurity_Utility_Htaccess::$custom_rules_marker_start . PHP_EOL; //Add feature marker start
-			$rules .= $custom_rules . PHP_EOL;
-			$rules .= AIOWPSecurity_Utility_Htaccess::$custom_rules_marker_end . PHP_EOL; //Add feature marker end
+			$rules .= AIOWPSecurity_Utility_Htaccess::$custom_rules_marker_start . "\n"; //Add feature marker start
+			$rules .= $custom_rules . "\n";
+			$rules .= AIOWPSecurity_Utility_Htaccess::$custom_rules_marker_end . "\n"; //Add feature marker end
 		}
 
 		return $rules;
@@ -614,5 +716,10 @@ END;
 		}
 
 		return $output;
+	}
+
+	public static function get_htaccess_path() {
+		$home_path = AIOWPSecurity_Utility_File::get_home_path();
+		return $home_path . '.htaccess';
 	}
 }

@@ -192,7 +192,7 @@ class Core extends Root
 			$this->cls('Activation')->auto_update();
 		}
 
-		if (is_admin()) {
+		if (is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
 			$this->cls('Admin');
 		}
 
@@ -289,7 +289,7 @@ class Core extends Root
 
 			$this->cls('Localization')->init();
 
-			// Hook cdn for attachements
+			// Hook cdn for attachments
 			$this->cls('CDN')->init();
 
 			// load cron tasks
@@ -393,7 +393,7 @@ class Core extends Root
 	}
 
 	/**
-	 * Tigger coment info display hook
+	 * Trigger comment info display hook
 	 *
 	 * @since 1.3
 	 * @access private
@@ -452,7 +452,7 @@ class Core extends Root
 	/**
 	 * For compatibility with those plugins have 'Bad' logic that forced all buffer output even it is NOT their buffer :(
 	 *
-	 * Usually this is called after send_headers() if following orignal WP process
+	 * Usually this is called after send_headers() if following original WP process
 	 *
 	 * @since 1.1.5
 	 * @access public
@@ -528,9 +528,9 @@ class Core extends Root
 		}
 
 		if (apply_filters('litespeed_is_json', false)) {
-			if (json_decode($buffer, true) == null) {
+			if (\json_decode($buffer, true) == null) {
 				Debug2::debug('[Core] Buffer converting to JSON');
-				$buffer = json_encode($buffer);
+				$buffer = \json_encode($buffer);
 				$buffer = trim($buffer, '"');
 			} else {
 				Debug2::debug('[Core] JSON Buffer');

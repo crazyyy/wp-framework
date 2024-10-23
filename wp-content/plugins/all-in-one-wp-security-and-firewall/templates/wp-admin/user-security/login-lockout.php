@@ -11,12 +11,13 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Login lockout options', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<?php
-			// Display security info badge
-			$aiowps_feature_mgr->output_feature_details_badge("user-login-login-lockdown");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-login-lockdown-nonce'); ?>
+		<div id="user-login-login-lockdown-badge">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("user-login-login-lockdown");
+			?>
+		</div>
+		<form action="" method="POST" id="aios-user-login-lockdown-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable login lockout feature', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -154,12 +155,13 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Login lockout IP whitelist settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<?php
-		// Display security info badge
-		$aiowps_feature_mgr->output_feature_details_badge("user-login-lockout-ip-whitelisting");
-		?>
-		<form action="" method="POST">
-		<?php wp_nonce_field('aiowpsec-lockdown-whitelist-settings-nonce'); ?>
+		<div id="user-login-lockout-ip-whitelisting-badge">
+			<?php
+			// Display security info badge
+			$aiowps_feature_mgr->output_feature_details_badge("user-login-lockout-ip-whitelisting");
+			?>
+		</div>
+		<form action="" method="POST" id="aios-user-login-lockout-whitelist-settings-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_lockdown_enable_whitelisting"><?php _e('Enable login lockout IP whitelist', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>

@@ -15,6 +15,8 @@ class Rule_Utils {
 	 */
 	public static function contains_pattern($subject, $pattern) {
 
+		if (empty($subject)) return false;
+
 		if (is_string($pattern)) return (1 === preg_match($pattern, $subject));
 
 		if (!is_array($pattern)) return false;

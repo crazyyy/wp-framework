@@ -11,8 +11,7 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Save the current wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-save-wp-config-nonce'); ?>
+		<form action="" method="POST" id="aiowpsec-save-wp-config-form">
 			<p class="description"><?php _e('Press the button below to backup and download the contents of the currently active wp-config.php file.', 'all-in-one-wp-security-and-firewall'); ?></p>
 			<input type="submit" name="aiowps_save_wp_config" value="<?php _e('Backup wp-config.php file', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
 		</form>
@@ -22,7 +21,6 @@
 	<h3 class="hndle"><label for="title"><?php _e('Restore from a backed up wp-config file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
 		<form id="aiowps_restore_wp_config_form" action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-restore-wp-config-nonce'); ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_restore_wp_config_button"><?php _e('wp-config file to restore from', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>

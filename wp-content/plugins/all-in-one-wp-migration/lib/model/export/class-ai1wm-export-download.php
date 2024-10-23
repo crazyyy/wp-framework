@@ -97,6 +97,10 @@ class Ai1wm_Export_Download {
 
 		do_action( 'ai1wm_status_export_done', $params );
 
+		if ( isset( $params['ai1wm_manual_backup'] ) ) {
+			do_action( 'ai1wm_status_backup_created', $params );
+		}
+
 		return $params;
 	}
 }

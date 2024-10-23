@@ -1,3 +1,13 @@
+@keyframes wpo_blink {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+}
 .wpo_hidden {
   display: none !important;
 }
@@ -605,7 +615,69 @@ a.loading.wpo-refresh-gzip-status img.wpo_spinner.display-none {
   margin-top: 10px;
 }
 
+#wpo-save-options-response {
+  margin-top: 10px;
+  color: #009B24;
+}
+
+#wpo-table-analysis-reload {
+  float: right;
+}
+
+#wpo-table-analysis-reload span {
+  vertical-align: middle;
+}
+
+#wpo-wipe-table-usage-data {
+  margin-top: 15px;
+}
+
+#wp-optimize-database-table-analysis {
+  font-size: 13px;
+}
+
+#wpo-db-analysis-table-search {
+  position: relative;
+  top: 1px;
+  height: 27px;
+}
+
+#wp-optimize-database-table-analysis table th {
+  font-weight: bold;
+}
+
+hr.wpo-thin-bar {
+  height: 1px;
+}
+
 .wpo-disabled-section {
   pointer-events: none;
   opacity: 0.4;
+}
+
+.wp_optimize_blink_animation {
+  margin: 8px;
+  font-size: 120%;
+}
+
+.wp_optimize_blink_animation img {
+  animation-name: wpo_blink;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-out;
+  padding-bottom: 10px;
+}
+
+.wp_optimize_blink_animation-message_text--small {
+  font-size: 100%;
+}
+
+.wp_optimize_blink_animation-message_text--medium {
+  font-size: 120%;
+  line-height: normal;
+}
+
+.wp_optimize_blink_animation-message_text--large {
+  font-size: 140%;
 }

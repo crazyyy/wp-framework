@@ -265,21 +265,30 @@ final class CEI_Core {
 		global $cei_error;
 
 		// Setup internal vars.
-		$cei_error	 = false;
-		$template	 = get_template();
-		$overrides   = array( 'test_form' => false, 'test_type' => false, 'mimes' => array('dat' => 'text/plain') );
-		$file        = wp_handle_upload( $_FILES['cei-import-file'], $overrides );
+		$cei_error = false;
+		$template  = get_template();
+
+		$validate = wp_check_filetype( $_FILES['cei-import-file']['name'], array( 'dat' => 'application/octet-stream' ) );
+		if ( 'application/octet-stream' !== $validate['type'] ) {
+			$cei_error = __( 'File type is not allowed', 'customizer-export-import' );
+			unlink( $_FILES['cei-import-file']['tmp_name'] );
+			return;
+		}
+
+		$overrides = array( 'test_form' => false, 'test_type' => false, 'mimes' => array( 'dat' => 'application/octet-stream' ) );
+		$file      = wp_handle_upload( $_FILES['cei-import-file'], $overrides );
 
 		// Make sure we have an uploaded file.
 		if ( isset( $file['error'] ) ) {
 			$cei_error = $file['error'];
 			return;
 		}
+
 		if ( ! file_exists( $file['file'] ) ) {
 			$cei_error = __( 'Error importing settings! Please try again.', 'customizer-export-import' );
 			return;
 		}
-
+		
 		// Get the upload data.
 		$raw  = file_get_contents( $file['file'] );
 		$data = @unserialize( $raw, array( 'allowed_classes' => false ) );
@@ -341,6 +350,11 @@ final class CEI_Core {
 
 		// Call the customize_save_after action.
 		do_action( 'customize_save_after', $wp_customize );
+	}
+	
+	public static function add_mime_for_upload( $mimes ) {
+		$mimes['dat'] = 'application/dat';
+		return $mimes;
 	}
 
 	/**

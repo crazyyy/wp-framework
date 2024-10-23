@@ -254,6 +254,7 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 			$aio_wp_security->configs->set_value('aiowps_enable_bbp_new_topic_captcha', isset($_POST["aiowps_enable_bbp_new_topic_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_woo_login_captcha', isset($_POST["aiowps_enable_woo_login_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_woo_register_captcha', isset($_POST["aiowps_enable_woo_register_captcha"]) ? '1' : '');
+			$aio_wp_security->configs->set_value('aiowps_enable_woo_checkout_captcha', isset($_POST["aiowps_enable_woo_checkout_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_woo_lostpassword_captcha', isset($_POST["aiowps_enable_woo_lostpassword_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_custom_login_captcha', isset($_POST["aiowps_enable_custom_login_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_password_protected_captcha', isset($_POST["aiowps_enable_password_protected_captcha"]) ? '1' : '');

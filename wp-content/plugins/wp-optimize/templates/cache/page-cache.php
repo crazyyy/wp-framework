@@ -1,7 +1,7 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
 <?php if ($does_server_handles_cache) : ?>
 <div class="wpo-info highlight-dashicons">
-	<h3><?php esc_html_e('Your web hosting company/server handles: ', 'wp-optimize'); ?></h3>
+	<h3><?php esc_html_e('Your web hosting company/server handles:', 'wp-optimize'); ?></h3>
 	<p><?php esc_html_e('Page caching', 'wp-optimize'); ?><span class="dashicons dashicons-saved"></span></p>
 	<p><?php esc_html_e('Gzip compression', 'wp-optimize'); ?><span class="dashicons dashicons-saved"></span></p>
 	<p><?php esc_html_e('Browser static file caching (via headers)', 'wp-optimize'); ?><span class="dashicons dashicons-saved"></span></p>	
@@ -63,6 +63,17 @@
 		<span id="wpo_current_cache_size_information"><?php esc_html_e('Current cache size:', 'wp-optimize'); ?> <?php echo esc_html(WP_Optimize()->format_size($cache_size['size'])); ?></span>
 		<br><span id="wpo_current_cache_file_count"><?php esc_html_e('Number of files:', 'wp-optimize'); ?> <?php echo esc_html($cache_size['file_count']); ?></span>
 	</p>
+	<div class="wpo-fieldgroup__subgroup" style="padding-bottom: 15px;">
+		<div style="float: left;">
+			<label for="wpo-auto-preload-after-purge">
+				<input type="checkbox" id="wpo-auto-preload-after-purge" class="cache-settings" name="auto_preload_purged_contents"  <?php checked($auto_preload_purged_contents); ?>>
+				<?php esc_html_e('Automatically preload content after it is purged', 'wp-optimize'); ?>
+			</label>
+			<span tabindex="0" data-tooltip="<?php echo esc_attr__('Automatically preload pages when a post or page is purged or updated.', 'wp-optimize') . ' ' . esc_attr__('Note that enabling this feature may extend the time it takes to save a post due to background preloading.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
+		</div>
+		<span class="dashicons dashicons-yes display-none save-done" style="line-height: 20px; float: left;"></span>
+	</div>
+
 </div>
 
 <h3><?php esc_html_e('Cache settings', 'wp-optimize'); ?></h3>

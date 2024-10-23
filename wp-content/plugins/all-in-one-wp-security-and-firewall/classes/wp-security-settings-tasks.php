@@ -17,8 +17,14 @@ class AIOWPSecurity_Settings_Tasks {
 		global $aio_wp_security;
 		$msg = array();
 		$aio_wp_security->configs->set_value('aiowps_enable_basic_firewall', '1', true);
+
 		//Now let's write the applicable rules to the .htaccess file
-		$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+		if (AIOWPSecurity_Utility::allow_to_write_to_htaccess()) {
+			$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+		} else {
+			$res = true;
+		}
+
 		if ($res) {
 			$msg['updated'] = __('Settings were successfully saved.', 'all-in-one-wp-security-and-firewall');
 		} else {
@@ -35,11 +41,17 @@ class AIOWPSecurity_Settings_Tasks {
 	public static function disable_all_security_features() {
 		$msg = array();
 		AIOWPSecurity_Configure_Settings::turn_off_all_security_features();
+		
 		//Now let's clear the applicable rules from the .htaccess file
-		$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+		if (AIOWPSecurity_Utility::allow_to_write_to_htaccess()) {
+			$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+		} else {
+			$res = true;
+		}
 		
 		//Now let's revert the disable editing setting in the wp-config.php file if necessary
 		$res2 = AIOWPSecurity_Utility::enable_file_edits();
+		
 		if ($res) {
 			$msg['updated'] = __('All the security features have been disabled successfully.', 'all-in-one-wp-security-and-firewall');
 		} else {
@@ -59,9 +71,15 @@ class AIOWPSecurity_Settings_Tasks {
 	 */
 	public static function disable_all_firewall_rules() {
 		$msg = array();
-		AIOWPSecurity_Configure_Settings::turn_off_all_security_features();
+		AIOWPSecurity_Configure_Settings::turn_off_firewall_configs();
+
 		//Now let's clear the applicable rules from the .htaccess file
-		$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+		if (AIOWPSecurity_Utility::allow_to_write_to_htaccess()) {
+			$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
+		} else {
+			$res = true;
+		}
+
 		if ($res) {
 			$msg['updated'] = __('All firewall rules have been disabled successfully.', 'all-in-one-wp-security-and-firewall');
 		} else {
@@ -81,7 +99,11 @@ class AIOWPSecurity_Settings_Tasks {
 			include(AIO_WP_SECURITY_PATH . '/admin/wp-security-reset-settings.php');
 		}
 		$reset_option_res = AIOWPSecurity_Reset_Settings::reset_options();
-		$delete_htaccess = AIOWPSecurity_Reset_Settings::delete_htaccess();
+		if (AIOWPSecurity_Utility::allow_to_write_to_htaccess()) {
+			$delete_htaccess = AIOWPSecurity_Reset_Settings::delete_htaccess();
+		} else {
+			$delete_htaccess = true;
+		}
 		AIOWPSecurity_Reset_Settings::reset_db_tables();
 		// AIOS premium and other plugin related config settings are reset by adding below action.
 		do_action('aios_reset_all_settings');

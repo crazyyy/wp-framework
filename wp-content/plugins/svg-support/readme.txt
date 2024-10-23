@@ -1,102 +1,106 @@
 === SVG Support ===
 Contributors: Benbodhi
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z9R7JERS82EQQ
-Tags: svg, vector, safesvg, safe svg, sanitization, sanitisation, sanitizer, sanitiser, sanitized, sanitised, sanitize, sanitise, css, style, mime, mime type, embed, img, render, inline, animation, animation, animate, js
+Tags: svg, vector, safe svg, sanitization, mime type
 Requires at least: 4.8
-Tested up to: 6.4.1
+Tested up to: 6.6.2
 Requires PHP: 7.2
-Stable tag: 2.5.5
+Stable tag: 2.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Safely upload SVG files to the Media Library with optional sanitization and minification. Render your SVG files inline for direct styling/animation of an SVG's internal elements.
+Safely upload SVGs to the Media Library, sanitize/minify them, and even render them inline for direct styling/animation of internal elements.
 
 
 == Description ==
 
-**Safely upload SVG files to your media library and use them like any other image. Now with optional sanitization!**
+**Upload SVG files to your media library securely, with built-in sanitization and advanced features for styling and animation.**
 
-But SVG Support has more features!!! Read on to learn more.
+SVG Support goes beyond just enabling SVG uploads. It offers powerful features that make working with SVGs easier and more flexible.
 
-When using SVG images on your WordPress site, it can be hard to style elements within the SVG using CSS. **Now you can, easily!**
+Scalable Vector Graphics (SVG) are a staple in modern web design, allowing you to embed images with small file sizes that scale perfectly at any size without losing quality. However, styling and animating SVGs can be challenging when using standard methods. SVG Support simplifies this by allowing you to render your SVGs inline, enabling direct styling and animation using CSS and JavaScript.
 
-Scalable Vector Graphics (SVG) are becoming common place in modern web design, allowing you to embed images with small file sizes that are scalable to any visual size without loss of quality.
+This plugin provides:
 
-This plugin not only provides SVG Support like the name says, it also allows you to easily embed your full SVG file's code using a simple IMG tag.
-
-By adding the class `"style-svg"` to your IMG elements (or outer containers), this plugin dynamically replaces any IMG elements containing an SVG in the src that are found inside the target class with your complete SVG code, rendering it inline.
-
-The main purpose of this is to allow styling and animation of your SVG elements. Usually your styling options are restricted when using `embed`, `object` or `img` tags alone.
+- **SVG Upload Support**: Easily upload SVG files to your media library.
+- **Automatic Sanitization**: All SVG uploads are sanitized by default to ensure security.
+- **Minification Options**: Reduce SVG file sizes with optional minification.
+- **Inline Rendering**: Render SVG code inline by adding the `"style-svg"` class to your images, making the elements within your SVGs directly targetable for styling and animation.
+- **Role-Based Upload Control**: Restrict SVG upload capabilities to specific user roles.
+- **Custom Target Class**: Define a custom CSS class for targeting SVGs, which can be applied to outer elements for greater flexibility.
 
 = Features =
-* SVG Support for your media library
-* Sanitize SVG uploads
-* Minify SVG files
-* Inline your SVG code
-* Style SVG elements directly using CSS
-* Animate SVG elements using CSS and JS
-* Super easy settings page with instructions
-* Restrict SVG upload ability to Administrators only
-* Set custom target class (can be used on outer elements as of 2.4)
-* **Extremely Simple To Use - Simplifies complex usage of SVG files**
+* Full SVG support in your media library
+* Automatic sanitization for secure SVG uploads
+* Optional minification for smaller SVG file sizes
+* Role-based upload restrictions
+* Inline SVG rendering for easy styling and animation
+* Custom target class support for flexible SVG handling
+* Simple and intuitive settings page with clear instructions
+* **Extremely Simple to Use - Simplifies complex SVG file handling**
 
 
 == Usage ==
 
-Firstly, install and activate SVG Support (this plugin).
+1. **Installation**: Install and activate SVG Support (this plugin) through your WordPress dashboard.
 
-Once activated, you can simply upload SVG images to your media library like any other file.
+2. **Basic Usage**: Once activated, you can upload SVG files to your media library like any other image file.
 
-As an administrator, you can go to the admin settings page "Settings > SVG Support" and restrict SVG file uploads to administrators only.
+3. **Admin Settings**:
+	- Navigate to "Settings > SVG Support" in your WordPress admin dashboard.
+	- Restrict SVG file uploads to specific user roles, such as Administrators.
 
-If you only need to upload SVG files to use as images, you don't need to enable "Advanced Mode”. Leaving it disabled ensures the frontend script is not enqueued and the unnecessary settings stay hidden.
+4. **Advanced Mode**:
+	- If you only need to upload SVG files as static images, you don’t need to enable "Advanced Mode". This keeps the plugin lightweight by not enqueuing unnecessary scripts.
+	- **For Advanced Use**: Enable "Advanced Mode" to access additional features such as minification and inline rendering.
 
-**For advanced use:** Enable the "Advanced Mode" under "Settings > SVG Support".
+5. **Inline SVG Rendering**:
+	- With Advanced Mode enabled, you can embed SVG images by adding the `"style-svg"` class (or a custom class you’ve defined) to your `<img>` tags.
+	- Example:
+	```
+	<img class="style-svg" alt="alt-text" src="image-source.svg" />
+	```
+	or
+	```
+	<img class="your-custom-class" alt="alt-text" src="image-source.svg" />
+	```
+	- The plugin dynamically replaces the `<img>` element with the actual SVG code, making the SVG’s internal elements targetable by CSS and JavaScript.
 
-Now you can enable santization and/or minification of your SVG uploads, define a custom CSS class to target and fiddle with some other settings.
+6. **Custom Target Classes**:
+	- You can set a custom class to target for inline rendering.
+	- You can add the target class to outer elements if you cannot directly add it to the `<img>` tag. The plugin will traverse the element’s children to find and replace the SVG.
 
-With advanced mode enabled, you can embed your SVG images just like you would a standard image with the addition of adding (in text view) the class `"style-svg"` (or the custom class you defined) to your IMG tags that you want this plugin to swap out with your actual SVG code.
+7. **Auto-Class Insertion (Classic Editor)**:
+	- Enable the setting to automatically add your target class to SVG images when inserting them into posts or pages. This also removes unnecessary attributes.
 
-For example:
+8. **Inline Rendering**:
+	- Since version 2.3.11, you can force all SVG files sitewide to be rendered inline with a single checkbox (use with caution).
+	- You can choose between the minified or expanded version of the JS file for inline rendering.
+	- You can choose between the jQuery or vanilla JS file for inline rendering.
 
-`<img class="style-svg" alt="alt-text" src="image-source.svg" />`
+9. **Featured Images**:
+	- If you save a post/page with an SVG as the featured image, a checkbox will appear in the featured image meta box to allow you to render the SVG inline (only available if Advanced Mode is active).
 
-or
+**Important**: If your SVG isn’t displaying correctly, it might be due to 0 height and width. Set your SVG’s dimensions in your CSS to ensure proper display.
 
-`<img class="your-custom-class" alt="alt-text" src="image-source.svg" />`
+*For any issues, please use the support tab, and I will do my best to assist you quickly.*
 
-The whole IMG tag element will now be dynamically replaced by the actual code of your SVG, making the inner content targetable.<br />
-This allows you to target elements within your SVG using CSS and JS.
-
-You can remove all other attributes from the IMG tag as it will disappear anyway.
-
-Additionally, you can now add the target class to outer elements if you're unable to add it directly to the IMG itself. This plugin will traverse the children looking for your SVG to replace with the inline code.
-
-There’s a setting to automatically add your class to the IMG tag for you when you're inserting SVG’s in to a post or page, which also removes unnecessary tags.
-
-Since 2.3.11, you can force all SVG files sitewide to be rendered inline with a single checkbox (use with caution). Additionally, you can now choose whether to use the minified or expanded version of the JS file.
-
-*Featured Images:* If a post/page is saved with your SVG as a featured image, a checkbox will display in the featured image meta box to allow you to render it inline (only if advanced mode is active).
-
-Please Note: If your SVG isn’t showing, it’s likely that it is being displayed with 0 height and width. In this case, you will need to set your own height and width in your CSS for SVG files to display correctly.
-
-*If you're having any issues, please use the support tab and I will try my best to get back to you quickly*
 
 == Spin up a test site ==
 
 With a single click, you can spin up a completely free test site to test SVG Support using TasteWP! No sign up, no cards, nothing! How cool is that? Give it a go:
 [Click Here to spin up a test site in seconds](https://tastewp.com/new?pre-installed-plugin-slug=svg-support&redirect=options-general.php%3Fpage%3Dsvg-support&ni=true)
 
+
 == Security ==
 
-As with allowing uploads of any files, there is potential risks involved. So I have added some features to help!
+Uploading files, including SVGs, comes with potential risks. SVG Support provides several features to help mitigate these risks and ensure secure handling of SVG files:
 
-- Optional sanitization to help strip any malicious code form your SVG files upon upload.
-- Restrict uploads to admin only.
+- Sanitization by default: Starting from version 2.5.8, all SVG uploads are sanitized by default to remove any potentially malicious code.
+- Role-Based Upload Restrictions: You can restrict SVG uploads to specific user roles, ensuring only trusted users can upload these files.
+- Optional Bypass of Sanitization: You have the option to allow certain roles to bypass the sanitization process, though this should be used with caution.
 
-Only allow users to upload SVG files if you trust them. You have the option to restrict SVG usage to Administrators only from the settings page plus the ability to enable SVG sanitization to attemnpt to clean up any SVG files uploaded.
-
-By default, anyone with Media Library access or upload_files capability will be able to upload SVG files (that is Administrators, Authors and Editors). Please note that SVG files are actually XML which would allow someone to inject malicious code if you're not careful with who has upload privileges.
+Important: Only allow users you trust to upload SVG files. By default, anyone with Media Library access or the `upload_files` capability (e.g., Administrators, Authors, Editors) can upload SVGs. Remember, SVG files are XML-based, meaning they can contain malicious code if not properly sanitized. Always configure your settings to balance functionality with security.
 
 
 == Feedback ==
@@ -105,6 +109,7 @@ I'm open to your [suggestions and feedback](mailto:wp@benbodhi.com) - Thanks for
 
 Follow [@SVGSupport](https://twitter.com/svgsupport) on Twitter
 Follow [@benbodhi](https://twitter.com/benbodhi) on Twitter
+Follow [@benbodhi](https://warpcast.com/benbodhi) on Warpcast
 
 *Note:* I hope you like this plugin! Please take a moment to [rate it](https://wordpress.org/support/view/plugin-reviews/svg-support?filter=5#postform).
 
@@ -160,6 +165,38 @@ You need to add the mime type for svg and svgz to: "MLA Settings > Media Library
 
 
 == Changelog ==
+
+= 2.5.8 =
+* **Security Enhancements**:
+	- Improved sanitization of SVG uploads and attachments for enhanced security.
+	- Ensured all output in the admin settings page is properly escaped.
+	- Replaced direct file handling functions with WordPress APIs for better security and compatibility.
+	- Improved translation support with added translators' comments and ordered placeholders.
+
+* **Admin Interface Improvements**:
+	- Updated admin-init.php with better escaping practices and enhanced security for the settings page.
+	- Added error logging to SVG processing to assist with debugging without disrupting the user experience.
+
+* **Performance and Compatibility**:
+	- Updated enqueue functions to ensure scripts and styles are loaded efficiently with proper dependencies.
+	- Improved metadata handling for SVGs to prevent issues in the Media Library and with ACF integration.
+	- Optimized nonce verification and meta updates in the featured image functions to prevent unnecessary database writes.
+
+* **General Code Improvements**:
+	- Refactored code to reduce redundancy and improve maintainability.
+	- Added detailed inline documentation for better code clarity and future development.
+
+* **Experimental Integration with WP All Import**:
+	- Introduced integration with WP All Import for experimental SVG handling during imports.
+	- SVG files imported via WP All Import are sanitized, and their metadata is generated and updated correctly.
+	- Added error logging to track issues during SVG import processing.
+	- **Note**: This feature is experimental and commented out in the main plugin file for now. Feel free to uncomment the include lines to test it out, but please ensure you back up your data first.
+
+= 2.5.7 =
+* Compatibility with newer versions of php.
+
+= 2.5.6 =
+* Addressed some security concerns.
 
 = 2.5.5 =
 * More error fixes and general clean up.
@@ -392,6 +429,15 @@ You need to add the mime type for svg and svgz to: "MLA Settings > Media Library
 
 
 == Upgrade Notice ==
+= 2.5.8 =
+Improved security, enhanced SVG processing, and updated admin interface. Includes better sanitization and escaping practices. Please take a backup before updating!
+
+= 2.5.7 =
+This update addresses issues with newer PHP versions.
+
+= 2.5.6 =
+This update addresses some security concerns.
+
 = 2.5.5 =
 Updating to 2.5+ Adds new features and addresses a number of earlier issues raised. Please take a backup before updating!
 2.5.5 fixes more reported errors in the 2.5 series of updates.
@@ -452,10 +498,10 @@ Fixes fatal error in some cases when removing old option from the database.
 Update to address PHP warnings and notices on the image widget when wp_debug is enabled.
 
 = 2.3.12 =
-* Wrapped the inline JS so you can call the inline function at will using `bodhisvgsInlineSupport();`. Added a native help tab. Removed the admin update notice. Did some general clean up of code and settings page. As always, it's best to take a full backup of your site before running any updates.
+* Inline JS can now be called using `bodhisvgsInlineSupport();`. Added a native help tab and removed the admin update notice. General cleanup of code and settings page. Remember to back up your site before updating.
 
 = 2.3.11 =
-* New Features and Fixes! Now you can force ALL of your SVG files (old and new) to be rendered inline in a single click with the new "Force Inline SVG" setting. You can also choose to use an expanded version of the inline JS if you want to minify it separately using a caching plugin or similar.
+* New Features and Fixes: Added "Force Inline SVG" to render all SVG files inline with one click. Option to use an expanded JS version for separate minification with a caching plugin.
 
 = 2.3.10 =
 * Fixed missing links in settings page.

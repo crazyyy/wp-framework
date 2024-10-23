@@ -17,41 +17,19 @@
 ?>
 	<div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('WP directory and file permissions scan results', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-		<div class="inside">
-			<?php
-				// Display security info badge
-				$aiowps_feature_mgr->output_feature_details_badge("filesystem-file-permissions");
-			?>
-			<form action="" method="POST">
-				<?php wp_nonce_field('aiowpsec-fix-permissions-nonce'); ?>
+		<div class="inside" id="aios-file-permissions-container" >
+			<div id="filesystem-file-permissions-badge">
+				<?php
+					// Display security info badge
+					$aiowps_feature_mgr->output_feature_details_badge("filesystem-file-permissions");
+				?>
+			</div>
+			<form action="" method="POST" id="aios-file-permissions-form" >
 				<input type="hidden" name="aiowps_permission_chg_file" id="aiowps_permission_chg_file" value="">
 				<input type="hidden" name="aiowps_recommended_permissions" id="aiowps_recommended_permissions" value="">
-				<table class="widefat file_permission_table">
-					<thead>
-						<tr>
-							<th><?php _e('Name', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('File/Folder', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('Current permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('Recommended permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('Recommended action', 'all-in-one-wp-security-and-firewall'); ?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-							foreach ($files_dirs_to_check as $file_or_dir) {
-								$filesystem_menu->show_wp_filesystem_permission_status($file_or_dir['name'], $file_or_dir['path'], $file_or_dir['permissions']);
-							}
-						?>
-					</tbody>
-					<tfoot>
-						<tr>
-							<th><?php _e('Name', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('File/Folder', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('Current permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('Recommended permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-							<th><?php _e('Recommended action', 'all-in-one-wp-security-and-firewall'); ?></th>
-					</tfoot>
-				</table>
+				<div id="aios_file_permissions_table">
+					<?php $aio_wp_security->include_template('wp-admin/filesystem-security/partials/file-permissions-table.php', false, array('files_dirs_to_check' => $files_dirs_to_check, 'file_utility' => $file_utility)); ?>
+				</div>
 			</form>
 		</div>
 	</div>

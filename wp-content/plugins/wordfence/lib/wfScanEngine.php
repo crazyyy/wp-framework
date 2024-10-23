@@ -9,17 +9,20 @@ require_once(__DIR__ . '/wfUtils.php');
 require_once(__DIR__ . '/wfFileUtils.php');
 require_once(__DIR__ . '/wfScanPath.php');
 require_once(__DIR__ . '/wfScanFile.php');
+require_once(__DIR__ . '/wfScanFileListItem.php');
 require_once(__DIR__ . '/wfScanEntrypoint.php');
 require_once(__DIR__ . '/wfCurlInterceptor.php');
 
 class wfScanEngine {
 	const SCAN_MANUALLY_KILLED = -999;
+	const SCAN_CHECK_INTERVAL = 10; //Seconds
 	
 	private static $scanIsRunning = false; //Indicates that the scan is running in this specific process
 
 	public $api = false;
 	private $dictWords = array();
 	private $forkRequested = false;
+	private $lastCheck = 0;
 
 	//Beginning of serialized properties on sleep
 	/** @var wordfenceHash */
@@ -350,33 +353,36 @@ class wfScanEngine {
 		}
 	}
 
-	public function shouldFork() {
-		static $lastCheck = 0;
+	private function checkScanStatus() {
+		wfIssues::updateScanStillRunning();
+		$this->checkForCoreVersionChange();
+		self::checkForKill();
+		$this->checkForDurationLimit();
+	}
 
-		if (time() - $this->cycleStartTime > $this->maxExecTime) {
+	public function shouldFork() {
+		$timestamp = time();
+
+		if ($timestamp - $this->cycleStartTime > $this->maxExecTime) {
+			$this->checkScanStatus();
 			return true;
 		}
 
-		if ($lastCheck > time() - $this->maxExecTime) {
+		if ($this->lastCheck > $timestamp - $this->maxExecTime) {
 			return false;
 		}
-		$lastCheck = time();
 
-		$this->checkForCoreVersionChange();
-		wfIssues::updateScanStillRunning();
-		self::checkForKill();
-		$this->checkForDurationLimit();
+		if ($timestamp - $this->lastCheck > self::SCAN_CHECK_INTERVAL)
+			$this->checkScanStatus();
+
+		$this->lastCheck = $timestamp;
 
 		return false;
 	}
 
 	public function forkIfNeeded() {
-		wfIssues::updateScanStillRunning();
-		$this->checkForCoreVersionChange();
-		self::checkForKill();
-		$this->checkForDurationLimit();
-		if (time() - $this->cycleStartTime > $this->maxExecTime) {
-			wordfence::status(4, 'info', __("Forking during hash scan to ensure continuity.", 'wordfence'));
+		if ($this->shouldFork()) {
+			wordfence::status(4, 'info', __("Forking during malware scan to ensure continuity.", 'wordfence'));
 			$this->fork();
 		}
 	}
@@ -2822,6 +2828,25 @@ class wfScanEngine {
 		} else {
 			$this->metrics[$type][$key][] = $value;
 		}
+	}
+
+	/**
+	 * Queries the is_safe_file endpoint. If provided an array, it does a bulk check and returns an array containing the
+	 * hashes that were marked as safe. If provided a string, it returns a boolean to indicate the safeness of the file.
+	 *
+	 * @param string|array $shac
+	 * @return array|bool
+	 */
+	public function isSafeFile($shac) {
+		if (is_array($shac)) {
+			$result = $this->api->call('is_safe_file', array(), array('multipleSHAC' => json_encode($shac)));
+			if (isset($result['isSafe'])) {
+				return $result['isSafe'];
+			}
+			return array();
+		}
+		$result = $this->api->call('is_safe_file', array(), array('shac' => strtoupper($shac)));
+		return isset($result['isSafe']) && $result['isSafe'] == 1;
 	}
 }
 

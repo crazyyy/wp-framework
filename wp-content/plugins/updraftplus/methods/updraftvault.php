@@ -366,7 +366,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		
 		ob_start();
 		?>
-			<tr class="{{get_template_css_classes true}}">
+			<tr id="remote-storage-updraftvault" class="{{get_template_css_classes true}}">
 				<th><img id="vaultlogo" src="{{storage_image_url}}" alt="{{method_display_name}}" width="150" height="116"></th>
 				<td valign="top" id="updraftvault_settings_cell">
 					{{{simplexmlelement_existence_label}}}

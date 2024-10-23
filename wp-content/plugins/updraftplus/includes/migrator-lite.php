@@ -367,7 +367,7 @@ class UpdraftPlus_Migrator_Lite {
 	public function lite_restore_all_downloaded_postscan($backups, $timestamp, $elements, &$info, &$mess, &$warn, &$err) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Filter use
 		if (is_array($info) && isset($info['migration']) && true === $info['migration']) {
 			if (empty($info['addui'])) $info['addui'] = '';
-			$info['addui'] .= '<div id="updraft_restorer_dboptions" class="notice before-h2 updraft-restore-option updraft-hidden">';
+			$info['addui'] .= '<div id="updraft_restorer_dboptions" class="udp-notice before-h2 updraft-restore-option updraft-hidden">';
 			$info['addui'] .= '<h4>' . __('Database restoration options:', 'updraftplus') . '</h4>';
 			$info['addui'] .= '<input name="updraft_restorer_replacesiteurl" id="updraft_restorer_replacesiteurl" type="checkbox" value="1" checked><label for="updraft_restorer_replacesiteurl" title="'.sprintf(__('All references to the site location in the database will be replaced with your current site URL, which is: %s', 'updraftplus'), htmlspecialchars(untrailingslashit(site_url()))).'"> '.__('Search and replace site location in the database (migrate)', 'updraftplus').'</label>';
 			$info['addui'] .= '</div>';

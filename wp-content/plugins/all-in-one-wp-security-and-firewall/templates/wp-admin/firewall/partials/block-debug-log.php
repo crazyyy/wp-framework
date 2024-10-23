@@ -2,11 +2,13 @@
 <div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('Block access to debug log file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
-		<?php
-		//Display security info badge
-		global $aiowps_feature_mgr;
-		$aiowps_feature_mgr->output_feature_details_badge("firewall-block-debug-file-access");
-		?>
+			<div id="firewall-block-debug-file-access-badge">
+			<?php
+			//Display security info badge
+			global $aiowps_feature_mgr;
+			$aiowps_feature_mgr->output_feature_details_badge("firewall-block-debug-file-access");
+			?>
+			</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Block access to debug.log file', 'all-in-one-wp-security-and-firewall'); ?>:</th>

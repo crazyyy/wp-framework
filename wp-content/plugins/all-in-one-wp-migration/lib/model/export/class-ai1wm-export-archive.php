@@ -31,6 +31,8 @@ class Ai1wm_Export_Archive {
 
 	public static function execute( $params ) {
 
+		do_action( 'ai1wm_status_export_start', $params );
+
 		// Set progress
 		Ai1wm_Status::info( __( 'Creating an empty archive...', AI1WM_PLUGIN_NAME ) );
 

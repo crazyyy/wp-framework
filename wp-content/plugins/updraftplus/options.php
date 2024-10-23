@@ -7,6 +7,11 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 class UpdraftPlus_Options {
 
 	/**
+	 * The url for UprdraftPlus page
+	 */
+	const PARENT_FILE = 'options-general.php?page=updraftplus';
+
+	/**
 	 * Whether or not the current user has permission to manage UpdraftPlus
 	 *
 	 * @return Boolean
@@ -88,8 +93,56 @@ class UpdraftPlus_Options {
 	 * Register the UpdraftPlus admin menu entry
 	 */
 	public static function add_admin_pages() {
+		$capability = apply_filters('option_page_capability_updraft-options-group', 'manage_options');
+
+		if (!defined('UPDRAFTPLUS_DISABLE_TOP_LEVEL_MENU_ENTRY') || !UPDRAFTPLUS_DISABLE_TOP_LEVEL_MENU_ENTRY) {
+			// Check user capability to manage options before proceeding
+			if (!current_user_can($capability)) return;
+
+			global $submenu, $title;
+
+			if (isset($_GET['page']) && 'updraftplus' == $_GET['page']) $title = 'UpdraftPlus';
+
+			// Add "UpdraftPlus" as the main menu item
+			add_menu_page(
+				'UpdraftPlus',
+				'UpdraftPlus',
+				$capability,
+				'options-general.php?page=updraftplus',
+				'', // Set the callback to empty string because it's unused
+				trailingslashit(UPDRAFTPLUS_URL).'images/dashicon-white.png'
+			);
+
+			UpdraftPlus_Options::add_submenu();
+
+			foreach ($submenu['options-general.php'] as $key => $item) {
+				if ('updraftplus' != $item[2]) continue;
+				unset($submenu['options-general.php'][$key]);
+			}
+		} else {
+			UpdraftPlus_Options::add_submenu();
+		}
+	}
+
+	/**
+	 * Adds a submenu page under the "Settings" menu in the WordPress admin.
+	 *
+	 * The capability required to access this submenu is filtered through the
+	 * 'option_page_capability_updraft-options-group' filter, with a default value of 'manage_options'.
+	 */
+	public static function add_submenu() {
 		global $updraftplus_admin;
-		add_submenu_page('options-general.php', 'UpdraftPlus', __('UpdraftPlus Backups', 'updraftplus'), apply_filters('option_page_capability_updraft-options-group', 'manage_options'), 'updraftplus', array($updraftplus_admin, 'settings_output'));
+
+		$capability = apply_filters('option_page_capability_updraft-options-group', 'manage_options');
+
+		add_submenu_page(
+			'options-general.php',
+			'UpdraftPlus',
+			__('UpdraftPlus Backups', 'updraftplus'),
+			$capability,
+			'updraftplus',
+			array($updraftplus_admin, 'settings_output')
+		);
 	}
 
 	public static function options_form_begin($settings_fields = 'updraft-options-group', $allow_autocomplete = true, $get_params = array(), $classes = '') {
@@ -205,8 +258,9 @@ class UpdraftPlus_Options {
 		register_setting('updraft-options-group', 'updraft_startday_db', array('UpdraftPlus_Options', 'week_or_month_day'));
 
 		global $pagenow;
-		if (is_multisite() && 'options-general.php' == $pagenow && isset($_REQUEST['page']) && 'updraftplus' == substr($_REQUEST['page'], 0, 11)) {
-			add_action('all_admin_notices', array('UpdraftPlus_Options', 'show_admin_warning_multisite'));
+		if ('options-general.php' == $pagenow && isset($_REQUEST['page']) && 'updraftplus' == substr($_REQUEST['page'], 0, 11)) {
+			if (!defined('UPDRAFTPLUS_DISABLE_TOP_LEVEL_MENU_ENTRY') || !UPDRAFTPLUS_DISABLE_TOP_LEVEL_MENU_ENTRY) add_filter('parent_file', array('UpdraftPlus', 'parent_file'), 99);
+			if (is_multisite()) add_action('all_admin_notices', array('UpdraftPlus_Options', 'show_admin_warning_multisite'));
 		}
 	}
 

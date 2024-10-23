@@ -45,6 +45,7 @@ class WP_Optimize_Minify_Admin {
 		add_action('wp_optimize_admin_page_wpo_minify_settings', array($this, 'output_settings'), 20);
 		add_action('wp_optimize_admin_page_wpo_minify_advanced', array($this, 'output_advanced'), 20);
 		add_action('wp_optimize_admin_page_wpo_minify_font', array($this, 'output_font_settings'), 20);
+		add_action('wp_optimize_admin_page_wpo_minify_analytics', array($this, 'output_analytics_settings'), 20);
 		add_action('wp_optimize_admin_page_wpo_minify_css', array($this, 'output_css_settings'), 20);
 		add_action('wp_optimize_admin_page_wpo_minify_js', array($this, 'output_js_settings'), 20);
 		add_action('wp_optimize_admin_page_wpo_minify_preload', array($this, 'output_preload_settings'), 20);
@@ -164,6 +165,28 @@ class WP_Optimize_Minify_Admin {
 			false,
 			array(
 				'wpo_minify_options' => $wpo_minify_options
+			)
+		);
+	}
+	
+	/**
+	 * Minify - Outputs the analytics settings tab
+	 *
+	 * @return void
+	 */
+	public function output_analytics_settings() {
+		$config = wp_optimize_minify_config()->get();
+		$id = isset($config['tracking_id']) ? $config['tracking_id'] : '';
+		$method = isset($config['analytics_method']) ? $config['analytics_method'] : '';
+		$is_enabled = isset($config['enable_analytics']) ? $config['enable_analytics'] : false;
+	
+		WP_Optimize()->include_template(
+			'minify/analytics-settings-tab.php',
+			false,
+			array(
+				'id' => $id,
+				'method'=> $method,
+				'is_enabled'=> $is_enabled
 			)
 		);
 	}

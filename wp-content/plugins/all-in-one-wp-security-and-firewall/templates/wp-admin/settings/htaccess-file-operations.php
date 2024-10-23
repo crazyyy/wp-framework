@@ -11,8 +11,7 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Save the current .htaccess file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-save-htaccess-nonce'); ?>
+		<form action="" method="POST" id="aiowpsec-save-htaccess-form">
 			<p class="description"><?php _e('Press the button below to backup and save the currently active .htaccess file.', 'all-in-one-wp-security-and-firewall'); ?></p>
 			<input type="submit" name="aiowps_save_htaccess" value="<?php _e('Backup .htaccess file', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
 		</form>
@@ -22,7 +21,6 @@
 	<h3 class="hndle"><label for="title"><?php _e('Restore from a backed up .htaccess file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
 		<form id="aiowps_restore_htaccess_form" action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-restore-htaccess-nonce'); ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="aiowps_restore_htaccess_button"><?php _e('.htaccess file to restore from', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>

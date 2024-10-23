@@ -60,11 +60,13 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('File change detection settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<?php
-			$aiowps_feature_mgr->output_feature_details_badge('scan-file-change-detection');
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-scheduled-fcd-scan-nonce'); ?>
+		<div id="scan-file-change-detection-badge">
+			<?php
+				$aiowps_feature_mgr->output_feature_details_badge('scan-file-change-detection');
+			?>
+		</div>
+		<div id="aios-file-change-info-box"></div>
+		<form action="" method="POST" id="aiowpsec-scheduled-fcd-scan-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable automated file change detection scan', 'all-in-one-wp-security-and-firewall'); ?>:</th>

@@ -134,6 +134,15 @@ class AIOWPSecurity_Feature_Item_Manager {
 					'aiowps_enable_registration_honeypot'
 				)
 			),
+			'http-authentication-admin-frontend' => array(
+				'name' => __('HTTP authentication for admin and frontend', 'all-in-one-wp-security-and-firewall'),
+				'points' => $this->feature_point_2,
+				'level' => $this->sec_level_basic,
+				'options' => array(
+					'aiowps_http_authentication_admin',
+					'aiowps_http_authentication_frontend',
+				)
+			),
 			// Database Security menu features
 			'db-security-db-prefix' => array(
 				'name' => __('Database prefix', 'all-in-one-wp-security-and-firewall'),
@@ -162,12 +171,12 @@ class AIOWPSecurity_Feature_Item_Manager {
 					'aiowps_disable_file_editing'
 				)
 			),
-			'block-wp-files-access' => array(
+			'auto-delete-wp-files' => array(
 				'name' => __('WordPress files access', 'all-in-one-wp-security-and-firewall'),
 				'points' => $this->feature_point_2,
 				'level' => $this->sec_level_basic,
 				'options' => array(
-					'aiowps_prevent_default_wp_file_access'
+					'aiowps_auto_delete_default_wp_files'
 				)
 			),
 			// Blacklist Manager menu features
@@ -186,7 +195,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_basic,
 				'options' => array(
 					'aiowps_enable_basic_firewall'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-pingback-rules' => array(
 				'name' => __('Enable pingback vulnerability protection', 'all-in-one-wp-security-and-firewall'),
@@ -202,7 +212,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_inter,
 				'options' => array(
 					'aiowps_block_debug_log_file_access'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-disable-index-views' => array(
 				'name' => __('Disable index views', 'all-in-one-wp-security-and-firewall'),
@@ -210,7 +221,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_inter,
 				'options' => array(
 					'aiowps_disable_index_views'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-disable-trace-track' => array(
 				'name' => __('Disable trace and track', 'all-in-one-wp-security-and-firewall'),
@@ -218,7 +230,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_advanced,
 				'options' => array(
 					'aiowps_disable_trace_and_track'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-forbid-proxy-comments' => array(
 				'name' => __('Forbid proxy comments', 'all-in-one-wp-security-and-firewall'),
@@ -470,6 +483,15 @@ class AIOWPSecurity_Feature_Item_Manager {
 				),
 				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'is_woocommerce_plugin_active'),
 			),
+			'woo-checkout-captcha' => array(
+				'name' => __('Woo Checkout CAPTCHA', 'all-in-one-wp-security-and-firewall'),
+				'points' => $this->feature_point_2,
+				'level' => $this->sec_level_basic,
+				'options' => array(
+					'aiowps_enable_woo_checkout_captcha'
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'is_woocommerce_plugin_active'),
+			),
 			// Ban POST requests with blank user-agent and referer
 			'firewall-ban-post-blank-headers' => array(
 				'name' => __('Ban POST requests that have blank user-agent and referer headers', 'all-in-one-wp-security-and-firewall'),
@@ -520,28 +542,60 @@ class AIOWPSecurity_Feature_Item_Manager {
 	}
 
 	/**
+	 * Call the callback function associated with the feature item.
+	 *
+	 * @param mixed $feature_item The feature item object.
+	 */
+	private function call_feature_callback($feature_item) {
+		call_user_func($feature_item->callback, $feature_item);
+	}
+
+	/**
 	 * This function will output the feature details badge HTML
 	 *
-	 * @param string $feature_id - the id of the feature we want to get the badge for
+	 * @param string $feature_id             - the id of the feature we want to get the badge for
+	 * @param bool   $return_instead_of_echo - whether to return the HTML or echo it
 	 *
-	 * @return void
+	 * @return string|void
 	 */
-	public function output_feature_details_badge($feature_id) {
+	public function output_feature_details_badge($feature_id, $return_instead_of_echo = false) {
+		// Retrieve the feature item by ID
 		$feature_item = $this->get_feature_item_by_id($feature_id);
+
 		if (!$feature_item) return;
+
+		$this->call_feature_callback($feature_item);
+
+		// Prepare HTML for the feature badge
 		$max_security_points = $feature_item->item_points;
 		$current_security_points = $feature_item->is_active() ? $max_security_points : 0;
 		$security_level = $feature_item->get_security_level_string();
 		$protection_level = (0 == $current_security_points) ? 'none' : 'full';
 		$status_icon = (0 == $current_security_points) ? 'dashicons-unlock' : 'dashicons-lock';
-		?>
-		<div class="aiowps_feature_details_badge">
-			<span class="aiowps_feature_details_badge_difficulty aiowps_feature_protection_<?php echo $protection_level; ?>" title="<?php _e('Feature difficulty', 'all-in-one-wp-security-and-firewall'); ?>"><span class="dashicons <?php echo $status_icon; ?>"></span><?php echo $security_level; ?></span>
-			<span class="aiowps_feature_details_badge_points" title="<?php _e('Security points', 'all-in-one-wp-security-and-firewall'); ?>"><?php echo $current_security_points .'/'. $max_security_points; ?></span>
-		</div>
-		<?php
+	
+		$badge_html = '<div class="aiowps_feature_details_badge">';
+		$badge_html .= '<span class="aiowps_feature_details_badge_difficulty aiowps_feature_protection_'.$protection_level.'" title="'.__('Feature difficulty', 'all-in-one-wp-security-and-firewall').'">';
+		$badge_html .= '<span class="dashicons '.$status_icon.'"></span>'.$security_level.'</span>';
+		$badge_html .= '<span class="aiowps_feature_details_badge_points" title="'.__('Security points', 'all-in-one-wp-security-and-firewall').'">';
+		$badge_html .= $current_security_points.'/'.$max_security_points.'</span>';
+		$badge_html .= '</div>';
+	
+		if ($return_instead_of_echo) {
+			return $badge_html;
+		} else {
+			echo $badge_html;
+		}
 	}
 
+	/**
+	 * This function will calculate the total points for the AJAX save function
+	 *
+	 * @return void
+	 */
+	public function calculate_total_feature_points() {
+		$this->calculate_total_points();
+	}
+	
 	/**
 	 * This function will setup the feature status and calculate the total points
 	 *

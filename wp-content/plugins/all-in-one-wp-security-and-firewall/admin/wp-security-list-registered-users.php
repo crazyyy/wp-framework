@@ -30,24 +30,12 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 	 * @return string - the html to be rendered
 	 */
 	public function column_ID($item) {
-		$approve_url = sprintf('admin.php?page=%s&tab=manual-approval&action=%s&user_id=%s', AIOWPSEC_USER_SECURITY_MENU_SLUG, 'approve_acct', $item['ID']);
-		//Add nonce to delete URL
-		$approve_url_nonce = wp_nonce_url($approve_url, "registered_user_item_action", "aiowps_nonce");
-
-		$delete_url = sprintf('admin.php?page=%s&tab=manual-approval&action=%s&user_id=%s', AIOWPSEC_USER_SECURITY_MENU_SLUG, 'delete_acct', $item['ID']);
-		//Add nonce to delete URL
-		$delete_url_nonce = wp_nonce_url($delete_url, "registered_user_item_action", "aiowps_nonce");
-
-		$block_ip = sprintf('admin.php?page=%s&tab=manual-approval&action=%s&ip_address=%s', AIOWPSEC_USER_SECURITY_MENU_SLUG, 'block_ip', $item['ip_address']);
-		//Add nonce to block IP
-		$block_ip_nonce = wp_nonce_url($block_ip, "registered_user_item_action", "aiowps_nonce");
-
 		//Build row actions
 		$actions = array(
 			'view' => '<a href="user-edit.php?user_id='.$item['ID'].'" target="_blank">'.__('View', 'all-in-one-wp-security-and-firewall').'</a>',
-			'approve_acct' => '<a href="'.$approve_url_nonce.'" onclick="return confirm(\''.esc_js(__('Are you sure you want to approve this account?', 'all-in-one-wp-security-and-firewall')).'\')">'. __('Approve', 'all-in-one-wp-security-and-firewall') . '</a>',
-			'delete_acct' => '<a href="'.$delete_url_nonce.'" onclick="return confirm(\''.esc_js(__('Are you sure you want to delete this account?', 'all-in-one-wp-security-and-firewall')).'\')">'. __('Delete', 'all-in-one-wp-security-and-firewall') . '</a>',
-			'block_ip' => '<a href="'.$block_ip_nonce.'" onclick="return confirm(\''.esc_js(__('Are you sure you want to block this IP address?', 'all-in-one-wp-security-and-firewall')).'\')">'. __('Block IP', 'all-in-one-wp-security-and-firewall') . '</a>',
+			'approve_acct' => '<a class="aios-approve-user-acct" href="" data-id="'.esc_attr($item['ID']).'" data-message="'.esc_js(__('Are you sure you want to approve this account?', 'all-in-one-wp-security-and-firewall')).'">'. __('Approve', 'all-in-one-wp-security-and-firewall') . '</a>',
+			'delete_acct' => '<a class="aios-delete-user-acct" href="" data-id="'.esc_attr($item['ID']).'" data-message="'.esc_js(__('Are you sure you want to delete this account?', 'all-in-one-wp-security-and-firewall')).'">'. __('Delete', 'all-in-one-wp-security-and-firewall') . '</a>',
+			'block_ip' => '<a class="aios-block-ip" href="" data-ip="'.esc_attr($item['ip_address']).'" data-message="'.esc_js(__('Are you sure you want to block this IP address?', 'all-in-one-wp-security-and-firewall')).'">'. __('Block IP', 'all-in-one-wp-security-and-firewall') . '</a>',
 		);
 		
 		//Return the user_login contents
@@ -160,7 +148,7 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 	 *
 	 * @param array|int $entries - this is an array of users or user_id to be approved
 	 *
-	 * @return void
+	 * @return void|string
 	 */
 	public function approve_selected_accounts($entries) {
 		global $aio_wp_security;
@@ -192,19 +180,7 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 			if ('' != $failed_accts) {
 				//display any failed account updates
 				rtrim($failed_accts);
-				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('The following accounts failed to update successfully: ', 'all-in-one-wp-security-and-firewall') . $failed_accts);
-			}
-		} elseif (null != $entries) {
-			$entries = esc_sql($entries);
-			// Approve single account
-			$result = update_user_meta($entries, $meta_key, $meta_value);
-			if ($result) {
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected account was approved successfully.', 'all-in-one-wp-security-and-firewall'));
-				$user = get_user_by('id', $entries);
-				$this->send_email_upon_account_activation($user);
-
-			} elseif (false === $result) {
-				$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_List_Registered_Users::approve_selected_accounts() - could not approve account ID: $entries", 4);
+				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('The following accounts failed to update successfully:', 'all-in-one-wp-security-and-firewall') . ' ' . $failed_accts);
 			}
 		}
 	}
@@ -225,7 +201,7 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 		$to_email_address = $user->user_email;
 		$email_msg = '';
 		$subject = '['.network_site_url().'] '. __('Your account is now active', 'all-in-one-wp-security-and-firewall');
-		$email_msg .= __('Your account with username: ', 'all-in-one-wp-security-and-firewall') . $user->user_login . __(' is now active', 'all-in-one-wp-security-and-firewall') . "\n";
+		$email_msg .= sprintf(__('Your account with username: %s is now active', 'all-in-one-wp-security-and-firewall'), $user->user_login) . "\n";
 		$subject = apply_filters('aiowps_register_approval_email_subject', $subject);
 		$email_msg = apply_filters('aiowps_register_approval_email_msg', $email_msg, $user); //also pass the WP_User object
 		
@@ -241,7 +217,7 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 	 *
 	 * @param array|int $entries - this is an array of users or single user to be deleted
 	 *
-	 * @return void
+	 * @return void|string
 	 */
 	public function delete_selected_accounts($entries) {
 		global $aio_wp_security;
@@ -255,15 +231,6 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 				}
 			}
 			AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected accounts were deleted successfully.', 'all-in-one-wp-security-and-firewall'));
-		} elseif (null != $entries) {
-			$entries = esc_sql($entries);
-			// Delete single account
-			$result = wp_delete_user($entries);
-			if (true === $result) {
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected account was deleted successfully.', 'all-in-one-wp-security-and-firewall'));
-			} else {
-				$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_List_Registered_Users::delete_selected_accounts() - could not delete account ID: $entries", 4);
-			}
 		}
 	}
 
@@ -272,7 +239,7 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 	 *
 	 * @param array|int $entries - this is an array of ips or ip to be blocked
 	 *
-	 * @return void
+	 * @return void|string
 	 */
 	public function block_selected_ips($entries) {
 		global $aio_wp_security;
@@ -298,21 +265,6 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 			$msg = __('The selected IP addresses were successfully added to the permanent block list.', 'all-in-one-wp-security-and-firewall');
 			$msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=permanent-block" target="_blank">'.__('View Blocked IPs', 'all-in-one-wp-security-and-firewall').'</a>';
 			AIOWPSecurity_Admin_Menu::show_msg_updated_st($msg);
-		} elseif (!empty($entries)) {
-			if (AIOWPSecurity_Utility_IP::get_user_ip_address() == $entries) {
-				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('You cannot block your own IP address:', 'all-in-one-wp-security-and-firewall') . ' ' . $entries);
-				return;
-			}
-			$entries = esc_sql($entries);
-			// Block single IP
-			$result = AIOWPSecurity_Blocking::add_ip_to_block_list($entries, 'registration_spam');
-			if (true === $result) {
-				$msg = __('The selected IP was successfully added to the permanent block list.', 'all-in-one-wp-security-and-firewall');
-				$msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=permanent-block" target="_blank">'.__('View Blocked IPs', 'all-in-one-wp-security-and-firewall').'</a>';
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st($msg);
-			} else {
-				$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_List_Registered_Users::block_selected_ips() - could not block IP: $entries", 4);
-			}
 		}
 	}
 

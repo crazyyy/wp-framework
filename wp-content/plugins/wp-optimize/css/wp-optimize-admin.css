@@ -1388,8 +1388,10 @@ h4.updraft_advert_heading {
   outline: none;
 }
 
+.wpo-analytics__premium-mask,
 .wpo-unused-images__premium-mask,
-.wpo-unused-image-sizes__premium-mask {
+.wpo-unused-image-sizes__premium-mask,
+.wpo-images-dimensions__premium-mask {
   position: absolute;
   top: 0;
   left: 0;
@@ -1405,16 +1407,24 @@ h4.updraft_advert_heading {
       justify-content: center;
 }
 
+.wpo-analytics__premium-mask,
 .wpo-unused-image-sizes__premium-mask {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.85));
 }
 
-a.wpo-unused-images__premium-link {
+a.wpo-analytics__premium-link,
+a.wpo-unused-images__premium-link,
+a.wpo-images-dimensions__premium-link {
   background: #FFF;
   display: inline-block;
   padding: 10px;
   border-radius: 3px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+p.wpo-images-dimension-show-links {
+  z-index: 999;
+  position: relative;
 }
 
 /* More Plugins page */
@@ -2101,4 +2111,27 @@ body.wpo-modal-is-opened {
   line-height: inherit;
   text-decoration: none;
   margin-left: 4px;
+}
+
+.wpo-table-usage__premium-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.85));
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  -ms-flex-pack: center;
+      justify-content: center;
+}
+.wpo-table-usage__premium-mask a.wpo-table-usage__premium-link {
+  background: #FFF;
+  display: inline-block;
+  padding: 10px;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }

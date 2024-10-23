@@ -3732,6 +3732,40 @@ span#updraftplus_ajax_restore_last_activity {
 	display: block;
 }
 
+/* UpdraftPlus Notice Styling */
+.udp-notice {
+	border: 1px solid #C3C4C7;
+	border-left-width: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+	        box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+	background: #FFF;
+	margin: 5px 0 15px 0;
+	padding: 1px 12px;
+}
+
+.udp-notice p {
+	margin: .5em 0;
+	padding: 2px;
+}
+
+.udp-notice.notice-warning {
+	border-left-color: #DBA617;
+}
+
+.udp-notice.notice-error {
+	border-left-color: #D63638;
+}
+
+.udp-notice.updraft-restore-option {
+	border-left-color: #CCC;
+	margin: 8px 0 4px 0;
+	padding: 12px;
+}
+
+div#updraft-restore-modal .udp-notice, .udp-notice.updraft-restore-option {
+	background: #F8F8F8;
+}
+
 @media only screen and (min-width: 1024px) {
 
 	#updraft_activejobsrow .updraft_row {

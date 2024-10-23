@@ -23,18 +23,15 @@ class AIOWPSecurity_List_Comment_Spammer_IP extends AIOWPSecurity_List_Table {
 	}
 		
 	public function column_comment_author_IP($item) {
-		$tab = 'comment-spam-ip-monitoring';
 		//Build row actions
-		if (!is_main_site()) {
-			//Suppress the block link if site is a multi site AND not the main site
+		if (!is_main_site() || 'blocked' === $item['status']) {
+			//Suppress the block link if site is a multi site AND not the main site or the status is blocked
 			$actions = array(); //blank array
 		} else {
-			$block_url = sprintf('admin.php?page=%s&tab=%s&action=%s&spammer_ip=%s', AIOWPSEC_SPAM_MENU_SLUG, $tab, 'block_spammer_ip', $item['comment_author_IP']);
-			//Add nonce to block URL
-			$block_url_nonce = wp_nonce_url($block_url, "block_spammer_ip", "aiowps_nonce");
-			
+			//Add IP to block URL
+			$ip = $item['comment_author_IP'];
 			$actions = array(
-				'block' => '<a href="'.$block_url_nonce.'" onclick="return confirm(\'Are you sure you want to permanently block this IP address?\')">Block</a>',
+				'block' => '<a class="aios-block-author-ip" data-ip="'.esc_attr($ip).'" data-message="'.esc_js(__('Are you sure you want to permanently block this IP address?', 'all-in-one-wp-security-and-firewall')).'" href="">'.__('Block', 'all-in-one-wp-security-and-firewall').'</a>',
 			);
 		}
 		
@@ -125,11 +122,6 @@ class AIOWPSecurity_List_Comment_Spammer_IP extends AIOWPSecurity_List_Table {
 			foreach ($entries as $ip_add) {
 				AIOWPSecurity_Blocking::add_ip_to_block_list($ip_add, 'spam');
 			}
-		} elseif (null != $entries) {
-			$entries = esc_sql($entries);
-
-			//individual entry where "block" link was clicked
-			AIOWPSecurity_Blocking::add_ip_to_block_list($entries, 'spam');
 		}
 
 		AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected IP addresses are now permanently blocked.', 'all-in-one-wp-security-and-firewall'));

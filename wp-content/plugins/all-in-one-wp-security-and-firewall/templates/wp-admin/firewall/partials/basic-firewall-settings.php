@@ -2,10 +2,12 @@
 <div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('Basic firewall settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
-		<?php
-		//Display security info badge
-		$aiowps_feature_mgr->output_feature_details_badge("firewall-basic-rules");
-		?>
+			<div id="firewall-basic-rules-badge">
+				<?php
+				//Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("firewall-basic-rules");
+				?>
+			</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable basic firewall protection', 'all-in-one-wp-security-and-firewall'); ?>:</th>

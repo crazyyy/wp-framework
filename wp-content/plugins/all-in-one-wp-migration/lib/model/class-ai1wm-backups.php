@@ -102,8 +102,14 @@ class Ai1wm_Backups {
 	 */
 	public static function delete_file( $file ) {
 		if ( ai1wm_is_filename_supported( $file ) ) {
-			return @unlink( ai1wm_backup_path( array( 'archive' => $file ) ) );
+			if ( $deleted = @unlink( ai1wm_backup_path( array( 'archive' => $file ) ) ) ) {
+				do_action( 'ai1wm_status_backup_deleted', $file );
+			}
+
+			return $deleted;
 		}
+
+		return false;
 	}
 
 	/**

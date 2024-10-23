@@ -169,6 +169,21 @@ abstract class AIOWPSecurity_Admin_Menu {
 	}
 
 	/**
+	 * Render settings successfully updated message
+	 *
+	 * @param bool $return_instead_of_echo - This is used for when the function needs to return the message
+	 *
+	 * @return string|void
+	 */
+	public static function show_msg_settings_updated_st($return_instead_of_echo = false) {
+		$message = '<div id="aios_message" class="updated fade"><p><strong>';
+		$message .= __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall');
+		$message .= '</strong></p></div>';
+		if ($return_instead_of_echo) return $message;
+		echo $message;
+	}
+
+	/**
 	 * Renders record(s) successfully deleted message at top of page.
 	 *
 	 * @param bool $return_instead_of_echo - This is used for when the function needs to return the message

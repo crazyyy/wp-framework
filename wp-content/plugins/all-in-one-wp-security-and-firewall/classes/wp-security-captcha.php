@@ -120,7 +120,7 @@ class AIOWPSecurity_Captcha {
 		switch ($default_captcha) {
 			case 'cloudflare-turnstile':
 			case 'google-recaptcha-v2':
-				wp_enqueue_script($default_captcha, $this->get_captcha_script_url($default_captcha), array(), AIO_WP_SECURITY_VERSION);
+				wp_enqueue_script($default_captcha, $this->get_captcha_script_url($default_captcha), array());
 				// Below is needed to provide some space for the CAPTCHA form (otherwise it appears partially hidden on RHS)
 				wp_add_inline_style('login', "#login { width: 340px; }");
 				break;
@@ -151,7 +151,7 @@ class AIOWPSecurity_Captcha {
 		switch ($default_captcha) {
 			case 'cloudflare-turnstile':
 			case 'google-recaptcha-v2':
-				wp_enqueue_script($default_captcha, $this->get_captcha_script_url($default_captcha), array(), AIO_WP_SECURITY_VERSION);
+				wp_enqueue_script($default_captcha, $this->get_captcha_script_url($default_captcha), array());
 				break;
 			default:
 				break;
@@ -248,7 +248,13 @@ class AIOWPSecurity_Captcha {
 	}
 
 	/**
-	 * Explicit render CAPTCHA on WooCommerce my account page forms or if not just render normally
+	 * Insert CAPTCHA question form on WooCommerce my account page forms or other forms.
+	 *
+	 * This function determines the type of CAPTCHA to display based on the configured default CAPTCHA type.
+	 * It handles special cases for WooCommerce "my account" page where both login and register forms need
+	 * CAPTCHAs rendered explicitly. For other forms, it renders CAPTCHA normally.
+	 *
+	 * @global object $aio_wp_security The global instance of the aio_wp_security class, which holds configuration settings.
 	 *
 	 * @return void
 	 */
@@ -264,7 +270,7 @@ class AIOWPSecurity_Captcha {
 				// need to display two CAPTCHA forms on same page (for login and register forms)
 				// For this case we use the "explicit" CAPTCHA display
 				$calling_hook = current_filter();
-				if ('woocommerce_login_form' == $calling_hook || 'woocommerce_lostpassword_form' == $calling_hook) {
+				if ('woocommerce_login_form' == $calling_hook || 'woocommerce_lostpassword_form' == $calling_hook || 'woocommerce_after_checkout_billing_form' == $calling_hook) {
 					$this->get_captcha_form($default_captcha, 1);
 					return;
 				}
@@ -303,21 +309,7 @@ class AIOWPSecurity_Captcha {
 		if ('cloudflare-turnstile' == $default_captcha) :
 		$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'));
 		?>
-		<script>
-				var verifyCallback = function(response) {
-					alert(response);
-				};
-				var onloadCallback = function() {
-					if (jQuery('.aios-wc-captcha').length) {
-						jQuery('.aios-wc-captcha').each(function(index, element) {
-							turnstile.render(element, {
-								sitekey: '<?php echo esc_js($site_key); ?>'
-							});
-						});
-					}
-				};
-		</script>
-		<script src='https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadCallback' async defer></script>
+		<script src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer></script>
 		<?php
 		elseif ('google-recaptcha-v2' == $default_captcha) :
 		$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_recaptcha_site_key'));
@@ -520,22 +512,24 @@ class AIOWPSecurity_Captcha {
 	 *
 	 * @return string - can return the CAPTCHA form
 	 */
-	private function get_captcha_form($default_captcha, $include_wc_id = 0, $return_instead_of_echo = false) {
+	public function get_captcha_form($default_captcha, $include_wc_id = 0, $return_instead_of_echo = false) {
 		global $aio_wp_security;
 		static $aios_wc_element_id;
 		$captcha_form = '';
+		$captcha_data_callback = '';
 		$wc_form_id = !empty($include_wc_id) ? 'id="woo_recaptcha_'.(++$aios_wc_element_id).'"' : '';
+		$captcha_data_callback = apply_filters('aios_captcha_data_callback', false) ? ' data-callback="data_callback"' : '';
 
 		switch ($default_captcha) {
 			case 'cloudflare-turnstile':
 				$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'));
 				$turnstile_theme = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_theme'));
 				if (empty($turnstile_theme)) $turnstile_theme = 'auto';
-				$captcha_form = '<div class="cf-turnstile-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="cf-turnstile'. (!empty($include_wc_id) ? ' aios-wc-captcha' : '') . '" data-sitekey="'.$site_key.'" data-theme="'.$turnstile_theme.'"></div></div>';
+				$captcha_form = '<div class="cf-turnstile-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="cf-turnstile'. (!empty($include_wc_id) ? ' aios-wc-captcha' : '') . '" data-sitekey="'.$site_key.'" data-theme="'.$turnstile_theme.'"'.$captcha_data_callback.'></div></div>';
 				break;
 			case 'google-recaptcha-v2':
 				$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_recaptcha_site_key'));
-				$captcha_form = '<div class="g-recaptcha-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="g-recaptcha'. (!empty($include_wc_id) ? ' aios-wc-captcha' : '') . '" data-sitekey="'.$site_key.'"></div></div>';
+				$captcha_form = '<div class="g-recaptcha-wrap" style="padding:10px 0 10px 0"><div '. $wc_form_id .' class="g-recaptcha'. (!empty($include_wc_id) ? ' aios-wc-captcha' : '') . '" data-sitekey="'.$site_key.'"'.$captcha_data_callback.'></div></div>';
 				break;
 			default:
 				return '';
@@ -771,7 +765,7 @@ class AIOWPSecurity_Captcha {
 		if (empty($form)) return $form_properties;
 
 		// enqueue script
-		wp_enqueue_script($default_captcha, $this->get_captcha_script_url($default_captcha), array(), AIO_WP_SECURITY_VERSION);
+		wp_enqueue_script($default_captcha, $this->get_captcha_script_url($default_captcha), array());
 
 		$field = $this->display_captcha_form($default_captcha, true);
 		$field .= "<span class='wpcf7-form-control-wrap' data-name='aiowps-captcha'></span>"; // add validation field for the captcha
@@ -921,5 +915,22 @@ class AIOWPSecurity_Captcha {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Verifies the captcha on the MemberPress lost password form.
+	 *
+	 * This function checks if the captcha verification on the MemberPress lost password form was successful.
+	 * If the captcha is incorrect, an error message is added to the errors array.
+	 *
+	 * @param array $errors An array of error messages.
+	 * @return array The modified array of error messages.
+	 */
+	public function verify_memberpress_form($errors) {
+		if (!$this->verify_captcha_submit()) {
+			$errors[] = sprintf(__('%s: Your answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>');
+		}
+
+		return $errors;
 	}
 }

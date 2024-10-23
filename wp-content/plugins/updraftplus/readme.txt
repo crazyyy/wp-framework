@@ -1,14 +1,14 @@
-=== UpdraftPlus: WordPress Backup & Migration Plugin ===
+=== UpdraftPlus: WP Backup & Migration Plugin ===
 Contributors: Backup with UpdraftPlus, DavidAnderson, pmbaldha, DNutbourne, aporter, bcrodua
 Tags: backup, database backup, wordpress backup, cloud backup, migration
 Requires at least: 3.2
-Tested up to: 6.6
-Stable tag: 1.24.3
+Tested up to: 6.7
+Stable tag: 1.24.6
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
 
-Backup, restoration and migration - world's most popular backup tool. Backup to the cloud - schedule backups or backup manually.
+Backup, restore or migrate your WordPress website to another host or domain. Schedule backups or run manually. Migrate in minutes. Reliable and easy to use.
 
 == Description ==
 
@@ -179,19 +179,49 @@ The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the b
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.32.x of the free version correspond to changes made in 2.16.32.x of the paid version.
 
-The [UpdraftPlus backup blog](https://updraftplus.com/news/) is the best place to learn in more detail about any important changes.
+= 1.24.6 - 25/Sep/2024 =
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.23.1.x of the free version correspond to changes made in 2.23.1.x of the paid version.
+* TWEAK: In 1.24.5, the browser title wrongly displayed as "UpdraftPlus" when accessing an unrelated plugin page using the main menu.
+
+= 1.24.5 - 24/Sep/2024 =
+
+* FIX: Incorrect regular expression for DigitalOcean Spaces endpoint
+* FIX: CSS conflicts with the LearnDash LMS Instructor Role Add-on plugin which caused some UI elements to disappear
+* TWEAK: Reorganize UpdraftPlus in left-hand menu and rename it to "UpdraftPlus"; to disable it, follow this guide: https://updraftplus.com/new-location-of-updraftplus-in-the-wordpress-dashboard/
+* TWEAK: Add span wrapper to UpdraftCentral connection failed message
+* TWEAK: Add the "Go here to complete your settings" link into the appropriate admin notice that when clicked will jump to the UpdraftVault configuration if no settings are specified.
+* TWEAK: Adjust regex patterns that didn't match some temporary files, causing them to not be automatically removed
+* TWEAK: After a restoration, clicking "Delete old folders" will also remove the wp-config-pre-ud-restore-backup.php file
+* TWEAK: On the settings page/tab; prevent the floating "Save changes" button from getting clicked multiple times and/or sending multiple AJAX requests
+* TWEAK: Remove pCloud from the add-ons list on the "Premium / Extensions" tab (there is no change in its availability)
+* TWEAK: Renamed wp-config-backup.php to wp-config-pre-ud-restore-backup.php to clarify its purpose as a backup file created before restoring WordPress core entities, and it will only be generated if the user does not select the "Over-write wp-config.php" option during restoration, as the previous name was too generic and could cause confusion
+* TWEAK: The popup modal for automatic plugin updates fails to retain the backup checkbox selection when the "remember" option is enabled in a Multisite environment.
+* TWEAK: Updated autobackup selector to resolve issues caused by the missing "update-link" class in WPForms Pro plugin
+
+= 1.24.4 - 2/Jul/2024 =
+
+* FIX: Case-sensitive issue of bit field type names in a table.
+* FIX: Resolved issue where backup files could not be deleted from remote storage when either the root directory was active or no directory was specified in the OneDrive configuration form.
+* FIX: When users attempt to update a plugin using the "View Version x.x.x Details" link instead of choosing "Update Now," the plugin is successfully updated; however, the UI incorrectly displays an "Update Failed" message
+* FIX: Conflict with the Gravity Forms plugin when there was an older version of jQuery UI presented on the "Installed Plugins" page.
+* TWEAK: Ensure compliance with Google Granular Consent and check for required permissions during storage access authorisation of Google Drive and Google Cloud
+* TWEAK: Prevent PHP warning and deprecation messages after completing access authorisation to Google Drive storage.
+* TWEAK: Prevent PHP warning when Dropbox remote storage has been authenticated and the page is refreshed.
+* TWEAK: Added filter updraftplus_working_dir_localpath to allow temporary unzip path to be modified by developers
+* TWEAK: Modify the displayed title of the plugin from "WordPress Backup & Migration Plugin" to "WP Backup & Migration Plugin" as required by the plugin directory team
+* TWEAK: Parse certain php events and log proper error messages
 
 = 1.24.3 - 30/Apr/2024 =
 
 * FIX: Regression in 1.23.16 for improving logs which then caused incorrect_offset error reported by Dropbox wasn't properly handled.
-* PERFORMANCE: The UpdraftVault remote storage can handle Wasabi as well as Amazon S3 storage in the background.
+* TWEAK: The UpdraftVault remote storage can handle Wasabi as well as Amazon S3 storage in the background.
 * TWEAK: Fix WP_Theme_JSON_Resolver::theme_has_support deprecation warning for UpdraftCentral  
 * TWEAK: Prevent "PHP Warning: Undefined property: UpdraftPlus_BackupModule_pcloud::$description" during rescan remote storage.
 * TWEAK: Prevent PHP deprecation warnings during database backups when encountering null values in bit field types.
-* TWEAK: Show a warning message when the WP_ACCESSIBLE_HOSTS constant is defined and updraftplus.com does not exist in its value
+* TWEAK: Show a warning message when the WP_ACCESSIBLE_HOSTS constant is defined and updraftplus.com is not permitted by its value
 * TWEAK: Update notices
+* TWEAK: Split multiple sentences into separate translation function calls.
+* TWEAK: Trim spaces from S3-Compatible (Generic) endpoint.
 
 = 1.24.2 - 26/Mar/2024 =
 
@@ -1901,7 +1931,7 @@ Older changes are found <a href="https://plugins.svn.wordpress.org/updraftplus/t
 
 == License ==
 
-    Copyright 2011-23 David Anderson
+    Copyright 2011-24 David Anderson
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1922,4 +1952,4 @@ Non-English translators are provided by volunteers, and wordpress.org does not g
 We recognise and thank those mentioned at https://updraftplus.com/acknowledgements/ for code and/or libraries used and/or modified under the terms of their open source licences.
 
 == Upgrade Notice ==
-* 1.24.3: Regression for improving Dropbox-related logs, improvements and various small tweaks. A recommended update for all.
+* 1.24.6: Top level menu correction from 1.24.5. A recommended update for all.

@@ -808,7 +808,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 				if (isset($_GET['code'])) $raw_code = $_GET['code'];
 			}
 
-			$this->do_complete_authentication($raw_state, $raw_code);
+			if (!empty($raw_code)) $this->do_complete_authentication($raw_state, $raw_code);
 		}
 		try {
 			$this->auth_request();

@@ -2737,15 +2737,19 @@ class UpdraftPlus_Backup {
 							} else {
 								$this_entry .= "0x" . bin2hex(str_repeat("0", floor(strspn($value, "0") / 4)).$value);
 							}
-						} elseif (isset($bit_fields[$key])) {
-							mbstring_binary_safe_encoding();
-							$val_len = is_string($value) ? strlen($value) : 0;
-							reset_mbstring_encoding();
-							$hex = '';
-							for ($i=0; $i<$val_len; $i++) {
-								$hex .= sprintf('%02X', ord($value[$i]));
+						} elseif (isset($bit_fields[strtolower($key)])) {
+							if (null === $value) {
+								$this_entry .= 'NULL';
+							} else {
+								mbstring_binary_safe_encoding();
+								$val_len = is_string($value) ? strlen($value) : 0;
+								reset_mbstring_encoding();
+								$hex = '';
+								for ($i=0; $i<$val_len; $i++) {
+									$hex .= sprintf('%02X', ord($value[$i]));
+								}
+								$this_entry .= "b'".str_pad($this->hex2bin($hex), $bit_fields[strtolower($key)], '0', STR_PAD_LEFT)."'";
 							}
-							$this_entry .= "b'".str_pad($this->hex2bin($hex), $bit_fields[$key], '0', STR_PAD_LEFT)."'";
 						} else {
 							$this_entry .= (null === $value) ? 'NULL' : "'" . str_replace($search, $replace, str_replace('\'', '\\\'', str_replace('\\', '\\\\', $value))) . "'";
 						}

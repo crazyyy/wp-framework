@@ -9,12 +9,13 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Force user logout options', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<?php
-			// Display security info badge
-			$aiowps_feature_mgr->output_feature_details_badge("user-login-force-logout");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-force-logout-settings-nonce'); ?>
+		<div id="user-login-force-logout-badge">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("user-login-force-logout");
+			?>
+		</div>
+		<form action="" method="POST" id="aios-force-user-logout-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable force user logout', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -25,7 +26,7 @@
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="aiowps_logout_time_period"><?php _e('Logout the user after XX minutes', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>
+					<th scope="row"><label for="aiowps_logout_time_period"><?php _e('Logout the user after X minutes', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>
 					<td><input id="aiowps_logout_time_period" type="text" size="5" name="aiowps_logout_time_period" value="<?php echo $aio_wp_security->configs->get_value('aiowps_logout_time_period'); ?>" />
 					<span class="description"><?php _e('(Minutes) The user will be forced to log back in after this time period has elapased.', 'all-in-one-wp-security-and-firewall'); ?></span>
 					</td> 

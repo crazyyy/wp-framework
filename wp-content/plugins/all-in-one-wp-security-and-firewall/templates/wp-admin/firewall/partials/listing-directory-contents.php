@@ -2,11 +2,13 @@
 <div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('Listing of directory contents', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
-		<?php
-		//Display security info badge
-		global $aiowps_feature_mgr;
-		$aiowps_feature_mgr->output_feature_details_badge("firewall-disable-index-views");
-		?>
+			<div id="firewall-disable-index-views-badge">
+				<?php
+				//Display security info badge
+				global $aiowps_feature_mgr;
+				$aiowps_feature_mgr->output_feature_details_badge("firewall-disable-index-views");
+				?>
+			</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Disable index views', 'all-in-one-wp-security-and-firewall'); ?>:</th>

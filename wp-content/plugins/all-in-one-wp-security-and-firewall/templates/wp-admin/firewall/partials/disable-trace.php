@@ -2,11 +2,13 @@
 <div class="postbox">
 		<h3 class="hndle"><label for="title"><?php _e('Trace and track', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
-		<?php
-		//Display security info badge
-		global $aiowps_feature_mgr;
-		$aiowps_feature_mgr->output_feature_details_badge("firewall-disable-trace-track");
-		?>
+			<div id="firewall-disable-trace-track-badge">
+				<?php
+				//Display security info badge
+				global $aiowps_feature_mgr;
+				$aiowps_feature_mgr->output_feature_details_badge("firewall-disable-trace-track");
+				?>
+			</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Disable trace and track', 'all-in-one-wp-security-and-firewall'); ?>:</th>

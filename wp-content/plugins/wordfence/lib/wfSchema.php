@@ -181,7 +181,7 @@ class wfSchema {
   `filenameMD5` binary(16) NOT NULL,
   `filename` varchar(1000) NOT NULL,
   `knownFile` tinyint(3) unsigned NOT NULL,
-  `oldMD5` binary(16) NOT NULL,
+  `oldMD5` binary(16) NOT NULL DEFAULT '',
   `newMD5` binary(16) NOT NULL,
   `SHAC` binary(32) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
   `stoppedOnSignature` varchar(255) NOT NULL DEFAULT '',

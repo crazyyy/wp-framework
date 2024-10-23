@@ -86,10 +86,12 @@ class AIOWPSecurity_Comment {
 	 */
 	public static function is_comment_spam_detected() {
 		$return = false;
-		if (empty($_SERVER['HTTP_REFERER']) || false === stristr($_SERVER['HTTP_REFERER'], parse_url(home_url(), PHP_URL_HOST)) || empty($_SERVER['HTTP_USER_AGENT'])) {
-			$return = true;
-		} elseif (self::is_bot_detected()) {
-			$return = true;
+		if (!is_user_logged_in()) {
+			if (empty($_SERVER['HTTP_REFERER']) || false === stristr($_SERVER['HTTP_REFERER'], parse_url(home_url(), PHP_URL_HOST)) || empty($_SERVER['HTTP_USER_AGENT'])) {
+				$return = true;
+			} elseif (self::is_bot_detected()) {
+				$return = true;
+			}
 		}
 		return apply_filters('aiowps_is_comment_spam_detected', $return);
 	}
@@ -100,6 +102,7 @@ class AIOWPSecurity_Comment {
 	 * @return boolean
 	 */
 	public static function is_bot_detected() {
+		global $aio_wp_security;
 		$return = false;
 		$key_map_arr = self::generate_antibot_keys();
 		foreach ($key_map_arr[0] as $key) {
@@ -108,7 +111,7 @@ class AIOWPSecurity_Comment {
 				break;
 			}
 		}
-		if (!$return) {
+		if (!$return && '1' == $aio_wp_security->configs->get_value('aiowps_spambot_detect_usecookies')) {
 			foreach ($key_map_arr[1] as $key) {
 				if (AIOWPSecurity_Utility::get_cookie_value($key[0]) != $key[1]) {
 					$return = true;
@@ -146,6 +149,15 @@ class AIOWPSecurity_Comment {
 		foreach ($key_map_arr[0] as $key) {
 			$antibot_hidden_fields .='<input type="hidden" name="' . esc_attr($key[0]) . '" value="'.esc_attr($key[1]).'" >';
 		}
+		if (isset($key_map_arr[2])) {
+			$antibot_hidden_fields .='<input type="hidden" name="aios_antibot_keys_expiry" id="aios_antibot_keys_expiry" value="'.esc_attr($key_map_arr[2]).'">';
+		}
+		wp_register_script('aios-front-js', AIO_WP_SECURITY_URL. '/js/wp-security-front-script.js', array('jquery'), AIO_WP_SECURITY_VERSION, true);
+		wp_enqueue_script('aios-front-js');
+		wp_localize_script('aios-front-js', 'AIOS_FRONT', array(
+			'ajaxurl' => admin_url('admin-ajax.php'), // URL to wp-admin/admin-ajax.php to process the request
+			'ajax_nonce' => wp_create_nonce('wp-security-ajax-nonce'),
+		));
 		$html_antibot_hidden_fields = sprintf($html_antibot_hidden_fields, $antibot_hidden_fields);
 		return $html_antibot_hidden_fields;
 	}
@@ -160,6 +172,9 @@ class AIOWPSecurity_Comment {
 	public static function generate_antibot_keys($update = false) {
 		$key_map_arr = get_site_option('aios_antibot_key_map_info');
 		if (!$update && is_array($key_map_arr)) {
+			return $key_map_arr;
+		}
+		if ($update && is_array($key_map_arr) && isset($key_map_arr[2]) && $key_map_arr[2] > time()) {
 			return $key_map_arr;
 		}
 		$key_map_arr = array();
@@ -179,6 +194,9 @@ class AIOWPSecurity_Comment {
 			$string2 = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(12);
 			$key_map_arr[1][] = array($string1, $string2);
 		}
+		// expiration time of keys
+		$current_time = time();
+		$key_map_arr[2] = (($current_time - ($current_time % 86400)) + AIOS_UPDATE_ANTIBOT_KEYS_AFTER_DAYS * 86400);
 		update_site_option('aios_antibot_key_map_info', $key_map_arr);
 		return $key_map_arr;
 	}

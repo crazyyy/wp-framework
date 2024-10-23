@@ -289,6 +289,13 @@ WP_Optimize_Images_View = function(settings) {
 				</label>\
 			</div>'
 		].join(''));
+
+		$('img:not(.error-event-attached)', images_view_container).each(function() {
+			$(this).on('error', function() {
+				// WordPress dashicons format-image icon.
+				$(this).attr('src', 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+PHJlY3QgeD0iMCIgZmlsbD0ibm9uZSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIi8+PGc+PHBhdGggZmlsbD0iI0FBQUFBQSIgZD0iTTIuMjUgMWgxNS41Yy42OSAwIDEuMjUuNTYgMS4yNSAxLjI1djE1LjVjMCAuNjktLjU2IDEuMjUtMS4yNSAxLjI1SDIuMjVDMS41NiAxOSAxIDE4LjQ0IDEgMTcuNzVWMi4yNUMxIDEuNTYgMS41NiAxIDIuMjUgMXpNMTcgMTdWM0gzdjE0aDE0ek0xMCA2YzAtMS4xLS45LTItMi0ycy0yIC45LTIgMiAuOSAyIDIgMiAyLS45IDItMnptMyA1czAtNiAzLTZ2MTBjMCAuNTUtLjQ1IDEtMSAxSDVjLS41NSAwLTEtLjQ1LTEtMVY4YzIgMCAzIDQgMyA0czEtMyAzLTMgMyAyIDMgMnoiLz48L2c+PC9zdmc+');
+			}).addClass('error-event-attached');
+		});
 	}
 
 	/**

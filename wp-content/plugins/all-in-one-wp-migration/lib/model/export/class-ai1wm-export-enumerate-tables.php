@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Ai1wm_Export_Enumerate_Tables {
 
-	public static function execute( $params, Ai1wm_Database $db_client = null ) {
+	public static function execute( $params ) {
 		// Set exclude database
 		if ( isset( $params['options']['no_database'] ) ) {
 			return $params;
@@ -46,9 +46,7 @@ class Ai1wm_Export_Enumerate_Tables {
 		Ai1wm_Status::info( __( 'Retrieving a list of WordPress database tables...', AI1WM_PLUGIN_NAME ) );
 
 		// Get database client
-		if ( is_null( $db_client ) ) {
-			$db_client = Ai1wm_Database_Utility::create_client();
-		}
+		$db_client = Ai1wm_Database_Utility::create_client();
 
 		// Include table prefixes
 		if ( ai1wm_table_prefix() ) {

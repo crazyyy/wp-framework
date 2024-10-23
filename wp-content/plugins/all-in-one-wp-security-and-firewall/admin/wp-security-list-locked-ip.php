@@ -62,7 +62,7 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 	public function column_failed_login_ip($item) {
 		$actions = array(
 			'unlock' => '<a href="" data-ip="'.esc_attr($item['failed_login_ip']).'" data-message="'.esc_js(__('Are you sure you want to unlock this address range?', 'all-in-one-wp-security-and-firewall')).'" class="aios-unlock-ip-button">'.esc_html__('Unlock', 'all-in-one-wp-security-and-firewall').'</a>',
-			'delete' => '<a href="" data-id="'.esc_attr($item['id']).'" data-message="'.esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')).'"  class="aios-delete-locked-ip-record-button">'.esc_html__('Delete', 'all-in-one-wp-security-and-firewall').'</a>',
+			'delete' => '<a href="" data-id="'.esc_attr($item['id']).'" data-message="'.esc_js(__('Are you sure you want to delete this item?', 'all-in-one-wp-security-and-firewall')).'"  class="aios-delete-locked-ip-record">'.esc_html__('Delete', 'all-in-one-wp-security-and-firewall').'</a>',
 		);
 
 		//Return the user_login contents

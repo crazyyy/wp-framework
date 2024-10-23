@@ -134,6 +134,10 @@ class Ai1wm_Main_Controller {
 
 		// Enqueue updater scripts and styles
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_updater_scripts_and_styles' ), 5 );
+
+		// Handle export/import exceptions (errors)
+		add_action( 'ai1wm_status_export_error', array( $this, 'handle_error_cleanup' ), 5, 2 );
+		add_action( 'ai1wm_status_import_error', array( $this, 'handle_error_cleanup' ), 5, 2 );
 	}
 
 	/**
@@ -790,6 +794,12 @@ class Ai1wm_Main_Controller {
 				'status'     => array(
 					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1, 'secret_key' => get_option( AI1WM_SECRET_KEY ) ), admin_url( 'admin-ajax.php?action=ai1wm_status' ) ) ),
 				),
+				'storage'    => array(
+					'url' => AI1WM_STORAGE_URL,
+				),
+				'error_log'  => array(
+					'pattern' => AI1WM_ERROR_NAME,
+				),
 				'secret_key' => get_option( AI1WM_SECRET_KEY ),
 			)
 		);
@@ -814,6 +824,7 @@ class Ai1wm_Main_Controller {
 				'backups_count_singular'              => __( 'You have %d backup', AI1WM_PLUGIN_NAME ),
 				'backups_count_plural'                => __( 'You have %d backups', AI1WM_PLUGIN_NAME ),
 				'archive_browser_download_error'      => __( 'Error while downloading file', AI1WM_PLUGIN_NAME ),
+				'view_error_log_button'               => __( 'View Error Log', AI1WM_PLUGIN_NAME ),
 			)
 		);
 	}
@@ -887,6 +898,12 @@ class Ai1wm_Main_Controller {
 				'status'     => array(
 					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1, 'secret_key' => get_option( AI1WM_SECRET_KEY ) ), admin_url( 'admin-ajax.php?action=ai1wm_status' ) ) ),
 				),
+				'storage'    => array(
+					'url' => AI1WM_STORAGE_URL,
+				),
+				'error_log'  => array(
+					'pattern' => AI1WM_ERROR_NAME,
+				),
 				'secret_key' => get_option( AI1WM_SECRET_KEY ),
 			)
 		);
@@ -939,6 +956,7 @@ class Ai1wm_Main_Controller {
 				'enter_password'                      => __( 'Enter a password', AI1WM_PLUGIN_NAME ),
 				'repeat_password'                     => __( 'Repeat the password', AI1WM_PLUGIN_NAME ),
 				'passwords_do_not_match'              => __( 'The passwords do not match', AI1WM_PLUGIN_NAME ),
+				'view_error_log_button'               => __( 'View Error Log', AI1WM_PLUGIN_NAME ),
 				'import_from_file'                    => sprintf(
 					__(
 						'Your file exceeds the maximum upload size for this site: <strong>%s</strong><br />%s%s',
@@ -1034,6 +1052,12 @@ class Ai1wm_Main_Controller {
 				'status'     => array(
 					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1, 'secret_key' => get_option( AI1WM_SECRET_KEY ) ), admin_url( 'admin-ajax.php?action=ai1wm_status' ) ) ),
 				),
+				'storage'    => array(
+					'url' => AI1WM_STORAGE_URL,
+				),
+				'error_log'  => array(
+					'pattern' => AI1WM_ERROR_NAME,
+				),
 				'secret_key' => get_option( AI1WM_SECRET_KEY ),
 			)
 		);
@@ -1047,6 +1071,12 @@ class Ai1wm_Main_Controller {
 				),
 				'status'     => array(
 					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1, 'secret_key' => get_option( AI1WM_SECRET_KEY ) ), admin_url( 'admin-ajax.php?action=ai1wm_status' ) ) ),
+				),
+				'storage'    => array(
+					'url' => AI1WM_STORAGE_URL,
+				),
+				'error_log'  => array(
+					'pattern' => AI1WM_ERROR_NAME,
 				),
 				'secret_key' => get_option( AI1WM_SECRET_KEY ),
 			)
@@ -1138,7 +1168,7 @@ class Ai1wm_Main_Controller {
 				'enter_password'                      => __( 'Enter a password', AI1WM_PLUGIN_NAME ),
 				'repeat_password'                     => __( 'Repeat the password', AI1WM_PLUGIN_NAME ),
 				'passwords_do_not_match'              => __( 'The passwords do not match', AI1WM_PLUGIN_NAME ),
-
+				'view_error_log_button'               => __( 'View Error Log', AI1WM_PLUGIN_NAME ),
 			)
 		);
 	}
@@ -1282,8 +1312,8 @@ class Ai1wm_Main_Controller {
 	 * @return void
 	 */
 	public function init() {
-		$user     = false;
-		$password = false;
+		$user = $password = false;
+
 		// Set username
 		if ( isset( $_SERVER['PHP_AUTH_USER'] ) ) {
 			$user = $_SERVER['PHP_AUTH_USER'];
@@ -1372,5 +1402,19 @@ class Ai1wm_Main_Controller {
 		);
 
 		return $schedules;
+	}
+
+	/**
+	 * Handles ai1wm_status_export_error hook
+	 *
+	 * @param $params
+	 * @param $exception
+	 *
+	 * @return void
+	 */
+	public function handle_error_cleanup( $params, $exception = null ) {
+		if ( ! $exception instanceof Ai1wm_Import_Retry_Exception ) {
+			Ai1wm_Directory::delete( ai1wm_storage_path( $params ) );
+		}
 	}
 }

@@ -30,14 +30,9 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 	 * @return string - the html to be rendered
 	 */
 	public function column_user_id($item) {
-		$tab = strip_tags($_REQUEST['tab']);
-		$force_logout_url = sprintf('admin.php?page=%s&tab=%s&action=%s&logged_in_id=%s', AIOWPSEC_USER_SECURITY_MENU_SLUG, $tab, 'force_user_logout', $item['user_id']);
-		//Add nonce to URL
-		$force_logout_nonce = wp_nonce_url($force_logout_url, "force_user_logout", "aiowps_nonce");
-		
 		//Build row actions
 		$actions = array(
-			'logout' => '<a href="'.$force_logout_nonce.'" onclick="return confirm(\'' . esc_js(__('Are you sure you want to force this user to be logged out of this session?', 'all-in-one-wp-security-and-firewall')) . '\')">'. __('Force logout', 'all-in-one-wp-security-and-firewall') . '</a>',
+			'logout' => '<a class="aios-force-logout-user" data-user-id="'.esc_attr($item['user_id']).'" data-message="'.esc_js(__('Are you sure you want to force this user to be logged out of this session?', 'all-in-one-wp-security-and-firewall')).'" href="">'.__('Force logout', 'all-in-one-wp-security-and-firewall').'</a>',
 		);
 		
 		//Return the user_login contents
@@ -130,13 +125,12 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 	 * @param int|array $users      - id of selected user or array of user ids to be logged out
 	 * @param bool      $logout_all - Boolean to show if all users should be logged out
 	 *
-	 * @return void
+	 * @return void|string
 	 */
 	public function force_user_logout($users, $logout_all = false) {
 		global $wpdb, $aio_wp_security;
 
 		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
-		$current_user_id = get_current_user_id();
 
 		if ($logout_all) {
 			// get all user_id(except for the admin) in the table and make it an array for users
@@ -156,7 +150,7 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 			$users = array_map('esc_sql', $users);
 
 			foreach ($users as $user_id) {
-				if (is_numeric($user_id) && !is_super_admin($user_id) && $this->is_user_member_of_blog($user_id)) {
+				if (is_numeric($user_id) && !is_super_admin($user_id) && AIOWPSecurity_Utility::is_user_member_of_blog($user_id)) {
 					if ($aio_wp_security->user_login_obj->delete_logged_in_user($user_id)) {
 						$this->logout_user($user_id);
 						continue;
@@ -171,53 +165,9 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 			}
 
 			AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st();
-		} elseif (null != $users) {
-			$error = '';
-
-			if (!is_numeric($users)) {
-				$error = __("Invalid user ID provided.", 'all-in-one-wp-security-and-firewall');
-			} elseif ($current_user_id == $users) {
-				$error = __("You cannot log yourself out", 'all-in-one-wp-security-and-firewall');
-			} elseif (is_super_admin($users)) {
-				$error = __("Super admins cannot be logged out.", 'all-in-one-wp-security-and-firewall');
-			} elseif (!$this->is_user_member_of_blog($users)) {
-				$error = __("You cannot log out a user from a different subsite.", 'all-in-one-wp-security-and-firewall');
-			}
-
-			if ($error) {
-				AIOWPSecurity_Admin_Menu::show_msg_error_st($error);
-				return;
-			}
-			$users = esc_sql($users);
-			$result = $aio_wp_security->user_login_obj->delete_logged_in_user($users);
-
-			if ($result) {
-				$this->logout_user($users);
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('The selected user has been logged out successfully.', 'all-in-one-wp-security-and-firewall'));
-			} else {
-				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to log out the selected user.', 'all-in-one-wp-security-and-firewall'));
-			}
 		}
 	}
 
-	/**
-	 * Check if a user is a member of the current blog ID in a multisite environment.
-	 *
-	 * @param int $user_id - User ID to check.
-	 *
-	 * @return bool Whether the user is a member of the current blog ID.
-	 */
-	protected function is_user_member_of_blog($user_id) {
-		$current_user_id = get_current_user_id();
-
-		if (is_multisite() && !is_super_admin($current_user_id)) {
-			$blog_id = get_current_blog_id();
-			return is_user_member_of_blog($user_id, $blog_id);
-		}
-
-		// Non-multisite or super admin, consider the user a member
-		return true;
-	}
 
 	/**
 	 * This function handles logging out a user using user_id
@@ -226,7 +176,7 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 	 *
 	 * @return void
 	 */
-	private function logout_user($user_id) {
+	public function logout_user($user_id) {
 		$user_id = absint($user_id);
 		$manager = WP_Session_Tokens::get_instance($user_id);
 		$manager->destroy_all();

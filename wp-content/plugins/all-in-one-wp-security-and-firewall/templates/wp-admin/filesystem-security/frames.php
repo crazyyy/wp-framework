@@ -1,13 +1,15 @@
 <?php if (!defined('ABSPATH')) die('No direct access.'); ?>
+<div id="aios-file-protection-settings-message" ></div>
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Prevent your site from being displayed in a frame', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-	<div class="inside">
-		<?php
-		//Display security info badge
-		$aiowps_feature_mgr->output_feature_details_badge("enable-frame-protection");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-prevent-display-frame'); ?>
+	<div class="inside" id="aios-frame-display-settings">
+		<div id="enable-frame-protection-badge">
+			<?php
+			//Display security info badge
+			$aiowps_feature_mgr->output_feature_details_badge("enable-frame-protection");
+			?>
+		</div>
+		<form action="" id="aios-frame-display-settings-form" method="POST">
 			<div class="aio_blue_box">
 				<?php
 					echo '<p>'.__('This feature allows you to prevent other sites from displaying any of your content via a frame or iframe.', 'all-in-one-wp-security-and-firewall').'</p>';

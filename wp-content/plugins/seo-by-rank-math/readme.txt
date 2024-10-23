@@ -2,10 +2,10 @@
 Contributors: rankmath
 Plugin link: https://rankmath.com/?utm_source=LP&utm_campaign=WP
 Tags: seo, sitemap, google search console, schema, redirection, WordPress SEO
-Tested up to: 6.5
+Tested up to: 6.6
 Requires at least: 6.3
 Requires PHP: 7.4
-Stable tag: 1.0.222
+Stable tag: 1.0.230
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -583,12 +583,12 @@ Please drop us an email at support@rankmath.com and we would be more than happy 
 
 == Changelog ==
 
-= 1.0.222 [June 26, 2024] =
-- Added: Support for AVIF images in [Open Graph](https://rankmath.com/kb/open-graph-meta-tags/) meta tags
-- Fixed: [Content AI](https://rankmath.com/kb/how-to-use-content-ai-tools/) displayed a white screen when the Schema module was disabled
-- Fixed: Issue with [Highlight Long Paragraphs](https://rankmath.com/kb/fix-long-paragraph-test/) feature in the Classic Editor
-- Fixed: Content AI error popup in the [Research tab](https://rankmath.com/kb/how-to-use-content-ai/#research-keywords) was blocking other metaboxes in the Classic Editor
-- Fixed: Issue with Show/Hide columns option in the [Index Status table](https://rankmath.com/kb/analytics/#index-status-of-posts)
+= 1.0.230 [Oct 16, 2024] =
+- Added: [Rank Math SEO Metabox](https://rankmath.com/kb/on-page-seo/) can now be used in FSE Block Templates
+- Fixed: [Filter](https://rankmath.com/kb/filters-hooks-api-developer/#change-breadcrumb-settings) for changing the breadcrumb separator was not working
+- Fixed: Creating new [redirections](https://rankmath.com/kb/setting-up-redirections/) was not working on certain setups
+- Fixed: Incorrect title was added when editing an existing redirection rule
+- Fixed: Untranslated string appeared on [Analytics page](https://rankmath.com/kb/analytics/)
 
 
 Full changelog can be found here - **[Rank Math changelog](https://rankmath.com/changelog/?utm_source=Plugin&utm_medium=Changelog&utm_campaign=WP)**

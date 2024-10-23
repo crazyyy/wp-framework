@@ -7,8 +7,7 @@
 				<?php _e('All IPs in your allow list will no longer be affected by the firewall\'s rules.', 'all-in-one-wp-security-and-firewall'); ?><br>
 			</p>
 		</div>
-			<form action="" method='post'>
-			<?php wp_nonce_field('aios-firewall-allowlist-nonce'); ?>
+			<form action="" method='post' id="aios-firewall-allowlist-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="aios_firewall_allowlist"><?php _e('Enter IP addresses:', 'all-in-one-wp-security-and-firewall'); ?></label></th>

@@ -2,8 +2,7 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('General visitor lockout', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-site-lockout'); ?>
+		<form action="" method="POST" id="aiowpsec-site-lockout-form">
 			<div class="aio_blue_box">
 				<?php
 					echo '<p>'.__('This feature allows you to put your site into "maintenance mode" by locking down the front-end to all visitors except logged in users with super admin privileges.', 'all-in-one-wp-security-and-firewall').'</p>';

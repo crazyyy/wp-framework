@@ -49,6 +49,11 @@ class AIOWPSecurity_Utility {
 	public static function get_current_page_url() {
 		if ((defined('WP_CLI') && WP_CLI) || (defined('DOING_CRON') && DOING_CRON)) return '';
 
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			// Return the referer URL instead of the AJAX URL
+			return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+		}
+
 		$pageURL = 'http';
 		if (isset($_SERVER["HTTPS"]) && "on" == $_SERVER["HTTPS"]) {
 			$pageURL .= "s";
@@ -82,16 +87,6 @@ class AIOWPSecurity_Utility {
 		if ('1' == $exit) {
 			exit;
 		}
-	}
-
-	/**
-	 * Returns logout URL with "after logout URL" query params
-	 *
-	 * @param type $after_logout_url
-	 * @return type
-	 */
-	public static function get_logout_url_with_after_logout_url_value($after_logout_url) {
-		return AIOWPSEC_WP_URL . '?aiowpsec_do_log_out=1&after_logout=' . $after_logout_url;
 	}
 
 	/**
@@ -307,7 +302,7 @@ class AIOWPSecurity_Utility {
 
 		//Make a backup of the config file
 		if (!AIOWPSecurity_Utility_File::backup_and_rename_wp_config($config_file)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to make a backup of the wp-config.php file.', 'all-in-one-wp-security-and-firewall') . ' ' . __(' This operation will not go ahead.', 'all-in-one-wp-security-and-firewall'));
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to make a backup of the wp-config.php file.', 'all-in-one-wp-security-and-firewall') . ' ' . __('This operation will not go ahead.', 'all-in-one-wp-security-and-firewall'));
 			//$aio_wp_security->debug_logger->log_debug("Disable PHP File Edit - Failed to make a backup of the wp-config.php file.",4);
 			return false;
 		} else {
@@ -1124,6 +1119,15 @@ class AIOWPSecurity_Utility {
 	public static function is_contact_form_7_plugin_active() {
 		return is_plugin_active('contact-form-7/wp-contact-form-7.php');
 	}
+
+	/**
+	 * Checks if the Memberpress plugin is active.
+	 *
+	 * @return Boolean - True if the Memberpress plugin is active, otherwise false.
+	 */
+	public static function is_memberpress_plugin_active() {
+		return is_plugin_active('memberpress/memberpress.php');
+	}
 	 
 	/**
 	 * Retrieves and returns current WP general settings date time format.
@@ -1192,12 +1196,15 @@ class AIOWPSecurity_Utility {
 	 *
 	 * @param bool $echo_results
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public static function delete_unneeded_default_files($echo_results = false) {
 		global $aio_wp_security;
 
-		foreach (array('readme.html', 'wp-config-sample.php') as $file_name) {
+		$files = array('readme.html', 'wp-config-sample.php', 'license.txt');
+		$info = array();
+		$error = array();
+		foreach ($files as $file_name) {
 			$file_path = ABSPATH . $file_name;
 
 			if (file_exists($file_path)) {
@@ -1210,14 +1217,29 @@ class AIOWPSecurity_Utility {
 					}
 				} else {
 					$failure_message = sprintf(__('Failed to delete the %s file.', 'all-in-one-wp-security-and-firewall'), $file_name) . ' ' . sprintf(__('Check the file/directory permissions at: %s', 'all-in-one-wp-security-and-firewall'), $file_path);
+					$error[] = $file_name;
 					$aio_wp_security->debug_logger->log_debug($failure_message, 4);
 
 					if ($echo_results) {
 						AIOWPSecurity_Admin_Menu::show_msg_error_st($failure_message);
 					}
 				}
+			} else {
+				$message = sprintf(__('The %s file has already been deleted.', 'all-in-one-wp-security-and-firewall'), $file_name);
+				$info[] = $message;
+				$aio_wp_security->debug_logger->log_debug($message, 0);
+
+				if ($echo_results) {
+					AIOWPSecurity_Admin_Menu::show_msg_updated_st($message);
+				}
 			}
 		}
+
+
+		return array(
+			'info' => $info,
+			'error' => empty($error) ? '' : implode(', ', $error)
+		);
 	}
 
 	/**
@@ -1259,6 +1281,25 @@ class AIOWPSecurity_Utility {
 		}
 
 		return AIOWPSecurity_Utility_IP::validate_ip_list($ip_list_array, 'whitelist');
+	}
+
+	/**
+	 * Check if a user is a member of the current blog ID in a multisite environment.
+	 *
+	 * @param int $user_id - User ID to check.
+	 *
+	 * @return bool Whether the user is a member of the current blog ID.
+	 */
+	public static function is_user_member_of_blog($user_id) {
+		$current_user_id = get_current_user_id();
+
+		if (is_multisite() && !is_super_admin($current_user_id)) {
+			$blog_id = get_current_blog_id();
+			return is_user_member_of_blog($user_id, $blog_id);
+		}
+
+		// Non-multisite or super admin, consider the user a member
+		return true;
 	}
 
 	/**
@@ -1345,5 +1386,22 @@ class AIOWPSecurity_Utility {
 		$aiowps_firewall_config->set_value('aiowps_blacklist_ips', $ip_list_array);
 
 		return true;
+	}
+
+	/**
+	 * Determines if the .htaccess file can be written to.
+	 *
+	 * This function checks if the current user has the necessary permissions
+	 * (is the main site and super admin) and whether the server type is supported
+	 * for writing to the .htaccess file. It prevents modifications on unsupported
+	 * server types such as Nginx and IIS.
+	 *
+	 * @return bool True if .htaccess can be written to, false otherwise.
+	 */
+	public static function allow_to_write_to_htaccess() {
+		if (!AIOWPSecurity_Utility_Permissions::is_main_site_and_super_admin()) return false;
+		$serverType = self::get_server_type();
+
+		return !in_array($serverType, array('-1', 'nginx', 'iis'));
 	}
 }

@@ -2,9 +2,7 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Manage delete plugin tasks', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-delete-plugin-settings'); ?>
-
+		<form action="" id="aiowpsec-delete-plugin-settings-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Delete database tables', 'all-in-one-wp-security-and-firewall'); ?>:</th>

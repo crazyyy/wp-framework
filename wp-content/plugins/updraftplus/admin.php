@@ -618,6 +618,9 @@ class UpdraftPlus_Admin {
 			}
 			UpdraftPlus_Options::update_updraft_option('updraftplus_version', $updraftplus->version);
 		}
+
+		// Dequeue conflicted scripts from other plugins before we enqueue our own scripts.
+		add_action('admin_enqueue_scripts', array($this, 'dequeue_conflicted_scripts'), 99998);
 		
 		if (UpdraftPlus_Options::admin_page() != $pagenow || empty($_REQUEST['page']) || 'updraftplus' != $_REQUEST['page']) {
 			// autobackup addon may enqueue admin-common.js and load the same script, so for the javascript we just need to make sure we call stopImmediatePropagation() to prevent other listeners of the same event from being called
@@ -817,6 +820,30 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
+	 * Dequeue conflicted scripts from other plugins before we enqueue our own scripts.
+	 */
+	public function dequeue_conflicted_scripts() {
+		global $pagenow;
+
+		// Dequeue Gravity Forms tooltip scripts if the autobackup addon is enabled.
+		if ('plugins.php' == $pagenow && class_exists('UpdraftPlus_Addon_Autobackup')) {
+			wp_dequeue_script('gform_tooltip_init');
+		}
+	}
+
+	/**
+	 * Enqueue conflicted scripts from other plugins after we enqueue our own scripts.
+	 */
+	public function enqueue_conflicted_scripts() {
+		global $pagenow;
+
+		// Enqueue Gravity Forms tooltip scripts if the autobackup addon is enabled.
+		if ('plugins.php' == $pagenow && class_exists('UpdraftPlus_Addon_Autobackup')) {
+			wp_enqueue_script('gform_tooltip_init');
+		}
+	}
+
+	/**
 	 * This is also called directly from the auto-backup add-on
 	 */
 	public function admin_enqueue_scripts() {
@@ -837,6 +864,7 @@ class UpdraftPlus_Admin {
 		// add_filter('style_loader_tag', array($this, 'style_loader_tag'), 10, 2);
 
 		$this->ensure_sufficient_jquery_and_enqueue();
+		$this->enqueue_conflicted_scripts();
 		$jquery_blockui_enqueue_version = $updraftplus->use_unminified_scripts() ? '2.71.0'.'.'.time() : '2.71.0';
 		wp_enqueue_script('jquery-blockui', UPDRAFTPLUS_URL.'/includes/blockui/jquery.blockUI'.$min_or_not.'.js', array('jquery'), $jquery_blockui_enqueue_version);
 	
@@ -1425,7 +1453,7 @@ class UpdraftPlus_Admin {
 	}
 
 	public function show_admin_warning_updraftvault() {
-		$this->show_admin_warning('<strong>'.__('UpdraftPlus notice:', 'updraftplus').'</strong> '.sprintf(__('%s has been chosen for remote storage, but you are not currently connected.', 'updraftplus'), 'UpdraftVault').' '.__('Go to the remote storage settings in order to connect.', 'updraftplus'), 'updated');
+		$this->show_admin_warning('<strong>'.__('UpdraftPlus notice:', 'updraftplus').'</strong> '.sprintf(__('%s has been chosen for remote storage, but you are not currently connected.', 'updraftplus'), 'UpdraftVault').' <a href="'.UpdraftPlus_Options::admin_page_url().'?page=updraftplus&amp;tab=settings#remote-storage-updraftvault" class="updraftplus-remote-storage-link">'.sprintf(__('Go here to complete your settings for %s.', 'updraftplus'), 'UpdraftVault').'</a>', 'updated');
 	}
 
 	/**
@@ -2918,7 +2946,7 @@ class UpdraftPlus_Admin {
 		}
 
 		if (isset($_GET['error'])) {
-			// This is used by Microsoft OneDrive authorisation failures (May 15). I am not sure what may have been using the 'error' GET parameter otherwise - but it is harmless.
+			// This is used by Microsoft OneDrive authorisation failures (May 15). I am not sure what may have been using the 'error' GET parameter otherwise - but it is harmless. June 2024: also now used for insufficient Google Drive permissions upon return from auth.updraftplus.com.
 			if (!empty($_GET['error_description'])) {
 				$this->show_admin_warning(htmlspecialchars($_GET['error_description']).' ('.htmlspecialchars($_GET['error']).')', 'error');
 			} else {
@@ -3868,7 +3896,7 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
-	 * Deletes the -old directories that are created when a backup is restored.
+	 * Deletes the -old directories and wp-config-pre-ud-restore-backup.php that are created when a backup is restored.
 	 *
 	 * @return Boolean. Can also exit (something we ought to probably review)
 	 */
@@ -3907,7 +3935,20 @@ class UpdraftPlus_Admin {
 			$ret3 = true;
 		}
 
-		return $ret && $ret3 && $ret4;
+		$ret2 = true;
+		if ($wp_filesystem->is_file(ABSPATH.'wp-config-pre-ud-restore-backup.php')) {
+			echo "<strong>".__('Delete', 'updraftplus').": </strong>wp-config-pre-ud-restore-backup.php: ";
+
+			if ($wp_filesystem->delete(ABSPATH.'wp-config-pre-ud-restore-backup.php')) {
+				echo "<strong>".__('OK', 'updraftplus')."</strong><br>";
+			} else {
+				$ret2 = false;
+				echo "<strong>".__('Failed', 'updraftplus')."</strong><br>";
+			}
+		}
+
+
+		return $ret && $ret2 && $ret3 && $ret4;
 	}
 
 	private function delete_old_dirs_dir($dir, $wpfs = true) {
@@ -4037,6 +4078,12 @@ class UpdraftPlus_Admin {
 			if ($print_as_comment) echo '<!--'.htmlspecialchars(untrailingslashit(WP_PLUGIN_DIR).'-old').'-->';
 			return true;
 		}
+
+		if (is_file(ABSPATH.'wp-config-pre-ud-restore-backup.php')) {
+			if ($print_as_comment) echo '<!--'.htmlspecialchars(ABSPATH.'wp-config-pre-ud-restore-backup.php').'-->';
+			return true;
+		}
+
 		return false;
 	}
 

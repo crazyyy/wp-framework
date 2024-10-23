@@ -10,12 +10,13 @@
 			'<br>'.__('You can view all accounts which have been newly registered via the handy table below and you can also perform bulk activation/deactivation/deletion tasks on each account.', 'all-in-one-wp-security-and-firewall').'</p>';
 			?>
 		</div>
-		<?php
-		// Display security info badge
-		$aiowps_feature_mgr->output_feature_details_badge("manually-approve-registrations");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-user-registration-settings-nonce'); ?>
+		<div id="manually-approve-registrations-badge">
+			<?php
+			// Display security info badge
+			$aiowps_feature_mgr->output_feature_details_badge("manually-approve-registrations");
+			?>
+		</div>
+		<form action="" method="POST" id="aios-manually-approve-registrations-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable manual approval of new registrations', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -31,6 +32,14 @@
 	</div>
 </div>
 <div class="postbox">
+	<h3 class="hndle"><label for="title"><?php _e('Refresh manual approval data', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+	<div class="inside">
+		<form action="" method="POST" id="aios-refresh-manual-approval-list-form">
+			<input type="submit" name="aiowps_refresh_manual_approval_list" value="<?php _e('Refresh data', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary" />
+		</form>
+	</div>
+</div>
+<div class="postbox" id="aios-manual-approval-table">
 	<h3 class="hndle"><label for="title"><?php _e('Approve registered users', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
 		<?php
@@ -38,13 +47,8 @@
 		$user_list->prepare_items();
 		?>
 		<form id="tables-filter" method="post">
-			<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-			<input type="hidden" name="page" value="<?php echo esc_attr($page); ?>" />
 			<?php
 			$user_list->search_box(__('Search', 'all-in-one-wp-security-and-firewall'), 'search_user_registration');
-			if (!empty($tab)) {
-				echo '<input type="hidden" name="tab" value="' . esc_attr($tab) . '" />';
-			}
 			?>
 			<!-- Now we can render the completed list table -->
 			<?php $user_list->display(); ?>

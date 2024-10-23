@@ -44,6 +44,7 @@ var WP_Optimize = function () {
 	var $ = jQuery;
 	var debug_level = 0;
 	var queue = new Updraft_Queue();
+	var block_ui = wp_optimize.block_ui;
 	var send_command = wp_optimize.send_command;
 	var optimization_force = false;
 	var optimization_logged_warnings = false;
@@ -1081,7 +1082,7 @@ var WP_Optimize = function () {
 		if (form.form_errors.has_errors()) return;
 
 		spinner.show();
-		$.blockUI();
+		block_ui(wpoptimize.saving);
 
 		// when optimizations list in the document - send information about selected optimizations.
 		if ($('#optimizations_list').length) {
@@ -1849,7 +1850,7 @@ var WP_Optimize = function () {
 	$('#wpo-settings-import').on('click', function(e) {
 		e.preventDefault();
 
-		block_ui();
+		block_ui(wpoptimize.importing);
 
 		var wpo_import_file_input = document.getElementById('import_settings');
 		if (0 === wpo_import_file_input.files.length) {
@@ -1859,22 +1860,6 @@ var WP_Optimize = function () {
 		}
 		read_settings_json_file(wpo_import_file_input.files[0]);
 	});
-
-	/**
-	 * Blocks UI
-	 */
-	function block_ui() {
-		$.blockUI({
-			css: {
-				width: '300px',
-				border: 'none',
-				'border-radius': '10px',
-				left: 'calc(50% - 150px)',
-				padding: '20px'
-			},
-			message: '<div style="margin: 8px; font-size:150%;" class="updraft_saving_popup"><img src="'+wpoptimize.spinner_src+'" height="80" width="80" style="padding-bottom:10px;"><br>'+wpoptimize.importing+'</div>'
-		});
-	}
 
 	/**
 	 * Export plugin settings as a JSON file

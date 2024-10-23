@@ -164,8 +164,8 @@ class Slack extends OpenGraph {
 	 */
 	private function is_term() {
 		if ( is_category() || is_tag() || is_tax() ) {
-			global $wp_query;
-			return Helper::get_settings( sprintf( 'titles.tax_%s_slack_enhanced_sharing', $wp_query->get_queried_object()->taxonomy ) );
+			$object = get_queried_object();
+			return $object && Helper::get_settings( sprintf( 'titles.tax_%s_slack_enhanced_sharing', $object->taxonomy ) );
 		}
 
 		return false;
@@ -302,7 +302,7 @@ class Slack extends OpenGraph {
 		 */
 		$words_per_minute = absint( $this->do_filter( 'frontend/time_to_read_wpm', 200 ) );
 
-		$words   = str_word_count( $content );
+		$words   = preg_match_all( '/\p{L}+/u', $content );
 		$minutes = floor( $words / $words_per_minute );
 
 		if ( $minutes > 0 ) {

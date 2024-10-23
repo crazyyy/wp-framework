@@ -214,7 +214,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 					$incremental_sets = array_keys($backups[$timestamp]['incremental_sets']);
 					// Check if there are more than one timestamp in the incremental set
 					if (1 < count($incremental_sets)) {
-						$incremental_select_html = '<div class="notice updraft-restore-option"><label>'.__('This backup set contains incremental backups of your files; please select the time you wish to restore your files to', 'updraftplus').': </label>';
+						$incremental_select_html = '<div class="udp-notice updraft-restore-option"><label>'.__('This backup set contains incremental backups of your files; please select the time you wish to restore your files to', 'updraftplus').': </label>';
 						$incremental_select_html .= '<select name="updraft_incremental_restore_point" id="updraft_incremental_restore_point">';
 						$incremental_sets = array_reverse($incremental_sets);
 						$first_timestamp = $incremental_sets[0];

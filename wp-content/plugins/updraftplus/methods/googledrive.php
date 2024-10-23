@@ -45,6 +45,11 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 						'user_id' => $_GET['user_id'],
 						'access_token' => $_GET['access_token']
 					);
+					
+					if (isset($_GET['scope'])) {
+						$scope = $_GET['scope'];
+						$code['scope'] = explode(' ', $scope);
+					}
 				} else {
 					$code = array();
 				}
@@ -461,7 +466,8 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 		if ($use_master) {
 			$client_id = $this->client_id;
-			$token = 'token'.$prefixed_instance_id.$this->redirect_uri();
+			$token = 'token'.$prefixed_instance_id;
+			$token .= $this->redirect_uri();
 		} else {
 			$client_id = $opts['clientid'];
 			$token = 'token'.$prefixed_instance_id;
@@ -474,8 +480,12 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			'scope' => apply_filters('updraft_googledrive_scope', 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/userinfo.profile'),
 			'state' => $token,
 			'access_type' => 'offline',
-			'approval_prompt' => 'force'
+			// 'approval_prompt' => 'force', // legacy and has been deprected. It can lead to conflicts when specified along with "prompt" param
+			'include_granted_scopes' => 'true',
+			'enable_granular_consent' => 'true',
+			'prompt' => 'select_account consent', // new option param as the replacement to 'approval_prompt'
 		);
+		$params = apply_filters('updraft_googledrive_auth_params', $params);
 		if (headers_sent()) {
 			$this->log(sprintf(__('The %s authentication could not go ahead, because something else on your site is breaking it.', 'updraftplus'), 'Google Drive').' '.__('Try disabling your other plugins and switching to a default theme.', 'updraftplus').' ('.__('Specifically, you are looking for the component that sends output (most likely PHP warnings/errors) before the page begins.', 'updraftplus').' '.__('Turning off any debugging settings may also help).', 'updraftplus').')', 'error');
 		} else {
@@ -499,6 +509,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$opts = $this->get_options();
 			$opts['user_id'] = base64_decode($code['user_id']);
 			$opts['tmp_access_token'] = base64_decode($code['access_token']);
+			if (isset($opts['auth_in_progress'])) $opts['scope'] = $code['scope'];
 			// Unset this value if it is set as this is a fresh auth we will set this value in the next step
 			if (isset($opts['expires_in'])) unset($opts['expires_in']);
 			// remove our flag so we know this authentication is complete
@@ -584,7 +595,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 				}
 			}
 		} else {
-			header('Location: '.UpdraftPlus_Options::admin_page_url().'?page=updraftplus&error='.urlencode(__('Authorization failed', 'updraftplus')));
+			header('Location: '.UpdraftPlus_Options::admin_page_url().'?page=updraftplus&error='.urlencode(sprintf(__('%s authorization failed', 'updraftplus'), 'Google Drive')));
 		}
 	}
 
@@ -842,11 +853,14 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 					$body = array('result' => 'error', 'error' => $result->get_error_code(), 'error_description' => $result->get_error_message());
 				
 				} else {
-				
-					$body_json = wp_remote_retrieve_body($result);
-
-					$body = json_decode($body_json, true);
+					$response_code = wp_remote_retrieve_response_code($result);
 					
+					if ($response_code < 200 || $response_code >= 300) {
+						$body = array('result' => 'error', 'error' => $response_code, 'error_description' => sprintf(__("%s for %s", 'updraftplus'), wp_remote_retrieve_response_message($result), $this->callback_url));
+					} else {
+						$body_json = wp_remote_retrieve_body($result);
+						$body = json_decode($body_json, true);
+					}
 				}
 				
 				if (!empty($body['result']) && 'error' == $body['result']) {

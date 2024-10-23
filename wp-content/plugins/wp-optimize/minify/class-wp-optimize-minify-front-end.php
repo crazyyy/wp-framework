@@ -217,6 +217,8 @@ class WP_Optimize_Minify_Front_End {
 		// Check if working with google font url
 
 		if ('fonts.googleapis.com' == parse_url($href, PHP_URL_HOST)) {
+			// if option disabled google fonts processing
+			if ($this->options['disable_google_fonts_processing']) return $html;
 			// check if google fonts should be removed
 			if ($this->options['remove_googlefonts']) return false;
 			// check if google fonts should be merged
@@ -488,6 +490,7 @@ class WP_Optimize_Minify_Front_End {
 		$merge_css = $this->options['enable_merging_of_css'];
 		$merge_inline_extra_css_js = $this->options['merge_inline_extra_css_js'];
 		$process_css = $minify_css || $merge_css;
+		$disable_google_fonts_processing = $this->options['disable_google_fonts_processing'];
 		$styles = clone $wp_styles;
 		$styles->all_deps($styles->queue);
 		$done = $styles->done;
@@ -690,11 +693,11 @@ class WP_Optimize_Minify_Front_End {
 			// check if the current URL points to a minified file.
 			$exclude_minified_css = WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
 			$normal_processing = $exclude_minified_css && !$merge_css;
-			// skip ignore list, conditional css, external css, font-awesome merge
+			// skip ignore list, conditional css, external css, font-awesome merge and already minified js
 			if (($process_css && !$normal_processing && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($conditional) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
 				|| empty($href)
 				|| ($process_css && 'inherit' == $this->options['fawesome_method'] && WP_Optimize_Minify_Functions::is_font_awesome($href))
-				|| ($process_css && 'inherit' == $this->options['gfonts_method'] && WP_Optimize_Minify_Functions::is_google_font($href))
+				|| ($process_css && !$disable_google_fonts_processing && 'inherit' == $this->options['gfonts_method'] && WP_Optimize_Minify_Functions::is_google_font($href))
 			) {
 				// colect inline css for this handle
 				if (isset($wp_styles->registered[$handle]->extra['after']) && is_array($wp_styles->registered[$handle]->extra['after'])) {
@@ -715,6 +718,8 @@ class WP_Optimize_Minify_Front_End {
 				$version_str = is_array($wp_styles->registered[$handle]->ver) ? $this->array_to_string_conversion($wp_styles->registered[$handle]->ver) : $wp_styles->registered[$handle]->ver;
 				array_push($header[count($header)-1]['versions'], $version_str);
 
+				$header[count($header) - 1]['last_modified'][] = WP_Optimize_Minify_Functions::get_modification_time($wp_styles->registered[$handle]->src);
+
 				// external and ignored css
 			} else {
 				// normal enqueuing
@@ -733,23 +738,27 @@ class WP_Optimize_Minify_Front_End {
 
 		// loop through header css and merge
 		for ($i=0,$l=count($header); $i<$l; $i++) {
+
 			if (!isset($header[$i]['handle'])) {
+
+				$handle_str = is_array($header[$i]['handles']) ? $this->array_to_string_conversion($header[$i]['handles']) : strval($header[$i]['handles']);
+				$last_modified_str = is_array($header[$i]['last_modified']) ? $this->array_to_string_conversion($header[$i]['last_modified']) : strval($header[$i]['last_modified']);
+
 				if ($merge_css) {
 					// get hash for the inline css in this group
 					$inline_css_group = array();
-					foreach ($header[$i]['handles'] as $h) {
-						if (!empty($inline_css) && isset($inline_css[$h]) && !empty($inline_css[$h])) {
-							$inline_css_group[] = $inline_css[$h];
+
+					if (is_array($header[$i]['handles'])) {
+						foreach ($header[$i]['handles'] as $h) {
+							if (!empty($inline_css) && isset($inline_css[$h]) && !empty($inline_css[$h])) {
+								$inline_css_group[] = $inline_css[$h];
+							}
 						}
 					}
 					$inline_css_hash = md5(implode('', $inline_css_group));
-					// We need this because some plugins/theme use empty array as version
-					// https://plugins.trac.wordpress.org/browser/mailin/tags/3.1.54/sendinblue.php#L456
-					$version_str = $this->array_to_string_conversion($header[$i]['versions']);
-					$handle_str = $this->array_to_string_conversion($header[$i]['handles']);
-					$hash = hash('adler32', $handle_str . $inline_css_hash . $version_str);
+					$hash = hash('adler32', $handle_str . $inline_css_hash . $last_modified_str);
 				} else {
-					$hash = implode('', $header[$i]['handles']) . implode('', $header[$i]['versions']);
+					$hash = $handle_str . $last_modified_str;
 				}
 
 				// static cache file info
@@ -778,8 +787,10 @@ class WP_Optimize_Minify_Front_End {
 						if (!empty($wp_styles->registered[$handle]->src)) {
 							
 							// get href per handle
-							$href = WP_Optimize_Minify_Functions::get_hurl($wp_styles->registered[$handle]->src);
+							$handle_src = $wp_styles->registered[$handle]->src;
+							$href = WP_Optimize_Minify_Functions::get_hurl($handle_src);
 							$version = $wp_styles->registered[$handle]->ver;
+							$last_modified = WP_Optimize_Minify_Functions::get_modification_time($handle_src);
 							
 							// inlined scripts without file
 							if (empty($href)) continue;
@@ -812,6 +823,8 @@ class WP_Optimize_Minify_Front_End {
 							// response has failed
 							if (true != $res['status']) {
 								$log['files'][$handle] = $res['log'];
+								$log['files'][$handle]['version'] = $version;
+								$log['files'][$handle]['last_modified'] = $last_modified;
 								continue;
 							}
 
@@ -820,6 +833,8 @@ class WP_Optimize_Minify_Front_End {
 							// append code to merged file
 							$code .= isset($res['code']) ? $res['code'] : '';
 							$log['files'][$handle] = $res['log'];
+							$log['files'][$handle]['version'] = $version;
+							$log['files'][$handle]['last_modified'] = $last_modified;
 							
 							// append inlined styles
 							if ($merge_inline_extra_css_js && isset($inline_css[$handle]) && !empty($inline_css[$handle])) {
@@ -996,6 +1011,7 @@ class WP_Optimize_Minify_Front_End {
 				// Register strategy if it is used
 				if (isset($scripts->registered[$handle]->extra['strategy'])) $footer[count($footer)-1]['strategy'] = $scripts->registered[$handle]->extra['strategy'];
 
+				$footer[count($footer) - 1]['last_modified'][] = WP_Optimize_Minify_Functions::get_modification_time($wp_scripts->registered[$handle]->src);
 				// external and ignored scripts
 
 				if (isset($scripts->registered[$handle]->extra['strategy'])) {
@@ -1011,13 +1027,17 @@ class WP_Optimize_Minify_Front_End {
 
 		// loop through footer scripts and merge
 		for ($i=0,$l=count($footer); $i<$l; $i++) {
+
 			if (!isset($footer[$i]['handle'])) {
 
+				$handles_str = is_array($footer[$i]['handles']) ? $this->array_to_string_conversion($footer[$i]['handles']) : strval($footer[$i]['handles']);
+				$last_modified_str = is_array($footer[$i]['last_modified']) ? $this->array_to_string_conversion($footer[$i]['last_modified']) : strval($footer[$i]['last_modified']);
+
 				if ($merge_js) {
-					// Change the hash based on version numbers
-					$hash = hash('adler32', implode('', $footer[$i]['handles']) . implode('', $footer[$i]['versions']));
+					// Change the hash based on last modified timestamp
+					$hash = hash('adler32', $handles_str . $last_modified_str);
 				} else {
-					$hash = implode('', $footer[$i]['handles']) . implode('', $footer[$i]['versions']);
+					$hash = $handles_str . $last_modified_str;
 				}
 								
 				// static cache file info
@@ -1050,8 +1070,10 @@ class WP_Optimize_Minify_Front_End {
 							if (in_array($handle, $done)) continue;
 							
 							// get href per handle
-							$href = WP_Optimize_Minify_Functions::get_hurl($wp_scripts->registered[$handle]->src);
+							$handle_src = $wp_scripts->registered[$handle]->src;
+							$href = WP_Optimize_Minify_Functions::get_hurl($handle_src);
 							$version = $wp_scripts->registered[$handle]->ver;
+							$last_modified = WP_Optimize_Minify_Functions::get_modification_time($handle_src);
 							// inlined scripts without file
 							if (empty($href)) {
 								continue;
@@ -1085,6 +1107,8 @@ class WP_Optimize_Minify_Front_End {
 							if (true != $res['status']) {
 								$log['files'][$handle] = $res['log'];
 								$log['files'][$handle]['uses_loading_strategy'] = isset($footer[$i]['strategy']);
+								$log['files'][$handle]['version'] = $version;
+								$log['files'][$handle]['last_modified'] = $last_modified;
 								continue;
 							}
 
@@ -1119,6 +1143,8 @@ class WP_Optimize_Minify_Front_End {
 							$code = WP_Optimize_Minify_Functions::prepare_merged_js($code, $href);
 							$log['files'][$handle] = $res['log'];
 							$log['files'][$handle]['uses_loading_strategy'] = isset($footer[$i]['strategy']);
+							$log['files'][$handle]['version'] = $version;
+							$log['files'][$handle]['last_modified'] = $last_modified;
 							
 							// consider dependencies on handles with an empty src
 						} else {
@@ -1335,6 +1361,7 @@ class WP_Optimize_Minify_Front_End {
 					// push it to the array
 					array_push($header[count($header)-1]['handles'], $handle);
 					array_push($header[count($header)-1]['versions'], $scripts->registered[$handle]->ver);
+					$header[count($header) - 1]['last_modified'][] = WP_Optimize_Minify_Functions::get_modification_time($wp_scripts->registered[$handle]->src);
 
 					// Register strategy if it is used
 					if (isset($scripts->registered[$handle]->extra['strategy'])) $header[count($header)-1]['strategy'] = $scripts->registered[$handle]->extra['strategy'];
@@ -1360,12 +1387,16 @@ class WP_Optimize_Minify_Front_End {
 
 		// loop through header scripts and merge
 		for ($i=0,$l=count($header); $i < $l; $i++) {
+
 			if (!isset($header[$i]['handle'])) {
-				
+
+				$handles_str = is_array($header[$i]['handles']) ? $this->array_to_string_conversion($header[$i]['handles']) : strval($header[$i]['handles']);
+				$last_modified_str = is_array($header[$i]['last_modified']) ? $this->array_to_string_conversion($header[$i]['last_modified']) : strval($header[$i]['last_modified']);
+
 				if ($merge_js) {
-					$hash = hash('adler32', implode('', $header[$i]['handles']) . implode('', $header[$i]['versions']));
+					$hash = hash('adler32', $handles_str . $last_modified_str);
 				} else {
-					$hash = implode('', $header[$i]['handles']) . implode('', $header[$i]['versions']);
+					$hash = $handles_str . $last_modified_str;
 				}
 
 				// static cache file info
@@ -1397,8 +1428,10 @@ class WP_Optimize_Minify_Front_End {
 							if (in_array($handle, $done)) continue;
 
 							// get href per handle
-							$href = WP_Optimize_Minify_Functions::get_hurl($wp_scripts->registered[$handle]->src);
+							$handle_src = $wp_scripts->registered[$handle]->src;
+							$href = WP_Optimize_Minify_Functions::get_hurl($handle_src);
 							$version = $wp_scripts->registered[$handle]->ver;
+							$last_modified = WP_Optimize_Minify_Functions::get_modification_time($handle_src);
 							if (empty($href)) continue;
 							// download, minify, cache
 							$tkey = 'js-'.hash('adler32', $handle . $href).'.js';
@@ -1429,6 +1462,8 @@ class WP_Optimize_Minify_Front_End {
 							if (true != $res['status']) {
 								$log['files'][$handle] = $res['log'];
 								$log['files'][$handle]['uses_loading_strategy'] = isset($header[$i]['strategy']);
+								$log['files'][$handle]['version'] = $version;
+								$log['files'][$handle]['last_modified'] = $last_modified;
 								continue;
 							}
 
@@ -1465,6 +1500,8 @@ class WP_Optimize_Minify_Front_End {
 							$code = WP_Optimize_Minify_Functions::prepare_merged_js($code, $href);
 							$log['files'][$handle] = $res['log'];
 							$log['files'][$handle]['uses_loading_strategy'] = isset($header[$i]['strategy']);
+							$log['files'][$handle]['version'] = $version;
+							$log['files'][$handle]['last_modified'] = $last_modified;
 							
 							// consider dependencies on handles with an empty src
 						} else {
@@ -1585,6 +1622,7 @@ class WP_Optimize_Minify_Front_End {
 		$minify_css = $this->options['enable_css_minification'];
 		$merge_css = $this->options['enable_merging_of_css'];
 		$process_css = $minify_css || $merge_css;
+		$disable_google_fonts_processing = $this->options['disable_google_fonts_processing'];
 		$log = "";
 		$code = "";
 		$styles = clone $wp_styles;
@@ -1611,7 +1649,7 @@ class WP_Optimize_Minify_Front_End {
 			// inlined scripts without file
 			if (empty($href)) continue;
 			
-			if (WP_Optimize_Minify_Functions::is_google_font($href)) {
+			if (!$disable_google_fonts_processing && WP_Optimize_Minify_Functions::is_google_font($href)) {
 				wp_dequeue_style($handle);
 				if ($this->options['remove_googlefonts']) {
 					$done = array_merge($done, array($handle));
@@ -1761,7 +1799,7 @@ class WP_Optimize_Minify_Front_End {
 			// check if the current URL points to a minified file.
 			$exclude_minified_css = WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
 			$normal_processing = $exclude_minified_css && !$merge_css;
-			// skip ignore list, conditional css, external css, font-awesome merge
+			// skip ignore list, conditional css, external css, font-awesome merge and already minified css
 			if (($process_css && !$normal_processing && !WP_Optimize_Minify_Functions::in_arrayi($href, $ignore_list) && !isset($conditional) && WP_Optimize_Minify_Functions::internal_url($href, site_url()))
 				|| empty($href)
 			) {
@@ -1780,6 +1818,7 @@ class WP_Optimize_Minify_Front_End {
 				// push it to the array get latest modified time
 				array_push($footer[count($footer)-1]['handles'], $handle);
 				array_push($footer[count($footer)-1]['versions'], $version);
+				$footer[count($footer) - 1]['last_modified'][] = WP_Optimize_Minify_Functions::get_modification_time($wp_styles->registered[$handle]->src);
 				
 				// external and ignored css
 			} else {
@@ -1800,19 +1839,26 @@ class WP_Optimize_Minify_Front_End {
 
 		// loop through footer css and merge
 		for ($i=0,$l=count($footer); $i<$l; $i++) {
+
 			if (!isset($footer[$i]['handle'])) {
+
+				$handles_str = is_array($footer[$i]['handles']) ? $this->array_to_string_conversion($footer[$i]['handles']) : strval($footer[$i]['handles']);
+				$last_modified_str = is_array($footer[$i]['last_modified']) ? $this->array_to_string_conversion($footer[$i]['last_modified']) : strval($footer[$i]['last_modified']);
+
 				if ($merge_css) {
 					// get hash for the inline css in this group
 					$inline_css_group = array();
-					foreach ($footer[$i]['handles'] as $h) {
-						if (isset($inline_css[$h]) && !empty($inline_css[$h])) {
-							$inline_css_group[] = $inline_css[$h];
+					if (is_array($footer[$i]['handles'])) {
+						foreach ($footer[$i]['handles'] as $h) {
+							if (isset($inline_css[$h]) && !empty($inline_css[$h])) {
+								$inline_css_group[] = $inline_css[$h];
+							}
 						}
 					}
 					$inline_css_hash = md5(implode('', $inline_css_group));
-					$hash = hash('adler32', implode('', $footer[$i]['handles']) . $inline_css_hash . implode('', $footer[$i]['versions']));
+					$hash = hash('adler32', $handles_str . $inline_css_hash . $last_modified_str);
 				} else {
-					$hash = implode('', $footer[$i]['handles']) . implode('', $footer[$i]['versions']);
+					$hash = $handles_str . $last_modified_str;
 				}
 
 				// static cache file info
@@ -1841,8 +1887,10 @@ class WP_Optimize_Minify_Front_End {
 						if (!empty($wp_styles->registered[$handle]->src)) {
 
 							// get href per handle
-							$href = WP_Optimize_Minify_Functions::get_hurl($wp_styles->registered[$handle]->src);
+							$handle_src = $wp_styles->registered[$handle]->src;
+							$href = WP_Optimize_Minify_Functions::get_hurl($handle_src);
 							$version = $wp_styles->registered[$handle]->ver;
+							$last_modified = WP_Optimize_Minify_Functions::get_modification_time($handle_src);
 							// inlined scripts without hreffile
 							if (empty($href)) continue;
 
@@ -1874,6 +1922,8 @@ class WP_Optimize_Minify_Front_End {
 							// response has failed
 							if (true != $res['status']) {
 								$log['files'][$handle] = $res['log'];
+								$log['files'][$handle]['version'] = $version;
+								$log['files'][$handle]['last_modified'] = $last_modified;
 								continue;
 							}
 
@@ -1882,6 +1932,8 @@ class WP_Optimize_Minify_Front_End {
 							// append code to merged file
 							$code .= isset($res['code']) ? $res['code'] : '';
 							$log['files'][$handle] = $res['log'];
+							$log['files'][$handle]['version'] = $version;
+							$log['files'][$handle]['last_modified'] = $last_modified;
 
 							// append inlined styles
 							if (isset($inline_css[$handle]) && !empty($inline_css[$handle])) {
@@ -1955,6 +2007,118 @@ class WP_Optimize_Minify_Front_End {
 
 		// remove from queue
 		$wp_styles->done = $done;
+	}
+
+	/**
+	 * Process JS Scripts of type module
+	 *
+	 * @param String $buffer Page HTML.
+	 *
+	 * @return String
+	 */
+	public function process_script_modules($buffer) {
+
+		if ('' === $buffer) return '';
+
+		if (!WP_Optimize_Utils::is_valid_html($buffer)) return $buffer;
+
+		$minify_js = $this->options['enable_js_minification'];
+		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
+		$cache_dir = $cache_path['cachedir'];
+		$cache_dir_url = $cache_path['cachedirurl'];
+		$cache_base_dir = $cache_path['cachebasedir'];
+
+		$scripts = $this->get_scripts($buffer);
+		if (empty($scripts)) return $buffer;
+
+		foreach ($scripts as $script) {
+			if ("module" !== $script['type']) continue;
+
+			$href = WP_Optimize_Minify_Functions::get_hurl($script['url']);
+			if (WP_Optimize_Minify_Functions::is_minified_css_js_filename($href)) continue;
+
+			$last_modified = WP_Optimize_Minify_Functions::get_modification_time($script['url']);
+			$handle = $script['handle'];
+			$version = $script['version'];
+
+			// Module script handles use slashes and @ symbols,
+			// replace them with '-' and empty string, break if handle is still ''
+			if (!empty($handle)) {
+				$handle_no_slash = str_replace(array('/', '@'), array('-', ''), $handle);
+			} else {
+				continue;
+			}
+
+			// code and log initialization
+			$log_header = "PROCESSED on ".date('r')." from ".home_url(add_query_arg(null, null));
+			$log = array(
+				'header' => $log_header,
+				'files' => array()
+			);
+			$meta_log = $this->meta_log_initialization($log_header);
+			$code = '';
+
+			// create cache files and urls
+			$file_name = 'wpo-minify-'.$handle_no_slash.($minify_js ? '.min' : '');
+			$file = $cache_dir.'/'.$file_name.'.js';
+			$meta_json_file = $cache_base_dir.'/'.'meta.json';
+			$file_url = WP_Optimize_Minify_Functions::get_protocol($cache_dir_url.'/'.$file_name.'.js');
+
+			// download, minify, cache
+			$tkey = 'js-'.hash('adler32', $handle_no_slash . $href).'.js';
+			$json = WP_Optimize_Minify_Cache_Functions::get_transient($tkey);
+			if (false === $json) {
+				$enable_minification = $minify_js && !WP_Optimize_Minify_Functions::is_minified_css_js_filename($href);
+				$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $enable_minification, 'js', $handle_no_slash, $version);
+				if ($this->options['debug']) {
+					echo "<!-- wpo_min DEBUG: Uncached file processing now for $handle / $href / $version -->\n";
+				}
+				WP_Optimize_Minify_Cache_Functions::set_transient($tkey, $json);
+			}
+
+			// decode
+			$res = json_decode($json, true);
+
+			if (null === $res) continue;
+
+			// Reset minified script module
+			if ($this->should_reset_minify_assets($res, $href, 'js', $handle, $version)) {
+				WP_Optimize_Minify_Cache_Functions::reset();
+				$this->minify_cache_incremented = true;
+				$meta_log['invalidation_reason'] = 'Checksum Mismatch and version changed from ' . $res['request']['version'] . ' to ' . $version;
+				$meta_log['files_that_changed'][$handle] = $res['log'];
+			}
+
+			if (!$res['status']) continue;
+
+			$code .= isset($res['code']) ? $res['code'] : '';
+			$code = WP_Optimize_Minify_Functions::prepare_merged_js($code, $href);
+			$log['files'][$handle] = $res['log'];
+			$log['files'][$handle]['version'] = $version;
+			$log['files'][$handle]['last_modified'] = $last_modified;
+
+			// If code is empty (nothing to minify) break loop
+			if (empty($code)) continue;
+
+			// Only generate meta.json file if cache is reset
+			if (!empty($meta_log['invalidation_reason'])) {
+				file_put_contents($meta_json_file, json_encode($meta_log));
+			}
+			WP_Optimize_Minify_Print::write_combined_asset($file, $code, $log);
+
+			// Extract importmap script tag
+			$json_map = $this->get_script_module_importmap($buffer);
+			$json_map_update = $json_map;
+
+			// Update module source file and importmap with new file url (if necessary)
+			$buffer = str_replace($script['url'], $file_url, $buffer);
+			if (!empty($json_map) && isset($json_map['imports'][$handle])) {
+				$json_map_update['imports'][$handle] = $file_url;
+				$buffer = str_replace(json_encode($json_map), json_encode($json_map_update), $buffer);
+			}
+		}
+
+		return $buffer;
 	}
 
 	/**
@@ -2325,6 +2489,60 @@ class WP_Optimize_Minify_Front_End {
 		) {
 			add_action('wp_head', array('WP_Optimize_Minify_Print', 'add_load_async'), 0);
 		}
+
+		// Process script module from generated html
+		ob_start(array($this, "process_script_modules"));
+	}
+
+	/**
+	 * Extract scripts tags from html buffer using regex
+	 *
+	 * @param string $html - HTML document as string
+	 * @return array
+	 */
+	private function get_scripts($html) {
+
+		preg_match_all('/<script([^>]*)>/Umi', $html, $script_matches, PREG_SET_ORDER);
+
+		$modified_script_matches = array();
+		foreach ($script_matches as $script) {
+			$script['url'] = '';
+			$script['handle'] = '';
+			$script['version'] = '';
+			$script['type'] = '';
+			$attributes = WP_Optimize_Utils::parse_attributes($script[1]);
+
+			if (isset($attributes['src'])) {
+				$script['url'] = $attributes['src'];
+				$url_query = wp_parse_url($script['url'], PHP_URL_QUERY);
+				$output = array();
+				wp_parse_str($url_query, $output);
+				if (isset($output['ver'])) $script['version'] = $output['ver'];
+			}
+
+			// Extract the id/handle from attribute's array if present
+			if (isset($attributes['id'])) $script['handle'] = $attributes['id'];
+
+			// Extract the type from attribute's array if present
+			if (isset($attributes['type'])) $script['type'] = $attributes['type'];
+
+			$modified_script_matches[] = $script;
+		}
+
+		return $modified_script_matches;
+	}
+
+	/**
+	 * Extract `importmap` json object from html buffer using regex
+	 *
+	 * @param string $html - HTML document as string
+	 * @return array
+	 */
+	private function get_script_module_importmap($html) {
+		preg_match('/<script\s+type\s*=\s*[\'"]importmap.*>(?<importmap>.*)<\/script>/Umsi', $html, $match);
+		if (!empty($match) && isset($match['importmap'])) return json_decode($match['importmap'], true);
+
+		return array();
 	}
 
 	/**

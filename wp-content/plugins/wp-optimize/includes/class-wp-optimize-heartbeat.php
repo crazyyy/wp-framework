@@ -38,7 +38,7 @@ class WP_Optimize_Heartbeat {
 	 * @return WP_Optimize_Heartbeat
 	 */
 	public static function get_instance() {
-		$_instance = null;
+		static $_instance = null;
 		if (null === $_instance) {
 			$_instance = new self();
 		}
@@ -117,6 +117,7 @@ class WP_Optimize_Heartbeat {
 							'error_code' => $command_response->get_error_code(),
 							'error_message' => $command_response->get_error_message(),
 							'error_data' => $command_response->get_error_data(),
+							'skip_notice' => !empty($command_data_param['skip_notice']),
 						);
 					}
 				}

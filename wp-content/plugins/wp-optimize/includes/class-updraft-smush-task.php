@@ -433,7 +433,7 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 		if (!class_exists('finfo')) return true;
 		$accepted_types = apply_filters('wpo_image_compression_accepted_mime_types', array('image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'));
 		// The ignore rule below is added because "finfo" doesn't exist in PHP5.2.
-		$finfo = new finfo(FILEINFO_MIME_TYPE); // phpcs:ignore PHPCompatibility.Classes.NewClasses.finfoFound, PHPCompatibility.Constants.NewConstants.fileinfo_mime_typeFound
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
 		$mime_type = $finfo->buffer($file_buffer);
 		return in_array($mime_type, $accepted_types);
 	}

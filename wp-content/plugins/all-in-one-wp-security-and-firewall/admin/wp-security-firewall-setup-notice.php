@@ -104,7 +104,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 *
 	 * @return void
 	 */
-	private function do_setup() {
+	public function do_setup() {
 
 		$is_inserted_firewall_file = false;
 
@@ -311,7 +311,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 *
 	 * @return void
 	 */
-	private function render_notices() {
+	public function render_notices() {
 		global $aio_wp_security;
 
 		$notices = array(
@@ -452,17 +452,9 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 * @return void
 	 */
 	private function render_firewall_installed_notice() {
-		?>
-			<div class='notice notice-success is-dismissible'>
-				<p><strong><?php _e('All In One WP Security and Firewall', 'all-in-one-wp-security-and-firewall'); ?></strong></p>
-				<p>
-					<?php
-						echo __('Your firewall has been installed with the highest level of protection.', 'all-in-one-wp-security-and-firewall').' '.
-							 __('You may have to wait 5 minutes for the changes to take effect.', 'all-in-one-wp-security-and-firewall');
-					?>
-				</p>
-			</div>
-		<?php
+		global $aio_wp_security;
+
+		$aio_wp_security->include_template('notices/firewall-installed-notice.php', false);
 	}
 
 	/**
@@ -586,8 +578,8 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 					<?php wp_nonce_field('aiowpsec-firewall-setup'); ?>
 					<input type="hidden" name="action" value="aiowps_firewall_setup">
 					<p>
-						<?php _e('We have detected that your AIOS firewall is not fully installed, and therefore does not have the highest level of protection. ', 'all-in-one-wp-security-and-firewall');?>
-						<?php _e('Your firewall will have reduced functionality until it has been upgraded. ', 'all-in-one-wp-security-and-firewall');?>
+						<?php _e('We have detected that your AIOS firewall is not fully installed, and therefore does not have the highest level of protection.', 'all-in-one-wp-security-and-firewall');?>
+						<?php echo ' ' . __('Your firewall will have reduced functionality until it has been upgraded.', 'all-in-one-wp-security-and-firewall');?>
 						<div style="padding-top: 10px;">
 							<input class="button button-primary" type="submit" name="btn_upgrade_now" value="<?php _e('Upgrade your protection now', 'all-in-one-wp-security-and-firewall'); ?>">
 						</div>
@@ -630,45 +622,12 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 	 * @return void
 	 */
 	private function render_automatic_setup_notice() {
-		
+		global $aio_wp_security;
+
 		if ($this->should_not_show_notice()) {
 			return;
 		}
-
-		?>
-			<div class="notice notice-information">
-
-				<form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
-					<?php wp_nonce_field('aiowpsec-firewall-setup'); ?>
-					<input type="hidden" name="action" value="aiowps_firewall_setup">
-					<p>
-						<strong><?php _e('All In One WP Security and Firewall', 'all-in-one-wp-security-and-firewall'); ?></strong>
-					</p>
-					<p>
-						<?php echo __('Our PHP-based firewall has been created to give you even greater protection.', 'all-in-one-wp-security-and-firewall').' '.
-								   __('To ensure the PHP-based firewall runs before any potentially vulnerable code in your WordPress site can be reached, it will need to be set up.', 'all-in-one-wp-security-and-firewall');
-						?>
-					</p>
-					<p>
-						<?php _e('If you already have our .htaccess-based firewall enabled, you will still need to set up the PHP-based firewall to benefit from its protection.', 'all-in-one-wp-security-and-firewall'); ?>
-					</p>
-					<p>
-						<?php _e('To set up the PHP-based firewall, press the \'Set up now\' button below:', 'all-in-one-wp-security-and-firewall'); ?>
-					</p>
-					<div style='padding-bottom: 10px; padding-top:10px;'>
-						<input class="button button-primary" type="submit" name="btn_setup_now" value="<?php _e('Set up now', 'all-in-one-wp-security-and-firewall'); ?>">
-				</form>
-						<?php if (!AIOWPSecurity_Utility_Firewall::is_firewall_page()) { ?>
-							<form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" style='display:inline;'>
-								<?php wp_nonce_field('aiowpsec-firewall-setup-dismiss'); ?>
-								<input type="hidden" name="action" value="aiowps_firewall_setup_dismiss">
-								<input class="button button-secondary" type="submit" name="btn_dismiss_setup_now" value="<?php _e('Dismiss', 'all-in-one-wp-security-and-firewall'); ?>">
-							</form>
-						<?php } ?>
-					</div>
-			</div>
-
-		<?php
+		$aio_wp_security->include_template('notices/firewall-setup-notice.php', false, array('show_dismiss' => !AIOWPSecurity_Utility_Firewall::is_firewall_page()));
 	}
 
 	/**

@@ -2,8 +2,7 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Refresh logged in user data', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-logged-in-users-nonce'); ?>
+		<form action="" method="POST" id="aios-refresh-logged-in-user-list-form">
 			<input type="submit" name="aiowps_refresh_logged_in_user_list" value="<?php _e('Refresh data', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary" />
 		</form>
 	</div>
@@ -16,7 +15,7 @@
 	</p>';
 	?>
 </div>
-<div class="postbox">
+<div class="postbox" id="aios-logged-in-users-table">
 	<h3 class="hndle"><label for="title"><?php _e('Currently logged in users', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
 		<?php
@@ -25,9 +24,6 @@
 			// echo "put table of locked entries here";
 		?>
 		<form id="tables-filter" method="get">
-			<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-			<input type="hidden" name="page" value="<?php echo esc_attr($page); ?>" />
-			<input type="hidden" name="tab" value="<?php echo esc_attr($tab); ?>" />
 			<!-- Now we can render the completed list table -->
 			<?php $user_list->display(); ?>
 		</form>

@@ -2,7 +2,7 @@
 /**
  * Featured image meta checkbox to inline SVG
  *
- * Allow users to select whether featured images should contain the SVG Support class
+ * Allow users to select whether featured images should contain the SVG Support class.
  * Check if the featured image is SVG first, then display meta box for SVG only.
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,22 +10,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Add checkbox to the featured image metabox
+ * Add checkbox to the featured image metabox.
  */
 function bodhi_svgs_featured_image_meta( $content ) {
 
 	global $post;
 
-	// check if featured image is set and has extension of .svg or .svgz
-	// need to make this check on the moment that the thumbnail shows up in the meta box.
+	// Check if featured image is set and has extension of .svg or .svgz.
 	if ( strpos( get_the_post_thumbnail(), '.svg' ) ) {
 
 		$text 	= __( 'Render this SVG inline (advanced)', 'svg-support' );
 		$id 	= 'inline_featured_image';
 		$value 	= esc_attr( get_post_meta( $post->ID, $id, true ) );
-		$label 	= '<label for="' . $id . '" class="selectit"><input name="' . $id . '" type="checkbox" id="' . $id . '" value="' . $value . ' "'. checked( $value, 1, false) .'> ' . $text .'</label>';
+		$label 	= '<label for="' . $id . '" class="selectit"><input name="' . $id . '" type="checkbox" id="' . $id . '" value="1" '. checked( $value, 1, false ) .'> ' . $text .'</label>';
+		$nonce  = wp_nonce_field( 'bodhi_svgs_save_featured_image_meta', 'bodhi_svgs_featured_image_nonce', true, false );
 
-		return $content .= $label;
+		return $content .= $label . $nonce;
 
 	} else {
 
@@ -39,39 +39,39 @@ if ( bodhi_svgs_advanced_mode() ) {
 }
 
 /**
- * Save featured image meta data when saved
+ * Save featured image meta data when saved.
  */
-
 function bodhi_svgs_save_featured_image_meta( $post_id, $post, $update ) {
 
-	// if gutenberg is active, disable the classic editor checkbox
-	if( isset($_REQUEST['hidden_post_status']) ){
-
-		$value = 0;
-		if ( isset( $_REQUEST['inline_featured_image'] ) ) {
-			$value = 1;
-		}
-
-		// Check if post type supports 'thumbnail' (Featured Image)
-		if ( post_type_supports( get_post_type( $post_id ), 'thumbnail' ) ) {
-
-			// set meta value to either 1 or 0
-			update_post_meta( $post_id, 'inline_featured_image', $value );
-
-		}
-
+	// Verify nonce
+	if ( ! isset( $_POST['bodhi_svgs_featured_image_nonce'] ) || ! wp_verify_nonce( $_POST['bodhi_svgs_featured_image_nonce'], 'bodhi_svgs_save_featured_image_meta' ) ) {
+		return $post_id;
 	}
 
+	// If this is an autosave, our form has not been submitted, so we don't want to do anything.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return $post_id;
+	}
+
+	// If the user does not have permission to edit posts, do nothing.
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return $post_id;
+	}
+
+	// Check if the new value is different from the existing value
+	$existing_value = get_post_meta( $post_id, 'inline_featured_image', true );
+	$new_value = isset( $_POST['inline_featured_image'] ) ? 1 : 0;
+
+	if ( $new_value != $existing_value ) {
+		// Update the meta value only if it has changed
+		update_post_meta( $post_id, 'inline_featured_image', $new_value );
+	}
 }
-
-
 add_action( 'save_post', 'bodhi_svgs_save_featured_image_meta', 10, 3 );
 
-
 /*
-*	Save featured image meta for Gutenberg Editor
-*/
-
+ * Save featured image meta for Gutenberg Editor
+ */
 function bodhi_svgs_register_meta() {
 
     register_meta( 'post', 'inline_featured_image', array(
@@ -82,11 +82,10 @@ function bodhi_svgs_register_meta() {
     ) );
 
 }
-
 add_action( 'init', 'bodhi_svgs_register_meta' );
 
 /**
- * Add class to the featured image output on front end
+ * Add class to the featured image output on front end.
  */
 function bodhi_svgs_add_class_to_thumbnail( $thumb ) {
 
@@ -96,15 +95,7 @@ function bodhi_svgs_add_class_to_thumbnail( $thumb ) {
 
 		global $bodhi_svgs_options;
 
-		if ( ! empty( $bodhi_svgs_options['css_target'] ) ) {
-
-			$target_class = $bodhi_svgs_options['css_target'];
-
-		} else {
-
-			$target_class = 'style-svg';
-
-		}
+		$target_class = ! empty( $bodhi_svgs_options['css_target'] ) ? $bodhi_svgs_options['css_target'] : 'style-svg';
 
 		if ( is_singular() ) {
 

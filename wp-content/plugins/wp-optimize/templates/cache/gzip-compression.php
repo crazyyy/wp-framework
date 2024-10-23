@@ -13,9 +13,17 @@
 		</span>
 	</p>
 
-	<?php if (is_wp_error($wpo_gzip_headers_information)) {
-		$class = 'notice notice-error';
-		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($wpo_gzip_headers_information->get_error_message()));
+	<?php
+	if (is_wp_error($wpo_gzip_headers_information)) {
+		?>
+		<div class="notice notice-error">
+			<p>
+				<b><?php esc_html_e('Error: Unable to Check GZIP Compression.', 'wp-optimize'); ?></b>
+				<?php esc_html_e('We encountered a problem while checking if GZIP compression is enabled.', 'wp-optimize'); ?>
+			</p>
+			<p><?php echo strip_tags($wpo_gzip_headers_information->get_error_message(), '<a><b>'); ?></p>
+		</div>
+		<?php
 	} else {
 		?>
 		<?php if ($wpo_gzip_compression_enabled && !is_wp_error($wpo_gzip_compression_enabled) && !$wpo_gzip_compression_enabled_by_wpo) : ?>

@@ -177,6 +177,101 @@ SQL
 		global $wpdb;
 		return $wpdb->_real_escape($str);
 	}
+	public function insert($table, $columns, $rows, $updateOnDuplicate) {
+		global $wpdb;
+		$rowCount = count($rows);
+		if ($rowCount === 0)
+			return;
+		$columnClause = implode(',', array_keys($columns));
+		$valuesClause = ltrim(str_repeat(',(' . implode(',', $columns) . ')', $rowCount), ',');
+		if ($updateOnDuplicate) {
+			$duplicateClause = ' ON DUPLICATE KEY UPDATE ' . implode(',', array_map(function($column) {
+				return "{$column} = VALUES({$column})";
+			}, $updateOnDuplicate));
+		}
+		else {
+			$duplicateClause = null;
+		}
+		$parameters = [];
+		foreach ($rows as $row) {
+			foreach ($row as $value) {
+				$parameters[] = $value;
+			}
+		}
+		$query = $wpdb->prepare("INSERT INTO {$table} ({$columnClause}) VALUES {$valuesClause}{$duplicateClause}", $parameters);
+		$result = $wpdb->query($query);
+		if ($result === false)
+			throw new RuntimeException("Insert query failed: {$query}");
+	}
+	private static function getBindingType($value, $override = null) {
+		if ($override !== null)
+			return $override;
+		if (is_int($value)) {
+			return '%d';
+		}
+		else {
+			return '%s';
+		}
+	}
+	private static function buildWhereClause($conditions, $bindingOverrides, &$parameters) {
+		$whereExpressions = [];
+		foreach ($conditions as $column => $value) {
+			$override = array_key_exists($column, $bindingOverrides) ? $bindingOverrides[$column] : null;
+			if ($override === null) {
+				$getBinding = [self::class, 'getBindingType'];
+			}
+			else {
+				$getBinding = function($value) use ($override) { return $override; };
+			}
+			if (is_array($value)) {
+				$whereExpressions[] = "{$column} IN (" . implode(',', array_map($getBinding, $value)) . ')';
+				$parameters = array_merge($parameters, $value);
+			}
+			else {
+				$whereExpressions[] = "{$column} = " . $getBinding($value);
+				$parameters[] = $value;
+			}
+		}
+		return implode(' AND ', $whereExpressions);
+	}
+	public function update($table, $set, $conditions, $bindingOverrides = []) {
+		global $wpdb;
+		$setExpressions = [];
+		$parameters = [];
+		foreach ($set as $column => $value) {
+			if (is_array($value)) {
+				$parameters[] = $value[1];
+				$value = $value[0];
+			}
+			$setExpressions[] = "{$column} = {$value}";
+		}
+		$whereClause = self::buildWhereClause($conditions, $bindingOverrides, $parameters);
+		$setClause = implode(',', $setExpressions);
+		$query = $wpdb->prepare("UPDATE {$table} SET {$setClause} WHERE {$whereClause}", $parameters);
+		$result = $wpdb->query($query);
+		if ($result === false)
+			throw new RuntimeException("UPDATE query failed: {$query}");
+	}
+	public function select($table, $columns, $conditions, $bindingOverrides = [], $limit = 500) {
+		global $wpdb;
+		$parameters = [];
+		$selectClause = implode(',', $columns);
+		$whereClause = Self::buildWhereClause($conditions, $bindingOverrides, $parameters);
+		$limitClause = $limit === null ? '' : " LIMIT {$limit}";
+		$query = $wpdb->prepare("SELECT {$selectClause} FROM {$table} WHERE {$whereClause}{$limitClause}", $parameters);
+		if (count($columns) == 1) {
+			$result = $wpdb->get_col($query);
+		}
+		else {
+			$result = $wpdb->get_results($query, ARRAY_N);
+		}
+		if (!is_array($result))
+			throw new RuntimeException("SELECT query failed: {$query}");
+		return $result;
+	}
+	public function selectAll($table, $columns, $conditions, $bindingOverrides = []) {
+		return $this->select($table, $columns, $conditions, $bindingOverrides, null);
+	}
 }
 
 abstract class wfModel {

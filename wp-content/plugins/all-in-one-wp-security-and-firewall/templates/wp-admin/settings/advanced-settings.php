@@ -44,8 +44,7 @@
 			#aiowps_ip_retrieve_method option:disabled { color: #cccccc; }
 			.aios-ip-error { color: #ff0000; }
 		</style>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-ip-settings-nonce'); ?>
+		<form action="" method="POST" id="aiowpsec-ip-settings-form">
 			<table class="form-table">
 				<tr valign="top">
 					<td>

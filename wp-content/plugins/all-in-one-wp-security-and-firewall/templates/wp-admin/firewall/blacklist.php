@@ -25,12 +25,13 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('IP hosts and user agent blacklist settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<?php
+		<div id="blacklist-manager-ip-user-agent-blacklisting-badge">
+			<?php
 			// Display security info badge
 			$aiowps_feature_mgr->output_feature_details_badge("blacklist-manager-ip-user-agent-blacklisting");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-blacklist-settings-nonce'); ?>
+			?>
+		</div>
+		<form action="" id="aios-blacklist-settings-form">
 			<div class="aio_orange_box">
 				<p>
 					<?php

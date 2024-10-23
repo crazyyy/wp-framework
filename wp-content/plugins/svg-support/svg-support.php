@@ -3,7 +3,7 @@
 Plugin Name: 	SVG Support
 Plugin URI:		http://wordpress.org/plugins/svg-support/
 Description: 	Upload SVG files to the Media Library and render SVG files inline for direct styling/animation of an SVG's internal elements using CSS/JS.
-Version: 		2.5.5
+Version: 		2.5.8
 Author: 		Benbodhi
 Author URI: 	https://benbodhi.com
 Text Domain: 	svg-support
@@ -24,28 +24,30 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 global $bodhi_svgs_options;
 $bodhi_svgs_options = array();										// Defining global array
-$svgs_plugin_version = '2.5.5';										// for use on admin pages
+$svgs_plugin_version = '2.5.8';										// for use on admin pages
 $plugin_file = plugin_basename(__FILE__);							// plugin file for reference
 define( 'BODHI_SVGS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );	// define the absolute plugin path for includes
 define( 'BODHI_SVGS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );		// define the plugin url for use in enqueue
-$bodhi_svgs_options = get_option('bodhi_svgs_settings');			// retrieve our plugin settings from the options table
+$bodhi_svgs_options = get_option('bodhi_svgs_settings', array());	// Retrieve our plugin settings from the options table, ensure it's an array
 
-/*
+// ensure $bodhi_svgs_options is always an array
+if (!is_array($bodhi_svgs_options)) {
+	$bodhi_svgs_options = [];
+	update_option('bodhi_svgs_settings', $bodhi_svgs_options);
+}
+
+/**
  * SVG Sanitizer class
  */
-use enshrined\svgSanitize\Sanitizer;								// init svg sanitizer for usage
-
-if ( ( !empty($bodhi_svgs_options['sanitize_svg']) && $bodhi_svgs_options['sanitize_svg'] === 'on' ) || ( !empty($bodhi_svgs_options['minify_svg']) && $bodhi_svgs_options['minify_svg'] === 'on' ) ) {
-
-	include( BODHI_SVGS_PLUGIN_PATH . 'vendor/autoload.php' );		// svg sanitizer
-
-	// interfaces to enable custom whitelisting of svg tags and attributes
-	include( BODHI_SVGS_PLUGIN_PATH . 'includes/svg-tags.php' );
-	include( BODHI_SVGS_PLUGIN_PATH . 'includes/svg-attributes.php' );
-
-	$sanitizer = new Sanitizer();									// initialize if enabled
-
-}
+// init svg sanitizer for usage
+use enshrined\svgSanitize\Sanitizer;
+// svg sanitizer
+include( BODHI_SVGS_PLUGIN_PATH . 'vendor/autoload.php' );
+// interfaces to enable custom whitelisting of svg tags and attributes
+include( BODHI_SVGS_PLUGIN_PATH . 'includes/svg-tags.php' );
+include( BODHI_SVGS_PLUGIN_PATH . 'includes/svg-attributes.php' );
+// initialize sanitizer
+$sanitizer = new Sanitizer();
 
 /**
  * Includes - keeping it modular
@@ -59,6 +61,11 @@ include( BODHI_SVGS_PLUGIN_PATH . 'functions/enqueue.php' );				// enqueue js & 
 include( BODHI_SVGS_PLUGIN_PATH . 'functions/localization.php' );			// setup localization & languages
 include( BODHI_SVGS_PLUGIN_PATH . 'functions/attribute-control.php' );		// auto set SVG class & remove dimensions during insertion
 include( BODHI_SVGS_PLUGIN_PATH . 'functions/featured-image.php' );			// allow inline SVG for featured images
+
+// Include WP All Import integration only if WP All Import is active
+// if ( defined( 'PMXI_VERSION' ) ) {
+// 	include( BODHI_SVGS_PLUGIN_PATH . 'integrations/wp-all-import.php' );
+// }
 
 /**
  * Version based conditional / Check for stored plugin version
@@ -101,12 +108,6 @@ elseif (isset($bodhi_svgs_options['restrict']) && $bodhi_svgs_options['restrict'
 	update_option( 'bodhi_svgs_settings', $bodhi_svgs_options );
 }
 
-// By default turn on "Sanitize SVG while uploading" option
-if ( !isset($bodhi_svgs_options['sanitize_svg']) ) {
-	$bodhi_svgs_options['sanitize_svg'] = "on";
-	update_option( 'bodhi_svgs_settings', $bodhi_svgs_options );
-}
-
 // By default sanitize on upload for everyone except administrator and editor roles
 if ( !isset($bodhi_svgs_options['sanitize_on_upload_roles']) ) {
 	$bodhi_svgs_options['sanitize_on_upload_roles'] = array('administrator', 'editor');
@@ -116,3 +117,18 @@ elseif ( isset($bodhi_svgs_options['sanitize_on_upload_roles']) && $bodhi_svgs_o
 	$bodhi_svgs_options['sanitize_on_upload_roles'] = array("none");
 	update_option( 'bodhi_svgs_settings', $bodhi_svgs_options );
 }
+
+/**
+ * Register activation and deactivation hooks
+ */
+// Activation Hook
+function bodhi_svgs_plugin_activation() {
+    bodhi_svgs_remove_old_sanitize_setting();
+}
+register_activation_hook(__FILE__, 'bodhi_svgs_plugin_activation');
+
+// Deactivation Hook
+function bodhi_svgs_plugin_deactivation() {
+    bodhi_svgs_remove_old_sanitize_setting();
+}
+register_deactivation_hook(__FILE__, 'bodhi_svgs_plugin_deactivation');

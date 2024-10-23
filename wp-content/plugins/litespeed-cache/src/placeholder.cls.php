@@ -174,6 +174,7 @@ class Placeholder extends Base
 		$additional_attr = '';
 		if ($this->_conf_lqip && $this_placeholder != $this->_conf_ph_default) {
 			Debug2::debug2('[LQIP] Use resp LQIP [size] ' . $size);
+			$size = str_replace('"', '', $size);
 			$additional_attr = ' data-placeholder-resp="' . $size . '"';
 		}
 
@@ -392,7 +393,7 @@ class Placeholder extends Base
 
 		$file = $this->_placeholder_realpath($src, $size);
 
-		// Local generate SVG to serve ( Repeatly doing this here to remove stored cron queue in case the setting _conf_lqip is changed )
+		// Local generate SVG to serve ( Repeatedly doing this here to remove stored cron queue in case the setting _conf_lqip is changed )
 		if (!$this->_conf_lqip || !$this->_lqip_size_check($size)) {
 			$data = $this->_generate_placeholder_locally($size);
 		} else {

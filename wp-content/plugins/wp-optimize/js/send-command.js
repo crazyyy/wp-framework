@@ -104,3 +104,78 @@ wp_optimize.notices = {
 		}.bind(this));
 	}
 };
+
+/**
+ * Parse JSON string, including automatically detecting unwanted extra input and skipping it
+ *
+ * @param {string|object} json_mix_str - JSON string which need to parse and convert to object
+ *
+ * @throws SyntaxError|String (including passing on what JSON.parse may throw) if a parsing error occurs.
+ *
+ * @return mixed parsed JSON object. Will only return if parsing is successful (otherwise, will throw)
+ */
+function wpo_parse_json(json_mix_str) {
+	// When using wp_send_json to return the value, the format is already parsed.
+	if ('object' === typeof json_mix_str) return json_mix_str;
+
+	// Just try it - i.e. the 'default' case where things work (which can include extra whitespace/line-feeds, and simple strings, etc.).
+	try {
+		var result = JSON.parse(json_mix_str);
+		return result;
+	} catch (e) {
+		console.log("WPO: Exception when trying to parse JSON (1) - will attempt to fix/re-parse");
+		console.log(json_mix_str);
+	}
+
+	var json_start_pos = json_mix_str.indexOf('{');
+	var json_last_pos = json_mix_str.lastIndexOf('}');
+
+	// Case where some php notice may be added after or before json string
+	if (json_start_pos > -1 && json_last_pos > -1) {
+		var json_str = json_mix_str.slice(json_start_pos, json_last_pos + 1);
+		try {
+			var parsed = JSON.parse(json_str);
+			return parsed;
+		} catch (e) {
+			console.log("WPO: Exception when trying to parse JSON (2) - will attempt to fix/re-parse based upon bracket counting");
+
+			var cursor = json_start_pos;
+			var open_count = 0;
+			var last_character = '';
+			var inside_string = false;
+
+			// Don't mistake this for a real JSON parser. Its aim is to improve the odds in real-world cases seen, not to arrive at universal perfection.
+			while ((open_count > 0 || cursor == json_start_pos) && cursor <= json_last_pos) {
+
+				var current_character = json_mix_str.charAt(cursor);
+
+				if (!inside_string && '{' == current_character) {
+					open_count++;
+				} else if (!inside_string && '}' == current_character) {
+					open_count--;
+				} else if ('"' == current_character && '\\' != last_character) {
+					inside_string = inside_string ? false : true;
+				}
+
+				last_character = current_character;
+				cursor++;
+			}
+
+			console.log("Started at cursor="+json_start_pos+", ended at cursor="+cursor+" with result following:");
+			console.log(json_mix_str.substring(json_start_pos, cursor));
+
+			try {
+				var parsed = JSON.parse(json_mix_str.substring(json_start_pos, cursor));
+				// console.log('WPO: JSON re-parse successful');
+				return parsed;
+			} catch (e) {
+				// Throw it again, so that our function works just like JSON.parse() in its behaviour.
+				throw e;
+			}
+
+		}
+	}
+
+	throw "WPO: could not parse the JSON";
+
+}

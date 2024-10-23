@@ -12,7 +12,7 @@
 		?>
 	</h3>
 
-	<a href="https://aiosplugin.com/"><img style="border: 0px; float: right; width: 250px; margin-right: 40px; margin-top: 40px;" alt="All-In-One Security (AIOS)" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/aios_logo_wide.png'; ?>"></a>
+	<a href="https://aiosplugin.com/"><img id="aiowps-notice-logo" alt="All-In-One Security (AIOS)" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/aios_logo_wide.png'; ?>"></a>
 
 	<div id="aiowps-dashnotice_wrapper" style="max-width: 800px;">
 		<p>

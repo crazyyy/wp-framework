@@ -119,6 +119,7 @@ class WP_Optimize_Minify_Config {
 			'merge_google_fonts' => true,
 			'enable_display_swap' => true,
 			'remove_googlefonts' => false,
+			'disable_google_fonts_processing' => false,
 			'gfonts_method' => 'inherit', // inline, async, exclude
 			'fawesome_method' => 'inherit', // inline, async, exclude
 			'enable_css' => true,
@@ -158,13 +159,17 @@ class WP_Optimize_Minify_Config {
 			'edit_default_exclutions' => false,
 			
 			'merge_allowed_urls' => '',
-
+			
 			// internal
 			'enabled' => false,
 			'last-cache-update' => 0,
 			'plugin_version' => '0.0.0',
 			'cache_lifespan' => 30,
 			'merge_inline_extra_css_js' => true,
+			
+			'enable_analytics' => false,
+			'analytics_method' => 'gtagv4',
+			'tracking_id' => '',
 		);
 		return apply_filters('wpo_minify_defaults', $defaults);
 	}

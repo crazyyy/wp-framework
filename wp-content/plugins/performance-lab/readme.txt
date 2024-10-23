@@ -1,19 +1,30 @@
 === Performance Lab ===
 
-Contributors:      wordpressdotorg
-Requires at least: 6.4
-Tested up to:      6.5
-Requires PHP:      7.2
-Stable tag:        3.2.0
-License:           GPLv2 or later
-License URI:       https://www.gnu.org/licenses/gpl-2.0.html
-Tags:              performance, site health, measurement, optimization, diagnostics
+Contributors: wordpressdotorg
+Tested up to: 6.7
+Stable tag:   3.5.1
+License:      GPLv2 or later
+License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+Tags:         performance, site health, measurement, optimization, diagnostics
 
 Performance plugin from the WordPress Performance Team, which is a collection of standalone performance features.
 
 == Description ==
 
-The Performance Lab plugin is a collection of features focused on enhancing performance of your site, most of which should eventually be merged into WordPress core. The plugin allows to individually enable and test the features to get their benefits before they become available in WordPress core, and to provide feedback to further improve the solutions.
+The Performance Lab plugin is a collection of features focused on enhancing performance of your site, most of which should eventually be merged into WordPress core. The plugin facilitates the discovery and activation of the individual performance feature plugins which the performance team is developing. In this way you can test the features to get their benefits before they become available in WordPress core. You can also play an important role by providing feedback to further improve the solutions. 
+
+The feature plugins which are currently featured by this plugin are:
+
+* [Image Placeholders](https://wordpress.org/plugins/dominant-color-images/)
+* [Modern Image Formats](https://wordpress.org/plugins/webp-uploads/)
+* [Performant Translations](https://wordpress.org/plugins/performant-translations/)
+* [Speculative Loading](https://wordpress.org/plugins/speculation-rules/)
+* [Embed Optimizer](https://wordpress.org/plugins/embed-optimizer/) _(experimental)_
+* [Enhanced Responsive Images](https://wordpress.org/plugins/auto-sizes/) _(experimental)_
+* [Image Prioritizer](https://wordpress.org/plugins/image-prioritizer/) _(experimental)_
+* [Web Worker Offloading](https://wordpress.org/plugins/web-worker-offloading/) _(experimental)_
+
+These plugins can also be installed separately from installing Performance Lab, but having the Performance Lab plugin also active will ensure you find out about new performance features as they are developed.
 
 == Installation ==
 
@@ -59,6 +70,62 @@ To report a security issue, please visit the [WordPress HackerOne](https://hacke
 Contributions are always welcome! Learn more about how to get involved in the [Core Performance Team Handbook](https://make.wordpress.org/performance/handbook/get-involved/).
 
 == Changelog ==
+
+= 3.5.1 =
+
+**Bug Fixes**
+
+* Account for plugin dependencies when storing relevant plugin info. ([1613](https://github.com/WordPress/performance/pull/1613))
+
+= 3.5.0 =
+
+**Enhancements**
+
+* Add Web Worker Offloading to list of Performance features. ([1577](https://github.com/WordPress/performance/pull/1577))
+* Only store info for relevant standalone plugins in the transient cache. ([1573](https://github.com/WordPress/performance/pull/1573))
+* Use a single WordPress.org API request to get information for all plugins. ([1562](https://github.com/WordPress/performance/pull/1562))
+
+= 3.4.1 =
+
+**Bug Fixes**
+
+* Fix Incorrect use of _n(). ([1491](https://github.com/WordPress/performance/pull/1491))
+
+= 3.4.0 =
+
+**Enhancements**
+
+* Remove Server-Timing metric for the autoloaded options query time. ([1456](https://github.com/WordPress/performance/pull/1456))
+
+**Bug Fixes**
+
+* Avoid sending Server-Timing header when buffer is being cleaned. ([1443](https://github.com/WordPress/performance/pull/1443))
+* Fix disabled options from reappearing in Site Health after external update. ([1374](https://github.com/WordPress/performance/pull/1374))
+* Improve Performance screen when external requests to WordPress.org fail. ([1474](https://github.com/WordPress/performance/pull/1474))
+
+= 3.3.1 =
+
+**Enhancements**
+
+* Add PHPStan strict rules (except for empty.notAllowed). ([1241](https://github.com/WordPress/performance/pull/1241))
+
+**Bug Fixes**
+
+* Allow null to be passed into perflab_admin_pointer(). ([1393](https://github.com/WordPress/performance/pull/1393))
+
+= 3.3.0 =
+
+**Enhancements**
+
+* Bump minimum WP versions and WP version tested up to. ([1333](https://github.com/WordPress/performance/pull/1333))
+* Improve message for WebP site health test. ([1249](https://github.com/WordPress/performance/pull/1249))
+* Remove 'Requires at least' and 'Requires PHP' from plugin readmes. ([1334](https://github.com/WordPress/performance/pull/1334))
+* Upgrade PHPStan to 1.11.6. ([1325](https://github.com/WordPress/performance/pull/1325))
+
+**Bug Fixes**
+
+* Extend core's Autoloaded Options Site Health test if present (in WP 6.6). ([1298](https://github.com/WordPress/performance/pull/1298))
+* Fix unit tests for multisite. ([1327](https://github.com/WordPress/performance/pull/1327))
 
 = 3.2.0 =
 

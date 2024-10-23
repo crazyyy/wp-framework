@@ -36,7 +36,7 @@ class ITC_SVG_Upload_Admin extends ITC_SVG_Upload_BaseController{
 		$plugin_title = $this->get_plugin_title();
 		//add_options_page
 		if ( empty ( $admin_page_hooks[$plugin_slug_name] ) ){
-			add_menu_page( 
+			add_options_page( 
 				__( $plugin_title, $plugin_slug_name ),
 				__( $plugin_title, $plugin_slug_name ),
 				'manage_options',

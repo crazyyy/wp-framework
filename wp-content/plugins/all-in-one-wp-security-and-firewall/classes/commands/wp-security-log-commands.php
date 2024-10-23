@@ -73,4 +73,25 @@ trait AIOWPSecurity_Log_Commands_Trait {
 			);
 		}
 	}
+
+	/**
+	 * Renders the audit log tab content.
+	 *
+	 * This function handles the rendering of the audit log tab content based on the
+	 * provided data via AJAX request. The data is used to filter the audit log or perform actions
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function render_audit_log_tab() {
+
+		if (empty($_POST['data'])) return;
+
+		$data = stripslashes_deep($_POST['data']);
+
+		// Needed for rendering the audit log table
+		include_once(AIO_WP_SECURITY_PATH.'/admin/wp-security-list-audit.php');
+		$audit_log_list = new AIOWPSecurity_List_Audit_Log($data);
+		$audit_log_list->ajax_response();
+	}
 }

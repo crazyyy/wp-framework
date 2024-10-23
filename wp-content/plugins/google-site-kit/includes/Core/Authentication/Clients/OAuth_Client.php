@@ -40,6 +40,7 @@ final class OAuth_Client extends OAuth_Client_Base {
 
 	const OPTION_ADDITIONAL_AUTH_SCOPES = 'googlesitekit_additional_auth_scopes';
 	const OPTION_REDIRECT_URL           = 'googlesitekit_redirect_url';
+	const OPTION_ERROR_REDIRECT_URL     = 'googlesitekit_error_redirect_url';
 	const CRON_REFRESH_PROFILE_DATA     = 'googlesitekit_cron_refresh_profile_data';
 
 	/**
@@ -217,7 +218,7 @@ final class OAuth_Client extends OAuth_Client_Base {
 		$granted_scopes     = $this->get_granted_scopes();
 		$unsatisfied_scopes = array_filter(
 			$scopes,
-			function( $scope ) use ( $granted_scopes ) {
+			function ( $scope ) use ( $granted_scopes ) {
 				return ! Scopes::is_satisfied_by( $scope, $granted_scopes );
 			}
 		);
@@ -347,10 +348,11 @@ final class OAuth_Client extends OAuth_Client_Base {
 	 * @since 1.34.1 Updated handling of $additional_scopes to restore rewritten scope.
 	 *
 	 * @param string   $redirect_url      Redirect URL after authentication.
+	 * @param string   $error_redirect_url Redirect URL after authentication error.
 	 * @param string[] $additional_scopes List of additional scopes to request.
 	 * @return string Authentication URL.
 	 */
-	public function get_authentication_url( $redirect_url = '', $additional_scopes = array() ) {
+	public function get_authentication_url( $redirect_url = '', $error_redirect_url = '', $additional_scopes = array() ) {
 		if ( empty( $redirect_url ) ) {
 			$redirect_url = $this->context->admin_url( 'splash' );
 		}
@@ -380,6 +382,7 @@ final class OAuth_Client extends OAuth_Client_Base {
 		$redirect_url = remove_query_arg( 'error', $redirect_url );
 
 		$this->user_options->set( self::OPTION_REDIRECT_URL, $redirect_url );
+		$this->user_options->set( self::OPTION_ERROR_REDIRECT_URL, $error_redirect_url );
 
 		// Ensure the latest required scopes are requested.
 		$scopes = array_merge( $this->get_required_scopes(), $additional_scopes );
@@ -399,8 +402,8 @@ final class OAuth_Client extends OAuth_Client_Base {
 	 * @since 1.49.0 Uses the new `Google_Proxy::setup_url_v2` method when the `serviceSetupV2` feature flag is enabled.
 	 */
 	public function authorize_user() {
-		$code       = htmlspecialchars( $this->context->input()->filter( INPUT_GET, 'code' ) );
-		$error_code = htmlspecialchars( $this->context->input()->filter( INPUT_GET, 'error' ) );
+		$code       = htmlspecialchars( $this->context->input()->filter( INPUT_GET, 'code' ) ?? '' );
+		$error_code = htmlspecialchars( $this->context->input()->filter( INPUT_GET, 'error' ) ?? '' );
 		// If the OAuth redirects with an error code, handle it.
 		if ( ! empty( $error_code ) ) {
 			$this->user_options->set( self::OPTION_ERROR_CODE, $error_code );
@@ -457,7 +460,7 @@ final class OAuth_Client extends OAuth_Client_Base {
 		}
 		$scopes = array_filter(
 			$scopes,
-			function( $scope ) {
+			function ( $scope ) {
 				if ( ! is_string( $scope ) ) {
 					return false;
 				}
@@ -510,6 +513,7 @@ final class OAuth_Client extends OAuth_Client_Base {
 				$redirect_url = add_query_arg( array( 'notification' => 'authentication_success' ), $redirect_url );
 			}
 			$this->user_options->delete( self::OPTION_REDIRECT_URL );
+			$this->user_options->delete( self::OPTION_ERROR_REDIRECT_URL );
 		} else {
 			// No redirect_url is set, use default page.
 			$redirect_url = $this->context->admin_url( 'splash', array( 'notification' => 'authentication_success' ) );
@@ -639,6 +643,7 @@ final class OAuth_Client extends OAuth_Client_Base {
 		parent::delete_token();
 
 		$this->user_options->delete( self::OPTION_REDIRECT_URL );
+		$this->user_options->delete( self::OPTION_ERROR_REDIRECT_URL );
 		$this->user_options->delete( self::OPTION_ADDITIONAL_AUTH_SCOPES );
 	}
 
@@ -649,6 +654,13 @@ final class OAuth_Client extends OAuth_Client_Base {
 	 * @since 1.77.0
 	 */
 	private function authorize_user_redirect_url() {
+		$error_redirect_url = $this->user_options->get( self::OPTION_ERROR_REDIRECT_URL );
+
+		if ( $error_redirect_url ) {
+			$this->user_options->delete( self::OPTION_ERROR_REDIRECT_URL );
+			return $error_redirect_url;
+		}
+
 		return current_user_can( Permissions::VIEW_DASHBOARD )
 			? $this->context->admin_url( 'dashboard' )
 			: $this->context->admin_url( 'splash' );

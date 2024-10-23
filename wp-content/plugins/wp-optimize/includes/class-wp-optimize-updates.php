@@ -31,7 +31,12 @@ class WP_Optimize_Updates {
 		'3.2.17' => array('update_3217_remove_htaccess_capability_tester_files'),
 		'3.2.18' => array('update_3218_reset_webp_serving_method'),
 		'3.2.19' => array('update_3219_modify_cache_config_for_cache_time'),
-		'3.3.0' => array('update_330_ua_async_exclusion_list')
+		'3.3.0' => array('update_330_ua_async_exclusion_list'),
+		'3.5.0' => array(
+			'update_350_move_content_of_existing_smush_logs_to_new_location',
+			'update_350_delete_plugin_table_list_regenerate_in_new_location',
+		),
+		'3.7.0' => array('update_370_disable_auto_preload_after_purge_feature'),
 	);
 
 	/**
@@ -256,6 +261,67 @@ class WP_Optimize_Updates {
 		$config->update(array(
 			'ualist' => $new_list
 		));
+	}
+
+	/**
+	 * Move existing smush log content in old path (uploads/smush-*) to new path (uploads/wpo/logs/smush-*)
+	 */
+	private static function update_350_move_content_of_existing_smush_logs_to_new_location() {
+		if (self::is_new_install()) return;
+
+		$upload_base = WP_Optimize_Utils::get_base_upload_dir();
+
+		$old_file = $upload_base . 'smush-' . substr(md5(wp_salt()), 0, 20) . '.log';
+		$new_file = WP_Optimize_Utils::get_log_file_path('smush');
+
+		// Check if only old file exists, if new file exists no need to overwrite its content
+		if (is_file($old_file) && !is_file($new_file)) {
+			$old_file_content = file_get_contents($old_file);
+			file_put_contents($new_file, $old_file_content);
+		}
+
+		// Delete all smush log files in the old path (uploads/smush-*)
+		if (!function_exists('glob')) return;
+		$files = glob($upload_base . 'smush-*.log');
+		if (false === $files) return;
+		foreach ($files as $file) {
+			if (is_file($file)) {
+				@unlink($file); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress error due to file permission issues
+			}
+		}
+	}
+
+	/**
+	 * Delete wpo-plugins-tables-list.json file from old location and regenerate in new location
+	 */
+	private static function update_350_delete_plugin_table_list_regenerate_in_new_location() {
+		if (self::is_new_install()) return;
+
+		// JSON file was moved to /wpo/ subfolder. Delete old files.
+		$upload_base = WP_Optimize_Utils::get_base_upload_dir();
+
+		$old_file = $upload_base . 'wpo-plugins-tables-list.json';
+		if (is_file($old_file)) {
+			@unlink($old_file); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress error due to file permission issues
+		}
+		// JSON file not present in the new location, regenerate it
+		$new_file = $upload_base . 'wpo/wpo-plugins-tables-list.json';
+		if (!is_file($new_file)) {
+			WP_Optimize()->get_db_info()->update_plugin_json();
+		}
+	}
+
+	/**
+	 * Disable auto preloading after purge feature for existing users
+	 */
+	private static function update_370_disable_auto_preload_after_purge_feature() {
+		if (self::is_new_install()) return;
+		$config = WPO_Cache_Config::instance()->get();
+		$cache_enabled = $config['enable_page_caching'];
+		if ($cache_enabled) {
+			$config['auto_preload_purged_contents'] = false;
+			WPO_Cache_Config::instance()->update($config);
+		}
 	}
 }
 

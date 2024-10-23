@@ -14,12 +14,13 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('WP generator meta info', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<div id="wp-generator-meta-tag-badge">
 		<?php
 			// Display security info badge
 			$aiowps_feature_mgr->output_feature_details_badge("wp-generator-meta-tag");
 		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-remove-wp-meta-info-nonce'); ?>
+		</div>
+		<form action="" method="POST" id="aiowpsec-remove-wp-meta-info-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Remove WP generator meta info', 'all-in-one-wp-security-and-firewall'); ?>:</th>

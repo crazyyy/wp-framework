@@ -24,6 +24,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 			$this->commands_object = new AIOWPSecurity_Commands();
 
 			add_action('wp_ajax_aios_ajax', array($this, 'handle_ajax_requests'));
+			add_action('wp_ajax_nopriv_get_antibot_keys', array($this->commands_object, 'get_antibot_keys'));
 		}
 
 		/**
@@ -125,10 +126,8 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 				'delete_locked_ip_record',
 				'clear_debug_logs',
 				'unlock_ip',
-				'unblacklist_ip',
 				'blocked_ip_list_unblock_ip',
 				'lock_ip',
-				'blacklist_ip',
 				'dismiss_notice',
 			));
 

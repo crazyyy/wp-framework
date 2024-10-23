@@ -1,7 +1,6 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
 <h2><?php _e('Custom .htaccess rules settings', 'all-in-one-wp-security-and-firewall'); ?></h2>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-save-custom-rules-settings-nonce'); ?>
+		<form action="" method="POST" id="aiowpsec-save-custom-rules-settings-form">
 			<div class="aio_blue_box">
 				<?php
 				$info_msg = '';

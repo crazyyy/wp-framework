@@ -528,13 +528,16 @@ class AIOWPSecurity_User_Login {
 	/**
 	 * Check the settings and log the user after the configured time period
 	 *
-	 * @return void
+	 * @param bool $return_url Optional. If true, the function returns the logout URL with a nonce.
+	 *                         Otherwise, it redirects to the logout URL. Default is false.
+	 *
+	 * @return void|string
 	 */
-	public function aiowps_force_logout_action_handler() {
+	public function aiowps_force_logout_action_handler($return_url = false) {
 		global $aio_wp_security;
 		//$aio_wp_security->debug_logger->log_debug("Force Logout - Checking if any user need to be logged out...");
 		//if this feature is enabled then do something
-		if ($aio_wp_security->configs->get_value('aiowps_enable_forced_logout')=='1') {
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_forced_logout')) {
 			if (is_user_logged_in()) {
 				$current_user = wp_get_current_user();
 				$user_id = $current_user->ID;
@@ -550,6 +553,7 @@ class AIOWPSecurity_User_Login {
 					$aio_wp_security->debug_logger->log_debug("Force Logout - This user logged in more than (".$logout_time_interval_value.") minutes ago. Doing a force log out for the user with username: ".$current_user->user_login);
 					$this->wp_logout_action_handler($user_id); //this will register the logout time/date in the logout_date column
 
+
 					$curr_page_url = AIOWPSecurity_Utility::get_current_page_url();
 					$after_logout_payload = array('redirect_to' => $curr_page_url, 'msg' => $this->key_login_msg.'=session_expired');
 					//Save some of the logout redirect data to a transient
@@ -557,6 +561,9 @@ class AIOWPSecurity_User_Login {
 					$logout_url = AIOWPSEC_WP_URL.'?aiowpsec_do_log_out=1';
 					$logout_url = AIOWPSecurity_Utility::add_query_data_to_url($logout_url, 'al_additional_data', '1');
 					$logout_url_with_nonce = html_entity_decode(wp_nonce_url($logout_url, 'aio_logout'));
+					if ($return_url) {
+						return $logout_url_with_nonce;
+					}
 					AIOWPSecurity_Utility::redirect_to_url($logout_url_with_nonce);
 				}
 			}

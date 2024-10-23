@@ -77,15 +77,6 @@ class AIOWPSecurity_Utility_File {
 		}
 	}
 
-	public static function backup_a_file($src_file_path, $suffix = 'backup') {
-		$backup_file_path = $src_file_path . '.' . $suffix;
-		if (!copy($src_file_path, $backup_file_path)) {
-			//Failed to make a backup copy
-			return false;
-		}
-		return true;
-	}
-
 	public static function backup_and_rename_wp_config($src_file_path, $prefix = 'backup') {
 		global $aio_wp_security;
 
@@ -107,25 +98,43 @@ class AIOWPSecurity_Utility_File {
 		return true;
 	}
 
-	public static function backup_and_rename_htaccess($src_file_path, $suffix = 'backup') {
+	/**
+	 * Backs up and renames the .htaccess file.
+	 *
+	 * This function creates a backup of the specified .htaccess file by copying it
+	 * to a designated backup directory with a randomly generated filename.
+	 *
+	 * @param string $src_file_path The path to the source .htaccess file to be backed up.
+	 *
+	 * @return string|false The name of the backup file on success, or false on failure.
+	 */
+	public static function backup_and_rename_htaccess($src_file_path) {
 		global $aio_wp_security;
 
-		//Check to see if the main "backups" directory exists - create it otherwise
-		$aiowps_backup_dir = WP_CONTENT_DIR.'/'.AIO_WP_SECURITY_BACKUPS_DIR_NAME;
+		// Define the backup directory path
+		$aiowps_backup_dir = WP_CONTENT_DIR . '/' . AIO_WP_SECURITY_BACKUPS_DIR_NAME;
+
+		// Ensure the backup directory exists or create it
 		if (!AIOWPSecurity_Utility_File::create_dir($aiowps_backup_dir)) {
 			$aio_wp_security->debug_logger->log_debug("backup_and_rename_htaccess - Creation of backup directory failed!", 4);
 			return false;
 		}
 
-		$src_parts = pathinfo($src_file_path);
-		$backup_file_name = $src_parts['basename'] . '.' . $suffix;
+		// Generate a random prefix for the backup file name
+		$random_prefix = AIOWPSecurity_Utility::generate_alpha_numeric_random_string(10);
+		$backup_file_name = $random_prefix . '_htaccess_backup';
 
-		$backup_file_path = $aiowps_backup_dir . '/' . $backup_file_name;
+		// Define the backup file path
+		$backup_file_path = $aiowps_backup_dir . '/' . $backup_file_name .'.txt';
+
+		// Copy the source file to the backup location
 		if (!copy($src_file_path, $backup_file_path)) {
-			//Failed to make a backup copy
+			// Failed to make a backup copy
 			return false;
 		}
-		return true;
+
+		// Return the backup file name on success
+		return $backup_file_name;
 	}
 
 	/**
@@ -204,42 +213,6 @@ class AIOWPSecurity_Utility_File {
 		} else {
 			return true;
 		}
-	}
-
-	public static function download_a_file_option1($file_path, $file_name = '') {
-		$file = $file_path;//Full ABS path to the file
-		if (empty($file_name)) {
-			$file_name = basename($file);
-		}
-
-		header('Content-Description: File Transfer');
-		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename='.$file_name);
-		header('Content-Transfer-Encoding: binary');
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate');
-		header('Pragma: public');
-		header('Content-Length: ' . filesize($file));
-		//ob_clean();
-		//flush();
-		readfile($file);
-		exit;
-	}
-
-	public static function download_content_to_a_file($output, $file_name = '') {
-		if (empty($file_name)) {
-			$file_name = 'aiowps_' . current_time('Y-m-d_H-i') . '.txt';
-		}
-
-		header("Content-Encoding: UTF-8");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-		header("Content-Description: File Transfer");
-		header("Content-type: application/octet-stream");
-		header("Content-disposition: attachment; filename=" . $file_name);
-		header("Content-Transfer-Encoding: binary");
-		header("Content-Length: " . strlen($output));
-		echo $output;
-		exit;
 	}
 
 	/**
@@ -377,49 +350,6 @@ class AIOWPSecurity_Utility_File {
 		return $res;
 	}
 
-	public static function get_attachment_id_from_url($attachment_url = '') {
-		global $wpdb;
-		$attachment_id = false;
-
-		// If there is no url, return.
-		if ('' == $attachment_url)return;
-
-		// Get the upload directory paths
-		$upload_dir_paths = wp_upload_dir();
-
-		// Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
-		if (false !== strpos($attachment_url, $upload_dir_paths['baseurl'])) {
-			// Remove the upload path base directory from the attachment URL
-			$attachment_url = str_replace($upload_dir_paths['baseurl'] . '/', '', $attachment_url);
-			// Now run custom database query to get attachment ID from attachment URL
-			$attachment_id = $wpdb->get_var($wpdb->prepare("SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = %s AND wposts.post_type = 'attachment'", $attachment_url));
-		}
-		return $attachment_id;
-	}
-
-
-	/**
-	 * Will return an indexed array of files sorted by last modified timestamp
-	 *
-	 * @param string $dir
-	 * @param string $sort (ASC, DESC)
-	 * @return array
-	 */
-	public static function scan_dir_sort_date($dir, $sort = 'DESC') {
-		$files = array();
-		foreach (scandir($dir) as $file) {
-			$files[$file] = filemtime($dir . '/' . $file);
-		}
-
-		if ('ASC' === $sort) {
-			asort($files);
-		} else {
-			arsort($files);
-		}
-
-		return array_keys($files);
-	}
-
 	/**
 	 * Remove a directory from the local filesystem
 	 *
@@ -457,5 +387,136 @@ class AIOWPSecurity_Utility_File {
 		global $wp_file_descriptions; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- We need to make this global see above comment
 		if (!function_exists('get_home_path')) require_once(ABSPATH. '/wp-admin/includes/file.php');
 		return wp_normalize_path(get_home_path());
+	}
+
+	/**
+	 * Check if wp config file.
+	 *
+	 * @param string $file_contents File contents
+	 *
+	 * @return bool
+	 */
+	public static function check_if_wp_config_contents($file_contents) {
+		return !empty($file_contents) && preg_match("/define\(\s*['\"]DB_NAME['\"]/i", $file_contents);
+	}
+
+	/**
+	 * Check if valid aios settings text
+	 *
+	 * @param string $text - Settings text
+	 *
+	 * @return boolean
+	 */
+	public static function check_is_aiowps_settings($text) {
+		return (false !== strpos($text, 'aiowps_enable_login_lockdown'));
+	}
+
+	/**
+	 * Checks if valid AIOS settings file contents and returns contents as string
+	 *
+	 * @param string $file_contents File contents
+	 *
+	 * @return int|string
+	 */
+	public static function check_if_valid_aiowps_settings_content($file_contents) {
+		// Check a known AIOS config strings to see if it is contained within this file
+		return !empty($file_contents) && self::check_is_aiowps_settings($file_contents);
+	}
+
+	/**
+	 * Scans WP key core files and directory permissions and populates a wp wide_fat table
+	 * Displays a red background entry with a "Fix" button for permissions which are "777"
+	 * Displays a yellow background entry with a "Fix" button for permissions which are less secure than the recommended
+	 * Displays a green entry for permissions which are as secure or better than the recommended
+	 *
+	 * @param string $name        - file name
+	 * @param string $path        - file path
+	 * @param string $recommended - file permission
+	 *
+	 * @return void
+	 */
+	public static function show_wp_filesystem_permission_status($name, $path, $recommended) {
+		$fix = false;
+		$configmod = self::get_file_permission($path);
+		if (self::is_file_world_writable($configmod)) {
+			$trclass = "aio_table_row_red"; // Display a red background if permissions are set as least secure ("777")
+			$fix = true;
+		} elseif ($configmod != $recommended) {
+			// $res = $this->is_file_permission_secure($recommended, $configmod);
+			$res = self::is_file_permission_secure($recommended, $configmod);
+			if ($res) {
+				$trclass = "aio_table_row_green"; //If the current permissions are even tighter than recommended then display a green row
+			} else {
+				$trclass = "aio_table_row_yellow"; // Display a yellow background if permissions are set to something different than recommended
+				$fix = true;
+			}
+		} else {
+			$trclass = "aio_table_row_green";
+		}
+		echo "<tr class=".$trclass.">";
+		echo '<td class="column-primary" data-colname="' . esc_attr(__('Name', 'all-in-one-wp-security-and-firewall')) . '">' . $name . '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details', 'all-in-one-wp-security-and-firewall') . '</span></button>' . "</td>";
+		echo '<td data-colname="' . esc_attr(__('File/Folder', 'all-in-one-wp-security-and-firewall')) . '">' . $path . "</td>";
+		echo '<td data-colname="' . esc_attr(__('Current permissions', 'all-in-one-wp-security-and-firewall')) . '">' . $configmod . '</td>';
+		echo '<td data-colname="' . esc_attr(__('Recommended permissions', 'all-in-one-wp-security-and-firewall')) . '">' . $recommended . '</td>';
+		if ($fix) {
+			echo '<td data-colname="' . esc_attr(__('Recommended action', 'all-in-one-wp-security-and-firewall')) . '">
+					<input type="submit" onclick="return set_file_permission_tochange(\'' . esc_js($path) . '\', \'' . esc_js($recommended) . '\')" name="aiowps_fix_permissions" value="' . esc_attr(__('Set recommended permissions', 'all-in-one-wp-security-and-firewall')) . '" class="button-secondary">
+					</td>';
+		} else {
+			echo '<td>'.__('No action required', 'all-in-one-wp-security-and-firewall').'</td>';
+		}
+		echo "</tr>";
+	}
+
+	/**
+	 * Checks if the given file permissions indicate that the file is world-writable.
+	 *
+	 * This function accepts a string representation of file permissions (in octal format)
+	 * and checks if the write bit is set for 'others' (world). It ensures the string
+	 * is 4 characters long by prepending a '0' if necessary and then extracts and
+	 * evaluates the last digit to determine if the file is world-writable.
+	 *
+	 * @param string $permissions The file permissions in octal format (e.g., "0777", "0755").
+	 * @return bool Returns true if the file is world-writable, otherwise false.
+	 */
+	public static function is_file_world_writable($permissions) {
+		if (strlen($permissions) == 3) {
+			$permissions = '0' . $permissions;
+		}
+
+		// Get the 'others' permissions (last digit)
+		$others_permissions = (int) substr($permissions, -1);
+
+		// Check if the write bit (2) is set for 'others'
+		return (bool) ($others_permissions & 0x2);
+	}
+	
+	/**
+	 * Read the larger file and get last 100 lines etc in an efficient way
+	 *
+	 * @param string  $filepath - file path
+	 * @param integer $offset   - offest to start reading the file from that line
+	 * @param integer $num      - number of lines to read
+	 * @param boolean $reverse  - return in reverse order
+	 *
+	 * @return array|boolean - file lines
+	 */
+	public static function read_file_lines($filepath, $offset = 0, $num = 10, $reverse = false) {
+		global $aio_wp_security;
+		try {
+			$file = new \SplFileObject($filepath, 'r');
+			if (-1 == $offset) {
+				$file->seek(PHP_INT_MAX); // PHP_INT_MAX to seeek to last line
+				$last_line = $file->key();
+				$offset = $last_line > $num ? $last_line - $num : 0;
+			}
+			$lines = new \LimitIterator($file, $offset, $offset + $num);
+			$lines_arr = iterator_to_array($lines);
+			if ($reverse) $lines_arr = array_reverse($lines_arr);
+			return $lines_arr;
+		} catch (\Exception $e) {
+			$aio_wp_security->debug_logger->log_debug("AIOS - Unable to read file: ". $filepath . " - " .$e->getMessage(), 4);
+		}
+		return false;
 	}
 }

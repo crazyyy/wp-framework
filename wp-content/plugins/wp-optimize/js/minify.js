@@ -1,5 +1,6 @@
  (function ($) {
 	var wp_optimize = window.wp_optimize || {};
+	var block_ui = wp_optimize.block_ui;
 	var send_command = wp_optimize.send_command;
 	var refresh_frequency = wpoptimize.refresh_frequency || 30000;
 	var heartbeat = WP_Optimize_Heartbeat();
@@ -33,7 +34,7 @@
 		 */
 		$('.purge_minify_cache').on('click', function(e) {
 			e.preventDefault();
-			$.blockUI();
+			block_ui(wpoptimize.clearing_cache);
 			send_command('purge_minify_cache', null, function(response) {
 				if (response.hasOwnProperty('files')) {
 					minify.updateFilesLists(response.files);
@@ -49,7 +50,7 @@
 		 * Use with caution, as cached html may still reference those files.
 		 */
 		$('.purge_all_minify_cache').on('click', function() {
-			$.blockUI();
+			block_ui(wpoptimize.clearing_cache);
 			send_command('purge_all_minify_cache', null, function(response) {
 				if (response.hasOwnProperty('files')) {
 					minify.updateFilesLists(response.files);
@@ -61,10 +62,10 @@
 		});
 
 		/**
-		 * Forces minifiy to create a new cache, safe to use
+		 * Forces minify to create a new cache, safe to use
 		 */
 		$('.minify_increment_cache').on('click', function() {
-			$.blockUI();
+			block_ui(wpoptimize.creating_cache);
 			send_command('minify_increment_cache', null, function(response) {
 				if (response.hasOwnProperty('files')) {
 					minify.updateFilesLists(response.files);
@@ -78,7 +79,7 @@
 
 		// ======= SLIDERS ========
 		// Generic slider save
-		$('#wp-optimize-nav-tab-wpo_minify-status-contents form :input, #wp-optimize-nav-tab-wpo_minify-js-contents form :input, #wp-optimize-nav-tab-wpo_minify-css-contents form :input, #wp-optimize-nav-tab-wpo_minify-font-contents form :input, #wp-optimize-nav-tab-wpo_minify-settings-contents form :input, #wp-optimize-nav-tab-wpo_minify-advanced-contents form :input').on('change', function() {
+		$('#wp-optimize-nav-tab-wpo_minify-status-contents form :input, #wp-optimize-nav-tab-wpo_minify-js-contents form :input, #wp-optimize-nav-tab-wpo_minify-css-contents form :input, #wp-optimize-nav-tab-wpo_minify-font-contents form :input, #wp-optimize-nav-tab-wpo_minify-analytics-contents form :input, #wp-optimize-nav-tab-wpo_minify-settings-contents form :input, #wp-optimize-nav-tab-wpo_minify-advanced-contents form :input').on('change', function() {
 			$(this).closest('form').data('need_saving', true);
 		});
 		
@@ -88,7 +89,7 @@
 			name = input.prop('name'),
 			data = {};
 			data[name] = val;
-			$.blockUI();
+			block_ui(wpoptimize.saving);
 			send_command('save_minify_settings', data, function(response) {
 				if (response.success) {
 					input.trigger('wp-optimize/minify/saved_setting');
@@ -132,7 +133,7 @@
 		// slider enable Debug mode
 		$('#wpo_min_enable_minify_debug').on('wp-optimize/minify/saved_setting', function() {
 			// Refresh the page as it's needed to show the extra options
-			$.blockUI({message: '<h1>'+wpoptimize.page_refresh+'</h1>'});
+			block_ui(wpoptimize.page_refresh);
 			location.href = $('#wp-optimize-nav-tab-wpo_minify-advanced').prop('href');
 		});
 
@@ -141,6 +142,16 @@
 			// Show exclusions section
 			$('.wpo-minify-default-exclusions').toggleClass('hidden', !$(this).prop('checked'));
 		});
+
+		var disable_google_fonts_processing = $('#disable_google_fonts_processing');
+
+		function handle_disable_google_fonts_processing() {
+			$('#wp-optimize-nav-tab-wpo_minify-font-contents .google_fonts_option').prop('disabled', disable_google_fonts_processing.is(':checked'));
+		}
+
+		disable_google_fonts_processing.on('change', handle_disable_google_fonts_processing);
+
+		handle_disable_google_fonts_processing();
 
 		// Save settings
 		$('.wp-optimize-save-minify-settings').on('click', function(e) {
@@ -151,7 +162,7 @@
 				$need_refresh_btn = null;
 			
 			spinner.show();
-			$.blockUI();
+			block_ui(wpoptimize.saving);
 
 			var data = {};
 
@@ -219,7 +230,7 @@
 				return false;
 			}
 
-			$.blockUI();
+			block_ui(wpoptimize.deleting);
 			send_command('delete_minify_cache_file', filename, function(response) {
 				if('' !== response.files) {
 					minify.updateFilesLists(response.files);
@@ -521,6 +532,14 @@
 			$('#wpo_min_cache_size').text(response.size);
 			$('#wpo_min_cache_total_size').text(response.total_size);
 		}
+
+		// switch for visibility (analytics setting tab).
+		var $analytics = $('#wpo-analytics-hidden-content');
+
+		$('#wpo_enable_analytics').on('change', function () {
+			$analytics.css('display', $(this).prop('checked') ? 'block' : 'none');
+		});
+
 		return this;
 	}
 
@@ -591,7 +610,6 @@
 				}
 			});
 		}
-
 		$('#wpo_min_cssprocessed ul.processed .no-files-yet').toggle(!data.css.length);
 
 		// Remove <li> if it's not in the files array
@@ -636,15 +654,15 @@
 		 return data;
 	 }
 
-	 /**
-	  * Reduces the form elements array into an object
-	  *
-	  * @param {Object} collection An empty object
-	  * @param {*} item form input element as array element
-	  *
-	  * @returns {Object} collection An object of form data
-	  */
-	 function form_serialize_reduce_cb(collection, item) {
+	/**
+	 * Reduces the form elements array into an object
+	 *
+	 * @param {Object} collection An empty object
+	 * @param {*} item form input element as array element
+	 *
+	 * @returns {Object} collection An object of form data
+	 */
+	function form_serialize_reduce_cb(collection, item) {
 		 // Ignore items containing [], which we expect to be returned as arrays
 		 if (item.name.includes('[]')) return collection;
 		 collection[item.name] = item.value;

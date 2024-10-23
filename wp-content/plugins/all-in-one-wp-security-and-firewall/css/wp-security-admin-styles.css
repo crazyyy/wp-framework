@@ -332,6 +332,10 @@
 	color: darkorange;
 }
 
+#aiowps_password_crack_time_calculation:empty + #aiowps_http_authentication_password_crack_time_explanation {
+	display: none;
+}
+
 /* bootstrap type labels */
 .aiowps_dashboard_table {
 	table-layout: fixed;
@@ -803,7 +807,7 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 }
 
 @media screen and (max-width: 600px) {
-	
+
 	.aiowps_next_scheduled_entity {
 		float: none;
 		width: 100%;
@@ -813,7 +817,7 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 	.aiowps_time_now_wrapper {
 		margin-top: 0;
 	}
-	
+
 }
 
 .details.column-details {
@@ -868,7 +872,7 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 	font-size: 20px;
 	margin-left: -5px;
 	padding: 0;
-	transform: translatey(3px);
+	transform: translatey(5px);
 }
 
 .aios_saving_popup img {
@@ -934,4 +938,180 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 .simbaotp_qr_container img {
 	max-width: 150px;
 	max-height: 150px;
+}
+
+.aiowps-postbox-container {
+	display: flex;
+	background: #FFF;
+	border: 1px solid #D3D3D3;
+	padding: 5px;
+}
+
+.aiowps-postbox-container .postbox {
+	border: none;
+	box-shadow: none;
+}
+
+.aiowps-postbox-container h4 {
+	margin: 1em 0;
+	padding: 5px;
+}
+
+.aiowps-postbox-container .aiowps_switch_container .aiowps_more_info_anchor {
+	margin: 10px 0px;
+	display: block;
+	position: relative;
+	width: fit-content;
+}
+
+.aiowps-rule-list {
+	list-style: none;
+	max-height: 300px;
+	overflow-y: auto;
+	padding: 5px;
+	border-top: 0.5px solid #D3D3D3;
+	margin-bottom: 0;
+}
+
+.aiowps-rule-list li {
+	padding: 5px 0px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: unset;
+}
+
+.aiowps-rule-list li .aiowps-rule-title {
+	cursor: pointer;
+	padding: 10px 5px;
+	border-radius: 3px;
+	width: 100%;
+}
+
+.aiowps-rule-list li:not(:last-child) {
+	border-bottom: 0.5px solid #D3D3D3;
+}
+
+.aiowps-rule-list li .aiowps-rule-title:hover {
+	background: #F8F9FA;
+}
+
+.aiowps-active .aiowps-rule-title {
+	font-weight: bold;
+	background: #7C22FF !important;
+	color: #FFF !important;
+}
+
+.aiowps-rules {
+	margin-right: 5px;
+	width: 20%;
+	border-right: 1px solid #D3D3D3;
+}
+
+.aiowps-settings {
+	width: 80%;
+}
+
+#aiowps-rule-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+#aiowps-rule-search .aiowps-search {
+	flex: 1;
+	background-image: none;
+	position: relative;
+	padding-right: 25px;
+	padding-left: 25px;
+	display: inline-flex;
+	align-items: center;
+	align-items: -moz-center; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	-webkit-align-items: center;
+	width: fill-available;
+	width: -webkit-fill-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari & Chrome */
+	width: -moz-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	max-width: fill-available;
+	max-width: -webkit-fill-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari & Chrome */
+	max-width: -moz-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	margin-right: 5px;
+}
+
+#aiowps-rule-search .dashicons-search {
+	font-family: dashicons;
+	font-size: 18px;
+	line-height: 1;
+	font-weight: 400;
+	font-style: normal;
+	display: inline-block;
+	text-transform: none;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	position: absolute;
+	vertical-align: middle;
+	margin-right: 5px;
+	top: 50%;
+	left: 5px;
+	z-index: 999;
+	transform: translatey(-50%);
+}
+
+#aiowps-rule-search .clear-search {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translatey(-50%);
+	cursor: pointer;
+}
+
+#aiowps-rule-search .clear-search:hover {
+	color: #000;
+}
+
+.aiowps-actions {
+	background: #FFF;
+	min-height: 60px;
+	margin-top: 0px;
+	border: 1px solid #D3D3D3;
+	border-top: none;
+	align-content: center;
+	padding-right: 15px;
+	text-align: right;
+	text-align: -webkit-right;  /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari & Chrome */
+	text-align: -moz-right; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	justify-content: end;
+	align-items: center;
+	display: flex;
+}
+
+@media only screen and (max-width: 768px) {
+
+	.aiowps-postbox-container {
+		flex-direction: column;
+	}
+
+	.aiowps-settings {
+		width: 100%;
+	}
+
+	.aiowps-rules {
+		width: 100%;
+		margin-bottom: 10px;
+		border-right: none;
+		border-bottom: 1px solid #D3D3D3;
+	}
+
+	.aiowps-rule-list {
+		max-height: 150px;
+	}
+
+}
+
+#simba-tfa-admin-wrapper form {
+	padding: 10px;
+	position: relative;
+	min-width: 255px;
+	border: 1px solid #C3C4C7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+	background: #FFF;
 }

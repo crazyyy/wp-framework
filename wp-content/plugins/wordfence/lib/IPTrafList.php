@@ -28,7 +28,7 @@ if (!wfUtils::isAdmin()) {
 			<th>Type:</th>
 			<td><?php
 				if ($v['statusCode'] == '404') {
-					echo '<span style="color: #F00;">' . esc_html('Page not found', 'wordfence') . '</span>';
+					echo '<span style="color: #F00;">' . esc_html__('Page not found', 'wordfence') . '</span>';
 				}
 				else if ($v['type'] == 'hit') {
 					esc_html_e('Normal request', 'wordfence');

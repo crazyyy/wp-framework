@@ -133,7 +133,7 @@ function bodhi_svgs_help_tab () {
 	// donations tab content
 	$bodhi_svgs_help_tab_donations = '<h3>' . __( 'Donations', 'svg-support' ) . '</h3>';
 
-	$bodhi_svgs_help_tab_donations .= '<p>' . __( 'SVG Support (this plugin) has grown to be used by over 800,000 websites actively and is maintained solely by one person. I couldn\'t possibly tell you how many hours have gone into the development, maintenance and support of this plugin. If you find it useful and would like to donate to help keep it going, that would be amazing! I truly appreciate the support and how far this has come.', 'svg-support' ) . '</p>';
+	$bodhi_svgs_help_tab_donations .= '<p>' . __( 'SVG Support (this plugin) has grown to be used by over 1 million websites actively and is maintained solely by one person. I couldn\'t possibly tell you how many hours have gone into the development, maintenance and support of this plugin. If you find it useful and would like to donate to help keep it going, that would be amazing! I truly appreciate the support and how far this has come.', 'svg-support' ) . '</p>';
 
 	$bodhi_svgs_help_tab_donations .= '<p><strong>' . __( 'Donation Methods:', 'svg-support' ) . '</strong></p>';
 

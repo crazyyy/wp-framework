@@ -6,10 +6,66 @@ if (class_exists('AIOWPSecurity_Commands')) return;
 
 if (!trait_exists('AIOWPSecurity_Log_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-log-commands.php');
 if (!trait_exists('AIOWPSecurity_Ip_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-ip-commands.php');
+if (!trait_exists('AIOWPSecurity_Comment_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-comment-commands.php');
+if (!trait_exists('AIOWPSecurity_User_Security_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-user-security-commands.php');
+if (!trait_exists('AIOWPSecurity_Settings_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-settings-commands.php');
+if (!trait_exists('AIOWPSecurity_Files_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-files-commands.php');
+if (!trait_exists('AIOWPSecurity_Firewall_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-firewall-commands.php');
+if (!trait_exists('AIOWPSecurity_Tools_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-tools-commands.php');
+if (!trait_exists('AIOWPSecurity_File_Scan_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-file-scan-commands.php');
 class AIOWPSecurity_Commands {
 
 	use AIOWPSecurity_Log_Commands_Trait;
 	use AIOWPSecurity_Ip_Commands_Trait;
+	use AIOWPSecurity_Comment_Commands_Trait;
+	use AIOWPSecurity_User_Security_Commands_Trait;
+	use AIOWPSecurity_Settings_Commands_Trait;
+	use AIOWPSecurity_Files_Commands_Trait;
+	use AIOWPSecurity_Firewall_Commands_Trait;
+	use AIOWPSecurity_Tools_Commands_Trait;
+	use AIOWPSecurity_File_Scan_Commands_Trait;
+
+	/**
+	 * This variable holds an instance of AIOWPSecurity_Feature_Item_Manager.
+	 *
+	 * @var AIOWPSecurity_Feature_Item_Manager $aiowps_feature_mgr
+	 */
+	private $aiowps_feature_mgr;
+
+	/**
+	 * The initializes the AIOWPS Feature Manager
+	 *
+	 * @return bool
+	 */
+	private function feature_mgr_init() {
+		static $initialized = false;
+		if ($initialized && !empty($this->aiowps_feature_mgr)) return true;
+
+		$this->aiowps_feature_mgr = new AIOWPSecurity_Feature_Item_Manager();
+
+		$initialized = true;
+
+		return true;
+	}
+
+	/**
+	 * Retrieves the feature manager object.
+	 *
+	 * This method initializes the feature manager if necessary and returns the
+	 * AIOWPSecurity_Feature_Item_Manager instance. If the initialization fails or
+	 * the feature manager object is empty, it returns a WP_Error.
+	 *
+	 * @return AIOWPSecurity_Feature_Item_Manager|WP_Error
+	 */
+	private function get_feature_mgr_object() {
+
+		$do_init = $this->feature_mgr_init();
+
+		if (true === $do_init && !empty($this->aiowps_feature_mgr)) return $this->aiowps_feature_mgr;
+
+		return new WP_Error('not_initialized', __('The feature item manager could not be initialized.', 'all-in-one-wp-security-and-firewall'));
+	}
+
 	/**
 	 * Get IP address of given method.
 	 *
@@ -95,72 +151,6 @@ class AIOWPSecurity_Commands {
 		return array();
 	}
 
-	/**
-	 * Gets the last file scan result and returns the scan result HTML template
-	 *
-	 * @param array $data - the request data
-	 *
-	 * @return array
-	 */
-	public function get_last_scan_results($data) {
-		global $aio_wp_security;
-
-		$response = array(
-			'status' => 'success',
-			'messages' => array(),
-			'data' => array(),
-			'content' => array(),
-		);
-
-		if ($data['reset_change_detected']) $aio_wp_security->configs->set_value('aiowps_fcds_change_detected', false, true);
-
-		$fcd_data = AIOWPSecurity_Scan::get_fcd_data();
-
-		if (!$fcd_data || !isset($fcd_data['last_scan_result'])) {
-			// no fcd data found
-			$response['messages'][] = __('No previous scan data was found; either run a manual scan or schedule regular file scans', 'all-in-one-wp-security-and-firewall');
-			return $response;
-		}
-
-		$response['content'] = $aio_wp_security->include_template('wp-admin/scanner/scan-result.php', true, array('fcd_data' => $fcd_data));
-
-		return $response;
-	}
-
-	/**
-	 * Performs a file scan and returns the scan result
-	 *
-	 * @return array
-	 */
-	public function perform_file_scan() {
-		global $aio_wp_security;
-
-		$response = array(
-			'status' => 'success',
-			'messages' => array(),
-			'data' => array(),
-			'content' => array(),
-		);
-
-		$result = $aio_wp_security->scan_obj->execute_file_change_detection_scan();
-
-		if (false === $result) {
-			// error case
-			$response['messages'][] = __('There was an error during the file change detection scan.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please check the plugin debug logs.', 'all-in-one-wp-security-and-firewall');
-		}
-		
-		// If this is first scan display special message
-		if (1 == $result['initial_scan']) {
-			$response['messages'][] = __('This is your first file change detection scan.', 'all-in-one-wp-security-and-firewall').' '.__('The details from this scan will be used for future scans.', 'all-in-one-wp-security-and-firewall'). ' <a href="#" class="aiowps_view_last_fcd_results">' . __('View the file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
-			$response['content']['last_scan'] = '<a href="#" class="aiowps_view_last_fcd_results">' . __('View last file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
-		} elseif (!$aio_wp_security->configs->get_value('aiowps_fcds_change_detected')) {
-			$response['messages'][] = __('The scan is complete - There were no file changes detected.', 'all-in-one-wp-security-and-firewall');
-		} elseif ($aio_wp_security->configs->get_value('aiowps_fcds_change_detected')) {
-			$response['messages'][] = __('The scan has detected that there was a change in your website\'s files.', 'all-in-one-wp-security-and-firewall'). ' <a href="#" class="aiowps_view_last_fcd_results">' . __('View the file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
-		}
-
-		return $response;
-	}
 
 	/**
 	 * This is a helper function to save settings options using key/value pairs
@@ -173,6 +163,10 @@ class AIOWPSecurity_Commands {
 	public function save_settings($options, $callback = null) {
 		global $aio_wp_security;
 
+		$aiowps_feature_mgr = $this->get_feature_mgr_object();
+		if (is_wp_error($aiowps_feature_mgr)) return false;
+
+
 		foreach ($options as $key => $value) {
 			$aio_wp_security->configs->set_value($key, $value);
 		}
@@ -182,6 +176,9 @@ class AIOWPSecurity_Commands {
 		if (is_callable($callback)) {
 			call_user_func($callback, $options);
 		}
+
+		$aiowps_feature_mgr->calculate_total_feature_points();
+
 		return true;
 	}
 
@@ -193,12 +190,9 @@ class AIOWPSecurity_Commands {
 	 * @return string
 	 */
 	public function get_feature_details_badge($feature_id) {
-		ob_start();
-		$aiowps_feature_mgr = new AIOWPSecurity_Feature_Item_Manager();
-		//Recalculate points after the feature status/options have been altered
-		$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-		$aiowps_feature_mgr->output_feature_details_badge($feature_id);
-		return ob_get_clean();
+		$aiowps_feature_mgr = $this->get_feature_mgr_object();
+		if (is_wp_error($aiowps_feature_mgr)) return '';
+		return $aiowps_feature_mgr->output_feature_details_badge($feature_id, true);
 	}
 
 	/**
@@ -221,5 +215,80 @@ class AIOWPSecurity_Commands {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Prepares and returns a structured response for AJAX commands.
+	 *
+	 * @param bool        $success Indicates whether the operation was successful (true for success, false for failure).
+	 * @param string|bool $message The message to include in the response (optional).
+	 *                             If false, no message is passed with the response.
+	 *                             If empty string, it defaults to a success or error message based on the $success flag.
+	 * @param array       $args    Optional. An associative array of additional response data, such as badges, info, values, or content.
+	 *
+	 * @return array The constructed response array containing status, message, and any additional data from $args.
+	 */
+	public function handle_response($success, $message = '', $args = array()) {
+		$response = array(
+			'status' => $success ? 'success' : 'error',
+		);
+
+		if (false !== $message) {
+			$response['message'] = $this->get_message($success, $message);
+		}
+
+		$allowed_keys = array('badges', 'info', 'values', 'content', 'extra_args');
+		foreach ($allowed_keys as $key) {
+			if (!empty($args[$key])) {
+				$response[$key] = 'badges' === $key ? $this->get_features_id_and_html($args[$key]) : $args[$key];
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Get the appropriate message based on success flag and provided message.
+	 *
+	 * @param bool   $success Indicates whether the operation was successful.
+	 * @param string $message The provided message.
+	 *
+	 * @return string The final message to be used in the response.
+	 */
+	private function get_message($success, $message) {
+		if ('' === $message) {
+			return $success ? __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall') : __('The settings update was unsuccessful.', 'all-in-one-wp-security-and-firewall');
+		}
+		return $message;
+	}
+
+	/**
+	 * Get antibot keys for the spam detection
+	 *
+	 * @return array
+	 */
+	public function get_antibot_keys() {
+		global $aio_wp_security;
+		
+		$response = array(
+			'status' => 'success',
+			'data' => array(),
+		);
+		
+		$nonce = empty($_POST['nonce']) ? '' : $_POST['nonce'];
+		if (!wp_verify_nonce($nonce, 'wp-security-ajax-nonce')) {
+			$response['status'] = false;
+			$response['error_code'] = 'invalid_nonce';
+			$response['error_message'] = 'Invalid nonce (wp-security-ajax-nonce) provided for this action.';
+		} else {
+			$key_map_arr = AIOWPSecurity_Comment::generate_antibot_keys(true);
+			$response['data'] = $key_map_arr[0];
+			if ('1' == $aio_wp_security->configs->get_value('aiowps_spambot_detect_usecookies')) {
+				AIOWPSecurity_Comment::insert_antibot_keys_in_cookie();
+			}
+		}
+		
+		echo json_encode($response);
+		exit;
 	}
 }

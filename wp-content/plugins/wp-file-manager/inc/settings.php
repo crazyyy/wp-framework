@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; 
-$images_url = 'https://www.webdesi9.com/plugins/wp_file_manager/images';
+$images_url = WP_FM_SITE_URL.'/wp-content/uploads/2024/08';
 ?>
 <style>
 .buy-now:hover,

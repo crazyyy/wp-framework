@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/wfFileUtils.php';
+require_once __DIR__ . '/wfScanFileProperties.php';
 
 class wfScanFile {
 
@@ -36,6 +37,10 @@ class wfScanFile {
 
 	public function __toString() {
 		return $this->getRealPath();
+	}
+
+	public function initializeProperties() {
+		return new wfScanFileProperties($this->realPath, $this->wordpressPath);
 	}
 
 }

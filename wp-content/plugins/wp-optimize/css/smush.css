@@ -666,23 +666,27 @@ img#wpo_smush_images_clear_stats_spinner {
   display: block !important;
 }
 
-#smush-metabox-inside-wrapper .smush-options.custom_compression span {
+#smush-metabox-inside-wrapper .smush-options.custom_compression span,
+.wpo-smush-compress-popup-content .smush-options.custom_compression span {
   display: block;
   max-width: 30%;
   clear: both;
 }
 
-#smush-metabox-inside-wrapper input#custom_compression_slider {
+#smush-metabox-inside-wrapper input#custom_compression_slider,
+.wpo-smush-compress-popup-content input#custom_compression_slider {
   display: block;
   clear: both;
   width: 100%;
 }
 
-#smush-metabox-inside-wrapper .smush-options.custom_compression span.alignleft {
+#smush-metabox-inside-wrapper .smush-options.custom_compression span.alignleft,
+.wpo-smush-compress-popup-content .smush-options.custom_compression span.alignleft {
   float: left;
 }
 
-#smush-metabox-inside-wrapper .smush-options.custom_compression span.alignright {
+#smush-metabox-inside-wrapper .smush-options.custom_compression span.alignright,
+.wpo-smush-compress-popup-content .smush-options.custom_compression span.alignright {
   float: right;
   text-align: right;
 }
@@ -696,6 +700,47 @@ img#wpo_smush_images_clear_stats_spinner {
 .media-frame-content .attachment-compat .compat-item,
 .compat-field-wpo_compress_image {
   overflow: visible !important;
+}
+
+/** Smush popup content **/
+.wpo-smush-compress-popup-content {
+  text-align: left;
+  padding: 20px;
+}
+
+.wpo-smush-compress-popup-content .wpo-toggle-advanced-options {
+  margin-top: 20px;
+}
+
+.wpo-smush-compress-popup-content h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.wpo-smush-compress-popup-content h4 {
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.wpo-smush-compress-popup-content label {
+  display: block;
+}
+
+.wpo-smush-compress-popup-content .wpo-advanced-options {
+  display: none;
+}
+
+.wpo-smush-compress-popup-content .wpo-toggle-advanced-options.opened + .wpo-advanced-options {
+  display: block;
+}
+
+/* Smush Media Library column */
+.wpo-smush-media-library-column .wpo-smush-compress-popup-btn {
+  margin-bottom: 5px;
+}
+
+.wpo-smush-media-library-column .wpo_restore_single_image {
+  margin-bottom: 5px;
 }
 
 .compat-field-wpo_compress_image {

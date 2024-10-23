@@ -9,7 +9,7 @@ class WP_Optimize_Commands {
 
 	private $optimizer;
 
-	private $options;
+	protected $options;
 
 	private $wpo_sites; // used in get_optimizations_info command.
 
@@ -561,7 +561,7 @@ class WP_Optimize_Commands {
 		$admin_settings .= WP_Optimize()->include_template('database/settings-general.php', true, array('optimize_db' => false));
 		$admin_settings .= WP_Optimize()->include_template('database/settings-auto-cleanup.php', true, array('optimize_db' => false, 'show_innodb_option' => WP_Optimize()->template_should_include_data() && $this->optimizer->show_innodb_force_optimize()));
 		$admin_settings .= WP_Optimize()->include_template('settings/settings-logging.php', true, array('optimize_db' => false));
-		$admin_settings .= '<input id="wp-optimize-settings-save" class="button button-primary" type="submit" name="wp-optimize-settings" value="' . esc_attr('Save settings', 'wp-optimize') .'" />';
+		$admin_settings .= '<input id="wp-optimize-settings-save" class="button button-primary" type="submit" name="wp-optimize-settings" value="' . esc_attr(__('Save settings', 'wp-optimize')) .'" />';
 		$admin_settings .= '</form>';
 		$admin_settings .= WP_Optimize()->include_template('settings/settings-trackback-and-comments.php', true, array('optimize_db' => false));
 		$content = $admin_settings;
@@ -1077,6 +1077,30 @@ class WP_Optimize_Commands {
 	 */
 	public function export_csv() {
 		WP_Optimization_images::instance()->output_csv();
+		return array(
+			'success' => true
+		);
+	}
+	
+	/**
+	 * Save images dimensions options
+	 *
+	 * @param array $settings Settings data
+	 * @return array
+	 */
+	public function save_images_dimension_option($settings) {
+		$options = WP_Optimize()->get_options();
+
+		if (!empty($settings["images_dimensions"]) && "true" === $settings["images_dimensions"]) {
+			$is_updated = $options->update_option('image_dimensions', 1);
+		} else {
+			$is_updated = $options->update_option('image_dimensions', 0);
+		}
+
+		if ($is_updated || $options->update_option('image_dimensions_ignore_classes', sanitize_text_field($settings['ignore_classes']))) {
+			wpo_cache_flush();
+		}
+		
 		return array(
 			'success' => true
 		);

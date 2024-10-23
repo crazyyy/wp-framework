@@ -250,10 +250,8 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		<div id='security_strength_chart_div'></div>
 		<div class="aiowps_dashboard_widget_footer">
 			<?php
-			_e('Total Achievable Points: ', 'all-in-one-wp-security-and-firewall');
-			echo '<strong>' . $total_security_points_achievable . '</strong><br />';
-			_e('Current Score of Your Site: ', 'all-in-one-wp-security-and-firewall');
-			echo '<strong>' . $total_site_security_points . '</strong>';
+			echo __('Total Achievable Points:', 'all-in-one-wp-security-and-firewall') . ' ' . '<strong>' . $total_security_points_achievable . '</strong><br />';
+			echo __('Current Score of Your Site:', 'all-in-one-wp-security-and-firewall') . ' ' . '<strong>' . $total_site_security_points . '</strong>';
 			?>
 		</div>
 		<?php
@@ -300,7 +298,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 
 	public function widget_spread_the_word() {
 		?>
-		<p><?php _e('We are working hard to make your WordPress site more secure. ', 'all-in-one-wp-security-and-firewall'). _e('Please support us, here is how:', 'all-in-one-wp-security-and-firewall');?></p>
+		<p><?php _e('We are working hard to make your WordPress site more secure.', 'all-in-one-wp-security-and-firewall'). _e('Please support us, here is how:', 'all-in-one-wp-security-and-firewall');?></p>
 		<p><a href="https://twitter.com/intent/user?screen_name=UpdraftPlus" target="_blank"><?php _e('Follow us on', 'all-in-one-wp-security-and-firewall');?> Twitter</a>
 		</p>
 		<p>
@@ -378,20 +376,22 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		echo '</div></div></a>';
 		echo '<div class="aio_clear_float"></div>';
 
-		$basic_firewall_feature = $aiowps_feature_mgr->get_feature_item_by_id("firewall-basic-rules");
-		echo '<div class="aiowps_feature_status_container">';
-		echo '<div class="aiowps_feature_status_name">' . __('Basic firewall', 'all-in-one-wp-security-and-firewall') . '</div>';
-		echo '<a href="admin.php?page=' . AIOWPSEC_FIREWALL_MENU_SLUG . '&tab=htaccess-rules">';
-		echo '<div class="aiowps_feature_status_bar">';
-		if ($basic_firewall_feature->is_active()) {
-			echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
-			echo '<div class="aiowps_feature_status_label">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
-		} else {
-			echo '<div class="aiowps_feature_status_label">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
-			echo '<div class="aiowps_feature_status_label aiowps_feature_status_off">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
+		if (AIOWPSecurity_Utility::allow_to_write_to_htaccess()) {
+			$basic_firewall_feature = $aiowps_feature_mgr->get_feature_item_by_id("firewall-basic-rules");
+			echo '<div class="aiowps_feature_status_container">';
+			echo '<div class="aiowps_feature_status_name">' . __('Basic firewall', 'all-in-one-wp-security-and-firewall') . '</div>';
+			echo '<a href="admin.php?page=' . AIOWPSEC_FIREWALL_MENU_SLUG . '&tab=htaccess-rules">';
+			echo '<div class="aiowps_feature_status_bar">';
+			if ($basic_firewall_feature->is_active()) {
+				echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
+				echo '<div class="aiowps_feature_status_label">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
+			} else {
+				echo '<div class="aiowps_feature_status_label">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
+				echo '<div class="aiowps_feature_status_label aiowps_feature_status_off">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
+			}
+			echo '</div></div></a>';
+			echo '<div class="aio_clear_float"></div>';
 		}
-		echo '</div></div></a>';
-		echo '<div class="aio_clear_float"></div>';
 	}
 
 	/**
@@ -548,7 +548,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 			echo '<div class="aio_green_box"><p>' . __('There are no IP addresses currently locked out.', 'all-in-one-wp-security-and-firewall') . '</p></div>';
 		} else {
 			$num_ips = count($locked_ips);
-			echo '<div class="aio_red_box"><p>' . __('Number of temporarily locked out IP addresses: ', 'all-in-one-wp-security-and-firewall') . ' <strong>' . $num_ips . '</strong></p>';
+			echo '<div class="aio_red_box"><p>' . __('Number of temporarily locked out IP addresses:', 'all-in-one-wp-security-and-firewall') . ' ' . ' <strong>' . $num_ips . '</strong></p>';
 			$info_msg = '<p>' . sprintf(__('Go to the %s menu to see more details', 'all-in-one-wp-security-and-firewall'), $locked_ips_link) . '</p>';
 			echo $info_msg . '</div>';
 		}

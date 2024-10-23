@@ -99,3 +99,23 @@ h4.aiowps_advert_heading {
 	}
 
 }
+
+#aiowps-notice-logo {
+	border: 0;
+	float: right;
+	width: 150px;
+	height: auto;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+	
+	#aiowps-notice-logo {
+		width: 250px;
+		height: auto;
+		margin-right: 40px;
+		margin-top: 40px;
+	}
+
+}

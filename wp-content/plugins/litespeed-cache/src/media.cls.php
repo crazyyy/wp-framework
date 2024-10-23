@@ -659,7 +659,15 @@ class Media extends Root
 		$html_list = array();
 		$placeholder_list = array();
 
-		$content = preg_replace(array('#<!--.*-->#sU', '#<noscript([^>]*)>.*</noscript>#isU'), '', $this->content);
+		$content = preg_replace(
+			array(
+				'#<!--.*-->#sU',
+				'#<noscript([^>]*)>.*</noscript>#isU',
+				'#<script([^>]*)>.*</script>#isU', // Added to remove warning of file not found when image size detection is turned ON.
+			),
+			'',
+			$this->content
+		);
 		/**
 		 * Exclude parent classes
 		 * @since  3.0
@@ -750,7 +758,7 @@ class Media extends Root
 
 						$attrs['width'] = $ori_width;
 						$attrs['height'] = $ori_height;
-						$new_html = preg_replace('#\s+(width|height)=(["\'])[^\2]*\2#', '', $match[0]);
+						$new_html = preg_replace('#\s+(width|height)=(["\'])[^\2]*?\2#', '', $match[0]);
 						$new_html = preg_replace('#<img\s+#i', '<img width="' . $attrs['width'] . '" height="' . $attrs['height'] . '" ', $new_html);
 						self::debug('Add missing sizes ' . $attrs['width'] . 'x' . $attrs['height'] . ' to ' . $attrs['src']);
 						$this->content = str_replace($match[0], $new_html, $this->content);
@@ -761,7 +769,7 @@ class Media extends Root
 
 			$placeholder = false;
 			if (!empty($attrs['width']) && $attrs['width'] != 'auto' && !empty($attrs['height']) && $attrs['height'] != 'auto') {
-				$placeholder = $attrs['width'] . 'x' . $attrs['height'];
+				$placeholder = intval($attrs['width']) . 'x' . intval($attrs['height']);
 			}
 
 			$src_list[] = $attrs['src'];
@@ -958,7 +966,7 @@ class Media extends Root
 			 */
 			$url = trim($url, '\'"');
 
-			// Fix Elementors Slideshow unusal background images like  style="background-image: url(&quot;https://xxxx.png&quot;);"
+			// Fix Elementors Slideshow unusual background images like  style="background-image: url(&quot;https://xxxx.png&quot;);"
 			if (strpos($url, '&quot;') === 0 && substr($url, -6) == '&quot;') {
 				$url = substr($url, 6, -6);
 			}
@@ -994,7 +1002,7 @@ class Media extends Root
 			// Decode HTML entities in the JSON string
 			$jsonString = html_entity_decode($match[1]);
 
-			$jsonData = json_decode($jsonString, true);
+			$jsonData = \json_decode($jsonString, true);
 
 			if (json_last_error() === JSON_ERROR_NONE) {
 				$did_webp_replace = false;
@@ -1012,7 +1020,7 @@ class Media extends Root
 
 				if ($did_webp_replace) {
 					// Re-encode the modified array back to a JSON string
-					$newJsonString = json_encode($jsonData);
+					$newJsonString = \json_encode($jsonData);
 
 					// Re-encode the JSON string to HTML entities only if it was originally encoded
 					if ($isEncoded) {

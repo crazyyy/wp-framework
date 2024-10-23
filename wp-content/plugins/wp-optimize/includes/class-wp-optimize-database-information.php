@@ -564,7 +564,7 @@ class WP_Optimize_Database_Information {
 	 */
 	private function get_plugin_json_file_path() {
 		$uploads_dir = wp_upload_dir(null, false);
-		return apply_filters('wpo_get_plugin_json_file_path', trailingslashit($uploads_dir['basedir']).'wpo-plugins-tables-list.json');
+		return apply_filters('wpo_get_plugin_json_file_path', trailingslashit($uploads_dir['basedir']).'wpo/wpo-plugins-tables-list.json');
 	}
 
 	/**

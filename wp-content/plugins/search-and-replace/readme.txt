@@ -1,10 +1,10 @@
 === Search & Replace ===
 Contributors: wp_media, krafit, Bueltge, derpixler, ChriCo, s-hinse
-Tags: search, replace, import, sql, migrate
+Tags: search, replace, import, sql, migrate,
 Requires at least: 4.0
 Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 3.2.2
+Stable tag: 3.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,10 @@ You want to donate - we prefer a [positive review](https://wordpress.org/support
 5. Result screen after search or search and replace
 
 == Changelog ==
+= 3.2.3 (2024-08-26) =
+* Fix a vulnerability when deserializing objects from the database
+* Fix deprecation logs about optional parameters declared before required parameters
+
 = 3.2.2 (2024-05-16) =
 * Now owned by WP Media
 * Fixed potential time based SQL injection

@@ -319,7 +319,7 @@ class AIOWPSecurity_Scan {
 			//Output of files added
 			$scan_summary .= "\r\n".__('The following files were added to your host', 'all-in-one-wp-security-and-firewall').":\r\n";
 			foreach ($scan_result['files_added'] as $key => $value) {
-				$scan_summary .= "\r\n".$key.' ('.__('modified on: ', 'all-in-one-wp-security-and-firewall').AIOWPSecurity_Utility::convert_timestamp($value['last_modified']).')';
+				$scan_summary .= "\r\n".$key.' ('.__('modified on:', 'all-in-one-wp-security-and-firewall'). ' ' . AIOWPSecurity_Utility::convert_timestamp($value['last_modified']).')';
 			}
 			$scan_summary .= "\r\n======================================\r\n";
 		}
@@ -327,7 +327,7 @@ class AIOWPSecurity_Scan {
 			//Output of files removed
 			$scan_summary .= "\r\n".__('The following files were removed from your host', 'all-in-one-wp-security-and-firewall').":\r\n";
 			foreach ($scan_result['files_removed'] as $key => $value) {
-				$scan_summary .= "\r\n".$key.' ('.__('modified on: ', 'all-in-one-wp-security-and-firewall').AIOWPSecurity_Utility::convert_timestamp($value['last_modified']).')';
+				$scan_summary .= "\r\n".$key.' ('.__('modified on:', 'all-in-one-wp-security-and-firewall'). ' ' . AIOWPSecurity_Utility::convert_timestamp($value['last_modified']).')';
 			}
 			$scan_summary .= "\r\n======================================\r\n";
 		}
@@ -336,7 +336,7 @@ class AIOWPSecurity_Scan {
 			//Output of files changed
 			$scan_summary .= "\r\n".__('The following files were changed on your host', 'all-in-one-wp-security-and-firewall').":\r\n";
 			foreach ($scan_result['files_changed'] as $key => $value) {
-				$scan_summary .= "\r\n".$key.' ('.__('modified on: ', 'all-in-one-wp-security-and-firewall').AIOWPSecurity_Utility::convert_timestamp($value['last_modified']).')';
+				$scan_summary .= "\r\n".$key.' ('.__('modified on:', 'all-in-one-wp-security-and-firewall'). ' ' . AIOWPSecurity_Utility::convert_timestamp($value['last_modified']).')';
 			}
 			$scan_summary .= "\r\n======================================\r\n";
 		}

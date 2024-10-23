@@ -136,13 +136,13 @@ class AIOWPSecurity_Utility_IP {
 					$ip_address = \IPLib\Factory::addressFromString($item);
 					$ip_address_range = \IPLib\Factory::rangeFromString($item);
 					if (null == $ip_address && null == $ip_address_range) {
-						$errors .= "\n".$item.__(' is not a valid ip address format.', 'all-in-one-wp-security-and-firewall');
+						$errors .= "\n" . sprintf(__('%s is not a valid IP address format.', 'all-in-one-wp-security-and-firewall'), $item);
 					}
 					
 					if (strlen($item) > 4 && !in_array($item, $list)) {
 						if ($item == $current_user_ip && 'blacklist' == $list_type) {
 							//You can't ban your own IP
-							$errors .= "\n".__('You cannot ban your own IP address: ', 'all-in-one-wp-security-and-firewall').$item;
+							$errors .= "\n".__('You cannot ban your own IP address:', 'all-in-one-wp-security-and-firewall') . ' ' . $item;
 						} else {
 							$list[] = trim($item);
 						}

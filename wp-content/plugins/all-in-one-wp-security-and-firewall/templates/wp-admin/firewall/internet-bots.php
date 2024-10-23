@@ -12,10 +12,9 @@
 	echo $info_msg;
 	?>
 </div>
-<form action="" method="POST">
-<?php wp_nonce_field('aiowpsec-save-internet-bot-settings-nonce'); ?>
+<form action=""  id="aios-internet-bots-settings-form">
 
-<?php $aio_wp_security->include_template('wp-admin/firewall/partials/fake-googlebots.php'); ?>
-<?php $aio_wp_security->include_template('wp-admin/firewall/partials/blank-ref-and-useragent.php'); ?>
-<input type="submit" name="aiowps_save_internet_bot_settings" value="<?php _e('Save internet bot settings', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
+	<?php $aio_wp_security->include_template('wp-admin/firewall/partials/fake-googlebots.php'); ?>
+	<?php $aio_wp_security->include_template('wp-admin/firewall/partials/blank-ref-and-useragent.php'); ?>
+	<input type="submit" name="aiowps_save_internet_bot_settings" value="<?php _e('Save internet bot settings', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
 </form>

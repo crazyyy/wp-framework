@@ -9,10 +9,12 @@
 			echo '<br />'.__('This feature will prevent people from directly hotlinking images from your site\'s pages by writing some directives in your .htaccess file.', 'all-in-one-wp-security-and-firewall').'</p>';
 		?>
 	</div>
-<?php
-	//Display security info badge
-	$aiowps_feature_mgr->output_feature_details_badge("prevent-hotlinking");
-?>
+	<div id="prevent-hotlinking-badge">
+		<?php
+			//Display security info badge
+			$aiowps_feature_mgr->output_feature_details_badge("prevent-hotlinking");
+		?>
+	</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Prevent image hotlinking', 'all-in-one-wp-security-and-firewall'); ?>:</th>

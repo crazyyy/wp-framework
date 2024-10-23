@@ -2,10 +2,10 @@
 // @codingStandardsIgnoreStart
 /*
 Plugin Name: All In One WP Security
-Version: 5.3.1
+Version: 5.3.4
 Plugin URI: https://wordpress.org/plugins/all-in-one-wp-security-and-firewall/
 Update URI: https://wordpress.org/plugins/all-in-one-wp-security-and-firewall/
-Author: All In One WP Security & Firewall Team
+Author: TeamUpdraft, DavidAnderson
 Author URI: https://aiosplugin.com/
 Description: All round best WordPress security plugin!
 Text Domain: all-in-one-wp-security-and-firewall

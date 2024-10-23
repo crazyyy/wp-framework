@@ -71,7 +71,7 @@ class WPO_Cache_Config {
 	 * @param array	  $config						- the cache configuration
 	 * @param boolean $skip_disk_if_not_yet_present - only write the configuration file to disk if it already exists. This presents PHP notices if the cache has never been on, and settings are saved.
 	 *
-	 * @return bool
+	 * @return true|WP_Error                        - returns true on success or WP_Error if the config cannot be written to disk
 	 */
 	public function update($config, $skip_disk_if_not_yet_present = false) {
 		$config = wp_parse_args($config, $this->get_defaults());
@@ -157,7 +157,7 @@ class WPO_Cache_Config {
 	 * @param array	  $config		   - Configuration array.
 	 * @param boolean $only_if_present - only writes to the disk if the configuration file already exists
 	 *
-	 * @return boolean - returns false if an attempt to write failed
+	 * @return true|WP_Error           - returns true on success or WP_Error if an attempt to write failed
 	 */
 	public function write($config, $only_if_present = false) {
 
@@ -220,6 +220,7 @@ class WPO_Cache_Config {
 			'enable_user_caching'						=> false,
 			'site_url'									=> network_home_url('/'),
 			'enable_cache_per_country'					=> false,
+			'enable_cache_aelia_currency'				=> false,
 			'permalink_structure'						=> get_option('permalink_structure'),
 			'uploads'									=> wp_normalize_path(wp_upload_dir()['basedir']),
 			'gmt_offset'								=> get_option('gmt_offset'),
@@ -227,6 +228,7 @@ class WPO_Cache_Config {
 			'date_format'                               => get_option('date_format'),
 			'time_format'                               => get_option('time_format'),
 			'use_webp_images'						    => false,
+			'auto_preload_purged_contents'				=> true
 		);
 
 		return apply_filters('wpo_cache_defaults', $defaults);

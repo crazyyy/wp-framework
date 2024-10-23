@@ -73,6 +73,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			'convert_to_webp_format',
 			'update_webp_options',
 			'get_smush_details',
+			'get_smush_settings_form',
 		);
 
 		return array_merge($commands, $smush_commands);
@@ -135,6 +136,8 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			$response['sizes-info'] = WP_Optimize()->include_template('images/smush-details.php', true, array('sizes_info' => $smush_stats['sizes-info']));
 		}
 
+		$response['media_column_html'] = $this->get_smush_media_column_content($blog, $image);
+
 		return $response;
 	}
 
@@ -162,6 +165,8 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$response['image']	 = $image_id;
 		$response['success'] = $success;
 		$response['summary'] = __('The image was restored successfully', 'wp-optimize');
+
+		$response['media_column_html'] = $this->get_smush_media_column_content($blog_id, $image_id);
 		
 		return $response;
 	}
@@ -260,9 +265,10 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		// Only run checks when trying to enable WebP
 		if ($options['webp_conversion']) {
 			//Run checks if we are enabling webp conversion
-			if (!WP_Optimize_WebP::is_shell_functions_available()) {
+			if (!$webp_instance->shell_functions_available()) {
 				$webp_instance->disable_webp_conversion();
-				return new WP_Error('update_failed_no_shell_functions', __('Required WebP shell functions are not available on server.', 'wp-optimize'));
+				$webp_instance->log("Required WebP shell functions are not available on the server, disabling WebP conversion");
+				return new WP_Error('update_failed_no_shell_functions', __('Required WebP shell functions are not available on the server.', 'wp-optimize'));
 			}
 
 			// Run conversion test if not already done and set necessary option value
@@ -271,7 +277,8 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 
 				if (!$webp_instance->is_webp_conversion_successful()) {
 					$webp_instance->disable_webp_conversion();
-					return new WP_Error('update_failed_no_working_webp_converter', __('No working Webp converter was found on server.', 'wp-optimize'));
+					$webp_instance->log("No working WebP converter was found on the server when updating WebP options, disabling WebP conversion");
+					return new WP_Error('update_failed_no_working_webp_converter', __('No working WebP converter was found on the server.', 'wp-optimize'));
 				}
 
 				$options['webp_conversion_test'] = true;
@@ -293,7 +300,8 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 
 		if (!$success) {
 			$webp_instance->disable_webp_conversion();
-			return new WP_Error('update_failed', __('Webp options could not be updated.', 'wp-optimize'));
+			$webp_instance->log("WebP options could not be updated");
+			return new WP_Error('update_failed', __('WebP options could not be updated.', 'wp-optimize'));
 		}
 
 		// Setup daily CRON only when enabling WebP and Delete daily CRON when disabling WebP
@@ -309,7 +317,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$response = array();
 		$response['status'] = true;
 		$response['saved'] = $success;
-		$response['summary'] = __('Webp options updated successfully.', 'wp-optimize');
+		$response['summary'] = __('WebP options updated successfully.', 'wp-optimize');
 
 		return $response;
 	}
@@ -398,9 +406,16 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	/**
 	 * Deletes and removes any pending tasks from queue
 	 *
+	 * @param array $data - in 'restore_images' index passed an array with ids of images to restore
 	 * @return WP_Error|array - information about the operation or WP_Error object on failure
 	 */
-	public function clear_pending_images() {
+	public function clear_pending_images($data) {
+
+		if (!empty($data['restore_images'])) {
+			foreach ($data['restore_images'] as $image) {
+				$this->task_manager->restore_single_image($image['attachment_id'], $image['blog_id']);
+			}
+		}
 
 		$success = $this->task_manager->clear_pending_images();
 
@@ -462,6 +477,11 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		}
 
 		$response['info'] = $info;
+
+		if (1 === count($data['selected_images'])) {
+			$selected_image = reset($data['selected_images']);
+			$response['media_column_html'] = $this->get_smush_media_column_content($selected_image['blog_id'], $selected_image['attachment_id']);
+		}
 
 		return $response;
 	}
@@ -595,11 +615,13 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	public function reset_webp_serving_method() {
 		$webp_instance = WP_Optimize()->get_webp_instance();
 		//Run checks before calling reset_webp_serving_method
-		if (!WP_Optimize_WebP::is_shell_functions_available()) {
+		if (!$webp_instance->shell_functions_available()) {
 			$webp_instance->disable_webp_conversion();
-			return new WP_Error('reset_failed_no_shell_functions', __('Required WebP shell functions are not available on server', 'wp-optimize'));
+			$webp_instance->log("The WebP serving method cannot be reset because required WebP shell functions are not available on the server");
+			return new WP_Error('reset_failed_no_shell_functions', __('The WebP serving method cannot be reset because required WebP shell functions are not available on the server', 'wp-optimize'));
 		} elseif (!$webp_instance->is_webp_conversion_enabled()) {
 			$webp_instance->disable_webp_conversion();
+			$webp_instance->log("The WebP serving method cannot be reset because WebP conversion is currently disabled");
 			return new WP_Error('reset_failed_webp_conversion_disabled', __('The WebP serving method cannot be reset because WebP conversion is currently disabled', 'wp-optimize'));
 		}
 
@@ -630,6 +652,51 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		return array(
 			'success' => __('Image is converted to WebP format.', 'wp-optimize'),
 		);
+	}
+
+	/**
+	 * Get Smush settings form
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function get_smush_settings_form($data) {
+		$attachment_id = isset($data['attachment_id']) ? $data['attachment_id'] : 0;
+		if (0 === $attachment_id) return $this->image_not_found_response();
+
+		$compressed = get_post_meta($attachment_id, 'smush-complete', true) ? true : false;
+
+		$smush_options = Updraft_Smush_Manager()->get_smush_options();
+
+		$extract = array(
+			'post_id' => $attachment_id,
+			'smush_options' => $smush_options,
+			'custom' => 90 >= $smush_options['image_quality'] && 65 <= $smush_options['image_quality'],
+			'smush_display' => $compressed ? "display:none;" : "display:block;",
+		);
+
+		return array(
+			'success' => true,
+			'html' => WP_Optimize()->include_template('admin-metabox-smush-settings.php', true, $extract),
+		);
+	}
+
+	/**
+	 * Get content for Media Library column content
+	 *
+	 * @param {int} $blog_id
+	 * @param {int} $attachment_id
+	 *
+	 * @return string
+	 */
+	private function get_smush_media_column_content($blog_id, $attachment_id) {
+		if (is_multisite()) switch_to_blog($blog_id);
+
+		$content = Updraft_Smush_Manager()->get_smush_details($attachment_id);
+		
+		if (is_multisite()) restore_current_blog();
+		
+		return $content;
 	}
 
 	/**

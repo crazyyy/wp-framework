@@ -142,7 +142,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		if (is_admin() && !is_user_logged_in() && basename($_SERVER["SCRIPT_FILENAME"]) !== 'admin-post.php') {
 			//Fix to prevent fatal error caused by some themes and Yoast SEO
 			do_action('aiowps_before_wp_die_renamed_login');
-			wp_die(__('You do not have permission to access this page. Please log in and try again.', 'all-in-one-wp-security-and-firewall'), 403);
+			wp_die(__('You do not have permission to access this page.', 'all-in-one-wp-security-and-firewall') .  ' ' . __('Please log in and try again.', 'all-in-one-wp-security-and-firewall'), 403);
 		}
 
 		//case where someone attempting to reach wp-login

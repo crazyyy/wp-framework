@@ -372,6 +372,7 @@ class AIOWPSecurity_Admin_Init {
 				'copied' => __('Copied', 'all-in-one-wp-security-and-firewall'),
 				'no_import_file' => __('You have not yet selected a file to import.', 'all-in-one-wp-security-and-firewall'),
 				'processing' => __('Processing...', 'all-in-one-wp-security-and-firewall'),
+				'invalid_domain' => __('Please enter a valid IP address or domain name.', 'all-in-one-wp-security-and-firewall'),
 				'logo' => AIO_WP_SECURITY_URL.'/images/plugin-logos/aios-logo.png',
 				'saving' => __('Saving...', 'all-in-one-wp-security-and-firewall'),
 				'deleting' => __('Deleting...', 'all-in-one-wp-security-and-firewall'),
@@ -381,6 +382,7 @@ class AIOWPSecurity_Admin_Init {
 				'importing' => __('Importing...', 'all-in-one-wp-security-and-firewall'),
 				'exporting' => __('Exporting...', 'all-in-one-wp-security-and-firewall'),
 				'refreshing' => __('Refreshing...', 'all-in-one-wp-security-and-firewall'),
+				'scanning' => __('Scanning...', 'all-in-one-wp-security-and-firewall'),
 				'close' => __('Close', 'all-in-one-wp-security-and-firewall'),
 				'completed' => __('Completed.', 'all-in-one-wp-security-and-firewall'),
 				'refreshed' => __('Refreshed.', 'all-in-one-wp-security-and-firewall'),
@@ -388,6 +390,9 @@ class AIOWPSecurity_Admin_Init {
 				'show_info' => __('show more', 'all-in-one-wp-security-and-firewall'),
 				'hide_info' => __('hide', 'all-in-one-wp-security-and-firewall'),
 				'show_notices' => __('But the following notices have been raised', 'all-in-one-wp-security-and-firewall'),
+				'disabling' => __('Disabling...', 'all-in-one-wp-security-and-firewall'),
+				'setting_up_firewall' => __('Setting up firewall...', 'all-in-one-wp-security-and-firewall'),
+				'downgrading_firewall' => __('Downgrading firewall...', 'all-in-one-wp-security-and-firewall'),
 			)
 		);
 		wp_register_script('aiowpsec-pw-tool-js', AIO_WP_SECURITY_URL. '/js/password-strength-tool.js', array('jquery')); // We will enqueue this in the user acct menu class
@@ -446,14 +451,16 @@ class AIOWPSecurity_Admin_Init {
 	}
 
 	/**
-	 * This function sets up our feature item manager class and adds it to GLOBALS
+	 * This function checks if the feature manager is initialized and initializes it if it is not then checks the feature status and recalculates the points
 	 *
 	 * @return void
 	 */
 	private function initialize_feature_manager() {
-		$aiowps_feature_mgr = new AIOWPSecurity_Feature_Item_Manager();
-		$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
-		$GLOBALS['aiowps_feature_mgr'] = $aiowps_feature_mgr;
+		if (!isset($aiowps_feature_mgr)) {
+			$aiowps_feature_mgr = new AIOWPSecurity_Feature_Item_Manager();
+			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
+			$GLOBALS['aiowps_feature_mgr'] = $aiowps_feature_mgr;
+		}
 	}
 
 	/**
@@ -462,7 +469,7 @@ class AIOWPSecurity_Admin_Init {
 	 * @return Void
 	 */
 	private function do_other_admin_side_init_tasks() {
-		global $aio_wp_security, $aiowps_firewall_config, $simba_two_factor_authentication;
+		global $aio_wp_security;
 
 		//***New Feature improvement for Cookie Based Brute Force Protection***//
 		// The old "test cookie" used to be too easy to guess because someone could just read the code and get the value.
@@ -508,42 +515,6 @@ class AIOWPSecurity_Admin_Init {
 				}
 				$aio_wp_security->configs->save_config();//save the value
 			}
-		}
-
-		if (isset($_POST['aiowps_save_wp_config'])) { // the wp-config backup operation
-			$nonce = $_REQUEST['_wpnonce'];
-			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-save-wp-config-nonce');
-			if (is_wp_error($result)) {
-				$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-				die($result->get_error_message());
-			}
-			$wp_config_path = AIOWPSecurity_Utility_File::get_wp_config_file_path();
-			$result = AIOWPSecurity_Utility_File::backup_and_rename_wp_config($wp_config_path); //Backup the wp_config.php file
-			AIOWPSecurity_Utility_File::download_a_file_option1($wp_config_path, "wp-config-backup.txt");
-		}
-
-		// Handle export settings
-		if (isset($_POST['aiowps_export_settings'])) { // Do form submission tasks
-			$nonce = $_REQUEST['_wpnonce'];
-			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-export-settings-nonce');
-			if (is_wp_error($result)) {
-				$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-				die($result->get_error_message());
-			}
-
-			$config_data = array();
-			$config_data['general'] = get_option('aio_wp_security_configs');
-
-			if (is_main_site() && is_super_admin()) {
-				$config_data['firewall'] = $aiowps_firewall_config->get_contents();
-
-				if (true == $simba_two_factor_authentication->is_tfa_integrated) {
-					$config_data['tfa'] = $simba_two_factor_authentication->get_configs();
-				}
-			}
-
-			$output = json_encode($config_data);
-			AIOWPSecurity_Utility_File::download_content_to_a_file($output);
 		}
 	}
 

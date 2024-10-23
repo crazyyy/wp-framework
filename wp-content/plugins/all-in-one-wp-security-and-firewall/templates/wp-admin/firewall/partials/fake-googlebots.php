@@ -19,11 +19,12 @@
 	echo $info_msg_2;
 	?>
 </div>
-
-<?php
-//Display security info badge
-$aiowps_feature_mgr->output_feature_details_badge("firewall-block-fake-googlebots");
-?>
+<div id="firewall-block-fake-googlebots-badge">
+	<?php
+	//Display security info badge
+	$aiowps_feature_mgr->output_feature_details_badge("firewall-block-fake-googlebots");
+	?>
+</div>
 
 <table class="form-table">
 	<tr valign="top">

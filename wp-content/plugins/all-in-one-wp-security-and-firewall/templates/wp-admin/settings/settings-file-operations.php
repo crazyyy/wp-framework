@@ -12,8 +12,7 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Export AIOS settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-export-settings-nonce'); ?>
+		<form action="" method="POST" id="aiowpsec-export-settings-form">
 			<table class="form-table">
 				<tr valign="top">
 					<span class="description"><?php echo htmlspecialchars(__('To export your All In One WP Security & Firewall settings press the button below.', 'all-in-one-wp-security-and-firewall')); ?></span>
@@ -27,7 +26,6 @@
 	<h3 class="hndle"><label for="title"><?php _e('Import AIOS settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
 		<form id="aiowps_restore_settings_form" action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-import-settings-nonce'); ?>
 			<table class="form-table">
 				<tr valign="top">
 					<span class="description"><?php echo htmlspecialchars(__('Use this section to import your All In One WP Security & Firewall settings from a file.', 'all-in-one-wp-security-and-firewall')); ?></span>

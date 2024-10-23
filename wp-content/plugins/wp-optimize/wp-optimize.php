@@ -3,9 +3,9 @@
 Plugin Name: WP-Optimize - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
 Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 3.4.1
+Version: 3.7.0
 Update URI: https://wordpress.org/plugins/wp-optimize/
-Author: David Anderson, Ruhani Rabin, Team Updraft
+Author: TeamUpdraft, DavidAnderson
 Author URI: https://updraftplus.com
 Text Domain: wp-optimize
 Domain Path: /languages
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.4.1');
+define('WPO_VERSION', '3.7.0');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PLUGIN_SLUG', plugin_basename(__FILE__));
@@ -147,6 +147,7 @@ class WP_Optimize {
 			'cache',
 			'compatibility',
 			'includes',
+			'includes/list-tables',
 			'minify',
 			'optimizations',
 			'webp',
@@ -390,6 +391,7 @@ class WP_Optimize {
 		// Register or enqueue common scripts
 		wp_register_script('wp-optimize-send-command', WPO_PLUGIN_URL.'js/send-command'.$min_or_not_internal.'.js', array(), $enqueue_version);
 		wp_localize_script('wp-optimize-send-command', 'wp_optimize_send_command_data', array('nonce' => wp_create_nonce('wp-optimize-ajax-nonce')));
+		wp_register_script('wp-optimize-block-ui', WPO_PLUGIN_URL.'js/blockUI'.$min_or_not_internal.'.js', array('jquery'), $enqueue_version);
 		wp_enqueue_style('wp-optimize-global', WPO_PLUGIN_URL.'css/wp-optimize-global'.$min_or_not_internal.'.css', array(), $enqueue_version);
 
 		// load scripts and styles only on WP-Optimize pages.
@@ -400,7 +402,7 @@ class WP_Optimize {
 		wp_register_script('updraft-queue-js', WPO_PLUGIN_URL.'js/queue'.$min_or_not_internal.'.js', array(), $enqueue_version);
 
 		wp_enqueue_script('wp-optimize-modal', WPO_PLUGIN_URL.'js/modal'.$min_or_not_internal.'.js', array('jquery', 'backbone', 'wp-util'), $enqueue_version);
-		wp_enqueue_script('wp-optimize-cache-js', WPO_PLUGIN_URL.'js/cache'.$min_or_not_internal.'.js', array('wp-optimize-send-command', 'smush-js', 'wp-optimize-heartbeat-js'), $enqueue_version);
+		wp_enqueue_script('wp-optimize-cache-js', WPO_PLUGIN_URL.'js/cache'.$min_or_not_internal.'.js', array('wp-optimize-send-command', 'smush-js', 'wp-optimize-heartbeat-js', 'wp-optimize-block-ui'), $enqueue_version);
 		wp_enqueue_script('wp-optimize-admin-js', WPO_PLUGIN_URL.'js/wpoadmin'.$min_or_not_internal.'.js', array('jquery', 'updraft-queue-js', 'wp-optimize-send-command', 'smush-js', 'wp-optimize-modal', 'wp-optimize-cache-js', 'wp-optimize-heartbeat-js'), $enqueue_version);
 		wp_enqueue_style('wp-optimize-admin-css', WPO_PLUGIN_URL.'css/wp-optimize-admin'.$min_or_not_internal.'.css', array(), $enqueue_version);
 		// Using tablesorter to help with organising the DB size on Table Information
@@ -817,14 +819,19 @@ class WP_Optimize {
 			'number_of_files' => __('Number of files:', 'wp-optimize'),
 			'toggle_info' => __('Show information', 'wp-optimize'),
 			'delete_file' => __('Delete', 'wp-optimize'),
+			'deleting' => __('Deleting...', 'wp-optimize'),
 			'added_to_list' => __('Added to the list', 'wp-optimize'),
 			'added_notice' => __('The file was added to the list', 'wp-optimize'),
 			'save_notice' => __('Save the changes', 'wp-optimize'),
+			'saving' => __('Saving...', 'wp-optimize'),
+			'clearing_cache' => __('Clearing cache...', 'wp-optimize'),
+			'creating_cache' => __('Creating cache...', 'wp-optimize'),
 			'page_refresh' => __('Refreshing the page to reflect changes...', 'wp-optimize'),
 			'cache_file_not_found' => __('Cache file was not found.', 'wp-optimize'),
 			'settings_have_been_deleted_successfully' => __('WP-Optimize settings have been deleted successfully.', 'wp-optimize'),
 			'loading_data' => __('Loading data...', 'wp-optimize'),
-			'spinner_src' => esc_attr(admin_url('images/spinner-2x.gif')),
+			'spinner_src' => esc_url(admin_url('images/spinner-2x.gif')),
+			'logo_src' => esc_url(WPO_PLUGIN_URL.'images/notices/wp_optimize_logo.png'),
 			'settings_page_url' => is_multisite() ? network_admin_url('admin.php?page=wpo_settings') : admin_url('admin.php?page=wpo_settings'),
 			'sites' => $this->get_sites(),
 			'user_always_ignores_table_delete_warning' => (get_user_meta(get_current_user_id(), 'wpo-ignores-table-delete-warning', true)) ? true : false,
@@ -841,6 +848,7 @@ class WP_Optimize {
 			'select_destination' => __('Select destination', 'wp-optimize'),
 			'show_information' => __('Show information', 'wp-optimize'),
 			'hide_information' => __('Hide information', 'wp-optimize'),
+			'please_wait' => __('Please wait...', 'wp-optimize')
 		));
 	}
 
@@ -1722,38 +1730,6 @@ class WP_Optimize {
 	}
 
 	/**
-	 * Get the current theme's style.css headers
-	 *
-	 * @return array|WP_Error
-	 */
-	public function get_stylesheet_headers() {
-		static $headers;
-		if (isset($headers)) return $headers;
-
-		$style = get_template_directory_uri() . '/style.css';
-
-		/**
-		 * Filters wp_remote_get parameters, when checking if browser cache is enabled.
-		 *
-		 * @param array $request_params Default parameters
-		 */
-		$request_params = apply_filters('wpoptimize_get_stylesheet_headers_args', array('timeout' => 10));
-
-		// trying to load style.css.
-		$response = wp_remote_get($style, $request_params);
-
-		if (is_a($response, 'WP_Error')) return $response;
-
-		$headers = wp_remote_retrieve_headers($response);
-
-		if (method_exists($headers, 'getAll')) {
-			$headers = $headers->getAll();
-		}
-
-		return is_array($headers) ? $headers : array();
-	}
-
-	/**
 	 * Try to change PHP script time limit.
 	 */
 	public function change_time_limit() {
@@ -1826,7 +1802,7 @@ class WP_Optimize {
 		$upload_dir = wp_upload_dir();
 		$path = parse_url($upload_dir['baseurl']);
 		$output .= "\nUser-agent: *";
-		$output .= "\nDisallow: " . str_replace($path['scheme'].'://'.$path['host'], '', $upload_dir['baseurl']) . "/wpo-plugins-tables-list.json\n";
+		$output .= "\nDisallow: " . str_replace($path['scheme'].'://'.$path['host'], '', $upload_dir['baseurl']) . "/wpo/wpo-plugins-tables-list.json\n";
 		return $output;
 	}
 

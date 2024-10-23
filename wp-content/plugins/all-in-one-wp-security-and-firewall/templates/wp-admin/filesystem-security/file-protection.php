@@ -6,8 +6,8 @@
 		echo '<p>'.$info_msg.' '.__('By protecting your files and assets, you can help prevent nefarious users gain key information and protect your server\'s resources.', 'all-in-one-wp-security-and-firewall').'</p>';
 	?>
 </div>
-<form action="" method="POST">
-	<?php wp_nonce_field('aios-firewall-file-protection-nonce'); ?>
+<div id="aios-file-protection-settings-message" ></div>
+<form action="" method="POST" id="aios-file-protection-settings-form">
 	<?php
 		$aio_wp_security->include_template('wp-admin/filesystem-security/partials/wp-file-access.php');
 		$aio_wp_security->include_template('wp-admin/filesystem-security/partials/prevent-hotlinks.php');
@@ -15,3 +15,4 @@
 	?>
 	<input type="submit" name="aiowps_save_file_protection" value="<?php _e('Save settings', 'all-in-one-wp-security-and-firewall'); ?>" class="button-primary">
 </form>
+

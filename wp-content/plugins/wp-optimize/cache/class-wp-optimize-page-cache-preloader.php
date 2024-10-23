@@ -15,12 +15,20 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	static protected $_instance = null;
 
 	/**
+	 * List of URLs for which a task will be created to preload them into cache
+	 *
+	 * @var array
+	 */
+	private $url_preload_list = array();
+
+	/**
 	 * WP_Optimize_Page_Cache_Preloader constructor.
 	 */
 	public function __construct() {
 		parent::__construct();
 
 		add_action('wpo_page_cache_schedule_preload', array($this, 'run_scheduled_cache_preload'));
+		add_action('wpo_page_cache_run_preload', array($this, 'run_preload_cron_job'));
 		add_filter('wpo_preload_headers', array($this, 'preload_headers'));
 	}
 
@@ -42,6 +50,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	public function cache_settings_updated($new_settings, $previous_settings) {
 		if (!$new_settings['enable_page_caching']) {
 			wp_clear_scheduled_hook('wpo_page_cache_schedule_preload');
+			wp_clear_scheduled_hook('wpo_page_cache_run_preload');
 			$this->delete_preload_continue_action();
 			return;
 		}
@@ -152,6 +161,22 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		$this->run();
 	}
 
+	/**
+	 * Runs manual cache preload and reschedules if scheduled preload is enabled
+	 *
+	 * @return void
+	 */
+	public function run_preload_cron_job() {
+		$wpo_page_cache = WP_Optimize()->get_page_cache();
+
+		if ($this->is_scheduled_preload_enabled()) {
+			$this->cancel_preload();
+			$this->reschedule_preload();
+			$this->run('scheduled', null, true);
+		} elseif ($wpo_page_cache->should_auto_preload_purged_contents()) {
+			$this->run('manual', null, true);
+		}
+	}
 
 	/**
 	 * Get cache config option value.
@@ -194,9 +219,6 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 				$description = 'Preload - '.$url;
 				$options = array('url' => $url, 'preload_type' => $type, 'anonymous_user_allowed' => (defined('DOING_CRON') && DOING_CRON) || (defined('WP_CLI') && WP_CLI));
 
-				if (!class_exists('WP_Optimize_Load_Url_Task')) {
-					require_once WPO_PLUGIN_MAIN_PATH . 'cache/class-wpo-load-url-task.php';
-				}
 				WP_Optimize_Load_Url_Task::create_task($this->task_type, $description, $options, 'WP_Optimize_Load_Url_Task');
 			}
 
@@ -480,6 +502,34 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	}
 
 	/**
+	 * Actually add the URLs to be preloaded into cache during `shutdown` hook
+	 *
+	 * @return void
+	 */
+	public function create_tasks_for_auto_preload_urls() {
+		foreach ($this->url_preload_list as $url) {
+			if (wpo_url_in_exceptions($url)) continue;
+
+			$description = 'Preload - '.$url;
+			$options = array('url' => $url, 'preload_type' => 'manual', 'anonymous_user_allowed' => (defined('DOING_CRON') && DOING_CRON) || (defined('WP_CLI') && WP_CLI));
+
+			WP_Optimize_Load_Url_Task::create_task($this->task_type, $description, $options, 'WP_Optimize_Load_Url_Task');
+		}
+
+		$this->run('manual', null, true);
+	}
+
+	/**
+	 * Prepare the URL list that will need to be tasked to be preloaded
+	 *
+	 * @param string $url The URL to be preloaded
+	 * @return void
+	 */
+	public function add_url_to_preload_list($url) {
+		$this->url_preload_list[] = $url;
+	}
+
+	/**
 	 * Captures and logs any interesting messages
 	 *
 	 * @param String $message    - the error message
@@ -711,5 +761,3 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		return $nighttime;
 	}
 }
-
-WP_Optimize_Page_Cache_Preloader::instance();

@@ -1,13 +1,14 @@
 <?php if (!defined('ABSPATH')) die('No direct access.'); ?>
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Disable the ability to copy text', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-	<div class="inside">
-		<?php
-		//Display security info badge
-		$aiowps_feature_mgr->output_feature_details_badge("enable-copy-protection");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-copy-protection'); ?>
+	<div class="inside" id="aios-copy-protection-settings">
+		<div id="enable-copy-protection-badge">
+			<?php
+			//Display security info badge
+			$aiowps_feature_mgr->output_feature_details_badge("enable-copy-protection");
+			?>
+		</div>
+		<form action="" id="aios-copy-protection-settings-form" method="POST">
 			<div class="aio_blue_box">
 				<?php
 					echo '<p>'.__('This feature allows you to disable the ability to select and copy text from your front end.', 'all-in-one-wp-security-and-firewall').'</p>';

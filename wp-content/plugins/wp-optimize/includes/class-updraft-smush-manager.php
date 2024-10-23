@@ -140,45 +140,71 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 	 * @return string smush details
 	 */
 	public function get_smush_details($attachment_id) {
-		$info = '';
+		$info = '<div class="wpo-smush-media-library-column" data-blog="'.esc_attr(get_current_blog_id()).'" data-id="'.esc_attr($attachment_id).'">';
+		$info .= $this->get_media_smush_column_content($attachment_id);
+		$info .= '</div>';
+
+		return $info;
+	}
+
+	/**
+	 * Get content for Media Library column.
+	 *
+	 * @param int  $attachment_id
+	 *
+	 * @return string
+	 */
+	public function get_media_smush_column_content($attachment_id) {
 		$file = get_attached_file($attachment_id);
 		$ext = WPO_Image_Utils::get_extension($file);
 		$allowed_extensions = WPO_Image_Utils::get_allowed_extensions();
-		
+
+		$compressed = get_post_meta($attachment_id, 'smush-complete', true) ? true : false;
+		$has_backup = get_post_meta($attachment_id, 'original-file', true) ? true : false;
+
+		$smush_info = get_post_meta($attachment_id, 'smush-info', true);
 		$smush_stats = get_post_meta($attachment_id, 'smush-stats', true);
-		
-		if (empty($smush_stats)) {
-			if ($this->is_compressed($attachment_id)) {
-				$info = esc_html__('The file was either compressed using another tool or marked as compressed', 'wp-optimize');
-			} else {
-				if (in_array($ext, $allowed_extensions) && file_exists($file)) {
-					$info = sprintf('<a href="%1$s">%2$s</a><br>', esc_url(admin_url("post.php?post=" . (int) $attachment_id . "&action=edit")), esc_html__('Compress', 'wp-optimize'));
-				}
-			}
-			return $info;
+		$marked = get_post_meta($attachment_id, 'smush-marked', false);
+
+		$extract = array(
+			'blog_id'			=> get_current_blog_id(),
+			'post_id' 			=> $attachment_id,
+			'smush_info_display'=> $compressed ? "display:inline-block;" : "display:none;",
+			'smush_display'		=> $compressed ? "display:none;" : "display:inline-block;",
+			'before_smush_sep'  => !$compressed ? '<span class="wpo-action-separator"> | </span>' : '',
+			'restore_action'	=> $has_backup && $compressed ? "display:block;" : "display:none;",
+			'smush_mark'		=> !$compressed && !$marked ? "display:inline-block;" : "display:none;",
+			'smush_unmark'      => $marked ? "display:inline-block;" : "display:none;",
+			'smush_info'		=> $smush_info ? $smush_info : ' ',
+			'smush_details'		=> '',
+			'restore_tooltip' 	=> $this->get_restore_image_tooltip_text(),
+			'smush_marked'		=> $marked,
+		);
+
+		if (!empty($smush_stats['sizes-info'])) {
+			$extract['smush_details'] = WP_Optimize()->include_template('images/smush-details.php', true, array('sizes_info' => $smush_stats['sizes-info']));
 		}
-		
+
+		$extract['compressed_by_another_plugin'] = $this->is_image_compressed_by_another_plugin($attachment_id);
+
+		$output = '';
+
+		if (WPO_Image_Utils::is_supported_extension($ext, $allowed_extensions)) {
+			$output .= WP_Optimize()->include_template('admin-medialibrary-smush-column.php', true, $extract);
+		} else {
+			$message = __('Compressing this file type extension is not supported', 'wp-optimize');
+			$output .= sprintf("<p>%s</p>", esc_html($message));
+
+		}
+
 		if (WPO_Image_Utils::is_supported_extension($ext, array_diff($allowed_extensions, array('gif'))) && file_exists($file) && !file_exists($file . '.webp')) {
 			if (WPO_WebP_Utils::can_do_webp_conversion()) {
-				$info = sprintf('<a href="#" class="convert-to-webp" data-attachment-id="%d">%s</a><br>', esc_attr($attachment_id), esc_html__('Convert to WebP', 'wp-optimize'));
+				$link_text = __('Convert to WebP', 'wp-optimize');
+				$output .= sprintf('<a href="#" class="convert-to-webp" data-attachment-id="%d">%s</a><br>', esc_attr($attachment_id), esc_html($link_text));
 			}
 		}
-		
-		$original_size = $smush_stats['original-size'];
-		$smushed_size = $smush_stats['smushed-size'];
-		
-		if (0 == $original_size) {
-			$info .= sprintf(esc_html__('The file was compressed to %s using WP-Optimize', 'wp-optimize'), WP_Optimize()->format_size($smushed_size));
-		} else {
-			$saved = round((($original_size - $smushed_size) / $original_size * 100), 2);
-			$info .= sprintf(esc_html__('The file was compressed from %s to %s, saving %s percent, using WP-Optimize', 'wp-optimize'), WP_Optimize()->format_size($original_size), WP_Optimize()->format_size($smushed_size), $saved);
-		}
-		
-		// Display additional information about resized images.
-		if (!empty($smush_stats['sizes-info'])) {
-			$info .= WP_Optimize()->include_template('images/smush-details.php', true, array('sizes_info' => $smush_stats['sizes-info']));
-		}
-		return $info;
+
+		return $output;
 	}
 
 	/**
@@ -750,6 +776,8 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 	 * @return array - translations used in JS
 	 */
 	public function smush_js_translations() {
+		$resmushit_article_link = WP_Optimize()->wp_optimize_url('https://resmush.it/api/', __('resmushIt', 'wp-optimize'), '', '', true);
+
 		return apply_filters('updraft_smush_js_translations', array(
 			'all_images_compressed' 		  => __('No uncompressed images were found.', 'wp-optimize'),
 			'error_unexpected_response' 	  => __('An unexpected response was received from the server.', 'wp-optimize') . ' ' . __('More information has been logged in the browser console.', 'wp-optimize'),
@@ -757,7 +785,10 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 			'error_try_again_later'			  => __('Please try again later.', 'wp-optimize'),
 			'server_check'					  => __('Connecting to the Smush API server, please wait', 'wp-optimize'),
 			'please_wait'					  => __('Please wait while the request is being processed', 'wp-optimize'),
-			'server_error'					  => __('There was an error connecting to the image compression server.', 'wp-optimize') . ' ' . __('This could mean either the server is temporarily unavailable or there are connectivity issues with your internet connection.', 'wp-optimize') . ' ' . __('Please try later.', 'wp-optimize'),
+			'server_error'					  => __('There was an error connecting to the image compression server.', 'wp-optimize') .
+				'<br>' . __('This could mean either the server is temporarily unavailable or there are connectivity issues with your internet connection.', 'wp-optimize') . ' ' .
+					'<i>' . sprintf(__('(Also ensure IPs listed at the bottom of this %s page are whitelisted by your webserver).', 'wp-optimize'), $resmushit_article_link) . '</i>' .
+				'<br>' . __('Please try later.', 'wp-optimize'),
 			'please_select_images'		  	  => __('Please select the images you want compressed from the "Uncompressed images" panel first', 'wp-optimize'),
 			'please_updating_images_info'	  => __('Please wait: updating information about the selected image.', 'wp-optimize'),
 			'please_select_compressed_images' => __('Please select the images you want to mark as already compressed from the "Uncompressed images" panel first', 'wp-optimize'),
@@ -771,6 +802,10 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 			'more' => __('More', 'wp-optimize'),
 			'less' => __('Less', 'wp-optimize'),
 			'converting_to_webp' => __('Converting image to WebP format, please wait', 'wp-optimize'),
+			'compress_image' => __('Compress Image', 'wp-optimize'),
+			'compress' => __('Compress', 'wp-optimize'),
+			'cancel' => __('Cancel', 'wp-optimize'),
+			'close' => __('Close', 'wp-optimize'),
 		));
 	}
 
@@ -813,28 +848,44 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 
 		$extract = array(
 			'post_id' 			=> $post->ID,
-			'smush_display'		=> $compressed ? "style='display:none;'" : "style='display:block;'",
-			'restore_display' 	=> $compressed ? "style='display:block;'" : "style='display:none;'",
-			'restore_action'	=> $has_backup ? "style='display:block;'" : "style='display:none;'",
-			'smush_mark'		=> !$compressed && !$marked ? "style='display:block;'" : "style='display:none;'",
-			'smush_unmark'      => $marked ? "style='display:block;'" : "style='display:none;'",
+			'smush_display'		=> $compressed ? "display:none;" : "display:block;",
+			'restore_display' 	=> $compressed ? "display:block;" : "display:none;",
+			'restore_action'	=> $has_backup ? "display:block;" : "display:none;",
+			'smush_mark'		=> !$compressed && !$marked ? "display:block;" : "display:none;",
+			'smush_unmark'      => $marked ? "display:block;" : "display:none;",
 			'smush_info'		=> $smush_info ? $smush_info : ' ',
 			'file_size'			=> $file_size,
 			'smush_options'     => $options,
 			'custom'            => 90 >= $options['image_quality'] && 65 <= $options['image_quality'],
 			'smush_details'		=> '',
+			'restore_tooltip'   => $this->get_restore_image_tooltip_text(),
+			'smush_marked'      => $marked,
 		);
 
 		if (!empty($smush_stats['sizes-info'])) {
 			$extract['smush_details'] = WP_Optimize()->include_template('images/smush-details.php', true, array('sizes_info' => $smush_stats['sizes-info']));
 		}
 
+		$extract['smush_settings_form'] = WP_Optimize()->include_template('admin-metabox-smush-settings.php', true, $extract);
 		$extract['compressed_by_another_plugin'] = $this->is_image_compressed_by_another_plugin($post->ID);
 		if (WPO_Image_Utils::is_supported_extension($ext, $allowed_extensions)) {
 			WP_Optimize()->include_template('admin-metabox-smush.php', false, $extract);
 		} else {
 			printf("<p>%s</p>", __('Compressing this file type extension is not supported', 'wp-optimize'));
 		}
+	}
+
+	/**
+	 * Get text for restrore image tooltip.
+	 *
+	 * @return string
+	 */
+	private function get_restore_image_tooltip_text() {
+		$text = __('Only the original image will be restored.', 'wp-optimize');
+		$text .= ' ';
+		$text .= __('In order to restore the other sizes, you should use a plugin such as "Regenerate Thumbnails".', 'wp-optimize');
+		
+		return $text;
 	}
 
 	/**
@@ -1112,7 +1163,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 		$enqueue_version = WP_Optimize()->get_enqueue_version();
 		$min_or_not = WP_Optimize()->get_min_or_not_string();
 		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
-		
+
 		$js_variables = $this->smush_js_translations();
 		$js_variables['ajaxurl'] = admin_url('admin-ajax.php');
 		$js_variables['features'] = $this->get_features();
@@ -1124,7 +1175,8 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 		$js_variables['cancel'] = esc_html__('Cancel', 'wp-optimize');
 		$js_variables['cancelling'] = esc_html__('Cancelling...', 'wp-optimize');
 		$js_variables['images_restored_successfully'] = esc_html__('The images were restored successfully', 'wp-optimize');
-
+		$js_variables['logo_src'] = esc_url(WPO_PLUGIN_URL.'images/notices/wp_optimize_logo.png');
+		
 		wp_enqueue_script('block-ui-js', WPO_PLUGIN_URL.'includes/blockui/jquery.blockUI'.$min_or_not.'.js', array('jquery'), $enqueue_version);
 		wp_enqueue_script('wp-optimize-heartbeat-js', WPO_PLUGIN_URL.'js/heartbeat'.$min_or_not_internal.'.js', array('jquery'), $enqueue_version);
 		wp_localize_script('wp-optimize-heartbeat-js', 'wpo_heartbeat_ajax', array(
@@ -1132,7 +1184,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 			'nonce' => wp_create_nonce('heartbeat-nonce'),
 			'interval' => WPO_Ajax::HEARTBEAT_INTERVAL
 		));
-		wp_enqueue_script('smush-js', WPO_PLUGIN_URL.'js/wposmush'.$min_or_not_internal.'.js', array('jquery', 'block-ui-js', 'wp-optimize-send-command', 'wp-optimize-heartbeat-js'), $enqueue_version);
+		wp_enqueue_script('smush-js', WPO_PLUGIN_URL.'js/wposmush'.$min_or_not_internal.'.js', array('jquery', 'block-ui-js', 'wp-optimize-block-ui', 'wp-optimize-send-command', 'wp-optimize-heartbeat-js'), $enqueue_version);
 		wp_enqueue_style('smush-css', WPO_PLUGIN_URL.'css/smush'.$min_or_not_internal.'.css', array(), $enqueue_version);
 		wp_localize_script('smush-js', 'wposmush', $js_variables);
 	}
@@ -1217,19 +1269,11 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_4 {
 
 	/**
 	 * Delete all smush log files
+	 *
+	 * @deprecated 3.5.0
 	 */
 	public function delete_log_files() {
-		if (!function_exists('glob')) return;
-		$upload_dir = wp_get_upload_dir();
-		$upload_base = $upload_dir['basedir'];
-		$files = glob($upload_base . '/smush-*.log');
-		if (false === $files) return;
-		foreach ($files as $file) {
-			if (is_file($file)) {
-				@unlink($file); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress error due to file permission issues
-			}
-		}
-
+		_deprecated_function(__METHOD__, '3.5.0');
 	}
 
 	/**

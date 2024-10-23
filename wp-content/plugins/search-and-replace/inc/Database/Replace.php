@@ -90,7 +90,7 @@ class Replace {
 		foreach ( (array) $tables as $table ) {
 			// Count tables.
 			$report ['tables'] ++;
-			$table_report = $this->replace_values( $search, $replace, $table, $csv );
+			$table_report = $this->replace_values( $table, $search, $replace, $csv );
 			// Log changes if any.
 			if ( 0 !== $table_report['change'] ) {
 				$report['changes'][ $table ] = $table_report;
@@ -106,15 +106,15 @@ class Replace {
 	/**
 	 * Replace data values inside the table.
 	 *
+	 * @param string $table
 	 * @param string $search
 	 * @param string $replace
-	 * @param string $table
 	 * @param null   $csv
 	 *
 	 * @return array
 	 * @throws \Throwable
 	 */
-	public function replace_values( $search = '', $replace = '', $table, $csv = null ) {
+	public function replace_values( $table, $search = '', $replace = '', $csv = null ) {
 
 		$table_report = [
 			'table_name' => $table,
@@ -335,7 +335,7 @@ class Replace {
 
 		// Some unserialized data cannot be re-serialised eg. SimpleXMLElements.
 		try {
-			$unserialized = is_serialized( $data, false ) ? maybe_unserialize( $data ) : false;
+			$unserialized = is_serialized( $data, false ) ? $this->maybe_unserialize_safe( $data ) : false;
 
 			if ( $unserialized !== false && ! is_serialized_string( $data ) ) {
 				$data = $this->recursive_unserialize_replace( $from, $to, $unserialized, false );
@@ -348,16 +348,26 @@ class Replace {
 				$data = $_tmp;
 
 				unset( $_tmp );
-			} elseif ( is_object( $data ) ) {
-				$_tmp  = $data;
-				$props = get_object_vars( $data );
-				foreach ( $props as $key => $value ) {
-					$_tmp->$key = $this->recursive_unserialize_replace( $from, $to, $value, false );
+			} elseif ( 'object' == gettype( $data ) ) {
+				if ( $this->is_cloneable( $data ) ) {
+					$_tmp  = clone $data;
+					$props = get_object_vars( $data );
+					foreach ( $props as $key => $value ) {
+						// PHP handles weirdly properties with integer names
+						if ( is_int( $key ) ) {
+							continue;
+						}
+						// Skip protected properties
+						if ( is_string( $key ) && preg_match( "/^(\\\\0).+/im", preg_quote( $key ) ) === 1 ) {
+							continue;
+						}
+						$_tmp->$key = $this->recursive_unserialize_replace( $from, $to, $value, false );
+					}
+
+					$data = $_tmp;
+
+					unset( $_tmp );
 				}
-
-				$data = $_tmp;
-
-				unset( $_tmp );
 			} else {
 				// Don't process data that isn't a string.
 				// In this case, just return it because we haven't coverage for this kind of value.
@@ -369,7 +379,7 @@ class Replace {
 
 				if ( is_serialized_string( $data ) ) {
 					// @codingStandardsIgnoreLine
-					$data   = maybe_unserialize( $data );
+					$data   = $this->maybe_unserialize_safe( $data );
 					$marker = true;
 				}
 
@@ -427,5 +437,34 @@ class Replace {
 		}
 
 		return $state;
+	}
+
+	/**
+	 * Unserializes data only if it was serialized.
+	 * unserialize function is called with allowed_classes set to false
+	 * to ensure no object instantiation and magic function calls.
+	 *
+	 * @since 3.2.3
+	 *
+	 * @param string $data Data that might be unserialized.
+	 * @return mixed Unserialized data can be any type.
+	 */
+	public function maybe_unserialize_safe( $data ) {
+		if ( is_serialized( $data ) ) {
+			return @unserialize( trim( $data ), array('allowed_classes' => false ) );
+		}
+	
+		return $data;
+	}
+
+	/**
+	 * Returns true if the object can be cloned.
+	 *
+	 * @param object $object
+	 *
+	 * @return bool
+	 */
+	private function is_cloneable( $object ) {
+		return ( new \ReflectionClass( get_class( $object ) ) )->isCloneable();
 	}
 }

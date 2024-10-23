@@ -29,6 +29,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Ai1wm_Database_Utility {
 
+	protected static $db_client = null;
+
+	public static function set_client( $db_client ) {
+		self::$db_client = $db_client;
+	}
+
 	/**
 	 * Get MySQLClient to be used for DB manipulation
 	 *
@@ -36,6 +42,10 @@ class Ai1wm_Database_Utility {
 	 */
 	public static function create_client() {
 		global $wpdb;
+
+		if ( self::$db_client ) {
+			return self::$db_client;
+		}
 
 		if ( $wpdb instanceof WP_SQLite_DB ) {
 			return new Ai1wm_Database_Sqlite( $wpdb );

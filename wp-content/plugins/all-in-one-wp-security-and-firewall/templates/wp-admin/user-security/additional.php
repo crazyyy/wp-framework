@@ -8,12 +8,12 @@
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Additional settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<form action="" method="POST">
+		<form action="" method="POST" id="aios-disable-application-password-form">
+			<div id="disable-application-password-badge">
 			<?php
 				$aiowps_feature_mgr->output_feature_details_badge("disable-application-password");
 			?>
-
-			<?php wp_nonce_field('aiowpsec-additonal-settings-nonce'); ?>
+			</div>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Disable application password', 'all-in-one-wp-security-and-firewall'); ?>:</th>

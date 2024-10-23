@@ -19,10 +19,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array{name: string, slug: string, short_description: string, requires: string|false, requires_php: string|false, requires_plugins: string[], download_link: string, version: string}|WP_Error Array of plugin data or WP_Error if failed.
  */
 function perflab_query_plugin_info( string $plugin_slug ) {
-	$plugin = get_transient( 'perflab_plugin_info_' . $plugin_slug );
+	$transient_key = 'perflab_plugins_info-v2';
+	$plugins       = get_transient( $transient_key );
 
-	if ( $plugin ) {
-		return $plugin;
+	if ( is_array( $plugins ) ) {
+		// If the specific plugin_slug is not in the cache, return an error.
+		if ( ! isset( $plugins[ $plugin_slug ] ) ) {
+			return new WP_Error( 'plugin_not_found', __( 'Plugin not found.', 'performance-lab' ) );
+		}
+		return $plugins[ $plugin_slug ]; // Return cached plugin info if found.
 	}
 
 	$fields = array(
@@ -36,36 +41,57 @@ function perflab_query_plugin_info( string $plugin_slug ) {
 		'version', // Needed by install_plugin_install_status().
 	);
 
-	$plugin = plugins_api(
-		'plugin_information',
+	// Proceed with API request since no cache hit.
+	$response = plugins_api(
+		'query_plugins',
 		array(
-			'slug'   => $plugin_slug,
-			'fields' => array_fill_keys( $fields, true ),
+			'author'   => 'wordpressdotorg',
+			'tag'      => 'performance',
+			'per_page' => 100,
+			'fields'   => array_fill_keys( $fields, true ),
 		)
 	);
 
-	if ( is_wp_error( $plugin ) ) {
-		return $plugin;
+	if ( is_wp_error( $response ) ) {
+		return new WP_Error(
+			'api_error',
+			sprintf(
+				/* translators: %s: API error message */
+				__( 'Failed to retrieve plugins data from WordPress.org API: %s', 'performance-lab' ),
+				$response->get_error_message()
+			)
+		);
 	}
 
-	if ( is_object( $plugin ) ) {
-		$plugin = (array) $plugin;
+	// Check if the response contains plugins.
+	if ( ! ( is_object( $response ) && property_exists( $response, 'plugins' ) ) ) {
+		return new WP_Error( 'no_plugins', __( 'No plugins found in the API response.', 'performance-lab' ) );
 	}
 
-	// Only store what we need.
-	$plugin = wp_array_slice_assoc( $plugin, $fields );
+	$plugins            = array();
+	$standalone_plugins = array_merge(
+		array_flip( perflab_get_standalone_plugins() ),
+		array( 'optimization-detective' => array() ) // TODO: Programmatically discover the plugin dependencies and add them here.
+	);
+	foreach ( $response->plugins as $plugin_data ) {
+		if ( ! isset( $standalone_plugins[ $plugin_data['slug'] ] ) ) {
+			continue;
+		}
+		$plugins[ $plugin_data['slug'] ] = wp_array_slice_assoc( $plugin_data, $fields );
+	}
 
-	// Make sure all fields default to false in case another plugin is modifying the response from WordPress.org via the plugins_api filter.
-	$plugin = array_merge( array_fill_keys( $fields, false ), $plugin );
+	set_transient( $transient_key, $plugins, HOUR_IN_SECONDS );
 
-	set_transient( 'perflab_plugin_info_' . $plugin_slug, $plugin, HOUR_IN_SECONDS );
+	if ( ! isset( $plugins[ $plugin_slug ] ) ) {
+		return new WP_Error( 'plugin_not_found', __( 'Plugin not found.', 'performance-lab' ) );
+	}
 
 	/**
 	 * Validated (mostly) plugin data.
 	 *
-	 * @var array{name: string, slug: string, short_description: string, requires: string|false, requires_php: string|false, requires_plugins: string[], download_link: string, version: string} $plugin
+	 * @var array<string, array{name: string, slug: string, short_description: string, requires: string|false, requires_php: string|false, requires_plugins: string[], download_link: string, version: string}> $plugins
 	 */
-	return $plugin;
+	return $plugins[ $plugin_slug ];
 }
 
 /**
@@ -90,45 +116,101 @@ function perflab_render_plugins_ui(): void {
 	require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-	$plugins              = array();
-	$experimental_plugins = array();
+	$plugins = array();
+	$errors  = array();
 
-	foreach ( perflab_get_standalone_plugin_data() as $plugin_slug => $plugin_data ) {
+	$standalone_plugin_data = perflab_get_standalone_plugin_data();
+	foreach ( $standalone_plugin_data as $plugin_slug => $plugin_data ) {
 		$api_data = perflab_query_plugin_info( $plugin_slug ); // Data from wordpress.org.
 
 		// Skip if the plugin is not on WordPress.org or there was a network error.
 		if ( $api_data instanceof WP_Error ) {
-			wp_admin_notice(
-				esc_html(
-					sprintf(
-						/* translators: 1: plugin slug. 2: error message. */
-						__( 'Failed to query WordPress.org Plugin Directory for plugin "%1$s". %2$s', 'performance-lab' ),
-						$plugin_slug,
-						$api_data->get_error_message()
-					)
-				),
-				array( 'type' => 'error' )
-			);
-			continue;
-		}
-
-		$plugin_data = array_merge(
-			array(
-				'experimental' => false,
-			),
-			$plugin_data, // Data defined within Performance Lab.
-			$api_data
-		);
-
-		// Separate experimental plugins so that they're displayed after non-experimental plugins.
-		if ( $plugin_data['experimental'] ) {
-			$experimental_plugins[ $plugin_slug ] = $plugin_data;
+			$errors[ $plugin_slug ] = $api_data;
 		} else {
-			$plugins[ $plugin_slug ] = $plugin_data;
+			$plugins[ $plugin_slug ] = array_merge(
+				array(
+					'experimental' => false,
+				),
+				$plugin_data, // Data defined within Performance Lab.
+				$api_data
+			);
 		}
 	}
 
-	if ( ! $plugins && ! $experimental_plugins ) {
+	if ( count( $errors ) > 0 ) {
+		$active_plugins = array_map(
+			static function ( string $file ) {
+				return strtok( $file, '/' );
+			},
+			array_keys( get_plugins() )
+		);
+		$plugin_list    = '<ul>';
+		$error_messages = array();
+		foreach ( $errors as $plugin_slug => $error ) {
+			if ( defined( $standalone_plugin_data[ $plugin_slug ]['constant'] ) ) {
+				$status = __( '(active)', 'performance-lab' );
+			} elseif ( in_array( $plugin_slug, $active_plugins, true ) ) {
+				$status = __( '(installed)', 'performance-lab' );
+			} else {
+				$status = '';
+			}
+
+			$plugin_list     .= sprintf(
+				'<li><a target="_blank" href="%s"><code>%s</code></a> %s</li>',
+				esc_url( trailingslashit( __( 'https://wordpress.org/plugins/', 'default' ) . $plugin_slug ) ),
+				esc_html( $plugin_slug ),
+				esc_html( $status )
+			);
+			$error_messages[] = $error->get_error_message();
+		}
+		$plugin_list .= '</ul>';
+
+		$error_messages = array_unique( $error_messages );
+
+		if ( count( $error_messages ) === 1 ) {
+			$error_text          = __( 'Failed to query WordPress.org Plugin Directory for the following plugin:', 'performance-lab' );
+			$error_occurred_text = __( 'The following error occurred:', 'performance-lab' );
+		} else {
+			$error_text          = __( 'Failed to query WordPress.org Plugin Directory for the following plugins:', 'performance-lab' );
+			$error_occurred_text = __( 'The following errors occurred:', 'performance-lab' );
+		}
+
+		wp_admin_notice(
+			'<p>' . esc_html( $error_text ) . '</p>' .
+			$plugin_list .
+			'<p>' . esc_html( $error_occurred_text ) . '</p>' .
+			'<ul><li>' .
+			join(
+				'</li><li>',
+				array_map(
+					static function ( string $error_message ): string {
+						return wp_kses( $error_message, array( 'a' => array( 'href' => true ) ) );
+					},
+					$error_messages
+				)
+			)
+			. '</li></ul>' .
+			'<p>' . esc_html__( 'Please consider manual plugin installation and activation. You can then access each plugin\'s settings via its respective "Settings" link on the Plugins screen.', 'performance-lab' ) . '</p>',
+			array(
+				'type'           => 'error',
+				'paragraph_wrap' => false,
+			)
+		);
+	}
+
+	/*
+	 * Sort plugins alphabetically, with experimental ones coming last.
+	 * Even though `experimental` is a boolean flag, the underlying
+	 * algorithm (`usort` with `strcmp`) makes it possible to sort by it.
+	 */
+	$plugins = wp_list_sort(
+		$plugins,
+		array(
+			'experimental' => 'ASC',
+			'name'         => 'ASC',
+		)
+	);
+	if ( count( $plugins ) === 0 ) {
 		return;
 	}
 	?>
@@ -141,9 +223,6 @@ function perflab_render_plugins_ui(): void {
 					<div id="the-list">
 						<?php
 						foreach ( $plugins as $plugin_data ) {
-							perflab_render_plugin_card( $plugin_data );
-						}
-						foreach ( $experimental_plugins as $plugin_data ) {
 							perflab_render_plugin_card( $plugin_data );
 						}
 						?>
@@ -174,11 +253,11 @@ function perflab_get_plugin_availability( array $plugin_data, array &$processed_
 
 	$availability = array(
 		'compatible_php' => (
-			! $plugin_data['requires_php'] ||
+			false === $plugin_data['requires_php'] ||
 			is_php_version_compatible( $plugin_data['requires_php'] )
 		),
 		'compatible_wp'  => (
-			! $plugin_data['requires'] ||
+			false === $plugin_data['requires'] ||
 			is_wp_version_compatible( $plugin_data['requires'] )
 		),
 	);
@@ -186,7 +265,7 @@ function perflab_get_plugin_availability( array $plugin_data, array &$processed_
 	$plugin_status = install_plugin_install_status( $plugin_data );
 
 	$availability['installed'] = ( 'install' !== $plugin_status['status'] );
-	$availability['activated'] = $plugin_status['file'] && is_plugin_active( $plugin_status['file'] );
+	$availability['activated'] = false !== $plugin_status['file'] && is_plugin_active( $plugin_status['file'] );
 
 	// The plugin is already installed or the user can install plugins.
 	$availability['can_install'] = (
@@ -197,7 +276,7 @@ function perflab_get_plugin_availability( array $plugin_data, array &$processed_
 	// The plugin is activated or the user can activate plugins.
 	$availability['can_activate'] = (
 		$availability['activated'] ||
-		$plugin_status['file'] // When not false, the plugin is installed.
+		false !== $plugin_status['file'] // When not false, the plugin is installed.
 			? current_user_can( 'activate_plugin', $plugin_status['file'] )
 			: current_user_can( 'activate_plugins' )
 	);
@@ -400,7 +479,7 @@ function perflab_render_plugin_card( array $plugin_data ): void {
 
 	if ( $availability['activated'] ) {
 		$settings_url = perflab_get_plugin_settings_url( $plugin_data['slug'] );
-		if ( $settings_url ) {
+		if ( null !== $settings_url ) {
 			/* translators: %s is the settings URL */
 			$action_links[] = sprintf( '<a href="%s">%s</a>', esc_url( $settings_url ), esc_html__( 'Settings', 'performance-lab' ) );
 		}

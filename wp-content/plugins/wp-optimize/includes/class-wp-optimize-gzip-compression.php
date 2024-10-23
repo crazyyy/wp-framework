@@ -5,6 +5,8 @@
  */
 class WP_Optimize_Gzip_Compression {
 
+	use WP_Optimize_HTTP_Error_Codes_Trait;
+	
 	/**
 	 * WP_Optimize_Htaccess instance.
 	 *
@@ -56,7 +58,7 @@ class WP_Optimize_Gzip_Compression {
 		static $headers_information;
 		if (isset($headers_information)) return $headers_information;
 
-		$headers = WP_Optimize()->get_stylesheet_headers();
+		$headers = $this->get_stylesheet_headers();
 
 		if (is_wp_error($headers)) return $headers;
 

@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Ai1wm_Import_Database {
 
-	public static function execute( $params, Ai1wm_Database $db_client = null ) {
+	public static function execute( $params ) {
 		global $wpdb;
 
 		// Skip database import
@@ -947,9 +947,7 @@ class Ai1wm_Import_Database {
 		$new_table_prefixes[] = ai1wm_table_prefix();
 
 		// Get database client
-		if ( is_null( $db_client ) ) {
-			$db_client = Ai1wm_Database_Utility::create_client();
-		}
+		$db_client = Ai1wm_Database_Utility::create_client();
 
 		// Set database options
 		$db_client->set_old_table_prefixes( $old_table_prefixes )

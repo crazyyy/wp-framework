@@ -137,6 +137,34 @@ function updraft_remote_storage_tab_activation(the_method){
 }
 
 /**
+ * Scroll to a specific remote storage configuration by adding the #remote-storage-{method_name} anchor hash to the URL.
+ */
+function updraft_scroll_to_remote_storage_config() {
+	var url_hash_match = window.location.hash.match(/#remote-storage-([A-Za-z]+)/);
+	if (url_hash_match && updraftlion.remote_storage_methods[url_hash_match[1]]) {
+		if (jQuery('.updraft_servicecheckbox').hasClass('multi')) {
+			updraft_remote_storage_tab_activation(url_hash_match[1]);
+		}
+		
+		document.getElementById('remote-storage-'+url_hash_match[1]).scrollIntoView();
+	}
+}
+
+/**
+ * Set up the remote storage configuration link to handle the click event. When it is clicked from the UDP settings page, we need to reopen the settings tab before scrolling to the remote storage configuration section.
+ */
+function updraft_setup_remote_storage_config_link() {
+	jQuery('.updraftplus-remote-storage-link').on('click', function(e) {
+		if ('settings' == updraftlion.tab) {
+			e.preventDefault();
+			updraft_open_main_tab('settings');
+			window.location.href = jQuery(this).attr('href');
+			updraft_scroll_to_remote_storage_config();
+		}
+	});
+}
+
+/**
  * Set the email report's setting to a different interface when email storage is selected
  *
  * @param {boolean} value True to set the email report setting to another interface, false otherwise
@@ -584,13 +612,15 @@ function load_save_button() {
 	if (updraft_settings_form_changed && !save_button_added) {
 		save_button_added = true;
 		jQuery('#updraft-navtab-settings-content').prepend('<input style="position:fixed;top:46px; right:20px;z-index: 999999;" type="button" class="button-primary" id="updraftplus-floating-settings-save" value="'+updraftlion.save_changes+'">');
-		jQuery("#updraft-navtab-settings-content").on('click', '#updraftplus-floating-settings-save', function() {
+		
+		// The click event for the save button will be registered every time the button is created. We need to use the 'one' method instead of the 'on' method to make sure the click event is executed only once.
+		jQuery("#updraft-navtab-settings-content").one('click', '#updraftplus-floating-settings-save', function() {
 			jQuery("#updraftplus-settings-save").trigger('click');
 			jQuery("#updraftplus-floating-settings-save").remove();
 			save_button_added = false;
 		});
 		
-		jQuery("#updraftplus-settings-save").on('click', function() {
+		jQuery("#updraftplus-settings-save").one('click', function() {
 			jQuery("#updraftplus-floating-settings-save").remove();
 			save_button_added = false;
 		});
@@ -1719,10 +1749,10 @@ function updraft_restorer_checkstage2(doalert) {
 			}
 			var report = resp.m;
 			if (resp.w != '') {
-				report = report + '<div class="notice notice-warning"><p><span class="dashicons dashicons-warning"></span> <strong>' + updraftlion.warnings +'</strong></p>' + resp.w + '</div>';
+				report = report + '<div class="udp-notice notice-warning"><p><span class="dashicons dashicons-warning"></span> <strong>' + updraftlion.warnings +'</strong></p>' + resp.w + '</div>';
 			}
 			if (resp.e != '') {
-				report = report + '<div class="notice notice-error"><p><span class="dashicons dashicons-dismiss"></span> <strong>' + updraftlion.errors+'</strong></p>' + resp.e + '</div>';
+				report = report + '<div class="udp-notice notice-error"><p><span class="dashicons dashicons-dismiss"></span> <strong>' + updraftlion.errors+'</strong></p>' + resp.e + '</div>';
 			} else {
 				updraft_restore_stage = 3;
 			}
@@ -3625,7 +3655,7 @@ jQuery(function($) {
 
 					if (typeof php_max_input_vars !== 'undefined') {
 						var restore_options_length = restore_options.split("&").length;
-						var warning_template_start = '<div class="notice notice-warning"><p><span class="dashicons dashicons-warning"></span> <strong>' + updraftlion.warnings +'</strong></p><ul id="updraft_restore_warnings">';
+						var warning_template_start = '<div class="udp-notice notice-warning"><p><span class="dashicons dashicons-warning"></span> <strong>' + updraftlion.warnings +'</strong></p><ul id="updraft_restore_warnings">';
 						var warning_template_end = '</ul></div>';
 
 						// If we can't detect the php_max_input_vars assume the PHP default of 1000
@@ -5154,6 +5184,8 @@ jQuery(function($) {
 		$('#remote-storage-holder').append(html).ready(function () {
 			$('.updraftplusmethod').not('.none').hide();
 			updraft_remote_storage_tabs_setup();
+			updraft_setup_remote_storage_config_link();
+			updraft_scroll_to_remote_storage_config();
 			// Displays warning to the user of their mistake if they try to enter a URL in the OneDrive settings and saved
 			$('#remote-storage-holder .updraftplus_onedrive_folder_input').trigger('keyup');
 		});
@@ -5429,6 +5461,8 @@ jQuery(function($) {
 		$('.updraftmessage').remove();
 		
 		$('#updraft_backup_started').before(resp.messages);
+
+		updraft_setup_remote_storage_config_link();
 		
 		console.log(resp);
 		// $('#updraft-next-backup-inner').html(resp.scheduled);

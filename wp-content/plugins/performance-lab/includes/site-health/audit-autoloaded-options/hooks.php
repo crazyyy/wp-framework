@@ -19,6 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array{direct: array<string, array{label: string, test: string}>} Amended tests.
  */
 function perflab_aao_add_autoloaded_options_test( array $tests ): array {
+	// Bail early if check already registered in WordPress core version 6.6.
+	if ( isset( $tests['direct']['autoloaded_options'] ) ) {
+		return $tests;
+	}
+
 	$tests['direct']['autoloaded_options'] = array(
 		'label' => __( 'Autoloaded options', 'performance-lab' ),
 		'test'  => 'perflab_aao_autoloaded_options_test',
@@ -111,3 +116,38 @@ function perflab_aao_admin_notices(): void {
 	}
 }
 add_action( 'admin_notices', 'perflab_aao_admin_notices' );
+
+/**
+ * Extends the health check description that merged in WordPress 6.6.
+ *
+ * @since 3.3.0
+ *
+ * @param string $description Description message when autoloaded options bigger than threshold.
+ * @return string Extended health check description.
+ */
+function perflab_aao_extend_core_check( string $description ): string {
+	return $description . perflab_aao_get_autoloaded_options_table() . perflab_aao_get_disabled_autoloaded_options_table();
+}
+add_filter( 'site_status_autoloaded_options_limit_description', 'perflab_aao_extend_core_check' );
+
+/**
+ * Filters the list of disabled options to exclude options that are autoloaded.
+ *
+ * This filter modifies the 'option_perflab_aao_disabled_options' to ensure
+ * that autoloaded options are not included in the disabled options list.
+ *
+ * @since 3.4.0
+ *
+ * @param string[]|mixed $disabled_options Array of disabled options.
+ * @return string[] Filtered array of disabled options excluding autoloaded options.
+ */
+function perflab_filter_option_perflab_aao_disabled_options( $disabled_options ): array {
+	$autoload_option_names = wp_list_pluck( perflab_aao_query_autoloaded_options(), 'option_name' );
+	return array_filter(
+		(array) $disabled_options,
+		static function ( $option ) use ( $autoload_option_names ): bool {
+			return ! in_array( $option, $autoload_option_names, true );
+		}
+	);
+}
+add_filter( 'option_perflab_aao_disabled_options', 'perflab_filter_option_perflab_aao_disabled_options' );

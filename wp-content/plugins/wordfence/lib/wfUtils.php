@@ -1451,11 +1451,7 @@ class wfUtils {
 		return implode("\n", array_unique(array_filter(array_map('trim', explode("\n", $string)))));
 	}
 
-	public static function beginProcessingFile($file) {
-		//Do nothing
-	}
-
-	public static function endProcessingFile() {
+	public static function afterProcessingFile() {
 		if (wfScanner::shared()->useLowResourceScanning()) {
 			usleep(10000); //10 ms
 		}
@@ -1652,26 +1648,35 @@ class wfUtils {
 		if(class_exists('wfScan')){ wfScan::$errorHandlingOn = true; }
 	}
 	//Note this function may report files that are too big which actually are not too big but are unseekable and throw an error on fseek(). But that's intentional
-	public static function fileTooBig($file){ //Deals with files > 2 gigs on 32 bit systems which are reported with the wrong size due to integer overflow
+	public static function fileTooBig($file, &$size = false, &$handle = false){ //Deals with files > 2 gigs on 32 bit systems which are reported with the wrong size due to integer overflow
 		if (!@is_file($file) || !@is_readable($file)) { return false; } //Only apply to readable files
 		wfUtils::errorsOff();
-		$fh = @fopen($file, 'r');
+		$fh = @fopen($file, 'rb');
 		wfUtils::errorsOn();
 		if(! $fh){ return false; }
-		$offset = WORDFENCE_MAX_FILE_SIZE_TO_PROCESS + 1;
-		$tooBig = false;
 		try {
-			if(@fseek($fh, $offset, SEEK_SET) === 0){
-				if(strlen(fread($fh, 1)) === 1){
-					$tooBig = true;
-				}
+			if(@fseek($fh, WORDFENCE_MAX_FILE_SIZE_OFFSET, SEEK_SET) === 0 && !empty(fread($fh, 1))){
+				return true;
 			} //Otherwise we couldn't seek there so it must be smaller
-			fclose($fh);
-			return $tooBig;
-		} catch(Exception $e){ return true; } //If we get an error don't scan this file, report it's too big.
+			if ($size !== false && @fseek($fh, 0, SEEK_END) === 0) {
+				$size = @ftell($fh);
+				if ($size === false)
+					$size = 0; // Assume 0 if unable to determine file size
+			}
+			return false;
+		} catch(Exception $e){
+			return true; //If we get an error don't scan this file, report it's too big.
+		} finally {
+			if ($handle === false) {
+				fclose($fh);
+			}
+			else {
+				$handle = $fh;
+			}
+		}
 	}
 	public static function fileOver2Gigs($file){ //Surround calls to this func with try/catch because fseek may throw error.
-		$fh = @fopen($file, 'r');
+		$fh = @fopen($file, 'rb');
 		if(! $fh){ return false; }
 		$offset = 2147483647;
 		$tooBig = false;

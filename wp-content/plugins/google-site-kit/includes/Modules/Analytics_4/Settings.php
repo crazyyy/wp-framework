@@ -68,7 +68,12 @@ class Settings extends Module_Settings implements Setting_With_Owned_Keys_Interf
 	 * @return array An array of keys for view-only settings.
 	 */
 	public function get_view_only_keys() {
-		return array( 'availableCustomDimensions', 'adSenseLinked' );
+		return array(
+			'availableCustomDimensions',
+			'adSenseLinked',
+			'availableAudiences',
+			'audienceSegmentationSetupCompletedBy',
+		);
 	}
 
 	/**
@@ -80,28 +85,30 @@ class Settings extends Module_Settings implements Setting_With_Owned_Keys_Interf
 	 */
 	protected function get_default() {
 		return array(
-			'ownerID'                          => 0,
-			'accountID'                        => '',
-			'adsConversionID'                  => '',
-			'propertyID'                       => '',
-			'webDataStreamID'                  => '',
-			'measurementID'                    => '',
-			'trackingDisabled'                 => array( 'loggedinUsers' ),
-			'useSnippet'                       => true,
-			'googleTagID'                      => '',
-			'googleTagAccountID'               => '',
-			'googleTagContainerID'             => '',
-			'googleTagContainerDestinationIDs' => null,
-			'googleTagLastSyncedAtMs'          => 0,
-			'availableCustomDimensions'        => null,
-			'propertyCreateTime'               => 0,
-			'adSenseLinked'                    => false,
-			'adSenseLinkedLastSyncedAt'        => 0,
-			'adsConversionIDMigratedAtMs'      => 0,
-			'adsLinked'                        => false,
-			'adsLinkedLastSyncedAt'            => 0,
-			'availableAudiences'               => null,
-			'availableAudiencesLastSyncedAt'   => 0,
+			'ownerID'                              => 0,
+			'accountID'                            => '',
+			'adsConversionID'                      => '',
+			'propertyID'                           => '',
+			'webDataStreamID'                      => '',
+			'measurementID'                        => '',
+			'trackingDisabled'                     => array( 'loggedinUsers' ),
+			'useSnippet'                           => true,
+			'googleTagID'                          => '',
+			'googleTagAccountID'                   => '',
+			'googleTagContainerID'                 => '',
+			'googleTagContainerDestinationIDs'     => null,
+			'googleTagLastSyncedAtMs'              => 0,
+			'availableCustomDimensions'            => null,
+			'propertyCreateTime'                   => 0,
+			'adSenseLinked'                        => false,
+			'adSenseLinkedLastSyncedAt'            => 0,
+			'adsConversionIDMigratedAtMs'          => 0,
+			'adsLinked'                            => false,
+			'adsLinkedLastSyncedAt'                => 0,
+			'availableAudiences'                   => null,
+			'availableAudiencesLastSyncedAt'       => 0,
+			'audienceSegmentationSetupCompletedBy' => null,
+			'detectedEvents'                       => array(),
 		);
 	}
 
@@ -113,7 +120,7 @@ class Settings extends Module_Settings implements Setting_With_Owned_Keys_Interf
 	 * @return callable|null
 	 */
 	protected function get_sanitize_callback() {
-		return function( $option ) {
+		return function ( $option ) {
 			if ( is_array( $option ) ) {
 				if ( isset( $option['useSnippet'] ) ) {
 					$option['useSnippet'] = (bool) $option['useSnippet'];
@@ -151,7 +158,7 @@ class Settings extends Module_Settings implements Setting_With_Owned_Keys_Interf
 					if ( is_array( $option['availableCustomDimensions'] ) ) {
 						$valid_dimensions = array_filter(
 							$option['availableCustomDimensions'],
-							function( $dimension ) {
+							function ( $dimension ) {
 								return is_string( $dimension ) && strpos( $dimension, 'googlesitekit_' ) === 0;
 							}
 						);
@@ -197,6 +204,12 @@ class Settings extends Module_Settings implements Setting_With_Owned_Keys_Interf
 				if ( isset( $option['availableAudiencesLastSyncedAt'] ) ) {
 					if ( ! is_int( $option['availableAudiencesLastSyncedAt'] ) ) {
 						$option['availableAudiencesLastSyncedAt'] = 0;
+					}
+				}
+
+				if ( isset( $option['audienceSegmentationSetupCompletedBy'] ) ) {
+					if ( ! is_int( $option['audienceSegmentationSetupCompletedBy'] ) ) {
+						$option['audienceSegmentationSetupCompletedBy'] = null;
 					}
 				}
 			}
