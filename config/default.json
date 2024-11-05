@@ -2,8 +2,8 @@
   "domain": "wpeb.ddev.site",
   "theme": "wp-wpeb",
   "ssl": {
-    "key": "c:\\apps\\persist\\laragon\\etc\\ssl\\laragon.key",
-    "cert": "c:\\apps\\persist\\laragon\\etc\\ssl\\laragon.crt"
+    "key": ".ddev/traefik/certs/wpeb.key",
+    "cert": ".ddev/traefik/certs/wpeb.crt"
   },
   "path": {
     "base": {
