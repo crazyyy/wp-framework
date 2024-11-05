@@ -1,34 +1,34 @@
 # IDE-specific files
+*.sublime-*
+.fleet
+.history
 .idea
 .phpintel
-.vscode
-.history
-*.sublime-*
 .project
-.fleet
+.vscode
 GitExtensions.settings
 
 # Version control and temporary files
-.git
-.svn
-.hg
-*~
-.cvs
-.listing
+*.backup
 *.bak
 *.bck
-*.backup
 *.disabled
+*.iws
 *.map
 *.orig
-*.iws
-._*
 *.swp
 *.tmp
-.tmp
-tmp
+*~
 .Spotlight-V100
 .Trashes
+._*
+.cvs
+.git
+.hg
+.listing
+.svn
+.tmp
+tmp
 
 # Dependency management
 bower_components/*
@@ -36,31 +36,36 @@ bower_components/*
 node_modules
 node_modules/**
 .sass-cache
-package-lock.json
-yarn.lock
 npm-debug.log
+package-lock.json
 yarn-error.log
+yarn.lock
+
+# Server Specific configs
+.user.ini
 
 # WordPress-specific files
 wp-content/ai1wm-backups/
-wp-content/blogs.dir/
-wp-content/backup-db/
-wp-content/backups/
-wp-content/backups-dup-pro/
 wp-content/aiowps_backups/
+wp-content/backup-db/
+wp-content/backups-dup-pro/
+wp-content/backups/
+wp-content/blogs.dir/
 wp-content/cache/
-wp-content/litespeed/
-wp-content/upgrade/
 wp-content/ewww/
+wp-content/litespeed/
 wp-content/updraft/
+wp-content/upgrade/
 wp-content/uploads/siteground-optimizer-assets/
 wp-content/wflogs/
-wp-content/mu-plugins/aios-firewall-loader.php
 wp-content/advanced-cache.php
-wp-content/wp-cache-config.php
 wp-content/db.php
+wp-content/debug.log
+wp-content/mu-plugins/aios-firewall-loader.php
 wp-content/object-cache.php
 wp-content/sgo-config.php
+wp-content/uploads/*/*.log
+wp-content/wp-cache-config.php
 aios-bootstrap.php
 
 # Exclude sensitive configuration files
