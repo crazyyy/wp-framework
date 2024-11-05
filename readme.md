@@ -318,3 +318,13 @@ if (WP_DEBUG) {
 //define('SMTP_AUTH', true); // Use SMTP authentication (true|false)
 //define('SMTP_DEBUG', 1); // For debugging purposes only
 ```
+
+### other things
+
+sudo chown -R $USER:$USER ./.git
+
+sudo chown -R www:www ./
+
+wp search-replace "vinwolves.ddev.site" "vinwolves.org" --all-tables
+
+wp db import ./DB/db.sql
