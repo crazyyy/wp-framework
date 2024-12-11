@@ -29,8 +29,8 @@ class AIOWPSecurity_Audit_Events {
 	 * @return void
 	 */
 	public static function add_event_actions() {
-		// Setup
-		self::setup_event_types();
+		// Setup event types to display filter dropdown for audit logs list
+		add_action('init', 'AIOWPSecurity_Audit_Events::setup_event_types');
 
 		// Core events
 		add_action('_core_updated_successfully', 'AIOWPSecurity_Audit_Events::core_updated', 10, 2);
@@ -58,9 +58,8 @@ class AIOWPSecurity_Audit_Events {
 		add_action('deleted_user', 'AIOWPSecurity_Audit_Events::user_deleted', 10, 3);
 		add_action('remove_user_from_blog', 'AIOWPSecurity_Audit_Events::user_removed_from_blog', 10, 3);
 
-		// Uncomment when the firewall config issues have been resolved
 		// Rule events
-		// add_action('plugins_loaded', 'AIOWPSecurity_Audit_Events::rule_event', 10, 2);
+		add_action('plugins_loaded', 'AIOWPSecurity_Audit_Events::rule_event', 10, 2);
 
 		// Attach an URL to the details to show as a link for configuring rules
 		add_filter('aios_audit_filter_details', function($details, $event_type) {
@@ -69,14 +68,14 @@ class AIOWPSecurity_Audit_Events {
 			if (!preg_match('/^rule_/', $event_type)) return $details;
 
 			$key = "{$details['firewall_event']['rule_name']}::{$details['firewall_event']['rule_family']}";
-				
+
 			// Get the URL for the corresponding rule
 			$location = AIOS_Helper::get_firewall_rule_location($key);
 			$can_show_configure = !empty($location);
-	
+
 			// Only the super admin on the main site can configure the firewall, so only show the configure link to them
 			if (is_multisite()) $can_show_configure = $can_show_configure && is_main_site() && is_super_admin();
-	
+
 			if ($can_show_configure) $details['firewall_event']['location'] = admin_url("admin.php?{$location}");
 
 			return $details;
@@ -98,7 +97,7 @@ class AIOWPSecurity_Audit_Events {
 	 *
 	 * @return void
 	 */
-	private static function setup_event_types() {
+	public static function setup_event_types() {
 		self::$event_types = array(
 			'core_updated' => __('Core updated', 'all-in-one-wp-security-and-firewall'),
 			'plugin_installed' => __('Plugin installed', 'all-in-one-wp-security-and-firewall'),
@@ -199,7 +198,7 @@ class AIOWPSecurity_Audit_Events {
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds a plugin deactivated event to the audit log
 	 *
@@ -444,10 +443,10 @@ class AIOWPSecurity_Audit_Events {
 	 * @return void
 	 */
 	public static function rule_event() {
-		
+		$aiowps_firewall_message_store = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::MESSAGE_STORE);
 		$events = array();
 		foreach (array('active', 'not_active', 'triggered', 'not_triggered') as $event) {
-			$data = \AIOWPS\Firewall\Message_Store::instance()->get('rule_'.$event);
+			$data = $aiowps_firewall_message_store->get('rule_'.$event);
 
 			if (empty($data)) continue;
 
@@ -460,11 +459,11 @@ class AIOWPSecurity_Audit_Events {
 						'rule_family' => $rule['family'],
 					)
 				);
-		
+
 				$blog_id = AIOWPSecurity_Utility::get_blog_id_from_request($rule['request']);
-				
+
 				$rule['request'] = apply_filters('aios_audit_filter_request', $rule['request'], $event);
-				
+
 				$events[] = array(
 					'network_id' => get_current_network_id(),
 					'site_id' => $blog_id,
@@ -490,7 +489,7 @@ class AIOWPSecurity_Audit_Events {
 	 * @param object $user_data - Object containing user's data
 	 */
 	public static function password_reset($user_data) {
-		
+
 		$user_login = (false === $user_data) ? 'unknown' : $user_data->user_login;
 
 		$details = array(
@@ -537,7 +536,7 @@ class AIOWPSecurity_Audit_Events {
 	public static function user_removed_from_blog($user_id, $blog_id, $reassign) {
 		$user_data = get_user_by('ID', $user_id);
 		$user_login = is_a($user_data, 'WP_User') && 0 !== $user_data->ID ? $user_data->user_login : 'unknown';
-		
+
 		$details = array(
 			'user_removed' => array(
 				'user_id' => $user_id,

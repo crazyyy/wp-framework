@@ -166,4 +166,33 @@ class Message_Store {
 
 		return $table;
 	}
+
+	/**
+	 * Clears all the messages from the message store table if it contains data.
+	 *
+	 * @return void
+	 */
+	public function clear_message_store() {
+		global $wpdb;
+
+		$table = $this->get_table();
+
+		// Check if the table exists and is accessible
+		if (empty($table)) {
+			return;
+		}
+
+		//Check if the table has any rows
+		$row_exists = $wpdb->get_var(
+			$wpdb->prepare("SELECT EXISTS (SELECT 1 FROM `{$table}` LIMIT 1)")
+		);
+	
+		// If there are no rows, $row_exists will be 0
+		if (!$row_exists) {
+			return;
+		}
+
+		// Clear the table (delete all records)
+		$wpdb->query($wpdb->prepare("DELETE FROM `{$table}`"));
+	}
 }

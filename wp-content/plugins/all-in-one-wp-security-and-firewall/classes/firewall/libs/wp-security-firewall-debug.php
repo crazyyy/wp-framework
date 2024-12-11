@@ -20,15 +20,18 @@ class Debug {
 	/**
 	 * Captures the firewall's events for debugging rules
 	 *
+	 * @global Constants     $aiowps_firewall_constants
+	 * @global Message_Store $aiowps_firewall_message_store
+	 *
 	 * @param string $event
 	 * @param Rule   $rule
+	 *
 	 * @return void
 	 */
 	public function rule_debug($event, Rule $rule) {
-		global $aiowps_constants;
+		global $aiowps_firewall_constants, $aiowps_firewall_message_store;
+		if (!$aiowps_firewall_constants->AIOS_FIREWALL_DEBUG && 'rule_triggered' !== $event) return;
 
-		if (!$aiowps_constants->AIOS_FIREWALL_DEBUG && 'rule_triggered' !== $event) return;
-		
 		$details = array(
 			'name'   => $rule->name,
 			'family' => $rule->family,
@@ -47,7 +50,10 @@ class Debug {
 		$details['request'] = $_SERVER;
 		unset($details['request']['HTTP_COOKIE']);
 
-		// Uncomment when the firewall config issues have been resolved
-		// Message_Store::instance()->set($event, $details);
+		// Uncomment when the firewall log issues have been resolved
+		//$aiowps_firewall_message_store->set($event, $details);
+
+		// Remove when the firewall log issues have been resolved
+		$aiowps_firewall_message_store->clear_message_store();
 	}
 }

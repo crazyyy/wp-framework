@@ -129,7 +129,7 @@ class AIOWPSecurity_Commands {
 		} elseif ('dismiss_firewall_settings_disabled_on_upgrade_notice' == $data['notice']) {
 			$is_reactivated = (isset($data['turn_it_back_on']) && '1' == $data['turn_it_back_on']);
 				if ($is_reactivated) {
-					global $aiowps_firewall_config;
+					$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 					$active_settings = $aio_wp_security->configs->get_value('aiowps_firewall_active_upgrade');
 	
 					if (!empty($active_settings)) {

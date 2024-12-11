@@ -178,7 +178,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 			'details' => __('Details', 'all-in-one-wp-security-and-firewall'),
 			'stacktrace' => __('Stack trace', 'all-in-one-wp-security-and-firewall')
 		);
-
+		$columns = apply_filters('list_auditlogs_get_columns', $columns);
 		return $columns;
 	}
 
@@ -199,7 +199,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 			'details' => array('details', false),
 			'stacktrace' => array('stacktrace', false)
 		);
-
+		$sortable_columns = apply_filters('list_auditlogs_get_sortable_columns', $sortable_columns);
 		return $sortable_columns;
 	}
 
@@ -268,7 +268,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 							<?php
 								foreach (AIOWPSecurity_Audit_Events::$log_levels as $level) {
 									$selected = isset($this->_args['data']['level-filter']) && $this->_args['data']['level-filter'] == $level ? ' selected = "selected"' : '';
-									echo '<option value="'. $level .'" '. $selected .'>'. $level .'</option>';
+									echo '<option value="'. esc_attr($level) .'" '. $selected .'>'. esc_html($level) .'</option>';
 								}
 							?>
 						</select>
@@ -276,9 +276,9 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 						<?php $selected = !isset($this->_args['data']['event-filter']) ? ' selected = "selected"' : ''; ?>
 							<option value="-1" <?php echo $selected; ?>><?php _e('All events', 'all-in-one-wp-security-and-firewall'); ?></option>
 							<?php
-								foreach (AIOWPSecurity_Audit_Events::$event_types as $event) {
-									$selected = isset($this->_args['data']['event-filter']) && $this->_args['data']['event-filter'] == $event ? ' selected = "selected"' : '';
-									echo '<option value="'. $event .'" '. $selected .'>'. $event .'</option>';
+								foreach (AIOWPSecurity_Audit_Events::$event_types as $event_type => $event) {
+									$selected = isset($this->_args['data']['event-filter']) && $this->_args['data']['event-filter'] == $event_type ? ' selected = "selected"' : '';
+									echo '<option value="'. esc_attr($event_type) .'" '. $selected .'>'. esc_html($event) .'</option>';
 								}
 							?>
 						</select>

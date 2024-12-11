@@ -122,6 +122,16 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 				'supported_positions' => array('ip-retrieval-settings'),
 				'validity_function' => 'should_show_ip_retrieval_settings_notice',
 			),
+			'load-firewall-resources-failed' => array(
+				'title'		  => '',
+				'text' 		  => '<p>' .
+					__('Failed to load the firewall resources.', 'all-in-one-wp-security-and-firewall') . ' ' .
+					__('The firewall won\'t operate correctly.', 'all-in-one-wp-security-and-firewall') .
+				'</p>',
+				'dismiss_time' => '',
+				'supported_positions' => array('load-firewall-resources-failed'),
+				'validity_function' => 'should_show_load_firewall_resources_failed_notice',
+			),
 			'upgrade-firewall-tab-rules' => array(
 				'title'		  => htmlspecialchars(__('Important: Disabled firewall settings', 'all-in-one-wp-security-and-firewall')),
 				'text' 		  => $firewall_upgrade_text,
@@ -304,6 +314,15 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 	}
 
 	/**
+	 * Decides whether to show the load firewall resources failed notice.
+	 *
+	 * @return boolean
+	 */
+	protected function should_show_load_firewall_resources_failed_notice() {
+		return !AIOS_Firewall_Resource::all_loaded();
+	}
+
+	/**
 	 * Determines whether to show the notice which handles the firewall settings notice
 	 *
 	 * @return boolean
@@ -374,7 +393,8 @@ class AIOWPSecurity_Notices extends Updraft_Notices_1_2 {
 			return true;
 		}
 
-		global $aio_wp_security, $aiowps_firewall_config;
+		global $aio_wp_security;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		// Is notice dismissed.
 		if ('1' == $aio_wp_security->configs->get_value('dismiss_ip_retrieval_settings_notice')) {

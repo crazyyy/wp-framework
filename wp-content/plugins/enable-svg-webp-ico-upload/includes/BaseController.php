@@ -10,18 +10,21 @@ if( ! class_exists( 'ITC_SVG_Upload_BaseController' ) ) {
 				'name'		=>'itc_svg_upload',
 				'title'		=>'Enable SVG, WebP &amp; ICO Upload',
 				'slug'		=>'itc-svg-upload',
-				'version'	=> ( defined( 'ITC_SVG_UPLOAD_VERSION' ) ) ? ITC_SVG_UPLOAD_VERSION: '1.0.4',
+				'version'	=> ( defined( 'ITC_SVG_UPLOAD_VERSION' ) ) ? ITC_SVG_UPLOAD_VERSION: '1.1.2',
 				'settings'	=>'itc_svg_upload_settings',
 			);
 		}
 
-		public function register_Module($plugin_name, $plugin_details){
+        public function register_Module($plugin_name, $plugin_details){
             $plugins = get_option($this->plugin_name_parent);
+            if ($plugins === false) {
+        $plugins = [];
+    }
 
-            if($plugin_name!== "" &&  isset($plugins[$plugin_name])){
-                $finalModuleDetails = array_merge($plugins[$plugin_name], $plugin_details);
-            }else{
-                $finalModuleDetails = $plugin_details;
+            if($plugin_name !== "" && isset($plugins[$plugin_name])){
+        $finalModuleDetails = array_merge($plugins[$plugin_name], $plugin_details);
+            } else {
+        $finalModuleDetails = $plugin_details;
             }
             $plugins[$plugin_name] = $finalModuleDetails;
             update_option($this->plugin_name_parent, $plugins);

@@ -5,7 +5,7 @@ Tags: security, malware scanning, two factor authentication, firewall, login sec
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 5.3.4
+Stable tag: 5.3.7
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -211,6 +211,39 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.3.7 - 5/Dec/2024 =
+
+* TWEAK: Change response code for blocked unauthorized REST requests to 403.
+* TWEAK: Temporarily removed firewall logging
+
+= 5.3.6 - 3/Dec/2024 =
+
+* FIX: Resolved an issue with the AIOS_Firewall_Resource class
+
+= 5.3.5 - 24/Nov/2024 =
+
+* FIX: Custom .htaccess rules are now properly escaped, with backslashes removed.
+* FIX: Import settings failed when visitor lockout messages had text alignment or other formatting applied
+* FIX: The audit log filter for event type now works correctly, even when the event type is translated into languages other than English
+* FIX: Resolved text overflow in the blue box on the Settings > WP Version Info page
+* FIX: Some user meta keys were not being removed after uninstalling the plugin
+* FIX: Subsites no longer incorrectly detect the Database Prefix feature as active
+* FIX: Prevented fatal errors from missing firewall resources, replacing them with debug log entries
+* FIX: WordPress database error: BLOB, TEXT, GEOMETRY, or JSON columns cannot have a default value set
+* FIX: The load_plugin_textdomain function is called during the init action, and translations are applied afterward
+* FIX: Renamed login page is now using the WordPress translations
+* TWEAK: Added a filter for PHP firewall rules templates
+* TWEAK: Updated the country code field for audit logs to be based on the IP address (Premium)
+* TWEAK: Improved the text in the 404 detection tab
+* TWEAK: Moved the allowlist into the blacklist tab, and renamed it to "Block & Allow Lists"
+* TWEAK: Moved the WP REST API feature to the PHP rules tab
+* TWEAK: Refactored multiple command classes to use the new AJAX response helper method: Tools, File scan, Files, Settings, and Log commands classes
+* TWEAK: Updated the UI for the .htaccess rules, Captcha settings and file protection tabs
+* TWEAK: Added a note in Settings > Delete plugin settings tab
+* TWEAK: Early calls to get_plugin_data() no longer require translations
+* TWEAK: Refactored the firewall command class to use the response helper method
+* TWEAK: Added a constant AIOS_DISABLE_HTTP_AUTHENTICATION. Define this in your wp-config.php to disable HTTP authentication
 
 = 5.3.4 - 21/Oct/2024 =
 
@@ -1490,4 +1523,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.3.4: Added HTTP authentication, fixed firewall reset and various tweaks. See changelog for full details. A recommended update for all.
+* 5.3.7: Fixed bugs released in v5.3.5. See changelog for full details. A recommended update for all.

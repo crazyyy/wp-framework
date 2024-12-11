@@ -6,6 +6,7 @@
 		<br />'.__('Typically, most 404 errors happen quite innocently when people have mis-typed a URL or used an old link to page which doesn\'t exist anymore.', 'all-in-one-wp-security-and-firewall').'
 		<br />'.__('However, in some cases you may find many repeated 404 errors which occur in a relatively short space of time and from the same IP address which are all attempting to access a variety of non-existent page URLs.', 'all-in-one-wp-security-and-firewall').'
 		<br />'.__('Such behaviour can mean that a hacker might be trying to find a particular page or URL for sinister reasons.', 'all-in-one-wp-security-and-firewall');
+	echo '<br/>' . apply_filters('aios_smart_404_notice', __('With this feature enabled, you can use the table below to manually temporarily block IP addresses.', 'all-in-one-wp-security-and-firewall') . '<br />' . sprintf(__('The %1$s Smart 404 %2$s feature in Premium automatically detects and blocks these IP addresses.', 'all-in-one-wp-security-and-firewall'), '<strong>', '</strong>'));
 	?>
 </div>
 <?php
@@ -36,10 +37,10 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 		<?php wp_nonce_field('aiowpsec-404-detection-nonce'); ?>
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row"><?php _e('Enable 404 IP detection and lockout', 'all-in-one-wp-security-and-firewall'); ?>:</th>
+					<th scope="row"><?php _e('Enable 404 IP detection', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the lockout of selected IP addresses.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_404_IP_lockout', '1' == $aio_wp_security->configs->get_value('aiowps_enable_404_IP_lockout')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this option to detect IP addresses that return 404 errors.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_404_IP_lockout', '1' == $aio_wp_security->configs->get_value('aiowps_enable_404_IP_lockout')); ?>
 						</div>
 					</td>
 				</tr>

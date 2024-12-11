@@ -17,7 +17,7 @@ if ( ! class_exists( "cmplz_documents_admin" ) ) {
 			add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 			add_action( 'save_post', array( $this, 'save_metabox_data' ) );
 			add_filter( 'display_post_states', array( $this, 'add_post_state') , 10, 2);
-			add_action( 'save_post', array( $this, 'clear_shortcode_transients' ), 10, 1 );
+			add_action( 'save_post', array( $this, 'clear_shortcode_transients' ), 10);
 			add_action( 'save_post', array($this, 'register_document_title_for_translations'), 10, 3);
 			add_action( 'cmplz_install_tables', array( $this, 'preload_privacy_info' ) );
 			add_action( 'admin_init', array( $this, 'add_privacy_info' ) );
@@ -37,15 +37,20 @@ if ( ! class_exists( "cmplz_documents_admin" ) ) {
 			if ( ! class_exists( 'WP_Privacy_Policy_Content' ) ) {
 				if ( file_exists(ABSPATH . 'wp-admin/includes/class-wp-privacy-policy-content.php') ) {
 					require_once( ABSPATH . 'wp-admin/includes/class-wp-privacy-policy-content.php' );
-				} else {
+				} elseif ( file_exists(ABSPATH . 'wp-admin/misc.php') ) {
 					require_once( ABSPATH . 'wp-admin/misc.php' );
+				} else {
+					return;
 				}
 			}
-			WP_Privacy_Policy_Content::_policy_page_updated( $policy_page_id );
-			//check again, to update the cache.
-			WP_Privacy_Policy_Content::text_change_check();
-			$data = WP_Privacy_Policy_Content::get_suggested_policy_text();
-			update_option('cmplz_preloaded_privacy_info', $data, false);
+
+			if ( class_exists( 'WP_Privacy_Policy_Content' ) ) {
+				WP_Privacy_Policy_Content::_policy_page_updated( $policy_page_id );
+				//check again, to update the cache.
+				WP_Privacy_Policy_Content::text_change_check();
+				$data = WP_Privacy_Policy_Content::get_suggested_policy_text();
+				update_option( 'cmplz_preloaded_privacy_info', $data, false );
+			}
 		}
 
 
@@ -998,10 +1003,20 @@ if ( ! class_exists( "cmplz_documents_admin" ) ) {
 		 *
 		 * @return void
 		 */
-		public function clear_shortcode_transients(
-			$post_id = false, $post = false
-		) {
-			delete_option('cmplz_transients');
+		public function clear_shortcode_transients()
+		{
+			global $post;
+			if (!$post || $post->post_type !== 'page') return;
+
+			$pages = COMPLIANZ::$document->get_required_pages();
+
+			foreach ($pages as $region => $region_pages) {
+				foreach ($region_pages as $type => $page) {
+					if ($this->page_exists($type, $region)) {
+						cmplz_delete_transient('cmplz_shortcode_' . $type . '-' . $region);
+					}
+				}
+			}
 		}
 
 		/**

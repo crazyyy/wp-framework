@@ -4,14 +4,30 @@
 <form action="" id="aios-php-firewall-settings-form">
 	<?php
 
-	$aio_wp_security->include_template('wp-admin/firewall/partials/xmlrpc-warning-notice.php');
-
 	$templates = array(
-		'xmlrpc-pingback-protection' => __('Security enhancements', 'all-in-one-wp-security-and-firewall'),
-		'disable-rss-atom' => __('Feed control', 'all-in-one-wp-security-and-firewall'),
-		'proxy-comment' => __('Comment protection', 'all-in-one-wp-security-and-firewall'),
-		'bad-query-strings' => __('URL security', 'all-in-one-wp-security-and-firewall'),
-		'advanced-character-filter' => __('String filtering', 'all-in-one-wp-security-and-firewall'),
+		'xmlrpc-pingback-protection' => array(
+			'title' => __('Security enhancements', 'all-in-one-wp-security-and-firewall'),
+			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+		),
+		'disable-rss-atom' => array(
+			'title' => __('Feed control', 'all-in-one-wp-security-and-firewall'),
+			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+		),
+		'proxy-comment' => array(
+			'title' => __('Comment protection', 'all-in-one-wp-security-and-firewall'),
+			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+		),
+		'bad-query-strings' => array(
+			'title' => __('URL security', 'all-in-one-wp-security-and-firewall'),
+			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+		),
+		'advanced-character-filter' => array(
+			'title' => __('String filtering', 'all-in-one-wp-security-and-firewall'),
+			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+		),
+		'wp-rest-api' => array(
+			'title' => __('WP REST API', 'all-in-one-wp-security-and-firewall')
+		)
 	);
 
 	$templates = apply_filters('aiowps_modify_php_firewall_rules_template', $templates);
@@ -28,21 +44,24 @@
 			</div>
 			<ul class="aiowps-rule-list">
 				<?php
-				$first_title = reset($templates);
+				if (empty($templates)) return;
+				$first_template = reset($templates);
+				$first_title = $first_template['title'];
 				
-				foreach ($templates as $template => $title) {
+				foreach ($templates as $key => $template) {
 					// Check if the current title is the first title
-					$is_active = ($template === $subtab || $title === $first_title) ? 'class="aiowps-active"' : '';
+					$is_active = ($key === $subtab || $template['title'] === $first_title) ? 'class="aiowps-active"' : '';
+					$title = $template['title'];
 					
-					echo '<li data-template="' . esc_attr($template) . '" ' . $is_active . '><span class="aiowps-rule-title">' . esc_attr($title) . '</span></li>';
+					echo '<li data-template="' . esc_attr($key) . '" ' . $is_active . '><span class="aiowps-rule-title">' . esc_html($title) . '</span></li>';
 				}
 				?>
 			</ul>
 		</div>
 		<div class="aiowps-settings">
 			<?php
-			foreach ($templates as $template => $title) {
-				$aio_wp_security->include_template('wp-admin/firewall/partials/' . $template . '.php');
+			foreach ($templates as $key => $template) {
+				$aio_wp_security->include_template('wp-admin/firewall/partials/' . esc_attr($key) . '.php');
 			}
 			?>
 		</div>

@@ -1,14 +1,15 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
 <div class="postbox aio_hidden" data-template="xmlrpc-pingback-protection">
-		<h3 class="hndle"><label for="title"><?php _e('WordPress XMLRPC and pingback vulnerability protection', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-		<div class="inside">
-			<div id="firewall-pingback-rules-badge">
+	<h3 class="hndle"><label for="title"><?php _e('WordPress XMLRPC and pingback vulnerability protection', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+	<div class="inside">
+		<div id="firewall-pingback-rules-badge">
 				<?php
-				global $aiowps_firewall_config;
+				$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 				//Display security info badge
 				$aiowps_feature_mgr->output_feature_details_badge("firewall-pingback-rules");
 				?>
 			</div>
+		<?php $aio_wp_security->include_template('wp-admin/firewall/partials/xmlrpc-warning-notice.php'); ?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Completely block access to XMLRPC', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -48,4 +49,5 @@
 				</td>
 			</tr>
 		</table>
-		</div></div>
+	</div>
+</div>

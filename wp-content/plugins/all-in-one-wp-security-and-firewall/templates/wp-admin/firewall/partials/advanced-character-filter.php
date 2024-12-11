@@ -4,12 +4,11 @@
 		<div class="inside">
 		<div id="firewall-advanced-character-string-filter-badge">
 			<?php
-			global $aiowps_firewall_config;
+			$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 			//Display security info badge
 			$aiowps_feature_mgr->output_feature_details_badge("firewall-advanced-character-string-filter");
 			?>
 		</div>
-
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable advanced character string filter', 'all-in-one-wp-security-and-firewall'); ?>:</th>

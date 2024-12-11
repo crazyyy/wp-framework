@@ -62,32 +62,35 @@ class AIOWPSecurity_Audit_Event_Handler {
 		$user = wp_get_current_user();
 		$username = (is_a($user, 'WP_User') && 0 !== $user->ID) ? $user->user_login : $username;
 		$ip = apply_filters('aios_audit_log_event_user_ip', AIOWPSecurity_Utility_IP::get_user_ip_address());
+		$data = apply_filters('aios_audit_log_event_user_country_code', array('ip' => $ip));
+		$country_code = isset($data['country_code']) ? $data['country_code'] : '';
 		$stacktrace = maybe_serialize(AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)));
 		$network_id = get_current_network_id();
 		$site_id = get_current_blog_id();
 		$details = json_encode($details, true);
 
-		$this->add_new_event($network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace);
+		$this->add_new_event($network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace, $country_code);
 	}
 
 	/**
 	 * This function adds the event to the audit log database table
 	 *
-	 * @param integer $network_id  - the id of the current network
-	 * @param integer $site_id     - the id of the current site
-	 * @param string  $username    - the username of the user who triggered the event
-	 * @param string  $ip          - the IP address of the user
-	 * @param string  $event_level - the event level
-	 * @param string  $event_type  - the event type
-	 * @param string  $details     - details about the event
-	 * @param string  $stacktrace  - the event stacktrace
+	 * @param integer $network_id   - the id of the current network
+	 * @param integer $site_id      - the id of the current site
+	 * @param string  $username     - the username of the user who triggered the event
+	 * @param string  $ip           - the IP address of the user
+	 * @param string  $event_level  - the event level
+	 * @param string  $event_type   - the event type
+	 * @param string  $details      - details about the event
+	 * @param string  $stacktrace   - the event stacktrace
+	 * @param string  $country_code - the country code
 	 *
 	 * @return void
 	 */
-	private function add_new_event($network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace) {
+	private function add_new_event($network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace, $country_code) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare("INSERT INTO ".AIOWPSEC_TBL_AUDIT_LOG." (network_id, site_id, username, ip, level, event_type, details, stacktrace, created) VALUES (%d, %d, %s, %s, %s, %s, %s, %s, UNIX_TIMESTAMP())", $network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace);
+		$sql = $wpdb->prepare("INSERT INTO ".AIOWPSEC_TBL_AUDIT_LOG." (network_id, site_id, username, ip, level, event_type, details, stacktrace, created, country_code) VALUES (%d, %d, %s, %s, %s, %s, %s, %s, UNIX_TIMESTAMP(), %s)", $network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace, $country_code);
 
 		$wpdb->query($sql);
 	}
@@ -102,17 +105,18 @@ class AIOWPSecurity_Audit_Event_Handler {
 	private function add_bulk_events($events) {
 		global $wpdb;
 
-		$sql = "INSERT INTO ".AIOWPSEC_TBL_AUDIT_LOG." (network_id, site_id, username, ip, level, event_type, details, stacktrace, created) VALUES ";
+		$sql = "INSERT INTO ".AIOWPSEC_TBL_AUDIT_LOG." (network_id, site_id, username, ip, level, event_type, details, stacktrace, created, country_code) VALUES ";
 		$values = array();
 
 		foreach ($events as $event) {
-			$sql .= "(%d, %d, %s, %s, %s, %s, %s, %s, %d),";
+			$sql .= "(%d, %d, %s, %s, %s, %s, %s, %s, %d, %s),";
 
 			$record_event = apply_filters('aios_audit_log_record_event', true, $event['event_type'], $event['details'], $event['level'], $event['username']);
 			if (!$record_event) continue;
 			
 			$event['ip'] = apply_filters('aios_audit_log_event_user_ip', $event['ip']);
-
+			$data = apply_filters('aios_audit_log_event_user_country_code', array('ip' => $event['ip']));
+			$event['country_code'] = isset($data['country_code']) ? $data['country_code'] : '';
 			$values[] = $event['network_id'];
 			$values[] = $event['site_id'];
 			$values[] = $event['username'];
@@ -122,6 +126,7 @@ class AIOWPSecurity_Audit_Event_Handler {
 			$values[] = $event['details'];
 			$values[] = $event['stacktrace'];
 			$values[] = $event['created'];
+			$values[] = $event['country_code'];
 		}
 
 		// remove last ',' character from query

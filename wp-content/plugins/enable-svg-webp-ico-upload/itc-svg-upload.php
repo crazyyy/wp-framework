@@ -9,7 +9,7 @@
  * Plugin Name:       Enable SVG, WebP, and ICO Upload
  * Plugin URI:        https://ideastocode.com/plugins/enable-svg-WebP-ico-upload/
  * Description:       This plugin will enable you to upload SVG, WebP & ICO files
- * Version:           1.0.6
+ * Version:           1.1.2
  * Author:            ideasToCode
  * Author URI:        http://ideastocode.com/
  * License:           GPL-2.0+
@@ -23,7 +23,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'ITC_SVG_UPLOAD_VERSION', '1.0.6' );
+define( 'ITC_SVG_UPLOAD_VERSION', '1.1.2' );
 if ( ! defined( 'ITC_SVG_UPLOAD_BASENAME' ) ) {
 	define( 'ITC_SVG_UPLOAD_BASENAME', plugin_basename( __FILE__ ) );
 }

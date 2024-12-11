@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) die('No direct access.'); ?>
-<div class="postbox">
+<div class="postbox aio_hidden" data-template="wp-file-access">
 	<h3 class="hndle"><label for="title"><?php _e('Delete default WP files', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
 		<div class="aio_blue_box">

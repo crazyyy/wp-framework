@@ -1,10 +1,10 @@
 <?php
 
-use AIOWPS\Firewall\Allow_List;
-
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly
 }
+
+use AIOWPS\Firewall\Allow_List;
 
 class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 
@@ -32,7 +32,6 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 			'php-rules' => array(
 				'title' => __('PHP rules', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_php_rules'),
-				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
 			'htaccess-rules' => array(
 				'title' => __('.htaccess rules', 'all-in-one-wp-security-and-firewall'),
@@ -49,9 +48,9 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 				'render_callback' => array($this, 'render_internet_bots'),
 				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
-			'blacklist' => array(
-				'title' => __('Blacklist', 'all-in-one-wp-security-and-firewall'),
-				'render_callback' => array($this, 'render_blacklist'),
+			'block-and-allow-lists' => array(
+				'title' => __('Block & allow lists', 'all-in-one-wp-security-and-firewall'),
+				'render_callback' => array($this, 'render_block_and_allow_lists'),
 				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
 			'wp-rest-api' => array(
@@ -96,7 +95,8 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return void
 	 */
 	protected function render_6g_firewall() {
-		global $aio_wp_security, $aiowps_firewall_config, $aiowps_feature_mgr;
+		global $aio_wp_security, $aiowps_feature_mgr;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		$block_request_methods = array_map('strtolower', AIOS_Abstracted_Ids::get_firewall_block_request_methods());
 
@@ -165,9 +165,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_advanced_settings() {
 		global $aio_wp_security;
 
-		$allowlist = Allow_List::get_ips();
-
-		$aio_wp_security->include_template('wp-admin/firewall/advanced-settings.php', false, compact('allowlist'));
+		$aio_wp_security->include_template('wp-admin/firewall/advanced-settings.php');
 	}
 
 	/**
@@ -175,18 +173,18 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	 *
 	 * @global $aio_wp_security
 	 * @global $aiowps_feature_mgr
-	 * @global $aiowps_firewall_config
 	 *
 	 * @return void
 	 */
-	protected function render_blacklist() {
+	protected function render_block_and_allow_lists() {
 		global $aio_wp_security, $aiowps_feature_mgr;
 		$result = 1;
 
 		$aiowps_banned_ip_addresses = $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses');
 		$aiowps_banned_user_agents = $aio_wp_security->configs->get_value('aiowps_banned_user_agents');
+		$allowlist = Allow_List::get_ips();
 
-		$aio_wp_security->include_template('wp-admin/firewall/blacklist.php', false, array('result' => $result, 'aiowps_feature_mgr' => $aiowps_feature_mgr, 'aiowps_banned_user_agents' => $aiowps_banned_user_agents, 'aiowps_banned_ip_addresses' => $aiowps_banned_ip_addresses));
+		$aio_wp_security->include_template('wp-admin/firewall/block-and-allow-lists.php', false, array('result' => $result, 'aiowps_feature_mgr' => $aiowps_feature_mgr, 'aiowps_banned_user_agents' => $aiowps_banned_user_agents, 'aiowps_banned_ip_addresses' => $aiowps_banned_ip_addresses, 'allowlist' => $allowlist));
 	}
 
 	/**
@@ -200,7 +198,8 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return int
 	 */
 	private function validate_user_agent_list($banned_user_agents) {
-		global $aio_wp_security, $aiowps_firewall_config;
+		global $aio_wp_security;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 		$submitted_agents = AIOWPSecurity_Utility::splitby_newline_trim_filter_empty($banned_user_agents);
 		$agents = array_unique(array_filter(array_map('sanitize_text_field', $submitted_agents), 'strlen'));
 		$aio_wp_security->configs->set_value('aiowps_banned_user_agents', implode("\n", $agents));
@@ -217,6 +216,6 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_wp_rest_api() {
 		global $aio_wp_security;
 
-		$aio_wp_security->include_template('wp-admin/firewall/wp-rest-api.php', false, array());
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'wp-rest-api'));
 	}
 }

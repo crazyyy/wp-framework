@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
-<div class="postbox">
+<div class="postbox aio_hidden" data-template="listing-directory-contents">
 		<h3 class="hndle"><label for="title"><?php _e('Listing of directory contents', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<div id="firewall-disable-index-views-badge">

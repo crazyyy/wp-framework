@@ -922,7 +922,7 @@ class AIOWPSecurity_Utility {
 		$active_plugins = wp_get_active_and_valid_plugins();
 
 		foreach ($active_plugins as $plugin_file) {
-			if ('two-factor-login.php' == basename($plugin_file) && is_dir(dirname($plugin_file) . '/simba-tfa/premium') && version_compare(get_plugin_data($plugin_file)['Version'], AIOS_TFA_PREMIUM_LATEST_INCOMPATIBLE_VERSION, '<=')) {
+			if ('two-factor-login.php' == basename($plugin_file) && is_dir(dirname($plugin_file) . '/simba-tfa/premium') && version_compare(get_plugin_data($plugin_file, false, false)['Version'], AIOS_TFA_PREMIUM_LATEST_INCOMPATIBLE_VERSION, '<=')) {
 				return true;
 			}
 		}
@@ -1264,8 +1264,6 @@ class AIOWPSecurity_Utility {
 	/**
 	 * Updates the Googlebot IP ranges config.
 	 *
-	 * @global AIOWPS\Firewall\Config $aiowps_firewall_config
-	 *
 	 * @return array|WP_Error
 	 */
 	public static function get_googlebot_ip_ranges() {
@@ -1313,7 +1311,8 @@ class AIOWPSecurity_Utility {
 	 * @return void|WP_Error
 	 */
 	public static function blacklist_ip($ip) {
-		global $aio_wp_security, $aiowps_firewall_config;
+		global $aio_wp_security;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		$blacklisted_ip_addresses = $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses');
 
@@ -1366,7 +1365,8 @@ class AIOWPSecurity_Utility {
 	 * @return boolean
 	 */
 	public static function unblacklist_ip($ip) {
-		global $aio_wp_security, $aiowps_firewall_config;
+		global $aio_wp_security;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		$blacklisted_ip_addresses = $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses');
 
@@ -1403,5 +1403,43 @@ class AIOWPSecurity_Utility {
 		$serverType = self::get_server_type();
 
 		return !in_array($serverType, array('-1', 'nginx', 'iis'));
+	}
+
+
+	/**
+	 * Filters an array item based on a specified callback key.
+	 *
+	 * This function checks if a specified callback is present and callable within the array item.
+	 * If the callback is callable, it executes the callback and returns the result.
+	 * If the callback is set but not callable, it logs an error and returns false.
+	 * If no callback is set, the function returns true.
+	 *
+	 * @param array  $item         The array item to filter.
+	 * @param string $callback_key The key in the array to check for a callable function.
+	 *
+	 * @return bool|mixed Returns the result of the callback if callable, false if the callback is not callable,
+	 *                    or true if no callback is set.
+	 */
+	public static function apply_callback_filter($item, $callback_key) {
+		if (isset($item[$callback_key])) {
+			if (is_callable($item[$callback_key])) {
+				return call_user_func($item[$callback_key]);
+			} else {
+				error_log("Callback function set but not callable (coding error)");
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * Checks if other specific form-related plugins are active.
+	 *
+	 * @return bool Returns `true` if any of the specified plugins (bbPress, BuddyPress,
+	 *              or Contact Form 7) are active, or `false` if none of them are active.
+	 */
+	public static function is_other_form_plugins_active() {
+		return self::is_bbpress_plugin_active() || self::is_buddypress_plugin_active() || self::is_contact_form_7_plugin_active();
 	}
 }

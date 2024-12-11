@@ -1,118 +1,112 @@
 <?php
-class ITC_SVG_Upload_Svg{
-    function __construct(){
-		
-	}
+require_once __DIR__ . '/vendor/autoload.php';
 
-	function fl_module_upload_regex( $regex, $type, $ext, $file ){
-		if( $ext == "svg" || $ext == "svgz" ){
-			$regex['photo'] = str_replace( '|png|', '|png|svgz?|', $regex['photo'] );
-		}
-		return $regex;
-	}
+use enshrined\svgSanitize\Sanitizer;
 
-	function fix_svg_thumbnail_size(){
-		echo '<style>.attachment-info .thumbnail img[src$=".svg"],#postimagediv .inside img[src$=".svg"]{width:100%}</style>';
-	}
+class ITC_SVG_Upload_Svg {
 
-	function wp_generate_attachment_metadata( $metadata, $attachment_id ){
-		if( get_post_mime_type( $attachment_id ) == 'image/svg+xml' ){
-			$svg_path = get_attached_file( $attachment_id );
-			$dimensions = $this->svg_dimensions( $svg_path );
-			$metadata['width'] = $dimensions->width;
-			$metadata['height'] = $dimensions->height;
-		}
-		return $metadata;
-	}
+    protected $sanitizer;
 
-	function wp_check_filetype_and_ext( $filetype_ext_data, $file, $filename, $mimes ){
-		if( substr( $filename, -4 ) == '.svg' ){
-			$filetype_ext_data['ext'] = 'svg';
-			$filetype_ext_data['type'] = 'image/svg+xml';
-		}
-		if( substr( $filename, -5 ) == '.svgz' ){
-			$filetype_ext_data['ext'] = 'svgz';
-			$filetype_ext_data['type'] = 'image/svg+xml';
-		}
-		return $filetype_ext_data;
-	}
+    public function __construct() {
+        $this->sanitizer = new Sanitizer();
+    }
 
-	public function add_svg_support(){
+    // Allow SVG uploads
+    public function add_svg_support($mime_types) {
+        $mime_types['svg'] = 'image/svg+xml';
+        return $mime_types;
+    }
 
-		function svg_thumbs( $content ){
-			return apply_filters( 'final_output', $content );
-		}
+    // Sanitize SVG during upload
+    public function sanitize_svg_upload($upload) {
+        if (isset($upload['type']) && $upload['type'] === 'image/svg+xml') {
+            if (!isset($upload['name']) || !$this->check_and_sanitize_file($upload['tmp_name'])) {
+                $upload['error'] = __('Sorry, the SVG file could not be sanitized.', 'enable-svg-webp-ico-upload');
+            }
+        }
+        return $upload;
+    }
 
-		ob_start( 'svg_thumbs' );
+    // Check and sanitize the SVG file
+    protected function check_and_sanitize_file($file) {
+        $unclean = file_get_contents($file);
 
-		add_filter( 'final_output', array( $this, 'final_output' ) );
-		add_filter( 'wp_prepare_attachment_for_js', array( $this, 'wp_prepare_attachment_for_js' ), 10, 3 );
-	}
+        if ($unclean === false) {
+            return false;
+        }
 
-	function final_output( $content ){
-		$content = str_replace(
-			'<# } else if ( \'image\' === data.type && data.sizes && data.sizes.full ) { #>',
-			'<# } else if ( \'svg+xml\' === data.subtype ) { #>
-				<img class="details-image" src="{{ data.url }}" draggable="false" />
-			<# } else if ( \'image\' === data.type && data.sizes && data.sizes.full ) { #>',
-			$content
-		);
+        // Set allowed tags and attributes with filters
+        $this->sanitizer->setAllowedTags(new class extends \enshrined\svgSanitize\data\AllowedTags {
+            public static function getTags() {
+                return apply_filters('esw_svg_allowed_tags', parent::getTags());
+            }
+        });
 
-		$content = str_replace(
-			'<# } else if ( \'image\' === data.type && data.sizes ) { #>',
-			'<# } else if ( \'svg+xml\' === data.subtype ) { #>
-				<div class="centered">
-					<img src="{{ data.url }}" class="thumbnail" draggable="false" />
-				</div>
-			<# } else if ( \'image\' === data.type && data.sizes ) { #>',
-			$content
-		);
+        $this->sanitizer->setAllowedAttrs(new class extends \enshrined\svgSanitize\data\AllowedAttributes {
+            public static function getAttributes() {
+                return apply_filters('esw_svg_allowed_attributes', parent::getAttributes());
+            }
+        });
 
-		return $content;
-	}
+        $clean = $this->sanitizer->sanitize($unclean);
 
-	public function add_svg_mime( $mimes = array() ){
-		$mimes['svg'] = 'image/svg+xml';
-		$mimes['svgz'] = 'image/svg+xml';
-		return $mimes;
-	}
+        if ($clean === false) {
+            return false;
+        }
 
-	function wp_prepare_attachment_for_js( $response, $attachment, $meta ){
-		if( $response['mime'] == 'image/svg+xml' && empty( $response['sizes'] ) ){
-			$svg_path = get_attached_file( $attachment->ID );
-			if( ! file_exists( $svg_path ) ){
-				$svg_path = $response['url'];
-			}
-			$dimensions = $this->svg_dimensions( $svg_path );
-			$response['sizes'] = array(
-				'full' => array(
-					'url' => $response['url'],
-					'width' => $dimensions->width,
-					'height' => $dimensions->height,
-					'orientation' => $dimensions->width > $dimensions->height ? 'landscape' : 'portrait'
-				)
-			);
-		}
-		return $response;
-	}
+        // Save the sanitized SVG file
+        file_put_contents($file, $clean);
+        return true;
+    }
 
-	function svg_dimensions( $svg ){
-		$svg = simplexml_load_file( $svg );
-		$width = 0;
-		$height = 0;
-		if( $svg ){
-			$attributes = $svg->attributes();
-			if( isset( $attributes->width, $attributes->height ) ){
-				$width = floatval( $attributes->width );
-				$height = floatval( $attributes->height );
-			}elseif( isset( $attributes->viewBox ) ){
-				$sizes = explode( " ", $attributes->viewBox );
-				if( isset( $sizes[2], $sizes[3] ) ){
-					$width = floatval( $sizes[2] );
-					$height = floatval( $sizes[3] );
-				}
-			}
-		}
-		return (object)array( 'width' => $width, 'height' => $height );
-	}
+    // Validate SVG files
+    public function validate_svg_file($checked, $file, $filename, $mimes) {
+        if (!$checked['type']) {
+            $file_info = wp_check_filetype($filename, $mimes);
+            if ($file_info['ext'] === 'svg' && $file_info['type'] === 'image/svg+xml') {
+                $checked = [
+                    'ext' => $file_info['ext'],
+                    'type' => $file_info['type'],
+                    'proper_filename' => $filename,
+                ];
+            }
+        }
+        return $checked;
+    }
+
+    // Display SVG files in the WordPress Media Library
+    public function display_svg_in_media_library($response, $attachment, $meta) {
+        if ($response['type'] === 'image' && $response['subtype'] === 'svg+xml' && class_exists('SimpleXMLElement')) {
+            $path = get_attached_file($attachment->ID);
+            if (@file_exists($path)) {
+                try {
+                    $svg = new SimpleXMLElement(@file_get_contents($path));
+                    $response['image'] = $response['thumb'] = [
+                        'src' => $response['url'],
+                        'width' => (int)$svg['width'],
+                        'height' => (int)$svg['height'],
+                    ];
+                } catch (Exception $e) {
+                    // Handle parsing errors
+                }
+            }
+        }
+        return $response;
+    }
+
+    // Add custom styles for SVGs in the WordPress admin interface
+    public function add_svg_styles() {
+        echo "<style>
+            /* Media Library SVG styles */
+            table.media .column-title .media-icon img[src*='.svg'] {
+                width: 100%;
+                height: auto;
+            }
+
+            /* Gutenberg editor SVG styles */
+            .components-responsive-wrapper__content[src*='.svg'] {
+                position: relative;
+            }
+        </style>";
+    }
 }

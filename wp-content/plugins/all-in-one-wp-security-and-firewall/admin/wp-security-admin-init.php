@@ -179,7 +179,7 @@ class AIOWPSecurity_Admin_Init {
 	 *
 	 * @return void
 	 */
-	private function aiowps_output_csv($items, $export_keys, $filename = 'data.csv') {
+	public static function aiowps_output_csv($items, $export_keys, $filename = 'data.csv') {
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=".$filename);
 		header("Pragma: no-cache");
@@ -207,31 +207,6 @@ class AIOWPSecurity_Admin_Init {
 	 */
 	public function aiowps_csv_download() {
 		global $aio_wp_security;
-		if (isset($_POST['aiowps_export_audit_event_logs_to_csv'])) {
-			$nonce = $_REQUEST['_wpnonce'];
-			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'bulk-items');
-			if (is_wp_error($result)) {
-				$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-				die($result->get_error_message());
-			}
-			include_once 'wp-security-list-audit.php';
-			$audit_log_list = new AIOWPSecurity_List_Audit_Log();
-			$audit_log_list->prepare_items(true);
-			$export_keys = array(
-				'id' => 'ID',
-				'created' => __('Date and time', 'all-in-one-wp-security-and-firewall'),
-				'level' => __('Level', 'all-in-one-wp-security-and-firewall'),
-				'network_id' => __('Network ID', 'all-in-one-wp-security-and-firewall'),
-				'site_id' => __('Site ID', 'all-in-one-wp-security-and-firewall'),
-				'username' => __('Username', 'all-in-one-wp-security-and-firewall'),
-				'ip' => __('IP', 'all-in-one-wp-security-and-firewall'),
-				'event_type' => __('Event', 'all-in-one-wp-security-and-firewall'),
-				'details' => __('Details', 'all-in-one-wp-security-and-firewall'),
-				'stacktrace' => __('Stack trace', 'all-in-one-wp-security-and-firewall')
-			);
-			$this->aiowps_output_csv($audit_log_list->items, $export_keys, 'audit_event_logs.csv');
-			exit();
-		}
 		if (isset($_POST['aiowps_export_404_event_logs_to_csv'])) {//Export 404 event logs
 			$nonce = $_REQUEST['_wpnonce'];
 			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-export-404-event-logs-to-csv-nonce');

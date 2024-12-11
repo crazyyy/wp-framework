@@ -141,7 +141,8 @@ class AIOWPSecurity_Cronjob_Handler {
 	 * @return void
 	 */
 	public function aios_update_googlebot_ip_ranges() {
-		global $aio_wp_security, $aiowps_firewall_config;
+		global $aio_wp_security;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		if ($aiowps_firewall_config->get_value('aiowps_block_fake_googlebots')) {
 			$validated_ip_list_array = AIOWPSecurity_Utility::get_googlebot_ip_ranges();

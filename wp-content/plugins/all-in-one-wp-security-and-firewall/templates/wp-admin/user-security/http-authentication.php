@@ -10,6 +10,19 @@
 		<?php } ?>
 	</p>
 </div>
+<?php if (defined('AIOS_DISABLE_HTTP_AUTHENTICATION') && AIOS_DISABLE_HTTP_AUTHENTICATION) { ?>
+	<div class="error">
+		<p>
+		<?php _e('HTTP authentication is currently disabled via the AIOS_DISABLE_HTTP_AUTHENTICATION constant (which is mostly likely to be defined in your wp-config.php)', 'all-in-one-wp-security-and-firewall'); ?>
+		</p>
+	</div>
+<?php } else { ?>
+	<div class="aio_grey_box">
+		<?php
+			echo '<p>' . sprintf(__('If you are locked out by the HTTP authentication feature, define the following constant %s in wp-config.php to disable the feature.', 'all-in-one-wp-security-and-firewall'), '<strong>define(\'AIOS_DISABLE_HTTP_AUTHENTICATION\', true);</strong>') . '</p>';
+		?>
+	</div>
+<?php } ?>
 <?php if (!$aio_wp_security->configs->get_value('aiowps_http_authentication_admin') && !$aio_wp_security->configs->get_value('aiowps_http_authentication_frontend')) { ?>
 	<?php if ((isset($_SERVER['PHP_AUTH_USER']) && $_SERVER['PHP_AUTH_USER'] != $aio_wp_security->configs->get_value('aiowps_http_authentication_username')) || (isset($_SERVER['PHP_AUTH_PW']) && $_SERVER['PHP_AUTH_PW'] != $aio_wp_security->configs->get_value('aiowps_http_authentication_password'))) { ?>
 		<div class="aio_orange_box">

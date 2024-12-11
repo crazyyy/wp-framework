@@ -27,8 +27,8 @@ class Rule_Cookie_Prevent_Bruteforce extends Rule {
 	 * @return boolean
 	 */
 	public function is_active() {
-		global $aiowps_firewall_config, $aiowps_constants;
-		if ($aiowps_constants->AIOS_DISABLE_COOKIE_BRUTE_FORCE_PREVENTION) {
+		global $aiowps_firewall_config, $aiowps_firewall_constants;
+		if ($aiowps_firewall_constants->AIOS_DISABLE_COOKIE_BRUTE_FORCE_PREVENTION) {
 			return false;
 		} else {
 			return (bool) $aiowps_firewall_config->get_value('aios_enable_brute_force_attack_prevention');

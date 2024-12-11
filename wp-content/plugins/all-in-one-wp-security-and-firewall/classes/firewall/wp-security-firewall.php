@@ -9,10 +9,10 @@ if (!defined('AIOWPS_FIREWALL_DIR')) {
 }
 
 if (!defined('AIOWPSEC_FIREWALL_DONE')) {
-	
+
 	//Gracefully handle if the file is unable to be included. (i.e: ensure the user's site does not crash)
 	if (!(@include_once AIOWPS_FIREWALL_DIR . '/wp-security-firewall-loader.php')) {
-		error_log('AIOS firewall error: unable to load the firewall.');
+		error_log('AIOS firewall error: failed to load the firewall. Unable to include wp-security-firewall-loader.php.');
 		return;
 	}
 

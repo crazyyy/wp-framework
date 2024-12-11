@@ -174,7 +174,7 @@ class AIOWPSecurity_Utility_Htaccess {
 		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 		$htaccess = $home_path . '.htaccess';
 		if (!self::htaccess_exist_and_readable($htaccess)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st(__($error_msg . ' ' . 'The .htaccess file either does not exist or is unreadable', 'all-in-one-wp-security'), !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('The .htaccess file either does not exist or is unreadable', 'all-in-one-wp-security'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("The .htaccess file either does not exist or is unreadable", 4);
 			return false;
 		} // check the existence of the file and if its readable

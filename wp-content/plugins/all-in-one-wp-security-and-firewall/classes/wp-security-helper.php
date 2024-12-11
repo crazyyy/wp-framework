@@ -57,7 +57,7 @@ class AIOS_Helper {
 	 * @return String visitor IP Address.
 	 */
 	public static function get_server_detected_user_ip_address() {
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		// check if user configured custom IP retrieval method
 		$ip_method_id = empty($aiowps_firewall_config) ? '' : $aiowps_firewall_config->get_value('aios_ip_retrieve_method');
@@ -156,11 +156,11 @@ class AIOS_Helper {
 	 * @return string|boolean external ip address if from one of lookup service gets response otherwise false.
 	 */
 	public static function get_external_ip_address() {
-		global $aiowps_constants;
+		$aiowps_firewall_constants = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONSTANTS);
 		$external_ip_address = false;
 		
 		//Running from cronjob REQUEST_URI is empty or DOING_CRON, if from command line cli is PHP_SAPI, constant set by user
-		if (empty($_SERVER['REQUEST_URI']) || (defined('DOING_CRON') && DOING_CRON) || 'cli' == PHP_SAPI || $aiowps_constants->AIOS_DISABLE_EXTERNAL_IP_ADDR) return $external_ip_address;
+		if (empty($_SERVER['REQUEST_URI']) || (defined('DOING_CRON') && DOING_CRON) || 'cli' == PHP_SAPI || $aiowps_firewall_constants->AIOS_DISABLE_EXTERNAL_IP_ADDR) return $external_ip_address;
 		
 		$ip_lookup_services = AIOS_Abstracted_Ids::get_ip_lookup_services();
 		$ip_lookup_services_keys = array_keys($ip_lookup_services);
@@ -180,16 +180,19 @@ class AIOS_Helper {
 	/**
 	 * Remote url request.
 	 *
+	 * @global \AIOWPS\Firewall\Constants $aiowps_firewall_constants
+	 *
 	 * @param string $url  url to be requested.
 	 * @param array  $args request args array.
 	 *
 	 * @return string response.
 	 */
 	public static function request_remote($url, $args = array()) {
-		global $aiowps_constants;
+		$aiowps_firewall_constants = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONSTANTS);
 		$response = '';
-		$root = \AIOWPS\Firewall\Utility::get_root_dir();
-		$includes = isset($aiowps_constants->WPINC) ? $aiowps_constants->WPINC : 'wp-includes';
+		$aiowps_firewall_utility = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::UTILITY);
+		$root = $aiowps_firewall_utility::get_root_dir();
+		$includes = isset($aiowps_firewall_constants->WPINC) ? $aiowps_firewall_constants->WPINC : 'wp-includes';
 		
 		//WP 6.2+ the request library updated to 2.0.5, class and interface files/directory moved and namespaced name used.
 		if (!class_exists('WpOrg\Requests\Autoload')) {
@@ -203,7 +206,7 @@ class AIOS_Helper {
 				Requests::set_certificate_path($root . $includes . '/certificates/ca-bundle.crt');
 			}
 		}
-		$timeout = isset($aiowps_constants->AIOS_REQUEST_TIMEOUT) ? $aiowps_constants->AIOS_REQUEST_TIMEOUT : 4;
+		$timeout = isset($aiowps_firewall_constants->AIOS_REQUEST_TIMEOUT) ? $aiowps_firewall_constants->AIOS_REQUEST_TIMEOUT : 4;
 		
 		try {
 			$headers = isset($args['headers']) ? $args['headers'] : array();
@@ -287,8 +290,8 @@ class AIOS_Helper {
 	 * @return string - Hash of $data
 	 */
 	 public static function get_hash($data) {
-		global $aiowps_constants;
-		$salt = $aiowps_constants->AUTH_KEY.$aiowps_constants->AUTH_SALT;
+		$aiowps_firewall_constants = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONSTANTS);
+		$salt = $aiowps_firewall_constants->AUTH_KEY.$aiowps_firewall_constants->AUTH_SALT;
 		return hash_hmac('md5', $data, $salt);
 	 }
 }

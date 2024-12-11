@@ -1,7 +1,13 @@
 <?php if (!defined('ABSPATH')) die('No direct access.'); ?>
 <?php
 
-$info = array();
+$info = array(
+	'wp-rest-api' => array(
+		'title' => __('WP REST API', 'all-in-one-wp-security-and-firewall'),
+		'uri' => 'aiowpsec_firewall&tab=php-rules&subtab=wp-rest-api'
+	)
+
+);
 
 if (empty($info)) return;
 ?>

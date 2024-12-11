@@ -65,6 +65,9 @@ class AIOWPSecurity_Uninstallation_Tasks extends AIOWPSecurity_Base_Tasks {
 			if (is_main_site()) {
 				$firewall_rules_path = AIOWPSecurity_Utility_Firewall::get_firewall_rules_path();
 				AIOWPSecurity_Utility_File::remove_local_directory($firewall_rules_path);
+
+				delete_metadata('user', '0', 'aiowps_account_status', '', true);
+				delete_metadata('user', '0', 'aiowps_registrant_ip', '', true);
 			}
 
 			delete_option('aio_wp_security_configs');

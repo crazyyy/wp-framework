@@ -233,7 +233,8 @@ class AIOWPSecurity_List_404 extends AIOWPSecurity_List_Table {
 	 * @return boolean|void
 	 */
 	public function blacklist_ip_address($entries) {
-		global $wpdb, $aio_wp_security, $aiowps_firewall_config;
+		global $wpdb, $aio_wp_security;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 		$bl_ip_addresses = $aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'); //get the currently saved blacklisted IPs
 		$ip_list_array = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($bl_ip_addresses);
 		

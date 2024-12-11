@@ -42,12 +42,11 @@ trait AIOWPSecurity_Tools_Commands_Trait {
 			}
 		}
 
-		$content = $aio_wp_security->include_template('wp-admin/tools/partials/who-is-lookup-result.php', true, array('result' => $result, 'ip_or_domain' => $ip_or_domain));
-
-		return array(
-			'status' => 'success',
-			'content' => array('aios-who-is-lookup-result-container' => $content)
+		$args = array(
+			'content' => array('aios-who-is-lookup-result-container' => $aio_wp_security->include_template('wp-admin/tools/partials/who-is-lookup-result.php', true, array('result' => $result, 'ip_or_domain' => $ip_or_domain)))
 		);
+
+		return $this->handle_response(true, false, $args);
 	}
 
 	/**
@@ -63,22 +62,21 @@ trait AIOWPSecurity_Tools_Commands_Trait {
 	public function perform_store_custom_htaccess_settings($data) {
 		global $aio_wp_security;
 
-		$response = array(
-			'status' => 'success',
-		);
-
+		$success = true;
+		$message = '';
 
 		$options = array();
 		// Save settings
 		if (isset($data["aiowps_enable_custom_rules"]) && empty($data['aiowps_custom_rules'])) {
-			$response['status'] = 'error';
-			$response['message'] = __('You must enter some .htaccess directives in the text box below', 'all-in-one-wp-security-and-firewall');
+			$message = __('You must enter some .htaccess directives in the text box below', 'all-in-one-wp-security-and-firewall');
+			return $this->handle_response(false, $message);
 		} else {
 			if (!empty($data['aiowps_custom_rules'])) {
-				// Undo magic quotes that are automatically added to `$_GET`,
-				// `$_POST`, `$_COOKIE`, and `$_SERVER` by WordPress as
-				// they corrupt any custom rule with backslash in it...
-				$options['aiowps_custom_rules'] = esc_textarea(wp_unslash($data['aiowps_custom_rules']));
+				// Sanitize textarea shoud not be used as <filesMatch "\.(js|css|html)$"> etc rules gets removed.
+				// Escape textarea should not be used the & becomes &amp;.
+				// Here stripslashes as old version 5.3.0 not required, AIOWPSecurity_Ajax::set_data applies wp_unslash for ajax data.
+				// So the .htacces rule having index\.php backslashes removed if used stripslashes below.
+				$options['aiowps_custom_rules'] = $data['aiowps_custom_rules'];
 			} else {
 				$options['aiowps_custom_rules'] = ''; //Clear the custom rules config value
 			}
@@ -90,8 +88,6 @@ trait AIOWPSecurity_Tools_Commands_Trait {
 			$options['aiowps_place_custom_rules_at_top'] = isset($data["aiowps_place_custom_rules_at_top"]) ? '1' : '';
 			$this->save_settings($options); // Save the configuration
 
-			$response['message'] = __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall');
-
 			$write_result = AIOWPSecurity_Utility_Htaccess::write_to_htaccess(); //now let's write to the .htaccess file
 			if (!$write_result) {
 				$options['aiowps_enable_custom_rules'] = $aiowps_custom_rules;
@@ -99,14 +95,13 @@ trait AIOWPSecurity_Tools_Commands_Trait {
 
 				$this->save_settings($options);
 
-				$response['status'] = 'error';
-				$response['message'] = __('The plugin was unable to write to the .htaccess file, please edit file manually.', 'all-in-one-wp-security-and-firewall');
+				$success = false;
+				$message = __('The plugin was unable to write to the .htaccess file, please edit file manually.', 'all-in-one-wp-security-and-firewall');
 				$aio_wp_security->debug_logger->log_debug("Custom Rules feature - The plugin was unable to write to the .htaccess file.");
 			}
 		}
 
-
-		return $response;
+		return $this->handle_response($success, $message);
 	}
 
 	/**
@@ -129,10 +124,7 @@ trait AIOWPSecurity_Tools_Commands_Trait {
 
 		do_action('aiowps_site_lockout_settings_saved'); // Trigger action hook.
 
-		return array(
-			'status' => 'success',
-			'message' => __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall')
-		);
+		return $this->handle_response(true);
 	}
 
 	/**

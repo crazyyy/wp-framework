@@ -98,14 +98,7 @@ abstract class AIOWPSecurity_Admin_Menu {
 	 * @return boolean - true if the tab should be displayed or false to hide it
 	 */
 	protected function should_display_tab($tab_info) {
-		if (!empty($tab_info['display_condition_callback']) && is_callable($tab_info['display_condition_callback'])) {
-			return call_user_func($tab_info['display_condition_callback']);
-		} elseif (!empty($tab_info['display_condition_callback']) && !is_callable($tab_info['display_condition_callback'])) {
-			error_log("Callback function set but not callable (coding error)");
-			return false;
-		} else {
-			return true;
-		}
+		return AIOWPSecurity_Utility::apply_callback_filter($tab_info, 'display_condition_callback');
 	}
 
 	/**

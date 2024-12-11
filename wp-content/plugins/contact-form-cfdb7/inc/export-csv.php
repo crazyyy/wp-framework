@@ -19,13 +19,8 @@ class CFDB7_Export_CSV{
         header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
         header("Last-Modified: {$now} GMT");
 		
-        // force download
-		header("Content-Description: File Transfer");
-		header("Content-Encoding: UTF-8");
-		header("Content-Type: text/csv; charset=UTF-8");
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
+        header("Content-Type: text/csv; charset=UTF-8");
+        header("Content-Disposition: attachment;filename={$filename}");
 
         // disposition / encoding on response body
 		header("Content-Disposition: attachment;filename={$filename}");
@@ -46,6 +41,7 @@ class CFDB7_Export_CSV{
         $array_keys = array_keys($array);
         $heading    = array();
         $unwanted   = array('cfdb7_file', 'cfdb7_', 'your-');
+        $delimiter  = apply_filters('cfdb7_csv_delimiter', ',');
 
         foreach ( $array_keys as $aKeys ) {
             if( $aKeys == 'form_date' ) $aKeys = 'Date';
@@ -56,7 +52,7 @@ class CFDB7_Export_CSV{
         }
 
         fputs( $df, ( chr(0xEF) . chr(0xBB) . chr(0xBF) ) ); 
-        fputcsv( $df, $heading );
+        fputcsv( $df, $heading, $delimiter);
 
         foreach ( $array['form_id'] as $line => $form_id ) {
             $line_values = array();
@@ -64,7 +60,7 @@ class CFDB7_Export_CSV{
                 $val = isset( $array[ $array_key ][ $line ] ) ? $array[ $array_key ][ $line ] : '';
                 $line_values[ $array_key ] = $val;
             }
-            fputcsv($df, $line_values);
+            fputcsv($df, $line_values, $delimiter);
         }
     }
     /**

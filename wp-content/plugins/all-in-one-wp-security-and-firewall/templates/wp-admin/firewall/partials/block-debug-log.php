@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
-<div class="postbox">
+<div class="postbox aio_hidden" data-template="block-debug-log">
 		<h3 class="hndle"><label for="title"><?php _e('Block access to debug log file', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<div id="firewall-block-debug-file-access-badge">

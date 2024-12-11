@@ -447,7 +447,7 @@ jQuery(function($) {
 				form[0].reset();
 				if (response.hasOwnProperty('redirect_url')) {
 					// Redirect to the URL
-					window.location.href = response.redirect_url;
+					window.location.href = response.extra_args.redirect_url;
 				}
 			})
 		})
@@ -661,9 +661,6 @@ jQuery(function($) {
 			}).get();
 	
 			var event_filter = jQuery(filter_event_selector).val();
-			if (event_filter) {
-				event_filter = event_filter.replace(/\s+/g, '_').toLowerCase();
-			}
 
 			var top_selector = jQuery('#bulk-action-selector-top').val(),
 			bottom_selector = jQuery('#bulk-action-selector-bottom').val(),
@@ -928,6 +925,14 @@ jQuery(function($) {
 		}) : false;
 	});
 
+	jQuery('#audit-log-list-table').on('click', '#aiowps_export_audit_event_logs_to_csv', function(e) {
+		e.preventDefault();
+
+		aios_submit_form(jQuery(this), 'export_audit_logs', true, aios_trans.processing, null, function (response) {
+			aios_download_csv_file(response.data, response.title);
+		});
+	});
+
 	jQuery('#aios-clear-debug-logs').on('click', '.aios-clear-debug-logs', function(e) {
 		e.preventDefault();
 		if (confirm(jQuery(this).data('message'))) {
@@ -1010,7 +1015,7 @@ jQuery(function($) {
 		e.preventDefault();
 		aios_submit_form(jQuery(this), 'perform_backup_htaccess_file', true, aios_trans.processing, null, function (response) {
 			if ('success' === response.status) {
-				aios_download_txt_file(response.data, response.title);
+				aios_download_txt_file(response.extra_args.data, response.extra_args.title);
 			}
 		});
 	});
@@ -1033,14 +1038,14 @@ jQuery(function($) {
 	jQuery('#aiowpsec-save-wp-config-form').on('submit', function(e) {
 		e.preventDefault();
 		aios_submit_form(jQuery(this), 'perform_save_wp_config', {}, aios_trans.saving, null, function(response) {
-			aios_download_txt_file(response.data, response.title);
+			aios_download_txt_file(response.extra_args.data, response.extra_args.title);
 		});
 	});
 
 	jQuery('#aiowpsec-export-settings-form').on('submit', function(e) {
 		e.preventDefault();
 		aios_submit_form(jQuery(this), 'perform_export_aios_settings', {}, aios_trans.exporting, null, function(response) {
-			aios_download_txt_file(response.data, response.title);
+			aios_download_txt_file(response.extra_args.data, response.extra_args.title);
 		});
 	});
 	// End of settings menu ajaxify
@@ -1097,7 +1102,7 @@ jQuery(function($) {
 		aios_submit_form(jQuery(this), 'perform_php_firewall_settings', true, aios_trans.saving, null, function(response) {
 			if ("success" === response.status) {
 				jQuery('.aio_orange_box').remove();
-				jQuery('#post-body h2:first').after(response.xmlprc_warning);
+				jQuery('#post-body h2:first').after(response.extra_args.xmlprc_warning);
 			}
 		});
 	});
@@ -1105,11 +1110,6 @@ jQuery(function($) {
 	jQuery('#aios-htaccess-firewall-settings-form').on('submit', function(e) {
 		e.preventDefault();
 		aios_submit_form(jQuery(this),'perform_htaccess_firewall_settings');
-	});
-
-	jQuery("#aios-rest-api-settings-form").on('submit', function(e) {
-		e.preventDefault();
-		aios_submit_form(jQuery(this),'perform_save_wp_rest_api_settings');
 	});
 
 	jQuery("#aios-blacklist-settings-form").on('submit', function(e) {
@@ -1146,16 +1146,20 @@ jQuery(function($) {
 	jQuery('#aiowps-firewall-status-container').on('submit', "#aiowpsec-firewall-setup-form", function(e) {
 		e.preventDefault();
 		aios_submit_form(jQuery(this), 'perform_setup_firewall', true, aios_trans.setting_up_firewall, null, function (response) {
-			jQuery("#aios-firewall-setup-notice").remove();
-			jQuery('#wpbody-content .wrap h2:first').after(response.info_box);
+			if (response.extra_args && response.extra_args.info_box) {
+				jQuery("#aios-firewall-setup-notice").remove();
+				jQuery('#wpbody-content .wrap h2:first').after(response.extra_args.info_box);
+			}
 		});
 	});
 
 	jQuery('#aiowps-firewall-status-container').on('submit', "#aiowps-firewall-downgrade-form", function(e) {
 		e.preventDefault();
 		aios_submit_form(jQuery(this), 'perform_downgrade_firewall', true, aios_trans.downgrading_firewall, null, function (response) {
-			jQuery("#aios-firewall-installed-notice").remove();
-			jQuery('#wpbody-content .wrap h2:first').after(response.info_box);
+			if (response.extra_args && response.extra_args.info_box) {
+				jQuery("#aios-firewall-installed-notice").remove();
+				jQuery('#wpbody-content .wrap h2:first').after(response.extra_args.info_box);
+			}
 		});
 	});
 	// end of firewall menu ajax
@@ -1370,8 +1374,8 @@ jQuery(function($) {
 			jQuery('#aiowps_activejobs_table .aiowps_spinner').addClass('visible');
 			}, function (response) {
 				jQuery('#aiowps_activejobs_table').html('');
-				if (response.hasOwnProperty('result')) {
-					jQuery('#aiowps_activejobs_table').append('<p>'+response.result+'</p>');
+				if ('success' === response.status) {
+					jQuery('#aiowps_activejobs_table').append('<p>'+response.extra_args.result+'</p>');
 				}
 		});
 	});
@@ -1504,7 +1508,35 @@ jQuery(function($) {
 	function aios_download_txt_file(data, title) {
 
 		// Create a Blob containing the text data
-		let blob = new Blob([data], { type: 'text/plain' });
+		let blob = new Blob([data], {type: 'text/plain'});
+		aios_download_file(blob, title);
+	}
+
+	/**
+	 * Initiates the download of a CSV file with the provided data and title.
+	 *
+	 * @param {string} data - The CSV data to be included in the file.
+	 * @param {string} title - The name of the file to be downloaded.
+	 */
+	function aios_download_csv_file(data, title) {
+
+		// Create a Blob containing the CSV data
+		let blob = new Blob([data], {type: 'text/csv'});
+		aios_download_file(blob, title);
+	}
+
+	/**
+	 * Triggers the download of a file using the provided Blob and filename.
+	 *
+	 * This function creates a temporary URL for the given Blob, then creates
+	 * and triggers a download of the file with the specified title. After the
+	 * download is initiated, it cleans up by removing the temporary element
+	 * and revoking the Blob URL.
+	 *
+	 * @param {Blob} blob - The Blob object containing the file data to be downloaded.
+	 * @param {string} title - The name of the file to be downloaded (including the file extension).
+	 */
+	function aios_download_file(blob, title) {
 
 		// Create a temporary URL to the Blob
 		let url = window.URL.createObjectURL(blob);
@@ -1520,6 +1552,7 @@ jQuery(function($) {
 		document.body.removeChild(a);
 		window.URL.revokeObjectURL(url);
 	}
+
 	// Add click event listener to rules
 	jQuery('.aiowps-rules li').on('click', function() {
 		jQuery('.aiowps-rules li').removeClass('aiowps-active');
@@ -1597,4 +1630,15 @@ jQuery(function($) {
 
 	set_active_tab_from_url();
 	// End of the new UI settings
+
+	//toggle xmlrpc warning
+	jQuery('#aiowps_enable_pingback_firewall').change(function() {
+		if (jQuery(this).is(':checked')) {
+			// When the checkbox is checked, remove the 'aio_hidden' class
+			jQuery('.xmlrpc_warning_box').removeClass('aio_hidden');
+		} else {
+			// Optionally, if unchecked, you can add the class back (if needed)
+			jQuery('.xmlrpc_warning_box').addClass('aio_hidden');
+		}
+	});
 });

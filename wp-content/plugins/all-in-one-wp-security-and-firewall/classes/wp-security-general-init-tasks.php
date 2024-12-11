@@ -323,6 +323,9 @@ class AIOWPSecurity_General_Init_Tasks {
 			add_action('upgrader_process_complete', array($this, 'delete_unneeded_files_after_upgrade'), 10, 2);
 		}
 
+		// filter php firewall templates array
+		add_filter('aiowps_modify_php_firewall_rules_template', array($this, 'filter_templates'), 10, 1);
+		
 		// For HTTP authentication.
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_http_authentication_admin') || '1' == $aio_wp_security->configs->get_value('aiowps_http_authentication_frontend')) {
 			$this->http_authentication();
@@ -330,6 +333,7 @@ class AIOWPSecurity_General_Init_Tasks {
 
 		// Add more tasks that need to be executed at init time
 
+		add_filter('aiowps_modify_captcha_settings_template', array($this, 'filter_captcha_settings_templates'), 10, 1);
 	} // end _construct()
 
 	public function aiowps_disable_xmlrpc_pingback_methods($methods) {
@@ -626,6 +630,8 @@ class AIOWPSecurity_General_Init_Tasks {
 	 */
 	private function http_authentication() {
 		global $aio_wp_security;
+		
+		if (defined('AIOS_DISABLE_HTTP_AUTHENTICATION') && AIOS_DISABLE_HTTP_AUTHENTICATION) return;
 
 		$request_uri = parse_url(urldecode($_SERVER['REQUEST_URI']));
 
@@ -787,7 +793,7 @@ class AIOWPSecurity_General_Init_Tasks {
 		$rest_user = wp_get_current_user();
 		if (empty($rest_user->ID)) {
 			$error_message = apply_filters('aiowps_rest_api_error_message', __('You are not authorized to perform this action.', 'all-in-one-wp-security-and-firewall'));
-			wp_die($error_message);
+			wp_die($error_message, '', 403);
 		}
 	}
 
@@ -861,5 +867,43 @@ class AIOWPSecurity_General_Init_Tasks {
 	 */
 	public function comment_form_submit_field($submit_field) {
 		return $submit_field . " " . AIOWPSecurity_Comment::insert_antibot_keys_in_comment_form();
+	}
+
+	/**
+	 * Filters the captcha settings templates based on specific conditions.
+	 *
+	 * This function checks if certain conditions (like login lockdown) are active, and filters the templates accordingly.
+	 * If a template contains a display condition callback, it ensures the callback is callable and invokes it to determine
+	 * whether the template should be included in the result.
+	 *
+	 * @param array $templates An array of captcha setting templates to filter.
+	 *
+	 * @return array The filtered array of captcha setting templates.
+	 */
+	public function filter_captcha_settings_templates($templates) {
+		global $aio_wp_security;
+
+		if (empty($templates) || $aio_wp_security->is_login_lockdown_by_const()) return array();
+
+		return $this->filter_templates($templates);
+	}
+
+
+	/**
+	 * Filters the provided templates array based on a specified callback condition.
+	 *
+	 * This function applies a filter to the input templates array, checking for each template
+	 * if a 'display_condition_callback' is set and callable. If the condition passes, the template is retained.
+	 *
+	 * @param array $templates An array of templates to filter. Each template should have a 'display_condition_callback' key.
+	 *
+	 * @return array Filtered array of templates where the 'display_condition_callback' is valid.
+	 */
+	public function filter_templates($templates) {
+		if (empty($templates)) return array();
+
+		return array_filter($templates, function ($template) {
+			return AIOWPSecurity_Utility::apply_callback_filter($template, 'display_condition_callback');
+		});
 	}
 }

@@ -46,7 +46,7 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 		$this->is_tfa_integrated = true;
 
 		// Run at a priority ensuring that this will be after AIOS has registered its translation domain
-		add_action('plugins_loaded', array($this, 'plugins_loaded'), 11);
+		add_action('init', array($this, 'plugin_text_domain_loaded'), 11);
 		
 		add_action('admin_menu', array($this, 'menu_entry_for_user'), 30);
 		$this->version = AIO_WP_SECURITY_VERSION;
@@ -60,9 +60,9 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 	}
 	
 	/**
-	 * Runs upon the WP action plugins_loaded (once the text domain has been loaded)
+	 * Runs upon the WP action init (once the text domain has been loaded)
 	 */
-	public function plugins_loaded() {
+	public function plugin_text_domain_loaded() {
 		$this->set_settings_page_heading(__('Two factor authentication - Admin settings', 'all-in-one-wp-security-and-firewall'));
 	}
 	

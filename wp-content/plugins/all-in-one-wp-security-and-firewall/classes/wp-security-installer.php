@@ -120,7 +120,7 @@ class AIOWPSecurity_Installer {
 		lock_reason varchar(128) NOT NULL DEFAULT '',
 		unlock_key varchar(128) NOT NULL DEFAULT '',
 		is_lockout_email_sent tinyint(1) NOT NULL DEFAULT '1',
-		backtrace_log text NOT NULL DEFAULT '',
+		backtrace_log text NOT NULL,
 		ip_lookup_result LONGTEXT DEFAULT NULL,
 		PRIMARY KEY  (id),
 		  KEY failed_login_ip (failed_login_ip),
@@ -184,9 +184,10 @@ class AIOWPSecurity_Installer {
 			ip VARCHAR(45) NOT NULL DEFAULT '',
 			level varchar(25) NOT NULL DEFAULT '',
 			event_type varchar(25) NOT NULL DEFAULT '',
-			details text NOT NULL DEFAULT '',
-			stacktrace text NOT NULL DEFAULT '',
+			details text NOT NULL,
+			stacktrace text NOT NULL,
 			created INTEGER UNSIGNED,
+			country_code varchar(50),
 			PRIMARY KEY  (id),
 			INDEX username (username),
 			INDEX ip (ip),
@@ -202,7 +203,7 @@ class AIOWPSecurity_Installer {
 			level varchar(25) NOT NULL DEFAULT '',
 			network_id bigint(20) NOT NULL DEFAULT '0',
 			site_id bigint(20) NOT NULL DEFAULT '0',
-			message text NOT NULL DEFAULT '',
+			message text NOT NULL,
 			type varchar(25) NOT NULL DEFAULT '',
 			PRIMARY KEY  (id)
 			)" . $charset_collate . ";";
@@ -227,8 +228,8 @@ class AIOWPSecurity_Installer {
 
 		$message_store_log_tbl_sql = "CREATE TABLE " . $message_store_log_tbl_name . " (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
-			message_key text NOT NULL DEFAULT '',
-			message_value text NOT NULL DEFAULT '',
+			message_key text NOT NULL,
+			message_value text NOT NULL,
 			created INTEGER UNSIGNED,
 			PRIMARY KEY  (id)
 			)" . $charset_collate . ";";

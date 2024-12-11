@@ -14,7 +14,7 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function set_default_settings() {
 		global $aio_wp_security;
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		$blog_email_address = get_bloginfo('admin_email'); // Get the blog admin email address - we will use as the default value
 
@@ -454,7 +454,7 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function upgrade_basic_firewall_rules_configs() {
 		global $aio_wp_security;
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		$settings = array(
 			'aiowps_enable_pingback_firewall',
@@ -555,7 +555,7 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function set_blacklist_ip_firewall_configs() {
 		global $aio_wp_security;
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 		$aiowps_firewall_config->set_value('aiowps_ip_retrieve_method', $aio_wp_security->configs->get_value('aiowps_ip_retrieve_method'));
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_blacklisting') && !empty($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses'))) {
 			$aiowps_firewall_config->set_value('aiowps_blacklist_ips', explode("\n", preg_replace("/\r/", "", trim($aio_wp_security->configs->get_value('aiowps_banned_ip_addresses')))));
@@ -571,7 +571,7 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function set_cookie_based_bruteforce_firewall_configs() {
 		global $aio_wp_security;
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 		
 		$aiowps_firewall_config->set_value('aios_enable_rename_login_page', $aio_wp_security->configs->get_value('aiowps_enable_rename_login_page'));
 		
@@ -598,7 +598,7 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function set_user_agent_firewall_configs() {
 		global $aio_wp_security;
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_blacklisting') && !empty($aio_wp_security->configs->get_value('aiowps_banned_user_agents'))) {
 			$aiowps_firewall_config->set_value('aiowps_blacklist_user_agents', explode("\n", preg_replace("/\r/", "", trim($aio_wp_security->configs->get_value('aiowps_banned_user_agents')))));
 		} else {
@@ -615,7 +615,8 @@ class AIOWPSecurity_Configure_Settings {
 	 * @return void
 	 */
 	private static function port_block_fake_googlebots_config() {
-		global $aio_wp_security, $aiowps_firewall_config;
+		global $aio_wp_security;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_block_fake_googlebots')) {
 			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', true);
@@ -637,7 +638,7 @@ class AIOWPSecurity_Configure_Settings {
 	 */
 	public static function set_ip_retrieve_method_configs() {
 		global $aio_wp_security;
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 		$aiowps_firewall_config->set_value('aios_ip_retrieve_method', $aio_wp_security->configs->get_value('aiowps_ip_retrieve_method'));
 	}
 	
@@ -668,7 +669,7 @@ class AIOWPSecurity_Configure_Settings {
 	 * @return void.
 	 */
 	public static function turn_off_all_6g_firewall_configs() {
-		global $aiowps_firewall_config;
+		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
 		$aiowps_firewall_config->set_value('aiowps_6g_block_request_methods', array());
 		$aiowps_firewall_config->set_value('aiowps_6g_block_query', false);
 		$aiowps_firewall_config->set_value('aiowps_6g_block_request', false);

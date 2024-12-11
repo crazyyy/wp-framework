@@ -17,12 +17,8 @@ trait AIOWPSecurity_File_Scan_Commands_Trait {
 	public function perform_save_file_detection_change_settings($data) {
 		global $aio_wp_security;
 
-		$response = array(
-			'status' => 'success',
-			'info' => array(),
-			'content' => array()
-		);
-
+		$info = array();
+		$content = array();
 		$options = array();
 		$errors = array();
 		$reset_scan_data = false;
@@ -64,7 +60,7 @@ trait AIOWPSecurity_File_Scan_Commands_Trait {
 		}
 		$email_address = implode("\n", $email_list_array);
 		if (!empty($errors)) {
-			$response['info'][] = implode('<br>', $errors);
+			$info[] = implode('<br>', $errors);
 		}
 
 		// Save all the form values to the options
@@ -77,22 +73,20 @@ trait AIOWPSecurity_File_Scan_Commands_Trait {
 		$options['aiowps_fcd_scan_email_address'] = $email_address;
 		$this->save_settings($options);
 
-		$response['message'] = __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall');
-
-		$response['content']['aios-file-change-info-box'] = '';
+		$content['aios-file-change-info-box'] = '';
 		// Let's check if backup interval was set to less than 24 hours
 		if (isset($data["aiowps_enable_automated_fcd_scan"]) && ($fcd_scan_frequency < 24) && 0 == $data["aiowps_fcd_scan_interval"]) {
-			$response['content']['aios-file-change-info-box'] = '<div class="aio_yellow_box">';
-			$response['content']['aios-file-change-info-box'] .= '<p>' . __('You have configured your file change detection scan to occur at least once daily.', 'all-in-one-wp-security-and-firewall') . '</p>';
-			$response['content']['aios-file-change-info-box'] .= '<p>' . __('For most websites we recommended that you choose a less frequent schedule such as once every few days, once a week or once a month.', 'all-in-one-wp-security-and-firewall') . '</p>';
-			$response['content']['aios-file-change-info-box'] .= '<p>' . __('Choosing a less frequent schedule will also help reduce your server load.', 'all-in-one-wp-security-and-firewall') . '</p>';
-			$response['content']['aios-file-change-info-box'] .= '</div>';
+			$content['aios-file-change-info-box'] = '<div class="aio_yellow_box">';
+			$content['aios-file-change-info-box'] .= '<p>' . __('You have configured your file change detection scan to occur at least once daily.', 'all-in-one-wp-security-and-firewall') . '</p>';
+			$content['aios-file-change-info-box'] .= '<p>' . __('For most websites we recommended that you choose a less frequent schedule such as once every few days, once a week or once a month.', 'all-in-one-wp-security-and-firewall') . '</p>';
+			$content['aios-file-change-info-box'] .= '<p>' . __('Choosing a less frequent schedule will also help reduce your server load.', 'all-in-one-wp-security-and-firewall') . '</p>';
+			$content['aios-file-change-info-box'] .= '</div>';
 		}
 
 		if ($reset_scan_data) {
 			$aio_wp_security->scan_obj->execute_file_change_detection_scan();
 			$new_scan_alert = __('New scan completed: The plugin has detected that you have made changes to the "File Types To Ignore" or "Files To Ignore" fields.', 'all-in-one-wp-security-and-firewall').' '.__('In order to ensure that future scan results are accurate, the old scan data has been refreshed.', 'all-in-one-wp-security-and-firewall');
-			$response['info'][] = $new_scan_alert;
+			$info[] = $new_scan_alert;
 		}
 
 		$next_fcd_scan_time = AIOWPSecurity_Scan::get_next_scheduled_scan();
@@ -104,11 +98,18 @@ trait AIOWPSecurity_File_Scan_Commands_Trait {
 			$next_scheduled_scan = '<span class="aiowps_next_scheduled_date_time">' . $scan_time . '</span>';
 		}
 
-		$response['content']['aiowps-next-files-scan-inner'] = $next_scheduled_scan;
-		$response['values']['aiowps_fcd_scan_frequency'] = absint($fcd_scan_frequency);
-		$response['badges'] = $this->get_features_id_and_html(array('scan-file-change-detection'));
+		$content['aiowps-next-files-scan-inner'] = $next_scheduled_scan;
+		$values = array('aiowps_fcd_scan_frequency' => absint($fcd_scan_frequency));
+		$badges = array('scan-file-change-detection');
 
-		return $response;
+		$args = array(
+			'content' => $content,
+			'values' => $values,
+			'badges' => $badges,
+			'info' => $info
+		);
+
+		return $this->handle_response(true, '', $args);
 	}
 
 
@@ -122,25 +123,19 @@ trait AIOWPSecurity_File_Scan_Commands_Trait {
 	public function get_last_scan_results($data) {
 		global $aio_wp_security;
 
-		$response = array(
-			'status' => 'success',
-			'content' => array(),
-		);
-
 		if ($data['reset_change_detected']) $aio_wp_security->configs->set_value('aiowps_fcds_change_detected', false, true);
 
 		$fcd_data = AIOWPSecurity_Scan::get_fcd_data();
 
 		if (!$fcd_data || !isset($fcd_data['last_scan_result'])) {
 			// no fcd data found
-			$response['status'] = 'error';
-			$response['message'] = __('No previous scan data was found; either run a manual scan or schedule regular file scans', 'all-in-one-wp-security-and-firewall');
-			return $response;
+			$message = __('No previous scan data was found; either run a manual scan or schedule regular file scans', 'all-in-one-wp-security-and-firewall');
+			return $this->handle_response(false, $message);
 		}
 
-		$response['content']['aiowps_previous_scan_wrapper'] = $aio_wp_security->include_template('wp-admin/scanner/scan-result.php', true, array('fcd_data' => $fcd_data));
+		$content = array('aiowps_previous_scan_wrapper' => $aio_wp_security->include_template('wp-admin/scanner/scan-result.php', true, array('fcd_data' => $fcd_data)));
 
-		return $response;
+		return $this->handle_response(true, false, array('content' => $content));
 	}
 
 	/**
@@ -151,30 +146,32 @@ trait AIOWPSecurity_File_Scan_Commands_Trait {
 	public function perform_file_scan() {
 		global $aio_wp_security;
 
-		$response = array(
-			'status' => 'success',
-			'content' => array(),
-		);
+		$content = array();
+		$extra_args = array();
 
 		$result = $aio_wp_security->scan_obj->execute_file_change_detection_scan();
 
 		if (false === $result) {
 			// error case
-			$response['status'] = 'error';
-			$response['message'] = __('There was an error during the file change detection scan.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please check the plugin debug logs.', 'all-in-one-wp-security-and-firewall');
-			return $response;
+			$message = __('There was an error during the file change detection scan.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please check the plugin debug logs.', 'all-in-one-wp-security-and-firewall');
+			return $this->handle_response(false, $message);
 		}
 
 		// If this is first scan display special message
 		if (1 == $result['initial_scan']) {
-			$response['result'] = __('This is your first file change detection scan.', 'all-in-one-wp-security-and-firewall').' '.__('The details from this scan will be used for future scans.', 'all-in-one-wp-security-and-firewall'). ' <a href="#" class="aiowps_view_last_fcd_results">' . __('View the file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
-			$response['content']['aiowps-previous-files-scan-inner'] = '<a href="#" class="aiowps_view_last_fcd_results">' . __('View last file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
+			$extra_args['result'] = __('This is your first file change detection scan.', 'all-in-one-wp-security-and-firewall').' '.__('The details from this scan will be used for future scans.', 'all-in-one-wp-security-and-firewall'). ' <a href="#" class="aiowps_view_last_fcd_results">' . __('View the file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
+			$content['aiowps-previous-files-scan-inner'] = '<a href="#" class="aiowps_view_last_fcd_results">' . __('View last file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
 		} elseif (!$aio_wp_security->configs->get_value('aiowps_fcds_change_detected')) {
-			$response['result'] = __('The scan is complete - There were no file changes detected.', 'all-in-one-wp-security-and-firewall');
+			$extra_args['result'] = __('The scan is complete - There were no file changes detected.', 'all-in-one-wp-security-and-firewall');
 		} elseif ($aio_wp_security->configs->get_value('aiowps_fcds_change_detected')) {
-			$response['result'] = __('The scan has detected that there was a change in your website\'s files.', 'all-in-one-wp-security-and-firewall'). ' <a href="#" class="aiowps_view_last_fcd_results">' . __('View the file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
+			$extra_args['result'] = __('The scan has detected that there was a change in your website\'s files.', 'all-in-one-wp-security-and-firewall'). ' <a href="#" class="aiowps_view_last_fcd_results">' . __('View the file scan results', 'all-in-one-wp-security-and-firewall') . '</a>';
 		}
 
-		return $response;
+		$args = array(
+			'extra_args' => $extra_args,
+			'content' => $content
+		);
+
+		return $this->handle_response(true, false, $args);
 	}
 }

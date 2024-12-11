@@ -67,6 +67,7 @@ wp-content/sgo-config.php
 wp-content/uploads/*/*.log
 wp-content/wp-cache-config.php
 aios-bootstrap.php
+.maintenance
 
 # Exclude sensitive configuration files
 wp-config.php
@@ -98,3 +99,4 @@ Desktop.ini
 *.flv
 *.mov
 *.wmv
+

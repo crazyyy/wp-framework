@@ -81,13 +81,13 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			if ( defined("cmplz_premium" ) ) {
 				return false;
 			}
-			$start_day = 20;
-			$end_day = 27;
+			$start_day = 25;
+			$end_day = 30;
 			$current_year = date("Y");//e.g. 2021
 			$current_month = date("n");//e.g. 3
 			$current_day = date("j");//e.g. 4
 
-			return $current_year == 2023
+			return $current_year == 2024
 				   && $current_month == 11
 				   && $current_day >= $start_day
 				   && $current_day <= $end_day;
@@ -151,7 +151,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		 */
 		public function no_security_plugin_active(){
 			//create switch statement
-			if (defined('rsssl_version')) return false; //really simple ssl
+			if (defined('rsssl_version')) return false; //really simple security
 			if (defined('WORDFENCE_VERSION')) return false; //wordfence
 			if (class_exists('ITSEC_Core')) return false; //ithemes
 			if (class_exists('AIO_WP_Security')) return false; // All in one security

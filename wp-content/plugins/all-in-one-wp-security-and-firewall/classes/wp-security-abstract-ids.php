@@ -46,6 +46,7 @@ class AIOS_Abstracted_Ids {
 		return array(
 			'automated-database-backup',
 			'ip-retrieval-settings',
+			'load-firewall-resources-failed',
 		);
 	}
 

@@ -3,6 +3,11 @@
 	<h3 class="hndle"><label for="title"><?php _e('Manage delete plugin tasks', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
 		<form action="" id="aiowpsec-delete-plugin-settings-form">
+			<div class="aio_yellow_box">
+				<p>
+				<?php echo __('NOTE: Even if these options are disabled, the plugin settings will still be inactive when the plugin is uninstalled, but they will be remembered for the next time the plugin is installed and activated.', 'all-in-one-wp-security-and-firewall'); ?>
+				</p>
+			</div>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Delete database tables', 'all-in-one-wp-security-and-firewall'); ?>:</th>
