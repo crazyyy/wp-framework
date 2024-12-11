@@ -38,7 +38,7 @@ if ( getenv( 'IS_DDEV_PROJECT' ) == 'true' ) {
 	 */
 	if ( ! isset( $table_prefix ) || empty( $table_prefix ) ) {
 		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-		$table_prefix = 'hadpj_';
+		$table_prefix = 'wp_';
 		// phpcs:enable
 	}
 }
