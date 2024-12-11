@@ -34,20 +34,13 @@
 						class="wpo-save-setting"
 						type="checkbox"
 						value="true"
-						<?php echo WPO_MINIFY_PHP_VERSION_MET ? '' : 'disabled'; ?>
 						<?php checked($wpo_minify_options['enabled']); ?>
 					>
 					<span class="slider round"></span>
 				</label>
 				<label for="wpo_min_enable_minify">
-					<?php if (WPO_MINIFY_PHP_VERSION_MET) {
+					<?php
 						esc_html_e('Enable Minify', 'wp-optimize');
-					} else {
-						echo esc_html__('The PHP version on your server is too old.', 'wp-optimize').' '.esc_html__('Update PHP to enable minification of JS, CSS and HTML on this website', 'wp-optimize');
-						?>
-						<span tabindex="0" data-tooltip="<?php esc_attr_e('PHP version requirement (5.4 minimum) not met', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
-						<?php
-					}
 					?>
 				</label>
 			</div>
@@ -153,7 +146,7 @@
 					class="button button-primary purge_minify_cache <?php echo $can_purge_the_cache ? '' : 'disabled'; ?>"
 					type="submit"
 					value="<?php wp_optimize_minify_config()->always_purge_everything() ? esc_attr_e('Purge the minified files', 'wp-optimize') : esc_attr_e('Reset the minified files', 'wp-optimize'); ?>"
-					<?php echo WPO_MINIFY_PHP_VERSION_MET && $can_purge_the_cache ? '' : 'disabled'; ?>
+					<?php echo $can_purge_the_cache ? '' : 'disabled'; ?>
 				>
 				<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
 				<span class="save-done dashicons dashicons-yes display-none"></span>
@@ -161,37 +154,36 @@
 			<p>
 				<span><?php esc_html_e("The new minified files will be regenerated when visiting your website's pages.", "wp-optimize"); ?> <?php $wp_optimize->wp_optimize_url('https://getwpo.com/faqs/what-does-reset-the-minified-files-actually-do/', __('Read more about what this does in our FAQs.', 'wp-optimize')); ?> (<?php esc_html_e('This will also purge the page cache', 'wp-optimize'); ?>)</span>
 			</p>
-			<?php if (WPO_MINIFY_PHP_VERSION_MET) : ?>
-				<?php esc_html_e('Minify cache size:', 'wp-optimize'); ?>
-				<ul class="ul-disc">
-					<li><?php esc_html_e('Current cache:', 'wp-optimize'); ?>
-						<strong id="wpo_min_cache_size">
-							<?php
-								if ($wpo_minify_options['enabled']) {
-									echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats($cache_dir));
-								} else {
-									esc_html_e('No minified files are present', 'wp-optimize');
-								}
-							?>
-						</strong>
-						<a href="#" class="js--wpo-goto" data-tab="advanced"><?php esc_html_e('View the files', 'wp-optimize'); ?></a>
-					</li>
-					<li>
-						<?php esc_html_e('Total cache:', 'wp-optimize'); ?>
-						<strong id="wpo_min_cache_total_size">
-							<?php
-								if ($wpo_minify_options['enabled']) {
-									echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats(WPO_CACHE_MIN_FILES_DIR));
-								} else {
-									esc_html_e('No minified files are present', 'wp-optimize');
-								}
-							?>
-						</strong>
-						<strong tabindex="0" data-tooltip="<?php esc_attr_e('This includes the older, non-expired cache, as well as the temporary files used to generate the minified files.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></strong>
-						<a href="#" class="wpo-minify-download-metas-button"><?php esc_html_e('Download debug log', 'wp-optimize'); ?></a>
-					</li>
-				</ul>
-			<?php endif; ?>
+
+			<?php esc_html_e('Minify cache size:', 'wp-optimize'); ?>
+			<ul class="ul-disc">
+				<li><?php esc_html_e('Current cache:', 'wp-optimize'); ?>
+					<strong id="wpo_min_cache_size">
+						<?php
+							if ($wpo_minify_options['enabled']) {
+								echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats($cache_dir));
+							} else {
+								esc_html_e('No minified files are present', 'wp-optimize');
+							}
+						?>
+					</strong>
+					<a href="#" class="js--wpo-goto" data-tab="advanced"><?php esc_html_e('View the files', 'wp-optimize'); ?></a>
+				</li>
+				<li>
+					<?php esc_html_e('Total cache:', 'wp-optimize'); ?>
+					<strong id="wpo_min_cache_total_size">
+						<?php
+							if ($wpo_minify_options['enabled']) {
+								echo esc_html(WP_Optimize_Minify_Cache_Functions::get_cachestats(WPO_CACHE_MIN_FILES_DIR));
+							} else {
+								esc_html_e('No minified files are present', 'wp-optimize');
+							}
+						?>
+					</strong>
+					<strong tabindex="0" data-tooltip="<?php esc_attr_e('This includes the older, non-expired cache, as well as the temporary files used to generate the minified files.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></strong>
+					<a href="#" class="wpo-minify-download-metas-button"><?php esc_html_e('Download debug log', 'wp-optimize'); ?></a>
+				</li>
+			</ul>
 			<p>
 				<?php esc_html_e('Last Minify cache update:', 'wp-optimize'); ?>
 				<strong id="wpo_min_cache_time">
@@ -212,7 +204,6 @@
 						class="button minify_increment_cache"
 						type="button"
 						value="<?php esc_attr_e('Increment cache', 'wp-optimize'); ?>"
-						<?php echo WPO_MINIFY_PHP_VERSION_MET ? '' : 'disabled'; ?>
 					>
 					<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
 					<span class="save-done dashicons dashicons-yes display-none"></span>
@@ -227,7 +218,6 @@
 							class="button purge_all_minify_cache"
 							type="button"
 							value="<?php esc_attr_e('Delete all the files generated by minifcation', 'wp-optimize'); ?>"
-							<?php echo WPO_MINIFY_PHP_VERSION_MET ? '' : 'disabled'; ?>
 						>
 						<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
 						<span class="save-done dashicons dashicons-yes display-none"></span>

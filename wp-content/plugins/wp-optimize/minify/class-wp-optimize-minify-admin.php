@@ -11,10 +11,8 @@ class WP_Optimize_Minify_Admin {
 	 * @return void
 	 */
 	public function __construct() {
-		if (WPO_MINIFY_PHP_VERSION_MET) {
-			// exclude processing for editors and administrators (fix editors)
-			add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'check_permissions_admin_notices'));
-		}
+		// exclude processing for editors and administrators (fix editors)
+		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'check_permissions_admin_notices'));
 
 		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'admin_notices_activation_errors'));
 
@@ -75,10 +73,6 @@ class WP_Optimize_Minify_Admin {
 		include ABSPATH . WPINC . '/version.php';
 		$errors = array();
 		
-		if (!WPO_MINIFY_PHP_VERSION_MET) {
-			$errors[] = __('WP-Optimize Minify requires PHP 5.4 or higher.', 'wp-optimize') . ' ' . sprintf(__("You're using version %s.", 'wp-optimize'), PHP_VERSION);
-		}
-
 		if (!extension_loaded('mbstring')) {
 			$errors[] = __('WP-Optimize Minify requires the PHP mbstring module to be installed on the server; please ask your web hosting company for advice on how to enable it on your server.', 'wp-optimize');
 		}
@@ -285,7 +279,7 @@ class WP_Optimize_Minify_Admin {
 	public function output_advanced() {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		$files = false;
-		if (apply_filters('wpo_minify_status_show_files_on_load', true) && WPO_MINIFY_PHP_VERSION_MET) {
+		if (apply_filters('wpo_minify_status_show_files_on_load', true)) {
 			$files = WP_Optimize_Minify_Cache_Functions::get_cached_files();
 		}
 

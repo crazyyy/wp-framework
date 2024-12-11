@@ -388,7 +388,7 @@ class WP_Optimize_WebP {
 	 */
 	private function maybe_purge_cache($old_redirection_possible, $new_redirection_possible) {
 		if ($old_redirection_possible !== $new_redirection_possible) {
-			WP_Optimize()->get_page_cache()->purge();
+			$is_cache_purged = WP_Optimize()->get_page_cache()->purge();
 			$log_old_value = empty($old_redirection_possible) ? "null" : $old_redirection_possible;
 			$log_new_value = empty($new_redirection_possible) ? "null" : $new_redirection_possible;
 			$this->log("Purging cache because redirection_possible value changed from: " .
@@ -396,6 +396,7 @@ class WP_Optimize_WebP {
 				" to " .
 				$log_new_value
 			);
+			if ($is_cache_purged) WP_Optimize()->get_page_cache()->file_log("Full Cache Purge due to change in the value of WebP redirection");
 		}
 	}
 	
@@ -468,7 +469,7 @@ class WP_Optimize_WebP {
 	}
 
 	/**
-	 * Determines whether one of the PHP shell functions required for WebP convertion is available or not.
+	 * Determines whether one of the PHP shell functions required for WebP conversion is available or not.
 	 *
 	 * @return bool
 	 */
@@ -477,7 +478,7 @@ class WP_Optimize_WebP {
 	}
 
 	/**
-	 * Determines whether one of the PHP shell functions required for WebP convertion is available or not.
+	 * Determines whether one of the PHP shell functions required for WebP conversion is available or not.
 	 *
 	 * @deprecated 3.6.0
 	 * @return bool
@@ -511,6 +512,15 @@ class WP_Optimize_WebP {
 			if (function_exists($function)) return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Return the configuration setting `webp_conversion` value
+	 *
+	 * @return bool
+	 */
+	public function is_webp_enabled() {
+		return $this->_should_use_webp;
 	}
 }
 

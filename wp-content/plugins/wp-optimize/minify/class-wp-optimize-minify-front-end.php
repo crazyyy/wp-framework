@@ -109,14 +109,14 @@ class WP_Optimize_Minify_Front_End {
 	}
 
 	/**
-	 * Wether to run the feature on a page or not
+	 * Whether to run the feature on a page or not
 	 *
 	 * @param string $context - Optional, The context where the check is done
 	 * @return boolean
 	 */
 	public function run_on_page($context = 'default') {
 		/**
-		 * Filters wether the functionality is ran on the current page.
+		 * Filters whether the functionality is ran on the current page.
 		 *
 		 * @param boolean $run_on_page
 		 * @param string  $context - Optional, The feature where the check is done
@@ -699,7 +699,7 @@ class WP_Optimize_Minify_Front_End {
 				|| ($process_css && 'inherit' == $this->options['fawesome_method'] && WP_Optimize_Minify_Functions::is_font_awesome($href))
 				|| ($process_css && !$disable_google_fonts_processing && 'inherit' == $this->options['gfonts_method'] && WP_Optimize_Minify_Functions::is_google_font($href))
 			) {
-				// colect inline css for this handle
+				// collect inline css for this handle
 				if (isset($wp_styles->registered[$handle]->extra['after']) && is_array($wp_styles->registered[$handle]->extra['after'])) {
 					$inline_css[$handle] = WP_Optimize_Minify_Functions::minify_css_string(implode('', $wp_styles->registered[$handle]->extra['after'])); // save
 					$wp_styles->registered[$handle]->extra['after'] = null; // dequeue
@@ -1804,7 +1804,7 @@ class WP_Optimize_Minify_Front_End {
 				|| empty($href)
 			) {
 					
-				// colect inline css for this handle
+				// collect inline css for this handle
 				if (isset($wp_styles->registered[$handle]->extra['after']) && is_array($wp_styles->registered[$handle]->extra['after'])) {
 					$inline_css[$handle] = WP_Optimize_Minify_Functions::minify_css_string(implode('', $wp_styles->registered[$handle]->extra['after'])); // save
 					$wp_styles->registered[$handle]->extra['after'] = null; // dequeue

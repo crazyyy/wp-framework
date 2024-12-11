@@ -36,9 +36,6 @@ class WP_Optimize_Minify {
 
 		$this->load_admin();
 
-		// Don't run the rest if PHP requirement isn't met
-		if (!WPO_MINIFY_PHP_VERSION_MET) return;
-
 		add_filter('wpo_cache_admin_bar_menu_items', array($this, 'admin_bar_menu'), 30, 1);
 		
 		if (WP_Optimize::is_premium()) {
@@ -60,15 +57,24 @@ class WP_Optimize_Minify {
 		// cron job to delete old wpo_min cache
 		add_action('wpo_minify_purge_old_cache', array('WP_Optimize_Minify_Cache_Functions', 'purge_old'));
 		
+		add_action('init', array($this, 'schedule_or_unschedule_purge_old_cache_event'));
+
+		// Handle minify cache purging.
+		add_action('wp_loaded', array($this, 'handle_purge_minify_cache'));
+
+	}
+
+	/**
+	 * Schedule or unschedule purge old cache event.
+	 *
+	 * @return void
+	 */
+	public function schedule_or_unschedule_purge_old_cache_event() {
 		if ($this->enabled) {
 			$this->schedule_purge_old_cache_event();
 		} else {
 			$this->unschedule_purge_old_cache_event();
 		}
-
-		// Handle minify cache purging.
-		add_action('wp_loaded', array($this, 'handle_purge_minify_cache'));
-
 	}
 
 	/**
@@ -206,7 +212,7 @@ class WP_Optimize_Minify {
 	/**
 	 * Unschedule purging of the minify cache
 	 *
-	 * @retrun void
+	 * @return void
 	 */
 	private function unschedule_purge_old_cache_event() {
 		// old cache purge event cron
@@ -219,7 +225,6 @@ class WP_Optimize_Minify {
 	 * @return void
 	 */
 	public function plugin_deactivate() {
-		if (defined('WPO_MINIFY_PHP_VERSION_MET') && !WPO_MINIFY_PHP_VERSION_MET) return;
 		if (class_exists('WP_Optimize_Minify_Cache_Functions') && WP_Optimize()->get_page_cache()->should_purge) {
 			WP_Optimize_Minify_Cache_Functions::purge_temp_files();
 			WP_Optimize_Minify_Cache_Functions::purge_old();
@@ -235,7 +240,6 @@ class WP_Optimize_Minify {
 	 * @return void
 	 */
 	public function plugin_uninstall() {
-		if (defined('WPO_MINIFY_PHP_VERSION_MET') && !WPO_MINIFY_PHP_VERSION_MET) return;
 		// remove options from DB
 		if (!function_exists('wp_optimize_minify_config')) {
 			include WP_OPTIMIZE_MINIFY_DIR.'/class-wp-optimize-minify-config.php';

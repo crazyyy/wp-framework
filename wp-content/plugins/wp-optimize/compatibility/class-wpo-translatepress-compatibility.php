@@ -55,6 +55,7 @@ class WPO_TranslatePress_Compatibility {
 			$possible_lang_url = $homepage_url. '/' . $value . $post_path;
 			WPO_Page_Cache::delete_cache_by_url($possible_lang_url);
 		}
+		if (!empty($url_slugs)) WPO_Page_Cache::instance()->file_log("Cache for associated TranslatePress translation posts for Title: {{title}} have been purged", $deleted_post_id);
 	}
 
 	/**
@@ -75,6 +76,7 @@ class WPO_TranslatePress_Compatibility {
 			$possible_lang_url = $homepage_url.'/'. $value . untrailingslashit($post_path) . '/feed/';
 			WPO_Page_Cache::delete_cache_by_url($possible_lang_url);
 		}
+		if (!empty($url_slugs)) WPO_Page_Cache::instance()->file_log("Cache for associated TranslatePress translation posts' feeds for Title: {{title}} have been purged", $deleted_post_id);
 	}
 }
 endif;

@@ -3399,7 +3399,7 @@ class UpdraftPlus_Backup {
 			}
 		}
 		gzclose($whandle);
-		return unserialize($var);
+		return $updraftplus->unserialize($var);
 	}
 
 	/**
@@ -3417,7 +3417,7 @@ class UpdraftPlus_Backup {
 
 		$original_index = $this->index;
 
-		$itext = (empty($this->index)) ? '' : ($this->index+1);
+		$itext = empty($this->index) ? '' : ($this->index+1);
 		$destination_base = $backup_file_basename.'-'.$whichone.$itext.'.zip.tmp';
 		// $destination is the temporary file (ending in .tmp)
 		$destination = $this->updraft_dir.'/'.$destination_base;
@@ -3552,7 +3552,7 @@ class UpdraftPlus_Backup {
 						if (is_array($var)) {
 							$this->zipfiles_batched = $var;
 							if (file_exists($cache_file_base.'-info.tmp')) {
-								$var = maybe_unserialize(file_get_contents($cache_file_base.'-info.tmp'));
+								$var = $updraftplus->unserialize(file_get_contents($cache_file_base.'-info.tmp'));
 								if (is_array($var) && isset($var['makezip_recursive_batchedbytes'])) {
 									$this->makezip_recursive_batchedbytes = $var['makezip_recursive_batchedbytes'];
 									if (file_exists($cache_file_base.'-zfs.gz.tmp')) {
@@ -3687,13 +3687,12 @@ class UpdraftPlus_Backup {
 							$aborted_on_dirbatched = true;
 						}
 						if (!empty($aborted_on_dirbatched)) {
-							@unlink($cache_file_base.'-zfs.gz.tmp');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
-							@unlink($cache_file_base.'-zfd.gz.tmp');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
-							@unlink($cache_file_base.'-zfb.gz.tmp');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
-							@unlink($cache_file_base.'-info.tmp');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
-						// @codingStandardsIgnoreLine
-						} else {
-							// Success.
+							// phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged -- no error required if the file doesn't exist.
+							@unlink($cache_file_base.'-zfs.gz.tmp');
+							@unlink($cache_file_base.'-zfd.gz.tmp');
+							@unlink($cache_file_base.'-zfb.gz.tmp');
+							@unlink($cache_file_base.'-info.tmp');
+							// phpcs:enable
 						}
 					}
 				}
@@ -4379,7 +4378,7 @@ class UpdraftPlus_Backup {
 		}
 
 		// Always warn of this
-		if (strpos($msg, 'File Size Limit Exceeded') !== false && 'UpdraftPlus_BinZip' == $this->use_zip_object) {
+		if (is_string($msg) && strpos($msg, 'File Size Limit Exceeded') !== false && 'UpdraftPlus_BinZip' == $this->use_zip_object) {
 			$updraftplus->log(sprintf(__('The zip engine returned the message: %s.', 'updraftplus'), 'File Size Limit Exceeded'). __('Go here for more information.', 'updraftplus').' https://updraftplus.com/what-should-i-do-if-i-see-the-message-file-size-limit-exceeded/', 'warning', 'zipcloseerror-filesizelimit');
 		} elseif ($warn) {
 			$warn_msg = __('A zip error occurred', 'updraftplus').' - ';

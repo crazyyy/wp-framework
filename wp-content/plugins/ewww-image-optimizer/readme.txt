@@ -2,10 +2,10 @@
 Contributors: nosilver4u
 Donate link: https://ewww.io/donate/
 Tags: compress, convert, webp, resize, lazy load
-Requires at least: 6.3
-Tested up to: 6.6
+Requires at least: 6.4
+Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 7.9.0
+Stable tag: 8.0.0
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -20,8 +20,8 @@ With EWWW IO you can optimize all your existing images, [from any plugin](https:
 
 1. **No Speed Limits** and [unlimited file size](https://ewww.io/unlimited-file-size/).
 1. **Smooth Handling** with pixel-perfect optimization using industry-leading tools and progressive rendering.
-1. **High Torque** as we bring you the best compression/quality ratio available with our Premium compression for JPG, PNG, and PDF files.
-1. **Adaptive Steering** with intelligent conversion options to get the right image format for the job (JPG, PNG, GIF, or WebP).
+1. **High Torque** as we bring you the best compression/quality ratio available with our Premium compression for JPG, PNG, SVG, WebP, and PDF files.
+1. **Adaptive Steering** with intelligent conversion options to get the right image format for the job (JPG, PNG, GIF, AVIF, or WebP).
 1. **Free Parking** The core plugin is free and always will be. However, our paid services offer up to 80% compression, and a [host of other features](https://ewww.io/plans/)!
 1. **Comprehensive Coverage:** no image gets left behind, optimize everything on your site, not just the WordPress Media Library.
 1. **Safety First:** all communications are secured with top SSL encryption.
@@ -32,7 +32,7 @@ EWWW IO is the only plugin that lets you optimize images using tools on your own
 
 = Automatic Everything =
 
-With Easy IO, images are automatically compressed, scaled to fit the page and device size, lazy loaded, and converted to the next-gen WebP format.
+With Easy IO, images are automatically compressed, scaled to fit the page and device size, lazy loaded, and converted to next-gen WebP and AVIF formats.
 
 = Support =
 
@@ -58,6 +58,10 @@ EWWW IO has been tested with hundreds (if not thousands) of [plugins and themes]
 = WebP Images =
 
 If you want simple, get automatic WebP conversion with Easy IO, and be done with it! Otherwise, you can generate WebP versions of your images with the Bulk Optimizer, and deliver them to supported browsers. Take your pick between Apache-style rewrite rules, JS WebP Rewriting, and <picture> WebP Rewriting. EWWW IO even works with the WebP option in the Cache Enabler plugin from KeyCDN.
+
+= AVIF Images = 
+
+AVIF conversion is built into the Easy IO CDN. Once your site is setup with Easy IO, edit the site settings to enable AVIF, and you're done!
 
 = WP-CLI =
 
@@ -140,8 +144,34 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
 
+= 8.0.0 =
+*Release Date - December 11, 2024*
+
+* added: WebP Optimization via API, existing customers may enable it on the Local tab in Ludicrous Mode
+* added: improved WebP Conversion quality by using full-size/original source for thumbs
+* added: Above the Fold setting for Lazy Load (previously EIO_LAZY_FOLD override)
+* added: High-DPI option for Easy IO
+* changed: gravatar images excluded from Above the Fold/EIO_LAZY_FOLD counts
+* fixed: Picture WebP ignores images with skip-lazy when it should not
+* fixed: image records not reset after image restore
+* fixed: several PHP warnings from bulk processes
+* fixed: paths for thumbs were broken on Windows
+* fixed: Easy IO adding images to srcset combined with broken WooCommerce gallery thumbnails causes oversized image sizes to be loaded
+* fixed: Easy IO srcset filler using incorrect width for calculations
+* fixed: PHP warning during bulk scan
+
+= 7.9.1 =
+*Release Date - October 31, 2024*
+
+* changed: bulk optimizer links point to async bulk tool, if available
+* fixed: Lazy Load for iframes results in empty src attribute
+* fixed: debug actions on bulk optimizer missing nonces
+* fixed: bulk optimize scanner queries are too long for some hosts
+* fixed: Lazy Load breaks --background CSS variable
+
 = 7.9.0 =
 *Release Date - September 12, 2024*
+
 * added: conversion of BMP images to JPG format
 * changed: allow folders outside of WordPress install to be optimized via Folders to Optimize
 * changed: improve performance of ewwwio_is_file(), props @rmpel

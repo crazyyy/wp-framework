@@ -58,8 +58,11 @@ class UpdraftPlus_S3_Compat {
 	const ACL_AUTHENTICATED_READ = 'authenticated-read';
 
 	const STORAGE_CLASS_STANDARD = 'STANDARD';
+
+	// AWS S3 client
+	private $client;
 	
-	private $config = array('scheme' => 'https', 'service' => 's3');
+	private $config;
 
 	private $__access_key = null; // AWS Access key
 
@@ -82,9 +85,9 @@ class UpdraftPlus_S3_Compat {
 
 	public $use_ssl_validation = true;
 
-	public $use_exceptions = false;
+	public $useExceptions = false;
 
-	private $_server_side_encryption = null;
+	private $_serverSideEncryption = null;
 
 	// SSL CURL SSL options - only needed if you are experiencing problems with your OpenSSL configuration
 	public $ssl_key = null;
@@ -132,13 +135,13 @@ class UpdraftPlus_S3_Compat {
 
 		// AWS SDK V3 requires we specify a version. String 'latest' can be used but not recommended, a full list of versions for each API found here: https://docs.aws.amazon.com/aws-sdk-php/v3/api/index.html
 		// latest S3Client version as of 16/09/21 is version 2006-03-01
-		$opts = array(
+		$this->config = array(
 			'credentials' => $credentials,
 			'version' => '2006-03-01',
 			'scheme' => ($use_ssl) ? 'https' : 'http',
 			'ua_append' => 'UpdraftPlus/'.$updraftplus->version,
 			// Using signature v4 requires a region (but see the note below)
-			// 'signature' => 'v4',
+			// 'signature_version' => 'v4',
 			// 'region' => $this->region
 			// 'endpoint' => 'somethingorother.s3.amazonaws.com'
 		);
@@ -147,16 +150,16 @@ class UpdraftPlus_S3_Compat {
 			// Can't specify signature v4, as that requires stating the region - which we don't necessarily yet know.
 			// Later comment: however, it looks to me like in current UD (Sep 2017), $endpoint is never used for Amazon S3/Vault, and there may be cases (e.g. DigitalOcean Spaces) where we might prefer v4 (DO support v2 too, currently) without knowing a region.
 			$this->endpoint = $endpoint;
-			$opts['endpoint'] = $endpoint;
+			$this->config['endpoint'] = $endpoint;
 		} else {
 			// Using signature v4 requires a region. Also, some regions (EU Central 1, China) require signature v4 - and all support it, so we may as well use it if we can.
-			$opts['signature'] = 'v4';
-			$opts['region'] = $this->region;
+			$this->config['signature_version'] = 'v4';
+			$this->config['region'] = $this->region;
 		}
 
-		if ($use_ssl) $opts['ssl.certificate_authority'] = $ssl_ca_cert;
+		if ($use_ssl) $this->config['http']['verify'] = $ssl_ca_cert;
 
-		$this->client = new S3MultiRegionClient($opts);
+		$this->client = new S3MultiRegionClient($this->config);
 	}
 
 	/**
@@ -246,25 +249,14 @@ class UpdraftPlus_S3_Compat {
 	public function setSSL($enabled, $validate = true) {
 		$this->use_ssl = $enabled;
 		$this->use_ssl_validation = $validate;
-		// http://guzzle.readthedocs.org/en/latest/clients.html#verify
-		if ($enabled) {
 
-			// Do nothing - in UpdraftPlus, setSSLAuth will be called later, and we do the calls there
+		$scheme = ($enabled) ? 'https' : 'http';
 
-// $verify_peer = ($validate) ? true : false;
-// $verify_host = ($validate) ? 2 : 0;
-//
-// $this->config['scheme'] = 'https';
-// $this->client->setConfig($this->config);
-//
-// $this->client->setSslVerification($validate, $verify_peer, $verify_host);
-
-
-		} else {
-			$this->config['scheme'] = 'http';
-// $this->client->setConfig($this->config);
+		// The AWS SDK V3 client doesn't have the 'setConfig' method, so we must recreate the client instance to update the configs. However, we only do it when the '$config' variable is changed.
+		if ($this->config['scheme'] != $scheme) {
+			$this->config['scheme'] = $scheme;
+			$this->client = new S3MultiRegionClient($this->config);
 		}
-		$this->client->setConfig($this->config);
 	}
 
 	public function getuseSSL() {
@@ -292,23 +284,17 @@ class UpdraftPlus_S3_Compat {
 
 		if (!$this->use_ssl) return;
 
-		if (!$this->use_ssl_validation) {
-			$this->client->setSslVerification(false);
+		if (!$this->use_ssl_validation || !$ssl_ca_cert) {
+			$verify = false;
 		} else {
-			if (!$ssl_ca_cert) {
-				$client = $this->client;
-				// "Static class properties and methods, as well as class constants, could not be accessed using a dynamic (variable) classname in PHP 5.2 or earlier." But the present file is not loaded in PHP 5.2.
-				// @codingStandardsIgnoreLine
-				$this->config[$client::SSL_CERT_AUTHORITY] = false;
-				$this->client->setConfig($this->config);
-			} else {
-				$this->client->setSslVerification(realpath($ssl_ca_cert), true, 2);
-			}
+			$verify = ('system' === $ssl_ca_cert) ? true : realpath($ssl_ca_cert);
 		}
 
-// $this->client->setSslVerification($ssl_ca_cert, $verify_peer, $verify_host);
-// $this->config['ssl.certificate_authority'] = $ssl_ca_cert;
-// $this->client->setConfig($this->config);
+		// The AWS SDK V3 client doesn't have the 'setConfig' method, so we must recreate the client instance to update the configs. However, we only do it when the '$config' variable is changed.
+		if ($this->config['http']['verify'] != $verify) {
+			$this->config['http']['verify'] = $verify;
+			$this->client = new S3MultiRegionClient($this->config);
+		}
 	}
 
 	/**

@@ -16,6 +16,10 @@ class WP_Optimize_Utils {
 		if (!is_dir($upload_base . 'wpo/logs')) {
 			wp_mkdir_p($upload_base . 'wpo/logs');
 		}
+		// Ensure index.php in log folder to stop directory listing
+		if (!file_exists($upload_base . 'wpo/logs/index.php')) {
+			file_put_contents($upload_base . 'wpo/logs/index.php', "<?php");
+		}
 		return $upload_base . 'wpo/logs/';
 	}
 

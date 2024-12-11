@@ -45,14 +45,14 @@ if ($optimize_db) {
 	</div>
 	<# if (data.no_backup) { #>
 		<p class="no-backup-detected">
-			<input type="checkbox" id="confirm_deletion_without_backup"> <strong><?php esc_html_e('No automatic backup was detected.', 'wp-optimize'); ?></strong> <?php esc_html_e('I confirm that I will be able to revert the changes if needed.', 'wp-optimize'); ?>
+			<label for="confirm_deletion_without_backup"><input type="checkbox" id="confirm_deletion_without_backup"> <strong><?php esc_html_e('No automatic backup was detected.', 'wp-optimize'); ?></strong> <?php esc_html_e('I confirm that I will be able to revert the changes if needed.', 'wp-optimize'); ?></label>
 		</p>
 	<# } #>
 	<p>
-		<input type="checkbox" id="confirm_table_deletion"> <?php esc_html_e('I confirm that I have understood the risks in doing that, and that I know what I am doing.', 'wp-optimize'); ?>
+		<label for="confirm_table_deletion"><input type="checkbox" id="confirm_table_deletion"> <?php esc_html_e('I confirm that I have understood the risks in doing that, and that I know what I am doing.', 'wp-optimize'); ?></label>
 	</p>
 	<p>
-		<input type="checkbox" id="ignores_table_delete_warning"> <?php esc_html_e('Do not show this warning again.', 'wp-optimize'); ?>
+		<label for="ignores_table_deletion_warning"><input type="checkbox" id="ignores_table_deletion_warning"> <?php esc_html_e('Do not show this warning again.', 'wp-optimize'); ?></label>
 	</p>
 	<button type="button" class="button button-primary delete-table" disabled><?php esc_html_e('Remove the table', 'wp-optimize'); ?></button>
 	<button type="button" class="button cancel wpo-modal--close"><?php esc_html_e('Cancel', 'wp-optimize'); ?></button>

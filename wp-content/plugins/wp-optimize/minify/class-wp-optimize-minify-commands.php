@@ -16,7 +16,6 @@ class WP_Optimize_Minify_Commands {
 	 * @return array
 	 */
 	public function get_minify_cached_files($data = array()) {
-		if (!WPO_MINIFY_PHP_VERSION_MET) return array('error' => __('WP-Optimize Minify requires a higher PHP version', 'wp-optimize'));
 		$stamp = isset($data['stamp']) ? $data['stamp'] : 0;
 		$files = WP_Optimize_Minify_Cache_Functions::get_cached_files($stamp, false);
 		$files['js'] = array_map(array('WP_Optimize_Minify_Cache_Functions', 'format_file_logs'), $files['js']);
@@ -31,7 +30,6 @@ class WP_Optimize_Minify_Commands {
 	 * @return array
 	 */
 	public function purge_all_minify_cache() {
-		if (!WPO_MINIFY_PHP_VERSION_MET) return array('error' => __('WP-Optimize Minify requires a higher PHP version', 'wp-optimize'));
 		WP_Optimize_Minify_Cache_Functions::purge();
 		WP_Optimize_Minify_Cache_Functions::cache_increment();
 		$others = WP_Optimize_Minify_Cache_Functions::purge_others();
@@ -53,7 +51,6 @@ class WP_Optimize_Minify_Commands {
 	 * @return array
 	 */
 	public function minify_increment_cache() {
-		if (!WPO_MINIFY_PHP_VERSION_MET) return array('error' => __('WP-Optimize Minify requires a higher PHP version', 'wp-optimize'));
 		WP_Optimize_Minify_Cache_Functions::cache_increment();
 		$files = $this->get_minify_cached_files();
 		return array(
@@ -68,8 +65,6 @@ class WP_Optimize_Minify_Commands {
 	 * @return array
 	 */
 	public function purge_minify_cache() {
-		if (!WPO_MINIFY_PHP_VERSION_MET) return array('error' => __('WP-Optimize Minify requires a higher PHP version', 'wp-optimize'));
-		
 		if (!WP_Optimize()->get_minify()->can_purge_cache() && !(defined('WP_CLI') && WP_CLI)) {
 			return array(
 				'error' => __('You do not have permission to purge the cache', 'wp-optimize')
@@ -112,7 +107,6 @@ class WP_Optimize_Minify_Commands {
 	 * @return array
 	 */
 	public function delete_minify_cache_file($filename) {
-		if (!WPO_MINIFY_PHP_VERSION_MET) return array('error' => __('WP-Optimize Minify requires a higher PHP version', 'wp-optimize'), 'result' => '', 'files' => '');
 		if (!WP_Optimize()->get_minify()->can_purge_cache()) return array('error' => __('You do not have permission to purge the cache', 'wp-optimize'), 'result' => '', 'files' => '');
 		
 		$response = array(

@@ -677,6 +677,11 @@ a.wpo-info__trigger span.dashicons {
   font-weight: bold;
 }
 
+p.wpo-description-show-links {
+  z-index: 999;
+  position: relative;
+}
+
 /* TABS */
 #wp-optimize-wrap h2.nav-tab-wrapper {
   margin-bottom: 0;
@@ -1846,7 +1851,7 @@ textarea.cache-settings {
   color: #9B3600;
 }
 #wp-optimize-wrap .processed .wpo_min_log .wpo_min_file_error a:hover {
-  color: #682400;
+  color: rgb(104, 36.2322580645, 0);
 }
 #wp-optimize-wrap .processed .wpo_min_log .wpo_min_file_debug {
   color: #9c9c9c;
@@ -1866,7 +1871,7 @@ textarea.cache-settings {
 #wp-optimize-wrap .wpo-page:not(.is-enabled) .wpo-minify-features {
   display: none;
 }
-#wp-optimize-wrap .wpo-page[data-whichpage=wpo_minify]:not(.is-enabled) .nav-tab-wrapper > a:not([data-tab=status]):not([role=toggle-menu]) {
+#wp-optimize-wrap .wpo-page[data-whichpage=wpo_minify]:not(.is-enabled) .nav-tab-wrapper > a:not([data-tab=status]):not([data-tab=analytics]):not([role=toggle-menu]) {
   display: none;
 }
 #wp-optimize-wrap .wpo-minify-features {

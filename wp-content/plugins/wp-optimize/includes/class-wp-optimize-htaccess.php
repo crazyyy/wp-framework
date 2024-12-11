@@ -185,7 +185,7 @@ class WP_Optimize_Htaccess {
 	 * @param array  $content
 	 * @param string $section
 	 */
-	public function update_commented_section($content, $section = 'WP-Optimize Browser Cache') {
+	public function update_commented_section($content, $section = 'WP-Optimize Browser Cache', $prepend = false) {
 		$section_begin = $this->get_section_begin_comment($section);
 		$section_end = $this->get_section_end_comment($section);
 
@@ -198,7 +198,7 @@ class WP_Optimize_Htaccess {
 		// check if section with cache settings already in the file.
 		if (false === $section_index) {
 			// no section in file then add it to the end of file.
-			$this->_file_tree = array_merge($this->_file_tree, $content);
+			$this->_file_tree = $prepend ? array_merge($content, $this->_file_tree) : array_merge($this->_file_tree, $content);
 		} else {
 			$remove_length = (false === $section_index['end']) ? null : ($section_index['end'] - $section_index['begin'] + 1);
 			array_splice($this->_file_tree, $section_index['begin'], $remove_length, $content);
@@ -268,7 +268,7 @@ class WP_Optimize_Htaccess {
 			if ($value == $section_end_normalized) $section_end_index = $i;
 		}
 
-		if (false == $section_begin_index) {
+		if (false === $section_begin_index) {
 			return false;
 		} else {
 			return array(

@@ -15,6 +15,7 @@ class WPO_Uninstall {
 		WP_Optimize()->get_minify()->plugin_uninstall();
 		WP_Optimize()->get_options()->wipe_settings();
 		WP_Optimize()->delete_transients_and_semaphores();
+		WP_Optimize()->get_table_management()->delete_plugin_tables();
 		Updraft_Tasks_Activation::uninstall(WPO_PLUGIN_SLUG);
 		self::delete_wpo_folder();
 		

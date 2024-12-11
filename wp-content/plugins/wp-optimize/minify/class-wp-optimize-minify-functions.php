@@ -626,7 +626,7 @@ class WP_Optimize_Minify_Functions {
 	}
 
 	/**
-	 * Get the content of an asset, wether local or remote
+	 * Get the content of an asset, whether local or remote
 	 *
 	 * @param string $url
 	 * @return array
@@ -873,7 +873,7 @@ class WP_Optimize_Minify_Functions {
 		}
 
 		/**
-		 * Wether to exclude the content or not from the minifying process.
+		 * Whether to exclude the content or not from the minifying process.
 		 */
 		return apply_filters('wpo_minify_exclude_contents', false);
 	}

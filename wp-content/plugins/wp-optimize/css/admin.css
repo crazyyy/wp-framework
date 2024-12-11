@@ -615,6 +615,53 @@ a.loading.wpo-refresh-gzip-status img.wpo_spinner.display-none {
   margin-top: 10px;
 }
 
+#wpo-server-info h2 {
+  margin-top: 2.5em;
+}
+
+#wpo-server-info-report {
+  display: none;
+}
+
+.wpo-settings-debug {
+  max-height: 30vh;
+  overflow: auto;
+}
+
+#wpo-status-report-container pre {
+  white-space: pre-wrap;
+  width: 100%;
+}
+
+#wpo-status-report-container table td:first-child {
+  width: 25%;
+}
+
+#wpo-copy-action-result {
+  display: none;
+  font-style: italic;
+}
+
+#wpo_404_detector_results {
+  margin-top: 15px;
+}
+
+.wpo-404-requests {
+  margin-top: 25px;
+}
+
+.wpo-text-center {
+  text-align: center;
+}
+
+th.wpo-thin-header {
+  width: 125px;
+}
+
+th.wpo-thin-header-2 {
+  width: 175px;
+}
+
 #wpo-save-options-response {
   margin-top: 10px;
   color: #009B24;

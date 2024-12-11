@@ -1261,7 +1261,7 @@ function wpo_cache_add_footer_output($output = null) {
 
 	if (function_exists('current_filter') && 'shutdown' == current_filter()) {
 		// Only add the line if it was a page, not something else (e.g. REST response)
-		if (function_exists('did_action') && did_action('wp_footer')) {
+		if (function_exists('did_action') && did_action('wp_footer') && !preg_match('/\/wp\-json\//', $_SERVER['REQUEST_URI'])) {
 			echo "\n<!-- WP Optimize page cache - https://getwpo.com - ".$buffered." -->\n";
 		} elseif (defined('WPO_CACHE_DEBUG') && WPO_CACHE_DEBUG && (!defined('REST_REQUEST') || !REST_REQUEST)) {
 			error_log('[CACHE DEBUG] '.wpo_current_url() . ' - ' . $buffered);
@@ -1344,13 +1344,62 @@ function wpo_cache_config_get($key, $default = false) {
 }
 endif;
 
+if (!function_exists('wpo_read_cache_directory_htaccess')) :
+/**
+ * Read .htaccess file for the cache directory.
+ *
+ * @return string
+ */
+function wpo_read_cache_directory_htaccess() {
+	$htaccess_filename = WPO_CACHE_FILES_DIR . '/.htaccess';
+	return is_file($htaccess_filename) ? file_get_contents($htaccess_filename) : '';
+}
+endif;
+
+if (!function_exists('wpo_write_cache_directory_htaccess')) :
+/**
+ * Write .htaccess file for the cache directory.
+ *
+ * @param string $htaccess_content
+ *
+ * @return void
+ */
+function wpo_write_cache_directory_htaccess($htaccess_content) {
+	$htaccess_filename = WPO_CACHE_FILES_DIR . '/.htaccess';
+	@file_put_contents($htaccess_filename, $htaccess_content); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress the error when there is file permission issues
+}
+endif;
+
+if (!function_exists('wpo_allow_access_to_index_cache_files')) :
+/**
+ * Update the .htaccess file to allow access to index.html files in the cache directory.
+ *
+ * @return void
+ */
+function wpo_allow_access_to_index_cache_files() {
+	$htaccess_content = wpo_read_cache_directory_htaccess();
+
+	if (false === strpos($htaccess_content, 'Allow access to index.html files')) {
+		$allow_access_to_index_html = "\n\n# Allow access to index.html files\n<FilesMatch \"index\\.html$\">\n\tOrder allow,deny\n\tAllow from all\n</FilesMatch>";
+		$htaccess_content .= $allow_access_to_index_html;
+		wpo_write_cache_directory_htaccess($htaccess_content);
+	}
+}
+endif;
+
+
 if (!function_exists('wpo_disable_cache_directories_viewing')) :
+/**
+ * Create config files to disable cache directory viewing
+ *
+ * @return void
+ */
 function wpo_disable_cache_directories_viewing() {
 	global $is_apache, $is_IIS, $is_iis7;
 
 	if (!is_dir(WPO_CACHE_FILES_DIR)) return;
 
-	// Create .htaccess file for apache server.
+	// Create a .htaccess file for apache server.
 	if ($is_apache) {
 		$htaccess_filename = WPO_CACHE_FILES_DIR . '/.htaccess';
 
@@ -1364,11 +1413,11 @@ Options -Indexes
 <FilesMatch ".*">
 	Order allow,deny
 	Deny from all
-</FilesMatch>		
+</FilesMatch>
 EOF;
 		// phpcs:enable
 
-		if (!is_file($htaccess_filename)) @file_put_contents($htaccess_filename, $htaccess_content); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress the error when there is file permission issues
+		if (!is_file($htaccess_filename)) wpo_write_cache_directory_htaccess($htaccess_content);
 	}
 
 	// Create web.config file for IIS servers.

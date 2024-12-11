@@ -62,10 +62,13 @@ class WP_Optimize_Admin {
 				"js" => __('JavaScript', 'wp-optimize').'<span class="menu-pill disabled hidden">'.__('Disabled', 'wp-optimize').'</span>',
 				"css" => __('CSS', 'wp-optimize').'<span class="menu-pill disabled hidden">'.__('Disabled', 'wp-optimize').'</span>',
 				"font" => __('Fonts', 'wp-optimize'),
-				"analytics" => __('Analytics', 'wp-optimize').'<span class="menu-pill premium-only">Premium</span>',
+				"analytics" => __('Google Analytics', 'wp-optimize').'<span class="menu-pill premium-only">Premium</span>',
 				"settings" => __('Settings', 'wp-optimize'),
 				"preload" => __('Preload', 'wp-optimize'),
 				"advanced" => __('Advanced', 'wp-optimize')
+			),
+			'wpo_performance' => array(
+				'404_detector' => __('Not found requests', 'wp-optimize'),
 			),
 			'wpo_settings' => array(
 				'settings' => array(
@@ -74,6 +77,7 @@ class WP_Optimize_Admin {
 //				'updraftcentral' => array(
 //					'title' => 'UpdraftCentral'
 //				),
+				'status' => __('System status', 'wp-optimize'),
 			),
 			'wpo_support' => array('support' => __('Support / FAQs', 'wp-optimize')),
 			'wpo_mayalso' => array('may_also' => __('Premium / Plugin family', 'wp-optimize')),
@@ -188,6 +192,7 @@ class WP_Optimize_Admin {
 		 * SETTINGS
 		 */
 		add_action('wp_optimize_admin_page_wpo_settings_settings', array($this, 'output_dashboard_settings_tab'), 20);
+		add_action('wp_optimize_admin_page_wpo_settings_status', array($this, 'output_dashboard_status_tab'));
 
 		/**
 		 * UpdraftCentral
@@ -206,6 +211,11 @@ class WP_Optimize_Admin {
 		add_action('wp_optimize_admin_page_WP-Optimize_tables', array($this, 'output_database_tables_tab'), 20);
 		add_action('wp_optimize_admin_page_WP-Optimize_settings', array($this, 'output_database_settings_tab'), 20);
 		add_action('wp_optimize_admin_page_WP-Optimize_table_analysis', array($this, 'output_table_usage_tab'), 20);
+		/**
+		 * PERFORMANCE
+		 */
+		add_action('wp_optimize_admin_page_wpo_performance_404_detector', array($this, 'output_performance_404_requests'), 20);
+
 		/**
 		 * CACHE
 		 */
@@ -300,6 +310,13 @@ class WP_Optimize_Admin {
 	}
 
 	/**
+	 * Outputs the system status page
+	 */
+	public function output_dashboard_status_tab() {
+		WP_Optimize()->include_template('status/status-page.php');
+	}
+
+	/**
 	 * UpdraftCentral settings tab
 	 */
 	public function output_dashboard_updraftcentral_tab() {
@@ -354,7 +371,7 @@ class WP_Optimize_Admin {
 		$wpo_cache = WP_Optimize()->get_page_cache();
 		$wpo_cache_options = $wpo_cache->config->get();
 		$wpo_cache_preloader = WP_Optimize_Page_Cache_Preloader::instance();
-		$is_running = $wpo_cache_preloader->is_running();
+		$is_running = $wpo_cache_preloader->is_busy() && !$wpo_cache_preloader->is_cancelled();
 		$status = $wpo_cache_preloader->get_status_info();
 
 		WP_Optimize()->include_template('cache/page-cache-preload.php', false, array(
@@ -496,6 +513,38 @@ class WP_Optimize_Admin {
 		} else {
 			$this->prevent_run_optimizations_message();
 		}
+	}
+
+	/**
+	 * Outputs the Performance 404 requests Tab
+	 */
+	public function output_performance_404_requests() {
+		$wp_optimize = WP_Optimize();
+		$is_enabled = $wp_optimize->get_options()->get_option('404_detector', 0);
+
+		$detector = $wp_optimize->get_404_detector();
+
+		$requests = $detector->get_suspicious_requests();
+
+		$report_has_data = false;
+		foreach ($requests as $url_requests) {
+			foreach ($url_requests as $row) {
+				if (1 < $row->occurrences && 'grouped' == $row->row_type) {
+					if (0 == $row->non_suspicious_referrers && 1 < $row->total_referrers) {
+						continue;
+					}
+				}
+				$report_has_data = true;
+			}
+		}
+
+		$wp_optimize->include_template('performance/404-detector.php', false, array(
+			'requests' => $requests,
+			'suspicious_threshold' => $detector->get_suspicious_request_count_threshold(),
+			'obj_404_detector' => $detector,
+			'report_has_data' => $report_has_data,
+			'is_enabled' => $is_enabled,
+		));
 	}
 
 	/**
@@ -699,9 +748,18 @@ class WP_Optimize_Admin {
 				'menu_title' => __('Minify', 'wp-optimize'),
 				'menu_slug' => 'wpo_minify',
 				'function' => array($this, 'display_admin'),
-				'icon' => 'dashboard',
+				'icon' => 'editor-contract',
 				'create_submenu' => true,
 				'order' => 50,
+			),
+			array(
+				'page_title' => __('Performance', 'wp-optimize'),
+				'menu_title' => __('Performance', 'wp-optimize'),
+				'menu_slug' => 'wpo_performance',
+				'function' => array($this, 'display_admin'),
+				'icon' => 'performance',
+				'create_submenu' => true,
+				'order' => 53,
 			),
 			array(
 				'create_submenu' => false,

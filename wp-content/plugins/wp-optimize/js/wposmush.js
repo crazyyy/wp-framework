@@ -1076,6 +1076,10 @@ var WP_Optimize_Smush = function() {
 				callback: function(resp) {
 
 					summary = resp.session_stats;
+					// Prevent pops with undefined headers
+					if (!resp.session_stats) {
+						return;
+					}
 
 					if (0 != resp.completed_task_count) {
 						summary += '<hr>' + resp.summary;

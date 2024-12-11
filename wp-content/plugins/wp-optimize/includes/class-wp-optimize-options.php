@@ -33,6 +33,7 @@ class WP_Optimize_Options {
 		'auto' => '',
 		'logging' => '',
 		'logging-additional' => '',
+		'404_detector' => 0,
 	);
 
 	/**
@@ -282,6 +283,9 @@ class WP_Optimize_Options {
 		$enable_db_force_optimize = (isset($settings['innodb-force-optimize']) ? 'true' : 'false');
 		$this->update_option('enable-db-force-optimize', $enable_db_force_optimize);
 
+		$wpo_404_detector = isset($settings['404_detector']) ? $settings['404_detector'] : 0;
+		$this->update_option('404_detector', $wpo_404_detector);
+
 		$output['messages'][] = __('Settings updated.', 'wp-optimize');
 
 		return $output;
@@ -297,13 +301,20 @@ class WP_Optimize_Options {
 		global $wpdb;
 
 		wp_cache_flush();
+
+		$settings = array(
+			'wpo-ignores-table-deletion-warning',
+			'wpo-ignores-post-meta-deletion-warning',
+			'wpo-ignores-orphaned-relationship-data-deletion-warning',
+		);
 		
-		// Delete the user meta if user meta is set for ignores the table delete warning
-		$user_query = new WP_User_Query(array('meta_key' => 'wpo-ignores-table-delete-warning', 'meta_value' => '1', 'fields' => 'ID'));
-		$users = $user_query->get_results();
-		if (!empty($users)) {
-			foreach ($users as $user_id) {
-				delete_user_meta($user_id, 'wpo-ignores-table-delete-warning');
+		foreach ($settings as $setting) {
+			$user_query = new WP_User_Query(array('meta_key' => $setting, 'meta_value' => '1', 'fields' => 'ID'));
+			$users = $user_query->get_results();
+			if (!empty($users)) {
+				foreach ($users as $user_id) {
+					delete_user_meta($user_id, $setting);
+				}
 			}
 		}
 

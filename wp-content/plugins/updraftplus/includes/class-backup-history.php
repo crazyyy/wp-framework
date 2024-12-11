@@ -44,7 +44,7 @@ class UpdraftPlus_Backup_History {
 	 */
 	public static function add_jobdata($backup_history) {
 	
-		global $wpdb;
+		global $wpdb, $updraftplus;
 		$table = is_multisite() ? $wpdb->sitemeta : $wpdb->options;
 		$key_column = is_multisite() ? 'meta_key' : 'option_name';
 		$value_column = is_multisite() ? 'meta_value' : 'option_value';
@@ -84,7 +84,7 @@ class UpdraftPlus_Backup_History {
 				// The 16 here is the length of 'updraft_jobdata_'
 				$nonce = substr($values->$key_column, 16);
 				if (empty($nonces_map[$nonce]) || empty($values->$value_column)) continue;
-				$jobdata = maybe_unserialize($values->$value_column);
+				$jobdata = $updraftplus->unserialize($values->$value_column);
 				$backup_history[$nonces_map[$nonce]]['jobdata'] = empty($jobdata) ? array() : $jobdata;
 			}
 			foreach ($columns as $nonce) {
@@ -284,9 +284,9 @@ class UpdraftPlus_Backup_History {
 	 * @return Mixed - the database option
 	 */
 	public static function filter_updraft_backup_history() {
-		global $wpdb;
+		global $wpdb, $updraftplus;
 		$row = $wpdb->get_row($wpdb->prepare("SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", 'updraft_backup_history'));
-		if (is_object($row)) return maybe_unserialize($row->option_value);
+		if (is_object($row) && !empty($row->option_value)) return $updraftplus->unserialize($row->option_value);
 		return false;
 	}
 	

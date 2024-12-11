@@ -73,3 +73,48 @@
 	<?php } ?>
 	</tbody>
 </table>
+
+<script type="text/html" id="tmpl-wpo-postmeta">
+	<h3><span class="dashicons dashicons-warning"></span> <?php esc_html_e('Are you sure you want to clean post metadata?', 'wp-optimize'); ?></h3>
+	<div class="notice notice-warning">
+		<p><?php echo esc_html__('WARNING', 'wp-optimize') . ' - ' . esc_html__('Only clean post metadata if you are sure of what you are doing, and after taking a backup with UpdraftPlus plugin', 'wp-optimize'); ?></p>
+	</div>
+	<h4><?php echo esc_html__('You are about to remove posts metadata.', 'wp-optimize'); ?></h4>
+	<p>
+		<input type="checkbox" id="confirm_post_meta_deletion"> <label for="confirm_post_meta_deletion"><?php esc_html_e('I have taken a backup and I want to continue with this optimization.', 'wp-optimize'); ?></label>
+	</p>
+	<p>
+		<input type="checkbox" id="ignores_post_meta_deletion_warning"> <label for="ignores_post_meta_deletion_warning"><?php esc_html_e('Do not show this warning again.', 'wp-optimize'); ?></label>
+	</p>
+	<button type="button" id="confirm-post-meta-delete-action" class="button button-primary delete-post-meta" disabled><?php esc_html_e('Remove posts metadata', 'wp-optimize'); ?></button>
+	<button type="button" class="button cancel wpo-modal--close"><?php esc_html_e('Cancel', 'wp-optimize'); ?></button>
+</script>
+
+<script type="text/html" id="tmpl-wpo-orphandata">
+	<h3><span class="dashicons dashicons-warning"></span> <?php esc_html_e('Are you sure you want to clean orphaned relationship data?', 'wp-optimize'); ?></h3>
+	<div class="notice notice-warning">
+		<p><?php echo esc_html__('WARNING', 'wp-optimize') . ' - ' . esc_html__('Only clean orphaned relationship data if you are sure of what you are doing, and after taking a backup with UpdraftPlus plugin', 'wp-optimize'); ?></p>
+	</div>
+	<h4><?php echo esc_html__('You are about to remove orphaned relationship data.', 'wp-optimize'); ?></h4>
+	<p>
+		<input type="checkbox" id="confirm_orphaned_relationship_data_deletion"> <label for="confirm_orphaned_relationship_data_deletion"><?php esc_html_e('I want to continue with this optimization.', 'wp-optimize'); ?></label>
+	</p>
+	<p>
+		<input type="checkbox" id="ignores_orphaned_relationship_data_deletion_warning"> <label for="ignores_orphaned_relationship_data_deletion_warning"><?php esc_html_e('Do not show this warning again.', 'wp-optimize'); ?></label>
+	</p>
+	<button type="button" id="confirm-orphaned-relationship-data-delete-action" class="button button-primary delete-orphaned-relationship-data" disabled><?php esc_html_e('Remove orphaned relationship data', 'wp-optimize'); ?></button>
+	<button type="button" class="button cancel wpo-modal--close"><?php esc_html_e('Cancel', 'wp-optimize'); ?></button>
+</script>
+
+<script type="text/html" id="tmpl-wpo-grouped-warnings">
+	<h3><span class="dashicons dashicons-warning"></span> <?php esc_html_e('Please review these actions that are about to run', 'wp-optimize'); ?></h3>
+	<div class="notice notice-warning">
+		[[warning_messages]]
+	</div>
+	<h4><?php echo esc_html__('You are about to remove sensible data.', 'wp-optimize'); ?></h4>
+	<p>
+		<input type="checkbox" id="confirm_grouped_warnings_data_deletion"> <label for="confirm_grouped_warnings_data_deletion"><?php esc_html_e('I want to continue with these optimizations.', 'wp-optimize'); ?></label>
+	</p>
+	<button type="button" id="confirm-grouped-warnings-data-delete-action" class="button button-primary delete-grouped-warnings-data" disabled><?php esc_html_e('Apply optimization', 'wp-optimize'); ?></button>
+	<button type="button" class="button cancel wpo-modal--close"><?php esc_html_e('Cancel', 'wp-optimize'); ?></button>
+</script>

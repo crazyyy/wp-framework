@@ -54,6 +54,13 @@ class WPO_Page_Cache {
 	public $logger;
 
 	/**
+	 * File Logger for this class
+	 *
+	 * @var mixed
+	 */
+	private $file_logger;
+
+	/**
 	 * Instance of this class
 	 *
 	 * @var mixed
@@ -99,10 +106,12 @@ class WPO_Page_Cache {
 		WPO_Cache_Rules::instance();
 		WP_Optimize_Page_Cache_Preloader::instance();
 		$this->logger = new Updraft_PHP_Logger();
+		$this->file_logger = new Updraft_File_Logger(WP_Optimize_Utils::get_log_file_path('cache'));
 
 		add_action('activated_plugin', array($this, 'activate_deactivate_plugin'));
 		add_action('deactivate_plugin', array($this, 'activate_deactivate_plugin'));
 		add_action('wpo_purge_old_cache', array($this, 'purge_old'));
+		add_action('wpo_prune_cache_logs', array($this, 'prune_cache_logs'));
 
 		/**
 		 * Regenerate config file on cache flush.
@@ -141,8 +150,12 @@ class WPO_Page_Cache {
 			if (!wp_next_scheduled('wpo_purge_old_cache')) {
 				wp_schedule_event(time() + (false === $page_cache_length ? '86400' : $page_cache_length), 'wpo_purge_old_cache', 'wpo_purge_old_cache');
 			}
+			if (!wp_next_scheduled('wpo_prune_cache_logs')) {
+				wp_schedule_event(time(), 'weekly', 'wpo_prune_cache_logs');
+			}
 		} else {
 			wp_clear_scheduled_hook('wpo_purge_old_cache');
+			wp_clear_scheduled_hook('wpo_prune_cache_logs');
 		}
 	}
 
@@ -155,7 +168,9 @@ class WPO_Page_Cache {
 
 		$this->update_cache_config();
 
-		$this->purge();
+		$is_cache_purged = $this->purge();
+
+		if ($is_cache_purged) $this->file_log("Full Cache Purge triggered by: plugin activation/deactivation");
 	}
 
 	/**
@@ -253,9 +268,12 @@ class WPO_Page_Cache {
 				$post = isset($_GET['post']) ? (int) $_GET['post'] : 0;
 				if ($post > 0) {
 					$success = self::delete_single_post_cache($post);
+					if ($success) $this->file_log("Cache for URL: {{URL}} has been purged, triggered by: " . __METHOD__, $post);
 				}
 			} else {
-				$success = self::delete_cache_by_url(wpo_current_url());
+				$url = wpo_current_url();
+				$success = self::delete_cache_by_url($url);
+				if ($success) $this->file_log("Cache for URL: " . self::remove_query_params($url) . " has been purged, triggered by: " . __METHOD__);
 			}
 
 			// remove nonce from url and reload page.
@@ -265,6 +283,7 @@ class WPO_Page_Cache {
 		} elseif (wp_verify_nonce($_GET['_wpo_purge'], 'wpo_purge_all_pages_cache')) {
 			$success = self::purge();
 			$this->maybe_set_preload_cron_job();
+			if ($success) $this->file_log("Full Cache Purge triggered by: ". __METHOD__);
 
 			// remove nonce from url and reload page.
 			wp_redirect(add_query_arg('wpo_all_pages_cache_purged', $success, remove_query_arg('_wpo_purge')));
@@ -359,6 +378,7 @@ class WPO_Page_Cache {
 	 * @return WP_Error|bool - true on success, error otherwise
 	 */
 	public function enable($force_enable = false) {
+		global $is_apache;
 		static $already_ran_enable = false;
 
 		if ($already_ran_enable) return $already_ran_enable;
@@ -380,6 +400,13 @@ class WPO_Page_Cache {
 		}
 
 		$this->maybe_regenerate_cache_config_file();
+
+		// Enable `.htaccess` rules to serve cached files
+		if ($is_apache && apply_filters('wpo_serve_cache_via_htaccess', false)) {
+			wpo_disable_cache_directories_viewing();
+			wpo_allow_access_to_index_cache_files();
+			$this->update_serve_cache_rules_htaccess_section(true);
+		}
 
 		if (!$force_enable) {
 			$already_ran_enable = true;
@@ -422,6 +449,8 @@ class WPO_Page_Cache {
 	 * @return bool - true on success, false otherwise
 	 */
 	public function disable() {
+		global $is_apache;
+
 		$ret = true;
 
 		$advanced_cache_file = $this->get_advanced_cache_filename();
@@ -457,10 +486,18 @@ class WPO_Page_Cache {
 		}
 
 		// Delete cache to avoid stale cache on next activation
-		$this->purge();
+		$is_cache_purged = $this->purge();
+		if ($is_cache_purged) $this->file_log("Full Cache Purge triggered by: ". __METHOD__);
 
+		// Delete `.htaccess` rules to serve cached files
+		if ($is_apache && apply_filters('wpo_serve_cache_via_htaccess', false)) {
+			$this->update_serve_cache_rules_htaccess_section(false);
+		}
+		
 		// Unschedule cron job to purge old cache
 		wp_clear_scheduled_hook('wpo_purge_old_cache');
+
+		if (!is_wp_error($ret)) wp_clear_scheduled_hook('wpo_prune_cache_logs');
 
 		return $ret;
 	}
@@ -782,7 +819,8 @@ EOF;
 
 		// Purge the cache when the site url or folder changed.
 		if ($is_the_site_url_or_folder_changed) {
-			$this->purge();
+			$is_cache_purged = $this->purge();
+			if ($is_cache_purged) $this->file_log("Full Cache Purge triggered by: ". __METHOD__);
 		}
 
 		if (!$this->write_advanced_cache()) {
@@ -1558,6 +1596,18 @@ EOF;
 	}
 
 	/**
+	 * Remove query params from request url
+	 *
+	 * @param string $url The request url.
+	 * @return string Returns url without query params.
+	 */
+	private static function remove_query_params($url) {
+		$parsed_url = wp_parse_url($url);
+		if (!$parsed_url) return '';
+		return $parsed_url['scheme'] . '://' . $parsed_url['host'] . $parsed_url['path'];
+	}
+
+	/**
 	 * Check configuration for auto preloading after cache deletion
 	 *
 	 * @return bool
@@ -1565,8 +1615,102 @@ EOF;
 	public function should_auto_preload_purged_contents() {
 		$wpo_cache = WP_Optimize()->get_page_cache();
 		$wpo_cache_options = $wpo_cache->config->get();
-		
+
 		return $wpo_cache_options['auto_preload_purged_contents'];
+	}
+
+	/**
+	 * Logging of interesting messages related to Cache Purging
+	 *
+	 * @param string $message
+	 * @param int $post_id
+	 */
+	public function file_log($message, $post_id = 0) {
+		if (!empty($post_id)) {
+			if (false !== strpos($message, '{{URL}}')) {
+				$message = str_replace('{{URL}}', get_permalink($post_id), $message);
+			}
+			if (false !== strpos($message, '{{title}}')) {
+				$message = str_replace('{{title}}', '"' . get_the_title($post_id) . '"', $message);
+			}
+		}
+		$this->file_logger->info($message);
+	}
+
+	/**
+	 * Prunes the log file
+	 */
+	public function prune_cache_logs() {
+		$this->file_log("Pruning the Cache log file");
+		$this->file_logger->prune_logs();
+	}
+
+	/**
+	 * Update .htaccess file to serve cached files directly.
+	 *
+	 * @param bool $enable
+	 */
+	public function update_serve_cache_rules_htaccess_section($enable) {
+		$htaccess = new WP_Optimize_Htaccess();
+
+		$section_title = 'WP-Optimize rules to serve cached files';
+
+		if ($enable) {
+			if (!$htaccess->is_commented_section_exists($section_title)) {
+				$htaccess->update_commented_section($this->prepare_apache_cache_handle_section(), $section_title, true);
+				$htaccess->write_file();
+			}
+		} elseif ($htaccess->is_commented_section_exists($section_title)) {
+			$htaccess->remove_commented_section($section_title);
+			$htaccess->write_file();
+		}
+
+	}
+
+	/**
+	 * Get the .htaccess section with rules to serve cached files
+	 *
+	 * @return array
+	 */
+	private function prepare_apache_cache_handle_section() {
+
+		$site_root = $this->get_site_root_path();
+
+		return array(
+			array(
+				'<IfModule mod_rewrite.c>',
+				'RewriteEngine On',
+				'RewriteCond %{REQUEST_METHOD} GET|HEAD',
+				'RewriteCond %{QUERY_STRING} =""',
+				'RewriteCond %{HTTP:Cookie} =""',
+				'RewriteCond %{REQUEST_URI} !^/(wp-(?:admin|login|register|comments-post|cron|json))/ [NC]',
+				'RewriteCond %{HTTP_USER_AGENT} !(android|blackberry|ipad|iphone|ipod|windows.phone|iEMobile|opera.mini|opera.mobile|webos|symbian|windows.mobile|kindle|googlebot.mobile) [NC]',
+				'RewriteCond %{DOCUMENT_ROOT}'.$site_root.'wp-content/cache/wpo-cache/%{HTTP_HOST}%{REQUEST_URI}index.html -f',
+				'RewriteRule ^(.*)$ '.$site_root.'wp-content/cache/wpo-cache/%{HTTP_HOST}%{REQUEST_URI}index.html [L]',
+				array(
+					'<IfModule mod_headers.c>',
+					'Header always set X-WP-Optimize-Cache-Header "Loaded from WP-Optimize cache" env=REDIRECT_STATUS',
+					'</IfModule>',
+				),
+				'</IfModule>',
+			),
+		);
+	}
+
+	/**
+	 * Get relative site root path, if site is placed in the subdirectory then it returns /subdirectory otherwise /
+	 *
+	 * @return string
+	 */
+	private function get_site_root_path($default = '/') {
+		$site_root = parse_url(site_url());
+		if (isset($site_root['path'])) {
+			$site_root = trailingslashit($site_root['path']);
+		} else {
+			$site_root = $default;
+		}
+
+		return $site_root;
 	}
 }
 

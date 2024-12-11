@@ -561,7 +561,7 @@ class WP_Optimize_Commands {
 		$admin_settings .= WP_Optimize()->include_template('database/settings-general.php', true, array('optimize_db' => false));
 		$admin_settings .= WP_Optimize()->include_template('database/settings-auto-cleanup.php', true, array('optimize_db' => false, 'show_innodb_option' => WP_Optimize()->template_should_include_data() && $this->optimizer->show_innodb_force_optimize()));
 		$admin_settings .= WP_Optimize()->include_template('settings/settings-logging.php', true, array('optimize_db' => false));
-		$admin_settings .= '<input id="wp-optimize-settings-save" class="button button-primary" type="submit" name="wp-optimize-settings" value="' . esc_attr(__('Save settings', 'wp-optimize')) .'" />';
+		$admin_settings .= '<input id="wp-optimize-settings-save" class="button button-primary" type="submit" name="wp-optimize-settings" value="' . esc_attr__('Save settings', 'wp-optimize') .'" />';
 		$admin_settings .= '</form>';
 		$admin_settings .= WP_Optimize()->include_template('settings/settings-trackback-and-comments.php', true, array('optimize_db' => false));
 		$content = $admin_settings;
@@ -1060,13 +1060,35 @@ class WP_Optimize_Commands {
 	}
 	
 	/**
-	 * Ignores the table delete warning for the current user
+	 * Ignores the table deletion warning for the current user
 	 *
-	 * @return boolean
+	 * @return array
 	 */
-	public function user_ignores_table_delete_warning() {
+	public function user_ignores_table_deletion_warning() {
 		return array(
-			'success' => update_user_meta(get_current_user_id(), 'wpo-ignores-table-delete-warning', true)
+			'success' => update_user_meta(get_current_user_id(), 'wpo-ignores-table-deletion-warning', true)
+		);
+	}
+
+	/**
+	 * Ignores the post meta deletion warning for the current user
+	 *
+	 * @return array
+	 */
+	public function user_ignores_post_meta_deletion_warning() {
+		return array(
+			'success' => update_user_meta(get_current_user_id(), 'wpo-ignores-post-meta-deletion-warning', true)
+		);
+	}
+
+	/**
+	 * Ignores the orphaned relationship data deletion warning for the current user
+	 *
+	 * @return array
+	 */
+	public function user_ignores_orphaned_relationship_data_deletion_warning() {
+		return array(
+			'success' => update_user_meta(get_current_user_id(), 'wpo-ignores-orphaned-relationship-data-deletion-warning', true)
 		);
 	}
 
@@ -1079,6 +1101,63 @@ class WP_Optimize_Commands {
 		WP_Optimization_images::instance()->output_csv();
 		return array(
 			'success' => true
+		);
+	}
+
+	/**
+	 * Build the HTML for the status report tab
+	 *
+	 * @return array
+	 */
+	public function generate_status_report() {
+		$system_status = WP_Optimize_System_Status_Report::get_instance();
+		$report_data = $system_status->generate_report();
+		
+		$html = WP_Optimize()->include_template('status/status-page-ajax.php', true, array(
+			'report_data' => $report_data
+		));
+		
+		return array(
+			'success' => true,
+			'html' => $html,
+			'replaceable_md_tags' => $system_status->get_replaceable_md_tags()
+		);
+	}
+
+	/**
+	 * Gz compress text logs using `gzencode` to generate valid gzip files
+	 *
+	 * @return array
+	 */
+	public function generate_logs_zip() {
+		$wpo_server_information = new WP_Optimize_Server_Information();
+
+		$logs = $wpo_server_information->get_logs();
+
+		$gz_available = function_exists('gzencode');
+		$data = array();
+		foreach ($logs as $path => $content) {
+			if ($gz_available) {
+				$log_content = gzencode($content);
+				
+				if (false === $log_content) {
+					$log_content = $content;
+					$gz_available = false;
+				}
+			} else {
+				$log_content = $content;
+			}
+				
+			$data[] = array(
+				'src' => base64_encode($log_content),
+				'name' => basename($path),
+				'compressed' => $gz_available
+			);
+		}
+
+		return array(
+			'success' => true,
+			'data' => $data
 		);
 	}
 	
@@ -1100,7 +1179,7 @@ class WP_Optimize_Commands {
 		if ($is_updated || $options->update_option('image_dimensions_ignore_classes', sanitize_text_field($settings['ignore_classes']))) {
 			wpo_cache_flush();
 		}
-		
+
 		return array(
 			'success' => true
 		);

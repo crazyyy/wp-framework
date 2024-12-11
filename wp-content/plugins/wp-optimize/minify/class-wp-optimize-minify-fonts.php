@@ -51,7 +51,7 @@ class WP_Optimize_Minify_Fonts {
 		$merge = self::build();
 		$config = wp_optimize_minify_config();
 		/**
-		 * Filters wether to add display=swap to Google fonts urls
+		 * Filters whether to add display=swap to Google fonts urls
 		 *
 		 * @param boolean $display - Default to true
 		 */

@@ -7,7 +7,7 @@
 			<strong class="wpo_min_cache_path">
 				<?php
 
-				$cache_path = WPO_MINIFY_PHP_VERSION_MET ? WP_Optimize_Minify_Cache_Functions::cache_path() : array("cachedir" => __('none', 'wp-optimize'));
+				$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
 				echo esc_html($cache_path['cachedir']);
 				?>
 			</strong>

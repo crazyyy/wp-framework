@@ -150,7 +150,7 @@ trait WP_Optimize_HTTP_Error_Codes_Trait {
 					. esc_html__('This usually happens when the site requires authentication to access it.', 'wp-optimize') . ' '
 					. sprintf(esc_html__('Please temporarily disable authentication for the following URL: %s and retry.', 'wp-optimize'), $link);
 			} elseif (404 == $response_code) {
-				$error = '<b>' . esc_html__('404 File Not Found', 'wp-optmize') . '</b>';
+				$error = '<b>' . esc_html__('404 File Not Found', 'wp-optimize') . '</b>';
 				$error_string = sprintf(esc_html__('The server responded with a %s error', 'wp-optimize'), $error) . ' '
 					. sprintf(esc_html__('Please temporarily restore the file under URL: %s, or just create an empty file and try again.', 'wp-optimize'), $link);
 			} else {

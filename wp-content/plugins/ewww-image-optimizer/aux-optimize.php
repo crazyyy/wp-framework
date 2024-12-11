@@ -21,17 +21,19 @@ function ewww_image_optimizer_aux_images() {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	$output = '';
 
+	ewwwio_debug_info();
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_debug' ) ) {
-		ewwwio_debug_info();
 		echo '<div style="clear:both;"></div>';
 		if ( ewwwio_is_file( ewwwio()->debug_log_path() ) ) {
 			?>
 			<h2><?php esc_html_e( 'Debug Log', 'ewww-image-optimizer' ); ?></h2>
 			<p>
-				<a target='_blank' href='<?php echo esc_url( admin_url( 'admin.php?action=ewww_image_optimizer_view_debug_log' ) ); ?>'><?php esc_html_e( 'View Log', 'ewww-image-optimizer' ); ?></a> -
-				<a href='<?php echo esc_url( admin_url( 'admin.php?action=ewww_image_optimizer_delete_debug_log' ) ); ?>'><?php esc_html_e( 'Clear Log', 'ewww-image-optimizer' ); ?></a>
+				<a target='_blank' href='<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?action=ewww_image_optimizer_view_debug_log' ), 'ewww_image_optimizer_options-options' ) ); ?>'><?php esc_html_e( 'View Log', 'ewww-image-optimizer' ); ?></a> -
+				<a href='<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?action=ewww_image_optimizer_delete_debug_log' ), 'ewww_image_optimizer_options-options' ) ); ?>'><?php esc_html_e( 'Clear Log', 'ewww-image-optimizer' ); ?></a>
 			</p>
-			<p><a class='button button-secondary' target='_blank' href='<?php echo esc_url( admin_url( 'admin.php?action=ewww_image_optimizer_download_debug_log' ) ); ?>'><?php esc_html_e( 'Download Log', 'ewww-image-optimizer' ); ?></a></p>
+			<p>
+				<a class='button button-secondary' target='_blank' href='<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?action=ewww_image_optimizer_download_debug_log' ), 'ewww_image_optimizer_options-options' ) ); ?>'><?php esc_html_e( 'Download Log', 'ewww-image-optimizer' ); ?></a>
+			</p>
 			<?php
 		}
 		echo '<h2>' . esc_html__( 'System Info', 'ewww-image-optimizer' ) . '</h2>';
@@ -45,8 +47,6 @@ function ewww_image_optimizer_aux_images() {
 				)
 			) .
 			'</div>';
-	} else {
-		ewwwio_debug_info();
 	}
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_enable_help' ) ) {
 		$current_user = wp_get_current_user();
@@ -386,13 +386,11 @@ function ewww_image_optimizer_aux_images_table() {
 		}
 
 		$output['table'] .= '<tr ' . ( $alternate ? "class='alternate' " : '' ) . 'id="ewww-image-' . $optimized_image['id'] . '">';
-		if ( ewww_image_optimizer_stream_wrapped( $file ) || ewwwio_is_file( $file ) ) {
-			$output['table'] .= "<td style='width:50px;' class='column-icon'><img style='width:50px;height:50px;object-fit:contain;' loading='lazy' src='$thumb_url' /></td>";
-		} else {
-			$output['table'] .= "<td style='width:50px;' class='column-icon'>" . esc_html__( 'file not found', 'ewww-image-optimizer' ) . '</td>';
-			ewwwio_debug_message( "could not find $file" );
-		} // End if().
+
+		$output['table'] .= "<td style='width:50px;' class='column-icon'><img style='width:50px;height:50px;object-fit:contain;' loading='lazy' src='$thumb_url' /></td>";
+
 		$output['table'] .= "<td class='title'>$image_name";
+
 		if ( $debug_query ) {
 			/* translators: %d: number of re-optimizations */
 			$output['table'] .= '<br>' . sprintf( esc_html__( 'Number of attempted optimizations: %d', 'ewww-image-optimizer' ), $optimized_image['updates'] );
@@ -1050,14 +1048,40 @@ function ewww_image_optimizer_ajax_delete_original() {
 	// Because some plugins might have loose filters (looking at you WPML).
 	remove_all_filters( 'wp_delete_file' );
 
-	$id = (int) $_POST['attachment_id'];
-
-	$new_meta = ewwwio_remove_original_image( $id );
-	if ( ewww_image_optimizer_iterable( $new_meta ) ) {
-		wp_update_attachment_metadata( $id, $new_meta );
+	$count = 0;
+	if ( ! empty( $_POST['completed'] ) ) {
+		$count = (int) $_POST['completed'] + 1;
 	}
+
+	$total = 0;
+	if ( ! empty( $_POST['total'] ) ) {
+		$total = (int) $_POST['total'];
+	}
+
+	$deleted  = false;
+	$id       = (int) $_POST['attachment_id'];
+	$old_meta = wp_get_attachment_metadata( $id );
+	$new_meta = ewwwio_remove_original_image( $id, $old_meta );
+	if ( ewww_image_optimizer_iterable( $new_meta ) ) {
+		$deleted_image = ewwwio_get_original_image_path( $id, '', $old_meta );
+		wp_update_attachment_metadata( $id, $new_meta );
+		/* translators: %s: filename of deleted image */
+		$deleted = sprintf( esc_html__( 'Deleted %s', 'ewww-image-optimizer' ), esc_html( $deleted_image ) );
+	}
+
 	update_option( 'ewww_image_optimizer_delete_originals_resume', $id, false );
-	die( wp_json_encode( array( 'completed' => 1 ) ) );
+
+	/* translators: 1: number of images scanned so far, 2: total number of images to scan */
+	$progress = sprintf( esc_html__( '%1$s / %2$s images checked', 'ewww-image-optimizer' ), number_format_i18n( $count ), number_format_i18n( $total ) );
+
+	die(
+		wp_json_encode(
+			array(
+				'progress' => $progress,
+				'deleted'  => $deleted,
+			)
+		)
+	);
 }
 
 /**
@@ -1216,8 +1240,29 @@ function ewww_image_optimizer_reset_images( $reset_images ) {
 	}
 	array_walk( $reset_images, 'intval' );
 	global $wpdb;
-	$reset_images_sql = '(' . implode( ',', $reset_images ) . ')';
-	$wpdb->query( "UPDATE $wpdb->ewwwio_images SET pending = 1, updated = updated WHERE id IN $reset_images_sql" ); // phpcs:ignore WordPress.DB.PreparedSQL
+	/**
+	 * Set a maximum for a query, 1k less than WPE's 16k limit, just to be safe.
+	 *
+	 * @param int 15000 The maximum query length.
+	 */
+	$max_query_length = apply_filters( 'ewww_image_optimizer_max_query_length', 15000 );
+	$reset_images_sql = '';
+	foreach ( $reset_images as $reset_image ) {
+		if ( strlen( $reset_images_sql ) > $max_query_length ) {
+			$reset_images_sql = rtrim( $reset_images_sql, ',' );
+			$updated          = $wpdb->query( "UPDATE $wpdb->ewwwio_images SET pending = 1, updated = updated WHERE id IN ($reset_images_sql)" ); // phpcs:ignore WordPress.DB.PreparedSQL
+			if ( ! $updated ) {
+				ewwwio_debug_message( 'db error: ' . $wpdb->last_error );
+			}
+			$reset_images_sql = '';
+		}
+		$reset_images_sql .= $reset_image . ',';
+	}
+	$reset_images_sql = rtrim( $reset_images_sql, ',' );
+	$updated          = $wpdb->query( "UPDATE $wpdb->ewwwio_images SET pending = 1, updated = updated WHERE id IN ($reset_images_sql)" ); // phpcs:ignore WordPress.DB.PreparedSQL
+	if ( ! $updated ) {
+		ewwwio_debug_message( 'db error: ' . $wpdb->last_error );
+	}
 }
 
 /**
@@ -1477,26 +1522,10 @@ function ewww_image_optimizer_insert_unscanned( $ids, $gallery = 'media' ) {
 			'force_smart'   => (int) ewwwio()->force_smart,
 			'webp_only'     => (int) ewwwio()->webp_only,
 		);
-		if ( count( $images ) > 999 ) {
-			$result = ewww_image_optimizer_mass_insert( $wpdb->ewwwio_queue, $images );
-			if ( $result ) {
-				ewwwio_debug_message( "inserted $result rows" );
-			} else {
-				ewwwio_debug_message( 'error follows:' );
-				ewwwio_debug_message( $wpdb->last_error );
-			}
-			$images = array();
-		}
-		$id = array_shift( $ids );
+		$id       = array_shift( $ids );
 	}
 	if ( $images ) {
 		$result = ewww_image_optimizer_mass_insert( $wpdb->ewwwio_queue, $images );
-		if ( $result ) {
-			ewwwio_debug_message( "inserted $result rows" );
-		} else {
-			ewwwio_debug_message( 'error follows:' );
-			ewwwio_debug_message( 'wpdb: ' . $wpdb->last_error );
-		}
 	}
 }
 
@@ -1758,7 +1787,7 @@ function ewww_image_optimizer_image_scan( $dir, $started = 0 ) {
 				);
 				++$image_count;
 			} // End if().
-			if ( $image_count > 1000 ) {
+			if ( false && $image_count > 1000 ) { // Disabled, should no longer be needed, as the mass_insert() function limits queries to 16k.
 				// Let's dump what we have so far to the db.
 				$image_count = 0;
 				ewww_image_optimizer_mass_insert( $wpdb->ewwwio_images, $images );

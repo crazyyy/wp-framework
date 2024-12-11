@@ -267,18 +267,18 @@ foreach ($default_options as $k => $v) {
 			<label for="updraft_email" class="updraft_checkbox email_report">
 				<input type="checkbox" id="updraft_email" name="updraft_email" value="<?php echo esc_attr(get_bloginfo('admin_email')); ?>"<?php if ($is_email_storage || !empty($updraft_email)) echo ' checked="checked"';?> <?php if ($is_email_storage) echo 'disabled onclick="return false"'; ?>> 
 				<?php
-					// have to add this hidden input so that when the form is submitted and if the udpraft_email checkbox is disabled, this hidden input will be passed to the server along with other active elements
+					// have to add this hidden input so that when the form is submitted and if the updraft_email checkbox is disabled, this hidden input will be passed to the server along with other active elements
 					if ($is_email_storage) echo '<input type="hidden" name="updraft_email" value="'.esc_attr(get_bloginfo('admin_email')).'">';
 				?>
 				<div id="cb_not_email_storage_label" <?php echo ($is_email_storage) ? 'style="display: none"' : 'style="display: inline"'; ?>>
 					<?php echo __("Check this box to have a basic report sent to", 'updraftplus').' <a href="'.admin_url('options-general.php').'">'.__("your site's admin address", 'updraftplus').'</a> ('.htmlspecialchars(get_bloginfo('admin_email')).")."; ?>
 				</div>
 				<div id="cb_email_storage_label" <?php echo (!$is_email_storage) ? 'style="display: none"' : 'style="display: inline"'; ?>>
-					<?php echo __("Your email backup and a report will be sent to", 'updraftplus').' <a href="'.admin_url('options-general.php').'">'.__("your site's admin address", 'updraftplus').'</a> ('.htmlspecialchars(get_bloginfo('admin_email')).').'; ?>
+					<?php echo esc_html__("Your email backup and a report will be sent to", 'updraftplus').' <a href="'.admin_url('options-general.php').'">'.esc_html__("your site's admin address", 'updraftplus').'</a> ('.htmlspecialchars(get_bloginfo('admin_email')).').'; ?>
 				</div>
 			</label>
 			<?php
-				if (!class_exists('UpdraftPlus_Addon_Reporting')) echo '<a href="'.$updraftplus->get_url('premium').'" target="_blank">'.__('For more reporting features, use the Premium version', 'updraftplus').'</a>';
+				if (!class_exists('UpdraftPlus_Addon_Reporting')) echo '<a href="'.$updraftplus->get_url('premium').'" target="_blank">'.esc_html__('For more reporting features, use the Premium version', 'updraftplus').'</a>';
 			?>
 		</td>
 	</tr>
@@ -306,7 +306,7 @@ foreach ($default_options as $k => $v) {
 	</tr>
 
 	<tr>
-		<th><?php _e('Expert settings', 'updraftplus');?>:</th>
+		<th><?php esc_html_e('Expert settings', 'updraftplus');?>:</th>
 		<td><a class="enableexpertmode" href="<?php echo esc_url(UpdraftPlus::get_current_clean_url());?>#enableexpertmode"><?php _e('Show expert settings', 'updraftplus');?></a> - <?php _e("open this to show some further options; don't bother with this unless you have a problem or are curious.", 'updraftplus');?> <?php do_action('updraftplus_expertsettingsdescription'); ?></td>
 	</tr>
 	<?php
@@ -318,12 +318,12 @@ foreach ($default_options as $k => $v) {
 
 	<tr class="expertmode updraft-hidden" style="display:none;">
 		<th><?php _e('Debug mode', 'updraftplus');?>:</th>
-		<td><input type="checkbox" id="updraft_debug_mode" data-updraft_settings_test="debug_mode" name="updraft_debug_mode" value="1" <?php echo $debug_mode; ?> /> <br><label for="updraft_debug_mode"><?php _e('Check this to receive more information and emails on the backup process - useful if something is going wrong.', 'updraftplus');?> <?php _e('This will also cause debugging output from all plugins to be shown upon this screen - please do not be surprised to see these.', 'updraftplus');?></label></td>
+		<td><input type="checkbox" id="updraft_debug_mode" data-updraft_settings_test="debug_mode" name="updraft_debug_mode" value="1" <?php echo $debug_mode; ?> /> <br><label for="updraft_debug_mode"><?php _e('Check this to receive more information and emails on the backup process - useful if something is going wrong.', 'updraftplus');?> <?php esc_html_e('This will also cause debugging output from all plugins to be shown upon this screen - please do not be surprised to see these.', 'updraftplus');?></label></td>
 	</tr>
 
 	<tr class="expertmode updraft-hidden" style="display:none;">
 		<th><?php _e('Split archives every:', 'updraftplus');?></th>
-		<td><input type="text" name="updraft_split_every" class="updraft_split_every" value="<?php echo $split_every_mb; ?>" size="5" /> MB<br><?php echo sprintf(__('UpdraftPlus will split up backup archives when they exceed this file size.', 'updraftplus').' '.__('The default value is %s megabytes.', 'updraftplus').' '.__('Be careful to leave some margin if your web-server has a hard size limit (e.g. the 2 GB / 2048 MB limit on some 32-bit servers/file systems).', 'updraftplus'), 400).' '.__('The higher the value, the more server resources are required to create the archive.', 'updraftplus'); ?></td>
+		<td><input type="text" name="updraft_split_every" class="updraft_split_every" value="<?php echo $split_every_mb; ?>" size="5" /> MB<br><?php echo sprintf(esc_html__('UpdraftPlus will split up backup archives when they exceed this file size.', 'updraftplus').' '.__('The default value is %s megabytes.', 'updraftplus').' '.esc_html__('Be careful to leave some margin if your web-server has a hard size limit (e.g. the 2 GB / 2048 MB limit on some 32-bit servers/file systems).', 'updraftplus'), 400).' '.esc_html__('The higher the value, the more server resources are required to create the archive.', 'updraftplus'); ?></td>
 	</tr>
 
 	<tr class="deletelocal expertmode updraft-hidden" style="display:none;">
@@ -342,18 +342,18 @@ foreach ($default_options as $k => $v) {
 				<?php echo $updraftplus_admin->really_writable_message($really_is_writable, $updraft_dir); ?>
 			</span>
 			<?php
-				echo __('This is where UpdraftPlus will write the zip files it creates initially.', 'updraftplus').' '.__('This directory must be writable by your web server.', 'updraftplus').' '.__('It is relative to your content directory (which by default is called wp-content).', 'updraftplus').' '.__("<b>Do not</b> place it inside your uploads or plugins directory, as that will cause recursion (backups of backups of backups of...).", 'updraftplus');
+				echo esc_html__('This is where UpdraftPlus will write the zip files it creates initially.', 'updraftplus').' '.esc_html__('This directory must be writable by your web server.', 'updraftplus').' '.esc_html__('It is relative to your content directory (which by default is called wp-content).', 'updraftplus').' '.esc_html__("Do not place it inside your uploads or plugins directory, as that will cause recursion (backups of backups of backups of...).", 'updraftplus');
 			?>
 		</td>
 	</tr>
 
 	<tr class="expertmode updraft-hidden" style="display:none;">
 		<th><?php _e("Use the server's SSL certificates", 'updraftplus');?>:</th>
-		<td><input data-updraft_settings_test="useservercerts" type="checkbox" id="updraft_ssl_useservercerts" name="updraft_ssl_useservercerts" value="1" <?php if (UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts')) echo 'checked="checked"'; ?>> <br><label for="updraft_ssl_useservercerts"><?php echo __('By default UpdraftPlus uses its own store of SSL certificates to verify the identity of remote sites (i.e. to make sure it is talking to the real Dropbox, Amazon S3, etc., and not an attacker).', 'updraftplus').' '.__('We keep these up to date.', 'updraftplus').' '.__('However, if you get an SSL error, then choosing this option (which causes UpdraftPlus to use your web server\'s collection instead) may help.', 'updraftplus');?></label></td>
+		<td><input data-updraft_settings_test="useservercerts" type="checkbox" id="updraft_ssl_useservercerts" name="updraft_ssl_useservercerts" value="1" <?php if (UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts')) echo 'checked="checked"'; ?>> <br><label for="updraft_ssl_useservercerts"><?php echo esc_html__('By default UpdraftPlus uses its own store of SSL certificates to verify the identity of remote sites (i.e. to make sure it is talking to the real Dropbox, Amazon S3, etc., and not an attacker).', 'updraftplus').' '.esc_html__('We keep these up to date.', 'updraftplus').' '.esc_html__('However, if you get an SSL error, then choosing this option (which causes UpdraftPlus to use your web server\'s collection instead) may help.', 'updraftplus');?></label></td>
 	</tr>
 
 	<tr class="expertmode updraft-hidden" style="display:none;">
-		<th><?php _e('Do not verify SSL certificates', 'updraftplus');?>:</th>
+		<th><?php esc_html_e('Do not verify SSL certificates', 'updraftplus');?>:</th>
 		<td><input data-updraft_settings_test="disableverify" type="checkbox" id="updraft_ssl_disableverify" name="updraft_ssl_disableverify" value="1" <?php if (UpdraftPlus_Options::get_updraft_option('updraft_ssl_disableverify')) echo 'checked="checked"'; ?>> <br><label for="updraft_ssl_disableverify"><?php echo __('Choosing this option lowers your security by stopping UpdraftPlus from verifying the identity of encrypted sites that it connects to (e.g. Dropbox, Google Drive).', 'updraftplus').' '.__('It means that UpdraftPlus will be using SSL only for encryption of traffic, and not for authentication.', 'updraftplus').' '.__('Note that not all cloud backup methods are necessarily using SSL authentication.', 'updraftplus');?></label></td>
 	</tr>
 
@@ -387,7 +387,7 @@ foreach ($default_options as $k => $v) {
 		<td></td>
 		<td>
 			<input type="hidden" name="action" value="update" />
-			<input type="submit" class="button-primary" id="updraftplus-settings-save" value="<?php _e('Save Changes', 'updraftplus');?>" />
+			<input type="submit" class="button-primary" id="updraftplus-settings-save" value="<?php esc_html_e('Save Changes', 'updraftplus');?>" />
 		</td>
 	</tr>
 	<?php } ?>

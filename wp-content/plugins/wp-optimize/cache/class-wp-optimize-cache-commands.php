@@ -115,6 +115,12 @@ class WP_Optimize_Cache_Commands {
 
 		$return['enabled'] = ($enabled && !is_wp_error($enabled)) || ($previous_settings['enable_page_caching'] && is_wp_error($disabled));
 
+		// $disable can either be boolean or WP_Error
+		if (!is_wp_error($disabled) && $disabled) {
+			WPO_Page_Cache::instance()->prune_cache_logs();
+			wp_clear_scheduled_hook('wpo_prune_cache_logs');
+		}
+		
 		return $return;
 	}
 
@@ -180,8 +186,9 @@ class WP_Optimize_Cache_Commands {
 			);
 		}
 
-		$purged = $wpo_page_cache->purge();
-		$cache_size = $wpo_page_cache->get_cache_size();
+		$purged = WP_Optimize()->get_page_cache()->purge();
+		if ($purged) WP_Optimize()->get_page_cache()->file_log("Full Cache Purge triggered by: " . __METHOD__);
+		$cache_size = WP_Optimize()->get_page_cache()->get_cache_size();
 		$wpo_page_cache_preloader = WP_Optimize_Page_Cache_Preloader::instance();
 
 		$response = array(

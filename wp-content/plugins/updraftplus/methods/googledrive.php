@@ -477,11 +477,13 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			'response_type' => 'code',
 			'client_id' => $client_id,
 			'redirect_uri' => $this->redirect_uri($use_master),
-			'scope' => apply_filters('updraft_googledrive_scope', 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/userinfo.profile'),
+			// Nov 2024 - https://www.googleapis.com/auth/drive.readonly temporarily removed for annual re-verification (for which we received no notification)
+			'scope' => apply_filters('updraft_googledrive_scope', 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile'),
 			'state' => $token,
 			'access_type' => 'offline',
 			// 'approval_prompt' => 'force', // legacy and has been deprected. It can lead to conflicts when specified along with "prompt" param
-			'include_granted_scopes' => 'true',
+			// Nov 2024 - changed from `true` for the same reason as a few lines earlier
+			'include_granted_scopes' => 'false',
 			'enable_granular_consent' => 'true',
 			'prompt' => 'select_account consent', // new option param as the replacement to 'approval_prompt'
 		);

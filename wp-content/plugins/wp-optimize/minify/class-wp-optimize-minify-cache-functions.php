@@ -144,7 +144,8 @@ class WP_Optimize_Minify_Cache_Functions {
 		}
 
 		// Purge WP-Optimize
-		WP_Optimize()->get_page_cache()->purge();
+		$is_cache_purged = WP_Optimize()->get_page_cache()->purge();
+		if ($is_cache_purged) WP_Optimize()->get_page_cache()->file_log("Full Cache Purge triggered by: ". __METHOD__);
 		
 		// Store the messages of purged cache if it was successful
 		$result = array();

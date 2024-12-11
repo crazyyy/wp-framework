@@ -37,6 +37,7 @@ class WP_Optimize_Updates {
 			'update_350_delete_plugin_table_list_regenerate_in_new_location',
 		),
 		'3.7.0' => array('update_370_disable_auto_preload_after_purge_feature'),
+		'3.8.0' => array('update_380_404_detector_table_create')
 	);
 
 	/**
@@ -115,7 +116,6 @@ class WP_Optimize_Updates {
 	 * @return void
 	 */
 	public static function update_minify_excludes() {
-		if (!WPO_MINIFY_PHP_VERSION_MET) return;
 		if (!function_exists('wp_optimize_minify_config')) {
 			include_once WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-config.php';
 		}
@@ -322,6 +322,14 @@ class WP_Optimize_Updates {
 			$config['auto_preload_purged_contents'] = false;
 			WPO_Cache_Config::instance()->update($config);
 		}
+	}
+
+	/**
+	 * Iterate over plugin utils tables creation, using WP_Optimize_Table_Management
+	 */
+	public static function update_380_404_detector_table_create() {
+		if (self::is_new_install()) return;
+		WP_Optimize()->get_table_management()->create_plugin_tables();
 	}
 }
 

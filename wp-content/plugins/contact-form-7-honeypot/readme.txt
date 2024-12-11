@@ -1,8 +1,8 @@
 === Honeypot for Contact Form 7 — Protect Contact Form 7 spam with ease! [100% FREE Anti-Spam Plugin] ===
 Tags: honeypot, antispam, anti-spam, captcha, spam, bots, form, forms, contact form 7, contactform7, contact form, cf7
 Requires at least: 4.8
-Tested up to: 6.6
-Stable tag: 2.1.5
+Tested up to: 6.7
+Stable tag: 2.1.7
 Requires PHP: 5.6
 Contributors: wpexpertsio
 License: GPLv2 or later
@@ -143,7 +143,14 @@ I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely
 3. Honeypot CF7 Form Tag settings
 
 == Changelog ==
-= 2.1.5 September, 26, 2024 =
+= 2.1.7 October, 13, 2024 =
+* Fixed compatibility issues with CF7 6.0
+* Tested compatibility with latest WordPress (Version 6.7)
+
+= 2.1.6 October, 05, 2024 =
+* Fixed compatibility issues with CF7 6.0
+
+= 2.1.5 September, 25, 2024 =
 * Removed warning from CF7 when honeypot is added.
 
 = 2.1.4 August, 22, 2024 =

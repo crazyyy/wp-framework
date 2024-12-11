@@ -504,7 +504,7 @@ class WP_Optimizer {
 	/**
 	 * This function will return total database size and a possible gain of db in KB.
 	 *
-	 * @param boolean $update - Wether to update the values or not
+	 * @param boolean $update - Whether to update the values or not
 	 * @return string total db size gained.
 	 */
 	public function get_current_db_size($update = false) {
@@ -596,7 +596,7 @@ class WP_Optimizer {
 	}
 
 	/**
-	 * Wether InnoDB tables require confirmation to be optimized
+	 * Whether InnoDB tables require confirmation to be optimized
 	 *
 	 * @return boolean
 	 */

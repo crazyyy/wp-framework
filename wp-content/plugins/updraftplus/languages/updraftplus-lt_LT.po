@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > 19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? 1 : 2);\n"
-"X-Generator: GlotPress/3.0.0\n"
+"X-Generator: GlotPress/4.0.1\n"
 "Language: lt\n"
 "Project-Id-Version: UpdraftPlus\n"
 

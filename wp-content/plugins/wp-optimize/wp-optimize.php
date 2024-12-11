@@ -3,7 +3,7 @@
 Plugin Name: WP-Optimize - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
 Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 3.7.0
+Version: 3.8.0
 Update URI: https://wordpress.org/plugins/wp-optimize/
 Author: TeamUpdraft, DavidAnderson
 Author URI: https://updraftplus.com
@@ -16,12 +16,12 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.7.0');
+define('WPO_VERSION', '3.8.0');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PLUGIN_SLUG', plugin_basename(__FILE__));
 define('WPO_PREMIUM_NOTIFICATION', false);
-define('WPO_MINIFY_PHP_VERSION_MET', version_compare(PHP_VERSION, '5.4', '>=') ? true : false);
+define('WPO_REQUIRED_PHP_VERSION', '5.6');
 if (!defined('WPO_USE_WEBP_CONVERSION')) define('WPO_USE_WEBP_CONVERSION', true);
 
 class WP_Optimize {
@@ -38,6 +38,7 @@ class WP_Optimize {
 	 * Class constructor
 	 */
 	public function __construct() {
+
 		spl_autoload_register(array($this, 'loader'));
 
 		// Checks if premium is installed along with plugins needed.
@@ -66,6 +67,9 @@ class WP_Optimize {
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 
 		add_action('wp_enqueue_scripts', array($this, 'frontend_enqueue_scripts'));
+		if ($this->get_options()->get_option('404_detector', 0)) {
+			WP_Optimize_Performance::get_instance($this->get_404_detector())->hook_404_handler();
+		}
 
 		$this->load_ajax_handler();
 		WP_Optimize_Heartbeat::get_instance();
@@ -106,6 +110,41 @@ class WP_Optimize {
 	}
 
 	/**
+	 * Check if minimum requirements for WP-Optimize is met or not.
+	 *
+	 * @return bool
+	 */
+	public function is_minimum_requirement_met() {
+		return (version_compare(WPO_REQUIRED_PHP_VERSION, PHP_VERSION, '<='));
+	}
+
+	/**
+	 * Add admin notice about minimum server requirements.
+	 */
+	public function add_notice_minimum_requirements_not_met() {
+		add_action('admin_notices', array($this, 'output_php_version_notice'));
+	}
+
+	/**
+	 * Deactivate the plugin programmatically
+	 */
+	public function deactivate_plugin() {
+		if (!function_exists('deactivate_plugins')) {
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+		deactivate_plugins(plugin_basename(__FILE__));
+	}
+
+	/**
+	 * Die after stating minimum requirements
+	 */
+	public function die_minimum_requirement_not_met() {
+		$message = $this->get_php_version_notice_message();
+		$message .= ' <a href="'.esc_attr(admin_url('plugins.php')).'">'.esc_html__('Back to Plugins.', 'wp-optimize').'</a>';
+		wp_die($message);
+	}
+
+	/**
 	 * Auto-loads classes.
 	 *
 	 * @param string $class_name The name of the class.
@@ -117,6 +156,12 @@ class WP_Optimize {
 			$class_file = WPO_PLUGIN_MAIN_PATH . trailingslashit($dir) . 'class-' . str_replace('_', '-', strtolower($class_name)) . '.php';
 			if (file_exists($class_file)) {
 				require_once($class_file);
+				return;
+			}
+
+			$interface_file = WPO_PLUGIN_MAIN_PATH . trailingslashit($dir) . 'interface-' . str_replace('_', '-', strtolower($class_name)) . '.php';
+			if (file_exists($interface_file)) {
+				require_once($interface_file);
 				return;
 			}
 		}
@@ -147,6 +192,7 @@ class WP_Optimize {
 			'cache',
 			'compatibility',
 			'includes',
+			'includes/tables',
 			'includes/list-tables',
 			'minify',
 			'optimizations',
@@ -415,10 +461,13 @@ class WP_Optimize {
 
 		$js_variables = $this->wpo_js_translations();
 		$js_variables['loggers_classes_info'] = $this->get_loggers_classes_info();
-
 		wp_localize_script('wp-optimize-admin-js', 'wpoptimize', $js_variables);
-
+		
 		do_action('wpo_premium_scripts_styles', $min_or_not_internal, $min_or_not, $enqueue_version);
+
+		wp_enqueue_script('wp-optimize-status-report', WPO_PLUGIN_URL.'js/status'.$min_or_not_internal.'.js', array('wp-api-fetch', 'wp-optimize-admin-js'), $enqueue_version);
+
+		wp_enqueue_script('js-zip', WPO_PLUGIN_URL.'/js/jszip/jszip' . $min_or_not . '.js', array(), $enqueue_version);
 	}
 
 	/**
@@ -519,6 +568,13 @@ class WP_Optimize {
 	 */
 	public function plugins_loaded() {
 
+		if (!$this->is_minimum_requirement_met()) {
+			$this->add_notice_minimum_requirements_not_met();
+			$this->deactivate_plugin();
+			WPO_Deactivation::actions();
+			return;
+		}
+
 		if ($this->does_server_handles_cache()) {
 			add_filter('wp_optimize_admin_page_wpo_cache_tabs', array($this, 'filter_cache_tabs'), 99, 1);
 
@@ -563,15 +619,16 @@ class WP_Optimize {
 		// Loads the task manager
 		$this->get_task_manager();
 
-		// Loads the language file.
-		load_plugin_textdomain('wp-optimize', false, dirname(plugin_basename(__FILE__)) . '/languages');
+		add_action('init', array($this, 'load_language_file'), 0);
 
 		// Load 3rd party plugin compatibilities.
 		$this->load_compatibilities();
 
 		// Load page cache.
 		$this->get_page_cache();
-		$this->init_page_cache();
+		// We use the init hook to avoid the _load_textdomain_just_in_time warning,
+		// which is triggered because we use translations during cache initialization
+		add_action('init', array($this, 'init_page_cache'), 1);
 
 		// Include minify
 		$this->get_minify();
@@ -588,6 +645,15 @@ class WP_Optimize {
 
 		// add_filter('updraftcentral_host_plugins', array($this, 'attach_updraftcentral_host'));
 		// if (file_exists(WPO_PLUGIN_MAIN_PATH.'central/factory.php')) include_once(WPO_PLUGIN_MAIN_PATH.'central/factory.php');
+	}
+
+	/**
+	 * Loads the language file.
+	 *
+	 * @return void
+	 */
+	public function load_language_file() {
+		load_plugin_textdomain('wp-optimize', false, dirname(plugin_basename(__FILE__)) . '/languages');
 	}
 
 	/**
@@ -732,6 +798,9 @@ class WP_Optimize {
 		if ($this->is_wp_smush_installed()) {
 			add_filter('transient_wp-smush-conflict_check', array($this, 'modify_wp_smush_conflict_check'), 9, 1);
 		}
+		if ($this->get_options()->get_option('404_detector', 0)) {
+			WP_Optimize_Performance::get_instance($this->get_404_detector())->init();
+		}
 	}
 
 	/**
@@ -834,7 +903,9 @@ class WP_Optimize {
 			'logo_src' => esc_url(WPO_PLUGIN_URL.'images/notices/wp_optimize_logo.png'),
 			'settings_page_url' => is_multisite() ? network_admin_url('admin.php?page=wpo_settings') : admin_url('admin.php?page=wpo_settings'),
 			'sites' => $this->get_sites(),
-			'user_always_ignores_table_delete_warning' => (get_user_meta(get_current_user_id(), 'wpo-ignores-table-delete-warning', true)) ? true : false,
+			'user_always_ignores_table_deletion_warning' => (get_user_meta(get_current_user_id(), 'wpo-ignores-table-deletion-warning', true)) ? true : false,
+			'user_always_ignores_post_meta_deletion_warning' => (get_user_meta(get_current_user_id(), 'wpo-ignores-post-meta-deletion-warning', true)) ? true : false,
+			'user_always_ignores_orphaned_relationship_data_deletion_warning' => (get_user_meta(get_current_user_id(), 'wpo-ignores-orphaned-relationship-data-deletion-warning', true)) ? true : false,
 			'post_meta_tweak_completed' => __('The tweak has been performed.', 'wp-optimize'),
 			'no_minified_assets' => __('No minified files are present', 'wp-optimize'),
 			'network_site_url' => network_site_url(),
@@ -846,9 +917,14 @@ class WP_Optimize {
 			'exported_on' => __('Which was exported on:', 'wp-optimize'),
 			'continue_import' => __('Do you want to carry out the import?', 'wp-optimize'),
 			'select_destination' => __('Select destination', 'wp-optimize'),
+			'show' => __('Show', 'wp-optimize'),
+			'hide' => __('Hide', 'wp-optimize'),
+			'please_wait' => __('Please wait a moment...', 'wp-optimize'),
+			'clipboard_failed' => __('Copy to clipboard failed, please do it manually', 'wp-optimize'),
+			'clipboard_success' => __('System status has been copied to the clipboard', 'wp-optimize'),
 			'show_information' => __('Show information', 'wp-optimize'),
 			'hide_information' => __('Hide information', 'wp-optimize'),
-			'please_wait' => __('Please wait...', 'wp-optimize')
+			'data_not_available' => __('Not available', 'wp-optimize')
 		));
 	}
 
@@ -1088,7 +1164,7 @@ class WP_Optimize {
 	 */
 	public function show_admin_warning_overdue_crons($howmany) {
 		$ret = '<div class="updated below-h2"><p>';
-		$ret .= '<strong>'.__('Warning', 'wp-optimize').':</strong> '.sprintf(__('WordPress has a number (%d) of scheduled tasks which are overdue.', 'wp-optimize'), $howmany).' '. __('Unless this is a development site, this probably means that the scheduler in your WordPress install is not working.', 'wp-optimize').' <a href="'.apply_filters('wpoptimize_com_link', "https://getwpo.com/faqs/the-scheduler-in-my-wordpress-installation-is-not-working-what-should-i-do/").'">'.__('Read this page for a guide to possible causes and how to fix it.', 'wp-optimize').'</a>';
+		$ret .= '<strong>'.__('Warning', 'wp-optimize').':</strong> '.sprintf(__('WordPress has a number (%d) of scheduled tasks which are overdue.', 'wp-optimize'), $howmany).' '. __('Unless this is a development site, this probably means that the scheduler in your WordPress install is not working.', 'wp-optimize').' <a target="_blank" href="'.apply_filters('wpoptimize_com_link', "https://getwpo.com/faqs/the-scheduler-in-my-wordpress-installation-is-not-working-what-should-i-do/").'">'.__('Read this page for a guide to possible causes and how to fix it.', 'wp-optimize').'</a>';
 		$ret .= '</p></div>';
 		return $ret;
 	}
@@ -1229,11 +1305,12 @@ class WP_Optimize {
 	/**
 	 * Format a timestamp into a juman readable date time
 	 *
-	 * @param int $timestamp
+	 * @param int	 $timestamp Epoch timestamp to convert
+	 * @param string $separator String separator
 	 * @return string
 	 */
-	public function format_date_time($timestamp) {
-		return date_i18n(get_option('date_format').' @ '.get_option('time_format'), ($timestamp + get_option('gmt_offset') * 3600));
+	public function format_date_time($timestamp, $separator = ' @ ') {
+		return date_i18n(get_option('date_format'). $separator .get_option('time_format'), ($timestamp + get_option('gmt_offset') * 3600));
 	}
 
 	/**
@@ -1268,6 +1345,7 @@ class WP_Optimize {
 		}
 
 		add_action('wpo_weekly_cron_tasks', array($this, 'do_weekly_cron_tasks'));
+		WP_Optimize_404_Detector_Cron::get_instance();
 	}
 
 	/**
@@ -1754,7 +1832,7 @@ class WP_Optimize {
 	 */
 	public function template_should_include_data() {
 		/**
-		 * Filters wether data should be included in certain templates or not.
+		 * Filters whether data should be included in certain templates or not.
 		 */
 		return apply_filters('wpo_template_should_include_data', $this->is_updraft_central_request());
 	}
@@ -1838,6 +1916,46 @@ class WP_Optimize {
 	 */
 	private function load_ajax_handler() {
 		WPO_Ajax::get_instance();
+	}
+
+	/**
+	 * Get instance of WP_Optimize_Table_Management
+	 *
+	 * @return WP_Optimize_Table_Management
+	 */
+	public function get_table_management() {
+		return WP_Optimize_Table_Management::get_instance();
+	}
+
+	/**
+	 * Get instance of WP_Optimize_404_Detector
+	 *
+	 * @return WP_Optimize_404_Detector
+	 */
+	public function get_404_detector() {
+		return WP_Optimize_404_Detector::get_instance();
+	}
+
+	/**
+	 * Returns the message used to notify the user that the PHP version doesn't meet the requirements.
+	 *
+	 * @return string
+	 */
+	public function get_php_version_notice_message() {
+		return sprintf(esc_html__('WP-Optimize requires a minimum PHP version of %s or higher', 'wp-optimize'), WPO_REQUIRED_PHP_VERSION);
+	}
+
+	/**
+	 * Output notice when PHP version is not meet for WP-Optimize.
+	 *
+	 * @return void
+	 */
+	public function output_php_version_notice() {
+		?>
+		<div class="notice notice-error is-dismissible">
+			<p><?php echo $this->get_php_version_notice_message(); ?></p>
+		</div>
+		<?php
 	}
 }
 

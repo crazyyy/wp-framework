@@ -9,6 +9,12 @@ class WPO_Activation {
 	 * Actions to be performed upon plugin activation
 	 */
 	public static function actions() {
+		if (!WP_Optimize()->is_minimum_requirement_met()) {
+			WP_Optimize()->add_notice_minimum_requirements_not_met();
+			WP_Optimize()->deactivate_plugin();
+			WP_Optimize()->die_minimum_requirement_not_met();
+		}
+
 		if (is_multisite() && !is_network_admin()) {
 			self::deactivate_and_die();
 		}
@@ -21,6 +27,7 @@ class WPO_Activation {
 		WP_Optimize()->get_minify()->plugin_activate();
 		WP_Optimize()->get_gzip_compression()->restore();
 		WP_Optimize()->get_browser_cache()->restore();
+		WP_Optimize()->get_table_management()->create_plugin_tables();
 
 		self::init_batch_processing();
 
@@ -34,8 +41,8 @@ class WPO_Activation {
 	 */
 	private static function deactivate_and_die() {
 		deactivate_plugins(plugin_basename(WPO_PLUGIN_MAIN_PATH . 'wp-optimize.php'));
-		wp_die(__('Only Network Administrator can activate WP-Optimize plugin.', 'wp-optimize') .
-			' <a href="' . admin_url('plugins.php') . '">' . __('go back', 'wp-optimize') . '</a>');
+		wp_die(esc_html__('Only Network Administrator can activate the WP-Optimize plugin.', 'wp-optimize') .
+			' <a href="' . esc_url(admin_url('plugins.php')) . '">' . esc_html__('go back', 'wp-optimize') . '</a>');
 	}
 
 	/**

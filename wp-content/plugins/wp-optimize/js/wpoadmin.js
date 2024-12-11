@@ -188,6 +188,10 @@ var WP_Optimize = function () {
 		// Update single table optimization buttons state on load.
 		update_single_table_optimization_buttons(force_single_table_optimization);
 
+		// Attach warning events
+		add_warning_for_delete_post_meta_action();
+		add_warning_for_delete_orphaned_relationship_data_action();
+
 	});
 
 	/**
@@ -367,11 +371,13 @@ var WP_Optimize = function () {
 		get_database_tabs();
 	});
 
+
 	// When showing the settings tab
 	$('#wp-optimize-wrap').on('tab-change/wpo_settings/settings', function(event, data) {
 		// If the innodb_force_optimize--container is present, fetch the required data.
 		// We load the database tabs together, as they need the same processing.
 		if (data.content.find('.innodb_force_optimize--container').length) get_database_tabs();
+		WPO_Status_Report();
 	});
 
 	/**
@@ -413,16 +419,16 @@ var WP_Optimize = function () {
 	function gather_settings(output_format) {
 		var form_data = '',
 			output_format = ('undefined' === typeof output_format) ? 'string' : output_format,
-			$form_elements = $("#wp-optimize-database-settings form input[name!='action'], #wp-optimize-database-settings form select, #wp-optimize-database-settings form textarea, #wp-optimize-general-settings form input[name!='action'], #wp-optimize-general-settings form textarea, #wp-optimize-general-settings form select, #wp-optimize-nav-tab-contents-optimize input[type='checkbox'], .wp-optimize-nav-tab-contents input[name^='enable-auto-backup-']");
+			$form_elements = $("#wp-optimize-database-settings form input[name!='action'], #wp-optimize-database-settings form select, #wp-optimize-database-settings form textarea, #wp-optimize-general-settings form input[name!='action'], #wp-optimize-general-settings form textarea, #wp-optimize-general-settings form select, #wp-optimize-nav-tab-contents-optimize input[type='checkbox'], .wp-optimize-nav-tab-contents input[name^='enable-auto-backup-'], #wpo-404-detector-form input[type=checkbox]");
 
 		if ('object' == output_format) {
 			form_data = $form_elements.serializeJSON({useIntKeysAsArrayIndex: true});
 		} else {
-			// Excluding the unnecessary 'action' input avoids triggering a very mis-conceived mod_security rule seen on one user's site.
+			// Excluding the unnecessary 'action' input avoids triggering a very misconceived mod_security rule seen on one user's site.
 			form_data = $form_elements.serialize();
 
 			// Include unchecked checkboxes. user filter to only include unchecked boxes.
-			$.each($('#wp-optimize-database-settings form input[type=checkbox], #wp-optimize-general-settings form input[type=checkbox], .wp-optimize-nav-tab-contents input[name^="enable-auto-backup-"]')
+			$.each($('#wp-optimize-database-settings form input[type=checkbox], #wp-optimize-general-settings form input[type=checkbox], .wp-optimize-nav-tab-contents input[name^="enable-auto-backup-"], #wpo-404-detector-form input[type=checkbox]')
 					.filter(function (idx) {
 						return $(this).prop('checked') == false
 					}),
@@ -566,17 +572,19 @@ var WP_Optimize = function () {
 					$('#optimize_current_db_size').html(response.total_size);
 				}
 
-				// Status check for optimizing tables.
-				const optimizetables_id = "optimizetables";
-				if (queue.contains_id(optimizetables_id)) {
-					$('#optimization_checkbox_' + optimizetables_id).hide();
-					$('#optimization_spinner_' + optimizetables_id).show();
-					$('.optimization_button_' + optimizetables_id).prop('disabled', true);
-				} else {
-					$('#optimization_checkbox_' + optimizetables_id).show();
-					$('#optimization_spinner_' + optimizetables_id).hide();
-					$('.optimization_button_' + optimizetables_id).prop('disabled', false);
-					$('#optimization_info_' + optimizetables_id).html(wpoptimize.optimization_complete + (optimization_logged_warnings ? (' ' + wpoptimize.with_warnings) : ''));
+				if ('optimizetables' === id) {
+					// Status check for optimizing tables.
+					const optimizetables_id = "optimizetables";
+					if (queue.contains_id(optimizetables_id)) {
+						$('#optimization_checkbox_' + optimizetables_id).hide();
+						$('#optimization_spinner_' + optimizetables_id).show();
+						$('.optimization_button_' + optimizetables_id).prop('disabled', true);
+					} else {
+						$('#optimization_checkbox_' + optimizetables_id).show();
+						$('#optimization_spinner_' + optimizetables_id).hide();
+						$('.optimization_button_' + optimizetables_id).prop('disabled', false);
+						$('#optimization_info_' + optimizetables_id).html(wpoptimize.optimization_complete + (optimization_logged_warnings ? (' ' + wpoptimize.with_warnings) : ''));
+					}
 				}
 
 				// check if we need update unapproved comments count.
@@ -787,18 +795,80 @@ var WP_Optimize = function () {
 	/*
 	 * Run all optimizations click.
 	 */
-	$('#wp-optimize-nav-tab-WP-Optimize-optimize-contents').on('click', '#wp-optimize', function (e) {
-		var run_btn = $(this);
-
+	$('#wp-optimize-nav-tab-WP-Optimize-optimize-contents #wp-optimize').on('click', function (e) {
 		e.preventDefault();
+		
+		if (null == tmpl_wpo_grouped_warnings_tpl) {
+			tmpl_wpo_grouped_warnings_tpl = $('#tmpl-wpo-grouped-warnings').html().toString();
+		}
 
-		// disable run button to avoid double click.
-		run_btn.prop('disabled', true);
-		save_sites_list_and_do_action(function() {
-			run_btn.prop('disabled', false);
-			run_optimizations();
-		});
+		user_confirm_destructive_actions(function() {
+			return function(run_btn) {
+				// disable run button to avoid double click.
+				$(run_btn).prop('disabled', true);
+				save_sites_list_and_do_action(function() {
+					$(run_btn).prop('disabled', false);
+					run_optimizations();
+				});
+			};
+		}(this));
 	});
+
+	var tmpl_wpo_grouped_warnings_tpl = null;
+
+	/**
+	 * Prepare the stack of optimizations that the user will need to actively confirm using the popup
+	 * Then show them in sequence
+	 */
+	function user_confirm_destructive_actions(callback) {
+		var optimizations = $('#optimizations_list .optimization_checkbox:checked');
+		
+		var confirmations_stack = [];
+
+		optimizations.filter(function(i, optim) {
+			var optimization_id = optim.id.replace('optimization_checkbox_', '');
+			var destructive_action_popup = $('#tmpl-wpo-' + optimization_id);
+			return 0 < destructive_action_popup.length;
+		}).each(function(i, maybe_confirm) {
+			var optimization_id = maybe_confirm.id.replace('optimization_checkbox_', '');
+			if (should_user_confirm_action(optimization_id)) {
+				confirmations_stack.push(optimization_id);
+			}
+		});
+		
+		user_confirm_destructive_actions_grouped(confirmations_stack, callback);
+	}
+
+	/**
+	 * Show confirmation popups for user to accept, in sequence. When done, trigger callback
+	 */
+	function user_confirm_destructive_actions_grouped(confirmations_stack, callback) {
+		if (0 < confirmations_stack.length) {
+			var warning_messages = [];
+			confirmations_stack.forEach(function(optimization_id) {
+				var str = $($('#tmpl-wpo-' + optimization_id).html()).children('p').html();
+				warning_messages.push(str);
+			});
+
+			wp_optimize.modal.open(
+				Object.assign(get_destructive_actions_confirm_popup('grouped-warnings'), {
+					cancel: function() {
+						// Nothing will be done
+					},
+					confirm: function() {
+						this.close();
+						callback();
+					},
+					content: function() {
+						return tmpl_wpo_grouped_warnings_tpl.replace('[[warning_messages]]', "<ul><li>" + warning_messages.join("</li><li>") + "</li></ul>");
+					}
+				}
+			));
+		} else {
+			// No confirmations needed
+			callback();
+		}
+	}
 
 	/**
 	 * Sent command to run selected optimizations and auto backup if selected
@@ -1071,7 +1141,7 @@ var WP_Optimize = function () {
 		});
 	});
 
-	$('#database_settings_form, #settings_form').on('click', '.wpo-save-settings', function (e) {
+	$('#database_settings_form, #settings_form, #wpo-404-detector-form').on('click', '.wpo-save-settings', function (e) {
 		e.preventDefault();
 		var form = $(this).closest('form');
 		var spinner = form.find('.wpo-saving-settings');
@@ -1128,6 +1198,12 @@ var WP_Optimize = function () {
 			if (resp && resp.hasOwnProperty('logging_settings_contents')) {
 				$('#wpo_logging_settings').replaceWith(resp.logging_settings_contents);
 			}
+
+			// switch for visibility (performance tab).
+			var $wpo_404_detector_btn = $('#wpo_404_detector');
+			$wpo_404_detector_btn.prop('checked', !$wpo_404_detector_btn.prop('checked'));
+			var $wpo_404_detector_results = $('#wpo_404_detector_results');
+			$wpo_404_detector_results.css('display', $wpo_404_detector_btn.prop('checked') ? 'block' : 'none');
 
 			// Need to refresh the page if enable-admin-menu tick state has changed.
 			if (resp.save_results.refresh) {
@@ -1540,7 +1616,7 @@ var WP_Optimize = function () {
 	$('#wpoptimize_table_list').on('click', '.run-single-table-delete', function () {
 		table_to_remove_btn = $(this);
 		var take_backup_checkbox = $('#enable-auto-backup-1');
-		if ('' == wpoptimize.user_always_ignores_table_delete_warning || '1' !== wpoptimize.user_always_ignores_table_delete_warning) {
+		if ('' == wpoptimize.user_always_ignores_table_deletion_warning || '1' !== wpoptimize.user_always_ignores_table_deletion_warning) {
 			wp_optimize.modal.open({
 				className: 'wpo-confirm',
 				events: {
@@ -1573,11 +1649,11 @@ var WP_Optimize = function () {
 				},
 				deleteTable: function() {
 					// check if user ignore table warning
-					var ignores_table_detele_warning_checkbox = this.$('#ignores_table_delete_warning');
-					if (ignores_table_detele_warning_checkbox.is(':checked')) {
-						send_command('user_ignores_table_delete_warning', {}, function(response) {
+					var ignores_table_deletion_warning_checkbox = this.$('#ignores_table_deletion_warning');
+					if (ignores_table_deletion_warning_checkbox.is(':checked')) {
+						send_command('user_ignores_table_deletion_warning', {}, function(response) {
 							if (response.success) {
-								wpoptimize.user_always_ignores_table_delete_warning = '1';
+								wpoptimize.user_always_ignores_table_deletion_warning = '1';
 							}
 						});
 					}
@@ -1660,7 +1736,7 @@ var WP_Optimize = function () {
 
 
 	/**
-	 * Send ajax commant to remove single database table.
+	 * Send ajax command to remove single database table.
 	 *
 	 * @param {Object} btn jQuery object of clicked "Remove" button.
 	 *
@@ -1862,18 +1938,14 @@ var WP_Optimize = function () {
 	});
 
 	/**
-	 * Export plugin settings as a JSON file
+	 * Pack WPO settings into a single object
 	 *
-	 * @param {object} e - Event object
-	 *
-	 * @return {void}
+	 * @return {object}
 	 */
-	function export_settings(e) {
-		e.preventDefault();
-
+	function build_settings() {
 		var date_now = new Date();
 
-		form_data = JSON.stringify({
+		return {
 			epoch_date: date_now.getTime(),
 			local_date: date_now.toLocaleString(),
 			network_site_url: wpoptimize.network_site_url,
@@ -1883,7 +1955,20 @@ var WP_Optimize = function () {
 				smush_settings: wp_optimize.smush_settings(),
 				database_settings: gather_settings('string')
 			}
-		});
+		};
+	}
+
+	/**
+	 * Export plugin settings as a JSON file
+	 *
+	 * @param {object} e - Event object
+	 *
+	 * @return {void}
+	 */
+	function export_settings(e) {
+		e.preventDefault();
+
+		form_data = JSON.stringify(build_settings());
 
 		// Attach this data to an anchor on page
 		var link = document.body.appendChild(document.createElement('a'));
@@ -1948,6 +2033,171 @@ var WP_Optimize = function () {
 		}
 	}
 
+	/**
+	 * Define popup for each optimization action that needs confirmation from user
+	 */
+	function get_destructive_actions_confirm_popup(action) {
+		var popups = destructive_actions_confirm_popup = {
+			postmeta: {
+				className: 'wpo-confirm',
+				events: {
+					'click .wpo-modal--bg': 'close',
+					'click #confirm_post_meta_deletion': 'deleteConfirm',
+					'click .cancel': 'cancel',
+					'click #confirm-post-meta-delete-action': 'confirm'
+				},
+				content: function() {
+					var content_template = wp.template('wpo-postmeta');
+					return content_template({});
+				},
+				deleteConfirm: function() {
+					var enable_button = $('#confirm_post_meta_deletion').is(':checked');
+					$('.delete-post-meta').prop('disabled', !enable_button);
+				}
+			},
+			orphandata: {
+				className: 'wpo-confirm',
+				events: {
+					'click .wpo-modal--bg': 'close',
+					'click #confirm_orphaned_relationship_data_deletion': 'deleteConfirm',
+					'click .cancel': 'cancel',
+					'click #confirm-orphaned-relationship-data-delete-action': 'confirm'
+				},
+				content: function() {
+					var content_template = wp.template('wpo-orphandata');
+					return content_template({});
+				},
+				deleteConfirm: function() {
+					var enable_button = $('#confirm_orphaned_relationship_data_deletion').is(':checked');
+					$('.delete-orphaned-relationship-data').prop('disabled', !enable_button);
+				}
+			},
+			"grouped-warnings": {
+				className: 'wpo-confirm',
+				events: {
+					'click .wpo-modal--bg': 'close',
+					'click #confirm_grouped_warnings_data_deletion': 'deleteConfirm',
+					'click .cancel': 'cancel',
+					'click #confirm-grouped-warnings-data-delete-action': 'confirm'
+				},
+				deleteConfirm: function() {
+					var enable_button = $('#confirm_grouped_warnings_data_deletion').is(':checked');
+					$('.delete-grouped-warnings-data').prop('disabled', !enable_button);
+				}
+			}
+		}
+
+		return popups[action];
+	}
+
+	/**
+	 * Attach click event to postmeta checkbox
+	 */
+	function add_warning_for_delete_post_meta_action() {
+		$('#optimization_button_postmeta_big').on('click', function (evt) {
+			return function(this_button) {
+				var remove_post_meta_checkbox = $('#optimization_checkbox_postmeta');
+
+				if (should_user_confirm_action('postmeta')) {
+					wp_optimize.modal.open(
+						Object.assign(get_destructive_actions_confirm_popup('postmeta'), {
+							cancel: function() {
+								$(remove_post_meta_checkbox).prop('checked', false);
+							},
+							confirm: function() {
+								maybe_dismiss_destructive_actions();
+								this.close();
+
+								$(this_button).prop('bypass-confirm-box', true);
+								$(this_button).trigger('click');
+								
+							}
+						}
+					));
+
+					evt.preventDefault();
+					return false;
+				} else {
+					$(this_button).prop('bypass-confirm-box', false);
+					return true;
+				}
+			}(this);
+		});
+	}
+	
+	/**
+	 * Check if dismiss future confirms checkbox is visible and selected, then save option in DB
+	 */
+	function maybe_dismiss_destructive_actions() {
+		var ignores_orphaned_relationship_data_delete_warning_checkbox = $('#ignores_orphaned_relationship_data_deletion_warning');
+		if (ignores_orphaned_relationship_data_delete_warning_checkbox.is(':visible') && ignores_orphaned_relationship_data_delete_warning_checkbox.is(':checked')) {
+			send_command('user_ignores_orphaned_relationship_data_deletion_warning', {}, function(response) {
+				if (response.success) {
+					wpoptimize.user_always_ignores_orphaned_relationship_data_deletion_warning = '1';
+				}
+			});
+		}
+
+		var ignores_post_meta_deletion_warning_checkbox = $('#ignores_post_meta_deletion_warning');
+		if (ignores_post_meta_deletion_warning_checkbox.is(':visible') && ignores_post_meta_deletion_warning_checkbox.is(':checked')) {
+			send_command('user_ignores_post_meta_deletion_warning', {}, function(response) {
+				if (response.success) {
+					wpoptimize.user_always_ignores_post_meta_deletion_warning = '1';
+				}
+			});
+		}
+	}
+
+	/**
+	 * Check if user dismissed confirms, or should they see the confirm popup
+	 */
+	function should_user_confirm_action(action) {
+		if ('orphandata' == action) {
+			var bypass_confirm = $('#optimization_button_orphandata_big').prop('bypass-confirm-box') == true;
+
+			return !bypass_confirm && ('' == wpoptimize.user_always_ignores_orphaned_relationship_data_deletion_warning || '1' !== wpoptimize.user_always_ignores_orphaned_relationship_data_deletion_warning);
+		} else if ('postmeta' == action) {
+			var bypass_confirm = $('#optimization_button_postmeta_big').prop('bypass-confirm-box') == true;
+
+			return !bypass_confirm && ('' == wpoptimize.user_always_ignores_post_meta_deletion_warning || '1' !== wpoptimize.user_always_ignores_post_meta_deletion_warning);
+		}
+	}
+
+	/**
+	 * Attach click event to orphandata optimization checkbox
+	 */
+	function add_warning_for_delete_orphaned_relationship_data_action() {
+		$('#optimization_button_orphandata_big').on('click', function (evt) {
+			return function(this_button) {
+				var remove_orphaned_relationship_data_checkbox = $('#optimization_checkbox_orphandata');
+
+				if (should_user_confirm_action('orphandata')) {
+					wp_optimize.modal.open(
+						Object.assign(get_destructive_actions_confirm_popup('orphandata'), {
+							cancel: function() {
+								$(remove_orphaned_relationship_data_checkbox).prop('checked', false);
+							},
+							confirm: function() {
+								maybe_dismiss_destructive_actions();
+
+								this.close();
+
+								$(this_button).prop('bypass-confirm-box', true);
+								$(this_button).trigger('click');
+							}
+						}
+					));
+
+					evt.preventDefault();
+					return false;
+				} else {
+					$(this_button).prop('bypass-confirm-box', false);
+					return true;
+				}
+			}(this);
+		});
+	}
+	
 	// Attach heartbeat API events
 	heartbeat.setup();
 
@@ -1955,7 +2205,8 @@ var WP_Optimize = function () {
 		send_command: send_command,
 		optimization_get_info: optimization_get_info,
 		take_a_backup_with_updraftplus: take_a_backup_with_updraftplus,
-		save_auto_backup_options: save_auto_backup_options
+		save_auto_backup_options: save_auto_backup_options,
+		build_settings: build_settings
 	}
 }; // END function WP_Optimize()
 
