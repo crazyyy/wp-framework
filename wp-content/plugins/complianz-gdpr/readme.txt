@@ -5,8 +5,8 @@ Tags: GDPR, Cookie, Cookie Notice, Consent, Privacy
 Requires at least: 5.9
 License: GPL2
 Requires PHP: 7.4
-Tested up to: 6.6
-Stable tag: 7.1.5
+Tested up to: 6.7.2
+Stable tag: 7.3.1
 
 Configure your Cookie Banner, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan.
 
@@ -29,7 +29,7 @@ https://www.youtube.com/watch?v=JJzOzNAd5Bw&ab_channel=ReallySimplePlugins
 
 = Consent Management =
 
-* Automatically configures you website based on wizard questions, WordPress scans and dedicated service and plugin integrations.
+* Automatically configures your website based on wizard questions, WordPress scans and dedicated service and plugin integrations.
 * Blocks 3rd party cookies like Google Maps, Facebook, Instagram, AdSense, Hubspot, Recaptcha, Twitter, ActiveCampaign, and many more.
 * Custom integrations for plugins, themes and services are automatically detected. 
 * Blocks iFrames, like YouTube, Vimeo, Dailymotion embedded videos and Social iFrames e.g. Instagram, Facebook et al.
@@ -98,7 +98,7 @@ Complianz offers a Full Privacy Suite for WordPress on [Complianz.io](https://co
 
 = Privacy Laws & Guidelines =
 
-Simultaneously select USA, Canada, United Kingdom, Australie, South Africa, Brazil and the EU as targeted regions with conditional Consent and dedicated Cookie Banners.
+Simultaneously select USA, Canada, United Kingdom, Australia, South Africa, Brazil and the EU as targeted regions with conditional Consent and dedicated Cookie Banners.
 
 * Support for GDPR / ePrivacy - European Union with Extension for Switzerland.
 * Support for USA / CCPA/CPRA/CPA/CTDPA/NRS 603A/UCPA/CDPA
@@ -134,7 +134,9 @@ Complianz is on [GitHub](https://github.com/Really-Simple-Plugins/complianz-gdpr
 
 IMPORTANT! Complianz | GDPR/CCPA Cookie Consent can help you meet compliance requirements, but the user must ensure that all requirements are met.
 
-Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by cookiedatabase.org, operated by Complianz B.V. The plugin sends the results of the (local) site scan to Cookiedatabase.org, for the sole purpose of providing you with accurate descriptions and keeping them up-to-date on a regular basis. We collect for research purposes:
+Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by cookiedatabase.org, operated by Complianz B.V. The plugin sends the results of Complianz' local or advanced website scan to Cookiedatabase.org, for the sole purpose of providing you with accurate descriptions and keeping them up-to-date on a regular basis. The advanced website scan can be initialized after authentication and consent for security purposes.
+
+We collect for research purposes:
 
 * Cookie names
 * Domain that provides the cookie names
@@ -142,17 +144,28 @@ Complianz provides your Cookie Policy with comprehensive cookie descriptions, su
 
 For more information:
 
-* Privacy Statement - [Privacy Statement](https://cookiedatabase.org/plugin-use-of-cookiedatabase-org-privacy-terms/) - Cookiedatabase.org
-* Terms and Conditions Database - [Terms of Use](https://cookiedatabase.org/terms-of-use/) - Cookiedatabase.org
-* Terms of Use API - [Terms of Use](https://cookiedatabase.org/terms-of-use-api/) - API - Cookiedatabase.org
+* Cookiedatabase.org - [Privacy Statement](https://cookiedatabase.org/plugin-use-of-cookiedatabase-org-privacy-terms/)
+* Cookiedatabase.org - [Terms and Conditions Database](https://cookiedatabase.org/terms-of-use/)
+* Cookiedatabase.org - [Terms of Use API](https://cookiedatabase.org/terms-of-use-api/)
 
-[Contact](https://complianz.io/support/) us if you have any questions, issues, or suggestions. Complianz | GDPR/CCPA Cookie Consent is developed by [Complianz B.V.](https://complianz.io). Leave your feature requests [here]().
+For security purposes, we authenticate the advanced website scan with:
+
+* Email address
+
+The advanced website scan collects public data from the user’s site, stores it for one hour, and then discards it without analysis.
+
+For more information:
+
+* Advanced website scan Complianz.io - [Privacy Statement](https://complianz.io/legal/privacy-statement/) 
+* Advanced website scan Complianz.io - [Terms of Use API](https://complianz.io/legal/terms-of-use/)
+
+[Contact](https://complianz.io/support/) us if you have any questions, issues, or suggestions. Complianz | GDPR/CCPA Cookie Consent is developed by [Complianz B.V.](https://complianz.io).
 
 == Installation ==
 * Go to “Plugins” in your WordPress Dashboard, and click “Add new”.
 * Click “Upload”, and select the downloaded zip file.
 * Activate your new plugin.
-* Use our tour to get familar with Complianz.
+* Use our tour to get familiar with Complianz.
 
 == Frequently Asked Questions ==
 = Knowledgebase =
@@ -185,6 +198,31 @@ The Brazilian General Data Protection Law is similar to the GDPR, the UK-GDPR it
 With some custom CSS this is possible, but we do not consider a cookie wall to be GDPR compliant, so it's not actively supported. We do, however, have the option to create a Soft Cookie Wall. Which blocks interaction with the website, but dismissing remains a possibility.
 
 == Changelog ==
+= 7.3.1 =
+* March 5th, 2025
+* Fix: removed admin redirect for cmplz_admin redirect solving issues with manageWP and overy forceful scan onboarding.
+* Enhancement: Add support for New Jersey, Iowa, Delaware, New Hampshire, Nebraska state privacy laws.
+* Enhancement: Email obfuscation now uses HTML entities and CSS to prevent spam bots from reading the email address.
+* Enhancement: Google Tag Manager script placement can now be dynamically set to load in the header or footer based on user preference, addressing Google Diagnostics warnings.
+* Enhancement:Small labels and descriptions adjustments.
+
+= 7.3.0 =
+* February 12th, 2025
+* Enhancement: Website Scan, added services detection.
+* Enhancement: Improved Omnisnippet compatibility.
+* Enhancement: Removed "BETA" references on Google Consent Mode V2 to reflect its finalized status.
+* Enhancement: Removed the soft cookie wall preview functionality and updated its description.
+* Enhancement: Added new Tips & Tricks.
+* Enhancement: Updated email field validation to allow the use of certain special characters.
+* Fix: Resolved issues with vendor links by improving the parsing logic to handle commas in vendor names or URLs correctly.
+* Fix: Triggered GeoIP database installation to ensure proper functionality during upgrades.
+
+= 7.2.0 =
+* December 16th, 2024
+* Feature: Website Scan
+* Enhancement: Introduced the cmplz_after_css_generation hook to improve CSS file management
+* Enhancement: Language file updated
+* Fix: translations https://complianz.io/doing-it-wrong-notice
 
 = 7.1.5 =
 * November 13th, 2024
@@ -199,11 +237,6 @@ With some custom CSS this is possible, but we do not consider a cookie wall to b
 * Fix: Ensure complete data removal on Complianz uninstall.
 * Fix: Update email validation for longer TLDs.
 * Fix: Label adjustment.
-
-= 7.1.1 =
-* August 6th, 2024
-* Tested up to 6.6
-* Several small bug fixes
 
 = 7.1.0 =
 * May 14th, 2024

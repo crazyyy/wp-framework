@@ -47,7 +47,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
       $error = "Memcache functions not available";
 
       $client->getLogger()->error($error);
-      throw new Google_Cache_Exception($error);
+      throw new Google_Cache_Exception($error); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
     }
 
     $this->client = $client;
@@ -63,7 +63,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
         $error = "You need to supply a valid memcache host and port";
 
         $client->getLogger()->error($error);
-        throw new Google_Cache_Exception($error);
+        throw new Google_Cache_Exception($error); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
       }
     }
   }
@@ -178,7 +178,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
       $error = "Couldn't connect to memcache server";
 
       $this->client->getLogger()->error($error);
-      throw new Google_Cache_Exception($error);
+      throw new Google_Cache_Exception($error); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
     }
   }
 }

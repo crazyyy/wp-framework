@@ -1,5 +1,5 @@
 <?php
-
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
 /**
  * Dropbox API base class
  * @author Ben Tadiar <ben@handcraftedbyben.co.uk>
@@ -409,3 +409,4 @@ class UpdraftPlus_Dropbox_API {
         return $this->normalisePath($path);
     }
 }
+// phpcs:enable

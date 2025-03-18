@@ -10,12 +10,6 @@ function cmplz_load_warning_types() {
 			'plus_one' => true,
 			'include_in_progress' => true,
 		),
-		'upgraded_to_7' => array(
-			'warning_condition'  => 'cmplz_upgraded_to_current_version',
-			'open' => cmplz_sprintf(__( 'Complianz GDPR/CCPA %s. Learn more about our newest release.', 'complianz-gdpr' ),'7.0'),
-			'url' => 'https://complianz.io/meet-complianz-7/',
-			'admin_notice' => true,
-		),
 		'migrate_js' => array(
 			'warning_condition'  => 'get_value_enable_migrate_js==yes',
 			'open' => __( 'Migrate.js, which allowed a smooth upgrade to 6.0, has been deprecated.', 'complianz-gdpr' ),
@@ -274,12 +268,12 @@ function cmplz_load_warning_types() {
 			'dismissible' => false,
 			'url' => 'https://complianz.io/what-regions-do-i-target/',
 		),
-		'install-burst' => array(
-			'warning_condition' => 'cmplz_show_install_burst_warning',
-			'open' => __( 'Statistics without Consent. Meet Burst Statistics from Complianz.', 'complianz-gdpr' ),
+		'textdomain-just-in-time-notice' => array(
+			'dismissible' => true,
+			'open' => __( 'You might see a notice about Complianz when debugging your WordPress website. Although not a breaking issue, pleasee know we\'re attending to this issue.', 'complianz-gdpr' ),
+			'warning_condition' => (defined('WP_DEBUG') && WP_DEBUG) ? '_true_' : '_false_',
 			'include_in_progress' => false,
-			'url' => '#wizard/consent-statistics',
-		),
-
+			'url' => 'https://complianz.io/doing-it-wrong-notice',
+		)
 	) );
 }

@@ -55,7 +55,12 @@
 			</li>
 		</ul>
 		<?php if (!$is_premium) : ?>
-			<p><?php printf(esc_html__('Finally, please take a look at our %spremium version%s, which is packed full of additional speed enhancements to make your site go even faster!', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/buy/')).'" target="_blank">', '</a>'); ?></p>
+			<p>
+			<?php
+				// translators: %1$s is an opening anchor tag, %2$s is a closing anchor tag
+				printf(esc_html__('Finally, please take a look at our %1$spremium version%2$s, which is packed full of additional speed enhancements to make your site go even faster!', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/buy/')).'" target="_blank">', '</a>');
+			?>
+			</p>
 		<?php endif; ?>
 		<div class="wpo-introduction-notice__footer">
 			<p class="wpo-introduction-notice__footer-links font-size__normal">
@@ -68,24 +73,41 @@
 		<h3><?php esc_html_e('Thank you for updating WP-Optimize!', 'wp-optimize'); ?></h3>
 		<p><?php esc_html_e('The team at WP-Optimize is working hard to make your site fast and efficient.', 'wp-optimize'); ?></p>
 		<p>
-			<?php printf(esc_html_x('This new version includes a new major feature: the ability to %s minify your scripts and stylesheets.%s', '%s will be replaced by a "strong" tag', 'wp-optimize'), '<strong>', '</strong>'); ?>
-			<?php esc_html_e("This highly requested feature adds an extra layer of optimization to your website, lowering the number of requests sent to your server by combining and minifying the JavaScript and CSS files.", 'wp-optimize'); ?>
+			<?php
+				// translators: %1$s is an opening strong tag, %2$s is a closing strong tag
+				printf(esc_html_x('This new version includes a new major feature: the ability to %1$s minify your scripts and stylesheets.%2$s', '%s will be replaced by a "strong" tag', 'wp-optimize'), '<strong>', '</strong>');
+				esc_html_e("This highly requested feature adds an extra layer of optimization to your website, lowering the number of requests sent to your server by combining and minifying the JavaScript and CSS files.", 'wp-optimize');
+			?>
 			<a href="#" class="js--wpo-goto" data-page="wpo_minify" data-tab="status"><?php esc_html_e('Go to minify settings.', 'wp-optimize'); ?></a>
 		</p>
 		<p><?php esc_html_e("If you already have plugins for minifying, don't worry - WP-Optimize won't interfere unless you turn these options on.", 'wp-optimize'); ?></p>
-		<p><?php printf(esc_html_x('Read more about this feature %son our website%s.', '%s will be replaced by a link tag', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/faqs/category/minification/')).'" target="_blank">', '</a>'); ?></p>
+		<p>
+		<?php
+			// translators: %1$s is an opening anchor tag, %2$s is a closing anchor tag
+			printf(esc_html_x('Read more about this feature %1$son our website%2$s.', '%s will be replaced by a link tag', 'wp-optimize'), '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/faqs/category/minification/')).'" target="_blank">', '</a>');
+		?>
+		</p>
 		<?php if (!$is_premium) : ?>
-			<p class="wpo-introduction-notice__footer-links--premium"><?php printf(esc_html_x('PS - check out our new improved Premium version %shere%s.', '%s is replaced by a link tag', 'wp-optimize'), '<a href="'.esc_url('https://getwpo.com/buy/').'" target="_blank">', '</a>'); ?></p>
+			<p class="wpo-introduction-notice__footer-links--premium">
+				<?php
+					// translators: %1$s is opening anchor tag, %2$s is closing anchor tag
+					printf(esc_html_x('PS - check out our new improved Premium version %1$shere%2$s.', '%s is replaced by a link tag', 'wp-optimize'), '<a href="'.esc_url('https://getwpo.com/buy/').'" target="_blank">', '</a>');
+				?>
+			</p>
 		<?php endif; ?>
 		<div class="wpo-introduction-notice__footer">
 			<p class="wpo-introduction-notice__footer-links font-size__normal">
 				<button type="button" class="button button-primary close"><?php esc_html_e('Dismiss', 'wp-optimize'); ?></button>
-				<?php if ($is_premium) : ?>
-					<?php printf(esc_html__('%sRead the full WP-Optimize documentation%s, or if you have any questions, please ask %sPremium support%s', 'wp-optimize'), '<a target="_blank" href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/faqs/')).'">', '</a>', '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/premium-support/')).'" target="_blank">', '</a>'); ?>
-				<?php else : ?>
-					<?php WP_Optimize()->wp_optimize_url('https://getwpo.com/faqs/', __('Read the documentation', 'wp-optimize')); ?>
-					| <?php WP_Optimize()->wp_optimize_url('https://wordpress.org/support/plugin/wp-optimize/', __('Support', 'wp-optimize')); ?>
-				<?php endif; ?>
+				<?php
+					if ($is_premium) :
+						// translators: %1$s is an opening anchor tag, %2$s is a closing anchor tag, %3$s is an opening anchor tag, %4$s is a closing anchor tag
+						printf(esc_html__('%1$sRead the full WP-Optimize documentation%2$s, or if you have any questions, please ask %3$sPremium support%4$s', 'wp-optimize'), '<a target="_blank" href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/faqs/')).'">', '</a>', '<a href="'.esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/premium-support/')).'" target="_blank">', '</a>');
+					else :
+						WP_Optimize()->wp_optimize_url('https://getwpo.com/faqs/', __('Read the documentation', 'wp-optimize'));
+						echo ' | ';
+						WP_Optimize()->wp_optimize_url('https://wordpress.org/support/plugin/wp-optimize/', __('Support', 'wp-optimize'));
+					endif;
+				?>
 			</p>
 		</div>
 

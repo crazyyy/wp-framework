@@ -288,12 +288,12 @@ class UpdraftPlus_S3 {
 
 
 	/**
-	 * Free signing key from memory, MUST be called if you are using setSigningKey()
+	 * Free signing key from memory, MUST be called on older PHP versions if you are using setSigningKey()
 	 *
 	 * @return void
 	 */
 	public function freeSigningKey() {
-		if (false !== $this->__signingKeyResource) {
+		if (false !== $this->__signingKeyResource && (!defined('PHP_MAJOR_VERSION') || PHP_MAJOR_VERSION < 8)) { // @phpcs:ignore PHPCompatibility.Constants.NewConstants.php_major_versionFound
 			openssl_free_key($this->__signingKeyResource);
 		}
 	}
@@ -323,9 +323,9 @@ class UpdraftPlus_S3 {
 	 */
 	private function _triggerError($message, $file, $line, $code = 0) {
 		if ($this->useExceptions) {
-			throw new UpdraftPlus_S3Exception($message, $file, $line, $code);
+			throw new UpdraftPlus_S3Exception($message, $file, $line, $code); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
 		} else {
-			trigger_error($message, E_USER_WARNING);
+			trigger_error(esc_html($message), E_USER_WARNING);
 		}
 	}
 
@@ -1943,7 +1943,11 @@ final class UpdraftPlus_S3Request extends UpdraftPlus_AWSRequest {
 				// Useful for debugging
 				// $this->response->error['body_xml'] = $this->response->body->asXML();
 				
-				if (isset($this->response->body->Region)) $this->response->error['region'] = $this->response->body->Region;
+				if (isset($this->response->body->Region)) {
+					$this->response->error['region'] = $this->response->body->Region;
+				} elseif (false !== stripos($this->response->body->Code, 'AuthorizationHeaderMalformed') && !empty($this->response->body->Message) && preg_match("#the region '[^']+' is wrong; expecting '([^']+)'#i", $this->response->body->Message, $matches)) {
+					$this->response->error['region'] = $matches[1];
+				}
 				$this->response->error['message'] = isset($this->response->body->Message) ? $this->response->body->Message : '';
 				if (isset($this->response->body->Resource))
 					$this->response->error['resource'] = (string)$this->response->body->Resource;

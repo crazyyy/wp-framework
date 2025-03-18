@@ -32,6 +32,7 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 			$table = $this->optimizer->get_table($this->data['optimization_table']);
 			if (false === $table) {
 				$this->register_meta('error', 1);
+				// translators: %s is the table name
 				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
 				return false;
 			}
@@ -51,6 +52,7 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 
 			if (false === $table) {
 				$this->register_meta('error', 1);
+				// translators: %s is the table name
 				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
 				return false;
 			}
@@ -75,10 +77,12 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 				}
 			}
 
-			$this->register_output(sprintf(_n('%s orphaned table deleted', '%s orphaned tables deleted', $deleted), $deleted));
+			// translators: %s is the number of deleted orphaned tables
+			$this->register_output(sprintf(_n('%s orphaned table deleted', '%s orphaned tables deleted', $deleted, 'wp-optimize'), $deleted));
 
 			if ($deleted > 0) {
-				$this->register_output(sprintf(_n('Deleting %s orphaned table was unsuccessful', 'Repairing %s orphaned tables were unsuccessful', $deleted), $deleted));
+				// translators: %s is the number of tables
+				$this->register_output(sprintf(_n('Deleting %s orphaned table was unsuccessful', 'Repairing %s orphaned tables were unsuccessful', $deleted, 'wp-optimize'), $deleted));
 			}
 		}
 	}
@@ -110,7 +114,7 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 			$table_name = sanitize_text_field($table_obj->Name);
 			$sql_query = $wpdb->prepare("ALTER TABLE `%1s`  ENGINE=InnoDB", $table_name);
 			$this->logger->info($sql_query);
-			$result = $wpdb->query($sql_query);
+			$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is already prepared
 		}
 		// check if alter query finished successfully.
 		if ('' != $wpdb->last_error) {
@@ -139,7 +143,7 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 
 		$this->logger->info($sql_query);
 
-		$result = $wpdb->query($sql_query);
+		$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is already prepared
 
 		// check if drop query finished successfully.
 		if ('' != $wpdb->last_error) {
@@ -181,7 +185,8 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 		if (0 == $corrupted_tables) {
 			$this->register_output(__('No corrupted tables found', 'wp-optimize'));
 		} else {
-			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables), $corrupted_tables));
+			// translators: %s is the number of corrupted tables
+			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables, 'wp-optimize'), $corrupted_tables));
 		}
 	}
 

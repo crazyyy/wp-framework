@@ -190,14 +190,14 @@ jQuery(function($) {
 							}
 						});
 						if (restore_data.data.hasOwnProperty('actions') && 'object' == typeof restore_data.data.actions) {
-							
-							var pages_found = updraft_restore_get_pages(restore_data.data.urls);
-							if (!$.isEmptyObject(pages_found)) {
-								$('.updraft_restore_result').before(updraftlion.ajax_restore_404_detected);
-								$.each(pages_found, function(index, url) {
-									$('.updraft_missing_pages').append('<li>'+url+'</li>');
-								});
-							}
+							updraft_restore_get_pages(restore_data.data.urls, function(pages_found) {
+								if (!$.isEmptyObject(pages_found)) {
+									$('.updraft_restore_result').before(updraftlion.ajax_restore_404_detected);
+									$.each(pages_found, function(index, url) {
+										$('.updraft_missing_pages').append('<li>'+url+'</li>');
+									});
+								}
+							});
 
 							$.each(restore_data.data.actions, function(index, item) {
 								$steps_list.after('<a href="'+item+'" class="button button-primary">'+index+'</a>');
@@ -280,24 +280,33 @@ jQuery(function($) {
 	}
 
 	/**
-	 * This function will make a call to the passed in urls and check if the response code is a 404 if it is then add it to the array of urls that are not found and return it
+	 * This function will make a call to the passed in urls and check if the response code is a 404 if it is then add it to the array of urls that are not found and return it via a callback
 	 *
-	 * @param {array} urls - the urls we want to test
-	 *
-	 * @return {array} an array of urls not found
+	 * @param {array}    urls     - the urls we want to test
+	 * @param {Function} callback - will be called with the array of urls not found
 	 */
-	function updraft_restore_get_pages(urls) {
-
+	function updraft_restore_get_pages(urls, callback) {
 		var urls_not_found = [];
+		var ajax_requests = [];
 
 		$.each(urls, function(index, url) {
+			var d = $.Deferred();
+			ajax_requests.push(d.promise());
+
 			var xhttp = new XMLHttpRequest();
-			xhttp.open('GET', url, false);
+			xhttp.onreadystatechange = function() {
+				if (4 == this.readyState) {
+					if (404 == this.status) urls_not_found.push(url);
+					d.resolve();
+				}
+			};
+			xhttp.open('GET', url, true);
 			xhttp.send(null);
-			if (xhttp.status == 404) urls_not_found.push(url);
 		});
 
-		return urls_not_found;
+		$.when.apply($, ajax_requests).done(function() {
+			callback(urls_not_found);
+		});
 	}
 
 	$('#updraftplus_ajax_restore_progress').on('click', '#updraft_restore_resume', function(e) {

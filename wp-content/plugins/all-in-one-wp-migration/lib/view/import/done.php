@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
+ *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
  * ███████╗█████╗  ██████╔╝██║   ██║██╔████╔██║███████║███████╗█████╔╝
@@ -28,18 +30,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( $should_reset_permalinks ) {
-	_e(
-		'» Permalinks are set to default. <a class="ai1wm-no-underline" href="https://help.servmask.com/knowledgebase/permalinks-are-set-to-default/" target="_blank">Why?</a> (opens a new window)<br />' .
-		'» <a class="ai1wm-no-underline" href="https://wordpress.org/support/view/plugin-reviews/all-in-one-wp-migration?rate=5#postform" target="_blank">Optionally, review the plugin</a>. (opens a new window)',
-		AI1WM_PLUGIN_NAME
+	printf(
+		__(
+			'» Permalinks are set to default. <a class="ai1wm-no-underline" href="https://help.servmask.com/knowledgebase/permalinks-are-set-to-default/" target="_blank">Why?</a><br />' .
+			'» <a class="ai1wm-no-underline" href="https://wordpress.org/support/view/plugin-reviews/all-in-one-wp-migration?rate=5#postform" target="_blank">Review your migration experience</a>.<br />' .
+			'» <a class="ai1wm-no-underline" href="%s" target="_blank">Protect your site with real-time threat protection</a>',
+			AI1WM_PLUGIN_NAME
+		),
+		'https://servmask.com/protect'
 	);
 } else {
 	printf(
 		__(
-			'» <a class="ai1wm-no-underline" href="%s" target="_blank">Save permalinks structure</a>. (opens a new window)<br />' .
-			'» <a class="ai1wm-no-underline" href="https://wordpress.org/support/view/plugin-reviews/all-in-one-wp-migration?rate=5#postform" target="_blank">Optionally, review the plugin</a>. (opens a new window)',
+			'» <a class="ai1wm-no-underline" href="%s" target="_blank">Save permalinks structure</a><br />' .
+			'» <a class="ai1wm-no-underline" href="https://wordpress.org/support/view/plugin-reviews/all-in-one-wp-migration?rate=5#postform" target="_blank">Review your migration experience</a><br />' .
+			'» <a class="ai1wm-no-underline" href="%s" target="_blank">Protect your site with real-time threat protection</a>',
 			AI1WM_PLUGIN_NAME
 		),
-		admin_url( 'options-permalink.php#submit' )
+		admin_url( 'options-permalink.php#submit' ),
+		'https://servmask.com/protect'
 	);
 }
+

@@ -21,6 +21,8 @@ class WP_Optimization_postmeta extends WP_Optimization {
 	 */
 	public function preview($params) {
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is `$wpdb->prepare` from global variable.
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT pm.* FROM `" . $this->wpdb->postmeta . "` pm".
 			" LEFT JOIN `" . $this->wpdb->posts . "` wp ON wp.ID = pm.post_id".
@@ -33,11 +35,12 @@ class WP_Optimization_postmeta extends WP_Optimization {
 		);
 
 		$posts = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// get total count post meta for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->postmeta . "` pm LEFT JOIN `" . $this->wpdb->posts . "` wp ON wp.ID = pm.post_id WHERE wp.ID IS NULL;";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is safe, no user input used
 
 		return array(
 			'id_key' => 'meta_id',
@@ -59,9 +62,11 @@ class WP_Optimization_postmeta extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s: number of orphaned post metadata records
 		$message = sprintf(_n('%s orphaned post meta data deleted', '%s orphaned post meta data deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s: number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -91,12 +96,14 @@ class WP_Optimization_postmeta extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count) {
+			// translators: %s: number of orphaned post metadata records
 			$message = sprintf(_n('%s orphaned post meta data in your database', '%s orphaned post meta data in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No orphaned post meta data in your database', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s: number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -113,7 +120,7 @@ class WP_Optimization_postmeta extends WP_Optimization {
 	 */
 	public function get_info() {
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->postmeta . "` pm LEFT JOIN `" . $this->wpdb->posts . "` wp ON wp.ID = pm.post_id WHERE wp.ID IS NULL;";
-		$postmeta = $this->wpdb->get_var($sql);
+		$postmeta = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is safe, no user input used
 
 		$this->found_count += $postmeta;
 	}

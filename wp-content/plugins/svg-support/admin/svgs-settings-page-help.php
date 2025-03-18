@@ -153,8 +153,8 @@ function bodhi_svgs_help_tab () {
 	 */
 	// add help tab sidebar
 	$screen->set_help_sidebar(
-		'<p><strong>' . __( 'For more help, visit:' ) . '</strong></p>' .
-		'<p>' . __( '<a target="_blank" href="https://wordpress.org/support/plugin/svg-support">SVG Support Forum</a>' ) . '</p>'
+		'<p><strong>' . __( 'For more help, visit:', 'svg-support' ) . '</strong></p>' .
+		'<p>' . __( '<a target="_blank" href="https://wordpress.org/support/plugin/svg-support">SVG Support Forum</a>', 'svg-support' ) . '</p>'
 	);
 
 }

@@ -34,6 +34,22 @@ class Base {
 	public static $temp_debug = false;
 
 	/**
+	 * System info, gathered from the debugger and debug_info() functions.
+	 *
+	 * @access public
+	 * @var string $system_info
+	 */
+	public static $system_info = '';
+
+	/**
+	 * Whether the site is multisite, network activated, and not configured for per-site settings.
+	 *
+	 * @access public
+	 * @var bool $use_network_options
+	 */
+	public static $use_network_options = null;
+
+	/**
 	 * Content directory (URL) for the plugin to use.
 	 *
 	 * @access protected
@@ -586,7 +602,7 @@ class Base {
 				$this->debug_message( 'sorry nope' );
 			}
 		}
-		return $this->imagick_supports_webp;
+		return apply_filters( 'ewwwio_imagick_supports_webp', $this->imagick_supports_webp );
 	}
 
 	/**
@@ -688,7 +704,7 @@ class Base {
 	 * Retrieve option: use 'site' setting if plugin is network activated, otherwise use 'blog' setting.
 	 *
 	 * Retrieves multi-site and single-site options as appropriate as well as allowing overrides with
-	 * same-named constant. Overrides are only available for integer and boolean options.
+	 * same-named constant. Overrides are only available for integers, booleans, and specifically supported options.
 	 *
 	 * @param string $option_name The name of the option to retrieve.
 	 * @param mixed  $default_value The default to use if not found/set, defaults to false, but not currently used.
@@ -745,18 +761,26 @@ class Base {
 		if ( 'EasyIO' === __NAMESPACE__ ) {
 			return \get_option( $option_name );
 		}
-		if ( ! \function_exists( 'is_plugin_active_for_network' ) && \is_multisite() ) {
-			// Need to include the plugin library for the is_plugin_active function.
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		if ( \is_null( self::$use_network_options ) ) {
+			self::$use_network_options = false;
+			if ( ! \function_exists( 'is_plugin_active_for_network' ) && \is_multisite() ) {
+				// Need to include the plugin library for the is_plugin_active function.
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+			if (
+				\is_multisite() &&
+				\defined( \strtoupper( $this->prefix ) . 'PLUGIN_FILE_REL' ) &&
+				\is_plugin_active_for_network( \constant( \strtoupper( $this->prefix ) . 'PLUGIN_FILE_REL' ) ) &&
+				! \get_site_option( $this->prefix . 'allow_multisite_override' )
+			) {
+				self::$use_network_options = true;
+			}
 		}
-		if (
-			! $single &&
-			\is_multisite() &&
-			\defined( \strtoupper( $this->prefix ) . 'PLUGIN_FILE_REL' ) &&
-			\is_plugin_active_for_network( \constant( \strtoupper( $this->prefix ) . 'PLUGIN_FILE_REL' ) ) &&
-			! \get_site_option( $this->prefix . 'allow_multisite_override' )
-		) {
+		if ( ! $single && self::$use_network_options ) {
 			$option_value = \get_site_option( $option_name );
+			if ( 'ewww_image_optimizer_exactdn' === $option_name && ! $option_value ) {
+				$option_value = \get_option( $option_name );
+			}
 		} else {
 			$option_value = \get_option( $option_name );
 		}
@@ -1330,15 +1354,21 @@ class Base {
 	 * @return bool True if the operation was successful.
 	 */
 	public function set_option( $option_name, $option_value ) {
-		if ( ! \function_exists( '\is_plugin_active_for_network' ) && \is_multisite() ) {
-			// Need to include the plugin library for the is_plugin_active function.
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		if ( \is_null( self::$use_network_options ) ) {
+			self::$use_network_options = false;
+			if ( ! \function_exists( '\is_plugin_active_for_network' ) && \is_multisite() ) {
+				// Need to include the plugin library for the is_plugin_active function.
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+			if (
+				\is_multisite() &&
+				\is_plugin_active_for_network( \constant( \strtoupper( $this->prefix ) . 'PLUGIN_FILE_REL' ) ) &&
+				! \get_site_option( $this->prefix . 'allow_multisite_override' )
+			) {
+				self::$use_network_options = true;
+			}
 		}
-		if (
-			\is_multisite() &&
-			\is_plugin_active_for_network( \constant( \strtoupper( $this->prefix ) . 'PLUGIN_FILE_REL' ) ) &&
-			! \get_site_option( $this->prefix . 'allow_multisite_override' )
-		) {
+		if ( self::$use_network_options ) {
 			$success = \update_site_option( $option_name, $option_value );
 		} else {
 			$success = \update_option( $option_name, $option_value );
@@ -1565,6 +1595,9 @@ class Base {
 	 * @return mixed Result of parse_url.
 	 */
 	public function parse_url( $url, $component = -1 ) {
+		if ( empty( $url ) ) {
+			return false;
+		}
 		if ( 0 === \strpos( $url, '//' ) ) {
 			$url = ( \is_ssl() ? 'https:' : 'http:' ) . $url;
 		}

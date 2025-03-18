@@ -55,48 +55,47 @@ class UpdraftPlus_Temporary_Clone_Status {
 		$this->page_start();
 		echo '<div class="updraftclone_content_container">';
 
-		echo '<img class="updraftclone_logo" alt="UpdraftClone Logo" src="'.trailingslashit(UPDRAFTPLUS_URL).'images/updraftclone_logo_white.png">';
-		echo $this->get_content();
+		echo '<img class="updraftclone_logo" alt="UpdraftClone Logo" src="'.esc_url(trailingslashit(UPDRAFTPLUS_URL)).'images/updraftclone_logo_white.png">';
+		$this->get_content(true);
 		?>
 		<div class="status-box">
 			<section class="progress">
-				<div class="progress-item <?php echo $this->get_progress_item_class(self::INSTALLED); ?>">
+				<div class="progress-item <?php echo esc_attr($this->get_progress_item_class(self::INSTALLED)); ?>">
 					<div class="progress-item__bar"></div>
-					<span class="icon"><?php echo $this->get_progress_item_icon(self::INSTALLED); ?></span>
-					<?php _e('WordPress installed', 'updraftplus'); ?>
+					<span class="icon"><?php $this->get_progress_item_icon(self::INSTALLED, true); ?></span>
+					<?php esc_html_e('WordPress installed', 'updraftplus'); ?>
 				</div>
-				<div class="progress-item <?php echo $this->get_progress_item_class(self::UPLOADING); ?>">
+				<div class="progress-item <?php echo esc_attr($this->get_progress_item_class(self::UPLOADING)); ?>">
 					<div class="progress-item__bar"></div>
-					<span class="icon"><?php echo $this->get_progress_item_icon(self::UPLOADING); ?></span>
+					<span class="icon"><?php $this->get_progress_item_icon(self::UPLOADING, true); ?></span>
 					<?php
 					if (self::UPLOADING >= $this->current_status) {
-						_e('Receiving site data', 'updraftplus');
+						esc_html_e('Receiving site data', 'updraftplus');
 					} else {
-						_e('Site data received', 'updraftplus');
+						esc_html_e('Site data received', 'updraftplus');
 					}
 					?>
 				</div>
-				<div class="progress-item <?php echo $this->get_progress_item_class(self::RESTORING); ?>">
+				<div class="progress-item <?php echo esc_attr($this->get_progress_item_class(self::RESTORING)); ?>">
 					<div class="progress-item__bar"></div>
-					<span class="icon"><?php echo $this->get_progress_item_icon(self::RESTORING); ?></span>
+					<span class="icon"><?php $this->get_progress_item_icon(self::RESTORING, true); ?></span>
 					<?php
 					if (self::RESTORING >= $this->current_status) {
-						_e('Deploying site data', 'updraftplus');
+						esc_html_e('Deploying site data', 'updraftplus');
 					} else {
-						_e('Site data has been deployed', 'updraftplus');
+						esc_html_e('Site data has been deployed', 'updraftplus');
 					}
 					?>
 				</div>
 				<div class="progress-item">
 					<div class="progress-item__bar"></div>
-					<span class="icon"><?php echo $this->get_progress_item_icon(); ?></span>
+					<span class="icon"><?php $this->get_progress_item_icon(1000, true); ?></span>
 					<?php
-						_e('Clone ready', 'updraftplus');
+						esc_html_e('Clone ready', 'updraftplus');
 					?>
 				</div>
 			</section>
-			<?php echo '<p class="status-description">' . $this->get_status_description() . '</p>'; ?>
-
+			<p class="status-description"><?php $this->get_status_description(true); ?></p>
 		</div>
 
 		<?php
@@ -357,30 +356,31 @@ class UpdraftPlus_Temporary_Clone_Status {
 	/**
 	 * This function will get and return the clone status description ready to be displayed on the page
 	 *
-	 * @return string - the clone status description
+	 * @param bool $echo_instead_of_return Indicate whether the description is to be shown directly (echoed) or just for retrieval
+	 * @return string/void - the clone status description
 	 */
-	public function get_status_description() {
-		$description = "";
+	public function get_status_description($echo_instead_of_return = false) {
+		if (!$echo_instead_of_return) ob_start();
 
 		switch ($this->current_status) {
 			case self::INSTALLED:
-				$description = __('WordPress installed; now awaiting the site data to be sent.', 'updraftplus');
+				echo esc_html__('WordPress installed; now awaiting the site data to be sent.', 'updraftplus');
 				break;
 			case self::UPLOADING:
 				$backup_details = $this->get_backup_details();
-				$description = __('The sending of the site data has begun.', 'updraftplus').' '.sprintf(__('So far %s data archives totalling %s have been received', 'updraftplus'), '<strong>'.$backup_details['sets'].'</strong>', '<strong>'.round($backup_details['uploaded'], 2).' MB</strong>');
+				echo esc_html__('The sending of the site data has begun.', 'updraftplus').' '.sprintf(esc_html__('So far %s data archives totalling %s have been received', 'updraftplus'), '<strong>'.esc_html($backup_details['sets']).'</strong>', '<strong>'.esc_html(round($backup_details['uploaded'], 2)).' MB</strong>');
 				break;
 			case self::RESTORING:
 				UpdraftPlus_Backup_History::rebuild();
 				$backup_details = $this->get_backup_details();
-				$description = __('The site data has all been received, and its import has begun.', 'updraftplus').' '.sprintf(__('%s archives remain', 'updraftplus'), '<strong>'.$backup_details['sets'].'</strong>');
+				echo esc_html__('The site data has all been received, and its import has begun.', 'updraftplus').' '.sprintf(esc_html__('%s archives remain', 'updraftplus'), '<strong>'.esc_html($backup_details['sets']).'</strong>');
 				break;
 			default:
-				$description = "(?)";
+				echo "(?)";
 				break;
 		}
 
-		return $description;
+		if (!$echo_instead_of_return) return ob_get_clean();
 	}
 
 	/**
@@ -413,12 +413,16 @@ class UpdraftPlus_Temporary_Clone_Status {
 	/**
 	 * This function will get and return the clone content ready to be displayed on the page
 	 *
-	 * @return string - the clone content
+	 * @param bool $echo_instead_of_return Indicate whether the content is to be shown directly (echoed) or just for retrieval
+	 * @return string/void - the clone content
 	 */
-	public function get_content() {
-		$content = '<p>'.__('Your UpdraftClone is still setting up.', 'updraftplus').' '.sprintf(__('You can check the progress here or in %s', 'updraftplus'), '<a href="https://updraftplus.com/my-account/clones/" target="_blank">'.__('your UpdraftPlus.com account', 'updraftplus')).'</a></p>';
-		$content .= '<p><a href="https://updraftplus.com/faq-category/updraftclone/" target="_blank">'.__('To read FAQs/documentation about UpdraftClone, go here.', 'updraftplus').'</a></p>';
-		return $content;
+	public function get_content($echo_instead_of_return = false) {
+		if (!$echo_instead_of_return) ob_start();
+		?>
+		<p><?php echo esc_html__('Your UpdraftClone is still setting up.', 'updraftplus').' '.sprintf(esc_html__('You can check the progress here or in %s', 'updraftplus'), '<a href="https://updraftplus.com/my-account/clones/" target="_blank">'.esc_html__('your UpdraftPlus.com account', 'updraftplus').'</a>'); ?></p>
+		<p><a href="https://updraftplus.com/faq-category/updraftclone/" target="_blank"><?php esc_html_e('To read FAQs/documentation about UpdraftClone, go here.', 'updraftplus'); ?></a></p>
+		<?php
+		if (!$echo_instead_of_return) return ob_get_clean();
 	}
 
 	/**
@@ -453,14 +457,19 @@ class UpdraftPlus_Temporary_Clone_Status {
 	/**
 	 * Get the progress item icon
 	 *
-	 * @param int $number The status number
-	 * @return string
+	 * @param int  $number                 The status number
+	 * @param bool $echo_instead_of_return Indicate whether the icon is to be shown directly (echoed) or just for retrieval
+	 * @return string/void
 	 */
-	private function get_progress_item_icon($number = 1000) {
-		$icon = '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">';
-		$icon .= '<use href="#'.(($number === $this->current_status) ? 'update' : (($number < $this->current_status) ? 'yes' : 'clock')).'" />';
-		$icon .= '</svg>';
-		return $icon;
+	private function get_progress_item_icon($number = 1000, $echo_instead_of_return = false) {
+		if (!$echo_instead_of_return) ob_start();
+		$anchor_text = '#'.(($number === $this->current_status) ? 'update' : (($number < $this->current_status) ? 'yes' : 'clock'));
+		?>
+		<svg viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+			<use href="<?php echo esc_url($anchor_text); ?>" />
+		</svg>
+		<?php
+		if (!$echo_instead_of_return) return ob_get_clean();
 	}
 }
 

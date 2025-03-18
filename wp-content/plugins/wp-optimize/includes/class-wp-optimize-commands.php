@@ -412,7 +412,7 @@ class WP_Optimize_Commands {
 		foreach ($tabs as $tab_id => $tab_description) {
 			ob_start();
 			// output wrap div for tab with id #wp-optimize-nav-tab-contents-'.$section.'-'.$tab_id
-			echo '<div class="wp-optimize-nav-tab-contents" id="wp-optimize-nav-tab-'.$section_id.'-'.$tab_id.'-contents">';
+			echo '<div class="wp-optimize-nav-tab-contents" id="wp-optimize-nav-tab-'.esc_attr($section_id).'-'.esc_attr($tab_id).'-contents">';
 			
 			echo '<div class="postbox wpo-tab-postbox">';
 
@@ -1051,6 +1051,7 @@ class WP_Optimize_Commands {
 		if ($result && !is_wp_error($result)) {
 			return is_array($result) ? array_merge(array('success' => true), $result) : array('success' => true, 'message' => $result);
 		} else {
+			// translators: %s is an action/command
 			$error_message = is_wp_error($result) ? $result->get_error_message() : sprintf(__('The command %s failed', 'wp-optimize'), $action);
 			return array(
 				'success' => false,

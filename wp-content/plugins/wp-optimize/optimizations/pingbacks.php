@@ -18,6 +18,8 @@ class WP_Optimization_pingbacks extends WP_Optimization {
 	public function preview($params) {
 
 		// get data requested for preview.
+		// `$this->wpdb` is `$wpdb`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT comment_ID, comment_author, SUBSTR(comment_content, 1, 128) AS comment_content FROM `" . $this->wpdb->comments . "`".
 			" WHERE comment_type = 'pingback'".
@@ -29,6 +31,7 @@ class WP_Optimization_pingbacks extends WP_Optimization {
 		);
 
 		$posts = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// fix empty revision titles.
 		if (!empty($posts)) {
@@ -43,7 +46,7 @@ class WP_Optimization_pingbacks extends WP_Optimization {
 		// get total count comments for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->comments . "` WHERE comment_type = 'pingback';";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is safe, no user input used
 
 		return array(
 			'id_key' => 'comment_ID',
@@ -64,9 +67,11 @@ class WP_Optimization_pingbacks extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s is number of pingback deleted
 		$message = sprintf(_n('%s pingback deleted', '%s pingbacks deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is number of sites
 			$message .= ' '.sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -108,12 +113,14 @@ class WP_Optimization_pingbacks extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count > 0) {
+			// translators: %s is number of pingbacks
 			$message = sprintf(_n('%s pingback found', '%s pingbacks found', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No pingbacks found', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is number of sites
 			$message .= ' '.sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -131,7 +138,7 @@ class WP_Optimization_pingbacks extends WP_Optimization {
 	public function get_info() {
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->comments . "` WHERE comment_type='pingback';";
 
-		$comments = $this->wpdb->get_var($sql);
+		$comments = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is safe, no user input used
 		$this->found_count += $comments;
 	}
 	

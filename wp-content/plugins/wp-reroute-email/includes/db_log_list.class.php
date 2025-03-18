@@ -4,7 +4,6 @@ if(!class_exists('WP_List_Table')){
    require_once( dirname(__FILE__) . '/class-wp-list-table.php' );
 }
 
-
 class DBLogList extends WP_List_Table {
     function __construct(){
         global $status, $page;
@@ -24,7 +23,7 @@ class DBLogList extends WP_List_Table {
     function column_subject($item){
         $page = sanitize_text_field(filter_input(INPUT_GET, 'page'));
         $actions = array(
-            'view'      => sprintf('<a href="?page=%s&tab=details&action=%s&logid=%s">' . esc_attr__('View Message', 'wp_reroute_email') . '</a>', esc_attr($page),'view', esc_attr($item->id))
+            'view'      => sprintf('<a href="?page=%s&tab=details&action=%s&logid=%s">' . esc_attr__('View Message', 'wp-reroute-email') . '</a>', esc_attr($page),'view', esc_attr($item->id))
         );
 
         return sprintf('%1$s %2$s', wp_kses_post($item->subject), $this->row_actions($actions));
@@ -37,9 +36,9 @@ class DBLogList extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'id' => 'ID',
-            'subject'     => esc_attr__('Subject', 'wp_reroute_email'),
-            'recipients_to'    => esc_attr__('Sent To', 'wp_reroute_email'),
-            'sent_on'  => esc_attr__('Sent On', 'wp_reroute_email')
+            'subject'     => esc_attr__('Subject', 'wp-reroute-email'),
+            'recipients_to'    => esc_attr__('Sent To', 'wp-reroute-email'),
+            'sent_on'  => esc_attr__('Sent On', 'wp-reroute-email')
         );
 
         return $columns;
@@ -55,7 +54,7 @@ class DBLogList extends WP_List_Table {
 
     function get_bulk_actions() {
         $actions = array(
-            'delete_all_messages'    => esc_attr__('Delete All Messages', 'wp_reroute_email')
+            'delete_all_messages'    => esc_attr__('Delete All Messages', 'wp-reroute-email')
         );
 
         return $actions;
@@ -67,6 +66,49 @@ class DBLogList extends WP_List_Table {
             $wpdb->query("DELETE FROM {$wpdb->prefix}wpre_emails");
         }
     }
+
+    function bulk_actions( $which = '' ) {
+        if ( is_null( $this->_actions ) ) {
+            $this->_actions = $this->get_bulk_actions();
+            $this->_actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->_actions );
+            $two = '';
+        } else {
+            $two = '2';
+        }
+
+        if ( empty( $this->_actions ) ) {
+            return;
+        }
+
+        echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' .
+            /* translators: Hidden accessibility text. */
+            __( 'Select bulk action' ) .
+        '</label>';
+        echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+        echo '<option value="-1">' . __( 'Bulk actions' ) . "</option>\n";
+
+        foreach ( $this->_actions as $key => $value ) {
+            if ( is_array( $value ) ) {
+                echo "\t" . '<optgroup label="' . esc_attr( $key ) . '">' . "\n";
+
+                foreach ( $value as $name => $title ) {
+                    $class = ( 'edit' === $name ) ? ' class="hide-if-no-js"' : '';
+
+                    echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . $title . "</option>\n";
+                }
+                echo "\t" . "</optgroup>\n";
+            } else {
+                $class = ( 'edit' === $key ) ? ' class="hide-if-no-js"' : '';
+
+                echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . $value . "</option>\n";
+            }
+        }
+
+        echo "</select>\n";
+
+        submit_button( __( 'Apply' ), 'action', 'wpre_bulk_action', false, array( 'id' => "dobulkaction$two" ) );
+        echo "\n";
+	}
 
     function prepare_items() {
         global $wpdb;
@@ -87,7 +129,7 @@ class DBLogList extends WP_List_Table {
         $paged = sanitize_text_field(filter_input(INPUT_GET, 'paged', FILTER_VALIDATE_INT));
 
         $orderby = !empty($orderby) && in_array($orderby, ['sent_on']) ? esc_sql($orderby) : 'sent_on';
-        $order = !empty($order) && in_array($order, ['ASC', 'DESC']) ? esc_sql($order) : 'DESC';
+        $order = !empty($order) && in_array($order, ['asc', 'desc']) ? esc_sql($order) : 'DESC';
 
         if(!empty($orderby) & !empty($order)){
             $query.= ' ORDER BY ' . $orderby . ' ' . $order;

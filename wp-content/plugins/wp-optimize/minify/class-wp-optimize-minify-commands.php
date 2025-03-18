@@ -88,7 +88,7 @@ class WP_Optimize_Minify_Commands {
 		
 		$notice = WP_Optimize_Minify_Functions::apply_strip_tags_for_messages_array($notice, '');
 
-		$notice = json_encode($notice); // encode
+		$notice = wp_json_encode($notice); // encode
 
 		return array(
 			'result' => 'caches cleared',
@@ -285,7 +285,7 @@ class WP_Optimize_Minify_Commands {
 		);
 
 		// loop through wpo-minify cache directory and get the meta.json files, combine into a single json file
-		if (is_dir(WPO_CACHE_MIN_FILES_DIR) && is_writable(dirname(WPO_CACHE_MIN_FILES_DIR))) {
+		if (is_dir(WPO_CACHE_MIN_FILES_DIR) && wp_is_writable(dirname(WPO_CACHE_MIN_FILES_DIR))) {
 			if ($handle = opendir(WPO_CACHE_MIN_FILES_DIR)) {
 				while (false !== ($d = readdir($handle))) {
 					if (0 === strcmp($d, '.') || 0 === strcmp($d, '..') || !is_numeric($d)) {
@@ -351,7 +351,7 @@ class WP_Optimize_Minify_Commands {
 	 */
 	private function check_and_delete($file) {
 		if (file_exists($file)) {
-			unlink($file);
+			wp_delete_file($file);
 		}
 	}
 

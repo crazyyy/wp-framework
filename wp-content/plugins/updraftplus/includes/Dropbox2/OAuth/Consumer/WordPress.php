@@ -65,12 +65,12 @@ class Dropbox_ConsumerWordPress extends Dropbox_ConsumerAbstract
         // Check if an error occurred and throw an Exception. This is part of the authentication process - don't modify.
         if (!empty($body->error)) {
             $message = $body->error . ' (Status Code: ' . wp_remote_retrieve_response_code($response) . ')';
-            throw new Dropbox_Exception($message);
+            throw new Dropbox_Exception($message); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
         }
         
         if (is_wp_error($response)) {
             $message = $response->get_error_message();
-            throw new Dropbox_Exception($message);
+            throw new Dropbox_Exception($message); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
         }
         
         $results = array ( 'body' => $body, 'code' => wp_remote_retrieve_response_code($response), 'headers' => $response['headers'] );

@@ -14,9 +14,11 @@ class WP_Optimization_orphandata extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s - number of deleted orphaned relationship data
 		$message = sprintf(_n('%s orphaned relationship data deleted', '%s orphaned relationship data deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s - number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -39,12 +41,14 @@ class WP_Optimization_orphandata extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count > 0) {
+			// translators: %s - number of orphaned relationship data
 			$message = sprintf(_n('%s orphaned relationship data in your database', '%s orphaned relationship data in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No orphaned relationship data in your database', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s - number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -55,8 +59,8 @@ class WP_Optimization_orphandata extends WP_Optimization {
 	 * Get count of unoptimized items.
 	 */
 	public function get_info() {
-		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->term_relationships . "` WHERE term_taxonomy_id=1 AND object_id NOT IN (SELECT id FROM `" . $this->wpdb->posts . "`);";
-		$orphandata = $this->wpdb->get_var($sql);
+		$sql = "SELECT COUNT(*) FROM `{$this->wpdb->term_relationships}` WHERE term_taxonomy_id=%d AND object_id NOT IN (SELECT id FROM `{$this->wpdb->posts}`);";
+		$orphandata = $this->wpdb->get_var($this->wpdb->prepare($sql, 1)); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- `$this->wpdb` is `$wpdb`
 
 		$this->found_count += $orphandata;
 	}

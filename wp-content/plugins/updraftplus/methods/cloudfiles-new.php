@@ -34,7 +34,7 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 
 		if (null === $disablesslverify) $disablesslverify = UpdraftPlus_Options::get_updraft_option('updraft_ssl_disableverify');
 
-		if (empty($user) || empty($apikey)) throw new Exception(__('Authorisation failed (check your credentials)', 'updraftplus'));
+		if (empty($user) || empty($apikey)) throw new Exception(__('Authorisation failed (check your credentials)', 'updraftplus')); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
 
 		$this->log("authentication URL: ".$new_authurl);
 
@@ -163,12 +163,12 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 	public function credentials_test($posted_settings) {
 
 		if (empty($posted_settings['apikey'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('API key', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('API key', 'updraftplus')));
 			return;
 		}
 
 		if (empty($posted_settings['user'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('Username', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('Username', 'updraftplus')));
 			return;
 		}
 

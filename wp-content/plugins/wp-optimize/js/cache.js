@@ -492,6 +492,16 @@ var WP_Optimize_Cache = function () {
 		update_cache_size_information(response);
 	}
 
+	// Handle avatar display settings
+	$('#wpo-show-avatars').on('change', function() {
+		if ($(this).is(':checked')) {
+			$('#wpo-host-gravatars-locally-container').show();
+		} else {
+			$('#wpo-host-gravatars-locally').prop('checked', false);
+			$('#wpo-host-gravatars-locally-container').hide();
+		}
+	});
+
 	/**
 	 * Run update information about cache size.
 	 *

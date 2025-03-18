@@ -30,6 +30,8 @@ class WP_Optimization_revisions extends WP_Optimization {
 		}
 
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is global `$wpdb->prepare`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT `ID`, `post_title`, `post_date`".
 			" FROM `" . $this->wpdb->posts . "`".
@@ -43,6 +45,7 @@ class WP_Optimization_revisions extends WP_Optimization {
 		);
 
 		$posts = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// fix empty revision titles.
 		if (!empty($posts)) {
@@ -54,7 +57,7 @@ class WP_Optimization_revisions extends WP_Optimization {
 		// get total count revisions for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->posts . "` WHERE post_type = 'revision'".$retention_subquery.";";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL statement is safe
 
 		return array(
 			'id_key' => 'ID',
@@ -75,9 +78,11 @@ class WP_Optimization_revisions extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s is number of post revisions deleted
 		$message = sprintf(_n('%s post revision deleted', '%s post revisions deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -128,7 +133,7 @@ class WP_Optimization_revisions extends WP_Optimization {
 			" GROUP BY `post_parent`".
 			" ORDER BY `post_parent`";
 
-		$results = $this->wpdb->get_results($sql, ARRAY_N);
+		$results = $this->wpdb->get_results($sql, ARRAY_N); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Safe no user input used
 		$post_parents = array();
 		$revisions = '';
 		foreach ($results as $row) {
@@ -160,12 +165,14 @@ class WP_Optimization_revisions extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count > 0) {
+			// translators: %s is number of post revisions
 			$message = sprintf(_n('%s post revision in your database', '%s post revisions in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No post revisions found', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is number of sites
 			$message .= ' '.sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -185,7 +192,7 @@ class WP_Optimization_revisions extends WP_Optimization {
 			" GROUP BY `post_parent`".
 			" ORDER BY `post_parent`";
 
-			$results = $this->wpdb->get_results($sql, ARRAY_N);
+			$results = $this->wpdb->get_results($sql, ARRAY_N); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Safe, no user input used
 			$post_parents = array();
 			$revisions = '';
 			foreach ($results as $row) {
@@ -210,7 +217,7 @@ class WP_Optimization_revisions extends WP_Optimization {
 			}
 			$sql .= ';';
 	
-			$revisions = $this->wpdb->get_var($sql);
+			$revisions = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL statement is safe
 	
 			$this->found_count += $revisions;
 		}
@@ -224,14 +231,17 @@ class WP_Optimization_revisions extends WP_Optimization {
 	public function settings_label() {
 	
 		if ('true' == $this->retention_enabled && 'true' == $this->revisions_retention_enabled) {
-			return sprintf(__('Clean post revisions which are older than %d weeks and keep at least %d revisions', 'wp-optimize'), $this->retention_period, $this->revisions_retention_count);
+			// translators: %1$d is revisions retention period in weeks, %2$d is revisions retention count
+			return sprintf(__('Clean post revisions which are older than %1$d weeks and keep at least %2$d revisions', 'wp-optimize'), $this->retention_period, $this->revisions_retention_count);
 		}
 
 		if ('true' == $this->retention_enabled && 'false' == $this->revisions_retention_enabled) {
+			// translators: %d is revisions retention period in weeks
 			return sprintf(__('Clean post revisions which are older than %d weeks', 'wp-optimize'), $this->retention_period);
 		}
 
 		if ('false' == $this->retention_enabled && 'true' == $this->revisions_retention_enabled) {
+			// translators: %d is number of revisions to retain
 			return sprintf(__('Clean post revisions but keep at least %d revisions', 'wp-optimize'), $this->revisions_retention_count);
 		}
 

@@ -18,7 +18,7 @@ class WP_Optimize_Minify_Print {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		$tag = '<script>' . "\n";
 		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-		$tag .= 'var wpo_server_info_js = ' . json_encode(array("user_agent" => $user_agent)) . "\n";
+		$tag .= 'var wpo_server_info_js = ' . wp_json_encode(array("user_agent" => $user_agent)) . "\n";
 
 		$exclude_js_from_page_speed_tools = $wpo_minify_options['exclude_js_from_page_speed_tools'];
 		$enable_defer_js = $wpo_minify_options['enable_defer_js'];
@@ -33,7 +33,7 @@ class WP_Optimize_Minify_Print {
 		$tag .= '</script>' . "\n";
 
 		if ($print) {
-			echo $tag;
+			echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped
 		} else {
 			return $tag;
 		}
@@ -47,11 +47,13 @@ class WP_Optimize_Minify_Print {
 	 * @return void
 	 */
 	public static function async_style($href, $media = 'all') {
-		echo '<link rel="preload" href="'.$href.'" as="style" media="'.$media.'" onload="this.onload=null;this.rel=\'stylesheet\'">' . "\n";
+		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Not applicable for this function
+		echo '<link rel="preload" href="'.esc_url($href).'" as="style" media="'.esc_attr($media).'" onload="this.onload=null;this.rel=\'stylesheet\'">' . "\n";
 		// fix for firefox not supporting preload
-		echo '<link rel="stylesheet" href="'.$href.'" media="'.$media.'">' . "\n";
-		echo '<noscript><link rel="stylesheet" href="'.$href.'" media="'.$media.'"></noscript>' . "\n";
-		echo '<!--[if IE]><link rel="stylesheet" href="'.$href.'" media="'.$media.'"><![endif]-->' . "\n";
+		echo '<link rel="stylesheet" href="'.esc_url($href).'" media="'.esc_attr($media).'">' . "\n";
+		echo '<noscript><link rel="stylesheet" href="'.esc_url($href).'" media="'.esc_attr($media).'"></noscript>' . "\n";
+		echo '<!--[if IE]><link rel="stylesheet" href="'.esc_url($href).'" media="'.esc_attr($media).'"><![endif]-->' . "\n";
+		// phpcs:enable
 	}
 
 	/**
@@ -66,7 +68,7 @@ class WP_Optimize_Minify_Print {
 		$cssguid = 'wpo_min'.hash('adler32', $href);
 		$tag = '<script>' . "\n";
 		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-		$tag .= 'var wpo_server_info_css = ' . json_encode(array("user_agent" => $user_agent)) . "\n";
+		$tag .= 'var wpo_server_info_css = ' . wp_json_encode(array("user_agent" => $user_agent)) . "\n";
 
 		$exclude_css_from_page_speed_tools = $wpo_minify_options['exclude_css_from_page_speed_tools'];
 		if ($exclude_css_from_page_speed_tools) {
@@ -77,7 +79,7 @@ class WP_Optimize_Minify_Print {
 			$tag .= '}';
 		}
 		$tag .= '</script>' . "\n";
-		echo $tag;
+		echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped
 	}
 
 	/**
@@ -97,7 +99,7 @@ class WP_Optimize_Minify_Print {
 		if (false === $json) {
 			$json = WP_Optimize_Minify_Functions::download_and_minify($href, null, $wpo_minify_options['enable_css_minification'], 'css', $handle);
 			if ($wpo_minify_options['debug']) {
-				echo "<!-- wpo_min DEBUG: Uncached file processing now for $href -->" . "\n";
+				echo "<!-- wpo_min DEBUG: Uncached file processing now for " . esc_html($href) . " -->" . "\n";
 			}
 			WP_Optimize_Minify_Cache_Functions::set_transient($tkey, $json);
 		}
@@ -112,7 +114,7 @@ class WP_Optimize_Minify_Print {
 		// inline css or fail
 		if (false != $res['status']) {
 			echo '<style type="text/css" media="all">' . "\n";
-			echo $res['code'] . "\n";
+			echo $res['code'] . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This is already escaped
 			echo '</style>' . "\n";
 			return true;
 		} else {
@@ -127,7 +129,7 @@ class WP_Optimize_Minify_Print {
 	 * @return void
 	 */
 	public static function style($href) {
-		echo '<link rel="stylesheet" href="'.$href.'" media="all">' . "\n";
+		echo '<link rel="stylesheet" href="'.esc_url($href).'" media="all">' . "\n"; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Not applicable here
 	}
 
 	/**
@@ -151,7 +153,7 @@ class WP_Optimize_Minify_Print {
 	 * @return void
 	 */
 	public static function write_combined_asset($file, $code, $log) {
-		file_put_contents($file.'.json', json_encode($log));
+		file_put_contents($file.'.json', wp_json_encode($log));
 		file_put_contents($file, $code);
 		// permissions
 		WP_Optimize_Minify_Cache_Functions::fix_permission_bits($file.'.json');
@@ -176,7 +178,7 @@ class WP_Optimize_Minify_Print {
 	public static function add_load_async() {
 		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		$contents = file_get_contents(trailingslashit(WPO_PLUGIN_MAIN_PATH) . "js/loadAsync$min_or_not_internal.js");
-		echo "<script>$contents</script>\n";
+		echo "<script>$contents</script>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped
 	}
 
 	/**
@@ -188,6 +190,6 @@ class WP_Optimize_Minify_Print {
 	public static function add_load_css() {
 		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		$contents = file_get_contents(trailingslashit(WPO_PLUGIN_MAIN_PATH) . "js/loadCSS$min_or_not_internal.js");
-		echo "<script>$contents</script>" . "\n";
+		echo "<script>$contents</script>" . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped
 	}
 }

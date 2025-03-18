@@ -408,7 +408,7 @@ class UpdraftPlus_Search_Replace {
 			}
 
 			// O:8:"DateTime":0:{} : see https://bugs.php.net/bug.php?id=62852
-			if (is_serialized($data) && false === strpos($data, 'O:8:"DateTime":0:{}') && false !== ($unserialized = @unserialize($data))) {// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
+			if (is_serialized($data) && false === strpos($data, 'O:8:"DateTime":0:{}') && false !== ($unserialized = UpdraftPlus::unserialize($data))) {
 				$data = $this->recursive_unserialize_replace($from, $to, $unserialized, true, $recursion_level + 1);
 			} elseif (is_array($data)) {
 				$_tmp = array();

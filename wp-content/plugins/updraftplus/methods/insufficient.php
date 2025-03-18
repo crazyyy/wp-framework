@@ -12,6 +12,12 @@ class UpdraftPlus_BackupModule_insufficientphp extends UpdraftPlus_BackupModule 
 
 	private $method;
 
+	private $desc;
+
+	private $image;
+
+	private $error_msg_trans;
+
 	public function __construct($method, $desc, $php, $image = null) {
 		$this->method = $method;
 		$this->desc = $desc;
@@ -111,14 +117,14 @@ class UpdraftPlus_BackupModule_insufficientphp extends UpdraftPlus_BackupModule 
 		ob_start();
 		$this->extra_config();
 		?>
-		<tr class="updraftplusmethod <?php echo $this->method;?>">
-			<th><?php echo htmlspecialchars($this->desc);?>:</th>
+		<tr class="updraftplusmethod <?php echo esc_attr($this->method);?>">
+			<th><?php echo esc_html($this->desc);?>:</th>
 			<td>
 				<em>
-					<?php echo (!empty($this->image)) ? '<p><img src="'.UPDRAFTPLUS_URL.'/images/'.$this->image.'"></p>' : ''; ?>
-					<?php echo htmlspecialchars($this->error_msg_trans);?>
-					<?php echo htmlspecialchars(__('You will need to ask your web hosting company to upgrade.', 'updraftplus'));?>
-					<?php echo sprintf(__('Your %s version: %s.', 'updraftplus'), 'PHP', phpversion());?>
+					<?php echo (!empty($this->image)) ? '<p><img src="'.esc_url(UPDRAFTPLUS_URL.'/images/'.$this->image).'"></p>' : ''; ?>
+					<?php echo esc_html($this->error_msg_trans);?>
+					<?php esc_html_e('You will need to ask your web hosting company to upgrade.', 'updraftplus');?>
+					<?php echo esc_html(sprintf(__('Your %s version: %s.', 'updraftplus'), 'PHP', phpversion()));?>
 				</em>
 			</td>
 		</tr>

@@ -3739,7 +3739,7 @@ class ExactDN extends Page_Parser {
 	 * @param array $directories List of directories.
 	 * @param array $media_ids Uploaded media IDs.
 	 *
-	 * @return array Modified list of diretories.
+	 * @return array Modified list of directories.
 	 */
 	public function buddyboss_media_directory_allow_access( $directories, $media_ids ) {
 		$this->debug_message( '<b>' . __METHOD__ . '()</b>' );
@@ -4054,6 +4054,9 @@ class ExactDN extends Page_Parser {
 			return $url;
 		}
 		if ( \did_action( 'cs_element_rendering' ) || \did_action( 'cornerstone_before_boot_app' ) || \apply_filters( 'cs_is_preview_render', false ) ) {
+			return $url;
+		}
+		if ( empty( $url ) ) {
 			return $url;
 		}
 		$this->debug_message( '<b>' . __METHOD__ . '()</b>' );

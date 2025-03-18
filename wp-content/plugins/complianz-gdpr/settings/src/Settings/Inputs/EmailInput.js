@@ -15,7 +15,7 @@ const EmailInput = ({
 	const isValidEmail = (string) => {
 		//convert 'string' to string
 		string = string + '';
-		var res = string.match(/^[\w-]+(\.[\w-]+)*@[^\s@]+\.[a-zA-Z]{2,}$/);
+		var res = string.match(/^[\w.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
 		return (res !== null)
 	};
 

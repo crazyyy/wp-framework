@@ -3,8 +3,8 @@
 Contributors: johnbillion
 Tags: debug, debug-bar, development, performance, query monitor
 Tested up to: 6.7
-Stable tag: 3.17.0
-License: GPLv2 or later
+Stable tag: 3.17.2
+License: GPL v2 or later
 Donate link: https://github.com/sponsors/johnbillion
 
 Query Monitor is the developer tools panel for WordPress.
@@ -133,8 +133,19 @@ Yes. You can enable this on the Settings panel.
 [I am accepting sponsorships via the GitHub Sponsors program](https://github.com/sponsors/johnbillion). If you work at an agency that develops with WordPress, ask your company to provide sponsorship in order to invest in its supply chain. The tools that I maintain probably save your company time and money, and GitHub sponsorship can now be done at the organisation level.
 
 In addition, if you like the plugin then I'd love for you to [leave a review](https://wordpress.org/support/view/plugin-reviews/query-monitor). Tell all your friends about it too!
-
 ## Changelog ##
+
+### 3.17.2 (4 February 2025) ###
+
+* Reinstates the "Blocks" panel
+
+### 3.17.1 (2 February 2025) ###
+
+* Prevents use of the deprecated `E_STRICT` constant in PHP 8.4.
+* Avoids use of the deprecated `setted_transient` and `setted_site_transient` actions in WordPress 6.8.
+* Skips showing the `_load_textdomain_just_in_time` notices when they're caused by Query Monitor itself.
+* Uses more appropriate formatting for a fatal error in REST API and Ajax contexts.
+
 
 ### 3.17.0 (27 November 2024) ###
 
@@ -174,21 +185,6 @@ In addition, if you like the plugin then I'd love for you to [leave a review](ht
 
 * Improves compatibility with WordPress Playground
 
-### 3.14.0 (18 October 2023) ###
-
-* Corrects the port number handling when displaying URLs for scripts and styles
-* Improves the `db.php` handling when activating and deactivating Query Monitor on a single site within a Multisite network, and when `DISALLOW_FILE_MODS` is in use
-* Improves check for Debug Bar existence
-* Identifies drop-in plugins as a specific component instead of "other"
-* Simplifies some of the data structure used when logging queries
-* Specifies that Query Monitor supports WordPress versions up to three years old
-
-### 3.13.1 (15 July 2023) ###
-
-* Avoids a fatal error if a deprecated warning is triggered early on during the bootstrap process
-* Avoids a PHP warning that can be triggered during certain HTTP API requests when Curl is not in use
-* Skips loading QM during the plugin update process
-
 ### Earlier versions ###
 
-For the changelog of earlier versions, <a href="https://github.com/johnbillion/query-monitor/releases">please refer to the releases page on GitHub</a>.
+For the changelog of earlier versions, <a href="https://github.com/johnbillion/query-monitor/releases">refer to the releases page on GitHub</a>.

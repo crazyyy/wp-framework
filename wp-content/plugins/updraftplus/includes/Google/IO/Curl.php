@@ -37,7 +37,7 @@ class UDP_Google_IO_Curl extends UDP_Google_IO_Abstract
     if (!extension_loaded('curl')) {
       $error = 'The cURL IO handler requires the cURL extension to be enabled';
       $client->getLogger()->critical($error);
-      throw new UDP_Google_IO_Exception($error);
+      throw new UDP_Google_IO_Exception($error); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
     }
 
     parent::__construct($client);
@@ -114,7 +114,7 @@ class UDP_Google_IO_Curl extends UDP_Google_IO_Abstract
       $map = $this->client->getClassConfig('UDP_Google_IO_Exception', 'retry_map');
 
       $this->client->getLogger()->error('cURL ' . $error);
-      throw new UDP_Google_IO_Exception($error, $code, null, $map);
+      throw new UDP_Google_IO_Exception($error, $code, null, $map); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
     }
     $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 

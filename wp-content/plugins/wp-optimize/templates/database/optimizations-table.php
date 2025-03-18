@@ -58,7 +58,7 @@
 			<td>
 				<label for="optimization_checkbox_<?php echo esc_attr($id); ?>"><?php echo esc_html($html['settings_label']); ?></label>
 				<div class="wp-optimize-settings-optimization-info" id="optimization_info_<?php echo esc_attr($id); ?>">
-				<?php echo join('<br>', $html['info']); ?>
+				<?php echo wp_kses_post(join('<br>', $html['info'])); ?>
 				</div>
 			</td>
 

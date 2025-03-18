@@ -307,7 +307,7 @@ abstract class UpdraftPlus_RemoteSend {
 			if (!is_array($remotesites)) $remotesites = array();
 
 			if (empty($remotesites[$site_id]) || empty($remotesites[$site_id]['url']) || empty($remotesites[$site_id]['key']) || empty($remotesites[$site_id]['name_indicator'])) {
-				throw new Exception("Remote site id ($site_id) not found - send aborted");
+				throw new Exception("Remote site id ($site_id) not found - send aborted"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error messages should be escaped when caught and printed.
 			}
 
 			array_push($initial_jobdata, 'remotesend_info', $remotesites[$site_id]);
@@ -401,14 +401,20 @@ abstract class UpdraftPlus_RemoteSend {
 			restore_error_handler();
 			
 			if (is_wp_error($response)) {
-
+				
 				$err_msg = __('Error:', 'updraftplus').' '.$response->get_error_message();
 				$err_data = $response->get_error_data();
 				$err_code = $response->get_error_code();
 
+				if (!is_numeric($err_code) && isset($err_data['response']['code'])) {
+					$err_code = $err_data['response']['code'];
+					$err_msg = __('Error:', 'updraftplus').' '.UpdraftPlus_HTTP_Error_Descriptions::get_http_status_code_description($err_code);
+				} elseif (is_string($err_data) && preg_match('/captcha|verify.*human|turnstile/i', $err_data)) {
+					$err_msg = __('Error:', 'updraftplus').' '.__('We are unable to proceed with the process due to a bot verification requirement', 'updraftplus');
+				}
 			} elseif (!is_array($response) || empty($response['response']) || 'pong' != $response['response']) {
 
-				$err_msg = __('Error:', 'updraftplus').' '.sprintf(__('You should check that the remote site is online, not firewalled, does not have security modules that may be blocking access, has UpdraftPlus version %s or later active and that the keys have been entered correctly.', 'updraftplus'), '2.10.3');
+				$err_msg = __('Error:', 'updraftplus').' '.sprintf(__('You should check that the remote site is online, not firewalled, bot verification setting is disabled, does not have security modules that may be blocking access, has UpdraftPlus version %s or later active and that the keys have been entered correctly.', 'updraftplus'), '2.10.3');
 				$err_data = $response;
 				$err_code = 'no_pong';
 
@@ -641,66 +647,98 @@ abstract class UpdraftPlus_RemoteSend {
 		die;
 	}
 
-	protected function get_remotesites_selector($remotesites = false) {
+	/**
+	 * Display or return html for selecting receiving remote site.
+	 *
+	 * @param bool|array $remotesites            Remote sites. Default false for fetching from options.
+	 * @param bool       $echo_instead_of_return Whether to display html or return it.
+	 * @return void|string Display or return HTML for selecting remotesites.
+	 */
+	protected function get_remotesites_selector($remotesites = false, $echo_instead_of_return = false) {
 
 		if (false === $remotesites) {
 			$remotesites = UpdraftPlus_Options::get_updraft_option('updraft_remotesites');
 			if (!is_array($remotesites)) $remotesites = array();
 		}
 
-		$ret = '';
+		if (!$echo_instead_of_return) ob_start();
 
 		if (empty($remotesites)) {
-			$ret .= '<p id="updraft_migrate_receivingsites_nonemsg"><em>'.__('No receiving sites have yet been added.', 'updraftplus').'</em></p>';
+			?>
+			<p id="updraft_migrate_receivingsites_nonemsg">
+				<em><?php esc_html_e('No receiving sites have yet been added.', 'updraftplus');?></em>
+			</p>
+			<?php
 		} else {
-			$ret .= '<p class="updraftplus-remote-sites-selector"><label>'.__('Send to site:', 'updraftplus').'</label> <select id="updraft_remotesites_selector">';
-			foreach ($remotesites as $k => $rsite) {
-				if (!is_array($rsite) || empty($rsite['url'])) continue;
-				$ret .= '<option value="'.esc_attr($k).'">'.htmlspecialchars($rsite['url']).'</option>';
-			}
-			$ret .= '</select>';
-			$ret .= ' <button class="button-primary" id="updraft_migrate_send_button" onclick="updraft_migrate_send_backup_options();">'.__('Send', 'updraftplus').'</button>';
-			$ret .= '</p>';
+			?>
+			<p class="updraftplus-remote-sites-selector">
+				<label><?php esc_html_e('Send to site:', 'updraftplus');?></label>
+				<select id="updraft_remotesites_selector">
+					<?php
+					foreach ($remotesites as $k => $rsite) {
+						if (!is_array($rsite) || empty($rsite['url'])) continue;
+						?>
+						<option value="<?php echo esc_attr($k);?>"><?php echo esc_html($rsite['url']);?></option>
+						<?php
+					}
+					?>
+				</select>
+				<button class="button-primary" id="updraft_migrate_send_button" onclick="updraft_migrate_send_backup_options();"><?php esc_html_e('Send', 'updraftplus');?></button>
+			</p>
+			<?php
 		}
+		?>
 
-		$ret .= '<div class="text-link-menu">';
-		$ret .= '<a href="#" class="updraft_migrate_add_site--trigger"><span class="dashicons dashicons-plus"></span>'.__('Add a site', 'updraftplus').'</a>';
-		$ret .= sprintf(
-			'<a href="javascript:void(0)" class="updraft_migrate_clear_sites" %s onclick="updraft_migrate_delete_existingsites(\'%s\');"><span class="dashicons dashicons-trash"></span>%s</a>',
-			empty($remotesites) ? 'style="display: none"' : '',
-			esc_js(__("You are about to permanently delete the list of existing sites.", 'updraftplus').' '.__("This action cannot be undone.", 'updraftplus').' '.__("'Cancel' to stop, 'OK' to delete.")),
-			__('Clear list of existing sites', 'updraftplus')
-		);
-		$ret .= '</div>';
-
-		return $ret;
+		<div class="text-link-menu">
+			<a href="#" class="updraft_migrate_add_site--trigger"><span class="dashicons dashicons-plus"></span><?php esc_html_e('Add a site', 'updraftplus');?></a>
+			<a href="#" class="updraft_migrate_clear_sites" <?php empty($remotesites) ? 'style="display: none"' : '';?>
+				onclick="event.preventDefault();updraft_migrate_delete_existingsites('<?php echo esc_js(__('You are about to permanently delete the list of existing sites.', 'updraftplus').' '.__('This action cannot be undone.', 'updraftplus').' '.__('\'Cancel\' to stop, \'OK\' to delete.'));?>');">
+				<span class="dashicons dashicons-trash"></span>
+				<?php esc_html_e('Clear list of existing sites', 'updraftplus');?>
+			</a>
+		</div>
+		<?php
+		if (!$echo_instead_of_return) return ob_get_clean();
 	}
 
-	protected function list_our_keys($our_keys = false) {
+	/**
+	 * Displays or returns html for listing keys for migrating sites.
+	 *
+	 * @param bool|array $our_keys               Keys for site migration.
+	 * @param bool       $echo_instead_of_return Whether to display HTML instead of returning.
+	 * @return void|string Display or return html for key selector for migration.
+	 */
+	protected function list_our_keys($our_keys = false, $echo_instead_of_return = false) {
+		if (!$echo_instead_of_return) ob_start();
 		if (false === $our_keys) {
-			$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_migrator_localkeys');
+			$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_migrator_localkeys', array());
 		}
 
-		if (empty($our_keys)) return '<em>'.__('No keys to allow remote sites to send backup data here have yet been created.', 'updraftplus').'</em>';
-
-		$ret = '';
-		$first_one = true;
-
-		foreach ($our_keys as $k => $key) {
-			if (!is_array($key)) continue;
-			if ($first_one) {
-				$first_one = false;
-				$ret .= '<p><strong>'.__('Existing keys', 'updraftplus').'</strong><br>';
+		if (empty($our_keys)) {
+			?>
+			<em><?php esc_html_e('No keys to allow remote sites to send backup data here have yet been created.', 'updraftplus');?></em>
+			<?php
+		} else {
+			$first_one = true;
+			foreach ($our_keys as $k => $key) {
+				if (!is_array($key)) continue;
+				if ($first_one) {
+					$first_one = false;
+					?>
+					<p><strong><?php esc_html_e('Existing keys', 'updraftplus');?></strong><br>
+					<?php
+				}
+				echo esc_html(($key['name'])).' - ';
+				?>
+				<a href="<?php echo esc_url(UpdraftPlus::get_current_clean_url());?>" onclick="updraft_migrate_local_key_delete('<?php echo esc_js($k);?>'); return false;" class="updraft_migrate_local_key_delete" data-keyid="<?php echo esc_attr($k);?>"><?php esc_html_e('Delete', 'updraftplus');?></a>
+				<br>
+				<?php
 			}
-			$ret .= htmlspecialchars($key['name']);
-			$ret .= ' - <a href="'.esc_url(UpdraftPlus::get_current_clean_url()).'" onclick="updraft_migrate_local_key_delete(\''.esc_attr($k).'\'); return false;" class="updraft_migrate_local_key_delete" data-keyid="'.esc_attr($k).'">'.__('Delete', 'updraftplus').'</a>';
-			$ret .= '<br>';
+	
+			if (!$first_one) echo "</p>"; // Handling the edge case where no <p> tag was opened earlier.
 		}
 
-		if ($ret) $ret .= '</p>';
-
-		return $ret;
-
+		if (!$echo_instead_of_return) return ob_get_clean();
 	}
 
 	/**

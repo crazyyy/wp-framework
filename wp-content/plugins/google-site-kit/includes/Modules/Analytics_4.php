@@ -89,12 +89,16 @@ use Google\Site_Kit_Dependencies\Google\Service\TagManager as Google_Service_Tag
 use Google\Site_Kit_Dependencies\Google_Service_TagManager_Container;
 use Google\Site_Kit_Dependencies\Psr\Http\Message\RequestInterface;
 use Google\Site_Kit\Core\REST_API\REST_Routes;
+use Google\Site_Kit\Core\Tags\First_Party_Mode\First_Party_Mode;
+use Google\Site_Kit\Modules\Analytics_4\Audience_Settings;
 use Google\Site_Kit\Modules\Analytics_4\Conversion_Reporting\Conversion_Reporting_Cron;
 use Google\Site_Kit\Modules\Analytics_4\Conversion_Reporting\Conversion_Reporting_Events_Sync;
+use Google\Site_Kit\Modules\Analytics_4\Conversion_Reporting\Conversion_Reporting_New_Badge_Events_Sync;
 use Google\Site_Kit\Modules\Analytics_4\Conversion_Reporting\Conversion_Reporting_Provider;
 use Google\Site_Kit\Modules\Analytics_4\Reset_Audiences;
 use stdClass;
 use WP_Error;
+use WP_Post;
 
 /**
  * Class representing the Analytics 4 module.
@@ -170,6 +174,15 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 	protected $resource_data_availability_date;
 
 	/**
+	 * Audience_Settings instance.
+	 *
+	 * @since 1.148.0
+	 *
+	 * @var Audience_Settings
+	 */
+	protected $audience_settings;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.113.0
@@ -229,6 +242,11 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 				$this
 			);
 			$conversion_reporting_provider->register();
+		}
+
+		if ( Feature_Flags::enabled( 'audienceSegmentation' ) ) {
+			$this->audience_settings = new Audience_Settings( $this->options );
+			$this->audience_settings->register();
 		}
 
 		( new Advanced_Tracking( $this->context ) )->register();
@@ -307,6 +325,13 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 						do_action( Synchronize_AdSenseLinked::CRON_SYNCHRONIZE_ADSENSE_LINKED );
 
 						if ( Feature_Flags::enabled( 'conversionReporting' ) ) {
+							// Reset event detection and new badge events.
+							$this->transients->delete( Conversion_Reporting_Events_Sync::DETECTED_EVENTS_TRANSIENT );
+							$this->transients->delete( Conversion_Reporting_Events_Sync::LOST_EVENTS_TRANSIENT );
+							$this->transients->delete( Conversion_Reporting_New_Badge_Events_Sync::NEW_EVENTS_BADGE_TRANSIENT );
+
+							$this->transients->set( Conversion_Reporting_New_Badge_Events_Sync::SKIP_NEW_BADGE_TRANSIENT, 1 );
+
 							do_action( Conversion_Reporting_Cron::CRON_ACTION );
 						}
 					}
@@ -593,6 +618,15 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 			);
 		}
 
+		// Add fields from First-party mode.
+		// Note: fields are added in both Analytics and Ads so that the debug fields will show if either module is enabled.
+		if ( Feature_Flags::enabled( 'firstPartyMode' ) ) {
+			$first_party_mode             = new First_Party_Mode( $this->context );
+			$fields_from_first_party_mode = $first_party_mode->get_debug_fields();
+
+			$debug_fields = array_merge( $debug_fields, $fields_from_first_party_mode );
+		}
+
 		return $debug_fields;
 	}
 
@@ -693,13 +727,11 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 				'service'   => 'analyticsaudiences',
 				'shareable' => true,
 			);
-		}
-
-		if ( Feature_Flags::enabled( 'conversionReporting' ) ) {
-			$datapoints['POST:clear-conversion-reporting-new-events']  = array(
-				'service' => '',
+			$datapoints['GET:audience-settings']                     = array(
+				'service'   => '',
+				'shareable' => true,
 			);
-			$datapoints['POST:clear-conversion-reporting-lost-events'] = array(
+			$datapoints['POST:save-audience-settings']               = array(
 				'service' => '',
 			);
 		}
@@ -805,21 +837,21 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 		}
 
 		if ( $this->context->is_amp() ) : ?>
-			<!-- <?php esc_html_e( 'Google Analytics AMP opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
-			<meta name="ga-opt-out" content="" id="__gaOptOutExtension">
-			<!-- <?php esc_html_e( 'End Google Analytics AMP opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
-		<?php else : ?>
-			<!-- <?php esc_html_e( 'Google Analytics opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
-			<?php
+<!-- <?php esc_html_e( 'Google Analytics AMP opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
+<meta name="ga-opt-out" content="" id="__gaOptOutExtension">
+<!-- <?php esc_html_e( 'End Google Analytics AMP opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
+<?php else : ?>
+<!-- <?php esc_html_e( 'Google Analytics opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
+	<?php
 			// Opt-out should always use the measurement ID, even when using a GT tag.
 			$tag_id = $this->get_measurement_id();
-			if ( ! empty( $tag_id ) ) {
-				BC_Functions::wp_print_inline_script_tag( sprintf( 'window["ga-disable-%s"] = true;', esc_attr( $tag_id ) ) );
-			}
-			?>
-			<?php do_action( 'googlesitekit_analytics_tracking_opt_out', $property_id, $account_id ); ?>
-			<!-- <?php esc_html_e( 'End Google Analytics opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
-			<?php
+	if ( ! empty( $tag_id ) ) {
+		BC_Functions::wp_print_inline_script_tag( sprintf( 'window["ga-disable-%s"] = true;', esc_attr( $tag_id ) ) );
+	}
+	?>
+	<?php do_action( 'googlesitekit_analytics_tracking_opt_out', $property_id, $account_id ); ?>
+<!-- <?php esc_html_e( 'End Google Analytics opt-out snippet added by Site Kit', 'google-site-kit' ); ?> -->
+	<?php
 		endif;
 	}
 
@@ -1448,9 +1480,15 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 				$custom_dimension = new GoogleAnalyticsAdminV1betaCustomDimension();
 				$custom_dimension->setParameterName( $custom_dimension_data['parameterName'] );
 				$custom_dimension->setDisplayName( $custom_dimension_data['displayName'] );
-				$custom_dimension->setDescription( $custom_dimension_data['description'] );
 				$custom_dimension->setScope( $custom_dimension_data['scope'] );
-				$custom_dimension->setDisallowAdsPersonalization( $custom_dimension_data['disallowAdsPersonalization'] );
+
+				if ( isset( $custom_dimension_data['description'] ) ) {
+					$custom_dimension->setDescription( $custom_dimension_data['description'] );
+				}
+
+				if ( isset( $custom_dimension_data['disallowAdsPersonalization'] ) ) {
+					$custom_dimension->setDisallowAdsPersonalization( $custom_dimension_data['disallowAdsPersonalization'] );
+				}
 
 				$analyticsadmin = $this->get_service( 'analyticsadmin' );
 
@@ -1460,6 +1498,36 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 						self::normalize_property_id( $data['propertyID'] ),
 						$custom_dimension
 					);
+
+			case 'GET:audience-settings':
+				return function () {
+					$settings = $this->audience_settings->get();
+					return current_user_can( Permissions::MANAGE_OPTIONS ) ? $settings : array_intersect_key( $settings, array_flip( $this->audience_settings->get_view_only_keys() ) );
+				};
+
+			case 'POST:save-audience-settings':
+				if ( ! current_user_can( Permissions::MANAGE_OPTIONS ) ) {
+					return new WP_Error(
+						'forbidden',
+						__( 'User does not have permission to save audience settings.', 'google-site-kit' ),
+						array( 'status' => 403 )
+					);
+				}
+
+				if ( isset( $data['audienceSegmentationSetupCompletedBy'] ) && ! is_int( $data['audienceSegmentationSetupCompletedBy'] ) ) {
+					throw new Invalid_Param_Exception( 'audienceSegmentationSetupCompletedBy' );
+				}
+
+				return function () use ( $data ) {
+					if ( isset( $data['audienceSegmentationSetupCompletedBy'] ) ) {
+						$new_settings['audienceSegmentationSetupCompletedBy'] = $data['audienceSegmentationSetupCompletedBy'];
+					}
+
+					$settings = $this->audience_settings->merge( $new_settings );
+
+					return $settings;
+				};
+
 			case 'POST:sync-audiences':
 				if ( ! $this->authentication->is_authenticated() ) {
 					return new WP_Error(
@@ -1674,14 +1742,6 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 				return function () use ( $data ) {
 					return $this->transients->set( 'googlesitekit_inline_tag_id_mismatch', $data['hasMismatchedTag'] );
 				};
-			case 'POST:clear-conversion-reporting-new-events':
-				return function () {
-					return $this->transients->delete( Conversion_Reporting_Events_Sync::DETECTED_EVENTS_TRANSIENT );
-				};
-			case 'POST:clear-conversion-reporting-lost-events':
-				return function () {
-					return $this->transients->delete( Conversion_Reporting_Events_Sync::LOST_EVENTS_TRANSIENT );
-				};
 		}
 
 		return parent::create_data_request( $data );
@@ -1821,7 +1881,6 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 			'slug'        => self::MODULE_SLUG,
 			'name'        => _x( 'Analytics', 'Service name', 'google-site-kit' ),
 			'description' => __( 'Get a deeper understanding of your customers. Google Analytics gives you the free tools you need to analyze data for your business in one place.', 'google-site-kit' ),
-			'order'       => 3,
 			'homepage'    => __( 'https://analytics.google.com/analytics/web', 'google-site-kit' ),
 		);
 	}
@@ -2028,6 +2087,10 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 
 		$data = array();
 		$post = get_queried_object();
+
+		if ( ! $post instanceof WP_Post ) {
+			return $data;
+		}
 
 		if ( in_array( 'googlesitekit_post_type', $settings['availableCustomDimensions'], true ) ) {
 			$data['googlesitekit_post_type'] = $post->post_type;
@@ -2603,10 +2666,13 @@ final class Analytics_4 extends Module implements Module_With_Scopes, Module_Wit
 			return $modules_data;
 		}
 
-		$detected_events                           = $this->transients->get( Conversion_Reporting_Events_Sync::DETECTED_EVENTS_TRANSIENT );
-		$lost_events                               = $this->transients->get( Conversion_Reporting_Events_Sync::LOST_EVENTS_TRANSIENT );
-		$modules_data['analytics-4']['newEvents']  = is_array( $detected_events ) ? $detected_events : array();
-		$modules_data['analytics-4']['lostEvents'] = is_array( $lost_events ) ? $lost_events : array();
+		$detected_events  = $this->transients->get( Conversion_Reporting_Events_Sync::DETECTED_EVENTS_TRANSIENT );
+		$lost_events      = $this->transients->get( Conversion_Reporting_Events_Sync::LOST_EVENTS_TRANSIENT );
+		$new_events_badge = $this->transients->get( Conversion_Reporting_New_Badge_Events_Sync::NEW_EVENTS_BADGE_TRANSIENT );
+
+		$modules_data['analytics-4']['newEvents']      = is_array( $detected_events ) ? $detected_events : array();
+		$modules_data['analytics-4']['lostEvents']     = is_array( $lost_events ) ? $lost_events : array();
+		$modules_data['analytics-4']['newBadgeEvents'] = is_array( $new_events_badge ) ? $new_events_badge['events'] : array();
 
 		return $modules_data;
 	}

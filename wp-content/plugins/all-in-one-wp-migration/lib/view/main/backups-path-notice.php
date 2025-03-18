@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -33,9 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 		printf(
 			__(
-				'All-in-One WP Migration is not able to create <strong>%s</strong> folder. ' .
-				'You will need to create this folder and grant it read/write/execute permissions (0777) ' .
-				'for the All-in-One WP Migration plugin to function properly.',
+				'Could not create <strong>%s</strong> folder. Please ensure the parent folder has read/write/execute permissions (0777).',
 				AI1WM_PLUGIN_NAME
 			),
 			AI1WM_BACKUPS_PATH

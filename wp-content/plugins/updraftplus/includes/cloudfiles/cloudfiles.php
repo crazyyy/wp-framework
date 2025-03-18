@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
 /**
  * This is the PHP Cloud Files API.
  *
@@ -2629,4 +2630,5 @@ class UpdraftPlus_CF_Object
  * c-hanging-comment-ender-p: nil
  * End:
  */
+// phpcs:enable
 ?>

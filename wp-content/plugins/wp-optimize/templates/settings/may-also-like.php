@@ -16,12 +16,12 @@
 		<tr>
 			<td></td>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/notices/wp_optimize_logo.png');?>" alt="WP-Optimize" width="80" height="80">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/notices/wp_optimize_logo.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A?>" alt="WP-Optimize" width="80" height="80">
 				<br>
 				<?php esc_html_e('Free', 'wp-optimize');?>
 			</td>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/notices/wp_optimize_logo.png');?>" alt="<?php esc_attr_e('WP-Optimize Premium', 'wp-optimize');?>" width="80" height="80">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/notices/wp_optimize_logo.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('WP-Optimize Premium', 'wp-optimize');?>" width="80" height="80">
 				<br>
 				<?php esc_html_e('Premium', 'wp-optimize');?>
 			</td>
@@ -37,7 +37,7 @@
 		</tr>
 		<tr class="wpo-main-feature-row">
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/database-optimization-vehicle-64x64.png');?>" alt="<?php esc_attr_e('Database cleaning', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/database-optimization-vehicle-64x64.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Database cleaning', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Database cleaning', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Clears out unnecessary data, cleans up your tables and retrieves space lost to data fragmentation.', 'wp-optimize'); ?></p>
 			</td>
@@ -50,7 +50,7 @@
 		</tr>
 		<tr class="wpo-main-feature-row">
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/image-compression-vehicle-64x64.png');?>" alt="<?php esc_attr_e('Image compression', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/image-compression-vehicle-64x64.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Image compression', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Image compression', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Compress your images for a much faster page load.', 'wp-optimize');?></p>
 			</td>
@@ -63,7 +63,7 @@
 		</tr>
 		<tr class="wpo-main-feature-row">
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/cache-vehicle-64x64.png');?>" alt="<?php esc_attr_e('Caching', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/cache-vehicle-64x64.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Caching', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Caching', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Cache your page and post for even more speed.', 'wp-optimize');?></p>
 			</td>
@@ -76,7 +76,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/multisite-support.png');?>" alt="<?php esc_attr_e('Multisite support', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/multisite-support.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Multisite support', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Multisite support', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Optimize any site (or combination of sites) on your WordPress Multisite or network', 'wp-optimize');?></p>
 			</td>
@@ -89,7 +89,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/optimize-individual.png');?>" alt="<?php esc_attr_e('Optimize individual tables', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/optimize-individual.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Optimize individual tables', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Optimize individual tables', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Perform optimizations on single tables', 'wp-optimize');?></p>
 			</td>
@@ -102,7 +102,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/remove-unwanted-img.png');?>" alt="<?php esc_attr_e('Remove unwanted images', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/remove-unwanted-img.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Remove unwanted images', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Remove unwanted images', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Remove images that have been orphaned or are no longer in use', 'wp-optimize');?></p>
 			</td>
@@ -115,7 +115,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/scheduling.png');?>" alt="<?php esc_attr_e('Multisite support', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/scheduling.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Multisite support', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Sophisticated scheduling', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('A more advanced scheduling system to make regular routine optimizations whenever you prefer', 'wp-optimize');?></p>
 			</td>
@@ -128,7 +128,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/wp-cli.png');?>" alt="<?php esc_attr_e('Control with WP-CLI', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/wp-cli.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Control with WP-CLI', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Control with WP-CLI', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Save time managing multiple sites from the WP command line', 'wp-optimize');?></p>
 			</td>
@@ -141,7 +141,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/lazy-load.png');?>" alt="<?php esc_attr_e('Lazy Loading', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/lazy-load.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Lazy Loading', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Lazy Loading', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Make your site run faster by only loading parts of a web-page when it is visible to the user', 'wp-optimize');?></p>
 			</td>
@@ -154,7 +154,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/optimization-preview.png');?>" alt="<?php esc_attr_e('Optimization Preview', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/optimization-preview.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Optimization Preview', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Optimization Preview', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Preview, select and remove data and records available for optimization from the database', 'wp-optimize');?></p>
 			</td>
@@ -167,7 +167,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/logging-n-reporting.png');?>" alt="<?php esc_attr_e('Enhanced logging and reporting', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/logging-n-reporting.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Enhanced logging and reporting', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Enhanced logging and reporting', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Send log messages to three additional locations: Slack, Syslog and Simple History', 'wp-optimize');?></p>
 			</td>
@@ -180,7 +180,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/choice-n-flexibility.png');?>" alt="<?php esc_attr_e('More choice and flexibility', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/choice-n-flexibility.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('More choice and flexibility', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('More choice and flexibility', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Choose from a number of advanced options, like the ability to optimize individual DB tables', 'wp-optimize');?></p>
 			</td>
@@ -193,7 +193,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/geolocation.png');?>" alt="<?php esc_attr_e('Geolocation for WooCommerce', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/geolocation.png');  // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Geolocation for WooCommerce', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Geolocation and tax country for WooCommerce', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Anyone running an international WooCommerce store needs this: serve country specific content to your customers, appropriate VAT, pricing, all cached for great performance', 'wp-optimize');?></p>
 			</td>
@@ -206,7 +206,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/more-settings.png');?>" alt="<?php esc_attr_e('Multilingual and multi-currency compatible', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/more-settings.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Multilingual and multi-currency compatible', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Multilingual and multi-currency compatible', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Cache supports WPML multilingual plugin and multiple currencies for WooCommerce', 'wp-optimize');?></p>
 			</td>
@@ -219,7 +219,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/choice-n-flexibility.png');?>" alt="<?php esc_attr_e('More caching options', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/choice-n-flexibility.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('More caching options', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('More caching options', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Exclude posts and pages from the cache, straight from the post edit screen.', 'wp-optimize');?></p>
 			</td>
@@ -232,7 +232,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/lazy-load.png');?>" alt="<?php esc_attr_e('Preload key requests', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/lazy-load.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Preload key requests', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Preload key requests', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Preload assets such as web fonts and icon fonts, as recommended by Google PageSpeed Insights', 'wp-optimize');?></p>
 			</td>
@@ -245,7 +245,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/advanced.png');?>" alt="<?php esc_attr_e('Power tweaks', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/advanced.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Power tweaks', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Power tweaks', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Catered towards more advanced users, the power tweaks will enable you to improve performance by targeting specific weak points, either in WordPress Core, or in popular plugins', 'wp-optimize');?></p>
 			</td>
@@ -258,7 +258,7 @@
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/premium-support.png');?>" alt="<?php esc_attr_e('Premium support', 'wp-optimize');?>" class="wpo-premium-image">
+				<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/features/premium-support.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Premium support', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php esc_html_e('Premium support', 'wp-optimize');?></h4>
 				<p><?php esc_html_e('Get your specific queries addressed directly by our experts', 'wp-optimize');?></p>
 			</td>

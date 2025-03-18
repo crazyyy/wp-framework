@@ -19,6 +19,7 @@ if ( !class_exists('cmplz_mailer') ) {
         public $sent_by_text;
 		public $warning_blocks;
 		public $error = '';
+		public $body;
 
 		public function __construct() {
 			$this->sent_by_text = __("This email is part of the Complianz Notification System", "complianz-gdpr");
@@ -135,5 +136,22 @@ if ( !class_exists('cmplz_mailer') ) {
 			return $success;
 		}
 
+		/**
+		 * Sends a basic email.
+		 *
+		 * This method checks if the necessary properties (`to`, `message`, and `subject`) are set before sending the email.
+		 * If any of these properties are empty, the method returns false.
+		 * Otherwise, it sends the email using the `wp_mail` function.
+		 *
+		 * @return bool True if the email was sent successfully, false otherwise.
+		 */
+		public function send_basic_mail() {//
+			// check the properties before to send
+			if ( empty($this->to) || empty($this->message) || empty($this->subject) ) {
+				return false;
+			}
+
+			return wp_mail( $this->to, sanitize_text_field($this->subject), wp_kses_post($this->body), $this->headers);
+		}
 	}
 }

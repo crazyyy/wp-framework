@@ -16,28 +16,28 @@
     <div class="message_details">
         <table class="message-table">
             <tr>
-                <th><?php esc_html_e('Sent On', 'wp_reroute_email'); ?>:</th>
+                <th><?php esc_html_e('Sent On', 'wp-reroute-email'); ?>:</th>
                 <td><?php esc_html_e(get_date_from_gmt( $item->sent_on, 'j F, Y H:i:s' )); ?></td>
             </tr>
             <tr>
-                <th><?php esc_html_e('To', 'wp_reroute_email'); ?>:</th>
+                <th><?php esc_html_e('To', 'wp-reroute-email'); ?>:</th>
                 <td><?php esc_html_e($item->recipients_to); ?></td>
             </tr>
             <tr>
-                <th><?php esc_html_e('CC', 'wp_reroute_email'); ?>:</th>
+                <th><?php esc_html_e('CC', 'wp-reroute-email'); ?>:</th>
                 <td><?php esc_html_e($item->recipients_cc); ?></td>
             </tr>
             <tr>
-                <th><?php esc_html_e('BCC', 'wp_reroute_email'); ?>:</th>
+                <th><?php esc_html_e('BCC', 'wp-reroute-email'); ?>:</th>
                 <td><?php esc_html_e($item->recipients_bcc); ?></td>
             </tr>
             <tr>
-                <th><?php esc_html_e('Subject', 'wp_reroute_email'); ?>:</th>
+                <th><?php esc_html_e('Subject', 'wp-reroute-email'); ?>:</th>
                 <td><?php esc_html_e($item->subject); ?></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
-                <td><a href="javascript:;" id="view-original" class="orgview"><?php esc_html_e('View Original Message', 'wp_reroute_email');?></a></td>
+                <td><a href="javascript:;" id="view-original" class="orgview"><?php esc_html_e('View Original Message', 'wp-reroute-email');?></a></td>
             </tr>
             <tr>
                 <td colspan="2" class="message_body">

@@ -10,8 +10,9 @@
 					$message .= ' ';
 					$message .= esc_html__('Because of that, the pre-load settings used for page-caching are used.', 'wp-optimize');
 					$message .= ' ';
-					$message .= sprintf(esc_html__('i.e. To configure pre-loading, go to the %sCache Preload settings in the caching section%s instead.', 'wp-optimize'), '<a href="' . admin_url('admin.php?page=wpo_cache&tab=wp_optimize_preload') . '">', '</a>');
-					echo $message;
+					// translators: %1$s is a opening anchor tag and %2$s is a closing anchor tag
+					$message .= sprintf(esc_html__('i.e. To configure pre-loading, go to the %1$sCache Preload settings in the caching section%2$s instead.', 'wp-optimize'), '<a href="' . esc_url(admin_url('admin.php?page=wpo_cache&tab=wp_optimize_preload')) . '">', '</a>');
+					echo wp_kses_post($message);
 				?>
 				<br>
 			</p>

@@ -3556,6 +3556,7 @@ ul.updraft-restore--stages li.active {
 	width: 100%;
 	-webkit-box-sizing: border-box;
 	        box-sizing: border-box;
+	z-index: 999999;
 }
 
 .updraft-restore--footer .updraft-restore--cancel {

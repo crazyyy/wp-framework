@@ -107,7 +107,7 @@ class UDP_Google_Http_REST
             'retry_map'
         );
       }
-      throw new UDP_Google_Service_Exception($err, $code, null, $errors, $map);
+      throw new UDP_Google_Service_Exception($err, $code, null, $errors, $map); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
     }
 
     // Only attempt to decode the response, if the response code wasn't (204) 'no content'
@@ -123,7 +123,7 @@ class UDP_Google_Http_REST
         if ($client) {
           $client->getLogger()->error($error);
         }
-        throw new UDP_Google_Service_Exception($error);
+        throw new UDP_Google_Service_Exception($error); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
       }
 
       if ($response->getExpectedClass()) {

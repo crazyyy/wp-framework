@@ -51,7 +51,7 @@ class UpdraftPlus_RangeHeader
 		if (!preg_match('/^\s*([A-Za-z]+)\s*=\s*(\d*)\s*-\s*(\d*)\s*(?:,|$)/', $header, $info)) {
 			throw new UpdraftPlus_InvalidRangeHeaderException('Invalid header format');
 		} else if (strtolower($info[1]) !== 'bytes') {
-			throw new UpdraftPlus_InvalidRangeHeaderException('Unknown range unit: ' . $info[1]);
+			throw new UpdraftPlus_InvalidRangeHeaderException('Unknown range unit: ' . $info[1]); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error messages should be escaped when caught and printed.
 		}
 
 		return new self(
@@ -195,7 +195,7 @@ class UpdraftPlus_PartialFileServlet
 		while ($length) {
 			$read = ($length > $chunkSize) ? $chunkSize : $length;
 			$length -= $read;
-			echo fread($fp, $read);
+			echo fread($fp, $read); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Raw output intended.
 		}
 	}
 
@@ -226,14 +226,14 @@ class UpdraftPlus_PartialFileServlet
 		$localPath = realpath($path);
 		if ($localPath === false || !is_file($localPath)) {
 			throw new UpdraftPlus_NonExistentFileException(
-				$path . ' does not exist or is not a file'
+				$path . ' does not exist or is not a file' // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error messages should be escaped when caught and printed.
 			);
 		}
 
 		// Make sure we can open the file for reading
 		if (!$fp = fopen($localPath, 'r')) {
 			throw new UpdraftPlus_UnreadableFileException(
-				'Failed to open ' . $localPath . ' for reading'
+				'Failed to open ' . $localPath . ' for reading' // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error messages should be escaped when caught and printed.
 			);
 		}
 

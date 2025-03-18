@@ -87,7 +87,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 */
 	public function compress_single_image($data) {
 
-		$options = !empty($data['smush_options']) ? $data['smush_options'] : $this->task_manager->get_smush_options();
+		$options = empty($data['smush_options']) ? $this->task_manager->get_smush_options() : $data['smush_options'];
 		$image = isset($data['selected_image']) ? filter_var($data['selected_image']['attachment_id'], FILTER_SANITIZE_NUMBER_INT) : false;
 		$blog = isset($data['selected_image']) ? filter_var($data['selected_image']['blog_id'], FILTER_SANITIZE_NUMBER_INT) : false;
 
@@ -197,7 +197,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 	 * @return void
 	 */
 	public function process_bulk_smush_shutdown() {
-		WP_Optimize()->close_browser_connection(json_encode($this->final_response));
+		WP_Optimize()->close_browser_connection(wp_json_encode($this->final_response));
 
 		$this->task_manager->process_bulk_smush($this->images);
 		exit;
@@ -225,11 +225,15 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$ui_update['failed_task_count'] = $this->task_manager->get_failed_task_count();
 
 		if (is_multisite()) {
-			$ui_update['summary'] = sprintf(__('Since the last reset of compression statistics on this multisite, a total of %d image(s) were compressed across the network.', 'wp-optimize').' '.__('This saved approximately %s of space at an average of %02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
+			// translators: %d: number of images compressed, %2$s: size of saved space, %3$02d: average percent saved
+			$ui_update['summary'] = sprintf(__('Since the last reset of compression statistics on this multisite, a total of %d image(s) were compressed across the network.', 'wp-optimize').' '.__('This saved approximately %2$s of space at an average of %3$02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
 		} else {
-			$ui_update['summary'] = sprintf(__('Since your compression statistics were last reset, a total of %d image(s) were compressed on this site.', 'wp-optimize').' '.__('This saved approximately %s of space at an average of %02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
+			// translators: %d: number of images compressed, %2$s: size of saved space, %3$02d: average percent saved
+			$ui_update['summary'] = sprintf(__('Since your compression statistics were last reset, a total of %d image(s) were compressed on this site.', 'wp-optimize').' '.__('This saved approximately %2$s of space at an average of %3$02d percent per image.', 'wp-optimize'), $ui_update['completed_task_count'], $ui_update['bytes_saved'], $ui_update['percent_saved']);
 		}
+		// translators: %d: number of images that could not be compressed
 		$ui_update['failed'] = sprintf(__("%d image(s) could not be compressed.", 'wp-optimize'), $ui_update['failed_task_count']) . ' ' . __('Please see the logs for more information, or try again later.', 'wp-optimize');
+		// translators: %d: number of images that were selected for compression, and pending processing
 		$ui_update['pending'] = sprintf(__("%d image(s) images were selected for compressing previously, but were not all processed.", 'wp-optimize'), $ui_update['pending_tasks']) . ' ' . __('You can either complete them now or cancel and retry later.', 'wp-optimize');
 		$ui_update['smush_complete'] = $this->task_manager->is_queue_processed();
 		
@@ -239,10 +243,12 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 			$ui_update['session_stats'] = "";
 
 			if (!empty($stats['success'])) {
-			$ui_update['session_stats'] .= sprintf(__("A total of %d image(s) were successfully compressed in this iteration.", 'wp-optimize'), $stats['success']);
+				// translators: %d: number of images compressed
+				$ui_update['session_stats'] .= sprintf(__("A total of %d image(s) were successfully compressed in this iteration.", 'wp-optimize'), $stats['success']);
 			}
 
 			if (!empty($stats['fail'])) {
+				// translators: %d: number of images that could not be compressed
 				$ui_update['session_stats'] .= sprintf(__("%d selected image(s) could not be compressed.", 'wp-optimize'), $stats['fail']) . ' ' . __('Please see the logs for more information, you may try again later.', 'wp-optimize');
 			}
 		}
@@ -534,6 +540,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 						if ($delete_only_backups_meta) {
 							if ($smushed_images_total > 0) {
 								$response['message'] = __('All the compressed images with backup copies of their original files were successfully restored.', 'wp-optimize');
+								// translators: %s - number of smushed images
 								$response['message'] .= ' '.sprintf(_n('Unable to restore %s image without backup files.', 'Unable to restore %s images without backup files.', $smushed_images_total, 'wp-optimize'), $smushed_images_total);
 							} else {
 								$response['message'] = __('All the compressed images were successfully restored.', 'wp-optimize');
@@ -573,7 +580,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		if (is_file($logfile)) {
 			if ($this->heartbeat_command) {
 				// The response will be inside the heartbeat response envelope, as each response of a heartbeat goes in its own unique ID key
-				readfile($logfile);
+				readfile($logfile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Using WP_Filesystem and get contents will result in `echo` and unescaped error
 			} else {
 				// Headers are needed for the `Download logs` link, which will run this command and just prompt a file download
 				header('Content-Description: File Transfer');
@@ -583,7 +590,7 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 				header('Cache-Control: must-revalidate');
 				header('Pragma: public');
 				header('Content-Length: ' . filesize($logfile));
-				readfile($logfile);
+				readfile($logfile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Using WP_Filesystem and get contents will result in `echo` and unescaped error
 				exit;
 			}
 		} else {

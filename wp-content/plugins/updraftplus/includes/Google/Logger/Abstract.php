@@ -397,7 +397,7 @@ abstract class Google_Logger_Abstract
     }
 
     throw new Google_Logger_Exception(
-        sprintf("Unknown LogLevel: '%s'", $level)
+        sprintf("Unknown LogLevel: '%s'", $level) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
     );
   }
 

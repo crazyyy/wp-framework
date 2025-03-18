@@ -456,7 +456,7 @@ class WP_Optimize_WebP {
 		$upload_dir = wp_upload_dir();
 		$destination =  $upload_dir['basedir']. '/wpo/images/wpo_logo_small.png.webp';
 		if (@file_exists($destination)) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
-			@unlink($destination); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
+			wp_delete_file($destination);
 		}
 	}
 

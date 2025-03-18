@@ -136,7 +136,7 @@ class WP_Optimize_Minify {
 				return;
 			} else {
 				$message = __('Minify cache purged', 'wp-optimize');
-				printf('<script>alert("%s");</script>', $message);
+				printf('<script>alert("%s");</script>', esc_html($message));
 				return;
 			}
 		}
@@ -275,8 +275,8 @@ class WP_Optimize_Minify {
 					(function(wp) {
 						if (window.wp && wp.hasOwnProperty('data') && 'function' == typeof wp.data.dispatch) {
 							wp.data.dispatch('core/notices').createNotice(
-								'<?php echo $type; ?>',
-								'<?php echo $message; ?>',
+								'<?php echo esc_js($type); ?>',
+								'<?php echo wp_kses_post($message); ?>',
 								{
 									isDismissible: true,
 								}
@@ -286,8 +286,8 @@ class WP_Optimize_Minify {
 				});
 			</script>
 		<?php else : ?>
-			<div class="notice wpo-notice notice-<?php echo $type; ?> is-dismissible">
-				<p><?php echo $message; ?></p>
+			<div class="notice wpo-notice notice-<?php echo esc_attr($type); ?> is-dismissible">
+				<p><?php echo wp_kses_post($message); ?></p>
 			</div>
 		<?php
 		endif;

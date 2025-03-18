@@ -229,7 +229,7 @@ function cmplz_services_fields( $fields ) {
 					],
 				'default'                 => 'no',
 				'label'                   => __( "Choose the appropriate frameworks needed for your configuration.", 'complianz-gdpr' ),
-				'comment'                 => __( "Google Advertising Products requires Google CMP Certified Consent Management. If you don't show ads, but use Google Advertising Products with Google Consent Mode, an additional framework is not required.", 'complianz-gdpr' ),
+				'comment'                 => __( "Google Advertising Products requires Google CMP Certified Consent Management. If you don't show ads, but use Google Advertising Products with Google Consent Mode, an additional framework is not required. Please be aware that this consent banner has additional guidelines and restricts customization.", 'complianz-gdpr' ),
 				'react_conditions'        => [
 					'relation' => 'AND',
 					[

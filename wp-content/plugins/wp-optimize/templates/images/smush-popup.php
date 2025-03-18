@@ -46,7 +46,7 @@
 	<div id="summary-message"></div>
 	<input type="button" id="wpo_smush_get_logs" class="wpo_smush_get_logs wpo_primary_small button-primary" value="<?php esc_attr_e('View logs', 'wp-optimize'); ?>">
 	<input type="button" id="wpo_smush_clear_stats_btn" class="wpo_primary_small button-primary align-right" value="<?php esc_attr_e('Clear compression statistics', 'wp-optimize'); ?>">
-	<img id="wpo_smush_images_clear_stats_spinner" class="display-none align-right" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+	<img id="wpo_smush_images_clear_stats_spinner" class="display-none align-right" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="..."><?php // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>
 	<span id="wpo_smush_images_clear_stats_done" class="dashicons dashicons-yes display-none save-done align-right"></span>
 	<span class="clearfix"></span>
 	<input type="button" class="wpo_primary_small button-primary wpo_smush_stats_cta_btn" value="<?php esc_attr_e('Close', 'wp-optimize'); ?>">

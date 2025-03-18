@@ -172,16 +172,17 @@ class WPO_Cache_Config {
 		// we write the cache config in a new format.
 		if (($advanced_cache_version && (version_compare($advanced_cache_version, '3.0.17', '>='))) || !$advanced_cache_version) {
 			// Apply the encoding required for placing within PHP single quotes - https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.single
-			$json_encoded_string = str_replace(array('\\', "'"), array('\\\\', '\\\''), json_encode($this->config));
+			$json_encoded_string = str_replace(array('\\', "'"), array('\\\\', '\\\''), wp_json_encode($this->config));
 
 			$config_content = '<?php' . "\n"
 				. 'if (!defined(\'ABSPATH\')) die(\'No direct access allowed\');' . "\n\n"
 				. '$GLOBALS[\'wpo_cache_config\'] = json_decode(\'' . $json_encoded_string . '\', true);' . "\n";
 		} else {
-			$config_content = json_encode($this->config);
+			$config_content = wp_json_encode($this->config);
 		}
 
-		if ((!$only_if_present || file_exists($config_file)) && (!is_writable(WPO_CACHE_CONFIG_DIR) || !file_put_contents($config_file, $config_content))) {
+		if ((!$only_if_present || file_exists($config_file)) && (!wp_is_writable(WPO_CACHE_CONFIG_DIR) || !file_put_contents($config_file, $config_content))) {
+			// translators: %s is the path to the cache config file
 			return new WP_Error('write_cache_config', sprintf(__('The cache configuration file could not be saved to the disk; please check the file/folder permissions of %s .', 'wp-optimize'), $config_file));
 		}
 
@@ -205,30 +206,32 @@ class WPO_Cache_Config {
 	public function get_defaults() {
 		
 		$defaults = array(
-			'enable_page_caching'						=> false,
-			'page_cache_length_value'					=> 24,
-			'page_cache_length_unit'					=> 'hours',
-			'page_cache_length'							=> 86400,
-			'cache_exception_conditional_tags'			=> array(),
-			'cache_exception_urls'						=> array(),
-			'cache_exception_cookies'					=> array(),
-			'cache_exception_browser_agents'			=> array(),
-			'enable_sitemap_preload'					=> false,
-			'enable_schedule_preload'					=> false,
-			'preload_schedule_type'						=> '',
-			'enable_mobile_caching'						=> false,
-			'enable_user_caching'						=> false,
-			'site_url'									=> network_home_url('/'),
-			'enable_cache_per_country'					=> false,
-			'enable_cache_aelia_currency'				=> false,
-			'permalink_structure'						=> get_option('permalink_structure'),
-			'uploads'									=> wp_normalize_path(wp_upload_dir()['basedir']),
-			'gmt_offset'								=> get_option('gmt_offset'),
-			'timezone_string'                           => get_option('timezone_string'),
-			'date_format'                               => get_option('date_format'),
-			'time_format'                               => get_option('time_format'),
-			'use_webp_images'						    => false,
-			'auto_preload_purged_contents'				=> true
+			'enable_page_caching'              => false,
+			'page_cache_length_value'          => 24,
+			'page_cache_length_unit'           => 'hours',
+			'page_cache_length'                => 86400,
+			'cache_exception_conditional_tags' => array(),
+			'cache_exception_urls'             => array(),
+			'cache_exception_cookies'          => array(),
+			'cache_exception_browser_agents'   => array(),
+			'enable_sitemap_preload'           => false,
+			'enable_schedule_preload'          => false,
+			'preload_schedule_type'            => '',
+			'enable_mobile_caching'            => false,
+			'enable_user_caching'              => false,
+			'site_url'                         => network_home_url('/'),
+			'enable_cache_per_country'         => false,
+			'enable_cache_aelia_currency'      => false,
+			'permalink_structure'              => get_option('permalink_structure'),
+			'uploads'                          => wp_normalize_path(wp_upload_dir()['basedir']),
+			'gmt_offset'                       => get_option('gmt_offset'),
+			'timezone_string'                  => get_option('timezone_string'),
+			'date_format'                      => get_option('date_format'),
+			'time_format'                      => get_option('time_format'),
+			'use_webp_images'                  => false,
+			'show_avatars'                     => 0,
+			'host_gravatars_locally'           => 0,
+			'auto_preload_purged_contents'     => true
 		);
 
 		return apply_filters('wpo_cache_defaults', $defaults);
@@ -240,7 +243,7 @@ class WPO_Cache_Config {
 	 * @return string
 	 */
 	public function get_cache_config_filename() {
-		$url = parse_url(network_site_url());
+		$url = wp_parse_url(network_site_url());
 
 		if (isset($url['port']) && '' != $url['port'] && 80 != $url['port']) {
 			return 'config-'.strtolower($url['host']).'-port'.$url['port'].'.php';

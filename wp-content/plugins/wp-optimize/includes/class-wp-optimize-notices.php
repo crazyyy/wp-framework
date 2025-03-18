@@ -66,6 +66,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 				'validity_function' => 'is_updraftcentral_installed',
 			),
 			'rate_plugin' => array(
+				// translators: %1$s is an anchor tag to WP-Optimize support forum, %2$s is closing tags
 				'text' => __("Hey - We noticed WP-Optimize has kept your site running fast for a while.", 'wp-optimize') . ' ' . __('If you like us, please consider leaving a positive review to spread the word.', 'wp-optimize') . ' ' . sprintf(__('Or if you have any issues or questions please leave us a support message %1$s here %2$s', 'wp-optimize'), '<a href="https://wordpress.org/support/plugin/wp-optimize/" target="_blank">', '</a><br>') . __('Thank you so much!', 'wp-optimize') . ' - <b>WP-Optimize</b><br>',
 				'image' => 'notices/ud_smile.png',
 				'button_link' => 'https://wordpress.org/support/plugin/wp-optimize/reviews/?rate=5#new-post',
@@ -146,7 +147,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 				'text' => __("The WordPress subscription extension for WooCommerce store owners.", "wp-optimize"),
 				'image' => 'notices/subscriben.png',
 				'button_link' => 'https://subscribenplugin.com',
-				'button_meta' => 'read_more',
+				'button_meta' => 'subscriben',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 			),
@@ -155,6 +156,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'blackfriday' => array(
 				'prefix' => '',
 				'title' => __('20% off - Black Friday Sale', 'wp-optimize'),
+				// translators: %1$s is a link to Black Friday sale page, %2$s is Black Friday sale discount code
 				'text' => $sale_description . '<br>' . sprintf('<a class="updraft_notice_link" href="%1$s" target="_blank">%2$s</a>', 'http://getwpo.com/blackfriday', sprintf(__('Save 20%% with code %s', 'wp-optimize'), '<b>blackfridaysale2024</b>'))  . ' ' . __('Hurry, offer ends on 2 December.', 'wp-optimize'),
 				'image' => 'notices/sale_20.png',
 				'button_link' => 'https://getwpo.com/blackfriday',
@@ -169,7 +171,8 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'newyear' => array(
 				'prefix' => '',
 				'title' => __('20% off - New Year Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% with code %s at %s.', 'wp-optimize'), '<b>newyearsale2025</b>', $checkout_html) . ' ' . __('Hurry, offer ends 28 January.', 'wp-optimize'),
+				// translators: %1$s is New Year sale discount code, %2$s is a link to check out page
+				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% with code %1$s at %2$s.', 'wp-optimize'), '<b>newyearsale2025</b>', $checkout_html) . ' ' . __('Hurry, offer ends 28 January.', 'wp-optimize'),
 				'image' => 'notices/sale_20.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
@@ -183,7 +186,8 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'spring' => array(
 				'prefix' => '',
 				'title' => __('20% off - Spring Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% off with code %s at %s.', 'wp-optimize'), '<b>springsale2024</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31 May.', 'wp-optimize'),
+				// translators: %1$s is Spring sale discount code, %2$s is a link to check out page
+				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% off with code %1$s at %2$s.', 'wp-optimize'), '<b>springsale2024</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31 May.', 'wp-optimize'),
 				'image' => 'notices/sale_20.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
@@ -197,7 +201,8 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'summer' => array(
 				'prefix' => '',
 				'title' => __('20% off - Summer Sale', 'wp-optimize'),
-				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% off with code %s at %s.'), '<b>summersale2024</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31 July.', 'wp-optimize'),
+				// translators: %1$s is Summer sale discount code, %2$s is a link to check out page
+				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% off with code %1$s at %2$s.', 'wp-optimize'), '<b>summersale2024</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31 July.', 'wp-optimize'),
 				'image' => 'notices/sale_20.png',
 				'button_link' => 'https://getwpo.com',
 				// 'button_meta' => 'wp-optimize',
@@ -211,6 +216,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'collection' => array(
 				'prefix' => '',
 				'title' => __('The UpdraftPlus Plugin Collection Sale', 'wp-optimize'),
+				// translators: %s is a discount code
 				'text' => sprintf(__('Visit any of our websites and use code %s at the checkout to get 20%% off all our plugins.', 'wp-optimize'), '<b>WPO2024</b>') . ' ' . __('Be quick, offer ends 30 September.', 'wp-optimize'),
 				'image' => 'notices/sale_20.png',
 				'button_link' => 'https://teamupdraft.com',

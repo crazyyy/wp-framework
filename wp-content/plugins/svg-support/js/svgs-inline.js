@@ -1,21 +1,35 @@
+/* eslint-env jquery */
+/* global svgSettings, ForceInlineSVGActive, cssTarget, frontSanitizationEnabled, DOMPurify, jQuery */
+
 jQuery(document).ready(function ($) {
 
     let bodhisvgsReplacements = 0;
+    let target;
 
     // Function to replace the img tag with the SVG
     function bodhisvgsReplace(img) {
+        const hasTargetClass = img.hasClass(target);
+        const parentHasTargetClass = img.parent().hasClass(target);
+        const insideTargetContainer = img.closest('.' + target).length > 0;
+        
+        // First check if we should process at all
+        if (ForceInlineSVGActive !== 'true' && !hasTargetClass && !insideTargetContainer) {
+            return;
+        }
+
+        // If skip nested is enabled, only skip if:
+        // 1. Image doesn't have target class AND
+        // 2. Image's parent is not the target container but is inside one
+        if (svgSettings.skipNested && !hasTargetClass && !parentHasTargetClass && insideTargetContainer) {
+            return;
+        }
 
         var imgID = img.attr('id');
         var imgClass = img.attr('class');
         var imgURL = img.attr('src');
 
-        // Set svg size to the original img size
-        // var imgWidth = $img.attr('width');
-        // var imgHeight = $img.attr('height');
-
         // Ensure the URL ends with .svg before proceeding
         if (!imgURL.endsWith('svg')) {
-            console.log('Not an SVG:', imgURL);
             return;
         }
 
@@ -49,29 +63,26 @@ jQuery(document).ready(function ($) {
 
             // If sanitization is enabled, sanitize the SVG code
             if (frontSanitizationEnabled === 'on' && $svg[0]['outerHTML'] != "") {
-                console.log('Sanitizing SVG:', imgURL);
                 $svg = DOMPurify.sanitize($svg[0]['outerHTML']);
             }
 
             // Replace image with new SVG
             img.replaceWith($svg);
 
-            // Trigger custom event after SVG is loaded
-            $(document).trigger('svg.loaded', [imgID]);
-
             // Increment the replacements counter
             bodhisvgsReplacements++;
 
+            // Trigger custom event after SVG is loaded
+            $(document).trigger('svg.loaded', [imgID]);
+
         }, 'xml').fail(function() {
-            console.error('Failed to load SVG:', imgURL);
+            // Silently fail
         });
 
     }
 
     // Wrap in IIFE so that it can be called again later as bodhisvgsInlineSupport();
     (bodhisvgsInlineSupport = function () {
-
-        console.log('Running bodhisvgsInlineSupport');
 
         // If force inline SVG option is active then add class
         if (ForceInlineSVGActive === 'true') {
@@ -115,27 +126,22 @@ jQuery(document).ready(function ($) {
         };
         // End snippet to support IE11
 
-        // Check to see if user set alternate class
-        var target;
+        // Set target before we use it
         if (ForceInlineSVGActive === 'true') {
-            target = cssTarget.Bodhi !== 'img.' ? cssTarget.Bodhi : 'img.style-svg';
+            target = cssTarget.Bodhi !== 'img.' ? cssTarget.ForceInlineSVG : 'style-svg';
         } else {
-            target = cssTarget !== 'img.' ? cssTarget.Bodhi : 'img.style-svg';
+            target = cssTarget.Bodhi !== 'img.' ? cssTarget.Bodhi : 'style-svg';
         }
-
-        console.log('Initial target:', target);
 
         // Ensure target is a string before applying replace method
         if (typeof target === 'string') {
-            target = target.replace("img", "");
-            console.log('Modified target:', target);
+            target = target.replace("img.", "");
         } else {
-            console.error('Target is not a string:', target);
             return;
         }
 
         // Replace images with SVGs based on the target class
-        $(target).each(function (index) {
+        $('.' + target).each(function (index) {
 
             // If image then send for replacement
             if (typeof $(this).attr('src') !== typeof undefined && $(this).attr('src') !== false) {

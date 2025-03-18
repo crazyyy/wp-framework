@@ -38,6 +38,6 @@ function rijndael_decrypt_file($file, $key) {
 
 	$ciphertext = file_get_contents($file);
 
-	print $rijndael->decrypt($ciphertext);
+	print $rijndael->decrypt($ciphertext);// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- intentional binary output
 
 }

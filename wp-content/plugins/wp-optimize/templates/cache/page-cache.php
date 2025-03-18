@@ -12,14 +12,14 @@
 	<div class="wpo-info__content">
 		<p><strong><?php esc_html_e('Not sure how to use the cache feature?', 'wp-optimize'); ?></strong> <br><?php esc_html_e('Watch our how-to video below.', 'wp-optimize'); ?></p>
 		<div class="wpo-video-preview">
-			<a href="https://vimeo.com/337247770" data-embed="https://player.vimeo.com/video/337247770?color=df6926&title=0&byline=0&portrait=0" target="_blank"><img src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/cache-video-preview.png'); ?>" alt="<?php esc_attr_e('Cache video preview', 'wp-optimize');?>" /></a>
+			<a href="https://vimeo.com/337247770" data-embed="https://player.vimeo.com/video/337247770?color=df6926&title=0&byline=0&portrait=0" target="_blank"><img src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/cache-video-preview.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Cache video preview', 'wp-optimize');?>" /></a>
 		</div>
 		<small>(<?php esc_html_e('Loads a video hosted on vimeo.com', 'wp-optimize'); ?>) - <?php $wp_optimize->wp_optimize_url('https://vimeo.com/337247770', __('Open the video in a new window', 'wp-optimize')); ?></small>
 	</div>
 </div>
 <div class="wpo-fieldgroup wpo-first-child cache-options">
 	<div class="notice notice-warning below-h2 wpo-warnings__enabling-cache wpo_hidden"><p></p><ul></ul></div>
-	<div class="notice error below-h2 wpo-error wpo-error__enabling-cache <?php echo empty($error) ? 'wpo_hidden' : ''; ?>"><p><?php echo htmlentities($error); ?></p></div>
+	<div class="notice error below-h2 wpo-error wpo-error__enabling-cache <?php echo empty($error) ? 'wpo_hidden' : ''; ?>"><p><?php echo esc_html($error); ?></p></div>
 
 	<pre id="wpo_advanced_cache_output" style="display: none;"></pre>
 
@@ -39,6 +39,7 @@
 	<?php if (!empty($active_cache_plugins)) { ?>
 	<p class="wpo-error">
 		<?php
+			// translators: %s - list of active caching plugins
 			$message = sprintf(__('It looks like you already have an active caching plugin (%s) installed.', 'wp-optimize'), implode(', ', $active_cache_plugins));
 			$message .= ' ';
 			$message .=  __('Having more than one active page cache might cause unexpected results.', 'wp-optimize');
@@ -53,7 +54,7 @@
 <div class="wpo-fieldgroup cache-options purge-cache" style="<?php echo esc_attr($display); ?>" >
 	<p class="wpo-button-wrap">
 		<input id="wp-optimize-purge-cache" class="button button-primary <?php echo $can_purge_the_cache ? '' : 'disabled'; ?>" type="submit" value="<?php esc_attr_e('Purge cache', 'wp-optimize'); ?>" <?php echo $can_purge_the_cache ? '' : 'disabled'; ?>>
-		<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+		<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 		<span class="save-done dashicons dashicons-yes display-none"></span>
 	</p>
 	<p>
@@ -119,7 +120,7 @@
 
 <input id="wp-optimize-save-cache-settings" class="button button-primary" type="submit" name="wp-optimize-save-cache-settings" value="<?php esc_attr_e('Save changes', 'wp-optimize'); ?>">
 
-<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="....">
+<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="....">
 
 <span class="save-done dashicons dashicons-yes display-none"></span>
 <?php endif;

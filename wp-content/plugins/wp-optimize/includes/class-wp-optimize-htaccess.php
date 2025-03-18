@@ -62,7 +62,7 @@ class WP_Optimize_Htaccess {
 	 * @return bool
 	 */
 	public function is_writable() {
-		return is_writable($this->_htaccess_file);
+		return wp_is_writable($this->_htaccess_file);
 	}
 
 	/**

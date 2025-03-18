@@ -3,7 +3,7 @@ Contributors: Backup with UpdraftPlus, DavidAnderson, pmbaldha, DNutbourne, apor
 Tags: backup, database backup, wordpress backup, cloud backup, migration
 Requires at least: 3.2
 Tested up to: 6.7
-Stable tag: 1.24.11
+Stable tag: 1.25.2
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -179,6 +179,39 @@ The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the b
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.32.x of the free version correspond to changes made in 2.16.32.x of the paid version.
 
+= 1.25.2 - 26/Feb/2025 =
+
+* FEATURE: Added a "Cron events" tab in the Advanced Tools section to check for the presence of the UpdraftPlus cron job.
+* FIX: Resolve the issue of uploads to pCloud failing after a folder name change by resetting the "folderid" whenever the folder name is updated.
+* TWEAK: Add site information for WooCommerce and HPOS support to the database backup header.
+* TWEAK: Create a log entry when a bot verification page appears during the file upload in the migration procedure.
+* TWEAK: Improve error message clarity for failed connection tests in migration.
+* TWEAK: Include details in the backup log file about the status and availability of the proxy configured in the system.
+* TWEAK: Update the Google library to support the WP_PROXY_HOST and WP_PROXY_PORT constants.
+* TWEAK: TWEAK Update the link for Onedrive and Azure app creation
+* COMPATIBILITY: Got rid of PHP 8.4 deprecation messages caused by the E_STRICT constant usage
+
+= 1.25.1 - 11/Jan/2025 =
+
+* SECURITY: Fix a non-persistent reflected XSS vulnerability due to a missing nonce combined with missing sanitisation. This could allow an attacker, who persuaded you to click a personally-crafted link to your site's dashboard whilst you were logged in, to once run JavaScript code in your dashboard. Thanks to Asaf Mozes for finding and responsibly disclosing this issue.
+* FIX: Prevent the restoration from failing when there is a 'sync-xhr=()' permission policy on the response header.
+* FIX: Improve the approach of acquiring a suggested region for Amazon AWS S3 if a failure arises during the getBucketLocation() call, particularly when the XML response fails to provide a field for the suggested region - this resolves issues with regions (e.g. us-east-2) which recently changed their response behaviour
+* TWEAK: Broaden the support to incorporate the "ap-southeast-4" region of Amazon AWS S3 and additional recently updated regions
+* TWEAK: A regression in the paid version update checker to version 4.13.2, resulting in non-appearance of notices concerning subscription status or WP version compatibility.
+
+= 1.24.12 - 23/Dec/2024 =
+
+* FIX: The pre-restoration stage failed to properly address the tables that were to be excluded, which caused a logical error that misread the checked "include all tables not listed" option as an instruction to restore every table
+* FIX: Update PHPSecLib library to version 2.0.48 which has the fixes for the "gmp_pow(): base and exponent overflow" on certain PHP versions and could cause backups to fail on the SFTP remote storage
+* TWEAK: Complete the review and removal of calls to the unserialize() PHP function allowing class instantiation begun in 1.24.7. (The final removal involved a theoretical security defect, if your development site allowed an attacker to post content to it which you migrated to another site, and which contained customised code that could perform destructive actions which the attacker knew about, prior to you then cloning the site. The result of this removal is that some search-replaces, highly unlikely to be encountered in practice, will be skipped).
+* TWEAK: Drop search and replace feature for PHP 5.2 users (to fulfil the preceding item)
+* TWEAK: Tweak UpdraftCentral media module to add "has_image_editor" property to each media item
+* TWEAK: On the restoration screen in a multisite configuration, the dropdown labeled "which site to restore" was covering other HTML elements, which caused some buttons to be positioned at the bottom instead of at the top
+* TWEAK: Avoid deregistering jQuery-UI CSS if already printed by other plugins to prevent compatibility issues
+* TWEAK: In the context of database restoration, the execution of LOCK and/or ALTER SQL statements must be avoided for any tables that are part of the "skipped tables" list
+* TWEAK: openssl_free_key() is only needed on PHP < 8
+* TWEAK: Various coding style changes to comply with "Plugin Check" rules
+
 = 1.24.11 - 15/Nov/2024 =
 
 * TWEAK: Do not request drive.readonly scope on Google Drive connections, due to Google's app permissions review (unannounced and requires us to create a Youtube video for their review process) - this means that (until the review completes) new connections to Google Drive can only access backups created by UpdraftPlus directly, and not backups which you manually upload to Google Drive. This restores the ability to make new connections to Google Drive.
@@ -188,6 +221,7 @@ N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which i
 
 * FIX: A regression in 1.24.8 when handling restoration of wp-config.php
 * TWEAK: The changes in handling of loading text domains in 1.24.8 did not cover most cases
+* TWEAK: Introduce the "updraftplus_use_builtin_wpcore_restoration" filter which can be used to restore WP-Core entity using a different WP-Core restoration mechanism especially in a case that the admin-ajax.php file couldn't be deleted during the restoration
 
 = 1.24.8 - 13/Nov/2024 =
 
@@ -1982,4 +2016,4 @@ Non-English translators are provided by volunteers, and wordpress.org does not g
 We recognise and thank those mentioned at https://updraftplus.com/acknowledgements/ for code and/or libraries used and/or modified under the terms of their open source licences.
 
 == Upgrade Notice ==
-* 1.24.11: Restore ability to connect new sites to Google Drive. A recommended update for all.
+* 1.25.2: New Cron Events tool for checking all UpdraftPlus-related cron events; identification of WooCommerce and HPOS support; error message clarity when bot verification occurs prior to or during the direct site to site migration. Various fixes and small tweaks - see the changelog for details. A recommended update for all.

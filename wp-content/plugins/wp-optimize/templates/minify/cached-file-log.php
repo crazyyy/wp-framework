@@ -3,7 +3,7 @@
 <?php
 if (isset($log->error)) {
 	?>
-	<div class="wpo_min_file_error"><?php echo strip_tags($log->error, '<a>'); ?></div>
+	<div class="wpo_min_file_error"><?php echo wp_kses_post($log->error); ?></div>
 	<?php
 	return;
 }

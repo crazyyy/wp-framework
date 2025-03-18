@@ -333,7 +333,7 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 
 		foreach ($required_test_parameters as $param => $descrip) {
 			if (empty($posted_settings[$param])) {
-				printf(__("Failure: No %s was given.", 'updraftplus'), $descrip)."\n";
+				echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), $descrip))."\n";
 				return;
 			}
 		}
@@ -341,9 +341,9 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 		$storage = $this->bootstrap($posted_settings);
 		
 		if (is_wp_error($storage)) {
-			echo __("Failed", 'updraftplus').": ";
+			echo esc_html__("Failed", 'updraftplus').": ";
 			foreach ($storage->get_error_messages() as $msg) {
-				echo "$msg\n";
+				echo esc_html($msg) .'\n';
 			}
 			return;
 		}
@@ -355,10 +355,10 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 		$data = (is_array($test_results) && isset($test_results['data'])) ? $test_results['data'] : null;
 		
 		if ((is_array($test_results) && $test_results['result']) || (!is_array($test_results) && $test_results)) {
-			_e('Success', 'updraftplus');
+			esc_html_e('Success', 'updraftplus');
 			$this->do_credentials_test_deletefile($testfile, $posted_settings);
 		} else {
-			_e("Failed: We were not able to place a file in that directory - please check your credentials.", 'updraftplus');
+			esc_html_e("Failed: We were not able to place a file in that directory - please check your credentials.", 'updraftplus');
 		}
 
 		return $data;

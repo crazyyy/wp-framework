@@ -4,8 +4,8 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 
 global $wpo_backup_initialized, $wpo_take_backup_checkbox_id;
 
-$updraftplus_admin = !empty($GLOBALS['updraftplus_admin']) ? $GLOBALS['updraftplus_admin'] : null;
-$updraftplus = !empty($GLOBALS['updraftplus']) ? $GLOBALS['updraftplus'] : null;
+$updraftplus_admin = empty($GLOBALS['updraftplus_admin']) ? null : $GLOBALS['updraftplus_admin'];
+$updraftplus = empty($GLOBALS['updraftplus']) ? null : $GLOBALS['updraftplus'];
 
 // Check if UpdraftPlus plugin status.
 $updraftplus_status = $this->is_installed('UpdraftPlus - Backup/Restore');

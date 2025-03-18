@@ -21,6 +21,8 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 */
 	public function preview($params) {
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is global `$wpdb->prepare`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT um.* FROM `" . $this->wpdb->usermeta . "` um".
 			" LEFT JOIN `" . $this->wpdb->users . "` wu ON wu.ID = um.user_id".
@@ -33,11 +35,12 @@ class WP_Optimization_usermeta extends WP_Optimization {
 		);
 
 		$users = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// get total count user meta for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->usermeta . "` um LEFT JOIN `" . $this->wpdb->users . "` wu ON wu.ID = um.user_id WHERE wu.ID IS NULL;";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 
 		return array(
 			'id_key' => 'umeta_id',
@@ -59,9 +62,11 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s is the number of orphaned user metadata deleted
 		$message = sprintf(_n('%s orphaned user meta data deleted', '%s orphaned user meta data deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -91,12 +96,14 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count) {
+			// translators: %s is the number of orphaned user metadata
 			$message = sprintf(_n('%s orphaned user meta data in your database', '%s orphaned user meta data in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No orphaned user meta data in your database', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -113,7 +120,7 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 */
 	public function get_info() {
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->usermeta . "` um LEFT JOIN `" . $this->wpdb->users . "` wu ON wu.ID = um.user_id WHERE wu.ID IS NULL;";
-		$usermeta = $this->wpdb->get_var($sql);
+		$usermeta = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 
 		$this->found_count += $usermeta;
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -33,7 +35,7 @@ class Ai1wm_Export_Config {
 		global $table_prefix, $wp_version;
 
 		// Set progress
-		Ai1wm_Status::info( __( 'Preparing configuration file...', AI1WM_PLUGIN_NAME ) );
+		Ai1wm_Status::info( __( 'Preparing configuration...', AI1WM_PLUGIN_NAME ) );
 
 		// Get options
 		$options = wp_load_alloptions();
@@ -177,7 +179,7 @@ class Ai1wm_Export_Config {
 		ai1wm_close( $handle );
 
 		// Set progress
-		Ai1wm_Status::info( __( 'Done preparing configuration file.', AI1WM_PLUGIN_NAME ) );
+		Ai1wm_Status::info( __( 'Configuration prepared.', AI1WM_PLUGIN_NAME ) );
 
 		return $params;
 	}

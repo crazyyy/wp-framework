@@ -36,6 +36,8 @@ class WP_Optimization_transient extends WP_Optimization {
 		}
 
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is global `$wpdb->prepare`
+		// phpcs:disable
 		if ('single' == $type) {
 			$sql = $this->wpdb->prepare("
 				SELECT
@@ -135,6 +137,7 @@ class WP_Optimization_transient extends WP_Optimization {
 		$posts = $this->wpdb->get_results($sql, ARRAY_A);
 
 		$total = $this->wpdb->get_var($sql_count);
+		// phpcs:enable
 
 		// define columns array depends on source type of request.
 		if ('single' == $type) {
@@ -174,9 +177,11 @@ class WP_Optimization_transient extends WP_Optimization {
 	 */
 	public function after_optimize() {
 
+		// translators: %s is the number of transient options deleted
 		$message = sprintf(_n('%s transient option deleted', '%s transient options deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -251,6 +256,7 @@ class WP_Optimization_transient extends WP_Optimization {
 			$sitemeta_table_transients_deleted = $this->query($clean2);
 			if ('' != $clean2_timeouts) $this->query($clean2_timeouts);
 
+			// translators: %s is the number of transient options deleted across network
 			$message2 = sprintf(_n('%s network-wide transient option deleted', '%s network-wide transient options deleted', $sitemeta_table_transients_deleted, 'wp-optimize'), number_format_i18n($sitemeta_table_transients_deleted));
 
 			$this->logger->info($message2);
@@ -374,21 +380,23 @@ class WP_Optimization_transient extends WP_Optimization {
 			$expired_suffix_sql = " AND b.meta_value < UNIX_TIMESTAMP()";
 
 			// get count of expired transients.
-			$sitemeta_table_transients = $this->wpdb->get_var($sitemeta_table_sql . $expired_suffix_sql);
+			$sitemeta_table_transients = $this->wpdb->get_var($sitemeta_table_sql . $expired_suffix_sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 			// get count of all transients.
-			$sitemeta_table_transients_all = $this->wpdb->get_var($sitemeta_table_sql);
+			$sitemeta_table_transients_all = $this->wpdb->get_var($sitemeta_table_sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 		} else {
 			$sitemeta_table_transients = 0;
 			$sitemeta_table_transients_all = 0;
 		}
 
 		if ($this->found_count_all > 0) {
+			// translators: %1$d is the number of expired transient options, %2$d is the number of all transient options
 			$message = sprintf(_n('%1$d of %2$d transient option expired', '%1$d of %2$d transient options expired', $this->found_count_all, 'wp-optimize'), number_format_i18n($this->found_count), number_format_i18n($this->found_count_all));
 		} else {
 			$message = __('No transient options found', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %d is the number of sites
 			$message .= ' ' . sprintf(_n('across %d site', 'across %d sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -401,6 +409,7 @@ class WP_Optimization_transient extends WP_Optimization {
 
 		if ($this->is_multisite_mode()) {
 			if ($sitemeta_table_transients_all > 0) {
+				// translators: %1$d is the number of expired transient options, %2$d is the number of all transient options across network
 				$message2 = sprintf(_n('%1$d of %2$d network-wide transient option found', '%1$d of %2$d network-wide transient options found', $sitemeta_table_transients_all, 'wp-optimize'), number_format_i18n($sitemeta_table_transients), number_format_i18n($sitemeta_table_transients_all));
 				$message2 = $this->get_preview_link($message2, array('data-type' => 'multisite'));
 			} else {
@@ -450,11 +459,11 @@ class WP_Optimization_transient extends WP_Optimization {
 			$expired_suffix_sql = " AND b.option_value < UNIX_TIMESTAMP()";
 
 			// get count of expired transients.
-			$options_table_transients = $this->wpdb->get_var($options_table_sql . $expired_suffix_sql);
+			$options_table_transients = $this->wpdb->get_var($options_table_sql . $expired_suffix_sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 			$this->found_count += $options_table_transients;
 
 			// get count of all transients.
-			$options_table_transients = $this->wpdb->get_var($options_table_sql);
+			$options_table_transients = $this->wpdb->get_var($options_table_sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 			$this->found_count_all += $options_table_transients;
 			$this->restore_current_blog();
 		}

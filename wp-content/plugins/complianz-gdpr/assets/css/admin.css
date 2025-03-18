@@ -468,14 +468,14 @@
     opacity: 0.45;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 15;
 }
 
 .cmplz-modal {
     max-width: 526px;
-    min-width: 200px;
+    min-width: 526px;
     position: fixed;
-    z-index: 3;
+    z-index: 20;
     border-radius: 12px;
     background-color: white;
     top: 50%;
@@ -1001,35 +1001,35 @@ button.button .cmplz-icon.cmplz-icon-loading > div {
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(1) {
-    width: 92%;
+    width: 61%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(2) {
-    width: 98%;
+    width: 83%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(3) {
-    width: 85%;
+    width: 92%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(4) {
-    width: 90%;
+    width: 96%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(5) {
-    width: 70%;
+    width: 63%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(6) {
-    width: 97%;
+    width: 92%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(7) {
-    width: 100%;
+    width: 68%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(8) {
-    width: 88%;
+    width: 92%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(9) {
@@ -1037,47 +1037,47 @@ button.button .cmplz-icon.cmplz-icon-loading > div {
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(10) {
-    width: 70%;
+    width: 87%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(11) {
-    width: 86%;
+    width: 95%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(12) {
-    width: 98%;
+    width: 67%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(13) {
-    width: 86%;
+    width: 82%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(14) {
-    width: 66%;
+    width: 95%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(15) {
-    width: 86%;
+    width: 70%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(16) {
-    width: 83%;
+    width: 97%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(17) {
-    width: 83%;
+    width: 64%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(18) {
-    width: 63%;
+    width: 82%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(19) {
-    width: 92%;
+    width: 71%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line:nth-of-type(20) {
-    width: 77%;
+    width: 74%;
 }
 
 .cmplz-placeholder .cmplz-placeholder-line ~ .cmplz-placeholder-line {
@@ -2316,7 +2316,8 @@ button.button .cmplz-icon.cmplz-icon-loading > div {
     color: var(--rsp-text-color-light);
 }
 
-.cmplz-suggested-plugin {
+.cmplz-suggested-plugin,
+.cmplz-wscscan-alert {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -2325,18 +2326,21 @@ button.button .cmplz-icon.cmplz-icon-loading > div {
     padding: 20px;
 }
 
-.cmplz-suggested-plugin-group-title {
+.cmplz-suggested-plugin-group-title,
+.cmplz-wscscan-alert-group-title {
     font-size: 14px;
     font-weight: 600;
 }
 
-.cmplz-suggested-plugin-group-desc {
+.cmplz-suggested-plugin-group-desc,
+.cmplz-wscscan-alert-group-desc {
     font-size: 12px;
     white-space: nowrap;
     margin: 4px 0;
 }
 
-.cmplz-suggested-plugin-desc-long {
+.cmplz-suggested-plugin-desc-long,
+.cmplz-wscscan-alert-desc-long {
     flex: 1;
     font-size: 12px;
     line-height: 1.6;
@@ -2345,18 +2349,21 @@ button.button .cmplz-icon.cmplz-icon-loading > div {
     margin-right: auto;
 }
 
-.cmplz-suggested-plugin-img {
+.cmplz-suggested-plugin-img,
+.cmplz-wscscan-alert-img {
     width: 70px;
     height: 70px;
     border-radius: 5px;
 }
 
-.cmplz-suggested-plugin button.cmplz-install-plugin {
+.cmplz-suggested-plugin button.cmplz-install-plugin,
+.cmplz-wscscan-alert button.cmplz-install-plugin {
     display: flex;
     align-items: center;
 }
 
-.cmplz-suggested-plugin button.cmplz-install-plugin .cmplz-icon {
+.cmplz-suggested-plugin button.cmplz-install-plugin .cmplz-icon,
+.cmplz-wscscan-alert button.cmplz-install-plugin .cmplz-icon {
     margin-left: 10px;
     margin-top: 5px;
 }
@@ -3667,6 +3674,17 @@ button {
 .cmplz-text-area-input-group__input:disabled {
     background-color: var(--rsp-grey-200);
     color: var(--rsp-grey-400);
+}
+
+.cmplz-password-input-group {
+    position: relative;
+}
+
+.cmplz-password-input-group .cmplz-icon {
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    cursor: pointer;
 }
 
 #complianz {

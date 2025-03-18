@@ -39,7 +39,7 @@ abstract class UpdraftPlus_BackupModule {
 	private function save_options() {
 	
 		if (!$this->supports_feature('multi_options')) {
-			throw new Exception('save_options() can only be called on a storage method which supports multi_options (this module, '.$this->get_id().', does not)');
+			throw new Exception('save_options() can only be called on a storage method which supports multi_options (this module, '.$this->get_id().', does not)'); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
 		}
 	
 		if (!$this->_instance_id) {
@@ -49,7 +49,7 @@ abstract class UpdraftPlus_BackupModule {
 		$current_db_options = UpdraftPlus_Storage_Methods_Interface::update_remote_storage_options_format($this->get_id());
 
 		if (is_wp_error($current_db_options)) {
-			throw new Exception('save_options(): options fetch/update failed ('.$current_db_options->get_error_code().': '.$current_db_options->get_error_message().')');
+			throw new Exception('save_options(): options fetch/update failed ('.$current_db_options->get_error_code().': '.$current_db_options->get_error_message().')'); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
 		}
 
 		$current_db_options['settings'][$this->_instance_id] = $this->_options;
@@ -280,7 +280,7 @@ abstract class UpdraftPlus_BackupModule {
 		ob_start();
 		// Allow methods to not use this hidden field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field)
 		if ($this->print_shared_settings_fields()) {
-			?><tr class="<?php echo $this->get_css_classes(); ?>"><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"></tr><?php
+			?><tr class="<?php echo esc_attr($this->get_css_classes()); ?>"><input type="hidden" name="updraft_<?php echo esc_attr($this->get_id());?>[version]" value="1"></tr><?php
 		}
 		
 		if ($this->supports_feature('config_templates')) {
@@ -353,7 +353,7 @@ abstract class UpdraftPlus_BackupModule {
 	 * Prints out the configuration section for a particular module. This is now (Sep 2017) considered deprecated; things are being ported over to get_configuration_template(), indicated via the feature 'config_templates'.
 	 */
 	public function config_print() {
-		echo $this->get_id().": module neither declares config_templates support, nor has a config_print() method (coding bug)";
+		echo esc_html($this->get_id()).": module neither declares config_templates support, nor has a config_print() method (coding bug)";
 	}
 
 	/**
@@ -399,9 +399,9 @@ abstract class UpdraftPlus_BackupModule {
 		ob_start();
 		$instance_id = $this->supports_feature('config_templates') ? '{{instance_id}}' : $this->_instance_id;
 		?>
-		<tr class="<?php echo $this->get_css_classes(); ?>">
+		<tr class="<?php echo esc_attr($this->get_css_classes()); ?>">
 			<th></th>
-			<td><p><button id="updraft-<?php echo $this->get_id();?>-test-<?php echo $instance_id;?>" type="button" class="button-primary updraft-test-button updraft-<?php echo $this->get_id();?>-test" data-instance_id="<?php echo $instance_id;?>" data-method="<?php echo $this->get_id();?>" data-method_label="<?php echo esc_attr($title);?>"><?php printf(__('Test %s Settings', 'updraftplus'), $title);?></button></p></td>
+			<td><p><button id="updraft-<?php echo esc_attr($this->get_id());?>-test-<?php echo esc_attr($instance_id);?>" type="button" class="button-primary updraft-test-button updraft-<?php echo esc_attr($this->get_id());?>-test" data-instance_id="<?php echo esc_attr($instance_id);?>" data-method="<?php echo esc_attr($this->get_id());?>" data-method_label="<?php echo esc_attr($title);?>"><?php echo esc_html(sprintf(__('Test %s Settings', 'updraftplus'), $title));?></button></p></td>
 		</tr>
 		<?php
 		return ob_get_clean();
@@ -485,7 +485,7 @@ abstract class UpdraftPlus_BackupModule {
 		
 			if ($supports_multi_options) {
 				// This is forbidden, because get_opts() is legacy and is for methods that do not support multi-options. Supporting multi-options leads to the array format being updated, which will then break get_opts().
-				die('Fatal error: method '.$this->get_id().' both supports multi_options and provides a get_opts method');
+				die('Fatal error: method '.esc_html($this->get_id()).' both supports multi_options and provides a get_opts method');
 			}
 			
 			$options = $this->get_opts();
@@ -637,7 +637,7 @@ abstract class UpdraftPlus_BackupModule {
 			$text = sprintf(__('Follow this link to authorize access to your %s account (you will not be able to backup to %s without it).', 'updraftplus'), $description, $description);
 		}
 
-		echo $account_warning . ' ' . $this->build_authentication_link($instance_id, $text);
+		echo esc_html($account_warning) . ' ' . wp_kses_post($this->build_authentication_link($instance_id, $text));
 
 		if (!$echo_instead_of_return) {
 			return ob_get_clean();
@@ -697,7 +697,7 @@ abstract class UpdraftPlus_BackupModule {
 		$id = $this->get_id();
 		$description = $this->get_description();
 
-		echo ' <a class="updraft_deauthlink" href="'.UpdraftPlus_Options::admin_page_url().'?action=updraftmethod-'.$id.'-auth&page=updraftplus&updraftplus_'.$id.'auth=deauth&nonce='.wp_create_nonce($id.'_deauth_nonce').'&updraftplus_instance={{instance_id}}" data-instance_id="{{instance_id}}" data-remote_method="'.$id.'">'.sprintf(__("Follow this link to remove these settings for %s.", 'updraftplus'), $description).'</a>';
+		echo ' <a class="updraft_deauthlink" href="'.esc_url(UpdraftPlus_Options::admin_page_url().'?action=updraftmethod-'.$id.'-auth&page=updraftplus&updraftplus_'.$id.'auth=deauth&nonce='.wp_create_nonce($id.'_deauth_nonce').'&updraftplus_instance={{instance_id}}').'" data-instance_id="{{instance_id}}" data-remote_method="'.esc_attr($id).'">'.esc_html(sprintf(__("Follow this link to remove these settings for %s.", 'updraftplus'), $description)).'</a>';
 
 		if (!$echo_instead_of_return) {
 			return ob_get_clean();

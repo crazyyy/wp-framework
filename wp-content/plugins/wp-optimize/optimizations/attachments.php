@@ -27,9 +27,11 @@ class WP_Optimization_attachments extends WP_Optimization {
 	 */
 	public function after_optimize() {
 
+		// translators: %s: number of orphaned attachments
 		$message = sprintf(_n('%s orphaned attachment deleted', '%s orphaned attachments deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s: number of sites
 			$message .= ' '.sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -43,9 +45,9 @@ class WP_Optimization_attachments extends WP_Optimization {
 	 */
 	public function optimize() {
 
-		$sql = "SELECT p.ID FROM `".$this->wpdb->posts."` p LEFT JOIN `".$this->wpdb->posts."` pp ON pp.ID = p.post_parent WHERE p.post_parent > 0 AND p.post_type = 'attachment' AND pp.ID IS NULL;";
-
-		$attachment_ids = $this->wpdb->get_col($sql);
+		$sql = "SELECT p.ID FROM `{$this->wpdb->posts}` p LEFT JOIN `{$this->wpdb->posts}` pp ON pp.ID = p.post_parent WHERE p.post_parent > %d AND p.post_type = %s AND pp.ID IS NULL;";
+		
+		$attachment_ids = $this->wpdb->get_col($this->wpdb->prepare($sql, 0, 'attachment')); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- `$this->wpdb` is `$wpdb`
 		$count_ids = count($attachment_ids);
 
 		if ($count_ids > 0) {
@@ -64,12 +66,14 @@ class WP_Optimization_attachments extends WP_Optimization {
 	public function after_get_info() {
 
 		if ($this->found_count) {
+			// translators: %s: number of orphaned attachments
 			$message = sprintf(_n('%s orphaned attachment found', '%s orphaned attachments found', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No orphaned attachments found', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s: number of sites
 			$message .= ' '.sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -81,8 +85,8 @@ class WP_Optimization_attachments extends WP_Optimization {
 	 */
 	public function get_info() {
 
-		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->posts . "` p LEFT JOIN `" . $this->wpdb->posts . "` pp ON pp.ID = p.post_parent WHERE p.post_parent > 0 AND p.post_type = 'attachment' AND pp.ID IS NULL;";
-		$postmeta = $this->wpdb->get_var($sql);
+		$sql = "SELECT COUNT(*) FROM `{$this->wpdb->posts}` p LEFT JOIN `{$this->wpdb->posts}` pp ON pp.ID = p.post_parent WHERE p.post_parent > %d AND p.post_type = %s AND pp.ID IS NULL;";
+		$postmeta = $this->wpdb->get_var($this->wpdb->prepare($sql, 0, 'attachment')); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- `$this->wpdb` is `$wpdb`
 
 		$this->found_count += $postmeta;
 

@@ -21,15 +21,17 @@ function bodhi_svgs_display_thumbs() {
 
 		add_filter( 'final_output', 'bodhi_svgs_final_output' );
 		function bodhi_svgs_final_output( $content ) {
+			if ($content === null) {
+				return '';
+			}
 
 			$content = str_replace(
 				'<# } else if ( \'image\' === data.type && data.sizes && data.sizes.full ) { #>',
 				'<# } else if ( \'svg+xml\' === data.subtype ) { #>
 					<img class="details-image" src="{{ data.url }}" draggable="false" />
 					<# } else if ( \'image\' === data.type && data.sizes && data.sizes.full ) { #>',
-
-					$content
-					);
+				$content
+			);
 
 			$content = str_replace(
 				'<# } else if ( \'image\' === data.type && data.sizes ) { #>',
@@ -38,12 +40,10 @@ function bodhi_svgs_display_thumbs() {
 						<img src="{{ data.url }}" class="thumbnail" draggable="false" />
 					</div>
 					<# } else if ( \'image\' === data.type && data.sizes ) { #>',
-
-					$content
-					);
+				$content
+			);
 
 			return $content;
-
 		}
 
 	}

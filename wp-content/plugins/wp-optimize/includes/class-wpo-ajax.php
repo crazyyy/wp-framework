@@ -62,12 +62,12 @@ class WPO_Ajax {
 		$this->set_heartbeat_subaction($action);
 
 		if (!$this->is_user_capable()) {
-			return json_encode($this->send_user_capability_error_response(false));
+			return wp_json_encode($this->send_user_capability_error_response(false));
 		}
 
 		if (is_multisite() && !current_user_can('manage_network_options')) {
 			if (!$this->is_valid_multisite_command()) {
-				return json_encode($this->send_invalid_multisite_command_error_response(false));
+				return wp_json_encode($this->send_invalid_multisite_command_error_response(false));
 			}
 		}
 
@@ -138,7 +138,7 @@ class WPO_Ajax {
 			$this->set_error_response_on_json_encode_error($json_last_error);
 		}
 
-		echo $this->results;
+		echo $this->results; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output already escaped
 		die;
 	}
 
@@ -382,6 +382,7 @@ class WPO_Ajax {
 		$this->results = array(
 			'result' => false,
 			'error_code' => 'command_not_found',
+			// translators: %s is an ajax command name
 			'error_message' => sprintf(__('The command "%s" was not found', 'wp-optimize'), $this->subaction)
 		);
 	}
@@ -445,14 +446,14 @@ class WPO_Ajax {
 			'error_data' => '',
 		);
 
-		$this->results = json_encode($this->results);
+		$this->results = wp_json_encode($this->results);
 	}
 
 	/**
 	 * Json encode the `results` property value
 	 */
 	private function json_encode_results() {
-		$this->results = json_encode($this->results);
+		$this->results = wp_json_encode($this->results);
 	}
 }
 

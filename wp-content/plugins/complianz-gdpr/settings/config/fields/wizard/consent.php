@@ -13,28 +13,12 @@ function cmplz_wizard_consent_fields( $fields ) {
 				'group_id' => 'cookie-scan',
 				'help'     => [
 					'label' => 'default',
-					'title' => __( "Site scan", 'complianz-gdpr' ),
+					'title' => __( "Website Scan", 'complianz-gdpr' ),
 					'text'  => __( "If you want to clear all cookies from the plugin, you can do so here. If you want to start with a clean slate, you might need to clear your browsercache, to make sure all cookies are removed from your browser as well.",
 						"complianz-gdpr" ),
 					'url'   => 'https://complianz.io/cookie-scan-results/',
 				],
 			],
-			[
-				'id'       => 'install-burst',
-				'type'     => 'install-plugin',
-				'plugin_data' => [
-					'title' => __("Burst Statistics from Complianz", 'complianz-gdpr'),
-					'summary' => __("Self-hosted and privacy-friendly analytics tool.", 'complianz-gdpr'),
-					'slug' => 'burst-statistics',
-					'description' => "Get detailed insights into visitors' behavior with Burst Statistics, the privacy-friendly analytics dashboard from Really Simple Plugins.",
-					'image' => "burst.png"
-
-				],
-				'menu_id'  => 'consent-statistics',
-				'group_id' => 'consent-statistics',
-				'label'    => '',
-			],
-
 			[
 				'id'                      => 'compile_statistics',
 				'type'                    => 'radio',
@@ -207,8 +191,7 @@ function cmplz_wizard_consent_fields( $fields ) {
 					'disabled'         => false,
 				],
 				'label'            => __( "Do you want to enable Google Consent Mode V2?", 'complianz-gdpr' ),
-				'tooltip'            => __( "Google Consent Mode is still in BETA", 'complianz-gdpr' ),
-				'comment'   => __("Consent Mode is still in BETA and you will need to verify if it's working correctly.", "complianz-gdpr").' '.cmplz_sprintf(__("Please read this %sarticle%s to make sure Consent Mode is working as expected.", "complianz-gdpr"),'<a target="_blank" href="https://complianz.io/consent-mode/">', '</a>'),
+				'comment'   => cmplz_sprintf(__("Please read this %sarticle%s to make sure Consent Mode is working as expected.", "complianz-gdpr"),'<a target="_blank" href="https://complianz.io/simplified-guide-to-google-consent-mode-v2/">', '</a>'),
 				'options'          => array(
 					'yes' => __( 'Yes', 'complianz-gdpr' ),
 					'no'  => __( 'No', 'complianz-gdpr' ),
@@ -401,6 +384,30 @@ function cmplz_wizard_consent_fields( $fields ) {
 					]
 				],
 				'tooltip'                 => __( "For the Google Tag Manager code, log in and you will immediatly see your container codes. The one next to your website name is the code you will need to fill in here, the container ID.", 'complianz-gdpr' ),
+			],
+			[
+				'id'               => 'gtm_code_head',
+				'menu_id'          => 'statistics-configuration',
+				'type'             => 'radio',
+				'default'          => 'no',
+				'premium'          => [
+					'url'     => 'https://complianz.io/pricing',
+					'disabled'=> false,
+				],
+				'label'            => __( "Do you want to force the script in the header?", 'complianz-gdpr' ),
+				'options'          => array(
+					'yes' => __( 'Yes - (Experimental)', 'complianz-gdpr' ),
+					'no'  => __( 'No', 'complianz-gdpr' ),
+				),
+				'comment'          => __("It's possible that forcing this script in the header breaks configurations and integrations with other plugins.", "complianz-gdpr"),
+				'disabled'         => true,
+				'react_conditions' => [
+					'relation' => 'AND',
+					[
+						'compile_statistics' => [ 'google-analytics', 'google-tag-manager' ],
+						'configuration_by_complianz' => 'yes'
+					]
+				],
 			],
 			[
 				'id'                      => 'aw_code',

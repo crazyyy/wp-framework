@@ -1,0 +1,19 @@
+.cmplz-support-alert {
+  padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+  border-radius: var(--rsp-border-radius);
+  margin-top: var(--rsp-spacing-s);
+  margin-bottom: var(--rsp-spacing-xs);
+  width: 100%;
+  display: flex;
+
+  .cmplz-icon {
+    margin-right: 10px;
+  }
+
+  &.cmplz-success {
+    background-color: var(--rsp-green-faded);
+  }
+  &.cmplz-warning {
+    background-color: var(--rsp-red-faded);
+  }
+}

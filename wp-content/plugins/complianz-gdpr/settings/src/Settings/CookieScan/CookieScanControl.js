@@ -17,6 +17,7 @@ const CookieScanControl = () => {
 	const {addHelpNotice, fieldsLoaded} = useFields();
 	const {selectedSubMenuItem } = useMenu();
 	const {setProgressLoaded} = useProgress();
+	const [wscLocked, setWscLocked] = useState(false);
 
 	useEffect ( () => {
 		if (lastLoadedIframe === nextPage) return;
@@ -50,7 +51,17 @@ const CookieScanControl = () => {
 		}
 	},[fieldsLoaded]);
 
-
+	useEffect(() => {
+		const checkWscLock = async () => {
+			try {
+				const response = await cmplz_api.doAction('get_wsc_status', {});
+				setWscLocked(response.wsc_lock);
+			} catch (error) {
+				console.error('Error activating Website Scan:', error);
+			}
+		};
+		checkWscLock();
+	}, []);
 
 	const doNotTrack = () => {
 		let dnt = 'doNotTrack' in navigator && navigator.doNotTrack === '1';
@@ -141,9 +152,38 @@ const CookieScanControl = () => {
 		description = <Icon name = "loading" color = 'grey' />;
 	}
 
-	let scanDisabled = progress<100 && progress>0;
+	let scanProgress = progress < 100 && progress > 0;
+	let scanDisabled = wscLocked ? true : scanProgress;
+
+	const startOnboardingFromWscAlert = () => {
+		const url = new URL(cmplz_settings.dashboard_url);
+		url.searchParams.set('websitescan', '');
+		setTimeout(() => {
+			window.location.href = url.href;
+		}, 500);
+	}
+
 	return (
 		<>
+			{wscLocked &&
+				<div className="cmplz-wscscan-alert">
+					<Icon name={'warning'} color={'orange'} size={48}/>
+					<div className="cmplz-wscscan-alert-group">
+						<div className="cmplz-wscscan-alert-group-title">{__("Advanced Scan Unavailable", "complianz-gdpr")}</div>
+						<div className="cmplz-wscscan-alert-group-desc">{__("We need to authenticate this domain.", "complianz-gpdr")}</div>
+					</div>
+
+					<div className="cmplz-wscscan-alert-desc-long">
+						{__("The new advanced Website Scan needs to authenticate your website for security purposes. It only takes a second!")}
+					</div>
+					<div>
+						<button type="button" onClick={startOnboardingFromWscAlert} className="cmplz-wscscan-alert button-secondary">
+							{__("Start", "complianz-gdpr")}
+						</button>
+					</div>
+				</div>
+			}
+
 			<div className="cmplz-table-header">
 				<button disabled={scanDisabled} className="button button-default" onClick={ (e) => Start(e) }>{__("Scan","complianz-gdpr")}</button>
 				<button disabled={scanDisabled} className="button button-default cmplz-reset-button" onClick={ (e) => clearCookies(e) }>{__("Clear Cookies","complianz-gdpr")}</button>

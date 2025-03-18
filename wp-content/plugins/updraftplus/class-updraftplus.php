@@ -94,6 +94,7 @@ class UpdraftPlus {
 		global $pagenow;
 		// Initialisation actions - takes place on plugin load
 
+		// phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_fopen,WordPress.WP.AlternativeFunctions.file_system_operations_fread,WordPress.WP.AlternativeFunctions.file_system_operations_fclose,WordPress.WP.AlternativeFunctions.file_system_operations_readfile,WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents,WordPress.WP.AlternativeFunctions.file_system_operations_fwrite   -- suggesting using the interactive WP Filesystem API (or any other API) for read-access to files is absurd; and all write operations in this file are non-interactive, to known-writable directories
 		if ($fp = fopen(UPDRAFTPLUS_DIR.'/updraftplus.php', 'r')) {
 			$file_data = fread($fp, 1024);
 			if (preg_match("/Version: ([\d\.]+)(\r|\n)/", $file_data, $matches)) {
@@ -187,6 +188,7 @@ class UpdraftPlus {
 		if (!wp_next_scheduled('updraftplus_clean_temporary_files')) {
 			wp_schedule_event(time(), 'twicedaily', 'updraftplus_clean_temporary_files');
 		}
+		// phpcs:enable
 	}
 
 	/**
@@ -389,16 +391,16 @@ class UpdraftPlus {
 	/**
 	 * Attempt to close the connection to the browser, optionally with some output sent first, whilst continuing execution
 	 *
-	 * @param String $txt - output to send
+	 * @param String $txt - JSON-encoded output to send
 	 */
 	public function close_browser_connection($txt = '') {
 		// Close browser connection so that it can resume AJAX polling
 		header('Content-Length: '.(empty($txt) ? '0' : 4+strlen($txt)));
 		header('Connection: close');
-		header('Content-Encoding: none');
+		header('Content-Encoding: application/json'); // Used to be 'none', but all inputs to this method are JSON-encoded
 		if (function_exists('session_id') && session_id()) session_write_close();
 		echo "\r\n\r\n";
-		echo $txt;
+		echo $txt; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- All inputs to this method are already JSON-encoded, and the output context is not HTML
 		// These two added - 19-Feb-15 - started being required on local dev machine, for unknown reason (probably some plugin that started an output buffer).
 		$ob_level = ob_get_level();
 		while ($ob_level > 0) {
@@ -604,7 +606,7 @@ class UpdraftPlus {
 				if (!isset($storage_objects_and_ids[$method]['object']) || !is_object($storage_objects_and_ids[$method]['object'])) {
 					updraft_try_include_file('methods/'.$method.'.php', 'include_once');
 					$call_class = "UpdraftPlus_BackupModule_".$method;
-					if (!class_exists($call_class)) die(htmlspecialchars($call_class)." class couldn't be found");
+					if (!class_exists($call_class)) die(esc_html($call_class)." class couldn't be found");
 					$backup_obj = new $call_class;
 				} else {
 					$backup_obj = $storage_objects_and_ids[$method]['object'];
@@ -649,9 +651,9 @@ class UpdraftPlus {
 				// At some point, it may be worth merging this with the previous section
 				$updraft_dir = $this->backups_dir_location();
 				
-				$findex = isset($_GET['findex']) ? (int) $_GET['findex'] : 0;
-				$backup_timestamp = $_GET['backup_timestamp'];
-				$what = (string) $_GET['what'];
+				$findex = isset($_GET['findex']) ? (int) stripslashes((string) $_GET['findex']) : 0;
+				$backup_timestamp = stripslashes((string) $_GET['backup_timestamp']);
+				$what = stripslashes((string) $_GET['what']);
 				
 				$backup_set = UpdraftPlus_Backup_History::get_history($backup_timestamp);
 
@@ -705,7 +707,7 @@ class UpdraftPlus {
 			return;
 		}
 		
-		wp_die('<h1>'.__('Under Maintenance', 'updraftplus') .'</h1><p>'.__('Briefly unavailable for scheduled maintenance.', 'updraftplus').' '.__('Check back in a minute.', 'updraftplus').'</p>');
+		wp_die('<h1>'.esc_html__('Under Maintenance', 'updraftplus') .'</h1><p>'.esc_html(__('Briefly unavailable for scheduled maintenance.', 'updraftplus').' '.__('Check back in a minute.', 'updraftplus')).'</p>');
 	}
 
 	/**
@@ -1019,7 +1021,9 @@ class UpdraftPlus {
 		
 		$mp = (int) $wpdb->get_var("SELECT @@session.max_allowed_packet");
 
-		$logline = "UpdraftPlus WordPress backup plugin (https://updraftplus.com): ".$this->version." WP: ".$wp_version." PHP: ".phpversion()." (".PHP_SAPI.", ".(function_exists('php_uname') ? @php_uname() : PHP_OS).") MySQL: $mysql_version (max packet size=$mp) WPLANG: ".get_locale()." Server: ".$_SERVER["SERVER_SOFTWARE"]." safe_mode: $safe_mode max_execution_time: $max_execution_time memory_limit: $memory_limit (used: {$memory_usage}M | {$memory_usage2}M) multisite: ".(is_multisite() ? (is_subdomain_install() ? 'Y (sub-domain)' : 'Y (sub-folder)') : 'N')." openssl: ".(defined('OPENSSL_VERSION_TEXT') ? OPENSSL_VERSION_TEXT : 'N')." mcrypt: ".(function_exists('mcrypt_encrypt') ? 'Y' : 'N')." LANG: ".getenv('LANG')." ZipArchive::addFile: ";// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
+		$proxy = new WP_HTTP_Proxy();
+
+		$logline = "UpdraftPlus WordPress backup plugin (https://updraftplus.com): ".$this->version." WP: ".$wp_version." PHP: ".phpversion()." (".PHP_SAPI.", ".(function_exists('php_uname') ? @php_uname() : PHP_OS).") MySQL: $mysql_version (max packet size=$mp) WPLANG: ".get_locale()." Server: ".$_SERVER["SERVER_SOFTWARE"]." safe_mode: $safe_mode max_execution_time: $max_execution_time memory_limit: $memory_limit (used: {$memory_usage}M | {$memory_usage2}M) multisite: ".(is_multisite() ? (is_subdomain_install() ? 'Y (sub-domain)' : 'Y (sub-folder)') : 'N')." openssl: ".(defined('OPENSSL_VERSION_TEXT') ? OPENSSL_VERSION_TEXT : 'N')." mcrypt: ".(function_exists('mcrypt_encrypt') ? 'Y' : 'N')." LANG: ".getenv('LANG')." WP Proxy: ".($proxy->is_enabled() ? 'enabled' : 'disabled')." ZipArchive::addFile: ";// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 
 		// method_exists causes some faulty PHP installations to segfault, leading to support requests
 		if (version_compare(phpversion(), '5.2.0', '>=') && extension_loaded('zip')) {
@@ -1186,8 +1190,8 @@ class UpdraftPlus {
 				break;
 		}
 
-		if (defined('UPDRAFTPLUS_CONSOLELOG') && UPDRAFTPLUS_CONSOLELOG) echo $line."\n";
-		if (defined('UPDRAFTPLUS_BROWSERLOG') && UPDRAFTPLUS_BROWSERLOG) echo htmlentities($line)."<br>\n";
+		if (defined('UPDRAFTPLUS_CONSOLELOG') && UPDRAFTPLUS_CONSOLELOG) echo $line."\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This constant can only be set deliberately by a user who is indicating he requires raw output on in a console (i.e. non-HTML) context
+		if (defined('UPDRAFTPLUS_BROWSERLOG') && UPDRAFTPLUS_BROWSERLOG) echo esc_html($line)."<br>\n";
 	}
 
 	/**
@@ -1272,12 +1276,15 @@ class UpdraftPlus {
 	 * Outputs data to the browser.
 	 * Will also fill the buffer on nginx systems after a specified amount of time.
 	 *
-	 * @param String $line The text to output
+	 * @param String $line The text to output. This may validly include HTML.
+	 *
 	 * @return void
 	 */
 	public function output_to_browser($line) {
-		echo $line;
+		echo wp_kses_post($line);
 		if (false === stripos($_SERVER['SERVER_SOFTWARE'], 'nginx')) return;
+		// Change it to what was actually output
+		$line = wp_kses_post($line);
 		static $strcount = 0;
 		static $time = 0;
 		$buffer_size = 65536; // The default NGINX config uses a buffer size of 32 or 64k, depending on the system. So we use 64K.
@@ -1290,7 +1297,7 @@ class UpdraftPlus {
 				$strcount = $strcount - $buffer_size;
 				return;
 			}
-			echo str_repeat(" ", ($buffer_size-$strcount));
+			echo str_repeat(' ', $buffer_size-$strcount); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Absurd false positive
 			// reset values
 			$time = time();
 			$strcount = 0;
@@ -2253,7 +2260,8 @@ class UpdraftPlus {
 		if ($last_bnonce) $this->jobdata_reset();
 		$last_bnonce = $bnonce;
 	
-		set_error_handler(array($this, 'php_error'), E_ALL & ~E_STRICT);
+		$error_levels = version_compare(PHP_VERSION, '8.4.0', '>=') ? E_ALL : E_ALL & ~E_STRICT;
+		set_error_handler(array($this, 'php_error'), $error_levels);
 
 		$this->current_resumption = $resumption_no;
 
@@ -3883,7 +3891,7 @@ class UpdraftPlus {
 		
 		if (!class_exists('UpdraftPlus_Notices')) updraft_try_include_file('includes/updraftplus-notices.php', 'include_once');
 		global $updraftplus_notices;
-		$ws_advert = $updraftplus_notices->do_notice(false, 'report-plain', true);
+		$ws_notice = $updraftplus_notices->do_notice(false, 'report-plain', true);
 		
 		$body = apply_filters('updraft_report_body',
 			__('Backup of:', 'updraftplus').' '.site_url()."\r\n".
@@ -3893,7 +3901,7 @@ class UpdraftPlus {
 			$extra_msg.
 			"\r\n".
 			$feed.
-			$ws_advert."\r\n".
+			$ws_notice."\r\n".
 			$append_log,
 			$final_message,
 			$backup_contains,
@@ -4108,14 +4116,14 @@ class UpdraftPlus {
 		foreach ($this->errors as $err) {
 			if (is_wp_error($err)) {
 				foreach ($err->get_error_messages() as $msg) {
-					echo '<li>'.htmlspecialchars($msg).'<li>';
+					echo '<li>'.esc_html($msg).'<li>';
 				}
 			} elseif (is_array($err) && ('error' == $err['level'] || 'warning' == $err['level'])) {
-				echo "<li>".htmlspecialchars($err['message'])."</li>";
+				echo "<li>".esc_html($err['message'])."</li>";
 			} elseif (is_string($err)) {
-				echo "<li>".htmlspecialchars($err)."</li>";
+				echo "<li>".esc_html($err)."</li>";
 			} else {
-				print "<li>".print_r($err, true)."</li>";
+				print "<li>".esc_html(print_r($err, true))."</li>";
 			}
 		}
 		echo '</ul>';
@@ -4851,7 +4859,7 @@ class UpdraftPlus {
 		if (function_exists('set_time_limit')) @set_time_limit(900);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 
 		if (!file_exists($fullpath) || filesize($fullpath) < 1) {
-			_e('File not found', 'updraftplus');
+			esc_html_e('File not found', 'updraftplus');
 			return;
 		}
 
@@ -6270,6 +6278,7 @@ class UpdraftPlus {
 				return $value1 != $value2;
 				break;
 			default:
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error messages should be escaped when caught and printed.
 				throw new Exception(__METHOD__.": Unsupported (".$operator.") operator", 1);
 				break;
 		}
@@ -6379,7 +6388,7 @@ class UpdraftPlus {
 		if (file_exists($checkout_embed_product_file)) {
 			$checkout_embed_products = json_decode(file_get_contents($checkout_embed_product_file));
 		} else {
-			throw new Exception(sprintf("The %s file is missing.", $checkout_embed_product_file));
+			throw new Exception(sprintf("The %s file is missing.", $checkout_embed_product_file)); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error messages should be escaped when caught and printed.
 		}
 
 		$checkout_embed_products = apply_filters('updraftplus_checkout_embed_products', $checkout_embed_products);
@@ -6432,10 +6441,16 @@ class UpdraftPlus {
 	 * @return mixed Unserialized data can be any of types (integer, float, boolean, string, array or object)
 	 */
 	public static function unserialize($serialized_data, $allowed_classes = false, $max_depth = 0) {
-		if (version_compare(PHP_VERSION, '7.0', '<')) {
-			$result = unserialize($serialized_data);
+		static $polyfill_unserialize_loaded = false;
+		if (version_compare(PHP_VERSION, '5.2', '<=')) {
+			$result = unserialize($serialized_data); // For PHP 5.2 users, the search-replace feature has been removed, meaning that any input provided in this context will not undergo search-replace processing
 		} else {
-			$result = unserialize($serialized_data, array('allowed_classes' => $allowed_classes, 'max_depth' => $max_depth)); //phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound
+			if (!$polyfill_unserialize_loaded) {
+				if (!class_exists('Brumann\Polyfill\DisallowedClassesSubstitutor')) updraft_try_include_file('vendor/brumann/polyfill-unserialize/src/DisallowedClassesSubstitutor.php', 'require_once');
+				if (!class_exists('Brumann\Polyfill\Unserialize')) updraft_try_include_file('vendor/brumann/polyfill-unserialize/src/Unserialize.php', 'require_once');
+				$polyfill_unserialize_loaded = true;
+			}
+			$result = call_user_func(array('Brumann\Polyfill\Unserialize', 'unserialize'), $serialized_data, array('allowed_classes' => $allowed_classes, 'max_depth' => $max_depth));
 		}
 		return $result;
 	}

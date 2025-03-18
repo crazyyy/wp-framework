@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -47,9 +49,9 @@ class Ai1wm_Compatibility {
 		foreach ( $extensions as $extension_name => $extension_data ) {
 			if ( ! Ai1wm_Compatibility::check( $extension_data ) ) {
 				if ( defined( 'WP_CLI' ) ) {
-					$messages[] = sprintf( __( '%s is not the latest version. You must update the plugin before you can use it. ', AI1WM_PLUGIN_NAME ), $extension_data['title'] );
+					$messages[] = sprintf( __( '%s is out of date. Please update this extension before using it.', AI1WM_PLUGIN_NAME ), $extension_data['title'] );
 				} else {
-					$messages[] = sprintf( __( '<strong>%s</strong> is not the latest version. You must <a href="%s">update the plugin</a> before you can use it. <br />', AI1WM_PLUGIN_NAME ), $extension_data['title'], network_admin_url( 'plugins.php' ) );
+					$messages[] = sprintf( __( '<strong>%s</strong> is out of date. You must <a href="%s">update this extension</a> before using it.<br />', AI1WM_PLUGIN_NAME ), $extension_data['title'], network_admin_url( 'plugins.php' ) );
 				}
 			}
 		}

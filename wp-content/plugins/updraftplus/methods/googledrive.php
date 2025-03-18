@@ -808,7 +808,6 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 	}
 
 	public function bootstrap($access_token = false) {
-
 		$storage = $this->get_storage();
 
 		if (!empty($storage) && is_object($storage) && is_a($storage, 'UDP_Google_Service_Drive')) return $storage;
@@ -816,6 +815,8 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		$opts = $this->get_options();
 
 		$use_master = $this->use_master($opts);
+
+		$curl_exists = function_exists('curl_version') && function_exists('curl_exec');
 
 		if (!$use_master) {
 			if (empty($opts['token']) || empty($opts['clientid']) || empty($opts['secret'])) {
@@ -926,7 +927,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		$config = new UDP_Google_Config();
 		$config->setClassConfig('UDP_Google_IO_Abstract', 'request_timeout_seconds', 60);
 		// In our testing, $storage->about->get() fails if gzip is not disabled when using the stream wrapper
-		if (!function_exists('curl_version') || !function_exists('curl_exec') || (defined('UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP') && UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP)) {
+		if (!$curl_exists || (defined('UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP') && UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP)) {
 			$config->setClassConfig('UDP_Google_Http_Request', 'disable_gzip', true);
 		}
 
@@ -938,7 +939,20 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$client_secret = '';
 		}
 
+		$proxy = new WP_HTTP_Proxy();
 		$client = new UDP_Google_Client($config);
+
+		$is_proxy_enabled = false;
+		if ($proxy->is_enabled() && $proxy->send_through_proxy($client->getBasePath())) {
+			$is_proxy_enabled = true;
+			if ($curl_exists && !defined('CURLOPT_PROXY')) {
+				$this->log('cURL transports couldn\'t be used because a proxy is set but the installed cURL version doesn\'t support proxy connections. Stream/socket transports (UDP_Google_IO_Stream) are being used instead.');
+				$config->setIoClass('UDP_Google_IO_Stream');
+				// Redeclare the client to use UDP_Google_IO_Stream
+				$client = new UDP_Google_Client($config);
+			}
+		}
+
 		$client->setClientId($client_id);
 		$client->setClientSecret($client_secret);
 		// $client->setUseObjects(true);
@@ -963,12 +977,28 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$setopts[CURLOPT_CONNECTTIMEOUT] = 15;
 			if (defined('UPDRAFTPLUS_IPV4_ONLY') && UPDRAFTPLUS_IPV4_ONLY) $setopts[CURLOPT_IPRESOLVE] = CURL_IPRESOLVE_V4;
 			$setopts[CURLOPT_HTTP_VERSION] = defined('UPDRAFTPLUS_GDRIVE_CURL_HTTP_VERSION') ? UPDRAFTPLUS_GDRIVE_CURL_HTTP_VERSION : CURL_HTTP_VERSION_1_1;
+
+			if ($is_proxy_enabled) {
+				$port = (int) $proxy->port();
+				if (empty($port)) $port = 8080;
+
+				$setopts[CURLOPT_PROXY] = $proxy->host();
+				$setopts[CURLOPT_PROXYPORT] = $port;
+				$setopts[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
+			}
 		} elseif (is_a($io, 'UDP_Google_IO_Stream')) {
 			$setopts['timeout'] = 60;
 			// We had to modify the SDK to support this
 			// https://wiki.php.net/rfc/tls-peer-verification - before PHP 5.6, there is no default CA file
 			if (!UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts') || (version_compare(PHP_VERSION, '5.6.0', '<'))) $setopts['cafile'] = UPDRAFTPLUS_DIR.'/includes/cacert.pem';
 			if (UpdraftPlus_Options::get_updraft_option('updraft_ssl_disableverify')) $setopts['disable_verify_peer'] = true;
+
+			if ($is_proxy_enabled) {
+				$port = (int) $proxy->port();
+				if (empty($port)) $port = 8080;
+
+				$setopts['proxy'] = $proxy->host().':'.$port;
+			}
 		}
 
 		$io->setOptions($setopts);
@@ -1364,7 +1394,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		fclose($handle);
 		$transkey = $transkey = 'resume_'.md5($file);
 		$this->jobdata_delete($transkey, 'gd'.$transkey);
-		if (false == $try_again) throw($e);
+		if (false == $try_again) throw $e;
 		// Reset this counter to prevent the something_useful_happened condition's possibility being sent into the far future and potentially missed
 		global $updraftplus;
 		if ($updraftplus->current_resumption > 9) $updraftplus->jobdata_set('uploaded_lastreset', $updraftplus->current_resumption);

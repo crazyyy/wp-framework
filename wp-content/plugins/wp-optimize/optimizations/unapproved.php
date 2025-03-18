@@ -30,6 +30,8 @@ class WP_Optimization_unapproved extends WP_Optimization {
 		}
 
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is global `$wpdb->prepare`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare("
 			SELECT
 				c.comment_ID,
@@ -51,6 +53,7 @@ class WP_Optimization_unapproved extends WP_Optimization {
 		);
 
 		$comments = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// fix empty revision titles.
 		if (!empty($comments)) {
@@ -73,7 +76,7 @@ class WP_Optimization_unapproved extends WP_Optimization {
 		// get total count comments for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->comments . "` WHERE comment_approved = '0' ".$retention_subquery.";";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 
 		return array(
 			'id_key' => 'comment_ID',
@@ -96,9 +99,11 @@ class WP_Optimization_unapproved extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s is the number of unapproved comments deleted
 		$message = sprintf(_n('%s unapproved comment deleted', '%s unapproved comments deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -139,12 +144,14 @@ class WP_Optimization_unapproved extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		if ($this->found_count) {
+			// translators: %s is the number of unapproved comments
 			$message = sprintf(_n('%s unapproved comment found', '%s unapproved comments found', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
 			$message = __('No unapproved comments found', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$message .= ' ' . sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 		}
 
@@ -167,12 +174,13 @@ class WP_Optimization_unapproved extends WP_Optimization {
 		}
 		$sql .= ';';
 
-		$comments = $this->wpdb->get_var($sql);
+		$comments = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe, no user input used
 		$this->found_count += $comments;
 	}
 
 	public function settings_label() {
 		if ('true' == $this->retention_enabled) {
+			// translators: %d is the number of weeks
 			return sprintf(__('Remove unapproved comments which are older than %d weeks', 'wp-optimize'), $this->retention_period);
 		} else {
 			return __('Remove unapproved comments', 'wp-optimize');

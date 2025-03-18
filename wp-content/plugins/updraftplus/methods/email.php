@@ -103,7 +103,7 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 		global $updraftplus;
 		?>
 		<tr class="updraftplusmethod email">
-			<th><?php _e('Note:', 'updraftplus');?></th>
+			<th><?php esc_html_e('Note:', 'updraftplus');?></th>
 			<td><?php
 
 				$used = apply_filters('updraftplus_email_whichaddresses',
@@ -111,7 +111,14 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 					' <a href="'.$updraftplus->get_url('premium').'" target="_blank">'.__('For more options, use Premium', 'updraftplus').'</a>'
 				);
 
-				echo $used.' '.sprintf(__('Be aware that mail servers tend to have size limits; typically around %s MB; backups larger than any limits will likely not arrive.', 'updraftplus'), '10-20');
+				$allowed_html = array(
+					'a' => array(
+						'href'   => array(),
+						'target' => array(),
+					)
+				);
+
+				echo wp_kses($used.' '.sprintf(__('Be aware that mail servers tend to have size limits; typically around %s MB; backups larger than any limits will likely not arrive.', 'updraftplus'), '10-20'), $allowed_html);
 				?>
 			</td>
 		</tr>

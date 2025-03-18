@@ -101,7 +101,7 @@ class UpdraftPlus_BackupModule_template extends UpdraftPlus_BackupModule {
 		$classes = $this->get_css_classes();
 	
 		?>
-			<tr class="updraftplusmethod <?php echo $classes;?>">
+			<tr class="updraftplusmethod <?php echo esc_attr($classes);?>">
 				<th>My Method:</th>
 				<td>
 					

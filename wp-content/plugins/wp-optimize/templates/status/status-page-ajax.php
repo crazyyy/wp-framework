@@ -21,7 +21,7 @@ foreach ($report_data as $block) :
 	<table class="wp-list-table widefat fixed striped table-view-list wp-optimize_page_wpo_settings">
 	<?php
 	foreach ($block['items'] as $info) :
-		$title = strip_tags($info['title']);
+		$title = wp_strip_all_tags($info['title']);
 		$value = $info['value'];
 		$markdown_value = isset($info['markdown_value']) ? $info['markdown_value'] : $value;
 		?>
@@ -30,7 +30,7 @@ foreach ($report_data as $block) :
 			<td><?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output already escaped ?></td>
 		</tr>
 	<?php
-		$markdown_report .= $title . ': ' . esc_html(strip_tags($markdown_value)) . "\n";
+		$markdown_report .= $title . ': ' . esc_html(wp_strip_all_tags($markdown_value)) . "\n";
 	endforeach;
 	$markdown_report .= "\n";
 	?>

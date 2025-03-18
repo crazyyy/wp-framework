@@ -86,7 +86,7 @@ if (!empty($_COOKIE)) {
 	}
 
 	// get cookie exceptions from options.
-	$cache_exception_cookies = !empty($GLOBALS['wpo_cache_config']['cache_exception_cookies']) ? $GLOBALS['wpo_cache_config']['cache_exception_cookies'] : array();
+	$cache_exception_cookies = empty($GLOBALS['wpo_cache_config']['cache_exception_cookies']) ? array() : $GLOBALS['wpo_cache_config']['cache_exception_cookies'];
 	// filter cookie exceptions, since WP 4.6
 	$cache_exception_cookies = function_exists('apply_filters') ? apply_filters('wpo_cache_exception_cookies', $cache_exception_cookies) : $cache_exception_cookies;
 

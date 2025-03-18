@@ -136,7 +136,7 @@ class Updraft_Dashboard_News {
 		if (!$this->do_ajax_dashboard_news()) return;
 		
 		remove_filter('wp_die_ajax_handler', array($this, 'wp_die_ajax_handler'));
-		echo $this->get_dashboard_news_html();
+		echo wp_kses_post($this->get_dashboard_news_html());
 		wp_die();
 	}
 	
@@ -189,8 +189,8 @@ class Updraft_Dashboard_News {
 		ob_start();
 		wp_dashboard_primary_output('dashboard_primary', $feeds);
 		$original_formatted_news = ob_get_clean();
-		$formatted_news = preg_replace('/<a(.+?)>(.+?)<\/a>/i', "<a$1>".$this->translations['item_prefix'].": $2</a>", $original_formatted_news);
-		$formatted_news = str_replace('<li>', '<li class="'.$this->slug.'_dashboard_news_item">'.'<a href="'.esc_url(UpdraftPlus::get_current_clean_url()).'" class="dashicons dashicons-no-alt" title="'.esc_attr($this->translations['dismiss_tooltip']).'" onClick="'.$this->slug.'_dismiss_dashboard_news(); return false;" style="float: right; box-shadow: none; margin-left: 5px;"></a>', $formatted_news);
+		$formatted_news = preg_replace('/<a(.+?)>(.+?)<\/a>/i', "<a$1>".esc_html($this->translations['item_prefix']).": $2</a>", $original_formatted_news);
+		$formatted_news = str_replace('<li>', '<li class="'.esc_attr($this->slug).'_dashboard_news_item">'.'<a href="'.esc_url(UpdraftPlus::get_current_clean_url()).'" class="dashicons dashicons-no-alt" title="'.esc_attr($this->translations['dismiss_tooltip']).'" onClick="'.esc_js($this->slug).'_dismiss_dashboard_news(); return false;" style="float: right; box-shadow: none; margin-left: 5px;"></a>', $formatted_news);
 		set_transient($this->slug.'_dashboard_news', $formatted_news, 43200); // 12 hours
 
 		return $formatted_news;
@@ -202,19 +202,19 @@ class Updraft_Dashboard_News {
 	public function admin_print_footer_scripts() {
 		?>
 		<script>
-		function <?php echo $this->slug; ?>_dismiss_dashboard_news() {
+		function <?php echo esc_js($this->slug); ?>_dismiss_dashboard_news() {
 			if (confirm("<?php echo esc_js($this->translations['dismiss_confirm']); ?>")) {
 				jQuery.ajax({
-					url: '<?php echo admin_url('admin-ajax.php');?>',
+					url: '<?php echo esc_url(admin_url('admin-ajax.php'));?>',
 					data : {
-						action: '<?php echo $this->slug; ?>_ajax_dismiss_dashboard_news',
-						nonce : '<?php echo wp_create_nonce($this->slug.'-dismiss-news-nonce');?>'
+						action: '<?php echo esc_js($this->slug); ?>_ajax_dismiss_dashboard_news',
+						nonce : '<?php echo esc_js(wp_create_nonce($this->slug.'-dismiss-news-nonce'));?>'
 					},
 					success: function(response) {
-						jQuery('.<?php echo $this->slug; ?>_dashboard_news_item').slideUp('slow');
+						jQuery('.<?php echo esc_js($this->slug); ?>_dashboard_news_item').slideUp('slow');
 					},
 					error: function(response, status, error_code) {
-						console.log("<?php echo $this->slug; ?>_dismiss_dashboard_news: error: "+status+" ("+error_code+")");
+						console.log("<?php echo esc_js($this->slug); ?>_dismiss_dashboard_news: error: "+status+" ("+error_code+")");
 						console.log(response);
 					}
 				});

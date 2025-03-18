@@ -47,6 +47,8 @@ class WP_Optimization_spam extends WP_Optimization {
 		}
 
 		// get data requested for preview.
+		// `$this->wpdb->prepare` is global `$wpdb->prepare`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT comment_ID, comment_author, SUBSTR(comment_content, 1, 128) AS comment_content FROM".
 			" `" . $this->wpdb->comments . "`".
@@ -60,6 +62,7 @@ class WP_Optimization_spam extends WP_Optimization {
 		);
 
 		$comments = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// fix empty revision titles.
 		if (!empty($comments)) {
@@ -77,7 +80,7 @@ class WP_Optimization_spam extends WP_Optimization {
 		// get total count comments for optimization.
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->comments . "` WHERE comment_approved = '{$type}' ".$retention_subquery.";";
 
-		$total = $this->wpdb->get_var($sql);
+		$total = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe no user input used
 
 		return array(
 			'id_key' => 'comment_ID',
@@ -106,11 +109,14 @@ class WP_Optimization_spam extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s: number of spam comments deleted
 		$message = sprintf(_n('%s spam comment deleted', '%s spam comments deleted', $this->processed_spam_count, 'wp-optimize'), number_format_i18n($this->processed_spam_count));
+		// translators: %s: number of comments removed from Trash
 		$message1 = sprintf(_n('%s comment removed from Trash', '%s comments removed from Trash', $this->processed_trash_count, 'wp-optimize'), number_format_i18n($this->processed_trash_count));
 
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s: number of sites
 			$blogs_count_text = sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 
 			$message .= ' '.$blogs_count_text;
@@ -173,6 +179,7 @@ class WP_Optimization_spam extends WP_Optimization {
 	public function after_get_info() {
 
 		if ($this->found_spam_count > 0) {
+			// translators: %s: number of spam comments
 			$message = sprintf(_n('%s spam comment found', '%s spam comments found', $this->found_spam_count, 'wp-optimize'), number_format_i18n($this->found_spam_count));
 
 			// if current version is not premium and Preview feature not supported then
@@ -186,6 +193,7 @@ class WP_Optimization_spam extends WP_Optimization {
 		}
 
 		if ($this->found_trash_count > 0) {
+			// translators: %s is the number of trashed comments
 			$message1 = sprintf(_n('%s trashed comment found', '%s trashed comments found', $this->found_trash_count, 'wp-optimize'), number_format_i18n($this->found_trash_count));
 
 			// if current version is not premium and Preview feature not supported then
@@ -198,6 +206,7 @@ class WP_Optimization_spam extends WP_Optimization {
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is the number of sites
 			$blogs_count_text = sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 
 			$message .= ' '.$blogs_count_text;
@@ -239,7 +248,7 @@ class WP_Optimization_spam extends WP_Optimization {
 		}
 		$sql .= ';';
 
-		return $this->wpdb->get_var($sql);
+		return $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- safe
 	}
 
 	/**
@@ -248,6 +257,7 @@ class WP_Optimization_spam extends WP_Optimization {
 	public function settings_label() {
 	
 		if ('true' == $this->retention_enabled) {
+			// translators: %s is the number of weeks
 			return sprintf(__('Remove spam and trashed comments which are older than %d weeks', 'wp-optimize'), $this->retention_period);
 		} else {
 			return __('Remove spam and trashed comments', 'wp-optimize');

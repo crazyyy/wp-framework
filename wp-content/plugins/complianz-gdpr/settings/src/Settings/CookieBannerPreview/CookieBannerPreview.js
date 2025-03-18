@@ -196,13 +196,6 @@ const CookieBannerPreview = () => {
 				await updatePreview();
 			}
 		}
-
-		if ( getFieldValue('soft_cookiewall')==1 ) {
-			setBannerContainerClass('cmplz-soft-cookiewall');
-			setTimeout(function(){
-				setBannerContainerClass('');
-			}, 4000)
-		}
 	}
 
 	useEffect(() => {

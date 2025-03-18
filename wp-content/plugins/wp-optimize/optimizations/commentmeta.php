@@ -29,6 +29,8 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 		$type = isset($params['type']) && 'akismet' == $params['type'] ? 'akismet' : 'trash';
 
 		// get data requested for preview.
+		// Suppress WordPress.DB.PreparedSQL.NotPrepared errors, these are safe and prepared. `$this->wpdb` is $wpdb`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT * FROM `" . $this->wpdb->commentmeta . "`".
 			" WHERE ".
@@ -43,6 +45,7 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 		);
 
 		$posts = $this->wpdb->get_results($sql, ARRAY_A);
+		// phpcs:enable
 
 		// fix empty revision titles.
 		if (!empty($posts)) {
@@ -55,6 +58,8 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 		}
 
 		// get total count comments for optimization.
+		// Suppress WordPress.DB.PreparedSQL.NotPrepared errors, these are safe and prepared. `$this->wpdb` is $wpdb`
+		// phpcs:disable
 		$sql = $this->wpdb->prepare(
 			"SELECT COUNT(*) FROM `" . $this->wpdb->comments . "`".
 				"WHERE ".
@@ -67,6 +72,7 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 		);
 
 		$total = $this->wpdb->get_var($sql);
+		// phpcs:enable
 
 		return array(
 			'id_key' => 'meta_id',
@@ -96,10 +102,13 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 	 * Do actions after optimize() function.
 	 */
 	public function after_optimize() {
+		// translators: %s is a number of unused comment metadata item removed
 		$message = sprintf(_n('%s unused comment metadata item removed', '%s unused comment metadata items removed', $this->processed_trash_count, 'wp-optimize'), number_format_i18n($this->processed_trash_count));
+		// translators: %s is a number of unused akismet comment metadata item removed
 		$message1 = sprintf(_n('%s unused akismet comment metadata item removed', '%s unused akismet comment metadata items removed', $this->processed_akismet_count, 'wp-optimize'), number_format_i18n($this->processed_akismet_count));
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is a number of sites
 			$blogs_count_text = ' '.sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 			$message .= $blogs_count_text;
 			$message1 .= $blogs_count_text;
@@ -157,18 +166,21 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 	public function after_get_info() {
 
 		if ($this->found_trash_count > 0) {
+			// translators: %s is a number of orphaned comment metadata
 			$message = sprintf(_n('%s orphaned comment meta data in your database', '%s orphaned comment meta data in your database', $this->found_trash_count, 'wp-optimize'), number_format_i18n($this->found_trash_count));
 		} else {
 			$message = __('No orphaned comment meta data in your database', 'wp-optimize');
 		}
 
 		if ($this->found_akismet_count > 0) {
+			// translators: %s is a number of unused Akismet comment metadata
 			$message1 = sprintf(_n('%s unused Akismet comment meta rows in your database', '%s unused Akismet meta rows in your database', $this->found_akismet_count, 'wp-optimize'), number_format_i18n($this->found_akismet_count));
 		} else {
 			$message1 = __('No Akismet comment meta rows in your database', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
+			// translators: %s is a number of sites
 			$blogs_count_text = ' '.sprintf(_n('across %s site', 'across %s sites', count($this->blogs_ids), 'wp-optimize'), count($this->blogs_ids));
 			$message .= $blogs_count_text;
 			$message1 .= $blogs_count_text;
@@ -193,11 +205,11 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 	public function get_info() {
 
 		$sql = "SELECT COUNT(*) FROM `" . $this->wpdb->commentmeta . "` WHERE comment_id NOT IN (SELECT comment_id FROM `" . $this->wpdb->comments . "`);";
-		$commentmeta = $this->wpdb->get_var($sql);
+		$commentmeta = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- this is safe, no user input used
 		$this->found_trash_count += $commentmeta;
 
 		$sql = "SELECT COUNT(*) FROM `".$this->wpdb->commentmeta."` WHERE meta_key LIKE '%akismet%';";
-		$akismetmeta = $this->wpdb->get_var($sql);
+		$akismetmeta = $this->wpdb->get_var($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- this is safe, no user input used
 		$this->found_akismet_count += $akismetmeta;
 
 	}

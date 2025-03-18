@@ -232,6 +232,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	protected function set_region($obj, $region, $bucket_name = '') {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $bucket_name
 
 	// AWS Regions: https://docs.aws.amazon.com/general/latest/gr/rande.html
+	// https://docs.aws.amazon.com/general/latest/gr/s3.html#auto-endpoints-s3
 		switch ($region) {
 			case 'EU':
 			case 'eu-west-1':
@@ -262,6 +263,17 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			case 'af-south-1':
 			case 'ap-east-1':
 			case 'ap-northeast-3':
+			case 'ap-south-2':
+			case 'ap-southeast-3':
+			case 'ap-southeast-5':
+			case 'ap-southeast-4':
+			case 'ap-southeast-7':
+			case 'ca-west-1':
+			case 'eu-south-2':
+			case 'eu-central-2':
+			case 'il-central-1':
+			case 'me-central-1':
+			case 'us-gov-east-1':
 			$endpoint = 's3.'.$region.'.amazonaws.com';
 				break;
 			case 'cn-north-1':
@@ -933,11 +945,16 @@ Check your permissions and credentials.','updraftplus'), 'error');
 				?>
 				<br>
 				<p>
-					<?php if ($console_url) echo sprintf(__('Get your access key and secret key from your <a href="%s">%s console</a>, then pick a (globally unique - all %s users) bucket name (letters and numbers) (and optionally a path) to use for storage.', 'updraftplus'), $console_url, $console_descrip, $whoweare_long).' '.__('This bucket will be created for you if it does not already exist.', 'updraftplus');?>
+					<?php
+						if ($console_url) {
+							$a_tag_html = array('a' => array('href' => array()));
+							echo wp_kses(sprintf(__('Get your access key and secret key from your <a href="%s">%s console</a>, then pick a (globally unique - all %s users) bucket name (letters and numbers) (and optionally a path) to use for storage.', 'updraftplus'), $console_url, $console_descrip, $whoweare_long), $a_tag_html).' '.esc_html__('This bucket will be created for you if it does not already exist.', 'updraftplus');
+						}
+					?>
 
-					<a href="<?php echo apply_filters("updraftplus_com_link", "https://updraftplus.com/faqs/i-get-ssl-certificate-errors-when-backing-up-andor-restoring/");?>" target="_blank"><?php _e('If you see errors about SSL certificates, then please go here for help.', 'updraftplus');?></a>
+					<a href="<?php echo esc_url(apply_filters("updraftplus_com_link", "https://updraftplus.com/faqs/i-get-ssl-certificate-errors-when-backing-up-andor-restoring/"));?>" target="_blank"><?php esc_html_e('If you see errors about SSL certificates, then please go here for help.', 'updraftplus');?></a>
 
-					<a href="<?php echo apply_filters("updraftplus_com_link", "https://updraftplus.com/faq-category/amazon-s3/");?>" target="_blank"><?php if ('s3' == $key) echo sprintf(__('Other %s FAQs.', 'updraftplus'), 'S3');?></a>
+					<a href="<?php echo esc_url(apply_filters("updraftplus_com_link", "https://updraftplus.com/faq-category/amazon-s3/"));?>" target="_blank"><?php if ('s3' == $key) echo esc_html(sprintf(__('Other %s FAQs.', 'updraftplus'), 'S3'));?></a>
 				</p>
 			</td>
 		</tr>
@@ -1025,10 +1042,10 @@ Check your permissions and credentials.','updraftplus'), 'error');
 		
 		if ('s3' == $key && version_compare(PHP_VERSION, '5.3.3', '>=') && class_exists('UpdraftPlus_Addon_S3_Enhanced')) {
 		?>
-			<tr class="<?php echo $classes;?>">
+			<tr class="<?php echo esc_attr($classes);?>">
 				<td colspan="2">
 				<?php
-					echo apply_filters('updraft_s3_apikeysetting', '<a href="'.$updraftplus->get_url('premium').'" target="_blank"><em>'.__('To create a new IAM sub-user and access key that has access only to this bucket, upgrade to Premium.', 'updraftplus').'</em></a>');
+					echo wp_kses_post(apply_filters('updraft_s3_apikeysetting', '<a href="'.$updraftplus->get_url('premium').'" target="_blank"><em>'.__('To create a new IAM sub-user and access key that has access only to this bucket, upgrade to Premium.', 'updraftplus').'</em></a>'));
 				?>
 				</td>
 			</tr>
@@ -1036,17 +1053,17 @@ Check your permissions and credentials.','updraftplus'), 'error');
 		}
 		?>
 
-		<tr class="<?php echo $classes;?>">
-			<th><?php echo sprintf(__('%s access key', 'updraftplus'), $whoweare_short);?>:</th>
+		<tr class="<?php echo esc_attr($classes);?>">
+			<th><?php echo esc_html(sprintf(__('%s access key', 'updraftplus'), $whoweare_short));?>:</th>
 			<td><input class="updraft_input--wide" data-updraft_settings_test="accesskey" type="text" autocomplete="off" <?php $this->output_settings_field_name_and_id('accesskey');?> value="{{accesskey}}" /></td>
 		</tr>
-		<tr class="<?php echo $classes;?>">
-			<th><?php echo sprintf(__('%s secret key', 'updraftplus'), $whoweare_short);?>:</th>
-			<td><input class="updraft_input--wide" data-updraft_settings_test="secretkey" type="<?php echo apply_filters('updraftplus_admin_secret_field_type', 'password'); ?>" autocomplete="off" <?php $this->output_settings_field_name_and_id('secretkey');?> value="{{secretkey}}" /></td>
+		<tr class="<?php echo esc_attr($classes);?>">
+			<th><?php echo esc_html(sprintf(__('%s secret key', 'updraftplus'), $whoweare_short));?>:</th>
+			<td><input class="updraft_input--wide" data-updraft_settings_test="secretkey" type="<?php echo esc_attr(apply_filters('updraftplus_admin_secret_field_type', 'password')); ?>" autocomplete="off" <?php $this->output_settings_field_name_and_id('secretkey');?> value="{{secretkey}}" /></td>
 		</tr>
-		<tr class="<?php echo $classes;?>">
-			<th><?php echo sprintf(__('%s location', 'updraftplus'), $whoweare_short);?>:</th>
-			<td><?php echo $key; ?>://<input class="updraft_input--wide" data-updraft_settings_test="path" title="<?php echo htmlspecialchars(__('Enter only a bucket name or a bucket and path.', 'updraftplus').' '.__('Examples: mybucket, mybucket/mypath', 'updraftplus')); ?>" type="text" <?php $this->output_settings_field_name_and_id('path');?> value="{{path}}" /></td>
+		<tr class="<?php echo esc_attr($classes);?>">
+			<th><?php echo esc_html(sprintf(__('%s location', 'updraftplus'), $whoweare_short));?>:</th>
+			<td><?php echo esc_html($key); ?>://<input class="updraft_input--wide" data-updraft_settings_test="path" title="<?php echo esc_attr(__('Enter only a bucket name or a bucket and path.', 'updraftplus').' '.__('Examples: mybucket, mybucket/mypath', 'updraftplus')); ?>" type="text" <?php $this->output_settings_field_name_and_id('path');?> value="{{path}}" /></td>
 		</tr>
 		<?php
 		$template_str .= ob_get_clean();
@@ -1363,11 +1380,11 @@ Check your permissions and credentials.','updraftplus'), 'error');
 	public function credentials_test($posted_settings) {
 
 		if (empty($posted_settings['accesskey'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('API key', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('API key', 'updraftplus')));
 			return;
 		}
 		if (empty($posted_settings['secretkey'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('API secret', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('API secret', 'updraftplus')));
 			return;
 		}
 
@@ -1389,12 +1406,12 @@ Check your permissions and credentials.','updraftplus'), 'error');
 		}
 
 		if (empty($bucket)) {
-			_e("Failure: No bucket details were given.", 'updraftplus');
+			esc_html_e("Failure: No bucket details were given.", 'updraftplus');
 			return;
 		}
 		
 		if (!$this->provider_has_regions && '' == $endpoint) {
-			_e("Failure: No endpoint details were given.", 'updraftplus');
+			esc_html_e("Failure: No endpoint details were given.", 'updraftplus');
 			return;
 		}
 		
@@ -1409,7 +1426,7 @@ Check your permissions and credentials.','updraftplus'), 'error');
 		$storage = $this->getS3($key, $secret, $useservercerts, $disableverify, $nossl, null, $sse, $session_token);
 		if (is_wp_error($storage)) {
 			foreach ($storage->get_error_messages() as $msg) {
-				echo $msg."\n";
+				echo esc_html($msg)."\n";
 			}
 			return;
 		}
@@ -1433,11 +1450,11 @@ Check your permissions and credentials.','updraftplus'), 'error');
 
 		if (empty($bucket_exists)) {
 		
-			echo __('Failure: We could not successfully access or create such a bucket.', 'updraftplus').' '.sprintf(__('Please check your access credentials, and if those are correct then try another bucket name (as another %s user may already have taken your name).', 'updraftplus'), $whoweare);
+			echo esc_html(__('Failure: We could not successfully access or create such a bucket.', 'updraftplus').' '.sprintf(__('Please check your access credentials, and if those are correct then try another bucket name (as another %s user may already have taken your name).', 'updraftplus'), $whoweare));
 			
-			if (!empty($this->s3_exception)) echo "\n\n".sprintf(__('The error reported by %s was:', 'updraftplus'), $whoweare).' '.$this->s3_exception;
+			if (!empty($this->s3_exception)) echo "\n\n".esc_html(sprintf(__('The error reported by %s was:', 'updraftplus'), $whoweare).' '.$this->s3_exception);
 			
-			if ('s3' == $config['key'] && 'AK' != substr($key, 0, 2)) echo "\n\n".sprintf(__('The AWS access key looks to be wrong (valid %s access keys begin with "AK")', 'updraftplus'), $whoweare);
+			if ('s3' == $config['key'] && 'AK' != substr($key, 0, 2)) echo "\n\n".esc_html(sprintf(__('The AWS access key looks to be wrong (valid %s access keys begin with "AK")', 'updraftplus'), $whoweare));
 		
 		} else {
 		
@@ -1446,26 +1463,26 @@ Check your permissions and credentials.','updraftplus'), 'error');
 			$storage->setExceptions(true);
 			try {
 				if (!$storage->putObjectString($try_file, $bucket, $path.$try_file)) {
-					echo __('Failure', 'updraftplus').": {$bucket_verb}".__('We successfully accessed the bucket, but the attempt to create a file in it failed.', 'updraftplus');
+					echo esc_html(__('Failure', 'updraftplus').": {$bucket_verb}".__('We successfully accessed the bucket, but the attempt to create a file in it failed.', 'updraftplus'));
 				} else {
-					echo __('Success', 'updraftplus').": {$bucket_verb}".__('We accessed the bucket, and were able to create files within it.', 'updraftplus').' ';
+					echo esc_html(__('Success', 'updraftplus').": {$bucket_verb}".__('We accessed the bucket, and were able to create files within it.', 'updraftplus')).' ';
 					$comm_with = ('' !== $endpoint) ? $endpoint : $config['whoweare_long'];
 					if ($storage->getuseSSL()) {
-						echo sprintf(__('The communication with %s was encrypted.', 'updraftplus'), $comm_with);
+						echo esc_html(sprintf(__('The communication with %s was encrypted.', 'updraftplus'), $comm_with));
 					} else {
-						echo sprintf(__('The communication with %s was not encrypted.', 'updraftplus'), $comm_with);
+						echo esc_html(sprintf(__('The communication with %s was not encrypted.', 'updraftplus'), $comm_with));
 					}
 					$create_success = true;
 				}
 			} catch (Exception $e) {
-				echo __('Failure', 'updraftplus').": {$bucket_verb}".__('We successfully accessed the bucket, but the attempt to create a file in it failed.', 'updraftplus').' '.__('Please check your access credentials.', 'updraftplus').' ('.$e->getMessage().')';
+				echo esc_html(__('Failure', 'updraftplus').": {$bucket_verb}".__('We successfully accessed the bucket, but the attempt to create a file in it failed.', 'updraftplus').' '.__('Please check your access credentials.', 'updraftplus').' ('.$e->getMessage().')');
 			}
 
 			if (!empty($create_success)) {
 				try {
 					@$storage->deleteObject($bucket, $path.$try_file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 				} catch (Exception $e) {
-					echo ' '.__('Delete failed:', 'updraftplus').' '.$e->getMessage();
+					echo esc_html(' '.__('Delete failed:', 'updraftplus').' '.$e->getMessage());
 				}
 			}
 

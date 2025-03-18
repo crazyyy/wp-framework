@@ -41,7 +41,7 @@ class Dropbox_Encrypter
             # Short-cut so that the mbstring extension is not required
             $this->key = $key;
         } elseif (($length = mb_strlen($key, '8bit')) !== self::KEY_SIZE) {
-            throw new Dropbox_Exception('Expecting a ' .  self::KEY_SIZE . ' byte key, got ' . $length);
+            throw new Dropbox_Exception('Expecting a ' .  self::KEY_SIZE . ' byte key, got ' . $length); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
         } else {
             // Set the encryption key
             $this->key = $key;

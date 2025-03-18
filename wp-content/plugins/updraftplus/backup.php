@@ -157,10 +157,8 @@ class UpdraftPlus_Backup {
 
 		$this->site_name = $this->get_site_name();
 
-		// Decide which zip engine to begin with
 		$this->debug = UpdraftPlus_Options::get_updraft_option('updraft_debug_mode');
 		$this->updraft_dir = $updraftplus->backups_dir_location();
-
 
 		updraft_try_include_file('includes/class-database-utility.php', 'require_once');
 
@@ -2831,7 +2829,7 @@ class UpdraftPlus_Backup {
 	 * @param String $hex Hexadecimal number
 	 * @return String a base2 format of the given hexadecimal number
 	 */
-	public function hex2bin($hex) {
+	private function hex2bin($hex) {
 		$table = array(
 			'0' => '0000',
 			'1' => '0001',
@@ -3016,6 +3014,16 @@ class UpdraftPlus_Backup {
 				}
 			}
 			$this->stow("# Site info: sql_mode=".$this->wpdb_obj->get_var('SELECT @@SESSION.sql_mode')."\n");
+
+			add_filter('updraftplus_backup_db_header_site_info', array($this, 'backup_db_header_site_info_woocommerce'));
+
+			// This filter allows a user to add extra information about site info.
+			if (array() !== ($site_info = apply_filters('updraftplus_backup_db_header_site_info', array()))) {
+				foreach ($site_info as $info) {
+					$this->stow("# Site info: ".$info."\n");
+				}
+			}
+
 			$this->stow("# Site info: end\n");
 		} else {
 			$this->stow("# MySQL database backup (supplementary database ".$this->whichdb.")\n");
@@ -3466,7 +3474,7 @@ class UpdraftPlus_Backup {
 			if (file_exists($examine_zip) && is_readable($examine_zip) && filesize($examine_zip) > 0) {
 
 				// Do not use (which also means do not create) a manifest if the file is still a .tmp file, since this may not be complete. If we are in this place in the code from a resumption, creating a manifest here will mean the manifest becomes out-of-date if further files are added.
-				$this->populate_existing_files_list($examine_zip, substr($examine_zip, -4, 4) === '.zip');
+				$this->populate_existing_files_list_from_zip($examine_zip, substr($examine_zip, -4, 4) === '.zip');
 
 				// try_split is true if there have been no check-ins recently - or if it needs to be split anyway
 				if ($j == $this->index) {
@@ -3493,7 +3501,7 @@ class UpdraftPlus_Backup {
 				$updraftplus->log("Zip file already exists, but is not readable or was zero-sized; will remove: ".basename($examine_zip));
 				@unlink($examine_zip);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
 			} elseif ($updraftplus->is_uploaded(basename($examine_zip))) {
-				$this->populate_existing_files_list($examine_zip, true);
+				$this->populate_existing_files_list_from_zip($examine_zip, true);
 			}
 		}
 
@@ -3902,7 +3910,7 @@ class UpdraftPlus_Backup {
 	 * We batch up the files, rather than do them one at a time. So we are more efficient than open,one-write,close.
 	 * To call into here, the array $this->zipfiles_batched must be populated (keys=paths, values=add-to-zip-as values). It gets reset upon exit from here.
 	 *
-	 * @param Boolean $warn_on_failures See if it warns on failures or not
+	 * @param Boolean $warn_on_failures - If set, then log at the 'warning' level
 	 *
 	 * @return Boolean|WP_Error
 	 */
@@ -4009,6 +4017,7 @@ class UpdraftPlus_Backup {
 		while ($dir = array_pop($this->zipfiles_dirbatched)) {
 			$zip->addEmptyDir($dir);
 		}
+		
 		$zipfiles_added_thisbatch = 0;
 
 		// Go through all those batched files
@@ -4043,9 +4052,7 @@ class UpdraftPlus_Backup {
 
 				$updraftplus->log(sprintf($log_msg, $add_as, round($fsize/1048576, 1)), 'warning', $large_file_warning_key);
 
-				if ('-final' == substr($large_file_warning_key, -6, 6)) {
-					continue;
-				}
+				if (preg_match('/-final$/', $large_file_warning_key)) continue;
 			}
 
 			// Skips files that are already added
@@ -4127,11 +4134,6 @@ class UpdraftPlus_Backup {
 						$ret = false;
 						$this->record_zip_error($files_zipadded_since_open, $zip->last_error, $warn_on_failures);
 					}
-
-					// if ($data_added_this_resumption > $max_data_added_any_resumption) {
-					// $max_data_added_any_resumption = $data_added_this_resumption;
-					// $updraftplus->jobdata_set('max_data_added_any_resumption', $max_data_added_any_resumption);
-					// }
 
 					$zipfiles_added_thisbatch = 0;
 
@@ -4452,14 +4454,18 @@ class UpdraftPlus_Backup {
 	}
 
 	/**
-	 * This function will populate $this->existing_files with a list of files found inside the passed in zip
+	 * This function will populate class variables (given below) with a list of files found inside the passed in zip
 	 *
 	 * @param string  $zip_path           - the zip file name we want to list files for; must end in .tmp
 	 * @param boolean $read_from_manifest - a boolean to indicate if we should try to read from the manifest or not
 	 *
+	 * @uses self::$existing_files
+	 * @uses self::$existing_files_rawsize
+	 * @uses self::$existing_zipfiles_size
+	 *
 	 * @return void
 	 */
-	private function populate_existing_files_list($zip_path, $read_from_manifest) {
+	private function populate_existing_files_list_from_zip($zip_path, $read_from_manifest) {
 		global $updraftplus;
 
 		// Get the name of the final manifest file
@@ -4661,6 +4667,31 @@ class UpdraftPlus_Backup {
 			if (0 === stripos($file, $pattern['directory']) && preg_match($pattern['regex'], $file)) return true;
 		}
 		return $filter;
+	}
+
+	/**
+	 * Adds WooCommerce-related information to the site info header for backup purposes.
+	 *
+	 * This method checks if WooCommerce is active and appends relevant information about
+	 * WooCommerce's state to the provided site info array. Specifically, it includes:
+	 * - Whether WooCommerce is active.
+	 * - Whether the High-Performance Order Storage (HPOS) feature is enabled.
+	 *
+	 * @param array $site_info The existing array of site information to which WooCommerce details will be appended.
+	 * @return array The updated site info array with WooCommerce-related details included.
+	 */
+	public function backup_db_header_site_info_woocommerce($site_info) {
+		if (class_exists('WooCommerce')) {
+			$wc_version = defined('WC_VERSION') ? WC_VERSION : get_option('woocommerce_version');
+			$info = 'WooCommerce='.$wc_version;
+
+			if (class_exists('Automattic\WooCommerce\Utilities\OrderUtil') && is_callable(array('Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled')) && call_user_func(array('Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled'))) {
+				$info .= ',HPOS=enabled';
+			}
+
+			$site_info[] = $info;
+		}
+		return $site_info;
 	}
 }
 

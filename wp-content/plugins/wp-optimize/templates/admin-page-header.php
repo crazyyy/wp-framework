@@ -23,7 +23,7 @@
 	</p>
 
 	<div class="wpo-logo__container">
-		<img class="wpo-logo" src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/wp_optimize_logo.png');?>" alt="" />
+		<img class="wpo-logo" src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/wp_optimize_logo.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="" />
 		<?php
 			$sqlversion = (string) $wp_optimize->get_db_info()->get_version();
 			echo '<strong>WP-Optimize '.(WP_Optimize::is_premium() ? esc_html__('Premium', 'wp-optimize') : '' ).' <span class="wpo-version">'.esc_html(WPO_VERSION).'</span></strong>';

@@ -18,7 +18,7 @@
 
 		<input id="wp-optimize-save-database-settings" class="button button-primary wpo-save-settings" type="submit" name="wp-optimize-settings" value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>">
 		
-		<img class="wpo_spinner wpo-saving-settings" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+		<img class="wpo_spinner wpo-saving-settings" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 		
 		<span class="dashicons dashicons-yes display-none save-done"></span>
 

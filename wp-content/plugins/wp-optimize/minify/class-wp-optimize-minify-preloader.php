@@ -137,6 +137,7 @@ class WP_Optimize_Minify_Preloader extends WP_Optimize_Preloader {
 	protected function get_last_preload_message($minify_cache_data, $last_preload_time_str) {
 		return array(
 			'done' => true,
+			// translators: %s: last preload time
 			'message' => sprintf(__('Last preload finished at %s', 'wp-optimize'), $last_preload_time_str),
 			'size' => WP_Optimize()->format_size($minify_cache_data['size']),
 			'total_size' => $minify_cache_data['total_size']

@@ -22,7 +22,7 @@
 		<?php if ($tab_icon) : ?>
 			<span class="dashicons dashicons-<?php echo esc_attr($tab_icon); ?>"></span>
 		<?php endif; ?>
-		<span><?php echo $tab_title; ?></span>
+		<span><?php echo wp_kses_post($tab_title); ?></span>
 	</a>
 
 	<?php } ?>

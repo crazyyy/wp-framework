@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -32,8 +34,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php
 	printf(
 		__(
-			'<h3>Site could not be exported</h3>' .
-			'<p>Please make sure that storage directory <strong>%s</strong> has read and write permissions.</p>' .
+			'<h3>Could not export site</h3>' .
+			'<p>Please ensure the directory <strong>%s</strong> has read/write permissions.</p>' .
 			'<p><a href="https://help.servmask.com/knowledgebase/invalid-file-permissions/" target="_blank">Technical details</a></p>',
 			AI1WM_PLUGIN_NAME
 		),

@@ -51,7 +51,7 @@ abstract class UpdraftCentral_Host {
 		if (empty($key) || !isset($this->translations[$key])) return '';
 
 		if ($echo) {
-			echo $this->translations[$key];
+			echo esc_html($this->translations[$key]);
 			return;
 		}
 
@@ -143,7 +143,7 @@ abstract class UpdraftCentral_Host {
 
 				if (is_string($results)) {
 					// A handful of legacy methods, and some which are directly the source for iframes, for which JSON is not appropriate.
-					echo $results;
+					echo $results; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- We don't escape here to avoid double escaping and keep the HTML code needed by the receiver of this request. 
 				} else {
 					echo json_encode($results);
 				}

@@ -2,7 +2,14 @@
 
 <div id="wp-optimize-dashnotice" class="updated">
 
-	<div style="float: right;"><a href="#" onclick="jQuery('#wp-optimize-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'wp_optimize_ajax', subaction: 'dismiss_dash_notice_until', nonce: '<?php echo esc_js(wp_create_nonce('wp-optimize-ajax-nonce')); ?>'});"><?php printf(esc_html__('Dismiss (for %s months)', 'wp-optimize'), 12); ?></a></div>
+	<div style="float: right;">
+		<a href="#" onclick="jQuery('#wp-optimize-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'wp_optimize_ajax', subaction: 'dismiss_dash_notice_until', nonce: '<?php echo esc_js(wp_create_nonce('wp-optimize-ajax-nonce')); ?>'});">
+			<?php
+				// translators: %s is number of months
+				printf(esc_html__('Dismiss (for %s months)', 'wp-optimize'), 12);
+			?>
+		</a>
+	</div>
 	
 <?php if ($is_premium) : ?>
 	<h3><?php esc_html_e('Thank you for installing WP-Optimize Premium.', 'wp-optimize'); ?></h3>	
@@ -10,7 +17,7 @@
 	<h3><?php esc_html_e('Thank you for installing WP-Optimize.', 'wp-optimize'); ?></h3>
 <?php endif; ?>
 
-	<a href="https://getwpo.com" target="_blank"><img style="border: 0px; float: right; width: 150px; margin-right: 40px;" alt="WP-Optimize" title="WP-Optimize" src="<?php echo esc_url(WPO_PLUGIN_URL.'images/logo/wpo_logo_small.png'); ?>"></a>
+	<a href="https://getwpo.com" target="_blank"><img style="border: 0px; float: right; width: 150px; margin-right: 40px;" alt="WP-Optimize" title="WP-Optimize" src="<?php echo esc_url(WPO_PLUGIN_URL.'images/logo/wpo_logo_small.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>"></a>
 
 	<div id="wp-optimize-dashnotice-wrapper" style="max-width: 800px;">
 	
@@ -38,6 +45,7 @@
 				$message .= esc_html__('Unlock new ways to speed up your WordPress website.', 'wp-optimize');
 				$message .= ' ';
 				$message .= sprintf(
+					// translators: %s is a link
 					esc_html__('Optimize from the WP-CLI, cache multilingual and multicurrency websites, get premium support and %s.', 'wp-optimize'),
 					sprintf(
 						'<a href="%s" target="_blank">%s</a>',
@@ -96,7 +104,10 @@
 		?>
 		</p>
 		<p>
-			<?php echo '<strong>'.esc_html__('More quality plugins', 'wp-optimize').': </strong>'.$wp_optimize->wp_optimize_url('https://www.simbahosting.co.uk/s3/shop/', __('Premium WooCommerce plugins', 'wp-optimize'), '', '', true); ?>
+			<strong><?php esc_html_e('More quality plugins', 'wp-optimize'); ?>: </strong>
+			<?php
+				$wp_optimize->wp_optimize_url('https://www.simbahosting.co.uk/s3/shop/', esc_html__('Premium WooCommerce plugins', 'wp-optimize'), '', '', false);
+			?>
 		</p>
 		<p>&nbsp;</p>
 	</div>

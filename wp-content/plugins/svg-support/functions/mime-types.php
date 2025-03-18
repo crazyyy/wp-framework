@@ -25,7 +25,12 @@ function bodhi_svgs_upload_mimes( $mimes = array() ) {
     
     // Get the current user and their roles
     $user = wp_get_current_user();
-    $current_user_roles = ( array ) $user->roles;
+    $current_user_roles = (array) $user->roles;
+
+    // For multisite, add network admin to allowed roles
+    if (is_multisite() && is_super_admin()) {
+        $current_user_roles[] = 'administrator';
+    }
 
     // Check if the user has the capability or the role
     $is_role_allowed = array_intersect($allowed_roles_array, $current_user_roles);
@@ -90,3 +95,23 @@ function bodhi_svgs_allow_svg_upload( $data, $file, $filename, $mimes ) {
 	return $data;
 }
 add_filter( 'wp_check_filetype_and_ext', 'bodhi_svgs_allow_svg_upload', 10, 4 );
+
+function bodhi_svgs_multisite_settings($mimes) {
+    // Check if this is a multisite installation
+    if (is_multisite()) {
+        // Get the site ID
+        $blog_id = get_current_blog_id();
+        
+        // Allow SVG on main site
+        if (is_main_site()) {
+            return $mimes;
+        }
+        
+        // For subsites, check if upload_files capability is allowed
+        if (get_site_option('upload_space_check_disabled')) {
+            return $mimes;
+        }
+    }
+    return $mimes;
+}
+add_filter('upload_mimes', 'bodhi_svgs_multisite_settings', 98);

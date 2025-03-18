@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -49,14 +51,14 @@ class Ai1wm_Import_Check_Decryption_Password {
 				$archive = new Ai1wm_Extractor( ai1wm_archive_path( $params ), $params['decryption_password'] );
 				$archive->extract_by_files_array( ai1wm_storage_path( $params ), array( AI1WM_MULTISITE_NAME, AI1WM_DATABASE_NAME ), array(), array() );
 
-				Ai1wm_Status::info( __( 'Done validating the decryption password.', AI1WM_PLUGIN_NAME ) );
+				Ai1wm_Status::info( __( 'Decryption password validated.', AI1WM_PLUGIN_NAME ) );
 
 				$ai1wm_params = $params;
 
 				return $params;
 			}
 
-			$decryption_password_error = __( 'The decryption password is not valid.', AI1WM_PLUGIN_NAME );
+			$decryption_password_error = __( 'The decryption password is not valid. The process cannot continue.', AI1WM_PLUGIN_NAME );
 
 			if ( defined( 'WP_CLI' ) ) {
 				WP_CLI::error( $decryption_password_error );

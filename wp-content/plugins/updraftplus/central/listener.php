@@ -23,6 +23,8 @@ class UpdraftCentral_Listener {
 
 	private $command_classes;
 
+	private $auto_logged_in_cookie;
+
 	/**
 	 * Class constructor
 	 *
@@ -168,6 +170,21 @@ class UpdraftCentral_Listener {
 			'command' => $command
 		);
 	}
+
+	/**
+	 * In response to auto logging in the user; set a corresponding logged_in cookie to the $login_user_cookie class variable
+	 *
+	 * @param String  $cookie     Authentication cookie
+	 * @param Integer $user_id    User ID
+	 * @param Integer $expiration The time the cookie expires as a UNIX timestamp
+	 * @param String  $scheme     Cookie scheme used. Accepts 'auth', 'secure_auth', or 'logged_in'
+	 */
+	public function set_global_logged_in_cookie($cookie, $user_id, $expiration, $scheme) {
+		if ('logged_in' === $scheme) {
+			$this->auto_logged_in_cookie = $cookie;
+		}
+		return $cookie;
+	}
 	
 	/**
 	 * Do verification before calling this method
@@ -181,10 +198,17 @@ class UpdraftCentral_Listener {
 			// Don't check that it's a WP_User - that's WP 3.5+ only
 			if (!is_object($user) || empty($user->ID)) return;
 			wp_set_current_user($user->ID, $user->user_login);
+			add_filter('auth_cookie', array($this, 'set_global_logged_in_cookie'), 10, 4);
 			wp_set_auth_cookie($user->ID);
+			remove_filter('auth_cookie', array($this, 'set_global_logged_in_cookie'), 10, 4);
 			do_action('wp_login', $user->user_login, $user);
 		}
 		if ($redirect_url) {
+			// the wp_set_auth_cookie() above uses setcookie() function but the corresponding LOGGED_IN_COOKIE variable is visible and can only be accessible on the next page load
+			// so we set the auth cookie into the superglobal $_COOKIE variable manually, we do this because the previously non logged-in user is now being auto-logged in and wp_create_nonce() needs the value of LOGGED_IN_COOKIE variable to produce a correct nonce
+			if ($this->auto_logged_in_cookie) $_COOKIE[LOGGED_IN_COOKIE] = $this->auto_logged_in_cookie;
+			$redirect_url = add_query_arg('restore_initiation_nonce', wp_create_nonce('updraftplus_udcentral_initiate_restore'), $redirect_url);
+			if ($this->auto_logged_in_cookie) unset($_COOKIE[LOGGED_IN_COOKIE]);
 			wp_safe_redirect($redirect_url);
 			exit;
 		}

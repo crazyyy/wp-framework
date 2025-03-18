@@ -9,6 +9,14 @@
   ],
   "creatorBuild" : "34576",
   "files" : {
+    "\/.gitignore" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/.gitignore",
+      "oF" : 0
+    },
     "\/admin\/admin-init.php" : {
       "cB" : 0,
       "ft" : 8192,
@@ -52,6 +60,22 @@
       "hM" : 0,
       "oA" : 2,
       "oAP" : "\/admin\/svgs-settings-page.php",
+      "oF" : 0
+    },
+    "\/composer.json" : {
+      "ft" : 524288,
+      "oA" : 1,
+      "oAP" : "\/composer-min.json",
+      "oF" : 0,
+      "oO" : 0,
+      "oS" : 1
+    },
+    "\/composer.lock" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/composer.lock",
       "oF" : 0
     },
     "\/css\/jquery.dropdown-min.css" : {
@@ -152,6 +176,14 @@
       "hM" : 0,
       "oA" : 2,
       "oAP" : "\/functions\/localization.php",
+      "oF" : 0
+    },
+    "\/functions\/meta-cleanup.php" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/functions\/meta-cleanup.php",
       "oF" : 0
     },
     "\/functions\/mime-types.php" : {
@@ -321,6 +353,25 @@
       "oA" : 2,
       "oAP" : "\/languages\/svgsupport.pot",
       "oF" : 0
+    },
+    "\/README.md" : {
+      "cB" : 0,
+      "cS" : 0,
+      "eF" : 1,
+      "eL" : 1,
+      "ema" : 1,
+      "eSQ" : 1,
+      "ft" : 4096,
+      "hM" : 0,
+      "oA" : 1,
+      "oAP" : "\/README.html",
+      "oF" : 1,
+      "oFM" : 0,
+      "oS" : 0,
+      "pHT" : 0,
+      "pME" : 1,
+      "rFN" : 0,
+      "uCM" : 0
     },
     "\/readme.txt" : {
       "cB" : 0,
@@ -530,16 +581,638 @@
       "oAP" : "\/vendor\/composer\/platform_check.php",
       "oF" : 0
     },
-    "\/vendor\/DOMPurify\/DOMPurify.js" : {
+    "\/vendor\/cure53\/dompurify\/.babelrc" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.babelrc",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.editorconfig" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.editorconfig",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.github\/dependabot.yml" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.github\/dependabot.yml",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.github\/FUNDING.yml" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.github\/FUNDING.yml",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.github\/ISSUE_TEMPLATE.md" : {
+      "cB" : 0,
+      "cS" : 0,
+      "eF" : 1,
+      "eL" : 1,
+      "ema" : 1,
+      "eSQ" : 1,
+      "ft" : 4096,
+      "hM" : 0,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.github\/ISSUE_TEMPLATE.html",
+      "oF" : 0,
+      "oFM" : 0,
+      "oS" : 0,
+      "pHT" : 0,
+      "pME" : 1,
+      "rFN" : 0,
+      "uCM" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.github\/PULL_REQUEST_TEMPLATE.md" : {
+      "cB" : 0,
+      "cS" : 0,
+      "eF" : 1,
+      "eL" : 1,
+      "ema" : 1,
+      "eSQ" : 1,
+      "ft" : 4096,
+      "hM" : 0,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.github\/PULL_REQUEST_TEMPLATE.html",
+      "oF" : 0,
+      "oFM" : 0,
+      "oS" : 0,
+      "pHT" : 0,
+      "pME" : 1,
+      "rFN" : 0,
+      "uCM" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.github\/workflows\/build-and-test.yml" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.github\/workflows\/build-and-test.yml",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.github\/workflows\/codeql-analysis.yml" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.github\/workflows\/codeql-analysis.yml",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.gitignore" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.gitignore",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.nvmrc" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.nvmrc",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.prettierignore" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.prettierignore",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.prettierrc" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.prettierrc",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/.settings\/.gitignore" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/.settings\/.gitignore",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/bower.json" : {
+      "ft" : 524288,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/bower-min.json",
+      "oF" : 0,
+      "oO" : 0,
+      "oS" : 1
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/advanced-config-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/advanced-config-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/basic-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/basic-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/config-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/config-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-link-proxy-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-link-proxy-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-mentaljs-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-mentaljs-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-node-removal-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-node-removal-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-node-removal2-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-node-removal2-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-proxy-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-proxy-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-removal-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-removal-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-sanitize-css-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-sanitize-css-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-scheme-allowlist.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-scheme-allowlist.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-svg-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-svg-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/hooks-target-blank-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/hooks-target-blank-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/lib\/Mental.js" : {
       "bF" : 0,
       "ft" : 64,
       "ma" : 0,
       "mi" : 1,
       "oA" : 0,
-      "oAP" : "\/vendor\/DOMPurify\/DOMPurify-min.js",
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/lib\/Mental-min.js",
       "oF" : 0,
       "sC" : 3,
       "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/README.md" : {
+      "cB" : 0,
+      "cS" : 0,
+      "eF" : 1,
+      "eL" : 1,
+      "ema" : 1,
+      "eSQ" : 1,
+      "ft" : 4096,
+      "hM" : 0,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/README.html",
+      "oF" : 0,
+      "oFM" : 0,
+      "oS" : 0,
+      "pHT" : 0,
+      "pME" : 1,
+      "rFN" : 0,
+      "uCM" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/demos\/trusted-types-demo.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/demos\/trusted-types-demo.html",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.cjs.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify.cjs-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.cjs.js.map" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify.cjs.js.map",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.es.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify.es-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.es.js.map" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify.es.js.map",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.js.map" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify.js.map",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.min.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify.min-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/dist\/purify.min.js.map" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/dist\/purify.min.js.map",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/LICENSE" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/LICENSE",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/package-lock.json" : {
+      "ft" : 524288,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/package-lock-min.json",
+      "oF" : 0,
+      "oO" : 0,
+      "oS" : 1
+    },
+    "\/vendor\/cure53\/dompurify\/package.json" : {
+      "ft" : 524288,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/package-min.json",
+      "oF" : 0,
+      "oO" : 0,
+      "oS" : 1
+    },
+    "\/vendor\/cure53\/dompurify\/README.md" : {
+      "cB" : 0,
+      "cS" : 0,
+      "eF" : 1,
+      "eL" : 1,
+      "ema" : 1,
+      "eSQ" : 1,
+      "ft" : 4096,
+      "hM" : 0,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/README.html",
+      "oF" : 0,
+      "oFM" : 0,
+      "oS" : 0,
+      "pHT" : 0,
+      "pME" : 1,
+      "rFN" : 0,
+      "uCM" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/rollup.config.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/rollup.config-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/scripts\/commit-amend-build.sh" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/scripts\/commit-amend-build.sh",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/scripts\/server.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/scripts\/server-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/SECURITY.md" : {
+      "cB" : 0,
+      "cS" : 0,
+      "eF" : 1,
+      "eL" : 1,
+      "ema" : 1,
+      "eSQ" : 1,
+      "ft" : 4096,
+      "hM" : 0,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/SECURITY.html",
+      "oF" : 0,
+      "oFM" : 0,
+      "oS" : 0,
+      "pHT" : 0,
+      "pME" : 1,
+      "rFN" : 0,
+      "uCM" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/src\/attrs.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/src\/attrs-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/src\/license_header" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/src\/license_header",
+      "oF" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/src\/purify.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/src\/purify-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/src\/regexp.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/src\/regexp-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/src\/tags.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/src\/tags-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/src\/utils.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/src\/utils-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/bootstrap-test-suite.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/bootstrap-test-suite-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/config\/setup.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/config\/setup-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/fixtures\/expect.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/fixtures\/expect-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/jsdom-node-runner.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/jsdom-node-runner-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/jsdom-node.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/jsdom-node-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/karma.conf.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/karma.conf-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/karma.custom-launchers.config.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/karma.custom-launchers.config-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/purify.min.spec.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/purify.min.spec-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/purify.spec.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 0,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/purify.spec-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/test\/test-suite.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/vendor\/cure53\/dompurify\/test\/test-suite-min.js",
+      "oF" : 0,
+      "sC" : 3,
+      "tS" : 0
+    },
+    "\/vendor\/cure53\/dompurify\/website\/index.html" : {
+      "cB" : 0,
+      "ft" : 8192,
+      "hM" : 0,
+      "oA" : 2,
+      "oAP" : "\/vendor\/cure53\/dompurify\/website\/index.html",
+      "oF" : 0
     },
     "\/vendor\/DOMPurify\/DOMPurify.min.js" : {
       "bF" : 0,
@@ -551,30 +1224,6 @@
       "oF" : 0,
       "sC" : 3,
       "tS" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/.github\/workflows\/tests.yml" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/.github\/workflows\/tests.yml",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/.gitignore" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/.gitignore",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/.travis.yml" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/.travis.yml",
-      "oF" : 0
     },
     "\/vendor\/enshrined\/svg-sanitize\/composer.json" : {
       "ft" : 524288,
@@ -590,22 +1239,6 @@
       "hM" : 0,
       "oA" : 2,
       "oAP" : "\/vendor\/enshrined\/svg-sanitize\/LICENSE",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/phpunit.xml" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/phpunit.xml",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/README.html" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/README.html",
       "oF" : 0
     },
     "\/vendor\/enshrined\/svg-sanitize\/README.md" : {
@@ -721,310 +1354,6 @@
       "hM" : 0,
       "oA" : 2,
       "oAP" : "\/vendor\/enshrined\/svg-sanitize\/src\/svg-scanner.php",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/AllowedAttributesTest.php" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/AllowedAttributesTest.php",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/AllowedTagsTest.php" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/AllowedTagsTest.php",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/ariaDataClean.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/ariaDataClean.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/ariaDataTest.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/ariaDataTest.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/badXmlTestOne.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/badXmlTestOne.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/entityClean.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/entityClean.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/entityTest.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/entityTest.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/externalClean.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/externalClean.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/externalTest.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/externalTest.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefCleanOne.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefCleanOne.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefCleanTwo.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefCleanTwo.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefTestOne.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefTestOne.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefTestTwo.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/hrefTestTwo.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/svgCleanOne.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/svgCleanOne.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/svgCleanOneMinified.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/svgCleanOneMinified.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/svgTestOne.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/svgTestOne.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useClean.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useClean.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosClean.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosClean.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosCleanTwo.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosCleanTwo.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosTest.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosTest.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosTestTwo.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useDosTestTwo.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useTest.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/useTest.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLaughsClean.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLaughsClean.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLaughsTest.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLaughsTest.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLoopClean.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLoopClean.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLoopTest.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xlinkLoopTest.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 3758088159,
-      "prP" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xmlCleanOne.xml" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xmlCleanOne.xml",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xmlTestOne.xml" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/data\/xmlTestOne.xml",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/Fixtures\/TestAllowedAttributes.php" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/Fixtures\/TestAllowedAttributes.php",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/Fixtures\/TestAllowedTags.php" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/Fixtures\/TestAllowedTags.php",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/SanitizerTest.php" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/SanitizerTest.php",
-      "oF" : 0
-    },
-    "\/vendor\/enshrined\/svg-sanitize\/tests\/SubjectTest.php" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 2,
-      "oAP" : "\/vendor\/enshrined\/svg-sanitize\/tests\/SubjectTest.php",
       "oF" : 0
     }
   },

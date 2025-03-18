@@ -95,15 +95,15 @@ abstract class WP_Optimization {
 	protected $wpdb;
 
 	/**
-	 * This is abstracted so as to provide future possibilities, e.g. logging.
+	 * This is abstracted so to provide future possibilities, e.g. logging.
 	 *
-	 * @param  string $sql The quesry for SQL to be ran.
+	 * @param  string $sql The prepared SQL query to run
 	 * @return array       Return array of results
 	 */
 	protected function query($sql) {
 		$this->sql_commands[] = $sql;
 		do_action('wp_optimize_optimization_query', $sql, $this);
-		$result = $this->wpdb->query($sql);
+		$result = $this->wpdb->query($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is already prepared
 		return apply_filters('wp_optimize_optimization_query_result', $result, $sql, $this);
 	}
 

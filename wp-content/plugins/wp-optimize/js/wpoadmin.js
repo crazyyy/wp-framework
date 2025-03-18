@@ -78,26 +78,6 @@ var WP_Optimize = function () {
 		enable_or_disable_schedule_options();
 	});
 
-	// table sorter library.
-	// This calls the tablesorter library in order to sort the table information correctly.
-	// There is a fix below on line 172 to apply applyWidgets on load to avoid display hidden for tabs.
-	// add parser through the tablesorter addParser method
-	$.tablesorter.addParser({
-		// set a unique id
-		id: 'sizes',
-		is: function(s) {
-			// return false so this parser is not auto detected
-			return false;
-		},
-		format: function(cell_content, table, cell) {
-			var val = $(cell).data('raw_value');
-			if (!val) val = 0;
-			return parseInt(val);
-		},
-		// set type, either numeric or text
-		type: 'numeric'
-	});
-
 	/*
 	 * Triggered when the database tabs are loaded.
 	 */
@@ -107,50 +87,42 @@ var WP_Optimize = function () {
 		 * Setup table events and tablesorter
 		 */
 
-		var table_list_filter = $('#wpoptimize_table_list_filter'),
-		table_list = $('#wpoptimize_table_list'),
-		table_footer_line = $('#wpoptimize_table_list tbody:last'),
-		tables_not_found = $('#wpoptimize_table_list_tables_not_found');
+		var elTable = document.getElementById('wpoptimize_table_list');
+		
+		enhanceSortableAccessibility([elTable]);
+		
+		document.getElementById('wpoptimize_table_list_filter').addEventListener('input', function () {
+			var filter = this.value.toLowerCase();
+			var regex = new RegExp(filter, 'i');
+			var tbody = elTable.querySelector('tbody');
+			var tfoot = elTable.querySelector('tfoot');
+			var rows = tbody.getElementsByTagName('tr');
+			var hidden = 0;
 
-		table_list.tablesorter({
-			theme: 'default',
-			widgets: ['zebra', 'rows', 'filter'],
-			cssInfoBlock: "tablesorter-no-sort",
-			// This option is to specify with columns will be disabled for sorting
-			headers: {
-				2: {sorter: 'digit'},
-				3: {sorter: 'sizes'},
-				4: {sorter: 'sizes'},
-				// For Column Action
-				7: {sorter: false }
-			},
-			widgetOptions: {
-				// filter_anyMatch replaced! Instead use the filter_external option
-				// Set to use a jQuery selector (or jQuery object) pointing to the
-				// external filter (column specific or any match)
-				filter_external: table_list_filter,
-				// add a default type search to the second table column
-				filter_defaultFilter: { 2 : '~{query}' }
+			for (var i = 0; i < rows.length; i++) {
+				var cell = rows[i].getElementsByTagName('td')[1];
+				if (cell) {
+					var value = cell.getAttribute('data-tablename');
+					if (regex.test(value)) {
+						rows[i].style.display = "";
+					} else {
+						rows[i].style.display = "none";
+						hidden++;
+					}
+				}
 			}
-		});
 
-		/*
-		 * After tables filtered check if we need show table footer and No tables message.
-		 */
-		table_list.on('filterEnd', function() {
-			var search_value = table_list_filter.val().trim();
-	
-			if ('' == search_value) {
-				table_footer_line.show();
+			tfoot.style.display = hidden > 0 ? "none" : "";
+
+			var tables_not_found = document.getElementById('wpoptimize_table_list_tables_not_found');
+			
+			// Check if rows are visible
+			if (hidden === rows.length) {
+				tables_not_found.style.display = 'block';
 			} else {
-				table_footer_line.hide();
+				tables_not_found.style.display = 'none';
 			}
-	
-			if (0 == $('#the-list tr:visible', table_list).length) {
-				tables_not_found.show();
-			} else {
-				tables_not_found.hide();
-			}
+
 		});
 
 		/*

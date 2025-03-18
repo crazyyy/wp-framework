@@ -233,7 +233,7 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 			'newyear' => array(
 				'prefix' => '',
 				'title' => __('New Year Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'newyearsale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('28 January', 'updraftplus')).'</b>',
+				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'newyearsale2025').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('28 January', 'updraftplus')).'</b>',
 				'image' => 'notices/sale_20_24.png',
 				'button_link' => 'https://updraftplus.com/shop/updraftplus-premium/',
 				'campaign' => 'newyear',

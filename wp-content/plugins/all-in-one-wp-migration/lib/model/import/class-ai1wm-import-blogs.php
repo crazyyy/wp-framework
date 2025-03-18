@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -131,13 +133,13 @@ class Ai1wm_Import_Blogs {
 							),
 						);
 					} else {
-						throw new Ai1wm_Import_Exception( __( 'The archive should contain <strong>Single WordPress</strong> site! Please revisit your export settings.', AI1WM_PLUGIN_NAME ) );
+						throw new Ai1wm_Import_Exception( __( 'The archive must contain only a single WordPress site. The process cannot continue. Please revisit your export settings.', AI1WM_PLUGIN_NAME ) );
 					}
 				} else {
-					throw new Ai1wm_Import_Exception( __( 'At least <strong>one WordPress</strong> site should be presented in the archive.', AI1WM_PLUGIN_NAME ) );
+					throw new Ai1wm_Import_Exception( __( 'The archive must contain at least one WordPress site. The process cannot continue. Please check your export settings.', AI1WM_PLUGIN_NAME ) );
 				}
 			} else {
-				throw new Ai1wm_Import_Exception( __( 'Unable to import <strong>WordPress Network</strong> into WordPress <strong>Single</strong> site.', AI1WM_PLUGIN_NAME ) );
+				throw new Ai1wm_Import_Exception( __( 'Could not import a WordPress Network into a single WordPress site. The process cannot continue. Please check your import settings.', AI1WM_PLUGIN_NAME ) );
 			}
 		}
 
@@ -147,7 +149,7 @@ class Ai1wm_Import_Blogs {
 		ai1wm_close( $handle );
 
 		// Set progress
-		Ai1wm_Status::info( __( 'Done preparing blogs.', AI1WM_PLUGIN_NAME ) );
+		Ai1wm_Status::info( __( 'Blogs prepared.', AI1WM_PLUGIN_NAME ) );
 
 		return $params;
 	}

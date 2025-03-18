@@ -3520,7 +3520,7 @@ jQuery(function($) {
 									} else {
 										for (var i=0; i<which_to_download.length; i++) {
 											// updraft_downloader(base, backup_timestamp, what, whicharea, set_contents, prettydate, async)
-											updraft_downloader('udrestoredlstatus_', backup_timestamp, which_to_download[i][0], '#ud_downloadstatus2', which_to_download[i][1], pretty_date, false);
+											updraft_downloader('udrestoredlstatus_', backup_timestamp, which_to_download[i][0], '#ud_downloadstatus2', which_to_download[i][1], pretty_date, true);
 										}
 									}
 		
@@ -3641,7 +3641,7 @@ jQuery(function($) {
 					var restore_options = $('#updraft_restoreoptions_ui select, #updraft_restoreoptions_ui input').serialize();
 
 					// jQuery serialize does not pick up unchecked checkboxes, but we want to include these so that we have a list of table/plugins/themes the user does not want to restore we prepend these with udp-skip-{entity}- and check this on the backend
-					var entities = ['table', 'plugins', 'themes'];
+					var entities = ['tables', 'plugins', 'themes'];
 
 					jQuery.each(entities, function(i, entity) {
 						jQuery.each(jQuery('input[name="updraft_restore_' + entity + '_options[]').filter(function(idx) {
@@ -4400,8 +4400,8 @@ jQuery(function($) {
 	
 	function updraft_restore_setup(entities, key, show_data) {
 		updraft_restore_setoptions(entities);
-		jQuery('#updraft_restore_timestamp').val(key);
-		jQuery('.updraft_restore_date').html(show_data);
+		if (key.toString().match(/^[0-9]+$/i)) jQuery('#updraft_restore_timestamp').val(key);
+		jQuery('.updraft_restore_date').text(show_data);
 		
 		updraft_restore_stage = 1;
 		
@@ -4653,6 +4653,32 @@ jQuery(function($) {
 		e.preventDefault();
 		jQuery('#updraft_restore_continue_action').val('updraft_restore_abort');
 		jQuery(this).parent('form').trigger('submit');
+	});
+
+	jQuery('#cron_events.advanced_tools_button').on('click', function(e) {
+		e.preventDefault();
+
+		var $table_body = jQuery('.advanced_settings_content .advanced_tools.cron_events tbody');
+		$table_body.html('');
+
+		updraft_send_command('get_cron_events', 1, function (response) {
+			$.each(response, function(index, item) {
+				var first_column = '<td>';
+				if (item.overdue) first_column = '<td style="border-left:4px solid #DB6A03;">';
+
+				$table_body.append($('<tr>').append(
+					$(first_column).text(item.hook),
+					$('<td>').text(item.name)
+				));
+				if (item.overdue) {
+					$table_body.find('tr:last').append('<td><span></span><br><span class="dashicons dashicons-warning" aria-hidden="true" style="color:#DB6A03"></span> <span></span></td>');
+				} else {
+					$table_body.find('tr:last').append('<td><span></span><br><span></span></td>');
+				}
+				$table_body.find('tr:last td:last span').not('.dashicons').first().text(item.time);
+				$table_body.find('tr:last td:last span').last().text(item.interval);
+			});
+		});
 	});
 });
 

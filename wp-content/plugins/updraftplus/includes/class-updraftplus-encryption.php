@@ -333,7 +333,7 @@ class UpdraftPlus_Encryption {
 		
 		if ('' == $encryption) {
 			header('Content-type: text/plain');
-			echo __('Decryption failed.', 'updraftplus').' '.__('The database file is encrypted, but you have no encryption key entered.', 'updraftplus');
+			echo esc_html(__('Decryption failed.', 'updraftplus').' '.__('The database file is encrypted, but you have no encryption key entered.', 'updraftplus'));
 			$updraftplus->log('Decryption of database failed: the database file is encrypted, but you have no encryption key entered.', 'error');
 		} else {
 
@@ -351,7 +351,7 @@ class UpdraftPlus_Encryption {
 				unlink($decrypted_file['fullpath']);
 			} else {
 				header('Content-type: text/plain');
-				echo __('Decryption failed.', 'updraftplus').' '.__('The most likely cause is that you used the wrong key.', 'updraftplus').' '.__('The decryption key used:', 'updraftplus').' '.$encryption;
+				echo esc_html(__('Decryption failed.', 'updraftplus').' '.__('The most likely cause is that you used the wrong key.', 'updraftplus').' '.__('The decryption key used:', 'updraftplus').' '.$encryption);
 				
 			}
 		}

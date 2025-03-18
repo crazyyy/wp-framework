@@ -23,6 +23,7 @@ if ($optimize_db) {
 	<p style="color: #0000ff;" id="optimization_table_total_gain">
 	<?php
 	if ($total_gain > 0) {
+		// translators: %s is the total space saved in KB/MB
 		printf(esc_html__('Total space saved: %s', 'wp-optimize'), '<span>'. esc_html($wp_optimize->format_size($total_gain)).'</span> ');
 		$optimizer->update_total_cleaned(strval($total_gain));
 	}
@@ -39,7 +40,12 @@ if ($optimize_db) {
 		<p><?php echo esc_html__('WARNING - some plugins might not be detected as installed or activated if they are in unknown folders (for example premium plugins).', 'wp-optimize').' '.esc_html__('Only delete a table if you are sure of what you are doing, and after taking a backup.', 'wp-optimize'); ?></p>
 		<p><?php echo esc_html__('If none of the plugins listed were ever installed on this website, you should not delete this table as it is likely to be used by an unlisted plugin.', 'wp-optimize'); ?></p>
 	</div>
-	<h4><?php printf(esc_html__('You are about to remove the table %s.', 'wp-optimize'), '<span class="table-name">{{data.table_name}}</span>'); ?></h4>
+	<h4>
+	<?php
+		// translators: %s is a table name
+		printf(esc_html__('You are about to remove the table %s.', 'wp-optimize'), '<span class="table-name">{{data.table_name}}</span>');
+	?>
+	</h4>
 	<div class="wpo-table-delete--plugins">
 		{{{data.plugins_list}}}
 	</div>

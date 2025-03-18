@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -34,14 +36,14 @@ class Ai1wm_Export_Archive {
 		do_action( 'ai1wm_status_export_start', $params );
 
 		// Set progress
-		Ai1wm_Status::info( __( 'Creating an empty archive...', AI1WM_PLUGIN_NAME ) );
+		Ai1wm_Status::info( __( 'Creating export file...', AI1WM_PLUGIN_NAME ) );
 
 		// Create empty archive file
 		$archive = new Ai1wm_Compressor( ai1wm_archive_path( $params ) );
 		$archive->close();
 
 		// Set progress
-		Ai1wm_Status::info( __( 'Done creating an empty archive.', AI1WM_PLUGIN_NAME ) );
+		Ai1wm_Status::info( __( 'Export file created.', AI1WM_PLUGIN_NAME ) );
 
 		return $params;
 	}

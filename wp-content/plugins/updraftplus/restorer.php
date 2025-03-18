@@ -393,7 +393,7 @@ class Updraft_Restorer {
 					if (false !== strpos($pdata, 'PCLZIP_ERR_BAD_FORMAT (-10)')) {
 						$url = apply_filters('updraftplus_com_link', 'https://updraftplus.com/faqs/error-message-pclzip_err_bad_format-10-invalid-archive-structure-mean/');
 						if ($browser_context) {
-							echo '<a href="'.$url.'" target="_blank"><strong>'.__('Follow this link for more information', 'updraftplus').'</strong></a><br>';
+							echo '<a href="'.esc_url($url).'" target="_blank"><strong>'.esc_html__('Follow this link for more information', 'updraftplus').'</strong></a><br>';
 						} else {
 							$updraftplus->log(__('Follow this link for more information', 'updraftplus').': '.$url);
 						}
@@ -3340,6 +3340,12 @@ class Updraft_Restorer {
 			} elseif (preg_match('/^\s*(\/\*\!40000 )?(alter|lock) tables? \`?([^\`\(]*)\`?\s+(write|disable|enable)/i', $sql_line, $matches)) {
 				// Only binary mysqldump produces this pattern (LOCK TABLES `table` WRITE, ALTER TABLE `table` (DISABLE|ENABLE) KEYS)
 				$sql_type = 4;
+				if (!empty($matches[3]) && $this->table_should_be_skipped($matches[3])) {
+					// Reset
+					$sql_line = '';
+					$sql_type = -1;
+					continue;
+				}
 				$temp_insert_table_prefix = $this->disable_atomic_on_current_table ? $this->final_import_table_prefix : $import_table_prefix;
 				if ($temp_insert_table_prefix != $this->old_table_prefix) {
 					if ('' === $this->old_table_prefix || $non_wp_table) {

@@ -12,6 +12,7 @@
 
 		echo '<label for="enable-retention">';
 		printf(
+			// translators: %s is number of weeks
 			esc_html__('Keep last %s weeks data', 'wp-optimize'),
 			'</label><input id="retention-period" name="retention-period" type="number" step="1" min="2" max="99" value="'.esc_attr($retention_period).'"><label for="enable-retention">'
 		);
@@ -27,6 +28,7 @@
 
 		echo '<label for="enable-revisions-retention">';
 		printf(
+			// translators: %s is number of revisions to keep
 			esc_html__('Always keep %s post revisions', 'wp-optimize'),
 			'</label><input id="revisions-retention-count" name="revisions-retention-count" type="number" step="1" min="2" max="99" value="'.esc_attr($revisions_retention_count).'"><label for="revisions-retention-count">'
 		);

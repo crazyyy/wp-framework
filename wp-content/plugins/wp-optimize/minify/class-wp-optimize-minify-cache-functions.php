@@ -20,7 +20,7 @@ class WP_Optimize_Minify_Cache_Functions {
 		if (function_exists('stat')) {
 			if ($stat = stat(dirname($file))) {
 				$perms = $stat['mode'] & 0007777;
-				chmod($file, $perms);
+				chmod($file, $perms); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- N/A
 				clearstatcache();
 				return true;
 			}
@@ -38,7 +38,7 @@ class WP_Optimize_Minify_Cache_Functions {
 			if (($perms & ~umask() != $perms)) {
 				$folder_parts = explode('/', substr($file, strlen(dirname($file)) + 1));
 				for ($i = 1, $c = count($folder_parts); $i <= $c; $i++) {
-					chmod(dirname($file) . '/' . implode('/', array_slice($folder_parts, 0, $i)), $perms);
+					chmod(dirname($file) . '/' . implode('/', array_slice($folder_parts, 0, $i)), $perms); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- N/A
 				}
 			}
 		}
@@ -190,6 +190,7 @@ class WP_Optimize_Minify_Cache_Functions {
 		// Purge Godaddy Managed WordPress Hosting (Varnish + APC)
 		if (class_exists('WPaaS\Plugin')) {
 			self::godaddy_request('BAN');
+			// translators: %s is a remote cache system name `Go Daddy Varnish`
 			$result[] = sprintf(__('A cache purge request has been sent to %s.', 'wp-optimize'), '<strong>Go Daddy Varnish</strong>') . ' ' . __('Please note that it may not work every time, due to cache rate limiting by your host.', 'wp-optimize');
 		}
 
@@ -213,6 +214,7 @@ class WP_Optimize_Minify_Cache_Functions {
 			}
 
 			if (method_exists('WpeCommon', 'purge_memcached') || method_exists('WpeCommon', 'clear_maxcdn_cache') || method_exists('WpeCommon', 'purge_varnish_cache')) {
+				// translators: %s is a remote cache system name `WP Engine`
 				$result[] = sprintf(__('A cache purge request has been sent to %s.', 'wp-optimize'), '<strong>WP Engine</strong>') . ' ' . __('Please note that it may not work every time, due to cache rate limiting by your host.', 'wp-optimize');
 			}
 		}
@@ -274,6 +276,7 @@ class WP_Optimize_Minify_Cache_Functions {
 	 */
 	public static function get_caches_purged_message($plugin_name) {
 		$message = sprintf(
+			// translators: %s is a plugin name
 			__('All caches from %s have also been purged.', 'wp-optimize'),
 			'<strong>' . esc_html($plugin_name) . '</strong>'
 		);
@@ -290,6 +293,7 @@ class WP_Optimize_Minify_Cache_Functions {
 	 */
 	public static function get_remote_caches_purged_message($host_name) {
 		$message = sprintf(
+			// translators: %s is a remote cache system name
 			__('A cache purge request has been sent to %s.', 'wp-optimize'),
 			'<strong>' . esc_html($host_name) . '</strong>'
 		);
@@ -339,7 +343,7 @@ class WP_Optimize_Minify_Cache_Functions {
 		$log = array();
 
 		// get all directories that are a direct child of current directory
-		if (is_dir(WPO_CACHE_MIN_FILES_DIR) && is_writable(dirname(WPO_CACHE_MIN_FILES_DIR))) {
+		if (is_dir(WPO_CACHE_MIN_FILES_DIR) && wp_is_writable(dirname(WPO_CACHE_MIN_FILES_DIR))) {
 			if ($handle = opendir(WPO_CACHE_MIN_FILES_DIR)) {
 				while (false !== ($d = readdir($handle))) {
 					if (strcmp($d, '.')==0 || strcmp($d, '..')==0) {
@@ -357,7 +361,7 @@ class WP_Optimize_Minify_Cache_Functions {
 								$log[] = "recursive files and folders deletion unsuccessful - $dir";
 							}
 							if (file_exists($dir)) {
-								if (rmdir($dir)) {
+								if (rmdir($dir)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- N/A
 									$log[] = "folder deleted successfully - $dir";
 								} else {
 									$log[] = "folder deletion unsuccessful - $dir";
@@ -433,6 +437,7 @@ class WP_Optimize_Minify_Cache_Functions {
 			}
 			return WP_Optimize()->format_size($size) . ' ('.$file_count.' files)';
 		} else {
+			// translators: %s is a folder path
 			return sprintf(__('Error: %s is not a directory!', 'wp-optimize'), $folder);
 		}
 	}
@@ -447,7 +452,7 @@ class WP_Optimize_Minify_Cache_Functions {
 	 */
 	public static function godaddy_request($method, $url = null) {
 		$url  = empty($url) ? home_url() : $url;
-		$host = parse_url($url, PHP_URL_HOST);
+		$host = wp_parse_url($url, PHP_URL_HOST);
 		$url  = set_url_scheme(str_replace($host, WPaas\Plugin::vip(), $url), 'http');
 		wp_cache_flush();
 		update_option('gd_system_last_cache_flush', time()); // purge apc
@@ -527,6 +532,7 @@ class WP_Optimize_Minify_Cache_Functions {
 		$file_link_html = '<a href="' . esc_url($file_url) . '" target="_blank">' . $file_name . '</a>';
 
 		if (!file_exists($file)) {
+			// translators: %s is a log file link
 			$error_log->error = sprintf(__('Log file %s is missing', 'wp-optimize'), $file_link_html);
 			return $error_log;
 		}
@@ -536,11 +542,13 @@ class WP_Optimize_Minify_Cache_Functions {
 		$is_valid_json = json_last_error() === JSON_ERROR_NONE ? true : false;
 
 		if (!$is_valid_json) {
-			$error_log->error = sprintf(__('JSON error in file %s | Error details: %s', 'wp-optimize'), $file_link_html, json_last_error_msg());
+			// translators: %1$s is a log file link, %2$s is the error message
+			$error_log->error = sprintf(__('JSON error in file %1$s | Error details: %2$s', 'wp-optimize'), $file_link_html, json_last_error_msg());
 			return $error_log;
 		}
 
 		if (!isset($log->header) || !isset($log->files)) {
+			// translators: %s is a log file link
 			$error_log->error = sprintf(__('Some data is missing in the log file %s', 'wp-optimize'), $file_link_html);
 			return $error_log;
 		}

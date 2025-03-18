@@ -15,7 +15,7 @@
 		<?php else : ?>
 			<a class="<?php echo ($active_page === $menu['menu_slug']) ? 'active' : ''; ?>" href="<?php echo esc_url(menu_page_url($menu['menu_slug'], false)); ?>" data-menuslug="<?php echo esc_attr($menu['menu_slug']); ?>">
 				<span class="dashicons dashicons-<?php echo esc_attr($menu['icon']); ?>"></span>
-				<span class="title"><?php esc_html_e($menu['menu_title']); ?></span>
+				<span class="title"><?php echo esc_html($menu['menu_title']); ?></span>
 			</a>
 		<?php endif; ?>
 

@@ -30,7 +30,9 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 
 		if (null === $disablesslverify) $disablesslverify = UpdraftPlus_Options::get_updraft_option('updraft_ssl_disableverify');
 
-		if (empty($user) || empty($password) || empty($authurl)) throw new Exception(__('Authorisation failed (check your credentials)', 'updraftplus'));// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable -- $user, $password and $authurl being extracted in extract() line 29
+		if (empty($user) || empty($password) || empty($authurl)) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable -- $user, $password and $authurl being extracted in extract() line 29
+			throw new Exception(__('Authorisation failed (check your credentials)', 'updraftplus')); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
+		}
 
 		updraft_try_include_file('vendor/autoload.php', 'include_once');
 		global $updraftplus;
@@ -112,22 +114,22 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 	public function credentials_test($posted_settings) {
 
 		if (empty($posted_settings['user'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('username', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('username', 'updraftplus')));
 			return;
 		}
 
 		if (empty($posted_settings['password'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('password', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('password', 'updraftplus')));
 			return;
 		}
 
 		if (empty($posted_settings['tenant'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), _x('tenant', '"tenant" is a term used with OpenStack storage - Google for "OpenStack tenant" to get more help on its meaning', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), _x('tenant', '"tenant" is a term used with OpenStack storage - Google for "OpenStack tenant" to get more help on its meaning', 'updraftplus')));
 			return;
 		}
 
 		if (empty($posted_settings['authurl'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('authentication URI', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('authentication URI', 'updraftplus')));
 			return;
 		}
 

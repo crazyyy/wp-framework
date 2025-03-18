@@ -138,6 +138,10 @@ class WP_Optimize_Minify_Config {
 			'cdn_url' => '',
 			'cdn_force' => false,
 
+			'enable_delay_js' => false,
+			'enable_preload_js' => false,
+			'exclude_delay_js' => '',
+
 			'async_css' => '',
 			'async_js' => '',
 			'disable_css_inline_merge' => true,

@@ -3,8 +3,6 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 class WP_Optimize_Minify_Admin {
 
-	private $wp_version_required = '4.5';
-
 	/**
 	 * Initialize, add actions and filters
 	 *
@@ -14,7 +12,7 @@ class WP_Optimize_Minify_Admin {
 		// exclude processing for editors and administrators (fix editors)
 		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'check_permissions_admin_notices'));
 
-		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'admin_notices_activation_errors'));
+		add_action('wp_optimize_admin_page_wpo_minify_status', array($this, 'admin_notices_activation_error'));
 
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 
@@ -64,29 +62,15 @@ class WP_Optimize_Minify_Admin {
 	}
 
 	/**
-	 * Conditionally runs upon the WP action admin_notices to display errors
+	 * Conditionally runs upon the WP action admin_notices to display error
 	 *
 	 * @return void
 	 */
-	public function admin_notices_activation_errors() {
-		global $wp_version;
-		include ABSPATH . WPINC . '/version.php';
-		$errors = array();
-		
+	public function admin_notices_activation_error() {
 		if (!extension_loaded('mbstring')) {
-			$errors[] = __('WP-Optimize Minify requires the PHP mbstring module to be installed on the server; please ask your web hosting company for advice on how to enable it on your server.', 'wp-optimize');
-		}
-		
-		if (version_compare($wp_version, $this->wp_version_required, '<')) {
-			$errors[] = sprintf(__('WP-Optimize Minify requires WordPress version %s or higher.', 'wp-optimize'), $this->wp_version_required) . ' ' . sprintf(__("You're using version %s.", 'wp-optimize'),  $wp_version);
-		}
-
-		foreach ($errors as $error) {
-			?>
-			<div class="notice notice-error wpo-warning">
-				<p><?php echo $error; ?></p>
-			</div>
-			<?php
+			echo '<div class="notice notice-error wpo-warning">';
+			echo '<p>' . esc_html__('WP-Optimize Minify requires the PHP mbstring module to be installed on the server; please ask your web hosting company for advice on how to enable it on your server.', 'wp-optimize') . '</p>';
+			echo '</div>';
 		}
 	}
 
@@ -99,25 +83,32 @@ class WP_Optimize_Minify_Admin {
 		// get cache path
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();
 		$cache_dir = $cache_path['cachedir'];
-		if (is_dir($cache_dir) && !is_writable($cache_dir)) {
+		if (is_dir($cache_dir) && !wp_is_writable($cache_dir)) {
 			$chmod = substr(sprintf('%o', fileperms($cache_dir)), -4);
 			?>
 			<div class="notice notice-error wpo-warning">
 				<p>
-					<?php printf(__('WP-Optimize Minify needs write permissions on the folder %s.', 'wp-optimize'), "<strong>".htmlspecialchars($cache_dir)."</strpmg>"); ?>
-				</p>
-			</div>
-			<div class="notice notice-error wpo-warning">
-				<p>
-					<?php printf(__('The current permissions for WP-Optimize Minify are chmod %s.', 'wp-optimize'), "<strong>$chmod</strong>"); ?>
+					<?php
+						// translators: %s is a directory
+						echo wp_kses_post(sprintf(__('WP-Optimize Minify needs write permissions on the folder %s.', 'wp-optimize'), "<strong>". esc_html($cache_dir)."</strong>"));
+					?>
 				</p>
 			</div>
 			<div class="notice notice-error wpo-warning">
 				<p>
 					<?php
-						printf(__('If you need something more than %s for it to work, then your server is probably misconfigured.', 'wp-optimize'), '<strong>775</strong>');
+						// translators: %s is a file permissions code
+						echo wp_kses_post(sprintf(__('The current permissions for WP-Optimize Minify are chmod %s.', 'wp-optimize'), "<strong>" . esc_html($chmod) . "</strong>"));
+					?>
+				</p>
+			</div>
+			<div class="notice notice-error wpo-warning">
+				<p>
+					<?php
+						// translators: %s is a file permissions code
+						echo wp_kses_post(sprintf(__('If you need something more than %s for it to work, then your server is probably misconfigured.', 'wp-optimize'), '<strong>775</strong>'));
 						echo " ";
-						_e('Please contact your hosting provider.', 'wp-optimize');
+						esc_html_e('Please contact your hosting provider.', 'wp-optimize');
 					?>
 				</p>
 			</div>
@@ -224,7 +215,7 @@ class WP_Optimize_Minify_Admin {
 	 */
 	public function output_settings() {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
-		$url = parse_url(get_home_url());
+		$url = wp_parse_url(get_home_url());
 		WP_Optimize()->include_template(
 			'minify/settings-tab.php',
 			false,

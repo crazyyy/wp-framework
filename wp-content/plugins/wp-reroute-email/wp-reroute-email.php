@@ -3,11 +3,11 @@
  * Plugin Name: WP Reroute Email
  * Plugin URI: http://wordpress.org/extend/plugins/wp-reroute-email/
  * Description: This plugin intercepts all outgoing emails from a WordPress site and reroutes them to a predefined configurable email address.
- * Version: 1.5.0
+ * Version: 1.5.1
  * Author: Sajjad Hossain
  * Author URI: http://www.sajjadhossain.com
  * License: GPLv2 or later
- * Text Domain: wp_reroute_email
+ * Text Domain: wp-reroute-email
  * Domain Path: /languages
  */
 
@@ -47,7 +47,7 @@ class WPRerouteEmail {
     }
 
     public function init() {
-        load_plugin_textdomain('wp_reroute_email', false, basename(dirname(__FILE__)) . '/languages');
+        load_plugin_textdomain('wp-reroute-email', false, basename(dirname(__FILE__)) . '/languages');
     }
 
     /**
@@ -187,7 +187,7 @@ class WPRerouteEmail {
         }
 
         if ($file == $this->plugin_name) {
-            $settings_link = '<a href="admin.php?page=wp-reroute-email/settings.php">' . esc_html__('Settings', 'wp_reroute_email') . '</a>';
+            $settings_link = '<a href="admin.php?page=wp-reroute-email/settings.php">' . esc_html__('Settings', 'wp-reroute-email') . '</a>';
             array_unshift($links, $settings_link);
         }
 
@@ -287,21 +287,21 @@ class WPRerouteEmail {
                 $db_log_option = get_option('wp_reroute_email_db_log_option');
                 
                 if($db_log_option == 1){
-                    $extra = esc_html__('All emails will be stored in database after sending.', 'wp_reroute_email');
+                    $extra = esc_html__('All emails will be stored in database after sending.', 'wp-reroute-email');
                 }
                 else{
-                    $extra = esc_html__('Emails will only be stored in database and no email will be sent.', 'wp_reroute_email');
+                    $extra = esc_html__('Emails will only be stored in database and no email will be sent.', 'wp-reroute-email');
                 }
             }
             else if(get_option('wp_reroute_email_address')){
-                $extra = sprintf(esc_html__('All emails from the site will be sent to <strong>%1$s</strong>', 'wp_reroute_email'), get_option('wp_reroute_email_address'));
+                $extra = sprintf(esc_html__('All emails from the site will be sent to <strong>%1$s</strong>', 'wp-reroute-email'), get_option('wp_reroute_email_address'));
             }
             
             $admin_url = admin_url();
             echo '<div class="error"> <p>' 
-                . sprintf(esc_html__('This site has %1$sWP Reroute Email%2$s enabled.', 'wp_reroute_email'), '<strong>', '</strong>')
+                . sprintf(esc_html__('This site has %1$sWP Reroute Email%2$s enabled.', 'wp-reroute-email'), '<strong>', '</strong>')
                 . ($extra ? ' ' . $extra . ' ' : '')
-                . sprintf(esc_html__('To change settings go %1$shere%2$s.', 'wp_reroute_email'), '<a href="' . $admin_url . 'admin.php?page=wp-reroute-email%2Fsettings.php">', '</a>') 
+                . sprintf(esc_html__('To change settings go %1$shere%2$s.', 'wp-reroute-email'), '<a href="' . $admin_url . 'admin.php?page=wp-reroute-email%2Fsettings.php">', '</a>') 
                     . '</p></div>';
         }
     }

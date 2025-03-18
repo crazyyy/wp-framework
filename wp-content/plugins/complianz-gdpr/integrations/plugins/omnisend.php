@@ -12,6 +12,7 @@ function cmplz_omnisend_script( $tags ) {
 		'category' => 'statistics',
 		'urls' => array(
 			'omnisend',
+			'omnisnippet1.com'
 		),
 	);
 	return $tags;

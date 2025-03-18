@@ -395,13 +395,14 @@ function cmplz_add_cookiebanner_settings( $fields ) {
 				'type'             => 'checkbox',
 				'default'          => false,
 				'label'            => __( "Show as soft cookie wall", 'complianz-gdpr' ),
+				'comment'   => __("Unlike the regular cookie wall, the soft cookie wall doesn't block visitors that do not deny consent or dismiss the banner. It will however forces a choice before visitors enter your website.",
+					"complianz-gdpr") .' '. cmplz_sprintf(__("Read more about %sthe soft cookie wall%s.", "complianz-gdpr"),'<a target="_blank" href="https://complianz.io/the-soft-cookie-wall/">', '</a>'),
 				'help'             => [
 					'label' => 'default',
 					'title' => __( "Soft cookie wall", 'complianz-gdpr' ),
 					'text'  => __( "Read more about our privacy-friendly cookie wall.", 'complianz-gdpr' ),
 					'url'   => 'https://complianz.io/the-soft-cookie-wall/',
 				],
-				'tooltip'          => __( 'After saving, a preview of the soft cookie wall will be shown for 3 seconds', 'complianz-gdpr' ),
 				'react_conditions' => [
 					'relation' => 'AND',
 					[

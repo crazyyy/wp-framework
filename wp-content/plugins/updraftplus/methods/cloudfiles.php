@@ -445,9 +445,9 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 		$classes = $this->get_css_classes(false);
 		
 		?>
-		<tr class="<?php echo $classes . ' ' . 'cloudfiles_pre_config_container';?>">
+		<tr class="<?php echo esc_attr($classes) . ' ' . 'cloudfiles_pre_config_container';?>">
 			<td colspan="2">
-				<img alt="Rackspace Cloud Files" src="<?php echo UPDRAFTPLUS_URL;?>/images/rackspacecloud-logo.png"><br>
+				<img alt="Rackspace Cloud Files" src="<?php echo esc_url(UPDRAFTPLUS_URL);?>/images/rackspacecloud-logo.png"><br>
 			<?php
 				// Check requirements.
 				global $updraftplus_admin;
@@ -456,10 +456,18 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 				}
 				$updraftplus_admin->curl_check('Rackspace Cloud Files', false, 'cloudfiles', false);
 			?>
-
-			<?php
-				echo '<p>' . __('Get your API key <a href="https://mycloud.rackspace.com/" target="_blank">from your Rackspace Cloud console</a> (<a href="http://www.rackspace.com/knowledge_center/article/rackspace-cloud-essentials-1-generating-your-api-key" target="_blank">read instructions here</a>), then pick a container name to use for storage.', 'updraftplus').' '.__('This container will be created for you if it does not already exist.', 'updraftplus').' <a href="https://updraftplus.com/faqs/there-appear-to-be-lots-of-extra-files-in-my-rackspace-cloud-files-container/" target="_blank">'.__('Also, you should read this important FAQ.', 'updraftplus').'</a></p>';
-			?>
+				<p>
+				<?php
+					printf(
+						// translators: %1$s - opening link tag to Rackspace Cloud console, %2$s - closing link tag, %3$s - opening link tag to instructions.
+						esc_html__('Get your API key from your %1$sRackspace Cloud console%2$s (%3$sread instructions here%2$s), then pick a container name to use for storage.', 'updraftplus'),
+						'<a href="https://mycloud.rackspace.com/" target="_blank">',
+						'</a>',
+						'<a href="http://www.rackspace.com/knowledge_center/article/rackspace-cloud-essentials-1-generating-your-api-key" target="_blank">'
+					);
+					echo ' '.esc_html__('This container will be created for you if it does not already exist.', 'updraftplus').' <a href="https://updraftplus.com/faqs/there-appear-to-be-lots-of-extra-files-in-my-rackspace-cloud-files-container/" target="_blank">'.esc_html__('Also, you should read this important FAQ.', 'updraftplus').'</a>';
+				?>
+				</p>
 			</td>
 		</tr>
 
@@ -531,12 +539,12 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 	public function credentials_test($posted_settings) {
 
 		if (empty($posted_settings['apikey'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('API key', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('API key', 'updraftplus')));
 			return;
 		}
 
 		if (empty($posted_settings['user'])) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('Username', 'updraftplus'));
+			echo esc_html(sprintf(__("Failure: No %s was given.", 'updraftplus'), __('Username', 'updraftplus')));
 			return;
 		}
 
@@ -556,7 +564,7 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 		}
 
 		if (empty($container)) {
-			_e("Failure: No container details were given.", 'updraftplus');
+			esc_html_e("Failure: No container details were given.", 'updraftplus');
 			return;
 		}
 
@@ -566,13 +574,13 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 			$storage = $this->getCF($user, $key, $authurl, $useservercerts);
 			$container_object = $storage->create_container($container);
 		} catch (AuthenticationException $e) {
-			echo __('Cloud Files authentication failed', 'updraftplus').' ('.$e->getMessage().')';
+			echo esc_html(__('Cloud Files authentication failed', 'updraftplus').' ('.$e->getMessage().')');
 			return;
 		} catch (NoSuchAccountException $s) {
-			echo __('Cloud Files authentication failed', 'updraftplus').' ('.$e->getMessage().')';
+			echo esc_html(__('Cloud Files authentication failed', 'updraftplus').' ('.$e->getMessage().')');
 			return;
 		} catch (Exception $e) {
-			echo __('Cloud Files authentication failed', 'updraftplus').' ('.$e->getMessage().')';
+			echo esc_html(__('Cloud Files authentication failed', 'updraftplus').' ('.$e->getMessage().')');
 			return;
 		}
 
@@ -583,11 +591,11 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 			$object->content_type = "text/plain";
 			$object->write('UpdraftPlus test file');
 		} catch (Exception $e) {
-			echo __('Cloud Files error - we accessed the container, but failed to create a file within it', 'updraftplus').' ('.$e->getMessage().')';
+			echo esc_html(__('Cloud Files error - we accessed the container, but failed to create a file within it', 'updraftplus').' ('.$e->getMessage().')');
 			return;
 		}
 
-		echo __('Success', 'updraftplus').": ".__('We accessed the container, and were able to create files within it.', 'updraftplus');
+		echo esc_html(__('Success', 'updraftplus').": ".__('We accessed the container, and were able to create files within it.', 'updraftplus'));
 
 		@$container_object->delete_object($try_file);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 	}

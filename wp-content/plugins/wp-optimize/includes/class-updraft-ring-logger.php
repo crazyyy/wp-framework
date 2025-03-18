@@ -135,7 +135,7 @@ class Updraft_Ring_Logger extends Updraft_Abstract_Logger {
 
 		if (!$this->is_enabled()) return false;
 		
-		$message = date("Y-m-d H:i:s").' ['.Updraft_Log_Levels::to_text($level).'] : '.$this->interpolate($message, $context);
+		$message = gmdate("Y-m-d H:i:s").' ['.Updraft_Log_Levels::to_text($level).'] : '.$this->interpolate($message, $context);
 		$this->add_log($message);
 	}
 

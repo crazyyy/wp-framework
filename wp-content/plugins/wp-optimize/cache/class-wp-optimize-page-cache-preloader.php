@@ -300,6 +300,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			$this->options->update_option('wpo_last_page_cache_preload_type', 'posts');
 		}
 
+		// translators: %d: Number of URLs found
 		$this->log(sprintf(_n('%d url found.', '%d urls found.', count($urls), 'wp-optimize'), count($urls)));
 
 		/**
@@ -590,8 +591,8 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 			}
 
 			if ($this->should_regenerate_file($file_path, $preload_type)) {
-				// delefe the expired cache file
-				unlink($file_path);
+				// delete the expired cache file
+				wp_delete_file($file_path);
 				$regenerate_count++;
 			}
 		}
@@ -717,6 +718,7 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 	protected function get_last_preload_message($cache_size, $last_preload_time_str) {
 		return array(
 			'done' => true,
+			// translators: %s is the last preload time
 			'message' => sprintf(__('Last preload finished at %s', 'wp-optimize'), $last_preload_time_str),
 			'size' => WP_Optimize()->format_size($cache_size['size']),
 			'file_count' => $cache_size['file_count']
@@ -753,8 +755,8 @@ class WP_Optimize_Page_Cache_Preloader extends WP_Optimize_Preloader {
 		$gmt_offset = WP_Optimize_Utils::get_gmt_offset();
 
 		// Set time to random time from 1 a.m. to 4:59 a.m.
-		$random_time = sprintf('%02d:%02d', rand(1, 4), rand(0, 59));
-		$nighttime = strtotime(date("Y-m-d {$random_time}:00", $time)) - $gmt_offset;
+		$random_time = sprintf('%02d:%02d', wp_rand(1, 4), wp_rand(0, 59));
+		$nighttime = strtotime(gmdate("Y-m-d {$random_time}:00", $time)) - $gmt_offset;
 		
 		if ($nighttime < time()) $nighttime += 24 * 3600;
 

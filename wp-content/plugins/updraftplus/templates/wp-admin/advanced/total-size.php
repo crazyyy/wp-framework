@@ -3,10 +3,10 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 $backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
 ?>
 <div class="advanced_tools total_size">
-	<h3> <?php _e('Total (uncompressed) on-disk data:', 'updraftplus');?></h3>
+	<h3> <?php esc_html_e('Total (uncompressed) on-disk data:', 'updraftplus');?></h3>
 	<p class="uncompressed-data">
 		<em>
-			<?php _e('N.B. This count is based upon what was, or was not, excluded the last time you saved the options.', 'updraftplus');?>
+			<?php esc_html_e('N.B. This count is based upon what was, or was not, excluded the last time you saved the options.', 'updraftplus');?>
 		</em>
 	</p>
 	<table>

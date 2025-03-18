@@ -431,15 +431,15 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		$use_server_certs = $posted_settings['useservercerts'];
 
 		if (empty($server)) {
-			_e('Failure: No server details were given.', 'updraftplus');
+			esc_html_e('Failure: No server details were given.', 'updraftplus');
 			return;
 		}
 		if (empty($login)) {
-			printf(__('Failure: No %s was given.', 'updraftplus'), __('login', 'updraftplus'));
+			echo esc_html(sprintf(__('Failure: No %s was given.', 'updraftplus'), __('login', 'updraftplus')));
 			return;
 		}
 		if (empty($pass)) {
-			printf(__('Failure: No %s was given.', 'updraftplus'), __('password', 'updraftplus'));
+			echo esc_html(sprintf(__('Failure: No %s was given.', 'updraftplus'), __('password', 'updraftplus')));
 			return;
 		}
 
@@ -449,7 +449,7 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		$ftp = $this->getFTP($server, $login, $pass, $nossl, $disable_verify, $use_server_certs, $passive);
 
 		if (!$ftp->connect()) {
-			_e('Failure: we did not successfully log in with those credentials.', 'updraftplus');
+			esc_html_e('Failure: we did not successfully log in with those credentials.', 'updraftplus');
 			return;
 		}
 		// $ftp->make_dir(); we may need to recursively create dirs? TODO
@@ -458,12 +458,12 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		$fullpath = trailingslashit($path).$file;
 		
 		if ($ftp->put(ABSPATH.WPINC.'/version.php', $fullpath, FTP_BINARY, false, true)) {
-			echo __("Success: we successfully logged in, and confirmed our ability to create a file in the given directory (login type:", 'updraftplus')." ".$ftp->login_type.')';
+			echo esc_html(__("Success: we successfully logged in, and confirmed our ability to create a file in the given directory (login type:", 'updraftplus')." ".$ftp->login_type.')');
 			@$ftp->delete($fullpath);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 		} else {
-			_e('Failure: we successfully logged in, but were not able to create a file in the given directory.', 'updraftplus');
+			esc_html_e('Failure: we successfully logged in, but were not able to create a file in the given directory.', 'updraftplus');
 			if (!empty($ftp->ssl)) {
-				echo ' '.__('This is sometimes caused by a firewall - try turning off SSL in the expert settings, and testing again.', 'updraftplus');
+				echo ' '.esc_html__('This is sometimes caused by a firewall - try turning off SSL in the expert settings, and testing again.', 'updraftplus');
 			}
 		}
 

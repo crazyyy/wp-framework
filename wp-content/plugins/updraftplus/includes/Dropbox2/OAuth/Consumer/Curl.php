@@ -1,5 +1,5 @@
 <?php
-
+// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped
 /**
 * OAuth consumer using PHP cURL
 * @author Ben Tadiar <ben@handcraftedbyben.co.uk>
@@ -359,3 +359,4 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
        return $this->lastResponse;
      }
 }
+// phpcs:enable

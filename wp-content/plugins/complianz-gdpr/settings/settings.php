@@ -235,6 +235,7 @@ function cmplz_plugin_admin_scripts() {
 						'user_id'           => get_current_user_id(),
                         'is_multisite'      => is_multisite(),
                         'is_multisite_plugin'=> defined('cmplz_premium_multisite'),
+						'onboarding_complete' => COMPLIANZ::$wsc_onboarding->wsc_is_dismissed(),
 				] )
 		);
 	}
@@ -615,15 +616,6 @@ function cmplz_other_plugins_data($slug=false){
 	}
 	$plugins = array(
 		[
-			'slug' => 'burst-statistics',
-			'constant_free' => 'burst_free',
-			'constant_premium' => 'burst_pro',
-			'website' => 'https://burst-statistics.com/pricing?src=complianz-plugin',
-			'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
-			'upgrade_url' => 'https://burst-statistics.com/pricing?src=cmplz-plugin',
-			'title' => 'Burst Statistics - '. __("Self-hosted and privacy-friendly analytics tool.", "complianz-gdpr"),
-		],
-		[
 			'slug' => 'really-simple-ssl',
 			'constant_free' => 'rsssl_version',
 			'constant_premium' => 'rsssl_pro',
@@ -806,6 +798,8 @@ function cmplz_rest_api_fields_set( WP_REST_Request $request): array {
 		ob_clean();
 	}
 	$fields = cmplz_fields(true, $options);
+	$fields = apply_filters('cmplz_after_saved_fields', $fields );
+
 	return [
             'request_success' => true,
             'fields' => $fields,
@@ -993,14 +987,12 @@ function cmplz_sanitize_field( $value, string $type, string $id ) {
 		case 'url':
 			return esc_url_raw($value);
 		case 'license':
-		    return $value;
+			return $value;
 		case 'multicheckbox':
 			if ( ! is_array( $value ) ) {
 				$value = empty($value) ? [] : [$value => 1];
 			}
 			return array_map( 'sanitize_text_field', $value );
-		case 'password':
-			return cmplz_encode_password($value);
 		case 'email':
 			return sanitize_email( $value );
 		case 'processors':
@@ -1014,6 +1006,7 @@ function cmplz_sanitize_field( $value, string $type, string $id ) {
 		case 'textarea':
 			return wp_kses_post($value);
 		case 'select':
+		case 'password':
 		case 'text':
 		default:
 			return sanitize_text_field( $value );

@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Team Updraft <mail@example.com>\n"
 "Last-Translator: Team Updraft <mail@example.com>\n"
-"POT-Creation-Date: 2024-12-05 20:58+0000\n"
+"POT-Creation-Date: 2024-12-16 17:51+0000\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/all-in-one-wp-security-and-firewall\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -1896,7 +1896,7 @@ msgstr ""
 msgid "Please enter the correct reCAPTCHA keys %s to use the Google reCAPTCHA feature."
 msgstr ""
 
-#: src/classes/wp-security-general-init-tasks.php:756, src/classes/wp-security-notices.php:183, src/templates/wp-admin/general/moved.php:18, src/templates/wp-admin/scanner/malware-scan.php:7
+#: src/classes/wp-security-general-init-tasks.php:756, src/classes/wp-security-notices.php:203, src/templates/wp-admin/general/moved.php:18, src/templates/wp-admin/scanner/malware-scan.php:7
 msgid "here"
 msgstr ""
 
@@ -1916,255 +1916,259 @@ msgstr ""
 msgid "Listing users is forbidden."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:26
+#: src/classes/wp-security-notices.php:30
+msgid "An error occurred while rendering this notice, please enable and check your debug log."
+msgstr ""
+
+#: src/classes/wp-security-notices.php:46
 msgid "The All in One Security plugin has deactivated some of the firewall settings that you had activated."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:29
+#: src/classes/wp-security-notices.php:49
 msgid "We have upgraded the following settings so that they are now part of the PHP firewall instead of .htaccess directives:"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:59
+#: src/classes/wp-security-notices.php:79
 msgid "None of the settings that have been upgraded were active."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:42
+#: src/classes/wp-security-notices.php:62
 msgid "Completely block xmlrpc.php"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:45, src/templates/wp-admin/firewall/partials/proxy-comment.php:14
+#: src/classes/wp-security-notices.php:65, src/templates/wp-admin/firewall/partials/proxy-comment.php:14
 msgid "Forbid proxy comment posting"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:48, src/templates/wp-admin/firewall/partials/bad-query-strings.php:14
+#: src/classes/wp-security-notices.php:68, src/templates/wp-admin/firewall/partials/bad-query-strings.php:14
 msgid "Deny bad query strings"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:51
+#: src/classes/wp-security-notices.php:71
 msgid "Advanced character filter"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:63
+#: src/classes/wp-security-notices.php:83
 msgid "What would you like to do?"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:66
+#: src/classes/wp-security-notices.php:86
 msgid "The All in One Security plugin has disabled the login whitelist setting that you have enabled in the past."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:72
+#: src/classes/wp-security-notices.php:92
 msgid "Your website is running on a non-Apache webserver, so the login whitelisting was not functional until the recent update of AIOS (because it relied upon Apache-specific features)."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:70
+#: src/classes/wp-security-notices.php:90
 msgid "Your website is running on an Apache webserver, the login whitelisting might not be functional until the recent update of AIOS (because it relied upon Apache-specific module features)."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:74
+#: src/classes/wp-security-notices.php:94
 msgid "It began working with AIOS version 5.0.8."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:74
+#: src/classes/wp-security-notices.php:94
 msgid "We have disabled it so that your login page will not be blocked unexpectedly."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:80
+#: src/classes/wp-security-notices.php:100
 msgid "Whitelisted login IP address(es):"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:83
+#: src/classes/wp-security-notices.php:103
 msgid "Would you like to re-enable login whitelisting?"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:89
+#: src/classes/wp-security-notices.php:109
 msgid "Removed database backup feature from the All In One WP Security & Firewall plugin"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:91
+#: src/classes/wp-security-notices.php:111
 msgid "Beginning with version 5.0.0, AIOS has replaced the AIOS backup method with the superior UpdraftPlus method."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:92
+#: src/classes/wp-security-notices.php:112
 msgid "It remains free and is fully supported by the UpdraftPlus team."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:95
+#: src/classes/wp-security-notices.php:115
 msgid "You are seeing this notice because you have previously set up automated database backups in AIOS."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:96
+#: src/classes/wp-security-notices.php:116
 msgid "Would you like to set up scheduled backups with UpdraftPlus?"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:102
+#: src/classes/wp-security-notices.php:122
 msgid "Setup UpdraftPlus backup plugin"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:108
+#: src/classes/wp-security-notices.php:128
 msgid "Important: set up your IP address detection settings"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:110
+#: src/classes/wp-security-notices.php:130
 msgid "The All in One Security plugin couldn't be certain about the correct method to detect the IP address for your site visitors with your currently-configured IP address detection settings."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:111
+#: src/classes/wp-security-notices.php:131
 msgid "It is important for your security to set the IP address detection settings properly."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:114
+#: src/classes/wp-security-notices.php:134
 msgid "Please go to the settings and set them now."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:120
+#: src/classes/wp-security-notices.php:140
 msgid "Setup IP address detection settings"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:128
+#: src/classes/wp-security-notices.php:148
 msgid "Failed to load the firewall resources."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:129
+#: src/classes/wp-security-notices.php:149
 msgid "The firewall won't operate correctly."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:136
+#: src/classes/wp-security-notices.php:156
 msgid "Important: Disabled firewall settings"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:142
+#: src/classes/wp-security-notices.php:162
 msgid "Reactivate"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:143
+#: src/classes/wp-security-notices.php:163
 msgid "Configure manually"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:146
+#: src/classes/wp-security-notices.php:166
 msgid "Keep deactivated"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:150
+#: src/classes/wp-security-notices.php:170
 msgid "Important: Blacklist manager disabled"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:152
+#: src/classes/wp-security-notices.php:172
 msgid "The blacklist manager feature has been disabled to prevent any unexpected site lockouts."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:155
+#: src/classes/wp-security-notices.php:175
 msgid "This feature will block any IP address or range listed in its settings, please double check your own details are not included before turning it back on."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:162, src/classes/wp-security-notices.php:176
+#: src/classes/wp-security-notices.php:182, src/classes/wp-security-notices.php:196
 msgid "Edit the settings"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:169
+#: src/classes/wp-security-notices.php:189
 msgid "Important: Disabled login whitelist setting"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:175
+#: src/classes/wp-security-notices.php:195
 msgid "Turn it back on"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:179
+#: src/classes/wp-security-notices.php:199
 msgid "Keep it off"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:183
+#: src/classes/wp-security-notices.php:203
 msgid "Hey - We noticed All In One WP Security & Firewall has kept your site safe for a while."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:183
+#: src/classes/wp-security-notices.php:203
 msgid "If you like us, please consider leaving a positive review to spread the word."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:183
+#: src/classes/wp-security-notices.php:203
 msgid "Or if you have any issues or questions please leave us a support message %s."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:183
+#: src/classes/wp-security-notices.php:203
 msgid "Thank you so much!"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:183
+#: src/classes/wp-security-notices.php:203
 msgid "Team All In One WP Security & Firewall"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:193
+#: src/classes/wp-security-notices.php:213
 msgid "Enhance your security even more by backing up your site"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:194
+#: src/classes/wp-security-notices.php:214
 msgid "UpdraftPlus is the world's most trusted backup plugin from the owners of All In One WP Security & Firewall"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:205
+#: src/classes/wp-security-notices.php:225
 msgid "After you've secured your site, we recommend you install our WP-Optimize plugin to streamline it for better website performance."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:217
+#: src/classes/wp-security-notices.php:237
 msgid "20% off - Black Friday Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:218, src/classes/wp-security-notices.php:232, src/classes/wp-security-notices.php:246, src/classes/wp-security-notices.php:260
+#: src/classes/wp-security-notices.php:238, src/classes/wp-security-notices.php:252, src/classes/wp-security-notices.php:266, src/classes/wp-security-notices.php:280
 msgid "Get added protection with Premium."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:218, src/classes/wp-security-notices.php:232, src/classes/wp-security-notices.php:246, src/classes/wp-security-notices.php:260
+#: src/classes/wp-security-notices.php:238, src/classes/wp-security-notices.php:252, src/classes/wp-security-notices.php:266, src/classes/wp-security-notices.php:280
 msgid "Scan your site for malware, downtime and response time issues."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:218, src/classes/wp-security-notices.php:232, src/classes/wp-security-notices.php:246, src/classes/wp-security-notices.php:260
+#: src/classes/wp-security-notices.php:238, src/classes/wp-security-notices.php:252, src/classes/wp-security-notices.php:266, src/classes/wp-security-notices.php:280
 msgid "Block traffic by country of origin, get advanced two-factor authentication, premium support and more."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:218, src/classes/wp-security-notices.php:232, src/classes/wp-security-notices.php:246
+#: src/classes/wp-security-notices.php:238, src/classes/wp-security-notices.php:252, src/classes/wp-security-notices.php:266
 msgid "Save 20%% off with code %s."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:218
+#: src/classes/wp-security-notices.php:238
 msgid "Hurry, offer ends 2 December."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:231
+#: src/classes/wp-security-notices.php:251
 msgid "20% off - New Year Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:232
+#: src/classes/wp-security-notices.php:252
 msgid "Hurry, offer ends 28 January."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:245
+#: src/classes/wp-security-notices.php:265
 msgid "20% off - Spring Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:246
+#: src/classes/wp-security-notices.php:266
 msgid "Hurry, offer ends 31 May."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:259
+#: src/classes/wp-security-notices.php:279
 msgid "20% off - Summer Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:260
+#: src/classes/wp-security-notices.php:280
 msgid "Get 20%% off with code %s."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:260
+#: src/classes/wp-security-notices.php:280
 msgid "Hurry, offer ends 31 July."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:273
+#: src/classes/wp-security-notices.php:293
 msgid "The Updraft Plugin Collection Sale"
 msgstr ""
 
-#: src/classes/wp-security-notices.php:274
+#: src/classes/wp-security-notices.php:294
 msgid "Visit any of our websites and use code %s at checkout to get 20%% off all our plugins."
 msgstr ""
 
-#: src/classes/wp-security-notices.php:274
+#: src/classes/wp-security-notices.php:294
 msgid "Be quick, offer ends 30 September."
 msgstr ""
 

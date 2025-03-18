@@ -813,7 +813,7 @@ class UpdraftPlus_S3_Compat {
 	}
 
 	private function trigger_from_exception($e) {
-		trigger_error($e->getMessage().' ('.get_class($e).') (line: '.$e->getLine().', file: '.$e->getFile().')', E_USER_WARNING);
+		trigger_error(esc_html($e->getMessage().' ('.get_class($e).') (line: '.$e->getLine().', file: '.$e->getFile().')'), E_USER_WARNING);
 		return false;
 	}
 

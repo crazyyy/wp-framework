@@ -9,9 +9,13 @@ $cls_link = 'https://getwpo.com/cumulative-layout-shift/';
 		<a class="wpo-images-dimensions__premium-link" href="<?php echo esc_url($wp_optimize->premium_version_link); ?>" target="_blank"><?php esc_html_e('Auto add images dimensions with WP-Optimize Premium.', 'wp-optimize'); ?></a>
 	</div>
 	<p class="wpo-images-dimension-show-links"><?php
-	printf(esc_html__('WP-Optimize will automatically detect images with missing width or height, and add those attributes for improving %s and %s.', 'wp-optimize'),
-		$wp_optimize->wp_optimize_url($fcp_link, __('First Contentful Paint time', 'wp-optimize'), '', '', true),
-		$wp_optimize->wp_optimize_url($cls_link, __('Cumulative Layout Shift', 'wp-optimize'), '', '', true));
+	// translators: %1$s - First Contentful Paint link, %2$s - Cumulative Layout Shift link (articles about core web vitals, FCP and CLS).
+	printf(esc_html__('WP-Optimize will automatically detect images with missing width or height, and add those attributes for improving %1$s and %2$s.', 'wp-optimize'),
+		// phpcs:disable
+		// WordPress.Security.EscapeOutput.OutputNotEscaped - Output is already escaped
+		$wp_optimize->wp_optimize_url($fcp_link, esc_html__('First Contentful Paint time', 'wp-optimize'), '', '', true),
+		$wp_optimize->wp_optimize_url($cls_link, esc_html__('Cumulative Layout Shift', 'wp-optimize'), '', '', true));
+		// phpcs:enable
 	?></p>
 	<div class="switch-container">
 		<label class="switch">

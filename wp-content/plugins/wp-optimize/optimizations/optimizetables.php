@@ -82,6 +82,7 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 				$this->register_meta('overhead_formatted', $wp_optimize->format_size($overhead_usage));
 			} else {
 				$this->register_meta('error', 1);
+				// translators: %s is a table name
 				$this->register_meta('message', sprintf(__('The table "%s" does not exist.', 'wp-optimize'), $this->data['optimization_table']));
 				return false;
 
@@ -161,9 +162,11 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 
 			if ($tablesstatus['inno_db_tables'] > 0) {
 				// Output message for how many InnoDB tables will not be optimized.
-				$this->register_output(sprintf(__('Tables using the InnoDB engine (%d) will not be optimized.'), $tablesstatus['inno_db_tables']));
+				// translators: %d is number of InnoDB tables
+				$this->register_output(sprintf(__('Tables using the InnoDB engine (%d) will not be optimized.', 'wp-optimize'), $tablesstatus['inno_db_tables']));
 
 				if ($tablesstatus['non_inno_db_tables'] > 0) {
+					// translators: %s is number of Non InnoDB tables
 					$this->register_output(sprintf(__('Other tables will be optimized (%s).', 'wp-optimize'), $tablesstatus['non_inno_db_tables']));
 				}
 
@@ -172,6 +175,7 @@ class WP_Optimization_optimizetables extends WP_Optimization {
 				$this->register_output('<input id="innodb_force_optimize" name="innodb-force-optimize" type="checkbox" value="true" '.checked($force_db_option, 'true').'><label for="innodb_force_optimize">'.__('Optimize InnoDB tables anyway.', 'wp-optimize').'</label><br><a href="'.$faq_url.'" target="_blank">'.__('Warning: you should read the FAQ on the risks of this operation first.', 'wp-optimize').'</a>');
 			}
 		} else {
+			// translators: %s is number of tables
 			$this->register_output(sprintf(__('Tables will be optimized (%s).', 'wp-optimize'), $tablesstatus['non_inno_db_tables'] + $tablesstatus['inno_db_tables']));
 		}
 	}

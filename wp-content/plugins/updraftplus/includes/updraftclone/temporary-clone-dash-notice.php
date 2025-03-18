@@ -40,16 +40,16 @@ class UpdraftPlus_Temporary_Clone_Dash_Notice {
 		$package_cost = empty($package_cost) ? 1 : $package_cost;
 		?>
 		<div id="updraftplus_temporary_clone-dashnotice" class="updated">
-			<div style="float:right;"><a href="#" onclick="jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {action: 'updraftplus_dash_notice_ajax', subaction: 'refresh_connection', nonce: '<?php echo wp_create_nonce('updraftplus_refresh_connection');?>' }, function() { location.reload(); });"><?php _e('Refresh connection', 'updraftplus'); ?></a></div>
-			<h1><?php _e('Welcome to your UpdraftClone (temporary clone)', 'updraftplus'); ?></h1>
+			<div style="float:right;"><a href="#" onclick="jQuery.post('<?php echo esc_js(admin_url('admin-ajax.php')); ?>', {action: 'updraftplus_dash_notice_ajax', subaction: 'refresh_connection', nonce: '<?php echo esc_js(wp_create_nonce('updraftplus_refresh_connection'));?>' }, function() { location.reload(); });"><?php esc_html_e('Refresh connection', 'updraftplus'); ?></a></div>
+			<h1><?php esc_html_e('Welcome to your UpdraftClone (temporary clone)', 'updraftplus'); ?></h1>
 			<p>
-				<?php echo __('Your clone will renew on:', 'updraftplus') . ' ' . $pretty_date . ' ' . get_option('timezone_string') . ' (' . $date_diff . ')'; ?>.
-				<?php echo sprintf(__('Each time your clone renews (weekly) it costs %s.', 'updraftplus'), sprintf(_n('%d token', '%d tokens', $package_cost, 'updraftplus'), $package_cost)).' '.__('You can shut this clone down at the following link:', 'updraftplus'); ?> <a target="_blank" href="https://updraftplus.com/my-account/clones/"><?php _e('Manage your clones', 'updraftplus'); ?></a>
+				<?php echo esc_html(__('Your clone will renew on:', 'updraftplus') . ' ' . $pretty_date . ' ' . get_option('timezone_string') . ' (' . $date_diff . ')'); ?>.
+				<?php echo esc_html(sprintf(__('Each time your clone renews (weekly) it costs %s.', 'updraftplus'), sprintf(_n('%d token', '%d tokens', $package_cost, 'updraftplus'), $package_cost)).' '.__('You can shut this clone down at the following link:', 'updraftplus')); ?> <a target="_blank" href="https://updraftplus.com/my-account/clones/"><?php esc_html_e('Manage your clones', 'updraftplus'); ?></a>
 			</p>
 			<?php
 			$show_removal_warning = get_site_option('updraftplus_clone_removal_warning', false);
 
-			if ($show_removal_warning) echo '<p>'.__('Warning: You have no clone tokens remaining and either no subscriptions or no subscription that will renew before the clone expiry date.', 'updraftplus').'</p>'
+			if ($show_removal_warning) echo '<p>'.esc_html__('Warning: You have no clone tokens remaining and either no subscriptions or no subscription that will renew before the clone expiry date.', 'updraftplus').'</p>'
 			?>
 		</div>
 		<?php

@@ -65,7 +65,7 @@ class WP_Optimize_Table_Management {
 		global $wpdb;
 
 		foreach ($this->plugin_utils as $util) {
-			$wpdb->query(sprintf("DROP TABLE IF EXISTS %s", $util->get_table_name()));
+			$wpdb->query(sprintf("DROP TABLE IF EXISTS %s", esc_sql($util->get_table_name())));
 		}
 	}
 
@@ -78,7 +78,7 @@ class WP_Optimize_Table_Management {
 	private function table_exists($table_name) {
 		global $wpdb;
 
-		return $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE '%s'", $table_name)) == $table_name;
+		return $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) == $table_name;
 	}
 
 	/**

@@ -175,7 +175,9 @@ class UpdraftPlus_Migrator_Lite {
 		// We don't support restoring single sites into multisite until WP 3.5
 		// Some (significantly out-dated) information on what import-into-multisite involves: http://iandunn.name/comprehensive-wordpress-multisite-migrations/
 		if (is_a($updraftplus, 'UpdraftPlus') && method_exists($updraftplus, 'get_wordpress_version') && version_compare($updraftplus->get_wordpress_version(), '3.5', '>=')) {
-			add_filter('updraftplus_restore_all_downloaded_postscan', array($this, 'lite_restore_all_downloaded_postscan'), 20, 7);
+			if (version_compare(PHP_VERSION, '5.3', '>=')) {
+				add_filter('updraftplus_restore_all_downloaded_postscan', array($this, 'lite_restore_all_downloaded_postscan'), 20, 7);
+			}
 			// Both MU and normal site
 			add_action('updraftplus_restorer_restore_options', array($this, 'restorer_restore_options'));
 		}
@@ -227,6 +229,12 @@ class UpdraftPlus_Migrator_Lite {
 	public function adminaction_searchreplace($options = array()) {
 	
 		global $updraftplus_restorer;
+
+		if (version_compare(PHP_VERSION, '5.3', '<')) {
+			echo esc_html(sprintf(__("The search and replace feature isn't suitable for PHP %s users.", 'updraftplus'), PHP_VERSION).' '.__('To take advantage of this feature, please upgrade your PHP version to at least 5.3.', 'updraftplus'))."<br>";
+			echo '<a href="'.esc_url(UpdraftPlus_Options::admin_page_url().'?page=updraftplus').'">'.esc_html__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
+			return;
+		}
 		
 		$options = wp_parse_args($options, array(
 			'show_return_link' => true,
@@ -243,7 +251,7 @@ class UpdraftPlus_Migrator_Lite {
 			echo sprintf(esc_html__("Failure: No %s was given.", 'updraftplus'), esc_html__('search term', 'updraftplus'))."<br>";
 			
 			if (!empty($options['show_return_link'])) {
-				echo '<a href="'.UpdraftPlus_Options::admin_page_url().'?page=updraftplus">'.esc_html__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
+				echo '<a href="'.esc_url(UpdraftPlus_Options::admin_page_url()).'?page=updraftplus">'.esc_html__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
 			}
 			
 			return;
@@ -259,7 +267,7 @@ class UpdraftPlus_Migrator_Lite {
 		$this->updraftplus_restore_db_pre();
 		$this->tables_replaced = array();
 		$this->updraftplus_restored_db_dosearchreplace(stripslashes($_POST['search']), stripslashes($_POST['replace']), $this->base_prefix, false);
-		if (!empty($options['show_return_link'])) echo '<a href="'.UpdraftPlus_Options::admin_page_url().'?page=updraftplus">'.esc_html__('Return to UpdraftPlus Configuration', 'updraftplus').'</a>';
+		if (!empty($options['show_return_link'])) echo '<a href="'.esc_url(UpdraftPlus_Options::admin_page_url()).'?page=updraftplus">'.esc_html__('Return to UpdraftPlus Configuration', 'updraftplus').'</a>';
 	}
 
 	/**
@@ -281,21 +289,25 @@ class UpdraftPlus_Migrator_Lite {
 	?>
 		<div class="advanced_tools search_replace">
 			<h3><?php esc_html_e('Search / replace database', 'updraftplus'); ?></h3>
-			<p><em><?php _e('This can easily destroy your site; so, use it with care!', 'updraftplus');?></em></p>
-			<form id="search_replace_form" method="post" onsubmit="return(confirm('<?php echo esc_js(__('A search/replace cannot be undone - are you sure you want to do this?', 'updraftplus'));?>'))">
-				<input type="hidden" name="nonce" value="<?php echo wp_create_nonce('updraftplus-credentialtest-nonce');?>">
+			<?php if (version_compare(PHP_VERSION, '5.3', '<')) { ?>
+				<p><em><?php echo esc_html(sprintf(__("This feature isn't suitable for PHP %s users.", 'updraftplus'), PHP_VERSION).' '.__('To take advantage of this feature, please upgrade your PHP version to at least 5.3.', 'updraftplus'));?></em></p>
+			<?php } else { ?>
+				<p><em><?php esc_html_e('This can easily destroy your site; so, use it with care!', 'updraftplus');?></em></p>
+				<form id="search_replace_form" method="post" onsubmit="return(confirm('<?php echo esc_js(__('A search/replace cannot be undone - are you sure you want to do this?', 'updraftplus'));?>'))">
+				<input type="hidden" name="nonce" value="<?php echo esc_attr(wp_create_nonce('updraftplus-credentialtest-nonce'));?>">
 				<input type="hidden" name="action" value="updraftplus_broadcastaction">
 				<input type="hidden" name="subaction" value="updraftplus_adminaction_searchreplace">
 				<table>
 				<?php
-					echo $updraftplus_admin->settings_debugrow('<label for="search">'.__('Search for', 'updraftplus').'</label>:', '<input id="search" type="text" name="search" value="" style="width:380px;">');
-					echo $updraftplus_admin->settings_debugrow('<label for="replace">'.__('Replace with', 'updraftplus').'</label>:', '<input id="replace" type="text" name="replace" value="" style="width:380px;">');
-					echo $updraftplus_admin->settings_debugrow('<label for="pagesize">'.__('Rows per batch', 'updraftplus').'</label>:', '<input id="pagesize" type="number" min="1" step="1" name="pagesize" value="5000" style="width:380px;">');
-					echo $updraftplus_admin->settings_debugrow('<label for="whichtables">'.__('These tables only', 'updraftplus').'</label>:', '<input id="whichtables" type="text" name="whichtables" title="'.esc_attr(__('Enter a comma-separated list; otherwise, leave blank for all tables.', 'updraftplus')).'" value="" style="width:380px;">');
+					$updraftplus_admin->settings_debugrow('<label for="search">'.esc_html__('Search for', 'updraftplus').'</label>:', '<input id="search" type="text" name="search" value="" style="width:380px;">');
+					$updraftplus_admin->settings_debugrow('<label for="replace">'.esc_html__('Replace with', 'updraftplus').'</label>:', '<input id="replace" type="text" name="replace" value="" style="width:380px;">');
+					$updraftplus_admin->settings_debugrow('<label for="pagesize">'.esc_html__('Rows per batch', 'updraftplus').'</label>:', '<input id="pagesize" type="number" min="1" step="1" name="pagesize" value="5000" style="width:380px;">');
+					$updraftplus_admin->settings_debugrow('<label for="whichtables">'.esc_html__('These tables only', 'updraftplus').'</label>:', '<input id="whichtables" type="text" name="whichtables" title="'.esc_attr__('Enter a comma-separated list; otherwise, leave blank for all tables.', 'updraftplus').'" value="" style="width:380px;">');
+					$updraftplus_admin->settings_debugrow('', '<input class="button-primary search_and_replace" type="submit" value="'.esc_attr__('Go', 'updraftplus').'">');
 				?>
-				<?php echo $updraftplus_admin->settings_debugrow('', '<input class="button-primary search_and_replace" type="submit" value="'.esc_attr(__('Go', 'updraftplus')).'">'); ?>
 				</table>
 			</form>
+			<?php } ?>
 		</div>
 	<?php
 	}
@@ -310,7 +322,12 @@ class UpdraftPlus_Migrator_Lite {
 	 * @return String - filtered
 	 */
 	public function dbscan_urlchange($output, $old_siteurl, $restore_options) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Filter use
-		return sprintf(__('This looks like a migration (the backup is from a site with a different address/URL, %s).', 'updraftplus'), htmlspecialchars($old_siteurl));
+		$msg = sprintf(__('This looks like a migration (the backup is from a site with a different address/URL, %s).', 'updraftplus'), htmlspecialchars($old_siteurl));
+		if (version_compare(PHP_VERSION, '5.3', '<')) {
+			$msg .= ' '.sprintf(__('However, the search and replace feature is not suitable for the PHP version (%s) your server is running on.', 'updraftplus'), PHP_VERSION);
+			$msg .= ' '.__('This restoration can search and replace your database if you upgrade your PHP version to at least 5.3.', 'updraftplus');
+		}
+		return $msg;
 	}
 	
 	/**
@@ -321,7 +338,13 @@ class UpdraftPlus_Migrator_Lite {
 	 * @return String - filtered
 	 */
 	public function https_to_http_additional_warning($output) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Filter use
-		return ' '.__('This restoration will work if you still have an SSL certificate (i.e. can use https) to access the site.', 'updraftplus').' '.__('Otherwise, you will want to use below search and replace to search/replace the site address so that the site can be visited without https.', 'updraftplus');
+		$msg = ' '.__('This restoration will work if you still have an SSL certificate (i.e. can use https) to access the site.', 'updraftplus');
+		if (version_compare(PHP_VERSION, '5.3', '<')) {
+			$msg .= ' '.__('Otherwise, you will want to upgrade your PHP version to at least 5.3 and take advantage of the search and replace feature.', 'updraftplus');
+		} else {
+			$msg .= ' '.__('Otherwise, you will want to use below search and replace to search/replace the site address so that the site can be visited without https.', 'updraftplus');
+		}
+		return $msg;
 	}
 	
 	/**
@@ -332,7 +355,13 @@ class UpdraftPlus_Migrator_Lite {
 	 * @return String - filtered
 	 */
 	public function http_to_https_additional_warning($output) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Filter use
-		return ' '.__('As long as your web hosting allows http (i.e. non-SSL access) or will forward requests to https (which is almost always the case), this is no problem.', 'updraftplus').' '.__('If that is not yet set up, then you should set it up, or use below search and replace so that the non-https links are automatically replaced.', 'updraftplus');
+		$msg = ' '.__('As long as your web hosting allows http (i.e. non-SSL access) or will forward requests to https (which is almost always the case), this is no problem.', 'updraftplus');
+		if (version_compare(PHP_VERSION, '5.3', '<')) {
+			$msg .= ' '.__('If that is not yet set up, then you should set it up, or upgrade your PHP version to at least 5.3 in order to access the search and replace feature, allowing for the automatic replacement of non-HTTPS links.', 'updraftplus');
+		} else {
+			$msg .= ' '.__('If that is not yet set up, then you should set it up, or use below search and replace so that the non-https links are automatically replaced.', 'updraftplus');
+		}
+		return $msg;
 	}
 	
 	/**
@@ -343,7 +372,11 @@ class UpdraftPlus_Migrator_Lite {
 	 * @return String - filtered
 	 */
 	public function dbscan_urlchange_www_append_warning($output) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Filter use
-		return __('you will want to use below search and replace site location in the database (migrate) to search/replace the site address.', 'updraftplus');
+		if (version_compare(PHP_VERSION, '5.3', '<')) {
+			return sprintf(__("This restoration can't use the search and replace feature as it's not suitable for the PHP version (%s) your server is running on.", 'updraftplus'), PHP_VERSION).' '.__('To take advantage of the feature, please upgrade your PHP version to at least 5.3.', 'updraftplus');
+		} else {
+			return __('you will want to use below search and replace site location in the database (migrate) to search/replace the site address.', 'updraftplus');
+		}
 	}
 		
 	public function restored_plugins_one($plugin) {
@@ -486,7 +519,7 @@ class UpdraftPlus_Migrator_Lite {
 		}
 
 		// Anything else to do?
-		if (empty($this->restore_options['updraft_restorer_replacesiteurl'])) return;
+		if (empty($this->restore_options['updraft_restorer_replacesiteurl']) || version_compare(PHP_VERSION, '5.3', '<')) return;
 
 		// Can only do something if the old siteurl is known
 		$old_siteurl = isset($this->old_siteurl) ? $this->old_siteurl : '';
@@ -666,7 +699,7 @@ class UpdraftPlus_Migrator_Lite {
 				?>
 				<div class="notice error updraftplus-migration-notice is-dismissible" >					<p>
 						<?php
-						printf('<strong>'.__('Warning', 'updraftplus').':</strong> '._n('Your .htaccess has an old site reference on line number %s. You should remove it manually.', 'Your .htaccess has an old site references on line numbers %s. You should remove them manually.', $count_old_site_references, 'updraftplus'), implode(', ', $htaccess_file_reference_line_num_arr));
+						printf('<strong>'.esc_html__('Warning', 'updraftplus').':</strong> '.esc_html(_n('Your .htaccess has an old site reference on line number %s. You should remove it manually.', 'Your .htaccess has an old site references on line numbers %s. You should remove them manually.', $count_old_site_references, 'updraftplus')), esc_html(implode(', ', $htaccess_file_reference_line_num_arr)));
 						?>
 					</p>
 				</div>
@@ -776,6 +809,11 @@ class UpdraftPlus_Migrator_Lite {
 
 		global $wpdb, $updraftplus;
 
+		if (version_compare(PHP_VERSION, '5.3', '<')) {
+			$unsupported_search_replace_msg = "The search and replace operation was disregarded due to the PHP version being unsupported (".PHP_VERSION.")";
+			$updraftplus->log_e($unsupported_search_replace_msg);
+			return;
+		}
 		$updraftplus->log('Begin search and replace (updraftplus_restored_db)');
 		$updraftplus->log(__('Database: search and replace site URL', 'updraftplus'), 'database-replace-site-url');
 
@@ -1052,7 +1090,7 @@ class UpdraftPlus_Migrator_Lite {
 			$GLOBALS['updraftplus_admin']->admin_enqueue_scripts();
 			?>
 			<script>
-			var updraft_credentialtest_nonce='<?php echo wp_create_nonce('updraftplus-credentialtest-nonce');?>';
+			var updraft_credentialtest_nonce='<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce'));?>';
 			</script>		
 		<?php
 		}

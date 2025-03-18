@@ -48,6 +48,7 @@ class WPO_Cache_Rules {
 
 		add_action('update_option_page_on_front', array($this, 'purge_cache_on_homepage_change'));
 		add_action('update_option_page_for_posts', array($this, 'purge_cache_on_blog_page_change'), 10, 2);
+		add_action('update_option_show_avatars', array($this, 'purge_cache_on_avatars_change'), 10, 2);
 
 		add_action('woocommerce_variation_set_stock', array($this, 'purge_product_page'), 10, 1);
 		add_action('woocommerce_product_set_stock', array($this, 'purge_product_page'), 10, 1);
@@ -139,7 +140,7 @@ class WPO_Cache_Rules {
 			if (!$add_cookie) return;
 
 			$url = get_permalink($comment->comment_post_ID);
-			$url_info = parse_url($url);
+			$url_info = wp_parse_url($url);
 			setcookie('wpo_commented_post', 1, time() + WEEK_IN_SECONDS, isset($url_info['path']) ? $url_info['path'] : '/');
 		}
 	}
@@ -336,7 +337,7 @@ class WPO_Cache_Rules {
 
 				$term_permalink = get_term_link($term['term_id']);
 				if (!is_wp_error($term_permalink)) {
-					$url = parse_url($term_permalink);
+					$url = wp_parse_url($term_permalink);
 					// Check if the permalink contains a valid path, to avoid deleting the whole cache.
 					if (!isset($url['path']) || '/' === $url['path']) return;
 					WPO_Page_Cache::delete_cache_by_url($term_permalink, true);
@@ -389,6 +390,18 @@ class WPO_Cache_Rules {
 			WPO_Page_Cache::delete_cache_by_url(get_permalink($value));
 		}
 		WPO_Page_Cache::instance()->file_log("Cache for homepage has been purged due to changes in the Posts page options, triggered by action: " . current_filter());
+	}
+	
+	/**
+	 * Purges cache if the avatars option is changed
+	 *
+	 * @param boolean $old_value
+	 * @param boolean $value
+	 */
+	public function purge_cache_on_avatars_change(bool $old_value, ?bool $value): void {
+		if ($old_value !== $value) {
+			$this->purge_cache();
+		}
 	}
 
 	/**

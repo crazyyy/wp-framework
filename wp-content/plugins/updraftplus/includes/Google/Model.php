@@ -241,7 +241,7 @@ class Google_Model implements ArrayAccess
   {
     if ($obj && !is_array($obj)) {
       throw new Google_Exception(
-          "Incorrect parameter type passed to $method(). Expected an array."
+          "Incorrect parameter type passed to $method(). Expected an array." // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
       );
     }
   }

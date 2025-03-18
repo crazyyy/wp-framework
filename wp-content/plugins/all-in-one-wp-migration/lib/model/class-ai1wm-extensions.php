@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -46,7 +48,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMZE_PLUGIN_CHECK,
 				'basename' => AI1WMZE_PLUGIN_BASENAME,
 				'version'  => AI1WMZE_VERSION,
-				'requires' => '1.45',
+				'requires' => '1.50',
 				'short'    => AI1WMZE_PLUGIN_SHORT,
 			);
 		}
@@ -60,7 +62,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMAE_PLUGIN_CHECK,
 				'basename' => AI1WMAE_PLUGIN_BASENAME,
 				'version'  => AI1WMAE_VERSION,
-				'requires' => '1.50',
+				'requires' => '1.56',
 				'short'    => AI1WMAE_PLUGIN_SHORT,
 			);
 		}
@@ -88,7 +90,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMBE_PLUGIN_CHECK,
 				'basename' => AI1WMBE_PLUGIN_BASENAME,
 				'version'  => AI1WMBE_VERSION,
-				'requires' => '1.61',
+				'requires' => '1.66',
 				'short'    => AI1WMBE_PLUGIN_SHORT,
 			);
 		}
@@ -102,7 +104,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMIE_PLUGIN_CHECK,
 				'basename' => AI1WMIE_PLUGIN_BASENAME,
 				'version'  => AI1WMIE_VERSION,
-				'requires' => '1.61',
+				'requires' => '1.66',
 				'short'    => AI1WMIE_PLUGIN_SHORT,
 			);
 		}
@@ -116,7 +118,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMXE_PLUGIN_CHECK,
 				'basename' => AI1WMXE_PLUGIN_BASENAME,
 				'version'  => AI1WMXE_VERSION,
-				'requires' => '1.30',
+				'requires' => '1.35',
 				'short'    => AI1WMXE_PLUGIN_SHORT,
 			);
 		}
@@ -130,7 +132,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMDE_PLUGIN_CHECK,
 				'basename' => AI1WMDE_PLUGIN_BASENAME,
 				'version'  => AI1WMDE_VERSION,
-				'requires' => '3.85',
+				'requires' => '3.90',
 				'short'    => AI1WMDE_PLUGIN_SHORT,
 			);
 		}
@@ -158,7 +160,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMFE_PLUGIN_CHECK,
 				'basename' => AI1WMFE_PLUGIN_BASENAME,
 				'version'  => AI1WMFE_VERSION,
-				'requires' => '2.84',
+				'requires' => '2.90',
 				'short'    => AI1WMFE_PLUGIN_SHORT,
 			);
 		}
@@ -172,7 +174,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMCE_PLUGIN_CHECK,
 				'basename' => AI1WMCE_PLUGIN_BASENAME,
 				'version'  => AI1WMCE_VERSION,
-				'requires' => '1.53',
+				'requires' => '1.59',
 				'short'    => AI1WMCE_PLUGIN_SHORT,
 			);
 		}
@@ -186,7 +188,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMGE_PLUGIN_CHECK,
 				'basename' => AI1WMGE_PLUGIN_BASENAME,
 				'version'  => AI1WMGE_VERSION,
-				'requires' => '2.89',
+				'requires' => '2.96',
 				'short'    => AI1WMGE_PLUGIN_SHORT,
 			);
 		}
@@ -200,7 +202,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMRE_PLUGIN_CHECK,
 				'basename' => AI1WMRE_PLUGIN_BASENAME,
 				'version'  => AI1WMRE_VERSION,
-				'requires' => '1.47',
+				'requires' => '1.52',
 				'short'    => AI1WMRE_PLUGIN_SHORT,
 			);
 		}
@@ -214,7 +216,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMEE_PLUGIN_CHECK,
 				'basename' => AI1WMEE_PLUGIN_BASENAME,
 				'version'  => AI1WMEE_VERSION,
-				'requires' => '1.54',
+				'requires' => '1.60',
 				'short'    => AI1WMEE_PLUGIN_SHORT,
 			);
 		}
@@ -228,7 +230,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMME_PLUGIN_CHECK,
 				'basename' => AI1WMME_PLUGIN_BASENAME,
 				'version'  => AI1WMME_VERSION,
-				'requires' => '4.37',
+				'requires' => '4.44',
 				'short'    => AI1WMME_PLUGIN_SHORT,
 			);
 		}
@@ -242,7 +244,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMOE_PLUGIN_CHECK,
 				'basename' => AI1WMOE_PLUGIN_BASENAME,
 				'version'  => AI1WMOE_VERSION,
-				'requires' => '1.74',
+				'requires' => '1.80',
 				'short'    => AI1WMOE_PLUGIN_SHORT,
 			);
 		}
@@ -256,7 +258,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMPE_PLUGIN_CHECK,
 				'basename' => AI1WMPE_PLUGIN_BASENAME,
 				'version'  => AI1WMPE_VERSION,
-				'requires' => '1.48',
+				'requires' => '1.53',
 				'short'    => AI1WMPE_PLUGIN_SHORT,
 			);
 		}
@@ -284,7 +286,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMNE_PLUGIN_CHECK,
 				'basename' => AI1WMNE_PLUGIN_BASENAME,
 				'version'  => AI1WMNE_VERSION,
-				'requires' => '1.45',
+				'requires' => '1.51',
 				'short'    => AI1WMNE_PLUGIN_SHORT,
 			);
 		}
@@ -298,7 +300,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMSE_PLUGIN_CHECK,
 				'basename' => AI1WMSE_PLUGIN_BASENAME,
 				'version'  => AI1WMSE_VERSION,
-				'requires' => '3.85',
+				'requires' => '3.91',
 				'short'    => AI1WMSE_PLUGIN_SHORT,
 			);
 		}
@@ -312,7 +314,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMUE_PLUGIN_CHECK,
 				'basename' => AI1WMUE_PLUGIN_BASENAME,
 				'version'  => AI1WMUE_VERSION,
-				'requires' => '2.59',
+				'requires' => '2.65',
 				'short'    => AI1WMUE_PLUGIN_SHORT,
 			);
 		}
@@ -326,7 +328,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMLE_PLUGIN_CHECK,
 				'basename' => AI1WMLE_PLUGIN_BASENAME,
 				'version'  => AI1WMLE_VERSION,
-				'requires' => '2.71',
+				'requires' => '2.76',
 				'short'    => AI1WMLE_PLUGIN_SHORT,
 			);
 		}
@@ -340,7 +342,7 @@ class Ai1wm_Extensions {
 				'check'    => AI1WMWE_PLUGIN_CHECK,
 				'basename' => AI1WMWE_PLUGIN_BASENAME,
 				'version'  => AI1WMWE_VERSION,
-				'requires' => '1.42',
+				'requires' => '1.47',
 				'short'    => AI1WMWE_PLUGIN_SHORT,
 			);
 		}

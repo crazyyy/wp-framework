@@ -132,7 +132,7 @@ class Updraft_File_Logger extends Updraft_Abstract_Logger {
 
 		if (!$this->is_enabled()) return false;
 		
-		$message = sprintf("[%s : %s] - %s \n", date("Y-m-d H:i:s"), Updraft_Log_Levels::to_text($level), $this->interpolate($message, $context));
+		$message = sprintf("[%s : %s] - %s \n", gmdate("Y-m-d H:i:s"), Updraft_Log_Levels::to_text($level), $this->interpolate($message, $context));
 		
 		if (false == file_put_contents($this->logfile, $message, FILE_APPEND)) {
 			error_log($message);

@@ -301,6 +301,6 @@ class Google_Http_MediaFileUpload
 
     $error = "Failed to start the resumable upload (HTTP {$message})";
     $this->client->getLogger()->error($error);
-    throw new Google_Exception($error);
+    throw new Google_Exception($error); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
   }
 }

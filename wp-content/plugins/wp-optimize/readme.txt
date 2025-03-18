@@ -2,10 +2,10 @@
 Contributors: DavidAnderson, ruhanirabin, DNutbourne, aporter, snightingale, lumberhack, webulous
 Donate link: https://david.dw-perspective.org.uk/donate
 Tags: cache, caching, image cache, minify, performance cache, page speed, image optimizer, compress images, optimize database, clean database
-Requires PHP: 5.6
-Requires at least: 4.5
+Requires PHP: 7.2
+Requires at least: 4.9
 Tested up to: 6.7
-Stable tag: 3.8.0
+Stable tag: 4.1.1
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -219,7 +219,7 @@ When WordPress uses a particular transient, that specific transient is re-create
 Please check your database for corrupted tables. That can happen, usually your web hosting company can run the repair command on the db.
 
 = Which WordPress and PHP versions are supported? =
-To use all features in the plugin, a minimum of version WordPress 4 with PHP 5.3 are required. But we do recommend to use the latest version of WordPress. Using PHP 7+ is also highly recommended, as our caching feature will work even faster.
+To use all features in the plugin, a minimum of version WordPress 4.9 with PHP 7.2 are required. But we do recommend to use the latest version of WordPress. Using PHP 7.2+ is also highly recommended, as our caching feature will work even faster.
 
 = Which optimisation will make the biggest difference? =
 This depends on your setup (theme, number and quality of plugins used, etc...), but generally, caching will make the biggest visible difference to your website's performance. Indeed, the cache functionality bypasses most of WordPress code to serve your pre-optimised cached pages directly to your visitor, significantly increasing the speed.
@@ -395,13 +395,39 @@ If none of the above works, disable processing of JavaScript files in the minify
 
 == Changelog ==
 
+= 4.1.1 - 05/Mar/2025 =
+
+* FIX: Page builders not working with Delay JS option enabled
+
+= 4.1.0 - 03/Mar/2025 =
+
+* FEATURE: Premium - Improve performance by caching Gravatar images locally.
+* FIX: Premium - Unused images - Fixed warnings when moving non existing image to trash
+
+= 4.0.1 - 17/Feb/2025 =
+
+* FIX: File system usage issue
+
+= 4.0.0 - 10/Feb/2025 =
+
+* FEATURE: Delay JavaScript execution 
+* FIX: Cache - Fixed PHP warning "Cannot modify header information"
+* FIX: Minify - Unusual behavior occurs when the "Disable Google Fonts processing" option is enabled
+* FIX: Smush - Fixed image compression actions in Media Library
+* REFACTOR: Replacing jQuery Tablesorter with 'sortable-tablesort' package
+* TWEAK: Cache - Enhance ActivityPub compatibility
+* TWEAK: Fix PHP notice caused by subscriben plugin advert
+* TWEAK: Minimum requirements were updated to PHP version 7.2 and WordPress version 4.9 
+* TWEAK: Remove uses of `unserialize` without restriction of allowed_classes
+* TWEAK: Recognise Independent Analytics Pro plugin tables in database optimization
+
 = 3.8.0 - 09/Dec/2024 =
 
 * FEATURE: Added a system status page
 * FEATURE: Logs frequent and highly recurrent 404 requests; introduces a new Performance tab.
-* FIX: Cache - Legacy Widgets visibility issue with WP-Optimize Cache enabled 
+* FIX: Cache - Legacy Widgets visibility issue with WP-Optimize Cache enabled
 * FIX: Cache - UI issue: Preload "Cancel" option is gone after reloading the WPO settings page instantly
-* FIX: Database - optimizing any item also changes the status of other items 
+* FIX: Database - optimizing any item also changes the status of other items
 * REFACTOR: Minify - Removal of the WPO_MINIFY_PHP_VERSION_MET constant
 * TWEAK: Add a warning message before deleting post metadata or orphaned relationship data.
 * TWEAK: Bailout early if the minimum PHP version is not met
@@ -792,4 +818,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 [See changelog for all versions](https://plugins.svn.wordpress.org/wp-optimize/trunk/changelog.txt).
 
 == Upgrade Notice ==
-* 3.8.0: Two new features have been added. Repeat 404 request detector and a system status page, a lot of fixes and tweaks - a recommended update for all
+* 4.1.1: A fix for page builders with Delay JS option - a recommended update for all

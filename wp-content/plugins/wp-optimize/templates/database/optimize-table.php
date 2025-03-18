@@ -17,7 +17,7 @@ if (!defined('WPO_VERSION')) die('No direct access allowed');
 			foreach ($optimization_results as $optimization_result) {
 				if (!empty($optimization_result->output)) {
 					foreach ($optimization_result->output as $line) {
-						echo $line."<br>";
+						echo wp_kses_post($line)."<br>";
 					}
 				}
 			}

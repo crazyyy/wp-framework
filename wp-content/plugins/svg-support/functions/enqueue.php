@@ -54,7 +54,7 @@ function bodhi_svgs_block_editor() {
 	global $svgs_plugin_version;
 
 	if ( bodhi_svgs_advanced_mode() ) {
-		wp_enqueue_script( 'bodhi-svgs-gutenberg-filters', BODHI_SVGS_PLUGIN_URL . '/js/gutenberg-filters.js', ['wp-edit-post'], $svgs_plugin_version, true );
+		wp_enqueue_script( 'bodhi-svgs-gutenberg-filters', BODHI_SVGS_PLUGIN_URL . '/js/min/gutenberg-filters-min.js', ['wp-edit-post'], $svgs_plugin_version, true );
 	}
 }
 add_action( 'enqueue_block_editor_assets', 'bodhi_svgs_block_editor' );
@@ -81,7 +81,7 @@ function bodhi_svgs_frontend_js() {
 
 	if ( ! empty( $bodhi_svgs_options['sanitize_svg_front_end'] ) && $bodhi_svgs_options['sanitize_svg_front_end'] === 'on' && bodhi_svgs_advanced_mode() === true ) {
 		$bodhi_svgs_js_footer = ! empty( $bodhi_svgs_options['js_foot_choice'] );
-		wp_enqueue_script( 'bodhi-dompurify-library', BODHI_SVGS_PLUGIN_URL . 'vendor/DOMPurify/DOMPurify.min.js', array(), '1.0.1', $bodhi_svgs_js_footer );
+		wp_enqueue_script( 'bodhi-dompurify-library', BODHI_SVGS_PLUGIN_URL . 'vendor/DOMPurify/DOMPurify.min.js', array(), '2.5.8', $bodhi_svgs_js_footer );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'bodhi_svgs_frontend_js', 9 );
@@ -121,8 +121,15 @@ function bodhi_svgs_inline() {
 
 		$bodhi_svgs_js_path = 'js/' . $bodhi_svgs_js_folder . 'svgs-inline' . $bodhi_svgs_js_vanilla . $bodhi_svgs_js_file . '.js';
 
-		wp_register_script( 'bodhi_svg_inline', BODHI_SVGS_PLUGIN_URL . $bodhi_svgs_js_path, array( 'jquery' ), $svgs_plugin_version, $bodhi_svgs_js_footer );
+		// Only change: Make jQuery dependency conditional on vanilla JS setting
+		$bodhi_svgs_dependencies = ! empty( $bodhi_svgs_options['use_vanilla_js'] ) ? array() : array( 'jquery' );
+
+		wp_register_script( 'bodhi_svg_inline', BODHI_SVGS_PLUGIN_URL . $bodhi_svgs_js_path, $bodhi_svgs_dependencies, $svgs_plugin_version, $bodhi_svgs_js_footer );
 		wp_enqueue_script( 'bodhi_svg_inline' );
+
+		wp_localize_script('bodhi_svg_inline', 'svgSettings', array(
+			'skipNested' => !empty($bodhi_svgs_options['skip_nested_svg'])
+		));
 
 		wp_add_inline_script(
 			'bodhi_svg_inline',

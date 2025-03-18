@@ -291,7 +291,7 @@ final class CEI_Core {
 		
 		// Get the upload data.
 		$raw  = file_get_contents( $file['file'] );
-		$data = @unserialize( $raw, array( 'allowed_classes' => false ) );
+		$data = @unserialize( trim( $raw ), array( 'allowed_classes' => false ) );
 
 		// Remove the uploaded file.
 		unlink( $file['file'] );

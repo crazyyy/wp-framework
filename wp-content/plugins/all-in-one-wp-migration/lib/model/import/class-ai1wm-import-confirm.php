@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2023 ServMask Inc.
+ * Copyright (C) 2014-2025 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Attribution: This code is part of the All-in-One WP Migration plugin, developed by
  *
  * ███████╗███████╗██████╗ ██╗   ██╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
  * ██╔════╝██╔════╝██╔══██╗██║   ██║████╗ ████║██╔══██╗██╔════╝██║ ██╔╝
@@ -45,16 +47,24 @@ class Ai1wm_Import_Confirm {
 
 		// Confirm message
 		if ( defined( 'WP_CLI' ) ) {
-			$messages[] = __(
-				'The import process will overwrite your website including the database, media, plugins, and themes. ' .
-				'Are you sure to proceed?',
-				AI1WM_PLUGIN_NAME
+			$messages[] = sprintf(
+				__(
+					'Importing this file will only replace matching content. Other items stay unchanged. ' .
+					'Need a full reset first? Try Reset Hub in our Unlimited Extension (%s). ' .
+					'Ensure you have a current backup. Proceed?',
+					AI1WM_PLUGIN_NAME
+				),
+				'https://servmask.com/products/unlimited-extension'
 			);
 		} else {
-			$messages[] = __(
-				'The import process will overwrite your website including the database, media, plugins, and themes. ' .
-				'Please ensure that you have a backup of your data before proceeding to the next step.',
-				AI1WM_PLUGIN_NAME
+			$messages[] = sprintf(
+				__(
+					'Importing this file will only replace matching content. Other items stay unchanged. ' .
+					'Need a full reset first? Try Reset Hub in our <a href="%s" target="_blank">Unlimited Extension</a>.<br />' .
+					'Ensure you have a current backup. Proceed?',
+					AI1WM_PLUGIN_NAME
+				),
+				'https://servmask.com/products/unlimited-extension?utm_source=import-confirm&utm_medium=plugin&utm_campaign=ai1wm'
 			);
 		}
 

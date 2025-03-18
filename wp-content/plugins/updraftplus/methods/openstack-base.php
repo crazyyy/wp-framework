@@ -474,7 +474,7 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 		}
 
 		if (empty($container)) {
-			_e('Failure: No container details were given.', 'updraftplus');
+			esc_html_e('Failure: No container details were given.', 'updraftplus');
 			return;
 		}
 
@@ -486,16 +486,16 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 			$code = $response->getStatusCode();
 			$reason = $response->getReasonPhrase();
 			if (401 == $code && 'Unauthorized' == $reason) {
-				echo __('Authorisation failed (check your credentials)', 'updraftplus');
+				esc_html_e('Authorisation failed (check your credentials)', 'updraftplus');
 			} else {
-				echo __('Authorisation failed (check your credentials)', 'updraftplus')." ($code:$reason)";
+				echo esc_html(__('Authorisation failed (check your credentials)', 'updraftplus')." ($code:$reason)");
 			}
 			return;
 		} catch (AuthenticationError $e) {
-			echo sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.$e->getMessage().')';
+			echo esc_html(sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.$e->getMessage().')');
 			return;
 		} catch (Exception $e) {
-			echo sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.get_class($e).', '.$e->getMessage().')';
+			echo esc_html(sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.get_class($e).', '.$e->getMessage().')');
 			return;
 		}
 
@@ -509,16 +509,16 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 			if (404 == $code) {
 				$container_object = $storage->createContainer($container);
 			} else {
-				echo __('Authorisation failed (check your credentials)', 'updraftplus')." ($code:$reason)";
+				echo esc_html(__('Authorisation failed (check your credentials)', 'updraftplus')." ($code:$reason)");
 				return;
 			}
 		} catch (Exception $e) {
-			echo sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.get_class($e).', '.$e->getMessage().')';
+			echo esc_html(sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.get_class($e).', '.$e->getMessage().')');
 			return;
 		}
 
 		if (!is_a($container_object, 'OpenCloud\ObjectStore\Resource\Container') && !is_a($container_object, 'Container')) {
-			echo sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.get_class($container_object).')';
+			echo esc_html(sprintf(__('%s authentication failed', 'updraftplus'), $this->desc).' ('.get_class($container_object).')');
 			return;
 		}
 
@@ -527,13 +527,13 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 		try {
 			$object = $container_object->uploadObject($try_file, 'UpdraftPlus test file', array('content-type' => 'text/plain'));
 		} catch (Exception $e) {
-			echo sprintf(__('%s error - we accessed the container, but failed to create a file within it', 'updraftplus'), $this->desc).' ('.get_class($e).', '.$e->getMessage().')';
-			if (!empty($this->region)) echo ' '.sprintf(__('Region: %s', 'updraftplus'), $this->region);
+			echo esc_html(sprintf(__('%s error - we accessed the container, but failed to create a file within it', 'updraftplus'), $this->desc).' ('.get_class($e).', '.$e->getMessage().')');
+			if (!empty($this->region)) echo ' '.esc_html(sprintf(__('Region: %s', 'updraftplus'), $this->region));
 			return;
 		}
 
-		echo __('Success', 'updraftplus').": ".__('We accessed the container, and were able to create files within it.', 'updraftplus');
-		if (!empty($this->region)) echo ' '.sprintf(__('Region: %s', 'updraftplus'), $this->region);
+		echo esc_html(__('Success', 'updraftplus').": ".__('We accessed the container, and were able to create files within it.', 'updraftplus'));
+		if (!empty($this->region)) echo ' '.esc_html(sprintf(__('Region: %s', 'updraftplus'), $this->region));
 
 		try {
 			if (!empty($object)) {
@@ -560,12 +560,12 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 		$classes = $this->get_css_classes(false);
 		
 		?>
-		<tr class="<?php echo $classes . ' ' . $this->method . '_pre_config_container';?>">
+		<tr class="<?php echo esc_attr($classes . ' ' . $this->method . '_pre_config_container');?>">
 			<td colspan="2">
 				<?php
 					if (!empty($this->img_url)) {
 					?>
-						<img alt="<?php echo $this->long_desc; ?>" src="<?php echo UPDRAFTPLUS_URL.$this->img_url; ?>">
+						<img alt="<?php echo esc_attr($this->long_desc); ?>" src="<?php echo esc_url(UPDRAFTPLUS_URL.$this->img_url); ?>">
 					<?php
 					}
 					?>

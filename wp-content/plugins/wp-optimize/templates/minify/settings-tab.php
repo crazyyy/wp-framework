@@ -68,7 +68,13 @@
 						value="dynamic"
 						<?php checked('dynamic' === $wpo_minify_options['default_protocol']); ?>
 					>
-					<?php esc_html_e('Same as home URL', 'wp-optimize'); ?> (<?php printf(esc_html__('Currently: %s', 'wp-optimize'), esc_html($default_protocol));?>)
+				<?php
+					esc_html_e('Same as home URL', 'wp-optimize');
+					echo '(';
+					// translators: %s is the current HTTP protocol
+					printf(esc_html__('Currently: %s', 'wp-optimize'), esc_html($default_protocol));
+					echo ')';
+				?>
 					<span tabindex="0" data-tooltip="<?php esc_attr_e('Uses your site\'s default protocol.', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span></span>
 				</label>
 				<label>
@@ -107,7 +113,7 @@
 				type="submit"
 				value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>"
 			>
-			<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+			<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 			<span class="save-done dashicons dashicons-yes display-none"></span>
 		</p>
 	</form>

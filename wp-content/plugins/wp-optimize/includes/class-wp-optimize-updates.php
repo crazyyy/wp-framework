@@ -68,18 +68,18 @@ class WP_Optimize_Updates {
 	 */
 	public static function delete_old_locks() {
 		global $wpdb;
-
-		// using this query we delete all rows related to locks.
+		
 		$query = "DELETE FROM {$wpdb->options}".
-				" WHERE (option_name LIKE ('updraft_semaphore_%')".
-				" OR option_name LIKE ('updraft_last_lock_time_%')".
-				" OR option_name LIKE ('updraft_locked_%')".
-				" OR option_name LIKE ('updraft_unlocked_%'))".
-				" AND ".
-				"(option_name LIKE ('%smush')".
-				" OR option_name LIKE ('%load-url-task'));";
+			" WHERE (option_name LIKE ('updraft_semaphore_%')".
+			" OR option_name LIKE ('updraft_last_lock_time_%')".
+			" OR option_name LIKE ('updraft_locked_%')".
+			" OR option_name LIKE ('updraft_unlocked_%'))".
+			" AND ".
+			"(option_name LIKE ('%smush')".
+			" OR option_name LIKE ('%load-url-task'));";
 
-		$wpdb->query($query);
+		$wpdb->query($query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared query, uses only hardcoded strings
+
 	}
 
 	/**
@@ -286,7 +286,7 @@ class WP_Optimize_Updates {
 		if (false === $files) return;
 		foreach ($files as $file) {
 			if (is_file($file)) {
-				@unlink($file); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress error due to file permission issues
+				wp_delete_file($file);
 			}
 		}
 	}
@@ -302,7 +302,7 @@ class WP_Optimize_Updates {
 
 		$old_file = $upload_base . 'wpo-plugins-tables-list.json';
 		if (is_file($old_file)) {
-			@unlink($old_file); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress error due to file permission issues
+			wp_delete_file($old_file);
 		}
 		// JSON file not present in the new location, regenerate it
 		$new_file = $upload_base . 'wpo/wpo-plugins-tables-list.json';

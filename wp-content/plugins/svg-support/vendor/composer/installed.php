@@ -1,33 +1,41 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'name' => 'benbodhi/svg-support',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'c8c61134935cfdadc2860ee4224523ae8ca156a5',
+        'type' => 'wordpress-plugin',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
     ),
-    'reference' => NULL,
-    'name' => '__root__',
-  ),
-  'versions' => 
-  array (
-    '__root__' => 
-    array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
+    'versions' => array(
+        'benbodhi/svg-support' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'c8c61134935cfdadc2860ee4224523ae8ca156a5',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'cure53/dompurify' => array(
+            'pretty_version' => '2.5.8',
+            'version' => '2.5.8.0',
+            'reference' => null,
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../cure53/dompurify',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'enshrined/svg-sanitize' => array(
+            'pretty_version' => '0.21.0',
+            'version' => '0.21.0.0',
+            'reference' => '5e477468fac5c5ce933dce53af3e8e4e58dcccc9',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../enshrined/svg-sanitize',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
     ),
-    'enshrined/svg-sanitize' => 
-    array (
-      'pretty_version' => '0.14.1',
-      'version' => '0.14.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '307b42066fb0b76b5119f5e1f0826e18fefabe95',
-    ),
-  ),
 );

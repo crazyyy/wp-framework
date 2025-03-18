@@ -5,11 +5,11 @@
 	<div class="updraft-ad-container updated below-h2">
 	<div class="updraft_notice_container updraft_review_notice_container">
 		<div class="updraft_advert_content_left_extra">
-			<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/'.$image);?>" width="85" alt="<?php esc_attr_e('notice image', 'wp-optimize');?>">
+			<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/'.$image); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" width="85" alt="<?php esc_attr_e('notice image', 'wp-optimize');?>">
 		</div>
 		<div class="updraft_advert_content_right">
 			<p>
-				<?php echo $text; ?>
+				<?php echo wp_kses_post($text); ?>
 			</p>
 					
 			<?php if (!empty($button_link)) { ?>
@@ -35,7 +35,7 @@
 <div class="updraft-ad-container updated below-h2">
 	<div class="updraft_notice_container">
 		<div class="updraft_advert_content_left">
-			<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/'.$image); ?>" width="60" height="60" alt="<?php esc_attr_e('notice image', 'wp-optimize'); ?>">
+			<img src="<?php echo esc_url(WPO_PLUGIN_URL.'images/'.$image); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" width="60" height="60" alt="<?php esc_attr_e('notice image', 'wp-optimize'); ?>">
 		</div>
 		<div class="updraft_advert_content_right">
 			<h3 class="updraft_advert_heading">
@@ -53,7 +53,7 @@
 			</h3>
 			<p>
 				<?php
-				echo $text;
+					echo wp_kses_post($text);
 					$button_text = '';
 					if (isset($discount_code)) echo ' <b>' . esc_html($discount_code) . '</b>';
 
@@ -63,6 +63,8 @@
 						$button_text = __('Get UpdraftCentral', 'wp-optimize');
 					} elseif ('updraftplus' == $button_meta) {
 						$button_text = __('Get UpdraftPlus', 'wp-optimize');
+					} elseif ('subscriben' == $button_meta) {
+						$button_text = __('Get Subscriben', 'wp-optimize');
 					} elseif ('signup' == $button_meta) {
 						$button_text = __('Sign up', 'wp-optimize');
 					} elseif ('go_there' == $button_meta) {

@@ -5,7 +5,7 @@ Tags: compress, convert, webp, resize, lazy load
 Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 8.0.0
+Stable tag: 8.1.2
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -143,6 +143,41 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
+
+= 8.1.2 =
+*Release Date - March 6, 2025*
+
+* changed: WebP Conversion mode configurable for API users
+* changed: combine metadata queries for faster async scanning
+* changed: Bulk Optimization no longer requires Force Re-optimization to create WebP images for previously optimized images
+* fixed: background processes trigger notice from loading translations too early
+* fixed: WooCommerce thumb regen still runs when WC sizes are disabled
+* fixed: Easy IO fails to refresh CDN domain when site URL has changed
+* fixed: Force and WebP Only options not applied when scanning additional folders in async mode
+* fixed: PDF and SVG images queued in WebP Only mode
+
+= 8.1.1 =
+*Release Date - February 26, 2025*
+
+* changed: added handling of HTTP errors to processes on Tools page
+* changed: added nonce-renewal for long-running processes on Tools page
+* changed: improved output for WebP Cleanup tool and Delete Converted Originals tool
+* fixed: queue table upgrade fails to add 'id' column
+
+= 8.1.0 =
+*Release Date - February 18, 2025*
+
+* added: Preserve Originals option to keep pre-scaled images for WebP and thumbnail generation
+* added: ability for 3rd party plugins to hook into Lazy Load and WebP HTML parsers
+* changed: ImageMagick is default WebP conversion method on supported servers
+* changed: improved performance of custom *_option functions on multisite
+* changed: Max Image Dimensions always override WP big_image threshold
+* changed: local image backups not removed on plugin deactivation
+* fixed: Sharpen Images not applied to new WebP Conversion process
+* fixed: WebP Quality not applied to ImageMagick WebP Conversion for thumbnails
+* fixed: WebP resizing overrides custom crop set by Crop Thumbnails
+* fixed: pre-scaled original cannot be found if attachment metadata is incomplete
+* fixed: PHP error in bulk image scanner
 
 = 8.0.0 =
 *Release Date - December 11, 2024*

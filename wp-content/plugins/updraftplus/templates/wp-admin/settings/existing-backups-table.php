@@ -12,11 +12,11 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 	<thead>
 		<tr style="margin-bottom: 4px;">
 			<?php if (!defined('UPDRAFTCENTRAL_COMMAND')) : ?>
-			<th class="check-column"><label class="screen-reader-text" for="cb-select-all"><?php _e('Select All'); ?></label><input id="cb-select-all" type="checkbox"></th>
+			<th class="check-column"><label class="screen-reader-text" for="cb-select-all"><?php esc_html_e('Select All'); ?></label><input id="cb-select-all" type="checkbox"></th>
 			<?php endif; ?>
-			<th class="backup-date"><?php _e('Backup date', 'updraftplus');?></th>
-			<th class="backup-data"><?php _e('Backup data (click to download)', 'updraftplus');?></th>
-			<th class="updraft_backup_actions"><?php _e('Actions', 'updraftplus');?></th>
+			<th class="backup-date"><?php esc_html_e('Backup date', 'updraftplus');?></th>
+			<th class="backup-data"><?php esc_html_e('Backup data (click to download)', 'updraftplus');?></th>
+			<th class="updraft_backup_actions"><?php esc_html_e('Actions', 'updraftplus');?></th>
 		</tr>		
 	</thead>
 	<tbody>
@@ -46,13 +46,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 
 			$rawbackup = $updraftplus_admin->raw_backup_info($backup_history, $key, $nonce, $jobdata);
 
-			$delete_button = $updraftplus_admin->delete_button($key, $nonce, $backup);
-
-			$upload_button = $updraftplus_admin->upload_button($key, $nonce, $backup, $jobdata);
-
 			$date_label = $updraftplus_admin->date_label($pretty_date, $key, $backup, $jobdata, $nonce);
-
-			$log_button = $updraftplus_admin->log_button($backup);
 
 			// Remote backups with no log result in useless empty rows. However, not showing anything messes up the "Existing backups (14)" display, until we tweak that code to count differently
 			// if ($remote_sent && !$log_button) continue;
@@ -61,19 +55,19 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 			<tr class="updraft_existing_backups_row updraft_existing_backups_row_<?php echo esc_attr($key);?>" data-key="<?php echo esc_attr($key);?>" data-nonce="<?php echo esc_attr($nonce);?>">
 				<?php if (!defined('UPDRAFTCENTRAL_COMMAND')) : ?>
 				<td class="backup-select">
-					<label class="screen-reader-text"><?php _e('Select All'); ?></label><input type="checkbox">
+					<label class="screen-reader-text"><?php esc_html_e('Select All'); ?></label><input type="checkbox">
 				</td>
 				<?php endif; ?>
 				<td class="updraft_existingbackup_date " data-nonce="<?php echo esc_attr(wp_create_nonce("updraftplus-credentialtest-nonce")); ?>" data-timestamp="<?php echo esc_attr($key); ?>" data-label="<?php esc_attr_e('Backup date', 'updraftplus');?>">
 					<div tabindex="0" class="backup_date_label">
 						<?php
-							echo $date_label;
+							echo wp_kses_post($date_label);
 							if (!empty($backup['always_keep'])) {
 								$wp_version = $updraftplus->get_wordpress_version();
 								if (version_compare($wp_version, '3.8.0', '<')) {
 									$image_url = $image_folder_url.'lock.png';
 									?>
-									<img class="stored_icon" src="<?php echo esc_attr($image_url);?>" title="<?php echo esc_attr(__('Only allow this backup to be deleted manually (i.e. keep it even if retention limits are hit).', 'updraftplus'));?>">
+									<img class="stored_icon" src="<?php echo esc_url($image_url);?>" title="<?php esc_attr_e('Only allow this backup to be deleted manually (i.e. keep it even if retention limits are hit).', 'updraftplus');?>">
 									<?php
 								} else {
 									echo '<span class="dashicons dashicons-lock"  title="'.esc_attr(__('Only allow this backup to be deleted manually (i.e. keep it even if retention limits are hit).', 'updraftplus')).'"></span>';
@@ -89,7 +83,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 
 									$remote_storage = ('remotesend' === $service) ? __('remote site', 'updraftplus') : $updraftplus->backup_methods[$service];
 									?>
-									<img class="stored_icon" src="<?php echo esc_attr($image_url);?>" title="<?php echo esc_attr(sprintf(__('Remote storage: %s', 'updraftplus'), $remote_storage));?>">
+									<img class="stored_icon" src="<?php echo esc_url($image_url);?>" title="<?php echo esc_attr(sprintf(__('Remote storage: %s', 'updraftplus'), $remote_storage));?>">
 									<?php
 								}
 							}
@@ -97,12 +91,12 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 					</div>
 				</td>
 				
-				<td data-label="<?php _e('Backup data (click to download)', 'updraftplus');?>"><?php
+				<td data-label="<?php esc_attr_e('Backup data (click to download)', 'updraftplus');?>"><?php
 
 				if ($remote_sent) {
 
-					_e('Backup sent to remote site - not available for download.', 'updraftplus');
-					if (!empty($backup['remotesend_url'])) echo '<br>'.__('Site', 'updraftplus').': <a href="'.esc_attr($backup['remotesend_url']).'">'.htmlspecialchars($backup['remotesend_url']).'</a>';
+					esc_html_e('Backup sent to remote site - not available for download.', 'updraftplus');
+					if (!empty($backup['remotesend_url'])) echo '<br>'.esc_html__('Site', 'updraftplus').': <a href="'.esc_url($backup['remotesend_url']).'">'.esc_html($backup['remotesend_url']).'</a>';
 
 				} else {
 
@@ -115,13 +109,13 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 							$db = is_array($backup['db']) ? $backup['db'][0] : $backup['db'];
 							if (UpdraftPlus_Encryption::is_file_encrypted($db)) $entities .= '/dbcrypted=1/';
 
-							echo $updraftplus_admin->download_db_button('db', $key, $esc_pretty_date, $backup, $accept);
+							$updraftplus_admin->download_db_button('db', $key, $esc_pretty_date, $backup, $accept);
 						}
 
 						// External databases
 						foreach ($backup as $bkey => $binfo) {
 							if ('db' == $bkey || 'db' != substr($bkey, 0, 2) || '-size' == substr($bkey, -5, 5)) continue;
-							echo $updraftplus_admin->download_db_button($bkey, $key, $esc_pretty_date, $backup);
+							$updraftplus_admin->download_db_button($bkey, $key, $esc_pretty_date, $backup);
 						}
 
 					} else {
@@ -133,18 +127,18 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 						$entities .= '/meta_foreign=2/';
 					}
 
-					echo $updraftplus_admin->download_buttons($backup, $key, $accept, $entities, $esc_pretty_date);
+					$updraftplus_admin->download_buttons($backup, $key, $accept, $entities, $esc_pretty_date);
 
 				}
 
 				?>
 				</td>
-				<td class="before-restore-button" data-label="<?php _e('Actions', 'updraftplus');?>">
+				<td class="before-restore-button" data-label="<?php esc_attr_e('Actions', 'updraftplus');?>">
 					<?php
-					echo $updraftplus_admin->restore_button($backup, $key, $pretty_date, $entities);
-					echo $upload_button;
-					echo $delete_button;
-					if (empty($backup['meta_foreign'])) echo $log_button;
+					$updraftplus_admin->restore_button($backup, $key, $pretty_date, $entities);
+					$updraftplus_admin->upload_button($key, $nonce, $backup, $jobdata);
+					$updraftplus_admin->delete_button($key, $nonce, $backup);
+					if (empty($backup['meta_foreign'])) $updraftplus_admin->log_button($backup);
 					?>
 				</td>
 			</tr>
@@ -155,7 +149,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 	<tfoot>
 		<tr class="updraft_existing_backups_page_actions">
 			<td colspan="4" style="text-align: center;">
-				<a class="updraft-load-more-backups"><?php _e('Show more backups...', 'updraftplus');?></a> | <a class="updraft-load-all-backups"><?php _e('Show all backups...', 'updraftplus');?></a>
+				<a class="updraft-load-more-backups"><?php esc_html_e('Show more backups...', 'updraftplus');?></a> | <a class="updraft-load-all-backups"><?php esc_html_e('Show all backups...', 'updraftplus');?></a>
 			</td>
 		</tr>
 	</tfoot>
@@ -163,14 +157,14 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 </table>
 <?php if (!defined('UPDRAFTCENTRAL_COMMAND')) : ?>
 <div id="ud_massactions">
-	<strong><?php _e('Actions upon selected backups', 'updraftplus');?></strong>
-	<div class="updraftplus-remove"><button title="<?php _e('Delete selected backups', 'updraftplus');?>" type="button" class="button button-remove js--delete-selected-backups"><?php _e('Delete', 'updraftplus');?></button></div>
-	<div class="updraft-viewlogdiv"><button title="<?php _e('Select all backups', 'updraftplus');?>" type="button" class="button js--select-all-backups" href="#"><?php _e('Select all', 'updraftplus');?></button></div>
-	<div class="updraft-viewlogdiv"><button title="<?php _e('Deselect all backups', 'updraftplus');?>" type="button" class="button js--deselect-all-backups" href="#"><?php _e('Deselect', 'updraftplus');?></button></div>
-	<small class="ud_massactions-tip"><?php _e('Use ctrl / cmd + press to select several items, or ctrl / cmd + shift + press to select all in between', 'updraftplus'); ?></small>
+	<strong><?php esc_html_e('Actions upon selected backups', 'updraftplus');?></strong>
+	<div class="updraftplus-remove"><button title="<?php esc_attr_e('Delete selected backups', 'updraftplus');?>" type="button" class="button button-remove js--delete-selected-backups"><?php esc_html_e('Delete', 'updraftplus');?></button></div>
+	<div class="updraft-viewlogdiv"><button title="<?php esc_attr_e('Select all backups', 'updraftplus');?>" type="button" class="button js--select-all-backups" href="#"><?php esc_html_e('Select all', 'updraftplus');?></button></div>
+	<div class="updraft-viewlogdiv"><button title="<?php esc_attr_e('Deselect all backups', 'updraftplus');?>" type="button" class="button js--deselect-all-backups" href="#"><?php esc_html_e('Deselect', 'updraftplus');?></button></div>
+	<small class="ud_massactions-tip"><?php esc_html_e('Use ctrl / cmd + press to select several items, or ctrl / cmd + shift + press to select all in between', 'updraftplus'); ?></small>
 </div>
 <div id="updraft-delete-waitwarning" class="updraft-hidden" style="display:none;">
-	<span class="spinner"></span> <em><?php _e('Deleting...', 'updraftplus');?> <span class="updraft-deleting-remote"><?php _e('Please allow time for the communications with the remote storage to complete.', 'updraftplus');?><span></em>
+	<span class="spinner"></span> <em><?php esc_html_e('Deleting...', 'updraftplus');?> <span class="updraft-deleting-remote"><?php esc_html_e('Please allow time for the communications with the remote storage to complete.', 'updraftplus');?><span></em>
 	<p id="updraft-deleted-files-total"></p>
 </div>
 <?php endif;

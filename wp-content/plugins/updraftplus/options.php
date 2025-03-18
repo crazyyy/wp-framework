@@ -149,7 +149,7 @@ class UpdraftPlus_Options {
 		global $pagenow;
 		echo '<form method="post"';
 		
-		if ('' != $classes) echo ' class="'.$classes.'"';
+		if ('' != $classes) echo ' class="'.esc_attr($classes).'"';
 		
 		$page = '';
 		if ('options-general.php' == $pagenow) $page = "options.php";
@@ -167,7 +167,7 @@ class UpdraftPlus_Options {
 			}
 		}
 
-		if ($page) echo ' action="'.$page.'"';
+		if ($page) echo ' action="'.esc_url($page).'"';
 
 		if (!$allow_autocomplete) echo ' autocomplete="off"';
 		echo '>';
@@ -184,8 +184,7 @@ class UpdraftPlus_Options {
 			// Add back the page parameter if it looks like we were on the settings page via an OAuth callback that has now had all parameters removed. This is likely unnecessarily conservative, but there's nothing requiring more than this at the current time.
 			if (substr($referer, -19, 19) == 'options-general.php' && false !== strpos($_SERVER['REQUEST_URI'], '?')) $referer .= '?page=updraftplus';
 
-			$referer_field = '<input type="hidden" name="_wp_http_referer" value="'. esc_attr($referer) . '" />';
-			echo $referer_field;
+			echo '<input type="hidden" name="_wp_http_referer" value="'. esc_attr($referer) . '" />';
 		}
 	}
 

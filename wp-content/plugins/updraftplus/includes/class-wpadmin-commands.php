@@ -116,7 +116,8 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 
 		if (isset($res['updraft_restore'])) {
 
-			set_error_handler(array($this->_updraftplus_admin, 'get_php_errors'), E_ALL & ~E_STRICT);
+			$error_levels = version_compare(PHP_VERSION, '8.4.0', '>=') ? E_ALL : E_ALL & ~E_STRICT;
+			set_error_handler(array($this->_updraftplus_admin, 'get_php_errors'), $error_levels);
 
 			$elements = array_flip($res['updraft_restore']);
 
@@ -396,14 +397,14 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 	
 		if (function_exists('phpinfo')) phpinfo(INFO_ALL ^ (INFO_CREDITS | INFO_LICENSE));
 
-		echo '<h3 id="ud-debuginfo-constants">'.__('Constants', 'updraftplus').'</h3>';
+		echo '<h3 id="ud-debuginfo-constants">'.esc_html__('Constants', 'updraftplus').'</h3>';
 		$opts = @get_defined_constants();// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 		ksort($opts);
 		echo '<table><thead></thead><tbody>';
 		foreach ($opts as $key => $opt) {
 			// Administrators can already read these in other ways, but we err on the side of caution
 			if (is_string($opt) && false !== stripos($opt, 'api_key')) $opt = '***';
-			echo '<tr><td>'.htmlspecialchars($key).'</td><td>'.htmlspecialchars(print_r($opt, true)).'</td>';
+			echo '<tr><td>'.esc_html($key).'</td><td>'.esc_html(print_r($opt, true)).'</td>';
 		}
 		echo '</tbody></table>';
 		
@@ -870,5 +871,67 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 			'size' => size_format((int) $db_table_size, 2),
 			'html' => $db_table_html
 		);
+	}
+
+	/**
+	 * Retrieves the scheduled UpdraftPlus cron events.
+	 *
+	 * This function fetches all cron events and filters those related to UpdraftPlus.
+	 * It then formats the schedule information, calculates the time difference,
+	 * and returns a structured array of cron details.
+	 *
+	 * @return array[] An array of cron event details, where each event contains:
+	 *                - `overdue` (int): Whether the event is overdue (1) or not (0).
+	 *                - `hook` (string): The name of the cron hook.
+	 *                - `name` (string): The display name of the schedule.
+	 *                - `time` (string): The formatted execution time.
+	 *                - `interval` (string): The time remaining or overdue duration.
+	 */
+	public function get_cron_events() {
+		$data = array();
+
+		$schedules = wp_get_schedules();
+		$cron = _get_cron_array();
+
+		$date_format = get_option('date_format');
+		$time_format = get_option('time_format');
+
+		// Loop through the cron schedules
+		foreach ($cron as $timestamp => $cron_hooks) {
+			foreach ($cron_hooks as $hook => $events) {
+				if (!preg_match('/^updraft(_backup(_database|_resume|_increments)?|plus_clean_temporary_files)$/', $hook)) continue;
+
+				sort($events);
+
+				$schedule_name = $schedules[$events[0]['schedule']];
+
+				$formatted_date = wp_date($date_format. ' ' .$time_format, $timestamp);
+
+				$difference = $timestamp - current_time('timestamp', true);
+				$difference_in_seconds = abs($difference);
+				$overdue = $difference < 0 ? 1 : 0;
+
+				$hours = floor($difference_in_seconds / 3600);
+				$minutes = floor(($difference_in_seconds % 3600) / 60);
+
+				if ($overdue) {
+					// translators: 1: Number of hours, 2: Number of minutes
+					$interval = sprintf(__('%1$d hours and %2$d minutes ago', 'updraftplus'), $hours, $minutes);
+				} else {
+					// translators: 1: Number of hours, 2: Number of minutes
+					$interval = sprintf(__('%1$d hours and %2$d minutes', 'updraftplus'), $hours, $minutes);
+				}
+
+				$data[] = array(
+					'overdue' => $overdue,
+					'hook' => $hook,
+					'name' => $schedule_name['display'],
+					'time' => $formatted_date,
+					'interval' => $interval
+				);
+			}
+		}
+
+		return $data;
 	}
 }

@@ -51,7 +51,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->account_url = 'https://really-simple-ssl.com/account';
 						$this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
 						break;
-					case "burst_pro":
+/*					case "burst_pro":
 						$this->slug = "burst-pro/burst-pro.php";
 						$this->plugin_name = "Burst";
 						$this->plugin_constant = "burst_pro";
@@ -60,7 +60,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->dashboard_url = add_query_arg(["page" => "burst"], admin_url( "index.php" ));
 						$this->account_url = 'https://burst-statistics.com/account';
 						$this->instructions = 'https://burst-statistics.com/how-to-install-burst-premium';
-						break;
+						break;*/
 					case "cmplz_pro":
 					default:
 						$this->slug = is_multisite() ? "complianz-gdpr-premium-multisite/complianz-gpdr-premium.php" : "complianz-gdpr-premium/complianz-gpdr-premium.php";

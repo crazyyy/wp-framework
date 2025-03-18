@@ -21,17 +21,17 @@ function bodhi_svgs_wpallimport_handle_svg( $attachment_id ) {
 		// Sanitize the SVG file.
 		if ( ! bodhi_svgs_sanitize_svg_on_import( $file_path ) ) {
 			// Log the error without deleting the attachment.
-			error_log( sprintf( 'SVG Sanitization failed for attachment ID %d during WP All Import.', $attachment_id ) );
+			// error_log( sprintf( 'SVG Sanitization failed for attachment ID %d during WP All Import.', $attachment_id ) );
 		}
 
 		// Generate attachment metadata for the SVG.
 		$metadata = wp_generate_attachment_metadata( $attachment_id, $file_path );
 		if ( ! empty( $metadata ) ) {
 			if ( ! wp_update_attachment_metadata( $attachment_id, $metadata ) ) {
-				error_log( sprintf( 'Failed to update metadata for SVG attachment ID %d during WP All Import.', $attachment_id ) );
+				// error_log( sprintf( 'Failed to update metadata for SVG attachment ID %d during WP All Import.', $attachment_id ) );
 			}
 		} else {
-			error_log( sprintf( 'Failed to generate metadata for SVG attachment ID %d during WP All Import.', $attachment_id ) );
+			// error_log( sprintf( 'Failed to generate metadata for SVG attachment ID %d during WP All Import.', $attachment_id ) );
 		}
 	}
 }
@@ -56,12 +56,12 @@ function bodhi_svgs_sanitize_svg_on_import( $file_path ) {
 			);
 			return true;
 		} else {
-			error_log( sprintf( 'Sanitization failed for SVG file at path %s.', $file_path ) );
+			// error_log( sprintf( 'Sanitization failed for SVG file at path %s.', $file_path ) );
 			return false;
 		}
 	}
 
-	error_log( sprintf( 'SVG file at path %s is either missing or not readable.', $file_path ) );
+	// error_log( sprintf( 'SVG file at path %s is either missing or not readable.', $file_path ) );
 	return false;
 }
 

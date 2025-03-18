@@ -69,10 +69,12 @@ class WP_Optimization_repairtables extends WP_Optimization {
 				}
 			}
 
-			$this->register_output(sprintf(_n('%s table repaired', '%s tables repaired', $repaired), $repaired));
+			// translators: %s is number of tables repaired.
+			$this->register_output(sprintf(_n('%s table repaired', '%s tables repaired', $repaired, 'wp-optimize'), $repaired));
 
 			if ($corrupted > 0) {
-				$this->register_output(sprintf(_n('Repairing %s table was unsuccessful', 'Repairing %s tables were unsuccessful', $corrupted), $corrupted));
+				// translators: %s is number of tables
+				$this->register_output(sprintf(_n('Repairing %s table was unsuccessful', 'Repairing %s tables were unsuccessful', $corrupted, 'wp-optimize'), $corrupted));
 			}
 		}
 	}
@@ -93,7 +95,7 @@ class WP_Optimization_repairtables extends WP_Optimization {
 
 		$this->logger->info('REPAIR TABLE `'.$table_obj->Name. '`');
 
-		$results = $wpdb->get_results('REPAIR TABLE `'.$table_obj->Name . '`');
+		$results = $wpdb->get_results('REPAIR TABLE `'. esc_sql($table_obj->Name) . '`');
 
 		if (!empty($results)) {
 			foreach ($results as $row) {
@@ -144,7 +146,8 @@ class WP_Optimization_repairtables extends WP_Optimization {
 		if (0 == $corrupted_tables) {
 			$this->register_output(__('No corrupted tables found', 'wp-optimize'));
 		} else {
-			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables), $corrupted_tables));
+			// translators: %s is number of corrupted tables
+			$this->register_output(sprintf(_n('%s corrupted table found', '%s corrupted tables found', $corrupted_tables, 'wp-optimize'), $corrupted_tables));
 		}
 	}
 

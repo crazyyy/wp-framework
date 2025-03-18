@@ -48,6 +48,6 @@
 
 <input id="wp-optimize-save-cache-preload-settings" class="button button-primary" type="submit" name="wp-optimize-save-cache-preload-settings" value="<?php esc_attr_e('Save changes', 'wp-optimize');?>">
 
-<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 
 <span class="save-done dashicons dashicons-yes display-none"></span>

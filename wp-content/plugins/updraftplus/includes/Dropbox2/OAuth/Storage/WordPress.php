@@ -64,7 +64,7 @@ class Dropbox_WordPress implements Dropbox_StorageInterface
 	public function get($type)
 	{
 		if ($type != 'request_token' && $type != 'access_token' && $type != 'appkey' && $type != 'CSRF' && $type != 'code') {
-			throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF' or 'code', got '$type'");
+			throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF' or 'code', got '$type'"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
 		} else {
 			if (false !== ($opts = $this->backup_module_object->get_options())) {
 				if ($type == 'request_token' || $type == 'access_token'){
@@ -93,7 +93,7 @@ class Dropbox_WordPress implements Dropbox_StorageInterface
 	public function set($token, $type)
 	{
 		if ($type != 'request_token' && $type != 'access_token' && $type != 'upgraded' && $type != 'CSRF' && $type != 'code') {
-			throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF', 'upgraded' or 'code', got '$type'");
+			throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF', 'upgraded' or 'code', got '$type'"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
 		} else {
 			
 			$opts = $this->backup_module_object->get_options();
@@ -125,7 +125,7 @@ class Dropbox_WordPress implements Dropbox_StorageInterface
 	public function do_unset($type)
 	{
 		if ($type != 'request_token' && $type != 'access_token' && $type != 'upgraded' && $type != 'CSRF' && $type != 'code') {
-			throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF', 'upgraded' or 'code', got '$type'");
+			throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF', 'upgraded' or 'code', got '$type'"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
 		} else {
 			
 			$opts = $this->backup_module_object->get_options();

@@ -5,14 +5,15 @@
 		<div class="wpo-info__content">
 			<p><strong><?php esc_html_e('Not sure how to use the image compression feature?', 'wp-optimize'); ?></strong> <br><?php esc_html_e('Watch our howto video below.', 'wp-optimize'); ?></p>
 			<div class="wpo-video-preview">
-				<a href="https://vimeo.com/333938451" data-embed="https://player.vimeo.com/video/333938451?color=df6926&title=0&byline=0&portrait=0" target="_blank"><img src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/image-compression-video-preview.png'); ?>" alt="<?php esc_attr_e('Video preview', 'wp-optimize'); ?>" /></a>
+				<a href="https://vimeo.com/333938451" data-embed="https://player.vimeo.com/video/333938451?color=df6926&title=0&byline=0&portrait=0" target="_blank"><img src="<?php echo esc_url(trailingslashit(WPO_PLUGIN_URL) . 'images/notices/image-compression-video-preview.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="<?php esc_attr_e('Video preview', 'wp-optimize'); ?>" /></a>
 			</div>
 			<small>(<?php esc_html_e('Loads a video hosted on vimeo.com', 'wp-optimize'); ?>) - <?php $wp_optimize->wp_optimize_url('https://vimeo.com/333938451', __('Open the video in a new window', 'wp-optimize')); ?></small>
 		</div>
 	</div>
 	<p>
 		<?php
-			printf(__('Note: Image optimization feature is offered via %s free API', 'wp-optimize'), '<a href="https://resmush.it/" target="_blank">reSmush.it</a>');
+			// translators: %s is a link to reSmush.it website
+			printf(esc_html__('Note: Image optimization feature is offered via %s free API', 'wp-optimize'), '<a href="https://resmush.it/" target="_blank">reSmush.it</a>');
 		?>
 	</p>
 	<div class="wpo-fieldgroup">
@@ -124,7 +125,7 @@
 				<br>
 				<input type="checkbox" id="smush-backup-delete" class="smush-options" <?php checked($smush_options['back_up_delete_after']); ?> >
 				<label for="smush-backup-delete"><?php esc_html_e('Automatically delete image backups after', 'wp-optimize');?><input id="smush-backup-delete-days" type="number" min="1" value="<?php echo (0 !== intval($smush_options['back_up_delete_after_days'])) ? intval($smush_options['back_up_delete_after_days']) : 50; ?>"><?php esc_html_e('days', 'wp-optimize');?></label><label> — <?php esc_html_e('or', 'wp-optimize'); ?></label> <button type="button" id="wpo_smush_delete_backup_btn" class="wpo_primary_small button"><?php esc_html_e('Delete all backup images now', 'wp-optimize'); ?></button>
-				<img id="wpo_smush_delete_backup_spinner" class="display-none" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+				<img id="wpo_smush_delete_backup_spinner" class="display-none" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 				<span id="wpo_smush_delete_backup_done" class="dashicons dashicons-yes display-none save-done"></span>
 				<br>
 				<button type="button" id="wpo_smush_mark_all_as_uncompressed_btn" class="wpo_primary_small button"><?php esc_html_e('Mark all images as uncompressed', 'wp-optimize'); ?></button>
@@ -140,7 +141,7 @@
 			</div>
 		</div>
 		<div class="save-options">
-			<img id="wpo_smush_images_save_options_spinner" class="display-none" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+			<img id="wpo_smush_images_save_options_spinner" class="display-none" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 			<span id="wpo_smush_images_save_options_done" class="display-none"><span class="dashicons dashicons-yes"></span> <?php esc_html_e('Saved options', 'wp-optimize');?></span>
 			<span id="wpo_smush_images_save_options_fail" class="display-none"><span class="dashicons dashicons-no"></span> <?php esc_html_e('Failed to save options', 'wp-optimize');?></span>
 		</div>
@@ -167,7 +168,7 @@
 				<a href="javascript:;" id="wpo_smush_images_refresh" class="wpo-refresh-button"><?php esc_html_e('Refresh image list', 'wp-optimize');?> 
 					<span class="dashicons dashicons-image-rotate"></span>
 				</a>
-				<img class="wpo_smush_images_loader" width="16" height="16" src="<?php echo esc_url(admin_url('/images/spinner-2x.gif')); ?>" />
+				<img class="wpo_smush_images_loader" width="16" height="16" src="<?php echo esc_url(admin_url('/images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" />
 			</div>
 		</div>
 		<div id="wpo_smush_images_grid"></div>

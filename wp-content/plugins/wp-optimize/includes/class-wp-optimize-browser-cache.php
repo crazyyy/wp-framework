@@ -189,11 +189,13 @@ class WP_Optimize_Browser_Cache {
 			$cache_section = $this->prepare_browser_cache_section($expiry_time);
 
 			if ($enable) {
+				// translators: %s is a file name
 				$message = sprintf(__("We can\'t update your %s file.", 'wp-optimize'), $this->_htaccess->get_filename()) . ' ' . __('Please try to add following lines manually:', 'wp-optimize');
 				$output = htmlentities($this->_htaccess->get_section_begin_comment() . PHP_EOL .
 						  join(PHP_EOL, $this->_htaccess->get_flat_array($cache_section)).
 						  PHP_EOL . $this->_htaccess->get_section_end_comment());
 			} else {
+				// translators: %s is a file name
 				$message = sprintf(__("We can\'t update your %s file.", 'wp-optimize'), $this->_htaccess->get_filename()) . ' ' . __('Please try to remove following lines manually:', 'wp-optimize');
 				$output = htmlentities($this->_htaccess->get_section_begin_comment() . PHP_EOL .
 					' ... ... ... '.

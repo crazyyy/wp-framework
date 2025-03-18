@@ -101,7 +101,7 @@ class UpdraftPlus_Admin {
 
 		if (!file_exists($template_file)) {
 			error_log("UpdraftPlus: template not found: $template_file");
-			echo __('Error:', 'updraftplus').' '.__('template not found', 'updraftplus')." ($path)";
+			echo esc_html(__('Error:', 'updraftplus').' '.__('template not found', 'updraftplus').' ('.$path.')');
 		} else {
 			extract($extract_these);
 			global $updraftplus, $wpdb;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Passed though to template file.
@@ -440,7 +440,7 @@ class UpdraftPlus_Admin {
 		
 		if (isset($files_not_scheduled) && isset($database_not_scheduled)) {
 		?>
-			<span class="not-scheduled"><?php _e('Nothing currently scheduled', 'updraftplus'); ?></span>
+			<span class="not-scheduled"><?php esc_html_e('Nothing currently scheduled', 'updraftplus'); ?></span>
 		<?php
 		} else {
 			echo empty($next_scheduled_backup_database_same_time) ? esc_html__('Files', 'updraftplus') : esc_html__('Files and database', 'updraftplus');
@@ -488,9 +488,9 @@ class UpdraftPlus_Admin {
 		}
 		
 		if ($files_not_scheduled) {
-			echo '<span>'.$next_scheduled_backup.'</span>';
+			echo '<span>'.esc_html($next_scheduled_backup).'</span>';
 		} else {
-			echo '<span class="updraft_next_scheduled_date_time">'.$next_scheduled_backup.'</span>';
+			echo '<span class="updraft_next_scheduled_date_time">'.esc_html($next_scheduled_backup).'</span>';
 		}
 		
 		if ($return_instead_of_echo) return ob_get_clean();
@@ -643,6 +643,11 @@ class UpdraftPlus_Admin {
 			return;
 		}
 
+		if (isset($_REQUEST['udaction']) && 'initiate_restore' === $_REQUEST['udaction']) {
+			// capability, backup_timestamp and nonce validations
+			if (!UpdraftPlus_Options::user_can_manage() || (!empty($_REQUEST['backup_timestamp']) && !preg_match('#^[0-9]+$#i', $_REQUEST['backup_timestamp'])) || !isset($_REQUEST['restore_initiation_nonce']) || !wp_verify_nonce($_REQUEST['restore_initiation_nonce'], 'updraftplus_udcentral_initiate_restore')) wp_die(esc_html__('Sorry, you are not allowed to access this page.', 'updraftplus'));
+		}
+
 		// Next, the actions that only come on the UpdraftPlus page
 		$this->setup_all_admin_notices_udonly($service);
 
@@ -676,7 +681,7 @@ class UpdraftPlus_Admin {
 		<script>
 			jQuery(function($) {
 				if ($('#dashboard-widgets #dashboard_php_nag').length < 1) return;
-				$('#dashboard-widgets #dashboard_php_nag .button-container').before('<div class="updraft-ad-container"><a href="<?php echo UpdraftPlus_Options::admin_page_url(); ?>?page=updraftplus&amp;tab=migrate#updraft-navtab-migrate-content"><?php echo esc_js(__('You can test running your site on a different PHP (or WordPress) version using UpdraftClone credits.', 'updraftplus')); ?></a> (<a href="#" onclick="jQuery(\'.updraft-ad-container\').slideUp(); jQuery.post(ajaxurl, {action: \'updraft_ajax\', subaction: \'dismiss_clone_php_notice\', nonce: \'<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce')); ?>\' });return false;"><?php echo esc_js(__('Dismiss notice', 'updraftplus')); ?></a>)</div>');
+				$('#dashboard-widgets #dashboard_php_nag .button-container').before('<div class="updraft-ad-container"><a href="<?php echo esc_url(UpdraftPlus_Options::admin_page_url()); ?>?page=updraftplus&amp;tab=migrate#updraft-navtab-migrate-content"><?php echo esc_js(__('You can test running your site on a different PHP (or WordPress) version using UpdraftClone credits.', 'updraftplus')); ?></a> (<a href="#" onclick="jQuery(\'.updraft-ad-container\').slideUp(); jQuery.post(ajaxurl, {action: \'updraft_ajax\', subaction: \'dismiss_clone_php_notice\', nonce: \'<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce')); ?>\' });return false;"><?php echo esc_js(__('Dismiss notice', 'updraftplus')); ?></a>)</div>');
 			});
 		</script>
 		<?php
@@ -870,7 +875,10 @@ class UpdraftPlus_Admin {
 		$updraft_min_or_not = $updraftplus->get_updraftplus_file_version();
 
 		// Defeat other plugins/themes which dump their jQuery UI CSS onto our settings page
-		wp_deregister_style('jquery-ui');
+		if (!wp_style_is('jquery-ui', 'done')) {
+			wp_dequeue_style('jquery-ui');
+			wp_deregister_style('jquery-ui');
+		}
 		$jquery_ui_version = version_compare($updraftplus->get_wordpress_version(), '5.6', '>=') ? '1.12.1' : '1.11.4';
 		$jquery_ui_css_enqueue_version = $updraftplus->use_unminified_scripts() ? $jquery_ui_version.'.0'.'.'.time() : $jquery_ui_version.'.0';
 		wp_enqueue_style('updraft-jquery-ui', UPDRAFTPLUS_URL."/includes/jquery-ui.custom-v$jquery_ui_version$updraft_min_or_not.css", array(), $jquery_ui_css_enqueue_version);
@@ -1195,10 +1203,14 @@ class UpdraftPlus_Admin {
 			if (!class_exists('UpdraftPlus_Addon_Autobackup')) {
 				if (!class_exists('UpdraftPlus_Notices')) updraft_try_include_file('includes/updraftplus-notices.php', 'include_once');
 				global $updraftplus_notices;
-				echo apply_filters('updraftplus_autobackup_blurb', $updraftplus_notices->do_notice('autobackup', 'autobackup', true));
+				$notice = $updraftplus_notices->do_notice('autobackup', 'autobackup', true);
 			} else {
-				echo apply_filters('updraftplus_autobackup_blurb', '');
+				$notice = '';
 			}
+
+			add_filter('safe_style_css', array($this, 'kses_allow_style_display'));
+			echo wp_kses(apply_filters('updraftplus_autobackup_blurb', $notice), $this->kses_allow_tags());
+			remove_filter('safe_style_css', array($this, 'kses_allow_style_display'));
 		?>
 		<script>
 		jQuery(function() {
@@ -1256,12 +1268,12 @@ class UpdraftPlus_Admin {
 		}
 
 		?><script>
-			var updraft_credentialtest_nonce = '<?php echo wp_create_nonce('updraftplus-credentialtest-nonce');?>';
-			var updraftplus_settings_nonce = '<?php echo wp_create_nonce('updraftplus-settings-nonce');?>';
+			var updraft_credentialtest_nonce = '<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce'));?>';
+			var updraftplus_settings_nonce = '<?php echo esc_js(wp_create_nonce('updraftplus-settings-nonce'));?>';
 			var updraft_siteurl = '<?php echo esc_js(site_url('', 'relative'));?>';
 			var updraft_plupload_config = <?php echo json_encode($plupload_init); ?>;
-			var updraft_download_nonce = '<?php echo wp_create_nonce('updraftplus_download');?>';
-			var updraft_accept_archivename = <?php echo apply_filters('updraftplus_accept_archivename_js', "[]");?>;
+			var updraft_download_nonce = '<?php echo esc_js(wp_create_nonce('updraftplus_download'));?>';
+			var updraft_accept_archivename = <?php echo esc_js(apply_filters('updraftplus_accept_archivename_js', "[]"));?>;
 			<?php
 			$plupload_init['browse_button'] = 'plupload-browse-button2';
 			$plupload_init['container'] = 'plupload-upload-ui2';
@@ -1369,7 +1381,7 @@ class UpdraftPlus_Admin {
 	 * @param String $class	  - CSS class to use for the div
 	 */
 	public function show_admin_warning($message, $class = 'updated') {
-		echo '<div class="updraftmessage '.esc_attr($class).'">'."<p>$message</p></div>";
+		echo '<div class="updraftmessage '.esc_attr($class).'"><p>'.$message.'</p></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- As the docblock says, the $message param should be already escaped before passing it to this method
 	}
 
 	public function show_admin_warning_multiple_storage_options() {
@@ -1833,7 +1845,7 @@ class UpdraftPlus_Admin {
 			
 			if (is_string($results)) {
 				// A handful of legacy methods, and some which are directly the source for iframes, for which JSON is not appropriate.
-				echo $results;
+				echo $results; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --the escaping should take place at the time the caller of this ajax handler receives a response from its request possibly after calling wp_remote_*() or JS jQuery.ajax()
 			} else {
 				echo json_encode($results);
 			}
@@ -2853,7 +2865,7 @@ class UpdraftPlus_Admin {
 		remove_filter('upload_dir', array($this, 'upload_dir'));
 		remove_filter('sanitize_file_name', array($this, 'sanitize_file_name'));
 
-		if (isset($status['error'])) die('ERROR: '.$status['error']);
+		if (isset($status['error'])) die('ERROR: '.wp_kses_post($status['error']));
 
 		// If this was the chunk, then we should instead be concatenating onto the final file
 		if (isset($_POST['chunks']) && isset($_POST['chunk']) && preg_match('/^[0-9]+$/', $_POST['chunk'])) {
@@ -2866,7 +2878,7 @@ class UpdraftPlus_Admin {
 			if (!preg_match('/^backup_([\-0-9]{15})_.*_([0-9a-f]{12})-db([0-9]+)?\.(gz\.crypt)$/i', $final_file)) {
 
 				@unlink($status['file']);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
-				echo 'ERROR:'.__('Bad filename format - this does not look like an encrypted database file created by UpdraftPlus', 'updraftplus');
+				echo 'ERROR:'.wp_kses_post(__('Bad filename format - this does not look like an encrypted database file created by UpdraftPlus', 'updraftplus'));
 				exit;
 			}
 			
@@ -2890,7 +2902,7 @@ class UpdraftPlus_Admin {
 		}
 
 		// send the uploaded file url in response
-		if (isset($final_file)) echo 'OK:'.$final_file;
+		if (isset($final_file)) echo 'OK:'.wp_kses_post($final_file);
 		exit;
 	}
 
@@ -2974,16 +2986,16 @@ class UpdraftPlus_Admin {
 		if (isset($_GET['action']) && 'updraft_create_backup_dir' == $_GET['action'] && isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'create_backup_dir')) {
 			$created = $this->create_backup_dir();
 			if (is_wp_error($created)) {
-				echo '<p>'.__('Backup directory could not be created', 'updraftplus').'...<br>';
+				echo '<p>'.esc_html__('Backup directory could not be created', 'updraftplus').'...<br>';
 				echo '<ul class="disc">';
 				foreach ($created->get_error_messages() as $msg) {
-					echo '<li>'.htmlspecialchars($msg).'</li>';
+					echo '<li>'.esc_html($msg).'</li>';
 				}
 				echo '</ul></p>';
 			} elseif (false !== $created) {
-				echo '<p>'.__('Backup directory successfully created.', 'updraftplus').'</p><br>';
+				echo '<p>'.esc_html__('Backup directory successfully created.', 'updraftplus').'</p><br>';
 			}
-			echo '<b>'.__('Actions', 'updraftplus').':</b> <a href="'.UpdraftPlus_Options::admin_page_url().'?page=updraftplus">'.__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
+			echo '<b>'.esc_html__('Actions', 'updraftplus').':</b> <a href="'.esc_url(UpdraftPlus_Options::admin_page_url().'?page=updraftplus').'">'.esc_html__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
 			return;
 		}
 
@@ -3002,12 +3014,12 @@ class UpdraftPlus_Admin {
 
 			<div id="updraft-hidethis">
 			<p>
-			<strong><?php _e('Warning:', 'updraftplus'); ?> <?php _e("If you can still read these words after the page finishes loading, then there is a JavaScript or jQuery problem in the site.", 'updraftplus'); ?></strong>
+			<strong><?php esc_html_e('Warning:', 'updraftplus'); ?> <?php esc_html_e("If you can still read these words after the page finishes loading, then there is a JavaScript or jQuery problem in the site.", 'updraftplus'); ?></strong>
 
 			<?php if (false !== strpos(basename(UPDRAFTPLUS_URL), ' ')) { ?>
-				<strong><?php echo __('The UpdraftPlus directory in wp-content/plugins has white-space in it; WordPress does not like this.', 'updraftplus').' '.__('You should rename the directory to wp-content/plugins/updraftplus to fix this problem.', 'updraftplus');?></strong>
+				<strong><?php echo esc_html(__('The UpdraftPlus directory in wp-content/plugins has white-space in it; WordPress does not like this.', 'updraftplus').' '.__('You should rename the directory to wp-content/plugins/updraftplus to fix this problem.', 'updraftplus'));?></strong>
 			<?php } else { ?>
-				<a href="<?php echo apply_filters('updraftplus_com_link', "https://updraftplus.com/do-you-have-a-javascript-or-jquery-error/");?>" target="_blank"><?php _e('Go here for more information.', 'updraftplus'); ?></a>
+				<a href="<?php echo esc_url(apply_filters('updraftplus_com_link', "https://updraftplus.com/do-you-have-a-javascript-or-jquery-error/"));?>" target="_blank"><?php esc_html_e('Go here for more information.', 'updraftplus'); ?></a>
 			<?php } ?>
 			</p>
 			</div>
@@ -3022,12 +3034,15 @@ class UpdraftPlus_Admin {
 				if (get_template() === 'optimizePressTheme' || is_plugin_active('optimizePressPlugin') || is_plugin_active_for_network('optimizePressPlugin')) {
 					$this->show_admin_warning("<a href='https://optimizepress.zendesk.com/hc/en-us/articles/203699826-Update-URL-References-after-moving-domain' target='_blank'>" . __("OptimizePress 2.0 encodes its contents, so search/replace does not work.", "updraftplus") . ' ' . __("To fix this problem go here.", "updraftplus") . "</a>", "notice notice-warning");
 				}
-				$success_advert = (isset($_GET['pval']) && 0 == $_GET['pval'] && !$updraftplus->have_addons) ? '<p>'.__('For even more features and personal support, check out ', 'updraftplus').'<strong><a href="'.$updraftplus->get_url('premium').'" target="_blank">UpdraftPlus Premium</a>.</strong></p>' : "";
 
-				echo "<div class=\"updated backup-restored\"><span><strong>".__('Your backup has been restored.', 'updraftplus').'</strong></span><br>';
+				echo "<div class=\"updated backup-restored\"><span><strong>".esc_html__('Your backup has been restored.', 'updraftplus').'</strong></span><br>';
 				// Unnecessary - will be advised of this below
 				// if (2 == $_GET['updraft_restore_success']) echo ' '.__('Your old (themes, uploads, plugins, whatever) directories have been retained with "-old" appended to their name. Remove them when you are satisfied that the backup worked properly.');
-				echo $success_advert;
+				if (isset($_GET['pval']) && 0 == $_GET['pval'] && !$updraftplus->have_addons) {
+					$success_advert = true;
+				?>
+					<p><?php esc_html_e('For even more features and personal support, check out ', 'updraftplus'); ?><strong><a href="<?php echo esc_url($updraftplus->get_url('premium')); ?>" target="_blank">UpdraftPlus Premium</a>.</strong></p>
+				<?php }
 				$include_deleteform_div = false;
 
 			}
@@ -3062,7 +3077,7 @@ class UpdraftPlus_Admin {
 				$memory_check_current = $updraftplus->memory_check_current();
 				if ($memory_check_current > 0) {
 				?>
-					<div class="updated memory-limit"><?php echo __('Your PHP memory limit (set by your web hosting company) is very low.', 'updraftplus').' '.__('UpdraftPlus attempted to raise it but was unsuccessful.', 'updraftplus').' '.__('This plugin may struggle with a memory limit of less than 64 Mb  - especially if you have very large files uploaded (though on the other hand, many sites will be successful with a 32Mb limit - your experience may vary).', 'updraftplus');?> <?php _e('Current limit is:', 'updraftplus');?> <?php echo $updraftplus->memory_check_current(); ?> MB</div>
+					<div class="updated memory-limit"><?php echo esc_html(__('Your PHP memory limit (set by your web hosting company) is very low.', 'updraftplus').' '.__('UpdraftPlus attempted to raise it but was unsuccessful.', 'updraftplus').' '.__('This plugin may struggle with a memory limit of less than 64 Mb  - especially if you have very large files uploaded (though on the other hand, many sites will be successful with a 32Mb limit - your experience may vary).', 'updraftplus').' '.__('Current limit is:', 'updraftplus').' '.$updraftplus->memory_check_current()); ?> MB</div>
 				<?php }
 			}
 
@@ -3123,7 +3138,7 @@ class UpdraftPlus_Admin {
 		</div>
 		
 		<div id="updraft-navtab-settings-content" <?php if ('settings' != $tabflag) echo 'class="updraft-hidden"'; ?> style="<?php if ('settings' != $tabflag) echo 'display:none;'; ?>">
-			<h2 class="updraft_settings_sectionheading"><?php _e('Backup Contents And Schedule', 'updraftplus');?></h2>
+			<h2 class="updraft_settings_sectionheading"><?php esc_html_e('Backup Contents And Schedule', 'updraftplus');?></h2>
 			<?php UpdraftPlus_Options::options_form_begin(); ?>
 				<?php $this->settings_formcontents(); ?>
 			</form>
@@ -3201,7 +3216,7 @@ class UpdraftPlus_Admin {
 			<?php
 				$tab_addons = $this->include_template('wp-admin/settings/tab-addons.php', true, array('tabflag' => $tabflag));
 				
-				echo apply_filters('updraftplus_addonstab_content', $tab_addons);
+				echo apply_filters('updraftplus_addonstab_content', $tab_addons);// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- this should be ignored because the variable contains html script tag
 				
 			?>
 		
@@ -3336,31 +3351,11 @@ class UpdraftPlus_Admin {
 		));
 		
 		if ($include_form_container) {
-			$enter_credentials_begin = UpdraftPlus_Options::options_form_begin('', false, array(), 'updraftplus_com_login');
-			if (is_multisite()) $enter_credentials_begin .= '<input type="hidden" name="action" value="update">';
+			UpdraftPlus_Options::options_form_begin('', false, array(), 'updraftplus_com_login'); // no need to echo as it's already echoed
+			if (is_multisite()) echo '<input type="hidden" name="action" value="update">';
 		} else {
-			$enter_credentials_begin = '<div class="updraftplus_com_login">';
+			echo '<div class="updraftplus_com_login">';
 		}
-
-		$interested = htmlspecialchars(__('Interested in knowing about your UpdraftPlus.Com password security? Read about it here.', 'updraftplus'));
-
-		$connect = htmlspecialchars(__('Connect', 'updraftplus'));
-
-		$enter_credentials_end = '<p class="updraft-after-form-table">';
-		
-		if ($include_form_container) {
-			$enter_credentials_end .= '<input type="submit" class="button-primary ud_connectsubmit" value="'.$connect.'"  />';
-		} else {
-			$enter_credentials_end .= '<button class="button-primary ud_connectsubmit">'.$connect.'</button>';
-		}
-		
-		$enter_credentials_end .= '<span class="updraftplus_spinner spinner">' . __('Processing', 'updraftplus') . '...</span></p>';
-
-		$enter_credentials_end .= '<p class="updraft-after-form-table" style="font-size: 70%"><em><a href="https://updraftplus.com/faqs/tell-me-about-my-updraftplus-com-account/" target="_blank">'.$interested.'</a></em></p>';
-
-		$enter_credentials_end .= $include_form_container ? '</form>' : '</div>';
-
-		echo $enter_credentials_begin;
 
 		$options = apply_filters('updraftplus_com_login_options', array("email" => "", "password" => ""));
 
@@ -3379,9 +3374,7 @@ class UpdraftPlus_Admin {
 
 			$name = "_wpnonce";
 			$action = esc_attr($option_group."-options");
-			$nonce_field = '<input type="hidden" name="' . $name . '" value="' . wp_create_nonce($action) . '" />';
-		
-			echo $nonce_field;
+			echo '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr(wp_create_nonce($action)) . '" />';
 
 			$referer = esc_url(UpdraftPlus_Manipulation_Functions::wp_unslash($_SERVER['REQUEST_URI']));
 
@@ -3392,33 +3385,33 @@ class UpdraftPlus_Admin {
 				$referer .= '&tab=addons';
 			}
 
-			echo '<input type="hidden" name="_wp_http_referer" value="'.$referer.'" />';
+			echo '<input type="hidden" name="_wp_http_referer" value="'.esc_attr($referer).'" />';
 			// End of duplication of settings-fields()
 		}
 		?>
 
-		<h2> <?php _e('Connect with your UpdraftPlus.Com account', 'updraftplus'); ?></h2>
+		<h2> <?php esc_html_e('Connect with your UpdraftPlus.Com account', 'updraftplus'); ?></h2>
 		<p class="updraftplus_com_login_status"></p>
 
 		<table class="form-table">
 			<tbody>
 				<tr class="non_tfa_fields">
-					<th><?php _e('Email', 'updraftplus'); ?></th>
+					<th><?php esc_html_e('Email', 'updraftplus'); ?></th>
 					<td>
-						<label for="<?php echo $option_page; ?>_options_email">
-							<input id="<?php echo $option_page; ?>_options_email" type="text" size="36" name="<?php echo $option_page; ?>_options[email]" value="<?php echo htmlspecialchars($options['email']); ?>" />
+						<label for="<?php echo esc_attr($option_page); ?>_options_email">
+							<input id="<?php echo esc_attr($option_page); ?>_options_email" type="text" size="36" name="<?php echo esc_attr($option_page); ?>_options[email]" value="<?php echo esc_attr($options['email']); ?>" />
 							<br/>
-							<a target="_blank" href="<?php echo $further_options['under_username_link']; ?>"><?php echo $further_options['under_username']; ?></a>
+							<a target="_blank" href="<?php echo esc_url($further_options['under_username_link']); ?>"><?php echo esc_html($further_options['under_username']); ?></a>
 						</label>
 					</td>
 				</tr>
 				<tr class="non_tfa_fields">
-					<th><?php _e('Password', 'updraftplus'); ?></th>
+					<th><?php esc_html_e('Password', 'updraftplus'); ?></th>
 					<td>
-						<label for="<?php echo $option_page; ?>_options_password">
-							<input id="<?php echo $option_page; ?>_options_password" type="password" size="36" name="<?php echo $option_page; ?>_options[password]" value="<?php echo empty($options['password']) ? '' : htmlspecialchars($options['password']); ?>" />
+						<label for="<?php echo esc_attr($option_page); ?>_options_password">
+							<input id="<?php echo esc_attr($option_page); ?>_options_password" type="password" size="36" name="<?php echo esc_attr($option_page); ?>_options[password]" value="<?php echo empty($options['password']) ? '' : esc_attr($options['password']); ?>" />
 							<br/>
-							<a target="_blank" href="<?php echo $updraftplus->get_url('lost-password'); ?>"><?php _e('Forgotten your details?', 'updraftplus'); ?></a>
+							<a target="_blank" href="<?php echo esc_url($updraftplus->get_url('lost-password')); ?>"><?php esc_html_e('Forgotten your details?', 'updraftplus'); ?></a>
 						</label>
 					</td>
 				</tr>
@@ -3429,8 +3422,8 @@ class UpdraftPlus_Admin {
 						<th></th>
 						<td>
 							<label>
-								<input type="checkbox" id="<?php echo $option_page; ?>_options_auto_updates" data-updraft_settings_test="updraft_auto_updates" name="<?php echo $option_page; ?>_options[updraft_auto_update]" value="1" <?php if ($updraftplus->is_automatic_updating_enabled()) echo 'checked="checked"'; ?> />
-								<?php _e('Ask WordPress to update UpdraftPlus automatically when an update is available', 'updraftplus');?>
+								<input type="checkbox" id="<?php echo esc_attr($option_page); ?>_options_auto_updates" data-updraft_settings_test="updraft_auto_updates" name="<?php echo esc_attr($option_page); ?>_options[updraft_auto_update]" value="1" <?php if ($updraftplus->is_automatic_updating_enabled()) echo 'checked="checked"'; ?> />
+								<?php esc_html_e('Ask WordPress to update UpdraftPlus automatically when an update is available', 'updraftplus');?>
 							</label>
 							<?php
 								$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys');
@@ -3438,10 +3431,10 @@ class UpdraftPlus_Admin {
 				
 								if (empty($our_keys)) :
 								?>
-									<p class="<?php echo $option_page; ?>-connect-to-udc">
+									<p class="<?php echo esc_attr($option_page); ?>-connect-to-udc">
 										<label>
-											<input type="checkbox" id="<?php echo $option_page; ?>_options_auto_udc_connect" name="<?php echo $option_page; ?>_options[updraft_auto_udc_connect]" value="1" checked="checked" />
-											<?php _e('Add this website to UpdraftCentral (remote, centralised control) - free for up to 5 sites.', 'updraftplus'); ?> <a target="_blank" href="https://updraftcentral.com"><?php _e('Learn more about UpdraftCentral', 'updraftplus'); ?></a>
+											<input type="checkbox" id="<?php echo esc_attr($option_page); ?>_options_auto_udc_connect" name="<?php echo esc_attr($option_page); ?>_options[updraft_auto_udc_connect]" value="1" checked="checked" />
+											<?php esc_html_e('Add this website to UpdraftCentral (remote, centralised control) - free for up to 5 sites.', 'updraftplus'); ?> <a target="_blank" href="https://updraftcentral.com"><?php esc_html_e('Learn more about UpdraftCentral', 'updraftplus'); ?></a>
 										</label>
 									</p>
 
@@ -3458,8 +3451,8 @@ class UpdraftPlus_Admin {
 					<tr class="non_tfa_fields">
 						<th></th>
 						<td>
-							<input type="checkbox" class="<?php echo $option_page; ?>_terms_and_conditions" name="<?php echo $option_page; ?>_terms_and_conditions" value="1">
-							<a target="_blank" href="<?php echo $further_options['terms_and_conditions_link']; ?>"><?php echo $further_options['terms_and_conditions']; ?></a>
+							<input type="checkbox" class="<?php echo esc_attr($option_page); ?>_terms_and_conditions" name="<?php echo esc_attr($option_page); ?>_terms_and_conditions" value="1">
+							<a target="_blank" href="<?php echo esc_url($further_options['terms_and_conditions_link']); ?>"><?php echo esc_html($further_options['terms_and_conditions']); ?></a>
 						</td>
 					</tr>
 					<?php
@@ -3467,10 +3460,10 @@ class UpdraftPlus_Admin {
 				?>
 				<?php if ($tfa) { ?>
 				<tr class="tfa_fields" style="display:none;">
-					<th><?php _e('One Time Password (check your OTP app to get this password)', 'updraftplus'); ?></th>
+					<th><?php esc_html_e('One Time Password (check your OTP app to get this password)', 'updraftplus'); ?></th>
 					<td>
-						<label for="<?php echo $option_page; ?>_options_two_factor_code">
-							<input id="<?php echo $option_page; ?>_options_two_factor_code" type="text" size="10" name="<?php echo $option_page; ?>_options[two_factor_code]" />
+						<label for="<?php echo esc_attr($option_page); ?>_options_two_factor_code">
+							<input id="<?php echo esc_attr($option_page); ?>_options_two_factor_code" type="text" size="10" name="<?php echo esc_attr($option_page); ?>_options[two_factor_code]" />
 						</label>
 					</td>
 				</tr>	
@@ -3478,9 +3471,26 @@ class UpdraftPlus_Admin {
 			</tbody>
 		</table>
 
+		<p class="updraft-after-form-table">';
+		
 		<?php
+		$connect = esc_html__('Connect', 'updraftplus');
+		if ($include_form_container) {
+		?>
+			<input type="submit" class="button-primary ud_connectsubmit" value="<?php echo esc_attr($connect); ?>" />
+		<?php } else { ?>
+			<button class="button-primary ud_connectsubmit"><?php esc_html_e($connect); ?></button>
+		<?php } ?>
+		
+		<span class="updraftplus_spinner spinner"><?php esc_html_e('Processing', 'updraftplus'); ?>...</span></p>
 
-		echo $enter_credentials_end;
+		<p class="updraft-after-form-table" style="font-size: 70%"><em><a href="https://updraftplus.com/faqs/tell-me-about-my-updraftplus-com-account/" target="_blank"><?php esc_html_e('Interested in knowing about your UpdraftPlus.Com password security? Read about it here.', 'updraftplus'); ?></a></em></p>
+
+		<?php if ($include_form_container) { ?>
+			</form>
+		<?php } else { ?>
+			</div>
+		<?php }
 	}
 
 	/**
@@ -3514,21 +3524,21 @@ class UpdraftPlus_Admin {
 				}
 			?>">
 				<div id="updraft_activejobs" class="<?php echo $wide_format ? 'wide-format' : ''; ?>">
-					<?php echo $active_jobs;?>
+					<?php echo wp_kses_post($active_jobs); ?>
 				</div>
 			</div>
 			<div id="updraft_lastlogmessagerow">
 				<?php if ($wide_format) {
 					// Hide for now - too ugly
 					?>
-					<div class="last-message"><strong><?php _e('Last log message', 'updraftplus');?>:</strong><br>
-						<span id="updraft_lastlogcontainer"><?php echo htmlspecialchars(UpdraftPlus_Options::get_updraft_lastmessage()); ?></span><br>
+					<div class="last-message"><strong><?php esc_html_e('Last log message', 'updraftplus');?>:</strong><br>
+						<span id="updraft_lastlogcontainer"><?php echo wp_kses_post(UpdraftPlus_Options::get_updraft_lastmessage()); ?></span><br>
 						<?php $this->most_recently_modified_log_link(); ?>
 					</div>
 				<?php } else { ?>
 					<div>
-						<strong><?php _e('Last log message', 'updraftplus');?>:</strong>
-						<span id="updraft_lastlogcontainer"><?php echo htmlspecialchars(UpdraftPlus_Options::get_updraft_lastmessage()); ?></span><br>
+						<strong><?php esc_html_e('Last log message', 'updraftplus');?>:</strong>
+						<span id="updraft_lastlogcontainer"><?php echo wp_kses_post(UpdraftPlus_Options::get_updraft_lastmessage()); ?></span><br>
 						<?php $this->most_recently_modified_log_link(); ?>
 					</div>
 				<?php } ?>
@@ -3538,14 +3548,14 @@ class UpdraftPlus_Admin {
 			if (1==0 && !defined('UPDRAFTPLUS_NOADS_B')) {
 				$feed = $updraftplus->get_updraftplus_rssfeed();
 				if (is_a($feed, 'SimplePie')) {
-					echo '<tr><th style="vertical-align:top;">'.__('Latest UpdraftPlus.com news:', 'updraftplus').'</th><td class="updraft_simplepie">';
+					echo '<tr><th style="vertical-align:top;">'.esc_html__('Latest UpdraftPlus.com news:', 'updraftplus').'</th><td class="updraft_simplepie">';
 					echo '<ul class="disc;">';
 					foreach ($feed->get_items(0, 5) as $item) {
 						echo '<li>';
 						echo '<a href="'.esc_attr($item->get_permalink()).'">';
-						echo htmlspecialchars($item->get_title());
+						echo esc_html($item->get_title());
 						// D, F j, Y H:i
-						echo "</a> (".htmlspecialchars($item->get_date('j F Y')).")";
+						echo "</a> (".esc_html($item->get_date('j F Y')).")";
 						echo '</li>';
 					}
 					echo '</ul></td></tr>';
@@ -3565,7 +3575,7 @@ class UpdraftPlus_Admin {
 		list($mod_time, $log_file, $nonce) = $updraftplus->last_modified_log();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Unused parameter is present because the method returns an array.
 		
 		?>
-			<a href="?page=updraftplus&amp;action=downloadlatestmodlog&amp;wpnonce=<?php echo wp_create_nonce('updraftplus_download'); ?>" <?php if (!$mod_time) echo 'style="display:none;"'; ?> class="updraft-log-link" onclick="event.preventDefault(); updraft_popuplog('');"><?php _e('Download most recently modified log file', 'updraftplus');?></a>
+			<a href="?page=updraftplus&amp;action=downloadlatestmodlog&amp;wpnonce=<?php echo esc_attr(wp_create_nonce('updraftplus_download')); ?>" <?php if (!$mod_time) echo 'style="display:none;"'; ?> class="updraft-log-link" onclick="event.preventDefault(); updraft_popuplog('');"><?php esc_html_e('Download most recently modified log file', 'updraftplus');?></a>
 		<?php
 	}
 	
@@ -3590,7 +3600,7 @@ class UpdraftPlus_Admin {
 	 * @param String $content - content cell contents
 	 */
 	public function settings_debugrow($head, $content) {
-		echo "<tr class=\"updraft_debugrow\"><th>$head</th><td>$content</td></tr>";
+		echo "<tr class=\"updraft_debugrow\"><th>".$head."</th><td>".wp_kses($content, $this->kses_allow_tags())."</td></tr>";
 	}
 
 	public function settings_advanced_tools($return_instead_of_echo = false, $pass_through = array()) {
@@ -3608,7 +3618,7 @@ class UpdraftPlus_Admin {
 			if ($include_div) {
 				echo '<div id="updraft_delete_old_dirs_pagediv" class="updated delete-old-directories">';
 			}
-			echo '<p>'.__('Your WordPress install has old folders from its state before you restored/migrated (technical information: these are suffixed with -old).', 'updraftplus').' '.__('You should press this button to delete them as soon as you have verified that the restoration worked.', 'updraftplus').'</p>';
+			echo '<p>'.esc_html(__('Your WordPress install has old folders from its state before you restored/migrated (technical information: these are suffixed with -old).', 'updraftplus').' '.__('You should press this button to delete them as soon as you have verified that the restoration worked.', 'updraftplus')).'</p>';
 		}
 		?>
 		<form method="post" action="<?php echo esc_url(add_query_arg(array('error' => false, 'updraft_restore_success' => false, 'action' => false, 'page' => 'updraftplus'), UpdraftPlus_Options::admin_page_url())); ?>">
@@ -3900,14 +3910,14 @@ class UpdraftPlus_Admin {
 	}
 
 	private function delete_old_dirs_go($show_return = true) {
-		echo $show_return ? '<h1>UpdraftPlus - '.__('Remove old folders', 'updraftplus').'</h1>' : '<h2>'.__('Remove old directories', 'updraftplus').'</h2>';
+		echo $show_return ? '<h1>UpdraftPlus - '.esc_html__('Remove old folders', 'updraftplus').'</h1>' : '<h2>'.esc_html__('Remove old directories', 'updraftplus').'</h2>';
 
 		if ($this->delete_old_dirs()) {
-			echo '<p>'.__('Old folders successfully removed.', 'updraftplus').'</p><br>';
+			echo '<p>'.esc_html__('Old folders successfully removed.', 'updraftplus').'</p><br>';
 		} else {
-			echo '<p>',__('Old folder removal failed for some reason.', 'updraftplus').' '.__('You may want to do this manually.', 'updraftplus').'</p><br>';
+			echo '<p>'.esc_html__('Old folder removal failed for some reason.', 'updraftplus').' '.esc_html__('You may want to do this manually.', 'updraftplus').'</p><br>';
 		}
-		if ($show_return) echo '<b>'.__('Actions', 'updraftplus').':</b> <a href="'.UpdraftPlus_Options::admin_page_url().'?page=updraftplus">'.__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
+		if ($show_return) echo '<b>'.esc_html__('Actions', 'updraftplus').':</b> <a href="'.esc_url(UpdraftPlus_Options::admin_page_url()).'?page=updraftplus">'.esc_html__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
 	}
 
 	/**
@@ -3937,14 +3947,14 @@ class UpdraftPlus_Admin {
 
 		$plugs = untrailingslashit($wp_filesystem->wp_plugins_dir());
 		if ($wp_filesystem->is_dir($plugs.'-old')) {
-			echo "<strong>".__('Delete', 'updraftplus').": </strong>plugins-old: ";
+			echo "<strong>".esc_html__('Delete', 'updraftplus').": </strong>plugins-old: ";
 			if (!$wp_filesystem->delete($plugs.'-old', true)) {
 				$ret3 = false;
-				echo "<strong>".__('Failed', 'updraftplus')."</strong><br>";
-				echo $updraftplus->log_permission_failure_message($wp_filesystem->wp_content_dir(), 'Delete '.$plugs.'-old');
+				echo "<strong>".esc_html__('Failed', 'updraftplus')."</strong><br>";
+				echo esc_html($updraftplus->log_permission_failure_message($wp_filesystem->wp_content_dir(), 'Delete '.$plugs.'-old'));
 			} else {
 				$ret3 = true;
-				echo "<strong>".__('OK', 'updraftplus')."</strong><br>";
+				echo "<strong>".esc_html__('OK', 'updraftplus')."</strong><br>";
 			}
 		} else {
 			$ret3 = true;
@@ -3952,13 +3962,13 @@ class UpdraftPlus_Admin {
 
 		$ret2 = true;
 		if ($wp_filesystem->is_file(ABSPATH.'wp-config-pre-ud-restore-backup.php')) {
-			echo "<strong>".__('Delete', 'updraftplus').": </strong>wp-config-pre-ud-restore-backup.php: ";
+			echo "<strong>".esc_html__('Delete', 'updraftplus').": </strong>wp-config-pre-ud-restore-backup.php: ";
 
 			if ($wp_filesystem->delete(ABSPATH.'wp-config-pre-ud-restore-backup.php')) {
-				echo "<strong>".__('OK', 'updraftplus')."</strong><br>";
+				echo "<strong>".esc_html__('OK', 'updraftplus')."</strong><br>";
 			} else {
 				$ret2 = false;
-				echo "<strong>".__('Failed', 'updraftplus')."</strong><br>";
+				echo "<strong>".esc_html__('Failed', 'updraftplus')."</strong><br>";
 			}
 		}
 
@@ -3984,23 +3994,23 @@ class UpdraftPlus_Admin {
 			$name = (is_array($item)) ? $item['name'] : $item;
 			if ("-old" == substr($name, -4, 4)) {
 				// recursively delete
-				print "<strong>".__('Delete', 'updraftplus').": </strong>".htmlspecialchars(basename($dir).'/'.$name).": ";
+				print "<strong>".esc_html__('Delete', 'updraftplus').": </strong>".esc_html(basename($dir).'/'.$name).": ";
 
 				if ($wpfs) {
 					if (!$wp_filesystem->delete($dir.$name, true)) {
 						$ret = false;
-						echo "<strong>".__('Failed', 'updraftplus')."</strong><br>";
-						echo $updraftplus->log_permission_failure_message($dir, 'Delete '.$dir.$name);
+						echo "<strong>".esc_html__('Failed', 'updraftplus')."</strong><br>";
+						echo wp_kses_post($updraftplus->log_permission_failure_message($dir, 'Delete '.$dir.$name));
 					} else {
-						echo "<strong>".__('OK', 'updraftplus')."</strong><br>";
+						echo "<strong>".esc_html__('OK', 'updraftplus')."</strong><br>";
 					}
 				} else {
 					if (UpdraftPlus_Filesystem_Functions::remove_local_directory($dir.$name)) {
-						echo "<strong>".__('OK', 'updraftplus')."</strong><br>";
+						echo "<strong>".esc_html__('OK', 'updraftplus')."</strong><br>";
 					} else {
 						$ret = false;
-						echo "<strong>".__('Failed', 'updraftplus')."</strong><br>";
-						echo $updraftplus->log_permission_failure_message($dir, 'Delete '.$dir.$name);
+						echo "<strong>".esc_html__('Failed', 'updraftplus')."</strong><br>";
+						echo wp_kses_post($updraftplus->log_permission_failure_message($dir, 'Delete '.$dir.$name));
 					}
 				}
 			}
@@ -4055,7 +4065,7 @@ class UpdraftPlus_Admin {
 			@$wp_filesystem->chmod($default_backup_dir, 0777);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 
 			if (UpdraftPlus_Filesystem_Functions::really_is_writable($updraft_dir)) {
-				echo '<p>'.__('The folder was created, but we had to change its file permissions to 777 (world-writable) to be able to write to it.', 'updraftplus').' '.__('You should check with your hosting provider that this will not cause any problems', 'updraftplus').'</p>';
+				echo '<p>'.esc_html__('The folder was created, but we had to change its file permissions to 777 (world-writable) to be able to write to it.', 'updraftplus').' '.esc_html__('You should check with your hosting provider that this will not cause any problems', 'updraftplus').'</p>';
 				return true;
 			} else {
 				@$wp_filesystem->chmod($default_backup_dir, 0775);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
@@ -4084,18 +4094,18 @@ class UpdraftPlus_Admin {
 			// is_dir() should be checked because scandir() occasionally returns a cached directory list.
 			$dir_path = $backups_dir_location.'/'.$dir;
 			if (preg_match('/-old$/', $dir) && is_dir($dir_path)) {
-				if ($print_as_comment) echo '<!--'.htmlspecialchars($dir).'-->';
+				if ($print_as_comment) echo '<!--'.esc_html($dir).'-->';
 				return true;
 			}
 		}
 		// No need to scan ABSPATH - we don't backup there
 		if (is_dir(untrailingslashit(WP_PLUGIN_DIR).'-old')) {
-			if ($print_as_comment) echo '<!--'.htmlspecialchars(untrailingslashit(WP_PLUGIN_DIR).'-old').'-->';
+			if ($print_as_comment) echo '<!--'.esc_html(untrailingslashit(WP_PLUGIN_DIR).'-old').'-->';
 			return true;
 		}
 
 		if (is_file(ABSPATH.'wp-config-pre-ud-restore-backup.php')) {
-			if ($print_as_comment) echo '<!--'.htmlspecialchars(ABSPATH.'wp-config-pre-ud-restore-backup.php').'-->';
+			if ($print_as_comment) echo '<!--'.esc_html(ABSPATH.'wp-config-pre-ud-restore-backup.php').'-->';
 			return true;
 		}
 
@@ -4404,7 +4414,7 @@ class UpdraftPlus_Admin {
 		$ret = "<div class=\"error updraftplusmethod $extraclass\"><p>$text</p></div>";
 		$ret .= "<div class=\"notice error below-h2\"><p>$text</p></div>";
 
-		if ($echo) echo $ret;
+		if ($echo) echo wp_kses_post($ret);
 		return $ret;
 
 	}
@@ -4445,7 +4455,7 @@ class UpdraftPlus_Admin {
 			}
 		}
 		if ($echo_instead_of_return) {
-			echo $ret;
+			echo wp_kses_post($ret);
 		} else {
 			return $ret;
 		}
@@ -4539,6 +4549,16 @@ class UpdraftPlus_Admin {
 		return esc_attr($rawbackup);
 	}
 
+	/**
+	 * Display button to download the DB backup in the existing backups table.
+	 *
+	 * @param string $bkey            Backup type.
+	 * @param string $key             Backup timestamp (epoch time).
+	 * @param string $esc_pretty_date Escaped pretty date.
+	 * @param array  $backup          Backup Instance.
+	 * @param array  $accept          Accepted archive names.
+	 * @return void - Display download button for DB backup.
+	 */
 	private function download_db_button($bkey, $key, $esc_pretty_date, $backup, $accept = array()) {
 
 		if (!empty($backup['meta_foreign']) && isset($accept[$backup['meta_foreign']])) {
@@ -4547,17 +4567,13 @@ class UpdraftPlus_Admin {
 			$desc_source = __('unknown source', 'updraftplus');
 		}
 
-		$ret = '';
-
 		if ('db' == $bkey) {
 			$dbt = empty($backup['meta_foreign']) ? esc_attr(__('Database', 'updraftplus')) : esc_attr(sprintf(__('Database (created by %s)', 'updraftplus'), $desc_source));
 		} else {
 			$dbt = __('External database', 'updraftplus').' ('.substr($bkey, 2).')';
 		}
 
-		$ret .= $this->download_button($bkey, $key, 0, null, '', $dbt, $esc_pretty_date, '0');
-		
-		return $ret;
+		$this->download_button($bkey, $key, 0, null, '', $dbt, $esc_pretty_date, '0');
 	}
 
 	/**
@@ -4567,12 +4583,11 @@ class UpdraftPlus_Admin {
 	 * @param Integer $key             Backup timestamp (epoch time)
 	 * @param Array   $accept          An array of values to be accepted from values within $backup
 	 * @param String  $entities        Entities to be added
-	 * @param String  $esc_pretty_date Whether the button needs to escape the pretty date format
-	 * @return String - the resulting HTML
+	 * @param String  $esc_pretty_date Escaped pretty date
+	 * @return Void - Display download buttons in existing backups table
 	 */
 	public function download_buttons($backup, $key, $accept, &$entities, $esc_pretty_date) {
 		global $updraftplus;
-		$ret = '';
 		$backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
 
 		$first_entity = true;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- template
@@ -4619,7 +4634,7 @@ class UpdraftPlus_Admin {
 				}
 
 				$ide = __('Press here to download or browse', 'updraftplus').' '.strtolower($info['description']);
-				$ide .= ' '.sprintf(__('(%d archive(s) in set, total %s).', 'updraftplus'), $howmanyinset, '%UP_backups_total_file_size%');
+				$ide .= ' '.sprintf(__('(%d archive(s) in set, total %s).', 'updraftplus'), $howmanyinset, UpdraftPlus_Manipulation_Functions::convert_numeric_size_to_text($total_file_size));
 				if ($index_missing) $ide .= ' '.__('You are missing one or more archives from this multi-archive set.', 'updraftplus');
 
 				$entities .= $set_contents.'/';
@@ -4627,14 +4642,22 @@ class UpdraftPlus_Admin {
 					$entities .= '/plugins=0//themes=0//uploads=0//others=0/';
 				}
 
-				$ret .= $this->download_button($type, $key, 0, null, $ide, $sdescrip, $esc_pretty_date, $set_contents);
-
-				$ret = str_replace('%UP_backups_total_file_size%', UpdraftPlus_Manipulation_Functions::convert_numeric_size_to_text($total_file_size), $ret);
+				$this->download_button($type, $key, 0, null, $ide, $sdescrip, $esc_pretty_date, $set_contents);
 			}
 		}
-		return $ret;
 	}
 
+	/**
+	 * Return HTML for 'Backup date' column in existing backups data table.
+	 *
+	 * @param string $pretty_date   Pretty date.
+	 * @param string $key           Backup timestamp (epoch time).
+	 * @param array  $backup        Backup instance.
+	 * @param array  $jobdata       Job data.
+	 * @param string $nonce         Nonce.
+	 * @param bool   $simple_format Whether to display simple format or not. Default false.
+	 * @return string - Return HTML for date label.
+	 */
 	public function date_label($pretty_date, $key, $backup, $jobdata, $nonce, $simple_format = false) {
 
 		$pretty_date = $simple_format ? $pretty_date : '<div class="clear-right">'.$pretty_date.'</div>';
@@ -4650,43 +4673,68 @@ class UpdraftPlus_Admin {
 		return $ret;
 	}
 
+	/**
+	 * Display download button for backups in existing backups table.
+	 *
+	 * @param string $type             Backup type.
+	 * @param string $backup_timestamp Backup timestamp (epoch time).
+	 * @param int    $findex           File index.
+	 * @param string $info             Additional Info.
+	 * @param string $title            Title attribute contents.
+	 * @param string $pdescrip         Button text.
+	 * @param string $esc_pretty_date  Escaped pretty date.
+	 * @param string $set_contents     Custom data attribute called set.
+	 * @return void - Display download button for backups.
+	 */
 	public function download_button($type, $backup_timestamp, $findex, $info, $title, $pdescrip, $esc_pretty_date, $set_contents) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Filter use
 	
-		$ret = '';
-
 		$wp_nonce = wp_create_nonce('updraftplus_download');
 		
 		// updraft_downloader(base, backup_timestamp, what, whicharea, set_contents, prettydate, async)
-		$ret .= '<button data-wp_nonce="'.esc_attr($wp_nonce).'" data-backup_timestamp="'.esc_attr($backup_timestamp).'" data-what="'.esc_attr($type).'" data-set_contents="'.esc_attr($set_contents).'" data-prettydate="'.esc_attr($esc_pretty_date).'" type="button" class="button updraft_download_button '."uddownloadform_{$type}_{$backup_timestamp}_{$findex}".'" title="'.$title.'">'.$pdescrip.'</button>';
+		echo '<button data-wp_nonce="'.esc_attr($wp_nonce).'" data-backup_timestamp="'.esc_attr($backup_timestamp).'" data-what="'.esc_attr($type).'" data-set_contents="'.esc_attr($set_contents).'" data-prettydate="'.esc_attr($esc_pretty_date).'" type="button" class="button updraft_download_button '.esc_attr("uddownloadform_{$type}_{$backup_timestamp}_{$findex}").'" title="'.esc_attr($title).'">'.esc_html($pdescrip).'</button>';
 		// onclick="'."return updraft_downloader('uddlstatus_', '$backup_timestamp', '$type', '.ud_downloadstatus', '$set_contents', '$esc_pretty_date', true)".'"
 		
-		return $ret;
 	}
 
+	/**
+	 * Display 'Restore' button for backup in existing backups table.
+	 *
+	 * @param array  $backup      Backup instance.
+	 * @param string $key         Backup timestamp (epoch time).
+	 * @param string $pretty_date Pretty date.
+	 * @param string $entities    Entities backed-up in this backup.
+	 * @return void - Display 'Restore' button.
+	 */
 	public function restore_button($backup, $key, $pretty_date, $entities = '') {
-		$ret = '<div class="restore-button">';
+		?>
+		<div class="restore-button">
+		<?php
 
 		if ($entities) {
 			$show_data = $pretty_date;
 			if (isset($backup['native']) && false == $backup['native']) {
 				$show_data .= ' '.__('(backup set imported from remote location)', 'updraftplus');
 			}
-
-			$ret .= '<button data-showdata="'.esc_attr($show_data).'" data-backup_timestamp="'.$key.'" data-entities="'.esc_attr($entities).'" title="'.__('After pressing this button, you will be given the option to choose which components you wish to restore', 'updraftplus').'" type="button" class="button button-primary choose-components-button">'.__('Restore', 'updraftplus').'</button>';
+			?>
+			<button data-showdata="<?php echo esc_attr($show_data);?>" data-backup_timestamp="<?php echo esc_attr($key);?>" data-entities="<?php echo esc_attr($entities);?>" title="<?php esc_attr_e('After pressing this button, you will be given the option to choose which components you wish to restore', 'updraftplus');?>" type="button" class="button button-primary choose-components-button">
+				<?php esc_html_e('Restore', 'updraftplus');?>
+			</button>
+			<?php
 		}
-		$ret .= "</div>\n";
-		return $ret;
+		?>
+		</div>
+		<?php
 	}
 
 	/**
-	 * Get HTML for the 'Upload' button for a particular backup in the 'Existing backups' tab
+	 * Display HTML for the 'Upload' button for a particular backup in the 'Existing backups' tab
 	 *
 	 * @param Integer	 $backup_time - backup timestamp (epoch time)
 	 * @param String	 $nonce       - backup nonce
 	 * @param Array		 $backup      - backup information array
 	 * @param Null|Array $jobdata	  - if not null, then use as the job data instead of fetching
 	 *
-	 * @return String - the resulting HTML
+	 * @return Void - Display 'Upload' button in existing backup table.
 	 */
 	public function upload_button($backup_time, $nonce, $backup, $jobdata = null) {
 		global $updraftplus;
@@ -4736,41 +4784,55 @@ class UpdraftPlus_Admin {
 					$is_first_service = false;
 				}
 
-				return '<div class="updraftplus-upload">
-				<button data-nonce="'.$nonce.'" data-key="'.$backup_time.'" data-services="'.esc_attr($service_list).'" title="'.__('After pressing this button, you can select where to upload your backup from a list of your currently saved remote storage locations', 'updraftplus').' ('.htmlspecialchars($service_list_display).')." type="button" class="button button-primary updraft-upload-link">'.__('Upload', 'updraftplus').'</button>
-				</div>';
+				?>
+				<div class="updraftplus-upload">
+					<button data-nonce="<?php echo esc_attr($nonce);?>" data-key="<?php echo esc_attr($backup_time);?>" data-services="<?php echo esc_attr($service_list);?>" title="<?php echo esc_attr(__('After pressing this button, you can select where to upload your backup from a list of your currently saved remote storage locations', 'updraftplus').' ('.$service_list_display.')');?>" type="button" class="button button-primary updraft-upload-link">
+						<?php esc_html_e('Upload', 'updraftplus');?>
+					</button>
+				</div>
+				<?php
 			}
 
-			return '';
+			return;
 		}
 	}
 
 	/**
-	 * Get HTML for the 'Delete' button for a particular backup in the 'Existing backups' tab
+	 * Display HTML for the 'Delete' button for a particular backup in the 'Existing backups' tab
 	 *
 	 * @param Integer $backup_time - backup timestamp (epoch time)
 	 * @param String  $nonce	   - backup nonce
 	 * @param Array	  $backup	   - backup information array
 	 *
-	 * @return String - the resulting HTML
+	 * @return Void - Display delete button for backup.
 	 */
 	public function delete_button($backup_time, $nonce, $backup) {
 		$sval = (!empty($backup['service']) && 'email' != $backup['service'] && 'none' != $backup['service'] && array('email') !== $backup['service'] && array('none') !== $backup['service'] && array('remotesend') !== $backup['service']) ? '1' : '0';
-		return '<div class="updraftplus-remove" data-hasremote="'.$sval.'">
-			<a data-hasremote="'.$sval.'" data-nonce="'.$nonce.'" data-key="'.$backup_time.'" class="button button-remove no-decoration updraft-delete-link" href="'.esc_url(UpdraftPlus::get_current_clean_url()).'" title="'.esc_attr(__('Delete this backup set', 'updraftplus')).'">'.__('Delete', 'updraftplus').'</a>
-		</div>';
+		?>
+		<div class="updraftplus-remove" data-hasremote="<?php echo esc_attr($sval);?>">
+			<a data-hasremote="<?php echo esc_attr($sval);?>" data-nonce="<?php echo esc_attr($nonce);?>" data-key="<?php echo esc_attr($backup_time);?>" class="button button-remove no-decoration updraft-delete-link" href="<?php echo esc_url(UpdraftPlus::get_current_clean_url());?>" title="<?php esc_attr_e('Delete this backup set', 'updraftplus');?>">
+				<?php esc_html_e('Delete', 'updraftplus');?>
+			</a>
+		</div>
+		<?php
 	}
 
+	/**
+	 * Display 'View Log' button in existing backups table.
+	 *
+	 * @param array $backup Backup instance.
+	 * @return void - Display 'View Log' button.
+	 */
 	public function log_button($backup) {
 		global $updraftplus;
 		$updraft_dir = $updraftplus->backups_dir_location();
-		$ret = '';
 		if (isset($backup['nonce']) && preg_match("/^[0-9a-f]{12}$/", $backup['nonce']) && is_readable($updraft_dir.'/log.'.$backup['nonce'].'.txt')) {
 			$nval = $backup['nonce'];
 			$url = UpdraftPlus_Options::admin_page()."?page=updraftplus&action=downloadlog&amp;updraftplus_backup_nonce=$nval";
-			$ret .= '<div style="clear:none;" class="updraft-viewlogdiv">
-					<a class="button no-decoration updraft-log-link" href="'.esc_attr($url).'" data-jobid="'.esc_attr($nval).'">
-						'.__('View Log', 'updraftplus').'
+			?>
+			<div style="clear:none;" class="updraft-viewlogdiv">
+					<a class="button no-decoration updraft-log-link" href="<?php echo esc_attr($url);?>" data-jobid="<?php echo esc_attr($nval);?>">
+						<?php esc_html_e('View Log', 'updraftplus');?>
 					</a>
 					<!--
 					<form action="$url" method="get">
@@ -4780,8 +4842,8 @@ class UpdraftPlus_Admin {
 						<input type="submit" value="$lt" class="updraft-log-link" onclick="event.preventDefault(); updraft_popuplog(\''.esc_attr($nval).'\');" />
 					</form>
 					-->
-				</div>';
-			return $ret;
+			</div>
+			<?php
 		}
 	}
 
@@ -5080,7 +5142,7 @@ class UpdraftPlus_Admin {
 			}
 			$pval = $updraftplus->have_addons ? 1 : 0;
 
-			echo '<strong>' . __('Actions', 'updraftplus') . ':</strong> <a href="' . UpdraftPlus_Options::admin_page_url() . '?page=updraftplus&updraft_restore_success=' . $s_val . '&pval=' . $pval . '">' . __('Return to UpdraftPlus configuration', 'updraftplus') . '</a>';
+			echo '<strong>'.esc_html__('Actions', 'updraftplus').':</strong> <a href="'.esc_url(UpdraftPlus_Options::admin_page_url().'?page=updraftplus&updraft_restore_success='.$s_val.'&pval='.$pval).'">'.esc_html__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
 			return;
 
 		} elseif (is_wp_error($backup_success)) {
@@ -5092,7 +5154,7 @@ class UpdraftPlus_Admin {
 			echo '<div class="updraft_restore_errors">';
 			$updraftplus->list_errors();
 			echo '</div>';
-			echo '<strong>' . __('Actions', 'updraftplus') . ':</strong> <a href="' . UpdraftPlus_Options::admin_page_url() . '?page=updraftplus">' . __('Return to UpdraftPlus configuration', 'updraftplus') . '</a>';
+			echo '<strong>'.esc_html__('Actions', 'updraftplus').':</strong> <a href="'.esc_url(UpdraftPlus_Options::admin_page_url().'?page=updraftplus').'">'.esc_html__('Return to UpdraftPlus configuration', 'updraftplus').'</a>';
 			return;
 		} elseif (false === $backup_success) {
 			// This means, "not yet - but stay on the page because we may be able to do it later, e.g. if the user types in the requested information"
@@ -5135,10 +5197,10 @@ class UpdraftPlus_Admin {
 
 		echo '<div class="updraft_restore_container">';
 		echo '<div class="error" id="updraft-restore-hidethis">';
-		echo '<p><strong>'. __('Warning: If you can still read these words after the page finishes loading, then there is a JavaScript or jQuery problem in the site.', 'updraftplus') .' '.__('This may prevent the restore procedure from being able to proceed.', 'updraftplus').'</strong>';
-		echo ' <a href="'. apply_filters('updraftplus_com_link', "https://updraftplus.com/do-you-have-a-javascript-or-jquery-error/") .'" target="_blank">'. __('Go here for more information.', 'updraftplus') .'</a></p>';
+		echo '<p><strong>'.esc_html__('Warning: If you can still read these words after the page finishes loading, then there is a JavaScript or jQuery problem in the site.', 'updraftplus').' '.esc_html__('This may prevent the restore procedure from being able to proceed.', 'updraftplus').'</strong>';
+		echo ' <a href="'.esc_url(apply_filters('updraftplus_com_link', "https://updraftplus.com/do-you-have-a-javascript-or-jquery-error/")).'" target="_blank">'.esc_html__('Go here for more information.', 'updraftplus').'</a></p>';
 		echo '</div>';
-		echo '<div class="updraft_restore_main--header">'.__('UpdraftPlus Restoration', 'updraftplus').' - '.__('Backup', 'updraftplus').' '.$pretty_date.'</div>';
+		echo '<div class="updraft_restore_main--header">'.esc_html__('UpdraftPlus Restoration', 'updraftplus').' - '.esc_html__('Backup', 'updraftplus').' '.esc_html($pretty_date).'</div>';
 		echo '<div class="updraft_restore_main">';
 		
 		if ($debug) echo '<input type="hidden" id="updraftplus_ajax_restore_debug" name="updraftplus_ajax_restore_debug" value="1">';
@@ -5147,35 +5209,35 @@ class UpdraftPlus_Admin {
 		echo '<div id="updraftplus_ajax_restore_progress" style="display: none;"></div>';
 
 		echo '<div class="updraft_restore_main--components">';
-		echo '	<p>'.sprintf(__('The restore operation has begun (%s).', 'updraftplus'), htmlspecialchars($updraftplus->nonce)).' '.__('Do not close this page until it reports itself as having finished.', 'updraftplus').'</p>';
-		echo '	<h2>'.__('Restoration progress:', 'updraftplus').'</h2>';
+		echo '<p>'.sprintf(esc_html__('The restore operation has begun (%s).', 'updraftplus'), $updraftplus->nonce).' '.esc_html__('Do not close this page until it reports itself as having finished.', 'updraftplus').'</p>';
+		echo '<h2>'.esc_html__('Restoration progress:', 'updraftplus').'</h2>';
 		echo '	<div class="updraft_restore_result"><span class="dashicons"></span><pan class="updraft_restore_result--text"></span></div>';
 		echo '	<ul class="updraft_restore_components_list">';
-		echo '		<li data-component="verifying" class="active"><span class="updraft_component--description">'.__('Verifying', 'updraftplus').'</span><span class="updraft_component--progress"></span></li>';
+		echo '<li data-component="verifying" class="active"><span class="updraft_component--description">'.esc_html__('Verifying', 'updraftplus').'</span><span class="updraft_component--progress"></span></li>';
 		foreach ($restore_components as $restore_component) {
 			// Set Database description
 			if ('db' == $restore_component && !isset($backupable_entities[$restore_component]['description'])) $backupable_entities[$restore_component]['description'] = __('Database', 'updraftplus');
 			if (!isset($backupable_entities[$restore_component])) {
 				die('Abort: invalid data');
 			}
-			echo '		<li data-component="'.esc_attr($restore_component).'"><span class="updraft_component--description">'.(isset($backupable_entities[$restore_component]['description']) ? htmlspecialchars($backupable_entities[$restore_component]['description']) : htmlspecialchars($restore_component)).'</span><span class="updraft_component--progress"></span></li>';
+			echo '<li data-component="'.esc_attr($restore_component).'"><span class="updraft_component--description">'.(isset($backupable_entities[$restore_component]['description']) ? esc_html($backupable_entities[$restore_component]['description']) : esc_html($restore_component)).'</span><span class="updraft_component--progress"></span></li>';
 		}
-		echo '		<li data-component="cleaning"><span class="updraft_component--description">'.__('Cleaning', 'updraftplus').'</span><span class="updraft_component--progress"></span></li>';
-		echo '		<li data-component="finished"><span class="updraft_component--description">'.__('Finished', 'updraftplus').'</span><span class="updraft_component--progress"></span></li>';
+		echo '<li data-component="cleaning"><span class="updraft_component--description">'.esc_html__('Cleaning', 'updraftplus').'</span><span class="updraft_component--progress"></span></li>';
+		echo '<li data-component="finished"><span class="updraft_component--description">'.esc_html__('Finished', 'updraftplus').'</span><span class="updraft_component--progress"></span></li>';
 		echo '	</ul>'; // end ul.updraft_restore_components_list
 		// Provide download link for the log file
-		echo '	<p><a target="_blank" href="?action=downloadlog&page=updraftplus&updraftplus_backup_nonce='.esc_attr($updraftplus->nonce).'">'.__('Follow this link to download the log file for this restoration (needed for any support requests).', 'updraftplus').'</a></p>';
+		echo '<p><a target="_blank" href="?action=downloadlog&page=updraftplus&updraftplus_backup_nonce='.esc_attr($updraftplus->nonce).'">'.esc_html__('Follow this link to download the log file for this restoration (needed for any support requests).', 'updraftplus').'</a></p>';
 		echo '</div>'; // end .updraft_restore_main--components
 		echo '<div class="updraft_restore_main--activity">';
-		echo '	<h2 class="updraft_restore_main--activity-title">'.__('Activity log', 'updraftplus').' <i id="activity-full-log" title="'.__('Full-screen', 'updraftplus').'" class="dashicons dashicons-fullscreen-alt" style="float: right; cursor: pointer; margin-left: 7px;"></i> <span id="updraftplus_ajax_restore_last_activity"></span></h2>';
+		echo '<h2 class="updraft_restore_main--activity-title">'.esc_html__('Activity log', 'updraftplus').' <i id="activity-full-log" title="'.esc_html__('Full-screen', 'updraftplus').'" class="dashicons dashicons-fullscreen-alt" style="float: right; cursor: pointer; margin-left: 7px;"></i> <span id="updraftplus_ajax_restore_last_activity"></span></h2>';
 		echo '	<div id="updraftplus_ajax_restore_output"></div>';
 		echo '</div>'; // end .updraft_restore_main--activity
 		echo '
 			<div class="updraft-restore--footer">
 				<ul class="updraft-restore--stages">
-					<li><span>1. '.__('Component selection', 'updraftplus').'</span></li>
-					<li><span>2. '.__('Verifications', 'updraftplus').'</span></li>
-					<li class="active"><span>3. '.__('Restoration', 'updraftplus').'</span></li>
+					<li><span>1. '.esc_html__('Component selection', 'updraftplus').'</span></li>
+					<li><span>2. '.esc_html__('Verifications', 'updraftplus').'</span></li>
+					<li class="active"><span>3. '.esc_html__('Restoration', 'updraftplus').'</span></li>
 				</ul>
 			</div>';
 		echo '</div>'; // end .updraft_restore_main
@@ -5256,7 +5318,7 @@ class UpdraftPlus_Admin {
 		$backup_set = UpdraftPlus_Backup_History::get_history($timestamp);
 
 		if (empty($backup_set)) {
-			echo '<p>'.__('This backup does not exist in the backup history - restoration aborted.', 'updraftplus').' '.__('Timestamp:', 'updraftplus').' '.htmlspecialchars($timestamp).'</p><br>';
+			echo '<p>'.esc_html__('This backup does not exist in the backup history - restoration aborted.', 'updraftplus').' '.esc_html__('Timestamp:', 'updraftplus').' '.esc_html($timestamp).'</p><br>';
 			return new WP_Error('does_not_exist', __('Backup does not exist in the backup history', 'updraftplus')." ($timestamp)");
 		}
 
@@ -5298,15 +5360,16 @@ class UpdraftPlus_Admin {
 
 		if (empty($entities_to_restore)) {
 			$restore_jobdata = $updraftplus->jobdata_getarray($updraftplus->nonce);
-			echo '<p>'.__('ABORT: Could not find the information on which entities to restore.', 'updraftplus').'</p><p>'.__('If making a request for support, please include this information:', 'updraftplus').' '.count($restore_jobdata).' : '.htmlspecialchars(serialize($restore_jobdata)).'</p>';
+			echo '<p>'.esc_html__('ABORT: Could not find the information on which entities to restore.', 'updraftplus').'</p><p>'.esc_html__('If making a request for support, please include this information:', 'updraftplus').' '.count($restore_jobdata).' : '.esc_html(serialize($restore_jobdata)).'</p>';
 			return new WP_Error('missing_info', 'Backup information not found');
 		}
 
 		// This is used in painting the admin page after a successful restore
 		$this->entities_to_restore = $entities_to_restore;
 
+		$error_levels = version_compare(PHP_VERSION, '8.4.0', '>=') ? E_ALL : E_ALL & ~E_STRICT;
 		// This will be removed by Updraft_Restorer::post_restore_clean_up()
-		set_error_handler(array($updraftplus, 'php_error'), E_ALL & ~E_STRICT);
+		set_error_handler(array($updraftplus, 'php_error'), $error_levels);
 
 		// Set $restore_options, either from the continuation data, or from $_POST
 		if (!empty($continuation_data['restore_options'])) {
@@ -5362,7 +5425,7 @@ class UpdraftPlus_Admin {
 	 * @param String $title - title
 	 */
 	public function restoration_title($title) {
-		echo '<h2>'.$title.'</h2>';
+		echo '<h2>'.esc_html($title).'</h2>';
 	}
 
 	/**
@@ -6409,9 +6472,9 @@ class UpdraftPlus_Admin {
 			$timestamp = empty($_REQUEST['timestamp']) ? '' : $_REQUEST['timestamp'];
 			$nonce = empty($_REQUEST['nonce']) ? '' : $_REQUEST['nonce'];
 			$type = empty($_REQUEST['type']) ? '' : $_REQUEST['type'];
-			if (empty($timestamp) || empty($nonce) || empty($type)) wp_die(__('The download link is broken, you may have clicked the link from untrusted source', 'updraftplus'), '', array('back_link' => true));
+			if (empty($timestamp) || empty($nonce) || empty($type)) wp_die(esc_html__('The download link is broken, you may have clicked the link from untrusted source', 'updraftplus'), '', array('back_link' => true));
 			$backup_history = UpdraftPlus_Backup_History::get_history();
-			if (!isset($backup_history[$timestamp]['nonce']) || $backup_history[$timestamp]['nonce'] !== $nonce) wp_die(__("The download link is broken or the backup file is no longer available", 'updraftplus'), '', array('back_link' => true));
+			if (!isset($backup_history[$timestamp]['nonce']) || $backup_history[$timestamp]['nonce'] !== $nonce) wp_die(esc_html__("The download link is broken or the backup file is no longer available", 'updraftplus'), '', array('back_link' => true));
 			$this->do_updraft_download_backup($findexes, $type, $timestamp, 2, false, '');
 			exit; // we don't need anything else but an exit
 		}
@@ -6460,6 +6523,80 @@ class UpdraftPlus_Admin {
 		$allowed_html['input']['value'] = true;
 		$allowed_html['input']['id'] = true;
 		return $allowed_html;
+	}
+
+	/**
+	 * Adds the 'display' property to the list of allowed CSS styles for wp_kses.
+	 *
+	 * This function is typically used with the `safe_style_css` filter to ensure
+	 * that the `display` property is not stripped when sanitizing inline styles
+	 * using wp_kses or related functions.
+	 *
+	 * @param array $css The array of currently allowed CSS properties.
+	 * @return array The modified array of allowed CSS properties including 'display'.
+	 */
+	public function kses_allow_style_display($css) {
+		$css[] = 'display';
+		return $css;
+	}
+
+	/**
+	 * Returns an array of allowed HTML tags and their attributes for sanitization purposes.
+	 *
+	 * This function defines a set of HTML tags and attributes that are considered safe
+	 * and can be used in specific contexts. The attributes are defined for each tag
+	 * to ensure only the intended attributes are allowed.
+	 *
+	 * @return array<string, array<string, bool>> An associative array where the keys are HTML tag names
+	 *                                            and the values are arrays of allowed attributes for
+	 *                                            each tag. The attribute arrays use attribute names
+	 *                                            as keys and `true` as the value to indicate the attribute
+	 *                                            is allowed.
+	 */
+	public function kses_allow_tags() {
+		return array(
+			'div' => array(
+				'class' => true,
+				'style' => true,
+			),
+			'h3' => array(
+				'style' => true,
+			),
+			'input' => array(
+				'type' => true,
+				'id' => true,
+				'name' => true,
+				'value' => true,
+				'checked' => true,
+				'style' => true,
+				'min' => true,
+				'step' => true,
+			),
+			'select' => array(
+				'id' => true,
+				'name' => true,
+				'value' => true,
+				'style' => true,
+			),
+			'option' => array(
+				'value' => true,
+				'selected' => true,
+			),
+			'label' => array(
+				'for' => true,
+			),
+			'br' => array(),
+			'em' => array(),
+			'a' => array(
+				'href' => true,
+				'target' => true,
+				'onclick' => true,
+				'data-type' => true,
+			),
+			'span' => array(
+				'id' => true,
+			)
+		);
 	}
 
 	/**

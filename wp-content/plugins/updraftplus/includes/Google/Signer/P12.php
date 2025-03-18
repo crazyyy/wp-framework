@@ -55,7 +55,7 @@ class Google_Signer_P12 extends Google_Signer_Abstract
         throw new Google_Auth_Exception(
             "Unable to parse the p12 file.  " .
             "Is this a .p12 file?  Is the password correct?  OpenSSL error: " .
-            openssl_error_string()
+            openssl_error_string() // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Error message to be escaped when caught and printed.
         );
       }
       // TODO(beaton): is this part of the contract for the openssl_pkcs12_read

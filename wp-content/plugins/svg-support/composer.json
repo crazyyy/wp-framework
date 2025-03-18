@@ -1,0 +1,39 @@
+{
+    "name": "benbodhi/svg-support",
+    "description": "Upload SVG files to the Media Library and render SVG files inline for direct styling/animation of an SVG's internal elements using CSS/JS.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "cure53/dompurify",
+                "version": "2.5.8",
+                "dist": {
+                    "url": "https://github.com/cure53/DOMPurify/archive/refs/tags/2.5.8.zip",
+                    "type": "zip"
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "cure53/dompurify": "2.5.8",
+        "enshrined/svg-sanitize": "^0.21.0"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "mkdir -p vendor/DOMPurify",
+            "cp vendor/cure53/dompurify/dist/purify.min.js vendor/DOMPurify/DOMPurify.min.js"
+        ],
+        "post-update-cmd": [
+            "mkdir -p vendor/DOMPurify",
+            "cp vendor/cure53/dompurify/dist/purify.min.js vendor/DOMPurify/DOMPurify.min.js"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}

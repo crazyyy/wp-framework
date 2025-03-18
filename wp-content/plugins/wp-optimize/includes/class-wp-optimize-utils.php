@@ -171,6 +171,52 @@ class WP_Optimize_Utils {
 			get_option('blog_charset'), false, DEFAULT_BR_TEXT,
 			DEFAULT_SPAN_TEXT, false);
 	}
+
+	/**
+	 * Unserialize data
+	 *
+	 * @param string        $serialized_data Data to be unserialized, should be one that is already serialized
+	 * @param boolean|array $allowed_classes Either an array of class names which should be accepted, false to accept no classes, or true to accept all classes
+	 * @param integer       $max_depth       The maximum depth of structures permitted during unserialization, and is intended to prevent stack overflows
+	 * @return mixed Unserialized data can be any of types (integer, float, boolean, string, array or object)
+	 */
+	public static function unserialize($serialized_data, $allowed_classes = false, $max_depth = 0) {
+		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound -- Used in PHP 7.0+
+		// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- suppress PHP warning in case of failure
+		return @unserialize(trim($serialized_data), array('allowed_classes' => $allowed_classes, 'max_depth' => $max_depth));
+	}
+
+	/**
+	 * Checks whether supplied data is serialized or not, and if so, unserializes it
+	 *
+	 * @param string        $serialized_data Data to be unserialized, should be one that is already serialized
+	 * @param boolean|array $allowed_classes Either an array of class names which should be accepted, false to accept no classes, or true to accept all classes
+	 * @param integer       $max_depth       The maximum depth of structures permitted during unserialization, and is intended to prevent stack overflows
+	 * @return mixed Unserialized data can be any of types (integer, float, boolean, string, array or object)
+	 */
+	public static function maybe_unserialize($serialized_data, $allowed_classes = false, $max_depth = 0) {
+		if (!is_serialized($serialized_data)) return $serialized_data;
+
+		return self::unserialize($serialized_data, $allowed_classes, $max_depth);
+	}
+			
+	/**
+	 * Get associative array with tag attributes and their values and build tag attribute string.
+	 *
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function build_attributes($attributes) {
+		$_attributes = array();
+
+		if (!empty($attributes)) {
+			foreach ($attributes as $key => $value) {
+				$_attributes[] = $key . '="' . esc_attr($value) . '"';
+			}
+		}
+
+		return join(' ', $_attributes);
+	}
 }
 
 endif;

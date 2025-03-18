@@ -277,8 +277,11 @@
 	
 			<h1><?php esc_html_e('CDN Options', 'wp-optimize'); ?></h1>
 			<p class="wpo_min-bold-green">
-				<?php printf(esc_html__('When the "Enable defer on processed JavaScript files" option is enabled, JavaScript and CSS files will not be loaded from the CDN due to %scompatibility%s reasons.', 'wp-optimize'), '<a target="_blank" href="https://www.chromestatus.com/feature/5718547946799104">', '</a>'); ?>
-				<?php esc_html_e('However, you can define a CDN Domain below, in order to use it for all of the static assets "inside" your CSS and JS files.', 'wp-optimize'); ?>
+			<?php
+				// translators: %1$s is opening anchor tag and %2$s is closing anchor tag
+				printf(esc_html__('When the "Enable defer on processed JavaScript files" option is enabled, JavaScript and CSS files will not be loaded from the CDN due to %1$scompatibility%2$s reasons.', 'wp-optimize'), '<a target="_blank" href="https://www.chromestatus.com/feature/5718547946799104">', '</a>');
+				esc_html_e('However, you can define a CDN Domain below, in order to use it for all of the static assets "inside" your CSS and JS files.', 'wp-optimize');
+			?>
 			</p>
 	
 			<h3><?php esc_html_e('Your CDN domain', 'wp-optimize'); ?></h3>
@@ -333,7 +336,7 @@
 				type="submit"
 				value="<?php esc_attr_e('Save settings', 'wp-optimize'); ?>"
 			>
-			<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); ?>" alt="...">
+			<img class="wpo_spinner" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="...">
 			<span class="save-done dashicons dashicons-yes display-none"></span>
 		</p>
 		<input type="hidden" name="minify_advanced_tab" value="1">

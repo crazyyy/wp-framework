@@ -283,7 +283,7 @@ class WP_Optimize_System_Status_Report {
 			$config['wp_salt_logged_in'] = '*****';
 		}
 
-		$json = json_encode($config, JSON_PRETTY_PRINT);
+		$json = wp_json_encode($config, JSON_PRETTY_PRINT);
 		return $preformat_container ? $this->pre_container($json) : $json;
 	}
 
@@ -333,7 +333,7 @@ class WP_Optimize_System_Status_Report {
 	 * @return string
 	 */
 	private function path_perms($preformat_container = true) {
-		$json = json_encode($this->server_info_util->get_uploads_dir_permissions(), JSON_PRETTY_PRINT);
+		$json = wp_json_encode($this->server_info_util->get_uploads_dir_permissions(), JSON_PRETTY_PRINT);
 		return $preformat_container ? $this->pre_container($json) : $json;
 	}
 
@@ -363,7 +363,7 @@ class WP_Optimize_System_Status_Report {
 	 */
 	private function ajax_value_container($value, $id, $dynamic_field_type) {
 		if (is_array($value)) {
-			$value = '<pre>' . json_encode($value, JSON_PRETTY_PRINT) . '</pre>';
+			$value = '<pre>' . wp_json_encode($value, JSON_PRETTY_PRINT) . '</pre>';
 		} else {
 			$value = esc_html($value);
 		}

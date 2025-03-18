@@ -78,7 +78,7 @@
 											name="wpo-logger-options[<?php echo esc_attr($option_name); ?>][]"
 											value="<?php echo esc_attr($options_values[$option_name]); ?>"
 											placeholder="<?php echo esc_attr($placeholder); ?>"
-										<?php echo $data_validate_attr; ?> "/>
+										<?php echo $data_validate_attr; // phpcs:ignore WordPress.Security.EscapeOutput -- Output is already escaped ?> "/>
 									<?php
 								}
 							}

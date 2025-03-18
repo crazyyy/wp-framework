@@ -42,7 +42,7 @@ class WP_Optimize_Cache_Commands {
 
 		$enabled = false;
 		$disabled = false;
-		$return = !empty($validation) ? $validation : array();
+		$return = empty($validation) ? array() : $validation;
 		$previous_settings = WPO_Cache_Config::instance()->get();
 
 		// Attempt to change current status if required
@@ -115,6 +115,13 @@ class WP_Optimize_Cache_Commands {
 
 		$return['enabled'] = ($enabled && !is_wp_error($enabled)) || ($previous_settings['enable_page_caching'] && is_wp_error($disabled));
 
+		if ($enabled && !is_wp_error($enabled)) {
+			if (isset($data['cache-settings']['host_gravatars_locally']) && $data['cache-settings']['host_gravatars_locally'] !== $previous_settings['host_gravatars_locally']) {
+				$cache = WPO_Page_Cache::instance();
+				$cache->file_log('Host gravatars locally setting changed, purging cache');
+				$cache->purge();
+			}
+		}
 		// $disable can either be boolean or WP_Error
 		if (!is_wp_error($disabled) && $disabled) {
 			WPO_Page_Cache::instance()->prune_cache_logs();
@@ -135,7 +142,9 @@ class WP_Optimize_Cache_Commands {
 		$status[] = WPO_Page_Cache::instance()->is_enabled() ? __('Caching is enabled', 'wp-optimize') : __('Caching is disabled', 'wp-optimize');
 
 		$preloader_status = WP_Optimize_Page_Cache_Preloader::instance()->get_status_info();
+		// translators: %s: The current cache size
 		$status[] = sprintf(__('Current cache size: %s', 'wp-optimize'), $preloader_status['size']);
+		// translators: %s: The number of files in the cache
 		$status[] = sprintf(__('Number of files: %s', 'wp-optimize'), $preloader_status['file_count']);
 
 		if (array_key_exists('message', $preloader_status)) $status[] = $preloader_status['message'];

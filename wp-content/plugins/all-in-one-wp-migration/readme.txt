@@ -4,7 +4,7 @@ Tags: backup, transfer, copy, move, clone
 Requires at least: 3.3
 Tested up to: 6.7
 Requires PHP: 5.3
-Stable tag: 7.87
+Stable tag: 7.90
 License: GPLv2 or later
 
 Backup, transfer, copy, and move a site with 1-click. Quick, easy, and reliable.
@@ -24,7 +24,7 @@ Follow these three simple steps, and your site will be live at its new location 
 
 One feature that makes All-in-One WP Migration widely loved (to the tune of over 6,000 5-star user reviews) is that the technical requirements for installing the plugin are simple.
 
-If you have WordPress version between 3.3 and 6.6.1 and PHP version between 5.3 and 8.4, you are good to go. All-in-One WP Migration also supports all versions of MySQL, MariaDB and SQLite.
+If you have WordPress version between 3.3 and 6.7.2 and PHP version between 5.3 and 8.4, you are good to go. All-in-One WP Migration also supports all versions of MySQL, MariaDB and SQLite.
 
 **Features Spotlight:**
 
@@ -98,6 +98,37 @@ All-in-One WP Migration is in full compliance with General Data Protection Regul
 See our [GDPR Compliant Privacy Policy here](https://www.iubenda.com/privacy-policy/946881).
 
 == Changelog ==
+= 7.90 =
+**Added**
+
+* Introduced a constant to disable MySQL late row lookups for enhanced database performance
+
+**Improved**
+
+* Enhanced SQLite database integration for improved stability and efficiency
+* Strengthened serialization replacement mechanism to address an unauthenticated PHP Object Injection vulnerability (CVE-2024-10942). Special thanks to Webbernaut for responsibly disclosing this issue
+* Preserved the wp_rocket_settings option during exports for improved user experience
+
+**Fixed**
+
+* Resolved PHP 8.4 deprecation warnings
+
+= 7.89 =
+**Improved**
+
+* Upgraded to Node.js 22 for better performance and security
+* Updated all plugin dependencies to keep things running smoothly and securely
+
+= 7.88 =
+**Fixed**
+
+* Fixed an issue where the upload progress was stuck at 100%
+* Fixed an issue where the upload could not be cancelled before it was completed
+
+**Improved**
+
+* Improved user-facing messages to be friendlier, direct, consistent, and more informative.
+
 = 7.87 =
 **Fixed**
 

@@ -21,15 +21,14 @@ function bodhi_svgs_plugin_action_links( $links ) {
 	return $links;
 
 }
-add_filter( 'plugin_action_links_' . $plugin_file, 'bodhi_svgs_plugin_action_links' );
+add_filter( 'plugin_action_links_' . plugin_basename(BODHI_SVGS_PLUGIN_FILE), 'bodhi_svgs_plugin_action_links' );
 
 /**
  * Add plugin_row_meta links
  */
 function bodhi_svgs_plugin_meta_links( $links, $file ) {
 
-	$plugin_file = 'svg-support/svg-support.php';
-	if ( $file == $plugin_file ) {
+	if ( $file == plugin_basename(BODHI_SVGS_PLUGIN_FILE) ) {
 		return array_merge(
 			$links,
 			array(

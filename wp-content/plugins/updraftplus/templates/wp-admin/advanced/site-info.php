@@ -2,7 +2,7 @@
 	if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 ?>
 <div class="advanced_tools site_info">
-	<h3><?php _e('Site information', 'updraftplus');?></h3>
+	<h3><?php esc_html_e('Site information', 'updraftplus');?></h3>
 	<table>
 	<?php
 
