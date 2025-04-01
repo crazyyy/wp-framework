@@ -11,9 +11,10 @@ class AIOWPSecurity_Block_Userini extends AIOWPSecurity_Block_File {
 	 * @return boolean|WP_Error  true if inserted; false if failed
 	 */
 	public function insert_contents() {
-		
+
 		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions -- wp_filesystem not recommended.
 		if (!is_writable($home_path)) {
 			return new WP_Error(
 				'file_directory_not_writable',

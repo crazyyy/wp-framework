@@ -83,11 +83,12 @@ foreach ($default_options as $k => $v) {
 	</tr>
 	<tr class="backup-interval-description">
 		<th></th>
-		<td><div>
+		<td><div><p>
 		<?php
-			echo apply_filters('updraftplus_fixtime_ftinfo', '<p>'.__('To fix the time at which a backup should take place,', 'updraftplus').' ('.__('e.g. if your server is busy at day and you want to run overnight', 'updraftplus').'), '.__('to take incremental backups', 'updraftplus').', '.__('or to configure more complex schedules', 'updraftplus').', <a href="'.$updraftplus->get_url('premium').'" target="_blank">'.htmlspecialchars(__('use UpdraftPlus Premium', 'updraftplus')).'</a></p>');
+			/* translators: $1$s: translatable text ,%2$s: translatable text, %3$s: translatable text,%4$s: UpdraftPlus Premium product name*/
+			echo wp_kses_post(sprintf(__('To %1$s (e.g. if your server is busy in the day and you want to run overnight), to take %2$s, or to %3$s, use %4$s', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/features/schedule-wordpress-backup-at-set-times?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=fix-the-time&utm_creative_format=text" target="_blank">'.__('fix the time at which a backup should take place', 'updraftplus').'</a>', '<a href="https://teamupdraft.com/updraftplus/features/wordpress-incremental-backup?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=incremental-backups&utm_creative_format=text" target="_blank">'.__('incremental backups', 'updraftplus').'</a>', '<a href="https://teamupdraft.com/updraftplus/features/backup-retention-rules/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=delete-backups-as-they-age&utm_creative_format=text" target="_blank">'.__('automatically delete backups as they age', 'updraftplus').'</a>', '<a href="https://teamupdraft.com/updraftplus/pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-premium&utm_creative_format=text" target="_blank">UpdraftPlus Premium</a>')).'.';
 		?>
-		</div></td>
+		<p></div></td>
 	</tr>
 </table>
 
@@ -123,7 +124,7 @@ foreach ($default_options as $k => $v) {
 		<?php
 			if (false === apply_filters('updraftplus_storage_printoptions', false, $active_service)) {
 				echo '</div>';
-				echo '<p><a href="'.$updraftplus->get_url('premium').'" target="_blank">'.htmlspecialchars(__('You can send a backup to more than one destination with Premium.', 'updraftplus')).'</a></p>';
+				echo '<p><a href="'.esc_url($updraftplus->get_url('premium_more_than_one_storage')).'" target="_blank">'.esc_html(__('You can send a backup to more than one destination with Premium.', 'updraftplus')).'</a></p>';
 			}
 		?>
 		
@@ -145,7 +146,12 @@ foreach ($default_options as $k => $v) {
 		<th><?php _e('Include in files backup', 'updraftplus');?>:</th>
 		<td>
 			<?php echo $updraftplus_admin->files_selector_widgetry('', true, true); ?>
-			<p><?php echo apply_filters('updraftplus_admin_directories_description', __('The above directories are everything, except for WordPress core itself which you can download afresh from WordPress.org.', 'updraftplus').' <a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/shop/").'" target="_blank">'.htmlspecialchars(__('See also the Premium version from our shop.', 'updraftplus')).'</a>'); ?></p>
+			<p>
+				<?php
+					/* translators: %1$s: translated link text 'backup more files', %2$s: product link text 'UpdraftPlus Premium'*/
+					echo wp_kses_post(__('The above includes all WordPress file directories, except for WordPress core which you can download afresh from WordPress.org.', 'updraftplus').' '.sprintf(__('You can %1$s e.g. customisations made to WordPress core, wp-config.php or custom directories outside of the normal WordPress structure with %2$s.', 'updraftplus'), ' <a href="'.esc_url(apply_filters('updraftplus_com_link', "https://teamupdraft.com/updraftplus/features/backup-more-files-wordpress/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=back-up-more_files&utm_creative_format=text")).'" target="_blank">'.__('backup more files', 'updraftplus').'</a>', '<a href="'.esc_url(apply_filters('updraftplus_com_link', "https://teamupdraft.com/updraftplus/features/backup-more-files-wordpress/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=back-up-more_files&utm_creative_format=text")).'" target="_blank">UpdraftPlus Premium</a>'));
+				?>
+			</p>
 		</td>
 	</tr>
 </table>
@@ -159,7 +165,7 @@ foreach ($default_options as $k => $v) {
 
 		<td>
 		<?php
-			echo apply_filters('updraft_database_encryption_config', '<a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/landing/updraftplus-premium").'" target="_blank">'.__("Don't want to be spied on? UpdraftPlus Premium can encrypt your database backup.", 'updraftplus').'</a> '.__('It can also backup external databases.', 'updraftplus'));
+			echo wp_kses_post(apply_filters('updraft_database_encryption_config', sprintf(__('%s with UpdraftPlus Premium.', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/features/database-encryption/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=encrypt-the-datbase&utm_creative_format=text" target="_blank">'.__('Encrypt the database', 'updraftplus').'</a>').' '.sprintf(__('You can also %s.', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/features/more-database-options/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=back-up-non-wp-tables&utm_creative_format=text" target="_blank">'.__('back up non-WP tables and external databases', 'updraftplus').'</a>')));
 		?>
 		</td>
 	</tr>
@@ -278,7 +284,7 @@ foreach ($default_options as $k => $v) {
 				</div>
 			</label>
 			<?php
-				if (!class_exists('UpdraftPlus_Addon_Reporting')) echo '<a href="'.$updraftplus->get_url('premium').'" target="_blank">'.esc_html__('For more reporting features, use the Premium version', 'updraftplus').'</a>';
+				if (!class_exists('UpdraftPlus_Addon_Reporting')) echo '<a href="https://teamupdraft.com/updraftplus/features/advanced-wordpress-backup-reports?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=check-this-box-basic-report&utm_creative_format=text" target="_blank">'.esc_html__('For more reporting features, use the Premium version', 'updraftplus').'</a>';
 			?>
 		</td>
 	</tr>
@@ -328,7 +334,7 @@ foreach ($default_options as $k => $v) {
 
 	<tr class="deletelocal expertmode updraft-hidden" style="display:none;">
 		<th><?php _e('Delete local backup', 'updraftplus');?>:</th>
-		<td><input type="checkbox" id="updraft_delete_local" name="updraft_delete_local" value="1" <?php if ($delete_local) echo 'checked="checked"'; ?>> <br><label for="updraft_delete_local"><?php _e('Check this to delete any superfluous backup files from your server after the backup run finishes (i.e. if you uncheck, then any files despatched remotely will also remain locally, and any files being kept locally will not be subject to the retention limits).', 'updraftplus');?></label></td>
+		<td><input type="checkbox" id="updraft_delete_local" name="updraft_delete_local" value="1" <?php if ($delete_local) echo 'checked="checked"'; ?>> <br><label for="updraft_delete_local"><?php esc_html_e('Check this to delete any superfluous backup files from your server after the backup run finishes (i.e. Whilst this option is unchecked, files sent to remote storage will also remain stored locally, and no locally stored files will be deleted in response to any retention rules).', 'updraftplus');?></label></td>
 	</tr>
 
 	<tr class="expertmode backupdirrow updraft-hidden" style="display:none;">

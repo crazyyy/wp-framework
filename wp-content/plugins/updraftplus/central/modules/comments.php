@@ -347,16 +347,16 @@ class UpdraftCentral_Comments_Commands extends UpdraftCentral_Commands {
 	public function get_comment_filters() {
 		// Options for comment_types field
 		$comment_types = apply_filters('admin_comment_types_dropdown', array(
-			'comment' => __('Comments'),
-			'pings' => __('Pings'),
+			'comment' => __('Comments'),// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- The string exists within the WordPress core.
+			'pings' => __('Pings'),// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- The string exists within the WordPress core.
 		));
 				
 		// Options for comment_status field
 		$comment_statuses = array(
-			'approve' => __('Approve'),
-			'hold' => __('Hold or Unapprove'),
-			'trash' => __('Trash'),
-			'spam' => __('Spam'),
+			'approve' => __('Approve'),// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- The string exists within the WordPress core.
+			'hold' => __('Hold or Unapprove', 'updraftplus'),
+			'trash' => __('Trash', 'updraftplus'),
+			'spam' => __('Spam', 'updraftplus'),
 		);
 		
 		// Pull sites options if available.

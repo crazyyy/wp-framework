@@ -3,7 +3,7 @@ Contributors: Backup with UpdraftPlus, DavidAnderson, pmbaldha, DNutbourne, apor
 Tags: backup, database backup, wordpress backup, cloud backup, migration
 Requires at least: 3.2
 Tested up to: 6.7
-Stable tag: 1.25.2
+Stable tag: 1.25.3
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -178,6 +178,22 @@ This problem is probably caused by your account being starved of resources by yo
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.32.x of the free version correspond to changes made in 2.16.32.x of the paid version.
+
+= 1.25.3 - 21/Mar/2025 =
+
+* FIX: An issue that prevented an UpdraftClone backup from sending when attempting to boot an UpdraftClone from WP_CLI
+* FIX: An issue that prevented changing the default UpdraftClone region when attempting to boot an UpdraftClone from WP_CLI
+* TWEAK: The "x-amz-content-sha256" request header is now signed and included in the S3 signature version 4. Some S3-based providers mandate the signing of this header for accurate signature calculation.
+* TWEAK: Introduce a new constant named "UPDRAFTPLUS_S3_EXCLUDE_SIGV4_CONTENT_SHA256_HEADER". This constant allows for the exclusion of the "x-amz-content-sha256" headers from being signed if desired; it accepts a boolean value, defaulting to false.
+* TWEAK: Add 'noopener, noreferrer' window features to the Javascript's window.open() call to prevent the target page from changing content of the original page
+* TWEAK: Favicon fetching feature for UpdraftCentral
+* TWEAK: Minor tweak to "updates" module to include icons to plugin and screenshot url to theme update items  
+* TWEAK: New UpdraftCentral module for background fetching
+* TWEAK: Revise the wording found in the expert settings regarding the deletion of local backup files
+* TWEAK: Update seasonal notices
+* TWEAK: Enhance the notifications to signify the introduction of other plugins that belong to the same plugin family
+* TWEAK: To avoid CORS issues and ensure the UpdraftPlus plugin is functional and accessible via the UpdraftCentral dashboard, the hostname and/or domain origin is changed from updraftplus.com to teamupdraft.com.
+* COMPATIBILITY: Resolved PHP deprecation warnings in lockadmin.php by eliminating the use of dynamic properties
 
 = 1.25.2 - 26/Feb/2025 =
 
@@ -2016,4 +2032,4 @@ Non-English translators are provided by volunteers, and wordpress.org does not g
 We recognise and thank those mentioned at https://updraftplus.com/acknowledgements/ for code and/or libraries used and/or modified under the terms of their open source licences.
 
 == Upgrade Notice ==
-* 1.25.2: New Cron Events tool for checking all UpdraftPlus-related cron events; identification of WooCommerce and HPOS support; error message clarity when bot verification occurs prior to or during the direct site to site migration. Various fixes and small tweaks - see the changelog for details. A recommended update for all.
+* 1.25.3: Various fixes and small tweaks - see the changelog for details. A recommended update for all.

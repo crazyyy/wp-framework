@@ -103,12 +103,12 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 		global $updraftplus;
 		?>
 		<tr class="updraftplusmethod email">
-			<th><?php esc_html_e('Note:', 'updraftplus');?></th>
+			<th><?php esc_html_e('Email:', 'updraftplus');?></th>
 			<td><?php
 
 				$used = apply_filters('updraftplus_email_whichaddresses',
 					sprintf(__("Your site's admin email address (%s) will be used.", 'updraftplus'), get_bloginfo('admin_email').' - <a href="'.esc_attr(admin_url('options-general.php')).'">'.__("configure it here", 'updraftplus').'</a>').
-					' <a href="'.$updraftplus->get_url('premium').'" target="_blank">'.__('For more options, use Premium', 'updraftplus').'</a>'
+					' <a href="'.$updraftplus->get_url('premium_email').'" target="_blank">'.__('For more options, use Premium', 'updraftplus').'</a>'
 				);
 
 				$allowed_html = array(

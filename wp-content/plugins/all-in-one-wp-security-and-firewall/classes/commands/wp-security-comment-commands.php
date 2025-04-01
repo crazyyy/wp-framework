@@ -148,7 +148,7 @@ trait AIOWPSecurity_Comment_Commands_Trait {
 			return array('status' => 'error', 'message' => __('Invalid IP address provided.', 'all-in-one-wp-security-and-firewall'));
 		}
 
-		$ip = strip_tags($data['ip']);
+		$ip = wp_strip_all_tags($data['ip']);
 
 		if (AIOWPSecurity_Utility_IP::get_user_ip_address() == $ip) {
 			return array('status' => 'error', 'message' => __('You cannot block your own IP address:', 'all-in-one-wp-security-and-firewall') . ' ' . $ip);
@@ -198,18 +198,20 @@ trait AIOWPSecurity_Comment_Commands_Trait {
 				$now_date,
 				'spam'
 			);
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore
 			$result = $wpdb->get_row($sql);
 
 			$block_comments_output = '<div class="aio_yellow_box">';
 			if (empty($result) || 0 == $result->total_count) {
-				$block_comments_output .= '<p><strong>'.__('You currently have no IP addresses permanently blocked due to spam.', 'all-in-one-wp-security-and-firewall').'</strong></p>';
+				$block_comments_output .= '<p><strong>'.esc_html__('You currently have no IP addresses permanently blocked due to spam.', 'all-in-one-wp-security-and-firewall').'</strong></p>';
 			} else {
 				$todays_blocked_count = $result->todays_blocked_count;
 				$total_count = $result->total_count;
 
-				$block_comments_output .= '<p><strong>'.__('Spammer IPs added to permanent block list today:', 'all-in-one-wp-security-and-firewall') . ' ' . $todays_blocked_count . '</strong></p>';
-				$block_comments_output .= '<hr><p><strong>'.__('All time total:', 'all-in-one-wp-security-and-firewall'). ' ' . $total_count.'</strong></p>';
-				$block_comments_output .= '<p><a class="button" href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=permanent-block" target="_blank">'.__('View blocked IPs', 'all-in-one-wp-security-and-firewall').'</a></p>';
+				$block_comments_output .= '<p><strong>'.esc_html__('Spammer IPs added to permanent block list today:', 'all-in-one-wp-security-and-firewall') . ' ' . esc_html($todays_blocked_count) . '</strong></p>';
+				$block_comments_output .= '<hr><p><strong>'.esc_html__('All time total:', 'all-in-one-wp-security-and-firewall'). ' ' . $total_count.'</strong></p>';
+				$block_comments_output .= '<p><a class="button" href="admin.php?page='.esc_attr(AIOWPSEC_MAIN_MENU_SLUG).'&tab=permanent-block" target="_blank">'.esc_html__('View blocked IPs', 'all-in-one-wp-security-and-firewall').'</a></p>';
 			}
 			$block_comments_output .= '</div>';
 		}

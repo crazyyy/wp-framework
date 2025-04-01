@@ -2,11 +2,11 @@
 <table class="wp-list-table widefat file_permission_table">
 	<thead>
 	<tr>
-		<th><?php _e('Name', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('File/Folder', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('Current permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('Recommended permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('Recommended action', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('Name', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('File/Folder', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('Current permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('Recommended permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('Recommended action', 'all-in-one-wp-security-and-firewall'); ?></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -18,10 +18,10 @@
 	</tbody>
 	<tfoot>
 	<tr>
-		<th  class="column-primary"><?php _e('Name', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('File/Folder', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('Current permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('Recommended permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
-		<th><?php _e('Recommended action', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th  class="column-primary"><?php esc_html_e('Name', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('File/Folder', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('Current permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('Recommended permissions', 'all-in-one-wp-security-and-firewall'); ?></th>
+		<th><?php esc_html_e('Recommended action', 'all-in-one-wp-security-and-firewall'); ?></th>
 	</tfoot>
 </table>

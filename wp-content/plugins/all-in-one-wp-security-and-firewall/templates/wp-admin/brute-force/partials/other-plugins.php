@@ -3,10 +3,12 @@
 	<h3 class="hndle"><label for="title"><?php _e('Other forms CAPTCHA settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<?php if (AIOWPSecurity_Utility::is_buddypress_plugin_active()) { ?>
 	<div class="inside">
+		<div id="bp-register-captcha-badge">
 		<?php
 		// Display security info badge
 		$aiowps_feature_mgr->output_feature_details_badge("bp-register-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on BuddyPress registration form', 'all-in-one-wp-security-and-firewall'); ?>:</label></th>
@@ -21,10 +23,12 @@
 	<?php } ?>
 	<?php if (AIOWPSecurity_Utility::is_bbpress_plugin_active()) { ?>
 		<div class="inside">
+			<div id="bbp-new-topic-captcha-badge">
 			<?php
 			// Display security info badge
 			$aiowps_feature_mgr->output_feature_details_badge("bbp-new-topic-captcha");
 			?>
+			</div>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable CAPTCHA on bbPress new topic form', 'all-in-one-wp-security-and-firewall'); ?>:</label></th>
@@ -39,10 +43,12 @@
 	<?php } ?>
 	<?php if (AIOWPSecurity_Utility::is_contact_form_7_plugin_active()) { ?>
 		<div class="inside">
+			<div id="contact-form-7-captcha-badge">
 			<?php
 			// Display security info badge
 			$aiowps_feature_mgr->output_feature_details_badge("contact-form-7-captcha");
 			?>
+			</div>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php echo sprintf(__('Enable CAPTCHA on %s', 'all-in-one-wp-security-and-firewall'), 'Contact Form 7'); ?>:</label></th>

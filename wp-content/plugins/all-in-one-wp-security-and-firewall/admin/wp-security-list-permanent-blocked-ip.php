@@ -132,15 +132,14 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 			}
 		} elseif (!empty($entries)) {
 			//Delete single record
-			$delete_command = "DELETE FROM " . AIOWPSEC_TBL_PERM_BLOCK . " WHERE id = '" . absint($entries) . "'";
-			$result = $wpdb->query($delete_command);
-			if ($result) {
-				return AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('Successfully unblocked and deleted the selected record(s).', 'all-in-one-wp-security-and-firewall'), true);
-			} elseif (false === $result) {
+			$delete_command = "DELETE FROM " . AIOWPSEC_TBL_PERM_BLOCK . " WHERE id = %d";
+			$result = $wpdb->query($wpdb->prepare($delete_command, absint($entries)));
+			if (false === $result) {
 				// Error on single delete
 				$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Perm Block table. Database error: '.$wpdb->last_error, 4);
-				return AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to unblock and delete the selected record(s).', 'all-in-one-wp-security-and-firewall'), true);
 			}
+
+			return $result;
 		}
 	}
 

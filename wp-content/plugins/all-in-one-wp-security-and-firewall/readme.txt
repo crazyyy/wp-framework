@@ -5,7 +5,7 @@ Tags: security, malware scanning, two factor authentication, firewall, login sec
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 5.3.8
+Stable tag: 5.4.0
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -125,7 +125,7 @@ Most security attacks come from a handful of countries and so it’s possible to
 their enquiry within 24 hours.
 
 #### Plugin Support
-* If you have a question or problem with the All-In-One Security plugin, post it on the support forum and we will help you. Premium customers can log queries directly with the team via aiosplugin.com
+* If you have a question or problem with the All-In-One Security plugin, post it on the support forum and we will help you. Premium customers can log queries directly with the team via https://teamupdraft.com/all-in-one-security/
 
 = Developers =
 * If you are a developer and you need some extra hooks or filters for this plugin then let us know.
@@ -168,7 +168,7 @@ But if your WordPress site is a business website, if it showcases what you do, o
 = What are the additional features of All-In-One Security Premium? =
 AIOS Premium scans your WordPress website for malware whilst also monitoring your site's response time and uptime, notifying you of any issues within 24 hours, AIOS Premium customers also benefit from hands-on ticketed support via email (rather than via WP Support forums).
 Additional security tools include Country Blocking, Smart 404 Error Blocking and Advanced Two Factor Authentication.
-More information is available from our [All-In-One Security website](https://aiosplugin.com)
+More information is available from our [All-In-One Security website](https://teamupdraft.com/all-in-one-security/)
 
 = How do I get started with All-In-One Security Premium? =
 In the web shop, purchase your preferred subscription. After completing the purchase, you will be emailed a link to download the plugin. You can also access the link through your "My Account" page.
@@ -192,7 +192,7 @@ Development and test sites require their own licence if updates to the plugin ar
 However, these sites can be disconnected from the licence when they have served their purpose. You can disconnect the licence via the site's WP Admin->Plugins page, and it will be available to be reassigned to a different site.
 
 = Is the All In One Security & Firewall Plugin GDPR and other privacy law compliant? =
-Please read more about GDPR compliance here: https://aiosplugin.com/privacy-policy/ .
+Please read more about GDPR compliance here: https://teamupdraft.com/privacy/ .
 
 == Installation ==
 
@@ -211,6 +211,28 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.4.0 - 27/Mar/2025 =
+
+* FIX: Replaced firewall URI parsers with non-WordPress methods
+* FIX: Resolved PHP 5.6 compatibility issue caused by the ?? operator in 5.3.10
+
+= 5.3.10 - 26/Mar/2025 =
+
+* FEATURE: Added commenting capability to IP whitelists
+* FEATURE: Added diagnostics reporting
+* FEATURE: Added a whitelist and user role-based access limit to the REST API firewall
+* FIX: "Undefined index: path" error when front-end HTTP Authentication is enabled.
+* FIX: Resolved dashboard translation issue where text lacked whitespace and was not properly translated
+* TWEAK: Remove uses of unserialize without restriction of allowed_classes
+* TWEAK: Refactored IP commands class to use response helper
+* TWEAK: Removed WP REST API tab
+* TWEAK: Switched "Critical Feature Status" toggle buttons on the dashboard to a status light system
+* TWEAK: Updated the security strength meter on the dashboard
+* TWEAK: Improved the dashboard widget to display a chart showing the number of logins over the last 7 days
+* TWEAK: Enhanced the maintenance mode switch on the dashboard for consistency with the rest of the plugin
+* TWEAK: Converted Brute Force menu actions to use AJAX
+* TWEAK: Updated seasonal notices 
 
 = 5.3.8 - 16/Dec/2024 =
 
@@ -1527,4 +1549,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.3.8: Fixed a translation related fatal error. See changelog for full details. A recommended update for all.
+* 5.4.0: Resolved a bug in the firewall and other compatibility issues. See changelog for full details. A recommended update for all.

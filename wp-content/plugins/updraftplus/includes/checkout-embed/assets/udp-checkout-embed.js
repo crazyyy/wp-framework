@@ -74,7 +74,7 @@
 			},
 			show_checkout: function() {
 				if (1) {
-					window.open(this.product_url, '_blank');
+					window.open(this.product_url, '_blank', 'noopener, noreferrer');
 				} else {
 					// Disabled because of SameSite problems
 					this.$el.addClass('loading iframe-is-opened');

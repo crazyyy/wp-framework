@@ -53,7 +53,8 @@ class AIOWPSecurity_Utility_Firewall {
 	 */
 	public static function is_firewall_page() {
 		global $pagenow;
-		return ('admin.php' == $pagenow && isset($_GET['page']) && false !== strpos($_GET['page'], AIOWPSEC_MENU_SLUG_PREFIX.'_firewall'));
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce.
+		return ('admin.php' == $pagenow && isset($_GET['page']) && false !== strpos(sanitize_title(wp_unslash($_GET['page'])), AIOWPSEC_MENU_SLUG_PREFIX.'_firewall'));
 	}
 
 	/**
@@ -230,7 +231,7 @@ class AIOWPSecurity_Utility_Firewall {
 		clearstatcache();
 		$muplugin_path = $firewall_files['muplugin'];
 		if (file_exists($muplugin_path)) {
-			@unlink($muplugin_path); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this
+			@wp_delete_file($muplugin_path); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this
 		}
 
 		$aio_wp_security->configs->set_value('aios_firewall_dismiss', false, true);

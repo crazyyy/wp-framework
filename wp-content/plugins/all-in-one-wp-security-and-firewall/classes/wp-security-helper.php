@@ -69,6 +69,7 @@ class AIOS_Helper {
 			$ip_method_id = 0;
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- WordPress API cannot be used here as it's loaded independently of WordPress
 		$visitor_ip = isset($_SERVER[$ip_retrieve_methods[$ip_method_id]]) ? $_SERVER[$ip_retrieve_methods[$ip_method_id]] : '';
 
 		// Check if multiple IPs were given - these will be present as comma-separated list
@@ -78,6 +79,7 @@ class AIOS_Helper {
 		if (!filter_var($visitor_ip, FILTER_VALIDATE_IP) && preg_match('/(.+):\d+$/', $visitor_ip, $matches)) $visitor_ip = $matches[1];
 
 		if (!filter_var($visitor_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && !filter_var($visitor_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- WordPress API cannot be used here as it's loaded independently of WordPress
 			$visitor_ip = empty($_SERVER['REMOTE_ADDR']) ? '' : $_SERVER['REMOTE_ADDR'];
 		}
 
@@ -223,12 +225,15 @@ class AIOS_Helper {
 		} catch (\Exception $e) {
 			$error_message = $e->getMessage();
 			// timed out exception ignore it.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- PCP warning. Part of AIOS error reporting.
 			if (!preg_match('/timed out/i', $error_message)) error_log('AIOS_Helper::request_remote exception - ' . $error_message);
 		} catch (\Error $e) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- PCP warning. Part of AIOS error reporting.
 			error_log('AIOS_Helper::request_remote error - ' . $e->getMessage());
 		}
 		
 		if (empty($response) && ini_get('allow_url_fopen')) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Cannot use WP API since Firewall is loaded outside WordPress.
 			$response = @file_get_contents($url, false, stream_context_create(array('http' => array("timeout" => $timeout)))); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this to silence request failed warning for IP lookup services
 		}
 		return $response;

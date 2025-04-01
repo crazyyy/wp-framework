@@ -172,7 +172,7 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 				{{{mb_substr_existence_label}}}
 				{{{curl_existence_label}}}
 				<br>
-				<p>{{openstack_text_description}} <a href="{{faq_link_url}}" target="_blank">{{faq_link_text}}</a></p>
+				<p>{{openstack_text_description}} <a href="{{{faq_link_url}}}" target="_blank">{{faq_link_text}}</a></p>
 			</td>
 		</tr>
 
@@ -245,7 +245,7 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 			'curl_existence_label' => wp_kses($updraftplus_admin->curl_check($this->long_desc, false, $this->method.' hidden-in-updraftcentral', false), $this->allowed_html_for_content_sanitisation()),
 			'openstack_text_description' => __('Get your access credentials from your OpenStack Swift provider, and then pick a container name to use for storage.', 'updraftplus').' '.__('This container will be created for you if it does not already exist.', 'updraftplus'),
 			'faq_link_text' => __('Also, you should read this important FAQ.', 'updraftplus'),
-			'faq_link_url' => wp_kses(apply_filters("updraftplus_com_link", "https://updraftplus.com/faqs/there-appear-to-be-lots-of-extra-files-in-my-rackspace-cloud-files-container/"), array(), array('http', 'https')),
+			'faq_link_url' => wp_kses(apply_filters("updraftplus_com_link", "https://teamupdraft.com/documentation/updraftplus/topics/cloud-storage/rackspace/there-are-extra-files-in-my-rackspace-cloud-files-container/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=openstack-important-faq&utm_creative_format=tex"), array(), array('http', 'https')),
 			'input_authentication_uri_label' => __('Authentication URI', 'updraftplus'),
 			'input_authentication_uri_title' => _x('This needs to be a v2 (Keystone) authentication URI; v1 (Swauth) is not supported.', 'Keystone and swauth are technical terms which cannot be translated', 'updraftplus'),
 			'input_tenant_label' => __('Tenant', 'updraftplus'),

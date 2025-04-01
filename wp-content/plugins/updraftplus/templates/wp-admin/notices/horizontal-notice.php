@@ -55,24 +55,28 @@
 				<?php
 					echo wp_kses_post($text);
 
+					if (isset($button_meta) && 'inline' == $button_meta) {
+				?>
+				<br>
+				<a href="<?php echo esc_attr(apply_filters('updraftplus_com_link', $button_link));?>"><b><?php echo esc_html($button_text); ?></b></a>
+				<?php
+						echo wp_kses_post($text2);
+					}
+
 					if (isset($discount_code)) echo ' <b>'.esc_html($discount_code).'</b>';
 					
-					if (!empty($button_link) && !empty($button_meta)) {
+					if (!empty($button_link) && ((!empty($button_meta) && 'inline' != $button_meta) || !empty($button_text))) {
 				?>
 				<a class="updraft_notice_link" href="<?php echo esc_attr(apply_filters('updraftplus_com_link', $button_link));?>"><?php
-						if ('updraftcentral' == $button_meta) {
-							esc_html__('Get UpdraftCentral', 'updraftplus');
-						} elseif ('updraftplus' == $button_meta) {
-							esc_html_e('Get Premium', 'updraftplus');
-						} elseif ('signup' == $button_meta) {
-							esc_html_e('Sign up', 'updraftplus');
-						} elseif ('learnmore' == $button_meta) {
-							esc_html_e('Learn more', 'updraftplus');
-						} elseif ('go_there' == $button_meta) {
-							esc_html_e('Go there', 'updraftplus');
-						} else {
-							esc_html_e('Read more', 'updraftplus');
-						}
+					global $updraftplus_admin;
+					$updraftplus_admin->include_template(
+						'wp-admin/notices/button-label.php',
+						false,
+						array(
+							'button_meta' => isset($button_meta) ? $button_meta : '',
+							'button_text' => isset($button_text) ? $button_text : ''
+						)
+					);
 					?></a>
 				<?php
 					}

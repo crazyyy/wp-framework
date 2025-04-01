@@ -61,10 +61,10 @@ class AIOWPSecurity_Filescan_Menu extends AIOWPSecurity_Admin_Menu {
 		$next_fcd_scan_time = AIOWPSecurity_Scan::get_next_scheduled_scan();
 
 		if (false == $next_fcd_scan_time) {
-			$next_scheduled_scan = '<span>' . __('Nothing is currently scheduled', 'all-in-one-wp-security-and-firewall') . '</span>';
+			$next_scheduled_scan = '<span>' . esc_html__('Nothing is currently scheduled', 'all-in-one-wp-security-and-firewall') . '</span>';
 		} else {
 			$scan_time = AIOWPSecurity_Utility::convert_timestamp($next_fcd_scan_time, 'D, F j, Y H:i');
-			$next_scheduled_scan = '<span class="aiowps_next_scheduled_date_time">' . $scan_time . '</span>';
+			$next_scheduled_scan = '<span class="aiowps_next_scheduled_date_time">' . esc_html($scan_time) . '</span>';
 		}
 		
 		$aio_wp_security->include_template('wp-admin/scanner/file-change-detect.php', false, array('aiowps_feature_mgr' => $aiowps_feature_mgr, 'previous_scan' => $previous_scan, 'next_scheduled_scan' => $next_scheduled_scan));

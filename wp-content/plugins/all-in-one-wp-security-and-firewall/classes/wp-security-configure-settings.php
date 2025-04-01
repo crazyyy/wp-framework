@@ -166,6 +166,8 @@ class AIOWPSecurity_Configure_Settings {
 
 		//REST API Security
 		$aio_wp_security->configs->set_value('aiowps_disallow_unauthorized_rest_requests', '');//Checkbox
+		$aio_wp_security->configs->set_value('aios_roles_disallowed_rest_requests', array());
+		$aio_wp_security->configs->set_value('aios_whitelisted_rest_routes', array());
 
 		// IP retrieval setting
 		$aio_wp_security->configs->set_value('aiowps_ip_retrieve_method', '0'); // Default is $_SERVER['REMOTE_ADDR']
@@ -363,6 +365,8 @@ class AIOWPSecurity_Configure_Settings {
 
 		//REST API Security
 		$aio_wp_security->configs->add_value('aiowps_disallow_unauthorized_rest_requests', '');//Checkbox
+		$aio_wp_security->configs->add_value('aios_roles_disallowed_rest_requests', array());
+		$aio_wp_security->configs->add_value('aios_whitelisted_rest_routes', array());
 
 		// IP retrieval setting
 		// Commented the below code line because the IP retrieve method will be configured when the AIOS plugin is activated for the first time.
@@ -477,7 +481,7 @@ class AIOWPSecurity_Configure_Settings {
 		}
 
 		if (!empty($active)) {
-			$aio_wp_security->configs->set_value('aiowps_firewall_active_upgrade', json_encode($active));
+			$aio_wp_security->configs->set_value('aiowps_firewall_active_upgrade', wp_json_encode($active));
 			$aio_wp_security->configs->save_config();
 			self::send_basic_firewall_upgrade_email();
 		}
@@ -493,6 +497,7 @@ class AIOWPSecurity_Configure_Settings {
 		$dashboard_link = 'admin.php?page=aiowpsec';
 		$dashboard_link = is_multisite() ? network_admin_url($dashboard_link) : admin_url($dashboard_link);
 		$subject = __('Basic firewall settings disabled', 'all-in-one-wp-security-and-firewall');
+		/* translators: %s: Dashboard link. */
 		$email_msg = __('Our basic firewall rules have been upgraded and to prevent any unexpected site issues we have disabled the features.', 'all-in-one-wp-security-and-firewall') . "\n\n" . __('You can enable the features again by logging into your WordPress dashboard.', 'all-in-one-wp-security-and-firewall') . "\n\n" .sprintf(__('Go to dashboard: %s', 'all-in-one-wp-security-and-firewall'), $dashboard_link) . "\n\n" . __('Once logged in you will see a notification where you can decide on which course of action you wish to take.', 'all-in-one-wp-security-and-firewall') . "\n";
 		$email = get_bloginfo('admin_email');
 		if (false === wp_mail($email, $subject, $email_msg)) {
@@ -510,6 +515,7 @@ class AIOWPSecurity_Configure_Settings {
 		$dashboard_link = 'admin.php?page=aiowpsec';
 		$dashboard_link = is_multisite() ? network_admin_url($dashboard_link) : admin_url($dashboard_link);
 		$subject = '['. get_option('siteurl'). '] '. __('Blacklist manager disabled notification', 'all-in-one-wp-security-and-firewall');
+		/* translators: %s: Dashboard link */
 		$email_msg = __('The blacklist manager feature has been updated and to prevent any unexpected site lockouts we have disabled the feature.', 'all-in-one-wp-security-and-firewall') . "\n\n" . __('You can enable the feature again by logging into your WordPress dashboard.', 'all-in-one-wp-security-and-firewall') . "\n\n" .sprintf(__('Go to dashboard: %s', 'all-in-one-wp-security-and-firewall'), $dashboard_link) . "\n\n" . __('Once logged in before turning the blacklist manger on please double check your settings to ensure you have not entered your own details.', 'all-in-one-wp-security-and-firewall') . "\n";
 		$email = get_bloginfo('admin_email');
 		$mail_sent = wp_mail($email, $subject, $email_msg);

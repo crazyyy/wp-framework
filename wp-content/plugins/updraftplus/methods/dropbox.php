@@ -598,10 +598,10 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 			'storage_image_url' => UPDRAFTPLUS_URL.'/images/dropbox-logo.png',
 			'storage_image_description' => sprintf(__('%s logo', 'updraftplus'), 'Dropbox'),
 			'curl_existence_label' => wp_kses($updraftplus_admin->curl_check($updraftplus->backup_methods[$this->get_id()], true, $this->get_id().' hidden-in-updraftcentral', false), $this->allowed_html_for_content_sanitisation()),
-			'app_authorisation_policy_label' => wp_kses(sprintf(__('Please read %s for use of our %s authorization app (none of your backup data is sent to us).', 'updraftplus'), '<a target="_blank" href="https://updraftplus.com/faqs/what-is-your-privacy-policy-for-the-use-of-your-dropbox-app/">'.__('this privacy policy', 'updraftplus').'</a>', 'Dropbox'), $this->allowed_html_for_content_sanitisation()),
+			'app_authorisation_policy_label' => wp_kses(sprintf(__('Please read %s for use of our %s authorization app (none of your backup data is sent to us).', 'updraftplus'), '<a target="_blank" href="https://teamupdraft.com/documentation/updraftplus/topics/cloud-storage/dropbox/faqs/what-is-your-privacy-policy-for-the-use-of-your-dropbox-app?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=privacy-policy&utm_creative_format=text">'.__('this privacy policy', 'updraftplus').'</a>', 'Dropbox'), $this->allowed_html_for_content_sanitisation()),
 			'sub_folders_instruction_label1' => __('Need to use sub-folders?', 'updraftplus'),
 			'sub_folders_instruction_label2' => sprintf(__('Backups are saved in %s.', 'updraftplus'), 'apps/UpdraftPlus'),
-			'sub_folders_instruction_label3' => wp_kses(sprintf(__('If you backup several sites into the same Dropbox and want to organize with sub-folders, then %scheck out Premium%s', 'updraftplus'), '<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/").'" target="_blank">', '</a>'), $this->allowed_html_for_content_sanitisation()),
+			'sub_folders_instruction_label3' => wp_kses(sprintf(__('If you backup several sites into the same Dropbox and want to organize with sub-folders, then %scheck out Premium%s', 'updraftplus'), '<a href="'.apply_filters("updraftplus_com_link", "https://teamupdraft.com/updraftplus/features/dropbox-enhanced?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=save-in-subfolders&utm_creative_format=text").'" target="_blank">', '</a>'), $this->allowed_html_for_content_sanitisation()),
 			'input_authenticate_with_label' => sprintf(__('Authenticate with %s', 'updraftplus'), __('Dropbox', 'updraftplus')),
 			'already_authenticated_label' => __('(You are already authenticated).', 'updraftplus'),
 			'authentication_link_text' => wp_kses(sprintf(__("<strong>After</strong> you have saved your settings (by clicking 'Save Changes' below), then come back here and follow this link to complete authentication with %s.", 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]), $this->allowed_html_for_content_sanitisation()),
@@ -648,8 +648,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		ob_start();
 		?>
 			<tr class="{{get_template_css_classes true}}">
-				<td></td>
-				<td><strong>{{sub_folders_instruction_label1}}</strong> {{sub_folders_instruction_label2}} {{{sub_folders_instruction_label3}}}</td>
+				<td colspan="2"><strong>{{sub_folders_instruction_label1}}</strong> {{sub_folders_instruction_label2}} {{{sub_folders_instruction_label3}}}</td>
 			</tr>
 		<?php
 		$partial_templates['dropbox_additional_configuration_top'] = ob_get_clean();

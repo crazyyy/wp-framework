@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) die('No direct access.'); ?>
-<form action="" method="POST">
+<form action="" id="aios-captcha-settings-form">
 	<?php
 	$templates = array(
 		'wordpress-forms' => array(
@@ -14,7 +14,6 @@
 			'display_condition_callback' => array('AIOWPSecurity_Utility', 'is_other_form_plugins_active'),
 		),
 	);
-	wp_nonce_field('aiowpsec-captcha-settings-nonce');
 	$aio_wp_security->include_template('wp-admin/brute-force/captcha-provider.php', false, array('default_captcha' => $default_captcha, 'supported_captchas' => $supported_captchas, 'captcha_themes' => $captcha_themes, 'captcha_theme' => $captcha_theme));
 
 	$templates = apply_filters('aiowps_modify_captcha_settings_template', $templates);

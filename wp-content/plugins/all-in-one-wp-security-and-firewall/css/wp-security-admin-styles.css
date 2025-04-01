@@ -1,3 +1,7 @@
+.aio_bold {
+	font-weight: bold;
+}
+
 .aio_half_width {
 	width: 50%;
 }
@@ -212,6 +216,18 @@
 	margin-right: 15px;
 }
 
+#canvas-holder {
+	width: 300px;
+	margin: auto;
+	padding-top: 20px;
+}
+
+#website-strength-text {
+	text-align: center !important;
+	font-size: 1.5em !important;
+	padding-bottom: 20px !important;
+}
+
 #security_strength_chart_div table {
 	margin-right: auto !important;
 	margin-left: auto !important;
@@ -220,18 +236,6 @@
 .aiowps_dashboard_widget_footer {
 	background-color: #E6E6E6;
 	padding: 10px;
-}
-
-.aiowps_feature_status_container {
-	display: block;
-	margin: 10px 0;
-}
-
-.aiowps_feature_status_name {
-	width: 50%;
-	font-weight: bold;
-	float: left;
-	padding: 5px 10px 5px 0;
 }
 
 .aiowps_feature_status_bar {
@@ -244,6 +248,13 @@
 	border-radius: 3px;
 	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1); /* phpcs:ignore Squiz.CSS.ForbiddenStyles.FoundWithAlternative -- This is a fallback for older browsers */
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.aiowps_feature_status_name {
+	width: 50%;
+	font-weight: bold;
+	float: left;
+	padding: 5px 10px 5px 0;
 }
 
 .aiowps_feature_status_label {
@@ -281,6 +292,71 @@
 	box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
+.aiowps_features_grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-gap: 0 10px;
+	margin: 10px 0;
+}
+
+.aiowps_critical_feature_link,
+.aiowps_critical_feature_link:hover {
+	text-decoration: none;
+	color: inherit;
+}
+
+.aiowps_critical_feature_status_container {
+	display: flex;
+	align-items: center;
+	padding: 5px 8px;
+	min-height: 30px;
+	transition: all 0.2s ease;
+}
+
+.aiowps_critical_feature_status_name {
+	flex: 1.5;
+	font-weight: bold;
+	margin-right: 8px;
+}
+
+.aiowps_feature_status_circle {
+	width: 24px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+}
+
+.aiowps_feature_status_circle_on,
+.aiowps_feature_status_circle_off {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	transition: transform 0.2s ease;
+}
+
+.aiowps_feature_status_circle_on {
+	background-color: #4CD964;
+}
+
+.aiowps_feature_status_circle_off {
+	background-color: #E4584F;
+}
+
+.aiowps_critical_feature_status_container:hover .aiowps_feature_status_circle_on,
+.aiowps_critical_feature_status_container:hover .aiowps_feature_status_circle_off {
+	transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+
+	.aiowps_features_grid {
+		grid-template-columns: 1fr;
+	}
+
+}
+
 .aiowps_feature_details_badge {
 	width: 100%;
 	font-size: 14px;
@@ -311,7 +387,7 @@
 }
 
 .aiowps_feature_protection_full {
-	background: #815AF1;
+	background: #5C3682;
 	color: #FFF;
 }
 
@@ -465,7 +541,7 @@ svg > g > g.google-visualization-tooltip {
 }
 
 .aiowps_switch input:checked + .slider {
-	background: #7C22FF;
+	background: #5C3682;
 	border-color: #6F30C9;
 }
 
@@ -937,7 +1013,9 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 }
 
 .simbaotp_qr_container img {
+	border-collapse: collapse;
 	max-width: 150px;
+	width: 100%;
 	max-height: 150px;
 }
 
@@ -998,7 +1076,7 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 
 .aiowps-active .aiowps-rule-title {
 	font-weight: bold;
-	background: #7C22FF !important;
+	background: #5C3682 !important;
 	color: #FFF !important;
 }
 
@@ -1115,4 +1193,22 @@ button.button-link.aios-toggle-advanced-options.advanced-options-disabled, butto
 	border: 1px solid #C3C4C7;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 	background: #FFF;
+}
+
+.aios-data-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.aios-data-table td, .aios-data-table th {
+	border: 1px solid #DDD;
+	padding: 8px;
+}
+
+.aios-data-table tr:nth-child(even) {
+	background-color: #F2F2F2;
+}
+
+.aios-data-table tr:hover {
+	background-color: #DDD;
 }

@@ -225,7 +225,7 @@ class AIOWPSecurity_General_Init_Tasks {
 				add_filter('wp_die_handler', function () {
 					return function ($message, $title, $args) {
 						if ('Application passwords are not available.' == $message) {
-							$message = htmlspecialchars(__('Application passwords have been disabled by All In One WP Security & Firewall plugin.', 'all-in-one-wp-security-and-firewall'));
+							$message = htmlspecialchars(__('Application passwords have been disabled by All-In-One Security plugin.', 'all-in-one-wp-security-and-firewall'));
 						}
 						_default_wp_die_handler($message, $title, $args);
 					};
@@ -532,7 +532,7 @@ class AIOWPSecurity_General_Init_Tasks {
 			$disabled_message .= '<tbody>';
 			$disabled_message .= '<tr id="disable-password">';
 			$disabled_message .= '<th>'.__('Disabled', 'all-in-one-wp-security-and-firewall').'</th>';
-			$disabled_message .= '<td>'.htmlspecialchars(__('Application passwords have been disabled by All In One WP Security & Firewall plugin.', 'all-in-one-wp-security-and-firewall'));
+			$disabled_message .= '<td>'.htmlspecialchars(__('Application passwords have been disabled by All-In-One Security plugin.', 'all-in-one-wp-security-and-firewall'));
 			if (AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
 				$aiowps_additional_setting_url = 'admin.php?page=aiowpsec_userlogin&tab=additional';
 				$change_setting_url = is_multisite() ? network_admin_url($aiowps_additional_setting_url) : admin_url($aiowps_additional_setting_url);
@@ -633,9 +633,9 @@ class AIOWPSecurity_General_Init_Tasks {
 		
 		if (defined('AIOS_DISABLE_HTTP_AUTHENTICATION') && AIOS_DISABLE_HTTP_AUTHENTICATION) return;
 
-		$request_uri = parse_url(urldecode($_SERVER['REQUEST_URI']));
+		$request_uri = isset($_SERVER['REQUEST_URI']) ? wp_parse_url(urldecode($_SERVER['REQUEST_URI'])) : '';
 
-		$request_path = $request_uri['path'];
+		$request_path = isset($request_uri['path']) ? $request_uri['path'] : '';
 		$request_query = isset($request_uri['query']) ? $request_uri['query'] : '';
 
 		$non_logged_in_admin_ajax_request = !is_user_logged_in() && defined('DOING_AJAX') && DOING_AJAX;
@@ -715,6 +715,7 @@ class AIOWPSecurity_General_Init_Tasks {
 		global $aio_wp_security;
 		$locked = $aio_wp_security->user_login_obj->check_locked_user();
 		if (!empty($locked)) {
+			/* translators: %s: Error notification with strong HTML tag. */
 			$errors->add('authentication_failed', sprintf(__('%s: Your IP address is currently locked.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please contact the administrator.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>'));
 			return $errors;
 		}
@@ -722,6 +723,7 @@ class AIOWPSecurity_General_Init_Tasks {
 		$verify_captcha = $aio_wp_security->captcha_obj->verify_captcha_submit();
 		if (false === $verify_captcha) {
 			// wrong answer was entered
+			/* translators: %s: Error notification with strong HTML tag. */
 			$errors->add('authentication_failed', sprintf(__('%s: Your answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>'));
 		}
 		return $errors;
@@ -782,17 +784,36 @@ class AIOWPSecurity_General_Init_Tasks {
 	}
 
 	/**
-	 * Re-wrote code which checks for REST API requests
+	 * Checks for REST API requests
 	 * Below uses the "rest_api_init" action hook to check for REST requests.
-	 * The code will block "unauthorized" requests whilst allowing genuine requests.
-	 * (P. Petreski June 2018)
+	 * It will block "unauthorized" requests whilst allowing genuine requests.
+	 * REST route will not be blocked if route is whitelisted or user is logged in and user role is allowed.
 	 *
 	 * @return void
 	 */
 	public function check_rest_api_requests() {
+		global $aio_wp_security;
+		
+		$is_whitelisted_route = false;
+		$rest_route = AIOWPSecurity_Utility::get_rest_route();
+		
+		if (empty($rest_route)) return; //rest_api_init is called getting rest server for non rest endpoint. example /wp-admin/post-new.php. WordPress 6.5.0 has wp_is_serving_rest_request we can not use.
+		
+		$aios_whitelisted_rest_routes = apply_filters('aios_whitelisted_rest_routes', $aio_wp_security->configs->get_value('aios_whitelisted_rest_routes'));
+		foreach ($aios_whitelisted_rest_routes as $whitelisted_rest_route) {
+			$whitelisted_rest_route = preg_quote($whitelisted_rest_route, '/');
+			// The 'wc/' rest route to match for white listed 'wc' not the 'wc-admin/' or other having wc
+			if (preg_match('/^'.$whitelisted_rest_route.'\//i', $rest_route)) {
+				$is_whitelisted_route = true;
+			}
+		}
+		
 		$rest_user = wp_get_current_user();
-		if (empty($rest_user->ID)) {
+		$is_disallowed_role = !empty($rest_user->roles) && !empty(array_intersect($rest_user->roles, $aio_wp_security->configs->get_value('aios_roles_disallowed_rest_requests'))) ? true : false;
+		 
+		if (!$is_whitelisted_route && (empty($rest_user->ID) || $is_disallowed_role)) {
 			$error_message = apply_filters('aiowps_rest_api_error_message', __('You are not authorized to perform this action.', 'all-in-one-wp-security-and-firewall'));
+			$aio_wp_security->debug_logger->log_debug('REST API request '.$rest_route.' was blocked, If this was unintentional whitelist "' . explode('/', $rest_route)[0] . '" the REST route.', 4);
 			wp_die($error_message, '', 403);
 		}
 	}

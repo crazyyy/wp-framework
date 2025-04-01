@@ -25,76 +25,90 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 		
 		$parent_notice_content = parent::populate_notices_content();
 
-		$sale_description = __('Backup, migrate and restore with Premium.', 'updraftplus');
-		$sale_description .= ' '.__('Backup incremental changes instead of full backups (saving server resources), clone or migrate your site with ease, get more remote storage locations, premium support and more.', 'updraftplus');
+		$sale_description = sprintf(__('%s, %s and %s with %s.', 'updraftplus'), '<b>'.__('Backup', 'updraftplus').'</b>', '<b>'.__('migrate', 'updraftplus').'</b>', '<b>'.__('restore', 'updraftplus').'</b>', '<b>'.__('Premium', 'updraftplus').'</b>');
+		$sale_description .= ' '.sprintf(__('Backup incremental changes, instead of full backups (saving server resources), %s, get more remote storage locations, %s and more.', 'updraftplus'), '<b>'.__('clone or migrate your site with ease', 'updraftplus').'</b>', '<b>'.__('premium support', 'updraftplus').'</b>');
 		
 		// Not used in 2024
 		// $checkout_html = '<a class="updraft_notice_link" href="https://updraftplus.com/shop/updraftplus-premium/">'.__('checkout', 'updraftplus').'</a>';
 
 		$child_notice_content = array(
 			1 => array(
-				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('Support', 'updraftplus'),
-				'text' => __('Enjoy professional, fast, and friendly help whenever you need it with Premium.', 'updraftplus'),
-				'image' => 'notices/support.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+				'prefix' => '',
+				'title' => __("Need help? We've got your back", 'updraftplus'),
+				'text' => __('Get direct support from the developers with Premium.', 'updraftplus'),
+				'image' => 'notices/updraft_logo.png',
+				'button_link' => 'https://teamupdraft.com/support/premium-support/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=needhelp&utm_creative_format=advert',
 				'campaign' => 'support',
-				'button_meta' => 'updraftplus',
+				'button_text' => __('Premium Support', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			2 => array(
-				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('UpdraftVault storage', 'updraftplus'),
-				'text' => __('The ultimately secure and convenient place to store your backups.', 'updraftplus'),
+				'prefix' => '',
+				'title' => __('Store your backups with us', 'updraftplus'),
+				'text' => __('UpdraftVault is the secure and convenient place to store your backups.', 'updraftplus'),
 				'image' => 'notices/updraft_logo.png',
-				'button_link' => 'https://updraftplus.com/landing/vault',
+				'button_link' => 'https://teamupdraft.com/updraftplus/updraftvault/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftvault&utm_creative_format=advert',
 				'campaign' => 'vault',
-				'button_meta' => 'updraftplus',
+				'button_text' => __('More about UpdraftVault', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
-			3 => array(
-				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('enhanced remote storage options', 'updraftplus'),
-				'text' => __('Enhanced storage options for Dropbox, Google Drive and S3.', 'updraftplus').' '.__('Plus many more options.', 'updraftplus'),
-				'image' => 'addons-images/morestorage.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+			'googledrive' => array(
+				'prefix' => '',
+				'title' => __('Backing up to Google Drive?', 'updraftplus'),
+				'text' => __('Organise backups with subfolders.', 'updraftplus'),
+				'image' => 'notices/updraft_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftplus/features/back-up-to-subfolders/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=google-drive&utm_creative_format=advert',
 				'campaign' => 'morestorage',
-				'button_meta' => 'updraftplus',
+				'button_text' => __('Google Drive enhancement', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_googledrive_in_use',
 			),
-			4 => array(
-				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('advanced options', 'updraftplus'),
-				'text' => __('Secure multisite installation, advanced reporting and much more.', 'updraftplus'),
-				'image' => 'addons-images/reporting.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
-				'campaign' => 'reporting',
-				'button_meta' => 'updraftplus',
+			'dropbox' => array(
+				'prefix' => '',
+				'title' => __('Backing up to Dropbox?', 'updraftplus'),
+				'text' => __('Organise backups with subfolders.', 'updraftplus'),
+				'image' => 'notices/updraft_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftplus/features/back-up-to-subfolders/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=dropbox&utm_creative_format=advert',
+				'campaign' => 'morestorage',
+				'button_text' => __('Dropbox enhancement', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_dropbox_in_use',
+			),
+			's3' => array(
+				'prefix' => '',
+				'title' => __('Backing up to Amazon S3?', 'updraftplus'),
+				'text' => __('Save money - back up to the infrequent storage class with Premium.', 'updraftplus'),
+				'image' => 'notices/updraft_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftplus/features/amazon-s3-enhanced/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=amazons3&utm_creative_format=advert',
+				'campaign' => 'morestorage',
+				'button_text' => __('Amazon S3 enhancement', 'updraftplus'),
+				'dismiss_time' => 'dismiss_notice',
+				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_s3_in_use',
 			),
 			5 => array(
-				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('secure your backups', 'updraftplus'),
-				'text' => __('Add SFTP to send your data securely, lock settings and encrypt your database backups for extra security.', 'updraftplus'),
-				'image' => 'addons-images/lockadmin.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+				'prefix' => '',
+				'title' => __('Secure your backups', 'updraftplus'),
+				'text' => __('Encrypt the database, lock UpdraftPlus settings to other admins and anonymise backups.', 'updraftplus'),
+				'image' => 'notices/updraft_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftplus/features?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=securebackups3&utm_creative_format=advert',
 				'campaign' => 'lockadmin',
-				'button_meta' => 'updraftplus',
+				'button_text' => __('See premium features', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			6 => array(
-				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('easily migrate or clone your site in minutes', 'updraftplus'),
+				'prefix' => '',
+				'title' => __('Easily migrate or clone your site in minutes', 'updraftplus'),
 				'text' => __('Copy your site to another domain directly.', 'updraftplus').' '.__('Includes find-and-replace tool for database references.', 'updraftplus'),
-				'image' => 'addons-images/migrator.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+				'image' => 'notices/updraft_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftplus/wordpress-migration-plugin/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=migrate&utm_creative_format=advert',
 				'campaign' => 'migrator',
-				'button_meta' => 'updraftplus',
+				'button_text' => __('Migration', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 			),
@@ -102,9 +116,9 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 				'prefix' => '',
 				'title' => __('Introducing UpdraftCentral', 'updraftplus'),
 				'text' => __('UpdraftCentral is a highly efficient way to manage, update and backup multiple websites from one place.', 'updraftplus'),
-				'image' => 'notices/updraft_logo.png',
-				'button_link' => 'https://updraftcentral.com',
-				'button_meta' => 'updraftcentral',
+				'image' => 'notices/updraftcentral_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftcentral?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftcentral1&utm_creative_format=advert',
+				'button_text' => __('UpdraftCentral', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
@@ -112,9 +126,9 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 				'prefix' => '',
 				'title' => __('Do you use UpdraftPlus on multiple sites?', 'updraftplus'),
 				'text' => __('Control all your WordPress installations from one place using UpdraftCentral remote site management!', 'updraftplus'),
-				'image' => 'notices/updraft_logo.png',
-				'button_link' => 'https://updraftcentral.com',
-				'button_meta' => 'updraftcentral',
+				'image' => 'notices/updraftcentral_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftcentral?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftcentral2&utm_creative_format=advert',
+				'button_text' => __('UpdraftCentral', 'updraftplus'),
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 			),
@@ -129,78 +143,44 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 			),
 			'translation_needed' => array(
 				'prefix' => '',
-				'title' => 'Can you translate? Want to improve UpdraftPlus for speakers of your language?',
-				'text' => $this->url_start(true, 'updraftplus.com/translate/')."Please go here for instructions - it is easy.".$this->url_end(true, 'updraftplus.com/translate/'),
-				'text_plain' => $this->url_start(false, 'updraftplus.com/translate/')."Please go here for instructions - it is easy.".$this->url_end(false, 'updraftplus.com/translate/'),
+				'title' => __('Can you translate?', 'updraftplus'),
+				'text' => __('Want to improve UpdraftPlus for speakers of your language?', 'updraftplus').' '.__('Go here for instructions', 'updraftplus'),
 				'image' => 'notices/updraft_logo.png',
-				'button_link' => false,
+				'button_link' => 'https://teamupdraft.com/translate-for-us?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=translate&utm_creative_format=advert',
+				'button_text' => __('Translate', 'updraftplus'),
 				'dismiss_time' => false,
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'translation_needed',
 			),
 			'social_media' => array(
 				'prefix' => '',
-				'title' => __('UpdraftPlus is on social media - check us out!', 'updraftplus'),
-				'text' => $this->url_start(true, 'twitter.com/updraftplus', true).__('Twitter', 'updraftplus').$this->url_end(true, 'twitter.com/updraftplus', true).
-						' - '.
-						$this->url_start(true, 'facebook.com/updraftplus', true).__('Facebook', 'updraftplus').$this->url_end(true, 'facebook.com/updraftplus', true),
-				'text_plain' => $this->url_start(false, 'twitter.com/updraftplus', true).__('Twitter', 'updraftplus').$this->url_end(false, 'twitter.com/updraftplus', true).
-						' - '.$this->url_start(false, 'facebook.com/updraftplus', true).__('Facebook', 'updraftplus').$this->url_end(false, 'facebook.com/updraftplus', true),
-				'image' => 'notices/updraft_logo.png',
+				'title' => __('Follow TeamUpdraft', 'updraftplus'),
+				'text' => $this->url_start(true, 'facebook.com/TeamUpdraftWP/', true).__('Facebook', 'updraftplus').$this->url_end(true, 'facebook.com/TeamUpdraftWP/', true).' - '.
+					$this->url_start(true, 'x.com/TeamUpdraftWP/', true).__('Twitter/X', 'updraftplus').$this->url_end(true, 'x.com/TeamUpdraftWP/', true).' - '.
+					$this->url_start(true, 'linkedin.com/company/teamupdraft', true).__('LinkedIn', 'updraftplus').$this->url_end(true, 'linkedin.com/company/teamupdraft', true).' - '.
+					$this->url_start(true, 'youtube.com/@TeamUpdraftWP', true).__('YouTube', 'updraftplus').$this->url_end(true, 'youtube.com/@TeamUpdraftWP', true),
+				'image' => 'notices/teamupdraft_logo.png',
 				'dismiss_time' => false,
 				'supported_positions' => $this->anywhere,
 			),
-			'newsletter' => array(
-				'prefix' => '',
-				'title' => __('UpdraftPlus Newsletter', 'updraftplus'),
-				'text' => __("Follow this link to sign up for the UpdraftPlus newsletter.", 'updraftplus'),
-				'image' => 'notices/updraft_logo.png',
-				'button_link' => 'https://updraftplus.com/newsletter-signup',
-				'campaign' => 'newsletter',
-				'button_meta' => 'signup',
-				'supported_positions' => $this->anywhere,
-				'dismiss_time' => false
-			),
-			'subscribe_blog' => array(
-				'prefix' => '',
-				'title' => __('UpdraftPlus Blog - get up-to-date news and offers', 'updraftplus'),
-				'text' => $this->url_start(true, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(true, 'updraftplus.com/news/').' - '.$this->url_start(true, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(true, 'feeds.feedburner.com/UpdraftPlus'),
-				'text_plain' => $this->url_start(false, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(false, 'updraftplus.com/news/').' - '.$this->url_start(false, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(false, 'feeds.feedburner.com/UpdraftPlus'),
-				'image' => 'notices/updraft_logo.png',
-				'button_link' => false,
-				'supported_positions' => $this->anywhere,
-				'dismiss_time' => false
-			),
-			'check_out_updraftplus_com' => array(
-				'prefix' => '',
-				'title' => __('UpdraftPlus Blog - get up-to-date news and offers', 'updraftplus'),
-				'text' => $this->url_start(true, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(true, 'updraftplus.com/news/').' - '.$this->url_start(true, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(true, 'feeds.feedburner.com/UpdraftPlus'),
-				'text_plain' => $this->url_start(false, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(false, 'updraftplus.com/news/').' - '.$this->url_start(false, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(false, 'feeds.feedburner.com/UpdraftPlus'),
-				'image' => 'notices/updraft_logo.png',
-				'button_link' => false,
-				'supported_positions' => $this->dashboard_bottom_or_report,
-				'dismiss_time' => false
-			),
 			'autobackup' => array(
 				'prefix' => '',
-				'title' => __('Make updates easy with UpdraftPlus', 'updraftplus'),
-				'text' => __('Be safe', 'updraftplus').' - '.$this->url_start(true, 'updraftplus.com/shop/updraftplus-premium/').'UpdraftPlus Premium'.$this->url_end(true, 'updraftplus.com/shop/updraftplus-premium/').' '.__('backs up automatically when you update plugins, themes or core', 'updraftplus'),
-				'text2' => __('Save time', 'updraftplus').' - '.$this->url_start(true, 'wordpress.org/plugins/stops-core-theme-and-plugin-updates/').'Easy Updates Manager'.$this->url_end(true, 'wordpress.org/plugins/stops-core-theme-and-plugin-updates/').' '.__('handles updates automatically as you want them', 'updraftplus'),
-				'text3' => __('Many sites?', 'updraftplus').' - '.$this->url_start(true, 'updraftplus.com/updraftcentral/').'UpdraftCentral'.$this->url_end(true, 'updraftplus.com/updraftcentral/').' '.__('manages all your WordPress sites at once from one place', 'updraftplus'),
-				'image' => 'addons-images/autobackup.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+				'title' => __('Automatically back up before updates', 'updraftplus'),
+				'text' => __('With UpdraftPlus Premium, your site is backed up before every update.', 'updraftplus').' '.__('Simple, safe, and hassle-free.', 'updraftplus'),
+				'image' => 'notices/updraft_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftplus/features/wordpress-automatic-backup-before-updates?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=automatic_backup&utm_creative_format=advert',
 				'campaign' => 'autobackup',
-				'button_meta' => 'updraftplus',
+				'button_text' => __('Back up before updates', 'updraftplus'),
 				'dismiss_time' => 'dismissautobackup',
 				'supported_positions' => $this->autobackup_bottom_or_report,
 			),
-			'subscriben' => array(
+			'aios' => array(
 				'prefix' => '',
-				'title' => 'Subscriben ' .__('by', 'updraftplus'). ' UpdraftPlus',
-				'text' => __("The WordPress subscription extension for WooCommerce store owners.", "updraftplus"),
-				'image' => 'notices/subscriben.png',
-				'button_link' => 'https://subscribenplugin.com',
-				'button_meta' => 'read_more',
+				'title' => 'Secure your site',
+				'text' => __("The 'All-In-One' Security plugin from TeamUpdraft.", "updraftplus"),
+				'image' => 'notices/aios_logo.png',
+				'button_link' => 'https://teamupdraft.com/all-in-one-security/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=aios&utm_creative_format=advert',
+				'button_text' => 'AIOS',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 			),
@@ -210,7 +190,7 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 				'text' => __("After you've backed up your database, we recommend you install our WP-Optimize plugin to streamline it for better website performance.", "updraftplus"),
 				'image' => 'notices/wp_optimize_logo.png',
 				'button_link' => 'https://wordpress.org/plugins/wp-optimize/',
-				'button_meta' => 'wp-optimize',
+				'button_text' => 'WP-Optimize',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'wp_optimize_installed',
@@ -219,54 +199,62 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 			// The sale adverts content starts here
 			'blackfriday' => array(
 				'prefix' => '',
-				'title' => __('Black Friday Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'blackfridaysale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('3 December', 'updraftplus')).'</b>',
-				'image' => 'notices/sale_20_24.png',
-				'button_link' => 'https://www.updraftplus.com/blackfriday?utm_source=plugin&utm_medium=banner&utm_campaign=black_friday',
+				'title' => __('20% off - Black Friday Sale', 'updraftplus'),
+				'text' => $sale_description,
+				'text2' => __('at checkout.', 'updraftplus').' <b>'.__('Hurry, offer ends 2 December.', 'updraftplus').'</b>',
+				'image' => 'notices/sale_20_25.png',
+				'button_text' => sprintf(__('Save 20%% with code %s', 'updraftplus'), 'blackfridaysale2025'),
+				'button_link' => 'https://teamupdraft.com/updraftplus/pricing/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=bf25-udp-plugin-banner&utm_content=bf-sale&utm_creative_format=advert',
 				'campaign' => 'blackfriday',
-				'button_meta' => 'learnmore',
+				'button_meta' => 'inline',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2024-11-14 00:00:00',
-				'valid_to' => '2024-12-02 23:59:59',
+				'valid_from' => '2025-11-14 00:00:00',
+				'valid_to' => '2025-12-02 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'newyear' => array(
 				'prefix' => '',
-				'title' => __('New Year Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'newyearsale2025').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('28 January', 'updraftplus')).'</b>',
-				'image' => 'notices/sale_20_24.png',
-				'button_link' => 'https://updraftplus.com/shop/updraftplus-premium/',
+				'title' => __('20% off - New Year Sale', 'updraftplus'),
+				'text' => $sale_description,
+				'text2' => __('at checkout.', 'updraftplus').' <b>'.__('Hurry, offer ends 28 January.', 'updraftplus').'</b>',
+				'image' => 'notices/sale_20_25.png',
+				'button_text' => sprintf(__('Save 20%% with code %s', 'updraftplus'), 'newyearsale2026'),
+				'button_link' => 'https://teamupdraft.com/updraftplus/pricing/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=seasonal-discount-banners&utm_content=new-year-sale&utm_creative_format=advert',
 				'campaign' => 'newyear',
-				'button_meta' => 'learnmore',
+				'button_meta' => 'inline',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2025-01-01 00:00:00',
-				'valid_to' => '2025-01-28 23:59:59',
+				'valid_from' => '2026-01-01 00:00:00',
+				'valid_to' => '2026-01-28 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'spring' => array(
 				'prefix' => '',
-				'title' => __('Spring Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'springsale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('31 May', 'updraftplus')).'</b>',
-				'image' => 'notices/sale_20_24.png',
-				'button_link' => 'https://updraftplus.com/shop/updraftplus-premium/',
+				'title' => __('20% off - Spring Sale', 'updraftplus'),
+				'text' => $sale_description,
+				'text2' => __('at checkout.', 'updraftplus').' <b>'.__('Hurry, offer ends 31 May.', 'updraftplus').'</b>',
+				'image' => 'notices/sale_20_25.png',
+				'button_text' => sprintf(__('Save 20%% with code %s', 'updraftplus'), 'springsale2025'),
+				'button_link' => 'https://teamupdraft.com/updraftplus/pricing/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=seasonal-discount-banners&utm_content=spring-sale&utm_creative_format=advert',
 				'campaign' => 'spring',
-				'button_meta' => 'learnmore',
+				'button_meta' => 'inline',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2024-05-01 00:00:00',
-				'valid_to' => '2024-05-31 23:59:59',
+				'valid_from' => '2025-05-01 00:00:00',
+				'valid_to' => '2025-05-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'summer' => array(
 				'prefix' => '',
-				'title' => __('Summer Sale', 'updraftplus'),
-				'text' => $sale_description.'<br><b>'.sprintf(__('Save 20%% with code %s.', 'updraftplus'), 'summersale2024').' '.sprintf(__('Offer ends %s', 'updraftplus'), __('31 July', 'updraftplus')).'</b>',
-				'image' => 'notices/sale_20_24.png',
-				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
+				'title' => __('20% off - Summer Sale', 'updraftplus'),
+				'text' => $sale_description,
+				'text2' => __('at checkout.', 'updraftplus').' <b>'.__('Hurry, offer ends 31 August.', 'updraftplus').'</b>',
+				'image' => 'notices/sale_20_25.png',
+				'button_text' => sprintf(__('Save 20%% with code %s', 'updraftplus'), 'summersale2025'),
+				'button_link' => 'https://teamupdraft.com/updraftplus/pricing/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=seasonal-discount-banners&utm_content=summer-sale&utm_creative_format=advert',
 				'campaign' => 'summer',
-				'button_meta' => 'learnmore',
+				'button_meta' => 'inline',
 				'dismiss_time' => 'dismiss_season',
-				'valid_from' => '2024-07-01 00:00:00',
-				'valid_to' => '2024-07-31 23:59:59',
+				'valid_from' => '2025-08-01 00:00:00',
+				'valid_to' => '2025-08-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'collection' => array(
@@ -407,6 +395,33 @@ class UpdraftPlus_Notices extends Updraft_Notices_1_2 {
 		updraft_try_include_file('admin.php', 'include_once');
 		global $updraftplus_admin;
 		return $updraftplus_admin->include_template('wp-admin/notices/'.$template_file, $return_instead_of_echo, $advert_information);
+	}
+
+	/**
+	 * Checks if Google Drive is the currently selected remote storage service.
+	 *
+	 * @return bool True if Google Drive is selected, false otherwise.
+	 */
+	public function is_googledrive_in_use() {
+		return in_array('googledrive', (array) UpdraftPlus_Options::get_updraft_option('updraft_service'));
+	}
+
+	/**
+	 * Checks if Dropbox is the currently selected remote storage service.
+	 *
+	 * @return bool True if Dropbox is selected, false otherwise.
+	 */
+	public function is_dropbox_in_use() {
+		return in_array('dropbox', (array) UpdraftPlus_Options::get_updraft_option('updraft_service'));
+	}
+
+	/**
+	 * Checks if Amazon S3 is the currently selected remote storage service.
+	 *
+	 * @return bool True if Amazon S3 is selected, false otherwise.
+	 */
+	public function is_s3_in_use() {
+		return in_array('s3', (array) UpdraftPlus_Options::get_updraft_option('updraft_service'));
 	}
 }
 

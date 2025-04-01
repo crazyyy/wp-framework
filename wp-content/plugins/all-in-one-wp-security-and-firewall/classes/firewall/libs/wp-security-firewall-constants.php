@@ -65,6 +65,7 @@ class Constants implements \ArrayAccess, \IteratorAggregate {
 		clearstatcache();
 		if (!file_exists($wpconfig)) return;
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- WP isn't loaded. WP_Filesystem cannot be used.
 		$source = file_get_contents($wpconfig);
 
 		if (false === $source) return;

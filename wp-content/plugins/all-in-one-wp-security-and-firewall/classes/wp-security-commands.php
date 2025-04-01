@@ -6,6 +6,7 @@ if (class_exists('AIOWPSecurity_Commands')) return;
 
 if (!trait_exists('AIOWPSecurity_Log_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-log-commands.php');
 if (!trait_exists('AIOWPSecurity_Ip_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-ip-commands.php');
+if (!trait_exists('AIOWPSecurity_Brute_Force_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-brute-force-commands.php');
 if (!trait_exists('AIOWPSecurity_Comment_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-comment-commands.php');
 if (!trait_exists('AIOWPSecurity_User_Security_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-user-security-commands.php');
 if (!trait_exists('AIOWPSecurity_Settings_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-settings-commands.php');
@@ -17,6 +18,7 @@ class AIOWPSecurity_Commands {
 
 	use AIOWPSecurity_Log_Commands_Trait;
 	use AIOWPSecurity_Ip_Commands_Trait;
+	use AIOWPSecurity_Brute_Force_Commands_Trait;
 	use AIOWPSecurity_Comment_Commands_Trait;
 	use AIOWPSecurity_User_Security_Commands_Trait;
 	use AIOWPSecurity_Settings_Commands_Trait;
@@ -290,5 +292,40 @@ class AIOWPSecurity_Commands {
 		
 		echo json_encode($response);
 		exit;
+	}
+
+	/**
+	 * This function will send the diagnostic report email
+	 *
+	 * @param array $data - the request data
+	 *
+	 * @return array
+	 */
+	public function send_report_email($data) {
+		global $aio_wp_security;
+
+		// Sanitize the email address first.
+		$sanitized_email = !empty($data['report_email']) ? sanitize_email($data['report_email']) : '';
+
+		if ('' === $sanitized_email || !is_email($sanitized_email)) {
+			return array(
+				'status' => 'error',
+				'message' => __('Invalid email address.', 'all-in-one-wp-security-and-firewall'),
+			);
+		}
+			
+		$result = $aio_wp_security->debug_obj->send_report($sanitized_email);
+		
+		if ($result) {
+			return array(
+				'status' => 'success',
+				'message' => __('The diagnostic report has been sent successfully.', 'all-in-one-wp-security-and-firewall'),
+			);
+		}
+
+		return array(
+			'status' => 'error',
+			'message' => __('There was an error sending the diagnostic report.', 'all-in-one-wp-security-and-firewall'),
+		);
 	}
 }

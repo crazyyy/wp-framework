@@ -2,11 +2,13 @@
 <div class="postbox aio_hidden" data-template="woo-captcha">
 	<h3 class="hndle"><label for="title"><?php _e('WooCommerce forms CAPTCHA settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<div id="woo-login-captcha-badge">
 		<?php
 		//Display security info badge
 		global $aiowps_feature_mgr;
 		$aiowps_feature_mgr->output_feature_details_badge("woo-login-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on WooCommerce login form', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -18,9 +20,11 @@
 			</tr>
 		</table>
 		<hr>
+		<div id="woo-lostpassword-captcha-badge">
 		<?php
 		$aiowps_feature_mgr->output_feature_details_badge("woo-lostpassword-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on WooCommerce lost password form', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -32,9 +36,11 @@
 			</tr>
 		</table>
 		<hr>
+		<div id="woo-register-captcha-badge">
 		<?php
 		$aiowps_feature_mgr->output_feature_details_badge("woo-register-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on WooCommerce registration form', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -46,9 +52,11 @@
 			</tr>
 		</table>
 		<hr>
+		<div id="woo-checkout-captcha-badge">
 		<?php
 		$aiowps_feature_mgr->output_feature_details_badge("woo-checkout-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<?php $is_enanled_guest_checkout = ('yes' == get_option('woocommerce_enable_guest_checkout')) ? 1 : 0; ?>
 			<div class="<?php echo $is_enanled_guest_checkout ? "aio_blue_box" : "aio_red_box"; ?>">

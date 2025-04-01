@@ -46,7 +46,7 @@ class Rule_Block_Refs_6g extends Rule {
 			'/(semalt.com|todaperfeita)/i',
 		);
 
-		return Rule_Utils::contains_pattern($_SERVER['HTTP_REFERER'], $patterns);
+		return Rule_Utils::contains_pattern($_SERVER['HTTP_REFERER'], $patterns); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- This is not a WordPress context. Also this only evaluates to a boolean.
 	}
 
 }

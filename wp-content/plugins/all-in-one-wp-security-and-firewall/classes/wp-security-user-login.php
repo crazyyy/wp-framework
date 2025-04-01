@@ -46,7 +46,8 @@ class AIOWPSecurity_User_Login {
 		global $pagenow;
 		if (in_array($pagenow, array('index.php', 'plugins.php'))) {
 			return true;
-		} elseif (('admin.php' == $pagenow && isset($_GET['page']) && false !== strpos($_GET['page'], AIOWPSEC_MENU_SLUG_PREFIX)) && !$this->is_locked_ip_addresses_tab_admin_page()) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. Ignore.
+		} elseif (('admin.php' == $pagenow && isset($_GET['page']) && false !== strpos(sanitize_title(wp_unslash($_GET['page'])), AIOWPSEC_MENU_SLUG_PREFIX)) && !$this->is_locked_ip_addresses_tab_admin_page()) {
 			return true;
 		}
 		return false;
@@ -59,6 +60,7 @@ class AIOWPSecurity_User_Login {
 	 */
 	private function is_locked_ip_addresses_tab_admin_page() {
 		global $pagenow;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce.
 		return ('admin.php' == $pagenow && isset($_GET['page']) && 'aiowpsec' == $_GET['page'] && isset($_GET['tab']) && 'locked-ip' == $_GET['tab']);
 	}
 
@@ -75,10 +77,10 @@ class AIOWPSecurity_User_Login {
 
 		echo '<div class="notice notice-error">
 					<p>'.
-						__('You have disabled login lockout by defining the AIOS_DISABLE_LOGIN_LOCKOUT constant value as true, and the login lockout setting has enabled it.', 'all-in-one-wp-security-and-firewall') . ' ' .
+						esc_html__('You have disabled login lockout by defining the AIOS_DISABLE_LOGIN_LOCKOUT constant value as true, and the login lockout setting has enabled it.', 'all-in-one-wp-security-and-firewall') . ' ' .
 						/* translators: 1: Locked IP Addresses admin page link */
-						sprintf(__('Delete your login lockout IP from %s and define the AIOS_DISABLE_LOGIN_LOCKOUT constant value as false.', 'all-in-one-wp-security-and-firewall'),
-							'<a href="'.admin_url('admin.php?page=aiowpsec&tab=locked-ip').'">' . __('Locked IP addresses', 'all-in-one-wp-security-and-firewall') . '</a>'
+						sprintf(esc_html__('Delete your login lockout IP from %s and define the AIOS_DISABLE_LOGIN_LOCKOUT constant value as false.', 'all-in-one-wp-security-and-firewall'),
+							'<a href="' . esc_url(admin_url('admin.php?page=aiowpsec&tab=locked-ip').'">') . esc_html__('Locked IP addresses', 'all-in-one-wp-security-and-firewall') . '</a>'
 						).
 					'</p>
 				</div>';
@@ -104,6 +106,7 @@ class AIOWPSecurity_User_Login {
 		if (null != $user_locked) {
 			$aio_wp_security->debug_logger->log_debug("Login attempt from blocked IP range - ".$user_locked['failed_login_ip'], 2);
 			// Allow the error message to be filtered.
+			/* translators: %s: Error notification with strong HTML tag. */
 			$error_msg = apply_filters('aiowps_ip_blocked_error_msg', sprintf(__('%s: Access from your IP address has been blocked for security reasons.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>') . ' ' . __('Please contact the administrator.', 'all-in-one-wp-security-and-firewall'));
 			// If unlock requests are allowed, add the "Request Unlock" button to the message.
 			$unlock_form = '';
@@ -112,7 +115,7 @@ class AIOWPSecurity_User_Login {
 				$error_msg .= $unlock_form;
 			}
 			$error_msg = apply_filters('aiowps_ip_blocked_output_page', $error_msg, $unlock_form); //filter the complete output of the locked page
-			wp_die($error_msg, __('Service temporarily unavailable', 'all-in-one-wp-security-and-firewall'), 503);
+			wp_die(wp_kses_post($error_msg), esc_html__('Service temporarily unavailable', 'all-in-one-wp-security-and-firewall'), 503);
 		} else {
 			return $user;
 		}
@@ -132,6 +135,7 @@ class AIOWPSecurity_User_Login {
 			return $user;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- PCP warning. No nonce.
 		if (! (isset($_POST['log']) && isset($_POST['pwd']))) {
 			// XML-RPC authentication (not via wp-login.php), nothing to do here.
 			return $user;
@@ -141,6 +145,8 @@ class AIOWPSecurity_User_Login {
 			// CAPTCHA not enabled, nothing to do here.
 			return $user;
 		}
+
+		/* translators: %s: Error notification with strong HTML tag. */
 		$captcha_error = new WP_Error('authentication_failed', sprintf(__('%s: Your answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ERROR', 'all-in-one-wp-security-and-firewall') . '</strong>'));
 		$verify_captcha = $aio_wp_security->captcha_obj->verify_captcha_submit();
 		if (false === $verify_captcha) {
@@ -167,6 +173,7 @@ class AIOWPSecurity_User_Login {
 			$aiowps_account_status = get_user_meta($user->ID, 'aiowps_account_status', true);
 			if ('pending' == $aiowps_account_status) {
 				// Account needs to be activated yet
+				/* translators: %s: Notification with strong HTML tag. */
 				return new WP_Error('account_pending', sprintf(__('%s: Your account is currently not active.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('ACCOUNT PENDING', 'all-in-one-wp-security-and-firewall') . '</strong>') . ' '. __('An administrator needs to activate your account before you can login.', 'all-in-one-wp-security-and-firewall'));
 			}
 		}
@@ -259,6 +266,7 @@ class AIOWPSecurity_User_Login {
 		$login_lockdown_table = AIOWPSEC_TBL_LOGIN_LOCKOUT;
 		$ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
 		if (empty($ip)) return false;
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 		$locked_user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $login_lockdown_table WHERE `released` > UNIX_TIMESTAMP() AND `failed_login_ip` = %s", $ip), ARRAY_A);
 		return $locked_user;
 	}
@@ -275,7 +283,7 @@ class AIOWPSecurity_User_Login {
 		$ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); // Get the users IP address
 
 		if (empty($ip)) return false;
-
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 		$login_failures = $wpdb->get_var("SELECT COUNT(ID) FROM $audit_log_table " . "WHERE created + " . esc_sql($login_retry_interval) . " > '" . esc_sql($now) . "' AND " . "ip = '" . esc_sql($ip) . "' AND event_type = 'failed_login'");
 		return $login_failures;
 	}
@@ -333,12 +341,14 @@ class AIOWPSecurity_User_Login {
 		$release_time = $date->format('Y-m-d H:i:s');
 		$backtrace_log = '';
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_php_backtrace_in_email')) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- PCP warning. Ignore.
 			$backtrace_log = AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace());
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- PCP warning. Ignore.
 			$backtrace_log = print_r($backtrace_log, true);
 		}
 		$is_lockout_email_sent = (1 == $aio_wp_security->configs->get_value('aiowps_enable_email_notify') ? 0 : -1);
 		$ip_lookup_result = AIOS_Helper::get_ip_reverse_lookup($ip);
-		$ip_lookup_result = json_encode($ip_lookup_result);
+		$ip_lookup_result = wp_json_encode($ip_lookup_result);
 		if (false === $ip_lookup_result) $ip_lookup_result = null;
 
 		$lock_seconds = $lock_minutes * MINUTE_IN_SECONDS;
@@ -388,9 +398,13 @@ class AIOWPSecurity_User_Login {
 				$email_msg = __('User login lockout events had occurred due to too many failed login attempts or invalid username:', 'all-in-one-wp-security-and-firewall')."\n\n";
 			
 				foreach ($lockout_ips_list as $lockout_ip) {
+					/* translators: %s: User name. */
 					$email_msg .= sprintf(__('Username: %s', 'all-in-one-wp-security-and-firewall'), $lockout_ip['username']) . "\n";
+
+					/* translators: %s: IP Address. */
 					$email_msg .= sprintf(__('IP address: %s', 'all-in-one-wp-security-and-firewall'), $lockout_ip['ip']) . "\n";
 					if ('' != $lockout_ip['ip_range']) {
+						/* translators: %s: IP Range. */
 						$email_msg .= sprintf(__('IP range: %s', 'all-in-one-wp-security-and-firewall'), $lockout_ip['ip_range']) . '.*' . "\n";
 					}
 					if (!empty($lockout_ip['ip_lookup_result'])) {
@@ -399,7 +413,9 @@ class AIOWPSecurity_User_Login {
 						$org = empty($ip_lookup_result['org']) ? __('Not Found', 'all-in-one-wp-security-and-firewall') : $ip_lookup_result['org'];
 						$as = empty($ip_lookup_result['as']) ? __('Not Found', 'all-in-one-wp-security-and-firewall') : $ip_lookup_result['as'];
 
+						/* translators: %s: Org. */
 						$email_msg .= sprintf(__('Org: %s', 'all-in-one-wp-security-and-firewall'), $org) . "\n";
+						/* translators: %s: AS. */
 						$email_msg .= sprintf(__('AS: %s', 'all-in-one-wp-security-and-firewall'), $as) . "\n";
 
 						$email_msg = apply_filters('aiowps_login_lockdown_email_message', $email_msg, $ip_lookup_result);
@@ -434,18 +450,21 @@ class AIOWPSecurity_User_Login {
 		global $wpdb, $aio_wp_security;
 		$unlock_link = '';
 		$lockout_table_name = AIOWPSEC_TBL_LOGIN_LOCKOUT;
-		$secret_rand_key = (md5(uniqid(rand(), true)));
+		$secret_rand_key = (md5(uniqid(wp_rand(), true)));
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP wanting. Ignore.
 		$res = $wpdb->query($wpdb->prepare("UPDATE $lockout_table_name SET unlock_key = %s WHERE released > UNIX_TIMESTAMP() AND failed_login_ip LIKE %s", $secret_rand_key,  "%" . esc_sql($ip_range) . "%"));
 		if (null == $res) {
 			$aio_wp_security->debug_logger->log_debug("No locked user found with IP range ".$ip_range, 4);
 			return false;
 		} else {
 			// Check if unlock request or submitted from a WooCommerce account login page
-			if (isset($_POST['aiowps-woo-login'])) {
+			if (isset($_POST['aiowps-woo-login'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- PCP warning. No nonce.
 				$date_time = current_time('mysql');
 				$data = array('date_time' => $date_time, 'meta_key1' => 'woo_unlock_request_key', 'meta_value1' => $secret_rand_key);
 				$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder, WordPress.DB.PreparedSQL.NotPrepared -- PCP error. Direct query required. Table name cannot be prepared pre WP 6.2.
 				$sql = $wpdb->prepare("INSERT INTO ".$aiowps_global_meta_tbl_name." (date_time, meta_key1, meta_value1, created) VALUES ('%s', '%s', '%s', UNIX_TIMESTAMP())", $data['date_time'], $data['meta_key1'], $data['meta_value1']);
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Prepared above.
 				$result = $wpdb->query($sql);
 				if (false === $result) {
 					$aio_wp_security->debug_logger->log_debug("generate_unlock_request_link() - Error inserting woo_unlock_request_key to AIOWPSEC_TBL_GLOBAL_META_DATA table for secret key ".$secret_rand_key, 4);
@@ -469,14 +488,18 @@ class AIOWPSecurity_User_Login {
 	public static function process_unlock_request($unlock_key) {
 		global $wpdb, $aio_wp_security;
 		$lockout_table_name = AIOWPSEC_TBL_LOGIN_LOCKOUT;
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- PCP error. Direct query required. Table name cannot be prepared pre WP 6.2.
 		$unlock_command = $wpdb->prepare("UPDATE ".$lockout_table_name." SET released = UNIX_TIMESTAMP() WHERE unlock_key = %s", $unlock_key);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Prepared above.
 		$result = $wpdb->query($unlock_command);
 		if (false === $result) {
 			$aio_wp_security->debug_logger->log_debug("Error unlocking user with unlock_key ".$unlock_key, 4);
 		} else {
 			// Now check if this unlock operation is for a WooCommerce login
 			$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- PCP error. Direct query required. Table name cannot be prepared pre WP 6.2.
 			$sql = $wpdb->prepare("SELECT * FROM $aiowps_global_meta_tbl_name WHERE meta_key1=%s AND meta_value1=%s", 'woo_unlock_request_key', $unlock_key);
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Prepared above.
 			$woo_result = $wpdb->get_row($sql, OBJECT);
 			if (empty($woo_result)) {
 				$woo_unlock = false;
@@ -492,6 +515,7 @@ class AIOWPSecurity_User_Login {
 				if ($woo_unlock) {
 					$login_url = wc_get_page_permalink('myaccount'); //redirect to woo login page if applicable
 					//Now let's cleanup after ourselves and delete the woo-related row in the AIOWPSEC_TBL_GLOBAL_META_DATA table
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore
 					$delete = $wpdb->delete($aiowps_global_meta_tbl_name, array('meta_key1' => 'woo_unlock_request_key', 'meta_value1' => $unlock_key));
 					if (false === $delete) {
 						$aio_wp_security->debug_logger->log_debug("process_unlock_request(): Error deleting row from AIOWPSEC_TBL_GLOBAL_META_DATA for meta_key1=woo_unlock_request_key and meta_value1=".$unlock_key, 4);
@@ -517,6 +541,7 @@ class AIOWPSecurity_User_Login {
 	public static function send_unlock_request_email($email, $unlock_link) {
 		global $aio_wp_security;
 		$subject = '['.network_site_url().'] '. __('Unlock request notification', 'all-in-one-wp-security-and-firewall');
+		/* translators: 1: Email 2: Link */
 		$email_msg = sprintf(__('You have requested for the account with email address %s to be unlocked.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Please press the link below to unlock your account:', 'all-in-one-wp-security-and-firewall'), $email) . "\n" . sprintf(__('Unlock link: %s', 'all-in-one-wp-security-and-firewall'), $unlock_link) . "\n\n" . __('After pressing the above link you will be able to login to the WordPress administration panel.', 'all-in-one-wp-security-and-firewall') . "\n";
 		
 		$sendMail = wp_mail($email, $subject, $email_msg);
@@ -708,12 +733,15 @@ class AIOWPSecurity_User_Login {
 	public function aiowps_login_message($message = '') {
 		global $aio_wp_security;
 		$msg = '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce.
 		if (isset($_GET[$this->key_login_msg]) && !empty($_GET[$this->key_login_msg])) {
-			$logout_msg = strip_tags($_GET[$this->key_login_msg]);
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce.
+			$logout_msg = wp_strip_tags(sanitize_title(wp_unslash($_GET[$this->key_login_msg])));
 		}
 		if (!empty($logout_msg)) {
 			switch ($logout_msg) {
 				case 'session_expired':
+					/* translators: %s: Minute count */
 					$msg = sprintf(__('Your session has expired because it has been over %d minutes since your last login.', 'all-in-one-wp-security-and-firewall'), $aio_wp_security->configs->get_value('aiowps_logout_time_period'));
 					$msg .= ' ' . __('Please log back in to continue.', 'all-in-one-wp-security-and-firewall');
 					break;
@@ -745,6 +773,7 @@ class AIOWPSecurity_User_Login {
 		$enc_result = base64_encode($current_time.$unlock_secret_string);
 		$unlock_request_form .= '<form method="post" action=""><div style="padding-bottom:10px;"><input type="hidden" name="aiowps-unlock-string-info" id="aiowps-unlock-string-info" value="'.$enc_result.'" />';
 		$unlock_request_form .= '<input type="hidden" name="aiowps-unlock-temp-string" id="aiowps-unlock-temp-string" value="'.$current_time.'" />';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- No nonce.
 		if (isset($_POST['woocommerce-login-nonce'])) {
 			$unlock_request_form .= '<input type="hidden" name="aiowps-woo-login" id="aiowps-woo-login" value="1" />';
 		}
@@ -764,9 +793,11 @@ class AIOWPSecurity_User_Login {
 
 		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
 		if ($sitewide) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 			$users_online = $wpdb->get_results("SELECT * FROM `{$logged_in_users_table}`", 'ARRAY_A');
 		} else {
 			$current_blog_id = get_current_blog_id();
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 			$users_online = $wpdb->get_results($wpdb->prepare("SELECT * FROM `{$logged_in_users_table}` WHERE site_id = %d", $current_blog_id), 'ARRAY_A');
 		}
 
@@ -788,7 +819,9 @@ class AIOWPSecurity_User_Login {
 			return;
 		}
 		// get recent lockout records on top to notify
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- PCP error. Direct query required.
 		$sql = $wpdb->prepare('SELECT id, user_login, failed_login_ip, backtrace_log, ip_lookup_result FROM ' .AIOWPSEC_TBL_LOGIN_LOCKOUT. ' WHERE is_lockout_email_sent = %d ORDER BY id DESC', 0);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Prepared above.
 		$result = $wpdb->get_results($sql);
 		if (empty($result)) {
 			return;
@@ -813,14 +846,15 @@ class AIOWPSecurity_User_Login {
 		$this->send_ip_lock_notification_email($lockout_ips_list, $backtrace_filepath);
 		
 		if ('' != $backtrace_filepath) {
-			unlink($backtrace_filepath);
+			wp_delete_file($backtrace_filepath);
 		}
 		
 		if (!empty($login_lockout_ids_send_emails)) {
 			$aio_wp_security->debug_logger->log_debug(sprintf('The IP lock notification emails of login lockout ids [%s] are sent.', implode(', ', $login_lockout_ids_send_emails)), 4);
 			// update all email to as sent.
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- PCP error. Direct query required. Table name cannot be prepared pre WP 6.2.
 			$sql = $wpdb->prepare('UPDATE '.AIOWPSEC_TBL_LOGIN_LOCKOUT.' SET is_lockout_email_sent = %d WHERE is_lockout_email_sent = %d', 1, 0);
-			//$sql = $wpdb->prepare('UPDATE '.AIOWPSEC_TBL_LOGIN_LOCKOUT.' SET is_lockout_email_sent = %d WHERE id IN (%1s)', 1, implode(', ', $login_lockout_ids_send_emails));
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Prepared above.
 			$update_result = $wpdb->query($sql);
 			if (false === $update_result) {
 				$error_msg = empty($wpdb->last_error) ? 'Could not receive the reason for the failure' : $wpdb->last_error;
@@ -847,12 +881,12 @@ class AIOWPSecurity_User_Login {
 		$login_time = time();
 
 		// Check if a record with the given user_id already exists
-		$existing_record = $wpdb->get_row(
-			$wpdb->prepare("SELECT * FROM " . $logged_in_users_table . " WHERE user_id = %d", $user_id)
-		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Direct query required. Table name cannot be prepared pre WP 6.2.
+		$existing_record = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $logged_in_users_table . " WHERE user_id = %d", $user_id));
 
 		if ($existing_record) {
 			// Update the existing record
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 			$result = $wpdb->update(
 				$logged_in_users_table,
 				array(
@@ -865,6 +899,7 @@ class AIOWPSecurity_User_Login {
 			);
 		} else {
 			// Create a new record
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 			$result = $wpdb->insert(
 				$logged_in_users_table,
 				array(
@@ -924,6 +959,7 @@ class AIOWPSecurity_User_Login {
 
 		if (empty($user_id)) return true;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 		$result = $wpdb->delete(
 			$logged_in_users_table,
 			array('user_id' => $user_id)
@@ -948,11 +984,10 @@ class AIOWPSecurity_User_Login {
 		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
 
 		// Delete data with expired cookie
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- PCP warning. Direct query required,
 		$result = $wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM " . $logged_in_users_table . " WHERE expires < %d",
-				time()
-			)
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- PCP error. Direct query required. Table name cannot be prepared pre WP 6.2.
+			$wpdb->prepare("DELETE FROM " . $logged_in_users_table . " WHERE expires < %d",	time())
 		);
 
 		if (false === $result) {
@@ -972,7 +1007,7 @@ class AIOWPSecurity_User_Login {
 		$ip = AIOWPSecurity_Utility_IP::get_user_ip_address(); //Get the IP address of user
 
 		// Find the position of the IP Address string in the message
-		$ip_string = $_SERVER['REMOTE_ADDR'];
+		$ip_string = isset($_SERVER['REMOTE_ADDR']) ? rest_is_ip_address(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
 		$ip_pos = strpos($message, $ip_string);
 
 		// If the IP Address string is found in the message and not the same as AIOWPS ip, replace it with the replacement string

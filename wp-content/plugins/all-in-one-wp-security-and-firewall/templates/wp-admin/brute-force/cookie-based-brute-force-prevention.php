@@ -8,64 +8,49 @@
 </div>
 <div class="aio_yellow_box">
 	<?php
-		$tutorial_link = '<a href="https://aiosplugin.com/how-to-use-cookie-based-brute-force-login-attack-prevention-feature/" target="_blank">' . __('tutorial', 'all-in-one-wp-security-and-firewall') . '</a>';
-		$info_msg = sprintf(__('To learn more about how to use this feature, please read the following %s.', 'all-in-one-wp-security-and-firewall'), $tutorial_link);
+		$tutorial_link = '<a href="https://teamupdraft.com/documentation/all-in-one-security/faqs/how-to-use-cookie-based-brute-force-login-attack-prevention-feature/?utm_source=aios-plugin&utm_medium=referral&utm_campaign=paac&utm_content=tutorial-on-brute-force-prevention&utm_creative_format=text" target="_blank">' . __('Read our tutorial on how to use the cookie-based brute force prevention feature', 'all-in-one-wp-security-and-firewall') . '</a>';
+		$info_msg = sprintf(__('%s.', 'all-in-one-wp-security-and-firewall'), $tutorial_link);
 		echo '<p>' . $info_msg . '</p>';
 	?>
 </div>
 <?php
+
 	if (defined('AIOS_DISABLE_COOKIE_BRUTE_FORCE_PREVENTION') && AIOS_DISABLE_COOKIE_BRUTE_FORCE_PREVENTION) {
 		$aio_wp_security->include_template('notices/cookie-based-brute-force-prevention-disabled.php');
 	}
 ?>
+<div id="aios-brute-force-info-box"></div>
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Cookie based brute force login prevention', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<?php
-			// Display security info badge
-			$aiowps_feature_mgr->output_feature_details_badge("firewall-enable-brute-force-attack-prevention");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-enable-cookie-based-brute-force-prevention'); ?>
+		<div id="firewall-enable-brute-force-attack-prevention-badge">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("firewall-enable-brute-force-attack-prevention");
+			?>
+		</div>
+		<form action="" id="aios-cookie-based-settings-form">
 			<div class="aio_orange_box">
 				<p>
-				<?php echo __('This feature can lock you out of admin if it doesn\'t work correctly on your site.', 'all-in-one-wp-security-and-firewall').' ' . sprintf(__('Before activating this feature you must read the following %s.', 'all-in-one-wp-security-and-firewall'), '<a href="https://aiosplugin.com/important-note-on-intermediate-and-advanced-features" target="_blank">'.__('message', 'all-in-one-wp-security-and-firewall').'</a>'); ?>
+				<?php echo __('This feature can lock you out of admin if it doesn\'t work correctly on your site.', 'all-in-one-wp-security-and-firewall').' ' . sprintf(__('Before activating this feature, please read the following %s.', 'all-in-one-wp-security-and-firewall'), '<a href="https://teamupdraft.com/documentation/all-in-one-security/faqs/important-note-on-intermediate-and-advanced-features/?utm_source=aios-plugin&utm_medium=referral&utm_campaign=paac&utm_content=you-must-read-this-to-activate-brute-force-login-prevention-feature&utm_creative_format=text" target="_blank">'.__('message', 'all-in-one-wp-security-and-firewall').'</a>'); ?>
 				</p>
 			</div>
-			<?php
-				$cookie_test_value = $aio_wp_security->configs->get_value('aiowps_cookie_test_success');
+			<div id="cookie-test-result-div">
+			</div>
+			<div id="aios-perform-cookie-test-div">
+				<?php
+					$cookie_test_value = $aio_wp_security->configs->get_value('aiowps_cookie_test_success');
 
-				$disable_brute_force_feature_input = true;
-				// If the cookie test is successful or if the feature is already enabled then go ahead as normal
-				if ('1' == $cookie_test_value || '1' == $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')) {
-					if (!empty($aiowps_cookie_test)) { // Cookie test was just performed and the test succeeded
-						echo '<div class="aio_green_box"><p>';
-						_e('The cookie test was successful, you can now enable this feature.', 'all-in-one-wp-security-and-firewall');
-						echo '</p></div>';
+					$disable_brute_force_feature_input = true;
+					// If the cookie test is successful or if the feature is already enabled then go ahead as normal
+					if ('1' == $cookie_test_value || '1' == $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention')) {
+						$disable_brute_force_feature_input = false;
+					} else {
+						$aio_wp_security->include_template('wp-admin/brute-force/partials/cookie-test-container.php', false);
 					}
-					$disable_brute_force_feature_input = false;
-				} else {
-					// Cookie test needs to be performed
-					if (!empty($aiowps_cookie_test) && '1' != $cookie_test_value) { // Test failed
-						echo '<div class="aio_red_box"><p>';
-						echo __('The cookie test failed on this server.', 'all-in-one-wp-security-and-firewall') .' '. __('Consequently, this feature cannot be used on this site.', 'all-in-one-wp-security-and-firewall');
-						echo '</p></div>';
-					}
-			?>
-			<div class="aio_yellow_box">
-				<p>
-					<?php
-					_e('Before using this feature, you must perform a cookie test first.', 'all-in-one-wp-security-and-firewall');
-					echo ' ';
-					echo htmlspecialchars(__("This ensures that your browser cookie is working correctly and that you won't lock yourself out.", 'all-in-one-wp-security-and-firewall'));
-					?>
-				</p>
+					$disable_brute_force_sub_fields = !$aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention');
+				?>
 			</div>
-			<?php
-					submit_button(__('Perform cookie test', 'all-in-one-wp-security-and-firewall'), 'primary', 'aiowps_do_cookie_test_for_bfla');
-				}
-				$disable_brute_force_sub_fields = !$aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention');
-			?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable brute force attack prevention', 'all-in-one-wp-security-and-firewall'); ?>:</th>

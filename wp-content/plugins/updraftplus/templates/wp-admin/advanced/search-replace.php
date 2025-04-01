@@ -5,9 +5,7 @@
 	<div class="advanced_tools search_replace">
 		<p class="updraftplus-search-replace-advert">
 			<h3><?php esc_html_e('Search / replace database', 'updraftplus'); ?></h3>
-			<a href="<?php echo esc_url($updraftplus->get_url('premium'));?>" target="_blank">
-				<em><?php esc_html_e('For the ability to migrate websites, upgrade to UpdraftPlus Premium.', 'updraftplus'); ?></em>
-			</a>
+			<em><?php echo wp_kses_post(sprintf(__('For direct site-to-site migration, get %s.', 'updraftplus'), '<a href="'.esc_url($updraftplus->get_url('premium')).'" target="_blank">UpdraftPlus Premium</a>')); ?></em>
 		</p>
 	</div>
 <?php endif;

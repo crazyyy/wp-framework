@@ -37,7 +37,7 @@ define( 'AI1WM_DEBUG', false );
 // ==================
 // = Plugin Version =
 // ==================
-define( 'AI1WM_VERSION', '7.90' );
+define( 'AI1WM_VERSION', '7.91' );
 
 // ===============
 // = Plugin Name =
@@ -223,6 +223,11 @@ define( 'AI1WM_SQLITE_DATABASE_EXTENSION', '.sqlite' );
 // = Elementor CSS Cache Name =
 // ============================
 define( 'AI1WM_ELEMENTOR_CSS_NAME', 'uploads' . DIRECTORY_SEPARATOR . 'elementor' . DIRECTORY_SEPARATOR . 'css' );
+
+// ========================
+// = CiviCRM Uploads Name =
+// ========================
+define( 'AI1WM_CIVICRM_UPLOADS_NAME', 'uploads' . DIRECTORY_SEPARATOR . 'civicrm' );
 
 // =========================
 // = Themes Functions Name =

@@ -122,7 +122,31 @@ trait AIOWPSecurity_Tools_Commands_Trait {
 		$options['aiowps_site_lockout_msg'] = $maint_msg; // Text area/msg box
 		$this->save_settings($options);
 
-		do_action('aiowps_site_lockout_settings_saved'); // Trigger action hook.
+		do_action('aiowps_site_lockout_settings_saved');
+
+		return array(
+			'status' => 'success',
+			'message' => __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall')
+		);
+	}
+
+	/**
+	 * Perform the general visitor lockout setting operation for the dashboard widget.
+	 *
+	 * @param array $data The data containing the general visitor lockout setting.
+	 *                    It should include the 'aiowps_site_lockout' key.
+	 * @return array An array containing the status of the operation and any relevant messages.
+	 *               The 'status' key indicates whether the operation was successful.
+	 *               The 'message' key contains an informational message about the outcome of the operation.
+	 */
+	public function perform_general_visitor_lockout_dashboard_widget($data) {
+		$options = array();
+
+		// Save settings
+		$options['aiowps_site_lockout'] = isset($data["aiowps_site_lockout"]) ? '1' : '';
+		$this->save_settings($options);
+
+		do_action('aiowps_site_lockout_settings_saved');
 
 		return $this->handle_response(true);
 	}

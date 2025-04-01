@@ -226,7 +226,7 @@ class AIOWPSecurity_Admin_Init {
 				'created' => __('Date and time', 'all-in-one-wp-security-and-firewall'),
 				'status' => __('Lock Status', 'all-in-one-wp-security-and-firewall'),
 			);
-			$this->aiowps_output_csv($event_list_404->items, $export_keys, '404_event_logs.csv');
+			AIOWPSecurity_Utility::output_csv($event_list_404->items, $export_keys, '404_event_logs.csv');
 			exit();
 		}
 	}
@@ -330,6 +330,8 @@ class AIOWPSecurity_Admin_Init {
 		wp_enqueue_script('dashboard');
 		wp_enqueue_script('thickbox');
 		wp_enqueue_script('media-upload');
+		wp_enqueue_script('chart-bundle', AIO_WP_SECURITY_URL . '/includes/chartjs/Chart.bundle.min.js', array(), AIO_WP_SECURITY_VERSION, true);
+		wp_enqueue_script('chartjs-gauge', AIO_WP_SECURITY_URL . '/includes/chartjs/chartjs-gauge.min.js', array(), AIO_WP_SECURITY_VERSION, true);
 		wp_register_script('jquery-blockui', AIO_WP_SECURITY_URL.'/includes/blockui/jquery.blockUI.js', array('jquery'), AIO_WP_SECURITY_VERSION, true);
 		wp_enqueue_script('jquery-blockui');
 		wp_register_script('aiowpsec-admin-js', AIO_WP_SECURITY_URL. '/js/wp-security-admin-script.js', array('jquery'), AIO_WP_SECURITY_VERSION, true);
@@ -348,7 +350,7 @@ class AIOWPSecurity_Admin_Init {
 				'no_import_file' => __('You have not yet selected a file to import.', 'all-in-one-wp-security-and-firewall'),
 				'processing' => __('Processing...', 'all-in-one-wp-security-and-firewall'),
 				'invalid_domain' => __('Please enter a valid IP address or domain name.', 'all-in-one-wp-security-and-firewall'),
-				'logo' => AIO_WP_SECURITY_URL.'/images/plugin-logos/aios-logo.png',
+				'logo' => AIO_WP_SECURITY_URL.'/images/plugin-logos/icon-aios-rgb.svg',
 				'saving' => __('Saving...', 'all-in-one-wp-security-and-firewall'),
 				'deleting' => __('Deleting...', 'all-in-one-wp-security-and-firewall'),
 				'blocking' => __('Blocking...', 'all-in-one-wp-security-and-firewall'),
@@ -368,6 +370,8 @@ class AIOWPSecurity_Admin_Init {
 				'disabling' => __('Disabling...', 'all-in-one-wp-security-and-firewall'),
 				'setting_up_firewall' => __('Setting up firewall...', 'all-in-one-wp-security-and-firewall'),
 				'downgrading_firewall' => __('Downgrading firewall...', 'all-in-one-wp-security-and-firewall'),
+				'maintenance_mode_enabled' => __('Maintenance mode is currently enabled.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Remember to disable it when you are done.', 'all-in-one-wp-security-and-firewall'),
+				'maintenance_mode_disabled' => __('Maintenance mode is currently disabled.', 'all-in-one-wp-security-and-firewall'),
 			)
 		);
 		wp_register_script('aiowpsec-pw-tool-js', AIO_WP_SECURITY_URL. '/js/password-strength-tool.js', array('jquery')); // We will enqueue this in the user acct menu class
@@ -417,7 +421,7 @@ class AIOWPSecurity_Admin_Init {
 	public function display_footer_review_message() {
 		$message = sprintf(
 			__('Enjoyed %s? Please leave us a %s rating on %s or %s', 'all-in-one-wp-security-and-firewall').' '.__('We really appreciate your support!', 'all-in-one-wp-security-and-firewall'),
-			'<b>' . htmlspecialchars('All In One WP Security & Firewall') . '</b>',
+			'<b>' . htmlspecialchars('All-In-One Security') . '</b>',
 			'<span style="color:#2271b1">&starf;&starf;&starf;&starf;&starf;</span>',
 			'<a href="https://uk.trustpilot.com/review/aiosplugin.com" target="_blank">Trustpilot</a>',
 			'<a href="https://www.g2.com/products/all-in-one-wp-security-firewall/reviews" target="_blank">G2.com</a>'
@@ -470,14 +474,6 @@ class AIOWPSecurity_Admin_Init {
 				$cur_url = "admin.php?page=".AIOWPSEC_BRUTE_FORCE_MENU_SLUG."&tab=cookie-based-brute-force-prevention";
 				$redirect_url = AIOWPSecurity_Utility::add_query_data_to_url($cur_url, 'aiowps_cookie_test', "1");
 				AIOWPSecurity_Utility::redirect_to_url($redirect_url);
-			}
-
-			if (isset($_POST['aiowps_enable_brute_force_attack_prevention'])) { // Enabling the BFLA feature so drop the cookie again
-				$brute_force_feature_secret_word = sanitize_text_field($_POST['aiowps_brute_force_secret_word']);
-				if (empty($brute_force_feature_secret_word)) {
-					$brute_force_feature_secret_word = AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD;
-				}
-				AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), AIOS_Helper::get_hash($brute_force_feature_secret_word));
 			}
 
 			if (isset($_REQUEST['aiowps_cookie_test'])) {

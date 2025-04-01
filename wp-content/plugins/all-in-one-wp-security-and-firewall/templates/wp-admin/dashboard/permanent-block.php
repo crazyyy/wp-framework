@@ -1,11 +1,11 @@
 <?php if (!defined('ABSPATH')) die('No direct access.'); ?>
 <div class="aio_blue_box">
 	<?php
-	echo '<p>' . __('This tab displays the list of all permanently blocked IP addresses.', 'all-in-one-wp-security-and-firewall') . '</p>' . '<p>' . __('NOTE: This feature does NOT use the .htaccess file to permanently block the IP addresses so it should be compatible with all web servers running WordPress.', 'all-in-one-wp-security-and-firewall') . '</p>';
+	echo '<p>' . esc_html__('This tab displays the list of all permanently blocked IP addresses.', 'all-in-one-wp-security-and-firewall') . '</p>' . '<p>' . esc_html__('NOTE: This feature does NOT use the .htaccess file to permanently block the IP addresses so it should be compatible with all web servers running WordPress.', 'all-in-one-wp-security-and-firewall') . '</p>';
 	?>
 </div>
 <div class="postbox">
-	<h3 class="hndle"><label for="title"><?php _e('Permanently blocked IP addresses', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+	<h3 class="hndle"><label for="title"><?php esc_html_e('Permanently blocked IP addresses', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside" id="permanent-ip-list-table">
 		<?php
 		// Fetch, prepare, sort, and filter our data...

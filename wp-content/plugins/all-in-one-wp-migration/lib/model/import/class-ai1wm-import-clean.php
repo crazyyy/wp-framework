@@ -39,6 +39,7 @@ class Ai1wm_Import_Clean {
 		$db_client->add_table_prefix_filter( ai1wm_table_prefix( 'mainsite' ) );
 		$db_client->flush();
 
+		// Trigger import cancel action
 		if ( isset( $params['ai1wm_import_cancel'] ) ) {
 			do_action( 'ai1wm_status_import_canceled', $params );
 		} else {

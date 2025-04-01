@@ -41,6 +41,7 @@ class Rule_Block_Request_Strings_6g extends Rule {
 		if (empty($_SERVER['REQUEST_URI'])) return Rule::NOT_SATISFIED;
 		
 		// ensure we get the request uri without the query string
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
 		$uri = (string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 		
 		if ('' == $uri) return Rule::NOT_SATISFIED;

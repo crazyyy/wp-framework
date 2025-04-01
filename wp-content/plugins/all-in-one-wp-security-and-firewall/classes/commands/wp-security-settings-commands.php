@@ -456,7 +456,7 @@ trait AIOWPSecurity_Settings_Commands_Trait {
 	}
 
 	/**
-	 * Perform exporting All In One WP Security & Firewall settings.
+	 * Perform exporting All-In-One Security settings.
 	 *
 	 * This method exports general settings, firewall settings, and two-factor authentication settings
 	 * if applicable. It then returns the exported data in JSON format along with a title for the export.

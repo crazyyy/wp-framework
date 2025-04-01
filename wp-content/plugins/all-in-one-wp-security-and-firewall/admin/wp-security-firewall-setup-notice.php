@@ -386,7 +386,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		?>
 			<div class="notice notice-error is-dismissible">
 				<p>
-					<strong><?php _e('All In One WP Security and Firewall', 'all-in-one-wp-security-and-firewall'); ?></strong>
+					<strong><?php _e('All-In-One Security', 'all-in-one-wp-security-and-firewall'); ?></strong>
 				</p>
 				<p><?php _e('We were unable to create the file necessary to give you the highest level of protection.', 'all-in-one-wp-security-and-firewall');?></p>
 				<p><?php _e('Your firewall will have reduced protection which means some of your firewall\'s functionality will be unavailable.', 'all-in-one-wp-security-and-firewall');?></p>
@@ -518,7 +518,7 @@ class AIOWPSecurity_Firewall_Setup_Notice {
 		?>
 			<div class="notice notice-warning is-dismissible">
 			<p>
-				<strong><?php _e('All In One WP Security and Firewall', 'all-in-one-wp-security-and-firewall'); ?></strong>
+				<strong><?php _e('All-In-One Security', 'all-in-one-wp-security-and-firewall'); ?></strong>
 			</p>
 			<p>
 				<?php echo __('We were unable to set up your firewall with the highest level of protection.', 'all-in-one-wp-security-and-firewall').' '.

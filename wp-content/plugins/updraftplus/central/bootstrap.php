@@ -45,7 +45,8 @@ class UpdraftCentral_Main {
 			'theme' => 'UpdraftCentral_Theme_Commands',
 			'posts' => 'UpdraftCentral_Posts_Commands',
 			'media' => 'UpdraftCentral_Media_Commands',
-			'pages' => 'UpdraftCentral_Pages_Commands'
+			'pages' => 'UpdraftCentral_Pages_Commands',
+			'backups' => 'UpdraftCentral_Backups_Commands'
 		));
 	
 		// N.B. This "updraftplus_remotecontrol_command_classes" filter has been marked as deprecated and will be remove after May 2021.
@@ -706,9 +707,9 @@ class UpdraftCentral_Main {
 							<div class="updraftcentral_wizard_mothership updraftcentral_wizard_option">
 								<label class="button-primary" tabindex="0">
 									<input checked="checked" type="radio" name="updraftcentral_mothership" id="updraftcentral_mothership_updraftpluscom" style="display: none;">
-									UpdraftPlus.Com
+									TeamUpdraft.com
 								</label><br>
-								<div><?php echo wp_kses_post(sprintf(esc_html($updraftcentral_host_plugin->retrieve_show_message('in_example')), '<a target="_blank" href="https://updraftplus.com/my-account/">'.esc_html($updraftcentral_host_plugin->retrieve_show_message('an_account')).'</a>')); ?></div>
+								<div><?php echo wp_kses_post(sprintf(esc_html($updraftcentral_host_plugin->retrieve_show_message('in_example')), '<a target="_blank" href="https://teamupdraft.com/my-account/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=an-account&utm_creative_format=text">'.esc_html($updraftcentral_host_plugin->retrieve_show_message('an_account')).'</a>')); ?></div>
 
 							</div>
 							<div class="updraftcentral_wizard_self_hosted_stage1 updraftcentral_wizard_option">
@@ -831,7 +832,7 @@ class UpdraftCentral_Main {
 		<div class="advanced_tools updraft_central">
 			<h3><?php $updraftcentral_host_plugin->retrieve_show_message('updraftcentral_remote_control', true); ?></h3>
 			<p>
-				<?php echo esc_html($updraftcentral_description); ?> <a target="_blank" href="https://updraftcentral.com"><?php $updraftcentral_host_plugin->retrieve_show_message('read_more', true); ?></a>
+				<?php echo esc_html($updraftcentral_description); ?> <a target="_blank" href="https://teamupdraft.com/updraftcentral/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=read-more-here&utm_creative_format=text"><?php $updraftcentral_host_plugin->retrieve_show_message('read_more', true); ?></a>
 			</p>
 			<div style="min-height: 310px;" id="updraftcentral_keys">
 				<?php $this->create_key_markup(true); ?>

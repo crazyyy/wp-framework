@@ -54,8 +54,8 @@ class Ai1wm_Export_Enumerate_Tables {
 		if ( ai1wm_table_prefix() ) {
 			$db_client->add_table_prefix_filter( ai1wm_table_prefix() );
 
-			// Include table prefixes (Webba Booking)
-			foreach ( array( 'wbk_services', 'wbk_days_on_off', 'wbk_locked_time_slots', 'wbk_appointments', 'wbk_cancelled_appointments', 'wbk_email_templates', 'wbk_service_categories', 'wbk_gg_calendars', 'wbk_coupons' ) as $table_name ) {
+			// Include table prefixes (Webba Booking and CiviCRM)
+			foreach ( array( 'wbk_', 'civicrm_' ) as $table_name ) {
 				$db_client->add_table_prefix_filter( $table_name );
 			}
 		}

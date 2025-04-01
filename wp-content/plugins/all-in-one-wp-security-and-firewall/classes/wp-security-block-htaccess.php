@@ -14,6 +14,7 @@ class AIOWPSecurity_Block_Htaccess extends AIOWPSecurity_Block_File {
 
 		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions -- wp_filesystem not recommended.
 		if (!is_writable($home_path)) {
 			return new WP_Error(
 				'file_wrong_permissions',

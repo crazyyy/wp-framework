@@ -147,9 +147,14 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 	 */
 	public function column_stacktrace($item) {
 		if (empty($item['stacktrace'])) return __('No stack trace available.', 'all-in-one-wp-security-and-firewall');
-		
-		$stacktrace = maybe_unserialize($item['stacktrace']);
+
+		if (is_serialized($item['stacktrace'])) {
+			$stacktrace = AIOWPSecurity_Utility::unserialize($item['stacktrace']);
+		} else {
+			$stacktrace = $item['stacktrace'];
+		}
 		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump -- Part of error reporting system.
 		var_dump($stacktrace);
 		$stacktrace_output = ob_get_contents();
 		ob_end_clean();
@@ -239,6 +244,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 			if (!empty($filters) || '' !== $search_term) {
 				$audit_log_tbl = AIOWPSEC_TBL_AUDIT_LOG;
 				$where_sql = $this->get_audit_list_where_sql($search_term, $filters);
+				// phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 				$results = $wpdb->get_results("SELECT id FROM {$audit_log_tbl} {$where_sql}", 'ARRAY_A');
 				$items = array_column($results, 'id');
 				$this->delete_audit_event_records($items);
@@ -264,30 +270,34 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 					<div class="alignleft actions">
 						<select name="level-filter" class="audit-filter-level">
 						<?php $selected = !isset($this->_args['data']['level-filter']) ? ' selected = "selected"' : ''; ?>
-							<option value="-1" <?php echo $selected; ?>><?php _e('All levels', 'all-in-one-wp-security-and-firewall'); ?></option>
+							<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- No user input to escape. ?>
+							<option value="-1" <?php echo $selected; ?>><?php esc_html_e('All levels', 'all-in-one-wp-security-and-firewall'); ?></option>
 							<?php
 								foreach (AIOWPSecurity_Audit_Events::$log_levels as $level) {
 									$selected = isset($this->_args['data']['level-filter']) && $this->_args['data']['level-filter'] == $level ? ' selected = "selected"' : '';
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- No user input to escape.
 									echo '<option value="'. esc_attr($level) .'" '. $selected .'>'. esc_html($level) .'</option>';
 								}
 							?>
 						</select>
 						<select name="event-filter" class="audit-filter-event">
 						<?php $selected = !isset($this->_args['data']['event-filter']) ? ' selected = "selected"' : ''; ?>
-							<option value="-1" <?php echo $selected; ?>><?php _e('All events', 'all-in-one-wp-security-and-firewall'); ?></option>
+							<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- No user input to escape. ?>
+							<option value="-1" <?php echo $selected; ?>><?php esc_html_e('All events', 'all-in-one-wp-security-and-firewall'); ?></option>
 							<?php
 								foreach (AIOWPSecurity_Audit_Events::$event_types as $event_type => $event) {
 									$selected = isset($this->_args['data']['event-filter']) && $this->_args['data']['event-filter'] == $event_type ? ' selected = "selected"' : '';
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- No user input to escape.
 									echo '<option value="'. esc_attr($event_type) .'" '. $selected .'>'. esc_html($event) .'</option>';
 								}
 							?>
 						</select>
-						<?php submit_button(__('Filter', 'all-in-one-wp-security-and-firewall'), 'action', '', false); ?>
+						<?php submit_button(esc_html__('Filter', 'all-in-one-wp-security-and-firewall'), 'action', '', false); ?>
 					</div>
 				<?php
 				break;
 			case 'bottom':
-				submit_button(__('Export to CSV', 'all-in-one-wp-security-and-firewall'), 'primary', 'aiowps_export_audit_event_logs_to_csv', false);
+				submit_button(esc_html__('Export to CSV', 'all-in-one-wp-security-and-firewall'), 'primary', 'aiowps_export_audit_event_logs_to_csv', false);
 				break;
 		}
 	}
@@ -310,6 +320,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 			// Delete all records
 			$site_id_where_sql = (!is_super_admin()) ? ' WHERE site_id = ' . get_current_blog_id() : '';
 			$delete_command = "DELETE FROM " . $audit_log_tbl . $site_id_where_sql;
+			// phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 			$result = $wpdb->query($delete_command);
 		} elseif (is_array($entries)) {
 			// Delete multiple records
@@ -323,6 +334,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 			foreach ($chunks as $chunk) {
 				$id_list = "(" . implode(",", $chunk) . ")"; // Create comma separate list for DB operation
 				$delete_command = "DELETE FROM " . $audit_log_tbl . " WHERE id IN " . $id_list . $site_id_where_sql;
+				// phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 				$result = $wpdb->query($delete_command);
 				if (!$result) {
 					$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Audit log table. Database error: '.$wpdb->last_error, 4);
@@ -334,6 +346,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 			// Delete single record
 			$site_id_where_sql = (!is_super_admin()) ? ' AND site_id = ' . get_current_blog_id() : '';
 			$delete_command = "DELETE FROM " . $audit_log_tbl . " WHERE id = '" . absint($entries) . "'" . $site_id_where_sql;
+			// phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 			$result = $wpdb->query($delete_command);
 		}
 
@@ -465,8 +478,8 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 		$audit_log_tbl = AIOWPSEC_TBL_AUDIT_LOG;
 
 		// Parameters that are going to be used to order the result
-		isset($this->_args['data']["orderby"]) ? $orderby = strip_tags($this->_args['data']["orderby"]) : $orderby = '';
-		isset($this->_args['data']["order"]) ? $order = strip_tags($this->_args['data']["order"]) : $order = '';
+		isset($this->_args['data']["orderby"]) ? $orderby = wp_strip_all_tags($this->_args['data']["orderby"]) : $orderby = '';
+		isset($this->_args['data']["order"]) ? $order = wp_strip_all_tags($this->_args['data']["order"]) : $order = '';
 		// By default show the most recent audit log entries.
 		$orderby = !empty($orderby) ? esc_sql($orderby) : 'created';
 		$order = !empty($order) ? esc_sql($order) : 'DESC';
@@ -479,10 +492,13 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 
 		$where_sql = $this->get_audit_list_where_sql($search_term, $filters);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 		$total_items = $wpdb->get_var("SELECT COUNT(*) FROM {$audit_log_tbl} {$where_sql}");
 		if ($ignore_pagination) {
+			// phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 			$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order}", 'ARRAY_A');
 		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 			$data = $wpdb->get_results("SELECT * FROM {$audit_log_tbl} {$where_sql} ORDER BY {$orderby} {$order} LIMIT {$per_page} OFFSET {$offset}", 'ARRAY_A');
 		}
 		
@@ -490,7 +506,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 		foreach ($data as $key => $entry) {
 			$details = json_decode($entry['details'], true);
 			$details = is_null($details) ? $entry['details'] : $details; // check if the decode worked, if not pass the json string
-			$data[$key]['details'] = json_encode(apply_filters('aios_audit_filter_details', $details, $entry['event_type']));
+			$data[$key]['details'] = wp_json_encode(apply_filters('aios_audit_filter_details', $details, $entry['event_type']));
 		}
 		
 		$this->items = $data;

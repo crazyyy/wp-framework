@@ -18,7 +18,7 @@
 								<div class="aiowps_more_info_body">
 									<?php
 									echo '<p class="description">'.__('Most users will want to share their site content widely, but some may prefer to prevent automated site scraping.', 'all-in-one-wp-security-and-firewall').'</p>';
-									echo '<p class="description">'.sprintf(__('For more information, check the %s', 'all-in-one-wp-security-and-firewall'), '<a target="_blank" href="https://aiosplugin.com/should-i-turn-the-disable-rss-and-atom-feeds-feature-on/">'.__('FAQs', 'all-in-one-wp-security-and-firewall').'</a>').'</p>';
+									echo '<p class="description">'.sprintf(__('For more information, check the %s', 'all-in-one-wp-security-and-firewall'), '<a target="_blank" href="https://teamupdraft.com/documentation/all-in-one-security/?utm_source=aios-plugin&utm_medium=referral&utm_campaign=paac&utm_content=php-rules-faq&utm_creative_format=text">'.__('documentation', 'all-in-one-wp-security-and-firewall').'</a>').'</p>';
 									?>
 								</div>
 							</div>

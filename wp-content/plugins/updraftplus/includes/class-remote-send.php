@@ -95,7 +95,8 @@ abstract class UpdraftPlus_RemoteSend {
 	protected function initialise_listener_error_handling($hash) {
 		global $updraftplus;
 		$updraftplus->error_reporting_stop_when_logged = true;
-		set_error_handler(array($updraftplus, 'php_error'), E_ALL & ~E_STRICT);
+		$error_levels = version_compare(PHP_VERSION, '8.4.0', '>=') ? E_ALL : E_ALL & ~E_STRICT;
+		set_error_handler(array($updraftplus, 'php_error'), $error_levels);
 		$this->php_events = array();
 		add_filter('updraftplus_logline', array($this, 'updraftplus_logline'), 10, 4);
 		if (!UpdraftPlus_Options::get_updraft_option('updraft_debug_mode')) return;
@@ -362,7 +363,8 @@ abstract class UpdraftPlus_RemoteSend {
 		try {
 		
 			$updraftplus->error_reporting_stop_when_logged = true;
-			set_error_handler(array($updraftplus, 'php_error'), E_ALL & ~E_STRICT);
+			$error_levels = version_compare(PHP_VERSION, '8.4.0', '>=') ? E_ALL : E_ALL & ~E_STRICT;
+			set_error_handler(array($updraftplus, 'php_error'), $error_levels);
 			$this->php_events = array();
 			add_filter('updraftplus_logline', array($this, 'updraftplus_logline'), 10, 4);
 		

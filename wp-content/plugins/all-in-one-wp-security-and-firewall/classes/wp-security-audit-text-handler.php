@@ -14,6 +14,7 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 * @return string
 	 */
 	public static function successful_login_to_text($info) {
+		/* translators: %s: User name */
 		return sprintf(__('Successful login with username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
 	}
 
@@ -35,7 +36,8 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 * @return string
 	 */
 	public static function core_updated_to_text($info) {
-		return sprintf(__('WordPress updated from version %s to %s', 'all-in-one-wp-security-and-firewall'), $info['old_version'], $info['new_version']);
+		/* translators: 1: Old version, 2: New version */
+		return sprintf(__('WordPress updated from version %1$s to %2$s', 'all-in-one-wp-security-and-firewall'), $info['old_version'], $info['new_version']);
 	}
 
 	/**
@@ -70,6 +72,7 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 */
 	public static function entity_changed_to_text($info) {
 		if ($info['entity']) {
+			/* translators: %s: Entity name */
 			return sprintf(__('Entity: "%s" has changed, please check the stacktrace for more details', 'all-in-one-wp-security-and-firewall'), $info['entity']);
 		} else {
 			return __('An unknown entity has changed, please check the stacktrace for more details', 'all-in-one-wp-security-and-firewall');
@@ -84,11 +87,14 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 */
 	public static function translation_updated_to_text($info) {
 		if ('core' == $info['type']) {
-			return sprintf(__('Core %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['language'], $info['version']);
+			/* translators: 1: Language name, 2: Version */
+			return sprintf(__('Core %1$s translations updated to version %2$s', 'all-in-one-wp-security-and-firewall'), $info['language'], $info['version']);
 		} elseif ('plugin' == $info['type']) {
-			return sprintf(__('Plugin "%s" %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
+			/* translators: 1: Slug, 2: Language, 3: Version */
+			return sprintf(__('Plugin "%1$s" %2$s translations updated to version %3$s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
 		} elseif ('theme' == $info['type']) {
-			return sprintf(__('Theme "%s" %s translations updated to version %s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
+			/* translators: 1: Slug, 2: Language name, 3: Version */
+			return sprintf(__('Theme "%1$s" %2$s translations updated to version %3$s', 'all-in-one-wp-security-and-firewall'), $info['slug'], $info['language'], $info['version']);
 		}
 	}
 
@@ -102,8 +108,10 @@ class AIOWPSecurity_Audit_Text_Handler {
 		if ($info['imported']) {
 			return __('Event imported from the failed logins table', 'all-in-one-wp-security-and-firewall');
 		} elseif ($info['known']) {
+			/* translators: %s: User name */
 			return sprintf(__('Failed login attempt with a known username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
 		} else {
+			/* translators: %s: User name */
 			return sprintf(__('Failed login attempt with a unknown username: %s', 'all-in-one-wp-security-and-firewall'), $info['username']);
 		}
 	}
@@ -116,10 +124,13 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 */
 	public static function user_registration_to_text($info) {
 		if ('admin' == $info['type']) {
-			return sprintf(__('Admin %s registered new user: %s', 'all-in-one-wp-security-and-firewall'), $info['admin_username'], $info['registered_username']);
+			/* translators: 1: Admin User name, 2: Registered User name */
+			return sprintf(__('Admin %1$s registered new user: %2$s', 'all-in-one-wp-security-and-firewall'), $info['admin_username'], $info['registered_username']);
 		} elseif ('pending' == $info['type']) {
+			/* translators: %s: Registered User name */
 			return sprintf(__('User %s registered and set to pending', 'all-in-one-wp-security-and-firewall'), $info['registered_username']);
 		} elseif ('registered' == $info['type']) {
+			/* translators: %s: Registered User name */
 			return sprintf(__('User %s registered', 'all-in-one-wp-security-and-firewall'), $info['registered_username']);
 		}
 	}
@@ -132,9 +143,11 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 */
 	public static function table_migration_to_text($info) {
 		if ($info['success']) {
-			return sprintf(__('Successfully migrated the `%s` table data to the `%s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
+			/* translators: 1: From table, 2: To table */
+			return sprintf(__('Successfully migrated the `%1$s` table data to the `%2$s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
 		} else {
-			return sprintf(__('Failed to migrate the `%s` table data to the `%s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
+			/* translators: 1: From table, 2: To table */
+			return sprintf(__('Failed to migrate the `%1$s` table data to the `%2$s` table', 'all-in-one-wp-security-and-firewall'), $info['from_table'], $info['to_table']);
 		}
 	}
 
@@ -148,16 +161,20 @@ class AIOWPSecurity_Audit_Text_Handler {
 		$output = '';
 		switch ($info['event']) {
 			case 'triggered':
-				$output = sprintf(__("'%s [%s]' rule has been triggered.", 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
+				/* translators: 1: Rule name, 2: Rule family */
+				$output = sprintf(__('"%1$s [%2$s]" rule has been triggered.', 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
 				break;
 			case 'not_triggered':
-				$output = sprintf(__("'%s [%s]' rule was not triggered.", 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
+				/* translators: 1: Rule name, 2: Rule family */
+				$output = sprintf(__('"%1$s [%2$s]" rule was not triggered.', 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
 				break;
 			case 'active':
-				$output = sprintf(__("'%s [%s]' rule is active.", 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
+				/* translators: 1: Rule name, 2: Rule family */
+				$output = sprintf(__('"%1$s [%2$s]" rule is active.', 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
 				break;
 			case 'not_active':
-				$output = sprintf(__("'%s [%s]' rule is not active.", 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
+				/* translators: 1: Rule name, 2: Rule family */
+				$output = sprintf(__('"%1$s [%2$s]" rule is not active.', 'all-in-one-wp-security-and-firewall'),  $info['rule_name'], $info['rule_family']);
 				break;
 			default:
 				$output = array(
@@ -173,7 +190,7 @@ class AIOWPSecurity_Audit_Text_Handler {
 			$output .= "<br><br><a href='{$info['location']}'target='_blank'>".__('Configure this rule', 'all-in-one-wp-security-and-firewall').'</a>';
 		}
 
-		return is_array($output) ? json_encode($output) : $output;
+		return is_array($output) ? wp_json_encode($output) : $output;
 	}
 
 	/**
@@ -183,6 +200,7 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 * @return string
 	 */
 	public static function password_reset_to_text($info) {
+		/* translators: %s: User login */
 		return sprintf(__('Password for user account: `%s` successfully changed', 'all-in-one-wp-security-and-firewall'), $info['user_login']);
 	}
 
@@ -194,9 +212,11 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 */
 	public static function user_deleted_to_text($info) {
 		if (empty($info['reassign'])) {
-			return sprintf(__('User account: %s with ID: `%s` has been deleted', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id']);
+			/* translators: 1: User login, 2: User ID */
+			return sprintf(__('User account: %1$s with ID: `%2$s` has been deleted', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id']);
 		} else {
-			return sprintf(__('User account: `%s` with ID: `%s` has been deleted and all content has been reassigned to user with ID: `%s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['reassign']);
+			/* translators: 1: User login, 2: User ID, 3: Reassign */
+			return sprintf(__('User account: `%1$s` with ID: `%2$s` has been deleted and all content has been reassigned to user with ID: `%3$s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['reassign']);
 		}
 	}
 
@@ -208,9 +228,11 @@ class AIOWPSecurity_Audit_Text_Handler {
 	 */
 	public static function user_removed_to_text($info) {
 		if (empty($info['reassign'])) {
-			return sprintf(__('User account: %s with ID: `%s` has been removed from the blog with ID: `%s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['blog_id']);
+			/* translators: 1: User login, 2: User ID, 3: Blog ID */
+			return sprintf(__('User account: %1$s with ID: `%2$s` has been removed from the blog with ID: `%3$s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['blog_id']);
 		} else {
-			return sprintf(__('User account: `%s` with ID: `%s` has been removed from the blog with ID: `%s` and all content has been reassigned to user with  ID: `%s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['blog_id'], $info['reassign']);
+			/* translators: 1: User login, 2: User ID, 3: Blog ID, 4: Reassign */
+			return sprintf(__('User account: `%1$s` with ID: `%2$s` has been removed from the blog with ID: `%3$s` and all content has been reassigned to user with  ID: `%4$s`', 'all-in-one-wp-security-and-firewall'), $info['user_login'], $info['user_id'], $info['blog_id'], $info['reassign']);
 		}
 	}
 }

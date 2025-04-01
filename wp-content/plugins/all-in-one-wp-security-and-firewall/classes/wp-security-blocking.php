@@ -26,9 +26,11 @@ class AIOWPSecurity_Blocking {
 		if (empty($block_reason)) {
 			$sql = 'SELECT blocked_ip FROM '.AIOWPSEC_TBL_PERM_BLOCK;
 		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- PCP error. Ignore.
 			$sql = $wpdb->prepare('SELECT blocked_ip FROM '.AIOWPSEC_TBL_PERM_BLOCK.' WHERE block_reason=%s', $block_reason);
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 		$result = $wpdb->get_results($sql, $output_type);
 		//The result returned by wp function is multi-dim array. Let's return a simple single dimensional array of ip addresses
 		if (!empty($result)) {
@@ -48,6 +50,7 @@ class AIOWPSecurity_Blocking {
 	 */
 	public static function is_ip_blocked($ip_address) {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 		$blocked_record = $wpdb->get_row($wpdb->prepare('SELECT * FROM '.AIOWPSEC_TBL_PERM_BLOCK.' WHERE blocked_ip=%s', $ip_address));
 		return !empty($blocked_record);
 	}
@@ -80,7 +83,9 @@ class AIOWPSecurity_Blocking {
 			$data = apply_filters('aiowps_pre_add_to_permanent_block', $data);
 			$perm_block_tbl_name = AIOWPSEC_TBL_PERM_BLOCK;
 			$country_origin = isset($data['country_origin']) ? $data['country_origin'] : '';
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder, WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 			$sql = $wpdb->prepare("INSERT INTO ".$perm_block_tbl_name." (blocked_ip, block_reason, blocked_date, country_origin, created) VALUES ('%s', '%s', '%s', '%s', UNIX_TIMESTAMP())", $data['blocked_ip'], $data['block_reason'], $data['blocked_date'], $country_origin);
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP error. Ignore.
 			$res = $wpdb->query($sql);
 			if (false === $res) {
 				$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Blocking::add_ip_to_block_list - Error inserting record into AIOWPSEC_TBL_PERM_BLOCK table for IP ".$ip_address);
@@ -94,6 +99,7 @@ class AIOWPSecurity_Blocking {
 	public static function unblock_ip($ip_address) {
 		global $wpdb;
 		$where = array('blocked_ip' => $ip_address);
+		// phpcs:ignore WordPress.DB -- PCP error. Direct call necessary. No caching needed.
 		$result = $wpdb->delete(AIOWPSEC_TBL_PERM_BLOCK, $where);
 		return $result;
 	}

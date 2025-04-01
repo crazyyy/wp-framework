@@ -1396,14 +1396,14 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 		if (!empty($params['password'])) {
 			if (!empty($params['sticky'])) {
 				return $this->_generic_error_response('post_save_failed', array(
-					'message' => __('A post can not be sticky and have a password.'),
+					'message' => __('A post can not be sticky and have a password.'),// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- The string exists within the WordPress core.
 					'args' => $params
 				));
 			}
 
 			if (!isset($params['sticky']) && is_sticky($post->ID)) {
 				return $this->_generic_error_response('post_save_failed', array(
-					'message' => __('A sticky post can not be password protected.'),
+					'message' => __('A sticky post can not be password protected.'),// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- The string exists within the WordPress core.
 					'args' => $params
 				));
 			}
@@ -1412,7 +1412,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 		if (!empty($params['sticky'])) {
 			if (!isset($params['password']) && post_password_required($post->ID)) {
 				return $this->_generic_error_response('post_save_failed', array(
-					'message' => __('A password protected post can not be set to sticky.'),
+					'message' => __('A password protected post can not be set to sticky.'),// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- The string exists within the WordPress core.
 					'args' => $params
 				));
 			}

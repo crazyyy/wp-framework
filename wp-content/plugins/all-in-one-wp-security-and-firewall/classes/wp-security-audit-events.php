@@ -471,8 +471,8 @@ class AIOWPSecurity_Audit_Events {
 					'ip' => $rule['ip'],
 					'level' => 'triggered' === $event ? 'warning' : 'info',
 					'event_type' => 'rule_'.$event,
-					'details' => json_encode($details, true),
-					'stacktrace' => (isset($rule['request']) ? print_r($rule['request'], true) : ''),
+					'details' => wp_json_encode($details, true),
+					'stacktrace' => (isset($rule['request']) ? print_r($rule['request'], true) : ''), // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- PCP warning. Part of AOIS error reporting system.
 					'created' => $rule['time']
 				);
 			}

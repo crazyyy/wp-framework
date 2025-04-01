@@ -502,6 +502,7 @@ class AIOWPSecurity_Feature_Item_Manager {
 				)
 			),
 			'contact-form-7-captcha' => array(
+				/* translators: %s: Plugin name */
 				'name' => sprintf(__('%s CAPTCHA', 'all-in-one-wp-security-and-firewall'), 'Contact Form 7'),
 				'points' => $this->feature_point_1,
 				'level' => $this->sec_level_basic,
@@ -537,7 +538,7 @@ class AIOWPSecurity_Feature_Item_Manager {
 	 */
 	public function get_feature_item_by_id($feature_id) {
 		if (isset($this->feature_items[$feature_id])) return $this->feature_items[$feature_id];
-		error_log("Feature ID not found (coding error)");
+		error_log("AIOS Feature Manager - Feature ID not found (coding error): $feature_id");
 		return false;
 	}
 

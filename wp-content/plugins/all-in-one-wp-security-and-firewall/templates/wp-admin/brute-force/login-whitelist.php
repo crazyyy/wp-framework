@@ -2,7 +2,7 @@
 <h2><?php _e('Login whitelist', 'all-in-one-wp-security-and-firewall'); ?></h2>
 <div class="aio_blue_box">
 	<?php
-		echo '<p>' . __('The All In One WP Security Whitelist feature gives you the option of only allowing certain IP addresses or ranges to have access to your WordPress login page.', 'all-in-one-wp-security-and-firewall') . '<br>' . __('This feature will deny login access for all IP addresses which are not in your whitelist as configured in the settings below.', 'all-in-one-wp-security-and-firewall') . '<br>' . __('By allowing/blocking IP addresses, you are using the most secure first line of defence because login access will only be granted to whitelisted IP addresses and other addresses will be blocked as soon as they try to access your login page.', 'all-in-one-wp-security-and-firewall') .'</p>';
+		echo '<p>' . __('The All-In-One Security whitelist feature gives you the option of only allowing certain IP addresses or ranges to have access to your WordPress login page.', 'all-in-one-wp-security-and-firewall') . '<br>' . __('This feature will deny login access for all IP addresses which are not in your whitelist as configured in the settings below.', 'all-in-one-wp-security-and-firewall') . '<br>' . __('By allowing/blocking IP addresses, you are using the most secure first line of defence because login access will only be granted to whitelisted IP addresses and other addresses will be blocked as soon as they try to access your login page.', 'all-in-one-wp-security-and-firewall') .'</p>';
 	?>
 </div>
 <div class="aio_grey_box">
@@ -19,18 +19,19 @@
 </div>
 <?php
 	if (defined('AIOS_DISABLE_LOGIN_WHITELIST') && AIOS_DISABLE_LOGIN_WHITELIST) {
-		$aio_wp_security->include_template('notices/disable-login-whitelist.php');
+	$aio_wp_security->include_template('notices/disable-login-whitelist.php');
 	}
 ?>
 <div class="postbox">
 	<h3 class="hndle"><label for="title"><?php _e('Login IP whitelist settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
-		<?php
-			// Display security info badge
-			$aiowps_feature_mgr->output_feature_details_badge("whitelist-manager-ip-login-whitelisting");
-		?>
-		<form action="" method="POST">
-			<?php wp_nonce_field('aiowpsec-whitelist-settings-nonce'); ?>
+		<div id="whitelist-manager-ip-login-whitelisting-badge">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("whitelist-manager-ip-login-whitelisting");
+			?>
+		</div>
+		<form action="" id="aios-login-whitelist-settings-form">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e('Enable IP whitelisting', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -52,13 +53,9 @@
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="aiowps_allowed_ip_addresses"><?php _e('Enter whitelisted IP addresses:', 'all-in-one-wp-security-and-firewall'); ?></label></th>
-					<td>
-						<textarea id="aiowps_allowed_ip_addresses" name="aiowps_allowed_ip_addresses" rows="5" cols="50"><?php echo esc_textarea($aiowps_allowed_ip_addresses); ?></textarea>
-						<br>
-						<span class="description"><?php echo __('Enter one or more IP addresses or IP ranges you wish to include in your whitelist.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Only the addresses specified here will have access to the WordPress login page.', 'all-in-one-wp-security-and-firewall'); ?></span>
-						<?php $aio_wp_security->include_template('info/ip-address-ip-range-info.php'); ?>
-					</td>
+					<?php
+					AIOWPSecurity_Utility_UI::ip_input_textarea(__('Enter whitelisted IP addresses:', 'all-in-one-wp-security-and-firewall'), 'aiowps_allowed_ip_addresses', $aiowps_allowed_ip_addresses, __('Enter one or more IP addresses or IP ranges you wish to include in your whitelist.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Only the addresses specified here will have access to the WordPress login page.', 'all-in-one-wp-security-and-firewall'));
+					?>
 				</tr>
 			</table>
 			<?php submit_button(__('Save settings', 'all-in-one-wp-security-and-firewall'), 'primary', 'aiowps_save_whitelist_settings');?>

@@ -1389,10 +1389,11 @@ class UpdraftPlus_S3 {
 		foreach ($aHeaders as $k => $v) {
 			$amzHeaders[strtolower($k)] = trim($v);
 		}
-		uksort($amzHeaders, 'strcmp');
 
 		// payload
 		$payloadHash = isset($amzHeaders['x-amz-content-sha256']) ? $amzHeaders['x-amz-content-sha256'] : hash('sha256', $data);
+		if (!isset($amzHeaders['x-amz-content-sha256']) && (!defined('UPDRAFTPLUS_S3_EXCLUDE_SIGV4_CONTENT_SHA256_HEADER') || !UPDRAFTPLUS_S3_EXCLUDE_SIGV4_CONTENT_SHA256_HEADER)) $amzHeaders['x-amz-content-sha256'] = $payloadHash;
+		uksort($amzHeaders, 'strcmp');
 
 		// parameters
 		$parameters = array();

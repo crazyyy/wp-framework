@@ -5897,37 +5897,67 @@ class UpdraftPlus {
 				return apply_filters('updraftplus_com_shop', 'https://updraftplus.com/shop/');
 				break;
 			case 'premium':
-				return apply_filters('updraftplus_com_premium', 'https://updraftplus.com/shop/updraftplus-premium/');
+				return apply_filters('updraftplus_com_premium', 'https://teamupdraft.com/updraftplus/pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-premium&utm_creative_format=text');
 				break;
 			case 'buy-tokens':
 				return apply_filters('updraftplus_com_updraftclone_tokens', 'https://updraftplus.com/shop/updraftclone-tokens/');
 				break;
 			case 'lost-password':
-				return apply_filters('updraftplus_com_myaccount_lostpassword', 'https://updraftplus.com/my-account/lost-password/');
+				return apply_filters('updraftplus_com_myaccount_lostpassword', 'https://teamupdraft.com/my-account/lost-password/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=forgotten-details&utm_creative_format=text');
 				break;
 			case 'mothership':
 				return apply_filters('updraftplus_com_mothership', 'https://updraftplus.com/plugin-info');
 				break;
 			case 'shop_premium':
-				return apply_filters('updraftplus_com_shop_premium', 'https://updraftplus.com/shop/updraftplus-premium/');
+				return apply_filters('updraftplus_com_shop_premium', 'https://teamupdraft.com/updraftplus/pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-premium&utm_creative_format=text');
 				break;
 			case 'shop_vault_5':
-				return apply_filters('updraftplus_com_shop_vault_5', 'https://updraftplus.com/shop/updraftplus-vault-storage-5-gb/');
+				return apply_filters('updraftplus_com_shop_vault_5', 'https://teamupdraft.com/cart/?add-to-cart=1431&variation_id=1441?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=$1-trial&utm_creative_format=button');
 				break;
 			case 'shop_vault_15':
-				return apply_filters('updraftplus_com_shop_vault_15', 'https://updraftplus.com/shop/updraftplus-vault-storage-15-gb/');
+				return apply_filters('updraftplus_com_shop_vault_15', 'https://teamupdraft.com/updraftplus/updraftvault/#updraftvault-pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=15GB&utm_creative_format=button');
 				break;
 			case 'shop_vault_50':
-				return apply_filters('updraftplus_com_shop_vault_50', 'https://updraftplus.com/shop/updraftplus-vault-storage-50-gb/');
+				return apply_filters('updraftplus_com_shop_vault_50', 'https://teamupdraft.com/updraftplus/updraftvault/#updraftvault-pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=50GB&utm_creative_format=button');
 				break;
 			case 'shop_vault_250':
-				return apply_filters('updraftplus_com_shop_vault_250', 'https://updraftplus.com/shop/updraftplus-vault-storage-250-gb/');
+				return apply_filters('updraftplus_com_shop_vault_250', 'https://teamupdraft.com/updraftplus/updraftvault/#updraftvault-pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=250GB&utm_creative_format=button');
 				break;
 			case 'anon_backups':
 				return apply_filters('updraftplus_com_anon_backups', 'https://updraftplus.com/upcoming-updraftplus-feature-clone-data-anonymisation/');
 				break;
 			case 'clone_packages':
 				return apply_filters('updraftplus_com_clone_packages', 'https://updraftplus.com/faqs/what-is-the-largest-site-that-i-can-clone-with-updraftclone/');
+				break;
+			case 'premium_more_than_one_storage':
+				return apply_filters('updraftplus_premium_more_than_one_storage', 'https://teamupdraft.com/updraftplus/pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=more-than-one&utm_creative_format=text');
+				break;
+			case 'premium_rackspace':
+				return apply_filters('updraftplus_premium_rackspace', 'https://teamupdraft.com/updraftplus/features/rackspace-cloudfiles?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=rackspace-container&utm_creative_format=text');
+				break;
+			case 'premium_onedrive':
+				return apply_filters('updraftplus_premium_onedrive', 'https://teamupdraft.com/updraftplus/wordpress-cloud-storage-options?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=back-up-to-onedrive&utm_creative_format=text');
+				break;
+			case 'premium_azure':
+				return apply_filters('updraftplus_premium_azure', 'https://teamupdraft.com/updraftplus/wordpress-cloud-storage-options?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=backup-to-microsoft-azure&utm_creative_format=text');
+				break;
+			case 'premium_sftp':
+				return apply_filters('updraftplus_premium_sftp', 'https://teamupdraft.com/updraftplus/wordpress-cloud-storage-options?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=backup-via-sftp-and-scp&utm_creative_format=text');
+				break;
+			case 'premium_googlecloud':
+				return apply_filters('updraftplus_premium_googlecloud', 'https://teamupdraft.com/updraftplus/wordpress-cloud-storage-options?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=backup-to-google-cloud&utm_creative_format=text');
+				break;
+			case 'premium_backblaze':
+				return apply_filters('updraftplus_premium_backblaze', 'https://teamupdraft.com/updraftplus/wordpress-cloud-storage-options?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=backup-to-backblaze&utm_creative_format=text');
+				break;
+			case 'premium_webdav':
+				return apply_filters('updraftplus_premium_webdav', 'https://teamupdraft.com/updraftplus/wordpress-cloud-storage-options?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=backup-to-webdav&utm_creative_format=text');
+				break;
+			case 'premium_pcloud':
+				return apply_filters('updraftplus_premium_pcloud', 'https://teamupdraft.com/updraftplus/wordpress-cloud-storage-options?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=backup-to-pcloud&utm_creative_format=text');
+				break;
+			case 'premium_email':
+				return apply_filters('updraftplus_premium_email', 'https://teamupdraft.com/updraftplus/features/advanced-wordpress-backup-reports?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=for-more-email-options&utm_creative_format=notice');
 				break;
 			default:
 				return 'URL not found ('.$which_page.')';

@@ -45,23 +45,30 @@ class Rule_Cookie_Prevent_Bruteforce extends Rule {
 		$brute_force_secret_word = $aiowps_firewall_config->get_value('aios_brute_force_secret_word');
 		$brute_force_secret_cookie_name = $aiowps_firewall_config->get_value('aios_brute_force_secret_cookie_name');
 		$login_page_slug = $aiowps_firewall_config->get_value('aios_login_page_slug');
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce.
 		if (!isset($_GET[$brute_force_secret_word])) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
 			$brute_force_secret_cookie_val = isset($_COOKIE[$brute_force_secret_cookie_name]) ? $_COOKIE[$brute_force_secret_cookie_name] : '';
 			$pw_protected_exception = $aiowps_firewall_config->get_value('aios_brute_force_attack_prevention_pw_protected_exception');
 			$prevent_ajax_exception = $aiowps_firewall_config->get_value('aios_brute_force_attack_prevention_ajax_exception');
-			
+
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
 			if (isset($_SERVER['REQUEST_URI']) && '' != $_SERVER['REQUEST_URI'] && !hash_equals($brute_force_secret_cookie_val, \AIOS_Helper::get_hash($brute_force_secret_word))) {
+
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
+				$request_uri = $_SERVER['REQUEST_URI'];
+
 				// admin section or login page or login custom slug called
-				$is_admin_or_login = (false != strpos($_SERVER['REQUEST_URI'], 'wp-admin') || false != strpos($_SERVER['REQUEST_URI'], 'wp-login') || ('' != $login_page_slug && false != strpos($_SERVER['REQUEST_URI'], $login_page_slug))) ? 1 : 0;
+				$is_admin_or_login = (false != strpos($request_uri, 'wp-admin') || false != strpos($request_uri, 'wp-login') || ('' != $login_page_slug && false != strpos($request_uri, $login_page_slug))) ? 1 : 0;
 				
 				// admin side ajax called
-				$is_admin_ajax_request = ('1' == $prevent_ajax_exception && false != strpos($_SERVER['REQUEST_URI'], 'wp-admin/admin-ajax.php')) ? intval($prevent_ajax_exception) : 0;
+				$is_admin_ajax_request = ('1' == $prevent_ajax_exception && false != strpos($request_uri, 'wp-admin/admin-ajax.php')) ? intval($prevent_ajax_exception) : 0;
 				
 				// password protected page called
-				$is_password_protected_access = ('1' == $pw_protected_exception && isset($_GET['action']) && 'postpass' == $_GET['action']) ? 1 : 0;
+				$is_password_protected_access = ('1' == $pw_protected_exception && isset($_GET['action']) && 'postpass' == sanitize_text_field(wp_unslash($_GET['action']))) ? 1 : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce.
 				
 				// logout action called
-				$is_logout_action = (isset($_GET['action']) && 'logout' == $_GET['action']) ? 1 : 0;
+				$is_logout_action = (isset($_GET['action']) && 'logout' == sanitize_text_field(wp_unslash($_GET['action']))) ? 1 : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce.
 				
 				// cookie based brute force on and accessing admin without ajax and password protected then redirect
 				if ($is_admin_or_login && !$is_admin_ajax_request && !$is_password_protected_access && !$is_logout_action) {

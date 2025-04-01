@@ -140,7 +140,8 @@ class Utility {
 		} else {
 			$dir_perms = 0777;
 		}
-	
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- PCP error. WP not loaded. WP API not available.
 		if (@mkdir($target, $dir_perms, true)) {
 	
 			/*
@@ -150,6 +151,7 @@ class Utility {
 			if (($dir_perms & ~umask()) != $dir_perms) {
 				$folder_parts = explode('/', substr($target, strlen($target_parent) + 1));
 				for ($i = 1, $c = count($folder_parts); $i <= $c; $i++) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions -- PCP error. WP not loaded. WP API not available.
 					chmod($target_parent . '/' . implode('/', array_slice($folder_parts, 0, $i)), $dir_perms);
 				}
 			}

@@ -14,7 +14,7 @@ class AIOWPSecurity_Captcha {
 	 */
 	public function __construct() {
 		global $aio_wp_security;
-
+		
 		$this->upgrade_captcha_options();
 		add_action('login_enqueue_scripts', array($this, 'aiowps_login_enqueue'));
 		add_filter('script_loader_tag', array($this, 'add_cfasync_data_attribute_to_captcha_tag'), 10, 2);
@@ -110,9 +110,9 @@ class AIOWPSecurity_Captcha {
 	 */
 	public function aiowps_login_enqueue() {
 		global $aio_wp_security;
-		
+
 		if ($aio_wp_security->is_login_lockdown_by_const()) return;
-		
+
 		if ('1' != $aio_wp_security->configs->get_value('aiowps_enable_login_captcha') && '1' != $aio_wp_security->configs->get_value('aiowps_enable_registration_page_captcha')) return;
 
 		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
@@ -167,11 +167,11 @@ class AIOWPSecurity_Captcha {
 	 */
 	public function insert_captcha_custom_login($cust_html_code) {
 		global $aio_wp_security;
-		
+
 		if ($aio_wp_security->is_login_lockdown_by_const()) return '';
 
 		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
-		
+
 		switch ($default_captcha) {
 			case 'cloudflare-turnstile':
 			case 'google-recaptcha-v2':
@@ -183,7 +183,7 @@ class AIOWPSecurity_Captcha {
 				$cap_form .= '<div class="aiowps-captcha-equation"><strong>';
 				$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question();
 				$cap_form .= $maths_question_output . '</strong></div></p>';
-	
+
 				$cust_html_code .= $cap_form;
 				return $cust_html_code;
 				break;
@@ -212,23 +212,23 @@ class AIOWPSecurity_Captcha {
 				<label>'.__('This content is password protected.', 'all-in-one-wp-security-and-firewall').' '.__('To view it please enter your password below:', 'all-in-one-wp-security-and-firewall').'</label>
 				<label for="'.esc_attr($label).'">'.__('Password:', 'all-in-one-wp-security-and-firewall').'</label>
 				<input name="post_password" id="'.esc_attr($label).'" type="password" size="20" />';
-				switch ($default_captcha) {
-					case 'cloudflare-turnstile':
-					case 'google-recaptcha-v2':
-						$cust_html_code .= $this->get_captcha_form($default_captcha, 0, true);
-						$this->add_captcha_script();
-						break;
-					case 'simple-math':
-						$captcha_form = '<p class="aiowps-captcha"><label>'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
-						$captcha_form .= '<div class="aiowps-captcha-equation"><strong>';
-						$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question();
-						$captcha_form .= $maths_question_output . '</strong></div></p>';
-						$cust_html_code .= $captcha_form;
-						break;
-					default:
-						break;
-				}
-				$cust_html_code .= '<input type="submit" name="Submit" class="button" value="'.__('Enter', 'all-in-one-wp-security-and-firewall').'" />
+		switch ($default_captcha) {
+			case 'cloudflare-turnstile':
+			case 'google-recaptcha-v2':
+				$cust_html_code .= $this->get_captcha_form($default_captcha, 0, true);
+				$this->add_captcha_script();
+				break;
+			case 'simple-math':
+				$captcha_form = '<p class="aiowps-captcha"><label>'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
+				$captcha_form .= '<div class="aiowps-captcha-equation"><strong>';
+				$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question();
+				$captcha_form .= $maths_question_output . '</strong></div></p>';
+				$cust_html_code .= $captcha_form;
+				break;
+			default:
+				break;
+		}
+		$cust_html_code .= '<input type="submit" name="Submit" class="button" value="'.__('Enter', 'all-in-one-wp-security-and-firewall').'" />
 			</form>
 		</div>';
 		return $cust_html_code;
@@ -299,22 +299,22 @@ class AIOWPSecurity_Captcha {
 	 */
 	public function print_captcha_api_woo() {
 		global $aio_wp_security;
-		
-		
+
+
 		//captcha should only show for woo account and checkout page
 		if ((function_exists('is_account_page') && !is_account_page()) && (function_exists('is_checkout') && !is_checkout()) && !apply_filters('aios_print_captcha_api_woo', false)) return;
 
 		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
 
 		if ('cloudflare-turnstile' == $default_captcha) :
-		$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'));
-		?>
-		<script src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer></script>
+			$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'));
+			?>
+			<script src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer></script>
 		<?php
 		elseif ('google-recaptcha-v2' == $default_captcha) :
-		$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_recaptcha_site_key'));
-		?>
-		<script>
+			$site_key = esc_html($aio_wp_security->configs->get_value('aiowps_recaptcha_site_key'));
+			?>
+			<script>
 				var verifyCallback = function(response) {
 					alert(response);
 				};
@@ -322,13 +322,13 @@ class AIOWPSecurity_Captcha {
 					if (jQuery('.aios-wc-captcha').length) {
 						jQuery('.aios-wc-captcha').each(function(index, element) {
 							grecaptcha.render(element, {
-							'sitekey' : '<?php echo $site_key; ?>',
+								'sitekey' : '<?php echo $site_key; ?>',
 							});
 						});
 					}
 				};
-		</script>
-		<script src='https://www.google.com/recaptcha/api.js?hl=<?php echo $this->get_google_recaptcha_compatible_site_locale(); ?>&onload=onloadCallback&render=explicit' async defer></script>
+			</script>
+			<script src='https://www.google.com/recaptcha/api.js?hl=<?php echo $this->get_google_recaptcha_compatible_site_locale(); ?>&onload=onloadCallback&render=explicit' async defer></script>
 		<?php
 		endif;
 	}
@@ -549,7 +549,7 @@ class AIOWPSecurity_Captcha {
 	 */
 	public function verify_captcha_submit() {
 		global $aio_wp_security;
-		
+
 		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
 
 		switch ($default_captcha) {
@@ -559,7 +559,7 @@ class AIOWPSecurity_Captcha {
 
 				// Expected CAPTCHA field in $_POST but got none!
 				if (!array_key_exists('cf-turnstile-response', $_POST)) return false;
-				
+
 				$cf_turnstile_response = isset($_POST['cf-turnstile-response']) ? stripslashes($_POST['cf-turnstile-response']) : '';
 				$verify_captcha = $this->verify_turnstile_recaptcha($cf_turnstile_response);
 				return $verify_captcha;
@@ -654,7 +654,7 @@ class AIOWPSecurity_Captcha {
 	 * @return boolean - true if valid otherwise false
 	 */
 	private function verify_captcha_response($url, $secret, $resp_token) {
-		
+
 		$is_humanoid = false;
 
 		if (empty($resp_token)) return $is_humanoid;
@@ -672,7 +672,7 @@ class AIOWPSecurity_Captcha {
 
 		$response = wp_remote_retrieve_body($response);
 		$response = json_decode($response, true);
-		
+
 		if (isset($response['success']) && true == $response['success']) $is_humanoid = true;
 
 		// We did not get a success response so check for the "timeout-or-duplicate" error code because it's possible we have sent this request a second time if another plugin has recalled the WP authentication code and this error code means the captcha has already been solved so return success

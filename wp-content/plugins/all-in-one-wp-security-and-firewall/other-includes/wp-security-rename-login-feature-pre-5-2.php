@@ -12,11 +12,11 @@
 
 // Redirect to https login if forced to use SSL
 if (force_ssl_admin() && ! is_ssl()) {
-	if (0 === strpos($_SERVER['REQUEST_URI'], 'http')) {
-		wp_safe_redirect(set_url_scheme($_SERVER['REQUEST_URI'], 'https'));
+	if (0 === strpos(isset($_SERVER['REQUEST_URI']) ? sanitize_url(wp_unslash($_SERVER['REQUEST_URI'])) : '', 'http')) {
+		wp_safe_redirect(set_url_scheme(sanitize_url(wp_unslash($_SERVER['REQUEST_URI'], 'https'))));
 		exit();
 	} else {
-		wp_safe_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+		wp_safe_redirect('https://' . isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '' . sanitize_url(wp_unslash($_SERVER['REQUEST_URI'])));
 		exit();
 	}
 }
@@ -78,7 +78,7 @@ $login_title = apply_filters('login_title', $login_title, $title);
 <!--<![endif]-->
 <head>
 	<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
-	<title><?php echo $login_title; ?></title>
+	<title><?php echo esc_html($login_title); ?></title>
 	<?php
 
 	wp_enqueue_style('login');
@@ -179,7 +179,7 @@ $login_title = apply_filters('login_title', $login_title, $title);
 do_action('login_header');
 ?>
 <div id="login">
-	<h1><a href="<?php echo esc_url($login_header_url); ?>" title="<?php echo esc_attr($login_header_title); ?>" tabindex="-1"><?php echo $login_header_text; ?></a></h1>
+	<h1><a href="<?php echo esc_url($login_header_url); ?>" title="<?php echo esc_attr($login_header_title); ?>" tabindex="-1"><?php echo esc_html($login_header_text); ?></a></h1>
 	<?php
 
 	unset($login_header_url, $login_header_title);
@@ -194,7 +194,7 @@ do_action('login_header');
 
 	$message = apply_filters('login_message', $message);
 	if (!empty($message))
-		echo $message . "\n";
+		echo wp_kses_post($message) . "\n";
 
 	// In case a plugin uses $error rather than the $wp_errors object
 	if (!empty($error)) {
@@ -223,7 +223,7 @@ do_action('login_header');
 			 *
 			 * @param string $errors Login error message.
 			 */
-			echo '<div id="login_error">' . apply_filters('login_errors', $errors) . "</div>\n";
+			echo '<div id="login_error">' . wp_kses_post(apply_filters('login_errors', $errors)) . "</div>\n";
 		}
 		if (! empty($messages)) {
 			/**
@@ -233,7 +233,7 @@ do_action('login_header');
 			 *
 			 * @param string $messages Login messages.
 			 */
-			echo '<p class="message">' . apply_filters('login_messages', $messages) . "</p>\n";
+			echo '<p class="message">' . wp_kses_post(apply_filters('login_messages', $messages)) . "</p>\n";
 		}
 	}
 	} // End of login_header()
@@ -250,7 +250,7 @@ do_action('login_header');
 	if (!$interim_login) : ?>
 	<p id="backtoblog"><a href="<?php echo esc_url(home_url('/')); ?>"><?php
 		/* translators: %s: site title */
-		printf(_x('&larr; Back to %s', 'site'), get_bloginfo('title', 'display'));
+		printf(esc_html_x('&larr; Back to %s', 'site', 'all-in-one-wp-security-and-firewall'), esc_html(get_bloginfo('title', 'display')));
 	?></a></p>
 	<?php
 		if (function_exists('the_privacy_policy_link')) {
@@ -263,7 +263,7 @@ do_action('login_header');
 
 <?php if (!empty($input_id)) : ?>
 	<script type="text/javascript">
-		try{document.getElementById('<?php echo $input_id; ?>').focus();}catch(e) {}
+		try{document.getElementById('<?php echo esc_js($input_id); ?>').focus();}catch(e) {}
 		if (typeof wpOnload=='function')wpOnload();
 	</script>
 		<?php endif; ?>
@@ -317,16 +317,18 @@ function wp_login_viewport_meta() {
 function retrieve_password() {
 	$errors = new WP_Error();
 
+	// phpcs:disable WordPress.Security.NonceVerification.Missing -- No nonce available.
 	if (empty($_POST['user_login']) || ! is_string($_POST['user_login'])) {
 		$errors->add('empty_username', __('<strong>ERROR</strong>: Enter a username or email address.', 'all-in-one-wp-security-and-firewall'));
-	} elseif (strpos($_POST['user_login'], '@')) {
-		$user_data = get_user_by('email', trim(wp_unslash($_POST['user_login'])));
+	} elseif (strpos(sanitize_email(wp_unslash($_POST['user_login'])), '@')) {
+		$user_data = get_user_by('email', trim(sanitize_email(wp_unslash($_POST['user_login']))));
 		if (empty($user_data))
 			$errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.', 'all-in-one-wp-security-and-firewall'));
 	} else {
-		$login = trim($_POST['user_login']);
+		$login = trim(sanitize_email(wp_unslash($_POST['user_login'])));
 		$user_data = get_user_by('login', $login);
 	}
+	// phpcs:enable WordPress.Security.NonceVerification.Missing -- No nonce available.
 
 	/**
 	* Fires before errors are returned from a password reset request.
@@ -406,7 +408,7 @@ function retrieve_password() {
 	$message = apply_filters('retrieve_password_message', $message, $key, $user_login, $user_data);
 
 	if ($message && !wp_mail($user_email, wp_specialchars_decode($title), $message))
-		wp_die(__('The email could not be sent.', 'all-in-one-wp-security-and-firewall') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.', 'all-in-one-wp-security-and-firewall'));
+		wp_die(esc_html__('The email could not be sent.', 'all-in-one-wp-security-and-firewall') . "<br />\n" . esc_html__('Possible reason: your host may have disabled the mail() function.', 'all-in-one-wp-security-and-firewall'));
 
 	return true;
 }
@@ -414,8 +416,8 @@ function retrieve_password() {
 //
 // Main
 //
-
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login';
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce available.
+$action = isset($_REQUEST['action']) ? sanitize_text_field(wp_unslash($_REQUEST['action'])) : 'login';
 $errors = new WP_Error();
 
 if (isset($_GET['key']))
@@ -430,10 +432,13 @@ nocache_headers();
 header('Content-Type: '.get_bloginfo('html_type').'; charset='.get_bloginfo('charset'));
 
 if (defined('RELOCATE') && RELOCATE) { // Move flag is set
-	if (isset($_SERVER['PATH_INFO']) && ($_SERVER['PATH_INFO'] != $_SERVER['PHP_SELF']))
-		$_SERVER['PHP_SELF'] = str_replace($_SERVER['PATH_INFO'], '', $_SERVER['PHP_SELF']);
+	$path_info = isset($_SERVER['PATH_INFO']) ? sanitize_text_field(wp_unslash($_SERVER['PATH_INFO'])) : '';
+	$php_self = isset($_SERVER['PHP_SELF']) ? sanitize_text_field(wp_unslash($_SERVER['PHP_SELF'])) : '';
 
-	$url = dirname(set_url_scheme('http://' .  $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']));
+	if ('' !== $path_info && ($path_info != $php_self))
+		$_SERVER['PHP_SELF'] = str_replace($path_info, '', $php_self);
+
+	$url = dirname(set_url_scheme('http://' . isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '' . $php_self));
 	if (get_option('siteurl') != $url)
 		update_option('siteurl', $url);
 }
@@ -442,7 +447,7 @@ setcookie(TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN, is_ssl()
 if (SITECOOKIEPATH != COOKIEPATH)
 	setcookie(TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
 
-$lang            = ! empty($_GET['wp_lang']) ? sanitize_text_field($_GET['wp_lang']) : '';
+$lang            = ! empty($_GET['wp_lang']) ? sanitize_text_field(wp_unslash($_GET['wp_lang'])) : '';
 $switched_locale = false;
 
 if (function_exists('switch_to_locale')) {
@@ -467,7 +472,7 @@ do_action('login_init');
  */
 do_action("login_form_{$action}");
 
-$http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
+$http_post = ('POST' == isset($_SERVER['REQUEST_METHOD']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])) : '');
 $interim_login = isset($_REQUEST['interim-login']);
 
 /**
@@ -502,6 +507,7 @@ switch ($action) {
 	 */
 	$expire = apply_filters('post_password_expires', time() + 10 * DAY_IN_SECONDS);
 
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitizing password not recommended. It's going to be hashed anyway.
 	setcookie('wp-postpass_' . COOKIEHASH, $hasher->HashPassword(wp_unslash($_POST['post_password'])), $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
 
 	if ($switched_locale) {
@@ -518,7 +524,7 @@ switch ($action) {
 	wp_logout();
 
 	if (! empty($_REQUEST['redirect_to'])) {
-			$redirect_to = $requested_redirect_to = $_REQUEST['redirect_to'];
+			$redirect_to = $requested_redirect_to = sanitize_text_field(wp_unslash($_REQUEST['redirect_to']));
 		} else {
 		$redirect_to = 'wp-login.php?loggedout=true';
 		$requested_redirect_to = '';
@@ -547,7 +553,7 @@ switch ($action) {
 	if ($http_post) {
 			$errors = retrieve_password();
 			if (!is_wp_error($errors)) {
-			$redirect_to = !empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : 'wp-login.php?checkemail=confirm';
+			$redirect_to = !empty($_REQUEST['redirect_to']) ? sanitize_text_field(wp_unslash($_REQUEST['redirect_to'])) : 'wp-login.php?checkemail=confirm';
 			wp_safe_redirect($redirect_to);
 			exit();
 				}
@@ -561,7 +567,7 @@ switch ($action) {
 				}
 		}
 
-	$lostpassword_redirect = ! empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : '';
+	$lostpassword_redirect = ! empty($_REQUEST['redirect_to']) ? sanitize_text_field(wp_unslash($_REQUEST['redirect_to'])) : '';
 	/**
 	 * Filter the URL redirected to after submitting the lostpassword/retrievepassword form.
 	 *
@@ -583,14 +589,14 @@ switch ($action) {
 	$user_login = '';
 
 	if (isset($_POST['user_login']) && is_string($_POST['user_login'])) {
-			$user_login = wp_unslash($_POST['user_login']);
+			$user_login = sanitize_text_field(wp_unslash($_POST['user_login']));
 	}
 		
 	?>
 
 		<form name="lostpasswordform" id="lostpasswordform" action="<?php echo esc_url(network_site_url('wp-login.php?action=lostpassword', 'login_post')); ?>" method="post">
 			<p>
-				<label for="user_login" ><?php _e('Username or Email Address', 'all-in-one-wp-security-and-firewall'); ?><br />
+				<label for="user_login" ><?php esc_html_e('Username or Email Address', 'all-in-one-wp-security-and-firewall'); ?><br />
 					<input type="text" name="user_login" id="user_login" class="input" value="<?php echo esc_attr($user_login); ?>" size="20" /></label>
 			</p>
 	<?php
@@ -605,7 +611,7 @@ switch ($action) {
 		</form>
 
 		<p id="nav">
-			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php esc_html_e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
 			<?php
 			if (get_option('users_can_register')) :
 				$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register', 'all-in-one-wp-security-and-firewall'));
@@ -613,7 +619,7 @@ switch ($action) {
 				echo esc_html($login_link_separator);
 
 				// This filter is documented in wp-includes/general-template.php
-				echo apply_filters('register', $registration_url);
+				echo wp_kses_post(apply_filters('register', $registration_url));
 			endif;
 			?>
 		</p>
@@ -627,19 +633,19 @@ switch ($action) {
 		break;
 	case 'resetpass':
 	case 'rp':
-	list($rp_path) = explode('?', wp_unslash($_SERVER['REQUEST_URI']));
+	list($rp_path) = explode('?', sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])));
 	$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-	if (isset($_GET['key'])) {
-			$value = sprintf('%s:%s', wp_unslash($_GET['login']), wp_unslash($_GET['key']));
+	if (isset($_GET['login']) && isset($_GET['key'])) {
+			$value = sprintf('%s:%s', sanitize_text_field(wp_unslash($_GET['login'])), sanitize_text_field(wp_unslash($_GET['key'])));
 			setcookie($rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true);
 			wp_safe_redirect(remove_query_arg(array('key', 'login')));
 			exit;
 		}
 
-	if (isset($_COOKIE[$rp_cookie]) && 0 < strpos($_COOKIE[$rp_cookie], ':')) {
-			list($rp_login, $rp_key) = explode(':', wp_unslash($_COOKIE[$rp_cookie]), 2);
+	if (isset($_COOKIE[$rp_cookie]) && 0 < strpos(sanitize_text_field(wp_unslash($_COOKIE[$rp_cookie])), ':')) {
+			list($rp_login, $rp_key) = explode(':', sanitize_text_field(wp_unslash($_COOKIE[$rp_cookie])), 2);
 			$user = check_password_reset_key($rp_key, $rp_login);
-			if (isset($_POST['pass1']) && ! hash_equals($rp_key, $_POST['rp_key'])) {
+			if (isset($_POST['pass1']) && ! hash_equals($rp_key, isset($_POST['rp_key']) ? sanitize_key(wp_unslash($_POST['rp_key'])) : '')) {
 			$user = false;
 				}
 		} else {
@@ -658,7 +664,8 @@ switch ($action) {
 
 	$errors = new WP_Error();
 
-	if (isset($_POST['pass1']) && $_POST['pass1'] != $_POST['pass2'])
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Not recommended to sanitize password.
+	if (isset($_POST['pass1']) && wp_unslash($_POST['pass1']) != isset($_POST['pass2']) ? wp_unslash($_POST['pass2']) : '')
 	$errors->add('password_reset_mismatch', __('The passwords do not match.', 'all-in-one-wp-security-and-firewall'));
 
 	/**
@@ -672,12 +679,13 @@ switch ($action) {
 	do_action('validate_password_reset', $errors, $user);
 
 	if ((! $errors->get_error_code()) && isset($_POST['pass1']) && !empty($_POST['pass1'])) {
-			reset_password($user, $_POST['pass1']);
-			setcookie($rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true);
-			login_header(__('Password Reset', 'all-in-one-wp-security-and-firewall'), '<p class="message reset-pass">' . __('Your password has been reset.', 'all-in-one-wp-security-and-firewall') . ' <a href="' . esc_url(wp_login_url()) . '">' . __('Log in', 'all-in-one-wp-security-and-firewall') . '</a></p>');
-			login_footer();
-			exit;
-		}
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Not recommended to sanitize password.
+		reset_password($user, wp_unslash($_POST['pass1']));
+		setcookie($rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true);
+		login_header(__('Password Reset', 'all-in-one-wp-security-and-firewall'), '<p class="message reset-pass">' . __('Your password has been reset.', 'all-in-one-wp-security-and-firewall') . ' <a href="' . esc_url(wp_login_url()) . '">' . __('Log in', 'all-in-one-wp-security-and-firewall') . '</a></p>');
+		login_footer();
+		exit;
+	}
 
 	wp_enqueue_script('utils');
 	wp_enqueue_script('user-profile');
@@ -689,7 +697,7 @@ switch ($action) {
 
 			<div class="user-pass1-wrap">
 					<p>
-							<label for="pass1"><?php _e('New password', 'all-in-one-wp-security-and-firewall'); ?></label>
+							<label for="pass1"><?php esc_html_e('New password', 'all-in-one-wp-security-and-firewall'); ?></label>
 					</p>
 
 					<div class="wp-pwd">
@@ -699,21 +707,21 @@ switch ($action) {
 											<span class="dashicons dashicons-hidden"></span>
 									</span>
 							</div>
-							<div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php _e('Strength indicator', 'all-in-one-wp-security-and-firewall'); ?></div>
+							<div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php esc_html_e('Strength indicator', 'all-in-one-wp-security-and-firewall'); ?></div>
 					</div>
 					<div class="pw-weak">
 							<label>
 									<input type="checkbox" name="pw_weak" class="pw-checkbox" />
-	<?php _e('Confirm use of weak password', 'all-in-one-wp-security-and-firewall'); ?>
+	<?php esc_html_e('Confirm use of weak password', 'all-in-one-wp-security-and-firewall'); ?>
 							</label>
 					</div>
 			</div>
 			<p class="user-pass2-wrap">
-				<label for="pass2"><?php _e('Confirm new password', 'all-in-one-wp-security-and-firewall'); ?></label><br />
+				<label for="pass2"><?php esc_html_e('Confirm new password', 'all-in-one-wp-security-and-firewall'); ?></label><br />
 				<input type="password" name="pass2" id="pass2" class="input" size="20" value="" autocomplete="off" />
 			</p>
 
-			<p class="description indicator-hint"><?php echo wp_get_password_hint(); ?></p>
+			<p class="description indicator-hint"><?php echo esc_html(wp_get_password_hint()); ?></p>
 			<br class="clear" />
 
 	<?php
@@ -731,7 +739,7 @@ switch ($action) {
 		</form>
 
 		<p id="nav">
-			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php esc_html_e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
 	<?php
 	if (get_option('users_can_register')) :
 			$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register', 'all-in-one-wp-security-and-firewall'));
@@ -739,7 +747,7 @@ switch ($action) {
 			echo esc_html($login_link_separator);
 
 			// This filter is documented in wp-includes/general-template.php
-			echo apply_filters('register', $registration_url);
+			echo wp_kses_post(apply_filters('register', $registration_url));
 		endif;
 	?>
 		</p>
@@ -772,23 +780,23 @@ switch ($action) {
 	$user_login = '';
 	$user_email = '';
 	if ($http_post) {
-			if (isset($_POST['user_login']) && is_string($_POST['user_login'])) {
-			$user_login = $_POST['user_login'];
-				}
+			if (isset($_POST['user_login']) && is_string(sanitize_text_field(wp_unslash($_POST['user_login'])))) {
+				$user_login = sanitize_text_field(wp_unslash($_POST['user_login']));
+			}
 
-			if (isset($_POST['user_email']) && is_string($_POST['user_email'])) {
-			$user_email = wp_unslash($_POST['user_email']);
-				}
+			if (isset($_POST['user_email']) && is_string(sanitize_email(wp_unslash($_POST['user_email'])))) {
+				$user_email = sanitize_email(wp_unslash($_POST['user_email']));
+			}
 
 			$errors = register_new_user($user_login, $user_email);
 			if (!is_wp_error($errors)) {
-			$redirect_to = !empty($_POST['redirect_to']) ? $_POST['redirect_to'] : 'wp-login.php?checkemail=registered';
-			wp_safe_redirect($redirect_to);
-			exit();
-				}
+				$redirect_to = !empty($_POST['redirect_to']) ? sanitize_text_field(wp_unslash($_POST['redirect_to'])) : 'wp-login.php?checkemail=registered';
+				wp_safe_redirect($redirect_to);
+				exit();
+			}
 		}
 
-	$registration_redirect = ! empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : '';
+	$registration_redirect = ! empty($_REQUEST['redirect_to']) ? sanitize_text_field(wp_unslash($_REQUEST['redirect_to'])) : '';
 	/**
 	 * Filter the registration redirect URL.
 	 *
@@ -802,11 +810,11 @@ switch ($action) {
 
 		<form name="registerform" id="registerform" action="<?php echo esc_url(site_url('wp-login.php?action=register', 'login_post')); ?>" method="post" novalidate="novalidate">
 			<p>
-				<label for="user_login"><?php _e('Username', 'all-in-one-wp-security-and-firewall'); ?><br />
+				<label for="user_login"><?php esc_html_e('Username', 'all-in-one-wp-security-and-firewall'); ?><br />
 					<input type="text" name="user_login" id="user_login" class="input" value="<?php echo esc_attr(wp_unslash($user_login)); ?>" size="20" /></label>
 			</p>
 			<p>
-				<label for="user_email"><?php _e('Email', 'all-in-one-wp-security-and-firewall'); ?><br />
+				<label for="user_email"><?php esc_html_e('Email', 'all-in-one-wp-security-and-firewall'); ?><br />
 					<input type="email" name="user_email" id="user_email" class="input" value="<?php echo esc_attr(wp_unslash($user_email)); ?>" size="25" /></label>
 			</p>
 	<?php
@@ -817,16 +825,16 @@ switch ($action) {
 	 */
 	do_action('register_form');
 	?>
-			<p id="reg_passmail"><?php _e('Registration confirmation will be emailed to you.', 'all-in-one-wp-security-and-firewall'); ?></p>
+			<p id="reg_passmail"><?php esc_html_e('Registration confirmation will be emailed to you.', 'all-in-one-wp-security-and-firewall'); ?></p>
 			<br class="clear" />
 			<input type="hidden" name="redirect_to" value="<?php echo esc_attr($redirect_to); ?>" />
 			<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Register', 'all-in-one-wp-security-and-firewall'); ?>"></p>
 		</form>
 
 		<p id="nav">
-			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php _e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="<?php echo esc_url(wp_login_url()); ?>"><?php esc_html_e('Log in', 'all-in-one-wp-security-and-firewall'); ?></a>
 	<?php echo esc_html($login_link_separator); ?>
-			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php _e('Lost your password?', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php esc_html_e('Lost your password?', 'all-in-one-wp-security-and-firewall'); ?></a>
 		</p>
 
 	<?php
@@ -838,7 +846,7 @@ switch ($action) {
 		break;
 	case 'confirmaction':
 	if (! isset($_GET['request_id'])) {
-			wp_die(__('Invalid request.', 'all-in-one-wp-security-and-firewall'));
+			wp_die(esc_html__('Invalid request.', 'all-in-one-wp-security-and-firewall'));
 		}
 
 	$request_id = (int) $_GET['request_id'];
@@ -847,10 +855,11 @@ switch ($action) {
 			$key    = sanitize_text_field(wp_unslash($_GET['confirm_key']));
 			$result = wp_validate_user_request_key($request_id, $key);
 		} else {
-		$result = new WP_Error('invalid_key', __('Invalid key', 'all-in-one-wp-security-and-firewall'));
+		$result = new WP_Error('invalid_key', esc_html__('Invalid key', 'all-in-one-wp-security-and-firewall'));
 		}
 
 	if (is_wp_error($result)) {
+			// phpcs:ignore	WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP error. $result is a WP_Error object. Error message already escaped.
 			wp_die($result);
 		}
 		
@@ -882,7 +891,7 @@ switch ($action) {
 
 	// If the user wants ssl but the session is not ssl, force a secure cookie.
 	if (!empty($_POST['log']) && !force_ssl_admin()) {
-			$user_name = sanitize_user($_POST['log']);
+			$user_name = sanitize_user(wp_unslash($_POST['log']));
 			$user = get_user_by('login', $user_name);
 
 			if (! $user && strpos($user_name, '@')) {
@@ -898,7 +907,7 @@ switch ($action) {
 	}
 
 	if (isset($_REQUEST['redirect_to'])) {
-			$redirect_to = $_REQUEST['redirect_to'];
+			$redirect_to = sanitize_text_field(wp_unslash($_REQUEST['redirect_to']));
 			// Redirect to https if user wants ssl
 			if ($secure_cookie && false !== strpos($redirect_to, 'wp-admin'))
 			$redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
@@ -921,7 +930,7 @@ switch ($action) {
 				}
 		}
 
-	$requested_redirect_to = isset($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : '';
+	$requested_redirect_to = isset($_REQUEST['redirect_to']) ? sanitize_text_field(wp_unslash($_REQUEST['redirect_to'])) : '';
 	/**
 	 * Filter the login redirect URL.
 	 *
@@ -943,7 +952,7 @@ switch ($action) {
 				// This action is documented in wp-login.php
 				do_action('login_footer'); ?>
 					<?php if ($customize_login) : ?>
-					<script type="text/javascript">setTimeout(function() { new wp.customize.Messenger({ url: '<?php echo wp_customize_url(); ?>', channel: 'login' }).send('login') }, 1000);</script>
+					<script type="text/javascript">setTimeout(function() { new wp.customize.Messenger({ url: '<?php echo esc_js(wp_customize_url()); ?>', channel: 'login' }).send('login') }, 1000);</script>
 				<?php endif; ?>
 			</body></html>
 	<?php		exit;
@@ -1006,14 +1015,14 @@ switch ($action) {
 	login_header(__('Log In', 'all-in-one-wp-security-and-firewall'), '', $errors);
 
 	if (isset($_POST['log']))
-	$user_login = ('incorrect_password' == $errors->get_error_code() || 'empty_password' == $errors->get_error_code()) ? esc_attr(wp_unslash($_POST['log'])) : '';
+	$user_login = ('incorrect_password' == $errors->get_error_code() || 'empty_password' == $errors->get_error_code()) ? esc_attr(sanitize_text_field(wp_unslash($_POST['log']))) : '';
 	$rememberme = ! empty($_POST['rememberme']);
 
 	if (! empty($errors->errors)) {
-			$aria_describedby_error = ' aria-describedby="login_error"';
-		} else {
+		$aria_describedby_error = ' aria-describedby="login_error"';
+	} else {
 		$aria_describedby_error = '';
-		}
+	}
 
 	//aiowps - this check is necessary because otherwise if variables are undefined we get a warning!
 	if (empty($user_login)) {
@@ -1027,12 +1036,12 @@ switch ($action) {
 
 <form name="loginform" id="loginform" action="<?php echo esc_url(site_url('wp-login.php', 'login_post')); ?>" method="post">
 	<p>
-		<label for="user_login"><?php _e('Username or Email Address', 'all-in-one-wp-security-and-firewall'); ?><br />
-		<input type="text" name="log" id="user_login"<?php echo $aria_describedby_error; ?> class="input" value="<?php echo esc_attr($user_login); ?>" size="20" /></label>
+		<label for="user_login"><?php esc_html_e('Username or Email Address', 'all-in-one-wp-security-and-firewall'); ?><br />
+		<input type="text" name="log" id="user_login"<?php echo wp_kses_post($aria_describedby_error); ?> class="input" value="<?php echo esc_attr($user_login); ?>" size="20" /></label>
 	</p>
 	<p>
-		<label for="user_pass"><?php _e('Password', 'all-in-one-wp-security-and-firewall'); ?><br />
-		<input type="password" name="pwd" id="user_pass"<?php echo $aria_describedby_error; ?> class="input" value="" size="20" /></label>
+		<label for="user_pass"><?php esc_html_e('Password', 'all-in-one-wp-security-and-firewall'); ?><br />
+		<input type="password" name="pwd" id="user_pass"<?php echo wp_kses_post($aria_describedby_error); ?> class="input" value="" size="20" /></label>
 	</p>
 <?php
 	/**
@@ -1064,12 +1073,12 @@ switch ($action) {
 					$registration_url = sprintf('<a href="%s">%s</a>', esc_url(wp_registration_url()), __('Register', 'all-in-one-wp-security-and-firewall'));
 
 					// This filter is documented in wp-includes/general-template.php
-					echo apply_filters('register', $registration_url);
+					echo wp_kses_post(apply_filters('register', $registration_url));
 
 					echo esc_html($login_link_separator);
 				endif;
 				?>
-			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php _e('Lost your password?', 'all-in-one-wp-security-and-firewall'); ?></a>
+			<a href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php esc_html_e('Lost your password?', 'all-in-one-wp-security-and-firewall'); ?></a>
 			<?php endif; ?>
 		</p>
 					<?php } ?>

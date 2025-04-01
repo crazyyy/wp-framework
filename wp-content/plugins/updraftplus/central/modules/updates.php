@@ -683,7 +683,21 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 			if (!empty($info['update']['requires'])) {
 				if (version_compare($wp_version, $info['update']['requires'], '<')) {
 					$is_compatible = false;
-					$message = esc_attr(sprintf(__('The latest update for this %s is not compatible with the WordPress version installed on the remote site.', 'updraftplus').' '.__('The minimum WordPress version supported by this %s is %s.', 'updraftplus'), $type, $type, $info['update']['requires']));
+
+					/* translators: %s: Plugin/theme type */
+					$message1 = sprintf(
+						__('The latest update for this %s is not compatible with the WordPress version installed on the remote site.', 'updraftplus'),
+						$type
+					);
+
+					/* translators: 1: Plugin/theme type, 2: Required WordPress version */
+					$message2 = sprintf(
+						__('The minimum WordPress version supported by this %1$s is %2$s.', 'updraftplus'),
+						$type,
+						$info['update']['requires']
+					);
+
+					$message = esc_attr($message1 . ' ' . $message2);
 				} else {
 					$is_compatible = true;
 				}
@@ -693,7 +707,21 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 			if (!empty($info['update']['requires_php'])) {
 				if (version_compare(PHP_VERSION, $info['update']['requires_php'], '<')) {
 					$is_compatible = false;
-					$message = esc_attr(sprintf(__('The latest update for this %s is not compatible with the PHP version installed on the remote site.', 'updraftplus').' '.__('The minimum PHP version supported by this %s is %s.', 'updraftplus'), $type, $type, $info['update']['requires_php']));
+
+					/* translators: %s: Plugin/theme type */
+					$message1 = sprintf(
+						__('The latest update for this %s is not compatible with the PHP version installed on the remote site.', 'updraftplus'),
+						$type
+					);
+
+					/* translators: 1: Plugin/theme type, 2: Required PHP version */
+					$message2 = sprintf(
+						__('The minimum PHP version supported by this %1$s is %2$s.', 'updraftplus'),
+						$type,
+						$info['update']['requires_php']
+					);
+
+					$message = esc_attr($message1 . ' ' . $message2);
 				} else {
 					$is_compatible = true;
 				}
@@ -703,6 +731,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 			if (!empty($info['update']['tested'])) {
 				if (version_compare($wp_version, $info['update']['tested'], '>')) {
 					$is_compatible = false;
+					// translators: %s: Plugin/theme type
 					$message = esc_attr(sprintf(__('The latest update for this %s has not been tested with the WordPress version installed on the remote site and may have compatibility issues when used.', 'updraftplus'), $type));
 				} else {
 					$is_compatible = true;
@@ -719,6 +748,58 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 			'compatible' => $is_compatible,
 			'compatible_message' => $message,
 		);
+	}
+
+	/**
+	 * Retrieve icons for plugin and screenshot for theme
+	 *
+	 * @param  string $type The type of the entity to process (e.g. 'plugin' or 'theme')
+	 * @param  string $slug The entity slug
+	 * @return string
+	 */
+	private function get_icons_screenshot($type, $slug) {
+		if (!in_array($type, array('plugin', 'theme'))) return '';
+
+		if ('plugin' == $type) {
+			if (!function_exists('plugins_api') && file_exists(ABSPATH.'wp-admin/includes/plugin-install.php')) {
+				include_once(ABSPATH.'wp-admin/includes/plugin-install.php');
+			}
+
+			// We make sure that the function now exists before we use it because
+			// the definition of this function maybe located in other places given
+			// the varying versions and changes to the WordPress platform.
+			if (function_exists('plugins_api')) {
+				$api = plugins_api('plugin_information', array(
+					'slug' => $slug,
+					'fields' => array('icons' => true),
+				));
+
+				if (!is_wp_error($api) && property_exists($api, 'icons')) {
+					return $api->icons;
+				}
+			}
+
+		} elseif ('theme' == $type) {
+			if (!function_exists('themes_api') && file_exists(ABSPATH.'wp-admin/includes/theme.php')) {
+				include_once(ABSPATH.'wp-admin/includes/theme.php');
+			}
+
+			// We make sure that the function now exists before we use it because
+			// the definition of this function maybe located in other places given
+			// the varying versions and changes to the WordPress platform.
+			if (function_exists('themes_api')) {
+				$api = themes_api('theme_information', array(
+					'slug' => $slug,
+					'fields' => array('screenshot_url' => true),
+				));
+
+				if (!is_wp_error($api) && property_exists($api, 'screenshot_url')) {
+					return $api->screenshot_url;
+				}
+			}
+		}
+
+		return '';
 	}
 
 	public function get_updates($options) {
@@ -773,6 +854,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 							'sections' => isset($update->update->sections) ? (array) $update->update->sections : null,
 							'requires' => isset($update->update->requires) ? $update->update->requires : null,
 							'requires_php' => isset($update->update->requires_php) ? $update->update->requires_php : null,
+							'icons' => isset($update->update->icons) ? $update->update->icons : $this->get_icons_screenshot('plugin', $update->update->slug),
 						),
 					);
 
@@ -818,6 +900,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 							'tested' => isset($update->update['tested']) ? $update->update['tested'] : null,
 							'requires' => $update->update['requires'],
 							'requires_php' => $update->update['requires_php'],
+							'screenshot_url' => isset($update->update['screenshot_url']) ? $update->update['screenshot_url'] : $this->get_icons_screenshot('theme', $update->update['theme']),
 						),
 					);
 

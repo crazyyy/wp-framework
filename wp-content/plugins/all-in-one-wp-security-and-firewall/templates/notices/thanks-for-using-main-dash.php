@@ -5,14 +5,14 @@
 	<h3>
 		<?php
 		if (AIOWPSecurity_Utility_Permissions::is_premium_installed()) {
-			esc_html_e('Thank you for using All-In-One Security (AIOS) Premium!', 'all-in-one-wp-security-and-firewall');
+			esc_html_e('Thank you for using All-In-One Security Premium!', 'all-in-one-wp-security-and-firewall');
 		} else {
-			esc_html_e('Thank you for using All-In-One Security (AIOS)!', 'all-in-one-wp-security-and-firewall');
+			esc_html_e('Thank you for using All-In-One Security!', 'all-in-one-wp-security-and-firewall');
 		}
 		?>
 	</h3>
 
-	<a href="https://aiosplugin.com/"><img id="aiowps-notice-logo" alt="All-In-One Security (AIOS)" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/aios_logo_wide.png'; ?>"></a>
+	<a href="https://teamupdraft.com/all-in-one-security/"><img id="aiowps-notice-logo" alt="All-In-One Security" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/aios_logo_wide.svg'; ?>"></a>
 
 	<div id="aiowps-dashnotice_wrapper" style="max-width: 800px;">
 		<p>
@@ -23,13 +23,13 @@
 		<ul>
 			<?php if (!AIOWPSecurity_Utility_Permissions::is_premium_installed()) : ?>
 			<li>
-				<a href="https://aiosplugin.com/?utm_medium=software&utm_source=aios&utm_content=aios-introduction-notice&utm_term=try-now-aios&utm_campaign=ad" target="_blank">
-					<strong><?php esc_html_e('All-In-One Security (AIOS):', 'all-in-one-wp-security-and-firewall'); ?></strong>
+				<a href="https://teamupdraft.com/all-in-one-security/?utm_medium=software&utm_source=aios&utm_content=aios-introduction-notice&utm_term=try-now-aios&utm_campaign=ad" target="_blank">
+					<strong><?php esc_html_e('All-In-One Security:', 'all-in-one-wp-security-and-firewall'); ?></strong>
 				</a>
 				<?php
 				printf(
 					__('Get malware scanning, country blocking, premium support and %s.', 'all-in-one-wp-security-and-firewall'),
-					'<a href="https://aiosplugin.com/features/" target="_blank">' . esc_html__('more', 'all-in-one-wp-security-and-firewall') . '</a>'
+					'<a href="https://teamupdraft.com/all-in-one-security/features/" target="_blank">' . esc_html__('more', 'all-in-one-wp-security-and-firewall') . '</a>'
 				);
 				?>
 			</li>

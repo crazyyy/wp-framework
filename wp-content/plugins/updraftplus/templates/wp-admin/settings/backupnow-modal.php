@@ -3,7 +3,7 @@
 
 	global $updraftplus;
 	
-	$premium_link = apply_filters('updraftplus_com_link', 'https://updraftplus.com/landing/updraftplus-premium');
+	$premium_link = apply_filters('updraftplus_com_link', 'https://teamupdraft.com/updraftplus/pricing/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=take-a-new-backup&utm_creative_format=text');
 	
 	$free_ret = '<em>'.__('All WordPress tables will be backed up.', 'updraftplus').' <a href="'.esc_url($premium_link).'">'. __('With UpdraftPlus Premium, you can choose to backup non-WordPress tables, backup only specified tables, and backup other databases too.', 'updraftplus').'</a></em>'."\n";
 ?>
@@ -14,10 +14,14 @@
 </p>
 
 <div class="incremental-free-only">
-	<p><?php echo sprintf(esc_html__('Incremental backups are a feature of %s (upgrade by following this link).', 'updraftplus'), '<a href="'.esc_url($updraftplus->get_url('premium')).'" target="_blank">UpdraftPlus Premium').'</a>'; ?>
+	<p>
+	<?php
+		/* translators: %s: "UpdraftPlus Premiums" as the product name that has incremental backups feature */
+		echo sprintf(esc_html__('Incremental backups are a feature of %s (upgrade by following this link).', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/pricing/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=incremental-backup&utm_creative_format=text" target="_blank">UpdraftPlus Premium').'</a>';
+	?>
 	</a>
 	<br>
-	<a href="https://updraftplus.com/tell-me-more-about-incremental-backups/" target="_blank"><?php esc_html_e('Find out more about incremental backups here.', 'updraftplus'); ?></a></p>
+	<a href="https://teamupdraft.com/updraftplus/features/wordpress-incremental-backup?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=take-a-new-backup&utm_creative_format=text" target="_blank"><?php esc_html_e('Find out more about incremental backups here.', 'updraftplus'); ?></a></p>
 </div>
 
 <p id="backupnow_database_container" class="new-backups-only">

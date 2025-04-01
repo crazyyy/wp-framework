@@ -813,6 +813,34 @@ class Ai1wm_Import_Database {
 			}
 		}
 
+		// Get WordPress Absolute Path
+		if ( isset( $config['WordPress']['Absolute'] ) && ( $absolute_path = $config['WordPress']['Absolute'] ) ) {
+
+			// Add plain WordPress Absolute
+			if ( ! in_array( $absolute_path, $old_replace_values ) ) {
+				$old_replace_values[] = $absolute_path;
+				$new_replace_values[] = ABSPATH;
+			}
+
+			// Add URL encoded WordPress Absolute
+			if ( ! in_array( urlencode( $absolute_path ), $old_replace_values ) ) {
+				$old_replace_values[] = urlencode( $absolute_path );
+				$new_replace_values[] = urlencode( ABSPATH );
+			}
+
+			// Add URL raw encoded WordPress Absolute
+			if ( ! in_array( rawurlencode( $absolute_path ), $old_replace_values ) ) {
+				$old_replace_values[] = rawurlencode( $absolute_path );
+				$new_replace_values[] = rawurlencode( ABSPATH );
+			}
+
+			// Add JSON escaped WordPress Absolute
+			if ( ! in_array( addcslashes( $absolute_path, '/' ), $old_replace_values ) ) {
+				$old_replace_values[] = addcslashes( $absolute_path, '/' );
+				$new_replace_values[] = addcslashes( ABSPATH, '/' );
+			}
+		}
+
 		// Get WordPress Content Dir
 		if ( isset( $config['WordPress']['Content'] ) && ( $content_dir = $config['WordPress']['Content'] ) ) {
 

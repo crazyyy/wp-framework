@@ -67,7 +67,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			$total_res = $wpdb->get_results($sql);
 			$block_comments_output = '<div class="aio_yellow_box">';
 			if (empty($total_res)) {
-				$block_comments_output .= '<p><strong>'.__('You currently have no IP addresses permanently blocked due to spam.', 'all-in-one-wp-security-and-firewall').'</strong></p></div>';
+				$block_comments_output .= '<p><strong>'.esc_html__('You currently have no IP addresses permanently blocked due to spam.', 'all-in-one-wp-security-and-firewall').'</strong></p></div>';
 			} else {
 				$total_count = count($total_res);
 				$todays_blocked_count = 0;
@@ -79,7 +79,7 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 						++$todays_blocked_count;
 					}
 				}
-				$block_comments_output .= '<p><strong>'.__('Spammer IPs added to permanent block list today:', 'all-in-one-wp-security-and-firewall'). ' ' . $todays_blocked_count.'</strong></p>'.'<hr><p><strong>'.__('All time total:', 'all-in-one-wp-security-and-firewall'). ' ' .$total_count.'</strong></p>'.'<p><a class="button" href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=permanent-block" target="_blank">'.__('View blocked IPs', 'all-in-one-wp-security-and-firewall').'</a></p></div>';
+				$block_comments_output .= '<p><strong>'.esc_html__('Spammer IPs added to permanent block list today:', 'all-in-one-wp-security-and-firewall'). ' ' . esc_html($todays_blocked_count).'</strong></p>'.'<hr><p><strong>'.esc_html__('All time total:', 'all-in-one-wp-security-and-firewall'). ' ' .esc_html($total_count).'</strong></p>'.'<p><a class="button" href="admin.php?page='.esc_attr(AIOWPSEC_MAIN_MENU_SLUG).'&tab=permanent-block" target="_blank">'.esc_html__('View blocked IPs', 'all-in-one-wp-security-and-firewall').'</a></p></div>';
 			}
 		}
 

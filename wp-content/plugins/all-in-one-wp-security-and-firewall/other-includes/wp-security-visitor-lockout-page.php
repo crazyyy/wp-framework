@@ -12,8 +12,8 @@ $maintenance_msg = apply_filters('the_content', $maintenance_msg);
 <head profile="http://gmpg.org/xfn/11">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php bloginfo('name'); ?></title>
-
-	<link rel="stylesheet" type="text/css" href="<?php echo AIO_WP_SECURITY_URL; ?>/css/wp-security-site-lockout-page.css" />
+	<?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Manual enqueue necessary. ?>
+	<link rel="stylesheet" type="text/css" href="<?php echo esc_url(AIO_WP_SECURITY_URL); ?>/css/wp-security-site-lockout-page.css" />
 	<?php wp_head(); ?>
 </head>
 
@@ -22,7 +22,7 @@ $maintenance_msg = apply_filters('the_content', $maintenance_msg);
 	<div class="aiowps-site-lockout-body-content">
 		<div class="aiowps-site-lockout-box">
 				<div class="aiowps-site-lockout-msg">
-					<?php echo $maintenance_msg; ?>
+					<?php echo wp_kses_post($maintenance_msg); ?>
 				</div>
 		</div> <!-- end .aiowps-site-lockout-box -->
 	</div> <!-- end .aiowps-site-lockout-body-content -->

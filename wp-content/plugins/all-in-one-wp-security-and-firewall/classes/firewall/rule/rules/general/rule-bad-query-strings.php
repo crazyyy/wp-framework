@@ -48,7 +48,8 @@ class Rule_Bad_Query_Strings extends Rule {
 			'/^.*(globals|encode|loopback).*/i',
 			"/(\;|'|\"|%22).*(request|insert|union|declare|drop)/i",
 		);
-		
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
 		return Rule_Utils::contains_pattern($_SERVER['QUERY_STRING'], $patterns);
 	}
 

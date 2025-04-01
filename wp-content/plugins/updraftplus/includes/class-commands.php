@@ -441,6 +441,7 @@ class UpdraftPlus_Commands {
 	
 		global $updraftplus_addon_cloudfilesenhanced;
 		if (!is_a($updraftplus_addon_cloudfilesenhanced, 'UpdraftPlus_Addon_CloudFilesEnhanced')) {
+			// translators: %s: The name of the missing add-on.
 			$data = array('e' => 1, 'm' => sprintf(__('%s add-on not found', 'updraftplus'), 'Rackspace Cloud Files'));
 		} else {
 			$data = $updraftplus_addon_cloudfilesenhanced->create_api_user($data);

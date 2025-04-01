@@ -1,7 +1,7 @@
 /*!
  * jQuery blockUI plugin
- * Version 2.71.0-2020.12.08
- * Requires jQuery v1.12 or later
+ * Version 2.70.0-2014.11.23
+ * Requires jQuery v1.7 or later
  *
  * Examples at: http://malsup.com/jquery/block/
  * Copyright (c) 2007-2013 M. Alsup
@@ -17,9 +17,6 @@
 "use strict";
 
 	function setup($) {
-		var migrateDeduplicateWarnings = jQuery.migrateDeduplicateWarnings || false;
-		jQuery.migrateDeduplicateWarnings = false;
-
 		$.fn._fadeIn = $.fn.fadeIn;
 
 		var noOp = $.noop || function() {};
@@ -29,7 +26,7 @@
 		var msie = /MSIE/.test(navigator.userAgent);
 		var ie6  = /MSIE 6.0/.test(navigator.userAgent) && ! /MSIE 8.0/.test(navigator.userAgent);
 		var mode = document.documentMode || 0;
-		var setExpr = "function" === typeof document.createElement('div').style.setExpression;
+		var setExpr = $.isFunction( document.createElement('div').style.setExpression );
 
 		// global $ methods for blocking/unblocking the entire page
 		$.blockUI   = function(opts) { install(window, opts); };
@@ -60,7 +57,7 @@
 
 			callBlock();
 			var nonmousedOpacity = $m.css('opacity');
-			$m.on('mouseover', function() {
+			$m.mouseover(function() {
 				callBlock({
 					fadeIn: 0,
 					timeout: 30000
@@ -69,7 +66,7 @@
 				var displayBlock = $('.blockMsg');
 				displayBlock.stop(); // cancel fadeout if it has started
 				displayBlock.fadeTo(300, 1); // make it easier to read the message by removing transparency
-			}).on('mouseout', function() {
+			}).mouseout(function() {
 				$('.blockMsg').fadeOut(1000);
 			});
 			// End konapun additions
@@ -195,7 +192,7 @@
 			// enable if you want key and mouse events to be disabled for content that is blocked
 			bindEvents: true,
 
-			// be default blockUI will suppress tab navigation from leaving blocking content
+			// be default blockUI will supress tab navigation from leaving blocking content
 			// (if bindEvents is true)
 			constrainTabKey: true,
 
@@ -290,7 +287,7 @@
 			var z = opts.baseZ;
 
 			// blockUI uses 3 layers for blocking, for simplicity they are all used on every platform;
-			// layer1 is the iframe layer which is used to suppress bleed through of underlying content
+			// layer1 is the iframe layer which is used to supress bleed through of underlying content
 			// layer2 is the overlay layer which has opacity and a wait cursor (by default)
 			// layer3 is the message content that is displayed while blocking
 			var lyr1, lyr2, lyr3, s;
@@ -361,14 +358,14 @@
 			}
 
 			// ie7 must use absolute positioning in quirks mode and to account for activex issues (when scrolling)
-			var expr = setExpr && ( "CSS1Compat" !== document.compatMode || $('object,embed', full ? null : el).length > 0);
+			var expr = setExpr && (!$.support.boxModel || $('object,embed', full ? null : el).length > 0);
 			if (ie6 || expr) {
 				// give body 100% height
-				if (full && opts.allowBodyStretch && "CSS1Compat" === document.compatMode)
+				if (full && opts.allowBodyStretch && $.support.boxModel)
 					$('html,body').css('height','100%');
 
 				// fix ie6 issue when blocked element has a border width
-				if ((ie6 || "CSS1Compat" !== document.compatMode) && !full) {
+				if ((ie6 || !$.support.boxModel) && !full) {
 					var t = sz(el,'borderTopWidth'), l = sz(el,'borderLeftWidth');
 					var fixT = t ? '(0 - '+t+')' : 0;
 					var fixL = l ? '(0 - '+l+')' : 0;
@@ -380,11 +377,11 @@
 					s.position = 'absolute';
 					if (i < 2) {
 						if (full)
-							s.setExpression('height','Math.max(document.body.scrollHeight, document.body.offsetHeight) - ("CSS1Compat" === document.compatMode?0:'+opts.quirksmodeOffsetHack+') + "px"');
+							s.setExpression('height','Math.max(document.body.scrollHeight, document.body.offsetHeight) - (jQuery.support.boxModel?0:'+opts.quirksmodeOffsetHack+') + "px"');
 						else
 							s.setExpression('height','this.parentNode.offsetHeight + "px"');
 						if (full)
-							s.setExpression('width','"CSS1Compat" === document.compatMode && document.documentElement.clientWidth || document.body.clientWidth + "px"');
+							s.setExpression('width','jQuery.support.boxModel && document.documentElement.clientWidth || document.body.clientWidth + "px"');
 						else
 							s.setExpression('width','this.parentNode.offsetWidth + "px"');
 						if (fixL) s.setExpression('left', fixL);
@@ -554,9 +551,9 @@
 			// bind anchors and inputs for mouse and key events
 			var events = 'mousedown mouseup keydown keypress keyup touchstart touchend touchmove';
 			if (b)
-				$(document).on(events, opts, handler);
+				$(document).bind(events, opts, handler);
 			else
-				$(document).off(events, handler);
+				$(document).unbind(events, handler);
 
 		// former impl...
 		//		var $e = $('a,:input');
@@ -609,7 +606,7 @@
 		function sz(el, p) {
 			return parseInt($.css(el,p),10)||0;
 		}
-		jQuery.migrateDeduplicateWarnings = migrateDeduplicateWarnings;
+
 	}
 
 

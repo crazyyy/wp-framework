@@ -55,6 +55,7 @@ class Rule_Block_Query_Strings_6g extends Rule {
 			'/(\'|\")(.*)(drop|insert|md5|select|union)/i',
 		);
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
 		return Rule_Utils::contains_pattern(rawurldecode($_SERVER['QUERY_STRING']), $patterns);
 	}
 

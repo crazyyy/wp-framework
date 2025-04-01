@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the UpdraftPlus package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-02-22 05:07:17+0000\n"
+"PO-Revision-Date: 2025-03-20 03:55:20+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2176,11 +2176,11 @@ msgstr "El límite de memoria para PHP (establecido por tu proveedor de hosting)
 
 #: src/admin.php:2993
 msgid "You should rename the directory to wp-content/plugins/updraftplus to fix this problem."
-msgstr ""
+msgstr "Tendrías que cambiar el nombre del directorio a wp-content/plugins/updraftplus para solucionar este problema."
 
 #: src/admin.php:2993
 msgid "The UpdraftPlus directory in wp-content/plugins has white-space in it; WordPress does not like this."
-msgstr ""
+msgstr "El directorio de UpdraftPlus wp-content/plugins tiene espacios en blanco, a WordPress no le gusta esto."
 
 #: src/admin.php:2889
 msgid "We really appreciate your support!"
@@ -2196,7 +2196,7 @@ msgstr "Quizás necesitás instalar una extensión"
 
 #: src/admin.php:2751
 msgid "This looks like a file created by UpdraftPlus, but this install does not know about this type of object: %s."
-msgstr ""
+msgstr "Parece un archivo creado por UpdraftPlus pero esta instalación no conoce este tipo de objetos: %s."
 
 #: src/admin.php:2465
 msgid "Aborting this backup."
@@ -2208,11 +2208,11 @@ msgstr "OK."
 
 #: src/admin.php:1674
 msgid "Therefore, please download the attachment from the original backup email and upload it using the \"Upload backup files\" facility in the \"Existing Backups\" tab."
-msgstr ""
+msgstr "Por lo tanto, descargá el archivo adjunto del correo electrónico de respaldo original y subilo utilizando la función \"Subir archivos de respaldo\" en la pestaña \"Respaldos existentes\"."
 
 #: src/admin.php:1674
 msgid "The email protocol does not allow a remote backup to be retrieved from an email that has been sent."
-msgstr ""
+msgstr "El protocolo de correo no permite recuperar un respaldo remoto de un correo electrónico enviado."
 
 #: src/admin.php:1491, src/admin.php:1498, src/addons/azure.php:61,
 #: src/addons/onedrive.php:105
@@ -2222,48 +2222,48 @@ msgstr "Para obtener más información, mirá: %s"
 #: src/admin.php:1491, src/admin.php:1498, src/addons/azure.php:61,
 #: src/addons/onedrive.php:105
 msgid "You will need to migrate to the Global endpoint in your UpdraftPlus settings."
-msgstr ""
+msgstr "Vas a tener que migrar al endpoint global en los ajustes de UpdraftPlus."
 
 #: src/admin.php:1491, src/admin.php:1498, src/addons/azure.php:61,
 #: src/addons/onedrive.php:105
 msgid "Due to the shutdown of the %1$s endpoint, support for %1$s will be ending soon."
-msgstr ""
+msgstr "Debido al cierre del endpoint %1$s, el soporte para %1$s finalizará pronto."
 
 #: src/admin.php:1484
 msgid "However, we were not able to register this site with %1$s, as there are no available %1$s licences on the account."
-msgstr ""
+msgstr "Sin embargo, no pudimos registrar este sitio con %1$s, ya que no hay licencias %1$s disponibles en la cuenta."
 
 #: src/admin.php:1484
 msgid "Connection to your %s account was successful."
-msgstr ""
+msgstr "La conexión a tu cuenta %s fue exitosa."
 
 #: src/admin.php:1477
 msgid "You will need to switch to a different end-point and migrate your data before that date."
-msgstr ""
+msgstr "Vas a tener que cambiar a un endpoint diferente y migrar tus datos anteriores a esa fecha."
 
 #: src/admin.php:1477
 msgid "The %s endpoint is scheduled to shut down on the 1st October 2018."
-msgstr ""
+msgstr "Está previsto que el endpoint %s se deshabilite el 1 de octubre de 2018."
 
 #: src/admin.php:1456
 msgid "Go here to complete your settings for %s."
-msgstr ""
+msgstr "Andá aquí para completar los ajustes de %s."
 
 #: src/admin.php:1429
 msgid "Unless this is a development site, this means that the scheduler in your WordPress install is not working properly."
-msgstr ""
+msgstr "A menos que se trate de un sitio de desarrollo, esto significa que el programador de tareas en esta instalación de WordPress no está funcionando correctamente."
 
 #: src/admin.php:1429
 msgid "WordPress has a number (%d) of scheduled tasks which are overdue."
-msgstr ""
+msgstr "WordPress tiene una cantidad (%d) de tareas programadas que están vencidas."
 
 #: src/admin.php:1402
 msgid "Please try to make sure that the notice you are seeing is from UpdraftPlus before you raise a support request."
-msgstr ""
+msgstr "Asegurate de que el aviso que ves sea de UpdraftPlus antes de realizar una solicitud de soporte."
 
 #: src/admin.php:1402
 msgid "You may see debugging notices on this page not just from UpdraftPlus, but from any other plugin installed."
-msgstr ""
+msgstr "Es posible que veas avisos de depuración en esta página, no solo de UpdraftPlus sino de cualquier otro plugin instalado."
 
 #: src/admin.php:1402
 msgid "UpdraftPlus's debug mode is on."
@@ -2271,27 +2271,27 @@ msgstr "El modo de depuración de UpdraftPlus está activo."
 
 #: src/admin.php:1398
 msgid "To get faster backups, ask your web hosting provider how to turn on the PHP zip module on your hosting."
-msgstr ""
+msgstr "Para crear los respaldos más rápido consultá a tu proveedor de hosting cómo activar el módulo zip de PHP."
 
 #: src/admin.php:1398
 msgid "Consequently, UpdraftPlus will use a built-in zip module (PclZip); this is significantly slower."
-msgstr ""
+msgstr "Esto significa que UpdraftPlus utilizará un módulo zip integrado (PclZip) que es significativamente más lento."
 
 #: src/admin.php:1398
 msgid "Neither the PHP zip module nor a zip executable are available on your webserver."
-msgstr ""
+msgstr "Ni el módulo zip de PHP ni un ejecutable zip están disponibles en este servidor web."
 
 #: src/admin.php:1390
 msgid "It may work for you, but if it does not, then please be aware that no support is available until you upgrade WordPress."
-msgstr ""
+msgstr "Puede que te funcione pero si no, tené en cuenta que no habrá soporte disponible hasta que actualicés WordPress."
 
 #: src/admin.php:1390
 msgid "UpdraftPlus does not officially support versions of WordPress before %s."
-msgstr ""
+msgstr "UpdraftPlus no soporta oficialmente versiones de WordPress anteriores a la %s."
 
 #: src/admin.php:1386
 msgid "Contact your the operator of your server (e.g. your web hosting company) to resolve this issue."
-msgstr ""
+msgstr "Contactate con el administrador de tu servidor (tu proveedor de hosting) para resolver este problema."
 
 #: src/admin.php:1386
 msgid "UpdraftPlus could well run out of space."
@@ -2299,23 +2299,23 @@ msgstr "UpdraftPlus puede quedarse sin espacio."
 
 #: src/admin.php:1386
 msgid "You have less than %s of free disk space on the disk which UpdraftPlus is configured to use to create backups."
-msgstr ""
+msgstr "Tenés menos de %s de espacio libre en el disco que UpdraftPlus usa para crear los respaldos."
 
 #: src/admin.php:1380
 msgid "No backups can run (even &quot;Backup Now&quot;) unless either you have set up a facility to call the scheduler manually, or until it is enabled."
-msgstr ""
+msgstr "No se puede ejecutar ningún respaldo (ni siquiera \"Hacer un respaldo ahora\") a menos que hayas configurado una función para llamar al programador manualmente o hasta que esté habilitado."
 
 #: src/admin.php:1380
 msgid "The scheduler is disabled in your WordPress install, via the DISABLE_WP_CRON setting."
-msgstr ""
+msgstr "El programador está deshabilitado en la instalación de WordPress a través del ajuste DISABLE_WP_CRON."
 
 #: src/admin.php:1161
 msgid "Therefore, please reload the page."
-msgstr ""
+msgstr "Por lo tanto, tenés que recargar la página."
 
 #: src/admin.php:1160
 msgid "This is usually caused by your dashboard page having been open a long time, and the included security tokens having since expired."
-msgstr ""
+msgstr "Generalmente, esto se debe a que la página del escritorio ha estado abierta durante mucho tiempo y los tokens de seguridad incluidos han expirado."
 
 #: src/admin.php:1158
 msgid "Searching for backups..."
@@ -2331,23 +2331,23 @@ msgstr "Enviar un respaldo existente"
 
 #: src/admin.php:1154
 msgid "You can send an existing local backup to the remote site or create a new backup"
-msgstr ""
+msgstr "Podés mandar un respaldo local al sitio remoto o crear uno nuevo."
 
 #: src/admin.php:1153
 msgid "See the browser console log for more information."
-msgstr ""
+msgstr "Mirá la consola del navegador para más información."
 
 #: src/admin.php:1153
 msgid "If you proceed with the restoration then some of the restore options will be lost and you may get unexpected results."
-msgstr ""
+msgstr "Si continuás con la restauración se perderán algunas de las opciones de restauración y es posible que haya resultados inesperados."
 
 #: src/admin.php:1109
 msgid "This could mean that your .htaccess file has incorrect contents, is missing, or that your webserver is missing an equivalent mechanism."
-msgstr ""
+msgstr "Esto podría significar que el archivo .htaccess tiene contenido incorrecto, no existe o que al servidor web le falta un mecanismo equivalente."
 
 #: src/admin.php:1109
 msgid "Attempts by the browser to access some pages have returned a \"not found (404)\" error."
-msgstr ""
+msgstr "Los intentos del navegador de acceder a algunas páginas han devuelto un error de \"no encontrado (404)\"."
 
 #: src/admin.php:1094
 msgid "No UpdraftCentral licences were available."
@@ -2355,7 +2355,7 @@ msgstr "No había licencias de UpdraftCentral disponibles."
 
 #: src/admin.php:1087
 msgid "You may have a security module on your webserver blocking the restoration operation."
-msgstr ""
+msgstr "Es posible que tengas un módulo de seguridad en el servidor web que esté bloqueando el proceso de restauración."
 
 #: src/admin.php:1087
 msgid "HTML was detected in the response."
@@ -2363,19 +2363,19 @@ msgstr "Se detectó HTML en la respuesta."
 
 #: src/admin.php:1072
 msgid "Once the clone has finished deploying it, you will receive an email."
-msgstr ""
+msgstr "Cuando el clon haya terminado de crearse vas a recibir un correo electrónico."
 
 #: src/admin.php:1072
 msgid "The clone has been provisioned, and its data has been sent to it."
-msgstr ""
+msgstr "El clon se ha aprovisionado y se te han enviado sus datos."
 
 #: src/admin.php:1071
 msgid "This may fail if you have components that are incompatible with earlier versions."
-msgstr ""
+msgstr "Esto puede fallar si tenés componentes que son incompatibles con versiones anteriores."
 
 #: src/admin.php:1071
 msgid "Warning: you have selected a lower version than your currently installed version."
-msgstr ""
+msgstr "Advertencia: seleccionaste una versión anterior a la que tenés instalada ahora."
 
 #: src/admin.php:1056
 msgid "Adding site to UpdraftCentral Cloud."
@@ -2431,7 +2431,7 @@ msgstr "No seleccionaste ningún componente para restaurar."
 
 #: src/admin.php:950, src/admin.php:951
 msgid "This file is not an UpdraftPlus backup archive (such files are .zip or .gz files which have a name like: backup_(time)_(site name)_(code)_(type).(zip|gz))."
-msgstr ""
+msgstr "Este archivo no es un archivo de respaldo de UpdraftPlus (tales archivos son archivos .zip o .gz que tienen un nombre como: backup_(hora)_(nombre del sitio)_(código)_(tipo).(zip|gz))."
 
 #: src/admin.php:940
 msgid "File size"
@@ -9175,7 +9175,7 @@ msgstr "a partir de la próxima vez que es"
 
 #: src/addons/sftp.php:713
 msgid "However, we were able to log in and move to the indicated directory and successfully create a file in that location."
-msgstr ""
+msgstr "Sin embargo, pudimos iniciar sesión y movernos al directorio indicado y crear con éxito un archivo en esa ubicación."
 
 #: src/addons/sftp.php:651
 msgid "Failure: Port must be an integer."
@@ -9240,7 +9240,7 @@ msgstr "No hay respaldo de %s directorios: no se encontró nada para hacer respa
 
 #: src/admin.php:4333, src/addons/morefiles.php:371
 msgid "If entering multiple files/directories, then separate them with commas."
-msgstr ""
+msgstr "Si ingresás varios archivos/directorios separalos con comas."
 
 #: src/addons/morefiles.php:319
 msgid "Be careful what you select - if you select / then it really will try to create a zip containing your entire webserver."

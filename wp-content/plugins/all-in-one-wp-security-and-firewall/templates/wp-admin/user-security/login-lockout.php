@@ -172,13 +172,9 @@
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><label for="aiowps_lockdown_allowed_ip_addresses"><?php _e('Enter whitelisted IP addresses:', 'all-in-one-wp-security-and-firewall'); ?></label></th>
-					<td>
-						<textarea id="aiowps_lockdown_allowed_ip_addresses" name="aiowps_lockdown_allowed_ip_addresses" rows="5" cols="50"><?php echo esc_textarea($aiowps_lockdown_allowed_ip_addresses); ?></textarea>
-						<br />
-						<span class="description"><?php echo __('Enter one or more IP addresses or IP ranges you wish to include in your whitelist.', 'all-in-one-wp-security-and-firewall') . ' ' . __('The addresses specified here will never be blocked by the login lockout feature.', 'all-in-one-wp-security-and-firewall'); ?></span>
-						<?php $aio_wp_security->include_template('info/ip-address-ip-range-info.php');?>
-					</td>
+					<?php
+					AIOWPSecurity_Utility_UI::ip_input_textarea(__('Enter whitelisted IP addresses:', 'all-in-one-wp-security-and-firewall'), 'aiowps_lockdown_allowed_ip_addresses', $aiowps_lockdown_allowed_ip_addresses, __('Enter one or more IP addresses or IP ranges you wish to include in your whitelist.', 'all-in-one-wp-security-and-firewall') . ' ' . __('The addresses specified here will never be blocked by the login lockout feature.', 'all-in-one-wp-security-and-firewall'));
+					?>
 				</tr>
 			</table>
 			<?php

@@ -92,10 +92,10 @@ trait AIOWPSecurity_File_Scan_Commands_Trait {
 		$next_fcd_scan_time = AIOWPSecurity_Scan::get_next_scheduled_scan();
 
 		if (false == $next_fcd_scan_time) {
-			$next_scheduled_scan = '<span>' . __('Nothing is currently scheduled', 'all-in-one-wp-security-and-firewall') . '</span>';
+			$next_scheduled_scan = '<span>' . esc_html__('Nothing is currently scheduled', 'all-in-one-wp-security-and-firewall') . '</span>';
 		} else {
 			$scan_time = AIOWPSecurity_Utility::convert_timestamp($next_fcd_scan_time, 'D, F j, Y H:i');
-			$next_scheduled_scan = '<span class="aiowps_next_scheduled_date_time">' . $scan_time . '</span>';
+			$next_scheduled_scan = '<span class="aiowps_next_scheduled_date_time">' . esc_html($scan_time) . '</span>';
 		}
 
 		$content['aiowps-next-files-scan-inner'] = $next_scheduled_scan;

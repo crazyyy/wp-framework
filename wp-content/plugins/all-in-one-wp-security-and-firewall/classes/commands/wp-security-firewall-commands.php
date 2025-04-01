@@ -30,6 +30,24 @@ trait AIOWPSecurity_Firewall_Commands_Trait {
 		$aiowps_firewall_config->set_value('aiowps_deny_bad_query_strings', isset($data['aiowps_deny_bad_query_strings']));
 		$aiowps_firewall_config->set_value('aiowps_advanced_char_string_filter', isset($data['aiowps_advanced_char_string_filter']));
 		$options['aiowps_disallow_unauthorized_rest_requests'] = isset($data["aiowps_disallow_unauthorized_rest_requests"]) ? '1' : '';
+		
+		$aios_whitelisted_rest_routes = array();
+		$route_namespaces = AIOWPSecurity_Utility::get_rest_namespaces();
+		foreach ($route_namespaces as $route_namespace) {
+			if (isset($data['aios_whitelisted_rest_routes_'.str_replace('-', '_', $route_namespace)])) {
+				$aios_whitelisted_rest_routes[] = $route_namespace;
+			}
+		}
+		$options['aios_whitelisted_rest_routes'] = $aios_whitelisted_rest_routes;
+		
+		$aios_roles_disallowed_rest_requests = array();
+		$user_roles = AIOWPSecurity_Utility_Permissions::get_user_roles();
+		foreach ($user_roles as $id => $name) {
+			if (!isset($data['aios_allowed_roles_rest_requests_'.$id])) {
+				$aios_roles_disallowed_rest_requests[] = $id;
+			}
+		}
+		$options['aios_roles_disallowed_rest_requests'] = $aios_roles_disallowed_rest_requests;
 
 		// Commit the config settings
 		$this->save_settings($options);

@@ -2,7 +2,7 @@
 <h2><?php _e('Ban IPs or user agents', 'all-in-one-wp-security-and-firewall'); ?></h2>
 <div class="aio_blue_box">
 	<?php
-	echo '<p>' . __('The All In One WP Security Blacklist feature gives you the option of banning certain host IP addresses or ranges and also user agents.', 'all-in-one-wp-security-and-firewall').'
+	echo '<p>' . __('The All-In-One Security blacklist feature gives you the option of banning certain host IP addresses or ranges and also user agents.', 'all-in-one-wp-security-and-firewall').'
 	<br />' . __('This feature will deny total site access for users which have IP addresses or user agents matching those which you have configured in the settings below.', 'all-in-one-wp-security-and-firewall').'
 	<br />' . __('Black-listed visitors will be blocked as soon as WordPress loads, preventing them from gaining any further access.', 'all-in-one-wp-security-and-firewall').'
 	</p>';
@@ -13,7 +13,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 ?>
 	<div class="aio_grey_box">
 		<?php
-			$premium_plugin_link = '<strong><a href="https://aiosplugin.com/" target="_blank">' . htmlspecialchars(__('All In One WP Security & Firewall Premium', 'all-in-one-wp-security-and-firewall')) . '</a></strong>';
+			$premium_plugin_link = '<strong><a href="https://teamupdraft.com/all-in-one-security/pricing/?utm_source=aios-plugin&utm_medium=referral&utm_campaign=paac&utm_content=firewall-tab-cta-for-premium&utm_creative_format=text" target="_blank">' . htmlspecialchars(__('All-In-One Security Premium', 'all-in-one-wp-security-and-firewall')) . '</a></strong>';
 			$info_msg = sprintf(__('You may also be interested in %s.', 'all-in-one-wp-security-and-firewall'), $premium_plugin_link);
 			$info_msg2 = sprintf(__('This plugin adds a number of extra features including %s and %s.', 'all-in-one-wp-security-and-firewall'), '<strong>' . __('smart 404 blocking', 'all-in-one-wp-security-and-firewall') . '</strong>', '<strong>' . __('country IP blocking', 'all-in-one-wp-security-and-firewall') . '</strong>');
 			echo '<p>' . $info_msg . '<br />' . $info_msg2 . '</p>';
@@ -35,7 +35,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 			<div class="aio_orange_box">
 				<p>
 					<?php
-						$read_link = '<a href="https://aiosplugin.com/important-note-on-intermediate-and-advanced-features" target="_blank">' . __('must read this message', 'all-in-one-wp-security-and-firewall') . '</a>';
+						$read_link = '<a href="https://teamupdraft.com/documentation/all-in-one-security/faqs/important-note-on-intermediate-and-advanced-features/?utm_source=aios-plugin&utm_medium=referral&utm_campaign=paac&utm_content=you-must-read-this-to-activate-blacklist-feature&utm_creative_format=text" target="_blank">' . __('please read the following message', 'all-in-one-wp-security-and-firewall') . '</a>';
 						echo __('This feature can lock you out of admin if it doesn\'t work correctly on your site.', 'all-in-one-wp-security-and-firewall'). ' ' . sprintf(__('You %s before activating this feature.', 'all-in-one-wp-security-and-firewall'), $read_link);
 					?>
 				</p>

@@ -2,10 +2,12 @@
 <div class="postbox aio_hidden" data-template="wordpress-forms">
 	<h3 class="hndle"><label for="title"><?php _e('Wordpress forms CAPTCHA settings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 	<div class="inside">
+		<div id="user-login-captcha-badge">
 		<?php
 		// Display security info badge
 		$aiowps_feature_mgr->output_feature_details_badge("user-login-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on login page', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -18,10 +20,12 @@
 		</table>
 	</div>
 	<div class="inside">
+		<div id="user-registration-captcha-badge">
 		<?php
 		// Display security info badge
 		$aiowps_feature_mgr->output_feature_details_badge("user-registration-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on registration page', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -34,11 +38,13 @@
 		</table>
 	</div>
 	<div class="inside">
+		<div id="lost-password-captcha-badge">
 		<?php
 		//Display security info badge
 		global $aiowps_feature_mgr;
 		$aiowps_feature_mgr->output_feature_details_badge("lost-password-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on lost password page', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -51,11 +57,13 @@
 		</table>
 	</div>
 	<div class="inside">
+		<div id="custom-login-captcha-badge">
 		<?php
 		//Display security info badge
 		global $aiowps_feature_mgr;
 		$aiowps_feature_mgr->output_feature_details_badge("custom-login-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on custom login form', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -68,10 +76,12 @@
 		</table>
 	</div>
 	<div class="inside">
+		<div id="comment-form-captcha-badge">
 		<?php
 		// Display security info badge
 		$aiowps_feature_mgr->output_feature_details_badge("comment-form-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on comment forms', 'all-in-one-wp-security-and-firewall'); ?>:</th>
@@ -84,10 +94,12 @@
 		</table>
 	</div>
 	<div class="inside">
+		<div id="password_protected-captcha-badge">
 		<?php
 		// Display security info badge
 		$aiowps_feature_mgr->output_feature_details_badge("password_protected-captcha");
 		?>
+		</div>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Enable CAPTCHA on password protected pages/posts', 'all-in-one-wp-security-and-firewall'); ?>:</th>

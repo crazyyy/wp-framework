@@ -37,6 +37,7 @@ class Rule_Block_Xmlrpc extends Rule {
 	 * @return boolean
 	 */
 	public function is_satisfied() {
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
 		return (isset($_SERVER['SCRIPT_FILENAME']) && 1 === preg_match('/\/xmlrpc\.php$/i', $_SERVER['SCRIPT_FILENAME']));
 	}
 

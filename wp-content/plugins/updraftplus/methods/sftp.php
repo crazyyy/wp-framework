@@ -26,7 +26,7 @@ if (class_exists('UpdraftPlus_Addons_RemoteStorage_sftp')) {
 	 */
 	class UpdraftPlus_BackupModule_sftp extends UpdraftPlus_BackupModule_AddonNotYetPresent {
 		public function __construct() {
-			parent::__construct('sftp', 'SFTP/SCP');
+			parent::__construct('sftp', 'SFTP and SCP');
 		}
 	}
 

@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.WP.AlternativeFunctions -- WP isn't loaded here. WP API is unavailable
 namespace AIOWPS\Firewall;
 
 /**
@@ -158,3 +159,5 @@ class Config {
 	}
 
 }
+
+// phpcs:enable WordPress.WP.AlternativeFunctions -- WP isn't loaded here. WP API is unavailable
