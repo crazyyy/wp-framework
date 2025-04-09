@@ -1,0 +1,86 @@
+name: Deploy to Home Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy with auto rollback and Telegram alerts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Pre-deploy backup
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+            export DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}
+            export BACKUP_DIR=~/releases
+            export TIMESTAMP=$(date +'%Y%m%d-%H%M%S')
+            mkdir -p $BACKUP_DIR
+            if [ -d "$DEPLOY_PATH" ]; then
+              cp -a $DEPLOY_PATH $BACKUP_DIR/backup-$TIMESTAMP
+              echo "$BACKUP_DIR/backup-$TIMESTAMP" > $BACKUP_DIR/latest
+            fi
+          EOF
+
+      - name: Deploy and Post-tasks
+        run: |
+          set -e
+
+          echo "Starting rsync..."
+          rsync -az --delete ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+
+          echo "Copying .env..."
+          scp .env ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/.env
+
+          echo "Running WP updates..."
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+            wp core update --allow-root
+            wp plugin update --all --allow-root
+            wp cache flush --allow-root
+          EOF
+
+      - name: Notify success in Telegram
+        if: success()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="✅ *Deployment succeeded* on `${{ secrets.DEPLOY_HOST }}`" \
+          -d parse_mode=Markdown
+
+      - name: Auto rollback on failure
+        if: failure()
+        run: |
+          echo "Deployment failed, rolling back..."
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+            export DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}
+            export BACKUP_DIR=~/releases
+            if [ -f "$BACKUP_DIR/latest" ]; then
+              LAST_BACKUP=$(cat $BACKUP_DIR/latest)
+              if [ -d "$LAST_BACKUP" ]; then
+                rm -rf $DEPLOY_PATH
+                cp -a $LAST_BACKUP $DEPLOY_PATH
+              fi
+            fi
+          EOF
+
+      - name: Notify rollback in Telegram
+        if: failure()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="⚠️ *Deployment failed* on `${{ secrets.DEPLOY_HOST }}`.\nRollback has been *executed automatically*." \
+          -d parse_mode=Markdown
