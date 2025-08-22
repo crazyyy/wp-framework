@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Provider;
 
@@ -57,7 +52,7 @@ class Image extends Base
         $gray = false,
         $format = 'png'
     ) {
-        trigger_deprecation(
+        fakerpress_thirdparty_trigger_deprecation(
             'fakerphp/faker',
             '1.20',
             'Provider is deprecated and will no longer be available in Faker 2. Please use a custom provider instead',
@@ -121,7 +116,7 @@ class Image extends Base
         $gray = false,
         $format = 'png'
     ) {
-        trigger_deprecation(
+        fakerpress_thirdparty_trigger_deprecation(
             'fakerphp/faker',
             '1.20',
             'Provider is deprecated and will no longer be available in Faker 2. Please use a custom provider instead',
@@ -175,7 +170,7 @@ class Image extends Base
 
     public static function getFormats(): array
     {
-        trigger_deprecation(
+        fakerpress_thirdparty_trigger_deprecation(
             'fakerphp/faker',
             '1.20',
             'Provider is deprecated and will no longer be available in Faker 2. Please use a custom provider instead',
@@ -186,7 +181,7 @@ class Image extends Base
 
     public static function getFormatConstants(): array
     {
-        trigger_deprecation(
+        fakerpress_thirdparty_trigger_deprecation(
             'fakerphp/faker',
             '1.20',
             'Provider is deprecated and will no longer be available in Faker 2. Please use a custom provider instead',

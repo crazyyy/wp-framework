@@ -2,10 +2,8 @@
 Contributors: nosilver4u
 Donate link: https://ewww.io/donate/
 Tags: compress, convert, webp, resize, lazy load
-Requires at least: 6.4
-Tested up to: 6.7
-Requires PHP: 7.4
-Stable tag: 8.1.3
+Tested up to: 6.8
+Stable tag: 8.2.0
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -143,6 +141,25 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
+
+= 8.2.0 =
+*Release Date - July 15, 2025*
+
+* added: JS WebP support for HTML elements/tags added via eio_allowed_background_image_elements filter
+* added: Easy IO support for dynamic cropping (crop=1) on WordPress.com sites
+* changed: use native ImageMagick methods to detect, and correct, paletted PNG thumbnails
+* changed: use authoritative classmap via composer to speed up autoloader, props @nlemoine
+* changed: streamlined admin notices
+* fixed: indexed PNG thumbnails with 8-bit alpha are distorted by quantization
+* fixed: PHP warnings related to HTML parsing
+* fixed: missing ImageMagick information on Site Health screen
+* fixed: PHP warnings when link URLs contain special regex characters
+
+= 8.1.4 =
+*Release Date - May 15, 2025*
+
+* added: customize lossy PDF compression by defining EWWW_IMAGE_OPTIMIZER_PDF_IMAGE_DPI and/or EWWW_IMAGE_OPTIMIZER_PDF_IMAGE_QUALITY
+* fixed: WebP thumbnails have incorrect orientation when created from the original unoptimized image
 
 = 8.1.3 =
 *Release Date - March 26, 2025*

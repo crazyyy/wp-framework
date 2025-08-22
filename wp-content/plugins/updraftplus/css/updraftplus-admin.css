@@ -217,6 +217,19 @@ textarea.updraft_input--wide {
 
 /* End input boxes */
 
+/* Reusable input error message css */
+.updraft-input-error-message {
+	display: block;
+	visibility: hidden;
+	line-height: 1.5rem;
+	color: red;
+	font-size: 0.9rem;
+}
+
+.updraft-input--invalid ~ .updraft-input-error-message {
+	visibility: visible;
+}
+
 /* Main Buttons */
 .main-dashboard-buttons {
 	border-width: 4px;
@@ -4274,4 +4287,14 @@ div#updraft-restore-modal .udp-notice, .udp-notice.updraft-restore-option {
 		line-height: 1;
 	}
 
+}
+
+.udp-dashicons-database-view:before {
+	content: "";
+	background-image: url("../images/icons/database-view.svg");
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	background-size: contain;
+	background-repeat: no-repeat;
 }

@@ -1,9 +1,22 @@
 <?php
+/**
+ * Plugin main class.
+ *
+ * @since 0.1.0
+ *
+ * @package FakerPress
+ * @subpackage Main
+ * @copyright Copyright (c) 2014-2025, Gustavo Bordoni
+ * @license http://www.gnu.org/licenses/gpl-2.0.txt GPL-2.0+
+ */
 
 namespace FakerPress;
 
-use FakerPress\Contracts\Service_Provider;
-
+/**
+ * Main plugin class used to setup all the necessary components.
+ *
+ * @since 0.1.0
+ */
 class Plugin {
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
@@ -12,7 +25,7 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	public const VERSION = '0.6.6';
+	public const VERSION = '0.8.0';
 
 	/**
 	 * @since 0.6.0
@@ -147,9 +160,6 @@ class Plugin {
 	 * @return void
 	 */
 	protected function autoload(): void {
-		// Load Composer Vendor Modules
-		require_once $this->plugin_path . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
 		// Load Composer Vendor Modules
 		require_once $this->plugin_path . 'vendor-prefixed' . DIRECTORY_SEPARATOR . 'autoload.php';
 	}

@@ -259,8 +259,10 @@ class WP_Optimize_Admin {
 	 * Database settings
 	 */
 	public function output_database_settings_tab() {
-		
-		if (WP_Optimize()->can_manage_options()) {
+		if (!WP_Optimize()->does_server_allows_table_optimization()) {
+			$message = __('Your server takes care of database optimization, no scheduled optimization needed', 'wp-optimize');
+			$this->prevent_run_optimizations_message($message);
+		} elseif (WP_Optimize()->can_run_optimizations()) {
 			WP_Optimize()->include_template('database/settings.php');
 		} else {
 			$this->prevent_manage_options_info();
@@ -357,7 +359,7 @@ class WP_Optimize_Admin {
 			'cache_size' => $wpo_cache->get_cache_size(),
 			'display' => $display,
 			'can_purge_the_cache' => $wpo_cache->can_purge_cache(),
-			'auto_preload_purged_contents' => $wpo_cache->should_auto_preload_purged_contents(),
+			'auto_preload_purged_contents' => $wpo_cache_options['auto_preload_purged_contents'],
 			'does_server_handles_cache' => WP_Optimize()->does_server_handles_cache(),
 			'error' => $error,
 		));
@@ -396,6 +398,7 @@ class WP_Optimize_Admin {
 		
 		$cache_exception_conditional_tags = is_array($wpo_cache_options['cache_exception_conditional_tags']) ? join("\n", $wpo_cache_options['cache_exception_conditional_tags']) : '';
 		$cache_exception_urls = is_array($wpo_cache_options['cache_exception_urls']) ? join("\n", $wpo_cache_options['cache_exception_urls']) : '';
+		$cache_ignore_query_variables = is_array($wpo_cache_options['cache_ignore_query_variables']) ? join("\n", $wpo_cache_options['cache_ignore_query_variables']) : '';
 		$cache_exception_cookies = is_array($wpo_cache_options['cache_exception_cookies']) ? join("\n", $wpo_cache_options['cache_exception_cookies']) : '';
 		$cache_exception_browser_agents = is_array($wpo_cache_options['cache_exception_browser_agents']) ? join("\n", $wpo_cache_options['cache_exception_browser_agents']) : '';
 		
@@ -403,6 +406,7 @@ class WP_Optimize_Admin {
 			'wpo_cache' => $wpo_cache,
 			'wpo_cache_options' => $wpo_cache_options,
 			'cache_exception_urls' => $cache_exception_urls,
+			'cache_ignore_query_variables' => $cache_ignore_query_variables,
 			'cache_exception_conditional_tags' => $cache_exception_conditional_tags,
 			'cache_exception_cookies' => $cache_exception_cookies,
 			'cache_exception_browser_agents' => $cache_exception_browser_agents,
@@ -488,7 +492,10 @@ class WP_Optimize_Admin {
 		$optimization_results = (($nonce_passed) ? $optimizer->do_optimizations($_POST) : false);
 		
 		// display optimizations table or restricted access message.
-		if (WP_Optimize()->can_run_optimizations()) {
+		if (!WP_Optimize()->does_server_allows_table_optimization()) {
+			$message = __('Your server takes care of database optimization', 'wp-optimize');
+			$this->prevent_run_optimizations_message($message);
+		} elseif (WP_Optimize()->can_run_optimizations()) {
 			WP_Optimize()->include_template('database/optimize-table.php', false, array('optimize_db' => $optimize_db, 'optimization_results' => $optimization_results, 'load_data' => false, 'does_server_allows_table_optimization' => WP_Optimize()->does_server_allows_table_optimization()));
 		} else {
 			$this->prevent_run_optimizations_message();

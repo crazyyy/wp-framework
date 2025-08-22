@@ -1,22 +1,18 @@
 <?php
+
 /**
  * Closure-based builder.
  *
  * @package lucatume\DI52
- *
- * @license GPL-3.0
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
-
 namespace FakerPress\ThirdParty\lucatume\DI52\Builders;
 
 use Closure;
 use FakerPress\ThirdParty\lucatume\DI52\Container;
-
 /**
  * Class ClosureBuilder
  *
- * @package FakerPress\ThirdParty\lucatume\DI52\Builders
+ * @package \FakerPress\ThirdParty\lucatume\DI52\Builders
  */
 class ClosureBuilder implements BuilderInterface
 {
@@ -26,14 +22,12 @@ class ClosureBuilder implements BuilderInterface
      * @var Container
      */
     protected $container;
-
     /**
      * A reference to the closure the builder should run to build.
      *
      * @var Closure
      */
     protected $closure;
-
     /**
      * ClosureBuilder constructor.
      *
@@ -45,7 +39,6 @@ class ClosureBuilder implements BuilderInterface
         $this->container = $container;
         $this->closure = $closure;
     }
-
     /**
      * Calls the Closure handled by the builder to return the built implementation.
      *

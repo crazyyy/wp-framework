@@ -103,7 +103,7 @@ abstract class WP_Optimization {
 	protected function query($sql) {
 		$this->sql_commands[] = $sql;
 		do_action('wp_optimize_optimization_query', $sql, $this);
-		$result = $this->wpdb->query($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is already prepared
+		$result = $this->wpdb->query($sql); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared query
 		return apply_filters('wp_optimize_optimization_query_result', $result, $sql, $this);
 	}
 
@@ -276,7 +276,9 @@ abstract class WP_Optimization {
 			$objects[] = 1;
 		}
 
-		return apply_filters('get_optimization_blogs', $objects);
+		$filtered_objects = apply_filters('get_optimization_blogs', $objects);
+		if (is_array($filtered_objects)) return $filtered_objects;
+		return $objects;
 	}
 
 	/**
@@ -437,12 +439,12 @@ abstract class WP_Optimization {
 			'dom_id' => $dom_id,
 			'activated' => $setting_activated,
 			'settings_label' => $settings_label,
-			'info' => $info
+			'info' => wp_kses(join('<br>', $info), $this->allow_checkboxes()),
 		);
 		
 		if (empty($settings_label)) {
 			// Error_log, as this is a defect.
-			error_log("Optimization with setting ID ".$setting_id." lacks a settings label (method: settings_label())");
+			error_log("Optimization with setting ID ".$setting_id." lacks a settings label (method: settings_label())"); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Using for debugging only
 		}
 		
 		return $settings_html;
@@ -478,5 +480,37 @@ abstract class WP_Optimization {
 		$link = '<a href="#" class="wpo-optimization-preview"'.$str_attr.'>'.$text.'</a>';
 
 		return $link;
+	}
+	
+	/**
+	 * Adds input and label tags to allowed HTML tags.
+	 *
+	 * @return array
+	 */
+	private function allow_checkboxes(): array {
+		$allowed_html = wp_kses_allowed_html('post');
+		
+		$allowed_html['input'] = array(
+			'type' => true,
+			'name' => true,
+			'id' => true,
+			'class' => true,
+			'value' => true,
+			'placeholder' => true,
+			'required' => true,
+			'checked' => true,
+			'disabled' => true,
+			'min' => true,
+			'max' => true,
+			'step' => true
+		);
+		
+		$allowed_html['label'] = array(
+			'for' => true,
+			'class' => true,
+			'id' => true
+		);
+		
+		return $allowed_html;
 	}
 }

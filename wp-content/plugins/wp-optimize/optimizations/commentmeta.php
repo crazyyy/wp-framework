@@ -79,14 +79,14 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 			'columns' => array(
 				'meta_id' => __('ID', 'wp-optimize'),
 				'comment_id' => __('Comment ID', 'wp-optimize'),
-				'meta_key' => __('Meta Key', 'wp-optimize'),
-				'meta_value' => __('Meta Value', 'wp-optimize'),
+				'meta_key' => __('Meta Key', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- This is not a query
+				'meta_value' => __('Meta Value', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- This is not a query
 			),
 			'offset' => $params['offset'],
 			'limit' => $params['limit'],
 			'total' => $total,
 			'data' => $this->htmlentities_array($posts, array('comment_ID')),
-			'message' => $total > 0 ? '' : __('No orphaned comment meta data in your database', 'wp-optimize'),
+			'message' => $total > 0 ? '' : __('No orphaned comment metadata in your database', 'wp-optimize'),
 		);
 	}
 
@@ -167,9 +167,9 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 
 		if ($this->found_trash_count > 0) {
 			// translators: %s is a number of orphaned comment metadata
-			$message = sprintf(_n('%s orphaned comment meta data in your database', '%s orphaned comment meta data in your database', $this->found_trash_count, 'wp-optimize'), number_format_i18n($this->found_trash_count));
+			$message = sprintf(_n('%s orphaned comment metadata in your database', '%s orphaned comment metadata in your database', $this->found_trash_count, 'wp-optimize'), number_format_i18n($this->found_trash_count));
 		} else {
-			$message = __('No orphaned comment meta data in your database', 'wp-optimize');
+			$message = __('No orphaned comment metadata in your database', 'wp-optimize');
 		}
 
 		if ($this->found_akismet_count > 0) {
@@ -215,10 +215,10 @@ class WP_Optimization_commentmeta extends WP_Optimization {
 	}
 
 	public function settings_label() {
-		return __('Clean comment meta data', 'wp-optimize');
+		return __('Clean comment metadata', 'wp-optimize');
 	}
 
 	public function get_auto_option_description() {
-		return __('Clean comment meta data', 'wp-optimize');
+		return __('Clean comment metadata', 'wp-optimize');
 	}
 }

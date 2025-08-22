@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Provider\kk_KZ;
 
@@ -61,7 +56,7 @@ class Company extends \FakerPress\ThirdParty\Faker\Provider\Company
      *
      * @return string 12 digits, like 150140000019
      */
-    public static function businessIdentificationNumber(\DateTime $registrationDate = null)
+    public static function businessIdentificationNumber(?\DateTime $registrationDate = null)
     {
         if (!$registrationDate) {
             $registrationDate = \FakerPress\ThirdParty\Faker\Provider\DateTime::dateTimeThisYear();

@@ -1,0 +1,566 @@
+"Project-Id-Version: Easy HTTPS (SSL) Redirection\n"
+"POT-Creation-Date: 2025-04-20 17:40+0600\n"
+"PO-Revision-Date: 2025-04-20 17:39+0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 3.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: easy-https-ssl.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: admin/ehssl-admin-init.php:63
+msgid "Easy HTTPS & SSL"
+msgstr ""
+
+#: admin/ehssl-admin-init.php:64 admin/ehssl-dashboard-menu.php:44
+msgid "Dashboard"
+msgstr ""
+
+#: admin/ehssl-admin-init.php:65 admin/ehssl-settings-menu.php:42
+#: easy-https-ssl.php:47 easy-https-ssl.php:61
+msgid "Settings"
+msgstr ""
+
+#: admin/ehssl-admin-init.php:66 admin/ehssl-certificate-expiry-menu.php:41
+msgid "Certificate Expiry"
+msgstr ""
+
+#: admin/ehssl-admin-init.php:72 admin/ehssl-settings-menu.php:133
+msgid "HTTPS Redirection"
+msgstr ""
+
+#: admin/ehssl-admin-init.php:242
+msgid "NOTE:"
+msgstr ""
+
+#: admin/ehssl-admin-init.php:243
+msgid ""
+"The following php extensions are missing which is required by this plugin to "
+"work properly. Contact you hosting provider enable this."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:72
+msgid "SSL certificate scan completed successfully."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:84
+msgid "SSL certificate info was deleted successfully."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:86
+msgid "No saved SSL certificate info was detected for deletion."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:94
+msgid "Certificates"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:101
+msgid "ID"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:102
+msgid "Label"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:103
+msgid "Issuer"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:104
+msgid "Issued on"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:105
+msgid "Expires on"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:106
+msgid "Status"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:126
+msgid ""
+"No SSL certificate information found. Click the Scan button to search for "
+"installed certificates."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:134
+msgid "Certificate Actions"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:139
+msgid "Click the Scan button to manually scan for available SSL certificates."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:144
+msgid "Scan Now"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:153
+msgid "Do you really want to delete all saved SSL info?"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:154
+msgid "Delete all SSL certificate records from the table."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:160
+msgid "Delete All SSL Info"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:187 admin/ehssl-settings-menu.php:89
+#: admin/ehssl-settings-menu.php:115 admin/ehssl-settings-menu.php:316
+msgid "Settings Saved."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:225
+msgid "Notification Email Settings"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:233
+msgid "Enable Certificate Expiry Notification"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:243
+msgid "Enable this option to send SSL certificate expiry notifications."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:249
+msgid "Email Content Type"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:254
+msgid "Plain Text"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:255
+msgid "HTML"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:258
+msgid ""
+"Choose whether the SSL expiry notification email should be sent in plain "
+"text or HTML format."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:264
+msgid "Notification Email Before Days"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:275
+msgid ""
+"Set how many days in advance the expiry email should be sent. Default is 7 "
+"days."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:281
+msgid "Notification Email From"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:291
+msgid "The email address used as the 'From' address in the notification email."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:297
+msgid "Notification Email To"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:308
+msgid "Email address where expiry notifications will be sent."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:314
+msgid "Notification Email Subject"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:325
+msgid "Certificate expiry notification email subject."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:331
+msgid "Notification Email Body"
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:363
+msgid "Certificate expiry notification email body."
+msgstr ""
+
+#: admin/ehssl-certificate-expiry-menu.php:372
+#: admin/ehssl-settings-menu.php:193 admin/ehssl-settings-menu.php:275
+#: admin/ehssl-settings-menu.php:344
+msgid "Save Changes"
+msgstr ""
+
+#: admin/ehssl-dashboard-menu.php:105
+msgid "SSL Status"
+msgstr ""
+
+#: admin/ehssl-dashboard-menu.php:115
+msgid "Your site is protected!"
+msgstr ""
+
+#: admin/ehssl-dashboard-menu.php:122
+msgid "No SSL found!"
+msgstr ""
+
+#: admin/ehssl-dashboard-menu.php:137
+msgid "SSL Information"
+msgstr ""
+
+#: admin/ehssl-settings-menu-old.php:16
+msgid "HTTPS Redirection Settings"
+msgstr ""
+
+#: admin/ehssl-settings-menu-old.php:19
+msgid ""
+"The HTTPS Redirection settings have been upgraded and relocated to a new "
+"menu page titled <strong>Easy HTTPS & SSL</strong>. We have also added new "
+"features to enhance the plugin. Click the link below to access the new "
+"settings page."
+msgstr ""
+
+#: admin/ehssl-settings-menu-old.php:22
+msgid "Go to the New Settings Page"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:125
+#, php-format
+msgid ""
+"When you enable the HTTPS redirection, the plugin will force redirect the "
+"URL to the HTTPS version of the URL. So before enabling this plugin's "
+"feature, visit your site's HTTPS URL %s to make sure the page loads "
+"correctly. Otherwise you may get locked out if your SSL certificate is not "
+"installed correctly on your site or the HTTPS URL is not working and this "
+"plugin is auto redirecting to the HTTPS URL."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:128
+msgid "Important!"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:129
+msgid ""
+"If you're using caching plugins similar to W3 Total Cache or WP Super Cache, "
+"you need to clear their cache after you enable or disable automatic "
+"redirection option. Failing to do so may result in mixed content warning "
+"from browser."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:142 admin/ehssl-settings-menu.php:219
+msgid "Notice:"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:142
+msgid ""
+"The plugin's settings have been changed. In order to save them please don't "
+"forget to click the 'Save Changes' button."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:150
+msgid "Enable Automatic Redirection to HTTPS"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:156
+msgid ""
+"Use this option to make your webpage(s) load in HTTPS version only. If "
+"someone enters a non-https URL in the browser's address bar then the plugin "
+"will automatically redirect to the HTTPS version of that URL."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:167
+msgid "Apply HTTPS Redirection To:"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:170
+msgid "The whole domain"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:173
+msgid "A few pages"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:177 admin/ehssl-settings-menu.php:181
+msgid "Please enter a page slug value in the field before adding it."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:181
+msgid "Enter the page slug"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:219
+msgid ""
+"It is very important to be extremely attentive when making changes to ."
+"htaccess file."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:220
+msgid "If after making changes your site stops functioning, do the following:"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:221
+msgid ""
+"Step #1: Open .htaccess file in the root directory of the WordPress install "
+"and delete everything between the following two lines"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:226
+msgid ""
+"Step #2: Save the htaccess file (this will erase any change this plugin made "
+"to that file)."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:227
+msgid ""
+"Step #3: Deactivate the plugin or rename this plugin's folder (which will "
+"deactivate the plugin)."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:229
+msgid ""
+"The changes will be applied immediately after saving the changes, if you are "
+"not sure - do not click the \"Save changes\" button."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:235
+msgid "HTTPS redirection only works if you have pretty permalinks enabled."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:236
+msgid ""
+"To enable pretty permalinks go to <em>Settings > Permalinks</em> and select "
+"any option other than \"default\"."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:237
+msgid "Enable Permalinks"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:243
+msgid "Debug Logging"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:246
+msgid ""
+"Debug logging can be useful to troubleshoot issues on your site. keep it "
+"disabled unless you are troubleshooting."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:253
+msgid "Enable Debug Logging"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:259
+msgid "Check this option to enable debug logging."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:262 admin/ehssl-settings-menu.php:267
+msgid "Click here"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:264
+msgid " to view log file."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:269
+msgid " to reset log file."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:293
+msgid "Log file has been reset."
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:295
+msgid "Error trying to reset log: "
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:322
+msgid "Static Resources"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:327
+msgid ""
+"HTTPS redirection is turned off. Turn it on first to change these settings "
+"below!"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:334
+msgid "Force Resources to Use HTTPS URL"
+msgstr ""
+
+#: admin/ehssl-settings-menu.php:340
+msgid ""
+"When checked, the plugin will force load HTTPS URL for any static resources "
+"in your content. Example: if you have have an image embedded in a post with "
+"a NON-HTTPS URL, this option will change that to a HTTPS URL."
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:41
+msgid "SSL Management"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:68
+msgid ""
+"The SSL Certificates required for HTTPS cannot be issued for WordPress sites "
+"that are based on 'localhost' or use an IP address. To effectively utilize "
+"SSL certificates, and hence to make the most from our plugin, you should "
+"operate your WordPress site on a standard domain. This limitation is not "
+"specific from our plugin but is a general rule in the issuance of SSL "
+"certificates."
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:93
+msgid "Error getting SSL:"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:139
+msgid "SSL certificate mode:"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:142
+msgid "Staging"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:143
+msgid "Live"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:149
+msgid "Email Address:"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:158
+msgid "Generate SSL Certificate"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:187
+msgid "Get Certificate Files"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:188
+#: admin/ehssl-ssl-management-menu.php:206
+#: admin/ehssl-ssl-management-menu.php:210
+msgid "Some documentation goes here..."
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:194
+msgid "Copy File Path"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:197
+msgid "Download File"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:198
+msgid "Copy File Content"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:205
+msgid "Add the certificate file paths"
+msgstr ""
+
+#: admin/ehssl-ssl-management-menu.php:209
+msgid "Restart the server"
+msgstr ""
+
+#: classes/ehssl-email-handler.php:74
+msgid "Click here to toggle email merge tag hints"
+msgstr ""
+
+#: classes/ehssl-email-handler.php:80
+msgid "The SSL certificate label"
+msgstr ""
+
+#: classes/ehssl-email-handler.php:84
+msgid "The issuer of SSL certificate"
+msgstr ""
+
+#: classes/ehssl-email-handler.php:88
+msgid "The issuing date of SSL certificate."
+msgstr ""
+
+#: classes/ehssl-email-handler.php:92
+msgid "The issuing time of SSL certificate."
+msgstr ""
+
+#: classes/ehssl-email-handler.php:96
+msgid "The issuing datetime of SSL certificate."
+msgstr ""
+
+#: classes/ehssl-email-handler.php:100
+msgid "The expiry date of SSL certificate."
+msgstr ""
+
+#: classes/ehssl-email-handler.php:104
+msgid "The expiry time of SSL certificate."
+msgstr ""
+
+#: classes/ehssl-email-handler.php:108
+msgid "The expiry datetime of SSL certificate."
+msgstr ""
+
+#: classes/ehssl-email-handler.php:112
+msgid "The current status of SSL certificate."
+msgstr ""
+
+#: classes/ehssl-ssl-certificate.php:73
+msgid "Could not verify ownership via HTTP"
+msgstr ""
+
+#: classes/ehssl-ssl-certificate.php:104
+msgid "SSL Certificate installation failed. Check the logs for details."
+msgstr ""
+
+#: classes/ehssl-ssl-certificate.php:124
+msgid ""
+"Certificate or private key file not found. Please generate a certificate "
+"first!"
+msgstr ""
+
+#: classes/ehssl-ssl-certificate.php:155
+msgid "Failed to create the acme-challenge directory"
+msgstr ""
+
+#: classes/ehssl-ssl-certificate.php:162
+msgid "Failed to create the certificate directory"
+msgstr ""
+
+#: classes/utilities/ehssl-utils.php:34
+msgid ""
+"Error! The URL value is empty. Please specify a correct URL value to "
+"redirect to!"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Easy HTTPS (SSL) Redirection"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid ""
+"https://www.tipsandtricks-hq.com/wordpress-easy-https-redirection-plugin"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"The plugin HTTPS Redirection allows an automatic redirection to the "
+"\"HTTPS\" version/URL of the site."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Tips and Tricks HQ"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.tipsandtricks-hq.com/"
+msgstr ""

@@ -11,6 +11,70 @@ if (!defined('UPDRAFTCENTRAL_CLIENT_DIR')) die('No access.');
 class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 
 	/**
+	 * Retrieve site icon (favicon)
+	 *
+	 * @return array An array containing the site icon (favicon) byte string if available
+	 */
+	public function get_site_icon() {
+
+		if (!function_exists('get_site_icon_url')) {
+			include_once(ABSPATH.'wp-includes/general-template.php');
+		}
+
+		$site_icon_url = get_site_icon_url();
+
+		// If none is set in WordPress, let's try to search for the default favicon
+		// within the site's directory
+		if (empty($site_icon_url)) {
+
+			if (!function_exists('get_site_url')) {
+				include_once(ABSPATH.'wp-includes/link-template.php');
+			}
+
+			// Common favicon locations to check
+			$potential_locations = array(
+				'/favicon.ico',
+				'/favicon.png',
+				'/favicon.svg',
+				'/assets/favicon.ico',
+				'/assets/images/favicon.ico',
+				'/apple-touch-icon.png',
+				'/apple-touch-icon-precomposed.png',
+			);
+
+			foreach ($potential_locations as $location) {
+				$path = rtrim(ABSPATH, '/\\').$location;
+				if (file_exists($path)) {
+					$site_icon_url = get_site_url().$location;
+					break;
+				}
+			}
+		}
+
+		// We are returning the site icon as byte string instead of URL in order to avoid
+		// any hotlink protection that might prevent us to show the icon in UpdraftCentral
+		// dashboard successfully.
+		$site_icon = '';
+		if (!empty($site_icon_url)) {
+			$content = file_get_contents($site_icon_url);
+
+			$mime_type = '';
+			foreach ($http_response_header as $value) {
+				if (false !== stripos($value, 'content-type:')) {
+					list(, $mime_type) = explode(':', preg_replace('/\s+/', '', $value));
+					break;
+				}
+			}
+
+			if ($content && !empty($mime_type)) {
+				$site_icon = 'data: '.$mime_type.';base64,'.base64_encode($content);
+			}
+		}
+
+		return $this->_response(array('site_icon' => $site_icon));
+	}
+
+	/**
 	 * Executes a list of submitted commands (multiplexer)
 	 *
 	 * @param Array $query An array containing the commands to execute and a flag to indicate how to handle command execution failure.

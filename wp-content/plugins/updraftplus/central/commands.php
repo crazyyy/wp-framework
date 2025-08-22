@@ -98,7 +98,7 @@ abstract class UpdraftCentral_Commands {
 		$request_filesystem_credentials = ('direct' != $filesystem_method && !$filesystem_credentials_are_stored);
 
 		// Do we need to execute a backup process before installing/managing items
-		$automatic_backups = (class_exists('UpdraftPlus_Options') && class_exists('UpdraftPlus_Addon_Autobackup') && UpdraftPlus_Options::get_updraft_option('updraft_autobackup_default', true)) ? true : false;
+		$automatic_backups = (class_exists('UpdraftPlus_Options') && class_exists('UpdraftPlus_Addon_Autobackup') && UpdraftPlus_Options::get_updraft_option('updraft_autobackup_default')) ? true : false;
 		
 		return array(
 			'request_filesystem_credentials' => $request_filesystem_credentials,

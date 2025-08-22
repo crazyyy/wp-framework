@@ -1,17 +1,14 @@
 <?php
+
 /**
  * The base service provider class.
- *
- * @license GPL-3.0
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
-
 namespace FakerPress\ThirdParty\lucatume\DI52;
 
 /**
  * Class ServiceProvider
  *
- * @package lucatume\DI52
+ * @package \lucatume\DI52
  */
 abstract class ServiceProvider
 {
@@ -21,13 +18,10 @@ abstract class ServiceProvider
      * @var bool
      */
     protected $deferred = false;
-
     /**
      * @var Container
      */
     protected $container;
-
-
     /**
      * ServiceProvider constructor.
      *
@@ -37,7 +31,6 @@ abstract class ServiceProvider
     {
         $this->container = $container;
     }
-
     /**
      * Whether the service provider will be a deferred one or not.
      *
@@ -47,7 +40,6 @@ abstract class ServiceProvider
     {
         return $this->deferred;
     }
-
     /**
      * Returns an array of the class or interfaces bound and provided by the service provider.
      *
@@ -57,7 +49,6 @@ abstract class ServiceProvider
     {
         return [];
     }
-
     /**
      * Binds and sets up implementations at boot time.
      *
@@ -67,7 +58,6 @@ abstract class ServiceProvider
     {
         // no-op
     }
-
     /**
      * Registers the service provider bindings.
      *

@@ -19,9 +19,9 @@ class Updraft_Logger implements Updraft_Logger_Interface {
 	/**
 	 * Constructor method
 	 *
-	 * @param Updraft_Logger_Interface $logger
+	 * @param Updraft_Logger_Interface|null $logger
 	 */
-	public function __construct(Updraft_Logger_Interface $logger = null) {
+	public function __construct(?Updraft_Logger_Interface $logger = null) {
 		if (!empty($logger)) $this->_loggers = array($logger);
 	}
 

@@ -1,19 +1,16 @@
 <?php
+
 /**
  * The API provided by a Builder that can be re-initialized.
  *
  * @package FakerPress\ThirdParty\lucatume\DI52\Builders
- *
- * @license GPL-3.0
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
-
 namespace FakerPress\ThirdParty\lucatume\DI52\Builders;
 
 /**
  * Interface ReinitializableBuilderInterface
  *
- * @package FakerPress\ThirdParty\lucatume\DI52\Builders
+ * @package \FakerPress\ThirdParty\lucatume\DI52\Builders
  */
 interface ReinitializableBuilderInterface
 {
@@ -25,5 +22,5 @@ interface ReinitializableBuilderInterface
      *
      * @return void This method does not return any value.
      */
-    public function reinit(array $afterBuildMethods = null, ...$buildArgs);
+    public function reinit(?array $afterBuildMethods = null, ...$buildArgs);
 }

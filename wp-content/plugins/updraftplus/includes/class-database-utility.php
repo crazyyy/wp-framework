@@ -592,7 +592,8 @@ class UpdraftPlus_Database_Utility {
 			);
 			$wpdb->query($sql['DROP_FUNCTION']);
 		} else {
-			$is_stored_routine_supported = new WP_Error('routine_creation_error', sprintf(__('An error occurred while attempting to check the support of stored routines creation (%s %s)', 'updraftplus'), $wpdb->last_error.' -', $sql['CREATE_FUNCTION']));
+			/* translators: 1: Last database error, 2: SQL create function statement. */
+			$is_stored_routine_supported = new WP_Error('routine_creation_error', sprintf(__('An error occurred while attempting to check the support of stored routines creation (%1$s %2$s)', 'updraftplus'), $wpdb->last_error.' -', $sql['CREATE_FUNCTION']));
 		}
 		$wpdb->suppress_errors($old_val);
 
@@ -660,7 +661,8 @@ class UpdraftPlus_Database_Utility {
 
 		$old_val = $wpdb->suppress_errors();
 		try {
-			$err_msg = __('An error occurred while attempting to retrieve routine status (%s %s)', 'updraftplus');
+			/* translators: 1: Last database error, 2: Additional error details. */
+			$err_msg = __('An error occurred while attempting to retrieve routine status (%1$s %2$s)', 'updraftplus');
 			$function_status = $wpdb->get_results($wpdb->prepare('SHOW FUNCTION STATUS WHERE DB = %s', DB_NAME), ARRAY_A);
 			if (!empty($wpdb->last_error)) throw new Exception(sprintf($err_msg, $wpdb->last_error.' -', $wpdb->last_query), 0);
 			$procedure_status = $wpdb->get_results($wpdb->prepare('SHOW PROCEDURE STATUS WHERE DB = %s', DB_NAME), ARRAY_A);
@@ -672,7 +674,8 @@ class UpdraftPlus_Database_Utility {
 				// Since routine name can include backquotes and routine name is typically enclosed with backquotes as well, the backquote escaping for the routine name can be done by adding a leading backquote
 				$quoted_escaped_routine_name = UpdraftPlus_Manipulation_Functions::backquote(str_replace('`', '``', $routine_name));
 				$routine = $wpdb->get_results($wpdb->prepare('SHOW CREATE %1$s %2$s', $routine['Type'], $quoted_escaped_routine_name), ARRAY_A);
-				if (!empty($wpdb->last_error)) throw new Exception(sprintf(__('An error occurred while attempting to retrieve the routine SQL/DDL statement (%s %s)', 'updraftplus'), $wpdb->last_error.' -', $wpdb->last_query), 1);
+				/* translators: 1: Last database error, 2: Last executed SQL query. */
+				if (!empty($wpdb->last_error)) throw new Exception(sprintf(__('An error occurred while attempting to retrieve the routine SQL/DDL statement (%1$s %2$s)', 'updraftplus'), $wpdb->last_error.' -', $wpdb->last_query), 1);
 				$stored_routines[$key] = array_merge($stored_routines[$key], $routine ? $routine[0] : array());
 			}
 		} catch (Exception $ex) {

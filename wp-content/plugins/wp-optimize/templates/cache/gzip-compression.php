@@ -46,7 +46,7 @@
 					<strong class="wpo-enabled"><?php esc_html_e('Gzip compression is currently ENABLED.', 'wp-optimize'); ?></strong>
 					<strong class="wpo-disabled"><?php esc_html_e('Gzip compression is currently DISABLED.', 'wp-optimize'); ?></strong>
 					<?php if (!$wp_optimize->is_apache_server() || ($wpo_gzip_compression_enabled && false == $wpo_gzip_compression_settings_added)) : ?>
-						<a href="#" class="wpo-refresh-gzip-status" title="<?php esc_attr_e('Press this to see if any changes were made to your Gzip configuration', 'wp-optimize'); ?>"><?php esc_html_e('Check status again', 'wp-optimize'); ?> <img class="wpo_spinner display-none" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>"></a>
+						<a href="#" class="wpo-refresh-gzip-status" title="<?php esc_attr_e('Press this to see if any changes were made to your Gzip configuration', 'wp-optimize'); ?>"><?php esc_html_e('Check status again', 'wp-optimize'); ?> <img class="wpo_spinner display-none" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="..."></a>
 					<?php endif; ?>
 				</p>
 				<br>

@@ -1,19 +1,16 @@
 <?php
+
 /**
  * A builder wrapping a value that will return upon build.
  *
  * @package lucatume\DI52
- *
- * @license GPL-3.0
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
-
 namespace FakerPress\ThirdParty\lucatume\DI52\Builders;
 
 /**
  * Class ValueBuilder
  *
- * @package FakerPress\ThirdParty\lucatume\DI52\Builders
+ * @package \FakerPress\ThirdParty\lucatume\DI52\Builders
  */
 class ValueBuilder implements BuilderInterface
 {
@@ -23,7 +20,6 @@ class ValueBuilder implements BuilderInterface
      * @var mixed
      */
     private $value;
-
     /**
      * ValueBuilder constructor.
      *
@@ -33,7 +29,6 @@ class ValueBuilder implements BuilderInterface
     {
         $this->value = $value;
     }
-
     /**
      * Builds and returns an instance of the builder built on the specified value.
      *
@@ -45,7 +40,6 @@ class ValueBuilder implements BuilderInterface
     {
         return $value instanceof self ? $value : new self($value);
     }
-
     /**
      * Returns the value wrapped by the builder.
      *

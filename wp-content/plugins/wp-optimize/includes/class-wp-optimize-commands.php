@@ -652,6 +652,10 @@ class WP_Optimize_Commands {
 	 * @return bool
 	 */
 	public function save_site_settings($data) {
+		if (!isset($data['wpo-sites'])) {
+			// this means no site selected
+			$data['wpo-sites'] = array();
+		}
 		return $this->options->save_wpo_sites_option($data['wpo-sites']);
 	}
 

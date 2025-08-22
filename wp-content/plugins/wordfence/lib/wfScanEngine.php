@@ -1628,6 +1628,13 @@ class wfScanEngine {
 	private function scan_passwds_init() {
 		$this->statusIDX['passwds'] = wfIssues::statusStart(__('Scanning for weak passwords', 'wordfence'));
 		$this->scanController->startStage(wfScanner::STAGE_PASSWORD_STRENGTH);
+		
+		require(ABSPATH . 'wp-includes/version.php'); /** @var string $wp_version */
+		if (version_compare($wp_version, '6.8', '>=')) {
+			wordfence::status(2, 'info', __('Skipping password strength check because WordPress version is >= 6.8 and MD5 is no longer used.', 'wordfence'));
+			return true;
+		}
+		
 		global $wpdb;
 		$counter = 0;
 		$query = "select ID from " . $wpdb->users;

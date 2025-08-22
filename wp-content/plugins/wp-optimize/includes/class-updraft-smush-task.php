@@ -370,19 +370,6 @@ abstract class Updraft_Smush_Task extends Updraft_Task_1_2 {
 	}
 
 	/**
-	 * Get features available with this service
-	 *
-	 * @return Array - an array of features
-	 */
-	public static function get_features() {
-		return array(
-			'max_filesize' => self::MAX_FILESIZE,
-			'lossy_compression' => true,
-			'preserve_exif' => true,
-		);
-	}
-
-	/**
 	 * Retrieve default options for this task.
 	 * This method should normally be over-ridden by the child.
 	 *

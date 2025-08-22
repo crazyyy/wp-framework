@@ -58,6 +58,21 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 	}
 
 	/**
+	 * Get partial templates of the Rackspace Cloud Files remote storage.
+	 *
+	 * @return Array an associative array keyed by name of the partial templates
+	 */
+	public function get_partial_templates() {
+		$partial_templates = array();
+		ob_start();
+		?>
+		<a href="{{updraftplus_premium_url}}" target="_blank"><em>{{api_key_setting_default_label}}</em></a>
+		<?php
+		$partial_templates['updraft_cloudfiles_apikeysetting'] = apply_filters('updraft_cloudfiles_apikeysetting', ob_get_clean());
+		return wp_parse_args(apply_filters('updraft_'.$this->get_id().'_partial_templates', $partial_templates), parent::get_partial_templates());
+	}
+
+	/**
 	 * This method overrides the parent method and lists the supported features of this remote storage option.
 	 *
 	 * @return Array - an array of supported features (any features not
@@ -249,7 +264,8 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 			<th>{{input_username_label}}:</th>
 			<td><input data-updraft_settings_test="user" type="text" autocomplete="off" class="updraft_input--wide udc-wd-600" id="{{get_template_input_attribute_value "id" "user"}}" name="{{get_template_input_attribute_value "name" "user"}}" value="{{user}}" />
 			<div style="clear:both;">
-				{{{input_username_title}}}
+				{{#> updraft_cloudfiles_apikeysetting}}
+				{{/updraft_cloudfiles_apikeysetting}}
 			</div>
 			</td>
 		</tr>
@@ -278,6 +294,7 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 		$properties = array(
 			'storage_image_url' => !empty($this->img_url) ? UPDRAFTPLUS_URL.$this->img_url : '',
 			'storage_long_description' => $this->long_desc,
+			'api_key_setting_default_label' => __('To create a new Rackspace API sub-user and API key that has access only to this Rackspace container, use Premium.', 'updraftplus'),
 			'mb_substr_existence_label' => !apply_filters('updraftplus_openstack_mbsubstr_exists', function_exists('mb_substr')) ? wp_kses($updraftplus_admin->show_double_warning('<strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__('Your web server\'s PHP installation does not include a required module (%s).', 'updraftplus'), 'mbstring').' '.__('Please contact your web hosting provider\'s support.', 'updraftplus').' '.sprintf(__("UpdraftPlus's %s module <strong>requires</strong> %s.", 'updraftplus'), $this->desc, 'mbstring').' '.__('Please do not file any support requests; there is no alternative.', 'updraftplus'), $this->method, false), $this->allowed_html_for_content_sanitisation()) : '',
 			'json_last_error_existence_label' => !apply_filters('updraftplus_rackspace_jsonlasterror_exists', function_exists('json_last_error')) ? wp_kses($updraftplus_admin->show_double_warning('<strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__('Your web server\'s PHP installation does not include a required module (%s).', 'updraftplus'), 'json').' '.__('Please contact your web hosting provider\'s support.', 'updraftplus').' '.sprintf(__("UpdraftPlus's %s module <strong>requires</strong> %s.", 'updraftplus'), 'Cloud Files', 'json').' '.__('Please do not file any support requests; there is no alternative.', 'updraftplus'), 'cloudfiles', false), $this->allowed_html_for_content_sanitisation()) : '',
 			'curl_existence_label' => wp_kses($updraftplus_admin->curl_check($this->long_desc, false, $this->method.' hidden-in-updraftcentral', false), $this->allowed_html_for_content_sanitisation()),
@@ -292,12 +309,12 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 			),
 			'input_region_label' => __('Cloud Files Storage Region', 'updraftplus'),
 			'input_username_label' => __('Cloud Files Username', 'updraftplus'),
-			'input_username_title' => wp_kses(apply_filters('updraft_cloudfiles_apikeysetting', '<a href="'.$updraftplus->get_url('premium_rackspace').'" target="_blank">'.__('To create a new Rackspace API sub-user and API key that has access only to this Rackspace container, use Premium.', 'updraftplus').'</a>'), $this->allowed_html_for_content_sanitisation()),
 			'input_apikey_label' => __('Cloud Files API Key', 'updraftplus'),
 			'input_apikey_type' => apply_filters('updraftplus_admin_secret_field_type', 'password'),
 			'input_container_label' => wp_kses(apply_filters('updraftplus_cloudfiles_location_description', __('Cloud Files Container', 'updraftplus')), $this->allowed_html_for_content_sanitisation()),
 			'input_test_label' => sprintf(__('Test %s Settings', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]),
+			'updraftplus_premium_url' => $updraftplus->get_url('premium'),
 		);
-		return wp_parse_args($properties, $this->get_persistent_variables_and_methods());
+		return wp_parse_args(apply_filters('updraft_'.$this->get_id().'_template_properties', array()), wp_parse_args($properties, $this->get_persistent_variables_and_methods()));
 	}
 }

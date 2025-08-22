@@ -129,24 +129,12 @@ class WP_Optimize_WebP {
 	}
 
 	/**
-	 * Decide whether the browser requesting the URL can accept webp images or not
-	 *
-	 * @return bool
-	 */
-	private function is_browser_accepting_webp() {
-		return (isset($_SERVER['HTTP_ACCEPT']) && false !== strpos($_SERVER['HTTP_ACCEPT'], 'image/webp'));
-	}
-	
-	/**
 	 * Detect whether using alter HTML method is possible or not
 	 *
 	 * @return bool
 	 */
 	private function is_alter_html_possible() {
-		if ($this->is_browser_accepting_webp()) {
-			return true;
-		}
-		return false;
+		return WPO_WebP_Utils::is_browser_accepting_webp();
 	}
 
 	/**
@@ -521,6 +509,18 @@ class WP_Optimize_WebP {
 	 */
 	public function is_webp_enabled() {
 		return $this->_should_use_webp;
+	}
+	
+	/**
+	 * Actions to be performed upon plugin activation
+	 *
+	 * @return void
+	 */
+	public function plugin_activate() {
+		if ($this->is_webp_enabled()) {
+			$this->init_webp_cron_scheduler();
+			$this->reset_webp_serving_method();
+		}
 	}
 }
 

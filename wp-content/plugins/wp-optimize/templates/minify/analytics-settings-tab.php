@@ -7,7 +7,7 @@
 		<p class="wpo-description-show-links">
 			<?php esc_html_e('Reduce the performance impact caused by analytics scripts.', 'wp-optimize'); ?>
 			<?php esc_html_e('Serve Google Analytics (GA) scripts locally by selecting Gtag.js or choose a lightweight alternative to GA by selecting Minimal Analytics.', 'wp-optimize'); ?>
-			<a href="<?php echo esc_url(WP_Optimize()->maybe_add_affiliate_params('https://getwpo.com/faqs/category/Google-Analytics/')); ?>" target="_blank"><?php esc_html_e('More information about the Google Analytics feature here', 'wp-optimize'); ?></a>
+			<a href="<?php echo esc_url(WP_Optimize()->maybe_add_affiliate_params('https://teamupdraft.com/documentation/wp-optimize/topics/general/faqs/how-to-set-up-google-analytics-in-wp-optimize/')); ?>" target="_blank"><?php esc_html_e('More information about the Google Analytics feature here', 'wp-optimize'); ?></a>
 		</p>
 		<div class="switch-container">
 			<label class="switch">
@@ -43,7 +43,7 @@
 								<option value="gtagv4" <?php selected($method, 'gtagv4'); ?>><?php esc_html_e('Gtag.js v4 (~52KB GZipped)', 'wp-optimize');?></option>
 								<option value="minimal-analytics" <?php selected($method, 'minimal-analytics'); ?>><?php esc_html_e('Minimal Analytics.js (~3KB GZipped)', 'wp-optimize');?></option>
 							</select>
-							<p class="description"><a href="https://getwpo.com/faqs/category/Google-Analytics/#Which-one-should-I-use-Google-Analytics-or-Minimal-Analytics-" target="_blank"><?php esc_html_e('Which analytics script should I use?', 'wp-optimize'); ?></a></p>
+							<p class="description"><a href="https://teamupdraft.com/documentation/wp-optimize/topics/general/faqs/how-to-set-up-google-analytics-in-wp-optimize/#which-one-should-i-use-google-analytics-or-minimal-analytics" target="_blank"><?php esc_html_e('Which analytics script should I use?', 'wp-optimize'); ?></a></p>
 						</td>
 					</tr>
 				</tbody>

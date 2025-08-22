@@ -2,8 +2,8 @@
 Contributors: Backup with UpdraftPlus, DavidAnderson, pmbaldha, DNutbourne, aporter, bcrodua
 Tags: backup, database backup, wordpress backup, cloud backup, migration
 Requires at least: 3.2
-Tested up to: 6.7
-Stable tag: 1.25.3
+Tested up to: 6.8
+Stable tag: 1.25.7
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -179,6 +179,52 @@ The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the b
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.32.x of the free version correspond to changes made in 2.16.32.x of the paid version.
 
+= 1.25.7 - 07/Aug/2025 =
+
+* FIX: A regression for verifying the presence of old folders in the backup directory; old folders created during the restoration of the "Others" entity were not detected correctly.
+* FIX: The per-backup lock entries were not removed, resulting in an accumulation of these entries in the database over time. (Includes clean-up of old entries).
+* TWEAK: Add IDrive e2 and MEGA to the S3-Compatible storage list
+* TWEAK: Internal function call to prevent a PHP 8.1 deprecation notice on fresh WP installs
+* TWEAK: Add wp-staging to the default uploads exclusion list
+* TWEAK: Add UpdraftCentral handler for site icon upload request.
+* TWEAK: Added support for the database view dashicon in WordPress versions prior to 5.5.
+* TWEAK: Include site icon information in the 'get_site_icon' response of the UpdraftCentral core module.
+* TWEAK: Resolve the empty list issue on the backup email reports created by the UpdraftPlus free version
+* TWEAK: The "Get every feature of UpdraftPlus Premium" box shouldn't be displayed after purchases got claimed/activated
+* TWEAK: Remove seasonal (new year, summer, spring and plugin collection) sale notices
+* TWEAK: Handle unsupported character set defined for table fields during database pre-restoration.
+* TWEAK: Updated links in the Premium Extensions tab of the plugin’s admin menu page.
+
+= 1.25.6 - 27/May/2025 =
+
+* FIX: A regression that prevented the remote storage label from being updated
+* FIX: A regression that could cause unintended behaviour when restoring special files
+* FIX: A fatal error when executing a standalone php backup script with "do_action('updraft_backup_all')".
+* FIX: Regression that caused certain features (e.g. PHP Info) to break due to a missing HTML attribute on the triggering element
+* FIX: An issue that caused migration failure for sites using the Performance Lab plugin or other plugins implementing an object cache drop-in
+* TWEAK: handle non fatal file rename failure during restore
+* TWEAK: The automatic backup feature is now disabled by default on new installs
+* TWEAK: return post status and formatted date from UDC post API
+* TWEAK: Replace a call to unserialize() in the Dropbox storage library
+* TWEAK: Validate the DreamObjects endpoint to ensure only expected DreamObjects enpoint formats can pass through.
+* TWEAK: Position the "includes all tables not listed below" option at the beginning of the first known table in the DB restoration widget.
+* TWEAK: Add a new default endpoint in DreamObjects along with UI to allow users to add custom endpoint in the format "s3.<region>.dream.io".
+* TWEAK: The Azure Storage Service add-on now requires PHP 5.6 or higher to support the mandatory use of TLS 1.2, which will be enforced starting August 31, 2025.
+
+= 1.25.5 - 17/Apr/2025 =
+
+* FIX: A bug that prevented the Rackspace "Create new API user and container" dialog from opening.
+* TWEAK: An HTTP header intended to terminate the browser's connection was incorrectly assigned a value that the header does not support.
+* TWEAK: Ability to automatically choose the proper checkout page when the user is about to buy TeamUpdraft products from within the plugin
+* TWEAK: Clear Divi theme CSS cache at the end of the restoration process
+* TWEAK: Resolve PHP warning in pCloud addon when upgrading from free to premium version.
+* TWEAK: Update error messages when the user fails to connect to their TeamUpdraft account on the 'Premium/Extensions' tab.
+
+= 1.25.4 - 24/Mar/2025 =
+
+* FIX: Regression in 1.25.3 - missing database encryption input field due to the use of the "wp_kses_post" function that doesn't allow "<input>" tag to be rendered
+* TWEAK: Add new fields to UpdraftCentral handler
+
 = 1.25.3 - 21/Mar/2025 =
 
 * FIX: An issue that prevented an UpdraftClone backup from sending when attempting to boot an UpdraftClone from WP_CLI
@@ -204,7 +250,7 @@ N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which i
 * TWEAK: Improve error message clarity for failed connection tests in migration.
 * TWEAK: Include details in the backup log file about the status and availability of the proxy configured in the system.
 * TWEAK: Update the Google library to support the WP_PROXY_HOST and WP_PROXY_PORT constants.
-* TWEAK: TWEAK Update the link for Onedrive and Azure app creation
+* TWEAK: Update the link for Onedrive and Azure app creation
 * COMPATIBILITY: Got rid of PHP 8.4 deprecation messages caused by the E_STRICT constant usage
 
 = 1.25.1 - 11/Jan/2025 =
@@ -419,7 +465,7 @@ N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which i
 * TWEAK: Fix unable to switch tab when a plugin (wrongly) loads certain CSS onto UD's settings page
 * TWEAK: Remove the word 'apparently' in the backup success message
 * TWEAK: Update to latest phpseclib 1.0.X version (prevents deprecation notice on PHP 8.1+)
-* TWEAK: Change "s3" property to "public" in UpdraftPlus_AWSRequest class for PHP 8.2 deprecation compatibility [https://source.updraftplus.com/team-updraft/updraftplus/-/merge_requests/1481]
+* TWEAK: Change "s3" property to "public" in UpdraftPlus_AWSRequest class for PHP 8.2 deprecation compatibility
 * TWEAK: Fixed Missing/ broken links for the pCloud image in addons tab
 * TWEAK: Buying UpdraftClone tokens through inline checkout
 * TWEAK: Fixed Spelling errors in updraftplus repo
@@ -2032,4 +2078,4 @@ Non-English translators are provided by volunteers, and wordpress.org does not g
 We recognise and thank those mentioned at https://updraftplus.com/acknowledgements/ for code and/or libraries used and/or modified under the terms of their open source licences.
 
 == Upgrade Notice ==
-* 1.25.3: Various fixes and small tweaks - see the changelog for details. A recommended update for all.
+* 1.25.7: Various fixes and small tweaks - see the changelog for details. A recommended update for all.

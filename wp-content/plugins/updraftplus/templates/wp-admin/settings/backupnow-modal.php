@@ -63,7 +63,11 @@
 	?>
 </div>
 
-<span id="backupnow_remote_container"><?php echo $this->backup_now_remote_message(); ?></span>
+<span id="backupnow_remote_container">
+	<?php
+	echo $this->backup_now_remote_message();// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- needs to be presented in html
+	?>
+</span>
 
 <p id="backupnow_always_keep_container" class="new-backups-only">
 	<input type="checkbox" id="always_keep">

@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Provider\en_GB;
 
@@ -23,7 +18,7 @@ class Company extends \FakerPress\ThirdParty\Faker\Provider\Company
      *
      * @see https://en.wikipedia.org/wiki/VAT_identification_number#VAT_numbers_by_country
      */
-    public static function vat(string $type = null): string
+    public static function vat(?string $type = null): string
     {
         switch ($type) {
             case static::VAT_TYPE_BRANCH:

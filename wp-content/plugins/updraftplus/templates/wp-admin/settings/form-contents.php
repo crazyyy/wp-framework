@@ -113,6 +113,7 @@ foreach ($default_options as $k => $v) {
 			$multi = apply_filters('updraftplus_storage_printoptions_multi', '');
 			
 			foreach ($updraftplus->backup_methods as $method => $description) {
+				/* translators: %s: Remote storage */
 				$backup_using = esc_attr(sprintf(__("Backup using %s?", 'updraftplus'), $description));
 				
 				echo "<input aria-label=\"$backup_using\" name=\"updraft_service[]\" class=\"updraft_servicecheckbox $method $multi\" id=\"updraft_servicecheckbox_$method\" type=\"checkbox\" value=\"$method\"";
@@ -165,7 +166,7 @@ foreach ($default_options as $k => $v) {
 
 		<td>
 		<?php
-			echo wp_kses_post(apply_filters('updraft_database_encryption_config', sprintf(__('%s with UpdraftPlus Premium.', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/features/database-encryption/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=encrypt-the-datbase&utm_creative_format=text" target="_blank">'.__('Encrypt the database', 'updraftplus').'</a>').' '.sprintf(__('You can also %s.', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/features/more-database-options/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=back-up-non-wp-tables&utm_creative_format=text" target="_blank">'.__('back up non-WP tables and external databases', 'updraftplus').'</a>')));
+			echo apply_filters('updraft_database_encryption_config', sprintf(__('%s with UpdraftPlus Premium.', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/features/database-encryption/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=encrypt-the-datbase&utm_creative_format=text" target="_blank">'.__('Encrypt the database', 'updraftplus').'</a>').' '.sprintf(__('You can also %s.', 'updraftplus'), '<a href="https://teamupdraft.com/updraftplus/features/more-database-options/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=back-up-non-wp-tables&utm_creative_format=text" target="_blank">'.__('back up non-WP tables and external databases', 'updraftplus').'</a>'));
 		?>
 		</td>
 	</tr>
@@ -186,7 +187,8 @@ foreach ($default_options as $k => $v) {
 
 				<?php
 				if (version_compare($updraftplus->get_wordpress_version(), '3.3', '<')) {
-					echo '<em>'.sprintf(__('This feature requires %s version %s or later', 'updraftplus'), 'WordPress', '3.3').'</em>';
+					/* translators: %1$s: WordPress, %2$s: Version number */
+					echo '<em>'.sprintf(__('This feature requires %1$s version %2$s or later', 'updraftplus'), 'WordPress', '3.3').'</em>';
 				} else {
 				?>
 
@@ -329,7 +331,16 @@ foreach ($default_options as $k => $v) {
 
 	<tr class="expertmode updraft-hidden" style="display:none;">
 		<th><?php _e('Split archives every:', 'updraftplus');?></th>
-		<td><input type="text" name="updraft_split_every" class="updraft_split_every" value="<?php echo $split_every_mb; ?>" size="5" /> MB<br><?php echo sprintf(esc_html__('UpdraftPlus will split up backup archives when they exceed this file size.', 'updraftplus').' '.__('The default value is %s megabytes.', 'updraftplus').' '.esc_html__('Be careful to leave some margin if your web-server has a hard size limit (e.g. the 2 GB / 2048 MB limit on some 32-bit servers/file systems).', 'updraftplus'), 400).' '.esc_html__('The higher the value, the more server resources are required to create the archive.', 'updraftplus'); ?></td>
+		<td>
+			<input type="text" name="updraft_split_every" class="updraft_split_every" value="<?php echo $split_every_mb; ?>" size="5" /> MB<br>
+			<?php
+				echo esc_html(__('UpdraftPlus will split up backup archives when they exceed this file size.', 'updraftplus').' '.
+					/* translators: %s: The default value of the backup split size */
+					sprintf(__('The default value is %s megabytes.', 'updraftplus'), 400).' '.
+					__('Be careful to leave some margin if your web-server has a hard size limit (e.g. the 2 GB / 2048 MB limit on some 32-bit servers/file systems).', 'updraftplus').' '.
+				__('The higher the value, the more server resources are required to create the archive.', 'updraftplus'));
+			?>
+		</td>
 	</tr>
 
 	<tr class="deletelocal expertmode updraft-hidden" style="display:none;">

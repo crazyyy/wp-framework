@@ -17,7 +17,7 @@
 	<h3><?php esc_html_e('Thank you for installing WP-Optimize.', 'wp-optimize'); ?></h3>
 <?php endif; ?>
 
-	<a href="https://getwpo.com" target="_blank"><img style="border: 0px; float: right; width: 150px; margin-right: 40px;" alt="WP-Optimize" title="WP-Optimize" src="<?php echo esc_url(WPO_PLUGIN_URL.'images/logo/wpo_logo_small.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>"></a>
+	<a href="https://teamupdraft.com/wp-optimize/" target="_blank"><img style="border: 0px; float: right; width: 150px; margin-right: 40px;" alt="WP-Optimize" title="WP-Optimize" src="<?php echo esc_url(WPO_PLUGIN_URL.'images/logo/wpo_logo_small.png'); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>"></a>
 
 	<div id="wp-optimize-dashnotice-wrapper" style="max-width: 800px;">
 	
@@ -40,7 +40,7 @@
 		
 		<p>
 			<?php
-				$message = $wp_optimize->wp_optimize_url('https://getwpo.com/buy/', '', '<strong>WP-Optimize Premium:</strong>', '', true);
+				$message = $wp_optimize->wp_optimize_url('https://teamupdraft.com/wp-optimize/pricing/', '', '<strong>WP-Optimize Premium:</strong>', '', true);
 				$message .= ' ';
 				$message .= esc_html__('Unlock new ways to speed up your WordPress website.', 'wp-optimize');
 				$message .= ' ';
@@ -49,7 +49,7 @@
 					esc_html__('Optimize from the WP-CLI, cache multilingual and multicurrency websites, get premium support and %s.', 'wp-optimize'),
 					sprintf(
 						'<a href="%s" target="_blank">%s</a>',
-						esc_url('https://getwpo.com/buy/'),
+						esc_url('https://teamupdraft.com/wp-optimize/pricing/'),
 						esc_html__('more', 'wp-optimize')
 					)
 				);

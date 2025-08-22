@@ -103,8 +103,6 @@ var WP_Optimize_Smush = function() {
 				smush_completed = false;
 				if (smush_timer_locked) return;
 				block_ui('', $.extend(block_ui_custom_options, {message: $('#wpo_smush_images_information_container')}), false, true);
-				$('#wpo_smush_images_information_server').html(wposmush.smush_settings.compression_server);
-
 				clear_smush_stats();
 
 				smush_timer_handle = window.setInterval(smush_timer, 1000);
@@ -726,7 +724,7 @@ var WP_Optimize_Smush = function() {
 				if ('update_failed_no_working_webp_converter' === resp.error_code) {
 					var html_msg = '<p>'
 						+ wposmush.webp_conversion_tool_error
-						+ ' <a href="https://getwpo.com/faqs/#How-can-I-get-WebP-conversion-tools-to-work-" target="_blank">'
+						+ ' <a href="https://teamupdraft.com/documentation/wp-optimize/topics/image-compression/troubleshooting/the-webp-conversion-tool-is-not-working/" target="_blank">'
 						+ wposmush.webp_conversion_tool_how_to
 						+ '</a></p>';
 					$('#smush-information-modal .smush-information').html(html_msg);
@@ -929,7 +927,7 @@ var WP_Optimize_Smush = function() {
 	/**
 	 * Update images optimization tab view with data returned from images optimization.
 	 *
-	 * @param {Object} data - meta data returned from task manager
+	 * @param {Object} data - metadata returned from task manager
 	 *
 	 * @return void
 	 */
@@ -991,8 +989,6 @@ var WP_Optimize_Smush = function() {
 		if (smush_timer_locked) return;
 
 		block_ui('', $.extend(block_ui_custom_options, {message: $('#wpo_smush_images_information_container')}), false, true);
-		service = $('.compression_server input[type="radio"]:checked + label small').text();
-		$('#wpo_smush_images_information_server').html(service);
 
 		clear_smush_stats();
 
@@ -1069,6 +1065,9 @@ var WP_Optimize_Smush = function() {
 
 		(function(single_callback) {
 			heartbeat_agents.push(heartbeat.add_agent({
+				// We have to use a non-unique agent in the complete action because the info update subactions
+				// have the same names, and the agent may not be added. This ensures that the "smush_complete" action will run.
+				_unique: false,
 				_wait: false,
 				_keep: false,
 				command: 'updraft_smush_ajax',

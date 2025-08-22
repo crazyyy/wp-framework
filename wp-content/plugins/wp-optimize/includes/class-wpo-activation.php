@@ -28,6 +28,7 @@ class WPO_Activation {
 		WP_Optimize()->get_gzip_compression()->restore();
 		WP_Optimize()->get_browser_cache()->restore();
 		WP_Optimize()->get_table_management()->create_plugin_tables();
+		WP_Optimize()->get_webp_instance()->plugin_activate();
 
 		self::init_batch_processing();
 

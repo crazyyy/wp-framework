@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 declare(strict_types=1);
 
@@ -23,7 +18,7 @@ final class Version implements Extension\VersionExtension
      */
     private array $semverCommonPreReleaseIdentifiers = ['alpha', 'beta', 'rc'];
 
-    public function __construct(Extension\NumberExtension $numberExtension = null)
+    public function __construct(?Extension\NumberExtension $numberExtension = null)
     {
 
         $this->numberExtension = $numberExtension ?: new  Number();

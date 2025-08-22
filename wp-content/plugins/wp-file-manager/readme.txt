@@ -2,9 +2,9 @@
 Contributors: mndpsingh287
 Tags: wp-file-manager, elfinder,file manager, ftp, wp-filemanager,file manager, wp-filemanager, Upload Files, WP File Manager, File Manage, Edit Files, Delete Files, FTP, filemanager, wpfilemanager, ftp, file transfer, update, create, delete, view, rename, editor, Cpanel, Control Panel, Admin, Shortcode, explorer, file explorer, filemanager
 Requires at least: 4.0
-Tested up to: 6.7.1
+Tested up to: 6.8.1
 Requires PHP: 5.2.4
-Stable tag: 8.0.1
+Stable tag: 8.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,14 +81,15 @@ Key Features in the Free File Manager plugin include:
 * **Dropbox Integration**        drag drop, copy paste all other operations between file manager and dropbox.
 
 
-> <strong>[Buy Pro Version](https://filemanagerpro.io/product/file-manager/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> with various features & support.
+> <strong>[Buy Pro Version](https://filemanagerpro.io/file-manager-pricing/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> with various features & support.
 > <strong>[Contact us](https://filemanagerpro.io/contact/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> for Support Only Pro Version Users.
 > <strong>[Documentation](https://filemanagerpro.io/documentation/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> Click Here.
 > <strong>[Addons](https://filemanagerpro.io/addons/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> with various features & support.
-**[Upgrade to Pro Version](https://filemanagerpro.io/product/file-manager/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)**
+**[Upgrade to Pro Version](https://filemanagerpro.io/file-manager-pricing/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)**
 
 = Premium Addons =
 
+<strong>[File Manager Cloudflare R2](https://filemanagerpro.io/product/file-manager-cloudflare-r2/?utm_source=Wordpress&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Cloudflare R2 bucket.
 <strong>[File Manager Digital Ocean](https://filemanagerpro.io/product/digital-ocean-add-on/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Digital Ocean.
 <strong>[File Manager Google Drive](https://filemanagerpro.io/product/file-manager-google-drive/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in Google Drive.
 <strong>[File Manager OneDrive](https://filemanagerpro.io/product/file-manager-one-drive/?utm_source=Wordpress.org&utm_medium=Website&utm_campaign=File%20Manager%20Pro)</strong> provides you ability to edit, delete, upload, download, copy and paste files and folders in OneDrive from File Manager.
@@ -138,6 +139,9 @@ Yes, You can archive any files and folders as zip then simple download it. Pleas
 
 
 == Changelog ==
+
+= 8.0.2 (26th May, 2025) =
+* Core libraries updated.
 
 = 8.0.1 (08th Jan, 2025) =
 * Checked compatibility with WordPress 6.7.1

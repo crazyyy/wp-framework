@@ -138,12 +138,12 @@
 		<div class="wpo-minify-default-exclusions<?php echo $wpo_minify_options['edit_default_exclutions'] ? '' : ' hidden'; ?>">
 			<h3><?php esc_html_e('Known incompatible files', 'wp-optimize'); ?></h3>
 			<fieldset>
-				<label for="ignore_list">
+				<p>
 					<?php esc_html_e('List of files that can\'t or shouldn\'t be minified or merged.', 'wp-optimize'); ?>
 					<?php esc_html_e('Do not edit this if you are not sure what it is.', 'wp-optimize'); ?>
 					<br><?php esc_html_e('Tick the checkbox to merge / minify the corresponding file anyways.', 'wp-optimize'); ?>
 					<span tabindex="0" data-tooltip="<?php esc_attr_e('Files that have been consistently reported by other users to cause trouble when merged', 'wp-optimize');?>"><span class="dashicons dashicons-editor-help"></span> </span>
-				</label>
+				</p>
 				<?php
 					$user_excluded_ignorelist_items = is_array($wpo_minify_options['ignore_list']) ? $wpo_minify_options['ignore_list'] : array();
 					if (empty($default_ignore)) {
@@ -160,11 +160,11 @@
 
 			<h3><?php esc_html_e('IE incompatible files', 'wp-optimize'); ?></h3>
 			<fieldset>
-				<label for="blacklist">
+				<p>
 					<?php esc_html_e('List of excluded files used for IE compatibility.', 'wp-optimize'); ?>
 					<?php esc_html_e('Do not edit this if you are not sure what it is.', 'wp-optimize'); ?>
 					<br><?php esc_html_e('Tick the checkbox to merge / minify the corresponding file anyways.', 'wp-optimize'); ?>
-				</label>
+				</p>
 				<?php
 					$user_excluded_blacklist_items = is_array($wpo_minify_options['blacklist']) ? $wpo_minify_options['blacklist'] : array();
 					if (empty($default_ie_blacklist)) {

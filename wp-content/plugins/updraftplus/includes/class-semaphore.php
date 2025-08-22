@@ -221,4 +221,14 @@ class UpdraftPlus_Semaphore {
 
 		return false;
 	}
+
+	/**
+	 * Remove a given lock from the options table in the database
+	 *
+	 * @return Boolean True if the lock has successfully been removed, false otherwise
+	 */
+	public function delete_lock() {
+		global $wpdb;
+		return (bool) $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name = %s", $this->lock_name));
+	}
 } // End UpdraftPlus_Semaphore

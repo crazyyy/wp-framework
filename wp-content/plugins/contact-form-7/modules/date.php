@@ -158,18 +158,18 @@ add_filter( 'wpcf7_messages', 'wpcf7_date_messages', 10, 1 );
 function wpcf7_date_messages( $messages ) {
 	return array_merge( $messages, array(
 		'invalid_date' => array(
-			'description' => __( "Date format that the sender entered is invalid", 'contact-form-7' ),
-			'default' => __( "Please enter a date in YYYY-MM-DD format.", 'contact-form-7' ),
+			'description' => __( 'Date format that the sender entered is invalid', 'contact-form-7' ),
+			'default' => __( 'Please enter a date in YYYY-MM-DD format.', 'contact-form-7' ),
 		),
 
 		'date_too_early' => array(
-			'description' => __( "Date is earlier than minimum limit", 'contact-form-7' ),
-			'default' => __( "This field has a too early date.", 'contact-form-7' ),
+			'description' => __( 'Date is earlier than minimum limit', 'contact-form-7' ),
+			'default' => __( 'This field has a too early date.', 'contact-form-7' ),
 		),
 
 		'date_too_late' => array(
-			'description' => __( "Date is later than maximum limit", 'contact-form-7' ),
-			'default' => __( "This field has a too late date.", 'contact-form-7' ),
+			'description' => __( 'Date is later than maximum limit', 'contact-form-7' ),
+			'default' => __( 'This field has a too late date.', 'contact-form-7' ),
 		),
 	) );
 }
@@ -199,28 +199,33 @@ function wpcf7_tag_generator_date( $contact_form, $options ) {
 
 	$tgg = new WPCF7_TagGeneratorGenerator( $options['content'] );
 
-?>
-<header class="description-box">
-	<h3><?php
-		echo esc_html( $field_types['date']['heading'] );
-	?></h3>
+	$formatter = new WPCF7_HTMLFormatter();
 
-	<p><?php
-		$description = wp_kses(
-			$field_types['date']['description'],
-			array(
-				'a' => array( 'href' => true ),
-				'strong' => array(),
-			),
-			array( 'http', 'https' )
-		);
+	$formatter->append_start_tag( 'header', array(
+		'class' => 'description-box',
+	) );
 
-		echo $description;
-	?></p>
-</header>
+	$formatter->append_start_tag( 'h3' );
 
-<div class="control-box">
-	<?php
+	$formatter->append_preformatted(
+		esc_html( $field_types['date']['heading'] )
+	);
+
+	$formatter->end_tag( 'h3' );
+
+	$formatter->append_start_tag( 'p' );
+
+	$formatter->append_preformatted(
+		wp_kses_data( $field_types['date']['description'] )
+	);
+
+	$formatter->end_tag( 'header' );
+
+	$formatter->append_start_tag( 'div', array(
+		'class' => 'control-box',
+	) );
+
+	$formatter->call_user_func( static function () use ( $tgg, $field_types ) {
 		$tgg->print( 'field_type', array(
 			'with_required' => true,
 			'select_options' => array(
@@ -243,15 +248,19 @@ function wpcf7_tag_generator_date( $contact_form, $options ) {
 			'type' => 'date',
 			'with_placeholder' => false,
 		) );
-	?>
-</div>
+	} );
 
-<footer class="insert-box">
-	<?php
+	$formatter->end_tag( 'div' );
+
+	$formatter->append_start_tag( 'footer', array(
+		'class' => 'insert-box',
+	) );
+
+	$formatter->call_user_func( static function () use ( $tgg, $field_types ) {
 		$tgg->print( 'insert_box_content' );
 
 		$tgg->print( 'mail_tag_tip' );
-	?>
-</footer>
-<?php
+	} );
+
+	$formatter->print();
 }

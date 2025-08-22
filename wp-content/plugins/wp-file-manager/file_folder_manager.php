@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/wp-file-manager
   Description: Manage your WP files.
   Author: mndpsingh287
-  Version: 8.0.1
+  Version: 8.0.2
   Author URI: https://profiles.wordpress.org/mndpsingh287
   License: GPLv2
  **/
@@ -19,7 +19,7 @@ if (!class_exists('mk_file_folder_manager')):
     class mk_file_folder_manager
     {
         protected $SERVER = 'https://filemanagerpro.io/api/plugindata/api.php';
-        var $ver = '8.0.1';
+        var $ver = '8.0.2';
         /* Auto Load Hooks */
         public function __construct()
         {
@@ -887,7 +887,7 @@ if (!class_exists('mk_file_folder_manager')):
                 $jquery_ui_js = 'jquery-ui-1.11.4.js';
                 // 5.6 jquery ui issue fix
                 if ( version_compare( $wp_version, '5.6', '>=' ) ) {
-                    $jquery_ui_js = 'jquery-ui-1.12.1.js';
+                    $jquery_ui_js = 'jquery-ui-1.13.2.js';
                 }
 
                 wp_enqueue_script('fm_jquery_ui', plugins_url('lib/jquery/'.$jquery_ui_js, __FILE__), $this->ver);

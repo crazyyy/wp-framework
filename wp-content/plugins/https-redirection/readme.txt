@@ -2,9 +2,9 @@
 Contributors: Tips and Tricks HQ
 Donate link: https://www.tipsandtricks-hq.com/development-center
 Tags: ssl, https, force ssl, insecure content, redirection, automatic redirection, htaccess, https redirection, ssl certificate, secure page, secure, force https
-Requires at least: 5.5
-Tested up to: 6.2
-Stable tag: 1.9.2
+Requires at least: 6.5
+Tested up to: 6.8
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,33 +14,35 @@ The plugin allows an automatic redirection to the "HTTPS" version/URL of the sit
 
 = Only use this plugin if you have installed SSL certificate on your site and HTTPS is working correctly =
 
-After you install SSL certificate on your site, you should use the "HTTPS" URL of your webpages. 
+Once you've installed an SSL certificate on your site, it's important to ensure that your webpages are accessed via their secure HTTPS URLs.
 
-You want to force search engines to index your HTTPS version of the webpage(s).
+To improve SEO and user security, you want search engines and visitors to always use the HTTPS version of your pages. This plugin makes that easy by automatically redirecting users to the HTTPS version whenever they try to access the non-HTTPS (HTTP) version of a page.
 
-This plugin will help you automatically setup a redirection to the https version of an URL when anyone tries to access the non-https version.
+=== Example ===
 
-Lets say for example, you want to use HTTPS URL for the following page on your site:
+Let's say you want to ensure the following page is always accessed over HTTPS:
 
-www.example.com/checkout
+`https://www.example.com/checkout`
 
-This plugin will enforce that so if anyone uses an URL like the following in the browser's address bar:
-http://www.example.com/checkout 
+If a visitor tries to access:
 
-It will automatically redirect to the following HTTPS version of the page:
-https://www.example.com/checkout
+`http://www.example.com/checkout`
 
-So you are always forcing the visitor to view the HTTPS version of the page or site in question.
+The plugin will automatically redirect them to the secure version:
 
-You can force your entire domain to be auto redirected to the HTTPS URL or selectively choose a few pages to be re-directed.
+`https://www.example.com/checkout`
 
-= Video Tutorials =
+This ensures that visitors always access the HTTPS version of your pages or site.
+
+You can choose to automatically redirect your entire domain to HTTPS, or selectively apply HTTPS redirection to specific pages.
+
+=== Video Tutorials ===
 
 https://www.youtube.com/watch?v=oyJgRFCM6u8
 
 https://www.youtube.com/watch?v=LtyBraB64v8
 
-= Force Load Static Files Using HTTPS =
+=== Force Load Static Files Using HTTPS ===
 
 If you started using SSL from day 1 of your site then all your static files are already embedded using HTTPS URL. You have no issue there.
 
@@ -50,11 +52,23 @@ This plugin has an option that will allow you to force load those static files u
 
 This will help you make the webpage fully compatible with SSL.
 
-= Features =
+=== SSL Certificate Expiry Notification ===
 
-* Actions: Do an auto redirect for the whole domain. So every URL will be redirected to the HTTPS version automatically.
-* Actions: Do an auto redirect for a few pages. The user can enter the URLs that will be auto redirected to the HTTPS version.
-* Force load static files (images, js, css etc) using a HTTPS URL.
+This plugin includes a feature that allows you to receive email notifications when your SSL certificate is about to expire. It helps ensure your website remains secure and accessible over HTTPS.
+
+You can configure the recipient email address and specify how many days in advance the notification should be sent. By default, the notification is sent 7 days before expiry, but you can adjust this to suit your preference.
+
+This feature is especially useful for site owners who may not frequently check their SSL status, or for those managing multiple websites. By receiving timely alerts, you can renew your SSL certificate in advance and prevent potential downtime or security warnings.
+
+=== Features ===
+* Automatically redirect all HTTP traffic to HTTPS
+* Option to force HTTPS on the entire site
+* Option to selectively apply HTTPS redirection to specific pages
+* Helps search engines index the secure versions of your pages
+* Improves site security and user trust
+* Force load static files (images, js, css etc) using a HTTPS URL
+* SSL certificate expiry notification - Option to send SSL expiry notifications to a specific email address
+* Easily see which SSL certificates on your site are approaching their expiry date.
 
 View more details on the [HTTPS Redirection plugin](https://www.tipsandtricks-hq.com/wordpress-easy-https-redirection-plugin) page.
 
@@ -76,8 +90,8 @@ The plugin will store the settings in the database and add all the necessary con
 
 = What should I do if after making changes in the .htaccess file with the help of the plugin my site stops working? =
 
-The.htaccess is located in the site root. With your FTP program or via Сpanel go to the site root, open the .htaccess file and delete the necessary strings manually.
-Please make use of the following information: http://codex.wordpress.org/FTP_Clients
+The.htaccess is located in the site root. With your FTP program or via cPanel go to the site root, open the .htaccess file and delete the necessary strings manually.
+Please make use of the following information: https://codex.wordpress.org/FTP_Clients
 
 = How to use the other language files with the HTTPS Redirection? = 
 
@@ -89,7 +103,7 @@ Here is an example for German language files.
 
 3. If there are no such files it will be necessary to copy other files from this folder (for example, for Russian or Italian language) and rename them (you should write `de_DE` instead of `ru_RU` in the both files).
 
-4. The files are edited with the help of the program Poedit - http://www.poedit.net/download.php - please load this program, install it, open the file with the help of this program (the required language file) and for each line in English you should write translation in German.
+4. The files are edited with the help of the program Poedit - https://poedit.net/download - please load this program, install it, open the file with the help of this program (the required language file) and for each line in English you should write translation in German.
 
 5. If everything has been done properly all the lines will be in German in the admin panel and on frontend.
 
@@ -98,6 +112,16 @@ Here is an example for German language files.
 1. Plugin settings page.
 
 == Changelog ==
+
+= v2.0.0 =
+- The plugin has gone through significant updates and improvements in this version.
+- If you have any issues after you upgrade to this version, please roll back to the previous version and contact us for support.
+- Here is the download link for the previous version: https://downloads.wordpress.org/plugin/https-redirection.1.9.2.zip
+- The plugin now has it's own admin menu labeled "Easy HTTPS & SSL".
+- Added a new option to send SSL expiry notifications to a specific email address.
+- Added a new option to specify how many days in advance the notification should be sent.
+- Added debug logging feature.
+- Updated the translation POT file.
 
 = v1.9.2 =
 - Added rule to handle sites that are sitting behind a reverse-proxy. Thanks to @canadiannaginata for pointing it out.

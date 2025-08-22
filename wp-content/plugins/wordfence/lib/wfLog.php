@@ -563,8 +563,8 @@ class wfLog {
 			if ($b->matchRequest($IP, $userAgent, $referrer) !== wfBlock::MATCH_NONE) {
 				$b->recordBlock();
 				wfActivityReport::logBlockedIP($IP, null, 'advanced');
-				$this->currentRequest->actionDescription = __('UA/Referrer/IP Range not allowed', 'wordfence');
-				$this->do503(3600, __("Advanced blocking in effect.", 'wordfence')); //exits
+				$this->currentRequest->actionDescription = @__('UA/Referrer/IP Range not allowed', 'wordfence');
+				$this->do503(3600, @__("Advanced blocking in effect.", 'wordfence')); //exits
 			}
 		}
 
@@ -576,7 +576,7 @@ class wfLog {
 				$bypassRedirDest = wfConfig::get('cbl_bypassRedirDest', '');
 				
 				$this->initLogRequest();
-				$this->getCurrentRequest()->actionDescription = __('redirected to bypass URL', 'wordfence');
+				$this->getCurrentRequest()->actionDescription = @__('redirected to bypass URL', 'wordfence');
 				$this->getCurrentRequest()->statusCode = 302;
 				$this->currentRequest->action = 'cbl:redirect';
 				$this->logHit();
@@ -590,7 +590,7 @@ class wfLog {
 				wfConfig::inc('totalCountryBlocked');
 				
 				$this->initLogRequest();
-				$this->getCurrentRequest()->actionDescription = sprintf(/* translators: URL */ __('blocked access via country blocking and redirected to URL (%s)', 'wordfence'), wfConfig::get('cbl_redirURL'));
+				$this->getCurrentRequest()->actionDescription = sprintf(/* translators: URL */ @__('blocked access via country blocking and redirected to URL (%s)', 'wordfence'), wfConfig::get('cbl_redirURL'));
 				$this->getCurrentRequest()->statusCode = 503;
 				if (!$this->getCurrentRequest()->action) {
 					$this->currentRequest->action = 'blocked:wordfence';
@@ -605,10 +605,10 @@ class wfLog {
 			}
 			else if ($match !== wfBlock::MATCH_NONE) {
 				$b->recordBlock();
-				$this->currentRequest->actionDescription = __('blocked access via country blocking', 'wordfence');
+				$this->currentRequest->actionDescription = @__('blocked access via country blocking', 'wordfence');
 				wfConfig::inc('totalCountryBlocked');
 				wfActivityReport::logBlockedIP($IP, null, 'country');
-				$this->do503(3600, __('Access from your area has been temporarily limited for security reasons', 'wordfence'));
+				$this->do503(3600, @__('Access from your area has been temporarily limited for security reasons', 'wordfence'));
 			}
 		}
 
@@ -623,7 +623,7 @@ class wfLog {
 			}
 			$reason = $ipBlock->reason;
 			if ($ipBlock->type == wfBlock::TYPE_IP_MANUAL || $ipBlock->type == wfBlock::TYPE_IP_AUTOMATIC_PERMANENT) {
-				$reason = __('Manual block by administrator', 'wordfence');
+				$reason = @__('Manual block by administrator', 'wordfence');
 			}
 			$this->do503($secsToGo, $reason); //exits
 		}

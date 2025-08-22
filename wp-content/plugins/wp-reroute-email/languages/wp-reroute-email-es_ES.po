@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Settings"
 msgstr "Configuración"
@@ -114,8 +114,23 @@ msgstr "Enviado a"
 msgid "Delete All Messages"
 msgstr "Eliminar todos los mensajes"
 
+msgid "Delete Messages Older Than 1 Day"
+msgstr "Eliminar mensajes de hace más de 1 día"
+
+msgid "Delete Messages Older Than 7 Days"
+msgstr "Eliminar mensajes de hace más de 7 días"
+
+msgid "Delete Messages Older Than 15 Days"
+msgstr "Eliminar mensajes de hace más de 15 días"
+
+msgid "Delete Messages Older Than 30 Days"
+msgstr "Eliminar mensajes de hace más de 30 días"
+
 msgid "Email sent."
 msgstr "Correo enviado."
+
+msgid "Email could not be sent."
+msgstr "No se pudo enviar el correo electrónico."
 
 msgid "Message"
 msgstr "Mensaje"

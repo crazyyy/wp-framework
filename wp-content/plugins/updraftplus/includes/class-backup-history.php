@@ -531,6 +531,7 @@ class UpdraftPlus_Backup_History {
 					'code' => 'foundforeign_'.md5($entry),
 					'desc' => $entry,
 					'method' => '',
+					// translators: %s: The description of the accepted foreign backup type.
 					'message' => sprintf(__('Backup created by: %s.', 'updraftplus'), $accept[$accepted_foreign]['desc'])
 				);
 			} elseif ('.zip' == strtolower(substr($entry, -4, 4)) || preg_match('/\.sql(\.(bz2|gz))?$/i', $entry)) {

@@ -1183,7 +1183,7 @@ Check your permissions and credentials.','updraftplus'), 'error');
 	 *
 	 * @return Array - N.B. May contain updated versions of $storage and $config
 	 */
-	private function get_bucket_access($storage, $config, $bucket, $path) {
+	protected function get_bucket_access($storage, $config, $bucket, $path) {
 
 		$bucket_exists = false;
 

@@ -42,7 +42,7 @@ $add_thickbox_for_urls = array();
 if (0 == count($requests) || !$report_has_data) {
 ?>
 <table class="wp-list-table widefat striped wpo-404-requests">
-	<tr><td colspan="5"><?php echo esc_html__('Nothing to show', 'wp-optimize'); ?></td></tr>
+	<tr><td><?php echo esc_html__('Nothing to show', 'wp-optimize'); ?></td></tr>
 </table>
 <?php
 }

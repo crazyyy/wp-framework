@@ -125,6 +125,6 @@ class Updraft_PHP_Logger extends Updraft_Abstract_Logger {
 		if (!$this->is_enabled()) return false;
 		
 		$message = '['.Updraft_Log_Levels::to_text($level).'] : '.$this->interpolate($message, $context);
-		error_log($message);
+		error_log($message); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Using for debugging purpose
 	}
 }

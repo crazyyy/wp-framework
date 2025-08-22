@@ -1,42 +1,55 @@
 <?php
 /**
- * Plugin Name: Honeypot for Contact Form 7
- * Plugin URI: https://wpexperts.io/
- * Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
- * Author: WPExperts
+ * Plugin Name: Contact Form 7 Apps
+ * Plugin URI: https://cf7apps.com/
+ * Description: Contact Form 7 Apps is a collection of useful modules and extensions for Contact Form 7.
+ * Author: CF7Apps
  * Author URI: https://wpexperts.io/
- * Version: 2.1.7
+ * Version: 3.0.0
  * Text Domain: contact-form-7-honeypot
  * Domain Path: /languages/
- * Requires Plugins: contact-form-7
- *
- * @package Honeypot4CF7
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'HONEYPOT4CF7_VERSION', '2.1.7' );
-define( 'HONEYPOT4CF7_PLUGIN', __FILE__ );
-define( 'HONEYPOT4CF7_PLUGIN_BASENAME', plugin_basename( HONEYPOT4CF7_PLUGIN ) );
-define( 'HONEYPOT4CF7_PLUGIN_NAME', trim( dirname( HONEYPOT4CF7_PLUGIN_BASENAME ), '/' ) );
-define( 'HONEYPOT4CF7_PLUGIN_DIR', untrailingslashit( dirname( HONEYPOT4CF7_PLUGIN ) ) );
-define( 'HONEYPOT4CF7_PLUGIN_DIR_URL', untrailingslashit( plugin_dir_url( HONEYPOT4CF7_PLUGIN ) ) );
-define( 'HONEYPOT4CF7_DEP_PLUGIN', 'contact-form-7/wp-contact-form-7.php' );
+define( 'CF7APPS_VERSION', '3.0.0' );
+define( 'CF7APPS_PLUGIN', __FILE__ );
+define( 'CF7APPS_PLUGIN_BASENAME', plugin_basename( CF7APPS_PLUGIN ) );
+define( 'CF7APPS_PLUGIN_NAME', trim( dirname( CF7APPS_PLUGIN_BASENAME ), '/' ) );
+define( 'CF7APPS_PLUGIN_DIR', untrailingslashit( dirname( CF7APPS_PLUGIN ) ) );
+define( 'CF7APPS_PLUGIN_DIR_URL', untrailingslashit( plugin_dir_url( CF7APPS_PLUGIN ) ) );
+define( 'CF7APPS_DEP_PLUGIN', 'contact-form-7/wp-contact-form-7.php' );
 
-if ( defined( 'WPCF7_VERSION' ) ) {
-	define( 'HONEYPOT4CF7_WPCF7_VERSION', WPCF7_VERSION );
-} else {
-	$path_to_cf7 = WP_PLUGIN_DIR . '/' . HONEYPOT4CF7_DEP_PLUGIN;
-	if ( file_exists( $path_to_cf7 ) ) {
-		$cf7_plugin_data = get_file_data($path_to_cf7, array('Version' => 'Version'), 'plugin');
-	}
+require_once CF7APPS_PLUGIN_DIR . '/includes/class-cf7apps.php';
 
-	if ( ! empty( $cf7_plugin_data['Version'] ) ) {
-		define( 'HONEYPOT4CF7_WPCF7_VERSION', $cf7_plugin_data['Version'] );
-	} else {
-		define( 'HONEYPOT4CF7_WPCF7_VERSION', '0.0.0' );
-	}
+// Legacy Honeypot
+require_once CF7APPS_PLUGIN_DIR . '/legacy-honeypot/legacy-honeypot.php';
+
+/**
+ * Initialize Contact Form 7 Apps
+ * 
+ * @since 3.0.0
+ */
+if( ! function_exists( 'CF7Apps' ) ):
+function CF7Apps() {
+	/**
+	 * Fires before Contact Form 7 Apps is initialized
+	 * 
+	 * @since 3.0.0
+	 */
+	do_action( 'cf7apps_before_init' );
+
+	$_class = CF7Apps::instance();
+
+	/**
+	 * Fires Contact Form 7 Apps is initialized
+	 * 
+	 * @since 3.0.0
+	 */
+	do_action( 'cf7apps_init' );
+
+	return $_class;
 }
+endif;
 
-require_once HONEYPOT4CF7_PLUGIN_DIR . '/includes/admin.php';
-require_once HONEYPOT4CF7_PLUGIN_DIR . '/includes/honeypot4cf7.php';
+CF7Apps();

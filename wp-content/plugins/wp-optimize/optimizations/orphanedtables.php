@@ -111,10 +111,10 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 		if (0 == $inno_db) return false;
 		// If InnoDB is active then convert MyISAM to InnoDB.
 		else {
-			$table_name = sanitize_text_field($table_obj->Name);
-			$sql_query = $wpdb->prepare("ALTER TABLE `%1s`  ENGINE=InnoDB", $table_name);
+			$table_name = esc_sql($table_obj->Name);
+			$sql_query = "ALTER TABLE `{$table_name}`  ENGINE=InnoDB";
 			$this->logger->info($sql_query);
-			$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is already prepared
+			$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is safe, not using user input
 		}
 		// check if alter query finished successfully.
 		if ('' != $wpdb->last_error) {
@@ -138,12 +138,12 @@ class WP_Optimization_orphanedtables extends WP_Optimization {
 		// don't delete table if it in use and plugin active.
 		if (!$table_obj->can_be_removed) return true;
 
-		$table_name = sanitize_text_field($table_obj->Name);
-		$sql_query = $wpdb->prepare("DROP TABLE `%1s`", $table_name);
+		$table_name = esc_sql($table_obj->Name);
+		$sql_query = "DROP TABLE `{$table_name}`";
 
 		$this->logger->info($sql_query);
 
-		$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is already prepared
+		$result = $wpdb->query($sql_query); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Statement is safe, not using user input
 
 		// check if drop query finished successfully.
 		if ('' != $wpdb->last_error) {

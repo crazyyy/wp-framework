@@ -135,7 +135,7 @@ class Updraft_File_Logger extends Updraft_Abstract_Logger {
 		$message = sprintf("[%s : %s] - %s \n", gmdate("Y-m-d H:i:s"), Updraft_Log_Levels::to_text($level), $this->interpolate($message, $context));
 		
 		if (false == file_put_contents($this->logfile, $message, FILE_APPEND)) {
-			error_log($message);
+			error_log($message); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Using for debugging purpose
 		}
 	}
 

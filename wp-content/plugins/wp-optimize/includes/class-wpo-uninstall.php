@@ -22,6 +22,10 @@ class WPO_Uninstall {
 			wpo_delete_files(WPO_Gravatar_Data::WPO_CACHE_GRAVATAR_DIR);
 		}
 		
+		if (class_exists('WP_Optimize_Lazy_Load')) {
+			WP_Optimize_Lazy_Load::instance()->delete_image_cache();
+		}
+		
 		$htaccess_file = self::get_upload_basedir() . '.htaccess';
 		if (is_file($htaccess_file) && 0 === filesize($htaccess_file)) {
 			wp_delete_file($htaccess_file);
@@ -73,7 +77,7 @@ class WPO_Uninstall {
 			foreach ($wpo_sub_folders as $folder) {
 				wpo_delete_files($wpo_folder . $folder);
 			}
-
+			
 			// phpcs:disable
 			// Generic.PHP.NoSilencedErrors.Discouraged -- suppress warning if it arises due to race condition
 			// WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Not applicable in this context

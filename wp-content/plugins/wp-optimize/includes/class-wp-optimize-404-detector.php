@@ -69,7 +69,7 @@ class WP_Optimize_404_Detector {
 		$now = current_datetime()->getTimestamp();
 		$request_timestamp = $now - ($now % 3600);
 
-		$url_data = isset($_SERVER['REQUEST_URI']) ? $this->parse_url(sanitize_url(wp_unslash($_SERVER['REQUEST_URI']))) : false;
+		$url_data = isset($_SERVER['REQUEST_URI']) ? $this->parse_url(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI']))) : false;
 
 		if (false == $url_data || !isset($url_data['path']) || ('/' == $url_data['path'])) {
 			return;
@@ -90,9 +90,9 @@ class WP_Optimize_404_Detector {
 	private function save_request_hour_row($request_timestamp, $url) {
 		global $wpdb;
 		
-		$log_table_name = $this->get_table_name();
+		$log_table_name = esc_sql($this->get_table_name());
 
-		$referrer = isset($_SERVER['HTTP_REFERER']) ? sanitize_url(wp_unslash($_SERVER['HTTP_REFERER'])) : "";
+		$referrer = isset($_SERVER['HTTP_REFERER']) ? esc_url_raw(wp_unslash($_SERVER['HTTP_REFERER'])) : "";
 
 		$safe_referrer = '';
 		if ('' !== $referrer) {
@@ -104,7 +104,7 @@ class WP_Optimize_404_Detector {
 							(isset($referrer_parsed['query']) ? '?' . $referrer_parsed['query'] : '');
 		}
 
-		$wpdb->query($wpdb->prepare("INSERT INTO `$log_table_name` SET `url` = %s, request_timestamp = %d, referrer = %s, request_count = 1 ON DUPLICATE KEY UPDATE request_count = request_count + 1", $url, $request_timestamp, $safe_referrer));
+		$wpdb->query($wpdb->prepare("INSERT INTO `{$log_table_name}` SET `url` = %s, request_timestamp = %d, referrer = %s, request_count = 1 ON DUPLICATE KEY UPDATE request_count = request_count + 1", $url, $request_timestamp, $safe_referrer)); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $log_table_name uses esc_sql, %i not supported till WP 6.2
 	}
 
 	/**
@@ -115,20 +115,20 @@ class WP_Optimize_404_Detector {
 	public function prune_404_log() {
 		global $wpdb;
 
-		$log_table_name = $this->get_table_name();
+		$log_table_name = esc_sql($this->get_table_name());
 
 		// Remove old trivial requests
 		$hs_to_remove_older = $this->suspicious_trivial_request_ttl_in_hours * 3600;
 		$remove_date = time() - $hs_to_remove_older;
 
 
-		$wpdb->query($wpdb->prepare("DELETE FROM `$log_table_name` WHERE request_timestamp < %d AND request_count < %d", $remove_date, $this->suspicious_request_count_threshold));
+		$wpdb->query($wpdb->prepare("DELETE FROM `$log_table_name` WHERE request_timestamp < %d AND request_count < %d", $remove_date, $this->suspicious_request_count_threshold)); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $log_table_name uses esc_sql, %i not supported till WP 6.2
 
 		// Remove any type of old request
 		$hs_to_remove_older = $this->suspicious_request_ttl_in_hours * 3600;
 		$remove_date = time() - $hs_to_remove_older;
 
-		$wpdb->query($wpdb->prepare("DELETE FROM `$log_table_name` WHERE request_timestamp < %d", $remove_date));
+		$wpdb->query($wpdb->prepare("DELETE FROM `$log_table_name` WHERE request_timestamp < %d", $remove_date)); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $log_table_name uses esc_sql, %i not supported till WP 6.2
 	}
 
 	/**
@@ -163,7 +163,7 @@ class WP_Optimize_404_Detector {
 	 */
 	private function get_single_suspicious_requests_by_referer(&$all_suspicious_referrers = null) {
 		global $wpdb;
-		$log_table_name = $this->get_table_name();
+		$log_table_name = esc_sql($this->get_table_name());
 
 		$threshold = $this->suspicious_request_count_threshold;
 
@@ -176,7 +176,7 @@ class WP_Optimize_404_Detector {
 									  COUNT(1) AS occurrences,
 									  1 AS total_referrers,
 									  'singles' AS row_type
-									  FROM `$log_table_name` GROUP BY `url`, referrer HAVING total_count >= %d ORDER BY request_timestamp DESC", $threshold, $threshold)
+									  FROM `$log_table_name` GROUP BY `url`, referrer HAVING total_count >= %d ORDER BY request_timestamp DESC", $threshold, $threshold)  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $log_table_name uses esc_sql, %i not supported till WP 6.2
 		);
 		
 		foreach ($by_referrer as &$item) {
@@ -202,7 +202,7 @@ class WP_Optimize_404_Detector {
 	 */
 	private function get_grouped_requests_by_url($known_suspicious_referrers) {
 		global $wpdb;
-		$log_table_name = $this->get_table_name();
+		$log_table_name = esc_sql($this->get_table_name());
 
 		$threshold = $this->suspicious_request_count_threshold;
 
@@ -219,7 +219,7 @@ class WP_Optimize_404_Detector {
 										(SUM(IF(%d < request_count AND LOCATE(MD5(SUBSTRING(referrer,1,6)), %s) = 0, 1, 0))) AS non_suspicious_referrers,
 										COUNT(DISTINCT(referrer)) AS total_referrers,
 										'grouped' AS row_type
-										FROM `$log_table_name` GROUP BY `url` HAVING 1 < occurrences AND %d <= total_count ORDER BY request_timestamp DESC", $threshold, $threshold, $known_suspicious_referrers, $threshold)
+										FROM `$log_table_name` GROUP BY `url` HAVING 1 < occurrences AND %d <= total_count ORDER BY request_timestamp DESC", $threshold, $threshold, $known_suspicious_referrers, $threshold) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $log_table_name uses esc_sql, %i not supported till WP 6.2
 		);
 		
 		foreach ($by_url as &$item) {
@@ -245,7 +245,7 @@ class WP_Optimize_404_Detector {
 	public function get_url_requests_by_referrer($url) {
 		global $wpdb;
 
-		$log_table_name = $this->get_table_name();
+		$log_table_name = esc_sql($this->get_table_name());
 
 		$return = array('over' => array(), 'under' => array());
 
@@ -256,8 +256,8 @@ class WP_Optimize_404_Detector {
 								referrer,
 								MIN(request_timestamp) AS first_access,
 								MAX(request_timestamp) AS last_access
-								FROM `$log_table_name`
-								WHERE `url` = %s GROUP BY referrer, (%d < request_count)
+								FROM `$log_table_name` " .  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $log_table_name uses esc_sql, %i not supported till WP 6.2
+								"WHERE `url` = %s GROUP BY referrer, (%d < request_count)
 								ORDER BY request_count DESC",
 				$url,
 				$threshold

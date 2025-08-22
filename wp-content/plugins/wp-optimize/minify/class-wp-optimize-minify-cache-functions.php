@@ -67,7 +67,7 @@ class WP_Optimize_Minify_Cache_Functions {
 			if (false === $enabled) break;
 
 			if (!is_dir($target) && !wp_mkdir_p($target)) {
-				error_log('WP_Optimize_Minify_Cache_Functions::cache_path(): The folder "'.$target.'" could not be created.');
+				error_log('WP_Optimize_Minify_Cache_Functions::cache_path(): The folder "'.$target.'" could not be created.'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Used for debugging
 			}
 		}
 		return array(
@@ -316,7 +316,7 @@ class WP_Optimize_Minify_Cache_Functions {
 				$log = "[Minify] recursive files and folders deletion unsuccessful";
 			}
 			if (wp_optimize_minify_config()->get('debug')) {
-				error_log($log);
+				error_log($log); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Used for debugging
 			}
 		}
 		return true;
@@ -375,7 +375,7 @@ class WP_Optimize_Minify_Cache_Functions {
 		}
 		if (wp_optimize_minify_config()->get('debug')) {
 			foreach ($log as $message) {
-				error_log($message);
+				error_log($message); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Used for debugging
 			}
 		}
 

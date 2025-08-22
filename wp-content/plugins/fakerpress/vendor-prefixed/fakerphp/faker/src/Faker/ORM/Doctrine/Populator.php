@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\ORM\Doctrine;
 
@@ -53,7 +48,7 @@ class Populator
      *
      * @param int $batchSize
      */
-    public function __construct(Generator $generator, ObjectManager $manager = null, $batchSize = 1000)
+    public function __construct(Generator $generator, ?ObjectManager $manager = null, $batchSize = 1000)
     {
         $this->generator = $generator;
         $this->manager = $manager;

@@ -3,9 +3,9 @@
  * @author Régis Guyomarch <regisg@gmail.com>
  * @author Benoit Delachaux <benorde33@gmail.com>
  * @author Jonathan Grunder <jonathan.grunder@gmail.com>
- * @version 2022-03-01
+ * @version 2023-04-16
  */
- (function(root, factory) {
+(function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -18,12 +18,11 @@
 		translator : 'Régis Guyomarch &lt;regisg@gmail.com&gt;, Benoit Delachaux &lt;benorde33@gmail.com&gt;, Jonathan Grunder &lt;jonathan.grunder@gmail.com&gt;',
 		language   : 'française',
 		direction  : 'ltr',
-		dateFormat : 'd/M/Y H:i', // will show like: 01/Mar/2022 12:27
-		fancyDateFormat : '$1 H:i', // will show like: Aujourd'hui 12:27
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 220301-122726
+		dateFormat : 'd/M/Y H:i', // will show like: 16/Avr/2023 12:36
+		fancyDateFormat : '$1 H:i', // will show like: Aujourd'hui 12:36
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 230416-123657
 		messages   : {
-			'getShareText' : 'Partagez',
-			'Editor ': 'Editeur de codes',
+
 			/********************************** errors **********************************/
 			'error'                : 'Erreur',
 			'errUnknown'           : 'Erreur inconnue.',
@@ -70,7 +69,7 @@
 			'errUploadTotalSize'   : 'Les données dépassent la taille maximale allouée.', // old name - errMaxSize
 			'errUploadFileSize'    : 'Le fichier dépasse la taille maximale allouée.', //  old name - errFileMaxSize
 			'errUploadMime'        : 'Type de fichier non autorisé.',
-			'errUploadTransfer'    : '"$1" erreur transfert.',
+			'errUploadTransfer'    : '"$1" erreur de transfert.',
 			'errUploadTemp'        : 'Impossible de créer un fichier temporaire pour transférer les fichiers.', // from v2.1 added 26.09.2015
 			'errNotReplace'        : 'L\'objet "$1" existe déjà à cet endroit et ne peut être remplacé par un objet d\'un type différent.', // new
 			'errReplace'           : 'Impossible de remplacer "$1".',
@@ -117,8 +116,8 @@
 			'errEditorNotFound'    : 'Aucun éditeur n\'a été trouvé pour ce type de fichier.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Une erreur est survenue du côté serveur.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Impossible de vider le dossier "$1".', // from v2.1.25 added 22.6.2017
-			'moreErrors'           : 'Il y a $1 d\'erreurs supplémentaires.', // from v2.1.44 added 9.12.2018
-			'errMaxMkdirs'         : 'Vous pouvez créer jusqu\'à $1 dossiers à la fois.', // from v2.1.58 added 20.6.2021
+			'moreErrors'           : 'Il y a encore $1 erreur(s).', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Vous ne pouvez créer que $1 dossier au même moment.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Créer une archive',
@@ -167,13 +166,13 @@
 			'cmdselectnone': 'Tout désélectionner', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Inverser la sélection', // from v2.1.28 added 15.08.2017
 			'cmdopennew'   : 'Ouvrir dans une nouvelle fenêtre', // from v2.1.38 added 3.4.2018
-			'cmdhide'      : 'Masquer (Préférence)', // from v2.1.41 added 24.7.2018
+			'cmdhide'      : 'Cacher (Préférence)', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Fermer',
-			'btnSave'   : 'Sauvegarder',
+			'btnSave'   : 'Enregistrer',
 			'btnRm'     : 'Supprimer',
-			'btnApply'  : 'Confirmer',
+			'btnApply'  : 'Appliquer',
 			'btnCancel' : 'Annuler',
 			'btnNo'     : 'Non',
 			'btnYes'    : 'Oui',
@@ -182,11 +181,11 @@
 			'btnUnmount': 'Démonter', // from v2.1 added 30.04.2012
 			'btnConv'   : 'Convertir', // from v2.1 added 08.04.2014
 			'btnCwd'    : 'Ici',      // from v2.1 added 22.5.2015
-			'btnVolume' : 'Le volume',    // from v2.1 added 22.5.2015
+			'btnVolume' : 'Volume',    // from v2.1 added 22.5.2015
 			'btnAll'    : 'Tous',       // from v2.1 added 22.5.2015
 			'btnMime'   : 'Type MIME', // from v2.1 added 22.5.2015
 			'btnFileName':'Nom du fichier',  // from v2.1 added 22.5.2015
-			'btnSaveClose': 'Enregistrer & Ferme', // from v2.1 added 12.6.2015
+			'btnSaveClose': 'Sauvegarder & Fermer', // from v2.1 added 12.6.2015
 			'btnBackup' : 'Sauvegarde', // fromv2.1 added 28.11.2015
 			'btnRename'    : 'Renommer',      // from v2.1.24 added 6.4.2017
 			'btnRenameAll' : 'Renommer (tous)', // from v2.1.24 added 6.4.2017
@@ -256,7 +255,7 @@
 			'April'       : 'Avril',
 			'May'         : 'Mai',
 			'June'        : 'Juin',
-			'July'        : 'Huillet',
+			'July'        : 'Juillet',
 			'August'      : 'Août',
 			'September'   : 'Septembre',
 			'October'     : 'Octobre',
@@ -293,24 +292,24 @@
 			'untitled file.txt' : 'NouveauFichier.txt', // added 10.11.2015
 			'untitled folder'   : 'NouveauDossier',   // added 10.11.2015
 			'Archive'           : 'NouvelleArchive',  // from v2.1 added 10.11.2015
-			'untitled file'     : 'NouveauFichier.$1',  // from v2.1.41 added 6.8.2018
+			'untitled file'     : 'NewFile.$1',  // from v2.1.41 added 6.8.2018
 			'extentionfile'     : '$1: Fichier',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Confirmation requise',
 			'confirmRm'       : 'Êtes-vous certain de vouloir supprimer les éléments ?<br/>Cela ne peut être annulé !',
-			'confirmRepl'     : 'Supprimer l\'ancien fichier par le nouveau ?',
+			'confirmRepl'     : 'Remplacer l\'ancien fichier par le nouveau ?',
 			'confirmRest'     : 'Remplacer l\'élément existant par l\'élément de la corbeille ?', // fromv2.1.24 added 5.5.2017
 			'confirmConvUTF8' : 'L\'encodage n\'est pas UTf-8<br/>Convertir en UTF-8 ?<br/>Les contenus deviendront UTF-8 en sauvegardant après la conversion.', // from v2.1 added 08.04.2014
 			'confirmNonUTF8'  : 'Impossible de détecter l\'encodage de ce fichier. Pour être modifié, il doit être temporairement convertit en UTF-8.<br/>Veuillez s\'il vous plaît sélectionner un encodage pour ce fichier.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : 'Ce fichier a été modifié.<br/>Les données seront perdues si les changements ne sont pas sauvegardés.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Êtes-vous certain de vouloir déplacer les éléments vers la corbeille?', //from v2.1.24 added 29.4.2017
-			'confirmMove'     : 'Voulez-vous vraiment déplacer les éléments vers "$1" ?', //from v2.1.50 added 27.7.2019
+			'confirmMove'     : 'Etes-vous sûr de vouloir déplacer ces éléments vers "$1"?', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : 'Appliquer à tous',
 			'name'            : 'Nom',
 			'size'            : 'Taille',
-			'perms'           : 'Autorisations',
+			'perms'           : 'Permissions',
 			'modify'          : 'Modifié',
 			'kind'            : 'Type',
 			'read'            : 'Lecture',
@@ -349,10 +348,10 @@
 			'ver'             : 'Version',
 			'protocolver'     : 'Version du protocole',
 			'homepage'        : 'Page du projet',
-			'docs'            : 'La documentation',
+			'docs'            : 'Documentation',
 			'github'          : 'Forkez-nous sur Github',
-			'twitter'         : 'Suivez nous sur twitter',
-			'facebook'        : 'Joignez-nous facebook',
+			'twitter'         : 'Suivez nous sur Twitter',
+			'facebook'        : 'Joignez-nous sur Facebook',
 			'team'            : 'Équipe',
 			'chiefdev'        : 'Développeur en chef',
 			'developer'       : 'Développeur',
@@ -428,7 +427,7 @@
 			'8pxgrid'         : 'Grille 8px', // from v2.1.16 added 4.10.2016
 			'enabled'         : 'Actif', // from v2.1.16 added 4.10.2016
 			'disabled'        : 'Inactif', // from v2.1.16 added 4.10.2016
-			'emptyIncSearch'  : 'Aucun résultat trouvé.\\AAppuyez sur [Entrée] pour développer la cible de recherche.', // from v2.1.16 added 5.10.2016
+			'emptyIncSearch'  : 'Aucun résultat trouvé.\\Appuyez sur [Entrée] pour développer la cible de recherche.', // from v2.1.16 added 5.10.2016
 			'emptyLetSearch'  : 'Aucun résultat trouvé pour la recherche par première lettre.', // from v2.1.23 added 24.3.2017
 			'textLabel'       : 'Label texte', // from v2.1.17 added 13.10.2016
 			'minsLeft'        : '$1 mins restantes', // from v2.1.17 added 13.11.2016
@@ -441,12 +440,12 @@
 			'TextArea'        : 'Zone de texte', // from v2.1.25 added 14.6.2017
 			'folderToEmpty'   : 'Vider le dossier "$1".', // from v2.1.25 added 22.6.2017
 			'filderIsEmpty'   : 'Il n\'y a pas d\'élément dans le dossier "$1".', // from v2.1.25 added 22.6.2017
-			'preference'      : 'Préférence', // from v2.1.26 added 28.6.2017
+			'preference'      : 'Préférences', // from v2.1.26 added 28.6.2017
 			'language'        : 'Configuration de langue', // from v2.1.26 added 28.6.2017
 			'clearBrowserData': 'Initialisation des configurations sauvegardées dans ce navigateur', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Paramètres de la barre d\'outils', // from v2.1.27 added 2.8.2017
-			'charsLeft'       : '... $1 caractères restants.',  // from v2.1.29 added 30.8.2017
-			'linesLeft'       : '... $1 de lignes restantes.',  // from v2.1.52 added 16.1.2020
+			'charsLeft'       : '... $1 caractère(s) restant(s).',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... $1 ligne(s) restante(s).',  // from v2.1.52 added 16.1.2020
 			'sum'             : 'Somme', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : 'Taille de fichier brute', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'Concentrez-vous sur l\'élément de dialogue avec le survol de la souris',  // from v2.1.30 added 2.11.2017
@@ -466,33 +465,33 @@
 			'unmountChildren' : 'Le(s) volume(s) suivant(s) montés sur ce volume seront également démontés. Êtes-vous sûr de vouloir le démonter ?', // from v2.1.33 added 5.3.2018
 			'selectionInfo'   : 'Informations sur la sélection', // from v2.1.33 added 7.3.2018
 			'hashChecker'     : 'Algorithme de hachage de fichier', // from v2.1.33 added 10.3.2018
-			'infoItems'       : 'Éléments d\'information (panneau d\'informations de sélection)', // from v2.1.38 added 28.3.2018
+			'infoItems'       : 'Éléments d\'information (panneau de sélection d\'informations )', // from v2.1.38 added 28.3.2018
 			'pressAgainToExit': 'Appuyez à nouveau pour quitter.', // from v2.1.38 added 1.4.2018
 			'toolbar'         : 'Barre d\'outils', // from v2.1.38 added 4.4.2018
 			'workspace'       : 'Espace de travail', // from v2.1.38 added 4.4.2018
 			'dialog'          : 'Dialogue', // from v2.1.38 added 4.4.2018
 			'all'             : 'Tout', // from v2.1.38 added 4.4.2018
-			'iconSize'        : 'Taille des icônes (vue Icônes)', // from v2.1.39 added 7.5.2018
-			'editorMaximized' : 'Ouvrir la fenêtre agrandie de l\'éditeur', // from v2.1.40 added 30.6.2018
+			'iconSize'        : 'Dimensions de l\'icône (Aperçu)', // from v2.1.39 added 7.5.2018
+			'editorMaximized' : 'Ouvrir la fenêtre d\'édition à la taille maximale', // from v2.1.40 added 30.6.2018
 			'editorConvNoApi' : 'Étant donné que la conversion par API n\'est pas disponible actuellement, veuillez effectuer la conversion sur le site Web.', //from v2.1.40 added 8.7.2018
-			'editorConvNeedUpload' : 'Après la conversion, vous devez télécharger l\'URL de l\'élément ou un fichier téléchargé pour enregistrer le fichier converti.', //from v2.1.40 added 8.7.2018
-			'convertOn'       : 'Convertissez sur le site de $1', // from v2.1.40 added 10.7.2018
+			'editorConvNeedUpload' : 'Après la conversion, vous devez ajouter l\'URL de l\'élément ou un fichier téléchargé pour enregistrer le fichier converti.', //from v2.1.40 added 8.7.2018
+			'convertOn'       : 'Convertir sur le site de $1', // from v2.1.40 added 10.7.2018
 			'integrations'    : 'Intégrations', // from v2.1.40 added 11.7.2018
 			'integrationWith' : 'Cet elFinder intègre les services externes suivants. Veuillez vérifier les conditions d\'utilisation, la politique de confidentialité, etc. avant de l\'utiliser.', // from v2.1.40 added 11.7.2018
-			'showHidden'      : 'Afficher les éléments cachés', // from v2.1.41 added 24.7.2018
-			'hideHidden'      : 'Masquer les éléments cachés', // from v2.1.41 added 24.7.2018
-			'toggleHidden'    : 'Afficher/Masquer les éléments masqués', // from v2.1.41 added 24.7.2018
-			'makefileTypes'   : 'Types de fichiers à activer avec "Nouveau fichier"', // from v2.1.41 added 7.8.2018
-			'typeOfTextfile'  : 'Type de fichier texte', // from v2.1.41 added 7.8.2018
+			'showHidden'      : 'Afficher les élément cachés', // from v2.1.41 added 24.7.2018
+			'hideHidden'      : 'Ne pas afficher les élément cachés', // from v2.1.41 added 24.7.2018
+			'toggleHidden'    : 'Afficher/Cacher les éléments cachés', // from v2.1.41 added 24.7.2018
+			'makefileTypes'   : 'Type de ficher autorisé avec "Nouveau fichier"', // from v2.1.41 added 7.8.2018
+			'typeOfTextfile'  : 'Type du fichier de texte', // from v2.1.41 added 7.8.2018
 			'add'             : 'Ajouter', // from v2.1.41 added 7.8.2018
-			'theme'           : 'Défaut', // from v2.1.43 added 19.10.2018
-			'default'         : 'défaut', // from v2.1.43 added 19.10.2018
-			'description'     : 'La description', // from v2.1.43 added 19.10.2018
-			'website'         : 'Site Internet', // from v2.1.43 added 19.10.2018
-			'author'          : 'Auteure', // from v2.1.43 added 19.10.2018
-			'email'           : 'Email', // from v2.1.43 added 19.10.2018
-			'license'         : 'la licence', // from v2.1.43 added 19.10.2018
-			'exportToSave'    : 'Cet élément ne peut pas être enregistré. Pour éviter de perdre les modifications, vous devez exporter vers votre PC.', // from v2.1.44 added 1.12.2018
+			'theme'           : 'Thème', // from v2.1.43 added 19.10.2018
+			'default'         : 'Par Défaut', // from v2.1.43 added 19.10.2018
+			'description'     : 'Description', // from v2.1.43 added 19.10.2018
+			'website'         : 'Site Web', // from v2.1.43 added 19.10.2018
+			'author'          : 'Aauteur', // from v2.1.43 added 19.10.2018
+			'email'           : 'E-mail', // from v2.1.43 added 19.10.2018
+			'license'         : 'License', // from v2.1.43 added 19.10.2018
+			'exportToSave'    : 'Cet élément ne peut être enregistrer. Pour éviter de perdre les modifications, vous devez exporter vers votre ordinateur.', // from v2.1.44 added 1.12.2018
 			'dblclickToSelect': 'Double-cliquez sur le fichier pour le sélectionner.', // from v2.1.47 added 22.1.2019
 			'useFullscreen'   : 'Utiliser le mode plein écran', // from v2.1.47 added 19.2.2019
 
@@ -547,7 +546,7 @@
 			'kindAWK'         : 'Source AWK',
 			'kindCSV'         : 'CSV',
 			'kindDOCBOOK'     : 'Document Docbook XML',
-			'kindMarkdown'    : 'Texte de démarque', // added 20.7.2015
+			'kindMarkdown'    : 'Markdown text', // added 20.7.2015
 			// images
 			'kindImage'       : 'Image',
 			'kindBMP'         : 'Image BMP',
@@ -580,3 +579,4 @@
 		}
 	};
 }));
+

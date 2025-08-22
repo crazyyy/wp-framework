@@ -106,11 +106,11 @@
 			<div class="compression_server">
 				<h3><?php esc_html_e('Compression service', 'wp-optimize');?></h3>
 				<div> <input type="radio" name="compression_server" id="resmushit" value="resmushit" <?php checked($smush_options['compression_server'], 'resmushit'); ?> >			  
-				<label for="resmushit">
+				<div id="wpo-resmushit-details">
 					<h4><?php esc_html_e('reSmush.it', 'wp-optimize');?></h4>
 					<p><?php esc_html_e('Can keep EXIF data', 'wp-optimize');?></p>
-					<small><?php esc_html_e('Service provided by reSmush.it', 'wp-optimize'); ?></small>
-				  </label>
+					<small><?php echo esc_html($compression_server_hint); ?></small>
+				  </div>
 				</div>
 			</div>
 			<br>
@@ -168,7 +168,7 @@
 				<a href="javascript:;" id="wpo_smush_images_refresh" class="wpo-refresh-button"><?php esc_html_e('Refresh image list', 'wp-optimize');?> 
 					<span class="dashicons dashicons-image-rotate"></span>
 				</a>
-				<img class="wpo_smush_images_loader" width="16" height="16" src="<?php echo esc_url(admin_url('/images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" />
+				<img class="wpo_smush_images_loader" width="16" height="16" src="<?php echo esc_url(admin_url('/images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="..." />
 			</div>
 		</div>
 		<div id="wpo_smush_images_grid"></div>

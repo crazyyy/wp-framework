@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Provider\fi_FI;
 
@@ -100,7 +95,7 @@ class Person extends \FakerPress\ThirdParty\Faker\Provider\Person
      *
      * @return string on format DDMMYYCZZZQ, where DDMMYY is the date of birth, C the century sign, ZZZ the individual number and Q the control character (checksum)
      */
-    public function personalIdentityNumber(\DateTime $birthdate = null, $gender = null)
+    public function personalIdentityNumber(?\DateTime $birthdate = null, $gender = null)
     {
         $checksumCharacters = '0123456789ABCDEFHJKLMNPRSTUVWXY';
 

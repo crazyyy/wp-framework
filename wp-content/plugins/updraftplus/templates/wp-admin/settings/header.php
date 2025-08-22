@@ -18,7 +18,7 @@
 		<?php
 			if (!is_file(UPDRAFTPLUS_DIR.'/udaddons/updraftplus-addons.php')) {
 			?>
-				<a href="<?php echo esc_url(apply_filters('updraftplus_com_link', "https://updraftplus.com/newsletter-signup"));?>" target="_blank"><?php esc_html_e("Newsletter sign-up", 'updraftplus'); ?></a> |
+				<a href="<?php echo esc_url(apply_filters('updraftplus_com_link', "https://teamupdraft.com/newsletter-signup?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=unknown&utm_creative_format=unknown"));?>" target="_blank"><?php esc_html_e("Newsletter sign-up", 'updraftplus'); ?></a> |
 			<?php
 			}
 	?>

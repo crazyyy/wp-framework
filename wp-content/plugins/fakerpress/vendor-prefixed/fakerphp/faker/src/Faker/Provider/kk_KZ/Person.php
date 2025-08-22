@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Provider\kk_KZ;
 
@@ -216,7 +211,7 @@ class Person extends \FakerPress\ThirdParty\Faker\Provider\Person
      *
      * @return string 12 digits, like 780322300455
      */
-    public static function individualIdentificationNumber(\DateTime $birthDate = null, $gender = self::GENDER_MALE)
+    public static function individualIdentificationNumber(?\DateTime $birthDate = null, $gender = self::GENDER_MALE)
     {
         if (!$birthDate) {
             $birthDate = DateTime::dateTimeBetween();

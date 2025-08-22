@@ -1,12 +1,12 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
-<a id="wp-optimize-nav-page-menu" href="#" role="toggle-menu">
+<button id="wp-optimize-nav-page-menu" aria-expanded="false" aria-controls="wpo-menu">
 	<span class="dashicons dashicons-no-alt"></span>
 	<span class="dashicons dashicons-menu"></span>
 	<span><?php esc_html_e('Menu', 'wp-optimize'); ?></span>
-</a>
-<div class="wpo-pages-menu">
+</button>
+<div id="wpo-menu" class="wpo-pages-menu">
 	<?php
-	$active_page = !empty($_REQUEST['page']) ? sanitize_text_field(wp_unslash($_REQUEST['page'])) : '';
+	$active_page = !empty($_REQUEST['page']) ? sanitize_text_field(wp_unslash($_REQUEST['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only used to compare with a string literal.
 	foreach ($menu_items as $menu) :
 	?>
 
@@ -22,7 +22,7 @@
 	<?php endforeach; ?>
 	<p class="wpo-header-links__mobile">
 		<span class="wpo-header-links__label"><?php esc_html_e('Useful links', 'wp-optimize'); ?></span>
-		<?php $wp_optimize->wp_optimize_url('https://getwpo.com/', __('Home', 'wp-optimize')); ?> |
+		<?php $wp_optimize->wp_optimize_url('https://teamupdraft.com/wp-optimize/', __('Home', 'wp-optimize')); ?> |
 
 		<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/', 'UpdraftPlus'); ?> |
 		
@@ -36,7 +36,7 @@
 
 		<?php $wp_optimize->wp_optimize_url('https://david.dw-perspective.org.uk', __("Team lead", 'wp-optimize')); ?> |
 		
-		<?php $wp_optimize->wp_optimize_url('https://getwpo.com/faqs/', __("FAQs", 'wp-optimize')); ?> |
+		<?php $wp_optimize->wp_optimize_url('https://teamupdraft.com/documentation/wp-optimize/faqs/', __("FAQs", 'wp-optimize')); ?> |
 
 		<?php $wp_optimize->wp_optimize_url('https://www.simbahosting.co.uk/s3/shop/', __("More plugins", 'wp-optimize')); ?>
 	</p>

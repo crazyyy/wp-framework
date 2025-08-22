@@ -45,12 +45,12 @@ class WPO_Cache_Config {
 	public function get() {
 
 		if (is_multisite()) {
-			$config = get_site_option('wpo_cache_config', $this->get_defaults());
+			$config = get_site_option('wpo_cache_config', $this->defaults);
 		} else {
-			$config = get_option('wpo_cache_config', $this->get_defaults());
+			$config = get_option('wpo_cache_config', $this->defaults);
 		}
 
-		return wp_parse_args($config, $this->get_defaults());
+		return wp_parse_args($config, $this->defaults);
 	}
 
 	/**
@@ -74,10 +74,17 @@ class WPO_Cache_Config {
 	 * @return true|WP_Error                        - returns true on success or WP_Error if the config cannot be written to disk
 	 */
 	public function update($config, $skip_disk_if_not_yet_present = false) {
-		$config = wp_parse_args($config, $this->get_defaults());
+		$config = wp_parse_args($config, $this->defaults);
 
 		$config['page_cache_length_value'] = intval($config['page_cache_length_value']);
 		$config['page_cache_length'] = $this->calculate_page_cache_length($config['page_cache_length_value'], $config['page_cache_length_unit']);
+		
+		$fields_to_trim = array('cache_exception_conditional_tags', 'cache_exception_urls', 'cache_ignore_query_variables', 'cache_exception_cookies', 'cache_exception_browser_agents');
+		foreach ($fields_to_trim as $field) {
+			if (!empty($config[$field]) && is_array($config[$field])) {
+				$config[$field] = array_map('trim', $config[$field]);
+			}
+		}
 
 		/**
 		 * Filters the cookies used to set cache file names
@@ -163,7 +170,7 @@ class WPO_Cache_Config {
 
 		$config_file = $this->get_config_file_path();
 
-		$this->config = wp_parse_args($config, $this->get_defaults());
+		$this->config = wp_parse_args($config, $this->defaults);
 
 		// from 3.0.17 we use more secure way to store cache config files.
 		$advanced_cache_version = WPO_Page_Cache::instance()->get_advanced_cache_version();
@@ -212,6 +219,7 @@ class WPO_Cache_Config {
 			'page_cache_length'                => 86400,
 			'cache_exception_conditional_tags' => array(),
 			'cache_exception_urls'             => array(),
+			'cache_ignore_query_variables' 	   => array(),
 			'cache_exception_cookies'          => array(),
 			'cache_exception_browser_agents'   => array(),
 			'enable_sitemap_preload'           => false,

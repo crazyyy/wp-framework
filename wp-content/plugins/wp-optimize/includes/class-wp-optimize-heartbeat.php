@@ -18,11 +18,7 @@ class WP_Optimize_Heartbeat {
 		
 		// Change heartbeat API frequency to 15 seconds to improve UI experience
 		// only for the pages that we enable in `$pages_enabled`
-		if (isset($_GET['page'])) {
-			$query_page = sanitize_text_field(wp_unslash($_GET['page'])); // phpcs:ignore WordPress.Security.NonceVerification -- not processing form data
-		} else {
-			$query_page = $pagenow;
-		}
+		$query_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : $pagenow; // phpcs:ignore WordPress.Security.NonceVerification -- not processing form data
 		
 		if (in_array($query_page, $pages_enabled)) {
 			add_filter('heartbeat_settings', array($this, 'set_heartbeat_time_interval'), PHP_INT_MAX);

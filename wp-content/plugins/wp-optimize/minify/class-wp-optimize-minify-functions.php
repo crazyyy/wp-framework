@@ -8,8 +8,11 @@ if (function_exists('mb_internal_encoding')) {
 }
 
 // must have
+// phpcs:disable
+// Squiz.PHP.DiscouragedFunctions.Discouraged -- Not applicable here
 ini_set('pcre.backtrack_limit', 5000000);
 ini_set('pcre.recursion_limit', 5000000);
+// phpcs:enable
 	
 use MatthiasMullie\Minify;
 
@@ -159,13 +162,13 @@ class WP_Optimize_Minify_Functions {
 		if (stripos($hurl, $wp_home) !== false) {
 			return true;
 		}
-		if (isset($_SERVER['HTTP_HOST']) && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'])) !== false) {
+		if (isset($_SERVER['HTTP_HOST']) && stripos($hurl, preg_replace('/:\d+$/', '', sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])))) !== false) {
 			return true;
 		}
-		if (isset($_SERVER['SERVER_NAME']) && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME'])) !== false) {
+		if (isset($_SERVER['SERVER_NAME']) && stripos($hurl, preg_replace('/:\d+$/', '', sanitize_text_field(wp_unslash($_SERVER['SERVER_NAME'])))) !== false) {
 			return true;
 		}
-		if (isset($_SERVER['SERVER_ADDR']) && '::1' != $_SERVER['SERVER_ADDR'] && stripos($hurl, preg_replace('/:\d+$/', '', $_SERVER['SERVER_ADDR'])) !== false) {
+		if (isset($_SERVER['SERVER_ADDR']) && '::1' != sanitize_text_field(wp_unslash($_SERVER['SERVER_ADDR'])) && stripos($hurl, preg_replace('/:\d+$/', '', sanitize_text_field(wp_unslash($_SERVER['SERVER_ADDR'])))) !== false) {
 			return true;
 		}
 
@@ -793,7 +796,7 @@ class WP_Optimize_Minify_Functions {
 		if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
 			$disable_on_url = array_filter(array_map('trim', explode("\n", get_option('wpo_min_disable_on_url', ''))));
 			foreach ($disable_on_url as $url) {
-				if (wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) == $url) {
+				if (wp_parse_url(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])), PHP_URL_PATH) == $url) {
 					return true;
 				}
 			}
@@ -821,12 +824,14 @@ class WP_Optimize_Minify_Functions {
 			|| (defined('SHORTINIT') && SHORTINIT)
 			|| (defined('REST_REQUEST') && REST_REQUEST)
 			|| (isset($_SERVER['REQUEST_METHOD']) && 'POST' === $_SERVER['REQUEST_METHOD'])
-			|| (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
-			|| (isset($_SERVER['REQUEST_URI']) && (strtolower(substr($_SERVER['REQUEST_URI'], -4)) == '.txt' || strtolower(substr($_SERVER['REQUEST_URI'], -4)) == '.xml'))
+			|| (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower(sanitize_text_field(wp_unslash($_SERVER['HTTP_X_REQUESTED_WITH']))) == 'xmlhttprequest')
+			|| (isset($_SERVER['REQUEST_URI']) && (strtolower(substr(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])), -4)) == '.txt' || strtolower(substr(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])), -4)) == '.xml'))
 		) {
 			return true;
 		}
 
+		// phpcs:disable
+		// WordPress.Security.NonceVerification.Recommended -- Using $_GET element only to compare, returns boolean
 		// Thrive plugins and other post_types
 		$arr = array('tve_form_type', 'tve_lead_shortcode', 'tqb_splash');
 		foreach ($arr as $a) {
@@ -871,6 +876,7 @@ class WP_Optimize_Minify_Functions {
 			);
 			return (bool) count(array_intersect($excluded_params, $get_params));
 		}
+		// phpcs:enable
 
 		/**
 		 * Whether to exclude the content or not from the minifying process.
@@ -1007,7 +1013,7 @@ class WP_Optimize_Minify_Functions {
 		
 		$args = array(
 			// info (needed for google fonts woff files + hinted fonts) as well as to bypass some security filters
-			'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',
+			'user-agent' => WP_Optimize_Utils::get_user_agent(),
 			'timeout' => 7
 		);
 
@@ -1125,7 +1131,7 @@ class WP_Optimize_Minify_Functions {
 	public static function get_remote_file_size($url) {
 		$args = array(
 			// info (needed for google fonts woff files + hinted fonts) as well as to bypass some security filters
-			'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',
+			'user-agent' => WP_Optimize_Utils::get_user_agent(),
 			'timeout' => 7
 		);
 
@@ -1219,8 +1225,10 @@ class WP_Optimize_Minify_Functions {
 		$abs_file_path = WP_Optimize_Utils::get_file_path($hurl);
 		if (empty($abs_file_path)) return '';
 
-		$modification_time = @filemtime($abs_file_path); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Suppress E-Warning on failure
-		return strval($modification_time);
+		$modification_time = strval(@filemtime($abs_file_path)); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Suppress E-Warning on failure
+		$filtered_modification_time = apply_filters('wpo_minify_file_modification_time', $modification_time, $abs_file_path);
+		
+		return is_string($filtered_modification_time) ? $filtered_modification_time : $modification_time;
 	}
 
 	/**
@@ -1238,7 +1246,7 @@ class WP_Optimize_Minify_Functions {
 			if (false === $encoding) {
 				$message .= "Could not determine its character encoding.";
 			}
-			error_log($message);
+			error_log($message); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Using for debugging purpose
 		}
 	}
 }

@@ -57,7 +57,7 @@ class WP_Optimize_Minify_Admin {
 		$enqueue_version = WP_Optimize()->get_enqueue_version();
 		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		if (preg_match('/wp\-optimize/i', $hook)) {
-			wp_enqueue_script('wp-optimize-min-js', WPO_PLUGIN_URL.'js/minify' . $min_or_not_internal . '.js', array('jquery', 'wp-optimize-admin-js'), $enqueue_version);
+			wp_enqueue_script('wp-optimize-min-js', WPO_PLUGIN_URL.'js/minify' . $min_or_not_internal . '.js', array('jquery', 'wp-optimize-admin-js'), $enqueue_version, true);
 		}
 	}
 

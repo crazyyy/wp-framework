@@ -24,7 +24,8 @@ class UpdraftPlus_BackupModule_insufficientphp extends UpdraftPlus_BackupModule 
 		$this->required_php = $php;
 		$this->image = $image;
 		$this->error_msg = 'This remote storage method ('.$this->desc.') requires PHP '.$this->required_php.' or later';
-		$this->error_msg_trans = sprintf(__('This remote storage method (%s) requires PHP %s or later.', 'updraftplus'), $this->desc, $this->required_php);
+		/* translators: 1: remote storage method, 2: required PHP version */
+		$this->error_msg_trans = sprintf(__('This remote storage method (%1$s) requires PHP %2$s or later.', 'updraftplus'), $this->desc, $this->required_php);
 	}
 
 	private function log_error() {
@@ -121,10 +122,13 @@ class UpdraftPlus_BackupModule_insufficientphp extends UpdraftPlus_BackupModule 
 			<th><?php echo esc_html($this->desc);?>:</th>
 			<td>
 				<em>
-					<?php echo (!empty($this->image)) ? '<p><img src="'.esc_url(UPDRAFTPLUS_URL.'/images/'.$this->image).'"></p>' : ''; ?>
-					<?php echo esc_html($this->error_msg_trans);?>
-					<?php esc_html_e('You will need to ask your web hosting company to upgrade.', 'updraftplus');?>
-					<?php echo esc_html(sprintf(__('Your %s version: %s.', 'updraftplus'), 'PHP', phpversion()));?>
+					<?php
+					echo (!empty($this->image)) ? '<p><img src="'.esc_url(UPDRAFTPLUS_URL.'/images/'.$this->image).'"></p>' : '';
+					echo esc_html($this->error_msg_trans);
+					esc_html_e('You will need to ask your web hosting company to upgrade.', 'updraftplus');
+					/* translators: 1: plugin name, 2: version number */
+					echo esc_html(sprintf(__('Your %1$s version: %2$s.', 'updraftplus'), 'PHP', phpversion()));
+					?>
 				</em>
 			</td>
 		</tr>

@@ -47,14 +47,14 @@ class WP_Optimization_postmeta extends WP_Optimization {
 			'columns' => array(
 				'meta_id' => __('ID', 'wp-optimize'),
 				'post_id' => __('Post ID', 'wp-optimize'),
-				'meta_key' => __('Meta Key', 'wp-optimize'),
-				'meta_value' => __('Meta Value', 'wp-optimize'),
+				'meta_key' => __('Meta Key', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- This is not a query
+				'meta_value' => __('Meta Value', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- This is not a query
 			),
 			'offset' => $params['offset'],
 			'limit' => $params['limit'],
 			'total' => $total,
 			'data' => $this->htmlentities_array($posts, array('ID')),
-			'message' => $total > 0 ? '' : __('No orphaned post meta data in your database', 'wp-optimize'),
+			'message' => $total > 0 ? '' : __('No orphaned post metadata in your database', 'wp-optimize'),
 		);
 	}
 
@@ -63,7 +63,7 @@ class WP_Optimization_postmeta extends WP_Optimization {
 	 */
 	public function after_optimize() {
 		// translators: %s: number of orphaned post metadata records
-		$message = sprintf(_n('%s orphaned post meta data deleted', '%s orphaned post meta data deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
+		$message = sprintf(_n('%s orphaned post metadata deleted', '%s orphaned post metadata deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
 			// translators: %s: number of sites
@@ -97,9 +97,9 @@ class WP_Optimization_postmeta extends WP_Optimization {
 	public function after_get_info() {
 		if ($this->found_count) {
 			// translators: %s: number of orphaned post metadata records
-			$message = sprintf(_n('%s orphaned post meta data in your database', '%s orphaned post meta data in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
+			$message = sprintf(_n('%s orphaned post metadata in your database', '%s orphaned post metadata in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
-			$message = __('No orphaned post meta data in your database', 'wp-optimize');
+			$message = __('No orphaned post metadata in your database', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
@@ -126,7 +126,7 @@ class WP_Optimization_postmeta extends WP_Optimization {
 	}
 
 	public function settings_label() {
-		return __('Clean post meta data', 'wp-optimize');
+		return __('Clean post metadata', 'wp-optimize');
 	}
 
 	/**

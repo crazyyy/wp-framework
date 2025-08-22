@@ -111,7 +111,25 @@ msgstr ""
 msgid "Delete All Messages"
 msgstr ""
 
+msgid "Delete Messages Older Than 1 Day"
+msgstr ""
+
+msgid "Delete Messages Older Than 7 Days"
+msgstr ""
+
+msgid "Delete Messages Older Than 15 Days"
+msgstr ""
+
+msgid "Delete Messages Older Than 30 Days"
+msgstr ""
+
+msgid "Messages have been deleted"
+msgstr ""
+
 msgid "Email sent."
+msgstr ""
+
+msgid "Email could not be sent."
 msgstr ""
 
 msgid "Message"

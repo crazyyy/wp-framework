@@ -166,7 +166,11 @@ class WPO_Cache_Rules {
 		if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || 'revision' === $post_type || null === $post_type_object || !$post_type_object->public) {
 			return;
 		}
-
+		$post_status = get_post_status($post_id);
+		if ('publish' !== $post_status) {
+			return;
+		}
+		
 		/**
 		 * Purge the whole cache if set to true, only the edited post otherwise. Default is false.
 		 *
@@ -202,6 +206,11 @@ class WPO_Cache_Rules {
 
 		if (null === $post_obj) return;
 
+		$post_status = get_post_status($post_id);
+		if ('publish' !== $post_status) {
+			return;
+		}
+		
 		if ('post' == $post_type) {
 			// delete blog page cache
 			$blog_post_id = get_option('page_for_posts');
@@ -240,10 +249,22 @@ class WPO_Cache_Rules {
 				WPO_Page_Cache::delete_cache_by_url($link, true);
 			}
 			WPO_Page_Cache::instance()->file_log("Cache for all archives page associated with post_type: " . $post_type . " and Title: {{title}} have been purged, triggered by action: " . current_filter(), $post_id);
-		} elseif ($post_obj->has_archive) {
+		}
+		if ($post_obj->has_archive) {
 			// delete archive page for custom post type.
 			WPO_Page_Cache::delete_cache_by_url(get_post_type_archive_link($post_type), true);
 			WPO_Page_Cache::instance()->file_log("Cache for archive page associated with post_type: " . $post_type . " and Title: {{title}} has been purged, triggered by action: " . current_filter(), $post_id);
+		}
+		if (post_type_supports($post_type, 'author')) {
+			$author_id  = get_post_field('post_author', $post_id);
+			$post_author = get_user_by('id', $author_id);
+			if ($author_id && $post_author) {
+				$author_url = get_author_posts_url($author_id);
+				if (!empty($author_url)) {
+					WPO_Page_Cache::delete_cache_by_url($author_url, true);
+					WPO_Page_Cache::instance()->file_log("Cache for author page URL: " . $author_url . " associated with post_type: " . $post_type . " and Title: {{title}} has been purged, triggered by action: " . current_filter(), $post_id);
+				}
+			}
 		}
 	}
 
@@ -272,7 +293,7 @@ class WPO_Cache_Rules {
 			'numberposts'      => -1,
 			'post_type'        => 'any',
 			'fields'           => 'ids',
-			'tax_query' => array(
+			'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- because we can't use `get_objects_in_term` for `OR` relationships
 				'relation' => 'OR',
 				array(
 					'taxonomy' => $taxonomy,

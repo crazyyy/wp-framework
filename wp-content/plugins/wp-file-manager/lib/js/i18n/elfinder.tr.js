@@ -3,11 +3,11 @@
  * @author I.Taskinoglu & A.Kaya <alikaya@armsyazilim.com>
  * @author Abdullah ELEN <abdullahelen@msn.com>
  * @author Osman KAYAN <osmnkayan@gmail.com>
- * @author alikayan95@gmail.com
+ * @author Ali KAYAN <alikayan95@gmail.com>
  * @author Cengiz AKCAN cengiz@vobo.company
- * @version 2022-03-03
+ * @version 2022-05-08
  */
- (function(root, factory) {
+(function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -17,16 +17,13 @@
 	}
 }(this, function(elFinder) {
 	elFinder.prototype.i18.tr = {
-		translator : 'I.Taskinoglu & A.Kaya &lt;alikaya@armsyazilim.com&gt;, Abdullah ELEN &lt;abdullahelen@msn.com&gt;, Osman KAYAN &lt;osmnkayan@gmail.com&gt;, alikayan95@gmail.com, Cengiz AKCAN cengiz@vobo.company',
+		translator : 'I.Taskinoglu & A.Kaya &lt;alikaya@armsyazilim.com&gt;, Abdullah ELEN &lt;abdullahelen@msn.com&gt;, Osman KAYAN &lt;osmnkayan@gmail.com&gt;, alikayan95@gmail.com, Cengiz AKCAN cengiz@vobo.company, Ali KAYAN &lt;alikayan95@gmail.com&gt;',
 		language   : 'Türkçe',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 03.03.2022 15:56
-		fancyDateFormat : '$1 H:i', // will show like: Bugün 15:56
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 220303-155625
+		dateFormat : 'd.m.Y H:i', // will show like: 08.05.2022 21:53
+		fancyDateFormat : '$1 H:i', // will show like: Bugün 21:53
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 220508-215305
 		messages   : {
-			'getShareText' : 'Paylaş',
-			'Editor ': 'Kod Düzenleyici',
-			
 
 			/********************************** errors **********************************/
 			'error'                : 'Hata',
@@ -244,9 +241,9 @@
 			'Yesterday'   : 'Dün',
 			'msJan'       : 'Oca',
 			'msFeb'       : 'Şub',
-			'msMar'       : 'Mart',
+			'msMar'       : 'Mar',
 			'msApr'       : 'Nis',
-			'msMay'       : 'Mayıs',
+			'msMay'       : 'May',
 			'msJun'       : 'Haz',
 			'msJul'       : 'Tem',
 			'msAug'       : 'Ağu',

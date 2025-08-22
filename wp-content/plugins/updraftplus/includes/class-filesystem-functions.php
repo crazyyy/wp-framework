@@ -184,6 +184,7 @@ class UpdraftPlus_Filesystem_Functions {
 					delete_site_option('updraftplus_semaphore_'.$nonce);
 				}
 			}
+			$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE (option_name REGEXP %s AND CAST(option_value AS UNSIGNED) < %d) OR (option_name REGEXP %s AND UNIX_TIMESTAMP() > CAST(option_value AS UNSIGNED) + %d) LIMIT 1000", '^updraft_lock_[a-f0-9A-F]{12}$', strtotime('2025-03-01'), '^updraft_lock_udp_backupjob_[a-f0-9A-F]{12}$', $older_than));
 		}
 		$updraft_dir = $updraftplus->backups_dir_location();
 		$now_time = time();

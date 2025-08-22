@@ -34,19 +34,22 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 		
 		$parent_notice_content = parent::populate_notices_content();
 
-		$sale_description = __('Make your site even faster with Premium.', 'wp-optimize') . ' ';
-		$sale_description .= __('Identify orphaned images, load webpages faster and get premium support.', 'wp-optimize') . ' ';
+		// translators: %1$s are bold html tags to make some of the text bold, %2$s are closing tags
+		$sale_description = sprintf(__('Make your site even %1$s faster with Premium %2$s.', 'wp-optimize'), '<b>', '</b>') . ' ';
+		// translators: %1$s are bold html tags to make some of the text bold, %2$s are closing tags
+		$sale_description .= sprintf(__('Identify orphaned images, load pages faster and get %1$s premium support %2$s.', 'wp-optimize'), '<b>', '</b>') . ' ';
 		$sale_description .= __('Get advanced options, like the ability to optimize your site using WP-CLI.', 'wp-optimize') . ' ';
-		$sale_description .= __('Premium is compatible with WordPress multisite, WooCommerce and other add-ons, including multilingual and multi-currency WordPress plugins.', 'wp-optimize');
+		// translators: %1$s are bold html tags to make some of the text bold, %2$s are closing tags
+		$sale_description .= sprintf(__('Premium is %1$s compatible with WordPress multisite, WooCommerce and other add-ons %2$s, including multilingual and multi-currency WordPress plugins.', 'wp-optimize'), '<b>', '</b>');
 		$sale_description .= '<br>';
 
-		$checkout_html = '<a href="https://getwpo.com/buy/">'.__('checkout', 'wp-optimize').'</a>';
+		$bf_checkout_html = '<b><a href="https://teamupdraft.com/wp-optimize/blackfriday/?utm_source=wpo-plugin&utm_medium=referral&utm_campaign=paac&utm_content=unknown&utm_creative_format=unknown" target="_blank">'.__('Save 20% with code blackfridaysale2025', 'wp-optimize').'</a></b>';
 
 		$child_notice_content = array(
 			'updraftplus' => array(
 				'prefix' => '',
 				'title' => __('Make sure you backup before you optimize your database', 'wp-optimize'),
-				'text' => __("UpdraftPlus is the world's most trusted backup plugin from the owners of WP-Optimize", 'wp-optimize'),
+				'text' => __("UpdraftPlus is the world's most trusted backup plugin, from the owners of WP-Optimize.", 'wp-optimize'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => 'https://wordpress.org/plugins/updraftplus/',
 				'button_meta' => 'updraftplus',
@@ -56,10 +59,10 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			),
 			'updraftcentral' => array(
 				'prefix' => '',
-				'title' => __('Save Time and Money.', 'wp-optimize') . ' ' . __('Manage multiple WordPress sites from one location.', 'wp-optimize'),
-				'text' => __('UpdraftCentral is a highly efficient way to take backup, update and manage multiple WP sites from one location.', 'wp-optimize'),
-				'image' => 'notices/updraft_logo.png',
-				'button_link' => 'https://updraftcentral.com',
+				'title' => __('Save time and money.', 'wp-optimize') . ' ' . __('Manage multiple sites from one location.', 'wp-optimize'),
+				'text' => __('Back up, update and manage multiple WordPress websites centrally.', 'wp-optimize'),
+				'image' => 'notices/updraft_central_logo.png',
+				'button_link' => 'https://teamupdraft.com/updraftcentral/?utm_source=wpo-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftcentral&utm_creative_format=advert',
 				'button_meta' => 'updraftcentral',
 				'dismiss_time' => 'dismiss_page_notice_until',
 				'supported_positions' => $this->dashboard_top_or_report,
@@ -67,8 +70,8 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			),
 			'rate_plugin' => array(
 				// translators: %1$s is an anchor tag to WP-Optimize support forum, %2$s is closing tags
-				'text' => __("Hey - We noticed WP-Optimize has kept your site running fast for a while.", 'wp-optimize') . ' ' . __('If you like us, please consider leaving a positive review to spread the word.', 'wp-optimize') . ' ' . sprintf(__('Or if you have any issues or questions please leave us a support message %1$s here %2$s', 'wp-optimize'), '<a href="https://wordpress.org/support/plugin/wp-optimize/" target="_blank">', '</a><br>') . __('Thank you so much!', 'wp-optimize') . ' - <b>WP-Optimize</b><br>',
-				'image' => 'notices/ud_smile.png',
+				'text' => __("We noticed WP-Optimize has kept your site running fast for a while.", 'wp-optimize') . ' ' . __('If you like us, please consider leaving us a positive review.', 'wp-optimize') . ' ' . sprintf(__('If you have any issues or questions please contact %1$s support. %2$s', 'wp-optimize'), '<a href="https://wordpress.org/support/plugin/wp-optimize/" target="_blank">', '</a><br>') . __('Thank you so much!', 'wp-optimize'),
+				'image' => 'notices/wp_optimize_logo.png',
 				'button_link' => 'https://wordpress.org/support/plugin/wp-optimize/reviews/?rate=5#new-post',
 				'button_meta' => 'review',
 				'dismiss_time' => 'dismiss_review_notice',
@@ -77,11 +80,11 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			),
 			'translation_needed' => array(
 				'prefix' => '',
-				'title' => 'Can you translate? Want to improve WP-Optimize for speakers of your language?',
-				'text' => $this->url_start(true, 'translate.wordpress.org/projects/wp-plugins/wp-optimize')."Please go here for instructions - it is easy.".$this->url_end(true, 'translate.wordpress.org/projects/wp-plugins/wp-optimize'),
-				'text_plain' => $this->url_start(false, 'translate.wordpress.org/projects/wp-plugins/wp-optimize')."Please go here for instructions - it is easy.".$this->url_end(false, 'translate.wordpress.org/projects/wp-plugins/wp-optimize'),
+				'title' => 'Can you translate?',
+				'text' => __("Want to improve WP-Optimize for speakers of your language? Go here for instructions", 'wp-optimize'),
 				'image' => 'notices/wp_optimize_logo.png',
-				'button_link' => false,
+				'button_link' => 'https://teamupdraft.com/translate-for-us?utm_source=wpo-plugin&utm_medium=referral&utm_campaign=paac&utm_content=translate&utm_creative_format=advert',
+				'button_meta' => 'translate',
 				'dismiss_time' => false,
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'translation_needed',
@@ -89,9 +92,9 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'wpo-premium' => array(
 				'prefix' => '',
 				'title' => __("Perform optimizations while your visitors sleep", "wp-optimize"),
-				'text' => __("WP-Optimize Premium features an advanced scheduling system that allows you to run optimizations at the quietest time of day (or night).", "wp-optimize"),
+				'text' => __("Schedule optimizations for set times e.g. overnight when server resources are high.", "wp-optimize"),
 				'image' => 'notices/wp_optimize_logo.png',
-				'button_link' => 'https://getwpo.com',
+				'button_link' => 'https://teamupdraft.com/wp-optimize/features?utm_source=wpo-plugin&utm_medium=referral&utm_campaign=paac&utm_content=while-they-sleep&utm_creative_format=advert',
 				'button_meta' => 'wpo-premium',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
@@ -99,21 +102,10 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			),
 			'wpo-premium-multisite' => array(
 				'prefix' => '',
-				'title' => __("Manage a multisite installation? Need extra control?", "wp-optimize"),
-				'text' => __("WP-Optimize Premium's multisite feature includes a locking system that restricts optimization commands to users with the right permissions.", "wp-optimize"),
+				'title' => __("Manage a multisite installation?", "wp-optimize"),
+				'text' => __("Optimize any site (or combination of sites) on the multisite network.", "wp-optimize") . ' ' . __("Give the right permissions to the right users.", "wp-optimize"),
 				'image' => 'notices/wp_optimize_logo.png',
-				'button_link' => 'https://getwpo.com',
-				'button_meta' => 'wpo-premium',
-				'dismiss_time' => 'dismiss_notice',
-				'supported_positions' => $this->anywhere,
-				'validity_function' => 'is_wpo_premium_installed',
-			),
-			'wpo-premium2' => array(
-				'prefix' => '',
-				'title' => __("WP-Optimize Premium offers unparalleled choice and flexibility", "wp-optimize"),
-				'text' => __("Upgrade today to combine over a dozen optimization options.", "wp-optimize"),
-				'image' => 'notices/wp_optimize_logo.png',
-				'button_link' => 'https://getwpo.com',
+				'button_link' => 'https://teamupdraft.com/wp-optimize/features?utm_source=wpo-plugin&utm_medium=referral&utm_campaign=paac&utm_content=multisite&utm_creative_format=advert',
 				'button_meta' => 'wpo-premium',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
@@ -124,30 +116,20 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 				'title' => __("Remove unwanted images for better site performance.", "wp-optimize"),
 				'text' => __("WP-Optimize Premium comes with a feature to easily remove orphaned images, or images that exceed a certain size from your website.", "wp-optimize"),
 				'image' => 'notices/wp_optimize_logo.png',
-				'button_link' => 'https://getwpo.com',
+				'button_link' => 'https://teamupdraft.com/wp-optimize/features?utm_source=wpo-plugin&utm_medium=referral&utm_campaign=paac&utm_content=unwanted-images&utm_creative_format=advert',
 				'button_meta' => 'wpo-premium',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'is_wpo_premium_installed',
 			),
-			'wpo-power-tweaks' => array(
+			'aios' => array(
 				'prefix' => '',
-				'title' => __("Power tweaks for advanced users and better site performance.", "wp-optimize"),
-				'text' => __("WP-Optimize Premium comes with the power tweaks that will enable you to improve performance by targeting specific weak points, either in WordPress Core, or in popular plugins.", "wp-optimize"),
-				'image' => 'notices/wp_optimize_logo.png',
-				'button_link' => 'https://getwpo.com/faqs/#Power-tweaks-2-',
-				'button_meta' => 'wpo-premium',
-				'dismiss_time' => 'dismiss_notice',
-				'supported_positions' => $this->anywhere,
-				'validity_function' => 'is_wpo_premium_installed',
-			),
-			'subscriben' => array(
-				'prefix' => '',
-				'title' => 'Subscriben ' .__('by', 'wp-optimize'). ' UpdraftPlus',
-				'text' => __("The WordPress subscription extension for WooCommerce store owners.", "wp-optimize"),
-				'image' => 'notices/subscriben.png',
-				'button_link' => 'https://subscribenplugin.com',
-				'button_meta' => 'subscriben',
+				'title' => __('Secure your site', 'wp-optimize'),
+				// translators: %1$s is the name of plugin and %2$s is the name of the team
+				'text' => sprintf(__('The %1$s plugin from %2$s.', 'wp-optimize'), '"All-In-One" Security', 'TeamUpdraft'),
+				'image' => 'notices/aios_logo.png',
+				'button_link' => 'https://teamupdraft.com/all-in-one-security/?utm_source=wpo-plugin&utm_medium=referral&utm_campaign=paac&utm_content=aios&utm_creative_format=advert',
+				'button_meta' => 'aios',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 			),
@@ -156,78 +138,18 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 			'blackfriday' => array(
 				'prefix' => '',
 				'title' => __('20% off - Black Friday Sale', 'wp-optimize'),
-				// translators: %1$s is a link to Black Friday sale page, %2$s is Black Friday sale discount code
-				'text' => $sale_description . '<br>' . sprintf('<a class="updraft_notice_link" href="%1$s" target="_blank">%2$s</a>', 'http://getwpo.com/blackfriday', sprintf(__('Save 20%% with code %s', 'wp-optimize'), '<b>blackfridaysale2024</b>'))  . ' ' . __('Hurry, offer ends on 2 December.', 'wp-optimize'),
-				'image' => 'notices/sale_20.png',
-				'button_link' => 'https://getwpo.com/blackfriday',
-				'button_meta' => 'collection',
+				// translators: %s is a link to pricing/check out page
+				'text' => $sale_description . '<br>' . sprintf(__('%s at checkout.', 'wp-optimize'), $bf_checkout_html) . ' <b>' . __('Hurry, offer ends 2 December.', 'wp-optimize') . '</b>',
+				'image' => 'notices/wpo_sale_icon.png',
+				'button_link' => 'https://teamupdraft.com/wp-optimize/blackfriday/',
+				'button_meta' => 'no-button',
 				'dismiss_time' => 'dismiss_season',
 				// 'discount_code' => 'blackfridaysale2022',
-				'valid_from' => '2024-11-14 00:00:00',
-				'valid_to' => '2024-12-02 23:59:59',
+				'valid_from' => '2025-11-14 00:00:00',
+				'valid_to' => '2025-12-02 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 				'validity_function' => 'is_wpo_premium_installed',
 			),
-			'newyear' => array(
-				'prefix' => '',
-				'title' => __('20% off - New Year Sale', 'wp-optimize'),
-				// translators: %1$s is New Year sale discount code, %2$s is a link to check out page
-				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% with code %1$s at %2$s.', 'wp-optimize'), '<b>newyearsale2025</b>', $checkout_html) . ' ' . __('Hurry, offer ends 28 January.', 'wp-optimize'),
-				'image' => 'notices/sale_20.png',
-				'button_link' => 'https://getwpo.com',
-				// 'button_meta' => 'wp-optimize',
-				'dismiss_time' => 'dismiss_season',
-				// 'discount_code' => 'newyearsale2023',
-				'valid_from' => '2025-01-01 00:00:00',
-				'valid_to' => '2025-01-28 23:59:59',
-				'supported_positions' => $this->dashboard_top_or_report,
-				'validity_function' => 'is_wpo_premium_installed',
-			),
-			'spring' => array(
-				'prefix' => '',
-				'title' => __('20% off - Spring Sale', 'wp-optimize'),
-				// translators: %1$s is Spring sale discount code, %2$s is a link to check out page
-				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% off with code %1$s at %2$s.', 'wp-optimize'), '<b>springsale2024</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31 May.', 'wp-optimize'),
-				'image' => 'notices/sale_20.png',
-				'button_link' => 'https://getwpo.com',
-				// 'button_meta' => 'wp-optimize',
-				'dismiss_time' => 'dismiss_season',
-				// 'discount_code' => 'springsale2022',
-				'valid_from' => '2024-05-01 00:00:00',
-				'valid_to' => '2024-05-31 23:59:59',
-				'supported_positions' => $this->dashboard_top_or_report,
-				'validity_function' => 'is_wpo_premium_installed',
-			),
-			'summer' => array(
-				'prefix' => '',
-				'title' => __('20% off - Summer Sale', 'wp-optimize'),
-				// translators: %1$s is Summer sale discount code, %2$s is a link to check out page
-				'text' => $sale_description . '<br>' . sprintf(__('Save 20%% off with code %1$s at %2$s.', 'wp-optimize'), '<b>summersale2024</b>', $checkout_html) . ' ' . __('Hurry, offer ends 31 July.', 'wp-optimize'),
-				'image' => 'notices/sale_20.png',
-				'button_link' => 'https://getwpo.com',
-				// 'button_meta' => 'wp-optimize',
-				'dismiss_time' => 'dismiss_season',
-				// 'discount_code' => 'summersale2022',
-				'valid_from' => '2024-07-01 00:00:00',
-				'valid_to' => '2024-07-31 23:59:59',
-				'supported_positions' => $this->dashboard_top_or_report,
-				'validity_function' => 'is_wpo_premium_installed',
-			),
-			'collection' => array(
-				'prefix' => '',
-				'title' => __('The UpdraftPlus Plugin Collection Sale', 'wp-optimize'),
-				// translators: %s is a discount code
-				'text' => sprintf(__('Visit any of our websites and use code %s at the checkout to get 20%% off all our plugins.', 'wp-optimize'), '<b>WPO2024</b>') . ' ' . __('Be quick, offer ends 30 September.', 'wp-optimize'),
-				'image' => 'notices/sale_20.png',
-				'button_link' => 'https://teamupdraft.com',
-				'campaign' => 'collection',
-				'button_meta' => 'collection',
-				'dismiss_time' => 'dismiss_season',
-				// 'discount_code' => 'WPO2022',
-				'valid_from' => '2024-09-01 00:00:00',
-				'valid_to' => '2024-09-24 23:59:59',
-				'supported_positions' => $this->dashboard_top_or_report,
-			)
 		);
 
 		return array_merge($parent_notice_content, $child_notice_content);
@@ -280,11 +202,11 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 	/**
 	 * This method will check to see if a number of different backup plugins are installed and if they are we won't display the notice
 	 *
-	 * @param  String  $product             the plugin slug
-	 * @param  boolean $also_require_active a bool to indicate if the plugin should be active or not
-	 * @return boolean                      a bool to indicate if the notice should be displayed or not
+	 * @param  string|null  $product             the plugin slug
+	 * @param  boolean      $also_require_active a bool to indicate if the plugin should be active or not
+	 * @return boolean                           a bool to indicate if the notice should be displayed or not
 	 */
-	public function is_backup_plugin_installed($product = null, $also_require_active = false) {
+	public function is_backup_plugin_installed(?string $product = null, bool $also_require_active = false): bool {
 		$backup_plugins = array('updraftplus' => 'UpdraftPlus', 'backwpup' => 'BackWPup', 'backupwordpress' => 'BackupWordPress', 'vaultpress' => 'VaultPress', 'wp-db-backup' => 'WP-DB-Backup', 'backupbuddy' => 'BackupBuddy');
 
 		foreach ($backup_plugins as $slug => $title) {

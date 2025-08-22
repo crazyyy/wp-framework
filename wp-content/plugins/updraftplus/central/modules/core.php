@@ -21,6 +21,13 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 			include_once(ABSPATH.'wp-includes/general-template.php');
 		}
 
+		if (!class_exists('UpdraftCentral_Media_Commands') && defined('UPDRAFTCENTRAL_CLIENT_DIR')) {
+			include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/modules/media.php');
+		}
+
+		$media = new UpdraftCentral_Media_Commands($this);
+		$icon_details = array();
+
 		$site_icon_url = get_site_icon_url();
 
 		// If none is set in WordPress, let's try to search for the default favicon
@@ -49,6 +56,9 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 					break;
 				}
 			}
+		} else {
+			$site_icon_id = (int) get_option('site_icon');
+			if ($site_icon_id) $icon_details = $media->get_media_item(array('id' => $site_icon_id), null, true);
 		}
 
 		// We are returning the site icon as byte string instead of URL in order to avoid
@@ -71,7 +81,96 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 			}
 		}
 
-		return $this->_response(array('site_icon' => $site_icon));
+		return $this->_response(array('site_icon' => $site_icon, 'icon_details' => $icon_details));
+	}
+
+	/**
+	 * Handles site icon upload
+	 *
+	 * @param Array $query An array containing the image data.
+	 *
+	 * @return Array
+	 */
+	public function handle_site_icon_upload($query) {
+		if (!current_user_can('upload_files')) {
+			return $this->_generic_error_response('insufficient_permission', array('error_message' => __('You do not have the necessary permissions to upload files.', 'updraftcentral')));
+		}
+
+		$data_uri = sanitize_text_field($query['data_uri']);
+		$filename = sanitize_text_field(basename($query['filename']));
+		$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+		$history = sanitize_text_field($query['history']);
+		$preview = sanitize_text_field($query['preview']);
+		$pattern = '/^data:(image\/[^;]+);base64,([A-Za-z0-9+\/=]+)$/i';
+
+		if (!empty($data_uri) && preg_match($pattern, $data_uri, $matches)) {
+			list(, $data) = explode(';', $data_uri);
+			list(, $data) = explode(',', $data);
+
+			$decoded_data = base64_decode($data);
+			if (!class_exists('wp_tempnam')) include_once(ABSPATH.'/wp-admin/includes/file.php');
+			$temp_img_file = wp_tempnam();
+			@file_put_contents($temp_img_file, $decoded_data); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the call.
+			$mime_type = wp_get_image_mime($temp_img_file);
+			@unlink($temp_img_file); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise if the file doesn't exist.
+			$allowed_ext = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tif', 'webp', 'avif', 'heic');
+			if (false !== $mime_type && !empty($matches[1]) && strtolower($mime_type) === strtolower($matches[1]) && !empty($file_ext) && in_array(strtolower($file_ext), $allowed_ext)) {
+				$upload = wp_upload_bits($filename, null, $decoded_data);
+			} else {
+				$upload = array('error' => __("Couldn't verify the actual MIME type of the given site icon image data.", 'updraftcentral'));
+			}
+
+			if (!$upload['error']) {
+				$attachment = array(
+					'guid' => $upload['url'],
+					'post_mime_type' => $upload['type'],
+					'post_title' => sanitize_file_name($filename),
+					'post_content' => '',
+					'post_status' => 'inherit',
+				);
+
+				$attach_id = wp_insert_attachment($attachment, $upload['file']);
+
+				if (!function_exists('wp_generate_attachment_metadata')) {
+					require_once(ABSPATH.'wp-admin/includes/image.php');
+				}
+
+				// Generate metadata and thumbnails
+				$attach_data = wp_generate_attachment_metadata($attach_id, $upload['file']);
+				wp_update_attachment_metadata($attach_id, $attach_data);
+
+				if (update_option('site_icon', $attach_id)) {
+					if (1 == intval($preview)) {
+						if (!class_exists('UpdraftCentral_Media_Commands') && defined('UPDRAFTCENTRAL_CLIENT_DIR')) {
+							include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/modules/media.php');
+						}
+
+						$media = new UpdraftCentral_Media_Commands($this);
+						$icon_details = $media->get_media_item(array('id' => $attach_id), null, true);
+
+						$params = array(
+							'_ajax_nonce' => $icon_details->nonce,
+							'postid' => $attach_id,
+							'history' => $history,
+							'rand' => $icon_details->misc['rand'],
+						);
+
+						$result = $media->image_preview($params);
+						$result['data']['icon_details'] = $icon_details;
+
+						return $result;
+					} else {
+						return $this->get_site_icon();
+					}
+				} else {
+					return $this->_generic_error_response('upload_error', array('error_message' => __('Unable to set uploaded file as site icon.', 'updraftcentral')));
+				}
+			} else {
+				return $this->_generic_error_response('upload_error', array('error_message' => $upload['error']));
+			}
+		} else {
+			return $this->_generic_error_response('data_uri_field_empty_or_invalid', array('error_message' => __('Required data URI is either missing or invalid.', 'updraftcentral')));
+		}
 	}
 
 	/**

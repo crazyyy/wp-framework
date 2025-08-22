@@ -145,6 +145,7 @@ class UpdraftPlus_Encryption {
 		global $updraftplus;
 
 		if (!function_exists('mcrypt_encrypt') && !extension_loaded('openssl')) {
+			/* translators: %s: The name of the missing encryption module. */
 			$updraftplus->log(sprintf(__('Your web-server does not have the %s module installed.', 'updraftplus'), 'PHP/mcrypt / PHP/OpenSSL').' '.__('Without it, encryption will be a lot slower.', 'updraftplus'), 'warning', 'nocrypt');
 		}
 

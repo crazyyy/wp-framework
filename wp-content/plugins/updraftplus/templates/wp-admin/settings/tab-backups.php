@@ -24,7 +24,7 @@ if (!empty($options['include_header'])) echo '<h2>'.esc_html(__('Existing backup
 <div class="download-backups form-table">
 	<?php if (!empty($options['include_whitespace_warning'])) { ?>
 		<p class="ud-whitespace-warning updraft-hidden" style="display:none;">
-			<?php echo '<strong>'.esc_html__('Warning', 'updraftplus').':</strong> '.esc_html(__('Your WordPress installation has a problem with outputting extra whitespace.', 'updraftplus').' '.__('This can corrupt backups that you download from here.', 'updraftplus')).' <a href="'.esc_url(apply_filters('updraftplus_com_link', "https://updraftplus.com/problems-with-extra-white-space/")).'" target="_blank">'.esc_html__('Follow this link for more information', 'updraftplus').'</a>';?>
+			<?php echo '<strong>'.esc_html__('Warning', 'updraftplus').':</strong> '.esc_html(__('Your WordPress installation has a problem with outputting extra whitespace.', 'updraftplus').' '.__('This can corrupt backups that you download from here.', 'updraftplus')).' <a href="'.esc_url(apply_filters('updraftplus_com_link', "https://teamupdraft.com/documentation/updraftplus/topics/general/troubleshooting/problems-with-extra-white-space/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=unknown&utm_creative_format=unknown")).'" target="_blank">'.esc_html__('Follow this link for more information', 'updraftplus').'</a>';?>
 		</p>
 	<?php }
 	$bom_warning = $updraftplus_admin->get_bom_warning_text();
@@ -68,10 +68,17 @@ if (!empty($options['include_header'])) echo '<h2>'.esc_html(__('Existing backup
 			?>
 		
 			<div id="updraft-plupload-modal" style="display:none;" title="<?php esc_attr_e('UpdraftPlus - Upload backup files', 'updraftplus'); ?>">
-			<p class="upload"><em><?php echo esc_html(__("Upload files into UpdraftPlus.", 'updraftplus').__('Or, you can place them manually into your UpdraftPlus directory (usually wp-content/updraft), e.g. via FTP, and then use the "rescan" link above.', 'updraftplus'));?></em></p>
+			<p class="upload"><em><?php echo esc_html(__("Upload files into UpdraftPlus.", 'updraftplus').' '.__('Or, you can place them manually into your UpdraftPlus directory (usually wp-content/updraft), e.g. via FTP, and then use the "rescan" link above.', 'updraftplus'));?></em></p>
 			<?php
 			if (version_compare($updraftplus->get_wordpress_version(), '3.3', '<')) {
-				echo '<em>'.esc_html(sprintf(__('This feature requires %s version %s or later', 'updraftplus'), 'WordPress', '3.3')).'</em>';
+				echo '<em>'.esc_html(
+					sprintf(
+						/* translators: %1$s: WordPress  %2$s: version number */
+						__('This feature requires %1$s version %2$s or later', 'updraftplus'),
+						'WordPress',
+						'3.3'
+					)
+				).'</em>';
 			} else {
 				?>
 				<div id="plupload-upload-ui">

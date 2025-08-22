@@ -4,8 +4,8 @@ Donate link: https://david.dw-perspective.org.uk/donate
 Tags: cache, caching, image cache, minify, performance cache, page speed, image optimizer, compress images, optimize database, clean database
 Requires PHP: 7.2
 Requires at least: 4.9
-Tested up to: 6.7
-Stable tag: 4.1.1
+Tested up to: 6.8
+Stable tag: 4.2.4
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,9 +15,7 @@ Get caching and more with this powerful cache plugin. Cache, optimize images, cl
 
 MORE THAN A CACHING PLUGIN
 
-<strong>WP-Optimize is trusted by more than 1 million WordPress website</strong> owners to <strong>boost performance</strong> and <strong>reduce page load times</strong> to improve your site's <strong>user experiences</strong> and <strong>SERP rankings in Google.</strong>
-
-[vimeo https://vimeo.com/333705073]
+<strong><a href="https://www.teamupdraft.com/wp-optimize?utm_source=wpo-wp-dir&utm_medium=referral&utm_campaign=plugin-dir&utm_content=wp_optimize&utm_creative_format=description">WP-Optimize</a> is trusted by more than 1 million WordPress website</strong> owners to <strong>boost performance</strong> and <strong>reduce page load times</strong> to improve your site's <strong>user experiences</strong> and <strong>SERP rankings in Google.</strong>
 
 It does this in four clever ways:
 
@@ -126,7 +124,7 @@ Cleans-up database tables, post revisions, auto draft posts, trashed posts, spam
 
 == WHY WP-OPTIMIZE? ==
 
-* It's brought to you by UpdraftPlus, the team behind the world's most trusted backup, migration and restoration plugin.
+* It's brought to you by [TeamUpdraft](https://www.teamupdraft.com?utm_source=wpo-wp-dir&utm_medium=referral&utm_campaign=plugin-dir&utm_content=teamupdraft&utm_creative_format=description), the team behind the world's most trusted backup, migration and restoration plugin.
 * It's easy to use.
 * It packs a punch for a free plugin.
 
@@ -135,7 +133,7 @@ WP-Optimize brings the best cache and optimization technology together into one 
 
 == PREMIUM FEATURES AT A GLANCE ==
 
-Our free version of WP-Optimize Cache is great, but we also have an even more powerful Premium version with extra features that offer the ultimate in freedom and flexibility:
+Our free version of WP-Optimize Cache is great, but we also have an even more powerful [Premium version](https://www.teamupdraft.com/wp-optimize/pricing?utm_source=wpo-wp-dir&utm_medium=referral&utm_campaign=plugin-dir&utm_content=premium_version&utm_creative_format=description) with extra features that offer the ultimate in freedom and flexibility:
 
 * <strong>Multisite Support:</strong> extends database optimisations so they function for multiple WordPress sites at a time. If you manage more than one website, you will need WP-Optimize Cache Premium.
 * <strong>Flexibility and Control:</strong> gives you the power to optimize select individual tables or a particular combination of tables on one or more WordPress websites, rather than having to optimize all database tables.
@@ -194,9 +192,6 @@ This is a "how long is string?" sort of question. It depends completely on your 
 = How do I get support? =
 In our support forum, here: https://wordpress.org/support/plugin/wp-optimize/
 
-= How do I use WP-Optimize Database Cleaning? =
-[vimeo https://vimeo.com/339511213]
-
 = WP-Optimize does not make large savings on my database =
 This is rare; it's probably because you're with a shared web hosting company that doesn't allow scripts to run an optimize command via SQL statements (SQL "OPTIMIZE" instruction). Please consult your web hosting company on this matter.
 
@@ -234,13 +229,12 @@ You think your site is fast without caching? A caching plugin will make your web
 Yes, your Gutenberg pages will be cached, as well as those created with page builder plugins such as Elementor.
 
 = How do I know my webpage is being cached (or why it isn't)? =
-If cache is enabled, and in order to see if your page is cached, use the "View Source" function in your web browser to view the page source. To find caching information, scroll down to the bottom, and you should see a line added by the cache: `<!-- Cached by WP Optimize - https://getwpo.com - Last modified: Sat, 20 Jul 2019 21:17:19 GMT ->`
-However, note that if you are using a further service that minifies HTML (e.g. Cloudflare), then this line may have been removed. Another method is to inspect the contents of the directory wpo-cache inside your wp-content directory. <a href="https://getwpo.com/faqs/how-do-i-know-my-webpage-is-being-cached/>Further information can be read here</a>
+If cache is enabled, and in order to see if your page is cached, use the "View Source" function in your web browser to view the page source. To find caching information, scroll down to the bottom, and you should see a line added by the cache: `<!-- Cached by WP Optimize - https://teamupdraft.com/wp-optimize/ - Last modified: Sat, 20 Jul 2019 21:17:19 GMT ->`
+However, note that if you are using a further service that minifies HTML (e.g. Cloudflare), then this line may have been removed. Another method is to inspect the contents of the directory wpo-cache inside your wp-content directory. <a href="https://teamupdraft.com/documentation/wp-optimize/topics/caching/faqs/how-do-i-know-my-webpage-is-being-cached/>Further information can be read here</a>
 Also note that if you do not preload the cache, a page or post will have to be visited once for the cache file to be generated.
 
 = How do I configure the page cache? =
-Go to WP-Optimize -> Cache and enable caching. For most people, that will be enough. If you run an e-commerce, have a custom login page or any page that has dynamic content, you might want to exclude certain urls from the cache. See <a href="https://getwpo.com/documentation/">Advanced caching options</a> in our cache documentation to know more on excluding an URL from the cache.
-[vimeo https://vimeo.com/337247770]
+Go to WP-Optimize -> Cache and enable caching. For most people, that will be enough. If you run an e-commerce, have a custom login page or any page that has dynamic content, you might want to exclude certain urls from the cache. Visit <a href="https://www.teamupdraft.com/documentation/wp-optimize?utm_source=wpo-wp-dir&utm_medium=referral&utm_campaign=plugin-dir&utm_content=documentation&utm_creative_format=faqs">documentation</a> for help.
 
 = Is the caching feature compatible with e-commerce plugins? =
 Yes, caching with WP-Optimize Cache allows you to safely cache your products, with plugins like WooCommerce or Easy Digital Downloads, or any e-commerce that uses `DONOTCACHEPAGE` to exclude sensitive pages from caching (e.g. my account, cart or checkout pages).
@@ -343,9 +337,6 @@ If you notice any issues due to high server load, set a higher interval for the 
 = Can WP-Optimize Cache minify JavaScript, CSS and HTML? =
 Yes, the newly added Minify enables you to minify JavaScript and CSS. It also enables you to minify HTML.
 
-= What is "Minify"? =
-[vimeo https://vimeo.com/402556749]
-
 = Why minify my WordPress site? =
 WP-Optimize Cache's Minify feature is all about increasing the speed of your WordPress site for your users.
 One way Minify does this is by reducing the size of your HTML, CSS and JavaScript files by removing unnecessary spaces and lines from the files and shortening long names internally within the code.
@@ -377,9 +368,6 @@ The first thing to try is to enable the setting "Contain each included file in i
 If the first option didn't work, try disabling merging of JavaScript files.
 If none of the above works, disable processing of JavaScript files in the minify settings, and <a href="https://wordpress.org/support/plugin/wp-optimize">open a support thread</a> with details about your issue. We'll do our best to help you troubleshoot the issue.
 
-= How do I use the image optimisation feature? =
-[vimeo https://vimeo.com/333938451]
-
 == Screenshots ==
 
 1. Cache - plugins comparison benchmark
@@ -394,6 +382,74 @@ If none of the above works, disable processing of JavaScript files in the minify
 
 
 == Changelog ==
+
+= 4.2.4 - 30/Jul/2025 =
+
+* FIX: Potential PHP fatal error when no site is selected during database optimization in multisite
+* FIX: Issue where the database optimization spinner remained indefinitely active
+* FIX: PHP 8.4 compatibility warnings
+* FIX: Minify default exclusions fatal error
+* FIX: Premium - Potential PHP fatal error - type hinting error in the database table usage feature
+* FIX: Premium - Page cache and lazy load meta boxes no longer display on post edit screen when their respective options are disabled
+* FIX: Only purge relevant files when a published post is saved; also purge the author archive cache upon post save
+* FIX: Premium - Fixed compatibility of Table usage with WordPress versions earlier than 5.3
+* REFACTOR: Premium - Database - Table Usage - added missed translation functions
+* TWEAK: Purged content will preload only when cache is enabled, and the user-agent has been updated to a modern browser and OS version
+* TWEAK: Update seasonal advert banner logos, texts and links
+* TWEAK: Update plugin readme text and links
+* TWEAK: Premium - Cache - Add UI element to ignore query variables
+* TWEAK: Premium - Database - Table Usage - replaced loading state with native modal
+* TWEAK: Removed seasonal discount ads except Black Friday
+
+= 4.2.3 - 15/Jul/2025 =
+
+* FIX: Cache - Resolved PHP warning caused by excessively long cache file names
+* FIX: Corrected typo from `meta data` to `metadata`
+* FIX: Cron reschedule event error for hook `wpo_prune_404_log` when `is_minimum_requirement_met` is `false`
+* FIX: Premium - Fixed a rare PHP warning that could occur when saving a post
+* FIX: Unused image - incorrect image filtering in multisite
+* FIX: WP Remote sync conflict caused in v4.2.1 and v4.2.2 By replacing wp_salt with core PHP functions
+* FIX: YouTube lazy-load – Thumbnail image now falls back to JPG if browser doesn't support WebP
+* FIX: WebP images were not being served in Firefox on certain environments
+* TWEAK: 404 detector logs URLs on mobile screens goes out of viewport fixed.
+* TWEAK: CSS Improvements, better font size handling, remove duplication, and SASS instead of import
+* TWEAK: Delay YouTube preview image cache purging
+* TWEAK: Display notice when server does not allow database optimizations
+* TWEAK: Enhanced database optimization compatibility with jQuery 4
+* TWEAK: Fixed incorrect transients count in database optimizations UI
+* TWEAK: Improved sanitization of incoming data in `Updraft_Smush_Manager_Commands`
+* TWEAK: Minify - Improved compatibility with Divi theme's dynamically generated assets
+* TWEAK: Multisite corrected site count in database optimizations UI.
+* TWEAK: Preserve EXIF data is set to false by default in all places at codebase level.
+* TWEAK: Update URLs of links and images to point to https://teamupdraft.com
+
+= 4.2.2 - 02/June/2025 =
+
+* FIX: Cache - Resolved unwanted output in WP-CLI and fatal error related to WooCommerce's country-specific files, introduced in v4.2.0
+* TWEAK: Premium - Cache - Compatibility with WordPress 6.8
+
+= 4.2.1 - 05/May/2025 =
+
+* FIX: Cache - Compatibility issue with other plugins due to late start of output buffering
+* TWEAK: Improved array handling in `get_active_plugins()`, potentially avoiding edge-case fatal error
+
+= 4.2.0 - 01/May/2025 =
+
+* SECURITY: On multisite installs (only), a logged-in site administrator could use an unsanitised parameter to inject unwanted content into SQL queries. Thanks to Marc Montpas for the responsible disclosure.
+* FEATURE: Premium - Replace YouTube Iframes with preview images to improve page speed
+* FIX: Fix conflict with the WPML plugin
+* FIX: Smush - Fixed PHP warning on the Media Library page
+* FIX: Smush - Fixed issue where the Smush popup would freeze
+* FIX: WebP images not served after WP-Optimize reactivation
+* REFACTOR: Smush option removed from media upload modal
+* TWEAK:  Update advert banner logos, texts and links
+* TWEAK: Add missing separator between compression items in media library
+* TWEAK: Avoid PHP warning thrown by Page Speed Ninja plugin
+* TWEAK: Cache - Start caching after plugins loaded 
+* TWEAK: Fix PHP deprecation warning in PHPSQLParser for PHP 8.4
+* TWEAK: Fix deprecation warning in Updraft_Logger class for PHP 8.4
+* TWEAK: Fixes absence of checkbox to remove all transients
+* TWEAK: Premium - Support and feedback links in Help tab now point to getwpo.com
 
 = 4.1.1 - 05/Mar/2025 =
 
@@ -818,4 +874,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 [See changelog for all versions](https://plugins.svn.wordpress.org/wp-optimize/trunk/changelog.txt).
 
 == Upgrade Notice ==
-* 4.1.1: A fix for page builders with Delay JS option - a recommended update for all
+* 4.2.4: Lot of fixes and tweaks - a recommended update for all

@@ -8,10 +8,16 @@
 <div id="updraft-delete-modal" title="<?php esc_html_e('Delete backup set', 'updraftplus');?>"> 
 	<form id="updraft_delete_form" method="post">
 		<p id="updraft_delete_question_singular">
-			<?php printf(esc_html__('Are you sure that you wish to remove %s from UpdraftPlus?', 'updraftplus'), esc_html__('this backup set', 'updraftplus')); ?> 
+			<?php
+			/* translators: %s: Item to be removed */
+			printf(esc_html__('Are you sure that you wish to remove %s from UpdraftPlus?', 'updraftplus'), esc_html__('this backup set', 'updraftplus'));
+			?> 
 		</p>
 		<p id="updraft_delete_question_plural" class="updraft-hidden" style="display:none;">
-			<?php printf(esc_html__('Are you sure that you wish to remove %s from UpdraftPlus?', 'updraftplus'), esc_html__('these backup sets', 'updraftplus')); ?> 
+			<?php
+			/* translators: %s: Item to be removed */
+			printf(esc_html__('Are you sure that you wish to remove %s from UpdraftPlus?', 'updraftplus'), esc_html__('these backup sets', 'updraftplus'));
+			?> 
 		</p>
 		<fieldset>
 			<input type="hidden" name="nonce" value="<?php echo esc_attr(wp_create_nonce('updraftplus-credentialtest-nonce'));?>"> 
@@ -72,17 +78,26 @@
 										echo '</div>';
 									} else {
 										$sdescrip = isset($info['shortdescription']) ? $info['shortdescription'] : $info['description'];
-										echo "<div class=\"updraft-restore-item cannot-restore\"><em>".esc_html(sprintf(__('The following entity cannot be restored automatically: "%s".', 'updraftplus'), $sdescrip))." ".esc_html__('You will need to restore it manually.', 'updraftplus')."</em><br>".'<input id="updraft_restore_'.esc_attr($type).'" type="hidden" name="updraft_restore[]" value="'.esc_attr($type).'">';
+										echo "<div class=\"updraft-restore-item cannot-restore\"><em>".
+										/* translators: %s: Entity that cannot be restored */
+										esc_html(sprintf(__('The following entity cannot be restored automatically: "%s".', 'updraftplus'), $sdescrip))." ".
+										esc_html__('You will need to restore it manually.', 'updraftplus')."</em><br>".'<input id="updraft_restore_'.esc_attr($type).'" type="hidden" name="updraft_restore[]" value="'.esc_attr($type).'">';
 										echo '</div>';
 									}
 								}
 							?>
 							<div class="updraft-restore-item">
 								<input id="updraft_restore_db" type="checkbox" name="updraft_restore[]" value="db"> <label for="updraft_restore_db"><?php esc_html_e('Database', 'updraftplus'); ?></label> 
-								<div id="updraft_restorer_dboptions" class="udp-notice below-h2 updraft-restore-option updraft-hidden"><h4><?php echo sprintf(esc_html__('%s restoration options:', 'updraftplus'), esc_html__('Database', 'updraftplus')); ?></h4> 
+								<div id="updraft_restorer_dboptions" class="udp-notice below-h2 updraft-restore-option updraft-hidden"><h4>
 									<?php
-									do_action("updraftplus_restore_form_db");
+									echo sprintf(
+										/* translators: %s: Restoration type */
+										esc_html__('%s restoration options:', 'updraftplus'),
+										esc_html__('Database', 'updraftplus')
+									);
 									?>
+								</h4> 
+								<?php do_action("updraftplus_restore_form_db"); ?>
 								</div>
 							</div>
 						</fieldset>

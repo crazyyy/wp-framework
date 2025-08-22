@@ -2,7 +2,7 @@
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access.');
 
-if (version_compare(phpversion(), '5.3.3', '>=')) {
+if (version_compare(phpversion(), '5.6', '>=')) {
 
 	if (class_exists('UpdraftPlus_Addons_RemoteStorage_azure')) {
 		class UpdraftPlus_BackupModule_azure extends UpdraftPlus_Addons_RemoteStorage_azure {
@@ -19,7 +19,7 @@ if (version_compare(phpversion(), '5.3.3', '>=')) {
 		 */
 		class UpdraftPlus_BackupModule_azure extends UpdraftPlus_BackupModule_AddonNotYetPresent {
 			public function __construct() {
-				parent::__construct('azure', 'Microsoft Azure', '5.3.3', 'azure.png');
+				parent::__construct('azure', 'Microsoft Azure', '5.6', 'azure.png');
 			}
 		}
 		
@@ -33,7 +33,7 @@ if (version_compare(phpversion(), '5.3.3', '>=')) {
 	 */
 	class UpdraftPlus_BackupModule_azure extends UpdraftPlus_BackupModule_insufficientphp {
 		public function __construct() {
-			parent::__construct('azure', 'Microsoft Azure', '5.3.3', 'azure.png');
+			parent::__construct('azure', 'Microsoft Azure', '5.6', 'azure.png');
 		}
 	}
 	

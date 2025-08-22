@@ -99,9 +99,9 @@ class UpdraftPlus_Options {
 			// Check user capability to manage options before proceeding
 			if (!current_user_can($capability)) return;
 
-			global $submenu, $title;
+			global $submenu, $title, $plugin_page;
 
-			if (isset($_GET['page']) && 'updraftplus' == $_GET['page']) $title = 'UpdraftPlus';
+			if ('updraftplus' == $plugin_page) $title = 'UpdraftPlus';
 
 			// Add "UpdraftPlus" as the main menu item
 			add_menu_page(
@@ -179,10 +179,10 @@ class UpdraftPlus_Options {
 
 			$remove_query_args = array('state', 'action', 'oauth_verifier');
 			
-			$referer = UpdraftPlus_Manipulation_Functions::wp_unslash(remove_query_arg($remove_query_args, $_SERVER['REQUEST_URI']));
+			$referer = UpdraftPlus_Manipulation_Functions::wp_unslash(remove_query_arg($remove_query_args, $_SERVER['REQUEST_URI'])); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- To be executed on server only, hence this superglobal not to be empty, sanitization and unslashing is done by custom function.
 
 			// Add back the page parameter if it looks like we were on the settings page via an OAuth callback that has now had all parameters removed. This is likely unnecessarily conservative, but there's nothing requiring more than this at the current time.
-			if (substr($referer, -19, 19) == 'options-general.php' && false !== strpos($_SERVER['REQUEST_URI'], '?')) $referer .= '?page=updraftplus';
+			if (substr($referer, -19, 19) == 'options-general.php' && false !== strpos($_SERVER['REQUEST_URI'], '?')) $referer .= '?page=updraftplus'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- To be executed on server only, hence this superglobal will not to be empty, sanitization and unslashing are not required as this superglobal is used directly.
 
 			echo '<input type="hidden" name="_wp_http_referer" value="'. esc_attr($referer) . '" />';
 		}
@@ -207,14 +207,14 @@ class UpdraftPlus_Options {
 		register_setting('updraft-options-group', 'updraft_interval_increments', array($updraftplus, 'schedule_backup_increments'));
 		register_setting('updraft-options-group', 'updraft_retain', array('UpdraftPlus_Manipulation_Functions', 'retain_range'));
 		register_setting('updraft-options-group', 'updraft_retain_db', array('UpdraftPlus_Manipulation_Functions', 'retain_range'));
-		register_setting('updraft-options-group', 'updraft_retain_extrarules');
+		register_setting('updraft-options-group', 'updraft_retain_extrarules', array($updraftplus_admin, 'return_array'));
 
-		register_setting('updraft-options-group', 'updraft_encryptionphrase');
+		register_setting('updraft-options-group', 'updraft_encryptionphrase', 'strval');
 		register_setting('updraft-options-group', 'updraft_service', array($updraftplus, 'just_one'));
 
 		$services_to_register = array_keys($updraftplus->backup_methods);
 		foreach ($services_to_register as $service) {
-			register_setting('updraft-options-group', 'updraft_'.$service);
+			register_setting('updraft-options-group', 'updraft_'.$service); // phpcs:ignore PluginCheck.CodeAnalysis.SettingSanitization.register_settingMissing -- Sanitize callback added below to avail two params.
 			// We have to add the filter manually in order to get the second parameter passed through (register_setting() only registers with one parameter)
 			add_filter('sanitize_option_updraft_'.$service, array($updraftplus, 'storage_options_filter'), 10, 2);
 		}
@@ -236,7 +236,7 @@ class UpdraftPlus_Options {
 		register_setting('updraft-options-group', 'updraft_autobackup_default', 'absint');
 		register_setting('updraft-options-group', 'updraft_delete_local', 'absint');
 		register_setting('updraft-options-group', 'updraft_debug_mode', 'absint');
-		register_setting('updraft-options-group', 'updraft_extradbs');
+		register_setting('updraft-options-group', 'updraft_extradbs', array($updraftplus_admin, 'return_array'));
 		register_setting('updraft-options-group', 'updraft_backupdb_nonwp', 'absint');
 
 		register_setting('updraft-options-group', 'updraft_include_plugins', 'absint');

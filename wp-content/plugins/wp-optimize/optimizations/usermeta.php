@@ -47,14 +47,14 @@ class WP_Optimization_usermeta extends WP_Optimization {
 			'columns' => array(
 				'umeta_id' => __('ID', 'wp-optimize'),
 				'user_id' => __('User ID', 'wp-optimize'),
-				'meta_key' => __('Meta Key', 'wp-optimize'),
-				'meta_value' => __('Meta Value', 'wp-optimize'),
+				'meta_key' => __('Meta Key', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- This is not a query
+				'meta_value' => __('Meta Value', 'wp-optimize'), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- This is not a query
 			),
 			'offset' => $params['offset'],
 			'limit' => $params['limit'],
 			'total' => $total,
 			'data' => $this->htmlentities_array($users, array('ID')),
-			'message' => $total > 0 ? '' : __('No orphaned user meta data in your database', 'wp-optimize'),
+			'message' => $total > 0 ? '' : __('No orphaned user metadata in your database', 'wp-optimize'),
 		);
 	}
 
@@ -63,7 +63,7 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 */
 	public function after_optimize() {
 		// translators: %s is the number of orphaned user metadata deleted
-		$message = sprintf(_n('%s orphaned user meta data deleted', '%s orphaned user meta data deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
+		$message = sprintf(_n('%s orphaned user metadata deleted', '%s orphaned user metadata deleted', $this->processed_count, 'wp-optimize'), number_format_i18n($this->processed_count));
 
 		if ($this->is_multisite_mode()) {
 			// translators: %s is the number sites
@@ -97,9 +97,9 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	public function after_get_info() {
 		if ($this->found_count) {
 			// translators: %s is the number of orphaned user metadata
-			$message = sprintf(_n('%s orphaned user meta data in your database', '%s orphaned user meta data in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
+			$message = sprintf(_n('%s orphaned user metadata in your database', '%s orphaned user metadata in your database', $this->found_count, 'wp-optimize'), number_format_i18n($this->found_count));
 		} else {
-			$message = __('No orphaned user meta data in your database', 'wp-optimize');
+			$message = __('No orphaned user metadata in your database', 'wp-optimize');
 		}
 
 		if ($this->is_multisite_mode()) {
@@ -129,7 +129,7 @@ class WP_Optimization_usermeta extends WP_Optimization {
 	 * Get settings label.
 	 */
 	public function settings_label() {
-		return __('Clean user meta data', 'wp-optimize');
+		return __('Clean user metadata', 'wp-optimize');
 	}
 
 	/**

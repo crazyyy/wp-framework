@@ -1094,6 +1094,8 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 					'permalink_template' => get_permalink($post->ID, true),
 					'author_name' => get_the_author_meta('display_name', $post->post_author),
 					'publish_month_year' => date('F Y', strtotime($post->post_date)),
+					'publish_month_year_date' => date('d F Y', strtotime($post->post_date)),
+					'post_status_object' => get_post_status_object(get_post_status($post->ID)),
 					'published_date' => $published_date,
 					'format' => get_post_format($post->ID),
 					'post_type_name' => $post_type_obj->name,

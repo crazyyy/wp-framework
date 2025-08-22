@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Provider;
 
@@ -339,7 +334,7 @@ class DateTime extends Base
      *
      * @example 'Europe/Paris'
      */
-    public static function timezone(string $countryCode = null)
+    public static function timezone(?string $countryCode = null)
     {
         if ($countryCode) {
             $timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::PER_COUNTRY, $countryCode);

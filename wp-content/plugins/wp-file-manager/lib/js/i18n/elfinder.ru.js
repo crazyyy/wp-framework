@@ -3,9 +3,10 @@
  * @author Dmitry "dio" Levashov <dio@std42.ru>
  * @author Andrew Berezovsky <andrew.berezovsky@gmail.com>
  * @author Alex Yashkin <alex@yashkin.by>
- * @version 2022-03-03
+ * @author Aleev Ruslan <info@cat-art.ru>
+ * @version 2024-11-05
  */
- (function(root, factory) {
+(function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['elfinder'], factory);
 	} else if (typeof exports !== 'undefined') {
@@ -15,15 +16,13 @@
 	}
 }(this, function(elFinder) {
 	elFinder.prototype.i18.ru = {
-		translator : 'Dmitry "dio" Levashov &lt;dio@std42.ru&gt;, Andrew Berezovsky &lt;andrew.berezovsky@gmail.com&gt;, Alex Yashkin &lt;alex@yashkin.by&gt;',
+		translator : 'Dmitry "dio" Levashov &lt;dio@std42.ru&gt;, Andrew Berezovsky &lt;andrew.berezovsky@gmail.com&gt;, Alex Yashkin &lt;alex@yashkin.by&gt;, Aleev Ruslan &lt;info@cat-art.ru&gt;',
 		language   : 'Русский язык',
 		direction  : 'ltr',
-		dateFormat : 'd M Y H:i', // will show like: 03 Мар 2022 11:22
-		fancyDateFormat : '$1 H:i', // will show like: Сегодня 11:22
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 220303-112216
+		dateFormat : 'd M Y H:i', // will show like: 05 Ноя 2024 21:08
+		fancyDateFormat : '$1 H:i', // will show like: Сегодня 21:08
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 241105-210850
 		messages   : {
-			'getShareText' : 'Делиться',
-			'Editor ': 'Редактор кода',
 
 			/********************************** errors **********************************/
 			'error'                : 'Ошибка',
@@ -119,7 +118,7 @@
 			'errServerError'       : 'Возникла ошибка на стороне сервера.', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'Невозможно очистить папку "$1".', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'Еще ошибок: $1', // from v2.1.44 added 9.12.2018
-			'errMaxMkdirs'         : 'Вы можете создать до $1 папки одновременно.', // from v2.1.58 added 20.6.2021
+			'errMaxMkdirs'         : 'Вы можете создать за один раз папок: $1.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Создать архив',
@@ -163,7 +162,7 @@
 			'cmdempty'     : 'Очистить папку', // from v2.1.25 added 22.06.2017
 			'cmdundo'      : 'Отменить', // from v2.1.27 added 31.07.2017
 			'cmdredo'      : 'Вернуть', // from v2.1.27 added 31.07.2017
-			'cmdpreference': 'Предпочтения', // from v2.1.27 added 03.08.2017
+			'cmdpreference': 'Настройки', // from v2.1.27 added 03.08.2017
 			'cmdselectall' : 'Выбрать все', // from v2.1.28 added 15.08.2017
 			'cmdselectnone': 'Отменить выбор', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Инвертировать выбор', // from v2.1.28 added 15.08.2017
@@ -442,7 +441,7 @@
 			'TextArea'        : 'Текстовая область', // from v2.1.25 added 14.6.2017
 			'folderToEmpty'   : 'Очистить папку "$1".', // from v2.1.25 added 22.6.2017
 			'filderIsEmpty'   : 'Нет файлов в паке "$1".', // from v2.1.25 added 22.6.2017
-			'preference'      : 'Настройки', // from v2.1.26 added 28.6.2017
+			'preference'      : 'Настройка', // from v2.1.26 added 28.6.2017
 			'language'        : 'Язык', // from v2.1.26 added 28.6.2017
 			'clearBrowserData': 'Сбросить настройки для этого браузера', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'Настройки панели', // from v2.1.27 added 2.8.2017
@@ -491,7 +490,7 @@
 			'description'     : 'Описание', // from v2.1.43 added 19.10.2018
 			'website'         : 'Веб-сайт', // from v2.1.43 added 19.10.2018
 			'author'          : 'Автор', // from v2.1.43 added 19.10.2018
-			'email'           : 'Эл. адрес', // from v2.1.43 added 19.10.2018
+			'email'           : 'Email', // from v2.1.43 added 19.10.2018
 			'license'         : 'Лицензия', // from v2.1.43 added 19.10.2018
 			'exportToSave'    : 'Невозможно сохранить файл. Чтобы не потерять изменения, экспортируйте их на свой ПК.', // from v2.1.44 added 1.12.2018
 			'dblclickToSelect': 'Двойной клик по файлу для его выбора.', // from v2.1.47 added 22.1.2019
@@ -533,7 +532,7 @@
 			'kindCSS'         : 'Таблицы стилей CSS',
 			'kindHTML'        : 'Документ HTML',
 			'kindJS'          : 'Исходник Javascript',
-			'kindRTF'         : 'Расширенный текстовый формат',
+			'kindRTF'         : 'Rich Text Format',
 			'kindC'           : 'Исходник C',
 			'kindCHeader'     : 'Заголовочный файл C',
 			'kindCPP'         : 'Исходник C++',

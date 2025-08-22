@@ -2,7 +2,7 @@
 <div id="wpo_smush_images_information_container" style="display:none;">
 	<div id="wpo_smush_images_information_wrapper">
 		<h3 id="wpo_smush_images_information_heading"><?php esc_html_e('Compressing images', 'wp-optimize');?></h3>
-		<h4 id="wpo_smush_images_information_server"></h4>
+		<h4 id="wpo_smush_images_information_server"><?php echo esc_html($compression_server_hint); ?></h4>
 		<div class="progress-bar orange stripes">
 			<span style="width: 100%"></span>
 		</div>

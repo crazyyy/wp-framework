@@ -17,7 +17,7 @@ class WP_Optimize_Minify_Print {
 	public static function async_script($href, $print = true) {
 		$wpo_minify_options = wp_optimize_minify_config()->get();
 		$tag = '<script>' . "\n";
-		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
 		$tag .= 'var wpo_server_info_js = ' . wp_json_encode(array("user_agent" => $user_agent)) . "\n";
 
 		$exclude_js_from_page_speed_tools = $wpo_minify_options['exclude_js_from_page_speed_tools'];
@@ -67,7 +67,7 @@ class WP_Optimize_Minify_Print {
 		// make a stylesheet, hide from PageSpeedIndex
 		$cssguid = 'wpo_min'.hash('adler32', $href);
 		$tag = '<script>' . "\n";
-		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
 		$tag .= 'var wpo_server_info_css = ' . wp_json_encode(array("user_agent" => $user_agent)) . "\n";
 
 		$exclude_css_from_page_speed_tools = $wpo_minify_options['exclude_css_from_page_speed_tools'];

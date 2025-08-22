@@ -54,7 +54,7 @@
 						<input type="hidden" id="wpo_enable_browser_cache" class="cache-settings" name="enable_browser_cache" value="<?php echo $wpo_browser_cache_enabled ? 'true' : 'false'; ?>" />
 						<label><?php esc_html_e('Expiration time:', 'wp-optimize'); ?></label>
 						<input id="wpo_browser_cache_expire_days" class="cache-settings" type="number" min="0" step="1" name="browser_cache_expire_days" value="<?php echo esc_attr($wpo_browser_cache_expire_days); ?>">
-						<label for="wpo_browser_cache_expire"><?php esc_html_e('day(s)', 'wp-optimize'); ?></label>
+						<label for="wpo_browser_cache_expire_days"><?php esc_html_e('day(s)', 'wp-optimize'); ?></label>
 						<input id="wpo_browser_cache_expire_hours" class="cache-settings" type="number" min="0" step="1" name="browser_cache_expire_hours" value="<?php echo esc_attr($wpo_browser_cache_expire_hours); ?>">
 						<label for="wpo_browser_cache_expire_hours"><?php esc_html_e('hour(s)', 'wp-optimize'); ?></label>
 						<button class="button-primary" type="button" id="wp_optimize_browser_cache_enable"><?php echo esc_html($button_text); ?></button>

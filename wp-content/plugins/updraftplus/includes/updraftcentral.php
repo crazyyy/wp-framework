@@ -56,10 +56,19 @@ class UpdraftPlus_UpdraftCentral_Cloud extends UpdraftPlus_Login {
 
 				} else {
 					if ('error' === $response['status']) {
+						$message = isset($response['message']) ? $response['message'] : $this->translate_message('generic');
+
+						if (isset($response['code']) && 'incorrect_password' === $response['code']) {
+							$message = __("Your email is valid, but your password wasn't recognised.", 'updraftplus').'<br>';
+							if (time() < strtotime('2026-01-01 00:00:00')) $message .= __('Some users were asked to reset their passwords as part of a recent website migration.', 'updraftplus').'<br>';
+							// translators: %s: The reset password link
+							$message .= sprintf(__('Try again, or %s before connecting again.', 'updraftplus'), '<a href="'.$updraftplus->get_url('lost-password').'">'.__('reset your password', 'updraftplus').'</a>');
+						}
+
 						$response = array(
 							'error' => true,
 							'code' => isset($response['code']) ? $response['code'] : -1,
-							'message' => isset($response['message']) ? $response['message'] : $this->translate_message('generic'),
+							'message' => $message,
 							'response' => $response
 						);
 					}

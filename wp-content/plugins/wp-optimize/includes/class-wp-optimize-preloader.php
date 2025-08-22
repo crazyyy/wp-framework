@@ -291,7 +291,7 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_4 {
 	public function preload_desktop($url) {
 		$desktop_args = array(
 			'httpversion' => '1.1',
-			'user-agent'  => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36',
+			'user-agent'  => WP_Optimize_Utils::get_user_agent(),
 			'timeout'     => 10,
 			'headers'     => apply_filters('wpo_preload_headers', array()),
 		);
@@ -315,7 +315,7 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_4 {
 
 		$amp_args = array(
 			'httpversion' => '1.1',
-			'user-agent'  => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36',
+			'user-agent'  => WP_Optimize_Utils::get_user_agent(),
 			'timeout'     => 10,
 			'headers'     => apply_filters('wpo_preload_headers', array()),
 		);
@@ -553,9 +553,9 @@ abstract class WP_Optimize_Preloader extends Updraft_Task_Manager_1_4 {
 		$domain = '';
 		$multisite_plugin_table_name = $wpdb->base_prefix.'domain_mapping';
 		// Check if table exists
-		if ($wpdb->get_var("SHOW TABLES LIKE '$multisite_plugin_table_name'") != $multisite_plugin_table_name) {
+		if ($wpdb->get_var("SHOW TABLES LIKE '" . esc_sql($multisite_plugin_table_name) . "'") != $multisite_plugin_table_name) {
 			// This table created in WordPress MU Domain Mapping plugin.
-			$row = $wpdb->get_row("SELECT `domain` FROM {$multisite_plugin_table_name} WHERE `blog_id` = {$blog_id} AND `active` = 1", ARRAY_A);
+			$row = $wpdb->get_row($wpdb->prepare("SELECT `domain` FROM " . esc_sql($multisite_plugin_table_name) . " WHERE `blog_id` = %d AND `active` = %d", $blog_id, 1), ARRAY_A);
 			if (!empty($row)) {
 				$domain = $row['domain'];
 			}

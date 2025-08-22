@@ -54,7 +54,7 @@ if (!$table_prefix) {
 		<tbody>
 			<tr>
 				<td></td>
-				<td class="loading" align="center" colspan="6"><img class="wpo-ajax-template-loader" width="16" height="16" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>"> <?php esc_html_e('Loading tables list...', 'wp-optimize'); ?></td>
+				<td class="loading" colspan="6"><img class="wpo-ajax-template-loader" width="16" height="16" src="<?php echo esc_url(admin_url('images/spinner-2x.gif')); // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage -- N/A ?>" alt="..."> <?php esc_html_e('Loading tables list...', 'wp-optimize'); ?></td>
 				<td></td>
 			</tr>
 		</tbody>

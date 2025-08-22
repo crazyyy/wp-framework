@@ -656,7 +656,7 @@ class WP_Optimize_Database_Information {
 		global $wpdb;
 		$tables_info = $wpdb->get_results('SHOW TABLE STATUS');
 		foreach ($tables_info as $table) {
-			$rows_count = $wpdb->get_var("SELECT COUNT(*) FROM `$table->Name`");
+			$rows_count = $wpdb->get_var("SELECT COUNT(*) FROM `" . esc_sql($table->Name) . "`");
 			set_transient('wpo_' . $table->Name . '_count', $rows_count, 24*60*60);
 		}
 	}

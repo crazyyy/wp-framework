@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Settings"
 msgstr "সেটিং গুলো"
@@ -114,8 +114,23 @@ msgstr "প্রাপক"
 msgid "Delete All Messages"
 msgstr "সব বার্তা মুছে ফেলুন"
 
+msgid "Delete Messages Older Than 1 Day"
+msgstr "১ দিন পুরোনো ইমেইল মুছে ফেলুন"
+
+msgid "Delete Messages Older Than 7 Days"
+msgstr "৭ দিন পুরোনো ইমেইল মুছে ফেলুন"
+
+msgid "Delete Messages Older Than 15 Days"
+msgstr "১৫ দিন পুরোনো ইমেইল মুছে ফেলুন"
+
+msgid "Delete Messages Older Than 30 Days"
+msgstr "৩০ দিন পুরোনো ইমেইল মুছে ফেলুন"
+
 msgid "Email sent."
 msgstr "ইমেইল পাঠানো হয়েছে"
+
+msgid "Email could not be sent."
+msgstr "ইমেইল পাঠানো যায়নি"
 
 msgid "Message"
 msgstr "বার্তা"

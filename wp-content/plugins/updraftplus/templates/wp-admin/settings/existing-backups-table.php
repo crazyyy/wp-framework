@@ -82,8 +82,10 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 									$image_url = file_exists($image_folder.$service.'.png') ? $image_folder_url.$service.'.png' : $image_folder_url.'folder.png';
 
 									$remote_storage = ('remotesend' === $service) ? __('remote site', 'updraftplus') : $updraftplus->backup_methods[$service];
+									/* translators: %s: Remote storage name*/
+									$remote_storage_label = __('Remote storage: %s', 'updraftplus');
 									?>
-									<img class="stored_icon" src="<?php echo esc_url($image_url);?>" title="<?php echo esc_attr(sprintf(__('Remote storage: %s', 'updraftplus'), $remote_storage));?>">
+									<img class="stored_icon" src="<?php echo esc_url($image_url);?>" title="<?php echo esc_attr(sprintf($remote_storage_label, $remote_storage));?>">
 									<?php
 								}
 							}

@@ -280,6 +280,8 @@ abstract class elFinderVolumeDriver
             'php4:*' => 'text/x-php',
             'php5:*' => 'text/x-php',
             'php7:*' => 'text/x-php',
+            'php8:*' => 'text/x-php',
+            'php9:*' => 'text/x-php',
             'phtml:*' => 'text/x-php',
             'phar:*' => 'text/x-php',
             'cgi:*' => 'text/x-httpd-cgi',
@@ -4072,20 +4074,21 @@ abstract class elFinderVolumeDriver
         }
 
         if ($checkNum && preg_match('/(' . preg_quote($suffix, '/') . ')(\d*)$/i', $name, $m)) {
-            $i = $m[2];
+            $i = (int)$m[2];
             $name = substr($name, 0, strlen($name) - strlen($m[2]));
         } else {
             $i = $start;
             $name .= $suffix;
         }
-        $max = (int)$i + 100000;
+        $max = $i + 100000;
 
         if (isset($lasts[$name])) {
             $i = max($i, $lasts[$name]);
         }
 
         while ($i <= $max) {
-            $n = $name . ($i >= 0 ? $i : '') . $ext;
+            $n = $name . ($i > 0 ? sprintf($this->options['uniqueNumFormat'], $i) : '') . $ext;
+
             if (!$this->isNameExists($this->joinPathCE($dir, $n))) {
                 $this->clearcache();
                 $lasts[$name] = ++$i;
@@ -4934,7 +4937,13 @@ abstract class elFinderVolumeDriver
             $pinfo = pathinfo($path);
             $ext = isset($pinfo['extension']) ? strtolower($pinfo['extension']) : '';
         }
-        return ($ext && isset(elFinderVolumeDriver::$mimetypes[$ext])) ? elFinderVolumeDriver::$mimetypes[$ext] : 'unknown';
+        $res = ($ext && isset(elFinderVolumeDriver::$mimetypes[$ext])) ? elFinderVolumeDriver::$mimetypes[$ext] : 'unknown';
+        // Recursive check if MIME type is unknown with multiple extensions
+        if ($res === 'unknown' && strpos($pinfo['filename'], '.')) {
+            return elFinderVolumeDriver::mimetypeInternalDetect($pinfo['filename']);
+        } else {
+            return $res;
+        }
     }
 
     /**
@@ -5338,7 +5347,15 @@ abstract class elFinderVolumeDriver
         $this->rmTmb($stat); // can not do rmTmb() after _move()
         $this->clearcache();
 
-        if ($res = $this->convEncOut($this->_move($this->convEncIn($src), $this->convEncIn($dst), $this->convEncIn($name)))) {
+        $res = $this->convEncOut($this->_move($this->convEncIn($src), $this->convEncIn($dst), $this->convEncIn($name)));
+        // if moving it didn't work try to copy / delete
+        if (!$res) {
+            if ($this->copy($src, $dst, $name)) {
+                $res = $this->remove($src);
+            }
+        }
+
+        if ($res) {
             $this->clearstatcache();
             if ($stat['mime'] === 'directory') {
                 $this->updateSubdirsCache($dst, true);
@@ -6811,10 +6828,18 @@ abstract class elFinderVolumeDriver
             $base = rtrim($base, $separator);
         }
 
-        // 'Here'
-        if ($path === '' || $path === '.' . $separator) return $base;
-
         $sepquoted = preg_quote($separator, '#');
+
+          // normalize `//` to `/`
+        $path = preg_replace('#' . $sepquoted . '+#', $separator, $path); // '#/+#'
+
+        // remove `./`
+        $path = preg_replace('#(?<=^|' . $sepquoted . ')\.' . $sepquoted . '#', '', $path); // '#(?<=^|/)\./#'
+
+        // 'Here'
+        if ($path === '') return $base;
+
+        // join $base to $path if $path start `../`
 
         if (substr($path, 0, 3) === '..' . $separator) {
             $path = $base . $separator . $path;
@@ -6827,6 +6852,9 @@ abstract class elFinderVolumeDriver
         if ($path !== $systemroot) {
             $path = rtrim($path, $separator);
         }
+
+        // discard the surplus `../`
+        $path = str_replace('..' . $separator, '', $path);
 
         // Absolute path
         if ($path[0] === $separator || strpos($path, $systemroot) === 0) {

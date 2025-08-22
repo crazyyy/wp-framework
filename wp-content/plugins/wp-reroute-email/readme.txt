@@ -1,8 +1,8 @@
 === WP Reroute Email ===
 Contributors: msh134
 Tags: mail, email, developer tool, development server
-Tested up to: 6.7.1
-Stable tag: 1.5.1
+Tested up to: 6.8
+Stable tag: 1.5.2
 License: GPLv2 or later
 
 This plugin reroutes all outgoing emails from a WordPress site (sent using the wp_mail() function) to a predefined configurable email address.
@@ -32,6 +32,10 @@ Now, you will be able to disable rerouting based on the subject texts.
 5. Email test form
 
 == Changelog ==
+= 1.5.2 =
+* Added new options for bulk message delete.
+* Compatibility checked.
+
 = 1.5.1 =
 * Updated language setup and files.
 * Compatibility checked.

@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\ORM\Doctrine;
 
@@ -32,7 +27,7 @@ class ColumnTypeGuesser
         switch ($type) {
             case 'boolean':
                 return static function () use ($generator) {
-                    return $generator->boolean;
+                    return $generator->boolean();
                 };
 
             case 'decimal':
@@ -71,14 +66,14 @@ class ColumnTypeGuesser
 
             case 'text':
                 return static function () use ($generator) {
-                    return $generator->text;
+                    return $generator->text();
                 };
 
             case 'datetime':
             case 'date':
             case 'time':
                 return static function () use ($generator) {
-                    return $generator->datetime;
+                    return $generator->datetime();
                 };
 
             case 'datetime_immutable':

@@ -60,7 +60,7 @@ class UpdraftCentral_Listener {
 				$mothership = $key['extra_info']['mothership'];
 				$url = '';
 				if ('__updraftpluscom' == $mothership) {
-					$url = 'https://updraftplus.com';
+					$url = 'https://teamupdraft.com';
 				} elseif (false != ($parsed = parse_url($key['extra_info']['mothership'])) && is_array($parsed)) {
 					$url = $parsed['scheme'].'://'.$parsed['host'];
 				}
@@ -320,7 +320,8 @@ class UpdraftCentral_Listener {
 		global $updraftcentral_host_plugin;
 
 		$this->host->error_reporting_stop_when_logged = true;
-		set_error_handler(array($this->host, 'php_error'), E_ALL & ~E_STRICT);
+		$error_levels = version_compare(PHP_VERSION, '8.4.0', '>=') ? E_ALL : E_ALL & ~E_STRICT;
+		set_error_handler(array($this->host, 'php_error'), $error_levels);
 		$this->php_events = array();
 		@ob_start();// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Might be a bigger picture that I am missing but do we need to silence errors here?
 		add_filter($updraftcentral_host_plugin->get_logline_filter(), array($this, 'updraftcentral_logline'), 10, 4);

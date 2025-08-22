@@ -622,7 +622,6 @@ class UpdraftCentral_Theme_Commands extends UpdraftCentral_Commands {
 	 * @return array Contains the result of the current process
 	 */
 	public function load_themes($query) {
-
 		$permissions = array('install_themes', 'switch_themes');
 		$args = array();
 		if (is_multisite() && !is_super_admin(get_current_user_id())) {
@@ -635,80 +634,324 @@ class UpdraftCentral_Theme_Commands extends UpdraftCentral_Commands {
 			return $error;
 		}
 
-		$website = get_bloginfo('name');
-		$results = array();
+		// Get pagination parameters early
+		$updates_only = isset($query['updates_only']) ? filter_var($query['updates_only'], FILTER_VALIDATE_BOOLEAN) : false;
+		$include_updates_pagination = isset($query['include_updates_pagination']) && $query['include_updates_pagination'];
+		$per_page = isset($query['per_page']) ? (int) $query['per_page'] : 10;
+		$page = isset($query['page']) ? (int) $query['page'] : 1;
+		$offset = ($page - 1) * $per_page;
 
-		// Load the updates command class if not existed
+		// A call is considered legacy if neither updates_only nor include_updates_pagination flags are set
+		$is_legacy_call = !isset($query['updates_only']) && !isset($query['include_updates_pagination']) && !isset($query['per_page']);
+		$sort_direction = isset($query['sort_direction']) ? strtolower($query['sort_direction']) : 'asc';
+
+		// Initialize arrays
+		$themes_with_updates = array();
+		$themes_without_updates = array();
+		$installed_slugs = array();
+		$snoozed_themes_info = array();
+
+		// Get current theme info once
+		$current_theme_slug = basename(get_stylesheet_directory());
+		$website = get_bloginfo('name');
+
+		// Load updates
 		if (!class_exists('UpdraftCentral_Updates_Commands')) include_once('updates.php');
 		$updates = new UpdraftCentral_Updates_Commands($this->rc);
-
-		// Get themes for update
 		$theme_updates = (array) $updates->get_item_updates('themes');
 
 		// Get all themes
 		$themes = wp_get_themes($args);
-		$current_theme_slug = basename(get_stylesheet_directory());
+		
+		// Sort themes by name
+		if (!empty($themes)) {
+			uasort($themes, array($this, '_sort_themes_by_name'));
+		}
+		
+		// Get list of snoozed theme slugs if provided
+		$snoozed_slugs = isset($query['snoozed_themes']) ? $query['snoozed_themes'] : array();
 
+		// Prepare config object for theme data
+		$config = array(
+			'website' => $website,
+			'current_theme_slug' => $current_theme_slug,
+			'is_legacy_call' => $is_legacy_call,
+			'snoozed_slugs' => $snoozed_slugs
+		);
+
+		// Process themes efficiently
 		foreach ($themes as $slug => $value) {
-			$name = $value->get('Name');
-			$theme_name = !empty($name) ? $name : $slug;
-
-			$theme = new stdClass();
-			$theme->name = $theme_name;
-			$theme->description = $value->get('Description');
-			$theme->slug = $slug;
-			$theme->version = $value->get('Version');
-			$theme->author = $value->get('Author');
-			$theme->status = ($slug === $current_theme_slug) ? 'active' : 'inactive';
-
-			$template = $value->get('Template');
-			$theme->child_theme = !empty($template) ? true : false;
-			$theme->website = $website;
-			$theme->multisite = is_multisite();
-			$theme->site_url = trailingslashit(get_bloginfo('url'));
-
-			if ($theme->child_theme) {
-				$parent_theme = wp_get_theme($template);
-				$parent_name = $parent_theme->get('Name');
-
-				$theme->parent = !empty($parent_name) ? $parent_name : $parent_theme->get_stylesheet();
+			// Skip processing if we're only looking for updates and this theme has none
+			if ($updates_only && empty($theme_updates[$slug])) {
+				continue;
 			}
 
-			if (!empty($theme_updates[$slug])) {
-				$update_info = $theme_updates[$slug];
+			$config['slug'] = $slug;
+			$theme = $this->_prepare_theme_data($value, $config);
 
-				if (version_compare($theme->version, $update_info->update['new_version'], '<')) {
-					if (!empty($update_info->update['new_version'])) $theme->latest_version = $update_info->update['new_version'];
-					if (!empty($update_info->update['package'])) $theme->download_link = $update_info->update['package'];
+			// Track installed slugs if needed
+			if (!empty($query['get_installed_slugs'])) {
+				$installed_slugs[] = $slug;
+			}
+
+			// Check for updates and categorize
+			if (!empty($theme_updates[$slug]) && version_compare($theme->version, $theme_updates[$slug]->update['new_version'], '<')) {
+				$theme = $this->_add_update_info($theme, $theme_updates[$slug], $is_legacy_call);
+
+				// Add to themes_with_updates regardless of snooze status
+				if ($slug === $current_theme_slug) {
+					$themes_with_updates = array($theme->slug => $theme) + $themes_with_updates;
+				} else {
+					$themes_with_updates[$theme->slug] = $theme;
+				}
+
+				// Track snoozed status separately
+				if (in_array($slug, $snoozed_slugs)) {
+					$snoozed_themes_info[$slug] = $theme;
+				}
+			} else {
+				if ($slug === $current_theme_slug) {
+					$themes_without_updates = array($theme->slug => $theme) + $themes_without_updates;
+				} else {
+					$themes_without_updates[$theme->slug] = $theme;
 				}
 			}
-
-			if (empty($theme->short_description) && !empty($theme->description)) {
-				// Only pull the first sentence as short description, it should be enough rather than displaying
-				// an empty description or a full blown one which the user can access anytime if they press on
-				// the view details link in UpdraftCentral.
-				$temp = explode('.', $theme->description);
-				$short_description = $temp[0];
-
-				// Adding the second sentence wouldn't hurt, in case the first sentence is too short.
-				if (isset($temp[1])) $short_description .= '.'.$temp[1];
-
-				$theme->short_description = $short_description.'.';
-			}
-
-			$results[] = $theme;
 		}
 
-		$result = array(
-			'themes' => $results,
+
+		// Handle response based on call type
+		if ($is_legacy_call) {
+			$result = $this->_prepare_legacy_response($themes_with_updates, $themes_without_updates, $theme_updates);
+		} else {
+			$result = $this->_prepare_paginated_response(
+				$themes_with_updates,
+				$themes_without_updates,
+				$updates_only,
+				$include_updates_pagination,
+				$per_page,
+				$page,
+				$offset,
+				$current_theme_slug,
+				$sort_direction
+			);
+		}
+
+		// Add installed slugs if requested
+		if (!empty($query['get_installed_slugs'])) {
+			$result['installed_slugs'] = $installed_slugs;
+		}
+
+		// Add snoozed themes info if any were requested
+		if (!empty($snoozed_themes_info)) {
+			$result['snoozed_themes_info'] = $snoozed_themes_info;
+		}
+
+		return $this->_response(array_merge($result, $this->_get_backup_credentials_settings(get_theme_root())));
+	}
+
+	/**
+	 * Prepare basic theme data
+	 *
+	 * @param WP_Theme $value  Theme object
+	 * @param array    $config Configuration array containing:
+	 *                         - slug: Theme slug
+	 *                         - website: Website name
+	 *                         - current_theme_slug: Current active theme slug
+	 *                         - is_legacy_call: Whether this is a legacy call
+	 *                         - snoozed_slugs: Array of snoozed theme slugs
+	 * @return stdClass Theme data object
+	 */
+	private function _prepare_theme_data($value, $config) {
+		$theme = new stdClass();
+		$theme->name = $value->get('Name') ? $value->get('Name') : $config['slug'];
+		$theme->description = $value->get('Description');
+		$theme->slug = $config['slug'];
+		$theme->version = $value->get('Version');
+		$theme->author = $value->get('Author');
+		$theme->status = ($config['slug'] === $config['current_theme_slug']) ? 'active' : 'inactive';
+
+		// Set is_snoozed property for all themes
+		$theme->is_snoozed = !empty($config['snoozed_slugs']) && in_array($config['slug'], $config['snoozed_slugs']);
+
+		if (!$config['is_legacy_call']) {
+			$screenshot = $value->get_screenshot();
+			$theme->screenshot = $screenshot ? $screenshot : null;
+			$theme->has_update = false;
+		}
+
+		$template = $value->get('Template');
+		$theme->child_theme = !empty($template);
+		$theme->website = $config['website'];
+		$theme->multisite = is_multisite();
+		$theme->site_url = trailingslashit(get_bloginfo('url'));
+
+		if ($theme->child_theme) {
+			$parent_theme = wp_get_theme($template);
+			$theme->parent = $parent_theme->get('Name') ? $parent_theme->get('Name') : $parent_theme->get_stylesheet();
+		}
+
+		if (empty($theme->short_description) && !empty($theme->description)) {
+			$temp = explode('.', $theme->description);
+			$theme->short_description = $temp[0] . (isset($temp[1]) ? '.' . $temp[1] : '') . '.';
+		}
+
+		return $theme;
+	}
+
+	/**
+	 * Add update information to theme object
+	 *
+	 * @param stdClass $theme          Theme object
+	 * @param object   $update_info    Update information
+	 * @param bool     $is_legacy_call Whether this is a legacy call
+	 * @return stdClass Updated theme object
+	 */
+	private function _add_update_info($theme, $update_info, $is_legacy_call) {
+		$theme->latest_version = $update_info->update['new_version'];
+		$theme->download_link = $update_info->update['package'];
+
+		if (!$is_legacy_call) {
+			$theme->update_url = $update_info->update['url'];
+			$theme->requires = $update_info->update['requires'];
+			$theme->requires_php = $update_info->update['requires_php'];
+			$theme->has_update = true;
+		}
+
+		return $theme;
+	}
+
+	/**
+	 * Prepare legacy response format
+	 *
+	 * @param array $themes_with_updates    Themes with updates
+	 * @param array $themes_without_updates Themes without updates
+	 * @param array $theme_updates          Theme updates data
+	 * @return array Legacy format response
+	 */
+	private function _prepare_legacy_response($themes_with_updates, $themes_without_updates, $theme_updates) {
+		return array(
+			'themes' => array_merge(array_values($themes_with_updates), array_values($themes_without_updates)),
 			'theme_updates' => $theme_updates,
 			'is_super_admin' => is_super_admin(),
 		);
-
-		$result = array_merge($result, $this->_get_backup_credentials_settings(get_theme_root()));
-		return $this->_response($result);
 	}
 
+	/**
+	 * Prepare paginated response format
+	 *
+	 * @param array  $themes_with_updates        Themes with updates
+	 * @param array  $themes_without_updates     Themes without updates
+	 * @param bool   $updates_only               Whether only updates are requested
+	 * @param bool   $include_updates_pagination Whether to include updates pagination
+	 * @param int    $per_page                   Number of items per page
+	 * @param int    $page                       Current page number
+	 * @param int    $offset                     Offset for pagination
+	 * @param string $current_theme_slug         Current active theme slug
+	 * @param string $sort_direction             Sort direction
+	 * @return array Paginated response
+	 */
+	private function _prepare_paginated_response($themes_with_updates, $themes_without_updates, $updates_only, $include_updates_pagination, $per_page, $page, $offset, $current_theme_slug, $sort_direction) {
+
+		// If only requesting updates, filter out snoozed themes here
+		if ($updates_only) {
+			$filtered_updates = array_filter($themes_with_updates, array($this, '_filter_non_snoozed'));
+			$results = array_slice($filtered_updates, $offset, $per_page);
+			return array(
+				'theme_updates' => $results,
+				'pagination' => array(
+					'total' => count($filtered_updates),
+					'per_page' => $per_page,
+					'current_page' => $page,
+					'total_pages' => ceil(count($filtered_updates) / $per_page)
+				)
+			);
+		}
+
+		// For all themes view, merge and sort
+		$all_themes = array_merge($themes_with_updates, $themes_without_updates);
+
+		// Sort themes
+		global $current_theme_slug, $sort_direction;
+		$current_theme_slug = $current_theme_slug;
+		$sort_direction = $sort_direction;
+		uasort($all_themes, array($this, '_sort_themes_with_active'));
+		
+		// Get paginated results for all themes
+		$results = array_slice($all_themes, $offset, $per_page);
+
+		// Filter out snoozed themes from updates list
+		$filtered_updates = array_filter($themes_with_updates, array($this, '_filter_non_snoozed'));
+
+		// For theme_updates, use the filtered list
+		$paginated_updates = $include_updates_pagination ? array_slice($filtered_updates, 0, $per_page) : $filtered_updates;
+
+		// Return with all the original data
+		$total_themes = count($all_themes);
+		$result = array(
+			'themes' => $results, // Contains ALL themes including snoozed ones
+			'theme_updates' => $paginated_updates, // Contains only non-snoozed themes with updates
+			'is_super_admin' => is_super_admin(),
+			'pagination' => array(
+				'total' => $total_themes,
+				'per_page' => $per_page,
+				'current_page' => $page,
+				'total_pages' => ceil($total_themes / $per_page)
+			),
+			'updates_count' => count($filtered_updates)
+		);
+
+		if ($include_updates_pagination) {
+			$result['updates_pagination'] = array(
+				'total' => count($filtered_updates),
+				'per_page' => $per_page,
+				'current_page' => 1,
+				'total_pages' => ceil(count($filtered_updates) / $per_page)
+			);
+		}
+		return $result;
+	}
+
+	/**
+	 * Sort themes by name
+	 *
+	 * @param object $a Theme object
+	 * @param object $b Theme object
+	 * @return int Comparison result
+	 */
+	private function _sort_themes_by_name($a, $b) {
+		global $sort_direction;
+		$result = strcasecmp($a->name, $b->name);
+		return 'desc' === $sort_direction ? -$result : $result;
+	}
+
+	/**
+	 * Sort all themes while keeping active theme first
+	 *
+	 * @param object $a Theme object
+	 * @param object $b Theme object
+	 * @return int Comparison result
+	 */
+	private function _sort_themes_with_active($a, $b) {
+		global $current_theme_slug, $sort_direction;
+		// Active theme always first
+		if ($a->slug === $current_theme_slug) return -1;
+		if ($b->slug === $current_theme_slug) return 1;
+
+		// Sort by name respecting direction
+		$result = strcasecmp($a->name, $b->name);
+		return 'desc' === $sort_direction ? -$result : $result;
+	}
+	
+	/**
+	 * Filter out snoozed themes
+	 *
+	 * @param object $theme Theme object
+	 * @return bool Whether the theme is not snoozed
+	 */
+	private function _filter_non_snoozed($theme) {
+		return !$theme->is_snoozed;
+	}
+	
 	/**
 	 * Gets the backup and security credentials settings for this website
 	 *

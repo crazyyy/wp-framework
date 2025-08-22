@@ -9,21 +9,45 @@ updraft_try_include_file('methods/s3.php', 'require_once');
  */
 class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 {
 
-	// This gets populated in the constructor
-	private $dreamobjects_endpoints = array();
-	
 	protected $provider_can_use_aws_sdk = false;
 	
 	protected $provider_has_regions = true;
 
 	/**
+	 * Regex for validating custom endpoint in the format `s3.<region>.dream.io`.
+	 *
+	 * @var string
+	 */
+	const ENDPOINT_REGEX = '^s3\.[0-9a-z_-]+\.dream\.io$';
+
+	/**
 	 * Class constructor
 	 */
 	public function __construct() {
+		add_action('updraftplus_admin_enqueue_scripts', array($this, 'updraftplus_admin_enqueue_scripts'));
+	}
+
+	/**
+	 * Enqueue scripts on UpdraftPlus settings page.
+	 *
+	 * @return void
+	 */
+	public function updraftplus_admin_enqueue_scripts() {
+		global $updraftplus;
+		$updraftplus->enqueue_select2();
+	}
+
+	/**
+	 * Returns endpoint options.
+	 *
+	 * @return array
+	 */
+	public static function get_endpoints() {
 		// When new endpoint introduced in future, Please add it here and also add it as hard coded option for endpoint dropdown in self::get_partial_configuration_template_for_endpoint()
 		// Put the default first
-		$this->dreamobjects_endpoints = array(
+		return array(
 			// Endpoint, then the label
+			's3.us-east-005.dream.io'    => 's3.us-east-005.dream.io',
 			'objects-us-east-1.dream.io' => 'objects-us-east-1.dream.io',
 			'objects-us-west-1.dream.io' => 'objects-us-west-1.dream.io ('.__('Closing 1st October 2018', 'updraftplus').')',
 		);
@@ -91,7 +115,7 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 		$opts['whoweare_long'] = 'DreamObjects';
 		$opts['key'] = 'dreamobjects';
 		if (empty($opts['endpoint'])) {
-			$endpoints = array_keys($this->dreamobjects_endpoints);
+			$endpoints = array_keys(self::get_endpoints());
 			$opts['endpoint'] = $endpoints[0];
 		}
 		return $opts;
@@ -141,13 +165,14 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 			<td>{{method_id}}://<input class="updraft_input--wide  udc-wd-600" data-updraft_settings_test="path" title="{{input_location_title}}" type="text" id="{{get_template_input_attribute_value "id" "path"}}" name="{{get_template_input_attribute_value "name" "path"}}" value="{{path}}" /></td>
 		</tr>
 		<tr class="{{get_template_css_classes true}}">
-				<th>{{input_endpoint_label}}</th>
-				<td>
-				<select data-updraft_settings_test="endpoint" id="{{get_template_input_attribute_value "id" "endpoint"}}" name="{{get_template_input_attribute_value "name" "endpoint"}}" style="width: 360px">
+			<th>{{input_endpoint_label}}</th>
+			<td>
+				<select class="select2-storage-config dreamobjects-endpoints" data-field-id="endpoint" data-storage-id="{{method_id}}" data-updraft_settings_test="endpoint" id="{{get_template_input_attribute_value "id" "endpoint"}}" name="{{get_template_input_attribute_value "name" "endpoint"}}" style="width: 360px">
 					{{#each dreamobjects_endpoints as |description endpoint|}}
 						<option value="{{endpoint}}" {{#ifeq ../endpoint endpoint}}selected="selected"{{/ifeq}}>{{description}}</option>
 					{{/each}}
 				</select>
+				<span class="updraft-input-error-message">{{invalid_endpoint_error_message}}</span>
 			</td>
 		</tr>
 		{{{get_template_test_button_html "DreamObjects"}}}
@@ -163,7 +188,11 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 	 */
 	public function transform_options_for_template($opts) {
 		$opts['endpoint'] = empty($opts['endpoint']) ? '' : $opts['endpoint'];
-		$opts['dreamobjects_endpoints'] = $this->dreamobjects_endpoints;
+		$opts['dreamobjects_endpoints'] = self::get_endpoints();
+		// Add custom endpoint in dropdown.
+		if (!empty($opts['endpoint']) && !isset($opts['dreamobjects_endpoints'][$opts['endpoint']])) {
+			$opts['dreamobjects_endpoints'][$opts['endpoint']] = $opts['endpoint'];
+		}
 		return $opts;
 	}
 
@@ -192,7 +221,86 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 			'input_location_title' => __('Enter only a bucket name or a bucket and path.', 'updraftplus').' '.__('Examples: mybucket, mybucket/mypath', 'updraftplus'),
 			'input_endpoint_label' => sprintf(__('%s end-point', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]),
 			'input_test_label' => sprintf(__('Test %s Settings', 'updraftplus'), $updraftplus->backup_methods[$this->get_id()]),
+			/* translators: %s: Desired endpoint format.*/
+			'invalid_endpoint_error_message' => sprintf(__('Custom endpoint should be in the following format "%s".', 'updraftplus'), 's3.<region>.dream.io'),
 		);
 		return wp_parse_args($properties, $this->get_persistent_variables_and_methods());
+	}
+
+	/**
+	 * Ensure that only the DreamObjects endpoints (objects-<region>.dream.io and s3.<region>.dream.io) are allowed and that signature header version 4 must exclusively be used for s3.<region>.dream.io enpoint
+	 *
+	 * @param Object $storage S3 name
+	 * @param Array  $config  array of config details; if the provider does not have the concept of regions, then the key 'endpoint' is required to be set
+	 * @param String $bucket  S3 Bucket
+	 * @param String $path    S3 Path
+	 *
+	 * @return Array - N.B. May contain updated versions of $storage and $config
+	 */
+	protected function get_bucket_access($storage, $config, $bucket, $path) {
+		if (empty($config['endpoint']) || !self::is_valid_endpoint($config['endpoint'])) throw new Exception('Invalid DreamObjects endpoint: '.$config['endpoint']); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The escaping should happen when the exception is caught and printed
+		if (preg_match('/'.self::ENDPOINT_REGEX.'/i', trim($config['endpoint']))) {
+			$this->use_v4 = true;
+			$storage->setSignatureVersion('v4');
+			$storage->useDNSBucketName(false);
+		}
+		return parent::get_bucket_access($storage, $config, $bucket, $path);
+	}
+
+	/**
+	 * Perform a test of user-supplied credentials, and echo the result.
+	 *
+	 * @param array $posted_settings Settings to test.
+	 *
+	 * @return void Echo the result of credentials test.
+	 */
+	public function credentials_test($posted_settings) {
+		if (!empty($posted_settings['endpoint']) && !self::is_valid_endpoint($posted_settings['endpoint'])) {
+			/* translators: %s: Invalid custom endpoint*/
+			echo sprintf(esc_html__('Failure: Custom endpoint "%s" is not in the desired format "%s".', 'updraftplus'), $posted_settings['endpoint'], 's3.<region>.dream.io'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Prevent escaping '<' & '>' in endpoint as this message is shown in alert.
+			return;
+		}
+		parent::credentials_test($posted_settings);
+	}
+
+	/**
+	 * Sanitization filter for saving DreamObjects settings.
+	 *
+	 * @param  array $new_settings New settings passed by user.
+	 *
+	 * @return array Sanitized settings to be saved in DB.
+	 */
+	public function options_filter($new_settings) {
+		$current_settings = UpdraftPlus_Options::get_updraft_option('updraft_dreamobjects', array());
+		// Previous settings would be empty on initial load.
+		if (empty($current_settings)) return parent::options_filter($new_settings);
+
+		$current_settings = $current_settings['settings'];
+		// Check if endpoint is updated to an invalid format, then log it.
+		foreach ($new_settings['settings'] as $instance_id => $new_storage_options) {
+			if (isset($current_settings[$instance_id]['endpoint'], $new_storage_options['endpoint'])
+				&& $current_settings[$instance_id]['endpoint'] !== $new_storage_options['endpoint']
+				&& !self::is_valid_endpoint($new_storage_options['endpoint'])
+			) {
+				$msg = sprintf('Custom endpoint "%s" is not in the format "s3.<region>.dream.io".', esc_html($new_storage_options['endpoint']));
+				$this->log($msg, 'error');
+				error_log('UpdraftPlus: DreamObjects: '.$msg);
+			}
+		}
+		return parent::options_filter($new_settings);
+	}
+
+	/**
+	 * Check if valid endpoint.
+	 *
+	 * @param string $endpoint DreamObjects endpoint provided by user.
+	 *
+	 * @return bool True for valid endpoint else false.
+	 */
+	public static function is_valid_endpoint($endpoint) {
+		$endpoint  = trim($endpoint);
+		$endpoints = self::get_endpoints();
+		if (isset($endpoints[$endpoint]) || preg_match('/'.self::ENDPOINT_REGEX.'/i', $endpoint)) return true;
+		return false;
 	}
 }

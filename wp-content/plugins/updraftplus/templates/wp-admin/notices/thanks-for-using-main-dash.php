@@ -1,5 +1,10 @@
 <div id="updraft-dashnotice" class="updated">
-	<div style="float:right;"><a href="#" onclick="jQuery('#updraft-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'updraft_ajax', subaction: 'dismissdashnotice', nonce: '<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce'));?>' });"><?php printf(esc_html__('Dismiss (for %s months)', 'updraftplus'), 12); ?></a></div>
+	<div style="float:right;"><a href="#" onclick="jQuery('#updraft-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'updraft_ajax', subaction: 'dismissdashnotice', nonce: '<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce'));?>' });">
+		<?php
+		/* translators: %d: Number of months */
+		printf(esc_html__('Dismiss (for %d months)', 'updraftplus'), 12);
+		?>
+	</a></div>
 
 	<h3><?php esc_html_e('Thank you for installing UpdraftPlus!', 'updraftplus');?></h3>
 	
@@ -7,7 +12,7 @@
 
 	<?php
 	if (!file_exists(UPDRAFTPLUS_DIR.'/udaddons')) {
-		echo '<p>'.esc_html__("If you like UpdraftPlus, you'll love UpdraftPlus Premium!").' '.__('Protect your WordPress investment with premium features, or check out our other 5* rated  plugins below:', 'updraftplus').'</p>';
+		echo '<p>'.esc_html__("If you like UpdraftPlus, you'll love UpdraftPlus Premium!", 'updraftplus').' '.__('Protect your WordPress investment with premium features, or check out our other 5* rated  plugins below:', 'updraftplus').'</p>';
 	} else {
 		echo '<p>'.esc_html__("If you like UpdraftPlus, you'll love our other plugins.", 'updraftplus').' '.__('All 5* rated and actively installed on millions of WordPress websites:', 'updraftplus').'</p>';
 	}
@@ -40,6 +45,11 @@
 		<a href="https://www.simbahosting.co.uk/s3/shop/" target="_blank"><?php echo __('Premium WooCommerce plugins', 'updraftplus').'</a> | <a href="https://wordpress.org/plugins/two-factor-authentication/" target="_blank">'.__('Free two-factor security plugin', 'updraftplus');?></a>
 	</p>
 	<p></p>
-	<div style="float:right;"><a href="#" onclick="jQuery('#updraft-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'updraft_ajax', subaction: 'dismissdashnotice', nonce: '<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce'));?>' });"><?php printf(esc_html__('Dismiss (for %s months)', 'updraftplus'), 12); ?></a></div>
+	<div style="float:right;"><a href="#" onclick="jQuery('#updraft-dashnotice').slideUp(); jQuery.post(ajaxurl, {action: 'updraft_ajax', subaction: 'dismissdashnotice', nonce: '<?php echo esc_js(wp_create_nonce('updraftplus-credentialtest-nonce'));?>' });">
+		<?php
+		/* translators: %d: Number of months */
+		printf(esc_html__('Dismiss (for %d months)', 'updraftplus'), 12);
+		?>
+	</a></div>
 	<p>&nbsp;</p>
 </div>

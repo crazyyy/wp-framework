@@ -1,14 +1,8 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker;
 
 use FakerPress\ThirdParty\Faker\Container\ContainerInterface;
-
 /**
  * @property string $citySuffix
  *
@@ -562,19 +556,15 @@ class Generator
 {
     protected $providers = [];
     protected $formatters = [];
-
     private $container;
-
     /**
      * @var UniqueGenerator
      */
     private $uniqueGenerator;
-
-    public function __construct(ContainerInterface $container = null)
+    public function __construct(?ContainerInterface $container = null)
     {
-        $this->container = $container ?: Container\ContainerBuilder::withDefaultExtensions()->build();
+        $this->container = $container ?: \FakerPress\ThirdParty\Faker\Container\ContainerBuilder::withDefaultExtensions()->build();
     }
-
     /**
      * @template T of Extension\Extension
      *
@@ -584,36 +574,26 @@ class Generator
      *
      * @return T
      */
-    public function ext(string $id): Extension\Extension
+    public function ext(string $id): \FakerPress\ThirdParty\Faker\Extension\Extension
     {
         if (!$this->container->has($id)) {
-            throw new Extension\ExtensionNotFound(sprintf(
-                'No Faker extension with id "%s" was loaded.',
-                $id,
-            ));
+            throw new Extension\ExtensionNotFound(sprintf('No Faker extension with id "%s" was loaded.', $id));
         }
-
         $extension = $this->container->get($id);
-
-        if ($extension instanceof Extension\GeneratorAwareExtension) {
+        if ($extension instanceof \FakerPress\ThirdParty\Faker\Extension\GeneratorAwareExtension) {
             $extension = $extension->withGenerator($this);
         }
-
         return $extension;
     }
-
     public function addProvider($provider)
     {
         array_unshift($this->providers, $provider);
-
         $this->formatters = [];
     }
-
     public function getProviders()
     {
         return $this->providers;
     }
-
     /**
      * With the unique generator you are guaranteed to never get the same two
      * values.
@@ -636,10 +616,8 @@ class Generator
         if ($reset || $this->uniqueGenerator === null) {
             $this->uniqueGenerator = new UniqueGenerator($this, $maxRetries);
         }
-
         return $this->uniqueGenerator;
     }
-
     /**
      * Get a value only some percentage of the time.
      *
@@ -650,13 +628,11 @@ class Generator
     public function optional(float $weight = 0.5, $default = null)
     {
         if ($weight > 1) {
-            trigger_deprecation('fakerphp/faker', '1.16', 'First argument ($weight) to method "optional()" must be between 0 and 1. You passed %f, we assume you meant %f.', $weight, $weight / 100);
+            fakerpress_thirdparty_trigger_deprecation('fakerphp/faker', '1.16', 'First argument ($weight) to method "optional()" must be between 0 and 1. You passed %f, we assume you meant %f.', $weight, $weight / 100);
             $weight = $weight / 100;
         }
-
         return new ChanceGenerator($this, $weight, $default);
     }
-
     /**
      * To make sure the value meet some criteria, pass a callable that verifies the
      * output. If the validator fails, the generator will try again.
@@ -686,7 +662,6 @@ class Generator
     {
         return new ValidGenerator($this, $validator, $maxRetries);
     }
-
     public function seed($seed = null)
     {
         if ($seed === null) {
@@ -695,7 +670,6 @@ class Generator
             mt_srand((int) $seed, self::mode());
         }
     }
-
     /**
      * @see https://www.php.net/manual/en/migration83.deprecated.php#migration83.deprecated.random
      */
@@ -704,15 +678,12 @@ class Generator
         if (PHP_VERSION_ID < 80300) {
             return MT_RAND_PHP;
         }
-
         return MT_RAND_MT19937;
     }
-
     public function format($format, $arguments = [])
     {
         return call_user_func_array($this->getFormatter($format), $arguments);
     }
-
     /**
      * @param string $format
      *
@@ -723,31 +694,23 @@ class Generator
         if (isset($this->formatters[$format])) {
             return $this->formatters[$format];
         }
-
         if (method_exists($this, $format)) {
             $this->formatters[$format] = [$this, $format];
-
             return $this->formatters[$format];
         }
-
         // "FakerPress\ThirdParty\Faker\Core\Barcode->ean13"
-        if (preg_match('|^([a-zA-Z0-9\\\]+)->([a-zA-Z0-9]+)$|', $format, $matches)) {
+        if (preg_match('|^([a-zA-Z0-9\\\\]+)->([a-zA-Z0-9]+)$|', $format, $matches)) {
             $this->formatters[$format] = [$this->ext($matches[1]), $matches[2]];
-
             return $this->formatters[$format];
         }
-
         foreach ($this->providers as $provider) {
             if (method_exists($provider, $format)) {
                 $this->formatters[$format] = [$provider, $format];
-
                 return $this->formatters[$format];
             }
         }
-
         throw new \InvalidArgumentException(sprintf('Unknown format "%s"', $format));
     }
-
     /**
      * Replaces tokens ('{{ tokenName }}') with the result from the token method call
      *
@@ -760,10 +723,8 @@ class Generator
         $callback = function ($matches) {
             return $this->format($matches[1]);
         };
-
-        return preg_replace_callback('/{{\s?(\w+|[\w\\\]+->\w+?)\s?}}/u', $callback, $string);
+        return preg_replace_callback('/{{\s?(\w+|[\w\\\\]+->\w+?)\s?}}/u', $callback, $string);
     }
-
     /**
      * Get a random MIME type
      *
@@ -771,9 +732,8 @@ class Generator
      */
     public function mimeType()
     {
-        return $this->ext(Extension\FileExtension::class)->mimeType();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\FileExtension::class)->mimeType();
     }
-
     /**
      * Get a random file extension (without a dot)
      *
@@ -781,17 +741,15 @@ class Generator
      */
     public function fileExtension()
     {
-        return $this->ext(Extension\FileExtension::class)->extension();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\FileExtension::class)->extension();
     }
-
     /**
      * Get a full path to a new real file on the system.
      */
     public function filePath()
     {
-        return $this->ext(Extension\FileExtension::class)->filePath();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\FileExtension::class)->filePath();
     }
-
     /**
      * Get an actual blood type
      *
@@ -799,9 +757,8 @@ class Generator
      */
     public function bloodType(): string
     {
-        return $this->ext(Extension\BloodExtension::class)->bloodType();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\BloodExtension::class)->bloodType();
     }
-
     /**
      * Get a random resis value
      *
@@ -809,9 +766,8 @@ class Generator
      */
     public function bloodRh(): string
     {
-        return $this->ext(Extension\BloodExtension::class)->bloodRh();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\BloodExtension::class)->bloodRh();
     }
-
     /**
      * Get a full blood group
      *
@@ -819,9 +775,8 @@ class Generator
      */
     public function bloodGroup(): string
     {
-        return $this->ext(Extension\BloodExtension::class)->bloodGroup();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\BloodExtension::class)->bloodGroup();
     }
-
     /**
      * Get a random EAN13 barcode.
      *
@@ -829,9 +784,8 @@ class Generator
      */
     public function ean13(): string
     {
-        return $this->ext(Extension\BarcodeExtension::class)->ean13();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\BarcodeExtension::class)->ean13();
     }
-
     /**
      * Get a random EAN8 barcode.
      *
@@ -839,9 +793,8 @@ class Generator
      */
     public function ean8(): string
     {
-        return $this->ext(Extension\BarcodeExtension::class)->ean8();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\BarcodeExtension::class)->ean8();
     }
-
     /**
      * Get a random ISBN-10 code
      *
@@ -851,9 +804,8 @@ class Generator
      */
     public function isbn10(): string
     {
-        return $this->ext(Extension\BarcodeExtension::class)->isbn10();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\BarcodeExtension::class)->isbn10();
     }
-
     /**
      * Get a random ISBN-13 code
      *
@@ -863,9 +815,8 @@ class Generator
      */
     public function isbn13(): string
     {
-        return $this->ext(Extension\BarcodeExtension::class)->isbn13();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\BarcodeExtension::class)->isbn13();
     }
-
     /**
      * Returns a random number between $int1 and $int2 (any order)
      *
@@ -873,33 +824,29 @@ class Generator
      */
     public function numberBetween($int1 = 0, $int2 = 2147483647): int
     {
-        return $this->ext(Extension\NumberExtension::class)->numberBetween((int) $int1, (int) $int2);
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\NumberExtension::class)->numberBetween((int) $int1, (int) $int2);
     }
-
     /**
      * Returns a random number between 0 and 9
      */
     public function randomDigit(): int
     {
-        return $this->ext(Extension\NumberExtension::class)->randomDigit();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\NumberExtension::class)->randomDigit();
     }
-
     /**
      * Generates a random digit, which cannot be $except
      */
     public function randomDigitNot($except): int
     {
-        return $this->ext(Extension\NumberExtension::class)->randomDigitNot((int) $except);
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\NumberExtension::class)->randomDigitNot((int) $except);
     }
-
     /**
      * Returns a random number between 1 and 9
      */
     public function randomDigitNotZero(): int
     {
-        return $this->ext(Extension\NumberExtension::class)->randomDigitNotZero();
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\NumberExtension::class)->randomDigitNotZero();
     }
-
     /**
      * Return a random float number
      *
@@ -907,13 +854,8 @@ class Generator
      */
     public function randomFloat($nbMaxDecimals = null, $min = 0, $max = null): float
     {
-        return $this->ext(Extension\NumberExtension::class)->randomFloat(
-            $nbMaxDecimals !== null ? (int) $nbMaxDecimals : null,
-            (float) $min,
-            $max !== null ? (float) $max : null,
-        );
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\NumberExtension::class)->randomFloat($nbMaxDecimals !== null ? (int) $nbMaxDecimals : null, (float) $min, $max !== null ? (float) $max : null);
     }
-
     /**
      * Returns a random integer with 0 to $nbDigits digits.
      *
@@ -926,12 +868,8 @@ class Generator
      */
     public function randomNumber($nbDigits = null, $strict = false): int
     {
-        return $this->ext(Extension\NumberExtension::class)->randomNumber(
-            $nbDigits !== null ? (int) $nbDigits : null,
-            (bool) $strict,
-        );
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\NumberExtension::class)->randomNumber($nbDigits !== null ? (int) $nbDigits : null, (bool) $strict);
     }
-
     /**
      * Get a version number in semantic versioning syntax 2.0.0. (https://semver.org/spec/v2.0.0.html)
      *
@@ -944,19 +882,16 @@ class Generator
      */
     public function semver(bool $preRelease = false, bool $build = false): string
     {
-        return $this->ext(Extension\VersionExtension::class)->semver($preRelease, $build);
+        return $this->ext(\FakerPress\ThirdParty\Faker\Extension\VersionExtension::class)->semver($preRelease, $build);
     }
-
     /**
      * @deprecated
      */
     protected function callFormatWithMatches($matches)
     {
-        trigger_deprecation('fakerphp/faker', '1.14', 'Protected method "callFormatWithMatches()" is deprecated and will be removed.');
-
+        fakerpress_thirdparty_trigger_deprecation('fakerphp/faker', '1.14', 'Protected method "callFormatWithMatches()" is deprecated and will be removed.');
         return $this->format($matches[1]);
     }
-
     /**
      * @param string $attribute
      *
@@ -964,11 +899,9 @@ class Generator
      */
     public function __get($attribute)
     {
-        trigger_deprecation('fakerphp/faker', '1.14', 'Accessing property "%s" is deprecated, use "%s()" instead.', $attribute, $attribute);
-
+        fakerpress_thirdparty_trigger_deprecation('fakerphp/faker', '1.14', 'Accessing property "%s" is deprecated, use "%s()" instead.', $attribute, $attribute);
         return $this->format($attribute);
     }
-
     /**
      * @param string $method
      * @param array  $attributes
@@ -977,12 +910,10 @@ class Generator
     {
         return $this->format($method, $attributes);
     }
-
     public function __destruct()
     {
         $this->seed();
     }
-
     public function __wakeup()
     {
         $this->formatters = [];

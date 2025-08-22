@@ -5,11 +5,11 @@ msgstr ""
 "PO-Revision-Date: \n"
 "Last-Translator: Sajjad Hossain <msh134@gmail.com>\n"
 "Language-Team: \n"
+"Language: sr_RS\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
-"Language: sr_RS\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Settings"
 msgstr "Podešavanja"
@@ -110,7 +110,22 @@ msgstr "Poslato"
 msgid "Delete All Messages"
 msgstr "Обриши све поруке"
 
+msgid "Delete Messages Older Than 1 Day"
+msgstr ""
+
+msgid "Delete Messages Older Than 7 Days"
+msgstr ""
+
+msgid "Delete Messages Older Than 15 Days"
+msgstr ""
+
+msgid "Delete Messages Older Than 30 Days"
+msgstr ""
+
 msgid "Email sent."
+msgstr ""
+
+msgid "Email could not be sent."
 msgstr ""
 
 msgid "Message"

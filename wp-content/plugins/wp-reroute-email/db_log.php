@@ -17,23 +17,23 @@
         <table class="message-table">
             <tr>
                 <th><?php esc_html_e('Sent On', 'wp-reroute-email'); ?>:</th>
-                <td><?php esc_html_e(get_date_from_gmt( $item->sent_on, 'j F, Y H:i:s' )); ?></td>
+                <td><?php esc_html(get_date_from_gmt( $item->sent_on, 'j F, Y H:i:s' )); ?></td>
             </tr>
             <tr>
                 <th><?php esc_html_e('To', 'wp-reroute-email'); ?>:</th>
-                <td><?php esc_html_e($item->recipients_to); ?></td>
+                <td><?php esc_html($item->recipients_to); ?></td>
             </tr>
             <tr>
                 <th><?php esc_html_e('CC', 'wp-reroute-email'); ?>:</th>
-                <td><?php esc_html_e($item->recipients_cc); ?></td>
+                <td><?php esc_html($item->recipients_cc); ?></td>
             </tr>
             <tr>
                 <th><?php esc_html_e('BCC', 'wp-reroute-email'); ?>:</th>
-                <td><?php esc_html_e($item->recipients_bcc); ?></td>
+                <td><?php esc_html($item->recipients_bcc); ?></td>
             </tr>
             <tr>
                 <th><?php esc_html_e('Subject', 'wp-reroute-email'); ?>:</th>
-                <td><?php esc_html_e($item->subject); ?></td>
+                <td><?php esc_html($item->subject); ?></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -56,10 +56,14 @@
         }
     }
     else{
+        $table->prepare_items();
+        
+        if($table->message) {
+            print '<div id="message" class="updated fade"><p>'. esc_html($table->message) . '</p></div>';
+        } 
 ?>
     <form action="" method="POST">
 <?php
-        $table->prepare_items();
         $table->display();
 ?>
     </form>

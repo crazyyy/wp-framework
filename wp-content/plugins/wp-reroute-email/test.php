@@ -15,8 +15,14 @@
         $message = sanitize_textarea_field(filter_input(INPUT_POST, 'message'));
         
         if($to && $subject && $message){
-            wp_mail($to, $subject, $message);
-            print '<div id="message" class="updated fade"><p>'. esc_html__('Email sent.', 'wp-reroute-email') . '</p></div>';
+            $emailSent = wp_mail($to, $subject, $message);
+
+            if($emailSent) {
+                print '<div id="message" class="updated fade"><p>'. esc_html__('Email sent.', 'wp-reroute-email') . '</p></div>';
+            } 
+            else {
+                print '<div id="message" class="error fade"><p>'. esc_html__('Email could not be sent.', 'wp-reroute-email') . '</p></div>';
+            }
         }
     }
 ?>    

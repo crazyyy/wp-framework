@@ -1066,7 +1066,10 @@ class UpdraftPlus_Commands {
 			UpdraftPlus::load_checkout_embed();
 
 			global $updraftplus_checkout_embed;
-			$checkout_url = $updraftplus_checkout_embed->get_product('updraftplus-clone-tokens', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=migrate');
+			$checkout_url = $updraftplus->get_url('buy_clone_tokens');
+			if (is_a($updraftplus_checkout_embed, 'Updraft_Checkout_Embed')) {
+				$checkout_url = $updraftplus_checkout_embed->get_product('updraftplus-clone-tokens', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=migrate');
+			}
 
 			$tokens = isset($response['tokens']) ? $response['tokens'] : 0;
 			$content = '<div class="updraftclone-main-row">';

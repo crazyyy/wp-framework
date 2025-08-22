@@ -88,7 +88,9 @@ var WP_Optimize = function () {
 		 */
 
 		var elTable = document.getElementById('wpoptimize_table_list');
-		
+
+		if (null === elTable) return;
+
 		enhanceSortableAccessibility([elTable]);
 		
 		document.getElementById('wpoptimize_table_list_filter').addEventListener('input', function () {
@@ -273,7 +275,7 @@ var WP_Optimize = function () {
 
 		toggle_mobile_menu(false);
 		// Mobile menu TABS toggle
-		if ($(this).is('[role="toggle-menu"]')) {
+		if ($(this).is('[id^="wp-optimize-nav-tab-menu-"]')) {
 			toggle_mobile_menu(true);
 			return;
 		}
@@ -365,12 +367,12 @@ var WP_Optimize = function () {
 			// Set the status to true, to prevent loading again.
 			database_tabs_loaded = true;
 
-			// Updtate the optimizations tab
+			// Update the optimizations tab
 			if (response.hasOwnProperty('optimizations')) {
 				container.find('.wp-optimize-optimizations-table-placeholder').replaceWith(response.optimizations);
 			}
 
-			// Updtate the optimizations tables list
+			// Update the optimizations tables list
 			update_tables_list(response);
 
 			$(document).trigger('wpo_database_tabs_loaded');
@@ -927,14 +929,13 @@ var WP_Optimize = function () {
 		wpo_settings_sites_list_items
 	);
 
-	var sites_list_clicked_count = 0;
+	var debounceTimer;
 
 	$([wpo_settings_all_sites_checkbox, wpo_settings_sites_list_items]).each(function() {
 		$(this).on('change', function() {
-			sites_list_clicked_count++;
-			setTimeout(function() {
-				sites_list_clicked_count--;
-				if (sites_list_clicked_count == 0) update_optimizations_info();
+			clearTimeout(debounceTimer);
+			debounceTimer = setTimeout(function() {
+				update_optimizations_info();
 			}, 1000);
 		});
 	});
@@ -1042,7 +1043,7 @@ var WP_Optimize = function () {
 	function run_optimization() {
 		$optimizations = $('#optimizations_list .optimization_checkbox:checked');
 
-		$optimizations.sort(function (a, b) {
+		$optimizations.toArray().sort(function (a, b) {
 			// Convert to IDs.
 			a = $(a).closest('.wp-optimize-settings').data('optimization_run_sort_order');
 			b = $(b).closest('.wp-optimize-settings').data('optimization_run_sort_order');
@@ -1086,6 +1087,7 @@ var WP_Optimize = function () {
 
 			// update body with new content.
 			$("#wpoptimize_table_list tbody").remove();
+			$("#wpoptimize_table_list tfoot").remove();
 			$("#wpoptimize_table_list thead").after(response.table_list);
 
 			$("#wpoptimize_table_list").trigger("updateAll", [resort, callback]);
@@ -1279,6 +1281,7 @@ var WP_Optimize = function () {
 			spinner.addClass('visibility-hidden');
 			action_done_icon.show().removeClass('visibility-hidden').delay(2500).fadeOut('fast', function() {
 				btn.show();
+				action_done_icon.show().addClass('visibility-hidden');
 			});
 		});
 	}
@@ -1353,7 +1356,7 @@ var WP_Optimize = function () {
 			if (!response.hasOwnProperty(i)) continue;
 
 			dom_id = ['#wp-optimize-settings-', response[i].dom_id].join('');
-			info = response[i].info ? response[i].info.join('<br>') : '';
+			info = response[i].info ? response[i].info : '';
 
 			$(dom_id + ' .wp-optimize-settings-optimization-info').html(info);
 		}

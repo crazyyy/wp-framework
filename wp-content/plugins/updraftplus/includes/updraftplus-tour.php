@@ -105,7 +105,13 @@ class UpdraftPlus_Tour {
 			),
 			'backup_now' => array(
 				'title' => __('Your first backup', 'updraftplus'),
-				'text' => sprintf(_x('To make a simple backup to your server, press this button. Or to setup regular backups and remote storage, go to %s settings %s', 'updraftplus'), '<strong><a href="#settings" class="js--go-to-settings">', '</a></strong>')
+				'text' => sprintf(
+					__('To make a simple backup to your server, press this button.', 'updraftplus').' '.
+					/* translators: 1: HTML <a> and <strong> opening tag 2: HTML </a> and </strong> closing tag*/
+					__('Or to setup regular backups and remote storage, go to %1$s settings %2$s', 'updraftplus'),
+					'<strong><a href="#settings" class="js--go-to-settings">',
+					'</a></strong>'
+				)
 			),
 			'backup_options' => array(
 				'title' => __("Manual backup options", 'updraftplus'),
@@ -186,7 +192,7 @@ class UpdraftPlus_Tour {
 					.' <a href="'.apply_filters('updraftplus_com_link', 'https://updraftplus.com/updraftvault/').'" target="_blank">'.__('Find out more here.', 'updraftplus').'</a>'
 					.'<br>'
 					.__("If you have a valid Premium license, you get 1GB of storage included.", 'updraftplus')
-					.' <a href="'.apply_filters('updraftplus_com_link', 'https://updraftplus.com/shop/updraftplus-vault-storage-5-gb/').'" target="_blank" '.$checkout_embed_5gb_attribute.'>'.__('Otherwise, you can try UpdraftVault for 1 month for only $1!', 'updraftplus').'</a>'
+					.' <a href="'.apply_filters('updraftplus_com_link', $updraftplus->get_url('shop_vault_5')).'" target="_blank" '.$checkout_embed_5gb_attribute.'>'.__('Otherwise, you can try UpdraftVault for 1 month for only $1!', 'updraftplus').'</a>'
 					.'</div>'
 			);
 

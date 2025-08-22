@@ -116,9 +116,28 @@ class WP_Optimize_Cache_Commands {
 		$return['enabled'] = ($enabled && !is_wp_error($enabled)) || ($previous_settings['enable_page_caching'] && is_wp_error($disabled));
 
 		if ($enabled && !is_wp_error($enabled)) {
-			if (isset($data['cache-settings']['host_gravatars_locally']) && $data['cache-settings']['host_gravatars_locally'] !== $previous_settings['host_gravatars_locally']) {
+			$options_needs_purge = array_flip(array(
+				'enable_mobile_caching',
+				'enable_user_caching',
+				'enable_per_role_cache',
+				'enable_user_specific_cache',
+				'enable_rest_caching',
+				'show_avatars',
+				'host_gravatars_locally',
+				'cache_exception_urls',
+				'cache_ignore_query_variables',
+				'cache_exception_cookies',
+				'cache_exception_conditional_tags',
+				'cache_exception_browser_agents',
+			));
+			$previous_settings = array_intersect_key($previous_settings, $options_needs_purge);
+			$current_settings = wp_parse_args($data['cache-settings'], WPO_Cache_Config::instance()->defaults);
+			$current_settings = array_intersect_key($current_settings, $options_needs_purge);
+			ksort($previous_settings);
+			ksort($current_settings);
+			if ($current_settings !== $previous_settings) {
 				$cache = WPO_Page_Cache::instance();
-				$cache->file_log('Host gravatars locally setting changed, purging cache');
+				$cache->file_log('Setting changed, purging cache');
 				$cache->purge();
 			}
 		}

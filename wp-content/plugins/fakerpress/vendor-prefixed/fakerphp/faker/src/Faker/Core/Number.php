@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 declare(strict_types=1);
 
@@ -68,7 +63,7 @@ final class Number implements Extension\NumberExtension
         return round($min + $this->numberBetween() / mt_getrandmax() * ($max - $min), $nbMaxDecimals);
     }
 
-    public function randomNumber(int $nbDigits = null, bool $strict = false): int
+    public function randomNumber(?int $nbDigits = null, bool $strict = false): int
     {
         if (null === $nbDigits) {
             $nbDigits = $this->randomDigitNotZero();

@@ -364,6 +364,7 @@ function updraft_remote_storage_test(method, result_callback, instance_id) {
 			result_callback = result_callback.call(this, response, status, data);
 		}
 		if ('undefined' !== typeof result_callback && false === result_callback) {
+			response.output = response.output.replaceAll('&quot;', '"');
 			alert(updraftlion.settings_test_result.replace('%s', method_label)+' '+response.output);
 			if (response.hasOwnProperty('data')) {
 				console.log(response.data);
@@ -3010,7 +3011,9 @@ jQuery(function($) {
 			operator_options: updraftlion.conditional_logic.operator_options,
 		};
 		var html = template(context);
-		jQuery(html).hide().insertAfter(jQuery('.' + method + '_add_instance_container').first()).show('slow');
+		jQuery(html).hide().insertAfter(jQuery('.' + method + '_add_instance_container').first()).show('slow', function() {
+			initialize_remote_storage_select2_elements(this);
+		});
 	}
 
 	/**
@@ -5214,6 +5217,7 @@ jQuery(function($) {
 			updraft_scroll_to_remote_storage_config();
 			// Displays warning to the user of their mistake if they try to enter a URL in the OneDrive settings and saved
 			$('#remote-storage-holder .updraftplus_onedrive_folder_input').trigger('keyup');
+			initialize_remote_storage_select2_elements(jQuery('#remote-storage-holder'));
 		});
 	}
 
@@ -6334,4 +6338,47 @@ function updraft_js_tree(remote_storage) {
 	  });
 	};
 
+}
+
+/**
+ * Initializes Select2 dynamic input for all <select> elements matching the given object of remote storage.
+ *
+ * @param {string} remote_storage_elements - An object of HTML elements of the remote storage template
+ * @returns {void}
+ */
+function initialize_remote_storage_select2_elements(remote_storage_elements) {
+	// <select> tag added to any remote storage configuration should have `select2` defined in its class attribute
+	var select_element = jQuery(remote_storage_elements).find('select.select2-storage-config');
+	for (var i=0; i < select_element.length; i++) {
+		// Initialize select2 text input.
+		jQuery(select_element[i]).select2({
+			tags: true
+		});
+		// any specific actions applied to remote storage should be implemented by first checking the remote storage ID
+		if ('dreamobjects' === jQuery(select_element[i]).data('storage-id')) {
+			if ('endpoint' === jQuery(select_element[i]).data('field-id')) {
+				jQuery(select_element[i]).on('change', function(e) {
+					validate_dreamobjects_endpoint(e.target);
+				});
+				validate_dreamobjects_endpoint(select_element[i]);
+			}
+		}
+	}
+}
+
+/**
+ * Validate selected DreamObjects endpoint.
+ *
+ * @param {HTMLSelectElement} select_element - The <select> element for DreamObjects endpoint.
+ *
+ * @returns {void}
+ */
+function validate_dreamobjects_endpoint(select_element) {
+	var endpoint = select_element.value.trim();
+	// Show or hide error message depending on endpoint validity.
+	if (updraftlion.dreamobject_endpoints.includes(endpoint) || new RegExp(updraftlion.dreamobject_endpoint_regex, 'i').test(endpoint)) {
+		select_element.classList.remove('updraft-input--invalid');
+	} else {
+		select_element.classList.add('updraft-input--invalid');
+	}
 }

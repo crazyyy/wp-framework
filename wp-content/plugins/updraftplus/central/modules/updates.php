@@ -1011,7 +1011,7 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 			$request_filesystem_credentials[$entity] = ('direct' != $filesystem_method && !$filesystem_credentials_are_stored);
 		}
 		
-		$automatic_backups = (class_exists('UpdraftPlus_Options') && class_exists('UpdraftPlus_Addon_Autobackup') && UpdraftPlus_Options::get_updraft_option('updraft_autobackup_default', true)) ? true : false;
+		$automatic_backups = (class_exists('UpdraftPlus_Options') && class_exists('UpdraftPlus_Addon_Autobackup') && UpdraftPlus_Options::get_updraft_option('updraft_autobackup_default')) ? true : false;
 		
 		return $this->_response(array(
 			'plugins' => $plugin_updates,

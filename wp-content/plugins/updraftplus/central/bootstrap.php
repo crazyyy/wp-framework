@@ -446,7 +446,7 @@ class UpdraftCentral_Main {
 
 		global $updraftcentral_host_plugin, $updraftplus;
 
-		$updraftplus->ensure_phpseclib();
+		if ($updraftplus && is_a($updraftplus, 'UpdraftPlus')) $updraftplus->ensure_phpseclib();
 		
 		if (!class_exists('UpdraftPlus_Remote_Communications_V2')) include_once($updraftcentral_host_plugin->get_host_dir().'/vendor/team-updraft/common-libs/src/updraft-rpc/class-udrpc2.php');
 		$ud_rpc = new UpdraftPlus_Remote_Communications_V2($indicator_name);

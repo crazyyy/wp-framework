@@ -60,8 +60,8 @@ class CFDB7_Form_Details
                                 $key_val = str_replace('your-', '', $key_val);
                                 $key_val = str_replace( array('-','_'), ' ', $key_val);
                                 $key_val = ucwords( $key_val );
-                                echo '<p><b>'.$key_val.'</b>: <a href="'.$cfdb7_dir_url.'/'.$data.'">'
-                                .$data.'</a></p>';
+                                echo '<p><b>'.esc_html($key_val).'</b>: <a href="'.esc_url($cfdb7_dir_url.'/'.$data).'">'
+                                .esc_html($data).'</a></p>';
                             }else{
 
 
@@ -72,7 +72,7 @@ class CFDB7_Form_Details
                                     $key_val      = ucwords( $key_val );
                                     $arr_str_data =  implode(', ',$data);
                                     $arr_str_data =  esc_html( $arr_str_data );
-                                    echo '<p><b>'.$key_val.'</b>: '. nl2br($arr_str_data) .'</p>';
+                                    echo '<p><b>'.esc_html($key_val).'</b>: '. nl2br($arr_str_data) .'</p>';
 
                                 }else{
 
@@ -81,7 +81,7 @@ class CFDB7_Form_Details
 
                                     $key_val = ucwords( $key_val );
                                     $data    = esc_html( $data );
-                                    echo '<p><b>'.$key_val.'</b>: '.nl2br($data).'</p>';
+                                    echo '<p><b>'.esc_html($key_val).'</b>: '.nl2br($data).'</p>';
                                 }
                             }
 

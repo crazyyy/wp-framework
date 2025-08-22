@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Extension;
 
@@ -30,7 +25,7 @@ interface DateTimeExtension
      *
      * @example DateTime('2005-08-16 20:39:21')
      */
-    public function dateTime($until = 'now', string $timezone = null): \DateTime;
+    public function dateTime($until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a DateTime object for a date between January 1, 0001, and now.
@@ -43,7 +38,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeAD($until = 'now', string $timezone = null): \DateTime;
+    public function dateTimeAD($until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a DateTime object a random date between `$from` and `$until`.
@@ -57,7 +52,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeBetween($from = '-30 years', $until = 'now', string $timezone = null): \DateTime;
+    public function dateTimeBetween($from = '-30 years', $until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a DateTime object based on a random date between `$from` and an interval.
@@ -71,7 +66,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeInInterval($from = '-30 years', string $interval = '+5 days', string $timezone = null): \DateTime;
+    public function dateTimeInInterval($from = '-30 years', string $interval = '+5 days', ?string $timezone = null): \DateTime;
 
     /**
      * Get a date time object somewhere inside the current week.
@@ -83,7 +78,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeThisWeek($until = 'now', string $timezone = null): \DateTime;
+    public function dateTimeThisWeek($until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a date time object somewhere inside the current month.
@@ -95,7 +90,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeThisMonth($until = 'now', string $timezone = null): \DateTime;
+    public function dateTimeThisMonth($until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a date time object somewhere inside the current year.
@@ -107,7 +102,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeThisYear($until = 'now', string $timezone = null): \DateTime;
+    public function dateTimeThisYear($until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a date time object somewhere inside the current decade.
@@ -119,7 +114,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeThisDecade($until = 'now', string $timezone = null): \DateTime;
+    public function dateTimeThisDecade($until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a date time object somewhere inside the current century.
@@ -131,7 +126,7 @@ interface DateTimeExtension
      * @see http://php.net/manual/en/timezones.php
      * @see http://php.net/manual/en/function.date-default-timezone-get.php
      */
-    public function dateTimeThisCentury($until = 'now', string $timezone = null): \DateTime;
+    public function dateTimeThisCentury($until = 'now', ?string $timezone = null): \DateTime;
 
     /**
      * Get a date string between January 1, 1970, and `$until`.
@@ -243,5 +238,5 @@ interface DateTimeExtension
      *
      * @example 'Europe/Rome'
      */
-    public function timezone(string $countryCode = null): string;
+    public function timezone(?string $countryCode = null): string;
 }

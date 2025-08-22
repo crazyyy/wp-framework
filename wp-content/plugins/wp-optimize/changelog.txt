@@ -1,5 +1,73 @@
 == Changelog ==
 
+= 4.2.4 - 30/Jul/2025 =
+
+* FIX: Potential PHP fatal error when no site is selected during database optimization in multisite
+* FIX: Issue where the database optimization spinner remained indefinitely active
+* FIX: PHP 8.4 compatibility warnings
+* FIX: Minify default exclusions fatal error
+* FIX: Premium - Potential PHP fatal error - type hinting error in the database table usage feature
+* FIX: Premium - Page cache and lazy load meta boxes no longer display on post edit screen when their respective options are disabled
+* FIX: Only purge relevant files when a published post is saved; also purge the author archive cache upon post save
+* FIX: Premium - Fixed compatibility of Table usage with WordPress versions earlier than 5.3
+* REFACTOR: Premium - Database - Table Usage - added missed translation functions
+* TWEAK: Purged content will preload only when cache is enabled, and the user-agent has been updated to a modern browser and OS version
+* TWEAK: Update seasonal advert banner logos, texts and links
+* TWEAK: Update plugin readme text and links
+* TWEAK: Premium - Cache - Add UI element to ignore query variables
+* TWEAK: Premium - Database - Table Usage - replaced loading state with native modal
+* TWEAK: Removed seasonal discount ads except Black Friday
+
+= 4.2.3 - 15/Jul/2025 =
+
+* FIX: Cache - Resolved PHP warning caused by excessively long cache file names
+* FIX: Corrected typo from `meta data` to `metadata`
+* FIX: Cron reschedule event error for hook `wpo_prune_404_log` when `is_minimum_requirement_met` is `false`
+* FIX: Premium - Fixed a rare PHP warning that could occur when saving a post
+* FIX: Unused image - incorrect image filtering in multisite
+* FIX: WP Remote sync conflict caused in v4.2.1 and v4.2.2 By replacing wp_salt with core PHP functions
+* FIX: YouTube lazy-load – Thumbnail image now falls back to JPG if browser doesn't support WebP
+* FIX: WebP images were not being served in Firefox on certain environments
+* TWEAK: 404 detector logs URLs on mobile screens goes out of viewport fixed.
+* TWEAK: CSS Improvements, better font size handling, remove duplication, and SASS instead of import
+* TWEAK: Delay YouTube preview image cache purging
+* TWEAK: Display notice when server does not allow database optimizations
+* TWEAK: Enhanced database optimization compatibility with jQuery 4
+* TWEAK: Fixed incorrect transients count in database optimizations UI
+* TWEAK: Improved sanitization of incoming data in `Updraft_Smush_Manager_Commands`
+* TWEAK: Minify - Improved compatibility with Divi theme's dynamically generated assets
+* TWEAK: Multisite corrected site count in database optimizations UI.
+* TWEAK: Preserve EXIF data is set to false by default in all places at codebase level.
+* TWEAK: Update URLs of links and images to point to https://teamupdraft.com
+
+= 4.2.2 - 02/June/2025 =
+
+* FIX: Cache - Resolved unwanted output in WP-CLI and fatal error related to WooCommerce's country-specific files, introduced in v4.2.0
+* TWEAK: Premium - Cache - Compatibility with WordPress 6.8
+
+= 4.2.1 - 05/May/2025 =
+
+* FIX: Cache - Compatibility issue with other plugins due to late start of output buffering
+* TWEAK: Improved array handling in `get_active_plugins()`, potentially avoiding edge-case fatal error
+
+= 4.2.0 - 01/May/2025 =
+
+* FEATURE: Premium - Replace YouTube Iframes with preview images to improve page speed
+* FIX: Fix conflict with the WPML plugin
+* FIX: Smush - Fixed PHP warning on the Media Library page
+* FIX: Smush - Fixed issue where the Smush popup would freeze
+* FIX: WebP images not served after WP-Optimize reactivation
+* REFACTOR: Smush option removed from media upload modal
+* SECURITY: On multisite installs (only), a site administrator could use an unsanitised parameter to inject unwanted content into SQL queries. Thanks to Marc Montpas for the responsible disclosure.
+* TWEAK:  Update advert banner logos, texts and links
+* TWEAK: Add missing separator between compression items in media library
+* TWEAK: Avoid PHP warning thrown by Page Speed Ninja plugin
+* TWEAK: Cache - Start caching after plugins loaded 
+* TWEAK: Fix PHP deprecation warning in PHPSQLParser for PHP 8.4
+* TWEAK: Fix deprecation warning in Updraft_Logger class for PHP 8.4
+* TWEAK: Fixes absence of checkbox to remove all transients
+* TWEAK: Premium - Support and feedback links in Help tab now point to getwpo.com
+
 = 4.1.1 - 05/Mar/2025 =
 
 * FIX: Page builders not working with Delay JS option enabled
@@ -13,9 +81,9 @@
 
 * FIX: File system usage issue
 
-= 4.0.0 - 05/Feb/2025 =
+= 4.0.0 - 10/Feb/2025 =
 
-* FEATURE: Delay Javascript Execution 
+* FEATURE: Delay JavaScript execution 
 * FIX: Cache - Fixed PHP warning "Cannot modify header information"
 * FIX: Minify - Unusual behavior occurs when the "Disable Google Fonts processing" option is enabled
 * FIX: Smush - Fixed image compression actions in Media Library
@@ -23,7 +91,7 @@
 * TWEAK: Cache - Enhance ActivityPub compatibility
 * TWEAK: Fix PHP notice caused by subscriben plugin advert
 * TWEAK: Minimum requirements were updated to PHP version 7.2 and WordPress version 4.9 
-* TWEAK: Proper usage of `unserialize` to prevent remote code execution
+* TWEAK: Remove uses of `unserialize` without restriction of allowed_classes
 * TWEAK: Recognise Independent Analytics Pro plugin tables in database optimization
 
 = 3.8.0 - 09/Dec/2024 =
@@ -975,7 +1043,7 @@
 * TWEAK: Added option to clean "all" transient options and network-wide transient options for multisite WordPress installation
 * TWEAK: Links to UpdraftPlus automatically Install/Activate UpdraftPlus plugin
 * TWEAK: FAQ links point to getwpo.com
-* TWEAK: Auto-draft, revision posts and pingback comments removing with their meta data
+* TWEAK: Auto-draft, revision posts and pingback comments removing with their metadata
 * TWEAK: Scheduler is not using the WordPress timezone settings
 * TWEAK: Detecting corrupted tables in background.
 * TWEAK: Unused Images optimization correctly detects images in pages built with popular plugins - Page Builder by SiteOrigin, Visual Composer, Beaver Builder, Elementor.

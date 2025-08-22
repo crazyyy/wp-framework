@@ -1,14 +1,14 @@
 <?php
 /**
 Plugin Name: WP-Optimize - Clean, Compress, Cache
-Plugin URI: https://getwpo.com
+Plugin URI: https://teamupdraft.com/wp-optimize
 Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 4.1.1
+Version: 4.2.4
 Requires at least: 4.9
 Requires PHP: 7.2
 Update URI: https://wordpress.org/plugins/wp-optimize/
 Author: TeamUpdraft, DavidAnderson
-Author URI: https://updraftplus.com
+Author URI: https://teamupdraft.com/wp-optimize?utm_source=wpo-wp-dir&utm_medium=referral&utm_campaign=plugin-dir&utm_content=teamupdraft&utm_creative_format=author
 Text Domain: wp-optimize
 Domain Path: /languages
 License: GPLv2 or later
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '4.1.1');
+define('WPO_VERSION', '4.2.4');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PLUGIN_SLUG', plugin_basename(__FILE__));
@@ -26,6 +26,7 @@ define('WPO_PREMIUM_NOTIFICATION', false);
 define('WPO_REQUIRED_PHP_VERSION', '7.2');
 define('WPO_REQUIRED_WP_VERSION', '4.9');
 if (!defined('WPO_USE_WEBP_CONVERSION')) define('WPO_USE_WEBP_CONVERSION', true);
+require_once(WPO_PLUGIN_MAIN_PATH.'includes/fragments/input-processing.php');
 
 class WP_Optimize {
 
@@ -50,12 +51,13 @@ class WP_Optimize {
 		register_activation_hook(__FILE__, array('WPO_Activation', 'actions'));
 		register_deactivation_hook(__FILE__, array('WPO_Deactivation', 'actions'));
 		register_uninstall_hook(__FILE__, array('WPO_Uninstall', 'actions'));
-		
+		if (!is_admin()) {
+			WPO_Page_Optimizer::instance()->initialise();
+		}
+
 		$this->load_admin();
 		add_action('admin_init', array($this, 'admin_init'));
 		add_action('admin_bar_menu', array($this, 'cache_admin_bar'), 100, 1);
-
-		add_action('init', array($this, 'schedule_plugin_cron_tasks'));
 
 		add_filter("plugin_action_links_".plugin_basename(__FILE__), array($this, 'plugin_settings_link'));
 		add_action('wpo_cron_event2', array($this, 'cron_action'));
@@ -279,8 +281,9 @@ class WP_Optimize {
 		$options = Updraft_Smush_Manager()->get_smush_options();
 		$custom = 90 >= $options['image_quality'] && 65 <= $options['image_quality'];
 		$sites = WP_Optimize()->get_sites();
-		$this->include_template('images/smush.php', false, array('smush_options' => $options, 'custom' => $custom, 'sites' => $sites, 'does_server_allows_local_webp_conversion' => $this->does_server_allows_local_webp_conversion()));
-		$this->include_template('images/smush-popup.php');
+		$compression_server_hint = Updraft_Smush_Manager()->get_compression_server_hint();
+		$this->include_template('images/smush.php', false, array('smush_options' => $options, 'custom' => $custom, 'sites' => $sites, 'does_server_allows_local_webp_conversion' => $this->does_server_allows_local_webp_conversion(), 'compression_server_hint' => $compression_server_hint));
+		$this->add_smush_popup_template();
 	}
 
 	public static function instance() {
@@ -634,13 +637,16 @@ class WP_Optimize {
 		// Loads the task manager
 		$this->get_task_manager();
 
+		add_action('init', array($this, 'schedule_plugin_cron_tasks'));
+  
 		add_action('init', array($this, 'load_language_file'), 0);
 
 		// Load 3rd party plugin compatibilities.
 		$this->load_compatibilities();
-
+		
 		// Load page cache.
 		$this->get_page_cache();
+
 		// We use the init hook to avoid the _load_textdomain_just_in_time warning,
 		// which is triggered because we use translations during cache initialization
 		add_action('init', array($this, 'init_page_cache'), 1);
@@ -729,7 +735,7 @@ class WP_Optimize {
 	private function get_active_plugins() {
 
 		// Gets all active plugins on the current site
-		$active_plugins = get_option('active_plugins');
+		$active_plugins = (array) get_option('active_plugins', array());
 
 		if (is_multisite()) {
 			$network_active_plugins = get_site_option('active_sitewide_plugins');
@@ -1187,7 +1193,7 @@ class WP_Optimize {
 	public function show_admin_warning_overdue_crons($howmany) {
 		$ret = '<div class="updated below-h2"><p>';
 		// translators: %d is number of overdue cron jobs
-		$ret .= '<strong>'.esc_html__('Warning', 'wp-optimize').':</strong> '.sprintf(esc_html__('WordPress has a number (%d) of scheduled tasks which are overdue.', 'wp-optimize'), $howmany).' '. esc_html__('Unless this is a development site, this probably means that the scheduler in your WordPress install is not working.', 'wp-optimize').' <a target="_blank" href="'.esc_url(apply_filters('wpoptimize_com_link', "https://getwpo.com/faqs/the-scheduler-in-my-wordpress-installation-is-not-working-what-should-i-do/")).'">'.esc_html__('Read this page for a guide to possible causes and how to fix it.', 'wp-optimize').'</a>';
+		$ret .= '<strong>'.esc_html__('Warning', 'wp-optimize').':</strong> '.sprintf(esc_html__('WordPress has a number (%d) of scheduled tasks which are overdue.', 'wp-optimize'), $howmany).' '. esc_html__('Unless this is a development site, this probably means that the scheduler in your WordPress install is not working.', 'wp-optimize').' <a target="_blank" href="'.esc_url(apply_filters('wpoptimize_com_link', "https://teamupdraft.com/blog/the-scheduler-in-wordpress-is-not-working-what-should-i-do/")).'">'.esc_html__('Read this page for a guide to possible causes and how to fix it.', 'wp-optimize').'</a>';
 		$ret .= '</p></div>';
 		return $ret;
 	}
@@ -1869,7 +1875,8 @@ class WP_Optimize {
 	 */
 	public function add_smush_popup_template() {
 		if (current_user_can($this->capability_required())) {
-			$this->include_template('images/smush-popup.php');
+			$compression_server_hint = Updraft_Smush_Manager()->get_compression_server_hint();
+			$this->include_template('images/smush-popup.php', false, array('compression_server_hint' => $compression_server_hint));
 		}
 	}
 

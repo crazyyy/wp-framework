@@ -50,7 +50,7 @@ class WPO_WebP_Utils {
 			$destination
 		);
 
-		set_error_handler(array(__CLASS__, 'handle_webp_conversion_warnings'), E_WARNING);
+		set_error_handler(array(__CLASS__, 'handle_webp_conversion_warnings'), E_WARNING); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_set_error_handler -- This is needed in order to suppress PHP warnings thrown by third party library
 
 		$converter_instance->doConvert();
 
@@ -80,6 +80,29 @@ class WPO_WebP_Utils {
 		}
 
 		// For other PHP warnings, use the default PHP error handler by returning false
+		return false;
+	}
+	
+	/**
+	 * Decide whether the browser requesting the URL can accept webp images or not
+	 *
+	 * @return bool
+	 */
+	public static function is_browser_accepting_webp(): bool {
+		$http_accept =  sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT'] ?? ''));
+		if (false !== strpos($http_accept, 'image/webp')) {
+			return true;
+		}
+		
+		// Link to compatibility site - https://caniuse.com/webp
+		$user_agent = sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? ''));
+		if (empty($user_agent)) return false;
+		
+		// Check Firefox version number
+		if (preg_match('/Firefox\/([\d\.]+[a-z\d]*)/', $user_agent, $matches)) {
+			if (version_compare('65.0.0', $matches[1], '<=')) return true;
+		}
+		
 		return false;
 	}
 }

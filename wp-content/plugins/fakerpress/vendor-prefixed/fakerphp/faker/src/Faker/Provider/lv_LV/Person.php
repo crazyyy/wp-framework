@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\Provider\lv_LV;
 
@@ -141,7 +136,7 @@ class Person extends \FakerPress\ThirdParty\Faker\Provider\Person
      *
      * @return string on format XXXXXX-XXXXX
      */
-    public function personalIdentityNumber(\DateTime $birthdate = null)
+    public function personalIdentityNumber(?\DateTime $birthdate = null)
     {
         if (!$birthdate) {
             $birthdate = DateTime::dateTimeThisCentury();

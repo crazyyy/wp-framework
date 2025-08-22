@@ -2,7 +2,7 @@
 namespace FakerPress\Provider;
 
 use FakerPress\ThirdParty\Faker\Provider\Base;
-use FakerPress;
+use FakerPress\ThirdParty\Cake\Chronos\Chronos;
 use FakerPress\Utils;
 use function FakerPress\make;
 
@@ -133,12 +133,12 @@ class WP_User extends Base {
 	 *
 	 * @return string|null
 	 */
-	public function user_pass( ?string $pass = null, int $qty = 10 ): ?string {
+	public function user_pass( ?string $pass = null, int $qty = 16 ): ?string {
 		if ( is_null( $pass ) ) {
 			if ( function_exists( 'wp_generate_password' ) ) {
-				$pass = wp_generate_password( $qty );
+				$pass = wp_generate_password( $qty, true );
 			} else {
-				$pass = $this->generator->randomNumber( $qty - 1 ) . $this->generator->randomLetter();
+				$pass = $this->generator->password( $qty );
 			}
 		}
 		return $pass;
@@ -186,7 +186,7 @@ class WP_User extends Base {
 
 	public function user_registered( $min = 'now', $max = null ) {
 		try {
-			$min = new \FakerPress\ThirdParty\Carbon\Carbon( $min );
+			$min = new Chronos( $min );
 		} catch ( \Exception $e ) {
 			return null;
 		}
@@ -194,7 +194,7 @@ class WP_User extends Base {
 		if ( ! is_null( $max ) ) {
 			// Unfortunatelly there is not such solution to this problem, we need to try and catch with DateTime
 			try {
-				$max = new \FakerPress\ThirdParty\Carbon\Carbon( $max );
+				$max = new Chronos( $max );
 			} catch ( \Exception $e ) {
 				return null;
 			}

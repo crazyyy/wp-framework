@@ -1,13 +1,10 @@
 <?php
+
 /**
  * The representation of a builder parameter.
  *
  * @package FakerPress\ThirdParty\lucatume\DI52\Builders
- *
- * @license GPL-3.0
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
-
 namespace FakerPress\ThirdParty\lucatume\DI52\Builders;
 
 use FakerPress\ThirdParty\lucatume\DI52\ContainerException;
@@ -15,11 +12,10 @@ use FakerPress\ThirdParty\lucatume\DI52\NestedParseError;
 use ParseError;
 use ReflectionException;
 use ReflectionParameter;
-
 /**
  * Class Parameter
  *
- * @package FakerPress\ThirdParty\lucatume\DI52\Builders
+ * @package \FakerPress\ThirdParty\lucatume\DI52\Builders
  */
 class Parameter
 {
@@ -47,42 +43,24 @@ class Parameter
      * @var bool
      */
     protected $isClass;
-
     /**
      * A list of the types that are NOT classes.
      *
      * @var array<string>
      */
-    protected static $nonClassTypes = [
-        'string',
-        'int',
-        'bool',
-        'float',
-        'double',
-        'array',
-        'resource',
-        'callable',
-        'iterable',
-        'union',
-    ];
+    protected static $nonClassTypes = ['string', 'int', 'bool', 'float', 'double', 'array', 'resource', 'callable', 'iterable', 'union'];
     /**
      * A map relating the string output type to the internal, type-hintable, type.
      *
      * @var array<string>
      */
-    protected static $conversionMap = [
-        'integer' => 'int',
-        'boolean' => 'bool',
-        'double' => 'float',
-    ];
-
+    protected static $conversionMap = ['integer' => 'int', 'boolean' => 'bool', 'double' => 'float'];
     /**
      * The parameter name.
      *
      * @var string
      */
     protected $name;
-
     /**
      * Parameter constructor.
      *
@@ -96,26 +74,22 @@ class Parameter
         $string = $reflectionParameter->__toString();
         $s = trim(str_replace('Parameter #' . $index, '', $string), '[ ]');
         $frags = explode(' ', $s);
-
         $this->name = $reflectionParameter->name;
         $this->type = strpos($frags[1], '$') === 0 ? null : $frags[1];
-
         // PHP 8.0 nullables.
-        $this->type = str_replace('?', '', (string)$this->type);
-
+        $this->type = str_replace('?', '', (string) $this->type);
         // PHP 8.0 Union types.
         if (strpos($this->type, '|') !== false) {
             $this->type = 'union';
         }
-
         if (isset(static::$conversionMap[$this->type])) {
-            $this->type = static::$conversionMap[$this->type]; // @codeCoverageIgnore
+            $this->type = static::$conversionMap[$this->type];
+            // @codeCoverageIgnore
         }
         $this->isClass = $this->type && $this->isClass();
         $this->isOptional = $frags[0] === '<optional>';
         $this->defaultValue = $this->isOptional ? $reflectionParameter->getDefaultValue() : null;
     }
-
     /**
      * Returns the parameter extracted data.
      *
@@ -123,13 +97,8 @@ class Parameter
      */
     public function getData()
     {
-        return [
-            'type' => $this->type,
-            'isOptional' => $this->isOptional,
-            'defaultValue' => $this->defaultValue
-        ];
+        return ['type' => $this->type, 'isOptional' => $this->isOptional, 'defaultValue' => $this->defaultValue];
     }
-
     /**
      * Returns the parameter default value, if any.
      *
@@ -139,7 +108,6 @@ class Parameter
     {
         return $this->defaultValue;
     }
-
     /**
      * Returns the parameter class name, if any.
      *
@@ -149,7 +117,6 @@ class Parameter
     {
         return $this->isClass ? $this->type : null;
     }
-
     /**
      * Returns the parameter name.
      *
@@ -159,7 +126,6 @@ class Parameter
     {
         return $this->name;
     }
-
     /**
      * Returns the parameter type, if any.
      *
@@ -169,7 +135,6 @@ class Parameter
     {
         return $this->type;
     }
-
     /**
      * Either return the parameter default value, or die trying.
      *
@@ -181,7 +146,6 @@ class Parameter
         if ($this->isOptional) {
             return $this->defaultValue;
         }
-
         if (!$this->isClass) {
             $format = 'Parameter $%s is not optional and is not type-hinted: auto-wiring is not magic.';
             $message = sprintf($format, $this->name);
@@ -189,10 +153,8 @@ class Parameter
             $format = 'Parameter $%s is not optional and its type (%s) cannot be resolved to a concrete class.';
             $message = sprintf($format, $this->name, $this->getClass());
         }
-
         throw new ContainerException($message);
     }
-
     /**
      * Check if the parameter type is a class.
      *
@@ -207,15 +169,13 @@ class Parameter
         if (in_array($this->type, static::$nonClassTypes, true)) {
             return false;
         }
-
         try {
             if (function_exists('enum_exists') && enum_exists((string) $this->type)) {
                 return false;
             }
         } catch (ParseError $e) {
-            throw new NestedParseError($e->getMessage(), $e->getCode(), $e, (string)$this->type, $this->name);
+            throw new NestedParseError($e->getMessage(), $e->getCode(), $e, (string) $this->type, $this->name);
         }
-
         return true;
     }
 }

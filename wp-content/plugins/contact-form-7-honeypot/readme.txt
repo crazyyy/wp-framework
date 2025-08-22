@@ -1,100 +1,79 @@
-=== Honeypot for Contact Form 7 — Protect Contact Form 7 spam with ease! [100% FREE Anti-Spam Plugin] ===
-Tags: honeypot, antispam, anti-spam, captcha, spam, bots, form, forms, contact form 7, contactform7, contact form, cf7
+=== CF7 Apps – [Honeypot and hCAPTCHA for Contact Form 7] ===
+Tags: contact form, anti-spam, spam protection, captcha, honeypot
 Requires at least: 4.8
-Tested up to: 6.7
-Stable tag: 2.1.7
+Tested up to: 6.8
+Stable tag: 3.0.0
 Requires PHP: 5.6
 Contributors: wpexpertsio
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Honeypot for Contact Form 7 adds honeypot non-intrusive anti-spam functionality to CF7 forms.
+Add hCaptcha and Honeypot to Contact Form 7 with CF7 Apps. Improve form security, lightweight, and no unnecessary code.
 
 == Description ==
 
-If you are tired of dealing with contact form spam and looking for a simple yet effective solution, then 👇
+**Add extra Spam Protection functionalities to your Contact Form 7 forms with CF7 Apps.**
 
-**Download the ✨Honeypot for Contact Form 7✨ plugin right NOW!**
+Contact Form 7 is one of the most popular form plugins for WordPress, but **it lacks many advanced features** that modern websites need. CF7 Apps adds extra Spam Protection functionalities to your Contact Form 7 forms, introducing honeypot and hCaptcha options.
 
-Don't take our word for it; look at our massive community of **400,000+ WordPress users** who trust this anti-spam plugin to prevent Contact Form 7 spam submissions without compromising user experience.
+👉 Get Support: [Click Here](https://wordpress.org/support/plugin/contact-form-7-honeypot/)
+👉 Check out the [Documentation](https://cf7apps.com/docs/?utm_source=wp_org&utm_medium=readme&utm_campaign=documentation)
 
-Wait, there is more to it! 😃👇
+==What CF7 Apps Can Do for You ?==
 
-Unlike traditional methods like using CAPTCHA for WordPress Contact Form 7, the honeypot plugin works silently in the background. By adding an invisible honeypot field to your contact form, it catches spam bots without bothering your visitors.
- 
-Plus, the plugin's submission time check feature further enhances Contact Form 7 spam prevention by blocking bots that submit forms too quickly.
+Right out of the box, CF7 Apps includes:
 
-Simply put, with this honeypot contact form solution, you can rest assured that only legitimate submissions reach your inbox.
+✅ **Honeypot App**
+✅ **hCaptcha App**
+💡 **[Suggest a Feature](https://cf7apps.com/submit-idea/?utm_source=wp_org&utm_medium=readme&utm_campaign=suggest_a_feature)**
 
-== What is a Honeypot Trap❔ ==
+And that’s just the beginning.
 
-In the context of contact form spam protection, a honeypot trap is a hidden field in your contact form designed to catch spambots. Contrary to humans, bots automatically fill out every field in a form, whether it's visible or not. When a bot fills in the honeypot field, the plugin recognizes it as a spam submission and discards it.
+🌟 **Add a Honeypot Field to Prevent Spam**
 
-**For example**, in the Honeypot for Contact Form 7, the plugin adds an invisible field to your Contact Form 7 form. Human users will never see this field, but spambots will. When a bot tries to submit the form, it unknowingly fills out this field, triggering the honeypot spam trap. This is how the plugin efficiently filters out unwanted spam without bothering genuine users.
+Our **Honeypot Contact Form 7 extension** creates a hidden field inside your Contact Form 7 forms. Real users never see it, but bots do—and that's how the bots fall for the trap. It blocks automated spam before it even hits your inbox.
 
+🌟 **Add hCaptcha to Contact Form 7**
 
-== How does Honeypot for Contact Form 7 work? ==
+Protect your forms from spam bots using **hCaptcha,** a privacy-friendly alternative to Google reCAPTCHA. This extension integrates directly with CF7 and works instantly after setup. No coding is required, and no extra plugins are needed. Just set up your site keys and you're done.
 
-The concept behind the **Honeypot for Contact Form 7** plugin is simple yet highly effective in preventing **contact form spam**. 
+**NOTE:**
+The best thing is that both features work independently. You can run them alone or together based on your site’s needs.
 
-Here’s a closer look at how the plugin works:
+==Real Use Cases for CF7 Apps==
 
-**✔️ Honeypot Field:** The plugin adds an invisible honeypot field to your Contact Form 7 forms. This field is invisible to human visitors but visible to spambots.
+With the CF7 Apps, you can do the following:
+  ✔️ Trap bots using a honeypot field without affecting users
+  ✔️ Add hCaptcha to Contact Form 7 for privacy-first anti-spam
 
-**✔️ Spam Detection:** When a bot fills out this invisible honeypot field, the submission is flagged as spam and discarded before it reaches your inbox.
+==Why Should You Install CF7 Apps?==
 
-**✔️ Submission Time Check:** Spambots typically submit forms within seconds. The plugin checks how quickly the form is submitted, and if it’s faster than a user-defined threshold, it’s marked as spam.
+* Works exclusively with Contact Form 7
+* Modular design — activate only the features you need
+* Lightweight — no unnecessary code or bloat
+* Built for form security, user control, and advanced customization
+* Continuously updated with new apps and requested features
 
-By combining these features, we have created a powerful Contact Form 7 honeypot solution that effectively blocks bots while allowing genuine users to submit their forms seamlessly.
+We built CF7 Apps for users who want more power without abandoning the simplicity of Contact Form 7.
 
+==Contribute or Report Issues==
+Do you have a feature request or bug to report? Contact us via the [official Support Channel.](https://wordpress.org/support/plugin/contact-form-7-honeypot) 
 
-### Why Should You Install Honeypot for Contact Form 7?
-
-The Honeypot for Contact Form 7 plugin is an excellent choice for website owners who want to block contact form spam without adding extra steps for users. 
-
-Following are some of the reasons why you should consider installing this plugin:
-
-**✅ No Annoying Captchas:** Instead of traditional CAPTCHA WordPress Contact Form 7 solutions, the honeypot spam protection field is invisible to users, providing a frictionless experience.
-
-**✅ Highly Effective:** The plugin’s honeypot field and submission time check effectively block spam submissions, keeping your inbox clean.
-
-**✅ Easy to Use:** Setting up the honeypot contact form plugin is extremely simple and doesn’t require any technical expertise.
-
-With **over 400,000** active installs, this anti spam form plugin has a proven track record of success in eliminating the Contact Form 7 spam problem.
-
-== Requirements for Honeypot for CF7 ==
-
-To use Honeypot for Contact Form 7, you’ll need the following:
-
-**☑️ Contact Form 7 Version 3.0+:** This plugin is compatible with [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) version 3.0 and above. However, we recommend using the latest CF7 version for better spam tracking.
-
-**☑️ WordPress:** The plugin is compatible with WordPress version 4.8 or higher. For better security and compatibility, make sure you’re running the latest version of WordPress.
-
-**☑️ Flamingo Plugin (Optional):** To track spam submissions and improve Contact Form 7 spam prevention, we recommend using [Flamingo](https://wordpress.org/plugins/flamingo/) alongside this honeypot plugin.
-
-== Support / Socials ==
-
-Support can be found [here](http://wordpress.org/support/plugin/contact-form-7-honeypot). Follow us on [Twitter](https://twitter.com/wpexpertsio) and on [Facebook](https://www.facebook.com/wpexpertsio/) for updates and news.
-
-== Privacy Policy ==
-
-We respect the user's data privacy, which is why the Honeypot for Contact Form 7 plugin does not track users, store personal information, or send data to external servers. The plugin does not use cookies and functions solely as an add-on for Contact Form 7.
-
-For additional privacy details, please refer to [Contact Form 7's privacy policy](https://contactform7.com/privacy-policy/#:~:text=We%20don't%20set%20a,are%20concerns%20about%20your%20privacy).
-
-== Download Legacy/Old Versions – If Needed ==
-
-We have designed the latest version of Honeypot for Contact Form 7 to work with the most recent versions of Contact Form 7 and WordPress. However, if you are using older versions, you can access previous versions of this honeypot plugin by clicking "Advanced View" on the plugin's page and scrolling to the bottom.
-
-Although it is possible to use older versions, we strongly recommend upgrading to the latest versions of WordPress, Contact Form 7, and the honeypot spam plugin to ensure the best protection against contact form spam.
 
 == Installation ==
 
-1. Install using the Wordpress "Add Plugin" feature -- just search for "Honeypot for Contact Form 7".
-1. Confirm that [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) is installed and activated. Then activate this plugin.
-1. Edit a form in Contact Form 7.
-1. Choose "Honeypot" from the CF7 tag generator. <em>Recommended: change the honeypot element's ID.</em>
-1. Insert the generated tag anywhere in your form. The added field uses inline CSS styles to hide the field from your visitors.
+**How to Get Started**
+
+1. Install the CF7 Apps plugin
+2. Go to the CF7 Apps dashboard
+3. Activate the addons you want (like hCaptcha or Honeypot)
+4. Configure and use the new feature immediately in your Contact Form 7 form.
+
+No code. No clutter. These are just all the essential add-ons that extend the capabilities of Contact Form 7.
+
+**Contribute or Report Issues**
+
+Do you have a feature request or bug to report? Visit the plugin’s support section on WordPress.org or contact us via the [official Support Channel.](https://wordpress.org/support/plugin/contact-form-7-honeypot/)
 
 = Altering the Honeypot Output HTML [ADVANCED] =
 While the basic settings should keep most people happy, we've added several filters for you to further customize the honeypot field. The three filters available are:
@@ -108,41 +87,45 @@ For examples of the above, please see this [recipe Gist](https://gist.github.com
 
 == Frequently Asked Questions == 
 
-= Will this module stop all my contact form spam? =
+=How do I add hCaptcha to Contact Form 7?=
+Activate the hCaptcha App inside CF7 Apps, enter your site keys, error messages, and save settings. That’s it. Now, you’ll see the hCaptcha tag in your Contact Form 7 form settings. 
 
-Probably not. But it should reduce it to a level whereby you don't require any additional spam challenges (CAPTCHA, math questions, etc.).
+=What is Contact Form 7?=
+Contact Form 7 is a long-standing WordPress plugin that lets you build and manage contact forms on your site. It supports multiple forms, customization, and various integrations—all without writing any code.
 
-= Are honeypots better than CAPTCHAs? =
+=Will CF7 Apps slow down my site?=
+No. Each addon works independently. You only activate the features you want. That keeps your website fast and your backend clean.
 
-This largely depends on the quality of the CAPTCHA. Unfortunately the more difficult a CAPTCHA is to break, the more unfriendly it is to the end user. This honeypot module was created because I don't like CAPTCHAs cluttering up my forms. My recommendation is to try this module first, and if you find that it doesn't stop enough spam, then employ more challenging anti-spam techniques.
+=How do I report a security issue?=
+If you discover a security vulnerability, please report it to us via the [official Support Channel.](https://wordpress.org/support/plugin/contact-form-7-honeypot) Our team will review, verify, and fix all security-related reports responsibly.
 
 = Can I use more than one Honeypot field in my forms? =
-You sure can, and many users have indicated this helps stop even more spam, as it increases your chances a bot will get caught in the trap. Just make sure each Honeypot field has a unique name.
+You sure can, and many users have indicated this helps stop even more spam, as it increases your chances that a bot will get caught in the trap. Just make sure each Honeypot field has a unique name.
 
-= Can I modify the HTML this plugin outputs? =
+= Can I modify the HTML that this plugin outputs? =
 
 Yep! See the **Installation** section for more details and [this Gist](https://gist.github.com/nocean/953b1362b63bd3ecf68c) for examples.
 
-= My form is not validating with a W3C validation tool =
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the CF7 Apps – [Honeypot and hCAPTCHA for Contact Form 7] plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/e58fd0b7-60aa-4ba8-aeeb-61889936d10c). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
-As of version 2.0, this shouldn't be the case any longer. However, if it is for some reason, there is a simple work around. See [here](https://wordpress.org/support/topic/w3c-validation-in-1-11-explanation-and-work-arounds/) for details.
+= Disclaimer =
 
-= Does this plugin work with Flamingo? =
-
-You bet! If the honeypot trap is triggered, an email isn't sent, but the form submission is added to the **spam** section of Flamingo so you can review what tripped things up.
-
-= Why do you have affiliate ads on your settings page? =
-
-I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely grateful to the numerous users that have donated to the plugin's development over the years, and while that's awesome, I don't think donations will ever come remotely close to covering the time and effort it takes to maintain and support a plugin that now has **nearly 1.5 million downloads** and **more than 400,000 active installs**.
-
+CF7 Apps is a third-party plugin and is not officially associated with or endorsed by Contact Form 7.
 
 == Screenshots ==
 
-1. Global Honeypot settings
-2. List of all the forms with Honepot Tag and other details.
-3. Honeypot CF7 Form Tag settings
+1. CF7 Apps Dashboard.
+2. Honeypot Settings.
+3. hCaptcha Settings.
+4. Contact form 7 hCaptcha Tag.
+5. CF7 Apps Tags.
 
 == Changelog ==
+= 3.0.0 - July 16, 2025 =
+* NEW - Introducing CF7 Apps, All new Dashboard.
+* NEW - Introducing hCaptcha.
+
 = 2.1.7 October, 13, 2024 =
 * Fixed compatibility issues with CF7 6.0
 * Tested compatibility with latest WordPress (Version 6.7)
@@ -157,7 +140,6 @@ I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely
 * Added new dependency feature.
 * Localized date settings in settings page
 * Added new datatable which shows a honeypot used in from or not.
-
 
 = 2.1.3 July 01, 2024 =
 * Tweak: Updated old URLs

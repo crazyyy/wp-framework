@@ -1,9 +1,4 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
- */
 
 namespace FakerPress\ThirdParty\Faker\ORM\Spot;
 
@@ -22,7 +17,7 @@ class Populator
     /**
      * Populator constructor.
      */
-    public function __construct(\FakerPress\ThirdParty\Faker\Generator $generator, Locator $locator = null)
+    public function __construct(\FakerPress\ThirdParty\Faker\Generator $generator, ?Locator $locator = null)
     {
         $this->generator = $generator;
         $this->locator = $locator;

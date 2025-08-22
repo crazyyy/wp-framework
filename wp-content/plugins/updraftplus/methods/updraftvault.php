@@ -396,28 +396,44 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 								<div class="vault-purchase-option-link"><b>{{price_5gb_package_label}}</b></div>
 								<div class="vault-purchase-option-or">{{start_trial_option_label}}</div>
 								<div class="vault-purchase-option-link"><b>{{discounted_price_5gb_package_label}}</b></div>
+								{{#if checkout_embed_5gb_attribute}}
 								<div class="vault-purchase-option-link"><a target="_blank" title="{{start_5gb_package_subscription_title}}" href="{{start_5gb_package_subscription_link}}" {{{checkout_embed_5gb_attribute}}}><button aria-label="{{start_trial_button_title}}" class="button-primary">{{start_trial_button_label}}</button></a></div>
+								{{else}}
+								<div class="vault-purchase-option-link"><a class="button-primary" target="_blank" title="{{start_5gb_package_subscription_title}}" href="{{start_5gb_package_subscription_link}}" aria-label="{{start_trial_button_title}}">{{start_trial_button_label}}</a></div>
+								{{/if}}
 							</div>
 							<div class="vault-purchase-option">
 								<div class="vault-purchase-option-size">15 GB</div>
 								<div class="vault-purchase-option-link"><b>{{price_15gb_package_label}}</b></div>
 								<div class="vault-purchase-option-or">{{discount_period_label}}</div>
 								<div class="vault-purchase-option-link"><b>{{discounted_price_15gb_package_label}}</b></div>
+								{{#if checkout_embed_15gb_attribute}}
 								<div class="vault-purchase-option-link"><a target="_blank" title="{{start_15gb_package_subscription_title}}" href="{{start_15gb_package_subscription_link}}" {{{checkout_embed_15gb_attribute}}}><button aria-label="{{start_15gb_subscription_button_title}}" class="button-primary">{{start_subscription_button_label}}</button></a></div>
+								{{else}}
+								<div class="vault-purchase-option-link"><a class="button-primary" target="_blank" title="{{start_15gb_package_subscription_title}}" href="{{start_15gb_package_subscription_link}}" aria-label="{{start_15gb_subscription_button_title}}">{{start_subscription_button_label}}</a></div>
+								{{/if}}
 							</div>
 							<div class="vault-purchase-option">
 								<div class="vault-purchase-option-size">50 GB</div>
 								<div class="vault-purchase-option-link"><b>{{price_50gb_package_label}}</b></div>
 								<div class="vault-purchase-option-or">{{discount_period_label}}</div>
 								<div class="vault-purchase-option-link"><b>{{discounted_price_50gb_package_label}}</b></div>
+								{{#if checkout_embed_50gb_attribute}}
 								<div class="vault-purchase-option-link"><a target="_blank" title="{{start_50gb_package_subscription_title}}" href="{{start_50gb_package_subscription_link}}" {{{checkout_embed_50gb_attribute}}}><button aria-label="{{start_50gb_subscription_button_title}}" class="button-primary">{{start_subscription_button_label}}</button></a></div>
+								{{else}}
+								<div class="vault-purchase-option-link"><a class="button-primary" target="_blank" title="{{start_50gb_package_subscription_title}}" href="{{start_50gb_package_subscription_link}}" aria-label="{{start_50gb_subscription_button_title}}">{{start_subscription_button_label}}</a></div>
+								{{/if}}
 							</div>
 							<div class="vault-purchase-option">
 								<div class="vault-purchase-option-size">250 GB</div>
 								<div class="vault-purchase-option-link"><b>{{price_250gb_package_label}}</b></div>
 								<div class="vault-purchase-option-or">{{discount_period_label}}</div>
 								<div class="vault-purchase-option-link"><b>{{discounted_price_250gb_package_label}}</b></div>
+								{{#if checkout_embed_250gb_attribute}}
 								<div class="vault-purchase-option-link"><a target="_blank" title="{{start_250gb_package_subscription_title}}" href="{{start_250gb_package_subscription_link}}" {{{checkout_embed_250gb_attribute}}}><button aria-label="{{start_250gb_subscription_button_title}}" class="button-primary">{{start_subscription_button_label}}</button></a></div>
+								{{else}}
+								<div class="vault-purchase-option-link"><a class="button-primary" target="_blank" title="{{start_250gb_package_subscription_title}}" href="{{start_250gb_package_subscription_link}}" aria-label="{{start_250gb_subscription_button_title}}">{{start_subscription_button_label}}</a></div>
+								{{/if}}
 							</div>
 						</div>
 						<p class="clear-left padding-top-20px">
@@ -539,10 +555,10 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 			'is_premium' => defined('UDADDONS2_DIR'),
 		);
 		if ($updraftplus_checkout_embed) {
-			$properties['checkout_embed_5gb_attribute'] = $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-5-gb') ? 'data-embed-checkout="'.esc_attr(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-5-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"' : '';
-			$properties['checkout_embed_15gb_attribute'] = $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-15-gb') ? 'data-embed-checkout="'.esc_attr(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-15-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"' : '';
-			$properties['checkout_embed_50gb_attribute'] = $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-50-gb') ? 'data-embed-checkout="'.esc_attr(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-50-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"' : '';
-			$properties['checkout_embed_250gb_attribute'] = $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-250-gb') ? 'data-embed-checkout="'.esc_attr(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-250-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"' : '';
+			if ($updraftplus_checkout_embed->get_product('updraftplus-vault-storage-5-gb')) $properties['checkout_embed_5gb_attribute'] = 'data-embed-checkout="'.esc_url(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-5-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"';
+			if ($updraftplus_checkout_embed->get_product('updraftplus-vault-storage-15-gb')) $properties['checkout_embed_15gb_attribute'] = 'data-embed-checkout="'.esc_url(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-15-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"';
+			if ($updraftplus_checkout_embed->get_product('updraftplus-vault-storage-50-gb')) $properties['checkout_embed_50gb_attribute'] = 'data-embed-checkout="'.esc_url(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-50-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"';
+			if ($updraftplus_checkout_embed->get_product('updraftplus-vault-storage-250-gb')) $properties['checkout_embed_250gb_attribute'] = 'data-embed-checkout="'.esc_url(apply_filters('updraftplus_com_link', $updraftplus_checkout_embed->get_product('updraftplus-vault-storage-250-gb', UpdraftPlus_Options::admin_page_url().'?page=updraftplus&tab=settings'))).'"';
 		}
 		$this->vault_in_config_print = false;
 		return wp_parse_args($properties, $this->get_persistent_variables_and_methods());

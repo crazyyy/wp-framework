@@ -25,7 +25,7 @@
 
 #wpadminbar .quicklinks .menupop ul li.wpo-cache-stats .ab-item span {
   line-height: 1.5;
-  font-size: 80%;
+  font-size: 10px;
   color: #989898;
 }
 
@@ -98,7 +98,6 @@
 
 .wp_optimize_blink_animation {
   margin: 8px;
-  font-size: 120%;
 }
 
 .wp_optimize_blink_animation img {
@@ -111,14 +110,25 @@
 }
 
 .wp_optimize_blink_animation-message_text--small {
-  font-size: 100%;
+  font-size: 18px;
 }
 
 .wp_optimize_blink_animation-message_text--medium {
-  font-size: 120%;
+  font-size: 20px;
   line-height: normal;
 }
 
 .wp_optimize_blink_animation-message_text--large {
-  font-size: 140%;
+  font-size: 22px;
+}
+
+@keyframes wpo_blink {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
 }

@@ -75,7 +75,7 @@ class WP_Optimize_Minify_Front_End {
 		}
 
 		if ($this->should_process_html()) {
-			add_action('template_redirect', array('WP_Optimize_Minify_Functions', 'html_compression_start'), 9);
+			add_action('template_redirect', array('WP_Optimize_Minify_Functions', 'html_compression_start'));
 		}
 
 		if ($this->should_use_loadCSS()) {
@@ -91,7 +91,7 @@ class WP_Optimize_Minify_Front_End {
 	 * @return bool
 	 */
 	private function is_cache_preload() {
-		return isset($_SERVER['HTTP_X_WP_OPTIMIZE_CACHE_PRELOAD']) && 0 === strcmp($_SERVER['HTTP_X_WP_OPTIMIZE_CACHE_PRELOAD'], 'Yes');
+		return isset($_SERVER['HTTP_X_WP_OPTIMIZE_CACHE_PRELOAD']) && 0 === strcmp(sanitize_text_field(wp_unslash($_SERVER['HTTP_X_WP_OPTIMIZE_CACHE_PRELOAD'])), 'Yes');
 	}
 
 	/**
@@ -403,7 +403,7 @@ class WP_Optimize_Minify_Front_End {
 
 		// should we exclude defer on the login page?
 		if ($this->options['exclude_defer_login']
-			&& false !== stripos($_SERVER["SCRIPT_NAME"], strrchr(wp_login_url(), '/'))
+			&& isset($_SERVER['SCRIPT_NAME']) && false !== stripos(sanitize_text_field(wp_unslash($_SERVER["SCRIPT_NAME"])), strrchr(wp_login_url(), '/'))
 		) {
 			return $tag;
 		}
@@ -2229,12 +2229,17 @@ class WP_Optimize_Minify_Front_End {
 		if (is_admin()) return false;
 
 		// get host with multisite support and query strings
-		$host = htmlentities($_SERVER['SERVER_NAME']);
+		$host = isset($_SERVER['SERVER_NAME']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_NAME'])) : '';
 		if (empty($host)) {
-			$host = isset($_SERVER['HTTP_HOST']) ? htmlentities($_SERVER['HTTP_HOST']) : '';
+			$host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
 		}
-		$request_query = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-		$request_uri = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+		$request_query = '';
+		$request_uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+		if (!empty($request_uri)) {
+			$request_query = wp_parse_url($request_uri, PHP_URL_QUERY);
+			$request_uri = wp_parse_url($request_uri, PHP_URL_PATH);
+		}
 		
 		// initialize headers
 		$headers = array();
@@ -2357,12 +2362,16 @@ class WP_Optimize_Minify_Front_End {
 		}
 
 		// get host with multisite support and query strings
-		$host = htmlentities($_SERVER['SERVER_NAME']);
+		$host = isset($_SERVER['SERVER_NAME']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_NAME'])) : '';
 		if (empty($host)) {
-			$host = isset($_SERVER['HTTP_HOST']) ? htmlentities($_SERVER['HTTP_HOST']) : '';
+			$host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
 		}
-		$request_query = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-		$request_uri = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$request_query = '';
+		$request_uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+		if (!empty($request_uri)) {
+			$request_query = wp_parse_url($request_uri, PHP_URL_QUERY);
+			$request_uri = wp_parse_url($request_uri, PHP_URL_PATH);
+		}
 		
 		// get cache path
 		$cache_path = WP_Optimize_Minify_Cache_Functions::cache_path();

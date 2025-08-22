@@ -5,6 +5,8 @@ if(!class_exists('WP_List_Table')){
 }
 
 class DBLogList extends WP_List_Table {
+    public $message;
+
     function __construct(){
         global $status, $page;
 
@@ -54,16 +56,29 @@ class DBLogList extends WP_List_Table {
 
     function get_bulk_actions() {
         $actions = array(
-            'delete_all_messages'    => esc_attr__('Delete All Messages', 'wp-reroute-email')
+            'delete_messages_1'    => esc_attr__('Delete Messages Older Than 1 Day', 'wp-reroute-email'),
+            'delete_messages_7'    => esc_attr__('Delete Messages Older Than 7 Days', 'wp-reroute-email'),
+            'delete_messages_15'    => esc_attr__('Delete Messages Older Than 15 Days', 'wp-reroute-email'),
+            'delete_messages_30'    => esc_attr__('Delete Messages Older Than 30 Days', 'wp-reroute-email'),
+            'delete_all_messages'    => esc_attr__('Delete All Messages', 'wp-reroute-email'),
         );
 
         return $actions;
     }
 
     function process_bulk_action() {
+        global $wpdb;
         if( 'delete_all_messages' === $this->current_action() ) {
-            global $wpdb;
             $wpdb->query("DELETE FROM {$wpdb->prefix}wpre_emails");
+            $this->message = esc_attr__('Messages have been deleted', 'wp-reroute-email');
+        }
+        else if(in_array($this->current_action(), ['delete_messages_1', 'delete_messages_7', 'delete_messages_15', 'delete_messages_30'])){
+            $days = (int)substr(strrchr($this->current_action(), '_'), 1);
+
+            if($days) {
+                $wpdb->query("DELETE FROM {$wpdb->prefix}wpre_emails WHERE  sent_on < NOW() - INTERVAL " . $days . " DAY");
+            }
+            $this->message = esc_attr__('Messages have been deleted', 'wp-reroute-email');
         }
     }
 

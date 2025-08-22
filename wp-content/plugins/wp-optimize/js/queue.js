@@ -146,9 +146,18 @@ function Updraft_Queue() {
 	 * @return {boolean}      Whether any queue object/element contains the ID.
 	 */
 	this.contains_id = function (id) {
-		return queue.some(function (ele) {
-			return ele.optimization_id === id;
+		return queue.slice(offset).some(function (ele) {
+			return ele && typeof ele === 'object' && ele.optimization_id === id;
 		});
+	}
+
+	/**
+	 * Returns a copy of all items currently in the queue.
+	 *
+	 * @returns {Array} - An array of all current items in the queue.
+	 */
+	this.get_all_items = function () {
+		return queue.slice(offset);
 	}
 
 }

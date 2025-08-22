@@ -1,22 +1,18 @@
 <?php
+
 /**
  * Class used to handle the special case of a parse error in a nested dependency
  * and bubble its nature up.
  *
  * @package FakerPress\ThirdParty\lucatume\DI52;
- *
- * @license GPL-3.0
- * Modified by Gustavo Bordoni on 22-April-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
-
 namespace FakerPress\ThirdParty\lucatume\DI52;
 
 use Throwable;
-
 /**
  * Class NestedParseError.
  *
- * @package FakerPress\ThirdParty\lucatume\DI52;
+ * @package \FakerPress\ThirdParty\lucatume\DI52;
  */
 class NestedParseError extends \Exception
 {
@@ -26,14 +22,12 @@ class NestedParseError extends \Exception
      * @var string
      */
     private $type;
-
     /**
      * The name of the entity being loaded.
      *
      * @var string
      */
     private $name;
-
     /**
      * NestedParseError constructor.
      *
@@ -43,13 +37,12 @@ class NestedParseError extends \Exception
      * @param string $type The type of the entity being loaded.
      * @param string $name The name of the entity being loaded.
      */
-    public function __construct($message = "", $code = 0, Throwable $previous = null, $type = '', $name = '')
+    public function __construct($message = "", $code = 0, ?Throwable $previous = null, $type = '', $name = '')
     {
         parent::__construct($message, $code, $previous);
         $this->type = $type;
         $this->name = $name;
     }
-
     /**
      * Returns the type of the entity being loaded.
      *
@@ -59,7 +52,6 @@ class NestedParseError extends \Exception
     {
         return $this->type;
     }
-
     /**
      * Returns the name of the entity being loaded.
      *

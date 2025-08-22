@@ -397,7 +397,7 @@ class UpdraftPlus {
 		// Close browser connection so that it can resume AJAX polling
 		header('Content-Length: '.(empty($txt) ? '0' : 4+strlen($txt)));
 		header('Connection: close');
-		header('Content-Encoding: application/json'); // Used to be 'none', but all inputs to this method are JSON-encoded
+		header('Content-Type: application/json'); // Used to be 'none', but all inputs to this method are JSON-encoded
 		if (function_exists('session_id') && session_id()) session_write_close();
 		echo "\r\n\r\n";
 		echo $txt; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- All inputs to this method are already JSON-encoded, and the output context is not HTML
@@ -3118,6 +3118,7 @@ class UpdraftPlus {
 	 * @return Boolean|Void - as for UpdraftPlus::boot_backup()
 	 */
 	public function backup_all($options = array()) {
+		if (!is_array($options)) $options = array();
 		$skip_cloud = empty($options['nocloud']) ? false : true;
 		return $this->boot_backup(1, 1, false, false, $skip_cloud ? 'none' : false, $options);
 	}
@@ -3205,7 +3206,7 @@ class UpdraftPlus {
 	 */
 	public function get_backup_job_semaphore_lock($job_nonce, $resumption_no) {
 
-		$semaphore = $job_nonce;
+		$semaphore = 'udp_backupjob_'.$job_nonce;
 		
 		if (!class_exists('Updraft_Semaphore_3_0')) updraft_try_include_file('includes/class-updraft-semaphore.php', 'include_once');
 
@@ -3614,7 +3615,7 @@ class UpdraftPlus {
 	public function backup_finish($do_cleanup, $allow_email, $force_abort = false) {
 
 		if (!empty($this->semaphore)) $this->semaphore->unlock();
-		if (!empty($this->backup_semaphore)) $this->backup_semaphore->release();
+		if (!empty($this->backup_semaphore)) $this->backup_semaphore->delete();
 
 		$this->restore_composer_autoloaders();
 		
@@ -3862,13 +3863,23 @@ class UpdraftPlus {
 			$rss = $this->get_updraftplus_rssfeed();
 			$this->log('Fetched RSS news feed; result is a: '.get_class($rss));
 			if (is_a($rss, 'SimplePie')) {
-				$feed .= __('Email reports created by UpdraftPlus (free edition) bring you the latest UpdraftPlus.com news', 'updraftplus')." - ".sprintf(__('read more at %s', 'updraftplus'), 'https://updraftplus.com/news/')."\r\n\r\n";
-				foreach ($rss->get_items(0, 6) as $item) {
+				$feed .= __('Email reports created by UpdraftPlus (free edition) bring you the latest TeamUpdraft.com news', 'updraftplus')." - ";
+				/* translators: %s: The TeamUpdraft news URL */
+				$feed .= sprintf(__('read more at %s', 'updraftplus'), 'https://teamupdraft.com/blog/')."\r\n\r\n";
+				$i = 0;
+				foreach ($rss->get_items(0, 20) as $item) {
+					$item_title = $item->get_title();
+					$item_date = $item->get_date('j F Y');
+
+					if ($i >= 6) break;
+					if (empty($item_title)) continue;
+					
 					$feed .= '* ';
-					$feed .= $item->get_title();
-					$feed .= " (".$item->get_date('j F Y').")";
+					$feed .= $item_title;
+					if (!empty($item_date)) $feed .= " (".$item_date.")";
 					// $feed .= ' - '.$item->get_permalink();
 					$feed .= "\r\n";
+					$i++;
 				}
 			}
 			$feed .= "\r\n\r\n";
@@ -5515,7 +5526,7 @@ class UpdraftPlus {
 		} elseif (count($tables_found) >= 0.90 * $php_max_input_vars) {
 			$php_max_input_vars_exceeded = true;
 			// If the amount of tables exceed 90% of the php max input vars then truncate the list to 50% of the php max input vars value
-			$tables_found = array_splice($tables_found, 0, $php_max_input_vars / 2);
+			$tables_found = array_splice($tables_found, 0, intval($php_max_input_vars / 2));
 		}
 
 		$php_max_input_vars_value = false == $php_max_input_vars ? 0 : $php_max_input_vars;
@@ -5541,15 +5552,15 @@ class UpdraftPlus {
 
 			$select_restore_tables .= '<div class="updraftplus_restore_tables_options_container" style="display:none;">';
 
+			$select_table_button = '<p><a href="#" class="updraft-select-all-tables">'.__('Select All', 'updraftplus').'</a> | <a href="#" class="updraft-deselect-all-tables">'.__('Deselect All', 'updraftplus').'</a></p>';
+			$select_restore_tables .= $select_table_button;
+
 			if ($db_scan_timed_out || $php_max_input_vars_exceeded) {
 				if ($db_scan_timed_out) $all_other_table_title = __('The database scan was taking too long and consequently the list of all tables in the database could not be completed.', 'updraftplus').' '.__('This option will ensure all tables not found will be backed up.', 'updraftplus');
 				if ($php_max_input_vars_exceeded) $all_other_table_title = __('The amount of database tables scanned is near or over the php_max_input_vars value so some tables maybe truncated.', 'updraftplus').' '.__('This option will ensure all tables not found will be backed up.', 'updraftplus');
-				$select_restore_tables .= '<input class="updraft_restore_tables_options" id="updraft_restore_table_udp_all_other_tables" checked="checked" type="checkbox" name="updraft_restore_tables_options[]" value="udp_all_other_tables"> ';
-				$select_restore_tables .= '<label for="updraft_restore_table_udp_all_other_tables"  title="'.$all_other_table_title.'">'.__('Include all tables not listed below', 'updraftplus').'</label><br>';
+				$select_restore_tables .= '<div style="margin-bottom:0.7rem;margin-top:0.7rem;"><input class="updraft_restore_tables_options" id="updraft_restore_table_udp_all_other_tables" checked="checked" type="checkbox" name="updraft_restore_tables_options[]" value="udp_all_other_tables"> ';
+				$select_restore_tables .= '<label for="updraft_restore_table_udp_all_other_tables"  title="'.$all_other_table_title.'">'.__('Include all tables not listed below', 'updraftplus').'</label></div>';
 			}
-
-			$select_table_button = '<p><a href="#" class="updraft-select-all-tables">'.__('Select All', 'updraftplus').'</a> | <a href="#" class="updraft-deselect-all-tables">'.__('Deselect All', 'updraftplus').'</a></p>';
-			$select_restore_tables .= $select_table_button;
 
 			foreach ($tables_found as $table) {
 				$checked = $skip_composite_tables && UpdraftPlus_Database_Utility::table_has_composite_private_key($table) ? '' : 'checked="checked"';
@@ -5909,22 +5920,22 @@ class UpdraftPlus {
 				return apply_filters('updraftplus_com_mothership', 'https://updraftplus.com/plugin-info');
 				break;
 			case 'shop_premium':
-				return apply_filters('updraftplus_com_shop_premium', 'https://teamupdraft.com/updraftplus/pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-premium&utm_creative_format=text');
+				return apply_filters('updraftplus_com_shop_premium', 'https://teamupdraft.com/updraftplus/pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-premium&utm_creative_format=text#pricing-block');
 				break;
 			case 'shop_vault_5':
-				return apply_filters('updraftplus_com_shop_vault_5', 'https://teamupdraft.com/cart/?add-to-cart=1431&variation_id=1441?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=$1-trial&utm_creative_format=button');
+				return apply_filters('updraftplus_com_shop_vault_5', 'https://teamupdraft.com/cart/?add-to-cart=1431&variation_id=1441?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-vault-storage-$1-trial&utm_creative_format=button');
 				break;
 			case 'shop_vault_15':
-				return apply_filters('updraftplus_com_shop_vault_15', 'https://teamupdraft.com/updraftplus/updraftvault/#updraftvault-pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=15GB&utm_creative_format=button');
+				return apply_filters('updraftplus_com_shop_vault_15', 'https://teamupdraft.com/cart/?add-to-cart=1434&variation_id=1441?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-vault-storage-15-gb&utm_creative_format=button');
 				break;
 			case 'shop_vault_50':
-				return apply_filters('updraftplus_com_shop_vault_50', 'https://teamupdraft.com/updraftplus/updraftvault/#updraftvault-pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=50GB&utm_creative_format=button');
+				return apply_filters('updraftplus_com_shop_vault_50', 'https://teamupdraft.com/cart/?add-to-cart=1440&variation_id=1441?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-vault-storage-50-gb&utm_creative_format=button');
 				break;
 			case 'shop_vault_250':
-				return apply_filters('updraftplus_com_shop_vault_250', 'https://teamupdraft.com/updraftplus/updraftvault/#updraftvault-pricing?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=250GB&utm_creative_format=button');
+				return apply_filters('updraftplus_com_shop_vault_250', 'https://teamupdraft.com/cart/?add-to-cart=1437&variation_id=1441?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=updraftplus-vault-storage-250-gb&utm_creative_format=button');
 				break;
 			case 'anon_backups':
-				return apply_filters('updraftplus_com_anon_backups', 'https://updraftplus.com/upcoming-updraftplus-feature-clone-data-anonymisation/');
+				return apply_filters('updraftplus_com_anon_backups', 'https://teamupdraft.com/blog/upcoming-updraftplus-feature-anonymise-data-before-cloning-your-site/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=unknown&utm_creative_format=unknown');
 				break;
 			case 'clone_packages':
 				return apply_filters('updraftplus_com_clone_packages', 'https://updraftplus.com/faqs/what-is-the-largest-site-that-i-can-clone-with-updraftclone/');
@@ -5958,6 +5969,9 @@ class UpdraftPlus {
 				break;
 			case 'premium_email':
 				return apply_filters('updraftplus_premium_email', 'https://teamupdraft.com/updraftplus/features/advanced-wordpress-backup-reports?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=for-more-email-options&utm_creative_format=notice');
+				break;
+			case 'buy_clone_tokens':
+				return apply_filters('updraftplus_buy_clone_tokens', 'https://teamupdraft.com/updraftplus/updraftclone/?utm_source=udp-plugin&utm_medium=referral&utm_campaign=paac&utm_content=to-clone-your-site&utm_creative_format=text#pricing-block');
 				break;
 			default:
 				return 'URL not found ('.$which_page.')';

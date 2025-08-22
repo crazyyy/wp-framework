@@ -28,7 +28,7 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 	<div>
 		<h2><?php esc_html_e('Login or register for UpdraftCentral Cloud', 'updraftplus');?></h2>
 		<div class="updraftcentral-subheading">
-		<?php esc_html_e('Add this website to your UpdraftCentral Cloud dashboard at updraftplus.com.', 'updraftplus');?>
+		<?php esc_html_e('Add this website to your UpdraftCentral Cloud dashboard at teamupdraft.com.', 'updraftplus');?>
 		<ul style="list-style: disc inside;">
 			<li><?php esc_html_e('If you already have an updraftplus.com account, then enter the details below.', 'updraftplus');?></li>
 			<li><?php esc_html_e('If not, then choose your details and a new account will be registered.', 'updraftplus');?></li>
@@ -65,7 +65,10 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 				<td class="updraftcentral_cloud_form_buttons">
 					<span class="form_hidden_fields"></span>
 					<div class="non_tfa_fields updraftcentral-data-consent">
-						<input type="checkbox" name="i_consent" value="1"> <label><?php echo sprintf(esc_html__('I consent to %s', 'updraftplus'), '<a href="https://updraftplus.com/data-protection-and-privacy-centre/" target="_blank">'.esc_html__('UpdraftPlus.Com account terms and policies', 'updraftplus').'</a>');?></label>
+						<input type="checkbox" name="i_consent" value="1">
+						<label>
+							<a href="https://teamupdraft.com/privacy/" target="_blank"><?php echo esc_html__('I consent to teamupdraft.com account terms and policies', 'updraftplus'); ?></a>
+						</label>
 					</div>
 					<button id="updraftcentral_cloud_login" class="btn btn-primary button-primary"><?php esc_html_e('Connect to UpdraftCentral Cloud', 'updraftplus');?></button>
 					<span class="updraftplus_spinner spinner"><?php esc_html_e('Processing', 'updraftplus');?>...</span>

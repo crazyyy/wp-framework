@@ -27,6 +27,7 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 			if (file_exists($fullpath) && filesize($fullpath) > UPDRAFTPLUS_WARN_EMAIL_SIZE) {
 				$size_in_mb_of_big_file = round(filesize($fullpath)/1048576, 1);
 				$toobig_hash = md5($file);
+				/* translators: %s: Backup file size in MB */
 				$this->log($file.': '.sprintf(__('This backup archive is %s MB in size - the attempt to send this via email is likely to fail (few email servers allow attachments of this size).', 'updraftplus'), $size_in_mb_of_big_file).' '.__('If so, you should switch to using a different remote storage method.', 'updraftplus'), 'warning', 'toobigforemail_'.$toobig_hash);
 			}
 
@@ -54,6 +55,7 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 								add_filter('wp_mail_from_name', array($updraftplus, 'get_email_from_name_header'), 9);
 							}
 							add_action('wp_mail_failed', array($updraftplus, 'log_email_delivery_failure'));
+							/* translators: %s: Site URL and description type */
 							$sent = wp_mail(trim($sendmail_addr), $subject, sprintf(__("Backup is of: %s.", 'updraftplus'), site_url().' ('.$descrip_type.')'), $headers, array($fullpath));
 							remove_action('wp_mail_failed', array($updraftplus, 'log_email_delivery_failure'));
 							if ($use_wp_from_name_filter) remove_filter('wp_mail_from_name', array($this, 'get_email_from_name_header'), 9);
@@ -107,6 +109,7 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 			<td><?php
 
 				$used = apply_filters('updraftplus_email_whichaddresses',
+					/* translators: %s: Admin email address */
 					sprintf(__("Your site's admin email address (%s) will be used.", 'updraftplus'), get_bloginfo('admin_email').' - <a href="'.esc_attr(admin_url('options-general.php')).'">'.__("configure it here", 'updraftplus').'</a>').
 					' <a href="'.$updraftplus->get_url('premium_email').'" target="_blank">'.__('For more options, use Premium', 'updraftplus').'</a>'
 				);
@@ -118,6 +121,7 @@ class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 					)
 				);
 
+				/* translators: %s: Approximate email size limit in MB */
 				echo wp_kses($used.' '.sprintf(__('Be aware that mail servers tend to have size limits; typically around %s MB; backups larger than any limits will likely not arrive.', 'updraftplus'), '10-20'), $allowed_html);
 				?>
 			</td>

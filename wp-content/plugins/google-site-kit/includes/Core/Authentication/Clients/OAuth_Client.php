@@ -18,10 +18,9 @@ use Google\Site_Kit\Core\Authentication\Google_Proxy;
 use Google\Site_Kit\Core\Authentication\Owner_ID;
 use Google\Site_Kit\Core\Authentication\Profile;
 use Google\Site_Kit\Core\Authentication\Token;
-use Google\Site_Kit\Core\Dashboard_Sharing\Activity_Metrics\Activity_Metrics;
-use Google\Site_Kit\Core\Dashboard_Sharing\Activity_Metrics\Active_Consumers;
 use Google\Site_Kit\Core\Permissions\Permissions;
 use Google\Site_Kit\Core\Storage\Options;
+use Google\Site_Kit\Core\Storage\Transients;
 use Google\Site_Kit\Core\Storage\User_Options;
 use Google\Site_Kit\Core\Util\Scopes;
 use Google\Site_Kit\Core\Util\URL;
@@ -52,20 +51,12 @@ final class OAuth_Client extends OAuth_Client_Base {
 	private $owner_id;
 
 	/**
-	 * Activity_Metrics instance.
+	 * Transients instance.
 	 *
-	 * @since 1.87.0
-	 * @var Activity_Metrics
+	 * @since 1.150.0
+	 * @var Transients
 	 */
-	private $activity_metrics;
-
-	/**
-	 * Active_Consumers instance.
-	 *
-	 * @since 1.87.0
-	 * @var Active_Consumers
-	 */
-	private $active_consumers;
+	private $transients;
 
 	/**
 	 * Constructor.
@@ -79,6 +70,7 @@ final class OAuth_Client extends OAuth_Client_Base {
 	 * @param Google_Proxy $google_proxy Optional. Google proxy instance. Default is a new instance.
 	 * @param Profile      $profile      Optional. Profile instance. Default is a new instance.
 	 * @param Token        $token        Optional. Token instance. Default is a new instance.
+	 * @param Transients   $transients   Optional. Transients instance. Default is a new instance.
 	 */
 	public function __construct(
 		Context $context,
@@ -87,7 +79,8 @@ final class OAuth_Client extends OAuth_Client_Base {
 		Credentials $credentials = null,
 		Google_Proxy $google_proxy = null,
 		Profile $profile = null,
-		Token $token = null
+		Token $token = null,
+		Transients $transients = null
 	) {
 		parent::__construct(
 			$context,
@@ -99,9 +92,8 @@ final class OAuth_Client extends OAuth_Client_Base {
 			$token
 		);
 
-		$this->owner_id         = new Owner_ID( $this->options );
-		$this->activity_metrics = new Activity_Metrics( $this->context, $this->user_options );
-		$this->active_consumers = new Active_Consumers( $this->user_options );
+		$this->owner_id   = new Owner_ID( $this->options );
+		$this->transients = $transients ?: new Transients( $this->context );
 	}
 
 	/**
@@ -121,10 +113,8 @@ final class OAuth_Client extends OAuth_Client_Base {
 			return;
 		}
 
-		$active_consumers = $this->activity_metrics->get_for_refresh_token();
-
 		try {
-			$token_response = $this->get_client()->fetchAccessTokenWithRefreshToken( $token['refresh_token'], $active_consumers );
+			$token_response = $this->get_client()->fetchAccessTokenWithRefreshToken( $token['refresh_token'] );
 		} catch ( \Exception $e ) {
 			$this->handle_fetch_token_exception( $e );
 			return;
@@ -135,7 +125,6 @@ final class OAuth_Client extends OAuth_Client_Base {
 			return;
 		}
 
-		$this->active_consumers->delete();
 		$this->set_token( $token_response );
 	}
 
@@ -404,6 +393,26 @@ final class OAuth_Client extends OAuth_Client_Base {
 	public function authorize_user() {
 		$code       = htmlspecialchars( $this->context->input()->filter( INPUT_GET, 'code' ) ?? '' );
 		$error_code = htmlspecialchars( $this->context->input()->filter( INPUT_GET, 'error' ) ?? '' );
+
+		// If we have a code, check if there's a stored redirect URL to prevent duplicate setups.
+		// The OAuth2 spec requires that an authorization code can only be used once.
+		// If `fetchAccessTokenWithAuthCode()` is called more than once with the same code, Google will return an error.
+		// This may happen when users click the final setup button multiple times or
+		// if there are concurrent requests with the same authorization code.
+		// By storing the successful redirect URL in transients and reusing it for duplicate
+		// requests with the same code, we ensure a smooth setup experience even when
+		// the same code is encountered multiple times.
+		if ( ! empty( $code ) ) {
+			$code_hash       = md5( $code );
+			$stored_redirect = $this->transients->get( $code_hash );
+
+			// If we have a stored redirect URL and valid credentials, redirect to prevent duplicate setup.
+			if ( ! empty( $stored_redirect ) && $this->credentials->has() ) {
+				wp_safe_redirect( $stored_redirect );
+				exit();
+			}
+		}
+
 		// If the OAuth redirects with an error code, handle it.
 		if ( ! empty( $error_code ) ) {
 			$this->user_options->set( self::OPTION_ERROR_CODE, $error_code );
@@ -517,6 +526,15 @@ final class OAuth_Client extends OAuth_Client_Base {
 		} else {
 			// No redirect_url is set, use default page.
 			$redirect_url = $this->context->admin_url( 'splash', array( 'notification' => 'authentication_success' ) );
+		}
+
+		// Store the redirect URL in transients using the authorization code hash as the key.
+		// This prevents duplicate setup attempts if the user clicks the setup CTA button multiple times,
+		// as subsequent requests with the same code will be redirected to the stored URL.
+		// Must be done before the redirect to ensure the URL is available for any duplicate requests.
+		if ( ! empty( $code ) && ! empty( $redirect_url ) ) {
+			$code_hash = md5( $code );
+			$this->transients->set( $code_hash, $redirect_url, 5 * MINUTE_IN_SECONDS );
 		}
 
 		wp_safe_redirect( $redirect_url );
@@ -646,16 +664,5 @@ final class OAuth_Client extends OAuth_Client_Base {
 		return current_user_can( Permissions::VIEW_DASHBOARD )
 			? $this->context->admin_url( 'dashboard' )
 			: $this->context->admin_url( 'splash' );
-	}
-
-	/**
-	 * Adds a user to the active consumers list.
-	 *
-	 * @since 1.87.0
-	 *
-	 * @param WP_User $user User object.
-	 */
-	public function add_active_consumer( WP_User $user ) {
-		$this->active_consumers->add( $user->ID, $user->roles );
 	}
 }
