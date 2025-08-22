@@ -28,17 +28,10 @@
 	 * @access private
 	 */
 	if (!defined('ABSPATH')) {
-		exit;//Exit if accessed directly
+	exit;//Exit if accessed directly
 	}
 
 class AIOWPSecurity_Ajax_Data_Table {
-
-	/**
-	 * Set a message passed to the front end.
-	 *
-	 * @var string
-	 */
-	private $aios_list_message;
 
 	/**
 	 * The current list of items.
@@ -195,8 +188,6 @@ class AIOWPSecurity_Ajax_Data_Table {
 				'excerpt' => __('Excerpt view', 'all-in-one-wp-security-and-firewall'),
 			);
 		}
-
-		add_action('set_aios_list_message', array($this, 'set_aios_list_message'));
 	}
 
 	/**
@@ -1376,14 +1367,6 @@ class AIOWPSecurity_Ajax_Data_Table {
 		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details', 'all-in-one-wp-security-and-firewall') . '</span></button>' : '';
 	}
 
-	/**
-	 * Set the message to be passed to the front end.
-	 *
-	 * @param string $message
-	 */
-	public function set_aios_list_message($message) {
-		$this->aios_list_message = $message;
-	}
 
 	/**
 	 * Handle an incoming ajax request (called from admin-ajax.php)
@@ -1391,7 +1374,6 @@ class AIOWPSecurity_Ajax_Data_Table {
 	 * @since 3.1.0
 	 */
 	public function ajax_response() {
-		global $aios_list_message;
 
 		$this->prepare_items(false);
 
@@ -1436,10 +1418,11 @@ class AIOWPSecurity_Ajax_Data_Table {
 			$response['total_pages_i18n'] = number_format_i18n($this->_pagination_args['total_pages']);
 		}
 
-		do_action('set_aios_list_message', $aios_list_message);
-
-		if (isset($this->aios_list_message)) {
-			$response['aios_list_message'] = $this->aios_list_message;
+		// Get the message from the helper
+		$list_message = AIOS_Helper::get_message('aios_list_message');
+		if ($list_message) {
+			$response['message'] = $list_message['message'];
+			$response['status'] = $list_message['type'];
 		}
 
 		die(wp_json_encode($response));

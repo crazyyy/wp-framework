@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 if ( cmplz_admin_logged_in() ) {
 	require_once( 'admin/integrations.php' );
 }
-require_once( trailingslashit(cmplz_path) . 'integrations/forms.php' );
+require_once( trailingslashit(CMPLZ_PATH) . 'integrations/forms.php' );
 
 global $cmplz_integrations_list;
 $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
@@ -236,7 +236,7 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 	),
 
 	'clarity'               => array(
-		'constant_or_function' => 'clarity_add_origins',
+		'constant_or_function' => 'clarity_register_settings',
 		'label'                => 'Microsoft Clarity',
 	),
 
@@ -605,7 +605,7 @@ foreach ( $cmplz_integrations_list as $plugin => $details ) {
 	}
 
 	$early_load = $details['early_load'];
-	$file       = apply_filters( 'cmplz_early_load_path', cmplz_path . "integrations/plugins/$early_load", $details );
+	$file       = apply_filters( 'cmplz_early_load_path', CMPLZ_PATH . "integrations/plugins/$early_load", $details );
 
 	if ( file_exists( $file ) ) {
 		require_once( $file );
@@ -659,7 +659,7 @@ function cmplz_integrations() {
 	foreach ( $cmplz_integrations_list as $plugin => $details ) {
 		if ( cmplz_integration_plugin_is_enabled( $plugin ) ) {
 			$actual_integrations_count++;
-			$file = apply_filters( 'cmplz_integration_path', cmplz_path . "integrations/plugins/$plugin.php", $plugin );
+			$file = apply_filters( 'cmplz_integration_path', CMPLZ_PATH . "integrations/plugins/$plugin.php", $plugin );
 			if ( file_exists( $file ) ) {
 				require_once( $file );
 			}
@@ -680,7 +680,7 @@ function cmplz_integrations() {
 	$services = array_keys( $services );
 	foreach ( $services as $service ) {
 		if ( cmplz_uses_thirdparty( $service ) ) {
-			if ( file_exists( cmplz_path . "integrations/services/$service.php" ) ) {
+			if ( file_exists( CMPLZ_PATH . "integrations/services/$service.php" ) ) {
 				require_once( "services/$service.php" );
 			}
 		}
@@ -690,7 +690,7 @@ function cmplz_integrations() {
 	$services = array_keys( $services );
 	foreach ( $services as $service ) {
 		if ( cmplz_uses_thirdparty( $service ) ) {
-			if ( file_exists( cmplz_path . "integrations/services/$service.php" ) ) {
+			if ( file_exists( CMPLZ_PATH . "integrations/services/$service.php" ) ) {
 				require_once( "services/$service.php" );
 			}
 		}

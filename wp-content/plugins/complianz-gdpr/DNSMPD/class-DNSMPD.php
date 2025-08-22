@@ -42,8 +42,8 @@ if ( ! class_exists( "cmplz_DNSMPD" ) ) {
 			if ( !cmplz_has_region('us') && !cmplz_datarequests_active() ) {
 				return;
 			}
-			$v = filemtime(cmplz_path . "DNSMPD/script.min.js");
-			wp_enqueue_script( 'cmplz-dnsmpd', cmplz_url . "DNSMPD/script.min.js", array( 'jquery' ), $v, true );
+			$v = filemtime(CMPLZ_PATH . "DNSMPD/script.min.js");
+			wp_enqueue_script( 'cmplz-dnsmpd', CMPLZ_URL . "DNSMPD/script.min.js", array( 'jquery' ), $v, true );
 			wp_localize_script(
 					'cmplz-dnsmpd',
 					'cmplz_datarequests',

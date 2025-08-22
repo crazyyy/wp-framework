@@ -785,7 +785,7 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
 				return;
 			}
 
-			wp_register_style( 'cmplz-wizard', cmplz_url . "assets/css/wizard$minified.css", false, cmplz_version );
+			wp_register_style( 'cmplz-wizard', CMPLZ_URL . "assets/css/wizard$minified.css", false, CMPLZ_VERSION );
 			wp_enqueue_style( 'cmplz-wizard' );
 		}
 

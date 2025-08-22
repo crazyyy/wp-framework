@@ -37,7 +37,7 @@ define( 'AI1WM_DEBUG', false );
 // ==================
 // = Plugin Version =
 // ==================
-define( 'AI1WM_VERSION', '7.91' );
+define( 'AI1WM_VERSION', '7.97' );
 
 // ===============
 // = Plugin Name =
@@ -1280,21 +1280,21 @@ if ( defined( 'AI1WMKE_PLUGIN_BASENAME' ) ) {
 // = Pro Plugin Title =
 // ====================
 if ( ! defined( 'AI1WMKE_PLUGIN_TITLE' ) ) {
-	define( 'AI1WMKE_PLUGIN_TITLE', 'Pro Plugin' );
+	define( 'AI1WMKE_PLUGIN_TITLE', 'All-in-One WP Migration Pro' );
 }
 
 // ====================
 // = Pro Plugin About =
 // ====================
 if ( ! defined( 'AI1WMKE_PLUGIN_ABOUT' ) ) {
-	define( 'AI1WMKE_PLUGIN_ABOUT', 'https://plugin-updates.wp-migration.com/pro-plugin.json' );
+	define( 'AI1WMKE_PLUGIN_ABOUT', 'https://plugin-updates.wp-migration.com/all-in-one-wp-migration-pro.json' );
 }
 
 // ====================
 // = Pro Plugin Check =
 // ====================
 if ( ! defined( 'AI1WMKE_PLUGIN_CHECK' ) ) {
-	define( 'AI1WMKE_PLUGIN_CHECK', 'https://redirect.wp-migration.com/v1/check/pro-plugin' );
+	define( 'AI1WMKE_PLUGIN_CHECK', 'https://redirect.wp-migration.com/v1/check/all-in-one-wp-migration-pro' );
 }
 
 // ==================

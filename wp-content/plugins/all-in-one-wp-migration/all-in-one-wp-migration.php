@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: All-in-One WP Migration
+ * Plugin Name: All-in-One WP Migration and Backup
  * Plugin URI: https://servmask.com/
  * Description: All-in-One WP Migration makes moving your entire WordPress site simple. Export or import your database, media, plugins, and themes with just a few clicks.
  * Author: ServMask
  * Author URI: https://servmask.com/
- * Version: 7.91
+ * Version: 7.97
  * Text Domain: all-in-one-wp-migration
  * Domain Path: /languages
  * Network: True
@@ -40,21 +40,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Kangaroos cannot jump here' );
 }
 
-// Check SSL Mode
+// Check SSL mode
 if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && ( $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) ) {
 	$_SERVER['HTTPS'] = 'on';
 }
 
-// Plugin Basename
+// Plugin basename
 define( 'AI1WM_PLUGIN_BASENAME', basename( dirname( __FILE__ ) ) . '/' . basename( __FILE__ ) );
 
-// Plugin Path
+// Plugin path
 define( 'AI1WM_PATH', dirname( __FILE__ ) );
 
 // Plugin URL
 define( 'AI1WM_URL', plugins_url( '', AI1WM_PLUGIN_BASENAME ) );
 
-// Plugin Storage URL
+// Plugin storage URL
 define( 'AI1WM_STORAGE_URL', plugins_url( 'storage', AI1WM_PLUGIN_BASENAME ) );
 
 // Include constants
@@ -72,7 +72,5 @@ require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'exceptions.php';
 // Include loader
 require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'loader.php';
 
-// =========================================================================
-// = All app initialization is done in Ai1wm_Main_Controller __constructor =
-// =========================================================================
+// Plugin initialization
 $main_controller = new Ai1wm_Main_Controller();

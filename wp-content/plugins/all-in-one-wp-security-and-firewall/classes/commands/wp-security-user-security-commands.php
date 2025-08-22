@@ -338,6 +338,25 @@ trait AIOWPSecurity_User_Security_Commands_Trait {
 	}
 
 	/**
+	 * Performs the action to save the HIBP settings.
+	 *
+	 * @param array $data An array containing the data to be saved.
+	 *
+	 * @return array Returns an array containing the status of the operation ('success' or 'error'),
+	 *               a message indicating the result of the operation,
+	 *               and a badge representing the updated feature details.
+	 */
+	public function perform_save_hibp_settings($data) {
+		global $aio_wp_security;
+
+		$aio_wp_security->configs->set_value('aiowps_hibp_user_profile_update', isset($data['aiowps_hibp_user_profile_update']) ? '1' : '', true);
+		$aio_wp_security->configs->set_value('aiowps_http_password_reset', isset($data['aiowps_http_password_reset']) ? '1' : '', true);
+		$aio_wp_security->configs->save_config();
+
+		return $this->handle_response(true, false, array('badges' => array('hibp')));
+	}
+
+	/**
 	 * Performs the action to disable application password.
 	 *
 	 * @param array $data An array containing the data to be saved.
@@ -435,6 +454,7 @@ trait AIOWPSecurity_User_Security_Commands_Trait {
 				);
 			}
 			$user_id = strip_tags($data['logged_in_id']);
+			$error = '';
 
 			if (!is_numeric($user_id)) {
 				$error = __("Invalid user ID provided.", 'all-in-one-wp-security-and-firewall');

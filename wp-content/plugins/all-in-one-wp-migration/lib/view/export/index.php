@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="ai1wm-holder">
 				<h1>
 					<i class="ai1wm-icon-export"></i>
-					<?php _e( 'Export Site', AI1WM_PLUGIN_NAME ); ?>
+					<?php esc_html_e( 'Export Site', 'all-in-one-wp-migration' ); ?>
 				</h1>
 
 				<?php if ( is_readable( AI1WM_STORAGE_PATH ) && is_writable( AI1WM_STORAGE_PATH ) ) : ?>

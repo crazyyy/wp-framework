@@ -26,6 +26,7 @@ class AIOWPSecurity_Utility_UI {
 		}
 		?>
 			<label class="aiowps_switch">
+                <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $other_attributes is already escaped ?>
 				<input type="checkbox" id="<?php echo esc_attr($option);?>" name="<?php echo esc_attr($option);?>" <?php if ($is_active) echo ' checked="checked"'; ?> <?php echo $other_attributes;?> value="1">
 				<span class="slider round"></span>
 			</label>
@@ -68,7 +69,7 @@ class AIOWPSecurity_Utility_UI {
 	 */
 	public static function format_data_as_table($data) {
 		$table_html = '<table class="aios-data-table">';
-		
+
 		// Check if an array is multidimensional
 		$is_multi_dimensional = function($array) {
 			if (!is_array($array)) {
@@ -90,7 +91,7 @@ class AIOWPSecurity_Utility_UI {
 				$table_html .= '<th>' . esc_html($header) . '</th>';
 			}
 			$table_html .= '</tr>';
-			
+
 			// Recursively format the multidimensional array
 			$table_html .= self::format_data_recursive($data);
 		} else {

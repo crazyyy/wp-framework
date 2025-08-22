@@ -47,6 +47,7 @@ class AIOS_Abstracted_Ids {
 			'automated-database-backup',
 			'ip-retrieval-settings',
 			'load-firewall-resources-failed',
+			'end-of-support-php-56',
 		);
 	}
 

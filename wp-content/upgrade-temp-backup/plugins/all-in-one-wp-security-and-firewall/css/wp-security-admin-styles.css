@@ -1,0 +1,1214 @@
+.aio_bold {
+	font-weight: bold;
+}
+
+.aio_half_width {
+	width: 50%;
+}
+
+.aio_one_third_width {
+	width: 33%;
+}
+
+.aio_width_80 {
+	width: 80%;
+}
+
+.aio_max_500 {
+	max-width: 500px;
+}
+
+.aio_spacer_15 {
+	margin-top: 15px;
+}
+
+.aio_spacer_10_tb {
+	margin: 10px 0;
+}
+
+.aio_spacer_10_tblr {
+	margin: 10px;
+}
+
+.aio_clear_float {
+	clear: both;
+}
+
+.aio_float_left {
+	float: left;
+}
+
+.aio_padding_10 {
+	padding: 10px !important;
+}
+
+.aio_section_separator_1 {
+	border-bottom: 1px solid #DEDEDE;
+	height: 10px;
+}
+
+.aiowps_admin_ul_grp1 {
+	list-style: circle;
+	padding: 0 0 0 30px;
+}
+
+.aio_grey_box {
+	margin: 10px 0 15px 0;
+	background-color: #ECECEC;
+	border: 1px solid #CFCFCF;
+	padding: 0 0 0 1em;
+}
+
+.aio_yellow_box {
+	margin: 10px 0 15px 0;
+	background-color: #FFFFE0;
+	border-color: #E6DB55;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 0 0 1em;
+}
+
+.aio_blue_box {
+	margin: 10px 0 15px 0;
+	background-color: #F0F9FF;
+	border-color: #16B;
+	color: #16B;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 0 0 1em;
+	line-height: 20px;
+	overflow-wrap: break-word;
+}
+
+.aio_green_box {
+	margin: 10px 0 15px 0;
+	background-color: #CCF4D6;
+	border-color: #059B53;
+	color: #043B14;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 1em;
+}
+
+.aio_red_box {
+	margin: 10px 0 15px 0;
+	background-color: #FFEBE8;
+	border-color: #C00;
+	color: #333;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 1em;
+}
+
+.aio_orange_box {
+	margin: 10px 0 15px 0;
+	background-color: #FFB900;
+	border-color: #D64500;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 1em;
+}
+
+.aio_success_with_icon {
+	background-image: url("../images/success.png");
+	background-repeat: no-repeat;
+	color: #529901;
+	padding-left: 20px;
+	font-size: 14px;
+}
+
+.aio_error_with_icon {
+	color: #F00;
+	background-image: url("../images/error.png");
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	font-size: 14px;
+}
+
+.aio_info_with_icon {
+	background-image: url("../images/info-icon.png");
+	background-repeat: no-repeat;
+	color: #16B;
+	padding-left: 20px;
+	font-size: 14px;
+}
+
+.file_permission_table {
+	margin: 20px 0;
+}
+
+.file_permission_table thead tr th {
+	background: #CCC;
+}
+
+.file_permission_table td {
+	padding: 7px;
+	font-family: "Courier 10 Pitch",courier,monospace;
+	color: #262626;
+	border-bottom: 1px solid #F2F2F2;
+	border-top: none;
+}
+
+.aio_table_row_red {
+	background-color: #FD6D73;
+}
+
+.aio_table_row_yellow {
+	background-color: #F5E679;
+}
+
+.aio_table_row_green {
+	background-color: #C8F18B;
+}
+
+.aiowps_loading_1 {
+	margin: 0 5px;
+}
+
+.aio_text_area_file_output {
+	background: none repeat scroll 0 0 #F9F9F9;
+	font-family: consolas,monaco,monospace;
+	font-size: 12px;
+	outline: 0 none;
+}
+
+.aiowps_more_info_anchor {
+	display: inline-block;
+	background-color: #D9D9D9;
+	color: #21759B;
+	font: 0.9em/1.455em "Lucida Grande","Lucida Sans Unicode",tahoma,verdana,sans-serif;
+	text-decoration: none;
+	padding: 3px 5px;
+}
+
+.aiowps_more_info_anchor:hover {
+	color: #333;
+	cursor: pointer;
+}
+
+.aiowps_more_info_toggle_char {
+	display: inline-block;
+	margin-right: 3px;
+	padding: 0 3px;
+	text-align: center;
+	background-color: #EDEDED;
+	width: 10px;
+}
+
+.aiowps_more_info_body {
+	margin: 10px 0 15px 0;
+	background-color: #FFFFE0;
+	border-color: #E6DB55;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 0 0 1em;
+}
+
+.aiowps_dashboard_box_small {
+	float: left;
+	max-width: 350px;
+	margin-right: 15px;
+}
+
+#canvas-holder {
+	width: 300px;
+	margin: auto;
+	padding-top: 20px;
+}
+
+#website-strength-text {
+	text-align: center !important;
+	font-size: 1.5em !important;
+	padding-bottom: 20px !important;
+}
+
+#security_strength_chart_div table {
+	margin-right: auto !important;
+	margin-left: auto !important;
+}
+
+.aiowps_dashboard_widget_footer {
+	background-color: #E6E6E6;
+	padding: 10px;
+}
+
+.aiowps_feature_status_bar {
+	display: block;
+	float: left;
+	width: 120px;
+	height: 26px;
+	position: relative;
+	background: rgba(0, 0, 0, 0.25);
+	border-radius: 3px;
+	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1); /* phpcs:ignore Squiz.CSS.ForbiddenStyles.FoundWithAlternative -- This is a fallback for older browsers */
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.aiowps_feature_status_name {
+	width: 50%;
+	font-weight: bold;
+	float: left;
+	padding: 5px 10px 5px 0;
+}
+
+.aiowps_feature_status_label {
+	display: block;
+	float: left;
+	padding: 4px;
+	text-align: center;
+	width: 52px;
+	color: #F7F7F7;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.aiowps_feature_status_on {
+	color: #043B14;
+	background: #65BD63;
+	border-radius: 3px;
+	background-image: -webkit-linear-gradient(top, #9DD993, #65BD63); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari and Chrome */
+	background-image: -moz-linear-gradient(top, #9DD993, #65BD63); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	background-image: -o-linear-gradient(top, #9DD993, #65BD63); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Opera */
+	background-image: linear-gradient(top bottom, #9DD993, #65BD63); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- Previous definitions are for outdated browsers  */
+	-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 0 2px rgba(0, 0, 0, 0.2); /* phpcs:ignore Squiz.CSS.ForbiddenStyles.FoundWithAlternative -- This is a fallback for older browsers */
+	box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.aiowps_feature_status_off {
+	color: #4D0000;
+	background: #BD6363;
+	border-radius: 3px;
+	background-image: -webkit-linear-gradient(top, #D99393, #BD6363); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari and Chrome */
+	background-image: -moz-linear-gradient(top, #D99393, #BD6363); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	background-image: -o-linear-gradient(top, #D99393, #BD6363); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Opera */
+	background-image: linear-gradient(top bottom, #D99393, #BD6363); /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- Previous definitions are for outdated browsers  */
+	-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 0 2px rgba(0, 0, 0, 0.2); /* phpcs:ignore Squiz.CSS.ForbiddenStyles.FoundWithAlternative -- This is a fallback for older browsers */
+	box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.aiowps_features_grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-gap: 0 10px;
+	margin: 10px 0;
+}
+
+.aiowps_critical_feature_link,
+.aiowps_critical_feature_link:hover {
+	text-decoration: none;
+	color: inherit;
+}
+
+.aiowps_critical_feature_status_container {
+	display: flex;
+	align-items: center;
+	padding: 5px 8px;
+	min-height: 30px;
+	transition: all 0.2s ease;
+}
+
+.aiowps_critical_feature_status_name {
+	flex: 1.5;
+	font-weight: bold;
+	margin-right: 8px;
+}
+
+.aiowps_feature_status_circle {
+	width: 24px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+}
+
+.aiowps_feature_status_circle_on,
+.aiowps_feature_status_circle_off {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	transition: transform 0.2s ease;
+}
+
+.aiowps_feature_status_circle_on {
+	background-color: #4CD964;
+}
+
+.aiowps_feature_status_circle_off {
+	background-color: #E4584F;
+}
+
+.aiowps_critical_feature_status_container:hover .aiowps_feature_status_circle_on,
+.aiowps_critical_feature_status_container:hover .aiowps_feature_status_circle_off {
+	transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+
+	.aiowps_features_grid {
+		grid-template-columns: 1fr;
+	}
+
+}
+
+.aiowps_feature_details_badge {
+	width: 100%;
+	font-size: 14px;
+}
+
+.aiowps_feature_details_badge_difficulty, .aiowps_feature_details_badge_points {
+	display: inline-block;
+	padding: 7px;
+}
+
+.aiowps_feature_details_badge_difficulty {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	margin-right: 0;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.aiowps_feature_details_badge_points {
+	background: #F1F1F1;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	margin-left: -3px;
+}
+
+.aiowps_feature_protection_none {
+	background: #6D797A;
+	color: #FFF;
+}
+
+.aiowps_feature_protection_full {
+	background: #5C3682;
+	color: #FFF;
+}
+
+#aiowps_pw_tool_main {
+	padding-top: 10px;
+}
+
+.aiowps_password_tool_field {
+	padding: 20px 0;
+}
+
+.aiowps_password_crack_info_text {
+	line-height: 1.16667em;
+	max-width: 40%;
+}
+
+#aiowps_password_crack_time_calculation {
+	line-height: 1.16667em;
+	color: darkorange;
+}
+
+#aiowps_password_crack_time_calculation:empty + #aiowps_http_authentication_password_crack_time_explanation {
+	display: none;
+}
+
+/* bootstrap type labels */
+.aiowps_dashboard_table {
+	table-layout: fixed;
+}
+
+.aiowps-label-danger {
+	background-color: #D9534F;
+}
+
+.aiowps-label-warning {
+	background-color: #F0AD4E;
+}
+
+.aiowps-label-primary {
+	background-color: #337AB7;
+}
+
+.aiowps-label-success {
+	background-color: #5CB85C;
+}
+
+.aiowps-label {
+	border-radius: 0.25em;
+	color: #FFF;
+	display: inline;
+	font-size: 75%;
+	font-weight: 700;
+	line-height: 1;
+	padding: 0.2em 0.6em 0.3em;
+	text-align: center;
+	vertical-align: baseline;
+	white-space: nowrap;
+}
+
+/* Fix for wp list table nav buttons style messed up in 5.1 */
+.tablenav .tablenav-pages .pagination-links a {
+	display: inline-block;
+	padding: 4px 5px 6px 5px;
+	font-size: 16px;
+	line-height: 1;
+	text-align: center;
+	text-decoration: none;
+	min-width: 17px;
+	border: 1px solid #CCC;
+	background: #F7F7F7;
+}
+
+svg > g > g.google-visualization-tooltip {
+	pointer-events: none;
+}
+
+.wp-security_page_aiowpsec_settings h2, .wp-security_page_aiowpsec_settings #poststuff h2 {
+	padding-left: 0;
+}
+
+.aio_hidden {
+	display: none;
+}
+
+/* Fix for WordPress thickbox not respecting the set width and height */
+/* Open issue for 8 years : https://core.trac.wordpress.org/ticket/27473 */
+#TB_ajaxContent {
+	width: 95% !important;
+	height: 95% !important;
+}
+
+.aiowps_switch {
+	position: relative;
+	display: inline-block;
+	width: 38px;
+	height: 18px;
+	margin-right: 6px;
+	box-sizing: border-box;
+}
+
+.aiowps_switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.aiowps_switch .slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #F2F4F5;
+	transition: 0.2s;
+	/* Rounded sliders */
+}
+
+.aiowps_switch .slider::before {
+	position: absolute;
+	content: "";
+	height: 8px;
+	width: 8px;
+	left: 2px;
+	bottom: 2px;
+	background-color: #555D66;
+	border: 1px solid #555D66;
+	transition: all 0.2s;
+}
+
+.aiowps_switch .slider::after {
+	content: "";
+	display: block;
+	position: absolute;
+	height: 4px;
+	width: 3px;
+	right: 4px;
+	top: 4px;
+	border-radius: 50%;
+	border: 1px solid #72777C;
+	box-sizing: content-box;
+}
+
+.aiowps_switch .slider.round {
+	border-radius: 23px;
+	border: 2px solid #555D66;
+}
+
+.aiowps_switch .slider.round::before {
+	border-radius: 50%;
+}
+
+.aiowps_switch input:checked + .slider {
+	background: #5C3682;
+	border-color: #6F30C9;
+}
+
+.aiowps_switch input:checked + .slider::before {
+	background: #FFF;
+	border-color: #FFF;
+	transform: translatex(20px);
+}
+
+.aiowps_switch input:checked + .slider::after {
+	content: "";
+	display: block;
+	position: absolute;
+	height: 6px;
+	width: 2px;
+	left: 7px;
+	top: 4px;
+	background: #FFF;
+	border: none;
+}
+
+.aiowps_switch input:disabled + .slider,
+.aiowps_switch input:disabled:checked + .slider {
+	background: rgba(85, 93, 102, 0.5);
+	border-color: #555D66;
+	opacity: 0.3;
+}
+
+.aiowps_switch input:focus + .slider {
+	box-shadow: 0 0 0 2px #F2F4F5, 0 0 0 3px #555D66;
+}
+
+.aiowps_switch input:disabled {
+	display: none;
+	/* Hide default HTML checkbox when it's disabled*/
+}
+
+.aiowps_next_scheduled_scan_wrapper {
+	display: flex;
+	background: #FFF;
+	justify-items: center;
+	flex-wrap: wrap;
+}
+
+.aiowps_next_scheduled_scan_wrapper > div {
+	width: 50%;
+	background: #FFF;
+	height: auto;
+	padding: 33px;
+	box-sizing: border-box;
+}
+
+.aiowps_next_scheduled_entity {
+	width: 50%;
+	display: inline-block;
+	float: left;
+}
+
+.aiowps_next_scheduled_entity .dashicons {
+	color: #CCC;
+	font-size: 20px;
+}
+
+.aiowps_next_scheduled_entity strong {
+	font-size: 20px;
+}
+
+.aiowps_next_scheduled_heading {
+	margin-bottom: 10px;
+}
+
+.aiowps_time_now_wrapper {
+	margin-top: 68px;
+	width: 100%;
+}
+
+.aiowps_time_now_label, .aiowps_time_now {
+	display: inline-block;
+	padding: 7px;
+}
+
+.aiowps_time_now_label {
+	background: #6D797A;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	color: #FFF;
+	margin-right: 0;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.aiowps_time_now {
+	background: #F1F1F1;
+	color: #3C434A;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	margin-left: -3px;
+}
+
+.aiowps_scan_btn_wrapper {
+	text-align: center;
+	border-left: 1px solid #F1F1F1;
+	justify-content: center;
+	align-items: center;
+}
+
+.aiowps_scan_btn_wrapper .button-large {
+	font-size: 1.3em !important;
+}
+
+.aiowps_next_scheduled_date_time {
+	color: #46A84B;
+}
+
+#aiowps_activejobs_table {
+	overflow: hidden;
+	width: 100%;
+	background: #FAFAFA;
+	padding: 0;
+}
+
+#aiowps_activejobs_table p {
+	text-align: center;
+}
+
+#aiowps_previous_scan_wrapper {
+	overflow: hidden;
+	width: 100%;
+	background: #FAFAFA;
+	padding: 0;
+}
+
+.aiowps_table_container {
+	max-height: 300px;
+	overflow-y: scroll;
+	margin-top: 20px;
+	border: 1px solid #C3C4C7;
+}
+
+.aiowps_scan_result_table {
+	width: 100%;
+	border: none !important;
+}
+
+.aiowps_scan_result_table_header {
+	position: sticky;
+	top: 0;
+	background-color: #FFF;
+	z-index: 1;
+}
+
+.aiowps_spinner.spinner {
+	padding-left: 25px;
+	float: none;
+}
+
+.aiowps_spinner.spinner.visible {
+	visibility: visible;
+	width: auto;
+}
+
+.button-link.aios-toggle-advanced-options {
+	text-decoration: none;
+}
+
+.button-link.aios-toggle-advanced-options:hover {
+	background-color: #FFF;
+}
+
+.button-link.aios-toggle-advanced-options:focus {
+	background-color: #FFF;
+}
+
+button.button-link.aios-toggle-advanced-options.advanced-options-disabled, button.button-link.aios-toggle-advanced-options.advanced-options-disabled span.dashicons-arrow-down-alt2:before {
+	color: #A7AAAD!important;
+	box-shadow: none!important;
+	cursor: default;
+	transform: none!important;
+}
+
+.aios-toggle-advanced-options {
+	display: block;
+	width: 100%;
+	margin-left: -20px;
+	margin-right: -20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	position: relative;
+	text-decoration: none;
+}
+
+.aios-toggle-advanced-options span.text {
+	background: #FFF;
+	z-index: 1;
+	position: relative;
+	padding-right: 5px;
+}
+
+.aios-toggle-advanced-options span.dashicons {
+	text-decoration: none;
+	font-size: 16px;
+	height: 16px;
+	vertical-align: middle;
+	transition: .2s all;
+	color: #444;
+}
+
+.aios-toggle-advanced-options.opened::before {
+	content: '';
+	border-top: 1px solid #CCC;
+	width: calc(100% + 13px);
+	position: absolute;
+	top: 16px;
+	left: -5px;
+}
+
+.aios-toggle-advanced-options.opened span.dashicons {
+	transform: rotate(180deg);
+}
+
+.aios-toggle-advanced-options.opened .aios-toggle-advanced-options__text-hide {
+	display: inline-block;
+}
+
+.aios-toggle-advanced-options.opened .aios-toggle-advanced-options__text-show {
+	display: none;
+}
+
+.aios-toggle-advanced-options .aios-toggle-advanced-options__text-show {
+	display: inline-block;
+}
+
+.aios-toggle-advanced-options .aios-toggle-advanced-options__text-hide {
+	display: none;
+}
+
+.aios-advanced-options-panel {
+	display: none;
+}
+
+.aios-toggle-advanced-options.opened + div.aios-advanced-options-panel {
+	display: block;
+}
+
+.aios-advanced-options-panel h3 {
+	font-size: 14px;
+	display: inline-block;
+}
+
+.aios-advanced-options-panel span.dashicons.dashicons-editor-help {
+	vertical-align: middle;
+	margin-bottom: 10px;
+}
+
+[data-tooltip] {
+	cursor: pointer;
+	position: relative;
+}
+
+[data-tooltip]:hover[data-tooltip]::before, [data-tooltip]:hover[data-tooltip]::after {
+	visibility: visible;
+	filter: opacity(100);
+	opacity: 1;
+	pointer-events: all;
+}
+
+[data-tooltip]::before, [data-tooltip]::after {
+	visibility: hidden;
+	filter: opacity(0);
+	opacity: 0;
+	pointer-events: none;
+}
+
+[data-tooltip]::before {
+	position: absolute;
+	bottom: 150%;
+	left: 50%;
+	margin-bottom: 5px;
+	margin-left: -110px;
+	padding: 12px;
+	width: 275px;
+	z-index: 9999;
+	border-radius: 3px;
+	background-color: hsla(0,0%,20%,0.95);
+	color: #FFF;
+	content: attr(data-tooltip);
+	text-align: center;
+	font-size: .85rem;
+	font-weight: 400;
+	line-height: 1.4;
+}
+
+[data-tooltip]::after {
+	position: absolute;
+	bottom: 150%;
+	left: 50%;
+	margin-left: -5px;
+	width: 0;
+	border-top: 5px solid hsla(0,0%,20%,0.9);
+	border-right: 5px solid transparent;
+	border-left: 5px solid transparent;
+	content: " ";
+	font-size: 0;
+	line-height: 0;
+}
+
+.dep-warning {
+	background-color: #EED202;
+	padding: 1.2em;
+	margin-right: 20px;
+	margin-left: 20px;
+	margin-top: 10px;
+	line-height: 1.2em;
+	color: #111E2A;
+}
+
+.dep-warning span {
+	vertical-align: middle;
+}
+
+@media only screen and (max-width: 782px) {
+
+	.aiowps_next_scheduled_scan_wrapper > .aiowps_scan_btn_wrapper {
+		padding-top: 0;
+	}
+
+	.aiowps_next_scheduled_scan_wrapper {
+		flex-direction: column;
+	}
+
+	.aiowps_next_scheduled_scan_wrapper > div {
+		width: 100%;
+	}
+
+	#aiowps_manual_fcd_scan {
+		margin: 0;
+		display: block;
+		width: 100%;
+	}
+
+}
+
+@media screen and (max-width: 600px) {
+
+	.aiowps_next_scheduled_entity {
+		float: none;
+		width: 100%;
+		margin-bottom: 2em;
+	}
+
+	.aiowps_time_now_wrapper {
+		margin-top: 0;
+	}
+
+}
+
+.details.column-details {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: block;
+	word-wrap: break-word;
+}
+
+.blockUI.blockOverlay.ui-widget-overlay {
+	background: #000;
+}
+
+.aios_success_popup {
+	text-align: center;
+	padding-bottom: 30px;
+}
+
+.aios_success_popup > .dashicons {
+	font-size: 100px;
+	width: 100px;
+	height: 100px;
+	line-height: 100px;
+	padding: 0;
+	border-radius: 50%;
+	margin-top: 30px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	background: #E2E6E5;
+}
+
+.aios_success_popup > .dashicons.dashicons-yes {
+	text-indent: -5px;
+}
+
+.aios_success_popup.success > .dashicons {
+	color: #008000;
+}
+
+.aios_success_popup.warning > .dashicons {
+	color: #888;
+}
+
+.aios_success_popup--message {
+	padding: 20px;
+}
+
+.button.aios-close-overlay .dashicons {
+	text-decoration: none;
+	font-size: 20px;
+	margin-left: -5px;
+	padding: 0;
+	transform: translatey(5px);
+}
+
+.aios_saving_popup img {
+	animation-name: aios_blink;
+	animation-duration: 610ms;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-timing-function: ease-out;
+}
+
+.aios-modal-info {
+	text-align: justify;
+	display: inline-block;
+}
+
+@keyframes aios_blink {
+
+	from {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	to {
+		opacity: 0.4;
+		transform: scale(0.85);
+	}
+
+}
+
+#aios_ajax_moreoptions {
+	max-height: 150px; /* Set the maximum height */
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 6px 10px;
+	margin: 4px 16px 6px 16px;
+}
+
+.aios_password_meter {
+	width: 100%;
+}
+
+.aios_meter_bar {
+	width: 40%;
+	background-color: #EEE;
+	border-radius: 10px;
+	overflow: hidden;
+	height: 10px;
+	margin: 10px 10px 0 0;
+}
+
+#aios_meter_fill {
+	height: 100%;
+	width: 0;
+	background-color: #F00;
+	border-radius: 5px;
+	transition: width 0.5s ease-in-out;
+}
+
+#aiowps_password_test {
+	width: 40%;
+}
+
+.simbaotp_qr_container img {
+	border-collapse: collapse;
+	max-width: 150px;
+	width: 100%;
+	max-height: 150px;
+}
+
+.aiowps-postbox-container {
+	display: flex;
+	background: #FFF;
+	border: 1px solid #D3D3D3;
+	padding: 5px;
+}
+
+.aiowps-postbox-container .postbox {
+	border: none;
+	box-shadow: none;
+}
+
+.aiowps-postbox-container h4 {
+	margin: 1em 0;
+	padding: 5px;
+}
+
+.aiowps-postbox-container .aiowps_switch_container .aiowps_more_info_anchor {
+	margin: 10px 0px;
+	display: block;
+	position: relative;
+	width: fit-content;
+}
+
+.aiowps-rule-list {
+	list-style: none;
+	max-height: 300px;
+	overflow-y: auto;
+	padding: 5px;
+	border-top: 0.5px solid #D3D3D3;
+	margin-bottom: 0;
+}
+
+.aiowps-rule-list li {
+	padding: 5px 0px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: unset;
+}
+
+.aiowps-rule-list li .aiowps-rule-title {
+	cursor: pointer;
+	padding: 10px 5px;
+	border-radius: 3px;
+	width: 100%;
+}
+
+.aiowps-rule-list li:not(:last-child) {
+	border-bottom: 0.5px solid #D3D3D3;
+}
+
+.aiowps-rule-list li .aiowps-rule-title:hover {
+	background: #F8F9FA;
+}
+
+.aiowps-active .aiowps-rule-title {
+	font-weight: bold;
+	background: #5C3682 !important;
+	color: #FFF !important;
+}
+
+.aiowps-rules {
+	margin-right: 5px;
+	width: 20%;
+	border-right: 1px solid #D3D3D3;
+}
+
+.aiowps-settings {
+	width: 80%;
+}
+
+#aiowps-rule-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+#aiowps-rule-search .aiowps-search {
+	flex: 1;
+	background-image: none;
+	position: relative;
+	padding-right: 25px;
+	padding-left: 25px;
+	display: inline-flex;
+	align-items: center;
+	align-items: -moz-center; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	-webkit-align-items: center;
+	width: fill-available;
+	width: -webkit-fill-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari & Chrome */
+	width: -moz-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	max-width: fill-available;
+	max-width: -webkit-fill-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari & Chrome */
+	max-width: -moz-available; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	margin-right: 5px;
+}
+
+#aiowps-rule-search .dashicons-search {
+	font-family: dashicons;
+	font-size: 18px;
+	line-height: 1;
+	font-weight: 400;
+	font-style: normal;
+	display: inline-block;
+	text-transform: none;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	position: absolute;
+	vertical-align: middle;
+	margin-right: 5px;
+	top: 50%;
+	left: 5px;
+	z-index: 999;
+	transform: translatey(-50%);
+}
+
+#aiowps-rule-search .clear-search {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translatey(-50%);
+	cursor: pointer;
+}
+
+#aiowps-rule-search .clear-search:hover {
+	color: #000;
+}
+
+.aiowps-actions {
+	background: #FFF;
+	min-height: 60px;
+	margin-top: 0px;
+	border: 1px solid #D3D3D3;
+	border-top: none;
+	align-content: center;
+	padding-right: 15px;
+	text-align: right;
+	text-align: -webkit-right;  /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Safari & Chrome */
+	text-align: -moz-right; /* phpcs:ignore Squiz.CSS.DuplicateStyleDefinition.Found -- For Mozilla */
+	justify-content: end;
+	align-items: center;
+	display: flex;
+}
+
+@media only screen and (max-width: 768px) {
+
+	.aiowps-postbox-container {
+		flex-direction: column;
+	}
+
+	.aiowps-settings {
+		width: 100%;
+	}
+
+	.aiowps-rules {
+		width: 100%;
+		margin-bottom: 10px;
+		border-right: none;
+		border-bottom: 1px solid #D3D3D3;
+	}
+
+	.aiowps-rule-list {
+		max-height: 150px;
+	}
+
+}
+
+#simba-tfa-admin-wrapper form {
+	padding: 10px;
+	position: relative;
+	min-width: 255px;
+	border: 1px solid #C3C4C7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+	background: #FFF;
+}
+
+.aios-data-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.aios-data-table td, .aios-data-table th {
+	border: 1px solid #DDD;
+	padding: 8px;
+}
+
+.aios-data-table tr:nth-child(even) {
+	background-color: #F2F2F2;
+}
+
+.aios-data-table tr:hover {
+	background-color: #DDD;
+}

@@ -6,11 +6,11 @@ defined('ABSPATH') or die();
  *
  * @since 1.0.0
  */
-require_once( cmplz_path . 'settings/config/menu.php' );
-require_once( cmplz_path . 'settings/config/blocks.php' );
-require_once( cmplz_path . 'settings/wizard.php' );
-require_once( cmplz_path . 'settings/config/fields-notices.php' );
-require_once( cmplz_path . 'settings/media/wp_enqueue_media_override.php');
+require_once( CMPLZ_PATH . 'settings/config/menu.php' );
+require_once( CMPLZ_PATH . 'settings/config/blocks.php' );
+require_once( CMPLZ_PATH . 'settings/wizard.php' );
+require_once( CMPLZ_PATH . 'settings/config/fields-notices.php' );
+require_once( CMPLZ_PATH . 'settings/media/wp_enqueue_media_override.php');
 /**
  * Fix for WPML issue where WPML breaks the rest api by adding a language locale in the url
  *
@@ -152,7 +152,7 @@ add_action('admin_footer', 'cmplz_fix_duplicate_menu_item');
  */
 function cmplz_get_chunk_translations() {
 	//get all files from the settings/build folder
-	$files = scandir(cmplz_path . 'settings/build');
+	$files = scandir(CMPLZ_PATH . 'settings/build');
 	$json_translations = [];
 	foreach ($files as $file) {
 		if (strpos($file, '.js') === false) {
@@ -162,7 +162,7 @@ function cmplz_get_chunk_translations() {
 		$chunk_handle = str_replace('.js', '', $file );
 		//temporarily register the script, so we can get a translations object.
 		wp_register_script( $chunk_handle, plugins_url('build/'.$file, __FILE__), [], true );
-		$path = defined('cmplz_premium') ? cmplz_path . 'languages' : false;
+		$path = defined('cmplz_premium') ? CMPLZ_PATH . 'languages' : false;
 		$localeData = load_script_textdomain( $chunk_handle, 'complianz-gdpr', $path );
 		if ( !empty($localeData) ){
 			$json_translations[] = $localeData;
@@ -191,6 +191,22 @@ function cmplz_plugin_admin_scripts() {
 				$assetFilename = $filename;
 			}
 		}
+	}
+
+	/**
+	 * Register polyfill for React JSX runtime for version lower than 6.6.
+	 *
+	 * @TODO: Remove this once the minimum required version of WordPress is 6.6.
+	 */
+	global $wp_version;
+
+	if ( version_compare( $wp_version, '6.6', '<' ) && ! wp_script_is( 'react-jsx-runtime', 'registered' ) ) {
+		wp_enqueue_script(
+			'react-jsx-runtime',
+			plugins_url( 'assets/js/react-jsx-runtime.js', __FILE__ ),
+			[ 'react'], // it is a polyfill for react JSX runtime, it depends on react
+            CMPLZ_VERSION,
+		);
 	}
 
 	// check if the necessary files are found
@@ -224,7 +240,7 @@ function cmplz_plugin_admin_scripts() {
 								admin_url( 'admin-ajax.php' ) ),
 						'dashboard_url'     => cmplz_admin_url(),
 						'upgrade_link'      => 'https://complianz.io/pricing',
-						'plugin_url'        => cmplz_url,
+						'plugin_url'        => CMPLZ_URL,
 						'license_url'      =>  is_multisite() ? cmplz_main_site_url('#settings/license') : '#settings/license',
 						'blocks'            => cmplz_blocks(),
 						'is_premium'        => defined( 'cmplz_premium' ),
@@ -295,7 +311,7 @@ function cmplz_add_option_menu() {
 			apply_filters('cmplz_capability','manage_privacy'),
 			'complianz',
 			'cmplz_settings_page',
-			cmplz_url . 'assets/images/menu-icon.svg',
+			CMPLZ_URL . 'assets/images/menu-icon.svg',
 			CMPLZ_MAIN_MENU_POSITION
 	);
 
@@ -593,7 +609,7 @@ function cmplz_plugin_actions($request){
 	$slug = $request->get_param('slug');
 	$action = $request->get_param('pluginAction');
 	if ( $action==='download' || $action==='activate' ) {
-		require_once(cmplz_path . 'class-installer.php');
+		require_once(CMPLZ_PATH . 'class-installer.php');
 		$installer = new cmplz_installer($slug);
 	}
 
@@ -616,44 +632,49 @@ function cmplz_other_plugins_data($slug=false){
 	}
 	$plugins = array(
 		[
+			'slug' => 'complianz-terms-conditions',
+			'constant_free' => 'cmplz_tc_version',
+			'create' => admin_url('admin.php?page=terms-conditions'),
+			'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
+			'title' => 'Complianz - '. __("Terms & Conditions", "complianz-gdpr"),
+			'summary' => __("Configure your own Terms and Conditions.", 'complianz-gdpr'),
+			'description' => __("A simple, but in-depth wizard will configure a Terms and Conditions page for your website or for those of your clients.", 'complianz-gdpr'),
+			'image' => "complianz-gdpr.png",
+		],
+		[
 			'slug' => 'really-simple-ssl',
 			'constant_free' => 'rsssl_version',
 			'constant_premium' => 'rsssl_pro',
 			'wordpress_url' => 'https://wordpress.org/plugins/really-simple-ssl/',
 			'upgrade_url' => 'https://really-simple-ssl.com/pro?src=cmplz-plugin',
-			'title' => "Really Simple Security - ".__("Simple and performant security.", "complianz-gdpr" ),
-		],
-		[
-			'slug' => 'complianz-terms-conditions',
-			'constant_free' => 'cmplz_tc_version',
-			'create' => admin_url('admin.php?page=terms-conditions'),
-			'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
-			'upgrade_url' => 'https://complianz.io?src=cmplz-plugin',
-			'title' => 'Complianz - '. __("Terms & Conditions", "complianz-gdpr"),
-		],
+			'title' => "Really Simple Security",
+            'summary' => __("Lightweight plugin. Heavyweight security features.", 'complianz-gdpr'),
+			'description' => __("Leverage your SSL certificate to the fullest, with health checks, security headers, hardening, vulnerability detection and more.", 'complianz-gdpr'),
+			'image' => "really-simple-ssl.png",
+		]
 	);
 
     foreach ($plugins as $index => $plugin ){
 		$star_rating = false;
-		require_once(cmplz_path . 'class-installer.php');
+		require_once(CMPLZ_PATH . 'class-installer.php');
 		$installer = new cmplz_installer($plugin['slug']);
-		#if slug defined, get star rating as well
+        #if slug defined, get star rating as well
 		if ( $slug ) {
 			$plugin_info = $installer->get_plugin_info();
 			$star_rating =  ['rating' => $plugin_info->rating,  'rating_count' => $plugin_info->num_ratings ];
-		}
+        }
 
         if ( isset($plugin['constant_premium']) && defined($plugin['constant_premium']) ) {
 	        $plugins[ $index ]['pluginAction'] = 'installed';
         } else if ( !$installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
 	        $plugins[$index]['pluginAction'] = 'download';
         } else if ( $installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
-	        $plugins[ $index ]['pluginAction'] = 'activate';
+            $plugins[ $index ]['pluginAction'] = 'activate';
         } else {
-	        if (isset($plugin['constant_premium']) ) {
-		        $plugins[$index]['pluginAction'] = 'upgrade-to-premium';
+            if (isset($plugin['constant_premium']) ) {
+                $plugins[$index]['pluginAction'] = 'upgrade-to-premium';
 	        } else {
-		        $plugins[ $index ]['pluginAction'] = 'installed';
+                $plugins[ $index ]['pluginAction'] = 'installed';
 	        }
 	    }
     }
@@ -668,8 +689,13 @@ function cmplz_other_plugins_data($slug=false){
         }
     }
 
-    return ['plugins' => $plugins];
+    // If first plugin Complianz T&C is not installed, return only that one
+    if ($plugins[0]['pluginAction'] !== 'installed') {
+        return ['plugins' => [$plugins[0]]];
+    }
 
+    // If first plugin is installed, return only the second one
+    return ['plugins' => [$plugins[1]]];
 }
 
 
@@ -735,7 +761,7 @@ function cmplz_rest_api_fields_set( WP_REST_Request $request): array {
 
 	$fields = $request->get_param('fields');
 	$finish = (bool) $request->get_param('finish');
-    $config_fields = COMPLIANZ::$config->fields;;
+    $config_fields = COMPLIANZ::$config->fields;
     $config_ids = array_column($config_fields, 'id');
 	foreach ( $fields as $index => $field ) {
 		$config_field_index = in_array( $field['id'], $config_ids, true );

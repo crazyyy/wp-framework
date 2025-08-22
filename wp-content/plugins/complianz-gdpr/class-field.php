@@ -3093,7 +3093,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 
         public function use_logo_complianz( $args )
 		{
-			$complianz_logo = file_get_contents(trailingslashit(cmplz_path) . 'assets/images/poweredbycomplianz.svg');
+			$complianz_logo = file_get_contents(trailingslashit(CMPLZ_PATH) . 'assets/images/poweredbycomplianz.svg');
 			do_action( 'complianz_before_label', $args );
 			do_action( 'complianz_label_html' , $args );
 			do_action( 'complianz_after_label', $args );
@@ -3131,7 +3131,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 		public
 		function use_logo_custom($args)
 		{
-			$src = cmplz_url . '/assets/images/placeholders/default-light.jpg';
+			$src = CMPLZ_URL . '/assets/images/placeholders/default-light.jpg';
 			$attachment_id = $this->get_value( $args['fieldname'], false );
 			if ( $attachment_id ) {
 				$src = wp_get_attachment_image_url( $attachment_id, 'cmplz_banner_image' );

@@ -15,7 +15,7 @@
 <div class="aio_yellow_box">
 	<?php
 	$info_msg_2 = '<p><strong>'. esc_html__('Attention', 'all-in-one-wp-security-and-firewall').'</strong>: ' . esc_html__('Sometimes non-malicious Internet organizations might have bots which impersonate as a "Googlebot".', 'all-in-one-wp-security-and-firewall').'</p>';
-	$info_msg_2 .= '<p>' . esc_html__('Just be aware that if you activate this feature the plugin will block all bots which use the "Googlebot" string in their User Agent information but are NOT officially from Google (irrespective whether they are malicious or not).', 'all-in-one-wp-security-and-firewall').'</p>';
+	$info_msg_2 .= '<p>' . esc_html__('Just be aware that if you activate this feature the plugin will block all bots which use the "Googlebot" string in their User Agent information but are NOT officially from Google (irrespective of whether or not they are malicious).', 'all-in-one-wp-security-and-firewall').'</p>';
 	$info_msg_2 .= '<p>' . esc_html__('All other bots from other organizations such as "Yahoo", "Bing" etc will not be affected by this feature.', 'all-in-one-wp-security-and-firewall').'</p>';
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Variable already escaped.
 	echo $info_msg_2;

@@ -80,7 +80,7 @@ class AIOWPSecurity_User_Login {
 						esc_html__('You have disabled login lockout by defining the AIOS_DISABLE_LOGIN_LOCKOUT constant value as true, and the login lockout setting has enabled it.', 'all-in-one-wp-security-and-firewall') . ' ' .
 						/* translators: 1: Locked IP Addresses admin page link */
 						sprintf(esc_html__('Delete your login lockout IP from %s and define the AIOS_DISABLE_LOGIN_LOCKOUT constant value as false.', 'all-in-one-wp-security-and-firewall'),
-							'<a href="' . esc_url(admin_url('admin.php?page=aiowpsec&tab=locked-ip').'">') . esc_html__('Locked IP addresses', 'all-in-one-wp-security-and-firewall') . '</a>'
+							'<a href="' . esc_url(admin_url('admin.php?page=aiowpsec&tab=locked-ip')) . '">' . esc_html__('Locked IP addresses', 'all-in-one-wp-security-and-firewall') . '</a>'
 						).
 					'</p>
 				</div>';
@@ -115,7 +115,8 @@ class AIOWPSecurity_User_Login {
 				$error_msg .= $unlock_form;
 			}
 			$error_msg = apply_filters('aiowps_ip_blocked_output_page', $error_msg, $unlock_form); //filter the complete output of the locked page
-			wp_die(wp_kses_post($error_msg), esc_html__('Service temporarily unavailable', 'all-in-one-wp-security-and-firewall'), 503);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Can not escape form html inside $error_msg.
+			wp_die($error_msg, esc_html__('Service temporarily unavailable', 'all-in-one-wp-security-and-firewall'), 503);
 		} else {
 			return $user;
 		}
@@ -341,7 +342,7 @@ class AIOWPSecurity_User_Login {
 		$release_time = $date->format('Y-m-d H:i:s');
 		$backtrace_log = '';
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_php_backtrace_in_email')) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- PCP warning. Ignore.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace, PHPCompatibility.FunctionUse.ArgumentFunctionsReportCurrentValue.NeedsInspection -- PCP and compatibility warnings. Safe to ignore.
 			$backtrace_log = AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace());
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- PCP warning. Ignore.
 			$backtrace_log = print_r($backtrace_log, true);
@@ -736,7 +737,7 @@ class AIOWPSecurity_User_Login {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce.
 		if (isset($_GET[$this->key_login_msg]) && !empty($_GET[$this->key_login_msg])) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce.
-			$logout_msg = wp_strip_tags(sanitize_title(wp_unslash($_GET[$this->key_login_msg])));
+			$logout_msg = wp_strip_all_tags(sanitize_title(wp_unslash($_GET[$this->key_login_msg])));
 		}
 		if (!empty($logout_msg)) {
 			switch ($logout_msg) {
@@ -791,7 +792,7 @@ class AIOWPSecurity_User_Login {
 	public static function get_logged_in_users($sitewide = true) {
 		global $wpdb;
 
-		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$logged_in_users_table = AIOWPSEC_TBL_LOGGED_IN_USERS;
 		if ($sitewide) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- PCP warning. Ignore.
 			$users_online = $wpdb->get_results("SELECT * FROM `{$logged_in_users_table}`", 'ARRAY_A');
@@ -874,7 +875,7 @@ class AIOWPSecurity_User_Login {
 	public function store_logged_in_user($user_id, $expiration) {
 		global $wpdb, $aio_wp_security;
 
-		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$logged_in_users_table = AIOWPSEC_TBL_LOGGED_IN_USERS;
 		$ip_address = AIOWPSecurity_Utility_IP::get_user_ip_address();
 		$userdata = get_userdata($user_id);
 		$username = $userdata->user_login;
@@ -955,7 +956,7 @@ class AIOWPSecurity_User_Login {
 	public function delete_logged_in_user($user_id) {
 		global $wpdb, $aio_wp_security;
 
-		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$logged_in_users_table = AIOWPSEC_TBL_LOGGED_IN_USERS;
 
 		if (empty($user_id)) return true;
 
@@ -981,7 +982,7 @@ class AIOWPSecurity_User_Login {
 	 */
 	public function delete_expired_logged_in_users() {
 		global $wpdb, $aio_wp_security;
-		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$logged_in_users_table = AIOWPSEC_TBL_LOGGED_IN_USERS;
 
 		// Delete data with expired cookie
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- PCP warning. Direct query required,

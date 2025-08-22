@@ -364,7 +364,6 @@
 				<?php esc_html_e("Improve your SEO with just a few clicks.", 'all-in-one-wp-security-and-firewall');?>
 			</p>
 			<a href="https://www.internallinkjuicer.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-ilj&utm_campaign=ad"><?php esc_html_e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
-			<a href="https://www.internallinkjuicer.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-ilj&utm_campaign=ad"><?php esc_html_e('Try for free', 'all-in-one-wp-security-and-firewall'); ?></a>
 		</div>
 		<div class="aiowps-plugin-family__plugin">
 			<a href="https://wpovernight.com/?utm_medium=software&utm_source=aios&utm_content=aios-mayalso-like-tab&utm_term=try-now-wp-overnight&utm_campaign=ad"><img class="addons" alt="WP Overnight" src="<?php echo AIO_WP_SECURITY_URL.'/images/plugin-logos/wp-overnight-sm.png'; ?>"></a>

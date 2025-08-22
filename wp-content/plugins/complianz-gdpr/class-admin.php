@@ -16,7 +16,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			self::$_this = $this;
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 
-			$plugin = cmplz_plugin;
+			$plugin = CMPLZ_PLUGIN;
 			add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 			add_action( "in_plugin_update_message-{$plugin}", array( $this, 'plugin_update_message'), 10, 2 );
 			//add_filter( "auto_update_plugin", array( $this, 'override_auto_updates'), 99, 2 );
@@ -69,28 +69,6 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				$this->run_table_init_hook();
 				delete_option( 'cmplz_run_activation' );
 			}
-		}
-
-		/**
-		 * Check if current day falls within required date range.
-		 *
-		 * @return bool
-		 */
-
-		public function is_bf(){
-			if ( defined("cmplz_premium" ) ) {
-				return false;
-			}
-			$start_day = 25;
-			$end_day = 30;
-			$current_year = date("Y");//e.g. 2021
-			$current_month = date("n");//e.g. 3
-			$current_day = date("j");//e.g. 4
-
-			return $current_year == 2024
-				   && $current_month == 11
-				   && $current_day >= $start_day
-				   && $current_day <= $end_day;
 		}
 
 		/**
@@ -207,8 +185,8 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			}
 			$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			$rtl = is_rtl() ? 'rtl/' : '';
-			$url = trailingslashit(cmplz_url) . "assets/css/{$rtl}admin{$min}.css";
-			$path = trailingslashit(cmplz_path) . "assets/css/{$rtl}admin{$min}.css";
+			$url = trailingslashit(CMPLZ_URL) . "assets/css/{$rtl}admin{$min}.css";
+			$path = trailingslashit(CMPLZ_PATH) . "assets/css/{$rtl}admin{$min}.css";
 			wp_enqueue_style( 'complianz-admin', $url, ['wp-components'], filemtime($path) );
 		}
 
@@ -337,7 +315,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				 style="border-left:4px solid #333">
 				<div class="cmplz-admin-notice-container">
 					<div class="cmplz-admin-notice-logo"><img width=80px"
-															  src="<?php echo cmplz_url ?>assets/images/icon-logo.svg"
+															  src="<?php echo CMPLZ_URL ?>assets/images/icon-logo.svg"
 															  alt="logo">
 					</div>
 					<div class="cmplz-admin-notice-content">
@@ -405,9 +383,9 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 
 				$warning_types = cmplz_load_warning_types();
 				if (empty($warning_types)) {
-
 					return [];
 				}
+
 
 				foreach ($warning_types as $id => $warning_type) {
 					$warning_types[$id] = wp_parse_args($warning_type, $warning_type_defaults );
@@ -517,13 +495,10 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			$completed = array();
 			$open = array();
 			$urgent = array();
-			$bf_notice = array();
 
 			if ( ! empty( $warnings ) ) {
 				foreach ( $warnings as $key => $warning ) {
-					if ( $key === 'bf-notice2023' ) {
-						$bf_notice[$key] = $warning;
-					} elseif ( isset($warning['status']) && $warning['status'] === 'urgent' ) {
+					if ( isset($warning['status']) && $warning['status'] === 'urgent' ) {
 						$urgent[$key] = $warning;
 					} elseif ( isset($warning['status']) && $warning['status'] === 'open' ) {
 						$open[$key] = $warning;
@@ -533,7 +508,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 				}
 			}
 
-			return $bf_notice + $urgent + $open + $completed;
+			return $urgent + $open + $completed;
 		}
 
 		/**

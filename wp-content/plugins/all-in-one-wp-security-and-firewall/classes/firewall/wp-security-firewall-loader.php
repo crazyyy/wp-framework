@@ -57,10 +57,9 @@ class Loader {
 			exit();
 		} catch (\Exception $e) {
 			$this->log_message($e->getMessage());
-		} catch (\Error $e) {
+		} catch (\Error $e) { // phpcs:ignore PHPCompatibility.Classes.NewClasses.errorFound -- this won't run on PHP 5.6 so we still want to catch it on other versions
 			$this->log_message($e->getMessage());
 		}
-
 	}
 
 	/**

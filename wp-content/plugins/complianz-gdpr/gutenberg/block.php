@@ -25,25 +25,25 @@ function cmplz_editor_assets() {
 		'complianz',
 		array(
 			'site_url' => get_rest_url(),
-			'cmplz_preview' => cmplz_url.  'assets/images/gutenberg-preview.png',
+			'cmplz_preview' => CMPLZ_URL.  'assets/images/gutenberg-preview.png',
 			'user_can_unfiltered_html' => current_user_can('unfiltered_html'),
 		)
 	);
 
-	wp_set_script_translations( 'cmplz-block', 'complianz-gdpr' , cmplz_path . '/languages');
+	wp_set_script_translations( 'cmplz-block', 'complianz-gdpr' , CMPLZ_PATH . '/languages');
 	$load_css = cmplz_get_option('use_document_css', true );
 	if ($load_css) {
-		$v = filemtime(cmplz_path . "assets/css/document.min.css");
+		$v = filemtime(CMPLZ_PATH . "assets/css/document.min.css");
 		wp_enqueue_style(
 			'cmplz-block', // Handle.
-			cmplz_url . "assets/css/document.min.css",
+			CMPLZ_URL . "assets/css/document.min.css",
 			array( 'wp-edit-blocks' ), $v
 		);
 	} else {
-		$v = filemtime(cmplz_path . "assets/css/document-grid.min.css");
+		$v = filemtime(CMPLZ_PATH . "assets/css/document-grid.min.css");
 		wp_enqueue_style(
 			'cmplz-block', // Handle.
-			cmplz_url . "assets/css/document-grid.min.css",
+			CMPLZ_URL . "assets/css/document-grid.min.css",
 			array( 'wp-edit-blocks' ), $v
 		);
 	}

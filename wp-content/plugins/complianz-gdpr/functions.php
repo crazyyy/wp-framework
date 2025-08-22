@@ -288,7 +288,7 @@ if ( !function_exists('cmplz_upgraded_to_current_version')){
 			return false;
 		}
 		//if the first version is below current, we just upgraded.
-		if ( version_compare($first_version,cmplz_version ,'<') ){
+		if ( version_compare($first_version,CMPLZ_VERSION ,'<') ){
 			return true;
 		}
 		return false;
@@ -305,10 +305,10 @@ if ( ! function_exists( 'cmplz_get_template' ) ) {
 	 */
 
 	function cmplz_get_template( $filename , $args = array(), $path = false ) {
-		$path = $path ? trailingslashit($path) : trailingslashit( cmplz_path ) . 'templates/';
+		$path = $path ? trailingslashit($path) : trailingslashit( CMPLZ_PATH ) . 'templates/';
 		$file = apply_filters('cmplz_template_file', $path . $filename, $filename);
 		$theme_file = trailingslashit( get_stylesheet_directory() )
-		              . trailingslashit( basename( cmplz_path ) )
+		              . trailingslashit( basename( CMPLZ_PATH ) )
 		              . 'templates/' . $filename;
 		if ( !file_exists( $file ) ) {
 		    return false;
@@ -2024,7 +2024,7 @@ if ( ! function_exists( 'cmplz_used_cookies' ) ) {
 
 		$servicesHTML = '<div id="cmplz-cookies-overview">'.$servicesHTML.'</div>';
 
-		return str_replace( '{plugin_url}',cmplz_url, $servicesHTML);
+		return str_replace( '{plugin_url}',CMPLZ_URL, $servicesHTML);
 	}
 }
 
@@ -2212,7 +2212,7 @@ if ( ! function_exists( 'cmplz_default_placeholder' ) ) {
 
 		$style = cmplz_get_option('placeholder_style');
 		$ratio = $type === 'google-maps' ? cmplz_get_option( 'google-maps-format' ) : '';
-		$path = cmplz_path . "assets/images/placeholders";
+		$path = CMPLZ_PATH . "assets/images/placeholders";
 		//check if this type exists as placeholder
 		if ( file_exists( "$path/$type-$style-$ratio.jpg" ) ) {
 			$img = "$type-$style-$ratio.jpg";
@@ -2222,12 +2222,12 @@ if ( ! function_exists( 'cmplz_default_placeholder' ) ) {
 			$img = "default-$style.jpg";
 		}
 
-		$img_url = cmplz_url . 'assets/images/placeholders/' . $img;
+		$img_url = CMPLZ_URL . 'assets/images/placeholders/' . $img;
 
 		//check for image in themedir/complianz-gpdr-premium
-		$theme_img = trailingslashit( get_stylesheet_directory() ) . trailingslashit( basename( cmplz_path ) ) . $img;
+		$theme_img = trailingslashit( get_stylesheet_directory() ) . trailingslashit( basename( CMPLZ_PATH ) ) . $img;
 		if ( file_exists( $theme_img ) ) {
-			$img_url = trailingslashit( get_stylesheet_directory_uri() ) . trailingslashit( basename( cmplz_path ) ) . $img;
+			$img_url = trailingslashit( get_stylesheet_directory_uri() ) . trailingslashit( basename( CMPLZ_PATH ) ) . $img;
 		}
 
 		return apply_filters( 'cmplz_default_placeholder', $img_url, $type, $style );
@@ -2695,7 +2695,7 @@ if ( ! function_exists( 'cmplz_remove_free_translation_files' ) ) {
 	 */
 
 	function cmplz_remove_free_translation_files() {
-		//can't use cmplz_path here, it may not have been defined yet on activation
+		//can't use CMPLZ_PATH here, it may not have been defined yet on activation
 		$path = plugin_dir_path(__FILE__);
 		$path = dirname( $path, 2 ) . "/languages/plugins/";
 		$extensions = array( "po", "mo", "php" );
@@ -2727,7 +2727,7 @@ if ( ! function_exists( 'cmplz_has_free_translation_files' ) ) {
 	 */
 
 	function cmplz_has_free_translation_files() {
-		//can't use cmplz_path here, it may not have been defined yet on activation
+		//can't use CMPLZ_PATH here, it may not have been defined yet on activation
 		$path = plugin_dir_path(__FILE__);
 		$path = dirname( $path, 2 ) . "/languages/plugins/";
 

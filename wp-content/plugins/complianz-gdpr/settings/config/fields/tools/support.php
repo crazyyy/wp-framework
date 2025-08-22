@@ -39,7 +39,7 @@ function cmplz_support_fields($fields){
 			'label'   => __( "System Status", 'complianz-gdpr' ),
 			'button_text'    => __( "Download", 'complianz-gdpr' ),
 			'default' => false,
-			'url' => trailingslashit( cmplz_url ) . 'system-status.php'
+			'url' => trailingslashit( CMPLZ_URL ) . 'system-status.php'
 
 		],
 		[

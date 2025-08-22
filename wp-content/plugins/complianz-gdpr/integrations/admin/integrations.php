@@ -335,7 +335,7 @@ class cmplz_integrations {
 		}
 		global $cmplz_integrations_list;
 		foreach ( $cmplz_integrations_list as $plugin => $details ) {
-			$file = apply_filters( 'cmplz_integration_path', cmplz_path . "integrations/plugins/$plugin.php", $plugin );
+			$file = apply_filters( 'cmplz_integration_path', CMPLZ_PATH . "integrations/plugins/$plugin.php", $plugin );
 			if ( file_exists( $file ) && cmplz_integration_plugin_is_active( $plugin ) ) {
 				$plugins[] = [
 					'id' => $plugin,

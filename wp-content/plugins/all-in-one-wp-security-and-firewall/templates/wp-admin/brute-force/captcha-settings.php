@@ -17,15 +17,17 @@
 	$aio_wp_security->include_template('wp-admin/brute-force/captcha-provider.php', false, array('default_captcha' => $default_captcha, 'supported_captchas' => $supported_captchas, 'captcha_themes' => $captcha_themes, 'captcha_theme' => $captcha_theme));
 
 	$templates = apply_filters('aiowps_modify_captcha_settings_template', $templates);
-	$subtab = isset($_GET['subtab']) ? sanitize_text_field($_GET['subtab']) : '';
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce check occurred outside of template.
+	$subtab = isset($_GET['subtab']) ? sanitize_text_field(wp_unslash($_GET['subtab'])) : '';
 	?>
 	<div id="aios-captcha-options" <?php if ('none' === $default_captcha) echo 'class="aio_hidden"'; ?>>
 		<div class="aiowps-postbox-container">
 			<div class="aiowps-rules">
-				<h3 class="hndle"><?php _e('Settings', 'all-in-one-wp-security-and-firewall'); ?></h3>
+				<h3 class="hndle"><?php esc_html_e('Settings', 'all-in-one-wp-security-and-firewall'); ?></h3>
 				<div id="aiowps-rule-search">
 					<span class="dashicons dashicons-search"></span>
-					<input type="text" placeholder="<?php _e('Search', 'all-in-one-wp-security-and-firewall'); ?>" class="aiowps-search">
+					<input type="text" placeholder="<?php esc_html_e('Search', 'all-in-one-wp-security-and-firewall'); ?>" class="aiowps-search">
 					<span class="dashicons dashicons-no-alt clear-search"></span>
 				</div>
 				<ul class="aiowps-rule-list">
@@ -41,6 +43,7 @@
 						$class .= ($key === $subtab || $title === $first_title) ? " aiowps-active" : '';
 						$class .= '"';
 
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- No user input for $class.
 						echo '<li data-template="' . esc_attr($key) . '" ' . $class . '><span class="aiowps-rule-title">' . esc_html($title) . '</span></li>';
 					}
 					?>

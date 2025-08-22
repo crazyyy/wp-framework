@@ -309,11 +309,11 @@ if ( ! class_exists( "cmplz_banner_loader" ) ) {
 			}
 			if ( cmplz_uses_thirdparty( 'instagram' ) && get_option( 'cmplz_post_scribe_required' ) ) {
 				$deps[] = 'cmplz-postscribe';
-				$v      = filemtime( cmplz_path . "assets/js/postscribe.min.js" );
-				wp_enqueue_script( 'cmplz-postscribe', cmplz_url . "assets/js/postscribe.min.js", array( 'jquery' ), $v, true );
+				$v      = filemtime( CMPLZ_PATH . "assets/js/postscribe.min.js" );
+				wp_enqueue_script( 'cmplz-postscribe', CMPLZ_URL . "assets/js/postscribe.min.js", array( 'jquery' ), $v, true );
 			}
-			$v = filemtime( cmplz_path . "cookiebanner/js/complianz$minified.js" );
-			wp_enqueue_script( 'cmplz-cookiebanner', cmplz_url . "cookiebanner/js/complianz$minified.js", $deps, $v, true );
+			$v = filemtime( CMPLZ_PATH . "cookiebanner/js/complianz$minified.js" );
+			wp_enqueue_script( 'cmplz-cookiebanner', CMPLZ_URL . "cookiebanner/js/complianz$minified.js", $deps, $v, true );
 			wp_localize_script( 'cmplz-cookiebanner', 'complianz', $cookiesettings );
 		}
 
@@ -357,7 +357,7 @@ if ( ! class_exists( "cmplz_banner_loader" ) ) {
 
 			$consent_types           = cmplz_get_used_consenttypes();
 			$banner_ids              = cmplz_ab_testing_enabled() ? wp_list_pluck( cmplz_get_cookiebanners(), 'ID' ) : [ cmplz_get_default_banner_id() ];
-			$path                    = trailingslashit( cmplz_path ) . 'cookiebanner/templates/';
+			$path                    = trailingslashit( CMPLZ_PATH ) . 'cookiebanner/templates/';
 			$manage_consent_template = cmplz_get_template( "manage-consent.php", false, $path );
 			$banner_html             = '';
 			$manage_consent_html     = '';

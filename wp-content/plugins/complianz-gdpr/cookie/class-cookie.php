@@ -643,7 +643,7 @@ function cmplz_install_cookie_table() {
 	if (!wp_doing_cron() && !cmplz_user_can_manage() ) {
 		return;
 	}
-	if ( get_option( 'cmplz_cookietable_version' ) != cmplz_version ) {
+	if ( get_option( 'cmplz_cookietable_version' ) != CMPLZ_VERSION ) {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
@@ -697,7 +697,7 @@ function cmplz_install_cookie_table() {
 		dbDelta( $sql );
 
 		//don't set to preload false, as we need this one in the get_cookies function.
-		update_option( 'cmplz_cookietable_version', cmplz_version );
+		update_option( 'cmplz_cookietable_version', CMPLZ_VERSION );
 
 	}
 }

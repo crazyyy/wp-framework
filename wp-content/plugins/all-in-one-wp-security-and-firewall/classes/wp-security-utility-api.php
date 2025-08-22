@@ -15,8 +15,8 @@ class AIOWPSecurity_Utility_API {
 	 *
 	 * @return array|string|WP_Error The response or WP_Error on failure.
 	 */
-	public function get($url, $args = array()) {
-		return $this->make_api_request($url, $args, 'GET');
+	public static function get($url, $args = array()) {
+		return self::make_api_request($url, $args, 'GET');
 	}
 
 	/**
@@ -27,8 +27,8 @@ class AIOWPSecurity_Utility_API {
 	 *
 	 * @return array|string|WP_Error The response or WP_Error on failure.
 	 */
-	public function post($url, $args = array()) {
-		return $this->make_api_request($url, $args, 'POST');
+	public static function post($url, $args = array()) {
+		return self::make_api_request($url, $args, 'POST');
 	}
 
 	/**
@@ -40,7 +40,7 @@ class AIOWPSecurity_Utility_API {
 	 *
 	 * @return array|string|WP_Error The response or WP_Error on failure.
 	 */
-	private function make_api_request($url, $args = array(), $method = 'GET') {
+	private static function make_api_request($url, $args = array(), $method = 'GET') {
 		global $aio_wp_security;
 
 		// Validate the method

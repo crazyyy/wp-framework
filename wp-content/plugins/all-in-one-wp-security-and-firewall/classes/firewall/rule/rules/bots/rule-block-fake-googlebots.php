@@ -76,7 +76,7 @@ class Rule_Block_Fake_Googlebots extends Rule {
 				} else {
 					return Rule::SATISFIED;
 				}
-			} catch (\Error $e) {
+			} catch (\Error $e) { // phpcs:ignore PHPCompatibility.Classes.NewClasses.errorFound -- this won't run on PHP 5.6 so we still want to catch it on other versions
 				// gethostbyaddr or gethostbyname not available on site.
 				$googlebot_ips = $aiowps_firewall_config->get_value('aiowps_googlebot_ip_ranges');
 				if (\AIOS_Helper::is_user_ip_address_within_list($googlebot_ips)) {

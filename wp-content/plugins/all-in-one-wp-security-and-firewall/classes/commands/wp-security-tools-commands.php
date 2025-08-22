@@ -152,6 +152,20 @@ trait AIOWPSecurity_Tools_Commands_Trait {
 	}
 
 	/**
+	 * Checks a password against the HIBP database.
+	 *
+	 * @param array $data Contains the password to be checked.
+	 *
+	 * @return array
+	 */
+	public function hibp_check_password($data) {
+		return array(
+			'status' => 'success',
+			'pwned' => AIOS_HIBP::password_is_pwned($data['password']),
+		);
+	}
+
+	/**
 	 * Does a WHOIS lookup on an IP address or domain name and then returns the result.
 	 *
 	 * @param String  $search  - IP address or domain name to do a WHOIS lookup on

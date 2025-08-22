@@ -41,6 +41,8 @@ class AIOWPSecurity_Audit_Event_Handler {
 	/**
 	 * This function records an event in the audit log
 	 *
+	 * @global AIO_WP_Security $aio_wp_security
+	 *
 	 * @param string $event_type  - the event type
 	 * @param array  $details     - details about the event
 	 * @param string $event_level - the event level
@@ -49,9 +51,11 @@ class AIOWPSecurity_Audit_Event_Handler {
 	 * @return void
 	 */
 	public function record_event($event_type, $details, $event_level = 'info', $username = '') {
-		
+
 		if (!function_exists('wp_get_current_user')) {
-			error_log("AIOWPSecurity_Audit_Event_Handler::record_event() called before plugins_loaded hook has run.");
+			global $aio_wp_security;
+
+			$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_Audit_Event_Handler::record_event() called before plugins_loaded hook has run.", 4);
 			return;
 		}
 
@@ -64,10 +68,10 @@ class AIOWPSecurity_Audit_Event_Handler {
 		$ip = apply_filters('aios_audit_log_event_user_ip', AIOWPSecurity_Utility_IP::get_user_ip_address());
 		$data = apply_filters('aios_audit_log_event_user_country_code', array('ip' => $ip));
 		$country_code = isset($data['country_code']) ? $data['country_code'] : '';
-		$stacktrace = maybe_serialize(AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)));
+		$stacktrace = maybe_serialize(AIOWPSecurity_Utility::normalise_call_stack_args(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- Required for the stacktrace to work.
 		$network_id = get_current_network_id();
 		$site_id = get_current_blog_id();
-		$details = json_encode($details, true);
+		$details = wp_json_encode($details, true);
 
 		$this->add_new_event($network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace, $country_code);
 	}
@@ -90,9 +94,7 @@ class AIOWPSecurity_Audit_Event_Handler {
 	private function add_new_event($network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace, $country_code) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare("INSERT INTO ".AIOWPSEC_TBL_AUDIT_LOG." (network_id, site_id, username, ip, level, event_type, details, stacktrace, created, country_code) VALUES (%d, %d, %s, %s, %s, %s, %s, %s, UNIX_TIMESTAMP(), %s)", $network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace, $country_code);
-
-		$wpdb->query($sql);
+		$wpdb->query($wpdb->prepare("INSERT INTO ".AIOWPSEC_TBL_AUDIT_LOG." (network_id, site_id, username, ip, level, event_type, details, stacktrace, created, country_code) VALUES (%d, %d, %s, %s, %s, %s, %s, %s, UNIX_TIMESTAMP(), %s)", $network_id, $site_id, $username, $ip, $event_level, $event_type, $details, $stacktrace, $country_code)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 	}
 
 	/**
@@ -132,7 +134,7 @@ class AIOWPSecurity_Audit_Event_Handler {
 		// remove last ',' character from query
 		$sql = rtrim($sql, ',');
 
-		$wpdb->query($wpdb->prepare($sql, $values));
+		$wpdb->query($wpdb->prepare($sql, $values)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- The sql query is being dynamically built.
 	}
 
 	/**
@@ -152,8 +154,6 @@ class AIOWPSecurity_Audit_Event_Handler {
 		$after_days = empty($after_days) ? 90 : $after_days;
 		$older_than_date = strtotime("-{$after_days} days", time());
 
-		$sql = $wpdb->prepare("DELETE FROM ".AIOWPSEC_TBL_AUDIT_LOG." WHERE created < %s", $older_than_date);
-
-		$wpdb->query($sql);
+		$wpdb->query($wpdb->prepare("DELETE FROM ".AIOWPSEC_TBL_AUDIT_LOG." WHERE created < %s", $older_than_date)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 	}
 }

@@ -130,7 +130,7 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 	public function force_user_logout($users, $logout_all = false) {
 		global $wpdb, $aio_wp_security;
 
-		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$logged_in_users_table = AIOWPSEC_TBL_LOGGED_IN_USERS;
 
 		if ($logout_all) {
 			// get all user_id(except for the admin) in the table and make it an array for users
@@ -197,7 +197,7 @@ class AIOWPSecurity_List_Logged_In_Users extends AIOWPSecurity_List_Table {
 		$columns = $this->get_columns();
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();
-		$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$logged_in_users_table = AIOWPSEC_TBL_LOGGED_IN_USERS;
 		$current_page = $this->get_pagenum();
 		$offset = ($current_page - 1) * $per_page;
 

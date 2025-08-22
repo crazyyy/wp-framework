@@ -30,30 +30,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div id="ai1wm-modal-dialog-<?php echo esc_attr( $modal ); ?>" class="ai1wm-modal-dialog">
+<div id="<?php echo esc_attr( 'ai1wm-modal-dialog-' . $modal ); ?>" class="ai1wm-modal-dialog">
 	<div class="ai1wm-modal-container" role="dialog">
-		<h2><?php _e( 'Enter your Purchase ID', AI1WM_PLUGIN_NAME ); ?></h2>
-		<p><?php _e( 'To update your plugin/extension to the latest version, please fill your Purchase ID below.', AI1WM_PLUGIN_NAME ); ?></p>
+		<h2><?php esc_html_e( 'Enter your Purchase ID', 'all-in-one-wp-migration' ); ?></h2>
+		<p><?php esc_html_e( 'To update your plugin/extension to the latest version, please fill your Purchase ID below.', 'all-in-one-wp-migration' ); ?></p>
 		<p class="ai1wm-modal-error"></p>
 		<p>
-			<input type="text" class="ai1wm-purchase-id" placeholder="<?php _e( 'Purchase ID', AI1WM_PLUGIN_NAME ); ?>" />
+			<input type="text" class="ai1wm-purchase-id" placeholder="<?php esc_attr_e( 'Purchase ID', 'all-in-one-wp-migration' ); ?>" />
 			<input type="hidden" class="ai1wm-update-link" value="<?php echo esc_url( $url ); ?>" />
 		</p>
 		<p>
-			<?php _e( "Don't have a Purchase ID? You can find your Purchase ID", AI1WM_PLUGIN_NAME ); ?>
-			<a href="https://servmask.com/lost-purchase" target="_blank" class="ai1wm-help-link"><?php _e( 'here', AI1WM_PLUGIN_NAME ); ?></a>
+			<?php esc_html_e( "Don't have a Purchase ID? You can find your Purchase ID", 'all-in-one-wp-migration' ); ?>
+			<a href="https://servmask.com/lost-purchase" target="_blank" class="ai1wm-help-link"><?php esc_html_e( 'here', 'all-in-one-wp-migration' ); ?></a>
 		</p>
 		<p class="ai1wm-modal-buttons submitbox">
 			<button type="button" class="ai1wm-purchase-add ai1wm-button-green">
-				<?php _e( 'Save', AI1WM_PLUGIN_NAME ); ?>
+				<?php esc_html_e( 'Save', 'all-in-one-wp-migration' ); ?>
 			</button>
-			<a href="#" class="submitdelete ai1wm-purchase-discard"><?php _e( 'Discard', AI1WM_PLUGIN_NAME ); ?></a>
+			<a href="#" class="submitdelete ai1wm-purchase-discard"><?php esc_html_e( 'Discard', 'all-in-one-wp-migration' ); ?></a>
 		</p>
 	</div>
 </div>
 
-<span id="ai1wm-update-section-<?php echo esc_attr( $modal ); ?>">
+<span id="<?php echo esc_attr( 'ai1wm-update-section-' . $modal ); ?>">
 	<i class="ai1wm-icon-update"></i>
-	<?php _e( 'There is an update available. To update, you must enter your', AI1WM_PLUGIN_NAME ); ?>
-	<a class="ai1wm-modal-dialog-purchase-id" href="#ai1wm-modal-dialog-<?php echo esc_attr( $modal ); ?>"><?php _e( 'Purchase ID', AI1WM_PLUGIN_NAME ); ?></a>.
+	<?php esc_html_e( 'There is an update available. To update, you must enter your', 'all-in-one-wp-migration' ); ?>
+	<a class="ai1wm-modal-dialog-purchase-id" href="<?php echo esc_attr( '#ai1wm-modal-dialog-' . $modal ); ?>"><?php esc_html_e( 'Purchase ID', 'all-in-one-wp-migration' ); ?></a>.
 </span>

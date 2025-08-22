@@ -13,9 +13,8 @@ class AIOWPSecurity_Block_Muplugin extends AIOWPSecurity_Block_File {
 	 * @return boolean|WP_Error
 	 */
 	public function insert_contents() {
-
 		$info = pathinfo($this->file_path);
-	
+
 		if (!isset($info['dirname'])) {
 			return new WP_Error(
 				'file_no_directory',
@@ -32,7 +31,7 @@ class AIOWPSecurity_Block_Muplugin extends AIOWPSecurity_Block_File {
 			);
 		}
 
-		return (false !== @file_put_contents($this->file_path, $this->get_contents())); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this
+		return (false !== @file_put_contents($this->file_path, $this->get_contents())); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- WP_Filesystem is not appropriate here.
 	}
 
 	/**

@@ -15,7 +15,7 @@ function cmplz_install_cookiebanner_table($force=false) {
 		return;
 	}
 
-	if ( get_option( 'cmplz_cbdb_version' ) !== cmplz_version ) {
+	if ( get_option( 'cmplz_cbdb_version' ) !== CMPLZ_VERSION ) {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
@@ -137,7 +137,7 @@ function cmplz_install_cookiebanner_table($force=false) {
 			}
 		}
 		//not preload false: used to check existence of database table.
-		update_option( 'cmplz_cbdb_version', cmplz_version );
+		update_option( 'cmplz_cbdb_version', CMPLZ_VERSION );
 	}
 }
 
@@ -985,17 +985,17 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			if ($all_variants) {
 				$custom_image = wp_get_attachment_image($this->logo_attachment_id, 'cmplz_banner_image', false, ['alt' => get_bloginfo('name') ]);
 				if (empty($custom_image)) {
-					$custom_image = '<img src="'.cmplz_url.'/assets/images/placeholders/default-light.jpg" class="attachment-cmplz_banner_image size-cmplz_banner_image" alt="placeholder" loading="lazy" />';
+					$custom_image = '<img src="'.CMPLZ_URL.'/assets/images/placeholders/default-light.jpg" class="attachment-cmplz_banner_image size-cmplz_banner_image" alt="placeholder" loading="lazy" />';
 				}
 				return array(
-					'complianz' => file_get_contents(trailingslashit(cmplz_path) . 'assets/images/poweredbycomplianz.svg'),
+					'complianz' => file_get_contents(trailingslashit(CMPLZ_PATH) . 'assets/images/poweredbycomplianz.svg'),
 					'site' => get_custom_logo(),
 					'custom' => $custom_image,
 				);
 			}
 			switch ($this->use_logo) {
 				case 'complianz':
-					$logo = file_get_contents(trailingslashit(cmplz_path) . 'assets/images/poweredbycomplianz.svg');
+					$logo = file_get_contents(trailingslashit(CMPLZ_PATH) . 'assets/images/poweredbycomplianz.svg');
 					break;
 				case 'site':
 					$logo = get_custom_logo();
@@ -1162,7 +1162,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				"slider_active_color" => $this->colorpalette_toggles['background'] ?? '',
 				"slider_inactive_color" => $this->colorpalette_toggles['inactive'] ?? '',
 				"slider_bullet_color" => $this->colorpalette_toggles['bullet'] ?? '',
-				"category_open_icon_url" => "url(".trailingslashit( cmplz_url)."assets/images/chevron-down.svg)",
+				"category_open_icon_url" => "url(".trailingslashit( CMPLZ_URL)."assets/images/chevron-down.svg)",
 			);
 			$output = apply_filters( 'cmplz_cookiebanner_settings_css', $output, $this );
 			return apply_filters( 'cmplz_cookiebanner_settings', $output, $this );
@@ -1189,7 +1189,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				$css_files = $this->get_css_file_modules($consent_type, $preview);
 				$css = "";
 				foreach ($css_files as $css_file) {
-					$file_path = trailingslashit(cmplz_path) . "cookiebanner/css/$css_file";
+					$file_path = trailingslashit(CMPLZ_PATH) . "cookiebanner/css/$css_file";
 					if ( file_exists($file_path) ) {
 						$css .= file_get_contents($file_path) . "\n";
 					}
@@ -1254,7 +1254,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				foreach ( $consent_types as $consent_type ) {
 					$file =  "css/banner-$banner_id-$consent_type.css";
 					if ( ! file_exists( $upload_dir . $file ) ) {
-						$css_file = cmplz_url . "cookiebanner/css/defaults/banner-{type}.css";
+						$css_file = CMPLZ_URL . "cookiebanner/css/defaults/banner-{type}.css";
 					}
 				}
 			}
@@ -1274,7 +1274,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				'set_cookies'          => apply_filters( 'cmplz_set_cookies_on_consent', array() ), //cookies to set on acceptance, in order array('cookiename=>array('consent value', 'revoke value');
 				'block_ajax_content'   => cmplz_get_option( 'enable_cookieblocker_ajax' ),
 				'banner_version'       => $this->banner_version,
-				'version'              => cmplz_version,
+				'version'              => CMPLZ_VERSION,
 				'store_consent'        => $store_consent,
 				'do_not_track_enabled' => cmplz_get_option('respect_dnt') !== 'no',
 				'consenttype'          => COMPLIANZ::$company->get_default_consenttype(),

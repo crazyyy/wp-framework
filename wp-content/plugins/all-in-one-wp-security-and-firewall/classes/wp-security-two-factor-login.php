@@ -117,8 +117,8 @@ class AIO_WP_Security_Simba_Two_Factor_Authentication_Plugin extends Simba_Two_F
 		global $current_user;
 		if ($this->is_activated_for_user($current_user->ID)) {
 			if (!AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
-				$menu_icon_url = AIO_WP_SECURITY_URL . '/images/plugin-icon.png';
-				add_menu_page(__('WP Security', 'all-in-one-wp-security-and-firewall'), __('WP Security', 'all-in-one-wp-security-and-firewall'), apply_filters('aios_management_permission', 'manage_options'), AIOWPSEC_MAIN_MENU_SLUG, '', $menu_icon_url);
+				$menu_icon_url = AIO_WP_SECURITY_URL . '/images/aios-plugin-icon.svg';
+				add_menu_page(__('AIOS', 'all-in-one-wp-security-and-firewall'), __('AIOS', 'all-in-one-wp-security-and-firewall'), apply_filters('aios_management_permission', 'manage_options'), AIOWPSEC_MAIN_MENU_SLUG, '', $menu_icon_url);
 			}
 			add_submenu_page(AIOWPSEC_MAIN_MENU_SLUG, __('Two Factor Auth', 'all-in-one-wp-security-and-firewall'),  __('Two Factor Auth', 'all-in-one-wp-security-and-firewall'), 'read', AIOWPSEC_TWO_FACTOR_AUTH_MENU_SLUG, array($this, 'show_dashboard_user_settings_page'));
 		}

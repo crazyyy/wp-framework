@@ -23,7 +23,7 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 	public function __construct() {
 		parent::__construct(__('Brute force', 'all-in-one-wp-security-and-firewall'));
 	}
-	
+
 	/**
 	 * This function will setup the menus tabs by setting the array $menu_tabs
 	 *
@@ -61,7 +61,7 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 
 		$this->menu_tabs = array_filter($menu_tabs, array($this, 'should_display_tab'));
 	}
-	
+
 	/**
 	 * Rename login page tab.
 	 *
@@ -113,11 +113,11 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 		if ('cloudflare-turnstile' == $aio_wp_security->configs->get_value('aiowps_default_captcha')) $captcha_theme = $aio_wp_security->configs->get_value('aiowps_turnstile_theme');
 
 		if ('cloudflare-turnstile' == $aio_wp_security->configs->get_value('aiowps_default_captcha') && false === $aio_wp_security->captcha_obj->cloudflare_turnstile_verify_configuration($aio_wp_security->configs->get_value('aiowps_turnstile_site_key'), $aio_wp_security->configs->get_value('aiowps_turnstile_secret_key'))) {
-			echo '<div class="notice notice-warning aio_red_box"><p>'.__('Your Cloudflare Turnstile configuration is invalid.', 'all-in-one-wp-security-and-firewall').' '.__('Please enter the correct Cloudflare Turnstile keys below to use the Turnstile feature.', 'all-in-one-wp-security-and-firewall').'</p></div>';
+			echo '<div class="notice notice-warning aio_red_box"><p>' . esc_html__('Your Cloudflare Turnstile configuration is invalid.', 'all-in-one-wp-security-and-firewall').' ' . esc_html__('Please enter the correct Cloudflare Turnstile keys below to use the Turnstile feature.', 'all-in-one-wp-security-and-firewall').'</p></div>';
 		}
 
 		if ('1' == $aio_wp_security->configs->get_value('aios_google_recaptcha_invalid_configuration')) {
-			echo '<div class="notice notice-warning aio_red_box"><p>'.__('Your Google reCAPTCHA configuration is invalid.', 'all-in-one-wp-security-and-firewall').' '.__('Please enter the correct reCAPTCHA keys below to use the reCAPTCHA feature.', 'all-in-one-wp-security-and-firewall').'</p></div>';
+			echo '<div class="notice notice-warning aio_red_box"><p>' . esc_html__('Your Google reCAPTCHA configuration is invalid.', 'all-in-one-wp-security-and-firewall') . ' ' . esc_html__('Please enter the correct reCAPTCHA keys below to use the reCAPTCHA feature.', 'all-in-one-wp-security-and-firewall').'</p></div>';
 		}
 
 		$default_captcha = $aio_wp_security->configs->get_value('aiowps_default_captcha');
@@ -152,8 +152,10 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 		include_once 'wp-security-list-404.php'; // For rendering the AIOWPSecurity_List_Table in basic-firewall tab
 		$event_list_404 = new AIOWPSecurity_List_404(); // For rendering the AIOWPSecurity_List_Table in basic-firewall tab
 
-		$page = $_REQUEST['page'];
-		$tab = isset($_REQUEST["tab"]) ? $_REQUEST["tab"] : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
+		$page = isset($_REQUEST['page']) ? sanitize_text_field(wp_unslash($_REQUEST['page'])) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
+		$tab = isset($_REQUEST["tab"]) ? sanitize_text_field(wp_unslash($_REQUEST["tab"])) : '';
 		$aio_wp_security->include_template('wp-admin/brute-force/404-detection.php', false, array('event_list_404' => $event_list_404, 'page' => $page, 'tab' => $tab));
 	}
 

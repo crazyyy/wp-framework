@@ -1,9 +1,10 @@
 === Advanced Custom Fields (ACF®) PRO ===
-Contributors: elliotcondon
+Contributors: deliciousbrains, wpengine, elliotcondon, mattshaw, lgladdy, antpb, johnstonphilip, dalewilliams, polevaultweb
 Tags: acf, fields, custom fields, meta, repeater
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.8.2
 Requires PHP: 7.4
+Stable tag: 6.5.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +93,74 @@ From your WordPress dashboard
 
 
 == Changelog ==
+
+= 6.5.0.1 =
+*Release Date 12th August 2025*
+*PRO Only Release*
+
+* Fix - Flexible Content layouts configured with a "Layout" setting of "Table" are now rendered correctly in the post editor
+* Fix - Flexible Content "Add Layout" buttons now insert the new layout in the correct position
+* Fix - Long Flexible Content layout names no longer extend outside of the "Add Layout" dropdown
+
+= 6.5.0 =
+*Release Date 11th August 2025*
+
+* New - Flexible Content layouts can now be renamed in the post editor, giving content editors better clarity when managing layouts
+* New - Flexible Content layouts can now be disabled, preventing them from rendering on the frontend without needing to delete their data
+* New - Flexible Content layouts can now be collapsed and expanded in bulk for faster content editing
+* New - Editing a Flexible Content layout now highlights the layout being edited, making it easier to identify
+* New - The Date and Date Time Picker fields can now be configured to default to the current date
+* Fix - Custom Icon Picker tabs now work correctly when used inside an ACF Block
+* Fix - Duplicating a Field Group no longer causes a fatal error when using Russian translations
+* Fix - ACF classes no longer use dynamic class properties, improving compatibility with PHP 8.2+
+* Fix - ACF PRO no longer shows an update available immediately after updating to the latest version
+* Fix - Field group metabox collapse and expand buttons are no longer misaligned in the post editor
+* Fix - The ACF Site Health section no longer causes a PHP warning when field group location rules are incomplete
+* Security - HTML is now escaped from field validation errors and tooltips
+
+= 6.4.3 =
+*Release Date 22nd July 2025*
+
+* Security - Unsafe HTML in field group labels is now correctly escaped for conditionally loaded field groups, resolving a JS execution vulnerability in the classic editor
+* Security - HTML is now escaped from field group labels when output in the ACF admin
+* Security - Bidirectional and Conditional Logic Select2 elements no longer render HTML in field labels or post titles
+* Security - The `acf.escHtml` function now uses the third party DOMPurify library to ensure all unsafe HTML is removed. A new `esc_html_dompurify_config` JS filter can be used to modify the default behaviour
+* Security - Post titles are now correctly escaped whenever they are output by ACF code. Thanks to Shogo Kumamaru of LAC Co., Ltd. for the responsible disclosure
+* Security - An admin notice is now displayed when version 3 of the Select2 library is used, as it has now been deprecated in favor of version 4
+
+= 6.4.2 =
+*Release Date 20th May 2025*
+
+* New - In ACF PRO, fields can now be added to WooCommerce Subscriptions when using HPOS
+* Security - Changing a field type no longer enables the "Allow Access to Value in Editor UI" setting
+* Fix - Paginated Repeater fields no longer save duplicate values when saving to a WooCommerce Order with HPOS disabled
+* Fix - Blocks registered via acf_register_block_type() with a `parent` value of `null` no longer fail to register
+
+= 6.4.1 =
+*Release Date 8th May 2025*
+
+* New - Select fields can now be configured to allow creating new options when editing the field's value (requires the "Stylized UI" and "Multiple" field settings to be enabled)
+* Enhancement - The "Escaped HTML" warning notice [introduced in ACF 6.2.5](https://www.advancedcustomfields.com/blog/acf-6-2-5-security-release/) is now disabled by default
+* Enhancement - The Icon Picker field now supports supplying an array of icons to a custom tab via a new `acf/fields/icon_picker/{tab_name}/icons` filter
+* Fix - ACF Blocks are now forced into preview mode when editing a synced pattern
+* Fix - The free ACF plugin once again works with the Classic Widgets plugin and the legacy ACF Options Page addon
+* Fix - ACF no longer causes an infinite loop in bbPress when editing replies
+
+= 6.4.0.1 =
+*Release Date 8th April 2025*
+
+* Fix - Calling `acf_get_reference()` with an invalid field name no longer causes a fatal error
+
+= 6.4.0 =
+*Release Date 7th April 2025*
+
+* New - In ACF PRO, fields can now be added to WooCommerce orders when using HPOS
+* Enhancement - ACF now uses Composer to autoload some classes
+* Fix - Repeater pagination now works when the Repeater is inside a Group field
+* Fix - Various translations are no longer called before the WordPress `init` action hook
+* Security - Link field no longer has a minor local XSS vulnerability
+* i18n - Various British English translation strings no longer have a quoting issue breaking links
+* i18n - Added Dutch (formal) translations (props @toineenzo)
 
 = 6.3.12 =
 *Release Date 21st January 2025*

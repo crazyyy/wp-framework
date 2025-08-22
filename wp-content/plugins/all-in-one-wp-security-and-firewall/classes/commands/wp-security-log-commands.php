@@ -75,8 +75,8 @@ trait AIOWPSecurity_Log_Commands_Trait {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- PCP warning. Nonce checked in previous function.
 		if (empty($_POST['data'])) return;
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- PCP warning. Nonce checked in previous function.
-		$data = array_map('sanitize_text_field', wp_unslash($_POST['data']));
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- PCP warning. Nonce checked in previous function and sanitization done at later.
+		$data = wp_unslash($_POST['data']);
 
 		// Needed for rendering the audit log table
 		include_once(AIO_WP_SECURITY_PATH.'/admin/wp-security-list-audit.php');

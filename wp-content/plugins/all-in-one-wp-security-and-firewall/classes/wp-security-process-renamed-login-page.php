@@ -178,10 +178,10 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 			}
 		}
 
-		//case where someone attempting to reach the standard register or signup pages
-		if (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-register.php') || isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-signup.php')) {
+		//case where someone attempting to reach the standard register pages
+		if (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-register.php')) {
 			//Check if the maintenance (lockout) mode is active - if so prevent access to site by not displaying 404 page!
-			if ($aio_wp_security->configs->get_value('aiowps_site_lockout') == '1') {
+			if ('1' == $aio_wp_security->configs->get_value('aiowps_site_lockout')) {
 				AIOWPSecurity_WP_Loaded_Tasks::site_lockout_tasks();
 			} else {
 				AIOWPSecurity_Process_Renamed_Login_Page::aiowps_set_404();
@@ -213,8 +213,10 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 				}
 
 				status_header(200);
-				if (version_compare($wp_version, '5.7', '>=')) {
+				if (version_compare($wp_version, '6.6', '>=')) {
 					require_once(AIO_WP_SECURITY_PATH . '/other-includes/wp-security-rename-login-feature.php');
+				} elseif (version_compare($wp_version, '5.7', '>=')) {
+					require_once(AIO_WP_SECURITY_PATH . '/other-includes/wp-security-rename-login-feature-pre-6-6.php');
 				} elseif (version_compare($wp_version, '5.2', '>=')) {
 					require_once(AIO_WP_SECURITY_PATH . '/other-includes/wp-security-rename-login-feature-pre-5-7.php');
 				} else {
@@ -257,6 +259,8 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 	 * @return boolean
 	 */
 	public static function is_renamed_login_page_requested($login_slug) {
+		
+		if (empty($_SERVER['REQUEST_URI'])) return false;
 	
 		$parsed_url_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 		$home_url_with_slug = home_url($login_slug, 'relative');

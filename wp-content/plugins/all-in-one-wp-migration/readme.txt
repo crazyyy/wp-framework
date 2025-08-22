@@ -2,10 +2,10 @@
 Contributors: yani.iliev, bangelov, pimjitsawang
 Tags: backup, transfer, copy, move, clone
 Requires at least: 3.3
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 5.3
-Stable tag: 7.91
-License: GPLv2 or later
+Stable tag: 7.97
+License: GPLv3 or later
 
 Trusted by 60M+ sites: The gold standard for WordPress migrations, backups, and site transfers since 2013.
 
@@ -113,6 +113,48 @@ All-in-One WP Migration is in full compliance with General Data Protection Regul
 See our [GDPR Compliant Privacy Policy here](https://www.iubenda.com/privacy-policy/946881).
 
 == Changelog ==
+= 7.97 =
+**Added**
+
+* SQLite support in AUTO_INCREMENT check
+
+**Fixed**
+
+* Database replacement for serialized values to handle edge cases with string length validation
+
+= 7.96 =
+**Added**
+
+* Admin notice warning when AUTO_INCREMENT is missing on wp_options table
+
+= 7.95 =
+**Added**
+
+* New action hook ai1wm_status_export_init for developers on export initialization
+
+**Fixed**
+
+* Theme export progress display showing incorrect percentage
+* Uninstall.php script functionality
+* Export and import button ordering
+* Dropdown height styling issues
+
+= 7.94 =
+**Added**
+
+* Refresh Elementor plugin cache on import
+
+= 7.93 =
+**Fixed**
+
+* Compatibility issue with PHP 7 and PHP 5 due to trailing comma in style registration
+
+= 7.92 =
+**Improved**
+
+* Passed Plugin Check Plugin (PCP) validation
+* Archive name generation
+
 = 7.91 =
 **Added**
 

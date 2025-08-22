@@ -440,7 +440,7 @@ class AIOWPSecurity_Utility_Htaccess {
 	public static function getrules_5g_blacklist() {
 		global $aio_wp_security;
 		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_enable_5g_firewall') == '1') {
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall')) {
 			$rules .= AIOWPSecurity_Utility_Htaccess::$five_g_blacklist_marker_start . "\n"; //Add feature marker start
 
 			$rules .= '# 5G BLACKLIST/FIREWALL (2013)

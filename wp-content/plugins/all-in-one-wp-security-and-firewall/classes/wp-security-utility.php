@@ -875,7 +875,7 @@ class AIOWPSecurity_Utility {
 				$dbg.= "############ BACKTRACE ENDS  ########\n\n";
 			}
 		} else {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- PCP warning. Ignore.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace, PHPCompatibility.FunctionUse.ArgumentFunctionsReportCurrentValue.NeedsInspection -- PCP and compatibility warnings. Safe to ignore.
 			$dbg = debug_backtrace();
 		}
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- PCP warning. Ignore
@@ -1008,14 +1008,13 @@ class AIOWPSecurity_Utility {
 	 */
 	public static function change_salt_postfixes() {
 		global $aio_wp_security;
-
-		$salt_postfixes = array(
-			'auth' => wp_generate_password(64, true, true),
-			'secure_auth' => wp_generate_password(64, true, true),
-			'logged_in' => wp_generate_password(64, true, true),
-			'nonce' => wp_generate_password(64, true, true),
-		);
-
+		
+		$salt_postfixes_scheme = array('auth', 'secure_auth', 'logged_in', 'nonce', 'wpcf7_submission');
+		$salt_postfixes_scheme = apply_filters('aios_salt_postfixes_scheme', $salt_postfixes_scheme);
+		$salt_postfixes = array();
+		foreach ($salt_postfixes_scheme as $scheme) {
+			$salt_postfixes[$scheme] = wp_generate_password(64, true, true);
+		}
 		return $aio_wp_security->configs->set_value('aiowps_salt_postfixes', $salt_postfixes, true);
 	}
 
@@ -1529,15 +1528,18 @@ class AIOWPSecurity_Utility {
 		// If route is not found in query parameter, extract from REQUEST_URI
 		if (empty($rest_route)) {
 			$request_uri = !empty($_SERVER['REQUEST_URI']) ? urldecode($_SERVER['REQUEST_URI']) : '';
-			$parsed_url = parse_url($request_uri);
+			$parsed_url = parse_url(trim($request_uri, '/'));
 			$path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
 			if (false !== strpos($path, rest_get_url_prefix())) {
-				$rest_route = preg_replace('/(.*)\/'.rest_get_url_prefix().'\//', '', $path); // wp-json rest prefix and multisite folder excluded
+				$path = preg_replace('/index\.php\//', '', $path); // index.php from path removed.
+				$rest_route = preg_replace('/(.*)\/?'.rest_get_url_prefix().'\/?/', '', $path); // wp-json rest prefix and multisite folder excluded
+				$rest_route = trim($rest_route, '/');
+				if (empty($rest_route)) $rest_route = '/'; // "wp-json" rest request without name space called.
 			} else {
 				$rest_route = '';
 			}
 		}
-		return trim($rest_route, '/');
+		return $rest_route;
 	}
 	
 	/**

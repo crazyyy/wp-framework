@@ -2,11 +2,12 @@
 <h2><?php esc_html_e('Display name security', 'all-in-one-wp-security-and-firewall'); ?></h2>
 <div class="aio_blue_box">
 	<?php
-	echo '<p>'.esc_html__('When you submit a post or answer a comment, WordPress will usually display your "nickname".', 'all-in-one-wp-security-and-firewall').'
-	<br />'.esc_html__('By default the nickname is set to the login (or user) name of your account.', 'all-in-one-wp-security-and-firewall').'
-	<br />'.esc_html__('From a security perspective, leaving your nickname the same as your user name is bad practice because it gives a hacker at least half of your account\'s login credentials.', 'all-in-one-wp-security-and-firewall').'
-	<br /><br />'.esc_html__('Therefore to further tighten your site\'s security you are advised to change your <strong>nickname</strong> and <strong>Display name</strong> to be different from your <strong>Username</strong>.', 'all-in-one-wp-security-and-firewall').'
-	</p>';
+	echo '<p>'.esc_html__('When you submit a post or answer a comment, WordPress will usually display your "nickname".', 'all-in-one-wp-security-and-firewall');
+	echo '<br />'.esc_html__('By default the nickname is set to the login (or user) name of your account.', 'all-in-one-wp-security-and-firewall');
+	echo '<br />'.esc_html__('From a security perspective, leaving your nickname the same as your user name is bad practice because it gives a hacker at least half of your account\'s login credentials.', 'all-in-one-wp-security-and-firewall');
+	/* translators: 1. Open strong tag, 2. Close strong tag. */
+	echo '<br /><br />'.sprintf(esc_html__('Therefore to further tighten your site\'s security you are advised to change your %1$snickname%2$s and  %1$sDisplay name%2$s to be different from your %1$sUsername%2$s.', 'all-in-one-wp-security-and-firewall'), '<strong>', '</strong>');
+	echo '</p>';
 	?>
 </div>
 <div class="postbox">
@@ -22,7 +23,7 @@
 		?>
 		<table class="form-table">
 			<?php
-				$edit_user_page = network_site_url().'/wp-admin/user-edit.php?user_id=';
+				$edit_user_page = network_site_url('wp-admin/user-edit.php?user_id=');
 				foreach ($login_nick_name_accounts as $usr) {
 					echo '<tr valign="top">';
 					// echo '<th scope="row"><label for="UserID'.$usr['ID'].'"> Login Name: </label></th>';

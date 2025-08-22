@@ -233,10 +233,11 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 	 * @return void
 	 */
 	private function process_bulk_action($search_term, $filters, $action, $items = array()) {
-		global $wpdb, $aios_list_message;
+		global $wpdb;
+
 		if ('delete_selected' === $action) { // Process delete bulk actions
 			if (!isset($items)) {
-				$aios_list_message = AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Please select some records using the checkboxes', 'all-in-one-wp-security-and-firewall'), true);
+				AIOS_Helper::set_message('aios_list_message', __('Please select some records using the checkboxes', 'all-in-one-wp-security-and-firewall'), 'error');
 			} else {
 				$this->delete_audit_event_records($items);
 			}
@@ -249,7 +250,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 				$items = array_column($results, 'id');
 				$this->delete_audit_event_records($items);
 			} else {
-				$aios_list_message = AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Please select the level or the event type filter or filter by a search term', 'all-in-one-wp-security-and-firewall'), true);
+				AIOS_Helper::set_message('aios_list_message', __('Please select the level or the event type filter or filter by a search term', 'all-in-one-wp-security-and-firewall'), 'error');
 			}
 		} elseif ('delete_all' === $action) {
 			$this->delete_audit_event_records(null, true);
@@ -311,7 +312,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 	 * @return void|string
 	 */
 	public function delete_audit_event_records($entries, $delete_all = false) {
-		global $wpdb, $aio_wp_security, $aios_list_message;
+		global $wpdb, $aio_wp_security;
 		
 		$audit_log_tbl = AIOWPSEC_TBL_AUDIT_LOG;
 		$result = false;
@@ -338,7 +339,7 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 				$result = $wpdb->query($delete_command);
 				if (!$result) {
 					$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Audit log table. Database error: '.$wpdb->last_error, 4);
-					$aios_list_message = AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st(true);
+					AIOS_Helper::set_message('aios_list_message', __('The selected record(s) have failed to delete.', 'all-in-one-wp-security-and-firewall'), 'error');
 					return;
 				}
 			}
@@ -351,11 +352,15 @@ class AIOWPSecurity_List_Audit_Log extends AIOWPSecurity_Ajax_Data_Table {
 		}
 
 		if ($result || 0 < $result) {
-			$aios_list_message = AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st(true);
+			$aios_list_message = __('The selected record(s) has been deleted successfully.', 'all-in-one-wp-security-and-firewall');
+			AIOS_Helper::set_message('aios_list_message', $aios_list_message);
 		} else {
+			$aios_list_message = __('The selected record(s) have failed to delete.', 'all-in-one-wp-security-and-firewall');
 			$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Audit log table. Database error: '.$wpdb->last_error, 4);
-			$aios_list_message = AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st(true);
+			AIOS_Helper::set_message('aios_list_message', $aios_list_message, 'error');
 		}
+
+		return $aios_list_message;
 	}
 
 	/**

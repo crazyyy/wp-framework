@@ -161,7 +161,7 @@ if ( ! class_exists( "cmplz_scan" ) ) {
 		public function enqueue_admin_assets( $hook ) {
 			if ( isset( $_GET['page'] ) && $_GET['page'] === 'complianz' ) {
 				//script to check for ad blockers
-				wp_enqueue_script( 'cmplz-ad-checker', cmplz_url . "assets/js/ads.js", array(), cmplz_version, true );
+				wp_enqueue_script( 'cmplz-ad-checker', CMPLZ_URL . "assets/js/ads.js", array(), CMPLZ_VERSION, true );
 			}
 		}
 

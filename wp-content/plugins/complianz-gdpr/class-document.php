@@ -144,13 +144,13 @@ if ( ! class_exists( "cmplz_document" ) ) {
 				$load_css = cmplz_get_value( 'use_document_css' );
 				if ( $load_css ) {
 					wp_register_style( 'cmplz-document',
-						cmplz_url . "assets/css/document$min.css", false,
-						cmplz_version );
+						CMPLZ_URL . "assets/css/document$min.css", false,
+						CMPLZ_VERSION );
 					wp_enqueue_style( 'cmplz-document' );
 				} else {
                     wp_register_style( 'cmplz-document-grid',
-                        cmplz_url . "assets/css/document-grid$min.css", false,
-                        cmplz_version );
+						CMPLZ_URL . "assets/css/document-grid$min.css", false,
+						CMPLZ_VERSION );
                     wp_enqueue_style( 'cmplz-document-grid' );
                 }
 
@@ -158,7 +158,7 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			}
 
 			if ( cmplz_get_value( 'safe_mode' ) !== 1 ) {
-				wp_register_style( 'cmplz-general', cmplz_url . "assets/css/cookieblocker$min.css", false, cmplz_version );
+				wp_register_style( 'cmplz-general', CMPLZ_URL . "assets/css/cookieblocker$min.css", false, CMPLZ_VERSION );
 				wp_enqueue_style( 'cmplz-general' );
 			}
 
@@ -2910,7 +2910,7 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			$css           = '';
 
 			if ( $load_css ) {
-				$css = file_get_contents( cmplz_path . "assets/css/document.css" );
+				$css = file_get_contents( CMPLZ_PATH . "assets/css/document.css" );
 			}
 			$title_html = $save_to_file ? ''
 				: '<h4 class="center">' . $title . '</h4>';
@@ -2955,7 +2955,7 @@ if ( ! class_exists( "cmplz_document" ) ) {
 
 			$html = preg_replace('/<input type="checkbox".*?>/', '', $html);
 
-			require cmplz_path . '/assets/vendor/autoload.php';
+			require CMPLZ_PATH . '/assets/vendor/autoload.php';
 
 			//generate a token when it's not there, otherwise use the existing one.
 			if ( get_option( 'cmplz_pdf_dir_token' ) ) {

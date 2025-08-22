@@ -418,7 +418,7 @@ trait AIOWPSecurity_Settings_Commands_Trait {
 		if (in_array($ip_retrieve_method_id, array_keys(AIOS_Abstracted_Ids::get_ip_retrieve_methods()))) {
 			$aio_wp_security->configs->set_value('aiowps_ip_retrieve_method', $ip_retrieve_method_id, true);
 			$aiowps_firewall_config->set_value('aios_ip_retrieve_method', $ip_retrieve_method_id);
-			$logged_in_users_table = AIOWSPEC_TBL_LOGGED_IN_USERS;
+			$logged_in_users_table = AIOWPSEC_TBL_LOGGED_IN_USERS;
 
 			//Clear logged in list because it might be showing wrong addresses
 			if (AIOWPSecurity_Utility::is_multisite_install()) {

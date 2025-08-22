@@ -399,7 +399,8 @@
 	padding: 20px 0;
 }
 
-.aiowps_password_crack_info_text {
+#aiowps_password_crack_info_text, #aiowps_password_hibp_info_text {
+	display: none;
 	line-height: 1.16667em;
 	max-width: 40%;
 }
@@ -407,10 +408,6 @@
 #aiowps_password_crack_time_calculation {
 	line-height: 1.16667em;
 	color: darkorange;
-}
-
-#aiowps_password_crack_time_calculation:empty + #aiowps_http_authentication_password_crack_time_explanation {
-	display: none;
 }
 
 /* bootstrap type labels */

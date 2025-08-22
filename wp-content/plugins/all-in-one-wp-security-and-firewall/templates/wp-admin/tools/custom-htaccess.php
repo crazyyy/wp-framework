@@ -14,7 +14,8 @@
 			</div>
 			<div class="aio_yellow_box">
 				<?php
-				$info_msg_2 = '<p>'. esc_html__('<strong>Warning</strong>: Only use this feature if you know what you are doing.', 'all-in-one-wp-security-and-firewall').'</p>';
+				/* translators: %s: Warning */
+				$info_msg_2 = '<p>'. sprintf(esc_html__('%s: Only use this feature if you know what you are doing.', 'all-in-one-wp-security-and-firewall'), '<strong>' . esc_html__('Warning', 'all-in-one-wp-security-and-firewall') . '</strong>').'</p>';
 				$info_msg_2 .= '<p>'.esc_html__('Incorrect .htaccess rules or directives can break or prevent access to your site.', 'all-in-one-wp-security-and-firewall').'</p>';
 				$info_msg_2 .= '<p>'.esc_html__('It is your responsibility to ensure that you are entering the correct code!', 'all-in-one-wp-security-and-firewall').'</p>';
 				$info_msg_2 .= '<p>'.esc_html__('If you break your site you will need to access your server via FTP or something similar and then edit your .htaccess file and delete the changes you made.', 'all-in-one-wp-security-and-firewall').'</p>';

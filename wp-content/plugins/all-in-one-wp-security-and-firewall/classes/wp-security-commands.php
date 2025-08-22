@@ -145,6 +145,8 @@ class AIOWPSecurity_Commands {
 				}
 
 				$aio_wp_security->configs->delete_value('aiowps_firewall_active_upgrade');
+		} elseif ('php_56_eol_dismiss_forever' == $data['notice']) {
+			$aio_wp_security->configs->set_value('php_56_eol_dismiss_forever', $time_now + (100 * 365.25 * 86400));
 		}
 		
 
@@ -313,9 +315,9 @@ class AIOWPSecurity_Commands {
 				'message' => __('Invalid email address.', 'all-in-one-wp-security-and-firewall'),
 			);
 		}
-			
-		$result = $aio_wp_security->debug_obj->send_report($sanitized_email);
-		
+
+		$result = $aio_wp_security->debug_obj->send_report($sanitized_email, wp_kses_post(html_entity_decode($data['report_sections'])));
+
 		if ($result) {
 			return array(
 				'status' => 'success',

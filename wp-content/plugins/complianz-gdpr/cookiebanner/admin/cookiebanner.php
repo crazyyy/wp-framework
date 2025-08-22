@@ -65,7 +65,7 @@ function cmplz_banner_data(array $data, string $action, WP_REST_Request $request
 		foreach ( $banners as $banner ){
 			$object_banners[] = new CMPLZ_COOKIEBANNER($banner->ID, true, true);
 		}
-		$path = trailingslashit( cmplz_path ).'cookiebanner/templates/';
+		$path = trailingslashit( CMPLZ_PATH ).'cookiebanner/templates/';
 		$banner_html = cmplz_get_template( "cookiebanner.php", [], $path);
 		$manage_consent_html = cmplz_get_template( "manage-consent.php", false, $path);
 		$page_links = COMPLIANZ::$document->get_page_links();

@@ -122,7 +122,7 @@ class AIOWPSecurity_Utility_Firewall {
 				} catch (Exception $exception) {
 					$aio_wp_security->debug_logger->log_debug($exception->getMessage(), 4);
 					return '';
-				} catch (Error $error) {
+				} catch (Error $error) { // phpcs:ignore PHPCompatibility.Classes.NewClasses.errorFound -- this won't run on PHP 5.6 so we still want to catch it on other versions
 					$aio_wp_security->debug_logger->log_debug($error->getMessage(), 4);
 					return '';
 				}

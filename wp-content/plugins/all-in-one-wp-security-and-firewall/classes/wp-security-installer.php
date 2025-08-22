@@ -26,7 +26,7 @@ class AIOWPSecurity_Installer {
 		global $wpdb;
 		if (function_exists('is_multisite') && is_multisite() && is_main_site()) {
 			// check if it is a network activation - if so, run the activation function for each blog id
-			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- There doesn't seem to be a documented alternative. Possible alternative get_sites(array('fields' => 'ids', 'number' => 0) but 'number' => 0 is not documented.
 			foreach ($blogids as $blog_id) {
 				switch_to_blog($blog_id);
 				AIOWPSecurity_Installer::create_db_tables();
@@ -96,7 +96,7 @@ class AIOWPSecurity_Installer {
 		$message_store_log_tbl_name = AIOWPSEC_TBL_MESSAGE_STORE;
 		$audit_log_tbl_name = AIOWPSEC_TBL_AUDIT_LOG;
 		$debug_log_tbl_name = AIOWPSEC_TBL_DEBUG_LOG;
-		$logged_in_users_tbl_name = AIOWSPEC_TBL_LOGGED_IN_USERS;
+		$logged_in_users_tbl_name = AIOWPSEC_TBL_LOGGED_IN_USERS;
 
 		$charset_collate = '';
 		if (!empty($wpdb->charset)) {
@@ -263,16 +263,15 @@ class AIOWPSecurity_Installer {
 		$audit_log_tbl_name = AIOWPSEC_TBL_AUDIT_LOG;
 		$network_id = get_current_network_id();
 		$site_id = get_current_blog_id();
-		
-		$query = $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($failed_login_tbl_name));
-		$table_exists = $wpdb->get_var($query);
+
+		$table_exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($failed_login_tbl_name))); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- There doesn't seem to be an alternative.
 		if ($table_exists) {
 			$import_details = array(
 				'failed_login' => array(
 					'imported' => true,
 				)
 			);
-			$import_details = json_encode($import_details, true);
+			$import_details = wp_json_encode($import_details, true);
 			$table_migration_details = array(
 				'table_migration' => array(
 					'success' => true,
@@ -281,19 +280,18 @@ class AIOWPSecurity_Installer {
 				)
 			);
 
-			if (false === $wpdb->query($wpdb->prepare("INSERT INTO $audit_log_tbl_name (network_id, site_id, username, ip, level, event_type, details, stacktrace, created) SELECT %d AS network_id, %d AS site_id, fl.user_login AS username, fl.login_attempt_ip AS ip, 'warning' AS level, 'Failed login' AS event_type, %s AS details, '' AS stacktrace, UNIX_TIMESTAMP(fl.failed_login_date) AS created FROM $failed_login_tbl_name fl", $network_id, $site_id, $import_details))) {
+			if (false === $wpdb->query($wpdb->prepare("INSERT INTO $audit_log_tbl_name (network_id, site_id, username, ip, level, event_type, details, stacktrace, created) SELECT %d AS network_id, %d AS site_id, fl.user_login AS username, fl.login_attempt_ip AS ip, 'warning' AS level, 'Failed login' AS event_type, %s AS details, '' AS stacktrace, UNIX_TIMESTAMP(fl.failed_login_date) AS created FROM $failed_login_tbl_name fl", $network_id, $site_id, $import_details))) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 				$table_migration_details['table_migration']['success'] = false;
 				do_action('aiowps_record_event', 'table_migration', $table_migration_details, 'error');
 			} else {
 				do_action('aiowps_record_event', 'table_migration', $table_migration_details, 'info');
-				$wpdb->query("DROP TABLE IF EXISTS `$failed_login_tbl_name`");
+				$wpdb->query("DROP TABLE IF EXISTS `$failed_login_tbl_name`"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 			}
 		}
 
-		$query = $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($login_activity_tbl_name));
-		$table_exists = $wpdb->get_var($query);
+		$table_exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($login_activity_tbl_name))); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- There doesn't seem to be an alternative.
 		if ($table_exists) {
-			$wpdb->query("DROP TABLE IF EXISTS `$login_activity_tbl_name`");
+			$wpdb->query("DROP TABLE IF EXISTS `$login_activity_tbl_name`"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 		}
 	}
 
@@ -304,7 +302,7 @@ class AIOWPSecurity_Installer {
 	 */
 	public static function clean_audit_log_stacktraces() {
 		global $wpdb;
-		$wpdb->query("UPDATE ".AIOWPSEC_TBL_AUDIT_LOG." SET stacktrace = '' WHERE event_type = 'failed_login' OR event_type = 'successful_login' OR event_type = 'user_registration'");
+		$wpdb->query("UPDATE ".AIOWPSEC_TBL_AUDIT_LOG." SET stacktrace = '' WHERE event_type = 'failed_login' OR event_type = 'successful_login' OR event_type = 'user_registration'"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 	}
 
 	/**
@@ -341,7 +339,7 @@ class AIOWPSecurity_Installer {
 	public static function update_column_to_timestamp($table_name, $field_datetime, $field_timestamp) {
 		global $wpdb;
 		//MySQL UNIX_TIMESTAMP will convert datetime based on local timezone not UTC
-		$offset = $wpdb->get_var("SELECT TIMESTAMPDIFF(SECOND, NOW(), UTC_TIMESTAMP())");
+		$offset = $wpdb->get_var("SELECT TIMESTAMPDIFF(SECOND, NOW(), UTC_TIMESTAMP())"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- There doesn't seem to be an alternative.
 		if (AIOWPSEC_TBL_PERM_BLOCK == $table_name || AIOWPSEC_TBL_GLOBAL_META_DATA == $table_name || AIOWPSEC_TBL_DEBUG_LOG == $table_name) {
 			//User local settings date time saved offset timezone needs to removed for UTC correct value
 			$offset += AIOWPSecurity_Utility::get_wp_timezone()->getOffset(new DateTime('now', new DateTimeZone('UTC')));
@@ -358,7 +356,7 @@ class AIOWPSecurity_Installer {
 			$table_name = $wpdb->prefix.'aiowps_debug_log';
 		}
 		//offset to make sure UTC timestamp updated
-		$wpdb->query($wpdb->prepare("UPDATE $table_name SET $field_timestamp = (UNIX_TIMESTAMP($field_datetime) - %d)", $offset));
+		$wpdb->query($wpdb->prepare("UPDATE $table_name SET $field_timestamp = (UNIX_TIMESTAMP($field_datetime) - %d)", $offset)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 	}
 
 	/**
@@ -372,6 +370,7 @@ class AIOWPSecurity_Installer {
 
 	public static function create_db_backup_dir() {
 		global $aio_wp_security;
+		// phpcs:disable WordPress.WP.AlternativeFunctions -- WP_Filesystem is not appropriate here.
 		//Create our folder in the "wp-content" directory
 		$aiowps_dir = WP_CONTENT_DIR . '/' . AIO_WP_SECURITY_BACKUPS_DIR_NAME;
 		if (!is_dir($aiowps_dir) && is_writable(WP_CONTENT_DIR)) {
@@ -397,6 +396,7 @@ class AIOWPSecurity_Installer {
 				}
 			}
 		}
+		// phpcs:enable WordPress.WP.AlternativeFunctions -- WP_Filesystem is not appropriate here.
 	}
 
 	/**
@@ -414,7 +414,7 @@ class AIOWPSecurity_Installer {
 		if (is_multisite() && is_main_site()) {
 			global $wpdb;
 			// check if it is a network activation
-			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- There doesn't seem to be a documented alternative. Possible alternative get_sites(array('fields' => 'ids', 'number' => 0) but 'number' => 0 is not documented.
 			foreach ($blogids as $blog_id) {
 				switch_to_blog($blog_id);
 				AIOWPSecurity_Installer::schedule_cron_events();

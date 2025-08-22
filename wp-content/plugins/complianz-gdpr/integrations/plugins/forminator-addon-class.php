@@ -8,7 +8,7 @@ final class CMPLZ_Forminator_Addon extends Forminator_Addon_Abstract {
 	 * Use this trait to mark this addon as PRO
 	 */
 	protected $_slug = 'complianz';
-	protected $_version = cmplz_version;
+	protected $_version = CMPLZ_VERSION;
 	protected $_min_forminator_version = '1.1';
 	protected $_short_title = 'Complianz';
 	protected $_title = 'Complianz Privacy Suite';
@@ -20,8 +20,8 @@ final class CMPLZ_Forminator_Addon extends Forminator_Addon_Abstract {
 	protected $_image_x2 = '';
 
 	public function __construct() {
-		$this->_icon = cmplz_url . 'assets/images/icon-logo.svg';
-		$this->_icon_x2 = cmplz_url . 'assets/images/icon-256x256.png';
+		$this->_icon = CMPLZ_URL . 'assets/images/icon-logo.svg';
+		$this->_icon_x2 = CMPLZ_URL . 'assets/images/icon-256x256.png';
 		// late init to allow translation
 		$this->_description
 			= __( 'Integrate Forminator with Complianz Privacy Suite',

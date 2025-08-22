@@ -100,7 +100,7 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 
 		if ('unblock' === $this->current_action()) { // Process unlock bulk actions
 			if (!isset($_REQUEST['item'])) {
-				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Please select some records using the checkboxes', 'all-in-one-wp-security-and-firewall'));
+				AIOS_Helper::set_message('aios_list_message', __('Please select some records using the checkboxes', 'all-in-one-wp-security-and-firewall'), 'error');
 			} else {
 				$this->unblock_ip_address(($_REQUEST['item']));
 			}
@@ -124,11 +124,11 @@ class AIOWPSecurity_List_Blocked_IP extends AIOWPSecurity_List_Table {
 			$delete_command = "DELETE FROM " . AIOWPSEC_TBL_PERM_BLOCK . " WHERE id IN " . $id_list;
 			$result = $wpdb->query($delete_command);
 			if ($result) {
-				AIOWPSecurity_Admin_Menu::show_msg_updated_st(__('Successfully unblocked and deleted the selected record(s).', 'all-in-one-wp-security-and-firewall'));
+				AIOS_Helper::set_message('aios_list_message', __('Successfully unblocked and deleted the selected record(s).', 'all-in-one-wp-security-and-firewall'));
 			} else {
 				// Error on bulk delete
 				$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Perm Block table. Database error: '.$wpdb->last_error, 4);
-				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Failed to unblock and delete the selected record(s).', 'all-in-one-wp-security-and-firewall'));
+				AIOS_Helper::set_message('aios_list_message', __('Failed to unblock and delete the selected record(s).', 'all-in-one-wp-security-and-firewall'), 'error');
 			}
 		} elseif (!empty($entries)) {
 			//Delete single record

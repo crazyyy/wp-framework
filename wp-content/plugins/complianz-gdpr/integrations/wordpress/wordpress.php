@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 /**
  * Tell the consent API we're following the api
  */
-$plugin = cmplz_plugin;
+$plugin = CMPLZ_PLUGIN;
 add_filter( "wp_consent_api_registered_$plugin", function () {
 	return true;
 } );

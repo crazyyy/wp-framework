@@ -5,13 +5,13 @@ Tags: GDPR, Cookie, Cookie Notice, Consent, Privacy
 Requires at least: 5.9
 License: GPL2
 Requires PHP: 7.4
-Tested up to: 6.7.2
-Stable tag: 7.3.1
+Tested up to: 6.8
+Stable tag: 7.4.2
 
-Configure your Cookie Banner, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan.
+Configure your Cookie Banner, Cookie Consent and Cookie Policy with our Wizard and Cookies Scan.
 
 == Description ==
-Complianz is a GDPR/CCPA Cookie Consent plugin that supports GDPR, ePrivacy, DSGVO, TTDSG, LGPD, POPIA, APA, RGPD, CCPA/CPRA and PIPEDA with a conditional Cookie Notice and customized Cookie Policy based on the results of the built-in Cookie Scan.
+Complianz is a GDPR/CCPA Cookie Banner plugin that supports GDPR, ePrivacy, DSGVO, TTDSG, LGPD, POPIA, APA, RGPD, CCPA/CPRA and PIPEDA with a conditional Cookie Consent Banner and customized Cookie Policy based on the results of the built-in Cookie Scan.
 
 https://www.youtube.com/watch?v=JJzOzNAd5Bw&ab_channel=ReallySimplePlugins
 
@@ -24,19 +24,19 @@ https://www.youtube.com/watch?v=JJzOzNAd5Bw&ab_channel=ReallySimplePlugins
 * Cookie Consent and Conditional Cookie Notice with Custom CSS and Customizable Templates. WCAG Level AA and ADA Compliant.
 * Banner Templates include: GDPR-friendly Cookie Wall - Accept/Dismiss - Consent per Category - Consent per Service
 * Banner Templates also include; Dismiss on scroll, time on page or both based on legislation
-* Cookie Banners and Legal Documents conform to WCAG 2.1 AA Accessibility Guidelines and ADA Compliance.
+* We aim to follow WCAG 2.1 AA guidelines and ADA best practices in the design of our cookie banners and legal documents to support accessibility.
 * No jQuery Dependency
 
 = Consent Management =
 
 * Automatically configures your website based on wizard questions, WordPress scans and dedicated service and plugin integrations.
 * Blocks 3rd party cookies like Google Maps, Facebook, Instagram, AdSense, Hubspot, Recaptcha, Twitter, ActiveCampaign, and many more.
-* Custom integrations for plugins, themes and services are automatically detected. 
+* Custom integrations for plugins, themes and services are automatically detected.
 * Blocks iFrames, like YouTube, Vimeo, Dailymotion embedded videos and Social iFrames e.g. Instagram, Facebook et al.
 * Shows placeholders for blocked iFrames. Stills from videos and individual placeholders per (social) service.
 * Script Center to control scripts, iFrames and plugins per category or service. With dependency functionality and placeholders.
 * Proof of Consent: User consent registration that respects the GDPR data minimization guideline.
-* Periodical Cookie Scan for changes in Cookies, Plugins and 3rd Party services. 
+* Periodical Cookie Scan for changes in Cookies, Plugins and 3rd Party services.
 * Automatically detects if you need a Cookie Notice (also called a Cookie Banner or Pop-Up).
 * Automatically anonymizes personal data for integrated statistics tools if needed.
 
@@ -110,13 +110,13 @@ Simultaneously select USA, Canada, United Kingdom, Australia, South Africa, Braz
 
 = Legal Documents =
 
-* Privacy statements (EU, CA, UK, AU, ZA, BR & USA). 
+* Privacy statements (EU, CA, UK, AU, ZA, BR & USA).
 * Cookie policy (EU, UK, CA, AU, ZA, BR & USA).
 * Impressum (Germany & Austria) & Imprint for world wide use.
 * Disclaimer
 * Terms & Conditions Integration
-* Processing agreements (EU, UK, CA, AU, ZA, BR & USA). 
-* Dataleak reporting tools (EU, UK, CA, AU, ZA, BR & USA). 
+* Processing agreements (EU, UK, CA, AU, ZA, BR & USA).
+* Dataleak reporting tools (EU, UK, CA, AU, ZA, BR & USA).
 * Supports CCPA Consent and Legal documents.
 * COPPA ready with Children's Privacy Policy (USA)
 * Children's Privacy Policy (UK,CA & AU)
@@ -156,7 +156,7 @@ The advanced website scan collects public data from the user’s site, stores it
 
 For more information:
 
-* Advanced website scan Complianz.io - [Privacy Statement](https://complianz.io/legal/privacy-statement/) 
+* Advanced website scan Complianz.io - [Privacy Statement](https://complianz.io/legal/privacy-statement/)
 * Advanced website scan Complianz.io - [Terms of Use API](https://complianz.io/legal/terms-of-use/)
 
 [Contact](https://complianz.io/support/) us if you have any questions, issues, or suggestions. Complianz | GDPR/CCPA Cookie Consent is developed by [Complianz B.V.](https://complianz.io).
@@ -172,9 +172,9 @@ For more information:
 Complianz maintains a continuously growing knowledgebase about GDPR, including subregions e.g. DSGVO and CNIL, CCPA, PIPEDA, COPPA, POPIA & other specific laws on [complianz.io](https://complianz.io)
 
 = Is my website GDPR, COPPA, CCPA, DSGVO, TTDSG, AVG, CNIL, UK-GDPR, PECR, CASL, LGPD, POPIA and/or PIPEDA compliant with this plugin? =
-We cannot guarantee compliance for your website. A correct configuration of this plugin by a website administrator is always required. 
+We cannot guarantee compliance for your website. A correct configuration of this plugin by a website administrator is always required.
 = When do I need a Cookie Notice? =
-Complianz | GDPR/CCPA Cookie Consent will determine this automatically based on the laws of the region or regions, where most of your visitors come from. 
+Complianz | GDPR/CCPA Cookie Consent will determine this automatically based on the laws of the region or regions, where most of your visitors come from.
 Regarding CCPA/CPRA, you always have to show which cookies you are using but there's no obligation in asking consent.
 = Do I always need a consent checkbox on contact forms? =
 Not always. The Complianz Privacy Suite Premium plugin can determine if you need this, based on your answers in the wizard. It mainly depends on the type of information and the reason why your visitor use the contact form.
@@ -198,9 +198,36 @@ The Brazilian General Data Protection Law is similar to the GDPR, the UK-GDPR it
 With some custom CSS this is possible, but we do not consider a cookie wall to be GDPR compliant, so it's not actively supported. We do, however, have the option to create a Soft Cookie Wall. Which blocks interaction with the website, but dismissing remains a possibility.
 
 == Changelog ==
+= 7.4.2 =
+* July 11th, 2025
+* Translations: Updated translations.
+* Accessibility: Improved cookie banner for better accessibility.
+* Fix: Backend not loading due to missing dependency on WordPress versions lower than 6.6.
+
+= 7.4.1 =
+* June 18th, 2025
+* New: Notifications system.
+* Update: Other plugins suggestion component.
+* Improvement: Website Scan, added site creation.
+* Improvement: Dailymotion integration.
+* Improvement: Google Recaptcha integration.
+* Improvement: Clarity integration.
+* Security update: Authenticated (Translator+) Stored XSS.
+
+= 7.4.0.1 =
+* April 14th, 2025
+* Improvement: Tested up to WordPress 6.8
+* Fix: Fixed missing "Details Per Purposes" section.
+
+= 7.4.0 =
+* March 31th, 2025
+* Improvement: refactored translations of Complianz due to Function _load_textdomain_just_in_time notice
+* Improvement: updated translations
+* Improvement: onboarding to authenticate website scan trigger changed
+
 = 7.3.1 =
 * March 5th, 2025
-* Fix: removed admin redirect for cmplz_admin redirect solving issues with manageWP and overy forceful scan onboarding.
+* Fix: removed admin redirect for cmplz_admin redirect solving issues with manageWP and forceful scan onboarding.
 * Enhancement: Add support for New Jersey, Iowa, Delaware, New Hampshire, Nebraska state privacy laws.
 * Enhancement: Email obfuscation now uses HTML entities and CSS to prevent spam bots from reading the email address.
 * Enhancement: Google Tag Manager script placement can now be dynamically set to load in the header or footer based on user preference, addressing Google Diagnostics warnings.

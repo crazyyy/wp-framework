@@ -335,7 +335,7 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		<p><a href="https://x.com/TeamUpdraftWP" target="_blank"><?php esc_html_e('Follow us on', 'all-in-one-wp-security-and-firewall');?> X</a>
 		</p>
 		<p>
-			<a href="http://twitter.com/intent/tweet?url=https://wordpress.org/plugins/all-in-one-wp-security-and-firewall&text=I love the All In One WP Security and Firewall plugin!"
+			<a href="https://x.com/intent/tweet?url=https://wordpress.org/plugins/all-in-one-wp-security-and-firewall&text=I love the All In One WP Security and Firewall plugin!"
 			target="_blank" class="aio_tweet_link"><?php esc_html_e('Post to X', 'all-in-one-wp-security-and-firewall');?></a>
 		</p>
 		<p>

@@ -35,7 +35,7 @@ function cmplz_get_system_status(){
 
 	echo "General\n";
 	echo "---------\n";
-	echo "Plugin version: " . cmplz_version . "\n";
+	echo "Plugin version: " . CMPLZ_VERSION . "\n";
 	global $wp_version;
 	echo "WordPress version: " . $wp_version . "\n";
 	echo "PHP version: " . PHP_VERSION . "\n";

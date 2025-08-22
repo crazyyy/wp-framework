@@ -110,6 +110,10 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_place_custom_rules_at_top', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_custom_rules', '');
 
+		// Upgrade unsafe HTTP calls
+		$aio_wp_security->configs->set_value('aiowps_upgrade_unsafe_http_calls', ''); // Checkbox
+		$aio_wp_security->configs->set_value('aiowps_upgrade_unsafe_http_calls_url_exceptions', '');
+
 		//404 detection
 		$aio_wp_security->configs->set_value('aiowps_enable_404_logging', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_404_IP_lockout', '');//Checkbox
@@ -184,6 +188,9 @@ class AIOWPSecurity_Configure_Settings {
 		// Deactivation Handler
 		$aio_wp_security->configs->set_value('aiowps_on_uninstall_delete_db_tables', '1'); //Checkbox
 		$aio_wp_security->configs->set_value('aiowps_on_uninstall_delete_configs', '1'); //Checkbox
+
+		// Reset the PHP 5.6 end of support notice
+		$aio_wp_security->configs->delete_value('php_56_eol_dismiss_forever');
 
 		//TODO - keep adding default options for any fields that require it
 
@@ -309,6 +316,10 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->add_value('aiowps_enable_custom_rules', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_place_custom_rules_at_top', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_custom_rules', '');
+
+		// Upgrade unsafe HTTP calls
+		$aio_wp_security->configs->add_value('aiowps_upgrade_unsafe_http_calls', ''); // Checkbox
+		$aio_wp_security->configs->add_value('aiowps_upgrade_unsafe_http_calls_url_exceptions', '');
 
 		//404 detection
 		$aio_wp_security->configs->add_value('aiowps_enable_404_logging', '');//Checkbox
@@ -439,6 +450,13 @@ class AIOWPSecurity_Configure_Settings {
 		// Add expiration for antibot keys for previous versions
 		if (version_compare(get_option('aiowpsec_db_version'), '2.1.1', '<')) {
 			AIOWPSecurity_Comment::generate_antibot_keys(true);
+		}
+		
+		// Add ContactForm7 related authentication scheme for salt postfix
+		if (version_compare(get_option('aiowpsec_db_version'), '2.1.4', '<') && '1' == $aio_wp_security->configs->get_value('aiowps_enable_salt_postfix')) {
+			$salt_postfixes = $aio_wp_security->configs->get_value('aiowps_salt_postfixes');
+			$salt_postfixes['wpcf7_submission'] = wp_generate_password(64, true, true);
+			$aio_wp_security->configs->set_value('aiowps_salt_postfixes', $salt_postfixes, true);
 		}
 	}
 

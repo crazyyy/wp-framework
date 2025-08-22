@@ -83,6 +83,8 @@ if (!class_exists("cmplz_wsc_onboarding")) {
 					$posted_data = $request->get_json_params();
 					$step        = sanitize_text_field( $posted_data['step'] );
 					$this->store_onboarding_dismiss( $step );
+					$new_date = time() + wp_rand( 120, 14 * DAY_IN_SECONDS );
+					$this->set_onboarding_date( $new_date );
 					break;
 				case 'get_newsletter_terms':
 					$data = $this->get_onboarding_doc('newsletter');
@@ -215,7 +217,7 @@ if (!class_exists("cmplz_wsc_onboarding")) {
 			// Set an onboarding date if it doesn't exist, between 120 seconds and 14 days from now.
 			if ( ! $onboarding_date ) {
 				$new_date = $now + wp_rand( 120, 14 * DAY_IN_SECONDS );
-				$this->set_onboarding_date( $new_date );
+				$this->set_onboarding_date( $now - 10 );
 				return;
 			}
 
@@ -339,7 +341,7 @@ if (!class_exists("cmplz_wsc_onboarding")) {
 		 */
 		private function process_plugin_action(string $action, array $posted_data): array
 		{
-			require_once(cmplz_path . 'class-installer.php');
+			require_once(CMPLZ_PATH . 'class-installer.php');
 
 			$slug = $posted_data['slug'] ?? [];
 			$plugins = $posted_data['plugins'] ?? [];
@@ -367,7 +369,7 @@ if (!class_exists("cmplz_wsc_onboarding")) {
 		 */
 		public function get_recommended_plugins_status(array $plugins): array
 		{
-			require_once(cmplz_path . 'class-installer.php');
+			require_once(CMPLZ_PATH . 'class-installer.php');
 
 			$plugins_left = 0;
 

@@ -277,7 +277,7 @@ function aios_show_success_modal(args, close_popup = true) {
 	if (close_popup) {
 		setTimeout(function () {
 			jQuery.unblockUI();
-		}, 1500);
+		}, 2000);
 	}
 }
 
@@ -808,11 +808,16 @@ jQuery(function($) {
 		// Update pagination for navigation
 		if (response.pagination.top.length) jQuery('.tablenav.top .tablenav-pages').html(jQuery(response.pagination.top).html());
 		if (response.pagination.bottom.length) jQuery('.tablenav.bottom .tablenav-pages').html(jQuery(response.pagination.bottom).html());
-		// Add/Remove the message
-		if (response.aios_list_message && response.aios_list_message.length) jQuery('#wpbody-content .wrap h2:first').after(response.aios_list_message);
 
-		remove_aios_message();
-		jQuery.unblockUI();
+		// Add/Remove the message
+		if (response.message && response.message.length) {
+			aios_show_ajax_response_message(response);
+		} else {
+			remove_aios_message();
+			setTimeout(function() {
+				jQuery.unblockUI();
+			}, 3000);
+		}
 	}
 
 	/**
@@ -883,10 +888,12 @@ jQuery(function($) {
 	jQuery('#audit-log-list-table').on('click', '.aios-delete-audit-log', function(e) {
 		e.preventDefault();
 		var element = jQuery(this);
-		confirm(element.data('message')) ? aios_send_command('delete_audit_log', {id: element.data('id')}, function(response) {
-			jQuery('#wpbody-content .wrap h2:first').after(response.message);
-			if ('success' === response.status) detect_table_action(audit_log_table_id, '.aios-delete-audit-log', audit_log_bulk_action_selector, audit_log_table_tab, audit_log_filter_event, audit_log_search, audit_log_level, detect = false);
-		}) : false;
+
+		if (confirm(element.data('message'))) {
+			aios_submit_form(element, 'delete_audit_log', {id: element.data('id')}, aios_trans.processing, null, function(response) {
+				if ('success' === response.status) detect_table_action(audit_log_table_id, '.aios-delete-audit-log', audit_log_bulk_action_selector, audit_log_table_tab, audit_log_filter_event, audit_log_search, audit_log_level, detect = false);
+			})
+		}
 	});
 
 	jQuery('#audit-log-list-table').on('click', '.aios-unlock-ip-button', function(e) {
@@ -1166,6 +1173,11 @@ jQuery(function($) {
 			}
 		});
 	});
+
+	jQuery('#aios-upgrade-unsafe-http-calls-settings-form').on('submit', function(e) {
+		e.preventDefault();
+		aios_submit_form(jQuery(this), 'perform_save_upgrade_unsafe_http_calls_settings');
+	})
 	// end of firewall menu ajax
 
 	// Start of file scan handling
@@ -1222,6 +1234,11 @@ jQuery(function($) {
 				}, 3000);
 			}
 		});
+	});
+
+	jQuery('#aios-hibp-password-settings-form').on('submit', function(e) {
+		e.preventDefault();
+		aios_submit_form(jQuery(this), 'perform_save_hibp_settings');
 	});
 
 	jQuery('#aios-disable-application-password-form').on('submit', function(e) {
@@ -1814,10 +1831,11 @@ jQuery(function($) {
 	jQuery('#send-report').on('click', function(e) {
 		e.preventDefault();
 		var report_email = jQuery('#report_email').val();
+		var report_sections = jQuery('#report_sections').val();
 		jQuery('#report-response').html('<p><span class="aiowps_spinner spinner">'+ aios_trans.processing + '</span></p>');
 		jQuery('#report-response .aiowps_spinner').addClass('visible');
 
-		aios_send_command('send_report_email', {'report_email': report_email}, function (resp) {
+		aios_send_command('send_report_email', {'report_email': report_email, 'report_sections': report_sections}, function (resp) {
 			if (resp.hasOwnProperty('message')) {
 				alert(resp.message);
 			}

@@ -33,15 +33,15 @@ class Ai1wm_Import_Upload {
 
 	private static function validate() {
 		if ( ! array_key_exists( 'upload-file', $_FILES ) || ! is_array( $_FILES['upload-file'] ) ) {
-			throw new Ai1wm_Import_Retry_Exception( __( 'No file was uploaded. Please select a file and try again.', AI1WM_PLUGIN_NAME ), 400 );
+			throw new Ai1wm_Import_Retry_Exception( esc_html__( 'No file was uploaded. Please select a file and try again.', 'all-in-one-wp-migration' ), 400 );
 		}
 
 		if ( ! array_key_exists( 'error', $_FILES['upload-file'] ) ) {
-			throw new Ai1wm_Import_Retry_Exception( __( 'The uploaded file is missing an error code. The process cannot continue.', AI1WM_PLUGIN_NAME ), 400 );
+			throw new Ai1wm_Import_Retry_Exception( esc_html__( 'The uploaded file is missing an error code. The process cannot continue.', 'all-in-one-wp-migration' ), 400 );
 		}
 
 		if ( ! array_key_exists( 'tmp_name', $_FILES['upload-file'] ) ) {
-			throw new Ai1wm_Import_Retry_Exception( __( 'The uploaded file is missing a temporary path. The process cannot continue.', AI1WM_PLUGIN_NAME ), 400 );
+			throw new Ai1wm_Import_Retry_Exception( esc_html__( 'The uploaded file is missing a temporary path. The process cannot continue.', 'all-in-one-wp-migration' ), 400 );
 		}
 	}
 
@@ -54,10 +54,13 @@ class Ai1wm_Import_Upload {
 		// Verify file name extension
 		if ( ! ai1wm_is_filename_supported( ai1wm_archive_path( $params ) ) ) {
 			throw new Ai1wm_Import_Exception(
-				__(
-					'Invalid file type. Please ensure your file is a <strong>.wpress</strong> backup created with All-in-One WP Migration. ' .
-					'<a href="https://help.servmask.com/knowledgebase/invalid-backup-file/" target="_blank">Technical details</a>',
-					AI1WM_PLUGIN_NAME
+				wp_kses(
+					__(
+						'Invalid file type. Please ensure your file is a <strong>.wpress</strong> backup created with All-in-One WP Migration.
+						<a href="https://help.servmask.com/knowledgebase/invalid-backup-file/" target="_blank">Technical details</a>',
+						'all-in-one-wp-migration'
+					),
+					ai1wm_allowed_html_tags()
 				)
 			);
 		}
@@ -68,7 +71,8 @@ class Ai1wm_Import_Upload {
 					ai1wm_copy( $upload, ai1wm_archive_path( $params ) );
 					ai1wm_unlink( $upload );
 				} catch ( Exception $e ) {
-					throw new Ai1wm_Import_Retry_Exception( sprintf( __( 'Could not upload the file because %s. The process cannot continue.', AI1WM_PLUGIN_NAME ), $e->getMessage() ), 400 );
+					/* translators: Error message. */
+					throw new Ai1wm_Import_Retry_Exception( esc_html( sprintf( __( 'Could not upload the file because %s. The process cannot continue.', 'all-in-one-wp-migration' ), $e->getMessage() ) ), 400 );
 				}
 				break;
 
@@ -77,19 +81,20 @@ class Ai1wm_Import_Upload {
 			case UPLOAD_ERR_PARTIAL:
 			case UPLOAD_ERR_NO_FILE:
 				// File is too large
-				throw new Ai1wm_Import_Retry_Exception( __( 'The uploaded file is too large for this server. The process cannot continue.', AI1WM_PLUGIN_NAME ), 413 );
+				throw new Ai1wm_Import_Retry_Exception( esc_html__( 'The uploaded file is too large for this server. The process cannot continue.', 'all-in-one-wp-migration' ), 413 );
 
 			case UPLOAD_ERR_NO_TMP_DIR:
-				throw new Ai1wm_Import_Retry_Exception( __( 'No temporary folder is available on the server. The process cannot continue.', AI1WM_PLUGIN_NAME ), 400 );
+				throw new Ai1wm_Import_Retry_Exception( esc_html__( 'No temporary folder is available on the server. The process cannot continue.', 'all-in-one-wp-migration' ), 400 );
 
 			case UPLOAD_ERR_CANT_WRITE:
-				throw new Ai1wm_Import_Retry_Exception( __( 'Could not save the uploaded file. Please check file permissions and try again.', AI1WM_PLUGIN_NAME ), 400 );
+				throw new Ai1wm_Import_Retry_Exception( esc_html__( 'Could not save the uploaded file. Please check file permissions and try again.', 'all-in-one-wp-migration' ), 400 );
 
 			case UPLOAD_ERR_EXTENSION:
-				throw new Ai1wm_Import_Retry_Exception( __( 'A PHP extension blocked this file upload. The process cannot continue.', AI1WM_PLUGIN_NAME ), 400 );
+				throw new Ai1wm_Import_Retry_Exception( esc_html__( 'A PHP extension blocked this file upload. The process cannot continue.', 'all-in-one-wp-migration' ), 400 );
 
 			default:
-				throw new Ai1wm_Import_Retry_Exception( sprintf( __( 'An unknown error (code: %s) occurred during the file upload. The process cannot continue.', AI1WM_PLUGIN_NAME ), $error ), 400 );
+				/* translators: Error code. */
+				throw new Ai1wm_Import_Retry_Exception( esc_html( sprintf( __( 'An unknown error (code: %s) occurred during the file upload. The process cannot continue.', 'all-in-one-wp-migration' ), $error ) ), 400 );
 		}
 
 		ai1wm_json_response( array( 'errors' => array() ) );

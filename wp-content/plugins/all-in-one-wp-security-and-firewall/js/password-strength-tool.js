@@ -1,11 +1,27 @@
 (function($) {
 	$.fn.extend({
-		pwdstr: function(el) {
+		pwdstr: function(crack_time_calculation, crack_time_message, hibp_message) {
 			return this.each(function() {
+				const check_interval = 500;
+				var last_check_time = 0;
 				$(this).keyup(function() {
-					$(el).html(getTime($(this).val()));
+					$(crack_time_calculation).html(getTime($(this).val()));
+					$(crack_time_message).show();
+					$(hibp_message).hide();
+
+					setTimeout(() => {
+						if (Date.now() - last_check_time > check_interval) {
+							last_check_time = Date.now();
+							aios_send_command('hibp_check_password', {password: $(this).val()}, function(response) {
+								if (response.pwned) {
+									$(crack_time_message).hide();
+									$(hibp_message).show();
+								}
+							})
+						}
+					}, check_interval);
 				});
-					
+
 				function getTime(str) {
 					var chars = 0;
 					var rate = 2800000000;
@@ -115,7 +131,7 @@
 		}
 	});
 	$(document).ready(function() {
-		$('#aiowps_password_test').pwdstr('#aiowps_password_crack_time_calculation');
+		$('#aiowps_password_test').pwdstr('#aiowps_password_crack_time_calculation', '#aiowps_password_crack_info_text', '#aiowps_password_hibp_info_text');
 	});
 })(jQuery);
 

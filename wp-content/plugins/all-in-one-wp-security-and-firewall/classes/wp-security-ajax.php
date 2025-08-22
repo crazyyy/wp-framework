@@ -81,7 +81,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 				$this->set_error_response_on_json_encode_error($json_last_error);
 			}
 
-			echo $this->results;
+			echo $this->results; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Variable is an array containing escaped data.
 			die;
 		}
 
@@ -91,6 +91,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 		 * @return void
 		 */
 		private function set_nonce() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- It's the actual nonce. It does not need sanitizing.
 			$this->nonce = empty($_POST['nonce']) ? '' : $_POST['nonce'];
 		}
 
@@ -100,6 +101,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 		 * @return void
 		 */
 		private function set_subaction() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already checked.
 			$this->subaction = empty($_POST['subaction']) ? '' : sanitize_text_field(wp_unslash($_POST['subaction']));
 		}
 
@@ -109,6 +111,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 		 * @return void
 		 */
 		private function set_data() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already checked.
 			$this->data = isset($_POST['data']) ? wp_unslash($_POST['data']) : null;
 		}
 
@@ -162,6 +165,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 		 * @return void
 		 */
 		private function add_invalid_command_error_log_entry() {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Part of error reporting.
 			error_log("AIOS: ajax_handler: no such command (" . $this->subaction . ")");
 		}
 
@@ -174,6 +178,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 			$this->results = array(
 				'result' => false,
 				'error_code' => 'command_not_found',
+				/* translators: %s: Subaction */
 				'error_message' => sprintf(__('The command "%s" was not found', 'all-in-one-wp-security-and-firewall'), $this->subaction)
 			);
 		}
@@ -232,7 +237,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 				'error_data' => '',
 			);
 
-			$this->results = json_encode($this->results);
+			$this->results = wp_json_encode($this->results);
 		}
 
 		/**
@@ -241,7 +246,7 @@ if (!class_exists('AIOWPSecurity_Ajax')) :
 		 * @return void
 		 */
 		private function json_encode_results() {
-			$this->results = json_encode($this->results);
+			$this->results = wp_json_encode($this->results);
 		}
 	}
 

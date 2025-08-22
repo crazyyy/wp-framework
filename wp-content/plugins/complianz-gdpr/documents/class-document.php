@@ -304,22 +304,22 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			if ( $this->is_complianz_page() ) {
 				$load_css = cmplz_get_option( 'use_document_css' );
 				if ( $load_css ) {
-					$v = filemtime(cmplz_path . "assets/css/document$min.css");
+					$v = filemtime(CMPLZ_PATH . "assets/css/document$min.css");
 					wp_register_style( 'cmplz-document',
-						cmplz_url . "assets/css/document$min.css", false,
+						CMPLZ_URL . "assets/css/document$min.css", false,
 						$v );
 					wp_enqueue_style( 'cmplz-document' );
 				} else {
-					$v = filemtime(cmplz_path . "assets/css/document-grid$min.css");
-                    wp_register_style( 'cmplz-document-grid', cmplz_url . "assets/css/document-grid$min.css", false, $v );
+					$v = filemtime(CMPLZ_PATH . "assets/css/document-grid$min.css");
+                    wp_register_style( 'cmplz-document-grid', CMPLZ_URL . "assets/css/document-grid$min.css", false, $v );
                     wp_enqueue_style( 'cmplz-document-grid' );
                 }
 				add_action( 'wp_head', array( $this, 'inline_styles' ), 100 );
 			}
 
 			if ( cmplz_get_option( 'disable_cookie_block' ) !== 1 ) {
-				$v = filemtime(cmplz_path . "assets/css/cookieblocker$min.css");
-				wp_register_style( 'cmplz-general', cmplz_url . "assets/css/cookieblocker$min.css", false, $v );
+				$v = filemtime(CMPLZ_PATH . "assets/css/cookieblocker$min.css");
+				wp_register_style( 'cmplz-general', CMPLZ_URL . "assets/css/cookieblocker$min.css", false, $v );
 				wp_enqueue_style( 'cmplz-general' );
 			}
 
@@ -1939,7 +1939,7 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			$css           = '';
 
 			if ( $load_css ) {
-				$css = file_get_contents( cmplz_path . "assets/css/document.css" );
+				$css = file_get_contents( CMPLZ_PATH . "assets/css/document.css" );
 			}
 			$title_html = $save_to_file ? '' : '<h4 class="center">' . $title . '</h4>';
 
@@ -1984,7 +1984,7 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			$html = preg_replace('/<input type="checkbox".*?>/', '', $html);
 			$html = preg_replace('/<span class="cmplz-fmail-domain">.*?<\/span>/', '', $html);
 
-			require cmplz_path . '/assets/vendor/autoload.php';
+			require CMPLZ_PATH . '/assets/vendor/autoload.php';
 
 			//obsolete function
 			if ( get_option( 'cmplz_pdf_dir_token' ) ) {

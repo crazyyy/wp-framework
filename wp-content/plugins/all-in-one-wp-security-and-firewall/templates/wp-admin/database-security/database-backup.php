@@ -28,7 +28,7 @@
 			<?php
 			echo esc_html__('The automated backup feature in All-In-One Security was removed as of version 5.0.0.', 'all-in-one-wp-security-and-firewall') . ' ' . __('For a reliable backup solution, we recommend', 'all-in-one-wp-security-and-firewall');
 			?>
-			<a href="https://teamupdraft.com/updraftplus/" title="<?php echo $link_title; ?>" alt="<?php echo $link_title; ?>">
+			<a href="https://teamupdraft.com/updraftplus/?utm_source=aios-plugin&utm_medium=referral&utm_campaign=paac&utm_content=automated-back-up-feature-info&utm_creative_format=notice" title="<?php echo $link_title; ?>" alt="<?php echo $link_title; ?>">
 			UpdraftPlus
 			</a>
 			<?php

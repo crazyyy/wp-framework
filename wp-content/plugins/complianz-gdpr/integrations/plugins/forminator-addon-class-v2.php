@@ -8,7 +8,7 @@ final class CMPLZ_Forminator_Addon_V2 extends Forminator_Integration {
 	 * Use this trait to mark this addon as PRO
 	 */
 	protected $_slug = 'complianz';
-	protected $_version = cmplz_version;
+	protected $_version = CMPLZ_VERSION;
 	protected $_min_forminator_version = '1.1';
 	protected $_short_title = 'Complianz';
 	protected $_title = 'Complianz Privacy Suite';
@@ -81,7 +81,7 @@ final class CMPLZ_Forminator_Addon_V2 extends Forminator_Integration {
 	 * @since  1.1
 	 */
 	public function get_image() {
-		return cmplz_url . 'assets/images/icon-logo.svg';
+		return CMPLZ_URL . 'assets/images/icon-logo.svg';
 	}
 
 	/**
@@ -91,7 +91,7 @@ final class CMPLZ_Forminator_Addon_V2 extends Forminator_Integration {
 	 * @since  1.1
 	 */
 	public function get_image_x2() {
-		return cmplz_url . 'assets/images/icon-256x256.png';
+		return CMPLZ_URL . 'assets/images/icon-256x256.png';
 	}
 
 	/**
@@ -101,7 +101,7 @@ final class CMPLZ_Forminator_Addon_V2 extends Forminator_Integration {
 	 * @since  1.1
 	 */
 	public function get_icon() {
-		return cmplz_url . 'assets/images/icon-logo.svg';
+		return CMPLZ_URL . 'assets/images/icon-logo.svg';
 	}
 
 	/**
@@ -111,6 +111,6 @@ final class CMPLZ_Forminator_Addon_V2 extends Forminator_Integration {
 	 * @since  1.1
 	 */
 	public function get_icon_x2() {
-		return cmplz_url . 'assets/images/icon-256x256.png';
+		return CMPLZ_URL . 'assets/images/icon-256x256.png';
 	}
 }

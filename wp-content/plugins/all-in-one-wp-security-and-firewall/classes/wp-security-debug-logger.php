@@ -38,11 +38,11 @@ class AIOWPSecurity_Logger {
 
 		$debug_log_tbl = AIOWPSEC_TBL_DEBUG_LOG;
 
-		$where_sql = (!is_super_admin()) ? 'WHERE site_id = '.get_current_blog_id() : '';
-
-		$query = "DELETE FROM $debug_log_tbl {$where_sql}";
-
-		$ret = $wpdb->query($query);
+		if (is_super_admin()) {
+			$ret = $wpdb->query("DELETE FROM $debug_log_tbl"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
+		} else {
+			$ret = $wpdb->query($wpdb->prepare("DELETE FROM $debug_log_tbl WHERE site_id = %d", get_current_blog_id())); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
+		}
 
 		if (false === $ret) {
 			$error_msg = empty($wpdb->last_error) ? __('Unable to get the reason why', 'all-in-one-wp-security-and-firewall') : $wpdb->last_error;
@@ -77,11 +77,11 @@ class AIOWPSecurity_Logger {
 			'message' => $message,
 			'type' => $type,
 		);
-		$sql = $wpdb->prepare("INSERT INTO ".$debug_tbl_name." (created, logtime, level, network_id, site_id, message,  type) VALUES ('%s', UNIX_TIMESTAMP(), '%s', '%d', '%d', '%s', '%s')", $data['created'], $data['level'], $data['network_id'], $data['site_id'], $data['message'], $data['type']);
-		$ret = $wpdb->query($sql);
+
+		$ret = $wpdb->query($wpdb->prepare("INSERT INTO ".$debug_tbl_name." (created, logtime, level, network_id, site_id, message,  type) VALUES (%s, UNIX_TIMESTAMP(), %s, %d, %d, %s, %s)", $data['created'], $data['level'], $data['network_id'], $data['site_id'], $data['message'], $data['type'])); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- We can't use %i because our plugin supports wordpress < 6.2.
 		if (false === $ret) {
 			$error_msg = empty($wpdb->last_error) ? 'Could not write to the debug log' : $wpdb->last_error;
-			error_log("All In One WP Security : {$error_msg}");
+			error_log("All In One WP Security : {$error_msg}"); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- We can't replace error_log with our debug logger here because the debug logger has failed.
 		}
 	}
  

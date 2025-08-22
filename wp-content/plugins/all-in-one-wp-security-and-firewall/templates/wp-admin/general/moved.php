@@ -6,12 +6,13 @@ $info = array();
 if (empty($info)) return;
 ?>
 <div class="postbox">
-	<h3 class="hndle"><label for="title"><?php echo $info[$key]['title']; ?></label></h3>
+	<h3 class="hndle"><label for="title"><?php echo esc_html($info[$key]['title']); ?></label></h3>
 	<div class="inside">
 		<?php
-			$new_location_link = '<a href="admin.php?page='.$info[$key]['uri'].'">' . __('here', 'all-in-one-wp-security-and-firewall') . '</a>';
+			$new_location_link = '<a href="admin.php?page=' . esc_html($info[$key]['uri']) . '">' . esc_html__('here', 'all-in-one-wp-security-and-firewall') . '</a>';
 			echo '<div class="aio_orange_box"><p>';
-			echo sprintf(__('The %s feature is now located %s.', 'all-in-one-wp-security-and-firewall'), $info[$key]['title'], $new_location_link) . ' ' . __('This page will be removed in a future release.', 'all-in-one-wp-security-and-firewall');
+			/* translators: 1: Old location 2: New location */
+			echo sprintf(esc_html__('The %1$s feature is now located %2$s.', 'all-in-one-wp-security-and-firewall'), esc_html($info[$key]['title']), $new_location_link) . ' ' . esc_html__('This page will be removed in a future release.', 'all-in-one-wp-security-and-firewall'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Link already escaped.
 			echo '</p></div>';
 		?>
 	</div>

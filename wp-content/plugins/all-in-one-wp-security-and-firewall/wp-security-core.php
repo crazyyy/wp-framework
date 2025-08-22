@@ -8,9 +8,9 @@ if (!class_exists('AIO_WP_Security')) {
 
 	class AIO_WP_Security {
 
-		public $version = '5.4.0';
+		public $version = '5.4.2';
 
-		public $db_version = '2.1.3';
+		public $db_version = '2.1.4';
 
 		public $firewall_version = '1.0.8';
 
@@ -180,12 +180,16 @@ if (!class_exists('AIO_WP_Security')) {
 			$base_prefix = $this->get_table_prefix();
 			define('AIOWPSEC_TBL_AUDIT_LOG', $base_prefix . 'aiowps_audit_log');
 			define('AIOWPSEC_TBL_DEBUG_LOG', $base_prefix . 'aiowps_debug_log');
-			define('AIOWSPEC_TBL_LOGGED_IN_USERS', $base_prefix . 'aiowps_logged_in_users');
+			define('AIOWPSEC_TBL_LOGGED_IN_USERS', $base_prefix . 'aiowps_logged_in_users');
 			define('AIOWPSEC_TBL_MESSAGE_STORE', $base_prefix . 'aiowps_message_store');
 		}
 
+		/**
+		 * Includes required files.
+		 *
+		 * @return void
+		 */
 		public function includes() {
-
 			// Load firewall, if it has not yet been loaded by this point
 			if (!defined('AIOWPSEC_FIREWALL_DONE')) {
 				$this->load_aio_firewall();
@@ -232,6 +236,7 @@ if (!class_exists('AIO_WP_Security')) {
 			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-block-userini.php');
 			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-block-wpconfig.php');
 			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-block-muplugin.php');
+			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-hibp.php');
 
 			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-reporting.php');
 			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-debug.php');

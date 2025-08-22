@@ -158,7 +158,8 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 			$ip_retrieve_methods[$id]['ip_method'] = $ip_method;
 
 			if (isset($_SERVER[$ip_method])) {
-				$ip_retrieve_methods[$id]['ip_method'] .= ' '.sprintf(__('(current value: %s)', 'all-in-one-wp-security-and-firewall'), $_SERVER[$ip_method]);
+				/* translators: %s: IP Method */
+				$ip_retrieve_methods[$id]['ip_method'] .= ' '.sprintf(__('(current value: %s)', 'all-in-one-wp-security-and-firewall'), sanitize_text_field(wp_unslash($_SERVER[$ip_method])));
 				$ip_retrieve_methods[$id]['is_enabled'] = true;
 			} else {
 				$ip_retrieve_methods[$id]['ip_method'] .= '  (' . __('no value (i.e. empty) on your server', 'all-in-one-wp-security-and-firewall') . ')';

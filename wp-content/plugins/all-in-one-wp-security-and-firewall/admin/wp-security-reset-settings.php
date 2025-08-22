@@ -74,7 +74,7 @@ class AIOWPSecurity_Reset_Settings {
 		$wpdb->query('TRUNCATE ' . $wpdb->prefix . 'aiowps_events');
 		$wpdb->query('TRUNCATE ' . $wpdb->prefix . 'aiowps_permanent_block');
 		if (is_main_site()) {
-			$wpdb->query('TRUNCATE ' . AIOWSPEC_TBL_LOGGED_IN_USERS);
+			$wpdb->query('TRUNCATE ' . AIOWPSEC_TBL_LOGGED_IN_USERS);
 			$wpdb->query('TRUNCATE ' . AIOWPSEC_TBL_MESSAGE_STORE);
 			$wpdb->query('TRUNCATE ' . AIOWPSEC_TBL_DEBUG_LOG);
 			$wpdb->query('TRUNCATE ' . AIOWPSEC_TBL_AUDIT_LOG);

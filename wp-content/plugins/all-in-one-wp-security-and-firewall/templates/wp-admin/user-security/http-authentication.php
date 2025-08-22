@@ -77,10 +77,12 @@
 						<input id="aiowps_password_test" type="text" name="aiowps_http_authentication_password" value="<?php echo $aio_wp_security->configs->get_value('aiowps_http_authentication_password'); ?>" size="15">
 						<br>
 						<?php
-						$crack_time = '<span id="aiowps_password_crack_time_calculation" style="all: initial; display: inline-block; padding-top: 7px; color: #3c434a;"></span>';
-						$password_tool_link = $rename_login_feature_link = '<a href="admin.php?page=' . AIOWPSEC_TOOLS_MENU_SLUG . '&tab=password-tool" target="_blank">' . __('Password tool', 'all-in-one-wp-security-and-firewall') . '</a>';
-						echo sprintf(__('%s to crack by a desktop PC according to the %s', 'all-in-one-wp-security-and-firewall'), $crack_time . '<span id="aiowps_http_authentication_password_crack_time_explanation">', $password_tool_link . '.</span>');
+						$crack_time = '<span id="aiowps_password_crack_time_calculation">' . __('1 sec', 'all-in-one-wp-security-and-firewall') . '</span>';
+						$password_tool_link = '<a href="admin.php?page=' . AIOWPSEC_TOOLS_MENU_SLUG . '&tab=password-tool" target="_blank">' . __('Password tool', 'all-in-one-wp-security-and-firewall') . '</a>';
+						$hibp_link = '<a href="admin.php?page=' . AIOWPSEC_USER_SECURITY_MENU_SLUG . '&tab=hibp" target="_blank">' . __('HIBP', 'all-in-one-wp-security-and-firewall') . '</a>';
 						?>
+						<span id="aiowps_password_crack_info_text"><?php printf(__('%s to crack by a desktop PC according to the %s.', 'all-in-one-wp-security-and-firewall'), $crack_time, $password_tool_link); ?></span>
+						<span id="aiowps_password_hibp_info_text"><?php printf(__('Pwned according to %s', 'all-in-one-wp-security-and-firewall'), $hibp_link); ?></span>
 					</td>
 				</tr>
 				<tr valign="top">

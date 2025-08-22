@@ -75,9 +75,9 @@ class AIOWPSecurity_Scan {
 	public function aiowps_send_file_change_alert_email($scan_result) {
 		global $aio_wp_security;
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_send_fcd_scan_email')) {
-			$subject = __('All In One WP Security - File change detected', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
+			$subject = __('All In One WP Security - File change detected', 'all-in-one-wp-security-and-firewall') . ' ' . AIOWPSecurity_Utility::convert_timestamp(null, 'l, F jS, Y \a\\t g:i a');
 			//$attachment = array();
-			$message = __('A file change was detected on your system for site URL', 'all-in-one-wp-security-and-firewall') . ' ' . network_site_url() . __('. Scan was generated on', 'all-in-one-wp-security-and-firewall') . ' ' . date('l, F jS, Y \a\\t g:i a', current_time('timestamp'));
+			$message = __('A file change was detected on your system for site URL', 'all-in-one-wp-security-and-firewall') . ' ' . network_site_url() . __('. Scan was generated on', 'all-in-one-wp-security-and-firewall') . ' ' . AIOWPSecurity_Utility::convert_timestamp(null, 'l, F jS, Y \a\\t g:i a');
 			$message .= "\r\n\r\n".__('A summary of the scan results is shown below:', 'all-in-one-wp-security-and-firewall');
 			$message .= "\r\n\r\n";
 			$message .= self::get_file_change_summary($scan_result);
@@ -166,6 +166,7 @@ class AIOWPSecurity_Scan {
 	 * @return bool|array - false on failure, array on success
 	 */
 	public static function get_fcd_data() {
+		// phpcs:disable WordPress.WP.AlternativeFunctions -- Silence wp_filesystem method suggestion. We cannot use that method.
 		global $aio_wp_security;
 		$aiowps_backup_dir = WP_CONTENT_DIR.'/'.AIO_WP_SECURITY_BACKUPS_DIR_NAME;
 		
@@ -215,6 +216,8 @@ class AIOWPSecurity_Scan {
 			}
 			
 		}
+
+		// phpcs:enable WordPress.WP.AlternativeFunctions -- Silence wp_filesystem method suggestion. We cannot use that method.
 	}
 	
 	/**
@@ -365,10 +368,14 @@ class AIOWPSecurity_Scan {
 			$aio_wp_security->debug_logger->log_debug(__METHOD__ . " - Creation of DB backup directory failed!", 4);
 			return false;
 		}
+
+		// phpcs:disable WordPress.WP.AlternativeFunctions -- Silence wp_filesystem method suggestion. We cannot use that method.
 		$results_file = $aiowps_backup_dir. '/'. $fcd_filename;
 		$fp = fopen($results_file, 'w');
 		fwrite($fp, json_encode($data));
 		fclose($fp);
+		// phpcs:enable WordPress.WP.AlternativeFunctions -- Silence wp_filesystem method suggestion. We cannot use that method.
 
+		return true;
 	}
 }
